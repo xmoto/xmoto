@@ -1,9 +1,11 @@
-X-Moto 0.1.7 (alpha)  2005-
+X-Moto 0.1.7 (alpha)  2005-10-25
 --------------------------------
 
- * Finally some sounds effects (not all yet).
+ * Finally some sounds effects (not all yet, and only the 
+   menus).
+ * 5 new (easier) built-in levels by Pasi Kallinen.
  * Configurable controls.
- * Joystick/gamepad support.
+ * Experimental (!) joystick support.
  * Double-clicking in lists to activate items.
  * Non-windows release now dynamically linked with ODE and
    LUA libraries.
@@ -17,6 +19,7 @@ X-Moto 0.1.7 (alpha)  2005-
       
    So this is good news if you want to burn X-Moto unto a CD
    and kill someone with it! :)
+ * Main menu no longer eats all of the CPU cycles.
 
 X-Moto 0.1.6 (alpha)  2005-10-05
 --------------------------------

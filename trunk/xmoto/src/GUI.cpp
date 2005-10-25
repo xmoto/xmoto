@@ -196,7 +196,7 @@ namespace vapp {
   Special message box for querying keypresses
   ===========================================================================*/    
   bool UIQueryKeyBox::keyDown(int nKey,int nChar) {
-    MessageBox(NULL,"HELLO",NULL,MB_OK);
+    //    MessageBox(NULL,"HELLO",NULL,MB_OK);
     return false;
   }
   

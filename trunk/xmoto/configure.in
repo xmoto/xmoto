@@ -56,4 +56,3 @@ AC_CHECK_LIB(ode,dJointAttach, [], [
 
 AC_OUTPUT(Makefile bin/Makefile)
 
-

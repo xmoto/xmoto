@@ -1,7 +1,5 @@
-INCLUDES = -Isrc
-CXXFLAGS = -DNOMMGR -w -O3 -DGAMEDATADIR=\"$(datadir)/@PACKAGE@\"
-CFLAGS = -DNOMMGR -w -O3 -DGAMEDATADIR=\"$(datadir)/@PACKAGE@\"
-SUBDIRS = bin
+CXXFLAGS = -DNOMMGR -w -O2 -DGAMEDATADIR=\"$(datadir)/@PACKAGE@\"
+CFLAGS = -DNOMMGR -w -O2 -DGAMEDATADIR=\"$(datadir)/@PACKAGE@\"
 
 image_SOURCES = src/image/tim.cpp src/image/tim_io_stdio.cpp \
 	src/image/tim_jpeg.cpp src/image/tim_memory_crt.cpp \
@@ -50,4 +48,4 @@ xmoto_SOURCES = $(common_SOURCES) src/BSP.cpp src/Game.cpp src/GameMain.cpp \
 	src/Input.h
 		
 uninstall-hook:
-	rm -r $(datadir)/@PACKAGE@
+	rm -r $(datadir)/@PACKAGE@		

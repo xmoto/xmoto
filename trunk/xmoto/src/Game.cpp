@@ -325,6 +325,11 @@ namespace vapp {
         /* Load sounds */
         //m_pEndOfLevelSFX = Sound::loadSample("Sounds/EndOfLevel.ogg");
         //m_pDieSFX = Sound::loadSample("Sounds/Die.ogg");
+        
+        Sound::loadSample("Sounds/Button1.ogg");
+//        Sound::loadSample("Sounds/Button2.ogg");
+        Sound::loadSample("Sounds/Button3.ogg");
+        
         Log(" %d sound%s loaded",Sound::getNumSamples(),Sound::getNumSamples()==1?"":"s");
       }
       _UpdateLoadingScreen((1.0f/8.0f) * 1,pLoadingScreen);
@@ -563,6 +568,9 @@ namespace vapp {
           sprintf(cTemp,"%f",fFPS_Rate);
           drawText(Vector2f(100,0),cTemp);
         }
+
+        /* Delay a bit so we don't eat all CPU */
+        SDL_Delay(5);
         break;
       }
       case GS_REPLAYING:

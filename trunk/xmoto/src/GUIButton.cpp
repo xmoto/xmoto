@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* 
  *  GUI: button
  */
+#include "Sound.h"
 #include "VXml.h"
 #include "GUI.h"
 
@@ -168,10 +169,15 @@ namespace vapp {
       
       if(m_Type == UI_BUTTON_TYPE_CHECK) {
         m_bChecked = !m_bChecked;
+        Sound::playSampleByName("Sounds/Button3.ogg");
       }
       else if(m_Type == UI_BUTTON_TYPE_RADIO) {
         _UncheckGroup(getGroup());
         m_bChecked = true;
+        Sound::playSampleByName("Sounds/Button3.ogg");
+      }
+      else {
+        Sound::playSampleByName("Sounds/Button1.ogg");
       }
     }
     m_State = UI_BUTTON_STATE_UNPRESSED;
@@ -213,13 +219,17 @@ namespace vapp {
       case SDLK_RETURN:
         if(m_Type == UI_BUTTON_TYPE_CHECK) {
           m_bChecked = !m_bChecked;
+          Sound::playSampleByName("Sounds/Button3.ogg");
         }
         else if(m_Type == UI_BUTTON_TYPE_RADIO) {
           _UncheckGroup(getGroup());
           m_bChecked = true;
+          Sound::playSampleByName("Sounds/Button3.ogg");
         }
-        else
+        else {
           setClicked(true);
+          Sound::playSampleByName("Sounds/Button1.ogg");
+        }
         break;
     }
     

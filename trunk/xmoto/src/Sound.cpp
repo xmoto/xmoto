@@ -106,7 +106,7 @@ namespace vapp {
       m_ASpec.format = AUDIO_S8;
     else
       m_ASpec.format = AUDIO_S16;
-    m_ASpec.samples = 8192; /* buffered samples */    
+    m_ASpec.samples = 1024; /* buffered samples */    
     m_ASpec.callback = audioCallback;
     m_ASpec.channels = m_nChannels;
     m_ASpec.userdata = NULL;
@@ -388,6 +388,8 @@ namespace vapp {
     pSample->cvt.buf = (Uint8 *)pSample->pcBuf;
     pSample->cvt.len = vs.getLength();
     
+    pSample->Name = File;
+    
     delete [] pcRaw;
     
     /* Register and return */    
@@ -406,6 +408,21 @@ namespace vapp {
     SamplePlayer *pPlayer = new SamplePlayer;
     pPlayer->initSample(pSample);
     m_pPlayers[nSlot] = (SoundPlayer *)pPlayer;
+  }
+  
+  SoundSample *Sound::findSample(const std::string &File) {
+    for(int i=0;i<m_Samples.size();i++) {
+      if(m_Samples[i]->Name == File)
+        return m_Samples[i];
+    }
+    return NULL;
+  }
+  
+  void Sound::playSampleByName(const std::string &Name) {
+    SoundSample *pSample = findSample(Name);
+    if(pSample != NULL) {
+      playSample(pSample);
+    }
   }
       
   /*==============================================================================

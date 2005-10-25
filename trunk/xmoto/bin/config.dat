@@ -27,7 +27,7 @@
 	<var name="JoyButtonFlipRight1" value="1"/>
 	<var name="JoyButtonChangeDir1" value="2"/>
 	<var name="JoystickLimboArea" value="0.07"/>
-	<var name="DefaultProfile" value="master ZEUS"/>
+	<var name="DefaultProfile" value="hest"/>
 	<var name="ScreenshotFormat" value="png"/>
 	<var name="NotifyAtInit" value="false"/>
 	<var name="ShowMiniMap" value="true"/>

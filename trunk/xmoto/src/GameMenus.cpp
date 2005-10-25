@@ -900,8 +900,8 @@ namespace vapp {
   }
   
   void GameApp::_ConfigureJoystick(void) {
-    _SimpleMessage("Hello, World!");
-    SDL_Delay(1000);
+    _SimpleMessage("Nothing here yet! :)");
+    SDL_Delay(1500);
   }
   
   void GameApp::_ChangeKeyConfig(void) {

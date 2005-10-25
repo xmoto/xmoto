@@ -5,12 +5,8 @@ Textures/Dirt.jpg
 Textures/FrostGround.jpg
 Textures/MoltenRock.jpg
 
-Sounds/PickUpStrawberry.ogg
 Sounds/Button1.ogg
-Sounds/Button2.ogg
 Sounds/Button3.ogg
-Sounds/EndOfLevel.ogg
-Sounds/Engine.ogg
 
 Levels/i00.lvl
 Levels/i00.lvs
@@ -31,6 +27,11 @@ Levels/i14.lvl
 Levels/i15.lvl
 Levels/i16.lvl
 Levels/i17.lvl
+Levels/i18.lvl
+Levels/i19.lvl
+Levels/i20.lvl
+Levels/i21.lvl
+Levels/i22.lvl
 
 Textures/Anims/Flower00.png
 Textures/Anims/Flower01.png

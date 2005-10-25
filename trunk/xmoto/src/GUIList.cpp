@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "VXml.h"
 #include "GUI.h"
+#include "Sound.h"
 
 namespace vapp {
 
@@ -161,6 +162,8 @@ namespace vapp {
           /* AND invoke enter-button */
           if(getSelected()>=0 && getSelected()<m_Entries.size() && m_pEnterButton != NULL) {
             m_pEnterButton->setClicked(true);
+
+            Sound::playSampleByName("Sounds/Button3.ogg");
           }          
 
           /* Under all circumstances set the activation flag */
@@ -291,7 +294,9 @@ namespace vapp {
       case SDLK_RETURN: 
         /* Uhh... send this to the default button, if any. And if anything is selected */
         if(getSelected()>=0 && getSelected()<m_Entries.size() && m_pEnterButton != NULL) {
-          m_pEnterButton->setClicked(true);        
+          m_pEnterButton->setClicked(true);       
+          
+          Sound::playSampleByName("Sounds/Button3.ogg");
         }
         
         /* Under all circumstances set the activation flag */

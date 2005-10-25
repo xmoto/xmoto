@@ -59,15 +59,24 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <stdio.h>
 #include <math.h>
 
+#if !defined(WIN32) 
+  #include <endian.h>
+#endif
+
+#if !defined(LITTLE_ENDIAN) && !defined(BIG_ENDIAN)
+  /* Assume little endian */
+  #define LITTLE_ENDIAN
+#endif
+
 extern "C" {
   #if defined(WIN32) 
     #include "lua/lua.h"
     #include "lua/lauxlib.h"
     #include "lua/lualib.h"
   #else
-    #include <lua/lua.h>
-    #include <lua/lauxlib.h>
-    #include <lua/lualib.h>
+    #include <lua50/lua.h>
+    #include <lua50/lauxlib.h>
+    #include <lua50/lualib.h>
   #endif
 };
 

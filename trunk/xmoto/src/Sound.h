@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VCommon.h"
 #include "VApp.h"
 #include "VFileIO.h"
+#include "UserConfig.h"
 
 #include "vorbis/codec.h"
 #include "vorbis/vorbisfile.h"
@@ -38,6 +39,7 @@ namespace vapp {
     int nBufSize;
     unsigned char *pcBuf;
     SDL_AudioCVT cvt;
+    std::string Name;
   };
 
 	/*===========================================================================
@@ -167,7 +169,7 @@ namespace vapp {
 
 	/*===========================================================================
 	Sound system object
-  ===========================================================================*/
+  ===========================================================================*/  
   class Sound {
     public:
       /* Static functions */
@@ -179,6 +181,8 @@ namespace vapp {
       static void playStream(std::string File);
       static SoundSample *loadSample(const std::string &File);
       static void playSample(SoundSample *pSample);
+      static SoundSample *findSample(const std::string &File);
+      static void playSampleByName(const std::string &Name);
       
       /* Data interface */
       static bool isEnabled(void) {return m_bEnable;}
