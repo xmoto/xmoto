@@ -1,0 +1,100 @@
+X-Moto 0.1.7 (Alpha Release)
+Copyright (C) 2005 Rasmus Neckelmann (neckelmann@gmail.com)
+
+http://xmoto.sourceforge.net
+
+IMPORTANT: This is an ALPHA release of the game, which means that many
+things aren't production stable. Also note that the final release of
+the game will include many more levels.
+ 
+I'll strongly appreciate any bug reports, feature requests, general 
+bashing, etc. Please help making the game better.
+
+Introduction
+============
+
+X-Moto is a challenging 2D motocross platform game, where physics play 
+an all important role in the gameplay. You need to control your bike to 
+its limit, if you want to have a chance finishing the more difficult of 
+the challenges. 
+
+First you'll try just to complete the levels, while later you'll compete 
+with yourself and others, racing against the clock.  
+
+Installation
+============
+
+The file INSTALL offers information on how to get X-Moto up and 
+running on your non-Windows computer. If you're reading this file on
+you're Windows computer, you've probably already installed X-Moto
+successfully :)
+
+Basic Gameplay
+==============
+
+A number of strawberries are spread around each level, which generally 
+consists of a complicated landscape seen from the side - i.e. much like 
+islands in the sky. You need to collect all these berries to 
+complete the level - when you've got the last one, you should find 
+the sunflower which will complete the level when you touch it. 
+Variations to this basic gameplay may be found around some of the 
+levels.
+Your motocross bike is likewise seen from the side, 
+and you control its throttle, braking, and simple changes to the 
+attitude by jerking the bike back and forth. Additionally you can change 
+the direction of your driving, by rotating on the spot. 
+
+Controls
+========
+
+You control your bike using the keyboard:
+
+Up arrow - Accelerates
+Down arrow - Brakes
+Left arrow - Rotates it counter-clockwise
+Right arrow - Rotates it clockwise
+Space - Turns around and drives in the other direction
+
+Note that the above keys can be configured to something else to suit
+your needs.
+Additionally, some other keys can be pressed while playing:
+
+Escape - Pauses the game, and opens the in-game menu
+F12 - Takes a screenshot and places it in the game directory 
+
+Bugs
+====
+
+If you experiences any bugs, please submit them using the "Bugs" 
+interface found on the X-Moto SourceForge page:
+   
+   http://sourceforge.net/projects/xmoto/
+
+License
+=======
+
+The game and its source code is released under the terms of the GNU 
+General Public License. See COPYING for details.
+Some of the source code origining from various third parties is not 
+released under the same license. Please consult the appropriate 
+license material for more information.
+Generally you're free to copy and reproduce both X-Moto and the 
+source code in any way you like, even to modify the source and release 
+your own version of the game, as long as you comply with the 
+above mentioned licenses.
+
+Authors
+=======
+
+X-Moto itself is written by Rasmus Neckelmann (neckelmann@gmail.com)
+
+Furthermore the following persons have contributed to the X-Moto
+project:
+
+ - XXX
+ - YYY
+
+Also a warm thank to Yves Berquin who have written the XML parser
+used by the game.
+ 
+ 

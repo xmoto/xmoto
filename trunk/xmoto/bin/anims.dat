@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- This file defines animations -->
+<animationdata>
+	
+	<animation name="Flower">
+		<size width="1" height="1"/>
+		<delay time="0.05"/>
+		<center x="0.5" y="0.5"/>
+		<frame file="Anims/Flower00.png"/>
+		<center x="0.5" y="0.51"/>
+		<frame file="Anims/Flower01.png"/>
+		<center x="0.5" y="0.52"/>
+		<frame file="Anims/Flower02.png"/>
+		<center x="0.5" y="0.53"/>
+		<frame file="Anims/Flower03.png"/>
+		<center x="0.5" y="0.54"/>
+		<frame file="Anims/Flower04.png"/>
+		<center x="0.5" y="0.55"/>
+		<frame file="Anims/Flower05.png"/>
+		<center x="0.5" y="0.56"/>
+		<frame file="Anims/Flower06.png"/>
+		<center x="0.5" y="0.56"/>
+		<frame file="Anims/Flower07.png"/>
+		<center x="0.5" y="0.55"/>
+		<frame file="Anims/Flower08.png"/>
+		<center x="0.5" y="0.54"/>
+		<frame file="Anims/Flower09.png"/>
+		<center x="0.5" y="0.53"/>
+		<frame file="Anims/Flower10.png"/>
+		<center x="0.5" y="0.52"/>
+		<frame file="Anims/Flower11.png"/>
+		<center x="0.5" y="0.51"/>
+		<frame file="Anims/Flower12.png"/>
+	</animation>
+	
+	<animation name="Wrecker">
+		<size width="1" height="1"/>
+		<delay time="0.05"/>
+		<frame file="Anims/Wrecker00.png"/>
+		<delay time="0.05"/>
+		<frame file="Anims/Wrecker01.png"/>
+		<delay time="0.05"/>
+		<frame file="Anims/Wrecker02.png"/>
+		<delay time="0.05"/>
+		<frame file="Anims/Wrecker03.png"/>
+		<delay time="0.05"/>
+		<frame file="Anims/Wrecker04.png"/>
+		<delay time="0.05"/>
+		<frame file="Anims/Wrecker05.png"/>
+		<delay time="0.05"/>
+		<frame file="Anims/Wrecker06.png"/>
+		<delay time="0.05"/>
+		<frame file="Anims/Wrecker07.png"/>
+		<delay time="0.05"/>
+		<frame file="Anims/Wrecker08.png"/>
+		<delay time="0.05"/>
+		<frame file="Anims/Wrecker09.png"/>
+		<delay time="0.05"/>
+		<frame file="Anims/Wrecker10.png"/>
+		<delay time="0.05"/>
+		<frame file="Anims/Wrecker11.png"/>
+		<delay time="0.05"/>
+		<frame file="Anims/Wrecker12.png"/>
+		<delay time="0.05"/>
+		<frame file="Anims/Wrecker13.png"/>
+		<delay time="0.05"/>
+		<frame file="Anims/Wrecker14.png"/>
+		<delay time="0.05"/>
+		<frame file="Anims/Wrecker15.png"/>
+		<delay time="0.05"/>
+		<frame file="Anims/Wrecker16.png"/>
+		<delay time="0.05"/>
+		<frame file="Anims/Wrecker17.png"/>
+		<delay time="0.05"/>
+		<frame file="Anims/Wrecker18.png"/>
+		<delay time="0.05"/>
+		<frame file="Anims/Wrecker19.png"/>
+		<delay time="0.05"/>
+		<frame file="Anims/Wrecker20.png"/>
+		<delay time="0.05"/>
+		<frame file="Anims/Wrecker21.png"/>
+		<delay time="0.05"/>
+		<frame file="Anims/Wrecker22.png"/>
+		<delay time="0.05"/>
+		<frame file="Anims/Wrecker23.png"/>
+		<delay time="0.05"/>
+		<frame file="Anims/Wrecker24.png"/>
+	</animation>
+	
+	<animation name="Strawberry">
+		<size width="1" height="1"/>
+		<delay time="0.05"/>
+		<center x="0.5" y="0.5"/>
+		<frame file="Anims/Strawberry00.png"/>
+		<center x="0.5" y="0.51"/>
+		<frame file="Anims/Strawberry01.png"/>
+		<center x="0.5" y="0.52"/>
+		<frame file="Anims/Strawberry02.png"/>
+		<center x="0.5" y="0.53"/>
+		<frame file="Anims/Strawberry03.png"/>
+		<center x="0.5" y="0.54"/>
+		<frame file="Anims/Strawberry04.png"/>
+		<center x="0.5" y="0.55"/>
+		<frame file="Anims/Strawberry05.png"/>
+		<center x="0.5" y="0.56"/>
+		<frame file="Anims/Strawberry06.png"/>
+		<center x="0.5" y="0.57"/>
+		<frame file="Anims/Strawberry07.png"/>
+		<center x="0.5" y="0.58"/>
+		<frame file="Anims/Strawberry08.png"/>
+		<center x="0.5" y="0.59"/>
+		<frame file="Anims/Strawberry09.png"/>
+		<center x="0.5" y="0.60"/>
+		<frame file="Anims/Strawberry10.png"/>
+		<center x="0.5" y="0.61"/>
+		<frame file="Anims/Strawberry11.png"/>
+		<center x="0.5" y="0.62"/>
+		<frame file="Anims/Strawberry12.png"/>
+		<center x="0.5" y="0.63"/>
+		<frame file="Anims/Strawberry13.png"/>
+		<center x="0.5" y="0.62"/>
+		<frame file="Anims/Strawberry14.png"/>
+		<center x="0.5" y="0.61"/>
+		<frame file="Anims/Strawberry15.png"/>
+		<center x="0.5" y="0.60"/>
+		<frame file="Anims/Strawberry16.png"/>
+		<center x="0.5" y="0.59"/>
+		<frame file="Anims/Strawberry17.png"/>
+		<center x="0.5" y="0.58"/>
+		<frame file="Anims/Strawberry18.png"/>
+		<center x="0.5" y="0.57"/>
+		<frame file="Anims/Strawberry19.png"/>
+		<center x="0.5" y="0.56"/>
+		<frame file="Anims/Strawberry20.png"/>
+		<center x="0.5" y="0.55"/>
+		<frame file="Anims/Strawberry21.png"/>
+		<center x="0.5" y="0.54"/>
+		<frame file="Anims/Strawberry22.png"/>
+		<center x="0.5" y="0.53"/>
+		<frame file="Anims/Strawberry23.png"/>
+		<center x="0.5" y="0.52"/>
+		<frame file="Anims/Strawberry24.png"/>
+		<center x="0.5" y="0.51"/>
+		<frame file="Anims/Strawberry25.png"/>
+	</animation>		
+	
+</animationdata>
+
+

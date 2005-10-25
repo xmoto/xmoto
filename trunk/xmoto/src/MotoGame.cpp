@@ -1,0 +1,925 @@
+/*=============================================================================
+XMOTO
+Copyright (C) 2005 Rasmus Neckelmann (neckelmann@gmail.com)
+
+This file is part of XMOTO.
+
+XMOTO is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+XMOTO is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with XMOTO; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+=============================================================================*/
+
+/* 
+ *  Game object. Handles all of the gamestate management und so weiter.
+ */
+#include "Game.h"
+#include "MotoGame.h"
+#include "VFileIO.h"
+#include "BSP.h"
+
+namespace vapp {
+
+  /*===========================================================================
+  Globals
+  ===========================================================================*/
+
+  /* Prim. game object */
+  MotoGame *m_pMotoGame;        
+  
+  /* Lua library prototypes */
+  int L_Game_GetTime(lua_State *pL);
+  int L_Game_Message(lua_State *pL);
+  int L_Game_IsPlayerInZone(lua_State *pL);
+  int L_Game_MoveBlock(lua_State *pL);
+  int L_Game_GetBlockPos(lua_State *pL);
+  int L_Game_SetBlockPos(lua_State *pL);
+  int L_Game_PlaceInGameArrow(lua_State *pL);
+  int L_Game_PlaceScreenArrow(lua_State *pL);
+  int L_Game_HideArrow(lua_State *pL);
+  int L_Game_ClearMessages(lua_State *pL);
+  
+  /* "Game" Lua library */
+  static const luaL_reg g_GameFuncs[] = {
+    {"GetTime", L_Game_GetTime},
+    {"Message", L_Game_Message},
+    {"IsPlayerInZone", L_Game_IsPlayerInZone},
+    {"MoveBlock", L_Game_MoveBlock},
+    {"GetBlockPos", L_Game_GetBlockPos},
+    {"SetBlockPos", L_Game_SetBlockPos},
+    {"PlaceInGameArrow", L_Game_PlaceInGameArrow},
+    {"PlaceScreenArrow", L_Game_PlaceScreenArrow},
+    {"HideArrow", L_Game_HideArrow},
+    {"ClearMessages", L_Game_ClearMessages},
+    {NULL, NULL}
+  };
+
+  /*===========================================================================
+  Init the lua game lib
+  ===========================================================================*/
+  LUALIB_API int luaopen_Game(lua_State *pL) {
+    luaL_openlib(pL,"Game",g_GameFuncs,0);
+    return 1;
+  }
+
+  /*===========================================================================
+  Simple lua interaction
+  ===========================================================================*/
+  bool MotoGame::scriptCallBool(std::string FuncName,bool bDefault) {
+    bool bRet = bDefault;
+
+    /* Fetch global function */
+    lua_getglobal(m_pL,FuncName.c_str());
+    
+    /* Is it really a function and not just a pile of ****? */
+    if(lua_isfunction(m_pL,-1)) {
+      /* Call! */
+      if(lua_pcall(m_pL,0,1,0) != 0) {
+        throw Exception("failed to invoke (bool) " + FuncName + std::string("(): ") + std::string(lua_tostring(m_pL,-1)));
+      }
+      
+      /* Retrieve return value */
+      if(!lua_toboolean(m_pL,-1)) {      
+        bRet = false;
+      }
+      else {
+        bRet = true;
+      }
+    }
+    
+    /* Reset Lua VM */
+    lua_settop(m_pL,0);        
+        
+    return bRet;
+  }
+  
+  void MotoGame::scriptCallVoid(std::string FuncName) {
+    /* Fetch global function */
+    lua_getglobal(m_pL,FuncName.c_str());
+    
+    /* Is it really a function and not just a pile of ****? */
+    if(lua_isfunction(m_pL,-1)) {
+      /* Call! */
+      if(lua_pcall(m_pL,0,0,0) != 0) {
+        throw Exception("failed to invoke (void) " + FuncName + std::string("(): ") + std::string(lua_tostring(m_pL,-1)));
+      }      
+    }
+    
+    /* Reset Lua VM */
+    lua_settop(m_pL,0);        
+  }
+  
+  void MotoGame::scriptCallTblVoid(std::string Table,std::string FuncName) {
+    /* Fetch global table */
+    lua_getglobal(m_pL,Table.c_str());
+    if(lua_istable(m_pL,-1)) {
+      lua_pushstring(m_pL,FuncName.c_str());
+      lua_gettable(m_pL,-2);
+      
+      if(lua_isfunction(m_pL,-1)) {
+        /* Call! */
+        if(lua_pcall(m_pL,0,0,0) != 0) {
+          throw Exception("failed to invoke (tbl,void) " + Table + std::string(".") + 
+                FuncName + std::string("(): ") + std::string(lua_tostring(m_pL,-1)));
+        }              
+      }
+    }
+
+    /* Reset Lua VM */
+    lua_settop(m_pL,0);        
+  }
+
+  /*===========================================================================
+  Dummy adding
+  ===========================================================================*/
+  void MotoGame::addDummy(Vector2f Pos,float r,float g,float b) {
+    m_Dummies[m_nNumDummies].Pos = Pos;
+    m_Dummies[m_nNumDummies].r = r;
+    m_Dummies[m_nNumDummies].g = g;
+    m_Dummies[m_nNumDummies].b = b;
+    m_nNumDummies++;
+  }
+
+  /*===========================================================================
+  Add game message
+  ===========================================================================*/
+  void MotoGame::gameMessage(std::string Text) {
+    GameMessage *pMsg = new GameMessage;
+    pMsg->fRemoveTime = getTime() + 5.0f;
+    pMsg->bNew = true;
+    pMsg->nAlpha = 255;
+    pMsg->Text = Text;
+    m_GameMessages.push_back(pMsg);
+  }
+
+  void MotoGame::clearGameMessages(void) {
+    for(int i=0;i<m_GameMessages.size();i++)
+      m_GameMessages[i]->fRemoveTime=0.0f;
+  }
+
+  /*===========================================================================
+  Update game
+  ===========================================================================*/
+  void MotoGame::updateLevel(float fTimeStep) {
+    /* Dummies are small markers that can show different things during debugging */
+    resetDummies();
+    
+    /* Handle game messages (keep them in place) */
+    int i=0;
+    while(1) {
+      if(i >= m_GameMessages.size()) break;      
+      if(getTime() > m_GameMessages[i]->fRemoveTime) {
+        m_GameMessages[i]->nAlpha -= 2;
+        
+        if(m_GameMessages[i]->nAlpha <= 0) {
+          delete m_GameMessages[i];
+          m_GameMessages.erase(m_GameMessages.begin() + i);
+          i--;
+          continue;
+        }
+      }
+      Vector2f TargetPos = Vector2f(0.2f,0.5f - (m_GameMessages.size()*0.05f)/2.0f + 0.05f*i);
+      if(m_GameMessages[i]->bNew) {
+        m_GameMessages[i]->Vel = Vector2f(0,0);
+        m_GameMessages[i]->Pos = TargetPos;
+        m_GameMessages[i]->bNew = false;
+      }
+      else {
+        if(!TargetPos.almostEqual(m_GameMessages[i]->Pos)) {
+          Vector2f F = TargetPos - m_GameMessages[i]->Pos;      
+          m_GameMessages[i]->Vel += F*0.0005f;
+          m_GameMessages[i]->Pos += m_GameMessages[i]->Vel;
+        }
+      }
+      i++;
+    }
+    
+    /* Increase time */
+    m_fTime += fTimeStep;
+    
+    /* Are we going to change direction during this update? */
+    bool bChangeDir = false;
+    if(m_BikeC.bChangeDir) {
+      m_BikeC.bChangeDir = false;
+      bChangeDir = true;
+      
+      m_BikeS.Dir = m_BikeS.Dir==DD_LEFT?DD_RIGHT:DD_LEFT; /* switch */
+      
+      /* Call The Evil Function. Children, don't try this at home! :-O */
+      _ChangeBikeDir();
+    }
+  
+    /* Get current bike state */
+    m_BikeS.pfFrontWheelPos = (dReal *)dBodyGetPosition( m_FrontWheelBodyID );
+    m_BikeS.pfRearWheelPos = (dReal *)dBodyGetPosition( m_RearWheelBodyID );
+    m_BikeS.pfFrontWheelRot = (dReal *)dBodyGetRotation( m_FrontWheelBodyID );
+    m_BikeS.pfRearWheelRot = (dReal *)dBodyGetRotation( m_RearWheelBodyID );
+    
+    m_BikeS.pfFramePos = (dReal *)dBodyGetPosition( m_FrameBodyID );    
+    m_BikeS.pfFrameRot = (dReal *)dBodyGetRotation( m_FrameBodyID );
+
+    //m_BikeS.pfPlayerLArmPos = (dReal *)dBodyGetPosition( m_PlayerLArmBodyID );
+    //m_BikeS.pfPlayerLArmRot = (dReal *)dBodyGetRotation( m_PlayerLArmBodyID );
+    //m_BikeS.pfPlayerUArmPos = (dReal *)dBodyGetPosition( m_PlayerUArmBodyID );
+    //m_BikeS.pfPlayerUArmRot = (dReal *)dBodyGetRotation( m_PlayerUArmBodyID );
+    //m_BikeS.pfPlayerLLegPos = (dReal *)dBodyGetPosition( m_PlayerLLegBodyID );
+    //m_BikeS.pfPlayerLLegRot = (dReal *)dBodyGetRotation( m_PlayerLLegBodyID );
+    //m_BikeS.pfPlayerULegPos = (dReal *)dBodyGetPosition( m_PlayerULegBodyID );
+    //m_BikeS.pfPlayerULegRot = (dReal *)dBodyGetRotation( m_PlayerULegBodyID );
+    //m_BikeS.pfPlayerTorsoPos = (dReal *)dBodyGetPosition( m_PlayerTorsoBodyID );
+    //m_BikeS.pfPlayerTorsoRot = (dReal *)dBodyGetRotation( m_PlayerTorsoBodyID );
+    
+    m_BikeS.RearWheelP.x = m_BikeS.pfRearWheelPos[0];
+    m_BikeS.RearWheelP.y = m_BikeS.pfRearWheelPos[1];    
+    m_BikeS.FrontWheelP.x = m_BikeS.pfFrontWheelPos[0];
+    m_BikeS.FrontWheelP.y = m_BikeS.pfFrontWheelPos[1];
+    m_BikeS.CenterP.x = m_BikeS.pfFramePos[0];
+    m_BikeS.CenterP.y = m_BikeS.pfFramePos[1];
+    
+    //m_BikeS.PlayerLArmP.x = m_BikeS.pfPlayerLArmPos[0]; m_BikeS.PlayerLArmP.y = m_BikeS.pfPlayerLArmPos[1];
+    //m_BikeS.PlayerUArmP.x = m_BikeS.pfPlayerUArmPos[0]; m_BikeS.PlayerUArmP.y = m_BikeS.pfPlayerUArmPos[1];
+    //m_BikeS.PlayerLLegP.x = m_BikeS.pfPlayerLLegPos[0]; m_BikeS.PlayerLLegP.y = m_BikeS.pfPlayerLLegPos[1];
+    //m_BikeS.PlayerULegP.x = m_BikeS.pfPlayerULegPos[0]; m_BikeS.PlayerULegP.y = m_BikeS.pfPlayerULegPos[1];
+    //m_BikeS.PlayerTorsoP.x = m_BikeS.pfPlayerTorsoPos[0]; m_BikeS.PlayerTorsoP.y = m_BikeS.pfPlayerTorsoPos[1];
+
+    m_BikeS.SwingAnchorP.x = m_BikeA.AR.x*m_BikeS.pfFrameRot[0*4+0] + m_BikeA.AR.y*m_BikeS.pfFrameRot[0*4+1] + m_BikeS.CenterP.x;
+    m_BikeS.SwingAnchorP.y = m_BikeA.AR.x*m_BikeS.pfFrameRot[1*4+0] + m_BikeA.AR.y*m_BikeS.pfFrameRot[1*4+1] + m_BikeS.CenterP.y;
+    m_BikeS.FrontAnchorP.x = m_BikeA.AF.x*m_BikeS.pfFrameRot[0*4+0] + m_BikeA.AF.y*m_BikeS.pfFrameRot[0*4+1] + m_BikeS.CenterP.x;
+    m_BikeS.FrontAnchorP.y = m_BikeA.AF.x*m_BikeS.pfFrameRot[1*4+0] + m_BikeA.AF.y*m_BikeS.pfFrameRot[1*4+1] + m_BikeS.CenterP.y;
+
+    m_BikeS.SwingAnchor2P.x = m_BikeA.AR2.x*m_BikeS.pfFrameRot[0*4+0] + m_BikeA.AR2.y*m_BikeS.pfFrameRot[0*4+1] + m_BikeS.CenterP.x;
+    m_BikeS.SwingAnchor2P.y = m_BikeA.AR2.x*m_BikeS.pfFrameRot[1*4+0] + m_BikeA.AR2.y*m_BikeS.pfFrameRot[1*4+1] + m_BikeS.CenterP.y;
+    m_BikeS.FrontAnchor2P.x = m_BikeA.AF2.x*m_BikeS.pfFrameRot[0*4+0] + m_BikeA.AF2.y*m_BikeS.pfFrameRot[0*4+1] + m_BikeS.CenterP.x;
+    m_BikeS.FrontAnchor2P.y = m_BikeA.AF2.x*m_BikeS.pfFrameRot[1*4+0] + m_BikeA.AF2.y*m_BikeS.pfFrameRot[1*4+1] + m_BikeS.CenterP.y;
+            
+    dVector3 T;
+    
+    dJointGetHingeAnchor(m_HandHingeID,T);
+    m_BikeS.HandP.x = T[0]; m_BikeS.HandP.y = T[1];
+
+    dJointGetHingeAnchor(m_ElbowHingeID,T);
+    m_BikeS.ElbowP.x = T[0]; m_BikeS.ElbowP.y = T[1];
+
+    dJointGetHingeAnchor(m_ShoulderHingeID,T);
+    m_BikeS.ShoulderP.x = T[0]; m_BikeS.ShoulderP.y = T[1];
+
+    dJointGetHingeAnchor(m_LowerBodyHingeID,T);
+    m_BikeS.LowerBodyP.x = T[0]; m_BikeS.LowerBodyP.y = T[1];
+
+    dJointGetHingeAnchor(m_KneeHingeID,T);
+    m_BikeS.KneeP.x = T[0]; m_BikeS.KneeP.y = T[1];
+
+    dJointGetHingeAnchor(m_FootHingeID,T);
+    m_BikeS.FootP.x = T[0]; m_BikeS.FootP.y = T[1];
+    
+    dJointGetHingeAnchor(m_HandHingeID2,T);
+    m_BikeS.Hand2P.x = T[0]; m_BikeS.Hand2P.y = T[1];
+
+    dJointGetHingeAnchor(m_ElbowHingeID2,T);
+    m_BikeS.Elbow2P.x = T[0]; m_BikeS.Elbow2P.y = T[1];
+
+    dJointGetHingeAnchor(m_ShoulderHingeID2,T);
+    m_BikeS.Shoulder2P.x = T[0]; m_BikeS.Shoulder2P.y = T[1];
+
+    dJointGetHingeAnchor(m_LowerBodyHingeID2,T);
+    m_BikeS.LowerBody2P.x = T[0]; m_BikeS.LowerBody2P.y = T[1];
+
+    dJointGetHingeAnchor(m_KneeHingeID2,T);
+    m_BikeS.Knee2P.x = T[0]; m_BikeS.Knee2P.y = T[1];
+
+    dJointGetHingeAnchor(m_FootHingeID2,T);
+    m_BikeS.Foot2P.x = T[0]; m_BikeS.Foot2P.y = T[1];
+    
+    /* Calculate head position */
+    Vector2f V = (m_BikeS.ShoulderP - m_BikeS.LowerBodyP);
+    V.normalize();
+    m_BikeS.HeadP = m_BikeS.ShoulderP + V*m_BikeP.fNeckLength;
+
+    /* Calculate head position (Alt.) */
+    V = (m_BikeS.Shoulder2P - m_BikeS.LowerBody2P);
+    V.normalize();
+    m_BikeS.Head2P = m_BikeS.Shoulder2P + V*m_BikeP.fNeckLength;
+
+    /* Maybe someone want these as well */    
+    m_BikeS.pAnchors = &m_BikeA;
+    m_BikeS.pParams = &m_BikeP;
+    
+    /* Internally we'd like to know the abs. relaxed position of the wheels */
+    m_BikeS.RFrontWheelP.x = m_BikeA.Fp.x*m_BikeS.pfFrameRot[0*4+0] + m_BikeA.Fp.y*m_BikeS.pfFrameRot[0*4+1] + m_BikeS.CenterP.x;
+    m_BikeS.RFrontWheelP.y = m_BikeA.Fp.x*m_BikeS.pfFrameRot[1*4+0] + m_BikeA.Fp.y*m_BikeS.pfFrameRot[1*4+1] + m_BikeS.CenterP.y;
+    m_BikeS.RRearWheelP.x = m_BikeA.Rp.x*m_BikeS.pfFrameRot[0*4+0] + m_BikeA.Rp.y*m_BikeS.pfFrameRot[0*4+1] + m_BikeS.CenterP.x;
+    m_BikeS.RRearWheelP.y = m_BikeA.Rp.x*m_BikeS.pfFrameRot[1*4+0] + m_BikeA.Rp.y*m_BikeS.pfFrameRot[1*4+1] + m_BikeS.CenterP.y;   
+        
+    /* Update misc stuff */
+    _UpdateZones();
+    _UpdateEntities();
+    
+    /* Invoke PreDraw() script function */
+    if(!scriptCallBool( "PreDraw",true ))
+      throw Exception("level script PreDraw() returned false");   
+
+    /* Update physics */
+    _UpdatePhysics(fTimeStep);
+  }
+
+  /*===========================================================================
+  State/stuff clearing
+  ===========================================================================*/
+  void MotoGame::clearStates(void) {      
+    /* BIKE_S */
+    m_BikeS.CenterP = Vector2f(0,0);
+    m_BikeS.Dir = DD_RIGHT;
+    m_BikeS.Elbow2P = Vector2f(0,0);
+    m_BikeS.ElbowP = Vector2f(0,0);
+    m_BikeS.fCurBrake = 0.0f;
+    m_BikeS.fCurEngine = 0.0f;
+    m_BikeS.Foot2P = Vector2f(0,0);
+    m_BikeS.FootP = Vector2f(0,0);
+    m_BikeS.FrontAnchor2P = Vector2f(0,0);
+    m_BikeS.FrontAnchorP = Vector2f(0,0);
+    m_BikeS.FrontWheelP = Vector2f(0,0);
+    m_BikeS.Hand2P = Vector2f(0,0);
+    m_BikeS.HandP = Vector2f(0,0);
+    m_BikeS.Head2P = Vector2f(0,0);
+    m_BikeS.HeadP = Vector2f(0,0);
+    m_BikeS.Knee2P = Vector2f(0,0);
+    m_BikeS.KneeP = Vector2f(0,0);
+    m_BikeS.LowerBody2P = Vector2f(0,0);
+    m_BikeS.LowerBodyP = Vector2f(0,0);
+    m_BikeS.pAnchors = NULL;
+    m_BikeS.pfFramePos = NULL;
+    m_BikeS.pfFrameRot = NULL;
+    m_BikeS.pfFrontWheelPos = NULL;
+    m_BikeS.pfFrontWheelRot = NULL;
+    m_BikeS.pfRearWheelPos = NULL;
+    m_BikeS.pfRearWheelRot = NULL;
+    m_BikeS.pfPlayerLArmPos = NULL;
+    m_BikeS.pfPlayerUArmPos = NULL;
+    m_BikeS.pfPlayerLLegPos = NULL;
+    m_BikeS.pfPlayerULegPos = NULL;
+    m_BikeS.pfPlayerTorsoPos = NULL;
+    m_BikeS.pfPlayerTorsoRot = NULL;
+    m_BikeS.PlayerLArmP = Vector2f(0,0);
+    m_BikeS.PlayerLLegP = Vector2f(0,0);
+    m_BikeS.PlayerTorsoP = Vector2f(0,0);
+    m_BikeS.PlayerUArmP = Vector2f(0,0);
+    m_BikeS.PlayerULegP = Vector2f(0,0);
+    m_BikeS.pfPlayerLArm2Pos = NULL;
+    m_BikeS.pfPlayerUArm2Pos = NULL;
+    m_BikeS.pfPlayerLLeg2Pos = NULL;
+    m_BikeS.pfPlayerULeg2Pos = NULL;
+    m_BikeS.pfPlayerTorso2Pos = NULL;
+    m_BikeS.pfPlayerTorso2Rot = NULL;
+    m_BikeS.PlayerLArm2P = Vector2f(0,0);
+    m_BikeS.PlayerLLeg2P = Vector2f(0,0);
+    m_BikeS.PlayerTorso2P = Vector2f(0,0);
+    m_BikeS.PlayerUArm2P = Vector2f(0,0);
+    m_BikeS.PlayerULeg2P = Vector2f(0,0);
+    m_BikeS.pParams = NULL;
+    m_BikeS.PrevFq = Vector2f(0,0);
+    m_BikeS.PrevRq = Vector2f(0,0);
+    m_BikeS.PrevPFq = Vector2f(0,0);
+    m_BikeS.PrevPHq = Vector2f(0,0);
+    m_BikeS.PrevPFq2 = Vector2f(0,0);
+    m_BikeS.PrevPHq2 = Vector2f(0,0);
+    m_BikeS.RearWheelP = Vector2f(0,0);
+    m_BikeS.RFrontWheelP = Vector2f(0,0);
+    m_BikeS.RRearWheelP = Vector2f(0,0);
+    m_BikeS.Shoulder2P = Vector2f(0,0);
+    m_BikeS.ShoulderP = Vector2f(0,0);
+    m_BikeS.SwingAnchor2P = Vector2f(0,0);
+    m_BikeS.SwingAnchorP = Vector2f(0,0);
+    
+    /* BIKE_P */
+    memset(&m_BikeP,0,sizeof(m_BikeP));
+    
+    /* BIKE_C */
+    memset(&m_BikeC,0,sizeof(m_BikeC));            
+  }
+
+  /*===========================================================================
+  Prepare the specified level for playing through this game object
+  ===========================================================================*/
+  void MotoGame::playLevel(LevelSrc *pLevelSrc) {
+    /* Clean up first, just for safe's sake */
+    endLevel();
+    
+    /* Create Lua state */
+    m_pL = lua_open();
+    luaopen_math(m_pL);
+    luaopen_Game(m_pL);    
+    m_pMotoGame = this;
+    
+    /* Clear stuff */
+    clearStates();
+    
+    m_bWheelSpin = false;
+    
+    m_fTime = 0.0f;
+    m_fFinishTime = 0.0f;
+    m_fLastAttitudeCon = -1000.0f;
+    m_fAttitudeCon = 0.0f;
+    
+    m_nStillFrames = 0;
+    m_nNumDummies = 0;
+    
+    m_Arrow.nArrowPointerMode = 0;
+        
+    m_PlayerFootAnchorBodyID = NULL;
+    m_PlayerHandAnchorBodyID = NULL;
+    m_PlayerTorsoBodyID = NULL;
+    m_PlayerUArmBodyID = NULL;
+    m_PlayerLArmBodyID = NULL;
+    m_PlayerULegBodyID = NULL;
+    m_PlayerLLegBodyID = NULL;
+    m_PlayerFootAnchorBodyID2 = NULL;
+    m_PlayerHandAnchorBodyID2 = NULL;
+    m_PlayerTorsoBodyID2 = NULL;
+    m_PlayerUArmBodyID2 = NULL;
+    m_PlayerLArmBodyID2 = NULL;
+    m_PlayerULegBodyID2 = NULL;
+    m_PlayerLLegBodyID2 = NULL;
+    
+    m_bDead = m_bFinished = false;
+    
+    /* Load and parse level script */
+    if(pLevelSrc->getScriptFile() != "") {
+      FileHandle *pfh = FS::openIFile(std::string("./Levels/") + pLevelSrc->getScriptFile());
+      if(pfh == NULL) {
+        lua_close(m_pL);
+        throw Exception("level script file not found");      
+      }
+      
+      std::string Line,ScriptBuf="";
+      
+      while(FS::readNextLine(pfh,Line)) {
+        if(Line.length() > 0) {
+          ScriptBuf.append(Line.append("\n"));
+        }
+      }
+      
+      FS::closeFile(pfh);
+
+      /* Use the Lua aux lib to load the buffer */
+      int nRet = luaL_loadbuffer(m_pL,ScriptBuf.c_str(),ScriptBuf.length(),pLevelSrc->getScriptFile().c_str()) ||
+                lua_pcall(m_pL,0,0,0);    
+       
+      /* Returned WHAT? */
+      if(nRet != 0) {
+        lua_close(m_pL);
+        throw Exception("failed to load level script");
+      }       
+    }    
+    
+    /* Initialize physics */
+    _InitPhysics();
+    
+    /* Set level source reference -- this tells the world that the level is ready */
+    m_pLevelSrc = pLevelSrc;
+    
+    /* Generate extended level data to be used by the game */
+    _GenerateLevel();
+    
+    /* Calculate bike stuff */
+    _CalculateBikeAnchors();    
+    Vector2f C( pLevelSrc->getPlayerStartX() - m_BikeA.Tp.x, pLevelSrc->getPlayerStartY() - m_BikeA.Tp.y);
+    _PrepareBikePhysics(C);
+    
+    /* Drive left-to-right for starters */
+    m_BikeS.Dir = DD_RIGHT;
+    
+    m_BikeS.fCurBrake = m_BikeS.fCurEngine = 0.0f;
+    
+    /* Spawn initial entities */
+    for(int i=0;i<m_pLevelSrc->getEntityList().size();i++) {
+      LevelEntity *pLEnt = m_pLevelSrc->getEntityList()[i];
+      
+      EntityType Type = _TransEntityType(pLEnt->TypeID);
+      if(Type != ET_UNASSIGNED) {
+        _SpawnEntity(pLEnt->ID,Type,Vector2f(pLEnt->fPosX,pLEnt->fPosY),pLEnt);        
+      }
+      else
+        Log("** Warning ** : Unknown entity type '%s' for '%s'",pLEnt->TypeID.c_str(),pLEnt->ID.c_str());
+    }
+    
+    /* Invoke the OnLoad() script function */
+    bool bOnLoadSuccess = scriptCallBool("OnLoad",true);  /* if no OnLoad(), assume success */
+
+    /* Success? */
+    if(!bOnLoadSuccess) {
+      /* Hmm, the script insists that we shouldn't begin playing... */
+      endLevel();      
+    }
+  }
+
+  /*===========================================================================
+  Free this game object
+  ===========================================================================*/
+  void MotoGame::endLevel(void) {
+    /* If not already freed */
+    if(m_pLevelSrc != NULL) {
+      /* Clean up */
+      while(m_Entities.size() > 0) _KillEntity(m_Entities[0]);
+      while(m_Blocks.size() > 0) {
+        while(m_Blocks[0]->Vertices.size() > 0) {
+          delete m_Blocks[0]->Vertices[0];
+          m_Blocks[0]->Vertices.erase( m_Blocks[0]->Vertices.begin() );
+        }
+        delete m_Blocks[0];
+        m_Blocks.erase( m_Blocks.begin() );
+      }
+      while(m_OvEdges.size() > 0) {
+        delete m_OvEdges[0];
+        m_OvEdges.erase( m_OvEdges.begin() );
+      }
+      lua_close(m_pL);
+
+      m_FSprites.clear();
+      m_BSprites.clear();
+      
+      /* Stop physics */
+      _UninitPhysics();
+      
+      /* Release reference to level source */
+      m_pLevelSrc = NULL;      
+    }
+    
+    /* Get rid of game messages */
+    for(int i=0;i<m_GameMessages.size();i++)
+      delete m_GameMessages[i];
+    m_GameMessages.clear();
+  }
+
+  /*===========================================================================
+  Level generation (i.e. parsing of level source)
+  ===========================================================================*/
+  void MotoGame::_GenerateLevel(void) {
+    if(m_pLevelSrc == NULL) {
+      Log("** Warning ** : Can't generate level when no source is assigned!");
+      return;
+    }
+    
+    /* Ok, our primary job is to convert the set of input blocks, which CAN
+       contain concave polygons, into a final set of (possibly) smaller 
+       blocks that are guaranteed to be convex. */
+    std::vector<LevelBlock *> &InBlocks = m_pLevelSrc->getBlockList();           
+    
+    Log("Generating level from %d block%s...",InBlocks.size(),InBlocks.size()==1?"":"s");
+    
+    /* For each input block */
+    for(int i=0;i<InBlocks.size();i++) {
+      /* Do the "convexifying" the BSP-way. It might be overkill, but we'll
+         probably appreciate it when the input data is very complex. It'll also 
+         let us handle crossing edges, and other kinds of weird input. */
+      BSP BSPTree;
+      
+      /* Define edges */
+      for(int j=0;j<InBlocks[i]->Vertices.size();j++) {
+        /* Next vertex? */
+        int jnext = j+1;
+        if(jnext == InBlocks[i]->Vertices.size()) jnext=0;
+        
+        /* Add as line def */
+        BSPTree.addLineDef( Vector2f(InBlocks[i]->Vertices[j]->fX,
+                                     InBlocks[i]->Vertices[j]->fY),
+                            Vector2f(InBlocks[i]->Vertices[jnext]->fX,
+                                     InBlocks[i]->Vertices[jnext]->fY) );                                             
+        /* Is this a special edge? */
+        if(InBlocks[i]->Vertices[j]->EdgeEffect != "") {
+          OverlayEdge *pEdge = new OverlayEdge;
+          pEdge->Effect = _TransEdgeEffect(InBlocks[i]->Vertices[j]->EdgeEffect);
+          pEdge->P1 = Vector2f(InBlocks[i]->Vertices[j]->fX,InBlocks[i]->Vertices[j]->fY);
+          pEdge->P2 = Vector2f(InBlocks[i]->Vertices[jnext]->fX,InBlocks[i]->Vertices[jnext]->fY);
+          pEdge->pSrcBlock = InBlocks[i];
+          m_OvEdges.push_back( pEdge );
+        }
+      }
+      
+      /* Compute */
+      std::vector<BSPPoly *> &BSPPolys = BSPTree.compute();      
+                  
+      /* Create blocks */
+      for(int j=0;j<BSPPolys.size();j++) {
+        _CreateBlock(BSPPolys[j],InBlocks[i]);
+      }
+      Log(" %d poly%s generated from block #%d",BSPPolys.size(),BSPPolys.size()==1?"":"s",i+1);
+    }
+    
+    Log(" %d special edge%s",m_OvEdges.size(),m_OvEdges.size()==1?"":"s");
+    Log(" %d poly%s in total",m_Blocks.size(),m_Blocks.size()==1?"":"s");
+    
+    /* Create level surroundings (by limits) */    
+    float fVMargin = 20,fHMargin = 20;
+    ConvexBlock *pBlock; 
+    ConvexBlockVertex *pVertex;
+    
+    /* TOP */
+    m_Blocks.push_back( pBlock = new ConvexBlock );    
+    pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
+    pVertex->P=Vector2f( m_pLevelSrc->getLeftLimit() - fHMargin, m_pLevelSrc->getTopLimit() + fVMargin);
+    pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
+    pVertex->P=Vector2f( m_pLevelSrc->getRightLimit() + fHMargin, m_pLevelSrc->getTopLimit() + fVMargin);
+    pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
+    pVertex->P=Vector2f( m_pLevelSrc->getRightLimit(), m_pLevelSrc->getTopLimit());
+    pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
+    pVertex->P=Vector2f( m_pLevelSrc->getLeftLimit(), m_pLevelSrc->getTopLimit());
+    pBlock->pSrcBlock = NULL;
+
+    /* BOTTOM */
+    m_Blocks.push_back( pBlock = new ConvexBlock );    
+    pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
+    pVertex->P=Vector2f( m_pLevelSrc->getRightLimit(), m_pLevelSrc->getBottomLimit());
+    pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
+    pVertex->P=Vector2f( m_pLevelSrc->getRightLimit() + fHMargin, m_pLevelSrc->getBottomLimit() - fVMargin);
+    pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
+    pVertex->P=Vector2f( m_pLevelSrc->getLeftLimit() - fHMargin, m_pLevelSrc->getBottomLimit() - fVMargin);
+    pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
+    pVertex->P=Vector2f( m_pLevelSrc->getLeftLimit(), m_pLevelSrc->getBottomLimit());
+    pBlock->pSrcBlock = NULL;
+
+    /* LEFT */
+    m_Blocks.push_back( pBlock = new ConvexBlock );    
+    pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
+    pVertex->P=Vector2f( m_pLevelSrc->getLeftLimit(), m_pLevelSrc->getTopLimit());
+    pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
+    pVertex->P=Vector2f( m_pLevelSrc->getLeftLimit(), m_pLevelSrc->getBottomLimit());
+    pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
+    pVertex->P=Vector2f( m_pLevelSrc->getLeftLimit() - fHMargin, m_pLevelSrc->getBottomLimit() - fVMargin);
+    pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
+    pVertex->P=Vector2f( m_pLevelSrc->getLeftLimit() - fHMargin, m_pLevelSrc->getTopLimit() + fVMargin);
+    pBlock->pSrcBlock = NULL;
+
+    /* RIGHT */
+    m_Blocks.push_back( pBlock = new ConvexBlock );    
+    pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
+    pVertex->P=Vector2f( m_pLevelSrc->getRightLimit(), m_pLevelSrc->getTopLimit());
+    pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
+    pVertex->P=Vector2f( m_pLevelSrc->getRightLimit() + fHMargin, m_pLevelSrc->getTopLimit() + fVMargin);
+    pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
+    pVertex->P=Vector2f( m_pLevelSrc->getRightLimit() + fHMargin, m_pLevelSrc->getBottomLimit() - fVMargin);
+    pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
+    pVertex->P=Vector2f( m_pLevelSrc->getRightLimit(), m_pLevelSrc->getBottomLimit());
+    pBlock->pSrcBlock = NULL;
+  }
+  
+  /*===========================================================================
+  Create block from BSP polygon
+  ===========================================================================*/
+  void MotoGame::_CreateBlock(BSPPoly *pPoly,LevelBlock *pSrcBlock) {
+    ConvexBlock *pBlock = new ConvexBlock;
+    pBlock->pSrcBlock = pSrcBlock;
+    
+    for(int i=0;i<pPoly->Vertices.size();i++) {
+      ConvexBlockVertex *pVertex = new ConvexBlockVertex;
+      
+      pVertex->P = pPoly->Vertices[i]->P;
+      
+      pBlock->Vertices.push_back( pVertex );
+    }
+    
+    m_Blocks.push_back( pBlock );
+  }
+  
+  /*===========================================================================
+  Calculate important bike anchor points from parameters 
+  ===========================================================================*/
+  void MotoGame::_CalculateBikeAnchors(void) {
+    m_BikeA.Tp = Vector2f( 0, -m_BikeP.Ch );
+    m_BikeA.Rp = m_BikeA.Tp + Vector2f( -0.5f*m_BikeP.Wb, m_BikeP.WR );
+    m_BikeA.Fp = m_BikeA.Tp + Vector2f( 0.5f*m_BikeP.Wb, m_BikeP.WR );
+    m_BikeA.AR = Vector2f(m_BikeP.RVx,m_BikeP.RVy);
+    m_BikeA.AF = Vector2f(m_BikeP.FVx,m_BikeP.FVy);
+    m_BikeA.AR2 = Vector2f(-m_BikeP.RVx,m_BikeP.RVy);
+    m_BikeA.AF2 = Vector2f(-m_BikeP.FVx,m_BikeP.FVy);
+    m_BikeA.PLAp = (Vector2f(m_BikeP.PEVx,m_BikeP.PEVy) + Vector2f(m_BikeP.PHVx,m_BikeP.PHVy))*0.5f;
+    m_BikeA.PUAp = (Vector2f(m_BikeP.PEVx,m_BikeP.PEVy) + Vector2f(m_BikeP.PSVx,m_BikeP.PSVy))*0.5f;
+    m_BikeA.PLLp = (Vector2f(m_BikeP.PFVx,m_BikeP.PFVy) + Vector2f(m_BikeP.PKVx,m_BikeP.PKVy))*0.5f;
+    m_BikeA.PULp = (Vector2f(m_BikeP.PLVx,m_BikeP.PLVy) + Vector2f(m_BikeP.PKVx,m_BikeP.PKVy))*0.5f;
+    m_BikeA.PTp = (Vector2f(m_BikeP.PLVx,m_BikeP.PLVy) + Vector2f(m_BikeP.PSVx,m_BikeP.PSVy))*0.5f;
+    m_BikeA.PHp = Vector2f(m_BikeP.PHVx,m_BikeP.PHVy);
+    m_BikeA.PFp = Vector2f(m_BikeP.PFVx,m_BikeP.PFVy);
+    m_BikeA.PLAp2 = (Vector2f(-m_BikeP.PEVx,m_BikeP.PEVy) + Vector2f(-m_BikeP.PHVx,m_BikeP.PHVy))*0.5f;
+    m_BikeA.PUAp2 = (Vector2f(-m_BikeP.PEVx,m_BikeP.PEVy) + Vector2f(-m_BikeP.PSVx,m_BikeP.PSVy))*0.5f;
+    m_BikeA.PLLp2 = (Vector2f(-m_BikeP.PFVx,m_BikeP.PFVy) + Vector2f(-m_BikeP.PKVx,m_BikeP.PKVy))*0.5f;
+    m_BikeA.PULp2 = (Vector2f(-m_BikeP.PLVx,m_BikeP.PLVy) + Vector2f(-m_BikeP.PKVx,m_BikeP.PKVy))*0.5f;
+    m_BikeA.PTp2 = (Vector2f(-m_BikeP.PLVx,m_BikeP.PLVy) + Vector2f(-m_BikeP.PSVx,m_BikeP.PSVy))*0.5f;
+    m_BikeA.PHp2 = Vector2f(-m_BikeP.PHVx,m_BikeP.PHVy);
+    m_BikeA.PFp2 = Vector2f(-m_BikeP.PFVx,m_BikeP.PFVy);
+  }
+
+  /*===========================================================================
+  Check whether the given circle touches the zone
+  ===========================================================================*/
+  bool MotoGame::_DoCircleTouchZone(const Vector2f &Cp,float Cr,LevelZone *pZone) {
+    /* Check each zone primitive */
+    for(int i=0;i<pZone->Prims.size();i++) {
+      if(pZone->Prims[i]->Type == LZPT_BOX) {
+        /* Do simple AABB-check */
+        Vector2f CMin(Cp.x-Cr,Cp.y-Cr);
+        Vector2f CMax(Cp.x+Cr,Cp.y+Cr);        
+        Vector2f FMin(CMin.x < pZone->Prims[i]->fLeft ? CMin.x : pZone->Prims[i]->fLeft,
+                      CMin.y < pZone->Prims[i]->fBottom ? CMin.y : pZone->Prims[i]->fBottom);
+        Vector2f FMax(CMax.x > pZone->Prims[i]->fRight ? CMax.x : pZone->Prims[i]->fRight,
+                      CMax.y > pZone->Prims[i]->fTop ? CMax.y : pZone->Prims[i]->fTop);
+        if(FMax.x - FMin.x < (CMax.x - CMin.x + pZone->Prims[i]->fRight - pZone->Prims[i]->fLeft) &&
+           FMax.y - FMin.y < (CMax.y - CMin.y + pZone->Prims[i]->fTop - pZone->Prims[i]->fBottom))
+          return true; /* Touch! */
+      }
+    }
+    
+    /* No touching! */
+    return false;
+  }
+  
+  /*===========================================================================
+  Update zone specific stuff -- call scripts where needed
+  ===========================================================================*/
+  void MotoGame::_UpdateZones(void) {
+    /* Check player touching for each zone */
+    for(int i=0;i<m_pLevelSrc->getZoneList().size();i++) {
+      LevelZone *pZone = m_pLevelSrc->getZoneList()[i];
+      
+      /* Check it against the wheels and the head */
+      if(_DoCircleTouchZone( m_BikeS.FrontWheelP,m_BikeP.WR,pZone ) ||
+         _DoCircleTouchZone( m_BikeS.RearWheelP,m_BikeP.WR,pZone )) {       
+        /* In the zone -- did he just enter it? */
+        if(!pZone->m_bInZone) {
+          /* Yup, notify script */
+          scriptCallTblVoid( pZone->ID,"OnEnter" );
+        }
+        pZone->m_bInZone = true;
+      }         
+      else {
+        /* Not in the zone... but was he during last update? - i.e. has 
+           he just left it? */      
+        if(pZone->m_bInZone) {
+          /* Yeah, notify script */
+          scriptCallTblVoid( pZone->ID,"OnLeave" );
+        }
+        pZone->m_bInZone = false;
+      }
+    }
+  }
+  
+  /*===========================================================================
+  Entity management
+  ===========================================================================*/
+  Entity *MotoGame::_SpawnEntity(std::string ID,EntityType Type,Vector2f Pos,LevelEntity *pSrc) {
+    /* Allocate entity */
+    Entity *pEnt = new Entity;
+    pEnt->Type = Type;
+    pEnt->pSrc = pSrc;
+    pEnt->Pos = Pos;
+    pEnt->ID = ID;
+    pEnt->fSize = 0.5f;
+    
+    if(pSrc != NULL) pEnt->fSize = pSrc->fSize;
+    
+    /* Init it */
+    switch(Type) {
+      case ET_SPRITE:
+        pEnt->fSpriteZ = 1.0f;              
+        if(pSrc != NULL)
+          pEnt->fSpriteZ = atof(m_pLevelSrc->getEntityParam(pSrc,"z","1.0").c_str());        
+          
+        pEnt->SpriteType = "";
+        if(pSrc != NULL)
+          pEnt->SpriteType = m_pLevelSrc->getEntityParam(pSrc,"name","");
+                          
+        /* Foreground/background? */
+        if(pEnt->fSpriteZ > 0.0f)
+          m_FSprites.push_back(pEnt); /* TODO: keep these lists ordered! */
+        else
+          m_BSprites.push_back(pEnt);
+        break;
+      case ET_WRECKER:
+        break;
+      case ET_ENDOFLEVEL:
+        break;
+      case ET_PLAYERSTART:
+        break;
+      case ET_PARTICLESOURCE:
+        pEnt->ParticleType = "";
+        if(pSrc != NULL)
+          pEnt->ParticleType = m_pLevelSrc->getEntityParam(pSrc,"type","");
+        pEnt->fNextParticleTime = 0;
+        break;
+      default:
+        /* TODO: Warning */        
+        ;
+    }
+    
+    /* Add it */
+    m_Entities.push_back(pEnt);
+        
+    /* Return it */
+    return pEnt;
+  }
+  
+  void MotoGame::_KillEntity(Entity *pEnt) { /* brutal */
+    for(int i=0;i<m_Entities.size();i++) {
+      if(m_Entities[i] == pEnt) {
+        delete pEnt;
+        m_Entities.erase(m_Entities.begin() + i);
+        return;
+      }
+    }
+    
+    /* TODO: Warning (not found) */
+  }
+
+  void MotoGame::_UpdateEntities(void) {
+    /* Do player touch anything? */
+    for(int i=0;i<m_Entities.size();i++) {    
+      if(circleTouchCircle2f(m_Entities[i]->Pos,m_Entities[i]->fSize,m_BikeS.HeadP,m_BikeP.fHeadSize)) {
+        touchEntity(m_Entities[i],true);
+      }
+      /* Wheel then? */
+      else if(circleTouchCircle2f(m_Entities[i]->Pos,m_Entities[i]->fSize,m_BikeS.FrontWheelP,m_BikeP.WR) ||
+              circleTouchCircle2f(m_Entities[i]->Pos,m_Entities[i]->fSize,m_BikeS.RearWheelP,m_BikeP.WR)) {
+        touchEntity(m_Entities[i],false);
+      }      
+    }
+  
+    /* Entities scheduled for termination? */
+    for(int i=0;i<m_DelSchedule.size();i++)
+      _KillEntity(m_DelSchedule[i]);
+    m_DelSchedule.clear();
+  }
+
+  EntityType MotoGame::_TransEntityType(std::string Name) {
+    if(Name == "Sprite") return ET_SPRITE;
+    if(Name == "PlayerStart") return ET_PLAYERSTART;
+    if(Name == "EndOfLevel") return ET_ENDOFLEVEL;
+    if(Name == "Wrecker") return ET_WRECKER;
+    if(Name == "Strawberry") return ET_STRAWBERRY;
+    if(Name == "ParticleSource") return ET_PARTICLESOURCE;
+    
+    return ET_UNASSIGNED;
+  }
+  
+  EdgeEffect MotoGame::_TransEdgeEffect(std::string Name) {
+    if(Name == "Grass") return EE_GRASS;
+    
+    return EE_UNASSIGNED;
+  }
+
+  /*===========================================================================
+  Entity stuff (public)
+  ===========================================================================*/
+  void MotoGame::deleteEntity(Entity *pEntity) {
+    /* Already scheduled for deletion? */
+    for(int i=0;i<m_DelSchedule.size();i++)
+      if(m_DelSchedule[i] == pEntity) return;
+    m_DelSchedule.push_back(pEntity);
+  }
+  
+  void MotoGame::touchEntity(Entity *pEntity,bool bHead) {
+    /* Start by invoking scripts if any */
+    scriptCallTblVoid(pEntity->ID,"Touch");
+    
+    /* What kind of entity? */
+    switch(pEntity->Type) {
+      case ET_SPRITE:        
+        break;
+      case ET_PLAYERSTART:
+        break;
+      case ET_ENDOFLEVEL:
+        /* How many strawberries left? */
+        if(countEntitiesByType(ET_STRAWBERRY) == 0) {
+          /* Level is done! */
+          m_bFinished = true;
+          m_fFinishTime = getTime();
+        }
+        break;
+      case ET_WRECKER:
+        /* Hmm :( */
+        m_bDead = true;
+        break;
+      case ET_STRAWBERRY:
+        /* OH... nice */
+        deleteEntity(pEntity);
+        break;
+    }
+  }
+  
+  int MotoGame::countEntitiesByType(EntityType Type) {
+    int n = 0;
+  
+    /* Count entities with this type */
+    for(int i=0;i<m_Entities.size();i++)
+      if(m_Entities[i]->Type == Type) n++;
+      
+    return n;
+  }
+
+};

@@ -1,0 +1,59 @@
+AC_INIT(src/GameMain.cpp)
+AM_INIT_AUTOMAKE(xmoto,0.1.7)
+AC_PROG_CC
+AC_PROG_CXX
+AC_PROG_INSTALL
+
+AC_CHECK_LIB(jpeg,jpeg_CreateCompress, [], [
+        echo "libjpeg required!"
+        exit -1
+        ])
+
+AC_CHECK_LIB(png,png_read_image, [], [
+        echo "libpng required!"
+        exit -1
+        ])
+
+AC_CHECK_LIB(SDL,SDL_Init, [], [
+        echo "SDL required!"
+        exit -1
+        ])
+
+AC_CHECK_LIB(GL,glVertex3f, [], [
+        echo "OpenGL required!"
+        exit -1
+        ])
+
+AC_CHECK_LIB(vorbis,vorbis_synthesis_blockin, [], [
+        echo "libvorbis required!"
+        exit -1
+        ])
+
+AC_CHECK_LIB(ogg,oggpack_adv, [], [
+        echo "libogg required!"
+        exit -1
+        ])
+
+AC_CHECK_LIB(vorbisfile,ov_read, [], [
+        echo "vorbisfile required!"
+        exit -1
+        ])
+        
+AC_CHECK_LIB(lua50,lua_pushboolean, [], [
+        echo "liblua50 required!"
+        exit -1
+        ])
+
+AC_CHECK_LIB(lualib50,luaopen_math, [], [
+        echo "liblualib50 required!"
+        exit -1
+        ])
+
+AC_CHECK_LIB(ode,dJointAttach, [], [
+        echo "libode required!"
+        exit -1
+        ])
+
+AC_OUTPUT(Makefile bin/Makefile)
+
+

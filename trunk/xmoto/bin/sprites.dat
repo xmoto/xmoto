@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- This file defines sprites -->
+<spritedata>
+	
+	<sprite name="Grass1">
+		<size width="0.5" height="0.5"/>
+		<center x="0.25" y="0.15"/>
+	</sprite>
+	
+	<sprite name="Tree1">
+		<size width="5" height="6"/>
+		<center x="2.5" y="0.2"/>
+	</sprite>
+	
+	<sprite name="BlankSignLeft1">
+		<size width="1.5" height="1.5"/>
+		<center x="0.75" y="0.1"/>
+	</sprite>
+
+	<sprite name="BlankSignRight1">
+		<size width="1.5" height="1.5"/>
+		<center x="0.75" y="0.1"/>
+	</sprite>
+	
+	<sprite name="FinSignLeft1">
+		<size width="1.5" height="1.5"/>
+		<center x="0.75" y="0.1"/>
+	</sprite>
+	
+	<sprite name="FinSignRight1">
+		<size width="1.5" height="1.5"/>
+		<center x="0.75" y="0.1"/>
+	</sprite>
+	
+	<sprite name="ThisWaySignLeft1">
+		<size width="1.5" height="1.5"/>
+		<center x="0.75" y="0.1"/>
+	</sprite>
+	
+	<sprite name="ThisWaySignRight1">
+		<size width="1.5" height="1.5"/>
+		<center x="0.75" y="0.1"/>
+	</sprite>
+
+	<sprite name="HangingVines1">
+		<size width="3.0" height="4.0"/>
+		<center x="1.5" y="3.6"/>
+	</sprite>
+	
+	<sprite name="HangingVines2">
+		<size width="3.0" height="4.0"/>
+		<center x="1.5" y="3.6"/>
+	</sprite>
+	
+	<sprite name="SnowMan">
+		<size width="1.5" height="2.0"/>
+		<center x="0.75" y="0.3"/>
+	</sprite>
+	
+	
+</spritedata>
+
+

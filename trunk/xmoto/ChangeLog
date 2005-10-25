@@ -1,0 +1,142 @@
+X-Moto 0.1.7 (alpha)  2005-
+--------------------------------
+
+ * Finally some sounds effects (not all yet).
+ * Configurable controls.
+ * Joystick/gamepad support.
+ * Double-clicking in lists to activate items.
+ * Non-windows release now dynamically linked with ODE and
+   LUA libraries.
+ * Paul Nettle's MMGR no longer included in the non-windows
+   release. Apparantly its (custom) license conflicted with
+   the Debian Free Software Guideline #6 (No Discrimination 
+   Against Fields of Endeavor) by stating:
+   
+    - "You may not use this software to directly or indirectly 
+      cause harm to others."
+      
+   So this is good news if you want to burn X-Moto unto a CD
+   and kill someone with it! :)
+
+X-Moto 0.1.6 (alpha)  2005-10-05
+--------------------------------
+
+ * New built-in levels.
+ * Now with sound back on (still no effects, though).
+ * Fixed bug that allowed disabled user interface buttons to
+   be selected with the keyboard.
+ * PgUp/PgDown now works in scroll lists.
+ * Clearified some error messages.
+ * Slight user interface adjustments.
+ * Removed GLU dependency.
+ * User interface scaling is now disabled, enabling better
+   support of resolutions higher than 800x600.
+ * Resolutions below 800x600 are no longer supported.
+ * Updated particle effects.
+
+X-Moto 0.1.5 (alpha)  2005-10-03
+--------------------------------
+
+Game:
+
+ * Loading screen at start-up.
+ * New particle effects.
+ * Built-in level 15 is now less difficult.
+ * Mouse wheel support.
+ * Fixed bug that caused most mouse events to be processed as
+   left button clicks.
+ * Updated user interface.
+ * Some code clean-up.
+
+X-Moto 0.1.4 (alpha)  2005-09-29
+--------------------------------
+
+Game:
+
+ * The -level option is now handled right.
+ * New -fps option.
+ * Built-in level 14 is no longer impossible.
+ * New built-in levels.
+ * New graphics.
+ * Scroll lists can actually scroll now.
+ * Nicer menu font.
+ * Minor changes and bug-fixes.
+ 
+Windows specific:
+
+ * Fewer statically linked libraries, more DLLs instead.
+
+X-Moto 0.1.3 (alpha)  2005-08-21
+--------------------------------
+
+Game:
+
+ * Partial sound support disabled.
+ * Higher framerate in built-in level "Burning Caves".
+ * Mouse cursor now hidden when playing.
+ * Internal data file packaging.
+ * New built-in levels.
+ * Minor changes and bug-fixes.
+ 
+Editor:
+ 
+ * Minor changes and bug-fixes.
+ 
+Windows specific:
+
+ * DLLs no longer packed with UPX, as it caused problems for some 
+   people. 
+
+X-Moto 0.1.2 (alpha)  2005-06-13
+--------------------------------
+
+Game:
+
+ * Major rendering pipeline optimizations.
+ * Replay support is only partially implemented, so it is now 
+   hidden.
+ * Renderer now obeys graphical quality settings.
+ * New configuration options.
+ * New built-in levels.
+
+X-Moto 0.1.1 (alpha)  2005-06-08
+--------------------------------
+
+Game:
+
+ * Now possible to control the menus by keyboard.
+ * Screenshot by pressing F12. The image is then saved in the user 
+   directory as a .png file.
+ * New built-in levels.
+ * Built-in level "Floating Bricks" is no longer impossible.
+ * Larger flower/strawberry radius (i.e. you touch them from a longer
+   distance).
+ * Minor driving model adjustments: Left and right keys more 
+   effective, less wheel rolling resistance, and more brake power.
+ * Two new command-line options for xmoto: -listreplays lists all 
+   stored replays, and -listlevels lists all installed levels.
+ * No longer sound in -nogfx mode.
+ * Bug in UI code that could cause memory corruption fixed.
+ * Many minor bugs fixed.
+
+Editor:
+
+ * Levels are now saved in the right directory regardless of where
+   the program is run from.
+
+Linux specific:
+
+ * Now you can install the game locally by using the --prefix option
+   for ./configure.
+ * No longer dependant on access to /dev/dsp.
+ * Various compatibility issues fixed.
+      
+Windows specific:
+ 
+ * Uninstall now also removes the start menu items proberly.
+ * Added missing run-time DLL to distribution.
+   
+X-Moto 0.1.0 (alpha)  2005-05-29
+--------------------------------
+
+First official release.
