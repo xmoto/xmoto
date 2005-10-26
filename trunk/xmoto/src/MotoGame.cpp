@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "MotoGame.h"
 #include "VFileIO.h"
 #include "BSP.h"
+#include "Sound.h"
 
 namespace vapp {
 
@@ -908,6 +909,10 @@ namespace vapp {
       case ET_STRAWBERRY:
         /* OH... nice */
         deleteEntity(pEntity);
+        
+        /* Play yummy-yummy sound */
+        Sound::playSampleByName("Sounds/PickUpStrawberry.ogg");
+        
         break;
     }
   }

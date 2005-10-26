@@ -3,15 +3,6 @@ Copyright (C) 2005 Rasmus Neckelmann (neckelmann@gmail.com)
 
 http://xmoto.sourceforge.net
 
-NOTES ABOUT 0.1.7: 
- * The sound system is not good. I'll change to SDL_mixer in one of the 
-   next releases.
- * Due to the change of level numbering for this release, your previous
-   high scores will probably be invalid. If that is a problem to you,
-   please make a backup copy of your players.bin file. 
-   Under all circumstances you should delete your old players.bin file
-   when upgrading to 0.1.7.
-
 IMPORTANT: This is an ALPHA release of the game, which means that many
 things aren't production stable. Also note that the final release of
 the game will include many more levels.

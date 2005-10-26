@@ -12,6 +12,11 @@
 		<size width="5" height="6"/>
 		<center x="2.5" y="0.2"/>
 	</sprite>
+
+	<sprite name="Tree2">
+		<size width="5" height="6"/>
+		<center x="2.5" y="0.2"/>
+	</sprite>
 	
 	<sprite name="BlankSignLeft1">
 		<size width="1.5" height="1.5"/>

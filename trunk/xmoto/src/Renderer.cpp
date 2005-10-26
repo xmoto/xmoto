@@ -268,10 +268,10 @@ namespace vapp {
         m_fCurrentHorizontalScrollShift = m_fDesiredHorizontalScrollShift;
       }
       else if(d < 0.0f) {
-        m_fCurrentHorizontalScrollShift -= 0.1f;
+        m_fCurrentHorizontalScrollShift -= 0.1f * m_fSpeedMultiply;
       }
       else if(d > 0.0f) {
-        m_fCurrentHorizontalScrollShift += 0.1f;
+        m_fCurrentHorizontalScrollShift += 0.1f * m_fSpeedMultiply;
       }
     }
 

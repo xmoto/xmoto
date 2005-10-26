@@ -40,6 +40,9 @@ namespace vapp {
     unsigned char *pcBuf;
     SDL_AudioCVT cvt;
     std::string Name;
+    
+    /* Used by SDL_mixer */
+    Mix_Chunk *pChunk;
   };
 
 	/*===========================================================================
@@ -194,6 +197,12 @@ namespace vapp {
     private:
       /* SDL audio callback */
       static void audioCallback(void *pvUserData,unsigned char *pcStream,int nLen); 
+      
+      /* SDL_mixer callbacks (RWops) */
+      static int RWops_seek(SDL_RWops *context,int offset,int whence);
+      static int RWops_read(SDL_RWops *context,void *ptr,int size,int maxnum);
+      static int RWops_write(SDL_RWops *context,const void *ptr,int size,int num);
+      static int RWops_close(SDL_RWops *context);      
     
       /* Data */
       static bool m_bEnable;               /* From config: AudioEnable */

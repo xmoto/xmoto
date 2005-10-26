@@ -26,6 +26,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "UserConfig.h"
 #include "Sound.h"
 
+#define USE_SDL_MIXER 1
+
 namespace vapp {
 
   /*===========================================================================
@@ -100,36 +102,65 @@ namespace vapp {
       return;
     }
     
-    /* Open audio device */
-    m_ASpec.freq = m_nSampleRate;
-    if(m_nSampleBits == 8)
-      m_ASpec.format = AUDIO_S8;
-    else
-      m_ASpec.format = AUDIO_S16;
-    m_ASpec.samples = 1024; /* buffered samples */    
-    m_ASpec.callback = audioCallback;
-    m_ASpec.channels = m_nChannels;
-    m_ASpec.userdata = NULL;
-    
-    if(SDL_OpenAudio(&m_ASpec,NULL) < 0) {
-      Log("** Warning ** : failed to open audio device (%s)",SDL_GetError());
-      SDL_QuitSubSystem(SDL_INIT_AUDIO);
-      m_bEnable = false;
-      return;
-    }
-    
-    /* Start playing */
-    SDL_PauseAudio(0);
+    #if USE_SDL_MIXER
+      int nFormat;
+      if(m_nSampleBits == 8) nFormat = AUDIO_S8;
+      else nFormat = AUDIO_S16;
+      
+      if(Mix_OpenAudio(m_nSampleRate,nFormat,m_nChannels,1024) < 0) {
+        Log("** Warning ** : failed to open mixer device (%s)",Mix_GetError());
+        SDL_QuitSubSystem(SDL_INIT_AUDIO);
+        m_bEnable = false;
+        return;
+      }
+      
+      Mix_AllocateChannels(1); /* one is enough */
+      
+    #else /* Not using SDL_mixer */
+      /* Open audio device */
+      m_ASpec.freq = m_nSampleRate;
+      if(m_nSampleBits == 8)
+        m_ASpec.format = AUDIO_S8;
+      else
+        m_ASpec.format = AUDIO_S16;
+      m_ASpec.samples = 1024; /* buffered samples */    
+      m_ASpec.callback = audioCallback;
+      m_ASpec.channels = m_nChannels;
+      m_ASpec.userdata = NULL;
+      
+      if(SDL_OpenAudio(&m_ASpec,NULL) < 0) {
+        Log("** Warning ** : failed to open audio device (%s)",SDL_GetError());
+        SDL_QuitSubSystem(SDL_INIT_AUDIO);
+        m_bEnable = false;
+        return;
+      }
+      
+      /* Start playing */
+      SDL_PauseAudio(0);
+    #endif
   }
   
   void Sound::uninit(void) {  
-    /* Free loaded samples */
-    for(int i=0;i<m_Samples.size();i++) {
-      delete [] m_Samples[i]->pcBuf;
-      delete m_Samples[i];
-    }
-    m_Samples.clear();
-  
+    #if USE_SDL_MIXER
+      if(isEnabled()) {
+        Mix_CloseAudio();
+      }      
+
+      /* Free loaded samples */
+      for(int i=0;i<m_Samples.size();i++) {
+        Mix_FreeChunk(m_Samples[i]->pChunk);
+        delete m_Samples[i];
+      }
+      m_Samples.clear();
+    #else /* Not using SDL_mixer */
+      /* Free loaded samples */
+      for(int i=0;i<m_Samples.size();i++) {
+        delete [] m_Samples[i]->pcBuf;
+        delete m_Samples[i];
+      }
+      m_Samples.clear();
+    #endif
+    
     /* Quit sound system if enabled */
     if(isEnabled()) {
       SDL_QuitSubSystem(SDL_INIT_AUDIO);
@@ -297,21 +328,25 @@ namespace vapp {
   Update sound system
   ==============================================================================*/
   void Sound::update(void) {
-    /* Walk through all player slots, and update them */
-    SDL_LockAudio();
-    for(int i=0;i<16;i++) {
-      if(m_pPlayers[i] != NULL) {
-        m_pPlayers[i]->update();
-                
-        /* Do it want to die? */
-        if(m_pPlayers[i]->isDone()) {
-          m_pPlayers[i]->shutdownPlayer();        
-          delete m_pPlayers[i];
-          m_pPlayers[i] = NULL;
-        }
-      }      
-    }    
-    SDL_UnlockAudio();
+    #if USE_SDL_MIXER
+      /* ... */
+    #else /* Not using SDL_mixer */
+      /* Walk through all player slots, and update them */
+      SDL_LockAudio();
+      for(int i=0;i<16;i++) {
+        if(m_pPlayers[i] != NULL) {
+          m_pPlayers[i]->update();
+                  
+          /* Do it want to die? */
+          if(m_pPlayers[i]->isDone()) {
+            m_pPlayers[i]->shutdownPlayer();        
+            delete m_pPlayers[i];
+            m_pPlayers[i] = NULL;
+          }
+        }      
+      }    
+      SDL_UnlockAudio();
+    #endif
   }
       
   /*==============================================================================
@@ -342,72 +377,143 @@ namespace vapp {
     m_nPosition = 0;
   }
 
+  int Sound::RWops_seek(SDL_RWops *context,int offset,int whence) {
+    FileHandle *pf = (FileHandle *)context->hidden.unknown.data1;
+    switch(whence) {
+      case SEEK_SET: FS::setOffset(pf,offset); break;
+      case SEEK_END: FS::setOffset(pf,FS::getLength(pf)); break;
+      case SEEK_CUR: FS::setOffset(pf,FS::getOffset(pf) + offset); break;
+    }
+    return FS::getOffset(pf);    
+  }
+  
+  int Sound::RWops_read(SDL_RWops *context,void *ptr,int size,int maxnum) {
+    FileHandle *pf = (FileHandle *)context->hidden.unknown.data1;
+    if(FS::isEnd(pf)) return 0;
+    
+    int nRemaining = (FS::getLength(pf) - FS::getOffset(pf)) / size;
+    
+    int nToRead = nRemaining < maxnum ? nRemaining : maxnum;
+    
+    if(!FS::readBuf(pf,(char *)ptr,size*nToRead))
+      return 0;
+      
+    return nToRead;
+  }
+
+  int Sound::RWops_write(SDL_RWops *context,const void *ptr,int size,int num) {
+    return num;
+  }
+  
+  int Sound::RWops_close(SDL_RWops *context) {    
+    return 0;
+  }
+ 
   SoundSample *Sound::loadSample(const std::string &File) {
     if(!Sound::isEnabled())
       throw Exception("Can't load sample, sound is disabled!");
+    
+    #if USE_SDL_MIXER
+      /* Allocate sample */
+      SoundSample *pSample = new SoundSample;
+      pSample->Name = File;
       
-    /* Start loading sample */
-    VorbisSound vs;
-    vs.openFile(File);
-    
-    /* Allocate sample */
-    SoundSample *pSample = new SoundSample;
-    
-    /* Build conversion structure */    
-    Uint16 nSrcFormat,nDstFormat;
-    Uint8 nSrcChannels,nDstChannels;
-    int nSrcRate,nDstRate;
-    
-    if(Sound::getSampleBits() == 8) nDstFormat = AUDIO_S8;
-    else nDstFormat = AUDIO_S16;
-    
-    nDstChannels = Sound::getChannels();
-    nDstRate = Sound::getSampleRate();
-    
-    if(vs.getSampleBits() == 8) nSrcFormat = AUDIO_S8;
-    else nSrcFormat = AUDIO_S16;
-    
-    nSrcChannels = vs.getChannels();
-    nSrcRate = vs.getSampleRate();
-                   
-    if(SDL_BuildAudioCVT(&pSample->cvt,nSrcFormat,nSrcChannels,nSrcRate,nDstFormat,nDstChannels,nDstRate) < 0) {
+      /* Setup a RW_ops struct */
+      SDL_RWops *pOps = SDL_AllocRW();
+      pOps->close = RWops_close;
+      pOps->read = RWops_read;
+      pOps->seek = RWops_seek;
+      pOps->write = RWops_write;
+      pOps->type = 1000;
+      
+      /* Open */
+      FileHandle *pf = FS::openIFile(File);
+      if(pf == NULL) {
+        SDL_FreeRW(pOps);
+        throw Exception("failed to open sample file");
+      }
+      
+      pOps->hidden.unknown.data1 = (void *)pf;
+      
+      /* Loadit */
+      pSample->pChunk = Mix_LoadWAV_RW(pOps,1);
+      
+      /* Close file */
+      FS::closeFile(pf);
+      
+      m_Samples.push_back(pSample);
+      return pSample;            
+      
+    #else /* Not using SDL_mixer */
+      /* Start loading sample */
+      VorbisSound vs;
+      vs.openFile(File);
+      
+      /* Allocate sample */
+      SoundSample *pSample = new SoundSample;
+      
+      /* Build conversion structure */    
+      Uint16 nSrcFormat,nDstFormat;
+      Uint8 nSrcChannels,nDstChannels;
+      int nSrcRate,nDstRate;
+      
+      if(Sound::getSampleBits() == 8) nDstFormat = AUDIO_S8;
+      else nDstFormat = AUDIO_S16;
+      
+      nDstChannels = Sound::getChannels();
+      nDstRate = Sound::getSampleRate();
+      
+      if(vs.getSampleBits() == 8) nSrcFormat = AUDIO_S8;
+      else nSrcFormat = AUDIO_S16;
+      
+      nSrcChannels = vs.getChannels();
+      nSrcRate = vs.getSampleRate();
+                     
+      if(SDL_BuildAudioCVT(&pSample->cvt,nSrcFormat,nSrcChannels,nSrcRate,nDstFormat,nDstChannels,nDstRate) < 0) {
+        vs.closeFile();
+        delete pSample;
+        Log("** Warning ** : Sound::loadSample() : Failed to prepare audio conversion for '%s'!",File.c_str());
+        throw Exception("unsupported audio format");
+      } 
+      
+      /* Decode entire .ogg */
+      unsigned char *pcRaw = new unsigned char[vs.getLength()];    
+      vs.decode(pcRaw,vs.getLength());
+              
+      /* Convert */
+      pSample->nBufSize = (int)((float)vs.getLength() * pSample->cvt.len_ratio);
+      pSample->pcBuf = new unsigned char[pSample->nBufSize * 4]; /* stupid, but i'm lazy */
+      memcpy(pSample->pcBuf,pcRaw,vs.getLength());
+      pSample->cvt.buf = (Uint8 *)pSample->pcBuf;
+      pSample->cvt.len = vs.getLength();
+      
+      pSample->Name = File;
+      
+      delete [] pcRaw;
+      
+      /* Register and return */    
       vs.closeFile();
-      delete pSample;
-      Log("** Warning ** : Sound::loadSample() : Failed to prepare audio conversion for '%s'!",File.c_str());
-      throw Exception("unsupported audio format");
-    } 
-    
-    /* Decode entire .ogg */
-    unsigned char *pcRaw = new unsigned char[vs.getLength()];    
-    vs.decode(pcRaw,vs.getLength());
-            
-    /* Convert */
-    pSample->nBufSize = (int)((float)vs.getLength() * pSample->cvt.len_ratio);
-    pSample->pcBuf = new unsigned char[pSample->nBufSize * 4]; /* stupid, but i'm lazy */
-    memcpy(pSample->pcBuf,pcRaw,vs.getLength());
-    pSample->cvt.buf = (Uint8 *)pSample->pcBuf;
-    pSample->cvt.len = vs.getLength();
-    
-    pSample->Name = File;
-    
-    delete [] pcRaw;
-    
-    /* Register and return */    
-    vs.closeFile();
-    m_Samples.push_back(pSample);
-    
-    return pSample;
+      m_Samples.push_back(pSample);
+      
+      return pSample;
+    #endif
   }
   
   void Sound::playSample(SoundSample *pSample) {
     if(pSample == NULL || !isEnabled()) return;
-  
-    int nSlot = _GetFreePlayerSlot();
-    if(nSlot<0) return;
-    
-    SamplePlayer *pPlayer = new SamplePlayer;
-    pPlayer->initSample(pSample);
-    m_pPlayers[nSlot] = (SoundPlayer *)pPlayer;
+
+    #if USE_SDL_MIXER      
+      /* WHY OH WHY does this pause the game thread for 200-300 ms on linux??? :( */
+      Mix_PlayChannel(-1,pSample->pChunk,0);
+      
+    #else /* Not using SDL_mixer */  
+      int nSlot = _GetFreePlayerSlot();
+      if(nSlot<0) return;
+      
+      SamplePlayer *pPlayer = new SamplePlayer;
+      pPlayer->initSample(pSample);
+      m_pPlayers[nSlot] = (SoundPlayer *)pPlayer;
+    #endif
   }
   
   SoundSample *Sound::findSample(const std::string &File) {
@@ -429,12 +535,16 @@ namespace vapp {
   Stream playing
   ==============================================================================*/
   void Sound::playStream(std::string File) {
-    int nSlot = _GetFreePlayerSlot();
-    if(nSlot<0) return; /* TODO: add request to some kind of queue, so we can
-                                 play it later */    
-    StreamPlayer *pStream = new StreamPlayer;
-    pStream->initStream(File,1024*100);
-    m_pPlayers[nSlot] = (SoundPlayer *)pStream;
+    #if USE_SDL_MIXER
+      /* .. */
+    #else /* Not using SDL_mixer */
+      int nSlot = _GetFreePlayerSlot();
+      if(nSlot<0) return; /* TODO: add request to some kind of queue, so we can
+                                  play it later */    
+      StreamPlayer *pStream = new StreamPlayer;
+      pStream->initStream(File,1024*100);
+      m_pPlayers[nSlot] = (SoundPlayer *)pStream;
+    #endif
   }
 
   void StreamPlayer::initStream(std::string File,int nBufSize) {

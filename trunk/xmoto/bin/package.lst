@@ -7,6 +7,7 @@ Textures/MoltenRock.jpg
 
 Sounds/Button1.ogg
 Sounds/Button3.ogg
+Sounds/PickUpStrawberry.ogg
 
 Levels/i00.lvl
 Levels/i00.lvs
@@ -100,6 +101,20 @@ Textures/Anims/Wrecker22.png
 Textures/Anims/Wrecker23.png
 Textures/Anims/Wrecker24.png
 
+Textures/Anims/FlagDown1.png
+Textures/Anims/FlagDown2.png
+Textures/Anims/FlagDown3.png
+
+Textures/Anims/FlagGoingUp1.png
+Textures/Anims/FlagGoingUp2.png
+Textures/Anims/FlagGoingUp3.png
+Textures/Anims/FlagGoingUp4.png
+Textures/Anims/FlagGoingUp5.png
+
+Textures/Anims/FlagUp1.png
+Textures/Anims/FlagUp2.png
+Textures/Anims/FlagUp3.png
+
 Textures/Bikes/Body1.png
 Textures/Bikes/Front1.png
 Textures/Bikes/Rear1.png
@@ -138,6 +153,7 @@ Textures/Sprites/SnowMan.png
 Textures/Sprites/ThisWaySignLeft1.png
 Textures/Sprites/ThisWaySignRight1.png
 Textures/Sprites/Tree1.png
+Textures/Sprites/Tree2.png
 
 Textures/UI/MenuBL.png
 Textures/UI/MenuBR.png

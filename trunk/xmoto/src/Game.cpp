@@ -330,6 +330,8 @@ namespace vapp {
 //        Sound::loadSample("Sounds/Button2.ogg");
         Sound::loadSample("Sounds/Button3.ogg");
         
+        Sound::loadSample("Sounds/PickUpStrawberry.ogg");
+        
         Log(" %d sound%s loaded",Sound::getNumSamples(),Sound::getNumSamples()==1?"":"s");
       }
       _UpdateLoadingScreen((1.0f/8.0f) * 1,pLoadingScreen);
@@ -539,11 +541,33 @@ namespace vapp {
     
     /* Current time? */
     static int nADelay = 0;
+    static int nFCount = 0;
     double fFrameTime = getRealTime();
     double fFrameRenderingTime = fFrameTime - m_fLastFrameTime;
     double fFramesPerSecond = 1.0f / fFrameRenderingTime;
     m_fLastFrameTime = fFrameTime;
-  
+
+    if(fFramesPerSecond < 90) {
+      if(nFCount < 0) nFCount = 0;
+      nFCount++;
+    }
+    else {
+      if(nFCount > 0) nFCount = 0;
+      nFCount--;
+    }
+    
+    if(!isNoGraphics()) {
+      if(!m_b50FpsMode && nFCount > 100) {
+        m_b50FpsMode = true;
+        m_Renderer.setSpeedMultiplier(2);   
+        printf("entering 50 fps!\n");
+      }
+      else if(m_b50FpsMode && nFCount < -100) {
+        m_b50FpsMode = false;
+        m_Renderer.setSpeedMultiplier(1);   
+        printf("entering 100 fps!\n");
+      }
+    }
     /* What state? */
     switch(m_State) {
       case GS_MENU:
@@ -592,6 +616,9 @@ namespace vapp {
           
           /* Update game */
           m_MotoGame.updateLevel( PHYS_STEP_SIZE );                
+          
+          if(m_b50FpsMode) /* if we're aiming for 50 fps instead of 100, do an extra step now */
+            m_MotoGame.updateLevel( PHYS_STEP_SIZE );                
         }
         else if(m_State == GS_REPLAYING) {
           /* Updates for this frame? */
@@ -661,7 +688,11 @@ namespace vapp {
         float fEndFrameTime = getTime();
         
         /* Delay */
-        nADelay = (PHYS_STEP_SIZE - (fEndFrameTime-fStartFrameTime)) * 1000.0f;
+        if(m_b50FpsMode)
+          nADelay = (2.0f * PHYS_STEP_SIZE - (fEndFrameTime-fStartFrameTime)) * 1000.0f;
+        else
+          nADelay = (PHYS_STEP_SIZE - (fEndFrameTime-fStartFrameTime)) * 1000.0f;
+          
         if(nADelay > 0) {
           if(!m_bTimeDemo)
             SDL_Delay(nADelay);

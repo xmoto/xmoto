@@ -75,7 +75,8 @@ namespace vapp {
                  m_pQuitMsgBox=NULL;
                  m_pNotifyMsgBox=NULL;
                  m_pNewProfileMsgBox=NULL;
-                 m_pDeleteProfileMsgBox=NULL;}
+                 m_pDeleteProfileMsgBox=NULL;
+                 m_b50FpsMode = false;}
         
       /* Virtual methods */
       virtual void drawFrame(void);
@@ -122,6 +123,8 @@ namespace vapp {
       
       double m_fLastFrameTime;                  /* When the last frama was initiated */
       double m_fLastPerfStateTime;
+      
+      bool m_b50FpsMode;
       
       /* Sound effects */
       SoundSample *m_pEndOfLevelSFX;

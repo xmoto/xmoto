@@ -54,5 +54,10 @@ AC_CHECK_LIB(ode,dJointAttach, [], [
         exit -1
         ])
 
+AC_CHECK_LIB(SDL_mixer,Mix_OpenAudio, [], [
+        echo "SDL_mixer required!"
+        exit -1
+        ])
+
 AC_OUTPUT(Makefile bin/Makefile)
 

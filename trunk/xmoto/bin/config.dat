@@ -7,7 +7,7 @@
 	<var name="DisplayWindowed" value="false"/>
 	<var name="MenuBackgroundGraphics" value="High"/>
 	<var name="GameGraphics" value="High"/>
-	<var name="AudioEnable" value="true"/>
+	<var name="AudioEnable" value="false"/>
 	<var name="AudioSampleRate" value="22050"/>
 	<var name="AudioSampleBits" value="16"/>
 	<var name="AudioChannels" value="Mono"/>
@@ -27,7 +27,7 @@
 	<var name="JoyButtonFlipRight1" value="1"/>
 	<var name="JoyButtonChangeDir1" value="2"/>
 	<var name="JoystickLimboArea" value="0.07"/>
-	<var name="DefaultProfile" value="hest"/>
+	<var name="DefaultProfile" value="hst"/>
 	<var name="ScreenshotFormat" value="png"/>
 	<var name="NotifyAtInit" value="false"/>
 	<var name="ShowMiniMap" value="true"/>

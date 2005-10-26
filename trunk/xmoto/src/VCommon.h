@@ -49,9 +49,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   typedef void (*PFNGLBINDBUFFERARBPROC)(GLenum target, GLuint buffer);
   typedef void (*PFNGLDELETEBUFFERSARBPROC)(GLsizei n, const GLuint *buffers); 
   typedef void (*PFNGLGENBUFFERSARBPROC)(GLsizei n, GLuint *buffers);
+
+/* Don't know how to check for 64-bit, can't do this :( */
   typedef void (*PFNGLBUFFERDATAARBPROC)(GLenum target, int size, const GLvoid *data, GLenum usage);
+//  typedef void (*PFNGLBUFFERDATAARBPROC)(GLenum target, GLsizeiptrARB size, const GLvoid *data, GLenum usage);  
 #endif
 #include <SDL/SDL.h>
+#include <SDL/SDL_mixer.h>
 
 #include <string>
 #include <vector>

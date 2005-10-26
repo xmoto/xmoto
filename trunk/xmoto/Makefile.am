@@ -1,5 +1,6 @@
 CXXFLAGS = -DNOMMGR -w -O2 -DGAMEDATADIR=\"$(datadir)/@PACKAGE@\"
 CFLAGS = -DNOMMGR -w -O2 -DGAMEDATADIR=\"$(datadir)/@PACKAGE@\"
+SUBDIRS = bin
 
 image_SOURCES = src/image/tim.cpp src/image/tim_io_stdio.cpp \
 	src/image/tim_jpeg.cpp src/image/tim_memory_crt.cpp \

@@ -153,7 +153,7 @@ namespace vapp {
   ===========================================================================*/
   class GameRenderer {
     public:
-      GameRenderer() {m_nNumSpriteTypes=0; m_bDebug=false; m_Quality=GQ_HIGH;}
+      GameRenderer() {m_nNumSpriteTypes=0; m_bDebug=false; m_Quality=GQ_HIGH; m_fSpeedMultiply=1.0f;}
       ~GameRenderer() {_Free();}
     
       /* Methods */
@@ -178,6 +178,7 @@ namespace vapp {
       UIFont *getMediumFont(void) {return m_pMFont;}
       void setBestTime(std::string s) {m_pBestTime->setCaption(s);}
       void setQuality(GraphQuality Quality) {m_Quality = Quality;}      
+      void setSpeedMultiplier(float f) {m_fSpeedMultiply = f;}
     
     private:
       /* Data */
@@ -204,6 +205,8 @@ namespace vapp {
       UIWindow *m_pInGameStats;
       UIStatic *m_pPlayTime;   
       UIStatic *m_pBestTime;
+      
+      float m_fSpeedMultiply;
       
       UIFont *m_pMFont,*m_pSFont;
       

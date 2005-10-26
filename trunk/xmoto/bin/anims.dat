@@ -2,7 +2,7 @@
 
 <!-- This file defines animations -->
 <animationdata>
-	
+		
 	<animation name="Flower">
 		<size width="1" height="1"/>
 		<delay time="0.05"/>
@@ -144,6 +144,36 @@
 		<center x="0.5" y="0.51"/>
 		<frame file="Anims/Strawberry25.png"/>
 	</animation>		
+
+	<!-- FLAG ANIMATIONS ARE TEMPORARY PLACEHOLDERS! -->
+	<animation name="FlagDown">
+		<size width="1" height="1"/>
+		<delay time="0.05"/>
+		<center x="0.5" y="0.5"/>
+		<frame file="Anims/FlagDown1.png"/>
+		<frame file="Anims/FlagDown2.png"/>
+		<frame file="Anims/FlagDown3.png"/>
+	</animation>
+	
+	<animation name="FlagUp">
+		<size width="1" height="1"/>
+		<delay time="0.05"/>
+		<center x="0.5" y="0.5"/>
+		<frame file="Anims/FlagUp1.png"/>
+		<frame file="Anims/FlagUp2.png"/>
+		<frame file="Anims/FlagUp3.png"/>
+	</animation>
+	
+	<animation name="FlagGoingUp">
+		<size width="1" height="1"/>
+		<delay time="0.05"/>
+		<center x="0.5" y="0.5"/>
+		<frame file="Anims/FlagGoingUp1.png"/>
+		<frame file="Anims/FlagGoingUp2.png"/>
+		<frame file="Anims/FlagGoingUp3.png"/>
+		<frame file="Anims/FlagGoingUp4.png"/>
+		<frame file="Anims/FlagGoingUp5.png"/>
+	</animation>
 	
 </animationdata>
 
