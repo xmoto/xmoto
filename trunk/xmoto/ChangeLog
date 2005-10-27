@@ -1,9 +1,8 @@
-X-Moto 0.1.7 (alpha)  2005-??-??
+X-Moto 0.1.7 (alpha)  2005-10-27
 --------------------------------
 
  * Game is no longer slow if Vertical Sync limits the 
    framerate.
- * Finally some sounds effects (not all yet).
  * 5 new (easier) built-in levels by Pasi Kallinen.
  * Configurable controls.
  * Experimental (!) joystick support.

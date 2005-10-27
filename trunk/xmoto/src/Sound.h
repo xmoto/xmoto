@@ -42,7 +42,7 @@ namespace vapp {
     std::string Name;
     
     /* Used by SDL_mixer */
-    Mix_Chunk *pChunk;
+    //Mix_Chunk *pChunk;
   };
 
 	/*===========================================================================

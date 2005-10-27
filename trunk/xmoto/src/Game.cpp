@@ -326,11 +326,11 @@ namespace vapp {
         //m_pEndOfLevelSFX = Sound::loadSample("Sounds/EndOfLevel.ogg");
         //m_pDieSFX = Sound::loadSample("Sounds/Die.ogg");
         
-        Sound::loadSample("Sounds/Button1.ogg");
-//        Sound::loadSample("Sounds/Button2.ogg");
-        Sound::loadSample("Sounds/Button3.ogg");
-        
-        Sound::loadSample("Sounds/PickUpStrawberry.ogg");
+//        Sound::loadSample("Sounds/Button1.ogg");
+////        Sound::loadSample("Sounds/Button2.ogg");
+//        Sound::loadSample("Sounds/Button3.ogg");
+//        
+//        Sound::loadSample("Sounds/PickUpStrawberry.ogg");
         
         Log(" %d sound%s loaded",Sound::getNumSamples(),Sound::getNumSamples()==1?"":"s");
       }
@@ -560,12 +560,12 @@ namespace vapp {
       if(!m_b50FpsMode && nFCount > 100) {
         m_b50FpsMode = true;
         m_Renderer.setSpeedMultiplier(2);   
-        printf("entering 50 fps!\n");
+        //printf("entering 50 fps!\n");
       }
       else if(m_b50FpsMode && nFCount < -100) {
         m_b50FpsMode = false;
         m_Renderer.setSpeedMultiplier(1);   
-        printf("entering 100 fps!\n");
+        //printf("entering 100 fps!\n");
       }
     }
     /* What state? */

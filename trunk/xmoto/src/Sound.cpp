@@ -26,7 +26,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "UserConfig.h"
 #include "Sound.h"
 
-#define USE_SDL_MIXER 1
+#define USE_SDL_MIXER     0
+#define USE_OPENAL        0
+#define USE_NO_SOUND      1
 
 namespace vapp {
 
@@ -47,6 +49,11 @@ namespace vapp {
   Init and uninit
   ===========================================================================*/
   void Sound::init(UserConfig *pConfig) {
+    #if USE_NO_SOUND
+      m_bEnable = false;
+      return;
+    #endif
+  
     /* Get user configuration */
     if(pConfig->getBool("AudioEnable")) {
       m_bEnable = true;
@@ -90,81 +97,96 @@ namespace vapp {
       return;
     }
     
-    /* Clear stuff */
-    for(int i=0;i<16;i++) {
-      m_pPlayers[i] = NULL;
-    }    
+    #if USE_OPENAL
+      try {
+//        sal::Global::init("default",m_nSampleRate,0,sal::SYNC_DEFAULT);
+      }
+      catch(const char *e) {
+        Log("** Warning ** : failed to initialize OpenAL (%s)",e);
+        m_bEnable = false;
+        return;
+      }
+    #else
+      /* Clear stuff */
+      for(int i=0;i<16;i++) {
+        m_pPlayers[i] = NULL;
+      }    
+          
+      /* Init SDL stuff */
+      if(SDL_InitSubSystem(SDL_INIT_AUDIO) < 0) {
+        Log("** Warning ** : failed to initialize SDL audio (%s)",SDL_GetError());
+        m_bEnable = false;
+        return;
+      }
+      
+      #if USE_SDL_MIXER
+        int nFormat;
+        if(m_nSampleBits == 8) nFormat = AUDIO_S8;
+        else nFormat = AUDIO_S16;
         
-    /* Init SDL stuff */
-    if(SDL_InitSubSystem(SDL_INIT_AUDIO) < 0) {
-      Log("** Warning ** : failed to initialize SDL audio (%s)",SDL_GetError());
-      m_bEnable = false;
-      return;
-    }
-    
-    #if USE_SDL_MIXER
-      int nFormat;
-      if(m_nSampleBits == 8) nFormat = AUDIO_S8;
-      else nFormat = AUDIO_S16;
-      
-      if(Mix_OpenAudio(m_nSampleRate,nFormat,m_nChannels,1024) < 0) {
-        Log("** Warning ** : failed to open mixer device (%s)",Mix_GetError());
-        SDL_QuitSubSystem(SDL_INIT_AUDIO);
-        m_bEnable = false;
-        return;
-      }
-      
-      Mix_AllocateChannels(1); /* one is enough */
-      
-    #else /* Not using SDL_mixer */
-      /* Open audio device */
-      m_ASpec.freq = m_nSampleRate;
-      if(m_nSampleBits == 8)
-        m_ASpec.format = AUDIO_S8;
-      else
-        m_ASpec.format = AUDIO_S16;
-      m_ASpec.samples = 1024; /* buffered samples */    
-      m_ASpec.callback = audioCallback;
-      m_ASpec.channels = m_nChannels;
-      m_ASpec.userdata = NULL;
-      
-      if(SDL_OpenAudio(&m_ASpec,NULL) < 0) {
-        Log("** Warning ** : failed to open audio device (%s)",SDL_GetError());
-        SDL_QuitSubSystem(SDL_INIT_AUDIO);
-        m_bEnable = false;
-        return;
-      }
-      
-      /* Start playing */
-      SDL_PauseAudio(0);
+        if(Mix_OpenAudio(m_nSampleRate,nFormat,m_nChannels,1024) < 0) {
+          Log("** Warning ** : failed to open mixer device (%s)",Mix_GetError());
+          SDL_QuitSubSystem(SDL_INIT_AUDIO);
+          m_bEnable = false;
+          return;
+        }
+        
+        Mix_AllocateChannels(1); /* one is enough */
+        
+      #else /* Not using SDL_mixer */
+        /* Open audio device */
+        m_ASpec.freq = m_nSampleRate;
+        if(m_nSampleBits == 8)
+          m_ASpec.format = AUDIO_S8;
+        else
+          m_ASpec.format = AUDIO_S16;
+        m_ASpec.samples = 1024; /* buffered samples */    
+        m_ASpec.callback = audioCallback;
+        m_ASpec.channels = m_nChannels;
+        m_ASpec.userdata = NULL;
+        
+        if(SDL_OpenAudio(&m_ASpec,NULL) < 0) {
+          Log("** Warning ** : failed to open audio device (%s)",SDL_GetError());
+          SDL_QuitSubSystem(SDL_INIT_AUDIO);
+          m_bEnable = false;
+          return;
+        }
+        
+        /* Start playing */
+        SDL_PauseAudio(0);
+      #endif
     #endif
   }
   
   void Sound::uninit(void) {  
-    #if USE_SDL_MIXER
-      if(isEnabled()) {
-        Mix_CloseAudio();
-      }      
+    #if USE_OPENAL
+      sal::Global::quit();
+    #else
+      #if USE_SDL_MIXER
+        if(isEnabled()) {
+          Mix_CloseAudio();
+        }      
 
-      /* Free loaded samples */
-      for(int i=0;i<m_Samples.size();i++) {
-        Mix_FreeChunk(m_Samples[i]->pChunk);
-        delete m_Samples[i];
+        /* Free loaded samples */
+        for(int i=0;i<m_Samples.size();i++) {
+          Mix_FreeChunk(m_Samples[i]->pChunk);
+          delete m_Samples[i];
+        }
+        m_Samples.clear();
+      #else /* Not using SDL_mixer */
+        /* Free loaded samples */
+        for(int i=0;i<m_Samples.size();i++) {
+          delete [] m_Samples[i]->pcBuf;
+          delete m_Samples[i];
+        }
+        m_Samples.clear();
+      #endif
+      
+      /* Quit sound system if enabled */
+      if(isEnabled()) {
+        SDL_QuitSubSystem(SDL_INIT_AUDIO);
       }
-      m_Samples.clear();
-    #else /* Not using SDL_mixer */
-      /* Free loaded samples */
-      for(int i=0;i<m_Samples.size();i++) {
-        delete [] m_Samples[i]->pcBuf;
-        delete m_Samples[i];
-      }
-      m_Samples.clear();
     #endif
-    
-    /* Quit sound system if enabled */
-    if(isEnabled()) {
-      SDL_QuitSubSystem(SDL_INIT_AUDIO);
-    }
   }
   
   /*===========================================================================
@@ -409,7 +431,7 @@ namespace vapp {
     return 0;
   }
  
-  SoundSample *Sound::loadSample(const std::string &File) {
+  SoundSample *Sound::loadSample(const std::string &File) {      
     if(!Sound::isEnabled())
       throw Exception("Can't load sample, sound is disabled!");
     

@@ -7,7 +7,7 @@
 	<var name="DisplayWindowed" value="false"/>
 	<var name="MenuBackgroundGraphics" value="High"/>
 	<var name="GameGraphics" value="High"/>
-	<var name="AudioEnable" value="false"/>
+	<var name="AudioEnable" value="true"/>
 	<var name="AudioSampleRate" value="22050"/>
 	<var name="AudioSampleBits" value="16"/>
 	<var name="AudioChannels" value="Mono"/>
