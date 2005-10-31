@@ -78,9 +78,15 @@ extern "C" {
     #include "lua/lauxlib.h"
     #include "lua/lualib.h"
   #else
-    #include <lua50/lua.h>
-    #include <lua50/lauxlib.h>
-    #include <lua50/lualib.h>
+    #if defined(HAVE_LIBLUA50)
+      #include <lua50/lua.h>
+      #include <lua50/lauxlib.h>
+      #include <lua50/lualib.h>
+    #else
+      #include <lua/lua.h>
+      #include <lua/lauxlib.h>
+      #include <lua/lualib.h>
+    #endif
   #endif
 };
 
