@@ -49,6 +49,14 @@ AC_SEARCH_LIBS(luaopen_math,lualib lualib50, [], [
         exit -1
         ])
 
+AC_CHECK_HEADER(lua50/lua.h,AC_DEFINE(HAVE_LUA50_LUA_H),[])
+AC_CHECK_HEADER(lua50/lauxlib.h,AC_DEFINE(HAVE_LUA50_LAUXLIB_H),[])
+AC_CHECK_HEADER(lua50/lualib.h,AC_DEFINE(HAVE_LUA50_LUALIB_H),[])
+
+AC_CHECK_HEADER(lua/lua.h,AC_DEFINE(HAVE_LUA_LUA_H),[])
+AC_CHECK_HEADER(lua/lauxlib.h,AC_DEFINE(HAVE_LUA_LAUXLIB_H),[])
+AC_CHECK_HEADER(lua/lualib.h,AC_DEFINE(HAVE_LUA_LUALIB_H),[])
+
 AC_SEARCH_LIBS(dJointAttach,ode ode0, [], [
         echo "libode or libode0 required!"
         exit -1
