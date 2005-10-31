@@ -120,10 +120,10 @@ namespace vapp {
            back a replay */
         m_pReplay = new Replay;
         m_pReplay->loadFromFile(m_PlaySpecificReplay);
-        if(m_pReplay->getEventChunks().empty()) {
-          /* TODO: error */
-          quit();
-        }
+        //if(m_pReplay->getEventChunks().empty()) {
+        //  /* TODO: error */
+        //  quit();
+        //}
         
         /* Find the specified level */
         LevelSrc *pLevelSrc = _FindLevelByID(m_pReplay->getLevelID());
@@ -1203,44 +1203,44 @@ namespace vapp {
   void GameApp::_PlaybackReplay(void) {
     if(m_pReplay != NULL) {
       /* Anything for this frame? (SLOW! TODO: speed up please) */      
-      for(int i=0;i<m_pReplay->getEventChunks().size();i++) {
-        for(int j=0;j<m_pReplay->getEventChunks()[i]->nNumEvents;j++) {
-          if(m_pReplay->getEventChunks()[i]->Events[j].nFrame == m_nFrame) {
-            //printf("%f\n",m_MotoGame.getTime());
-            //printf("Frame %d: %s\n",m_nFrame,Replay::eventName(m_pReplay->getEventChunks()[i]->Events[j].Type).c_str());
-          
-            switch(m_pReplay->getEventChunks()[i]->Events[j].Type) {
-              case REPLAY_EVENT_CHANGE_DIRECTION:
-                m_MotoGame.getBikeController()->bChangeDir = true;
-                break;
-              //case REPLAY_EVENT_START_BRAKING:
-              //  m_MotoGame.getBikeController()->bBrake = true;
-              //  break;
-              //case REPLAY_EVENT_STOP_BRAKING:
-              //  m_MotoGame.getBikeController()->bBrake = false;
-              //  break;
-              //case REPLAY_EVENT_START_DRIVING:
-              //  m_MotoGame.getBikeController()->bDrive = true;
-              //  break;
-              //case REPLAY_EVENT_STOP_DRIVING:
-              //  m_MotoGame.getBikeController()->bDrive = false;
-              //  break;
-              case REPLAY_EVENT_START_PULLING_BACKWARD:
-                m_MotoGame.getBikeController()->bPullBack = true;
-                break;
-              case REPLAY_EVENT_STOP_PULLING_BACKWARD:
-                m_MotoGame.getBikeController()->bPullBack = false;
-                break;
-              case REPLAY_EVENT_START_PUSHING_FORWARD:
-                m_MotoGame.getBikeController()->bPushForward = true;
-                break;
-              case REPLAY_EVENT_STOP_PUSHING_FORWARD:
-                m_MotoGame.getBikeController()->bPushForward = false;
-                break;
-            }
-          }
-        }
-      }
+      //for(int i=0;i<m_pReplay->getEventChunks().size();i++) {
+      //  for(int j=0;j<m_pReplay->getEventChunks()[i]->nNumEvents;j++) {
+      //    if(m_pReplay->getEventChunks()[i]->Events[j].nFrame == m_nFrame) {
+      //      //printf("%f\n",m_MotoGame.getTime());
+      //      //printf("Frame %d: %s\n",m_nFrame,Replay::eventName(m_pReplay->getEventChunks()[i]->Events[j].Type).c_str());
+      //    
+      //      switch(m_pReplay->getEventChunks()[i]->Events[j].Type) {
+      //        case REPLAY_EVENT_CHANGE_DIRECTION:
+      //          m_MotoGame.getBikeController()->bChangeDir = true;
+      //          break;
+      //        //case REPLAY_EVENT_START_BRAKING:
+      //        //  m_MotoGame.getBikeController()->bBrake = true;
+      //        //  break;
+      //        //case REPLAY_EVENT_STOP_BRAKING:
+      //        //  m_MotoGame.getBikeController()->bBrake = false;
+      //        //  break;
+      //        //case REPLAY_EVENT_START_DRIVING:
+      //        //  m_MotoGame.getBikeController()->bDrive = true;
+      //        //  break;
+      //        //case REPLAY_EVENT_STOP_DRIVING:
+      //        //  m_MotoGame.getBikeController()->bDrive = false;
+      //        //  break;
+      //        case REPLAY_EVENT_START_PULLING_BACKWARD:
+      //          m_MotoGame.getBikeController()->bPullBack = true;
+      //          break;
+      //        case REPLAY_EVENT_STOP_PULLING_BACKWARD:
+      //          m_MotoGame.getBikeController()->bPullBack = false;
+      //          break;
+      //        case REPLAY_EVENT_START_PUSHING_FORWARD:
+      //          m_MotoGame.getBikeController()->bPushForward = true;
+      //          break;
+      //        case REPLAY_EVENT_STOP_PUSHING_FORWARD:
+      //          m_MotoGame.getBikeController()->bPushForward = false;
+      //          break;
+      //      }
+      //    }
+      //  }
+      //}
     }    
   }
     
@@ -1287,6 +1287,7 @@ namespace vapp {
     m_Config.createVar( "ScreenshotFormat",       "png" );
     m_Config.createVar( "NotifyAtInit",           "true" );
     m_Config.createVar( "ShowMiniMap",            "true" );
+    m_Config.createVar( "StoreReplays",           "true" );
   }
   
   /*===========================================================================

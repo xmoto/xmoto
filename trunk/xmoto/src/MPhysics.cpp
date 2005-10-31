@@ -80,255 +80,267 @@ namespace vapp {
   /*===========================================================================
   Update physics
   ===========================================================================*/
-  void MotoGame::_UpdatePhysics(float fTimeStep) {
+  void MotoGame::_UpdatePhysics(float fTimeStep,SerializedState *pState) {
     /* No wheel spin per default */
     m_bWheelSpin = false;
-    
-    /* Should we disable stuff? Ok ODE has an autodisable feature, but i'd rather
-       roll my own here. */
-    const dReal *pfFront = dBodyGetLinearVel(m_FrontWheelBodyID);
-    const dReal *pfRear = dBodyGetLinearVel(m_RearWheelBodyID);
-    const dReal *pfFrame = dBodyGetLinearVel(m_FrameBodyID);
-    #define SLEEP_EPS PHYS_SLEEP_EPS
-    if(fabs(pfFront[0]) < SLEEP_EPS && fabs(pfFront[1]) < SLEEP_EPS &&
-       fabs(pfRear[0]) < SLEEP_EPS && fabs(pfRear[1]) < SLEEP_EPS &&
-       fabs(pfFrame[0]) < SLEEP_EPS && fabs(pfFrame[1]) < SLEEP_EPS) {
-      m_nStillFrames++;
-    }
+
+    if(pState == NULL) {        
+      /* Should we disable stuff? Ok ODE has an autodisable feature, but i'd rather
+        roll my own here. */
+      const dReal *pfFront = dBodyGetLinearVel(m_FrontWheelBodyID);
+      const dReal *pfRear = dBodyGetLinearVel(m_RearWheelBodyID);
+      const dReal *pfFrame = dBodyGetLinearVel(m_FrameBodyID);
+      #define SLEEP_EPS PHYS_SLEEP_EPS
+      if(fabs(pfFront[0]) < SLEEP_EPS && fabs(pfFront[1]) < SLEEP_EPS &&
+        fabs(pfRear[0]) < SLEEP_EPS && fabs(pfRear[1]) < SLEEP_EPS &&
+        fabs(pfFrame[0]) < SLEEP_EPS && fabs(pfFrame[1]) < SLEEP_EPS) {
+        m_nStillFrames++;
+      }
+      else {
+        m_nStillFrames=0;
+      }
+      bool bSleep = false;
+      
+      //printf("[%d]",m_nStillFrames);        
+      if(m_nStillFrames > PHYS_SLEEP_FRAMES) {
+        bSleep = true;
+        dBodyDisable(m_FrontWheelBodyID);
+        dBodyDisable(m_RearWheelBodyID);
+        dBodyDisable(m_FrameBodyID);
+      }
+      else {
+        if(!dBodyIsEnabled(m_FrontWheelBodyID)) dBodyEnable(m_FrontWheelBodyID);
+        if(!dBodyIsEnabled(m_RearWheelBodyID)) dBodyEnable(m_RearWheelBodyID);
+        if(!dBodyIsEnabled(m_FrameBodyID)) dBodyEnable(m_FrameBodyID);
+      }
+
+      if(!bSleep) {
+        /* Update front suspension */
+        Vector2f Fq = m_BikeS.RFrontWheelP - m_BikeS.FrontWheelP;
+        Vector2f Fqv = Fq - m_BikeS.PrevFq;
+        Vector2f FSpring = Fq * PHYS_SUSP_SPRING; 
+        Vector2f FDamp = Fqv * PHYS_SUSP_DAMP;
+        Vector2f FTotal = FSpring + FDamp;  
+        dBodyAddForce(m_FrontWheelBodyID,FTotal.x,FTotal.y,0);
+        dBodyAddForceAtPos(m_FrameBodyID,-FTotal.x,-FTotal.y,0,m_BikeS.RFrontWheelP.x,m_BikeS.RFrontWheelP.y,0);
+        m_BikeS.PrevFq = Fq;
+
+        /* Update rear suspension */
+        Vector2f Rq = m_BikeS.RRearWheelP - m_BikeS.RearWheelP;
+        Vector2f Rqv = Rq - m_BikeS.PrevRq;
+        Vector2f RSpring = Rq * PHYS_SUSP_SPRING; 
+        Vector2f RDamp = Rqv * PHYS_SUSP_DAMP;
+        Vector2f RTotal = RSpring + RDamp;   
+        dBodyAddForce(m_RearWheelBodyID,RTotal.x,RTotal.y,0);
+        dBodyAddForceAtPos(m_FrameBodyID,-RTotal.x,-RTotal.y,0,m_BikeS.RRearWheelP.x,m_BikeS.RRearWheelP.y,0);
+        m_BikeS.PrevRq = Rq;
+      }    
+
+      /* Apply attitude control (SIMPLISTIC!) */
+      if(m_BikeC.bPullBack && getTime()-m_fLastAttitudeCon > 0.6f) {
+  //      m_fAttitudeCon = 8000;
+        m_fAttitudeCon = PHYS_RIDER_ATTITUDE_TORQUE;
+        m_fLastAttitudeCon = getTime();
+      }
+      else if(m_BikeC.bPushForward && getTime()-m_fLastAttitudeCon > 0.6f) {
+        m_fAttitudeCon = -PHYS_RIDER_ATTITUDE_TORQUE;
+  //      m_fAttitudeCon = -8000;
+        m_fLastAttitudeCon = getTime();
+      }
+      
+      if(m_fAttitudeCon != 0.0f) {
+        m_nStillFrames=0;
+        dBodyEnable(m_FrontWheelBodyID);
+        dBodyEnable(m_RearWheelBodyID);
+        dBodyEnable(m_FrameBodyID);
+        dBodyAddTorque(m_FrameBodyID,0,0,m_fAttitudeCon);      
+        
+        //printf("AttitudeCon %f\n",m_fAttitudeCon);
+      }
+      
+      m_fAttitudeCon *= PHYS_ATTITUDE_DEFACTOR;
+      if(fabs(m_fAttitudeCon) < 100) { /* make sure we glue to zero */
+        m_fAttitudeCon = 0.0f;
+      }
+
+      float fRearWheelAngVel = dBodyGetAngularVel(m_RearWheelBodyID)[2];
+      float fFrontWheelAngVel = dBodyGetAngularVel(m_FrontWheelBodyID)[2];
+
+      /* Misc */
+      if(!bSleep) {
+        if(fRearWheelAngVel > -PHYS_MAX_ROLL_VELOCITY && fRearWheelAngVel < PHYS_MAX_ROLL_VELOCITY)    
+          dBodyAddTorque(m_RearWheelBodyID,0,0,-dBodyGetAngularVel(m_RearWheelBodyID)[2]*PHYS_ROLL_RESIST);
+        else
+          dBodyAddTorque(m_RearWheelBodyID,0,0,-dBodyGetAngularVel(m_RearWheelBodyID)[2]*PHYS_ROLL_RESIST_MAX);
+        
+        if(fFrontWheelAngVel > -PHYS_MAX_ROLL_VELOCITY && fFrontWheelAngVel < PHYS_MAX_ROLL_VELOCITY)    
+          dBodyAddTorque(m_FrontWheelBodyID,0,0,-dBodyGetAngularVel(m_FrontWheelBodyID)[2]*PHYS_ROLL_RESIST);
+        else
+          dBodyAddTorque(m_FrontWheelBodyID,0,0,-dBodyGetAngularVel(m_FrontWheelBodyID)[2]*PHYS_ROLL_RESIST_MAX);
+      }
+      
+      if(m_BikeS.fCurEngine>0.0f)
+        m_BikeS.fCurEngine -= m_BikeP.fMaxEngine*0.05f;          
+        
+      /* Stuff */
+      if(m_BikeC.bDebug1) {       
+        /* This is from I experimented with allowing the player to shift the center of mass of the
+          bike. Not a success. */    
+        //dBodyAddTorque(m_PlayerULegBodyID,0,0,-300);      
+      }
+
+      /* Apply motor/brake torques */
+      if(m_BikeC.fBrake > 0.0f) {
+        /* Brake! */        
+        if(!bSleep) {
+          //printf("Brake!\n");
+        
+          dBodyAddTorque(m_RearWheelBodyID,0,0,-dBodyGetAngularVel(m_RearWheelBodyID)[2]*PHYS_BRAKE_FACTOR*m_BikeC.fBrake);
+          dBodyAddTorque(m_FrontWheelBodyID,0,0,-dBodyGetAngularVel(m_FrontWheelBodyID)[2]*PHYS_BRAKE_FACTOR*m_BikeC.fBrake);
+        }
+      }
+      else {
+        /* Throttle? */
+        if(m_BikeC.fDrive > 0.0f) {
+          if(m_BikeS.Dir == DD_RIGHT) {
+            if(fRearWheelAngVel > -PHYS_MAX_ROLL_VELOCITY) {
+              m_nStillFrames=0;
+              dBodyEnable(m_FrontWheelBodyID);
+              dBodyEnable(m_RearWheelBodyID);
+              dBodyEnable(m_FrameBodyID);
+              
+              dBodyAddTorque(m_RearWheelBodyID,0,0,-m_BikeP.fMaxEngine*PHYS_ENGINE_DAMP*m_BikeC.fDrive);    
+              
+              //printf("Drive!\n");
+            }
+          }
+          else {
+            if(fFrontWheelAngVel < PHYS_MAX_ROLL_VELOCITY) {
+              m_nStillFrames=0;
+              dBodyEnable(m_FrontWheelBodyID);
+              dBodyEnable(m_RearWheelBodyID);
+              dBodyEnable(m_FrameBodyID);
+
+              dBodyAddTorque(m_FrontWheelBodyID,0,0,m_BikeP.fMaxEngine*PHYS_ENGINE_DAMP*m_BikeC.fDrive);    
+            }
+          }
+        }
+      }
+        
+      /* Perform collision detection between the bike and the level blocks */
+      int nNumContacts;
+      dContact Contacts[100];
+      
+      static int nSlipFrameInterlace =0; /* Okay, lazy approach again. Front wheel can generate particles
+                                            even frames, rear wheel odd frames */
+      nSlipFrameInterlace++;
+      
+      if(dBodyIsEnabled(m_FrontWheelBodyID)) {
+        nNumContacts = _IntersectWheelLevel( m_BikeS.FrontWheelP,m_BikeP.WR,Contacts );
+        Vector2f WSP;
+        for(int i=0;i<nNumContacts;i++) {
+          if(pState == NULL)
+            dJointAttach(dJointCreateContact(m_WorldID,m_ContactGroup,&Contacts[i]),m_FrontWheelBodyID,0);                         
+            
+          addDummy(Vector2f(Contacts[i].geom.pos[0],Contacts[i].geom.pos[1]),0,1,0);
+          
+          WSP.x = Contacts[i].geom.pos[0];
+          WSP.y = Contacts[i].geom.pos[1];
+        }
+
+        //if(nNumContacts > 0 && nSlipFrameInterlace&1  && sqrt(pfFrame[0]*pfFrame[0] + pfFrame[1]*pfFrame[1])>1.2f) {
+        //  Vector2f WSPvel( (-(m_BikeS.FrontWheelP.y - WSP.y)),
+        //                   ((m_BikeS.FrontWheelP.x - WSP.x)) );
+        //  WSPvel.normalize();
+        //  WSPvel *= -m_BikeP.WR * fFrontWheelAngVel;
+        //  
+        //  Vector2f Vs;
+        //  Vs.x = WSPvel.x + pfRear[0];
+        //  Vs.y = WSPvel.y + pfRear[1];
+        //  
+        //  if(Vs.length() > 1.25) {
+        //    m_bWheelSpin = true;
+        //    m_WheelSpinPoint = WSP;          
+        //    m_WheelSpinDir = Vs * 0.1f;
+
+        //    //Vector2f Zz = (m_WheelSpinDir + Vector2f(m_BikeS.FrontWheelP.x - WSP.x,m_BikeS.FrontWheelP.y - WSP.y)) / 2.0f;
+        //    //m_WheelSpinDir = Zz;
+        //  }        
+        //}
+        
+        if(m_BikeS.Dir == DD_LEFT) {
+          if(fabs(fFrontWheelAngVel) > 5 && m_BikeC.fDrive>0.0f && nNumContacts > 0) {
+            m_bWheelSpin = true;
+            m_WheelSpinPoint = WSP;
+            m_WheelSpinDir.x = (((m_BikeS.FrontWheelP.y - WSP.y))*1 + (m_BikeS.FrontWheelP.x - WSP.x)) /2;
+            m_WheelSpinDir.y = ((-(m_BikeS.FrontWheelP.x - WSP.x))*1 + (m_BikeS.FrontWheelP.y - WSP.y)) /2;
+          }
+        }
+      }
+
+      if(dBodyIsEnabled(m_RearWheelBodyID)) {
+        nNumContacts = _IntersectWheelLevel( m_BikeS.RearWheelP,m_BikeP.WR,Contacts );
+        Vector2f WSP;
+        for(int i=0;i<nNumContacts;i++) {
+          dJointAttach(dJointCreateContact(m_WorldID,m_ContactGroup,&Contacts[i]),m_RearWheelBodyID,0);                         
+          addDummy(Vector2f(Contacts[i].geom.pos[0],Contacts[i].geom.pos[1]),0,1,0);
+          
+          WSP.x = Contacts[i].geom.pos[0];
+          WSP.y = Contacts[i].geom.pos[1];
+        }
+              
+        /* Calculate wheel linear velocity at slip-point */
+        //if(nNumContacts > 0 && !(nSlipFrameInterlace&1) && sqrt(pfFrame[0]*pfFrame[0] + pfFrame[1]*pfFrame[1])>1.2f) {
+        //  Vector2f WSPvel( (-(m_BikeS.RearWheelP.y - WSP.y)),
+        //                   ((m_BikeS.RearWheelP.x - WSP.x)) );
+        //  WSPvel.normalize();
+        //  WSPvel *= -m_BikeP.WR * fRearWheelAngVel;
+        //  
+        //  Vector2f Vs;
+        //  Vs.x = WSPvel.x + pfRear[0];
+        //  Vs.y = WSPvel.y + pfRear[1];
+        //  
+        //  if(Vs.length() > 1.25) {
+        //    m_bWheelSpin = true;
+        //    m_WheelSpinPoint = WSP;          
+        //    m_WheelSpinDir = Vs * 0.1f;
+        //    
+        //    //Vector2f Zz = (m_WheelSpinDir + Vector2f(m_BikeS.RearWheelP.x - WSP.x,m_BikeS.RearWheelP.y - WSP.y)) / 2.0f;
+        //    //m_WheelSpinDir = Zz;
+        //  }        
+        //}
+
+        if(m_BikeS.Dir == DD_RIGHT) {
+          if(fabs(fRearWheelAngVel) > 5 && m_BikeC.fDrive>0 && nNumContacts > 0) {
+            m_bWheelSpin = true;
+            m_WheelSpinPoint = WSP;
+            m_WheelSpinDir.x = ((-(m_BikeS.RearWheelP.y - WSP.y))*1 + (m_BikeS.RearWheelP.x - WSP.x)) /2;
+            m_WheelSpinDir.y = (((m_BikeS.RearWheelP.x - WSP.x))*1 + (m_BikeS.RearWheelP.y - WSP.y)) /2;
+          }
+        }
+      }
+      
+      /* Player head */
+      if(m_BikeS.Dir == DD_RIGHT) {
+        if(_IntersectHeadLevel(m_BikeS.HeadP,m_BikeP.fHeadSize)) {
+          m_bDead = true;
+        }
+      }
+      else if(m_BikeS.Dir == DD_LEFT) {
+        if(_IntersectHeadLevel(m_BikeS.Head2P,m_BikeP.fHeadSize)) {
+          m_bDead = true;
+        }
+      }
+    }  
     else {
-      m_nStillFrames=0;
-    }
-    bool bSleep = false;
-    
-    //printf("[%d]",m_nStillFrames);
-    
-    if(m_nStillFrames > PHYS_SLEEP_FRAMES) {
-      bSleep = true;
+      /* A serialized state have been suplied! */
       dBodyDisable(m_FrontWheelBodyID);
       dBodyDisable(m_RearWheelBodyID);
       dBodyDisable(m_FrameBodyID);
-    }
-    else {
-      if(!dBodyIsEnabled(m_FrontWheelBodyID)) dBodyEnable(m_FrontWheelBodyID);
-      if(!dBodyIsEnabled(m_RearWheelBodyID)) dBodyEnable(m_RearWheelBodyID);
-      if(!dBodyIsEnabled(m_FrameBodyID)) dBodyEnable(m_FrameBodyID);
-    }
-
-    if(!bSleep) {
-      /* Update front suspension */
-      Vector2f Fq = m_BikeS.RFrontWheelP - m_BikeS.FrontWheelP;
-      Vector2f Fqv = Fq - m_BikeS.PrevFq;
-      Vector2f FSpring = Fq * PHYS_SUSP_SPRING; 
-      Vector2f FDamp = Fqv * PHYS_SUSP_DAMP;
-      Vector2f FTotal = FSpring + FDamp;  
-      dBodyAddForce(m_FrontWheelBodyID,FTotal.x,FTotal.y,0);
-      dBodyAddForceAtPos(m_FrameBodyID,-FTotal.x,-FTotal.y,0,m_BikeS.RFrontWheelP.x,m_BikeS.RFrontWheelP.y,0);
-      m_BikeS.PrevFq = Fq;
-
-      /* Update rear suspension */
-      Vector2f Rq = m_BikeS.RRearWheelP - m_BikeS.RearWheelP;
-      Vector2f Rqv = Rq - m_BikeS.PrevRq;
-      Vector2f RSpring = Rq * PHYS_SUSP_SPRING; 
-      Vector2f RDamp = Rqv * PHYS_SUSP_DAMP;
-      Vector2f RTotal = RSpring + RDamp;   
-      dBodyAddForce(m_RearWheelBodyID,RTotal.x,RTotal.y,0);
-      dBodyAddForceAtPos(m_FrameBodyID,-RTotal.x,-RTotal.y,0,m_BikeS.RRearWheelP.x,m_BikeS.RRearWheelP.y,0);
-      m_BikeS.PrevRq = Rq;
+      
+      /* Load it */
+      unserializeGameState((const char *)pState,sizeof(SerializedState));
     }    
-
-    /* Apply attitude control (SIMPLISTIC!) */
-    if(m_BikeC.bPullBack && getTime()-m_fLastAttitudeCon > 0.6f) {
-//      m_fAttitudeCon = 8000;
-      m_fAttitudeCon = PHYS_RIDER_ATTITUDE_TORQUE;
-      m_fLastAttitudeCon = getTime();
-    }
-    else if(m_BikeC.bPushForward && getTime()-m_fLastAttitudeCon > 0.6f) {
-      m_fAttitudeCon = -PHYS_RIDER_ATTITUDE_TORQUE;
-//      m_fAttitudeCon = -8000;
-      m_fLastAttitudeCon = getTime();
-    }
-    
-    if(m_fAttitudeCon != 0.0f) {
-      m_nStillFrames=0;
-      dBodyEnable(m_FrontWheelBodyID);
-      dBodyEnable(m_RearWheelBodyID);
-      dBodyEnable(m_FrameBodyID);
-      dBodyAddTorque(m_FrameBodyID,0,0,m_fAttitudeCon);      
-      
-      //printf("AttitudeCon %f\n",m_fAttitudeCon);
-    }
-    
-    m_fAttitudeCon *= PHYS_ATTITUDE_DEFACTOR;
-    if(fabs(m_fAttitudeCon) < 100) { /* make sure we glue to zero */
-      m_fAttitudeCon = 0.0f;
-    }
-
-    float fRearWheelAngVel = dBodyGetAngularVel(m_RearWheelBodyID)[2];
-    float fFrontWheelAngVel = dBodyGetAngularVel(m_FrontWheelBodyID)[2];
-
-    /* Misc */
-    if(!bSleep) {
-      if(fRearWheelAngVel > -PHYS_MAX_ROLL_VELOCITY && fRearWheelAngVel < PHYS_MAX_ROLL_VELOCITY)    
-        dBodyAddTorque(m_RearWheelBodyID,0,0,-dBodyGetAngularVel(m_RearWheelBodyID)[2]*PHYS_ROLL_RESIST);
-      else
-        dBodyAddTorque(m_RearWheelBodyID,0,0,-dBodyGetAngularVel(m_RearWheelBodyID)[2]*PHYS_ROLL_RESIST_MAX);
-      
-      if(fFrontWheelAngVel > -PHYS_MAX_ROLL_VELOCITY && fFrontWheelAngVel < PHYS_MAX_ROLL_VELOCITY)    
-        dBodyAddTorque(m_FrontWheelBodyID,0,0,-dBodyGetAngularVel(m_FrontWheelBodyID)[2]*PHYS_ROLL_RESIST);
-      else
-        dBodyAddTorque(m_FrontWheelBodyID,0,0,-dBodyGetAngularVel(m_FrontWheelBodyID)[2]*PHYS_ROLL_RESIST_MAX);
-    }
-    
-    if(m_BikeS.fCurEngine>0.0f)
-      m_BikeS.fCurEngine -= m_BikeP.fMaxEngine*0.05f;          
-      
-    /* Stuff */
-    if(m_BikeC.bDebug1) {       
-      /* This is from I experimented with allowing the player to shift the center of mass of the
-         bike. Not a success. */    
-      //dBodyAddTorque(m_PlayerULegBodyID,0,0,-300);      
-    }
-
-    /* Apply motor/brake torques */
-    if(m_BikeC.fBrake > 0.0f) {
-      /* Brake! */        
-      if(!bSleep) {
-        //printf("Brake!\n");
-      
-        dBodyAddTorque(m_RearWheelBodyID,0,0,-dBodyGetAngularVel(m_RearWheelBodyID)[2]*PHYS_BRAKE_FACTOR*m_BikeC.fBrake);
-        dBodyAddTorque(m_FrontWheelBodyID,0,0,-dBodyGetAngularVel(m_FrontWheelBodyID)[2]*PHYS_BRAKE_FACTOR*m_BikeC.fBrake);
-      }
-    }
-    else {
-      /* Throttle? */
-      if(m_BikeC.fDrive > 0.0f) {
-        if(m_BikeS.Dir == DD_RIGHT) {
-          if(fRearWheelAngVel > -PHYS_MAX_ROLL_VELOCITY) {
-            m_nStillFrames=0;
-            dBodyEnable(m_FrontWheelBodyID);
-            dBodyEnable(m_RearWheelBodyID);
-            dBodyEnable(m_FrameBodyID);
-            
-            dBodyAddTorque(m_RearWheelBodyID,0,0,-m_BikeP.fMaxEngine*PHYS_ENGINE_DAMP*m_BikeC.fDrive);    
-            
-            //printf("Drive!\n");
-          }
-        }
-        else {
-          if(fFrontWheelAngVel < PHYS_MAX_ROLL_VELOCITY) {
-            m_nStillFrames=0;
-            dBodyEnable(m_FrontWheelBodyID);
-            dBodyEnable(m_RearWheelBodyID);
-            dBodyEnable(m_FrameBodyID);
-
-            dBodyAddTorque(m_FrontWheelBodyID,0,0,m_BikeP.fMaxEngine*PHYS_ENGINE_DAMP*m_BikeC.fDrive);    
-          }
-        }
-      }
-    }
-        
-    /* Perform collision detection between the bike and the level blocks */
-    int nNumContacts;
-    dContact Contacts[100];
-    
-    static int nSlipFrameInterlace =0; /* Okay, lazy approach again. Front wheel can generate particles
-                                          even frames, rear wheel odd frames */
-    nSlipFrameInterlace++;
-    
-    if(dBodyIsEnabled(m_FrontWheelBodyID)) {
-      nNumContacts = _IntersectWheelLevel( m_BikeS.FrontWheelP,m_BikeP.WR,Contacts );
-      Vector2f WSP;
-      for(int i=0;i<nNumContacts;i++) {
-        dJointAttach(dJointCreateContact(m_WorldID,m_ContactGroup,&Contacts[i]),m_FrontWheelBodyID,0);                         
-        addDummy(Vector2f(Contacts[i].geom.pos[0],Contacts[i].geom.pos[1]),0,1,0);
-        
-        WSP.x = Contacts[i].geom.pos[0];
-        WSP.y = Contacts[i].geom.pos[1];
-      }
-
-      //if(nNumContacts > 0 && nSlipFrameInterlace&1  && sqrt(pfFrame[0]*pfFrame[0] + pfFrame[1]*pfFrame[1])>1.2f) {
-      //  Vector2f WSPvel( (-(m_BikeS.FrontWheelP.y - WSP.y)),
-      //                   ((m_BikeS.FrontWheelP.x - WSP.x)) );
-      //  WSPvel.normalize();
-      //  WSPvel *= -m_BikeP.WR * fFrontWheelAngVel;
-      //  
-      //  Vector2f Vs;
-      //  Vs.x = WSPvel.x + pfRear[0];
-      //  Vs.y = WSPvel.y + pfRear[1];
-      //  
-      //  if(Vs.length() > 1.25) {
-      //    m_bWheelSpin = true;
-      //    m_WheelSpinPoint = WSP;          
-      //    m_WheelSpinDir = Vs * 0.1f;
-
-      //    //Vector2f Zz = (m_WheelSpinDir + Vector2f(m_BikeS.FrontWheelP.x - WSP.x,m_BikeS.FrontWheelP.y - WSP.y)) / 2.0f;
-      //    //m_WheelSpinDir = Zz;
-      //  }        
-      //}
-      
-      if(m_BikeS.Dir == DD_LEFT) {
-        if(fabs(fFrontWheelAngVel) > 5 && m_BikeC.fDrive>0.0f && nNumContacts > 0) {
-          m_bWheelSpin = true;
-          m_WheelSpinPoint = WSP;
-          m_WheelSpinDir.x = (((m_BikeS.FrontWheelP.y - WSP.y))*1 + (m_BikeS.FrontWheelP.x - WSP.x)) /2;
-          m_WheelSpinDir.y = ((-(m_BikeS.FrontWheelP.x - WSP.x))*1 + (m_BikeS.FrontWheelP.y - WSP.y)) /2;
-        }
-      }
-    }
-
-    if(dBodyIsEnabled(m_RearWheelBodyID)) {
-      nNumContacts = _IntersectWheelLevel( m_BikeS.RearWheelP,m_BikeP.WR,Contacts );
-      Vector2f WSP;
-      for(int i=0;i<nNumContacts;i++) {
-        dJointAttach(dJointCreateContact(m_WorldID,m_ContactGroup,&Contacts[i]),m_RearWheelBodyID,0);                         
-        addDummy(Vector2f(Contacts[i].geom.pos[0],Contacts[i].geom.pos[1]),0,1,0);
-        
-        WSP.x = Contacts[i].geom.pos[0];
-        WSP.y = Contacts[i].geom.pos[1];
-      }
-            
-      /* Calculate wheel linear velocity at slip-point */
-      //if(nNumContacts > 0 && !(nSlipFrameInterlace&1) && sqrt(pfFrame[0]*pfFrame[0] + pfFrame[1]*pfFrame[1])>1.2f) {
-      //  Vector2f WSPvel( (-(m_BikeS.RearWheelP.y - WSP.y)),
-      //                   ((m_BikeS.RearWheelP.x - WSP.x)) );
-      //  WSPvel.normalize();
-      //  WSPvel *= -m_BikeP.WR * fRearWheelAngVel;
-      //  
-      //  Vector2f Vs;
-      //  Vs.x = WSPvel.x + pfRear[0];
-      //  Vs.y = WSPvel.y + pfRear[1];
-      //  
-      //  if(Vs.length() > 1.25) {
-      //    m_bWheelSpin = true;
-      //    m_WheelSpinPoint = WSP;          
-      //    m_WheelSpinDir = Vs * 0.1f;
-      //    
-      //    //Vector2f Zz = (m_WheelSpinDir + Vector2f(m_BikeS.RearWheelP.x - WSP.x,m_BikeS.RearWheelP.y - WSP.y)) / 2.0f;
-      //    //m_WheelSpinDir = Zz;
-      //  }        
-      //}
-
-      if(m_BikeS.Dir == DD_RIGHT) {
-        if(fabs(fRearWheelAngVel) > 5 && m_BikeC.fDrive>0 && nNumContacts > 0) {
-          m_bWheelSpin = true;
-          m_WheelSpinPoint = WSP;
-          m_WheelSpinDir.x = ((-(m_BikeS.RearWheelP.y - WSP.y))*1 + (m_BikeS.RearWheelP.x - WSP.x)) /2;
-          m_WheelSpinDir.y = (((m_BikeS.RearWheelP.x - WSP.x))*1 + (m_BikeS.RearWheelP.y - WSP.y)) /2;
-        }
-      }
-    }
-    
-    /* Player head */
-    if(m_BikeS.Dir == DD_RIGHT) {
-      if(_IntersectHeadLevel(m_BikeS.HeadP,m_BikeP.fHeadSize)) {
-        m_bDead = true;
-      }
-    }
-    else if(m_BikeS.Dir == DD_LEFT) {
-      if(_IntersectHeadLevel(m_BikeS.Head2P,m_BikeP.fHeadSize)) {
-        m_bDead = true;
-      }
-    }
     
     /* Move rider along bike -- calculate handlebar and footpeg coords */
     Vector2f FootRP,HandRP;
@@ -374,7 +386,7 @@ namespace vapp {
     PHTotal = PHSpring + PHDamp;  
     dBodyAddForce(m_PlayerHandAnchorBodyID2,PHTotal.x,PHTotal.y,0);
     m_BikeS.PrevPHq2 = PHq;    
-           
+               
     /* Perform world simulation step */
     dWorldQuickStep(m_WorldID,fTimeStep*PHYS_SPEED);
     

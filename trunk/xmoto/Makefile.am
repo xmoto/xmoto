@@ -46,7 +46,8 @@ xmoto_SOURCES = $(common_SOURCES) src/BSP.cpp src/Game.cpp src/GameMain.cpp \
 	src/RendererParticles.cpp \
 	src/RendererBike.cpp \
 	src/Input.cpp \
-	src/Input.h
+	src/Input.h \
+	src/GameSerializer.cpp
 		
 uninstall-hook:
 	rm -r $(datadir)/@PACKAGE@		

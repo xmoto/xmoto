@@ -96,7 +96,7 @@ Central place to keep many in-game text strings
                                       "This is an alpha release of X-Moto, which means that the\n"       \
                                       "game you're experiencing right now indeed isn't the\n"            \
                                       "final version of the game.\n"                                     \
-                                      "All kinds of feedback are highly appriciated, so the game\n"      \
+                                      "All kinds of feedback are highly appreciated, so the game\n"      \
                                       "can get better.\n"                                                \
                                       "Mail bugs, ideas, comments, feature requests, hatemail, etc\n"    \
                                       "to neckelmann@gmail.com\n"                                        \

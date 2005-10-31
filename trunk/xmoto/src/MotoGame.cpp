@@ -170,7 +170,7 @@ namespace vapp {
   /*===========================================================================
   Update game
   ===========================================================================*/
-  void MotoGame::updateLevel(float fTimeStep) {
+  void MotoGame::updateLevel(float fTimeStep,SerializedState *pState) {
     /* Dummies are small markers that can show different things during debugging */
     resetDummies();
     
@@ -227,17 +227,6 @@ namespace vapp {
     
     m_BikeS.pfFramePos = (dReal *)dBodyGetPosition( m_FrameBodyID );    
     m_BikeS.pfFrameRot = (dReal *)dBodyGetRotation( m_FrameBodyID );
-
-    //m_BikeS.pfPlayerLArmPos = (dReal *)dBodyGetPosition( m_PlayerLArmBodyID );
-    //m_BikeS.pfPlayerLArmRot = (dReal *)dBodyGetRotation( m_PlayerLArmBodyID );
-    //m_BikeS.pfPlayerUArmPos = (dReal *)dBodyGetPosition( m_PlayerUArmBodyID );
-    //m_BikeS.pfPlayerUArmRot = (dReal *)dBodyGetRotation( m_PlayerUArmBodyID );
-    //m_BikeS.pfPlayerLLegPos = (dReal *)dBodyGetPosition( m_PlayerLLegBodyID );
-    //m_BikeS.pfPlayerLLegRot = (dReal *)dBodyGetRotation( m_PlayerLLegBodyID );
-    //m_BikeS.pfPlayerULegPos = (dReal *)dBodyGetPosition( m_PlayerULegBodyID );
-    //m_BikeS.pfPlayerULegRot = (dReal *)dBodyGetRotation( m_PlayerULegBodyID );
-    //m_BikeS.pfPlayerTorsoPos = (dReal *)dBodyGetPosition( m_PlayerTorsoBodyID );
-    //m_BikeS.pfPlayerTorsoRot = (dReal *)dBodyGetRotation( m_PlayerTorsoBodyID );
     
     m_BikeS.RearWheelP.x = m_BikeS.pfRearWheelPos[0];
     m_BikeS.RearWheelP.y = m_BikeS.pfRearWheelPos[1];    
@@ -246,12 +235,6 @@ namespace vapp {
     m_BikeS.CenterP.x = m_BikeS.pfFramePos[0];
     m_BikeS.CenterP.y = m_BikeS.pfFramePos[1];
     
-    //m_BikeS.PlayerLArmP.x = m_BikeS.pfPlayerLArmPos[0]; m_BikeS.PlayerLArmP.y = m_BikeS.pfPlayerLArmPos[1];
-    //m_BikeS.PlayerUArmP.x = m_BikeS.pfPlayerUArmPos[0]; m_BikeS.PlayerUArmP.y = m_BikeS.pfPlayerUArmPos[1];
-    //m_BikeS.PlayerLLegP.x = m_BikeS.pfPlayerLLegPos[0]; m_BikeS.PlayerLLegP.y = m_BikeS.pfPlayerLLegPos[1];
-    //m_BikeS.PlayerULegP.x = m_BikeS.pfPlayerULegPos[0]; m_BikeS.PlayerULegP.y = m_BikeS.pfPlayerULegPos[1];
-    //m_BikeS.PlayerTorsoP.x = m_BikeS.pfPlayerTorsoPos[0]; m_BikeS.PlayerTorsoP.y = m_BikeS.pfPlayerTorsoPos[1];
-
     m_BikeS.SwingAnchorP.x = m_BikeA.AR.x*m_BikeS.pfFrameRot[0*4+0] + m_BikeA.AR.y*m_BikeS.pfFrameRot[0*4+1] + m_BikeS.CenterP.x;
     m_BikeS.SwingAnchorP.y = m_BikeA.AR.x*m_BikeS.pfFrameRot[1*4+0] + m_BikeA.AR.y*m_BikeS.pfFrameRot[1*4+1] + m_BikeS.CenterP.y;
     m_BikeS.FrontAnchorP.x = m_BikeA.AF.x*m_BikeS.pfFrameRot[0*4+0] + m_BikeA.AF.y*m_BikeS.pfFrameRot[0*4+1] + m_BikeS.CenterP.x;
@@ -329,7 +312,7 @@ namespace vapp {
       throw Exception("level script PreDraw() returned false");   
 
     /* Update physics */
-    _UpdatePhysics(fTimeStep);
+    _UpdatePhysics(fTimeStep,pState);
   }
 
   /*===========================================================================
@@ -434,6 +417,8 @@ namespace vapp {
     m_nNumDummies = 0;
     
     m_Arrow.nArrowPointerMode = 0;
+    
+    m_bUnserialized = false;
         
     m_PlayerFootAnchorBodyID = NULL;
     m_PlayerHandAnchorBodyID = NULL;

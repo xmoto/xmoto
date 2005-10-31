@@ -336,11 +336,14 @@ namespace vapp {
 	/*===========================================================================
 	Serialized game state
   ===========================================================================*/
-  //class SerializedState {
-  //  public:
-  //  private:
-  //    std::vector<unsigned char> m_Data;  /* Serialized data */
-  //};
+  struct SerializedState {
+    float fFrontWheelX,fFrontWheelY;
+    float fFrontWheelRot[4];
+    float fRearWheelX,fRearWheelY;
+    float fRearWheelRot[4];
+    float fFrameX,fFrameY;
+    float fFrameRot[4];
+  };
   
 	/*===========================================================================
 	Game object
@@ -353,7 +356,7 @@ namespace vapp {
     
       /* Methods */
       void playLevel(LevelSrc *pLevelSrc);
-      void updateLevel(float fTimeStep);
+      void updateLevel(float fTimeStep,SerializedState *pState=NULL);
       void endLevel(void);
       
       void touchEntity(Entity *pEntity,bool bHead); 
@@ -364,6 +367,9 @@ namespace vapp {
       
       void gameMessage(std::string Text);
       void clearGameMessages(void);
+      
+      int serializeGameState(char *pcBuf,int nBufSize);
+      void unserializeGameState(const char *pcBuf,int nBufSize);
       
       /* Direct Lua interaction methods */
       bool scriptCallBool(std::string FuncName,bool bDefault=false);
@@ -428,6 +434,8 @@ namespace vapp {
       BikeController m_BikeC;             /* Bike controller */
       
       bool m_bFinished,m_bDead;           /* Yir */
+      
+      bool m_bUnserialized;
       
       /* Wheels spinning dirt up... muzakka! :D */
       bool m_bWheelSpin;                  /* Do it captain */
@@ -502,7 +510,7 @@ namespace vapp {
       void _UpdateEntities(void);
       
       /* MPhysics.cpp */
-      void _UpdatePhysics(float fTimeStep);
+      void _UpdatePhysics(float fTimeStep,SerializedState *pState);
       void _InitPhysics(void);
       void _UninitPhysics(void);
       void _PrepareBikePhysics(Vector2f StartPos);
