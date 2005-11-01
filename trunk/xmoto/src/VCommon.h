@@ -50,7 +50,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   typedef void (*PFNGLDELETEBUFFERSARBPROC)(GLsizei n, const GLuint *buffers); 
   typedef void (*PFNGLGENBUFFERSARBPROC)(GLsizei n, GLuint *buffers);
 
-  #ifndef __x86_64__
+  #if !defined(__x86_64__)
     typedef void (*PFNGLBUFFERDATAARBPROC)(GLenum target, int size, const GLvoid *data, GLenum usage);
   #else
     typedef void (*PFNGLBUFFERDATAARBPROC)(GLenum target, GLsizeiptrARB size, const GLvoid *data, GLenum usage);
@@ -81,16 +81,34 @@ extern "C" {
     #include "lua/lauxlib.h"
     #include "lua/lualib.h"
   #else
-    #if defined(HAVE_LUA50_LUA_H) /* if this is the case
-                                     assume we have the others
-                                     as well */
+    #if defined(HAVE_LUA50_LUA_H)
       #include <lua50/lua.h>
-      #include <lua50/lauxlib.h>
-      #include <lua50/lualib.h>
-    #else
+    #elif defined(HAVE_LUA_LUA_H)
       #include <lua/lua.h>
+    #elif defined(HAVE_LUA_H)
+      #include <lua.h>
+    #else
+      #error Missing lua.h
+    #endif
+
+    #if defined(HAVE_LUA50_LAUXLIB_H)
+      #include <lua50/lauxlib.h>
+    #elif defined(HAVE_LUA_LAUXLIB_H)
       #include <lua/lauxlib.h>
+    #elif defined(HAVE_LAUXLIB_H)
+      #include <lauxlib.h>
+    #else
+      #error Missing lauxlib.h
+    #endif
+    
+    #if defined(HAVE_LUA50_LUALIB_H)
+      #include <lua50/lualib.h>
+    #elif defined(HAVE_LUA_LUALIB_H)
       #include <lua/lualib.h>
+    #elif defined(HAVE_LUALIB_H)
+      #include <lualib.h>
+    #else
+      #error Missing lualib.h    
     #endif
   #endif
 };

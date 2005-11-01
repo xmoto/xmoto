@@ -57,6 +57,10 @@ AC_CHECK_HEADER(lua/lua.h,AC_DEFINE(HAVE_LUA_LUA_H),[])
 AC_CHECK_HEADER(lua/lauxlib.h,AC_DEFINE(HAVE_LUA_LAUXLIB_H),[])
 AC_CHECK_HEADER(lua/lualib.h,AC_DEFINE(HAVE_LUA_LUALIB_H),[])
 
+AC_CHECK_HEADER(lua.h,AC_DEFINE(HAVE_LUA_H),[])
+AC_CHECK_HEADER(lauxlib.h,AC_DEFINE(HAVE_LAUXLIB_H),[])
+AC_CHECK_HEADER(lualib.h,AC_DEFINE(HAVE_LUALIB_H),[])
+
 AC_SEARCH_LIBS(dJointAttach,ode ode0, [], [
         echo "libode or libode0 required!"
         exit -1
