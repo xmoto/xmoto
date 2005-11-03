@@ -835,14 +835,10 @@ namespace vapp {
           /* Read file size */
           int nSize;
 
-          #if defined(LITTLE_ENDIAN)
-            fread(&nSize,4,1,fp);
-          #elif defined(BIG_ENDIAN)
-            /* Patch by Michel Daenzer (applied 2005-10-25) */
-            unsigned char nSizeBuf[4];
-            fread(nSizeBuf,4,1,fp);
-            nSize = nSizeBuf[0] | nSizeBuf[1] << 8 | nSizeBuf[2] << 16 | nSizeBuf[3] << 24;
-          #endif
+          /* Patch by Michel Daenzer (applied 2005-10-25) */
+          unsigned char nSizeBuf[4];
+          fread(nSizeBuf,4,1,fp);
+          nSize = nSizeBuf[0] | nSizeBuf[1] << 8 | nSizeBuf[2] << 16 | nSizeBuf[3] << 24;
           
           if(m_nNumPackFiles < MAX_PACK_FILES) {
             m_PackFiles[m_nNumPackFiles].Name = cBuf;
