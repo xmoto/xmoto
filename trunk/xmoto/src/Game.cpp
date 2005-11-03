@@ -309,6 +309,7 @@ namespace vapp {
     m_Renderer.setParent( (App *)this );
     m_Renderer.setGameObject( &m_MotoGame );        
     m_Renderer.setDebug( m_bDebugMode );
+    m_Renderer.setUglyMode( m_bUglyMode );
     
     /* Data time! */
     Log("Loading data...");
@@ -1108,6 +1109,9 @@ namespace vapp {
       else if(UserArgs[i] == "-fps") {
         m_bShowFrameRate = true;
       }
+      else if(UserArgs[i] == "-ugly") {
+				m_bUglyMode = true;
+      }
     }
   }
 
@@ -1125,6 +1129,8 @@ namespace vapp {
     //               printf("\t\tImplicit -nogfx.\n");
     printf("\t-timedemo\n\t\tNo delaying, maximum framerate.\n");
     printf("\t-fps\n\t\tDisplay framerate.\n");
+    printf("\t-ugly\n\t\tEnable 'ugly' mode, suitable for computers without\n");
+                   printf("\t\ta good OpenGL-enabled video card.\n");
   }  
     
   /*===========================================================================

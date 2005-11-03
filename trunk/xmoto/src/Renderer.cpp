@@ -278,7 +278,8 @@ namespace vapp {
     m_Scroll += Vector2f(m_fCurrentHorizontalScrollShift,0.0f);
 
     /* SKY! */
-    _RenderSky();
+    if(!m_bUglyMode)
+			_RenderSky();
 
     /* Perform scaling/translation */
     float fScale = 0.195f;
@@ -289,7 +290,7 @@ namespace vapp {
     glLoadIdentity();
     glMatrixMode(GL_MODELVIEW);
       
-    if(m_Quality != GQ_LOW) {
+    if(m_Quality != GQ_LOW && !m_bUglyMode) {
       /* Background blocks */
       _RenderBackground();
       
@@ -297,7 +298,7 @@ namespace vapp {
       _RenderSprites(false,true);
     }
 
-    if(m_Quality == GQ_HIGH) {
+    if(m_Quality == GQ_HIGH && !m_bUglyMode) {
       /* Render particles (back!) */    
       _RenderParticles(false);
     }
@@ -311,12 +312,12 @@ namespace vapp {
     /* ... followed by the bike ... */
     _RenderBike();
     
-    if(m_Quality == GQ_HIGH) {
+    if(m_Quality == GQ_HIGH && !m_bUglyMode) {
       /* Render particles (front!) */    
       _RenderParticles();
     }
     
-    if(m_Quality != GQ_LOW) {
+    if(m_Quality != GQ_LOW && !m_bUglyMode) {
       /* ... and finally the foreground sprites! */
       _RenderSprites(true,false);
     }
@@ -519,69 +520,88 @@ namespace vapp {
     int dd=0;
     for(dd=0;dd<1000;dd++) cols[dd]=1.0f;
 
-    /* Render all non-background blocks */
-    /* Static geoms... */
-    for(int i=0;i<m_Geoms.size();i++) {
-      glBindTexture(GL_TEXTURE_2D,m_Geoms[i]->pTexture->nID);
-      glEnable(GL_TEXTURE_2D);      
-      glColor3f(1,1,1);
-      
-      /* VBO optimized? */
-      if(getParent()->useVBOs()) {
-        for(int j=0;j<m_Geoms[i]->Polys.size();j++) {          
-          StaticGeomPoly *pPoly = m_Geoms[i]->Polys[j];
-          getParent()->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nVertexBufferID);
-          glVertexPointer(2,GL_FLOAT,0,(char *)NULL);
-          getParent()->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nTexCoordBufferID);
-          glTexCoordPointer(2,GL_FLOAT,0,(char *)NULL);
-          glDrawArrays(GL_POLYGON,0,pPoly->nNumVertices);
-        }      
-      }
-      else {
-        for(int j=0;j<m_Geoms[i]->Polys.size();j++) {          
-          glBegin(GL_POLYGON);
-          glColor3f(1,1,1);
-          for(int k=0;k<m_Geoms[i]->Polys[j]->nNumVertices;k++) {
-            glTexCoord2f(m_Geoms[i]->Polys[j]->pTexCoords[k].x,m_Geoms[i]->Polys[j]->pTexCoords[k].y);
-            glVertex2f(m_Geoms[i]->Polys[j]->pVertices[k].x,m_Geoms[i]->Polys[j]->pVertices[k].y);
-          }
-          glEnd();
-        }
-      }
-            
-      glDisable(GL_TEXTURE_2D);
-    }
-    
-    /* Render all special edges (if quality!=low) */
-    if(m_Quality != GQ_LOW) {
-      for(int i=0;i<pGame->getOverlayEdges().size();i++) {
-        OverlayEdge *pEdge = pGame->getOverlayEdges()[i];
-        
-        switch(pEdge->Effect) {
-          case EE_GRASS:
-            if(m_pEdgeGrass1 != NULL) {
-              glEnable(GL_BLEND); 
-              glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
-              glBindTexture(GL_TEXTURE_2D,m_pEdgeGrass1->nID);
-              glEnable(GL_TEXTURE_2D);
-              glBegin(GL_POLYGON);
-              glColor3f(1,1,1);
-              glTexCoord2f((pEdge->pSrcBlock->fPosX+pEdge->P1.x)*0.5,0.01);
-              _Vertex(pEdge->P1 + Vector2f(pEdge->pSrcBlock->fPosX,pEdge->pSrcBlock->fPosY));
-              glTexCoord2f((pEdge->pSrcBlock->fPosX+pEdge->P2.x)*0.5,0.01);
-              _Vertex(pEdge->P2 + Vector2f(pEdge->pSrcBlock->fPosX,pEdge->pSrcBlock->fPosY));
-              glTexCoord2f((pEdge->pSrcBlock->fPosX+pEdge->P2.x)*0.5,0.99);
-              _Vertex(pEdge->P2 + Vector2f(pEdge->pSrcBlock->fPosX,pEdge->pSrcBlock->fPosY) + Vector2f(0,-0.3));
-              glTexCoord2f((pEdge->pSrcBlock->fPosX+pEdge->P1.x)*0.5,0.99);
-              _Vertex(pEdge->P1 + Vector2f(pEdge->pSrcBlock->fPosX,pEdge->pSrcBlock->fPosY) + Vector2f(0,-0.3));
-              glEnd();
-              glDisable(GL_TEXTURE_2D);
-              glDisable(GL_BLEND);
-            }
-            break;
-        }
-      }
-    }
+		/* Ugly mode? */
+		if(m_bUglyMode) {
+			/* Render all non-background blocks */
+	    std::vector<LevelBlock *> &Blocks = getGameObject()->getLevelSrc()->getBlockList();
+	
+			for(int i=0;i<Blocks.size();i++) {
+				if(!Blocks[i]->bBackground) {
+					glBegin(GL_LINE_LOOP);
+					glColor3f(1,1,1);
+					for(int j=0;j<Blocks[i]->Vertices.size();j++) {
+						glVertex2f(Blocks[i]->Vertices[j]->fX + Blocks[i]->fPosX,
+						           Blocks[i]->Vertices[j]->fY + Blocks[i]->fPosY);
+					}
+					glEnd();
+				}
+			}
+		}
+		else {
+			/* Render all non-background blocks */
+			/* Static geoms... */
+			for(int i=0;i<m_Geoms.size();i++) {
+				glBindTexture(GL_TEXTURE_2D,m_Geoms[i]->pTexture->nID);
+				glEnable(GL_TEXTURE_2D);      
+				glColor3f(1,1,1);
+	      
+				/* VBO optimized? */
+				if(getParent()->useVBOs()) {
+					for(int j=0;j<m_Geoms[i]->Polys.size();j++) {          
+						StaticGeomPoly *pPoly = m_Geoms[i]->Polys[j];
+						getParent()->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nVertexBufferID);
+						glVertexPointer(2,GL_FLOAT,0,(char *)NULL);
+						getParent()->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nTexCoordBufferID);
+						glTexCoordPointer(2,GL_FLOAT,0,(char *)NULL);
+						glDrawArrays(GL_POLYGON,0,pPoly->nNumVertices);
+					}      
+				}
+				else {
+					for(int j=0;j<m_Geoms[i]->Polys.size();j++) {          
+						glBegin(GL_POLYGON);
+						glColor3f(1,1,1);
+						for(int k=0;k<m_Geoms[i]->Polys[j]->nNumVertices;k++) {
+							glTexCoord2f(m_Geoms[i]->Polys[j]->pTexCoords[k].x,m_Geoms[i]->Polys[j]->pTexCoords[k].y);
+							glVertex2f(m_Geoms[i]->Polys[j]->pVertices[k].x,m_Geoms[i]->Polys[j]->pVertices[k].y);
+						}
+						glEnd();
+					}
+				}
+	            
+				glDisable(GL_TEXTURE_2D);
+			}
+	    
+			/* Render all special edges (if quality!=low) */
+			if(m_Quality != GQ_LOW) {
+				for(int i=0;i<pGame->getOverlayEdges().size();i++) {
+					OverlayEdge *pEdge = pGame->getOverlayEdges()[i];
+	        
+					switch(pEdge->Effect) {
+						case EE_GRASS:
+							if(m_pEdgeGrass1 != NULL) {
+								glEnable(GL_BLEND); 
+								glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
+								glBindTexture(GL_TEXTURE_2D,m_pEdgeGrass1->nID);
+								glEnable(GL_TEXTURE_2D);
+								glBegin(GL_POLYGON);
+								glColor3f(1,1,1);
+								glTexCoord2f((pEdge->pSrcBlock->fPosX+pEdge->P1.x)*0.5,0.01);
+								_Vertex(pEdge->P1 + Vector2f(pEdge->pSrcBlock->fPosX,pEdge->pSrcBlock->fPosY));
+								glTexCoord2f((pEdge->pSrcBlock->fPosX+pEdge->P2.x)*0.5,0.01);
+								_Vertex(pEdge->P2 + Vector2f(pEdge->pSrcBlock->fPosX,pEdge->pSrcBlock->fPosY));
+								glTexCoord2f((pEdge->pSrcBlock->fPosX+pEdge->P2.x)*0.5,0.99);
+								_Vertex(pEdge->P2 + Vector2f(pEdge->pSrcBlock->fPosX,pEdge->pSrcBlock->fPosY) + Vector2f(0,-0.3));
+								glTexCoord2f((pEdge->pSrcBlock->fPosX+pEdge->P1.x)*0.5,0.99);
+								_Vertex(pEdge->P1 + Vector2f(pEdge->pSrcBlock->fPosX,pEdge->pSrcBlock->fPosY) + Vector2f(0,-0.3));
+								glEnd();
+								glDisable(GL_TEXTURE_2D);
+								glDisable(GL_BLEND);
+							}
+							break;
+					}
+				}
+			}
+		}
   }  
 
   /*===========================================================================

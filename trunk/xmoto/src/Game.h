@@ -76,7 +76,9 @@ namespace vapp {
                  m_pNotifyMsgBox=NULL;
                  m_pNewProfileMsgBox=NULL;
                  m_pDeleteProfileMsgBox=NULL;
-                 m_b50FpsMode = false;}
+                 m_b50FpsMode = false;
+                 m_bUglyMode = false;
+                 }
         
       /* Virtual methods */
       virtual void drawFrame(void);
@@ -104,6 +106,7 @@ namespace vapp {
       bool m_bListReplays;                      /* true: list all replays */
       bool m_bTimeDemo;                         /* true: (valid for replaying) - performance benchmark */
       bool m_bDebugMode;                        /* true: show debug info */
+      bool m_bUglyMode;													/* true: fast 'n ugly graphics */
       std::string m_PlaySpecificLevel;          /* If set, we only want to 
                                                    play this level */
       std::string m_PlaySpecificReplay;         /* If set, we only want to 

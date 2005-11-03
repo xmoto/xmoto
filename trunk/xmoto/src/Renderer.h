@@ -172,6 +172,7 @@ namespace vapp {
       void setParent(App *pParent) {m_pParent=pParent;}
       App *getParent(void) {return m_pParent;}
       void setDebug(bool bDebug) {m_bDebug = bDebug;}
+      void setUglyMode(bool bUglyMode) {m_bUglyMode = bUglyMode;}
       bool isDebug(void) {return m_bDebug;}
       UIRoot *getGUI(void) {return &m_GUI;}
       UIFont *getSmallFont(void) {return m_pSFont;}
@@ -190,6 +191,7 @@ namespace vapp {
       App *m_pParent;               /* Our owner, so we know where to draw. */
       
       bool m_bDebug;
+      bool m_bUglyMode;
       
       int m_nNumSpriteTypes;
       SpriteType m_SpriteTypes[100];
