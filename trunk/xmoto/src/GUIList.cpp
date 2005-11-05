@@ -268,6 +268,7 @@ namespace vapp {
   void UIList::clear(void) {
     _FreeUIList();
     m_Entries.clear();
+    m_nSelected = 0;
   }
 
   /*===========================================================================

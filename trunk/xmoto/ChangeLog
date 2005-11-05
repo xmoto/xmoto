@@ -1,8 +1,12 @@
 X-Moto 0.1.8 (alpha)  2005-??-??
 --------------------------------
 
+ * Replays supported.
  * Non-windows release with a more intelligent configure
    script.
+ * New -ugly option for computers without a proper OpenGL
+   video card.
+ * Major code clean up and several bug-fixes.
 
 X-Moto 0.1.7 (alpha)  2005-10-27
 --------------------------------

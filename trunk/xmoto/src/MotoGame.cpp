@@ -170,7 +170,7 @@ namespace vapp {
   /*===========================================================================
   Update game
   ===========================================================================*/
-  void MotoGame::updateLevel(float fTimeStep,SerializedState *pState) {
+  void MotoGame::updateLevel(float fTimeStep,SerializedBikeState *pReplayState) {
     /* Dummies are small markers that can show different things during debugging */
     resetDummies();
     
@@ -205,7 +205,10 @@ namespace vapp {
     }
     
     /* Increase time */
-    m_fTime += fTimeStep;
+    if(pReplayState == NULL)
+      m_fTime += fTimeStep;
+    else
+      m_fTime = pReplayState->fGameTime;
     
     /* Are we going to change direction during this update? */
     bool bChangeDir = false;
@@ -214,94 +217,10 @@ namespace vapp {
       bChangeDir = true;
       
       m_BikeS.Dir = m_BikeS.Dir==DD_LEFT?DD_RIGHT:DD_LEFT; /* switch */
-      
-      /* Call The Evil Function. Children, don't try this at home! :-O */
-      _ChangeBikeDir();
     }
   
-    /* Get current bike state */
-    m_BikeS.pfFrontWheelPos = (dReal *)dBodyGetPosition( m_FrontWheelBodyID );
-    m_BikeS.pfRearWheelPos = (dReal *)dBodyGetPosition( m_RearWheelBodyID );
-    m_BikeS.pfFrontWheelRot = (dReal *)dBodyGetRotation( m_FrontWheelBodyID );
-    m_BikeS.pfRearWheelRot = (dReal *)dBodyGetRotation( m_RearWheelBodyID );
-    
-    m_BikeS.pfFramePos = (dReal *)dBodyGetPosition( m_FrameBodyID );    
-    m_BikeS.pfFrameRot = (dReal *)dBodyGetRotation( m_FrameBodyID );
-    
-    m_BikeS.RearWheelP.x = m_BikeS.pfRearWheelPos[0];
-    m_BikeS.RearWheelP.y = m_BikeS.pfRearWheelPos[1];    
-    m_BikeS.FrontWheelP.x = m_BikeS.pfFrontWheelPos[0];
-    m_BikeS.FrontWheelP.y = m_BikeS.pfFrontWheelPos[1];
-    m_BikeS.CenterP.x = m_BikeS.pfFramePos[0];
-    m_BikeS.CenterP.y = m_BikeS.pfFramePos[1];
-    
-    m_BikeS.SwingAnchorP.x = m_BikeA.AR.x*m_BikeS.pfFrameRot[0*4+0] + m_BikeA.AR.y*m_BikeS.pfFrameRot[0*4+1] + m_BikeS.CenterP.x;
-    m_BikeS.SwingAnchorP.y = m_BikeA.AR.x*m_BikeS.pfFrameRot[1*4+0] + m_BikeA.AR.y*m_BikeS.pfFrameRot[1*4+1] + m_BikeS.CenterP.y;
-    m_BikeS.FrontAnchorP.x = m_BikeA.AF.x*m_BikeS.pfFrameRot[0*4+0] + m_BikeA.AF.y*m_BikeS.pfFrameRot[0*4+1] + m_BikeS.CenterP.x;
-    m_BikeS.FrontAnchorP.y = m_BikeA.AF.x*m_BikeS.pfFrameRot[1*4+0] + m_BikeA.AF.y*m_BikeS.pfFrameRot[1*4+1] + m_BikeS.CenterP.y;
-
-    m_BikeS.SwingAnchor2P.x = m_BikeA.AR2.x*m_BikeS.pfFrameRot[0*4+0] + m_BikeA.AR2.y*m_BikeS.pfFrameRot[0*4+1] + m_BikeS.CenterP.x;
-    m_BikeS.SwingAnchor2P.y = m_BikeA.AR2.x*m_BikeS.pfFrameRot[1*4+0] + m_BikeA.AR2.y*m_BikeS.pfFrameRot[1*4+1] + m_BikeS.CenterP.y;
-    m_BikeS.FrontAnchor2P.x = m_BikeA.AF2.x*m_BikeS.pfFrameRot[0*4+0] + m_BikeA.AF2.y*m_BikeS.pfFrameRot[0*4+1] + m_BikeS.CenterP.x;
-    m_BikeS.FrontAnchor2P.y = m_BikeA.AF2.x*m_BikeS.pfFrameRot[1*4+0] + m_BikeA.AF2.y*m_BikeS.pfFrameRot[1*4+1] + m_BikeS.CenterP.y;
-            
-    dVector3 T;
-    
-    dJointGetHingeAnchor(m_HandHingeID,T);
-    m_BikeS.HandP.x = T[0]; m_BikeS.HandP.y = T[1];
-
-    dJointGetHingeAnchor(m_ElbowHingeID,T);
-    m_BikeS.ElbowP.x = T[0]; m_BikeS.ElbowP.y = T[1];
-
-    dJointGetHingeAnchor(m_ShoulderHingeID,T);
-    m_BikeS.ShoulderP.x = T[0]; m_BikeS.ShoulderP.y = T[1];
-
-    dJointGetHingeAnchor(m_LowerBodyHingeID,T);
-    m_BikeS.LowerBodyP.x = T[0]; m_BikeS.LowerBodyP.y = T[1];
-
-    dJointGetHingeAnchor(m_KneeHingeID,T);
-    m_BikeS.KneeP.x = T[0]; m_BikeS.KneeP.y = T[1];
-
-    dJointGetHingeAnchor(m_FootHingeID,T);
-    m_BikeS.FootP.x = T[0]; m_BikeS.FootP.y = T[1];
-    
-    dJointGetHingeAnchor(m_HandHingeID2,T);
-    m_BikeS.Hand2P.x = T[0]; m_BikeS.Hand2P.y = T[1];
-
-    dJointGetHingeAnchor(m_ElbowHingeID2,T);
-    m_BikeS.Elbow2P.x = T[0]; m_BikeS.Elbow2P.y = T[1];
-
-    dJointGetHingeAnchor(m_ShoulderHingeID2,T);
-    m_BikeS.Shoulder2P.x = T[0]; m_BikeS.Shoulder2P.y = T[1];
-
-    dJointGetHingeAnchor(m_LowerBodyHingeID2,T);
-    m_BikeS.LowerBody2P.x = T[0]; m_BikeS.LowerBody2P.y = T[1];
-
-    dJointGetHingeAnchor(m_KneeHingeID2,T);
-    m_BikeS.Knee2P.x = T[0]; m_BikeS.Knee2P.y = T[1];
-
-    dJointGetHingeAnchor(m_FootHingeID2,T);
-    m_BikeS.Foot2P.x = T[0]; m_BikeS.Foot2P.y = T[1];
-    
-    /* Calculate head position */
-    Vector2f V = (m_BikeS.ShoulderP - m_BikeS.LowerBodyP);
-    V.normalize();
-    m_BikeS.HeadP = m_BikeS.ShoulderP + V*m_BikeP.fNeckLength;
-
-    /* Calculate head position (Alt.) */
-    V = (m_BikeS.Shoulder2P - m_BikeS.LowerBody2P);
-    V.normalize();
-    m_BikeS.Head2P = m_BikeS.Shoulder2P + V*m_BikeP.fNeckLength;
-
-    /* Maybe someone want these as well */    
-    m_BikeS.pAnchors = &m_BikeA;
-    m_BikeS.pParams = &m_BikeP;
-    
-    /* Internally we'd like to know the abs. relaxed position of the wheels */
-    m_BikeS.RFrontWheelP.x = m_BikeA.Fp.x*m_BikeS.pfFrameRot[0*4+0] + m_BikeA.Fp.y*m_BikeS.pfFrameRot[0*4+1] + m_BikeS.CenterP.x;
-    m_BikeS.RFrontWheelP.y = m_BikeA.Fp.x*m_BikeS.pfFrameRot[1*4+0] + m_BikeA.Fp.y*m_BikeS.pfFrameRot[1*4+1] + m_BikeS.CenterP.y;
-    m_BikeS.RRearWheelP.x = m_BikeA.Rp.x*m_BikeS.pfFrameRot[0*4+0] + m_BikeA.Rp.y*m_BikeS.pfFrameRot[0*4+1] + m_BikeS.CenterP.x;
-    m_BikeS.RRearWheelP.y = m_BikeA.Rp.x*m_BikeS.pfFrameRot[1*4+0] + m_BikeA.Rp.y*m_BikeS.pfFrameRot[1*4+1] + m_BikeS.CenterP.y;   
+    /* Update game state */
+    _UpdateGameState(pReplayState);
         
     /* Update misc stuff */
     _UpdateZones();
@@ -311,8 +230,11 @@ namespace vapp {
     if(!scriptCallBool( "PreDraw",true ))
       throw Exception("level script PreDraw() returned false");   
 
-    /* Update physics */
-    _UpdatePhysics(fTimeStep,pState);
+    /* Only make a full physics update when not replaying */
+    if(pReplayState == NULL) {
+      /* Update physics */
+      _UpdatePhysics(fTimeStep);
+    }
   }
 
   /*===========================================================================
@@ -340,29 +262,29 @@ namespace vapp {
     m_BikeS.LowerBody2P = Vector2f(0,0);
     m_BikeS.LowerBodyP = Vector2f(0,0);
     m_BikeS.pAnchors = NULL;
-    m_BikeS.pfFramePos = NULL;
-    m_BikeS.pfFrameRot = NULL;
-    m_BikeS.pfFrontWheelPos = NULL;
-    m_BikeS.pfFrontWheelRot = NULL;
-    m_BikeS.pfRearWheelPos = NULL;
-    m_BikeS.pfRearWheelRot = NULL;
-    m_BikeS.pfPlayerLArmPos = NULL;
-    m_BikeS.pfPlayerUArmPos = NULL;
-    m_BikeS.pfPlayerLLegPos = NULL;
-    m_BikeS.pfPlayerULegPos = NULL;
-    m_BikeS.pfPlayerTorsoPos = NULL;
-    m_BikeS.pfPlayerTorsoRot = NULL;
+    //m_BikeS.pfFramePos = NULL;
+    //m_BikeS.pfFrameRot = NULL;
+    //m_BikeS.pfFrontWheelPos = NULL;
+    //m_BikeS.pfFrontWheelRot = NULL;
+    //m_BikeS.pfRearWheelPos = NULL;
+    //m_BikeS.pfRearWheelRot = NULL;
+    //m_BikeS.pfPlayerLArmPos = NULL;
+    //m_BikeS.pfPlayerUArmPos = NULL;
+    //m_BikeS.pfPlayerLLegPos = NULL;
+    //m_BikeS.pfPlayerULegPos = NULL;
+    //m_BikeS.pfPlayerTorsoPos = NULL;
+    //m_BikeS.pfPlayerTorsoRot = NULL;
     m_BikeS.PlayerLArmP = Vector2f(0,0);
     m_BikeS.PlayerLLegP = Vector2f(0,0);
     m_BikeS.PlayerTorsoP = Vector2f(0,0);
     m_BikeS.PlayerUArmP = Vector2f(0,0);
     m_BikeS.PlayerULegP = Vector2f(0,0);
-    m_BikeS.pfPlayerLArm2Pos = NULL;
-    m_BikeS.pfPlayerUArm2Pos = NULL;
-    m_BikeS.pfPlayerLLeg2Pos = NULL;
-    m_BikeS.pfPlayerULeg2Pos = NULL;
-    m_BikeS.pfPlayerTorso2Pos = NULL;
-    m_BikeS.pfPlayerTorso2Rot = NULL;
+    //m_BikeS.pfPlayerLArm2Pos = NULL;
+    //m_BikeS.pfPlayerUArm2Pos = NULL;
+    //m_BikeS.pfPlayerLLeg2Pos = NULL;
+    //m_BikeS.pfPlayerULeg2Pos = NULL;
+    //m_BikeS.pfPlayerTorso2Pos = NULL;
+    //m_BikeS.pfPlayerTorso2Rot = NULL;
     m_BikeS.PlayerLArm2P = Vector2f(0,0);
     m_BikeS.PlayerLLeg2P = Vector2f(0,0);
     m_BikeS.PlayerTorso2P = Vector2f(0,0);
@@ -418,8 +340,6 @@ namespace vapp {
     
     m_Arrow.nArrowPointerMode = 0;
     
-    m_bUnserialized = false;
-        
     m_PlayerFootAnchorBodyID = NULL;
     m_PlayerHandAnchorBodyID = NULL;
     m_PlayerTorsoBodyID = NULL;

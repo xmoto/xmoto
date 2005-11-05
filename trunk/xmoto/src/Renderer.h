@@ -178,6 +178,7 @@ namespace vapp {
       UIFont *getSmallFont(void) {return m_pSFont;}
       UIFont *getMediumFont(void) {return m_pMFont;}
       void setBestTime(std::string s) {m_pBestTime->setCaption(s);}
+      std::string getBestTime(void) {return m_pBestTime->getCaption();}
       void setQuality(GraphQuality Quality) {m_Quality = Quality;}      
       void setSpeedMultiplier(float f) {m_fSpeedMultiply = f;}
     

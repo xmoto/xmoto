@@ -31,5 +31,7 @@
 	<var name="ScreenshotFormat" value="png"/>
 	<var name="NotifyAtInit" value="false"/>
 	<var name="ShowMiniMap" value="true"/>
+	<var name="StoreReplays" value="true"/>
+	<var name="ReplayFrameRate" value="25"/>
 </userconfig>
 

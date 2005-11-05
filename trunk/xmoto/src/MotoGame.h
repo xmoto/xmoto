@@ -65,8 +65,6 @@ namespace vapp {
 	Controller struct
   ===========================================================================*/
   struct BikeController {
-    //bool bDrive;          /* Full throttle if true */
-    //bool bBrake;          /* Full brake power if true */
     float fDrive;         /* Drive throttle (0-1) */
     float fBrake;         /* Brake amount (0-1) */
     bool bPullBack;       /* Pull bike back, i.e. lift front wheel */
@@ -172,7 +170,30 @@ namespace vapp {
   };
 
 	/*===========================================================================
-	Bike state (for rendering, absolute coordinates)
+	Serialized bike state
+  ===========================================================================*/
+  #define SER_BIKE_STATE_DIR_LEFT     0x01
+  #define SER_BIKE_STATE_DIR_RIGHT    0x02
+  
+  struct SerializedBikeState {
+    unsigned char cFlags;             /* State flags */
+    float fGameTime;                  /* Game time */  
+    float fRearWheelX,fRearWheelY;    /* Rear wheel position */
+    float fFrontWheelX,fFrontWheelY;  /* Front wheel position */
+    float fFrameX,fFrameY;            /* Frame position */
+    float fRearWheelRot[4];           /* Rear wheel rotation */   
+    float fFrontWheelRot[4];          /* Front wheel rotation */   
+    float fFrameRot[4];               /* Frame rotation */   
+    float fHandX,fHandY;              /* Hand position */
+    float fElbowX,fElbowY;            /* Elbow position */
+    float fShoulderX,fShoulderY;      /* Shoulder position */
+    float fLowerBodyX,fLowerBodyY;    /* Ass position */
+    float fKneeX,fKneeY;              /* Knee position */
+    float fFootX,fFootY;              /* Foot position */    
+  };
+
+	/*===========================================================================
+	Bike state 
   ===========================================================================*/
   struct BikeState {
     DriveDir Dir;         /* Driving left or right? */
@@ -198,12 +219,12 @@ namespace vapp {
     Vector2f PlayerLArm2P; /* Position of player's upper arm (Alt.) */
         
     /* Internals */
-    dReal *pfFrontWheelPos;
-    dReal *pfRearWheelPos;
-    dReal *pfFramePos;
-    dReal *pfFrontWheelRot;
-    dReal *pfRearWheelRot;
-    dReal *pfFrameRot;
+    float fFrontWheelRot[4];
+    float fRearWheelRot[4];
+    float fFrameRot[4];
+    //dReal *pfFrontWheelRot;
+    //dReal *pfRearWheelRot;
+    //dReal *pfFrameRot;
     
     Vector2f HandP;
     Vector2f ElbowP;
@@ -221,27 +242,27 @@ namespace vapp {
     Vector2f Foot2P;
     Vector2f Head2P;        /* NB! not a phys. body */
 
-    dReal *pfPlayerTorsoPos;
-    dReal *pfPlayerTorsoRot;
-    dReal *pfPlayerULegPos;
-    dReal *pfPlayerULegRot;
-    dReal *pfPlayerLLegPos;
-    dReal *pfPlayerLLegRot;
-    dReal *pfPlayerUArmPos;
-    dReal *pfPlayerUArmRot;
-    dReal *pfPlayerLArmPos;
-    dReal *pfPlayerLArmRot;
+    //dReal *pfPlayerTorsoPos;
+    //dReal *pfPlayerTorsoRot;
+    //dReal *pfPlayerULegPos;
+    //dReal *pfPlayerULegRot;
+    //dReal *pfPlayerLLegPos;
+    //dReal *pfPlayerLLegRot;
+    //dReal *pfPlayerUArmPos;
+    //dReal *pfPlayerUArmRot;
+    //dReal *pfPlayerLArmPos;
+    //dReal *pfPlayerLArmRot;
 
-    dReal *pfPlayerTorso2Pos;
-    dReal *pfPlayerTorso2Rot;
-    dReal *pfPlayerULeg2Pos;
-    dReal *pfPlayerULeg2Rot;
-    dReal *pfPlayerLLeg2Pos;
-    dReal *pfPlayerLLeg2Rot;
-    dReal *pfPlayerUArm2Pos;
-    dReal *pfPlayerUArm2Rot;
-    dReal *pfPlayerLArm2Pos;
-    dReal *pfPlayerLArm2Rot;
+    //dReal *pfPlayerTorso2Pos;
+    //dReal *pfPlayerTorso2Rot;
+    //dReal *pfPlayerULeg2Pos;
+    //dReal *pfPlayerULeg2Rot;
+    //dReal *pfPlayerLLeg2Pos;
+    //dReal *pfPlayerLLeg2Rot;
+    //dReal *pfPlayerUArm2Pos;
+    //dReal *pfPlayerUArm2Rot;
+    //dReal *pfPlayerLArm2Pos;
+    //dReal *pfPlayerLArm2Rot;
 
     Vector2f RRearWheelP; /* Relaxed rear wheel position */
     Vector2f RFrontWheelP;/* Relaxed front wheel position */
@@ -332,19 +353,7 @@ namespace vapp {
     std::string Text;                 /* The text */
     int nAlpha;                       /* Alpha amount */
   };  
-  
-	/*===========================================================================
-	Serialized game state
-  ===========================================================================*/
-  struct SerializedState {
-    float fFrontWheelX,fFrontWheelY;
-    float fFrontWheelRot[4];
-    float fRearWheelX,fRearWheelY;
-    float fRearWheelRot[4];
-    float fFrameX,fFrameY;
-    float fFrameRot[4];
-  };
-  
+    
 	/*===========================================================================
 	Game object
   ===========================================================================*/
@@ -356,7 +365,7 @@ namespace vapp {
     
       /* Methods */
       void playLevel(LevelSrc *pLevelSrc);
-      void updateLevel(float fTimeStep,SerializedState *pState=NULL);
+      void updateLevel(float fTimeStep,SerializedBikeState *pReplayState);
       void endLevel(void);
       
       void touchEntity(Entity *pEntity,bool bHead); 
@@ -368,8 +377,7 @@ namespace vapp {
       void gameMessage(std::string Text);
       void clearGameMessages(void);
       
-      int serializeGameState(char *pcBuf,int nBufSize);
-      void unserializeGameState(const char *pcBuf,int nBufSize);
+      void getSerializedBikeState(SerializedBikeState *pState);
       
       /* Direct Lua interaction methods */
       bool scriptCallBool(std::string FuncName,bool bDefault=false);
@@ -394,9 +402,7 @@ namespace vapp {
       bool isWheelSpinning(void) {return m_bWheelSpin;}
       Vector2f getWheelSpinPoint(void) {return m_WheelSpinPoint;}
       Vector2f getWheelSpinDir(void) {return m_WheelSpinDir;}
-      
-//      void serializeState(SerializedState *ps);
-      
+            
       /* Debug */
       void resetDummies(void) {m_nNumDummies=0;}
       int getNumDummies(void) {return m_nNumDummies;}
@@ -434,8 +440,6 @@ namespace vapp {
       BikeController m_BikeC;             /* Bike controller */
       
       bool m_bFinished,m_bDead;           /* Yir */
-      
-      bool m_bUnserialized;
       
       /* Wheels spinning dirt up... muzakka! :D */
       bool m_bWheelSpin;                  /* Do it captain */
@@ -508,14 +512,14 @@ namespace vapp {
       EntityType _TransEntityType(std::string Name);
       EdgeEffect _TransEdgeEffect(std::string Name);
       void _UpdateEntities(void);
+      void _UpdateGameState(SerializedBikeState *pReplayState);
       
       /* MPhysics.cpp */
-      void _UpdatePhysics(float fTimeStep,SerializedState *pState);
+      void _UpdatePhysics(float fTimeStep);
       void _InitPhysics(void);
       void _UninitPhysics(void);
       void _PrepareBikePhysics(Vector2f StartPos);
       void _PrepareRider(Vector2f StartPos);
-      void _ChangeBikeDir(void);
     };
 
 };

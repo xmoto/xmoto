@@ -44,11 +44,11 @@ namespace vapp {
     GS_UNASSIGNED = 0,
     GS_MENU,                  /* In the game menu */
     GS_PLAYING,               /* Playing the game */
-    GS_REPLAYING,             /* Playing back a replay */
     GS_PAUSE,                 /* Paused from GS_PLAYING */
     GS_JUSTDEAD,              /* Head-banging too much */
     GS_EDIT_PROFILES,         /* In profile editor */
-    GS_FINISHED               /* Finished a level */
+    GS_FINISHED,              /* Finished a level */
+    GS_REPLAYING              /* Replaying */
   };
 
 	/*===========================================================================
@@ -67,17 +67,21 @@ namespace vapp {
     public:
       GameApp() {m_bShowMiniMap=true;
                  m_bDebugMode=false;
-                 m_bListReplays=false;
                  m_bListLevels=false;
+                 m_bListReplays=false;
                  m_bTimeDemo=false;
                  m_bShowFrameRate=false;
-                 m_pReplay=NULL;
                  m_pQuitMsgBox=NULL;
                  m_pNotifyMsgBox=NULL;
                  m_pNewProfileMsgBox=NULL;
                  m_pDeleteProfileMsgBox=NULL;
+                 m_pDeleteReplayMsgBox=NULL;
+                 m_pSaveReplayMsgBox=NULL;
+                 m_pReplaysWindow=NULL;
                  m_b50FpsMode = false;
                  m_bUglyMode = false;
+                 m_pReplay = NULL;
+                 m_bRecordReplays = true;
                  }
         
       /* Virtual methods */
@@ -103,14 +107,14 @@ namespace vapp {
       /* Data */
       bool m_bShowFrameRate;                    /* true: frame rate */
       bool m_bListLevels;                       /* true: list installed levels */
-      bool m_bListReplays;                      /* true: list all replays */
+      bool m_bListReplays;                      /* true: list replays */
       bool m_bTimeDemo;                         /* true: (valid for replaying) - performance benchmark */
       bool m_bDebugMode;                        /* true: show debug info */
       bool m_bUglyMode;													/* true: fast 'n ugly graphics */
       std::string m_PlaySpecificLevel;          /* If set, we only want to 
                                                    play this level */
-      std::string m_PlaySpecificReplay;         /* If set, we only want to 
-                                                   playback this replay */          
+      std::string m_PlaySpecificReplay;         /* If set, we only want to
+                                                   play this replay */                                                   
       std::string m_ForceProfile;               /* Force this player profile */    
       std::string m_GraphDebugInfoFile;
       int m_nNumLevels;
@@ -120,14 +124,17 @@ namespace vapp {
       GameState m_State;                        /* Current state */      
       MotoGame m_MotoGame;                      /* Game object */
       GameRenderer m_Renderer;                  /* Renderer */
-      Replay *m_pReplay;                        /* Active replay object */
       int m_nFrame;                             /* Frame # */
       PlayerProfile *m_pPlayer;                 /* The player's profile */
       
       double m_fLastFrameTime;                  /* When the last frama was initiated */
       double m_fLastPerfStateTime;
+      float m_fLastStateSerializationTime;    
       
       bool m_b50FpsMode;
+      
+      Replay *m_pReplay;
+      std::string m_ReplayPlayerName;
       
       /* Sound effects */
       SoundSample *m_pEndOfLevelSFX;
@@ -139,19 +146,16 @@ namespace vapp {
       UIMsgBox *m_pQuitMsgBox;
       UIMsgBox *m_pNotifyMsgBox;
             
-      /* Keep a copy of the previous bike-controller state, so we can track 
-         changes for the replayer */
-      BikeController m_PrevBikeC;
-      
       /* Main menu background / title */
       Texture *m_pTitleBL,*m_pTitleBR,*m_pTitleTL,*m_pTitleTR;
       
       /* Main menu buttons and stuff */
       int m_nNumMainMenuButtons;
       UIButton *m_pMainMenuButtons[10];
-      UIFrame *m_pOptionsWindow,*m_pHelpWindow,*m_pReplaysWindow,*m_pBestTimesWindow,*m_pPlayWindow;
+      UIFrame *m_pOptionsWindow,*m_pHelpWindow,*m_pPlayWindow,*m_pReplaysWindow;
       UIWindow *m_pMainMenu;
-      
+      UIMsgBox *m_pDeleteReplayMsgBox;
+            
       /* In-game PAUSE menu fun */
       UIFrame *m_pPauseMenu;
       int m_nPauseShade;
@@ -177,6 +181,9 @@ namespace vapp {
       UIMsgBox *m_pNewProfileMsgBox;    
       UIMsgBox *m_pDeleteProfileMsgBox;
       
+      /* Replay saving UI fun */
+      UIMsgBox *m_pSaveReplayMsgBox;    
+      
       /* Config & profiles */
       UserConfig m_Config;
       PlayerData m_Profiles;
@@ -184,19 +191,19 @@ namespace vapp {
       /* Misc settings */
       MenuBackgroundGraphics m_MenuBackgroundGraphics;
       bool m_bShowMiniMap;
+      bool m_bRecordReplays;
+      float m_fReplayFrameRate;
+      float m_fCurrentReplayFrameRate;
             
       /* Helpers */
       LevelSrc *_FindLevelByID(std::string ID);
-      void _StoreControllerState(void);
-      void _RecordReplay(void);
-      void _PlaybackReplay(void);          
       void _HandleMainMenu(void);  
       void _HandlePauseMenu(void);
       void _HandleJustDeadMenu(void);
       void _HandleFinishMenu(void);
       void _HandleProfileEditor(void);
-      void _CreateReplayList(UIList *pList);
-      void _CreateLevelLists(UIList *pExternalLevels,UIList *pInternalLists);
+      void _CreateLevelLists(UIList *pExternalLevels,UIList *pInternalLevels);
+      void _CreateReplaysList(UIList *pList);
       void _CreateProfileList(void);
       void _CreateDefaultConfig(void);
       void _UpdateActionKeyList(void);
@@ -212,8 +219,10 @@ namespace vapp {
       void _SaveOptions(void);
       void _UpdateSettings(void);
       void _UpdateLevelLists(void);
+      void _UpdateReplaysList(void);
       void _GameScreenshot(void);
-
+      void _SaveReplay(const std::string &Name);
+    
       void _UpdateLoadingScreen(float fDone,Texture *pScreen);      
       
       void _SimpleMessage(const std::string &Msg);

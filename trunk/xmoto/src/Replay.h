@@ -24,62 +24,74 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "VCommon.h"
 #include "VApp.h"
+#include "VFileIO.h"
 
 namespace vapp {
 
-	/*===========================================================================
-	Replay info
-  ===========================================================================*/  
   struct ReplayInfo {
-    ReplayInfo() {
-      fFinishTime=0.0f;
-    }  
-
-    std::string PlayerName,LevelID,Name;
-    float fFinishTime;
+    std::string Name;
+    std::string Player;
+    std::string Level;
+    float fFrameRate;
+  };
+  
+  struct ReplayStateChunk {
+    char *pcChunkData;
+    int nNumStates;
   };
 
-	/*===========================================================================
-	Replay class
-  ===========================================================================*/
   class Replay {
     public:
-      Replay() {
-        m_fFinishTime = 0.0f;
-      }
-      ~Replay() {_Free();}
-      
-      /* Static replay prober */
-      static std::vector<ReplayInfo *> probeReplays(void);
-      static void freeReplayList(std::vector<ReplayInfo *> &List);
-//      static std::string eventName(ReplayEventType Type);
+      Replay();
+      ~Replay();
       
       /* Methods */
-      void loadFromFile(std::string Name);
-      void saveToFile(std::string Name);
-  //    void event(int nFrame,ReplayEventType Type);      
+      void storeState(const char *pcState);
+      bool loadState(char *pcState);      
+      void createReplay(const std::string &FileName,const std::string &LevelID,const std::string &Player,float fFrameRate,int nStateSize);
+      void saveReplay(void);
+      std::string openReplay(const std::string &FileName,float *pfFrameRate,std::string &Player);
+      void finishReplay(void);
+      void fastforward(float fSeconds);
+      void fastrewind(float fSeconds);
       
-      /* Data interface */
-      //std::vector<ReplayEventChunk *> &getEventChunks(void) {return m_EventChunks;}            
-      float getFinishTime() {return m_fFinishTime;}
-      void setFinishTime(float fTime) {m_fFinishTime=fTime;}
-      std::string getPlayerName(void) {return m_PlayerName;}
-      void setPlayerName(std::string Name) {m_PlayerName=Name;}
-      std::string getLevelID(void) {return m_LevelID;}
-      void setLevelID(std::string ID) {m_LevelID=ID;}      
-      
-    private:
-      /* Data */
-      //std::vector<ReplayEventChunk *> m_EventChunks;
-      
-      /* Information */
-      float m_fFinishTime;      /* Finishing time - not necesarily true */
-      std::string m_PlayerName; /* Name of accomplishing player */
-      std::string m_LevelID;    /* Level ID */
-      
-      /* Helpers */
-      void _Free(void);
+      /* Static methods */
+      static std::vector<ReplayInfo *> createReplayList(const std::string &PlayerName);
+      static void freeReplayList(std::vector<ReplayInfo *> &List);
+    
+    private: 
+      /* Data */ 
+      std::vector<ReplayStateChunk> m_Chunks;
+      int m_nCurChunk,m_nCurState;      
+      std::string m_FileName,m_LevelID,m_PlayerName;
+      float m_fFrameRate;
+      int m_nStateSize;
   };
+
+  //class Replay {
+  //  public:
+  //    Replay();
+  //    ~Replay();
+  //    
+  //    /* Methods */
+  //    void storeState(const char *pcState,int nStateSize);
+  //    bool loadState(char *pcState,int nStateSize);
+  //    void createReplay(const std::string &FileName,const std::string &LevelID,const std::string &Player,float fFrameRate);
+  //    std::string openReplay(const std::string &FileName,float *pfFrameRate,std::string &Player);
+  //    void finishReplay(void);
+  //    void fastforward(int nStateSize,float fSeconds,float fFrameRate);
+  //    void fastrewind(int nStateSize,float fSeconds,float fFrameRate);
+  //    
+  //    /* Static methods */
+  //    static std::vector<ReplayInfo *> createReplayList(const std::string &PlayerName);
+  //    static void freeReplayList(std::vector<ReplayInfo *> &List);
+  //  
+  //  private: 
+  //    /* Data */ 
+  //    FileHandle *m_pfh;
+  //    int m_nVersion;      
+  //    int m_nHeaderEnd;
+  //};
 
 };
 

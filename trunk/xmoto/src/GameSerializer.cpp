@@ -27,48 +27,43 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 namespace vapp {
 
   /*===========================================================================
-  Serialize game state into buffer
+  Serializer
   ===========================================================================*/
-  int MotoGame::serializeGameState(char *pcBuf,int nBufSize) {  
-    SerializedState *pState = (SerializedState *)pcBuf;
-    if(nBufSize < sizeof(SerializedState)) return 0;
-  
-    /* Save front wheel pos/rot */
-    pState->fFrontWheelX = m_BikeS.pfFrontWheelPos[0];
-    pState->fFrontWheelY = m_BikeS.pfFrontWheelPos[1];
-    pState->fFrontWheelRot[0] = m_BikeS.pfFrontWheelRot[0];
-    pState->fFrontWheelRot[1] = m_BikeS.pfFrontWheelRot[1];
-    pState->fFrontWheelRot[2] = m_BikeS.pfFrontWheelRot[4];
-    pState->fFrontWheelRot[3] = m_BikeS.pfFrontWheelRot[5];
-  
-    /* Save rear wheel pos/rot */
-    pState->fRearWheelX = m_BikeS.pfRearWheelPos[0];
-    pState->fRearWheelY = m_BikeS.pfRearWheelPos[1];
-    pState->fRearWheelRot[0] = m_BikeS.pfRearWheelRot[0];
-    pState->fRearWheelRot[1] = m_BikeS.pfRearWheelRot[1];
-    pState->fRearWheelRot[2] = m_BikeS.pfRearWheelRot[4];
-    pState->fRearWheelRot[3] = m_BikeS.pfRearWheelRot[5];
-  
-    /* Save frame pos/rot */
-    pState->fFrameX = m_BikeS.pfFramePos[0];
-    pState->fFrameY = m_BikeS.pfFramePos[1];
-    pState->fFrameRot[0] = m_BikeS.pfFrameRot[0];
-    pState->fFrameRot[1] = m_BikeS.pfFrameRot[1];
-    pState->fFrameRot[2] = m_BikeS.pfFrameRot[4];
-    pState->fFrameRot[3] = m_BikeS.pfFrameRot[5];
+  void MotoGame::getSerializedBikeState(SerializedBikeState *pState) {
+    /* Get. */
+    pState->fGameTime = m_fTime;
     
-    return sizeof(SerializedState);
-  }
-
-  /*===========================================================================
-  Load serialized game state from buffer
-  ===========================================================================*/
-  void MotoGame::unserializeGameState(const char *pcBuf,int nBufSize) {
-    SerializedState *pState = (SerializedState *)pcBuf;
-    if(nBufSize < sizeof(SerializedState)) return;
+    if(m_BikeS.Dir == DD_LEFT) pState->cFlags = SER_BIKE_STATE_DIR_LEFT;
+    else if(m_BikeS.Dir == DD_RIGHT) pState->cFlags = SER_BIKE_STATE_DIR_RIGHT;
     
-    /* ... */
-  }
+    pState->fFrontWheelX = m_BikeS.FrontWheelP.x;
+    pState->fFrontWheelY = m_BikeS.FrontWheelP.y;
+    pState->fRearWheelX = m_BikeS.RearWheelP.x;
+    pState->fRearWheelY = m_BikeS.RearWheelP.y;
+    pState->fFrameX = m_BikeS.CenterP.x;
+    pState->fFrameY = m_BikeS.CenterP.y;
+    
+    memcpy(pState->fFrontWheelRot,m_BikeS.fFrontWheelRot,sizeof(float)*4);
+    memcpy(pState->fRearWheelRot,m_BikeS.fRearWheelRot,sizeof(float)*4);
+    memcpy(pState->fFrameRot,m_BikeS.fFrameRot,sizeof(float)*4);
+    
+    if(m_BikeS.Dir == DD_RIGHT) {
+      pState->fHandX = m_BikeS.HandP.x; pState->fHandY = m_BikeS.HandP.y;
+      pState->fElbowX = m_BikeS.ElbowP.x; pState->fElbowY = m_BikeS.ElbowP.y;
+      pState->fShoulderX = m_BikeS.ShoulderP.x; pState->fShoulderY = m_BikeS.ShoulderP.y;
+      pState->fLowerBodyX = m_BikeS.LowerBodyP.x; pState->fLowerBodyY = m_BikeS.LowerBodyP.y;
+      pState->fKneeX = m_BikeS.KneeP.x; pState->fKneeY = m_BikeS.KneeP.y;
+      pState->fFootX = m_BikeS.FootP.x; pState->fFootY = m_BikeS.FootP.y;
+    }
+    else if(m_BikeS.Dir == DD_LEFT) {
+      pState->fHandX = m_BikeS.Hand2P.x; pState->fHandY = m_BikeS.Hand2P.y;
+      pState->fElbowX = m_BikeS.Elbow2P.x; pState->fElbowY = m_BikeS.Elbow2P.y;
+      pState->fShoulderX = m_BikeS.Shoulder2P.x; pState->fShoulderY = m_BikeS.Shoulder2P.y;
+      pState->fLowerBodyX = m_BikeS.LowerBody2P.x; pState->fLowerBodyY = m_BikeS.LowerBody2P.y;
+      pState->fKneeX = m_BikeS.Knee2P.x; pState->fKneeY = m_BikeS.Knee2P.y;
+      pState->fFootX = m_BikeS.Foot2P.x; pState->fFootY = m_BikeS.Foot2P.y;
+    }
+  }      
 
 };
 

@@ -38,6 +38,13 @@ namespace vapp {
   }
 
   /*===========================================================================
+  Update replays list
+  ===========================================================================*/
+  void GameApp::_UpdateReplaysList(void) {
+    _CreateReplaysList((UIList *)m_pReplaysWindow->getChild("REPLAY_LIST"));                       
+  }
+
+  /*===========================================================================
   Change game state
   ===========================================================================*/
   void GameApp::setState(GameState s) {
@@ -46,8 +53,51 @@ namespace vapp {
     m_State = s;
     
     switch(s) {
+      case GS_REPLAYING: {
+        /* Open a replay for input */
+        if(m_pReplay != NULL) delete m_pReplay;
+        m_pReplay = new Replay;
+        std::string LevelID = m_pReplay->openReplay(m_PlaySpecificReplay,&m_fCurrentReplayFrameRate,m_ReplayPlayerName);
+        if(LevelID == "") {
+          Log("** Warning ** : No valid level identifier could be extracted from the replay: %s",m_PlaySpecificReplay.c_str());
+          throw Exception("invalid replay");
+        }
+        else {
+          /* Fine, open the level */
+          LevelSrc *pLevelSrc = _FindLevelByID(LevelID);
+          if(pLevelSrc == NULL) {
+            Log("** Warning ** : level '%s' specified by replay '%s' not found",LevelID.c_str(),m_PlaySpecificReplay.c_str());
+            throw Exception("unknown level specified by replay");
+          }
+          else {    
+            /* Init level */                
+            m_MotoGame.playLevel( pLevelSrc );
+            m_nFrame = 0;
+            m_Renderer.prepareForNewLevel();
+            
+            /* Show help string */
+            if(!isNoGraphics()) {
+              PlayerTimeEntry *pBestTime = m_Profiles.getBestTime(LevelID);
+              PlayerTimeEntry *pBestPTime = m_Profiles.getBestPlayerTime(m_pPlayer->PlayerName,LevelID);
+              
+              std::string T1 = "  --  ",T2 = "  --  ";
+              if(pBestTime != NULL)
+                T1 = formatTime(pBestTime->fFinishTime);
+              if(pBestPTime != NULL)
+                T2 = formatTime(pBestPTime->fFinishTime);
+              
+              m_Renderer.setBestTime(T1 + std::string(" / ") + T2 + std::string(GAMETEXT_REPLAYHELPTEXT));
+            }
+          }          
+        }
+        break;
+      }  
       case GS_MENU: {
         SDL_ShowCursor(SDL_ENABLE);
+        
+        /* Any replays to get rid off? */
+        if(m_pReplay != NULL) delete m_pReplay;
+        m_pReplay = NULL;
 
         /* The main menu, the one which is entered initially when the game 
            begins. */
@@ -75,6 +125,7 @@ namespace vapp {
         /* Default playing state */
         m_fLastFrameTime = 0.0f;
         m_fLastPerfStateTime = 0.0f;
+        m_fLastStateSerializationTime = -100.0f; /* loong time ago :) */
 
         /* We need a profile */
         if(m_pPlayer == NULL) {
@@ -92,56 +143,20 @@ namespace vapp {
           /* Start playing right away */                
           m_MotoGame.playLevel( pLevelSrc );
           m_State = GS_PLAYING;        
-          memset(&m_PrevBikeC,0,sizeof(m_PrevBikeC)); /* reset controller */
           m_nFrame = 0;
-          m_pReplay = new Replay;
-          m_pReplay->setFinishTime(0);
-          m_pReplay->setLevelID(m_PlaySpecificLevel);
-          m_pReplay->setPlayerName(m_pPlayer->PlayerName);                
+          
+          if(m_pReplay != NULL) delete m_pReplay;
+          m_pReplay = NULL;
+          
+          if(m_bRecordReplays) {
+            m_pReplay = new Replay;
+            m_pReplay->createReplay("Latest.rpl",pLevelSrc->getID(),m_pPlayer->PlayerName,m_fReplayFrameRate,sizeof(SerializedBikeState));
+          }
           
           PlayerTimeEntry *pBestTime = m_Profiles.getBestTime(m_PlaySpecificLevel);
           PlayerTimeEntry *pBestPTime = m_Profiles.getBestPlayerTime(m_pPlayer->PlayerName,m_PlaySpecificLevel);
           
           std::string T1 = "  --  ",T2 = "  --  ";
-          if(pBestTime != NULL)
-            T1 = formatTime(pBestTime->fFinishTime);
-          if(pBestPTime != NULL)
-            T2 = formatTime(pBestPTime->fFinishTime);
-          
-          m_Renderer.setBestTime(T1 + std::string(" / ") + T2);
-          m_Renderer.prepareForNewLevel();
-        }
-        break;
-      }
-      case GS_REPLAYING: {
-        SDL_ShowCursor(SDL_DISABLE);
-
-        /* Closely coupled with the GS_PLAYING state, this is when playing
-           back a replay */
-        m_pReplay = new Replay;
-        m_pReplay->loadFromFile(m_PlaySpecificReplay);
-        //if(m_pReplay->getEventChunks().empty()) {
-        //  /* TODO: error */
-        //  quit();
-        //}
-        
-        /* Find the specified level */
-        LevelSrc *pLevelSrc = _FindLevelByID(m_pReplay->getLevelID());
-        if(pLevelSrc == NULL) {
-          Log("** Warning ** : level '%s' (for replay '%s') not found",m_pReplay->getLevelID().c_str(),m_PlaySpecificReplay.c_str());
-          /* TODO: error */
-          quit();
-        }
-        
-        /* Okay, start the replay */
-        m_MotoGame.playLevel( pLevelSrc );
-        m_nFrame = 0;
-        
-        if(!isNoGraphics()) {
-          PlayerTimeEntry *pBestTime = m_Profiles.getBestTime(m_pReplay->getLevelID());
-          PlayerTimeEntry *pBestPTime = m_Profiles.getBestPlayerTime(m_pReplay->getPlayerName(),m_pReplay->getLevelID());
-          
-          std::string T1 = "--",T2 = "--";
           if(pBestTime != NULL)
             T1 = formatTime(pBestTime->fFinishTime);
           if(pBestPTime != NULL)
@@ -160,6 +175,9 @@ namespace vapp {
       }
       case GS_JUSTDEAD: {
         SDL_ShowCursor(SDL_ENABLE);
+        
+        /* Finish replay */
+        if(m_pReplay != NULL) m_pReplay->finishReplay();
         
         /* Play the DIE!!! sound */
         //Sound::playSample(m_pDieSFX);
@@ -181,6 +199,9 @@ namespace vapp {
       case GS_FINISHED: {
         SDL_ShowCursor(SDL_ENABLE);
 
+        /* Finish replay */
+        if(m_pReplay != NULL) m_pReplay->finishReplay();
+        
         /* Play the good sound. */
         //Sound::playSample(m_pEndOfLevelSFX);
 
@@ -240,6 +261,10 @@ namespace vapp {
     
     /* Show mini map? */
     m_bShowMiniMap = m_Config.getBool("ShowMiniMap");
+    
+    /* Replay stuff */
+    m_fReplayFrameRate = m_Config.getFloat("ReplayFrameRate");
+    m_bRecordReplays = m_Config.getBool("StoreReplays");
   }
   
   /*===========================================================================
@@ -276,7 +301,7 @@ namespace vapp {
     
     /* Init some config */
     _UpdateSettings();
-  
+    
     /* Profiles */
     Log("Loading profiles...");
     m_Profiles.loadFile();
@@ -295,6 +320,37 @@ namespace vapp {
       /* OK, use the first then */
       m_pPlayer = m_Profiles.getProfiles()[0];
     }
+
+    /* List replays? */  
+    if(m_bListReplays) {
+      std::vector<ReplayInfo *> Replays = Replay::createReplayList("");
+      printf("\nReplay                    Level                     Player\n");
+      printf("-----------------------------------------------------------------------\n");
+      for(int i=0;i<Replays.size();i++) {
+        std::string LevelDesc;
+        
+        if(Replays[i]->Level.length() == 6 &&
+           Replays[i]->Level[0] == '_' && Replays[i]->Level[1] == 'i' &&
+           Replays[i]->Level[2] == 'L' && Replays[i]->Level[5] == '_') {
+          int nNum;
+          sscanf(Replays[i]->Level.c_str(),"_iL%d_",&nNum);
+          char cBuf[256];
+          sprintf(cBuf,"#%d",nNum+1);
+          LevelDesc = cBuf;
+        }
+        else LevelDesc = Replays[i]->Level;
+      
+        printf("%-25s %-25s %-25s\n",
+               Replays[i]->Name.c_str(),
+               LevelDesc.c_str(),
+               Replays[i]->Player.c_str());
+      }
+      if(Replays.empty()) printf("(none)\n");
+      Replay::freeReplayList(Replays);
+      quit();
+      return;
+    }
+
     
     /* Init sound system */
     if(!isNoGraphics()) {
@@ -394,17 +450,6 @@ namespace vapp {
     
     Log(" %d level%s loaded",m_nNumLevels,m_nNumLevels==1?"":"s");
     
-    /* List replays? */
-    if(m_bListReplays) {
-      std::vector<ReplayInfo *> RplInfo = Replay::probeReplays();
-      for(int i=0;i<RplInfo.size();i++) {
-        printf("%-20s %-20s %-20s %s\n",RplInfo[i]->LevelID.c_str(),RplInfo[i]->Name.c_str(),RplInfo[i]->PlayerName.c_str(),formatTime(RplInfo[i]->fFinishTime).c_str());
-      }
-      Replay::freeReplayList(RplInfo);            
-      quit();
-      return;      
-    }
-    
     if(!isNoGraphics()) {
       /* Initialize renderer */
       m_Renderer.init();
@@ -425,15 +470,14 @@ namespace vapp {
     }
         
     /* What to do? */
-    if(m_PlaySpecificReplay != "") {
-      /* ======= PLAY SPECIFIC REPLAY ======= */
-      setState(GS_REPLAYING);
-      Log("Playing replay '%s'...",m_PlaySpecificReplay.c_str());
-    }
-    else if(m_PlaySpecificLevel != "" && !isNoGraphics()) {
+    if(m_PlaySpecificLevel != "" && !isNoGraphics()) {
       /* ======= PLAY SPECIFIC LEVEL ======= */
       setState(GS_PLAYING);
       Log("Playing as '%s'...",m_pPlayer->PlayerName.c_str());
+    }
+    else if(m_PlaySpecificReplay != "") {
+      /* ======= PLAY SPECIFIC REPLAY ======= */
+      setState(GS_REPLAYING);
     }
     else {
       /* Graphics? */
@@ -481,6 +525,7 @@ namespace vapp {
   ===========================================================================*/
   void GameApp::drawFrame(void) {
     char cTemp[256];
+    bool bValidGameState = true;
 
     /* Update sound system and input */
     if(!isNoGraphics()) {
@@ -493,7 +538,6 @@ namespace vapp {
     switch(m_State) {
       case GS_MENU:
       case GS_EDIT_PROFILES:
-      case GS_REPLAYING:
       case GS_PAUSE:
       case GS_JUSTDEAD:
       case GS_FINISHED:
@@ -547,7 +591,7 @@ namespace vapp {
     double fFrameRenderingTime = fFrameTime - m_fLastFrameTime;
     double fFramesPerSecond = 1.0f / fFrameRenderingTime;
     m_fLastFrameTime = fFrameTime;
-
+    
     if(fFramesPerSecond < 90) {
       if(nFCount < 0) nFCount = 0;
       nFCount++;
@@ -598,45 +642,53 @@ namespace vapp {
         SDL_Delay(5);
         break;
       }
-      case GS_REPLAYING:
       case GS_PAUSE:
       case GS_JUSTDEAD:
       case GS_FINISHED:
+      case GS_REPLAYING:
       case GS_PLAYING: {
         /* When did the frame start? */
         float fStartFrameTime = getTime();
 
         /* Only do this when not paused */
         if(m_State == GS_PLAYING) {
-          /* Updates for this frame? */
-          _RecordReplay();
-
           /* Increase frame counter, copy stuff */
           m_nFrame++;
-          _StoreControllerState();        
-          
+                    
           /* Update game */
-          m_MotoGame.updateLevel( PHYS_STEP_SIZE );                
+          m_MotoGame.updateLevel( PHYS_STEP_SIZE,NULL );                
           
           if(m_b50FpsMode) /* if we're aiming for 50 fps instead of 100, do an extra step now */
-            m_MotoGame.updateLevel( PHYS_STEP_SIZE );                
+            m_MotoGame.updateLevel( PHYS_STEP_SIZE,NULL );       
+          
+          /* We'd like to serialize the game state 25 times per second for the replay */
+          if(getRealTime() - m_fLastStateSerializationTime >= 1.0f/m_fReplayFrameRate) {
+            m_fLastStateSerializationTime = getRealTime();
+            
+            /* Get it */
+            SerializedBikeState BikeState;
+            m_MotoGame.getSerializedBikeState(&BikeState);
+            if(m_pReplay != NULL)
+              m_pReplay->storeState((const char *)&BikeState);              
+          }
         }
         else if(m_State == GS_REPLAYING) {
-          /* Updates for this frame? */
-          _PlaybackReplay();
-          
-          /* Increase frame counter */
-          m_nFrame++;        
-
-          /* Update game */
-          m_MotoGame.updateLevel( PHYS_STEP_SIZE );
+          /* Read replay state */
+          SerializedBikeState BikeState;
+          if(m_pReplay != NULL) {        
+            if(m_pReplay->loadState((char *)&BikeState)) {            
+              /* Update game */
+              m_MotoGame.updateLevel( PHYS_STEP_SIZE,&BikeState );                
+            }
+          }
+          else bValidGameState = false;
         }
                 
         /* Render */
-        if(!isNoGraphics()) {
+        if(!isNoGraphics() && bValidGameState) {
           m_Renderer.render();
         
-          if(m_bShowMiniMap && m_State != GS_REPLAYING) {
+          if(m_bShowMiniMap) {
             if(m_MotoGame.getBikeState()->Dir == DD_LEFT)
               m_Renderer.renderMiniMap(getDispWidth()-150,getDispHeight()-100,150,100);
             else if(m_MotoGame.getBikeState()->Dir == DD_RIGHT)
@@ -649,8 +701,6 @@ namespace vapp {
           /* News? */
           if(m_MotoGame.isDead()) {
             /* You're dead maan! */
-            delete m_pReplay;
-            m_pReplay = NULL;
             setState(GS_JUSTDEAD);
           }
           else if(m_MotoGame.isFinished()) {
@@ -658,30 +708,10 @@ namespace vapp {
             std::string TimeStamp = getTimeStamp();
             m_Profiles.addFinishTime(m_pPlayer->PlayerName,"",
                                      m_MotoGame.getLevelSrc()->getID(),m_MotoGame.getFinishTime(),TimeStamp); 
-            m_pReplay->setFinishTime(m_MotoGame.getFinishTime());
-            m_pReplay->saveToFile("Latest.rpl");          
-
-            delete m_pReplay;
-            m_pReplay = NULL;                                                
             _MakeBestTimesWindow(m_pBestTimes,m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->getID(),
                                  m_MotoGame.getFinishTime(),TimeStamp);
             _UpdateLevelLists();
             setState(GS_FINISHED);
-          }
-        }
-        else if(m_State == GS_REPLAYING) {        
-          if(m_MotoGame.isDead()) {
-            /* You're dead maan! */
-            delete m_pReplay;
-            m_pReplay = NULL;
-            quit();
-          }
-          else if(m_MotoGame.isFinished()) {
-            /* You're done maaaan! :D */
-            printf("%s\n%s\n",m_pReplay->getPlayerName().c_str(),formatTime(m_MotoGame.getFinishTime()).c_str());
-            delete m_pReplay;
-            m_pReplay = NULL;
-            quit();
           }
         }
         
@@ -689,14 +719,25 @@ namespace vapp {
         float fEndFrameTime = getTime();
         
         /* Delay */
-        if(m_b50FpsMode)
-          nADelay = (2.0f * PHYS_STEP_SIZE - (fEndFrameTime-fStartFrameTime)) * 1000.0f;
-        else
-          nADelay = (PHYS_STEP_SIZE - (fEndFrameTime-fStartFrameTime)) * 1000.0f;
-          
-        if(nADelay > 0) {
-          if(!m_bTimeDemo)
-            SDL_Delay(nADelay);
+        if(m_State == GS_REPLAYING) {
+          /* When replaying... */
+          nADelay = (1.0f/m_fCurrentReplayFrameRate - (fEndFrameTime-fStartFrameTime)) * 1000.0f;
+            
+          if(nADelay > 0) {
+            if(!m_bTimeDemo)
+              SDL_Delay(nADelay);
+          }
+        }
+        else {
+          if(m_b50FpsMode)
+            nADelay = (2.0f * PHYS_STEP_SIZE - (fEndFrameTime-fStartFrameTime)) * 1000.0f;
+          else
+            nADelay = (PHYS_STEP_SIZE - (fEndFrameTime-fStartFrameTime)) * 1000.0f;
+            
+          if(nADelay > 0) {
+            if(!m_bTimeDemo)
+              SDL_Delay(nADelay);
+          }
         }
 
         /* Show fps (debug modish) */
@@ -771,6 +812,9 @@ namespace vapp {
       
       m_InputHandler.uninit();
     }
+    
+    if(m_pReplay != NULL)
+      delete m_pReplay;
   
     if(m_pPlayer != NULL) 
       m_Config.setString("DefaultProfile",m_pPlayer->PlayerName);
@@ -780,9 +824,6 @@ namespace vapp {
     m_Config.saveFile();
     m_Profiles.saveFile();
 
-    if(m_pReplay != NULL) delete m_pReplay;
-    m_pReplay = NULL;
-  
     if(!isNoGraphics()) {
       UITextDraw::uninitTextDrawing();  
     
@@ -860,15 +901,6 @@ namespace vapp {
         m_Renderer.getGUI()->keyDown(nKey,nChar);
         break;
       }
-      case GS_REPLAYING:
-        /* ESCAPE quits a replay */
-        switch(nKey) {
-          case SDLK_ESCAPE:
-            /* Escape quits */
-            quit();
-            break;
-        }
-        break;
       case GS_PAUSE:
         switch(nKey) {
           case SDLK_ESCAPE:
@@ -886,7 +918,6 @@ namespace vapp {
         switch(nKey) {
           case SDLK_ESCAPE:
             /* Out of this game, please */
-            if(m_pReplay != NULL) delete m_pReplay;
             m_pFinishMenu->showWindow(false);
             m_pBestTimes->showWindow(false);
             m_pJustDeadMenu->showWindow(false);
@@ -903,6 +934,26 @@ namespace vapp {
             break;      
         }
         break;
+      case GS_REPLAYING:
+        switch(nKey) {
+          case SDLK_ESCAPE:
+            /* Escape quits the replay */
+            m_MotoGame.endLevel();
+            m_Renderer.unprepareForNewLevel();
+            setState(GS_MENU);            
+            break;          
+          case SDLK_RIGHT:
+            /* Right arrow key: fast forward */
+            if(m_pReplay != NULL)
+              m_pReplay->fastforward(1);
+            break;
+          case SDLK_LEFT:
+            /* Left arrow key: rewind */
+            if(m_pReplay != NULL)
+              m_pReplay->fastrewind(1);
+            break;
+        }
+        break;
       case GS_PLAYING:
         switch(nKey) {
           case SDLK_ESCAPE:
@@ -914,27 +965,6 @@ namespace vapp {
           default:
             /* Notify the controller */
             m_InputHandler.handleInput(INPUT_KEY_DOWN,nKey,m_MotoGame.getBikeController());
-          //case SDLK_LEFT:
-          //  /* Left! */
-          //  m_MotoGame.getBikeController()->bPullBack=true;
-          //  break;
-          //case SDLK_RIGHT:
-          //  /* Right! */
-          //  m_MotoGame.getBikeController()->bPushForward=true;
-          //  break;
-          //case SDLK_UP:
-          //  /* Drive! */
-          //  m_MotoGame.getBikeController()->bDrive=true;
-          //  break;
-          //case SDLK_DOWN:
-          //  /* Brake! */
-          //  m_MotoGame.getBikeController()->bBrake=true;
-          //  break;
-
-          //case SDLK_q:
-          //  /* Debug control 1 */
-          //  m_MotoGame.getBikeController()->bDebug1=true;
-          //  break;
         }
         break; 
     }
@@ -953,32 +983,8 @@ namespace vapp {
         m_Renderer.getGUI()->keyUp(nKey);
         break;
       case GS_PLAYING:
-        switch(nKey) {
-          //case SDLK_SPACE:
-          //  /* Drive backwards! */
-          //  m_MotoGame.getBikeController()->bChangeDir = true;
-          //  break;
-          //case SDLK_LEFT:
-          //  /* Left! */
-          //  m_MotoGame.getBikeController()->bPullBack=false;
-          //  break;
-          //case SDLK_RIGHT:
-          //  /* Right! */
-          //  m_MotoGame.getBikeController()->bPushForward=false;
-          //  break;
-          //case SDLK_UP:
-          //  /* Stop driving! */
-          //  m_MotoGame.getBikeController()->bDrive=false;
-          //  break;
-          //case SDLK_DOWN:
-          //  /* Stop braking! */
-          //  m_MotoGame.getBikeController()->bBrake=false;
-          //  break;
-          default:
-            /* Notify the controller */
-            m_InputHandler.handleInput(INPUT_KEY_UP,nKey,m_MotoGame.getBikeController());
-
-        }
+        /* Notify the controller */
+        m_InputHandler.handleInput(INPUT_KEY_UP,nKey,m_MotoGame.getBikeController());
         break; 
     }
   }
@@ -1050,7 +1056,15 @@ namespace vapp {
   void GameApp::parseUserArgs(std::vector<std::string> &UserArgs) {
     /* Look through them... */
     for(int i=0;i<UserArgs.size();i++) {
-      if(UserArgs[i] == "-level") {
+      if(UserArgs[i] == "-replay") {
+        if(i+1<UserArgs.size()) {
+          m_PlaySpecificReplay = UserArgs[i+1];
+        }
+        else
+          throw SyntaxError("no replay specified");        
+        i++;
+      }
+      else if(UserArgs[i] == "-level") {
         if(i+1<UserArgs.size()) {
           m_PlaySpecificLevel = UserArgs[i+1];
           
@@ -1066,16 +1080,6 @@ namespace vapp {
           throw SyntaxError("no level specified");        
         i++;
       }
-      //else if(UserArgs[i] == "-replay") {
-      //  if(i+1<UserArgs.size())
-      //    m_PlaySpecificReplay = UserArgs[++i];
-      //  else
-      //    throw SyntaxError("no replay specified");        
-
-      //  Log("** Warning ** : Replays are still buggy!");        
-
-      //  i++;
-      //}
       else if(UserArgs[i] == "-debug") {
         m_bDebugMode = true;
       }
@@ -1093,14 +1097,12 @@ namespace vapp {
           throw SyntaxError("no debug file specified");        
         i++;
       }      
-      //else if(UserArgs[i] == "-listreplays") {
-      //  m_bListReplays = true;
-      //  setNoGraphics(true);
-      //  
-      //  Log("** Warning ** : Replays are still buggy!");        
-      //}
       else if(UserArgs[i] == "-listlevels") {
         m_bListLevels = true;
+        setNoGraphics(true);
+      }
+      else if(UserArgs[i] == "-listreplays") {
+        m_bListReplays = true;
         setNoGraphics(true);
       }
       else if(UserArgs[i] == "-timedemo") {
@@ -1120,13 +1122,11 @@ namespace vapp {
   ===========================================================================*/
   void GameApp::helpUserArgs(void) {
     printf("\t-level ID\n\t\tStart playing the given level right away.\n");
-    //printf("\t-replay FILE\n\t\tPlay back the given replay file.\n");
+    printf("\t-replay NAME\n\t\tPlayback replay with the given name.\n");    
     printf("\t-debug\n\t\tEnable debug mode.\n");
     printf("\t-profile NAME\n\t\tUse this player profile.\n");
     printf("\t-listlevels\n\t\tOutputs a list of all installed levels.\n");
-                   printf("\t\tImplicit -nogfx.\n");
-    //printf("\t-listreplays\n\t\tOutputs a list of all recorded replays.\n");
-    //               printf("\t\tImplicit -nogfx.\n");
+    printf("\t-listreplays\n\t\tOutputs a list of all replays.\n");
     printf("\t-timedemo\n\t\tNo delaying, maximum framerate.\n");
     printf("\t-fps\n\t\tDisplay framerate.\n");
     printf("\t-ugly\n\t\tEnable 'ugly' mode, suitable for computers without\n");
@@ -1142,112 +1142,6 @@ namespace vapp {
       if(m_Levels[i].getID() == ID) return &m_Levels[i];
     }
     return NULL; /* nothing */
-  }
-
-  /*===========================================================================
-  Copy controller state into temp. structure 
-  ===========================================================================*/
-  void GameApp::_StoreControllerState(void) {
-    m_PrevBikeC.fBrake = m_MotoGame.getBikeController()->fBrake;
-    m_PrevBikeC.bChangeDir = m_MotoGame.getBikeController()->bChangeDir;
-    m_PrevBikeC.fDrive = m_MotoGame.getBikeController()->fDrive;
-    m_PrevBikeC.bPullBack = m_MotoGame.getBikeController()->bPullBack;
-    m_PrevBikeC.bPushForward = m_MotoGame.getBikeController()->bPushForward;
-  }
-  
-  /*===========================================================================
-  Update replay structure if necesary
-  ===========================================================================*/
-  void GameApp::_RecordReplay(void) {
-    //if(m_pReplay != NULL) {
-    //  if(!m_PrevBikeC.bBrake && m_MotoGame.getBikeController()->bBrake) {
-    //    //printf("%f\n",m_MotoGame.getTime());
-    //    m_pReplay->event(m_nFrame,REPLAY_EVENT_START_BRAKING);
-    //  }
-    //  else if(m_PrevBikeC.bBrake && !m_MotoGame.getBikeController()->bBrake) {
-    //    //printf("%f\n",m_MotoGame.getTime());
-    //    m_pReplay->event(m_nFrame,REPLAY_EVENT_STOP_BRAKING);
-    //  }
-
-    //  if(!m_PrevBikeC.bDrive && m_MotoGame.getBikeController()->bDrive) {
-    //    //printf("%f\n",m_MotoGame.getTime());
-    //    m_pReplay->event(m_nFrame,REPLAY_EVENT_START_DRIVING);
-    //  }
-    //  else if(m_PrevBikeC.bDrive && !m_MotoGame.getBikeController()->bDrive) {
-    //    //printf("%f\n",m_MotoGame.getTime());
-    //    m_pReplay->event(m_nFrame,REPLAY_EVENT_STOP_DRIVING);
-    //  }
-
-    //  if(!m_PrevBikeC.bPushForward && m_MotoGame.getBikeController()->bPushForward) {
-    //    //printf("%f\n",m_MotoGame.getTime());
-    //    m_pReplay->event(m_nFrame,REPLAY_EVENT_START_PUSHING_FORWARD);
-    //  }
-    //  else if(m_PrevBikeC.bPushForward && !m_MotoGame.getBikeController()->bPushForward) {
-    //    //printf("%f\n",m_MotoGame.getTime());
-    //    m_pReplay->event(m_nFrame,REPLAY_EVENT_STOP_PUSHING_FORWARD);
-    //  }
-
-    //  if(!m_PrevBikeC.bPullBack && m_MotoGame.getBikeController()->bPullBack) {
-    //    //printf("%f\n",m_MotoGame.getTime());
-    //    m_pReplay->event(m_nFrame,REPLAY_EVENT_START_PULLING_BACKWARD);
-    //  }
-    //  else if(m_PrevBikeC.bPullBack && !m_MotoGame.getBikeController()->bPullBack) {
-    //    //printf("%f\n",m_MotoGame.getTime());        
-    //    m_pReplay->event(m_nFrame,REPLAY_EVENT_STOP_PULLING_BACKWARD);
-    //  }
-
-    //  if(m_MotoGame.getBikeController()->bChangeDir) {
-    //    //printf("%f\n",m_MotoGame.getTime());
-    //    m_pReplay->event(m_nFrame,REPLAY_EVENT_CHANGE_DIRECTION);
-    //  }
-    //}
-  }
-
-  /*===========================================================================
-  Read playback, updating controller if necesary 
-  ===========================================================================*/
-  void GameApp::_PlaybackReplay(void) {
-    if(m_pReplay != NULL) {
-      /* Anything for this frame? (SLOW! TODO: speed up please) */      
-      //for(int i=0;i<m_pReplay->getEventChunks().size();i++) {
-      //  for(int j=0;j<m_pReplay->getEventChunks()[i]->nNumEvents;j++) {
-      //    if(m_pReplay->getEventChunks()[i]->Events[j].nFrame == m_nFrame) {
-      //      //printf("%f\n",m_MotoGame.getTime());
-      //      //printf("Frame %d: %s\n",m_nFrame,Replay::eventName(m_pReplay->getEventChunks()[i]->Events[j].Type).c_str());
-      //    
-      //      switch(m_pReplay->getEventChunks()[i]->Events[j].Type) {
-      //        case REPLAY_EVENT_CHANGE_DIRECTION:
-      //          m_MotoGame.getBikeController()->bChangeDir = true;
-      //          break;
-      //        //case REPLAY_EVENT_START_BRAKING:
-      //        //  m_MotoGame.getBikeController()->bBrake = true;
-      //        //  break;
-      //        //case REPLAY_EVENT_STOP_BRAKING:
-      //        //  m_MotoGame.getBikeController()->bBrake = false;
-      //        //  break;
-      //        //case REPLAY_EVENT_START_DRIVING:
-      //        //  m_MotoGame.getBikeController()->bDrive = true;
-      //        //  break;
-      //        //case REPLAY_EVENT_STOP_DRIVING:
-      //        //  m_MotoGame.getBikeController()->bDrive = false;
-      //        //  break;
-      //        case REPLAY_EVENT_START_PULLING_BACKWARD:
-      //          m_MotoGame.getBikeController()->bPullBack = true;
-      //          break;
-      //        case REPLAY_EVENT_STOP_PULLING_BACKWARD:
-      //          m_MotoGame.getBikeController()->bPullBack = false;
-      //          break;
-      //        case REPLAY_EVENT_START_PUSHING_FORWARD:
-      //          m_MotoGame.getBikeController()->bPushForward = true;
-      //          break;
-      //        case REPLAY_EVENT_STOP_PUSHING_FORWARD:
-      //          m_MotoGame.getBikeController()->bPushForward = false;
-      //          break;
-      //      }
-      //    }
-      //  }
-      //}
-    }    
   }
     
   /*===========================================================================
@@ -1294,6 +1188,7 @@ namespace vapp {
     m_Config.createVar( "NotifyAtInit",           "true" );
     m_Config.createVar( "ShowMiniMap",            "true" );
     m_Config.createVar( "StoreReplays",           "true" );
+    m_Config.createVar( "ReplayFrameRate",        "25" );
   }
   
   /*===========================================================================
@@ -1302,6 +1197,41 @@ namespace vapp {
   void GameApp::notifyMsg(std::string Msg) {
     if(m_pNotifyMsgBox != NULL) delete m_pNotifyMsgBox;
     m_pNotifyMsgBox = m_Renderer.getGUI()->msgBox(Msg,(UIMsgBoxButton)(UI_MSGBOX_OK));
+  }
+  
+  /*===========================================================================
+  Save a replay
+  ===========================================================================*/
+  void GameApp::_SaveReplay(const std::string &Name) {
+    /* This is simply a job of copying the Replays/Latest.rpl file into 
+       Replays/Name.rpl */
+    std::string RealName = Name;
+    
+    /* Strip illegal characters from name */
+    int i=0;
+    while(1) {
+      if(i >= RealName.length()) break;
+      
+      if((RealName[i] >= 'a' && RealName[i] <= 'z') ||
+         (RealName[i] >= 'A' && RealName[i] <= 'Z') ||
+         (RealName[i] >= '0' && RealName[i] <= '9') ||
+         RealName[i]=='!' || RealName[i]=='@' || RealName[i]=='#' || RealName[i]=='&' ||
+         RealName[i]=='(' || RealName[i]==')' || RealName[i]=='-' || RealName[i]=='_' ||
+         RealName[i]==' ' || RealName[i]=='.' || RealName[i]==',' || RealName[i]=='*') {
+        /* This is ok */
+        i++;
+      }
+      else {
+        /* Not ok */
+        RealName.erase(RealName.begin() + i);
+      }            
+    }
+
+    /* Try saving */
+    if(!FS::copyFile("Replays/Latest.rpl",std::string("Replays/") + RealName + std::string(".rpl"))) {
+      Log("** Warning ** : Failed to save replay: %s",Name.c_str());
+      notifyMsg(GAMETEXT_FAILEDTOSAVEREPLAY);
+    }
   }
   
 };

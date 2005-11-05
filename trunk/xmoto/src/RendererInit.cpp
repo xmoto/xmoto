@@ -235,14 +235,14 @@ namespace vapp {
     
     getGUI()->setFont(m_pSFont); /* default font */
 
-    m_pInGameStats = new UIWindow(getGUI(),0,0,"",200,100);
+    m_pInGameStats = new UIWindow(getGUI(),0,0,"",800,100);
     m_pInGameStats->showWindow(false);
     
     m_pPlayTime = new UIStatic(m_pInGameStats,0,0,"00:00:00",200,20);
     m_pPlayTime->setFont(m_pMFont);
     m_pPlayTime->setVAlign(UI_ALIGN_TOP);
     m_pPlayTime->setHAlign(UI_ALIGN_LEFT);
-    m_pBestTime = new UIStatic(m_pInGameStats,0,23,"-- / --",200,20);
+    m_pBestTime = new UIStatic(m_pInGameStats,0,23,"-- / --",800,20);
     m_pBestTime->setFont(m_pSFont);
     m_pBestTime->setVAlign(UI_ALIGN_TOP);
     m_pBestTime->setHAlign(UI_ALIGN_LEFT);

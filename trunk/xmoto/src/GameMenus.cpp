@@ -44,10 +44,11 @@ namespace vapp {
     m_pFinishMenu->setStyle(UI_FRAMESTYLE_MENU);
     
     m_pFinishMenuButtons[0] = new UIButton(m_pFinishMenu,0,0,GAMETEXT_TRYAGAIN,207,57);
-//    m_pFinishMenuButtons[1] = new UIButton(m_pFinishMenu,0,0,GAMETEXT_SAVEREPLAY,207,57);
-    m_pFinishMenuButtons[1] = new UIButton(m_pFinishMenu,0,0,GAMETEXT_ABORT,207,57);
-    m_pFinishMenuButtons[2] = new UIButton(m_pFinishMenu,0,0,GAMETEXT_QUIT,207,57);
-    m_nNumFinishMenuButtons = 3;
+    m_pFinishMenuButtons[1] = new UIButton(m_pFinishMenu,0,0,GAMETEXT_SAVEREPLAY,207,57);
+    if(!m_bRecordReplays) m_pFinishMenuButtons[1]->enableWindow(false);
+    m_pFinishMenuButtons[2] = new UIButton(m_pFinishMenu,0,0,GAMETEXT_ABORT,207,57);
+    m_pFinishMenuButtons[3] = new UIButton(m_pFinishMenu,0,0,GAMETEXT_QUIT,207,57);
+    m_nNumFinishMenuButtons = 4;
 
     UIStatic *pFinishText = new UIStatic(m_pFinishMenu,0,95,GAMETEXT_FINISH,m_pFinishMenu->getPosition().nWidth,36);
     pFinishText->setFont(m_Renderer.getMediumFont());
@@ -80,15 +81,17 @@ namespace vapp {
     m_pPauseMenu->setPrimaryChild(m_pPauseMenuButtons[0]); /* default button: Resume */
     
     /* Initialize just-dead menu */
-    m_pJustDeadMenu = new UIFrame(m_Renderer.getGUI(),getDispWidth()/2 - 200,100,"",400,400);
+    m_pJustDeadMenu = new UIFrame(m_Renderer.getGUI(),getDispWidth()/2 - 200,100,"",400,480);
     m_pJustDeadMenu->setStyle(UI_FRAMESTYLE_MENU);
     
     m_pJustDeadMenuButtons[0] = new UIButton(m_pJustDeadMenu,0,0,GAMETEXT_TRYAGAIN,207,57);
-    m_pJustDeadMenuButtons[1] = new UIButton(m_pJustDeadMenu,0,0,GAMETEXT_ABORT,207,57);
-    m_pJustDeadMenuButtons[2] = new UIButton(m_pJustDeadMenu,0,0,GAMETEXT_QUIT,207,57);
-    m_nNumJustDeadMenuButtons = 3;
+    m_pJustDeadMenuButtons[1] = new UIButton(m_pJustDeadMenu,0,0,GAMETEXT_SAVEREPLAY,207,57);
+    if(!m_bRecordReplays) m_pJustDeadMenuButtons[1]->enableWindow(false);
+    m_pJustDeadMenuButtons[2] = new UIButton(m_pJustDeadMenu,0,0,GAMETEXT_ABORT,207,57);
+    m_pJustDeadMenuButtons[3] = new UIButton(m_pJustDeadMenu,0,0,GAMETEXT_QUIT,207,57);
+    m_nNumJustDeadMenuButtons = 4;
 
-    UIStatic *pJustDeadText = new UIStatic(m_pJustDeadMenu,0,85,GAMETEXT_JUSTDEAD,m_pJustDeadMenu->getPosition().nWidth,36);
+    UIStatic *pJustDeadText = new UIStatic(m_pJustDeadMenu,0,95,GAMETEXT_JUSTDEAD,m_pJustDeadMenu->getPosition().nWidth,36);
     pJustDeadText->setFont(m_Renderer.getMediumFont());
     
     for(int i=0;i<m_nNumJustDeadMenuButtons;i++) {
@@ -106,12 +109,11 @@ namespace vapp {
     m_pMainMenu->enableWindow(true);                                 
     
     m_pMainMenuButtons[0] = new UIButton(m_pMainMenu,0,0,GAMETEXT_LEVELS,207,57);
-//    m_pMainMenuButtons[1] = new UIButton(m_pMainMenu,0,0,GAMETEXT_VIEWREPLAYS,207,57);
-//    m_pMainMenuButtons[1] = new UIButton(m_pMainMenu,0,0,GAMETEXT_BESTTIMES,207,57);
-    m_pMainMenuButtons[1] = new UIButton(m_pMainMenu,0,0,GAMETEXT_OPTIONS,207,57);
-    m_pMainMenuButtons[2] = new UIButton(m_pMainMenu,0,0,GAMETEXT_HELP,207,57);
-    m_pMainMenuButtons[3] = new UIButton(m_pMainMenu,0,0,GAMETEXT_QUIT,207,57);
-    m_nNumMainMenuButtons = 4;
+    m_pMainMenuButtons[1] = new UIButton(m_pMainMenu,0,0,GAMETEXT_REPLAYS,207,57);
+    m_pMainMenuButtons[2] = new UIButton(m_pMainMenu,0,0,GAMETEXT_OPTIONS,207,57);
+    m_pMainMenuButtons[3] = new UIButton(m_pMainMenu,0,0,GAMETEXT_HELP,207,57);
+    m_pMainMenuButtons[4] = new UIButton(m_pMainMenu,0,0,GAMETEXT_QUIT,207,57);
+    m_nNumMainMenuButtons = 5;
         
 //    UIStatic *pPlayerText = new UIStatic(m_pMainMenu,300,85,"",getDispWidth()-300-120,50);
     UIStatic *pPlayerText = new UIStatic(m_pMainMenu,300,(getDispHeight()*85)/600,"",getDispWidth()-300-120,50);
@@ -149,25 +151,6 @@ namespace vapp {
     pSomeText->setVAlign(UI_ALIGN_TOP);
     pSomeText->setHAlign(UI_ALIGN_LEFT);
     
-    m_pReplaysWindow = new UIFrame(m_pMainMenu,300,(getDispHeight()*140)/600,"",getDispWidth()-300-20,getDispHeight()-40-(getDispHeight()*120)/600);
-    m_pReplaysWindow->showWindow(false);
-    pSomeText = new UIStatic(m_pReplaysWindow,0,0,GAMETEXT_REPLAYS,m_pHelpWindow->getPosition().nWidth,36);
-    pSomeText->setFont(m_Renderer.getMediumFont());      
-    UIList *pReplaysList = new UIList(m_pReplaysWindow,20,40,"",m_pReplaysWindow->getPosition().nWidth-40,m_pReplaysWindow->getPosition().nHeight-115);
-    pReplaysList->setFont(m_Renderer.getSmallFont());
-    pReplaysList->addColumn(GAMETEXT_NAME,128);
-    pReplaysList->addColumn(GAMETEXT_LEVEL,128);
-    pReplaysList->addColumn(GAMETEXT_PLAYER,128);
-    _CreateReplayList(pReplaysList);
-    UIButton *pViewReplayButton = new UIButton(m_pReplaysWindow,11,m_pReplaysWindow->getPosition().nHeight-68,GAMETEXT_VIEW,115,57);
-    pViewReplayButton->setFont(m_Renderer.getSmallFont());
-    pViewReplayButton->setType(UI_BUTTON_TYPE_SMALL);
-    
-    m_pBestTimesWindow = new UIFrame(m_pMainMenu,300,(getDispHeight()*140)/600,"",getDispWidth()-300-20,getDispHeight()-40-(getDispHeight()*120)/600);      
-    m_pBestTimesWindow->showWindow(false);
-    pSomeText = new UIStatic(m_pBestTimesWindow,0,0,GAMETEXT_BESTTIMES,m_pHelpWindow->getPosition().nWidth,36);
-    pSomeText->setFont(m_Renderer.getMediumFont());
-
     m_pPlayWindow = new UIFrame(m_pMainMenu,300,(getDispHeight()*140)/600,"",getDispWidth()-300-20,getDispHeight()-40-(getDispHeight()*120)/600);      
     m_pPlayWindow->showWindow(false);
     pSomeText = new UIStatic(m_pPlayWindow,0,0,GAMETEXT_CHOOSELEVEL,m_pHelpWindow->getPosition().nWidth,36);
@@ -200,6 +183,31 @@ namespace vapp {
     pExternalLevelsList->addColumn(GAMETEXT_FILE,250);
     pExternalLevelsList->setEnterButton( pGoButton );        
 
+    m_pReplaysWindow = new UIFrame(m_pMainMenu,300,(getDispHeight()*140)/600,"",getDispWidth()-300-20,getDispHeight()-40-(getDispHeight()*120)/600);      
+    m_pReplaysWindow->showWindow(false);
+    pSomeText = new UIStatic(m_pReplaysWindow,0,0,GAMETEXT_REPLAYS,m_pHelpWindow->getPosition().nWidth,36);
+    pSomeText->setFont(m_Renderer.getMediumFont());
+    UIButton *pShowButton = new UIButton(m_pReplaysWindow,11,m_pReplaysWindow->getPosition().nHeight-68,GAMETEXT_SHOW,115,57);
+    pShowButton->setFont(m_Renderer.getSmallFont());
+    pShowButton->setType(UI_BUTTON_TYPE_SMALL);
+    pShowButton->setID("REPLAY_SHOW_BUTTON");
+    UIButton *pDeleteButton = new UIButton(m_pReplaysWindow,11+115,m_pReplaysWindow->getPosition().nHeight-68,GAMETEXT_DELETE,115,57);
+    pDeleteButton->setFont(m_Renderer.getSmallFont());
+    pDeleteButton->setType(UI_BUTTON_TYPE_SMALL);
+    pDeleteButton->setID("REPLAY_DELETE_BUTTON");
+    UIButton *pListAllButton = new UIButton(m_pReplaysWindow,11+115+115,m_pReplaysWindow->getPosition().nHeight-68,GAMETEXT_LISTALL,115,57);
+    pListAllButton->setFont(m_Renderer.getSmallFont());
+    pListAllButton->setType(UI_BUTTON_TYPE_CHECK);
+    pListAllButton->setID("REPLAY_LIST_ALL");
+    UIList *pReplayList = new UIList(m_pReplaysWindow,20,40,"",m_pReplaysWindow->getPosition().nWidth-40,m_pReplaysWindow->getPosition().nHeight-115);      
+    pReplayList->setID("REPLAY_LIST");
+    pReplayList->showWindow(true);
+    pReplayList->setFont(m_Renderer.getSmallFont());
+    pReplayList->addColumn(GAMETEXT_REPLAY,128);
+    pReplayList->addColumn(GAMETEXT_LEVEL,200);
+    pReplayList->addColumn(GAMETEXT_PLAYER,128);
+    pReplayList->setEnterButton( pShowButton );
+    
     //m_pPlayWindow->setPrimaryChild(m_pJustDeadMenuButtons[0]); /* default button: Try Again */
 
     m_pOptionsWindow = new UIFrame(m_pMainMenu,300,(getDispHeight()*140)/600,"",getDispWidth()-300-20,getDispHeight()-40-(getDispHeight()*120)/600);
@@ -209,11 +217,11 @@ namespace vapp {
     UITabView *pOptionsTabs  = new UITabView(m_pOptionsWindow,20,40,"",m_pOptionsWindow->getPosition().nWidth-40,m_pOptionsWindow->getPosition().nHeight-115);
     pOptionsTabs->setID("OPTIONS_TABS");
     pOptionsTabs->setFont(m_Renderer.getSmallFont());
-    UIButton *pSaveOptionsButton = new UIButton(m_pOptionsWindow,11,m_pReplaysWindow->getPosition().nHeight-68,GAMETEXT_SAVE,115,57);
+    UIButton *pSaveOptionsButton = new UIButton(m_pOptionsWindow,11,m_pOptionsWindow->getPosition().nHeight-68,GAMETEXT_SAVE,115,57);
     pSaveOptionsButton->setID("SAVE_BUTTON");
     pSaveOptionsButton->setFont(m_Renderer.getSmallFont());
     pSaveOptionsButton->setType(UI_BUTTON_TYPE_SMALL);
-    UIButton *pDefaultOptionsButton = new UIButton(m_pOptionsWindow,126,m_pReplaysWindow->getPosition().nHeight-68,GAMETEXT_DEFAULTS,115,57);
+    UIButton *pDefaultOptionsButton = new UIButton(m_pOptionsWindow,126,m_pOptionsWindow->getPosition().nHeight-68,GAMETEXT_DEFAULTS,115,57);
     pDefaultOptionsButton->setID("DEFAULTS_BUTTON");
     pDefaultOptionsButton->setFont(m_Renderer.getSmallFont());
     pDefaultOptionsButton->setType(UI_BUTTON_TYPE_SMALL);      
@@ -476,16 +484,12 @@ namespace vapp {
                                                         (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
         }
         else if(m_pPauseMenuButtons[i]->getCaption() == GAMETEXT_ABORT) {
-          if(m_pReplay != NULL) delete m_pReplay;
-          m_pReplay = NULL;
           m_pPauseMenu->showWindow(false);
           m_MotoGame.endLevel();
           m_Renderer.unprepareForNewLevel();
           setState(GS_MENU);          
         }
         else if(m_pPauseMenuButtons[i]->getCaption() == GAMETEXT_RESTART) {
-          if(m_pReplay != NULL) delete m_pReplay;
-          m_pReplay = NULL;
           m_pPauseMenu->showWindow(false);
           m_MotoGame.endLevel();
           m_Renderer.unprepareForNewLevel();
@@ -506,17 +510,50 @@ namespace vapp {
   Update finish menu
   ===========================================================================*/
   void GameApp::_HandleFinishMenu(void) {
+    /* Is savereplay box open? */
+    if(m_pSaveReplayMsgBox != NULL) {
+      UIMsgBoxButton Clicked = m_pSaveReplayMsgBox->getClicked();
+      if(Clicked != UI_MSGBOX_NOTHING) {
+        std::string Name = m_pSaveReplayMsgBox->getTextInput();
+      
+        delete m_pSaveReplayMsgBox;
+        m_pSaveReplayMsgBox = NULL;
+
+        if(Clicked == UI_MSGBOX_OK) {
+          _SaveReplay(Name);
+        }        
+      }
+    }
+    
     /* Any of the finish menu buttons clicked? */
     for(int i=0;i<m_nNumFinishMenuButtons;i++) {
+      if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_SAVEREPLAY) {
+        /* Have we recorded a replay? If not then disable the "Save Replay" button */
+        if(m_pReplay == NULL) {
+          m_pFinishMenuButtons[i]->enableWindow(false);
+        }
+        else {
+          m_pFinishMenuButtons[i]->enableWindow(true);
+        }
+      }
+
       if(m_pFinishMenuButtons[i]->isClicked()) {
         if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_QUIT) {
           if(m_pQuitMsgBox == NULL)
             m_pQuitMsgBox = m_Renderer.getGUI()->msgBox(GAMETEXT_QUITMESSAGE,
                                                         (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
         }
+        else if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_SAVEREPLAY) {
+          if(m_pReplay != NULL) {
+            if(m_pSaveReplayMsgBox == NULL) {
+              m_pSaveReplayMsgBox = m_Renderer.getGUI()->msgBox(GAMETEXT_ENTERREPLAYNAME,
+                                                                (UIMsgBoxButton)(UI_MSGBOX_OK|UI_MSGBOX_CANCEL),
+                                                                true);
+              m_pSaveReplayMsgBox->setTextInputFont(m_Renderer.getMediumFont());                                                          
+            }          
+          }
+        }
         else if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_TRYAGAIN) {
-          if(m_pReplay != NULL) delete m_pReplay;
-          m_pReplay = NULL;
           LevelSrc *pCurLevel = m_MotoGame.getLevelSrc();
           m_PlaySpecificLevel = pCurLevel->getID();
           m_pFinishMenu->showWindow(false);
@@ -526,8 +563,6 @@ namespace vapp {
           setState(GS_PLAYING);           
         }
         else if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_ABORT) {
-          if(m_pReplay != NULL) delete m_pReplay;
-          m_pReplay = NULL;
           m_pFinishMenu->showWindow(false);
           m_pBestTimes->showWindow(false);
           m_MotoGame.endLevel();
@@ -628,6 +663,8 @@ namespace vapp {
       if(pPlayerTag) {
         pPlayerTag->setCaption(std::string(GAMETEXT_CURPLAYER) + m_pPlayer->PlayerName);
       }                   
+      
+      _UpdateReplaysList();
     }    
     else if(pDeleteButton->isClicked()) {
       if(m_pDeleteProfileMsgBox == NULL)
@@ -670,8 +707,33 @@ namespace vapp {
   Update just-dead menu
   ===========================================================================*/
   void GameApp::_HandleJustDeadMenu(void) {
+    /* Is savereplay box open? */
+    if(m_pSaveReplayMsgBox != NULL) {
+      UIMsgBoxButton Clicked = m_pSaveReplayMsgBox->getClicked();
+      if(Clicked != UI_MSGBOX_NOTHING) {
+        std::string Name = m_pSaveReplayMsgBox->getTextInput();
+      
+        delete m_pSaveReplayMsgBox;
+        m_pSaveReplayMsgBox = NULL;
+
+        if(Clicked == UI_MSGBOX_OK) {
+          _SaveReplay(Name);
+        }        
+      }
+    }
+    
     /* Any of the just-dead menu buttons clicked? */
     for(int i=0;i<m_nNumJustDeadMenuButtons;i++) {
+      if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_SAVEREPLAY) {
+        /* Have we recorded a replay? If not then disable the "Save Replay" button */
+        if(m_pReplay == NULL) {
+          m_pJustDeadMenuButtons[i]->enableWindow(false);
+        }
+        else {
+          m_pJustDeadMenuButtons[i]->enableWindow(true);
+        }
+      }
+    
       if(m_pJustDeadMenuButtons[i]->isClicked()) {
         if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_QUIT) {
           if(m_pQuitMsgBox == NULL)
@@ -679,8 +741,6 @@ namespace vapp {
                                                         (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
         }
         else if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_TRYAGAIN) {
-          if(m_pReplay != NULL) delete m_pReplay;
-          m_pReplay = NULL;
           LevelSrc *pCurLevel = m_MotoGame.getLevelSrc();
           m_PlaySpecificLevel = pCurLevel->getID();
           m_pJustDeadMenu->showWindow(false);
@@ -688,9 +748,17 @@ namespace vapp {
           m_Renderer.unprepareForNewLevel();          
           setState(GS_PLAYING);          
         }
+        else if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_SAVEREPLAY) {
+          if(m_pReplay != NULL) {
+            if(m_pSaveReplayMsgBox == NULL) {
+              m_pSaveReplayMsgBox = m_Renderer.getGUI()->msgBox(GAMETEXT_ENTERREPLAYNAME,
+                                                                (UIMsgBoxButton)(UI_MSGBOX_OK|UI_MSGBOX_CANCEL),
+                                                                true);
+              m_pSaveReplayMsgBox->setTextInputFont(m_Renderer.getMediumFont());                                                          
+            }          
+          }
+        }
         else if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_ABORT) {
-          if(m_pReplay != NULL) delete m_pReplay;
-          m_pReplay = NULL;
           m_pJustDeadMenu->showWindow(false);
           m_MotoGame.endLevel();
           m_Renderer.unprepareForNewLevel();
@@ -714,36 +782,26 @@ namespace vapp {
           m_pOptionsWindow->showWindow(false);
           m_pHelpWindow->showWindow(false);
           m_pReplaysWindow->showWindow(false);
-          m_pBestTimesWindow->showWindow(false);
           m_pPlayWindow->showWindow(true);                    
-        }
-        else if(m_pMainMenuButtons[i]->getCaption() == GAMETEXT_VIEWREPLAYS) {        
-          m_pOptionsWindow->showWindow(false);
-          m_pHelpWindow->showWindow(false);
-          m_pReplaysWindow->showWindow(true);
-          m_pBestTimesWindow->showWindow(false);
-          m_pPlayWindow->showWindow(false);
         }
         else if(m_pMainMenuButtons[i]->getCaption() == GAMETEXT_OPTIONS) {
           if(m_pOptionsWindow->isHidden()) _ImportOptions();        
           m_pOptionsWindow->showWindow(true);
           m_pHelpWindow->showWindow(false);
           m_pReplaysWindow->showWindow(false);
-          m_pBestTimesWindow->showWindow(false);
           m_pPlayWindow->showWindow(false);
         }
         else if(m_pMainMenuButtons[i]->getCaption() == GAMETEXT_HELP) {
           m_pOptionsWindow->showWindow(false);
           m_pHelpWindow->showWindow(true);
           m_pReplaysWindow->showWindow(false);
-          m_pBestTimesWindow->showWindow(false);
           m_pPlayWindow->showWindow(false);
         }
-        else if(m_pMainMenuButtons[i]->getCaption() == GAMETEXT_BESTTIMES) {
+        else if(m_pMainMenuButtons[i]->getCaption() == GAMETEXT_REPLAYS) {
+          if(m_pReplaysWindow->isHidden()) _UpdateReplaysList();
           m_pOptionsWindow->showWindow(false);
           m_pHelpWindow->showWindow(false);
-          m_pReplaysWindow->showWindow(false);
-          m_pBestTimesWindow->showWindow(true);
+          m_pReplaysWindow->showWindow(true);
           m_pPlayWindow->showWindow(false);
         }
         else if(m_pMainMenuButtons[i]->getCaption() == GAMETEXT_QUIT) {
@@ -752,6 +810,29 @@ namespace vapp {
                                                         (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
         }
       }
+    }
+
+    /* Delete replay msgbox? */
+    if(m_pDeleteReplayMsgBox != NULL) {
+      UIMsgBoxButton Clicked = m_pDeleteReplayMsgBox->getClicked();
+      if(Clicked != UI_MSGBOX_NOTHING) {
+        if(Clicked == UI_MSGBOX_YES) {
+          /* Delete selected replay */
+          UIList *pList = reinterpret_cast<UIList *>(m_pReplaysWindow->getChild("REPLAY_LIST"));
+          if(pList != NULL) {
+            int nIdx = pList->getSelected();
+            if(nIdx >= 0 && nIdx < pList->getEntries().size()) {
+              UIListEntry *pEntry = pList->getEntries()[nIdx];
+              if(pEntry != NULL) {
+                FS::deleteFile(std::string("Replays/") + pEntry->Text[0] + std::string(".rpl"));
+                _UpdateReplaysList();
+              }
+            }
+          }
+        }
+        delete m_pDeleteReplayMsgBox;
+        m_pDeleteReplayMsgBox = NULL;
+      }      
     }
     
     /* Change player */
@@ -857,6 +938,46 @@ namespace vapp {
         m_PlaySpecificLevel = pLevelSrc->getID();
         setState(GS_PLAYING);
       }
+    }
+    
+    /* REPLAYS */        
+    UIButton *pReplaysShowButton = (UIButton *)m_pReplaysWindow->getChild("REPLAY_SHOW_BUTTON");
+    UIButton *pReplaysDeleteButton = (UIButton *)m_pReplaysWindow->getChild("REPLAY_DELETE_BUTTON");
+    UIButton *pReplaysListAllButton = (UIButton *)m_pReplaysWindow->getChild("REPLAY_LIST_ALL");
+    UIList *pReplaysList = (UIList *)m_pReplaysWindow->getChild("REPLAY_LIST");
+    
+    if(pReplaysList->getEntries().empty()) {
+      pReplaysShowButton->enableWindow(false);
+      pReplaysDeleteButton->enableWindow(false);
+    }
+    else {
+      pReplaysShowButton->enableWindow(true);
+      pReplaysDeleteButton->enableWindow(true);
+    }
+
+    if(pReplaysListAllButton->isClicked()) {
+      _UpdateReplaysList();      
+    }
+    
+    if(pReplaysShowButton->isClicked()) {
+      /* Show replay */
+      if(pReplaysList->getSelected() >= 0 && pReplaysList->getSelected() < pReplaysList->getEntries().size()) {
+        UIListEntry *pListEntry = pReplaysList->getEntries()[pReplaysList->getSelected()];
+        if(pListEntry != NULL) {
+          /* Do it captain */
+          pReplaysShowButton->setClicked(false);
+          m_pMainMenu->showWindow(false);
+          m_PlaySpecificReplay = pListEntry->Text[0];
+          setState(GS_REPLAYING);
+        }
+      }
+    }
+    
+    if(pReplaysDeleteButton->isClicked()) {
+      /* Delete replay - but ask the user first */
+      if(m_pDeleteReplayMsgBox == NULL)
+        m_pDeleteReplayMsgBox = m_Renderer.getGUI()->msgBox(GAMETEXT_DELETEREPLAYMESSAGE,
+                                                            (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));      
     }
   }
 
@@ -978,22 +1099,42 @@ namespace vapp {
       }
     }
   }
-  
+
   /*===========================================================================
-  Find all replays and add the to the list
+  Update replays list
   ===========================================================================*/
-  void GameApp::_CreateReplayList(UIList *pList) {
-    std::vector<ReplayInfo *> Replays = Replay::probeReplays();
+  void GameApp::_CreateReplaysList(UIList *pList) {
+    /* Should we list all players' replays? */
+    UIButton *pButton = (UIButton *)m_pReplaysWindow->getChild("REPLAY_LIST_ALL");
+    bool bListAll = false;
+    if(pButton != NULL && pButton->getChecked()) {
+      bListAll = true;
+    }
+    
+    /* Clear list */
+    pList->clear();
+    
+    /* Enumerate replays */
+    std::string PlayerSearch;
+    if(!bListAll) PlayerSearch = m_pPlayer->PlayerName;
+    
+    std::vector<ReplayInfo *> Replays = Replay::createReplayList(PlayerSearch);
     
     for(int i=0;i<Replays.size();i++) {
       UIListEntry *pEntry = pList->addEntry(Replays[i]->Name);
-      pEntry->Text.push_back(Replays[i]->LevelID);
-      pEntry->Text.push_back(Replays[i]->PlayerName);
+      
+      LevelSrc *pLevel = _FindLevelByID(Replays[i]->Level);
+      if(pLevel == NULL)
+        pEntry->Text.push_back(GAMETEXT_UNKNOWNLEVEL);
+      else
+        pEntry->Text.push_back(pLevel->getLevelInfo()->Name);
+      
+      pEntry->Text.push_back(Replays[i]->Player);
     }
     
     Replay::freeReplayList(Replays);
   }
-
+  
   /*===========================================================================
   Scan through loaded levels
   ===========================================================================*/

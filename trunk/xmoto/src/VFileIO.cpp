@@ -704,6 +704,122 @@ namespace vapp {
   }
   
   /*===========================================================================
+  Delete file
+  ===========================================================================*/
+  void FS::deleteFile(const std::string &File) {
+    /* We can only delete user files */
+    if(m_UserDir == "") {
+      Log("** Warning ** : No user directory, can't delete file: %s",File.c_str());
+      return;
+    }
+    
+    std::string FullFile = m_UserDir + std::string("/") + File;
+    remove(FullFile.c_str());
+  }
+  
+  /*===========================================================================
+  Copy file
+  ===========================================================================*/
+  bool FS::copyFile(const std::string &From,const std::string &To) {
+    /* All file copying must happen inside the user directory... */
+    if(m_UserDir == "") {
+      Log("** Warning ** : No user directory, can't copy file '%s' to '%s'",From.c_str(),To.c_str());
+      return false;
+    }
+
+    std::string FullFrom = m_UserDir + std::string("/") + From;
+    std::string FullTo = m_UserDir + std::string("/") + To;
+    
+    /* Does the destination file already exist? */
+    FILE *fp = fopen(FullTo.c_str(),"rb");
+    if(fp != NULL) {
+      fclose(fp);
+
+      /* Yup, modify its name - strip extension */
+      int k = FullTo.find_last_of(".");
+      std::string FullToExt,FullToBaseName;
+      if(k>=0) {
+        FullToBaseName = FullTo.substr(0,k);
+        FullToExt = FullTo.substr(k);
+      }
+      else {
+        FullToBaseName = FullTo;
+        FullToExt = "";
+      }
+      
+      int i = 1;
+      while(1) {
+        char cTemp[1024];
+        sprintf(cTemp,"%s (%d)%s",FullToBaseName.c_str(),i,FullToExt.c_str());
+        
+        /* What about this file then? */
+        fp = fopen(cTemp,"rb");
+        if(fp == NULL) {
+          /* Good one */
+          FullTo = cTemp;
+          break;        
+        }
+        fclose(fp);
+        
+        /* Next */
+      }      
+    }
+    
+    /* Open files and copy */
+    FILE *in = fopen(FullFrom.c_str(),"rb");
+    if(in != NULL) {
+      FILE *out = fopen(FullTo.c_str(),"wb");
+      if(out != NULL) {
+        /* Get input file size */
+        fseek(in,0,SEEK_END);
+        int nFileSize = ftell(in);
+        fseek(in,0,SEEK_SET);
+        int nTotalWritten = 0;
+      
+        /* Good, start copying */
+        while(!feof(in)) {
+          char cBuf[8192];
+          
+          int nRead = fread(cBuf,1,sizeof(cBuf),in);
+          if(nRead > 0) {
+            int nWritten = fwrite(cBuf,1,nRead,out);
+            if(nWritten > 0) {
+              nTotalWritten += nWritten;  
+            }
+          }
+          else break;
+        }
+        
+        /* Did we copy everything? */
+        if(nTotalWritten != nFileSize) {
+          /* Nope, clean up the mess and bail out */
+          fclose(in);
+          fclose(out);
+          remove(FullTo.c_str());
+          Log("** Warning ** : Failed to copy all of '%s' to '%s'",FullFrom.c_str(),FullTo.c_str());
+          return false;
+        }
+        
+        fclose(out);
+      }
+      else {
+        fclose(in);
+        Log("** Warning ** : Failed to open file for output: %s",FullTo.c_str());
+        return false;      
+      }
+      
+      fclose(in);
+    }
+    else {
+      Log("** Warning ** : Failed to open file for input: %s",FullFrom.c_str());
+      return false;
+    }
+    
+    /* OK */
+    return true;
+  }
+  
+  /*===========================================================================
   Initialize file system fun
   ===========================================================================*/
   std::string FS::m_UserDir,FS::m_DataDir; /* Globals */
@@ -760,15 +876,15 @@ namespace vapp {
       }
       
       /* If there is no Replay-dir in user-dir try making that too */
-      //if(!isDir(m_UserDir + std::string("/Replays"))) {
-      //  if(mkdir((m_UserDir + std::string("/Replays")).c_str(),S_IRUSR|S_IWUSR|S_IRWXU)) { /* drwx------ */
-      //    Log("** Warning ** : failed to create user replay directory '%s'!",(m_UserDir + std::string("/Replays")).c_str());
-      //  }
-      //  if(!isDir(m_UserDir + std::string("/Replays"))) {
-      //    /* Still no dir... */
-      //    throw Exception("could not create user replay directory");
-      //  }
-      //}
+      if(!isDir(m_UserDir + std::string("/Replays"))) {
+        if(mkdir((m_UserDir + std::string("/Replays")).c_str(),S_IRUSR|S_IWUSR|S_IRWXU)) { /* drwx------ */
+          Log("** Warning ** : failed to create user replay directory '%s'!",(m_UserDir + std::string("/Replays")).c_str());
+        }
+        if(!isDir(m_UserDir + std::string("/Replays"))) {
+          /* Still no dir... */
+          throw Exception("could not create user replay directory");
+        }
+      }
 
       /* The same goes for the /Levels dir */
       if(!isDir(m_UserDir + std::string("/Levels"))) {
