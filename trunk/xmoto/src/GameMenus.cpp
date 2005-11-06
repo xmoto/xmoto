@@ -174,7 +174,7 @@ namespace vapp {
     pInternalLevelsList->showWindow(true);
     pInternalLevelsTab->showWindow(true);
     pInternalLevelsList->setFont(m_Renderer.getSmallFont());
-    pInternalLevelsList->addColumn(GAMETEXT_LEVEL,128);
+    pInternalLevelsList->addColumn(GAMETEXT_LEVEL,300);
     pInternalLevelsList->setEnterButton( pGoButton );
     UIList *pExternalLevelsList = new UIList(pExternalLevelsTab,0,0,"",pExternalLevelsTab->getPosition().nWidth,pExternalLevelsTab->getPosition().nHeight);      /* -64 to make room for bonus */
     pExternalLevelsList->setID("PLAY_EXTERNAL_LEVELS_LIST");
@@ -392,6 +392,12 @@ namespace vapp {
     pStereoButton->setFont(m_Renderer.getSmallFont());
     pStereoButton->setGroup(10025);
 
+    UIButton *pEnableEngineSoundButton = new UIButton(pAudioOptionsTab,5,117,GAMETEXT_ENABLEENGINESOUND,pAudioOptionsTab->getPosition().nWidth-10,28);
+    pEnableEngineSoundButton->setType(UI_BUTTON_TYPE_CHECK);
+    pEnableEngineSoundButton->setID("ENABLE_ENGINE_SOUND");
+    pEnableEngineSoundButton->enableWindow(true);
+    pEnableEngineSoundButton->setFont(m_Renderer.getSmallFont());
+    
     UIWindow *pControlsOptionsTab = new UIWindow(pOptionsTabs,20,40,GAMETEXT_CONTROLS,pOptionsTabs->getPosition().nWidth-40,pOptionsTabs->getPosition().nHeight);                  
     pControlsOptionsTab->enableWindow(true);
     pControlsOptionsTab->showWindow(false);
@@ -856,7 +862,8 @@ namespace vapp {
     UIButton *pSample16Button = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:16BIT");
     UIButton *pMonoButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:MONO");
     UIButton *pStereoButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:STEREO");
-        
+    UIButton *pEnableEngineSoundButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_ENGINE_SOUND");
+
     if(pEnableAudioButton) {
       bool t=pEnableAudioButton->getChecked();
       p11kHzButton->enableWindow(t);
@@ -866,6 +873,7 @@ namespace vapp {
       pSample16Button->enableWindow(t);
       pMonoButton->enableWindow(t);
       pStereoButton->enableWindow(t);
+      pEnableEngineSoundButton->enableWindow(t);
     }
     
     UIButton *pSaveOptions = (UIButton *)m_pOptionsWindow->getChild("SAVE_BUTTON");
@@ -1224,6 +1232,7 @@ namespace vapp {
     UIButton *pSample16Button = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:16BIT");
     UIButton *pMonoButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:MONO");
     UIButton *pStereoButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:STEREO");
+    UIButton *pEnableEngineSoundButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_ENGINE_SOUND");
 
     UIButton *p16bpp = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:VIDEO_TAB:16BPP");
     UIButton *p32bpp = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:VIDEO_TAB:32BPP");
@@ -1246,6 +1255,7 @@ namespace vapp {
     pSample16Button->setChecked(false);
     pMonoButton->setChecked(false);
     pStereoButton->setChecked(false);
+    pEnableEngineSoundButton->setChecked(false);
     
     p16bpp->setChecked(false);
     p32bpp->setChecked(false);
@@ -1284,12 +1294,14 @@ namespace vapp {
     else
       pMonoButton->setChecked(true); /* TODO: warning */
       
+    pEnableEngineSoundButton->setChecked(m_Config.getBool("EngineSoundEnable"));      
+      
     switch(m_Config.getInteger("DisplayBPP")) {
       case 16: p16bpp->setChecked(true); break;
       case 32: p32bpp->setChecked(true); break;
       default: p16bpp->setChecked(true); break; /* TODO: warning */      
     }
-    
+        
     pRunWindowed->setChecked(m_Config.getBool("DisplayWindowed"));
     
     if(m_Config.getString("MenuBackgroundGraphics") == "Low") 
@@ -1339,6 +1351,7 @@ namespace vapp {
     m_Config.setValue("GameGraphics",m_Config.getDefaultValue("GameGraphics"));
     m_Config.setValue("MenuBackgroundGraphics",m_Config.getDefaultValue("MenuBackgroundGraphics"));
     m_Config.setValue("ShowMiniMap",m_Config.getDefaultValue("ShowMiniMap"));
+    m_Config.setValue("EngineSoundEnable",m_Config.getDefaultValue("EngineSoundEnable"));
     
     m_Config.setValue("ControllerMode1",m_Config.getDefaultValue("ControllerMode1"));
     m_Config.setValue("KeyDrive1",m_Config.getDefaultValue("KeyDrive1"));
@@ -1383,6 +1396,7 @@ namespace vapp {
     UIButton *pSample16Button = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:16BIT");
     UIButton *pMonoButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:MONO");
     UIButton *pStereoButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:STEREO");
+    UIButton *pEnableEngineSoundButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_ENGINE_SOUND");
     
     UIButton *p16bpp = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:VIDEO_TAB:16BPP");
     UIButton *p32bpp = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:VIDEO_TAB:32BPP");
@@ -1420,6 +1434,8 @@ namespace vapp {
       else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPRIGHT) m_Config.setString("KeyFlipRight1",pActionList->getEntries()[i]->Text[1]);
       else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CHANGEDIR) m_Config.setString("KeyChangeDir1",pActionList->getEntries()[i]->Text[1]);
     }
+    
+    m_Config.setBool("EngineSoundEnable",pEnableEngineSoundButton->getChecked());
             
     /* The following require restart */
     m_Config.setChanged(false);      

@@ -95,6 +95,8 @@ namespace vapp {
              m_bCmdDispHeight=false;
              m_bCmdDispBPP=false;
              m_bCmdWindowed=false;
+             
+             m_nLScissorX = m_nLScissorY = m_nLScissorW = m_nLScissorH = 0;
                           
              m_AppName="";
              m_CopyrightInfo="";
@@ -127,6 +129,7 @@ namespace vapp {
 //#endif
 
       void scissorGraphics(int x,int y,int nWidth,int nHeight);
+      void getScissorGraphics(int *px,int *py,int *pnWidth,int *pnHeight);
       Img *grabScreen(void);
       bool isExtensionSupported(std::string Ext);
 
@@ -188,6 +191,8 @@ namespace vapp {
       
       bool m_bVBOSupported;
       bool m_bDontUseGLExtensions;
+      
+      int m_nLScissorX,m_nLScissorY,m_nLScissorW,m_nLScissorH;
       
       /* User nofification */
       std::string m_UserNotify;

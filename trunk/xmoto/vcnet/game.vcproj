@@ -35,7 +35,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="SDL_mixer.lib vorbisfile_static_d.lib ogg_static_d.lib vorbis_static_d.lib commond.lib opengl32.lib SDL.lib SDLmain.lib zdll.lib jpeg6b.lib libpng13.lib"
+				AdditionalDependencies="SDL_mixer.lib commond.lib opengl32.lib SDL.lib SDLmain.lib zdll.lib jpeg6b.lib libpng13.lib"
 				OutputFile="$(SolutionDir)/../bin/xmotod.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="$(SolutionDir)"
@@ -91,7 +91,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="SDL_mixer.lib vorbisfile_static.lib ogg_static.lib vorbis_static.lib common.lib opengl32.lib SDL.lib SDLmain.lib zdll.lib jpeg6b.lib libpng13.lib"
+				AdditionalDependencies="SDL_mixer.lib common.lib opengl32.lib SDL.lib SDLmain.lib zdll.lib jpeg6b.lib libpng13.lib"
 				OutputFile="$(SolutionDir)/../bin/xmoto.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(SolutionDir)"

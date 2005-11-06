@@ -57,6 +57,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_DELETEPROFILE        "Delete"
 #define GAMETEXT_DRIVE                "Drive"
 #define GAMETEXT_ENABLEAUDIO          "Enable Audio"
+#define GAMETEXT_ENABLEENGINESOUND    "Enable Engine Sound"
 #define GAMETEXT_ENTERPLAYERNAME      "Enter player name:"
 #define GAMETEXT_ENTERREPLAYNAME      "Enter name of replay:"
 #define GAMETEXT_EXTERNALLEVELS       "External Levels"     

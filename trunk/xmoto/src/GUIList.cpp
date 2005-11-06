@@ -105,11 +105,29 @@ namespace vapp {
           putRect(nLX,m_nScroll+ nLY+i*nRowHeight,nLWidth,nRowHeight,MAKE_COLOR(255,255,255,n));                 
         }
       }              
+
+      int yy = m_nScroll+nLY+i*nRowHeight;
+      if(yy >= getPosition().nHeight - 6) break;
+      int yy2 = m_nScroll+nLY+i*nRowHeight + nRowHeight;
+      int nLRH = nRowHeight;
+      if(yy2 >= getPosition().nHeight - 6) nLRH = nRowHeight - (yy2 - (getPosition().nHeight - 6));
+      int yym1 = m_nScroll+nLY+i*nRowHeight;
+      if(yym1 + nRowHeight > nLY) {
+        if(yym1 < nLY) {
+          yym1 += (nLY-yym1);
+        }
       
-      int x = 0;      
-      for(int j=0;j<m_Entries[i]->Text.size();j++) {              
-        putText(nLX+x,nLY+y,m_Entries[i]->Text[j]);
-        x += m_ColumnWidths[j];                
+        int nOldScissor[4];
+        glGetIntegerv(GL_SCISSOR_BOX,nOldScissor);
+        
+        int x = 0;      
+        for(int j=0;j<m_Entries[i]->Text.size();j++) {    
+          setScissor(nLX+x,yym1,m_ColumnWidths[j]-4,nLRH);
+          putText(nLX+x,nLY+y,m_Entries[i]->Text[j]);
+          x += m_ColumnWidths[j];                
+        }
+        
+        glScissor(nOldScissor[0],nOldScissor[1],nOldScissor[2],nOldScissor[3]);
       }
     }
     

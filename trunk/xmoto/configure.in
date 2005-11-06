@@ -13,6 +13,11 @@ AC_CHECK_LIB(png,png_read_image, [], [
         echo "libpng required!"
         exit -1
         ])
+        
+AC_CHECK_LIB(z,uncompress, [], [
+        echo "zlib required!"
+        exit -1
+        ])        
 
 AC_CHECK_LIB(SDL,SDL_Init, [], [
         echo "SDL required!"
@@ -23,22 +28,7 @@ AC_CHECK_LIB(GL,glVertex3f, [], [
         echo "OpenGL required!"
         exit -1
         ])
-
-AC_CHECK_LIB(vorbis,vorbis_synthesis_blockin, [], [
-        echo "libvorbis required!"
-        exit -1
-        ])
-
-AC_CHECK_LIB(ogg,oggpack_adv, [], [
-        echo "libogg required!"
-        exit -1
-        ])
-
-AC_CHECK_LIB(vorbisfile,ov_read, [], [
-        echo "vorbisfile required!"
-        exit -1
-        ])
-        
+       
 AC_SEARCH_LIBS(lua_pushboolean,lua lua50, [], [
         echo "liblua50 or liblua required!"
         exit -1

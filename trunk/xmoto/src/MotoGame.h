@@ -174,12 +174,6 @@ namespace vapp {
   ===========================================================================*/
   #define SER_BIKE_STATE_DIR_LEFT         0x01
   #define SER_BIKE_STATE_DIR_RIGHT        0x02
-  #define SER_BIKE_STATE_XSUBSPACE_1_0    0x04
-  #define SER_BIKE_STATE_YSUBSPACE_1_0    0x08
-  #define SER_BIKE_STATE_XSUBSPACE_1_5    0x10
-  #define SER_BIKE_STATE_YSUBSPACE_1_5    0x20
-  #define SER_BIKE_STATE_XSUBSPACE_2_5    0x40
-  #define SER_BIKE_STATE_YSUBSPACE_2_5    0x80
   
   struct SerializedBikeState {
     unsigned char cFlags;             /* State flags */
@@ -187,27 +181,20 @@ namespace vapp {
     float fFrameX,fFrameY;            /* Frame position */
     float fMaxXDiff,fMaxYDiff;        /* Addressing space around the frame */
 
-    float fRearWheelRot[4];           /* Rear wheel rotation */   
-    float fFrontWheelRot[4];          /* Front wheel rotation */   
-    float fFrameRot[4];               /* Frame rotation */   
+    unsigned short nRearWheelRot;     /* Encoded rear wheel matrix */
+    unsigned short nFrontWheelRot;    /* Encoded front wheel matrix */
+    unsigned short nFrameRot;         /* Encoded frame matrix */
+        
+    unsigned char cBikeEngineRPM;     /* Maps to a float between 400 and 5000 */
     
     char cRearWheelX,cRearWheelY;     /* Rear wheel position */
     char cFrontWheelX,cFrontWheelY;   /* Front wheel position */
-    char cHandX,cHandY;               /* Hand position */
+    //char cHandX,cHandY;               /* Hand position */
     char cElbowX,cElbowY;             /* Elbow position */
     char cShoulderX,cShoulderY;       /* Shoulder position */
     char cLowerBodyX,cLowerBodyY;     /* Ass position */
     char cKneeX,cKneeY;               /* Knee position */
-    char cFootX,cFootY;               /* Foot position */
-
-    //float fRearWheelX,fRearWheelY;    /* Rear wheel position */
-    //float fFrontWheelX,fFrontWheelY;  /* Front wheel position */
-    //float fHandX,fHandY;              /* Hand position */
-    //float fElbowX,fElbowY;            /* Elbow position */
-    //float fShoulderX,fShoulderY;      /* Shoulder position */
-    //float fLowerBodyX,fLowerBodyY;    /* Ass position */
-    //float fKneeX,fKneeY;              /* Knee position */
-    //float fFootX,fFootY;              /* Foot position */    
+    //char cFootX,cFootY;               /* Foot position */
   };
 
 	/*===========================================================================
@@ -215,6 +202,8 @@ namespace vapp {
   ===========================================================================*/
   struct BikeState {
     DriveDir Dir;         /* Driving left or right? */
+  
+    float fBikeEngineRPM;
   
     Vector2f RearWheelP;  /* Rear wheel position */
     Vector2f FrontWheelP; /* Front wheel position */
@@ -240,9 +229,9 @@ namespace vapp {
     float fFrontWheelRot[4];
     float fRearWheelRot[4];
     float fFrameRot[4];
-    //dReal *pfFrontWheelRot;
-    //dReal *pfRearWheelRot;
-    //dReal *pfFrameRot;
+    
+    Vector2f WantedHandP,WantedFootP;
+    Vector2f WantedHand2P,WantedFoot2P;    
     
     Vector2f HandP;
     Vector2f ElbowP;
@@ -396,6 +385,8 @@ namespace vapp {
       void clearGameMessages(void);
       
       void getSerializedBikeState(SerializedBikeState *pState);
+
+      float getBikeEngineRPM(void);
       
       /* Direct Lua interaction methods */
       bool scriptCallBool(std::string FuncName,bool bDefault=false);
@@ -534,6 +525,8 @@ namespace vapp {
       void _UpdateGameState(SerializedBikeState *pReplayState);
       char _MapCoordTo8Bits(float fRef,float fMaxDiff,float fCoord);
       float _Map8BitsToCoord(float fRef,float fMaxDiff,char c);
+      unsigned short _MatrixTo16Bits(const float *pfMatrix);
+      void _16BitsToMatrix(unsigned short n16,float *pfMatrix);
       
       /* MPhysics.cpp */
       void _UpdatePhysics(float fTimeStep);

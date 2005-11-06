@@ -429,7 +429,7 @@ namespace vapp {
   }
   
   /*===========================================================================
-  Set graphics scissoring
+  Set/get graphics scissoring
   ===========================================================================*/
   void App::scissorGraphics(int x,int y,int nWidth,int nHeight) {
     //float fx = (float)(m_nDispWidth*x) / (float)getDispWidth();
@@ -444,6 +444,18 @@ namespace vapp {
     //glScissor(fx,m_nDispHeight - (fy+fh)-1,fw+1,fh+1);
     
     glScissor(x,m_nDispHeight - (y+nHeight),nWidth,nHeight);
+    
+    m_nLScissorX = x;
+    m_nLScissorY = y;
+    m_nLScissorW = nWidth;
+    m_nLScissorH = nHeight;
+  }  
+  
+  void App::getScissorGraphics(int *px,int *py,int *pnWidth,int *pnHeight) {
+    *px = m_nLScissorX;
+    *py = m_nLScissorY;
+    *pnWidth = m_nLScissorW;
+    *pnHeight = m_nLScissorH;
   }  
 
   /*===========================================================================

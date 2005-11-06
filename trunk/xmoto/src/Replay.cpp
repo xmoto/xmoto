@@ -22,10 +22,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* 
  *  Replay recording and management.
  */
- 
+
 #include "Replay.h"
+#if defined(WIN32) 
+  #include "zlib.h"
+#else
+  #include <zlib.h>
+#endif
 
 namespace vapp {
+
+  bool Replay::m_bEnableCompression = true;
 
   Replay::Replay() {
     m_bFinished = false;
@@ -33,6 +40,10 @@ namespace vapp {
   }
       
   Replay::~Replay() {
+    _FreeReplay();
+  }        
+  
+  void Replay::_FreeReplay(void) {
     /* Dealloc chunks */
     for(int i=0;i<m_Chunks.size();i++) {
       if(m_Chunks[i].pcChunkData != NULL) {
@@ -40,7 +51,7 @@ namespace vapp {
       }
     }
     m_Chunks.clear();
-  }        
+  }
   
   void Replay::finishReplay(bool bFinished,float fFinishTime) {
     m_fFinishTime = fFinishTime;
@@ -67,6 +78,7 @@ namespace vapp {
     
     /* Write header */
     FS::writeByte(pfh,0); /* Version: 0 */
+    FS::writeInt(pfh,0x12345678); /* Endianness guard */
     FS::writeString(pfh,m_LevelID);
     FS::writeString(pfh,m_PlayerName);
     FS::writeFloat(pfh,m_fFrameRate);
@@ -81,7 +93,31 @@ namespace vapp {
       /* Write chunks */    
       for(int i=0;i<m_Chunks.size();i++) {
         FS::writeInt(pfh,m_Chunks[i].nNumStates);
-        FS::writeBuf(pfh,m_Chunks[i].pcChunkData,m_nStateSize * m_Chunks[i].nNumStates);
+
+        /* Compression enabled? */
+        if(m_bEnableCompression) {
+          /* Try compressing the chunk with zlib */        
+          unsigned char *pcCompressed = new unsigned char[m_nStateSize * m_Chunks[i].nNumStates * 2 + 12];
+          uLongf nDestLen = m_nStateSize * m_Chunks[i].nNumStates * 2 + 12;
+          uLongf nSrcLen = m_nStateSize * m_Chunks[i].nNumStates;
+          int nZRet = compress2((Bytef *)pcCompressed,&nDestLen,(Bytef *)m_Chunks[i].pcChunkData,nSrcLen,9);
+          if(nZRet != Z_OK) {
+            /* Failed to compress... Save uncompressed chunk then */
+            FS::writeBool(pfh,false); /* compression: false */
+            FS::writeBuf(pfh,m_Chunks[i].pcChunkData,m_nStateSize * m_Chunks[i].nNumStates);
+          }
+          else {
+            /* Compressed ok */
+            FS::writeBool(pfh,true); /* compression: true */
+            FS::writeInt(pfh,nDestLen);
+            FS::writeBuf(pfh,(char *)pcCompressed,nDestLen);
+          }
+          delete [] pcCompressed;        
+        }
+        else {
+          FS::writeBool(pfh,false); /* compression: false */
+          FS::writeBuf(pfh,m_Chunks[i].pcChunkData,m_nStateSize * m_Chunks[i].nNumStates);
+        }
       }
     }
     
@@ -111,6 +147,13 @@ namespace vapp {
       return "";
     }
     else {
+      /* Little/big endian safety check */
+      if(FS::readInt(pfh) != 0x12345678) {
+        FS::closeFile(pfh);
+        Log("** Warning ** : Sorry, the replay you're trying to open are not endian-compatible with your computer!");
+        return "";        
+      }
+    
       /* Read level ID */
       m_LevelID = FS::readString(pfh);
       
@@ -136,7 +179,36 @@ namespace vapp {
         ReplayStateChunk Chunk;        
         Chunk.nNumStates = FS::readInt(pfh);
         Chunk.pcChunkData = new char [Chunk.nNumStates * m_nStateSize];
-        FS::readBuf(pfh,Chunk.pcChunkData,m_nStateSize*Chunk.nNumStates);
+        
+        /* Compressed or not compressed? */
+        if(FS::readBool(pfh)) {
+          /* Compressed! - read compressed size */
+          int nCompressedSize = FS::readInt(pfh);
+          
+          /* Read compressed data */
+          unsigned char *pcCompressed = new unsigned char [nCompressedSize];
+          FS::readBuf(pfh,(char *)pcCompressed,nCompressedSize);
+         
+          /* Uncompress it */           
+          uLongf nDestLen = Chunk.nNumStates * m_nStateSize;
+          uLongf nSrcLen = nCompressedSize;
+          int nZRet = uncompress((Bytef *)Chunk.pcChunkData,&nDestLen,(Bytef *)pcCompressed,nSrcLen);
+          if(nZRet != Z_OK || nDestLen != Chunk.nNumStates * m_nStateSize) {
+            delete [] pcCompressed;
+            delete [] Chunk.pcChunkData;
+            FS::closeFile(pfh);
+            _FreeReplay();
+            Log("** Warning ** : Failed to uncompress chunk %d in replay: %s",i,FileName.c_str());
+            return "";
+          }
+          
+          /* Clean up */
+          delete [] pcCompressed;
+        }
+        else {
+          /* Not compressed! */
+          FS::readBuf(pfh,Chunk.pcChunkData,m_nStateSize*Chunk.nNumStates);
+        }
         
         m_Chunks.push_back(Chunk);
       }
@@ -151,7 +223,7 @@ namespace vapp {
     return m_LevelID;
   }
       
-  #define STATES_PER_CHUNK 64
+  #define STATES_PER_CHUNK 512
   void Replay::storeState(const char *pcState) {
     if(m_Chunks.empty()) {
       ReplayStateChunk Chunk;
@@ -201,19 +273,21 @@ namespace vapp {
       if(pfh != NULL) {
         int nVersion = FS::readByte(pfh);
         if(nVersion == 0) {
-          std::string LevelID = FS::readString(pfh);
-          std::string Player = FS::readString(pfh);
-          float fFrameRate = FS::readFloat(pfh);
-          
-          if((PlayerName=="" || PlayerName==Player) && FS::getFileBaseName(ReplayFiles[i]) != "Latest") {
-            /* Fine. */
-            ReplayInfo *pInfo = new ReplayInfo;
-            pInfo->Level = LevelID;
-            pInfo->Name = FS::getFileBaseName(ReplayFiles[i]);
-            pInfo->Player = Player;
-            pInfo->fFrameRate = fFrameRate;
+          if(FS::readInt(pfh) == 0x12345678) {                  
+            std::string LevelID = FS::readString(pfh);
+            std::string Player = FS::readString(pfh);
+            float fFrameRate = FS::readFloat(pfh);
             
-            Ret.push_back(pInfo);
+            if((PlayerName=="" || PlayerName==Player) && FS::getFileBaseName(ReplayFiles[i]) != "Latest") {
+              /* Fine. */
+              ReplayInfo *pInfo = new ReplayInfo;
+              pInfo->Level = LevelID;
+              pInfo->Name = FS::getFileBaseName(ReplayFiles[i]);
+              pInfo->Player = Player;
+              pInfo->fFrameRate = fFrameRate;
+              
+              Ret.push_back(pInfo);
+            }
           }
         }
         else {

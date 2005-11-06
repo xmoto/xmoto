@@ -83,6 +83,8 @@ namespace vapp {
                  m_pReplay = NULL;
                  m_bRecordReplays = true;
                  m_bShowCursor = true;
+                 m_bEnableEngineSound = true;
+                 m_bCompressReplays = true;
                  }
         
       /* Virtual methods */
@@ -105,6 +107,8 @@ namespace vapp {
       void notifyMsg(std::string Msg);      
     
     private: 
+      EngineSoundSimulator m_EngineSound;
+    
       /* Data */
       bool m_bShowFrameRate;                    /* true: frame rate */
       bool m_bListLevels;                       /* true: list installed levels */
@@ -112,6 +116,8 @@ namespace vapp {
       bool m_bTimeDemo;                         /* true: (valid for replaying) - performance benchmark */
       bool m_bDebugMode;                        /* true: show debug info */
       bool m_bUglyMode;													/* true: fast 'n ugly graphics */
+      bool m_bEnableEngineSound;                /* true: engine sound is enabled */
+      bool m_bCompressReplays;                  /* true: compress replays with zlib */
       std::string m_PlaySpecificLevel;          /* If set, we only want to 
                                                    play this level */
       std::string m_PlaySpecificReplay;         /* If set, we only want to

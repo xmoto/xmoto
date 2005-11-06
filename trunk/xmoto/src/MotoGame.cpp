@@ -244,6 +244,7 @@ namespace vapp {
     /* BIKE_S */
     m_BikeS.CenterP = Vector2f(0,0);
     m_BikeS.Dir = DD_RIGHT;
+    m_BikeS.fBikeEngineRPM = 0.0f;
     m_BikeS.Elbow2P = Vector2f(0,0);
     m_BikeS.ElbowP = Vector2f(0,0);
     m_BikeS.fCurBrake = 0.0f;

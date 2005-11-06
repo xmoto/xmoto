@@ -78,6 +78,13 @@ namespace vapp {
   }
 
   /*===========================================================================
+  Determine and return the engine RPMs
+  ===========================================================================*/
+  float MotoGame::getBikeEngineRPM(void) {
+    return m_BikeS.fBikeEngineRPM;
+  }
+
+  /*===========================================================================
   Update physics
   ===========================================================================*/
   void MotoGame::_UpdatePhysics(float fTimeStep) {
@@ -186,6 +193,23 @@ namespace vapp {
       /* This is from I experimented with allowing the player to shift the center of mass of the
         bike. Not a success. */    
       //dBodyAddTorque(m_PlayerULegBodyID,0,0,-300);      
+    }
+    
+    /* Update RPM */
+    /* Simply map the wheel ang vel to the RPM (stupid, lame, lots of bad stuff) */
+    if(m_BikeS.Dir == DD_RIGHT) {
+      float f = -fRearWheelAngVel;
+      if(f<0.0f) f=0.0f;      
+      m_BikeS.fBikeEngineRPM = 400.0f + 4600.0f * (f / 50.0f) * m_BikeC.fDrive;
+      if(m_BikeS.fBikeEngineRPM < 400.0f) m_BikeS.fBikeEngineRPM = 400.0f;
+      if(m_BikeS.fBikeEngineRPM > 5000.0f) m_BikeS.fBikeEngineRPM = 5000.0f;
+    }
+    else if(m_BikeS.Dir == DD_LEFT) {
+      float f = fFrontWheelAngVel;
+      if(f<0.0f) f=0.0f;      
+      m_BikeS.fBikeEngineRPM = 400.0f + 4600.0f * (f / 50.0f) * m_BikeC.fDrive;
+      if(m_BikeS.fBikeEngineRPM < 400.0f) m_BikeS.fBikeEngineRPM = 400.0f;
+      if(m_BikeS.fBikeEngineRPM > 5000.0f) m_BikeS.fBikeEngineRPM = 5000.0f;
     }
 
     /* Apply motor/brake torques */
@@ -333,11 +357,9 @@ namespace vapp {
     /* Move rider along bike -- calculate handlebar and footpeg coords */
     Vector2f FootRP,HandRP;
     
-    FootRP.x = m_BikeA.PFp.x*m_BikeS.fFrameRot[0] + m_BikeA.PFp.y*m_BikeS.fFrameRot[1] + m_BikeS.CenterP.x;
-    FootRP.y = m_BikeA.PFp.x*m_BikeS.fFrameRot[2] + m_BikeA.PFp.y*m_BikeS.fFrameRot[3] + m_BikeS.CenterP.y;
-    HandRP.x = m_BikeA.PHp.x*m_BikeS.fFrameRot[0] + m_BikeA.PHp.y*m_BikeS.fFrameRot[1] + m_BikeS.CenterP.x;
-    HandRP.y = m_BikeA.PHp.x*m_BikeS.fFrameRot[2] + m_BikeA.PHp.y*m_BikeS.fFrameRot[3] + m_BikeS.CenterP.y;    
-    
+    FootRP = m_BikeS.WantedFootP;
+    HandRP = m_BikeS.WantedHandP;
+        
     Vector2f PFq = FootRP - m_BikeS.FootP;
     Vector2f PFqv = PFq - m_BikeS.PrevPFq;
     Vector2f PFSpring = PFq * PHYS_RIDER_SPRING; 
@@ -354,11 +376,9 @@ namespace vapp {
     dBodyAddForce(m_PlayerHandAnchorBodyID,PHTotal.x,PHTotal.y,0);
     m_BikeS.PrevPHq = PHq;    
 
-    FootRP.x = m_BikeA.PFp2.x*m_BikeS.fFrameRot[0] + m_BikeA.PFp2.y*m_BikeS.fFrameRot[1] + m_BikeS.CenterP.x;
-    FootRP.y = m_BikeA.PFp2.x*m_BikeS.fFrameRot[2] + m_BikeA.PFp2.y*m_BikeS.fFrameRot[3] + m_BikeS.CenterP.y;
-    HandRP.x = m_BikeA.PHp2.x*m_BikeS.fFrameRot[0] + m_BikeA.PHp2.y*m_BikeS.fFrameRot[1] + m_BikeS.CenterP.x;
-    HandRP.y = m_BikeA.PHp2.x*m_BikeS.fFrameRot[2] + m_BikeA.PHp2.y*m_BikeS.fFrameRot[3] + m_BikeS.CenterP.y;    
-
+    FootRP = m_BikeS.WantedFoot2P;
+    HandRP = m_BikeS.WantedHand2P;
+        
     PFq = FootRP - m_BikeS.Foot2P;
     PFqv = PFq - m_BikeS.PrevPFq2;
     PFSpring = PFq * PHYS_RIDER_SPRING; 
@@ -425,10 +445,13 @@ namespace vapp {
       m_BikeS.FrontWheelP.y = _Map8BitsToCoord(pReplayState->fFrameY,pReplayState->fMaxYDiff,pReplayState->cFrontWheelY);
       m_BikeS.CenterP.x = pReplayState->fFrameX; 
       m_BikeS.CenterP.y = pReplayState->fFrameY;
-      
-      memcpy(m_BikeS.fFrameRot,pReplayState->fFrameRot,sizeof(float)*4);
-      memcpy(m_BikeS.fFrontWheelRot,pReplayState->fFrontWheelRot,sizeof(float)*4);
-      memcpy(m_BikeS.fRearWheelRot,pReplayState->fRearWheelRot,sizeof(float)*4);
+            
+      _16BitsToMatrix(pReplayState->nFrameRot,m_BikeS.fFrameRot);
+      _16BitsToMatrix(pReplayState->nFrontWheelRot,m_BikeS.fFrontWheelRot);
+      _16BitsToMatrix(pReplayState->nRearWheelRot,m_BikeS.fRearWheelRot);
+
+      /* Update engine stuff */
+      m_BikeS.fBikeEngineRPM = 400.0f + 4600.0f * ((float)pReplayState->cBikeEngineRPM) / 255.0f;
     }                                                                                        
     
     m_BikeS.SwingAnchorP.x = m_BikeA.AR.x*m_BikeS.fFrameRot[0] + m_BikeA.AR.y*m_BikeS.fFrameRot[1] + m_BikeS.CenterP.x;
@@ -440,6 +463,17 @@ namespace vapp {
     m_BikeS.SwingAnchor2P.y = m_BikeA.AR2.x*m_BikeS.fFrameRot[2] + m_BikeA.AR2.y*m_BikeS.fFrameRot[3] + m_BikeS.CenterP.y;
     m_BikeS.FrontAnchor2P.x = m_BikeA.AF2.x*m_BikeS.fFrameRot[0] + m_BikeA.AF2.y*m_BikeS.fFrameRot[1] + m_BikeS.CenterP.x;
     m_BikeS.FrontAnchor2P.y = m_BikeA.AF2.x*m_BikeS.fFrameRot[2] + m_BikeA.AF2.y*m_BikeS.fFrameRot[3] + m_BikeS.CenterP.y;
+
+    /* Calculate desired hand/foot positions */
+    m_BikeS.WantedFootP.x = m_BikeA.PFp.x*m_BikeS.fFrameRot[0] + m_BikeA.PFp.y*m_BikeS.fFrameRot[1] + m_BikeS.CenterP.x;
+    m_BikeS.WantedFootP.y = m_BikeA.PFp.x*m_BikeS.fFrameRot[2] + m_BikeA.PFp.y*m_BikeS.fFrameRot[3] + m_BikeS.CenterP.y;
+    m_BikeS.WantedHandP.x = m_BikeA.PHp.x*m_BikeS.fFrameRot[0] + m_BikeA.PHp.y*m_BikeS.fFrameRot[1] + m_BikeS.CenterP.x;
+    m_BikeS.WantedHandP.y = m_BikeA.PHp.x*m_BikeS.fFrameRot[2] + m_BikeA.PHp.y*m_BikeS.fFrameRot[3] + m_BikeS.CenterP.y;    
+        
+    m_BikeS.WantedFoot2P.x = m_BikeA.PFp2.x*m_BikeS.fFrameRot[0] + m_BikeA.PFp2.y*m_BikeS.fFrameRot[1] + m_BikeS.CenterP.x;
+    m_BikeS.WantedFoot2P.y = m_BikeA.PFp2.x*m_BikeS.fFrameRot[2] + m_BikeA.PFp2.y*m_BikeS.fFrameRot[3] + m_BikeS.CenterP.y;
+    m_BikeS.WantedHand2P.x = m_BikeA.PHp2.x*m_BikeS.fFrameRot[0] + m_BikeA.PHp2.y*m_BikeS.fFrameRot[1] + m_BikeS.CenterP.x;
+    m_BikeS.WantedHand2P.y = m_BikeA.PHp2.x*m_BikeS.fFrameRot[2] + m_BikeA.PHp2.y*m_BikeS.fFrameRot[3] + m_BikeS.CenterP.y;    
 
     /* Still a replay question... */
     if(pReplayState == NULL) {            
@@ -486,9 +520,8 @@ namespace vapp {
     else {
       /* Get hinges from serialized state */
       if(pReplayState->cFlags & SER_BIKE_STATE_DIR_RIGHT) {
-        m_BikeS.HandP.x = _Map8BitsToCoord(pReplayState->fFrameX,pReplayState->fMaxXDiff,pReplayState->cHandX); 
-        m_BikeS.HandP.y = _Map8BitsToCoord(pReplayState->fFrameY,pReplayState->fMaxYDiff,pReplayState->cHandY);
-        m_BikeS.ElbowP.x = _Map8BitsToCoord(pReplayState->fFrameX,pReplayState->fMaxXDiff,pReplayState->cElbowX); 
+        m_BikeS.HandP = m_BikeS.WantedHandP;
+        m_BikeS.ElbowP.x = _Map8BitsToCoord(pReplayState->fFrameX,pReplayState->fMaxXDiff,pReplayState->cElbowX);         
         m_BikeS.ElbowP.y = _Map8BitsToCoord(pReplayState->fFrameY,pReplayState->fMaxYDiff,pReplayState->cElbowY);
         m_BikeS.ShoulderP.x = _Map8BitsToCoord(pReplayState->fFrameX,pReplayState->fMaxXDiff,pReplayState->cShoulderX); 
         m_BikeS.ShoulderP.y = _Map8BitsToCoord(pReplayState->fFrameY,pReplayState->fMaxYDiff,pReplayState->cShoulderY);
@@ -496,16 +529,14 @@ namespace vapp {
         m_BikeS.LowerBodyP.y = _Map8BitsToCoord(pReplayState->fFrameY,pReplayState->fMaxYDiff,pReplayState->cLowerBodyY);
         m_BikeS.KneeP.x = _Map8BitsToCoord(pReplayState->fFrameX,pReplayState->fMaxXDiff,pReplayState->cKneeX); 
         m_BikeS.KneeP.y = _Map8BitsToCoord(pReplayState->fFrameY,pReplayState->fMaxYDiff,pReplayState->cKneeY);
-        m_BikeS.FootP.x = _Map8BitsToCoord(pReplayState->fFrameX,pReplayState->fMaxXDiff,pReplayState->cFootX); 
-        m_BikeS.FootP.y = _Map8BitsToCoord(pReplayState->fFrameY,pReplayState->fMaxYDiff,pReplayState->cFootY);
+        m_BikeS.FootP = m_BikeS.WantedFootP;
         
         m_BikeS.Dir = DD_RIGHT;
         
         bUpdateAltRider = false;
       }
       else if(pReplayState->cFlags & SER_BIKE_STATE_DIR_LEFT) {
-        m_BikeS.Hand2P.x = _Map8BitsToCoord(pReplayState->fFrameX,pReplayState->fMaxXDiff,pReplayState->cHandX); 
-        m_BikeS.Hand2P.y = _Map8BitsToCoord(pReplayState->fFrameY,pReplayState->fMaxYDiff,pReplayState->cHandY);
+        m_BikeS.Hand2P = m_BikeS.WantedHand2P;
         m_BikeS.Elbow2P.x = _Map8BitsToCoord(pReplayState->fFrameX,pReplayState->fMaxXDiff,pReplayState->cElbowX); 
         m_BikeS.Elbow2P.y = _Map8BitsToCoord(pReplayState->fFrameY,pReplayState->fMaxYDiff,pReplayState->cElbowY);
         m_BikeS.Shoulder2P.x = _Map8BitsToCoord(pReplayState->fFrameX,pReplayState->fMaxXDiff,pReplayState->cShoulderX); 
@@ -514,35 +545,14 @@ namespace vapp {
         m_BikeS.LowerBody2P.y = _Map8BitsToCoord(pReplayState->fFrameY,pReplayState->fMaxYDiff,pReplayState->cLowerBodyY);
         m_BikeS.Knee2P.x = _Map8BitsToCoord(pReplayState->fFrameX,pReplayState->fMaxXDiff,pReplayState->cKneeX); 
         m_BikeS.Knee2P.y = _Map8BitsToCoord(pReplayState->fFrameY,pReplayState->fMaxYDiff,pReplayState->cKneeY);
-        m_BikeS.Foot2P.x = _Map8BitsToCoord(pReplayState->fFrameX,pReplayState->fMaxXDiff,pReplayState->cFootX); 
-        m_BikeS.Foot2P.y = _Map8BitsToCoord(pReplayState->fFrameY,pReplayState->fMaxYDiff,pReplayState->cFootY);
+        m_BikeS.Foot2P = m_BikeS.WantedFoot2P;
 
         m_BikeS.Dir = DD_LEFT;
 
         bUpdateRider = false;
       }
     }
-    
-    /* ================================================================================= 
-       Regarding replays: We only need to store either the primary rider coordinates OR
-       the alternative ones, depending on which direction where moving. To sum up the
-       space requirements:
-       
-         Bike coordinates:       24 bytes
-         Bike rotations:         48 bytes
-         Bike direction:          1 byte
-         Rider hinges:           48 bytes
-         ----------------------------------
-                                121 bytes total
-                               
-       Per frame:                    121 bytes
-       Per second @ 25 fps:          3025 bytes
-       Per minute:                   177 kB
-       Size of a five-minute replay: 886 kB
-       
-       That's quite a lot... Maybe someone should implent some kind of compression?
-       ================================================================================= */
-      
+          
     Vector2f V;      
         
     if(bUpdateRider) {        
@@ -567,7 +577,7 @@ namespace vapp {
     m_BikeS.RFrontWheelP.x = m_BikeA.Fp.x*m_BikeS.fFrameRot[0] + m_BikeA.Fp.y*m_BikeS.fFrameRot[1] + m_BikeS.CenterP.x;
     m_BikeS.RFrontWheelP.y = m_BikeA.Fp.x*m_BikeS.fFrameRot[2] + m_BikeA.Fp.y*m_BikeS.fFrameRot[3] + m_BikeS.CenterP.y;
     m_BikeS.RRearWheelP.x = m_BikeA.Rp.x*m_BikeS.fFrameRot[0] + m_BikeA.Rp.y*m_BikeS.fFrameRot[1] + m_BikeS.CenterP.x;
-    m_BikeS.RRearWheelP.y = m_BikeA.Rp.x*m_BikeS.fFrameRot[2] + m_BikeA.Rp.y*m_BikeS.fFrameRot[3] + m_BikeS.CenterP.y;   
+    m_BikeS.RRearWheelP.y = m_BikeA.Rp.x*m_BikeS.fFrameRot[2] + m_BikeA.Rp.y*m_BikeS.fFrameRot[3] + m_BikeS.CenterP.y;       
   }
 
   /*===========================================================================

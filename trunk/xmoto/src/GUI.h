@@ -227,6 +227,7 @@ namespace vapp {
       void putElem(int x,int y,int nWidth,int nHeight,UIElem Elem,bool bDisabled,bool bActive=false);
       void putRect(int x,int y,int nWidth,int nHeight,Color c);
       void setScissor(int x,int y,int nWidth,int nHeight);
+      void getScissor(int *px,int *py,int *pnWidth,int *pnHeight);
       
       /* Utils */
       void getTextExt(std::string Text,int *pnMinX,int *pnMinY,int *pnMaxX,int *pnMaxY);
@@ -305,7 +306,7 @@ namespace vapp {
       bool m_bHide;                             /* Hide window */
       bool m_bDisable;                          /* Disable window */
       bool m_bActive;                           /* Only one window should be active at a time */
-      int m_nGroup;                             /* In window group */
+      int m_nGroup;                             /* In window group */    
   };  
 
 

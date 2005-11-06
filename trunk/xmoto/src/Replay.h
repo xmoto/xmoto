@@ -62,6 +62,9 @@ namespace vapp {
       /* Data interface */
       bool didFinish(void) {return m_bFinished;}
       float getFinishTime(void) {return m_fFinishTime;}      
+      
+      /* Static data interface */
+      static void enableCompression(bool b) {m_bEnableCompression = b;}
     
     private: 
       /* Data */ 
@@ -72,32 +75,13 @@ namespace vapp {
       int m_nStateSize;
       bool m_bFinished;
       float m_fFinishTime;
+      
+      /* Helpers */
+      void _FreeReplay(void);
+      
+      /* Static data */
+      static bool m_bEnableCompression;
   };
-
-  //class Replay {
-  //  public:
-  //    Replay();
-  //    ~Replay();
-  //    
-  //    /* Methods */
-  //    void storeState(const char *pcState,int nStateSize);
-  //    bool loadState(char *pcState,int nStateSize);
-  //    void createReplay(const std::string &FileName,const std::string &LevelID,const std::string &Player,float fFrameRate);
-  //    std::string openReplay(const std::string &FileName,float *pfFrameRate,std::string &Player);
-  //    void finishReplay(void);
-  //    void fastforward(int nStateSize,float fSeconds,float fFrameRate);
-  //    void fastrewind(int nStateSize,float fSeconds,float fFrameRate);
-  //    
-  //    /* Static methods */
-  //    static std::vector<ReplayInfo *> createReplayList(const std::string &PlayerName);
-  //    static void freeReplayList(std::vector<ReplayInfo *> &List);
-  //  
-  //  private: 
-  //    /* Data */ 
-  //    FileHandle *m_pfh;
-  //    int m_nVersion;      
-  //    int m_nHeaderEnd;
-  //};
 
 };
 

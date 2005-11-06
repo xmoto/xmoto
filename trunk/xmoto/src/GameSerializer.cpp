@@ -20,11 +20,53 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 /* 
- *  Game state serialization and unserialization.
+ *  Game state serialization
  */
 #include "MotoGame.h"
 
 namespace vapp {
+
+  /*===========================================================================
+  Matrix encodings
+  ===========================================================================*/
+  unsigned short MotoGame::_MatrixTo16Bits(const float *pfMatrix) {
+    /* We idea is that we only need to store the first column of the matrix,
+       as the second on is simply the first one transposed... Each of the
+       two components of the first column is given 8 bits of precision */
+    int n1 = (int)(pfMatrix[0] * 127.0f + 127.0f);   
+    if(n1<0) n1=0;
+    if(n1>255) n1=255;    
+    unsigned char c1 = n1;
+    int n2 = (int)(pfMatrix[2] * 127.0f + 127.0f);   
+    if(n2<0) n2=0;
+    if(n2>255) n2=255;
+    unsigned char c2 = n2;
+    return (unsigned short) ((((unsigned short)c1)<<8)|(unsigned short)c2);
+  }
+  
+  void MotoGame::_16BitsToMatrix(unsigned short n16,float *pfMatrix) {
+    /* Convert it back again */
+    int n1 = (int)((n16&0xff00)>>8);
+    int n2 = (int)(n16&0xff);
+    pfMatrix[0] = (((float)n1) - 127.0f) / 127.0f;
+    pfMatrix[2] = (((float)n2) - 127.0f) / 127.0f;
+    
+    /* Make sure the column is normalized */
+    float d = sqrt(pfMatrix[0]*pfMatrix[0] + pfMatrix[2]*pfMatrix[2]);
+    if(d == 0.0f) {
+      /* It's null... */
+      pfMatrix[0] = 1.0f; pfMatrix[1] = 0.0f;
+      pfMatrix[2] = 0.0f; pfMatrix[3] = 1.0f;
+    }
+    else {
+      pfMatrix[0] /= d;
+      pfMatrix[2] /= d;
+      
+      /* Transpose second column */
+      pfMatrix[1] = -pfMatrix[2];
+      pfMatrix[3] = pfMatrix[0];
+    }
+  }
 
   /*===========================================================================
   Neat trick for converting floating-point numbers to 8 bits
@@ -55,20 +97,16 @@ namespace vapp {
     if( fabs(m_BikeS.CenterP.x - m_BikeS.FrontWheelP.x) > fMaxX) fMaxX = fabs(m_BikeS.CenterP.x - m_BikeS.FrontWheelP.x);
     if( fabs(m_BikeS.CenterP.x - m_BikeS.RearWheelP.x) > fMaxX) fMaxX = fabs(m_BikeS.CenterP.x - m_BikeS.RearWheelP.x);
     if(m_BikeS.Dir == DD_RIGHT) {
-      if( fabs(m_BikeS.CenterP.x - m_BikeS.HandP.x) > fMaxX) fMaxX = fabs(m_BikeS.CenterP.x - m_BikeS.HandP.x);
       if( fabs(m_BikeS.CenterP.x - m_BikeS.ElbowP.x) > fMaxX) fMaxX = fabs(m_BikeS.CenterP.x - m_BikeS.ElbowP.x);
       if( fabs(m_BikeS.CenterP.x - m_BikeS.ShoulderP.x) > fMaxX) fMaxX = fabs(m_BikeS.CenterP.x - m_BikeS.ShoulderP.x);
       if( fabs(m_BikeS.CenterP.x - m_BikeS.LowerBodyP.x) > fMaxX) fMaxX = fabs(m_BikeS.CenterP.x - m_BikeS.LowerBodyP.x);
       if( fabs(m_BikeS.CenterP.x - m_BikeS.KneeP.x) > fMaxX) fMaxX = fabs(m_BikeS.CenterP.x - m_BikeS.KneeP.x);
-      if( fabs(m_BikeS.CenterP.x - m_BikeS.FootP.x) > fMaxX) fMaxX = fabs(m_BikeS.CenterP.x - m_BikeS.FootP.x);
     }
     else if(m_BikeS.Dir == DD_LEFT) {
-      if( fabs(m_BikeS.CenterP.x - m_BikeS.Hand2P.x) > fMaxX) fMaxX = fabs(m_BikeS.CenterP.x - m_BikeS.Hand2P.x);
       if( fabs(m_BikeS.CenterP.x - m_BikeS.Elbow2P.x) > fMaxX) fMaxX = fabs(m_BikeS.CenterP.x - m_BikeS.Elbow2P.x);
       if( fabs(m_BikeS.CenterP.x - m_BikeS.Shoulder2P.x) > fMaxX) fMaxX = fabs(m_BikeS.CenterP.x - m_BikeS.Shoulder2P.x);
       if( fabs(m_BikeS.CenterP.x - m_BikeS.LowerBody2P.x) > fMaxX) fMaxX = fabs(m_BikeS.CenterP.x - m_BikeS.LowerBody2P.x);
       if( fabs(m_BikeS.CenterP.x - m_BikeS.Knee2P.x) > fMaxX) fMaxX = fabs(m_BikeS.CenterP.x - m_BikeS.Knee2P.x);
-      if( fabs(m_BikeS.CenterP.x - m_BikeS.Foot2P.x) > fMaxX) fMaxX = fabs(m_BikeS.CenterP.x - m_BikeS.Foot2P.x);
     }
     pState->fMaxXDiff = fMaxX;
     
@@ -77,22 +115,24 @@ namespace vapp {
     if( fabs(m_BikeS.CenterP.y - m_BikeS.FrontWheelP.y) > fMaxY) fMaxY = fabs(m_BikeS.CenterP.y - m_BikeS.FrontWheelP.y);
     if( fabs(m_BikeS.CenterP.y - m_BikeS.RearWheelP.y) > fMaxY) fMaxY = fabs(m_BikeS.CenterP.y - m_BikeS.RearWheelP.y);
     if(m_BikeS.Dir == DD_RIGHT) {
-      if( fabs(m_BikeS.CenterP.y - m_BikeS.HandP.y) > fMaxY) fMaxY = fabs(m_BikeS.CenterP.y - m_BikeS.HandP.y);
       if( fabs(m_BikeS.CenterP.y - m_BikeS.ElbowP.y) > fMaxY) fMaxY = fabs(m_BikeS.CenterP.y - m_BikeS.ElbowP.y);
       if( fabs(m_BikeS.CenterP.y - m_BikeS.ShoulderP.y) > fMaxY) fMaxY = fabs(m_BikeS.CenterP.y - m_BikeS.ShoulderP.y);
       if( fabs(m_BikeS.CenterP.y - m_BikeS.LowerBodyP.y) > fMaxY) fMaxY = fabs(m_BikeS.CenterP.y - m_BikeS.LowerBodyP.y);
       if( fabs(m_BikeS.CenterP.y - m_BikeS.KneeP.y) > fMaxY) fMaxY = fabs(m_BikeS.CenterP.y - m_BikeS.KneeP.y);
-      if( fabs(m_BikeS.CenterP.y - m_BikeS.FootP.y) > fMaxY) fMaxY = fabs(m_BikeS.CenterP.y - m_BikeS.FootP.y);
     }
     else if(m_BikeS.Dir == DD_LEFT) {
-      if( fabs(m_BikeS.CenterP.y - m_BikeS.Hand2P.y) > fMaxY) fMaxY = fabs(m_BikeS.CenterP.y - m_BikeS.Hand2P.y);
       if( fabs(m_BikeS.CenterP.y - m_BikeS.Elbow2P.y) > fMaxY) fMaxY = fabs(m_BikeS.CenterP.y - m_BikeS.Elbow2P.y);
       if( fabs(m_BikeS.CenterP.y - m_BikeS.Shoulder2P.y) > fMaxY) fMaxY = fabs(m_BikeS.CenterP.y - m_BikeS.Shoulder2P.y);
       if( fabs(m_BikeS.CenterP.y - m_BikeS.LowerBody2P.y) > fMaxY) fMaxY = fabs(m_BikeS.CenterP.y - m_BikeS.LowerBody2P.y);
       if( fabs(m_BikeS.CenterP.y - m_BikeS.Knee2P.y) > fMaxY) fMaxY = fabs(m_BikeS.CenterP.y - m_BikeS.Knee2P.y);
-      if( fabs(m_BikeS.CenterP.y - m_BikeS.Foot2P.y) > fMaxY) fMaxY = fabs(m_BikeS.CenterP.y - m_BikeS.Foot2P.y);
     }
     pState->fMaxYDiff = fMaxY;
+    
+    /* Update engine stuff */    
+    int n = (int)(((m_BikeS.fBikeEngineRPM-400.0f)/4600.0f)*255.0f);
+    if(n<0) n=0;
+    if(n>255) n=255;
+    pState->cBikeEngineRPM = n;
         
     /* Calculate serialization */
     pState->fFrameX = m_BikeS.CenterP.x;
@@ -103,13 +143,27 @@ namespace vapp {
     pState->cRearWheelX = _MapCoordTo8Bits(pState->fFrameX,pState->fMaxXDiff,m_BikeS.RearWheelP.x);
     pState->cRearWheelY = _MapCoordTo8Bits(pState->fFrameY,pState->fMaxYDiff,m_BikeS.RearWheelP.y);
     
-    memcpy(pState->fFrontWheelRot,m_BikeS.fFrontWheelRot,sizeof(float)*4);
-    memcpy(pState->fRearWheelRot,m_BikeS.fRearWheelRot,sizeof(float)*4);
-    memcpy(pState->fFrameRot,m_BikeS.fFrameRot,sizeof(float)*4);
+    //memcpy(pState->fFrontWheelRot,m_BikeS.fFrontWheelRot,sizeof(float)*4);
+    //memcpy(pState->fRearWheelRot,m_BikeS.fRearWheelRot,sizeof(float)*4);
+    //memcpy(pState->fFrameRot,m_BikeS.fFrameRot,sizeof(float)*4);
+    
+    pState->nFrontWheelRot = _MatrixTo16Bits(m_BikeS.fFrontWheelRot);
+    pState->nRearWheelRot = _MatrixTo16Bits(m_BikeS.fRearWheelRot);
+    pState->nFrameRot = _MatrixTo16Bits(m_BikeS.fFrameRot);
+    
+    //printf("[ %f %f \n"
+    //       "  %f %f ]\n",pState->fFrameRot[0],pState->fFrameRot[1],pState->fFrameRot[2],pState->fFrameRot[3]);
+           
+    //unsigned short test = _MatrixTo16Bits(m_BikeS.fFrameRot);
+    //float fTest[4];
+    //_16BitsToMatrix(test,fTest);
+    //
+    //printf(" %f %f      %f %f\n"
+    //       " %f %f      %f %f\n\n",
+    //       m_BikeS.fFrameRot[0],m_BikeS.fFrameRot[1],      fTest[0],fTest[1],
+    //       m_BikeS.fFrameRot[2],m_BikeS.fFrameRot[3],      fTest[2],fTest[3]);             
     
     if(m_BikeS.Dir == DD_RIGHT) {
-      pState->cHandX = _MapCoordTo8Bits(pState->fFrameX,pState->fMaxXDiff,m_BikeS.HandP.x); 
-      pState->cHandY = _MapCoordTo8Bits(pState->fFrameY,pState->fMaxYDiff,m_BikeS.HandP.y);
       pState->cElbowX = _MapCoordTo8Bits(pState->fFrameX,pState->fMaxXDiff,m_BikeS.ElbowP.x); 
       pState->cElbowY = _MapCoordTo8Bits(pState->fFrameY,pState->fMaxYDiff,m_BikeS.ElbowP.y);
       pState->cShoulderX = _MapCoordTo8Bits(pState->fFrameX,pState->fMaxXDiff,m_BikeS.ShoulderP.x); 
@@ -118,12 +172,8 @@ namespace vapp {
       pState->cLowerBodyY = _MapCoordTo8Bits(pState->fFrameY,pState->fMaxYDiff,m_BikeS.LowerBodyP.y);
       pState->cKneeX = _MapCoordTo8Bits(pState->fFrameX,pState->fMaxXDiff,m_BikeS.KneeP.x); 
       pState->cKneeY = _MapCoordTo8Bits(pState->fFrameY,pState->fMaxYDiff,m_BikeS.KneeP.y);
-      pState->cFootX = _MapCoordTo8Bits(pState->fFrameX,pState->fMaxXDiff,m_BikeS.FootP.x); 
-      pState->cFootY = _MapCoordTo8Bits(pState->fFrameY,pState->fMaxYDiff,m_BikeS.FootP.y);
     }
     else if(m_BikeS.Dir == DD_LEFT) {
-      pState->cHandX = _MapCoordTo8Bits(pState->fFrameX,pState->fMaxXDiff,m_BikeS.Hand2P.x); 
-      pState->cHandY = _MapCoordTo8Bits(pState->fFrameY,pState->fMaxYDiff,m_BikeS.Hand2P.y);
       pState->cElbowX = _MapCoordTo8Bits(pState->fFrameX,pState->fMaxXDiff,m_BikeS.Elbow2P.x); 
       pState->cElbowY = _MapCoordTo8Bits(pState->fFrameY,pState->fMaxYDiff,m_BikeS.Elbow2P.y);
       pState->cShoulderX = _MapCoordTo8Bits(pState->fFrameX,pState->fMaxXDiff,m_BikeS.Shoulder2P.x); 
@@ -132,8 +182,6 @@ namespace vapp {
       pState->cLowerBodyY = _MapCoordTo8Bits(pState->fFrameY,pState->fMaxYDiff,m_BikeS.LowerBody2P.y);
       pState->cKneeX = _MapCoordTo8Bits(pState->fFrameX,pState->fMaxXDiff,m_BikeS.Knee2P.x); 
       pState->cKneeY = _MapCoordTo8Bits(pState->fFrameY,pState->fMaxYDiff,m_BikeS.Knee2P.y);
-      pState->cFootX = _MapCoordTo8Bits(pState->fFrameX,pState->fMaxXDiff,m_BikeS.Foot2P.x); 
-      pState->cFootY = _MapCoordTo8Bits(pState->fFrameY,pState->fMaxYDiff,m_BikeS.Foot2P.y);
     }
   }      
 

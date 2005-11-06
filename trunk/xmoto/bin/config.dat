@@ -11,6 +11,7 @@
 	<var name="AudioSampleRate" value="22050"/>
 	<var name="AudioSampleBits" value="16"/>
 	<var name="AudioChannels" value="Mono"/>
+	<var name="EngineSoundEnable" value="true"/>
 	<var name="ControllerMode1" value="Keyboard"/>
 	<var name="KeyDrive1" value="Up"/>
 	<var name="KeyBrake1" value="Down"/>
@@ -33,5 +34,6 @@
 	<var name="ShowMiniMap" value="true"/>
 	<var name="StoreReplays" value="true"/>
 	<var name="ReplayFrameRate" value="25"/>
+	<var name="CompressReplays" value="true"/>
 </userconfig>
 

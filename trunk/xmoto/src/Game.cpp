@@ -185,7 +185,7 @@ namespace vapp {
         
         /* Finish replay */
         if(m_pReplay != NULL) m_pReplay->finishReplay(false,0.0f);
-        
+                
         /* Play the DIE!!! sound */
         //Sound::playSample(m_pDieSFX);
 
@@ -274,6 +274,11 @@ namespace vapp {
     /* Replay stuff */
     m_fReplayFrameRate = m_Config.getFloat("ReplayFrameRate");
     m_bRecordReplays = m_Config.getBool("StoreReplays");
+    m_bCompressReplays = m_Config.getBool("CompressReplays");
+    Replay::enableCompression(m_bCompressReplays);
+    
+    /* Other settings */
+    m_bEnableEngineSound = m_Config.getBool("EngineSoundEnable");
   }
   
   /*===========================================================================
@@ -399,6 +404,20 @@ namespace vapp {
         Sound::loadSample("Sounds/Button3.ogg");
         
         Sound::loadSample("Sounds/PickUpStrawberry.ogg");
+        
+        m_EngineSound.addBangSample(Sound::loadSample("Sounds/Engine/00.wav"));
+        m_EngineSound.addBangSample(Sound::loadSample("Sounds/Engine/01.wav"));
+        m_EngineSound.addBangSample(Sound::loadSample("Sounds/Engine/02.wav"));
+        m_EngineSound.addBangSample(Sound::loadSample("Sounds/Engine/03.wav"));
+        m_EngineSound.addBangSample(Sound::loadSample("Sounds/Engine/04.wav"));
+        m_EngineSound.addBangSample(Sound::loadSample("Sounds/Engine/05.wav"));
+        m_EngineSound.addBangSample(Sound::loadSample("Sounds/Engine/06.wav"));
+        m_EngineSound.addBangSample(Sound::loadSample("Sounds/Engine/07.wav"));
+        m_EngineSound.addBangSample(Sound::loadSample("Sounds/Engine/08.wav"));
+        m_EngineSound.addBangSample(Sound::loadSample("Sounds/Engine/09.wav"));
+        m_EngineSound.addBangSample(Sound::loadSample("Sounds/Engine/10.wav"));
+        m_EngineSound.addBangSample(Sound::loadSample("Sounds/Engine/11.wav"));
+        m_EngineSound.addBangSample(Sound::loadSample("Sounds/Engine/12.wav"));
         
         Log(" %d sound%s loaded",Sound::getNumSamples(),Sound::getNumSamples()==1?"":"s");
       }
@@ -542,6 +561,8 @@ namespace vapp {
 
     /* Update sound system and input */
     if(!isNoGraphics()) {
+      m_EngineSound.update(getRealTime());
+      m_EngineSound.setRPM(0); /* per default don't have engien sound */
       Sound::update();
       
       m_InputHandler.updateInput(m_MotoGame.getBikeController());
@@ -675,7 +696,12 @@ namespace vapp {
           m_MotoGame.updateLevel( PHYS_STEP_SIZE,NULL );                
           
           if(m_b50FpsMode) /* if we're aiming for 50 fps instead of 100, do an extra step now */
-            m_MotoGame.updateLevel( PHYS_STEP_SIZE,NULL );       
+            m_MotoGame.updateLevel( PHYS_STEP_SIZE,NULL );      
+            
+          if(m_bEnableEngineSound) {
+            /* Update engine RPM */
+            m_EngineSound.setRPM( m_MotoGame.getBikeEngineRPM() ); 
+          }
           
           /* We'd like to serialize the game state 25 times per second for the replay */
           if(getRealTime() - m_fLastStateSerializationTime >= 1.0f/m_fReplayFrameRate) {
@@ -695,6 +721,11 @@ namespace vapp {
             if(m_pReplay->loadState((char *)&BikeState)) {            
               /* Update game */
               m_MotoGame.updateLevel( PHYS_STEP_SIZE,&BikeState );                
+
+              if(m_bEnableEngineSound) {
+                /* Update engine RPM */
+                m_EngineSound.setRPM( m_MotoGame.getBikeEngineRPM() ); 
+              }
             }
             else {
               if(m_pReplay->didFinish()) {
@@ -1190,6 +1221,7 @@ namespace vapp {
     m_Config.createVar( "AudioSampleRate",        "22050" );
     m_Config.createVar( "AudioSampleBits",        "16" );
     m_Config.createVar( "AudioChannels",          "Mono" );
+    m_Config.createVar( "EngineSoundEnable",      "true" );
 
     /* Controls */
     m_Config.createVar( "ControllerMode1",        "Keyboard" );
@@ -1218,6 +1250,7 @@ namespace vapp {
     m_Config.createVar( "ShowMiniMap",            "true" );
     m_Config.createVar( "StoreReplays",           "true" );
     m_Config.createVar( "ReplayFrameRate",        "25" );
+    m_Config.createVar( "CompressReplays",        "true" );
   }
   
   /*===========================================================================

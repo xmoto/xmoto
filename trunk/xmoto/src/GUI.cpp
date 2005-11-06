@@ -409,7 +409,15 @@ namespace vapp {
   }
   
   void UIWindow::setScissor(int x,int y,int nWidth,int nHeight) {
+    /* This can be used for a simple 2-level scissor stack */
     getApp()->scissorGraphics(x+getAbsPosX(),y+getAbsPosY(),nWidth,nHeight);
+  }
+  
+  void UIWindow::getScissor(int *px,int *py,int *pnWidth,int *pnHeight) {
+    int x,y;
+    getApp()->getScissorGraphics(&x,&y,pnWidth,pnHeight);
+    *px = x - getAbsPosX();
+    *py = y - getAbsPosY();    
   }
   
   void UIWindow::putRect(int x,int y,int nWidth,int nHeight,Color c) {
