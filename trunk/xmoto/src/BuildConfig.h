@@ -28,7 +28,7 @@ Info
 
 #define BUILD_MAJORVERSION    0
 #define BUILD_VERSION         1
-#define BUILD_MINORVERSION    8
+#define BUILD_MINORVERSION    9
 
 /*=============================================================================
 Build configuration

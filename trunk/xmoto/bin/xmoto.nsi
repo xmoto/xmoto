@@ -1,5 +1,5 @@
-Name "X-Moto 0.1.8"
-OutFile "xmoto-0.1.8-win32-setup.exe"
+Name "X-Moto 0.1.9"
+OutFile "xmoto-0.1.9-win32-setup.exe"
 InstallDir $PROGRAMFILES\XMoto
 InstallDirRegKey HKLM "Software\XMoto" "Install_Dir"
 
@@ -49,7 +49,6 @@ Section "Game (required)"
 
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\XMoto" "DisplayName" "X-Moto"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\XMoto" "UninstallString" '"$INSTDIR\uninstall.exe"'
-	WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\XMoto" "NoModify" 1
 	WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\XMoto" "NoRepair" 1
 	WriteUninstaller "uninstall.exe"
 
