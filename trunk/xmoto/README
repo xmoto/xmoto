@@ -62,6 +62,24 @@ Additionally, some other keys can be pressed while playing:
 Escape - Pauses the game, and opens the in-game menu
 F12 - Takes a screenshot and places it in the game directory 
 
+Replays
+=======
+
+As of alpha version 0.1.8, X-Moto supports recording and playback of
+replays. These are always stored in the Replays/ directory, which on
+Windows is located in the game installation directory, and on 
+Linux-like systems is located in the .xmoto/ in the user directory.
+One should be aware that replays can take up quite a large amount of
+harddisk space - on average you can expect a single minute of replay
+to equal around 120 kilobytes. If you want to disable recording of 
+replays, you can set the 'StoreReplays' variable to 'false' in
+config.dat, which on Windows is located in the game directory, and
+on Linux is located in .xmoto/. 
+
+If you want to exchange replays with other people, it's probably
+a good idea to compress the replay files - expect a compression 
+ratio of around 70% with popular file packing utilities.
+
 Bugs
 ====
 
@@ -89,11 +107,12 @@ Authors
 X-Moto itself is written by Rasmus Neckelmann (neckelmann@gmail.com)
 
 Furthermore the following persons have contributed to the X-Moto
-project:
+project with game content:
 
  - Brandon Ross (sound effects)
  - Pasi Kallinen (some of the built-in levels)
+ - CoW (some of the built-in levels)
 
 Also a warm thank-you to Yves Berquin who have written the XML parser
-used by the game.
+used by the game (tinyxml).
  

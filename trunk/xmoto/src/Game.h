@@ -82,6 +82,7 @@ namespace vapp {
                  m_bUglyMode = false;
                  m_pReplay = NULL;
                  m_bRecordReplays = true;
+                 m_bShowCursor = true;
                  }
         
       /* Virtual methods */
@@ -148,6 +149,8 @@ namespace vapp {
             
       /* Main menu background / title */
       Texture *m_pTitleBL,*m_pTitleBR,*m_pTitleTL,*m_pTitleTR;
+      Texture *m_pCursor;
+      bool m_bShowCursor;
       
       /* Main menu buttons and stuff */
       int m_nNumMainMenuButtons;

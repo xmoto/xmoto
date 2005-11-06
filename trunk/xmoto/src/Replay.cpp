@@ -28,6 +28,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 namespace vapp {
 
   Replay::Replay() {
+    m_bFinished = false;
+    m_fFinishTime = 0.0f;
   }
       
   Replay::~Replay() {
@@ -40,7 +42,10 @@ namespace vapp {
     m_Chunks.clear();
   }        
   
-  void Replay::finishReplay(void) {
+  void Replay::finishReplay(bool bFinished,float fFinishTime) {
+    m_fFinishTime = fFinishTime;
+    m_bFinished = bFinished;
+  
     saveReplay();
   }
   
@@ -66,6 +71,8 @@ namespace vapp {
     FS::writeString(pfh,m_PlayerName);
     FS::writeFloat(pfh,m_fFrameRate);
     FS::writeInt(pfh,m_nStateSize);
+    FS::writeBool(pfh,m_bFinished);
+    FS::writeFloat(pfh,m_fFinishTime);
     
     if(m_Chunks.empty()) FS::writeInt(pfh,0);
     else {
@@ -116,6 +123,12 @@ namespace vapp {
 
       /* Read state size */
       m_nStateSize = FS::readInt(pfh);
+      
+      /* Read finish time if any */
+      m_bFinished = FS::readBool(pfh);
+      m_fFinishTime = FS::readFloat(pfh);
+      
+//      printf("[open replay!   finished=%d   finishtime=%f\n",m_bFinished,m_fFinishTime);
       
       /* Read chunks */
       int nNumChunks = FS::readInt(pfh);

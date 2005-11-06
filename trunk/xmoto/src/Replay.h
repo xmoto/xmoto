@@ -51,13 +51,17 @@ namespace vapp {
       void createReplay(const std::string &FileName,const std::string &LevelID,const std::string &Player,float fFrameRate,int nStateSize);
       void saveReplay(void);
       std::string openReplay(const std::string &FileName,float *pfFrameRate,std::string &Player);
-      void finishReplay(void);
+      void finishReplay(bool bFinished,float fFinishTime);
       void fastforward(float fSeconds);
       void fastrewind(float fSeconds);
       
       /* Static methods */
       static std::vector<ReplayInfo *> createReplayList(const std::string &PlayerName);
       static void freeReplayList(std::vector<ReplayInfo *> &List);
+      
+      /* Data interface */
+      bool didFinish(void) {return m_bFinished;}
+      float getFinishTime(void) {return m_fFinishTime;}      
     
     private: 
       /* Data */ 
@@ -66,6 +70,8 @@ namespace vapp {
       std::string m_FileName,m_LevelID,m_PlayerName;
       float m_fFrameRate;
       int m_nStateSize;
+      bool m_bFinished;
+      float m_fFinishTime;
   };
 
   //class Replay {

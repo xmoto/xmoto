@@ -33,6 +33,12 @@ Levels/i19.lvl
 Levels/i20.lvl
 Levels/i21.lvl
 Levels/i22.lvl
+Levels/i23.lvl
+Levels/i24.lvl
+Levels/i25.lvl
+Levels/i26.lvl
+Levels/i27.lvl
+Levels/i28.lvl
 
 Textures/Anims/Flower00.png
 Textures/Anims/Flower01.png
@@ -168,5 +174,6 @@ Textures/UI/TitleTL.jpg
 Textures/UI/TitleTR.jpg
 Textures/UI/DarkBlob.png
 Textures/UI/Loading.png
+Textures/UI/Cursor.png
 
 

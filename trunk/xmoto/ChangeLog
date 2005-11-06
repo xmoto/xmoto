@@ -1,11 +1,17 @@
 X-Moto 0.1.8 (alpha)  2005-??-??
 --------------------------------
 
+ * 6 new (very difficult) built-in levels by CoW.
+ * Very limited sounds (only menu buttons and when 
+   picking up strawberries).
+ * Uses SDL_mixer for sound playback.
  * Replays supported.
  * Non-windows release with a more intelligent configure
    script.
  * New -ugly option for computers without a proper OpenGL
    video card.
+ * Custom mouse cursor, the standard SDL one caused some
+   problems for some people.
  * Major code clean up and several bug-fixes.
 
 X-Moto 0.1.7 (alpha)  2005-10-27

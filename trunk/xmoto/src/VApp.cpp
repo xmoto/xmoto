@@ -45,8 +45,9 @@ namespace vapp {
     vsprintf(cBuf,pcFmt,List);
     va_end(List);
     
-    if(!g_bQuietLog)
+    if(!g_bQuietLog) {
       printf("%s\n",cBuf);
+    }
   }
 
   /*===========================================================================

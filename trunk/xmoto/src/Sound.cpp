@@ -26,9 +26,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "UserConfig.h"
 #include "Sound.h"
 
-#define USE_SDL_MIXER     0
+#define USE_SDL_MIXER     1
 #define USE_OPENAL        0
-#define USE_NO_SOUND      1
+#define USE_NO_SOUND      0
 
 namespace vapp {
 
@@ -124,7 +124,7 @@ namespace vapp {
         if(m_nSampleBits == 8) nFormat = AUDIO_S8;
         else nFormat = AUDIO_S16;
         
-        if(Mix_OpenAudio(m_nSampleRate,nFormat,m_nChannels,1024) < 0) {
+        if(Mix_OpenAudio(m_nSampleRate,nFormat,m_nChannels,2048) < 0) {
           Log("** Warning ** : failed to open mixer device (%s)",Mix_GetError());
           SDL_QuitSubSystem(SDL_INIT_AUDIO);
           m_bEnable = false;

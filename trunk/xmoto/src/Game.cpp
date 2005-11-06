@@ -54,6 +54,9 @@ namespace vapp {
     
     switch(s) {
       case GS_REPLAYING: {
+        //SDL_ShowCursor(SDL_DISABLE);
+        m_bShowCursor = false;
+        
         /* Open a replay for input */
         if(m_pReplay != NULL) delete m_pReplay;
         m_pReplay = new Replay;
@@ -93,7 +96,8 @@ namespace vapp {
         break;
       }  
       case GS_MENU: {
-        SDL_ShowCursor(SDL_ENABLE);
+        //SDL_ShowCursor(SDL_ENABLE);
+        m_bShowCursor = true;
         
         /* Any replays to get rid off? */
         if(m_pReplay != NULL) delete m_pReplay;
@@ -117,7 +121,8 @@ namespace vapp {
         break;
       }
       case GS_PLAYING: {
-        SDL_ShowCursor(SDL_DISABLE);
+//        SDL_ShowCursor(SDL_DISABLE);
+        m_bShowCursor = false;
         
         /* Initialize controls */
         m_InputHandler.configure(&m_Config);
@@ -168,16 +173,18 @@ namespace vapp {
         break;
       }
       case GS_PAUSE: {
-        SDL_ShowCursor(SDL_ENABLE);
+//        SDL_ShowCursor(SDL_ENABLE);
+        m_bShowCursor = true;
 
         /* Paused from GS_PLAYING */
         break;
       }
       case GS_JUSTDEAD: {
-        SDL_ShowCursor(SDL_ENABLE);
+//        SDL_ShowCursor(SDL_ENABLE);
+        m_bShowCursor = true;
         
         /* Finish replay */
-        if(m_pReplay != NULL) m_pReplay->finishReplay();
+        if(m_pReplay != NULL) m_pReplay->finishReplay(false,0.0f);
         
         /* Play the DIE!!! sound */
         //Sound::playSample(m_pDieSFX);
@@ -189,7 +196,8 @@ namespace vapp {
         break;
       }
       case GS_EDIT_PROFILES: {
-        SDL_ShowCursor(SDL_ENABLE);
+//        SDL_ShowCursor(SDL_ENABLE);
+        m_bShowCursor = true;
 
         /* The profile editor can work on top of the main menu, or as init
            state when there is no player profiles available */
@@ -197,10 +205,11 @@ namespace vapp {
         break;
       }
       case GS_FINISHED: {
-        SDL_ShowCursor(SDL_ENABLE);
+//        SDL_ShowCursor(SDL_ENABLE);
+        m_bShowCursor = true;
 
         /* Finish replay */
-        if(m_pReplay != NULL) m_pReplay->finishReplay();
+        if(m_pReplay != NULL) m_pReplay->finishReplay(true,m_MotoGame.getFinishTime());
         
         /* Play the good sound. */
         //Sound::playSample(m_pEndOfLevelSFX);
@@ -290,6 +299,8 @@ namespace vapp {
   Initialize game
   ===========================================================================*/
   void GameApp::userInit(void) {
+    SDL_ShowCursor(SDL_DISABLE);        
+  
     /* Reset timers */
     m_fLastFrameTime = 0.0f;
     m_fLastPerfStateTime = 0.0f;
@@ -383,11 +394,11 @@ namespace vapp {
         //m_pEndOfLevelSFX = Sound::loadSample("Sounds/EndOfLevel.ogg");
         //m_pDieSFX = Sound::loadSample("Sounds/Die.ogg");
         
-//        Sound::loadSample("Sounds/Button1.ogg");
-////        Sound::loadSample("Sounds/Button2.ogg");
-//        Sound::loadSample("Sounds/Button3.ogg");
-//        
-//        Sound::loadSample("Sounds/PickUpStrawberry.ogg");
+        Sound::loadSample("Sounds/Button1.ogg");
+//        Sound::loadSample("Sounds/Button2.ogg");
+        Sound::loadSample("Sounds/Button3.ogg");
+        
+        Sound::loadSample("Sounds/PickUpStrawberry.ogg");
         
         Log(" %d sound%s loaded",Sound::getNumSamples(),Sound::getNumSamples()==1?"":"s");
       }
@@ -419,11 +430,13 @@ namespace vapp {
       if(TexMan.getTexture("default") == NULL)
         throw Exception("no valid default texture");
         
-      /* Load title screen textures */
+      /* Load title screen textures + cursor */
       m_pTitleBL = TexMan.loadTexture("Textures/UI/TitleBL.jpg",false,true);
       m_pTitleBR = TexMan.loadTexture("Textures/UI/TitleBR.jpg",false,true);
       m_pTitleTL = TexMan.loadTexture("Textures/UI/TitleTL.jpg",false,true);
       m_pTitleTR = TexMan.loadTexture("Textures/UI/TitleTR.jpg",false,true);
+      
+      m_pCursor = TexMan.loadTexture("Textures/UI/Cursor.png",false,true,true);
 
       _UpdateLoadingScreen((1.0f/8.0f) * 4,pLoadingScreen);
     }
@@ -541,11 +554,14 @@ namespace vapp {
       case GS_PAUSE:
       case GS_JUSTDEAD:
       case GS_FINISHED:
-        SDL_ShowCursor(SDL_ENABLE);
+        m_bShowCursor = true;
+        //SDL_ShowCursor(SDL_ENABLE);
         break;
 
       case GS_PLAYING:
-        SDL_ShowCursor(SDL_DISABLE);
+      case GS_REPLAYING:
+        m_bShowCursor = false;
+        //SDL_ShowCursor(SDL_DISABLE);      
         break;
     }
   
@@ -680,6 +696,12 @@ namespace vapp {
               /* Update game */
               m_MotoGame.updateLevel( PHYS_STEP_SIZE,&BikeState );                
             }
+            else {
+              if(m_pReplay->didFinish()) {
+                /* Make sure that it's the same finish time */
+                m_MotoGame.setTime(m_pReplay->getFinishTime());
+              }
+            }
           }
           else bValidGameState = false;
         }
@@ -801,6 +823,13 @@ namespace vapp {
         break;
       }
     }    
+    
+    /* Draw mouse cursor */
+    if(!isNoGraphics() && m_bShowCursor) {
+      int nMX,nMY;
+      getMousePos(&nMX,&nMY);      
+      drawImage(Vector2f(nMX-2,nMY-2),Vector2f(nMX+30,nMY+30),m_pCursor);
+    }
   }
 
   /*===========================================================================

@@ -58,7 +58,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #endif
 #include <SDL/SDL.h>
-//#include <SDL/SDL_mixer.h>
+#include <SDL/SDL_mixer.h>
 
 #include <string>
 #include <vector>

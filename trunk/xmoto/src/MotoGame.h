@@ -172,24 +172,42 @@ namespace vapp {
 	/*===========================================================================
 	Serialized bike state
   ===========================================================================*/
-  #define SER_BIKE_STATE_DIR_LEFT     0x01
-  #define SER_BIKE_STATE_DIR_RIGHT    0x02
+  #define SER_BIKE_STATE_DIR_LEFT         0x01
+  #define SER_BIKE_STATE_DIR_RIGHT        0x02
+  #define SER_BIKE_STATE_XSUBSPACE_1_0    0x04
+  #define SER_BIKE_STATE_YSUBSPACE_1_0    0x08
+  #define SER_BIKE_STATE_XSUBSPACE_1_5    0x10
+  #define SER_BIKE_STATE_YSUBSPACE_1_5    0x20
+  #define SER_BIKE_STATE_XSUBSPACE_2_5    0x40
+  #define SER_BIKE_STATE_YSUBSPACE_2_5    0x80
   
   struct SerializedBikeState {
     unsigned char cFlags;             /* State flags */
-    float fGameTime;                  /* Game time */  
-    float fRearWheelX,fRearWheelY;    /* Rear wheel position */
-    float fFrontWheelX,fFrontWheelY;  /* Front wheel position */
+    float fGameTime;                  /* Game time */      
     float fFrameX,fFrameY;            /* Frame position */
+    float fMaxXDiff,fMaxYDiff;        /* Addressing space around the frame */
+
     float fRearWheelRot[4];           /* Rear wheel rotation */   
     float fFrontWheelRot[4];          /* Front wheel rotation */   
     float fFrameRot[4];               /* Frame rotation */   
-    float fHandX,fHandY;              /* Hand position */
-    float fElbowX,fElbowY;            /* Elbow position */
-    float fShoulderX,fShoulderY;      /* Shoulder position */
-    float fLowerBodyX,fLowerBodyY;    /* Ass position */
-    float fKneeX,fKneeY;              /* Knee position */
-    float fFootX,fFootY;              /* Foot position */    
+    
+    char cRearWheelX,cRearWheelY;     /* Rear wheel position */
+    char cFrontWheelX,cFrontWheelY;   /* Front wheel position */
+    char cHandX,cHandY;               /* Hand position */
+    char cElbowX,cElbowY;             /* Elbow position */
+    char cShoulderX,cShoulderY;       /* Shoulder position */
+    char cLowerBodyX,cLowerBodyY;     /* Ass position */
+    char cKneeX,cKneeY;               /* Knee position */
+    char cFootX,cFootY;               /* Foot position */
+
+    //float fRearWheelX,fRearWheelY;    /* Rear wheel position */
+    //float fFrontWheelX,fFrontWheelY;  /* Front wheel position */
+    //float fHandX,fHandY;              /* Hand position */
+    //float fElbowX,fElbowY;            /* Elbow position */
+    //float fShoulderX,fShoulderY;      /* Shoulder position */
+    //float fLowerBodyX,fLowerBodyY;    /* Ass position */
+    //float fKneeX,fKneeY;              /* Knee position */
+    //float fFootX,fFootY;              /* Foot position */    
   };
 
 	/*===========================================================================
@@ -397,6 +415,7 @@ namespace vapp {
       std::vector<Entity *> &getFSprites(void) {return m_FSprites;}
       std::vector<OverlayEdge *> &getOverlayEdges(void) {return m_OvEdges;}
       float getTime(void) {return m_fTime;}
+      void setTime(float f) {m_fTime=f;}
       float getFinishTime(void) {return m_fFinishTime;}
       ArrowPointer &getArrowPointer(void) {return m_Arrow;}
       bool isWheelSpinning(void) {return m_bWheelSpin;}
@@ -513,6 +532,8 @@ namespace vapp {
       EdgeEffect _TransEdgeEffect(std::string Name);
       void _UpdateEntities(void);
       void _UpdateGameState(SerializedBikeState *pReplayState);
+      char _MapCoordTo8Bits(float fRef,float fMaxDiff,float fCoord);
+      float _Map8BitsToCoord(float fRef,float fMaxDiff,char c);
       
       /* MPhysics.cpp */
       void _UpdatePhysics(float fTimeStep);

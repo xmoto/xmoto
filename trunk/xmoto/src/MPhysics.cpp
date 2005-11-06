@@ -419,9 +419,12 @@ namespace vapp {
     }
     else {
       /* Replaying... fetch serialized state */
-      m_BikeS.RearWheelP.x = pReplayState->fRearWheelX; m_BikeS.RearWheelP.y = pReplayState->fRearWheelY;
-      m_BikeS.FrontWheelP.x = pReplayState->fFrontWheelX; m_BikeS.FrontWheelP.y = pReplayState->fFrontWheelY;
-      m_BikeS.CenterP.x = pReplayState->fFrameX; m_BikeS.CenterP.y = pReplayState->fFrameY;
+      m_BikeS.RearWheelP.x = _Map8BitsToCoord(pReplayState->fFrameX,pReplayState->fMaxXDiff,pReplayState->cRearWheelX); 
+      m_BikeS.RearWheelP.y = _Map8BitsToCoord(pReplayState->fFrameY,pReplayState->fMaxYDiff,pReplayState->cRearWheelY);
+      m_BikeS.FrontWheelP.x = _Map8BitsToCoord(pReplayState->fFrameX,pReplayState->fMaxXDiff,pReplayState->cFrontWheelX); 
+      m_BikeS.FrontWheelP.y = _Map8BitsToCoord(pReplayState->fFrameY,pReplayState->fMaxYDiff,pReplayState->cFrontWheelY);
+      m_BikeS.CenterP.x = pReplayState->fFrameX; 
+      m_BikeS.CenterP.y = pReplayState->fFrameY;
       
       memcpy(m_BikeS.fFrameRot,pReplayState->fFrameRot,sizeof(float)*4);
       memcpy(m_BikeS.fFrontWheelRot,pReplayState->fFrontWheelRot,sizeof(float)*4);
@@ -483,24 +486,36 @@ namespace vapp {
     else {
       /* Get hinges from serialized state */
       if(pReplayState->cFlags & SER_BIKE_STATE_DIR_RIGHT) {
-        m_BikeS.HandP.x = pReplayState->fHandX; m_BikeS.HandP.y = pReplayState->fHandY;
-        m_BikeS.ElbowP.x = pReplayState->fElbowX; m_BikeS.ElbowP.y = pReplayState->fElbowY;
-        m_BikeS.ShoulderP.x = pReplayState->fShoulderX; m_BikeS.ShoulderP.y = pReplayState->fShoulderY;
-        m_BikeS.LowerBodyP.x = pReplayState->fLowerBodyX; m_BikeS.LowerBodyP.y = pReplayState->fLowerBodyY;
-        m_BikeS.KneeP.x = pReplayState->fKneeX; m_BikeS.KneeP.y = pReplayState->fKneeY;
-        m_BikeS.FootP.x = pReplayState->fFootX; m_BikeS.FootP.y = pReplayState->fFootY;
+        m_BikeS.HandP.x = _Map8BitsToCoord(pReplayState->fFrameX,pReplayState->fMaxXDiff,pReplayState->cHandX); 
+        m_BikeS.HandP.y = _Map8BitsToCoord(pReplayState->fFrameY,pReplayState->fMaxYDiff,pReplayState->cHandY);
+        m_BikeS.ElbowP.x = _Map8BitsToCoord(pReplayState->fFrameX,pReplayState->fMaxXDiff,pReplayState->cElbowX); 
+        m_BikeS.ElbowP.y = _Map8BitsToCoord(pReplayState->fFrameY,pReplayState->fMaxYDiff,pReplayState->cElbowY);
+        m_BikeS.ShoulderP.x = _Map8BitsToCoord(pReplayState->fFrameX,pReplayState->fMaxXDiff,pReplayState->cShoulderX); 
+        m_BikeS.ShoulderP.y = _Map8BitsToCoord(pReplayState->fFrameY,pReplayState->fMaxYDiff,pReplayState->cShoulderY);
+        m_BikeS.LowerBodyP.x = _Map8BitsToCoord(pReplayState->fFrameX,pReplayState->fMaxXDiff,pReplayState->cLowerBodyX); 
+        m_BikeS.LowerBodyP.y = _Map8BitsToCoord(pReplayState->fFrameY,pReplayState->fMaxYDiff,pReplayState->cLowerBodyY);
+        m_BikeS.KneeP.x = _Map8BitsToCoord(pReplayState->fFrameX,pReplayState->fMaxXDiff,pReplayState->cKneeX); 
+        m_BikeS.KneeP.y = _Map8BitsToCoord(pReplayState->fFrameY,pReplayState->fMaxYDiff,pReplayState->cKneeY);
+        m_BikeS.FootP.x = _Map8BitsToCoord(pReplayState->fFrameX,pReplayState->fMaxXDiff,pReplayState->cFootX); 
+        m_BikeS.FootP.y = _Map8BitsToCoord(pReplayState->fFrameY,pReplayState->fMaxYDiff,pReplayState->cFootY);
         
         m_BikeS.Dir = DD_RIGHT;
         
         bUpdateAltRider = false;
       }
       else if(pReplayState->cFlags & SER_BIKE_STATE_DIR_LEFT) {
-        m_BikeS.Hand2P.x = pReplayState->fHandX; m_BikeS.Hand2P.y = pReplayState->fHandY;
-        m_BikeS.Elbow2P.x = pReplayState->fElbowX; m_BikeS.Elbow2P.y = pReplayState->fElbowY;
-        m_BikeS.Shoulder2P.x = pReplayState->fShoulderX; m_BikeS.Shoulder2P.y = pReplayState->fShoulderY;
-        m_BikeS.LowerBody2P.x = pReplayState->fLowerBodyX; m_BikeS.LowerBody2P.y = pReplayState->fLowerBodyY;
-        m_BikeS.Knee2P.x = pReplayState->fKneeX; m_BikeS.Knee2P.y = pReplayState->fKneeY;
-        m_BikeS.Foot2P.x = pReplayState->fFootX; m_BikeS.Foot2P.y = pReplayState->fFootY;
+        m_BikeS.Hand2P.x = _Map8BitsToCoord(pReplayState->fFrameX,pReplayState->fMaxXDiff,pReplayState->cHandX); 
+        m_BikeS.Hand2P.y = _Map8BitsToCoord(pReplayState->fFrameY,pReplayState->fMaxYDiff,pReplayState->cHandY);
+        m_BikeS.Elbow2P.x = _Map8BitsToCoord(pReplayState->fFrameX,pReplayState->fMaxXDiff,pReplayState->cElbowX); 
+        m_BikeS.Elbow2P.y = _Map8BitsToCoord(pReplayState->fFrameY,pReplayState->fMaxYDiff,pReplayState->cElbowY);
+        m_BikeS.Shoulder2P.x = _Map8BitsToCoord(pReplayState->fFrameX,pReplayState->fMaxXDiff,pReplayState->cShoulderX); 
+        m_BikeS.Shoulder2P.y = _Map8BitsToCoord(pReplayState->fFrameY,pReplayState->fMaxYDiff,pReplayState->cShoulderY);
+        m_BikeS.LowerBody2P.x = _Map8BitsToCoord(pReplayState->fFrameX,pReplayState->fMaxXDiff,pReplayState->cLowerBodyX); 
+        m_BikeS.LowerBody2P.y = _Map8BitsToCoord(pReplayState->fFrameY,pReplayState->fMaxYDiff,pReplayState->cLowerBodyY);
+        m_BikeS.Knee2P.x = _Map8BitsToCoord(pReplayState->fFrameX,pReplayState->fMaxXDiff,pReplayState->cKneeX); 
+        m_BikeS.Knee2P.y = _Map8BitsToCoord(pReplayState->fFrameY,pReplayState->fMaxYDiff,pReplayState->cKneeY);
+        m_BikeS.Foot2P.x = _Map8BitsToCoord(pReplayState->fFrameX,pReplayState->fMaxXDiff,pReplayState->cFootX); 
+        m_BikeS.Foot2P.y = _Map8BitsToCoord(pReplayState->fFrameY,pReplayState->fMaxYDiff,pReplayState->cFootY);
 
         m_BikeS.Dir = DD_LEFT;
 
