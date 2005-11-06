@@ -118,7 +118,7 @@ namespace vapp {
     for(int i=0;i<getChildren().size();i++) {
       int x1,x2;    
       getTextExt(getChildren()[i]->getCaption(),&x1,NULL,&x2,NULL);      
-      if(x >= nCX-8 && y >= 0 && x < nCX+16+(x2-x1) && y < nHeaderHeight) {
+      if(x >= nCX-8 && y >= -4 && x < nCX+16+(x2-x1) && y < nHeaderHeight) {
         m_nSelected = i;
         
         /* Hide everything except this */

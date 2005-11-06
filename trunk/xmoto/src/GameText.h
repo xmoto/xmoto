@@ -35,8 +35,10 @@ Central place to keep many in-game text strings
 #define GAMETEXT_8BIT                 "8-bit"
 #define GAMETEXT_ABORT                "Abort Playing"
 #define GAMETEXT_ACTION               "Action"
+#define GAMETEXT_ALL                  "All"
 #define GAMETEXT_ALREADYUSED          "Already used!"
 #define GAMETEXT_AUDIO                "Audio"
+#define GAMETEXT_AUTHOR               "Author: "
 #define GAMETEXT_BESTTIMES            "Best Times"
 #define GAMETEXT_BRAKE                "Brake"
 #define GAMETEXT_BUILTINLEVELS        "Built-In Levels"     
@@ -50,11 +52,13 @@ Central place to keep many in-game text strings
 #define GAMETEXT_CONFIGUREJOYSTICK    "Configure Joystick..."
 #define GAMETEXT_CONTROLS             "Controls"
 #define GAMETEXT_CURPLAYER            "Player:"
+#define GAMETEXT_DATE                 "Date: "
 #define GAMETEXT_DEFAULTS             "Defaults"
 #define GAMETEXT_DELETEPLAYERMESSAGE  "Do you really want to delete player?"
 #define GAMETEXT_DELETEREPLAYMESSAGE  "Do you really want to delete replay?"
 #define GAMETEXT_DELETE               "Delete"
 #define GAMETEXT_DELETEPROFILE        "Delete"
+#define GAMETEXT_DESCRIPTION          "Description: "
 #define GAMETEXT_DRIVE                "Drive"
 #define GAMETEXT_ENABLEAUDIO          "Enable Audio"
 #define GAMETEXT_ENABLEENGINESOUND    "Enable Engine Sound"
@@ -64,10 +68,12 @@ Central place to keep many in-game text strings
 #define GAMETEXT_FAILEDTOSAVEREPLAY   "Failed to save replay!\nMaybe you should try with another name?"
 #define GAMETEXT_FILE                 "File"
 #define GAMETEXT_FINISH               "Finished!"
+#define GAMETEXT_FINISHTIME           "Finish Time"
 #define GAMETEXT_FLIPLEFT             "Flip left"
 #define GAMETEXT_FLIPRIGHT            "Flip right"
 #define GAMETEXT_GAMEGFX              "Game Graphics:"
 #define GAMETEXT_GENERAL              "General"
+#define GAMETEXT_GENERALINFO          "General Info"
 #define GAMETEXT_HELP                 "Help"
 #define GAMETEXT_HELPTEXT             "You control your bike using the keyboard:\n"                      \
                                       "\n"                                                               \
@@ -88,6 +94,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_KEY                  "Key"
 #define GAMETEXT_KEYBOARD             "Keyboard"
 #define GAMETEXT_LEVEL                "Level"
+#define GAMETEXT_LEVELNAME            "Level Name: "
 #define GAMETEXT_LEVELS               "Levels"
 #define GAMETEXT_LISTALL              "List All"
 #define GAMETEXT_LOW                  "Low"
@@ -97,6 +104,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_MONO                 "Mono"
 #define GAMETEXT_NAME                 "Name"
 #define GAMETEXT_NEWPROFILE           "New Profile..."
+#define GAMETEXT_NOTFINISHED          "(Not finished)"
 #define GAMETEXT_NOTIFYATINIT         "Important note!\n"                                                \
                                       "\n"                                                               \
                                       "This is an alpha release of X-Moto, which means that the\n"       \
@@ -109,9 +117,11 @@ Central place to keep many in-game text strings
                                       "\n"                                                               \
                                       "Also visit http://xmoto.sourceforge.net to make sure you've\n"    \
                                       "got the latest version."
+#define GAMETEXT_OK                   "OK"                                      
 #define GAMETEXT_OPTIONS              "Options"
 #define GAMETEXT_OPTIONSREQURERESTART "Some options will not take effect before next restart!"
 #define GAMETEXT_PAUSE                "Pause"
+#define GAMETEXT_PERSONAL             "Personal"
 #define GAMETEXT_PLAYER               "Player"
 #define GAMETEXT_PLAYERPROFILE        "Player Profile"
 #define GAMETEXT_PLAYERPROFILES       "Player Profiles"
@@ -128,6 +138,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_SAVEREPLAY           "Save Replay"
 #define GAMETEXT_SCREENRES            "Screen Resolution"
 #define GAMETEXT_SHOW                 "Show"
+#define GAMETEXT_SHOWINFO             "Info..."
 #define GAMETEXT_SHOWMINIMAP          "Show Mini Map"
 #define GAMETEXT_SKIPPED              " (Skipped)"
 #define GAMETEXT_STARTLEVEL           "Play!"

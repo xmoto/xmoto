@@ -262,7 +262,7 @@ namespace vapp {
     return true;
   }
   
-  std::vector<ReplayInfo *> Replay::createReplayList(const std::string &PlayerName) {
+  std::vector<ReplayInfo *> Replay::createReplayList(const std::string &PlayerName,const std::string &LevelIDCheck) {
     std::vector<ReplayInfo *> Ret;
     
     /* Find all replays done by the given player name */
@@ -277,16 +277,26 @@ namespace vapp {
             std::string LevelID = FS::readString(pfh);
             std::string Player = FS::readString(pfh);
             float fFrameRate = FS::readFloat(pfh);
+            int nStateSize = FS::readInt(pfh);
+            bool bFinished = FS::readBool(pfh);
+            float fFinishTime = FS::readFloat(pfh);
             
             if((PlayerName=="" || PlayerName==Player) && FS::getFileBaseName(ReplayFiles[i]) != "Latest") {
-              /* Fine. */
-              ReplayInfo *pInfo = new ReplayInfo;
-              pInfo->Level = LevelID;
-              pInfo->Name = FS::getFileBaseName(ReplayFiles[i]);
-              pInfo->Player = Player;
-              pInfo->fFrameRate = fFrameRate;
-              
-              Ret.push_back(pInfo);
+              if(LevelIDCheck=="" || LevelID==LevelIDCheck) {
+                /* Fine. */
+                ReplayInfo *pInfo = new ReplayInfo;
+                pInfo->Level = LevelID;
+                pInfo->Name = FS::getFileBaseName(ReplayFiles[i]);
+                pInfo->Player = Player;
+                pInfo->fFrameRate = fFrameRate;
+                
+                if(bFinished)
+                  pInfo->fFinishTime = fFinishTime;
+                else
+                  pInfo->fFinishTime = -1;
+                
+                Ret.push_back(pInfo);
+              }
             }
           }
         }

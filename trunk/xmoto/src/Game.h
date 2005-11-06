@@ -48,7 +48,8 @@ namespace vapp {
     GS_JUSTDEAD,              /* Head-banging too much */
     GS_EDIT_PROFILES,         /* In profile editor */
     GS_FINISHED,              /* Finished a level */
-    GS_REPLAYING              /* Replaying */
+    GS_REPLAYING,             /* Replaying */
+    GS_LEVEL_INFO_VIEWER,     /* In level info viewer */
   };
 
 	/*===========================================================================
@@ -190,6 +191,10 @@ namespace vapp {
       UIMsgBox *m_pNewProfileMsgBox;    
       UIMsgBox *m_pDeleteProfileMsgBox;
       
+      /* Level info viewer fun */
+      UIFrame *m_pLevelInfoViewer;      
+      std::string m_LevelInfoViewerLevel;
+      
       /* Replay saving UI fun */
       UIMsgBox *m_pSaveReplayMsgBox;    
       
@@ -211,11 +216,14 @@ namespace vapp {
       void _HandleJustDeadMenu(void);
       void _HandleFinishMenu(void);
       void _HandleProfileEditor(void);
+      void _HandleLevelInfoViewer(void);
       void _CreateLevelLists(UIList *pExternalLevels,UIList *pInternalLevels);
       void _CreateReplaysList(UIList *pList);
       void _CreateProfileList(void);
       void _CreateDefaultConfig(void);
       void _UpdateActionKeyList(void);
+      void _UpdateLevelInfoViewerBestTimes(const std::string &LevelID);     
+      void _UpdateLevelInfoViewerReplays(const std::string &LevelID);     
       void _ChangeKeyConfig(void);
       void _ConfigureJoystick(void);
       void _MakeBestTimesWindow(UIBestTimes *pWindow,std::string PlayerName,std::string LevelID,

@@ -572,6 +572,7 @@ namespace vapp {
     switch(m_State) {
       case GS_MENU:
       case GS_EDIT_PROFILES:
+      case GS_LEVEL_INFO_VIEWER:
       case GS_PAUSE:
       case GS_JUSTDEAD:
       case GS_FINISHED:
@@ -653,6 +654,7 @@ namespace vapp {
     /* What state? */
     switch(m_State) {
       case GS_MENU:
+      case GS_LEVEL_INFO_VIEWER:
       case GS_EDIT_PROFILES: {
         /* Draw menu background */
         _DrawMenuBackground();
@@ -665,6 +667,8 @@ namespace vapp {
           _HandleMainMenu();
         else if(m_State == GS_EDIT_PROFILES)
           _HandleProfileEditor();
+        else if(m_State == GS_LEVEL_INFO_VIEWER)
+          _HandleLevelInfoViewer();
                   
         /* Draw GUI */
         m_Renderer.getGUI()->paint();                
@@ -956,6 +960,7 @@ namespace vapp {
     /* What state? */
     switch(m_State) {
       case GS_EDIT_PROFILES:
+      case GS_LEVEL_INFO_VIEWER:
       case GS_MENU: {
         /* The GUI wants to know about keypresses... */
         m_Renderer.getGUI()->keyDown(nKey,nChar);
@@ -1037,6 +1042,7 @@ namespace vapp {
     /* What state? */
     switch(m_State) {
       case GS_EDIT_PROFILES:
+      case GS_LEVEL_INFO_VIEWER:
       case GS_FINISHED:
       case GS_JUSTDEAD:
       case GS_MENU:
@@ -1059,6 +1065,7 @@ namespace vapp {
       case GS_JUSTDEAD:
       case GS_FINISHED:
       case GS_EDIT_PROFILES:
+      case GS_LEVEL_INFO_VIEWER:
         int nX,nY;        
         getMousePos(&nX,&nY);
         
@@ -1076,6 +1083,7 @@ namespace vapp {
       case GS_JUSTDEAD:
       case GS_FINISHED:
       case GS_EDIT_PROFILES:
+      case GS_LEVEL_INFO_VIEWER:
         int nX,nY;        
         getMousePos(&nX,&nY);
         
@@ -1099,6 +1107,7 @@ namespace vapp {
       case GS_JUSTDEAD:
       case GS_FINISHED:
       case GS_EDIT_PROFILES:
+      case GS_LEVEL_INFO_VIEWER:
         int nX,nY;
         getMousePos(&nX,&nY);
         

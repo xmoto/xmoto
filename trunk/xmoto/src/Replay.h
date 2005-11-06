@@ -33,6 +33,7 @@ namespace vapp {
     std::string Player;
     std::string Level;
     float fFrameRate;
+    float fFinishTime;
   };
   
   struct ReplayStateChunk {
@@ -56,7 +57,7 @@ namespace vapp {
       void fastrewind(float fSeconds);
       
       /* Static methods */
-      static std::vector<ReplayInfo *> createReplayList(const std::string &PlayerName);
+      static std::vector<ReplayInfo *> createReplayList(const std::string &PlayerName,const std::string &LevelID = "");
       static void freeReplayList(std::vector<ReplayInfo *> &List);
       
       /* Data interface */
