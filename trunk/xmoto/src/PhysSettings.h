@@ -27,6 +27,9 @@ Physical setup of the bike goes in this file. You should indeed not modify this
 if you want to be able to play levels besides your own...
 =============================================================================*/
 
+#define ENGINE_MIN_RPM      700.0f
+#define ENGINE_MAX_RPM      8000.0f
+
 #if 0 /* Set to 1 to enable EXPERIMENTAL physics! */
 
   /* This is an attempt to lower the system requirements drastically by 

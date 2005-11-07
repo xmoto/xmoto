@@ -133,7 +133,7 @@ namespace vapp {
           return;
         }
         
-        Mix_AllocateChannels(32);
+        Mix_AllocateChannels(64);
         
       #else /* Not using SDL_mixer */
         /* Open audio device */

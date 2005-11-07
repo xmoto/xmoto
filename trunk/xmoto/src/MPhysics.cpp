@@ -200,16 +200,16 @@ namespace vapp {
     if(m_BikeS.Dir == DD_RIGHT) {
       float f = -fRearWheelAngVel;
       if(f<0.0f) f=0.0f;      
-      m_BikeS.fBikeEngineRPM = 400.0f + 4600.0f * (f / 50.0f) * m_BikeC.fDrive;
-      if(m_BikeS.fBikeEngineRPM < 400.0f) m_BikeS.fBikeEngineRPM = 400.0f;
-      if(m_BikeS.fBikeEngineRPM > 5000.0f) m_BikeS.fBikeEngineRPM = 5000.0f;
+      m_BikeS.fBikeEngineRPM = ENGINE_MIN_RPM + (ENGINE_MAX_RPM - ENGINE_MIN_RPM) * (f / PHYS_MAX_ROLL_VELOCITY) * m_BikeC.fDrive;
+      if(m_BikeS.fBikeEngineRPM < ENGINE_MIN_RPM) m_BikeS.fBikeEngineRPM = ENGINE_MIN_RPM;
+      if(m_BikeS.fBikeEngineRPM > ENGINE_MAX_RPM) m_BikeS.fBikeEngineRPM = ENGINE_MAX_RPM;
     }
     else if(m_BikeS.Dir == DD_LEFT) {
       float f = fFrontWheelAngVel;
       if(f<0.0f) f=0.0f;      
-      m_BikeS.fBikeEngineRPM = 400.0f + 4600.0f * (f / 50.0f) * m_BikeC.fDrive;
-      if(m_BikeS.fBikeEngineRPM < 400.0f) m_BikeS.fBikeEngineRPM = 400.0f;
-      if(m_BikeS.fBikeEngineRPM > 5000.0f) m_BikeS.fBikeEngineRPM = 5000.0f;
+      m_BikeS.fBikeEngineRPM = ENGINE_MIN_RPM + (ENGINE_MAX_RPM - ENGINE_MIN_RPM) * (f / PHYS_MAX_ROLL_VELOCITY) * m_BikeC.fDrive;
+      if(m_BikeS.fBikeEngineRPM < ENGINE_MIN_RPM) m_BikeS.fBikeEngineRPM = ENGINE_MIN_RPM;
+      if(m_BikeS.fBikeEngineRPM > ENGINE_MAX_RPM) m_BikeS.fBikeEngineRPM = ENGINE_MAX_RPM;
     }
 
     /* Apply motor/brake torques */
@@ -451,7 +451,7 @@ namespace vapp {
       _16BitsToMatrix(pReplayState->nRearWheelRot,m_BikeS.fRearWheelRot);
 
       /* Update engine stuff */
-      m_BikeS.fBikeEngineRPM = 400.0f + 4600.0f * ((float)pReplayState->cBikeEngineRPM) / 255.0f;
+      m_BikeS.fBikeEngineRPM = ENGINE_MIN_RPM + (ENGINE_MAX_RPM - ENGINE_MIN_RPM) * ((float)pReplayState->cBikeEngineRPM) / 255.0f;
     }                                                                                        
     
     m_BikeS.SwingAnchorP.x = m_BikeA.AR.x*m_BikeS.fFrameRot[0] + m_BikeA.AR.y*m_BikeS.fFrameRot[1] + m_BikeS.CenterP.x;

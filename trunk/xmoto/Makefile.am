@@ -1,5 +1,5 @@
-CXXFLAGS = -DNOMMGR -w -O2 -DGAMEDATADIR=\"$(datadir)/@PACKAGE@\"
-CFLAGS = -DNOMMGR -w -O2 -DGAMEDATADIR=\"$(datadir)/@PACKAGE@\"
+AM_CXXFLAGS = -DNOMMGR -w -DGAMEDATADIR=\"$(datadir)/@PACKAGE@\"
+AM_CFLAGS = -DNOMMGR -w -DGAMEDATADIR=\"$(datadir)/@PACKAGE@\"
 SUBDIRS = bin
 
 image_SOURCES = src/image/tim.cpp src/image/tim_io_stdio.cpp \
@@ -50,4 +50,4 @@ xmoto_SOURCES = $(common_SOURCES) src/BSP.cpp src/Game.cpp src/GameMain.cpp \
 	src/GameSerializer.cpp
 		
 uninstall-hook:
-	rm -r $(datadir)/@PACKAGE@		
+	rm -r $(datadir)/@PACKAGE@

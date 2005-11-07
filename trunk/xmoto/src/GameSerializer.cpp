@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* 
  *  Game state serialization
  */
+#include "PhysSettings.h"
 #include "MotoGame.h"
 
 namespace vapp {
@@ -129,7 +130,7 @@ namespace vapp {
     pState->fMaxYDiff = fMaxY;
     
     /* Update engine stuff */    
-    int n = (int)(((m_BikeS.fBikeEngineRPM-400.0f)/4600.0f)*255.0f);
+    int n = (int)(((m_BikeS.fBikeEngineRPM-ENGINE_MIN_RPM)/ENGINE_MAX_RPM)*255.0f);
     if(n<0) n=0;
     if(n>255) n=255;
     pState->cBikeEngineRPM = n;
