@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "BSP.h"
 
 #define GAME_EVENT_QUEUE_SIZE				128
+#define GAME_EVENT_OUTGOING_BUFFER  65536
 
 namespace vapp {
 
@@ -379,39 +380,49 @@ namespace vapp {
 	/*===========================================================================
 	Game event
   ===========================================================================*/
+  struct GameEventPlayerDies {
+  	bool bWrecker;								/* Killed by wrecker */					
+  };
+  
+  struct GameEventEntityDestroyed {
+		/* Have enough information so that we can recreate the entity */
+		char cEntityID[64];					  /* ID of entity */
+		EntityType Type;              /* Type */
+		float fSize;									/* Size of it */
+		float fPosX,fPosY;					  /* Position of it */
+  };
+  
+  struct GameEventPlayerEntersZone {
+		LevelZone *pZone;							/* Pointer to zone */
+  };
+  
+  struct GameEventPlayerLeavesZone {
+		LevelZone *pZone;							/* Pointer to zone */
+  };
+  
+  struct GameEventPlayerTouchesEntity {
+		char cEntityID[64];					  /* ID of entity */
+		bool bHead;										/* Touched with head? */
+  };
+  
   struct GameEvent {
 		GameEventType Type;								/* Type of event */
 		
-		union {								
+		union GameEvent_u {								
 			/* GAME_EVENT_PLAYER_DIES */		
-			struct {							
-				bool bWrecker;								/* Killed by wrecker */					
-			} PlayerDies;								
+			GameEventPlayerDies PlayerDies;								
 			
 			/* GAME_EVENT_ENTITY_DESTROYED */
-			struct {
-				/* Have enough information so that we can recreate the entity */
-				char cEntityID[64];					  /* ID of entity */
-				EntityType Type;              /* Type */
-				float fSize;									/* Size of it */
-				float fPosX,fPosY;					  /* Position of it */
-			} EntityDestroyed;
+			GameEventEntityDestroyed EntityDestroyed;
 			
 			/* GAME_EVENT_PLAYER_ENTERS_ZONE */
-			struct {
-				LevelZone *pZone;							/* Pointer to zone */
-			} PlayerEntersZone;
+			GameEventPlayerEntersZone PlayerEntersZone;
 			
 			/* GAME_EVENT_PLAYER_LEAVES_ZONE */
-			struct {
-				LevelZone *pZone;							/* Pointer to zone */
-			} PlayerLeavesZone;
+			GameEventPlayerLeavesZone PlayerLeavesZone;
 
 			/* GAME_EVENT_PLAYER_TOUCHES_ENTITY */
-			struct {
-				char cEntityID[64];					  /* ID of entity */
-				bool bHead;										/* Touched with head? */
-			} PlayerTouchesEntity;
+			GameEventPlayerTouchesEntity PlayerTouchesEntity;
 		} u;		
   };
     
@@ -596,6 +607,15 @@ namespace vapp {
       void _UninitPhysics(void);
       void _PrepareBikePhysics(Vector2f StartPos);
       void _PrepareRider(Vector2f StartPos);
+      
+      /* Outgoing event buffer */
+      //void _OEBufferWrite(const char *pcBuf,int nBufSize);
+      //void oeBufferRead(char *pcBuf,int nBufSize);
+      //int oeBufferGetNumPendingBytes(void);      
+      //
+      //char m_cOEBuffer[GAME_EVENT_OUTGOING_BUFFER]
+      //int m_nOEBufferReadIdx,m_nOEBufferWriteIdx;
+      
     };
 
 };
