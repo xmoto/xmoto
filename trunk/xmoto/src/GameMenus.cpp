@@ -178,13 +178,13 @@ namespace vapp {
     pInternalLevelsList->showWindow(true);
     pInternalLevelsTab->showWindow(true);
     pInternalLevelsList->setFont(m_Renderer.getSmallFont());
-    pInternalLevelsList->addColumn(GAMETEXT_LEVEL,300);
+    pInternalLevelsList->addColumn(GAMETEXT_LEVEL,pInternalLevelsTab->getPosition().nWidth);
     pInternalLevelsList->setEnterButton( pGoButton );
     UIList *pExternalLevelsList = new UIList(pExternalLevelsTab,0,0,"",pExternalLevelsTab->getPosition().nWidth,pExternalLevelsTab->getPosition().nHeight);      /* -64 to make room for bonus */
     pExternalLevelsList->setID("PLAY_EXTERNAL_LEVELS_LIST");
     pExternalLevelsList->setFont(m_Renderer.getSmallFont());
-    pExternalLevelsList->addColumn(GAMETEXT_LEVEL,250);
-    pExternalLevelsList->addColumn(GAMETEXT_FILE,250);
+    pExternalLevelsList->addColumn(GAMETEXT_LEVEL,pExternalLevelsTab->getPosition().nWidth/2);
+    pExternalLevelsList->addColumn(GAMETEXT_FILE,pExternalLevelsTab->getPosition().nWidth/2);
     pExternalLevelsList->setEnterButton( pGoButton );        
 
     m_pReplaysWindow = new UIFrame(m_pMainMenu,300,(getDispHeight()*140)/600,"",getDispWidth()-300-20,getDispHeight()-40-(getDispHeight()*120)/600);      
