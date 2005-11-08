@@ -4,6 +4,9 @@ X-Moto 0.1.9 (alpha)  2005-??-??
  * Added a level information viewing user interface, 
    including in-menu shortcuts to best times and replays
    for a specific level.
+ * Fixed a bug that caused the game to misbehave if 
+   escape was pressed while entering the name of a replay
+   to save.
 
 X-Moto 0.1.8 (alpha)  2005-11-06
 --------------------------------

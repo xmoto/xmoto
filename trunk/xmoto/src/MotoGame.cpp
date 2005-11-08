@@ -245,27 +245,37 @@ namespace vapp {
 				/* What event? */
 				switch(pEvent->Type) {
 					case GAME_EVENT_PLAYER_DIES:
-						m_bDead = true;
-						break;
-					case GAME_EVENT_PLAYER_ENTERS_ZONE:						
-						/* Notify script */
-						scriptCallTblVoid( pZone->ID,"OnEnter" );
-						break;
-					case GAME_EVENT_PLAYER_LEAVES_ZONE:
-						/* Notify script */
-						scriptCallTblVoid( pZone->ID,"OnLeave" );						
-						break;
-					case GAME_EVENT_PLAYER_TOUCHES_ENTITY:
-						Entity *pEntityToTouch = findEntity(pEvent->u.PlayerTouchesEntity.EntityID);
-						if(pEntityToTouch != NULL) {
-							touchEntity(pEntityToTouch,pEvent->u.PlayerTouchesEntity.bHead);
+					  {
+						  m_bDead = true;
 						}
 						break;
-					case GAME_EVENT_ENTITY_DESTROYED:
-						/* Destroy entity */
-						Entity *pEntityToDestroy = findEntity(pEvent->u.EntityDestroyed.EntityID);
-						if(pEntityToDestroy != NULL) {
-							deleteEntity(pEntityToDestroy);
+					case GAME_EVENT_PLAYER_ENTERS_ZONE:						
+					  {
+						  /* Notify script */
+						  scriptCallTblVoid( pEvent->u.PlayerEntersZone.pZone->ID,"OnEnter" );
+						}
+						break;
+					case GAME_EVENT_PLAYER_LEAVES_ZONE:
+					  {
+						  /* Notify script */
+						  scriptCallTblVoid( pEvent->u.PlayerEntersZone.pZone->ID,"OnLeave" );						
+						}
+						break;
+					case GAME_EVENT_PLAYER_TOUCHES_ENTITY:
+					  {
+						  Entity *pEntityToTouch = findEntity(pEvent->u.PlayerTouchesEntity.cEntityID);
+						  if(pEntityToTouch != NULL) {
+							  touchEntity(pEntityToTouch,pEvent->u.PlayerTouchesEntity.bHead);
+						  }
+						}
+						break;
+					case GAME_EVENT_ENTITY_DESTROYED: 
+					  {
+						  /* Destroy entity */
+						  Entity *pEntityToDestroy = findEntity(pEvent->u.EntityDestroyed.cEntityID);
+						  if(pEntityToDestroy != NULL) {
+							  deleteEntity(pEntityToDestroy);
+						  }
 						}
 						break;
 				}
@@ -803,12 +813,11 @@ namespace vapp {
 					/* Generate event */
 					GameEvent *pEvent = createGameEvent(GAME_EVENT_PLAYER_TOUCHES_ENTITY);
 					if(pEvent != NULL) {
-						pEvent->u.PlayerPlayerTouchesEntity.bHead = true;
-						pEvent->u.PlayerPlayerTouchesEntity.EntityID = m_Entities[i]->ID;
+						pEvent->u.PlayerTouchesEntity.bHead = true;						
+						strncpy(pEvent->u.PlayerTouchesEntity.cEntityID,m_Entities[i]->ID.c_str(),sizeof(pEvent->u.PlayerTouchesEntity.cEntityID)-1);						
 						m_Entities[i]->bTouched = true;
 					}					
 				}
-        //touchEntity(m_Entities[i],true);
       }
       /* Wheel then? */
       else if(circleTouchCircle2f(m_Entities[i]->Pos,m_Entities[i]->fSize,m_BikeS.FrontWheelP,m_BikeP.WR) ||
@@ -817,12 +826,11 @@ namespace vapp {
 					/* Generate event */
 					GameEvent *pEvent = createGameEvent(GAME_EVENT_PLAYER_TOUCHES_ENTITY);
 					if(pEvent != NULL) {
-						pEvent->u.PlayerPlayerTouchesEntity.bHead = false;
-						pEvent->u.PlayerPlayerTouchesEntity.EntityID = m_Entities[i]->ID;
+						pEvent->u.PlayerTouchesEntity.bHead = false;
+						strncpy(pEvent->u.PlayerTouchesEntity.cEntityID,m_Entities[i]->ID.c_str(),sizeof(pEvent->u.PlayerTouchesEntity.cEntityID)-1);
 						m_Entities[i]->bTouched = true;
 					}					
 				}
-        //touchEntity(m_Entities[i],false);
       }      
       else {
 				/* Not touching */
@@ -869,31 +877,38 @@ namespace vapp {
       case ET_PLAYERSTART:
         break;
       case ET_ENDOFLEVEL:
-        /* How many strawberries left? */
-        if(countEntitiesByType(ET_STRAWBERRY) == 0) {
-          /* Level is done! */
-          m_bFinished = true;
-          m_fFinishTime = getTime();
+        {
+          /* How many strawberries left? */
+          if(countEntitiesByType(ET_STRAWBERRY) == 0) {
+            /* Level is done! */
+            m_bFinished = true;
+            m_fFinishTime = getTime();
+          }
         }
         break;
-      case ET_WRECKER:
-        /* Hmm :( */
-				GameEvent *pEvent = createGameEvent(GAME_EVENT_PLAYER_DIES);        
-				if(pEvent != NULL) {
-					pEvent->u.PlayerDies.bWrecker = true;
+      case ET_WRECKER: 
+        {
+          /* Hmm :( */
+				  GameEvent *pEvent = createGameEvent(GAME_EVENT_PLAYER_DIES);        
+				  if(pEvent != NULL) {
+					  pEvent->u.PlayerDies.bWrecker = true;
+				  }
 				}
         break;
       case ET_STRAWBERRY:
-        /* OH... nice */
-        GameEvent *pEvent = createGameEvent(GAME_EVENT_ENTITY_DESTROYED);
-        if(pEvent != NULL) {
-					pEvent->u.EntityDestroyed.EntityID = pEntity->ID;
-					pEvent->u.EntityDestroyed.EntityType = pEntity->Type;
-					pEvent->u.EntityDestroyed.fSize = pEntity->fSize;
-					pEvent->u.EntityDestroyed.Pos = pEntity->Pos;
-        }                
-        /* Play yummy-yummy sound */
-        Sound::playSampleByName("Sounds/PickUpStrawberry.ogg");
+        {
+          /* OH... nice */
+          GameEvent *pEvent = createGameEvent(GAME_EVENT_ENTITY_DESTROYED);
+          if(pEvent != NULL) {
+					  strncpy(pEvent->u.EntityDestroyed.cEntityID,pEntity->ID.c_str(),sizeof(pEvent->u.EntityDestroyed.cEntityID)-1);
+					  pEvent->u.EntityDestroyed.Type = pEntity->Type;
+					  pEvent->u.EntityDestroyed.fSize = pEntity->fSize;
+					  pEvent->u.EntityDestroyed.fPosX = pEntity->Pos.x;
+					  pEvent->u.EntityDestroyed.fPosY = pEntity->Pos.y;
+          }                
+          /* Play yummy-yummy sound */
+          Sound::playSampleByName("Sounds/PickUpStrawberry.ogg");
+        }
         break;
     }
   }
@@ -923,6 +938,7 @@ namespace vapp {
 		if(getNumPendingGameEvents() < GAME_EVENT_QUEUE_SIZE - 1) {
 			/* Yup. */
 			GameEvent *pEvent = &m_GameEventQueue[m_nGameEventQueueWriteIdx];			
+			pEvent->Type = Type;
 			m_nGameEventQueueWriteIdx++;			
 			if(m_nGameEventQueueWriteIdx == GAME_EVENT_QUEUE_SIZE) {
 				m_nGameEventQueueWriteIdx = 0;
@@ -943,6 +959,7 @@ namespace vapp {
 			if(m_nGameEventQueueReadIdx == GAME_EVENT_QUEUE_SIZE) {
 				m_nGameEventQueueReadIdx = 0;
 			}
+			
 			return pEvent;
 		}
 		
@@ -952,6 +969,7 @@ namespace vapp {
 
   int MotoGame::getNumPendingGameEvents(void) {
 		if(m_nGameEventQueueReadIdx < m_nGameEventQueueWriteIdx) {
+		  //printf("Hoorse %d %d\n",m_nGameEventQueueWriteIdx , m_nGameEventQueueReadIdx);
 			return m_nGameEventQueueWriteIdx - m_nGameEventQueueReadIdx;
 		}
 		else if(m_nGameEventQueueReadIdx > m_nGameEventQueueWriteIdx) {

@@ -391,9 +391,10 @@ namespace vapp {
 			/* GAME_EVENT_ENTITY_DESTROYED */
 			struct {
 				/* Have enough information so that we can recreate the entity */
-				std::string EntityID;					/* ID of entity */
+				char cEntityID[64];					  /* ID of entity */
+				EntityType Type;              /* Type */
 				float fSize;									/* Size of it */
-				Vector2f Pos;									/* Position of it */
+				float fPosX,fPosY;					  /* Position of it */
 			} EntityDestroyed;
 			
 			/* GAME_EVENT_PLAYER_ENTERS_ZONE */
@@ -408,7 +409,7 @@ namespace vapp {
 
 			/* GAME_EVENT_PLAYER_TOUCHES_ENTITY */
 			struct {
-				std::string EntityID;					/* ID of entity */
+				char cEntityID[64];					  /* ID of entity */
 				bool bHead;										/* Touched with head? */
 			} PlayerTouchesEntity;
 		} u;		

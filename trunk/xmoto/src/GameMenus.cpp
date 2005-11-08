@@ -700,7 +700,7 @@ namespace vapp {
 
         if(Clicked == UI_MSGBOX_OK) {
           _SaveReplay(Name);
-        }        
+        }    
       }
     }
     

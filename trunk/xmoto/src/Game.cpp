@@ -643,12 +643,12 @@ namespace vapp {
       if(!m_b50FpsMode && nFCount > 100) {
         m_b50FpsMode = true;
         m_Renderer.setSpeedMultiplier(2);   
-        //printf("entering 50 fps!\n");
+//        printf("entering 50 fps!\n");
       }
       else if(m_b50FpsMode && nFCount < -100) {
         m_b50FpsMode = false;
         m_Renderer.setSpeedMultiplier(1);   
-        //printf("entering 100 fps!\n");
+//        printf("entering 100 fps!\n");
       }
     }
     /* What state? */
@@ -982,13 +982,22 @@ namespace vapp {
       case GS_JUSTDEAD:
         switch(nKey) {
           case SDLK_ESCAPE:
-            /* Out of this game, please */
-            m_pFinishMenu->showWindow(false);
-            m_pBestTimes->showWindow(false);
-            m_pJustDeadMenu->showWindow(false);
-            m_MotoGame.endLevel();
-            m_Renderer.unprepareForNewLevel();
-            setState(GS_MENU);
+            if(m_pSaveReplayMsgBox == NULL) {          
+              /* Out of this game, please */
+              m_pFinishMenu->showWindow(false);
+              m_pBestTimes->showWindow(false);
+              m_pJustDeadMenu->showWindow(false);
+              m_MotoGame.endLevel();
+              m_Renderer.unprepareForNewLevel();
+              setState(GS_MENU);
+            }
+            else {
+              if(m_State == GS_JUSTDEAD)
+                if(getRealTime() < m_fCoolDownEnd)
+                  break;
+               
+              m_Renderer.getGUI()->keyDown(nKey,nChar);
+            }
             break;
           default:
             if(m_State == GS_JUSTDEAD)
