@@ -198,6 +198,7 @@ Other things to be aware of regarding X-Moto replays:
  - Also when using the left/right arrow keys to skip around, 
    you might skip picking up strawberries. This is not a bug, it's
    a feature! :)
+ - No fancy dirt particles from rear wheel spinning.
 
 Advanced Configuration Options
 ==============================

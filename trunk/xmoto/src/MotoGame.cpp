@@ -222,9 +222,11 @@ namespace vapp {
     /* Update game state */
     _UpdateGameState(pReplayState);
         
-    /* Update misc stuff */
-    _UpdateZones();
-    _UpdateEntities();
+    /* Update misc stuff (only when not playing a replay) */
+    if(pReplayState == NULL) {
+			_UpdateZones();
+			_UpdateEntities();
+    }
     
     /* Invoke PreDraw() script function */
     if(!scriptCallBool( "PreDraw",true ))
@@ -235,6 +237,46 @@ namespace vapp {
       /* Update physics */
       _UpdatePhysics(fTimeStep);
     }
+    
+    /* Handle events generated this update */
+    while(getNumPendingGameEvents() > 0) {
+			GameEvent *pEvent = getNextGameEvent();
+			if(pEvent != NULL) {
+				/* What event? */
+				switch(pEvent->Type) {
+					case GAME_EVENT_PLAYER_DIES:
+						m_bDead = true;
+						break;
+					case GAME_EVENT_PLAYER_ENTERS_ZONE:						
+						/* Notify script */
+						scriptCallTblVoid( pZone->ID,"OnEnter" );
+						break;
+					case GAME_EVENT_PLAYER_LEAVES_ZONE:
+						/* Notify script */
+						scriptCallTblVoid( pZone->ID,"OnLeave" );						
+						break;
+					case GAME_EVENT_PLAYER_TOUCHES_ENTITY:
+						Entity *pEntityToTouch = findEntity(pEvent->u.PlayerTouchesEntity.EntityID);
+						if(pEntityToTouch != NULL) {
+							touchEntity(pEntityToTouch,pEvent->u.PlayerTouchesEntity.bHead);
+						}
+						break;
+					case GAME_EVENT_ENTITY_DESTROYED:
+						/* Destroy entity */
+						Entity *pEntityToDestroy = findEntity(pEvent->u.EntityDestroyed.EntityID);
+						if(pEntityToDestroy != NULL) {
+							deleteEntity(pEntityToDestroy);
+						}
+						break;
+				}
+			}
+			else break;
+    }
+
+    /* Entities scheduled for termination? */
+    for(int i=0;i<m_DelSchedule.size();i++)
+      _KillEntity(m_DelSchedule[i]);
+    m_DelSchedule.clear();
   }
 
   /*===========================================================================
@@ -357,6 +399,8 @@ namespace vapp {
     m_PlayerLLegBodyID2 = NULL;
     
     m_bDead = m_bFinished = false;
+    
+    m_nGameEventQueueReadIdx = m_nGameEventQueueWriteIdx = 0;
     
     /* Load and parse level script */
     if(pLevelSrc->getScriptFile() != "") {
@@ -660,19 +704,25 @@ namespace vapp {
          _DoCircleTouchZone( m_BikeS.RearWheelP,m_BikeP.WR,pZone )) {       
         /* In the zone -- did he just enter it? */
         if(!pZone->m_bInZone) {
-          /* Yup, notify script */
-          scriptCallTblVoid( pZone->ID,"OnEnter" );
+					/* Generate event */
+					GameEvent *pEvent = createGameEvent(GAME_EVENT_PLAYER_ENTERS_ZONE);
+					if(pEvent != NULL) {
+		        pZone->m_bInZone = true;
+		        pEvent->u.PlayerEntersZone.pZone = pZone;
+		      }
         }
-        pZone->m_bInZone = true;
       }         
       else {
         /* Not in the zone... but was he during last update? - i.e. has 
            he just left it? */      
         if(pZone->m_bInZone) {
-          /* Yeah, notify script */
-          scriptCallTblVoid( pZone->ID,"OnLeave" );
+					/* Generate event */
+					GameEvent *pEvent = createGameEvent(GAME_EVENT_PLAYER_LEAVES_ZONE);
+					if(pEvent != NULL) {
+		        pZone->m_bInZone = false;
+		        pEvent->u.PlayerLeavesZone.pZone = pZone;
+		      }
         }
-        pZone->m_bInZone = false;
       }
     }
   }
@@ -747,20 +797,38 @@ namespace vapp {
   void MotoGame::_UpdateEntities(void) {
     /* Do player touch anything? */
     for(int i=0;i<m_Entities.size();i++) {    
+			/* Head? */
       if(circleTouchCircle2f(m_Entities[i]->Pos,m_Entities[i]->fSize,m_BikeS.HeadP,m_BikeP.fHeadSize)) {
-        touchEntity(m_Entities[i],true);
+				if(!m_Entities[i]->bTouched) {
+					/* Generate event */
+					GameEvent *pEvent = createGameEvent(GAME_EVENT_PLAYER_TOUCHES_ENTITY);
+					if(pEvent != NULL) {
+						pEvent->u.PlayerPlayerTouchesEntity.bHead = true;
+						pEvent->u.PlayerPlayerTouchesEntity.EntityID = m_Entities[i]->ID;
+						m_Entities[i]->bTouched = true;
+					}					
+				}
+        //touchEntity(m_Entities[i],true);
       }
       /* Wheel then? */
       else if(circleTouchCircle2f(m_Entities[i]->Pos,m_Entities[i]->fSize,m_BikeS.FrontWheelP,m_BikeP.WR) ||
               circleTouchCircle2f(m_Entities[i]->Pos,m_Entities[i]->fSize,m_BikeS.RearWheelP,m_BikeP.WR)) {
-        touchEntity(m_Entities[i],false);
+				if(!m_Entities[i]->bTouched) {
+					/* Generate event */
+					GameEvent *pEvent = createGameEvent(GAME_EVENT_PLAYER_TOUCHES_ENTITY);
+					if(pEvent != NULL) {
+						pEvent->u.PlayerPlayerTouchesEntity.bHead = false;
+						pEvent->u.PlayerPlayerTouchesEntity.EntityID = m_Entities[i]->ID;
+						m_Entities[i]->bTouched = true;
+					}					
+				}
+        //touchEntity(m_Entities[i],false);
       }      
+      else {
+				/* Not touching */
+				m_Entities[i]->bTouched = false;
+      }
     }
-  
-    /* Entities scheduled for termination? */
-    for(int i=0;i<m_DelSchedule.size();i++)
-      _KillEntity(m_DelSchedule[i]);
-    m_DelSchedule.clear();
   }
 
   EntityType MotoGame::_TransEntityType(std::string Name) {
@@ -810,15 +878,22 @@ namespace vapp {
         break;
       case ET_WRECKER:
         /* Hmm :( */
-        m_bDead = true;
+				GameEvent *pEvent = createGameEvent(GAME_EVENT_PLAYER_DIES);        
+				if(pEvent != NULL) {
+					pEvent->u.PlayerDies.bWrecker = true;
+				}
         break;
       case ET_STRAWBERRY:
         /* OH... nice */
-        deleteEntity(pEntity);
-        
+        GameEvent *pEvent = createGameEvent(GAME_EVENT_ENTITY_DESTROYED);
+        if(pEvent != NULL) {
+					pEvent->u.EntityDestroyed.EntityID = pEntity->ID;
+					pEvent->u.EntityDestroyed.EntityType = pEntity->Type;
+					pEvent->u.EntityDestroyed.fSize = pEntity->fSize;
+					pEvent->u.EntityDestroyed.Pos = pEntity->Pos;
+        }                
         /* Play yummy-yummy sound */
         Sound::playSampleByName("Sounds/PickUpStrawberry.ogg");
-        
         break;
     }
   }
@@ -831,6 +906,59 @@ namespace vapp {
       if(m_Entities[i]->Type == Type) n++;
       
     return n;
+  }
+
+  Entity *MotoGame::findEntity(const std::string &ID) {	
+		for(int i=0;i<m_Entities.size();i++) {
+			if(m_Entities[i]->ID == ID) return m_Entities[i];
+		}
+		return NULL;
+  }
+
+  /*===========================================================================
+  Game event queue management
+  ===========================================================================*/
+  GameEvent *MotoGame::createGameEvent(GameEventType Type) {
+		/* Space left in queue? */
+		if(getNumPendingGameEvents() < GAME_EVENT_QUEUE_SIZE - 1) {
+			/* Yup. */
+			GameEvent *pEvent = &m_GameEventQueue[m_nGameEventQueueWriteIdx];			
+			m_nGameEventQueueWriteIdx++;			
+			if(m_nGameEventQueueWriteIdx == GAME_EVENT_QUEUE_SIZE) {
+				m_nGameEventQueueWriteIdx = 0;
+			}
+			return pEvent;
+		}
+		
+		/* No */
+		return NULL;
+  }
+  
+  GameEvent *MotoGame::getNextGameEvent(void) {
+		/* Anything in queue? */
+		if(getNumPendingGameEvents() > 0) {
+			/* Get next event and advance the read idx */
+			GameEvent *pEvent = &m_GameEventQueue[m_nGameEventQueueReadIdx];
+			m_nGameEventQueueReadIdx++;
+			if(m_nGameEventQueueReadIdx == GAME_EVENT_QUEUE_SIZE) {
+				m_nGameEventQueueReadIdx = 0;
+			}
+			return pEvent;
+		}
+		
+		/* Nope, nothing */
+		return NULL;
+  }
+
+  int MotoGame::getNumPendingGameEvents(void) {
+		if(m_nGameEventQueueReadIdx < m_nGameEventQueueWriteIdx) {
+			return m_nGameEventQueueWriteIdx - m_nGameEventQueueReadIdx;
+		}
+		else if(m_nGameEventQueueReadIdx > m_nGameEventQueueWriteIdx) {
+			return GAME_EVENT_QUEUE_SIZE - m_nGameEventQueueReadIdx + m_nGameEventQueueWriteIdx;
+		}
+		
+		return 0;
   }
 
 };

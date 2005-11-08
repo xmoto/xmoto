@@ -28,6 +28,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "LevelSrc.h"
 #include "BSP.h"
 
+#define GAME_EVENT_QUEUE_SIZE				128
+
 namespace vapp {
 
 	/*===========================================================================
@@ -175,6 +177,8 @@ namespace vapp {
   #define SER_BIKE_STATE_DIR_LEFT         0x01
   #define SER_BIKE_STATE_DIR_RIGHT        0x02
   
+  /* IMPORTANT: This structure must be kept as is, otherwise replays will
+                be broken! */
   struct SerializedBikeState {
     unsigned char cFlags;             /* State flags */
     float fGameTime;                  /* Game time */      
@@ -189,12 +193,10 @@ namespace vapp {
     
     char cRearWheelX,cRearWheelY;     /* Rear wheel position */
     char cFrontWheelX,cFrontWheelY;   /* Front wheel position */
-    //char cHandX,cHandY;               /* Hand position */
     char cElbowX,cElbowY;             /* Elbow position */
     char cShoulderX,cShoulderY;       /* Shoulder position */
     char cLowerBodyX,cLowerBodyY;     /* Ass position */
     char cKneeX,cKneeY;               /* Knee position */
-    //char cFootX,cFootY;               /* Foot position */
   };
 
 	/*===========================================================================
@@ -324,11 +326,13 @@ namespace vapp {
       fSize = 1.0f;
       fSpriteZ = 1;
       fNextParticleTime = 0;
+      bTouched = false;
     }
   
     std::string ID;
     EntityType Type;
     LevelEntity *pSrc;
+    bool bTouched;
     
     float fSize;                      /* Size */
     Vector2f Pos;                     /* Position */    
@@ -360,6 +364,55 @@ namespace vapp {
     std::string Text;                 /* The text */
     int nAlpha;                       /* Alpha amount */
   };  
+
+	/*===========================================================================
+	Game event types
+  ===========================================================================*/
+  enum GameEventType {
+		GAME_EVENT_PLAYER_DIES,
+		GAME_EVENT_PLAYER_ENTERS_ZONE,
+		GAME_EVENT_PLAYER_LEAVES_ZONE,
+		GAME_EVENT_PLAYER_TOUCHES_ENTITY,
+		GAME_EVENT_ENTITY_DESTROYED,
+  };
+  
+	/*===========================================================================
+	Game event
+  ===========================================================================*/
+  struct GameEvent {
+		GameEventType Type;								/* Type of event */
+		
+		union {								
+			/* GAME_EVENT_PLAYER_DIES */		
+			struct {							
+				bool bWrecker;								/* Killed by wrecker */					
+			} PlayerDies;								
+			
+			/* GAME_EVENT_ENTITY_DESTROYED */
+			struct {
+				/* Have enough information so that we can recreate the entity */
+				std::string EntityID;					/* ID of entity */
+				float fSize;									/* Size of it */
+				Vector2f Pos;									/* Position of it */
+			} EntityDestroyed;
+			
+			/* GAME_EVENT_PLAYER_ENTERS_ZONE */
+			struct {
+				LevelZone *pZone;							/* Pointer to zone */
+			} PlayerEntersZone;
+			
+			/* GAME_EVENT_PLAYER_LEAVES_ZONE */
+			struct {
+				LevelZone *pZone;							/* Pointer to zone */
+			} PlayerLeavesZone;
+
+			/* GAME_EVENT_PLAYER_TOUCHES_ENTITY */
+			struct {
+				std::string EntityID;					/* ID of entity */
+				bool bHead;										/* Touched with head? */
+			} PlayerTouchesEntity;
+		} u;		
+  };
     
 	/*===========================================================================
 	Game object
@@ -378,6 +431,7 @@ namespace vapp {
       void touchEntity(Entity *pEntity,bool bHead); 
       void deleteEntity(Entity *pEntity);
       int countEntitiesByType(EntityType Type);
+      Entity *findEntity(const std::string &ID);
       
       void clearStates(void);
       
@@ -387,6 +441,10 @@ namespace vapp {
       void getSerializedBikeState(SerializedBikeState *pState);
 
       float getBikeEngineRPM(void);
+      
+      GameEvent *createGameEvent(GameEventType Type);
+      GameEvent *getNextGameEvent(void);
+      int getNumPendingGameEvents(void);
       
       /* Direct Lua interaction methods */
       bool scriptCallBool(std::string FuncName,bool bDefault=false);
@@ -419,8 +477,11 @@ namespace vapp {
       DummyHelper *getDummies(void) {return m_Dummies;}
       void addDummy(Vector2f Pos,float r,float g,float b);
     
-    private: 
+    private:         
       /* Data */
+      int m_nGameEventQueueReadIdx,m_nGameEventQueueWriteIdx;
+      GameEvent m_GameEventQueue[GAME_EVENT_QUEUE_SIZE];
+      
       float m_fTime,m_fLastAttitudeCon;
       float m_fFinishTime,m_fAttitudeCon;
       
