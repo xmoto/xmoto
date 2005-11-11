@@ -94,6 +94,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_KEY                  "Key"
 #define GAMETEXT_KEYBOARD             "Keyboard"
 #define GAMETEXT_LEVEL                "Level"
+#define GAMETEXT_LEVELISSCRIPTED      "(Scripted level)"
 #define GAMETEXT_LEVELNAME            "Level Name: "
 #define GAMETEXT_LEVELS               "Levels"
 #define GAMETEXT_LISTALL              "List All"

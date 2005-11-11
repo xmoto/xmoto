@@ -38,6 +38,12 @@ int SDL_main(int nNumArgs,char **ppcArgs) {
 #else
 int main(int nNumArgs,char **ppcArgs) {
 #endif
+  //
+  //EventReplay er;
+  //std::ostream &P = er;
+  //
+  //P << (char)30;
+
   /* Start application */
   try {  
     /* Init file system stuff */

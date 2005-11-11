@@ -23,7 +23,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
  * CRT memory driver.
  */
-#include <malloc.h>
+
+#if defined(__APPLE__) && defined(__MACH__)
+  #include <stdlib.h>
+#else
+  #include <malloc.h>
+#endif
+
 #include "tim.h"
 
 /*==============================================================================

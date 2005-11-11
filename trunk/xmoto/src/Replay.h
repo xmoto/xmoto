@@ -25,9 +25,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VCommon.h"
 #include "VApp.h"
 #include "VFileIO.h"
+#include "DBuffer.h"
 
 namespace vapp {
 
+  /*===========================================================================
+  Structs
+  ===========================================================================*/  
+  /* Replay information - an array of these suckers are returned when you
+     probe for replays on a computer */
   struct ReplayInfo {
     std::string Name;
     std::string Player;
@@ -36,15 +42,20 @@ namespace vapp {
     float fFinishTime;
   };
   
+  /* Replays states (frames) are grouped together in chunks for easy
+     processing */
   struct ReplayStateChunk {
     char *pcChunkData;
     int nNumStates;
   };
-
-  class Replay {
+   
+  /*===========================================================================
+  Replay class
+  ===========================================================================*/  
+  class Replay : public DBuffer {
     public:
       Replay();
-      ~Replay();
+      virtual ~Replay();
       
       /* Methods */
       void storeState(const char *pcState);
@@ -76,7 +87,9 @@ namespace vapp {
       int m_nStateSize;
       bool m_bFinished;
       float m_fFinishTime;
-      
+      char *m_pcInputEventsData;
+      int m_nInputEventsDataSize;
+            
       /* Helpers */
       void _FreeReplay(void);
       

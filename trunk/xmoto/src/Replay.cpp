@@ -37,6 +37,8 @@ namespace vapp {
   Replay::Replay() {
     m_bFinished = false;
     m_fFinishTime = 0.0f;
+    m_pcInputEventsData = NULL;
+    m_nInputEventsDataSize = 0;
   }
       
   Replay::~Replay() {
@@ -51,6 +53,8 @@ namespace vapp {
       }
     }
     m_Chunks.clear();
+    
+    if(m_pcInputEventsData != NULL) delete [] m_pcInputEventsData;
   }
   
   void Replay::finishReplay(bool bFinished,float fFinishTime) {
@@ -66,6 +70,8 @@ namespace vapp {
     m_PlayerName = Player;
     m_fFrameRate = fFrameRate;
     m_nStateSize = nStateSize;    
+    
+    initOutput(1024);
   }
   
   void Replay::saveReplay(void) {
@@ -77,7 +83,7 @@ namespace vapp {
     }        
     
     /* Write header */
-    FS::writeByte(pfh,0); /* Version: 0 */
+    FS::writeByte(pfh,1); /* Version: 1 */
     FS::writeInt(pfh,0x12345678); /* Endianness guard */
     FS::writeString(pfh,m_LevelID);
     FS::writeString(pfh,m_PlayerName);
@@ -86,8 +92,18 @@ namespace vapp {
     FS::writeBool(pfh,m_bFinished);
     FS::writeFloat(pfh,m_fFinishTime);
     
+    /* Events */
+    const char *pcUncompressedEvents = convertOutputToInput();
+    int nUncompressedEventsSize = numRemainingBytes();
+    FS::writeInt(pfh,nUncompressedEventsSize);
+    
+    /* No compression */
+    FS::writeBool(pfh,false); /* compression: false */
+    FS::writeBuf(pfh,(char *)pcUncompressedEvents,nUncompressedEventsSize);
+        
+    /* Chunks */
     if(m_Chunks.empty()) FS::writeInt(pfh,0);
-    else {
+    else {        
       FS::writeInt(pfh,m_Chunks.size());
     
       /* Write chunks */    
@@ -141,7 +157,7 @@ namespace vapp {
     int nVersion = FS::readByte(pfh); 
     
     /* Supported version? */
-    if(nVersion != 0) {
+    if(nVersion != 0 && nVersion != 1) {
       FS::closeFile(pfh);
       Log("** Warning ** : Unsupported replay file version (%d): %s",nVersion,(std::string("Replays/") + FileName).c_str());
       return "";
@@ -171,7 +187,24 @@ namespace vapp {
       m_bFinished = FS::readBool(pfh);
       m_fFinishTime = FS::readFloat(pfh);
       
-//      printf("[open replay!   finished=%d   finishtime=%f\n",m_bFinished,m_fFinishTime);
+      /* Version 1 includes event data */
+      if(nVersion == 1) {
+        /* Read uncompressed size */
+        m_nInputEventsDataSize = FS::readInt(pfh);
+        m_pcInputEventsData = new char [m_nInputEventsDataSize];
+        
+        /* Compressed? */
+        if(FS::readBool(pfh)) {
+          /* Compressed */          
+        }
+        else {
+          /* Not compressed */
+          FS::readBuf(pfh,m_pcInputEventsData,m_nInputEventsDataSize);
+        }
+
+        /* Set up input stream */
+        initInput(m_pcInputEventsData,m_nInputEventsDataSize);        
+      }
       
       /* Read chunks */
       int nNumChunks = FS::readInt(pfh);
@@ -360,197 +393,6 @@ namespace vapp {
       }
     }
   }  
-
-  //Replay::Replay() {
-  //  /* No file */
-  //  m_pfh = NULL;
-  //}
-  //    
-  //Replay::~Replay() {
-  //  /* Close file if there is one */
-  //  if(m_pfh != NULL) {       
-  //    printf("REPLAY END!\n");
-  //    FS::closeFile(m_pfh);
-  //    m_pfh = NULL;
-  //  }
-  //}        
-  //
-  //void Replay::finishReplay(void) {
-  //  /* Close files and stuff */
-  //  if(m_pfh != NULL) {
-  //    printf("REPLAY END (2)!\n");
-  //    FS::closeFile(m_pfh);
-  //    m_pfh = NULL;
-  //  }
-  //}
-  //
-  //void Replay::createReplay(const std::string &FileName,const std::string &LevelID,const std::string &Player,float fFrameRate) {
-  //  /* Do we already have an open file? If so close it */
-  //  if(m_pfh != NULL) {
-  //    FS::closeFile(m_pfh);
-  //    m_pfh = NULL;
-  //  }
-  //  
-  //  /* Open file for output */
-  //  m_pfh = FS::openOFile(std::string("Replays/") + FileName);
-  //  if(m_pfh == NULL) {
-  //    Log("** Warning ** : Failed to open replay file for output: %s",(std::string("Replays/") + FileName).c_str());
-  //    return;
-  //  }
-  //  
-  //  /* Write header */
-  //  FS::writeByte(m_pfh,0); /* Version: 0 */    
-  //  
-  //  FS::writeString(m_pfh,LevelID);
-  //  FS::writeString(m_pfh,Player);
-  //  FS::writeFloat(m_pfh,fFrameRate);
-  //}
-  //
-  //std::string Replay::openReplay(const std::string &FileName,float *pfFrameRate,std::string &Player) {
-  //  std::string LevelID;
-
-  //  /* Do we already have an open file? If so close it */
-  //  if(m_pfh != NULL) {
-  //    FS::closeFile(m_pfh);
-  //    m_pfh = NULL;
-  //  }
-  //  
-  //  /* Open file for input */
-  //  m_pfh = FS::openIFile(std::string("Replays/") + FileName);
-  //  if(m_pfh == NULL) {
-  //    /* Try adding a .rpl extension */
-  //    m_pfh = FS::openIFile(std::string("Replays/") + FileName + std::string(".rpl"));
-  //    if(m_pfh == NULL) {    
-  //      Log("** Warning ** : Failed to open replay file for input: %s",(std::string("Replays/") + FileName).c_str());
-  //      return "";
-  //    }
-  //  }
-  //  
-  //  /* Read header */
-  //  m_nVersion = FS::readByte(m_pfh); 
-  //  
-  //  /* Supported version? */
-  //  if(m_nVersion != 0) {
-  //    FS::closeFile(m_pfh);
-  //    m_pfh = NULL;
-  //    Log("** Warning ** : Unsupported replay file version (%d): %s",(std::string("Replays/") + FileName).c_str(),m_nVersion);
-  //    return "";
-  //  }
-  //  else {
-  //    /* Read level ID */
-  //    LevelID = FS::readString(m_pfh);
-  //    
-  //    /* Read player name */
-  //    Player = FS::readString(m_pfh);
-  //    
-  //    /* Read replay frame rate */
-  //    float fFrameRate = FS::readFloat(m_pfh);
-  //    if(pfFrameRate != NULL) *pfFrameRate = fFrameRate;            
-  //    
-  //    /* Remember this position */
-  //    m_nHeaderEnd = FS::getOffset(m_pfh);
-  //  }
-  //  
-  //  return LevelID;
-  //}
-  //    
-  //void Replay::storeState(const char *pcState,int nStateSize) {
-  //  /* If we have a file, save state */
-  //  if(m_pfh != NULL) {
-  //    /* Write state */
-  //    FS::writeBuf(m_pfh,(char *)pcState,nStateSize);
-  //  }
-  //}
-  //
-  //bool Replay::loadState(char *pcState,int nStateSize) {
-  //  /* If we have a file, load state */
-  //  if(m_pfh != NULL) {
-  //    /* Read state */
-  //    if(m_nVersion == 0) {
-  //      if(!FS::readBuf(m_pfh,pcState,nStateSize))
-  //        return false;
-  //        
-  //      /* OK */
-  //      return true; 
-  //    }      
-  //  }
-  //     
-  //  /* Not ok */
-  //  return false;
-  //}
-  //
-  //std::vector<ReplayInfo *> Replay::createReplayList(const std::string &PlayerName) {
-  //  std::vector<ReplayInfo *> Ret;
-  //  
-  //  /* Find all replays done by the given player name */
-  //  std::vector<std::string> ReplayFiles = FS::findPhysFiles("Replays/*.rpl");
-  //  for(int i=0;i<ReplayFiles.size();i++) {
-  //    /* Try opening it */
-  //    FileHandle *pfh = FS::openIFile(ReplayFiles[i]);
-  //    if(pfh != NULL) {
-  //      int nVersion = FS::readByte(pfh);
-  //      if(nVersion == 0) {
-  //        std::string LevelID = FS::readString(pfh);
-  //        std::string Player = FS::readString(pfh);
-  //        float fFrameRate = FS::readFloat(pfh);
-  //        
-  //        if((PlayerName=="" || PlayerName==Player) && FS::getFileBaseName(ReplayFiles[i]) != "Latest") {
-  //          /* Fine. */
-  //          ReplayInfo *pInfo = new ReplayInfo;
-  //          pInfo->Level = LevelID;
-  //          pInfo->Name = FS::getFileBaseName(ReplayFiles[i]);
-  //          pInfo->Player = Player;
-  //          pInfo->fFrameRate = fFrameRate;
-  //          
-  //          Ret.push_back(pInfo);
-  //        }
-  //      }
-  //      else {
-  //        /* Not supported */
-  //      }
-  //    
-  //      FS::closeFile(pfh);
-  //    }
-  //  }
-  //  
-  //  /* Super. */
-  //  return Ret;
-  //}
-  //
-  //void Replay::freeReplayList(std::vector<ReplayInfo *> &List) {
-  //  /* Free list items */
-  //  for(int i=0;i<List.size();i++)
-  //    delete List[i];
-  //  List.clear();
-  //}
-  //
-  //void Replay::fastforward(int nStateSize,float fSeconds,float fFrameRate) {
-  //  if(m_pfh != NULL) {
-  //    /* How many states should we move forward? */
-  //    int nNumStates = (int)(fSeconds * fFrameRate);
-  //    
-  //    if(m_nVersion == 0) {
-  //      /* Move file reading cursor */
-  //      int nNewOffset = FS::getOffset(m_pfh) + nNumStates * nStateSize;
-  //      if(nNewOffset > FS::getLength(m_pfh) - nStateSize) nNewOffset = FS::getLength(m_pfh) - nStateSize;
-  //      FS::setOffset(m_pfh,nNewOffset);
-  //    }
-  //  }
-  //}  
-
-  //void Replay::fastrewind(int nStateSize,float fSeconds,float fFrameRate) {
-  //  if(m_pfh != NULL) {
-  //    /* How many states should we move backward? */
-  //    int nNumStates = (int)(fSeconds * fFrameRate);
-  //    
-  //    if(m_nVersion == 0) {
-  //      /* Move file reading cursor */
-  //      int nNewOffset = FS::getOffset(m_pfh) - nNumStates * nStateSize;
-  //      if(nNewOffset < m_nHeaderEnd) nNewOffset = m_nHeaderEnd;
-  //      FS::setOffset(m_pfh,nNewOffset);
-  //    }
-  //  }
-  //}  
   
 };
 

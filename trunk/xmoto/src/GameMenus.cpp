@@ -608,29 +608,47 @@ namespace vapp {
     if(pList != NULL && pLV_BestTimes_All != NULL && pLV_BestTimes_Personal != NULL && m_pPlayer != NULL &&
        pLV_Replays_Show != NULL) {
       std::vector<ReplayInfo *> Replays;
-       
-      /* Personal or all replays? */
-      if(pLV_Replays_All->getChecked()) {
-        Replays = Replay::createReplayList("",LevelID);
-      }
-      else if(pLV_Replays_Personal->getChecked()) {
-        Replays = Replay::createReplayList(m_pPlayer->PlayerName,LevelID);
-      }
       
-      /* Create list */
-      pList->clear();
-      for(int i=0;i<Replays.size();i++) {
-        UIListEntry *pEntry = pList->addEntry(Replays[i]->Name);
-        pEntry->Text.push_back(Replays[i]->Player);
+      /* If level is scripted, keep list empty */
+      LevelSrc *pLevelSrc = _FindLevelByID(LevelID);
+      if(pLevelSrc != NULL && pLevelSrc->isScripted()) {
+        pList->clear();
+        pList->addEntry(GAMETEXT_LEVELISSCRIPTED);
         
-        if(Replays[i]->fFinishTime < 0)
-          pEntry->Text.push_back(GAMETEXT_NOTFINISHED);
-        else
-          pEntry->Text.push_back(formatTime(Replays[i]->fFinishTime));
+        pLV_Replays_Personal->enableWindow(false);
+        pLV_Replays_All->enableWindow(false);
+        pLV_Replays_Show->enableWindow(false);
+        pList->enableWindow(false);
       }
-      
-      /* Clean up */
-      Replay::freeReplayList(Replays);
+      else {       
+        /* Personal or all replays? */
+        if(pLV_Replays_All->getChecked()) {
+          Replays = Replay::createReplayList("",LevelID);
+        }
+        else if(pLV_Replays_Personal->getChecked()) {
+          Replays = Replay::createReplayList(m_pPlayer->PlayerName,LevelID);
+        }
+        
+        /* Create list */
+        pList->clear();
+        for(int i=0;i<Replays.size();i++) {
+          UIListEntry *pEntry = pList->addEntry(Replays[i]->Name);
+          pEntry->Text.push_back(Replays[i]->Player);
+          
+          if(Replays[i]->fFinishTime < 0)
+            pEntry->Text.push_back(GAMETEXT_NOTFINISHED);
+          else
+            pEntry->Text.push_back(formatTime(Replays[i]->fFinishTime));
+        }
+        
+        /* Clean up */
+        Replay::freeReplayList(Replays);
+
+        pLV_Replays_Personal->enableWindow(true);
+        pLV_Replays_All->enableWindow(true);
+        pLV_Replays_Show->enableWindow(true);
+        pList->enableWindow(true);
+      }
     }
   }
   
@@ -788,7 +806,7 @@ namespace vapp {
       /* Show replay */
       if(pLV_Replays_List->getSelected() >= 0 && pLV_Replays_List->getSelected() < pLV_Replays_List->getEntries().size()) {
         UIListEntry *pListEntry = pLV_Replays_List->getEntries()[pLV_Replays_List->getSelected()];
-        if(pListEntry != NULL) {
+        if(pListEntry != NULL && !pListEntry->Text.empty() && pListEntry->Text[0] != GAMETEXT_LEVELISSCRIPTED) {
           /* Do it captain */
           pLV_Replays_Show->setClicked(false);
           m_pLevelInfoViewer->showWindow(false);

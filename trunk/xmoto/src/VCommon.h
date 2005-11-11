@@ -35,12 +35,19 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   #include <windows.h>
 #endif
 
-#include <GL/gl.h>
+#if defined(__APPLE__) && defined(__MACH__)
+  #include <OpenGL/gl.h>  /* Header File For The OpenGL Library */
+#else
+  #include <GL/gl.h>      /* Header File For The OpenGL Library */
+#endif
+
+#include <stddef.h>
 
 #if defined(WIN32) && defined(_MSC_VER)
   #define GL_GLEXT_PROTOTYPES 1
   #include "glext.h"
 #else
+
   /* This aren't elegant. It would be nicer to use glext.h, but I can't get
      it to work :( */
   #define GL_ARRAY_BUFFER_ARB 0x8892
@@ -50,11 +57,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   typedef void (*PFNGLDELETEBUFFERSARBPROC)(GLsizei n, const GLuint *buffers); 
   typedef void (*PFNGLGENBUFFERSARBPROC)(GLsizei n, GLuint *buffers);
 
-  #if !defined(__x86_64__)
-    typedef void (*PFNGLBUFFERDATAARBPROC)(GLenum target, int size, const GLvoid *data, GLenum usage);
-  #else
-    typedef void (*PFNGLBUFFERDATAARBPROC)(GLenum target, GLsizeiptrARB size, const GLvoid *data, GLenum usage);
-  #endif
+  typedef size_t GLsizeiptrARB; /* is this always true? */
+
+  typedef void (*PFNGLBUFFERDATAARBPROC)(GLenum target, GLsizeiptrARB size, const GLvoid *data, GLenum usage);
 
 #endif
 #include <SDL/SDL.h>
@@ -62,11 +67,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <string>
 #include <vector>
+#include <ostream>
+#include <istream>
 
 #include <stdio.h>
 #include <math.h>
 
-#if !defined(WIN32) 
+#if !defined(WIN32) && !defined(__APPLE__) && !defined(__MACH__)
   #include <endian.h>
 #endif
 

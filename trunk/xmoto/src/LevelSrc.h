@@ -156,7 +156,8 @@ namespace vapp {
       
       LevelEntity *createEntity(std::string TypeID,float x,float y);
                               
-      /* Data interface */            
+      /* Data interface */ 
+      bool isScripted(void) {if(m_ScriptFile!="") return true; return false;}           
       std::string &getFileName(void) {return m_FileName;}
       void setFileName(const std::string &File) {m_FileName = File;}     
       LevelInfo *getLevelInfo(void) {return &m_Info;}

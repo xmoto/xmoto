@@ -134,11 +134,11 @@ namespace vapp {
       /* Use VBO optimization? */
       if(getParent()->useVBOs()) {
         /* Copy static coordinates unto video memory */
-        getParent()->glGenBuffersARB(1,&pPoly->nVertexBufferID);
+        getParent()->glGenBuffersARB(1, (GLuint *) &pPoly->nVertexBufferID);
         getParent()->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nVertexBufferID);
         getParent()->glBufferDataARB(GL_ARRAY_BUFFER_ARB,pPoly->nNumVertices*2*sizeof(float),(void *)pPoly->pVertices,GL_STATIC_DRAW_ARB);
         
-        getParent()->glGenBuffersARB(1,&pPoly->nTexCoordBufferID);
+        getParent()->glGenBuffersARB(1, (GLuint *) &pPoly->nTexCoordBufferID);
         getParent()->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nTexCoordBufferID);
         getParent()->glBufferDataARB(GL_ARRAY_BUFFER_ARB,pPoly->nNumVertices*2*sizeof(float),(void *)pPoly->pTexCoords,GL_STATIC_DRAW_ARB);
       }
@@ -164,8 +164,8 @@ namespace vapp {
     for(int i=0;i<m_Geoms.size();i++) { 
       for(int j=0;j<m_Geoms[i]->Polys.size();j++) { 
         if(m_Geoms[i]->Polys[j]->nVertexBufferID) {
-          getParent()->glDeleteBuffersARB(1,&m_Geoms[i]->Polys[j]->nVertexBufferID);
-          getParent()->glDeleteBuffersARB(1,&m_Geoms[i]->Polys[j]->nTexCoordBufferID);
+          getParent()->glDeleteBuffersARB(1, (GLuint *) &m_Geoms[i]->Polys[j]->nVertexBufferID);
+          getParent()->glDeleteBuffersARB(1, (GLuint *) &m_Geoms[i]->Polys[j]->nTexCoordBufferID);
         }
       
         delete [] m_Geoms[i]->Polys[j]->pTexCoords;
@@ -284,6 +284,7 @@ namespace vapp {
     /* Perform scaling/translation */
     float fScale = 0.195f;
     glScalef(fScale * ((float)getParent()->getDispHeight()) / getParent()->getDispWidth(),fScale,1);
+    //glRotatef(getGameObject()->getTime()*100,0,0,1); /* Uncomment this line if you want to vomit :) */
     glTranslatef(m_Scroll.x,m_Scroll.y,0);
     
     glMatrixMode(GL_PROJECTION);

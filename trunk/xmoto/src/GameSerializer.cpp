@@ -28,6 +28,108 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 namespace vapp {
 
   /*===========================================================================
+  Decoding of event stream
+  ===========================================================================*/
+  void MotoGame::unserializeGameEvents(DBuffer &Buffer) {
+    /* Continue until buffer is empty */
+    bool bError = false;
+    while(Buffer.numRemainingBytes() > sizeof(float) && !bError) {
+      /* Get event time */
+      float fEventTime;
+      Buffer >> fEventTime;
+      
+      /* Get event type */
+      GameEventType EventType;
+      Buffer >> EventType;
+      
+      /* What now depends on event type */
+      switch(EventType) {
+        case GAME_EVENT_ENTITY_DESTROYED:
+          GameEvent Event;
+          
+          /* Read entity name */
+          int n;
+          Buffer >> n;
+          if(n >= sizeof(Event.u.EntityDestroyed.cEntityID)) {
+            Log("** Warning ** : Entity name in replay too long, ignoring all events!");
+            bError = true;
+          }
+          else {
+            Buffer.readBuf(Event.u.EntityDestroyed.cEntityID,n);
+            Event.u.EntityDestroyed.cEntityID[n] = '\0';
+            
+            /* Read entity type */
+            Buffer >> Event.u.EntityDestroyed.Type;
+            
+            /* Read size and pos */
+            Buffer >> Event.u.EntityDestroyed.fSize;
+            Buffer >> Event.u.EntityDestroyed.fPosX;
+            Buffer >> Event.u.EntityDestroyed.fPosY;            
+            
+            /* Seems ok, add it */
+            RecordedGameEvent *p = new RecordedGameEvent;
+            p->fTime = fEventTime;
+            p->bPassed = false;
+            p->Event.Type = EventType;
+            p->Event.nSeq = 0;
+            memcpy(&p->Event.u,&Event.u,sizeof(Event.u));
+            m_ReplayEvents.push_back(p);
+          }
+          break;
+        default:
+          Log("** Warning ** : Failed to parse game events in replay, it will probably not play right!");
+          bError = true;
+          break;
+      }
+    }
+  }
+
+  /*===========================================================================
+  Encoding of event buffer 
+  ===========================================================================*/
+  void MotoGame::_SerializeGameEventQueue(DBuffer &Buffer,GameEvent *pEvent) {
+    /* Encode this event */
+    //printf("encode event %d:\n",pEvent->nSeq);
+    
+    switch(pEvent->Type) {
+      case GAME_EVENT_ENTITY_DESTROYED:
+        {          
+          int i;
+          Buffer << getTime();
+          Buffer << pEvent->Type;
+          Buffer << (i=strlen(pEvent->u.EntityDestroyed.cEntityID));
+          Buffer.writeBuf(pEvent->u.EntityDestroyed.cEntityID,i);
+          Buffer << pEvent->u.EntityDestroyed.Type;
+          Buffer << pEvent->u.EntityDestroyed.fSize;
+          Buffer << pEvent->u.EntityDestroyed.fPosX;
+          Buffer << pEvent->u.EntityDestroyed.fPosY;
+          //printf("  ENTITY_DESTROYED\n");
+          //printf("    id=%s\n",pEvent->u.EntityDestroyed.cEntityID);
+          //printf("    type=%d\n",pEvent->u.EntityDestroyed.Type);
+          //printf("    size=%f\n",pEvent->u.EntityDestroyed.fSize);
+          //printf("    x,y=%f,%f\n",pEvent->u.EntityDestroyed.fPosX,pEvent->u.EntityDestroyed.fPosY);          
+        }
+        break;
+      case GAME_EVENT_PLAYER_DIES:
+        {
+        }
+        break;
+      case GAME_EVENT_PLAYER_ENTERS_ZONE:
+        {
+        }
+        break;
+      case GAME_EVENT_PLAYER_LEAVES_ZONE:
+        {
+        }
+        break;
+      case GAME_EVENT_PLAYER_TOUCHES_ENTITY:
+        {
+        }
+        break;
+    }            
+  }
+
+  /*===========================================================================
   Matrix encodings
   ===========================================================================*/
   unsigned short MotoGame::_MatrixTo16Bits(const float *pfMatrix) {

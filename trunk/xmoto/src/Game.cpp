@@ -78,6 +78,9 @@ namespace vapp {
             m_nFrame = 0;
             m_Renderer.prepareForNewLevel();
             
+            /* Reconstruct game events that are going to happen during the replay */
+            m_MotoGame.unserializeGameEvents( *m_pReplay );            
+            
             /* Show help string */
             if(!isNoGraphics()) {
               PlayerTimeEntry *pBestTime = m_Profiles.getBestTime(LevelID);
@@ -153,7 +156,7 @@ namespace vapp {
           if(m_pReplay != NULL) delete m_pReplay;
           m_pReplay = NULL;
           
-          if(m_bRecordReplays) {
+          if(m_bRecordReplays && !pLevelSrc->isScripted()) {
             m_pReplay = new Replay;
             m_pReplay->createReplay("Latest.rpl",pLevelSrc->getID(),m_pPlayer->PlayerName,m_fReplayFrameRate,sizeof(SerializedBikeState));
           }
@@ -697,11 +700,11 @@ namespace vapp {
           m_nFrame++;
                     
           /* Update game */
-          m_MotoGame.updateLevel( PHYS_STEP_SIZE,NULL );                
+          m_MotoGame.updateLevel( PHYS_STEP_SIZE,NULL,m_pReplay );                
           
           if(m_b50FpsMode) /* if we're aiming for 50 fps instead of 100, do an extra step now */
-            m_MotoGame.updateLevel( PHYS_STEP_SIZE,NULL );      
-            
+            m_MotoGame.updateLevel( PHYS_STEP_SIZE,NULL,m_pReplay );      
+
           if(m_bEnableEngineSound) {
             /* Update engine RPM */
             m_EngineSound.setRPM( m_MotoGame.getBikeEngineRPM() ); 
@@ -724,7 +727,7 @@ namespace vapp {
           if(m_pReplay != NULL) {        
             if(m_pReplay->loadState((char *)&BikeState)) {            
               /* Update game */
-              m_MotoGame.updateLevel( PHYS_STEP_SIZE,&BikeState );                
+              m_MotoGame.updateLevel( PHYS_STEP_SIZE,&BikeState,m_pReplay ); 
 
               if(m_bEnableEngineSound) {
                 /* Update engine RPM */

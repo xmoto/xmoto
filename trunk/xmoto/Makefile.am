@@ -18,7 +18,9 @@ common_SOURCES = src/BuiltInFont.cpp src/Image.cpp src/LevelSrc.cpp \
 	src/VApp.h src/VBezier.h src/VCommon.h src/VDraw.h \
 	src/VExcept.h src/VFileIO.h src/VMath.h src/VTexture.h src/VXml.h \
 	src/BuildConfig.h \
-	src/BuiltInFont.h
+	src/BuiltInFont.h \
+	src/DBuffer.cpp \
+	src/DBuffer.h
 
 bin_PROGRAMS = xmoto xmoto-edit
 

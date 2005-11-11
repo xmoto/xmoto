@@ -27,45 +27,46 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VMath.h"
 #include "LevelSrc.h"
 #include "BSP.h"
+#include "DBuffer.h"
 
 #define GAME_EVENT_QUEUE_SIZE				128
 #define GAME_EVENT_OUTGOING_BUFFER  65536
 
 namespace vapp {
 
-	/*===========================================================================
-	Defines
+  /*===========================================================================
+  Defines
   ===========================================================================*/
   
   /* This is the magic depth factor :)  - tweak to obtain max. stability */
   #define DEPTH_FACTOR    2
 
-	/*===========================================================================
-	Driving directions
+  /*===========================================================================
+  Driving directions
   ===========================================================================*/
   enum DriveDir {
     DD_RIGHT,
     DD_LEFT
   };
 
-	/*===========================================================================
-	Edge effects
+  /*===========================================================================
+  Edge effects
   ===========================================================================*/
   enum EdgeEffect {
     EE_UNASSIGNED,
     EE_GRASS
   };
 
-	/*===========================================================================
-	Dummy helper - a point we'd like to track graphically
+  /*===========================================================================
+  Dummy helper - a point we'd like to track graphically
   ===========================================================================*/
   struct DummyHelper {
     Vector2f Pos;         /* position */
     float r,g,b;          /* What color? */
   };
 
-	/*===========================================================================
-	Controller struct
+  /*===========================================================================
+  Controller struct
   ===========================================================================*/
   struct BikeController {
     float fDrive;         /* Drive throttle (0-1) */
@@ -79,15 +80,15 @@ namespace vapp {
     bool bDebug1;
   };
 
-	/*===========================================================================
-	Convex block vertex
+  /*===========================================================================
+  Convex block vertex
   ===========================================================================*/
   struct ConvexBlockVertex {
     Vector2f P;                                   /* Position of vertex */
   };
 
-	/*===========================================================================
-	Convex block
+  /*===========================================================================
+  Convex block
   ===========================================================================*/
   struct ConvexBlock {
     ConvexBlock() {
@@ -98,8 +99,8 @@ namespace vapp {
     LevelBlock *pSrcBlock;                        /* Source block */
   };
 
-	/*===========================================================================
-	Overlay edge (grass, effects, etc)
+  /*===========================================================================
+  Overlay edge (grass, effects, etc)
   ===========================================================================*/
   struct OverlayEdge {
     OverlayEdge() {
@@ -111,8 +112,8 @@ namespace vapp {
     LevelBlock *pSrcBlock;                        /* Source block */
   };
 
-	/*===========================================================================
-	Bike params
+  /*===========================================================================
+  Bike params
   ===========================================================================*/
   struct BikeParams {
     /* Geometrical */
@@ -143,8 +144,8 @@ namespace vapp {
     float fMaxBrake,fMaxEngine;
   };
 
-	/*===========================================================================
-	Bike anchor points (relative to center of mass)
+  /*===========================================================================
+  Bike anchor points (relative to center of mass)
   ===========================================================================*/
   struct BikeAnchors {
     Vector2f Tp;          /* Point on the ground, exactly between the wheels */
@@ -172,8 +173,8 @@ namespace vapp {
     Vector2f PFp2;        /* Player foot center (Alt.) */
   };
 
-	/*===========================================================================
-	Serialized bike state
+  /*===========================================================================
+  Serialized bike state
   ===========================================================================*/
   #define SER_BIKE_STATE_DIR_LEFT         0x01
   #define SER_BIKE_STATE_DIR_RIGHT        0x02
@@ -200,8 +201,8 @@ namespace vapp {
     char cKneeX,cKneeY;               /* Knee position */
   };
 
-	/*===========================================================================
-	Bike state 
+  /*===========================================================================
+  Bike state 
   ===========================================================================*/
   struct BikeState {
     DriveDir Dir;         /* Driving left or right? */
@@ -406,6 +407,7 @@ namespace vapp {
   };
   
   struct GameEvent {
+    int nSeq;                         /* Sequence number */
 		GameEventType Type;								/* Type of event */
 		
 		union GameEvent_u {								
@@ -425,6 +427,12 @@ namespace vapp {
 			GameEventPlayerTouchesEntity PlayerTouchesEntity;
 		} u;		
   };
+  
+  struct RecordedGameEvent {
+    float fTime;                    /* Time of event */
+    GameEvent Event;                /* Event itself */
+    bool bPassed;                   /* Whether we have passed it */
+  };
     
 	/*===========================================================================
 	Game object
@@ -437,7 +445,7 @@ namespace vapp {
     
       /* Methods */
       void playLevel(LevelSrc *pLevelSrc);
-      void updateLevel(float fTimeStep,SerializedBikeState *pReplayState);
+      void updateLevel(float fTimeStep,SerializedBikeState *pReplayState,DBuffer *pEventReplayBuffer);
       void endLevel(void);
       
       void touchEntity(Entity *pEntity,bool bHead); 
@@ -451,6 +459,7 @@ namespace vapp {
       void clearGameMessages(void);
       
       void getSerializedBikeState(SerializedBikeState *pState);
+      void unserializeGameEvents(DBuffer &Buffer);
 
       float getBikeEngineRPM(void);
       
@@ -511,6 +520,8 @@ namespace vapp {
       std::vector<Entity *> m_Entities;   /* Entities */
       dWorldID m_WorldID;                 /* World ID */
       
+      std::vector<RecordedGameEvent *> m_ReplayEvents; /* Events reconstructed from replay */
+      
       std::vector<Entity *> m_FSprites;   /* Foreground sprites */
       std::vector<Entity *> m_BSprites;   /* Background sprites */
       std::vector<OverlayEdge *> m_OvEdges;/* Overlay edges */
@@ -523,6 +534,8 @@ namespace vapp {
       BikeController m_BikeC;             /* Bike controller */
       
       bool m_bFinished,m_bDead;           /* Yir */
+      
+      int m_nLastEventSeq;
       
       /* Wheels spinning dirt up... muzakka! :D */
       bool m_bWheelSpin;                  /* Do it captain */
@@ -600,6 +613,11 @@ namespace vapp {
       float _Map8BitsToCoord(float fRef,float fMaxDiff,char c);
       unsigned short _MatrixTo16Bits(const float *pfMatrix);
       void _16BitsToMatrix(unsigned short n16,float *pfMatrix);
+      void _SerializeGameEventQueue(DBuffer &Buffer,GameEvent *pEvent);
+      
+      void _UpdateReplayEvents(void);
+      void _HandleReplayEvent(GameEvent *pEvent);
+      void _HandleReverseReplayEvent(GameEvent *pEvent);
       
       /* MPhysics.cpp */
       void _UpdatePhysics(float fTimeStep);
@@ -607,15 +625,7 @@ namespace vapp {
       void _UninitPhysics(void);
       void _PrepareBikePhysics(Vector2f StartPos);
       void _PrepareRider(Vector2f StartPos);
-      
-      /* Outgoing event buffer */
-      //void _OEBufferWrite(const char *pcBuf,int nBufSize);
-      //void oeBufferRead(char *pcBuf,int nBufSize);
-      //int oeBufferGetNumPendingBytes(void);      
-      //
-      //char m_cOEBuffer[GAME_EVENT_OUTGOING_BUFFER]
-      //int m_nOEBufferReadIdx,m_nOEBufferWriteIdx;
-      
+            
     };
 
 };

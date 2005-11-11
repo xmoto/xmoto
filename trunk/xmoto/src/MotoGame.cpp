@@ -170,7 +170,7 @@ namespace vapp {
   /*===========================================================================
   Update game
   ===========================================================================*/
-  void MotoGame::updateLevel(float fTimeStep,SerializedBikeState *pReplayState) {
+  void MotoGame::updateLevel(float fTimeStep,SerializedBikeState *pReplayState,DBuffer *pDBuffer) {
     /* Dummies are small markers that can show different things during debugging */
     resetDummies();
     
@@ -236,51 +236,58 @@ namespace vapp {
     if(pReplayState == NULL) {
       /* Update physics */
       _UpdatePhysics(fTimeStep);
+          
+      /* Handle events generated this update */
+      while(getNumPendingGameEvents() > 0) {
+			  GameEvent *pEvent = getNextGameEvent();
+			  if(pEvent != NULL) {
+			    /* Encode event */
+			    _SerializeGameEventQueue(*pDBuffer,pEvent);
+			  
+				  /* What event? */
+				  switch(pEvent->Type) {
+					  case GAME_EVENT_PLAYER_DIES:
+					    {
+						    m_bDead = true;
+						  }
+						  break;
+					  case GAME_EVENT_PLAYER_ENTERS_ZONE:						
+					    {
+						    /* Notify script */
+						    scriptCallTblVoid( pEvent->u.PlayerEntersZone.pZone->ID,"OnEnter" );
+						  }
+						  break;
+					  case GAME_EVENT_PLAYER_LEAVES_ZONE:
+					    {
+						    /* Notify script */
+						    scriptCallTblVoid( pEvent->u.PlayerEntersZone.pZone->ID,"OnLeave" );						
+						  }
+						  break;
+					  case GAME_EVENT_PLAYER_TOUCHES_ENTITY:
+					    {
+						    Entity *pEntityToTouch = findEntity(pEvent->u.PlayerTouchesEntity.cEntityID);
+						    if(pEntityToTouch != NULL) {
+							    touchEntity(pEntityToTouch,pEvent->u.PlayerTouchesEntity.bHead);
+						    }
+						  }
+						  break;
+					  case GAME_EVENT_ENTITY_DESTROYED: 
+					    {
+						    /* Destroy entity */
+						    Entity *pEntityToDestroy = findEntity(pEvent->u.EntityDestroyed.cEntityID);
+						    if(pEntityToDestroy != NULL) {
+							    deleteEntity(pEntityToDestroy);
+						    }
+						  }
+						  break;
+				  }
+			  }
+			  else break;
+      }
     }
-    
-    /* Handle events generated this update */
-    while(getNumPendingGameEvents() > 0) {
-			GameEvent *pEvent = getNextGameEvent();
-			if(pEvent != NULL) {
-				/* What event? */
-				switch(pEvent->Type) {
-					case GAME_EVENT_PLAYER_DIES:
-					  {
-						  m_bDead = true;
-						}
-						break;
-					case GAME_EVENT_PLAYER_ENTERS_ZONE:						
-					  {
-						  /* Notify script */
-						  scriptCallTblVoid( pEvent->u.PlayerEntersZone.pZone->ID,"OnEnter" );
-						}
-						break;
-					case GAME_EVENT_PLAYER_LEAVES_ZONE:
-					  {
-						  /* Notify script */
-						  scriptCallTblVoid( pEvent->u.PlayerEntersZone.pZone->ID,"OnLeave" );						
-						}
-						break;
-					case GAME_EVENT_PLAYER_TOUCHES_ENTITY:
-					  {
-						  Entity *pEntityToTouch = findEntity(pEvent->u.PlayerTouchesEntity.cEntityID);
-						  if(pEntityToTouch != NULL) {
-							  touchEntity(pEntityToTouch,pEvent->u.PlayerTouchesEntity.bHead);
-						  }
-						}
-						break;
-					case GAME_EVENT_ENTITY_DESTROYED: 
-					  {
-						  /* Destroy entity */
-						  Entity *pEntityToDestroy = findEntity(pEvent->u.EntityDestroyed.cEntityID);
-						  if(pEntityToDestroy != NULL) {
-							  deleteEntity(pEntityToDestroy);
-						  }
-						}
-						break;
-				}
-			}
-			else break;
+    else {
+      /* Well, handle replay events instead */
+      _UpdateReplayEvents();
     }
 
     /* Entities scheduled for termination? */
@@ -390,6 +397,8 @@ namespace vapp {
     
     m_nStillFrames = 0;
     m_nNumDummies = 0;
+    
+    m_nLastEventSeq = 0;
     
     m_Arrow.nArrowPointerMode = 0;
     
@@ -518,6 +527,11 @@ namespace vapp {
     for(int i=0;i<m_GameMessages.size();i++)
       delete m_GameMessages[i];
     m_GameMessages.clear();
+    
+    /* Get rid of replay events */
+    for(int i=0;i<m_ReplayEvents.size();i++)
+      delete m_ReplayEvents[i];
+    m_ReplayEvents.clear();
   }
 
   /*===========================================================================
@@ -939,6 +953,7 @@ namespace vapp {
 			/* Yup. */
 			GameEvent *pEvent = &m_GameEventQueue[m_nGameEventQueueWriteIdx];			
 			pEvent->Type = Type;
+			pEvent->nSeq = m_nLastEventSeq++;
 			m_nGameEventQueueWriteIdx++;			
 			if(m_nGameEventQueueWriteIdx == GAME_EVENT_QUEUE_SIZE) {
 				m_nGameEventQueueWriteIdx = 0;
@@ -969,7 +984,6 @@ namespace vapp {
 
   int MotoGame::getNumPendingGameEvents(void) {
 		if(m_nGameEventQueueReadIdx < m_nGameEventQueueWriteIdx) {
-		  //printf("Hoorse %d %d\n",m_nGameEventQueueWriteIdx , m_nGameEventQueueReadIdx);
 			return m_nGameEventQueueWriteIdx - m_nGameEventQueueReadIdx;
 		}
 		else if(m_nGameEventQueueReadIdx > m_nGameEventQueueWriteIdx) {
@@ -978,5 +992,82 @@ namespace vapp {
 		
 		return 0;
   }
+
+  /*===========================================================================
+  Update recorded replay events
+  ===========================================================================*/
+  void MotoGame::_UpdateReplayEvents(void) {
+    /* Start looking for events that should be passed */
+    for(int i=0;i<m_ReplayEvents.size();i++) {
+      /* Not passed? And with a time stamp that tells it should have happened
+         by now? */
+      if(!m_ReplayEvents[i]->bPassed && m_ReplayEvents[i]->fTime < getTime()) {
+        /* Nice. Handle this event, replay style */
+        _HandleReplayEvent(&m_ReplayEvents[i]->Event);
+        
+        /* Pass it */
+        m_ReplayEvents[i]->bPassed = true;
+      }
+    }
+
+    /* Now see if we have moved back in time and whether we should apply some
+       REVERSE events */
+    for(int i=m_ReplayEvents.size()-1;i>=0;i--) {
+      /* Passed? And with a time stamp larger than current time? */
+      if(m_ReplayEvents[i]->bPassed && m_ReplayEvents[i]->fTime > getTime()) {
+        /* Nice. Handle this event, replay style BACKWARDS */
+        _HandleReverseReplayEvent(&m_ReplayEvents[i]->Event);
+
+        /* Un-pass it */
+        m_ReplayEvents[i]->bPassed = false;
+      }
+    }
+  }
+
+  void MotoGame::_HandleReplayEvent(GameEvent *pEvent) {
+    /* Note how the number of events handled here are smaller than in the 
+       primary event handling loop. That's because when playing replays, we
+       only care about the most basic events - not events causing other
+       events to be triggered */
+    switch(pEvent->Type) {
+      case GAME_EVENT_ENTITY_DESTROYED:
+        {
+          /* Destroy entity */
+				  Entity *pEntityToDestroy = findEntity(pEvent->u.EntityDestroyed.cEntityID);
+				  if(pEntityToDestroy != NULL) {
+					  deleteEntity(pEntityToDestroy);
+				  }        
+				  else
+				    Log("** Warning ** : Failed to destroy entity '%s' specified by replay!",
+				        pEvent->u.EntityDestroyed.cEntityID);
+				}
+        break;
+    }
+  }
+  
+  void MotoGame::_HandleReverseReplayEvent(GameEvent *pEvent) {
+    /* Apply events with reverse results */
+    switch(pEvent->Type) {
+      case GAME_EVENT_ENTITY_DESTROYED:
+        {
+          /* Un-destroy entity (create it :P) */
+				  Entity *pEntityToDestroy = findEntity(pEvent->u.EntityDestroyed.cEntityID);
+				  if(pEntityToDestroy == NULL) {
+					  Entity *pNew = _SpawnEntity(pEvent->u.EntityDestroyed.cEntityID,
+					                              pEvent->u.EntityDestroyed.Type,
+					                              Vector2f(pEvent->u.EntityDestroyed.fPosX,
+					                                       pEvent->u.EntityDestroyed.fPosY),
+					                              NULL);
+            if(pNew != NULL) {
+              pNew->fSize = pEvent->u.EntityDestroyed.fSize;
+            }					                              
+				  }        
+				  else
+				    Log("** Warning ** : Failed to create entity '%s' specified by replay - it's already there!",
+				        pEvent->u.EntityDestroyed.cEntityID);
+				}
+        break;
+    }
+  }  
 
 };

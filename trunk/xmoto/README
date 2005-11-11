@@ -30,7 +30,7 @@ General hardware requirements:
  - RAM: 128 MB (at least 40 MB of free memory prefered)
  - Graphics: GeForce-class card with 32 MB of video memory (or better)
  - HDD: A couple of free megabytes on your harddrive :)
- - Software: Windows 2000/XP, Linux, or FreeBSD (other UNIX-like 
+ - Software: Windows 2000/XP, Linux, Mac OS X or FreeBSD (other UNIX-like 
    OS's might be supported as well)
 
 Software dependencies for compiling on non-Windows platforms:
@@ -273,11 +273,12 @@ Authors
 X-Moto itself is written by Rasmus Neckelmann (neckelmann@gmail.com)
 
 Furthermore the following persons have contributed to the X-Moto
-project with game content:
+project:
 
  - Brandon Ross (sound effects)
  - Pasi Kallinen (some of the built-in levels)
  - CoW (some of the built-in levels)
+ - Maxime Biais (MacOS X patch)
 
 Also a warm thank-you to Yves Berquin who have written the XML parser
 used by the game (tinyxml).

@@ -403,6 +403,7 @@ namespace vapp {
        
     /* Perform world simulation step */
     dWorldQuickStep(m_WorldID,fTimeStep*PHYS_SPEED);
+    //dWorldStep(m_WorldID,fTimeStep*PHYS_SPEED);
     
     /* Empty contact joint group */
     dJointGroupEmpty(m_ContactGroup);

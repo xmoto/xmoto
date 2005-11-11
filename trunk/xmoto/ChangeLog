@@ -7,6 +7,12 @@ X-Moto 0.1.9 (alpha)  2005-??-??
  * Fixed a bug that caused the game to misbehave if 
    escape was pressed while entering the name of a replay
    to save.
+ * Better handling of events in replays (for instance,
+   picked-up strawberries are no longer gone when 
+   rewinding).
+ * Applied MacOS X patch by Maxime Biais.
+ * Replays can no longer be recorded for levels that 
+   include scripting.
 
 X-Moto 0.1.8 (alpha)  2005-11-06
 --------------------------------
