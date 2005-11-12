@@ -17,6 +17,10 @@ X-Moto 0.1.9 (alpha)  2005-??-??
    replays, but this version can read old replays 
    without any problems (in which case the new event
    features will be missing).
+ * Faster building procedure on Windows.
+ * New built-in levels.
+ * New tutorial levels. These are now considered external
+   levels, so you'll find them under that tab.
 
 X-Moto 0.1.8 (alpha)  2005-11-06
 --------------------------------

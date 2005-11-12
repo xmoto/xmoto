@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "VXml.h"
 #include "GUI.h"
+#include "GameText.h"
 
 namespace vapp {
 
@@ -207,10 +208,10 @@ namespace vapp {
     /* Go through buttons... anything clicked? */
     for(int i=0;i<m_nNumButtons;i++) {
       if(m_pButtons[i]->isClicked()) {  
-        if(m_pButtons[i]->getCaption() == "OK") return UI_MSGBOX_OK;
-        if(m_pButtons[i]->getCaption() == "Cancel") return UI_MSGBOX_CANCEL;
-        if(m_pButtons[i]->getCaption() == "Yes") return UI_MSGBOX_YES;
-        if(m_pButtons[i]->getCaption() == "No") return UI_MSGBOX_NO;
+        if(m_pButtons[i]->getCaption() == GAMETEXT_OK) return UI_MSGBOX_OK;
+        if(m_pButtons[i]->getCaption() == GAMETEXT_CANCEL) return UI_MSGBOX_CANCEL;
+        if(m_pButtons[i]->getCaption() == GAMETEXT_YES) return UI_MSGBOX_YES;
+        if(m_pButtons[i]->getCaption() == GAMETEXT_NO) return UI_MSGBOX_NO;
       }
     }
     return UI_MSGBOX_NOTHING;

@@ -183,8 +183,8 @@ namespace vapp {
     UIList *pExternalLevelsList = new UIList(pExternalLevelsTab,0,0,"",pExternalLevelsTab->getPosition().nWidth,pExternalLevelsTab->getPosition().nHeight);      /* -64 to make room for bonus */
     pExternalLevelsList->setID("PLAY_EXTERNAL_LEVELS_LIST");
     pExternalLevelsList->setFont(m_Renderer.getSmallFont());
-    pExternalLevelsList->addColumn(GAMETEXT_LEVEL,pExternalLevelsTab->getPosition().nWidth/2);
-    pExternalLevelsList->addColumn(GAMETEXT_FILE,pExternalLevelsTab->getPosition().nWidth/2);
+    pExternalLevelsList->addColumn(GAMETEXT_LEVEL,pExternalLevelsTab->getPosition().nWidth - 128);
+    pExternalLevelsList->addColumn(GAMETEXT_SCRIPTED,128);  
     pExternalLevelsList->setEnterButton( pGoButton );        
 
     m_pReplaysWindow = new UIFrame(m_pMainMenu,300,(getDispHeight()*140)/600,"",getDispWidth()-300-20,getDispHeight()-40-(getDispHeight()*120)/600);      
@@ -1470,7 +1470,11 @@ namespace vapp {
       else {
         /* Consider it external */
         UIListEntry *pEntry = pExternalLevels->addEntry(Name,reinterpret_cast<void *>(pLevel));
-        pEntry->Text.push_back(File);
+        
+        if(pLevel->isScripted())
+          pEntry->Text.push_back(GAMETEXT_YES);
+        else
+          pEntry->Text.push_back(GAMETEXT_NO);
       }
     }
   }

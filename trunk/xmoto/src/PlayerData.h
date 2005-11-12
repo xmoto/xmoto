@@ -97,6 +97,7 @@ namespace vapp {
 	    /* Helpers */
 	    void _FreePlayerData(void);
 	    std::string _Fix016LevelID(const std::string &s);
+	    std::string _Fix018LevelID(const std::string &s);
 	};
 
 };

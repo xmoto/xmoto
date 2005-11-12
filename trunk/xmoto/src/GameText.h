@@ -105,6 +105,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_MONO                 "Mono"
 #define GAMETEXT_NAME                 "Name"
 #define GAMETEXT_NEWPROFILE           "New Profile..."
+#define GAMETEXT_NO                   "No"
 #define GAMETEXT_NOTFINISHED          "(Not finished)"
 #define GAMETEXT_NOTIFYATINIT         "Important note!\n"                                                \
                                       "\n"                                                               \
@@ -141,6 +142,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_SHOW                 "Show"
 #define GAMETEXT_SHOWINFO             "Info..."
 #define GAMETEXT_SHOWMINIMAP          "Show Mini Map"
+#define GAMETEXT_SCRIPTED             "Scripted"
 #define GAMETEXT_SKIPPED              " (Skipped)"
 #define GAMETEXT_STARTLEVEL           "Play!"
 #define GAMETEXT_STEREO               "Stereo"
@@ -149,5 +151,6 @@ Central place to keep many in-game text strings
 #define GAMETEXT_USEPROFILE           "Use Profile"
 #define GAMETEXT_VIDEO                "Video"
 #define GAMETEXT_VIEW                 "View"
+#define GAMETEXT_YES                  "Yes"
 
 #endif

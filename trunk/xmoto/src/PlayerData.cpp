@@ -28,11 +28,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 namespace vapp {
 
   /*===========================================================================
-  Utility function to translate pre-0.1.7 level IDs
+  Utility function to translate pre-0.1.7 level IDs to 0.1.9 level IDs
   ===========================================================================*/
   std::string PlayerData::_Fix016LevelID(const std::string &s) {
     /* NOTE! Remember to update this if changing level numbering again */
-    if(s == "_iL03_") return "_iL08_";
+    if(s == "_iL00_") return "tut1";
+    else if(s == "_iL03_") return "_iL08_";
     else if(s == "_iL04_") return "_iL09_";
     else if(s == "_iL05_") return "_iL10_";
     else if(s == "_iL06_") return "_iL11_";
@@ -47,6 +48,43 @@ namespace vapp {
     else if(s == "_iL15_") return "_iL20_";
     else if(s == "_iL16_") return "_iL21_";    
     else if(s == "_iL17_") return "_iL22_";
+    return s;
+  }
+
+  /*===========================================================================
+  Utility function to translate pre-0.1.9 level IDs to 0.1.9 level IDs
+  ===========================================================================*/
+  std::string PlayerData::_Fix018LevelID(const std::string &s) {
+    /* NOTE! Remember to update this if changing level numbering again */
+    if(s == "_iL00_") return "tut1";
+    //else if(s == "_iL01_") return "_iL00_";
+    //else if(s == "_iL02_") return "_iL01_";
+    //else if(s == "_iL03_") return "_iL02_";
+    //else if(s == "_iL04_") return "_iL03_";
+    //else if(s == "_iL05_") return "_iL04_";
+    //else if(s == "_iL06_") return "_iL05_";
+    //else if(s == "_iL07_") return "_iL06_";
+    //else if(s == "_iL08_") return "_iL07_";
+    //else if(s == "_iL09_") return "_iL08_";
+    //else if(s == "_iL10_") return "_iL09_";
+    //else if(s == "_iL11_") return "_iL10_";
+    //else if(s == "_iL12_") return "_iL11_";
+    //else if(s == "_iL13_") return "_iL12_";
+    //else if(s == "_iL14_") return "_iL13_";
+    //else if(s == "_iL15_") return "_iL14_";
+    //else if(s == "_iL16_") return "_iL15_";    
+    //else if(s == "_iL17_") return "_iL16_";
+    //else if(s == "_iL18_") return "_iL17_";
+    //else if(s == "_iL19_") return "_iL18_";
+    //else if(s == "_iL20_") return "_iL19_";
+    //else if(s == "_iL21_") return "_iL20_";
+    //else if(s == "_iL22_") return "_iL21_";
+    //else if(s == "_iL23_") return "_iL22_";
+    //else if(s == "_iL24_") return "_iL23_";
+    //else if(s == "_iL25_") return "_iL24_";
+    //else if(s == "_iL26_") return "_iL25_";
+    //else if(s == "_iL27_") return "_iL26_";
+    //else if(s == "_iL28_") return "_iL27_";
     return s;
   }
 
@@ -104,6 +142,42 @@ namespace vapp {
       }
 	  }
 	  else if(nVersion == 0x11) {
+	    /* This is the old (<= 0.1.8) players.bin file. At 0.1.9 there was a bit of moving
+	       around in the levels numbers, so if we try to load this now,  it will for sure explode.
+	       Instead, simply load it and translate the level numbers on-the-fly */
+	    Log("** Warning ** : Found players.bin from before version 0.1.9, trying to upgrade...\n");
+	  
+	    /* Read number of player profiles */
+	    int nNumPlayerProfiles = FS::readInt(pfh);
+
+	    if(nNumPlayerProfiles >= 0) {
+	      /* For each player profile */
+        for(int i=0;i<nNumPlayerProfiles;i++) {
+          std::string PlayerName = FS::readString(pfh);
+          PlayerProfile *pPlayer = createProfile(PlayerName);
+          if(pPlayer != NULL) {
+            int nNumCompletedInternals = FS::readInt(pfh);
+            int nNumSkippedInternals = FS::readInt(pfh);
+            
+            for(int j=0;j<nNumCompletedInternals;j++)
+              completeLevel(PlayerName,_Fix018LevelID(FS::readString(pfh)));
+
+            for(int j=0;j<nNumSkippedInternals;j++)
+              skipLevel(PlayerName,_Fix018LevelID(FS::readString(pfh)));
+              
+            while(1) {
+              std::string LevelID = _Fix018LevelID(FS::readString(pfh));
+              if(LevelID.length() == 0) break;
+              std::string Replay = FS::readString(pfh);
+              std::string TimeStamp = FS::readString(pfh);
+              float fTime = FS::readFloat(pfh);
+              addFinishTime(PlayerName,Replay,LevelID,fTime,TimeStamp);             
+            }
+          }
+        }
+      }
+    }
+	  else if(nVersion == 0x12) {
 	    /* Read number of player profiles */
 	    int nNumPlayerProfiles = FS::readInt(pfh);
 
@@ -152,7 +226,7 @@ namespace vapp {
 	  }
 	  
 	  /* Write */
-	  FS::writeShort(pfh,0x11);
+	  FS::writeShort(pfh,0x12);
 	  FS::writeInt(pfh,m_Profiles.size());
 	  for(int i=0;i<m_Profiles.size();i++) {
 	    FS::writeString(pfh,m_Profiles[i]->PlayerName);
