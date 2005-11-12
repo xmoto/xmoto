@@ -20,13 +20,27 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 /* 
- *  Game state serialization
+ *  Game state serialization and magic
  */
 #include "PhysSettings.h"
 #include "MotoGame.h"
 
 namespace vapp {
 
+  /*===========================================================================
+  Game state interpolation for smoother replays 
+  ===========================================================================*/
+  void MotoGame::interpolateGameState(SerializedBikeState *pA,SerializedBikeState *pB,SerializedBikeState *p,float t) {
+    /* First of all inherit everything from A */
+    memcpy(p,pA,sizeof(SerializedBikeState));
+    
+    /* Interpolate away! The frame is the most important... */
+    p->fFrameX = pA->fFrameX + (pB->fFrameX - pA->fFrameX)*t;
+    p->fFrameY = pA->fFrameY + (pB->fFrameY - pA->fFrameY)*t;
+    
+    p->fGameTime = pA->fGameTime + (pB->fGameTime - pA->fGameTime)*t;
+  }
+  
   /*===========================================================================
   Decoding of event stream
   ===========================================================================*/

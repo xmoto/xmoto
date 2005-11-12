@@ -460,6 +460,7 @@ namespace vapp {
       
       void getSerializedBikeState(SerializedBikeState *pState);
       void unserializeGameEvents(DBuffer &Buffer);
+      void interpolateGameState(SerializedBikeState *pA,SerializedBikeState *pB,SerializedBikeState *p,float t);
 
       float getBikeEngineRPM(void);
       

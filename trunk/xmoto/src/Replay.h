@@ -59,7 +59,8 @@ namespace vapp {
       
       /* Methods */
       void storeState(const char *pcState);
-      bool loadState(char *pcState);      
+      bool loadState(char *pcState);  
+      bool peekState(char *pcState);    
       void createReplay(const std::string &FileName,const std::string &LevelID,const std::string &Player,float fFrameRate,int nStateSize);
       void saveReplay(void);
       std::string openReplay(const std::string &FileName,float *pfFrameRate,std::string &Player);

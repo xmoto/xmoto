@@ -646,12 +646,12 @@ namespace vapp {
       if(!m_b50FpsMode && nFCount > 100) {
         m_b50FpsMode = true;
         m_Renderer.setSpeedMultiplier(2);   
-//        printf("entering 50 fps!\n");
+        //printf("entering 50 fps!\n");
       }
       else if(m_b50FpsMode && nFCount < -100) {
         m_b50FpsMode = false;
         m_Renderer.setSpeedMultiplier(1);   
-//        printf("entering 100 fps!\n");
+        //printf("entering 100 fps!\n");
       }
     }
     /* What state? */
@@ -696,7 +696,7 @@ namespace vapp {
 
         /* Only do this when not paused */
         if(m_State == GS_PLAYING) {
-          /* Increase frame counter, copy stuff */
+          /* Increase frame counter */
           m_nFrame++;
                     
           /* Update game */
@@ -722,22 +722,39 @@ namespace vapp {
           }
         }
         else if(m_State == GS_REPLAYING) {
-          /* Read replay state */
-          SerializedBikeState BikeState;
-          if(m_pReplay != NULL) {        
-            if(m_pReplay->loadState((char *)&BikeState)) {            
-              /* Update game */
-              m_MotoGame.updateLevel( PHYS_STEP_SIZE,&BikeState,m_pReplay ); 
+          m_nFrame++;
 
-              if(m_bEnableEngineSound) {
-                /* Update engine RPM */
-                m_EngineSound.setRPM( m_MotoGame.getBikeEngineRPM() ); 
+          /* Read replay state */
+          static SerializedBikeState BikeState;          
+          if(m_pReplay != NULL) {       
+            /* Even frame number: Read the next state */
+            if(m_nFrame%2 || m_nFrame==1) {       
+              /* REAL NON-INTERPOLATED FRAME */    
+              if(m_pReplay->loadState((char *)&BikeState)) {            
+                /* Update game */
+                m_MotoGame.updateLevel( PHYS_STEP_SIZE,&BikeState,m_pReplay ); 
+
+                if(m_bEnableEngineSound) {
+                  /* Update engine RPM */
+                  m_EngineSound.setRPM( m_MotoGame.getBikeEngineRPM() ); 
+                }
+              }
+              else {
+                if(m_pReplay->didFinish()) {
+                  /* Make sure that it's the same finish time */
+                  m_MotoGame.setTime(m_pReplay->getFinishTime());
+                }
               }
             }
-            else {
-              if(m_pReplay->didFinish()) {
-                /* Make sure that it's the same finish time */
-                m_MotoGame.setTime(m_pReplay->getFinishTime());
+            else {                          
+              /* INTERPOLATED FRAME */
+              SerializedBikeState NextBikeState,ibs;
+              if(m_pReplay->peekState((char *)&NextBikeState)) {
+                /* Nice. Interpolate the states! */
+                m_MotoGame.interpolateGameState(&BikeState,&NextBikeState,&ibs,0.5f);
+
+                /* Update game */
+                m_MotoGame.updateLevel( PHYS_STEP_SIZE,&ibs,m_pReplay );                 
               }
             }
           }
@@ -781,8 +798,8 @@ namespace vapp {
         /* Delay */
         if(m_State == GS_REPLAYING) {
           /* When replaying... */
-          nADelay = (1.0f/m_fCurrentReplayFrameRate - (fEndFrameTime-fStartFrameTime)) * 1000.0f;
-            
+          nADelay = ((1.0f/m_fCurrentReplayFrameRate - (fEndFrameTime-fStartFrameTime)) * 1000.0f) * 0.5f;
+                      
           if(nADelay > 0) {
             if(!m_bTimeDemo)
               SDL_Delay(nADelay);

@@ -337,6 +337,20 @@ namespace vapp {
     return true;
   }
   
+  bool Replay::peekState(char *pcState) {
+    /* Like loadState() but this one does not advance the cursor... it just takes a peek */
+    int nPeekChunk=m_nCurChunk,nPeekState=m_nCurState;
+    if(nPeekState >= STATES_PER_CHUNK) {
+      nPeekChunk++;
+      nPeekState = 0;
+    }
+    if(nPeekChunk >= m_Chunks.size()) return false;
+    if(nPeekState >= m_Chunks[nPeekChunk].nNumStates) return false;
+    
+    memcpy(pcState,&m_Chunks[nPeekChunk].pcChunkData[nPeekState*m_nStateSize],m_nStateSize);
+    return true;
+  }
+  
   std::vector<ReplayInfo *> Replay::createReplayList(const std::string &PlayerName,const std::string &LevelIDCheck) {
     std::vector<ReplayInfo *> Ret;
     
