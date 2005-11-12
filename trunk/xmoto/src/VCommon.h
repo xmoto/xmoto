@@ -84,9 +84,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 extern "C" {
   #if defined(WIN32) 
-    #include "lua/lua.h"
-    #include "lua/lauxlib.h"
-    #include "lua/lualib.h"
+    #include "lua.h"
+    #include "lauxlib.h"
+    #include "lualib.h"
   #else
     #if defined(HAVE_LUA50_LUA_H)
       #include <lua50/lua.h>

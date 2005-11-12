@@ -241,8 +241,10 @@ namespace vapp {
       while(getNumPendingGameEvents() > 0) {
 			  GameEvent *pEvent = getNextGameEvent();
 			  if(pEvent != NULL) {
-			    /* Encode event */
-			    _SerializeGameEventQueue(*pDBuffer,pEvent);
+			    if(pDBuffer != NULL) {
+			      /* Encode event */
+			      _SerializeGameEventQueue(*pDBuffer,pEvent);
+			    }
 			  
 				  /* What event? */
 				  switch(pEvent->Type) {

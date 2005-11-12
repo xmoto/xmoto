@@ -35,7 +35,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="lua50.lib SDL_mixer.lib commond.lib opengl32.lib SDL.lib SDLmain.lib zdll.lib jpeg6b.lib libpng13.lib"
+				AdditionalDependencies="libode.lib lua50.lib SDL_mixer.lib commond.lib opengl32.lib SDL.lib SDLmain.lib zdll.lib jpeg6b.lib libpng13.lib"
 				OutputFile="$(SolutionDir)/../bin/xmotod.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="$(SolutionDir)"
@@ -91,7 +91,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="SDL_mixer.lib common.lib opengl32.lib SDL.lib SDLmain.lib zdll.lib jpeg6b.lib libpng13.lib"
+				AdditionalDependencies="libode.lib lua50.lib SDL_mixer.lib common.lib opengl32.lib SDL.lib SDLmain.lib zdll.lib jpeg6b.lib libpng13.lib"
 				OutputFile="$(SolutionDir)/../bin/xmoto.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(SolutionDir)"
@@ -252,145 +252,6 @@
 			</File>
 			<File
 				RelativePath=".\resource.rc">
-			</File>
-		</Filter>
-		<Filter
-			Name="ode"
-			Filter="">
-			<File
-				RelativePath="..\src\ode\s\array.cpp">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\array.h">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\collision_kernel.cpp">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\collision_kernel.h">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\collision_quadtreespace.cpp">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\collision_space.cpp">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\collision_space_internal.h">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\collision_std.cpp">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\collision_std.h">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\collision_transform.cpp">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\collision_transform.h">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\collision_util.cpp">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\collision_util.h">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\error.cpp">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\export-dif.cpp">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\fastdot.c">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\fastldlt.c">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\fastlsolve.c">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\fastltsolve.c">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\joint.cpp">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\joint.h">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\lcp.cpp">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\lcp.h">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\mass.cpp">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\mat.cpp">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\mat.h">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\matrix.cpp">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\memory.cpp">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\misc.cpp">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\objects.h">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\obstack.cpp">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\obstack.h">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\ode.cpp">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\odemath.cpp">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\quickstep.cpp">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\quickstep.h">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\rotation.cpp">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\step.cpp">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\step.h">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\stepfast.cpp">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\testing.cpp">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\testing.h">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\timer.cpp">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\util.cpp">
-			</File>
-			<File
-				RelativePath="..\src\ode\s\util.h">
 			</File>
 		</Filter>
 	</Files>

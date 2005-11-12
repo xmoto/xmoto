@@ -13,6 +13,10 @@ X-Moto 0.1.9 (alpha)  2005-??-??
  * Applied MacOS X patch by Maxime Biais.
  * Replays can no longer be recorded for levels that 
    include scripting.
+ * Older releases will not be able to read the new 
+   replays, but this version can read old replays 
+   without any problems (in which case the new event
+   features will be missing).
 
 X-Moto 0.1.8 (alpha)  2005-11-06
 --------------------------------

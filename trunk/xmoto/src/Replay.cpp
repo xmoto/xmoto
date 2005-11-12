@@ -97,10 +97,32 @@ namespace vapp {
     int nUncompressedEventsSize = numRemainingBytes();
     FS::writeInt(pfh,nUncompressedEventsSize);
     
-    /* No compression */
-    FS::writeBool(pfh,false); /* compression: false */
-    FS::writeBuf(pfh,(char *)pcUncompressedEvents,nUncompressedEventsSize);
-        
+    /* Compression? */
+    if(m_bEnableCompression) {
+      /* Compress events with zlib */
+      char *pcCompressedEvents = new char [nUncompressedEventsSize * 2 + 12];
+      uLongf nDestLen = nUncompressedEventsSize * 2 + 12;
+      uLongf nSrcLen = nUncompressedEventsSize;
+      int nZRet = compress2((Bytef *)pcCompressedEvents,&nDestLen,(Bytef *)pcUncompressedEvents,nSrcLen,9);
+      if(nZRet != Z_OK) {
+        /* Failed to compress, save raw events */
+        FS::writeBool(pfh,false); /* compression: false */
+        FS::writeBuf(pfh,(char *)pcUncompressedEvents,nUncompressedEventsSize);
+      }
+      else {
+        /* OK */        
+        FS::writeBool(pfh,true); /* compression: true */
+        FS::writeInt(pfh,nDestLen);
+        FS::writeBuf(pfh,(char *)pcCompressedEvents,nDestLen);
+      }
+      delete [] pcCompressedEvents;
+    }
+    else {    
+      /* No compression */
+      FS::writeBool(pfh,false); /* compression: false */
+      FS::writeBuf(pfh,(char *)pcUncompressedEvents,nUncompressedEventsSize);
+    }
+    
     /* Chunks */
     if(m_Chunks.empty()) FS::writeInt(pfh,0);
     else {        
@@ -196,6 +218,26 @@ namespace vapp {
         /* Compressed? */
         if(FS::readBool(pfh)) {
           /* Compressed */          
+          int nCompressedEventsSize = FS::readInt(pfh);
+          
+          char *pcCompressedEvents = new char [nCompressedEventsSize];
+          FS::readBuf(pfh,pcCompressedEvents,nCompressedEventsSize);
+          
+          /* Unpack */
+          uLongf nDestLen = m_nInputEventsDataSize;
+          uLongf nSrcLen = nCompressedEventsSize;
+          int nZRet = uncompress((Bytef *)m_pcInputEventsData,&nDestLen,(Bytef *)pcCompressedEvents,nSrcLen);
+          if(nZRet != Z_OK || nDestLen != m_nInputEventsDataSize) {
+            delete [] pcCompressedEvents;
+            delete [] m_pcInputEventsData; m_pcInputEventsData = NULL;
+            FS::closeFile(pfh);
+            _FreeReplay();
+            Log("** Warning ** : Failed to uncompress events in replay: %s",FileName.c_str());
+            return "";
+          }
+          
+          /* Clean up */
+          delete [] pcCompressedEvents;
         }
         else {
           /* Not compressed */

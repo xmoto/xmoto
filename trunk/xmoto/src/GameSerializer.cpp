@@ -88,9 +88,7 @@ namespace vapp {
   Encoding of event buffer 
   ===========================================================================*/
   void MotoGame::_SerializeGameEventQueue(DBuffer &Buffer,GameEvent *pEvent) {
-    /* Encode this event */
-    //printf("encode event %d:\n",pEvent->nSeq);
-    
+    /* Note how we couldn't care less about most of the game events */    
     switch(pEvent->Type) {
       case GAME_EVENT_ENTITY_DESTROYED:
         {          
@@ -103,27 +101,6 @@ namespace vapp {
           Buffer << pEvent->u.EntityDestroyed.fSize;
           Buffer << pEvent->u.EntityDestroyed.fPosX;
           Buffer << pEvent->u.EntityDestroyed.fPosY;
-          //printf("  ENTITY_DESTROYED\n");
-          //printf("    id=%s\n",pEvent->u.EntityDestroyed.cEntityID);
-          //printf("    type=%d\n",pEvent->u.EntityDestroyed.Type);
-          //printf("    size=%f\n",pEvent->u.EntityDestroyed.fSize);
-          //printf("    x,y=%f,%f\n",pEvent->u.EntityDestroyed.fPosX,pEvent->u.EntityDestroyed.fPosY);          
-        }
-        break;
-      case GAME_EVENT_PLAYER_DIES:
-        {
-        }
-        break;
-      case GAME_EVENT_PLAYER_ENTERS_ZONE:
-        {
-        }
-        break;
-      case GAME_EVENT_PLAYER_LEAVES_ZONE:
-        {
-        }
-        break;
-      case GAME_EVENT_PLAYER_TOUCHES_ENTITY:
-        {
         }
         break;
     }            
