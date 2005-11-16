@@ -18,9 +18,13 @@ X-Moto 0.1.9 (alpha)  2005-??-??
    without any problems (in which case the new event
    features will be missing).
  * Faster building procedure on Windows.
- * New built-in levels.
+ * New built-in levels, one of them by Clive Crous.
  * New tutorial levels. These are now considered external
    levels, so you'll find them under that tab.
+ * Smoother playback of replays.
+ * Note that I have given up ordering the built-in levels
+   by difficulty. The current order will be kept until
+   beta.
 
 X-Moto 0.1.8 (alpha)  2005-11-06
 --------------------------------
