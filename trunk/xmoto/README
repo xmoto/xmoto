@@ -188,16 +188,11 @@ Other things to be aware of regarding X-Moto replays:
    keep in mind that the replays are already automatically 
    compressed, so doing it again will probably just add extra 
    overhead to the file size.
- - Levels that make use of scripting are not fully supported by
-   the replay system, but it should probably work if you don't
-   use the left/right arrow keys to skip around in the replay.
+ - Replay can't be recorded if the level make use of scripting.
  - Don't expect exchange of replays between computers with 
    different endianness, i.e. X-Moto on PPC (Mac, etc) won't be
    able to run replays crated by X-Moto on x86 (Intel, etc). This
    will probably be fixed in the future.
- - Also when using the left/right arrow keys to skip around, 
-   you might skip picking up strawberries. This is not a bug, it's
-   a feature! :)
  - No fancy dirt particles from rear wheel spinning.
 
 Advanced Configuration Options

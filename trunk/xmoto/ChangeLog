@@ -1,4 +1,4 @@
-X-Moto 0.1.9 (alpha)  2005-??-??
+X-Moto 0.1.9 (alpha)  2005-12-01
 --------------------------------
 
  * Added a level information viewing user interface, 
@@ -25,6 +25,8 @@ X-Moto 0.1.9 (alpha)  2005-??-??
  * Note that I have given up ordering the built-in levels
    by difficulty. The current order will be kept until
    beta.
+ * Thanks to Petter Reinholdtsen for pointing out that
+   SDL/SDL_opengl.h fixes all of the OpenGL problems. :)
 
 X-Moto 0.1.8 (alpha)  2005-11-06
 --------------------------------

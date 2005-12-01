@@ -35,35 +35,37 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   #include <windows.h>
 #endif
 
-#if defined(__APPLE__) && defined(__MACH__)
-  #include <OpenGL/gl.h>  /* Header File For The OpenGL Library */
-#else
-  #include <GL/gl.h>      /* Header File For The OpenGL Library */
-#endif
+//#if defined(__APPLE__) && defined(__MACH__)
+//  #include <OpenGL/gl.h>  /* Header File For The OpenGL Library */
+//#else
+//  #include <GL/gl.h>      /* Header File For The OpenGL Library */
+//#endif
 
 #include <stddef.h>
 
-#if defined(WIN32) && defined(_MSC_VER)
-  #define GL_GLEXT_PROTOTYPES 1
-  #include "glext.h"
-#else
+//#if defined(WIN32) && defined(_MSC_VER)
+//  #define GL_GLEXT_PROTOTYPES 1
+//  #include "glext.h"
+//#else
+//
+//  /* This aren't elegant. It would be nicer to use glext.h, but I can't get
+//     it to work :( */
+//  #define GL_ARRAY_BUFFER_ARB 0x8892
+//  #define GL_STATIC_DRAW_ARB 0x88E4
+//  
+//  typedef void (*PFNGLBINDBUFFERARBPROC)(GLenum target, GLuint buffer);
+//  typedef void (*PFNGLDELETEBUFFERSARBPROC)(GLsizei n, const GLuint *buffers); 
+//  typedef void (*PFNGLGENBUFFERSARBPROC)(GLsizei n, GLuint *buffers);
+//
+//  typedef size_t GLsizeiptrARB; /* is this always true? */
+//
+//  typedef void (*PFNGLBUFFERDATAARBPROC)(GLenum target, GLsizeiptrARB size, const GLvoid *data, GLenum usage);
+//
+//#endif
 
-  /* This aren't elegant. It would be nicer to use glext.h, but I can't get
-     it to work :( */
-  #define GL_ARRAY_BUFFER_ARB 0x8892
-  #define GL_STATIC_DRAW_ARB 0x88E4
-  
-  typedef void (*PFNGLBINDBUFFERARBPROC)(GLenum target, GLuint buffer);
-  typedef void (*PFNGLDELETEBUFFERSARBPROC)(GLsizei n, const GLuint *buffers); 
-  typedef void (*PFNGLGENBUFFERSARBPROC)(GLsizei n, GLuint *buffers);
-
-  typedef size_t GLsizeiptrARB; /* is this always true? */
-
-  typedef void (*PFNGLBUFFERDATAARBPROC)(GLenum target, GLsizeiptrARB size, const GLvoid *data, GLenum usage);
-
-#endif
 #include <SDL/SDL.h>
 #include <SDL/SDL_mixer.h>
+#include <SDL/SDL_opengl.h>
 
 #include <string>
 #include <vector>
