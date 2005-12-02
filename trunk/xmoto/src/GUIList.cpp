@@ -117,8 +117,8 @@ namespace vapp {
           yym1 += (nLY-yym1);
         }
       
-        int nOldScissor[4];
-        glGetIntegerv(GL_SCISSOR_BOX,nOldScissor);
+        nOldScissor[4];
+        glGetIntegerv(GL_SCISSOR_BOX,(GLint *) nOldScissor);
         
         int x = 0;      
         for(int j=0;j<m_Entries[i]->Text.size();j++) {    
