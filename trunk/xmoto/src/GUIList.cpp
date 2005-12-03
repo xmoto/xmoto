@@ -117,7 +117,7 @@ namespace vapp {
           yym1 += (nLY-yym1);
         }
       
-        nOldScissor[4];
+        int nOldScissor[4];
         glGetIntegerv(GL_SCISSOR_BOX,(GLint *) nOldScissor);
         
         int x = 0;      

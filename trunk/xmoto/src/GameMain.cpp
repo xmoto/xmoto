@@ -58,13 +58,15 @@ int main(int nNumArgs,char **ppcArgs) {
     Game.run(nNumArgs,ppcArgs);
   }
   catch (Exception &e) {
+    FS::writeLog(std::string("Exception: ") + e.getMsg());
+  
     printf("fatal exception : %s\n",e.getMsg().c_str());        
     SDL_Quit(); /* make sure SDL shuts down gracefully */
 
     #if defined(WIN32)
       char cBuf[1024];
       sprintf(cBuf,"Fatal exception occured: %s\n"
-                   "Consult the file stdout.txt for more information about what\n"
+                   "Consult the file xmoto.log for more information about what\n"
                    "might has occured.\n",e.getMsg().c_str());                    
       MessageBox(NULL,cBuf,"X-Moto Error",MB_OK|MB_ICONERROR);
     #endif

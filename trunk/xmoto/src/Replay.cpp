@@ -177,7 +177,7 @@ namespace vapp {
     
     /* Read header */
     int nVersion = FS::readByte(pfh); 
-    
+        
     /* Supported version? */
     if(nVersion != 0 && nVersion != 1) {
       FS::closeFile(pfh);
@@ -361,7 +361,7 @@ namespace vapp {
       FileHandle *pfh = FS::openIFile(ReplayFiles[i]);
       if(pfh != NULL) {
         int nVersion = FS::readByte(pfh);
-        if(nVersion == 0) {
+        if(nVersion == 0 || nVersion == 1) {
           if(FS::readInt(pfh) == 0x12345678) {                  
             std::string LevelID = FS::readString(pfh);
             std::string Player = FS::readString(pfh);

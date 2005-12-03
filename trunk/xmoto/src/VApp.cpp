@@ -30,6 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <stdarg.h>
 #include <time.h>
 #include "VApp.h"
+#include "VFileIO.h"
 
 namespace vapp {
 
@@ -37,6 +38,7 @@ namespace vapp {
   Global application log 
   ===========================================================================*/
   bool g_bQuietLog = false;
+  bool g_bVerbose = false;
   
   void Log(char *pcFmt,...) {
     va_list List;
@@ -46,7 +48,14 @@ namespace vapp {
     va_end(List);
     
     if(!g_bQuietLog) {
-      printf("%s\n",cBuf);
+      #if defined(_MSC_VER) && defined(_DEBUG)
+        printf("%s\n",cBuf); /* I like my stdout when debugging :P */
+      #else
+        if(g_bVerbose) 
+          printf("%s\n",cBuf); /* also write to stdout */
+      #endif
+
+      FS::writeLog(cBuf);
     }
   }
 
@@ -553,6 +562,9 @@ namespace vapp {
       else if(!strcmp(ppcArgs[i],"-q")) {
         g_bQuietLog = true;
       } 
+      else if(!strcmp(ppcArgs[i],"-v")) {
+        g_bVerbose = true;
+      } 
       else if(!strcmp(ppcArgs[i],"-noexts")) {
         m_bDontUseGLExtensions = true;
       }     
@@ -569,7 +581,8 @@ namespace vapp {
         printf("\t-fs\n\t\tForces fullscreen mode.\n");
         printf("\t-win\n\t\tForces windowed mode.\n");
         printf("\t-nogfx\n\t\tDon't show any graphical elements.\n");
-        printf("\t-q\n\t\tLeave stdout pretty much alone.\n");
+        printf("\t-q\n\t\tDon't print messages to screen, and don't save them in the log.\n");
+        printf("\t-v\n\t\tBe verbose.\n");
         printf("\t-noexts\n\t\tDon't use any OpenGL extensions.\n");
         helpUserArgs();
         printf("\n");

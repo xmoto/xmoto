@@ -1,4 +1,4 @@
-X-Moto 0.1.9 (Alpha Release)
+X-Moto 0.1.10 (Alpha Release)
 Copyright (C) 2005 Rasmus Neckelmann (neckelmann@gmail.com)
 
 http://xmoto.sourceforge.net
@@ -112,9 +112,11 @@ line when starting the program:
  
  -win               Like -fs, but forces windowed mode instead.
  
- -q                 Enables quiet mode, in which your console isn't
-                    spammed with all the interesting information 
-                    X-Moto usually spouts out.
+ -q                 Enables quiet mode, in which no messages is 
+                    written in the log or to the console. This 
+                    overrides the -v option.
+ 
+ -v                 Enables verbose mode.
  
  -noexts            Disables the use of OpenGL extensions. Try this
                     option if you experience weird graphical errors 

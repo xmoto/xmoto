@@ -820,9 +820,22 @@ namespace vapp {
   }
   
   /*===========================================================================
+  Write message to log
+  ===========================================================================*/
+  void FS::writeLog(const std::string &s) {
+    if(m_UserDir != "") {
+      FILE *fp = fopen((m_UserDir + std::string("/xmoto.log")).c_str(),"a");
+      if(fp != NULL) {
+        fprintf(fp,"%s\n",s.c_str());
+        fclose(fp);
+      }
+    }
+  } 
+  
+  /*===========================================================================
   Initialize file system fun
   ===========================================================================*/
-  std::string FS::m_UserDir,FS::m_DataDir; /* Globals */
+  std::string FS::m_UserDir="",FS::m_DataDir; /* Globals */
   bool FS::m_bGotDataDir;
   std::string FS::m_BinDataFile = "";
   int FS::m_nNumPackFiles = 0;
@@ -904,6 +917,9 @@ namespace vapp {
         m_bGotDataDir = true;
       }
     #endif    
+
+    /* Delete old log */    
+    remove( (m_UserDir + std::string("/xmoto.log")).c_str() );
     
     /* Info */
     Log("User directory: %s",m_UserDir.c_str());      
@@ -930,7 +946,7 @@ namespace vapp {
         fclose(fptest);
       #endif
     }
-      
+          
     /* Initialize binary data package if any */
     FILE *fp = fopen(m_BinDataFile.c_str(),"rb");
     m_nNumPackFiles = 0;

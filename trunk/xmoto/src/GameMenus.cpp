@@ -202,6 +202,7 @@ namespace vapp {
     UIButton *pListAllButton = new UIButton(m_pReplaysWindow,11+115+115,m_pReplaysWindow->getPosition().nHeight-68,GAMETEXT_LISTALL,115,57);
     pListAllButton->setFont(m_Renderer.getSmallFont());
     pListAllButton->setType(UI_BUTTON_TYPE_CHECK);
+    pListAllButton->setChecked(true);
     pListAllButton->setID("REPLAY_LIST_ALL");
     UIList *pReplayList = new UIList(m_pReplaysWindow,20,40,"",m_pReplaysWindow->getPosition().nWidth-40,m_pReplaysWindow->getPosition().nHeight-115);      
     pReplayList->setID("REPLAY_LIST");
@@ -534,14 +535,14 @@ namespace vapp {
     pLV_Replays_Personal->setType(UI_BUTTON_TYPE_RADIO);
     pLV_Replays_Personal->setID("LEVEL_VIEWER_REPLAYS_PERSONAL");
     pLV_Replays_Personal->enableWindow(true);
-    pLV_Replays_Personal->setChecked(true);
+    pLV_Replays_Personal->setChecked(false);
     pLV_Replays_Personal->setFont(m_Renderer.getSmallFont());
     pLV_Replays_Personal->setGroup(421024);
     UIButton *pLV_Replays_All = new UIButton(pLVTab_Replays,5 + ((pLVTab_Replays->getPosition().nWidth-40)/2)*1,5,GAMETEXT_ALL,(pLVTab_Replays->getPosition().nWidth-40)/2,28);
     pLV_Replays_All->setType(UI_BUTTON_TYPE_RADIO);
     pLV_Replays_All->setID("LEVEL_VIEWER_REPLAYS_ALL");
     pLV_Replays_All->enableWindow(true);
-    pLV_Replays_All->setChecked(false);
+    pLV_Replays_All->setChecked(true);
     pLV_Replays_All->setFont(m_Renderer.getSmallFont());
     pLV_Replays_All->setGroup(421024);
     UIList *pLV_Replays_List= new UIList(pLVTab_Replays,5,43,"",pLVTab_Replays->getPosition().nWidth-10,pLVTab_Replays->getPosition().nHeight-100);

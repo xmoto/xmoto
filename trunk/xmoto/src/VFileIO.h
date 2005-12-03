@@ -89,6 +89,7 @@ namespace vapp {
       static bool copyFile(const std::string &From,const std::string &To);
       static void deleteFile(const std::string &File);
       
+      static void writeLog(const std::string &s);
       static FileHandle *openOFile(std::string Path);
       static FileHandle *openIFile(std::string Path);
       static void closeFile(FileHandle *pfh);

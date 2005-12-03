@@ -1,3 +1,18 @@
+X-Moto 0.1.10 (alpha) 2005-12-03
+--------------------------------
+
+ * Nasty (and very stupid) bug that prevented new replays
+   from being shown, has been fixed.
+ * Spamming your console is no longer default behaviour.
+   If you want to enable it, use the new -v command-line
+   option.
+ * Log messages are now written to xmoto.log (also on 
+   Windows, so there's no longer a stdout.txt).
+ * Fixed an bug that prevented the game from compiling
+   on Mac OS X (thanks again Maxime Biais).
+ * The game now defaults to listing all levels, not only
+   the ones made by the current player.
+
 X-Moto 0.1.9 (alpha)  2005-12-01
 --------------------------------
 
