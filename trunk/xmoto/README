@@ -1,5 +1,5 @@
-X-Moto 0.1.10 (Alpha Release)
-Copyright (C) 2005 Rasmus Neckelmann (neckelmann@gmail.com)
+X-Moto 0.1.11 (Alpha Release)
+Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 http://xmoto.sourceforge.net
 
@@ -277,6 +277,9 @@ project:
  - CoW (some of the built-in levels)
  - Clive Crous (one of the built-in levels)
  - Maxime Biais (MacOS X patch)
+ - Eric Piel (various code patches)
+ - Nicolas Adenis-Lamarre (designed and maintains the best-times
+   website).
 
 Also a warm thank-you to Yves Berquin who have written the XML parser
 used by the game (tinyxml).

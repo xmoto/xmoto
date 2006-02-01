@@ -1,3 +1,16 @@
+X-Moto 0.1.11 (alpha) 2006-
+--------------------------------
+
+ * Made a change that hopefully should make mouse 
+   movement less inresponsive on some systems.
+ * Integrated a patch by Eric Piel that makes the game 
+   play more smooth, most notable on lower end systems.
+ * Added a better set of configuration scripts, also by
+   Eric Piel. Please notify me if some compatibility is 
+   broken by this, and I'll try to fix it as fast as 
+   possible.
+ * Various minor changes.
+
 X-Moto 0.1.10 (alpha) 2005-12-03
 --------------------------------
 
@@ -10,7 +23,7 @@ X-Moto 0.1.10 (alpha) 2005-12-03
    Windows, so there's no longer a stdout.txt).
  * Fixed an bug that prevented the game from compiling
    on Mac OS X (thanks again Maxime Biais).
- * The game now defaults to listing all levels, not only
+ * The game now defaults to listing all replays, not only
    the ones made by the current player.
 
 X-Moto 0.1.9 (alpha)  2005-12-01

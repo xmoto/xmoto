@@ -84,7 +84,10 @@ Central place to keep many in-game text strings
                                       "  Space - Turns around and drives in the other direction\n"       \
                                       "\n"                                                               \
                                       "Find all the strawberries and touch the flower to finish\n"       \
-                                      "the level."                                                       \
+                                      "the level.\n"                                                     \
+                                      "\n"                                                               \
+                                      "Note that the above key assignments can be configured\n"          \
+                                      "manually.\n"                                                      \
                                       "\n"                                                               \
                                       "Read the README file or check out the website at\n"               \
                                       "http://xmoto.sourceforce.net for more information."

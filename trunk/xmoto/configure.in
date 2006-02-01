@@ -1,18 +1,28 @@
 AC_INIT(src/GameMain.cpp)
-AM_INIT_AUTOMAKE(xmoto,0.1.10)
+
+dnl otherwise autoconf whines
+AC_CANONICAL_TARGET()
+AM_INIT_AUTOMAKE(xmoto,0.1.11)
+
 AC_PROG_CC
 AC_PROG_CXX
 AC_PROG_INSTALL
 
-AC_CHECK_LIB(jpeg,jpeg_CreateCompress, [], [AC_MSG_ERROR(libjpeg required)])
-AC_CHECK_LIB(png,png_read_image, [], [AC_MSG_ERROR(libpng required)])
-AC_CHECK_LIB(z,uncompress, [], [AC_MSG_ERROR(zlib required)])
-AC_CHECK_LIB(SDL,SDL_Init, [], [AC_MSG_ERROR(SDL required)])
-AC_CHECK_LIB(SDL_mixer,Mix_OpenAudio, [], [AC_MSG_ERROR(SDL_mixer required)])
-AC_CHECK_LIB(GL,glVertex3f, [], [AC_MSG_ERROR(OpenGL required)])
+AC_CHECK_LIB(jpeg, jpeg_CreateCompress, [], [AC_MSG_ERROR(libjpeg required)])
+AC_CHECK_LIB(png, png_read_image, [], [AC_MSG_ERROR(libpng required)])
+AC_CHECK_LIB(z, uncompress, [], [AC_MSG_ERROR(zlib required)])
+AM_PATH_SDL(1.0.0, [], [AC_MSG_ERROR(SDL required)])
+AC_CHECK_LIB(SDL_mixer, Mix_OpenAudio, [], [AC_MSG_ERROR(SDL_mixer required)])
+AX_CHECK_GL()
 
 AC_SEARCH_LIBS(lua_pushboolean,lua lua50, [], [AC_MSG_ERROR(liblua50 or liblua required)])
 AC_SEARCH_LIBS(luaopen_math,lualib lualib50, [], [AC_MSG_ERROR(liblualib50 or liblualib required)])
+
+dnl ***** Check lua headers, as they are prone to be located random places on random systems! *****
+dnl The following three lines where suggested by Eric Piel, but they don't seem to work on my system
+dnl AC_CHECK_HEADERS(lua.h lua/lua.h lua50/lua.h, [break], [AC_MSG_ERROR(Could not find lua.h)])
+dnl AC_CHECK_HEADERS(lauxlib.h lua/lauxlib.h lua50/lauxlib.h, [break], [AC_MSG_ERROR(Could not find luaxlib.h)])
+dnl AC_CHECK_HEADERS(lualib.h lua/lualib.h lua50/lualib.h, [break], [AC_MSG_ERROR(Could not find lualib.h)])
 
 AC_CHECK_HEADER(lua50/lua.h,AC_DEFINE(HAVE_LUA50_LUA_H),[])
 AC_CHECK_HEADER(lua50/lauxlib.h,AC_DEFINE(HAVE_LUA50_LAUXLIB_H),[])
@@ -28,4 +38,4 @@ AC_CHECK_HEADER(lualib.h,AC_DEFINE(HAVE_LUALIB_H),[])
 
 AC_SEARCH_LIBS(dJointAttach,ode ode0, [], [AC_MSG_ERROR(libode or libode0 required)])
 
-AC_OUTPUT(Makefile bin/Makefile)
+AC_OUTPUT(Makefile bin/Makefile src/Makefile)

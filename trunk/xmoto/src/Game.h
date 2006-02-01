@@ -138,6 +138,7 @@ namespace vapp {
       double m_fLastFrameTime;                  /* When the last frama was initiated */
       double m_fLastPerfStateTime;
       float m_fLastStateSerializationTime;    
+      double m_fLastPhysTime;                  /* When the last physic was computed */
       
       bool m_b50FpsMode;
       

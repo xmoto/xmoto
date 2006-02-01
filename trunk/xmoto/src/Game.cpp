@@ -224,6 +224,8 @@ namespace vapp {
         break;
       }
     }
+    
+    m_fLastPhysTime = getTime() - PHYS_STEP_SIZE;
   }
 
   /*===========================================================================
@@ -312,6 +314,7 @@ namespace vapp {
     /* Reset timers */
     m_fLastFrameTime = 0.0f;
     m_fLastPerfStateTime = 0.0f;
+    m_fLastPhysTime = getTime() - PHYS_STEP_SIZE;
     
     /* And stuff */
     m_nPauseShade = 0;
@@ -612,7 +615,8 @@ namespace vapp {
       }
     }
     
-    /* Perform a rather precise calculation of the frame rate */
+    /* Perform a rather precise calculation of the frame rate */    
+    double fFrameTime = getRealTime();
     static int nFPS_Frames = 0;
     static double fFPS_LastTime = 0.0f;
     static double fFPS_CurrentTime = 0.0f;
@@ -626,34 +630,10 @@ namespace vapp {
     nFPS_Frames++;
     
     /* Current time? */
-    static int nADelay = 0;
-    static int nFCount = 0;
-    double fFrameTime = getRealTime();
-    double fFrameRenderingTime = fFrameTime - m_fLastFrameTime;
-    double fFramesPerSecond = 1.0f / fFrameRenderingTime;
-    m_fLastFrameTime = fFrameTime;
+    int nADelay = 0;    
     
-    if(fFramesPerSecond < 90) {
-      if(nFCount < 0) nFCount = 0;
-      nFCount++;
-    }
-    else {
-      if(nFCount > 0) nFCount = 0;
-      nFCount--;
-    }
+    m_fLastFrameTime = fFrameTime; /* FIXME unsused*/
     
-    if(!isNoGraphics()) {
-      if(!m_b50FpsMode && nFCount > 100) {
-        m_b50FpsMode = true;
-        m_Renderer.setSpeedMultiplier(2);   
-        //printf("entering 50 fps!\n");
-      }
-      else if(m_b50FpsMode && nFCount < -100) {
-        m_b50FpsMode = false;
-        m_Renderer.setSpeedMultiplier(1);   
-        //printf("entering 100 fps!\n");
-      }
-    }
     /* What state? */
     switch(m_State) {
       case GS_MENU:
@@ -683,7 +663,7 @@ namespace vapp {
         }
 
         /* Delay a bit so we don't eat all CPU */
-        SDL_Delay(5);
+        SDL_Delay(10);
         break;
       }
       case GS_PAUSE:
@@ -692,19 +672,34 @@ namespace vapp {
       case GS_REPLAYING:
       case GS_PLAYING: {
         /* When did the frame start? */
-        float fStartFrameTime = getTime();
+        double fStartFrameTime = getTime();
+        int nPhysSteps = 0;
 
         /* Only do this when not paused */
         if(m_State == GS_PLAYING) {
           /* Increase frame counter */
           m_nFrame++;
-                    
-          /* Update game */
-          m_MotoGame.updateLevel( PHYS_STEP_SIZE,NULL,m_pReplay );                
-          
-          if(m_b50FpsMode) /* if we're aiming for 50 fps instead of 100, do an extra step now */
-            m_MotoGame.updateLevel( PHYS_STEP_SIZE,NULL,m_pReplay );      
 
+      	  /* reinitialise if we can't catch up */
+      	  if (m_fLastPhysTime - getTime() < -0.5f)
+      	    m_fLastPhysTime = getTime() - PHYS_STEP_SIZE;
+      
+                /* Update game until we've catched up with the real time */
+      	  do {
+                  m_MotoGame.updateLevel( PHYS_STEP_SIZE,NULL,m_pReplay );
+      	    m_fLastPhysTime += PHYS_STEP_SIZE;
+      	    nPhysSteps++;
+      	    /* don't do this infinitely, maximum miss 50 frames, then give up */
+      	  } while ((m_fLastPhysTime + PHYS_STEP_SIZE <= getTime()) && (nPhysSteps < 50));
+      	  m_Renderer.setSpeedMultiplier(nPhysSteps);
+      	  
+      	  if(!m_bTimeDemo) {
+      	    /* Never pass this point while being ahead of time, busy wait until it's time */
+      	    if (nPhysSteps <= 1)
+      	      while (m_fLastPhysTime > getTime())
+      	    ;
+      	  }
+                    
           if(m_bEnableEngineSound) {
             /* Update engine RPM */
             m_EngineSound.setRPM( m_MotoGame.getBikeEngineRPM() ); 
@@ -793,28 +788,26 @@ namespace vapp {
         }
         
         /* When did it end? */
-        float fEndFrameTime = getTime();
+        double fEndFrameTime = getTime();
         
         /* Delay */
         if(m_State == GS_REPLAYING) {
           /* When replaying... */
           nADelay = ((1.0f/m_fCurrentReplayFrameRate - (fEndFrameTime-fStartFrameTime)) * 1000.0f) * 0.5f;
-                      
-          if(nADelay > 0) {
-            if(!m_bTimeDemo)
-              SDL_Delay(nADelay);
-          }
         }
+      	else if ((m_State == GS_FINISHED) || (m_State == GS_JUSTDEAD) || (m_State == GS_PAUSE)) {
+      	  SDL_Delay(10);
+      	}
         else {
-          if(m_b50FpsMode)
-            nADelay = (2.0f * PHYS_STEP_SIZE - (fEndFrameTime-fStartFrameTime)) * 1000.0f;
-          else
-            nADelay = (PHYS_STEP_SIZE - (fEndFrameTime-fStartFrameTime)) * 1000.0f;
-            
-          if(nADelay > 0) {
-            if(!m_bTimeDemo)
-              SDL_Delay(nADelay);
-          }
+      	  /* become idle only if we hadn't to skip any frame, recently, and more globaly (80% of fps) */
+          if ((nPhysSteps <= 1) && (fFPS_Rate > (0.8f / PHYS_STEP_SIZE)))
+          nADelay = ((m_fLastPhysTime + PHYS_STEP_SIZE) - fEndFrameTime) * 1000.0f;
+        }
+        
+        if(nADelay > 0) {
+          if(!m_bTimeDemo) {
+            SDL_Delay(nADelay);
+      	  }
         }
 
         /* Show fps (debug modish) */
