@@ -46,7 +46,7 @@ namespace vapp {
   
   #define CD_MIN_CELL_SIZE        2.0f
   #define CD_MAX_GRID_SIZE        16
-  #define CD_EPSILON              0.001f
+  #define CD_EPSILON              0.01f
 
   /*===========================================================================
   Reset collision system
@@ -344,9 +344,6 @@ namespace vapp {
         
         /* Check all lines in cell */
         for(int j=0;j<m_pGrid[i].Lines.size();j++) {
-          if(m_bDebugFlag)
-            m_CheckedLinesW.push_back(m_pGrid[i].Lines[j]);
-
           /* Is circle "behind" the line? */
           float vx = m_pGrid[i].Lines[j]->x2 - m_pGrid[i].Lines[j]->x1;
           float vy = m_pGrid[i].Lines[j]->y2 - m_pGrid[i].Lines[j]->y1;
@@ -362,13 +359,16 @@ namespace vapp {
             continue;
           }
 
+          if(m_bDebugFlag)
+            m_CheckedLinesW.push_back(m_pGrid[i].Lines[j]);
+
           /* Is line endings inside the circle? */
           float dx1 = m_pGrid[i].Lines[j]->x1 - x;
           float dy1 = m_pGrid[i].Lines[j]->y1 - y;
-          if(dx1*dx1 + dy1*dy1 <= r*r) {
+          if(sqrt(dx1*dx1 + dy1*dy1) <= r) {
             /* We have a touch! */
             dContact c;
-            Vector2f W = Vector2f(enx,eny);
+            Vector2f W = Vector2f(-dx1,-dy1);
             W.normalize();
 
             _SetWheelContactParams(&c,Vector2f(m_pGrid[i].Lines[j]->x1,m_pGrid[i].Lines[j]->y1),
@@ -379,10 +379,10 @@ namespace vapp {
 
           float dx2 = m_pGrid[i].Lines[j]->x2 - x;
           float dy2 = m_pGrid[i].Lines[j]->y2 - y;
-          if(dx2*dx2 + dy2*dy2 <= r*r) {
+          if(sqrt(dx2*dx2 + dy2*dy2) <= r) {
             /* We have a touch! */            
             dContact c;
-            Vector2f W = Vector2f(enx,eny);
+            Vector2f W = Vector2f(-dx2,-dy2);
             W.normalize();
 
             _SetWheelContactParams(&c,Vector2f(m_pGrid[i].Lines[j]->x2,m_pGrid[i].Lines[j]->y2),

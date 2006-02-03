@@ -557,14 +557,18 @@ namespace vapp {
     Vector2f LevelBoundsMin,LevelBoundsMax;
     LevelBoundsMin.x = m_pLevelSrc->getLeftLimit();
     LevelBoundsMax.x = m_pLevelSrc->getRightLimit();
-    LevelBoundsMin.y = m_pLevelSrc->getTopLimit();
-    LevelBoundsMax.y = m_pLevelSrc->getBottomLimit();
+    LevelBoundsMin.y = m_pLevelSrc->getBottomLimit();
+    LevelBoundsMax.y = m_pLevelSrc->getTopLimit();
     for(int i=0;i<InBlocks.size();i++) { 
       for(int j=0;j<InBlocks[i]->Vertices.size();j++) {
-        LevelBoundsMin.x = InBlocks[i]->Vertices[j]->fX < LevelBoundsMin.x ? InBlocks[i]->Vertices[j]->fX : LevelBoundsMin.x;
-        LevelBoundsMin.y = InBlocks[i]->Vertices[j]->fY < LevelBoundsMin.y ? InBlocks[i]->Vertices[j]->fY : LevelBoundsMin.y;
-        LevelBoundsMax.x = InBlocks[i]->Vertices[j]->fX > LevelBoundsMax.x ? InBlocks[i]->Vertices[j]->fX : LevelBoundsMax.x;
-        LevelBoundsMax.y = InBlocks[i]->Vertices[j]->fY > LevelBoundsMax.y ? InBlocks[i]->Vertices[j]->fY : LevelBoundsMax.y;
+        LevelBoundsMin.x = InBlocks[i]->fPosX+InBlocks[i]->Vertices[j]->fX < LevelBoundsMin.x ? 
+                           InBlocks[i]->fPosX+InBlocks[i]->Vertices[j]->fX : LevelBoundsMin.x;
+        LevelBoundsMin.y = InBlocks[i]->fPosY+InBlocks[i]->Vertices[j]->fY < LevelBoundsMin.y ? 
+                           InBlocks[i]->fPosY+InBlocks[i]->Vertices[j]->fY : LevelBoundsMin.y;
+        LevelBoundsMax.x = InBlocks[i]->fPosX+InBlocks[i]->Vertices[j]->fX > LevelBoundsMax.x ? 
+                           InBlocks[i]->fPosX+InBlocks[i]->Vertices[j]->fX : LevelBoundsMax.x;
+        LevelBoundsMax.y = InBlocks[i]->fPosY+InBlocks[i]->Vertices[j]->fY > LevelBoundsMax.y ? 
+                           InBlocks[i]->fPosY+InBlocks[i]->Vertices[j]->fY : LevelBoundsMax.y;
       }
     }
     

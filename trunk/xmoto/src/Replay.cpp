@@ -170,8 +170,12 @@ namespace vapp {
       /* Try adding a .rpl extension */
       pfh = FS::openIFile(std::string("Replays/") + FileName + std::string(".rpl"));
       if(pfh == NULL) {    
-        Log("** Warning ** : Failed to open replay file for input: %s",(std::string("Replays/") + FileName).c_str());
-        return "";
+        /* Finally try opening as if it is a full path */
+        pfh = FS::openIFile(FileName);
+        if(pfh == NULL) {
+          Log("** Warning ** : Failed to open replay file for input: %s",(std::string("Replays/") + FileName).c_str());
+          return "";
+        }
       }
     }
     

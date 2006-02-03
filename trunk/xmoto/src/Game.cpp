@@ -97,6 +97,8 @@ namespace vapp {
                 T2 = formatTime(pBestPTime->fFinishTime);
               
               m_Renderer.setBestTime(T1 + std::string(" / ") + T2 + std::string(GAMETEXT_REPLAYHELPTEXT));              
+              
+              if(m_bBenchmark) m_Renderer.setBestTime("");
             }
 
             m_fStartTime = getRealTime();
@@ -578,7 +580,7 @@ namespace vapp {
   void GameApp::drawFrame(void) {
     char cTemp[256];
     bool bValidGameState = true;
-    
+   
     /* Update sound system and input */
     if(!isNoGraphics()) {
       m_EngineSound.update(getRealTime());
