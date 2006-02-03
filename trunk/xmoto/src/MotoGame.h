@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "LevelSrc.h"
 #include "BSP.h"
 #include "DBuffer.h"
+#include "Collision.h"
 
 #define GAME_EVENT_QUEUE_SIZE				128
 #define GAME_EVENT_OUTGOING_BUFFER  65536
@@ -492,6 +493,7 @@ namespace vapp {
       bool isWheelSpinning(void) {return m_bWheelSpin;}
       Vector2f getWheelSpinPoint(void) {return m_WheelSpinPoint;}
       Vector2f getWheelSpinDir(void) {return m_WheelSpinDir;}
+      CollisionSystem *getCollisionHandler(void) {return &m_Collision;}
             
       /* Debug */
       void resetDummies(void) {m_nNumDummies=0;}
@@ -514,6 +516,8 @@ namespace vapp {
 
       ArrowPointer m_Arrow;               /* Arrow */  
       
+      CollisionSystem m_Collision;        /* Collision system */
+            
       LevelSrc *m_pLevelSrc;              /* Source of level */            
       lua_State *m_pL;                    /* Lua state associated with the
                                              level */
@@ -598,9 +602,6 @@ namespace vapp {
       int _IntersectWheelLine(Vector2f Cp,float Cr,int nNumContacts,dContact *pContacts,Vector2f A0,Vector2f A1);
       bool _IntersectHeadLevel(Vector2f Cp,float Cr);
       bool _IntersectHeadLine(Vector2f Cp,float Cr,Vector2f A0,Vector2f A1);
-      void _SetWheelContactParams(dContact *pc,const Vector2f &Pos,const Vector2f &Normal,float fDepth);
-      int _AddContactToList(dContact *pContacts,int nNumContacts,dContact *pc);      
-      float _CalculateDepth(const Vector2f &Cp,float Cr,Vector2f P);
       bool _DoCircleTouchZone(const Vector2f &Cp,float Cr,LevelZone *pZone);
       bool _IntersectPointLevel(Vector2f Cp);
       void _UpdateZones(void);

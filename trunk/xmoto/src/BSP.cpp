@@ -112,6 +112,8 @@ namespace vapp {
       
         delete pPoly;
         Log("** Warning ** : BSP::_Recurse() - empty final polygon ignored");
+        
+        m_nNumErrors++;
       }
     }
     else {
@@ -165,7 +167,8 @@ namespace vapp {
 
     /* Empty? */
     if(pPoly->Vertices.empty()) {
-      Log("** Warning ** : BSP::_SplitPoly() - empty polygon encountered, bash the coder");
+      Log("** Warning ** : BSP::_SplitPoly() - empty polygon encountered");
+      m_nNumErrors++;
       return;
     }
     
@@ -190,7 +193,7 @@ namespace vapp {
     if(nNumInBack==0 && nNumInFront==0) {
       /* Everything is on the line */                 
       Log("** Warning ** : BSP::_SplitPoly() - polygon fully plane aligned");
-      
+      m_nNumErrors++;
       //printf("   %d verts :\n",pPoly->Vertices.size());
       //for(int i=0;i<pPoly->Vertices.size();i++) {
       //  printf("     [%f %f]\n",pPoly->Vertices[i]->P.x,pPoly->Vertices[i]->P.y);
@@ -259,6 +262,8 @@ namespace vapp {
           if(den == 0.0f) { 
             /* This should REALLY not be the case... warning! */
             Log("** Warning ** : BSP::_SplitPoly() - impossible case (1)");
+            m_nNumErrors++;
+            
             /* Now it's best simply to ignore this */
             continue;
           }
@@ -368,6 +373,8 @@ namespace vapp {
           if(den == 0.0f) { 
             /* This should REALLY not be the case... warning! */
             Log("** Warning ** : BSP::_SplitLines() - impossible case (1)");
+            m_nNumErrors++;
+            
             /* Now it's best simply to ignore this */
             continue;
           }
@@ -404,6 +411,8 @@ namespace vapp {
           else {
             /* Another thing we should just ignore */
             Log("** Warning ** : BSP::_SplitLines() - impossible case (2)");
+            m_nNumErrors++;
+            
             continue;
           }         
         }

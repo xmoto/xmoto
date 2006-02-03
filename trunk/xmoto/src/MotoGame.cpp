@@ -387,6 +387,9 @@ namespace vapp {
     luaopen_Game(m_pL);    
     m_pMotoGame = this;
     
+    /* Clear collision system */
+    m_Collision.reset();
+    
     /* Clear stuff */
     clearStates();
     
@@ -460,7 +463,7 @@ namespace vapp {
     
     /* Generate extended level data to be used by the game */
     _GenerateLevel();
-    
+        
     /* Calculate bike stuff */
     _CalculateBikeAnchors();    
     Vector2f C( pLevelSrc->getPlayerStartX() - m_BikeA.Tp.x, pLevelSrc->getPlayerStartY() - m_BikeA.Tp.y);
@@ -544,15 +547,36 @@ namespace vapp {
       Log("** Warning ** : Can't generate level when no source is assigned!");
       return;
     }
-    
+        
     /* Ok, our primary job is to convert the set of input blocks, which CAN
        contain concave polygons, into a final set of (possibly) smaller 
        blocks that are guaranteed to be convex. */
     std::vector<LevelBlock *> &InBlocks = m_pLevelSrc->getBlockList();           
+
+    /* Start by determining the bounding box of the level */
+    Vector2f LevelBoundsMin,LevelBoundsMax;
+    LevelBoundsMin.x = m_pLevelSrc->getLeftLimit();
+    LevelBoundsMax.x = m_pLevelSrc->getRightLimit();
+    LevelBoundsMin.y = m_pLevelSrc->getTopLimit();
+    LevelBoundsMax.y = m_pLevelSrc->getBottomLimit();
+    for(int i=0;i<InBlocks.size();i++) { 
+      for(int j=0;j<InBlocks[i]->Vertices.size();j++) {
+        LevelBoundsMin.x = InBlocks[i]->Vertices[j]->fX < LevelBoundsMin.x ? InBlocks[i]->Vertices[j]->fX : LevelBoundsMin.x;
+        LevelBoundsMin.y = InBlocks[i]->Vertices[j]->fY < LevelBoundsMin.y ? InBlocks[i]->Vertices[j]->fY : LevelBoundsMin.y;
+        LevelBoundsMax.x = InBlocks[i]->Vertices[j]->fX > LevelBoundsMax.x ? InBlocks[i]->Vertices[j]->fX : LevelBoundsMax.x;
+        LevelBoundsMax.y = InBlocks[i]->Vertices[j]->fY > LevelBoundsMax.y ? InBlocks[i]->Vertices[j]->fY : LevelBoundsMax.y;
+      }
+    }
+    
+    m_Collision.setDims(LevelBoundsMin.x,LevelBoundsMin.y,LevelBoundsMax.x,LevelBoundsMax.y);
+    //m_Collision.setSize(LevelBoundsMax.x - LevelBoundsMin.x,LevelBoundsMax.y - LevelBoundsMin.y);
+    //m_Collision.setCenter((LevelBoundsMax.x + LevelBoundsMin.x)/2.0f,(LevelBoundsMax.y + LevelBoundsMin.y)/2.0f);
     
     Log("Generating level from %d block%s...",InBlocks.size(),InBlocks.size()==1?"":"s");
     
     /* For each input block */
+    int nTotalBSPErrors = 0;
+    
     for(int i=0;i<InBlocks.size();i++) {
       /* Do the "convexifying" the BSP-way. It might be overkill, but we'll
          probably appreciate it when the input data is very complex. It'll also 
@@ -565,7 +589,15 @@ namespace vapp {
         int jnext = j+1;
         if(jnext == InBlocks[i]->Vertices.size()) jnext=0;
         
-        /* Add as line def */
+        if(!InBlocks[i]->bBackground) {
+          /* Add line to collision handler */
+          m_Collision.defineLine(InBlocks[i]->fPosX + InBlocks[i]->Vertices[j]->fX,
+                                InBlocks[i]->fPosY + InBlocks[i]->Vertices[j]->fY,
+                                InBlocks[i]->fPosX + InBlocks[i]->Vertices[jnext]->fX,
+                                InBlocks[i]->fPosY + InBlocks[i]->Vertices[jnext]->fY);
+        }
+        
+        /* Add line to BSP generator */
         BSPTree.addLineDef( Vector2f(InBlocks[i]->Vertices[j]->fX,
                                      InBlocks[i]->Vertices[j]->fY),
                             Vector2f(InBlocks[i]->Vertices[jnext]->fX,
@@ -589,10 +621,19 @@ namespace vapp {
         _CreateBlock(BSPPolys[j],InBlocks[i]);
       }
       Log(" %d poly%s generated from block #%d",BSPPolys.size(),BSPPolys.size()==1?"":"s",i+1);
+
+      /* Errors from BSP? */        
+      nTotalBSPErrors += BSPTree.getNumErrors();      
     }
     
     Log(" %d special edge%s",m_OvEdges.size(),m_OvEdges.size()==1?"":"s");
-    Log(" %d poly%s in total",m_Blocks.size(),m_Blocks.size()==1?"":"s");
+    Log(" %d poly%s in total",m_Blocks.size(),m_Blocks.size()==1?"":"s");        
+    
+    if(nTotalBSPErrors > 0) {
+      Log(" %d BSP error%s in total",nTotalBSPErrors,nTotalBSPErrors==1?"":"s");
+      gameMessage(GAMETEXT_WARNING);
+      gameMessage(GAMETEXT_ERRORSINLEVEL);
+    }
     
     /* Create level surroundings (by limits) */    
     float fVMargin = 20,fHMargin = 20;
@@ -646,6 +687,24 @@ namespace vapp {
     pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
     pVertex->P=Vector2f( m_pLevelSrc->getRightLimit(), m_pLevelSrc->getBottomLimit());
     pBlock->pSrcBlock = NULL;
+    
+    /* Give limits to collision system */
+    m_Collision.defineLine( m_pLevelSrc->getLeftLimit(), m_pLevelSrc->getTopLimit(),
+                            m_pLevelSrc->getLeftLimit(), m_pLevelSrc->getBottomLimit() );
+    m_Collision.defineLine( m_pLevelSrc->getLeftLimit(), m_pLevelSrc->getBottomLimit(),
+                            m_pLevelSrc->getRightLimit(), m_pLevelSrc->getBottomLimit() );
+    m_Collision.defineLine( m_pLevelSrc->getRightLimit(), m_pLevelSrc->getBottomLimit(),
+                            m_pLevelSrc->getRightLimit(), m_pLevelSrc->getTopLimit() );
+    m_Collision.defineLine( m_pLevelSrc->getRightLimit(), m_pLevelSrc->getTopLimit(),
+                            m_pLevelSrc->getLeftLimit(), m_pLevelSrc->getTopLimit() );
+    
+    /* Show stats about the collision system */
+    CollisionSystemStats CStats;
+    m_Collision.getStats(&CStats);
+    Log(" %dx%d grid with %.1fx%.1f cells (%.0f%% empty)\n"
+        " %d total blocking lines",
+        CStats.nGridWidth,CStats.nGridHeight,CStats.fCellWidth,CStats.fCellHeight,
+        CStats.fPercentageOfEmptyCells,CStats.nTotalLines);
   }
   
   /*===========================================================================

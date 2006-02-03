@@ -1,58 +1,58 @@
 X-Moto 0.1.11 (alpha) 2006-
 --------------------------------
 
- * Made a change that hopefully should make mouse 
-   movement less inresponsive on some systems.
- * Integrated a patch by Eric Piel that makes the game 
-   play more smooth, most notable on lower end systems.
- * Added a better set of configuration scripts, also by
-   Eric Piel. Please notify me if some compatibility is 
-   broken by this, and I'll try to fix it as fast as 
-   possible.
- * Various minor changes.
+ * Major optimization of collision detection. The framerate should be
+   many-doubled when playing geometry-heavy levels.
+ * Game no longer quits if a level specified by the user or a replay
+   isn't found.
+ * Made a change that hopefully should make mouse movement less 
+   inresponsive on some systems.
+ * Integrated a patch by Eric Piel that makes the game play more 
+   smooth, most notable on lower end systems.
+ * Added a (hopefully) better set of build configuration scripts, also
+   by Eric Piel. Please notify me if some compatibility is broken by
+   this, and I'll try to fix it as fast as possible.
+ * New -benchmark option to play with.
+ * The user is now warned if he's entering a level with geometrical
+   errors.
+ * Various minor changes and several small bugs fixed.
 
 X-Moto 0.1.10 (alpha) 2005-12-03
 --------------------------------
 
- * Nasty (and very stupid) bug that prevented new replays
-   from being shown, has been fixed.
- * Spamming your console is no longer default behaviour.
-   If you want to enable it, use the new -v command-line
-   option.
- * Log messages are now written to xmoto.log (also on 
-   Windows, so there's no longer a stdout.txt).
- * Fixed an bug that prevented the game from compiling
-   on Mac OS X (thanks again Maxime Biais).
- * The game now defaults to listing all replays, not only
-   the ones made by the current player.
+ * Nasty (and very stupid) bug that prevented new replays from being
+   shown, has been fixed.
+ * Spamming your console is no longer default behaviour. If you want
+   to enable it, use the new -v command-line option.
+ * Log messages are now written to xmoto.log (also on Windows, so 
+   there's no longer a stdout.txt).
+ * Fixed an bug that prevented the game from compiling on Mac OS X
+   (thanks again Maxime Biais).
+ * The game now defaults to listing all replays, not only the ones
+   made by the current player.
 
 X-Moto 0.1.9 (alpha)  2005-12-01
 --------------------------------
 
- * Added a level information viewing user interface, 
-   including in-menu shortcuts to best times and replays
-   for a specific level.
- * Fixed a bug that caused the game to misbehave if 
-   escape was pressed while entering the name of a replay
-   to save.
- * Better handling of events in replays (for instance,
-   picked-up strawberries are no longer gone when 
-   rewinding).
+ * Added a level information viewing user interface, including in-menu
+   shortcuts to best times and replays for a specific level.
+ * Fixed a bug that caused the game to misbehave if escape was pressed
+   while entering the name of a replay to save.
+ * Better handling of events in replays (for instance, picked-up 
+   strawberries are no longer gone when rewinding).
  * Applied MacOS X patch by Maxime Biais.
- * Replays can no longer be recorded for levels that 
-   include scripting.
- * Older releases will not be able to read the new 
-   replays, but this version can read old replays 
-   without any problems (in which case the new event
-   features will be missing).
+ * Replays can no longer be recorded for levels that include 
+   scripting.
+ * Older releases will not be able to read the new replays, but this
+   version can read old replays without any problems (in which case
+   the new event features will be missing).
  * Faster building procedure on Windows.
  * New built-in levels, one of them by Clive Crous.
- * New tutorial levels. These are now considered external
-   levels, so you'll find them under that tab.
+ * New tutorial levels. These are now considered external levels, so
+   you'll find them under that tab.
  * Smoother playback of replays.
- * Note that I have given up ordering the built-in levels
-   by difficulty. The current order will be kept until
-   beta.
+ * Note that I have given up ordering the built-in levels by 
+   difficulty. The current order will be kept until beta.
  * Thanks to Petter Reinholdtsen for pointing out that
    SDL/SDL_opengl.h fixes all of the OpenGL problems. :)
 
@@ -60,22 +60,19 @@ X-Moto 0.1.8 (alpha)  2005-11-06
 --------------------------------
 
  * 6 new (difficult) built-in levels by CoW.
- * Very limited sounds (only menu buttons, when 
-   picking up strawberries, and a very minimalistic
-   bike engine sound).
+ * Very limited sounds (only menu buttons, when picking up 
+   strawberries, and a very minimalistic bike engine sound).
  * Uses SDL_mixer for sound playback.
  * No longer directly dependant on the Ogg Vorbis 
    libraries.
- * Now direclty dependant on zlib, although that propably
-   won't mean much, as X-Moto have used zlib indirectly
-   through libpng all the time.
+ * Now direclty dependant on zlib, although that propably won't mean
+   much, as X-Moto have used zlib indirectly through libpng all the 
+   time.
  * Replays supported.
- * Non-windows release with a more intelligent configure
-   script.
- * New -ugly option for computers without a proper OpenGL
-   video card.
- * Custom mouse cursor, the standard SDL one caused some
-   problems for some people.
+ * Non-windows release with a more intelligent configure script.
+ * New -ugly option for computers without a proper OpenGL video card.
+ * Custom mouse cursor, the standard SDL one caused some problems for
+   some people.
  * Major code clean up and several bug-fixes.
  * Much more program documntation in README.
  * List columns are now clipped properly.
@@ -91,16 +88,16 @@ X-Moto 0.1.7 (alpha)  2005-10-27
  * Double-clicking in lists to activate items.
  * Non-windows release now dynamically linked with ODE and
    LUA libraries.
- * Paul Nettle's MMGR no longer included in the non-windows
-   release. Apparantly its (custom) license conflicted with
-   the Debian Free Software Guideline #6 (No Discrimination 
-   Against Fields of Endeavor) by stating:
+ * Paul Nettle's MMGR no longer included in the non-windows release. 
+   Apparantly its (custom) license conflicted with the Debian Free 
+   Software Guideline #6 (No Discrimination Against Fields of 
+   Endeavor) by stating:
    
-    - "You may not use this software to directly or indirectly 
-      cause harm to others."
+    - "You may not use this software to directly or indirectly cause
+       harm to others."
       
-   So this is good news if you want to burn X-Moto unto a CD
-   and kill someone with it! :)
+   So this is good news if you want to burn X-Moto unto a CD and kill
+   someone with it! :)
  * Main menu no longer eats all of the CPU cycles.
 
 X-Moto 0.1.6 (alpha)  2005-10-05
@@ -108,14 +105,14 @@ X-Moto 0.1.6 (alpha)  2005-10-05
 
  * New built-in levels.
  * Now with sound back on (still no effects, though).
- * Fixed bug that allowed disabled user interface buttons to
-   be selected with the keyboard.
+ * Fixed bug that allowed disabled user interface buttons to be 
+   selected with the keyboard.
  * PgUp/PgDown now works in scroll lists.
  * Clearified some error messages.
  * Slight user interface adjustments.
  * Removed GLU dependency.
- * User interface scaling is now disabled, enabling better
-   support of resolutions higher than 800x600.
+ * User interface scaling is now disabled, enabling better support 
+   of resolutions higher than 800x600.
  * Resolutions below 800x600 are no longer supported.
  * Updated particle effects.
 
@@ -128,8 +125,8 @@ Game:
  * New particle effects.
  * Built-in level 15 is now less difficult.
  * Mouse wheel support.
- * Fixed bug that caused most mouse events to be processed as
-   left button clicks.
+ * Fixed bug that caused most mouse events to be processed as left 
+   button clicks.
  * Updated user interface.
  * Some code clean-up.
 
@@ -178,8 +175,7 @@ X-Moto 0.1.2 (alpha)  2005-06-13
 Game:
 
  * Major rendering pipeline optimizations.
- * Replay support is only partially implemented, so it is now 
-   hidden.
+ * Replay support is only partially implemented, so it is now hidden.
  * Renderer now obeys graphical quality settings.
  * New configuration options.
  * New built-in levels.

@@ -86,6 +86,7 @@ namespace vapp {
                  m_bShowCursor = true;
                  m_bEnableEngineSound = true;
                  m_bCompressReplays = true;
+                 m_bBenchmark = false;
                  }
         
       /* Virtual methods */
@@ -111,6 +112,7 @@ namespace vapp {
       EngineSoundSimulator m_EngineSound;
     
       /* Data */
+      bool m_bBenchmark;                        /* true: Test game performance */
       bool m_bShowFrameRate;                    /* true: frame rate */
       bool m_bListLevels;                       /* true: list installed levels */
       bool m_bListReplays;                      /* true: list replays */
@@ -139,6 +141,7 @@ namespace vapp {
       double m_fLastPerfStateTime;
       float m_fLastStateSerializationTime;    
       double m_fLastPhysTime;                  /* When the last physic was computed */
+      double m_fStartTime;                      
       
       bool m_b50FpsMode;
       

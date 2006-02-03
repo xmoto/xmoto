@@ -145,8 +145,8 @@ namespace vapp {
                    BMin1.y<BMin2.y ? BMin1.y:BMin2.y );
     Vector2f FMax( BMax1.x>BMax2.x ? BMax1.x:BMax2.x, 
                    BMax1.y>BMax2.y ? BMax1.y:BMax2.y );
-    if(FMax.x-FMin.x < BMax1.x-BMin1.x+BMax2.x-BMin2.x &&
-       FMax.y-FMin.y < BMax1.y-BMin1.y+BMax2.y-BMin2.y) return true;
+    if(FMax.x-FMin.x < 0.0001f + (BMax1.x-BMin1.x)+(BMax2.x-BMin2.x) &&
+       FMax.y-FMin.y < 0.0001f + (BMax1.y-BMin1.y)+(BMax2.y-BMin2.y)) return true;
     return false;
   }
   

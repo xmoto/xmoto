@@ -72,16 +72,21 @@ namespace vapp {
   ===========================================================================*/
   class BSP {
     public:
+      BSP() {m_nNumErrors=0;}
       ~BSP() {_Cleanup();}
     
       /* Methods */
       void addLineDef(Vector2f P0,Vector2f P1);
       std::vector<BSPPoly *> &compute(void);            
       
+      int getNumErrors(void) {return m_nNumErrors;}
+      
     private:
       /* Data */
       std::vector<BSPLine *> m_Lines;     /* Input data set */
       std::vector<BSPPoly *> m_Polys;     /* Output data set */
+      
+      int m_nNumErrors;                   /* Number of errors found */
       
       /* Helpers */
       void _Cleanup(void);

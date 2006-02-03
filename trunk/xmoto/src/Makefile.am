@@ -52,7 +52,9 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp GameMain.cpp \
 	RendererBike.cpp \
 	Input.cpp \
 	Input.h \
-	GameSerializer.cpp
+	GameSerializer.cpp \
+	Collision.cpp \
+	Collision.h
 
 xmoto_LDADD = $(common_LDADD)
 		

@@ -133,6 +133,9 @@
 				RelativePath="..\src\BSP.cpp">
 			</File>
 			<File
+				RelativePath="..\src\Collision.cpp">
+			</File>
+			<File
 				RelativePath="..\src\Game.cpp">
 			</File>
 			<File
@@ -208,6 +211,9 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
 				RelativePath="..\src\BSP.h">
+			</File>
+			<File
+				RelativePath="..\src\Collision.h">
 			</File>
 			<File
 				RelativePath="..\src\Game.h">

@@ -322,6 +322,67 @@ namespace vapp {
       /* ... and finally the foreground sprites! */
       _RenderSprites(true,false);
     }
+    
+    if(isDebug()) {
+      /* Draw some collision handling debug info */
+      CollisionSystem *pc = getGameObject()->getCollisionHandler();
+      for(int i=0;i<pc->m_CheckedLines.size();i++) {
+        glLineWidth(3);
+ 			  glBegin(GL_LINE_STRIP);
+  		  glColor3f(1,0,0);
+  		  glVertex2f(pc->m_CheckedLines[i]->x1,pc->m_CheckedLines[i]->y1);
+  		  glVertex2f(pc->m_CheckedLines[i]->x2,pc->m_CheckedLines[i]->y2);
+  		  glEnd();
+        glLineWidth(2);
+      }
+      for(int i=0;i<pc->m_CheckedCells.size();i++) {
+        glBegin(GL_LINE_LOOP);
+        glColor3f(1,0,0);
+        glVertex2f(pc->m_CheckedCells[i].x1,pc->m_CheckedCells[i].y1);
+        glVertex2f(pc->m_CheckedCells[i].x2,pc->m_CheckedCells[i].y1);
+        glVertex2f(pc->m_CheckedCells[i].x2,pc->m_CheckedCells[i].y2);
+        glVertex2f(pc->m_CheckedCells[i].x1,pc->m_CheckedCells[i].y2);
+        glEnd();
+      }
+      for(int i=0;i<pc->m_CheckedLinesW.size();i++) {
+        glLineWidth(1);
+ 			  glBegin(GL_LINE_STRIP);
+  		  glColor3f(0,1,0);
+  		  glVertex2f(pc->m_CheckedLinesW[i]->x1,pc->m_CheckedLinesW[i]->y1);
+  		  glVertex2f(pc->m_CheckedLinesW[i]->x2,pc->m_CheckedLinesW[i]->y2);
+  		  glEnd();
+        glLineWidth(1);
+      }
+      for(int i=0;i<pc->m_CheckedCellsW.size();i++) {
+        glBegin(GL_LINE_LOOP);
+        glColor3f(0,1,0);
+        glVertex2f(pc->m_CheckedCellsW[i].x1,pc->m_CheckedCellsW[i].y1);
+        glVertex2f(pc->m_CheckedCellsW[i].x2,pc->m_CheckedCellsW[i].y1);
+        glVertex2f(pc->m_CheckedCellsW[i].x2,pc->m_CheckedCellsW[i].y2);
+        glVertex2f(pc->m_CheckedCellsW[i].x1,pc->m_CheckedCellsW[i].y2);
+        glEnd();
+      }
+    }
+    
+    //const std::vector<LineSoup *> &LSoups = getGameObject()->getCollisionHandler()->getSoups();
+    //for(int i=0;i<LSoups.size();i++) {
+    //  glLineWidth(3);
+    //  for(int j=0;j<LSoups[i]->cNumLines;j++) {
+  		//	glBegin(GL_LINE_STRIP);
+	  	//	glColor3f(LSoups[i]->r,LSoups[i]->g,LSoups[i]->b);
+	  	//	glVertex2f(LSoups[i]->Lines[j].x1,LSoups[i]->Lines[j].y1);
+	  	//	glVertex2f(LSoups[i]->Lines[j].x2,LSoups[i]->Lines[j].y2);
+	  	//	glEnd();
+    //  }
+    //  glLineWidth(1);
+    //  glBegin(GL_LINE_LOOP);
+  		//glColor3f(LSoups[i]->r,LSoups[i]->g,LSoups[i]->b);
+  		//glVertex2f(LSoups[i]->Min.x,LSoups[i]->Min.y);
+  		//glVertex2f(LSoups[i]->Max.x,LSoups[i]->Min.y);
+  		//glVertex2f(LSoups[i]->Max.x,LSoups[i]->Max.y);
+  		//glVertex2f(LSoups[i]->Min.x,LSoups[i]->Max.y);
+    //  glEnd();
+    //}
         
     /* Hmm, in debug-mode we'd also like to see the zones and stuff */
     if(isDebug()) {    

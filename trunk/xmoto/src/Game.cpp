@@ -70,7 +70,11 @@ namespace vapp {
           LevelSrc *pLevelSrc = _FindLevelByID(LevelID);
           if(pLevelSrc == NULL) {
             Log("** Warning ** : level '%s' specified by replay '%s' not found",LevelID.c_str(),m_PlaySpecificReplay.c_str());
-            throw Exception("unknown level specified by replay");
+            
+            char cBuf[256];
+            sprintf(cBuf,GAMETEXT_LEVELREQUIREDBYREPLAY,LevelID.c_str());
+            setState(GS_MENU);
+            notifyMsg(cBuf);                        
           }
           else {    
             /* Init level */                
@@ -92,8 +96,10 @@ namespace vapp {
               if(pBestPTime != NULL)
                 T2 = formatTime(pBestPTime->fFinishTime);
               
-              m_Renderer.setBestTime(T1 + std::string(" / ") + T2 + std::string(GAMETEXT_REPLAYHELPTEXT));
+              m_Renderer.setBestTime(T1 + std::string(" / ") + T2 + std::string(GAMETEXT_REPLAYHELPTEXT));              
             }
+
+            m_fStartTime = getRealTime();
           }          
         }
         break;
@@ -145,7 +151,12 @@ namespace vapp {
         LevelSrc *pLevelSrc = _FindLevelByID(m_PlaySpecificLevel);
         if(pLevelSrc == NULL) {
           Log("** Warning ** : level '%s' not found",m_PlaySpecificLevel.c_str());
-          throw Exception("no level");
+
+          char cBuf[256];
+          sprintf(cBuf,GAMETEXT_LEVELNOTFOUND,m_PlaySpecificLevel.c_str());
+          setState(GS_MENU);
+          notifyMsg(cBuf);
+//          throw Exception("no level");
         }
         else {    
           /* Start playing right away */                
@@ -389,6 +400,9 @@ namespace vapp {
     m_Renderer.setDebug( m_bDebugMode );
     m_Renderer.setUglyMode( m_bUglyMode );
     
+    /* Tell collision system whether we want debug-info or not */
+    m_MotoGame.getCollisionHandler()->setDebug( m_bDebugMode );
+    
     /* Data time! */
     Log("Loading data...");
 
@@ -564,11 +578,11 @@ namespace vapp {
   void GameApp::drawFrame(void) {
     char cTemp[256];
     bool bValidGameState = true;
-
+    
     /* Update sound system and input */
     if(!isNoGraphics()) {
       m_EngineSound.update(getRealTime());
-      m_EngineSound.setRPM(0); /* per default don't have engien sound */
+      m_EngineSound.setRPM(0); /* per default don't have engine sound */
       Sound::update();
       
       m_InputHandler.updateInput(m_MotoGame.getBikeController());
@@ -680,24 +694,29 @@ namespace vapp {
           /* Increase frame counter */
           m_nFrame++;
 
+          /* Following time code is made by Eric Piel, but I took the liberty to change the minimum
+             frame-miss number from 50 to 10, because it wasn't working well. */
+             
       	  /* reinitialise if we can't catch up */
-      	  if (m_fLastPhysTime - getTime() < -0.5f)
+      	  if (m_fLastPhysTime - getTime() < -0.1f)
       	    m_fLastPhysTime = getTime() - PHYS_STEP_SIZE;
       
-                /* Update game until we've catched up with the real time */
+          /* Update game until we've catched up with the real time */
       	  do {
                   m_MotoGame.updateLevel( PHYS_STEP_SIZE,NULL,m_pReplay );
       	    m_fLastPhysTime += PHYS_STEP_SIZE;
       	    nPhysSteps++;
-      	    /* don't do this infinitely, maximum miss 50 frames, then give up */
-      	  } while ((m_fLastPhysTime + PHYS_STEP_SIZE <= getTime()) && (nPhysSteps < 50));
+      	    /* don't do this infinitely, maximum miss 10 frames, then give up */
+      	  } while ((m_fLastPhysTime + PHYS_STEP_SIZE <= getTime()) && (nPhysSteps < 10));
+      	  
+//      	  printf("%d ",nPhysSteps);
       	  m_Renderer.setSpeedMultiplier(nPhysSteps);
       	  
       	  if(!m_bTimeDemo) {
       	    /* Never pass this point while being ahead of time, busy wait until it's time */
-      	    if (nPhysSteps <= 1)
-      	      while (m_fLastPhysTime > getTime())
-      	    ;
+      	    if (nPhysSteps <= 1) {      	    
+      	      while (m_fLastPhysTime > getTime());
+      	    }
       	  }
                     
           if(m_bEnableEngineSound) {
@@ -751,6 +770,15 @@ namespace vapp {
                 /* Update game */
                 m_MotoGame.updateLevel( PHYS_STEP_SIZE,&ibs,m_pReplay );                 
               }
+            }
+            
+            /* Benchmarking and finished? If so, print the report and quit */
+            if(m_pReplay->didFinish() && m_bBenchmark) {
+              double fBenchmarkTime = getRealTime() - m_fStartTime;
+              printf("\n");
+              printf(" * %d frames rendered in %.0f seconds\n",m_nFrame,fBenchmarkTime);
+              printf(" * Average framerate: %.1f fps\n",((double)m_nFrame) / fBenchmarkTime);
+              quit();
             }
           }
           else bValidGameState = false;
@@ -1205,6 +1233,9 @@ namespace vapp {
       else if(UserArgs[i] == "-ugly") {
 				m_bUglyMode = true;
       }
+      else if(UserArgs[i] == "-benchmark") {
+				m_bBenchmark = true;
+      }
     }
   }
 
@@ -1222,6 +1253,9 @@ namespace vapp {
     printf("\t-fps\n\t\tDisplay framerate.\n");
     printf("\t-ugly\n\t\tEnable 'ugly' mode, suitable for computers without\n");
                    printf("\t\ta good OpenGL-enabled video card.\n");
+    printf("\t-benchmark\n\t\tOnly meaningful when combined with -replay and\n");
+                   printf("\t\t-timedemo. Useful to determine the graphics\n");
+                   printf("\t\tperformance.\n");
   }  
     
   /*===========================================================================

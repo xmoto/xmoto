@@ -329,8 +329,14 @@ namespace vapp {
       m_nCurChunk++;
       m_nCurState = 0;
     }
-    if(m_nCurChunk >= m_Chunks.size()) return false;    
-    if(m_nCurState >= m_Chunks[m_nCurChunk].nNumStates) return false;
+    if(m_nCurChunk >= m_Chunks.size()) {
+      m_bFinished = true;
+      return false;    
+    }
+    if(m_nCurState >= m_Chunks[m_nCurChunk].nNumStates) {
+      m_bFinished = true;
+      return false;
+    }
     
     memcpy(pcState,&m_Chunks[m_nCurChunk].pcChunkData[m_nCurState*m_nStateSize],m_nStateSize);
     m_nCurState++;

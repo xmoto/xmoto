@@ -64,6 +64,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_ENABLEENGINESOUND    "Enable Engine Sound"
 #define GAMETEXT_ENTERPLAYERNAME      "Enter player name:"
 #define GAMETEXT_ENTERREPLAYNAME      "Enter name of replay:"
+#define GAMETEXT_ERRORSINLEVEL        "There's errors in the level, don't expect it to playable!"
 #define GAMETEXT_EXTERNALLEVELS       "External Levels"     
 #define GAMETEXT_FAILEDTOSAVEREPLAY   "Failed to save replay!\nMaybe you should try with another name?"
 #define GAMETEXT_FILE                 "File"
@@ -87,7 +88,7 @@ Central place to keep many in-game text strings
                                       "the level.\n"                                                     \
                                       "\n"                                                               \
                                       "Note that the above key assignments can be configured\n"          \
-                                      "manually.\n"                                                      \
+                                      "to suit your needs.\n"                                            \
                                       "\n"                                                               \
                                       "Read the README file or check out the website at\n"               \
                                       "http://xmoto.sourceforce.net for more information."
@@ -99,6 +100,8 @@ Central place to keep many in-game text strings
 #define GAMETEXT_LEVEL                "Level"
 #define GAMETEXT_LEVELISSCRIPTED      "(Scripted level)"
 #define GAMETEXT_LEVELNAME            "Level Name: "
+#define GAMETEXT_LEVELNOTFOUND        "Level '%s' not found!"
+#define GAMETEXT_LEVELREQUIREDBYREPLAY "Level '%s' required by replay!"
 #define GAMETEXT_LEVELS               "Levels"
 #define GAMETEXT_LISTALL              "List All"
 #define GAMETEXT_LOW                  "Low"
@@ -154,6 +157,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_USEPROFILE           "Use Profile"
 #define GAMETEXT_VIDEO                "Video"
 #define GAMETEXT_VIEW                 "View"
+#define GAMETEXT_WARNING              "Warning:"
 #define GAMETEXT_YES                  "Yes"
 
 #endif
