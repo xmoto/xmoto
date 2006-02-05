@@ -163,6 +163,11 @@ line when starting the program:
                     should even be possible to run X-Moto in OpenGL
                     software emulation mode (MesaGL on linux, Windows' 
                     OpenGL fallback driver, etc).
+ 
+ -benchmark         When combined with -timedemo and -replay, the game
+                    will simply run the replay as fast as possible, 
+                    write the average framerate to stdout, and then 
+                    quit.
                      
 Note that this list is not complete, several obscure ones have been 
 left out. This is mostly due to not all of them being completely 
