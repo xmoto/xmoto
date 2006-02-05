@@ -38,4 +38,4 @@ AC_CHECK_HEADER(lualib.h,AC_DEFINE(HAVE_LUALIB_H),[])
 
 AC_SEARCH_LIBS(dJointAttach,ode ode0, [], [AC_MSG_ERROR(libode or libode0 required)])
 
-AC_OUTPUT(Makefile bin/Makefile src/Makefile)
+AC_OUTPUT(Makefile bin/Makefile)
