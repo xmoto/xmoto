@@ -111,8 +111,8 @@ namespace vapp {
     /* Allocate grid structure */
     m_pGrid = new GridCell[m_nGridWidth * m_nGridHeight];
     
-    printf("%dx%d grid width %.2fx%.2f cells\n",
-           m_nGridWidth,m_nGridHeight,m_fCellWidth,m_fCellHeight);
+    //printf("%dx%d grid width %.2fx%.2f cells\n",
+    //       m_nGridWidth,m_nGridHeight,m_fCellWidth,m_fCellHeight);
   }
  
   /*===========================================================================
