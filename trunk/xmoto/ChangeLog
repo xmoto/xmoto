@@ -1,4 +1,4 @@
-X-Moto 0.1.11 (alpha) 2006-
+X-Moto 0.1.11 (alpha) 2006-02-05
 --------------------------------
 
  * Major optimization of collision detection. The framerate should be
