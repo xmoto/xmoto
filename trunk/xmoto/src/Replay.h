@@ -75,6 +75,7 @@ namespace vapp {
       /* Data interface */
       bool didFinish(void) {return m_bFinished;}
       float getFinishTime(void) {return m_fFinishTime;}      
+      bool endOfFile(void) {return m_bEndOfFile;}
       
       /* Static data interface */
       static void enableCompression(bool b) {m_bEnableCompression = b;}
@@ -87,6 +88,7 @@ namespace vapp {
       float m_fFrameRate;
       int m_nStateSize;
       bool m_bFinished;
+      bool m_bEndOfFile;
       float m_fFinishTime;
       char *m_pcInputEventsData;
       int m_nInputEventsDataSize;

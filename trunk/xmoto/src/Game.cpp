@@ -775,7 +775,7 @@ namespace vapp {
             }
             
             /* Benchmarking and finished? If so, print the report and quit */
-            if(m_pReplay->didFinish() && m_bBenchmark) {
+            if(m_pReplay->endOfFile() && m_bBenchmark) {
               double fBenchmarkTime = getRealTime() - m_fStartTime;
               printf("\n");
               printf(" * %d frames rendered in %.0f seconds\n",m_nFrame,fBenchmarkTime);

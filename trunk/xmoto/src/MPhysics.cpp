@@ -362,8 +362,8 @@ namespace vapp {
       }
     }
     
-    m_PrevFrontWheelP = m_BikeS.FrontWheelP;
-    m_PrevRearWheelP = m_BikeS.RearWheelP;
+    //m_PrevFrontWheelP = m_BikeS.FrontWheelP;
+    //m_PrevRearWheelP = m_BikeS.RearWheelP;
     m_PrevHeadP = m_BikeS.HeadP;
     m_PrevHead2P = m_BikeS.Head2P;
     

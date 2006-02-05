@@ -298,8 +298,8 @@ namespace vapp {
     m_DelSchedule.clear();
     
     /* Remember bike pos for next time */
-    m_PrevFrontWheelP = m_BikeS.FrontWheelP;
-    m_PrevRearWheelP = m_BikeS.RearWheelP;
+    //m_PrevFrontWheelP = m_BikeS.FrontWheelP;
+    //m_PrevRearWheelP = m_BikeS.RearWheelP;
   }
 
   /*===========================================================================
@@ -473,10 +473,10 @@ namespace vapp {
     Vector2f C( pLevelSrc->getPlayerStartX() - m_BikeA.Tp.x, pLevelSrc->getPlayerStartY() - m_BikeA.Tp.y);
     _PrepareBikePhysics(C);
     
-    const dReal *pf = dBodyGetPosition(m_FrontWheelBodyID);
-    m_PrevFrontWheelP = Vector2f(pf[0],pf[1]);
-    pf = dBodyGetPosition(m_RearWheelBodyID);
-    m_PrevRearWheelP = Vector2f(pf[0],pf[1]);
+    //const dReal *pf = dBodyGetPosition(m_FrontWheelBodyID);
+    //m_PrevFrontWheelP = Vector2f(pf[0],pf[1]);
+    //pf = dBodyGetPosition(m_RearWheelBodyID);
+    //m_PrevRearWheelP = Vector2f(pf[0],pf[1]);
     
     /* Drive left-to-right for starters */
     m_BikeS.Dir = DD_RIGHT;
@@ -714,10 +714,10 @@ namespace vapp {
     /* Show stats about the collision system */
     CollisionSystemStats CStats;
     m_Collision.getStats(&CStats);
-    Log(" %dx%d grid with %.1fx%.1f cells (%.0f%% empty)\n"
-        " %d total blocking lines",
+    Log(" %dx%d grid with %.1fx%.1f cells (%.0f%% empty)",
         CStats.nGridWidth,CStats.nGridHeight,CStats.fCellWidth,CStats.fCellHeight,
-        CStats.fPercentageOfEmptyCells,CStats.nTotalLines);
+        CStats.fPercentageOfEmptyCells);
+    Log(" %d total blocking lines",CStats.nTotalLines);
   }
   
   /*===========================================================================

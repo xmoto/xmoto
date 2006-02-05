@@ -36,6 +36,7 @@ namespace vapp {
 
   Replay::Replay() {
     m_bFinished = false;
+    m_bEndOfFile = false;
     m_fFinishTime = 0.0f;
     m_pcInputEventsData = NULL;
     m_nInputEventsDataSize = 0;
@@ -334,11 +335,11 @@ namespace vapp {
       m_nCurState = 0;
     }
     if(m_nCurChunk >= m_Chunks.size()) {
-      m_bFinished = true;
+      m_bEndOfFile = true;
       return false;    
     }
     if(m_nCurState >= m_Chunks[m_nCurChunk].nNumStates) {
-      m_bFinished = true;
+      m_bEndOfFile = true;
       return false;
     }
     
