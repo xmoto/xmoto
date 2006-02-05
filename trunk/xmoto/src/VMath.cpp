@@ -81,9 +81,24 @@ namespace vapp {
   
   int intersectLineLine2f(const Vector2f &A0,const Vector2f &A1,const Vector2f &B0,
                           const Vector2f &B1,Vector2f &Res) {
-    /* Return number of intersections */
-    /* TODO: Hmm, just saw this empty function... are we going to use it for anything? */
-    return 0;
+    if(A0.almostEqual(A1) || B0.almostEqual(B1)) return 0;
+                          
+    Vector2f P = B0, N = Vector2f( -(B1.y-B0.y), (B1.x-B0.x) );
+    float den = N.dot(A1-A0);
+    if(fabs(den) < 0.0001f) return 0;
+    float t = (P.dot(N) - A0.dot(N)) / den;
+    if(t<0.0f || t>1.0f) return 0;
+    
+    P = A0;
+    N = Vector2f( -(A1.y-A0.y), (A1.x-A0.x) );
+    den = N.dot(B1-B0);
+    if(fabs(den) < 0.0001f) return 0;
+    t = (P.dot(N) - B0.dot(N)) / den;
+    if(t<0.0f || t>1.0f) return 0;
+        
+    Res = B0 + (B1-B0)*t;        
+        
+    return 1;
   }  
   
   /*===========================================================================

@@ -524,7 +524,7 @@ namespace vapp {
       std::vector<ConvexBlock *> m_Blocks;/* Blocks */
       std::vector<Entity *> m_Entities;   /* Entities */
       dWorldID m_WorldID;                 /* World ID */
-      
+            
       std::vector<RecordedGameEvent *> m_ReplayEvents; /* Events reconstructed from replay */
       
       std::vector<Entity *> m_FSprites;   /* Foreground sprites */
@@ -541,6 +541,13 @@ namespace vapp {
       bool m_bFinished,m_bDead;           /* Yir */
       
       int m_nLastEventSeq;
+      
+      bool m_bFirstPhysicsUpdate;
+
+      Vector2f m_PrevRearWheelP;          /* Prev. rear wheel position */
+      Vector2f m_PrevFrontWheelP;         /* Prev. front wheel position */
+      Vector2f m_PrevHeadP;
+      Vector2f m_PrevHead2P;
       
       /* Wheels spinning dirt up... muzakka! :D */
       bool m_bWheelSpin;                  /* Do it captain */
@@ -600,7 +607,7 @@ namespace vapp {
       void _CalculateBikeAnchors(void);
       int _IntersectWheelLevel(Vector2f Cp,float Cr,dContact *pContacts);
       int _IntersectWheelLine(Vector2f Cp,float Cr,int nNumContacts,dContact *pContacts,Vector2f A0,Vector2f A1);
-      bool _IntersectHeadLevel(Vector2f Cp,float Cr);
+      bool _IntersectHeadLevel(Vector2f Cp,float Cr,const Vector2f &LastCp);
       bool _IntersectHeadLine(Vector2f Cp,float Cr,Vector2f A0,Vector2f A1);
       bool _DoCircleTouchZone(const Vector2f &Cp,float Cr,LevelZone *pZone);
       bool _IntersectPointLevel(Vector2f Cp);

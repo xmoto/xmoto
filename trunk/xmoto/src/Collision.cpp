@@ -162,8 +162,6 @@ namespace vapp {
   Boolean check of collision between line and system
   ===========================================================================*/
   bool CollisionSystem::checkLine(float x1,float y1,float x2,float y2) {
-    /* TODO: if physical (moving) blocks ever are added, this function is going
-             to be needed */
     return false;
   }
   
@@ -295,6 +293,79 @@ namespace vapp {
     return false;
   }
       
+  /*===========================================================================
+  Calculate collision between line and system
+  ===========================================================================*/
+  int CollisionSystem::collideLine(float x1,float y1,float x2,float y2,dContact *pContacts,int nMaxC) {
+    int nNumC = 0;
+  
+    /* Calculate bounding box of line */
+    float fMinX = CD_MIN(x1,x2);
+    float fMinY = CD_MIN(y1,y2);
+    float fMaxX = CD_MAX(x1,x2);
+    float fMaxY = CD_MAX(y1,y2);
+  
+    /* Calculate cell coordinates */
+    int nMinCX = (int)floor(((fMinX - m_fMinX - CD_EPSILON) * (float)m_nGridWidth) / (m_fMaxX - m_fMinX));
+    int nMinCY = (int)floor(((fMinY - m_fMinY - CD_EPSILON) * (float)m_nGridHeight) / (m_fMaxY - m_fMinY));
+    int nMaxCX = (int)floor(((fMaxX - m_fMinX + CD_EPSILON) * (float)m_nGridWidth) / (m_fMaxX - m_fMinX));
+    int nMaxCY = (int)floor(((fMaxY - m_fMinY + CD_EPSILON) * (float)m_nGridHeight) / (m_fMaxY - m_fMinY));
+    
+    if(nMinCX < 0) nMinCX = 0;
+    if(nMinCY < 0) nMinCY = 0;
+    if(nMaxCX > m_nGridWidth-1) nMaxCX = m_nGridWidth-1;
+    if(nMaxCY > m_nGridHeight-1) nMaxCY = m_nGridHeight-1;        
+
+    /* For each cell we might have touched something in... */
+    for(int cx=nMinCX;cx<=nMaxCX;cx++) {
+      for(int cy=nMinCY;cy<=nMaxCY;cy++) {
+        int i = cx + cy*m_nGridWidth;
+            
+        /* Empty? That would be nice */
+        if(m_pGrid[i].Lines.empty()) continue;
+        
+        /* TODO: currently we will probably check the same lines several times each... AVOID THAT! */
+        
+        /* Check all lines in cell */
+        for(int j=0;j<m_pGrid[i].Lines.size();j++) {
+          /* Is the beginning "behind" the line? */
+          float vx = m_pGrid[i].Lines[j]->x2 - m_pGrid[i].Lines[j]->x1;
+          float vy = m_pGrid[i].Lines[j]->y2 - m_pGrid[i].Lines[j]->y1;
+          float enx = -vy;
+          float eny = vx;
+          if(enx*x1 + eny*y1 < enx*m_pGrid[i].Lines[j]->x1 + eny*m_pGrid[i].Lines[j]->y1) {
+            /* Yes it is, can't touch */
+            continue;
+          }
+
+          /* Too small? */
+          if(fabs(vx) < 0.0001f && fabs(vy) < 0.0001f) {
+            continue;
+          }
+          
+          /* Try calculating intersection point */
+          Vector2f T;
+          int n = intersectLineLine2f(Vector2f(x1,y1),Vector2f(x2,y2),
+                                      Vector2f(m_pGrid[i].Lines[j]->x1,m_pGrid[i].Lines[j]->y1),
+                                      Vector2f(m_pGrid[i].Lines[j]->x2,m_pGrid[i].Lines[j]->y2),T);
+          if(n > 0) {
+            dContact c;
+            Vector2f W = Vector2f(vx,vy);
+            W.normalize();
+
+            _SetWheelContactParams(&c,T,W,0.0f);                                   
+            nNumC = _AddContactToList(pContacts,nNumC,&c,nMaxC);     
+            
+            //printf("WTF?!");       
+          }                                      
+        }          
+      }
+    }
+
+    /* Woo, nothing touched */
+    return nNumC;
+  }
+
   /*===========================================================================
   Calculate precise intersections between circle and geometry, if any
   ===========================================================================*/

@@ -296,6 +296,10 @@ namespace vapp {
     for(int i=0;i<m_DelSchedule.size();i++)
       _KillEntity(m_DelSchedule[i]);
     m_DelSchedule.clear();
+    
+    /* Remember bike pos for next time */
+    m_PrevFrontWheelP = m_BikeS.FrontWheelP;
+    m_PrevRearWheelP = m_BikeS.RearWheelP;
   }
 
   /*===========================================================================
@@ -468,6 +472,11 @@ namespace vapp {
     _CalculateBikeAnchors();    
     Vector2f C( pLevelSrc->getPlayerStartX() - m_BikeA.Tp.x, pLevelSrc->getPlayerStartY() - m_BikeA.Tp.y);
     _PrepareBikePhysics(C);
+    
+    const dReal *pf = dBodyGetPosition(m_FrontWheelBodyID);
+    m_PrevFrontWheelP = Vector2f(pf[0],pf[1]);
+    pf = dBodyGetPosition(m_RearWheelBodyID);
+    m_PrevRearWheelP = Vector2f(pf[0],pf[1]);
     
     /* Drive left-to-right for starters */
     m_BikeS.Dir = DD_RIGHT;

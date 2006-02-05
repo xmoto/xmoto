@@ -17,6 +17,10 @@ X-Moto 0.1.11 (alpha) 2006-
    errors.
  * The -replay option now accepts replays regardless of their
    location.   
+ * It should now longer be possible to move head through level 
+   geometry at high speed or by flipping.
+ * A couple of new built-in levels.
+ * Level limits are now not invisible when using -ugly.
  * Various minor changes and several small bugs fixed.
 
 X-Moto 0.1.10 (alpha) 2005-12-03

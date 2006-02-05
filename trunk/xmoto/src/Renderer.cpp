@@ -323,6 +323,18 @@ namespace vapp {
       _RenderSprites(true,false);
     }
     
+    //glBegin(GL_LINE_STRIP);
+    //glColor3f(1,1,1);
+    //glVertex2f(getGameObject()->m_PrevFrontWheelP.x,getGameObject()->m_PrevFrontWheelP.y);
+    //glVertex2f(getGameObject()->getBikeState()->FrontWheelP.x,getGameObject()->getBikeState()->FrontWheelP.y);
+    //glEnd();
+    //    
+    //glBegin(GL_LINE_STRIP);
+    //glColor3f(1,1,1);
+    //glVertex2f(getGameObject()->m_PrevRearWheelP.x,getGameObject()->m_PrevRearWheelP.y);
+    //glVertex2f(getGameObject()->getBikeState()->RearWheelP.x,getGameObject()->getBikeState()->RearWheelP.y);
+    //glEnd();
+        
     if(isDebug()) {
       /* Draw some collision handling debug info */
       CollisionSystem *pc = getGameObject()->getCollisionHandler();
@@ -598,6 +610,15 @@ namespace vapp {
 					glEnd();
 				}
 			}
+			
+			/* Also render the level limits */
+			glBegin(GL_LINE_LOOP);
+			glColor3f(1,1,1);
+			glVertex2f(getGameObject()->getLevelSrc()->getLeftLimit(),getGameObject()->getLevelSrc()->getTopLimit());
+			glVertex2f(getGameObject()->getLevelSrc()->getRightLimit(),getGameObject()->getLevelSrc()->getTopLimit());
+			glVertex2f(getGameObject()->getLevelSrc()->getRightLimit(),getGameObject()->getLevelSrc()->getBottomLimit());
+			glVertex2f(getGameObject()->getLevelSrc()->getLeftLimit(),getGameObject()->getLevelSrc()->getBottomLimit());
+			glEnd();
 		}
 		else {
 			/* Render all non-background blocks */

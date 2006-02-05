@@ -580,7 +580,7 @@ namespace vapp {
   void GameApp::drawFrame(void) {
     char cTemp[256];
     bool bValidGameState = true;
-   
+
     /* Update sound system and input */
     if(!isNoGraphics()) {
       m_EngineSound.update(getRealTime());

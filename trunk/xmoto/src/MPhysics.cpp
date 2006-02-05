@@ -31,6 +31,8 @@ namespace vapp {
   Init physics
   ===========================================================================*/
   void MotoGame::_InitPhysics(void) {
+    m_bFirstPhysicsUpdate = true;
+  
     /* Setup ODE */
     m_WorldID = dWorldCreate();
     dWorldSetERP(m_WorldID,PHYS_WORLD_ERP);
@@ -257,7 +259,7 @@ namespace vapp {
     static int nSlipFrameInterlace =0; /* Okay, lazy approach again. Front wheel can generate particles
                                           even frames, rear wheel odd frames */
     nSlipFrameInterlace++;
-    
+        
     if(dBodyIsEnabled(m_FrontWheelBodyID)) {
       nNumContacts = _IntersectWheelLevel( m_BikeS.FrontWheelP,m_BikeP.WR,Contacts );
       Vector2f WSP;
@@ -340,11 +342,11 @@ namespace vapp {
           m_WheelSpinDir.y = (((m_BikeS.RearWheelP.x - WSP.x))*1 + (m_BikeS.RearWheelP.y - WSP.y)) /2;
         }
       }
-    }
+    }        
     
     /* Player head */
     if(m_BikeS.Dir == DD_RIGHT) {
-      if(_IntersectHeadLevel(m_BikeS.HeadP,m_BikeP.fHeadSize)) {
+      if(_IntersectHeadLevel(m_BikeS.HeadP,m_BikeP.fHeadSize,m_PrevHeadP)) {
 				GameEvent *pEvent = createGameEvent(GAME_EVENT_PLAYER_DIES);
 				if(pEvent != NULL) {
 					pEvent->u.PlayerDies.bWrecker = false;
@@ -352,13 +354,18 @@ namespace vapp {
       }
     }
     else if(m_BikeS.Dir == DD_LEFT) {
-      if(_IntersectHeadLevel(m_BikeS.Head2P,m_BikeP.fHeadSize)) {
+      if(_IntersectHeadLevel(m_BikeS.Head2P,m_BikeP.fHeadSize,m_PrevHead2P)) {
 				GameEvent *pEvent = createGameEvent(GAME_EVENT_PLAYER_DIES);
 				if(pEvent != NULL) {
 					pEvent->u.PlayerDies.bWrecker = false;
 				}
       }
     }
+    
+    m_PrevFrontWheelP = m_BikeS.FrontWheelP;
+    m_PrevRearWheelP = m_BikeS.RearWheelP;
+    m_PrevHeadP = m_BikeS.HeadP;
+    m_PrevHead2P = m_BikeS.Head2P;
     
     /* Move rider along bike -- calculate handlebar and footpeg coords */
     Vector2f FootRP,HandRP;
@@ -407,6 +414,8 @@ namespace vapp {
     
     /* Empty contact joint group */
     dJointGroupEmpty(m_ContactGroup);
+    
+    m_bFirstPhysicsUpdate = false;
   }
 
   /*===========================================================================
@@ -844,13 +853,27 @@ namespace vapp {
     return false; /* TODO */
   }
   
-  bool MotoGame::_IntersectHeadLevel(Vector2f Cp,float Cr) {
+  bool MotoGame::_IntersectHeadLevel(Vector2f Cp,float Cr,const Vector2f &LastCp) {
     if(m_Collision.checkCircle(Cp.x,Cp.y,Cr)) return true;
+    
+    if(!m_bFirstPhysicsUpdate) {
+      dContact c[100];
+      int nNumContacts = m_Collision.collideLine(LastCp.x,LastCp.y,Cp.x,Cp.y,c,100);
+      if(nNumContacts > 0) {
+        return true;
+      }
+    }
+    
     return false;
   }
 
   int MotoGame::_IntersectWheelLevel(Vector2f Cp,float Cr,dContact *pContacts) {
     int nNumContacts = m_Collision.collideCircle(Cp.x,Cp.y,Cr,pContacts,100);
+    if(nNumContacts == 0) {
+      /* Nothing... but what if we are moving so fast that the circle has moved
+         all the way through some geometry? Check it's path. */
+      //nNumContacts = m_Collision.collideLine(
+    }
     return nNumContacts;
   }
   

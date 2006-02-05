@@ -66,6 +66,7 @@ namespace vapp {
       bool checkBoxFast(float fMinX,float fMinY,float fMaxX,float fMaxY);
       bool checkCirclePath(float x1,float y1,float x2,float y2,float r);
       
+      int collideLine(float x1,float y1,float x2,float y2,dContact *pContacts,int nMaxC);
       int collideCircle(float x,float y,float r,dContact *pContacts,int nMaxC);
       int collideCirclePath(float x1,float y1,float x2,float y2,float r,float *cx,float *cy,int nMaxC);
       
