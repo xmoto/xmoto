@@ -38,12 +38,6 @@ int SDL_main(int nNumArgs,char **ppcArgs) {
 #else
 int main(int nNumArgs,char **ppcArgs) {
 #endif
-  //
-  //EventReplay er;
-  //std::ostream &P = er;
-  //
-  //P << (char)30;
-
   /* Start application */
   try {  
     /* Init file system stuff */
@@ -54,7 +48,7 @@ int main(int nNumArgs,char **ppcArgs) {
     
     Game.setAppName(std::string("X-Moto"));
     Game.setAppCommand(std::string("xmoto"));
-    Game.setCopyrightInfo(std::string("(C) Copyright 2005 Rasmus Neckelmann (neckelmann@gmail.com)"));
+    Game.setCopyrightInfo(std::string("(C) Copyright 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)"));
     Game.run(nNumArgs,ppcArgs);
   }
   catch (Exception &e) {

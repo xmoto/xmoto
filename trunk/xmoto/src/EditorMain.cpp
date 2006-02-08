@@ -46,7 +46,7 @@ int main(int nNumArgs,char **ppcArgs) {
     EditorApp Editor;
     Editor.setAppName(std::string("X-Moto Editor"));
     Editor.setAppCommand(std::string("xmoto-edit"));
-    Editor.setCopyrightInfo(std::string("(C) Copyright 2005 Rasmus Neckelmann (neckelmann@gmail.com)"));
+    Editor.setCopyrightInfo(std::string("(C) Copyright 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)"));
     Editor.run(nNumArgs,ppcArgs);
   }
   catch (Exception &e) {
@@ -56,7 +56,7 @@ int main(int nNumArgs,char **ppcArgs) {
     #if defined(WIN32)
       char cBuf[1024];
       sprintf(cBuf,"Fatal exception occured: %s\n"
-                   "Consult the file stdout.txt for more information about what\n"
+                   "Consult the file xmoto.log for more information about what\n"
                    "might has occured.\n",e.getMsg().c_str());                    
       MessageBox(NULL,cBuf,"X-Moto Editor Error",MB_OK|MB_ICONERROR);
     #endif
