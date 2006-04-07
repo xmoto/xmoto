@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VFileIO.h"
 #include "BSP.h"
 #include "Sound.h"
+#include "PhysSettings.h"
 
 namespace vapp {
 
@@ -48,6 +49,10 @@ namespace vapp {
   int L_Game_PlaceScreenArrow(lua_State *pL);
   int L_Game_HideArrow(lua_State *pL);
   int L_Game_ClearMessages(lua_State *pL);
+  int L_Game_SetGravity(lua_State *pL);  
+  int L_Game_GetGravity(lua_State *pL);  
+  int L_Game_SetPlayerPosition(lua_State *pL);
+  int L_Game_GetPlayerPosition(lua_State *pL);
   
   /* "Game" Lua library */
   static const luaL_reg g_GameFuncs[] = {
@@ -61,6 +66,10 @@ namespace vapp {
     {"PlaceScreenArrow", L_Game_PlaceScreenArrow},
     {"HideArrow", L_Game_HideArrow},
     {"ClearMessages", L_Game_ClearMessages},
+    {"SetGravity", L_Game_SetGravity},
+    {"GetGravity", L_Game_GetGravity},
+    {"SetPlayerPosition", L_Game_SetPlayerPosition},
+    {"GetPlayerPosition", L_Game_GetPlayerPosition},
     {NULL, NULL}
   };
 
@@ -137,6 +146,61 @@ namespace vapp {
 
     /* Reset Lua VM */
     lua_settop(m_pL,0);        
+  }
+
+  /*===========================================================================
+  Misc
+  ===========================================================================*/
+  void MotoGame::setPlayerPosition(float x,float y,bool bFaceRight) {
+    //_UninitPhysics();
+    //_InitPhysics();
+    //
+    //_PrepareRider(Vector2f(x,y));        
+    printf("%f %f %d\n",x,y,bFaceRight);
+
+    /* Clear stuff */
+    clearStates();    
+    
+    m_fLastAttitudeCon = -1000.0f;
+    m_fAttitudeCon = 0.0f;
+    
+    m_PlayerFootAnchorBodyID = NULL;
+    m_PlayerHandAnchorBodyID = NULL;
+    m_PlayerTorsoBodyID = NULL;
+    m_PlayerUArmBodyID = NULL;
+    m_PlayerLArmBodyID = NULL;
+    m_PlayerULegBodyID = NULL;
+    m_PlayerLLegBodyID = NULL;
+    m_PlayerFootAnchorBodyID2 = NULL;
+    m_PlayerHandAnchorBodyID2 = NULL;
+    m_PlayerTorsoBodyID2 = NULL;
+    m_PlayerUArmBodyID2 = NULL;
+    m_PlayerLArmBodyID2 = NULL;
+    m_PlayerULegBodyID2 = NULL;
+    m_PlayerLLegBodyID2 = NULL;
+
+    /* Restart physics */
+    _UninitPhysics();
+    _InitPhysics();
+
+    /* Calculate bike stuff */
+    _CalculateBikeAnchors();    
+    Vector2f C( x - m_BikeA.Tp.x, y - m_BikeA.Tp.y);
+    _PrepareBikePhysics(C);
+        
+    m_BikeS.Dir = bFaceRight?DD_RIGHT:DD_LEFT;
+    
+    m_BikeS.fCurBrake = m_BikeS.fCurEngine = 0.0f;
+
+  }
+  
+  const Vector2f &MotoGame::getPlayerPosition(void) {
+    return m_BikeS.CenterP;
+  }
+  
+  bool MotoGame::getPlayerFaceDir(void) {
+    if(m_BikeS.Dir == DD_RIGHT) return true;
+    else return false;
   }
 
   /*===========================================================================
@@ -384,6 +448,10 @@ namespace vapp {
   void MotoGame::playLevel(LevelSrc *pLevelSrc) {
     /* Clean up first, just for safe's sake */
     endLevel();
+    
+    /* Set default gravity */
+    m_PhysGravity.x = 0;
+    m_PhysGravity.y = PHYS_WORLD_GRAV;
     
     /* Create Lua state */
     m_pL = lua_open();

@@ -37,7 +37,9 @@ namespace vapp {
     m_WorldID = dWorldCreate();
     dWorldSetERP(m_WorldID,PHYS_WORLD_ERP);
     dWorldSetCFM(m_WorldID,PHYS_WORLD_CFM);
-    dWorldSetGravity(m_WorldID,0,PHYS_WORLD_GRAV,0);    
+        
+    dWorldSetGravity(m_WorldID,m_PhysGravity.x,m_PhysGravity.y,0);    
+    
     m_ContactGroup = dJointGroupCreate(0);
     
     dWorldSetQuickStepNumIterations(m_WorldID,PHYS_QSTEP_ITERS);
@@ -92,6 +94,9 @@ namespace vapp {
   void MotoGame::_UpdatePhysics(float fTimeStep) {
     /* No wheel spin per default */
     m_bWheelSpin = false;
+
+    /* Update gravity vector */
+    dWorldSetGravity(m_WorldID,m_PhysGravity.x,m_PhysGravity.y,0);    
 
     /* Should we disable stuff? Ok ODE has an autodisable feature, but i'd rather
       roll my own here. */

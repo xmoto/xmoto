@@ -93,12 +93,12 @@ namespace vapp {
       void _ComputeNormal(BSPLine *pLine);     
       void _UpdateAABB(Vector2f &P,Vector2f &Min,Vector2f &Max); 
       void _Recurse(BSPPoly *pSubSpace,std::vector<BSPLine *> &Lines);
-      void BSP::_SplitPoly(BSPPoly *pPoly,BSPPoly *pFront,BSPPoly *pBack,BSPLine *pLine);
-      void BSP::_SplitLines(std::vector<BSPLine *> &Lines,std::vector<BSPLine *> &Front,std::vector<BSPLine *> &Back,
+      void _SplitPoly(BSPPoly *pPoly,BSPPoly *pFront,BSPPoly *pBack,BSPLine *pLine);
+      void _SplitLines(std::vector<BSPLine *> &Lines,std::vector<BSPLine *> &Front,std::vector<BSPLine *> &Back,
                             BSPLine *pLine,int *pnNumFront,int *pnNumBack,int *pnNumSplits,bool bProbe);
-      BSPLine *BSP::_FindBestSplitter(std::vector<BSPLine *> &Lines);
-      BSPLine *BSP::_CopyLine(BSPLine *pSrc);
-      BSPPoly *BSP::_CopyPoly(BSPPoly *pDst,BSPPoly *pSrc);      
+      BSPLine *_FindBestSplitter(std::vector<BSPLine *> &Lines);
+      BSPLine *_CopyLine(BSPLine *pSrc);
+      BSPPoly *_CopyPoly(BSPPoly *pDst,BSPPoly *pSrc);      
   };
 
 };

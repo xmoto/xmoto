@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VFileIO.h"
 #include "MotoGame.h"
 #include "Renderer.h"
+#include "PhysSettings.h"
 
 namespace vapp {
 
@@ -137,7 +138,7 @@ namespace vapp {
         
         switch(m_Particles[i]->Type) {
           case PT_DEBRIS:
-            m_Particles[i]->Acc = Vector2f(0.0,-1.5);
+            m_Particles[i]->Acc = pGame->getGravity() * (-1.5f / PHYS_WORLD_GRAV);
             c=GET_RED(m_Particles[i]->DebrisTint);
             a=GET_ALPHA(m_Particles[i]->DebrisTint);
             a -= 120.0f * fTimeStep;

@@ -90,7 +90,7 @@ namespace vapp {
               PlayerTimeEntry *pBestTime = m_Profiles.getBestTime(LevelID);
               PlayerTimeEntry *pBestPTime = m_Profiles.getBestPlayerTime(m_pPlayer->PlayerName,LevelID);
               
-              std::string T1 = "  --  ",T2 = "  --  ";
+              std::string T1 = "--:--:--",T2 = "--:--:--";
               if(pBestTime != NULL)
                 T1 = formatTime(pBestTime->fFinishTime);
               if(pBestPTime != NULL)
@@ -177,7 +177,7 @@ namespace vapp {
           PlayerTimeEntry *pBestTime = m_Profiles.getBestTime(m_PlaySpecificLevel);
           PlayerTimeEntry *pBestPTime = m_Profiles.getBestPlayerTime(m_pPlayer->PlayerName,m_PlaySpecificLevel);
           
-          std::string T1 = "  --  ",T2 = "  --  ";
+          std::string T1 = "--:--:--",T2 = "--:--:--";
           if(pBestTime != NULL)
             T1 = formatTime(pBestTime->fFinishTime);
           if(pBestPTime != NULL)

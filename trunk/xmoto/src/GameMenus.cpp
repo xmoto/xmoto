@@ -420,7 +420,7 @@ namespace vapp {
     pJoystickControls->setID("JOYSTICK");
     pJoystickControls->enableWindow(true);
     pJoystickControls->setFont(m_Renderer.getSmallFont());
-    pJoystickControls->setGroup(200243);
+    pJoystickControls->setGroup(200243);    
 
     UIList *pKeyCList = new UIList(pControlsOptionsTab,5,43,"",pControlsOptionsTab->getPosition().nWidth-10,118);
     pKeyCList->setID("KEY_ACTION_LIST");
@@ -433,6 +433,14 @@ namespace vapp {
     pConfigureJoystick->setID("CONFIGURE_JOYSTICK");
     pConfigureJoystick->enableWindow(true);
     pConfigureJoystick->setFont(m_Renderer.getSmallFont());
+
+#if defined(HIDE_JOYSTICK_SUPPORT)
+  pKeyboardControls->showWindow(false);
+  pJoystickControls->showWindow(false);
+  pConfigureJoystick->showWindow(false);
+  
+  pKeyCList->setPosition(5,5,pControlsOptionsTab->getPosition().nWidth-10,118);
+#endif
 
     /* Initialize profile editor */
     m_pProfileEditor = new UIFrame(m_Renderer.getGUI(),getDispWidth()/2-350,getDispHeight()/2-250,"",700,500); 

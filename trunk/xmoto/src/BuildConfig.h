@@ -46,6 +46,9 @@ Build configuration
 /* EMUL_800x600 - Let everything think that the resolution is 800x600 */
 #define EMUL_800x600
 
+/* HIDE_JOYSTICK_SUPPORT - Disable joystick config UI */
+#define HIDE_JOYSTICK_SUPPORT
+
 /*=============================================================================
 Misc, don't touch
 =============================================================================*/

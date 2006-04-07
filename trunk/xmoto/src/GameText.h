@@ -135,7 +135,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_PLAYERPROFILES       "Player Profiles"
 #define GAMETEXT_PRESSANYKEYTO        "Press key you want to '%s' or ESC to cancel..."
 #define GAMETEXT_QUIT                 "Quit Game"
-#define GAMETEXT_QUITMESSAGE          "Do you really want to quit?\nEach time you quit X-Moto, one baby dolphin dies :("
+#define GAMETEXT_QUITMESSAGE          "Do you really want to quit?"
 #define GAMETEXT_REPLAY               "Replay"
 #define GAMETEXT_REPLAYHELPTEXT       "  ESC: Stop   Left arrow key: Rewind   Right arrow key: Fast Forward"
 #define GAMETEXT_REPLAYS              "View Replays"

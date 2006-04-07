@@ -469,6 +469,10 @@ namespace vapp {
       GameEvent *getNextGameEvent(void);
       int getNumPendingGameEvents(void);
       
+      void setPlayerPosition(float x,float y,bool bFaceRight);
+      const Vector2f &getPlayerPosition(void);
+      bool getPlayerFaceDir(void);
+      
       /* Direct Lua interaction methods */
       bool scriptCallBool(std::string FuncName,bool bDefault=false);
       void scriptCallVoid(std::string FuncName);
@@ -494,6 +498,8 @@ namespace vapp {
       Vector2f getWheelSpinPoint(void) {return m_WheelSpinPoint;}
       Vector2f getWheelSpinDir(void) {return m_WheelSpinDir;}
       CollisionSystem *getCollisionHandler(void) {return &m_Collision;}
+      void setGravity(float x,float y) {m_PhysGravity.x=x; m_PhysGravity.y=y;}
+      const Vector2f &getGravity(void) {return m_PhysGravity;}
             
       /* Debug */
       void resetDummies(void) {m_nNumDummies=0;}
@@ -513,6 +519,8 @@ namespace vapp {
       DummyHelper m_Dummies[100];
       
       int m_nStillFrames;
+
+      Vector2f m_PhysGravity; /* gravity */
 
       ArrowPointer m_Arrow;               /* Arrow */  
       

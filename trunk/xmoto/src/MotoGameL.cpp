@@ -121,6 +121,7 @@ namespace vapp {
         return 1;
       }
     }
+    /* Block not found, return <0,0> */
     lua_pushnumber(pL,0);
     lua_pushnumber(pL,0);
     return 1;
@@ -138,6 +139,37 @@ namespace vapp {
     }
     return 1;
   }  
+
+  int L_Game_SetGravity(lua_State *pL) {
+    /* Set gravity */
+    m_pMotoGame->setGravity(luaL_check_number(pL,1),luaL_check_number(pL,2));    
+    return 1;
+  }  
+
+  int L_Game_GetGravity(lua_State *pL) {
+    /* Get gravity */
+    lua_pushnumber(pL,m_pMotoGame->getGravity().x);
+    lua_pushnumber(pL,m_pMotoGame->getGravity().y);    
+    return 1;
+  }
+
+  int L_Game_SetPlayerPosition(lua_State *pL) {
+    /* Set player position */  
+    bool bRight = false;
+    if(luaL_check_number(pL,3) > 0.0f) bRight = true;
+    
+    m_pMotoGame->setPlayerPosition(luaL_check_number(pL,1),luaL_check_number(pL,2),bRight);    
+    return 1;
+  }  
+  
+  int L_Game_GetPlayerPosition(lua_State *pL) {
+    /* Get player position */
+    lua_pushnumber(pL,m_pMotoGame->getPlayerPosition().x);
+    lua_pushnumber(pL,m_pMotoGame->getPlayerPosition().y);
+    lua_pushnumber(pL,m_pMotoGame->getPlayerFaceDir());
+    return 1;
+  }
+  
   
 };
 

@@ -191,6 +191,7 @@ namespace vapp {
                          MAKE_COLOR(0,0,0,MINIMAPALPHA),MAKE_COLOR(255,255,255,MINIMAPALPHA));
     getParent()->scissorGraphics(x+1,y+1,nWidth-2,nHeight-2);
     glEnable(GL_SCISSOR_TEST);
+    glLoadIdentity();
         
     MotoGame *pGame = getGameObject();
     std::vector<ConvexBlock *> &Blocks = pGame->getBlocks();
@@ -207,6 +208,7 @@ namespace vapp {
       glColor3f(0.5,0.5,0.5);
       for(int j=0;j<Blocks[i]->Vertices.size();j++) {
         Vector2f P = Center + Blocks[i]->Vertices[j]->P;
+        
         MINIVERTEX(P.x,P.y);                  
       }
       glEnd();
@@ -276,6 +278,8 @@ namespace vapp {
     }
 
     m_Scroll += Vector2f(m_fCurrentHorizontalScrollShift,0.0f);
+
+    glLoadIdentity();
 
     /* SKY! */
     if(!m_bUglyMode)
