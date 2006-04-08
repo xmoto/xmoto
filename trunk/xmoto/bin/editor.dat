@@ -2,7 +2,7 @@
 
 <!-- This file defines the entities placeable in the editor -->
 <editordata>
-	
+
 	<entitytype id="EndOfLevel" size="1" psize="0.5">
 		<symbol>
 			<circle x="0" y="0" radius="1" border="1"
@@ -73,7 +73,19 @@
 
 		<param name="type" default="Smoke"/>
 	</entitytype>
-	
+
+	<entitytype id="Dummy" size="1" psize="0.5">
+		<symbol>
+			<circle x="0" y="0" radius="1" border="1"
+			        bcolor="#00000000" fcolor="#0000ffff"/>
+			<circle x="0" y="0" radius="0.5" border="1"
+			        bcolor="#00000000" fcolor="#00ffffff"/>
+			<text allign="center" vallign="center" x="0" y="0"
+			      bcolor="#00000000" fcolor="#6363ffff"
+			      caption="Dummy"/>
+		</symbol>	
+	</entitytype>
+		
 </editordata>
 
 

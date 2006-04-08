@@ -1,6 +1,6 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005 Rasmus Neckelmann (neckelmann@gmail.com)
+Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -692,12 +692,14 @@ namespace vapp {
         else if(m_pPauseMenuButtons[i]->getCaption() == GAMETEXT_ABORT) {
           m_pPauseMenu->showWindow(false);
           m_MotoGame.endLevel();
+          m_InputHandler.resetScriptKeyHooks();                     
           m_Renderer.unprepareForNewLevel();
           setState(GS_MENU);          
         }
         else if(m_pPauseMenuButtons[i]->getCaption() == GAMETEXT_RESTART) {
           m_pPauseMenu->showWindow(false);
           m_MotoGame.endLevel();
+          m_InputHandler.resetScriptKeyHooks();                     
           m_Renderer.unprepareForNewLevel();
           setState(GS_PLAYING);                               
         }
@@ -765,6 +767,7 @@ namespace vapp {
           m_pFinishMenu->showWindow(false);
           m_pBestTimes->showWindow(false);
           m_MotoGame.endLevel();
+          m_InputHandler.resetScriptKeyHooks();           
           m_Renderer.unprepareForNewLevel();
           setState(GS_PLAYING);           
         }
@@ -772,6 +775,7 @@ namespace vapp {
           m_pFinishMenu->showWindow(false);
           m_pBestTimes->showWindow(false);
           m_MotoGame.endLevel();
+          m_InputHandler.resetScriptKeyHooks();                     
           m_Renderer.unprepareForNewLevel();
           setState(GS_MENU);
         }
@@ -998,6 +1002,7 @@ namespace vapp {
           m_PlaySpecificLevel = pCurLevel->getID();
           m_pJustDeadMenu->showWindow(false);
           m_MotoGame.endLevel();
+          m_InputHandler.resetScriptKeyHooks();                     
           m_Renderer.unprepareForNewLevel();          
           setState(GS_PLAYING);          
         }
@@ -1014,6 +1019,7 @@ namespace vapp {
         else if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_ABORT) {
           m_pJustDeadMenu->showWindow(false);
           m_MotoGame.endLevel();
+          m_InputHandler.resetScriptKeyHooks();                     
           m_Renderer.unprepareForNewLevel();
           setState(GS_MENU);
         }

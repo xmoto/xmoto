@@ -63,6 +63,10 @@
 		<center x="0.75" y="0.3"/>
 	</sprite>
 	
+	<sprite name="Tut3Sign">
+		<size width="3" height="3"/>
+		<center x="1.5" y="0.2"/>
+	</sprite>
 	
 </spritedata>
 

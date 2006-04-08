@@ -1,6 +1,6 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005 Rasmus Neckelmann (neckelmann@gmail.com)
+Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -345,6 +345,18 @@ namespace vapp {
       }
     }      
   }
+  
+  /*===========================================================================
+  Add script key hook
+  ===========================================================================*/  
+  void InputHandler::addScriptKeyHook(MotoGame *pGame,const std::string &KeyName,const std::string &FuncName) {
+    if(m_nNumScriptKeyHooks < MAX_SCRIPT_KEY_HOOKS) {
+      m_ScriptKeyHooks[m_nNumScriptKeyHooks].FuncName = FuncName;
+      m_ScriptKeyHooks[m_nNumScriptKeyHooks].nKey = _StringToKey(KeyName);
+      m_ScriptKeyHooks[m_nNumScriptKeyHooks].pGame = pGame;
+      m_nNumScriptKeyHooks++;
+    }
+  }  
 
   /*===========================================================================
   Handle an input event
@@ -395,6 +407,16 @@ namespace vapp {
           }
           break;
       }      
+    }
+    
+    /* Have the script hooked this key? */
+    if(Type == INPUT_KEY_DOWN) {
+      for(int i=0;i<m_nNumScriptKeyHooks;i++) {
+        if(m_ScriptKeyHooks[i].nKey == nKey) {
+          /* Invoke script */
+          m_ScriptKeyHooks[i].pGame->scriptCallVoid(m_ScriptKeyHooks[i].FuncName);
+        }
+      }
     }
   }
   

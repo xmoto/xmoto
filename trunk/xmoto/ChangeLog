@@ -4,6 +4,10 @@ X-Moto 0.1.12 (alpha) 2006-
  * Fixed a bug that prevented the game from compiling with g++ 4.1.
  * Removed unfinished joystick configuration interface from the menu.
  * New LUA (script) functions. See src/MotoGameL.cpp for details.
+ * Files in xmoto.bin are now prioritized lower when loading.
+ * Now possible to skip around between the different parts of 
+   tutorial 3.
+ * New built-in levels.
  * Various minor changes and some small bugs fixed.
 
 X-Moto 0.1.11 (alpha) 2006-02-05

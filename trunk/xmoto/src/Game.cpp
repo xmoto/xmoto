@@ -1,6 +1,6 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005 Rasmus Neckelmann (neckelmann@gmail.com)
+Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -26,9 +26,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VFileIO.h"
 #include "Sound.h"
 #include "PhysSettings.h"
+#include "Input.h"
 
 namespace vapp {
 
+  /* CRY! */
+  extern InputHandler *m_pActiveInputHandler;
+  
   /*===========================================================================
   Update levels lists - must be done after each completed level
   ===========================================================================*/
@@ -77,7 +81,8 @@ namespace vapp {
             notifyMsg(cBuf);                        
           }
           else {    
-            /* Init level */                
+            /* Init level */    
+            m_InputHandler.resetScriptKeyHooks();                                   
             m_MotoGame.playLevel( pLevelSrc );
             m_nFrame = 0;
             m_Renderer.prepareForNewLevel();
@@ -137,6 +142,7 @@ namespace vapp {
         
         /* Initialize controls */
         m_InputHandler.configure(&m_Config);
+        m_pActiveInputHandler = &m_InputHandler;
       
         /* Default playing state */
         m_fLastFrameTime = 0.0f;
@@ -161,7 +167,8 @@ namespace vapp {
 //          throw Exception("no level");
         }
         else {    
-          /* Start playing right away */                
+          /* Start playing right away */     
+          m_InputHandler.resetScriptKeyHooks();           
           m_MotoGame.playLevel( pLevelSrc );
           m_State = GS_PLAYING;        
           m_nFrame = 0;
@@ -1031,6 +1038,7 @@ namespace vapp {
               m_pBestTimes->showWindow(false);
               m_pJustDeadMenu->showWindow(false);
               m_MotoGame.endLevel();
+              m_InputHandler.resetScriptKeyHooks();                         
               m_Renderer.unprepareForNewLevel();
               setState(GS_MENU);
             }
@@ -1056,6 +1064,7 @@ namespace vapp {
           case SDLK_ESCAPE:
             /* Escape quits the replay */
             m_MotoGame.endLevel();
+            m_InputHandler.resetScriptKeyHooks();                      
             m_Renderer.unprepareForNewLevel();
             setState(GS_MENU);            
             break;          

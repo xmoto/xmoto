@@ -1,6 +1,6 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005 Rasmus Neckelmann (neckelmann@gmail.com)
+Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -316,11 +316,24 @@ namespace vapp {
       pfh->Type = FHT_STDIO;
     }
     else {
-      /* Maybe it's in the data package then? */
-      bool bGotIt = false;
+      /* Try current working dir */
+      pfh->fp = fopen(Path.c_str(),"rb");
+      if(pfh->fp == NULL) {
+        /* No luck. Try the user-dir then */
+        pfh->fp = fopen((m_UserDir + std::string("/") + Path).c_str(),"rb");        
+        if(pfh->fp == NULL && m_bGotDataDir) {
+          /* Not there either, the data-dir is our last chance */
+          pfh->fp = fopen((m_DataDir + std::string("/") + Path).c_str(),"rb");        
+        }
+      }
+      pfh->Type = FHT_STDIO;
+    }
+    
+    if(pfh->fp == NULL) {
+      /* No luck so far, look in the data package */
       for(int i=0;i<m_nNumPackFiles;i++) {              
         if(m_PackFiles[i].Name == Path ||
-           (std::string("./") + m_PackFiles[i].Name) == Path) {
+          (std::string("./") + m_PackFiles[i].Name) == Path) {
           /* Found it, yeah. */
           pfh->fp = fopen(m_BinDataFile.c_str(),"rb");
           if(pfh->fp != NULL) {
@@ -329,25 +342,10 @@ namespace vapp {
             pfh->nSize = m_PackFiles[i].nSize;
             pfh->nOffset = ftell(pfh->fp);
 //            printf("OPENED '%s' IN PACKAGE!\n",Path.c_str());
-            bGotIt = true;
           }          
           else break;
         }
-      }
-    
-      if(!bGotIt) {
-        /* Try current working dir */
-        pfh->fp = fopen(Path.c_str(),"rb");
-        if(pfh->fp == NULL) {
-          /* No luck. Try the user-dir then */
-          pfh->fp = fopen((m_UserDir + std::string("/") + Path).c_str(),"rb");        
-          if(pfh->fp == NULL && m_bGotDataDir) {
-            /* Not there either, the data-dir is our last chance */
-            pfh->fp = fopen((m_DataDir + std::string("/") + Path).c_str(),"rb");        
-          }
-        }
-        pfh->Type = FHT_STDIO;
-      }
+      }      
     }
     
     if(pfh->fp != NULL) { 
@@ -361,6 +359,7 @@ namespace vapp {
       }
       return pfh;
     }
+    
     delete pfh;
     return NULL;
   }

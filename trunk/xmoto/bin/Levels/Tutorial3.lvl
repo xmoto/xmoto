@@ -18,7 +18,7 @@
 		<vertex x="-32.500000" y="-9.500000"/>
 	</block>
 	<block id="Block1">
-		<position x="0.098612" y="-0.284628"/>
+		<position x="0.098612" y="-0.284627"/>
 		<usetexture id="Bricks"/>
 		<vertex x="-16.000000" y="10.525620"/>
 		<vertex x="-15.147982" y="10.525620"/>
@@ -70,6 +70,14 @@
 		<vertex x="38.222221" y="-16.555555"/>
 		<vertex x="38.222221" y="8.444445"/>
 	</block>
+	<block id="Block7">
+		<position x="0.000000" y="0.117500"/>
+		<usetexture id="Bricks"/>
+		<vertex x="-17.983431" y="2.672500"/>
+		<vertex x="-15.650000" y="2.672500"/>
+		<vertex x="-15.650000" y="2.402500"/>
+		<vertex x="-17.983431" y="2.402500"/>
+	</block>
 	<entity id="MyPlayerStart0" typeid="PlayerStart">
 		<size r="0.400000"/>
 		<position x="-24.000000" y="0.000000"/>
@@ -78,6 +86,32 @@
 		<size r="0.500000"/>
 		<position x="45.000000" y="0.645180"/>
 		<param name="style" value="default"/>
+	</entity>
+	<entity id="Part2" typeid="Dummy">
+		<size r="0.500000"/>
+		<position x="-12.000000" y="0.000000"/>
+	</entity>
+	<entity id="Part1" typeid="Dummy">
+		<size r="0.500000"/>
+		<position x="-23.000000" y="0.000000"/>
+	</entity>
+	<entity id="Part3" typeid="Dummy">
+		<size r="0.500000"/>
+		<position x="0.000000" y="0.000000"/>
+	</entity>
+	<entity id="Part4" typeid="Dummy">
+		<size r="0.500000"/>
+		<position x="15.000000" y="0.000000"/>
+	</entity>
+	<entity id="Part5" typeid="Dummy">
+		<size r="0.500000"/>
+		<position x="30.000000" y="0.000000"/>
+	</entity>
+	<entity id="MySprite0" typeid="Sprite">
+		<size r="0.400000"/>
+		<position x="-17.844694" y="2.773215"/>
+		<param name="z" value="-1"/>
+		<param name="name" value="Tut3Sign"/>
 	</entity>
 	<zone id="FirstZone">
 		<box left="-29.000000" right="-17.000000" top="6.000000" bottom="0.000000"/>

@@ -7,6 +7,11 @@ FifthZone = {}
 TutorialStage = 0
 
 function PreDraw() 	
+	if TutorialStage < 0 then
+		-- No messages when we have teleported
+		return true
+	end
+	
 	-- Stages
 	if TutorialStage == 1 then
 		if Game.GetTime() > 7 then
@@ -69,11 +74,58 @@ function PreDraw()
 	return true
 end
 
+function TUT3_JumpToPart1()
+	x,y = Game.GetEntityPos("Part1")
+	Game.SetPlayerPosition(x,y,1)
+	TutorialStage = -1
+	Game.ClearMessages()
+end
+
+function TUT3_JumpToPart2()
+	x,y = Game.GetEntityPos("Part2")
+	Game.SetPlayerPosition(x,y,1)
+	TutorialStage = -1
+	Game.ClearMessages()
+end
+
+function TUT3_JumpToPart3()
+	x,y = Game.GetEntityPos("Part3")
+	Game.SetPlayerPosition(x,y,1)
+	TutorialStage = -1
+	Game.ClearMessages()
+end
+
+function TUT3_JumpToPart4()
+	x,y = Game.GetEntityPos("Part4")
+	Game.SetPlayerPosition(x,y,1)
+	TutorialStage = -1
+	Game.ClearMessages()
+end
+
+function TUT3_JumpToPart5()
+	x,y = Game.GetEntityPos("Part5")
+	Game.SetPlayerPosition(x,y,1)
+	TutorialStage = -1
+	Game.ClearMessages()
+end
+
 function OnLoad()
+	-- Set up key hooks (shortcuts to different parts of the tutorial)
+	Game.SetKeyHook("1","TUT3_JumpToPart1")
+	Game.SetKeyHook("2","TUT3_JumpToPart2")
+	Game.SetKeyHook("3","TUT3_JumpToPart3")
+	Game.SetKeyHook("4","TUT3_JumpToPart4")
+	Game.SetKeyHook("5","TUT3_JumpToPart5")
+	
 	return true
 end		
 
 function FirstZone.OnEnter()
+	if TutorialStage < 0 then
+		-- No messages when we have teleported
+		return
+	end
+
 	if TutorialStage < 1 then
 		-- First part of tutorial...
 		TutorialStage = 1
@@ -89,6 +141,11 @@ function FirstZone.OnLeave()
 end
 
 function SecondZone.OnEnter()
+	if TutorialStage < 0 then
+		-- No messages when we have teleported
+		return
+	end
+
 	if TutorialStage <= 4 then
 		-- Second part of tutorial...
 		TutorialStage = 5
@@ -103,6 +160,11 @@ function SecondZone.OnLeave()
 end
 
 function ThirdZone.OnEnter()
+	if TutorialStage < 0 then
+		-- No messages when we have teleported
+		return
+	end
+
 	if TutorialStage <= 8 then
 		-- Third part of tutorial...
 		TutorialStage = 9
@@ -117,6 +179,11 @@ function ThirdZone.OnLeave()
 end
 
 function FourthZone.OnEnter()
+	if TutorialStage < 0 then
+		-- No messages when we have teleported
+		return
+	end
+
 	if TutorialStage <= 9 then
 		-- Fourth part of tutorial...
 		TutorialStage = 10
@@ -131,6 +198,11 @@ function FourthZone.OnLeave()
 end
 
 function FifthZone.OnEnter()
+	if TutorialStage < 0 then
+		-- No messages when we have teleported
+		return
+	end
+
 	if TutorialStage <= 10 then
 		-- Last part of tutorial...
 		TutorialStage = 11

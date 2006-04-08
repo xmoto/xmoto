@@ -1,6 +1,6 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005 Rasmus Neckelmann (neckelmann@gmail.com)
+Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -303,7 +303,8 @@ namespace vapp {
     ET_ENDOFLEVEL,
     ET_WRECKER,
     ET_STRAWBERRY,
-    ET_PARTICLESOURCE
+    ET_PARTICLESOURCE,
+    ET_DUMMY
   };
 
 	/*===========================================================================
@@ -355,6 +356,16 @@ namespace vapp {
     /* ET_PARTICLESOURCE */
     std::string ParticleType;
     float fNextParticleTime;
+    
+    /* ET_DUMMY */
+  };
+
+	/*===========================================================================
+	Requested player state
+  ===========================================================================*/
+  struct GameReqPlayerPos {
+    Vector2f Pos;
+    bool bDriveRight;  
   };
 
 	/*===========================================================================
@@ -606,7 +617,11 @@ namespace vapp {
       dJointID m_ElbowHingeID2;
       dJointID m_HandHingeID2;
             
-      dJointGroupID m_ContactGroup;       /* Contact joint group */      
+      dJointGroupID m_ContactGroup;       /* Contact joint group */     
+      
+      /* Teleport next frame? */
+      bool m_bTeleport;
+      GameReqPlayerPos m_TeleportDest; 
                                              
       /* Helpers */
       void _GenerateLevel(void);          /* Called by playLevel() to 

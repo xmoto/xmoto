@@ -30,8 +30,6 @@ Levels/Tutorial2.lvs
 Levels/Tutorial3.lvl
 Levels/Tutorial3.lvs
 
-Levels/more levs/nemligja.lvl
-
 Levels/i00.lvl
 Levels/i01.lvl
 Levels/i02.lvl
@@ -65,6 +63,8 @@ Levels/i29.lvl
 Levels/i30.lvl
 Levels/i31.lvl
 Levels/i32.lvl
+Levels/i33.lvl
+Levels/i34.lvl
 
 Textures/Anims/Flower00.png
 Textures/Anims/Flower01.png
@@ -186,6 +186,7 @@ Textures/Sprites/ThisWaySignLeft1.png
 Textures/Sprites/ThisWaySignRight1.png
 Textures/Sprites/Tree1.png
 Textures/Sprites/Tree2.png
+Textures/Sprites/Tut3Sign.png
 
 Textures/UI/MenuBL.png
 Textures/UI/MenuBR.png

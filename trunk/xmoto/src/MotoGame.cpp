@@ -1,6 +1,6 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005 Rasmus Neckelmann (neckelmann@gmail.com)
+Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -53,6 +53,9 @@ namespace vapp {
   int L_Game_GetGravity(lua_State *pL);  
   int L_Game_SetPlayerPosition(lua_State *pL);
   int L_Game_GetPlayerPosition(lua_State *pL);
+  int L_Game_GetEntityPos(lua_State *pL);
+  int L_Game_SetEntityPos(lua_State *pL);
+  int L_Game_SetKeyHook(lua_State *pL);
   
   /* "Game" Lua library */
   static const luaL_reg g_GameFuncs[] = {
@@ -70,6 +73,9 @@ namespace vapp {
     {"GetGravity", L_Game_GetGravity},
     {"SetPlayerPosition", L_Game_SetPlayerPosition},
     {"GetPlayerPosition", L_Game_GetPlayerPosition},
+    {"GetEntityPos", L_Game_GetEntityPos},
+    {"SetEntityPos", L_Game_SetEntityPos},
+    {"SetKeyHook", L_Game_SetKeyHook},
     {NULL, NULL}
   };
 
@@ -149,49 +155,13 @@ namespace vapp {
   }
 
   /*===========================================================================
-  Misc
+  Teleporting
   ===========================================================================*/
   void MotoGame::setPlayerPosition(float x,float y,bool bFaceRight) {
-    //_UninitPhysics();
-    //_InitPhysics();
-    //
-    //_PrepareRider(Vector2f(x,y));        
-    printf("%f %f %d\n",x,y,bFaceRight);
-
-    /* Clear stuff */
-    clearStates();    
-    
-    m_fLastAttitudeCon = -1000.0f;
-    m_fAttitudeCon = 0.0f;
-    
-    m_PlayerFootAnchorBodyID = NULL;
-    m_PlayerHandAnchorBodyID = NULL;
-    m_PlayerTorsoBodyID = NULL;
-    m_PlayerUArmBodyID = NULL;
-    m_PlayerLArmBodyID = NULL;
-    m_PlayerULegBodyID = NULL;
-    m_PlayerLLegBodyID = NULL;
-    m_PlayerFootAnchorBodyID2 = NULL;
-    m_PlayerHandAnchorBodyID2 = NULL;
-    m_PlayerTorsoBodyID2 = NULL;
-    m_PlayerUArmBodyID2 = NULL;
-    m_PlayerLArmBodyID2 = NULL;
-    m_PlayerULegBodyID2 = NULL;
-    m_PlayerLLegBodyID2 = NULL;
-
-    /* Restart physics */
-    _UninitPhysics();
-    _InitPhysics();
-
-    /* Calculate bike stuff */
-    _CalculateBikeAnchors();    
-    Vector2f C( x - m_BikeA.Tp.x, y - m_BikeA.Tp.y);
-    _PrepareBikePhysics(C);
-        
-    m_BikeS.Dir = bFaceRight?DD_RIGHT:DD_LEFT;
-    
-    m_BikeS.fCurBrake = m_BikeS.fCurEngine = 0.0f;
-
+    /* Request teleport next frame */
+    m_TeleportDest.bDriveRight = bFaceRight;
+    m_TeleportDest.Pos = Vector2f(x,y);
+    m_bTeleport = true;
   }
   
   const Vector2f &MotoGame::getPlayerPosition(void) {
@@ -237,6 +207,45 @@ namespace vapp {
   void MotoGame::updateLevel(float fTimeStep,SerializedBikeState *pReplayState,DBuffer *pDBuffer) {
     /* Dummies are small markers that can show different things during debugging */
     resetDummies();
+    
+    /* Going to teleport? Do it now, before we tinker to much with the state */
+    if(m_bTeleport) {
+      /* Clear stuff */
+      clearStates();    
+      
+      m_fLastAttitudeCon = -1000.0f;
+      m_fAttitudeCon = 0.0f;
+      
+      m_PlayerFootAnchorBodyID = NULL;
+      m_PlayerHandAnchorBodyID = NULL;
+      m_PlayerTorsoBodyID = NULL;
+      m_PlayerUArmBodyID = NULL;
+      m_PlayerLArmBodyID = NULL;
+      m_PlayerULegBodyID = NULL;
+      m_PlayerLLegBodyID = NULL;
+      m_PlayerFootAnchorBodyID2 = NULL;
+      m_PlayerHandAnchorBodyID2 = NULL;
+      m_PlayerTorsoBodyID2 = NULL;
+      m_PlayerUArmBodyID2 = NULL;
+      m_PlayerLArmBodyID2 = NULL;
+      m_PlayerULegBodyID2 = NULL;
+      m_PlayerLLegBodyID2 = NULL;
+
+      /* Restart physics */
+      _UninitPhysics();
+      _InitPhysics();
+
+      /* Calculate bike stuff */
+      _CalculateBikeAnchors();    
+      Vector2f C( m_TeleportDest.Pos.x - m_BikeA.Tp.x, m_TeleportDest.Pos.y - m_BikeA.Tp.y);
+      _PrepareBikePhysics(C);
+          
+      m_BikeS.Dir = m_TeleportDest.bDriveRight?DD_RIGHT:DD_LEFT;
+      
+      m_BikeS.fCurBrake = m_BikeS.fCurEngine = 0.0f;
+      
+      m_bTeleport = false;
+    }
     
     /* Handle game messages (keep them in place) */
     int i=0;
@@ -420,7 +429,7 @@ namespace vapp {
     m_BikeS.PlayerTorso2P = Vector2f(0,0);
     m_BikeS.PlayerUArm2P = Vector2f(0,0);
     m_BikeS.PlayerULeg2P = Vector2f(0,0);
-    m_BikeS.pParams = NULL;
+    m_BikeS.pParams = &m_BikeP; /* clumsy, ugly, evil. I hate myself. */
     m_BikeS.PrevFq = Vector2f(0,0);
     m_BikeS.PrevRq = Vector2f(0,0);
     m_BikeS.PrevPFq = Vector2f(0,0);
@@ -447,7 +456,7 @@ namespace vapp {
   ===========================================================================*/
   void MotoGame::playLevel(LevelSrc *pLevelSrc) {
     /* Clean up first, just for safe's sake */
-    endLevel();
+    endLevel();               
     
     /* Set default gravity */
     m_PhysGravity.x = 0;
@@ -478,7 +487,9 @@ namespace vapp {
     m_nLastEventSeq = 0;
     
     m_Arrow.nArrowPointerMode = 0;
-    
+
+    m_bTeleport=false;
+        
     m_PlayerFootAnchorBodyID = NULL;
     m_PlayerHandAnchorBodyID = NULL;
     m_PlayerTorsoBodyID = NULL;
@@ -930,6 +941,8 @@ namespace vapp {
         break;
       case ET_PLAYERSTART:
         break;
+      case ET_DUMMY:
+        break;
       case ET_PARTICLESOURCE:
         pEnt->ParticleType = "";
         if(pSrc != NULL)
@@ -1002,6 +1015,7 @@ namespace vapp {
     if(Name == "Wrecker") return ET_WRECKER;
     if(Name == "Strawberry") return ET_STRAWBERRY;
     if(Name == "ParticleSource") return ET_PARTICLESOURCE;
+    if(Name == "Dummy") return ET_DUMMY;
     
     return ET_UNASSIGNED;
   }

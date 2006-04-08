@@ -1,6 +1,6 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005 Rasmus Neckelmann (neckelmann@gmail.com)
+Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -35,6 +35,17 @@ namespace vapp {
   enum ControllerModeID {
     CONTROLLER_MODE_KEYBOARD,
     CONTROLLER_MODE_JOYSTICK1
+  };
+
+  /*===========================================================================
+  Script hooks
+  ===========================================================================*/
+  #define MAX_SCRIPT_KEY_HOOKS 16
+  
+  struct InputScriptKeyHook {
+    int nKey;                 /* Hooked key */
+    std::string FuncName;     /* Script function to invoke */    
+    MotoGame *pGame;          /* Pointer to game */
   };
 
   /*===========================================================================
@@ -87,15 +98,21 @@ namespace vapp {
       
       /* Methods */
       void configure(UserConfig *pConfig);
-      void handleInput(InputEventType Type,int nKey,BikeController *pController);
+      void handleInput(InputEventType Type,int nKey,BikeController *pController);      
       std::string waitForKey(void);
       void updateInput(BikeController *pController);
       void init(UserConfig *pConfig);
       void uninit(void);
+      
+      void resetScriptKeyHooks(void) {m_nNumScriptKeyHooks = 0;}
+      void addScriptKeyHook(MotoGame *pGame,const std::string &KeyName,const std::string &FuncName);
     
     private:
 
       /* Data */
+      int m_nNumScriptKeyHooks;
+      InputScriptKeyHook m_ScriptKeyHooks[MAX_SCRIPT_KEY_HOOKS];
+      
       ControllerModeID m_ControllerModeID1;      
       InputAction m_ActiveAction;
 
