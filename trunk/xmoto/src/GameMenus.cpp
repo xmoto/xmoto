@@ -40,62 +40,65 @@ namespace vapp {
     m_pBestTimes->setHFont(m_Renderer.getSmallFont());
 
     /* Initialize finish menu */
-    m_pFinishMenu = new UIFrame(m_Renderer.getGUI(),300,60,"",400,480);
+    m_pFinishMenu = new UIFrame(m_Renderer.getGUI(),300,30,"",400,540);
     m_pFinishMenu->setStyle(UI_FRAMESTYLE_MENU);
     
     m_pFinishMenuButtons[0] = new UIButton(m_pFinishMenu,0,0,GAMETEXT_TRYAGAIN,207,57);
     m_pFinishMenuButtons[1] = new UIButton(m_pFinishMenu,0,0,GAMETEXT_SAVEREPLAY,207,57);
     if(!m_bRecordReplays) m_pFinishMenuButtons[1]->enableWindow(false);
-    m_pFinishMenuButtons[2] = new UIButton(m_pFinishMenu,0,0,GAMETEXT_ABORT,207,57);
-    m_pFinishMenuButtons[3] = new UIButton(m_pFinishMenu,0,0,GAMETEXT_QUIT,207,57);
-    m_nNumFinishMenuButtons = 4;
+    m_pFinishMenuButtons[2] = new UIButton(m_pFinishMenu,0,0,GAMETEXT_PLAYNEXT,207,57);
+    m_pFinishMenuButtons[3] = new UIButton(m_pFinishMenu,0,0,GAMETEXT_ABORT,207,57);
+    m_pFinishMenuButtons[4] = new UIButton(m_pFinishMenu,0,0,GAMETEXT_QUIT,207,57);
+    m_nNumFinishMenuButtons = 5;
 
-    UIStatic *pFinishText = new UIStatic(m_pFinishMenu,0,95,GAMETEXT_FINISH,m_pFinishMenu->getPosition().nWidth,36);
+    UIStatic *pFinishText = new UIStatic(m_pFinishMenu,0,100,GAMETEXT_FINISH,m_pFinishMenu->getPosition().nWidth,36);
     pFinishText->setFont(m_Renderer.getMediumFont());
 
     for(int i=0;i<m_nNumFinishMenuButtons;i++) {
-      m_pFinishMenuButtons[i]->setPosition(200-207/2,10+m_pFinishMenu->getPosition().nHeight/2 - (m_nNumFinishMenuButtons*57)/2 + i*57,207,57);
+      m_pFinishMenuButtons[i]->setPosition(200-207/2,m_pFinishMenu->getPosition().nHeight/2 - (m_nNumFinishMenuButtons*57)/2 + i*57,207,57);
       m_pFinishMenuButtons[i]->setFont(m_Renderer.getSmallFont());
     }
 
-    m_pFinishMenu->setPrimaryChild(m_pFinishMenuButtons[0]); /* default button: Try Again (TODO: set this to "Play next") */
+    m_pFinishMenu->setPrimaryChild(m_pFinishMenuButtons[2]); /* default button: Play next */
                       
     /* Initialize pause menu */
-    m_pPauseMenu = new UIFrame(m_Renderer.getGUI(),getDispWidth()/2 - 200,100,"",400,480);
+    m_pPauseMenu = new UIFrame(m_Renderer.getGUI(),getDispWidth()/2 - 200,70,"",400,540);
     m_pPauseMenu->setStyle(UI_FRAMESTYLE_MENU);
     
     m_pPauseMenuButtons[0] = new UIButton(m_pPauseMenu,0,0,GAMETEXT_RESUME,207,57);
     m_pPauseMenuButtons[1] = new UIButton(m_pPauseMenu,0,0,GAMETEXT_RESTART,207,57);
-    m_pPauseMenuButtons[2] = new UIButton(m_pPauseMenu,0,0,GAMETEXT_ABORT,207,57);
-    m_pPauseMenuButtons[3] = new UIButton(m_pPauseMenu,0,0,GAMETEXT_QUIT,207,57);
-    m_nNumPauseMenuButtons = 4;
+    m_pPauseMenuButtons[2] = new UIButton(m_pPauseMenu,0,0,GAMETEXT_PLAYNEXT,207,57);
+    m_pPauseMenuButtons[3] = new UIButton(m_pPauseMenu,0,0,GAMETEXT_ABORT,207,57);
+    m_pPauseMenuButtons[4] = new UIButton(m_pPauseMenu,0,0,GAMETEXT_QUIT,207,57);
+    m_nNumPauseMenuButtons = 5;
 
-    UIStatic *pPauseText = new UIStatic(m_pPauseMenu,0,95,GAMETEXT_PAUSE,m_pPauseMenu->getPosition().nWidth,36);
+    UIStatic *pPauseText = new UIStatic(m_pPauseMenu,0,100,GAMETEXT_PAUSE,m_pPauseMenu->getPosition().nWidth,36);
     pPauseText->setFont(m_Renderer.getMediumFont());
     
     for(int i=0;i<m_nNumPauseMenuButtons;i++) {
-      m_pPauseMenuButtons[i]->setPosition(200 -207/2,20+m_pPauseMenu->getPosition().nHeight/2 - (m_nNumPauseMenuButtons*57)/2 + i*57,207,57);
+      m_pPauseMenuButtons[i]->setPosition(200 -207/2,10+m_pPauseMenu->getPosition().nHeight/2 - (m_nNumPauseMenuButtons*57)/2 + i*57,207,57);
       m_pPauseMenuButtons[i]->setFont(m_Renderer.getSmallFont());
     }
     
     m_pPauseMenu->setPrimaryChild(m_pPauseMenuButtons[0]); /* default button: Resume */
     
     /* Initialize just-dead menu */
-    m_pJustDeadMenu = new UIFrame(m_Renderer.getGUI(),getDispWidth()/2 - 200,100,"",400,480);
+    m_pJustDeadMenu = new UIFrame(m_Renderer.getGUI(),getDispWidth()/2 - 200,70,"",400,540);
     m_pJustDeadMenu->setStyle(UI_FRAMESTYLE_MENU);
     
     m_pJustDeadMenuButtons[0] = new UIButton(m_pJustDeadMenu,0,0,GAMETEXT_TRYAGAIN,207,57);
     m_pJustDeadMenuButtons[1] = new UIButton(m_pJustDeadMenu,0,0,GAMETEXT_SAVEREPLAY,207,57);
     if(!m_bRecordReplays) m_pJustDeadMenuButtons[1]->enableWindow(false);
-    m_pJustDeadMenuButtons[2] = new UIButton(m_pJustDeadMenu,0,0,GAMETEXT_ABORT,207,57);
-    m_pJustDeadMenuButtons[3] = new UIButton(m_pJustDeadMenu,0,0,GAMETEXT_QUIT,207,57);
-    m_nNumJustDeadMenuButtons = 4;
+    m_pJustDeadMenuButtons[2] = new UIButton(m_pJustDeadMenu,0,0,GAMETEXT_PLAYNEXT,207,57);
+    m_pJustDeadMenuButtons[3] = new UIButton(m_pJustDeadMenu,0,0,GAMETEXT_ABORT,207,57);
+    m_pJustDeadMenuButtons[4] = new UIButton(m_pJustDeadMenu,0,0,GAMETEXT_QUIT,207,57);
+    m_nNumJustDeadMenuButtons = 5;
 
-    UIStatic *pJustDeadText = new UIStatic(m_pJustDeadMenu,0,95,GAMETEXT_JUSTDEAD,m_pJustDeadMenu->getPosition().nWidth,36);
+    UIStatic *pJustDeadText = new UIStatic(m_pJustDeadMenu,0,100,GAMETEXT_JUSTDEAD,m_pJustDeadMenu->getPosition().nWidth,36);
     pJustDeadText->setFont(m_Renderer.getMediumFont());
     
     for(int i=0;i<m_nNumJustDeadMenuButtons;i++) {
-      m_pJustDeadMenuButtons[i]->setPosition( 200 -207/2,20+m_pJustDeadMenu->getPosition().nHeight/2 - (m_nNumJustDeadMenuButtons*57)/2 + i*57,207,57);
+      m_pJustDeadMenuButtons[i]->setPosition( 200 -207/2,10+m_pJustDeadMenu->getPosition().nHeight/2 - (m_nNumJustDeadMenuButtons*57)/2 + i*57,207,57);
       m_pJustDeadMenuButtons[i]->setFont(m_Renderer.getSmallFont());
     }
 
@@ -758,6 +761,14 @@ namespace vapp {
   void GameApp::_HandlePauseMenu(void) {
     /* Any of the pause menu buttons clicked? */
     for(int i=0;i<m_nNumPauseMenuButtons;i++) {
+      if(m_pPauseMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
+        /* Uhm... is it likely that there's a next level? */
+        LevelSrc *pLS = _FindLevelByID(m_PlaySpecificLevel);
+        if(pLS != NULL) {
+          m_pPauseMenuButtons[i]->enableWindow(_IsThereANextLevel(pLS));
+        }
+      }
+
       if(m_pPauseMenuButtons[i]->isClicked()) {
         if(m_pPauseMenuButtons[i]->getCaption() == GAMETEXT_QUIT) {
           if(m_pQuitMsgBox == NULL)
@@ -778,6 +789,26 @@ namespace vapp {
           m_InputHandler.resetScriptKeyHooks();                     
           m_Renderer.unprepareForNewLevel();
           setState(GS_PLAYING);                               
+        }
+        else if(m_pPauseMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
+          LevelSrc *pLS = _FindLevelByID(m_PlaySpecificLevel);
+          if(pLS != NULL) {
+            std::string NextLevel = _DetermineNextLevel(pLS);
+            if(NextLevel != "") {        
+              m_pPauseMenu->showWindow(false);
+              m_MotoGame.endLevel();
+              m_InputHandler.resetScriptKeyHooks();                     
+              m_Renderer.unprepareForNewLevel();                    
+              
+              m_PlaySpecificLevel = NextLevel;
+              
+              setState(GS_PLAYING);                               
+            }
+            else {
+              notifyMsg(GAMETEXT_NONEXTLEVEL);
+            }
+              
+          }
         }
         else if(m_pPauseMenuButtons[i]->getCaption() == GAMETEXT_RESUME) {
           m_pPauseMenu->showWindow(false);
@@ -821,11 +852,40 @@ namespace vapp {
         }
       }
 
+      if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
+        /* Uhm... is it likely that there's a next level? */
+        LevelSrc *pLS = _FindLevelByID(m_PlaySpecificLevel);
+        if(pLS != NULL) {
+          m_pFinishMenuButtons[i]->enableWindow(_IsThereANextLevel(pLS));
+        }
+      }
+      
       if(m_pFinishMenuButtons[i]->isClicked()) {
         if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_QUIT) {
           if(m_pQuitMsgBox == NULL)
             m_pQuitMsgBox = m_Renderer.getGUI()->msgBox(GAMETEXT_QUITMESSAGE,
                                                         (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
+        }
+        else if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
+          LevelSrc *pLS = _FindLevelByID(m_PlaySpecificLevel);
+          if(pLS != NULL) {
+            std::string NextLevel = _DetermineNextLevel(pLS);
+            if(NextLevel != "") {        
+              m_pFinishMenu->showWindow(false);
+              m_pBestTimes->showWindow(false);
+              m_MotoGame.endLevel();
+              m_InputHandler.resetScriptKeyHooks();                     
+              m_Renderer.unprepareForNewLevel();                    
+              
+              m_PlaySpecificLevel = NextLevel;
+              
+              setState(GS_PLAYING);                               
+            }
+            else {
+              notifyMsg(GAMETEXT_NONEXTLEVEL);
+            }
+              
+          }
         }
         else if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_SAVEREPLAY) {
           if(m_pReplay != NULL) {
@@ -1138,8 +1198,16 @@ namespace vapp {
         else {
           m_pJustDeadMenuButtons[i]->enableWindow(true);
         }
+      }    
+
+      if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
+        /* Uhm... is it likely that there's a next level? */
+        LevelSrc *pLS = _FindLevelByID(m_PlaySpecificLevel);
+        if(pLS != NULL) {
+          m_pJustDeadMenuButtons[i]->enableWindow(_IsThereANextLevel(pLS));
+        }
       }
-    
+      
       if(m_pJustDeadMenuButtons[i]->isClicked()) {
         if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_QUIT) {
           if(m_pQuitMsgBox == NULL)
@@ -1154,6 +1222,26 @@ namespace vapp {
           m_InputHandler.resetScriptKeyHooks();                     
           m_Renderer.unprepareForNewLevel();          
           setState(GS_PLAYING);          
+        }
+        else if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
+          LevelSrc *pLS = _FindLevelByID(m_PlaySpecificLevel);
+          if(pLS != NULL) {
+            std::string NextLevel = _DetermineNextLevel(pLS);
+            if(NextLevel != "") {        
+              m_pJustDeadMenu->showWindow(false);
+              m_MotoGame.endLevel();
+              m_InputHandler.resetScriptKeyHooks();                     
+              m_Renderer.unprepareForNewLevel();                    
+              
+              m_PlaySpecificLevel = NextLevel;
+              
+              setState(GS_PLAYING);                               
+            }
+            else {
+              notifyMsg(GAMETEXT_NONEXTLEVEL);
+            }
+              
+          }
         }
         else if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_SAVEREPLAY) {
           if(m_pReplay != NULL) {

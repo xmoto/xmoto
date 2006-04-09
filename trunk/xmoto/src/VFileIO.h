@@ -84,7 +84,7 @@ namespace vapp {
       /* Methods */
       static void init(std::string AppDir);
       
-      static std::vector<std::string> findPhysFiles(std::string Files);
+      static std::vector<std::string> findPhysFiles(std::string Files,bool bRecurse = false);
       
       static bool copyFile(const std::string &From,const std::string &To);
       static void deleteFile(const std::string &File);
@@ -146,6 +146,7 @@ namespace vapp {
     private:
       /* Helper functions */
       static void _ThrowFileError(FileHandle *pfh,std::string Description);
+      static void _FindFilesRecursive(const std::string &Dir,const std::string &Wildcard,std::vector<std::string> &List);
       
       /* Data */
       static std::string m_UserDir,m_DataDir;

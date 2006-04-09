@@ -274,6 +274,8 @@ namespace vapp {
       
       void _UpdateLevelPackManager(LevelSrc *pLevelSrc);
       LevelPack *_FindLevelPackByName(const std::string &Name);
+      std::string _DetermineNextLevel(LevelSrc *pLevelSrc);
+      bool _IsThereANextLevel(LevelSrc *pLevelSrc);
   };
 
 };

@@ -125,9 +125,90 @@ namespace vapp {
   }
 
   /*===========================================================================
-  Code soup :)  -- this is largely copy/paste material from earlier project
+  Code soup :)  -- this is largely copy/paste material from an earlier project
+  
+  FutureRasmus: well, this is probably the crappiest code in the world. Period.
   ===========================================================================*/
-  std::vector<std::string> FS::findPhysFiles(std::string Files) {
+  void FS::_FindFilesRecursive(const std::string &DirX,const std::string &Wildcard,std::vector<std::string> &List) {
+    /* Windows? */
+    #ifdef WIN32
+      long fh;
+      struct _finddata_t fd;
+      
+      std::string Dir = DirX;
+      if(!DirX.empty() && DirX[DirX.length()-1] == '/') {
+        Dir = DirX.substr(0,DirX.length()-1);
+      }
+      
+      if((fh = _findfirst((Dir + std::string("/") + Wildcard).c_str(),&fd)) != -1L) {
+        do {
+					if(strcmp(fd.name,".") && strcmp(fd.name,"..")) {
+					  std::string F = Dir + std::string("/") + std::string(fd.name);
+					  bool bFound = false;
+					  for(int k = 0;k<List.size();k++) {
+					    if(getFileBaseName(List[k]) == getFileBaseName(F)) {  
+					      bFound = true;
+					      break;
+					    }
+					  }
+					  if(!bFound)
+						  List.push_back(F);
+				  }
+        } while(_findnext(fh,&fd)==0);
+        _findclose(fh);
+      }
+      
+      /* Now, recurse into sub-dirs */
+      if((fh = _findfirst( (Dir + std::string("/*")).c_str(),&fd)) != -1L) {
+        do {
+					if(strcmp(fd.name,".") && strcmp(fd.name,"..")) {
+					  std::string F = Dir + std::string("/") + std::string(fd.name);
+            if(isDir(F)) {
+              /* Recurse! */
+              _FindFilesRecursive(F,Wildcard,List);
+            }					  
+					}
+			  } while(_findnext(fh,&fd)==0);
+			  _findclose(fh);
+			}      
+	  #else
+      struct dirent *dp;    
+      DIR *dirp = opendir(Dir.c_str());
+      while(dirp) {
+        if((dp = readdir(dirp)) != NULL) {
+			    std::string F = Dir + std::string(dp->d_name);
+			    if(isDir(F)) {
+			      /* Recurse... */
+            if(strcmp(dp->d_name,".") && strcmp(dp->d_name,"..")) {			      
+              _FindFilesRecursive(F + std::string("/"),Wildcard,List);
+            }
+			    }
+			    else {			    
+            if(str_match_wildcard((char *)Wildcard.c_str(),(char *)dp->d_name,true)) {
+              /* Match! */
+              if(strcmp(dp->d_name,".") && strcmp(dp->d_name,"..")) {
+					      bool bFound = false;
+					      for(int k = 0;k<List.size();k++) {
+  					      if(FS::getFileBaseName(List[k]) == FS::getFileBaseName(F)) {  
+					          bFound = true;
+					          break;
+					        }
+					      }
+					      if(!bFound)
+						      List.push_back(F);
+              }							
+            }
+          }
+        }
+        else {
+          closedir(dirp);
+          break;        
+        }
+      }	      
+    #endif    
+  }
+
+  std::vector<std::string> FS::findPhysFiles(std::string Files,bool bRecurse) {
     std::vector<std::string> Result;
     std::string Wildcard;
     std::string DirToSearch,AltDirToSearch,UDirToSearch = "";
@@ -170,57 +251,39 @@ namespace vapp {
 //    printf("W=%s   D=%s  AD=%s\n",Wildcard.c_str(),DirToSearch.c_str(),AltDirToSearch.c_str());    
     /* Windows? */
     #ifdef WIN32
-      long fh;
-      struct _finddata_t fd;
-      
-      if((fh = _findfirst((DirToSearch + Wildcard).c_str(),&fd)) != -1L) {
-        do {
-					if(strcmp(fd.name,".") && strcmp(fd.name,"..")) {
-					  std::string F = DirToSearch + std::string(fd.name);
-					  bool bFound = false;
-					  for(int k = 0;k<Result.size();k++) {
-					    if(FS::getFileBaseName(Result[k]) == FS::getFileBaseName(F)) {  
-					      bFound = true;
-					      break;
-					    }
-					  }
-					  if(!bFound)
-						  Result.push_back(F);
-				  }
-        } while(_findnext(fh,&fd)==0);
-        _findclose(fh);
+      if(bRecurse) {
+        _FindFilesRecursive(DirToSearch,Wildcard,Result);
       }
-    #else /* Assume linux, unix... yalla yalla... */
-      /* Search directories */
-      struct dirent *dp;    
-      DIR *dirp = opendir(DirToSearch.c_str());
-      while(dirp) {
-        if((dp = readdir(dirp)) != NULL) {
-          if(str_match_wildcard((char *)Wildcard.c_str(),(char *)dp->d_name,true)) {
-            /* Match! */
-            if(strcmp(dp->d_name,".") && strcmp(dp->d_name,"..")) {
-					    std::string F = DirToSearch + std::string(dp->d_name);
+      else {
+        long fh;
+        struct _finddata_t fd;
+        
+        if((fh = _findfirst((DirToSearch + Wildcard).c_str(),&fd)) != -1L) {
+          do {
+					  if(strcmp(fd.name,".") && strcmp(fd.name,"..")) {
+					    std::string F = DirToSearch + std::string(fd.name);
 					    bool bFound = false;
 					    for(int k = 0;k<Result.size();k++) {
-  					    if(FS::getFileBaseName(Result[k]) == FS::getFileBaseName(F)) {  
+					      if(FS::getFileBaseName(Result[k]) == FS::getFileBaseName(F)) {  
 					        bFound = true;
 					        break;
 					      }
 					    }
 					    if(!bFound)
 						    Result.push_back(F);
-            }							
-          }
-        }
-        else {
-          closedir(dirp);
-          break;        
+				    }
+          } while(_findnext(fh,&fd)==0);
+          _findclose(fh);
         }
       }
-
-      if(UDirToSearch != "") {
-        dirp = opendir(UDirToSearch.c_str());
-        DirToSearch = UDirToSearch;
+    #else /* Assume linux, unix... yalla yalla... */
+      if(bRecurse) {
+        _FindFilesRecursive(DirToSearch,Wildcard,Result);
+      }
+      else {
+        /* Search directories */
+        struct dirent *dp;    
+        DIR *dirp = opendir(DirToSearch.c_str());
         while(dirp) {
           if((dp = readdir(dirp)) != NULL) {
             if(str_match_wildcard((char *)Wildcard.c_str(),(char *)dp->d_name,true)) {
@@ -229,47 +292,85 @@ namespace vapp {
 					      std::string F = DirToSearch + std::string(dp->d_name);
 					      bool bFound = false;
 					      for(int k = 0;k<Result.size();k++) {
-    					    if(FS::getFileBaseName(Result[k]) == FS::getFileBaseName(F)) {  
+  					      if(FS::getFileBaseName(Result[k]) == FS::getFileBaseName(F)) {  
 					          bFound = true;
 					          break;
 					        }
 					      }
 					      if(!bFound)
 						      Result.push_back(F);
-						  }
+              }							
             }
           }
           else {
             closedir(dirp);
             break;        
+          }
+        }
+      }
+      
+      if(UDirToSearch != "") {
+        if(bRecurse) {
+          _FindFilesRecursive(UDirToSearch,Wildcard,Result);        
+        }
+        else {
+          dirp = opendir(UDirToSearch.c_str());
+          DirToSearch = UDirToSearch;
+          while(dirp) {
+            if((dp = readdir(dirp)) != NULL) {
+              if(str_match_wildcard((char *)Wildcard.c_str(),(char *)dp->d_name,true)) {
+                /* Match! */
+                if(strcmp(dp->d_name,".") && strcmp(dp->d_name,"..")) {
+					        std::string F = DirToSearch + std::string(dp->d_name);
+					        bool bFound = false;
+					        for(int k = 0;k<Result.size();k++) {
+    					      if(FS::getFileBaseName(Result[k]) == FS::getFileBaseName(F)) {  
+					            bFound = true;
+					            break;
+					          }
+					        }
+					        if(!bFound)
+						        Result.push_back(F);
+						    }
+              }
+            }
+            else {
+              closedir(dirp);
+              break;        
+            }
           }
         }
       }
 
       if(AltDirToSearch != DirToSearch) {
-        dirp = opendir(AltDirToSearch.c_str());
-        DirToSearch = AltDirToSearch;
-        while(dirp) {
-          if((dp = readdir(dirp)) != NULL) {
-            if(str_match_wildcard((char *)Wildcard.c_str(),(char *)dp->d_name,true)) {
-              /* Match! */
-              if(strcmp(dp->d_name,".") && strcmp(dp->d_name,"..")) {
-					      std::string F = DirToSearch + std::string(dp->d_name);
-					      bool bFound = false;
-					      for(int k = 0;k<Result.size();k++) {
-    					    if(FS::getFileBaseName(Result[k]) == FS::getFileBaseName(F)) {  
-					          bFound = true;
-					          break;
+        if(bRecurse) {
+          _FindFilesRecursive(AltDirToSearch,Wildcard,Result);
+        }
+        else {
+          dirp = opendir(AltDirToSearch.c_str());
+          DirToSearch = AltDirToSearch;
+          while(dirp) {
+            if((dp = readdir(dirp)) != NULL) {
+              if(str_match_wildcard((char *)Wildcard.c_str(),(char *)dp->d_name,true)) {
+                /* Match! */
+                if(strcmp(dp->d_name,".") && strcmp(dp->d_name,"..")) {
+					        std::string F = DirToSearch + std::string(dp->d_name);
+					        bool bFound = false;
+					        for(int k = 0;k<Result.size();k++) {
+    					      if(FS::getFileBaseName(Result[k]) == FS::getFileBaseName(F)) {  
+					            bFound = true;
+					            break;
+					          }
 					        }
-					      }
-					      if(!bFound)
-						      Result.push_back(F);
-						  }
+					        if(!bFound)
+						        Result.push_back(F);
+						    }
+              }
             }
-          }
-          else {
-            closedir(dirp);
-            break;        
+            else {
+              closedir(dirp);
+              break;        
+            }
           }
         }
       }

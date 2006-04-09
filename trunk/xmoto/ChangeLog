@@ -10,6 +10,9 @@ X-Moto 0.1.12 (alpha) 2006-
  * Scripts can now be encapsulated directly in .lvl-files.
  * Now you'll see an icon beside the clock, indicating the the current
    objective.
+ * Added a "Next Level" button to the in-game menus. 
+ * You can now have several levels of sub-directories in your Levels/
+   directory.
  * Introduced the concept of "level packs", i.e. logical groupings of
    levels. The tutorials are now considered a level pack. Note that
    levels which are in a level pack can't be seen in the "External

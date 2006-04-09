@@ -495,8 +495,11 @@ namespace vapp {
     }
      
     /* Find all .lvl files in the level dir and load them */
-    std::vector<std::string> LvlFiles = FS::findPhysFiles("Levels/*.lvl");
+    std::vector<std::string> LvlFiles = FS::findPhysFiles("Levels/*.lvl",true);
     for(int i=0;i<LvlFiles.size();i++) {
+      printf("[%s]\n",LvlFiles[i].c_str());
+      continue;
+      
       /* Load it */
       m_Levels[i].setFileName( LvlFiles[i] );
       m_Levels[i].loadXML();            
@@ -696,7 +699,7 @@ namespace vapp {
         /* Show frame rate */
         if(m_bShowFrameRate) {
           sprintf(cTemp,"%f",fFPS_Rate);
-          drawText(Vector2f(100,0),cTemp);
+          drawText(Vector2f(130,0),cTemp);
         }
 
         /* Delay a bit so we don't eat all CPU */
@@ -917,7 +920,7 @@ namespace vapp {
         /* Show frame rate */
         if(m_bShowFrameRate) {
           sprintf(cTemp,"%f",fFPS_Rate);
-          drawText(Vector2f(100,0),cTemp);
+          drawText(Vector2f(130,0),cTemp);
         }
         break;
       }
@@ -1423,6 +1426,52 @@ namespace vapp {
     }
     return NULL;
   }
+ 
+  std::string GameApp::_DetermineNextLevel(LevelSrc *pLevelSrc) {
+    /* If the given level is an internal, it's rather straightforward to determine the next one */
+    if(m_Profiles.isInternal(pLevelSrc->getID())) {
+      /* Goodie. */
+      int nLevelNum = -1;
+      sscanf(pLevelSrc->getID().c_str(),"_iL%02d_",&nLevelNum);
+      if(nLevelNum < 0) return ""; /* some problem... */      
+      char cNextLevelID[256];
+      sprintf(cNextLevelID,"_iL%02d_",nLevelNum+1);
+      
+      LevelSrc *pNextLevelSrc = _FindLevelByID(cNextLevelID);
+      if(pNextLevelSrc == NULL) return ""; /* no more levels */
+      
+      return pNextLevelSrc->getID();
+    }
+    
+    /* Not internal... maybe it's in a level pack? */
+    if(pLevelSrc->getLevelPack() != "") {
+      LevelPack *pPack = _FindLevelPackByName(pLevelSrc->getLevelPack());
+      if(pPack != NULL) {
+        /* Determine next then */
+        for(int i=0;i<pPack->Levels.size()-1;i++) {
+          if(pPack->Levels[i] == pLevelSrc) {
+            return pPack->Levels[i+1]->getID();
+          }
+        }
+      }
+    }
+    
+    /* Nothing. Just a random external */
+    return "";
+  }
+  
+  bool GameApp::_IsThereANextLevel(LevelSrc *pLevelSrc) {
+    /* If it's internal, there's probably one */
+    if(m_Profiles.isInternal(pLevelSrc->getID()))
+      return true;
+    
+    /* If it's in a level pack, there's probably one too */
+    if(pLevelSrc->getLevelPack() != "")
+      return true;
+      
+    /* Otherwise... probably not */
+    return false;
+  }  
  
 };
 

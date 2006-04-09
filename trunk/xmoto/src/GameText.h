@@ -115,6 +115,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_NAME                 "Name"
 #define GAMETEXT_NEWPROFILE           "New Profile..."
 #define GAMETEXT_NO                   "No"
+#define GAMETEXT_NONEXTLEVEL          "No level following this one, sorry."
 #define GAMETEXT_NOTFINISHED          "(Not finished)"
 #define GAMETEXT_NOTIFYATINIT         "Important note!\n"                                                \
                                       "\n"                                                               \
@@ -138,6 +139,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_PLAYER               "Player"
 #define GAMETEXT_PLAYERPROFILE        "Player Profile"
 #define GAMETEXT_PLAYERPROFILES       "Player Profiles"
+#define GAMETEXT_PLAYNEXT             "Play Next Level"
 #define GAMETEXT_PRESSANYKEYTO        "Press key you want to '%s' or ESC to cancel..."
 #define GAMETEXT_QUIT                 "Quit Game"
 #define GAMETEXT_QUITMESSAGE          "Do you really want to quit?"

@@ -75,12 +75,14 @@ function FirstZone.OnEnter()
 		-- First part of tutorial...
 		TutorialStage = 1
 		
-		ChangeDirControl = Game.GetKeyByAction("ChangeDir");
+		ChangeDirControl = Game.GetKeyByAction("ChangeDir")
 		
 		Game.ClearMessages()
 		Game.Message("This tutorial will teach you the basics of jumping.")
 		
-		if ChangeDirControl != "?" then
+		if ChangeDirControl == "?" then
+			-- Well, something is wrong, don't say anything :)
+		else
 			Game.Message("Remember you can turn around your bike")
 			Game.Message("by pressing ",ChangeDirControl,".")
 		end
