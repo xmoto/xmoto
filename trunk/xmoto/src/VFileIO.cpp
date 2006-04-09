@@ -314,7 +314,8 @@ namespace vapp {
           _FindFilesRecursive(UDirToSearch,Wildcard,Result);        
         }
         else {
-          dirp = opendir(UDirToSearch.c_str());
+          struct dirent *dp;    
+          DIR *dirp = opendir(UDirToSearch.c_str());
           DirToSearch = UDirToSearch;
           while(dirp) {
             if((dp = readdir(dirp)) != NULL) {
@@ -347,7 +348,8 @@ namespace vapp {
           _FindFilesRecursive(AltDirToSearch,Wildcard,Result);
         }
         else {
-          dirp = opendir(AltDirToSearch.c_str());
+          struct dirent *dp;    
+          DIR *dirp = opendir(AltDirToSearch.c_str());
           DirToSearch = AltDirToSearch;
           while(dirp) {
             if((dp = readdir(dirp)) != NULL) {
