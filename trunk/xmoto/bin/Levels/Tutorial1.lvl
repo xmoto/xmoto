@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<level id="tut1">
+<level id="tut1" levelpack="Tutorials">
 
 	<info>
 		<name>Tutorial #1 - Basics</name>

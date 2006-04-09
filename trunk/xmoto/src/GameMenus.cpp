@@ -109,11 +109,12 @@ namespace vapp {
     m_pMainMenu->enableWindow(true);                                 
     
     m_pMainMenuButtons[0] = new UIButton(m_pMainMenu,0,0,GAMETEXT_LEVELS,207,57);
-    m_pMainMenuButtons[1] = new UIButton(m_pMainMenu,0,0,GAMETEXT_REPLAYS,207,57);
-    m_pMainMenuButtons[2] = new UIButton(m_pMainMenu,0,0,GAMETEXT_OPTIONS,207,57);
-    m_pMainMenuButtons[3] = new UIButton(m_pMainMenu,0,0,GAMETEXT_HELP,207,57);
-    m_pMainMenuButtons[4] = new UIButton(m_pMainMenu,0,0,GAMETEXT_QUIT,207,57);
-    m_nNumMainMenuButtons = 5;
+    m_pMainMenuButtons[1] = new UIButton(m_pMainMenu,0,0,GAMETEXT_LEVELPACKS,207,57);
+    m_pMainMenuButtons[2] = new UIButton(m_pMainMenu,0,0,GAMETEXT_REPLAYS,207,57);
+    m_pMainMenuButtons[3] = new UIButton(m_pMainMenu,0,0,GAMETEXT_OPTIONS,207,57);
+    m_pMainMenuButtons[4] = new UIButton(m_pMainMenu,0,0,GAMETEXT_HELP,207,57);
+    m_pMainMenuButtons[5] = new UIButton(m_pMainMenu,0,0,GAMETEXT_QUIT,207,57);
+    m_nNumMainMenuButtons = 6;
         
 //    UIStatic *pPlayerText = new UIStatic(m_pMainMenu,300,85,"",getDispWidth()-300-120,50);
     UIStatic *pPlayerText = new UIStatic(m_pMainMenu,300,(getDispHeight()*85)/600,"",getDispWidth()-300-120,50);
@@ -442,6 +443,23 @@ namespace vapp {
   pKeyCList->setPosition(5,5,pControlsOptionsTab->getPosition().nWidth-10,118);
 #endif
 
+    m_pLevelPacksWindow = new UIFrame(m_pMainMenu,300,(getDispHeight()*140)/600,"",getDispWidth()-300-20,getDispHeight()-40-(getDispHeight()*120)/600);      
+    m_pLevelPacksWindow->showWindow(false);
+    pSomeText = new UIStatic(m_pLevelPacksWindow,0,0,GAMETEXT_LEVELPACKS,m_pLevelPacksWindow->getPosition().nWidth,36);
+    pSomeText->setFont(m_Renderer.getMediumFont());    
+    UIButton *pOpenButton = new UIButton(m_pLevelPacksWindow,11,m_pLevelPacksWindow->getPosition().nHeight-68,GAMETEXT_OPEN,115,57);
+    pOpenButton->setFont(m_Renderer.getSmallFont());
+    pOpenButton->setType(UI_BUTTON_TYPE_SMALL);
+    pOpenButton->setID("LEVELPACK_OPEN_BUTTON");
+    UIList *pLevelPackList = new UIList(m_pLevelPacksWindow,20,40,"",m_pLevelPacksWindow->getPosition().nWidth-40,m_pLevelPacksWindow->getPosition().nHeight-115);      
+    pLevelPackList->setID("LEVELPACK_LIST");
+    pLevelPackList->showWindow(true);
+    pLevelPackList->setFont(m_Renderer.getSmallFont());
+    pLevelPackList->addColumn(GAMETEXT_LEVELPACK,128);
+    pLevelPackList->addColumn(GAMETEXT_NUMLEVELS,200);
+    //pLevelPackList->addColumn(GAMETEXT_PLAYER,128);
+    pLevelPackList->setEnterButton( pOpenButton );
+
     /* Initialize profile editor */
     m_pProfileEditor = new UIFrame(m_Renderer.getGUI(),getDispWidth()/2-350,getDispHeight()/2-250,"",700,500); 
     m_pProfileEditor->setStyle(UI_FRAMESTYLE_TRANS);           
@@ -465,6 +483,28 @@ namespace vapp {
     pProfDeleteButton->setID("DELETEPROFILE_BUTTON");
     pProfileList->setEnterButton( pProfUseButton );
     _CreateProfileList();
+
+    /* Initialize level pack viewer */
+    m_pLevelPackViewer = new UIFrame(m_Renderer.getGUI(),getDispWidth()/2-350,getDispHeight()/2-250,"",700,500); 
+    m_pLevelPackViewer->setStyle(UI_FRAMESTYLE_TRANS);           
+    UIStatic *pLevelPackViewerTitle = new UIStatic(m_pLevelPackViewer,0,0,"(level pack name goes here)",700,50);
+    pLevelPackViewerTitle->setID("LEVELPACK_VIEWER_TITLE");
+    pLevelPackViewerTitle->setFont(m_Renderer.getMediumFont());
+    UIList *pLevelPackLevelList = new UIList(m_pLevelPackViewer,20,50,"",400,430);
+    pLevelPackLevelList->setFont(m_Renderer.getSmallFont());
+    pLevelPackLevelList->addColumn(GAMETEXT_LEVEL,pLevelPackLevelList->getPosition().nWidth-128);      
+    pLevelPackLevelList->addColumn(GAMETEXT_SCRIPTED,128);      
+    pLevelPackLevelList->setID("LEVELPACK_LEVEL_LIST");
+    UIButton *pLevelPackPlay = new UIButton(m_pLevelPackViewer,450,50,GAMETEXT_STARTLEVEL,207,57);
+    pLevelPackPlay->setFont(m_Renderer.getSmallFont());
+    pLevelPackPlay->setID("LEVELPACK_PLAY_BUTTON");
+    UIButton *pLevelPackInfo = new UIButton(m_pLevelPackViewer,450,107,GAMETEXT_LEVELINFO,207,57);
+    pLevelPackInfo->setFont(m_Renderer.getSmallFont());
+    pLevelPackInfo->setID("LEVELPACK_INFO_BUTTON");
+    UIButton *pLevelPackCancel = new UIButton(m_pLevelPackViewer,450,164,GAMETEXT_CLOSE,207,57);
+    pLevelPackCancel->setFont(m_Renderer.getSmallFont());
+    pLevelPackCancel->setID("LEVELPACK_CANCEL_BUTTON");
+    pLevelPackLevelList->setEnterButton( pLevelPackPlay );
 
     /* Initialize level info viewer */
     m_pLevelInfoViewer = new UIFrame(m_Renderer.getGUI(),getDispWidth()/2-350,getDispHeight()/2-250,"",700,500); 
@@ -573,6 +613,24 @@ namespace vapp {
     m_pFinishMenu->showWindow(false);
     m_pBestTimes->showWindow(false);
     m_pLevelInfoViewer->showWindow(false);
+    m_pLevelPackViewer->showWindow(false);
+  }
+  
+  /*===========================================================================
+  Add levels to list (level pack)
+  ===========================================================================*/  
+  void GameApp::_CreateLevelPackLevelList(void) {  
+    UIList *pList = (UIList *)m_pLevelPackViewer->getChild("LEVELPACK_LEVEL_LIST");    
+    pList->clear();
+    
+    for(int i=0;i<m_pActiveLevelPack->Levels.size();i++) {
+      UIListEntry *pEntry = pList->addEntry(m_pActiveLevelPack->Levels[i]->getLevelInfo()->Name,m_pActiveLevelPack->Levels[i]);
+      
+      if(m_pActiveLevelPack->Levels[i]->isScripted())
+        pEntry->Text.push_back(GAMETEXT_YES);
+      else
+        pEntry->Text.push_back(GAMETEXT_NO);
+    }
   }
   
   /*===========================================================================
@@ -678,6 +736,23 @@ namespace vapp {
   }
   
   /*===========================================================================
+  Update level pack list
+  ===========================================================================*/  
+  void GameApp::_UpdateLevelPackList(void) {
+    UIList *pList = (UIList *)m_pLevelPacksWindow->getChild("LEVELPACK_LIST");
+    pList->clear();
+    
+    UIListEntry *p;
+    
+    for(int i=0;i<m_LevelPacks.size();i++) {
+      p = pList->addEntry(m_LevelPacks[i]->Name);
+      char cBuf[256]; sprintf(cBuf,"%d",m_LevelPacks[i]->Levels.size());
+      p->Text.push_back(cBuf);
+      p->pvUser = (void *)m_LevelPacks[i];
+    }
+  }
+  
+  /*===========================================================================
   Update pause menu
   ===========================================================================*/
   void GameApp::_HandlePauseMenu(void) {
@@ -694,7 +769,8 @@ namespace vapp {
           m_MotoGame.endLevel();
           m_InputHandler.resetScriptKeyHooks();                     
           m_Renderer.unprepareForNewLevel();
-          setState(GS_MENU);          
+          setState(m_StateAfterPlaying);
+          //setState(GS_MENU);          
         }
         else if(m_pPauseMenuButtons[i]->getCaption() == GAMETEXT_RESTART) {
           m_pPauseMenu->showWindow(false);
@@ -777,7 +853,8 @@ namespace vapp {
           m_MotoGame.endLevel();
           m_InputHandler.resetScriptKeyHooks();                     
           m_Renderer.unprepareForNewLevel();
-          setState(GS_MENU);
+//          setState(GS_MENU);
+          setState(m_StateAfterPlaying);
         }
 
         /* Don't process this clickin' more than once */
@@ -829,6 +906,78 @@ namespace vapp {
           m_PlaySpecificReplay = pListEntry->Text[0];
           setState(GS_REPLAYING);
         }
+      }
+    }
+  }
+
+  /*===========================================================================
+  Update level pack viewer
+  ===========================================================================*/
+  void GameApp::_HandleLevelPackViewer(void) {    
+    /* Get buttons and list */
+    UIButton *pCancelButton = reinterpret_cast<UIButton *>(m_pLevelPackViewer->getChild("LEVELPACK_CANCEL_BUTTON"));
+    UIButton *pPlayButton = reinterpret_cast<UIButton *>(m_pLevelPackViewer->getChild("LEVELPACK_PLAY_BUTTON"));
+    UIButton *pLevelInfoButton = reinterpret_cast<UIButton *>(m_pLevelPackViewer->getChild("LEVELPACK_INFO_BUTTON"));
+    UIList *pList = (UIList *)m_pLevelPackViewer->getChild("LEVELPACK_LEVEL_LIST");
+    
+    /* Check buttons */
+    if(pCancelButton!=NULL && pCancelButton->isClicked()) {
+      pCancelButton->setClicked(false);
+      
+      m_State = GS_MENU;
+      m_pLevelPackViewer->showWindow(false);
+      m_pMainMenu->enableChildren(true);
+      m_pMainMenu->enableWindow(true);
+    }
+    
+    if(pPlayButton!=NULL && pPlayButton->isClicked()) {
+      pPlayButton->setClicked(false);
+      
+      int nSel = pList->getSelected();
+      if(nSel >= 0) {      
+        LevelSrc *pLevelSrc = (LevelSrc *)pList->getEntries()[nSel]->pvUser;
+              
+        m_pLevelPackViewer->showWindow(false);
+        m_pMainMenu->showWindow(false);      
+        m_PlaySpecificLevel = pLevelSrc->getID();        
+        m_StateAfterPlaying = GS_LEVELPACK_VIEWER;
+        setState(GS_PLAYING);      
+      }
+    }
+
+    if(pLevelInfoButton!=NULL && pLevelInfoButton->isClicked()) {
+      pLevelInfoButton->setClicked(false);
+
+      int nSel = pList->getSelected();
+      if(nSel >= 0) {      
+        LevelSrc *pLevelSrc = (LevelSrc *)pList->getEntries()[nSel]->pvUser;
+
+        /* === OPEN LEVEL INFO VIEWER === */      
+        /* Set information */
+        UIStatic *pLevelName = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TITLE");
+        
+        if(pLevelName != NULL) pLevelName->setCaption(pLevelSrc->getLevelInfo()->Name);
+
+        UIStatic *pGeneralInfo_LevelName = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_LEVELNAME");
+        UIStatic *pGeneralInfo_Author = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_AUTHOR");
+        UIStatic *pGeneralInfo_Date = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_DATE");
+        UIStatic *pGeneralInfo_Description = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_DESCRIPTION");
+
+        if(pGeneralInfo_LevelName != NULL) pGeneralInfo_LevelName->setCaption(std::string(GAMETEXT_LEVELNAME) + pLevelSrc->getLevelInfo()->Name);
+        if(pGeneralInfo_Author != NULL) pGeneralInfo_Author->setCaption(std::string(GAMETEXT_AUTHOR) + pLevelSrc->getLevelInfo()->Author);
+        if(pGeneralInfo_Date != NULL) pGeneralInfo_Date->setCaption(std::string(GAMETEXT_DATE) + pLevelSrc->getLevelInfo()->Date);
+        if(pGeneralInfo_Description != NULL) pGeneralInfo_Description->setCaption(std::string(GAMETEXT_DESCRIPTION) + pLevelSrc->getLevelInfo()->Description);
+            
+        _UpdateLevelInfoViewerBestTimes(m_LevelInfoViewerLevel = pLevelSrc->getID());
+        _UpdateLevelInfoViewerReplays(m_LevelInfoViewerLevel);
+        
+        /* Nice. Open the level info viewer */
+        pLevelInfoButton->setActive(false);
+        m_pLevelPackViewer->showWindow(false);
+        m_pLevelInfoViewer->showWindow(true);
+        m_pMainMenu->enableChildren(false);
+        m_pMainMenu->enableWindow(false);
+        m_State = GS_LEVEL_INFO_VIEWER;      
       }
     }
   }
@@ -1021,7 +1170,8 @@ namespace vapp {
           m_MotoGame.endLevel();
           m_InputHandler.resetScriptKeyHooks();                     
           m_Renderer.unprepareForNewLevel();
-          setState(GS_MENU);
+          //setState(GS_MENU);
+          setState(m_StateAfterPlaying);
         }
 
         /* Don't process this clickin' more than once */
@@ -1042,6 +1192,17 @@ namespace vapp {
           m_pHelpWindow->showWindow(false);
           m_pReplaysWindow->showWindow(false);
           m_pPlayWindow->showWindow(true);                    
+          m_pLevelPacksWindow->showWindow(false);                    
+        }
+        else if(m_pMainMenuButtons[i]->getCaption() == GAMETEXT_LEVELPACKS) {
+          m_pOptionsWindow->showWindow(false);
+          m_pHelpWindow->showWindow(false);
+          m_pReplaysWindow->showWindow(false);
+          m_pPlayWindow->showWindow(false);                    
+          m_pLevelPacksWindow->showWindow(true);                    
+          
+          /* Make sure all level packs are listed */
+          _UpdateLevelPackList();
         }
         else if(m_pMainMenuButtons[i]->getCaption() == GAMETEXT_OPTIONS) {
           if(m_pOptionsWindow->isHidden()) _ImportOptions();        
@@ -1049,12 +1210,14 @@ namespace vapp {
           m_pHelpWindow->showWindow(false);
           m_pReplaysWindow->showWindow(false);
           m_pPlayWindow->showWindow(false);
+          m_pLevelPacksWindow->showWindow(false);                    
         }
         else if(m_pMainMenuButtons[i]->getCaption() == GAMETEXT_HELP) {
           m_pOptionsWindow->showWindow(false);
           m_pHelpWindow->showWindow(true);
           m_pReplaysWindow->showWindow(false);
           m_pPlayWindow->showWindow(false);
+          m_pLevelPacksWindow->showWindow(false);                    
         }
         else if(m_pMainMenuButtons[i]->getCaption() == GAMETEXT_REPLAYS) {
           if(m_pReplaysWindow->isHidden()) _UpdateReplaysList();
@@ -1062,6 +1225,7 @@ namespace vapp {
           m_pHelpWindow->showWindow(false);
           m_pReplaysWindow->showWindow(true);
           m_pPlayWindow->showWindow(false);
+          m_pLevelPacksWindow->showWindow(false);                    
         }
         else if(m_pMainMenuButtons[i]->getCaption() == GAMETEXT_QUIT) {
           if(m_pQuitMsgBox == NULL)
@@ -1104,6 +1268,31 @@ namespace vapp {
       m_pMainMenu->enableWindow(false);
       m_State = GS_EDIT_PROFILES;
       return;
+    }
+    
+    /* LEVEL PACKS */
+    UIButton *pOpenButton = (UIButton *)m_pLevelPacksWindow->getChild("LEVELPACK_OPEN_BUTTON");
+    UIList *pLevelPackList = (UIList *)m_pLevelPacksWindow->getChild("LEVELPACK_LIST");
+    if(pOpenButton!=NULL && pLevelPackList!=NULL && pOpenButton->isClicked()) {
+      /* Open level pack viewer */
+      int nSel = pLevelPackList->getSelected();
+      if(nSel>=0 && nSel<pLevelPackList->getEntries().size()) {
+        pOpenButton->setClicked(false);
+        pOpenButton->setActive(false);      
+
+        m_pActiveLevelPack = (LevelPack *)pLevelPackList->getEntries()[nSel]->pvUser;
+        
+        UIStatic *pTitle = (UIStatic *)m_pLevelPackViewer->getChild("LEVELPACK_VIEWER_TITLE");
+        if(pTitle != NULL) pTitle->setCaption(m_pActiveLevelPack->Name);
+        
+        _CreateLevelPackLevelList();
+        
+        m_pLevelPackViewer->showWindow(true);
+        m_pMainMenu->enableChildren(false);
+        m_pMainMenu->enableWindow(false);
+        m_State = GS_LEVELPACK_VIEWER;
+        return;
+      }
     }
     
     /* OPTIONS */
@@ -1198,6 +1387,7 @@ namespace vapp {
       if(pLevelSrc != NULL) {
         m_pMainMenu->showWindow(false);      
         m_PlaySpecificLevel = pLevelSrc->getID();
+        m_StateAfterPlaying = GS_MENU;
         setState(GS_PLAYING);
       }
     }
@@ -1275,6 +1465,7 @@ namespace vapp {
           pReplaysShowButton->setClicked(false);
           m_pMainMenu->showWindow(false);
           m_PlaySpecificReplay = pListEntry->Text[0];
+          m_StateAfterPlaying = GS_MENU;
           setState(GS_REPLAYING);
         }
       }
@@ -1483,13 +1674,15 @@ namespace vapp {
         pInternalLevels->addEntry(Name+Tag,reinterpret_cast<void *>(pLevel));
       }
       else {
-        /* Consider it external */
-        UIListEntry *pEntry = pExternalLevels->addEntry(Name,reinterpret_cast<void *>(pLevel));
-        
-        if(pLevel->isScripted())
-          pEntry->Text.push_back(GAMETEXT_YES);
-        else
-          pEntry->Text.push_back(GAMETEXT_NO);
+        /* Consider it external -- but only if it's not in a level pack */
+        if(pLevel->getLevelPack() == "") {
+          UIListEntry *pEntry = pExternalLevels->addEntry(Name,reinterpret_cast<void *>(pLevel));
+          
+          if(pLevel->isScripted())
+            pEntry->Text.push_back(GAMETEXT_YES);
+          else
+            pEntry->Text.push_back(GAMETEXT_NO);
+        }
       }
     }
   }

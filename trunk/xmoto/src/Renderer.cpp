@@ -450,6 +450,63 @@ namespace vapp {
 
     /* And then the game messages */
     _RenderGameMessages();            
+    
+    /* If there's strawberries in the level, tell the user how many there's left */
+    _RenderGameStatus();
+  }
+
+  /*===========================================================================
+  Game status rendering
+  ===========================================================================*/
+  void GameRenderer::_RenderGameStatus(void) {
+    MotoGame *pGame = getGameObject();
+
+    int nStrawberriesLeft = pGame->countEntitiesByType(ET_STRAWBERRY);
+    Texture *pIcon = m_pFlowerAnim->m_Frames[0]->pTexture;
+    int nQuantity = 0;
+    
+    if(nStrawberriesLeft > 0) {
+      pIcon = m_pStrawberryAnim->m_Frames[0]->pTexture;
+      nQuantity = nStrawberriesLeft;
+    }
+            
+    float x1 = 90;
+    float y1 = -2;
+    float x2 = 115;
+    float y2 = 23;
+    
+    glEnable(GL_BLEND); 
+    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
+    glBindTexture(GL_TEXTURE_2D,pIcon->nID);
+    glEnable(GL_TEXTURE_2D);
+    glBegin(GL_POLYGON);
+    glColor3f(1,1,1);
+    glTexCoord2f(0,0);
+    getParent()->glVertex(x1,y1);
+    glTexCoord2f(1,0);
+    getParent()->glVertex(x2,y1);
+    glTexCoord2f(1,1);
+    getParent()->glVertex(x2,y2);
+    glTexCoord2f(0,1);
+    getParent()->glVertex(x1,y2);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_BLEND);        
+
+    if(nQuantity > 0) {
+      int tx1,ty1,tx2,ty2;
+      char cBuf[256];    
+      sprintf(cBuf,"%d",nQuantity);
+      UITextDraw::getTextExt(getSmallFont(),cBuf,&tx1,&ty1,&tx2,&ty2);
+      
+      /* Now for some evil special-case adjustments */
+      int nAdjust = 0;
+      if(nQuantity == 1) nAdjust = -3;
+      if(nQuantity > 9) nAdjust = -2;
+      
+      /* Draw text */
+      UITextDraw::printRaw(getSmallFont(),nAdjust + (x1+x2)/2 - (tx2-tx1)/2,y2-(ty2-ty1)+3,cBuf,MAKE_COLOR(255,255,0,255));
+    }
   }
   
   /*===========================================================================

@@ -77,7 +77,11 @@ namespace vapp {
     }
     
     FS::writeLineF(pfh,"<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-    FS::writeLineF(pfh,"<level id=\"%s\">",m_ID.c_str());
+    
+    if(m_LevelPack != "")
+      FS::writeLineF(pfh,"<level id=\"%s\" levelpack=\"%s\">",m_ID.c_str(),m_LevelPack.c_str());
+    else
+      FS::writeLineF(pfh,"<level id=\"%s\">",m_ID.c_str());
     
     /* INFO */
     FS::writeLineF(pfh,"\t<info>");
@@ -89,8 +93,20 @@ namespace vapp {
     FS::writeLineF(pfh,"\t</info>");
     
     /* MISC */
-    if(m_ScriptFile != "")
+    if(m_ScriptFile != "" && m_ScriptSource != "") {
+      FS::writeLineF(pfh,"\t<script source=\"%s\">",m_ScriptFile.c_str());
+      FS::writeByte(pfh,'\t'); FS::writeByte(pfh,'\t');
+      FS::writeBuf(pfh,(char *)m_ScriptSource.c_str(),m_ScriptSource.length());
+      FS::writeLineF(pfh,"</script>");
+    }
+    else if(m_ScriptFile != "")
       FS::writeLineF(pfh,"\t<script source=\"%s\"/>",m_ScriptFile.c_str());
+    else if(m_ScriptSource != "") {
+      FS::writeLineF(pfh,"\t<script>");
+      FS::writeByte(pfh,'\t'); FS::writeByte(pfh,'\t');
+      FS::writeBuf(pfh,(char *)m_ScriptSource.c_str(),m_ScriptSource.length());
+      FS::writeLineF(pfh,"</script>");
+    }
       
     FS::writeLineF(pfh,"\t<limits left=\"%f\" right=\"%f\" top=\"%f\" bottom=\"%f\"/>",m_fLeftLimit,m_fRightLimit,m_fTopLimit,m_fBottomLimit);
     
@@ -162,6 +178,9 @@ namespace vapp {
     m_ID = _GetOption(pLevelElem,"id");
     if(m_ID == "") return; /* TODO: error */    
     
+    /* Get level pack */
+    m_LevelPack = _GetOption(pLevelElem,"levelpack");
+    
     /* Set default info */
     m_Info.Name = m_FileName;
     m_Info.Date = "";
@@ -193,11 +212,22 @@ namespace vapp {
       if(Tmp != "") m_Info.Sky = Tmp;
     }
     
-    /* Get script file */
+    /* Get script */
     m_ScriptFile = "";
+    m_ScriptSource = "";
+    
     TiXmlElement *pScriptElem = _FindElement(pLevelElem,std::string("script"));
     if(pScriptElem != NULL) {
+      /* External script file specified? */
       m_ScriptFile = _GetOption(pScriptElem,"source");      
+      
+      /* Encapsulated script? */
+      for(TiXmlNode *pScript=pScriptElem->FirstChild();pScript!=NULL;
+          pScript=pScript->NextSibling()) {
+        if(pScript->Type() == TiXmlNode::TEXT) {
+          m_ScriptSource.append(pScript->Value());
+        }
+      }
     }    
     
     /* Get level limits */

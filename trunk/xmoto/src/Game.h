@@ -38,7 +38,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 namespace vapp {
 
 	/*===========================================================================
-	States
+	Overall game states
   ===========================================================================*/
   enum GameState {
     GS_UNASSIGNED = 0,
@@ -50,6 +50,7 @@ namespace vapp {
     GS_FINISHED,              /* Finished a level */
     GS_REPLAYING,             /* Replaying */
     GS_LEVEL_INFO_VIEWER,     /* In level info viewer */
+    GS_LEVELPACK_VIEWER,      /* In level pack viewer */
   };
 
 	/*===========================================================================
@@ -59,6 +60,14 @@ namespace vapp {
     MENU_GFX_OFF,
     MENU_GFX_LOW,
     MENU_GFX_HIGH
+  };
+  
+	/*===========================================================================
+	Level packs
+  ===========================================================================*/
+  struct LevelPack {
+    std::string Name;
+    std::vector<LevelSrc *> Levels;
   };
 
 	/*===========================================================================
@@ -79,6 +88,9 @@ namespace vapp {
                  m_pDeleteReplayMsgBox=NULL;
                  m_pSaveReplayMsgBox=NULL;
                  m_pReplaysWindow=NULL;
+                 m_pLevelPacksWindow=NULL;
+                 m_pLevelPackViewer=NULL;  
+                 m_pActiveLevelPack=NULL;
                  m_b50FpsMode = false;
                  m_bUglyMode = false;
                  m_pReplay = NULL;
@@ -112,6 +124,8 @@ namespace vapp {
       EngineSoundSimulator m_EngineSound;
     
       /* Data */
+      std::vector<LevelPack *> m_LevelPacks;    /* Level packs */
+      
       bool m_bBenchmark;                        /* true: Test game performance */
       bool m_bShowFrameRate;                    /* true: frame rate */
       bool m_bListLevels;                       /* true: list installed levels */
@@ -132,7 +146,8 @@ namespace vapp {
       
       InputHandler m_InputHandler;              /* The glorious input handler */
       GameState m_State;                        /* Current state */      
-      MotoGame m_MotoGame;                      /* Game object */
+      GameState m_StateAfterPlaying;            /* State that should be used later */
+      MotoGame m_MotoGame;                      /* Game object */      
       GameRenderer m_Renderer;                  /* Renderer */
       int m_nFrame;                             /* Frame # */
       PlayerProfile *m_pPlayer;                 /* The player's profile */
@@ -166,7 +181,7 @@ namespace vapp {
       /* Main menu buttons and stuff */
       int m_nNumMainMenuButtons;
       UIButton *m_pMainMenuButtons[10];
-      UIFrame *m_pOptionsWindow,*m_pHelpWindow,*m_pPlayWindow,*m_pReplaysWindow;
+      UIFrame *m_pOptionsWindow,*m_pHelpWindow,*m_pPlayWindow,*m_pReplaysWindow,*m_pLevelPacksWindow;
       UIWindow *m_pMainMenu;
       UIMsgBox *m_pDeleteReplayMsgBox;
             
@@ -195,6 +210,10 @@ namespace vapp {
       UIMsgBox *m_pNewProfileMsgBox;    
       UIMsgBox *m_pDeleteProfileMsgBox;
       
+      /* Level pack viewer fun */
+      UIFrame *m_pLevelPackViewer;  
+      LevelPack *m_pActiveLevelPack;
+      
       /* Level info viewer fun */
       UIFrame *m_pLevelInfoViewer;      
       std::string m_LevelInfoViewerLevel;
@@ -221,11 +240,14 @@ namespace vapp {
       void _HandleFinishMenu(void);
       void _HandleProfileEditor(void);
       void _HandleLevelInfoViewer(void);
+      void _HandleLevelPackViewer(void);
       void _CreateLevelLists(UIList *pExternalLevels,UIList *pInternalLevels);
       void _CreateReplaysList(UIList *pList);
       void _CreateProfileList(void);
       void _CreateDefaultConfig(void);
+      void _CreateLevelPackLevelList(void);
       void _UpdateActionKeyList(void);
+      void _UpdateLevelPackList(void);
       void _UpdateLevelInfoViewerBestTimes(const std::string &LevelID);     
       void _UpdateLevelInfoViewerReplays(const std::string &LevelID);     
       void _ChangeKeyConfig(void);
@@ -249,6 +271,9 @@ namespace vapp {
       void _SimpleMessage(const std::string &Msg);
       
       int _IsKeyInUse(const std::string &Key);
+      
+      void _UpdateLevelPackManager(LevelSrc *pLevelSrc);
+      LevelPack *_FindLevelPackByName(const std::string &Name);
   };
 
 };

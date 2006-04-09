@@ -433,6 +433,20 @@ namespace vapp {
     m_nChangeDirKey1 = SDLK_SPACE;
   }  
 
+  /*===========================================================================
+  Get key by action...
+  ===========================================================================*/  
+  std::string InputHandler::getKeyByAction(const std::string &Action) {
+    if(m_ControllerModeID1 != CONTROLLER_MODE_KEYBOARD) return "?";
+    
+    if(Action == "Drive") return _KeyToString(m_nDriveKey1);
+    if(Action == "Brake") return _KeyToString(m_nBrakeKey1);
+    if(Action == "PullBack") return _KeyToString(m_nPullBackKey1);
+    if(Action == "PushForward") return _KeyToString(m_nPushForwardKey1);
+    if(Action == "ChangeDir") return _KeyToString(m_nChangeDirKey1);
+
+    return "?";
+  }
 
 };
 

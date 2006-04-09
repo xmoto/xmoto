@@ -98,9 +98,12 @@ Central place to keep many in-game text strings
 #define GAMETEXT_KEY                  "Key"
 #define GAMETEXT_KEYBOARD             "Keyboard"
 #define GAMETEXT_LEVEL                "Level"
+#define GAMETEXT_LEVELINFO            "Level Info..."
 #define GAMETEXT_LEVELISSCRIPTED      "(Scripted level)"
 #define GAMETEXT_LEVELNAME            "Level Name: "
 #define GAMETEXT_LEVELNOTFOUND        "Level '%s' not found!"
+#define GAMETEXT_LEVELPACK            "Level Pack"
+#define GAMETEXT_LEVELPACKS           "Level Packs"
 #define GAMETEXT_LEVELREQUIREDBYREPLAY "Level '%s' required by replay!"
 #define GAMETEXT_LEVELS               "Levels"
 #define GAMETEXT_LISTALL              "List All"
@@ -125,7 +128,9 @@ Central place to keep many in-game text strings
                                       "\n"                                                               \
                                       "Also visit http://xmoto.sourceforge.net to make sure you've\n"    \
                                       "got the latest version."
-#define GAMETEXT_OK                   "OK"                                      
+#define GAMETEXT_NUMLEVELS            "# Levels"
+#define GAMETEXT_OK                   "OK"     
+#define GAMETEXT_OPEN                 "Open"
 #define GAMETEXT_OPTIONS              "Options"
 #define GAMETEXT_OPTIONSREQURERESTART "Some options will not take effect before next restart!"
 #define GAMETEXT_PAUSE                "Pause"

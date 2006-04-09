@@ -56,6 +56,7 @@ namespace vapp {
   int L_Game_GetEntityPos(lua_State *pL);
   int L_Game_SetEntityPos(lua_State *pL);
   int L_Game_SetKeyHook(lua_State *pL);
+  int L_Game_GetKeyByAction(lua_State *pL);
   
   /* "Game" Lua library */
   static const luaL_reg g_GameFuncs[] = {
@@ -76,6 +77,7 @@ namespace vapp {
     {"GetEntityPos", L_Game_GetEntityPos},
     {"SetEntityPos", L_Game_SetEntityPos},
     {"SetKeyHook", L_Game_SetKeyHook},
+    {"GetKeyByAction", L_Game_GetKeyByAction},
     {NULL, NULL}
   };
 
@@ -510,33 +512,60 @@ namespace vapp {
     m_nGameEventQueueReadIdx = m_nGameEventQueueWriteIdx = 0;
     
     /* Load and parse level script */
+    bool bTryParsingEncapsulatedLevelScript = true;
+    bool bNeedScript = false;
+    bool bGotScript = false;
+    
     if(pLevelSrc->getScriptFile() != "") {
       FileHandle *pfh = FS::openIFile(std::string("./Levels/") + pLevelSrc->getScriptFile());
       if(pfh == NULL) {
-        lua_close(m_pL);
-        throw Exception("level script file not found");      
+        /* Well, file not found -- try encapsulated script */
+        bNeedScript = true;
       }
-      
-      std::string Line,ScriptBuf="";
-      
-      while(FS::readNextLine(pfh,Line)) {
-        if(Line.length() > 0) {
-          ScriptBuf.append(Line.append("\n"));
+      else {      
+        std::string Line,ScriptBuf="";
+        
+        while(FS::readNextLine(pfh,Line)) {
+          if(Line.length() > 0) {
+            ScriptBuf.append(Line.append("\n"));
+          }
         }
-      }
-      
-      FS::closeFile(pfh);
+        
+        FS::closeFile(pfh);
 
-      /* Use the Lua aux lib to load the buffer */
-      int nRet = luaL_loadbuffer(m_pL,ScriptBuf.c_str(),ScriptBuf.length(),pLevelSrc->getScriptFile().c_str()) ||
-                lua_pcall(m_pL,0,0,0);    
-       
-      /* Returned WHAT? */
-      if(nRet != 0) {
-        lua_close(m_pL);
-        throw Exception("failed to load level script");
+        /* Use the Lua aux lib to load the buffer */
+        int nRet = luaL_loadbuffer(m_pL,ScriptBuf.c_str(),ScriptBuf.length(),pLevelSrc->getScriptFile().c_str()) ||
+                  lua_pcall(m_pL,0,0,0);    
+         
+        /* Returned WHAT? */
+        if(nRet != 0) {
+          lua_close(m_pL);
+          throw Exception("failed to load level script");
+        }
+
+        bGotScript = true;
+        bTryParsingEncapsulatedLevelScript = false;
       }       
     }    
+    
+    if(bTryParsingEncapsulatedLevelScript && pLevelSrc->getScriptSource() != "") {
+        /* Use the Lua aux lib to load the buffer */
+        int nRet = luaL_loadbuffer(m_pL,pLevelSrc->getScriptSource().c_str(),pLevelSrc->getScriptSource().length(),
+                                   pLevelSrc->getFileName().c_str()) || lua_pcall(m_pL,0,0,0);    
+         
+        /* Returned WHAT? */
+        if(nRet != 0) {
+          lua_close(m_pL);
+          throw Exception("failed to load level encapsulated script");
+        }
+
+        bGotScript = true;      
+    }    
+    
+    if(bNeedScript && !bGotScript) {
+      lua_close(m_pL);
+      throw Exception("failed to get level script");
+    }
     
     /* Initialize physics */
     _InitPhysics();

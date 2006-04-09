@@ -212,6 +212,14 @@ namespace vapp {
     }
     return 0;
   }
+
+  int L_Game_GetKeyByAction(lua_State *pL) {
+    if(m_pActiveInputHandler != NULL) {
+      lua_pushstring(pL,m_pActiveInputHandler->getKeyByAction(luaL_checkstring(pL,1)).c_str());
+      return 1;
+    }
+    return 0;
+  }  
   
 };
 

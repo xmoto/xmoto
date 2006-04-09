@@ -181,6 +181,9 @@
 				RelativePath="..\src\MPhysics.cpp">
 			</File>
 			<File
+				RelativePath="..\src\OpenBrowser.cpp">
+			</File>
+			<File
 				RelativePath="..\src\PlayerData.cpp">
 			</File>
 			<File
@@ -229,6 +232,9 @@
 			</File>
 			<File
 				RelativePath="..\src\MotoGame.h">
+			</File>
+			<File
+				RelativePath="..\src\OpenBrowser.h">
 			</File>
 			<File
 				RelativePath="..\src\PhysSettings.h">

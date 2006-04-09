@@ -22,6 +22,15 @@ must not be misrepresented as being the original software.
 distribution.
 */
 
+/* 2006-04-09, Rasmus Neckelmann
+   
+   IMPORTANT NOTE: This file is not the original from the tinyxml package!
+   
+   Changes:
+      
+      - Whitespaces in TEXT nodes are no longer trimmed.
+*/
+
 #include "tinyxml.h"
 #include <ctype.h>
 
@@ -1390,7 +1399,7 @@ const char* TiXmlText::Parse( const char* p, TiXmlParsingData* data, TiXmlEncodi
 		data->Stamp( p, encoding );
 		location = data->Cursor();
 	}
-	bool ignoreWhite = true;
+	bool ignoreWhite = false;
 
 	const char* end = "<";
 	p = ReadText( p, &value, ignoreWhite, end, false, encoding );

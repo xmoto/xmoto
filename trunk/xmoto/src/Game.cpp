@@ -57,6 +57,11 @@ namespace vapp {
     m_State = s;
     
     switch(s) {
+      case GS_LEVELPACK_VIEWER: {
+          m_pLevelPackViewer->showWindow(true);
+          m_pMainMenu->showWindow(true);
+        }
+        break;
       case GS_REPLAYING: {
         //SDL_ShowCursor(SDL_DISABLE);
         m_bShowCursor = false;
@@ -496,6 +501,9 @@ namespace vapp {
       m_Levels[i].setFileName( LvlFiles[i] );
       m_Levels[i].loadXML();            
       
+      /* Update level pack manager */
+      _UpdateLevelPackManager(&m_Levels[i]);
+      
       /* Output? */
       if(m_bListLevels) {
         printf("%-25s %-25s %-25s\n",FS::getFileBaseName(m_Levels[i].getFileName()).c_str(),m_Levels[i].getID().c_str(),m_Levels[i].getLevelInfo()->Name.c_str());
@@ -510,6 +518,7 @@ namespace vapp {
     }
     
     Log(" %d level%s loaded",m_nNumLevels,m_nNumLevels==1?"":"s");
+    Log(" %d level pack%s",m_LevelPacks.size(),m_LevelPacks.size()==1?"":"s");
     
     if(!isNoGraphics()) {
       /* Initialize renderer */
@@ -533,11 +542,13 @@ namespace vapp {
     /* What to do? */
     if(m_PlaySpecificLevel != "" && !isNoGraphics()) {
       /* ======= PLAY SPECIFIC LEVEL ======= */
+      m_StateAfterPlaying = GS_MENU;
       setState(GS_PLAYING);
       Log("Playing as '%s'...",m_pPlayer->PlayerName.c_str());
     }
     else if(m_PlaySpecificReplay != "") {
       /* ======= PLAY SPECIFIC REPLAY ======= */
+      m_StateAfterPlaying = GS_MENU;
       setState(GS_REPLAYING);
     }
     else {
@@ -661,6 +672,7 @@ namespace vapp {
     switch(m_State) {
       case GS_MENU:
       case GS_LEVEL_INFO_VIEWER:
+      case GS_LEVELPACK_VIEWER:
       case GS_EDIT_PROFILES: {
         /* Draw menu background */
         _DrawMenuBackground();
@@ -675,6 +687,8 @@ namespace vapp {
           _HandleProfileEditor();
         else if(m_State == GS_LEVEL_INFO_VIEWER)
           _HandleLevelInfoViewer();
+        else if(m_State == GS_LEVELPACK_VIEWER)
+          _HandleLevelPackViewer();
                   
         /* Draw GUI */
         m_Renderer.getGUI()->paint();                
@@ -921,6 +935,11 @@ namespace vapp {
   Shutdown game
   ===========================================================================*/
   void GameApp::userShutdown(void) {  
+    for(int i=0;i<m_LevelPacks.size();i++) {
+      delete m_LevelPacks[i];
+    }
+    m_LevelPacks.clear();
+  
     if(!isNoGraphics()) {
       m_Renderer.unprepareForNewLevel(); /* just to be sure, shutdown can happen quite hard */
       
@@ -1011,6 +1030,7 @@ namespace vapp {
     switch(m_State) {
       case GS_EDIT_PROFILES:
       case GS_LEVEL_INFO_VIEWER:
+      case GS_LEVELPACK_VIEWER:
       case GS_MENU: {
         /* The GUI wants to know about keypresses... */
         m_Renderer.getGUI()->keyDown(nKey,nChar);
@@ -1040,7 +1060,8 @@ namespace vapp {
               m_MotoGame.endLevel();
               m_InputHandler.resetScriptKeyHooks();                         
               m_Renderer.unprepareForNewLevel();
-              setState(GS_MENU);
+              //setState(GS_MENU);
+              setState(m_StateAfterPlaying);
             }
             else {
               if(m_State == GS_JUSTDEAD)
@@ -1106,6 +1127,7 @@ namespace vapp {
       case GS_LEVEL_INFO_VIEWER:
       case GS_FINISHED:
       case GS_JUSTDEAD:
+      case GS_LEVELPACK_VIEWER:
       case GS_MENU:
         m_Renderer.getGUI()->keyUp(nKey);
         break;
@@ -1127,6 +1149,7 @@ namespace vapp {
       case GS_FINISHED:
       case GS_EDIT_PROFILES:
       case GS_LEVEL_INFO_VIEWER:
+      case GS_LEVELPACK_VIEWER:
         int nX,nY;        
         getMousePos(&nX,&nY);
         
@@ -1145,6 +1168,7 @@ namespace vapp {
       case GS_FINISHED:
       case GS_EDIT_PROFILES:
       case GS_LEVEL_INFO_VIEWER:
+      case GS_LEVELPACK_VIEWER:
         int nX,nY;        
         getMousePos(&nX,&nY);
         
@@ -1169,6 +1193,7 @@ namespace vapp {
       case GS_FINISHED:
       case GS_EDIT_PROFILES:
       case GS_LEVEL_INFO_VIEWER:
+      case GS_LEVELPACK_VIEWER:
         int nX,nY;
         getMousePos(&nX,&nY);
         
@@ -1371,6 +1396,34 @@ namespace vapp {
       notifyMsg(GAMETEXT_FAILEDTOSAVEREPLAY);
     }
   }
-  
+
+  /*===========================================================================
+  Level packs
+  ===========================================================================*/
+  void GameApp::_UpdateLevelPackManager(LevelSrc *pLevelSrc) {
+    if(pLevelSrc->getLevelPack() != "") {
+      /* Already a known level pack? */
+      LevelPack *pPack = _FindLevelPackByName(pLevelSrc->getLevelPack());
+      if(pPack == NULL) {
+        /* No, register it */
+        pPack = new LevelPack;
+        pPack->Name = pLevelSrc->getLevelPack();
+        m_LevelPacks.push_back(pPack);
+      }
+      
+      /* Add level to pack */
+      pPack->Levels.push_back(pLevelSrc);
+    }
+  }
+
+  LevelPack *GameApp::_FindLevelPackByName(const std::string &Name) {
+    /* Look for level pack in list */
+    for(int i=0;i<m_LevelPacks.size();i++) {
+      if(m_LevelPacks[i]->Name == Name) return m_LevelPacks[i];
+    }
+    return NULL;
+  }
+ 
 };
+
 

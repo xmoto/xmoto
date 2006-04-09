@@ -253,6 +253,7 @@ namespace vapp {
       void _RenderSky(void);
       void _RenderEntities(void);    
       void _RenderGameMessages(void); 
+      void _RenderGameStatus(void);
       void _RenderParticles(bool bFront=true);
       void _RenderParticle(Vector2f P,Texture *pTexture,float fSize,float fAngle,Color c);
       

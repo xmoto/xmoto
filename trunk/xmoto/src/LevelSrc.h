@@ -157,13 +157,14 @@ namespace vapp {
       LevelEntity *createEntity(std::string TypeID,float x,float y);
                               
       /* Data interface */ 
-      bool isScripted(void) {if(m_ScriptFile!="") return true; return false;}           
+      bool isScripted(void) {if(m_ScriptFile!="" || m_ScriptSource!="") return true; return false;}           
       std::string &getFileName(void) {return m_FileName;}
       void setFileName(const std::string &File) {m_FileName = File;}     
       LevelInfo *getLevelInfo(void) {return &m_Info;}
       std::string &getID(void) {return m_ID;}
       void setID(const std::string &ID) {m_ID = ID;}
       std::string &getScriptFile(void) {return m_ScriptFile;}
+      std::string &getScriptSource(void) {return m_ScriptSource;}
       void setScriptFile(const std::string &ScriptFile) {m_ScriptFile = ScriptFile;}
       std::vector<LevelBlock *> &getBlockList(void) {return m_Blocks;}
       std::vector<LevelZone *> &getZoneList(void) {return m_Zones;}
@@ -174,6 +175,8 @@ namespace vapp {
       float getBottomLimit(void) {return m_fBottomLimit;}      
       float getPlayerStartX(void) {return m_fPlayerStartX;}
       float getPlayerStartY(void) {return m_fPlayerStartY;}
+      void setLevelPack(const std::string &s) {m_LevelPack = s;}
+      const std::string &getLevelPack(void) {return m_LevelPack;}
       void setPlayerStart(float x,float y) {m_fPlayerStartX=x ;m_fPlayerStartY=y;}
       void setLimits(float fLeft,float fRight,float fTop,float fBottom) {
         m_fLeftLimit=fLeft; m_fRightLimit=fRight; m_fTopLimit=fTop; m_fBottomLimit=fBottom;      
@@ -202,6 +205,7 @@ namespace vapp {
     
     private:
       /* Data */
+      std::string m_LevelPack;        /* In this level pack */
       XMLDocument m_XML;              /* Plain XML source */      
       std::string m_FileName;         /* Current file name */
       
@@ -209,7 +213,9 @@ namespace vapp {
       
       std::string m_ID;               /* Level ID */
       
-      std::string m_ScriptFile;       /* Script source */      
+      std::string m_ScriptFile;       /* Script file name */      
+      std::string m_ScriptSource;     /* Script source code */
+      
       float m_fLeftLimit,m_fRightLimit,m_fTopLimit,m_fBottomLimit; /* Limits */
       float m_fPlayerStartX,m_fPlayerStartY; /* Player start pos */
       

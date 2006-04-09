@@ -41,7 +41,7 @@ function PreDraw()
 			
 			ArrowMode = 2
 			TargetArrowAngle = 45
-			TargetArrowX = 150
+			TargetArrowX = 125
 			TargetArrowY = 10
 		end	
 	elseif TutorialStage == 4 then
@@ -94,13 +94,24 @@ function PreDraw()
 	elseif TutorialStage == 8 then
 		if Game.GetTime() > 39 then
 			TutorialStage = 9
-									
-			Game.Message("UP ARROW: Drive forward")
-			Game.Message("DOWN ARROW: Brake")
-			Game.Message("SPACE: Change direction")
-			Game.Message("LEFT ARROW: Rotate anti-clockwise")
-			Game.Message("RIGHT ARROW: Rotate clockwise")
 			
+			DriveControl = Game.GetKeyByAction("Drive")
+			BrakeControl = Game.GetKeyByAction("Brake")
+			ChangeDirControl = Game.GetKeyByAction("ChangeDir")
+			PullBackwardControl = Game.GetKeyByAction("PullBack")
+			PushForwardControl = Game.GetKeyByAction("PushForward")
+			
+			if DriveControl=="?" or BrakeControl=="?" or ChangeDirControl=="?" or 
+			   PullBackwardControl=="?" or PushForwardControl=="?" then
+				Game.Message("(You seem to be using a joystick, can't help with that :P)")
+			else 
+				Game.Message(DriveControl,": Drive forward")
+				Game.Message(BrakeControl,": Brake")
+				Game.Message(ChangeDirControl,": Change direction")
+				Game.Message(PullBackwardControl,": Rotate anti-clockwise")
+				Game.Message(PushForwardControl,": Rotate clockwise")
+			end			   
+												
 			ArrowMode = 0
 		end	
 	elseif TutorialStage == 9 then
@@ -109,20 +120,39 @@ function PreDraw()
 									
 			Game.Message("Okay. The red dot on your minimap is a strawberry.")
 			Game.Message("The primary objective of the game is for you")
-			Game.Message("to collect all of them, and then find the flower.")
+			Game.Message("to collect all of them, and then find the flower.")						
 		end	
 	elseif TutorialStage == 10 then
 		if Game.GetTime() > 52 then
 			TutorialStage = 11
 									
-			Game.Message("Drive in its direction...")
+			Game.Message("The icon to the right of your time,")
+			Game.Message("indicates how many strawberries still left.")
+
+			ArrowMode = 2
+			TargetArrowAngle = 45
+			TargetArrowX = 150
+			TargetArrowY = 10
 		end	
-	elseif TutorialStage == 12 then
+	elseif TutorialStage == 11 then
+		if Game.GetTime() > 56 then
+			TutorialStage = 12
+									
+			Game.Message("Drive in its direction...")
+			
+			ArrowMode = 2
+			TargetArrowAngle = 200
+			TargetArrowX = -80
+			TargetArrowY = 200
+		end	
+	elseif TutorialStage == 13 then
 		if (Game.GetTime() - Zone2Time) > 8 then
-			TutorialStage = 13
+			TutorialStage = 14
 									
 			Game.Message("When done, head for the flower.")
 			Game.Message("It's the purple dot on your minimap.")
+
+			ArrowMode = 0
 		end	
 	end
 	
@@ -187,9 +217,9 @@ function FirstZone.OnLeave()
 end
 
 function SecondZone.OnEnter()
-	if TutorialStage < 12 then
+	if TutorialStage < 13 then
 		-- Second part of tutorial...
-		TutorialStage = 12
+		TutorialStage = 13
 
 		Game.ClearMessages()
 		Game.Message("Pick up the strawberry by touching it")
@@ -201,9 +231,9 @@ function SecondZone.OnLeave()
 end
 
 function ThirdZone.OnEnter()
-	if TutorialStage < 14 then
+	if TutorialStage < 15 then
 		-- Third and last part of tutorial...
-		TutorialStage = 15
+		TutorialStage = 16
 
 		Game.ClearMessages()
 		Game.Message("Touch it to finish the level. Good luck with the rest :)")

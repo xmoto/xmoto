@@ -5,9 +5,15 @@ X-Moto 0.1.12 (alpha) 2006-
  * Removed unfinished joystick configuration interface from the menu.
  * New LUA (script) functions. See src/MotoGameL.cpp for details.
  * Files in xmoto.bin are now prioritized lower when loading.
- * Now possible to skip around between the different parts of 
-   tutorial 3.
+ * Tutorials updated.
  * New built-in levels.
+ * Scripts can now be encapsulated directly in .lvl-files.
+ * Now you'll see an icon beside the clock, indicating the the current
+   objective.
+ * Introduced the concept of "level packs", i.e. logical groupings of
+   levels. The tutorials are now considered a level pack. Note that
+   levels which are in a level pack can't be seen in the "External
+   Levels" list.
  * Various minor changes and some small bugs fixed.
 
 X-Moto 0.1.11 (alpha) 2006-02-05

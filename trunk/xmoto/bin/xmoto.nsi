@@ -38,9 +38,9 @@ Section "Game (required)"
 	File "xmoto.bin"
 	File "xmoto.exe"
 	
-	File /oname="README.txt" "..\README.txt"
-	File /oname="COPYING.txt" "..\COPYING.txt"
-	File /oname="ChangeLog.txt" "..\ChangeLog.txt"
+	File "/oname=README.txt" "..\README.txt"
+	File "/oname=COPYING.txt" "..\COPYING.txt"
+	File "/oname=ChangeLog.txt" "..\ChangeLog.txt"
 	
 	CreateDirectory "$INSTDIR\Replays"
 	CreateDirectory "$INSTDIR\Levels"
