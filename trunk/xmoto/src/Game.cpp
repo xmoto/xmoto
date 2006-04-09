@@ -497,8 +497,7 @@ namespace vapp {
     /* Find all .lvl files in the level dir and load them */
     std::vector<std::string> LvlFiles = FS::findPhysFiles("Levels/*.lvl",true);
     for(int i=0;i<LvlFiles.size();i++) {
-      printf("[%s]\n",LvlFiles[i].c_str());
-      continue;
+//      printf("[%s]\n",LvlFiles[i].c_str());
       
       /* Load it */
       m_Levels[i].setFileName( LvlFiles[i] );
