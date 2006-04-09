@@ -60,6 +60,11 @@ namespace vapp {
       case GS_LEVELPACK_VIEWER: {
           m_pLevelPackViewer->showWindow(true);
           m_pMainMenu->showWindow(true);
+          
+          UIList *pList = (UIList *)m_pLevelPackViewer->getChild("LEVELPACK_LEVEL_LIST");
+          if(pList != NULL) {
+            pList->makeActive();
+          }
         }
         break;
       case GS_REPLAYING: {
