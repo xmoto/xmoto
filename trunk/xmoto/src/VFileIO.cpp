@@ -172,6 +172,8 @@ namespace vapp {
 			  _findclose(fh);
 			}      
 	  #else
+	    std::string Dir = DirX;
+	  
       struct dirent *dp;    
       DIR *dirp = opendir(Dir.c_str());
       while(dirp) {
