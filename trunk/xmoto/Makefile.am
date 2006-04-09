@@ -54,7 +54,9 @@ xmoto_SOURCES = $(common_SOURCES) src/BSP.cpp src/Game.cpp src/GameMain.cpp \
 	src/Input.h \
 	src/GameSerializer.cpp \
 	src/Collision.cpp \
-	src/Collision.h
+	src/Collision.h \
+	src/OpenBrowser.cpp \
+	src/OpenBrowser.h
 
 xmoto_LDADD = $(common_LDADD)
 		
