@@ -1003,6 +1003,17 @@ namespace vapp {
         }
       }
 
+      /* Make sure we got a level cache dir */
+      if(!isDir(m_UserDir + std::string("/LCache"))) {
+        if(mkdir((m_UserDir + std::string("/LCache")).c_str(),S_IRUSR|S_IWUSR|S_IRWXU)) { /* drwx------ */
+          Log("** Warning ** : failed to create user LCache directory '%s'!",(m_UserDir + std::string("/LCache")).c_str());
+        }
+        if(!isDir(m_UserDir + std::string("/LCache"))) {
+          /* Still no dir... */
+          throw Exception("could not create user LCache directory");
+        }
+      }
+
       /* The same goes for the /Levels dir */
       if(!isDir(m_UserDir + std::string("/Levels"))) {
         if(mkdir((m_UserDir + std::string("/Levels")).c_str(),S_IRUSR|S_IWUSR|S_IRWXU)) { /* drwx------ */
@@ -1095,6 +1106,41 @@ namespace vapp {
     }        
   }
 
+  /*===========================================================================
+  Endian-safe I/O helpers
+  ===========================================================================*/
+  void FS::writeShort_LE(FileHandle *pfh,short v) {    
+    writeByte(pfh,v&0xff);
+    writeByte(pfh,(v&0xff00)>>8);
+  }
+  
+  void FS::writeInt_LE(FileHandle *pfh,int v) {
+    writeByte(pfh,v&0xff);
+    writeByte(pfh,(v&0xff00)>>8);
+    writeByte(pfh,(v&0xff0000)>>16);
+    writeByte(pfh,(v&0xff000000)>>24);
+  }
+  
+  void FS::writeFloat_LE(FileHandle *pfh,float v) {
+    writeInt_LE(pfh,*((int *)&v));
+  }
+  
+  int FS::readShort_LE(FileHandle *pfh) {
+    unsigned char c[2];
+    readBuf(pfh,(char *)c,2);
+    return c[0]|(c[1]<<8);
+  }
+  
+  int FS::readInt_LE(FileHandle *pfh) {
+    unsigned char c[4];
+    readBuf(pfh,(char *)c,4);
+    return c[0]|(c[1]<<8)|(c[2]<<16)|(c[3]<<24);
+  }
+  
+  float FS::readFloat_LE(FileHandle *pfh) {
+    int v = readInt_LE(pfh);
+    return *((float *)&v);
+  }
   
 };
 

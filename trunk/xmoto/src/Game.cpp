@@ -314,6 +314,9 @@ namespace vapp {
     
     /* Other settings */
     m_bEnableEngineSound = m_Config.getBool("EngineSoundEnable");
+    
+    /* Cache? */
+    m_bEnableLevelCache = m_Config.getBool("LevelCache");
   }
   
   /*===========================================================================
@@ -498,15 +501,57 @@ namespace vapp {
 
       _UpdateLoadingScreen((1.0f/8.0f) * 4,pLoadingScreen);
     }
+    
+    /* Test level cache directory */
+    if(m_bEnableLevelCache && !FS::isDir("LCache")) {
+      m_bEnableLevelCache = false;
+      Log("** Warning ** : Level cache directory not found, forcing caching off!");
+    }
      
     /* Find all .lvl files in the level dir and load them */
+    int nNumCached = 0;
     std::vector<std::string> LvlFiles = FS::findPhysFiles("Levels/*.lvl",true);
     for(int i=0;i<LvlFiles.size();i++) {
-//      printf("[%s]\n",LvlFiles[i].c_str());
-      
-      /* Load it */
       m_Levels[i].setFileName( LvlFiles[i] );
-      m_Levels[i].loadXML();            
+
+      /* Cache or not to cache? */
+      if(m_bEnableLevelCache) {
+        /* Start by determining file CRC */
+        LevelCheckSum Sum;
+        m_Levels[i].probeCheckSum(&Sum);
+        
+        /* Determine name in cache */
+        std::string LevelFileBaseName = FS::getFileBaseName(LvlFiles[i]);
+        char cCacheFileName[1024];      
+        sprintf(cCacheFileName,"LCache/%08x%s.blv",Sum.nCRC32,LevelFileBaseName.c_str());
+                  
+        /* Got level in cache? */
+        if(!m_Levels[i].importBinary(cCacheFileName,&Sum)) {
+          /* Not in cache, buggers. Load it. */
+          m_Levels[i].loadXML();
+          
+          /* Cache it now */
+          m_Levels[i].exportBinary(cCacheFileName,&Sum);
+        }
+        else nNumCached++;
+      }
+      else {
+        /* Just load it */
+        m_Levels[i].loadXML();       
+      }
+          
+      /* Load it */            
+      //m_Levels[i].loadXML();            
+
+      /* --- */
+      //char HEST[256];
+      //sprintf(HEST,"LCache/%08X.blv",Sum.nCRC32);
+      //printf("[%s]\n",HEST);
+      //if(m_Levels[i].importBinary(HEST,&Sum)) {
+      //  printf("  OK\n");
+      //}
+      //else printf("  NOT OK\n");
+      //m_Levels[i].exportBinary(HEST,&Sum);
       
       /* Update level pack manager */
       _UpdateLevelPackManager(&m_Levels[i]);
@@ -524,7 +569,7 @@ namespace vapp {
       return;
     }
     
-    Log(" %d level%s loaded",m_nNumLevels,m_nNumLevels==1?"":"s");
+    Log(" %d level%s loaded (%d from cache)",m_nNumLevels,m_nNumLevels==1?"":"s",nNumCached);
     Log(" %d level pack%s",m_LevelPacks.size(),m_LevelPacks.size()==1?"":"s");
     
     if(!isNoGraphics()) {
@@ -1359,6 +1404,7 @@ namespace vapp {
     m_Config.createVar( "StoreReplays",           "true" );
     m_Config.createVar( "ReplayFrameRate",        "25" );
     m_Config.createVar( "CompressReplays",        "true" );
+    m_Config.createVar( "LevelCache",             "true" );
   }
   
   /*===========================================================================

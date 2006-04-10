@@ -81,6 +81,7 @@ namespace vapp {
                  m_bListReplays=false;
                  m_bTimeDemo=false;
                  m_bShowFrameRate=false;
+                 m_bEnableLevelCache=true;
                  m_pQuitMsgBox=NULL;
                  m_pNotifyMsgBox=NULL;
                  m_pNewProfileMsgBox=NULL;
@@ -135,6 +136,7 @@ namespace vapp {
       bool m_bUglyMode;													/* true: fast 'n ugly graphics */
       bool m_bEnableEngineSound;                /* true: engine sound is enabled */
       bool m_bCompressReplays;                  /* true: compress replays with zlib */
+      bool m_bEnableLevelCache;                 /* true: cache levels for faster loading */
       std::string m_PlaySpecificLevel;          /* If set, we only want to 
                                                    play this level */
       std::string m_PlaySpecificReplay;         /* If set, we only want to

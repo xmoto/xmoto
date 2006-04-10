@@ -22,17 +22,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* 
  *  XML support through the tinyxml library.
  */
-
 #include "VApp.h"
 #include "VXml.h"
 #include "VFileIO.h"
+#include "CRCHash.h"
 
 namespace vapp {
 
   /*===========================================================================
   Load XML document from disk
   ===========================================================================*/
-  void XMLDocument::readFromFile(std::string File) {
+  void XMLDocument::readFromFile(std::string File,unsigned long *pnCRC32) {
     /* Clean up if a doc already is loaded */
     if(m_pXML) delete m_pXML;
     
@@ -51,10 +51,17 @@ namespace vapp {
       }
     }    
     FS::closeFile(pfh);
-
-    m_pXML->Parse(Doc.c_str());
-    if(m_pXML->Error()) {
-      Log("** Warning ** : XML-parsing error in '%s' : %s",File.c_str(),m_pXML->ErrorDesc());
+    
+    /* Are we just going to need the CRC? */
+    if(pnCRC32 != NULL) {
+      *pnCRC32 = CRC32::computeCRC32((const unsigned char *)Doc.c_str(),Doc.length());
+    }
+    else {
+      /* Parse XML */
+      m_pXML->Parse(Doc.c_str());
+      if(m_pXML->Error()) {
+        Log("** Warning ** : XML-parsing error in '%s' : %s",File.c_str(),m_pXML->ErrorDesc());
+      }
     }
   }
       

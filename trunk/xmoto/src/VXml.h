@@ -36,7 +36,9 @@ namespace vapp {
       ~XMLDocument() {if(m_pXML) delete m_pXML;}
     
       /* Methods */
-      void readFromFile(std::string File);
+      /* (if pnCRC32!=NULL, then readFromFile() should not parse XML,
+          but just calculate the CRC32 of the text file) */
+      void readFromFile(std::string File,unsigned long *pnCRC32=NULL);
       void writeToFile(std::string File);      
       
       /* Data interface */

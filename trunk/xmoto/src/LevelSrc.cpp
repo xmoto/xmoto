@@ -544,6 +544,270 @@ namespace vapp {
     if(pc == NULL) return Default;
     return std::string(pc);
   }
+  
+  /*===========================================================================
+  Calculate checksum of level XML before loading it
+  ===========================================================================*/
+  bool LevelSrc::probeCheckSum(LevelCheckSum *pSum) {
+    m_XML.readFromFile( m_FileName,&pSum->nCRC32 );      
+    return true;
+  }
+      
+  /*===========================================================================
+  Export binary level file
+  ===========================================================================*/
+  void LevelSrc::exportBinary(const std::string &FileName,LevelCheckSum *pSum) {
+    /* Export binary... */
+    FileHandle *pfh = FS::openOFile(FileName);
+    if(pfh == NULL) {
+      Log("** Warning ** : Failed to export binary: %s",FileName.c_str());
+    }
+    else {
+      /* Write tag */
+      FS::writeBuf(pfh,"XBL1",4);
+      
+      /* Write CRC32 of XML */
+      FS::writeInt_LE(pfh,pSum->nCRC32);
+            
+      /* Write header */
+      FS::writeString(pfh,m_ID);
+      FS::writeString(pfh,m_LevelPack);
+      FS::writeString(pfh,m_Info.Name);
+      FS::writeString(pfh,m_Info.Description);
+      FS::writeString(pfh,m_Info.Author);
+      FS::writeString(pfh,m_Info.Date);
+      FS::writeString(pfh,m_Info.Sky);
+      FS::writeString(pfh,m_ScriptFile);
+      
+      FS::writeFloat_LE(pfh,m_fLeftLimit);
+      FS::writeFloat_LE(pfh,m_fRightLimit);
+      FS::writeFloat_LE(pfh,m_fTopLimit);
+      FS::writeFloat_LE(pfh,m_fBottomLimit);
+      
+      /* Write script (if any) */
+      FS::writeInt_LE(pfh,m_ScriptSource.length());
+      FS::writeBuf(pfh,(char *)m_ScriptSource.c_str(),m_ScriptSource.length());
+      
+      /* Write blocks */
+      FS::writeInt_LE(pfh,m_Blocks.size());
+      for(int i=0;i<m_Blocks.size();i++) {
+        FS::writeString(pfh,m_Blocks[i]->ID);
+        FS::writeBool(pfh,m_Blocks[i]->bBackground);
+        FS::writeBool(pfh,m_Blocks[i]->bWater);
+        FS::writeString(pfh,m_Blocks[i]->Texture);
+        FS::writeFloat_LE(pfh,m_Blocks[i]->fPosX);
+        FS::writeFloat_LE(pfh,m_Blocks[i]->fPosY);
+        
+        FS::writeShort_LE(pfh,m_Blocks[i]->Vertices.size());
+        
+        for(int j=0;j<m_Blocks[i]->Vertices.size();j++) {
+          FS::writeFloat_LE(pfh,m_Blocks[i]->Vertices[j]->fX);
+          FS::writeFloat_LE(pfh,m_Blocks[i]->Vertices[j]->fY);
+          FS::writeString(pfh,m_Blocks[i]->Vertices[j]->EdgeEffect);
+        }        
+      }
+      
+      /* Write entities */
+      FS::writeInt_LE(pfh,m_Entities.size());
+      for(int i=0;i<m_Entities.size();i++) {
+			  FS::writeString(pfh,m_Entities[i]->ID);
+			  FS::writeString(pfh,m_Entities[i]->TypeID);
+			  FS::writeFloat_LE(pfh,m_Entities[i]->fSize);
+        FS::writeFloat_LE(pfh,m_Entities[i]->fPosX);
+        FS::writeFloat_LE(pfh,m_Entities[i]->fPosY);
+        FS::writeByte(pfh,m_Entities[i]->Params.size());       
+        for(int j=0;j<m_Entities[i]->Params.size();j++) {
+          FS::writeString(pfh,m_Entities[i]->Params[j]->Name);
+          FS::writeString(pfh,m_Entities[i]->Params[j]->Value);        
+        }
+      }  
+      
+      /* Write zones */
+      FS::writeInt_LE(pfh,m_Zones.size());
+      for(int i=0;i<m_Zones.size();i++) {
+        FS::writeString(pfh,m_Zones[i]->ID);
+        FS::writeByte(pfh,m_Zones[i]->Prims.size());
+        
+        for(int j=0;j<m_Zones[i]->Prims.size();j++) {
+          FS::writeInt_LE(pfh,(int)m_Zones[i]->Prims[j]->Type);
+        
+          if(m_Zones[i]->Prims[j]->Type == LZPT_BOX) {
+            FS::writeFloat_LE(pfh,m_Zones[i]->Prims[j]->fLeft);
+            FS::writeFloat_LE(pfh,m_Zones[i]->Prims[j]->fRight);
+            FS::writeFloat_LE(pfh,m_Zones[i]->Prims[j]->fTop);
+            FS::writeFloat_LE(pfh,m_Zones[i]->Prims[j]->fBottom);
+          }
+        }
+      }
+                
+      /* clean up */
+      FS::closeFile(pfh);
+    }
+  }
+  
+  /*===========================================================================
+  Import binary level file
+  ===========================================================================*/
+  bool LevelSrc::importBinary(const std::string &FileName,LevelCheckSum *pSum) {
+    _UnloadLevelData();
+    bool bRet = true;
 
+    m_fPlayerStartX = m_fPlayerStartY = 0.0f;
+
+    /* Import binary */
+    FileHandle *pfh = FS::openIFile(FileName);
+    if(pfh == NULL) {
+      return false;
+    }
+    else {
+      /* Read tag - it tells something about the format */
+      char cTag[5];
+      FS::readBuf(pfh,(char *)cTag,4);
+      cTag[4] = '\0';
+      int nFormat = 0;
+      if(!strcmp(cTag,"XBL1"))
+        nFormat = 1;
+        
+      if(nFormat == 1) {
+        /* Read "format 1" binary level */
+        /* Right CRC? */
+        if(FS::readInt_LE(pfh) != pSum->nCRC32) {
+          Log("** Warning ** : CRC check failed, can't import: %s",FileName.c_str());
+          bRet = false;
+        }
+        else {
+          /* Read header */
+          m_ID = FS::readString(pfh);
+          m_LevelPack = FS::readString(pfh);
+          m_Info.Name = FS::readString(pfh);
+          m_Info.Description = FS::readString(pfh);
+          m_Info.Author = FS::readString(pfh);
+          m_Info.Date = FS::readString(pfh);
+          m_Info.Sky = FS::readString(pfh);
+          m_ScriptFile = FS::readString(pfh);
+
+          m_fLeftLimit = FS::readFloat_LE(pfh);
+          m_fRightLimit = FS::readFloat_LE(pfh);
+          m_fTopLimit = FS::readFloat_LE(pfh);
+          m_fBottomLimit = FS::readFloat_LE(pfh);
+
+          /* Read embedded script */
+          int nScriptSourceLen = FS::readInt_LE(pfh);
+          if(nScriptSourceLen > 0) {
+            char *pcTemp = new char[nScriptSourceLen+1];
+            FS::readBuf(pfh,(char *)pcTemp,nScriptSourceLen);
+            pcTemp[nScriptSourceLen]='\0';
+            
+            m_ScriptSource = pcTemp;
+            
+            delete [] pcTemp;           
+          }
+          else
+            m_ScriptSource = "";
+
+          /* Read blocks */
+          int nNumBlocks = FS::readInt_LE(pfh);
+          m_Blocks.reserve(nNumBlocks);
+          for(int i=0;i<nNumBlocks;i++) {
+            LevelBlock *pBlock = new LevelBlock;
+            pBlock->ID = FS::readString(pfh);
+            pBlock->bBackground = FS::readBool(pfh);
+            pBlock->bWater = FS::readBool(pfh);
+            pBlock->Texture = FS::readString(pfh);
+            pBlock->fPosX = FS::readFloat_LE(pfh);
+            pBlock->fPosY = FS::readFloat_LE(pfh);
+            
+            int nNumVertices = FS::readShort_LE(pfh);
+            pBlock->Vertices.reserve(nNumVertices);
+            for(int j=0;j<nNumVertices;j++) {
+              LevelBlockVertex *pV = new LevelBlockVertex;
+              pV->fX = FS::readFloat_LE(pfh);
+              pV->fY = FS::readFloat_LE(pfh);
+              pV->EdgeEffect = FS::readString(pfh);
+             
+              pBlock->Vertices.push_back(pV);
+            }
+            
+            m_Blocks.push_back(pBlock);
+          }
+
+          /* Read entities */
+          int nNumEntities = FS::readInt_LE(pfh);
+          m_Entities.reserve(nNumEntities);
+          for(int i=0;i<nNumEntities;i++) {
+            LevelEntity *pEnt = new LevelEntity;
+            pEnt->ID = FS::readString(pfh);
+            pEnt->TypeID = FS::readString(pfh);
+            pEnt->fSize = FS::readFloat_LE(pfh);
+            pEnt->fPosX = FS::readFloat_LE(pfh);
+            pEnt->fPosY = FS::readFloat_LE(pfh);
+            
+            int nNumParams = FS::readByte(pfh);
+            pEnt->Params.reserve(nNumParams);
+            for(int j=0;j<nNumParams;j++) {
+              LevelEntityParam *pP = new LevelEntityParam;
+              pP->Name = FS::readString(pfh);
+              pP->Value = FS::readString(pfh);
+              
+              pEnt->Params.push_back(pP);
+            }
+            
+            m_Entities.push_back(pEnt);
+            
+            /* Player start? */
+            if(pEnt->TypeID == "PlayerStart") {
+              m_fPlayerStartX = pEnt->fPosX;
+              m_fPlayerStartY = pEnt->fPosY;
+            }
+          }
+          
+          /* Read zones */
+          int nNumZones = FS::readInt_LE(pfh);
+          m_Zones.reserve(nNumZones);
+          for(int i=0;i<nNumZones;i++) {
+            LevelZone *pZone = new LevelZone;
+            pZone->ID = FS::readString(pfh);
+            
+            int nNumPrims = FS::readByte(pfh);
+            pZone->Prims.reserve(nNumPrims);
+            for(int j=0;j<nNumPrims;j++) {
+              LevelZonePrim *pP = new LevelZonePrim;
+              pP->Type = (LevelZonePrimType)FS::readInt_LE(pfh);
+              
+              if(pP->Type == LZPT_BOX) {
+                pP->fLeft = FS::readFloat_LE(pfh);
+                pP->fRight = FS::readFloat_LE(pfh);
+                pP->fTop = FS::readFloat_LE(pfh);
+                pP->fBottom = FS::readFloat_LE(pfh);
+              }
+              else {
+                Log("** Warning ** : Invalid zone primitive encountered in: %s",FileName.c_str());
+                delete pP;
+                delete pZone;
+                bRet = false;
+                break;
+              }
+              
+              pZone->Prims.push_back(pP);
+            }
+            
+            if(!bRet) break;
+            
+            m_Zones.push_back(pZone);
+          }                                                                       
+        }
+      }
+      else {
+        Log("** Warning ** : Invalid binary format (%d), can't import: %s",nFormat,FileName.c_str());
+        bRet = false;
+      }
+    
+      /* clean up */
+      FS::closeFile(pfh);
+    }
+    
+    return bRet;
+  }
+    
 };
 

@@ -172,6 +172,9 @@
 				RelativePath="..\src\Input.cpp">
 			</File>
 			<File
+				RelativePath="..\src\LevelCache.cpp">
+			</File>
+			<File
 				RelativePath="..\src\MotoGame.cpp">
 			</File>
 			<File
@@ -229,6 +232,9 @@
 			</File>
 			<File
 				RelativePath="..\src\Input.h">
+			</File>
+			<File
+				RelativePath="..\src\LevelCache.h">
 			</File>
 			<File
 				RelativePath="..\src\MotoGame.h">

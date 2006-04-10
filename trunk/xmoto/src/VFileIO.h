@@ -125,6 +125,14 @@ namespace vapp {
       static void writeLine(FileHandle *pfh,std::string Line);
       static void writeLineF(FileHandle *pfh,char *pcFmt,...);
       
+      /* Endian-safe helpers */
+      static void writeShort_LE(FileHandle *pfh,short v);
+      static void writeInt_LE(FileHandle *pfh,int v);
+      static void writeFloat_LE(FileHandle *pfh,float v);
+      static int readShort_LE(FileHandle *pfh);
+      static int readInt_LE(FileHandle *pfh);
+      static float readFloat_LE(FileHandle *pfh);      
+      
       /* For buffered reading: */
       static int readBufferedChar(FileHandle *pfh);
       static int peekNextBufferedChar(FileHandle *pfh); 

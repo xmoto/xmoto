@@ -142,6 +142,13 @@ namespace vapp {
   };
 
 	/*===========================================================================
+  Level checksum struct
+  ===========================================================================*/
+  struct LevelCheckSum {
+    unsigned long nCRC32;     /* Use CRC32 for now TODO: MD5? */
+  };
+
+	/*===========================================================================
 	Level source object - holds all stored information about a level, used by 
 	both the editor and the game itself.
   ===========================================================================*/
@@ -153,6 +160,11 @@ namespace vapp {
       /* Methods */
       void saveXML(void);
       void loadXML(void);
+      
+      bool probeCheckSum(LevelCheckSum *pSum);
+      
+      void exportBinary(const std::string &FileName,LevelCheckSum *pSum);
+      bool importBinary(const std::string &FileName,LevelCheckSum *pSum);
       
       LevelEntity *createEntity(std::string TypeID,float x,float y);
                               

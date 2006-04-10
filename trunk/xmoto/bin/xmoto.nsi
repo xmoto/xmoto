@@ -1,5 +1,5 @@
-Name "X-Moto 0.1.12"
-OutFile "xmoto-0.1.12-win32-setup.exe"
+Name "X-Moto 0.1.13"
+OutFile "xmoto-0.1.13-win32-setup.exe"
 InstallDir $PROGRAMFILES\XMoto
 InstallDirRegKey HKLM "Software\XMoto" "Install_Dir"
 
@@ -45,6 +45,7 @@ Section "Game (required)"
 	CreateDirectory "$INSTDIR\Replays"
 	CreateDirectory "$INSTDIR\Levels"
 	CreateDirectory "$INSTDIR\Textures"
+	CreateDirectory "$INSTDIR\LCache"
 
 	WriteRegStr HKLM SOFTWARE\XMoto "Install_Dir" "$INSTDIR"
 

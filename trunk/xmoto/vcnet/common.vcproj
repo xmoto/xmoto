@@ -114,6 +114,9 @@
 				RelativePath="..\src\BuiltInFont.cpp">
 			</File>
 			<File
+				RelativePath="..\src\CRCHash.cpp">
+			</File>
+			<File
 				RelativePath="..\src\DBuffer.cpp">
 			</File>
 			<File
@@ -159,6 +162,9 @@
 			</File>
 			<File
 				RelativePath="..\src\BuiltInFont.h">
+			</File>
+			<File
+				RelativePath="..\src\CRCHash.h">
 			</File>
 			<File
 				RelativePath="..\src\DBuffer.h">
