@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #ifdef WIN32
   #include <io.h>
+  #include <direct.h>
 #else
   #include <unistd.h>
   #include <sys/types.h>
@@ -993,11 +994,11 @@ namespace vapp {
       }
       
       /* If there is no Replay-dir in user-dir try making that too */
-      if(!isDir(m_UserDir + std::string("/Replays"))) {
-        if(mkdir((m_UserDir + std::string("/Replays")).c_str(),S_IRUSR|S_IWUSR|S_IRWXU)) { /* drwx------ */
+      if(!isDir(getReplaysDir()))) {
+        if(mkdir(getReplaysDir().c_str(),S_IRUSR|S_IWUSR|S_IRWXU)) { /* drwx------ */
           Log("** Warning ** : failed to create user replay directory '%s'!",(m_UserDir + std::string("/Replays")).c_str());
         }
-        if(!isDir(m_UserDir + std::string("/Replays"))) {
+        if(!isDir(getReplaysDir())) {
           /* Still no dir... */
           throw Exception("could not create user replay directory");
         }
@@ -1015,11 +1016,11 @@ namespace vapp {
       }
 
       /* The same goes for the /Levels dir */
-      if(!isDir(m_UserDir + std::string("/Levels"))) {
-        if(mkdir((m_UserDir + std::string("/Levels")).c_str(),S_IRUSR|S_IWUSR|S_IRWXU)) { /* drwx------ */
+      if(!isDir(getLevelsDir())) {
+        if(mkdir(getLevelsDir().c_str(),S_IRUSR|S_IWUSR|S_IRWXU)) { /* drwx------ */
           Log("** Warning ** : failed to create user levels directory '%s'!",(m_UserDir + std::string("/Levels")).c_str());
         }
-        if(!isDir(m_UserDir + std::string("/Levels"))) {
+        if(!isDir(getLevelsDir())) {
           /* Still no dir... */
           throw Exception("could not create user levels directory");
         }
@@ -1104,6 +1105,17 @@ namespace vapp {
       
       fclose(fp);
     }        
+  }
+
+  /*===========================================================================
+  Hmm, for some reason I have to do this. Don't ask me why.
+  ===========================================================================*/
+  int FS::mkDir(const char *pcPath) {
+    #if defined(_MSC_VER)
+      return _mkdir(pcPath);
+    #else
+      return mkdir(pcPath,S_IRUSR|S_IWUSR|S_IRWXU);
+    #endif
   }
 
   /*===========================================================================

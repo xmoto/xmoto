@@ -56,6 +56,9 @@ namespace vapp {
        The various states are described below in the switch-statement */  
     m_State = s;
     
+    /* Always clear context when changing state */
+    m_Renderer.getGUI()->clearContext();
+    
     switch(s) {
       case GS_LEVELPACK_VIEWER: {
           m_pLevelPackViewer->showWindow(true);
@@ -114,6 +117,9 @@ namespace vapp {
               m_Renderer.setBestTime(T1 + std::string(" / ") + T2 + std::string(GAMETEXT_REPLAYHELPTEXT));              
               
               if(m_bBenchmark) m_Renderer.setBestTime("");
+              
+              /* World-record stuff */
+              _UpdateWorldRecord(LevelID);
             }
 
             m_fStartTime = getRealTime();
@@ -201,6 +207,11 @@ namespace vapp {
             T2 = formatTime(pBestPTime->fFinishTime);
           
           m_Renderer.setBestTime(T1 + std::string(" / ") + T2);
+
+          /* World-record stuff */
+          _UpdateWorldRecord(m_PlaySpecificLevel);
+
+          /* Prepare level */
           m_Renderer.prepareForNewLevel();
         }
         break;
@@ -314,7 +325,9 @@ namespace vapp {
     
     /* Other settings */
     m_bEnableEngineSound = m_Config.getBool("EngineSoundEnable");
-    
+    m_bEnableWebHighscores = m_Config.getBool("WebHighscores");
+    m_bShowWebHighscoreInGame = m_Config.getBool("ShowInGameWorldRecord");
+        
     /* Cache? */
     m_bEnableLevelCache = m_Config.getBool("LevelCache");
   }
@@ -322,7 +335,7 @@ namespace vapp {
   /*===========================================================================
   Update loading screen
   ===========================================================================*/
-  void GameApp::_UpdateLoadingScreen(float fDone,Texture *pLoadingScreen) {
+  void GameApp::_UpdateLoadingScreen(float fDone,Texture *pLoadingScreen,const std::string &NextTask) {
     if(pLoadingScreen != NULL) {
       glClear(GL_COLOR_BUFFER_BIT);
       drawImage(Vector2f(getDispWidth()/2 - 256,getDispHeight()/2 - 40),
@@ -334,6 +347,9 @@ namespace vapp {
       drawBox(Vector2f(getDispWidth()/2 + 256 - (512.0f*(1-fDone)),getDispHeight()/2 + 25),              
               Vector2f(getDispWidth()/2 + 256,getDispHeight()/2 + 40),              
               0,MAKE_COLOR(0,0,0,128));
+             
+      drawText(Vector2f(getDispWidth()/2 - 256,getDispHeight()/2 + 40 + 3),NextTask);
+              
       SDL_GL_SwapBuffers();
     }
   }
@@ -434,7 +450,7 @@ namespace vapp {
     if(!isNoGraphics()) {    
       /* Show loading screen */
       pLoadingScreen = TexMan.loadTexture("Textures/UI/Loading.png",false,true);
-      _UpdateLoadingScreen((1.0f/8.0f) * 0,pLoadingScreen);
+      _UpdateLoadingScreen((1.0f/9.0f) * 0,pLoadingScreen,GAMETEXT_LOADINGSOUNDS);
       
       if(Sound::isEnabled()) {
         /* Load sounds */
@@ -463,7 +479,7 @@ namespace vapp {
         
         Log(" %d sound%s loaded",Sound::getNumSamples(),Sound::getNumSamples()==1?"":"s");
       }
-      _UpdateLoadingScreen((1.0f/8.0f) * 1,pLoadingScreen);
+      _UpdateLoadingScreen((1.0f/9.0f) * 1,pLoadingScreen,GAMETEXT_INITTEXT);
           
       /* Find all files in the textures dir and load them */
       TexMan.setDefaultTextureName("Dirt");
@@ -471,7 +487,7 @@ namespace vapp {
       UITextDraw::initTextDrawing(this);
       UITexture::setApp(this);
 
-      _UpdateLoadingScreen((1.0f/8.0f) * 2,pLoadingScreen);
+      _UpdateLoadingScreen((1.0f/9.0f) * 2,pLoadingScreen,GAMETEXT_LOADINGTEXTURES);
       
       std::vector<std::string> TextureFiles = FS::findPhysFiles("Textures/*.jpg");
       int nLoaded=0;
@@ -485,7 +501,7 @@ namespace vapp {
       }
       Log(" %d texture%s loaded",nLoaded,nLoaded==1?"":"s");
 
-      _UpdateLoadingScreen((1.0f/8.0f) * 3,pLoadingScreen);
+      _UpdateLoadingScreen((1.0f/9.0f) * 3,pLoadingScreen,GAMETEXT_LOADINGMENUGRAPHICS);
         
       /* Check to see if we can find the default texture */
       if(TexMan.getTexture("default") == NULL)
@@ -499,7 +515,7 @@ namespace vapp {
       
       m_pCursor = TexMan.loadTexture("Textures/UI/Cursor.png",false,true,true);
 
-      _UpdateLoadingScreen((1.0f/8.0f) * 4,pLoadingScreen);
+      _UpdateLoadingScreen((1.0f/9.0f) * 4,pLoadingScreen,GAMETEXT_LOADINGLEVELS);
     }
     
     /* Test level cache directory */
@@ -527,7 +543,7 @@ namespace vapp {
                   
         /* Got level in cache? */
         if(!m_Levels[i].importBinary(cCacheFileName,&Sum)) {
-          /* Not in cache, buggers. Load it. */
+          /* Not in cache, buggers. Load it from (slow) XML then. */
           m_Levels[i].loadXML();
           
           /* Cache it now */
@@ -540,19 +556,6 @@ namespace vapp {
         m_Levels[i].loadXML();       
       }
           
-      /* Load it */            
-      //m_Levels[i].loadXML();            
-
-      /* --- */
-      //char HEST[256];
-      //sprintf(HEST,"LCache/%08X.blv",Sum.nCRC32);
-      //printf("[%s]\n",HEST);
-      //if(m_Levels[i].importBinary(HEST,&Sum)) {
-      //  printf("  OK\n");
-      //}
-      //else printf("  NOT OK\n");
-      //m_Levels[i].exportBinary(HEST,&Sum);
-      
       /* Update level pack manager */
       _UpdateLevelPackManager(&m_Levels[i]);
       
@@ -562,7 +565,7 @@ namespace vapp {
       }
     }
     m_nNumLevels = LvlFiles.size();
-    _UpdateLoadingScreen((1.0f/8.0f) * 5,pLoadingScreen);
+    _UpdateLoadingScreen((1.0f/9.0f) * 5,pLoadingScreen,GAMETEXT_INITRENDERER);
     
     if(m_bListLevels) {
       quit();
@@ -571,24 +574,41 @@ namespace vapp {
     
     Log(" %d level%s loaded (%d from cache)",m_nNumLevels,m_nNumLevels==1?"":"s",nNumCached);
     Log(" %d level pack%s",m_LevelPacks.size(),m_LevelPacks.size()==1?"":"s");
-    
+        
     if(!isNoGraphics()) {
       /* Initialize renderer */
       m_Renderer.init();
-      _UpdateLoadingScreen((1.0f/8.0f) * 6,pLoadingScreen);
+      _UpdateLoadingScreen((1.0f/9.0f) * 6,pLoadingScreen,GAMETEXT_INITMENUS);
       
       /* Bonus info */
       Log("Total: %d kB of textures loaded",TexMan.getTextureUsage()/1024);
 
       /* Initialize menu system */
       _InitMenus();    
-      _UpdateLoadingScreen((1.0f/8.0f) * 7,pLoadingScreen);
+      _UpdateLoadingScreen((1.0f/9.0f) * 7,pLoadingScreen,GAMETEXT_UPDATINGLEVELS);
 
       _UpdateLevelLists();
-      _UpdateLoadingScreen((1.0f/8.0f) * 8,pLoadingScreen);      
+      _UpdateLoadingScreen((1.0f/9.0f) * 8,pLoadingScreen,GAMETEXT_INITINPUT);      
       
       /* Init input system */
       m_InputHandler.init(&m_Config);
+    }
+
+    /* Fetch highscores from web? */
+    if(m_bEnableWebHighscores) {
+      _UpdateLoadingScreen((1.0f/9.0f) * 9,pLoadingScreen,GAMETEXT_DLHIGHSCORES);      
+      
+      /* Try downloading the highscores */
+      try {
+        m_WebHighscores.update();
+      }
+      catch(Exception &e) {
+        /* No internet connection, probably... (just use the latest ones, if any) */
+        Log("** Warning ** : Failed to update web-highscores [%s]",e.getMsg().c_str());        
+      }
+      
+      /* Upgrade high scores */
+      m_WebHighscores.upgrade();      
     }
         
     /* What to do? */
@@ -650,6 +670,9 @@ namespace vapp {
   void GameApp::drawFrame(void) {
     char cTemp[256];
     bool bValidGameState = true;
+        
+    /* Per default, don't wait between frames */
+    setFrameDelay(0);
 
     /* Update sound system and input */
     if(!isNoGraphics()) {
@@ -743,16 +766,17 @@ namespace vapp {
           _HandleLevelPackViewer();
                   
         /* Draw GUI */
+        m_Renderer.getGUI()->enableContextMenuDrawing(true);
         m_Renderer.getGUI()->paint();                
         
         /* Show frame rate */
         if(m_bShowFrameRate) {
           sprintf(cTemp,"%f",fFPS_Rate);
           drawText(Vector2f(130,0),cTemp);
-        }
+        }                
 
         /* Delay a bit so we don't eat all CPU */
-        SDL_Delay(10);
+        setFrameDelay(10);
         break;
       }
       case GS_PAUSE:
@@ -899,19 +923,21 @@ namespace vapp {
           nADelay = ((1.0f/m_fCurrentReplayFrameRate - (fEndFrameTime-fStartFrameTime)) * 1000.0f) * 0.5f;
         }
       	else if ((m_State == GS_FINISHED) || (m_State == GS_JUSTDEAD) || (m_State == GS_PAUSE)) {
-      	  SDL_Delay(10);
+      	  //SDL_Delay(10);
+      	  setFrameDelay(10);
       	}
         else {
       	  /* become idle only if we hadn't to skip any frame, recently, and more globaly (80% of fps) */
           if ((nPhysSteps <= 1) && (fFPS_Rate > (0.8f / PHYS_STEP_SIZE)))
           nADelay = ((m_fLastPhysTime + PHYS_STEP_SIZE) - fEndFrameTime) * 1000.0f;
         }
-        
+                
         if(nADelay > 0) {
           if(!m_bTimeDemo) {
-            SDL_Delay(nADelay);
+            //SDL_Delay(nADelay);
+            setFrameDelay(nADelay);
       	  }
-        }
+        }        
 
         /* Show fps (debug modish) */
         if(m_bDebugMode) {
@@ -962,6 +988,19 @@ namespace vapp {
           /* Blah... */
           _HandleFinishMenu();
         }        
+        
+        /* Level name to draw? */
+        if(m_State == GS_JUSTDEAD || m_State == GS_PAUSE || m_State == GS_FINISHED &&
+           m_MotoGame.getLevelSrc() != NULL) {
+          UITextDraw::printRaw(m_Renderer.getMediumFont(),0,getDispHeight()-4,m_MotoGame.getLevelSrc()->getLevelInfo()->Name,
+                               MAKE_COLOR(255,255,255,255));
+        }
+        
+        /* Context menu? */
+        if(m_State == GS_PLAYING || m_State == GS_REPLAYING)
+          m_Renderer.getGUI()->enableContextMenuDrawing(false);
+        else
+          m_Renderer.getGUI()->enableContextMenuDrawing(true);
         
         /* Draw GUI */
         m_Renderer.getGUI()->paint();        
@@ -1405,6 +1444,8 @@ namespace vapp {
     m_Config.createVar( "ReplayFrameRate",        "25" );
     m_Config.createVar( "CompressReplays",        "true" );
     m_Config.createVar( "LevelCache",             "true" );
+    m_Config.createVar( "WebHighscores",          "true" );
+    m_Config.createVar( "ShowInGameWorldRecord",  "false" );
   }
   
   /*===========================================================================
@@ -1523,6 +1564,52 @@ namespace vapp {
     return false;
   }  
  
+  /*===========================================================================
+  World records
+  ===========================================================================*/
+  void GameApp::_UpdateWorldRecord(const std::string &LevelID) {
+    m_Renderer.setWorldRecordTime("");
+    
+    if(m_bShowWebHighscoreInGame) {
+      WebHighscore *pWebHS = m_WebHighscores.getHighscoreFromLevel(LevelID);
+      if(pWebHS != NULL) {
+        char cTime[256];
+        int n1=0,n2=0,n3=0;
+        
+        sscanf(pWebHS->getTime().c_str(),"%d:%d:%d",&n1,&n2,&n3);
+        sprintf(cTime,"%02d:%02d:%02d",n1,n2,n3);
+      
+        m_Renderer.setWorldRecordTime(std::string(GAMETEXT_WORLDRECORD) + std::string(cTime) + 
+                                      std::string(" (") + pWebHS->getPlayerName() + std::string(")"));
+      } 
+      else {
+        m_Renderer.setWorldRecordTime(GAMETEXT_WORLDRECORD GAMETEXT_NONE);      
+      }                
+    }
+  }
+  
+  /*===========================================================================
+  WebHSAppInterface implementation
+  ===========================================================================*/
+  void GameApp::beginTask(WebHSTask Task) {
+    /* TODO: make this nice */
+    printf("task begun (%d)\n",Task);
+  }
+  
+  void GameApp::setTaskProgress(float fPercent) {
+    /* TODO: make this nice */
+    printf(" ... %.0f%%\n",fPercent);
+  }
+  
+  void GameApp::endTask(void) {
+    /* TODO: make this nice */
+    printf("task done!\n");
+  }  
+  
+  bool GameApp::doesLevelExist(const std::string &LevelID) {
+    return _FindLevelByID(LevelID) != NULL;
+  }
+  
 };
 
 

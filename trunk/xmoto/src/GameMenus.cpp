@@ -44,11 +44,20 @@ namespace vapp {
     m_pFinishMenu->setStyle(UI_FRAMESTYLE_MENU);
     
     m_pFinishMenuButtons[0] = new UIButton(m_pFinishMenu,0,0,GAMETEXT_TRYAGAIN,207,57);
+    m_pFinishMenuButtons[0]->setContextHelp(CONTEXTHELP_PLAY_THIS_LEVEL_AGAIN);
+    
     m_pFinishMenuButtons[1] = new UIButton(m_pFinishMenu,0,0,GAMETEXT_SAVEREPLAY,207,57);
+    m_pFinishMenuButtons[1]->setContextHelp(CONTEXTHELP_SAVE_A_REPLAY);
     if(!m_bRecordReplays) m_pFinishMenuButtons[1]->enableWindow(false);
+
     m_pFinishMenuButtons[2] = new UIButton(m_pFinishMenu,0,0,GAMETEXT_PLAYNEXT,207,57);
+    m_pFinishMenuButtons[2]->setContextHelp(CONTEXTHELP_PLAY_NEXT_LEVEL);
+    
     m_pFinishMenuButtons[3] = new UIButton(m_pFinishMenu,0,0,GAMETEXT_ABORT,207,57);
+    m_pFinishMenuButtons[3]->setContextHelp(CONTEXTHELP_BACK_TO_MAIN_MENU);
+    
     m_pFinishMenuButtons[4] = new UIButton(m_pFinishMenu,0,0,GAMETEXT_QUIT,207,57);
+    m_pFinishMenuButtons[4]->setContextHelp(CONTEXTHELP_QUIT_THE_GAME);
     m_nNumFinishMenuButtons = 5;
 
     UIStatic *pFinishText = new UIStatic(m_pFinishMenu,0,100,GAMETEXT_FINISH,m_pFinishMenu->getPosition().nWidth,36);
@@ -66,10 +75,19 @@ namespace vapp {
     m_pPauseMenu->setStyle(UI_FRAMESTYLE_MENU);
     
     m_pPauseMenuButtons[0] = new UIButton(m_pPauseMenu,0,0,GAMETEXT_RESUME,207,57);
+    m_pPauseMenuButtons[0]->setContextHelp(CONTEXTHELP_BACK_TO_GAME);
+    
     m_pPauseMenuButtons[1] = new UIButton(m_pPauseMenu,0,0,GAMETEXT_RESTART,207,57);
+    m_pPauseMenuButtons[1]->setContextHelp(CONTEXTHELP_TRY_LEVEL_AGAIN_FROM_BEGINNING);
+    
     m_pPauseMenuButtons[2] = new UIButton(m_pPauseMenu,0,0,GAMETEXT_PLAYNEXT,207,57);
+    m_pPauseMenuButtons[2]->setContextHelp(CONTEXTHELP_PLAY_NEXT_INSTEAD);
+    
     m_pPauseMenuButtons[3] = new UIButton(m_pPauseMenu,0,0,GAMETEXT_ABORT,207,57);
+    m_pPauseMenuButtons[3]->setContextHelp(CONTEXTHELP_BACK_TO_MAIN_MENU);
+    
     m_pPauseMenuButtons[4] = new UIButton(m_pPauseMenu,0,0,GAMETEXT_QUIT,207,57);
+    m_pPauseMenuButtons[4]->setContextHelp(CONTEXTHELP_QUIT_THE_GAME);    
     m_nNumPauseMenuButtons = 5;
 
     UIStatic *pPauseText = new UIStatic(m_pPauseMenu,0,100,GAMETEXT_PAUSE,m_pPauseMenu->getPosition().nWidth,36);
@@ -87,11 +105,20 @@ namespace vapp {
     m_pJustDeadMenu->setStyle(UI_FRAMESTYLE_MENU);
     
     m_pJustDeadMenuButtons[0] = new UIButton(m_pJustDeadMenu,0,0,GAMETEXT_TRYAGAIN,207,57);
+    m_pJustDeadMenuButtons[0]->setContextHelp(CONTEXTHELP_TRY_LEVEL_AGAIN);
+    
     m_pJustDeadMenuButtons[1] = new UIButton(m_pJustDeadMenu,0,0,GAMETEXT_SAVEREPLAY,207,57);
+    m_pJustDeadMenuButtons[1]->setContextHelp(CONTEXTHELP_SAVE_A_REPLAY);    
     if(!m_bRecordReplays) m_pJustDeadMenuButtons[1]->enableWindow(false);
+    
     m_pJustDeadMenuButtons[2] = new UIButton(m_pJustDeadMenu,0,0,GAMETEXT_PLAYNEXT,207,57);
+    m_pJustDeadMenuButtons[2]->setContextHelp(CONTEXTHELP_PLAY_NEXT_LEVEL);
+    
     m_pJustDeadMenuButtons[3] = new UIButton(m_pJustDeadMenu,0,0,GAMETEXT_ABORT,207,57);
+    m_pJustDeadMenuButtons[3]->setContextHelp(CONTEXTHELP_BACK_TO_MAIN_MENU);
+    
     m_pJustDeadMenuButtons[4] = new UIButton(m_pJustDeadMenu,0,0,GAMETEXT_QUIT,207,57);
+    m_pJustDeadMenuButtons[4]->setContextHelp(CONTEXTHELP_QUIT_THE_GAME);
     m_nNumJustDeadMenuButtons = 5;
 
     UIStatic *pJustDeadText = new UIStatic(m_pJustDeadMenu,0,100,GAMETEXT_JUSTDEAD,m_pJustDeadMenu->getPosition().nWidth,36);
@@ -112,11 +139,23 @@ namespace vapp {
     m_pMainMenu->enableWindow(true);                                 
     
     m_pMainMenuButtons[0] = new UIButton(m_pMainMenu,0,0,GAMETEXT_LEVELS,207,57);
+    m_pMainMenuButtons[0]->setContextHelp(CONTEXTHELP_BUILT_IN_AND_EXTERNALS);
+    
     m_pMainMenuButtons[1] = new UIButton(m_pMainMenu,0,0,GAMETEXT_LEVELPACKS,207,57);
+    m_pMainMenuButtons[1]->setContextHelp(CONTEXTHELP_LEVEL_PACKS);
+    
     m_pMainMenuButtons[2] = new UIButton(m_pMainMenu,0,0,GAMETEXT_REPLAYS,207,57);
+    m_pMainMenuButtons[2]->setContextHelp(CONTEXTHELP_REPLAY_LIST);
+    
     m_pMainMenuButtons[3] = new UIButton(m_pMainMenu,0,0,GAMETEXT_OPTIONS,207,57);
+    m_pMainMenuButtons[3]->setContextHelp(CONTEXTHELP_OPTIONS);
+
     m_pMainMenuButtons[4] = new UIButton(m_pMainMenu,0,0,GAMETEXT_HELP,207,57);
+    m_pMainMenuButtons[4]->setContextHelp(CONTEXTHELP_HELP);
+
     m_pMainMenuButtons[5] = new UIButton(m_pMainMenu,0,0,GAMETEXT_QUIT,207,57);
+    m_pMainMenuButtons[5]->setContextHelp(CONTEXTHELP_QUIT_THE_GAME);
+
     m_nNumMainMenuButtons = 6;
         
 //    UIStatic *pPlayerText = new UIStatic(m_pMainMenu,300,85,"",getDispWidth()-300-120,50);
@@ -131,6 +170,7 @@ namespace vapp {
     pChangePlayerButton->setType(UI_BUTTON_TYPE_SMALL);
     pChangePlayerButton->setFont(m_Renderer.getSmallFont());
     pChangePlayerButton->setID("CHANGEPLAYERBUTTON");
+    pChangePlayerButton->setContextHelp(CONTEXTHELP_CHANGE_PLAYER);
     
     UIStatic *pSomeText = new UIStatic(m_pMainMenu,0,getDispHeight()-20,
                                         std::string("X-Moto/") + getVersionString() + std::string(" ALPHA"),
@@ -145,9 +185,19 @@ namespace vapp {
     }           
 
     m_pMainMenu->setPrimaryChild(m_pMainMenuButtons[0]); /* default button: Play */
+    
+    //m_pGameInfoWindow = new UIFrame(m_pMainMenu,47,20+getDispHeight()/2 + (m_nNumMainMenuButtons*57)/2,
+    //                                "",207,getDispHeight() - (20+getDispHeight()/2 + (m_nNumMainMenuButtons*57)/2));
+    //m_pGameInfoWindow->showWindow(true);
           
-    m_pHelpWindow = new UIFrame(m_pMainMenu,300,(getDispHeight()*140)/600,"",getDispWidth()-300-20,getDispHeight()-40-(getDispHeight()*120)/600);
+    m_pHelpWindow = new UIFrame(m_pMainMenu,300,(getDispHeight()*140)/600,"",getDispWidth()-300-20,getDispHeight()-40-(getDispHeight()*120)/600-10);
     m_pHelpWindow->showWindow(false);
+    UIButton *pTutorialButton = new UIButton(m_pHelpWindow,m_pHelpWindow->getPosition().nWidth-120,m_pHelpWindow->getPosition().nHeight-62,
+                                             GAMETEXT_TUTORIAL,115,57);
+    pTutorialButton->setContextHelp(CONTEXTHELP_TUTORIAL);
+    pTutorialButton->setFont(m_Renderer.getSmallFont());
+    pTutorialButton->setType(UI_BUTTON_TYPE_SMALL);
+    pTutorialButton->setID("HELP_TUTORIAL_BUTTON");
     pSomeText = new UIStatic(m_pHelpWindow,0,0,GAMETEXT_HELP,m_pHelpWindow->getPosition().nWidth,36);
     pSomeText->setFont(m_Renderer.getMediumFont());
     pSomeText = new UIStatic(m_pHelpWindow,10,46,GAMETEXT_HELPTEXT,m_pHelpWindow->getPosition().nWidth-20,m_pHelpWindow->getPosition().nHeight-56);
@@ -155,14 +205,18 @@ namespace vapp {
     pSomeText->setVAlign(UI_ALIGN_TOP);
     pSomeText->setHAlign(UI_ALIGN_LEFT);
     
-    m_pPlayWindow = new UIFrame(m_pMainMenu,300,(getDispHeight()*140)/600,"",getDispWidth()-300-20,getDispHeight()-40-(getDispHeight()*120)/600);      
+    m_pPlayWindow = new UIFrame(m_pMainMenu,300,(getDispHeight()*140)/600,"",getDispWidth()-300-20,getDispHeight()-40-(getDispHeight()*120)/600-10);      
     m_pPlayWindow->showWindow(false);
     pSomeText = new UIStatic(m_pPlayWindow,0,0,GAMETEXT_CHOOSELEVEL,m_pHelpWindow->getPosition().nWidth,36);
     pSomeText->setFont(m_Renderer.getMediumFont());
     UITabView *pLevelTabs = new UITabView(m_pPlayWindow,20,40,"",m_pPlayWindow->getPosition().nWidth-40,m_pPlayWindow->getPosition().nHeight-115);
     pLevelTabs->setFont(m_Renderer.getSmallFont());
-    pLevelTabs->setID("PLAY_LEVEL_TABS");  
+    pLevelTabs->setID("PLAY_LEVEL_TABS"); 
+    pLevelTabs->setTabContextHelp(0,CONTEXTHELP_OFFICIAL_LEVELS);
+    pLevelTabs->setTabContextHelp(1,CONTEXTHELP_EXTERNAL_LEVELS);
+     
     UIButton *pGoButton = new UIButton(m_pPlayWindow,11,m_pPlayWindow->getPosition().nHeight-68,GAMETEXT_STARTLEVEL,115,57);
+    pGoButton->setContextHelp(CONTEXTHELP_PLAY_SELECTED_LEVEL);
     pGoButton->setFont(m_Renderer.getSmallFont());
     pGoButton->setType(UI_BUTTON_TYPE_SMALL);
     pGoButton->setID("PLAY_GO_BUTTON");
@@ -170,12 +224,13 @@ namespace vapp {
     pLevelInfoButton->setFont(m_Renderer.getSmallFont());
     pLevelInfoButton->setType(UI_BUTTON_TYPE_SMALL);
     pLevelInfoButton->setID("PLAY_LEVEL_INFO_BUTTON");
+    pLevelInfoButton->setContextHelp(CONTEXTHELP_LEVEL_INFO);
     UIWindow *pInternalLevelsTab = new UIWindow(pLevelTabs,20,40,GAMETEXT_BUILTINLEVELS,pLevelTabs->getPosition().nWidth-40,pLevelTabs->getPosition().nHeight-60);
     pInternalLevelsTab->enableWindow(true);
     pInternalLevelsTab->setID("PLAY_INTERNAL_LEVELS_TAB");
     UIWindow *pExternalLevelsTab = new UIWindow(pLevelTabs,20,40,GAMETEXT_EXTERNALLEVELS,pLevelTabs->getPosition().nWidth-40,pLevelTabs->getPosition().nHeight-60);
     pExternalLevelsTab->enableWindow(true);
-    pExternalLevelsTab->showWindow(false);
+    pExternalLevelsTab->showWindow(false);    
     pExternalLevelsTab->setID("PLAY_EXTERNAL_LEVELS_TAB");
     UIList *pInternalLevelsList = new UIList(pInternalLevelsTab,0,0,"",pInternalLevelsTab->getPosition().nWidth,pInternalLevelsTab->getPosition().nHeight);      
     pInternalLevelsList->setID("PLAY_INTERNAL_LEVELS_LIST");
@@ -191,7 +246,7 @@ namespace vapp {
     pExternalLevelsList->addColumn(GAMETEXT_SCRIPTED,128);  
     pExternalLevelsList->setEnterButton( pGoButton );        
 
-    m_pReplaysWindow = new UIFrame(m_pMainMenu,300,(getDispHeight()*140)/600,"",getDispWidth()-300-20,getDispHeight()-40-(getDispHeight()*120)/600);      
+    m_pReplaysWindow = new UIFrame(m_pMainMenu,300,(getDispHeight()*140)/600,"",getDispWidth()-300-20,getDispHeight()-40-(getDispHeight()*120)/600-10);      
     m_pReplaysWindow->showWindow(false);
     pSomeText = new UIStatic(m_pReplaysWindow,0,0,GAMETEXT_REPLAYS,m_pHelpWindow->getPosition().nWidth,36);
     pSomeText->setFont(m_Renderer.getMediumFont());
@@ -199,15 +254,18 @@ namespace vapp {
     pShowButton->setFont(m_Renderer.getSmallFont());
     pShowButton->setType(UI_BUTTON_TYPE_SMALL);
     pShowButton->setID("REPLAY_SHOW_BUTTON");
+    pShowButton->setContextHelp(CONTEXTHELP_RUN_REPLAY);
     UIButton *pDeleteButton = new UIButton(m_pReplaysWindow,11+115,m_pReplaysWindow->getPosition().nHeight-68,GAMETEXT_DELETE,115,57);
     pDeleteButton->setFont(m_Renderer.getSmallFont());
     pDeleteButton->setType(UI_BUTTON_TYPE_SMALL);
     pDeleteButton->setID("REPLAY_DELETE_BUTTON");
+    pDeleteButton->setContextHelp(CONTEXTHELP_DELETE_REPLAY);
     UIButton *pListAllButton = new UIButton(m_pReplaysWindow,11+115+115,m_pReplaysWindow->getPosition().nHeight-68,GAMETEXT_LISTALL,115,57);
     pListAllButton->setFont(m_Renderer.getSmallFont());
     pListAllButton->setType(UI_BUTTON_TYPE_CHECK);
     pListAllButton->setChecked(true);
     pListAllButton->setID("REPLAY_LIST_ALL");
+    pListAllButton->setContextHelp(CONTEXTHELP_ALL_REPLAYS);
     UIList *pReplayList = new UIList(m_pReplaysWindow,20,40,"",m_pReplaysWindow->getPosition().nWidth-40,m_pReplaysWindow->getPosition().nHeight-115);      
     pReplayList->setID("REPLAY_LIST");
     pReplayList->showWindow(true);
@@ -219,21 +277,27 @@ namespace vapp {
     
     //m_pPlayWindow->setPrimaryChild(m_pJustDeadMenuButtons[0]); /* default button: Try Again */
 
-    m_pOptionsWindow = new UIFrame(m_pMainMenu,300,(getDispHeight()*140)/600,"",getDispWidth()-300-20,getDispHeight()-40-(getDispHeight()*120)/600);
+    m_pOptionsWindow = new UIFrame(m_pMainMenu,300,(getDispHeight()*140)/600,"",getDispWidth()-300-20,getDispHeight()-40-(getDispHeight()*120)/600-10);
     m_pOptionsWindow->showWindow(false);
     pSomeText = new UIStatic(m_pOptionsWindow,0,0,GAMETEXT_OPTIONS,m_pHelpWindow->getPosition().nWidth,36);
     pSomeText->setFont(m_Renderer.getMediumFont());
     UITabView *pOptionsTabs  = new UITabView(m_pOptionsWindow,20,40,"",m_pOptionsWindow->getPosition().nWidth-40,m_pOptionsWindow->getPosition().nHeight-115);
     pOptionsTabs->setID("OPTIONS_TABS");
     pOptionsTabs->setFont(m_Renderer.getSmallFont());
+    pOptionsTabs->setTabContextHelp(0,CONTEXTHELP_GENERAL_OPTIONS);
+    pOptionsTabs->setTabContextHelp(1,CONTEXTHELP_VIDEO_OPTIONS);
+    pOptionsTabs->setTabContextHelp(2,CONTEXTHELP_AUDIO_OPTIONS);
+    pOptionsTabs->setTabContextHelp(3,CONTEXTHELP_CONTROL_OPTIONS);
     UIButton *pSaveOptionsButton = new UIButton(m_pOptionsWindow,11,m_pOptionsWindow->getPosition().nHeight-68,GAMETEXT_SAVE,115,57);
     pSaveOptionsButton->setID("SAVE_BUTTON");
     pSaveOptionsButton->setFont(m_Renderer.getSmallFont());
     pSaveOptionsButton->setType(UI_BUTTON_TYPE_SMALL);
+    pSaveOptionsButton->setContextHelp(CONTEXTHELP_SAVE_OPTIONS);
     UIButton *pDefaultOptionsButton = new UIButton(m_pOptionsWindow,126,m_pOptionsWindow->getPosition().nHeight-68,GAMETEXT_DEFAULTS,115,57);
     pDefaultOptionsButton->setID("DEFAULTS_BUTTON");
     pDefaultOptionsButton->setFont(m_Renderer.getSmallFont());
     pDefaultOptionsButton->setType(UI_BUTTON_TYPE_SMALL);      
+    pDefaultOptionsButton->setContextHelp(CONTEXTHELP_DEFAULTS);
     UIWindow *pGeneralOptionsTab = new UIWindow(pOptionsTabs,20,40,GAMETEXT_GENERAL,pOptionsTabs->getPosition().nWidth-40,pOptionsTabs->getPosition().nHeight);
     pGeneralOptionsTab->enableWindow(true);
     pGeneralOptionsTab->showWindow(true);
@@ -245,6 +309,23 @@ namespace vapp {
     pShowMiniMap->enableWindow(true);
     pShowMiniMap->setFont(m_Renderer.getSmallFont());
     pShowMiniMap->setGroup(50023);
+    pShowMiniMap->setContextHelp(CONTEXTHELP_MINI_MAP);
+    
+    UIButton *pEnableWebHighscores = new UIButton(pGeneralOptionsTab,5,43,GAMETEXT_ENABLEWEBHIGHSCORES,(pGeneralOptionsTab->getPosition().nWidth-40),28);
+    pEnableWebHighscores->setType(UI_BUTTON_TYPE_CHECK);
+    pEnableWebHighscores->setID("ENABLEWEBHIGHSCORES");
+    pEnableWebHighscores->enableWindow(true);
+    pEnableWebHighscores->setFont(m_Renderer.getSmallFont());
+    pEnableWebHighscores->setGroup(50023);
+    pEnableWebHighscores->setContextHelp(CONTEXTHELP_DOWNLOAD_BEST_TIMES);
+
+    UIButton *pInGameWorldRecord = new UIButton(pGeneralOptionsTab,5,81,GAMETEXT_ENABLEINGAMEWORLDRECORD,(pGeneralOptionsTab->getPosition().nWidth-40),28);
+    pInGameWorldRecord->setType(UI_BUTTON_TYPE_CHECK);
+    pInGameWorldRecord->setID("INGAMEWORLDRECORD");
+    pInGameWorldRecord->enableWindow(true);
+    pInGameWorldRecord->setFont(m_Renderer.getSmallFont());
+    pInGameWorldRecord->setGroup(50023);
+    pInGameWorldRecord->setContextHelp(CONTEXTHELP_INGAME_WORLD_RECORD);
     
     UIWindow *pVideoOptionsTab = new UIWindow(pOptionsTabs,20,40,GAMETEXT_VIDEO,pOptionsTabs->getPosition().nWidth-40,pOptionsTabs->getPosition().nHeight);
     pVideoOptionsTab->enableWindow(true);
@@ -257,6 +338,7 @@ namespace vapp {
     p16BitsPerPixel->enableWindow(true);
     p16BitsPerPixel->setFont(m_Renderer.getSmallFont());
     p16BitsPerPixel->setGroup(20023);
+    p16BitsPerPixel->setContextHelp(CONTEXTHELP_HIGHCOLOR);
 
     UIButton *p32BitsPerPixel = new UIButton(pVideoOptionsTab,5 + ((pVideoOptionsTab->getPosition().nWidth-40)/2)*1,5,GAMETEXT_32BPP,(pVideoOptionsTab->getPosition().nWidth-40)/2,28);
     p32BitsPerPixel->setType(UI_BUTTON_TYPE_RADIO);
@@ -264,6 +346,7 @@ namespace vapp {
     p32BitsPerPixel->enableWindow(true);
     p32BitsPerPixel->setFont(m_Renderer.getSmallFont());
     p32BitsPerPixel->setGroup(20023);
+    p32BitsPerPixel->setContextHelp(CONTEXTHELP_TRUECOLOR);
     
     UIList *pDispResList = new UIList(pVideoOptionsTab,5,43,"",pVideoOptionsTab->getPosition().nWidth-10,128);
     pDispResList->setID("RES_LIST");
@@ -275,12 +358,14 @@ namespace vapp {
     pDispResList->addEntry("1024 X 768");
     pDispResList->addEntry("1280 X 1024");
     pDispResList->addEntry("1600 X 1200");
+    pDispResList->setContextHelp(CONTEXTHELP_RESOLUTION);
 
     UIButton *pRunWindowed = new UIButton(pVideoOptionsTab,5,180,GAMETEXT_RUNWINDOWED,(pVideoOptionsTab->getPosition().nWidth-40)/1,28);
     pRunWindowed->setType(UI_BUTTON_TYPE_CHECK);
     pRunWindowed->setID("RUN_WINDOWED");
     pRunWindowed->enableWindow(true);
     pRunWindowed->setFont(m_Renderer.getSmallFont());
+    pRunWindowed->setContextHelp(CONTEXTHELP_RUN_IN_WINDOW);
     
     pSomeText = new UIStatic(pVideoOptionsTab,5,208,GAMETEXT_MENUGFX,120,28);
     pSomeText->setFont(m_Renderer.getSmallFont());    
@@ -293,6 +378,7 @@ namespace vapp {
     pMenuLow->enableWindow(true);
     pMenuLow->setFont(m_Renderer.getSmallFont());
     pMenuLow->setGroup(20024);
+    pMenuLow->setContextHelp(CONTEXTHELP_LOW_MENU);
 
     UIButton *pMenuMed = new UIButton(pVideoOptionsTab,120+((pVideoOptionsTab->getPosition().nWidth-120)/3)*1,208,GAMETEXT_MEDIUM,(pVideoOptionsTab->getPosition().nWidth-120)/3,28);
     pMenuMed->setType(UI_BUTTON_TYPE_RADIO);
@@ -300,6 +386,7 @@ namespace vapp {
     pMenuMed->enableWindow(true);
     pMenuMed->setFont(m_Renderer.getSmallFont());
     pMenuMed->setGroup(20024);
+    pMenuMed->setContextHelp(CONTEXTHELP_MEDIUM_MENU);
 
     UIButton *pMenuHigh = new UIButton(pVideoOptionsTab,120+((pVideoOptionsTab->getPosition().nWidth-120)/3)*2,208,GAMETEXT_HIGH,(pVideoOptionsTab->getPosition().nWidth-120)/3,28);
     pMenuHigh->setType(UI_BUTTON_TYPE_RADIO);
@@ -307,6 +394,7 @@ namespace vapp {
     pMenuHigh->enableWindow(true);
     pMenuHigh->setFont(m_Renderer.getSmallFont());
     pMenuHigh->setGroup(20024);
+    pMenuHigh->setContextHelp(CONTEXTHELP_HIGH_MENU);
 
     pSomeText = new UIStatic(pVideoOptionsTab,5,236,GAMETEXT_GAMEGFX,120,28);
     pSomeText->setFont(m_Renderer.getSmallFont());    
@@ -319,6 +407,7 @@ namespace vapp {
     pGameLow->enableWindow(true);
     pGameLow->setFont(m_Renderer.getSmallFont());
     pGameLow->setGroup(20025);
+    pGameLow->setContextHelp(CONTEXTHELP_LOW_GAME);
 
     UIButton *pGameMed = new UIButton(pVideoOptionsTab,120+((pVideoOptionsTab->getPosition().nWidth-120)/3)*1,236,GAMETEXT_MEDIUM,(pVideoOptionsTab->getPosition().nWidth-120)/3,28);
     pGameMed->setType(UI_BUTTON_TYPE_RADIO);
@@ -326,6 +415,7 @@ namespace vapp {
     pGameMed->enableWindow(true);
     pGameMed->setFont(m_Renderer.getSmallFont());
     pGameMed->setGroup(20025);
+    pGameMed->setContextHelp(CONTEXTHELP_MEDIUM_GAME);
 
     UIButton *pGameHigh = new UIButton(pVideoOptionsTab,120+((pVideoOptionsTab->getPosition().nWidth-120)/3)*2,236,GAMETEXT_HIGH,(pVideoOptionsTab->getPosition().nWidth-120)/3,28);
     pGameHigh->setType(UI_BUTTON_TYPE_RADIO);
@@ -333,6 +423,7 @@ namespace vapp {
     pGameHigh->enableWindow(true);
     pGameHigh->setFont(m_Renderer.getSmallFont());
     pGameHigh->setGroup(20025);
+    pGameHigh->setContextHelp(CONTEXTHELP_HIGH_GAME);
 
     //UIButton *pMenuGraphics = new UIButton(pVideoOptionsTab,5,180,"Run Windowed",(pVideoOptionsTab->getPosition().nWidth-40)/1,28);
     //pRunWindowed->setType(UI_BUTTON_TYPE_CHECK);
@@ -351,6 +442,7 @@ namespace vapp {
     pEnableAudioButton->setID("ENABLE_AUDIO");
     pEnableAudioButton->enableWindow(true);
     pEnableAudioButton->setFont(m_Renderer.getSmallFont());
+    pEnableAudioButton->setContextHelp(CONTEXTHELP_SOUND_ON);
     
     UIButton *pSampleRate11Button = new UIButton(pAudioOptionsTab,25,33,GAMETEXT_11KHZ,(pAudioOptionsTab->getPosition().nWidth-40)/3,28);
     pSampleRate11Button->setType(UI_BUTTON_TYPE_RADIO);
@@ -358,6 +450,7 @@ namespace vapp {
     pSampleRate11Button->enableWindow(true);
     pSampleRate11Button->setFont(m_Renderer.getSmallFont());
     pSampleRate11Button->setGroup(10023);
+    pSampleRate11Button->setContextHelp(CONTEXTHELP_11HZ);
     
     UIButton *pSampleRate22Button = new UIButton(pAudioOptionsTab,25 + ((pAudioOptionsTab->getPosition().nWidth-40)/3)*1,33,GAMETEXT_22KHZ,(pAudioOptionsTab->getPosition().nWidth-40)/3,28);
     pSampleRate22Button->setType(UI_BUTTON_TYPE_RADIO);
@@ -365,6 +458,7 @@ namespace vapp {
     pSampleRate22Button->enableWindow(true);
     pSampleRate22Button->setFont(m_Renderer.getSmallFont());
     pSampleRate22Button->setGroup(10023);
+    pSampleRate22Button->setContextHelp(CONTEXTHELP_22HZ);
     
     UIButton *pSampleRate44Button = new UIButton(pAudioOptionsTab,25 + ((pAudioOptionsTab->getPosition().nWidth-40)/3)*2,33,GAMETEXT_44KHZ,(pAudioOptionsTab->getPosition().nWidth-40)/3,28);
     pSampleRate44Button->setType(UI_BUTTON_TYPE_RADIO);
@@ -372,6 +466,7 @@ namespace vapp {
     pSampleRate44Button->enableWindow(true);
     pSampleRate44Button->setFont(m_Renderer.getSmallFont());
     pSampleRate44Button->setGroup(10023);
+    pSampleRate44Button->setContextHelp(CONTEXTHELP_44HZ);
 
     UIButton *pSample8Button = new UIButton(pAudioOptionsTab,25,61,GAMETEXT_8BIT,(pAudioOptionsTab->getPosition().nWidth-40)/3,28);
     pSample8Button->setType(UI_BUTTON_TYPE_RADIO);
@@ -379,6 +474,7 @@ namespace vapp {
     pSample8Button->enableWindow(true);
     pSample8Button->setFont(m_Renderer.getSmallFont());
     pSample8Button->setGroup(10024);
+    pSample8Button->setContextHelp(CONTEXTHELP_8BIT);
 
     UIButton *pSample16Button = new UIButton(pAudioOptionsTab,25 + ((pAudioOptionsTab->getPosition().nWidth-40)/3)*1,61,GAMETEXT_16BIT,(pAudioOptionsTab->getPosition().nWidth-40)/3,28);    
     pSample16Button->setType(UI_BUTTON_TYPE_RADIO);
@@ -386,6 +482,7 @@ namespace vapp {
     pSample16Button->enableWindow(true);
     pSample16Button->setFont(m_Renderer.getSmallFont());
     pSample16Button->setGroup(10024);
+    pSample16Button->setContextHelp(CONTEXTHELP_16BIT);
 
     UIButton *pMonoButton = new UIButton(pAudioOptionsTab,25,89,GAMETEXT_MONO,(pAudioOptionsTab->getPosition().nWidth-40)/3,28);
     pMonoButton->setType(UI_BUTTON_TYPE_RADIO);
@@ -393,6 +490,7 @@ namespace vapp {
     pMonoButton->enableWindow(true);
     pMonoButton->setFont(m_Renderer.getSmallFont());
     pMonoButton->setGroup(10025);
+    pMonoButton->setContextHelp(CONTEXTHELP_MONO);
     
     UIButton *pStereoButton = new UIButton(pAudioOptionsTab,25 + ((pAudioOptionsTab->getPosition().nWidth-40)/3)*1,89,GAMETEXT_STEREO,(pAudioOptionsTab->getPosition().nWidth-40)/3,28);
     pStereoButton->setType(UI_BUTTON_TYPE_RADIO);
@@ -400,12 +498,14 @@ namespace vapp {
     pStereoButton->enableWindow(true);
     pStereoButton->setFont(m_Renderer.getSmallFont());
     pStereoButton->setGroup(10025);
+    pStereoButton->setContextHelp(CONTEXTHELP_STEREO);
 
     UIButton *pEnableEngineSoundButton = new UIButton(pAudioOptionsTab,5,117,GAMETEXT_ENABLEENGINESOUND,pAudioOptionsTab->getPosition().nWidth-10,28);
     pEnableEngineSoundButton->setType(UI_BUTTON_TYPE_CHECK);
     pEnableEngineSoundButton->setID("ENABLE_ENGINE_SOUND");
     pEnableEngineSoundButton->enableWindow(true);
     pEnableEngineSoundButton->setFont(m_Renderer.getSmallFont());
+    pEnableEngineSoundButton->setContextHelp(CONTEXTHELP_ENGINE_SOUND);
     
     UIWindow *pControlsOptionsTab = new UIWindow(pOptionsTabs,20,40,GAMETEXT_CONTROLS,pOptionsTabs->getPosition().nWidth-40,pOptionsTabs->getPosition().nHeight);                  
     pControlsOptionsTab->enableWindow(true);
@@ -418,6 +518,7 @@ namespace vapp {
     pKeyboardControls->enableWindow(true);
     pKeyboardControls->setFont(m_Renderer.getSmallFont());
     pKeyboardControls->setGroup(200243);
+    //pKeyboardControls->setContextHelp("
 
     UIButton *pJoystickControls = new UIButton(pControlsOptionsTab,5 + ((pControlsOptionsTab->getPosition().nWidth-40)/2)*1,5,GAMETEXT_JOYSTICK,(pVideoOptionsTab->getPosition().nWidth-40)/2,28);
     pJoystickControls->setType(UI_BUTTON_TYPE_RADIO);
@@ -431,6 +532,7 @@ namespace vapp {
     pKeyCList->setFont(m_Renderer.getSmallFont());
     pKeyCList->addColumn(GAMETEXT_ACTION,pKeyCList->getPosition().nWidth/2);
     pKeyCList->addColumn(GAMETEXT_KEY,pKeyCList->getPosition().nWidth/2);
+    pKeyCList->setContextHelp(CONTEXTHELP_SELECT_ACTION);
 
     UIButton *pConfigureJoystick = new UIButton(pControlsOptionsTab,0,180,GAMETEXT_CONFIGUREJOYSTICK,207,57);
     pConfigureJoystick->setType(UI_BUTTON_TYPE_LARGE);
@@ -446,7 +548,7 @@ namespace vapp {
   pKeyCList->setPosition(5,5,pControlsOptionsTab->getPosition().nWidth-10,118);
 #endif
 
-    m_pLevelPacksWindow = new UIFrame(m_pMainMenu,300,(getDispHeight()*140)/600,"",getDispWidth()-300-20,getDispHeight()-40-(getDispHeight()*120)/600);      
+    m_pLevelPacksWindow = new UIFrame(m_pMainMenu,300,(getDispHeight()*140)/600,"",getDispWidth()-300-20,getDispHeight()-40-(getDispHeight()*120)/600-10);      
     m_pLevelPacksWindow->showWindow(false);
     pSomeText = new UIStatic(m_pLevelPacksWindow,0,0,GAMETEXT_LEVELPACKS,m_pLevelPacksWindow->getPosition().nWidth,36);
     pSomeText->setFont(m_Renderer.getMediumFont());    
@@ -454,6 +556,8 @@ namespace vapp {
     pOpenButton->setFont(m_Renderer.getSmallFont());
     pOpenButton->setType(UI_BUTTON_TYPE_SMALL);
     pOpenButton->setID("LEVELPACK_OPEN_BUTTON");
+    pOpenButton->setContextHelp(CONTEXTHELP_VIEW_LEVEL_PACK);
+    
     UIList *pLevelPackList = new UIList(m_pLevelPacksWindow,20,40,"",m_pLevelPacksWindow->getPosition().nWidth-40,m_pLevelPacksWindow->getPosition().nHeight-115);      
     pLevelPackList->setID("LEVELPACK_LIST");
     pLevelPackList->showWindow(true);
@@ -472,52 +576,64 @@ namespace vapp {
     pProfileList->setFont(m_Renderer.getSmallFont());
     pProfileList->addColumn(GAMETEXT_PLAYERPROFILE,128);      
     pProfileList->setID("PROFILE_LIST");
+    pProfileList->setContextHelp(CONTEXTHELP_SELECT_PLAYER_PROFILE);
     UIButton *pProfUseButton = new UIButton(m_pProfileEditor,450,50,GAMETEXT_USEPROFILE,207,57);
     pProfUseButton->setFont(m_Renderer.getSmallFont());
     pProfUseButton->setID("USEPROFILE_BUTTON");
+    pProfUseButton->setContextHelp(CONTEXTHELP_USE_PLAYER_PROFILE);
     UIButton *pProfNewButton = new UIButton(m_pProfileEditor,450,107,GAMETEXT_NEWPROFILE,207,57);
     pProfNewButton->setFont(m_Renderer.getSmallFont());
     pProfNewButton->setID("NEWPROFILE_BUTTON");
+    pProfNewButton->setContextHelp(CONTEXTHELP_CREATE_PLAYER_PROFILE);
     UIButton *pProfCancelButton = new UIButton(m_pProfileEditor,450,164,GAMETEXT_CLOSE,207,57);
     pProfCancelButton->setFont(m_Renderer.getSmallFont());
     pProfCancelButton->setID("CANCEL_BUTTON");
+    pProfCancelButton->setContextHelp(CONTEXTHELP_CLOSE_PROFILE_EDITOR);
     UIButton *pProfDeleteButton = new UIButton(m_pProfileEditor,450,423,GAMETEXT_DELETEPROFILE,207,57);
     pProfDeleteButton->setFont(m_Renderer.getSmallFont());
     pProfDeleteButton->setID("DELETEPROFILE_BUTTON");
+    pProfDeleteButton->setContextHelp(CONTEXTHELP_DELETE_PROFILE);
     pProfileList->setEnterButton( pProfUseButton );
     _CreateProfileList();
 
     /* Initialize level pack viewer */
     m_pLevelPackViewer = new UIFrame(m_Renderer.getGUI(),getDispWidth()/2-350,getDispHeight()/2-250,"",700,500); 
     m_pLevelPackViewer->setStyle(UI_FRAMESTYLE_TRANS);           
-    UIStatic *pLevelPackViewerTitle = new UIStatic(m_pLevelPackViewer,0,0,"(level pack name goes here)",700,50);
+    UIStatic *pLevelPackViewerTitle = new UIStatic(m_pLevelPackViewer,0,0,"(level pack name goes here)",700,40);
     pLevelPackViewerTitle->setID("LEVELPACK_VIEWER_TITLE");
     pLevelPackViewerTitle->setFont(m_Renderer.getMediumFont());
     UIList *pLevelPackLevelList = new UIList(m_pLevelPackViewer,20,50,"",400,430);
     pLevelPackLevelList->setFont(m_Renderer.getSmallFont());
     pLevelPackLevelList->addColumn(GAMETEXT_LEVEL,pLevelPackLevelList->getPosition().nWidth-128);      
     pLevelPackLevelList->addColumn(GAMETEXT_SCRIPTED,128);      
+    pLevelPackLevelList->setContextHelp(CONTEXTHELP_SELECT_LEVEL_IN_LEVEL_PACK);
     pLevelPackLevelList->setID("LEVELPACK_LEVEL_LIST");
     UIButton *pLevelPackPlay = new UIButton(m_pLevelPackViewer,450,50,GAMETEXT_STARTLEVEL,207,57);
     pLevelPackPlay->setFont(m_Renderer.getSmallFont());
     pLevelPackPlay->setID("LEVELPACK_PLAY_BUTTON");
+    pLevelPackPlay->setContextHelp(CONTEXTHELP_PLAY_SELECTED_LEVEL);
     UIButton *pLevelPackInfo = new UIButton(m_pLevelPackViewer,450,107,GAMETEXT_LEVELINFO,207,57);
     pLevelPackInfo->setFont(m_Renderer.getSmallFont());
     pLevelPackInfo->setID("LEVELPACK_INFO_BUTTON");
+    pLevelPackInfo->setContextHelp(CONTEXTHELP_LEVEL_INFO);
     UIButton *pLevelPackCancel = new UIButton(m_pLevelPackViewer,450,164,GAMETEXT_CLOSE,207,57);
     pLevelPackCancel->setFont(m_Renderer.getSmallFont());
     pLevelPackCancel->setID("LEVELPACK_CANCEL_BUTTON");
+    pLevelPackCancel->setContextHelp(CONTEXTHELP_CLOSE_LEVEL_PACK);
     pLevelPackLevelList->setEnterButton( pLevelPackPlay );
 
     /* Initialize level info viewer */
     m_pLevelInfoViewer = new UIFrame(m_Renderer.getGUI(),getDispWidth()/2-350,getDispHeight()/2-250,"",700,500); 
     m_pLevelInfoViewer->setStyle(UI_FRAMESTYLE_TRANS);
-    UIStatic *pLevelInfoViewerTitle = new UIStatic(m_pLevelInfoViewer,0,0,"(level name goes here)",700,50);
+    UIStatic *pLevelInfoViewerTitle = new UIStatic(m_pLevelInfoViewer,0,0,"(level name goes here)",700,40);
     pLevelInfoViewerTitle->setID("LEVEL_VIEWER_TITLE");  
     pLevelInfoViewerTitle->setFont(m_Renderer.getMediumFont());
     UITabView *pLevelViewerTabs = new UITabView(m_pLevelInfoViewer,20,40,"",m_pLevelInfoViewer->getPosition().nWidth-40,m_pLevelInfoViewer->getPosition().nHeight-115);
     pLevelViewerTabs->setFont(m_Renderer.getSmallFont());
     pLevelViewerTabs->setID("LEVEL_VIEWER_TABS");  
+    pLevelViewerTabs->setTabContextHelp(0,CONTEXTHELP_GENERAL_INFO);
+    pLevelViewerTabs->setTabContextHelp(1,CONTEXTHELP_BEST_TIMES_INFO);
+    pLevelViewerTabs->setTabContextHelp(2,CONTEXTHELP_REPLAYS_INFO);
     UIWindow *pLVTab_Info = new UIWindow(pLevelViewerTabs,20,40,GAMETEXT_GENERALINFO,pLevelViewerTabs->getPosition().nWidth-40,pLevelViewerTabs->getPosition().nHeight-60);
     pLVTab_Info->enableWindow(true);
     pLVTab_Info->setID("LEVEL_VIEWER_GENERALINFO_TAB");
@@ -533,6 +649,7 @@ namespace vapp {
     pOKButton->setFont(m_Renderer.getSmallFont());
     pOKButton->setType(UI_BUTTON_TYPE_SMALL);
     pOKButton->setID("LEVEL_VIEWER_OK_BUTTON");
+    pOKButton->setContextHelp(CONTEXTHELP_BACK_TO_MAIN_MENU);
     
     /* Level info viewer - general info */
     UIStatic *pLV_Info_LevelName = new UIStatic(pLVTab_Info,0,0,"(level name goes here)",pLVTab_Info->getPosition().nWidth,40);
@@ -568,6 +685,7 @@ namespace vapp {
     pLV_BestTimes_Personal->setChecked(true);
     pLV_BestTimes_Personal->setFont(m_Renderer.getSmallFont());
     pLV_BestTimes_Personal->setGroup(421023);
+    pLV_BestTimes_Personal->setContextHelp(CONTEXTHELP_ONLY_SHOW_PERSONAL_BESTS);
     UIButton *pLV_BestTimes_All = new UIButton(pLVTab_BestTimes,5 + ((pLVTab_BestTimes->getPosition().nWidth-40)/2)*1,5,GAMETEXT_ALL,(pLVTab_BestTimes->getPosition().nWidth-40)/2,28);
     pLV_BestTimes_All->setType(UI_BUTTON_TYPE_RADIO);
     pLV_BestTimes_All->setID("LEVEL_VIEWER_BESTTIMES_ALL");
@@ -575,11 +693,18 @@ namespace vapp {
     pLV_BestTimes_All->setChecked(false);
     pLV_BestTimes_All->setFont(m_Renderer.getSmallFont());
     pLV_BestTimes_All->setGroup(421023);
-    UIList *pLV_BestTimes_List= new UIList(pLVTab_BestTimes,5,43,"",pLVTab_BestTimes->getPosition().nWidth-10,pLVTab_BestTimes->getPosition().nHeight-43);
+    pLV_BestTimes_All->setContextHelp(CONTEXTHELP_SHOW_ALL_BESTS);
+    
+    UIList *pLV_BestTimes_List= new UIList(pLVTab_BestTimes,5,43,"",pLVTab_BestTimes->getPosition().nWidth-10,pLVTab_BestTimes->getPosition().nHeight-100);
     pLV_BestTimes_List->setID("LEVEL_VIEWER_BESTTIMES_LIST");
     pLV_BestTimes_List->setFont(m_Renderer.getSmallFont());
     pLV_BestTimes_List->addColumn(GAMETEXT_FINISHTIME,128);
     pLV_BestTimes_List->addColumn(GAMETEXT_PLAYER,pLV_BestTimes_List->getPosition().nWidth-128);    
+    UIStatic *pLV_BestTimes_WorldRecord = new UIStatic(pLVTab_BestTimes,5,pLVTab_BestTimes->getPosition().nHeight-50,"",pLVTab_BestTimes->getPosition().nWidth,50);
+    pLV_BestTimes_WorldRecord->setID("LEVEL_VIEWER_BESTTIMES_WORLDRECORD");
+    pLV_BestTimes_WorldRecord->setFont(m_Renderer.getSmallFont());
+    pLV_BestTimes_WorldRecord->setVAlign(UI_ALIGN_CENTER);
+    pLV_BestTimes_WorldRecord->setHAlign(UI_ALIGN_LEFT);
 
     /* Level info viewer - replays */
     UIButton *pLV_Replays_Personal = new UIButton(pLVTab_Replays,5,5,GAMETEXT_PERSONAL,(pLVTab_Replays->getPosition().nWidth-40)/2,28);
@@ -589,6 +714,7 @@ namespace vapp {
     pLV_Replays_Personal->setChecked(false);
     pLV_Replays_Personal->setFont(m_Renderer.getSmallFont());
     pLV_Replays_Personal->setGroup(421024);
+    pLV_Replays_Personal->setContextHelp(CONTEXTHELP_ONLY_SHOW_PERSONAL_REPLAYS);
     UIButton *pLV_Replays_All = new UIButton(pLVTab_Replays,5 + ((pLVTab_Replays->getPosition().nWidth-40)/2)*1,5,GAMETEXT_ALL,(pLVTab_Replays->getPosition().nWidth-40)/2,28);
     pLV_Replays_All->setType(UI_BUTTON_TYPE_RADIO);
     pLV_Replays_All->setID("LEVEL_VIEWER_REPLAYS_ALL");
@@ -596,6 +722,8 @@ namespace vapp {
     pLV_Replays_All->setChecked(true);
     pLV_Replays_All->setFont(m_Renderer.getSmallFont());
     pLV_Replays_All->setGroup(421024);
+    pLV_Replays_All->setContextHelp(CONTEXTHELP_SHOW_ALL_REPLAYS);
+    
     UIList *pLV_Replays_List= new UIList(pLVTab_Replays,5,43,"",pLVTab_Replays->getPosition().nWidth-10,pLVTab_Replays->getPosition().nHeight-100);
     pLV_Replays_List->setID("LEVEL_VIEWER_REPLAYS_LIST");
     pLV_Replays_List->setFont(m_Renderer.getSmallFont());
@@ -606,6 +734,7 @@ namespace vapp {
     pLV_Replays_Show->setFont(m_Renderer.getSmallFont());
     pLV_Replays_Show->setType(UI_BUTTON_TYPE_SMALL);
     pLV_Replays_Show->setID("LEVEL_VIEWER_REPLAYS_SHOW");
+    pLV_Replays_Show->setContextHelp(CONTEXTHELP_RUN_SELECTED_REPLAY);
     pLV_Replays_List->setEnterButton( pLV_Replays_Show );
     
     /* Hide menus */
@@ -643,8 +772,10 @@ namespace vapp {
     UIList *pList = (UIList *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_BESTTIMES_TAB:LEVEL_VIEWER_BESTTIMES_LIST");
     UIButton *pLV_BestTimes_Personal = (UIButton *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_BESTTIMES_TAB:LEVEL_VIEWER_BESTTIMES_PERSONAL");
     UIButton *pLV_BestTimes_All = (UIButton *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_BESTTIMES_TAB:LEVEL_VIEWER_BESTTIMES_ALL");
+    UIStatic *pLV_BestTimes_WorldRecord = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_BESTTIMES_TAB:LEVEL_VIEWER_BESTTIMES_WORLDRECORD");
 
-    if(pList != NULL && pLV_BestTimes_All != NULL && pLV_BestTimes_Personal != NULL && m_pPlayer != NULL) {
+    if(pList != NULL && pLV_BestTimes_All != NULL && pLV_BestTimes_Personal != NULL && m_pPlayer != NULL &&
+       pLV_BestTimes_WorldRecord != NULL) {
       std::vector<PlayerTimeEntry *> Top10;
       
       /* Good. Personal times or all times? */
@@ -661,6 +792,23 @@ namespace vapp {
         UIListEntry *pEntry = pList->addEntry(formatTime(Top10[i]->fFinishTime));
         pEntry->Text.push_back(Top10[i]->PlayerName);
       }            
+      
+      /* Get record */
+      if(m_bEnableWebHighscores) {
+        WebHighscore *pWebHS = m_WebHighscores.getHighscoreFromLevel(LevelID);
+        if(pWebHS != NULL) {
+          char cTime[512];
+          int n1=0,n2=0,n3=0;
+          
+          sscanf(pWebHS->getTime().c_str(),"%d:%d:%d",&n1,&n2,&n3);
+          sprintf(cTime,GAMETEXT_WORLDRECORD "%02d:%02d:%02d (" GAMETEXT_BY " %s)",n1,n2,n3,pWebHS->getPlayerName().c_str());
+          pLV_BestTimes_WorldRecord->setCaption(cTime);
+        }        
+        else
+          pLV_BestTimes_WorldRecord->setCaption(GAMETEXT_WORLDRECORD GAMETEXT_NONE);
+      }
+      else
+        pLV_BestTimes_WorldRecord->setCaption(GAMETEXT_WORLDRECORD GAMETEXT_NA);
     }
   }
 
@@ -1306,6 +1454,12 @@ namespace vapp {
           m_pReplaysWindow->showWindow(false);
           m_pPlayWindow->showWindow(false);
           m_pLevelPacksWindow->showWindow(false);                    
+        
+          if(_FindLevelByID("tut1") == NULL) {
+            /* Tutorial not found, disable button */
+            UIButton *pTutButton = (UIButton *)m_pHelpWindow->getChild("HELP_TUTORIAL_BUTTON");
+            pTutButton->enableWindow(false);
+          }
         }
         else if(m_pMainMenuButtons[i]->getCaption() == GAMETEXT_REPLAYS) {
           if(m_pReplaysWindow->isHidden()) _UpdateReplaysList();
@@ -1384,6 +1538,8 @@ namespace vapp {
     }
     
     /* OPTIONS */
+    UIButton *pWebHighscores = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:ENABLEWEBHIGHSCORES");
+    UIButton *pInGameWorldRecord = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:INGAMEWORLDRECORD");
     UIButton *pEnableAudioButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_AUDIO");
     UIButton *p11kHzButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:RATE11KHZ");
     UIButton *p22kHzButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:RATE22KHZ");
@@ -1393,6 +1549,11 @@ namespace vapp {
     UIButton *pMonoButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:MONO");
     UIButton *pStereoButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:STEREO");
     UIButton *pEnableEngineSoundButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_ENGINE_SOUND");
+    
+    if(pInGameWorldRecord && pWebHighscores) {
+      bool t=pWebHighscores->getChecked();
+      pInGameWorldRecord->enableWindow(t);      
+    }
 
     if(pEnableAudioButton) {
       bool t=pEnableAudioButton->getChecked();
@@ -1443,6 +1604,21 @@ namespace vapp {
     
     if(pConfigJoystick && pConfigJoystick->isClicked()) {
       _ConfigureJoystick();
+    }
+    
+    /* HELP */
+    UIButton *pTutorialButton = (UIButton *)m_pHelpWindow->getChild("HELP_TUTORIAL_BUTTON");
+    if(pTutorialButton && pTutorialButton->isClicked()) {
+      pTutorialButton->setClicked(false);
+      
+      /* Find first tutorial level */
+      LevelSrc *pLevelSrc = _FindLevelByID("tut1");
+      if(pLevelSrc != NULL) {
+        m_pMainMenu->showWindow(false);      
+        m_PlaySpecificLevel = pLevelSrc->getID();
+        m_StateAfterPlaying = GS_MENU;
+        setState(GS_PLAYING);
+      }
     }
     
     /* PLAY */
@@ -1807,6 +1983,8 @@ namespace vapp {
   ===========================================================================*/
   void GameApp::_ImportOptions(void) {
     UIButton *pShowMiniMap = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:SHOWMINIMAP");
+    UIButton *pWebHighscores = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:ENABLEWEBHIGHSCORES");
+    UIButton *pInGameWorldRecord = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:INGAMEWORLDRECORD");
   
     UIButton *pEnableAudioButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_AUDIO");
     UIButton *p11kHzButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:RATE11KHZ");
@@ -1855,6 +2033,8 @@ namespace vapp {
     pJoystickControl->setChecked(false);
     
     pShowMiniMap->setChecked(m_Config.getBool("ShowMiniMap"));
+    pWebHighscores->setChecked(m_Config.getBool("WebHighscores"));
+    pInGameWorldRecord->setChecked(m_Config.getBool("ShowInGameWorldRecord"));
     
     pEnableAudioButton->setChecked(m_Config.getBool("AudioEnable"));
 
@@ -1946,6 +2126,8 @@ namespace vapp {
 
     /* The following require restart */
     m_Config.setChanged(false);      
+
+    m_Config.setValue("WebHighscores",m_Config.getDefaultValue("WebHighscores"));
         
     m_Config.setValue("AudioEnable",m_Config.getDefaultValue("AudioEnable"));
     m_Config.setValue("AudioSampleRate",m_Config.getDefaultValue("AudioSampleRate"));
@@ -1970,7 +2152,9 @@ namespace vapp {
   void GameApp::_SaveOptions(void) {
     bool bNotify = false;
   
+    UIButton *pInGameWorldRecord = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:INGAMEWORLDRECORD");
     UIButton *pShowMiniMap = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:SHOWMINIMAP");
+    UIButton *pWebHighscores = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:ENABLEWEBHIGHSCORES");
 
     UIButton *pEnableAudioButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_AUDIO");
     UIButton *p11kHzButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:RATE11KHZ");
@@ -1999,6 +2183,7 @@ namespace vapp {
 
     /* First all those which don't need a restart */
     m_Config.setBool("ShowMiniMap",pShowMiniMap->getChecked());
+    m_Config.setBool("ShowInGameWorldRecord",pInGameWorldRecord->getChecked());
     
     if(pMenuLow->getChecked()) m_Config.setString("MenuBackgroundGraphics","Low");
     else if(pMenuMed->getChecked()) m_Config.setString("MenuBackgroundGraphics","Medium");
@@ -2023,6 +2208,9 @@ namespace vapp {
             
     /* The following require restart */
     m_Config.setChanged(false);      
+
+    m_Config.setBool("WebHighscores",pWebHighscores->getChecked());
+
     m_Config.setBool("AudioEnable",pEnableAudioButton->getChecked());
     
     if(p11kHzButton->getChecked()) m_Config.setInteger("AudioSampleRate",11025);

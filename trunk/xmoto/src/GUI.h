@@ -220,6 +220,7 @@ namespace vapp {
       virtual bool keyDown(int nKey,int nChar) {return false;}
       virtual bool keyUp(int nKey) {return false;}
       virtual bool offerActivation(void) {return false;}
+      virtual std::string subContextHelp(int x,int y) {return "";}
 
       /* Painting */            
       void putText(int x,int y,std::string Text);      
@@ -278,6 +279,8 @@ namespace vapp {
       void setActive(bool b) {m_bActive = b;}
       int getGroup(void) {return m_nGroup;}
       void setGroup(int n) {m_nGroup = n;}
+      void setContextHelp(const std::string &s) {m_ContextHelp = s;}
+      const std::string &getContextHelp(void) {return m_ContextHelp;}
     
     protected:
       /* Protected interface */
@@ -289,6 +292,7 @@ namespace vapp {
     
     private:
       /* Data */
+      std::string m_ContextHelp;                /* Context help */
       UIWindow *m_pPrimaryChild;                /* If !=null, this child is activated when
                                                    the window transists from "hidden" to "shown". 
                                                    useful for specifying "default" buttons in menus */
@@ -628,6 +632,9 @@ namespace vapp {
       virtual void mouseRDown(int x,int y);
       virtual void mouseRUp(int x,int y);
       virtual void mouseHover(int x,int y);      
+      virtual std::string subContextHelp(int x,int y);
+      
+      void setTabContextHelp(int nTab,const std::string &s);
       
       /* Data interface */      
       UIWindow *getSelected(void) {
@@ -639,6 +646,7 @@ namespace vapp {
     private:
       /* Data */
       int m_nSelected;
+      std::vector<std::string> m_TabContextHelp;
   };
 
 	/*===========================================================================
@@ -668,7 +676,7 @@ namespace vapp {
   class UIRoot : public UIWindow {
     public:
       UIRoot() {
-        _InitWindow();
+        _InitWindow();        
       }
     
       /* Methods */
@@ -682,17 +690,24 @@ namespace vapp {
       virtual void mouseWheelUp(int x,int y);
       virtual void mouseWheelDown(int x,int y);
       virtual bool keyDown(int nKey,int nChar);      
-      virtual bool keyUp(int nKey);      
+      virtual bool keyUp(int nKey);  
       
       void deactivate(UIWindow *pWindow);
+      
+      void enableContextMenuDrawing(bool b) {m_bShowContextMenu=b;}
+      void clearContext(void) {m_CurrentContextHelp = "";}
       
       void activateUp(void);
       void activateDown(void);
       void activateLeft(void);
       void activateRight(void);
-      
+            
     private:
-      /* Helpers */
+      /* Data */
+      bool m_bShowContextMenu;
+      std::string m_CurrentContextHelp;
+            
+      /* Helpers */      
       bool _RootKeyEvent(UIWindow *pWindow,UIRootKeyEvent Event,int nKey,int nChar);
       bool _RootMouseEvent(UIWindow *pWindow,UIRootMouseEvent Event,int x,int y);
       void _RootPaint(int x,int y,UIWindow *pWindow,UIRect *pRect);

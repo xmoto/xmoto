@@ -90,6 +90,7 @@ namespace vapp {
              m_fNextFrame=0.0f;
              m_bNoGraphics=false;                         
              m_bDontUseGLExtensions=false;
+             m_nFrameDelay=0;
               
              m_bCmdDispWidth=false;
              m_bCmdDispHeight=false;
@@ -111,14 +112,15 @@ namespace vapp {
       void setAppName(const std::string &i) {m_AppName=i;}
       void setCopyrightInfo(const std::string &i) {m_CopyrightInfo=i;}
       void setAppCommand(const std::string &i) {m_AppCommand=i;}
-      void setFPS(float i) {m_fFramesPerSecond=i;}
+      void setFPS(float i) {m_fFramesPerSecond=i;}      
             
       double getTime(void); 
       double getRealTime(void);
       std::string getTimeStamp(void);
       void quit(void);      
       std::string formatTime(float fSecs);
-      void getMousePos(int *pnX,int *pnY);            
+      void getMousePos(int *pnX,int *pnY);        
+      bool haveMouseMoved(void);    
     
 //#if defined(EMUL_800x600)      
 //      int getDispWidth(void) {return 800;}
@@ -127,6 +129,8 @@ namespace vapp {
       int getDispWidth(void) {return m_nDispWidth;}
       int getDispHeight(void) {return m_nDispHeight;}
 //#endif
+
+      void setFrameDelay(int nDelay) {m_nFrameDelay=nDelay;}
 
       void scissorGraphics(int x,int y,int nWidth,int nHeight);
       void getScissorGraphics(int *px,int *py,int *pnWidth,int *pnHeight);
@@ -182,6 +186,8 @@ namespace vapp {
       void _ParseArgs(int nNumArgs,char **ppcArgs);
       
       /* Data */
+      int m_nFrameDelay; /* # of millisecs to wait after screen buffer swap */
+      
       int m_nDispWidth,m_nDispHeight,m_nDispBPP; /* Screen stuff */
       bool m_bWindowed;         /* Windowed or not */
       float m_fFramesPerSecond; /* Force this FPS */

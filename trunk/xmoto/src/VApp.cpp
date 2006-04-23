@@ -218,11 +218,22 @@ namespace vapp {
       if(!isNoGraphics()) {
         /* Swap buffers */
         SDL_GL_SwapBuffers();
+        
+        /* Does app want us to delay a bit after the frame? */
+        if(m_nFrameDelay > 0)
+          SDL_Delay(m_nFrameDelay);
       }
     }
     
     /* Shutdown */
     _Uninit();
+  }
+
+  bool App::haveMouseMoved(void) {
+    int nX,nY;
+    SDL_GetRelativeMouseState(&nX,&nY);
+    if(nX || nY) return true;
+    return false;
   }
 
   void App::getMousePos(int *pnX,int *pnY) {

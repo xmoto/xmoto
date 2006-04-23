@@ -524,7 +524,8 @@ namespace vapp {
                   getParent()->getDispHeight()/2 - (float)(pArrow->ArrowPointerPos.y + m_Scroll.y)*m_fZoom);      
       }
       else if(pArrow->nArrowPointerMode == 2) {          
-        C=pArrow->ArrowPointerPos;
+        C.x=(getParent()->getDispWidth() * pArrow->ArrowPointerPos.x) / 800.0f;
+        C.y=(getParent()->getDispHeight() * pArrow->ArrowPointerPos.y) / 600.0f;
       }
       Vector2f p1,p2,p3,p4;
       p1 = Vector2f(1,0); p1.rotateXY(pArrow->fArrowPointerAngle);
@@ -609,6 +610,8 @@ namespace vapp {
            Vector2f(-pType->Center.x,-pType->Center.y);
             
       glEnable(GL_BLEND); 
+      glEnable(GL_ALPHA_TEST);
+      glAlphaFunc(GL_GEQUAL,0.5f);
       glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
       glBindTexture(GL_TEXTURE_2D,GLName);
       glEnable(GL_TEXTURE_2D);
@@ -624,6 +627,7 @@ namespace vapp {
       _Vertex(p3);
       glEnd();
       glDisable(GL_TEXTURE_2D);
+      glDisable(GL_ALPHA_TEST);
       glDisable(GL_BLEND);
 
       /* Debug mode? */

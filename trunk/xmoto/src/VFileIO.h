@@ -146,10 +146,15 @@ namespace vapp {
       static bool isDir(std::string AppDir);
       static bool isPathAbsolute(std::string Path);
       
+      static int mkDir(const char *pcPath);
+      
       /* Data interfaces */
       static std::string getUserDir(void) {return m_UserDir;}
       static std::string getDataDir(void) {return m_DataDir;}
       static bool isDataDirAvailable(void) {return m_bGotDataDir;}
+      
+      static const std::string getReplaysDir(void) {return m_UserDir + std::string("/Replays");}
+      static const std::string getLevelsDir(void) {return m_UserDir + std::string("/Levels");}
     
     private:
       /* Helper functions */

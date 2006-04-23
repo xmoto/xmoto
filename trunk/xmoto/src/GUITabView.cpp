@@ -137,6 +137,34 @@ namespace vapp {
     }
   }
   
+  void UITabView::setTabContextHelp(int nTab,const std::string &s) {
+    if(nTab >= m_TabContextHelp.size()) {
+      m_TabContextHelp.resize(nTab+1);
+      m_TabContextHelp[nTab] = s;
+    }
+  }
+  
+  std::string UITabView::subContextHelp(int x,int y) {
+    /* Oh... cursor inside a tab-button? */
+    int nHeaderHeight=24;
+    int nCX = 8;
+    int nCY = (2*nHeaderHeight)/3;    
+
+    for(int i=0;i<getChildren().size();i++) {
+      int x1,x2;    
+      getTextExt(getChildren()[i]->getCaption(),&x1,NULL,&x2,NULL);      
+      if(x >= nCX-8 && y >= -4 && x < nCX+16+(x2-x1) && y < nHeaderHeight) {
+        /* This one! */
+        if(i<m_TabContextHelp.size())
+          return m_TabContextHelp[i];
+        return "";
+      }
+      nCX += (x2-x1) + 18;
+    }
+    
+    return "";
+  }
+  
   void UITabView::mouseLUp(int x,int y) {
   }
   

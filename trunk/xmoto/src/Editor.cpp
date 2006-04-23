@@ -371,6 +371,9 @@ namespace vapp {
               pBlock->fTextureScale = 1.0f;              
               pBlock->ID = _CreateBlockName();
               pBlock->Texture = "default";
+              
+              //float ff = 0;
+              
               for(int i=0;i<m_NewBlockX.size();i++) {
                 LevelBlockVertex *pVertex = new LevelBlockVertex;
                 pBlock->Vertices.push_back( pVertex );
@@ -383,7 +386,22 @@ namespace vapp {
                 pVertex->b = 255;
                 pVertex->a = 255;
                 pVertex->bSelected = false;
+                
+                //int inext = i+1;
+//                int iprev = i-1;
+                //if(inext >= m_NewBlockX.size()) inext = 0;
+//                if(iprev < 0) iprev = m_NewBlockX.size()-1;
+                
+                //float ffX1 = m_NewBlockX[i] - pBlock->fPosX;
+                //float ffY1 = m_NewBlockY[i] - pBlock->fPosY;
+                //float ffX2 = m_NewBlockX[inext] - pBlock->fPosX;
+                //float ffY2 = m_NewBlockY[inext] - pBlock->fPosY;
+                //
+                //ff += ffX1*ffX2 + ffY1*ffY2;
               }
+              
+              //printf("[%f]\n",ff);
+              
               setState(ES_DEFAULT);
             }
             else {
@@ -419,7 +437,7 @@ namespace vapp {
             TextureSelectionTool Sel;
             std::vector<Texture *> TexList;
             
-            /* Only list textures tagget with "BLK" */
+            /* Only list textures tagged with "BLK" */
             TexList = TexMan.fetchTaggedTextures("BLK");
             
             Vector2f A=Vector2f(17,17);

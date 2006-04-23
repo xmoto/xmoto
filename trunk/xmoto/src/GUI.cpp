@@ -631,17 +631,46 @@ FRAME_BR (187,198) (8x8)
   void UIRoot::paint(void) {
     UIRect Screen;
     
+    /* Clip to full screen */
     Screen.nX = 0;
     Screen.nY = 0;
     Screen.nWidth = getApp()->getDispWidth();
     Screen.nHeight = getApp()->getDispHeight();
       
+    /* Draw root's children */
     glEnable(GL_SCISSOR_TEST);
 
     for(int i=0;i<getChildren().size();i++)
       _RootPaint(0,0,getChildren()[i],&Screen);
 
     glDisable(GL_SCISSOR_TEST);
+
+    /* Context help? */
+    if(m_bShowContextMenu) {
+      int nContextHelpHeight = 20;
+      
+      /* Shade out bottom of screen */
+      glEnable(GL_BLEND);
+      glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+      glBegin(GL_POLYGON);
+      glColor4f(0,0,0,0);
+      getApp()->glVertex(0,getApp()->getDispHeight()-nContextHelpHeight);
+      getApp()->glVertex(getApp()->getDispWidth(),getApp()->getDispHeight()-nContextHelpHeight);
+      glColor4f(0,0,0,0.7);
+      getApp()->glVertex(getApp()->getDispWidth(),getApp()->getDispHeight());
+      getApp()->glVertex(0,getApp()->getDispHeight());
+      glEnd();
+      glDisable(GL_BLEND);
+        
+      if(!m_CurrentContextHelp.empty()) {
+        /* Print help string */
+        int nX1,nY1,nX2,nY2;
+        getTextExt(m_CurrentContextHelp,&nX1,&nY1,&nX2,&nY2);
+        
+        UITextDraw::printRaw(getFont(),getApp()->getDispWidth()-(nX2-nY1),getApp()->getDispHeight()-5,
+                            m_CurrentContextHelp,MAKE_COLOR(255,255,0,255));
+      }
+    }
   }
   
   void UIRoot::mouseLDown(int x,int y) {
@@ -759,7 +788,20 @@ FRAME_BR (187,198) (8x8)
           case UI_ROOT_MOUSE_RBUTTON_DOWN: pWindow->mouseRDown(wx,wy); break;
           case UI_ROOT_MOUSE_LBUTTON_UP: pWindow->mouseLUp(wx,wy); break;
           case UI_ROOT_MOUSE_RBUTTON_UP: pWindow->mouseRUp(wx,wy); break;
-          case UI_ROOT_MOUSE_HOVER: pWindow->mouseHover(wx,wy); break;
+          case UI_ROOT_MOUSE_HOVER: {              
+              /* Post mouse-hover event to window */
+              pWindow->mouseHover(wx,wy); 
+              
+              /* By the way, does it want to offer context-help? (only 
+                 if mouse have actually moved) */
+              if(getApp()->haveMouseMoved()) {
+                std::string SubCHelp = pWindow->subContextHelp(wx,wy);
+                if(SubCHelp != "") m_CurrentContextHelp = SubCHelp;
+                else m_CurrentContextHelp = pWindow->getContextHelp();
+              }
+              
+              break;
+            }
           case UI_ROOT_MOUSE_WHEEL_UP: pWindow->mouseWheelUp(wx,wy); break;
           case UI_ROOT_MOUSE_WHEEL_DOWN: pWindow->mouseWheelDown(wx,wy); break;
           case UI_ROOT_MOUSE_DOUBLE_CLICK: pWindow->mouseLDoubleClick(wx,wy); break;
@@ -1166,13 +1208,19 @@ FRAME_BR (187,198) (8x8)
         if(nBest>=0) {
           deactivate(this);
           Map[nBest].pWindow->setActive(true);          
+          
+          m_CurrentContextHelp = Map[nBest].pWindow->getContextHelp();
         }
         else {
           deactivate(this);
-          if(dx<0 || dy<0)
+          if(dx<0 || dy<0) {
             Map[0].pWindow->setActive(true);
-          else if(dx>0 || dy>0)
+            m_CurrentContextHelp = Map[0].pWindow->getContextHelp();
+          }
+          else if(dx>0 || dy>0) {
             Map[nNum-1].pWindow->setActive(true);
+            m_CurrentContextHelp = Map[nNum-1].pWindow->getContextHelp();
+          }
         }
       }
     }

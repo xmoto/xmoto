@@ -2,7 +2,21 @@ X-Moto 0.1.13 (alpha) 2006-
 --------------------------------
 
  * Level files are now cached for much faster loading time.
-
+ * Integration with Nicolas Adenis-Lamarre's high-score website; World 
+   records can now be seen inside the game.
+ * New library requirement: libcurl.
+ * Slight physics adjustment: It should no longer be possible to fall
+   through the ground when standing still. Stay calm, this should NOT 
+   affect the gameplay.
+ * Alpha-testing enabled for sprites; which are less fuzzy looking 
+   now. Also looks better with anti-aliasing.
+ * Context help in the menus.
+ * It's now possible to see what level you're playing.
+ * Less retarded usage of SDL_Delay(), UI more responsive.
+ * Fixed bug that made it difficult to click tabs in level info 
+   viewer.
+ * Various minor changes and several other small bugs fixed.
+ 
 X-Moto 0.1.12 (alpha) 2006-04-09
 --------------------------------
 
@@ -106,7 +120,7 @@ X-Moto 0.1.8 (alpha)  2005-11-06
  * Custom mouse cursor, the standard SDL one caused some problems for
    some people.
  * Major code clean up and several bug-fixes.
- * Much more program documntation in README.
+ * Much more program documentation in README.
  * List columns are now clipped properly.
 
 X-Moto 0.1.7 (alpha)  2005-10-27

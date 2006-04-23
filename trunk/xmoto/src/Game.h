@@ -34,6 +34,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "PlayerData.h"
 #include "Sound.h"
 #include "Input.h"
+#include "WebHighscores.h"
+#include "WebHSAppInterface.h"
 
 namespace vapp {
 
@@ -73,8 +75,9 @@ namespace vapp {
 	/*===========================================================================
 	Game application
   ===========================================================================*/
-  class GameApp : public App {
+  class GameApp : public App, public WebHSAppInterface {
     public:
+      virtual ~GameApp() {}
       GameApp() {m_bShowMiniMap=true;
                  m_bDebugMode=false;
                  m_bListLevels=false;
@@ -92,6 +95,7 @@ namespace vapp {
                  m_pLevelPacksWindow=NULL;
                  m_pLevelPackViewer=NULL;  
                  m_pActiveLevelPack=NULL;
+                 m_pGameInfoWindow=NULL;
                  m_b50FpsMode = false;
                  m_bUglyMode = false;
                  m_pReplay = NULL;
@@ -100,7 +104,16 @@ namespace vapp {
                  m_bEnableEngineSound = true;
                  m_bCompressReplays = true;
                  m_bBenchmark = false;
+                 m_bEnableWebHighscores = true;
+                 m_bShowWebHighscoreInGame = false;
                  }
+                 
+      /* WebHSAppInterface implementation */ 
+      virtual void beginTask(WebHSTask Task);
+      virtual void setTaskProgress(float fPercent);
+      virtual void endTask(void);
+      
+      virtual bool doesLevelExist(const std::string &LevelID); 
         
       /* Virtual methods */
       virtual void drawFrame(void);
@@ -115,7 +128,6 @@ namespace vapp {
       virtual void parseUserArgs(std::vector<std::string> &UserArgs);
       virtual void helpUserArgs(void);
       virtual void selectDisplayMode(int *pnWidth,int *pnHeight,int *pnBPP,bool *pbWindowed);
-
       
       /* Methods */
       void setState(GameState s);
@@ -127,6 +139,8 @@ namespace vapp {
       /* Data */
       std::vector<LevelPack *> m_LevelPacks;    /* Level packs */
       
+      bool m_bShowWebHighscoreInGame;           /* true: Show world highscore inside the game */
+      bool m_bEnableWebHighscores;              /* true: Read world highscores from website */
       bool m_bBenchmark;                        /* true: Test game performance */
       bool m_bShowFrameRate;                    /* true: frame rate */
       bool m_bListLevels;                       /* true: list installed levels */
@@ -165,6 +179,9 @@ namespace vapp {
       Replay *m_pReplay;
       std::string m_ReplayPlayerName;
       
+      /* Web-highscores */
+      WebHighscores m_WebHighscores;
+      
       /* Sound effects */
       SoundSample *m_pEndOfLevelSFX;
       SoundSample *m_pStrawberryPickupSFX;
@@ -186,6 +203,7 @@ namespace vapp {
       UIFrame *m_pOptionsWindow,*m_pHelpWindow,*m_pPlayWindow,*m_pReplaysWindow,*m_pLevelPacksWindow;
       UIWindow *m_pMainMenu;
       UIMsgBox *m_pDeleteReplayMsgBox;
+      UIFrame *m_pGameInfoWindow;
             
       /* In-game PAUSE menu fun */
       UIFrame *m_pPauseMenu;
@@ -235,6 +253,7 @@ namespace vapp {
       float m_fCurrentReplayFrameRate;
             
       /* Helpers */
+      void _UpdateWorldRecord(const std::string &LevelID);
       LevelSrc *_FindLevelByID(std::string ID);
       void _HandleMainMenu(void);  
       void _HandlePauseMenu(void);
@@ -268,7 +287,7 @@ namespace vapp {
       void _GameScreenshot(void);
       void _SaveReplay(const std::string &Name);
     
-      void _UpdateLoadingScreen(float fDone,Texture *pScreen);      
+      void _UpdateLoadingScreen(float fDone,Texture *pScreen,const std::string &NextTask);      
       
       void _SimpleMessage(const std::string &Msg);
       
