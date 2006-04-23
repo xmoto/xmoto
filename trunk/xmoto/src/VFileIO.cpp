@@ -994,7 +994,7 @@ namespace vapp {
       }
       
       /* If there is no Replay-dir in user-dir try making that too */
-      if(!isDir(getReplaysDir()))) {
+      if(!isDir(getReplaysDir())) {
         if(mkdir(getReplaysDir().c_str(),S_IRUSR|S_IWUSR|S_IRWXU)) { /* drwx------ */
           Log("** Warning ** : failed to create user replay directory '%s'!",(m_UserDir + std::string("/Replays")).c_str());
         }
