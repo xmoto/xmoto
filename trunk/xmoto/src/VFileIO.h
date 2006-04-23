@@ -153,8 +153,8 @@ namespace vapp {
       static std::string getDataDir(void) {return m_DataDir;}
       static bool isDataDirAvailable(void) {return m_bGotDataDir;}
       
-      static const std::string &getReplaysDir(void) {return m_UserDir + std::string("/Replays");}
-      static const std::string &getLevelsDir(void) {return m_UserDir + std::string("/Levels");}
+      static std::string getReplaysDir(void) {return m_UserDir + std::string("/Replays");}
+      static std::string getLevelsDir(void) {return m_UserDir + std::string("/Levels");}
     
     private:
       /* Helper functions */

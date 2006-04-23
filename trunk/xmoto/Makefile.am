@@ -19,7 +19,9 @@ common_SOURCES = src/BuiltInFont.cpp src/Image.cpp src/LevelSrc.cpp \
 	src/BuildConfig.h \
 	src/BuiltInFont.h \
 	src/DBuffer.cpp \
-	src/DBuffer.h
+	src/DBuffer.h \
+	src/CRCHash.cpp \
+	src/CRCHash.h
 
 common_LDADD = $(GL_LIBS)
 
@@ -59,9 +61,7 @@ xmoto_SOURCES = $(common_SOURCES) src/BSP.cpp src/Game.cpp src/GameMain.cpp \
 	src/OpenBrowser.h \
 	src/WebHighscores.cpp \
 	src/WebHighscores.h \
-	src/WebHSAppInterface.h \
-	src/CRCHash.cpp \
-	src/CRCHash.h
+	src/WebHSAppInterface.h
 
 xmoto_LDADD = $(common_LDADD)
 		
