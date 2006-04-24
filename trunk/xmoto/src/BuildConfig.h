@@ -51,7 +51,7 @@ Build configuration
 
 /* DO_NOT_ALLOW_WEBHIGHSCORES - Don't compile with webhighscores support, 
    regardless of whether libcurl is available or not */
-#define DO_NOT_ALLOW_WEBHIGHSCORES
+//#define DO_NOT_ALLOW_WEBHIGHSCORES
 
 /*=============================================================================
 Misc, don't touch
