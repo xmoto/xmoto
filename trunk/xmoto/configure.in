@@ -13,7 +13,6 @@ AC_CHECK_LIB(png, png_read_image, [], [AC_MSG_ERROR(libpng required)])
 AC_CHECK_LIB(z, uncompress, [], [AC_MSG_ERROR(zlib required)])
 AM_PATH_SDL(1.0.0, [], [AC_MSG_ERROR(SDL required)])
 AC_CHECK_LIB(SDL_mixer, Mix_OpenAudio, [], [AC_MSG_ERROR(SDL_mixer required)])
-AC_CHECK_LIB(curl, curl_easy_init,[],[AC_MSG_WARN(online highscores disabled)])
 AX_CHECK_GL()
 
 AC_SEARCH_LIBS(lua_pushboolean,lua lua50, [], [AC_MSG_ERROR(liblua50 or liblua required)])
@@ -38,5 +37,7 @@ AC_CHECK_HEADER(lauxlib.h,AC_DEFINE(HAVE_LAUXLIB_H),[])
 AC_CHECK_HEADER(lualib.h,AC_DEFINE(HAVE_LUALIB_H),[])
 
 AC_SEARCH_LIBS(dJointAttach,ode ode0, [], [AC_MSG_ERROR(libode or libode0 required)])
+
+AC_CHECK_LIB(curl, curl_easy_init,[],[AC_MSG_WARN(online highscores disabled)])
 
 AC_OUTPUT(Makefile bin/Makefile)
