@@ -49,11 +49,19 @@ Build configuration
 /* HIDE_JOYSTICK_SUPPORT - Disable joystick config UI */
 #define HIDE_JOYSTICK_SUPPORT
 
+/* DO_NOT_ALLOW_WEBHIGHSCORES - Don't compile with webhighscores support, 
+   regardless of whether libcurl is available or not */
+#define DO_NOT_ALLOW_WEBHIGHSCORES
+
 /*=============================================================================
 Misc, don't touch
 =============================================================================*/
 #if defined(XMOTO_EDITOR) && defined(EMUL_800x600)
   #undef EMUL_800x600 /* editor don't want that */
+#endif
+
+#if defined(HAVE_LIBCURL) && !defined(DO_NOT_ALLOW_WEBHIGHSCORES)
+  #define SUPPORT_WEBHIGHSCORES
 #endif
 
 #endif

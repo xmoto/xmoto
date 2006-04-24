@@ -22,6 +22,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __WEBHSAPPINTERFACE_H__
 #define __WEBHSAPPINTERFACE_H__
 
+#include "BuildConfig.h"
+
+#if defined(SUPPORT_WEBHIGHSCORES)
 #include <string>
 
 namespace vapp {
@@ -42,11 +45,17 @@ namespace vapp {
       virtual void setTaskProgress(float fPercent) = 0;
       virtual void endTask(void) = 0;
       
+      virtual void setBeingDownloadedLevel(const std::string &LevelName) = 0;
+      virtual void readEvents(void) = 0;
+      
       /* Level tools */
       virtual bool doesLevelExist(const std::string &LevelID) = 0; 
+      
   };
 
 };
+
+#endif
 
 #endif
 

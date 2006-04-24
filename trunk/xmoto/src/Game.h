@@ -75,7 +75,11 @@ namespace vapp {
 	/*===========================================================================
 	Game application
   ===========================================================================*/
+  #if defined(SUPPORT_WEBHIGHSCORES)
   class GameApp : public App, public WebHSAppInterface {
+  #else
+  class GameApp : public App {
+  #endif
     public:
       virtual ~GameApp() {}
       GameApp() {m_bShowMiniMap=true;
@@ -106,15 +110,21 @@ namespace vapp {
                  m_bBenchmark = false;
                  m_bEnableWebHighscores = true;
                  m_bShowWebHighscoreInGame = false;
+                 m_bEnableContextHelp = true;
                  }
                  
-      /* WebHSAppInterface implementation */ 
-      virtual void beginTask(WebHSTask Task);
-      virtual void setTaskProgress(float fPercent);
-      virtual void endTask(void);
-      
-      virtual bool doesLevelExist(const std::string &LevelID); 
+      #if defined(SUPPORT_WEBHIGHSCORES)                 
+        /* WebHSAppInterface implementation */ 
+        virtual void beginTask(WebHSTask Task);
+        virtual void setTaskProgress(float fPercent);
+        virtual void endTask(void);
+
+        virtual void setBeingDownloadedLevel(const std::string &LevelName);
+        virtual void readEvents(void);
         
+        virtual bool doesLevelExist(const std::string &LevelID); 
+      #endif
+      
       /* Virtual methods */
       virtual void drawFrame(void);
       virtual void userInit(void);
@@ -139,6 +149,7 @@ namespace vapp {
       /* Data */
       std::vector<LevelPack *> m_LevelPacks;    /* Level packs */
       
+      bool m_bEnableContextHelp;                /* true: Show context help */
       bool m_bShowWebHighscoreInGame;           /* true: Show world highscore inside the game */
       bool m_bEnableWebHighscores;              /* true: Read world highscores from website */
       bool m_bBenchmark;                        /* true: Test game performance */
@@ -180,7 +191,9 @@ namespace vapp {
       std::string m_ReplayPlayerName;
       
       /* Web-highscores */
-      WebHighscores m_WebHighscores;
+      #if defined(SUPPORT_WEBHIGHSCORES)
+        WebHighscores m_WebHighscores;
+      #endif
       
       /* Sound effects */
       SoundSample *m_pEndOfLevelSFX;

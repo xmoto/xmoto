@@ -326,6 +326,14 @@ namespace vapp {
     pInGameWorldRecord->setFont(m_Renderer.getSmallFont());
     pInGameWorldRecord->setGroup(50023);
     pInGameWorldRecord->setContextHelp(CONTEXTHELP_INGAME_WORLD_RECORD);
+
+    UIButton *pContextHelp = new UIButton(pGeneralOptionsTab,5,119,GAMETEXT_ENABLECONTEXTHELP,(pGeneralOptionsTab->getPosition().nWidth-40),28);
+    pContextHelp->setType(UI_BUTTON_TYPE_CHECK);
+    pContextHelp->setID("ENABLECONTEXTHELP");
+    pContextHelp->enableWindow(true);
+    pContextHelp->setFont(m_Renderer.getSmallFont());
+    pContextHelp->setGroup(50023);
+    pContextHelp->setContextHelp(CONTEXTHELP_SHOWCONTEXTHELP);
     
     UIWindow *pVideoOptionsTab = new UIWindow(pOptionsTabs,20,40,GAMETEXT_VIDEO,pOptionsTabs->getPosition().nWidth-40,pOptionsTabs->getPosition().nHeight);
     pVideoOptionsTab->enableWindow(true);
@@ -794,6 +802,7 @@ namespace vapp {
       }            
       
       /* Get record */
+      #if defined(SUPPORT_WEBHIGHSCORES)
       if(m_bEnableWebHighscores) {
         WebHighscore *pWebHS = m_WebHighscores.getHighscoreFromLevel(LevelID);
         if(pWebHS != NULL) {
@@ -808,6 +817,7 @@ namespace vapp {
           pLV_BestTimes_WorldRecord->setCaption(GAMETEXT_WORLDRECORD GAMETEXT_NONE);
       }
       else
+      #endif
         pLV_BestTimes_WorldRecord->setCaption(GAMETEXT_WORLDRECORD GAMETEXT_NA);
     }
   }
@@ -1550,6 +1560,14 @@ namespace vapp {
     UIButton *pStereoButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:STEREO");
     UIButton *pEnableEngineSoundButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_ENGINE_SOUND");
     
+    #if !defined(SUPPORT_WEBHIGHSCORES)
+      pWebHighscores->enableWindow(false);
+      pInGameWorldRecord->enableWindow(false);
+      
+      pWebHighscores->setChecked(false);
+      pInGameWorldRecord->setChecked(false);
+    #endif
+    
     if(pInGameWorldRecord && pWebHighscores) {
       bool t=pWebHighscores->getChecked();
       pInGameWorldRecord->enableWindow(t);      
@@ -1985,6 +2003,7 @@ namespace vapp {
     UIButton *pShowMiniMap = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:SHOWMINIMAP");
     UIButton *pWebHighscores = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:ENABLEWEBHIGHSCORES");
     UIButton *pInGameWorldRecord = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:INGAMEWORLDRECORD");
+    UIButton *pContextHelp = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:ENABLECONTEXTHELP");
   
     UIButton *pEnableAudioButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_AUDIO");
     UIButton *p11kHzButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:RATE11KHZ");
@@ -2035,6 +2054,7 @@ namespace vapp {
     pShowMiniMap->setChecked(m_Config.getBool("ShowMiniMap"));
     pWebHighscores->setChecked(m_Config.getBool("WebHighscores"));
     pInGameWorldRecord->setChecked(m_Config.getBool("ShowInGameWorldRecord"));
+    pContextHelp->setChecked(m_Config.getBool("ContextHelp"));
     
     pEnableAudioButton->setChecked(m_Config.getBool("AudioEnable"));
 
@@ -2115,6 +2135,7 @@ namespace vapp {
     m_Config.setValue("GameGraphics",m_Config.getDefaultValue("GameGraphics"));
     m_Config.setValue("MenuBackgroundGraphics",m_Config.getDefaultValue("MenuBackgroundGraphics"));
     m_Config.setValue("ShowMiniMap",m_Config.getDefaultValue("ShowMiniMap"));
+    m_Config.setValue("ContextHelp",m_Config.getDefaultValue("ContextHelp"));
     m_Config.setValue("EngineSoundEnable",m_Config.getDefaultValue("EngineSoundEnable"));
     
     m_Config.setValue("ControllerMode1",m_Config.getDefaultValue("ControllerMode1"));
@@ -2155,6 +2176,7 @@ namespace vapp {
     UIButton *pInGameWorldRecord = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:INGAMEWORLDRECORD");
     UIButton *pShowMiniMap = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:SHOWMINIMAP");
     UIButton *pWebHighscores = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:ENABLEWEBHIGHSCORES");
+    UIButton *pContextHelp = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:ENABLECONTEXTHELP");
 
     UIButton *pEnableAudioButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_AUDIO");
     UIButton *p11kHzButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:RATE11KHZ");
@@ -2184,6 +2206,7 @@ namespace vapp {
     /* First all those which don't need a restart */
     m_Config.setBool("ShowMiniMap",pShowMiniMap->getChecked());
     m_Config.setBool("ShowInGameWorldRecord",pInGameWorldRecord->getChecked());
+    m_Config.setBool("ContextHelp",pContextHelp->getChecked());
     
     if(pMenuLow->getChecked()) m_Config.setString("MenuBackgroundGraphics","Low");
     else if(pMenuMed->getChecked()) m_Config.setString("MenuBackgroundGraphics","Medium");

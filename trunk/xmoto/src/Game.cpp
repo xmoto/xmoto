@@ -327,6 +327,7 @@ namespace vapp {
     m_bEnableEngineSound = m_Config.getBool("EngineSoundEnable");
     m_bEnableWebHighscores = m_Config.getBool("WebHighscores");
     m_bShowWebHighscoreInGame = m_Config.getBool("ShowInGameWorldRecord");
+    m_bEnableContextHelp = m_Config.getBool("ContextHelp");
         
     /* Cache? */
     m_bEnableLevelCache = m_Config.getBool("LevelCache");
@@ -594,22 +595,24 @@ namespace vapp {
       m_InputHandler.init(&m_Config);
     }
 
-    /* Fetch highscores from web? */
-    if(m_bEnableWebHighscores) {
-      _UpdateLoadingScreen((1.0f/9.0f) * 9,pLoadingScreen,GAMETEXT_DLHIGHSCORES);      
-      
-      /* Try downloading the highscores */
-      try {
-        m_WebHighscores.update();
+    #if defined(SUPPORT_WEBHIGHSCORES)
+      /* Fetch highscores from web? */
+      if(m_bEnableWebHighscores) {
+        _UpdateLoadingScreen((1.0f/9.0f) * 9,pLoadingScreen,GAMETEXT_DLHIGHSCORES);      
+        
+        /* Try downloading the highscores */
+        try {
+          m_WebHighscores.update();
+        }
+        catch(Exception &e) {
+          /* No internet connection, probably... (just use the latest ones, if any) */
+          Log("** Warning ** : Failed to update web-highscores [%s]",e.getMsg().c_str());        
+        }
+        
+        /* Upgrade high scores */
+        m_WebHighscores.upgrade();      
       }
-      catch(Exception &e) {
-        /* No internet connection, probably... (just use the latest ones, if any) */
-        Log("** Warning ** : Failed to update web-highscores [%s]",e.getMsg().c_str());        
-      }
-      
-      /* Upgrade high scores */
-      m_WebHighscores.upgrade();      
-    }
+    #endif
         
     /* What to do? */
     if(m_PlaySpecificLevel != "" && !isNoGraphics()) {
@@ -766,7 +769,11 @@ namespace vapp {
           _HandleLevelPackViewer();
                   
         /* Draw GUI */
-        m_Renderer.getGUI()->enableContextMenuDrawing(true);
+        if(m_bEnableContextHelp)
+          m_Renderer.getGUI()->enableContextMenuDrawing(true);
+        else
+          m_Renderer.getGUI()->enableContextMenuDrawing(false);
+          
         m_Renderer.getGUI()->paint();                
         
         /* Show frame rate */
@@ -807,10 +814,10 @@ namespace vapp {
       	    nPhysSteps++;
       	    /* don't do this infinitely, maximum miss 10 frames, then give up */
       	  } while ((m_fLastPhysTime + PHYS_STEP_SIZE <= getTime()) && (nPhysSteps < 10));
-      	  
+        	
 //      	  printf("%d ",nPhysSteps);
       	  m_Renderer.setSpeedMultiplier(nPhysSteps);
-      	  
+          
       	  if(!m_bTimeDemo) {
       	    /* Never pass this point while being ahead of time, busy wait until it's time */
       	    if (nPhysSteps <= 1) {      	    
@@ -997,7 +1004,7 @@ namespace vapp {
         }
         
         /* Context menu? */
-        if(m_State == GS_PLAYING || m_State == GS_REPLAYING)
+        if(m_State == GS_PLAYING || m_State == GS_REPLAYING || !m_bEnableContextHelp)
           m_Renderer.getGUI()->enableContextMenuDrawing(false);
         else
           m_Renderer.getGUI()->enableContextMenuDrawing(true);
@@ -1446,6 +1453,7 @@ namespace vapp {
     m_Config.createVar( "LevelCache",             "true" );
     m_Config.createVar( "WebHighscores",          "true" );
     m_Config.createVar( "ShowInGameWorldRecord",  "false" );
+    m_Config.createVar( "ContextHelp",            "true" );
   }
   
   /*===========================================================================
@@ -1567,9 +1575,10 @@ namespace vapp {
   /*===========================================================================
   World records
   ===========================================================================*/
-  void GameApp::_UpdateWorldRecord(const std::string &LevelID) {
+  void GameApp::_UpdateWorldRecord(const std::string &LevelID) {  
     m_Renderer.setWorldRecordTime("");
     
+    #if defined(SUPPORT_WEBHIGHSCORES)
     if(m_bShowWebHighscoreInGame) {
       WebHighscore *pWebHS = m_WebHighscores.getHighscoreFromLevel(LevelID);
       if(pWebHS != NULL) {
@@ -1586,11 +1595,14 @@ namespace vapp {
         m_Renderer.setWorldRecordTime(GAMETEXT_WORLDRECORD GAMETEXT_NONE);      
       }                
     }
+    #endif
   }
   
   /*===========================================================================
   WebHSAppInterface implementation
   ===========================================================================*/
+  #if defined(SUPPORT_WEBHIGHSCORES)
+  
   void GameApp::beginTask(WebHSTask Task) {
     /* TODO: make this nice */
     printf("task begun (%d)\n",Task);
@@ -1605,11 +1617,20 @@ namespace vapp {
     /* TODO: make this nice */
     printf("task done!\n");
   }  
+
+  void GameApp::setBeingDownloadedLevel(const std::string &LevelName) {
+    printf(" ... [level: %s]\n",LevelName.c_str());
+  }
+  
+  void GameApp::readEvents(void) {
+    printf("(updating events)\n");
+  }
   
   bool GameApp::doesLevelExist(const std::string &LevelID) {
     return _FindLevelByID(LevelID) != NULL;
   }
   
+  #endif
 };
 
 

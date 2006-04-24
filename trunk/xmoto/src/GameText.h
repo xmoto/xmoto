@@ -63,6 +63,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_DLHIGHSCORES         "Downloading high-scores..."
 #define GAMETEXT_DRIVE                "Drive"
 #define GAMETEXT_ENABLEAUDIO          "Enable Audio"
+#define GAMETEXT_ENABLECONTEXTHELP    "Enable Context Help"
 #define GAMETEXT_ENABLEENGINESOUND    "Enable Engine Sound"
 #define GAMETEXT_ENABLEINGAMEWORLDRECORD "Show World Record in-game"
 #define GAMETEXT_ENABLEWEBHIGHSCORES  "Download World Records from WWW"
@@ -253,5 +254,6 @@ Central place to keep many in-game text strings
 #define CONTEXTHELP_ONLY_SHOW_PERSONAL_REPLAYS "Only show personal replays for this level"
 #define CONTEXTHELP_SHOW_ALL_REPLAYS "Show all replays for this level"
 #define CONTEXTHELP_RUN_SELECTED_REPLAY "Run selected replay"
+#define CONTEXTHELP_SHOWCONTEXTHELP "Show helpful help strings such as this one"
 
 #endif

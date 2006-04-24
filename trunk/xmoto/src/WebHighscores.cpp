@@ -21,6 +21,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 /* file contributed by Nicolas Adenis-Lamarre */
 
+#include "BuildConfig.h"
+#if defined(SUPPORT_WEBHIGHSCORES)
+
 #ifdef WIN32
   #include <io.h>
 #else
@@ -278,3 +281,4 @@ void WebLevels::upgrade() {
   }
 }
 
+#endif

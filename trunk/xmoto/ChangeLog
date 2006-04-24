@@ -4,7 +4,8 @@ X-Moto 0.1.13 (alpha) 2006-
  * Level files are now cached for much faster loading time.
  * Integration with Nicolas Adenis-Lamarre's high-score website; World 
    records can now be seen inside the game.
- * New library requirement: libcurl.
+ * New (optional) library dependency: libcurl. If library isn't found
+   by ./configure, the online high-score system is disabled.
  * Slight physics adjustment: It should no longer be possible to fall
    through the ground when standing still. Stay calm, this should NOT 
    affect the gameplay.
