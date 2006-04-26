@@ -1004,9 +1004,11 @@ namespace vapp {
 
   void MotoGame::_UpdateEntities(void) {
     /* Do player touch anything? */
-    for(int i=0;i<m_Entities.size();i++) {    
-			/* Head? */
-      if(circleTouchCircle2f(m_Entities[i]->Pos,m_Entities[i]->fSize,m_BikeS.HeadP,m_BikeP.fHeadSize)) {
+    for(int i=0;i<m_Entities.size();i++) {            
+			/* Head? */						
+			Vector2f HeadPos = m_BikeS.Dir==DD_RIGHT?m_BikeS.HeadP:m_BikeS.Head2P;
+			
+      if(circleTouchCircle2f(m_Entities[i]->Pos,m_Entities[i]->fSize,HeadPos,m_BikeP.fHeadSize)) {
 				if(!m_Entities[i]->bTouched) {
 					/* Generate event */
 					GameEvent *pEvent = createGameEvent(GAME_EVENT_PLAYER_TOUCHES_ENTITY);

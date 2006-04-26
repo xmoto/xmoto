@@ -225,6 +225,11 @@ namespace vapp {
     pLevelInfoButton->setType(UI_BUTTON_TYPE_SMALL);
     pLevelInfoButton->setID("PLAY_LEVEL_INFO_BUTTON");
     pLevelInfoButton->setContextHelp(CONTEXTHELP_LEVEL_INFO);
+    UIButton *pDownloadLevelsButton = new UIButton(m_pPlayWindow,m_pPlayWindow->getPosition().nWidth-207-10,m_pPlayWindow->getPosition().nHeight-68,GAMETEXT_DOWNLOADLEVELS,207,57);
+    pDownloadLevelsButton->setFont(m_Renderer.getSmallFont());
+    pDownloadLevelsButton->setType(UI_BUTTON_TYPE_LARGE);
+    pDownloadLevelsButton->setID("PLAY_DOWNLOAD_LEVELS_BUTTON");
+    pDownloadLevelsButton->setContextHelp(CONTEXTHELP_DOWNLOADLEVELS);
     UIWindow *pInternalLevelsTab = new UIWindow(pLevelTabs,20,40,GAMETEXT_BUILTINLEVELS,pLevelTabs->getPosition().nWidth-40,pLevelTabs->getPosition().nHeight-60);
     pInternalLevelsTab->enableWindow(true);
     pInternalLevelsTab->setID("PLAY_INTERNAL_LEVELS_TAB");
@@ -803,8 +808,8 @@ namespace vapp {
       
       /* Get record */
       #if defined(SUPPORT_WEBHIGHSCORES)
-      if(m_bEnableWebHighscores) {
-        WebHighscore *pWebHS = m_WebHighscores.getHighscoreFromLevel(LevelID);
+      if(m_bEnableWebHighscores && m_pWebHighscores!=NULL) {
+        WebHighscore *pWebHS = m_pWebHighscores->getHighscoreFromLevel(LevelID);
         if(pWebHS != NULL) {
           char cTime[512];
           int n1=0,n2=0,n3=0;
@@ -1560,7 +1565,7 @@ namespace vapp {
     UIButton *pStereoButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:STEREO");
     UIButton *pEnableEngineSoundButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_ENGINE_SOUND");
     
-    #if !defined(SUPPORT_WEBHIGHSCORES)
+    #if !defined(SUPPORT_WEBACCESS)
       pWebHighscores->enableWindow(false);
       pInGameWorldRecord->enableWindow(false);
       
@@ -1641,9 +1646,22 @@ namespace vapp {
     
     /* PLAY */
     UIButton *pPlayGoButton = (UIButton *)m_pPlayWindow->getChild("PLAY_GO_BUTTON");
+    UIButton *pPlayDLButton = (UIButton *)m_pPlayWindow->getChild("PLAY_DOWNLOAD_LEVELS_BUTTON");
     UIButton *pLevelInfoButton = (UIButton *)m_pPlayWindow->getChild("PLAY_LEVEL_INFO_BUTTON");
     UIList *pPlayExternalLevelsList = (UIList *)m_pPlayWindow->getChild("PLAY_LEVEL_TABS:PLAY_EXTERNAL_LEVELS_TAB:PLAY_EXTERNAL_LEVELS_LIST");
     UIList *pPlayInternalLevelsList = (UIList *)m_pPlayWindow->getChild("PLAY_LEVEL_TABS:PLAY_INTERNAL_LEVELS_TAB:PLAY_INTERNAL_LEVELS_LIST");
+
+    if(pPlayDLButton != NULL) {
+      #if !defined(SUPPORT_WEBACCESS)
+        pPlayDLButton->enableWindow(false);
+      #else          
+        if(pPlayDLButton->isClicked()) {
+          pPlayDLButton->setClicked(false);
+          
+          _CheckForExtraLevels();
+        }
+      #endif
+    }
 
     if(pPlayGoButton && pPlayGoButton->isClicked()) {
       pPlayGoButton->setClicked(false);
@@ -1773,7 +1791,7 @@ namespace vapp {
     return -1;
   }
   
-  void GameApp::_SimpleMessage(const std::string &Msg) {      
+  void GameApp::_SimpleMessage(const std::string &Msg,UIRect *pRect) {      
     m_Renderer.getGUI()->paint();
     drawBox(Vector2f(0,0),Vector2f(getDispWidth(),getDispHeight()),0,MAKE_COLOR(0,0,0,170),0);
     int cx,cy;
@@ -1783,6 +1801,13 @@ namespace vapp {
     
     int nW = cx + 150, nH = cy + 150;
     int nx = getDispWidth()/2 - nW/2,ny = getDispHeight()/2 - nH/2;
+    
+    if(pRect != NULL) {
+      pRect->nX = nx;
+      pRect->nY = ny;
+      pRect->nWidth = nW;
+      pRect->nHeight = nH;
+    }
 
     m_Renderer.getGUI()->putElem(nx,ny,-1,-1,UI_ELEM_FRAME_TL,false);
     m_Renderer.getGUI()->putElem(nx+nW-8,ny,-1,-1,UI_ELEM_FRAME_TR,false);

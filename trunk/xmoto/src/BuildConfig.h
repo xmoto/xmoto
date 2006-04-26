@@ -49,9 +49,9 @@ Build configuration
 /* HIDE_JOYSTICK_SUPPORT - Disable joystick config UI */
 #define HIDE_JOYSTICK_SUPPORT
 
-/* DO_NOT_ALLOW_WEBHIGHSCORES - Don't compile with webhighscores support, 
+/* DO_NOT_ALLOW_WEBACCESS - Don't compile with web-access support, 
    regardless of whether libcurl is available or not */
-//#define DO_NOT_ALLOW_WEBHIGHSCORES
+//#define DO_NOT_ALLOW_WEBACCESS
 
 /*=============================================================================
 Misc, don't touch
@@ -60,8 +60,8 @@ Misc, don't touch
   #undef EMUL_800x600 /* editor don't want that */
 #endif
 
-#if defined(HAVE_LIBCURL) && !defined(DO_NOT_ALLOW_WEBHIGHSCORES)
-  #define SUPPORT_WEBHIGHSCORES
+#if defined(HAVE_LIBCURL) && !defined(DO_NOT_ALLOW_WEBACCESS)
+  #define SUPPORT_WEBACCESS
 #endif
 
 #endif

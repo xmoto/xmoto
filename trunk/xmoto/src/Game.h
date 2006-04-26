@@ -34,8 +34,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "PlayerData.h"
 #include "Sound.h"
 #include "Input.h"
-#include "WebHighscores.h"
-#include "WebHSAppInterface.h"
+#include "WWW.h"
+#include "WWWAppInterface.h"
 
 namespace vapp {
 
@@ -75,8 +75,8 @@ namespace vapp {
 	/*===========================================================================
 	Game application
   ===========================================================================*/
-  #if defined(SUPPORT_WEBHIGHSCORES)
-  class GameApp : public App, public WebHSAppInterface {
+  #if defined(SUPPORT_WEBACCESS)
+  class GameApp : public App, public WWWAppInterface {
   #else
   class GameApp : public App {
   #endif
@@ -91,6 +91,7 @@ namespace vapp {
                  m_bEnableLevelCache=true;
                  m_pQuitMsgBox=NULL;
                  m_pNotifyMsgBox=NULL;
+                 m_pDownloadLevelsMsgBox=NULL;
                  m_pNewProfileMsgBox=NULL;
                  m_pDeleteProfileMsgBox=NULL;
                  m_pDeleteReplayMsgBox=NULL;
@@ -111,13 +112,15 @@ namespace vapp {
                  m_bEnableWebHighscores = true;
                  m_bShowWebHighscoreInGame = false;
                  m_bEnableContextHelp = true;
+                 #if defined(SUPPORT_WEBACCESS)
+                  m_pWebHighscores = NULL;
+                  m_pWebLevels = NULL;
+                 #endif
                  }
                  
-      #if defined(SUPPORT_WEBHIGHSCORES)                 
-        /* WebHSAppInterface implementation */ 
-        virtual void beginTask(WebHSTask Task);
+      #if defined(SUPPORT_WEBACCESS)                 
+        /* WWWAppInterface implementation */ 
         virtual void setTaskProgress(float fPercent);
-        virtual void endTask(void);
 
         virtual void setBeingDownloadedLevel(const std::string &LevelName);
         virtual void readEvents(void);
@@ -190,9 +193,11 @@ namespace vapp {
       Replay *m_pReplay;
       std::string m_ReplayPlayerName;
       
-      /* Web-highscores */
-      #if defined(SUPPORT_WEBHIGHSCORES)
-        WebHighscores m_WebHighscores;
+      /* WWW */
+      #if defined(SUPPORT_WEBACCESS)
+        WebHighscores *m_pWebHighscores;
+        WebLevels *m_pWebLevels;
+        ProxySettings m_ProxySettings;
       #endif
       
       /* Sound effects */
@@ -204,6 +209,9 @@ namespace vapp {
       /* Various popups */
       UIMsgBox *m_pQuitMsgBox;
       UIMsgBox *m_pNotifyMsgBox;
+      UIMsgBox *m_pDownloadLevelsMsgBox;
+      
+      UIRect m_DownloadLevelsMsgBoxRect;
             
       /* Main menu background / title */
       Texture *m_pTitleBL,*m_pTitleBR,*m_pTitleTL,*m_pTitleTR;
@@ -302,7 +310,7 @@ namespace vapp {
     
       void _UpdateLoadingScreen(float fDone,Texture *pScreen,const std::string &NextTask);      
       
-      void _SimpleMessage(const std::string &Msg);
+      void _SimpleMessage(const std::string &Msg,UIRect *pRect=NULL);
       
       int _IsKeyInUse(const std::string &Key);
       
@@ -310,6 +318,14 @@ namespace vapp {
       LevelPack *_FindLevelPackByName(const std::string &Name);
       std::string _DetermineNextLevel(LevelSrc *pLevelSrc);
       bool _IsThereANextLevel(LevelSrc *pLevelSrc);
+      
+      void _ConfigureProxy(void);
+      
+      void _CheckForExtraLevels(void);
+      void _DownloadExtraLevels(void);
+      
+      int _LoadLevels(const std::vector<std::string> &LvlFiles);
+      
   };
 
 };

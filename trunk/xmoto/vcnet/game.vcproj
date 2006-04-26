@@ -172,9 +172,6 @@
 				RelativePath="..\src\Input.cpp">
 			</File>
 			<File
-				RelativePath="..\src\LevelCache.cpp">
-			</File>
-			<File
 				RelativePath="..\src\MotoGame.cpp">
 			</File>
 			<File
@@ -211,7 +208,7 @@
 				RelativePath="..\src\UserConfig.cpp">
 			</File>
 			<File
-				RelativePath="..\src\WebHighscores.cpp">
+				RelativePath="..\src\WWW.cpp">
 			</File>
 		</Filter>
 		<Filter
@@ -235,9 +232,6 @@
 			</File>
 			<File
 				RelativePath="..\src\Input.h">
-			</File>
-			<File
-				RelativePath="..\src\LevelCache.h">
 			</File>
 			<File
 				RelativePath="..\src\MotoGame.h">
@@ -264,10 +258,10 @@
 				RelativePath="..\src\UserConfig.h">
 			</File>
 			<File
-				RelativePath="..\src\WebHighscores.h">
+				RelativePath="..\src\WWW.h">
 			</File>
 			<File
-				RelativePath="..\src\WebHSAppInterface.h">
+				RelativePath="..\src\WWWAppInterface.h">
 			</File>
 		</Filter>
 		<Filter

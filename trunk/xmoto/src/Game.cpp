@@ -28,6 +28,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "PhysSettings.h"
 #include "Input.h"
 
+#if defined(SUPPORT_WEBACCESS)
+  #include <curl/curl.h>
+#endif
+
 namespace vapp {
 
   /* CRY! */
@@ -331,6 +335,9 @@ namespace vapp {
         
     /* Cache? */
     m_bEnableLevelCache = m_Config.getBool("LevelCache");
+    
+    /* Configure proxy */
+    _ConfigureProxy();
   }
   
   /*===========================================================================
@@ -525,47 +532,17 @@ namespace vapp {
       Log("** Warning ** : Level cache directory not found, forcing caching off!");
     }
      
-    /* Find all .lvl files in the level dir and load them */
-    int nNumCached = 0;
+    /* Find all .lvl files in the level dir and load them */    
+    m_nNumLevels = 0;
     std::vector<std::string> LvlFiles = FS::findPhysFiles("Levels/*.lvl",true);
-    for(int i=0;i<LvlFiles.size();i++) {
-      m_Levels[i].setFileName( LvlFiles[i] );
-
-      /* Cache or not to cache? */
-      if(m_bEnableLevelCache) {
-        /* Start by determining file CRC */
-        LevelCheckSum Sum;
-        m_Levels[i].probeCheckSum(&Sum);
-        
-        /* Determine name in cache */
-        std::string LevelFileBaseName = FS::getFileBaseName(LvlFiles[i]);
-        char cCacheFileName[1024];      
-        sprintf(cCacheFileName,"LCache/%08x%s.blv",Sum.nCRC32,LevelFileBaseName.c_str());
-                  
-        /* Got level in cache? */
-        if(!m_Levels[i].importBinary(cCacheFileName,&Sum)) {
-          /* Not in cache, buggers. Load it from (slow) XML then. */
-          m_Levels[i].loadXML();
-          
-          /* Cache it now */
-          m_Levels[i].exportBinary(cCacheFileName,&Sum);
-        }
-        else nNumCached++;
-      }
-      else {
-        /* Just load it */
-        m_Levels[i].loadXML();       
-      }
-          
-      /* Update level pack manager */
-      _UpdateLevelPackManager(&m_Levels[i]);
-      
-      /* Output? */
-      if(m_bListLevels) {
+    int nNumCached = _LoadLevels(LvlFiles);
+    
+    /* -listlevels? */
+    if(m_bListLevels) {
+      for(int i=0;i<m_nNumLevels;i++) {          
         printf("%-25s %-25s %-25s\n",FS::getFileBaseName(m_Levels[i].getFileName()).c_str(),m_Levels[i].getID().c_str(),m_Levels[i].getLevelInfo()->Name.c_str());
       }
     }
-    m_nNumLevels = LvlFiles.size();
     _UpdateLoadingScreen((1.0f/9.0f) * 5,pLoadingScreen,GAMETEXT_INITRENDERER);
     
     if(m_bListLevels) {
@@ -595,14 +572,16 @@ namespace vapp {
       m_InputHandler.init(&m_Config);
     }
 
-    #if defined(SUPPORT_WEBHIGHSCORES)
+    #if defined(SUPPORT_WEBACCESS)    
       /* Fetch highscores from web? */
-      if(m_bEnableWebHighscores) {
+      if(m_bEnableWebHighscores) {            
         _UpdateLoadingScreen((1.0f/9.0f) * 9,pLoadingScreen,GAMETEXT_DLHIGHSCORES);      
+        
+        m_pWebHighscores = new WebHighscores(&m_ProxySettings);
         
         /* Try downloading the highscores */
         try {
-          m_WebHighscores.update();
+          m_pWebHighscores->update();
         }
         catch(Exception &e) {
           /* No internet connection, probably... (just use the latest ones, if any) */
@@ -610,7 +589,7 @@ namespace vapp {
         }
         
         /* Upgrade high scores */
-        m_WebHighscores.upgrade();      
+        m_pWebHighscores->upgrade();      
       }
     #endif
         
@@ -642,6 +621,55 @@ namespace vapp {
     }            
   }
 
+  /*===========================================================================
+  Load some levels...
+  ===========================================================================*/
+  int GameApp::_LoadLevels(const std::vector<std::string> &LvlFiles) {
+    int nNumCached = 0;
+  
+    for(int i=0;i<LvlFiles.size();i++) {
+      int j = m_nNumLevels;
+      if(j >= 2048) {
+        Log("** Warning ** : Too many levels.");
+        break;
+      }
+      m_nNumLevels++;
+    
+      m_Levels[j].setFileName( LvlFiles[i] );
+
+      /* Cache or not to cache? */
+      if(m_bEnableLevelCache) {
+        /* Start by determining file CRC */
+        LevelCheckSum Sum;
+        m_Levels[j].probeCheckSum(&Sum);
+        
+        /* Determine name in cache */
+        std::string LevelFileBaseName = FS::getFileBaseName(LvlFiles[i]);
+        char cCacheFileName[1024];      
+        sprintf(cCacheFileName,"LCache/%08x%s.blv",Sum.nCRC32,LevelFileBaseName.c_str());
+                  
+        /* Got level in cache? */
+        if(!m_Levels[j].importBinary(cCacheFileName,&Sum)) {
+          /* Not in cache, buggers. Load it from (slow) XML then. */
+          m_Levels[j].loadXML();
+          
+          /* Cache it now */
+          m_Levels[j].exportBinary(cCacheFileName,&Sum);
+        }
+        else nNumCached++;
+      }
+      else {
+        /* Just load it */
+        m_Levels[j].loadXML();       
+      }
+          
+      /* Update level pack manager */
+      _UpdateLevelPackManager(&m_Levels[j]);
+    }
+    
+    return nNumCached;
+  }
+  
   /*===========================================================================
   Draw menu/title screen background
   ===========================================================================*/
@@ -724,6 +752,21 @@ namespace vapp {
       if(m_pNotifyMsgBox->getClicked() == UI_MSGBOX_OK) {
         delete m_pNotifyMsgBox;
         m_pNotifyMsgBox = NULL;
+      }
+    }
+    /* And the download-levels box? */
+    else if(m_pDownloadLevelsMsgBox != NULL) {
+      UIMsgBoxButton Button = m_pDownloadLevelsMsgBox->getClicked();
+      if(Button == UI_MSGBOX_YES) {
+        /* Download levels! */
+        _DownloadExtraLevels();
+
+        delete m_pDownloadLevelsMsgBox;
+        m_pDownloadLevelsMsgBox = NULL;
+      }
+      else if(Button == UI_MSGBOX_NO) {
+        delete m_pDownloadLevelsMsgBox;
+        m_pDownloadLevelsMsgBox = NULL;
       }
     }
     
@@ -1033,6 +1076,14 @@ namespace vapp {
   Shutdown game
   ===========================================================================*/
   void GameApp::userShutdown(void) {  
+    #if defined(SUPPORT_WEBACCESS)
+      if(m_pWebHighscores != NULL)
+        delete m_pWebHighscores;
+        
+      if(m_pWebLevels != NULL)
+        delete m_pWebLevels;
+    #endif
+  
     for(int i=0;i<m_LevelPacks.size();i++) {
       delete m_LevelPacks[i];
     }
@@ -1454,6 +1505,14 @@ namespace vapp {
     m_Config.createVar( "WebHighscores",          "true" );
     m_Config.createVar( "ShowInGameWorldRecord",  "false" );
     m_Config.createVar( "ContextHelp",            "true" );
+    
+    /* Proxy */
+    m_Config.createVar( "ProxyType",              "" ); /* (blank), HTTP, SOCKS4, or SOCKS5 */
+    m_Config.createVar( "ProxyServer",            "" ); /* (may include user/pass and port) */
+    m_Config.createVar( "ProxyPort",              "-1" );
+    //m_Config.createVar( "ProxyAuthUser",          "" ); 
+    //m_Config.createVar( "ProxyAuthPwd",          "" );
+    
   }
   
   /*===========================================================================
@@ -1578,52 +1637,142 @@ namespace vapp {
   void GameApp::_UpdateWorldRecord(const std::string &LevelID) {  
     m_Renderer.setWorldRecordTime("");
     
-    #if defined(SUPPORT_WEBHIGHSCORES)
-    if(m_bShowWebHighscoreInGame) {
-      WebHighscore *pWebHS = m_WebHighscores.getHighscoreFromLevel(LevelID);
-      if(pWebHS != NULL) {
-        char cTime[256];
-        int n1=0,n2=0,n3=0;
+    #if defined(SUPPORT_WEBACCESS)
+      if(m_bShowWebHighscoreInGame && m_pWebHighscores!=NULL) {
+        WebHighscore *pWebHS = m_pWebHighscores->getHighscoreFromLevel(LevelID);
+        if(pWebHS != NULL) {
+          char cTime[256];
+          int n1=0,n2=0,n3=0;
+          
+          sscanf(pWebHS->getTime().c_str(),"%d:%d:%d",&n1,&n2,&n3);
+          sprintf(cTime,"%02d:%02d:%02d",n1,n2,n3);
         
-        sscanf(pWebHS->getTime().c_str(),"%d:%d:%d",&n1,&n2,&n3);
-        sprintf(cTime,"%02d:%02d:%02d",n1,n2,n3);
-      
-        m_Renderer.setWorldRecordTime(std::string(GAMETEXT_WORLDRECORD) + std::string(cTime) + 
-                                      std::string(" (") + pWebHS->getPlayerName() + std::string(")"));
-      } 
-      else {
-        m_Renderer.setWorldRecordTime(GAMETEXT_WORLDRECORD GAMETEXT_NONE);      
-      }                
-    }
+          m_Renderer.setWorldRecordTime(std::string(GAMETEXT_WORLDRECORD) + std::string(cTime) + 
+                                        std::string(" (") + pWebHS->getPlayerName() + std::string(")"));
+        } 
+        else {
+          m_Renderer.setWorldRecordTime(GAMETEXT_WORLDRECORD GAMETEXT_NONE);      
+        }                
+      }
     #endif
   }
   
   /*===========================================================================
-  WebHSAppInterface implementation
+  Extra WWW levels
   ===========================================================================*/
-  #if defined(SUPPORT_WEBHIGHSCORES)
-  
-  void GameApp::beginTask(WebHSTask Task) {
-    /* TODO: make this nice */
-    printf("task begun (%d)\n",Task);
-  }
-  
-  void GameApp::setTaskProgress(float fPercent) {
-    /* TODO: make this nice */
-    printf(" ... %.0f%%\n",fPercent);
-  }
-  
-  void GameApp::endTask(void) {
-    /* TODO: make this nice */
-    printf("task done!\n");
-  }  
+  void GameApp::_DownloadExtraLevels(void) {
+    #if defined(SUPPORT_WEBACCESS)
+      /* Download extra levels */
+      if(m_pWebLevels != NULL) {
+        _SimpleMessage("Downloading extra levels...\nPress ESC to abort.\n\n ",&m_DownloadLevelsMsgBoxRect);
 
+        try {                  
+          Log("WWW: Downloading levels...");
+          clearCancelAsSoonAsPossible();
+          m_pWebLevels->upgrade();          
+        } 
+        catch(Exception &e) {
+          Log("** Warning ** : Unable to check for extra levels [%s]",e.getMsg().c_str());
+        }      
+
+        /* Got some new levels... load them! */
+        const std::vector<std::string> LvlFiles = m_pWebLevels->getDownloadedLevels();
+        
+        Log("Loading new levels...");
+        int nOldNum = m_nNumLevels;
+        _LoadLevels(LvlFiles);
+        Log(" %d new level%s loaded",m_nNumLevels-nOldNum,(m_nNumLevels-nOldNum)==1?"":"s");
+        
+        /* Update level lists */
+        _UpdateLevelLists();
+      }            
+    #endif
+  }
+
+  void GameApp::_CheckForExtraLevels(void) {
+    #if defined(SUPPORT_WEBACCESS)
+      /* Check for extra levels */
+      try {
+        _SimpleMessage("Checking for new levels...");
+      
+        if(m_pWebLevels != NULL) delete m_pWebLevels;
+        m_pWebLevels = new WebLevels(this,&m_ProxySettings);
+        
+        Log("WWW: Checking for new levels...");
+        clearCancelAsSoonAsPossible();
+        m_pWebLevels->update();     
+        int nULevels=0,nUBytes=0;
+        m_pWebLevels->getUpdateInfo(&nUBytes,&nULevels);
+        Log("WWW: %d new level%s found",nULevels,nULevels==1?"":"s");
+
+        if(nULevels == 0) {
+          notifyMsg("No new levels found.\n\nTry again another time.");
+        }        
+        else {
+          /* Ask user whether he want to download levels or snot */
+          if(m_pDownloadLevelsMsgBox == NULL) {
+            char cBuf[256];
+            sprintf(cBuf,"%d new level%s found. Download %s?",nULevels,nULevels==1?"":"s",nULevels==1?"it":"them");
+            m_pDownloadLevelsMsgBox = m_Renderer.getGUI()->msgBox(cBuf,(UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
+          }
+        }
+      } 
+      catch(Exception &e) {
+        Log("** Warning ** : Unable to check for extra levels [%s]",e.getMsg().c_str());
+      }      
+    #endif
+  }
+  
+  /*===========================================================================
+  WWWAppInterface implementation
+  ===========================================================================*/
+  #if defined(SUPPORT_WEBACCESS)
+    
+  void GameApp::setTaskProgress(float fPercent) {
+    int nBarHeight = 15;
+    
+    drawBox(Vector2f(m_DownloadLevelsMsgBoxRect.nX+10,m_DownloadLevelsMsgBoxRect.nY+
+                                                   m_DownloadLevelsMsgBoxRect.nHeight-
+                                                   nBarHeight*2),
+            Vector2f(m_DownloadLevelsMsgBoxRect.nX+m_DownloadLevelsMsgBoxRect.nWidth-10,
+                     m_DownloadLevelsMsgBoxRect.nY+m_DownloadLevelsMsgBoxRect.nHeight-nBarHeight),
+            0,MAKE_COLOR(0,0,0,255),0);
+            
+                
+    drawBox(Vector2f(m_DownloadLevelsMsgBoxRect.nX+10,m_DownloadLevelsMsgBoxRect.nY+
+                                                   m_DownloadLevelsMsgBoxRect.nHeight-
+                                                   nBarHeight*2),
+            Vector2f(m_DownloadLevelsMsgBoxRect.nX+10+((m_DownloadLevelsMsgBoxRect.nWidth-20)*(int)fPercent)/100,
+                     m_DownloadLevelsMsgBoxRect.nY+m_DownloadLevelsMsgBoxRect.nHeight-nBarHeight),
+            0,MAKE_COLOR(255,0,0,255),0);
+
+    SDL_GL_SwapBuffers();            
+  }
+  
   void GameApp::setBeingDownloadedLevel(const std::string &LevelName) {
-    printf(" ... [level: %s]\n",LevelName.c_str());
+    drawText(Vector2f(0,0),LevelName + std::string("(Temp. message, make it nicer... kthxbye.)                     "),MAKE_COLOR(0,0,0,255));
   }
   
   void GameApp::readEvents(void) {
-    printf("(updating events)\n");
+    /* Check for events */ 
+    SDL_PumpEvents();
+    
+    SDL_Event Event;
+    while(SDL_PollEvent(&Event)) {
+      /* What event? */
+      switch(Event.type) {
+        case SDL_KEYDOWN: 
+          if(Event.key.keysym.sym == SDLK_ESCAPE)
+            setCancelAsSoonAsPossible();
+          break;
+        case SDL_QUIT:  
+          /* Force quit */
+          quit();
+          setCancelAsSoonAsPossible();
+          return;
+      }
+    }
+    
   }
   
   bool GameApp::doesLevelExist(const std::string &LevelID) {
@@ -1631,6 +1780,44 @@ namespace vapp {
   }
   
   #endif
+
+  /*===========================================================================
+  Configure proxy
+  ===========================================================================*/
+  #if defined(SUPPORT_WEBACCESS)
+  
+  void GameApp::_ConfigureProxy(void) {
+    bool bFetchPortAndServer = false;
+  
+    /* Proxy? */        
+    std::string s = m_Config.getString("ProxyType");
+    if(s == "HTTP") {
+      m_ProxySettings.setType(CURLPROXY_HTTP);
+      bFetchPortAndServer = true;
+    }
+    else if(s == "SOCKS4") {
+      m_ProxySettings.setType(CURLPROXY_SOCKS4);
+      bFetchPortAndServer = true;
+    }
+    else if(s == "SOCKS5") {
+      m_ProxySettings.setType(CURLPROXY_SOCKS5);
+      bFetchPortAndServer = true;
+    }
+    else {
+      m_ProxySettings.setDefaultAuthentification();
+      m_ProxySettings.setDefaultPort();
+      m_ProxySettings.setDefaultServer();
+      m_ProxySettings.setDefaultType();
+    }
+    
+    if(bFetchPortAndServer) {
+      m_ProxySettings.setPort(m_Config.getInteger("ProxyPort"));
+      m_ProxySettings.setServer(m_Config.getString("ProxyServer"));      
+    }
+  }
+    
+  #endif
+  
 };
 
 
