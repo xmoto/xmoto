@@ -1784,9 +1784,8 @@ namespace vapp {
   /*===========================================================================
   Configure proxy
   ===========================================================================*/
-  #if defined(SUPPORT_WEBACCESS)
-  
   void GameApp::_ConfigureProxy(void) {
+  #if defined(SUPPORT_WEBACCESS)  
     bool bFetchPortAndServer = false;
   
     /* Proxy? */        
@@ -1814,9 +1813,9 @@ namespace vapp {
       m_ProxySettings.setPort(m_Config.getInteger("ProxyPort"));
       m_ProxySettings.setServer(m_Config.getString("ProxyServer"));      
     }
+  #endif
   }
     
-  #endif
   
 };
 
