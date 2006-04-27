@@ -807,7 +807,7 @@ namespace vapp {
       }            
       
       /* Get record */
-      #if defined(SUPPORT_WEBHIGHSCORES)
+      #if defined(SUPPORT_WEBACCESS)
       if(m_bEnableWebHighscores && m_pWebHighscores!=NULL) {
         WebHighscore *pWebHS = m_pWebHighscores->getHighscoreFromLevel(LevelID);
         if(pWebHS != NULL) {
