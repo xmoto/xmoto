@@ -160,6 +160,7 @@ void WebHighscores::setWebsiteURL(std::string p_webhighscores_url) {
 }
 
 WebHighscore* WebHighscores::getHighscoreFromLevel(const std::string &p_levelId) {
+  printf("a :%s\n", m_webhighscores[p_levelId.c_str()]);
   #if defined(USE_HASH_MAP)
     return m_webhighscores[p_levelId.c_str()];
   #else
@@ -342,7 +343,8 @@ void FSWeb::downloadFile(const std::string &p_local_file,
 WebLevel::WebLevel(std::string p_id, std::string p_name, std::string p_url) {
   m_id   = p_id;
   m_name = p_name;
-  m_url  = p_url; 
+  m_url  = p_url;
+  m_require_update = false;
 }
 
 std::string WebLevel::getId() const {
@@ -355,6 +357,22 @@ std::string WebLevel::getName() const {
 
 std::string WebLevel::getUrl() const {
   return m_url;
+}
+
+bool WebLevel::requireUpdate() const {
+  return m_require_update;
+}
+
+void WebLevel::setRequireUpdate(bool p_require_update) {
+  m_require_update = p_require_update;
+}
+
+void WebLevel::setCurrentPath(std::string p_current_path) {
+  m_current_path = p_current_path;
+}
+
+std::string WebLevel::getCurrentPath() const {
+  return m_current_path;
 }
 
 WebLevels::WebLevels(vapp::WWWAppInterface *p_WebLevelApp,
@@ -404,7 +422,7 @@ void WebLevels::extractLevelsToDownloadFromXml() {
   TiXmlDocument *v_webLXmlData;
   TiXmlElement *v_webLXmlDataElement;
   const char *pc;
-  std::string v_levelId, v_levelName, v_url;
+  std::string v_levelId, v_levelName, v_url, v_CRC32sum_web;
   
   v_webLXml.readFromFile(getXmlFileName());
   v_webLXmlData = v_webLXml.getLowLevelAccess();
@@ -429,9 +447,14 @@ void WebLevels::extractLevelsToDownloadFromXml() {
 	if(pc != NULL) {
 	  v_url = pc;	 
 	  
-	  /* if it doesn't exist */
-	  if(m_WebLevelApp->doesLevelExist(v_levelId) == false) {
-	    m_webLevels.push_back(new WebLevel(v_levelId, v_levelName, v_url));
+	  pc = pVarElem->Attribute("sum");
+	  if(pc != NULL) {
+	    v_CRC32sum_web = pc;	
+
+	    /* if it doesn't exist */
+	    if(m_WebLevelApp->doesLevelExist(v_levelId) == false) {
+	      m_webLevels.push_back(new WebLevel(v_levelId, v_levelName, v_url));
+	    }
 	  }
 	}
       }
@@ -507,7 +530,7 @@ void WebLevels::upgrade() {
     float v_percentage = (((float)v_nb_levels_downloaded) * 100.0) / ((float)v_nb_levels_to_download);
 
     m_WebLevelApp->setTaskProgress(v_percentage);
-    m_WebLevelApp->setBeingDownloadedLevel((*it)->getName());
+    m_WebLevelApp->setBeingDownloadedLevel((*it)->getName()/*, (*it)->requireUpdate()*/);
 
     v_data.v_nb_levels_downloaded = v_nb_levels_downloaded;
     std::string v_destFile = getDestinationFile(v_url);

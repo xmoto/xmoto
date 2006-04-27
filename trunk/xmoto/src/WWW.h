@@ -18,7 +18,7 @@
 #define DEFAULT_WEBHIGHSCORES_URL         "http://aspegic500.free.fr/xmoto_highscores/highscores.xml"
 #define DEFAULT_WEBHIGHSCORES_FILENAME    "webhighscores.xml"
 #define DEFAULT_TRANSFERT_TIMEOUT         240
-#define DEFAULT_TRANSFERT_CONNECT_TIMEOUT 20
+#define DEFAULT_TRANSFERT_CONNECT_TIMEOUT 10
 #define DEFAULT_WEBLEVELS_URL             "http://aspegic500.free.fr/xmoto_highscores/levels.xml"
 #define DEFAULT_WEBLEVELS_FILENAME        "weblevels.xml"
 #define DEFAULT_WEBLEVELS_DIR             "downloaded"
@@ -150,10 +150,21 @@ public:
   std::string getId() const;
   std::string getName() const;
   std::string getUrl() const;
+
+  /* true if the level should be updated from the website but exists */  
+  bool requireUpdate() const; /* false by default */
+  void setRequireUpdate(bool p_require_update);
+
+  /* if level require update, these methods have a sense */
+  void setCurrentPath(std::string p_current_path);
+  std::string getCurrentPath() const;
+
 private:
   std::string m_id;
   std::string m_name;
   std::string m_url;
+  bool m_require_update;
+  std::string m_current_path;
 };
 
 class WebLevels {
