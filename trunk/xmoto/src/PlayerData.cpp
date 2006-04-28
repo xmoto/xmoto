@@ -92,7 +92,7 @@ namespace vapp {
   Load from binary (would rather use XML, but this makes it a bit more 
   cumbersome to cheat)
   ===========================================================================*/
- 	void PlayerData::loadFile(void) {
+	void PlayerData::loadFile(void) {
 	  _FreePlayerData();
 	
 	  /* Open binary file for input */
@@ -293,9 +293,6 @@ namespace vapp {
 	  
 	  for(int i=0;i<pPlayer->CompletedInternals.size();i++)
 	    if(pPlayer->CompletedInternals[i] == LevelID) return true;
-
-	  for(int i=0;i<pPlayer->CompletedInternals.size();i++)
-	  if(pPlayer->CompletedInternals[i] == LevelID) return true;
 	  
 	  return false;
 	}
@@ -338,8 +335,6 @@ namespace vapp {
   Check if a level is internal
   ===========================================================================*/
   bool PlayerData::isInternal(std::string LevelID) {
-      return true;
-
     char *pcInternals[] = {
       "_iL00_","_iL01_","_iL02_","_iL03_","_iL04_","_iL05_","_iL06_","_iL07_","_iL08_","_iL09_",
       "_iL10_","_iL11_","_iL12_","_iL13_","_iL14_","_iL15_","_iL16_","_iL17_","_iL18_","_iL19_",
@@ -361,7 +356,7 @@ namespace vapp {
 	
   /*===========================================================================
   Merge finish time
-  ===========================================================================*/
+   ===========================================================================*/
 	void PlayerData::addFinishTime(std::string PlayerName,std::string Replay,std::string LevelID,float fTime,std::string TimeStamp) {
 	  PlayerProfile *pPlayer = getProfile(PlayerName);
 	  if(pPlayer == NULL) return;
