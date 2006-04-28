@@ -270,6 +270,9 @@ void FSWeb::downloadFile(const std::string &p_local_file,
 
   std::string v_local_file_tmp = p_local_file + ".part";
 
+  std::string v_proxy_server;
+  std::string v_proxy_auth_str;
+
   /* open the file */
   if( (v_destinationFile = fopen(v_local_file_tmp.c_str(), "w")) == false) {
     throw vapp::Exception("error : unable to open output file " 
@@ -296,8 +299,8 @@ void FSWeb::downloadFile(const std::string &p_local_file,
        curl_easy_setopt(v_curl, CURLOPT_PROXY, p_proxy_settings->getServer().c_str());
        result is destroyed on call to curl_easy_perform
     */
-    std::string v_proxy_server = p_proxy_settings->getServer();
-    std::string v_proxy_auth_str =
+    v_proxy_server = p_proxy_settings->getServer();
+    v_proxy_auth_str =
       p_proxy_settings->getAuthentificationUser()
       + " "
       + p_proxy_settings->getAuthentificationPassword();

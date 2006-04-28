@@ -269,7 +269,7 @@ namespace vapp {
 	  m_Profiles.push_back(pProfile);
 	  return pProfile;
 	}
-	
+   
 	void PlayerData::destroyProfile(std::string PlayerName) {
 	  for(int i=0;i<m_Profiles.size();i++) {
 	    if(m_Profiles[i]->PlayerName == PlayerName) {
@@ -335,9 +335,7 @@ namespace vapp {
   Check if a level is internal
   ===========================================================================*/
   bool PlayerData::isInternal(std::string LevelID) {
-    return true;
-
-    char *pcInternals[] = {
+      char *pcInternals[] = {
       "_iL00_","_iL01_","_iL02_","_iL03_","_iL04_","_iL05_","_iL06_","_iL07_","_iL08_","_iL09_",
       "_iL10_","_iL11_","_iL12_","_iL13_","_iL14_","_iL15_","_iL16_","_iL17_","_iL18_","_iL19_",
       "_iL20_","_iL21_","_iL22_","_iL23_","_iL24_","_iL25_","_iL26_","_iL27_","_iL28_","_iL29_",
