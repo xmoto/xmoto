@@ -1252,15 +1252,15 @@ namespace vapp {
         break;
       case GS_PLAYING:
         switch(nKey) {
-          case SDLK_ESCAPE:
-            /* Escape pauses */
-            setState(GS_PAUSE);
-            m_pPauseMenu->showWindow(true);
-            m_nPauseShade = 0;
-            break;
+	case SDLK_ESCAPE:
+	  /* Escape pauses */
+	  setState(GS_PAUSE);
+	  m_pPauseMenu->showWindow(true);
+	  m_nPauseShade = 0;
+	  break;
           default:
             /* Notify the controller */
-            m_InputHandler.handleInput(INPUT_KEY_DOWN,nKey,m_MotoGame.getBikeController());
+            m_InputHandler.handleInput(INPUT_KEY_DOWN,nKey,m_MotoGame.getBikeController(), &m_Renderer);
         }
         break; 
     }
@@ -1282,7 +1282,7 @@ namespace vapp {
         break;
       case GS_PLAYING:
         /* Notify the controller */
-        m_InputHandler.handleInput(INPUT_KEY_UP,nKey,m_MotoGame.getBikeController());
+        m_InputHandler.handleInput(INPUT_KEY_UP,nKey,m_MotoGame.getBikeController(), &m_Renderer);
         break; 
     }
   }
@@ -1480,6 +1480,8 @@ namespace vapp {
     m_Config.createVar( "KeyFlipLeft1",           "Left" );
     m_Config.createVar( "KeyFlipRight1",          "Right" );
     m_Config.createVar( "KeyChangeDir1",          "Space" );
+    m_Config.createVar( "KeyZoomIn",              "PageUp" );
+    m_Config.createVar( "KeyZoomOut",             "PageDown" );
         
     m_Config.createVar( "JoyIdx1",                "-1" );
     m_Config.createVar( "JoyAxisPrim1",           "" );
@@ -1586,49 +1588,69 @@ namespace vapp {
   }
  
   std::string GameApp::_DetermineNextLevel(LevelSrc *pLevelSrc) {
-    /* If the given level is an internal, it's rather straightforward to determine the next one */
-    if(m_Profiles.isInternal(pLevelSrc->getID())) {
-      /* Goodie. */
-      int nLevelNum = -1;
-      sscanf(pLevelSrc->getID().c_str(),"_iL%02d_",&nLevelNum);
-      if(nLevelNum < 0) return ""; /* some problem... */      
-      char cNextLevelID[256];
-      sprintf(cNextLevelID,"_iL%02d_",nLevelNum+1);
-      
-      LevelSrc *pNextLevelSrc = _FindLevelByID(cNextLevelID);
-      if(pNextLevelSrc == NULL) return ""; /* no more levels */
-      
-      return pNextLevelSrc->getID();
-    }
-    
-    /* Not internal... maybe it's in a level pack? */
-    if(pLevelSrc->getLevelPack() != "") {
-      LevelPack *pPack = _FindLevelPackByName(pLevelSrc->getLevelPack());
-      if(pPack != NULL) {
-        /* Determine next then */
-        for(int i=0;i<pPack->Levels.size()-1;i++) {
-          if(pPack->Levels[i] == pLevelSrc) {
-            return pPack->Levels[i+1]->getID();
-          }
-        }
+    int i;
+    bool v_found;
+    int v_current_level;
+
+    /* Look through all level sources... */
+    i = 0;
+    v_found = false;
+    while(v_found == false && i<m_nNumLevels) {
+      if(m_Levels[i].getID() == pLevelSrc->getID()) {
+	v_found = true;
+	v_current_level = i;
+      } else {
+	i++;
       }
     }
+
+    /* if not found */
+    if(v_found == false) {
+      return "";
+    }
+
+    /* determine current level type */
+    bool isCurrentPack = pLevelSrc->getLevelPack() != "";
+
+    /* case of pack */
+    if(isCurrentPack) {
+      LevelPack *pPack = _FindLevelPackByName(pLevelSrc->getLevelPack());
+      if(pPack != NULL) {
+	/* Determine next then */
+	for(int j=0; j<pPack->Levels.size()-1; j++) {
+	  if(pPack->Levels[j] == pLevelSrc) {
+	    return pPack->Levels[j+1]->getID();
+	  }
+	}
+      }
+      return "";
+    }
+
+    /* determine current level type */
+    bool isCurrentInternal = m_Profiles.isInternal(pLevelSrc->getID());
     
-    /* Nothing. Just a random external */
+    /* find the next one */
+    i++; // from the current one
+    while(i<m_nNumLevels) {
+      bool isInternal = m_Profiles.isInternal(m_Levels[i].getID());
+
+      /* case of internal level */
+      if(isCurrentInternal && isInternal) {
+	return m_Levels[i].getID();
+      }
+     
+      /* case of external */
+      if(isCurrentInternal == false && isInternal == false) {
+	return m_Levels[i].getID();
+      }
+      
+      i++;
+    }
     return "";
   }
   
   bool GameApp::_IsThereANextLevel(LevelSrc *pLevelSrc) {
-    /* If it's internal, there's probably one */
-    if(m_Profiles.isInternal(pLevelSrc->getID()))
-      return true;
-    
-    /* If it's in a level pack, there's probably one too */
-    if(pLevelSrc->getLevelPack() != "")
-      return true;
-      
-    /* Otherwise... probably not */
-    return false;
+    return _DetermineNextLevel(pLevelSrc) != "";
   }  
  
   /*===========================================================================

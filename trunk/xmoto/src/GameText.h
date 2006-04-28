@@ -82,19 +82,18 @@ Central place to keep many in-game text strings
 #define GAMETEXT_GENERAL              "General"
 #define GAMETEXT_GENERALINFO          "General Info"
 #define GAMETEXT_HELP                 "Help"
-#define GAMETEXT_HELPTEXT             "You control your bike using the keyboard:\n"                      \
+#define GAMETEXT_HELPTEXT(accelerate_KEY, brake_KEY, rotate_counter_clockwise_KEY, rotate_clockwise_KEY, change_direction_KEY, zoom_in_KEY, zoom_out_KEY)            "You control your bike using the keyboard:\n"                      \
                                       "\n"                                                               \
-                                      "  Up arrow - Accelerates\n"                                       \
-                                      "  Down arrow - Brakes\n"                                          \
-                                      "  Left arrow - Rotates it counter-clockwise\n"                    \
-                                      "  Right arrow - Rotates it clockwise\n"                           \
-                                      "  Space - Turns around and drives in the other direction\n"       \
-                                      "\n"                                                               \
+                                      "  " + accelerate_KEY + " - Accelerates\n"                                       \
+                                      "  " + brake_KEY + " - Brakes\n"                                          \
+                                      "  " + rotate_counter_clockwise_KEY + " - Rotates it counter-clockwise\n"                    \
+                                      "  " + rotate_clockwise_KEY + " - Rotates it clockwise\n"                           \
+                                      "  " + change_direction_KEY + " - Turns around and drives in the other direction\n"       \
+"  " + zoom_in_KEY + " - Zoom in\n" \
+"  " + zoom_out_KEY + " - Zoom out\n"       \
+                                      "\n" \
                                       "Find all the strawberries and touch the flower to finish\n"       \
                                       "the level.\n"                                                     \
-                                      "\n"                                                               \
-                                      "Note that the above key assignments can be configured\n"          \
-                                      "to suit your needs.\n"                                            \
                                       "\n"                                                               \
                                       "Read the README file or check out the website at\n"               \
                                       "http://xmoto.sourceforce.net for more information."
@@ -185,6 +184,9 @@ Central place to keep many in-game text strings
 #define GAMETEXT_WARNING              "Warning:"
 #define GAMETEXT_WORLDRECORD          "World Record: "
 #define GAMETEXT_YES                  "Yes"
+#define GAMETEXT_ZOOMIN  	      "Zoom in"
+#define GAMETEXT_ZOOMOUT 	      "Zoom out"
+
 
 /* Context help strings */
 #define CONTEXTHELP_PLAY_THIS_LEVEL_AGAIN "Play this level again"

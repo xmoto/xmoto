@@ -200,7 +200,19 @@ namespace vapp {
     pTutorialButton->setID("HELP_TUTORIAL_BUTTON");
     pSomeText = new UIStatic(m_pHelpWindow,0,0,GAMETEXT_HELP,m_pHelpWindow->getPosition().nWidth,36);
     pSomeText->setFont(m_Renderer.getMediumFont());
-    pSomeText = new UIStatic(m_pHelpWindow,10,46,GAMETEXT_HELPTEXT,m_pHelpWindow->getPosition().nWidth-20,m_pHelpWindow->getPosition().nHeight-56);
+    pSomeText = new UIStatic(m_pHelpWindow,
+			     10,
+			     46,
+			     GAMETEXT_HELPTEXT(m_Config.getString("KeyDrive1"),
+					       m_Config.getString("KeyBrake1"),
+					       m_Config.getString("KeyFlipLeft1"),
+					       m_Config.getString("KeyFlipRight1"),
+					       m_Config.getString("KeyChangeDir1"),
+					       m_Config.getString("KeyZoomIn"),
+					       m_Config.getString("KeyZoomOut")
+					       ),
+			     m_pHelpWindow->getPosition().nWidth-20,
+			     m_pHelpWindow->getPosition().nHeight-56);
     pSomeText->setFont(m_Renderer.getSmallFont());
     pSomeText->setVAlign(UI_ALIGN_TOP);
     pSomeText->setHAlign(UI_ALIGN_LEFT);
@@ -558,7 +570,7 @@ namespace vapp {
   pJoystickControls->showWindow(false);
   pConfigureJoystick->showWindow(false);
   
-  pKeyCList->setPosition(5,5,pControlsOptionsTab->getPosition().nWidth-10,118);
+  pKeyCList->setPosition(5,5,pControlsOptionsTab->getPosition().nWidth-10,238);
 #endif
 
     m_pLevelPacksWindow = new UIFrame(m_pMainMenu,300,(getDispHeight()*140)/600,"",getDispWidth()-300-20,getDispHeight()-40-(getDispHeight()*120)/600-10);      
@@ -899,6 +911,8 @@ namespace vapp {
     p = pList->addEntry(GAMETEXT_FLIPLEFT); p->Text.push_back(m_Config.getString("KeyFlipLeft1"));
     p = pList->addEntry(GAMETEXT_FLIPRIGHT); p->Text.push_back(m_Config.getString("KeyFlipRight1"));
     p = pList->addEntry(GAMETEXT_CHANGEDIR); p->Text.push_back(m_Config.getString("KeyChangeDir1"));
+    p = pList->addEntry(GAMETEXT_ZOOMIN); p->Text.push_back(m_Config.getString("KeyZoomIn"));
+    p = pList->addEntry(GAMETEXT_ZOOMOUT); p->Text.push_back(m_Config.getString("KeyZoomOut"));
   }
   
   /*===========================================================================
@@ -1965,25 +1979,26 @@ namespace vapp {
 
       if(pLevel->getFileName() != "") File = FS::getFileBaseName(pLevel->getFileName());
       else File = "???";
+
+      /* Consider it internal */
+      /* Skipped or completed? */
+      std::string Tag="";
       
+      if(m_Profiles.isLevelCompleted(m_pPlayer->PlayerName,pLevel->getID()))
+	Tag=GAMETEXT_COMPLETED;
+      else if(m_Profiles.isLevelSkipped(m_pPlayer->PlayerName,pLevel->getID()))
+	Tag=GAMETEXT_SKIPPED;
+      
+      //        printf("[%s][%s]%s\n",m_pPlayer->PlayerName.c_str(),pLevel->getID().c_str(),Tag.c_str());
+      
+
       if(bInternal) {
-        /* Consider it internal */
-        /* Skipped or completed? */
-        std::string Tag="";
-
-        if(m_Profiles.isLevelCompleted(m_pPlayer->PlayerName,pLevel->getID()))
-          Tag=GAMETEXT_COMPLETED;
-        else if(m_Profiles.isLevelSkipped(m_pPlayer->PlayerName,pLevel->getID()))
-          Tag=GAMETEXT_SKIPPED;
-
-//        printf("[%s][%s]%s\n",m_pPlayer->PlayerName.c_str(),pLevel->getID().c_str(),Tag.c_str());
-        
         pInternalLevels->addEntry(Name+Tag,reinterpret_cast<void *>(pLevel));
       }
       else {
         /* Consider it external -- but only if it's not in a level pack */
         if(pLevel->getLevelPack() == "") {
-          UIListEntry *pEntry = pExternalLevels->addEntry(Name,reinterpret_cast<void *>(pLevel));
+          UIListEntry *pEntry = pExternalLevels->addEntry(Name+Tag,reinterpret_cast<void *>(pLevel));
           
           if(pLevel->isScripted())
             pEntry->Text.push_back(GAMETEXT_YES);
@@ -2169,6 +2184,8 @@ namespace vapp {
     m_Config.setValue("KeyFlipLeft1",m_Config.getDefaultValue("KeyFlipLeft1"));
     m_Config.setValue("KeyFlipRight1",m_Config.getDefaultValue("KeyFlipRight1"));
     m_Config.setValue("KeyChangeDir1",m_Config.getDefaultValue("KeyChangeDir1"));
+    m_Config.setValue("KeyZoomIn",m_Config.getDefaultValue("KeyZoomIn"));
+    m_Config.setValue("KeyZoomOut",m_Config.getDefaultValue("KeyZoomOut"));
 
     /* The following require restart */
     m_Config.setChanged(false);      
@@ -2250,6 +2267,8 @@ namespace vapp {
       else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPLEFT) m_Config.setString("KeyFlipLeft1",pActionList->getEntries()[i]->Text[1]);
       else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPRIGHT) m_Config.setString("KeyFlipRight1",pActionList->getEntries()[i]->Text[1]);
       else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CHANGEDIR) m_Config.setString("KeyChangeDir1",pActionList->getEntries()[i]->Text[1]);
+      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_ZOOMIN) m_Config.setString("KeyZoomIn",pActionList->getEntries()[i]->Text[1]);
+      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_ZOOMOUT) m_Config.setString("KeyZoomOut",pActionList->getEntries()[i]->Text[1]);
     }
     
     m_Config.setBool("EngineSoundEnable",pEnableEngineSoundButton->getChecked());

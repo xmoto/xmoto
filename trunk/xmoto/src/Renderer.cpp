@@ -237,10 +237,15 @@ namespace vapp {
     getParent()->scissorGraphics(0,0,getParent()->getDispWidth(),getParent()->getDispHeight());
   }
 
+  void GameRenderer::zoom(float p_f) {
+    m_fScale += p_f;
+  }
+
   /*===========================================================================
   Main rendering function
   ===========================================================================*/
-  void GameRenderer::render(void) {  
+  void GameRenderer::render(void) {
+ 
     /* Update time */    
     m_pInGameStats->showWindow(true);
     m_pPlayTime->setCaption(getParent()->formatTime(getGameObject()->getTime()));
@@ -286,8 +291,8 @@ namespace vapp {
 			_RenderSky();
 
     /* Perform scaling/translation */
-    float fScale = 0.195f;
-    glScalef(fScale * ((float)getParent()->getDispHeight()) / getParent()->getDispWidth(),fScale,1);
+    
+    glScalef(m_fScale * ((float)getParent()->getDispHeight()) / getParent()->getDispWidth(), m_fScale,1);
     //glRotatef(getGameObject()->getTime()*100,0,0,1); /* Uncomment this line if you want to vomit :) */
     glTranslatef(m_Scroll.x,m_Scroll.y,0);
     

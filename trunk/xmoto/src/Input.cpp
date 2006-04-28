@@ -35,7 +35,9 @@ namespace vapp {
     "Brake",           ACTION_BRAKE,             
     "PullBack",        ACTION_PULLBACK,          
     "PushForward",     ACTION_PUSHFORWARD,       
-    "ChangeDirection", ACTION_CHANGEDIR,         
+    "ChangeDirection", ACTION_CHANGEDIR,     
+    "ZoomIn",          ACTION_ZOOMIN,     
+    "ZoomOut",         ACTION_ZOOMOUT,     
     NULL
   };
 
@@ -82,6 +84,8 @@ namespace vapp {
     "8",               SDLK_8,
     "9",               SDLK_9,
     "0",               SDLK_0,
+    "PageUp",          SDLK_PAGEUP,
+    "PageDown",        SDLK_PAGEDOWN,
     /* TODO: add more */
     NULL    
   };
@@ -303,10 +307,13 @@ namespace vapp {
         m_nPullBackKey1 = _StringToKey(pConfig->getString("KeyFlipLeft1"));
         m_nPushForwardKey1 = _StringToKey(pConfig->getString("KeyFlipRight1"));
         m_nChangeDirKey1 = _StringToKey(pConfig->getString("KeyChangeDir1"));
+	m_nZoomIn = _StringToKey(pConfig->getString("KeyZoomIn"));
+	m_nZoomOut = _StringToKey(pConfig->getString("KeyZoomOut"));
         
         /* All good? */
         if(m_nDriveKey1<0 || m_nBrakeKey1<0 || m_nPullBackKey1<0 ||
-          m_nPushForwardKey1<0 || m_nChangeDirKey1<0) {
+          m_nPushForwardKey1<0 || m_nChangeDirKey1<0 || 
+	   m_nZoomIn<0 || m_nZoomOut <0) {
           Log("** Warning ** : Invalid keyboard configuration!");
           _SetDefaultConfig();
         }
@@ -361,7 +368,10 @@ namespace vapp {
   /*===========================================================================
   Handle an input event
   ===========================================================================*/  
-  void InputHandler::handleInput(InputEventType Type,int nKey,BikeController *pController) {
+  void InputHandler::handleInput(InputEventType Type,
+				 int nKey,
+				 BikeController *pController,
+				 GameRenderer *pGameRender) {
     /* Update controller 1 */
     if(m_ControllerModeID1 == CONTROLLER_MODE_KEYBOARD) {
       /* Keyboard controlled */
@@ -382,7 +392,14 @@ namespace vapp {
           else if(m_nPushForwardKey1 == nKey) {
             /* Push forward */
             pController->bPushForward = true;            
-          }
+          } else if(m_nZoomIn == nKey) {
+	    /* Zoom in */
+	    pGameRender->zoom(0.002);
+	  } else if(m_nZoomOut == nKey) {
+	    /* Zoom out */
+	    pGameRender->zoom(-0.002);
+	  }
+
           break;
         case INPUT_KEY_UP:
           if(m_nDriveKey1 == nKey) {
@@ -426,11 +443,13 @@ namespace vapp {
   void InputHandler::_SetDefaultConfig(void) {
     m_ControllerModeID1 = CONTROLLER_MODE_KEYBOARD;
     
-    m_nDriveKey1 = SDLK_UP;
-    m_nBrakeKey1 = SDLK_DOWN;
-    m_nPullBackKey1 = SDLK_LEFT;
+    m_nDriveKey1       = SDLK_UP;
+    m_nBrakeKey1       = SDLK_DOWN;
+    m_nPullBackKey1    = SDLK_LEFT;
     m_nPushForwardKey1 = SDLK_RIGHT;
-    m_nChangeDirKey1 = SDLK_SPACE;
+    m_nChangeDirKey1   = SDLK_SPACE;
+    m_nZoomIn          = SDLK_PAGEUP;
+    m_nZoomOut         = SDLK_PAGEDOWN;
   }  
 
   /*===========================================================================
@@ -444,6 +463,8 @@ namespace vapp {
     if(Action == "PullBack") return _KeyToString(m_nPullBackKey1);
     if(Action == "PushForward") return _KeyToString(m_nPushForwardKey1);
     if(Action == "ChangeDir") return _KeyToString(m_nChangeDirKey1);
+    if(Action == "ZoomIn") return _KeyToString(m_nZoomIn);
+    if(Action == "ZoomOut") return _KeyToString(m_nZoomOut);
 
     return "?";
   }

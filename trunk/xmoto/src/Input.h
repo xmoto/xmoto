@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VApp.h"
 #include "MotoGame.h"
 #include "UserConfig.h"
+#include "Renderer.h"
 
 namespace vapp {
 
@@ -77,6 +78,8 @@ namespace vapp {
     ACTION_PULLBACK,          /* Param: None */
     ACTION_PUSHFORWARD,       /* Param: None */
     ACTION_CHANGEDIR,         /* Param: None */
+    ACTION_ZOOMIN,            /* Param: None */
+    ACTION_ZOOMOUT,           /* Param: None */
   };
     
   struct InputAction {
@@ -98,7 +101,7 @@ namespace vapp {
       
       /* Methods */
       void configure(UserConfig *pConfig);
-      void handleInput(InputEventType Type,int nKey,BikeController *pController);      
+      void handleInput(InputEventType Type,int nKey,BikeController *pController, GameRenderer *pGameRender);      
       std::string waitForKey(void);
       void updateInput(BikeController *pController);
       void init(UserConfig *pConfig);
@@ -126,6 +129,8 @@ namespace vapp {
       int m_nPullBackKey1;
       int m_nPushForwardKey1;
       int m_nChangeDirKey1;
+      int m_nZoomIn;
+      int m_nZoomOut;
 
       /* For ControllerMode1 = CONTROLLER_MODE_JOYSTICK1 */
       SDL_Joystick *m_pActiveJoystick1;

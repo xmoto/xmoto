@@ -153,7 +153,13 @@ namespace vapp {
   ===========================================================================*/
   class GameRenderer {
     public:
-      GameRenderer() {m_nNumSpriteTypes=0; m_bDebug=false; m_Quality=GQ_HIGH; m_fSpeedMultiply=1.0f;}
+      GameRenderer() {
+	m_nNumSpriteTypes=0;
+	m_bDebug=false;
+	m_Quality=GQ_HIGH;
+	m_fSpeedMultiply=1.0f;
+	m_fScale = 0.195f;
+      }
       ~GameRenderer() {_Free();}
     
       /* Methods */
@@ -182,9 +188,12 @@ namespace vapp {
       std::string getBestTime(void) {return m_pBestTime->getCaption();}
       void setQuality(GraphQuality Quality) {m_Quality = Quality;}      
       void setSpeedMultiplier(float f) {m_fSpeedMultiply = f;}
-    
+      void zoom(float p_f);
+
     private:
       /* Data */
+      float m_fScale;
+
       std::vector<GraphDebugInfo *> m_DebugInfo;
       
       std::vector<StaticGeom *> m_Geoms;
