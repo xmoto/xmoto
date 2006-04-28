@@ -292,8 +292,19 @@ void FSWeb::downloadFile(const std::string &p_local_file,
 
   /* set proxy settings */
   if(p_proxy_settings != NULL) {
+    /* v_proxy_server because 
+       after call to 
+       curl_easy_setopt(v_curl, CURLOPT_PROXY, p_proxy_settings->getServer().c_str());
+       result is destroyed on call to curl_easy_perform
+    */
+    std::string v_proxy_server = p_proxy_settings->getServer();
+    std::string v_proxy_auth_str =
+      p_proxy_settings->getAuthentificationUser()
+      + " "
+      + p_proxy_settings->getAuthentificationPassword();
+
     if(p_proxy_settings->useDefaultServer() == false) {
-      curl_easy_setopt(v_curl, CURLOPT_PROXY, p_proxy_settings->getServer().c_str());
+      curl_easy_setopt(v_curl, CURLOPT_PROXY, v_proxy_server.c_str());
     }
     
     if(p_proxy_settings->useDefaultPort() == false) {
@@ -303,10 +314,6 @@ void FSWeb::downloadFile(const std::string &p_local_file,
     curl_easy_setopt(v_curl, CURLOPT_PROXYTYPE, p_proxy_settings->getType());
    
     if(p_proxy_settings->useDefaultAuthentification() == false) {
-      std::string v_proxy_auth_str =
-	p_proxy_settings->getAuthentificationUser()
-	+ " "
-	+ p_proxy_settings->getAuthentificationPassword();
       curl_easy_setopt(v_curl, CURLOPT_PROXYUSERPWD,
 		       v_proxy_auth_str.c_str());
     }
