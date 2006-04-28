@@ -160,7 +160,6 @@ void WebHighscores::setWebsiteURL(std::string p_webhighscores_url) {
 }
 
 WebHighscore* WebHighscores::getHighscoreFromLevel(const std::string &p_levelId) {
-  printf("a :%s\n", m_webhighscores[p_levelId.c_str()]);
   #if defined(USE_HASH_MAP)
     return m_webhighscores[p_levelId.c_str()];
   #else

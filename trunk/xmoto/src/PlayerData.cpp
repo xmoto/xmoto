@@ -335,6 +335,8 @@ namespace vapp {
   Check if a level is internal
   ===========================================================================*/
   bool PlayerData::isInternal(std::string LevelID) {
+    return true;
+
     char *pcInternals[] = {
       "_iL00_","_iL01_","_iL02_","_iL03_","_iL04_","_iL05_","_iL06_","_iL07_","_iL08_","_iL09_",
       "_iL10_","_iL11_","_iL12_","_iL13_","_iL14_","_iL15_","_iL16_","_iL17_","_iL18_","_iL19_",
