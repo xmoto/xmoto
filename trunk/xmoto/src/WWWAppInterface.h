@@ -38,8 +38,7 @@ namespace vapp {
     virtual void setTaskProgress(float p_percent) = 0;
 
     /* p_isNew is true if it's a new level, false if it's just an update */
-    virtual void setBeingDownloadedLevel(const std::string &p_LevelName) = 0;
-    //virtual void setBeingDownloadedLevel(const std::string &p_LevelName, bool p_isNew) = 0;
+    virtual void setBeingDownloadedLevel(const std::string &p_LevelName,bool p_isNew=true) = 0;
 
     virtual void readEvents() = 0;
     
@@ -47,10 +46,13 @@ namespace vapp {
     virtual bool doesLevelExist(const std::string &p_LevelId) = 0;
   
     /* return the level file or "" if you won't the level be updated (if required) */
-    //virtual std::string levelPathForUpdate(const std::string &p_LevelId) = 0;
+    virtual std::string levelPathForUpdate(const std::string &p_LevelId) = 0;
 
     /* return the CRC32 sum or "" if can't determine it */
-    //virtual std::string levelCRC32Sum(const std::string &p_LevelId) = 0;
+    virtual std::string levelCRC32Sum(const std::string &p_LevelId) = 0;
+    
+    /* return the MD5 sum or "" not available */
+    //virtual std::string levelMD5Sum(const std::string &LevelID) = 0;
 
     /* Data interface */
     void setCancelAsSoonAsPossible() {m_cancel_as_soon_as_possible = true;}

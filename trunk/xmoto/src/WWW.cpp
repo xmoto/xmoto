@@ -476,6 +476,9 @@ void WebLevels::extractLevelsToDownloadFromXml() {
 	  pc = pVarElem->Attribute("sum");
 	  if(pc != NULL) {
 	    v_CRC32sum_web = pc;	
+	    
+	    /* The CRC32 of php is not the same as the one i'm using :( */
+	    //printf("[%s][%s][%s]\n",v_levelId.c_str(),m_WebLevelApp->levelCRC32Sum(v_levelId).c_str(),pc);
 
 	    /* if it doesn't exist */
 	    if(m_WebLevelApp->doesLevelExist(v_levelId) == false) {

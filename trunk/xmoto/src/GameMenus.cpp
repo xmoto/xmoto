@@ -1408,6 +1408,7 @@ namespace vapp {
         else {
           /* No internet connection thank you */
           m_bEnableWebHighscores = false;
+          m_Config.setBool("WebHighscores",false);
 
           setState(GS_MENU);
         }

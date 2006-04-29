@@ -217,6 +217,8 @@ namespace vapp {
         for(int i=0;i<pEnt->Params.size();i++) if(pEnt->Params[i]->Name == ID) return pEnt->Params[i]->Value;
         return Def;
       }
+      
+      const LevelCheckSum *getLevelCheckSum(void) {return &m_LevelCheckSum;}
     
     private:
       /* Data */
@@ -237,6 +239,8 @@ namespace vapp {
       std::vector<LevelBlock *> m_Blocks; /* Level blocks */
       std::vector<LevelZone *> m_Zones; /* Level zones */
       std::vector<LevelEntity *> m_Entities; /* Level entities */
+      
+      LevelCheckSum m_LevelCheckSum;
       
       /* Helper methods */
       TiXmlElement *_FindElement(TiXmlElement *pRoot,const std::string &Name);

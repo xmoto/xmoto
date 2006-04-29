@@ -32,6 +32,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   #include <curl/curl.h>
 #endif
 
+//#include "md5/md5.h"
+
 namespace vapp {
 
   /* CRY! */
@@ -1838,7 +1840,7 @@ namespace vapp {
   WWWAppInterface implementation
   ===========================================================================*/
   #if defined(SUPPORT_WEBACCESS)
-    
+        
   void GameApp::setTaskProgress(float fPercent) {
     int nBarHeight = 15;
     
@@ -1860,7 +1862,7 @@ namespace vapp {
     SDL_GL_SwapBuffers();            
   }
   
-  void GameApp::setBeingDownloadedLevel(const std::string &LevelName) {
+  void GameApp::setBeingDownloadedLevel(const std::string &LevelName,bool bNewLevel) {
     drawText(Vector2f(0,0),LevelName + std::string("(Temp. message, make it nicer... kthxbye.)                     "),MAKE_COLOR(0,0,0,255));
   }
   
@@ -1890,6 +1892,40 @@ namespace vapp {
     return _FindLevelByID(LevelID) != NULL;
   }
   
+  std::string GameApp::levelPathForUpdate(const std::string &p_LevelId) {
+    LevelSrc *pLevel = _FindLevelByID(p_LevelId);
+    if(pLevel != NULL) {
+      //pLevel->getFileName(
+      //printf("\n-----\nLEVEL: %s\n",p_LevelId.c_str());
+      //printf("FILENAME: %s\n-----\n",pLevel->getFileName().c_str());
+    }
+    return "";
+  }
+  
+  std::string GameApp::levelCRC32Sum(const std::string &p_LevelId) {
+    LevelSrc *pLevel = _FindLevelByID(p_LevelId);
+    if(pLevel != NULL) {
+      char cBuf[256];
+      const LevelCheckSum *pSum = pLevel->getLevelCheckSum();      
+      sprintf(cBuf,"%ul",pSum->nCRC32);
+      return cBuf;
+    }
+    return "";
+  }
+  
+  std::string GameApp::levelMD5Sum(const std::string &LevelID) {
+    /* Get full path of level */
+    //std::string FullPath = levelPathForUpdate(LevelID);
+    //if(FullPath != "") {
+    //  /* Prepare MD5 calculation */
+    //  /* Open file */
+    //  
+    //}
+    
+    /* Nothing */
+    return "";
+  }  
+    
   #endif
 
   /*===========================================================================

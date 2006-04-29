@@ -166,7 +166,8 @@ namespace vapp {
   void LevelSrc::loadXML(void) {
     /* Load XML document and fetch tinyxml handle */
     _UnloadLevelData();
-    m_XML.readFromFile( m_FileName );
+    m_LevelCheckSum.nCRC32 = 0;
+    m_XML.readFromFile( m_FileName,&m_LevelCheckSum.nCRC32 );
     
     TiXmlDocument *pDoc = m_XML.getLowLevelAccess();
     
@@ -670,6 +671,8 @@ namespace vapp {
         
       if(nFormat == 1) {
         /* Read "format 1" binary level */
+        m_LevelCheckSum.nCRC32 = pSum->nCRC32;
+        
         /* Right CRC? */
         if(FS::readInt_LE(pfh) != pSum->nCRC32) {
           Log("** Warning ** : CRC check failed, can't import: %s",FileName.c_str());
@@ -724,7 +727,7 @@ namespace vapp {
               pV->fX = FS::readFloat_LE(pfh);
               pV->fY = FS::readFloat_LE(pfh);
               pV->EdgeEffect = FS::readString(pfh);
-             
+              
               pBlock->Vertices.push_back(pV);
             }
             
@@ -801,7 +804,7 @@ namespace vapp {
         Log("** Warning ** : Invalid binary format (%d), can't import: %s",nFormat,FileName.c_str());
         bRet = false;
       }
-    
+             
       /* clean up */
       FS::closeFile(pfh);
     }

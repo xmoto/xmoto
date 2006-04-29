@@ -129,10 +129,14 @@ namespace vapp {
         /* WWWAppInterface implementation */ 
         virtual void setTaskProgress(float fPercent);
 
-        virtual void setBeingDownloadedLevel(const std::string &LevelName);
+        virtual void setBeingDownloadedLevel(const std::string &LevelName,bool p_bNew = true);
         virtual void readEvents(void);
         
         virtual bool doesLevelExist(const std::string &LevelID); 
+
+        virtual std::string levelPathForUpdate(const std::string &p_LevelId);
+        virtual std::string levelCRC32Sum(const std::string &p_LevelId);
+        virtual std::string levelMD5Sum(const std::string &LevelID);
       #endif
       
       /* Virtual methods */
