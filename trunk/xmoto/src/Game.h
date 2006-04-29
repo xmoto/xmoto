@@ -53,6 +53,7 @@ namespace vapp {
     GS_REPLAYING,             /* Replaying */
     GS_LEVEL_INFO_VIEWER,     /* In level info viewer */
     GS_LEVELPACK_VIEWER,      /* In level pack viewer */
+    GS_EDIT_WEBCONFIG,        /* Editing internet configuration */
   };
 
 	/*===========================================================================
@@ -102,9 +103,11 @@ namespace vapp {
                  m_pSaveReplayMsgBox=NULL;
                  m_pReplaysWindow=NULL;
                  m_pLevelPacksWindow=NULL;
+                 m_pWebConfEditor=NULL;
                  m_pLevelPackViewer=NULL;  
                  m_pActiveLevelPack=NULL;
                  m_pGameInfoWindow=NULL;
+                 m_pWebConfMsgBox=NULL;
                  m_b50FpsMode = false;
                  m_bUglyMode = false;
                  m_pReplay = NULL;
@@ -255,6 +258,10 @@ namespace vapp {
       UIMsgBox *m_pNewProfileMsgBox;    
       UIMsgBox *m_pDeleteProfileMsgBox;
       
+      /* Internet connection configurator */
+      UIFrame *m_pWebConfEditor;      
+      UIMsgBox *m_pWebConfMsgBox;    
+      
       /* Level pack viewer fun */
       UIFrame *m_pLevelPackViewer;  
       LevelPack *m_pActiveLevelPack;
@@ -284,6 +291,7 @@ namespace vapp {
       void _HandlePauseMenu(void);
       void _HandleJustDeadMenu(void);
       void _HandleFinishMenu(void);
+      void _HandleWebConfEditor(void);
       void _HandleProfileEditor(void);
       void _HandleLevelInfoViewer(void);
       void _HandleLevelPackViewer(void);
@@ -326,11 +334,13 @@ namespace vapp {
       void _ConfigureProxy(void);
       
       void _CheckForExtraLevels(void);
+      void _UpdateWebHighscores(bool bSilent);
       void _DownloadExtraLevels(void);
       
       int _LoadLevels(const std::vector<std::string> &LvlFiles);
       std::string _FixHighscoreTime(const std::string &s);
-      
+    
+      void _InitWebConf(void);  
   };
 
 };

@@ -313,6 +313,28 @@ namespace vapp {
       int m_nGroup;                             /* In window group */    
   };  
 
+	/*===========================================================================
+	UI edit
+  ===========================================================================*/
+  class UIEdit : public UIWindow {
+    public:
+      UIEdit() {}
+      UIEdit(UIWindow *pParent,int x=0,int y=0,std::string Caption="",int nWidth=0,int nHeight=0) {
+        initW(pParent,x,y,Caption,nWidth,nHeight);
+        m_nCursorPos = 0;
+      }      
+    
+      /* Methods */
+      virtual void paint(void);
+      virtual bool keyDown(int nKey,int nChar);
+      
+      virtual bool offerActivation(void) {return true;}
+
+    private:
+      /* Data */
+      int m_nCursorPos;
+    
+  };
 
 	/*===========================================================================
 	UI frame

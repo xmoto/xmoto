@@ -1,6 +1,8 @@
-X-Moto 0.1.13 (alpha) 2006-
+X-Moto 0.1.14 (alpha) 2006-
 --------------------------------
-
+ * New version numbering policy: If the last number is even it's
+   a stable X-Moto release, otherwise it's an unstable development
+   version (from CVS).
  * Major bug in the player head/entity collision detection code fixed. 
  * Level files are now cached for much faster loading time.
  * Integration with Nicolas Adenis-Lamarre's website; World records 
@@ -8,7 +10,7 @@ X-Moto 0.1.13 (alpha) 2006-
    automatically.
  * New (optional) library dependency: libcurl. If library isn't found
    by ./configure, the online high-score system is disabled, so please
-   install libcurl (version 3) before upgrading to X-Moto 0.1.13. 
+   install libcurl (version 3) before upgrading to X-Moto 0.1.14. 
    (This does not affect X-Moto on Windows, libcurl is included with 
    the game there).
  * Slight physics adjustment: It should no longer be possible to fall
@@ -16,7 +18,7 @@ X-Moto 0.1.13 (alpha) 2006-
    affect the gameplay.
  * Alpha-testing enabled for sprites; which are less fuzzy looking 
    now. Also looks better with anti-aliasing.
- * Lot's of new UI stuff, including context help.
+ * Lots of new UI stuff, including context help.
  * It's now possible to see what level you're playing.
  * Less retarded usage of SDL_Delay(), UI more responsive.
  * Fixed bug that made it difficult to click tabs in level info 

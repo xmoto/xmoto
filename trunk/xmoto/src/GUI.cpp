@@ -1030,7 +1030,7 @@ FRAME_BR (187,198) (8x8)
     glDisable(GL_BLEND);
     glDisable(GL_TEXTURE_2D);
   }
-  
+    
   void UITextDraw::getTextExt(UIFont *pFont,std::string Text,int *pnMinX,int *pnMinY,int *pnMaxX,int *pnMaxY) {
     int cx=0,cy=0;
     
@@ -1045,10 +1045,14 @@ FRAME_BR (187,198) (8x8)
         cy += (pFont->Chars['|'].nHeight*3)/2;
         cx = 0;
       }
+      else if(nChar == ' ') {
+        cx += pFont->Chars['-'].nIncX;
+        if(pnMaxX) *pnMaxX += pFont->Chars['-'].nIncX;
+      }
       else if(pFont->Chars[nChar].bAvail) {
         int x1 = cx + pFont->Chars[nChar].nOffsetX;
         int y1 = cy - pFont->Chars[nChar].nOffsetY;
-        int x2 = x1 + pFont->Chars[nChar].nWidth;
+        int x2 = cx + pFont->Chars[nChar].nIncX;
         int y2 = y1 + pFont->Chars[nChar].nHeight;
 
         if(pnMinX && x1<*pnMinX) *pnMinX = x1;
@@ -1058,8 +1062,10 @@ FRAME_BR (187,198) (8x8)
         
         cx += pFont->Chars[nChar].nIncX;
       }
-      else
+      else {
         cx += pFont->Chars['-'].nIncX;
+        if(pnMaxX) *pnMaxX += pFont->Chars['-'].nIncX;
+      }
     }  
   }
   

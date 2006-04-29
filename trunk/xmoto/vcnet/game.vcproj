@@ -157,6 +157,9 @@
 				RelativePath="..\src\GUIButton.cpp">
 			</File>
 			<File
+				RelativePath="..\src\GUIEdit.cpp">
+			</File>
+			<File
 				RelativePath="..\src\GUIFrame.cpp">
 			</File>
 			<File

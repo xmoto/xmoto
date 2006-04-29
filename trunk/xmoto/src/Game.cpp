@@ -141,19 +141,7 @@ namespace vapp {
 
         /* The main menu, the one which is entered initially when the game 
            begins. */
-        m_pMainMenu->showWindow(true);
-        
-        /* Did the initializer come up with messages for the user? */
-        if(getUserNotify() != "") {
-          notifyMsg(getUserNotify());
-        }                
-        /* Should we show a notification box? (with important one-time info) */
-        else if(m_Config.getBool("NotifyAtInit")) {
-          notifyMsg(GAMETEXT_NOTIFYATINIT);                    
-          
-          /* Don't do this again, please */
-          m_Config.setBool("NotifyAtInit",false); 
-        }        
+        m_pMainMenu->showWindow(true);                        
         break;
       }
       case GS_PLAYING: {
@@ -250,6 +238,16 @@ namespace vapp {
         /* The profile editor can work on top of the main menu, or as init
            state when there is no player profiles available */
         m_pProfileEditor->showWindow(true);
+        break;
+      }
+      case GS_EDIT_WEBCONFIG: {
+        m_bShowCursor = true;
+        if(m_pWebConfMsgBox != NULL) delete m_pWebConfMsgBox;
+        m_pWebConfEditor->showWindow(false);
+        m_pWebConfMsgBox = m_Renderer.getGUI()->msgBox("Do you want to allow X-Moto connecting\n"
+                                                       "to the Internet to look for more levels\n"
+                                                       "and best times of other players?",
+                                                       (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
         break;
       }
       case GS_FINISHED: {
@@ -557,20 +555,8 @@ namespace vapp {
       /* Fetch highscores from web? */
       if(m_bEnableWebHighscores) {            
         _UpdateLoadingScreen((1.0f/9.0f) * 6,pLoadingScreen,GAMETEXT_DLHIGHSCORES);      
-        
-        m_pWebHighscores = new WebHighscores(&m_ProxySettings);
-        
-        /* Try downloading the highscores */
-        try {
-          m_pWebHighscores->update();
-        }
-        catch(Exception &e) {
-          /* No internet connection, probably... (just use the latest ones, if any) */
-          Log("** Warning ** : Failed to update web-highscores [%s]",e.getMsg().c_str());        
-        }
-        
-        /* Upgrade high scores */
-        m_pWebHighscores->upgrade();      
+
+        _UpdateWebHighscores(true);        
       }
     #endif
         
@@ -614,6 +600,13 @@ namespace vapp {
       if(m_pPlayer == NULL) {
         setState(GS_EDIT_PROFILES);
       }
+      #if defined(SUPPORT_WEBACCESS)
+      else if(m_Config.getBool("WebConfAtInit")) {
+        /* We need web-config */
+        _InitWebConf();
+        setState(GS_EDIT_WEBCONFIG);
+      }
+      #endif
       else {
         /* Enter the menu */
         setState(GS_MENU);
@@ -718,6 +711,7 @@ namespace vapp {
     switch(m_State) {
       case GS_MENU:
       case GS_EDIT_PROFILES:
+      case GS_EDIT_WEBCONFIG:
       case GS_LEVEL_INFO_VIEWER:
       case GS_PAUSE:
       case GS_JUSTDEAD:
@@ -769,7 +763,7 @@ namespace vapp {
         m_pDownloadLevelsMsgBox = NULL;
       }
     }
-    
+        
     /* Perform a rather precise calculation of the frame rate */    
     double fFrameTime = getRealTime();
     static int nFPS_Frames = 0;
@@ -792,9 +786,23 @@ namespace vapp {
     /* What state? */
     switch(m_State) {
       case GS_MENU:
+        /* Did the initializer come up with messages for the user? */
+        if(getUserNotify() != "") {
+          notifyMsg(getUserNotify());
+        }                
+        /* Should we show a notification box? (with important one-time info) */
+        else if(m_Config.getBool("NotifyAtInit")) {
+          notifyMsg(GAMETEXT_NOTIFYATINIT);                    
+          
+          /* Don't do this again, please */
+          m_Config.setBool("NotifyAtInit",false); 
+        }        
+
       case GS_LEVEL_INFO_VIEWER:
       case GS_LEVELPACK_VIEWER:
+      case GS_EDIT_WEBCONFIG:
       case GS_EDIT_PROFILES: {
+
         /* Draw menu background */
         _DrawMenuBackground();
                 
@@ -806,6 +814,8 @@ namespace vapp {
           _HandleMainMenu();
         else if(m_State == GS_EDIT_PROFILES)
           _HandleProfileEditor();
+        else if(m_State == GS_EDIT_WEBCONFIG)
+          _HandleWebConfEditor();
         else if(m_State == GS_LEVEL_INFO_VIEWER)
           _HandleLevelInfoViewer();
         else if(m_State == GS_LEVELPACK_VIEWER)
@@ -1178,6 +1188,7 @@ namespace vapp {
     /* What state? */
     switch(m_State) {
       case GS_EDIT_PROFILES:
+      case GS_EDIT_WEBCONFIG:
       case GS_LEVEL_INFO_VIEWER:
       case GS_LEVELPACK_VIEWER:
       case GS_MENU: {
@@ -1272,6 +1283,7 @@ namespace vapp {
   void GameApp::keyUp(int nKey) {
     /* What state? */
     switch(m_State) {
+      case GS_EDIT_WEBCONFIG:
       case GS_EDIT_PROFILES:
       case GS_LEVEL_INFO_VIEWER:
       case GS_FINISHED:
@@ -1297,6 +1309,7 @@ namespace vapp {
       case GS_JUSTDEAD:
       case GS_FINISHED:
       case GS_EDIT_PROFILES:
+      case GS_EDIT_WEBCONFIG:
       case GS_LEVEL_INFO_VIEWER:
       case GS_LEVELPACK_VIEWER:
         int nX,nY;        
@@ -1316,6 +1329,7 @@ namespace vapp {
       case GS_JUSTDEAD:
       case GS_FINISHED:
       case GS_EDIT_PROFILES:
+      case GS_EDIT_WEBCONFIG:
       case GS_LEVEL_INFO_VIEWER:
       case GS_LEVELPACK_VIEWER:
         int nX,nY;        
@@ -1341,6 +1355,7 @@ namespace vapp {
       case GS_JUSTDEAD:
       case GS_FINISHED:
       case GS_EDIT_PROFILES:
+      case GS_EDIT_WEBCONFIG:
       case GS_LEVEL_INFO_VIEWER:
       case GS_LEVELPACK_VIEWER:
         int nX,nY;
@@ -1507,9 +1522,10 @@ namespace vapp {
     m_Config.createVar( "ReplayFrameRate",        "25" );
     m_Config.createVar( "CompressReplays",        "true" );
     m_Config.createVar( "LevelCache",             "true" );
-    m_Config.createVar( "WebHighscores",          "true" );
+    m_Config.createVar( "WebHighscores",          "false" );
     m_Config.createVar( "ShowInGameWorldRecord",  "false" );
     m_Config.createVar( "ContextHelp",            "true" );
+    m_Config.createVar( "WebConfAtInit",          "true" );
     
     /* Proxy */
     m_Config.createVar( "ProxyType",              "" ); /* (blank), HTTP, SOCKS4, or SOCKS5 */
@@ -1601,12 +1617,12 @@ namespace vapp {
 
                   pc = pHintElem->Attribute("show_times");
                   if(pc != NULL) {
-                    pPack->bShowTimes = (bool)atoi(pc);
+                    pPack->bShowTimes = atoi(pc)==1;
                   }
 
                   pc = pHintElem->Attribute("show_wtimes");
                   if(pc != NULL) {
-                    pPack->bShowWebTimes = (bool)atoi(pc);
+                    pPack->bShowWebTimes = atoi(pc)==1;
                   }
                 }
               }              
@@ -1725,6 +1741,31 @@ namespace vapp {
     #endif
   }
   
+  void GameApp::_UpdateWebHighscores(bool bSilent) {
+    #if defined(SUPPORT_WEBACCESS)
+      if(m_pWebHighscores != NULL) delete m_pWebHighscores;
+      m_pWebHighscores = new WebHighscores(&m_ProxySettings);
+      
+      if(!bSilent)
+        _SimpleMessage(GAMETEXT_DLHIGHSCORES,&m_DownloadLevelsMsgBoxRect);
+
+      /* Try downloading the highscores */
+      try {
+        m_pWebHighscores->update();
+      }
+      catch(Exception &e) {
+        /* No internet connection, probably... (just use the latest times, if any) */
+        Log("** Warning ** : Failed to update web-highscores [%s]",e.getMsg().c_str());        
+        
+        if(!bSilent)
+          notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES);
+      }
+      
+      /* Upgrade high scores */
+      m_pWebHighscores->upgrade();      
+    #endif
+  }
+  
   /*===========================================================================
   Extra WWW levels
   ===========================================================================*/
@@ -1732,7 +1773,7 @@ namespace vapp {
     #if defined(SUPPORT_WEBACCESS)
       /* Download extra levels */
       if(m_pWebLevels != NULL) {
-        _SimpleMessage("Downloading extra levels...\nPress ESC to abort.\n\n ",&m_DownloadLevelsMsgBoxRect);
+        _SimpleMessage(GAMETEXT_DLLEVELS,&m_DownloadLevelsMsgBoxRect);
 
         try {                  
           Log("WWW: Downloading levels...");
@@ -1741,6 +1782,8 @@ namespace vapp {
         } 
         catch(Exception &e) {
           Log("** Warning ** : Unable to check for extra levels [%s]",e.getMsg().c_str());
+          
+          notifyMsg(GAMETEXT_FAILEDDLLEVELS);
         }      
 
         /* Got some new levels... load them! */
