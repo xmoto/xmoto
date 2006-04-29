@@ -203,15 +203,24 @@ namespace vapp {
     pSomeText = new UIStatic(m_pHelpWindow,
 			     10,
 			     46,
+			     #if defined(ENABLE_ZOOMING)
 			     GAMETEXT_HELPTEXT(m_Config.getString("KeyDrive1"),
 					       m_Config.getString("KeyBrake1"),
 					       m_Config.getString("KeyFlipLeft1"),
 					       m_Config.getString("KeyFlipRight1"),
-					       m_Config.getString("KeyChangeDir1"),
+					       m_Config.getString("KeyChangeDir1"),			       
 					       m_Config.getString("KeyZoomIn"),
 					       m_Config.getString("KeyZoomOut")
-					       ),
-			     m_pHelpWindow->getPosition().nWidth-20,
+					       )
+           #else
+			     GAMETEXT_HELPTEXT(m_Config.getString("KeyDrive1"),
+					       m_Config.getString("KeyBrake1"),
+					       m_Config.getString("KeyFlipLeft1"),
+					       m_Config.getString("KeyFlipRight1"),
+					       m_Config.getString("KeyChangeDir1")					       
+					       )
+           #endif
+			     ,m_pHelpWindow->getPosition().nWidth-20,
 			     m_pHelpWindow->getPosition().nHeight-56);
     pSomeText->setFont(m_Renderer.getSmallFont());
     pSomeText->setVAlign(UI_ALIGN_TOP);
@@ -911,8 +920,11 @@ namespace vapp {
     p = pList->addEntry(GAMETEXT_FLIPLEFT); p->Text.push_back(m_Config.getString("KeyFlipLeft1"));
     p = pList->addEntry(GAMETEXT_FLIPRIGHT); p->Text.push_back(m_Config.getString("KeyFlipRight1"));
     p = pList->addEntry(GAMETEXT_CHANGEDIR); p->Text.push_back(m_Config.getString("KeyChangeDir1"));
-    p = pList->addEntry(GAMETEXT_ZOOMIN); p->Text.push_back(m_Config.getString("KeyZoomIn"));
-    p = pList->addEntry(GAMETEXT_ZOOMOUT); p->Text.push_back(m_Config.getString("KeyZoomOut"));
+    
+    #if defined(ENABLE_ZOOMING)    
+      p = pList->addEntry(GAMETEXT_ZOOMIN); p->Text.push_back(m_Config.getString("KeyZoomIn"));
+      p = pList->addEntry(GAMETEXT_ZOOMOUT); p->Text.push_back(m_Config.getString("KeyZoomOut"));
+    #endif
   }
   
   /*===========================================================================
@@ -2184,8 +2196,11 @@ namespace vapp {
     m_Config.setValue("KeyFlipLeft1",m_Config.getDefaultValue("KeyFlipLeft1"));
     m_Config.setValue("KeyFlipRight1",m_Config.getDefaultValue("KeyFlipRight1"));
     m_Config.setValue("KeyChangeDir1",m_Config.getDefaultValue("KeyChangeDir1"));
-    m_Config.setValue("KeyZoomIn",m_Config.getDefaultValue("KeyZoomIn"));
-    m_Config.setValue("KeyZoomOut",m_Config.getDefaultValue("KeyZoomOut"));
+    
+    #if defined(ENABLE_ZOOMING)
+      m_Config.setValue("KeyZoomIn",m_Config.getDefaultValue("KeyZoomIn"));
+      m_Config.setValue("KeyZoomOut",m_Config.getDefaultValue("KeyZoomOut"));
+    #endif
 
     /* The following require restart */
     m_Config.setChanged(false);      
@@ -2267,8 +2282,10 @@ namespace vapp {
       else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPLEFT) m_Config.setString("KeyFlipLeft1",pActionList->getEntries()[i]->Text[1]);
       else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPRIGHT) m_Config.setString("KeyFlipRight1",pActionList->getEntries()[i]->Text[1]);
       else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CHANGEDIR) m_Config.setString("KeyChangeDir1",pActionList->getEntries()[i]->Text[1]);
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_ZOOMIN) m_Config.setString("KeyZoomIn",pActionList->getEntries()[i]->Text[1]);
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_ZOOMOUT) m_Config.setString("KeyZoomOut",pActionList->getEntries()[i]->Text[1]);
+      #if defined(ENABLE_ZOOMING)
+        else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_ZOOMIN) m_Config.setString("KeyZoomIn",pActionList->getEntries()[i]->Text[1]);
+        else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_ZOOMOUT) m_Config.setString("KeyZoomOut",pActionList->getEntries()[i]->Text[1]);
+      #endif
     }
     
     m_Config.setBool("EngineSoundEnable",pEnableEngineSoundButton->getChecked());

@@ -49,6 +49,9 @@ Build configuration
 /* HIDE_JOYSTICK_SUPPORT - Disable joystick config UI */
 #define HIDE_JOYSTICK_SUPPORT
 
+/* ENABLE_ZOOMING - Allow user to zoom in and out while playing */
+//#define ENABLE_ZOOMING
+
 /* DO_NOT_ALLOW_WEBACCESS - Don't compile with web-access support, 
    regardless of whether libcurl is available or not */
 //#define DO_NOT_ALLOW_WEBACCESS

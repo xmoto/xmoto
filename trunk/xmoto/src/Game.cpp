@@ -1480,8 +1480,11 @@ namespace vapp {
     m_Config.createVar( "KeyFlipLeft1",           "Left" );
     m_Config.createVar( "KeyFlipRight1",          "Right" );
     m_Config.createVar( "KeyChangeDir1",          "Space" );
-    m_Config.createVar( "KeyZoomIn",              "PageUp" );
-    m_Config.createVar( "KeyZoomOut",             "PageDown" );
+    
+    #if defined(ENABLE_ZOOMING)
+      m_Config.createVar( "KeyZoomIn",              "PageUp" );
+      m_Config.createVar( "KeyZoomOut",             "PageDown" );
+    #endif
         
     m_Config.createVar( "JoyIdx1",                "-1" );
     m_Config.createVar( "JoyAxisPrim1",           "" );

@@ -36,8 +36,10 @@ namespace vapp {
     "PullBack",        ACTION_PULLBACK,          
     "PushForward",     ACTION_PUSHFORWARD,       
     "ChangeDirection", ACTION_CHANGEDIR,     
-    "ZoomIn",          ACTION_ZOOMIN,     
-    "ZoomOut",         ACTION_ZOOMOUT,     
+    #if defined(ENABLE_ZOOMING)    
+      "ZoomIn",          ACTION_ZOOMIN,     
+      "ZoomOut",         ACTION_ZOOMOUT,     
+    #endif
     NULL
   };
 
@@ -307,13 +309,19 @@ namespace vapp {
         m_nPullBackKey1 = _StringToKey(pConfig->getString("KeyFlipLeft1"));
         m_nPushForwardKey1 = _StringToKey(pConfig->getString("KeyFlipRight1"));
         m_nChangeDirKey1 = _StringToKey(pConfig->getString("KeyChangeDir1"));
-	m_nZoomIn = _StringToKey(pConfig->getString("KeyZoomIn"));
-	m_nZoomOut = _StringToKey(pConfig->getString("KeyZoomOut"));
+
+        #if defined(ENABLE_ZOOMING)          
+	        m_nZoomIn = _StringToKey(pConfig->getString("KeyZoomIn"));
+	        m_nZoomOut = _StringToKey(pConfig->getString("KeyZoomOut"));
+	      #endif
         
         /* All good? */
         if(m_nDriveKey1<0 || m_nBrakeKey1<0 || m_nPullBackKey1<0 ||
-          m_nPushForwardKey1<0 || m_nChangeDirKey1<0 || 
-	   m_nZoomIn<0 || m_nZoomOut <0) {
+          m_nPushForwardKey1<0 || m_nChangeDirKey1<0 
+          #if defined(ENABLE_ZOOMING)
+            ||m_nZoomIn<0 || m_nZoomOut <0
+          #endif
+	        ) {
           Log("** Warning ** : Invalid keyboard configuration!");
 	  _SetDefaultConfigToUnsetKeys();
         }
@@ -392,13 +400,17 @@ namespace vapp {
           else if(m_nPushForwardKey1 == nKey) {
             /* Push forward */
             pController->bPushForward = true;            
-          } else if(m_nZoomIn == nKey) {
-	    /* Zoom in */
-	    pGameRender->zoom(0.002);
-	  } else if(m_nZoomOut == nKey) {
-	    /* Zoom out */
-	    pGameRender->zoom(-0.002);
-	  }
+          } 
+          #if defined(ENABLE_ZOOMING)          
+          else if(m_nZoomIn == nKey) {
+	          /* Zoom in */
+	          pGameRender->zoom(0.002);
+	        } 
+	        else if(m_nZoomOut == nKey) {
+	          /* Zoom out */
+	          pGameRender->zoom(-0.002);
+	        }
+	        #endif
 
           break;
         case INPUT_KEY_UP:
@@ -448,8 +460,11 @@ namespace vapp {
     m_nPullBackKey1    = SDLK_LEFT;
     m_nPushForwardKey1 = SDLK_RIGHT;
     m_nChangeDirKey1   = SDLK_SPACE;
-    m_nZoomIn          = SDLK_PAGEUP;
-    m_nZoomOut         = SDLK_PAGEDOWN;
+    
+    #if defined(ENABLE_ZOOMING)    
+      m_nZoomIn          = SDLK_PAGEUP;
+      m_nZoomOut         = SDLK_PAGEDOWN;
+    #endif
   }  
 
   void InputHandler::_SetDefaultConfigToUnsetKeys() {
@@ -475,8 +490,11 @@ namespace vapp {
     if(Action == "PullBack") return _KeyToString(m_nPullBackKey1);
     if(Action == "PushForward") return _KeyToString(m_nPushForwardKey1);
     if(Action == "ChangeDir") return _KeyToString(m_nChangeDirKey1);
-    if(Action == "ZoomIn") return _KeyToString(m_nZoomIn);
-    if(Action == "ZoomOut") return _KeyToString(m_nZoomOut);
+    
+    #if defined(ENABLE_ZOOMING)    
+      if(Action == "ZoomIn") return _KeyToString(m_nZoomIn);
+      if(Action == "ZoomOut") return _KeyToString(m_nZoomOut);
+    #endif
 
     return "?";
   }
