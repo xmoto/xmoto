@@ -53,8 +53,16 @@ namespace vapp {
     int nHX = 6,nHY = 6;
     setTextSolidColor(MAKE_COLOR(188,186,67,255));
     for(int i=0;i<m_Columns.size();i++) {
-      putText(nHX,nHY + (nHeaderHeight*2)/3,m_Columns[i]);
-      nHX += m_ColumnWidths[i];            
+      if(!(m_nColumnHideFlags & (1<<i))) {
+        putText(nHX,nHY + (nHeaderHeight*2)/3,m_Columns[i]);
+        nHX += m_ColumnWidths[i]; 
+        
+        /* Next columns disabled? If so, make more room to this one */
+        for(int j=i+1;j<m_Columns.size();j++) {
+          if(m_nColumnHideFlags & (1<<j))
+            nHX += m_ColumnWidths[i]; 
+        }           
+      }
     }
     putRect(6,nHeaderHeight+6,getPosition().nWidth-12 - 20,2,MAKE_COLOR(188,186,67,255));
         
@@ -122,9 +130,19 @@ namespace vapp {
         
         int x = 0;      
         for(int j=0;j<m_Entries[i]->Text.size();j++) {    
-          setScissor(nLX+x,yym1,m_ColumnWidths[j]-4,nLRH);
-          putText(nLX+x,nLY+y,m_Entries[i]->Text[j]);
-          x += m_ColumnWidths[j];                
+          if(!(m_nColumnHideFlags & (1<<j))) {
+            /* Next columns disabled? If so, make more room to this one */
+            int nExtraRoom = 0;
+            for(int k=j+1;k<m_Columns.size();k++) {
+              if(m_nColumnHideFlags & (1<<k))
+                nExtraRoom += m_ColumnWidths[i]; 
+            }           
+          
+            /* Draw */          
+            setScissor(nLX+x,yym1,m_ColumnWidths[j]-4+nExtraRoom,nLRH);
+            putText(nLX+x,nLY+y,m_Entries[i]->Text[j]);
+            x += m_ColumnWidths[j] + nExtraRoom;                
+          }
         }
         
         glScissor(nOldScissor[0],nOldScissor[1],nOldScissor[2],nOldScissor[3]);

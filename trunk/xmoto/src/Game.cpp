@@ -552,30 +552,11 @@ namespace vapp {
     
     Log(" %d level%s loaded (%d from cache)",m_nNumLevels,m_nNumLevels==1?"":"s",nNumCached);
     Log(" %d level pack%s",m_LevelPacks.size(),m_LevelPacks.size()==1?"":"s");
-        
-    if(!isNoGraphics()) {
-      /* Initialize renderer */
-      m_Renderer.init();
-      _UpdateLoadingScreen((1.0f/9.0f) * 6,pLoadingScreen,GAMETEXT_INITMENUS);
-      
-      /* Bonus info */
-      Log("Total: %d kB of textures loaded",TexMan.getTextureUsage()/1024);
-
-      /* Initialize menu system */
-      _InitMenus();    
-      _UpdateLoadingScreen((1.0f/9.0f) * 7,pLoadingScreen,GAMETEXT_UPDATINGLEVELS);
-
-      _UpdateLevelLists();
-      _UpdateLoadingScreen((1.0f/9.0f) * 8,pLoadingScreen,GAMETEXT_INITINPUT);      
-      
-      /* Init input system */
-      m_InputHandler.init(&m_Config);
-    }
 
     #if defined(SUPPORT_WEBACCESS)    
       /* Fetch highscores from web? */
       if(m_bEnableWebHighscores) {            
-        _UpdateLoadingScreen((1.0f/9.0f) * 9,pLoadingScreen,GAMETEXT_DLHIGHSCORES);      
+        _UpdateLoadingScreen((1.0f/9.0f) * 6,pLoadingScreen,GAMETEXT_DLHIGHSCORES);      
         
         m_pWebHighscores = new WebHighscores(&m_ProxySettings);
         
@@ -592,6 +573,25 @@ namespace vapp {
         m_pWebHighscores->upgrade();      
       }
     #endif
+        
+    if(!isNoGraphics()) {
+      /* Initialize renderer */
+      m_Renderer.init();
+      _UpdateLoadingScreen((1.0f/9.0f) * 7,pLoadingScreen,GAMETEXT_INITMENUS);
+      
+      /* Bonus info */
+      Log("Total: %d kB of textures loaded",TexMan.getTextureUsage()/1024);
+
+      /* Initialize menu system */
+      _InitMenus();    
+      _UpdateLoadingScreen((1.0f/9.0f) * 8,pLoadingScreen,GAMETEXT_UPDATINGLEVELS);
+
+      _UpdateLevelLists();
+      _UpdateLoadingScreen((1.0f/9.0f) * 9,pLoadingScreen,GAMETEXT_INITINPUT);      
+      
+      /* Init input system */
+      m_InputHandler.init(&m_Config);
+    }
         
     /* What to do? */
     if(m_PlaySpecificLevel != "" && !isNoGraphics()) {
@@ -1575,6 +1575,44 @@ namespace vapp {
         pPack = new LevelPack;
         pPack->Name = pLevelSrc->getLevelPack();
         m_LevelPacks.push_back(pPack);
+        
+        /* Set default hints */
+        pPack->bShowTimes = true;
+        pPack->bShowWebTimes = true;
+        
+        /* Try to find a hints file for this level pack */
+        std::vector<std::string> LpkFiles = FS::findPhysFiles("Levels/*.lpk",true);
+        for(int i=0;i<LpkFiles.size();i++) {
+          XMLDocument XML; 
+          XML.readFromFile(LpkFiles[i]);
+          TiXmlDocument *pDoc = XML.getLowLevelAccess();
+          
+          if(pDoc != NULL) {
+            TiXmlElement *pLpkHintsElem = pDoc->FirstChildElement("lpkhints");
+            if(pLpkHintsElem != NULL) {
+              /* For this level pack? */
+              const char *pcFor = pLpkHintsElem->Attribute("for");
+              if(pcFor != NULL && pPack->Name == pcFor) {
+                /* Yup. Extract hints */
+                for(TiXmlElement *pHintElem = pLpkHintsElem->FirstChildElement("hint");
+                    pHintElem != NULL; pHintElem=pHintElem->NextSiblingElement("hint")) {
+                  /* Check for known hints... */
+                  const char *pc;
+
+                  pc = pHintElem->Attribute("show_times");
+                  if(pc != NULL) {
+                    pPack->bShowTimes = (bool)atoi(pc);
+                  }
+
+                  pc = pHintElem->Attribute("show_wtimes");
+                  if(pc != NULL) {
+                    pPack->bShowWebTimes = (bool)atoi(pc);
+                  }
+                }
+              }              
+            }
+          }
+        }
       }
       
       /* Add level to pack */
@@ -1659,20 +1697,25 @@ namespace vapp {
   /*===========================================================================
   World records
   ===========================================================================*/
+  std::string GameApp::_FixHighscoreTime(const std::string &s) {
+    char cTime[256];
+    int n1=0,n2=0,n3=0;
+      
+    sscanf(s.c_str(),"%d:%d:%d",&n1,&n2,&n3);
+    sprintf(cTime,"%02d:%02d:%02d",n1,n2,n3);
+    
+    return cTime;
+  }
+  
   void GameApp::_UpdateWorldRecord(const std::string &LevelID) {  
     m_Renderer.setWorldRecordTime("");
     
     #if defined(SUPPORT_WEBACCESS)
       if(m_bShowWebHighscoreInGame && m_pWebHighscores!=NULL) {
         WebHighscore *pWebHS = m_pWebHighscores->getHighscoreFromLevel(LevelID);
-        if(pWebHS != NULL) {
-          char cTime[256];
-          int n1=0,n2=0,n3=0;
-          
-          sscanf(pWebHS->getTime().c_str(),"%d:%d:%d",&n1,&n2,&n3);
-          sprintf(cTime,"%02d:%02d:%02d",n1,n2,n3);
-        
-          m_Renderer.setWorldRecordTime(pWebHS->getRoom()->getRoomName() + ": " + std::string(cTime) + 
+        if(pWebHS != NULL) {        
+          m_Renderer.setWorldRecordTime(pWebHS->getRoom()->getRoomName() + ": " + 
+                                        _FixHighscoreTime(pWebHS->getTime()) + 
                                         std::string(" (") + pWebHS->getPlayerName() + std::string(")"));
         } 
         else {

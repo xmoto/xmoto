@@ -51,6 +51,14 @@ namespace vapp {
   Game.* 
     Lua game library functions
   ===========================================================================*/
+  int L_Game_Log(lua_State *pL) {
+    std::string Out;
+    for(int i=0;i<lua_gettop(pL);i++) 
+      Out.append(luaL_checkstring(pL,i+1));
+    Log((char *)Out.c_str());    
+    return 0;    
+  }
+  
   int L_Game_ClearMessages(lua_State *pL) {
     m_pMotoGame->clearGameMessages();
     return 0;

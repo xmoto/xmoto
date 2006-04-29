@@ -565,6 +565,8 @@ namespace vapp {
         m_bScrollDownPressed = m_bScrollUpPressed = false;
         
         m_bScrollDownHover = m_bScrollUpHover = false;
+        
+        unhideAllColumns();
       }      
       virtual ~UIList() {_FreeUIList();}
 
@@ -592,12 +594,15 @@ namespace vapp {
       void addColumn(std::string Title,int nWidth) {m_Columns.push_back(Title); m_ColumnWidths.push_back(nWidth);}
       void setEnterButton(UIButton *pButton) {m_pEnterButton = pButton;}
       bool isItemActivated(void) {return m_bItemActivated;}
+      void setHideColumn(int n) {m_nColumnHideFlags |= (1<<n);}
+      void unhideAllColumns(void) {m_nColumnHideFlags=0;}
       
     private:
       /* Data */
       std::vector<UIListEntry *> m_Entries;
       std::vector<std::string> m_Columns;
       std::vector<int> m_ColumnWidths;
+      unsigned int m_nColumnHideFlags;
       int m_nSelected;
       bool m_bItemActivated;
       UIButton *m_pEnterButton; /* if not null this is the "default" button of the list, i.e. the one 

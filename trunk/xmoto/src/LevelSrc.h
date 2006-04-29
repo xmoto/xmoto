@@ -63,6 +63,9 @@ namespace vapp {
     
     /* For game internals only - sure, it's not cool to have them here, but
        it's easy :) */
+    /* Rasmus of the future, 12 months later:  ARGH!!! This caused a bug that 
+       was very annoying to fix. PLEASE don't do this again. Encapsulation ftw!
+       */
     bool m_bInZone;
   };
 

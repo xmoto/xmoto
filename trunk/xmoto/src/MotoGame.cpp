@@ -57,6 +57,7 @@ namespace vapp {
   int L_Game_SetEntityPos(lua_State *pL);
   int L_Game_SetKeyHook(lua_State *pL);
   int L_Game_GetKeyByAction(lua_State *pL);
+  int L_Game_Log(lua_State *pL);
   
   /* "Game" Lua library */
   static const luaL_reg g_GameFuncs[] = {
@@ -78,6 +79,7 @@ namespace vapp {
     {"SetEntityPos", L_Game_SetEntityPos},
     {"SetKeyHook", L_Game_SetKeyHook},
     {"GetKeyByAction", L_Game_GetKeyByAction},
+    {"Log", L_Game_Log},
     {NULL, NULL}
   };
 
@@ -137,8 +139,11 @@ namespace vapp {
   }
   
   void MotoGame::scriptCallTblVoid(std::string Table,std::string FuncName) {
-    /* Fetch global table */
+    /* Fetch global table */        
     lua_getglobal(m_pL,Table.c_str());
+    
+//    printf("[%s.%s]\n",Table.c_str(),FuncName.c_str());
+    
     if(lua_istable(m_pL,-1)) {
       lua_pushstring(m_pL,FuncName.c_str());
       lua_gettable(m_pL,-2);
@@ -511,6 +516,10 @@ namespace vapp {
     
     m_nGameEventQueueReadIdx = m_nGameEventQueueWriteIdx = 0;
     
+    /* Clear zone flags */
+    for(int i=0;i<pLevelSrc->getZoneList().size();i++)
+      pLevelSrc->getZoneList()[i]->m_bInZone = false;
+    
     /* Load and parse level script */
     bool bTryParsingEncapsulatedLevelScript = true;
     bool bNeedScript = false;
@@ -536,7 +545,7 @@ namespace vapp {
         /* Use the Lua aux lib to load the buffer */
         int nRet = luaL_loadbuffer(m_pL,ScriptBuf.c_str(),ScriptBuf.length(),pLevelSrc->getScriptFile().c_str()) ||
                   lua_pcall(m_pL,0,0,0);    
-         
+
         /* Returned WHAT? */
         if(nRet != 0) {
           lua_close(m_pL);
@@ -634,6 +643,7 @@ namespace vapp {
         m_OvEdges.erase( m_OvEdges.begin() );
       }
       lua_close(m_pL);
+      m_pL = NULL;
 
       m_FSprites.clear();
       m_BSprites.clear();

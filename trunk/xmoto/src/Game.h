@@ -70,6 +70,10 @@ namespace vapp {
   struct LevelPack {
     std::string Name;
     std::vector<LevelSrc *> Levels;
+    
+    /* Hints */
+    bool bShowTimes;
+    bool bShowWebTimes;
   };
 
 	/*===========================================================================
@@ -325,6 +329,7 @@ namespace vapp {
       void _DownloadExtraLevels(void);
       
       int _LoadLevels(const std::vector<std::string> &LvlFiles);
+      std::string _FixHighscoreTime(const std::string &s);
       
   };
 

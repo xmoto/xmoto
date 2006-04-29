@@ -263,13 +263,22 @@ namespace vapp {
     pInternalLevelsList->showWindow(true);
     pInternalLevelsTab->showWindow(true);
     pInternalLevelsList->setFont(m_Renderer.getSmallFont());
-    pInternalLevelsList->addColumn(GAMETEXT_LEVEL,pInternalLevelsTab->getPosition().nWidth);
+    pInternalLevelsList->addColumn(GAMETEXT_LEVEL,pInternalLevelsTab->getPosition().nWidth - 175);
+    pInternalLevelsList->addColumn(GAMETEXT_TIME,80);  
+#if defined(SUPPORT_WEBACCESS)    
+    pInternalLevelsList->addColumn("WR:",80);  
+#endif    
     pInternalLevelsList->setEnterButton( pGoButton );
     UIList *pExternalLevelsList = new UIList(pExternalLevelsTab,0,0,"",pExternalLevelsTab->getPosition().nWidth,pExternalLevelsTab->getPosition().nHeight);      /* -64 to make room for bonus */
     pExternalLevelsList->setID("PLAY_EXTERNAL_LEVELS_LIST");
     pExternalLevelsList->setFont(m_Renderer.getSmallFont());
-    pExternalLevelsList->addColumn(GAMETEXT_LEVEL,pExternalLevelsTab->getPosition().nWidth - 128);
-    pExternalLevelsList->addColumn(GAMETEXT_SCRIPTED,128);  
+    pExternalLevelsList->addColumn(GAMETEXT_LEVEL,pExternalLevelsTab->getPosition().nWidth - 175);
+//    pExternalLevelsList->addColumn(GAMETEXT_SCRIPTED,128);  
+    pExternalLevelsList->addColumn(GAMETEXT_TIME,80);  
+#if defined(SUPPORT_WEBACCESS)
+    pExternalLevelsList->addColumn("WR:",80);  
+    
+#endif
     pExternalLevelsList->setEnterButton( pGoButton );        
 
     m_pReplaysWindow = new UIFrame(m_pMainMenu,300,(getDispHeight()*140)/600,"",getDispWidth()-300-20,getDispHeight()-40-(getDispHeight()*120)/600-10);      
@@ -638,8 +647,11 @@ namespace vapp {
     pLevelPackViewerTitle->setFont(m_Renderer.getMediumFont());
     UIList *pLevelPackLevelList = new UIList(m_pLevelPackViewer,20,50,"",400,430);
     pLevelPackLevelList->setFont(m_Renderer.getSmallFont());
-    pLevelPackLevelList->addColumn(GAMETEXT_LEVEL,pLevelPackLevelList->getPosition().nWidth-128);      
-    pLevelPackLevelList->addColumn(GAMETEXT_SCRIPTED,128);      
+    pLevelPackLevelList->addColumn(GAMETEXT_LEVEL,pLevelPackLevelList->getPosition().nWidth-175);      
+    pLevelPackLevelList->addColumn(GAMETEXT_TIME,80);      
+#if defined(SUPPORT_WEBACCESS)    
+    pLevelPackLevelList->addColumn("WR:",80);      
+#endif
     pLevelPackLevelList->setContextHelp(CONTEXTHELP_SELECT_LEVEL_IN_LEVEL_PACK);
     pLevelPackLevelList->setID("LEVELPACK_LEVEL_LIST");
     UIButton *pLevelPackPlay = new UIButton(m_pLevelPackViewer,450,50,GAMETEXT_STARTLEVEL,207,57);
@@ -789,13 +801,41 @@ namespace vapp {
     UIList *pList = (UIList *)m_pLevelPackViewer->getChild("LEVELPACK_LEVEL_LIST");    
     pList->clear();
     
+    /* Obey hints */
+    pList->unhideAllColumns();
+    if(!m_pActiveLevelPack->bShowTimes)
+      pList->setHideColumn(1);
+    if(!m_pActiveLevelPack->bShowWebTimes)
+      pList->setHideColumn(2);
+    
+    /* Add levels */
     for(int i=0;i<m_pActiveLevelPack->Levels.size();i++) {
       UIListEntry *pEntry = pList->addEntry(m_pActiveLevelPack->Levels[i]->getLevelInfo()->Name,m_pActiveLevelPack->Levels[i]);
       
-      if(m_pActiveLevelPack->Levels[i]->isScripted())
-        pEntry->Text.push_back(GAMETEXT_YES);
-      else
-        pEntry->Text.push_back(GAMETEXT_NO);
+      if(m_pPlayer != NULL) {
+        PlayerTimeEntry *pTimeEntry = m_Profiles.getBestPlayerTime(m_pPlayer->PlayerName,m_pActiveLevelPack->Levels[i]->getID());
+        if(pTimeEntry != NULL)
+          pEntry->Text.push_back(formatTime(pTimeEntry->fFinishTime));
+        else
+          pEntry->Text.push_back("--:--:--");
+
+        #if defined(SUPPORT_WEBACCESS)
+          if(m_pWebHighscores != NULL) {
+            WebHighscore *pWH = m_pWebHighscores->getHighscoreFromLevel(m_pActiveLevelPack->Levels[i]->getID());
+            if(pWH != NULL)
+              pEntry->Text.push_back(_FixHighscoreTime(pWH->getTime()));
+            else
+              pEntry->Text.push_back("N/A");
+          }        
+          else
+            pEntry->Text.push_back("N/A");          
+        #endif
+      }
+      
+      //if(m_pActiveLevelPack->Levels[i]->isScripted())
+      //  pEntry->Text.push_back(GAMETEXT_YES);
+      //else
+      //  pEntry->Text.push_back(GAMETEXT_NO);
     }
   }
   
@@ -1992,32 +2032,46 @@ namespace vapp {
       if(pLevel->getFileName() != "") File = FS::getFileBaseName(pLevel->getFileName());
       else File = "???";
 
-      /* Consider it internal */
-      /* Skipped or completed? */
-      std::string Tag="";
+      UIListEntry *pEntry = NULL;
+      PlayerTimeEntry *pTimeEntry = NULL;
       
-      if(m_Profiles.isLevelCompleted(m_pPlayer->PlayerName,pLevel->getID()))
-	Tag=GAMETEXT_COMPLETED;
-      else if(m_Profiles.isLevelSkipped(m_pPlayer->PlayerName,pLevel->getID()))
-	Tag=GAMETEXT_SKIPPED;
-      
-      //        printf("[%s][%s]%s\n",m_pPlayer->PlayerName.c_str(),pLevel->getID().c_str(),Tag.c_str());
-      
-
       if(bInternal) {
-        pInternalLevels->addEntry(Name+Tag,reinterpret_cast<void *>(pLevel));
+        /* Internal level */
+        pEntry = pInternalLevels->addEntry(Name,reinterpret_cast<void *>(pLevel));
       }
       else {
-        /* Consider it external -- but only if it's not in a level pack */
+        /* External level (not in level pack) */
         if(pLevel->getLevelPack() == "") {
-          UIListEntry *pEntry = pExternalLevels->addEntry(Name+Tag,reinterpret_cast<void *>(pLevel));
-          
-          if(pLevel->isScripted())
-            pEntry->Text.push_back(GAMETEXT_YES);
-          else
-            pEntry->Text.push_back(GAMETEXT_NO);
+          pEntry = pExternalLevels->addEntry(Name,reinterpret_cast<void *>(pLevel));
         }
       }
+
+      /* Add times to list entry */
+      if(pEntry != NULL) {
+        pTimeEntry = m_Profiles.getBestPlayerTime(m_pPlayer->PlayerName,pLevel->getID());                    
+      
+        if(pTimeEntry != NULL)
+          pEntry->Text.push_back(formatTime(pTimeEntry->fFinishTime));
+        else
+          pEntry->Text.push_back("--:--:--");
+
+#if defined(SUPPORT_WEBACCESS)
+        if(m_pWebHighscores != NULL) {    
+          WebHighscore *pWH = m_pWebHighscores->getHighscoreFromLevel(pLevel->getID());
+          if(pWH != NULL)
+            pEntry->Text.push_back(_FixHighscoreTime(pWH->getTime()));
+          else
+            pEntry->Text.push_back("N/A");
+        }
+        else
+          pEntry->Text.push_back("N/A");
+#endif          
+      }
+      
+          //if(pLevel->isScripted())
+          //  pEntry->Text.push_back(GAMETEXT_YES);
+          //else
+          //  pEntry->Text.push_back(GAMETEXT_NO);
     }
   }
 

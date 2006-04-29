@@ -197,6 +197,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_SKIPPED              " (Skipped)"
 #define GAMETEXT_STARTLEVEL           "Play!"
 #define GAMETEXT_STEREO               "Stereo"
+#define GAMETEXT_TIME                 "Time:"
 #define GAMETEXT_TRYAGAIN             "Try This Level Again"
 #define GAMETEXT_TUTORIAL             "Tutorial"
 #define GAMETEXT_UNKNOWNLEVEL         "(Unknown)"

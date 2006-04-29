@@ -204,7 +204,6 @@ function FirstZone.OnEnter()
 	if TutorialStage < 1 then
 		-- First part of tutorial...
 		TutorialStage = 1
-		
 		Game.ClearMessages()
 		Game.Message("Welcome to X-Moto!")
 		Game.Message("This level is a short tutorial of")
