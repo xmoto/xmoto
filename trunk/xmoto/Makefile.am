@@ -61,7 +61,8 @@ xmoto_SOURCES = $(common_SOURCES) src/BSP.cpp src/Game.cpp src/GameMain.cpp \
 	src/OpenBrowser.h \
 	src/WWW.cpp \
 	src/WWW.h \
-	src/WWWAppInterface.h
+	src/WWWAppInterface.h \
+	src/GUIEdit.cpp
 
 xmoto_LDADD = $(common_LDADD)
 		
