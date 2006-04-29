@@ -155,6 +155,7 @@ namespace vapp {
       
       /* Set default config */
       void _SetDefaultConfig(void);
+      void _SetDefaultConfigToUnsetKeys();
   };
   
 };

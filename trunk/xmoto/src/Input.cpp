@@ -315,7 +315,7 @@ namespace vapp {
           m_nPushForwardKey1<0 || m_nChangeDirKey1<0 || 
 	   m_nZoomIn<0 || m_nZoomOut <0) {
           Log("** Warning ** : Invalid keyboard configuration!");
-          _SetDefaultConfig();
+	  _SetDefaultConfigToUnsetKeys();
         }
         break;
       }
@@ -451,6 +451,18 @@ namespace vapp {
     m_nZoomIn          = SDLK_PAGEUP;
     m_nZoomOut         = SDLK_PAGEDOWN;
   }  
+
+  void InputHandler::_SetDefaultConfigToUnsetKeys() {
+    m_ControllerModeID1 = CONTROLLER_MODE_KEYBOARD;
+    
+    if(m_nDriveKey1       < 0) { m_nDriveKey1 	    = SDLK_UP;       }
+    if(m_nBrakeKey1       < 0) { m_nBrakeKey1 	    = SDLK_DOWN;     }
+    if(m_nPullBackKey1    < 0) { m_nPullBackKey1    = SDLK_LEFT;     }
+    if(m_nPushForwardKey1 < 0) { m_nPushForwardKey1 = SDLK_RIGHT;    }
+    if(m_nChangeDirKey1   < 0) { m_nChangeDirKey1   = SDLK_SPACE;    }
+    if(m_nZoomIn          < 0) { m_nZoomIn          = SDLK_PAGEUP;   }
+    if(m_nZoomOut         < 0) { m_nZoomOut         = SDLK_PAGEDOWN; }
+  }
 
   /*===========================================================================
   Get key by action...
