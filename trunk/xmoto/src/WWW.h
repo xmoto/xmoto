@@ -48,6 +48,8 @@
   };
 #endif
 
+class WebHighscores;
+
 class ProxySettings {
  public:
   ProxySettings();
@@ -97,7 +99,8 @@ class FSWeb {
 
 class WebHighscore {
  public:
-  WebHighscore(std::string p_levelId,
+  WebHighscore(WebHighscores *p_room,
+	       std::string p_levelId,
 	       std::string p_playerName,
 	       std::string p_time,
 	       std::string p_rplUrl,
@@ -108,6 +111,7 @@ class WebHighscore {
   std::string getPlayerName() const;
   std::string getTime() const;
   std::string getLevelId() const;
+  WebHighscores* getRoom() const;
 
  private:
   std::string m_playerName;
@@ -116,6 +120,7 @@ class WebHighscore {
   std::string m_rplUrl;
   std::string m_rplFilename;
   const ProxySettings *m_proxy_settings;
+  WebHighscores *m_room;
 };
 
 class WebHighscores {
@@ -129,6 +134,7 @@ class WebHighscores {
   /* return NULL if no data found */
   WebHighscore* getHighscoreFromLevel(const std::string &p_levelId);
   void setWebsiteURL(std::string p_webhighscores_url);
+  std::string getRoomName() const;
 
  private:
   #if defined(USE_HASH_MAP)
@@ -138,6 +144,7 @@ class WebHighscores {
   #endif
   std::string m_userFilename;
   std::string m_webhighscores_url;
+  std::string m_roomName;
   const ProxySettings *m_proxy_settings;
 
   void fillHash();

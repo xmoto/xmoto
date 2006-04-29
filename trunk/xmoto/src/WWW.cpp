@@ -104,7 +104,8 @@ bool ProxySettings::useDefaultAuthentification() const {
   return m_authUser == "";
 }
 
-WebHighscore::WebHighscore(std::string p_levelId,
+WebHighscore::WebHighscore(WebHighscores *p_room,
+			   std::string p_levelId,
 			   std::string p_playerName,
 			   std::string p_time,
 			   std::string p_rplUrl,
@@ -119,6 +120,7 @@ WebHighscore::WebHighscore(std::string p_levelId,
     + ".rpl";
 
   m_proxy_settings = p_proxy_settings;
+  m_room = p_room;
 }
 
 WebHighscore::~WebHighscore() {
@@ -140,6 +142,10 @@ std::string WebHighscore::getTime() const {
   return m_time;
 }
 
+WebHighscores* WebHighscore::getRoom() const {
+  return m_room;
+}
+
 WebHighscores::WebHighscores(const ProxySettings *p_proxy_settings) {
   std::string v_userDir;
   v_userDir = vapp::FS::getUserDir();
@@ -149,10 +155,15 @@ WebHighscores::WebHighscores(const ProxySettings *p_proxy_settings) {
   m_webhighscores_url = DEFAULT_WEBHIGHSCORES_URL;
 
   m_proxy_settings = p_proxy_settings;
+  m_roomName = "";
 }
 
 WebHighscores::~WebHighscores() {
   cleanHash();
+}
+
+std::string WebHighscores::getRoomName() const {
+  return m_roomName;
 }
 
 void WebHighscores::setWebsiteURL(std::string p_webhighscores_url) {
@@ -206,6 +217,12 @@ void WebHighscores::fillHash() {
   v_webHSXmlData = v_webHSXml.getLowLevelAccess();
   v_webHSXmlDataElement = v_webHSXmlData->FirstChildElement("xmoto_worldrecords");
 
+  /* get Room name */
+  pc = v_webHSXmlDataElement->Attribute("roomname");
+  if(pc != NULL) {
+    m_roomName = pc;
+  }
+
   if(v_webHSXmlDataElement != NULL) {
     for(TiXmlElement *pVarElem = v_webHSXmlDataElement->FirstChildElement("worldrecord");
 	pVarElem!=NULL;
@@ -228,7 +245,7 @@ void WebHighscores::fillHash() {
       if(pc == NULL) { continue; }
       v_rplUrl = pc;
       
-      wh = new WebHighscore(v_levelId, v_playerName, v_time, v_rplUrl, m_proxy_settings);
+      wh = new WebHighscore(this, v_levelId, v_playerName, v_time, v_rplUrl, m_proxy_settings);
       
       #if defined(USE_HASH_MAP)
         m_webhighscores[wh->getLevelId().c_str()] = wh;

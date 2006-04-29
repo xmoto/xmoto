@@ -1672,11 +1672,11 @@ namespace vapp {
           sscanf(pWebHS->getTime().c_str(),"%d:%d:%d",&n1,&n2,&n3);
           sprintf(cTime,"%02d:%02d:%02d",n1,n2,n3);
         
-          m_Renderer.setWorldRecordTime(std::string(GAMETEXT_WORLDRECORD) + std::string(cTime) + 
+          m_Renderer.setWorldRecordTime(pWebHS->getRoom()->getRoomName() + ": " + std::string(cTime) + 
                                         std::string(" (") + pWebHS->getPlayerName() + std::string(")"));
         } 
         else {
-          m_Renderer.setWorldRecordTime(GAMETEXT_WORLDRECORD GAMETEXT_NONE);      
+          m_Renderer.setWorldRecordTime(pWebHS->getRoom()->getRoomName() + ": "  GAMETEXT_NONE);      
         }                
       }
     #endif
