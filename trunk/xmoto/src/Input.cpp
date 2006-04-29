@@ -475,8 +475,11 @@ namespace vapp {
     if(m_nPullBackKey1    < 0) { m_nPullBackKey1    = SDLK_LEFT;     }
     if(m_nPushForwardKey1 < 0) { m_nPushForwardKey1 = SDLK_RIGHT;    }
     if(m_nChangeDirKey1   < 0) { m_nChangeDirKey1   = SDLK_SPACE;    }
-    if(m_nZoomIn          < 0) { m_nZoomIn          = SDLK_PAGEUP;   }
-    if(m_nZoomOut         < 0) { m_nZoomOut         = SDLK_PAGEDOWN; }
+    
+    #if defined(ENABLE_ZOOMING)
+      if(m_nZoomIn          < 0) { m_nZoomIn          = SDLK_PAGEUP;   }
+      if(m_nZoomOut         < 0) { m_nZoomOut         = SDLK_PAGEDOWN; }
+    #endif
   }
 
   /*===========================================================================
