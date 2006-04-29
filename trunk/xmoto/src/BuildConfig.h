@@ -50,11 +50,11 @@ Build configuration
 #define HIDE_JOYSTICK_SUPPORT
 
 /* ENABLE_ZOOMING - Allow user to zoom in and out while playing */
-//#define ENABLE_ZOOMING
+#define ENABLE_ZOOMING
 
 /* DO_NOT_ALLOW_WEBACCESS - Don't compile with web-access support, 
    regardless of whether libcurl is available or not */
-#define DO_NOT_ALLOW_WEBACCESS
+//#define DO_NOT_ALLOW_WEBACCESS
 
 /*=============================================================================
 Misc, don't touch

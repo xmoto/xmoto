@@ -825,10 +825,10 @@ namespace vapp {
             if(pWH != NULL)
               pEntry->Text.push_back(_FixHighscoreTime(pWH->getTime()));
             else
-              pEntry->Text.push_back("N/A");
+              pEntry->Text.push_back(GAMETEXT_WORLDRECORDNA);
           }        
           else
-            pEntry->Text.push_back("N/A");          
+            pEntry->Text.push_back(GAMETEXT_WORLDRECORDNA);          
         #endif
       }
       
@@ -880,11 +880,11 @@ namespace vapp {
           pLV_BestTimes_WorldRecord->setCaption(cTime);
         }        
         else
-          pLV_BestTimes_WorldRecord->setCaption(GAMETEXT_WORLDRECORD GAMETEXT_NONE);
+          pLV_BestTimes_WorldRecord->setCaption(GAMETEXT_WORLDRECORD GAMETEXT_WORLDRECORDNA);
       }
       else
       #endif
-        pLV_BestTimes_WorldRecord->setCaption(GAMETEXT_WORLDRECORD GAMETEXT_NA);
+        pLV_BestTimes_WorldRecord->setCaption(GAMETEXT_WORLDRECORD GAMETEXT_WORLDRECORDNA);
     }
   }
 
@@ -2061,10 +2061,10 @@ namespace vapp {
           if(pWH != NULL)
             pEntry->Text.push_back(_FixHighscoreTime(pWH->getTime()));
           else
-            pEntry->Text.push_back("N/A");
+            pEntry->Text.push_back(GAMETEXT_WORLDRECORDNA);
         }
         else
-          pEntry->Text.push_back("N/A");
+          pEntry->Text.push_back(GAMETEXT_WORLDRECORDNA);
 #endif          
       }
       
