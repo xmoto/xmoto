@@ -23,3 +23,5 @@
 * add a button to refresh highscores
 * what about check for new levels at startup and propose to download
    new levels ?
+* upload highscore from the game ? (require login/password room
+   configuration ;-(
