@@ -12,7 +12,7 @@
       Still too lazy to implement hash_map on windows :)
     - no mkdir() in vs.net
     - remove() also a bit different in vs.net
-    - added cleanHash() to WebHighscores destructor
+    - added cleanHash() to WebRoom destructor
  */
 
 #include "WWW.h"
@@ -104,7 +104,7 @@ bool ProxySettings::useDefaultAuthentification() const {
   return m_authUser == "";
 }
 
-WebHighscore::WebHighscore(WebHighscores *p_room,
+WebHighscore::WebHighscore(WebRoom *p_room,
 			   std::string p_levelId,
 			   std::string p_playerName,
 			   std::string p_time,
@@ -142,11 +142,11 @@ std::string WebHighscore::getTime() const {
   return m_time;
 }
 
-WebHighscores* WebHighscore::getRoom() const {
+WebRoom* WebHighscore::getRoom() const {
   return m_room;
 }
 
-WebHighscores::WebHighscores(const ProxySettings *p_proxy_settings) {
+WebRoom::WebRoom(const ProxySettings *p_proxy_settings) {
   std::string v_userDir;
   v_userDir = vapp::FS::getUserDir();
   m_userFilename =  v_userDir 
@@ -158,19 +158,19 @@ WebHighscores::WebHighscores(const ProxySettings *p_proxy_settings) {
   m_roomName = "";
 }
 
-WebHighscores::~WebHighscores() {
+WebRoom::~WebRoom() {
   cleanHash();
 }
 
-std::string WebHighscores::getRoomName() const {
+std::string WebRoom::getRoomName() const {
   return m_roomName;
 }
 
-void WebHighscores::setWebsiteURL(std::string p_webhighscores_url) {
+void WebRoom::setWebsiteURL(std::string p_webhighscores_url) {
   m_webhighscores_url = p_webhighscores_url;
 }
 
-WebHighscore* WebHighscores::getHighscoreFromLevel(const std::string &p_levelId) {
+WebHighscore* WebRoom::getHighscoreFromLevel(const std::string &p_levelId) {
   #if defined(USE_HASH_MAP)
     return m_webhighscores[p_levelId.c_str()];
   #else
@@ -180,7 +180,7 @@ WebHighscore* WebHighscores::getHighscoreFromLevel(const std::string &p_levelId)
   #endif
 }
 
-void WebHighscores::cleanHash() {
+void WebRoom::cleanHash() {
   #if defined(USE_HASH_MAP)
     HashNamespace::hash_map<const char*, WebHighscore*, HashNamespace::hash<const char*>, highscore_str, std::allocator<WebHighscore*> >::iterator it;
 
@@ -201,7 +201,7 @@ void WebHighscores::cleanHash() {
   m_webhighscores.clear();
 }
 
-void WebHighscores::fillHash() {
+void WebRoom::fillHash() {
   /* clean hash table */
   cleanHash();
 
@@ -261,12 +261,12 @@ void WebHighscores::fillHash() {
   }
 }
 
-void WebHighscores::update() {
+void WebRoom::update() {
   /* download xml file */
   FSWeb::downloadFile(m_userFilename, m_webhighscores_url, NULL, NULL, m_proxy_settings);
 }
 
-void WebHighscores::upgrade() {
+void WebRoom::upgrade() {
   fillHash();
 }
 

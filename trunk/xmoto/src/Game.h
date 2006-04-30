@@ -206,7 +206,7 @@ namespace vapp {
       
       /* WWW */
       #if defined(SUPPORT_WEBACCESS)
-        WebHighscores *m_pWebHighscores;
+        WebRoom *m_pWebHighscores;
         WebLevels *m_pWebLevels;
         ProxySettings m_ProxySettings;
       #endif

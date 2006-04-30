@@ -48,7 +48,7 @@
   };
 #endif
 
-class WebHighscores;
+class WebRoom;
 
 class ProxySettings {
  public:
@@ -99,7 +99,7 @@ class FSWeb {
 
 class WebHighscore {
  public:
-  WebHighscore(WebHighscores *p_room,
+  WebHighscore(WebRoom *p_room,
 	       std::string p_levelId,
 	       std::string p_playerName,
 	       std::string p_time,
@@ -111,7 +111,7 @@ class WebHighscore {
   std::string getPlayerName() const;
   std::string getTime() const;
   std::string getLevelId() const;
-  WebHighscores* getRoom() const;
+  WebRoom* getRoom() const;
 
  private:
   std::string m_playerName;
@@ -120,13 +120,13 @@ class WebHighscore {
   std::string m_rplUrl;
   std::string m_rplFilename;
   const ProxySettings *m_proxy_settings;
-  WebHighscores *m_room;
+  WebRoom *m_room;
 };
 
-class WebHighscores {
+class WebRoom {
  public:
-  WebHighscores(const ProxySettings *p_proxy_settings);
-  ~WebHighscores();
+  WebRoom(const ProxySettings *p_proxy_settings);
+  ~WebRoom();
 
   void update(); /* throws exceptions */
   void upgrade(); /* throws exceptions */

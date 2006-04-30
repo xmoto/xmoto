@@ -1748,7 +1748,7 @@ namespace vapp {
   void GameApp::_UpdateWebHighscores(bool bSilent) {
     #if defined(SUPPORT_WEBACCESS)
       if(m_pWebHighscores != NULL) delete m_pWebHighscores;
-      m_pWebHighscores = new WebHighscores(&m_ProxySettings);
+      m_pWebHighscores = new WebRoom(&m_ProxySettings);
       
       if(!bSilent)
         _SimpleMessage(GAMETEXT_DLHIGHSCORES,&m_DownloadLevelsMsgBoxRect);
