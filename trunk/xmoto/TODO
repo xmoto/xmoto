@@ -1,17 +1,15 @@
 * ghost mode
 * add a button <see replay> which download the highscore from the
    website and play it
-* a a <new level> tab
+* add a <new level> tab
 * add <xml_room> in configuration so that the player can choose the
    link to his room xml file
 * add zoom out, zoom in, 3 2 1 GO ! at level startup (it neckelmann
    agree) 
 * when you have a world highscore, display a message (not a popup)
-* add proxy settings
 * add a message when internet connexion failed (on highscore, and
    levels download)
 * sort level by name (or difficulty (add a difficuly=[0-9]* in lvl ?))
-* 2 colums in level list for <room highscore> <your highscore>
 * CRC32 to update levels
 * theme (for sprites)
 * context information for levels : when one is selected, display
@@ -25,3 +23,4 @@
    new levels ?
 * upload highscore from the game ? (require login/password room
    configuration ;-(
+* IS IT NORMAL THAT AFTER PROXY CONFIGURATION IT DOWNLOAD HIGHSCORES ???
