@@ -955,15 +955,16 @@ namespace vapp {
           int n1=0,n2=0,n3=0;
           
           sscanf(pWebHS->getTime().c_str(),"%d:%d:%d",&n1,&n2,&n3);
-          sprintf(cTime,GAMETEXT_WORLDRECORD "%02d:%02d:%02d (" GAMETEXT_BY " %s)",n1,n2,n3,pWebHS->getPlayerName().c_str());
+          sprintf(cTime, "%s: %02d:%02d:%02d (" GAMETEXT_BY " %s)", m_pWebHighscores->getRoomName().c_str(), n1,n2,n3,pWebHS->getPlayerName().c_str());
           pLV_BestTimes_WorldRecord->setCaption(cTime);
         }        
-        else
-          pLV_BestTimes_WorldRecord->setCaption(GAMETEXT_WORLDRECORD GAMETEXT_WORLDRECORDNA);
+        else {
+          pLV_BestTimes_WorldRecord->setCaption(m_pWebHighscores->getRoomName() + ": " + GAMETEXT_WORLDRECORDNA);
+	}
       }
       else
       #endif
-        pLV_BestTimes_WorldRecord->setCaption(GAMETEXT_WORLDRECORD GAMETEXT_WORLDRECORDNA);
+        pLV_BestTimes_WorldRecord->setCaption("");
     }
   }
 
@@ -1408,10 +1409,9 @@ namespace vapp {
         else {
           /* No internet connection thank you */
           m_bEnableWebHighscores = false;
-          m_Config.setBool("WebHighscores",false);
-
           setState(GS_MENU);
         }
+	m_Config.setBool("WebHighscores", m_bEnableWebHighscores);
         
         m_Config.setBool("WebConfAtInit",false);
         delete m_pWebConfMsgBox;

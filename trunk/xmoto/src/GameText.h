@@ -217,7 +217,6 @@ Central place to keep many in-game text strings
 #define GAMETEXT_VIDEO                "Video"
 #define GAMETEXT_VIEW                 "View"
 #define GAMETEXT_WARNING              "Warning:"
-#define GAMETEXT_WORLDRECORD          "World Record: "
 #define GAMETEXT_WORLDRECORDNA        "--:--:--"
 #define GAMETEXT_YES                  "Yes"
 #define GAMETEXT_ZOOMIN  	            "Zoom in"
