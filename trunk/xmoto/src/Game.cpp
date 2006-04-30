@@ -1731,13 +1731,13 @@ namespace vapp {
     #if defined(SUPPORT_WEBACCESS)
       if(m_bShowWebHighscoreInGame && m_pWebHighscores!=NULL) {
         WebHighscore *pWebHS = m_pWebHighscores->getHighscoreFromLevel(LevelID);
-        if(pWebHS != NULL) {        
+        if(pWebHS != NULL) {
           m_Renderer.setWorldRecordTime(pWebHS->getRoom()->getRoomName() + ": " + 
                                         _FixHighscoreTime(pWebHS->getTime()) + 
                                         std::string(" (") + pWebHS->getPlayerName() + std::string(")"));
         } 
         else {
-          m_Renderer.setWorldRecordTime(pWebHS->getRoom()->getRoomName() + ": "  GAMETEXT_NONE);      
+          m_Renderer.setWorldRecordTime("");      
         }                
       }
     #endif
