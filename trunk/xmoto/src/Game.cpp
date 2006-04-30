@@ -1737,7 +1737,9 @@ namespace vapp {
                                         std::string(" (") + pWebHS->getPlayerName() + std::string(")"));
         } 
         else {
-          m_Renderer.setWorldRecordTime("");      
+	  m_Renderer.setWorldRecordTime(m_pWebHighscores->getRoomName() + ": " + 
+					GAMETEXT_WORLDRECORDNA
+					);
         }                
       }
     #endif
