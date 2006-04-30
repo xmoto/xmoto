@@ -215,15 +215,20 @@ void WebHighscores::fillHash() {
 
   v_webHSXml.readFromFile(m_userFilename);
   v_webHSXmlData = v_webHSXml.getLowLevelAccess();
-  v_webHSXmlDataElement = v_webHSXmlData->FirstChildElement("xmoto_worldrecords");
 
-  /* get Room name */
-  pc = v_webHSXmlDataElement->Attribute("roomname");
-  if(pc != NULL) {
-    m_roomName = pc;
+  if(v_webHSXmlData == NULL) {
+    throw vapp::Exception("error : unable analyse xml highscore file");
   }
 
+  v_webHSXmlDataElement = v_webHSXmlData->FirstChildElement("xmoto_worldrecords");
+
   if(v_webHSXmlDataElement != NULL) {
+    /* get Room name */
+    pc = v_webHSXmlDataElement->Attribute("roomname");
+    if(pc != NULL) {
+      m_roomName = pc;
+    }
+
     for(TiXmlElement *pVarElem = v_webHSXmlDataElement->FirstChildElement("worldrecord");
 	pVarElem!=NULL;
 	pVarElem = pVarElem->NextSiblingElement("worldrecord")
@@ -452,6 +457,11 @@ void WebLevels::extractLevelsToDownloadFromXml() {
   
   v_webLXml.readFromFile(getXmlFileName());
   v_webLXmlData = v_webLXml.getLowLevelAccess();
+
+  if(v_webLXmlData == NULL) {
+    throw vapp::Exception("error : unable analyse xml level file");
+  }
+
   v_webLXmlDataElement = v_webLXmlData->FirstChildElement("xmoto_levels");
   
   if(v_webLXmlDataElement == NULL) {
@@ -478,7 +488,7 @@ void WebLevels::extractLevelsToDownloadFromXml() {
 	    v_CRC32sum_web = pc;	
 	    
 	    /* The CRC32 of php is not the same as the one i'm using :( */
-	    //printf("[%s][%s][%s]\n",v_levelId.c_str(),m_WebLevelApp->levelCRC32Sum(v_levelId).c_str(),pc);
+	    //printf("[%s][%u][%s]\n",v_levelId.c_str(),m_WebLevelApp->levelCRC32Sum(v_levelId).c_str(),pc);
 
 	    /* if it doesn't exist */
 	    if(m_WebLevelApp->doesLevelExist(v_levelId) == false) {
