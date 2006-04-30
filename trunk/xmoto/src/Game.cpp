@@ -1766,7 +1766,12 @@ namespace vapp {
       }
       
       /* Upgrade high scores */
-      m_pWebHighscores->upgrade();      
+      try {
+	m_pWebHighscores->upgrade();      
+      } catch(Exception &e) {
+	/* file probably doesn't exist */
+	Log("** Warning ** : Failed to analyse web-highscores file");		
+      }
     #endif
   }
   
