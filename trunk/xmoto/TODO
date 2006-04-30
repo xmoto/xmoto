@@ -20,3 +20,6 @@
    button, it's easiest) (it neckelmann agree)
 * add a counter of uncompleted levels
 * rename webhighscores into webrooms
+* add a button to refresh highscores
+* what about check for new levels at startup and propose to download
+   new levels ?
