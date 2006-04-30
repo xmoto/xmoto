@@ -129,7 +129,7 @@ class WebHighscores {
   ~WebHighscores();
 
   void update(); /* throws exceptions */
-  void upgrade();
+  void upgrade(); /* throws exceptions */
 
   /* return NULL if no data found */
   WebHighscore* getHighscoreFromLevel(const std::string &p_levelId);
