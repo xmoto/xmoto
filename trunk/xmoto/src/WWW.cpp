@@ -453,7 +453,7 @@ void WebLevels::extractLevelsToDownloadFromXml() {
   TiXmlDocument *v_webLXmlData;
   TiXmlElement *v_webLXmlDataElement;
   const char *pc;
-  std::string v_levelId, v_levelName, v_url, v_CRC32sum_web;
+  std::string v_levelId, v_levelName, v_url, v_MD5sum_web;
   
   v_webLXml.readFromFile(getXmlFileName());
   v_webLXmlData = v_webLXml.getLowLevelAccess();
@@ -485,14 +485,20 @@ void WebLevels::extractLevelsToDownloadFromXml() {
 	  
 	  pc = pVarElem->Attribute("sum");
 	  if(pc != NULL) {
-	    v_CRC32sum_web = pc;	
-	    
-	    /* The CRC32 of php is not the same as the one i'm using :( */
-	    //printf("[%s][%u][%s]\n",v_levelId.c_str(),m_WebLevelApp->levelCRC32Sum(v_levelId).c_str(),pc);
+	    v_MD5sum_web = pc;	
 
 	    /* if it doesn't exist */
 	    if(m_WebLevelApp->doesLevelExist(v_levelId) == false) {
 	      m_webLevels.push_back(new WebLevel(v_levelId, v_levelName, v_url));
+	    } else { /* or it md5sum if different */
+	      if(m_WebLevelApp->levelPathForUpdate(v_levelId) != "") {
+		if(m_WebLevelApp->levelMD5Sum(v_levelId) != v_MD5sum_web) {
+		  WebLevel *v_lvl = new WebLevel(v_levelId, v_levelName, v_url);
+		  v_lvl->setCurrentPath(m_WebLevelApp->levelPathForUpdate(v_levelId));
+		  v_lvl->setRequireUpdate(true);
+		  m_webLevels.push_back(v_lvl);
+		}
+	      }
 	    }
 	  }
 	}
@@ -580,7 +586,9 @@ void WebLevels::upgrade() {
 			&v_data,
 			m_proxy_settings);
 			
-    m_webLevelsDownloadedOK.push_back(v_destFile);
+    if((*it)->requireUpdate()) {
+      m_webLevelsNewDownloadedOK.push_back(v_destFile);
+    }
     v_nb_levels_downloaded++;
     m_WebLevelApp->readEvents(); 
     it++;
@@ -594,8 +602,12 @@ void WebLevels::getUpdateInfo(int *pnUBytes,int *pnULevels) {
   if(pnUBytes != NULL) *pnUBytes = -1;
 }
 
-const std::vector<std::string> &WebLevels::getDownloadedLevels(void) {
-  return m_webLevelsDownloadedOK;
+const std::vector<std::string> &WebLevels::getNewDownloadedLevels(void) {
+  return m_webLevelsNewDownloadedOK;
+}
+
+const std::vector<std::string> &WebLevels::getUpdatedDownloadedLevels(void) {
+  return m_webLevelsUpdatedDownloadedOK;
 }
 
 #endif

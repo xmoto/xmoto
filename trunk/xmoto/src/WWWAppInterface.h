@@ -49,10 +49,10 @@ namespace vapp {
     virtual std::string levelPathForUpdate(const std::string &p_LevelId) = 0;
 
     /* return the CRC32 sum or "" if can't determine it */
-    virtual std::string levelCRC32Sum(const std::string &p_LevelId) = 0;
+    // virtual std::string levelCRC32Sum(const std::string &p_LevelId) = 0;
     
     /* return the MD5 sum or "" not available */
-    //virtual std::string levelMD5Sum(const std::string &LevelID) = 0;
+    virtual std::string levelMD5Sum(const std::string &LevelID) = 0;
 
     /* Data interface */
     void setCancelAsSoonAsPossible() {m_cancel_as_soon_as_possible = true;}

@@ -189,14 +189,19 @@ class WebLevels {
   /* after update() you might want to know how much is going to be downloaded */
   void getUpdateInfo(int *pnUBytes,int *pnULevels);
   
-  /* Get names of files downloaded OK */
-  const std::vector<std::string> &getDownloadedLevels(void);
+  /* Get names of new files downloaded OK */
+  const std::vector<std::string> &getNewDownloadedLevels();
   
+  /* Get names of updated files downloaded OK*/
+  const std::vector<std::string> &getUpdatedDownloadedLevels();
+
  private:
   vapp::WWWAppInterface *m_WebLevelApp;
   std::vector<WebLevel*> m_webLevels;
-  std::vector<std::string> m_webLevelsDownloadedOK; /* file names of those levels 
-           which where downloaded OK (so we can load them right away) */
+  std::vector<std::string> m_webLevelsNewDownloadedOK; /* file names of those levels 
+           which where downloaded OK (so we can load them right away) and which are new */
+  std::vector<std::string> m_webLevelsUpdatedDownloadedOK;
+
   const ProxySettings *m_proxy_settings;
 
   std::string getXmlFileName();

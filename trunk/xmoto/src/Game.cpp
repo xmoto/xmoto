@@ -27,12 +27,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Sound.h"
 #include "PhysSettings.h"
 #include "Input.h"
+#include "md5sum/md5file.h"
 
 #if defined(SUPPORT_WEBACCESS)
   #include <curl/curl.h>
 #endif
-
-//#include "md5/md5.h"
 
 namespace vapp {
 
@@ -1812,7 +1811,7 @@ namespace vapp {
         }      
 
         /* Got some new levels... load them! */
-        const std::vector<std::string> LvlFiles = m_pWebLevels->getDownloadedLevels();
+        const std::vector<std::string> LvlFiles = m_pWebLevels->getNewDownloadedLevels();
         
         Log("Loading new levels...");
         int nOldNum = m_nNumLevels;
@@ -1916,12 +1915,10 @@ namespace vapp {
   }
   
   std::string GameApp::levelPathForUpdate(const std::string &p_LevelId) {
-    LevelSrc *pLevel = _FindLevelByID(p_LevelId);
-    if(pLevel != NULL) {
-      //pLevel->getFileName(
-      //printf("\n-----\nLEVEL: %s\n",p_LevelId.c_str());
-      //printf("FILENAME: %s\n-----\n",pLevel->getFileName().c_str());
-    }
+    //LevelSrc *pLevel = _FindLevelByID(p_LevelId);
+    //if(pLevel != NULL) {
+    //  return pLevel->getFileName();
+    //}
     return "";
   }
   
@@ -1940,14 +1937,12 @@ namespace vapp {
     /* Get full path of level */
     //std::string FullPath = levelPathForUpdate(LevelID);
     //if(FullPath != "") {
-    //  /* Prepare MD5 calculation */
-    //  /* Open file */
-    //  
+    //  return md5file(FullPath);
     //}
-    
+
     /* Nothing */
     return "";
-  }  
+  }
     
   #endif
 
