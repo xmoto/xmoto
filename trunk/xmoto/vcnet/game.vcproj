@@ -175,6 +175,12 @@
 				RelativePath="..\src\Input.cpp">
 			</File>
 			<File
+				RelativePath="..\src\md5sum\md5.c">
+			</File>
+			<File
+				RelativePath="..\src\md5sum\md5file.cpp">
+			</File>
+			<File
 				RelativePath="..\src\MotoGame.cpp">
 			</File>
 			<File
@@ -235,6 +241,12 @@
 			</File>
 			<File
 				RelativePath="..\src\Input.h">
+			</File>
+			<File
+				RelativePath="..\src\md5sum\md5.h">
+			</File>
+			<File
+				RelativePath="..\src\md5sum\md5file.h">
 			</File>
 			<File
 				RelativePath="..\src\MotoGame.h">

@@ -29,7 +29,7 @@ General hardware requirements:
  - CPU: x86 @ ~500 MHz (a wild guess)
  - RAM: 128 MB (at least 40 MB of free memory prefered)
  - Graphics: GeForce-class card with 32 MB of video memory (or better)
- - HDD: 6 MB of free space on your hard drive.
+ - HDD: 7 MB of free space on your hard drive.
  - Software: Windows 2000/XP, Linux, Mac OS X or FreeBSD (other UNIX-like 
    OS's might be supported as well)
 
@@ -40,10 +40,11 @@ Software dependencies for compiling on non-Windows platforms:
  - zlib
  - SDL
  - GL
+ - libcurl
  - lua (5.x)
  - ode (0.x)
  - SDL_mixer
-
+ 
 Installation
 ============
 
@@ -173,6 +174,20 @@ Note that this list is not complete, several obscure ones have been
 left out. This is mostly due to not all of them being completely 
 implemented and workable.
 
+Letting X-Moto Access The Web
+=============================
+
+Alpha version 0.1.14 of X-Moto comes with a new feature that allows
+the game to connect to the web and download high-scores (world 
+records) and extra levels. 
+The first time you run X-Moto you'll be asked about whether you want
+to allow the game to access your Internet connection; if you don't
+have one, simply click "No". Then you'll be asked to specify your
+proxy settings. X-Moto supports HTTP proxies, SOCKS4 proxies, and
+SOCKS5 proxies. If you're behind a firewall, you most likely need to
+specify a proxy; ask your network administrator for guidance if 
+you're in doubt.
+
 Replays
 =======
 
@@ -242,7 +257,11 @@ get included in the menus:
                     
  CompressReplays    If true, replays will be compressed with zlib.
                     This is the default behaviour. Set this to false
-                    if you experience replay saving to take too long.                    
+                    if you experience replay saving to take too long.      
+                    
+ LevelCache         Levels are cached in the LCache/ directory for
+                    faster loading. If this variable is set to false,
+                    the feature will be disabled.      
  
 You'll also find a number of obscure controller configuration 
 options in config.dat, but I'll leave them undocumented as the plan
@@ -274,6 +293,9 @@ Authors
 
 X-Moto itself is written by Rasmus Neckelmann (neckelmann@gmail.com)
 
+Nicolas Adenis-Lamarre have written the code that allows interfacing
+with his X-Moto high-scores/extra levels website. 
+
 Furthermore the following persons have contributed to the X-Moto
 project:
 
@@ -283,8 +305,7 @@ project:
  - Clive Crous (one of the built-in levels)
  - Maxime Biais (MacOS X patch)
  - Eric Piel (various code patches)
- - Nicolas Adenis-Lamarre (designed and maintains the best-times
-   website).
+ - Torben Green (some of the built-in levels)
 
 Also a warm thank-you to Yves Berquin who have written the XML parser
 used by the game (tinyxml).
