@@ -304,7 +304,6 @@ namespace vapp {
     return m_LevelID;
   }
       
-  #define STATES_PER_CHUNK 512
   void Replay::storeState(const char *pcState) {
     if(m_Chunks.empty()) {
       ReplayStateChunk Chunk;
@@ -329,12 +328,19 @@ namespace vapp {
     }
   }
   
-  bool Replay::nextState() {
+  bool Replay::nextNormalState() {
+    return nextState(m_speed_factor);
+  }
+
+  bool Replay::nextState(float p_frames) {
     if(m_is_paused) {
       return ! m_bEndOfFile;
     }
 
-    m_nCurState += m_speed_factor;
+    /* put endoffile to false ; and in the following line, put it to true if required*/
+    m_bEndOfFile = false;
+
+    m_nCurState += p_frames;
 
     /* end or start of a chunk */
     if(m_nCurState >= STATES_PER_CHUNK || m_nCurState < 0.0) {
@@ -386,7 +392,7 @@ namespace vapp {
       return false;
     }
 
-    if(nextState()) { /* do nothing */ }
+    if(nextNormalState()) { /* do nothing */ }
 
     return true;
   }
@@ -469,48 +475,20 @@ namespace vapp {
     m_speed_factor -= REPLAY_SPEED_INCREMENT;
   }
 
+  float Replay::getSpeed() const {
+    return m_speed_factor;
+  }
+
   void Replay::fastforward(float fSeconds) {
     /* How many states should we move forward? */
-    int nNumStates = (int)(fSeconds * m_fFrameRate);
-    
-    for(int i=0;i<nNumStates;i++) {
-      /* Move one state forward */
-      m_nCurState += 1.0;
-      if( ((int)m_nCurState) >= m_Chunks[m_nCurChunk].nNumStates) {
-        m_nCurChunk++;
-        if(m_nCurChunk >= m_Chunks.size()) {
-          m_nCurChunk = m_Chunks.size() - 1;
-          m_nCurState = m_Chunks[m_nCurChunk].nNumStates - 1;
-          break;
-        }
-        else {
-          m_nCurState = 0.0;
-        }
-      }
-    }
+    float nNumStates = (fSeconds * m_fFrameRate);
+    nextState(nNumStates);
   }  
 
   void Replay::fastrewind(float fSeconds) {
-    /* How many states should we move backward? */
-    int nNumStates = (int)(fSeconds * m_fFrameRate);
-    m_bEndOfFile = false;
-
-    for(int i=0;i<nNumStates;i++) {
-      /* Move one state back */
-      m_nCurState -= 1.0;
-      if(m_nCurState < 0.0) {
-        m_nCurChunk--;
-        if(m_nCurChunk < 0) {
-          m_nCurChunk = 0;
-          m_nCurState = 0.0;
-          break;
-        }
-        else {
-          m_nCurState = m_Chunks[m_nCurChunk].nNumStates - 1;
-        }
-      }
-    }
+    /* How many states should we move forward? */
+    float nNumStates = (fSeconds * m_fFrameRate);
+    nextState(-nNumStates);
   }  
   
 };
-

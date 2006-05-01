@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "DBuffer.h"
 
 #define REPLAY_SPEED_INCREMENT 0.5
+#define STATES_PER_CHUNK 512
 
 namespace vapp {
 
@@ -61,7 +62,6 @@ namespace vapp {
       
       /* Methods */
       void storeState(const char *pcState);
-      bool Replay::nextState(); /* go to the next state */
       bool loadState(char *pcState); /* go and get the next state */  
       bool peekState(char *pcState); /* get current state */
       void createReplay(const std::string &FileName,const std::string &LevelID,const std::string &Player,float fFrameRate,int nStateSize);
@@ -73,6 +73,7 @@ namespace vapp {
       void pause();
       void faster();
       void slower();
+      float getSpeed() const; /* get multiple factor of the replay */
 
       /* Static methods */
       static std::vector<ReplayInfo *> createReplayList(const std::string &PlayerName,const std::string &LevelID = "");
@@ -106,6 +107,8 @@ namespace vapp {
  
       /* Helpers */
       void _FreeReplay(void);
+      bool nextState(float p_frames); /* go to the next state */
+      bool nextNormalState(); /* go to the next state */
       
       /* Static data */
       static bool m_bEnableCompression;

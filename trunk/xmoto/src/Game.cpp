@@ -115,13 +115,14 @@ namespace vapp {
               PlayerTimeEntry *pBestPTime = m_Profiles.getBestPlayerTime(m_pPlayer->PlayerName,LevelID);
               
               std::string T1 = "--:--:--",T2 = "--:--:--";
+
               if(pBestTime != NULL)
                 T1 = formatTime(pBestTime->fFinishTime);
               if(pBestPTime != NULL)
                 T2 = formatTime(pBestPTime->fFinishTime);
               
-              m_Renderer.setBestTime(T1 + std::string(" / ") + T2 + std::string(GAMETEXT_REPLAYHELPTEXT));              
-              
+              m_Renderer.setBestTime(T1 + std::string(" / ") + T2 + std::string(GAMETEXT_REPLAYHELPTEXT));
+
               if(m_bBenchmark) m_Renderer.setBestTime("");
               
               /* World-record stuff */
