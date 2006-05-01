@@ -87,6 +87,8 @@ namespace vapp {
       /* Static data interface */
       static void enableCompression(bool b) {m_bEnableCompression = b;}
     
+      static std::string giveAutomaticName();
+
     private: 
       /* Data */ 
       std::vector<ReplayStateChunk> m_Chunks;

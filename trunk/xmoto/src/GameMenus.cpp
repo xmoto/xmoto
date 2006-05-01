@@ -1202,7 +1202,7 @@ namespace vapp {
               m_pSaveReplayMsgBox = m_Renderer.getGUI()->msgBox(GAMETEXT_ENTERREPLAYNAME,
                                                                 (UIMsgBoxButton)(UI_MSGBOX_OK|UI_MSGBOX_CANCEL),
                                                                 true);
-              m_pSaveReplayMsgBox->setTextInputFont(m_Renderer.getMediumFont());                                                          
+              m_pSaveReplayMsgBox->setTextInputFont(m_Renderer.getMediumFont());
             }          
           }
         }
@@ -1679,7 +1679,8 @@ namespace vapp {
               m_pSaveReplayMsgBox = m_Renderer.getGUI()->msgBox(GAMETEXT_ENTERREPLAYNAME,
                                                                 (UIMsgBoxButton)(UI_MSGBOX_OK|UI_MSGBOX_CANCEL),
                                                                 true);
-              m_pSaveReplayMsgBox->setTextInputFont(m_Renderer.getMediumFont());                                                          
+              m_pSaveReplayMsgBox->setTextInputFont(m_Renderer.getMediumFont());                               
+	      m_pSaveReplayMsgBox->setTextInput(Replay::giveAutomaticName());
             }          
           }
         }

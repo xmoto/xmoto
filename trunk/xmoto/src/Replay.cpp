@@ -29,6 +29,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   #include <zlib.h>
 #endif
 
+#include <time.h> 
+#include <ctime>
+#include <iostream>
+#include <locale>
+
 namespace vapp {
 
   bool Replay::m_bEnableCompression = true;
@@ -490,5 +495,16 @@ namespace vapp {
     float nNumStates = (fSeconds * m_fFrameRate);
     nextState(-nNumStates);
   }  
+
+  std::string Replay::giveAutomaticName() {
+    time_t date;
+    time(&date);
+    struct tm *TL = localtime(&date);
+
+    char date_str[15];
+    strftime(date_str, 15, "%d-%m-%y %H-%M", TL);
+
+    return std::string(date_str);
+  }
   
 };
