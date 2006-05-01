@@ -27,6 +27,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VFileIO.h"
 #include "DBuffer.h"
 
+#define REPLAY_SPEED_INCREMENT 0.5
+
 namespace vapp {
 
   /*===========================================================================
@@ -59,15 +61,19 @@ namespace vapp {
       
       /* Methods */
       void storeState(const char *pcState);
-      bool loadState(char *pcState);  
-      bool peekState(char *pcState);    
+      bool Replay::nextState(); /* go to the next state */
+      bool loadState(char *pcState); /* go and get the next state */  
+      bool peekState(char *pcState); /* get current state */
       void createReplay(const std::string &FileName,const std::string &LevelID,const std::string &Player,float fFrameRate,int nStateSize);
       void saveReplay(void);
       std::string openReplay(const std::string &FileName,float *pfFrameRate,std::string &Player);
       void finishReplay(bool bFinished,float fFinishTime);
       void fastforward(float fSeconds);
       void fastrewind(float fSeconds);
-      
+      void pause();
+      void faster();
+      void slower();
+
       /* Static methods */
       static std::vector<ReplayInfo *> createReplayList(const std::string &PlayerName,const std::string &LevelID = "");
       static void freeReplayList(std::vector<ReplayInfo *> &List);
@@ -83,7 +89,8 @@ namespace vapp {
     private: 
       /* Data */ 
       std::vector<ReplayStateChunk> m_Chunks;
-      int m_nCurChunk,m_nCurState;      
+      int m_nCurChunk;
+      float m_nCurState; /* is a float so that manage slow */   
       std::string m_FileName,m_LevelID,m_PlayerName;
       float m_fFrameRate;
       int m_nStateSize;
@@ -92,7 +99,11 @@ namespace vapp {
       float m_fFinishTime;
       char *m_pcInputEventsData;
       int m_nInputEventsDataSize;
-            
+
+      float m_speed_factor; /* nb frame to increment each time ;
+			       is a float so that manage slow */
+      bool  m_is_paused;
+ 
       /* Helpers */
       void _FreeReplay(void);
       

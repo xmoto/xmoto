@@ -39,6 +39,8 @@ namespace vapp {
     m_fFinishTime = 0.0f;
     m_pcInputEventsData = NULL;
     m_nInputEventsDataSize = 0;
+    m_speed_factor = 1.0;
+    m_is_paused = false;
   }
       
   Replay::~Replay() {
@@ -297,7 +299,7 @@ namespace vapp {
     FS::closeFile(pfh);
     
     m_nCurChunk = 0;
-    m_nCurState = 0;
+    m_nCurState = 0.0;
     
     return m_LevelID;
   }
@@ -327,38 +329,75 @@ namespace vapp {
     }
   }
   
-  bool Replay::loadState(char *pcState) {
-    /* Read next state */
-    if(m_nCurState >= STATES_PER_CHUNK) {
-      m_nCurChunk++;
-      m_nCurState = 0;
+  bool Replay::nextState() {
+    if(m_is_paused) {
+      return ! m_bEndOfFile;
     }
-    if(m_nCurChunk >= m_Chunks.size()) {
-      m_bEndOfFile = true;
-      return false;    
-    }
-    if(m_nCurState >= m_Chunks[m_nCurChunk].nNumStates) {
-      m_bEndOfFile = true;
-      return false;
+
+    m_nCurState += m_speed_factor;
+
+    /* end or start of a chunk */
+    if(m_nCurState >= STATES_PER_CHUNK || m_nCurState < 0.0) {
+
+      /* go on the following chunk */
+      if(m_nCurState >= STATES_PER_CHUNK) { /* end of a chunk */
+	if(m_nCurChunk < m_Chunks.size() -1) {	
+	  m_nCurChunk++;
+	  m_nCurState = m_nCurState - m_Chunks[m_nCurChunk-1].nNumStates -1;
+	}
+      } else {
+	if(m_nCurState < 0.0) { /* start of a chunk */
+	  if(m_nCurChunk > 0) {	
+	    m_nCurChunk--;
+	    m_nCurState = m_Chunks[m_nCurChunk-1].nNumStates -1 + m_nCurState;
+	  }
+	}
+      }
+
+      /* if that's the beginning */
+      if(m_nCurState < 0.0) {
+	m_nCurState = 0.0;
+      }
+
+      /* if that's end */
+      if(m_nCurState >= m_Chunks[m_nCurChunk].nNumStates) {
+	m_bEndOfFile = true;
+	m_nCurState = m_Chunks[m_nCurChunk].nNumStates -1;
+	return false;
+      }
+      
+    } else { /* that's not the end or the start of the chunk */
+
+      /* if that's the beginning, do nothing */
+
+      /* if that's end */
+      if(m_nCurState >= m_Chunks[m_nCurChunk].nNumStates) {
+	m_bEndOfFile = true;
+	m_nCurState = m_Chunks[m_nCurChunk].nNumStates -1;
+	return false;
+      }
     }
     
-    memcpy(pcState,&m_Chunks[m_nCurChunk].pcChunkData[m_nCurState*m_nStateSize],m_nStateSize);
-    m_nCurState++;
+    return true;
+  }
+
+  bool Replay::loadState(char *pcState) {
+    if(peekState(pcState) == false) {
+      return false;
+    }
+
+    if(nextState()) { /* do nothing */ }
+
     return true;
   }
   
   bool Replay::peekState(char *pcState) {
     /* Like loadState() but this one does not advance the cursor... it just takes a peek */
-    int nPeekChunk=m_nCurChunk,nPeekState=m_nCurState;
-    if(nPeekState >= STATES_PER_CHUNK) {
-      nPeekChunk++;
-      nPeekState = 0;
-    }
-    if(nPeekChunk >= m_Chunks.size()) return false;
-    if(nPeekState >= m_Chunks[nPeekChunk].nNumStates) return false;
-    
-    memcpy(pcState,&m_Chunks[nPeekChunk].pcChunkData[nPeekState*m_nStateSize],m_nStateSize);
-    return true;
+    memcpy(pcState,
+	   &m_Chunks[m_nCurChunk].pcChunkData[((int)m_nCurState)*m_nStateSize],
+	   m_nStateSize);
+
+    return !m_bEndOfFile;
   }
   
   std::vector<ReplayInfo *> Replay::createReplayList(const std::string &PlayerName,const std::string &LevelIDCheck) {
@@ -418,14 +457,26 @@ namespace vapp {
     List.clear();
   }
   
+  void Replay::pause() {
+    m_is_paused = ! m_is_paused;
+  }
+
+  void Replay::faster() {
+    m_speed_factor += REPLAY_SPEED_INCREMENT;
+  }
+
+  void Replay::slower() {
+    m_speed_factor -= REPLAY_SPEED_INCREMENT;
+  }
+
   void Replay::fastforward(float fSeconds) {
     /* How many states should we move forward? */
     int nNumStates = (int)(fSeconds * m_fFrameRate);
     
     for(int i=0;i<nNumStates;i++) {
       /* Move one state forward */
-      m_nCurState++;
-      if(m_nCurState >= m_Chunks[m_nCurChunk].nNumStates) {
+      m_nCurState += 1.0;
+      if( ((int)m_nCurState) >= m_Chunks[m_nCurChunk].nNumStates) {
         m_nCurChunk++;
         if(m_nCurChunk >= m_Chunks.size()) {
           m_nCurChunk = m_Chunks.size() - 1;
@@ -433,7 +484,7 @@ namespace vapp {
           break;
         }
         else {
-          m_nCurState = 0;
+          m_nCurState = 0.0;
         }
       }
     }
@@ -442,15 +493,16 @@ namespace vapp {
   void Replay::fastrewind(float fSeconds) {
     /* How many states should we move backward? */
     int nNumStates = (int)(fSeconds * m_fFrameRate);
+    m_bEndOfFile = false;
 
     for(int i=0;i<nNumStates;i++) {
       /* Move one state back */
-      m_nCurState--;
-      if(m_nCurState < 0) {
+      m_nCurState -= 1.0;
+      if(m_nCurState < 0.0) {
         m_nCurChunk--;
         if(m_nCurChunk < 0) {
           m_nCurChunk = 0;
-          m_nCurState = 0;
+          m_nCurState = 0.0;
           break;
         }
         else {

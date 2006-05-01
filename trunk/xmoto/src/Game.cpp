@@ -927,7 +927,7 @@ namespace vapp {
               if(m_pReplay->peekState((char *)&NextBikeState)) {
                 /* Nice. Interpolate the states! */
                 m_MotoGame.interpolateGameState(&BikeState,&NextBikeState,&ibs,0.5f);
-
+		
                 /* Update game */
                 m_MotoGame.updateLevel( PHYS_STEP_SIZE,&ibs,m_pReplay );                 
               }
@@ -1261,6 +1261,21 @@ namespace vapp {
             if(m_pReplay != NULL)
               m_pReplay->fastrewind(1);
             break;
+	case SDLK_SPACE:
+	  /* pause */
+	  if(m_pReplay != NULL)
+	    m_pReplay->pause();
+	  break;
+	case SDLK_UP:
+	  /* pause */
+	  if(m_pReplay != NULL)
+	    m_pReplay->faster();
+	  break;
+	case SDLK_DOWN:
+	  /* pause */
+	  if(m_pReplay != NULL)
+	    m_pReplay->slower();
+	  break;
         }
         break;
       case GS_PLAYING:
