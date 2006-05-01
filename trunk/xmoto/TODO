@@ -1,16 +1,25 @@
-* ghost mode
+before next version :
+* add <xml_room> in configuration so that the player can choose the
+   link to his room xml file
 * add a button <see replay> which download the highscore from the
    website and play it
 * add a <new level> tab
-* add <xml_room> in configuration so that the player can choose the
-   link to his room xml file
-* add zoom out, zoom in, 3 2 1 GO ! at level startup (it neckelmann
-   agree) 
 * when you have a world highscore, display a message (not a popup)
 * add a message when internet connexion failed (on highscore, and
    levels download)
+* MD5sum to update levels
+* what about check for new levels at startup and propose to download
+   new levels ?
+* IS IT NORMAL THAT AFTER PROXY CONFIGURATION IT DOWNLOAD HIGHSCORES
+   ???
+* hum : once you choose yes/no first time on connection box, it would
+   be nice to save optoins ;-)
+
+for next version :
+
+* ghost mode
+* add 3 2 1 GO ! at level startup (it neckelmann agree) 
 * sort level by name (or difficulty (add a difficuly=[0-9]* in lvl ?))
-* CRC32 to update levels
 * theme (for sprites)
 * context information for levels : when one is selected, display
    information
@@ -18,18 +27,12 @@
    button, it's easiest) (it neckelmann agree)
 * add a counter of uncompleted levels
 * add a button to refresh highscores
-* what about check for new levels at startup and propose to download
-   new levels ?
 * upload highscore from the game ? (require login/password room
    configuration ;-(
-* IS IT NORMAL THAT AFTER PROXY CONFIGURATION IT DOWNLOAD HIGHSCORES
-   ???
 * see :
    http://aspegic500.free.fr/xmoto_highscores/replays/replay_707.rpl :
    it seems that there is a bug on replays
 * it seems that there is a bug on speed it is played (if i play
    replays done on fast machine, it appear faster)
-* hum : once you choose yes/no first time on connection box, it would
-   be nice to save optoins ;-)
 * replays : if you to <- at the end of a replay, when you play it
    fast, sometimes, i does'nt display the last frame ;-(
