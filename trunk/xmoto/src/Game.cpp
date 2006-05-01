@@ -904,8 +904,9 @@ namespace vapp {
           if(m_pReplay != NULL) {       
             /* Even frame number: Read the next state */
             if(m_nFrame%2 || m_nFrame==1) {       
-              /* REAL NON-INTERPOLATED FRAME */    
-              if(m_pReplay->loadState((char *)&BikeState)) {            
+              /* REAL NON-INTERPOLATED FRAME */
+	      if(m_pReplay->endOfFile() == false) {
+		m_pReplay->loadState((char *)&BikeState);
                 /* Update game */
                 m_MotoGame.updateLevel( PHYS_STEP_SIZE,&BikeState,m_pReplay ); 
 
@@ -924,9 +925,10 @@ namespace vapp {
             else {                          
               /* INTERPOLATED FRAME */
               SerializedBikeState NextBikeState,ibs;
-              if(m_pReplay->peekState((char *)&NextBikeState)) {
-                /* Nice. Interpolate the states! */
-                m_MotoGame.interpolateGameState(&BikeState,&NextBikeState,&ibs,0.5f);
+	      if(m_pReplay->endOfFile() == false) {
+		m_pReplay->peekState((char *)&NextBikeState);
+		/* Nice. Interpolate the states! */
+		m_MotoGame.interpolateGameState(&BikeState,&NextBikeState,&ibs,0.5f);
 		
                 /* Update game */
                 m_MotoGame.updateLevel( PHYS_STEP_SIZE,&ibs,m_pReplay );                 
