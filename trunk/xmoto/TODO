@@ -34,5 +34,3 @@ for next versions :
    it seems that there is a bug on replays
 * it seems that there is a bug on speed it is played (if i play
    replays done on fast machine, it appear faster)
-* replays : if you to <- at the end of a replay, when you play it
-   fast, sometimes, i does'nt display the last frame ;-(
