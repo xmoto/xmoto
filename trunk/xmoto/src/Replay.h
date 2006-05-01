@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VFileIO.h"
 #include "DBuffer.h"
 
-#define REPLAY_SPEED_INCREMENT 0.5
+#define REPLAY_SPEED_INCREMENT 0.25
 #define STATES_PER_CHUNK 512
 
 namespace vapp {
