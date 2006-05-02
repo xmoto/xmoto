@@ -33,12 +33,18 @@ namespace vapp {
   Packager main - note that this is a VERY simplistic approach to data files
   ===========================================================================*/
   void Packager::go(void) {
-    printf("X-Moto Data Packager!\n");
-    printf("---------------------\n");
-    
-    printf("Finding out which files to package...\n");
-    FILE *fp=fopen("package.lst","r");
     char cBuf[256];
+
+    printf("X-Moto Data Packager!\n");
+    printf("---------------------\n");  
+    printf("Finding out which files to package...\n");
+    
+    FILE *fp;
+
+    if( (fp=fopen("package.lst","r")) == NULL) {
+      printf("Can't file the file package.lst...\n");
+      return;
+    }
     
     std::vector<std::string> FileList;
     
