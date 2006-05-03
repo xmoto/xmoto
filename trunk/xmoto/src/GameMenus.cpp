@@ -1203,6 +1203,7 @@ namespace vapp {
                                                                 (UIMsgBoxButton)(UI_MSGBOX_OK|UI_MSGBOX_CANCEL),
                                                                 true);
               m_pSaveReplayMsgBox->setTextInputFont(m_Renderer.getMediumFont());
+	      m_pSaveReplayMsgBox->setTextInput(Replay::giveAutomaticName());
             }          
           }
         }
