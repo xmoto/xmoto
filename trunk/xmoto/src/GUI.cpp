@@ -320,12 +320,14 @@ namespace vapp {
     pMsgBox->makeActive();    
     if(bTextInput)
       pMsgBox->enableTextInput();
-
-    /* Disable all siblings */
-    for(int i=0;i<getChildren().size()-1;i++) {      
-      pMsgBox->getSiblingStates().push_back(!getChildren()[i]->isDisabled());
-      getChildren()[i]->enableWindow(false);     
-    }
+    
+    /* Disable all siblings (if there's not already a msg-box) */
+    //if(!m_bActiveMsgBox) {
+      for(int i=0;i<getChildren().size()-1;i++) {      
+        pMsgBox->getSiblingStates().push_back(!getChildren()[i]->isDisabled());
+        getChildren()[i]->enableWindow(false);     
+      }
+    //}
     
     /* Create text static */
     int nStaticY=0;
@@ -368,6 +370,9 @@ namespace vapp {
       pMsgBox->addButton(pButton);
       nCX+=115;
     }
+    
+    /* Set msgbox flag */
+    m_bActiveMsgBox = true;
 
     return pMsgBox;                                
   }

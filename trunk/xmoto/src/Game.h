@@ -122,6 +122,7 @@ namespace vapp {
                  #if defined(SUPPORT_WEBACCESS)
                   m_pWebHighscores = NULL;
                   m_pWebLevels = NULL;
+                  m_fDownloadTaskProgressLast = 0;
                  #endif
                  }
                  
@@ -133,6 +134,7 @@ namespace vapp {
         virtual void readEvents(void);
         
         virtual bool doesLevelExist(const std::string &LevelID); 
+        virtual bool shouldLevelBeUpdated(const std::string &LevelID);
 
         virtual std::string levelPathForUpdate(const std::string &p_LevelId);
         virtual std::string levelCRC32Sum(const std::string &p_LevelId);
@@ -209,6 +211,8 @@ namespace vapp {
         WebRoom *m_pWebHighscores;
         WebLevels *m_pWebLevels;
         ProxySettings m_ProxySettings;
+        std::string m_DownloadingLevel;
+        float m_fDownloadTaskProgressLast;
       #endif
       
       /* Sound effects */
@@ -326,7 +330,7 @@ namespace vapp {
     
       void _UpdateLoadingScreen(float fDone,Texture *pScreen,const std::string &NextTask);      
       
-      void _SimpleMessage(const std::string &Msg,UIRect *pRect=NULL);
+      void _SimpleMessage(const std::string &Msg,UIRect *pRect=NULL,bool bNoSwap=false);
       
       int _IsKeyInUse(const std::string &Key);
       

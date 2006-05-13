@@ -296,7 +296,7 @@ void FSWeb::downloadFile(const std::string &p_local_file,
   std::string v_proxy_auth_str;
 
   /* open the file */
-  if( (v_destinationFile = fopen(v_local_file_tmp.c_str(), "w")) == false) {
+  if( (v_destinationFile = fopen(v_local_file_tmp.c_str(), "wb")) == false) {
     throw vapp::Exception("error : unable to open output file " 
 			  + v_local_file_tmp);
   }
@@ -520,7 +520,7 @@ void WebLevels::update() {
 struct f_curl_download_data {
   vapp::WWWAppInterface *v_WebLevelApp;
   int v_nb_levels_to_download;
-  int v_nb_levels_downloaded;
+  int v_nb_levels_performed;
 };
 
 int WebLevels::f_curl_progress_callback(void *clientp,
@@ -538,7 +538,7 @@ int WebLevels::f_curl_progress_callback(void *clientp,
   }
 
   real_percentage_already_done = 
-    (((float)data->v_nb_levels_downloaded) * 100.0) 
+    (((float)data->v_nb_levels_performed) * 100.0) 
     / ((float)data->v_nb_levels_to_download);
 
   /* we can't make confiance to the web server information */
@@ -559,11 +559,12 @@ int WebLevels::f_curl_progress_callback(void *clientp,
 void WebLevels::upgrade() {
   std::vector<WebLevel*>::iterator it;
   f_curl_download_data v_data;
+  bool to_download;
 
   createDestinationDirIfRequired();
 
   int v_nb_levels_to_download = m_webLevels.size();
-  int v_nb_levels_downloaded  = 0;
+  int v_nb_levels_performed  = 0;
 
   v_data.v_WebLevelApp = m_WebLevelApp;
   v_data.v_nb_levels_to_download = v_nb_levels_to_download;
@@ -572,24 +573,49 @@ void WebLevels::upgrade() {
   it = m_webLevels.begin();
   while(it != m_webLevels.end() && m_WebLevelApp->isCancelAsSoonAsPossible() == false) {
     std::string v_url = (*it)->getUrl();
-    float v_percentage = (((float)v_nb_levels_downloaded) * 100.0) / ((float)v_nb_levels_to_download);
+    float v_percentage = (((float)v_nb_levels_performed) * 100.0) / ((float)v_nb_levels_to_download);
 
     m_WebLevelApp->setTaskProgress(v_percentage);
-    m_WebLevelApp->setBeingDownloadedLevel((*it)->getName()/*, (*it)->requireUpdate()*/);
+    m_WebLevelApp->setBeingDownloadedLevel((*it)->getName(), (*it)->requireUpdate());
 
-    v_data.v_nb_levels_downloaded = v_nb_levels_downloaded;
-    std::string v_destFile = getDestinationFile(v_url);
-    
-    FSWeb::downloadFile(v_destFile,
-			v_url,
-			f_curl_progress_callback,
-			&v_data,
-			m_proxy_settings);
-			
+    /* should the level be updated */
+    to_download = true;
     if((*it)->requireUpdate()) {
-      m_webLevelsNewDownloadedOK.push_back(v_destFile);
+      /* does the user want to update the level ? */
+      to_download = m_WebLevelApp->shouldLevelBeUpdated((*it)->getId());
     }
-    v_nb_levels_downloaded++;
+
+    if(to_download) {
+      v_data.v_nb_levels_performed = v_nb_levels_performed;
+      std::string v_destFile;
+      
+      if((*it)->requireUpdate()) {
+	v_destFile = m_WebLevelApp->levelPathForUpdate((*it)->getId());
+      } else {
+	v_destFile = getDestinationFile(v_url);
+      }
+      
+      try {
+	FSWeb::downloadFile(v_destFile,
+			    v_url,
+			    f_curl_progress_callback,
+			    &v_data,
+			    m_proxy_settings);
+
+	if((*it)->requireUpdate()) {
+	  m_webLevelsUpdatedDownloadedOK.push_back(v_destFile);
+	} else {
+	  m_webLevelsNewDownloadedOK.push_back(v_destFile);
+	}
+
+      } catch(vapp::Exception &e) {
+	if(m_WebLevelApp->isCancelAsSoonAsPossible() == false) {
+	  throw e;
+	}
+      }
+    }    
+
+    v_nb_levels_performed++;
     m_WebLevelApp->readEvents(); 
     it++;
   }
@@ -611,4 +637,5 @@ const std::vector<std::string> &WebLevels::getUpdatedDownloadedLevels(void) {
 }
 
 #endif
+
 

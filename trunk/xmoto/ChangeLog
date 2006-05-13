@@ -27,6 +27,7 @@ X-Moto 0.1.14 (alpha) 2006-
  * 4 new built-in levels by Torben Green.
  * More control over playback of replays: Up/down to increase/decrease
    speed and space to pause.
+ * External levels ordered alphabetically.
  * Various minor changes and several other small bugs fixed.
  
 X-Moto 0.1.12 (alpha) 2006-04-09

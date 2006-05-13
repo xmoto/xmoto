@@ -235,6 +235,7 @@ namespace vapp {
     pLevelTabs->setID("PLAY_LEVEL_TABS"); 
     pLevelTabs->setTabContextHelp(0,CONTEXTHELP_OFFICIAL_LEVELS);
     pLevelTabs->setTabContextHelp(1,CONTEXTHELP_EXTERNAL_LEVELS);
+    pLevelTabs->setTabContextHelp(2,CONTEXTHELP_NEW_LEVELS);
      
     UIButton *pGoButton = new UIButton(m_pPlayWindow,11,m_pPlayWindow->getPosition().nHeight-68,GAMETEXT_STARTLEVEL,115,57);
     pGoButton->setContextHelp(CONTEXTHELP_PLAY_SELECTED_LEVEL);
@@ -258,6 +259,12 @@ namespace vapp {
     pExternalLevelsTab->enableWindow(true);
     pExternalLevelsTab->showWindow(false);    
     pExternalLevelsTab->setID("PLAY_EXTERNAL_LEVELS_TAB");
+#if defined(SUPPORT_WEBACCESS)    
+    UIWindow *pNewLevelsTab = new UIWindow(pLevelTabs,20,40,GAMETEXT_NEWLEVELS,pLevelTabs->getPosition().nWidth-40,pLevelTabs->getPosition().nHeight-60);
+    pNewLevelsTab->enableWindow(true);
+    pNewLevelsTab->showWindow(false);        
+    pNewLevelsTab->setID("PLAY_NEW_LEVELS_TAB");
+#endif    
     UIList *pInternalLevelsList = new UIList(pInternalLevelsTab,0,0,"",pInternalLevelsTab->getPosition().nWidth,pInternalLevelsTab->getPosition().nHeight);      
     pInternalLevelsList->setID("PLAY_INTERNAL_LEVELS_LIST");
     pInternalLevelsList->showWindow(true);
@@ -269,9 +276,10 @@ namespace vapp {
     pInternalLevelsList->addColumn("WR:",80);  
 #endif    
     pInternalLevelsList->setEnterButton( pGoButton );
-    UIList *pExternalLevelsList = new UIList(pExternalLevelsTab,0,0,"",pExternalLevelsTab->getPosition().nWidth,pExternalLevelsTab->getPosition().nHeight);      /* -64 to make room for bonus */
+    UIList *pExternalLevelsList = new UIList(pExternalLevelsTab,0,0,"",pExternalLevelsTab->getPosition().nWidth,pExternalLevelsTab->getPosition().nHeight);     
     pExternalLevelsList->setID("PLAY_EXTERNAL_LEVELS_LIST");
     pExternalLevelsList->setFont(m_Renderer.getSmallFont());
+    pExternalLevelsList->setSort(true);
     pExternalLevelsList->addColumn(GAMETEXT_LEVEL,pExternalLevelsTab->getPosition().nWidth - 175);
 //    pExternalLevelsList->addColumn(GAMETEXT_SCRIPTED,128);  
     pExternalLevelsList->addColumn(GAMETEXT_TIME,80);  
@@ -280,6 +288,14 @@ namespace vapp {
     
 #endif
     pExternalLevelsList->setEnterButton( pGoButton );        
+#if defined(SUPPORT_WEBACCESS)
+    UIList *pNewLevelsList = new UIList(pNewLevelsTab,0,0,"",pNewLevelsTab->getPosition().nWidth,pNewLevelsTab->getPosition().nHeight);      
+    pNewLevelsList->setID("PLAY_NEW_LEVELS_LIST");
+    pNewLevelsList->setFont(m_Renderer.getSmallFont());
+    pNewLevelsList->setSort(true);
+    pNewLevelsList->addColumn(GAMETEXT_LEVEL,pNewLevelsTab->getPosition().nWidth);
+    pNewLevelsList->setEnterButton( pGoButton );        
+#endif
 
     m_pReplaysWindow = new UIFrame(m_pMainMenu,300,(getDispHeight()*140)/600,"",getDispWidth()-300-20,getDispHeight()-40-(getDispHeight()*120)/600-10);      
     m_pReplaysWindow->showWindow(false);
@@ -1934,6 +1950,7 @@ namespace vapp {
     UIButton *pLevelInfoButton = (UIButton *)m_pPlayWindow->getChild("PLAY_LEVEL_INFO_BUTTON");
     UIList *pPlayExternalLevelsList = (UIList *)m_pPlayWindow->getChild("PLAY_LEVEL_TABS:PLAY_EXTERNAL_LEVELS_TAB:PLAY_EXTERNAL_LEVELS_LIST");
     UIList *pPlayInternalLevelsList = (UIList *)m_pPlayWindow->getChild("PLAY_LEVEL_TABS:PLAY_INTERNAL_LEVELS_TAB:PLAY_INTERNAL_LEVELS_LIST");
+    UIList *pPlayNewLevelsList = (UIList *)m_pPlayWindow->getChild("PLAY_LEVEL_TABS:PLAY_NEW_LEVELS_TAB:PLAY_NEW_LEVELS_LIST");
 
     if(pPlayDLButton != NULL) {
       #if !defined(SUPPORT_WEBACCESS)
@@ -1966,6 +1983,13 @@ namespace vapp {
           pLevelSrc = reinterpret_cast<LevelSrc *>(pEntry->pvUser);
         }
       }
+      else if(pPlayNewLevelsList && !pPlayNewLevelsList->isBranchHidden() && pPlayNewLevelsList->getSelected()>=0) {
+        /* Play selected new/updated level */
+        if(!pPlayNewLevelsList->getEntries().empty()) {
+          UIListEntry *pEntry = pPlayNewLevelsList->getEntries()[pPlayNewLevelsList->getSelected()];        
+          pLevelSrc = reinterpret_cast<LevelSrc *>(pEntry->pvUser);
+        }
+      }
       
       /* Start playing it */
       if(pLevelSrc != NULL) {
@@ -1989,6 +2013,12 @@ namespace vapp {
       else if(pPlayExternalLevelsList && !pPlayExternalLevelsList->isBranchHidden() && pPlayExternalLevelsList->getSelected()>=0) {
         if(!pPlayExternalLevelsList->getEntries().empty()) {
           UIListEntry *pEntry = pPlayExternalLevelsList->getEntries()[pPlayExternalLevelsList->getSelected()];        
+          pLevelSrc = reinterpret_cast<LevelSrc *>(pEntry->pvUser);
+        }
+      }
+      else if(pPlayNewLevelsList && !pPlayNewLevelsList->isBranchHidden() && pPlayNewLevelsList->getSelected()>=0) {
+        if(!pPlayNewLevelsList->getEntries().empty()) {
+          UIListEntry *pEntry = pPlayNewLevelsList->getEntries()[pPlayNewLevelsList->getSelected()];        
           pLevelSrc = reinterpret_cast<LevelSrc *>(pEntry->pvUser);
         }
       }
@@ -2075,7 +2105,7 @@ namespace vapp {
     return -1;
   }
   
-  void GameApp::_SimpleMessage(const std::string &Msg,UIRect *pRect) {      
+  void GameApp::_SimpleMessage(const std::string &Msg,UIRect *pRect,bool bNoSwap) {      
     m_Renderer.getGUI()->paint();
     drawBox(Vector2f(0,0),Vector2f(getDispWidth(),getDispHeight()),0,MAKE_COLOR(0,0,0,170),0);
     int cx,cy;
@@ -2106,7 +2136,8 @@ namespace vapp {
     m_Renderer.getGUI()->putText(getDispWidth()/2 - cx/2,getDispHeight()/2,Msg.c_str());
     m_Renderer.getGUI()->setFont(m_Renderer.getSmallFont());
     
-    SDL_GL_SwapBuffers();
+    if(!bNoSwap)
+      SDL_GL_SwapBuffers();
   }
   
   void GameApp::_ConfigureJoystick(void) {

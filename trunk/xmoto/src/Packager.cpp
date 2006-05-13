@@ -42,7 +42,7 @@ namespace vapp {
     FILE *fp;
 
     if( (fp=fopen("package.lst","r")) == NULL) {
-      printf("Can't file the file package.lst...\n");
+      printf("Can't find the file package.lst...\n");
       return;
     }
     

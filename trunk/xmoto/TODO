@@ -3,15 +3,17 @@ before next version :
    link to his room xml file
 * add a button <see replay> which download the highscore from the
    website and play it
-* add a <new level> tab
 * when you have a world highscore, display a message (not a popup)
 * add a message when internet connexion failed (on highscore, and
    levels download)
-* MD5sum to update levels
 * what about check for new levels at startup and propose to download
    new levels ?
 * IS IT NORMAL THAT AFTER PROXY CONFIGURATION IT DOWNLOAD HIGHSCORES
    ???
+  -- Yes. :) But it could be discussed whether it is necesary if it has
+     already been done (the idea is that when the user enables web-access,
+     he want to download highscores immediately.
+   
 * hum : once you choose yes/no first time on connection box, it would
    be nice to save options ;-)
 
@@ -39,3 +41,5 @@ for next versions :
    location can merge their highscores)
 * two possibilities to show room : one to see the world highscore, one
    to see you room (optionnal)
+* add 2 rooms configurations so that i can display, world highscore
+   and highscore of my room

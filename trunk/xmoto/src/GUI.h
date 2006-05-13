@@ -194,6 +194,7 @@ namespace vapp {
         m_bDisable = false;
         m_bActive = false;
         m_nGroup = 0;
+        m_bActiveMsgBox = false;
         setPrimaryChild(NULL);
         setOpacity(100);
       }
@@ -281,6 +282,7 @@ namespace vapp {
       void setGroup(int n) {m_nGroup = n;}
       void setContextHelp(const std::string &s) {m_ContextHelp = s;}
       const std::string &getContextHelp(void) {return m_ContextHelp;}
+      void clearMsgBoxActive(void) {m_bActiveMsgBox = false; /* pain */}
     
     protected:
       /* Protected interface */
@@ -311,6 +313,7 @@ namespace vapp {
       bool m_bDisable;                          /* Disable window */
       bool m_bActive;                           /* Only one window should be active at a time */
       int m_nGroup;                             /* In window group */    
+      bool m_bActiveMsgBox;                     /* Message box active */
   };  
 
 	/*===========================================================================
@@ -581,7 +584,7 @@ namespace vapp {
         m_nScroll = 0;
         m_nSelected = 0;
         m_pEnterButton = NULL;
-        
+        m_bSort = false;
         m_bItemActivated = false;
         
         m_bScrollDownPressed = m_bScrollUpPressed = false;
@@ -618,9 +621,11 @@ namespace vapp {
       bool isItemActivated(void) {return m_bItemActivated;}
       void setHideColumn(int n) {m_nColumnHideFlags |= (1<<n);}
       void unhideAllColumns(void) {m_nColumnHideFlags=0;}
+      void setSort(bool bSort) {m_bSort=bSort;}
       
     private:
       /* Data */
+      bool m_bSort;
       std::vector<UIListEntry *> m_Entries;
       std::vector<std::string> m_Columns;
       std::vector<int> m_ColumnWidths;
@@ -668,6 +673,9 @@ namespace vapp {
         if(!getChildren().empty() && m_nSelected >= 0 && m_nSelected < getChildren().size()) 
           return getChildren()[m_nSelected];
         return NULL;
+      }
+      void setSelected(int n) {
+        m_nSelected = n;
       }
       
     private:

@@ -53,6 +53,9 @@ namespace vapp {
     
     /* return the MD5 sum or "" not available */
     virtual std::string levelMD5Sum(const std::string &LevelID) = 0;
+    
+    /* Ask the user whether he want a level to be updated */
+    virtual bool shouldLevelBeUpdated(const std::string &LevelID) = 0;
 
     /* Data interface */
     void setCancelAsSoonAsPossible() {m_cancel_as_soon_as_possible = true;}

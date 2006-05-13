@@ -148,7 +148,8 @@ namespace vapp {
   Level checksum struct
   ===========================================================================*/
   struct LevelCheckSum {
-    unsigned long nCRC32;     /* Use CRC32 for now TODO: MD5? */
+    unsigned long nCRC32;   
+    std::string MD5Sum;
   };
 
 	/*===========================================================================
@@ -219,7 +220,9 @@ namespace vapp {
       }
       
       const LevelCheckSum *getLevelCheckSum(void) {return &m_LevelCheckSum;}
-    
+      void setLevelMD5Sum(const std::string &s) {m_LevelCheckSum.MD5Sum = s;}
+      static int compareLevel(const LevelSrc *p_lvl1, const LevelSrc *p_lvl2);    
+
     private:
       /* Data */
       std::string m_LevelPack;        /* In this level pack */

@@ -82,8 +82,8 @@ if you want to be able to play levels besides your own...
 #define PHYS_SUSP_DAMP                205000
 
 /* Misc */
-#define PHYS_SLEEP_EPS                0.006 // 2006-04-23: changed from 0.008
-#define PHYS_SLEEP_FRAMES             150
+#define PHYS_SLEEP_EPS                0.02 // 2006-04-23: changed from 0.008
+#define PHYS_SLEEP_FRAMES             20     // 150
 #define PHYS_BRAKE_FACTOR             80
 #define PHYS_ENGINE_DAMP              0.4
 

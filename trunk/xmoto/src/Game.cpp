@@ -43,7 +43,8 @@ namespace vapp {
   ===========================================================================*/
   void GameApp::_UpdateLevelLists(void) {
     _CreateLevelLists((UIList *)m_pPlayWindow->getChild("PLAY_LEVEL_TABS:PLAY_EXTERNAL_LEVELS_TAB:PLAY_EXTERNAL_LEVELS_LIST"),
-                      (UIList *)m_pPlayWindow->getChild("PLAY_LEVEL_TABS:PLAY_INTERNAL_LEVELS_TAB:PLAY_INTERNAL_LEVELS_LIST"));    
+                      (UIList *)m_pPlayWindow->getChild("PLAY_LEVEL_TABS:PLAY_INTERNAL_LEVELS_TAB:PLAY_INTERNAL_LEVELS_LIST"));
+    
   }
 
   /*===========================================================================
@@ -631,8 +632,14 @@ namespace vapp {
       m_nNumLevels++;
     
       m_Levels[j].setFileName( LvlFiles[i] );
+      
+      /* Determine MD5 sum of level file */
+      std::string MD5Sum = md5file( LvlFiles[i] );
+      //printf("[%s][%s]\n",MD5Sum.c_str(),LvlFiles[i].c_str());
+      m_Levels[j].setLevelMD5Sum( MD5Sum );
 
       /* Cache or not to cache? */
+      bool bCached = false;
       if(m_bEnableLevelCache) {
         /* Start by determining file CRC */
         LevelCheckSum Sum;
@@ -651,15 +658,39 @@ namespace vapp {
           /* Cache it now */
           m_Levels[j].exportBinary(cCacheFileName,&Sum);
         }
-        else nNumCached++;
+        else {
+          nNumCached++;
+          bCached = true;
+        }
       }
       else {
         /* Just load it */
         m_Levels[j].loadXML();       
       }
+      
+      /* Check for ID conflict */
+      bool bGoodLevel = true;
+      for(int k=0;k<m_nNumLevels-1;k++) {
+        if(m_Levels[k].getID() == m_Levels[j].getID()) {
+          /* Conflict! */
+          Log("** Warning ** : More than one level with ID '%s'!",m_Levels[k].getID().c_str());
           
-      /* Update level pack manager */
-      _UpdateLevelPackManager(&m_Levels[j]);
+          m_nNumLevels--;
+          
+          if(bCached)
+            nNumCached--;
+            
+          bGoodLevel = false;
+          break;
+        }
+      }
+          
+      if(bGoodLevel) {
+        /* Update level pack manager */
+        _UpdateLevelPackManager(&m_Levels[j]);
+      }
+      
+      //printf("got level [%s][%s]\n",m_Levels[j].getID().c_str(),m_Levels[j].getFileName().c_str());
     }
     
     return nNumCached;
@@ -701,7 +732,7 @@ namespace vapp {
     setFrameDelay(0);
 
     /* Update sound system and input */
-    if(!isNoGraphics()) {
+    if(!isNoGraphics()) {        
       m_EngineSound.update(getRealTime());
       m_EngineSound.setRPM(0); /* per default don't have engine sound */
       Sound::update();
@@ -754,11 +785,11 @@ namespace vapp {
     else if(m_pDownloadLevelsMsgBox != NULL) {
       UIMsgBoxButton Button = m_pDownloadLevelsMsgBox->getClicked();
       if(Button == UI_MSGBOX_YES) {
-        /* Download levels! */
-        _DownloadExtraLevels();
-
         delete m_pDownloadLevelsMsgBox;
         m_pDownloadLevelsMsgBox = NULL;
+
+        /* Download levels! */
+        _DownloadExtraLevels();
       }
       else if(Button == UI_MSGBOX_NO) {
         delete m_pDownloadLevelsMsgBox;
@@ -1673,10 +1704,11 @@ namespace vapp {
     v_found = false;
     while(v_found == false && i<m_nNumLevels) {
       if(m_Levels[i].getID() == pLevelSrc->getID()) {
-	v_found = true;
-	v_current_level = i;
-      } else {
-	i++;
+	      v_found = true;
+	      v_current_level = i;
+      } 
+      else {
+      	i++;
       }
     }
 
@@ -1692,18 +1724,50 @@ namespace vapp {
     if(isCurrentPack) {
       LevelPack *pPack = _FindLevelPackByName(pLevelSrc->getLevelPack());
       if(pPack != NULL) {
-	/* Determine next then */
-	for(int j=0; j<pPack->Levels.size()-1; j++) {
-	  if(pPack->Levels[j] == pLevelSrc) {
-	    return pPack->Levels[j+1]->getID();
-	  }
-	}
+	      /* Determine next then */
+	      for(int j=0; j<pPack->Levels.size()-1; j++) {
+	        if(pPack->Levels[j] == pLevelSrc) {
+	          return pPack->Levels[j+1]->getID();
+	        }
+	      }
       }
       return "";
     }
 
     /* determine current level type */
     bool isCurrentInternal = m_Profiles.isInternal(pLevelSrc->getID());
+    
+    /* Not internal? */
+    if(!isCurrentInternal) {
+      /* Nope... make sure levels are played the same order they're listed */
+      UIWindow *pPlayNewLevelsTab = (UIList *)m_pPlayWindow->getChild("PLAY_LEVEL_TABS:PLAY_NEW_LEVELS_TAB");
+      UIWindow *pPlayExternalLevelsTab = (UIList *)m_pPlayWindow->getChild("PLAY_LEVEL_TABS:PLAY_EXTERNAL_LEVELS_TAB");
+      UIList *pPlayNewLevelsList = (UIList *)m_pPlayWindow->getChild("PLAY_LEVEL_TABS:PLAY_NEW_LEVELS_TAB:PLAY_NEW_LEVELS_LIST");
+      UIList *pPlayExternalLevelsList = (UIList *)m_pPlayWindow->getChild("PLAY_LEVEL_TABS:PLAY_EXTERNAL_LEVELS_TAB:PLAY_EXTERNAL_LEVELS_LIST");
+      
+      UIList *pList = NULL;
+            
+      if(pPlayNewLevelsTab != NULL && !pPlayNewLevelsTab->isHidden()) {
+        /* new/updated levels tab open */
+        pList = pPlayNewLevelsList;
+      }
+      else if(pPlayExternalLevelsTab != NULL && !pPlayExternalLevelsTab->isHidden()) {
+        /* external levels tab open */
+        pList = pPlayExternalLevelsList;
+      }
+      
+      if(pList != NULL) {
+        for(int i=0;i<pList->getEntries().size()-1;i++) {
+          if(pList->getEntries()[i]->pvUser == (void *)pLevelSrc) {
+            /* This is it */
+            return ((LevelSrc *)pList->getEntries()[i+1]->pvUser)->getID();
+          }
+        }
+        
+        if(pList->getEntries()[pList->getEntries().size()-1]->pvUser == (void *)pLevelSrc)
+          return "";
+      }
+    }
     
     /* find the next one */
     i++; // from the current one
@@ -1712,12 +1776,12 @@ namespace vapp {
 
       /* case of internal level */
       if(isCurrentInternal && isInternal) {
-	return m_Levels[i].getID();
+      	return m_Levels[i].getID();
       }
      
       /* case of external */
       if(isCurrentInternal == false && isInternal == false) {
-	return m_Levels[i].getID();
+	      return m_Levels[i].getID();
       }
       
       i++;
@@ -1798,6 +1862,8 @@ namespace vapp {
   void GameApp::_DownloadExtraLevels(void) {
     #if defined(SUPPORT_WEBACCESS)
       /* Download extra levels */
+      m_DownloadingLevel = "";
+      
       if(m_pWebLevels != NULL) {
         _SimpleMessage(GAMETEXT_DLLEVELS,&m_DownloadLevelsMsgBoxRect);
 
@@ -1807,11 +1873,34 @@ namespace vapp {
           m_pWebLevels->upgrade();          
         } 
         catch(Exception &e) {
-          Log("** Warning ** : Unable to check for extra levels [%s]",e.getMsg().c_str());
-          
+          Log("** Warning ** : Unable to download extra levels [%s]",e.getMsg().c_str());
+  
+          if(m_pDownloadLevelsMsgBox != NULL) {
+            delete m_pDownloadLevelsMsgBox;
+            m_pDownloadLevelsMsgBox = NULL;
+          }
           notifyMsg(GAMETEXT_FAILEDDLLEVELS);
+          return;
         }      
 
+        /* Get pointer to GUI list of new/updated levels */
+        UIList *pPlayNewLevelsList = (UIList *)m_pPlayWindow->getChild("PLAY_LEVEL_TABS:PLAY_NEW_LEVELS_TAB:PLAY_NEW_LEVELS_LIST");
+        if(pPlayNewLevelsList != NULL) {
+          /* Clear list, and make sure it is visible */
+          UIWindow *pInternalTab = (UIWindow *)m_pPlayWindow->getChild("PLAY_LEVEL_TABS:PLAY_INTERNAL_LEVELS_TAB");
+          UIWindow *pExternalTab = (UIWindow *)m_pPlayWindow->getChild("PLAY_LEVEL_TABS:PLAY_EXTERNAL_LEVELS_TAB");
+          UIWindow *pNewTab = (UIWindow *)m_pPlayWindow->getChild("PLAY_LEVEL_TABS:PLAY_NEW_LEVELS_TAB");
+          if(pNewTab != NULL) pNewTab->showWindow(true);
+          if(pExternalTab != NULL) pExternalTab->showWindow(false);
+          if(pInternalTab != NULL) pInternalTab->showWindow(false);
+          
+          UITabView *pTabView = (UITabView *)m_pPlayWindow->getChild("PLAY_LEVEL_TABS");
+          if(pTabView != NULL)
+            pTabView->setSelected(2);
+          
+          pPlayNewLevelsList->clear();
+        }
+          
         /* Got some new levels... load them! */
         const std::vector<std::string> LvlFiles = m_pWebLevels->getNewDownloadedLevels();
         
@@ -1819,6 +1908,44 @@ namespace vapp {
         int nOldNum = m_nNumLevels;
         _LoadLevels(LvlFiles);
         Log(" %d new level%s loaded",m_nNumLevels-nOldNum,(m_nNumLevels-nOldNum)==1?"":"s");
+        
+        /* Add new levels to GUI list */
+        if(pPlayNewLevelsList != NULL) {
+          for(int i=nOldNum;i<m_nNumLevels;i++) {
+            UIListEntry *pEntry = pPlayNewLevelsList->addEntry(std::string("New: ") + m_Levels[i].getLevelInfo()->Name,
+                                                               &m_Levels[i]);
+          }
+        }
+        
+        /* Updated levels? */
+        const std::vector<std::string> UpdatedLvlFiles = m_pWebLevels->getUpdatedDownloadedLevels();
+        
+        Log("Reloading updated levels...");
+        int nReloaded = 0;
+        for(int i=0;i<UpdatedLvlFiles.size();i++) {
+          /* Find levels by file names */
+          bool bFound = false;
+          for(int j=0;j<m_nNumLevels;j++) {
+            if(m_Levels[j].getFileName() == UpdatedLvlFiles[i]) {
+              /* Found it... */
+              bFound = true;
+              
+              /* Reload! */
+              m_Levels[j].loadXML(); /* TODO: already update cache here */
+              
+              /* Add it to list of new levels as "updated" */
+              if(pPlayNewLevelsList != NULL) {
+                UIListEntry *pEntry = pPlayNewLevelsList->addEntry(std::string("Updated: ") + m_Levels[j].getLevelInfo()->Name,
+                                                                   &m_Levels[j]);
+              }
+              
+              nReloaded++;
+              break;
+            }
+          }
+        }
+        Log(" %d reloaded",nReloaded);
+        Log(" %d not reloaded",UpdatedLvlFiles.size() - nReloaded);        
         
         /* Update level lists */
         _UpdateLevelLists();
@@ -1830,32 +1957,39 @@ namespace vapp {
     #if defined(SUPPORT_WEBACCESS)
       /* Check for extra levels */
       try {
-        _SimpleMessage("Checking for new levels...");
+        _SimpleMessage(GAMETEXT_CHECKINGFORLEVELS);
       
         if(m_pWebLevels != NULL) delete m_pWebLevels;
         m_pWebLevels = new WebLevels(this,&m_ProxySettings);
         
-        Log("WWW: Checking for new levels...");
+        Log("WWW: Checking for new or updated levels...");
         clearCancelAsSoonAsPossible();
         m_pWebLevels->update();     
         int nULevels=0,nUBytes=0;
         m_pWebLevels->getUpdateInfo(&nUBytes,&nULevels);
-        Log("WWW: %d new level%s found",nULevels,nULevels==1?"":"s");
+        Log("WWW: %d new or updated level%s found",nULevels,nULevels==1?"":"s");
 
         if(nULevels == 0) {
-          notifyMsg("No new levels found.\n\nTry again another time.");
+          notifyMsg(GAMETEXT_NONEWLEVELS);
         }        
         else {
           /* Ask user whether he want to download levels or snot */
           if(m_pDownloadLevelsMsgBox == NULL) {
             char cBuf[256];
-            sprintf(cBuf,"%d new level%s found. Download %s?",nULevels,nULevels==1?"":"s",nULevels==1?"it":"them");
+            
+            sprintf(cBuf,nULevels==1?GAMETEXT_NEWLEVELAVAIL:
+                                     GAMETEXT_NEWLEVELSAVAIL,nULevels);
             m_pDownloadLevelsMsgBox = m_Renderer.getGUI()->msgBox(cBuf,(UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
           }
         }
       } 
       catch(Exception &e) {
         Log("** Warning ** : Unable to check for extra levels [%s]",e.getMsg().c_str());
+        if(m_pDownloadLevelsMsgBox != NULL) {
+          delete m_pDownloadLevelsMsgBox;
+          m_pDownloadLevelsMsgBox = NULL;
+        }
+        notifyMsg(GAMETEXT_FAILEDCHECKLEVELS);
       }      
     #endif
   }
@@ -1865,8 +1999,75 @@ namespace vapp {
   ===========================================================================*/
   #if defined(SUPPORT_WEBACCESS)
         
+  bool GameApp::shouldLevelBeUpdated(const std::string &LevelID) {
+    /* Hmm... ask user whether this level should be updated */
+    bool bRet = true;
+    
+    LevelSrc *pLevel = _FindLevelByID(LevelID);
+    if(pLevel != NULL) {
+      bool bDialogBoxOpen = true;
+      
+      char cBuf[1024];
+      sprintf(cBuf,GAMETEXT_WANTTOUPDATELEVEL,pLevel->getLevelInfo()->Name.c_str(),
+              pLevel->getFileName().c_str());
+      UIMsgBox *pMsgBox = m_Renderer.getGUI()->msgBox(cBuf,(UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
+      
+      while(bDialogBoxOpen) {
+        SDL_PumpEvents();
+        
+        SDL_Event Event;
+        while(SDL_PollEvent(&Event)) {
+          /* What event? */
+          switch(Event.type) {
+            case SDL_QUIT:  
+              /* Force quit */
+              quit();
+              setCancelAsSoonAsPossible();
+              return false;
+            case SDL_MOUSEBUTTONDOWN:
+              mouseDown(Event.button.button);
+              break;
+            case SDL_MOUSEBUTTONUP:
+              mouseUp(Event.button.button);
+              break;
+          }
+        }
+        
+        UIMsgBoxButton Button = pMsgBox->getClicked();
+        if(Button != UI_MSGBOX_NOTHING) {
+          if(Button != UI_MSGBOX_YES) {
+            bRet = false;
+          }
+          bDialogBoxOpen = false;
+        }
+
+        _DrawMenuBackground();
+        _DispatchMouseHover();
+        
+        m_Renderer.getGUI()->paint();
+        
+        UIRect TempRect;
+        
+        int nMX,nMY;
+        getMousePos(&nMX,&nMY);      
+        drawImage(Vector2f(nMX-2,nMY-2),Vector2f(nMX+30,nMY+30),m_pCursor);
+
+        SDL_GL_SwapBuffers();            
+      }    
+      
+      delete pMsgBox;
+      setTaskProgress(m_fDownloadTaskProgressLast);
+    }    
+    return bRet;        
+  }
+        
   void GameApp::setTaskProgress(float fPercent) {
     int nBarHeight = 15;
+    m_fDownloadTaskProgressLast = fPercent;
+    readEvents();
+    
+    _DrawMenuBackground();
+    _SimpleMessage(std::string(GAMETEXT_DLLEVELS),&m_DownloadLevelsMsgBoxRect,true);
     
     drawBox(Vector2f(m_DownloadLevelsMsgBoxRect.nX+10,m_DownloadLevelsMsgBoxRect.nY+
                                                    m_DownloadLevelsMsgBoxRect.nHeight-
@@ -1883,11 +2084,13 @@ namespace vapp {
                      m_DownloadLevelsMsgBoxRect.nY+m_DownloadLevelsMsgBoxRect.nHeight-nBarHeight),
             0,MAKE_COLOR(255,0,0,255),0);
 
+    UITextDraw::printRaw(m_Renderer.getSmallFont(),m_DownloadLevelsMsgBoxRect.nX+13,m_DownloadLevelsMsgBoxRect.nY+
+                         m_DownloadLevelsMsgBoxRect.nHeight-nBarHeight-4,m_DownloadingLevel,MAKE_COLOR(255,255,255,128));
     SDL_GL_SwapBuffers();            
   }
   
   void GameApp::setBeingDownloadedLevel(const std::string &LevelName,bool bNewLevel) {
-    drawText(Vector2f(0,0),LevelName + std::string("(Temp. message, make it nicer... kthxbye.)                     "),MAKE_COLOR(0,0,0,255));
+    m_DownloadingLevel = LevelName;
   }
   
   void GameApp::readEvents(void) {
@@ -1908,8 +2111,7 @@ namespace vapp {
           setCancelAsSoonAsPossible();
           return;
       }
-    }
-    
+    }    
   }
   
   bool GameApp::doesLevelExist(const std::string &LevelID) {
@@ -1917,10 +2119,12 @@ namespace vapp {
   }
   
   std::string GameApp::levelPathForUpdate(const std::string &p_LevelId) {
-    //LevelSrc *pLevel = _FindLevelByID(p_LevelId);
-    //if(pLevel != NULL) {
-    //  return pLevel->getFileName();
-    //}
+    LevelSrc *pLevel = _FindLevelByID(p_LevelId);
+    if(pLevel != NULL) {
+      /* If level path is not absolute, this level is not updatable */
+      if(FS::isPathAbsolute(pLevel->getFileName()))
+        return pLevel->getFileName();
+    }
     return "";
   }
   
@@ -1936,11 +2140,10 @@ namespace vapp {
   }
   
   std::string GameApp::levelMD5Sum(const std::string &LevelID) {
-    /* Get full path of level */
-    //std::string FullPath = levelPathForUpdate(LevelID);
-    //if(FullPath != "") {
-    //  return md5file(FullPath);
-    //}
+    LevelSrc *pLevel = _FindLevelByID(LevelID);
+    if(pLevel != NULL) {
+      return pLevel->getLevelCheckSum()->MD5Sum;
+    }
 
     /* Nothing */
     return "";

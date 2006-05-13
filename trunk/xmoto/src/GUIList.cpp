@@ -294,9 +294,23 @@ namespace vapp {
   Allocate entry / vice versa
   ===========================================================================*/
   UIListEntry *UIList::addEntry(std::string Text,void *pvUser) {
-    UIListEntry *p = new UIListEntry;
+    UIListEntry *p = new UIListEntry;        
     p->Text.push_back(Text);
     p->pvUser = pvUser;
+    
+    /* Sorted? */
+    if(m_bSort) {
+      /* Yeah, keep it alphabetical, please */
+      for(int i=0;i<m_Entries.size();i++) {
+        if(Text < m_Entries[i]->Text[0]) {
+          /* Here! */
+          m_Entries.insert(m_Entries.begin() + i,p);
+          return p;
+        }
+      }
+    }
+
+    /* Just add it to the end */
     m_Entries.push_back(p);
     return p;
   }

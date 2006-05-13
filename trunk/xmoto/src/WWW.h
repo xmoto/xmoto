@@ -18,7 +18,7 @@
 #define DEFAULT_WEBHIGHSCORES_URL         "http://aspegic500.free.fr/xmoto_highscores/highscores.xml"
 #define DEFAULT_WEBHIGHSCORES_FILENAME    "webhighscores.xml"
 #define DEFAULT_TRANSFERT_TIMEOUT         240
-#define DEFAULT_TRANSFERT_CONNECT_TIMEOUT 10
+#define DEFAULT_TRANSFERT_CONNECT_TIMEOUT 30
 #define DEFAULT_WEBLEVELS_URL             "http://aspegic500.free.fr/xmoto_highscores/levels.xml"
 #define DEFAULT_WEBLEVELS_FILENAME        "weblevels.xml"
 #define DEFAULT_WEBLEVELS_DIR             "downloaded"
@@ -194,6 +194,9 @@ class WebLevels {
   
   /* Get names of updated files downloaded OK*/
   const std::vector<std::string> &getUpdatedDownloadedLevels();
+
+  /* Get IDs of updated levels downloaded OK*/
+  const std::vector<std::string> &getUpdatedDownloadedLevelIDs();
 
  private:
   vapp::WWWAppInterface *m_WebLevelApp;

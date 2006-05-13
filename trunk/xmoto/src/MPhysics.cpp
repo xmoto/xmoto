@@ -114,7 +114,7 @@ namespace vapp {
     }
     bool bSleep = false;
     
-    //printf("[%d]",m_nStillFrames);        
+    //printf("]",m_nStillFrames);        
     if(m_nStillFrames > PHYS_SLEEP_FRAMES) {
       bSleep = true;
       dBodyDisable(m_FrontWheelBodyID);
@@ -126,6 +126,8 @@ namespace vapp {
       if(!dBodyIsEnabled(m_RearWheelBodyID)) dBodyEnable(m_RearWheelBodyID);
       if(!dBodyIsEnabled(m_FrameBodyID)) dBodyEnable(m_FrameBodyID);
     }
+    
+    //printf("%d",bSleep);
 
     if(!bSleep) {
       /* Update front suspension */

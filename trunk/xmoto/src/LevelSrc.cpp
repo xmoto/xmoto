@@ -167,7 +167,7 @@ namespace vapp {
     /* Load XML document and fetch tinyxml handle */
     _UnloadLevelData();
     m_LevelCheckSum.nCRC32 = 0;
-    m_XML.readFromFile( m_FileName,&m_LevelCheckSum.nCRC32 );
+    m_XML.readFromFile( m_FileName, /*&m_LevelCheckSum.nCRC32*/ NULL );
     
     TiXmlDocument *pDoc = m_XML.getLowLevelAccess();
     
@@ -810,6 +810,18 @@ namespace vapp {
     }
     
     return bRet;
+  }
+
+  int LevelSrc::compareLevel(const LevelSrc *p_lvl1, const LevelSrc *p_lvl2) {
+    if(p_lvl1->m_Info.Name == p_lvl2->m_Info.Name) {
+      return 0;
+    }
+    
+    if(p_lvl1->m_Info.Name > p_lvl2->m_Info.Name) {
+      return 1;
+    } 
+
+    return -1;
   }
     
 };
