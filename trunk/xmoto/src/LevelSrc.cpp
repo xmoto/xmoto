@@ -669,8 +669,6 @@ namespace vapp {
       if(!strcmp(cTag,"XBL1"))
         nFormat = 1;
         
-      printf("reading...\n");
-        
       if(nFormat == 1) {
         /* Read "format 1" binary level */
         m_LevelCheckSum.nCRC32 = pSum->nCRC32;
@@ -729,9 +727,7 @@ namespace vapp {
               pV->fX = FS::readFloat_LE(pfh);
               pV->fY = FS::readFloat_LE(pfh);
               pV->EdgeEffect = FS::readString(pfh);
-              
-              printf("[%f %f]\n",pV->fX,pV->fY);
-              
+                            
               pBlock->Vertices.push_back(pV);
             }
             
