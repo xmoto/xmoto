@@ -556,12 +556,16 @@ namespace vapp {
     Log(" %d level pack%s",m_LevelPacks.size(),m_LevelPacks.size()==1?"":"s");
 
     #if defined(SUPPORT_WEBACCESS)    
-      /* Fetch highscores from web? */
-      if(m_bEnableWebHighscores) {            
-        _UpdateLoadingScreen((1.0f/9.0f) * 6,pLoadingScreen,GAMETEXT_DLHIGHSCORES);      
-
-        _UpdateWebHighscores(true);        
-      }
+    /* Fetch highscores from web? */
+    if(m_pWebHighscores != NULL) delete m_pWebHighscores;
+    m_pWebHighscores = new WebRoom(&m_ProxySettings);
+    
+    if(m_bEnableWebHighscores) {            
+      _UpdateLoadingScreen((1.0f/9.0f) * 6,pLoadingScreen,GAMETEXT_DLHIGHSCORES);      
+      
+      _UpdateWebHighscores(true);        
+    }
+     _UpgradeWebHighscores();
     #endif
         
     if(!isNoGraphics()) {
@@ -1828,10 +1832,7 @@ namespace vapp {
   }
   
   void GameApp::_UpdateWebHighscores(bool bSilent) {
-    #if defined(SUPPORT_WEBACCESS)
-      if(m_pWebHighscores != NULL) delete m_pWebHighscores;
-      m_pWebHighscores = new WebRoom(&m_ProxySettings);
-      
+    #if defined(SUPPORT_WEBACCESS)    
       if(!bSilent)
         _SimpleMessage(GAMETEXT_DLHIGHSCORES,&m_DownloadLevelsMsgBoxRect);
 
@@ -1845,18 +1846,22 @@ namespace vapp {
         
         if(!bSilent)
           notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES);
-      }
-      
-      /* Upgrade high scores */
-      try {
-	m_pWebHighscores->upgrade();      
-      } catch(Exception &e) {
-	/* file probably doesn't exist */
-	Log("** Warning ** : Failed to analyse web-highscores file");		
-      }
+      }      
     #endif
   }
   
+  void GameApp::_UpgradeWebHighscores() {
+    #if defined(SUPPORT_WEBACCESS)
+    /* Upgrade high scores */
+    try {
+      m_pWebHighscores->upgrade();      
+    } catch(Exception &e) {
+      /* file probably doesn't exist */
+      Log("** Warning ** : Failed to analyse web-highscores file");		
+    }
+    #endif
+  }
+
   /*===========================================================================
   Extra WWW levels
   ===========================================================================*/

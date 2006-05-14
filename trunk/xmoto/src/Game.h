@@ -343,6 +343,7 @@ namespace vapp {
       
       void _CheckForExtraLevels(void);
       void _UpdateWebHighscores(bool bSilent);
+      void _UpgradeWebHighscores();
       void _DownloadExtraLevels(void);
       
       int _LoadLevels(const std::vector<std::string> &LvlFiles);
