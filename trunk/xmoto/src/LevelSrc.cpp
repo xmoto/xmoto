@@ -689,10 +689,10 @@ namespace vapp {
           m_Info.Sky = FS::readString(pfh);
           m_ScriptFile = FS::readString(pfh);
 
-          m_fLeftLimit = FS::readFloat(pfh);
-          m_fRightLimit = FS::readFloat(pfh);
-          m_fTopLimit = FS::readFloat(pfh);
-          m_fBottomLimit = FS::readFloat(pfh);
+          //m_fLeftLimit = FS::readFloat(pfh);
+          //m_fRightLimit = FS::readFloat(pfh);
+          //m_fTopLimit = FS::readFloat(pfh);
+          //m_fBottomLimit = FS::readFloat(pfh);
 
           m_fLeftLimit = FS::readFloat_LE(pfh);
           m_fRightLimit = FS::readFloat_LE(pfh);
