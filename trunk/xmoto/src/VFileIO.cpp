@@ -1151,7 +1151,6 @@ namespace vapp {
   
   float FS::readFloat_LE(FileHandle *pfh) {
     int v = readInt_LE(pfh);
-    printf("[%08X][%f]\n",v,*((float *)&v));
     return *((float *)&v);
   }
   
