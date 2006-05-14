@@ -528,7 +528,8 @@ namespace vapp {
     }
     
     /* Test level cache directory */
-    if(m_bEnableLevelCache && !FS::isDir("LCache")) {
+    std::string LCachePath = FS::getUserDir() + std::string("/LCache");
+    if(m_bEnableLevelCache && !FS::isDir(LCachePath)) {
       m_bEnableLevelCache = false;
       Log("** Warning ** : Level cache directory not found, forcing caching off!");
     }
