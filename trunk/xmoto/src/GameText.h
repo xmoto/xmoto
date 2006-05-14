@@ -156,6 +156,8 @@ Central place to keep many in-game text strings
 #define GAMETEXT_MODIFYSELECTED       "Modify Selected..."
 #define GAMETEXT_MONO                 "Mono"
 #define GAMETEXT_NAME                 "Name"
+#define GAMETEXT_NEWHIGHSCORE         "New highscore !"
+#define GAMETEXT_NEWHIGHSCOREPERSONAL "New personal highscore !"
 #define GAMETEXT_NEWLEVELAVAIL        "%d new or updated level available. Download now?"
 #define GAMETEXT_NEWLEVELS            "New Levels"
 #define GAMETEXT_NEWLEVELSAVAIL       "%d new or updated levels available. Download now?"

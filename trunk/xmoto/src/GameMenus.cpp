@@ -63,6 +63,11 @@ namespace vapp {
     UIStatic *pFinishText = new UIStatic(m_pFinishMenu,0,100,GAMETEXT_FINISH,m_pFinishMenu->getPosition().nWidth,36);
     pFinishText->setFont(m_Renderer.getMediumFont());
 
+    m_pNewWorldRecord = new UIStatic(m_pFinishMenu,
+				     105,
+				     450,
+				     "",200, 25);
+
     for(int i=0;i<m_nNumFinishMenuButtons;i++) {
       m_pFinishMenuButtons[i]->setPosition(200-207/2,m_pFinishMenu->getPosition().nHeight/2 - (m_nNumFinishMenuButtons*57)/2 + i*57,207,57);
       m_pFinishMenuButtons[i]->setFont(m_Renderer.getSmallFont());
@@ -1144,6 +1149,53 @@ namespace vapp {
         m_pPauseMenuButtons[i]->setClicked(false);
       }
     }
+  }
+
+  /* called only when the finishmenu is displayed */
+  void GameApp::_RefreshFinishMenu() {
+
+
+    /* is it a highscore ? */
+    float v_best_local_time;
+    float v_best_personal_time;
+    float v_current_time;
+    bool v_is_a_highscore;
+    bool v_is_a_personal_highscore;
+
+    v_best_local_time = m_Profiles.getBestTime(m_MotoGame.getLevelSrc()->getID())->fFinishTime;
+    v_best_personal_time = m_Profiles.getBestPlayerTime(m_pPlayer->PlayerName,
+							m_MotoGame.getLevelSrc()->getID())->fFinishTime;
+    v_current_time = m_MotoGame.getFinishTime();
+
+    v_is_a_highscore = (v_current_time <= v_best_local_time);  /* = because highscore is already stored in playerdata */
+
+    v_is_a_personal_highscore = (v_current_time <= v_best_personal_time);  /* = because highscore is already stored in playerdata */
+
+    #if defined(SUPPORT_WEBACCESS) 
+    /* search a better webhighscore */
+    if(m_pWebHighscores != NULL && v_is_a_highscore == true) {
+      WebHighscore* wh = m_pWebHighscores->getHighscoreFromLevel(m_MotoGame.getLevelSrc()->getID());
+      if(wh != NULL) {
+	v_is_a_highscore = (v_current_time < wh->getFTime());
+      } else {
+	/* never highscored */
+	v_is_a_highscore = true;
+      }
+    }
+    #endif
+
+    if(v_is_a_highscore) {
+      m_pNewWorldRecord->setFont(m_Renderer.getMediumFont());
+      m_pNewWorldRecord->setCaption(GAMETEXT_NEWHIGHSCORE);
+    } else {
+      if(v_is_a_personal_highscore) {
+	m_pNewWorldRecord->setFont(m_Renderer.getSmallFont());
+	m_pNewWorldRecord->setCaption(GAMETEXT_NEWHIGHSCOREPERSONAL);
+      } else {
+	m_pNewWorldRecord->setCaption(""); /* you can make better ;-)*/
+      }
+    }
+
   }
 
   /*===========================================================================

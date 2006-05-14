@@ -264,6 +264,7 @@ namespace vapp {
         //Sound::playSample(m_pEndOfLevelSFX);
 
         /* A more lucky outcome of GS_PLAYING than GS_JUSTDEAD :) */
+	_RefreshFinishMenu();
         m_pFinishMenu->showWindow(true);
         m_pBestTimes->showWindow(true);
         m_nFinishShade = 0;            

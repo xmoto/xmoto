@@ -142,6 +142,11 @@ std::string WebHighscore::getTime() const {
   return m_time;
 }
 
+float WebHighscore::getFTime() const {
+  // todo
+  return 0.0;
+}
+
 WebRoom* WebHighscore::getRoom() const {
   return m_room;
 }

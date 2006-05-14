@@ -257,7 +257,9 @@ namespace vapp {
       /* In-game FINISH menu fun */
       UIFrame *m_pFinishMenu;
       int m_nFinishShade;
-      UIButton *m_pFinishMenuButtons[10];            
+      UIButton *m_pFinishMenuButtons[10];
+      UIStatic *m_pNewWorldRecord;
+
       int m_nNumFinishMenuButtons;      
       UIBestTimes *m_pBestTimes;
       
@@ -298,6 +300,7 @@ namespace vapp {
       void _HandleMainMenu(void);  
       void _HandlePauseMenu(void);
       void _HandleJustDeadMenu(void);
+      void _RefreshFinishMenu(void);
       void _HandleFinishMenu(void);
       void _HandleWebConfEditor(void);
       void _HandleProfileEditor(void);
