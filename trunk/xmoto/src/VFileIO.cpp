@@ -1134,10 +1134,10 @@ namespace vapp {
   }
   
   void FS::writeFloat_LE(FileHandle *pfh,float v) {
-    //writeInt_LE(pfh,*((int *)&v));    
-    unsigned char *pc=(unsigned char *)&v;
-    for(int i=0;i<4;i++)
-      writeByte(pfh,pc[i]);
+    writeInt_LE(pfh,*((int *)&v));    
+    //unsigned char *pc=(unsigned char *)&v;
+    //for(int i=0;i<4;i++)
+    //  writeByte(pfh,pc[i]);
   }
   
   int FS::readShort_LE(FileHandle *pfh) {
@@ -1153,13 +1153,13 @@ namespace vapp {
   }
   
   float FS::readFloat_LE(FileHandle *pfh) {
-    //int v = readInt_LE(pfh);
-    //return *((float *)&v);
-    float v;
-    unsigned char *pc=(unsigned char *)&v;
-    for(int i=0;i<4;i++)
-      pc[i]=readByte(pfh);
-    return v;
+    int v = readInt_LE(pfh);
+    return *((float *)&v);
+    //float v;
+    //unsigned char *pc=(unsigned char *)&v;
+    //for(int i=0;i<4;i++)
+    //  pc[i]=readByte(pfh);
+    //return v;
   }
   
 };
