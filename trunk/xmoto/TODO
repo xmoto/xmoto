@@ -3,9 +3,8 @@ before next version :
    link to his room xml file
 * add a button <see replay> which download the highscore from the
    website and play it
-* when you have a world highscore, display a message (not a popup)
-* add a message when internet connexion failed (on highscore, and
-   levels download)
+* when you have a world highscore, display a message (not a popup) :
+   just WebHighscore::getFTime() const is missing
 * what about check for new levels at startup and propose to download
    new levels ?
 * IS IT NORMAL THAT AFTER PROXY CONFIGURATION IT DOWNLOAD HIGHSCORES
@@ -13,9 +12,7 @@ before next version :
   -- Yes. :) But it could be discussed whether it is necesary if it has
      already been done (the idea is that when the user enables web-access,
      he want to download highscores immediately.
-   
-* hum : once you choose yes/no first time on connection box, it would
-   be nice to save options ;-)
+* disable download levels if www is disabled
 
 for next versions :
 
