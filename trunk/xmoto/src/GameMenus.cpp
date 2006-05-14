@@ -1861,12 +1861,6 @@ namespace vapp {
       pINetConf->setChecked(false);
     #endif
     
-    if(pInGameWorldRecord && pWebHighscores) {
-      bool t=pWebHighscores->getChecked();
-      pInGameWorldRecord->enableWindow(t);      
-      pINetConf->enableWindow(t);      
-    }
-
     if(pEnableAudioButton) {
       bool t=pEnableAudioButton->getChecked();
       p11kHzButton->enableWindow(t);
