@@ -1521,6 +1521,7 @@ namespace vapp {
         _ConfigureProxy();
         
         _UpdateWebHighscores(false);
+        _UpgradeWebHighscores();       
         _UpdateLevelLists();
       }      
 
