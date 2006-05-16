@@ -4,12 +4,15 @@ before next version :
   -- Yes. :) But it could be discussed whether it is necesary if it has
      already been done (the idea is that when the user enables web-access,
      he want to download highscores immediately.
-* disable download levels if www is disabled
-* it doesn't show world records first time the game is started
-
-for next versions :
+ -> update highscore button
 * add <xml_room> in configuration so that the player can choose the
    link to his room xml file
+
+* display f12 in help, and key for replay slow, fast, pause, and the
+   current speed to display
+
+for next versions :
+
 * add a button <see replay> which download the highscore from the
    website and play it
 * what about check for new levels at startup and propose to download
