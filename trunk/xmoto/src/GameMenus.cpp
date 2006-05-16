@@ -1915,6 +1915,15 @@ namespace vapp {
       pWebHighscores->setChecked(false);
       pInGameWorldRecord->setChecked(false);      
       pINetConf->setChecked(false);
+    #else
+      if(pWebHighscores->getChecked()) {
+        pInGameWorldRecord->enableWindow(true);
+        pINetConf->enableWindow(true);
+      }
+      else {
+        pInGameWorldRecord->enableWindow(false);
+        pINetConf->enableWindow(false);
+      }
     #endif
     
     if(pEnableAudioButton) {
@@ -2006,6 +2015,11 @@ namespace vapp {
       #if !defined(SUPPORT_WEBACCESS)
         pPlayDLButton->enableWindow(false);
       #else          
+        if(pWebHighscores->getChecked())
+          pPlayDLButton->enableWindow(true);
+        else
+          pPlayDLButton->enableWindow(false);
+      
         if(pPlayDLButton->isClicked()) {
           pPlayDLButton->setClicked(false);
           
