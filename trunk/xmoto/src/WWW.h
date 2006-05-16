@@ -110,7 +110,7 @@ class WebHighscore {
 
   std::string getPlayerName() const;
   std::string getTime() const;
-  float       getFTime() const;
+  float       getFTime() const; /* throws exceptions */
   std::string getLevelId() const;
   WebRoom* getRoom() const;
 

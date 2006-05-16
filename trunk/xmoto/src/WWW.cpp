@@ -143,8 +143,43 @@ std::string WebHighscore::getTime() const {
 }
 
 float WebHighscore::getFTime() const {
-  // todo
-  return 0.0;
+  std::string::size_type v_pos;
+  std::string v_min, v_sec, v_hun;
+  std::string v_rest;
+  float v_fmin, v_fsec, v_fhun;
+
+  v_rest = m_time;
+
+  /* search min */
+  v_pos = v_rest.find(":", 0);
+  if(v_pos == std::string::npos || v_pos == 0) {
+    throw vapp::Exception("error : invalid time in webhighscore");
+  }
+  v_min = v_rest.substr(0, v_pos);
+  if(v_pos == v_rest.length() -1) {
+    throw vapp::Exception("error : invalid time in webhighscore");
+  }
+  v_rest = v_rest.substr(v_pos+1, v_rest.length() -v_pos -1);
+
+  /* search sec */
+  v_pos = v_rest.find(":", 0);
+  if(v_pos == std::string::npos || v_pos == 0) {
+    throw vapp::Exception("error : invalid time in webhighscore");
+  }
+  v_sec = v_rest.substr(0, v_pos);
+  if(v_pos == v_rest.length() -1) {
+    throw vapp::Exception("error : invalid time in webhighscore");
+  }
+  v_rest = v_rest.substr(v_pos+1, v_rest.length() -v_pos -1);
+
+  /* search hun */
+  v_hun = v_rest;
+
+  v_fmin = atof(v_min.c_str());
+  v_fsec = atof(v_sec.c_str());
+  v_fhun = atof(v_hun.c_str());
+
+  return v_fmin * 60.0 + v_fsec + v_fhun / 60.0;
 }
 
 WebRoom* WebHighscore::getRoom() const {

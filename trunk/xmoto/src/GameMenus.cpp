@@ -1154,7 +1154,6 @@ namespace vapp {
   /* called only when the finishmenu is displayed */
   void GameApp::_RefreshFinishMenu() {
 
-
     /* is it a highscore ? */
     float v_best_local_time;
     float v_best_personal_time;
@@ -1176,7 +1175,11 @@ namespace vapp {
     if(m_pWebHighscores != NULL && v_is_a_highscore == true) {
       WebHighscore* wh = m_pWebHighscores->getHighscoreFromLevel(m_MotoGame.getLevelSrc()->getID());
       if(wh != NULL) {
-	v_is_a_highscore = (v_current_time < wh->getFTime());
+	try {
+	  v_is_a_highscore = (v_current_time < wh->getFTime());
+	} catch(Exception &e) {
+	  v_is_a_highscore = false; /* what to do ? more chances that it's not a highscore ;-) */
+	}
       } else {
 	/* never highscored */
 	v_is_a_highscore = true;
