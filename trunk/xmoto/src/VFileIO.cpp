@@ -1151,16 +1151,16 @@ namespace vapp {
     readBuf(pfh,(char *)c,4);
     return c[0]|(c[1]<<8)|(c[2]<<16)|(c[3]<<24);
   }
-  
+
   float FS::readFloat_LE(FileHandle *pfh) {
-    int v = readInt_LE(pfh);
-    return *((float *)&v);
-    //float v;
-    //unsigned char *pc=(unsigned char *)&v;
-    //for(int i=0;i<4;i++)
-    //  pc[i]=readByte(pfh);
-    //return v;
-  }
+    float res;
+
+    unsigned char *pc=(unsigned char *)&res;
+    for(int i=0;i<4;i++)
+    pc[i]=readByte(pfh);
+
+    return res;
+  }  
   
 };
 
