@@ -686,6 +686,9 @@ namespace vapp {
         if(m_Levels[k].getID() == m_Levels[j].getID()) {
           /* Conflict! */
           Log("** Warning ** : More than one level with ID '%s'!",m_Levels[k].getID().c_str());
+          Log("                (%s)\n",m_Levels[j].getFileName().c_str());
+          Log("                (%s)\n",m_Levels[k].getFileName().c_str());
+          if(bCached) Log("                (cached)\n");
           m_nNumLevels--;
           
           if(bCached)

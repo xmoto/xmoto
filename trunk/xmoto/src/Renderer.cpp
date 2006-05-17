@@ -1084,7 +1084,7 @@ namespace vapp {
   }
   
   void GameRenderer::showReplayHelp(float p_speed) {
-    char v_speed_str[4 + 1];
+    char v_speed_str[256];
     sprintf(v_speed_str, "% .2f", p_speed);
     m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXT(String(v_speed_str)));
   }
