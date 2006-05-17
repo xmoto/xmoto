@@ -40,7 +40,7 @@ Software dependencies for compiling on non-Windows platforms:
  - zlib
  - SDL
  - GL
- - libcurl
+ - libcurl (3.x)
  - lua (5.x)
  - ode (0.x)
  - SDL_mixer
@@ -84,7 +84,8 @@ your needs.
 Additionally, some other keys can be pressed while playing:
 
 Escape - Pauses the game, and opens the in-game menu
-F12 - Takes a screenshot and places it in the game directory 
+F12 - Takes a screenshot (saved in the game directory on Windows,
+  otherwise in the ~/.xmoto directory)
 
 Command-line Options
 ====================
@@ -293,8 +294,9 @@ Authors
 
 X-Moto itself is written by Rasmus Neckelmann (neckelmann@gmail.com)
 
-Nicolas Adenis-Lamarre have written the code that allows interfacing
-with his X-Moto high-scores/extra levels website. 
+Nicolas Adenis-Lamarre has written the code that allows interfacing
+with his X-Moto high-scores/extra levels website. He has also 
+contributed a lot of other code changes to the project.
 
 Furthermore the following persons have contributed to the X-Moto
 project:
@@ -308,5 +310,5 @@ project:
  - Torben Green (some of the built-in levels)
 
 Also a warm thank-you to Yves Berquin who have written the XML parser
-used by the game (tinyxml).
+used by the game (tinyxml), and to L. Peter Deutsch for his MD5 code.
  
