@@ -135,6 +135,7 @@ class WebRoom {
   /* return NULL if no data found */
   WebHighscore* getHighscoreFromLevel(const std::string &p_levelId);
   void setWebsiteURL(std::string p_webhighscores_url);
+  void setRoomName(const std::string &p_name);
   std::string getRoomName() const;
 
  private:
@@ -198,6 +199,9 @@ class WebLevels {
 
   /* Get IDs of updated levels downloaded OK*/
   const std::vector<std::string> &getUpdatedDownloadedLevelIDs();
+  
+  /* Set URL */
+  void setURL(const std::string &p_url) {m_levels_url = p_url;}
 
  private:
   vapp::WWWAppInterface *m_WebLevelApp;
@@ -207,6 +211,8 @@ class WebLevels {
   std::vector<std::string> m_webLevelsUpdatedDownloadedOK;
 
   const ProxySettings *m_proxy_settings;
+  
+  std::string m_levels_url;
 
   std::string getXmlFileName();
   void downloadXml(); /* throw exceptions */

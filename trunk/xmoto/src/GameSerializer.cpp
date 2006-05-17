@@ -91,6 +91,7 @@ namespace vapp {
           }
           break;
         default:
+          __asm{int 3};
           Log("** Warning ** : Failed to parse game events in replay, it will probably not play right!");
           bError = true;
           break;
@@ -124,7 +125,7 @@ namespace vapp {
   Matrix encodings
   ===========================================================================*/
   unsigned short MotoGame::_MatrixTo16Bits(const float *pfMatrix) {
-    /* We idea is that we only need to store the first column of the matrix,
+    /* The idea is that we only need to store the first column of the matrix,
        as the second on is simply the first one transposed... Each of the
        two components of the first column is given 8 bits of precision */
     int n1 = (int)(pfMatrix[0] * 127.0f + 127.0f);   

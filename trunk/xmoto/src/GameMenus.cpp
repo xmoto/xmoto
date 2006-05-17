@@ -352,7 +352,13 @@ namespace vapp {
     pINetConf->setType(UI_BUTTON_TYPE_LARGE);
     pINetConf->setID("PROXYCONFIG");
     pINetConf->setFont(m_Renderer.getSmallFont());
-    pINetConf->setContextHelp("Configure how you are connected to the Internet");
+    pINetConf->setContextHelp(CONTEXTHELP_PROXYCONFIG);
+
+    UIButton *pUpdHS = new UIButton(pGeneralOptionsTab,pGeneralOptionsTab->getPosition().nWidth-207-207,pGeneralOptionsTab->getPosition().nHeight-110,GAMETEXT_UPDATEHIGHSCORES,207,57);
+    pUpdHS->setType(UI_BUTTON_TYPE_LARGE);
+    pUpdHS->setID("UPDATEHIGHSCORES");
+    pUpdHS->setFont(m_Renderer.getSmallFont());
+    pUpdHS->setContextHelp(CONTEXTHELP_UPDATEHIGHSCORES);
 
     UIButton *pShowMiniMap = new UIButton(pGeneralOptionsTab,5,5,GAMETEXT_SHOWMINIMAP,(pGeneralOptionsTab->getPosition().nWidth-40)/2,28);
     pShowMiniMap->setType(UI_BUTTON_TYPE_CHECK);
@@ -1887,6 +1893,7 @@ namespace vapp {
     
     /* OPTIONS */
     UIButton *pINetConf = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:PROXYCONFIG");
+    UIButton *pUpdHS = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:UPDATEHIGHSCORES");
     UIButton *pWebHighscores = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:ENABLEWEBHIGHSCORES");
     UIButton *pInGameWorldRecord = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:INGAMEWORLDRECORD");
     UIButton *pEnableAudioButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_AUDIO");
@@ -1903,18 +1910,20 @@ namespace vapp {
       pWebHighscores->enableWindow(false);
       pInGameWorldRecord->enableWindow(false);
       pINetConf->enableWindow(false);
+      pUpdHS->enableWindow(false);
       
       pWebHighscores->setChecked(false);
       pInGameWorldRecord->setChecked(false);      
-      pINetConf->setChecked(false);
     #else
       if(pWebHighscores->getChecked()) {
         //pInGameWorldRecord->enableWindow(true);
         pINetConf->enableWindow(true);
+        pUpdHS->enableWindow(true);
       }
       else {
         //pInGameWorldRecord->enableWindow(false);
         pINetConf->enableWindow(false);
+        pUpdHS->enableWindow(true);
       }
     #endif
     
@@ -1931,7 +1940,7 @@ namespace vapp {
     }
     
     if(pINetConf->isClicked()) {
-      pINetConf->setClicked(true);
+      pINetConf->setClicked(false);
       
       _InitWebConf();
       m_State = GS_EDIT_WEBCONFIG;
@@ -1940,6 +1949,15 @@ namespace vapp {
       m_pMainMenu->enableWindow(false);
       return;
     }
+    
+    if(pUpdHS->isClicked()) {
+      pUpdHS->setClicked(false);
+#if defined(SUPPORT_WEBACCESS)
+      _UpdateWebHighscores(false);
+      _UpgradeWebHighscores();       
+      _UpdateLevelLists();      
+#endif      
+    }    
     
     UIButton *pSaveOptions = (UIButton *)m_pOptionsWindow->getChild("SAVE_BUTTON");
     UIButton *pDefaultOptions = (UIButton *)m_pOptionsWindow->getChild("DEFAULTS_BUTTON");

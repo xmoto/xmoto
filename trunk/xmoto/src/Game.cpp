@@ -561,7 +561,8 @@ namespace vapp {
     #if defined(SUPPORT_WEBACCESS)    
       /* Fetch highscores from web? */
       if(m_pWebHighscores != NULL) delete m_pWebHighscores;
-      m_pWebHighscores = new WebRoom(&m_ProxySettings);
+      m_pWebHighscores = new WebRoom(&m_ProxySettings);      
+      m_pWebHighscores->setWebsiteURL(m_Config.getString("WebHighscoresURL"));
       
       if(m_bEnableWebHighscores) {            
         _UpdateLoadingScreen((1.0f/9.0f) * 6,pLoadingScreen,GAMETEXT_DLHIGHSCORES);      
@@ -1597,6 +1598,10 @@ namespace vapp {
     m_Config.createVar( "ContextHelp",            "true" );
     m_Config.createVar( "WebConfAtInit",          "true" );
     
+    /* Webstuff */
+    m_Config.createVar( "WebHighscoresURL",       DEFAULT_WEBHIGHSCORES_URL );
+    m_Config.createVar( "WebLevelsURL",           DEFAULT_WEBLEVELS_URL );
+    
     /* Proxy */
     m_Config.createVar( "ProxyType",              "" ); /* (blank), HTTP, SOCKS4, or SOCKS5 */
     m_Config.createVar( "ProxyServer",            "" ); /* (may include user/pass and port) */
@@ -1982,6 +1987,7 @@ namespace vapp {
       
         if(m_pWebLevels != NULL) delete m_pWebLevels;
         m_pWebLevels = new WebLevels(this,&m_ProxySettings);
+        m_pWebLevels->setURL(m_Config.getString("WebLevelsURL"));
         
         Log("WWW: Checking for new or updated levels...");
         clearCancelAsSoonAsPossible();
