@@ -348,13 +348,13 @@ namespace vapp {
     pGeneralOptionsTab->showWindow(true);
     pGeneralOptionsTab->setID("GENERAL_TAB");
     
-    UIButton *pINetConf = new UIButton(pGeneralOptionsTab,pGeneralOptionsTab->getPosition().nWidth-207,pGeneralOptionsTab->getPosition().nHeight-110,GAMETEXT_PROXYCONFIG,207,57);
+    UIButton *pINetConf = new UIButton(pGeneralOptionsTab,pGeneralOptionsTab->getPosition().nWidth-200,pGeneralOptionsTab->getPosition().nHeight-110,GAMETEXT_PROXYCONFIG,207,57);
     pINetConf->setType(UI_BUTTON_TYPE_LARGE);
     pINetConf->setID("PROXYCONFIG");
     pINetConf->setFont(m_Renderer.getSmallFont());
     pINetConf->setContextHelp(CONTEXTHELP_PROXYCONFIG);
 
-    UIButton *pUpdHS = new UIButton(pGeneralOptionsTab,pGeneralOptionsTab->getPosition().nWidth-207-207,pGeneralOptionsTab->getPosition().nHeight-110,GAMETEXT_UPDATEHIGHSCORES,207,57);
+    UIButton *pUpdHS = new UIButton(pGeneralOptionsTab,pGeneralOptionsTab->getPosition().nWidth-200-200,pGeneralOptionsTab->getPosition().nHeight-110,GAMETEXT_UPDATEHIGHSCORES,207,57);
     pUpdHS->setType(UI_BUTTON_TYPE_LARGE);
     pUpdHS->setID("UPDATEHIGHSCORES");
     pUpdHS->setFont(m_Renderer.getSmallFont());
@@ -1518,9 +1518,9 @@ namespace vapp {
         
         _ConfigureProxy();
         
-        _UpdateWebHighscores(false);
-        _UpgradeWebHighscores();       
-        _UpdateLevelLists();
+        //_UpdateWebHighscores(false);
+        //_UpgradeWebHighscores();       
+        //_UpdateLevelLists();
       }      
 
       /* Direct connection selected? If so, no need to enabled proxy editing */

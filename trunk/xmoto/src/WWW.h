@@ -135,7 +135,6 @@ class WebRoom {
   /* return NULL if no data found */
   WebHighscore* getHighscoreFromLevel(const std::string &p_levelId);
   void setWebsiteURL(std::string p_webhighscores_url);
-  void setRoomName(const std::string &p_name);
   std::string getRoomName() const;
 
  private:

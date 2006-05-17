@@ -206,10 +206,6 @@ std::string WebRoom::getRoomName() const {
   return m_roomName;
 }
 
-void WebRoom::setRoomName(const std::string &p_name) {
-  m_roomName = p_name;
-}
-
 void WebRoom::setWebsiteURL(std::string p_webhighscores_url) {
   m_webhighscores_url = p_webhighscores_url;
 }
