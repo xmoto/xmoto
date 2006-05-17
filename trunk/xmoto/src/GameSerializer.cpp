@@ -91,7 +91,6 @@ namespace vapp {
           }
           break;
         default:
-          __asm{int 3};
           Log("** Warning ** : Failed to parse game events in replay, it will probably not play right!");
           bError = true;
           break;
