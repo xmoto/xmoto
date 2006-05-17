@@ -569,7 +569,11 @@ namespace vapp {
       
       /* Write CRC32 of XML */
       FS::writeInt_LE(pfh,pSum->nCRC32);
-            
+         
+      if(m_ID == "") {
+        __asm {int 3};
+      }   
+         
       /* Write header */
       FS::writeString(pfh,m_ID);
       FS::writeString(pfh,m_LevelPack);

@@ -892,6 +892,9 @@ namespace vapp {
     m_pBestTimes->showWindow(false);
     m_pLevelInfoViewer->showWindow(false);
     m_pLevelPackViewer->showWindow(false);
+    
+    /* Update options */
+    _ImportOptions();
   }
   
   /*===========================================================================
@@ -1917,11 +1920,11 @@ namespace vapp {
       pINetConf->setChecked(false);
     #else
       if(pWebHighscores->getChecked()) {
-        pInGameWorldRecord->enableWindow(true);
+        //pInGameWorldRecord->enableWindow(true);
         pINetConf->enableWindow(true);
       }
       else {
-        pInGameWorldRecord->enableWindow(false);
+        //pInGameWorldRecord->enableWindow(false);
         pINetConf->enableWindow(false);
       }
     #endif

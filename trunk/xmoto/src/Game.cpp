@@ -557,16 +557,16 @@ namespace vapp {
     Log(" %d level pack%s",m_LevelPacks.size(),m_LevelPacks.size()==1?"":"s");
 
     #if defined(SUPPORT_WEBACCESS)    
-    /* Fetch highscores from web? */
-    if(m_pWebHighscores != NULL) delete m_pWebHighscores;
-    m_pWebHighscores = new WebRoom(&m_ProxySettings);
-    
-    if(m_bEnableWebHighscores) {            
-      _UpdateLoadingScreen((1.0f/9.0f) * 6,pLoadingScreen,GAMETEXT_DLHIGHSCORES);      
+      /* Fetch highscores from web? */
+      if(m_pWebHighscores != NULL) delete m_pWebHighscores;
+      m_pWebHighscores = new WebRoom(&m_ProxySettings);
       
-      _UpdateWebHighscores(true);        
-    }
-     _UpgradeWebHighscores();
+      if(m_bEnableWebHighscores) {            
+        _UpdateLoadingScreen((1.0f/9.0f) * 6,pLoadingScreen,GAMETEXT_DLHIGHSCORES);      
+        
+        _UpdateWebHighscores(true);        
+      }
+      _UpgradeWebHighscores();
     #endif
         
     if(!isNoGraphics()) {
@@ -639,6 +639,10 @@ namespace vapp {
     
       m_Levels[j].setFileName( LvlFiles[i] );
       
+      //if(strstr(LvlFiles[i].c_str(),"l138")) {
+      //  __asm{int 3};
+      //}
+      
       /* Determine MD5 sum of level file */
       std::string MD5Sum = md5file( LvlFiles[i] );
       //printf("[%s][%s]\n",MD5Sum.c_str(),LvlFiles[i].c_str());
@@ -680,7 +684,6 @@ namespace vapp {
         if(m_Levels[k].getID() == m_Levels[j].getID()) {
           /* Conflict! */
           Log("** Warning ** : More than one level with ID '%s'!",m_Levels[k].getID().c_str());
-          
           m_nNumLevels--;
           
           if(bCached)
