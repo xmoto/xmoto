@@ -208,23 +208,12 @@ namespace vapp {
     pSomeText = new UIStatic(m_pHelpWindow,
 			     10,
 			     46,
-			     #if defined(ENABLE_ZOOMING)
-			     GAMETEXT_HELPTEXT(m_Config.getString("KeyDrive1"),
-					       m_Config.getString("KeyBrake1"),
-					       m_Config.getString("KeyFlipLeft1"),
-					       m_Config.getString("KeyFlipRight1"),
-					       m_Config.getString("KeyChangeDir1"),			       
-					       m_Config.getString("KeyZoomIn"),
-					       m_Config.getString("KeyZoomOut")
-					       )
-           #else
 			     GAMETEXT_HELPTEXT(m_Config.getString("KeyDrive1"),
 					       m_Config.getString("KeyBrake1"),
 					       m_Config.getString("KeyFlipLeft1"),
 					       m_Config.getString("KeyFlipRight1"),
 					       m_Config.getString("KeyChangeDir1")					       
 					       )
-           #endif
 			     ,m_pHelpWindow->getPosition().nWidth-20,
 			     m_pHelpWindow->getPosition().nHeight-56);
     pSomeText->setFont(m_Renderer.getSmallFont());

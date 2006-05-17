@@ -91,40 +91,22 @@ Central place to keep many in-game text strings
 #define GAMETEXT_GENERALINFO          "General Info"
 #define GAMETEXT_HELP                 "Help"
 
-#if defined(ENABLE_ZOOMING)
-  #define GAMETEXT_HELPTEXT(accelerate_KEY, brake_KEY, rotate_counter_clockwise_KEY, rotate_clockwise_KEY, change_direction_KEY, zoom_in_KEY, zoom_out_KEY)            \
-                                        "You control your bike using the keyboard:\n"                      \
-                                        "\n"                                                               \
-                                        "  " + accelerate_KEY + " - Accelerates\n"                                       \
-                                        "  " + brake_KEY + " - Brakes\n"                                          \
-                                        "  " + rotate_counter_clockwise_KEY + " - Rotates it counter-clockwise\n"                    \
-                                        "  " + rotate_clockwise_KEY + " - Rotates it clockwise\n"                           \
-                                        "  " + change_direction_KEY + " - Turns around and drives in the other direction\n"       \
-                                        "  " + zoom_in_KEY + " - Zoom in\n" \
-                                        "  " + zoom_out_KEY + " - Zoom out\n"       \
-                                        "\n" \
-                                        "Find all the strawberries and touch the flower to finish\n"       \
-                                        "the level.\n"                                                     \
-                                        "\n"                                                               \
-                                        "Read the README file or check out the website at\n"               \
-                                        "http://xmoto.sourceforce.net for more information."
-#else
-  #define GAMETEXT_HELPTEXT(accelerate_KEY, brake_KEY, rotate_counter_clockwise_KEY, rotate_clockwise_KEY, change_direction_KEY)   \
-                                        "You control your bike using the keyboard:\n"                      \
-                                        "\n"                                                               \
-                                        "  " + accelerate_KEY + " - Accelerates\n"                                       \
-                                        "  " + brake_KEY + " - Brakes\n"                                          \
-                                        "  " + rotate_counter_clockwise_KEY + " - Rotates it counter-clockwise\n"                    \
-                                        "  " + rotate_clockwise_KEY + " - Rotates it clockwise\n"                           \
-                                        "  " + change_direction_KEY + " - Turns around and drives in the other direction\n"       \
-                                        "\n" \
-                                        "Find all the strawberries and touch the flower to finish\n"       \
-                                        "the level.\n"                                                     \
-                                        "\n"                                                               \
-                                        "Read the README file or check out the website at\n"               \
-                                        "http://xmoto.sourceforce.net for more information."
 
-#endif
+#define GAMETEXT_HELPTEXT(accelerate_KEY, brake_KEY, rotate_counter_clockwise_KEY, rotate_clockwise_KEY, change_direction_KEY)   \
+                                        "You control your bike using the keyboard:\n"                      \
+                                        "\n"                                                               \
+                                        "  " + accelerate_KEY + " - Accelerates\n"                                       \
+                                        "  " + brake_KEY + " - Brakes\n"                                          \
+                                        "  " + rotate_counter_clockwise_KEY + " - Rotates it counter-clockwise\n"                    \
+                                        "  " + rotate_clockwise_KEY + " - Rotates it clockwise\n"                           \
+                                        "  " + change_direction_KEY + " - Turns around and drives in the other direction\n"       \
+                                        "  F12 - Take a screenshot\n"       \
+                                        "\n" \
+                                        "Find all the strawberries and touch the flower to finish\n"       \
+                                        "the level.\n"                                                     \
+                                        "\n"                                                               \
+                                        "Read the README file or check out the website at\n"               \
+                                        "http://xmoto.sourceforce.net for more information."
 
 #define GAMETEXT_HIGH                 "High"
 #define GAMETEXT_INETCONF             "Internet Configuration"
