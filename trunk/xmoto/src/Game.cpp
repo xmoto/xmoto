@@ -121,7 +121,8 @@ namespace vapp {
               if(pBestPTime != NULL)
                 T2 = formatTime(pBestPTime->fFinishTime);
               
-              m_Renderer.setBestTime(T1 + std::string(" / ") + T2 + std::string(GAMETEXT_REPLAYHELPTEXT));
+              m_Renderer.setBestTime(T1 + std::string(" / ") + T2);
+	      m_Renderer.showReplayHelp(m_pReplay->getSpeed());
 
               if(m_bBenchmark) m_Renderer.setBestTime("");
               
@@ -202,6 +203,7 @@ namespace vapp {
             T2 = formatTime(pBestPTime->fFinishTime);
           
           m_Renderer.setBestTime(T1 + std::string(" / ") + T2);
+	  m_Renderer.hideReplayHelp();
 
           /* World-record stuff */
           _UpdateWorldRecord(m_PlaySpecificLevel);
@@ -1305,18 +1307,24 @@ namespace vapp {
             break;
 	case SDLK_SPACE:
 	  /* pause */
-	  if(m_pReplay != NULL)
+	  if(m_pReplay != NULL) {
 	    m_pReplay->pause();
+	    m_Renderer.showReplayHelp(m_pReplay->getSpeed()); /* update help */
+	  }
 	  break;
 	case SDLK_UP:
-	  /* pause */
-	  if(m_pReplay != NULL)
+	  /* faster */
+	  if(m_pReplay != NULL) {
 	    m_pReplay->faster();
+	    m_Renderer.showReplayHelp(m_pReplay->getSpeed()); /* update help */
+	  }
 	  break;
 	case SDLK_DOWN:
-	  /* pause */
-	  if(m_pReplay != NULL)
+	  /* slower */
+	  if(m_pReplay != NULL) {
 	    m_pReplay->slower();
+	    m_Renderer.showReplayHelp(m_pReplay->getSpeed()); /* update help */
+	  }
 	  break;
         }
         break;

@@ -466,14 +466,21 @@ namespace vapp {
   }
 
   void Replay::faster() {
-    m_speed_factor += REPLAY_SPEED_INCREMENT;
+    if(m_is_paused == false) {
+      m_speed_factor += REPLAY_SPEED_INCREMENT;
+    }
   }
 
   void Replay::slower() {
-    m_speed_factor -= REPLAY_SPEED_INCREMENT;
+    if(m_is_paused == false) {
+      m_speed_factor -= REPLAY_SPEED_INCREMENT;
+    }
   }
 
   float Replay::getSpeed() const {
+    if(m_is_paused) {
+      return 0.0;
+    }
     return m_speed_factor;
   }
 
@@ -481,7 +488,7 @@ namespace vapp {
     /* How many states should we move forward? */
     float nNumStates = (fSeconds * m_fFrameRate);
     nextState(nNumStates);
-  }  
+  }
 
   void Replay::fastrewind(float fSeconds) {
     /* How many states should we move forward? */

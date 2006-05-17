@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VFileIO.h"
 #include "MotoGame.h"
 #include "Renderer.h"
+#include "GameText.h"
 
 namespace vapp {
   
@@ -1082,5 +1083,15 @@ namespace vapp {
     }
   }
   
+  void GameRenderer::showReplayHelp(float p_speed) {
+    char v_speed_str[4 + 1];
+    sprintf(v_speed_str, "% .2f", p_speed);
+    m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXT(String(v_speed_str)));
+  }
+
+  void GameRenderer::hideReplayHelp() {
+    m_pReplayHelp->setCaption("");
+  }
+
 };
 

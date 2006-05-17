@@ -184,6 +184,8 @@ namespace vapp {
       UIFont *getSmallFont(void) {return m_pSFont;}
       UIFont *getMediumFont(void) {return m_pMFont;}
       void setBestTime(std::string s) {m_pBestTime->setCaption(s);}
+      void showReplayHelp(float p_speed);
+      void hideReplayHelp();
       void setWorldRecordTime(const std::string &s) {m_pWorldRecordTime->setCaption(s);}
       std::string getBestTime(void) {return m_pBestTime->getCaption();}
       void setQuality(GraphQuality Quality) {m_Quality = Quality;}      
@@ -218,6 +220,7 @@ namespace vapp {
       UIWindow *m_pInGameStats;
       UIStatic *m_pPlayTime;   
       UIStatic *m_pBestTime;
+      UIStatic *m_pReplayHelp;
       UIStatic *m_pWorldRecordTime;
       
       float m_fSpeedMultiply;

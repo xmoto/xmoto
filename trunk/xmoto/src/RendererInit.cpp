@@ -242,11 +242,15 @@ namespace vapp {
     m_pPlayTime->setFont(m_pMFont);
     m_pPlayTime->setVAlign(UI_ALIGN_TOP);
     m_pPlayTime->setHAlign(UI_ALIGN_LEFT);
-    m_pBestTime = new UIStatic(m_pInGameStats,0,23,"--:--:-- / --:--:--",800,20);
+    m_pBestTime   = new UIStatic(m_pInGameStats,0,23,"--:--:-- / --:--:--",800,20);
     m_pBestTime->setFont(m_pSFont);
     m_pBestTime->setVAlign(UI_ALIGN_TOP);
     m_pBestTime->setHAlign(UI_ALIGN_LEFT);
     m_pBestTime->setContextHelp("Personal best time / best time on this computer");
+    m_pReplayHelp = new UIStatic(m_pInGameStats, 200, 0, "", 590, 20);
+    m_pReplayHelp->setFont(m_pSFont);
+    m_pReplayHelp->setVAlign(UI_ALIGN_TOP);
+    m_pReplayHelp->setHAlign(UI_ALIGN_RIGHT);
     m_pWorldRecordTime = new UIStatic(m_pInGameStats,0,43,"",800,20);
     m_pWorldRecordTime->setFont(m_pSFont);
     m_pWorldRecordTime->setVAlign(UI_ALIGN_TOP);
