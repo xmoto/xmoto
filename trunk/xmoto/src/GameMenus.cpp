@@ -1923,7 +1923,7 @@ namespace vapp {
       else {
         //pInGameWorldRecord->enableWindow(false);
         pINetConf->enableWindow(false);
-        pUpdHS->enableWindow(true);
+        pUpdHS->enableWindow(false);
       }
     #endif
     
