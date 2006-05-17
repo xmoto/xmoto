@@ -75,7 +75,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_ENABLEWEBHIGHSCORES  "Enable WWW Access"
 #define GAMETEXT_ENTERPLAYERNAME      "Enter player name:"
 #define GAMETEXT_ENTERREPLAYNAME      "Enter name of replay:"
-#define GAMETEXT_ERRORSINLEVEL        "There's errors in the level, don't expect it to playable!"
+#define GAMETEXT_ERRORSINLEVEL        "There are errors in the level, don't expect it to be playable!"
 #define GAMETEXT_EXTERNALLEVELS       "External Levels"     
 #define GAMETEXT_FAILEDCHECKLEVELS    "Failed to check for levels.\nCheck your Internet connection!"
 #define GAMETEXT_FAILEDDLHIGHSCORES   "Failed to download high-scores.\nCheck your Internet connection!"
