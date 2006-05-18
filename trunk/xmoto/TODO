@@ -1,7 +1,8 @@
 before next version :
-change default likes to xmoto.free.fr
+* change default likes to xmoto.free.fr
 
 for next versions :
+* add highscore tab in pack and new levels
 * see :
    http://aspegic500.free.fr/xmoto_highscores/replays/replay_707.rpl :
    it seems that there is a bug on replays
