@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* 
  *  GUI: Framed besttimes window
  */
+#include "GameText.h"
 #include "VXml.h"
 #include "GUI.h"
 
@@ -50,7 +51,7 @@ namespace vapp {
     UIFont *pOldFont = getFont();
     setFont(m_pHFont);
     
-    putText(40,64,"All:");
+    putText(40,64,GAMETEXT_ALLRECORDS);
     for(int i=0;i<m_Col1.size();i++) {
       if(i == m_nHighlight1) {
         setTextSolidColor(MAKE_COLOR(255,255,0,255));
@@ -60,7 +61,7 @@ namespace vapp {
       setTextSolidColor(MAKE_COLOR(255,255,255,255));
     }
 
-    putText(40,100 + 16*m_Col1.size(),"Personal:");
+    putText(40,100 + 16*m_Col1.size(),GAMETEXT_PERSONALRECORDS);
     for(int i=0;i<m_Col3.size();i++) {
       if(i == m_nHighlight2) {
         setTextSolidColor(MAKE_COLOR(255,255,0,255));

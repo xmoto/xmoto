@@ -502,7 +502,7 @@ namespace vapp {
     struct tm *TL = localtime(&date);
 
     char date_str[15];
-    strftime(date_str, 15, "%d-%m-%y %H-%M", TL);
+    strftime(date_str, 15, "%d-%m-%y %H%M", TL);
 
     return std::string(date_str);
   }

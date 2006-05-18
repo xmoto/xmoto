@@ -31,7 +31,7 @@ if you want to be able to play levels besides your own...
 #define ENGINE_MAX_RPM      8000.0f
 
 /* World settings */
-#define PHYS_WORLD_ERP                0.3f      /* global error reduction */
+#define PHYS_WORLD_ERP                0.3f      /* global error reduction (0.3) */
 #define PHYS_WORLD_CFM                0.000001f /* global constant force mix */
 #define PHYS_WORLD_GRAV               -9.81f    /* Grav. acceleration */
 #define PHYS_SPEED                    0.6f      /* simulation speed factor */
