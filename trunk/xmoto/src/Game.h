@@ -123,6 +123,7 @@ namespace vapp {
                   m_pWebHighscores = NULL;
                   m_pWebLevels = NULL;
                   m_fDownloadTaskProgressLast = 0;
+                  m_bWebHighscoresUpdatedThisSession = false;
                  #endif
                  }
                  
@@ -165,6 +166,7 @@ namespace vapp {
       /* Data */
       std::vector<LevelPack *> m_LevelPacks;    /* Level packs */
       
+      bool m_bWebHighscoresUpdatedThisSession;  /* true: Updated this session */
       bool m_bEnableContextHelp;                /* true: Show context help */
       bool m_bShowWebHighscoreInGame;           /* true: Show world highscore inside the game */
       bool m_bEnableWebHighscores;              /* true: Read world highscores from website */

@@ -1515,12 +1515,16 @@ namespace vapp {
         m_pMainMenu->enableChildren(true);
         m_pMainMenu->enableWindow(true);
         setState(GS_MENU);
-        
+
+#if defined(SUPPORT_WEBACCESS)        
         _ConfigureProxy();
-        
-        //_UpdateWebHighscores(false);
-        //_UpgradeWebHighscores();       
-        //_UpdateLevelLists();
+
+        if(!m_bWebHighscoresUpdatedThisSession) {        
+          _UpdateWebHighscores(false);
+          _UpgradeWebHighscores();       
+          _UpdateLevelLists();
+        }
+#endif
       }      
 
       /* Direct connection selected? If so, no need to enabled proxy editing */

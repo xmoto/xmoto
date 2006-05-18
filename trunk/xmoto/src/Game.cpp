@@ -1856,6 +1856,8 @@ namespace vapp {
       if(!bSilent)
         _SimpleMessage(GAMETEXT_DLHIGHSCORES,&m_DownloadLevelsMsgBoxRect);
 
+      m_bWebHighscoresUpdatedThisSession = true;
+
       /* Try downloading the highscores */
       try {
         m_pWebHighscores->update();
