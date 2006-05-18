@@ -1,5 +1,5 @@
-Name "X-Moto 0.1.13test5"
-OutFile "xmoto-0.1.13test5-win32-setup.exe"
+Name "X-Moto 0.1.13test6"
+OutFile "xmoto-0.1.13test6-win32-setup.exe"
 InstallDir $PROGRAMFILES\XMoto
 InstallDirRegKey HKLM "Software\XMoto" "Install_Dir"
 
@@ -35,6 +35,9 @@ Section "Game (required)"
 	File "libcurl.dll"
 	File "SDL.dll"
 	File "SDL_mixer.dll"
+	File "ogg.dll"
+	File "vorbis.dll"
+	File "vorbisfile.dll"
 	File "sprites.dat"
 	File "xmoto.bin"
 	File "xmoto.exe"

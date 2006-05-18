@@ -24,12 +24,14 @@ X-Moto 0.1.14 (alpha) 2006-
  * Fixed bug that made it difficult to click tabs in level info 
    viewer.
  * "Next Level" button also for external levels now.
- * 4 new built-in levels by Torben Green.
+ * 8 new built-in levels, including 4 by Torben Green, and one by 
+   Thomas Kjaerulff.
  * More control over playback of replays: Up/down to increase/decrease
    speed and space to pause.
  * External levels ordered alphabetically.
- * Automatic replay naming.
+ * Automatic replay naming. 
  * Various minor changes and several other small bugs fixed.
+ * Windows specific: Upgraded to SDL 1.2.10 and SDL_mixer 1.2.7.
  
 X-Moto 0.1.12 (alpha) 2006-04-09
 --------------------------------

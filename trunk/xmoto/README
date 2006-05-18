@@ -29,7 +29,7 @@ General hardware requirements:
  - CPU: x86 @ ~500 MHz (a wild guess)
  - RAM: 128 MB (at least 40 MB of free memory prefered)
  - Graphics: GeForce-class card with 32 MB of video memory (or better)
- - HDD: 7 MB of free space on your hard drive.
+ - HDD: 8 MB of free space on your hard drive.
  - Software: Windows 2000/XP, Linux, Mac OS X or FreeBSD (other UNIX-like 
    OS's might be supported as well)
 
@@ -308,6 +308,7 @@ project:
  - Maxime Biais (MacOS X patch)
  - Eric Piel (various code patches)
  - Torben Green (some of the built-in levels)
+ - Thomas Kjaerulff (one of the built-in levels)
 
 Also a warm thank-you to Yves Berquin who have written the XML parser
 used by the game (tinyxml), and to L. Peter Deutsch for his MD5 code.

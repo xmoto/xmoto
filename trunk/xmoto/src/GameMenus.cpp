@@ -1518,12 +1518,16 @@ namespace vapp {
 
 #if defined(SUPPORT_WEBACCESS)        
         _ConfigureProxy();
-
+        
         if(!m_bWebHighscoresUpdatedThisSession) {        
           _UpdateWebHighscores(false);
           _UpgradeWebHighscores();       
           _UpdateLevelLists();
         }
+
+        /* Update options */
+        _ImportOptions();
+        
 #endif
       }      
 
