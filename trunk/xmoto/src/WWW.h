@@ -15,11 +15,11 @@
 
 #include "WWWAppInterface.h"
 
-#define DEFAULT_WEBHIGHSCORES_URL         "http://aspegic500.free.fr/xmoto_highscores/highscores.xml"
+#define DEFAULT_WEBHIGHSCORES_URL         "http://xmoto.free.fr/highscores.xml"
 #define DEFAULT_WEBHIGHSCORES_FILENAME    "webhighscores.xml"
 #define DEFAULT_TRANSFERT_TIMEOUT         240
 #define DEFAULT_TRANSFERT_CONNECT_TIMEOUT 15
-#define DEFAULT_WEBLEVELS_URL             "http://aspegic500.free.fr/xmoto_highscores/levels.xml"
+#define DEFAULT_WEBLEVELS_URL             "http://xmoto.free.fr/levels.xml"
 #define DEFAULT_WEBLEVELS_FILENAME        "weblevels.xml"
 #define DEFAULT_WEBLEVELS_DIR             "downloaded"
 
