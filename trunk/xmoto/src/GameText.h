@@ -37,7 +37,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_8BIT                 "8-bit"
 #define GAMETEXT_ABORT                "Abort Playing"
 #define GAMETEXT_ACTION               "Action"
-#define GAMETEXT_ALL                  "All"
+#define GAMETEXT_ALL                  "All (on this computer)"
 #define GAMETEXT_ALLRECORDS           "All (on this computer):"
 #define GAMETEXT_ALREADYUSED          "Already used!"
 #define GAMETEXT_AUDIO                "Audio"

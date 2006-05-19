@@ -54,7 +54,7 @@ Build configuration
 
 /* DO_NOT_ALLOW_WEBACCESS - Don't compile with web-access support, 
    regardless of whether libcurl is available or not */
-#define DO_NOT_ALLOW_WEBACCESS
+//#define DO_NOT_ALLOW_WEBACCESS
 
 /*=============================================================================
 Misc, don't touch
