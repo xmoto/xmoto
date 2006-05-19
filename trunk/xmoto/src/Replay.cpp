@@ -501,8 +501,8 @@ namespace vapp {
     time(&date);
     struct tm *TL = localtime(&date);
 
-    char date_str[15];
-    strftime(date_str, 15, "%d-%m-%y %H%M", TL);
+    char date_str[256];
+    strftime(date_str, sizeof(date_str)-1, "%d-%m-%y %H_%M", TL);
 
     return std::string(date_str);
   }
