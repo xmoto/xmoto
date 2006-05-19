@@ -1,36 +1,33 @@
-before next version :
-* change default likes to xmoto.free.fr
-
-for next versions :
-* add highscore tab in pack and new levels
+* add highscore tab in pack and new levels (priority=high)
 * see :
    http://aspegic500.free.fr/xmoto_highscores/replays/replay_707.rpl :
-   it seems that there is a bug on replays
+   it seems that there is a bug on replays (priority=high)
 * add <xml_room> in configuration so that the player can choose the
-   link to his room xml file
-* add a tab : favorite levels
+   link to his room xml file (priority=high)
 * add a button <see replay> which download the highscore from the
-   website and play it
+   website and play it (priority=high)
 * what about check for new levels at startup and propose to download
-   new levels ?
-* ghost mode
+   new levels ? (with a small non-intrusive message) (priority=high)
+* add a counter of uncompleted levels (priority=medium)
+* theme (for sprites) (priority=medium)
+* add a tab : favorite levels (priority=low)
+* add 2 rooms configurations so that i can display, world highscore
+   and highscore of my room (priority=low)
+* add import of players.bin (so that people playing at different
+   location can merge their highscores) (priority=very low)
+* translations (priority=very low)
+
+Undecided:
 * add 3 2 1 GO ! at level startup (it neckelmann agree) 
-* theme (for sprites)
+* ghost mode
 * context information for levels : when one is selected, display
    information
 * separate personnal highscores from others (two tabs instead of a
    button, it's easiest) (it neckelmann agree)
-* add a counter of uncompleted levels
-* add a button to refresh highscores
 * upload highscore from the game ? (require login/password room
    configuration ;-(
 * it seems that there is a bug on speed it is played (if i play
    replays done on fast machine, it appear faster)
 * pb for left hand written people for the editor
-* add import of players.bin (so that people playing at different
-   location can merge their highscores)
 * two possibilities to show room : one to see the world highscore, one
    to see you room (optionnal)
-* add 2 rooms configurations so that i can display, world highscore
-   and highscore of my room
-* translations
