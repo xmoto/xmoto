@@ -1593,9 +1593,11 @@ namespace vapp {
     m_Config.createVar( "ReplayFrameRate",        "25" );
     m_Config.createVar( "CompressReplays",        "true" );
     m_Config.createVar( "LevelCache",             "true" );
+    m_Config.createVar( "ContextHelp",            "true" );
+
+#if defined(SUPPORT_WEBACCESS)
     m_Config.createVar( "WebHighscores",          "false" );
     m_Config.createVar( "ShowInGameWorldRecord",  "false" );
-    m_Config.createVar( "ContextHelp",            "true" );
     m_Config.createVar( "WebConfAtInit",          "true" );
     
     /* Webstuff */
@@ -1608,6 +1610,7 @@ namespace vapp {
     m_Config.createVar( "ProxyPort",              "-1" );
     //m_Config.createVar( "ProxyAuthUser",          "" ); 
     //m_Config.createVar( "ProxyAuthPwd",          "" );
+#endif
     
   }
   
