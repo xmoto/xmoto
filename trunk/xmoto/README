@@ -228,6 +228,13 @@ in any text editor. In addition to the options accessible from inside
 the game, there's a couple more, which is not interesting enough to 
 get included in the menus:
 
+ WebHighscoresURL   The URL from which public high-scores should be
+                    downloaded. Please consult the high-scores website
+                    for information about how this is used to make 
+                    your own "private" high-score lists.
+                    
+ WebLevelsURL       Place on the web to look for extra levels.
+
  DefaultProfile     Specifies which player profile should be active 
                     when the game starts.
                     
