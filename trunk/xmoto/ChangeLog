@@ -1,4 +1,4 @@
-X-Moto 0.1.14 (alpha) 2006-
+X-Moto 0.1.14 (alpha) 2006-05-19
 --------------------------------
  * New version numbering policy: If the last number is even it's
    a stable X-Moto release, otherwise it's an unstable development
