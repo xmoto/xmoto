@@ -2282,14 +2282,43 @@ namespace vapp {
   {
     std::string res;
     std::vector<ReplayInfo *> Replays = Replay::createReplayList("", p_levelId);
+    float v_fFinishTime;
     
     if(Replays.size() == 0) {
       Replay::freeReplayList(Replays);
       return "";
     }
 
-    res = std::string("Replays/") + Replays[0]->Name + std::string(".rpl");
+    res = "";
+    v_fFinishTime = -1.0;
+    switch(p_strategy) {
+      case GHOST_STRATEGY_MYBEST:
+      for(int i=0; i<Replays.size(); i++) {
+	if(Replays[i]->Player == m_pPlayer->PlayerName) {
+	  if(Replays[i]->fFinishTime != -1.0 &&
+	     (Replays[i]->fFinishTime < v_fFinishTime ||
+	      v_fFinishTime == -1)
+	     )
+	    {
+	      res = std::string("Replays/") + Replays[i]->Name + std::string(".rpl");
+	    }
+	}
+      }
+      break;
 
+    case GHOST_STRATEGY_THEBEST:
+      for(int i=0; i<Replays.size(); i++) {
+	if(Replays[i]->fFinishTime != -1.0 &&
+	   (Replays[i]->fFinishTime < v_fFinishTime ||
+	    v_fFinishTime == -1)
+	   )
+	  {
+	    res = std::string("Replays/") + Replays[i]->Name + std::string(".rpl");
+	  }
+      }
+      break;
+    }
+    
     Replay::freeReplayList(Replays);
     return res;
   }
