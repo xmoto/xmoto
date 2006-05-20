@@ -31,3 +31,6 @@ Undecided:
 * pb for left hand written people for the editor
 * two possibilities to show room : one to see the world highscore, one
    to see you room (optionnal)
+* allow to run : xmoto l1.lvl or xmoto r1.rpl depending on the
+   extension to allow playing a level or a replay just by cliking on
+   it (and why not even if it's not in the xmoto dir)
