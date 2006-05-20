@@ -111,6 +111,9 @@ namespace vapp {
                  m_b50FpsMode = false;
                  m_bUglyMode = false;
                  m_pReplay = NULL;
+#if defined(ALLOW_GHOST)
+		 m_pGhostReplay = NULL;
+#endif
                  m_bRecordReplays = true;
                  m_bShowCursor = true;
                  m_bEnableEngineSound = true;
@@ -206,6 +209,9 @@ namespace vapp {
       bool m_b50FpsMode;
       
       Replay *m_pReplay;
+#if defined(ALLOW_GHOST) 
+      Replay *m_pGhostReplay;
+#endif
       std::string m_ReplayPlayerName;
       
       /* WWW */

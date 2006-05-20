@@ -208,6 +208,22 @@ namespace vapp {
           /* World-record stuff */
           _UpdateWorldRecord(m_PlaySpecificLevel);
 
+#if defined(ALLOW_GHOST)
+	  /* Ghost replay */
+	  if(m_pGhostReplay != NULL) delete m_pGhostReplay;
+	  std::string v_PlayGhostReplay;
+	  std::string v_GhostReplayPlayerName;
+	  float v_ghostReplayFrameRate;
+
+	  v_PlayGhostReplay = "/home/nicolas/.xmoto/Replays/ghost.rpl";
+	  m_pGhostReplay = new Replay;
+	  std::string GhostLevelID = m_pGhostReplay->openReplay(v_PlayGhostReplay,&v_ghostReplayFrameRate,v_GhostReplayPlayerName);
+	  if(GhostLevelID == "") {
+	    Log("** Warning ** : invalid replay '%s' for ghost", v_PlayGhostReplay.c_str());
+	    throw Exception("invalid replay");
+	  }
+#endif
+
           /* Prepare level */
           m_Renderer.prepareForNewLevel();
         }
@@ -931,6 +947,20 @@ namespace vapp {
             m_EngineSound.setRPM( m_MotoGame.getBikeEngineRPM() ); 
           }
           
+#if defined(ALLOW_GHOST)
+          /* Read replay state */
+          if(m_pGhostReplay != NULL) {       
+	    printf("ghost time %f, current time: %f\n", m_pGhostReplay->getCurrentTime(), m_MotoGame.getTime());
+	    while(m_pGhostReplay->getCurrentTime() < m_MotoGame.getTime()
+	      && m_pGhostReplay->endOfFile() == false) {
+	      //if(m_pGhostReplay->endOfFile() == false) {
+	      static SerializedBikeState GhostBikeState;
+	      m_pGhostReplay->loadState((char *)&GhostBikeState);
+	      m_MotoGame.UpdateGhostFromReplay(&GhostBikeState);
+	    }
+	  }
+#endif
+
           /* We'd like to serialize the game state 25 times per second for the replay */
           if(getRealTime() - m_fLastStateSerializationTime >= 1.0f/m_fReplayFrameRate) {
             m_fLastStateSerializationTime = getRealTime();
@@ -1157,7 +1187,12 @@ namespace vapp {
     
     if(m_pReplay != NULL)
       delete m_pReplay;
-  
+
+#if defined(ALLOW_GHOST)
+      if(m_pGhostReplay != NULL)
+      delete m_pGhostReplay;
+#endif  
+
     if(m_pPlayer != NULL) 
       m_Config.setString("DefaultProfile",m_pPlayer->PlayerName);
 

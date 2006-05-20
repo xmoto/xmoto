@@ -32,10 +32,8 @@ namespace vapp {
   /*===========================================================================
   Rendering of the bike
   ===========================================================================*/
-  void GameRenderer::_RenderBike(void) {
+  void GameRenderer::_RenderBike(BikeState *pBike) {
     /* Render bike */
-    BikeState *pBike = getGameObject()->getBikeState();
-    
     Vector2f p0,p1,p2,p3,o0,o1,o2,o3;
     Vector2f C;
     Vector2f Sv,Rc,Fc;

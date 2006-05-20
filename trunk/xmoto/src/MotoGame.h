@@ -495,6 +495,9 @@ namespace vapp {
       LevelSrc *getLevelSrc(void) {return m_pLevelSrc;}
       std::vector<ConvexBlock *> &getBlocks(void) {return m_Blocks;}
       BikeState *getBikeState(void) {return &m_BikeS;}
+#if defined(ALLOW_GHOST)  
+      BikeState *getGhostBikeState(void) {return &m_GhostBikeS;}
+#endif
       BikeController *getBikeController(void) {return &m_BikeC;}
       std::vector<GameMessage *> &getGameMessage(void) {return m_GameMessages;}
       std::vector<Entity *> &getEntities(void) {return m_Entities;}
@@ -518,6 +521,10 @@ namespace vapp {
       DummyHelper *getDummies(void) {return m_Dummies;}
       void addDummy(Vector2f Pos,float r,float g,float b);
     
+#if defined(ALLOW_GHOST)  
+      void UpdateGhostFromReplay(SerializedBikeState *pReplayState);
+#endif
+
     private:         
       /* Data */
       int m_nGameEventQueueReadIdx,m_nGameEventQueueWriteIdx;
@@ -555,6 +562,11 @@ namespace vapp {
       BikeParams m_BikeP;                 /* Bike parameters */      
       BikeAnchors m_BikeA;                /* Important bike anchor points */
       BikeState m_BikeS;                  /* Bike state */
+
+#if defined(ALLOW_GHOST)  
+      BikeState m_GhostBikeS;             /* ghost state */
+#endif
+
       BikeController m_BikeC;             /* Bike controller */
       
       bool m_bFinished,m_bDead;           /* Yir */
@@ -641,6 +653,9 @@ namespace vapp {
       EdgeEffect _TransEdgeEffect(std::string Name);
       void _UpdateEntities(void);
       void _UpdateGameState(SerializedBikeState *pReplayState);
+#if defined(ALLOW_GHOST)
+      /* static */ void _UpdateStateFromReplay(SerializedBikeState *pReplayState,BikeState *pBikeS);
+#endif
       char _MapCoordTo8Bits(float fRef,float fMaxDiff,float fCoord);
       float _Map8BitsToCoord(float fRef,float fMaxDiff,char c);
       unsigned short _MatrixTo16Bits(const float *pfMatrix);

@@ -1267,4 +1267,10 @@ namespace vapp {
     }
   }  
 
+#if defined(ALLOW_GHOST) 
+  void MotoGame::UpdateGhostFromReplay(SerializedBikeState *pReplayState) {
+    _UpdateStateFromReplay(pReplayState, &m_GhostBikeS);
+  }
+#endif
+
 };

@@ -320,8 +320,13 @@ namespace vapp {
     /* ... the entities ... */
     _RenderEntities();
 
+#if defined(ALLOW_GHOST)  
+    /* ... followed by the ghost ... */
+    _RenderBike(getGameObject()->getGhostBikeState());
+#endif
+
     /* ... followed by the bike ... */
-    _RenderBike();
+    _RenderBike(getGameObject()->getBikeState());
     
     if(m_Quality == GQ_HIGH && !m_bUglyMode) {
       /* Render particles (front!) */    

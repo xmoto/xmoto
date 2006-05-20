@@ -261,7 +261,7 @@ namespace vapp {
       /* Subroutines */
       void _RenderSprites(bool bForeground,bool bBackground);
       void _RenderSprite(Entity *pSprite);
-      void _RenderBike(void);
+      void _RenderBike(BikeState *pBike);
       void _RenderBlocks(void);
       void _RenderBackground(void);
       void _RenderSky(void);
