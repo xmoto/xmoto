@@ -495,8 +495,10 @@ namespace vapp {
       LevelSrc *getLevelSrc(void) {return m_pLevelSrc;}
       std::vector<ConvexBlock *> &getBlocks(void) {return m_Blocks;}
       BikeState *getBikeState(void) {return &m_BikeS;}
-#if defined(ALLOW_GHOST)  
+#if defined(ALLOW_GHOST)
       BikeState *getGhostBikeState(void) {return &m_GhostBikeS;}
+      bool isGhostActive() {return m_isGhostActive;}
+      void setGhostActive(bool s) {m_isGhostActive = s;}
 #endif
       BikeController *getBikeController(void) {return &m_BikeC;}
       std::vector<GameMessage *> &getGameMessage(void) {return m_GameMessages;}
@@ -565,6 +567,7 @@ namespace vapp {
 
 #if defined(ALLOW_GHOST)  
       BikeState m_GhostBikeS;             /* ghost state */
+      bool m_isGhostActive;               /* is ghost active : must it be displayed, ... */
 #endif
 
       BikeController m_BikeC;             /* Bike controller */

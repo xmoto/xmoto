@@ -65,6 +65,14 @@ namespace vapp {
     MENU_GFX_HIGH
   };
   
+
+#if defined(ALLOW_GHOST) 
+  enum GhostSearchStrategy {
+    GHOST_STRATEGY_MYBEST,
+    GHOST_STRATEGY_THEBEST
+  };
+#endif
+
 	/*===========================================================================
 	Level packs
   ===========================================================================*/
@@ -361,7 +369,13 @@ namespace vapp {
       int _LoadLevels(const std::vector<std::string> &LvlFiles);
       std::string _FixHighscoreTime(const std::string &s);
     
-      void _InitWebConf(void);  
+      void _InitWebConf(void);
+
+#if defined(ALLOW_GHOST) 
+      std::string _getGhostReplayPath(std::string p_levelId,
+				      GhostSearchStrategy p_strategy);
+#endif
+
   };
 
 };

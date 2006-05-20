@@ -212,17 +212,18 @@ namespace vapp {
 	  /* Ghost replay */
 	  if(m_pGhostReplay != NULL) delete m_pGhostReplay;
 	  std::string v_PlayGhostReplay;
-	  std::string v_GhostReplayPlayerName;
-	  float v_ghostReplayFrameRate;
 
-	  v_PlayGhostReplay = "/home/nicolas/.xmoto/Replays/ghost.rpl";
-	  m_pGhostReplay = new Replay;
-	  std::string GhostLevelID = m_pGhostReplay->openReplay(v_PlayGhostReplay,&v_ghostReplayFrameRate,v_GhostReplayPlayerName);
-	  if(GhostLevelID == "") {
-	    Log("** Warning ** : invalid replay '%s' for ghost", v_PlayGhostReplay.c_str());
-	    throw Exception("invalid replay");
+	  v_PlayGhostReplay = _getGhostReplayPath(pLevelSrc->getID(), GHOST_STRATEGY_THEBEST);
+	  if(v_PlayGhostReplay != "") {
+	    std::string v_GhostReplayPlayerName;
+	    float v_ghostReplayFrameRate;
+	    m_pGhostReplay = new Replay;
+	    std::string GhostLevelID = m_pGhostReplay->openReplay(v_PlayGhostReplay,&v_ghostReplayFrameRate,v_GhostReplayPlayerName);
+	    if(GhostLevelID != "") {
+	      m_nGhostFrame = 0;
+	      m_MotoGame.setGhostActive(true);
+	    }
 	  }
-	  m_nGhostFrame = 0;
 #endif
 
           /* Prepare level */
@@ -240,6 +241,9 @@ namespace vapp {
       case GS_JUSTDEAD: {
 //        SDL_ShowCursor(SDL_ENABLE);
         m_bShowCursor = true;
+
+	/* hide ghost */
+	m_MotoGame.setGhostActive(false);
         
         /* Finish replay */
         if(m_pReplay != NULL) m_pReplay->finishReplay(false,0.0f);
@@ -276,6 +280,8 @@ namespace vapp {
 //        SDL_ShowCursor(SDL_ENABLE);
         m_bShowCursor = true;
 
+	/* hide ghost */
+	m_MotoGame.setGhostActive(false);
         /* Finish replay */
         if(m_pReplay != NULL) m_pReplay->finishReplay(true,m_MotoGame.getFinishTime());
         
@@ -2269,8 +2275,15 @@ namespace vapp {
     }
   #endif
   }
-    
-  
+
+
+#if defined(ALLOW_GHOST) 
+  std::string GameApp::_getGhostReplayPath(std::string p_levelId,
+					   GhostSearchStrategy p_strategy) {
+    return "/home/nicolas/.xmoto/Replays/ghost.rpl";
+  }
+#endif    
+
 };
 
 

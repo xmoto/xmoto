@@ -455,7 +455,9 @@ namespace vapp {
     memset(&m_BikeP,0,sizeof(m_BikeP));
     
     /* BIKE_C */
-    memset(&m_BikeC,0,sizeof(m_BikeC));            
+    memset(&m_BikeC,0,sizeof(m_BikeC)); 
+
+    m_isGhostActive = false;           
   }
 
   /*===========================================================================

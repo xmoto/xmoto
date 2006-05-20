@@ -320,9 +320,11 @@ namespace vapp {
     /* ... the entities ... */
     _RenderEntities();
 
-#if defined(ALLOW_GHOST)  
-    /* ... followed by the ghost ... */
-    _RenderBike(getGameObject()->getGhostBikeState());
+#if defined(ALLOW_GHOST)
+    if(getGameObject()->isGhostActive()) {
+      /* ... followed by the ghost ... */
+      _RenderBike(getGameObject()->getGhostBikeState());
+    }
 #endif
 
     /* ... followed by the bike ... */
