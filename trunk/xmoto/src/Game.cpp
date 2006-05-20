@@ -950,7 +950,6 @@ namespace vapp {
 #if defined(ALLOW_GHOST)
           /* Read replay state */
           if(m_pGhostReplay != NULL) {       
-	    printf("ghost time %f, current time: %f\n", m_pGhostReplay->getCurrentTime(), m_MotoGame.getTime());
 	    while(m_pGhostReplay->getCurrentTime() < m_MotoGame.getTime()
 	      && m_pGhostReplay->endOfFile() == false) {
 	      //if(m_pGhostReplay->endOfFile() == false) {
