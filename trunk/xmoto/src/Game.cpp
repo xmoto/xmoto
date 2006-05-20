@@ -222,6 +222,7 @@ namespace vapp {
 	    Log("** Warning ** : invalid replay '%s' for ghost", v_PlayGhostReplay.c_str());
 	    throw Exception("invalid replay");
 	  }
+	  m_nGhostFrame = 0;
 #endif
 
           /* Prepare level */
@@ -949,13 +950,30 @@ namespace vapp {
           
 #if defined(ALLOW_GHOST)
           /* Read replay state */
-          if(m_pGhostReplay != NULL) {       
+          if(m_pGhostReplay != NULL) { 
+	    static SerializedBikeState GhostBikeState;
+	    static SerializedBikeState previousGhostBikeState;
+	    bool has_new_state;
+
+	    has_new_state = false;
+	    m_pGhostReplay->peekState((char *)&previousGhostBikeState);
 	    while(m_pGhostReplay->getCurrentTime() < m_MotoGame.getTime()
-	      && m_pGhostReplay->endOfFile() == false) {
-	      //if(m_pGhostReplay->endOfFile() == false) {
-	      static SerializedBikeState GhostBikeState;
+		  && m_pGhostReplay->endOfFile() == false) {
+	      has_new_state = true;
 	      m_pGhostReplay->loadState((char *)&GhostBikeState);
-	      m_MotoGame.UpdateGhostFromReplay(&GhostBikeState);
+	    }
+	    if(has_new_state) {
+	      if(m_nGhostFrame%2 || m_nGhostFrame==1) {
+		/* DONT INTERPOLATED FRAME */
+		m_MotoGame.UpdateGhostFromReplay(&GhostBikeState);
+	      } else {
+		/* INTERPOLATED FRAME */
+		SerializedBikeState ibs;
+		m_MotoGame.interpolateGameState(&previousGhostBikeState,
+						&GhostBikeState,&ibs,0.5f);
+		m_MotoGame.UpdateGhostFromReplay(&ibs);
+	      }
+	      m_nGhostFrame++;
 	    }
 	  }
 #endif

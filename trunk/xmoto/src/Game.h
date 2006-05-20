@@ -211,6 +211,7 @@ namespace vapp {
       Replay *m_pReplay;
 #if defined(ALLOW_GHOST) 
       Replay *m_pGhostReplay;
+      int m_nGhostFrame;
 #endif
       std::string m_ReplayPlayerName;
       
