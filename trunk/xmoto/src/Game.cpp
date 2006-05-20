@@ -2279,8 +2279,20 @@ namespace vapp {
 
 #if defined(ALLOW_GHOST) 
   std::string GameApp::_getGhostReplayPath(std::string p_levelId,
-					   GhostSearchStrategy p_strategy) {
-    return "/home/nicolas/.xmoto/Replays/ghost.rpl";
+					   GhostSearchStrategy p_strategy) 
+  {
+    std::string res;
+    std::vector<ReplayInfo *> Replays = Replay::createReplayList("", p_levelId);
+    
+    if(Replays.size() == 0) {
+      Replay::freeReplayList(Replays);
+      return "";
+    }
+
+    res = std::string("Replays/") + Replays[0]->Name + std::string(".rpl");
+
+    Replay::freeReplayList(Replays);
+    return res;
   }
 #endif    
 
