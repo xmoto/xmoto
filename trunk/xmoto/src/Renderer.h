@@ -148,6 +148,22 @@ namespace vapp {
     Vector2f Min,Max; /* AABB */
   };
 
+  struct TextureTheme {
+    /* rider */
+    Texture *RiderTorso;
+    Texture *RiderUpperLeg;
+    Texture *RiderLowerLeg;
+    Texture *RiderUpperArm;
+    Texture *RiderLowerArm;
+
+    /* bike */
+    Texture *BikeBody;
+    Texture *BikeRear;
+    Texture *BikeFront;
+    Texture *BikeWheel;
+  };
+
+
 	/*===========================================================================
 	Game rendering class
   ===========================================================================*/
@@ -235,16 +251,13 @@ namespace vapp {
       Animation *m_pStrawberryAnim;
       Animation *m_pFlowerAnim;
       Animation *m_pWreckerAnim;
-      Texture *m_pBikeBody1;
-      Texture *m_pBikeRear1;
-      Texture *m_pBikeFront1;
-      Texture *m_pBikeWheel1;
-      Texture *m_pRiderTorso1;
-      Texture *m_pRiderUpperLeg1;
-      Texture *m_pRiderLowerLeg1;
-      Texture *m_pRiderUpperArm1;
-      Texture *m_pRiderLowerArm1;
-      
+
+      TextureTheme theme_normal;
+
+#if defined(ALLOW_GHOST)
+      TextureTheme theme_ghost;
+#endif      
+
       Texture *m_pArrowTexture;
       
       Texture *m_pSmoke1;
@@ -261,7 +274,7 @@ namespace vapp {
       /* Subroutines */
       void _RenderSprites(bool bForeground,bool bBackground);
       void _RenderSprite(Entity *pSprite);
-      void _RenderBike(BikeState *pBike);
+      void _RenderBike(BikeState *pBike, TextureTheme *p_theme);
       void _RenderBlocks(void);
       void _RenderBackground(void);
       void _RenderSky(void);

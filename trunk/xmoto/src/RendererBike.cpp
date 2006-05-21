@@ -32,7 +32,7 @@ namespace vapp {
   /*===========================================================================
   Rendering of the bike
   ===========================================================================*/
-  void GameRenderer::_RenderBike(BikeState *pBike) {
+  void GameRenderer::_RenderBike(BikeState *pBike, TextureTheme *p_theme) {
     /* Render bike */
     Vector2f p0,p1,p2,p3,o0,o1,o2,o3;
     Vector2f C;
@@ -88,7 +88,7 @@ namespace vapp {
     else {
       glEnable(GL_BLEND); 
       glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
-      glBindTexture(GL_TEXTURE_2D,m_pBikeWheel1->nID);
+      glBindTexture(GL_TEXTURE_2D,p_theme->BikeWheel->nID);
       glEnable(GL_TEXTURE_2D);
       glBegin(GL_POLYGON);
       glColor3f(1,1,1);
@@ -155,7 +155,7 @@ namespace vapp {
     else {
       glEnable(GL_BLEND); 
       glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
-      glBindTexture(GL_TEXTURE_2D,m_pBikeWheel1->nID);
+      glBindTexture(GL_TEXTURE_2D,p_theme->BikeWheel->nID);
       glEnable(GL_TEXTURE_2D);
       glBegin(GL_POLYGON);
       glColor3f(1,1,1);
@@ -193,7 +193,7 @@ namespace vapp {
 
       glEnable(GL_BLEND); 
       glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
-      glBindTexture(GL_TEXTURE_2D,m_pBikeRear1->nID);
+      glBindTexture(GL_TEXTURE_2D,p_theme->BikeRear->nID);
       glEnable(GL_TEXTURE_2D);
       glBegin(GL_POLYGON);
       glColor3f(1,1,1);
@@ -229,7 +229,7 @@ namespace vapp {
       
       glEnable(GL_BLEND); 
       glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
-      glBindTexture(GL_TEXTURE_2D,m_pBikeFront1->nID);
+      glBindTexture(GL_TEXTURE_2D,p_theme->BikeFront->nID);
       glEnable(GL_TEXTURE_2D);
       glBegin(GL_POLYGON);
       glColor3f(1,1,1);
@@ -263,7 +263,7 @@ namespace vapp {
       
       glEnable(GL_BLEND); 
       glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
-      glBindTexture(GL_TEXTURE_2D,m_pBikeBody1->nID);
+      glBindTexture(GL_TEXTURE_2D,p_theme->BikeBody->nID);
       glEnable(GL_TEXTURE_2D);
       glBegin(GL_POLYGON);
       glColor3f(1,1,1);
@@ -326,7 +326,7 @@ namespace vapp {
 
         glEnable(GL_BLEND); 
         glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
-        glBindTexture(GL_TEXTURE_2D,m_pRiderTorso1->nID);
+        glBindTexture(GL_TEXTURE_2D,p_theme->RiderTorso->nID);
         glEnable(GL_TEXTURE_2D);
         glBegin(GL_POLYGON);
         glColor3f(1,1,1);
@@ -352,7 +352,7 @@ namespace vapp {
         
         glEnable(GL_BLEND); 
         glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
-        glBindTexture(GL_TEXTURE_2D,m_pRiderUpperArm1->nID);
+        glBindTexture(GL_TEXTURE_2D,p_theme->RiderUpperArm->nID);
         glEnable(GL_TEXTURE_2D);
         glBegin(GL_POLYGON);
         glColor3f(1,1,1);
@@ -378,7 +378,7 @@ namespace vapp {
         
         glEnable(GL_BLEND); 
         glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
-        glBindTexture(GL_TEXTURE_2D,m_pRiderLowerArm1->nID);
+        glBindTexture(GL_TEXTURE_2D,p_theme->RiderLowerArm->nID);
         glEnable(GL_TEXTURE_2D);
         glBegin(GL_POLYGON);
         glColor3f(1,1,1);
@@ -404,7 +404,7 @@ namespace vapp {
         
         glEnable(GL_BLEND); 
         glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
-        glBindTexture(GL_TEXTURE_2D,m_pRiderUpperLeg1->nID);
+        glBindTexture(GL_TEXTURE_2D,p_theme->RiderUpperLeg->nID);
         glEnable(GL_TEXTURE_2D);
         glBegin(GL_POLYGON);
         glColor3f(1,1,1);
@@ -430,7 +430,7 @@ namespace vapp {
         
         glEnable(GL_BLEND); 
         glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
-        glBindTexture(GL_TEXTURE_2D,m_pRiderLowerLeg1->nID);
+        glBindTexture(GL_TEXTURE_2D,p_theme->RiderLowerLeg->nID);
         glEnable(GL_TEXTURE_2D);
         glBegin(GL_POLYGON);
         glColor3f(1,1,1);
@@ -480,7 +480,7 @@ namespace vapp {
         
         glEnable(GL_BLEND); 
         glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
-        glBindTexture(GL_TEXTURE_2D,m_pRiderTorso1->nID);
+        glBindTexture(GL_TEXTURE_2D,p_theme->RiderTorso->nID);
         glEnable(GL_TEXTURE_2D);
         glBegin(GL_POLYGON);
         glColor3f(1,1,1);
@@ -506,7 +506,7 @@ namespace vapp {
         
         glEnable(GL_BLEND); 
         glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
-        glBindTexture(GL_TEXTURE_2D,m_pRiderUpperArm1->nID);
+        glBindTexture(GL_TEXTURE_2D,p_theme->RiderUpperArm->nID);
         glEnable(GL_TEXTURE_2D);
         glBegin(GL_POLYGON);
         glColor3f(1,1,1);
@@ -532,7 +532,7 @@ namespace vapp {
         
         glEnable(GL_BLEND); 
         glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
-        glBindTexture(GL_TEXTURE_2D,m_pRiderLowerArm1->nID);
+        glBindTexture(GL_TEXTURE_2D,p_theme->RiderLowerArm->nID);
         glEnable(GL_TEXTURE_2D);
         glBegin(GL_POLYGON);
         glColor3f(1,1,1);
@@ -558,7 +558,7 @@ namespace vapp {
         
         glEnable(GL_BLEND); 
         glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
-        glBindTexture(GL_TEXTURE_2D,m_pRiderUpperLeg1->nID);
+        glBindTexture(GL_TEXTURE_2D,p_theme->RiderUpperLeg->nID);
         glEnable(GL_TEXTURE_2D);
         glBegin(GL_POLYGON);
         glColor3f(1,1,1);
@@ -584,7 +584,7 @@ namespace vapp {
         
         glEnable(GL_BLEND); 
         glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
-        glBindTexture(GL_TEXTURE_2D,m_pRiderLowerLeg1->nID);
+        glBindTexture(GL_TEXTURE_2D,p_theme->RiderLowerLeg->nID);
         glEnable(GL_TEXTURE_2D);
         glBegin(GL_POLYGON);
         glColor3f(1,1,1);

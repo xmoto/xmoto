@@ -323,12 +323,12 @@ namespace vapp {
 #if defined(ALLOW_GHOST)
     if(getGameObject()->isGhostActive()) {
       /* ... followed by the ghost ... */
-      _RenderBike(getGameObject()->getGhostBikeState());
+      _RenderBike(getGameObject()->getGhostBikeState(), &theme_ghost);
     }
 #endif
 
     /* ... followed by the bike ... */
-    _RenderBike(getGameObject()->getBikeState());
+    _RenderBike(getGameObject()->getBikeState(), &theme_normal);
     
     if(m_Quality == GQ_HIGH && !m_bUglyMode) {
       /* Render particles (front!) */    
