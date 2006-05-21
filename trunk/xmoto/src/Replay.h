@@ -64,7 +64,6 @@ namespace vapp {
       void storeState(const char *pcState);
       void loadState(char *pcState); /* go and get the next state */  
       void peekState(char *pcState); /* get current state */
-      float getCurrentTime();
       void createReplay(const std::string &FileName,const std::string &LevelID,const std::string &Player,float fFrameRate,int nStateSize);
       void saveReplay(void);
       std::string openReplay(const std::string &FileName,float *pfFrameRate,std::string &Player);

@@ -403,11 +403,6 @@ namespace vapp {
 	   &m_Chunks[m_nCurChunk].pcChunkData[((int)m_nCurState)*m_nStateSize],
 	   m_nStateSize);
   }
-  
-  float Replay::getCurrentTime() {
-    return (m_nCurChunk * STATES_PER_CHUNK + ((int)m_nCurState)) / m_fFrameRate;
-  }
-
 
   std::vector<ReplayInfo *> Replay::createReplayList(const std::string &PlayerName,const std::string &LevelIDCheck) {
     std::vector<ReplayInfo *> Ret;

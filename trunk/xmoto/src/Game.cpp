@@ -958,16 +958,15 @@ namespace vapp {
           if(m_pGhostReplay != NULL) { 
 	    static SerializedBikeState GhostBikeState;
 	    static SerializedBikeState previousGhostBikeState;
-	    bool has_new_state;
 
-	    has_new_state = false;
 	    m_pGhostReplay->peekState((char *)&previousGhostBikeState);
-	    while(m_pGhostReplay->getCurrentTime() < m_MotoGame.getTime()
-		  && m_pGhostReplay->endOfFile() == false) {
-	      has_new_state = true;
-	      m_pGhostReplay->loadState((char *)&GhostBikeState);
-	    }
-	    if(has_new_state) {
+	    if(previousGhostBikeState.fGameTime < m_MotoGame.getTime()
+	       && m_pGhostReplay->endOfFile() == false) {
+	      do {
+		m_pGhostReplay->loadState((char *)&GhostBikeState);
+	      } while(GhostBikeState.fGameTime < m_MotoGame.getTime()
+		      && m_pGhostReplay->endOfFile() == false);
+
 	      if(m_nGhostFrame%2 || m_nGhostFrame==1) {
 		/* DONT INTERPOLATED FRAME */
 		m_MotoGame.UpdateGhostFromReplay(&GhostBikeState);
