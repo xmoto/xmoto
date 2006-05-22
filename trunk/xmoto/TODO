@@ -17,9 +17,21 @@
    location can merge their highscores) (priority=very low)
 * translations (priority=very low)
 
+Ghost finition :
+* do not reload the ghost if it is already the good loaded
+* make a vector for replay to load them faster
+* option for ghost
+a tab "Ghost"
+  o allow ghost
+
+  Strategy ghost :
+  o get my best
+  o get the best
+  o get the highscore of the room
+* strategy : get the best of the room and reload it if required
+
 Undecided:
 * add 3 2 1 GO ! at level startup (it neckelmann agree) 
-* ghost mode
 * context information for levels : when one is selected, display
    information
 * separate personnal highscores from others (two tabs instead of a
@@ -34,3 +46,4 @@ Undecided:
 * allow to run : xmoto l1.lvl or xmoto r1.rpl depending on the
    extension to allow playing a level or a replay just by cliking on
    it (and why not even if it's not in the xmoto dir)
+* save scripted replays
