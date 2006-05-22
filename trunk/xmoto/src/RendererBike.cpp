@@ -32,7 +32,7 @@ namespace vapp {
   /*===========================================================================
   Rendering of the bike
   ===========================================================================*/
-  void GameRenderer::_RenderBike(BikeState *pBike, TextureTheme *p_theme) {
+  void GameRenderer::_RenderBike(BikeState *pBike, BikeParams *pBikeParms, TextureTheme *p_theme) {
     /* Render bike */
     Vector2f p0,p1,p2,p3,o0,o1,o2,o3;
     Vector2f C;
@@ -41,16 +41,16 @@ namespace vapp {
     /* Draw front wheel */
     /* Ugly mode? */
     if(m_bUglyMode) {
-      o0 = Vector2f(-pBike->pParams->WR,0);
-      o1 = Vector2f(0,pBike->pParams->WR);
-      o2 = Vector2f(pBike->pParams->WR,0);
-      o3 = Vector2f(0,-pBike->pParams->WR);
+      o0 = Vector2f(-pBikeParms->WR,0);
+      o1 = Vector2f(0,pBikeParms->WR);
+      o2 = Vector2f(pBikeParms->WR,0);
+      o3 = Vector2f(0,-pBikeParms->WR);
     }
     else {
-      o0 = Vector2f(-pBike->pParams->WR,pBike->pParams->WR);
-      o1 = Vector2f(pBike->pParams->WR,pBike->pParams->WR);
-      o2 = Vector2f(pBike->pParams->WR,-pBike->pParams->WR);
-      o3 = Vector2f(-pBike->pParams->WR,-pBike->pParams->WR);
+      o0 = Vector2f(-pBikeParms->WR,pBikeParms->WR);
+      o1 = Vector2f(pBikeParms->WR,pBikeParms->WR);
+      o2 = Vector2f(pBikeParms->WR,-pBikeParms->WR);
+      o3 = Vector2f(-pBikeParms->WR,-pBikeParms->WR);
     }
     p0 = Vector2f(o0.x*pBike->fFrontWheelRot[0] + o0.y*pBike->fFrontWheelRot[1],
                   o0.x*pBike->fFrontWheelRot[2] + o0.y*pBike->fFrontWheelRot[3]);
@@ -81,7 +81,7 @@ namespace vapp {
       glColor3f(1,0,0);
       for(int i=0;i<nSteps;i++) {
         float r = (3.14159f * 2.0f * (float)i)/ (float)nSteps;            
-        _Vertex( Vector2f(C.x + pBike->pParams->WR*sin(r),C.y + pBike->pParams->WR*cos(r)) );
+        _Vertex( Vector2f(C.x + pBikeParms->WR*sin(r),C.y + pBikeParms->WR*cos(r)) );
       }      
       glEnd();
     }
@@ -108,16 +108,16 @@ namespace vapp {
     /* Draw rear wheel */        
     /* Ugly mode? */
     if(m_bUglyMode) {
-      o0 = Vector2f(-pBike->pParams->WR,0);
-      o1 = Vector2f(0,pBike->pParams->WR);
-      o2 = Vector2f(pBike->pParams->WR,0);
-      o3 = Vector2f(0,-pBike->pParams->WR);
+      o0 = Vector2f(-pBikeParms->WR,0);
+      o1 = Vector2f(0,pBikeParms->WR);
+      o2 = Vector2f(pBikeParms->WR,0);
+      o3 = Vector2f(0,-pBikeParms->WR);
     }
     else {
-      o0 = Vector2f(-pBike->pParams->WR,pBike->pParams->WR);
-      o1 = Vector2f(pBike->pParams->WR,pBike->pParams->WR);
-      o2 = Vector2f(pBike->pParams->WR,-pBike->pParams->WR);
-      o3 = Vector2f(-pBike->pParams->WR,-pBike->pParams->WR);
+      o0 = Vector2f(-pBikeParms->WR,pBikeParms->WR);
+      o1 = Vector2f(pBikeParms->WR,pBikeParms->WR);
+      o2 = Vector2f(pBikeParms->WR,-pBikeParms->WR);
+      o3 = Vector2f(-pBikeParms->WR,-pBikeParms->WR);
     }
     p0 = Vector2f(o0.x*pBike->fRearWheelRot[0] + o0.y*pBike->fRearWheelRot[1],
                   o0.x*pBike->fRearWheelRot[2] + o0.y*pBike->fRearWheelRot[3]);
@@ -148,7 +148,7 @@ namespace vapp {
       glColor3f(1,0,0);
       for(int i=0;i<nSteps;i++) {
         float r = (3.14159f * 2.0f * (float)i)/ (float)nSteps;            
-        _Vertex( Vector2f(C.x + pBike->pParams->WR*sin(r),C.y + pBike->pParams->WR*cos(r)) );
+        _Vertex( Vector2f(C.x + pBikeParms->WR*sin(r),C.y + pBikeParms->WR*cos(r)) );
       }      
       glEnd();
     }
@@ -310,8 +310,8 @@ namespace vapp {
         glColor3f(0,1,0);
         for(int i=0;i<nSteps;i++) {
           float r = (3.14159f * 2.0f * (float)i)/ (float)nSteps;            
-          _Vertex( Vector2f(pBike->HeadP.x + pBike->pParams->fHeadSize*sin(r),
-                            pBike->HeadP.y + pBike->pParams->fHeadSize*cos(r)) );
+          _Vertex( Vector2f(pBike->HeadP.x + pBikeParms->fHeadSize*sin(r),
+                            pBike->HeadP.y + pBikeParms->fHeadSize*cos(r)) );
         }      
         glEnd();
       }
@@ -464,8 +464,8 @@ namespace vapp {
         glColor3f(0,1,0);
         for(int i=0;i<nSteps;i++) {
           float r = (3.14159f * 2.0f * (float)i)/ (float)nSteps;            
-          _Vertex( Vector2f(pBike->Head2P.x + pBike->pParams->fHeadSize*sin(r),
-                            pBike->Head2P.y + pBike->pParams->fHeadSize*cos(r)) );
+          _Vertex( Vector2f(pBike->Head2P.x + pBikeParms->fHeadSize*sin(r),
+                            pBike->Head2P.y + pBikeParms->fHeadSize*cos(r)) );
         }      
         glEnd();
       }
