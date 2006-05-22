@@ -65,7 +65,21 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <SDL/SDL.h>
 #include <SDL/SDL_mixer.h>
-#include <SDL/SDL_opengl.h>
+//#include <SDL/SDL_opengl.h>  /* can't use this, it's glext.h is simply too old */
+/* Pull in OpenGL headers */
+#if defined(WIN32)
+  #include <windows.h>
+#endif
+#if defined(__APPLE__) && defined(__MACH__)
+  #include <OpenGL/gl.h>
+  #include <OpenGL/glu.h>
+#else
+  #define __glext_h_
+  #include <GL/gl.h>
+  #include <GL/glu.h>
+  #undef __glext_h_
+#endif
+#include "glext.h"
 
 #include <string>
 #include <vector>
