@@ -121,6 +121,8 @@ namespace vapp {
                  m_pReplay = NULL;
 #if defined(ALLOW_GHOST)
 		 m_pGhostReplay = NULL;
+		 GhostSearchStrategies[0] = GHOST_STRATEGY_MYBEST;
+		 GhostSearchStrategies[1] = GHOST_STRATEGY_THEBEST;
 #endif
                  m_bRecordReplays = true;
                  m_bShowCursor = true;
@@ -220,6 +222,7 @@ namespace vapp {
 #if defined(ALLOW_GHOST) 
       Replay *m_pGhostReplay;
       int m_nGhostFrame;
+      enum GhostSearchStrategy GhostSearchStrategies[2];
 #endif
       std::string m_ReplayPlayerName;
       

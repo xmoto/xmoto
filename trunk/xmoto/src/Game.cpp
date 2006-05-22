@@ -210,21 +210,23 @@ namespace vapp {
 
 #if defined(ALLOW_GHOST)
 	  /* Ghost replay */
-	  std::string v_PlayGhostReplay;
-	  v_PlayGhostReplay = _getGhostReplayPath(pLevelSrc->getID(), GHOST_STRATEGY_THEBEST);
-	  if(v_PlayGhostReplay != "") {
-	    std::string v_GhostReplayPlayerName;
-	    float v_ghostReplayFrameRate;
-	    if(m_pGhostReplay != NULL) delete m_pGhostReplay;
-	    m_pGhostReplay = new Replay;
-	    std::string GhostLevelID = m_pGhostReplay->openReplay(v_PlayGhostReplay,&v_ghostReplayFrameRate,v_GhostReplayPlayerName);
-	    if(GhostLevelID != "") {
-	      m_nGhostFrame = 0;
-	      m_MotoGame.setGhostActive(true);
-	      /* read first state */
-	      static SerializedBikeState GhostBikeState;
-	      m_pGhostReplay->peekState((char *)&GhostBikeState);
-	      m_MotoGame.UpdateGhostFromReplay(&GhostBikeState);
+	  if(m_Config.getBool("EnableGhost")) {
+	    std::string v_PlayGhostReplay;
+	    v_PlayGhostReplay = _getGhostReplayPath(pLevelSrc->getID(), (enum GhostSearchStrategy) m_Config.getInteger("GhostSearchStrategy"));
+	    if(v_PlayGhostReplay != "") {
+	      std::string v_GhostReplayPlayerName;
+	      float v_ghostReplayFrameRate;
+	      if(m_pGhostReplay != NULL) delete m_pGhostReplay;
+	      m_pGhostReplay = new Replay;
+	      std::string GhostLevelID = m_pGhostReplay->openReplay(v_PlayGhostReplay,&v_ghostReplayFrameRate,v_GhostReplayPlayerName);
+	      if(GhostLevelID != "") {
+		m_nGhostFrame = 0;
+		m_MotoGame.setGhostActive(true);
+		/* read first state */
+		static SerializedBikeState GhostBikeState;
+		m_pGhostReplay->peekState((char *)&GhostBikeState);
+		m_MotoGame.UpdateGhostFromReplay(&GhostBikeState);
+	      }
 	    }
 	  }
 #endif
@@ -1672,6 +1674,10 @@ namespace vapp {
     //m_Config.createVar( "ProxyAuthPwd",          "" );
 #endif
     
+#if defined(ALLOW_GHOST)
+    m_Config.createVar( "EnableGhost"        , "true");
+    m_Config.createVar( "GhostSearchStrategy", "0");
+#endif
   }
   
   /*===========================================================================

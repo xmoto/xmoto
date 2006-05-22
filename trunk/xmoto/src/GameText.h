@@ -72,6 +72,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_ENABLEAUDIO          "Enable Audio"
 #define GAMETEXT_ENABLECONTEXTHELP    "Enable Context Help"
 #define GAMETEXT_ENABLEENGINESOUND    "Enable Engine Sound"
+#define GAMETEXT_ENABLEGHOST          "Enable Ghost"
 #define GAMETEXT_ENABLEINGAMEWORLDRECORD "Show World Record in-game"
 #define GAMETEXT_ENABLEWEBHIGHSCORES  "Enable WWW Access"
 #define GAMETEXT_ENTERPLAYERNAME      "Enter player name:"
@@ -90,6 +91,10 @@ Central place to keep many in-game text strings
 #define GAMETEXT_GAMEGFX              "Game Graphics:"
 #define GAMETEXT_GENERAL              "General"
 #define GAMETEXT_GENERALINFO          "General Info"
+#define GAMETEXT_GHOST_STRATEGIES_TYPE  "Type"
+#define GAMETEXT_GHOST_STRATEGY_MYBEST  "Ghost is the best of my replays"
+#define GAMETEXT_GHOST_STRATEGY_THEBEST "Ghost is the best of the replays"
+#define GAMETEXT_GHOSTTAB             "Ghost"
 #define GAMETEXT_HELP                 "Help"
 
 
@@ -298,5 +303,8 @@ Central place to keep many in-game text strings
 #define CONTEXTHELP_PROXYSERVER "Write the IP address or host name of proxy server to use"
 #define CONTEXTHELP_PROXYPORT "Write the port number used by the proxy server"
 #define CONTEXTHELP_NEW_LEVELS "New levels and levels updated from the Internet"
+
+#define CONTEXTHELP_GHOST_MODE "Show the ghost if possible in the game"
+#define CONTEXTHELP_GHOST_STRATEGIES "Choose which ghost to display"
 
 #endif

@@ -617,6 +617,29 @@ namespace vapp {
   pKeyCList->setPosition(5,5,pControlsOptionsTab->getPosition().nWidth-10,238);
 #endif
 
+#if defined(ALLOW_GHOST) 
+    UIWindow *pGhostOptionsTab = new UIWindow(pOptionsTabs,20,40,GAMETEXT_GHOSTTAB,pOptionsTabs->getPosition().nWidth-40,pOptionsTabs->getPosition().nHeight);
+    pGhostOptionsTab->enableWindow(true);
+    pGhostOptionsTab->showWindow(false);
+    pGhostOptionsTab->setID("GHOST_TAB");
+
+    UIButton *pEnableGhost = new UIButton(pGhostOptionsTab,5,5,GAMETEXT_ENABLEGHOST,(pGhostOptionsTab->getPosition().nWidth-40)/2,28);
+    pEnableGhost->setType(UI_BUTTON_TYPE_CHECK);
+    pEnableGhost->setID("ENABLE_GHOST");
+    pEnableGhost->enableWindow(true);
+    pEnableGhost->setFont(m_Renderer.getSmallFont());
+    pEnableGhost->setGroup(50023);
+    pEnableGhost->setContextHelp(CONTEXTHELP_GHOST_MODE);
+
+    UIList *pGhostStrategiesList = new UIList(pGhostOptionsTab,5,43,"",pGhostOptionsTab->getPosition().nWidth-10,203);
+    pGhostStrategiesList->setID("GHOST_STRATEGIES_LIST");
+    pGhostStrategiesList->setFont(m_Renderer.getSmallFont());
+    pGhostStrategiesList->addColumn(GAMETEXT_GHOST_STRATEGIES_TYPE,pGhostStrategiesList->getPosition().nWidth);
+    pGhostStrategiesList->addEntry(GAMETEXT_GHOST_STRATEGY_MYBEST, GhostSearchStrategies + 0);
+    pGhostStrategiesList->addEntry(GAMETEXT_GHOST_STRATEGY_THEBEST, GhostSearchStrategies + 1);
+    pGhostStrategiesList->setContextHelp(CONTEXTHELP_GHOST_STRATEGIES);
+#endif
+
     m_pLevelPacksWindow = new UIFrame(m_pMainMenu,300,(getDispHeight()*140)/600,"",getDispWidth()-300-20,getDispHeight()-40-(getDispHeight()*120)/600-10);      
     m_pLevelPacksWindow->showWindow(false);
     pSomeText = new UIStatic(m_pLevelPacksWindow,0,0,GAMETEXT_LEVELPACKS,m_pLevelPacksWindow->getPosition().nWidth,36);
@@ -1918,6 +1941,18 @@ namespace vapp {
     UIButton *pStereoButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:STEREO");
     UIButton *pEnableEngineSoundButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_ENGINE_SOUND");
     
+#if defined(ALLOW_GHOST) 
+    UIButton *pEnableGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:ENABLE_GHOST");
+    UIList *pGhostStrategy = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGIES_LIST");
+
+    if(pEnableGhost->getChecked()) {
+      pGhostStrategy->enableWindow(true);
+    } else {
+      pGhostStrategy->enableWindow(false);
+    }
+#endif
+
+
     #if !defined(SUPPORT_WEBACCESS)
       pWebHighscores->enableWindow(false);
       pInGameWorldRecord->enableWindow(false);
@@ -2492,6 +2527,29 @@ namespace vapp {
     pKeyboardControl->setChecked(false);
     pJoystickControl->setChecked(false);
     
+#if defined(ALLOW_GHOST) 
+    UIButton *pEnableGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:ENABLE_GHOST");
+    UIList *pGhostStrategy = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGIES_LIST");
+
+    pEnableGhost->setChecked(m_Config.getBool("EnableGhost"));
+    int v_ghost_strategy = m_Config.getInteger("GhostSearchStrategy");
+
+    int nGSMode = -1;
+    for(int i=0;i<pGhostStrategy->getEntries().size();i++) {
+      if(*((int*)(pGhostStrategy->getEntries()[i]->pvUser)) == v_ghost_strategy) {
+        nGSMode = i;
+        break;
+      }
+    }
+    if(nGSMode < 0) {
+      /* TODO: warning */
+      pGhostStrategy->setSelected(0);
+    }
+    else {
+      pGhostStrategy->setSelected(nGSMode);
+    }  
+#endif
+
     pShowMiniMap->setChecked(m_Config.getBool("ShowMiniMap"));
     pWebHighscores->setChecked(m_Config.getBool("WebHighscores"));
     pInGameWorldRecord->setChecked(m_Config.getBool("ShowInGameWorldRecord"));
@@ -2594,7 +2652,7 @@ namespace vapp {
     /* The following require restart */
     m_Config.setChanged(false);      
 
-    m_Config.setValue("WebHighscores",m_Config.getDefaultValue("WebHighscores"));
+    //m_Config.setValue("WebHighscores",m_Config.getDefaultValue("WebHighscores"));
         
     m_Config.setValue("AudioEnable",m_Config.getDefaultValue("AudioEnable"));
     m_Config.setValue("AudioSampleRate",m_Config.getDefaultValue("AudioSampleRate"));
@@ -2683,6 +2741,17 @@ namespace vapp {
     m_Config.setChanged(false);      
 
     m_Config.setBool("WebHighscores",pWebHighscores->getChecked());
+
+#if defined(ALLOW_GHOST)
+    UIButton *pEnableGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:ENABLE_GHOST");
+    UIList *pGhostStrategy = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGIES_LIST");
+    m_Config.setBool("EnableGhost",pEnableGhost->getChecked());
+
+    if(pGhostStrategy->getSelected() >= 0 && pGhostStrategy->getSelected() < pGhostStrategy->getEntries().size()) {
+      UIListEntry *pEntry = pGhostStrategy->getEntries()[pGhostStrategy->getSelected()];
+      m_Config.setInteger("GhostSearchStrategy", *((int*)(pEntry->pvUser)));
+    }
+#endif
 
     m_Config.setBool("AudioEnable",pEnableAudioButton->getChecked());
     
