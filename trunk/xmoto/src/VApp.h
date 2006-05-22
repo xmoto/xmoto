@@ -97,6 +97,8 @@ namespace vapp {
              m_bCmdDispBPP=false;
              m_bCmdWindowed=false;
              
+             m_bFBOSupported = false;
+             
              m_nLScissorX = m_nLScissorY = m_nLScissorW = m_nLScissorH = 0;
                           
              m_AppName="";
@@ -156,6 +158,7 @@ namespace vapp {
       bool isCmdDispBPP(void) {return m_bCmdDispBPP;}
       bool isCmdDispWindowed(void) {return m_bCmdWindowed;}      
       bool useVBOs(void) {return m_bVBOSupported;}
+      bool useFBOs(void) {return m_bFBOSupported;}
       
       TextureManager TexMan;
 
@@ -165,6 +168,25 @@ namespace vapp {
       PFNGLBUFFERDATAARBPROC glBufferDataARB;
       PFNGLDELETEBUFFERSARBPROC glDeleteBuffersARB;
               
+      /* Extensions (for render-to-texture) */
+      PFNGLISRENDERBUFFEREXTPROC glIsRenderbufferEXT;
+      PFNGLBINDRENDERBUFFEREXTPROC glBindRenderbufferEXT;
+      PFNGLDELETERENDERBUFFERSEXTPROC glDeleteRenderbuffersEXT;
+      PFNGLGENRENDERBUFFERSEXTPROC glGenRenderbuffersEXT;
+      PFNGLRENDERBUFFERSTORAGEEXTPROC glRenderbufferStorageEXT;
+      PFNGLGETRENDERBUFFERPARAMETERIVEXTPROC glGetRenderbufferParameterivEXT;
+      PFNGLISFRAMEBUFFEREXTPROC glIsFramebufferEXT;
+      PFNGLBINDFRAMEBUFFEREXTPROC glBindFramebufferEXT;
+      PFNGLDELETEFRAMEBUFFERSEXTPROC glDeleteFramebuffersEXT;
+      PFNGLGENFRAMEBUFFERSEXTPROC glGenFramebuffersEXT;
+      PFNGLCHECKFRAMEBUFFERSTATUSEXTPROC glCheckFramebufferStatusEXT;
+      PFNGLFRAMEBUFFERTEXTURE1DEXTPROC glFramebufferTexture1DEXT;
+      PFNGLFRAMEBUFFERTEXTURE2DEXTPROC glFramebufferTexture2DEXT;
+      PFNGLFRAMEBUFFERTEXTURE3DEXTPROC glFramebufferTexture3DEXT;
+      PFNGLFRAMEBUFFERRENDERBUFFEREXTPROC glFramebufferRenderbufferEXT;
+      PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVEXTPROC glGetFramebufferAttachmentParameterivEXT;
+      PFNGLGENERATEMIPMAPEXTPROC glGenerateMipmapEXT;         
+           
     protected:
 
       /* Virtual protected methods */
@@ -198,6 +220,7 @@ namespace vapp {
       bool m_bCmdDispWidth,m_bCmdDispHeight,m_bCmdDispBPP,m_bCmdWindowed;
       
       bool m_bVBOSupported;
+      bool m_bFBOSupported;
       bool m_bDontUseGLExtensions;
       
       int m_nLScissorX,m_nLScissorY,m_nLScissorW,m_nLScissorH;

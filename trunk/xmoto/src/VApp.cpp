@@ -326,22 +326,6 @@ namespace vapp {
 	  /* 2005-10-05 ... note that we no longer ask for explicit settings... it's
 	                    better to do it per auto */
 	  SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,1);	
-
-	  //switch(m_nDispBPP) {
-		 // case 16: 
-			//  SDL_GL_SetAttribute(SDL_GL_RED_SIZE,5);
-			//  SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE,6);
-			//  SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,5);
-			//  SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,16);
-			//  SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,1);	
-			//  break;
-		 // case 32: 
-			//  SDL_GL_SetAttribute(SDL_GL_RED_SIZE,8);
-			//  SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE,8);
-			//  SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,8);
-			//  SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,16);
-			//  break;
-	  //}	
 	
 	  /* Create video flags */
 	  int nFlags = SDL_OPENGL;
@@ -372,8 +356,6 @@ namespace vapp {
 	  glViewport(0,0,m_nDispWidth,m_nDispHeight);
 	  glMatrixMode(GL_PROJECTION);
 	  glLoadIdentity();
-	  //gluOrtho2D(0,0,m_nDispWidth,m_nDispHeight);
-//	  glOrtho(0,0,m_nDispWidth,m_nDispHeight,-1,1);
 	  glOrtho(0,m_nDispWidth,0,m_nDispHeight,-1,1);
 	  
 	  glMatrixMode(GL_MODELVIEW);
@@ -405,12 +387,15 @@ namespace vapp {
       }
     #endif
 	  
-//          Log("GL: %s",glGetString(GL_EXTENSIONS));
 	  /* Init OpenGL extensions */
-	  if(m_bDontUseGLExtensions) 
+	  if(m_bDontUseGLExtensions) {
 	    m_bVBOSupported = false;
-	  else
+	    m_bFBOSupported = false;
+	  }
+	  else {
 	    m_bVBOSupported = isExtensionSupported("GL_ARB_vertex_buffer_object");
+	    m_bFBOSupported = isExtensionSupported("GL_EXT_framebuffer_object");
+	  }
 	  
 	  if(m_bVBOSupported) {
 		  glGenBuffersARB=(PFNGLGENBUFFERSARBPROC)SDL_GL_GetProcAddress("glGenBuffersARB");
@@ -421,10 +406,34 @@ namespace vapp {
 	    glEnableClientState( GL_VERTEX_ARRAY );		
 	    glEnableClientState( GL_TEXTURE_COORD_ARRAY );
 		  	  
-	    Log("GL: using Vertex Buffer Objects");	  
+	    Log("GL: using ARB_vertex_buffer_object");	  
 	  }
 	  else
-	    Log("GL: not using Vertex Buffer Objects");	  
+	    Log("GL: not using ARB_vertex_buffer_object");	  
+	    
+	  if(m_bFBOSupported) {
+		  glIsRenderbufferEXT = (PFNGLISRENDERBUFFEREXTPROC)SDL_GL_GetProcAddress("glIsRenderbufferEXT");
+		  glBindRenderbufferEXT = (PFNGLBINDRENDERBUFFEREXTPROC)SDL_GL_GetProcAddress("glBindRenderbufferEXT");
+		  glDeleteRenderbuffersEXT = (PFNGLDELETERENDERBUFFERSEXTPROC)SDL_GL_GetProcAddress("glDeleteRenderbuffersEXT");
+		  glGenRenderbuffersEXT = (PFNGLGENRENDERBUFFERSEXTPROC)SDL_GL_GetProcAddress("glGenRenderbuffersEXT");
+		  glRenderbufferStorageEXT = (PFNGLRENDERBUFFERSTORAGEEXTPROC)SDL_GL_GetProcAddress("glRenderbufferStorageEXT");
+		  glGetRenderbufferParameterivEXT = (PFNGLGETRENDERBUFFERPARAMETERIVEXTPROC)SDL_GL_GetProcAddress("glGetRenderbufferParameterivEXT");
+		  glIsFramebufferEXT = (PFNGLISFRAMEBUFFEREXTPROC)SDL_GL_GetProcAddress("glIsFramebufferEXT");
+		  glBindFramebufferEXT = (PFNGLBINDFRAMEBUFFEREXTPROC)SDL_GL_GetProcAddress("glBindFramebufferEXT");
+		  glDeleteFramebuffersEXT = (PFNGLDELETEFRAMEBUFFERSEXTPROC)SDL_GL_GetProcAddress("glDeleteFramebuffersEXT");
+		  glGenFramebuffersEXT = (PFNGLGENFRAMEBUFFERSEXTPROC)SDL_GL_GetProcAddress("glGenFramebuffersEXT");
+		  glCheckFramebufferStatusEXT = (PFNGLCHECKFRAMEBUFFERSTATUSEXTPROC)SDL_GL_GetProcAddress("glCheckFramebufferStatusEXT");
+		  glFramebufferTexture1DEXT = (PFNGLFRAMEBUFFERTEXTURE1DEXTPROC)SDL_GL_GetProcAddress("glFramebufferTexture1DEXT");
+		  glFramebufferTexture2DEXT = (PFNGLFRAMEBUFFERTEXTURE2DEXTPROC)SDL_GL_GetProcAddress("glFramebufferTexture2DEXT");
+		  glFramebufferTexture3DEXT = (PFNGLFRAMEBUFFERTEXTURE3DEXTPROC)SDL_GL_GetProcAddress("glFramebufferTexture3DEXT");
+		  glFramebufferRenderbufferEXT = (PFNGLFRAMEBUFFERRENDERBUFFEREXTPROC)SDL_GL_GetProcAddress("glFramebufferRenderbufferEXT");
+		  glGetFramebufferAttachmentParameterivEXT = (PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVEXTPROC)SDL_GL_GetProcAddress("glGetFramebufferAttachmentParameterivEXT");
+		  glGenerateMipmapEXT = (PFNGLGENERATEMIPMAPEXTPROC)SDL_GL_GetProcAddress("glGenerateMipmapEXT");
+	    	  
+	    Log("GL: using EXT_framebuffer_object");
+	  }
+	  else
+	    Log("GL: not using EXT_framebuffer_object");
 	  
 	  /* Set background color to black */
 	  glClearColor(0.0f,0.0f,0.0f,0.0f);

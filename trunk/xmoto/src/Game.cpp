@@ -350,6 +350,9 @@ namespace vapp {
     else if(s == "Medium") m_Renderer.setQuality(GQ_MEDIUM);
     else if(s == "High") m_Renderer.setQuality(GQ_HIGH);
     
+    m_bGhostMotionBlur = m_Config.getBool("GhostMotionBlur");
+    m_Renderer.setGhostMotionBlur( m_bGhostMotionBlur );
+    
     /* Show mini map? */
     m_bShowMiniMap = m_Config.getBool("ShowMiniMap");
     
@@ -477,6 +480,7 @@ namespace vapp {
     m_Renderer.setGameObject( &m_MotoGame );        
     m_Renderer.setDebug( m_bDebugMode );
     m_Renderer.setUglyMode( m_bUglyMode );
+    m_Renderer.setGhostMotionBlur( m_bGhostMotionBlur );
     
     /* Tell collision system whether we want debug-info or not */
     m_MotoGame.getCollisionHandler()->setDebug( m_bDebugMode );
@@ -1613,6 +1617,7 @@ namespace vapp {
     m_Config.createVar( "DisplayWindowed",        "false" );
     m_Config.createVar( "MenuBackgroundGraphics", "High" );
     m_Config.createVar( "GameGraphics",           "High" );
+    m_Config.createVar( "GhostMotionBlur",        "true" );
         
     /* Audio */
     m_Config.createVar( "AudioEnable",            "true" );

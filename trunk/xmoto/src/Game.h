@@ -119,6 +119,7 @@ namespace vapp {
                  m_b50FpsMode = false;
                  m_bUglyMode = false;
                  m_pReplay = NULL;
+                 m_bGhostMotionBlur = true;
 #if defined(ALLOW_GHOST)
 		 m_pGhostReplay = NULL;
 		 GhostSearchStrategies[0] = GHOST_STRATEGY_MYBEST;
@@ -192,6 +193,7 @@ namespace vapp {
       bool m_bUglyMode;													/* true: fast 'n ugly graphics */
       bool m_bEnableEngineSound;                /* true: engine sound is enabled */
       bool m_bCompressReplays;                  /* true: compress replays with zlib */
+      bool m_bGhostMotionBlur;                  /* true: apply fancy motion blur to ghosts */
       bool m_bEnableLevelCache;                 /* true: cache levels for faster loading */
       std::string m_PlaySpecificLevel;          /* If set, we only want to 
                                                    play this level */

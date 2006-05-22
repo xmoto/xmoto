@@ -163,6 +163,25 @@ namespace vapp {
     Texture *BikeWheel;
   };
 
+	/*===========================================================================
+	Special effects overlay
+  ===========================================================================*/
+  class SFXOverlay {
+    public:
+      /* Methods */
+      void init(App *pApp,int nWidth,int nHeight);
+      void cleanUp(void);
+      void beginRendering(void);
+      GLuint endRendering(void);
+      void fade(float f);
+    
+    private:
+      /* Some OpenGL handles */
+      GLuint m_DynamicTextureID;
+      GLuint m_FrameBufferID;      
+      int m_nOverlayWidth,m_nOverlayHeight;
+      App *m_pApp;
+  };
 
 	/*===========================================================================
 	Game rendering class
@@ -175,6 +194,7 @@ namespace vapp {
 	m_Quality=GQ_HIGH;
 	m_fSpeedMultiply=1.0f;
 	m_fScale = 0.195f;
+	m_bGhostMotionBlur = true;
       }
       ~GameRenderer() {_Free();}
     
@@ -189,6 +209,7 @@ namespace vapp {
       Particle *spawnParticle(ParticleType Type,Vector2f Pos,Vector2f Vel,float fLifeTime);
     
       /* Data interface */
+      void setGhostMotionBlur(bool b) {m_bGhostMotionBlur = b;}
       void setGameObject(MotoGame *pMotoGame) {m_pMotoGame=pMotoGame;}
       MotoGame *getGameObject(void) {return m_pMotoGame;}
       void setParent(App *pParent) {m_pParent=pParent;}
@@ -266,6 +287,10 @@ namespace vapp {
       Texture *m_pDirt1;
       
       GraphQuality m_Quality;
+      bool m_bGhostMotionBlur;
+      
+      /* FBO overlay */
+      SFXOverlay m_Overlay;
             
       /* Particle fun */
       float m_fNextParticleUpdate;

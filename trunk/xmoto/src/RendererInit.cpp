@@ -278,6 +278,9 @@ namespace vapp {
     m_pWorldRecordTime->setFont(m_pSFont);
     m_pWorldRecordTime->setVAlign(UI_ALIGN_TOP);
     m_pWorldRecordTime->setHAlign(UI_ALIGN_LEFT);
+    
+    /* Overlays? */
+    m_Overlay.init(getParent(),512,512);
   }
 
 };

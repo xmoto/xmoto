@@ -199,6 +199,9 @@
 				RelativePath="..\src\RendererBike.cpp">
 			</File>
 			<File
+				RelativePath="..\src\RendererFBO.cpp">
+			</File>
+			<File
 				RelativePath="..\src\RendererInit.cpp">
 			</File>
 			<File

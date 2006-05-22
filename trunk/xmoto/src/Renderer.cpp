@@ -322,8 +322,47 @@ namespace vapp {
 
 #if defined(ALLOW_GHOST)
     if(getGameObject()->isGhostActive()) {
-      /* ... followed by the ghost ... */
+      /* ... followed by the ghost ... Render into overlay? */
+      if(m_bGhostMotionBlur && getParent()->useFBOs()) {
+        m_Overlay.beginRendering();
+        m_Overlay.fade(0.15);
+      }
       _RenderBike(getGameObject()->getGhostBikeState(), getGameObject()->getBikeParams(), &theme_ghost);
+      
+      if(m_bGhostMotionBlur && getParent()->useFBOs()) {
+        GLuint nOverlayTextureID = m_Overlay.endRendering();
+        
+        glMatrixMode(GL_PROJECTION);
+        glPushMatrix();
+        glLoadIdentity();
+        glOrtho(0,getParent()->getDispWidth(),0,getParent()->getDispHeight(),-1,1);
+        glMatrixMode(GL_MODELVIEW);
+        glPushMatrix();
+        glLoadIdentity();
+
+        glEnable(GL_BLEND);
+        glEnable(GL_TEXTURE_2D);
+        glBlendFunc(GL_ONE,GL_ONE);
+        glBindTexture(GL_TEXTURE_2D,nOverlayTextureID);
+        glBegin(GL_POLYGON);
+        glColor3f(1,1,1);
+        glTexCoord2f(0,0);
+        glVertex2f(0,0);
+        glTexCoord2f(1,0);
+        glVertex2f(getParent()->getDispWidth(),0);
+        glTexCoord2f(1,1);
+        glVertex2f(getParent()->getDispWidth(),getParent()->getDispHeight());
+        glTexCoord2f(0,1);
+        glVertex2f(0,getParent()->getDispHeight());
+        glEnd();
+        glDisable(GL_TEXTURE_2D);
+        glDisable(GL_BLEND);
+
+        glPopMatrix();
+        glMatrixMode(GL_PROJECTION);
+        glPopMatrix();
+        glMatrixMode(GL_MODELVIEW);
+      }
     }
 #endif
 
@@ -1006,6 +1045,9 @@ namespace vapp {
   Free stuff
   ===========================================================================*/
   void GameRenderer::_Free(void) {
+    /* Free overlay */
+    m_Overlay.cleanUp();
+    
     /* Free animations */
     for(int i=0;i<m_Anims.size();i++) { 
       for(int j=0;j<m_Anims[i]->m_Frames.size();j++) 
