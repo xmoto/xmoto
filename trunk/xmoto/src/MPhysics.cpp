@@ -521,10 +521,6 @@ namespace vapp {
       pBikeS->Head2P = pBikeS->Shoulder2P + V*m_BikeP.fNeckLength;
     }
     
-    /* Maybe someone want these as well */    
-    pBikeS->pAnchors = &m_BikeA;
-    pBikeS->pParams = &m_BikeP;
-    
     /* Internally we'd like to know the abs. relaxed position of the wheels */
     pBikeS->RFrontWheelP.x = m_BikeA.Fp.x*pBikeS->fFrameRot[0] + m_BikeA.Fp.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
     pBikeS->RFrontWheelP.y = m_BikeA.Fp.x*pBikeS->fFrameRot[2] + m_BikeA.Fp.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;
@@ -698,10 +694,6 @@ namespace vapp {
       m_BikeS.Head2P = m_BikeS.Shoulder2P + V*m_BikeP.fNeckLength;
     }
 
-    /* Maybe someone want these as well */    
-    m_BikeS.pAnchors = &m_BikeA;
-    m_BikeS.pParams = &m_BikeP;
-    
     /* Internally we'd like to know the abs. relaxed position of the wheels */
     m_BikeS.RFrontWheelP.x = m_BikeA.Fp.x*m_BikeS.fFrameRot[0] + m_BikeA.Fp.y*m_BikeS.fFrameRot[1] + m_BikeS.CenterP.x;
     m_BikeS.RFrontWheelP.y = m_BikeA.Fp.x*m_BikeS.fFrameRot[2] + m_BikeA.Fp.y*m_BikeS.fFrameRot[3] + m_BikeS.CenterP.y;

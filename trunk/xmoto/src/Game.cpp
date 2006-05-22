@@ -955,7 +955,7 @@ namespace vapp {
           
 #if defined(ALLOW_GHOST)
           /* Read replay state */
-          if(m_pGhostReplay != NULL) { 
+          if(m_pGhostReplay != NULL) {
 	    static SerializedBikeState GhostBikeState;
 	    static SerializedBikeState previousGhostBikeState;
 
@@ -969,7 +969,7 @@ namespace vapp {
 
 	      if(m_nGhostFrame%2 || m_nGhostFrame==1) {
 		/* DONT INTERPOLATED FRAME */
-		m_MotoGame.UpdateGhostFromReplay(&GhostBikeState);
+		m_MotoGame.UpdateGhostFromReplay(&previousGhostBikeState);
 	      } else {
 		/* INTERPOLATED FRAME */
 		SerializedBikeState ibs;

@@ -436,7 +436,6 @@ namespace vapp {
     m_BikeS.PlayerTorso2P = Vector2f(0,0);
     m_BikeS.PlayerUArm2P = Vector2f(0,0);
     m_BikeS.PlayerULeg2P = Vector2f(0,0);
-    m_BikeS.pParams = &m_BikeP; /* clumsy, ugly, evil. I hate myself. */
     m_BikeS.PrevFq = Vector2f(0,0);
     m_BikeS.PrevRq = Vector2f(0,0);
     m_BikeS.PrevPFq = Vector2f(0,0);

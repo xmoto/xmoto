@@ -286,7 +286,6 @@ namespace vapp {
     Vector2f PrevPHq2;    /* Previous error (player hand) (Alt.) */
     
     /* Bonusinfo */
-    BikeParams *pParams;
     BikeAnchors *pAnchors;
     
     /* Driving */
@@ -495,6 +494,9 @@ namespace vapp {
       LevelSrc *getLevelSrc(void) {return m_pLevelSrc;}
       std::vector<ConvexBlock *> &getBlocks(void) {return m_Blocks;}
       BikeState *getBikeState(void) {return &m_BikeS;}
+
+      BikeParams *getBikeParams() { return &m_BikeP;}
+
 #if defined(ALLOW_GHOST)
       BikeState *getGhostBikeState(void) {return &m_GhostBikeS;}
       bool isGhostActive() {return m_isGhostActive;}
@@ -561,7 +563,7 @@ namespace vapp {
       std::vector<Entity *> m_DelSchedule;/* Entities scheduled for deletion */
       std::vector<GameMessage *> m_GameMessages;
       
-      BikeParams m_BikeP;                 /* Bike parameters */      
+      BikeParams m_BikeP;                 /* Bike physics */      
       BikeAnchors m_BikeA;                /* Important bike anchor points */
       BikeState m_BikeS;                  /* Bike state */
 
