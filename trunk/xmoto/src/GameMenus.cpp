@@ -417,12 +417,16 @@ namespace vapp {
     pDispResList->setID("RES_LIST");
     pDispResList->setFont(m_Renderer.getSmallFont());
     pDispResList->addColumn(GAMETEXT_SCREENRES,pDispResList->getPosition().nWidth);
-    //pDispResList->addEntry("512 X 384");
-    //pDispResList->addEntry("640 X 480");
-    pDispResList->addEntry("800 X 600");
-    pDispResList->addEntry("1024 X 768");
-    pDispResList->addEntry("1280 X 1024");
-    pDispResList->addEntry("1600 X 1200");
+
+    std::vector<std::string>* modes = getDisplayModes();
+    
+    for(int i=0; i < modes->size(); i++) {
+      pDispResList->addEntry((*modes)[i].c_str());
+    }
+    
+    delete modes;
+
+
     pDispResList->setContextHelp(CONTEXTHELP_RESOLUTION);
 
     UIButton *pRunWindowed = new UIButton(pVideoOptionsTab,5,180,GAMETEXT_RUNWINDOWED,(pVideoOptionsTab->getPosition().nWidth-40)/1,28);

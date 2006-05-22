@@ -130,6 +130,8 @@ namespace vapp {
       int getDispHeight(void) {return m_nDispHeight;}
 //#endif
 
+      std::vector<std::string>* getDisplayModes();
+
       void setFrameDelay(int nDelay) {m_nFrameDelay=nDelay;}
 
       void scissorGraphics(int x,int y,int nWidth,int nHeight);
