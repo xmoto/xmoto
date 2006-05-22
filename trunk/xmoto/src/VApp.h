@@ -30,6 +30,35 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VTexture.h"
 #include "Image.h"
 
+/* Make sure we have all required OpenGL function pointer types, even
+   though they're bogus */
+#if !defined(GL_ARB_vertex_buffer_object)   
+  typedef void (*PFNGLGENBUFFERSARBPROC)(void);
+  typedef void (*PFNGLBINDBUFFERARBPROC)(void);
+  typedef void (*PFNGLBUFFERDATAARBPROC)(void);
+  typedef void (*PFNGLDELETEBUFFERSARBPROC)(void);
+#endif
+
+#if !defined(GL_EXT_framebuffer_object)
+  typedef void (*PFNGLISRENDERBUFFEREXTPROC)(void);
+  typedef void (*PFNGLBINDRENDERBUFFEREXTPROC)(void);
+  typedef void (*PFNGLDELETERENDERBUFFERSEXTPROC)(void);
+  typedef void (*PFNGLGENRENDERBUFFERSEXTPROC)(void);
+  typedef void (*PFNGLRENDERBUFFERSTORAGEEXTPROC)(void);
+  typedef void (*PFNGLGETRENDERBUFFERPARAMETERIVEXTPROC)(void);
+  typedef void (*PFNGLISFRAMEBUFFEREXTPROC)(void);
+  typedef void (*PFNGLBINDFRAMEBUFFEREXTPROC)(void);
+  typedef void (*PFNGLDELETEFRAMEBUFFERSEXTPROC)(void);
+  typedef void (*PFNGLGENFRAMEBUFFERSEXTPROC)(void);
+  typedef void (*PFNGLCHECKFRAMEBUFFERSTATUSEXTPROC)(void);
+  typedef void (*PFNGLFRAMEBUFFERTEXTURE1DEXTPROC)(void);
+  typedef void (*PFNGLFRAMEBUFFERTEXTURE2DEXTPROC)(void);
+  typedef void (*PFNGLFRAMEBUFFERTEXTURE3DEXTPROC)(void);
+  typedef void (*PFNGLFRAMEBUFFERRENDERBUFFEREXTPROC)(void);
+  typedef void (*PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVEXTPROC)(void);
+  typedef void (*PFNGLGENERATEMIPMAPEXTPROC)(void);
+#endif
+
 namespace vapp {
 
   class App;
