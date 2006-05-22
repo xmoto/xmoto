@@ -221,6 +221,10 @@ namespace vapp {
 	    if(GhostLevelID != "") {
 	      m_nGhostFrame = 0;
 	      m_MotoGame.setGhostActive(true);
+	      /* read first state */
+	      static SerializedBikeState GhostBikeState;
+	      m_pGhostReplay->peekState((char *)&GhostBikeState);
+	      m_MotoGame.UpdateGhostFromReplay(&GhostBikeState);
 	    }
 	  }
 #endif
@@ -969,7 +973,7 @@ namespace vapp {
 
 	      if(m_nGhostFrame%2 || m_nGhostFrame==1) {
 		/* DONT INTERPOLATED FRAME */
-		m_MotoGame.UpdateGhostFromReplay(&previousGhostBikeState);
+		m_MotoGame.UpdateGhostFromReplay(&GhostBikeState);
 	      } else {
 		/* INTERPOLATED FRAME */
 		SerializedBikeState ibs;
