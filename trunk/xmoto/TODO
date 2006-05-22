@@ -20,15 +20,7 @@
 
 Ghost finition :
 * do not reload the ghost if it is already the good loaded
-* make a vector for replay to load them faster
-* option for ghost
-a tab "Ghost"
-  o allow ghost
-
-  Strategy ghost :
-  o get my best
-  o get the best
-  o get the highscore of the room
+* make a vector for replays to load them faster
 * strategy : get the best of the room and reload it if required
 
 Undecided:
