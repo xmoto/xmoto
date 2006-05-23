@@ -6,6 +6,8 @@
    link to his room xml file (priority=high)
 * add a button <see replay> which download the highscore from the
    website and play it (priority=high)
+  add informatin about highscore when a level is selected (name of the
+   driver, <see button>, ...)  
 * what about check for new levels at startup and propose to download
    new levels ? (with a small non-intrusive message) (priority=high)
 * add a counter of uncompleted levels (priority=medium)
@@ -16,7 +18,7 @@
 * add import of players.bin (so that people playing at different
    location can merge their highscores) (priority=very low)
 * translations (priority=very low)
-   
+
 Ghost finition :
 * make a vector for replays to load them faster
 
