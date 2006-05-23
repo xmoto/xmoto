@@ -123,6 +123,7 @@ namespace vapp {
                  m_bGhostMotionBlur = true;
 #if defined(ALLOW_GHOST)
 		 m_pGhostReplay = NULL;
+		 m_lastGhostReplay = "";
 		 GhostSearchStrategies[0] = GHOST_STRATEGY_MYBEST;
 		 GhostSearchStrategies[1] = GHOST_STRATEGY_THEBEST;
 		 GhostSearchStrategies[2] = GHOST_STRATEGY_BESTOFROOM;
@@ -225,6 +226,7 @@ namespace vapp {
       Replay *m_pReplay;
 #if defined(ALLOW_GHOST) 
       Replay *m_pGhostReplay;
+      String m_lastGhostReplay;
       int m_nGhostFrame;
       enum GhostSearchStrategy GhostSearchStrategies[3];
 #endif

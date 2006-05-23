@@ -216,9 +216,33 @@ namespace vapp {
 	    if(v_PlayGhostReplay != "") {
 	      std::string v_GhostReplayPlayerName;
 	      float v_ghostReplayFrameRate;
-	      if(m_pGhostReplay != NULL) delete m_pGhostReplay;
-	      m_pGhostReplay = new Replay;
-	      std::string GhostLevelID = m_pGhostReplay->openReplay(v_PlayGhostReplay,&v_ghostReplayFrameRate,v_GhostReplayPlayerName);
+	      std::string GhostLevelID;
+
+	      /* hope the man will not replace the existing replay */
+	      /* i want just to be sure that levelid is the same */
+	      String v_levelIdInGhost = "";
+	      if(m_pGhostReplay != NULL) {
+		v_levelIdInGhost = m_pGhostReplay->getLevelId();
+	      }
+
+	      if(m_lastGhostReplay != v_PlayGhostReplay || 
+		 v_levelIdInGhost != pLevelSrc->getID()) {
+
+		if(m_pGhostReplay != NULL) delete m_pGhostReplay;
+		m_pGhostReplay = new Replay;
+		GhostLevelID = m_pGhostReplay->openReplay(v_PlayGhostReplay,&v_ghostReplayFrameRate,v_GhostReplayPlayerName);
+
+		if(GhostLevelID != "") {
+		  m_lastGhostReplay = v_PlayGhostReplay;
+		} else {
+		  /* bad replay */
+		}
+	      } else {
+		/* if last ghost loaded has the same filename, don't reload it */
+		GhostLevelID = pLevelSrc->getID();
+		m_pGhostReplay->reinitialize();
+	      }
+
 	      if(GhostLevelID != "") {
 		m_nGhostFrame = 0;
 		m_MotoGame.setGhostActive(true);
@@ -226,6 +250,8 @@ namespace vapp {
 		static SerializedBikeState GhostBikeState;
 		m_pGhostReplay->peekState((char *)&GhostBikeState);
 		m_MotoGame.UpdateGhostFromReplay(&GhostBikeState);
+	      } else {
+		/* bad replay */
 	      }
 	    }
 	  }

@@ -67,6 +67,9 @@ namespace vapp {
       void createReplay(const std::string &FileName,const std::string &LevelID,const std::string &Player,float fFrameRate,int nStateSize);
       void saveReplay(void);
       std::string openReplay(const std::string &FileName,float *pfFrameRate,std::string &Player);
+      void reinitialize();
+      std::string getLevelId();
+
       void finishReplay(bool bFinished,float fFinishTime);
       void fastforward(float fSeconds);
       void fastrewind(float fSeconds);
