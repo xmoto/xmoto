@@ -18,7 +18,6 @@
 * translations (priority=very low)
    
 Ghost finition :
-* do not reload the ghost if it is already the good loaded
 * make a vector for replays to load them faster
 
 Undecided:
