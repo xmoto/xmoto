@@ -497,9 +497,10 @@ namespace vapp {
 	if(sdl_modes[i]->w < 800 || sdl_modes[i]->h < 600)
 	  continue;
 
-	sprintf(tmp, "%d X %d",
+	snprintf(tmp, 126, "%d X %d",
 		sdl_modes[i]->w,
 		sdl_modes[i]->h);
+	tmp[127] = '\0';
 
 	/* Only single */
 	bool findDouble = false;
