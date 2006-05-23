@@ -145,6 +145,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_MENUGFX              "Menu Graphics:"
 #define GAMETEXT_MODIFYSELECTED       "Modify Selected..."
 #define GAMETEXT_MONO                 "Mono"
+#define GAMETEXT_MOTIONBLURGHOST      "Motion blur ghost"
 #define GAMETEXT_NAME                 "Name"
 #define GAMETEXT_NEWHIGHSCORE         "New highscore !"
 #define GAMETEXT_NEWHIGHSCOREPERSONAL "New personal highscore !"
@@ -308,5 +309,6 @@ Central place to keep many in-game text strings
 
 #define CONTEXTHELP_GHOST_MODE "Show the ghost if possible in the game"
 #define CONTEXTHELP_GHOST_STRATEGIES "Choose which ghost to display"
+#define CONTEXTHELP_MOTIONBLURGHOST "Make motion blur effect for the ghost (if your graphical card allows this)"
 
 #endif

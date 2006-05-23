@@ -628,10 +628,9 @@ namespace vapp {
     pEnableGhost->setID("ENABLE_GHOST");
     pEnableGhost->enableWindow(true);
     pEnableGhost->setFont(m_Renderer.getSmallFont());
-    pEnableGhost->setGroup(50023);
     pEnableGhost->setContextHelp(CONTEXTHELP_GHOST_MODE);
 
-    UIList *pGhostStrategiesList = new UIList(pGhostOptionsTab,5,43,"",pGhostOptionsTab->getPosition().nWidth-10,203);
+    UIList *pGhostStrategiesList = new UIList(pGhostOptionsTab,5,43,"",pGhostOptionsTab->getPosition().nWidth-10,153);
     pGhostStrategiesList->setID("GHOST_STRATEGIES_LIST");
     pGhostStrategiesList->setFont(m_Renderer.getSmallFont());
     pGhostStrategiesList->addColumn(GAMETEXT_GHOST_STRATEGIES_TYPE,pGhostStrategiesList->getPosition().nWidth);
@@ -643,6 +642,14 @@ namespace vapp {
 #endif
 
     pGhostStrategiesList->setContextHelp(CONTEXTHELP_GHOST_STRATEGIES);
+
+    UIButton *pMotionBlurGhost = new UIButton(pGhostOptionsTab,5,203,GAMETEXT_MOTIONBLURGHOST,(pGhostOptionsTab->getPosition().nWidth-40)/2,28);
+    pMotionBlurGhost->setType(UI_BUTTON_TYPE_CHECK);
+    pMotionBlurGhost->setID("MOTION_BLUR_GHOST");
+    pMotionBlurGhost->enableWindow(true);
+    pMotionBlurGhost->setFont(m_Renderer.getSmallFont());
+    pMotionBlurGhost->setContextHelp(CONTEXTHELP_MOTIONBLURGHOST);
+
 #endif
 
     m_pLevelPacksWindow = new UIFrame(m_pMainMenu,300,(getDispHeight()*140)/600,"",getDispWidth()-300-20,getDispHeight()-40-(getDispHeight()*120)/600-10);      
@@ -1949,11 +1956,14 @@ namespace vapp {
 #if defined(ALLOW_GHOST) 
     UIButton *pEnableGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:ENABLE_GHOST");
     UIList *pGhostStrategy = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGIES_LIST");
+    UIButton *pMotionBlurGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:MOTION_BLUR_GHOST");
 
     if(pEnableGhost->getChecked()) {
       pGhostStrategy->enableWindow(true);
+      pMotionBlurGhost->enableWindow(true);
     } else {
       pGhostStrategy->enableWindow(false);
+      pMotionBlurGhost->enableWindow(true);
     }
 #endif
 
@@ -2535,9 +2545,11 @@ namespace vapp {
 #if defined(ALLOW_GHOST) 
     UIButton *pEnableGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:ENABLE_GHOST");
     UIList *pGhostStrategy = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGIES_LIST");
+    UIButton *pMotionBlurGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:MOTION_BLUR_GHOST");
 
     pEnableGhost->setChecked(m_Config.getBool("EnableGhost"));
     int v_ghost_strategy = m_Config.getInteger("GhostSearchStrategy");
+    pMotionBlurGhost->setChecked(m_Config.getBool("GhostMotionBlur"));
 
     int nGSMode = -1;
     for(int i=0;i<pGhostStrategy->getEntries().size();i++) {
@@ -2750,7 +2762,10 @@ namespace vapp {
 #if defined(ALLOW_GHOST)
     UIButton *pEnableGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:ENABLE_GHOST");
     UIList *pGhostStrategy = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGIES_LIST");
+    UIButton *pMotionBlurGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:MOTION_BLUR_GHOST");
+
     m_Config.setBool("EnableGhost",pEnableGhost->getChecked());
+    m_Config.setBool("GhostMotionBlur",pMotionBlurGhost->getChecked());
 
     if(pGhostStrategy->getSelected() >= 0 && pGhostStrategy->getSelected() < pGhostStrategy->getEntries().size()) {
       UIListEntry *pEntry = pGhostStrategy->getEntries()[pGhostStrategy->getSelected()];
