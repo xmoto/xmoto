@@ -20,7 +20,6 @@
 Ghost finition :
 * do not reload the ghost if it is already the good loaded
 * make a vector for replays to load them faster
-* add an option for blur in interface
 
 Undecided:
 * add 3 2 1 GO ! at level startup (it neckelmann agree) 
