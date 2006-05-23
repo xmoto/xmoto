@@ -584,10 +584,10 @@ namespace vapp {
       FS::writeString(pfh,m_Info.Sky);
       FS::writeString(pfh,m_ScriptFile);
       
-      FS::writeFloat_LE(pfh,m_fLeftLimit);
-      FS::writeFloat_LE(pfh,m_fRightLimit);
-      FS::writeFloat_LE(pfh,m_fTopLimit);
-      FS::writeFloat_LE(pfh,m_fBottomLimit);
+      FS::writeFloat(pfh,m_fLeftLimit);
+      FS::writeFloat(pfh,m_fRightLimit);
+      FS::writeFloat(pfh,m_fTopLimit);
+      FS::writeFloat(pfh,m_fBottomLimit);
       
       /* Write script (if any) */
       FS::writeInt_LE(pfh,m_ScriptSource.length());
@@ -600,14 +600,14 @@ namespace vapp {
         FS::writeBool(pfh,m_Blocks[i]->bBackground);
         FS::writeBool(pfh,m_Blocks[i]->bWater);
         FS::writeString(pfh,m_Blocks[i]->Texture);
-        FS::writeFloat_LE(pfh,m_Blocks[i]->fPosX);
-        FS::writeFloat_LE(pfh,m_Blocks[i]->fPosY);
+        FS::writeFloat(pfh,m_Blocks[i]->fPosX);
+        FS::writeFloat(pfh,m_Blocks[i]->fPosY);
         
         FS::writeShort_LE(pfh,m_Blocks[i]->Vertices.size());
         
         for(int j=0;j<m_Blocks[i]->Vertices.size();j++) {
-          FS::writeFloat_LE(pfh,m_Blocks[i]->Vertices[j]->fX);
-          FS::writeFloat_LE(pfh,m_Blocks[i]->Vertices[j]->fY);
+          FS::writeFloat(pfh,m_Blocks[i]->Vertices[j]->fX);
+          FS::writeFloat(pfh,m_Blocks[i]->Vertices[j]->fY);
           FS::writeString(pfh,m_Blocks[i]->Vertices[j]->EdgeEffect);
         }        
       }
@@ -617,9 +617,9 @@ namespace vapp {
       for(int i=0;i<m_Entities.size();i++) {
 			  FS::writeString(pfh,m_Entities[i]->ID);
 			  FS::writeString(pfh,m_Entities[i]->TypeID);
-			  FS::writeFloat_LE(pfh,m_Entities[i]->fSize);
-        FS::writeFloat_LE(pfh,m_Entities[i]->fPosX);
-        FS::writeFloat_LE(pfh,m_Entities[i]->fPosY);
+			  FS::writeFloat(pfh,m_Entities[i]->fSize);
+        FS::writeFloat(pfh,m_Entities[i]->fPosX);
+        FS::writeFloat(pfh,m_Entities[i]->fPosY);
         FS::writeByte(pfh,m_Entities[i]->Params.size());       
         for(int j=0;j<m_Entities[i]->Params.size();j++) {
           FS::writeString(pfh,m_Entities[i]->Params[j]->Name);
@@ -637,10 +637,10 @@ namespace vapp {
           FS::writeInt_LE(pfh,(int)m_Zones[i]->Prims[j]->Type);
         
           if(m_Zones[i]->Prims[j]->Type == LZPT_BOX) {
-            FS::writeFloat_LE(pfh,m_Zones[i]->Prims[j]->fLeft);
-            FS::writeFloat_LE(pfh,m_Zones[i]->Prims[j]->fRight);
-            FS::writeFloat_LE(pfh,m_Zones[i]->Prims[j]->fTop);
-            FS::writeFloat_LE(pfh,m_Zones[i]->Prims[j]->fBottom);
+            FS::writeFloat(pfh,m_Zones[i]->Prims[j]->fLeft);
+            FS::writeFloat(pfh,m_Zones[i]->Prims[j]->fRight);
+            FS::writeFloat(pfh,m_Zones[i]->Prims[j]->fTop);
+            FS::writeFloat(pfh,m_Zones[i]->Prims[j]->fBottom);
           }
         }
       }
@@ -698,10 +698,10 @@ namespace vapp {
           //m_fTopLimit = FS::readFloat(pfh);
           //m_fBottomLimit = FS::readFloat(pfh);
 
-          m_fLeftLimit = FS::readFloat_LE(pfh);
-          m_fRightLimit = FS::readFloat_LE(pfh);
-          m_fTopLimit = FS::readFloat_LE(pfh);
-          m_fBottomLimit = FS::readFloat_LE(pfh);
+          m_fLeftLimit = FS::readFloat(pfh);
+          m_fRightLimit = FS::readFloat(pfh);
+          m_fTopLimit = FS::readFloat(pfh);
+          m_fBottomLimit = FS::readFloat(pfh);
 
           /* Read embedded script */
           int nScriptSourceLen = FS::readInt_LE(pfh);
@@ -726,15 +726,15 @@ namespace vapp {
             pBlock->bBackground = FS::readBool(pfh);
             pBlock->bWater = FS::readBool(pfh);
             pBlock->Texture = FS::readString(pfh);
-            pBlock->fPosX = FS::readFloat_LE(pfh);
-            pBlock->fPosY = FS::readFloat_LE(pfh);
+            pBlock->fPosX = FS::readFloat(pfh);
+            pBlock->fPosY = FS::readFloat(pfh);
             
             int nNumVertices = FS::readShort_LE(pfh);
             pBlock->Vertices.reserve(nNumVertices);
             for(int j=0;j<nNumVertices;j++) {
               LevelBlockVertex *pV = new LevelBlockVertex;
-              pV->fX = FS::readFloat_LE(pfh);
-              pV->fY = FS::readFloat_LE(pfh);
+              pV->fX = FS::readFloat(pfh);
+              pV->fY = FS::readFloat(pfh);
               pV->EdgeEffect = FS::readString(pfh);
                             
               pBlock->Vertices.push_back(pV);
@@ -750,9 +750,9 @@ namespace vapp {
             LevelEntity *pEnt = new LevelEntity;
             pEnt->ID = FS::readString(pfh);
             pEnt->TypeID = FS::readString(pfh);
-            pEnt->fSize = FS::readFloat_LE(pfh);
-            pEnt->fPosX = FS::readFloat_LE(pfh);
-            pEnt->fPosY = FS::readFloat_LE(pfh);
+            pEnt->fSize = FS::readFloat(pfh);
+            pEnt->fPosX = FS::readFloat(pfh);
+            pEnt->fPosY = FS::readFloat(pfh);
             
             int nNumParams = FS::readByte(pfh);
             pEnt->Params.reserve(nNumParams);
@@ -787,10 +787,10 @@ namespace vapp {
               pP->Type = (LevelZonePrimType)FS::readInt_LE(pfh);
               
               if(pP->Type == LZPT_BOX) {
-                pP->fLeft = FS::readFloat_LE(pfh);
-                pP->fRight = FS::readFloat_LE(pfh);
-                pP->fTop = FS::readFloat_LE(pfh);
-                pP->fBottom = FS::readFloat_LE(pfh);
+                pP->fLeft = FS::readFloat(pfh);
+                pP->fRight = FS::readFloat(pfh);
+                pP->fTop = FS::readFloat(pfh);
+                pP->fBottom = FS::readFloat(pfh);
               }
               else {
                 Log("** Warning ** : Invalid zone primitive encountered in: %s",FileName.c_str());

@@ -1,4 +1,4 @@
-X-Moto 0.1.14 (Alpha Release)
+X-Moto 0.1.15 (Alpha Release)
 Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 http://xmoto.sourceforge.net
@@ -26,12 +26,17 @@ System Requirements
 
 General hardware requirements:
 
- - CPU: x86 @ ~500 MHz (a wild guess)
+ - CPU: 500 MHz (a wild guess)
  - RAM: 128 MB (at least 40 MB of free memory prefered)
- - Graphics: GeForce-class card with 32 MB of video memory (or better)
- - HDD: 8 MB of free space on your hard drive.
+ - Graphics: nVidia GeForce-class card with 32 MB of video memory
+ - HDD: 10 MB of free space on your hard drive.
  - Software: Windows 2000/XP, Linux, Mac OS X or FreeBSD (other UNIX-like 
    OS's might be supported as well)
+
+Recommended:
+
+ - CPU: 1 GHz
+ - Graphics: nVidia GeForce FX/ATI RADEON 9600-class GPU
 
 Software dependencies for compiling on non-Windows platforms:
 

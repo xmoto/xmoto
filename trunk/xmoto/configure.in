@@ -2,7 +2,7 @@ AC_INIT(src/GameMain.cpp)
 
 dnl otherwise autoconf whines
 AC_CANONICAL_TARGET()
-AM_INIT_AUTOMAKE(xmoto,0.1.14)
+AM_INIT_AUTOMAKE(xmoto,0.1.15)
 
 AC_PROG_CC
 AC_PROG_CXX

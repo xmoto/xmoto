@@ -23,6 +23,9 @@ Sounds/Engine/10.wav
 Sounds/Engine/11.wav
 Sounds/Engine/12.wav
 
+Shaders/SFXOverlay.vert
+Shaders/SFXOverlay.frag
+
 Levels/Tutorial1.lvl
 Levels/Tutorial1.lvs
 Levels/Tutorial2.lvl

@@ -37,7 +37,8 @@ namespace vapp {
   /*===========================================================================
   Globals
   ===========================================================================*/
-  void Log(char *pcFmt,...);
+  void Log(const char *pcFmt,...);
+  void LogRaw(const char *pcMsg);
   
   /*===========================================================================
   Sub-application - something that runs in the context of a parent app
@@ -91,7 +92,7 @@ namespace vapp {
              m_bNoGraphics=false;                         
              m_bDontUseGLExtensions=false;
              m_nFrameDelay=0;
-              
+             m_bShadersSupported = false;
              m_bCmdDispWidth=false;
              m_bCmdDispHeight=false;
              m_bCmdDispBPP=false;
@@ -149,7 +150,7 @@ namespace vapp {
       bool isNoGraphics(void) {return m_bNoGraphics;}
       void setNoGraphics(bool b) {m_bNoGraphics = b;}
       std::string getVersionString(void) {
-        char cBuf[256]; sprintf(cBuf,"%d.%d.%d",BUILD_MAJORVERSION,BUILD_VERSION,BUILD_MINORVERSION);
+        char cBuf[256]; sprintf(cBuf,"%d.%d.%d" BUILD_EXTRAINFO,BUILD_MAJORVERSION,BUILD_VERSION,BUILD_MINORVERSION);
         return cBuf;        
       }
       
@@ -159,6 +160,7 @@ namespace vapp {
       bool isCmdDispWindowed(void) {return m_bCmdWindowed;}      
       bool useVBOs(void) {return m_bVBOSupported;}
       bool useFBOs(void) {return m_bFBOSupported;}
+      bool useShaders(void) {return m_bShadersSupported;}
       
       TextureManager TexMan;
 
@@ -186,7 +188,51 @@ namespace vapp {
       PFNGLFRAMEBUFFERRENDERBUFFEREXTPROC glFramebufferRenderbufferEXT;
       PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVEXTPROC glGetFramebufferAttachmentParameterivEXT;
       PFNGLGENERATEMIPMAPEXTPROC glGenerateMipmapEXT;         
-           
+      
+      /* Extensions (for shaders) */
+      PFNGLBINDATTRIBLOCATIONARBPROC glBindAttribLocationARB;
+      PFNGLGETACTIVEATTRIBARBPROC glGetActiveAttribARB;
+      PFNGLGETATTRIBLOCATIONARBPROC glGetAttribLocationARB;
+      PFNGLDELETEOBJECTARBPROC glDeleteObjectARB;
+      PFNGLGETHANDLEARBPROC glGetHandleARB;
+      PFNGLDETACHOBJECTARBPROC glDetachObjectARB;
+      PFNGLCREATESHADEROBJECTARBPROC glCreateShaderObjectARB;
+      PFNGLSHADERSOURCEARBPROC glShaderSourceARB;
+      PFNGLCOMPILESHADERARBPROC glCompileShaderARB;
+      PFNGLCREATEPROGRAMOBJECTARBPROC glCreateProgramObjectARB;
+      PFNGLATTACHOBJECTARBPROC glAttachObjectARB;
+      PFNGLLINKPROGRAMARBPROC glLinkProgramARB;
+      PFNGLUSEPROGRAMOBJECTARBPROC glUseProgramObjectARB;
+      PFNGLVALIDATEPROGRAMARBPROC glValidateProgramARB;
+      PFNGLUNIFORM1FARBPROC glUniform1fARB;
+      PFNGLUNIFORM2FARBPROC glUniform2fARB;
+      PFNGLUNIFORM3FARBPROC glUniform3fARB;
+      PFNGLUNIFORM4FARBPROC glUniform4fARB;
+      PFNGLUNIFORM1IARBPROC glUniform1iARB;
+      PFNGLUNIFORM2IARBPROC glUniform2iARB;
+      PFNGLUNIFORM3IARBPROC glUniform3iARB;
+      PFNGLUNIFORM4IARBPROC glUniform4iARB;
+      PFNGLUNIFORM1FVARBPROC glUniform1fvARB;
+      PFNGLUNIFORM2FVARBPROC glUniform2fvARB;
+      PFNGLUNIFORM3FVARBPROC glUniform3fvARB;
+      PFNGLUNIFORM4FVARBPROC glUniform4fvARB;
+      PFNGLUNIFORM1IVARBPROC glUniform1ivARB;
+      PFNGLUNIFORM2IVARBPROC glUniform2ivARB;
+      PFNGLUNIFORM3IVARBPROC glUniform3ivARB;
+      PFNGLUNIFORM4IVARBPROC glUniform4ivARB;
+      PFNGLUNIFORMMATRIX2FVARBPROC glUniformMatrix2fvARB;
+      PFNGLUNIFORMMATRIX3FVARBPROC glUniformMatrix3fvARB;
+      PFNGLUNIFORMMATRIX4FVARBPROC glUniformMatrix4fvARB;
+      PFNGLGETOBJECTPARAMETERFVARBPROC glGetObjectParameterfvARB;
+      PFNGLGETOBJECTPARAMETERIVARBPROC glGetObjectParameterivARB;
+      PFNGLGETINFOLOGARBPROC glGetInfoLogARB;
+      PFNGLGETATTACHEDOBJECTSARBPROC glGetAttachedObjectsARB;
+      PFNGLGETUNIFORMLOCATIONARBPROC glGetUniformLocationARB;
+      PFNGLGETACTIVEUNIFORMARBPROC glGetActiveUniformARB;
+      PFNGLGETUNIFORMFVARBPROC glGetUniformfvARB;
+      PFNGLGETUNIFORMIVARBPROC glGetUniformivARB;
+      PFNGLGETSHADERSOURCEARBPROC glGetShaderSourceARB;    
+      
     protected:
 
       /* Virtual protected methods */
@@ -221,6 +267,7 @@ namespace vapp {
       
       bool m_bVBOSupported;
       bool m_bFBOSupported;
+      bool m_bShadersSupported;
       bool m_bDontUseGLExtensions;
       
       int m_nLScissorX,m_nLScissorY,m_nLScissorW,m_nLScissorH;

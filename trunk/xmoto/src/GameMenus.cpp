@@ -426,7 +426,6 @@ namespace vapp {
     
     delete modes;
 
-
     pDispResList->setContextHelp(CONTEXTHELP_RESOLUTION);
 
     UIButton *pRunWindowed = new UIButton(pVideoOptionsTab,5,180,GAMETEXT_RUNWINDOWED,(pVideoOptionsTab->getPosition().nWidth-40)/1,28);

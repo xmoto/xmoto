@@ -174,6 +174,7 @@ namespace vapp {
       void beginRendering(void);
       GLuint endRendering(void);
       void fade(float f);
+      void present(void);
     
     private:
       /* Some OpenGL handles */
@@ -181,6 +182,17 @@ namespace vapp {
       GLuint m_FrameBufferID;      
       int m_nOverlayWidth,m_nOverlayHeight;
       App *m_pApp;
+      
+      /* For shaders */
+      bool m_bUseShaders;
+      GLhandleARB m_VertShaderID;
+      GLhandleARB m_FragShaderID;
+      GLhandleARB m_ProgramID;
+      
+      /* Helpers */
+      char **_LoadShaderSource(const std::string &File,int *pnNumLines);
+      void _FreeShaderSource(char **ppc,int nNumLines);
+      bool _SetShaderSource(GLhandleARB ShaderID,const std::string &File);
   };
 
 	/*===========================================================================

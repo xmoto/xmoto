@@ -1,6 +1,8 @@
-X-Moto 0.1.16 (alpha) 2006-0?-??
+X-Moto 0.1.16 (alpha) 2006-
 --------------------------------
- * Ghost mode
+ * Ghost replays while playing.
+ * Game should work with AMD64 again now. The long standing corrupted 
+   fonts in editor-bug on AMD64 has also been fixed.
  * Automatic list of screen resolution
 	
 X-Moto 0.1.14 (alpha) 2006-05-19

@@ -40,23 +40,27 @@ namespace vapp {
   bool g_bQuietLog = false;
   bool g_bVerbose = false;
   
-  void Log(char *pcFmt,...) {
+  void LogRaw(const char *pcMsg) {
+    if(!g_bQuietLog) {
+      #if defined(_MSC_VER) && defined(_DEBUG)
+        printf("%s\n",pcMsg); /* I like my stdout when debugging :P */
+      #else
+        if(g_bVerbose) 
+          printf("%s\n",pcMsg); /* also write to stdout */
+      #endif
+
+      FS::writeLog(pcMsg);
+    }
+  }
+  
+  void Log(const char *pcFmt,...) {
     va_list List;
     char cBuf[1024];
     va_start(List,pcFmt);
     vsprintf(cBuf,pcFmt,List);
     va_end(List);
     
-    if(!g_bQuietLog) {
-      #if defined(_MSC_VER) && defined(_DEBUG)
-        printf("%s\n",cBuf); /* I like my stdout when debugging :P */
-      #else
-        if(g_bVerbose) 
-          printf("%s\n",cBuf); /* also write to stdout */
-      #endif
-
-      FS::writeLog(cBuf);
-    }
+    LogRaw(cBuf);    
   }
 
   /*===========================================================================
@@ -391,10 +395,15 @@ namespace vapp {
 	  if(m_bDontUseGLExtensions) {
 	    m_bVBOSupported = false;
 	    m_bFBOSupported = false;
+	    m_bShadersSupported = false;
 	  }
 	  else {
 	    m_bVBOSupported = isExtensionSupported("GL_ARB_vertex_buffer_object");
 	    m_bFBOSupported = isExtensionSupported("GL_EXT_framebuffer_object");
+	    
+	    m_bShadersSupported = isExtensionSupported("GL_ARB_fragment_shader") &&
+	                          isExtensionSupported("GL_ARB_vertex_shader") &&
+	                          isExtensionSupported("GL_ARB_shader_objects");
 	  }
 	  
 	  if(m_bVBOSupported) {
@@ -434,6 +443,55 @@ namespace vapp {
 	  }
 	  else
 	    Log("GL: not using EXT_framebuffer_object");
+	    
+	  if(m_bShadersSupported) {
+      glBindAttribLocationARB = (PFNGLBINDATTRIBLOCATIONARBPROC)SDL_GL_GetProcAddress("glBindAttribLocationARB");
+      glGetActiveAttribARB = (PFNGLGETACTIVEATTRIBARBPROC)SDL_GL_GetProcAddress("glGetActiveAttribARB");
+      glGetAttribLocationARB = (PFNGLGETATTRIBLOCATIONARBPROC)SDL_GL_GetProcAddress("glGetAttribLocationARB");
+      glDeleteObjectARB = (PFNGLDELETEOBJECTARBPROC)SDL_GL_GetProcAddress("glDeleteObjectARB");
+      glGetHandleARB = (PFNGLGETHANDLEARBPROC)SDL_GL_GetProcAddress("glGetHandleARB");
+      glDetachObjectARB = (PFNGLDETACHOBJECTARBPROC)SDL_GL_GetProcAddress("glDetachObjectARB");
+      glCreateShaderObjectARB = (PFNGLCREATESHADEROBJECTARBPROC)SDL_GL_GetProcAddress("glCreateShaderObjectARB");
+      glShaderSourceARB = (PFNGLSHADERSOURCEARBPROC)SDL_GL_GetProcAddress("glShaderSourceARB");
+      glCompileShaderARB = (PFNGLCOMPILESHADERARBPROC)SDL_GL_GetProcAddress("glCompileShaderARB");
+      glCreateProgramObjectARB = (PFNGLCREATEPROGRAMOBJECTARBPROC)SDL_GL_GetProcAddress("glCreateProgramObjectARB");
+      glAttachObjectARB = (PFNGLATTACHOBJECTARBPROC)SDL_GL_GetProcAddress("glAttachObjectARB");
+      glLinkProgramARB = (PFNGLLINKPROGRAMARBPROC)SDL_GL_GetProcAddress("glLinkProgramARB");
+      glUseProgramObjectARB = (PFNGLUSEPROGRAMOBJECTARBPROC)SDL_GL_GetProcAddress("glUseProgramObjectARB");
+      glValidateProgramARB = (PFNGLVALIDATEPROGRAMARBPROC)SDL_GL_GetProcAddress("glValidateProgramARB");
+      glUniform1fARB = (PFNGLUNIFORM1FARBPROC)SDL_GL_GetProcAddress("glUniform1fARB");
+      glUniform2fARB = (PFNGLUNIFORM2FARBPROC)SDL_GL_GetProcAddress("glUniform2fARB");
+      glUniform3fARB = (PFNGLUNIFORM3FARBPROC)SDL_GL_GetProcAddress("glUniform3fARB");
+      glUniform4fARB = (PFNGLUNIFORM4FARBPROC)SDL_GL_GetProcAddress("glUniform4fARB");
+      glUniform1iARB = (PFNGLUNIFORM1IARBPROC)SDL_GL_GetProcAddress("glUniform1iARB");
+      glUniform2iARB = (PFNGLUNIFORM2IARBPROC)SDL_GL_GetProcAddress("glUniform2iARB");
+      glUniform3iARB = (PFNGLUNIFORM3IARBPROC)SDL_GL_GetProcAddress("glUniform3iARB");
+      glUniform4iARB = (PFNGLUNIFORM4IARBPROC)SDL_GL_GetProcAddress("glUniform4iARB");
+      glUniform1fvARB = (PFNGLUNIFORM1FVARBPROC)SDL_GL_GetProcAddress("glUniform1fvARB");
+      glUniform2fvARB = (PFNGLUNIFORM2FVARBPROC)SDL_GL_GetProcAddress("glUniform2fvARB");
+      glUniform3fvARB = (PFNGLUNIFORM3FVARBPROC)SDL_GL_GetProcAddress("glUniform3fvARB");
+      glUniform4fvARB = (PFNGLUNIFORM4FVARBPROC)SDL_GL_GetProcAddress("glUniform4fvARB");
+      glUniform1ivARB = (PFNGLUNIFORM1IVARBPROC)SDL_GL_GetProcAddress("glUniform1ivARB");
+      glUniform2ivARB = (PFNGLUNIFORM2IVARBPROC)SDL_GL_GetProcAddress("glUniform2ivARB");
+      glUniform3ivARB = (PFNGLUNIFORM3IVARBPROC)SDL_GL_GetProcAddress("glUniform3ivARB");
+      glUniform4ivARB = (PFNGLUNIFORM4IVARBPROC)SDL_GL_GetProcAddress("glUniform4ivARB");
+      glUniformMatrix2fvARB = (PFNGLUNIFORMMATRIX2FVARBPROC)SDL_GL_GetProcAddress("glUniformMatrix2fvARB");
+      glUniformMatrix3fvARB = (PFNGLUNIFORMMATRIX3FVARBPROC)SDL_GL_GetProcAddress("glUniformMatrix3fvARB");
+      glUniformMatrix4fvARB = (PFNGLUNIFORMMATRIX4FVARBPROC)SDL_GL_GetProcAddress("glUniformMatrix4fvARB");
+      glGetObjectParameterfvARB = (PFNGLGETOBJECTPARAMETERFVARBPROC)SDL_GL_GetProcAddress("glGetObjectParameterfvARB");
+      glGetObjectParameterivARB = (PFNGLGETOBJECTPARAMETERIVARBPROC)SDL_GL_GetProcAddress("glGetObjectParameterivARB");
+      glGetInfoLogARB = (PFNGLGETINFOLOGARBPROC)SDL_GL_GetProcAddress("glGetInfoLogARB");
+      glGetAttachedObjectsARB = (PFNGLGETATTACHEDOBJECTSARBPROC)SDL_GL_GetProcAddress("glGetAttachedObjectsARB");
+      glGetUniformLocationARB = (PFNGLGETUNIFORMLOCATIONARBPROC)SDL_GL_GetProcAddress("glGetUniformLocationARB");
+      glGetActiveUniformARB = (PFNGLGETACTIVEUNIFORMARBPROC)SDL_GL_GetProcAddress("glGetActiveUniformARB");
+      glGetUniformfvARB = (PFNGLGETUNIFORMFVARBPROC)SDL_GL_GetProcAddress("glGetUniformfvARB");
+      glGetUniformivARB = (PFNGLGETUNIFORMIVARBPROC)SDL_GL_GetProcAddress("glGetUniformivARB");
+      glGetShaderSourceARB = (PFNGLGETSHADERSOURCEARBPROC)SDL_GL_GetProcAddress("glGetShaderSourceARB");    
+	  	  
+	    Log("GL: using ARB_fragment_shader/ARB_vertex_shader/ARB_shader_objects");
+	  }
+	  else
+	    Log("GL: not using ARB_fragment_shader/ARB_vertex_shader/ARB_shader_objects");
 	  
 	  /* Set background color to black */
 	  glClearColor(0.0f,0.0f,0.0f,0.0f);
@@ -474,14 +532,14 @@ namespace vapp {
 
     /* Check is there are any modes available */
     if(sdl_modes == (SDL_Rect **)0){
-      Log("** Warning ** : No modes available.");
+      Log("** Warning ** : No display modes available.");
       throw Exception("getDisplayModes : No modes available.");
     }
 
     /* Check if or resolution is restricted */
     if(sdl_modes == (SDL_Rect **)-1){
       /* Should never happen */
-      Log("All resolutions available.");
+      //Log("All resolutions available.");
       modes->push_back("800 X 600");
       modes->push_back("1024 X 768");
       modes->push_back("1280 X 1024");
@@ -504,7 +562,7 @@ namespace vapp {
 
 	/* Only single */
 	bool findDouble = false;
-	Log("size: %d", modes->size());
+	//Log("size: %d", modes->size());
 	for(int j=0; j<modes->size(); j++)
 	  if(!strcmp(tmp, (*modes)[j].c_str())){
 	    findDouble = true;
@@ -513,7 +571,7 @@ namespace vapp {
 
 	if(!findDouble){
 	  modes->push_back(tmp);
-	  Log("  %s", tmp);
+	  //Log("  %s", tmp);
 	}
       }
     }

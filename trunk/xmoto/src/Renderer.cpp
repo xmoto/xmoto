@@ -246,7 +246,6 @@ namespace vapp {
   Main rendering function
   ===========================================================================*/
   void GameRenderer::render(void) {
- 
     /* Update time */    
     m_pInGameStats->showWindow(true);
     m_pPlayTime->setCaption(getParent()->formatTime(getGameObject()->getTime()));
@@ -331,37 +330,7 @@ namespace vapp {
       
       if(m_bGhostMotionBlur && getParent()->useFBOs()) {
         GLuint nOverlayTextureID = m_Overlay.endRendering();
-        
-        glMatrixMode(GL_PROJECTION);
-        glPushMatrix();
-        glLoadIdentity();
-        glOrtho(0,getParent()->getDispWidth(),0,getParent()->getDispHeight(),-1,1);
-        glMatrixMode(GL_MODELVIEW);
-        glPushMatrix();
-        glLoadIdentity();
-
-        glEnable(GL_BLEND);
-        glEnable(GL_TEXTURE_2D);
-        glBlendFunc(GL_ONE,GL_ONE);
-        glBindTexture(GL_TEXTURE_2D,nOverlayTextureID);
-        glBegin(GL_POLYGON);
-        glColor3f(1,1,1);
-        glTexCoord2f(0,0);
-        glVertex2f(0,0);
-        glTexCoord2f(1,0);
-        glVertex2f(getParent()->getDispWidth(),0);
-        glTexCoord2f(1,1);
-        glVertex2f(getParent()->getDispWidth(),getParent()->getDispHeight());
-        glTexCoord2f(0,1);
-        glVertex2f(0,getParent()->getDispHeight());
-        glEnd();
-        glDisable(GL_TEXTURE_2D);
-        glDisable(GL_BLEND);
-
-        glPopMatrix();
-        glMatrixMode(GL_PROJECTION);
-        glPopMatrix();
-        glMatrixMode(GL_MODELVIEW);
+        m_Overlay.present();
       }
     }
 #endif
