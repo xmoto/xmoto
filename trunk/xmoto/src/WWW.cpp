@@ -130,6 +130,10 @@ void WebHighscore::download() {
   FSWeb::downloadFile(m_rplFilename, m_rplUrl, NULL, NULL, m_proxy_settings);
 }
 
+std::string WebHighscore::getReplayName() {
+  return vapp::FS::getFileBaseName(m_rplFilename);
+}
+
 std::string WebHighscore::getPlayerName() const {
   return m_playerName;
 }

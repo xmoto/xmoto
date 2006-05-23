@@ -637,6 +637,11 @@ namespace vapp {
     pGhostStrategiesList->addColumn(GAMETEXT_GHOST_STRATEGIES_TYPE,pGhostStrategiesList->getPosition().nWidth);
     pGhostStrategiesList->addEntry(GAMETEXT_GHOST_STRATEGY_MYBEST, GhostSearchStrategies + 0);
     pGhostStrategiesList->addEntry(GAMETEXT_GHOST_STRATEGY_THEBEST, GhostSearchStrategies + 1);
+
+#if defined(SUPPORT_WEBACCESS)
+    pGhostStrategiesList->addEntry(GAMETEXT_GHOST_STRATEGY_BESTOFROOM, GhostSearchStrategies + 2);
+#endif
+
     pGhostStrategiesList->setContextHelp(CONTEXTHELP_GHOST_STRATEGIES);
 #endif
 

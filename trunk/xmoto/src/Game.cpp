@@ -2297,13 +2297,8 @@ namespace vapp {
     std::string res;
     std::vector<ReplayInfo *> Replays = Replay::createReplayList("", p_levelId);
     float v_fFinishTime;
-    
-    if(Replays.size() == 0) {
-      Replay::freeReplayList(Replays);
-      return "";
-    }
-
     res = "";
+
     v_fFinishTime = -1.0;
     switch(p_strategy) {
       case GHOST_STRATEGY_MYBEST:
@@ -2331,8 +2326,45 @@ namespace vapp {
 	  }
       }
       break;
+
+#if defined(SUPPORT_WEBACCESS)    
+    case GHOST_STRATEGY_BESTOFROOM:
+      if(m_pWebHighscores != NULL) {
+       	WebHighscore* v_hs;
+       	v_hs = m_pWebHighscores->getHighscoreFromLevel(p_levelId);
+       	if(v_hs != NULL) {
+       	  String v_replay_name = v_hs->getReplayName();
+	  int i=0;
+
+	  /* search if the replay is already downloaded */
+	  bool found = false;
+	  while(i < Replays.size() && found == false) {
+	    if(Replays[i]->Name == v_replay_name) {
+	      found = true;
+	    }
+	    i++;
+	  }
+	  if(found) {
+	    res = std::string("Replays/") + v_replay_name + std::string(".rpl");
+	  } else {
+	    if(m_bEnableWebHighscores) {
+	      /* download the replay */
+	      try {
+		_SimpleMessage(GAMETEXT_DLGHOST,&m_pDownloadGhostMsgBoxRect);
+		v_hs->download();
+		res = std::string("Replays/") + v_replay_name + std::string(".rpl");
+	      } catch(Exception &e) {
+		/* do nothing */
+	      }
+	    }
+	  }
+       	}
+      }
+      break;
+#endif      
+
     }
-    
+
     Replay::freeReplayList(Replays);
     return res;
   }

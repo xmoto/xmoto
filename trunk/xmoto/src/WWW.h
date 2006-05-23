@@ -107,6 +107,8 @@ class WebHighscore {
 	       const ProxySettings *p_proxy_settings);
   ~WebHighscore();
   void download(); /* throws exceptions */
+  /* return the path to the replay, even if it's not downloaded */
+  std::string getReplayName();
 
   std::string getPlayerName() const;
   std::string getTime() const;

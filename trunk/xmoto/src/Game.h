@@ -69,7 +69,8 @@ namespace vapp {
 #if defined(ALLOW_GHOST) 
   enum GhostSearchStrategy {
     GHOST_STRATEGY_MYBEST,
-    GHOST_STRATEGY_THEBEST
+    GHOST_STRATEGY_THEBEST,
+    GHOST_STRATEGY_BESTOFROOM
   };
 #endif
 
@@ -124,6 +125,7 @@ namespace vapp {
 		 m_pGhostReplay = NULL;
 		 GhostSearchStrategies[0] = GHOST_STRATEGY_MYBEST;
 		 GhostSearchStrategies[1] = GHOST_STRATEGY_THEBEST;
+		 GhostSearchStrategies[2] = GHOST_STRATEGY_BESTOFROOM;
 #endif
                  m_bRecordReplays = true;
                  m_bShowCursor = true;
@@ -224,7 +226,7 @@ namespace vapp {
 #if defined(ALLOW_GHOST) 
       Replay *m_pGhostReplay;
       int m_nGhostFrame;
-      enum GhostSearchStrategy GhostSearchStrategies[2];
+      enum GhostSearchStrategy GhostSearchStrategies[3];
 #endif
       std::string m_ReplayPlayerName;
       
@@ -249,6 +251,7 @@ namespace vapp {
       UIMsgBox *m_pDownloadLevelsMsgBox;
       
       UIRect m_DownloadLevelsMsgBoxRect;
+      UIRect m_pDownloadGhostMsgBoxRect;
             
       /* Main menu background / title */
       Texture *m_pTitleBL,*m_pTitleBR,*m_pTitleTL,*m_pTitleTR;
