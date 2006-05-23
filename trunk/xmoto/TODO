@@ -16,7 +16,6 @@
 * add import of players.bin (so that people playing at different
    location can merge their highscores) (priority=very low)
 * translations (priority=very low)
-* correct Resolution for 16bpp and 32bpp
 
 Ghost finition :
 * do not reload the ghost if it is already the good loaded
