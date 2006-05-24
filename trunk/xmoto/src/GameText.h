@@ -94,9 +94,9 @@ Central place to keep many in-game text strings
 #define GAMETEXT_GENERAL              "General"
 #define GAMETEXT_GENERALINFO          "General Info"
 #define GAMETEXT_GHOST_STRATEGIES_TYPE  "Type"
-#define GAMETEXT_GHOST_STRATEGY_BESTOFROOM "Ghost is the highscore of the room"
-#define GAMETEXT_GHOST_STRATEGY_MYBEST  "Ghost is the best of my replays"
-#define GAMETEXT_GHOST_STRATEGY_THEBEST "Ghost is the best of the replays"
+#define GAMETEXT_GHOST_STRATEGY_BESTOFROOM "The highscore of the room"
+#define GAMETEXT_GHOST_STRATEGY_MYBEST  "The best of my replays (on this computer)"
+#define GAMETEXT_GHOST_STRATEGY_THEBEST "The best of the replays (on this computer)"
 #define GAMETEXT_GHOSTTAB             "Ghost"
 #define GAMETEXT_HELP                 "Help"
 
