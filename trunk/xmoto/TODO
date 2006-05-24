@@ -18,6 +18,8 @@
    location can merge their highscores) (priority=very low)
 * translations (priority=very low)
 
+* there is no error when dowloading highscores fails ;-(
+
 Ghost finition :
 * make a vector for replays to load them faster
 
