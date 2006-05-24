@@ -141,7 +141,8 @@ namespace vapp {
                   m_pWebLevels = NULL;
                   m_fDownloadTaskProgressLast = 0;
                   m_bWebHighscoresUpdatedThisSession = false;
-                 #endif
+		  m_bWebLevelsToDownload = false;
+                #endif
                  }
                  
       #if defined(SUPPORT_WEBACCESS)                 
@@ -184,6 +185,7 @@ namespace vapp {
       std::vector<LevelPack *> m_LevelPacks;    /* Level packs */
       
       bool m_bWebHighscoresUpdatedThisSession;  /* true: Updated this session */
+      bool m_bWebLevelsToDownload;              /* true: there are new levels to download */
       bool m_bEnableContextHelp;                /* true: Show context help */
       bool m_bShowWebHighscoreInGame;           /* true: Show world highscore inside the game */
       bool m_bEnableWebHighscores;              /* true: Read world highscores from website */
@@ -373,6 +375,7 @@ namespace vapp {
       
       void _CheckForExtraLevels(void);
       void _UpdateWebHighscores(bool bSilent);
+      void _UpdateWebLevels(bool bSilent);
       void _UpgradeWebHighscores();
       void _DownloadExtraLevels(void);
       

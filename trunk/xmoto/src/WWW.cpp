@@ -557,6 +557,13 @@ std::string WebLevels::getDestinationFile(std::string p_url) {
 }
 
 void WebLevels::update() {
+  /* delete levels information */
+  std::vector<WebLevel*>::iterator it; 
+  for(it = m_webLevels.begin(); it != m_webLevels.end(); it++) {
+    delete *it;
+  }
+  m_webLevels.clear();
+
   downloadXml();
   extractLevelsToDownloadFromXml();
 }

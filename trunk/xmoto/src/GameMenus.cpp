@@ -170,6 +170,12 @@ namespace vapp {
     pPlayerText->setID("PLAYERTAG");
     if(m_pPlayer != NULL) pPlayerText->setCaption(std::string(GAMETEXT_CURPLAYER) + m_pPlayer->PlayerName);
     
+    /* new levels ? */
+    UIStatic *pNewLevelText = new UIStatic(m_pMainMenu,5,0,"",200,30);
+    pNewLevelText->setFont(m_Renderer.getSmallFont());            
+    pNewLevelText->setHAlign(UI_ALIGN_LEFT);
+    pNewLevelText->setID("NEWLEVELAVAILBLE");
+    
 //    UIButton *pChangePlayerButton = new UIButton(m_pMainMenu,getDispWidth()-115,80,GAMETEXT_CHANGE,115,57);
     UIButton *pChangePlayerButton = new UIButton(m_pMainMenu,getDispWidth()-115,(getDispHeight()*80)/600,GAMETEXT_CHANGE,115,57);
     pChangePlayerButton->setType(UI_BUTTON_TYPE_SMALL);
@@ -1911,7 +1917,14 @@ namespace vapp {
       m_State = GS_EDIT_PROFILES;
       return;
     }
-    
+
+    UIStatic *pNewLevelText = (UIStatic *)m_pMainMenu->getChild("NEWLEVELAVAILBLE");
+    if(m_bWebLevelsToDownload) {
+      pNewLevelText->setCaption(GAMETEXT_NEWLEVELS_AVAIBLE);
+    } else {
+      pNewLevelText->setCaption("");
+    }
+
     /* LEVEL PACKS */
     UIButton *pOpenButton = (UIButton *)m_pLevelPacksWindow->getChild("LEVELPACK_OPEN_BUTTON");
     UIList *pLevelPackList = (UIList *)m_pLevelPacksWindow->getChild("LEVELPACK_LIST");

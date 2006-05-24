@@ -622,11 +622,22 @@ namespace vapp {
       m_pWebHighscores = new WebRoom(&m_ProxySettings);      
       m_pWebHighscores->setWebsiteURL(m_Config.getString("WebHighscoresURL"));
       
-      if(m_bEnableWebHighscores) {            
+      if(m_bEnableWebHighscores) {  
+	bool bSilent = true;
+          
+	try {
         _UpdateLoadingScreen((1.0f/9.0f) * 6,pLoadingScreen,GAMETEXT_DLHIGHSCORES);      
-        
-        _UpdateWebHighscores(true);        
+        _UpdateWebHighscores(bSilent);
+        _UpdateLoadingScreen((1.0f/9.0f) * 6,pLoadingScreen,GAMETEXT_DLLEVELSCHECK);      
+        _UpdateWebLevels(bSilent);       
+	} catch(Exception &e) {
+	  /* No internet connection, probably... (just use the latest times, if any) */
+	  Log("** Warning ** : Failed to update web-highscores [%s]",e.getMsg().c_str());              
+	  if(!bSilent)
+	    notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES);
+	}
       }
+
       _UpgradeWebHighscores();
     #endif
         
@@ -1953,22 +1964,32 @@ namespace vapp {
   
   void GameApp::_UpdateWebHighscores(bool bSilent) {
     #if defined(SUPPORT_WEBACCESS)    
-      if(!bSilent)
-        _SimpleMessage(GAMETEXT_DLHIGHSCORES,&m_DownloadLevelsMsgBoxRect);
+    //if(!bSilent)
+    //  _SimpleMessage(GAMETEXT_DLHIGHSCORES,&m_DownloadLevelsMsgBoxRect);
 
       m_bWebHighscoresUpdatedThisSession = true;
 
       /* Try downloading the highscores */
-      try {
-        m_pWebHighscores->update();
+      m_pWebHighscores->update();
+    #endif
+  }
+
+  void GameApp::_UpdateWebLevels(bool bSilent) {
+    #if defined(SUPPORT_WEBACCESS)    
+    //if(!bSilent)
+    //  _SimpleMessage(GAMETEXT_DLLEVELSCHECK,&m_DownloadLevelsMsgBoxRect);
+
+      /* Try download levels list */
+      if(m_pWebLevels == NULL) {
+	m_pWebLevels = new WebLevels(this,&m_ProxySettings);
       }
-      catch(Exception &e) {
-        /* No internet connection, probably... (just use the latest times, if any) */
-        Log("** Warning ** : Failed to update web-highscores [%s]",e.getMsg().c_str());        
-        
-        if(!bSilent)
-          notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES);
-      }      
+      m_pWebLevels->setURL(m_Config.getString("WebLevelsURL"));
+      Log("WWW: Checking for new or updated levels...");
+      m_pWebLevels->update();
+
+      int nULevels=0,nUBytes=0;
+      m_pWebLevels->getUpdateInfo(&nUBytes,&nULevels);
+      m_bWebLevelsToDownload = nULevels!=0;
     #endif
   }
   
@@ -1998,7 +2019,8 @@ namespace vapp {
         try {                  
           Log("WWW: Downloading levels...");
           clearCancelAsSoonAsPossible();
-          m_pWebLevels->upgrade();          
+          m_pWebLevels->upgrade();
+	  m_bWebLevelsToDownload = false;          
         } 
         catch(Exception &e) {
           Log("** Warning ** : Unable to download extra levels [%s]",e.getMsg().c_str());
@@ -2087,8 +2109,9 @@ namespace vapp {
       try {
         _SimpleMessage(GAMETEXT_CHECKINGFORLEVELS);
       
-        if(m_pWebLevels != NULL) delete m_pWebLevels;
-        m_pWebLevels = new WebLevels(this,&m_ProxySettings);
+        if(m_pWebLevels == NULL) {
+	  m_pWebLevels = new WebLevels(this,&m_ProxySettings);
+	}
         m_pWebLevels->setURL(m_Config.getString("WebLevelsURL"));
         
         Log("WWW: Checking for new or updated levels...");
@@ -2096,6 +2119,8 @@ namespace vapp {
         m_pWebLevels->update();     
         int nULevels=0,nUBytes=0;
         m_pWebLevels->getUpdateInfo(&nUBytes,&nULevels);
+	m_bWebLevelsToDownload = nULevels!=0;
+
         Log("WWW: %d new or updated level%s found",nULevels,nULevels==1?"":"s");
 
         if(nULevels == 0) {
