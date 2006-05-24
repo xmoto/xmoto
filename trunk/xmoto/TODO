@@ -9,8 +9,6 @@
    website and play it (priority=high)
   add informatin about highscore when a level is selected (name of the
    driver, <see button>, ...)  
-* what about check for new levels at startup and propose to download
-   new levels ? (with a small non-intrusive message) (priority=high)
 * add a counter of uncompleted levels (priority=medium)
 * theme (for sprites) (priority=medium)
 * add a tab : favorite levels (priority=low)
