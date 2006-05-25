@@ -188,7 +188,11 @@ namespace vapp {
           if(m_pReplay != NULL) delete m_pReplay;
           m_pReplay = NULL;
           
+#if defined (ALLOW_SCRIPT_REPLAYING) 
+          if(m_bRecordReplays) {
+#else
           if(m_bRecordReplays && !pLevelSrc->isScripted()) {
+#endif
             m_pReplay = new Replay;
             m_pReplay->createReplay("Latest.rpl",pLevelSrc->getID(),m_pPlayer->PlayerName,m_fReplayFrameRate,sizeof(SerializedBikeState));
           }
@@ -213,6 +217,7 @@ namespace vapp {
 	  if(m_Config.getBool("EnableGhost")) {
 	    std::string v_PlayGhostReplay;
 	    v_PlayGhostReplay = _getGhostReplayPath(pLevelSrc->getID(), (enum GhostSearchStrategy) m_Config.getInteger("GhostSearchStrategy"));
+
 	    if(v_PlayGhostReplay != "") {
 	      std::string v_GhostReplayPlayerName;
 	      float v_ghostReplayFrameRate;

@@ -1045,7 +1045,8 @@ namespace vapp {
     if(pList != NULL && pLV_BestTimes_All != NULL && pLV_BestTimes_Personal != NULL && m_pPlayer != NULL &&
        pLV_Replays_Show != NULL) {
       std::vector<ReplayInfo *> Replays;
-      
+
+#if !defined (ALLOW_SCRIPT_REPLAYING)      
       /* If level is scripted, keep list empty */
       LevelSrc *pLevelSrc = _FindLevelByID(LevelID);
       if(pLevelSrc != NULL && pLevelSrc->isScripted()) {
@@ -1057,7 +1058,9 @@ namespace vapp {
         pLV_Replays_Show->enableWindow(false);
         pList->enableWindow(false);
       }
-      else {       
+      else 
+#endif
+	{       
         /* Personal or all replays? */
         if(pLV_Replays_All->getChecked()) {
           Replays = Replay::createReplayList("",LevelID);

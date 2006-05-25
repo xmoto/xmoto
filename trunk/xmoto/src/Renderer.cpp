@@ -240,6 +240,9 @@ namespace vapp {
 
   void GameRenderer::zoom(float p_f) {
     m_fScale += p_f;
+    if(m_fScale < 0) {
+      m_fScale = 0;
+    }
   }
 
   /*===========================================================================
