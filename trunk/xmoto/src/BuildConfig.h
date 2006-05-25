@@ -51,7 +51,7 @@ Build configuration
 #define HIDE_JOYSTICK_SUPPORT
 
 /* ENABLE_ZOOMING - Allow user to zoom in and out while playing */
-#define ENABLE_ZOOMING
+//#define ENABLE_ZOOMING
 
 #define ALLOW_GHOST
 
