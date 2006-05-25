@@ -1,3 +1,6 @@
+* BUG : if www is not activated at startup, go in option, check www,
+   then click on proxy, then ok => www is unchecked
+
 * try to compile without WEBSUPPORT and GHOST to see the result
 * add highscore tab in pack and new levels (priority=high)
 * see :

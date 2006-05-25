@@ -1565,7 +1565,8 @@ namespace vapp {
         
         if(!m_bWebHighscoresUpdatedThisSession) {        
           _UpdateWebHighscores(false);
-          _UpgradeWebHighscores();       
+          _UpgradeWebHighscores();  
+	  _UpdateWebLevels(false);
           _UpdateLevelLists();
         }
 
@@ -2028,7 +2029,8 @@ namespace vapp {
       pUpdHS->setClicked(false);
 #if defined(SUPPORT_WEBACCESS)
       _UpdateWebHighscores(false);
-      _UpgradeWebHighscores();       
+      _UpgradeWebHighscores();    
+      _UpdateWebLevels(false);   
       _UpdateLevelLists();      
 #endif      
     }    
