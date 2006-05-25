@@ -1,6 +1,10 @@
 * BUG : if www is not activated at startup, go in option, check www,
    then click on proxy, then ok => www is unchecked
 
+* BUG : notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES); does not work the
+   first time we load the game called in gamemenu.cpp, line 1573 but
+   not displayed, i don't know why
+
 * try to compile without WEBSUPPORT and GHOST to see the result
 * add highscore tab in pack and new levels (priority=high)
 * see :
@@ -20,8 +24,6 @@
 * add import of players.bin (so that people playing at different
    location can merge their highscores) (priority=very low)
 * translations (priority=very low)
-
-* there is no error when dowloading highscores fails ;-(
 
 Ghost finition :
 * make a vector for replays to load them faster

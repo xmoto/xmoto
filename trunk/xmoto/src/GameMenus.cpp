@@ -1562,13 +1562,17 @@ namespace vapp {
 
 #if defined(SUPPORT_WEBACCESS)        
         _ConfigureProxy();
-        
+
         if(!m_bWebHighscoresUpdatedThisSession) {        
-          _UpdateWebHighscores(false);
-          _UpgradeWebHighscores();  
-	  _UpdateWebLevels(false);
-          _UpdateLevelLists();
-        }
+	  try {
+	    _UpdateWebHighscores(false);
+	    _UpgradeWebHighscores();  
+	    _UpdateWebLevels(false);
+	    _UpdateLevelLists();
+	  } catch(Exception &e) {
+	    notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES);
+	  }
+	}
 
         /* Update options */
         _ImportOptions();
@@ -2028,10 +2032,14 @@ namespace vapp {
     if(pUpdHS->isClicked()) {
       pUpdHS->setClicked(false);
 #if defined(SUPPORT_WEBACCESS)
-      _UpdateWebHighscores(false);
-      _UpgradeWebHighscores();    
-      _UpdateWebLevels(false);   
-      _UpdateLevelLists();      
+      try {
+	_UpdateWebHighscores(false);
+	_UpgradeWebHighscores();    
+	_UpdateWebLevels(false);   
+	_UpdateLevelLists();      
+      } catch(Exception &e) {
+	notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES);
+      }
 #endif      
     }    
     

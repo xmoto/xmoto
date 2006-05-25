@@ -1964,8 +1964,8 @@ namespace vapp {
   
   void GameApp::_UpdateWebHighscores(bool bSilent) {
     #if defined(SUPPORT_WEBACCESS)    
-    //if(!bSilent)
-    //  _SimpleMessage(GAMETEXT_DLHIGHSCORES,&m_DownloadLevelsMsgBoxRect);
+    if(!bSilent)
+      _SimpleMessage(GAMETEXT_DLHIGHSCORES,&m_DownloadLevelsMsgBoxRect);
 
       m_bWebHighscoresUpdatedThisSession = true;
 
@@ -1976,8 +1976,8 @@ namespace vapp {
 
   void GameApp::_UpdateWebLevels(bool bSilent) {
     #if defined(SUPPORT_WEBACCESS)    
-    //if(!bSilent)
-    //  _SimpleMessage(GAMETEXT_DLLEVELSCHECK,&m_DownloadLevelsMsgBoxRect);
+    if(!bSilent)
+      _SimpleMessage(GAMETEXT_DLLEVELSCHECK,&m_DownloadLevelsMsgBoxRect);
 
       /* Try download levels list */
       if(m_pWebLevels == NULL) {
