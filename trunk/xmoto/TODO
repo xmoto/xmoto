@@ -1,10 +1,10 @@
+* Make sure LUA5.1 is supported properly OR use LUA5.0 explicitly.
 * BUG : if www is not activated at startup, go in option, check www,
    then click on proxy, then ok => www is unchecked
 
 * BUG : notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES); does not work the
    first time we load the game called in gamemenu.cpp, line 1573 but
    not displayed, i don't know why
-
 * try to compile without WEBSUPPORT and GHOST to see the result
 * add highscore tab in pack and new levels (priority=high)
 * see :
