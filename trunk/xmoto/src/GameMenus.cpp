@@ -1980,7 +1980,7 @@ namespace vapp {
       pMotionBlurGhost->enableWindow(true);
     } else {
       pGhostStrategy->enableWindow(false);
-      pMotionBlurGhost->enableWindow(true);
+      pMotionBlurGhost->enableWindow(false);
     }
 #endif
 
