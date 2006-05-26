@@ -29,6 +29,7 @@ Ghost finition :
 * make a vector for replays to load them faster
 
 Undecided:
+* allow keep button pressed on list for people having not wheel ;-)
 * add 3 2 1 GO ! at level startup (it neckelmann agree) 
 * context information for levels : when one is selected, display
    information
