@@ -1,23 +1,23 @@
 /*=============================================================================
-XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
+  XMOTO
+  Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
-This file is part of XMOTO.
+  This file is part of XMOTO.
 
-XMOTO is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
+  XMOTO is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
 
-XMOTO is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+  XMOTO is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with XMOTO; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-=============================================================================*/
+  You should have received a copy of the GNU General Public License
+  along with XMOTO; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+  =============================================================================*/
 
 /* 
  *  Game object. Handles all of the gamestate management und so weiter.
@@ -32,8 +32,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 namespace vapp {
 
   /*===========================================================================
-  Globals
-  ===========================================================================*/
+    Globals
+    ===========================================================================*/
 
   /* Prim. game object */
   MotoGame *m_pMotoGame;        
@@ -84,16 +84,16 @@ namespace vapp {
   };
 
   /*===========================================================================
-  Init the lua game lib
-  ===========================================================================*/
+    Init the lua game lib
+    ===========================================================================*/
   LUALIB_API int luaopen_Game(lua_State *pL) {
     luaL_openlib(pL,"Game",g_GameFuncs,0);
     return 1;
   }
 
   /*===========================================================================
-  Simple lua interaction
-  ===========================================================================*/
+    Simple lua interaction
+    ===========================================================================*/
   bool MotoGame::scriptCallBool(std::string FuncName,bool bDefault) {
     bool bRet = bDefault;
 
@@ -142,7 +142,7 @@ namespace vapp {
     /* Fetch global table */        
     lua_getglobal(m_pL,Table.c_str());
     
-//    printf("[%s.%s]\n",Table.c_str(),FuncName.c_str());
+    //    printf("[%s.%s]\n",Table.c_str(),FuncName.c_str());
     
     if(lua_istable(m_pL,-1)) {
       lua_pushstring(m_pL,FuncName.c_str());
@@ -152,7 +152,7 @@ namespace vapp {
         /* Call! */
         if(lua_pcall(m_pL,0,0,0) != 0) {
           throw Exception("failed to invoke (tbl,void) " + Table + std::string(".") + 
-                FuncName + std::string("(): ") + std::string(lua_tostring(m_pL,-1)));
+			  FuncName + std::string("(): ") + std::string(lua_tostring(m_pL,-1)));
         }              
       }
     }
@@ -162,8 +162,8 @@ namespace vapp {
   }
 
   /*===========================================================================
-  Teleporting
-  ===========================================================================*/
+    Teleporting
+    ===========================================================================*/
   void MotoGame::setPlayerPosition(float x,float y,bool bFaceRight) {
     /* Request teleport next frame */
     m_TeleportDest.bDriveRight = bFaceRight;
@@ -181,8 +181,8 @@ namespace vapp {
   }
 
   /*===========================================================================
-  Dummy adding
-  ===========================================================================*/
+    Dummy adding
+    ===========================================================================*/
   void MotoGame::addDummy(Vector2f Pos,float r,float g,float b) {
     m_Dummies[m_nNumDummies].Pos = Pos;
     m_Dummies[m_nNumDummies].r = r;
@@ -192,8 +192,8 @@ namespace vapp {
   }
 
   /*===========================================================================
-  Add game message
-  ===========================================================================*/
+    Add game message
+    ===========================================================================*/
   void MotoGame::gameMessage(std::string Text) {
     GameMessage *pMsg = new GameMessage;
     pMsg->fRemoveTime = getTime() + 5.0f;
@@ -209,8 +209,8 @@ namespace vapp {
   }
 
   /*===========================================================================
-  Update game
-  ===========================================================================*/
+    Update game
+    ===========================================================================*/
   void MotoGame::updateLevel(float fTimeStep,SerializedBikeState *pReplayState,DBuffer *pDBuffer) {
     bool v_enableScript = pReplayState == NULL; // don't use script on replay (lua action must be read from the replay)
 
@@ -306,14 +306,19 @@ namespace vapp {
         
     /* Update misc stuff (only when not playing a replay) */
     if(pReplayState == NULL) {
-			_UpdateZones();
-			_UpdateEntities();
+      _UpdateZones();
+      _UpdateEntities();
     }
     
     /* Invoke PreDraw() script function */
     if(v_enableScript) {
-      if(!scriptCallBool( "PreDraw",true ))
-      throw Exception("level script PreDraw() returned false");   
+      GameEvent *pEvent = createGameEvent(GAME_EVENT_LUA_FUNCTION_CALLED);
+      if(pEvent != NULL) {
+	strncpy(pEvent->u.LuaFunctionCalled.functionName,
+		"PreDraw",
+		8);
+	pEvent->u.LuaFunctionCalled.b1 = true;
+      } 
     }
 
     /* Only make a full physics update when not replaying */
@@ -323,56 +328,83 @@ namespace vapp {
           
       /* Handle events generated this update */
       while(getNumPendingGameEvents() > 0) {
-			  GameEvent *pEvent = getNextGameEvent();
-			  if(pEvent != NULL) {
-			    if(pDBuffer != NULL) {
-			      /* Encode event */
-			      _SerializeGameEventQueue(*pDBuffer,pEvent);
-			    }
+	GameEvent *pEvent = getNextGameEvent();
+	if(pEvent != NULL) {
+	  if(pDBuffer != NULL) {
+	    /* Encode event */
+	    _SerializeGameEventQueue(*pDBuffer,pEvent);
+	  }
 			  
-				  /* What event? */
-				  switch(pEvent->Type) {
-					  case GAME_EVENT_PLAYER_DIES:
-					    {
-						    m_bDead = true;
-						  }
-						  break;
-					  case GAME_EVENT_PLAYER_ENTERS_ZONE:						
-					    {
-						    /* Notify script */
-					      if(v_enableScript) {
-						scriptCallTblVoid( pEvent->u.PlayerEntersZone.pZone->ID,"OnEnter" );
-					      }
-						  }
-						  break;
-					  case GAME_EVENT_PLAYER_LEAVES_ZONE:
-					    {
-					      if(v_enableScript) {
-						/* Notify script */
-						    scriptCallTblVoid( pEvent->u.PlayerEntersZone.pZone->ID,"OnLeave" );						
-					      }
-						  }
-						  break;
-					  case GAME_EVENT_PLAYER_TOUCHES_ENTITY:
-					    {
-						    Entity *pEntityToTouch = findEntity(pEvent->u.PlayerTouchesEntity.cEntityID);
-						    if(pEntityToTouch != NULL) {
-							    touchEntity(pEntityToTouch,pEvent->u.PlayerTouchesEntity.bHead, v_enableScript);
-						    }
-						  }
-						  break;
-					  case GAME_EVENT_ENTITY_DESTROYED: 
-					    {
-						    /* Destroy entity */
-						    Entity *pEntityToDestroy = findEntity(pEvent->u.EntityDestroyed.cEntityID);
-						    if(pEntityToDestroy != NULL) {
-							    deleteEntity(pEntityToDestroy);
-						    }
-						  }
-						  break;
-				  }
-			  }
-			  else break;
+	  /* What event? */
+	  switch(pEvent->Type) {
+	  case GAME_EVENT_PLAYER_DIES:
+	    {
+	      m_bDead = true;
+	    }
+	    break;
+	  case GAME_EVENT_PLAYER_ENTERS_ZONE:						
+	    {
+	      /* Notify script */
+	      if(v_enableScript) {
+		scriptCallTblVoid( pEvent->u.PlayerEntersZone.pZone->ID,"OnEnter" );
+	      }
+	    }
+	    break;
+	  case GAME_EVENT_PLAYER_LEAVES_ZONE:
+	    {
+	      if(v_enableScript) {
+		/* Notify script */
+		scriptCallTblVoid( pEvent->u.PlayerEntersZone.pZone->ID,"OnLeave" );						
+	      }
+	    }
+	    break;
+	  case GAME_EVENT_PLAYER_TOUCHES_ENTITY:
+	    {
+	      Entity *pEntityToTouch = findEntity(pEvent->u.PlayerTouchesEntity.cEntityID);
+	      if(pEntityToTouch != NULL) {
+		touchEntity(pEntityToTouch,pEvent->u.PlayerTouchesEntity.bHead, v_enableScript);
+	      }
+	    }
+	    break;
+	  case GAME_EVENT_ENTITY_DESTROYED: 
+	    {
+	      /* Destroy entity */
+	      Entity *pEntityToDestroy = findEntity(pEvent->u.EntityDestroyed.cEntityID);
+	      if(pEntityToDestroy != NULL) {
+		deleteEntity(pEntityToDestroy);
+	      }
+	    }
+	    break;
+	  case GAME_EVENT_LUA_FUNCTION_CALLED:
+	    {
+	      /* call lua function */
+
+	      /* PREDRAW */
+	      if(strcmp(pEvent->u.LuaFunctionCalled.functionName, "PreDraw") == 0) {
+		if(!scriptCallBool( "PreDraw",
+				    pEvent->u.LuaFunctionCalled.b1))
+		  throw Exception("level script PreDraw() returned false");
+
+              /* ONLOAD */
+	      } else if(strcmp(pEvent->u.LuaFunctionCalled.functionName, "OnLoad") == 0) {
+		bool bOnLoadSuccess = scriptCallBool("OnLoad",
+						     pEvent->u.LuaFunctionCalled.b1);
+		                                     /* if no OnLoad(), assume success */
+		/* Success? */
+		if(!bOnLoadSuccess) {
+		  /* Hmm, the script insists that we shouldn't begin playing... */
+		  endLevel();      
+		}
+
+	      } else
+		{
+		  // should not append
+		}
+	    }
+	    break;
+	  }
+	}
+	else break;
       }
     }
     else {
@@ -391,8 +423,8 @@ namespace vapp {
   }
 
   /*===========================================================================
-  State/stuff clearing
-  ===========================================================================*/
+    State/stuff clearing
+    ===========================================================================*/
   void MotoGame::clearStates(void) {      
     /* BIKE_S */
     m_BikeS.CenterP = Vector2f(0,0);
@@ -468,8 +500,8 @@ namespace vapp {
   }
 
   /*===========================================================================
-  Prepare the specified level for playing through this game object
-  ===========================================================================*/
+    Prepare the specified level for playing through this game object
+    ===========================================================================*/
   void MotoGame::playLevel(LevelSrc *pLevelSrc, bool bIsAReplay) {
     bool v_enableScript = bIsAReplay == false;
 
@@ -555,7 +587,7 @@ namespace vapp {
 
         /* Use the Lua aux lib to load the buffer */
         int nRet = luaL_loadbuffer(m_pL,ScriptBuf.c_str(),ScriptBuf.length(),pLevelSrc->getScriptFile().c_str()) ||
-                  lua_pcall(m_pL,0,0,0);    
+	  lua_pcall(m_pL,0,0,0);    
 
         /* Returned WHAT? */
         if(nRet != 0) {
@@ -569,17 +601,17 @@ namespace vapp {
     }    
     
     if(bTryParsingEncapsulatedLevelScript && pLevelSrc->getScriptSource() != "") {
-        /* Use the Lua aux lib to load the buffer */
-        int nRet = luaL_loadbuffer(m_pL,pLevelSrc->getScriptSource().c_str(),pLevelSrc->getScriptSource().length(),
-                                   pLevelSrc->getFileName().c_str()) || lua_pcall(m_pL,0,0,0);    
+      /* Use the Lua aux lib to load the buffer */
+      int nRet = luaL_loadbuffer(m_pL,pLevelSrc->getScriptSource().c_str(),pLevelSrc->getScriptSource().length(),
+				 pLevelSrc->getFileName().c_str()) || lua_pcall(m_pL,0,0,0);    
          
-        /* Returned WHAT? */
-        if(nRet != 0) {
-          lua_close(m_pL);
-          throw Exception("failed to load level encapsulated script");
-        }
+      /* Returned WHAT? */
+      if(nRet != 0) {
+	lua_close(m_pL);
+	throw Exception("failed to load level encapsulated script");
+      }
 
-        bGotScript = true;      
+      bGotScript = true;      
     }    
     
     if(bNeedScript && !bGotScript) {
@@ -625,19 +657,19 @@ namespace vapp {
     
     /* Invoke the OnLoad() script function */
     if(v_enableScript) {
-      bool bOnLoadSuccess = scriptCallBool("OnLoad",true);  /* if no OnLoad(), assume success */
-
-      /* Success? */
-      if(!bOnLoadSuccess) {
-	/* Hmm, the script insists that we shouldn't begin playing... */
-	endLevel();      
-      }
+      GameEvent *pEvent = createGameEvent(GAME_EVENT_LUA_FUNCTION_CALLED);
+      if(pEvent != NULL) {
+	strncpy(pEvent->u.LuaFunctionCalled.functionName,
+		"OnLoad",
+		7);
+	pEvent->u.LuaFunctionCalled.b1 = true;
+      } 
     }
   }
 
   /*===========================================================================
-  Free this game object
-  ===========================================================================*/
+    Free this game object
+    ===========================================================================*/
   void MotoGame::endLevel(void) {
     /* If not already freed */
     if(m_pLevelSrc != NULL) {
@@ -680,8 +712,8 @@ namespace vapp {
   }
 
   /*===========================================================================
-  Level generation (i.e. parsing of level source)
-  ===========================================================================*/
+    Level generation (i.e. parsing of level source)
+    ===========================================================================*/
   void MotoGame::_GenerateLevel(void) {
     if(m_pLevelSrc == NULL) {
       Log("** Warning ** : Can't generate level when no source is assigned!");
@@ -702,13 +734,13 @@ namespace vapp {
     for(int i=0;i<InBlocks.size();i++) { 
       for(int j=0;j<InBlocks[i]->Vertices.size();j++) {
         LevelBoundsMin.x = InBlocks[i]->fPosX+InBlocks[i]->Vertices[j]->fX < LevelBoundsMin.x ? 
-                           InBlocks[i]->fPosX+InBlocks[i]->Vertices[j]->fX : LevelBoundsMin.x;
+	  InBlocks[i]->fPosX+InBlocks[i]->Vertices[j]->fX : LevelBoundsMin.x;
         LevelBoundsMin.y = InBlocks[i]->fPosY+InBlocks[i]->Vertices[j]->fY < LevelBoundsMin.y ? 
-                           InBlocks[i]->fPosY+InBlocks[i]->Vertices[j]->fY : LevelBoundsMin.y;
+	  InBlocks[i]->fPosY+InBlocks[i]->Vertices[j]->fY : LevelBoundsMin.y;
         LevelBoundsMax.x = InBlocks[i]->fPosX+InBlocks[i]->Vertices[j]->fX > LevelBoundsMax.x ? 
-                           InBlocks[i]->fPosX+InBlocks[i]->Vertices[j]->fX : LevelBoundsMax.x;
+	  InBlocks[i]->fPosX+InBlocks[i]->Vertices[j]->fX : LevelBoundsMax.x;
         LevelBoundsMax.y = InBlocks[i]->fPosY+InBlocks[i]->Vertices[j]->fY > LevelBoundsMax.y ? 
-                           InBlocks[i]->fPosY+InBlocks[i]->Vertices[j]->fY : LevelBoundsMax.y;
+	  InBlocks[i]->fPosY+InBlocks[i]->Vertices[j]->fY : LevelBoundsMax.y;
       }
     }
     
@@ -736,9 +768,9 @@ namespace vapp {
         if(!InBlocks[i]->bBackground) {
           /* Add line to collision handler */
           m_Collision.defineLine(InBlocks[i]->fPosX + InBlocks[i]->Vertices[j]->fX,
-                                InBlocks[i]->fPosY + InBlocks[i]->Vertices[j]->fY,
-                                InBlocks[i]->fPosX + InBlocks[i]->Vertices[jnext]->fX,
-                                InBlocks[i]->fPosY + InBlocks[i]->Vertices[jnext]->fY);
+				 InBlocks[i]->fPosY + InBlocks[i]->Vertices[j]->fY,
+				 InBlocks[i]->fPosX + InBlocks[i]->Vertices[jnext]->fX,
+				 InBlocks[i]->fPosY + InBlocks[i]->Vertices[jnext]->fY);
         }
         
         /* Add line to BSP generator */
@@ -852,8 +884,8 @@ namespace vapp {
   }
   
   /*===========================================================================
-  Create block from BSP polygon
-  ===========================================================================*/
+    Create block from BSP polygon
+    ===========================================================================*/
   void MotoGame::_CreateBlock(BSPPoly *pPoly,LevelBlock *pSrcBlock) {
     ConvexBlock *pBlock = new ConvexBlock;
     pBlock->pSrcBlock = pSrcBlock;
@@ -870,8 +902,8 @@ namespace vapp {
   }
   
   /*===========================================================================
-  Calculate important bike anchor points from parameters 
-  ===========================================================================*/
+    Calculate important bike anchor points from parameters 
+    ===========================================================================*/
   void MotoGame::_CalculateBikeAnchors(void) {
     m_BikeA.Tp = Vector2f( 0, -m_BikeP.Ch );
     m_BikeA.Rp = m_BikeA.Tp + Vector2f( -0.5f*m_BikeP.Wb, m_BikeP.WR );
@@ -897,8 +929,8 @@ namespace vapp {
   }
 
   /*===========================================================================
-  Check whether the given circle touches the zone
-  ===========================================================================*/
+    Check whether the given circle touches the zone
+    ===========================================================================*/
   bool MotoGame::_DoCircleTouchZone(const Vector2f &Cp,float Cr,LevelZone *pZone) {
     /* Check each zone primitive */
     for(int i=0;i<pZone->Prims.size();i++) {
@@ -921,8 +953,8 @@ namespace vapp {
   }
   
   /*===========================================================================
-  Update zone specific stuff -- call scripts where needed
-  ===========================================================================*/
+    Update zone specific stuff -- call scripts where needed
+    ===========================================================================*/
   void MotoGame::_UpdateZones(void) {
     /* Check player touching for each zone */
     for(int i=0;i<m_pLevelSrc->getZoneList().size();i++) {
@@ -933,32 +965,32 @@ namespace vapp {
          _DoCircleTouchZone( m_BikeS.RearWheelP,m_BikeP.WR,pZone )) {       
         /* In the zone -- did he just enter it? */
         if(!pZone->m_bInZone) {
-					/* Generate event */
-					GameEvent *pEvent = createGameEvent(GAME_EVENT_PLAYER_ENTERS_ZONE);
-					if(pEvent != NULL) {
-		        pZone->m_bInZone = true;
-		        pEvent->u.PlayerEntersZone.pZone = pZone;
-		      }
+	  /* Generate event */
+	  GameEvent *pEvent = createGameEvent(GAME_EVENT_PLAYER_ENTERS_ZONE);
+	  if(pEvent != NULL) {
+	    pZone->m_bInZone = true;
+	    pEvent->u.PlayerEntersZone.pZone = pZone;
+	  }
         }
       }         
       else {
         /* Not in the zone... but was he during last update? - i.e. has 
            he just left it? */      
         if(pZone->m_bInZone) {
-					/* Generate event */
-					GameEvent *pEvent = createGameEvent(GAME_EVENT_PLAYER_LEAVES_ZONE);
-					if(pEvent != NULL) {
-		        pZone->m_bInZone = false;
-		        pEvent->u.PlayerLeavesZone.pZone = pZone;
-		      }
+	  /* Generate event */
+	  GameEvent *pEvent = createGameEvent(GAME_EVENT_PLAYER_LEAVES_ZONE);
+	  if(pEvent != NULL) {
+	    pZone->m_bInZone = false;
+	    pEvent->u.PlayerLeavesZone.pZone = pZone;
+	  }
         }
       }
     }
   }
   
   /*===========================================================================
-  Entity management
-  ===========================================================================*/
+    Entity management
+    ===========================================================================*/
   Entity *MotoGame::_SpawnEntity(std::string ID,EntityType Type,Vector2f Pos,LevelEntity *pSrc) {
     /* Allocate entity */
     Entity *pEnt = new Entity;
@@ -972,38 +1004,38 @@ namespace vapp {
     
     /* Init it */
     switch(Type) {
-      case ET_SPRITE:
-        pEnt->fSpriteZ = 1.0f;              
-        if(pSrc != NULL)
-          pEnt->fSpriteZ = atof(m_pLevelSrc->getEntityParam(pSrc,"z","1.0").c_str());        
+    case ET_SPRITE:
+      pEnt->fSpriteZ = 1.0f;              
+      if(pSrc != NULL)
+	pEnt->fSpriteZ = atof(m_pLevelSrc->getEntityParam(pSrc,"z","1.0").c_str());        
           
-        pEnt->SpriteType = "";
-        if(pSrc != NULL)
-          pEnt->SpriteType = m_pLevelSrc->getEntityParam(pSrc,"name","");
+      pEnt->SpriteType = "";
+      if(pSrc != NULL)
+	pEnt->SpriteType = m_pLevelSrc->getEntityParam(pSrc,"name","");
                           
-        /* Foreground/background? */
-        if(pEnt->fSpriteZ > 0.0f)
-          m_FSprites.push_back(pEnt); /* TODO: keep these lists ordered! */
-        else
-          m_BSprites.push_back(pEnt);
-        break;
-      case ET_WRECKER:
-        break;
-      case ET_ENDOFLEVEL:
-        break;
-      case ET_PLAYERSTART:
-        break;
-      case ET_DUMMY:
-        break;
-      case ET_PARTICLESOURCE:
-        pEnt->ParticleType = "";
-        if(pSrc != NULL)
-          pEnt->ParticleType = m_pLevelSrc->getEntityParam(pSrc,"type","");
-        pEnt->fNextParticleTime = 0;
-        break;
-      default:
-        /* TODO: Warning */        
-        ;
+      /* Foreground/background? */
+      if(pEnt->fSpriteZ > 0.0f)
+	m_FSprites.push_back(pEnt); /* TODO: keep these lists ordered! */
+      else
+	m_BSprites.push_back(pEnt);
+      break;
+    case ET_WRECKER:
+      break;
+    case ET_ENDOFLEVEL:
+      break;
+    case ET_PLAYERSTART:
+      break;
+    case ET_DUMMY:
+      break;
+    case ET_PARTICLESOURCE:
+      pEnt->ParticleType = "";
+      if(pSrc != NULL)
+	pEnt->ParticleType = m_pLevelSrc->getEntityParam(pSrc,"type","");
+      pEnt->fNextParticleTime = 0;
+      break;
+    default:
+      /* TODO: Warning */        
+      ;
     }
     
     /* Add it */
@@ -1028,36 +1060,36 @@ namespace vapp {
   void MotoGame::_UpdateEntities(void) {
     /* Do player touch anything? */
     for(int i=0;i<m_Entities.size();i++) {            
-			/* Head? */						
-			Vector2f HeadPos = m_BikeS.Dir==DD_RIGHT?m_BikeS.HeadP:m_BikeS.Head2P;
+      /* Head? */						
+      Vector2f HeadPos = m_BikeS.Dir==DD_RIGHT?m_BikeS.HeadP:m_BikeS.Head2P;
 			
       if(circleTouchCircle2f(m_Entities[i]->Pos,m_Entities[i]->fSize,HeadPos,m_BikeP.fHeadSize)) {
-				if(!m_Entities[i]->bTouched) {
-					/* Generate event */
-					GameEvent *pEvent = createGameEvent(GAME_EVENT_PLAYER_TOUCHES_ENTITY);
-					if(pEvent != NULL) {
-						pEvent->u.PlayerTouchesEntity.bHead = true;						
-						strncpy(pEvent->u.PlayerTouchesEntity.cEntityID,m_Entities[i]->ID.c_str(),sizeof(pEvent->u.PlayerTouchesEntity.cEntityID)-1);						
-						m_Entities[i]->bTouched = true;
-					}					
-				}
+	if(!m_Entities[i]->bTouched) {
+	  /* Generate event */
+	  GameEvent *pEvent = createGameEvent(GAME_EVENT_PLAYER_TOUCHES_ENTITY);
+	  if(pEvent != NULL) {
+	    pEvent->u.PlayerTouchesEntity.bHead = true;						
+	    strncpy(pEvent->u.PlayerTouchesEntity.cEntityID,m_Entities[i]->ID.c_str(),sizeof(pEvent->u.PlayerTouchesEntity.cEntityID)-1);						
+	    m_Entities[i]->bTouched = true;
+	  }					
+	}
       }
       /* Wheel then? */
       else if(circleTouchCircle2f(m_Entities[i]->Pos,m_Entities[i]->fSize,m_BikeS.FrontWheelP,m_BikeP.WR) ||
               circleTouchCircle2f(m_Entities[i]->Pos,m_Entities[i]->fSize,m_BikeS.RearWheelP,m_BikeP.WR)) {
-				if(!m_Entities[i]->bTouched) {
-					/* Generate event */
-					GameEvent *pEvent = createGameEvent(GAME_EVENT_PLAYER_TOUCHES_ENTITY);
-					if(pEvent != NULL) {
-						pEvent->u.PlayerTouchesEntity.bHead = false;
-						strncpy(pEvent->u.PlayerTouchesEntity.cEntityID,m_Entities[i]->ID.c_str(),sizeof(pEvent->u.PlayerTouchesEntity.cEntityID)-1);
-						m_Entities[i]->bTouched = true;
-					}					
-				}
+	if(!m_Entities[i]->bTouched) {
+	  /* Generate event */
+	  GameEvent *pEvent = createGameEvent(GAME_EVENT_PLAYER_TOUCHES_ENTITY);
+	  if(pEvent != NULL) {
+	    pEvent->u.PlayerTouchesEntity.bHead = false;
+	    strncpy(pEvent->u.PlayerTouchesEntity.cEntityID,m_Entities[i]->ID.c_str(),sizeof(pEvent->u.PlayerTouchesEntity.cEntityID)-1);
+	    m_Entities[i]->bTouched = true;
+	  }					
+	}
       }      
       else {
-				/* Not touching */
-				m_Entities[i]->bTouched = false;
+	/* Not touching */
+	m_Entities[i]->bTouched = false;
       }
     }
   }
@@ -1081,8 +1113,8 @@ namespace vapp {
   }
 
   /*===========================================================================
-  Entity stuff (public)
-  ===========================================================================*/
+    Entity stuff (public)
+    ===========================================================================*/
   void MotoGame::deleteEntity(Entity *pEntity) {
     /* Already scheduled for deletion? */
     for(int i=0;i<m_DelSchedule.size();i++)
@@ -1098,44 +1130,44 @@ namespace vapp {
 
     /* What kind of entity? */
     switch(pEntity->Type) {
-      case ET_SPRITE:        
-        break;
-      case ET_PLAYERSTART:
-        break;
-      case ET_ENDOFLEVEL:
-        {
-          /* How many strawberries left? */
-          if(countEntitiesByType(ET_STRAWBERRY) == 0) {
-            /* Level is done! */
-            m_bFinished = true;
-            m_fFinishTime = getTime();
-          }
-        }
-        break;
-      case ET_WRECKER: 
-        {
-          /* Hmm :( */
-				  GameEvent *pEvent = createGameEvent(GAME_EVENT_PLAYER_DIES);        
-				  if(pEvent != NULL) {
-					  pEvent->u.PlayerDies.bWrecker = true;
-				  }
-				}
-        break;
-      case ET_STRAWBERRY:
-        {
-          /* OH... nice */
-          GameEvent *pEvent = createGameEvent(GAME_EVENT_ENTITY_DESTROYED);
-          if(pEvent != NULL) {
-					  strncpy(pEvent->u.EntityDestroyed.cEntityID,pEntity->ID.c_str(),sizeof(pEvent->u.EntityDestroyed.cEntityID)-1);
-					  pEvent->u.EntityDestroyed.Type = pEntity->Type;
-					  pEvent->u.EntityDestroyed.fSize = pEntity->fSize;
-					  pEvent->u.EntityDestroyed.fPosX = pEntity->Pos.x;
-					  pEvent->u.EntityDestroyed.fPosY = pEntity->Pos.y;
-          }                
-          /* Play yummy-yummy sound */
-          Sound::playSampleByName("Sounds/PickUpStrawberry.ogg");
-        }
-        break;
+    case ET_SPRITE:        
+      break;
+    case ET_PLAYERSTART:
+      break;
+    case ET_ENDOFLEVEL:
+      {
+	/* How many strawberries left? */
+	if(countEntitiesByType(ET_STRAWBERRY) == 0) {
+	  /* Level is done! */
+	  m_bFinished = true;
+	  m_fFinishTime = getTime();
+	}
+      }
+      break;
+    case ET_WRECKER: 
+      {
+	/* Hmm :( */
+	GameEvent *pEvent = createGameEvent(GAME_EVENT_PLAYER_DIES);        
+	if(pEvent != NULL) {
+	  pEvent->u.PlayerDies.bWrecker = true;
+	}
+      }
+      break;
+    case ET_STRAWBERRY:
+      {
+	/* OH... nice */
+	GameEvent *pEvent = createGameEvent(GAME_EVENT_ENTITY_DESTROYED);
+	if(pEvent != NULL) {
+	  strncpy(pEvent->u.EntityDestroyed.cEntityID,pEntity->ID.c_str(),sizeof(pEvent->u.EntityDestroyed.cEntityID)-1);
+	  pEvent->u.EntityDestroyed.Type = pEntity->Type;
+	  pEvent->u.EntityDestroyed.fSize = pEntity->fSize;
+	  pEvent->u.EntityDestroyed.fPosX = pEntity->Pos.x;
+	  pEvent->u.EntityDestroyed.fPosY = pEntity->Pos.y;
+	}                
+	/* Play yummy-yummy sound */
+	Sound::playSampleByName("Sounds/PickUpStrawberry.ogg");
+      }
+      break;
     }
   }
   
@@ -1150,64 +1182,64 @@ namespace vapp {
   }
 
   Entity *MotoGame::findEntity(const std::string &ID) {	
-		for(int i=0;i<m_Entities.size();i++) {
-			if(m_Entities[i]->ID == ID) return m_Entities[i];
-		}
-		return NULL;
+    for(int i=0;i<m_Entities.size();i++) {
+      if(m_Entities[i]->ID == ID) return m_Entities[i];
+    }
+    return NULL;
   }
 
   /*===========================================================================
-  Game event queue management
-  ===========================================================================*/
+    Game event queue management
+    ===========================================================================*/
   GameEvent *MotoGame::createGameEvent(GameEventType Type) {
-		/* Space left in queue? */
-		if(getNumPendingGameEvents() < GAME_EVENT_QUEUE_SIZE - 1) {
-			/* Yup. */
-			GameEvent *pEvent = &m_GameEventQueue[m_nGameEventQueueWriteIdx];			
-			pEvent->Type = Type;
-			pEvent->nSeq = m_nLastEventSeq++;
-			m_nGameEventQueueWriteIdx++;			
-			if(m_nGameEventQueueWriteIdx == GAME_EVENT_QUEUE_SIZE) {
-				m_nGameEventQueueWriteIdx = 0;
-			}
-			return pEvent;
-		}
+    /* Space left in queue? */
+    if(getNumPendingGameEvents() < GAME_EVENT_QUEUE_SIZE - 1) {
+      /* Yup. */
+      GameEvent *pEvent = &m_GameEventQueue[m_nGameEventQueueWriteIdx];			
+      pEvent->Type = Type;
+      pEvent->nSeq = m_nLastEventSeq++;
+      m_nGameEventQueueWriteIdx++;			
+      if(m_nGameEventQueueWriteIdx == GAME_EVENT_QUEUE_SIZE) {
+	m_nGameEventQueueWriteIdx = 0;
+      }
+      return pEvent;
+    }
 		
-		/* No */
-		return NULL;
+    /* No */
+    return NULL;
   }
   
   GameEvent *MotoGame::getNextGameEvent(void) {
-		/* Anything in queue? */
-		if(getNumPendingGameEvents() > 0) {
-			/* Get next event and advance the read idx */
-			GameEvent *pEvent = &m_GameEventQueue[m_nGameEventQueueReadIdx];
-			m_nGameEventQueueReadIdx++;
-			if(m_nGameEventQueueReadIdx == GAME_EVENT_QUEUE_SIZE) {
-				m_nGameEventQueueReadIdx = 0;
-			}
+    /* Anything in queue? */
+    if(getNumPendingGameEvents() > 0) {
+      /* Get next event and advance the read idx */
+      GameEvent *pEvent = &m_GameEventQueue[m_nGameEventQueueReadIdx];
+      m_nGameEventQueueReadIdx++;
+      if(m_nGameEventQueueReadIdx == GAME_EVENT_QUEUE_SIZE) {
+	m_nGameEventQueueReadIdx = 0;
+      }
 			
-			return pEvent;
-		}
+      return pEvent;
+    }
 		
-		/* Nope, nothing */
-		return NULL;
+    /* Nope, nothing */
+    return NULL;
   }
 
   int MotoGame::getNumPendingGameEvents(void) {
-		if(m_nGameEventQueueReadIdx < m_nGameEventQueueWriteIdx) {
-			return m_nGameEventQueueWriteIdx - m_nGameEventQueueReadIdx;
-		}
-		else if(m_nGameEventQueueReadIdx > m_nGameEventQueueWriteIdx) {
-			return GAME_EVENT_QUEUE_SIZE - m_nGameEventQueueReadIdx + m_nGameEventQueueWriteIdx;
-		}
+    if(m_nGameEventQueueReadIdx < m_nGameEventQueueWriteIdx) {
+      return m_nGameEventQueueWriteIdx - m_nGameEventQueueReadIdx;
+    }
+    else if(m_nGameEventQueueReadIdx > m_nGameEventQueueWriteIdx) {
+      return GAME_EVENT_QUEUE_SIZE - m_nGameEventQueueReadIdx + m_nGameEventQueueWriteIdx;
+    }
 		
-		return 0;
+    return 0;
   }
 
   /*===========================================================================
-  Update recorded replay events
-  ===========================================================================*/
+    Update recorded replay events
+    ===========================================================================*/
   void MotoGame::_UpdateReplayEvents(void) {
     /* Start looking for events that should be passed */
     for(int i=0;i<m_ReplayEvents.size();i++) {
@@ -1242,43 +1274,54 @@ namespace vapp {
        only care about the most basic events - not events causing other
        events to be triggered */
     switch(pEvent->Type) {
-      case GAME_EVENT_ENTITY_DESTROYED:
-        {
-          /* Destroy entity */
-				  Entity *pEntityToDestroy = findEntity(pEvent->u.EntityDestroyed.cEntityID);
-				  if(pEntityToDestroy != NULL) {
-					  deleteEntity(pEntityToDestroy);
-				  }        
-				  else
-				    Log("** Warning ** : Failed to destroy entity '%s' specified by replay!",
-				        pEvent->u.EntityDestroyed.cEntityID);
-				}
-        break;
+    case GAME_EVENT_ENTITY_DESTROYED:
+      {
+	/* Destroy entity */
+	Entity *pEntityToDestroy = findEntity(pEvent->u.EntityDestroyed.cEntityID);
+	if(pEntityToDestroy != NULL) {
+	  deleteEntity(pEntityToDestroy);
+	}        
+	else
+	  Log("** Warning ** : Failed to destroy entity '%s' specified by replay!",
+	      pEvent->u.EntityDestroyed.cEntityID);
+      }
+      break;
+    case GAME_EVENT_LUA_FUNCTION_CALLED:
+      {
+	/* call lua function */
+	printf("Call lua function\n");
+      }
+      break;
     }
   }
   
   void MotoGame::_HandleReverseReplayEvent(GameEvent *pEvent) {
     /* Apply events with reverse results */
     switch(pEvent->Type) {
-      case GAME_EVENT_ENTITY_DESTROYED:
-        {
-          /* Un-destroy entity (create it :P) */
-				  Entity *pEntityToDestroy = findEntity(pEvent->u.EntityDestroyed.cEntityID);
-				  if(pEntityToDestroy == NULL) {
-					  Entity *pNew = _SpawnEntity(pEvent->u.EntityDestroyed.cEntityID,
-					                              pEvent->u.EntityDestroyed.Type,
-					                              Vector2f(pEvent->u.EntityDestroyed.fPosX,
-					                                       pEvent->u.EntityDestroyed.fPosY),
-					                              NULL);
-            if(pNew != NULL) {
-              pNew->fSize = pEvent->u.EntityDestroyed.fSize;
-            }					                              
-				  }        
-				  else
-				    Log("** Warning ** : Failed to create entity '%s' specified by replay - it's already there!",
-				        pEvent->u.EntityDestroyed.cEntityID);
-				}
-        break;
+    case GAME_EVENT_ENTITY_DESTROYED:
+      {
+	/* Un-destroy entity (create it :P) */
+	Entity *pEntityToDestroy = findEntity(pEvent->u.EntityDestroyed.cEntityID);
+	if(pEntityToDestroy == NULL) {
+	  Entity *pNew = _SpawnEntity(pEvent->u.EntityDestroyed.cEntityID,
+				      pEvent->u.EntityDestroyed.Type,
+				      Vector2f(pEvent->u.EntityDestroyed.fPosX,
+					       pEvent->u.EntityDestroyed.fPosY),
+				      NULL);
+	  if(pNew != NULL) {
+	    pNew->fSize = pEvent->u.EntityDestroyed.fSize;
+	  }					                              
+	}        
+	else
+	  Log("** Warning ** : Failed to create entity '%s' specified by replay - it's already there!",
+	      pEvent->u.EntityDestroyed.cEntityID);
+      }
+      break;
+    case GAME_EVENT_LUA_FUNCTION_CALLED:
+      {
+	/* do nothing : impossible to do */
+      }
+      break;
     }
   }  
 

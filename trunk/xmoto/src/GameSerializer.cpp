@@ -1,23 +1,23 @@
 /*=============================================================================
-XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
+  XMOTO
+  Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
-This file is part of XMOTO.
+  This file is part of XMOTO.
 
-XMOTO is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
+  XMOTO is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
 
-XMOTO is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+  XMOTO is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with XMOTO; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-=============================================================================*/
+  You should have received a copy of the GNU General Public License
+  along with XMOTO; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+  =============================================================================*/
 
 /* 
  *  Game state serialization and magic
@@ -28,8 +28,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 namespace vapp {
 
   /*===========================================================================
-  Game state interpolation for smoother replays 
-  ===========================================================================*/
+    Game state interpolation for smoother replays 
+    ===========================================================================*/
   void MotoGame::interpolateGameState(SerializedBikeState *pA,SerializedBikeState *pB,SerializedBikeState *p,float t) {
     /* First of all inherit everything from A */
     memcpy(p,pA,sizeof(SerializedBikeState));
@@ -42,8 +42,8 @@ namespace vapp {
   }
   
   /*===========================================================================
-  Decoding of event stream
-  ===========================================================================*/
+    Decoding of event stream
+    ===========================================================================*/
   void MotoGame::unserializeGameEvents(DBuffer &Buffer) {
     /* Continue until buffer is empty */
     bool bError = false;
@@ -58,71 +58,120 @@ namespace vapp {
       
       /* What now depends on event type */
       switch(EventType) {
-        case GAME_EVENT_ENTITY_DESTROYED:
-          GameEvent Event;
+      case GAME_EVENT_ENTITY_DESTROYED:
+	GameEvent Event;
           
-          /* Read entity name */
-          int n;
-          Buffer >> n;
-          if(n >= sizeof(Event.u.EntityDestroyed.cEntityID)) {
-            Log("** Warning ** : Entity name in replay too long, ignoring all events!");
-            bError = true;
-          }
-          else {
-            Buffer.readBuf(Event.u.EntityDestroyed.cEntityID,n);
-            Event.u.EntityDestroyed.cEntityID[n] = '\0';
+	/* Read entity name */
+	int n;
+	Buffer >> n;
+	if(n >= sizeof(Event.u.EntityDestroyed.cEntityID)) {
+	  Log("** Warning ** : Entity name in replay too long, ignoring all events!");
+	  bError = true;
+	}
+	else {
+	  Buffer.readBuf(Event.u.EntityDestroyed.cEntityID,n);
+	  Event.u.EntityDestroyed.cEntityID[n] = '\0';
             
-            /* Read entity type */
-            Buffer >> Event.u.EntityDestroyed.Type;
+	  /* Read entity type */
+	  Buffer >> Event.u.EntityDestroyed.Type;
             
-            /* Read size and pos */
-            Buffer >> Event.u.EntityDestroyed.fSize;
-            Buffer >> Event.u.EntityDestroyed.fPosX;
-            Buffer >> Event.u.EntityDestroyed.fPosY;            
+	  /* Read size and pos */
+	  Buffer >> Event.u.EntityDestroyed.fSize;
+	  Buffer >> Event.u.EntityDestroyed.fPosX;
+	  Buffer >> Event.u.EntityDestroyed.fPosY;            
             
-            /* Seems ok, add it */
-            RecordedGameEvent *p = new RecordedGameEvent;
-            p->fTime = fEventTime;
-            p->bPassed = false;
-            p->Event.Type = EventType;
-            p->Event.nSeq = 0;
-            memcpy(&p->Event.u,&Event.u,sizeof(Event.u));
-            m_ReplayEvents.push_back(p);
-          }
-          break;
-        default:
-          Log("** Warning ** : Failed to parse game events in replay, it will probably not play right!");
-          bError = true;
-          break;
+	  /* Seems ok, add it */
+	  RecordedGameEvent *p = new RecordedGameEvent;
+	  p->fTime = fEventTime;
+	  p->bPassed = false;
+	  p->Event.Type = EventType;
+	  p->Event.nSeq = 0;
+	  memcpy(&p->Event.u,&Event.u,sizeof(Event.u));
+	  m_ReplayEvents.push_back(p);
+	}
+	break;
+      case GAME_EVENT_LUA_FUNCTION_CALLED:
+	{
+	  int n;
+	  Buffer >> n;
+	 
+	  if(n >= sizeof(Event.u.LuaFunctionCalled.functionName)) {
+	    Log("** Warning ** : Lua function name in replay too long, ignoring all events!");
+	    bError = true;
+	  }
+	  else {
+	    Buffer.readBuf(Event.u.LuaFunctionCalled.functionName,n);
+	    Event.u.LuaFunctionCalled.functionName[n] = '\0';
+	    
+	    /* PREDRAW */
+	    if(strcmp(Event.u.LuaFunctionCalled.functionName, "PreDraw") == 0) {
+	      Buffer >> Event.u.LuaFunctionCalled.b1;
+	      
+	      /* ONLOAD */
+	    } else if(strcmp(Event.u.LuaFunctionCalled.functionName, "OnLoad") == 0) {
+	      Buffer >> Event.u.LuaFunctionCalled.b1;
+	      
+	    } else {
+	      /* should not append */
+	    }
+	  }
+	}
+	break;
+      default:
+	Log("** Warning ** : Failed to parse game events in replay, it will probably not play right!");
+	bError = true;
+	break;
       }
     }
   }
 
   /*===========================================================================
-  Encoding of event buffer 
-  ===========================================================================*/
+    Encoding of event buffer 
+    ===========================================================================*/
   void MotoGame::_SerializeGameEventQueue(DBuffer &Buffer,GameEvent *pEvent) {
     /* Note how we couldn't care less about most of the game events */    
     switch(pEvent->Type) {
-      case GAME_EVENT_ENTITY_DESTROYED:
-        {          
-          int i;
-          Buffer << getTime();
-          Buffer << pEvent->Type;
-          Buffer << (i=strlen(pEvent->u.EntityDestroyed.cEntityID));
-          Buffer.writeBuf(pEvent->u.EntityDestroyed.cEntityID,i);
-          Buffer << pEvent->u.EntityDestroyed.Type;
-          Buffer << pEvent->u.EntityDestroyed.fSize;
-          Buffer << pEvent->u.EntityDestroyed.fPosX;
-          Buffer << pEvent->u.EntityDestroyed.fPosY;
-        }
-        break;
+    case GAME_EVENT_ENTITY_DESTROYED:
+      {          
+	int i;
+	Buffer << getTime();
+	Buffer << pEvent->Type;
+	Buffer << (i=strlen(pEvent->u.EntityDestroyed.cEntityID));
+	Buffer.writeBuf(pEvent->u.EntityDestroyed.cEntityID,i);
+	Buffer << pEvent->u.EntityDestroyed.Type;
+	Buffer << pEvent->u.EntityDestroyed.fSize;
+	Buffer << pEvent->u.EntityDestroyed.fPosX;
+	Buffer << pEvent->u.EntityDestroyed.fPosY;
+      }
+      break;
+    case GAME_EVENT_LUA_FUNCTION_CALLED:
+      {
+	int i;
+
+	Buffer << getTime();
+	Buffer << pEvent->Type;
+	Buffer << (i=strlen(pEvent->u.LuaFunctionCalled.functionName));
+	Buffer.writeBuf(pEvent->u.LuaFunctionCalled.functionName, i);
+
+	/* PREDRAW */
+	if(strcmp(pEvent->u.LuaFunctionCalled.functionName, "PreDraw") == 0) {
+	  Buffer << pEvent->u.LuaFunctionCalled.b1;
+
+        /* ONLOAD */
+	} else if(strcmp(pEvent->u.LuaFunctionCalled.functionName, "OnLoad") == 0) {
+	  Buffer << pEvent->u.LuaFunctionCalled.b1;
+
+	} else {
+	  /* should not append */
+	}
+      }
+      break;
     }            
   }
 
   /*===========================================================================
-  Matrix encodings
-  ===========================================================================*/
+    Matrix encodings
+    ===========================================================================*/
   unsigned short MotoGame::_MatrixTo16Bits(const float *pfMatrix) {
     /* The idea is that we only need to store the first column of the matrix,
        as the second on is simply the first one transposed... Each of the
@@ -163,8 +212,8 @@ namespace vapp {
   }
 
   /*===========================================================================
-  Neat trick for converting floating-point numbers to 8 bits
-  ===========================================================================*/
+    Neat trick for converting floating-point numbers to 8 bits
+    ===========================================================================*/
   char MotoGame::_MapCoordTo8Bits(float fRef,float fMaxDiff,float fCoord) {
     int n = (int)((127.0f * (fCoord-fRef))/fMaxDiff);
     if(n<-127) n=-127;
@@ -177,8 +226,8 @@ namespace vapp {
   }
 
   /*===========================================================================
-  Serializer
-  ===========================================================================*/
+    Serializer
+    ===========================================================================*/
   void MotoGame::getSerializedBikeState(SerializedBikeState *pState) {
     /* Get. */
     pState->fGameTime = m_fTime;
