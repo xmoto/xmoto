@@ -102,7 +102,7 @@ namespace vapp {
           else {    
             /* Init level */    
             m_InputHandler.resetScriptKeyHooks();                                   
-            m_MotoGame.playLevel( pLevelSrc );
+            m_MotoGame.playLevel(pLevelSrc , true);
             m_nFrame = 0;
             m_Renderer.prepareForNewLevel();
             
@@ -181,7 +181,7 @@ namespace vapp {
         else {    
           /* Start playing right away */     
           m_InputHandler.resetScriptKeyHooks();           
-          m_MotoGame.playLevel( pLevelSrc );
+          m_MotoGame.playLevel(pLevelSrc, false);
           m_State = GS_PLAYING;        
           m_nFrame = 0;
           

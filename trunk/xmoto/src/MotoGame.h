@@ -455,11 +455,11 @@ namespace vapp {
       ~MotoGame() {endLevel();}     
     
       /* Methods */
-      void playLevel(LevelSrc *pLevelSrc);
+      void playLevel(LevelSrc *pLevelSrc, bool bIsAReplay);
       void updateLevel(float fTimeStep,SerializedBikeState *pReplayState,DBuffer *pEventReplayBuffer);
       void endLevel(void);
       
-      void touchEntity(Entity *pEntity,bool bHead); 
+      void touchEntity(Entity *pEntity,bool bHead, bool bEnableScript); 
       void deleteEntity(Entity *pEntity);
       int countEntitiesByType(EntityType Type);
       Entity *findEntity(const std::string &ID);

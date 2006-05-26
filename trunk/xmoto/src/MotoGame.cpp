@@ -212,6 +212,8 @@ namespace vapp {
   Update game
   ===========================================================================*/
   void MotoGame::updateLevel(float fTimeStep,SerializedBikeState *pReplayState,DBuffer *pDBuffer) {
+    bool v_enableScript = pReplayState == NULL; // don't use script on replay (lua action must be read from the replay)
+
     /* Dummies are small markers that can show different things during debugging */
     resetDummies();
     
@@ -309,8 +311,10 @@ namespace vapp {
     }
     
     /* Invoke PreDraw() script function */
-    if(!scriptCallBool( "PreDraw",true ))
+    if(v_enableScript) {
+      if(!scriptCallBool( "PreDraw",true ))
       throw Exception("level script PreDraw() returned false");   
+    }
 
     /* Only make a full physics update when not replaying */
     if(pReplayState == NULL) {
@@ -336,20 +340,24 @@ namespace vapp {
 					  case GAME_EVENT_PLAYER_ENTERS_ZONE:						
 					    {
 						    /* Notify script */
-						    scriptCallTblVoid( pEvent->u.PlayerEntersZone.pZone->ID,"OnEnter" );
+					      if(v_enableScript) {
+						scriptCallTblVoid( pEvent->u.PlayerEntersZone.pZone->ID,"OnEnter" );
+					      }
 						  }
 						  break;
 					  case GAME_EVENT_PLAYER_LEAVES_ZONE:
 					    {
-						    /* Notify script */
+					      if(v_enableScript) {
+						/* Notify script */
 						    scriptCallTblVoid( pEvent->u.PlayerEntersZone.pZone->ID,"OnLeave" );						
+					      }
 						  }
 						  break;
 					  case GAME_EVENT_PLAYER_TOUCHES_ENTITY:
 					    {
 						    Entity *pEntityToTouch = findEntity(pEvent->u.PlayerTouchesEntity.cEntityID);
 						    if(pEntityToTouch != NULL) {
-							    touchEntity(pEntityToTouch,pEvent->u.PlayerTouchesEntity.bHead);
+							    touchEntity(pEntityToTouch,pEvent->u.PlayerTouchesEntity.bHead, v_enableScript);
 						    }
 						  }
 						  break;
@@ -462,7 +470,9 @@ namespace vapp {
   /*===========================================================================
   Prepare the specified level for playing through this game object
   ===========================================================================*/
-  void MotoGame::playLevel(LevelSrc *pLevelSrc) {
+  void MotoGame::playLevel(LevelSrc *pLevelSrc, bool bIsAReplay) {
+    bool v_enableScript = bIsAReplay == false;
+
     /* Clean up first, just for safe's sake */
     endLevel();               
     
@@ -614,12 +624,14 @@ namespace vapp {
     }
     
     /* Invoke the OnLoad() script function */
-    bool bOnLoadSuccess = scriptCallBool("OnLoad",true);  /* if no OnLoad(), assume success */
+    if(v_enableScript) {
+      bool bOnLoadSuccess = scriptCallBool("OnLoad",true);  /* if no OnLoad(), assume success */
 
-    /* Success? */
-    if(!bOnLoadSuccess) {
-      /* Hmm, the script insists that we shouldn't begin playing... */
-      endLevel();      
+      /* Success? */
+      if(!bOnLoadSuccess) {
+	/* Hmm, the script insists that we shouldn't begin playing... */
+	endLevel();      
+      }
     }
   }
 
@@ -1078,10 +1090,12 @@ namespace vapp {
     m_DelSchedule.push_back(pEntity);
   }
   
-  void MotoGame::touchEntity(Entity *pEntity,bool bHead) {
+  void MotoGame::touchEntity(Entity *pEntity,bool bHead, bool bEnableScript) {
     /* Start by invoking scripts if any */
-    scriptCallTblVoid(pEntity->ID,"Touch");
-    
+    if(bEnableScript) {
+      scriptCallTblVoid(pEntity->ID,"Touch");
+    }    
+
     /* What kind of entity? */
     switch(pEntity->Type) {
       case ET_SPRITE:        
