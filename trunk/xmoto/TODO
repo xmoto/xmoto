@@ -32,6 +32,8 @@ Ghost finition :
 * make a vector for replays to load them faster
 
 Undecided:
+* Sound::playSampleByName("Sounds/NewHighscore.ogg"); ? it could be nice
+
 * preDraw in script in not good because it depends on framerate,
   making something which is called every 0.01 seconds would be better
    like this :
