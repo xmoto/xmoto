@@ -386,8 +386,7 @@ namespace vapp {
 		GAME_EVENT_PLAYER_ENTERS_ZONE,
 		GAME_EVENT_PLAYER_LEAVES_ZONE,
 		GAME_EVENT_PLAYER_TOUCHES_ENTITY,
-		GAME_EVENT_ENTITY_DESTROYED,
-		GAME_EVENT_LUA_FUNCTION_CALLED
+		GAME_EVENT_ENTITY_DESTROYED
   };
   
 	/*===========================================================================
@@ -417,11 +416,6 @@ namespace vapp {
 		char cEntityID[64];					  /* ID of entity */
 		bool bHead;										/* Touched with head? */
   };
-  
-  struct GameEventLuaFunctionCalled {
-    char functionName[256];
-    bool b1;
-  };
 
   struct GameEvent {
     int nSeq;                         /* Sequence number */
@@ -442,9 +436,6 @@ namespace vapp {
 
 			/* GAME_EVENT_PLAYER_TOUCHES_ENTITY */
 			GameEventPlayerTouchesEntity PlayerTouchesEntity;
-
-		        /* GAME_EVENT_LUA_FUNCTION_CALLED */
-		        GameEventLuaFunctionCalled LuaFunctionCalled;
 		} u;		
   };
   

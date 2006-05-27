@@ -90,33 +90,33 @@ namespace vapp {
 	  m_ReplayEvents.push_back(p);
 	}
 	break;
-      case GAME_EVENT_LUA_FUNCTION_CALLED:
-	{
-	  int n;
-	  Buffer >> n;
-	 
-	  if(n >= sizeof(Event.u.LuaFunctionCalled.functionName)) {
-	    Log("** Warning ** : Lua function name in replay too long, ignoring all events!");
-	    bError = true;
-	  }
-	  else {
-	    Buffer.readBuf(Event.u.LuaFunctionCalled.functionName,n);
-	    Event.u.LuaFunctionCalled.functionName[n] = '\0';
-	    
-	    /* PREDRAW */
-	    if(strcmp(Event.u.LuaFunctionCalled.functionName, "PreDraw") == 0) {
-	      Buffer >> Event.u.LuaFunctionCalled.b1;
-	      
-	      /* ONLOAD */
-	    } else if(strcmp(Event.u.LuaFunctionCalled.functionName, "OnLoad") == 0) {
-	      Buffer >> Event.u.LuaFunctionCalled.b1;
-	      
-	    } else {
-	      /* should not append */
-	    }
-	  }
-	}
-	break;
+//      case GAME_EVENT_LUA_FUNCTION_CALLED:
+//	{
+//	  int n;
+//	  Buffer >> n;
+//	 
+//	  if(n >= sizeof(Event.u.LuaFunctionCalled.functionName)) {
+//	    Log("** Warning ** : Lua function name in replay too long, ignoring all events!");
+//	    bError = true;
+//	  }
+//	  else {
+//	    Buffer.readBuf(Event.u.LuaFunctionCalled.functionName,n);
+//	    Event.u.LuaFunctionCalled.functionName[n] = '\0';
+//	    
+//	    /* PREDRAW */
+//	    if(strcmp(Event.u.LuaFunctionCalled.functionName, "PreDraw") == 0) {
+//	      Buffer >> Event.u.LuaFunctionCalled.b1;
+//	      
+//	      /* ONLOAD */
+//	    } else if(strcmp(Event.u.LuaFunctionCalled.functionName, "OnLoad") == 0) {
+//	      Buffer >> Event.u.LuaFunctionCalled.b1;
+//	      
+//	    } else {
+//	      /* should not append */
+//	    }
+//	  }
+//	}
+//	break;
       default:
 	Log("** Warning ** : Failed to parse game events in replay, it will probably not play right!");
 	bError = true;
@@ -144,28 +144,28 @@ namespace vapp {
 	Buffer << pEvent->u.EntityDestroyed.fPosY;
       }
       break;
-    case GAME_EVENT_LUA_FUNCTION_CALLED:
-      {
-	int i;
-
-	Buffer << getTime();
-	Buffer << pEvent->Type;
-	Buffer << (i=strlen(pEvent->u.LuaFunctionCalled.functionName));
-	Buffer.writeBuf(pEvent->u.LuaFunctionCalled.functionName, i);
-
-	/* PREDRAW */
-	if(strcmp(pEvent->u.LuaFunctionCalled.functionName, "PreDraw") == 0) {
-	  Buffer << pEvent->u.LuaFunctionCalled.b1;
-
-        /* ONLOAD */
-	} else if(strcmp(pEvent->u.LuaFunctionCalled.functionName, "OnLoad") == 0) {
-	  Buffer << pEvent->u.LuaFunctionCalled.b1;
-
-	} else {
-	  /* should not append */
-	}
-      }
-      break;
+//    case GAME_EVENT_LUA_FUNCTION_CALLED:
+//      {
+//	int i;
+//
+//	Buffer << getTime();
+//	Buffer << pEvent->Type;
+//	Buffer << (i=strlen(pEvent->u.LuaFunctionCalled.functionName));
+//	Buffer.writeBuf(pEvent->u.LuaFunctionCalled.functionName, i);
+//
+//	/* PREDRAW */
+//	if(strcmp(pEvent->u.LuaFunctionCalled.functionName, "PreDraw") == 0) {
+//	  Buffer << pEvent->u.LuaFunctionCalled.b1;
+//
+//        /* ONLOAD */
+//	} else if(strcmp(pEvent->u.LuaFunctionCalled.functionName, "OnLoad") == 0) {
+//	  Buffer << pEvent->u.LuaFunctionCalled.b1;
+//
+//	} else {
+//	  /* should not append */
+//	}
+//      }
+//      break;
     }            
   }
 

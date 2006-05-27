@@ -312,14 +312,11 @@ namespace vapp {
     
     /* Invoke PreDraw() script function */
     if(v_enableScript) {
-      GameEvent *pEvent = createGameEvent(GAME_EVENT_LUA_FUNCTION_CALLED);
-      if(pEvent != NULL) {
-	strncpy(pEvent->u.LuaFunctionCalled.functionName,
-		"PreDraw",
-		8);
-	pEvent->u.LuaFunctionCalled.b1 = true;
-      } 
-    }
+      if(!scriptCallBool("PreDraw",
+			 true)) {
+	throw Exception("level script PreDraw() returned false");
+      }
+    } 
 
     /* Only make a full physics update when not replaying */
     if(pReplayState == NULL) {
@@ -373,33 +370,6 @@ namespace vapp {
 	      if(pEntityToDestroy != NULL) {
 		deleteEntity(pEntityToDestroy);
 	      }
-	    }
-	    break;
-	  case GAME_EVENT_LUA_FUNCTION_CALLED:
-	    {
-	      /* call lua function */
-
-	      /* PREDRAW */
-	      if(strcmp(pEvent->u.LuaFunctionCalled.functionName, "PreDraw") == 0) {
-		if(!scriptCallBool( "PreDraw",
-				    pEvent->u.LuaFunctionCalled.b1))
-		  throw Exception("level script PreDraw() returned false");
-
-              /* ONLOAD */
-	      } else if(strcmp(pEvent->u.LuaFunctionCalled.functionName, "OnLoad") == 0) {
-		bool bOnLoadSuccess = scriptCallBool("OnLoad",
-						     pEvent->u.LuaFunctionCalled.b1);
-		                                     /* if no OnLoad(), assume success */
-		/* Success? */
-		if(!bOnLoadSuccess) {
-		  /* Hmm, the script insists that we shouldn't begin playing... */
-		  endLevel();      
-		}
-
-	      } else
-		{
-		  // should not append
-		}
 	    }
 	    break;
 	  }
@@ -657,13 +627,14 @@ namespace vapp {
     
     /* Invoke the OnLoad() script function */
     if(v_enableScript) {
-      GameEvent *pEvent = createGameEvent(GAME_EVENT_LUA_FUNCTION_CALLED);
-      if(pEvent != NULL) {
-	strncpy(pEvent->u.LuaFunctionCalled.functionName,
-		"OnLoad",
-		7);
-	pEvent->u.LuaFunctionCalled.b1 = true;
-      } 
+      bool bOnLoadSuccess = scriptCallBool("OnLoad",
+					   true);
+      /* if no OnLoad(), assume success */
+      /* Success? */
+      if(!bOnLoadSuccess) {
+	/* Hmm, the script insists that we shouldn't begin playing... */
+	endLevel();      
+      }
     }
   }
 
@@ -1286,12 +1257,12 @@ namespace vapp {
 	      pEvent->u.EntityDestroyed.cEntityID);
       }
       break;
-    case GAME_EVENT_LUA_FUNCTION_CALLED:
-      {
-	/* call lua function */
-	printf("Call lua function\n");
-      }
-      break;
+    //case GAME_EVENT_LUA_FUNCTION_CALLED:
+    //  {
+    //	/* call lua function */
+    //	printf("Call lua function\n");
+    //  }
+    //  break;
     }
   }
   
@@ -1317,11 +1288,11 @@ namespace vapp {
 	      pEvent->u.EntityDestroyed.cEntityID);
       }
       break;
-    case GAME_EVENT_LUA_FUNCTION_CALLED:
-      {
-	/* do nothing : impossible to do */
-      }
-      break;
+    //case GAME_EVENT_LUA_FUNCTION_CALLED:
+    //  {
+    //	/* do nothing : impossible to do */
+    //  }
+    //  break;
     }
   }  
 
