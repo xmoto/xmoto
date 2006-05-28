@@ -58,9 +58,11 @@ namespace vapp {
       GameEventType EventType;
       Buffer >> EventType;
       
+      bool bIsOk = false;
+
       /* What now depends on event type */
       switch(EventType) {
-      case GAME_EVENT_ENTITY_DESTROYED:        
+      case GAME_EVENT_ENTITY_DESTROYED:       
 	/* Read entity name */
 	int n;
 	Buffer >> n;
@@ -80,14 +82,7 @@ namespace vapp {
 	  Buffer >> Event.u.EntityDestroyed.fPosX;
 	  Buffer >> Event.u.EntityDestroyed.fPosY;            
             
-	  /* Seems ok, add it */
-	  RecordedGameEvent *p = new RecordedGameEvent;
-	  p->fTime = fEventTime;
-	  p->bPassed = false;
-	  p->Event.Type = EventType;
-	  p->Event.nSeq = 0;
-	  memcpy(&p->Event.u,&Event.u,sizeof(Event.u));
-	  m_ReplayEvents.push_back(p);
+	  bIsOk = true;
 	}
 	break;
 
@@ -106,25 +101,23 @@ namespace vapp {
 	    Buffer >> Event.u.LuaCallSetentitypos.x;
 	    Buffer >> Event.u.LuaCallSetentitypos.y;
 
-	    /* Seems ok, add it */
-	    RecordedGameEvent *p = new RecordedGameEvent;
-	    p->fTime = fEventTime;
-	    p->bPassed = false;
-	    p->Event.Type = EventType;
-	    p->Event.nSeq = 0;
-	    memcpy(&p->Event.u,&Event.u,sizeof(Event.u));
-	    m_ReplayEvents.push_back(p);
+	    bIsOk = true;
 	  }
 	}
 	break;
 
       case GAME_EVENT_LUA_CALL_CLEARMESSAGES:
 	{
+	  bIsOk = true;
 	}
 	break;
 	
       case GAME_EVENT_LUA_CALL_PLACEINGAMEARROW:
 	{
+	  Buffer >> Event.u.LuaCallPlaceingamearrow.x;
+	  Buffer >> Event.u.LuaCallPlaceingamearrow.y;
+	  Buffer >> Event.u.LuaCallPlaceingamearrow.angle;
+	  bIsOk = true;
 	}
 	break;
 	
@@ -140,6 +133,17 @@ namespace vapp {
 	
       case GAME_EVENT_LUA_CALL_MESSAGE:
 	{
+	  int n;
+	  Buffer >> n;
+	  if(n >= sizeof(Event.u.LuaCallMessage.cMessage)) {
+	    Log("** Warning ** : Message in replay too long, ignoring all events!");
+	    bError = true;
+	  }
+	  else {
+	    Buffer.readBuf(Event.u.LuaCallMessage.cMessage, n);
+	    Event.u.LuaCallMessage.cMessage[n] = '\0';
+	    bIsOk = true;
+	  }
 	}
 	break;
 	
@@ -168,6 +172,18 @@ namespace vapp {
 	bError = true;
 	break;
       }
+
+      if(bIsOk) {
+	/* Seems ok, add it */
+	RecordedGameEvent *p = new RecordedGameEvent;
+	p->fTime = fEventTime;
+	p->bPassed = false;
+	p->Event.Type = EventType;
+	p->Event.nSeq = 0;
+	memcpy(&p->Event.u,&Event.u,sizeof(Event.u));
+	m_ReplayEvents.push_back(p);
+      }
+
     }
   }
 
@@ -205,11 +221,18 @@ namespace vapp {
 
     case GAME_EVENT_LUA_CALL_CLEARMESSAGES:
       {
+	Buffer << getTime();
+	Buffer << pEvent->Type;
       }
       break;
       
     case GAME_EVENT_LUA_CALL_PLACEINGAMEARROW:
       {
+	Buffer << getTime();
+	Buffer << pEvent->Type;
+	Buffer << pEvent->u.LuaCallPlaceingamearrow.x;
+	Buffer << pEvent->u.LuaCallPlaceingamearrow.y;
+	Buffer << pEvent->u.LuaCallPlaceingamearrow.angle;
       }
       break;
       
@@ -225,6 +248,11 @@ namespace vapp {
       
     case GAME_EVENT_LUA_CALL_MESSAGE:
       {
+	int i;
+	Buffer << getTime();
+	Buffer << pEvent->Type;
+	Buffer << (i=strlen(pEvent->u.LuaCallMessage.cMessage));
+	Buffer.writeBuf(pEvent->u.LuaCallMessage.cMessage,i);
       }
       break;
       

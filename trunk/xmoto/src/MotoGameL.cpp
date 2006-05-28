@@ -63,17 +63,18 @@ namespace vapp {
   
   int L_Game_ClearMessages(lua_State *pL) {
     /* event for this */
-
-    m_pMotoGame->clearGameMessages();
+    GameEvent *pEvent = m_pMotoGame->createGameEvent(GAME_EVENT_LUA_CALL_CLEARMESSAGES);
     return 0;
   }
 
   int L_Game_PlaceInGameArrow(lua_State *pL) {
     /* event for this */
-
-    m_pMotoGame->getArrowPointer().nArrowPointerMode = 1;
-    m_pMotoGame->getArrowPointer().ArrowPointerPos = Vector2f(luaL_check_number(pL,1),luaL_check_number(pL,2));
-    m_pMotoGame->getArrowPointer().fArrowPointerAngle = luaL_check_number(pL,3);
+    GameEvent *pEvent = m_pMotoGame->createGameEvent(GAME_EVENT_LUA_CALL_PLACEINGAMEARROW);
+    if(pEvent != NULL) {
+      pEvent->u.LuaCallPlaceingamearrow.x     = luaL_check_number(pL,1);
+      pEvent->u.LuaCallPlaceingamearrow.y     = luaL_check_number(pL,2);
+      pEvent->u.LuaCallPlaceingamearrow.angle = luaL_check_number(pL,3);    
+    }
     return 0;
   }
 
@@ -103,12 +104,19 @@ namespace vapp {
   
   int L_Game_Message(lua_State *pL) {  
     /* event for this */
-  
-    /* Convert all arguments to strings, and spit them out */
+
+    /* Convert all arguments to strings */
     std::string Out;
     for(int i=0;i<lua_gettop(pL);i++) 
       Out.append(luaL_checkstring(pL,i+1));
-    m_pMotoGame->gameMessage(Out);    
+  
+    GameEvent *pEvent = m_pMotoGame->createGameEvent(GAME_EVENT_LUA_CALL_MESSAGE);
+    if(pEvent != NULL) {
+      strncpy(pEvent->u.LuaCallMessage.cMessage,
+	      Out.c_str(),
+	      sizeof(pEvent->u.LuaCallMessage.cMessage)-1);
+    }
+   
     return 0;
   }  
   

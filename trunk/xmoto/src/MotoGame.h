@@ -382,22 +382,22 @@ namespace vapp {
 	Game event types
   ===========================================================================*/
   enum GameEventType {
-		GAME_EVENT_PLAYER_DIES,
-		GAME_EVENT_PLAYER_ENTERS_ZONE,
-		GAME_EVENT_PLAYER_LEAVES_ZONE,
-		GAME_EVENT_PLAYER_TOUCHES_ENTITY,
-		GAME_EVENT_ENTITY_DESTROYED,
-		
-		GAME_EVENT_LUA_CALL_CLEARMESSAGES,
-		GAME_EVENT_LUA_CALL_PLACEINGAMEARROW,
-		GAME_EVENT_LUA_CALL_PLACESCREENARROW,
-		GAME_EVENT_LUA_CALL_HIDEARROW,
-		GAME_EVENT_LUA_CALL_MESSAGE,
-		GAME_EVENT_LUA_CALL_MOVEBLOCK,
-		GAME_EVENT_LUA_CALL_SETBLOCKPOS,
-		GAME_EVENT_LUA_CALL_SETGRAVITY,
-		GAME_EVENT_LUA_CALL_SETPLAYERPOSITION,
-		GAME_EVENT_LUA_CALL_SETENTITYPOS
+    GAME_EVENT_PLAYER_DIES,
+    GAME_EVENT_PLAYER_ENTERS_ZONE,
+    GAME_EVENT_PLAYER_LEAVES_ZONE,
+    GAME_EVENT_PLAYER_TOUCHES_ENTITY,
+    GAME_EVENT_ENTITY_DESTROYED,
+    
+    GAME_EVENT_LUA_CALL_CLEARMESSAGES,
+    GAME_EVENT_LUA_CALL_PLACEINGAMEARROW,
+    GAME_EVENT_LUA_CALL_PLACESCREENARROW,
+    GAME_EVENT_LUA_CALL_HIDEARROW,
+    GAME_EVENT_LUA_CALL_MESSAGE,
+    GAME_EVENT_LUA_CALL_MOVEBLOCK,
+    GAME_EVENT_LUA_CALL_SETBLOCKPOS,
+    GAME_EVENT_LUA_CALL_SETGRAVITY,
+    GAME_EVENT_LUA_CALL_SETPLAYERPOSITION,
+    GAME_EVENT_LUA_CALL_SETENTITYPOS
 
   };
   
@@ -431,9 +431,11 @@ namespace vapp {
 
 
   struct GameEventLuaCallClearmessages {
+    /* nothing */
   };
   
   struct GameEventLuaCallPlaceingamearrow {
+    float x, y, angle;
   };
   
   struct GameEventLuaCallPlacescreenarrow {
@@ -443,6 +445,7 @@ namespace vapp {
   };
   
   struct GameEventLuaCallMessage {
+    char cMessage[512]; /* message */
   };
   
   struct GameEventLuaCallMoveblock {
@@ -757,6 +760,7 @@ namespace vapp {
          
       /* action for events */
       void _SetEntityPos(String pEntityID, float pX, float pY);
+      void _PlaceInGameArrow(float pX, float pY, float pAngle);
     };
 
 };

@@ -32,12 +32,21 @@ Ghost finition :
 * make a vector for replays to load them faster
 
 Script replay recording finition :
-- do not allow << >> <- -> in replay on scripted levels
+- do not allow << <- in replay on scripted levels
 Finish:
 - updateLevel
 - HandleReplayEvent
 - unserializeGameEvents
 - SerializeGameEventQueue
+
+for
+- GAME_EVENT_LUA_CALL_PLACESCREENARROW,
+- GAME_EVENT_LUA_CALL_HIDEARROW,
+- GAME_EVENT_LUA_CALL_MOVEBLOCK,
+- GAME_EVENT_LUA_CALL_SETBLOCKPOS,
+- GAME_EVENT_LUA_CALL_SETGRAVITY,
+- GAME_EVENT_LUA_CALL_SETPLAYERPOSITION,
+
 And remove ALLOW_SCRIPT_REPLAYING
 
 Undecided:

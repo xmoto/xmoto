@@ -383,11 +383,15 @@ namespace vapp {
 
 	  case GAME_EVENT_LUA_CALL_CLEARMESSAGES:
 	    {
+	      clearGameMessages();
 	    }
 	    break;
 
 	  case GAME_EVENT_LUA_CALL_PLACEINGAMEARROW:
 	    {
+	      _PlaceInGameArrow(pEvent->u.LuaCallPlaceingamearrow.x,
+				pEvent->u.LuaCallPlaceingamearrow.y,
+				pEvent->u.LuaCallPlaceingamearrow.angle);
 	    }
 	    break;
 
@@ -403,6 +407,7 @@ namespace vapp {
 
 	  case GAME_EVENT_LUA_CALL_MESSAGE:
 	    {
+	      gameMessage(pEvent->u.LuaCallMessage.cMessage);
 	    }
 	    break;
 
@@ -1320,14 +1325,17 @@ namespace vapp {
       }
       break;
 
-
     case GAME_EVENT_LUA_CALL_CLEARMESSAGES:
       {
+	clearGameMessages();
       }
       break;
       
     case GAME_EVENT_LUA_CALL_PLACEINGAMEARROW:
       {
+	_PlaceInGameArrow(pEvent->u.LuaCallPlaceingamearrow.x,
+			  pEvent->u.LuaCallPlaceingamearrow.y,
+			  pEvent->u.LuaCallPlaceingamearrow.angle);
       }
       break;
       
@@ -1343,6 +1351,7 @@ namespace vapp {
       
     case GAME_EVENT_LUA_CALL_MESSAGE:
       {
+	gameMessage(pEvent->u.LuaCallMessage.cMessage); 
       }
       break;
       
@@ -1421,6 +1430,12 @@ namespace vapp {
       }
     }
     /* Entity not found */
+  }
+
+  void MotoGame::_PlaceInGameArrow(float pX, float pY, float pAngle) {
+    m_pMotoGame->getArrowPointer().nArrowPointerMode = 1;
+    m_pMotoGame->getArrowPointer().ArrowPointerPos = Vector2f(pX, pY);
+    m_pMotoGame->getArrowPointer().fArrowPointerAngle = pAngle;
   }
 
 #if defined(ALLOW_GHOST) 
