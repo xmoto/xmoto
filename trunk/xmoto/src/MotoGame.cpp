@@ -397,11 +397,15 @@ namespace vapp {
 
 	  case GAME_EVENT_LUA_CALL_PLACESCREENARROW:
 	    {
+	      _PlaceScreenArrow(pEvent->u.LuaCallPlacescreenarrow.x,
+				pEvent->u.LuaCallPlacescreenarrow.y,
+				pEvent->u.LuaCallPlacescreenarrow.angle);  
 	    }
 	    break;
 
 	  case GAME_EVENT_LUA_CALL_HIDEARROW:
 	    {
+	      getArrowPointer().nArrowPointerMode = 0;
 	    }
 	    break;
 
@@ -413,21 +417,32 @@ namespace vapp {
 
 	  case GAME_EVENT_LUA_CALL_MOVEBLOCK:
 	    {
+	      _MoveBlock(pEvent->u.LuaCallMoveblock.cBlockID,
+			 pEvent->u.LuaCallMoveblock.x,
+			 pEvent->u.LuaCallMoveblock.y);
 	    }
 	    break;
 
 	  case GAME_EVENT_LUA_CALL_SETBLOCKPOS:
 	    {
+	      _SetBlockPos(pEvent->u.LuaCallSetblockpos.cBlockID,
+			   pEvent->u.LuaCallSetblockpos.x,
+			   pEvent->u.LuaCallSetblockpos.y);
 	    }
 	    break;
 
 	  case GAME_EVENT_LUA_CALL_SETGRAVITY:
 	    {
+	      setGravity(pEvent->u.LuaCallSetgravity.x,
+			 pEvent->u.LuaCallSetgravity.y);
 	    }
 	    break;
 
 	  case GAME_EVENT_LUA_CALL_SETPLAYERPOSITION:
 	    {
+	      m_pMotoGame->setPlayerPosition(pEvent->u.LuaCallSetplayerposition.x,
+					     pEvent->u.LuaCallSetplayerposition.y,
+					     pEvent->u.LuaCallSetplayerposition.bRight);
 	    }
 	    break;
 
@@ -1341,11 +1356,15 @@ namespace vapp {
       
     case GAME_EVENT_LUA_CALL_PLACESCREENARROW:
       {
+	_PlaceScreenArrow(pEvent->u.LuaCallPlaceingamearrow.x,
+			  pEvent->u.LuaCallPlaceingamearrow.y,
+			  pEvent->u.LuaCallPlaceingamearrow.angle);
       }
       break;
       
     case GAME_EVENT_LUA_CALL_HIDEARROW:
       {
+	getArrowPointer().nArrowPointerMode = 0;
       }
       break;
       
@@ -1357,21 +1376,33 @@ namespace vapp {
       
     case GAME_EVENT_LUA_CALL_MOVEBLOCK:
       {
+	_MoveBlock(pEvent->u.LuaCallMoveblock.cBlockID,
+		   pEvent->u.LuaCallMoveblock.x,
+		   pEvent->u.LuaCallMoveblock.y);
       }
       break;
       
     case GAME_EVENT_LUA_CALL_SETBLOCKPOS:
       {
+	_SetBlockPos(pEvent->u.LuaCallSetblockpos.cBlockID,
+		     pEvent->u.LuaCallSetblockpos.x,
+		     pEvent->u.LuaCallSetblockpos.y);
       }
       break;
       
     case GAME_EVENT_LUA_CALL_SETGRAVITY:
       {
+	setGravity(pEvent->u.LuaCallSetgravity.x,
+		   pEvent->u.LuaCallSetgravity.y);
+		   
       }
       break;
       
     case GAME_EVENT_LUA_CALL_SETPLAYERPOSITION:
       {
+	m_pMotoGame->setPlayerPosition(pEvent->u.LuaCallSetplayerposition.x,
+				       pEvent->u.LuaCallSetplayerposition.y,
+				       pEvent->u.LuaCallSetplayerposition.bRight);
       }
       break;
       
@@ -1436,6 +1467,36 @@ namespace vapp {
     m_pMotoGame->getArrowPointer().nArrowPointerMode = 1;
     m_pMotoGame->getArrowPointer().ArrowPointerPos = Vector2f(pX, pY);
     m_pMotoGame->getArrowPointer().fArrowPointerAngle = pAngle;
+  }
+
+  void MotoGame::_PlaceScreenArrow(float pX, float pY, float pAngle) {
+    m_pMotoGame->getArrowPointer().nArrowPointerMode = 2;
+    m_pMotoGame->getArrowPointer().ArrowPointerPos = Vector2f(pX, pY);
+    m_pMotoGame->getArrowPointer().fArrowPointerAngle = pAngle;
+  }
+
+  void MotoGame::_MoveBlock(String pBlockID, float pX, float pY) {
+    /* Find the specified block and move it along the given vector */
+    for(int i=0;i<getBlocks().size();i++) {
+      ConvexBlock *pBlock = getBlocks()[i];
+      if(pBlock->pSrcBlock->ID == pBlockID) {
+        pBlock->pSrcBlock->fPosX += pX;
+        pBlock->pSrcBlock->fPosY += pY;
+        break;
+      }
+    }
+  }
+
+  void MotoGame::_SetBlockPos(String pBlockID, float pX, float pY) {
+    /* Find the specified block and set its position */
+    for(int i=0;i<getBlocks().size();i++) {
+      ConvexBlock *pBlock = getBlocks()[i];
+      if(pBlock->pSrcBlock->ID == pBlockID) {
+        pBlock->pSrcBlock->fPosX = pX;
+        pBlock->pSrcBlock->fPosY = pY;
+        break;
+      }
+    }
   }
 
 #if defined(ALLOW_GHOST) 

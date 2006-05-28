@@ -123,11 +123,16 @@ namespace vapp {
 	
       case GAME_EVENT_LUA_CALL_PLACESCREENARROW:
 	{
+	  Buffer >> Event.u.LuaCallPlacescreenarrow.x;
+	  Buffer >> Event.u.LuaCallPlacescreenarrow.y;
+	  Buffer >> Event.u.LuaCallPlacescreenarrow.angle;
+	  bIsOk = true;
 	}
 	break;
 	
       case GAME_EVENT_LUA_CALL_HIDEARROW:
 	{
+	  bIsOk = true;
 	}
 	break;
 	
@@ -149,21 +154,58 @@ namespace vapp {
 	
       case GAME_EVENT_LUA_CALL_MOVEBLOCK:
 	{
+	  int n;
+	  Buffer >> n;
+	  if(n >= sizeof(Event.u.LuaCallMoveblock.cBlockID)) {
+	    Log("** Warning ** : Block name in replay too long, ignoring all events!");
+	    bError = true;
+	  }
+	  else {
+	    Buffer.readBuf(Event.u.LuaCallMoveblock.cBlockID,n);
+	    Event.u.LuaCallMoveblock.cBlockID[n] = '\0';
+
+	    Buffer >> Event.u.LuaCallMoveblock.x;
+	    Buffer >> Event.u.LuaCallMoveblock.y;
+
+	    bIsOk = true;
+	  }
 	}
 	break;
 	
       case GAME_EVENT_LUA_CALL_SETBLOCKPOS:
 	{
+	  int n;
+	  Buffer >> n;
+	  if(n >= sizeof(Event.u.LuaCallSetblockpos.cBlockID)) {
+	    Log("** Warning ** : Block name in replay too long, ignoring all events!");
+	    bError = true;
+	  }
+	  else {
+	    Buffer.readBuf(Event.u.LuaCallSetblockpos.cBlockID,n);
+	    Event.u.LuaCallSetblockpos.cBlockID[n] = '\0';
+
+	    Buffer >> Event.u.LuaCallSetblockpos.x;
+	    Buffer >> Event.u.LuaCallSetblockpos.y;
+
+	    bIsOk = true;
+	  }
 	}
 	break;
 	
       case GAME_EVENT_LUA_CALL_SETGRAVITY:
 	{
+	  Buffer >> Event.u.LuaCallSetgravity.x;
+	  Buffer >> Event.u.LuaCallSetgravity.y;
+	  bIsOk = true;
 	}
 	break;
 	
       case GAME_EVENT_LUA_CALL_SETPLAYERPOSITION:
 	{
+	  Buffer >> Event.u.LuaCallSetplayerposition.x;
+	  Buffer >> Event.u.LuaCallSetplayerposition.y;
+	  Buffer >> Event.u.LuaCallSetplayerposition.bRight;
+	  bIsOk = true;
 	}
 	break;
 	
@@ -238,11 +280,18 @@ namespace vapp {
       
     case GAME_EVENT_LUA_CALL_PLACESCREENARROW:
       {
+	Buffer << getTime();
+	Buffer << pEvent->Type;
+	Buffer << pEvent->u.LuaCallPlacescreenarrow.x;
+	Buffer << pEvent->u.LuaCallPlacescreenarrow.y;
+	Buffer << pEvent->u.LuaCallPlacescreenarrow.angle;
       }
       break;
       
     case GAME_EVENT_LUA_CALL_HIDEARROW:
       {
+	Buffer << getTime();
+	Buffer << pEvent->Type;
       }
       break;
       
@@ -258,21 +307,44 @@ namespace vapp {
       
     case GAME_EVENT_LUA_CALL_MOVEBLOCK:
       {
+	int i;
+	Buffer << getTime();
+	Buffer << pEvent->Type;
+	Buffer << (i=strlen(pEvent->u.LuaCallMoveblock.cBlockID));
+	Buffer.writeBuf(pEvent->u.LuaCallMoveblock.cBlockID,i);
+	Buffer << pEvent->u.LuaCallMoveblock.x;
+	Buffer << pEvent->u.LuaCallMoveblock.y;
       }
       break;
       
     case GAME_EVENT_LUA_CALL_SETBLOCKPOS:
       {
+	int i;
+	Buffer << getTime();
+	Buffer << pEvent->Type;
+	Buffer << (i=strlen(pEvent->u.LuaCallSetblockpos.cBlockID));
+	Buffer.writeBuf(pEvent->u.LuaCallSetblockpos.cBlockID,i);
+	Buffer << pEvent->u.LuaCallSetblockpos.x;
+	Buffer << pEvent->u.LuaCallSetblockpos.y;
       }
       break;
       
     case GAME_EVENT_LUA_CALL_SETGRAVITY:
       {
+	Buffer << getTime();
+	Buffer << pEvent->Type;
+	Buffer << pEvent->u.LuaCallSetgravity.x;
+	Buffer << pEvent->u.LuaCallSetgravity.y;
       }
       break;
       
     case GAME_EVENT_LUA_CALL_SETPLAYERPOSITION:
       {
+	Buffer << getTime();
+	Buffer << pEvent->Type;
+	Buffer << pEvent->u.LuaCallSetplayerposition.x;
+	Buffer << pEvent->u.LuaCallSetplayerposition.y;
+	Buffer << pEvent->u.LuaCallSetplayerposition.bRight;
       }
       break;
       

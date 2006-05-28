@@ -80,17 +80,19 @@ namespace vapp {
 
   int L_Game_PlaceScreenArrow(lua_State *pL) {
     /* event for this */
+    GameEvent *pEvent = m_pMotoGame->createGameEvent(GAME_EVENT_LUA_CALL_PLACESCREENARROW);
+    if(pEvent != NULL) {
+      pEvent->u.LuaCallPlacescreenarrow.x     = luaL_check_number(pL,1);
+      pEvent->u.LuaCallPlacescreenarrow.y     = luaL_check_number(pL,2);
+      pEvent->u.LuaCallPlacescreenarrow.angle = luaL_check_number(pL,3);    
+    }
 
-    m_pMotoGame->getArrowPointer().nArrowPointerMode = 2;
-    m_pMotoGame->getArrowPointer().ArrowPointerPos = Vector2f(luaL_check_number(pL,1),luaL_check_number(pL,2));
-    m_pMotoGame->getArrowPointer().fArrowPointerAngle = luaL_check_number(pL,3);
     return 0;
   }
 
   int L_Game_HideArrow(lua_State *pL) {
     /* event for this */
-
-    m_pMotoGame->getArrowPointer().nArrowPointerMode = 0;
+    GameEvent *pEvent = m_pMotoGame->createGameEvent(GAME_EVENT_LUA_CALL_HIDEARROW);
     return 0;
   }
   
@@ -139,15 +141,15 @@ namespace vapp {
   int L_Game_MoveBlock(lua_State *pL) {
     /* event for this */
 
-    /* Find the specified block and move it along the given vector */
-    for(int i=0;i<m_pMotoGame->getBlocks().size();i++) {
-      ConvexBlock *pBlock = m_pMotoGame->getBlocks()[i];
-      if(pBlock->pSrcBlock->ID == luaL_checkstring(pL,1)) {
-        pBlock->pSrcBlock->fPosX += luaL_check_number(pL,2);
-        pBlock->pSrcBlock->fPosY += luaL_check_number(pL,3);
-        break;
-      }
+    GameEvent *pEvent = m_pMotoGame->createGameEvent(GAME_EVENT_LUA_CALL_MOVEBLOCK);
+    if(pEvent != NULL) {
+      strncpy(pEvent->u.LuaCallMoveblock.cBlockID,
+	      luaL_checkstring(pL,1),
+	      sizeof(pEvent->u.LuaCallMoveblock.cBlockID)-1);
+      pEvent->u.LuaCallMoveblock.x = luaL_check_number(pL,2);
+      pEvent->u.LuaCallMoveblock.y = luaL_check_number(pL,3);
     }
+
     return 0;
   }
   
@@ -172,23 +174,27 @@ namespace vapp {
   int L_Game_SetBlockPos(lua_State *pL) {
     /* event for this */
 
-    /* Find the specified block and set its position */
-    for(int i=0;i<m_pMotoGame->getBlocks().size();i++) {
-      ConvexBlock *pBlock = m_pMotoGame->getBlocks()[i];
-      if(pBlock->pSrcBlock->ID == luaL_checkstring(pL,1)) {
-        pBlock->pSrcBlock->fPosX = luaL_check_number(pL,2);
-        pBlock->pSrcBlock->fPosY = luaL_check_number(pL,3);
-        break;
-      }
+    GameEvent *pEvent = m_pMotoGame->createGameEvent(GAME_EVENT_LUA_CALL_SETBLOCKPOS);
+    if(pEvent != NULL) {
+      strncpy(pEvent->u.LuaCallSetblockpos.cBlockID,
+	      luaL_checkstring(pL,1),
+	      sizeof(pEvent->u.LuaCallSetblockpos.cBlockID)-1);
+      pEvent->u.LuaCallSetblockpos.x = luaL_check_number(pL,2);
+      pEvent->u.LuaCallSetblockpos.y = luaL_check_number(pL,3);
     }
+
     return 0;
   }  
 
   int L_Game_SetGravity(lua_State *pL) {
     /* event for this */
 
-    /* Set gravity */
-    m_pMotoGame->setGravity(luaL_check_number(pL,1),luaL_check_number(pL,2));    
+    GameEvent *pEvent = m_pMotoGame->createGameEvent(GAME_EVENT_LUA_CALL_SETGRAVITY);
+    if(pEvent != NULL) {
+      pEvent->u.LuaCallSetgravity.x = luaL_check_number(pL,2);
+      pEvent->u.LuaCallSetgravity.y = luaL_check_number(pL,3);
+    }
+      
     return 0;
   }  
 
@@ -204,11 +210,15 @@ namespace vapp {
   int L_Game_SetPlayerPosition(lua_State *pL) {
     /* event for this */
 
-    /* Set player position */  
-    bool bRight = false;
-    if(luaL_check_number(pL,3) > 0.0f) bRight = true;
-    
-    m_pMotoGame->setPlayerPosition(luaL_check_number(pL,1),luaL_check_number(pL,2),bRight);    
+    GameEvent *pEvent = m_pMotoGame->createGameEvent(GAME_EVENT_LUA_CALL_SETPLAYERPOSITION);
+    if(pEvent != NULL) {
+      bool bRight = false;
+      if(luaL_check_number(pL,3) > 0.0f) bRight = true;
+
+      pEvent->u.LuaCallSetplayerposition.x      = luaL_check_number(pL,1);
+      pEvent->u.LuaCallSetplayerposition.y      = luaL_check_number(pL,2);
+      pEvent->u.LuaCallSetplayerposition.bRight = bRight;
+    }
     return 0;
   }  
   

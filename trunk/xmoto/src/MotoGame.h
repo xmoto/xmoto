@@ -439,6 +439,7 @@ namespace vapp {
   };
   
   struct GameEventLuaCallPlacescreenarrow {
+    float x, y, angle;
   };
   
   struct GameEventLuaCallHidearrow {
@@ -449,15 +450,22 @@ namespace vapp {
   };
   
   struct GameEventLuaCallMoveblock {
+    char cBlockID[64]; /* ID of block */
+    float x, y;
   };
   
   struct GameEventLuaCallSetblockpos {
+    char cBlockID[64]; /* ID of block */
+    float x, y;
   };
   
   struct GameEventLuaCallSetgravity {
+    float x, y;
   };
   
   struct GameEventLuaCallSetplayerposition {
+    float x, y;
+    bool bRight;
   };
   
   struct GameEventLuaCallSetentitypos {
@@ -761,6 +769,9 @@ namespace vapp {
       /* action for events */
       void _SetEntityPos(String pEntityID, float pX, float pY);
       void _PlaceInGameArrow(float pX, float pY, float pAngle);
+      void _PlaceScreenArrow(float pX, float pY, float pAngle);
+      void _MoveBlock(String pBlockID, float pX, float pY);
+      void _SetBlockPos(String pBlockID, float pX, float pY);
     };
 
 };
