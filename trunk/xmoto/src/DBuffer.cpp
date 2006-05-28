@@ -38,7 +38,7 @@ namespace vapp {
   void DBuffer::initOutput(int nPartSize) {
     /* Initialize buffer for output */
     m_bInit = true;
-    m_bOutput = true;  
+    m_bOutput = true; 
     m_nPartSize = nPartSize;
     m_nCurPart = 0;
   }
@@ -70,7 +70,7 @@ namespace vapp {
         
         /* What's left? */
         int nRem = m_nPartSize - m_Parts[m_nCurPart]->nPtr;
-        int nWrite = nRem < nBufSize ? nRem : nBufSize;
+        int nWrite = nRem < nBufSize-i ? nRem : nBufSize-i;
         
         /* Write it */
         memcpy(&m_Parts[m_nCurPart]->pcBuffer[m_Parts[m_nCurPart]->nPtr],&pcBuf[i],nWrite);
@@ -94,7 +94,7 @@ namespace vapp {
       /* Remaining in input buffer? */
       if(m_nSize - m_nReadPtr < nBufSize) {
         /* TODO: error */
-        memset(pcBuf,0,nBufSize); 
+        memset(pcBuf,0,nBufSize);
       }
       else {
         /* Read and advance ptr */
@@ -119,6 +119,7 @@ namespace vapp {
         if(i == m_Parts.size() - 1) m_nSize += m_Parts[i]->nPtr;
         else m_nSize += m_nPartSize;
       }
+
       m_pcData = new char [m_nSize];
       int k = 0;
       for(int i=0;i<m_Parts.size();i++) {
