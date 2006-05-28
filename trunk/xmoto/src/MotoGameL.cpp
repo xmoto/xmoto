@@ -191,8 +191,8 @@ namespace vapp {
 
     GameEvent *pEvent = m_pMotoGame->createGameEvent(GAME_EVENT_LUA_CALL_SETGRAVITY);
     if(pEvent != NULL) {
-      pEvent->u.LuaCallSetgravity.x = luaL_check_number(pL,2);
-      pEvent->u.LuaCallSetgravity.y = luaL_check_number(pL,3);
+      pEvent->u.LuaCallSetgravity.x = luaL_check_number(pL,1);
+      pEvent->u.LuaCallSetgravity.y = luaL_check_number(pL,2);
     }
       
     return 0;
