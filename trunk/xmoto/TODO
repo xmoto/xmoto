@@ -31,6 +31,15 @@
 Ghost finition :
 * make a vector for replays to load them faster
 
+Script replay recording finition :
+- do not allow << >> <- -> in replay on scripted levels
+Finish:
+- updateLevel
+- HandleReplayEvent
+- unserializeGameEvents
+- SerializeGameEventQueue
+And remove ALLOW_SCRIPT_REPLAYING
+
 Undecided:
 * Sound::playSampleByName("Sounds/NewHighscore.ogg"); ? it could be nice
 

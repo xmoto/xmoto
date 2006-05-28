@@ -372,6 +372,60 @@ namespace vapp {
 	      }
 	    }
 	    break;
+
+	  case GAME_EVENT_LUA_CALL_SETENTITYPOS:
+	    {
+	      _SetEntityPos(pEvent->u.LuaCallSetentitypos.cEntityID,
+			    pEvent->u.LuaCallSetentitypos.x,
+			    pEvent->u.LuaCallSetentitypos.y);
+	    }
+	    break;
+
+	  case GAME_EVENT_LUA_CALL_CLEARMESSAGES:
+	    {
+	    }
+	    break;
+
+	  case GAME_EVENT_LUA_CALL_PLACEINGAMEARROW:
+	    {
+	    }
+	    break;
+
+	  case GAME_EVENT_LUA_CALL_PLACESCREENARROW:
+	    {
+	    }
+	    break;
+
+	  case GAME_EVENT_LUA_CALL_HIDEARROW:
+	    {
+	    }
+	    break;
+
+	  case GAME_EVENT_LUA_CALL_MESSAGE:
+	    {
+	    }
+	    break;
+
+	  case GAME_EVENT_LUA_CALL_MOVEBLOCK:
+	    {
+	    }
+	    break;
+
+	  case GAME_EVENT_LUA_CALL_SETBLOCKPOS:
+	    {
+	    }
+	    break;
+
+	  case GAME_EVENT_LUA_CALL_SETGRAVITY:
+	    {
+	    }
+	    break;
+
+	  case GAME_EVENT_LUA_CALL_SETPLAYERPOSITION:
+	    {
+	    }
+	    break;
+
 	  }
 	}
 	else break;
@@ -1257,12 +1311,61 @@ namespace vapp {
 	      pEvent->u.EntityDestroyed.cEntityID);
       }
       break;
-    //case GAME_EVENT_LUA_FUNCTION_CALLED:
-    //  {
-    //	/* call lua function */
-    //	printf("Call lua function\n");
-    //  }
-    //  break;
+
+    case GAME_EVENT_LUA_CALL_SETENTITYPOS:
+      {
+	_SetEntityPos(pEvent->u.LuaCallSetentitypos.cEntityID,
+		      pEvent->u.LuaCallSetentitypos.x,
+		      pEvent->u.LuaCallSetentitypos.y);
+      }
+      break;
+
+
+    case GAME_EVENT_LUA_CALL_CLEARMESSAGES:
+      {
+      }
+      break;
+      
+    case GAME_EVENT_LUA_CALL_PLACEINGAMEARROW:
+      {
+      }
+      break;
+      
+    case GAME_EVENT_LUA_CALL_PLACESCREENARROW:
+      {
+      }
+      break;
+      
+    case GAME_EVENT_LUA_CALL_HIDEARROW:
+      {
+      }
+      break;
+      
+    case GAME_EVENT_LUA_CALL_MESSAGE:
+      {
+      }
+      break;
+      
+    case GAME_EVENT_LUA_CALL_MOVEBLOCK:
+      {
+      }
+      break;
+      
+    case GAME_EVENT_LUA_CALL_SETBLOCKPOS:
+      {
+      }
+      break;
+      
+    case GAME_EVENT_LUA_CALL_SETGRAVITY:
+      {
+      }
+      break;
+      
+    case GAME_EVENT_LUA_CALL_SETPLAYERPOSITION:
+      {
+      }
+      break;
+      
     }
   }
   
@@ -1288,13 +1391,37 @@ namespace vapp {
 	      pEvent->u.EntityDestroyed.cEntityID);
       }
       break;
-    //case GAME_EVENT_LUA_FUNCTION_CALLED:
-    //  {
-    //	/* do nothing : impossible to do */
-    //  }
-    //  break;
+
+    case GAME_EVENT_LUA_CALL_SETENTITYPOS:
+    case GAME_EVENT_LUA_CALL_CLEARMESSAGES:
+    case GAME_EVENT_LUA_CALL_PLACEINGAMEARROW:
+    case GAME_EVENT_LUA_CALL_PLACESCREENARROW:
+    case GAME_EVENT_LUA_CALL_HIDEARROW:
+    case GAME_EVENT_LUA_CALL_MESSAGE:
+    case GAME_EVENT_LUA_CALL_MOVEBLOCK:
+    case GAME_EVENT_LUA_CALL_SETBLOCKPOS:
+    case GAME_EVENT_LUA_CALL_SETGRAVITY:
+    case GAME_EVENT_LUA_CALL_SETPLAYERPOSITION:
+      {
+	/* hum : do nothing */
+	/* what can i do ?  */
+      }
+      break;
+
     }
   }  
+
+  void MotoGame::_SetEntityPos(String pEntityID, float pX, float pY) {
+    /* Find the specified entity and set its position */
+    for(int i=0;i<getEntities().size();i++) {
+      Entity *p = getEntities()[i];
+      if(pEntityID == p->ID) {
+	p->Pos.x = pX;
+	p->Pos.y = pY;
+      }
+    }
+    /* Entity not found */
+  }
 
 #if defined(ALLOW_GHOST) 
   void MotoGame::UpdateGhostFromReplay(SerializedBikeState *pReplayState) {

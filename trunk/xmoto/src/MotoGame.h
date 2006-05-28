@@ -386,7 +386,19 @@ namespace vapp {
 		GAME_EVENT_PLAYER_ENTERS_ZONE,
 		GAME_EVENT_PLAYER_LEAVES_ZONE,
 		GAME_EVENT_PLAYER_TOUCHES_ENTITY,
-		GAME_EVENT_ENTITY_DESTROYED
+		GAME_EVENT_ENTITY_DESTROYED,
+		
+		GAME_EVENT_LUA_CALL_CLEARMESSAGES,
+		GAME_EVENT_LUA_CALL_PLACEINGAMEARROW,
+		GAME_EVENT_LUA_CALL_PLACESCREENARROW,
+		GAME_EVENT_LUA_CALL_HIDEARROW,
+		GAME_EVENT_LUA_CALL_MESSAGE,
+		GAME_EVENT_LUA_CALL_MOVEBLOCK,
+		GAME_EVENT_LUA_CALL_SETBLOCKPOS,
+		GAME_EVENT_LUA_CALL_SETGRAVITY,
+		GAME_EVENT_LUA_CALL_SETPLAYERPOSITION,
+		GAME_EVENT_LUA_CALL_SETENTITYPOS
+
   };
   
 	/*===========================================================================
@@ -417,26 +429,91 @@ namespace vapp {
 		bool bHead;										/* Touched with head? */
   };
 
+
+  struct GameEventLuaCallClearmessages {
+  };
+  
+  struct GameEventLuaCallPlaceingamearrow {
+  };
+  
+  struct GameEventLuaCallPlacescreenarrow {
+  };
+  
+  struct GameEventLuaCallHidearrow {
+  };
+  
+  struct GameEventLuaCallMessage {
+  };
+  
+  struct GameEventLuaCallMoveblock {
+  };
+  
+  struct GameEventLuaCallSetblockpos {
+  };
+  
+  struct GameEventLuaCallSetgravity {
+  };
+  
+  struct GameEventLuaCallSetplayerposition {
+  };
+  
+  struct GameEventLuaCallSetentitypos {
+    char cEntityID[64]; /* ID of entity */
+    float x,y;
+  };
+  
   struct GameEvent {
     int nSeq;                         /* Sequence number */
-		GameEventType Type;								/* Type of event */
-		
-		union GameEvent_u {								
-			/* GAME_EVENT_PLAYER_DIES */		
-			GameEventPlayerDies PlayerDies;								
-			
-			/* GAME_EVENT_ENTITY_DESTROYED */
-			GameEventEntityDestroyed EntityDestroyed;
-			
-			/* GAME_EVENT_PLAYER_ENTERS_ZONE */
-			GameEventPlayerEntersZone PlayerEntersZone;
-			
-			/* GAME_EVENT_PLAYER_LEAVES_ZONE */
-			GameEventPlayerLeavesZone PlayerLeavesZone;
+    GameEventType Type;								/* Type of event */
+    
+    union GameEvent_u {								
+      /* GAME_EVENT_PLAYER_DIES */		
+      GameEventPlayerDies PlayerDies;								
+      
+      /* GAME_EVENT_ENTITY_DESTROYED */
+      GameEventEntityDestroyed EntityDestroyed;
+      
+      /* GAME_EVENT_PLAYER_ENTERS_ZONE */
+      GameEventPlayerEntersZone PlayerEntersZone;
+      
+      /* GAME_EVENT_PLAYER_LEAVES_ZONE */
+      GameEventPlayerLeavesZone PlayerLeavesZone;
+      
+      /* GAME_EVENT_PLAYER_TOUCHES_ENTITY */
+      GameEventPlayerTouchesEntity PlayerTouchesEntity;
 
-			/* GAME_EVENT_PLAYER_TOUCHES_ENTITY */
-			GameEventPlayerTouchesEntity PlayerTouchesEntity;
-		} u;		
+
+      /* GAME_EVENT_LUA_CALL_CLEARMESSAGES     */
+      GameEventLuaCallClearmessages LuaCallClearmessages;
+
+      /* GAME_EVENT_LUA_CALL_PLACEINGAMEARROW  */
+      GameEventLuaCallPlaceingamearrow LuaCallPlaceingamearrow;
+
+      /* GAME_EVENT_LUA_CALL_PLACESCREENARROW  */
+      GameEventLuaCallPlacescreenarrow LuaCallPlacescreenarrow;
+
+      /* GAME_EVENT_LUA_CALL_HIDEARROW	 */
+      GameEventLuaCallHidearrow LuaCallHidearrow;
+
+      /* GAME_EVENT_LUA_CALL_MESSAGE		 */
+      GameEventLuaCallMessage LuaCallMessage;
+
+      /* GAME_EVENT_LUA_CALL_MOVEBLOCK	 */
+      GameEventLuaCallMoveblock LuaCallMoveblock;
+
+      /* GAME_EVENT_LUA_CALL_SETBLOCKPOS	 */
+      GameEventLuaCallSetblockpos LuaCallSetblockpos;
+
+      /* GAME_EVENT_LUA_CALL_SETGRAVITY	 */
+      GameEventLuaCallSetgravity LuaCallSetgravity;
+
+      /* GAME_EVENT_LUA_CALL_SETPLAYERPOSITION */
+      GameEventLuaCallSetplayerposition LuaCallSetplayerposition;
+
+      /* GAME_EVENT_LUA_CALL_SETENTITYPOS      */
+      GameEventLuaCallSetentitypos LuaCallSetentitypos;
+
+    } u;		
   };
   
   struct RecordedGameEvent {
@@ -677,7 +754,9 @@ namespace vapp {
       void _UninitPhysics(void);
       void _PrepareBikePhysics(Vector2f StartPos);
       void _PrepareRider(Vector2f StartPos);
-            
+         
+      /* action for events */
+      void _SetEntityPos(String pEntityID, float pX, float pY);
     };
 
 };

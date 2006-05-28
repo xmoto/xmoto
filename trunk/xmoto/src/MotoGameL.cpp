@@ -52,6 +52,8 @@ namespace vapp {
     Lua game library functions
   ===========================================================================*/
   int L_Game_Log(lua_State *pL) {
+    /* no event for this */
+
     std::string Out;
     for(int i=0;i<lua_gettop(pL);i++) 
       Out.append(luaL_checkstring(pL,i+1));
@@ -60,11 +62,15 @@ namespace vapp {
   }
   
   int L_Game_ClearMessages(lua_State *pL) {
+    /* event for this */
+
     m_pMotoGame->clearGameMessages();
     return 0;
   }
 
   int L_Game_PlaceInGameArrow(lua_State *pL) {
+    /* event for this */
+
     m_pMotoGame->getArrowPointer().nArrowPointerMode = 1;
     m_pMotoGame->getArrowPointer().ArrowPointerPos = Vector2f(luaL_check_number(pL,1),luaL_check_number(pL,2));
     m_pMotoGame->getArrowPointer().fArrowPointerAngle = luaL_check_number(pL,3);
@@ -72,6 +78,8 @@ namespace vapp {
   }
 
   int L_Game_PlaceScreenArrow(lua_State *pL) {
+    /* event for this */
+
     m_pMotoGame->getArrowPointer().nArrowPointerMode = 2;
     m_pMotoGame->getArrowPointer().ArrowPointerPos = Vector2f(luaL_check_number(pL,1),luaL_check_number(pL,2));
     m_pMotoGame->getArrowPointer().fArrowPointerAngle = luaL_check_number(pL,3);
@@ -79,17 +87,23 @@ namespace vapp {
   }
 
   int L_Game_HideArrow(lua_State *pL) {
+    /* event for this */
+
     m_pMotoGame->getArrowPointer().nArrowPointerMode = 0;
     return 0;
   }
   
   int L_Game_GetTime(lua_State *pL) {
+    /* no event for this */
+
     /* Get current game time */
     lua_pushnumber(pL,m_pMotoGame->getTime());
     return 1;
   }
   
-  int L_Game_Message(lua_State *pL) {    
+  int L_Game_Message(lua_State *pL) {  
+    /* event for this */
+  
     /* Convert all arguments to strings, and spit them out */
     std::string Out;
     for(int i=0;i<lua_gettop(pL);i++) 
@@ -98,7 +112,9 @@ namespace vapp {
     return 0;
   }  
   
-  int L_Game_IsPlayerInZone(lua_State *pL) {    
+  int L_Game_IsPlayerInZone(lua_State *pL) {
+    /* no event for this */
+   
     int nRet = FALSE;
   
     /* Check whether the player is in the specified zone */
@@ -113,6 +129,8 @@ namespace vapp {
   }
   
   int L_Game_MoveBlock(lua_State *pL) {
+    /* event for this */
+
     /* Find the specified block and move it along the given vector */
     for(int i=0;i<m_pMotoGame->getBlocks().size();i++) {
       ConvexBlock *pBlock = m_pMotoGame->getBlocks()[i];
@@ -126,6 +144,8 @@ namespace vapp {
   }
   
   int L_Game_GetBlockPos(lua_State *pL) {
+    /* no event for this */
+
     /* Find the specified block and return its position */
     for(int i=0;i<m_pMotoGame->getBlocks().size();i++) {
       ConvexBlock *pBlock = m_pMotoGame->getBlocks()[i];
@@ -142,6 +162,8 @@ namespace vapp {
   }
   
   int L_Game_SetBlockPos(lua_State *pL) {
+    /* event for this */
+
     /* Find the specified block and set its position */
     for(int i=0;i<m_pMotoGame->getBlocks().size();i++) {
       ConvexBlock *pBlock = m_pMotoGame->getBlocks()[i];
@@ -155,12 +177,16 @@ namespace vapp {
   }  
 
   int L_Game_SetGravity(lua_State *pL) {
+    /* event for this */
+
     /* Set gravity */
     m_pMotoGame->setGravity(luaL_check_number(pL,1),luaL_check_number(pL,2));    
     return 0;
   }  
 
   int L_Game_GetGravity(lua_State *pL) {
+    /* no event for this */
+
     /* Get gravity */
     lua_pushnumber(pL,m_pMotoGame->getGravity().x);
     lua_pushnumber(pL,m_pMotoGame->getGravity().y);    
@@ -168,6 +194,8 @@ namespace vapp {
   }
 
   int L_Game_SetPlayerPosition(lua_State *pL) {
+    /* event for this */
+
     /* Set player position */  
     bool bRight = false;
     if(luaL_check_number(pL,3) > 0.0f) bRight = true;
@@ -177,6 +205,8 @@ namespace vapp {
   }  
   
   int L_Game_GetPlayerPosition(lua_State *pL) {
+    /* no event for this */
+
     /* Get player position */
     lua_pushnumber(pL,m_pMotoGame->getPlayerPosition().x);
     lua_pushnumber(pL,m_pMotoGame->getPlayerPosition().y);
@@ -185,6 +215,8 @@ namespace vapp {
   }
 
   int L_Game_GetEntityPos(lua_State *pL) {
+    /* no event for this */
+
     /* Find the specified entity and return its position */
     for(int i=0;i<m_pMotoGame->getEntities().size();i++) {
       Entity *p = m_pMotoGame->getEntities()[i];
@@ -201,20 +233,22 @@ namespace vapp {
   }  
 
   int L_Game_SetEntityPos(lua_State *pL) {
-    /* Find the specified entity and set its position */
-    for(int i=0;i<m_pMotoGame->getEntities().size();i++) {
-      Entity *p = m_pMotoGame->getEntities()[i];
-      if(p->ID == luaL_checkstring(pL,1)) {
-        p->Pos.x = luaL_checknumber(pL,2);
-        p->Pos.y = luaL_checknumber(pL,3);
-        return 0;
-      }
+    /* event for this */
+    GameEvent *pEvent = m_pMotoGame->createGameEvent(GAME_EVENT_LUA_CALL_SETENTITYPOS);
+    if(pEvent != NULL) {
+      strncpy(pEvent->u.LuaCallSetentitypos.cEntityID,
+	      luaL_checkstring(pL,1),
+	      sizeof(pEvent->u.LuaCallSetentitypos.cEntityID)-1);
+      pEvent->u.LuaCallSetentitypos.x = luaL_check_number(pL,2);
+      pEvent->u.LuaCallSetentitypos.y = luaL_check_number(pL,3);
+      
     }
-    /* Entity not found */
     return 0;
   }  
   
   int L_Game_SetKeyHook(lua_State *pL) {
+    /* no event for this */
+
     if(m_pActiveInputHandler != NULL) {
       m_pActiveInputHandler->addScriptKeyHook(m_pMotoGame,luaL_checkstring(pL,1),luaL_checkstring(pL,2));
     }
@@ -222,6 +256,8 @@ namespace vapp {
   }
 
   int L_Game_GetKeyByAction(lua_State *pL) {
+    /* no event for this */
+
     if(m_pActiveInputHandler != NULL) {
       lua_pushstring(pL,m_pActiveInputHandler->getKeyByAction(luaL_checkstring(pL,1)).c_str());
       return 1;

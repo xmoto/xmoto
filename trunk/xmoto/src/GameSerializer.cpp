@@ -50,6 +50,8 @@ namespace vapp {
     while(Buffer.numRemainingBytes() > sizeof(float) && !bError) {
       /* Get event time */
       float fEventTime;
+      GameEvent Event;
+
       Buffer >> fEventTime;
       
       /* Get event type */
@@ -58,9 +60,7 @@ namespace vapp {
       
       /* What now depends on event type */
       switch(EventType) {
-      case GAME_EVENT_ENTITY_DESTROYED:
-	GameEvent Event;
-          
+      case GAME_EVENT_ENTITY_DESTROYED:        
 	/* Read entity name */
 	int n;
 	Buffer >> n;
@@ -90,33 +90,79 @@ namespace vapp {
 	  m_ReplayEvents.push_back(p);
 	}
 	break;
-//      case GAME_EVENT_LUA_FUNCTION_CALLED:
-//	{
-//	  int n;
-//	  Buffer >> n;
-//	 
-//	  if(n >= sizeof(Event.u.LuaFunctionCalled.functionName)) {
-//	    Log("** Warning ** : Lua function name in replay too long, ignoring all events!");
-//	    bError = true;
-//	  }
-//	  else {
-//	    Buffer.readBuf(Event.u.LuaFunctionCalled.functionName,n);
-//	    Event.u.LuaFunctionCalled.functionName[n] = '\0';
-//	    
-//	    /* PREDRAW */
-//	    if(strcmp(Event.u.LuaFunctionCalled.functionName, "PreDraw") == 0) {
-//	      Buffer >> Event.u.LuaFunctionCalled.b1;
-//	      
-//	      /* ONLOAD */
-//	    } else if(strcmp(Event.u.LuaFunctionCalled.functionName, "OnLoad") == 0) {
-//	      Buffer >> Event.u.LuaFunctionCalled.b1;
-//	      
-//	    } else {
-//	      /* should not append */
-//	    }
-//	  }
-//	}
-//	break;
+
+      case GAME_EVENT_LUA_CALL_SETENTITYPOS:
+	{
+	  int n;
+	  Buffer >> n;
+	  if(n >= sizeof(Event.u.LuaCallSetentitypos.cEntityID)) {
+	    Log("** Warning ** : Entity name in replay too long, ignoring all events!");
+	    bError = true;
+	  }
+	  else {
+	    Buffer.readBuf(Event.u.LuaCallSetentitypos.cEntityID,n);
+	    Event.u.LuaCallSetentitypos.cEntityID[n] = '\0';
+
+	    Buffer >> Event.u.LuaCallSetentitypos.x;
+	    Buffer >> Event.u.LuaCallSetentitypos.y;
+
+	    /* Seems ok, add it */
+	    RecordedGameEvent *p = new RecordedGameEvent;
+	    p->fTime = fEventTime;
+	    p->bPassed = false;
+	    p->Event.Type = EventType;
+	    p->Event.nSeq = 0;
+	    memcpy(&p->Event.u,&Event.u,sizeof(Event.u));
+	    m_ReplayEvents.push_back(p);
+	  }
+	}
+	break;
+
+      case GAME_EVENT_LUA_CALL_CLEARMESSAGES:
+	{
+	}
+	break;
+	
+      case GAME_EVENT_LUA_CALL_PLACEINGAMEARROW:
+	{
+	}
+	break;
+	
+      case GAME_EVENT_LUA_CALL_PLACESCREENARROW:
+	{
+	}
+	break;
+	
+      case GAME_EVENT_LUA_CALL_HIDEARROW:
+	{
+	}
+	break;
+	
+      case GAME_EVENT_LUA_CALL_MESSAGE:
+	{
+	}
+	break;
+	
+      case GAME_EVENT_LUA_CALL_MOVEBLOCK:
+	{
+	}
+	break;
+	
+      case GAME_EVENT_LUA_CALL_SETBLOCKPOS:
+	{
+	}
+	break;
+	
+      case GAME_EVENT_LUA_CALL_SETGRAVITY:
+	{
+	}
+	break;
+	
+      case GAME_EVENT_LUA_CALL_SETPLAYERPOSITION:
+	{
+	}
+	break;
+	
       default:
 	Log("** Warning ** : Failed to parse game events in replay, it will probably not play right!");
 	bError = true;
@@ -144,28 +190,64 @@ namespace vapp {
 	Buffer << pEvent->u.EntityDestroyed.fPosY;
       }
       break;
-//    case GAME_EVENT_LUA_FUNCTION_CALLED:
-//      {
-//	int i;
-//
-//	Buffer << getTime();
-//	Buffer << pEvent->Type;
-//	Buffer << (i=strlen(pEvent->u.LuaFunctionCalled.functionName));
-//	Buffer.writeBuf(pEvent->u.LuaFunctionCalled.functionName, i);
-//
-//	/* PREDRAW */
-//	if(strcmp(pEvent->u.LuaFunctionCalled.functionName, "PreDraw") == 0) {
-//	  Buffer << pEvent->u.LuaFunctionCalled.b1;
-//
-//        /* ONLOAD */
-//	} else if(strcmp(pEvent->u.LuaFunctionCalled.functionName, "OnLoad") == 0) {
-//	  Buffer << pEvent->u.LuaFunctionCalled.b1;
-//
-//	} else {
-//	  /* should not append */
-//	}
-//      }
-//      break;
+
+    case GAME_EVENT_LUA_CALL_SETENTITYPOS:
+      {
+	int i;
+	Buffer << getTime();
+	Buffer << pEvent->Type;
+	Buffer << (i=strlen(pEvent->u.LuaCallSetentitypos.cEntityID));
+	Buffer.writeBuf(pEvent->u.LuaCallSetentitypos.cEntityID,i);
+	Buffer << pEvent->u.LuaCallSetentitypos.x;
+	Buffer << pEvent->u.LuaCallSetentitypos.y;
+      }
+      break;
+
+    case GAME_EVENT_LUA_CALL_CLEARMESSAGES:
+      {
+      }
+      break;
+      
+    case GAME_EVENT_LUA_CALL_PLACEINGAMEARROW:
+      {
+      }
+      break;
+      
+    case GAME_EVENT_LUA_CALL_PLACESCREENARROW:
+      {
+      }
+      break;
+      
+    case GAME_EVENT_LUA_CALL_HIDEARROW:
+      {
+      }
+      break;
+      
+    case GAME_EVENT_LUA_CALL_MESSAGE:
+      {
+      }
+      break;
+      
+    case GAME_EVENT_LUA_CALL_MOVEBLOCK:
+      {
+      }
+      break;
+      
+    case GAME_EVENT_LUA_CALL_SETBLOCKPOS:
+      {
+      }
+      break;
+      
+    case GAME_EVENT_LUA_CALL_SETGRAVITY:
+      {
+      }
+      break;
+      
+    case GAME_EVENT_LUA_CALL_SETPLAYERPOSITION:
+      {
+      }
+      break;
+      
     }            
   }
 
