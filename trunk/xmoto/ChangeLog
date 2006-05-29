@@ -3,7 +3,8 @@ X-Moto 0.1.16 (alpha) 2006-
  * Ghost replays while playing.
  * Game should work with AMD64 again now. The long standing corrupted 
    fonts in editor-bug on AMD64 has also been fixed.
- * Automatic list of screen resolutions
+ * Automatic list of screen resolutions (patch by Emmanuel Gorse)
+ * scripted levels are now recordable
 	
 X-Moto 0.1.14 (alpha) 2006-05-19
 --------------------------------
