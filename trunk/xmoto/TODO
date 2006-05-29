@@ -1,3 +1,4 @@
+# for 0.1.16
 * Make sure LUA5.1 is supported properly OR use LUA5.0 explicitly.
   -> see http://www.lua.org/manual/5.1/manual.html#incompat
 * BUG : if www is not activated at startup, go in option, check www,
@@ -6,7 +7,6 @@
    first time we load the game called in gamemenu.cpp, line 1573 but
    not displayed, i don't know why
 * BUG : move objects in script doesn't work
-
 * try to compile without WEBSUPPORT and GHOST to see the result
 * add highscore tab in pack and new levels (priority=high)
 * add <xml_room> in configuration so that the player can choose the
@@ -15,6 +15,13 @@
    website and play it (priority=high)
   add informatin about highscore when a level is selected (name of the
    driver, <see button>, ...)  
+* an option to save automatically the replay if it's a highscore
+
+Ghost finition :
+* make a vector for replays to load them faster
+
+# for after
+
 * add a counter of uncompleted levels (priority=medium)
 * theme (for sprites) (priority=medium)
 * add a tab : favorite levels (priority=low)
@@ -23,9 +30,6 @@
 * add import of players.bin (so that people playing at different
    location can merge their highscores) (priority=very low)
 * translations (priority=very low)
-
-Ghost finition :
-* make a vector for replays to load them faster
 
 Undecided:
 * allow keep button pressed on list for people having not wheel ;-)
@@ -44,4 +48,3 @@ Undecided:
 * allow to run : xmoto -level l1.lvl to allow playing a level just by cliking on
    it (even if it's not in the xmoto dir)
 * display wind
-* an option to save automatically the replay if it's a highscore
