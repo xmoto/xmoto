@@ -1219,10 +1219,16 @@ namespace vapp {
     if(v_is_a_highscore) {
       m_pNewWorldRecord->setFont(m_Renderer.getMediumFont());
       m_pNewWorldRecord->setCaption(GAMETEXT_NEWHIGHSCORE);
+
+      /* Play the good sound. */
+      Sound::playSampleByName("Sounds/NewHighscore.ogg");
     } else {
       if(v_is_a_personal_highscore) {
 	m_pNewWorldRecord->setFont(m_Renderer.getSmallFont());
 	m_pNewWorldRecord->setCaption(GAMETEXT_NEWHIGHSCOREPERSONAL);
+
+	/* Play the good sound. */
+	Sound::playSampleByName("Sounds/NewHighscore.ogg");
       } else {
 	m_pNewWorldRecord->setCaption(""); /* you can make better ;-)*/
       }

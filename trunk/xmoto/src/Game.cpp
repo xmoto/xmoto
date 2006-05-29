@@ -318,9 +318,6 @@ namespace vapp {
         /* Finish replay */
         if(m_pReplay != NULL) m_pReplay->finishReplay(true,m_MotoGame.getFinishTime());
         
-        /* Play the good sound. */
-        //Sound::playSample(m_pEndOfLevelSFX);
-
         /* A more lucky outcome of GS_PLAYING than GS_JUSTDEAD :) */
 	_RefreshFinishMenu();
         m_pFinishMenu->showWindow(true);
@@ -526,7 +523,7 @@ namespace vapp {
       
       if(Sound::isEnabled()) {
         /* Load sounds */
-        //m_pEndOfLevelSFX = Sound::loadSample("Sounds/EndOfLevel.ogg");
+        Sound::loadSample("Sounds/NewHighscore.ogg");
         //m_pDieSFX = Sound::loadSample("Sounds/Die.ogg");
         
         Sound::loadSample("Sounds/Button1.ogg");
@@ -534,7 +531,7 @@ namespace vapp {
         Sound::loadSample("Sounds/Button3.ogg");
         
         Sound::loadSample("Sounds/PickUpStrawberry.ogg");
-        
+
         m_EngineSound.addBangSample(Sound::loadSample("Sounds/Engine/00.wav"));
         m_EngineSound.addBangSample(Sound::loadSample("Sounds/Engine/01.wav"));
         m_EngineSound.addBangSample(Sound::loadSample("Sounds/Engine/02.wav"));
