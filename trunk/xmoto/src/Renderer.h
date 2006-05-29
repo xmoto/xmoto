@@ -233,7 +233,7 @@ namespace vapp {
       UIFont *getSmallFont(void) {return m_pSFont;}
       UIFont *getMediumFont(void) {return m_pMFont;}
       void setBestTime(std::string s) {m_pBestTime->setCaption(s);}
-      void showReplayHelp(float p_speed);
+      void showReplayHelp(float p_speed, bool bAllowRewind);
       void hideReplayHelp();
       void setWorldRecordTime(const std::string &s) {m_pWorldRecordTime->setCaption(s);}
       std::string getBestTime(void) {return m_pBestTime->getCaption();}

@@ -192,6 +192,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_QUITMESSAGE          "Do you really want to quit?"
 #define GAMETEXT_REPLAY               "Replay"
 #define GAMETEXT_REPLAYHELPTEXT(current_speed) "Stop[esc] ||[space]  << >>[right/left keys]  < >[up/down keys]   Speed:" + current_speed + "x"
+#define GAMETEXT_REPLAYHELPTEXTNOREWIND(current_speed) "Stop[esc] ||[space] >>[left key] < >[up/down keys]   Speed:" + current_speed + "x"
   // + "a" + "X"
 #define GAMETEXT_REPLAYS              "View Replays"
 #define GAMETEXT_RESTART              "Restart This Level"

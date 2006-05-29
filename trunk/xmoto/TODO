@@ -31,11 +31,6 @@
 Ghost finition :
 * make a vector for replays to load them faster
 
-Script replay recording finition :
-- do not allow << <- in replay on scripted levels
-And remove ALLOW_SCRIPT_REPLAYING
-
-
 Undecided:
 * Sound::playSampleByName("Sounds/NewHighscore.ogg"); ? it could be nice
 
@@ -72,3 +67,5 @@ end
    extension to allow playing a level or a replay just by cliking on
    it (and why not even if it's not in the xmoto dir)
 * display wind
+* enter key while playing : restart immediatly the level
+* an option to save automatically the replay if it's a highscore

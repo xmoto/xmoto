@@ -122,7 +122,8 @@ namespace vapp {
                 T2 = formatTime(pBestPTime->fFinishTime);
               
               m_Renderer.setBestTime(T1 + std::string(" / ") + T2);
-	      m_Renderer.showReplayHelp(m_pReplay->getSpeed());
+	      m_Renderer.showReplayHelp(m_pReplay->getSpeed(),
+					! _IsReplayScripted(m_pReplay));
 
               if(m_bBenchmark) m_Renderer.setBestTime("");
               
@@ -188,11 +189,7 @@ namespace vapp {
           if(m_pReplay != NULL) delete m_pReplay;
           m_pReplay = NULL;
           
-#if defined (ALLOW_SCRIPT_REPLAYING) 
           if(m_bRecordReplays) {
-#else
-          if(m_bRecordReplays && !pLevelSrc->isScripted()) {
-#endif
             m_pReplay = new Replay;
             m_pReplay->createReplay("Latest.rpl",pLevelSrc->getID(),m_pPlayer->PlayerName,m_fReplayFrameRate,sizeof(SerializedBikeState));
           }
@@ -1414,28 +1411,33 @@ namespace vapp {
             break;
           case SDLK_LEFT:
             /* Left arrow key: rewind */
-            if(m_pReplay != NULL)
-              m_pReplay->fastrewind(1);
+	    if(_IsReplayScripted(m_pReplay) == false) {
+	      m_pReplay->fastrewind(1);
+	    }
             break;
 	case SDLK_SPACE:
 	  /* pause */
 	  if(m_pReplay != NULL) {
 	    m_pReplay->pause();
-	    m_Renderer.showReplayHelp(m_pReplay->getSpeed()); /* update help */
+	    m_Renderer.showReplayHelp(m_pReplay->getSpeed(),
+				      ! _IsReplayScripted(m_pReplay)); /* update help */
 	  }
 	  break;
 	case SDLK_UP:
 	  /* faster */
 	  if(m_pReplay != NULL) {
 	    m_pReplay->faster();
-	    m_Renderer.showReplayHelp(m_pReplay->getSpeed()); /* update help */
+	    m_Renderer.showReplayHelp(m_pReplay->getSpeed(),
+				      ! _IsReplayScripted(m_pReplay)); /* update help */
 	  }
 	  break;
 	case SDLK_DOWN:
 	  /* slower */
-	  if(m_pReplay != NULL) {
+	  if(_IsReplayScripted(m_pReplay) == false ||
+	     m_pReplay->getSpeed() >= REPLAY_SPEED_INCREMENT) {
 	    m_pReplay->slower();
-	    m_Renderer.showReplayHelp(m_pReplay->getSpeed()); /* update help */
+	    m_Renderer.showReplayHelp(m_pReplay->getSpeed(),
+				      ! _IsReplayScripted(m_pReplay)); /* update help */
 	  }
 	  break;
         }
@@ -2345,6 +2347,17 @@ namespace vapp {
   #endif
   }
 
+    bool GameApp::_IsReplayScripted(Replay *p_pReplay) {
+      LevelSrc *pLevelSrc;
+
+      if(p_pReplay != NULL) {
+	pLevelSrc = _FindLevelByID(p_pReplay->getLevelId());
+	if(pLevelSrc != NULL) {
+	  return pLevelSrc->isScripted();
+	}
+      }
+      return false; /* throw exception ? */
+    }
 
 #if defined(ALLOW_GHOST) 
   std::string GameApp::_getGhostReplayPath(std::string p_levelId,

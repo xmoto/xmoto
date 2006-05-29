@@ -372,7 +372,8 @@ namespace vapp {
       bool _IsThereANextLevel(LevelSrc *pLevelSrc);
       
       void _ConfigureProxy(void);
-      
+      bool _IsReplayScripted(Replay *p_pReplay);
+
       void _CheckForExtraLevels(void);
       void _UpdateWebHighscores(bool bSilent);
       void _UpdateWebLevels(bool bSilent);

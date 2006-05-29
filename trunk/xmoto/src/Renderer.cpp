@@ -1103,15 +1103,27 @@ namespace vapp {
     }
   }
   
-  void GameRenderer::showReplayHelp(float p_speed) {
-    if(p_speed >= 10.0) {
-      m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXT(String(">> 10")));
-    } else if(p_speed <= -10.0) {
-      m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXT(String("<<-10")));
+  void GameRenderer::showReplayHelp(float p_speed, bool bAllowRewind) {
+    if(bAllowRewind) {
+      if(p_speed >= 10.0) {
+	m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXT(String(">> 10")));
+      } else if(p_speed <= -10.0) {
+	m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXT(String("<<-10")));
+      } else {
+	char v_speed_str[5 + 1];
+	sprintf(v_speed_str, "% .2f", p_speed);
+	m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXT(String(v_speed_str)));
+      }
     } else {
-      char v_speed_str[5 + 1];
-      sprintf(v_speed_str, "% .2f", p_speed);
-      m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXT(String(v_speed_str)));
+      if(p_speed >= 10.0) {
+	m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXTNOREWIND(String(">> 10")));
+      } else if(p_speed <= -10.0) {
+	m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXTNOREWIND(String("<<-10")));
+      } else {
+	char v_speed_str[5 + 1];
+	sprintf(v_speed_str, "% .2f", p_speed);
+	m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXTNOREWIND(String(v_speed_str)));
+      }
     }
   }
 
@@ -1120,4 +1132,3 @@ namespace vapp {
   }
 
 };
-
