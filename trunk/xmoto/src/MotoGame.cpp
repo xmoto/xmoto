@@ -316,6 +316,17 @@ namespace vapp {
 			 true)) {
 	throw Exception("level script PreDraw() returned false");
       }
+    }
+
+    /* Invoke EveryHundreath() script function */
+    if(v_enableScript) {
+      while(getTime() - m_lastCallToEveryHundreath > 0.01) {
+	if(!scriptCallBool("EveryHundreath",
+			   true)) {
+	  throw Exception("level script EveryHundreath() returned false");
+	}
+	m_lastCallToEveryHundreath += 0.01;
+      }
     } 
 
     /* Only make a full physics update when not replaying */
@@ -603,6 +614,8 @@ namespace vapp {
     
     m_nGameEventQueueReadIdx = m_nGameEventQueueWriteIdx = 0;
     
+    m_lastCallToEveryHundreath = 0.0;
+
     /* Clear zone flags */
     for(int i=0;i<pLevelSrc->getZoneList().size();i++)
       pLevelSrc->getZoneList()[i]->m_bInZone = false;

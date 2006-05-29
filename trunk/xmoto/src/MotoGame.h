@@ -539,7 +539,9 @@ namespace vapp {
   class MotoGame {
     public:          
       MotoGame() {m_pLevelSrc=NULL;
-                  clearStates();}
+                  clearStates();
+		  m_lastCallToEveryHundreath = 0.0;
+      }
       ~MotoGame() {endLevel();}     
     
       /* Methods */
@@ -727,7 +729,10 @@ namespace vapp {
       /* Teleport next frame? */
       bool m_bTeleport;
       GameReqPlayerPos m_TeleportDest; 
-                                             
+            
+      /* for EveryHundreath function */
+      float m_lastCallToEveryHundreath;
+                
       /* Helpers */
       void _GenerateLevel(void);          /* Called by playLevel() to 
                                              prepare the level */
