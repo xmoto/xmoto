@@ -32,8 +32,6 @@ Ghost finition :
 * make a vector for replays to load them faster
 
 Undecided:
-* Sound::playSampleByName("Sounds/NewHighscore.ogg"); ? it could be nice
-
 * allow keep button pressed on list for people having not wheel ;-)
 * add 3 2 1 GO ! at level startup (it neckelmann agree) 
 * context information for levels : when one is selected, display
@@ -47,8 +45,7 @@ Undecided:
 * pb for left hand written people for the editor
 * two possibilities to show room : one to see the world highscore, one
    to see you room (optionnal)
-* allow to run : xmoto l1.lvl or xmoto r1.rpl depending on the
-   extension to allow playing a level or a replay just by cliking on
-   it (and why not even if it's not in the xmoto dir)
+* allow to run : xmoto -level l1.lvl to allow playing a level just by cliking on
+   it (even if it's not in the xmoto dir)
 * display wind
 * an option to save automatically the replay if it's a highscore
