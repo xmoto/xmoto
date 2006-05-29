@@ -1400,9 +1400,11 @@ namespace vapp {
       
     case GAME_EVENT_LUA_CALL_SETPLAYERPOSITION:
       {
-	m_pMotoGame->setPlayerPosition(pEvent->u.LuaCallSetplayerposition.x,
-				       pEvent->u.LuaCallSetplayerposition.y,
-				       pEvent->u.LuaCallSetplayerposition.bRight);
+	/* don't set player position while it's already made by the game */
+	/* however, this state is recorded : you can imagine than an effect
+	   or something is done when this append to alert the player he took
+	   a teleporter
+	*/
       }
       break;
       
