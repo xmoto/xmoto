@@ -34,22 +34,6 @@ Ghost finition :
 Undecided:
 * Sound::playSampleByName("Sounds/NewHighscore.ogg"); ? it could be nice
 
-* preDraw in script in not good because it depends on framerate,
-  making something which is called every 0.01 seconds would be better
-   like this :
-   currently it requires in the script :
-   (it would be nicer to make it in xmoto)
-
-   v_action_time_diff = 0.01
-   function PreDraw() 
-	while(Game.GetTime() - v_last_action_time > v_action_time_diff)
-	do
-                // do something here
-
-		v_last_action_time = v_last_action_time + v_action_time_diff
-	end
-	return true
-end
 * allow keep button pressed on list for people having not wheel ;-)
 * add 3 2 1 GO ! at level startup (it neckelmann agree) 
 * context information for levels : when one is selected, display

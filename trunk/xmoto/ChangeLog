@@ -5,6 +5,8 @@ X-Moto 0.1.16 (alpha) 2006-
    fonts in editor-bug on AMD64 has also been fixed.
  * Automatic list of screen resolutions (patch by Emmanuel Gorse)
  * scripted levels are now recordable
+ * preDraw() in script is not good because it depends on framerate : it is now obsolete ;
+   use EveryHundreath() instead
 	
 X-Moto 0.1.14 (alpha) 2006-05-19
 --------------------------------
