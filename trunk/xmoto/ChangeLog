@@ -9,6 +9,7 @@ X-Moto 0.1.16 (alpha) 2006-
    use EveryHundreath() instead
  * return key while playing now restarts immediatly the level
  * play a sound when you make a new highscore
+ * some bugs fixed
 	
 X-Moto 0.1.14 (alpha) 2006-05-19
 --------------------------------
