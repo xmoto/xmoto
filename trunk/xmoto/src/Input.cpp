@@ -88,6 +88,7 @@ namespace vapp {
     "0",               SDLK_0,
     "PageUp",          SDLK_PAGEUP,
     "PageDown",        SDLK_PAGEDOWN,
+    "Return",          SDLK_RETURN,
     /* TODO: add more */
     NULL    
   };

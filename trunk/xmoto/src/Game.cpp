@@ -1450,6 +1450,13 @@ namespace vapp {
 	  m_pPauseMenu->showWindow(true);
 	  m_nPauseShade = 0;
 	  break;
+	case SDLK_RETURN:
+	  /* retart immediatly the level */
+          m_MotoGame.endLevel();
+          m_InputHandler.resetScriptKeyHooks();           
+          m_Renderer.unprepareForNewLevel();
+          setState(GS_PLAYING); 
+	  break;
           default:
             /* Notify the controller */
             m_InputHandler.handleInput(INPUT_KEY_DOWN,nKey,m_MotoGame.getBikeController(), &m_Renderer);
