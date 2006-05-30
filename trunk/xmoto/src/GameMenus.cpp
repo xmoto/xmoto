@@ -64,9 +64,9 @@ namespace vapp {
     pFinishText->setFont(m_Renderer.getMediumFont());
 
     m_pNewWorldRecord = new UIStatic(m_pFinishMenu,
-				     105,
+				     115,
 				     450,
-				     "",200, 25);
+				     "",400, 50);
 
     for(int i=0;i<m_nNumFinishMenuButtons;i++) {
       m_pFinishMenuButtons[i]->setPosition(200-207/2,m_pFinishMenu->getPosition().nHeight/2 - (m_nNumFinishMenuButtons*57)/2 + i*57,207,57);
@@ -1216,21 +1216,30 @@ namespace vapp {
     }
     #endif
 
+    bool bHappyEnd = false;
+    String v_caption = "";
     if(v_is_a_highscore) {
       m_pNewWorldRecord->setFont(m_Renderer.getMediumFont());
-      m_pNewWorldRecord->setCaption(GAMETEXT_NEWHIGHSCORE);
-
-      /* Play the good sound. */
-      Sound::playSampleByName("Sounds/NewHighscore.ogg");
+      v_caption = GAMETEXT_NEWHIGHSCORE;
+      bHappyEnd = true;
     } else {
       if(v_is_a_personal_highscore) {
 	m_pNewWorldRecord->setFont(m_Renderer.getSmallFont());
-	m_pNewWorldRecord->setCaption(GAMETEXT_NEWHIGHSCOREPERSONAL);
-
-	/* Play the good sound. */
-	Sound::playSampleByName("Sounds/NewHighscore.ogg");
+	v_caption = GAMETEXT_NEWHIGHSCOREPERSONAL;
+	bHappyEnd = true;
       } else {
 	m_pNewWorldRecord->setCaption(""); /* you can make better ;-)*/
+      }
+    }
+
+    if(bHappyEnd) {
+      Sound::playSampleByName("Sounds/NewHighscore.ogg");
+
+      if(m_pReplay != NULL && m_Config.getBool("AutosaveHighscoreReplays")) {
+	String v_replayName = Replay::giveAutomaticName();
+	_SaveReplay(v_replayName);
+	v_caption += "\n(Saved as " + v_replayName + ")";
+	m_pNewWorldRecord->setCaption(v_caption);
       }
     }
 

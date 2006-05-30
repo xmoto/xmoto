@@ -1679,6 +1679,8 @@ namespace vapp {
     m_Config.createVar( "KeyFlipRight1",          "Right" );
     m_Config.createVar( "KeyChangeDir1",          "Space" );
     
+    m_Config.createVar( "AutosaveHighscoreReplays", "true");
+
     #if defined(ENABLE_ZOOMING)
       m_Config.createVar( "KeyZoomIn",              "PageUp" );
       m_Config.createVar( "KeyZoomOut",             "PageDown" );

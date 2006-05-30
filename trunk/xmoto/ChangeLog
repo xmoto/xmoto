@@ -9,6 +9,7 @@ X-Moto 0.1.16 (alpha) 2006-
    use Tick() instead.
  * Hitting "return" while playing now restarts the level immediately.
  * A sound is played when you make a new highscore.
+ * save automatically the replay if it's a highscore (if the option is checked)
  * Some bugs fixed.
 	
 X-Moto 0.1.14 (alpha) 2006-05-19

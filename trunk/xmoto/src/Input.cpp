@@ -272,7 +272,7 @@ namespace vapp {
         switch(Event.type) {
           case SDL_QUIT:
             return "<<QUIT>>";
-          case SDL_KEYDOWN:
+	case SDL_KEYDOWN:
             if(Event.key.keysym.sym == SDLK_ESCAPE) return "<<CANCEL>>";
           
             Ret = _KeyToString(Event.key.keysym.sym);

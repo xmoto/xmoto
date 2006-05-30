@@ -1,4 +1,6 @@
 # for 0.1.16
+* make an option to choose if the replay must be save automatically
+   when it's a highscore (high !) and display "saved" nicer
 * Make sure LUA5.1 is supported properly OR use LUA5.0 explicitly.
   -> see http://www.lua.org/manual/5.1/manual.html#incompat
 * BUG : if www is not activated at startup, go in option, check www,
@@ -15,18 +17,21 @@
    website and play it (priority=high)
   add informatin about highscore when a level is selected (name of the
    driver, <see button>, ...)  
-* an option to save automatically the replay if it's a highscore
 
 Ghost finition :
 * make a vector for replays to load them faster
 
 * be able to use wheel and clic to affect buttons
+	case SDL_BUTTON_WHEELDOWN:  
+	case SDL_BUTTON_WHEELUP:  
+	case SDL_BUTTON_RIGHT:
+	case SDL_BUTTON_LEFT:
+
 * see time diff with the ghost
 * see biker speed
 * have a <----> for the lists
 * see about timeout when connection failed
 * see the name of the ghost
-
 
 # for after
 
