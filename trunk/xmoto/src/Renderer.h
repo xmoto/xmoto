@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VApp.h"
 #include "MotoGame.h"
 #include "GUI.h"
+#include "Replay.h"
 
 namespace vapp {
 
@@ -221,7 +222,6 @@ namespace vapp {
       Particle *spawnParticle(ParticleType Type,Vector2f Pos,Vector2f Vel,float fLifeTime);
     
       /* Data interface */
-      void setGhostMotionBlur(bool b) {m_bGhostMotionBlur = b;}
       void setGameObject(MotoGame *pMotoGame) {m_pMotoGame=pMotoGame;}
       MotoGame *getGameObject(void) {return m_pMotoGame;}
       void setParent(App *pParent) {m_pParent=pParent;}
@@ -240,6 +240,12 @@ namespace vapp {
       void setQuality(GraphQuality Quality) {m_Quality = Quality;}      
       void setSpeedMultiplier(float f) {m_fSpeedMultiply = f;}
       void zoom(float p_f);
+      void setGhostMotionBlur(bool b) {m_bGhostMotionBlur = b;}
+      
+#if defined(ALLOW_GHOST)
+      void setGhostReplay(Replay *pReplay) {m_pGhostReplay = pReplay;}
+      void setGhostReplayDesc(const std::string &s) {m_ReplayDesc = s;}
+#endif
 
     private:
       /* Data */
@@ -289,6 +295,12 @@ namespace vapp {
 
 #if defined(ALLOW_GHOST)
       TextureTheme theme_ghost;
+      Vector2f m_GhostInfoPos,m_GhostInfoVel;
+      float m_fNextGhostInfoUpdate;
+      int m_nGhostInfoTrans;
+      std::string m_GhostInfoString;
+      Replay *m_pGhostReplay;
+      std::string m_ReplayDesc;
 #endif      
 
       Texture *m_pArrowTexture;
@@ -320,6 +332,7 @@ namespace vapp {
       void _RenderGameStatus(void);
       void _RenderParticles(bool bFront=true);
       void _RenderParticle(Vector2f P,Texture *pTexture,float fSize,float fAngle,Color c);
+      void _RenderInGameText(Vector2f P,const std::string &Text,Color c = 0xffffffff);
       
       /* Helpers... */
       void _Vertex(Vector2f P);     /* Spit out a correctly transformed 

@@ -51,6 +51,23 @@ namespace vapp {
     m_fCurrentHorizontalScrollShift = 0.0f;
     m_fDesiredHorizontalScrollShift = 0.0f;
     m_fNextParticleUpdate = 0.0f;
+    
+    #if defined(ALLOW_GHOST)
+      /* Set initial ghost information position */
+      if(getGameObject()->isGhostActive()) {
+        m_GhostInfoPos = getGameObject()->getGhostBikeState()->CenterP + Vector2f(0,-1.5f);
+        m_GhostInfoVel = Vector2f(0,0);
+
+        m_fNextGhostInfoUpdate = 0.0f;
+        m_nGhostInfoTrans = 255;
+        
+        if(m_pGhostReplay != NULL) {
+          m_GhostInfoString = std::string("Ghost of ") + m_pGhostReplay->getPlayerName() +
+                              std::string("\n(") + m_ReplayDesc + std::string(")") +
+                              std::string("\n(") + getParent()->formatTime(m_pGhostReplay->getFinishTime()) + std::string(")");
+        }
+      }
+    #endif
         
     /* Optimize scene */
     std::vector<ConvexBlock *> &Blocks = getGameObject()->getBlocks();
@@ -335,6 +352,24 @@ namespace vapp {
         GLuint nOverlayTextureID = m_Overlay.endRendering();
         m_Overlay.present();
       }
+      
+      if(m_nGhostInfoTrans > 0) {
+        _RenderInGameText(m_GhostInfoPos,m_GhostInfoString,MAKE_COLOR(255,255,255,m_nGhostInfoTrans));
+        if(getGameObject()->getTime() > m_fNextGhostInfoUpdate) {
+          if(getGameObject()->getTime() - m_fNextGhostInfoUpdate > 0.05f) {
+            if(getGameObject()->getTime() > 3.0f) m_nGhostInfoTrans=0;
+            
+            m_GhostInfoPos = getGameObject()->getGhostBikeState()->CenterP + Vector2f(0,-1.5);
+          }
+          else {
+            if(getGameObject()->getTime() > 3.0f) m_nGhostInfoTrans-=16;
+            
+            m_GhostInfoVel = ((getGameObject()->getGhostBikeState()->CenterP + Vector2f(0,-1.5)) - m_GhostInfoPos) * 0.2f;
+            m_GhostInfoPos += m_GhostInfoVel;
+          }
+          m_fNextGhostInfoUpdate = getGameObject()->getTime() + 0.025f;        
+        }
+      }      
     }
 #endif
 
@@ -1103,6 +1138,9 @@ namespace vapp {
     }
   }
   
+  /*===========================================================================
+  Replay stuff
+  ===========================================================================*/
   void GameRenderer::showReplayHelp(float p_speed, bool bAllowRewind) {
     if(bAllowRewind) {
       if(p_speed >= 10.0) {
@@ -1130,5 +1168,80 @@ namespace vapp {
   void GameRenderer::hideReplayHelp() {
     m_pReplayHelp->setCaption("");
   }
+  
+  /*===========================================================================
+  In-game text rendering
+  ===========================================================================*/
+  /* 
+                     |pi0
+                     |pi1
+                     |pi2
+                     |pi3
+       -------------------
+       m0 m4 m8  m12 |po0
+       m1 m5 m9  m13 |po1
+       m2 m6 m10 m14 |po2
+       m3 m7 m11 m15 |po3      
+  */
+  #define MULT_GL_MATRIX(pi,po,m) { \
+    po[0] = m[0]*pi[0] + m[4]*pi[1] + m[8]*pi[2] + m[12]*pi[3]; \
+    po[1] = m[1]*pi[0] + m[5]*pi[1] + m[9]*pi[2] + m[13]*pi[3]; \
+    po[2] = m[2]*pi[0] + m[6]*pi[1] + m[10]*pi[2] + m[14]*pi[3]; \
+    po[3] = m[3]*pi[0] + m[7]*pi[1] + m[11]*pi[2] + m[15]*pi[3]; \
+  }    
+  
+  void GameRenderer::_RenderInGameText(Vector2f P,const std::string &Text,Color c) {
+    /* Perform manual transformation of world coordinates into screen
+       coordinates */
+    GLfloat fPoint[4],fTemp[4];
+    GLfloat fModelView[16];
+    GLfloat fProj[16];
+    
+    glGetFloatv(GL_MODELVIEW_MATRIX,fModelView);    
+    glGetFloatv(GL_PROJECTION_MATRIX,fProj);
+    
+    fPoint[0] = P.x;
+    fPoint[1] = P.y;
+    fPoint[2] = 0.0f; /* no z please */
+    fPoint[3] = 1.0f; /* homogenous 4-D coords */
+    
+    MULT_GL_MATRIX(fPoint,fTemp,fModelView);
+    MULT_GL_MATRIX(fTemp,fPoint,fProj);
+    
+    float x = (fPoint[0] / fPoint[3] + 1.0f) / 2.0f;
+    float y = 1.0f - (fPoint[1] / fPoint[3] + 1.0f) / 2.0f;
+    
+    if(x > 0.0f && x < 1.0f && y > 0.0f && y < 1.0f) {    
+      /* Map to viewport */
+      float vx = ((float)getParent()->getDispWidth() * x);
+      float vy = ((float)getParent()->getDispHeight() * y);
+
+      glMatrixMode(GL_PROJECTION);
+      glPushMatrix();
+      glLoadIdentity();
+      glOrtho(0,getParent()->getDispWidth(),0,getParent()->getDispHeight(),-1,1);
+      glMatrixMode(GL_MODELVIEW);
+      glPushMatrix();
+      glLoadIdentity();
+      
+      int nMinX,nMinY,nMaxX,nMaxY;
+      UITextDraw::getTextExt(m_pSFont,Text,&nMinX,&nMinY,&nMaxX,&nMaxY);
+      int nx = vx - (nMaxX - nMinX)/2;
+      int ny = vy;
+      UITextDraw::printRaw(m_pSFont,nx-1,ny-1,Text,MAKE_COLOR(0,0,0,GET_ALPHA(c)));
+      UITextDraw::printRaw(m_pSFont,nx+1,ny-1,Text,MAKE_COLOR(0,0,0,GET_ALPHA(c)));
+      UITextDraw::printRaw(m_pSFont,nx+1,ny+1,Text,MAKE_COLOR(0,0,0,GET_ALPHA(c)));
+      UITextDraw::printRaw(m_pSFont,nx-1,ny+1,Text,MAKE_COLOR(0,0,0,GET_ALPHA(c)));
+      UITextDraw::printRaw(m_pSFont,nx,ny,Text,c);
+
+      glPopMatrix();
+      glMatrixMode(GL_PROJECTION);
+      glPopMatrix();
+      glMatrixMode(GL_MODELVIEW);
+      
+    }
+  }
+  
+  
 
 };

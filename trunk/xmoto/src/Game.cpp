@@ -104,7 +104,7 @@ namespace vapp {
             m_InputHandler.resetScriptKeyHooks();                                   
             m_MotoGame.playLevel(pLevelSrc , true);
             m_nFrame = 0;
-            m_Renderer.prepareForNewLevel();
+            m_Renderer.prepareForNewLevel();            
             
             /* Reconstruct game events that are going to happen during the replay */
             m_MotoGame.unserializeGameEvents( *m_pReplay );            
@@ -232,6 +232,22 @@ namespace vapp {
 
 		if(m_pGhostReplay != NULL) delete m_pGhostReplay;
 		m_pGhostReplay = new Replay;
+		m_Renderer.setGhostReplay(m_pGhostReplay);
+		
+		switch((GhostSearchStrategy)m_Config.getInteger("GhostSearchStrategy")) {
+      case GHOST_STRATEGY_MYBEST:
+		    m_Renderer.setGhostReplayDesc("Your best");
+		    break;
+      case GHOST_STRATEGY_THEBEST:
+		    m_Renderer.setGhostReplayDesc("Local best");
+		    break;
+      case GHOST_STRATEGY_BESTOFROOM:
+		    m_Renderer.setGhostReplayDesc("World Record");
+        break;
+		  default:
+		    m_Renderer.setGhostReplayDesc("");
+		}
+		
 		GhostLevelID = m_pGhostReplay->openReplay(v_PlayGhostReplay,&v_ghostReplayFrameRate,v_GhostReplayPlayerName);
 
 		if(GhostLevelID != "") {

@@ -85,6 +85,7 @@ namespace vapp {
       /* Data interface */
       bool didFinish(void) {return m_bFinished;}
       float getFinishTime(void) {return m_fFinishTime;}      
+      const std::string &getPlayerName(void) {return m_PlayerName;}
       bool endOfFile(void) {return m_bEndOfFile;}
       
       /* Static data interface */
