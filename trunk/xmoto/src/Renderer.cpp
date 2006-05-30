@@ -66,6 +66,9 @@ namespace vapp {
                               std::string("\n(") + m_ReplayDesc + std::string(")") +
                               std::string("\n(") + getParent()->formatTime(m_pGhostReplay->getFinishTime()) + std::string(")");
         }
+        
+        if(m_ReplayDesc == "")
+          m_nGhostInfoTrans = 0;
       }
     #endif
         

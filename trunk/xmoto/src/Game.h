@@ -136,6 +136,7 @@ namespace vapp {
                  m_bEnableWebHighscores = true;
                  m_bShowWebHighscoreInGame = false;
                  m_bEnableContextHelp = true;
+                 m_bEnableGhostInfo = false;
                  #if defined(SUPPORT_WEBACCESS)
                   m_pWebHighscores = NULL;
                   m_pWebLevels = NULL;
@@ -200,6 +201,7 @@ namespace vapp {
       bool m_bCompressReplays;                  /* true: compress replays with zlib */
       bool m_bGhostMotionBlur;                  /* true: apply fancy motion blur to ghosts */
       bool m_bEnableLevelCache;                 /* true: cache levels for faster loading */
+      bool m_bEnableGhostInfo;
       std::string m_PlaySpecificLevel;          /* If set, we only want to 
                                                    play this level */
       std::string m_PlaySpecificReplay;         /* If set, we only want to

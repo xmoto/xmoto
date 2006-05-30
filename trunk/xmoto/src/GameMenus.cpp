@@ -648,12 +648,19 @@ namespace vapp {
 
     pGhostStrategiesList->setContextHelp(CONTEXTHELP_GHOST_STRATEGIES);
 
-    UIButton *pMotionBlurGhost = new UIButton(pGhostOptionsTab,5,203,GAMETEXT_MOTIONBLURGHOST,(pGhostOptionsTab->getPosition().nWidth-40)/2,28);
+    UIButton *pMotionBlurGhost = new UIButton(pGhostOptionsTab,5,203,GAMETEXT_MOTIONBLURGHOST,(pGhostOptionsTab->getPosition().nWidth-40),28);
     pMotionBlurGhost->setType(UI_BUTTON_TYPE_CHECK);
     pMotionBlurGhost->setID("MOTION_BLUR_GHOST");
     pMotionBlurGhost->enableWindow(true);
     pMotionBlurGhost->setFont(m_Renderer.getSmallFont());
     pMotionBlurGhost->setContextHelp(CONTEXTHELP_MOTIONBLURGHOST);
+
+    UIButton *pDisplayGhostInfo = new UIButton(pGhostOptionsTab,5,231,GAMETEXT_DISPLAYGHOSTINFO,(pGhostOptionsTab->getPosition().nWidth-40),28);
+    pDisplayGhostInfo->setType(UI_BUTTON_TYPE_CHECK);
+    pDisplayGhostInfo->setID("DISPLAY_GHOST_INFO");
+    pDisplayGhostInfo->enableWindow(true);
+    pDisplayGhostInfo->setFont(m_Renderer.getSmallFont());
+    pDisplayGhostInfo->setContextHelp(CONTEXTHELP_DISPLAY_GHOST_INFO);
 
 #endif
 
@@ -1974,13 +1981,16 @@ namespace vapp {
     UIButton *pEnableGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:ENABLE_GHOST");
     UIList *pGhostStrategy = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGIES_LIST");
     UIButton *pMotionBlurGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:MOTION_BLUR_GHOST");
+    UIButton *pDisplayGhostInfo = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:DISPLAY_GHOST_INFO");
 
     if(pEnableGhost->getChecked()) {
       pGhostStrategy->enableWindow(true);
       pMotionBlurGhost->enableWindow(true);
+      pDisplayGhostInfo->enableWindow(true);
     } else {
       pGhostStrategy->enableWindow(false);
       pMotionBlurGhost->enableWindow(false);
+      pDisplayGhostInfo->enableWindow(false);
     }
 #endif
 
@@ -2568,10 +2578,12 @@ namespace vapp {
     UIButton *pEnableGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:ENABLE_GHOST");
     UIList *pGhostStrategy = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGIES_LIST");
     UIButton *pMotionBlurGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:MOTION_BLUR_GHOST");
+    UIButton *pDisplayGhostInfo = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:DISPLAY_GHOST_INFO");
 
     pEnableGhost->setChecked(m_Config.getBool("EnableGhost"));
     int v_ghost_strategy = m_Config.getInteger("GhostSearchStrategy");
     pMotionBlurGhost->setChecked(m_Config.getBool("GhostMotionBlur"));
+    pDisplayGhostInfo->setChecked(m_Config.getBool("DisplayGhostInfo"));
 
     int nGSMode = -1;
     for(int i=0;i<pGhostStrategy->getEntries().size();i++) {
@@ -2775,6 +2787,14 @@ namespace vapp {
     }
     
     m_Config.setBool("EngineSoundEnable",pEnableEngineSoundButton->getChecked());
+
+#if defined(ALLOW_GHOST)
+    UIButton *pMotionBlurGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:MOTION_BLUR_GHOST");
+    UIButton *pDisplayGhostInfo = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:DISPLAY_GHOST_INFO");
+
+    m_Config.setBool("GhostMotionBlur",pMotionBlurGhost->getChecked());
+    m_Config.setBool("DisplayGhostInfo",pDisplayGhostInfo->getChecked());
+#endif
             
     /* The following require restart */
     m_Config.setChanged(false);      
@@ -2784,10 +2804,8 @@ namespace vapp {
 #if defined(ALLOW_GHOST)
     UIButton *pEnableGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:ENABLE_GHOST");
     UIList *pGhostStrategy = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGIES_LIST");
-    UIButton *pMotionBlurGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:MOTION_BLUR_GHOST");
 
     m_Config.setBool("EnableGhost",pEnableGhost->getChecked());
-    m_Config.setBool("GhostMotionBlur",pMotionBlurGhost->getChecked());
 
     if(pGhostStrategy->getSelected() >= 0 && pGhostStrategy->getSelected() < pGhostStrategy->getEntries().size()) {
       UIListEntry *pEntry = pGhostStrategy->getEntries()[pGhostStrategy->getSelected()];

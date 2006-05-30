@@ -234,19 +234,26 @@ namespace vapp {
 		m_pGhostReplay = new Replay;
 		m_Renderer.setGhostReplay(m_pGhostReplay);
 		
-		switch((GhostSearchStrategy)m_Config.getInteger("GhostSearchStrategy")) {
-      case GHOST_STRATEGY_MYBEST:
-		    m_Renderer.setGhostReplayDesc("Your best");
-		    break;
-      case GHOST_STRATEGY_THEBEST:
-		    m_Renderer.setGhostReplayDesc("Local best");
-		    break;
-      case GHOST_STRATEGY_BESTOFROOM:
-		    m_Renderer.setGhostReplayDesc("World Record");
-        break;
-		  default:
-		    m_Renderer.setGhostReplayDesc("");
+		if(m_bEnableGhostInfo) {
+		  switch((GhostSearchStrategy)m_Config.getInteger("GhostSearchStrategy")) {
+        case GHOST_STRATEGY_MYBEST:
+		      m_Renderer.setGhostReplayDesc("Your best");
+		      break;
+        case GHOST_STRATEGY_THEBEST:
+		      m_Renderer.setGhostReplayDesc("Local best");
+		      break;
+  #if defined(SUPPORT_WEBACCESS) 
+        case GHOST_STRATEGY_BESTOFROOM:
+		      m_Renderer.setGhostReplayDesc(m_pWebHighscores->getRoomName() );
+          break;
+  #endif
+		    default:
+		      m_Renderer.setGhostReplayDesc("");
+		  }
 		}
+		else
+		  m_Renderer.setGhostReplayDesc("");
+
 		
 		GhostLevelID = m_pGhostReplay->openReplay(v_PlayGhostReplay,&v_ghostReplayFrameRate,v_GhostReplayPlayerName);
 
@@ -408,6 +415,7 @@ namespace vapp {
     m_bEnableWebHighscores = m_Config.getBool("WebHighscores");
     m_bShowWebHighscoreInGame = m_Config.getBool("ShowInGameWorldRecord");
     m_bEnableContextHelp = m_Config.getBool("ContextHelp");
+    m_bEnableGhostInfo = m_Config.getBool("DisplayGhostInfo");
         
     /* Cache? */
     m_bEnableLevelCache = m_Config.getBool("LevelCache");
@@ -1678,7 +1686,6 @@ namespace vapp {
     m_Config.createVar( "DisplayWindowed",        "false" );
     m_Config.createVar( "MenuBackgroundGraphics", "High" );
     m_Config.createVar( "GameGraphics",           "High" );
-    m_Config.createVar( "GhostMotionBlur",        "true" );
         
     /* Audio */
     m_Config.createVar( "AudioEnable",            "true" );
@@ -1745,6 +1752,8 @@ namespace vapp {
 #if defined(ALLOW_GHOST)
     m_Config.createVar( "EnableGhost"        , "true");
     m_Config.createVar( "GhostSearchStrategy", "0");
+    m_Config.createVar( "DisplayGhostInfo",    "false");
+    m_Config.createVar( "GhostMotionBlur",        "true" );
 #endif
   }
   
