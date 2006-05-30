@@ -1449,10 +1449,7 @@ namespace vapp {
 	  break;
 	case SDLK_RETURN:
 	  /* retart immediatly the level */
-          m_MotoGame.endLevel();
-          m_InputHandler.resetScriptKeyHooks();           
-          m_Renderer.unprepareForNewLevel();
-          setState(GS_PLAYING); 
+	  _RestartLevel();
 	  break;
           default:
             /* Notify the controller */
@@ -2159,6 +2156,13 @@ namespace vapp {
     #endif
   }
   
+  void GameApp::_RestartLevel() {
+    m_MotoGame.endLevel();
+    m_InputHandler.resetScriptKeyHooks();           
+    m_Renderer.unprepareForNewLevel();
+    setState(GS_PLAYING);
+  }
+
   /*===========================================================================
   WWWAppInterface implementation
   ===========================================================================*/

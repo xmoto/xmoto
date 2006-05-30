@@ -373,6 +373,7 @@ namespace vapp {
       
       void _ConfigureProxy(void);
       bool _IsReplayScripted(Replay *p_pReplay);
+      void _RestartLevel();
 
       void _CheckForExtraLevels(void);
       void _UpdateWebHighscores(bool bSilent);

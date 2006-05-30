@@ -20,6 +20,14 @@
 Ghost finition :
 * make a vector for replays to load them faster
 
+* be able to use wheel and clic to affect buttons
+* see time diff with the ghost
+* see biker speed
+* have a <----> for the lists
+* see about timeout when connection failed
+* see the name of the ghost
+
+
 # for after
 
 * add a counter of uncompleted levels (priority=medium)

@@ -1318,10 +1318,8 @@ namespace vapp {
           m_PlaySpecificLevel = pCurLevel->getID();
           m_pFinishMenu->showWindow(false);
           m_pBestTimes->showWindow(false);
-          m_MotoGame.endLevel();
-          m_InputHandler.resetScriptKeyHooks();           
-          m_Renderer.unprepareForNewLevel();
-          setState(GS_PLAYING);           
+
+	  _RestartLevel();
         }
         else if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_ABORT) {
           m_pFinishMenu->showWindow(false);
