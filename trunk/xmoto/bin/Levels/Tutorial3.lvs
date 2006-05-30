@@ -6,7 +6,7 @@ FifthZone = {}
 
 TutorialStage = 0
 
-function PreDraw() 	
+function Tick() 	
 	if TutorialStage < 0 then
 		-- No messages when we have teleported
 		return true

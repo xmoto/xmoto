@@ -3,13 +3,13 @@ X-Moto 0.1.16 (alpha) 2006-
  * Ghost replays while playing.
  * Game should work with AMD64 again now. The long standing corrupted 
    fonts in editor-bug on AMD64 has also been fixed.
- * Automatic list of screen resolutions (patch by Emmanuel Gorse)
- * scripted levels are now recordable
- * preDraw() in script is not good because it depends on framerate : it is now obsolete ;
-   use EveryHundreath() instead
- * return key while playing now restarts immediatly the level
- * play a sound when you make a new highscore
- * some bugs fixed
+ * Automatic list of screen resolutions (patch by Emmanuel Gorse).
+ * Scripted levels are now recordable.
+ * PreDraw() in script is not good because it depends on framerate, 
+   use Tick() instead.
+ * Hitting "return" while playing now restarts the level immediately.
+ * A sound is played when you make a new highscore.
+ * Some bugs fixed.
 	
 X-Moto 0.1.14 (alpha) 2006-05-19
 --------------------------------

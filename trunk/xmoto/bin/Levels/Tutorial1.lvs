@@ -18,7 +18,7 @@ TargetArrowAngle = 90
 
 Zone2Time = 0
 
-function PreDraw() 	
+function Tick() 	
 	-- Stages
 	if TutorialStage == 1 then
 		if Game.GetTime() > 6 then
