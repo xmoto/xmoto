@@ -1,5 +1,6 @@
 X-Moto 0.1.16 (alpha) 2006-
 --------------------------------
+
  * Ghost replays while playing.
  * Game should work with AMD64 again now. The long standing corrupted 
    fonts in editor-bug on AMD64 has also been fixed.
@@ -9,11 +10,12 @@ X-Moto 0.1.16 (alpha) 2006-
    use Tick() instead.
  * Hitting "return" while playing now restarts the level immediately.
  * A sound is played when you make a new highscore.
- * save automatically the replay if it's a highscore (if the option is checked)
+ * Optional automatic saving of replays if it's a highscore.
  * Some bugs fixed.
 	
 X-Moto 0.1.14 (alpha) 2006-05-19
 --------------------------------
+
  * New version numbering policy: If the last number is even it's
    a stable X-Moto release, otherwise it's an unstable development
    version (from CVS).

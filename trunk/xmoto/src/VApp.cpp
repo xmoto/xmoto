@@ -546,7 +546,7 @@ namespace vapp {
       modes->push_back("1600 X 1200");
     } else{
       /* Print valid modes */
-      Log("Available Modes :");
+      //Log("Available Modes :");
 
       for(i=0; sdl_modes[i]; i++){
 	char tmp[128];
