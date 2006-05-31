@@ -42,6 +42,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_ALREADYUSED          "Already used!"
 #define GAMETEXT_AUDIO                "Audio"
 #define GAMETEXT_AUTHOR               "Author: "
+#define GAMETEXT_AUTOSAVEREPLAYS      "Automatic saving of replays"
 #define GAMETEXT_BESTTIMES            "Best Times"
 #define GAMETEXT_BRAKE                "Brake"
 #define GAMETEXT_BUILTINLEVELS        "Built-In Levels"     
@@ -315,5 +316,6 @@ Central place to keep many in-game text strings
 #define CONTEXTHELP_GHOST_STRATEGIES "Choose which ghost to display"
 #define CONTEXTHELP_MOTIONBLURGHOST "Make motion blur effect for the ghost (if supported by your graphics card)"
 #define CONTEXTHELP_DISPLAY_GHOST_INFO "When starting a level with a ghost, display who the ghost is of"
+#define CONTEXTHELP_AUTOSAVEREPLAYS "Automatic saving of replays if it's a highscore"
 
 #endif
