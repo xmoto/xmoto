@@ -11,7 +11,7 @@ X-Moto 0.1.16 (alpha) 2006-
  * Hitting "return" while playing now restarts the level immediately.
  * A sound is played when you make a new highscore.
  * Optional automatic saving of replays if it's a highscore.
- * mouse can be used to control the biker
+ * mouse buttons can be used to control the biker
  * Some bugs fixed.
 	
 X-Moto 0.1.14 (alpha) 2006-05-19
