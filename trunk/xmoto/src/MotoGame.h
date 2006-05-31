@@ -595,6 +595,7 @@ namespace vapp {
       void setGhostActive(bool s) {m_isGhostActive = s;}
       std::vector<float> m_myLastStrawberry;
       std::vector<float> m_ghostLastStrawberry;
+      float m_myDiffOfGhost;
 #endif
       BikeController *getBikeController(void) {return &m_BikeC;}
       std::vector<GameMessage *> &getGameMessage(void) {return m_GameMessages;}
@@ -620,7 +621,8 @@ namespace vapp {
       void addDummy(Vector2f Pos,float r,float g,float b);
     
 #if defined(ALLOW_GHOST)  
-      void UpdateGhostFromReplay(SerializedBikeState *pReplayState);
+      void UpdateGhostFromReplay(Replay *p_replay, SerializedBikeState *pReplayState);
+      float getGhostDiff() {return m_myDiffOfGhost;}
 #endif
 
     private:         
@@ -755,6 +757,7 @@ namespace vapp {
       void _UpdateGameState(SerializedBikeState *pReplayState);
 #if defined(ALLOW_GHOST)
       /* static */ void _UpdateStateFromReplay(SerializedBikeState *pReplayState,BikeState *pBikeS);
+      void UpdateDiffFromGhost();
 #endif
       char _MapCoordTo8Bits(float fRef,float fMaxDiff,float fCoord);
       float _Map8BitsToCoord(float fRef,float fMaxDiff,char c);

@@ -712,6 +712,13 @@ namespace vapp {
         Log("** Warning ** : Unknown entity type '%s' for '%s'",pLEnt->TypeID.c_str(),pLEnt->ID.c_str());
     }
     
+
+#if defined(ALLOW_GHOST)
+      m_myLastStrawberry.clear();
+      m_ghostLastStrawberry.clear();
+      m_myDiffOfGhost = 0.0;
+#endif
+
     /* Invoke the OnLoad() script function */
     if(v_enableScript) {
       bool bOnLoadSuccess = scriptCallBool("OnLoad",
@@ -1221,9 +1228,8 @@ namespace vapp {
 	Sound::playSampleByName("Sounds/PickUpStrawberry.ogg");
 
 #if defined(ALLOW_GHOST)
-	/* new Strawberry for me */
-	// m_myLastStrawberry.push_back(getTime());
-	//	printf("New for ME\n");
+	m_myLastStrawberry.push_back(getTime());
+	UpdateDiffFromGhost();
 #endif
       }
       break;
@@ -1520,9 +1526,52 @@ namespace vapp {
   }
 
 #if defined(ALLOW_GHOST) 
-  void MotoGame::UpdateGhostFromReplay(SerializedBikeState *pReplayState) {
+  void MotoGame::UpdateGhostFromReplay(Replay *p_replay, SerializedBikeState *pReplayState) {
     _UpdateStateFromReplay(pReplayState, &m_GhostBikeS);
+
+    std::vector<RecordedGameEvent *> *v_replayEvents;
+    v_replayEvents = p_replay->getEvents();
+
+    /* Start looking for events that should be passed */
+    for(int i=0;i<v_replayEvents->size();i++) {
+      /* Not passed? And with a time stamp that tells it should have happened
+         by now? */
+      if(!(*v_replayEvents)[i]->bPassed && (*v_replayEvents)[i]->fTime < getTime()) {
+        /* Nice. Handle this event, replay style */
+	
+    	if((*v_replayEvents)[i]->Event.Type == GAME_EVENT_ENTITY_DESTROYED) {
+	  EntityType v_entityType = (*v_replayEvents)[i]->Event.u.EntityDestroyed.Type;
+
+    	  if(v_entityType == ET_STRAWBERRY) {
+	    /* new Strawberry for ghost */
+	    m_ghostLastStrawberry.push_back((*v_replayEvents)[i]->fTime);
+	    UpdateDiffFromGhost();
+    	  }
+    	}
+        /* Pass it */
+        (*v_replayEvents)[i]->bPassed = true;
+      }
+    }
   }
+
+  void MotoGame::UpdateDiffFromGhost() {
+    if(m_myLastStrawberry.size() == 0 || m_ghostLastStrawberry.size() == 0) {
+      return;
+    }
+
+    if(m_myLastStrawberry.size() > m_ghostLastStrawberry.size()) {
+      /* i'm winning */
+      m_myDiffOfGhost = - m_myLastStrawberry[m_ghostLastStrawberry.size() -1] + m_ghostLastStrawberry[m_ghostLastStrawberry.size() -1];
+    } else {
+      /* ghost is winning */
+      m_myDiffOfGhost = - m_myLastStrawberry[m_myLastStrawberry.size() -1] + m_ghostLastStrawberry[m_myLastStrawberry.size() -1];
+    }
+
+    char msg[256];
+    sprintf(msg, "%+.2f", m_myDiffOfGhost);
+    this->gameMessage(msg);
+  }
+
 #endif
 
 };

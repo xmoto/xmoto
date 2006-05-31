@@ -271,7 +271,7 @@ namespace vapp {
 		/* read first state */
 		static SerializedBikeState GhostBikeState;
 		m_pGhostReplay->peekState((char *)&GhostBikeState);
-		m_MotoGame.UpdateGhostFromReplay(&GhostBikeState);
+		m_MotoGame.UpdateGhostFromReplay(m_pGhostReplay, &GhostBikeState);
 	      } else {
 		/* bad replay */
 	      }
@@ -1041,13 +1041,13 @@ namespace vapp {
 
 	      if(m_nGhostFrame%2 || m_nGhostFrame==1) {
 		/* DONT INTERPOLATED FRAME */
-		m_MotoGame.UpdateGhostFromReplay(&GhostBikeState);
+		m_MotoGame.UpdateGhostFromReplay(m_pGhostReplay, &GhostBikeState);
 	      } else {
 		/* INTERPOLATED FRAME */
 		SerializedBikeState ibs;
 		m_MotoGame.interpolateGameState(&previousGhostBikeState,
 						&GhostBikeState,&ibs,0.5f);
-		m_MotoGame.UpdateGhostFromReplay(&ibs);
+		m_MotoGame.UpdateGhostFromReplay(m_pGhostReplay, &ibs);
 	      }
 	      m_nGhostFrame++;
 	    }
