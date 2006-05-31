@@ -53,6 +53,11 @@ namespace vapp {
   }        
   
   void Replay::_FreeReplay(void) {
+    /* Get rid of replay events */
+    for(int i=0;i<m_ReplayEvents.size();i++)
+      delete m_ReplayEvents[i];
+    m_ReplayEvents.clear();
+
     /* Dealloc chunks */
     for(int i=0;i<m_Chunks.size();i++) {
       if(m_Chunks[i].pcChunkData != NULL) {
@@ -306,6 +311,10 @@ namespace vapp {
     m_nCurChunk = 0;
     m_nCurState = 0.0;
     
+            
+    /* Reconstruct game events that are going to happen during the replay */
+    MotoGame::unserializeGameEvents(this, &m_ReplayEvents);
+
     return m_LevelID;
   }
       

@@ -35,6 +35,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 namespace vapp {
 
+  class Replay;
+
   /*===========================================================================
   Defines
   ===========================================================================*/
@@ -526,13 +528,13 @@ namespace vapp {
 
     } u;		
   };
-  
+    
   struct RecordedGameEvent {
     float fTime;                    /* Time of event */
     GameEvent Event;                /* Event itself */
     bool bPassed;                   /* Whether we have passed it */
   };
-    
+
 	/*===========================================================================
 	Game object
   ===========================================================================*/
@@ -546,7 +548,7 @@ namespace vapp {
     
       /* Methods */
       void playLevel(LevelSrc *pLevelSrc, bool bIsAReplay);
-      void updateLevel(float fTimeStep,SerializedBikeState *pReplayState,DBuffer *pEventReplayBuffer);
+      void updateLevel(float fTimeStep,SerializedBikeState *pReplayState,Replay *p_replay);
       void endLevel(void);
       
       void touchEntity(Entity *pEntity,bool bHead, bool bEnableScript); 
@@ -560,7 +562,7 @@ namespace vapp {
       void clearGameMessages(void);
       
       void getSerializedBikeState(SerializedBikeState *pState);
-      void unserializeGameEvents(DBuffer &Buffer);
+      static void unserializeGameEvents(DBuffer *Buffer, std::vector<RecordedGameEvent *> *v_ReplayEvents);
       void interpolateGameState(SerializedBikeState *pA,SerializedBikeState *pB,SerializedBikeState *p,float t);
 
       float getBikeEngineRPM(void);
@@ -591,6 +593,8 @@ namespace vapp {
       BikeState *getGhostBikeState(void) {return &m_GhostBikeS;}
       bool isGhostActive() {return m_isGhostActive;}
       void setGhostActive(bool s) {m_isGhostActive = s;}
+      std::vector<float> m_myLastStrawberry;
+      std::vector<float> m_ghostLastStrawberry;
 #endif
       BikeController *getBikeController(void) {return &m_BikeC;}
       std::vector<GameMessage *> &getGameMessage(void) {return m_GameMessages;}
@@ -644,8 +648,6 @@ namespace vapp {
       std::vector<ConvexBlock *> m_Blocks;/* Blocks */
       std::vector<Entity *> m_Entities;   /* Entities */
       dWorldID m_WorldID;                 /* World ID */
-            
-      std::vector<RecordedGameEvent *> m_ReplayEvents; /* Events reconstructed from replay */
       
       std::vector<Entity *> m_FSprites;   /* Foreground sprites */
       std::vector<Entity *> m_BSprites;   /* Background sprites */
@@ -760,7 +762,7 @@ namespace vapp {
       void _16BitsToMatrix(unsigned short n16,float *pfMatrix);
       void _SerializeGameEventQueue(DBuffer &Buffer,GameEvent *pEvent);
       
-      void _UpdateReplayEvents(void);
+      void _UpdateReplayEvents(Replay *p_replay);
       void _HandleReplayEvent(GameEvent *pEvent);
       void _HandleReverseReplayEvent(GameEvent *pEvent);
       

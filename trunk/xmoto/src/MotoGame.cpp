@@ -211,7 +211,7 @@ namespace vapp {
   /*===========================================================================
     Update game
     ===========================================================================*/
-  void MotoGame::updateLevel(float fTimeStep,SerializedBikeState *pReplayState,DBuffer *pDBuffer) {
+  void MotoGame::updateLevel(float fTimeStep,SerializedBikeState *pReplayState,Replay *p_replay) {
     bool v_enableScript = pReplayState == NULL; // don't use script on replay (lua action must be read from the replay)
 
     /* Dummies are small markers that can show different things during debugging */
@@ -338,9 +338,9 @@ namespace vapp {
       while(getNumPendingGameEvents() > 0) {
 	GameEvent *pEvent = getNextGameEvent();
 	if(pEvent != NULL) {
-	  if(pDBuffer != NULL) {
+	  if(p_replay != NULL) {
 	    /* Encode event */
-	    _SerializeGameEventQueue(*pDBuffer,pEvent);
+	    _SerializeGameEventQueue(*p_replay,pEvent);
 	  }
 			  
 	  /* What event? */
@@ -464,7 +464,7 @@ namespace vapp {
     }
     else {
       /* Well, handle replay events instead */
-      _UpdateReplayEvents();
+      _UpdateReplayEvents(p_replay);
     }
 
     /* Entities scheduled for termination? */
@@ -762,11 +762,6 @@ namespace vapp {
     for(int i=0;i<m_GameMessages.size();i++)
       delete m_GameMessages[i];
     m_GameMessages.clear();
-    
-    /* Get rid of replay events */
-    for(int i=0;i<m_ReplayEvents.size();i++)
-      delete m_ReplayEvents[i];
-    m_ReplayEvents.clear();
   }
 
   /*===========================================================================
@@ -1224,6 +1219,12 @@ namespace vapp {
 	}                
 	/* Play yummy-yummy sound */
 	Sound::playSampleByName("Sounds/PickUpStrawberry.ogg");
+
+#if defined(ALLOW_GHOST)
+	/* new Strawberry for me */
+	// m_myLastStrawberry.push_back(getTime());
+	//	printf("New for ME\n");
+#endif
       }
       break;
     }
@@ -1298,30 +1299,34 @@ namespace vapp {
   /*===========================================================================
     Update recorded replay events
     ===========================================================================*/
-  void MotoGame::_UpdateReplayEvents(void) {
+  void MotoGame::_UpdateReplayEvents(Replay *p_replay) {
+    std::vector<RecordedGameEvent *> *v_replayEvents;
+
+    v_replayEvents = p_replay->getEvents();
+
     /* Start looking for events that should be passed */
-    for(int i=0;i<m_ReplayEvents.size();i++) {
+    for(int i=0;i<v_replayEvents->size();i++) {
       /* Not passed? And with a time stamp that tells it should have happened
          by now? */
-      if(!m_ReplayEvents[i]->bPassed && m_ReplayEvents[i]->fTime < getTime()) {
+      if(!(*v_replayEvents)[i]->bPassed && (*v_replayEvents)[i]->fTime < getTime()) {
         /* Nice. Handle this event, replay style */
-        _HandleReplayEvent(&m_ReplayEvents[i]->Event);
+        _HandleReplayEvent(&((*v_replayEvents)[i]->Event));
         
         /* Pass it */
-        m_ReplayEvents[i]->bPassed = true;
+        (*v_replayEvents)[i]->bPassed = true;
       }
     }
 
     /* Now see if we have moved back in time and whether we should apply some
        REVERSE events */
-    for(int i=m_ReplayEvents.size()-1;i>=0;i--) {
+    for(int i=v_replayEvents->size()-1;i>=0;i--) {
       /* Passed? And with a time stamp larger than current time? */
-      if(m_ReplayEvents[i]->bPassed && m_ReplayEvents[i]->fTime > getTime()) {
+      if((*v_replayEvents)[i]->bPassed && (*v_replayEvents)[i]->fTime > getTime()) {
         /* Nice. Handle this event, replay style BACKWARDS */
-        _HandleReverseReplayEvent(&m_ReplayEvents[i]->Event);
+        _HandleReverseReplayEvent(&((*v_replayEvents)[i]->Event));
 
         /* Un-pass it */
-        m_ReplayEvents[i]->bPassed = false;
+        (*v_replayEvents)[i]->bPassed = false;
       }
     }
   }

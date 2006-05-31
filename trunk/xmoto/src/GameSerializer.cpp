@@ -44,19 +44,19 @@ namespace vapp {
   /*===========================================================================
     Decoding of event stream
     ===========================================================================*/
-  void MotoGame::unserializeGameEvents(DBuffer &Buffer) {
+  void MotoGame::unserializeGameEvents(DBuffer *Buffer, std::vector<RecordedGameEvent *> *v_ReplayEvents) {
     /* Continue until buffer is empty */
     bool bError = false;
-    while(Buffer.numRemainingBytes() > sizeof(float) && !bError) {
+    while((*Buffer).numRemainingBytes() > sizeof(float) && !bError) {
       /* Get event time */
       float fEventTime;
       GameEvent Event;
 
-      Buffer >> fEventTime;
+      (*Buffer) >> fEventTime;
       
       /* Get event type */
       GameEventType EventType;
-      Buffer >> EventType;
+      (*Buffer) >> EventType;
       
       bool bIsOk = false;
 
@@ -65,22 +65,22 @@ namespace vapp {
       case GAME_EVENT_ENTITY_DESTROYED:       
 	/* Read entity name */
 	int n;
-	Buffer >> n;
+	(*Buffer) >> n;
 	if(n >= sizeof(Event.u.EntityDestroyed.cEntityID)) {
 	  Log("** Warning ** : Entity name in replay too long, ignoring all events!");
 	  bError = true;
 	}
 	else {
-	  Buffer.readBuf(Event.u.EntityDestroyed.cEntityID,n);
+	  (*Buffer).readBuf(Event.u.EntityDestroyed.cEntityID,n);
 	  Event.u.EntityDestroyed.cEntityID[n] = '\0';
             
 	  /* Read entity type */
-	  Buffer >> Event.u.EntityDestroyed.Type;
+	  (*Buffer) >> Event.u.EntityDestroyed.Type;
             
 	  /* Read size and pos */
-	  Buffer >> Event.u.EntityDestroyed.fSize;
-	  Buffer >> Event.u.EntityDestroyed.fPosX;
-	  Buffer >> Event.u.EntityDestroyed.fPosY;            
+	  (*Buffer) >> Event.u.EntityDestroyed.fSize;
+	  (*Buffer) >> Event.u.EntityDestroyed.fPosX;
+	  (*Buffer) >> Event.u.EntityDestroyed.fPosY;            
             
 	  bIsOk = true;
 	}
@@ -89,17 +89,17 @@ namespace vapp {
       case GAME_EVENT_LUA_CALL_SETENTITYPOS:
 	{
 	  int n;
-	  Buffer >> n;
+	  (*Buffer) >> n;
 	  if(n >= sizeof(Event.u.LuaCallSetentitypos.cEntityID)) {
 	    Log("** Warning ** : Entity name in replay too long, ignoring all events!");
 	    bError = true;
 	  }
 	  else {
-	    Buffer.readBuf(Event.u.LuaCallSetentitypos.cEntityID,n);
+	    (*Buffer).readBuf(Event.u.LuaCallSetentitypos.cEntityID,n);
 	    Event.u.LuaCallSetentitypos.cEntityID[n] = '\0';
 
-	    Buffer >> Event.u.LuaCallSetentitypos.x;
-	    Buffer >> Event.u.LuaCallSetentitypos.y;
+	    (*Buffer) >> Event.u.LuaCallSetentitypos.x;
+	    (*Buffer) >> Event.u.LuaCallSetentitypos.y;
 
 	    bIsOk = true;
 	  }
@@ -114,18 +114,18 @@ namespace vapp {
 	
       case GAME_EVENT_LUA_CALL_PLACEINGAMEARROW:
 	{
-	  Buffer >> Event.u.LuaCallPlaceingamearrow.x;
-	  Buffer >> Event.u.LuaCallPlaceingamearrow.y;
-	  Buffer >> Event.u.LuaCallPlaceingamearrow.angle;
+	  (*Buffer) >> Event.u.LuaCallPlaceingamearrow.x;
+	  (*Buffer) >> Event.u.LuaCallPlaceingamearrow.y;
+	  (*Buffer) >> Event.u.LuaCallPlaceingamearrow.angle;
 	  bIsOk = true;
 	}
 	break;
 	
       case GAME_EVENT_LUA_CALL_PLACESCREENARROW:
 	{
-	  Buffer >> Event.u.LuaCallPlacescreenarrow.x;
-	  Buffer >> Event.u.LuaCallPlacescreenarrow.y;
-	  Buffer >> Event.u.LuaCallPlacescreenarrow.angle;
+	  (*Buffer) >> Event.u.LuaCallPlacescreenarrow.x;
+	  (*Buffer) >> Event.u.LuaCallPlacescreenarrow.y;
+	  (*Buffer) >> Event.u.LuaCallPlacescreenarrow.angle;
 	  bIsOk = true;
 	}
 	break;
@@ -139,13 +139,13 @@ namespace vapp {
       case GAME_EVENT_LUA_CALL_MESSAGE:
 	{
 	  int n;
-	  Buffer >> n;
+	  (*Buffer) >> n;
 	  if(n >= sizeof(Event.u.LuaCallMessage.cMessage)) {
 	    Log("** Warning ** : Message in replay too long, ignoring all events!");
 	    bError = true;
 	  }
 	  else {
-	    Buffer.readBuf(Event.u.LuaCallMessage.cMessage, n);
+	    (*Buffer).readBuf(Event.u.LuaCallMessage.cMessage, n);
 	    Event.u.LuaCallMessage.cMessage[n] = '\0';
 	    bIsOk = true;
 	  }
@@ -155,17 +155,17 @@ namespace vapp {
       case GAME_EVENT_LUA_CALL_MOVEBLOCK:
 	{
 	  int n;
-	  Buffer >> n;
+	  (*Buffer) >> n;
 	  if(n >= sizeof(Event.u.LuaCallMoveblock.cBlockID)) {
 	    Log("** Warning ** : Block name in replay too long, ignoring all events!");
 	    bError = true;
 	  }
 	  else {
-	    Buffer.readBuf(Event.u.LuaCallMoveblock.cBlockID,n);
+	    (*Buffer).readBuf(Event.u.LuaCallMoveblock.cBlockID,n);
 	    Event.u.LuaCallMoveblock.cBlockID[n] = '\0';
 
-	    Buffer >> Event.u.LuaCallMoveblock.x;
-	    Buffer >> Event.u.LuaCallMoveblock.y;
+	    (*Buffer) >> Event.u.LuaCallMoveblock.x;
+	    (*Buffer) >> Event.u.LuaCallMoveblock.y;
 
 	    bIsOk = true;
 	  }
@@ -175,17 +175,17 @@ namespace vapp {
       case GAME_EVENT_LUA_CALL_SETBLOCKPOS:
 	{
 	  int n;
-	  Buffer >> n;
+	  (*Buffer) >> n;
 	  if(n >= sizeof(Event.u.LuaCallSetblockpos.cBlockID)) {
 	    Log("** Warning ** : Block name in replay too long, ignoring all events!");
 	    bError = true;
 	  }
 	  else {
-	    Buffer.readBuf(Event.u.LuaCallSetblockpos.cBlockID,n);
+	    (*Buffer).readBuf(Event.u.LuaCallSetblockpos.cBlockID,n);
 	    Event.u.LuaCallSetblockpos.cBlockID[n] = '\0';
 
-	    Buffer >> Event.u.LuaCallSetblockpos.x;
-	    Buffer >> Event.u.LuaCallSetblockpos.y;
+	    (*Buffer) >> Event.u.LuaCallSetblockpos.x;
+	    (*Buffer) >> Event.u.LuaCallSetblockpos.y;
 
 	    bIsOk = true;
 	  }
@@ -194,17 +194,17 @@ namespace vapp {
 	
       case GAME_EVENT_LUA_CALL_SETGRAVITY:
 	{
-	  Buffer >> Event.u.LuaCallSetgravity.x;
-	  Buffer >> Event.u.LuaCallSetgravity.y;
+	  (*Buffer) >> Event.u.LuaCallSetgravity.x;
+	  (*Buffer) >> Event.u.LuaCallSetgravity.y;
 	  bIsOk = true;
 	}
 	break;
 	
       case GAME_EVENT_LUA_CALL_SETPLAYERPOSITION:
 	{
-	  Buffer >> Event.u.LuaCallSetplayerposition.x;
-	  Buffer >> Event.u.LuaCallSetplayerposition.y;
-	  Buffer >> Event.u.LuaCallSetplayerposition.bRight;
+	  (*Buffer) >> Event.u.LuaCallSetplayerposition.x;
+	  (*Buffer) >> Event.u.LuaCallSetplayerposition.y;
+	  (*Buffer) >> Event.u.LuaCallSetplayerposition.bRight;
 	  bIsOk = true;
 	}
 	break;
@@ -223,7 +223,7 @@ namespace vapp {
 	p->Event.Type = EventType;
 	p->Event.nSeq = 0;
 	memcpy(&p->Event.u,&Event.u,sizeof(Event.u));
-	m_ReplayEvents.push_back(p);
+	v_ReplayEvents->push_back(p);
       }
 
     }

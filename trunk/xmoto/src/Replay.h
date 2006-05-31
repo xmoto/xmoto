@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VApp.h"
 #include "VFileIO.h"
 #include "DBuffer.h"
+#include "MotoGame.h"
 
 #define REPLAY_SPEED_INCREMENT 0.25
 #define STATES_PER_CHUNK 512
@@ -93,6 +94,8 @@ namespace vapp {
     
       static std::string giveAutomaticName();
 
+      std::vector<RecordedGameEvent *> *getEvents() {return &m_ReplayEvents;}
+
     private: 
       /* Data */ 
       std::vector<ReplayStateChunk> m_Chunks;
@@ -118,6 +121,9 @@ namespace vapp {
       
       /* Static data */
       static bool m_bEnableCompression;
+
+      /* Events reconstructed from replay */
+      std::vector<RecordedGameEvent *> m_ReplayEvents;
   };
 
 };

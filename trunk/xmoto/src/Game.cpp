@@ -106,9 +106,6 @@ namespace vapp {
             m_nFrame = 0;
             m_Renderer.prepareForNewLevel();            
             
-            /* Reconstruct game events that are going to happen during the replay */
-            m_MotoGame.unserializeGameEvents( *m_pReplay );            
-            
             /* Show help string */
             if(!isNoGraphics()) {
               PlayerTimeEntry *pBestTime = m_Profiles.getBestTime(LevelID);

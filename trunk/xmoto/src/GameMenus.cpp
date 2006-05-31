@@ -64,7 +64,7 @@ namespace vapp {
     pFinishText->setFont(m_Renderer.getMediumFont());
 
     m_pNewWorldRecord = new UIStatic(m_pFinishMenu,
-				     115,
+				     5,
 				     450,
 				     "",400, 50);
 
