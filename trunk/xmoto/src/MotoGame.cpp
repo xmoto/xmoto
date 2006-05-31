@@ -321,9 +321,9 @@ namespace vapp {
     /* Invoke EveryHundreath() script function */
     if(v_enableScript) {
       while(getTime() - m_lastCallToEveryHundreath > 0.01) {
-	if(!scriptCallBool("EveryHundreath",
+	if(!scriptCallBool("Tick",
 			   true)) {
-	  throw Exception("level script EveryHundreath() returned false");
+	  throw Exception("level script Tick() returned false");
 	}
 	m_lastCallToEveryHundreath += 0.01;
       }
