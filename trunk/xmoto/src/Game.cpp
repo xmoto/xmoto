@@ -1008,7 +1008,7 @@ namespace vapp {
       	    /* don't do this infinitely, maximum miss 10 frames, then give up */
 
 	    if(m_Config.getBool("LimitFramerate")) {
-	      SDL_Delay(0);
+	      SDL_Delay(1);
 	    }
 	    
       	  } while ((m_fLastPhysTime + PHYS_STEP_SIZE <= getTime()) && (nPhysSteps < 10));
