@@ -595,7 +595,8 @@ namespace vapp {
       void setGhostActive(bool s) {m_isGhostActive = s;}
       std::vector<float> m_myLastStrawberry;
       std::vector<float> m_ghostLastStrawberry;
-      float m_myDiffOfGhost;
+      float m_myDiffOfGhost; /* time diff between the ghost and the player */
+      int m_myDiffOfGhostLastStrawberry; /* last Strawberry for which the calcul has been done */
 #endif
       BikeController *getBikeController(void) {return &m_BikeC;}
       std::vector<GameMessage *> &getGameMessage(void) {return m_GameMessages;}

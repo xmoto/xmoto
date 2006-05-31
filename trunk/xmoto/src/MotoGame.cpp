@@ -616,6 +616,13 @@ namespace vapp {
     
     m_lastCallToEveryHundreath = 0.0;
 
+#if defined(ALLOW_GHOST)
+      m_myLastStrawberry.clear();
+      m_ghostLastStrawberry.clear();
+      m_myDiffOfGhost = 0.0;
+      m_myDiffOfGhostLastStrawberry = -1;
+#endif
+
     /* Clear zone flags */
     for(int i=0;i<pLevelSrc->getZoneList().size();i++)
       pLevelSrc->getZoneList()[i]->m_bInZone = false;
@@ -712,12 +719,6 @@ namespace vapp {
         Log("** Warning ** : Unknown entity type '%s' for '%s'",pLEnt->TypeID.c_str(),pLEnt->ID.c_str());
     }
     
-
-#if defined(ALLOW_GHOST)
-      m_myLastStrawberry.clear();
-      m_ghostLastStrawberry.clear();
-      m_myDiffOfGhost = 0.0;
-#endif
 
     /* Invoke the OnLoad() script function */
     if(v_enableScript) {
@@ -1555,21 +1556,28 @@ namespace vapp {
   }
 
   void MotoGame::UpdateDiffFromGhost() {
+    int v_myDiffOfGhostLastStrawberry_new;
+
     if(m_myLastStrawberry.size() == 0 || m_ghostLastStrawberry.size() == 0) {
       return;
     }
 
     if(m_myLastStrawberry.size() > m_ghostLastStrawberry.size()) {
       /* i'm winning */
-      m_myDiffOfGhost = - m_myLastStrawberry[m_ghostLastStrawberry.size() -1] + m_ghostLastStrawberry[m_ghostLastStrawberry.size() -1];
+      v_myDiffOfGhostLastStrawberry_new = m_ghostLastStrawberry.size() -1;
     } else {
       /* ghost is winning */
-      m_myDiffOfGhost = - m_myLastStrawberry[m_myLastStrawberry.size() -1] + m_ghostLastStrawberry[m_myLastStrawberry.size() -1];
+      v_myDiffOfGhostLastStrawberry_new = m_myLastStrawberry.size() -1;
     }
 
-    char msg[256];
-    sprintf(msg, "%+.2f", m_myDiffOfGhost);
-    this->gameMessage(msg);
+    if(v_myDiffOfGhostLastStrawberry_new != m_myDiffOfGhostLastStrawberry) {
+      m_myDiffOfGhostLastStrawberry = v_myDiffOfGhostLastStrawberry_new;
+      m_myDiffOfGhost = m_myLastStrawberry[m_myDiffOfGhostLastStrawberry] - m_ghostLastStrawberry[m_myDiffOfGhostLastStrawberry];
+
+      char msg[256];
+      sprintf(msg, "%+.2f", m_myDiffOfGhost);
+      this->gameMessage(msg);
+    }
   }
 
 #endif

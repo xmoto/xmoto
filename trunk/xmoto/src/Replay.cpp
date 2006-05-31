@@ -521,7 +521,12 @@ namespace vapp {
     m_nCurState = 0.0;
     m_bEndOfFile = false;
     m_speed_factor = 1;
-     m_is_paused = false;
+    m_is_paused = false;
+
+    /* resetting events */
+    for(int i=0;i<m_ReplayEvents.size();i++) {
+      m_ReplayEvents[i]->bPassed = false;
+    }
   }
 
   std::string Replay::getLevelId() {
