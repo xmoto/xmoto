@@ -21,9 +21,6 @@
   add informatin about highscore when a level is selected (name of the
    driver, <see button>, ...)  
 
-* check that SDL_DELAY(0) is good
-
-
 Ghost finition :
 * make a vector for replays to load them faster
 

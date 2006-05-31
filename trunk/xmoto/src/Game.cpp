@@ -1556,6 +1556,11 @@ namespace vapp {
           m_Renderer.getGUI()->mouseWheelDown(nX,nY);
         
         break;
+
+      case GS_PLAYING:
+      /* Notify the controller */
+      m_InputHandler.handleInput(INPUT_KEY_DOWN,nButton,m_MotoGame.getBikeController(), &m_Renderer);
+
     }
   }
 
@@ -1577,6 +1582,11 @@ namespace vapp {
         else if(nButton = SDL_BUTTON_RIGHT)
           m_Renderer.getGUI()->mouseRUp(nX,nY);
         break;
+
+      case GS_PLAYING:
+      /* Notify the controller */
+      m_InputHandler.handleInput(INPUT_KEY_UP,nButton,m_MotoGame.getBikeController(), &m_Renderer);
+      break;
     }
   }
 

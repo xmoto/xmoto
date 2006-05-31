@@ -89,6 +89,10 @@ namespace vapp {
     "PageUp",          SDLK_PAGEUP,
     "PageDown",        SDLK_PAGEDOWN,
     "Return",          SDLK_RETURN,
+    "Left Click",      SDL_BUTTON_LEFT,
+    "Right Click",     SDL_BUTTON_RIGHT,
+    "Wheel down",      SDL_BUTTON_WHEELDOWN,
+    "Wheel up",        SDL_BUTTON_WHEELUP,
     /* TODO: add more */
     NULL    
   };
@@ -272,6 +276,10 @@ namespace vapp {
         switch(Event.type) {
           case SDL_QUIT:
             return "<<QUIT>>";
+	case SDL_MOUSEBUTTONDOWN:
+	  Ret = _KeyToString(Event.button.button);
+	  if(Ret != "") bWait = false;
+	  break;
 	case SDL_KEYDOWN:
             if(Event.key.keysym.sym == SDLK_ESCAPE) return "<<CANCEL>>";
           
