@@ -21,6 +21,9 @@
   add informatin about highscore when a level is selected (name of the
    driver, <see button>, ...)  
 
+* check that SDL_DELAY(0) is good
+
+
 Ghost finition :
 * make a vector for replays to load them faster
 
@@ -31,11 +34,11 @@ Ghost finition :
 	case SDL_BUTTON_LEFT:
 
 * see time diff with the ghost
+# for after
+
 * see biker speed
 * have a <----> for the lists
 * see about timeout when connection failed
-
-# for after
 
 * a button "clean replays" which remove not highscore replays or
    something like it
