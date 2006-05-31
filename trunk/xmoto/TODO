@@ -9,6 +9,9 @@
    first time we load the game called in gamemenu.cpp, line 1573 but
    not displayed, i don't know why
 * BUG : move objects in script doesn't work
+
+* BUG : xmoto crashes when some textures are missing for a level
+
 * try to compile without WEBSUPPORT and GHOST to see the result
 * add highscore tab in pack and new levels (priority=high)
 * add <xml_room> in configuration so that the player can choose the
@@ -33,6 +36,13 @@ Ghost finition :
 * see about timeout when connection failed
 
 # for after
+
+* a button "clean replays" which remove not highscore replays or
+   something like it
+* be able to choose "download highscore" "check for new level" at
+   startup
+* check for a new version at startup
+
 
 * add a counter of uncompleted levels (priority=medium)
 * theme (for sprites) (priority=medium)
