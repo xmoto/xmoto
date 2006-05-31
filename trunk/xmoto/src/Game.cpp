@@ -1018,7 +1018,7 @@ namespace vapp {
           
       	  if(!m_bTimeDemo) {
       	    /* Never pass this point while being ahead of time, busy wait until it's time */
-      	    if (nPhysSteps <= 1) {      	    
+      	    if (nPhysSteps <= 1) {  
       	      while (m_fLastPhysTime > getTime());
       	    }
       	  }
