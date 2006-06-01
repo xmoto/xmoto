@@ -91,6 +91,7 @@ namespace vapp {
     "Return",          SDLK_RETURN,
     "Left Click",      SDL_BUTTON_LEFT,
     "Right Click",     SDL_BUTTON_RIGHT,
+    "Middle Click",    SDL_BUTTON_MIDDLE,
     "Wheel down",      SDL_BUTTON_WHEELDOWN,
     "Wheel up",        SDL_BUTTON_WHEELUP,
     /* TODO: add more */
