@@ -1,5 +1,7 @@
 # for 0.1.16
 * display "saved" nicer
+* display time diff for the ghost nicer
+
 * Make sure LUA5.1 is supported properly OR use LUA5.0 explicitly.
   -> see http://www.lua.org/manual/5.1/manual.html#incompat
 * BUG : if www is not activated at startup, go in option, check www,
@@ -22,8 +24,6 @@
 
 Ghost finition :
 * make a vector for replays to load them faster
-
-* see time diff with the ghost
 
 
 # for after
