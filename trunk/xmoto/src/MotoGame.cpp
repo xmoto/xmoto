@@ -1229,8 +1229,10 @@ namespace vapp {
 	Sound::playSampleByName("Sounds/PickUpStrawberry.ogg");
 
 #if defined(ALLOW_GHOST)
-	m_myLastStrawberry.push_back(getTime());
-	UpdateDiffFromGhost();
+	if(isGhostActive()) {
+	  m_myLastStrawberry.push_back(getTime());
+	  UpdateDiffFromGhost();
+	}
 #endif
       }
       break;
