@@ -88,6 +88,20 @@ namespace vapp {
     return m_BikeS.fBikeEngineRPM;
   }
 
+  float MotoGame::getBikeEngineSpeed() {
+    float fWheelAngVel;
+    float speed;
+
+    if(m_BikeS.Dir == DD_RIGHT) {
+      fWheelAngVel = dBodyGetAngularVel(m_RearWheelBodyID)[2];
+    } else {
+      fWheelAngVel = dBodyGetAngularVel(m_FrontWheelBodyID)[2];
+    }
+
+    speed = (fWheelAngVel * PHYS_WHEEL_RADIUS * 3.6);
+    return speed >= 0.0 ? speed : -speed;
+  }
+
   /*===========================================================================
   Update physics
   ===========================================================================*/

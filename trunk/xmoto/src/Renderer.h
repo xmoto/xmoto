@@ -238,6 +238,7 @@ namespace vapp {
       void showReplayHelp(float p_speed, bool bAllowRewind);
       void hideReplayHelp();
       void setWorldRecordTime(const std::string &s) {m_pWorldRecordTime->setCaption(s);}
+      void setSpeed(const std::string &s) {m_pSpeed->setCaption(s);}
       std::string getBestTime(void) {return m_pBestTime->getCaption();}
       void setQuality(GraphQuality Quality) {m_Quality = Quality;}      
       void setSpeedMultiplier(float f) {m_fSpeedMultiply = f;}
@@ -280,7 +281,8 @@ namespace vapp {
       UIStatic *m_pBestTime;
       UIStatic *m_pReplayHelp;
       UIStatic *m_pWorldRecordTime;
-      
+      UIStatic *m_pSpeed;      
+
       float m_fSpeedMultiply;
       
       UIFont *m_pMFont,*m_pSFont;

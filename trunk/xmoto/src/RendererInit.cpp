@@ -279,6 +279,11 @@ namespace vapp {
     m_pWorldRecordTime->setVAlign(UI_ALIGN_TOP);
     m_pWorldRecordTime->setHAlign(UI_ALIGN_LEFT);
     
+    m_pSpeed = new UIStatic(m_pInGameStats,0,60,"",60,20);
+    m_pSpeed->setFont(m_pSFont);
+    m_pSpeed->setVAlign(UI_ALIGN_TOP);
+    m_pSpeed->setHAlign(UI_ALIGN_RIGHT);
+
     /* Overlays? */
     m_Overlay.init(getParent(),512,512);
   }

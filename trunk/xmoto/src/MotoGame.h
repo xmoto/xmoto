@@ -566,7 +566,8 @@ namespace vapp {
       void interpolateGameState(SerializedBikeState *pA,SerializedBikeState *pB,SerializedBikeState *p,float t);
 
       float getBikeEngineRPM(void);
-      
+      float getBikeEngineSpeed();
+
       GameEvent *createGameEvent(GameEventType Type);
       GameEvent *getNextGameEvent(void);
       int getNumPendingGameEvents(void);
@@ -614,7 +615,7 @@ namespace vapp {
       CollisionSystem *getCollisionHandler(void) {return &m_Collision;}
       void setGravity(float x,float y) {m_PhysGravity.x=x; m_PhysGravity.y=y;}
       const Vector2f &getGravity(void) {return m_PhysGravity;}
-            
+        
       /* Debug */
       void resetDummies(void) {m_nNumDummies=0;}
       int getNumDummies(void) {return m_nNumDummies;}

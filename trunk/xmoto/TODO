@@ -1,6 +1,7 @@
 # for 0.1.16
 * display "saved" nicer
 * display time diff for the ghost nicer
+* display a nice counter for engine speed
 
 * Make sure LUA5.1 is supported properly OR use LUA5.0 explicitly.
   -> see http://www.lua.org/manual/5.1/manual.html#incompat
@@ -27,8 +28,6 @@ Ghost finition :
 
 
 # for after
-
-* see biker speed
 * have a <----> for the lists
 * see about timeout when connection failed
 

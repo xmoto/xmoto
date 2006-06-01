@@ -518,6 +518,16 @@ namespace vapp {
     
     /* If there's strawberries in the level, tell the user how many there's left */
     _RenderGameStatus();
+
+    /* display speed km/h : very bad */
+    static float v_last_update = 0.0;
+    MotoGame *pGame = getGameObject();
+    if(v_last_update + 0.3 < pGame->getTime()) {
+      char v_speed[16];
+      sprintf(v_speed, "%i km/h", (int)(pGame->getBikeEngineSpeed()));
+      setSpeed(v_speed);
+      v_last_update = pGame->getTime();
+    }
   }
 
   /*===========================================================================
