@@ -51,6 +51,7 @@ namespace vapp {
     m_fCurrentHorizontalScrollShift = 0.0f;
     m_fDesiredHorizontalScrollShift = 0.0f;
     m_fNextParticleUpdate = 0.0f;
+    m_lastCounterUpdate = 0.0;
     
     #if defined(ALLOW_GHOST)
       /* Set initial ghost information position */
@@ -520,13 +521,12 @@ namespace vapp {
     _RenderGameStatus();
 
     /* display speed km/h : very bad */
-    static float v_last_update = 0.0;
     MotoGame *pGame = getGameObject();
-    if(v_last_update + 0.3 < pGame->getTime()) {
+    if(m_lastCounterUpdate + 0.3 < pGame->getTime()) {
       char v_speed[16];
       sprintf(v_speed, "%i km/h", (int)(pGame->getBikeEngineSpeed()));
       setSpeed(v_speed);
-      v_last_update = pGame->getTime();
+      m_lastCounterUpdate = pGame->getTime();
     }
   }
 
