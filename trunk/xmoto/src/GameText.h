@@ -229,6 +229,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_YES                  "Yes"
 #define GAMETEXT_ZOOMIN  	            "Zoom in"
 #define GAMETEXT_ZOOMOUT 	            "Zoom out"
+#define GAMETEXT_ZOOMINIT 	            "Reinitialize zoom"
 
 /* Context help strings */
 #define CONTEXTHELP_UPDATEHIGHSCORES "Download the latest X-Moto world records from the Internet"

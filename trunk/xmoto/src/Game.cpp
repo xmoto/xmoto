@@ -1720,6 +1720,7 @@ namespace vapp {
     #if defined(ENABLE_ZOOMING)
       m_Config.createVar( "KeyZoomIn",              "PageUp" );
       m_Config.createVar( "KeyZoomOut",             "PageDown" );
+      m_Config.createVar( "KeyZoomInit",            "Home" );
     #endif
         
     m_Config.createVar( "JoyIdx1",                "-1" );

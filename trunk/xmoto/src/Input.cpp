@@ -37,8 +37,9 @@ namespace vapp {
     "PushForward",     ACTION_PUSHFORWARD,       
     "ChangeDirection", ACTION_CHANGEDIR,     
     #if defined(ENABLE_ZOOMING)    
-      "ZoomIn",          ACTION_ZOOMIN,     
-      "ZoomOut",         ACTION_ZOOMOUT,     
+      "ZoomIn",        ACTION_ZOOMIN,     
+      "ZoomOut",       ACTION_ZOOMOUT,
+      "ZoomInit",      ACTION_ZOOMINIT, 
     #endif
     NULL
   };
@@ -88,6 +89,8 @@ namespace vapp {
     "0",               SDLK_0,
     "PageUp",          SDLK_PAGEUP,
     "PageDown",        SDLK_PAGEDOWN,
+    "Home",            SDLK_HOME,
+    "End",             SDLK_END,
     "Return",          SDLK_RETURN,
     "Left Click",      SDL_BUTTON_LEFT,
     "Right Click",     SDL_BUTTON_RIGHT,
@@ -321,15 +324,16 @@ namespace vapp {
         m_nChangeDirKey1 = _StringToKey(pConfig->getString("KeyChangeDir1"));
 
         #if defined(ENABLE_ZOOMING)          
-	        m_nZoomIn = _StringToKey(pConfig->getString("KeyZoomIn"));
-	        m_nZoomOut = _StringToKey(pConfig->getString("KeyZoomOut"));
-	      #endif
+	m_nZoomIn   = _StringToKey(pConfig->getString("KeyZoomIn"));
+	m_nZoomOut  = _StringToKey(pConfig->getString("KeyZoomOut"));
+	m_nZoomInit = _StringToKey(pConfig->getString("KeyZoomInit"));
+	#endif
         
         /* All good? */
         if(m_nDriveKey1<0 || m_nBrakeKey1<0 || m_nPullBackKey1<0 ||
           m_nPushForwardKey1<0 || m_nChangeDirKey1<0 
           #if defined(ENABLE_ZOOMING)
-            ||m_nZoomIn<0 || m_nZoomOut <0
+            ||m_nZoomIn<0 || m_nZoomOut <0 || m_nZoomInit <0
           #endif
 	        ) {
           Log("** Warning ** : Invalid keyboard configuration!");
@@ -411,16 +415,20 @@ namespace vapp {
             /* Push forward */
             pController->bPushForward = true;            
           } 
-          #if defined(ENABLE_ZOOMING)          
-          else if(m_nZoomIn == nKey) {
-	          /* Zoom in */
-	          pGameRender->zoom(0.002);
-	        } 
-	        else if(m_nZoomOut == nKey) {
-	          /* Zoom out */
-	          pGameRender->zoom(-0.002);
-	        }
-	        #endif
+#if defined(ENABLE_ZOOMING)          
+	else if(m_nZoomIn == nKey) {
+	  /* Zoom in */
+	  pGameRender->zoom(0.002);
+	} 
+	else if(m_nZoomOut == nKey) {
+	  /* Zoom out */
+	  pGameRender->zoom(-0.002);
+	}
+	else if(m_nZoomInit == nKey) {
+	  /* Zoom out */
+	  pGameRender->initZoom();
+	}
+#endif
 
           break;
         case INPUT_KEY_UP:
@@ -474,6 +482,7 @@ namespace vapp {
     #if defined(ENABLE_ZOOMING)    
       m_nZoomIn          = SDLK_PAGEUP;
       m_nZoomOut         = SDLK_PAGEDOWN;
+      m_nZoomOut         = SDLK_HOME;
     #endif
   }  
 
@@ -487,8 +496,9 @@ namespace vapp {
     if(m_nChangeDirKey1   < 0) { m_nChangeDirKey1   = SDLK_SPACE;    }
     
     #if defined(ENABLE_ZOOMING)
-      if(m_nZoomIn          < 0) { m_nZoomIn          = SDLK_PAGEUP;   }
-      if(m_nZoomOut         < 0) { m_nZoomOut         = SDLK_PAGEDOWN; }
+    if(m_nZoomIn          < 0) { m_nZoomIn          = SDLK_PAGEUP;   }
+    if(m_nZoomOut         < 0) { m_nZoomOut         = SDLK_PAGEDOWN; }
+    if(m_nZoomInit        < 0) { m_nZoomInit        = SDLK_HOME; }
     #endif
   }
 
@@ -505,8 +515,9 @@ namespace vapp {
     if(Action == "ChangeDir") return _KeyToString(m_nChangeDirKey1);
     
     #if defined(ENABLE_ZOOMING)    
-      if(Action == "ZoomIn") return _KeyToString(m_nZoomIn);
-      if(Action == "ZoomOut") return _KeyToString(m_nZoomOut);
+    if(Action == "ZoomIn")   return _KeyToString(m_nZoomIn);
+    if(Action == "ZoomOut")  return _KeyToString(m_nZoomOut);
+    if(Action == "ZoomInit") return _KeyToString(m_nZoomInit);
     #endif
 
     return "?";

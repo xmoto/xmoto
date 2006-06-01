@@ -28,6 +28,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GUI.h"
 #include "Replay.h"
 
+#define ZOOM_DEFAULT 0.195f
+
 namespace vapp {
 
 	/*===========================================================================
@@ -206,7 +208,7 @@ namespace vapp {
 	m_bDebug=false;
 	m_Quality=GQ_HIGH;
 	m_fSpeedMultiply=1.0f;
-	m_fScale = 0.195f;
+	m_fScale = ZOOM_DEFAULT;
 	m_bGhostMotionBlur = true;
       }
       ~GameRenderer() {_Free();}
@@ -240,6 +242,7 @@ namespace vapp {
       void setQuality(GraphQuality Quality) {m_Quality = Quality;}      
       void setSpeedMultiplier(float f) {m_fSpeedMultiply = f;}
       void zoom(float p_f);
+      void initZoom();
       void setGhostMotionBlur(bool b) {m_bGhostMotionBlur = b;}
       
 #if defined(ALLOW_GHOST)

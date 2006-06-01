@@ -1109,6 +1109,7 @@ namespace vapp {
     #if defined(ENABLE_ZOOMING)    
       p = pList->addEntry(GAMETEXT_ZOOMIN); p->Text.push_back(m_Config.getString("KeyZoomIn"));
       p = pList->addEntry(GAMETEXT_ZOOMOUT); p->Text.push_back(m_Config.getString("KeyZoomOut"));
+      p = pList->addEntry(GAMETEXT_ZOOMINIT); p->Text.push_back(m_Config.getString("KeyZoomInit"));
     #endif
   }
   
@@ -2708,6 +2709,7 @@ namespace vapp {
     #if defined(ENABLE_ZOOMING)
       m_Config.setValue("KeyZoomIn",m_Config.getDefaultValue("KeyZoomIn"));
       m_Config.setValue("KeyZoomOut",m_Config.getDefaultValue("KeyZoomOut"));
+      m_Config.setValue("KeyZoomInit",m_Config.getDefaultValue("KeyZoomInit"));
     #endif
 
     /* The following require restart */
@@ -2795,6 +2797,7 @@ namespace vapp {
       #if defined(ENABLE_ZOOMING)
         else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_ZOOMIN) m_Config.setString("KeyZoomIn",pActionList->getEntries()[i]->Text[1]);
         else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_ZOOMOUT) m_Config.setString("KeyZoomOut",pActionList->getEntries()[i]->Text[1]);
+      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_ZOOMINIT) m_Config.setString("KeyZoomInit",pActionList->getEntries()[i]->Text[1]);
       #endif
     }
     

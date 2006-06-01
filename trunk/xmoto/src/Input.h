@@ -80,6 +80,7 @@ namespace vapp {
     ACTION_CHANGEDIR,         /* Param: None */
     ACTION_ZOOMIN,            /* Param: None */
     ACTION_ZOOMOUT,           /* Param: None */
+    ACTION_ZOOMINIT           /* Param: None */
   };
     
   struct InputAction {
@@ -131,6 +132,7 @@ namespace vapp {
       int m_nChangeDirKey1;
       int m_nZoomIn;
       int m_nZoomOut;
+      int m_nZoomInit;
 
       /* For ControllerMode1 = CONTROLLER_MODE_JOYSTICK1 */
       SDL_Joystick *m_pActiveJoystick1;
