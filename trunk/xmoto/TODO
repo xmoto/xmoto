@@ -14,6 +14,16 @@
 
 * BUG : xmoto crashes when some textures are missing for a level
 
+* BUG : bug in the editor
+if you load and save http://xmoto.free.fr/levels/l189.lvl
+because  > is replaced by &gt;
+
+* BUG : information on ghost option is not considered before the next
+   restart of the game
+
+* having the information of time diff about the ghost each time you
+   take a strawberry, because we know the information already at this time
+
 * try to compile without WEBSUPPORT and GHOST to see the result
 * add highscore tab in pack and new levels (priority=high)
 * add <xml_room> in configuration so that the player can choose the
