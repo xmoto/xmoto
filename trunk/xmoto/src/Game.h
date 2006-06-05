@@ -271,7 +271,9 @@ namespace vapp {
       UIWindow *m_pMainMenu;
       UIMsgBox *m_pDeleteReplayMsgBox;
       UIFrame *m_pGameInfoWindow;
-            
+      
+      UIWindow *m_m_pLevelInfoFrame;
+      
       /* In-game PAUSE menu fun */
       UIFrame *m_pPauseMenu;
       int m_nPauseShade;

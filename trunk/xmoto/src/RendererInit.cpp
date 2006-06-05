@@ -286,7 +286,7 @@ namespace vapp {
     m_pSpeed->setHAlign(UI_ALIGN_RIGHT);
 
     /* new highscore ! */
-    m_pInGameNewHighscore = new UIWindow(getGUI(),410,475,"",200,100);
+    m_pInGameNewHighscore = new UIWindow(getGUI(),405,475,"",200,100);
     m_pInGameNewHighscore->showWindow(false);
 
     m_pNewHighscorePersonal_str = new UIStatic(m_pInGameNewHighscore,
@@ -294,7 +294,7 @@ namespace vapp {
 					       GAMETEXT_NEWHIGHSCOREPERSONAL,
 					       200, 20);
     m_pNewHighscorePersonal_str->setFont(m_pSFont);
-    m_pSpeed->setHAlign(UI_ALIGN_CENTER);
+    m_pNewHighscorePersonal_str->setHAlign(UI_ALIGN_CENTER);
     m_pNewHighscorePersonal_str->showWindow(false);
 
     m_pNewHighscoreBest_str = new UIStatic(m_pInGameNewHighscore,
@@ -302,7 +302,7 @@ namespace vapp {
 					   GAMETEXT_NEWHIGHSCORE,
 					   200, 30);
     m_pNewHighscoreBest_str->setFont(m_pMFont);
-    m_pSpeed->setHAlign(UI_ALIGN_CENTER);
+    m_pNewHighscoreBest_str->setHAlign(UI_ALIGN_CENTER);
     m_pNewHighscoreBest_str->showWindow(false);
 
     m_pNewHighscoreSave_str = new UIStatic(m_pInGameNewHighscore,
@@ -310,7 +310,7 @@ namespace vapp {
 					   "",
 					   200, 20);
     m_pNewHighscoreSave_str->setFont(m_pSFont);
-    m_pSpeed->setHAlign(UI_ALIGN_CENTER);
+    m_pNewHighscoreSave_str->setHAlign(UI_ALIGN_CENTER);
     m_pNewHighscoreSave_str->showWindow(false);
 
     /* Overlays? */

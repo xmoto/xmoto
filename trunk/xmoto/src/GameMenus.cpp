@@ -158,6 +158,15 @@ namespace vapp {
 
     m_nNumMainMenuButtons = 6;
         
+    ///* level info frame */
+    //UIWindow *m_pLevelInfoFrame = new UIWindow(m_pMainMenu,50,475,"",200,100);
+    //m_pLevelInfoFrame->showWindow(true);
+    //UIStatic *pBestPlayerText = new UIStatic(m_pLevelInfoFrame, 0, 0,"Player", 150, 50);
+    //setFont(m_pMFont);
+    //setHAlign(UI_ALIGN_CENTER);
+    //pBestPlayerText->showWindow(true);
+
+
 //    UIStatic *pPlayerText = new UIStatic(m_pMainMenu,300,85,"",getDispWidth()-300-120,50);
     UIStatic *pPlayerText = new UIStatic(m_pMainMenu,300,(getDispHeight()*85)/600,"",getDispWidth()-300-120,50);
     pPlayerText->setFont(m_Renderer.getMediumFont());            
