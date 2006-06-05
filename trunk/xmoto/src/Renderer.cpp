@@ -51,7 +51,6 @@ namespace vapp {
     m_fCurrentHorizontalScrollShift = 0.0f;
     m_fDesiredHorizontalScrollShift = 0.0f;
     m_fNextParticleUpdate = 0.0f;
-    m_lastCounterUpdate = 0.0;
     
     #if defined(ALLOW_GHOST)
       /* Set initial ghost information position */
@@ -519,15 +518,6 @@ namespace vapp {
     
     /* If there's strawberries in the level, tell the user how many there's left */
     _RenderGameStatus();
-
-    /* display speed km/h : very bad */
-    MotoGame *pGame = getGameObject();
-    if(m_lastCounterUpdate + 0.3 < pGame->getTime()) {
-      char v_speed[16];
-      sprintf(v_speed, "%i km/h", (int)(pGame->getBikeEngineSpeed()));
-      setSpeed(v_speed);
-      m_lastCounterUpdate = pGame->getTime();
-    }
   }
 
   /*===========================================================================

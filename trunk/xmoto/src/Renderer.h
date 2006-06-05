@@ -210,7 +210,6 @@ namespace vapp {
 	m_fSpeedMultiply=1.0f;
 	m_fScale = ZOOM_DEFAULT;
 	m_bGhostMotionBlur = true;
-	m_lastCounterUpdate = 0.0;
       }
       ~GameRenderer() {_Free();}
     
@@ -307,9 +306,6 @@ namespace vapp {
       Animation *m_pWreckerAnim;
 
       TextureTheme theme_normal;
-
-      /* for the counter */
-      float m_lastCounterUpdate;
 
 #if defined(ALLOW_GHOST)
       TextureTheme theme_ghost;
