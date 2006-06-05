@@ -230,28 +230,7 @@ namespace vapp {
 		if(m_pGhostReplay != NULL) delete m_pGhostReplay;
 		m_pGhostReplay = new Replay;
 		m_Renderer.setGhostReplay(m_pGhostReplay);
-		
-		if(m_bEnableGhostInfo) {
-		  switch((GhostSearchStrategy)m_Config.getInteger("GhostSearchStrategy")) {
-        case GHOST_STRATEGY_MYBEST:
-		      m_Renderer.setGhostReplayDesc("Your best");
-		      break;
-        case GHOST_STRATEGY_THEBEST:
-		      m_Renderer.setGhostReplayDesc("Local best");
-		      break;
-  #if defined(SUPPORT_WEBACCESS) 
-        case GHOST_STRATEGY_BESTOFROOM:
-		      m_Renderer.setGhostReplayDesc(m_pWebHighscores->getRoomName() );
-          break;
-  #endif
-		    default:
-		      m_Renderer.setGhostReplayDesc("");
-		  }
-		}
-		else
-		  m_Renderer.setGhostReplayDesc("");
-
-		
+	
 		GhostLevelID = m_pGhostReplay->openReplay(v_PlayGhostReplay,&v_ghostReplayFrameRate,v_GhostReplayPlayerName);
 
 		if(GhostLevelID != "") {
@@ -264,6 +243,27 @@ namespace vapp {
 		GhostLevelID = pLevelSrc->getID();
 		m_pGhostReplay->reinitialize();
 	      }
+
+	      /* ghost info */
+	      if(m_bEnableGhostInfo) {
+		switch((GhostSearchStrategy)m_Config.getInteger("GhostSearchStrategy")) {
+		case GHOST_STRATEGY_MYBEST:
+		  m_Renderer.setGhostReplayDesc("Your best");
+		  break;
+		case GHOST_STRATEGY_THEBEST:
+		  m_Renderer.setGhostReplayDesc("Local best");
+		  break;
+#if defined(SUPPORT_WEBACCESS) 
+		case GHOST_STRATEGY_BESTOFROOM:
+		  m_Renderer.setGhostReplayDesc(m_pWebHighscores->getRoomName() );
+		  break;
+#endif
+		default:
+		  m_Renderer.setGhostReplayDesc("");
+		}
+	      }
+	      else
+		m_Renderer.setGhostReplayDesc("");
 
 	      if(GhostLevelID != "") {
 		m_nGhostFrame = 0;
