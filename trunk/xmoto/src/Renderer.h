@@ -252,6 +252,11 @@ namespace vapp {
       void setGhostReplayDesc(const std::string &s) {m_ReplayDesc = s;}
 #endif
 
+      /* if p_save == "", nothing is displayed for p_save */
+      void showMsgNewPersonalHighscore(String p_save = "");
+      void showMsgNewBestHighscore(String p_save = "");
+      void hideMsgNewHighscore();
+
     private:
       /* Data */
       float m_fScale;
@@ -283,6 +288,10 @@ namespace vapp {
       UIStatic *m_pReplayHelp;
       UIStatic *m_pWorldRecordTime;
       UIStatic *m_pSpeed;      
+      UIWindow *m_pInGameNewHighscore;
+      UIStatic *m_pNewHighscoreBest_str;
+      UIStatic *m_pNewHighscorePersonal_str;
+      UIStatic *m_pNewHighscoreSave_str;
 
       float m_fSpeedMultiply;
       

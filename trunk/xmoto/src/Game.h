@@ -331,7 +331,6 @@ namespace vapp {
       void _HandleMainMenu(void);  
       void _HandlePauseMenu(void);
       void _HandleJustDeadMenu(void);
-      void _RefreshFinishMenu(void);
       void _HandleFinishMenu(void);
       void _HandleWebConfEditor(void);
       void _HandleProfileEditor(void);

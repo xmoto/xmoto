@@ -339,10 +339,71 @@ namespace vapp {
         if(m_pReplay != NULL) m_pReplay->finishReplay(true,m_MotoGame.getFinishTime());
         
         /* A more lucky outcome of GS_PLAYING than GS_JUSTDEAD :) */
-	_RefreshFinishMenu();
         m_pFinishMenu->showWindow(true);
         m_pBestTimes->showWindow(true);
         m_nFinishShade = 0;            
+
+	/* display message on finish and eventually save the replay */
+	
+	/* is it a highscore ? */
+	float v_best_local_time;
+	float v_best_personal_time;
+	float v_current_time;
+	bool v_is_a_highscore;
+	bool v_is_a_personal_highscore;
+	
+	v_best_local_time = m_Profiles.getBestTime(m_MotoGame.getLevelSrc()->getID())->fFinishTime;
+	v_best_personal_time = m_Profiles.getBestPlayerTime(m_pPlayer->PlayerName,
+							    m_MotoGame.getLevelSrc()->getID())->fFinishTime;
+	v_current_time = m_MotoGame.getFinishTime();
+
+	v_is_a_highscore = (v_current_time <= v_best_local_time);  /* = because highscore is already stored in playerdata */
+
+	v_is_a_personal_highscore = (v_current_time <= v_best_personal_time);  /* = because highscore is already stored in playerdata */
+
+#if defined(SUPPORT_WEBACCESS) 
+	/* search a better webhighscore */
+	if(m_pWebHighscores != NULL && v_is_a_highscore == true) {
+	  WebHighscore* wh = m_pWebHighscores->getHighscoreFromLevel(m_MotoGame.getLevelSrc()->getID());
+	  if(wh != NULL) {
+	    try {
+	      v_is_a_highscore = (v_current_time < wh->getFTime());
+	    } catch(Exception &e) {
+	      v_is_a_highscore = false; /* what to do ? more chances that it's not a highscore ;-) */
+	    }
+	  } else {
+	    /* never highscored */
+	    v_is_a_highscore = true;
+	  }
+	}
+#endif
+
+	if(v_is_a_highscore) { /* best highscore */
+	  Sound::playSampleByName("Sounds/NewHighscore.ogg");
+	  if(m_pReplay != NULL && m_Config.getBool("AutosaveHighscoreReplays")) {
+	    String v_replayName = Replay::giveAutomaticName();
+	    _SaveReplay(v_replayName);
+	    m_Renderer.showMsgNewBestHighscore(v_replayName);
+	  } else {
+	    m_Renderer.showMsgNewBestHighscore();
+	  }
+
+	} else {
+	  if(v_is_a_personal_highscore) { /* personal highscore */
+	    Sound::playSampleByName("Sounds/NewHighscore.ogg");
+	    if(m_pReplay != NULL && m_Config.getBool("AutosaveHighscoreReplays")) {
+	      String v_replayName = Replay::giveAutomaticName();
+	      _SaveReplay(v_replayName);
+	      m_Renderer.showMsgNewPersonalHighscore(v_replayName);
+	    } else {
+	      m_Renderer.showMsgNewPersonalHighscore();
+	    }
+
+	  } else { /* no highscore */
+	    m_Renderer.hideMsgNewHighscore();
+	  }
+	}
+
         break;
       }
     }

@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VFileIO.h"
 #include "MotoGame.h"
 #include "Renderer.h"
+#include "GameText.h"
 
 namespace vapp {
 
@@ -283,6 +284,34 @@ namespace vapp {
     m_pSpeed->setFont(m_pSFont);
     m_pSpeed->setVAlign(UI_ALIGN_TOP);
     m_pSpeed->setHAlign(UI_ALIGN_RIGHT);
+
+    /* new highscore ! */
+    m_pInGameNewHighscore = new UIWindow(getGUI(),410,475,"",200,100);
+    m_pInGameNewHighscore->showWindow(false);
+
+    m_pNewHighscorePersonal_str = new UIStatic(m_pInGameNewHighscore,
+					       0, 5,
+					       GAMETEXT_NEWHIGHSCOREPERSONAL,
+					       200, 20);
+    m_pNewHighscorePersonal_str->setFont(m_pSFont);
+    m_pSpeed->setHAlign(UI_ALIGN_CENTER);
+    m_pNewHighscorePersonal_str->showWindow(false);
+
+    m_pNewHighscoreBest_str = new UIStatic(m_pInGameNewHighscore,
+					   0, 0,
+					   GAMETEXT_NEWHIGHSCORE,
+					   200, 30);
+    m_pNewHighscoreBest_str->setFont(m_pMFont);
+    m_pSpeed->setHAlign(UI_ALIGN_CENTER);
+    m_pNewHighscoreBest_str->showWindow(false);
+
+    m_pNewHighscoreSave_str = new UIStatic(m_pInGameNewHighscore,
+					   0, 25,
+					   "",
+					   200, 20);
+    m_pNewHighscoreSave_str->setFont(m_pSFont);
+    m_pSpeed->setHAlign(UI_ALIGN_CENTER);
+    m_pNewHighscoreSave_str->showWindow(false);
 
     /* Overlays? */
     m_Overlay.init(getParent(),512,512);

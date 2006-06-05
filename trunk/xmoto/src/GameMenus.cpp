@@ -62,12 +62,7 @@ namespace vapp {
 
     UIStatic *pFinishText = new UIStatic(m_pFinishMenu,0,100,GAMETEXT_FINISH,m_pFinishMenu->getPosition().nWidth,36);
     pFinishText->setFont(m_Renderer.getMediumFont());
-
-    m_pNewWorldRecord = new UIStatic(m_pFinishMenu,
-				     5,
-				     450,
-				     "",400, 50);
-
+   
     for(int i=0;i<m_nNumFinishMenuButtons;i++) {
       m_pFinishMenuButtons[i]->setPosition(200-207/2,m_pFinishMenu->getPosition().nHeight/2 - (m_nNumFinishMenuButtons*57)/2 + i*57,207,57);
       m_pFinishMenuButtons[i]->setFont(m_Renderer.getSmallFont());
@@ -1194,71 +1189,6 @@ namespace vapp {
         m_pPauseMenuButtons[i]->setClicked(false);
       }
     }
-  }
-
-  /* called only when the finishmenu is displayed */
-  void GameApp::_RefreshFinishMenu() {
-
-    /* is it a highscore ? */
-    float v_best_local_time;
-    float v_best_personal_time;
-    float v_current_time;
-    bool v_is_a_highscore;
-    bool v_is_a_personal_highscore;
-
-    v_best_local_time = m_Profiles.getBestTime(m_MotoGame.getLevelSrc()->getID())->fFinishTime;
-    v_best_personal_time = m_Profiles.getBestPlayerTime(m_pPlayer->PlayerName,
-							m_MotoGame.getLevelSrc()->getID())->fFinishTime;
-    v_current_time = m_MotoGame.getFinishTime();
-
-    v_is_a_highscore = (v_current_time <= v_best_local_time);  /* = because highscore is already stored in playerdata */
-
-    v_is_a_personal_highscore = (v_current_time <= v_best_personal_time);  /* = because highscore is already stored in playerdata */
-
-    #if defined(SUPPORT_WEBACCESS) 
-    /* search a better webhighscore */
-    if(m_pWebHighscores != NULL && v_is_a_highscore == true) {
-      WebHighscore* wh = m_pWebHighscores->getHighscoreFromLevel(m_MotoGame.getLevelSrc()->getID());
-      if(wh != NULL) {
-	try {
-	  v_is_a_highscore = (v_current_time < wh->getFTime());
-	} catch(Exception &e) {
-	  v_is_a_highscore = false; /* what to do ? more chances that it's not a highscore ;-) */
-	}
-      } else {
-	/* never highscored */
-	v_is_a_highscore = true;
-      }
-    }
-    #endif
-
-    bool bHappyEnd = false;
-    String v_caption = "";
-    if(v_is_a_highscore) {
-      m_pNewWorldRecord->setFont(m_Renderer.getMediumFont());
-      v_caption = GAMETEXT_NEWHIGHSCORE;
-      bHappyEnd = true;
-    } else {
-      if(v_is_a_personal_highscore) {
-	m_pNewWorldRecord->setFont(m_Renderer.getSmallFont());
-	v_caption = GAMETEXT_NEWHIGHSCOREPERSONAL;
-	bHappyEnd = true;
-      } else {
-	m_pNewWorldRecord->setCaption(""); /* you can make better ;-)*/
-      }
-    }
-
-    if(bHappyEnd) {
-      Sound::playSampleByName("Sounds/NewHighscore.ogg");
-
-      if(m_pReplay != NULL && m_Config.getBool("AutosaveHighscoreReplays")) {
-	String v_replayName = Replay::giveAutomaticName();
-	_SaveReplay(v_replayName);
-	v_caption += "\n(Saved as " + v_replayName + ")";
-	m_pNewWorldRecord->setCaption(v_caption);
-      }
-    }
-
   }
 
   /*===========================================================================

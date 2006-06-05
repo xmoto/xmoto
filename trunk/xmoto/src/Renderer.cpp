@@ -1259,6 +1259,32 @@ namespace vapp {
     }
   }
   
+  void GameRenderer::showMsgNewPersonalHighscore(String p_save) {
+    m_pInGameNewHighscore->showWindow(true);
+    m_pNewHighscorePersonal_str->showWindow(true);
+    m_pNewHighscoreBest_str->showWindow(false);
+    if(p_save == "") {
+      m_pNewHighscoreSave_str->showWindow(false);
+    } else {
+      m_pNewHighscoreSave_str->showWindow(true);
+      m_pNewHighscoreSave_str->setCaption("(Saved as " + p_save + ")");
+    }
+  }
   
+  void GameRenderer::showMsgNewBestHighscore(String p_save) {
+    m_pInGameNewHighscore->showWindow(true);
+    m_pNewHighscorePersonal_str->showWindow(false);
+    m_pNewHighscoreBest_str->showWindow(true);
+    if(p_save == "") {
+      m_pNewHighscoreSave_str->showWindow(false);
+    } else {
+      m_pNewHighscoreSave_str->showWindow(true);
+      m_pNewHighscoreSave_str->setCaption("(Saved as " + p_save + ")");
+    }
+  }
+
+  void GameRenderer::hideMsgNewHighscore() {
+    m_pInGameNewHighscore->showWindow(false);
+  }
 
 };
