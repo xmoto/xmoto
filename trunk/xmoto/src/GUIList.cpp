@@ -152,6 +152,7 @@ namespace vapp {
     /* Stuff */
     m_bScrollDownHover = false;
     m_bScrollUpHover = false;
+    m_bClicked = false;
   }
 
   /*===========================================================================
@@ -260,7 +261,9 @@ namespace vapp {
        y >= nLY+nLHeight-20 && y < nLY+nLHeight) {
       /* Scroll down! */
       _Scroll(-16);
-    }    
+    }
+
+    m_bClicked = true;  
   }
   
   void UIList::mouseRDown(int x,int y) {

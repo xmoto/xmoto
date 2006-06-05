@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-#if !defined(_MSC_VER)
+#if !defined(_MSC_VER) && !defined(__APPLE__) && !defined(__MACH__)
   #define USE_HASH_MAP
 #endif
 

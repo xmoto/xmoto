@@ -591,6 +591,8 @@ namespace vapp {
         
         m_bScrollDownHover = m_bScrollUpHover = false;
         
+	m_bClicked = false;
+
         unhideAllColumns();
       }      
       virtual ~UIList() {_FreeUIList();}
@@ -623,6 +625,9 @@ namespace vapp {
       void unhideAllColumns(void) {m_nColumnHideFlags=0;}
       void setSort(bool bSort) {m_bSort=bSort;}
       
+      bool isClicked(void) {return m_bClicked;}
+      void setClicked(bool b) {m_bClicked=b;}
+
     private:
       /* Data */
       bool m_bSort;
@@ -639,6 +644,8 @@ namespace vapp {
       
       bool m_bScrollUpHover,m_bScrollDownHover;
       
+      bool m_bClicked;
+
       /* Helpers */
       void _FreeUIList(void);
       void _NewlySelectedItem(void);
@@ -655,6 +662,7 @@ namespace vapp {
         initW(pParent,x,y,Caption,nWidth,nHeight);        
         
         m_nSelected = 0;
+	m_bChanged = 0;
       }      
 
       /* Methods */
@@ -678,9 +686,13 @@ namespace vapp {
         m_nSelected = n;
       }
       
+      bool isChanged(void) {return m_bChanged;}
+      void setChanged(bool b) {m_bChanged=b;}
+
     private:
       /* Data */
       int m_nSelected;
+      bool m_bChanged;
       std::vector<std::string> m_TabContextHelp;
   };
 

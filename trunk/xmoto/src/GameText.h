@@ -44,6 +44,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_AUTHOR               "Author: "
 #define GAMETEXT_AUTOSAVEREPLAYS      "Automatic saving of replays"
 #define GAMETEXT_BESTTIMES            "Best Times"
+#define GAMETEXT_BESTPLAYER           "Best player : "
 #define GAMETEXT_BRAKE                "Brake"
 #define GAMETEXT_BUILTINLEVELS        "Built-In Levels"     
 #define GAMETEXT_BY                   "by"
@@ -223,6 +224,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_USINGSOCKS5PROXY     "Using SOCKS5 Proxy"
 #define GAMETEXT_VIDEO                "Video"
 #define GAMETEXT_VIEW                 "View"
+#define GAMETEXT_VIEWTHEHIGHSCORE     "View the highscore"
 #define GAMETEXT_WANTTOUPDATELEVEL    "Do you want to update level \"%s\"?\n(%s)"
 #define GAMETEXT_WARNING              "Warning:"
 #define GAMETEXT_WORLDRECORDNA        "--:--:--"
@@ -318,5 +320,6 @@ Central place to keep many in-game text strings
 #define CONTEXTHELP_MOTIONBLURGHOST "Make motion blur effect for the ghost (if supported by your graphics card)"
 #define CONTEXTHELP_DISPLAY_GHOST_INFO "When starting a level with a ghost, display who the ghost is of"
 #define CONTEXTHELP_AUTOSAVEREPLAYS "Automatic saving of replays if it's a highscore"
+#define CONTEXTHELP_VIEWTHEHIGHSCORE "View the replay of the room's highscore"
 
 #endif

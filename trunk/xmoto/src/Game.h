@@ -266,14 +266,25 @@ namespace vapp {
       
       /* Main menu buttons and stuff */
       int m_nNumMainMenuButtons;
+      UITabView *m_pLevelTabs;
       UIButton *m_pMainMenuButtons[10];
       UIFrame *m_pOptionsWindow,*m_pHelpWindow,*m_pPlayWindow,*m_pReplaysWindow,*m_pLevelPacksWindow;
       UIWindow *m_pMainMenu;
       UIMsgBox *m_pDeleteReplayMsgBox;
       UIFrame *m_pGameInfoWindow;
-      
-      UIWindow *m_m_pLevelInfoFrame;
-      
+
+      /* LEVEL lists */
+      UIList *m_pPlayExternalLevelsList;
+      UIList *m_pPlayInternalLevelsList;
+      UIList *m_pPlayNewLevelsList;
+
+#if defined(SUPPORT_WEBACCESS)
+      UIWindow *m_pLevelInfoFrame;
+      UIButton *m_pLevelInfoViewReplayButton;      
+      UIStatic *m_pBestPlayerText;
+      String    m_pLevelToShowOnViewHighscore;
+#endif
+
       /* In-game PAUSE menu fun */
       UIFrame *m_pPauseMenu;
       int m_nPauseShade;
@@ -388,6 +399,11 @@ namespace vapp {
       std::string _FixHighscoreTime(const std::string &s);
     
       void _InitWebConf(void);
+
+#if defined(SUPPORT_WEBACCESS)
+      void setLevelInfoFrameBestPlayer(String pLevelID);
+      void viewHighscoreOf();
+#endif
 
 #if defined(ALLOW_GHOST) 
       std::string _getGhostReplayPath(std::string p_levelId,

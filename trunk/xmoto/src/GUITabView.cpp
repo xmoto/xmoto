@@ -103,6 +103,8 @@ namespace vapp {
     else {
       putElem(0,8 + nHeaderHeight -8,-1,-1,UI_ELEM_FRAME_TL,false);      
     }
+
+    m_bChanged = false;
   }
 
   /*===========================================================================
@@ -120,7 +122,8 @@ namespace vapp {
       getTextExt(getChildren()[i]->getCaption(),&x1,NULL,&x2,NULL);      
       if(x >= nCX-8 && y >= -4 && x < nCX+16+(x2-x1) && y < nHeaderHeight) {
         m_nSelected = i;
-        
+	m_bChanged = true;        
+
         /* Hide everything except this */
         for(int j=0;j<getChildren().size();j++) { 
           if(j == i) {
