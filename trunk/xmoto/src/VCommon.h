@@ -44,15 +44,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #if defined(WIN32)
   #include <windows.h>
 #endif
-#if defined(__APPLE__) && defined(__MACH__)
-  #include <OpenGL/gl.h>
-  #include <OpenGL/glu.h>
-#else
+//#if defined(__APPLE__) && defined(__MACH__)
+//#include <OpenGL/gl.h>
+//#include <OpenGL/glu.h>
+//#else
   #define __glext_h_
   #include <GL/gl.h>
   #include <GL/glu.h>
   #undef __glext_h_
-#endif
+//#endif
 #include "glext.h"
 
 #include <string>

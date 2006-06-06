@@ -237,6 +237,8 @@ namespace vapp {
 		  m_Renderer.setGhostReplay(m_pGhostReplay);
 		} else {
 		  /* bad replay */
+		  delete m_pGhostReplay;
+		  m_pGhostReplay = NULL;
 		}
 	      } else {
 		/* if last ghost loaded has the same filename, don't reload it */
