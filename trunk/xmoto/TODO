@@ -62,15 +62,3 @@ Undecided:
 * allow to run : xmoto -level l1.lvl to allow playing a level just by cliking on
    it (even if it's not in the xmoto dir)
 * display wind
-
-
-(00:31:32) Jose:   Program received signal EXC_BAD_ACCESS, Could not access memory.
-Reason: KERN_INVALID_ADDRESS at address: 0x7aab9b28
-0x0006e214 in vapp::Replay::peekState (this=0xea02c, pcState=0x7fffffff <Address 0x7fffffff out of bounds>) at src/Replay.cpp:413
-413                m_nStateSize);
-(gdb) bt
-#0  0x0006e214 in vapp::Replay::peekState (this=0xea02c, pcState=0x7fffffff <Address 0x7fffffff out of bounds>) at src/Replay.cpp:413
-#1  0x0002cb98 in vapp::GameApp::drawFrame (this=0xbffb2fbc) at src/Game.cpp:1035
-#2  0x0000c2d4 in vapp::App::run (this=0xbffb2fbc, nNumArgs=2147483647, ppcArgs=0x79732f72) at src/VApp.cpp:220
-#3  0x0002f880 in SDL_main (nNumArgs=1, ppcArgs=0x1904890) at src/GameMain.cpp:52
-#4  0x0007fabc in -[SDLMain applicationDidFinishLaunching:] (self=0xea02c, _cmd=0x7fffffff, note=0x79732f72) at macosx/SDLMain.m:294
