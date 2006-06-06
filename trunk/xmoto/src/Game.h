@@ -257,7 +257,7 @@ namespace vapp {
       UIMsgBox *m_pDownloadLevelsMsgBox;
       
       UIRect m_DownloadLevelsMsgBoxRect;
-      UIRect m_pDownloadGhostMsgBoxRect;
+      UIRect m_pDownloadHighscoreMsgBoxRect;
             
       /* Main menu background / title */
       Texture *m_pTitleBL,*m_pTitleBR,*m_pTitleTL,*m_pTitleTR;

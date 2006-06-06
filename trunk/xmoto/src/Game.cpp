@@ -2531,7 +2531,7 @@ namespace vapp {
 	    if(m_bEnableWebHighscores) {
 	      /* download the replay */
 	      try {
-		_SimpleMessage(GAMETEXT_DLGHOST,&m_pDownloadGhostMsgBoxRect);
+		_SimpleMessage(GAMETEXT_DLGHOST,&m_pDownloadHighscoreMsgBoxRect);
 		v_hs->download();
 		res = std::string("Replays/") + v_replay_name + std::string(".rpl");
 	      } catch(Exception &e) {

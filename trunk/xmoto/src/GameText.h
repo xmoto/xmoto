@@ -69,6 +69,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_DISPLAYGHOSTINFO     "Display Ghost Information"
 #define GAMETEXT_DIRECTCONN           "Direct Connection"
 #define GAMETEXT_DLGHOST              "Downloading the ghost..."
+#define GAMETEXT_DLHIGHSCORE          "Downloading the highscore..."
 #define GAMETEXT_DLHIGHSCORES         "Downloading high-scores..."
 #define GAMETEXT_DLLEVELS             "Downloading extra levels...\nPress ESC to abort.\n\n "
 #define GAMETEXT_DLLEVELSCHECK        "Checking for new levels..."

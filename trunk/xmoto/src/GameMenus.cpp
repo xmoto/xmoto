@@ -2926,16 +2926,42 @@ namespace vapp {
   }
 
   void GameApp::viewHighscoreOf() {
-    /* the replay file is supposed to be present to call this function */
-    if(m_pWebHighscores != NULL) {
-      WebHighscore *pWH = m_pWebHighscores->getHighscoreFromLevel(m_pLevelToShowOnViewHighscore);
-      if(pWH != NULL) {
-	m_pMainMenu->showWindow(false);
-	m_PlaySpecificReplay = pWH->getReplayName();      
-	m_StateAfterPlaying = GS_MENU;
-	setState(GS_REPLAYING);
+    if(m_pWebHighscores == NULL) return;
+
+    WebHighscore *pWH = m_pWebHighscores->getHighscoreFromLevel(m_pLevelToShowOnViewHighscore);
+    if(pWH == NULL) return;
+
+    std::vector<ReplayInfo *> Replays = Replay::createReplayList("", m_pLevelToShowOnViewHighscore);
+    String v_replay_name = pWH->getReplayName();
+    int i=0;
+
+    /* search if the replay is already downloaded */
+    bool found = false;
+    while(i < Replays.size() && found == false) {
+      if(Replays[i]->Name == v_replay_name) {
+	found = true;
+      }
+      i++;
+    }
+
+    if(found == false) {
+      if(m_bEnableWebHighscores) {
+	try {
+	  _SimpleMessage(GAMETEXT_DLHIGHSCORE,&m_pDownloadHighscoreMsgBoxRect);
+	  pWH->download();
+	} catch(Exception &e) {
+	  return;
+	}
+      } else {
+	return;
       }
     }
+
+    /* play it */
+    m_pMainMenu->showWindow(false);
+    m_PlaySpecificReplay = pWH->getReplayName();      
+    m_StateAfterPlaying = GS_MENU;
+    setState(GS_REPLAYING);
   }
 #endif
 
