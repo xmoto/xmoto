@@ -1260,6 +1260,7 @@ namespace vapp {
             std::string NextLevel = _DetermineNextLevel(pLS);
             if(NextLevel != "") {        
               m_pFinishMenu->showWindow(false);
+	      m_Renderer.hideMsgNewHighscore();
               m_pBestTimes->showWindow(false);
               m_MotoGame.endLevel();
               m_InputHandler.resetScriptKeyHooks();                     
@@ -1290,12 +1291,14 @@ namespace vapp {
           LevelSrc *pCurLevel = m_MotoGame.getLevelSrc();
           m_PlaySpecificLevel = pCurLevel->getID();
           m_pFinishMenu->showWindow(false);
+	  m_Renderer.hideMsgNewHighscore();
           m_pBestTimes->showWindow(false);
 
 	  _RestartLevel();
         }
         else if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_ABORT) {
           m_pFinishMenu->showWindow(false);
+	  m_Renderer.hideMsgNewHighscore();
           m_pBestTimes->showWindow(false);
           m_MotoGame.endLevel();
           m_InputHandler.resetScriptKeyHooks();                     
