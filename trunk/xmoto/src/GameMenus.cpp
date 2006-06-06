@@ -160,7 +160,7 @@ namespace vapp {
     
 #if defined(SUPPORT_WEBACCESS)        
     /* level info frame */
-    m_pLevelInfoFrame = new UIWindow(m_pMainMenu,13,490,"",275,100);
+    m_pLevelInfoFrame = new UIWindow(m_pMainMenu,13,getDispHeight()/2 - (m_nNumMainMenuButtons*57)/2 + m_nNumMainMenuButtons*57,"",275,100);
     m_pLevelInfoFrame->showWindow(false);
     m_pBestPlayerText = new UIStatic(m_pLevelInfoFrame, 0, 5,"", 275, 50);
     m_pBestPlayerText->setHAlign(UI_ALIGN_RIGHT);
