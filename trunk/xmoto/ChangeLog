@@ -12,6 +12,7 @@ X-Moto 0.1.16 (alpha) 2006-
  * A sound is played when you make a new highscore.
  * Optional automatic saving of replays if it's a highscore.
  * mouse buttons can be used to control the biker
+ * a button to view highscore's replay easyly (download it if it is missing)
  * Some bugs fixed.
 	
 X-Moto 0.1.14 (alpha) 2006-05-19

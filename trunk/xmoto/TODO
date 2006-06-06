@@ -22,13 +22,6 @@ because  > is replaced by &gt;
 * add <xml_room> in configuration so that the player can choose the
    link to his room xml file (priority=high)
 
-
-* add a button <see replay> which download the highscore from the
-   website and play it (priority=high)
-  add informatin about highscore when a level is selected (name of the
-   driver, <see button>, ...)  
- : it is done, just required to download automatically the replay if required
-
 Ghost finition :
 * make a vector for replays to load them faster
 
