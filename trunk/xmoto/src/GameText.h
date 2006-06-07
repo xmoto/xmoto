@@ -88,6 +88,8 @@ Central place to keep many in-game text strings
 #define GAMETEXT_FAILEDCHECKLEVELS    "Failed to check for levels.\nCheck your Internet connection!"
 #define GAMETEXT_FAILEDDLHIGHSCORES   "Failed to download high-scores.\nCheck your Internet connection!"
 #define GAMETEXT_FAILEDDLLEVELS       "Failed to download levels.\nCheck your Internet connection!"
+#define GAMETEXT_FAILEDDLREPLAY       "Failed to download the replay.\nCheck your Internet connection!"
+#define GAMETEXT_FAILEDTOLOADREPLAY   "Failed to load replay !"
 #define GAMETEXT_FAILEDTOSAVEREPLAY   "Failed to save replay!\nMaybe you should try with another name?"
 #define GAMETEXT_FILE                 "File"
 #define GAMETEXT_FINISH               "Finished!"
