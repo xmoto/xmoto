@@ -1947,7 +1947,7 @@ namespace vapp {
             if(nIdx >= 0 && nIdx < pList->getEntries().size()) {
               UIListEntry *pEntry = pList->getEntries()[nIdx];
               if(pEntry != NULL) {
-                FS::deleteFile(std::string("Replays/") + pEntry->Text[0] + std::string(".rpl"));
+		Replay::deleteReplay(pEntry->Text[0]);
                 _UpdateReplaysList();
               }
             }

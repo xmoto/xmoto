@@ -533,4 +533,8 @@ namespace vapp {
     return m_LevelID;
   }
 
+  void Replay::deleteReplay(std::string ReplayName) {
+    FS::deleteFile(std::string("Replays/") + ReplayName + std::string(".rpl"));
+  }
+
 };
