@@ -194,13 +194,30 @@ namespace vapp {
   /*===========================================================================
     Add game message
     ===========================================================================*/
-  void MotoGame::gameMessage(std::string Text) {
-    GameMessage *pMsg = new GameMessage;
+  void MotoGame::gameMessage(std::string Text,bool bOnce) {
+    /* "unique"? */
+    GameMessage *pMsg = NULL;
+    
+    if(bOnce) {
+      /* Yeah, if there's another "unique", replace it */
+      for(int i=0;i<m_GameMessages.size();i++) {
+        if(m_GameMessages[i]->bOnce) {
+          pMsg = m_GameMessages[i];
+          break;
+        }
+      }
+    }
+    
+    if(pMsg == NULL) {    
+      pMsg = new GameMessage;
+      m_GameMessages.push_back(pMsg);
+    }
+    
     pMsg->fRemoveTime = getTime() + 5.0f;
     pMsg->bNew = true;
     pMsg->nAlpha = 255;
     pMsg->Text = Text;
-    m_GameMessages.push_back(pMsg);
+    pMsg->bOnce = bOnce;
   }
 
   void MotoGame::clearGameMessages(void) {
@@ -1578,7 +1595,7 @@ namespace vapp {
 
       char msg[256];
       sprintf(msg, "%+.2f", m_myDiffOfGhost);
-      this->gameMessage(msg);
+      this->gameMessage(msg,true);
     }
   }
 

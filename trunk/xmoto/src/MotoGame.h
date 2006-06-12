@@ -378,6 +378,7 @@ namespace vapp {
     float fRemoveTime;                /* The time when it should be removed */
     std::string Text;                 /* The text */
     int nAlpha;                       /* Alpha amount */
+    bool bOnce;                       /* Unique message */
   };  
 
 	/*===========================================================================
@@ -558,7 +559,7 @@ namespace vapp {
       
       void clearStates(void);
       
-      void gameMessage(std::string Text);
+      void gameMessage(std::string Text,bool bOnce = false);
       void clearGameMessages(void);
       
       void getSerializedBikeState(SerializedBikeState *pState);
