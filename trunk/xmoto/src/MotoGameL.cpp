@@ -48,6 +48,20 @@ namespace vapp {
   extern MotoGame *m_pMotoGame;        
 
   /*===========================================================================
+  Lua 5.1 compatibility code (Following is from lua 5.0.2)
+  ===========================================================================*/
+  static void X_tag_error (lua_State *L, int narg, int tag) {
+    luaL_typerror(L, narg, lua_typename(L, tag)); 
+  }
+  
+  lua_Number X_luaL_check_number(lua_State *L,int narg) {
+    lua_Number d = lua_tonumber(L, narg);
+    if (d == 0 && !lua_isnumber(L, narg))  /* avoid extra test when d is not 0 */
+      X_tag_error(L, narg, LUA_TNUMBER);
+    return d;    
+  }
+
+  /*===========================================================================
   Game.* 
     Lua game library functions
   ===========================================================================*/
@@ -71,9 +85,9 @@ namespace vapp {
     /* event for this */
     GameEvent *pEvent = m_pMotoGame->createGameEvent(GAME_EVENT_LUA_CALL_PLACEINGAMEARROW);
     if(pEvent != NULL) {
-      pEvent->u.LuaCallPlaceingamearrow.x     = luaL_check_number(pL,1);
-      pEvent->u.LuaCallPlaceingamearrow.y     = luaL_check_number(pL,2);
-      pEvent->u.LuaCallPlaceingamearrow.angle = luaL_check_number(pL,3);    
+      pEvent->u.LuaCallPlaceingamearrow.x     = X_luaL_check_number(pL,1);
+      pEvent->u.LuaCallPlaceingamearrow.y     = X_luaL_check_number(pL,2);
+      pEvent->u.LuaCallPlaceingamearrow.angle = X_luaL_check_number(pL,3);    
     }
     return 0;
   }
@@ -82,9 +96,9 @@ namespace vapp {
     /* event for this */
     GameEvent *pEvent = m_pMotoGame->createGameEvent(GAME_EVENT_LUA_CALL_PLACESCREENARROW);
     if(pEvent != NULL) {
-      pEvent->u.LuaCallPlacescreenarrow.x     = luaL_check_number(pL,1);
-      pEvent->u.LuaCallPlacescreenarrow.y     = luaL_check_number(pL,2);
-      pEvent->u.LuaCallPlacescreenarrow.angle = luaL_check_number(pL,3);    
+      pEvent->u.LuaCallPlacescreenarrow.x     = X_luaL_check_number(pL,1);
+      pEvent->u.LuaCallPlacescreenarrow.y     = X_luaL_check_number(pL,2);
+      pEvent->u.LuaCallPlacescreenarrow.angle = X_luaL_check_number(pL,3);    
     }
 
     return 0;
@@ -146,8 +160,8 @@ namespace vapp {
       strncpy(pEvent->u.LuaCallMoveblock.cBlockID,
 	      luaL_checkstring(pL,1),
 	      sizeof(pEvent->u.LuaCallMoveblock.cBlockID)-1);
-      pEvent->u.LuaCallMoveblock.x = luaL_check_number(pL,2);
-      pEvent->u.LuaCallMoveblock.y = luaL_check_number(pL,3);
+      pEvent->u.LuaCallMoveblock.x = X_luaL_check_number(pL,2);
+      pEvent->u.LuaCallMoveblock.y = X_luaL_check_number(pL,3);
     }
 
     return 0;
@@ -179,8 +193,8 @@ namespace vapp {
       strncpy(pEvent->u.LuaCallSetblockpos.cBlockID,
 	      luaL_checkstring(pL,1),
 	      sizeof(pEvent->u.LuaCallSetblockpos.cBlockID)-1);
-      pEvent->u.LuaCallSetblockpos.x = luaL_check_number(pL,2);
-      pEvent->u.LuaCallSetblockpos.y = luaL_check_number(pL,3);
+      pEvent->u.LuaCallSetblockpos.x = X_luaL_check_number(pL,2);
+      pEvent->u.LuaCallSetblockpos.y = X_luaL_check_number(pL,3);
     }
 
     return 0;
@@ -191,8 +205,8 @@ namespace vapp {
 
     GameEvent *pEvent = m_pMotoGame->createGameEvent(GAME_EVENT_LUA_CALL_SETGRAVITY);
     if(pEvent != NULL) {
-      pEvent->u.LuaCallSetgravity.x = luaL_check_number(pL,1);
-      pEvent->u.LuaCallSetgravity.y = luaL_check_number(pL,2);
+      pEvent->u.LuaCallSetgravity.x = X_luaL_check_number(pL,1);
+      pEvent->u.LuaCallSetgravity.y = X_luaL_check_number(pL,2);
     }
       
     return 0;
@@ -213,10 +227,10 @@ namespace vapp {
     GameEvent *pEvent = m_pMotoGame->createGameEvent(GAME_EVENT_LUA_CALL_SETPLAYERPOSITION);
     if(pEvent != NULL) {
       bool bRight = false;
-      if(luaL_check_number(pL,3) > 0.0f) bRight = true;
+      if(X_luaL_check_number(pL,3) > 0.0f) bRight = true;
 
-      pEvent->u.LuaCallSetplayerposition.x      = luaL_check_number(pL,1);
-      pEvent->u.LuaCallSetplayerposition.y      = luaL_check_number(pL,2);
+      pEvent->u.LuaCallSetplayerposition.x      = X_luaL_check_number(pL,1);
+      pEvent->u.LuaCallSetplayerposition.y      = X_luaL_check_number(pL,2);
       pEvent->u.LuaCallSetplayerposition.bRight = bRight;
     }
     return 0;
@@ -257,8 +271,8 @@ namespace vapp {
       strncpy(pEvent->u.LuaCallSetentitypos.cEntityID,
 	      luaL_checkstring(pL,1),
 	      sizeof(pEvent->u.LuaCallSetentitypos.cEntityID)-1);
-      pEvent->u.LuaCallSetentitypos.x = luaL_check_number(pL,2);
-      pEvent->u.LuaCallSetentitypos.y = luaL_check_number(pL,3);
+      pEvent->u.LuaCallSetentitypos.x = X_luaL_check_number(pL,2);
+      pEvent->u.LuaCallSetentitypos.y = X_luaL_check_number(pL,3);
       
     }
     return 0;

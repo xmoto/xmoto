@@ -15,14 +15,18 @@ AM_PATH_SDL(1.0.0, [], [AC_MSG_ERROR(SDL required)])
 AC_CHECK_LIB(SDL_mixer, Mix_OpenAudio, [], [AC_MSG_ERROR(SDL_mixer required)])
 AX_CHECK_GL()
 
-AC_SEARCH_LIBS(lua_pushboolean,lua lua50, [], [AC_MSG_ERROR(liblua50 or liblua required)])
-AC_SEARCH_LIBS(luaopen_math,lualib lualib50, [], [AC_MSG_ERROR(liblualib50 or liblualib required)])
+AC_SEARCH_LIBS(lua_pushboolean,lua lua51 lua50, [], [AC_MSG_ERROR(liblua51, liblua50, or liblua required)])
+AC_SEARCH_LIBS(luaopen_math,lualib lualib51 lualib50, [], [AC_MSG_ERROR(liblualib51, liblualib50, or liblualib required)])
 
 dnl ***** Check lua headers, as they are prone to be located random places on random systems! *****
 dnl The following three lines where suggested by Eric Piel, but they don't seem to work on my system
 dnl AC_CHECK_HEADERS(lua.h lua/lua.h lua50/lua.h, [break], [AC_MSG_ERROR(Could not find lua.h)])
 dnl AC_CHECK_HEADERS(lauxlib.h lua/lauxlib.h lua50/lauxlib.h, [break], [AC_MSG_ERROR(Could not find luaxlib.h)])
 dnl AC_CHECK_HEADERS(lualib.h lua/lualib.h lua50/lualib.h, [break], [AC_MSG_ERROR(Could not find lualib.h)])
+
+AC_CHECK_HEADER(lua51/lua.h,AC_DEFINE(HAVE_LUA51_LUA_H),[])
+AC_CHECK_HEADER(lua51/lauxlib.h,AC_DEFINE(HAVE_LUA51_LAUXLIB_H),[])
+AC_CHECK_HEADER(lua51/lualib.h,AC_DEFINE(HAVE_LUA51_LUALIB_H),[])
 
 AC_CHECK_HEADER(lua50/lua.h,AC_DEFINE(HAVE_LUA50_LUA_H),[])
 AC_CHECK_HEADER(lua50/lauxlib.h,AC_DEFINE(HAVE_LUA50_LAUXLIB_H),[])
@@ -36,7 +40,8 @@ AC_CHECK_HEADER(lua.h,AC_DEFINE(HAVE_LUA_H),[])
 AC_CHECK_HEADER(lauxlib.h,AC_DEFINE(HAVE_LAUXLIB_H),[])
 AC_CHECK_HEADER(lualib.h,AC_DEFINE(HAVE_LUALIB_H),[])
 
-AC_SEARCH_LIBS(dJointAttach,ode ode0, [], [AC_MSG_ERROR(libode or libode0 required)])
+dnl AC_SEARCH_LIBS(dJointAttach,ode ode0, [], [AC_MSG_ERROR(libode or libode0 required)])
+AC_SEARCH_LIBS(dJointAttach,ode ode0, [], [AC_MSG_ERROR(libode or libode0 required)], -lstdc++)
 
 AC_CHECK_LIB(curl, curl_easy_init,[],[AC_MSG_WARN(online highscores disabled)])
 

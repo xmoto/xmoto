@@ -78,7 +78,9 @@ extern "C" {
     #include "lauxlib.h"
     #include "lualib.h"
   #else
-    #if defined(HAVE_LUA50_LUA_H)
+    #if defined(HAVE_LUA51_LUA_H)
+      #include <lua51/lua.h>
+    #elif defined(HAVE_LUA50_LUA_H)
       #include <lua50/lua.h>
     #elif defined(HAVE_LUA_LUA_H)
       #include <lua/lua.h>
@@ -88,7 +90,9 @@ extern "C" {
       #error Missing lua.h
     #endif
 
-    #if defined(HAVE_LUA50_LAUXLIB_H)
+    #if defined(HAVE_LUA51_LAUXLIB_H)
+      #include <lua51/lauxlib.h>
+    #elif defined(HAVE_LUA50_LAUXLIB_H)
       #include <lua50/lauxlib.h>
     #elif defined(HAVE_LUA_LAUXLIB_H)
       #include <lua/lauxlib.h>
@@ -98,7 +102,9 @@ extern "C" {
       #error Missing lauxlib.h
     #endif
     
-    #if defined(HAVE_LUA50_LUALIB_H)
+    #if defined(HAVE_LUA51_LUALIB_H)
+      #include <lua51/lualib.h>
+    #elif defined(HAVE_LUA50_LUALIB_H)
       #include <lua50/lualib.h>
     #elif defined(HAVE_LUA_LUALIB_H)
       #include <lua/lualib.h>

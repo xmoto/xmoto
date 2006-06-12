@@ -13,6 +13,7 @@ X-Moto 0.1.16 (alpha) 2006-
  * Optional automatic saving of replays if it's a highscore.
  * mouse buttons can be used to control the biker
  * a button to view highscore's replay easyly (download it if it is missing)
+ * Updated to support Lua 5.1.
  * Some bugs fixed.
 	
 X-Moto 0.1.14 (alpha) 2006-05-19
