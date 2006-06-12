@@ -87,6 +87,7 @@ namespace vapp {
         Center = Vector2f(Blocks[i]->pSrcBlock->fPosX,Blocks[i]->pSrcBlock->fPosY);
         pTexture = getParent()->TexMan.getTexture(Blocks[i]->pSrcBlock->Texture);
         if(pTexture != NULL) {GLName = pTexture->nID;}
+        else Log("** Warning ** : Texture '%s' not found!",Blocks[i]->pSrcBlock->Texture.c_str());
       }
       else {
         pTexture = getParent()->TexMan.getTexture("default");
@@ -754,7 +755,11 @@ namespace vapp {
 			/* Render all non-background blocks */
 			/* Static geoms... */
 			for(int i=0;i<m_Geoms.size();i++) {
-				glBindTexture(GL_TEXTURE_2D,m_Geoms[i]->pTexture->nID);
+			  if(m_Geoms[i]->pTexture != NULL)
+				  glBindTexture(GL_TEXTURE_2D,m_Geoms[i]->pTexture->nID);				  
+				else
+				  glBindTexture(GL_TEXTURE_2D,0);	/* no texture */
+				  
 				glEnable(GL_TEXTURE_2D);      
 				glColor3f(1,1,1);
 	      
