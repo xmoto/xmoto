@@ -9,8 +9,6 @@
 * add <xml_room> in configuration so that the player can choose the link to his room xml file (priority=high)
 * BUG : update highscore button, check for new levels too
 * "view the highscore" button is not visible for pack
-* BUG : xmoto-edit downloaded/l66.lvl then "play this level" -> "Cave
-   : level not found" because there is a space in the id
 * BUG : when you have a level to update, you update it ; it you
    reclick on check for new level, it will reupdate it, and you can
    continue ... it adds the levels several times in the list
@@ -59,3 +57,5 @@ Fixed:
 * BUG : xmoto crashes when some textures are missing for a level
 * display time diff for the ghost nicer
 * make a vector for replays to load them faster
+* BUG : xmoto-edit downloaded/l66.lvl then "play this level" -> "Cave
+   : level not found" because there is a space in the id

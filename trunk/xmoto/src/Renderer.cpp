@@ -87,7 +87,10 @@ namespace vapp {
         Center = Vector2f(Blocks[i]->pSrcBlock->fPosX,Blocks[i]->pSrcBlock->fPosY);
         pTexture = getParent()->TexMan.getTexture(Blocks[i]->pSrcBlock->Texture);
         if(pTexture != NULL) {GLName = pTexture->nID;}
-        else Log("** Warning ** : Texture '%s' not found!",Blocks[i]->pSrcBlock->Texture.c_str());
+        else {
+          Log("** Warning ** : Texture '%s' not found!",Blocks[i]->pSrcBlock->Texture.c_str());
+          getGameObject()->gameMessage(GAMETEXT_ERRORSINLEVEL,true);          
+        }
       }
       else {
         pTexture = getParent()->TexMan.getTexture("default");
