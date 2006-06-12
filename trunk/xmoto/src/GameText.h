@@ -38,6 +38,9 @@ Central place to keep many in-game text strings
 #define GAMETEXT_ABORT                "Abort Playing"
 #define GAMETEXT_ACTION               "Action"
 #define GAMETEXT_ALL                  "All (on this computer)"
+#define GAMETEXT_ALLOWINTERNETCONN    "Do you want to allow X-Moto connecting\n" \
+                                      "to the Internet to look for more levels\n" \
+                                      "and best times of other players?"
 #define GAMETEXT_ALLRECORDS           "All (on this computer):"
 #define GAMETEXT_ALREADYUSED          "Already used!"
 #define GAMETEXT_AUDIO                "Audio"
@@ -103,6 +106,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_GHOST_STRATEGY_BESTOFROOM "The highscore of the room"
 #define GAMETEXT_GHOST_STRATEGY_MYBEST  "The best of my replays (on this computer)"
 #define GAMETEXT_GHOST_STRATEGY_THEBEST "The best of the replays (on this computer)"
+#define GAMETEXT_GHOSTOF              "Ghost of"
 #define GAMETEXT_GHOSTTAB             "Ghost"
 #define GAMETEXT_HELP                 "Help"
 

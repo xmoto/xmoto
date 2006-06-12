@@ -325,9 +325,7 @@ namespace vapp {
         m_bShowCursor = true;
         if(m_pWebConfMsgBox != NULL) delete m_pWebConfMsgBox;
         m_pWebConfEditor->showWindow(false);
-        m_pWebConfMsgBox = m_Renderer.getGUI()->msgBox("Do you want to allow X-Moto connecting\n"
-                                                       "to the Internet to look for more levels\n"
-                                                       "and best times of other players?",
+        m_pWebConfMsgBox = m_Renderer.getGUI()->msgBox(GAMETEXT_ALLOWINTERNETCONN,
                                                        (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
         break;
       }
@@ -841,9 +839,9 @@ namespace vapp {
         if(m_Levels[k].getID() == m_Levels[j].getID()) {
           /* Conflict! */
           Log("** Warning ** : More than one level with ID '%s'!",m_Levels[k].getID().c_str());
-          Log("                (%s)\n",m_Levels[j].getFileName().c_str());
-          Log("                (%s)\n",m_Levels[k].getFileName().c_str());
-          if(bCached) Log("                (cached)\n");
+          Log("                (%s)",m_Levels[j].getFileName().c_str());
+          Log("                (%s)",m_Levels[k].getFileName().c_str());
+          if(bCached) Log("                (cached)");
           m_nNumLevels--;
           
           if(bCached)

@@ -1538,7 +1538,9 @@ namespace vapp {
 	    notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES);
 	  }
 	}
-
+	
+	      m_Config.setBool("WebHighscores",true);
+	
         /* Update options */
         _ImportOptions();
         

@@ -62,7 +62,7 @@ namespace vapp {
         m_nGhostInfoTrans = 255;
         
         if(m_pGhostReplay != NULL) {
-          m_GhostInfoString = std::string("Ghost of ") + m_pGhostReplay->getPlayerName() +
+          m_GhostInfoString = std::string(GAMETEXT_GHOSTOF) + m_pGhostReplay->getPlayerName() +
                               std::string("\n(") + m_ReplayDesc + std::string(")") +
                               std::string("\n(") + getParent()->formatTime(m_pGhostReplay->getFinishTime()) + std::string(")");
         }
