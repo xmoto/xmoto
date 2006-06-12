@@ -2196,10 +2196,36 @@ namespace vapp {
             if(m_Levels[j].getFileName() == UpdatedLvlFiles[i]) {
               /* Found it... */
               bFound = true;
-              
-              /* Reload! */
-              m_Levels[j].loadXML(); /* TODO: already update cache here */
-              
+
+              /* Determine MD5 sum of level file */
+              std::string MD5Sum = md5file( UpdatedLvlFiles[i] );
+              m_Levels[j].setLevelMD5Sum( MD5Sum );
+
+              /* Update cache? */
+              if(m_bEnableLevelCache) {
+                /* Start by determining file CRC */
+                LevelCheckSum Sum;
+                m_Levels[j].probeCheckSum(&Sum);
+                
+                /* Determine name in cache */
+                std::string LevelFileBaseName = FS::getFileBaseName(UpdatedLvlFiles[i]);
+                char cCacheFileName[1024];      
+                sprintf(cCacheFileName,"LCache/%08x%s.blv",Sum.nCRC32,FS::getFileBaseName(UpdatedLvlFiles[i]).c_str());
+                          
+                /* Got level in cache? */
+                if(!m_Levels[j].importBinary(cCacheFileName,&Sum)) {
+                  /* Not in cache, buggers. Load it from (slow) XML then. */
+                  m_Levels[j].loadXML();
+                  
+                  /* Cache it now */
+                  m_Levels[j].exportBinary(cCacheFileName,&Sum);
+                }
+              }
+              else {
+                /* Just load it */
+                m_Levels[j].loadXML();       
+              }
+                            
               /* Add it to list of new levels as "updated" */
               if(pPlayNewLevelsList != NULL) {
                 UIListEntry *pEntry = pPlayNewLevelsList->addEntry(std::string("Updated: ") + m_Levels[j].getLevelInfo()->Name,

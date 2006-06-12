@@ -222,7 +222,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_TRYAGAIN             "Try This Level Again"
 #define GAMETEXT_TUTORIAL             "Tutorial"
 #define GAMETEXT_UNKNOWNLEVEL         "(Unknown)"
-#define GAMETEXT_UPDATEHIGHSCORES     "Update Highscores"
+#define GAMETEXT_UPDATEHIGHSCORES     "Upd. Highscores/Levels"
 #define GAMETEXT_UPDATINGLEVELS       "Updating level lists..."
 #define GAMETEXT_USEENVVARS           "Use Environment Vars"
 #define GAMETEXT_USEPROFILE           "Use Profile"
@@ -241,7 +241,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_ZOOMINIT 	            "Reinitialize zoom"
 
 /* Context help strings */
-#define CONTEXTHELP_UPDATEHIGHSCORES "Download the latest X-Moto world records from the Internet"
+#define CONTEXTHELP_UPDATEHIGHSCORES "Download the latest X-Moto world records and levels from the Internet"
 #define CONTEXTHELP_PROXYCONFIG "Configure how you are connected to the Internet"
 #define CONTEXTHELP_PLAY_THIS_LEVEL_AGAIN "Play this level again"
 #define CONTEXTHELP_SAVE_A_REPLAY "Save a replay for later viewing"
