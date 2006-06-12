@@ -1,5 +1,10 @@
 # for 0.1.16
 * BUG : bug in the editor if you load and save http://xmoto.free.fr/levels/l189.lvl because  > is replaced by &gt;
+   -- as far as I can see, it's the other way around? tinyxml translates &gt; to > when loading, but as I'm not saving
+      the xml using tinyxml (I probably should, but that's another topic), I just save the >'s. But isn't that fine?
+      I don't think there's a reason to put &gt; in <script>, it works fine with >. (I assume the creator of the level
+      added the &gt;'s manually).
+      
 * try to compile without WEBSUPPORT and GHOST to see the result
 * add highscore tab in pack and new levels (priority=high)
 * add <xml_room> in configuration so that the player can choose the link to his room xml file (priority=high)
