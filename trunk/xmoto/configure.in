@@ -15,8 +15,8 @@ AM_PATH_SDL(1.0.0, [], [AC_MSG_ERROR(SDL required)])
 AC_CHECK_LIB(SDL_mixer, Mix_OpenAudio, [], [AC_MSG_ERROR(SDL_mixer required)])
 AX_CHECK_GL()
 
-AC_SEARCH_LIBS(lua_pushboolean,lua lua51 lua50, [], [AC_MSG_ERROR(liblua51, liblua50, or liblua required)])
-AC_SEARCH_LIBS(luaopen_math,lualib lualib51 lualib50, [], [AC_MSG_ERROR(liblualib51, liblualib50, or liblualib required)])
+AC_SEARCH_LIBS(lua_pushboolean,lua lua5.1 lua50, [], [AC_MSG_ERROR(liblua5.1, liblua50, or liblua required)])
+AC_SEARCH_LIBS(luaopen_math,lualib lualib5.1 lualib50, [], [AC_MSG_ERROR(liblualib5.1, liblualib50, or liblualib required)])
 
 dnl ***** Check lua headers, as they are prone to be located random places on random systems! *****
 dnl The following three lines where suggested by Eric Piel, but they don't seem to work on my system
