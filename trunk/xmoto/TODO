@@ -10,6 +10,7 @@
 * try to compile without WEBSUPPORT and GHOST to see the result
 * add highscore tab in pack and new levels (priority=high)
 * add <xml_room> in configuration so that the player can choose the link to his room xml file (priority=high)
+* BUG : update highscore button, check for new levels too
 
 Ghost finition :
 * make a vector for replays to load them faster
