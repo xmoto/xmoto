@@ -61,16 +61,19 @@ namespace vapp {
   ===========================================================================*/  
   class ReplayList {
     public:
-      /* Static methods */
-      static void update(const std::string &Replay = "");
-      static std::vector<ReplayInfo *> findReplays(const std::string &PlayerName,const std::string &LevelID = "");
+      ~ReplayList() {clear();} /* destructor */
+    
+      /* Methods */
+      void update(const std::string &Replay = "");
+      std::vector<ReplayInfo *> findReplays(const std::string &PlayerName,const std::string &LevelID = "");
+      void clear(void);
       
     private:
       /* Data */
-      static std::vector<ReplayInfo *> m_Replays;
+      std::vector<ReplayInfo *> m_Replays;
       
       /* Helpers */
-      static ReplayInfo *_FindReplayInfo(const std::string &ReplayName);
+      ReplayInfo *_FindReplayInfo(const std::string &ReplayName);
   };
    
   /*===========================================================================
@@ -100,10 +103,6 @@ namespace vapp {
       void slower();
       float getSpeed() const; /* get multiple factor of the replay */
 
-      /* Static methods */
-      static std::vector<ReplayInfo *> createReplayList(const std::string &PlayerName,const std::string &LevelID = "");
-      static void freeReplayList(std::vector<ReplayInfo *> &List);
-      
       /* Data interface */
       bool didFinish(void) {return m_bFinished;}
       float getFinishTime(void) {return m_fFinishTime;}      

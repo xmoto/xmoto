@@ -413,8 +413,8 @@ namespace vapp {
 	   m_nStateSize);
   }
 
-  std::vector<ReplayInfo *> Replay::createReplayList(const std::string &PlayerName,const std::string &LevelIDCheck) {
-    return ReplayList::findReplays(PlayerName,LevelIDCheck);
+  //std::vector<ReplayInfo *> Replay::createReplayList(const std::string &PlayerName,const std::string &LevelIDCheck) {
+  //  return ReplayList::findReplays(PlayerName,LevelIDCheck);
   
     //std::vector<ReplayInfo *> Ret;
     //
@@ -463,14 +463,14 @@ namespace vapp {
     //
     ///* Super. */
     //return Ret;
-  }
+  //}
   
-  void Replay::freeReplayList(std::vector<ReplayInfo *> &List) {
+  //void Replay::freeReplayList(std::vector<ReplayInfo *> &List) {
     ///* Free list items */
     //for(int i=0;i<List.size();i++)
     //  delete List[i];
     //List.clear();
-  }
+  //}
   
   void Replay::pause() {
     m_is_paused = ! m_is_paused;

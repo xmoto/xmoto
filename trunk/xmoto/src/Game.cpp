@@ -545,11 +545,11 @@ namespace vapp {
     }
     
     /* Update replays */
-    ReplayList::update();
+    m_ReplayList.update();
     
     /* List replays? */  
     if(m_bListReplays) {
-      std::vector<ReplayInfo *> Replays = Replay::createReplayList("");
+      std::vector<ReplayInfo *> Replays = m_ReplayList.findReplays("");
       printf("\nReplay                    Level                     Player\n");
       printf("-----------------------------------------------------------------------\n");
       for(int i=0;i<Replays.size();i++) {
@@ -572,7 +572,6 @@ namespace vapp {
                Replays[i]->Player.c_str());
       }
       if(Replays.empty()) printf("(none)\n");
-      Replay::freeReplayList(Replays);
       quit();
       return;
     }
@@ -1337,7 +1336,7 @@ namespace vapp {
       delete m_LevelPacks[i];
     }
     m_LevelPacks.clear();
-  
+      
     if(!isNoGraphics()) {
       m_Renderer.unprepareForNewLevel(); /* just to be sure, shutdown can happen quite hard */
       
@@ -1747,9 +1746,9 @@ namespace vapp {
   ===========================================================================*/
   LevelSrc *GameApp::_FindLevelByID(std::string ID) {
     /* Look through all level sources... */
-    printf("LOOKING FOR [%s]\n",ID.c_str());
+    //printf("LOOKING FOR [%s]\n",ID.c_str());
     for(int i=0;i<m_nNumLevels;i++) {
-      printf("  .. is it [%s]?\n",m_Levels[i].getID().c_str());
+      //printf("  .. is it [%s]?\n",m_Levels[i].getID().c_str());
       if(m_Levels[i].getID() == ID) return &m_Levels[i];
     }
     return NULL; /* nothing */
@@ -1882,7 +1881,7 @@ namespace vapp {
     }
     
     /* Update replay list to reflect changes */
-    ReplayList::update(RealName);
+    m_ReplayList.update(RealName);
   }
 
   /*===========================================================================
@@ -2484,7 +2483,7 @@ namespace vapp {
 					   GhostSearchStrategy p_strategy) 
   {
     std::string res;
-    std::vector<ReplayInfo *> Replays = Replay::createReplayList("", p_levelId);
+    std::vector<ReplayInfo *> Replays = m_ReplayList.findReplays("", p_levelId);
     float v_fFinishTime;
     res = "";
 
@@ -2542,7 +2541,7 @@ namespace vapp {
 		_SimpleMessage(GAMETEXT_DLGHOST,&m_pDownloadHighscoreMsgBoxRect);
 		v_hs->download();
 		res = std::string("Replays/") + v_replay_name + std::string(".rpl");
-		      ReplayList::update(v_replay_name);
+		      m_ReplayList.update(v_replay_name);
 	      } catch(Exception &e) {
 		/* do nothing */
 	      }
@@ -2555,7 +2554,6 @@ namespace vapp {
 
     }
 
-    Replay::freeReplayList(Replays);
     return res;
   }
 #endif    

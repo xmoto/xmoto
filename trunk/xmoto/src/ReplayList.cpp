@@ -26,9 +26,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 namespace vapp {
 
-  /* Global replay list */
-  std::vector<ReplayInfo *> ReplayList::m_Replays;
-
   /*===========================================================================
   Scan for new replays in /Replays
   ===========================================================================*/
@@ -133,6 +130,15 @@ namespace vapp {
     } while(bDel);
     
     //printf("NEW REPLAYS = %d\n",nNumNew);
+  }
+  
+  /*===========================================================================
+  Clean up stuff
+  ===========================================================================*/
+  void ReplayList::clear(void) {
+    for(int i=0;i<m_Replays.size();i++)
+      delete m_Replays[i];
+    m_Replays.clear();     
   }
   
   /*===========================================================================

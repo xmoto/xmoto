@@ -1076,10 +1076,10 @@ namespace vapp {
 
       /* Personal or all replays? */
       if(pLV_Replays_All->getChecked()) {
-	Replays = Replay::createReplayList("",LevelID);
+	Replays = m_ReplayList.findReplays("",LevelID);
       }
       else if(pLV_Replays_Personal->getChecked()) {
-	Replays = Replay::createReplayList(m_pPlayer->PlayerName,LevelID);
+	Replays = m_ReplayList.findReplays(m_pPlayer->PlayerName,LevelID);
       }
       
       /* Create list */
@@ -1095,8 +1095,6 @@ namespace vapp {
       }
       
       /* Clean up */
-      Replay::freeReplayList(Replays);
-      
       pLV_Replays_Personal->enableWindow(true);
       pLV_Replays_All->enableWindow(true);
       pLV_Replays_Show->enableWindow(true);
@@ -2443,7 +2441,7 @@ namespace vapp {
     std::string PlayerSearch;
     if(!bListAll) PlayerSearch = m_pPlayer->PlayerName;
     
-    std::vector<ReplayInfo *> Replays = Replay::createReplayList(PlayerSearch);
+    std::vector<ReplayInfo *> Replays = m_ReplayList.findReplays(PlayerSearch);
     
     for(int i=0;i<Replays.size();i++) {
       UIListEntry *pEntry = pList->addEntry(Replays[i]->Name);
@@ -2456,8 +2454,6 @@ namespace vapp {
       
       pEntry->Text.push_back(Replays[i]->Player);
     }
-    
-    Replay::freeReplayList(Replays);
   }
   
   /*===========================================================================
@@ -2903,7 +2899,7 @@ namespace vapp {
 	m_pLevelToShowOnViewHighscore = pLevelID;
 
 	/* search if the replay is already downloaded */
-	std::vector<ReplayInfo *> Replays = Replay::createReplayList("", pLevelID);
+	std::vector<ReplayInfo *> Replays = m_ReplayList.findReplays("", pLevelID);
 	String v_replay_name = pWH->getReplayName();
 	bool found = false;
 	int i = 0;
@@ -2913,7 +2909,6 @@ namespace vapp {
 	  }
 	  i++;
 	}
-	Replay::freeReplayList(Replays);
 
 	if(found) {
 	  m_pLevelInfoViewReplayButton->enableWindow(true);
@@ -2936,7 +2931,7 @@ namespace vapp {
     WebHighscore *pWH = m_pWebHighscores->getHighscoreFromLevel(m_pLevelToShowOnViewHighscore);
     if(pWH == NULL) return;
 
-    std::vector<ReplayInfo *> Replays = Replay::createReplayList("", m_pLevelToShowOnViewHighscore);
+    std::vector<ReplayInfo *> Replays = m_ReplayList.findReplays("", m_pLevelToShowOnViewHighscore);
     int i=0;
 
     /* search if the replay is already downloaded */
@@ -2947,7 +2942,6 @@ namespace vapp {
       }
       i++;
     }
-    Replay::freeReplayList(Replays);
 
     if(found == false) {
       if(m_bEnableWebHighscores) {
@@ -2955,11 +2949,11 @@ namespace vapp {
 	  _SimpleMessage(GAMETEXT_DLHIGHSCORE,&m_pDownloadHighscoreMsgBoxRect);
 	  pWH->download();
 	  
-	  ReplayList::update(pWH->getReplayName());
+	  m_ReplayList.update(pWH->getReplayName());
 
 	  /* not very nice : make a new search to be sure the replay is here */
 	  /* because it could have been downloaded but unplayable : for macosx for example */
-	  std::vector<ReplayInfo *> Replays = Replay::createReplayList("", m_pLevelToShowOnViewHighscore);
+	  std::vector<ReplayInfo *> Replays = m_ReplayList.findReplays("", m_pLevelToShowOnViewHighscore);
 	  int i=0;
 	  /* search if the replay is already downloaded */
 	  bool found = false;
@@ -2969,7 +2963,6 @@ namespace vapp {
 	    }
 	    i++;
 	  }
-	  Replay::freeReplayList(Replays);
 
 	  if(found == false) {
 	    notifyMsg(GAMETEXT_FAILEDTOLOADREPLAY);

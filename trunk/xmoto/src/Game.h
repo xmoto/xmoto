@@ -183,6 +183,7 @@ namespace vapp {
       EngineSoundSimulator m_EngineSound;
     
       /* Data */
+      ReplayList m_ReplayList;                  /* Replay list */
       std::vector<LevelPack *> m_LevelPacks;    /* Level packs */
       
       bool m_bWebHighscoresUpdatedThisSession;  /* true: Updated this session */
@@ -272,7 +273,7 @@ namespace vapp {
       UIWindow *m_pMainMenu;
       UIMsgBox *m_pDeleteReplayMsgBox;
       UIFrame *m_pGameInfoWindow;
-
+      
       /* LEVEL lists */
       UIList *m_pPlayExternalLevelsList;
       UIList *m_pPlayInternalLevelsList;
