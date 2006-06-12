@@ -2954,6 +2954,8 @@ namespace vapp {
 	try {
 	  _SimpleMessage(GAMETEXT_DLHIGHSCORE,&m_pDownloadHighscoreMsgBoxRect);
 	  pWH->download();
+	  
+	  ReplayList::update(pWH->getReplayName());
 
 	  /* not very nice : make a new search to be sure the replay is here */
 	  /* because it could have been downloaded but unplayable : for macosx for example */

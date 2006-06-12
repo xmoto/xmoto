@@ -15,9 +15,6 @@
    reclick on check for new level, it will reupdate it, and you can
    continue ... it adds the levels several times in the list
 
-Ghost finition :
-* make a vector for replays to load them faster
-
 # for after
 * have a <----> for the lists
 * see about timeout when connection failed
@@ -61,3 +58,4 @@ Fixed:
 * Make sure LUA5.1 is supported properly OR use LUA5.0 explicitly. -> see http://www.lua.org/manual/5.1/manual.html#incompat
 * BUG : xmoto crashes when some textures are missing for a level
 * display time diff for the ghost nicer
+* make a vector for replays to load them faster

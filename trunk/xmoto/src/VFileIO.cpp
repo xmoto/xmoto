@@ -773,6 +773,19 @@ namespace vapp {
     if(n<0) return FName;
     return FName.substr(0,n);
   }
+
+  /*=========================================================================== 
+  Find out how old this file thing is... (physical file system only)
+  ===========================================================================*/
+  int FS::getFileTimeStamp(const std::string &Path) {
+    struct stat S;
+
+    if(stat(Path.c_str(),&S)) { 
+      return 0;
+    }
+    
+    return (int)S.st_mtime; /* no we don't care about exact value */
+  }
   
   /*=========================================================================== 
   Is that a dir or what? - and similar stuffin'

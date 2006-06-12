@@ -543,7 +543,10 @@ namespace vapp {
       /* OK, use the first then */
       m_pPlayer = m_Profiles.getProfiles()[0];
     }
-
+    
+    /* Update replays */
+    ReplayList::update();
+    
     /* List replays? */  
     if(m_bListReplays) {
       std::vector<ReplayInfo *> Replays = Replay::createReplayList("");
@@ -1875,6 +1878,9 @@ namespace vapp {
       Log("** Warning ** : Failed to save replay: %s",Name.c_str());
       notifyMsg(GAMETEXT_FAILEDTOSAVEREPLAY);
     }
+    
+    /* Update replay list to reflect changes */
+    ReplayList::update(RealName);
   }
 
   /*===========================================================================
@@ -2534,6 +2540,7 @@ namespace vapp {
 		_SimpleMessage(GAMETEXT_DLGHOST,&m_pDownloadHighscoreMsgBoxRect);
 		v_hs->download();
 		res = std::string("Replays/") + v_replay_name + std::string(".rpl");
+		      ReplayList::update(v_replay_name);
 	      } catch(Exception &e) {
 		/* do nothing */
 	      }

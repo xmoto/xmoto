@@ -211,6 +211,9 @@
 				RelativePath="..\src\Replay.cpp">
 			</File>
 			<File
+				RelativePath="..\src\ReplayList.cpp">
+			</File>
+			<File
 				RelativePath="..\src\Sound.cpp">
 			</File>
 			<File

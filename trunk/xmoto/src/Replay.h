@@ -44,6 +44,9 @@ namespace vapp {
     std::string Level;
     float fFrameRate;
     float fFinishTime;
+    
+    int nTimeStamp;   /* replay file time stamp */
+    bool bUpdated; /* internal flag */   
   };
   
   /* Replays states (frames) are grouped together in chunks for easy
@@ -51,6 +54,23 @@ namespace vapp {
   struct ReplayStateChunk {
     char *pcChunkData;
     int nNumStates;
+  };
+
+  /*===========================================================================
+  ReplayList class
+  ===========================================================================*/  
+  class ReplayList {
+    public:
+      /* Static methods */
+      static void update(const std::string &Replay = "");
+      static std::vector<ReplayInfo *> findReplays(const std::string &PlayerName,const std::string &LevelID = "");
+      
+    private:
+      /* Data */
+      static std::vector<ReplayInfo *> m_Replays;
+      
+      /* Helpers */
+      static ReplayInfo *_FindReplayInfo(const std::string &ReplayName);
   };
    
   /*===========================================================================

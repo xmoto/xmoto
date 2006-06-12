@@ -14,6 +14,7 @@ X-Moto 0.1.16 (alpha) 2006-
  * mouse buttons can be used to control the biker
  * a button to view highscore's replay easyly (download it if it is missing)
  * Updated to support the new Lua 5.1.
+ * Faster scanning of replays.
  * Game no longer crashes if a level is using an unknown texture.
  * Some bugs fixed.
 	

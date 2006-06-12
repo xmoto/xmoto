@@ -144,6 +144,7 @@ namespace vapp {
       
       /* Misc */
       static bool isDir(std::string AppDir);
+      static int getFileTimeStamp(const std::string &Path);
       static bool isPathAbsolute(std::string Path);
       
       static int mkDir(const char *pcPath);
