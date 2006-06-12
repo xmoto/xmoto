@@ -1747,7 +1747,9 @@ namespace vapp {
   ===========================================================================*/
   LevelSrc *GameApp::_FindLevelByID(std::string ID) {
     /* Look through all level sources... */
+    printf("LOOKING FOR [%s]\n",ID.c_str());
     for(int i=0;i<m_nNumLevels;i++) {
+      printf("  .. is it [%s]?\n",m_Levels[i].getID().c_str());
       if(m_Levels[i].getID() == ID) return &m_Levels[i];
     }
     return NULL; /* nothing */

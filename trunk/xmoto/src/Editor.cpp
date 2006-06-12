@@ -1226,7 +1226,30 @@ namespace vapp {
 					  m_Log.msg("Level parameters changed.");
   					
             m_pLevelSrc->setFileName( Entries[0].Value );
-            m_pLevelSrc->setID( Entries[1].Value );
+            
+            /* Make sure invalid chars isn't saved in ID */
+            std::string ID = Entries[1].Value;
+
+            int i=0;
+            while(1) {
+              if(i >= ID.length()) break;
+              
+              if((ID[i] >= 'a' && ID[i] <= 'z') ||
+                (ID[i] >= 'A' && ID[i] <= 'Z') ||
+                (ID[i] >= '0' && ID[i] <= '9') || ID[i]=='_') {
+                /* This is ok */
+                i++;
+              }
+              else {
+                /* Not ok */
+                ID.erase(ID.begin() + i);
+              }            
+            }
+            
+            if(ID == "") ID = "noname";
+                        
+            m_pLevelSrc->setID(ID);
+            
             m_pLevelSrc->setScriptFile( Entries[2].Value );
             m_pLevelSrc->getLevelInfo()->Name = Entries[3].Value;
             m_pLevelSrc->getLevelInfo()->Date = Entries[4].Value;
@@ -1326,7 +1349,7 @@ namespace vapp {
         m_Log.msg("Playing it.");
         
         char cBuf[256];
-        sprintf(cBuf,"%s -win -level %s",XMOTOCOMMAND,m_pLevelSrc->getID().c_str());
+        sprintf(cBuf,"%s -win -level \"%s\"",XMOTOCOMMAND,m_pLevelSrc->getID().c_str());
         system(cBuf);      
         setState(ES_DEFAULT);			          
 			  break;
