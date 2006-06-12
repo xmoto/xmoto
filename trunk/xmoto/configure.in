@@ -24,9 +24,9 @@ dnl AC_CHECK_HEADERS(lua.h lua/lua.h lua50/lua.h, [break], [AC_MSG_ERROR(Could n
 dnl AC_CHECK_HEADERS(lauxlib.h lua/lauxlib.h lua50/lauxlib.h, [break], [AC_MSG_ERROR(Could not find luaxlib.h)])
 dnl AC_CHECK_HEADERS(lualib.h lua/lualib.h lua50/lualib.h, [break], [AC_MSG_ERROR(Could not find lualib.h)])
 
-AC_CHECK_HEADER(lua51/lua.h,AC_DEFINE(HAVE_LUA51_LUA_H),[])
-AC_CHECK_HEADER(lua51/lauxlib.h,AC_DEFINE(HAVE_LUA51_LAUXLIB_H),[])
-AC_CHECK_HEADER(lua51/lualib.h,AC_DEFINE(HAVE_LUA51_LUALIB_H),[])
+AC_CHECK_HEADER(lua5.1/lua.h,AC_DEFINE(HAVE_LUA51_LUA_H),[])
+AC_CHECK_HEADER(lua5.1/lauxlib.h,AC_DEFINE(HAVE_LUA51_LAUXLIB_H),[])
+AC_CHECK_HEADER(lua5.1/lualib.h,AC_DEFINE(HAVE_LUA51_LUALIB_H),[])
 
 AC_CHECK_HEADER(lua50/lua.h,AC_DEFINE(HAVE_LUA50_LUA_H),[])
 AC_CHECK_HEADER(lua50/lauxlib.h,AC_DEFINE(HAVE_LUA50_LAUXLIB_H),[])
