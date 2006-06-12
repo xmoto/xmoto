@@ -992,10 +992,12 @@ namespace vapp {
         }                
         /* Should we show a notification box? (with important one-time info) */
         else if(m_Config.getBool("NotifyAtInit")) {
-          notifyMsg(GAMETEXT_NOTIFYATINIT);                    
-          
-          /* Don't do this again, please */
-          m_Config.setBool("NotifyAtInit",false); 
+          if(m_pNotifyMsgBox == NULL) {
+            notifyMsg(GAMETEXT_NOTIFYATINIT);                    
+            
+            /* Don't do this again, please */
+            m_Config.setBool("NotifyAtInit",false); 
+          }
         }        
 
       case GS_LEVEL_INFO_VIEWER:
