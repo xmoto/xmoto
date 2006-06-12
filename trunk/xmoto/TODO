@@ -11,6 +11,7 @@
 * add highscore tab in pack and new levels (priority=high)
 * add <xml_room> in configuration so that the player can choose the link to his room xml file (priority=high)
 * BUG : update highscore button, check for new levels too
+* "view the highscore" button is not visible for pack
 
 Ghost finition :
 * make a vector for replays to load them faster
