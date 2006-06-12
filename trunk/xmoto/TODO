@@ -14,6 +14,9 @@
 * "view the highscore" button is not visible for pack
 * BUG : xmoto-edit downloaded/l66.lvl then "play this level" -> "Cave
    : level not found" because there is a space in the id
+* BUG : when you have a level to update, you update it ; it you
+   reclick on check for new level, it will reupdate it, and you can
+   continue ... it adds the levels several times in the list
 
 Ghost finition :
 * make a vector for replays to load them faster
