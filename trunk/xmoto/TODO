@@ -49,6 +49,8 @@ Undecided:
 * allow to run : xmoto -level l1.lvl to allow playing a level just by cliking on
    it (even if it's not in the xmoto dir)
 * display wind
+* high level function for script : DynamicMove(item, srcX, srcY, dstX, dstY,
+   speed, type = "linear") for example : one call manage the movement of the element
 
 Fixed:
 
