@@ -2141,7 +2141,7 @@ namespace vapp {
           Log("WWW: Downloading levels...");
           clearCancelAsSoonAsPossible();
           m_pWebLevels->upgrade();
-	  m_bWebLevelsToDownload = false;          
+	  m_bWebLevelsToDownload = false;
         } 
         catch(Exception &e) {
           Log("** Warning ** : Unable to download extra levels [%s]",e.getMsg().c_str());

@@ -1972,6 +1972,7 @@ namespace vapp {
 
     UIStatic *pNewLevelText = (UIStatic *)m_pMainMenu->getChild("NEWLEVELAVAILBLE");
     if(m_bWebLevelsToDownload) {
+      pNewLevelText->showWindow(true);
       if(m_pNewLevelsAvailIcon == NULL)
         pNewLevelText->setCaption(GAMETEXT_NEWLEVELS_AVAIBLE);
       else {
@@ -1979,7 +1980,7 @@ namespace vapp {
         pNewLevelText->setBackground(m_pNewLevelsAvailIcon);
       }      
     } else {
-      pNewLevelText->setCaption("");
+      pNewLevelText->showWindow(false);
     }
 
     /* LEVEL PACKS */

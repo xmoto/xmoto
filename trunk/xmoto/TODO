@@ -3,11 +3,9 @@
 * add highscore tab in pack and new levels (priority=high)
 * add <xml_room> in configuration so that the player can choose the link to his room xml file (priority=high)
 * "view the highscore" button is not visible for pack
-* BUG : when you update levels, new levels is displayed again !
 * update highscores/levels doesn't really update levels, an other idea
    for the button caption ?
-* display error : missing texture instead of just "the level has a pb"
-   ?
+* display error : missing texture instead of just "the level has a pb" ?
 * BUG : on mac os x : http://xmoto.free.fr/tmp/Letters.png
 * use bSomething for options instead of many calls
 
@@ -68,3 +66,4 @@ Fixed:
    reclick on check for new level, it will reupdate it, and you can
    continue ... it adds the levels several times in the list
 * BUG : notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES); does not work the first time we load the game called in gamemenu.cpp, line 1573 but not displayed, i don't know why
+* BUG : when you update levels, new levels is displayed again !
