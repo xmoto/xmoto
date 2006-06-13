@@ -1,6 +1,6 @@
 # for 0.1.16
 * try to compile without WEBSUPPORT and GHOST to see the result
-* add highscore tab in pack and new levels (priority=high)
+### in progress, i will finish soon * add highscore tab in pack and new levels (priority=high)
 * add <xml_room> in configuration so that the player can choose the link to his room xml file (priority=high)
 * "view the highscore" button is not visible for pack
 * update highscores/levels doesn't really update levels, an other idea

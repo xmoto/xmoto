@@ -143,7 +143,13 @@ std::string WebHighscore::getLevelId() const {
 }
 
 std::string WebHighscore::getTime() const {
-  return m_time;
+  char cTime[256];
+  int n1=0,n2=0,n3=0;
+  
+  sscanf(m_time.c_str(),"%d:%d:%d",&n1,&n2,&n3);
+  sprintf(cTime,"%02d:%02d:%02d",n1,n2,n3);
+  
+  return cTime;
 }
 
 float WebHighscore::getFTime() const {

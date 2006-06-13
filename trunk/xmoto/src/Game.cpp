@@ -42,8 +42,8 @@ namespace vapp {
   Update levels lists - must be done after each completed level
   ===========================================================================*/
   void GameApp::_UpdateLevelLists(void) {
-    _CreateLevelLists((UIList *)m_pPlayWindow->getChild("PLAY_LEVEL_TABS:PLAY_EXTERNAL_LEVELS_TAB:PLAY_EXTERNAL_LEVELS_LIST"),
-                      (UIList *)m_pPlayWindow->getChild("PLAY_LEVEL_TABS:PLAY_INTERNAL_LEVELS_TAB:PLAY_INTERNAL_LEVELS_LIST"));
+    _CreateLevelLists((UILevelList *)m_pPlayWindow->getChild("PLAY_LEVEL_TABS:PLAY_EXTERNAL_LEVELS_TAB:PLAY_EXTERNAL_LEVELS_LIST"),
+                      (UILevelList *)m_pPlayWindow->getChild("PLAY_LEVEL_TABS:PLAY_INTERNAL_LEVELS_TAB:PLAY_INTERNAL_LEVELS_LIST"));
     
   }
 
@@ -2061,19 +2061,6 @@ namespace vapp {
   bool GameApp::_IsThereANextLevel(LevelSrc *pLevelSrc) {
     return _DetermineNextLevel(pLevelSrc) != "";
   }  
- 
-  /*===========================================================================
-  World records
-  ===========================================================================*/
-  std::string GameApp::_FixHighscoreTime(const std::string &s) {
-    char cTime[256];
-    int n1=0,n2=0,n3=0;
-      
-    sscanf(s.c_str(),"%d:%d:%d",&n1,&n2,&n3);
-    sprintf(cTime,"%02d:%02d:%02d",n1,n2,n3);
-    
-    return cTime;
-  }
   
   void GameApp::_UpdateWorldRecord(const std::string &LevelID) {  
     m_Renderer.setWorldRecordTime("");
@@ -2083,7 +2070,7 @@ namespace vapp {
         WebHighscore *pWebHS = m_pWebHighscores->getHighscoreFromLevel(LevelID);
         if(pWebHS != NULL) {
           m_Renderer.setWorldRecordTime(pWebHS->getRoom()->getRoomName() + ": " + 
-                                        _FixHighscoreTime(pWebHS->getTime()) + 
+                                        pWebHS->getTime() + 
                                         std::string(" (") + pWebHS->getPlayerName() + std::string(")"));
         } 
         else {
@@ -2167,7 +2154,7 @@ namespace vapp {
         }      
 
         /* Get pointer to GUI list of new/updated levels */
-        UIList *pPlayNewLevelsList = (UIList *)m_pPlayWindow->getChild("PLAY_LEVEL_TABS:PLAY_NEW_LEVELS_TAB:PLAY_NEW_LEVELS_LIST");
+        UILevelList *pPlayNewLevelsList = (UILevelList *)m_pPlayWindow->getChild("PLAY_LEVEL_TABS:PLAY_NEW_LEVELS_TAB:PLAY_NEW_LEVELS_LIST");
         if(pPlayNewLevelsList != NULL) {
           /* Clear list, and make sure it is visible */
           UIWindow *pInternalTab = (UIWindow *)m_pPlayWindow->getChild("PLAY_LEVEL_TABS:PLAY_INTERNAL_LEVELS_TAB");
@@ -2195,8 +2182,7 @@ namespace vapp {
         /* Add new levels to GUI list */
         if(pPlayNewLevelsList != NULL) {
           for(int i=nOldNum;i<m_nNumLevels;i++) {
-            UIListEntry *pEntry = pPlayNewLevelsList->addEntry(std::string("New: ") + m_Levels[i].getLevelInfo()->Name,
-                                                               &m_Levels[i]);
+	    pPlayNewLevelsList->addLevel(m_Levels+i, m_pPlayer, &m_Profiles, m_pWebHighscores, std::string("New: "));
           }
         }
         
@@ -2244,8 +2230,7 @@ namespace vapp {
                             
               /* Add it to list of new levels as "updated" */
               if(pPlayNewLevelsList != NULL) {
-                UIListEntry *pEntry = pPlayNewLevelsList->addEntry(std::string("Updated: ") + m_Levels[j].getLevelInfo()->Name,
-                                                                   &m_Levels[j]);
+		pPlayNewLevelsList->addLevel(m_Levels+j, m_pPlayer, &m_Profiles, m_pWebHighscores, std::string("Updated: "));
               }
               
               nReloaded++;

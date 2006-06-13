@@ -46,6 +46,8 @@ xmoto_SOURCES = $(common_SOURCES) src/BSP.cpp src/Game.cpp src/GameMain.cpp \
 	src/Game.h \
 	src/GameText.h \
 	src/GUI.h \
+	src/GUIXMoto.h \
+	src/GUIXMoto.cpp \
 	src/MotoGame.h \
 	src/PhysSettings.h \
 	src/PlayerData.h \

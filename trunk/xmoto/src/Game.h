@@ -36,6 +36,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Input.h"
 #include "WWW.h"
 #include "WWWAppInterface.h"
+#include "GUIXMoto.h"
 
 namespace vapp {
 
@@ -285,9 +286,9 @@ namespace vapp {
       UIFrame *m_pGameInfoWindow;
       
       /* LEVEL lists */
-      UIList *m_pPlayExternalLevelsList;
-      UIList *m_pPlayInternalLevelsList;
-      UIList *m_pPlayNewLevelsList;
+      UILevelList *m_pPlayExternalLevelsList;
+      UILevelList *m_pPlayInternalLevelsList;
+      UILevelList *m_pPlayNewLevelsList;
 
 #if defined(SUPPORT_WEBACCESS)
       UIWindow *m_pLevelInfoFrame;
@@ -360,7 +361,7 @@ namespace vapp {
       void _HandleProfileEditor(void);
       void _HandleLevelInfoViewer(void);
       void _HandleLevelPackViewer(void);
-      void _CreateLevelLists(UIList *pExternalLevels,UIList *pInternalLevels);
+      void _CreateLevelLists(UILevelList *pExternalLevels,UILevelList *pInternalLevels);
       void _CreateReplaysList(UIList *pList);
       void _CreateProfileList(void);
       void _CreateDefaultConfig(void);
@@ -407,7 +408,6 @@ namespace vapp {
       void _DownloadExtraLevels(void);
       
       int _LoadLevels(const std::vector<std::string> &LvlFiles);
-      std::string _FixHighscoreTime(const std::string &s);
     
       void _InitWebConf(void);
 

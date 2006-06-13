@@ -261,9 +261,11 @@ namespace vapp {
     pDownloadLevelsButton->setType(UI_BUTTON_TYPE_LARGE);
     pDownloadLevelsButton->setID("PLAY_DOWNLOAD_LEVELS_BUTTON");
     pDownloadLevelsButton->setContextHelp(CONTEXTHELP_DOWNLOADLEVELS);
+
     UIWindow *pInternalLevelsTab = new UIWindow(m_pLevelTabs,20,40,GAMETEXT_BUILTINLEVELS,m_pLevelTabs->getPosition().nWidth-40,m_pLevelTabs->getPosition().nHeight-60);
     pInternalLevelsTab->enableWindow(true);
     pInternalLevelsTab->setID("PLAY_INTERNAL_LEVELS_TAB");
+
     UIWindow *pExternalLevelsTab = new UIWindow(m_pLevelTabs,20,40,GAMETEXT_EXTERNALLEVELS,m_pLevelTabs->getPosition().nWidth-40,m_pLevelTabs->getPosition().nHeight-60);
     pExternalLevelsTab->enableWindow(true);
     pExternalLevelsTab->showWindow(false);    
@@ -277,36 +279,23 @@ namespace vapp {
 
     pInternalLevelsTab->showWindow(true);
  
-    m_pPlayInternalLevelsList = new UIList(pInternalLevelsTab,0,0,"",pInternalLevelsTab->getPosition().nWidth,pInternalLevelsTab->getPosition().nHeight);      
+    m_pPlayInternalLevelsList = new UILevelList(pInternalLevelsTab,0,0,"",pInternalLevelsTab->getPosition().nWidth,pInternalLevelsTab->getPosition().nHeight);      
     m_pPlayInternalLevelsList->setID("PLAY_INTERNAL_LEVELS_LIST");
     m_pPlayInternalLevelsList->showWindow(true);
     m_pPlayInternalLevelsList->setFont(m_Renderer.getSmallFont());
-    m_pPlayInternalLevelsList->addColumn(GAMETEXT_LEVEL,pInternalLevelsTab->getPosition().nWidth - 175);
-    m_pPlayInternalLevelsList->addColumn(GAMETEXT_TIME,80);  
-#if defined(SUPPORT_WEBACCESS)    
-    m_pPlayInternalLevelsList->addColumn("WR:",80);  
-#endif    
     m_pPlayInternalLevelsList->setEnterButton( pGoButton );
 
-    m_pPlayExternalLevelsList = new UIList(pExternalLevelsTab,0,0,"",pExternalLevelsTab->getPosition().nWidth,pExternalLevelsTab->getPosition().nHeight);     
+    m_pPlayExternalLevelsList = new UILevelList(pExternalLevelsTab,0,0,"",pExternalLevelsTab->getPosition().nWidth,pExternalLevelsTab->getPosition().nHeight);     
     m_pPlayExternalLevelsList->setID("PLAY_EXTERNAL_LEVELS_LIST");
     m_pPlayExternalLevelsList->setFont(m_Renderer.getSmallFont());
     m_pPlayExternalLevelsList->setSort(true);
-    m_pPlayExternalLevelsList->addColumn(GAMETEXT_LEVEL,pExternalLevelsTab->getPosition().nWidth - 175);
-//    pExternalLevelsList->addColumn(GAMETEXT_SCRIPTED,128);  
-    m_pPlayExternalLevelsList->addColumn(GAMETEXT_TIME,80);  
-#if defined(SUPPORT_WEBACCESS)
-    m_pPlayExternalLevelsList->addColumn("WR:",80);  
-    
-#endif
     m_pPlayExternalLevelsList->setEnterButton( pGoButton );
      
 #if defined(SUPPORT_WEBACCESS)
-    m_pPlayNewLevelsList = new UIList(pNewLevelsTab,0,0,"",pNewLevelsTab->getPosition().nWidth,pNewLevelsTab->getPosition().nHeight);      
+    m_pPlayNewLevelsList = new UILevelList(pNewLevelsTab,0,0,"",pNewLevelsTab->getPosition().nWidth,pNewLevelsTab->getPosition().nHeight);      
     m_pPlayNewLevelsList->setID("PLAY_NEW_LEVELS_LIST");
     m_pPlayNewLevelsList->setFont(m_Renderer.getSmallFont());
     m_pPlayNewLevelsList->setSort(true);
-    m_pPlayNewLevelsList->addColumn(GAMETEXT_LEVEL,pNewLevelsTab->getPosition().nWidth);
     m_pPlayNewLevelsList->setEnterButton( pGoButton );        
 #endif
 
@@ -1000,7 +989,7 @@ namespace vapp {
           if(m_pWebHighscores != NULL) {
             WebHighscore *pWH = m_pWebHighscores->getHighscoreFromLevel(m_pActiveLevelPack->Levels[i]->getID());
             if(pWH != NULL)
-              pEntry->Text.push_back(_FixHighscoreTime(pWH->getTime()));
+              pEntry->Text.push_back(pWH->getTime());
             else
               pEntry->Text.push_back(GAMETEXT_WORLDRECORDNA);
           }        
@@ -1890,50 +1879,26 @@ namespace vapp {
     /* level menu : */
     /* any list clicked ? */
     if(m_pPlayInternalLevelsList->isClicked()) {
-#if defined(SUPPORT_WEBACCESS)
-      /* Find out what to play */
-      LevelSrc *pLevelSrc = NULL;
-      if(m_pPlayInternalLevelsList && !m_pPlayInternalLevelsList->isBranchHidden() && m_pPlayInternalLevelsList->getSelected()>=0) {
-        /* Play selected internal level */
-        if(!m_pPlayInternalLevelsList->getEntries().empty()) {
-          UIListEntry *pEntry = m_pPlayInternalLevelsList->getEntries()[m_pPlayInternalLevelsList->getSelected()];
-          pLevelSrc = reinterpret_cast<LevelSrc *>(pEntry->pvUser);        
-	  setLevelInfoFrameBestPlayer(pLevelSrc->getID());
-        }
-      }      
-#endif
+      LevelSrc *pLevelSrc = m_pPlayInternalLevelsList->getSelectedLevel();
+      if(pLevelSrc != NULL) {
+	setLevelInfoFrameBestPlayer(pLevelSrc->getID());
+      }
       m_pPlayInternalLevelsList->setClicked(false);
     }
 
     if(m_pPlayExternalLevelsList->isClicked()) {
-#if defined(SUPPORT_WEBACCESS)
-      /* Find out what to play */
-      LevelSrc *pLevelSrc = NULL;
-      if(m_pPlayExternalLevelsList && !m_pPlayExternalLevelsList->isBranchHidden() && m_pPlayExternalLevelsList->getSelected()>=0) {
-        /* Play selected internal level */
-        if(!m_pPlayExternalLevelsList->getEntries().empty()) {
-          UIListEntry *pEntry = m_pPlayExternalLevelsList->getEntries()[m_pPlayExternalLevelsList->getSelected()];
-          pLevelSrc = reinterpret_cast<LevelSrc *>(pEntry->pvUser);
-	  setLevelInfoFrameBestPlayer(pLevelSrc->getID());       
-        }
-      }  
-#endif
+      LevelSrc *pLevelSrc = m_pPlayExternalLevelsList->getSelectedLevel();
+      if(pLevelSrc != NULL) {
+	setLevelInfoFrameBestPlayer(pLevelSrc->getID());
+      }
       m_pPlayExternalLevelsList->setClicked(false);
     }
 
     if(m_pPlayNewLevelsList->isClicked()) {
-#if defined(SUPPORT_WEBACCESS)
-      /* Find out what to play */
-      LevelSrc *pLevelSrc = NULL;
-      if(m_pPlayNewLevelsList && !m_pPlayNewLevelsList->isBranchHidden() && m_pPlayNewLevelsList->getSelected()>=0) {
-        /* Play selected internal level */
-        if(!m_pPlayNewLevelsList->getEntries().empty()) {
-          UIListEntry *pEntry = m_pPlayNewLevelsList->getEntries()[m_pPlayNewLevelsList->getSelected()];
-          pLevelSrc = reinterpret_cast<LevelSrc *>(pEntry->pvUser);        
-	  setLevelInfoFrameBestPlayer(pLevelSrc->getID());
-        }
-      }  
-#endif
+      LevelSrc *pLevelSrc = m_pPlayNewLevelsList->getSelectedLevel();
+      if(pLevelSrc != NULL) {
+	setLevelInfoFrameBestPlayer(pLevelSrc->getID());
+      }
       m_pPlayNewLevelsList->setClicked(false);
     }
 
@@ -2192,28 +2157,15 @@ namespace vapp {
       
       /* Find out what to play */
       LevelSrc *pLevelSrc = NULL;
-      if(m_pPlayInternalLevelsList && !m_pPlayInternalLevelsList->isBranchHidden() && m_pPlayInternalLevelsList->getSelected()>=0) {
-        /* Play selected internal level */
-        if(!m_pPlayInternalLevelsList->getEntries().empty()) {
-          UIListEntry *pEntry = m_pPlayInternalLevelsList->getEntries()[m_pPlayInternalLevelsList->getSelected()];
-          pLevelSrc = reinterpret_cast<LevelSrc *>(pEntry->pvUser);        
-        }
+
+      if(m_pPlayInternalLevelsList && !m_pPlayInternalLevelsList->isBranchHidden()) {
+	pLevelSrc = m_pPlayInternalLevelsList->getSelectedLevel();
+      } else if(m_pPlayExternalLevelsList && !m_pPlayExternalLevelsList->isBranchHidden()) {
+	pLevelSrc = m_pPlayExternalLevelsList->getSelectedLevel();
+      } else if(m_pPlayNewLevelsList && !m_pPlayNewLevelsList->isBranchHidden()) {
+	pLevelSrc = m_pPlayNewLevelsList->getSelectedLevel();
       }
-      else if(m_pPlayExternalLevelsList && !m_pPlayExternalLevelsList->isBranchHidden() && m_pPlayExternalLevelsList->getSelected()>=0) {
-        /* Play selected external level */
-        if(!m_pPlayExternalLevelsList->getEntries().empty()) {
-          UIListEntry *pEntry = m_pPlayExternalLevelsList->getEntries()[m_pPlayExternalLevelsList->getSelected()];        
-          pLevelSrc = reinterpret_cast<LevelSrc *>(pEntry->pvUser);
-        }
-      }
-      else if(m_pPlayNewLevelsList && !m_pPlayNewLevelsList->isBranchHidden() && m_pPlayNewLevelsList->getSelected()>=0) {
-        /* Play selected new/updated level */
-        if(!m_pPlayNewLevelsList->getEntries().empty()) {
-          UIListEntry *pEntry = m_pPlayNewLevelsList->getEntries()[m_pPlayNewLevelsList->getSelected()];        
-          pLevelSrc = reinterpret_cast<LevelSrc *>(pEntry->pvUser);
-        }
-      }
-      
+
       /* Start playing it */
       if(pLevelSrc != NULL) {
         m_pMainMenu->showWindow(false);      
@@ -2227,23 +2179,13 @@ namespace vapp {
       
       /* Find out what level is selected */
       LevelSrc *pLevelSrc = NULL;
-      if(m_pPlayInternalLevelsList && !m_pPlayInternalLevelsList->isBranchHidden() && m_pPlayInternalLevelsList->getSelected()>=0) {
-        if(!m_pPlayInternalLevelsList->getEntries().empty()) {
-          UIListEntry *pEntry = m_pPlayInternalLevelsList->getEntries()[m_pPlayInternalLevelsList->getSelected()];
-          pLevelSrc = reinterpret_cast<LevelSrc *>(pEntry->pvUser);        
-        }
-      }
-      else if(m_pPlayExternalLevelsList && !m_pPlayExternalLevelsList->isBranchHidden() && m_pPlayExternalLevelsList->getSelected()>=0) {
-        if(!m_pPlayExternalLevelsList->getEntries().empty()) {
-          UIListEntry *pEntry = m_pPlayExternalLevelsList->getEntries()[m_pPlayExternalLevelsList->getSelected()];        
-          pLevelSrc = reinterpret_cast<LevelSrc *>(pEntry->pvUser);
-        }
-      }
-      else if(m_pPlayNewLevelsList && !m_pPlayNewLevelsList->isBranchHidden() && m_pPlayNewLevelsList->getSelected()>=0) {
-        if(!m_pPlayNewLevelsList->getEntries().empty()) {
-          UIListEntry *pEntry = m_pPlayNewLevelsList->getEntries()[m_pPlayNewLevelsList->getSelected()];        
-          pLevelSrc = reinterpret_cast<LevelSrc *>(pEntry->pvUser);
-        }
+
+      if(m_pPlayInternalLevelsList && !m_pPlayInternalLevelsList->isBranchHidden()) {
+	pLevelSrc = m_pPlayInternalLevelsList->getSelectedLevel();
+      } else if(m_pPlayExternalLevelsList && !m_pPlayExternalLevelsList->isBranchHidden()) {
+	pLevelSrc = m_pPlayExternalLevelsList->getSelectedLevel();
+      } else if(m_pPlayNewLevelsList && !m_pPlayNewLevelsList->isBranchHidden()) {
+	pLevelSrc = m_pPlayNewLevelsList->getSelectedLevel();
       }
       
       if(pLevelSrc != NULL) {
@@ -2481,7 +2423,7 @@ namespace vapp {
   /*===========================================================================
   Scan through loaded levels
   ===========================================================================*/
-  void GameApp::_CreateLevelLists(UIList *pExternalLevels,UIList *pInternalLevels) {
+  void GameApp::_CreateLevelLists(UILevelList *pExternalLevels,UILevelList *pInternalLevels) {
     /* List of internal levels. Yeah, to let the user see a difference between
        the built-ins and the ones he has installed himself, here's a list of
        all those which should be considered internal */    
@@ -2491,59 +2433,18 @@ namespace vapp {
     if(m_pPlayer == NULL) return;
   
     for(int i=0;i<m_nNumLevels;i++) {
-      LevelSrc *pLevel = &m_Levels[i];
-      
+      LevelSrc *pLevel = &m_Levels[i];     
       /* Internal or external? */
       bool bInternal = m_Profiles.isInternal(pLevel->getID());
       
-      std::string Name,File;
-      
-      if(pLevel->getLevelInfo()->Name != "") Name = pLevel->getLevelInfo()->Name;
-      else Name = "???";
-
-      if(pLevel->getFileName() != "") File = FS::getFileBaseName(pLevel->getFileName());
-      else File = "???";
-
-      UIListEntry *pEntry = NULL;
-      PlayerTimeEntry *pTimeEntry = NULL;
-      
       if(bInternal) {
-        /* Internal level */
-        pEntry = pInternalLevels->addEntry(Name,reinterpret_cast<void *>(pLevel));
+	pInternalLevels->addLevel(pLevel, m_pPlayer, &m_Profiles, m_pWebHighscores);
+      } else {
+	/* is external */
+	if(pLevel->getLevelPack() == "") {
+	  pExternalLevels->addLevel(pLevel, m_pPlayer, &m_Profiles, m_pWebHighscores);
+	}
       }
-      else {
-        /* External level (not in level pack) */
-        if(pLevel->getLevelPack() == "") {
-          pEntry = pExternalLevels->addEntry(Name,reinterpret_cast<void *>(pLevel));
-        }
-      }
-
-      /* Add times to list entry */
-      if(pEntry != NULL) {
-        pTimeEntry = m_Profiles.getBestPlayerTime(m_pPlayer->PlayerName,pLevel->getID());                    
-      
-        if(pTimeEntry != NULL)
-          pEntry->Text.push_back(formatTime(pTimeEntry->fFinishTime));
-        else
-          pEntry->Text.push_back("--:--:--");
-
-#if defined(SUPPORT_WEBACCESS)
-        if(m_pWebHighscores != NULL) {    
-          WebHighscore *pWH = m_pWebHighscores->getHighscoreFromLevel(pLevel->getID());
-          if(pWH != NULL)
-            pEntry->Text.push_back(_FixHighscoreTime(pWH->getTime()));
-          else
-            pEntry->Text.push_back(GAMETEXT_WORLDRECORDNA);
-        }
-        else
-          pEntry->Text.push_back(GAMETEXT_WORLDRECORDNA);
-#endif          
-      }
-      
-          //if(pLevel->isScripted())
-          //  pEntry->Text.push_back(GAMETEXT_YES);
-          //else
-          //  pEntry->Text.push_back(GAMETEXT_NO);
     }
   }
 

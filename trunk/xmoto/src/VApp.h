@@ -121,7 +121,7 @@ namespace vapp {
       double getRealTime(void);
       std::string getTimeStamp(void);
       void quit(void);      
-      std::string formatTime(float fSecs);
+      static std::string formatTime(float fSecs);
       void getMousePos(int *pnX,int *pnY);        
       bool haveMouseMoved(void);    
     
