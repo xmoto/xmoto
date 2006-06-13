@@ -3,6 +3,12 @@
 * add highscore tab in pack and new levels (priority=high)
 * add <xml_room> in configuration so that the player can choose the link to his room xml file (priority=high)
 * "view the highscore" button is not visible for pack
+* BUG : when you update levels, new levels is displayed again !
+* update highscores/levels doesn't really update levels, an other idea
+   for the button caption ?
+* display error : missing texture instead of just "the level has a pb"
+   ?
+* BUG : on mac os x : http://xmoto.free.fr/tmp/Letters.png
 
 # for after
 * having the information of time diff about the ghost each time you take a strawberry, because we know the information already at this time
