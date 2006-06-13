@@ -110,6 +110,7 @@ namespace vapp {
                  m_pDeleteProfileMsgBox=NULL;
                  m_pDeleteReplayMsgBox=NULL;
                  m_pSaveReplayMsgBox=NULL;
+                 m_pNewLevelsAvailIcon=NULL;
                  m_pReplaysWindow=NULL;
                  m_pLevelPacksWindow=NULL;
                  m_pWebConfEditor=NULL;
@@ -263,6 +264,7 @@ namespace vapp {
       /* Main menu background / title */
       Texture *m_pTitleBL,*m_pTitleBR,*m_pTitleTL,*m_pTitleTR;
       Texture *m_pCursor;
+      Texture *m_pNewLevelsAvailIcon;
       bool m_bShowCursor;
       
       /* Main menu buttons and stuff */

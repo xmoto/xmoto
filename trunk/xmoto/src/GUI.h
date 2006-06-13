@@ -487,6 +487,8 @@ namespace vapp {
         m_bBackgroundShade = false;
         
         m_pDarkBlobTexture = UITexture::load("./Textures/UI/DarkBlob.png");                         
+        
+        m_pCustomBackgroundTexture = NULL;
       }      
 
       /* Methods */
@@ -498,6 +500,7 @@ namespace vapp {
       UIAlign getVAlign(void) {return m_VAlign;}
       UIAlign getHAlign(void) {return m_HAlign;}
       void setBackgroundShade(bool b) {m_bBackgroundShade=b;}
+      void setBackground(Texture *p) {m_pCustomBackgroundTexture = p;}
       
     private:
       /* Data */
@@ -505,6 +508,7 @@ namespace vapp {
       bool m_bBackgroundShade;
       
       Texture *m_pDarkBlobTexture;
+      Texture *m_pCustomBackgroundTexture;
   };
   
 	/*===========================================================================

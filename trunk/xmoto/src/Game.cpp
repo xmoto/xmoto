@@ -660,13 +660,15 @@ namespace vapp {
       if(TexMan.getTexture("default") == NULL)
         throw Exception("no valid default texture");
         
-      /* Load title screen textures + cursor */
+      /* Load title screen textures + cursor + stuff */
       m_pTitleBL = TexMan.loadTexture("Textures/UI/TitleBL.jpg",false,true);
       m_pTitleBR = TexMan.loadTexture("Textures/UI/TitleBR.jpg",false,true);
       m_pTitleTL = TexMan.loadTexture("Textures/UI/TitleTL.jpg",false,true);
       m_pTitleTR = TexMan.loadTexture("Textures/UI/TitleTR.jpg",false,true);
       
       m_pCursor = TexMan.loadTexture("Textures/UI/Cursor.png",false,true,true);
+      
+      m_pNewLevelsAvailIcon = TexMan.loadTexture("Textures/UI/NewLevelsAvail.png",false,true,true);
 
       _UpdateLoadingScreen((1.0f/9.0f) * 4,pLoadingScreen,GAMETEXT_LOADINGLEVELS);
     }

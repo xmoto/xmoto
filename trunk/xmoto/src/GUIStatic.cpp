@@ -30,11 +30,16 @@ namespace vapp {
   /*===========================================================================
   Painting
   ===========================================================================*/
-  void UIStatic::paint(void) {
+  void UIStatic::paint(void) {  
     /* Darken background? */
     if(m_bBackgroundShade) {
       putImage(0,0,getPosition().nWidth,getPosition().nHeight,m_pDarkBlobTexture);
     }
+    
+    /* Background image? */
+    if(m_pCustomBackgroundTexture != NULL) {
+      putImage(0,0,getPosition().nWidth,getPosition().nHeight,m_pCustomBackgroundTexture);    
+    }    
   
     /* Determine text size */
     int x1,y1,x2,y2,x=0,y=0;  

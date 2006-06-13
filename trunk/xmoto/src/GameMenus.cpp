@@ -180,7 +180,7 @@ namespace vapp {
     if(m_pPlayer != NULL) pPlayerText->setCaption(std::string(GAMETEXT_CURPLAYER) + m_pPlayer->PlayerName);
     
     /* new levels ? */
-    UIStatic *pNewLevelText = new UIStatic(m_pMainMenu,5,0,"",200,30);
+    UIStatic *pNewLevelText = new UIStatic(m_pMainMenu,5,-90,"",200,200);
     pNewLevelText->setFont(m_Renderer.getSmallFont());            
     pNewLevelText->setHAlign(UI_ALIGN_LEFT);
     pNewLevelText->setID("NEWLEVELAVAILBLE");
@@ -1972,7 +1972,12 @@ namespace vapp {
 
     UIStatic *pNewLevelText = (UIStatic *)m_pMainMenu->getChild("NEWLEVELAVAILBLE");
     if(m_bWebLevelsToDownload) {
-      pNewLevelText->setCaption(GAMETEXT_NEWLEVELS_AVAIBLE);
+      if(m_pNewLevelsAvailIcon == NULL)
+        pNewLevelText->setCaption(GAMETEXT_NEWLEVELS_AVAIBLE);
+      else {
+        /* Nice we've got a fancy image to display instead... do that! */
+        pNewLevelText->setBackground(m_pNewLevelsAvailIcon);
+      }      
     } else {
       pNewLevelText->setCaption("");
     }
