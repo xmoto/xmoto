@@ -33,7 +33,7 @@ namespace vapp {
     ReplayFiles = FS::findPhysFiles("Replays/*.rpl");
 
     for(int i=0; i<ReplayFiles.size(); i++) {
-      addReplay(ReplayFiles[i]);
+      addReplay(FS::getFileBaseName(ReplayFiles[i]));
     }
   }
 
