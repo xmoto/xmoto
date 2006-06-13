@@ -96,7 +96,15 @@ namespace vapp {
     if(m_ScriptFile != "" && m_ScriptSource != "") {
       FS::writeLineF(pfh,"\t<script source=\"%s\">",m_ScriptFile.c_str());
       FS::writeByte(pfh,'\t'); FS::writeByte(pfh,'\t');
-      FS::writeBuf(pfh,(char *)m_ScriptSource.c_str(),m_ScriptSource.length());
+      
+      /* Write script and transform dangerous characters */
+      for(int i=0;i<m_ScriptSource.length();i++) {
+        int c = m_ScriptSource[i];
+        if(c == '<') FS::writeBuf(pfh,"&lt;",4);
+        else if(c == '>') FS::writeBuf(pfh,"&gt;",4);
+        else FS::writeByte(pfh,c);
+      }
+      //FS::writeBuf(pfh,(char *)m_ScriptSource.c_str(),m_ScriptSource.length());
       FS::writeLineF(pfh,"</script>");
     }
     else if(m_ScriptFile != "")
@@ -104,7 +112,14 @@ namespace vapp {
     else if(m_ScriptSource != "") {
       FS::writeLineF(pfh,"\t<script>");
       FS::writeByte(pfh,'\t'); FS::writeByte(pfh,'\t');
-      FS::writeBuf(pfh,(char *)m_ScriptSource.c_str(),m_ScriptSource.length());
+      /* Write script and transform dangerous characters */
+      for(int i=0;i<m_ScriptSource.length();i++) {
+        int c = m_ScriptSource[i];
+        if(c == '<') FS::writeBuf(pfh,"&lt;",4);
+        else if(c == '>') FS::writeBuf(pfh,"&gt;",4);
+        else FS::writeByte(pfh,c);
+      }
+//      FS::writeBuf(pfh,(char *)m_ScriptSource.c_str(),m_ScriptSource.length());
       FS::writeLineF(pfh,"</script>");
     }
       
