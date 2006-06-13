@@ -128,7 +128,10 @@ namespace vapp {
 		 GhostSearchStrategies[0] = GHOST_STRATEGY_MYBEST;
 		 GhostSearchStrategies[1] = GHOST_STRATEGY_THEBEST;
 		 GhostSearchStrategies[2] = GHOST_STRATEGY_BESTOFROOM;
+		 m_bEnableGhost = true;
+		 m_GhostSearchStrategy = GHOST_STRATEGY_MYBEST;
 #endif
+		 m_bAutosaveHighscoreReplays = true;
                  m_bRecordReplays = true;
                  m_bShowCursor = true;
                  m_bEnableEngineSound = true;
@@ -204,6 +207,7 @@ namespace vapp {
       bool m_bGhostMotionBlur;                  /* true: apply fancy motion blur to ghosts */
       bool m_bEnableLevelCache;                 /* true: cache levels for faster loading */
       bool m_bEnableGhostInfo;
+      bool m_bAutosaveHighscoreReplays;
       std::string m_PlaySpecificLevel;          /* If set, we only want to 
                                                    play this level */
       std::string m_PlaySpecificReplay;         /* If set, we only want to
@@ -235,6 +239,8 @@ namespace vapp {
       String m_lastGhostReplay;
       int m_nGhostFrame;
       enum GhostSearchStrategy GhostSearchStrategies[3];
+      bool m_bEnableGhost;
+      GhostSearchStrategy m_GhostSearchStrategy;
 #endif
       std::string m_ReplayPlayerName;
       

@@ -208,9 +208,9 @@ namespace vapp {
 
 #if defined(ALLOW_GHOST)
 	  /* Ghost replay */
-	  if(m_Config.getBool("EnableGhost")) {
+	  if(m_bEnableGhost) {
 	    std::string v_PlayGhostReplay;
-	    v_PlayGhostReplay = _getGhostReplayPath(pLevelSrc->getID(), (enum GhostSearchStrategy) m_Config.getInteger("GhostSearchStrategy"));
+	    v_PlayGhostReplay = _getGhostReplayPath(pLevelSrc->getID(),  m_GhostSearchStrategy);
 
 	    if(v_PlayGhostReplay != "") {
 	      std::string v_GhostReplayPlayerName;
@@ -256,7 +256,7 @@ namespace vapp {
 
 		/* ghost info */
 		if(m_bEnableGhostInfo) {
-		  switch((GhostSearchStrategy)m_Config.getInteger("GhostSearchStrategy")) {
+		  switch(m_GhostSearchStrategy) {
 		  case GHOST_STRATEGY_MYBEST:
 		    m_Renderer.setGhostReplayDesc("Your best");
 		    break;
@@ -380,7 +380,7 @@ namespace vapp {
 
 	if(v_is_a_highscore) { /* best highscore */
 	  Sound::playSampleByName("Sounds/NewHighscore.ogg");
-	  if(m_pReplay != NULL && m_Config.getBool("AutosaveHighscoreReplays")) {
+	  if(m_pReplay != NULL && m_bAutosaveHighscoreReplays) {
 	    String v_replayName = Replay::giveAutomaticName();
 	    _SaveReplay(v_replayName);
 	    m_Renderer.showMsgNewBestHighscore(v_replayName);
@@ -391,7 +391,7 @@ namespace vapp {
 	} else {
 	  if(v_is_a_personal_highscore) { /* personal highscore */
 	    Sound::playSampleByName("Sounds/NewHighscore.ogg");
-	    if(m_pReplay != NULL && m_Config.getBool("AutosaveHighscoreReplays")) {
+	    if(m_pReplay != NULL && m_bAutosaveHighscoreReplays) {
 	      String v_replayName = Replay::giveAutomaticName();
 	      _SaveReplay(v_replayName);
 	      m_Renderer.showMsgNewPersonalHighscore(v_replayName);
@@ -467,7 +467,12 @@ namespace vapp {
     m_bRecordReplays = m_Config.getBool("StoreReplays");
     m_bCompressReplays = m_Config.getBool("CompressReplays");
     Replay::enableCompression(m_bCompressReplays);
-    
+    m_bAutosaveHighscoreReplays = m_Config.getBool("AutosaveHighscoreReplays");
+
+    /* ghost */
+    m_bEnableGhost = m_Config.getBool("EnableGhost");
+    m_GhostSearchStrategy = (enum GhostSearchStrategy) m_Config.getInteger("GhostSearchStrategy");
+
     /* Other settings */
     m_bEnableEngineSound = m_Config.getBool("EngineSoundEnable");
     m_bEnableWebHighscores = m_Config.getBool("WebHighscores");
