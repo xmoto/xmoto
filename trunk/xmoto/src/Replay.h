@@ -46,7 +46,6 @@ namespace vapp {
     float fFinishTime;
     
     int nTimeStamp;   /* replay file time stamp */
-    bool bUpdated; /* internal flag */   
   };
   
   /* Replays states (frames) are grouped together in chunks for easy
@@ -64,16 +63,17 @@ namespace vapp {
       ~ReplayList() {clear();} /* destructor */
     
       /* Methods */
-      void update(const std::string &Replay = "");
-      std::vector<ReplayInfo *> findReplays(const std::string &PlayerName,const std::string &LevelID = "");
+      void initFromDir();
+      void addReplay(const std::string &Replay);
+      void delReplay(const std::string &Replay);
       void clear(void);
+
+      std::vector<ReplayInfo *>* findReplays(const std::string &PlayerName = "",
+					     const std::string &LevelID = "");
       
     private:
       /* Data */
       std::vector<ReplayInfo *> m_Replays;
-      
-      /* Helpers */
-      ReplayInfo *_FindReplayInfo(const std::string &ReplayName);
   };
    
   /*===========================================================================
@@ -115,6 +115,9 @@ namespace vapp {
       static std::string giveAutomaticName();
 
       std::vector<RecordedGameEvent *> *getEvents() {return &m_ReplayEvents;}
+
+      /* return NULL if the replay is not valid */
+      static ReplayInfo* getReplayInfos(const std::string p_ReplayName);
 
     private: 
       /* Data */ 

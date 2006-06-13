@@ -552,33 +552,34 @@ namespace vapp {
     }
     
     /* Update replays */
-    m_ReplayList.update();
+    m_ReplayList.initFromDir();
     
     /* List replays? */  
     if(m_bListReplays) {
-      std::vector<ReplayInfo *> Replays = m_ReplayList.findReplays("");
+      std::vector<ReplayInfo *> *Replays = m_ReplayList.findReplays();
       printf("\nReplay                    Level                     Player\n");
       printf("-----------------------------------------------------------------------\n");
-      for(int i=0;i<Replays.size();i++) {
+      for(int i=0;i<Replays->size();i++) {
         std::string LevelDesc;
         
-        if(Replays[i]->Level.length() == 6 &&
-           Replays[i]->Level[0] == '_' && Replays[i]->Level[1] == 'i' &&
-           Replays[i]->Level[2] == 'L' && Replays[i]->Level[5] == '_') {
+        if((*Replays)[i]->Level.length() == 6 &&
+           (*Replays)[i]->Level[0] == '_' && (*Replays)[i]->Level[1] == 'i' &&
+           (*Replays)[i]->Level[2] == 'L' && (*Replays)[i]->Level[5] == '_') {
           int nNum;
-          sscanf(Replays[i]->Level.c_str(),"_iL%d_",&nNum);
+          sscanf((*Replays)[i]->Level.c_str(),"_iL%d_",&nNum);
           char cBuf[256];
           sprintf(cBuf,"#%d",nNum+1);
           LevelDesc = cBuf;
         }
-        else LevelDesc = Replays[i]->Level;
+        else LevelDesc = (*Replays)[i]->Level;
       
         printf("%-25s %-25s %-25s\n",
-               Replays[i]->Name.c_str(),
+               (*Replays)[i]->Name.c_str(),
                LevelDesc.c_str(),
-               Replays[i]->Player.c_str());
+               (*Replays)[i]->Player.c_str());
       }
-      if(Replays.empty()) printf("(none)\n");
+      if(Replays->empty()) printf("(none)\n");
+      delete Replays;
       quit();
       return;
     }
@@ -1893,7 +1894,8 @@ namespace vapp {
     }
     
     /* Update replay list to reflect changes */
-    m_ReplayList.update(RealName);
+    m_ReplayList.addReplay(RealName);
+    _UpdateReplaysList();
   }
 
   /*===========================================================================
@@ -2521,34 +2523,34 @@ namespace vapp {
 					   GhostSearchStrategy p_strategy) 
   {
     std::string res;
-    std::vector<ReplayInfo *> Replays = m_ReplayList.findReplays("", p_levelId);
+    std::vector<ReplayInfo *> *Replays = m_ReplayList.findReplays("", p_levelId);
     float v_fFinishTime;
     res = "";
 
     v_fFinishTime = -1.0;
     switch(p_strategy) {
       case GHOST_STRATEGY_MYBEST:
-      for(int i=0; i<Replays.size(); i++) {
-	if(Replays[i]->Player == m_pPlayer->PlayerName) {
-	  if(Replays[i]->fFinishTime != -1.0 &&
-	     (Replays[i]->fFinishTime < v_fFinishTime ||
+      for(int i=0; i<Replays->size(); i++) {
+	if((*Replays)[i]->Player == m_pPlayer->PlayerName) {
+	  if((*Replays)[i]->fFinishTime != -1.0 &&
+	     ((*Replays)[i]->fFinishTime < v_fFinishTime ||
 	      v_fFinishTime == -1)
 	     )
 	    {
-	      res = std::string("Replays/") + Replays[i]->Name + std::string(".rpl");
+	      res = std::string("Replays/") + (*Replays)[i]->Name + std::string(".rpl");
 	    }
 	}
       }
       break;
 
     case GHOST_STRATEGY_THEBEST:
-      for(int i=0; i<Replays.size(); i++) {
-	if(Replays[i]->fFinishTime != -1.0 &&
-	   (Replays[i]->fFinishTime < v_fFinishTime ||
+      for(int i=0; i<Replays->size(); i++) {
+	if((*Replays)[i]->fFinishTime != -1.0 &&
+	   ((*Replays)[i]->fFinishTime < v_fFinishTime ||
 	    v_fFinishTime == -1)
 	   )
 	  {
-	    res = std::string("Replays/") + Replays[i]->Name + std::string(".rpl");
+	    res = std::string("Replays/") + (*Replays)[i]->Name + std::string(".rpl");
 	  }
       }
       break;
@@ -2564,8 +2566,8 @@ namespace vapp {
 
 	  /* search if the replay is already downloaded */
 	  bool found = false;
-	  while(i < Replays.size() && found == false) {
-	    if(Replays[i]->Name == v_replay_name) {
+	  while(i < Replays->size() && found == false) {
+	    if((*Replays)[i]->Name == v_replay_name) {
 	      found = true;
 	    }
 	    i++;
@@ -2579,7 +2581,8 @@ namespace vapp {
 		_SimpleMessage(GAMETEXT_DLGHOST,&m_pDownloadHighscoreMsgBoxRect);
 		v_hs->download();
 		res = std::string("Replays/") + v_replay_name + std::string(".rpl");
-		      m_ReplayList.update(v_replay_name);
+		m_ReplayList.addReplay(v_replay_name);
+		_UpdateReplaysList();
 	      } catch(Exception &e) {
 		/* do nothing */
 	      }
@@ -2592,6 +2595,7 @@ namespace vapp {
 
     }
 
+    delete Replays;
     return res;
   }
 #endif    

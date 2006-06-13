@@ -539,4 +539,52 @@ namespace vapp {
     FS::deleteFile(std::string("Replays/") + ReplayName + std::string(".rpl"));
   }
 
+  ReplayInfo* Replay::getReplayInfos(const std::string p_ReplayName) {
+    /* Found anything, and is the time stamp the same? If so, we don't 
+       want to check this again */
+
+      /* Try opening it */
+      FileHandle *pfh = FS::openIFile("Replays/" + p_ReplayName + ".rpl");
+      if(pfh == NULL) {
+	return NULL;
+      }
+
+      int nVersion = FS::readByte(pfh);
+      if(nVersion != 0 && nVersion != 1) {
+	FS::closeFile(pfh);
+	return NULL;
+      }
+
+      if(FS::readInt(pfh) != 0x12345678) {   
+	FS::closeFile(pfh);
+	return NULL;
+      }
+  
+      std::string LevelID = FS::readString(pfh);
+      std::string Player  = FS::readString(pfh);
+      float fFrameRate    = FS::readFloat(pfh);
+      int nStateSize      = FS::readInt(pfh);
+      bool bFinished      = FS::readBool(pfh);
+      float fFinishTime   = FS::readFloat(pfh);
+                
+      ReplayInfo *pRpl     = new ReplayInfo;
+      int nTimeStamp       = FS::getFileTimeStamp("Replays/" + p_ReplayName + ".rpl");
+
+      /* Set members */
+      pRpl->Level = LevelID;
+      pRpl->Name = p_ReplayName;
+      pRpl->Player = Player;
+      pRpl->nTimeStamp = nTimeStamp;
+      pRpl->fFrameRate = fFrameRate;
+
+      if(bFinished) {
+	pRpl->fFinishTime = fFinishTime;
+      } else {
+	pRpl->fFinishTime = -1;                
+      }
+          
+      FS::closeFile(pfh);
+      return pRpl;
+  }
+
 };
