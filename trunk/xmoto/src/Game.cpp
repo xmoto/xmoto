@@ -469,9 +469,13 @@ namespace vapp {
     Replay::enableCompression(m_bCompressReplays);
     m_bAutosaveHighscoreReplays = m_Config.getBool("AutosaveHighscoreReplays");
 
+#if defined(ALLOW_GHOST)
     /* ghost */
-    m_bEnableGhost = m_Config.getBool("EnableGhost");
+    m_bEnableGhost        = m_Config.getBool("EnableGhost");
+    m_bShowGhostTimeDiff  = m_Config.getBool("ShowGhostTimeDiff");
+    m_MotoGame.setShowGhostTimeDiff(m_bShowGhostTimeDiff);
     m_GhostSearchStrategy = (enum GhostSearchStrategy) m_Config.getInteger("GhostSearchStrategy");
+#endif
 
     /* Other settings */
     m_bEnableEngineSound = m_Config.getBool("EngineSoundEnable");
@@ -1840,8 +1844,9 @@ namespace vapp {
 #if defined(ALLOW_GHOST)
     m_Config.createVar( "EnableGhost"        , "true");
     m_Config.createVar( "GhostSearchStrategy", "0");
-    m_Config.createVar( "DisplayGhostInfo",    "false");
-    m_Config.createVar( "GhostMotionBlur",        "true" );
+    m_Config.createVar( "ShowGhostTimeDiff"  , "true");
+    m_Config.createVar( "DisplayGhostInfo"   , "false");
+    m_Config.createVar( "GhostMotionBlur"    , "true" );
 #endif
   }
   

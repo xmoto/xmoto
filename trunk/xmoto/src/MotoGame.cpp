@@ -1246,7 +1246,7 @@ namespace vapp {
 	Sound::playSampleByName("Sounds/PickUpStrawberry.ogg");
 
 #if defined(ALLOW_GHOST)
-	if(isGhostActive()) {
+	if(isGhostActive() && m_showGhostTimeDiff) {
 	  m_myLastStrawberry.push_back(getTime());
 	  UpdateDiffFromGhost();
 	}
@@ -1549,27 +1549,29 @@ namespace vapp {
   void MotoGame::UpdateGhostFromReplay(Replay *p_replay, SerializedBikeState *pReplayState) {
     _UpdateStateFromReplay(pReplayState, &m_GhostBikeS);
 
-    std::vector<RecordedGameEvent *> *v_replayEvents;
-    v_replayEvents = p_replay->getEvents();
-
-    /* Start looking for events that should be passed */
-    for(int i=0;i<v_replayEvents->size();i++) {
-      /* Not passed? And with a time stamp that tells it should have happened
-         by now? */
-      if(!(*v_replayEvents)[i]->bPassed && (*v_replayEvents)[i]->fTime < getTime()) {
-        /* Nice. Handle this event, replay style */
-	
-    	if((*v_replayEvents)[i]->Event.Type == GAME_EVENT_ENTITY_DESTROYED) {
-	  EntityType v_entityType = (*v_replayEvents)[i]->Event.u.EntityDestroyed.Type;
-
-    	  if(v_entityType == ET_STRAWBERRY) {
-	    /* new Strawberry for ghost */
-	    m_ghostLastStrawberry.push_back((*v_replayEvents)[i]->fTime);
-	    UpdateDiffFromGhost();
-    	  }
-    	}
-        /* Pass it */
-        (*v_replayEvents)[i]->bPassed = true;
+    if(m_showGhostTimeDiff) {
+      std::vector<RecordedGameEvent *> *v_replayEvents;
+      v_replayEvents = p_replay->getEvents();
+      
+      /* Start looking for events that should be passed */
+      for(int i=0;i<v_replayEvents->size();i++) {
+	/* Not passed? And with a time stamp that tells it should have happened
+	   by now? */
+	if(!(*v_replayEvents)[i]->bPassed && (*v_replayEvents)[i]->fTime < getTime()) {
+	  /* Nice. Handle this event, replay style */
+	  
+	  if((*v_replayEvents)[i]->Event.Type == GAME_EVENT_ENTITY_DESTROYED) {
+	    EntityType v_entityType = (*v_replayEvents)[i]->Event.u.EntityDestroyed.Type;
+	    
+	    if(v_entityType == ET_STRAWBERRY) {
+	      /* new Strawberry for ghost */
+	      m_ghostLastStrawberry.push_back((*v_replayEvents)[i]->fTime);
+	      UpdateDiffFromGhost();
+	    }
+	  }
+	  /* Pass it */
+	  (*v_replayEvents)[i]->bPassed = true;
+	}
       }
     }
   }

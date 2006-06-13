@@ -656,7 +656,7 @@ namespace vapp {
     pEnableGhost->setFont(m_Renderer.getSmallFont());
     pEnableGhost->setContextHelp(CONTEXTHELP_GHOST_MODE);
 
-    UIList *pGhostStrategiesList = new UIList(pGhostOptionsTab,5,43,"",pGhostOptionsTab->getPosition().nWidth-10,153);
+    UIList *pGhostStrategiesList = new UIList(pGhostOptionsTab,5,43,"",pGhostOptionsTab->getPosition().nWidth-10,125);
     pGhostStrategiesList->setID("GHOST_STRATEGIES_LIST");
     pGhostStrategiesList->setFont(m_Renderer.getSmallFont());
     pGhostStrategiesList->addColumn(GAMETEXT_GHOST_STRATEGIES_TYPE,pGhostStrategiesList->getPosition().nWidth);
@@ -669,19 +669,26 @@ namespace vapp {
 
     pGhostStrategiesList->setContextHelp(CONTEXTHELP_GHOST_STRATEGIES);
 
-    UIButton *pMotionBlurGhost = new UIButton(pGhostOptionsTab,5,203,GAMETEXT_MOTIONBLURGHOST,(pGhostOptionsTab->getPosition().nWidth-40),28);
-    pMotionBlurGhost->setType(UI_BUTTON_TYPE_CHECK);
-    pMotionBlurGhost->setID("MOTION_BLUR_GHOST");
-    pMotionBlurGhost->enableWindow(true);
-    pMotionBlurGhost->setFont(m_Renderer.getSmallFont());
-    pMotionBlurGhost->setContextHelp(CONTEXTHELP_MOTIONBLURGHOST);
+    UIButton *pDisplayGhostTimeDiff = new UIButton(pGhostOptionsTab,5,175,GAMETEXT_DISPLAYGHOSTTIMEDIFF,(pGhostOptionsTab->getPosition().nWidth-40),28);
+    pDisplayGhostTimeDiff->setType(UI_BUTTON_TYPE_CHECK);
+    pDisplayGhostTimeDiff->setID("DISPLAY_GHOST_TIMEDIFF");
+    pDisplayGhostTimeDiff->enableWindow(true);
+    pDisplayGhostTimeDiff->setFont(m_Renderer.getSmallFont());
+    pDisplayGhostTimeDiff->setContextHelp(CONTEXTHELP_DISPLAY_GHOST_TIMEDIFF);
 
-    UIButton *pDisplayGhostInfo = new UIButton(pGhostOptionsTab,5,231,GAMETEXT_DISPLAYGHOSTINFO,(pGhostOptionsTab->getPosition().nWidth-40),28);
+    UIButton *pDisplayGhostInfo = new UIButton(pGhostOptionsTab,5,203,GAMETEXT_DISPLAYGHOSTINFO,(pGhostOptionsTab->getPosition().nWidth-40),28);
     pDisplayGhostInfo->setType(UI_BUTTON_TYPE_CHECK);
     pDisplayGhostInfo->setID("DISPLAY_GHOST_INFO");
     pDisplayGhostInfo->enableWindow(true);
     pDisplayGhostInfo->setFont(m_Renderer.getSmallFont());
     pDisplayGhostInfo->setContextHelp(CONTEXTHELP_DISPLAY_GHOST_INFO);
+
+    UIButton *pMotionBlurGhost = new UIButton(pGhostOptionsTab,5,231,GAMETEXT_MOTIONBLURGHOST,(pGhostOptionsTab->getPosition().nWidth-40),28);
+    pMotionBlurGhost->setType(UI_BUTTON_TYPE_CHECK);
+    pMotionBlurGhost->setID("MOTION_BLUR_GHOST");
+    pMotionBlurGhost->enableWindow(true);
+    pMotionBlurGhost->setFont(m_Renderer.getSmallFont());
+    pMotionBlurGhost->setContextHelp(CONTEXTHELP_MOTIONBLURGHOST);
 
 #endif
 
@@ -2028,15 +2035,18 @@ namespace vapp {
     UIList *pGhostStrategy = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGIES_LIST");
     UIButton *pMotionBlurGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:MOTION_BLUR_GHOST");
     UIButton *pDisplayGhostInfo = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:DISPLAY_GHOST_INFO");
+    UIButton *pDisplayGhostTimeDiff = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:DISPLAY_GHOST_TIMEDIFF");
 
     if(pEnableGhost->getChecked()) {
       pGhostStrategy->enableWindow(true);
       pMotionBlurGhost->enableWindow(true);
       pDisplayGhostInfo->enableWindow(true);
+      pDisplayGhostTimeDiff->enableWindow(true);
     } else {
       pGhostStrategy->enableWindow(false);
       pMotionBlurGhost->enableWindow(false);
       pDisplayGhostInfo->enableWindow(false);
+      pDisplayGhostTimeDiff->enableWindow(false);
     }
 #endif
 
@@ -2621,11 +2631,13 @@ namespace vapp {
     UIList *pGhostStrategy = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGIES_LIST");
     UIButton *pMotionBlurGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:MOTION_BLUR_GHOST");
     UIButton *pDisplayGhostInfo = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:DISPLAY_GHOST_INFO");
+    UIButton *pDisplayGhostTimeDiff = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:DISPLAY_GHOST_TIMEDIFF");
 
     pEnableGhost->setChecked(m_Config.getBool("EnableGhost"));
     int v_ghost_strategy = m_Config.getInteger("GhostSearchStrategy");
     pMotionBlurGhost->setChecked(m_Config.getBool("GhostMotionBlur"));
     pDisplayGhostInfo->setChecked(m_Config.getBool("DisplayGhostInfo"));
+    pDisplayGhostTimeDiff->setChecked(m_Config.getBool("ShowGhostTimeDiff"));
 
     int nGSMode = -1;
     for(int i=0;i<pGhostStrategy->getEntries().size();i++) {
@@ -2838,9 +2850,11 @@ namespace vapp {
 #if defined(ALLOW_GHOST)
     UIButton *pMotionBlurGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:MOTION_BLUR_GHOST");
     UIButton *pDisplayGhostInfo = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:DISPLAY_GHOST_INFO");
+    UIButton *pDisplayGhostTimeDiff = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:DISPLAY_GHOST_TIMEDIFF");
 
     m_Config.setBool("GhostMotionBlur",pMotionBlurGhost->getChecked());
     m_Config.setBool("DisplayGhostInfo",pDisplayGhostInfo->getChecked());
+    m_Config.setBool("ShowGhostTimeDiff",pDisplayGhostTimeDiff->getChecked());
 #endif
             
     /* The following require restart */

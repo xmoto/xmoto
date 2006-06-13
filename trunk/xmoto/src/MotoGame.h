@@ -544,6 +544,9 @@ namespace vapp {
       MotoGame() {m_pLevelSrc=NULL;
                   clearStates();
 		  m_lastCallToEveryHundreath = 0.0;
+#if defined(ALLOW_GHOST)
+		  m_showGhostTimeDiff = true;
+#endif
       }
       ~MotoGame() {endLevel();}     
     
@@ -626,6 +629,7 @@ namespace vapp {
 #if defined(ALLOW_GHOST)  
       void UpdateGhostFromReplay(Replay *p_replay, SerializedBikeState *pReplayState);
       float getGhostDiff() {return m_myDiffOfGhost;}
+      void setShowGhostTimeDiff(bool b) { m_showGhostTimeDiff = b; }
 #endif
 
     private:         
@@ -667,6 +671,7 @@ namespace vapp {
 #if defined(ALLOW_GHOST)  
       BikeState m_GhostBikeS;             /* ghost state */
       bool m_isGhostActive;               /* is ghost active : must it be displayed, ... */
+      bool m_showGhostTimeDiff;
 #endif
 
       BikeController m_BikeC;             /* Bike controller */

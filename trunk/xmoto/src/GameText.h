@@ -69,6 +69,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_DELETE               "Delete"
 #define GAMETEXT_DELETEPROFILE        "Delete"
 #define GAMETEXT_DESCRIPTION          "Description: "
+#define GAMETEXT_DISPLAYGHOSTTIMEDIFF "Display Ghost time difference"
 #define GAMETEXT_DISPLAYGHOSTINFO     "Display Ghost Information"
 #define GAMETEXT_DIRECTCONN           "Direct Connection"
 #define GAMETEXT_DLGHOST              "Downloading the ghost..."
@@ -326,6 +327,7 @@ Central place to keep many in-game text strings
 #define CONTEXTHELP_GHOST_STRATEGIES "Choose which ghost to display"
 #define CONTEXTHELP_MOTIONBLURGHOST "Make motion blur effect for the ghost (if supported by your graphics card)"
 #define CONTEXTHELP_DISPLAY_GHOST_INFO "When starting a level with a ghost, display who the ghost is of"
+#define CONTEXTHELP_DISPLAY_GHOST_TIMEDIFF "Display the time difference between the ghost and you"
 #define CONTEXTHELP_AUTOSAVEREPLAYS "Automatic saving of replays if it's a highscore"
 #define CONTEXTHELP_VIEWTHEHIGHSCORE "View the replay of the room's highscore"
 

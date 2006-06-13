@@ -129,6 +129,7 @@ namespace vapp {
 		 GhostSearchStrategies[1] = GHOST_STRATEGY_THEBEST;
 		 GhostSearchStrategies[2] = GHOST_STRATEGY_BESTOFROOM;
 		 m_bEnableGhost = true;
+		 m_bShowGhostTimeDiff = true;
 		 m_GhostSearchStrategy = GHOST_STRATEGY_MYBEST;
 #endif
 		 m_bAutosaveHighscoreReplays = true;
@@ -241,6 +242,7 @@ namespace vapp {
       enum GhostSearchStrategy GhostSearchStrategies[3];
       bool m_bEnableGhost;
       GhostSearchStrategy m_GhostSearchStrategy;
+      bool m_bShowGhostTimeDiff;
 #endif
       std::string m_ReplayPlayerName;
       
