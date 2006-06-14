@@ -808,19 +808,18 @@ namespace vapp {
     UIStatic *pLevelPackViewerTitle = new UIStatic(m_pLevelPackViewer,0,0,"(level pack name goes here)",700,40);
     pLevelPackViewerTitle->setID("LEVELPACK_VIEWER_TITLE");
     pLevelPackViewerTitle->setFont(m_Renderer.getMediumFont());
-    UIList *pLevelPackLevelList = new UIList(m_pLevelPackViewer,20,50,"",400,430);
-    pLevelPackLevelList->setFont(m_Renderer.getSmallFont());
-    pLevelPackLevelList->addColumn(GAMETEXT_LEVEL,pLevelPackLevelList->getPosition().nWidth-175);      
-    pLevelPackLevelList->addColumn(GAMETEXT_TIME,80);      
-#if defined(SUPPORT_WEBACCESS)    
-    pLevelPackLevelList->addColumn("WR:",80);      
-#endif
-    pLevelPackLevelList->setContextHelp(CONTEXTHELP_SELECT_LEVEL_IN_LEVEL_PACK);
-    pLevelPackLevelList->setID("LEVELPACK_LEVEL_LIST");
+
     UIButton *pLevelPackPlay = new UIButton(m_pLevelPackViewer,450,50,GAMETEXT_STARTLEVEL,207,57);
     pLevelPackPlay->setFont(m_Renderer.getSmallFont());
     pLevelPackPlay->setID("LEVELPACK_PLAY_BUTTON");
     pLevelPackPlay->setContextHelp(CONTEXTHELP_PLAY_SELECTED_LEVEL);
+
+    UILevelList *pLevelPackLevelList = new UILevelList(m_pLevelPackViewer,20,50,"",400,430);
+    pLevelPackLevelList->setFont(m_Renderer.getSmallFont());
+    pLevelPackLevelList->setContextHelp(CONTEXTHELP_SELECT_LEVEL_IN_LEVEL_PACK);
+    pLevelPackLevelList->setID("LEVELPACK_LEVEL_LIST");
+    pLevelPackLevelList->setEnterButton( pLevelPackPlay );
+
     UIButton *pLevelPackInfo = new UIButton(m_pLevelPackViewer,450,107,GAMETEXT_LEVELINFO,207,57);
     pLevelPackInfo->setFont(m_Renderer.getSmallFont());
     pLevelPackInfo->setID("LEVELPACK_INFO_BUTTON");
@@ -829,7 +828,6 @@ namespace vapp {
     pLevelPackCancel->setFont(m_Renderer.getSmallFont());
     pLevelPackCancel->setID("LEVELPACK_CANCEL_BUTTON");
     pLevelPackCancel->setContextHelp(CONTEXTHELP_CLOSE_LEVEL_PACK);
-    pLevelPackLevelList->setEnterButton( pLevelPackPlay );
 
     /* Initialize level info viewer */
     m_pLevelInfoViewer = new UIFrame(m_Renderer.getGUI(),getDispWidth()/2-350,getDispHeight()/2-250,"",700,500); 
@@ -964,44 +962,12 @@ namespace vapp {
   Add levels to list (level pack)
   ===========================================================================*/  
   void GameApp::_CreateLevelPackLevelList(void) {  
-    UIList *pList = (UIList *)m_pLevelPackViewer->getChild("LEVELPACK_LEVEL_LIST");    
+    UILevelList *pList = (UILevelList *)m_pLevelPackViewer->getChild("LEVELPACK_LEVEL_LIST");    
     pList->clear();
-    
-    /* Obey hints */
-    pList->unhideAllColumns();
-    if(!m_pActiveLevelPack->bShowTimes)
-      pList->setHideColumn(1);
-    if(!m_pActiveLevelPack->bShowWebTimes)
-      pList->setHideColumn(2);
-    
+       
     /* Add levels */
     for(int i=0;i<m_pActiveLevelPack->Levels.size();i++) {
-      UIListEntry *pEntry = pList->addEntry(m_pActiveLevelPack->Levels[i]->getLevelInfo()->Name,m_pActiveLevelPack->Levels[i]);
-      
-      if(m_pPlayer != NULL) {
-        PlayerTimeEntry *pTimeEntry = m_Profiles.getBestPlayerTime(m_pPlayer->PlayerName,m_pActiveLevelPack->Levels[i]->getID());
-        if(pTimeEntry != NULL)
-          pEntry->Text.push_back(formatTime(pTimeEntry->fFinishTime));
-        else
-          pEntry->Text.push_back("--:--:--");
-
-        #if defined(SUPPORT_WEBACCESS)
-          if(m_pWebHighscores != NULL) {
-            WebHighscore *pWH = m_pWebHighscores->getHighscoreFromLevel(m_pActiveLevelPack->Levels[i]->getID());
-            if(pWH != NULL)
-              pEntry->Text.push_back(pWH->getTime());
-            else
-              pEntry->Text.push_back(GAMETEXT_WORLDRECORDNA);
-          }        
-          else
-            pEntry->Text.push_back(GAMETEXT_WORLDRECORDNA);          
-        #endif
-      }
-      
-      //if(m_pActiveLevelPack->Levels[i]->isScripted())
-      //  pEntry->Text.push_back(GAMETEXT_YES);
-      //else
-      //  pEntry->Text.push_back(GAMETEXT_NO);
+       pList->addLevel(m_pActiveLevelPack->Levels[i], m_pPlayer, &m_Profiles, m_pWebHighscores);
     }
   }
   
@@ -1363,7 +1329,7 @@ namespace vapp {
     UIButton *pCancelButton = reinterpret_cast<UIButton *>(m_pLevelPackViewer->getChild("LEVELPACK_CANCEL_BUTTON"));
     UIButton *pPlayButton = reinterpret_cast<UIButton *>(m_pLevelPackViewer->getChild("LEVELPACK_PLAY_BUTTON"));
     UIButton *pLevelInfoButton = reinterpret_cast<UIButton *>(m_pLevelPackViewer->getChild("LEVELPACK_INFO_BUTTON"));
-    UIList *pList = (UIList *)m_pLevelPackViewer->getChild("LEVELPACK_LEVEL_LIST");
+    UILevelList *pList = (UILevelList *)m_pLevelPackViewer->getChild("LEVELPACK_LEVEL_LIST");
     
     /* Check buttons */
     if(pCancelButton!=NULL && pCancelButton->isClicked()) {
@@ -1377,26 +1343,23 @@ namespace vapp {
     
     if(pPlayButton!=NULL && pPlayButton->isClicked()) {
       pPlayButton->setClicked(false);
-      
-      int nSel = pList->getSelected();
-      if(nSel >= 0) {      
-        LevelSrc *pLevelSrc = (LevelSrc *)pList->getEntries()[nSel]->pvUser;
-              
-        m_pLevelPackViewer->showWindow(false);
-        m_pMainMenu->showWindow(false);      
-        m_PlaySpecificLevel = pLevelSrc->getID();        
-        m_StateAfterPlaying = GS_LEVELPACK_VIEWER;
-        setState(GS_PLAYING);      
-      }
+
+	LevelSrc *pLevelSrc = pList->getSelectedLevel();
+	if(pLevelSrc != NULL) {
+	  m_pLevelPackViewer->showWindow(false);
+	  m_pMainMenu->showWindow(false);      
+	  m_PlaySpecificLevel = pLevelSrc->getID();        
+	  m_StateAfterPlaying = GS_LEVELPACK_VIEWER;
+	  setState(GS_PLAYING);   
+	}
     }
 
     if(pLevelInfoButton!=NULL && pLevelInfoButton->isClicked()) {
       pLevelInfoButton->setClicked(false);
 
-      int nSel = pList->getSelected();
-      if(nSel >= 0) {      
-        LevelSrc *pLevelSrc = (LevelSrc *)pList->getEntries()[nSel]->pvUser;
-
+      LevelSrc *pLevelSrc = pList->getSelectedLevel();
+      if(pLevelSrc != NULL) {
+	
         /* === OPEN LEVEL INFO VIEWER === */      
         /* Set information */
         UIStatic *pLevelName = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TITLE");
