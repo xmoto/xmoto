@@ -356,43 +356,15 @@ namespace vapp {
     pGeneralOptionsTab->showWindow(true);
     pGeneralOptionsTab->setID("GENERAL_TAB");
     
-    UIButton *pINetConf = new UIButton(pGeneralOptionsTab,pGeneralOptionsTab->getPosition().nWidth-200,pGeneralOptionsTab->getPosition().nHeight-110,GAMETEXT_PROXYCONFIG,207,57);
-    pINetConf->setType(UI_BUTTON_TYPE_LARGE);
-    pINetConf->setID("PROXYCONFIG");
-    pINetConf->setFont(m_Renderer.getSmallFont());
-    pINetConf->setContextHelp(CONTEXTHELP_PROXYCONFIG);
-
-    UIButton *pUpdHS = new UIButton(pGeneralOptionsTab,pGeneralOptionsTab->getPosition().nWidth-200-200,pGeneralOptionsTab->getPosition().nHeight-110,GAMETEXT_UPDATEHIGHSCORES,207,57);
-    pUpdHS->setType(UI_BUTTON_TYPE_LARGE);
-    pUpdHS->setID("UPDATEHIGHSCORES");
-    pUpdHS->setFont(m_Renderer.getSmallFont());
-    pUpdHS->setContextHelp(CONTEXTHELP_UPDATEHIGHSCORES);
-
-    UIButton *pShowMiniMap = new UIButton(pGeneralOptionsTab,5,5,GAMETEXT_SHOWMINIMAP,(pGeneralOptionsTab->getPosition().nWidth-40)/2,28);
+    UIButton *pShowMiniMap = new UIButton(pGeneralOptionsTab,5,43,GAMETEXT_SHOWMINIMAP,(pGeneralOptionsTab->getPosition().nWidth-40)/2,28);
     pShowMiniMap->setType(UI_BUTTON_TYPE_CHECK);
     pShowMiniMap->setID("SHOWMINIMAP");
     pShowMiniMap->enableWindow(true);
     pShowMiniMap->setFont(m_Renderer.getSmallFont());
     pShowMiniMap->setGroup(50023);
     pShowMiniMap->setContextHelp(CONTEXTHELP_MINI_MAP);
-    
-    UIButton *pEnableWebHighscores = new UIButton(pGeneralOptionsTab,5,43,GAMETEXT_ENABLEWEBHIGHSCORES,(pGeneralOptionsTab->getPosition().nWidth-40),28);
-    pEnableWebHighscores->setType(UI_BUTTON_TYPE_CHECK);
-    pEnableWebHighscores->setID("ENABLEWEBHIGHSCORES");
-    pEnableWebHighscores->enableWindow(true);
-    pEnableWebHighscores->setFont(m_Renderer.getSmallFont());
-    pEnableWebHighscores->setGroup(50023);
-    pEnableWebHighscores->setContextHelp(CONTEXTHELP_DOWNLOAD_BEST_TIMES);
 
-    UIButton *pInGameWorldRecord = new UIButton(pGeneralOptionsTab,5,81,GAMETEXT_ENABLEINGAMEWORLDRECORD,(pGeneralOptionsTab->getPosition().nWidth-40),28);
-    pInGameWorldRecord->setType(UI_BUTTON_TYPE_CHECK);
-    pInGameWorldRecord->setID("INGAMEWORLDRECORD");
-    pInGameWorldRecord->enableWindow(true);
-    pInGameWorldRecord->setFont(m_Renderer.getSmallFont());
-    pInGameWorldRecord->setGroup(50023);
-    pInGameWorldRecord->setContextHelp(CONTEXTHELP_INGAME_WORLD_RECORD);
-
-    UIButton *pContextHelp = new UIButton(pGeneralOptionsTab,5,119,GAMETEXT_ENABLECONTEXTHELP,(pGeneralOptionsTab->getPosition().nWidth-40),28);
+    UIButton *pContextHelp = new UIButton(pGeneralOptionsTab,5,81,GAMETEXT_ENABLECONTEXTHELP,(pGeneralOptionsTab->getPosition().nWidth-40),28);
     pContextHelp->setType(UI_BUTTON_TYPE_CHECK);
     pContextHelp->setID("ENABLECONTEXTHELP");
     pContextHelp->enableWindow(true);
@@ -400,7 +372,7 @@ namespace vapp {
     pContextHelp->setGroup(50023);
     pContextHelp->setContextHelp(CONTEXTHELP_SHOWCONTEXTHELP);
  
-    UIButton *pAutosaveReplays = new UIButton(pGeneralOptionsTab,5,157,GAMETEXT_AUTOSAVEREPLAYS,(pGeneralOptionsTab->getPosition().nWidth-40),28);
+    UIButton *pAutosaveReplays = new UIButton(pGeneralOptionsTab,5,119,GAMETEXT_AUTOSAVEREPLAYS,(pGeneralOptionsTab->getPosition().nWidth-40),28);
     pAutosaveReplays->setType(UI_BUTTON_TYPE_CHECK);
     pAutosaveReplays->setID("AUTOSAVEREPLAYS");
     pAutosaveReplays->enableWindow(true);
@@ -630,6 +602,41 @@ namespace vapp {
   pConfigureJoystick->showWindow(false);
   
   pKeyCList->setPosition(5,5,pControlsOptionsTab->getPosition().nWidth-10,238);
+#endif
+
+#if defined(SUPPORT_WEBACCESS)
+    UIWindow *pWWWOptionsTab = new UIWindow(pOptionsTabs,20,40,GAMETEXT_WWWTAB,pOptionsTabs->getPosition().nWidth-40,pOptionsTabs->getPosition().nHeight);
+    pWWWOptionsTab->enableWindow(true);
+    pWWWOptionsTab->showWindow(false);
+    pWWWOptionsTab->setID("WWW_TAB");
+
+    UIButton *pEnableWebHighscores = new UIButton(pWWWOptionsTab,5,43,GAMETEXT_ENABLEWEBHIGHSCORES,(pGeneralOptionsTab->getPosition().nWidth-40),28);
+    pEnableWebHighscores->setType(UI_BUTTON_TYPE_CHECK);
+    pEnableWebHighscores->setID("ENABLEWEBHIGHSCORES");
+    pEnableWebHighscores->enableWindow(true);
+    pEnableWebHighscores->setFont(m_Renderer.getSmallFont());
+    pEnableWebHighscores->setGroup(50123);
+    pEnableWebHighscores->setContextHelp(CONTEXTHELP_DOWNLOAD_BEST_TIMES);
+
+    UIButton *pInGameWorldRecord = new UIButton(pWWWOptionsTab,5,81,GAMETEXT_ENABLEINGAMEWORLDRECORD,(pGeneralOptionsTab->getPosition().nWidth-40),28);
+    pInGameWorldRecord->setType(UI_BUTTON_TYPE_CHECK);
+    pInGameWorldRecord->setID("INGAMEWORLDRECORD");
+    pInGameWorldRecord->enableWindow(true);
+    pInGameWorldRecord->setFont(m_Renderer.getSmallFont());
+    pInGameWorldRecord->setGroup(50123);
+    pInGameWorldRecord->setContextHelp(CONTEXTHELP_INGAME_WORLD_RECORD);
+
+    UIButton *pINetConf = new UIButton(pWWWOptionsTab,pWWWOptionsTab->getPosition().nWidth-200,pWWWOptionsTab->getPosition().nHeight-110,GAMETEXT_PROXYCONFIG,207,57);
+    pINetConf->setType(UI_BUTTON_TYPE_LARGE);
+    pINetConf->setID("PROXYCONFIG");
+    pINetConf->setFont(m_Renderer.getSmallFont());
+    pINetConf->setContextHelp(CONTEXTHELP_PROXYCONFIG);
+
+    UIButton *pUpdHS = new UIButton(pWWWOptionsTab,pWWWOptionsTab->getPosition().nWidth-200-200,pWWWOptionsTab->getPosition().nHeight-110,GAMETEXT_UPDATEHIGHSCORES,207,57);
+    pUpdHS->setType(UI_BUTTON_TYPE_LARGE);
+    pUpdHS->setID("UPDATEHIGHSCORES");
+    pUpdHS->setFont(m_Renderer.getSmallFont());
+    pUpdHS->setContextHelp(CONTEXTHELP_UPDATEHIGHSCORES);
 #endif
 
 #if defined(ALLOW_GHOST) 
@@ -1946,10 +1953,6 @@ namespace vapp {
     }
     
     /* OPTIONS */
-    UIButton *pINetConf = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:PROXYCONFIG");
-    UIButton *pUpdHS = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:UPDATEHIGHSCORES");
-    UIButton *pWebHighscores = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:ENABLEWEBHIGHSCORES");
-    UIButton *pInGameWorldRecord = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:INGAMEWORLDRECORD");
     UIButton *pEnableAudioButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_AUDIO");
     UIButton *p11kHzButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:RATE11KHZ");
     UIButton *p22kHzButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:RATE22KHZ");
@@ -1959,7 +1962,14 @@ namespace vapp {
     UIButton *pMonoButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:MONO");
     UIButton *pStereoButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:STEREO");
     UIButton *pEnableEngineSoundButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_ENGINE_SOUND");
-    
+  
+#if defined(SUPPORT_WEBACCESS)  
+    UIButton *pINetConf = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:PROXYCONFIG");
+    UIButton *pUpdHS = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:UPDATEHIGHSCORES");
+    UIButton *pWebHighscores = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:ENABLEWEBHIGHSCORES");
+    UIButton *pInGameWorldRecord = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:INGAMEWORLDRECORD");
+#endif
+
 #if defined(ALLOW_GHOST) 
     UIButton *pEnableGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:ENABLE_GHOST");
     UIList *pGhostStrategy = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGIES_LIST");
@@ -2443,8 +2453,7 @@ namespace vapp {
   ===========================================================================*/
   void GameApp::_ImportOptions(void) {
     UIButton *pShowMiniMap = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:SHOWMINIMAP");
-    UIButton *pWebHighscores = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:ENABLEWEBHIGHSCORES");
-    UIButton *pInGameWorldRecord = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:INGAMEWORLDRECORD");
+
     UIButton *pContextHelp = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:ENABLECONTEXTHELP");
     UIButton *pAutosaveReplays = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:AUTOSAVEREPLAYS");
 
@@ -2494,6 +2503,13 @@ namespace vapp {
     pKeyboardControl->setChecked(false);
     pJoystickControl->setChecked(false);
     
+#if defined(SUPPORT_WEBACCESS)
+    UIButton *pWebHighscores = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:ENABLEWEBHIGHSCORES");
+    UIButton *pInGameWorldRecord = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:INGAMEWORLDRECORD");
+    pWebHighscores->setChecked(m_Config.getBool("WebHighscores"));
+    pInGameWorldRecord->setChecked(m_Config.getBool("ShowInGameWorldRecord"));
+#endif
+
 #if defined(ALLOW_GHOST) 
     UIButton *pEnableGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:ENABLE_GHOST");
     UIList *pGhostStrategy = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGIES_LIST");
@@ -2524,8 +2540,6 @@ namespace vapp {
 #endif
 
     pShowMiniMap->setChecked(m_Config.getBool("ShowMiniMap"));
-    pWebHighscores->setChecked(m_Config.getBool("WebHighscores"));
-    pInGameWorldRecord->setChecked(m_Config.getBool("ShowInGameWorldRecord"));
     pContextHelp->setChecked(m_Config.getBool("ContextHelp"));
     pAutosaveReplays->setChecked(m_Config.getBool("AutosaveHighscoreReplays"));
 
@@ -2652,9 +2666,7 @@ namespace vapp {
   void GameApp::_SaveOptions(void) {
     bool bNotify = false;
   
-    UIButton *pInGameWorldRecord = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:INGAMEWORLDRECORD");
     UIButton *pShowMiniMap = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:SHOWMINIMAP");
-    UIButton *pWebHighscores = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:ENABLEWEBHIGHSCORES");
     UIButton *pContextHelp = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:ENABLECONTEXTHELP");
     UIButton *pAutosaveReplays = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:AUTOSAVEREPLAYS");
 
@@ -2685,9 +2697,7 @@ namespace vapp {
 
     /* First all those which don't need a restart */
     m_Config.setBool("ShowMiniMap",pShowMiniMap->getChecked());
-    m_Config.setBool("ShowInGameWorldRecord",pInGameWorldRecord->getChecked());
     m_Config.setBool("ContextHelp",pContextHelp->getChecked());
-    m_Config.setBool("AutosaveHighscoreReplays",pAutosaveReplays->getChecked());
     
     if(pMenuLow->getChecked()) m_Config.setString("MenuBackgroundGraphics","Low");
     else if(pMenuMed->getChecked()) m_Config.setString("MenuBackgroundGraphics","Medium");
@@ -2714,6 +2724,13 @@ namespace vapp {
     }
     
     m_Config.setBool("EngineSoundEnable",pEnableEngineSoundButton->getChecked());
+
+#if defined(SUPPORT_WEBACCESS)
+    UIButton *pWebHighscores = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:ENABLEWEBHIGHSCORES");
+    UIButton *pInGameWorldRecord = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:INGAMEWORLDRECORD");
+    m_Config.setBool("ShowInGameWorldRecord",pInGameWorldRecord->getChecked());
+    m_Config.setBool("AutosaveHighscoreReplays",pAutosaveReplays->getChecked());
+#endif
 
 #if defined(ALLOW_GHOST)
     UIButton *pMotionBlurGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:MOTION_BLUR_GHOST");

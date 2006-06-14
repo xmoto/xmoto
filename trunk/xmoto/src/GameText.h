@@ -236,6 +236,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_WANTTOUPDATELEVEL    "Do you want to update level \"%s\"?\n(%s)"
 #define GAMETEXT_WARNING              "Warning:"
 #define GAMETEXT_WORLDRECORDNA        "--:--:--"
+#define GAMETEXT_WWWTAB             "WWW"
 #define GAMETEXT_YES                  "Yes"
 #define GAMETEXT_ZOOMIN  	            "Zoom in"
 #define GAMETEXT_ZOOMOUT 	            "Zoom out"
