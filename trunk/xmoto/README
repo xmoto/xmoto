@@ -321,6 +321,8 @@ project:
  - Eric Piel (various code patches)
  - Torben Green (some of the built-in levels)
  - Thomas Kjaerulff (one of the built-in levels)
+ - Emmanuel Gorse (SDL resolutions list patch)
+ - Jose Alberto Coelho (MacOS X tester)
 
 Also a warm thank-you to Yves Berquin who have written the XML parser
 used by the game (tinyxml), and to L. Peter Deutsch for his MD5 code.
