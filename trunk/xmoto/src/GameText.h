@@ -80,6 +80,8 @@ Central place to keep many in-game text strings
 #define GAMETEXT_DOWNLOADLEVELS       "Get More Levels!"
 #define GAMETEXT_DRIVE                "Drive"
 #define GAMETEXT_ENABLEAUDIO          "Enable Audio"
+#define GAMETEXT_ENABLECHECKNEWLEVELSATSTARTUP  "Check new levels at startup"
+#define GAMETEXT_ENABLECHECKHIGHSCORESATSTARTUP "Check new highscores at startup"
 #define GAMETEXT_ENABLECONTEXTHELP    "Enable Context Help"
 #define GAMETEXT_ENABLEENGINESOUND    "Enable Engine Sound"
 #define GAMETEXT_ENABLEGHOST          "Enable Ghost"
@@ -331,5 +333,8 @@ Central place to keep many in-game text strings
 #define CONTEXTHELP_DISPLAY_GHOST_TIMEDIFF "Display the time difference between the ghost and you"
 #define CONTEXTHELP_AUTOSAVEREPLAYS "Automatic saving of replays if it's a highscore"
 #define CONTEXTHELP_VIEWTHEHIGHSCORE "View the replay of the room's highscore"
+
+#define CONTEXTHELP_ENABLE_CHECK_NEW_LEVELS_AT_STARTUP "Check new levels at startup"
+#define CONTEXTHELP_ENABLE_CHECK_HIGHSCORES_AT_STARTUP "Check new highscores at startup"
 
 #endif

@@ -610,7 +610,7 @@ namespace vapp {
     pWWWOptionsTab->showWindow(false);
     pWWWOptionsTab->setID("WWW_TAB");
 
-    UIButton *pEnableWebHighscores = new UIButton(pWWWOptionsTab,5,43,GAMETEXT_ENABLEWEBHIGHSCORES,(pGeneralOptionsTab->getPosition().nWidth-40),28);
+    UIButton *pEnableWebHighscores = new UIButton(pWWWOptionsTab,5,5,GAMETEXT_ENABLEWEBHIGHSCORES,(pGeneralOptionsTab->getPosition().nWidth-40),28);
     pEnableWebHighscores->setType(UI_BUTTON_TYPE_CHECK);
     pEnableWebHighscores->setID("ENABLEWEBHIGHSCORES");
     pEnableWebHighscores->enableWindow(true);
@@ -618,7 +618,23 @@ namespace vapp {
     pEnableWebHighscores->setGroup(50123);
     pEnableWebHighscores->setContextHelp(CONTEXTHELP_DOWNLOAD_BEST_TIMES);
 
-    UIButton *pInGameWorldRecord = new UIButton(pWWWOptionsTab,5,81,GAMETEXT_ENABLEINGAMEWORLDRECORD,(pGeneralOptionsTab->getPosition().nWidth-40),28);
+    UIButton *pEnableCheckNewLevelsAtStartup = new UIButton(pWWWOptionsTab,5,43,GAMETEXT_ENABLECHECKNEWLEVELSATSTARTUP,(pGeneralOptionsTab->getPosition().nWidth-40),28);
+    pEnableCheckNewLevelsAtStartup->setType(UI_BUTTON_TYPE_CHECK);
+    pEnableCheckNewLevelsAtStartup->setID("ENABLECHECKNEWLEVELSATSTARTUP");
+    pEnableCheckNewLevelsAtStartup->enableWindow(true);
+    pEnableCheckNewLevelsAtStartup->setFont(m_Renderer.getSmallFont());
+    pEnableCheckNewLevelsAtStartup->setGroup(50123);
+    pEnableCheckNewLevelsAtStartup->setContextHelp(CONTEXTHELP_ENABLE_CHECK_NEW_LEVELS_AT_STARTUP);
+
+    UIButton *pEnableCheckHighscoresAtStartup = new UIButton(pWWWOptionsTab,5,81,GAMETEXT_ENABLECHECKHIGHSCORESATSTARTUP,(pGeneralOptionsTab->getPosition().nWidth-40),28);
+    pEnableCheckHighscoresAtStartup->setType(UI_BUTTON_TYPE_CHECK);
+    pEnableCheckHighscoresAtStartup->setID("ENABLECHECKHIGHSCORESATSTARTUP");
+    pEnableCheckHighscoresAtStartup->enableWindow(true);
+    pEnableCheckHighscoresAtStartup->setFont(m_Renderer.getSmallFont());
+    pEnableCheckHighscoresAtStartup->setGroup(50123);
+    pEnableCheckHighscoresAtStartup->setContextHelp(CONTEXTHELP_ENABLE_CHECK_HIGHSCORES_AT_STARTUP);
+
+    UIButton *pInGameWorldRecord = new UIButton(pWWWOptionsTab,5,119,GAMETEXT_ENABLEINGAMEWORLDRECORD,(pGeneralOptionsTab->getPosition().nWidth-40),28);
     pInGameWorldRecord->setType(UI_BUTTON_TYPE_CHECK);
     pInGameWorldRecord->setID("INGAMEWORLDRECORD");
     pInGameWorldRecord->enableWindow(true);
@@ -1968,6 +1984,9 @@ namespace vapp {
     UIButton *pUpdHS = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:UPDATEHIGHSCORES");
     UIButton *pWebHighscores = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:ENABLEWEBHIGHSCORES");
     UIButton *pInGameWorldRecord = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:INGAMEWORLDRECORD");
+
+    UIButton *pCheckNewLevelsAtStartup = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:ENABLECHECKNEWLEVELSATSTARTUP");
+    UIButton *pCheckHighscoresAtStartup = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:ENABLECHECKHIGHSCORESATSTARTUP");
 #endif
 
 #if defined(ALLOW_GHOST) 
@@ -2004,11 +2023,15 @@ namespace vapp {
         //pInGameWorldRecord->enableWindow(true);
         pINetConf->enableWindow(true);
         pUpdHS->enableWindow(true);
+	pCheckNewLevelsAtStartup->enableWindow(true);
+	pCheckHighscoresAtStartup->enableWindow(true);
       }
       else {
         //pInGameWorldRecord->enableWindow(false);
         pINetConf->enableWindow(false);
         pUpdHS->enableWindow(false);
+	pCheckNewLevelsAtStartup->enableWindow(false);
+	pCheckHighscoresAtStartup->enableWindow(false);
       }
     #endif
     
@@ -2506,8 +2529,13 @@ namespace vapp {
 #if defined(SUPPORT_WEBACCESS)
     UIButton *pWebHighscores = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:ENABLEWEBHIGHSCORES");
     UIButton *pInGameWorldRecord = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:INGAMEWORLDRECORD");
+    UIButton *pCheckNewLevelsAtStartup = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:ENABLECHECKNEWLEVELSATSTARTUP");
+    UIButton *pCheckHighscoresAtStartup = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:ENABLECHECKHIGHSCORESATSTARTUP");
+
     pWebHighscores->setChecked(m_Config.getBool("WebHighscores"));
     pInGameWorldRecord->setChecked(m_Config.getBool("ShowInGameWorldRecord"));
+    pCheckNewLevelsAtStartup->setChecked(m_Config.getBool("CheckNewLevelsAtStartup"));
+    pCheckHighscoresAtStartup->setChecked(m_Config.getBool("CheckHighscoresAtStartup"));
 #endif
 
 #if defined(ALLOW_GHOST) 
@@ -2728,8 +2756,13 @@ namespace vapp {
 #if defined(SUPPORT_WEBACCESS)
     UIButton *pWebHighscores = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:ENABLEWEBHIGHSCORES");
     UIButton *pInGameWorldRecord = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:INGAMEWORLDRECORD");
+    UIButton *pCheckNewLevelsAtStartup = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:ENABLECHECKNEWLEVELSATSTARTUP");
+    UIButton *pCheckHighscoresAtStartup = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:ENABLECHECKHIGHSCORESATSTARTUP");
     m_Config.setBool("ShowInGameWorldRecord",pInGameWorldRecord->getChecked());
     m_Config.setBool("AutosaveHighscoreReplays",pAutosaveReplays->getChecked());
+
+    m_Config.setBool("CheckNewLevelsAtStartup",pCheckNewLevelsAtStartup->getChecked());
+    m_Config.setBool("CheckHighscoresAtStartup",pCheckHighscoresAtStartup->getChecked());
 #endif
 
 #if defined(ALLOW_GHOST)

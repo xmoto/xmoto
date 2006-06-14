@@ -477,12 +477,18 @@ namespace vapp {
     m_GhostSearchStrategy = (enum GhostSearchStrategy) m_Config.getInteger("GhostSearchStrategy");
 #endif
 
-    /* Other settings */
-    m_bEnableEngineSound = m_Config.getBool("EngineSoundEnable");
+#if defined(SUPPORT_WEBACCESS)
     m_bEnableWebHighscores = m_Config.getBool("WebHighscores");
     m_bShowWebHighscoreInGame = m_Config.getBool("ShowInGameWorldRecord");
-    m_bEnableContextHelp = m_Config.getBool("ContextHelp");
     m_bEnableGhostInfo = m_Config.getBool("DisplayGhostInfo");
+    m_bEnableCheckNewLevelsAtStartup  = m_Config.getBool("CheckNewLevelsAtStartup");
+    m_bEnableCheckHighscoresAtStartup = m_Config.getBool("CheckHighscoresAtStartup");
+#endif
+
+    /* Other settings */
+    m_bEnableEngineSound = m_Config.getBool("EngineSoundEnable");
+    m_bEnableContextHelp = m_Config.getBool("ContextHelp");
+
         
     /* Cache? */
     m_bEnableLevelCache = m_Config.getBool("LevelCache");
@@ -721,10 +727,14 @@ namespace vapp {
 	bool bSilent = true;
           
 	try {
-        _UpdateLoadingScreen((1.0f/9.0f) * 6,pLoadingScreen,GAMETEXT_DLHIGHSCORES);      
-        _UpdateWebHighscores(bSilent);
-        _UpdateLoadingScreen((1.0f/9.0f) * 6,pLoadingScreen,GAMETEXT_DLLEVELSCHECK);      
-        _UpdateWebLevels(bSilent);       
+	  if(m_bEnableCheckHighscoresAtStartup) {
+	    _UpdateLoadingScreen((1.0f/9.0f) * 6,pLoadingScreen,GAMETEXT_DLHIGHSCORES);      
+	    _UpdateWebHighscores(bSilent);
+	  }
+	  if(m_bEnableCheckNewLevelsAtStartup) {
+	    _UpdateLoadingScreen((1.0f/9.0f) * 6,pLoadingScreen,GAMETEXT_DLLEVELSCHECK);      
+	    _UpdateWebLevels(bSilent);       
+	  }
 	} catch(Exception &e) {
 	  /* No internet connection, probably... (just use the latest times, if any) */
 	  Log("** Warning ** : Failed to update web-highscores [%s]",e.getMsg().c_str());              
@@ -1826,9 +1836,11 @@ namespace vapp {
     m_Config.createVar( "ContextHelp",            "true" );
 
 #if defined(SUPPORT_WEBACCESS)
-    m_Config.createVar( "WebHighscores",          "false" );
-    m_Config.createVar( "ShowInGameWorldRecord",  "false" );
-    m_Config.createVar( "WebConfAtInit",          "true" );
+    m_Config.createVar( "WebHighscores",            "false" );
+    m_Config.createVar( "CheckHighscoresAtStartup", "true" );
+    m_Config.createVar( "CheckNewLevelsAtStartup",  "true" );
+    m_Config.createVar( "ShowInGameWorldRecord",    "false" );
+    m_Config.createVar( "WebConfAtInit",            "true" );
     
     /* Webstuff */
     m_Config.createVar( "WebHighscoresURL",       DEFAULT_WEBHIGHSCORES_URL );

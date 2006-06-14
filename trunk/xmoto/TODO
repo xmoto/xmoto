@@ -18,8 +18,6 @@
 * display a nice counter for engine speed : disable this counter in replays
 * a button "clean replays" which remove not highscore replays or
    something like it
-* be able to choose "download highscore" "check for new level" at
-   startup
 * check for a new version at startup
 
 
@@ -73,3 +71,5 @@ Fixed:
 * BUG : if you die and save the replay, replay list is empty ; if you
    delete one, it does not delete it
 * add highscore tab in pack and new levels (priority=high)
+* be able to choose "download highscore" "check for new level" at
+   startup

@@ -132,6 +132,7 @@ namespace vapp {
 		 m_bEnableGhost = true;
 		 m_bShowGhostTimeDiff = true;
 		 m_GhostSearchStrategy = GHOST_STRATEGY_MYBEST;
+                 m_bEnableGhostInfo = false;
 #endif
 		 m_bAutosaveHighscoreReplays = true;
                  m_bRecordReplays = true;
@@ -139,17 +140,20 @@ namespace vapp {
                  m_bEnableEngineSound = true;
                  m_bCompressReplays = true;
                  m_bBenchmark = false;
-                 m_bEnableWebHighscores = true;
-                 m_bShowWebHighscoreInGame = false;
                  m_bEnableContextHelp = true;
-                 m_bEnableGhostInfo = false;
-                 #if defined(SUPPORT_WEBACCESS)
-                  m_pWebHighscores = NULL;
-                  m_pWebLevels = NULL;
-                  m_fDownloadTaskProgressLast = 0;
-                  m_bWebHighscoresUpdatedThisSession = false;
-		  m_bWebLevelsToDownload = false;
-                #endif
+
+#if defined(SUPPORT_WEBACCESS)
+                 m_bShowWebHighscoreInGame = false;
+                 m_bEnableWebHighscores = true;
+		 m_pWebHighscores = NULL;
+		 m_pWebLevels = NULL;
+		 m_fDownloadTaskProgressLast = 0;
+		 m_bWebHighscoresUpdatedThisSession = false;
+		 m_bWebLevelsToDownload = false;
+
+		 m_bEnableCheckNewLevelsAtStartup  = true;
+		 m_bEnableCheckHighscoresAtStartup = true;
+#endif
                  }
                  
       #if defined(SUPPORT_WEBACCESS)                 
@@ -192,11 +196,8 @@ namespace vapp {
       ReplayList m_ReplayList;                  /* Replay list */
       std::vector<LevelPack *> m_LevelPacks;    /* Level packs */
       
-      bool m_bWebHighscoresUpdatedThisSession;  /* true: Updated this session */
-      bool m_bWebLevelsToDownload;              /* true: there are new levels to download */
       bool m_bEnableContextHelp;                /* true: Show context help */
       bool m_bShowWebHighscoreInGame;           /* true: Show world highscore inside the game */
-      bool m_bEnableWebHighscores;              /* true: Read world highscores from website */
       bool m_bBenchmark;                        /* true: Test game performance */
       bool m_bShowFrameRate;                    /* true: frame rate */
       bool m_bListLevels;                       /* true: list installed levels */
@@ -206,9 +207,7 @@ namespace vapp {
       bool m_bUglyMode;													/* true: fast 'n ugly graphics */
       bool m_bEnableEngineSound;                /* true: engine sound is enabled */
       bool m_bCompressReplays;                  /* true: compress replays with zlib */
-      bool m_bGhostMotionBlur;                  /* true: apply fancy motion blur to ghosts */
       bool m_bEnableLevelCache;                 /* true: cache levels for faster loading */
-      bool m_bEnableGhostInfo;
       bool m_bAutosaveHighscoreReplays;
       std::string m_PlaySpecificLevel;          /* If set, we only want to 
                                                    play this level */
@@ -244,17 +243,25 @@ namespace vapp {
       bool m_bEnableGhost;
       GhostSearchStrategy m_GhostSearchStrategy;
       bool m_bShowGhostTimeDiff;
+      bool m_bGhostMotionBlur;                  /* true: apply fancy motion blur to ghosts */
+      bool m_bEnableGhostInfo;
 #endif
       std::string m_ReplayPlayerName;
       
       /* WWW */
-      #if defined(SUPPORT_WEBACCESS)
-        WebRoom *m_pWebHighscores;
-        WebLevels *m_pWebLevels;
-        ProxySettings m_ProxySettings;
-        std::string m_DownloadingLevel;
-        float m_fDownloadTaskProgressLast;
-      #endif
+#if defined(SUPPORT_WEBACCESS)
+      WebRoom *m_pWebHighscores;
+      WebLevels *m_pWebLevels;
+      ProxySettings m_ProxySettings;
+      std::string m_DownloadingLevel;
+      float m_fDownloadTaskProgressLast;
+
+      bool m_bEnableWebHighscores;              /* true: Read world highscores from website */
+      bool m_bWebHighscoresUpdatedThisSession;  /* true: Updated this session */
+      bool m_bWebLevelsToDownload;              /* true: there are new levels to download */
+      bool m_bEnableCheckNewLevelsAtStartup;
+      bool m_bEnableCheckHighscoresAtStartup;
+#endif
       
       /* Sound effects */
       SoundSample *m_pEndOfLevelSFX;
