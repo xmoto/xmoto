@@ -159,7 +159,7 @@ namespace vapp {
   ===========================================================================*/  
   void DrawLib::_InitTextRendering(TextureManager *pTextureManager) {   
     CBuiltInFont Fnt;
-  
+      
     /* Create texture */
     int nImgWidth = 256, nImgHeight = 256;
     Color *pImgData = new Color[nImgWidth * nImgHeight];
@@ -171,7 +171,12 @@ namespace vapp {
       unsigned char *pc = Fnt.fetchChar(i);
       for(int y=0;y<h;y++) {
         for(int x=0;x<w;x++) {
-          pImgData[(cx+x) + (cy+y)*nImgWidth] = MAKE_COLOR(pc[x+y*w],255,255,255);
+          unsigned char *pcT = (unsigned char *)&pImgData[(cx+x) + (cy+y)*nImgWidth];
+          pcT[0] = 255;
+          pcT[1] = 255;
+          pcT[2] = 255;
+          pcT[3] = pc[x+y*w];        
+          //pImgData[(cx+x) + (cy+y)*nImgWidth] = MAKE_COLOR(pc[x+y*w],255,255,255);
         }
       }
       

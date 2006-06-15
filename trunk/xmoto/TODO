@@ -9,6 +9,7 @@
 * BUG : when you see level info in level pack ; then you click on ok
    -> it close the window and the levelpack window
 * LevelpackList does not allow to see #tutorial 3
+* BUG : xmoto --help causes a crash (trying to free non-init data i think, related to FBO stuff)
 
 * BUG :
 - start a level, press very fastly (ESC-ENTER)* ; quite easy to
