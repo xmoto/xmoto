@@ -54,7 +54,9 @@ namespace vapp {
     GS_REPLAYING,             /* Replaying */
     GS_LEVEL_INFO_VIEWER,     /* In level info viewer */
     GS_LEVELPACK_VIEWER,      /* In level pack viewer */
+#if defined(SUPPORT_WEBACCESS)
     GS_EDIT_WEBCONFIG,        /* Editing internet configuration */
+#endif
   };
 
 	/*===========================================================================
@@ -106,19 +108,21 @@ namespace vapp {
                  m_bEnableLevelCache=true;
                  m_pQuitMsgBox=NULL;
                  m_pNotifyMsgBox=NULL;
+#if defined(SUPPORT_WEBACCESS)
                  m_pDownloadLevelsMsgBox=NULL;
+                 m_pNewLevelsAvailIcon=NULL;
+                 m_pWebConfEditor=NULL;
+                 m_pWebConfMsgBox=NULL;
+#endif
                  m_pNewProfileMsgBox=NULL;
                  m_pDeleteProfileMsgBox=NULL;
                  m_pDeleteReplayMsgBox=NULL;
                  m_pSaveReplayMsgBox=NULL;
-                 m_pNewLevelsAvailIcon=NULL;
                  m_pReplaysWindow=NULL;
                  m_pLevelPacksWindow=NULL;
-                 m_pWebConfEditor=NULL;
                  m_pLevelPackViewer=NULL;  
                  m_pActiveLevelPack=NULL;
                  m_pGameInfoWindow=NULL;
-                 m_pWebConfMsgBox=NULL;
                  m_b50FpsMode = false;
                  m_bUglyMode = false;
                  m_pReplay = NULL;
@@ -156,7 +160,7 @@ namespace vapp {
 #endif
                  }
                  
-      #if defined(SUPPORT_WEBACCESS)                 
+#if defined(SUPPORT_WEBACCESS)                 
         /* WWWAppInterface implementation */ 
         virtual void setTaskProgress(float fPercent);
 
@@ -169,7 +173,7 @@ namespace vapp {
         virtual std::string levelPathForUpdate(const std::string &p_LevelId);
         virtual std::string levelCRC32Sum(const std::string &p_LevelId);
         virtual std::string levelMD5Sum(const std::string &LevelID);
-      #endif
+#endif
       
       /* Virtual methods */
       virtual void drawFrame(void);
@@ -197,7 +201,6 @@ namespace vapp {
       std::vector<LevelPack *> m_LevelPacks;    /* Level packs */
       
       bool m_bEnableContextHelp;                /* true: Show context help */
-      bool m_bShowWebHighscoreInGame;           /* true: Show world highscore inside the game */
       bool m_bBenchmark;                        /* true: Test game performance */
       bool m_bShowFrameRate;                    /* true: frame rate */
       bool m_bListLevels;                       /* true: list installed levels */
@@ -250,6 +253,7 @@ namespace vapp {
       
       /* WWW */
 #if defined(SUPPORT_WEBACCESS)
+      bool m_bShowWebHighscoreInGame;           /* true: Show world highscore inside the game */
       WebRoom *m_pWebHighscores;
       WebLevels *m_pWebLevels;
       ProxySettings m_ProxySettings;
@@ -261,6 +265,7 @@ namespace vapp {
       bool m_bWebLevelsToDownload;              /* true: there are new levels to download */
       bool m_bEnableCheckNewLevelsAtStartup;
       bool m_bEnableCheckHighscoresAtStartup;
+
 #endif
       
       /* Sound effects */
@@ -272,15 +277,18 @@ namespace vapp {
       /* Various popups */
       UIMsgBox *m_pQuitMsgBox;
       UIMsgBox *m_pNotifyMsgBox;
+#if defined(SUPPORT_WEBACCESS)
       UIMsgBox *m_pDownloadLevelsMsgBox;
-      
       UIRect m_DownloadLevelsMsgBoxRect;
       UIRect m_pDownloadHighscoreMsgBoxRect;
-            
+#endif            
+
       /* Main menu background / title */
       Texture *m_pTitleBL,*m_pTitleBR,*m_pTitleTL,*m_pTitleTR;
       Texture *m_pCursor;
+#if defined(SUPPORT_WEBACCESS)
       Texture *m_pNewLevelsAvailIcon;
+#endif
       bool m_bShowCursor;
       
       /* Main menu buttons and stuff */
@@ -331,10 +339,12 @@ namespace vapp {
       UIMsgBox *m_pNewProfileMsgBox;    
       UIMsgBox *m_pDeleteProfileMsgBox;
       
+#if defined(SUPPORT_WEBACCESS)
       /* Internet connection configurator */
       UIFrame *m_pWebConfEditor;      
       UIMsgBox *m_pWebConfMsgBox;    
-      
+#endif
+
       /* Level pack viewer fun */
       UIFrame *m_pLevelPackViewer;  
       LevelPack *m_pActiveLevelPack;
@@ -358,13 +368,17 @@ namespace vapp {
       float m_fCurrentReplayFrameRate;
             
       /* Helpers */
+#if defined(SUPPORT_WEBACCESS) 
       void _UpdateWorldRecord(const std::string &LevelID);
+#endif
       LevelSrc *_FindLevelByID(std::string ID);
       void _HandleMainMenu(void);  
       void _HandlePauseMenu(void);
       void _HandleJustDeadMenu(void);
       void _HandleFinishMenu(void);
+#if defined(SUPPORT_WEBACCESS) 
       void _HandleWebConfEditor(void);
+#endif
       void _HandleProfileEditor(void);
       void _HandleLevelInfoViewer(void);
       void _HandleLevelPackViewer(void);
@@ -404,19 +418,20 @@ namespace vapp {
       std::string _DetermineNextLevel(LevelSrc *pLevelSrc);
       bool _IsThereANextLevel(LevelSrc *pLevelSrc);
       
-      void _ConfigureProxy(void);
       bool _IsReplayScripted(Replay *p_pReplay);
       void _RestartLevel();
-
+  
+      int _LoadLevels(const std::vector<std::string> &LvlFiles);
+    
+#if defined(SUPPORT_WEBACCESS)
+      void _InitWebConf(void);
       void _CheckForExtraLevels(void);
       void _UpdateWebHighscores(bool bSilent);
       void _UpdateWebLevels(bool bSilent);
       void _UpgradeWebHighscores();
       void _DownloadExtraLevels(void);
-      
-      int _LoadLevels(const std::vector<std::string> &LvlFiles);
-    
-      void _InitWebConf(void);
+      void _ConfigureProxy(void);
+#endif
 
 #if defined(SUPPORT_WEBACCESS)
       void setLevelInfoFrameBestPlayer(String pLevelID);

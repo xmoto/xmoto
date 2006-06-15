@@ -124,8 +124,10 @@ namespace vapp {
 
               if(m_bBenchmark) m_Renderer.setBestTime("");
               
+#if defined(SUPPORT_WEBACCESS) 
               /* World-record stuff */
               _UpdateWorldRecord(LevelID);
+#endif
             }
 
             m_fStartTime = getRealTime();
@@ -204,7 +206,9 @@ namespace vapp {
 	  m_Renderer.hideReplayHelp();
 
           /* World-record stuff */
+#if defined(SUPPORT_WEBACCESS) 
           _UpdateWorldRecord(m_PlaySpecificLevel);
+#endif
 
 #if defined(ALLOW_GHOST)
 	  /* Ghost replay */
@@ -321,6 +325,8 @@ namespace vapp {
         m_pProfileEditor->showWindow(true);
         break;
       }
+
+#if defined(SUPPORT_WEBACCESS)
       case GS_EDIT_WEBCONFIG: {
         m_bShowCursor = true;
         if(m_pWebConfMsgBox != NULL) delete m_pWebConfMsgBox;
@@ -329,6 +335,7 @@ namespace vapp {
                                                        (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
         break;
       }
+#endif
       case GS_FINISHED: {
 //        SDL_ShowCursor(SDL_ENABLE);
         m_bShowCursor = true;
@@ -493,8 +500,10 @@ namespace vapp {
     /* Cache? */
     m_bEnableLevelCache = m_Config.getBool("LevelCache");
     
+#if defined(SUPPORT_WEBACCESS)
     /* Configure proxy */
     _ConfigureProxy();
+#endif
   }
   
   /*===========================================================================
@@ -683,8 +692,10 @@ namespace vapp {
       m_pTitleTR = TexMan.loadTexture("Textures/UI/TitleTR.jpg",false,true);
       
       m_pCursor = TexMan.loadTexture("Textures/UI/Cursor.png",false,true,true);
-      
+
+#if defined(SUPPORT_WEBACCESS)      
       m_pNewLevelsAvailIcon = TexMan.loadTexture("Textures/UI/NewLevelsAvail.png",false,true,true);
+#endif
 
       _UpdateLoadingScreen((1.0f/9.0f) * 4,pLoadingScreen,GAMETEXT_LOADINGLEVELS);
     }
@@ -786,13 +797,13 @@ namespace vapp {
       if(m_pPlayer == NULL) {
         setState(GS_EDIT_PROFILES);
       }
-      #if defined(SUPPORT_WEBACCESS)
+#if defined(SUPPORT_WEBACCESS)
       else if(m_Config.getBool("WebConfAtInit")) {
         /* We need web-config */
         _InitWebConf();
         setState(GS_EDIT_WEBCONFIG);
       }
-      #endif
+#endif
       else {
         /* Enter the menu */
         setState(GS_MENU);
@@ -935,7 +946,9 @@ namespace vapp {
     switch(m_State) {
       case GS_MENU:
       case GS_EDIT_PROFILES:
+#if defined(SUPPORT_WEBACCESS)
       case GS_EDIT_WEBCONFIG:
+#endif
       case GS_LEVEL_INFO_VIEWER:
       case GS_PAUSE:
       case GS_JUSTDEAD:
@@ -972,6 +985,8 @@ namespace vapp {
         m_pNotifyMsgBox = NULL;
       }
     }
+
+#if defined(SUPPORT_WEBACCESS)
     /* And the download-levels box? */
     else if(m_pDownloadLevelsMsgBox != NULL) {
       UIMsgBoxButton Button = m_pDownloadLevelsMsgBox->getClicked();
@@ -987,7 +1002,8 @@ namespace vapp {
         m_pDownloadLevelsMsgBox = NULL;
       }
     }
-        
+#endif       
+ 
     /* Perform a rather precise calculation of the frame rate */    
     double fFrameTime = getRealTime();
     static int nFPS_Frames = 0;
@@ -1026,7 +1042,9 @@ namespace vapp {
 
       case GS_LEVEL_INFO_VIEWER:
       case GS_LEVELPACK_VIEWER:
+#if defined(SUPPORT_WEBACCESS)
       case GS_EDIT_WEBCONFIG:
+#endif
       case GS_EDIT_PROFILES: {
 
         /* Draw menu background */
@@ -1040,8 +1058,10 @@ namespace vapp {
           _HandleMainMenu();
         else if(m_State == GS_EDIT_PROFILES)
           _HandleProfileEditor();
+#if defined(SUPPORT_WEBACCESS) 
         else if(m_State == GS_EDIT_WEBCONFIG)
           _HandleWebConfEditor();
+#endif
         else if(m_State == GS_LEVEL_INFO_VIEWER)
           _HandleLevelInfoViewer();
         else if(m_State == GS_LEVELPACK_VIEWER)
@@ -1455,7 +1475,9 @@ namespace vapp {
     /* What state? */
     switch(m_State) {
       case GS_EDIT_PROFILES:
+#if defined(SUPPORT_WEBACCESS)
       case GS_EDIT_WEBCONFIG:
+#endif
       case GS_LEVEL_INFO_VIEWER:
       case GS_LEVELPACK_VIEWER:
       case GS_MENU: {
@@ -1580,7 +1602,9 @@ namespace vapp {
   void GameApp::keyUp(int nKey) {
     /* What state? */
     switch(m_State) {
+#if defined(SUPPORT_WEBACCESS)
       case GS_EDIT_WEBCONFIG:
+#endif
       case GS_EDIT_PROFILES:
       case GS_LEVEL_INFO_VIEWER:
       case GS_FINISHED:
@@ -1606,7 +1630,9 @@ namespace vapp {
       case GS_JUSTDEAD:
       case GS_FINISHED:
       case GS_EDIT_PROFILES:
+#if defined(SUPPORT_WEBACCESS)
       case GS_EDIT_WEBCONFIG:
+#endif
       case GS_LEVEL_INFO_VIEWER:
       case GS_LEVELPACK_VIEWER:
         int nX,nY;        
@@ -1626,7 +1652,9 @@ namespace vapp {
       case GS_JUSTDEAD:
       case GS_FINISHED:
       case GS_EDIT_PROFILES:
+#if defined(SUPPORT_WEBACCESS)
       case GS_EDIT_WEBCONFIG:
+#endif
       case GS_LEVEL_INFO_VIEWER:
       case GS_LEVELPACK_VIEWER:
         int nX,nY;        
@@ -1657,7 +1685,9 @@ namespace vapp {
       case GS_JUSTDEAD:
       case GS_FINISHED:
       case GS_EDIT_PROFILES:
+#if defined(SUPPORT_WEBACCESS)
       case GS_EDIT_WEBCONFIG:
+#endif
       case GS_LEVEL_INFO_VIEWER:
       case GS_LEVELPACK_VIEWER:
         int nX,nY;
@@ -2075,11 +2105,11 @@ namespace vapp {
   bool GameApp::_IsThereANextLevel(LevelSrc *pLevelSrc) {
     return _DetermineNextLevel(pLevelSrc) != "";
   }  
-  
+
+#if defined(SUPPORT_WEBACCESS)  
   void GameApp::_UpdateWorldRecord(const std::string &LevelID) {  
     m_Renderer.setWorldRecordTime("");
     
-    #if defined(SUPPORT_WEBACCESS)
       if(m_bShowWebHighscoreInGame && m_pWebHighscores!=NULL) {
         WebHighscore *pWebHS = m_pWebHighscores->getHighscoreFromLevel(LevelID);
         if(pWebHS != NULL) {
@@ -2093,9 +2123,10 @@ namespace vapp {
 					);
         }                
       }
-    #endif
   }
-  
+#endif  
+
+#if defined(SUPPORT_WEBACCESS)  
   void GameApp::_UpdateWebHighscores(bool bSilent) {
     #if defined(SUPPORT_WEBACCESS)    
     if(!bSilent)
@@ -2107,7 +2138,9 @@ namespace vapp {
       m_pWebHighscores->update();
     #endif
   }
+#endif
 
+#if defined(SUPPORT_WEBACCESS)  
   void GameApp::_UpdateWebLevels(bool bSilent) {
     #if defined(SUPPORT_WEBACCESS)    
     if(!bSilent)
@@ -2126,7 +2159,9 @@ namespace vapp {
       m_bWebLevelsToDownload = nULevels!=0;
     #endif
   }
+#endif
   
+#if defined(SUPPORT_WEBACCESS)  
   void GameApp::_UpgradeWebHighscores() {
     #if defined(SUPPORT_WEBACCESS)
     /* Upgrade high scores */
@@ -2138,7 +2173,9 @@ namespace vapp {
     }
     #endif
   }
+#endif
 
+#if defined(SUPPORT_WEBACCESS)  
   /*===========================================================================
   Extra WWW levels
   ===========================================================================*/
@@ -2260,7 +2297,9 @@ namespace vapp {
       }            
     #endif
   }
+#endif
 
+#if defined(SUPPORT_WEBACCESS)  
   void GameApp::_CheckForExtraLevels(void) {
     #if defined(SUPPORT_WEBACCESS)
       /* Check for extra levels */
@@ -2305,7 +2344,8 @@ namespace vapp {
       }      
     #endif
   }
-  
+#endif  
+
   void GameApp::_RestartLevel() {
     m_MotoGame.endLevel();
     m_InputHandler.resetScriptKeyHooks();           
@@ -2316,7 +2356,7 @@ namespace vapp {
   /*===========================================================================
   WWWAppInterface implementation
   ===========================================================================*/
-  #if defined(SUPPORT_WEBACCESS)
+#if defined(SUPPORT_WEBACCESS)
         
   bool GameApp::shouldLevelBeUpdated(const std::string &LevelID) {
     /* Hmm... ask user whether this level should be updated */
@@ -2468,13 +2508,13 @@ namespace vapp {
     return "";
   }
     
-  #endif
+#endif
 
+#if defined(SUPPORT_WEBACCESS)  
   /*===========================================================================
   Configure proxy
   ===========================================================================*/
   void GameApp::_ConfigureProxy(void) {
-  #if defined(SUPPORT_WEBACCESS)  
     bool bFetchPortAndServer = false;
   
     /* Proxy? */        
@@ -2502,8 +2542,8 @@ namespace vapp {
       m_ProxySettings.setPort(m_Config.getInteger("ProxyPort"));
       m_ProxySettings.setServer(m_Config.getString("ProxyServer"));      
     }
-  #endif
   }
+#endif
 
     bool GameApp::_IsReplayScripted(Replay *p_pReplay) {
       LevelSrc *pLevelSrc;

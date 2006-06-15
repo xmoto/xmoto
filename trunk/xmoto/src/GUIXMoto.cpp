@@ -62,7 +62,9 @@ void UILevelList::hideRoomBestTime() {
 void UILevelList::addLevel(vapp::LevelSrc *pLevel,
 			   vapp::PlayerProfile *p_player,
 			   vapp::PlayerData *p_profile,
+#if defined(SUPPORT_WEBACCESS) 
 			   WebRoom *p_pWebHighscores,
+#endif
 			   std::string p_prefix) {
   std::string Name,File;
       

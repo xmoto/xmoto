@@ -247,7 +247,9 @@ namespace vapp {
       void setBestTime(std::string s) {m_pBestTime->setCaption(s);}
       void showReplayHelp(float p_speed, bool bAllowRewind);
       void hideReplayHelp();
+#if defined(SUPPORT_WEBACCESS)  
       void setWorldRecordTime(const std::string &s) {m_pWorldRecordTime->setCaption(s);}
+#endif
       void setSpeed(const std::string &s) {m_pSpeed->setCaption(s);}
       std::string getBestTime(void) {return m_pBestTime->getCaption();}
       void setQuality(GraphQuality Quality) {m_Quality = Quality;}      
@@ -295,7 +297,9 @@ namespace vapp {
       UIStatic *m_pPlayTime;   
       UIStatic *m_pBestTime;
       UIStatic *m_pReplayHelp;
+#if defined(SUPPORT_WEBACCESS)  
       UIStatic *m_pWorldRecordTime;
+#endif
       UIStatic *m_pSpeed;      
       UIWindow *m_pInGameNewHighscore;
       UIStatic *m_pNewHighscoreBest_str;

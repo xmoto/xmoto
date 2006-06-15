@@ -723,13 +723,14 @@ namespace vapp {
     //pLevelPackList->addColumn(GAMETEXT_PLAYER,128);
     pLevelPackList->setEnterButton( pOpenButton );
 
+#if defined(SUPPORT_WEBACCESS)
     /* Initialize internet connection configurator */
     m_pWebConfEditor = new UIFrame(m_Renderer.getGUI(),getDispWidth()/2-206,getDispHeight()/2-385/2,"",412,385); 
     m_pWebConfEditor->setStyle(UI_FRAMESTYLE_TRANS);           
     m_pWebConfEditor->showWindow(false);
     UIStatic *pWebConfEditorTitle = new UIStatic(m_pWebConfEditor,0,0,GAMETEXT_INETCONF,400,50);
     pWebConfEditorTitle->setFont(m_Renderer.getMediumFont());
-    
+   
     #if defined(WIN32)
       /* I don't expect a windows user to know what an environment variable is */
       #define DIRCONNTEXT GAMETEXT_DIRECTCONN
@@ -795,6 +796,7 @@ namespace vapp {
     pProxyPortEdit->setFont(m_Renderer.getSmallFont());
     pProxyPortEdit->setID("PORTEDIT");
     pProxyPortEdit->setContextHelp(CONTEXTHELP_PROXYPORT);
+#endif
 
     /* Initialize profile editor */
     m_pProfileEditor = new UIFrame(m_Renderer.getGUI(),getDispWidth()/2-350,getDispHeight()/2-250,"",700,500); 
@@ -999,7 +1001,14 @@ namespace vapp {
 
     /* Add levels */
     for(int i=0;i<m_pActiveLevelPack->Levels.size();i++) {
-       pList->addLevel(m_pActiveLevelPack->Levels[i], m_pPlayer, &m_Profiles, m_pWebHighscores);
+       pList->addLevel(m_pActiveLevelPack->Levels[i],
+		       m_pPlayer,
+		       &m_Profiles
+#if defined(SUPPORT_WEBACCESS) 
+		       ,
+		       m_pWebHighscores
+#endif
+		       );
     }
   }
   
@@ -1422,6 +1431,7 @@ namespace vapp {
     }
   }
 
+#if defined(SUPPORT_WEBACCESS)
   /*===========================================================================
   Update internet connection editor
   ===========================================================================*/
@@ -1456,7 +1466,9 @@ namespace vapp {
     /* Make sure OK button is activated */
     pConnOK->makeActive();
   }
-  
+#endif  
+
+#if defined(SUPPORT_WEBACCESS) 
   void GameApp::_HandleWebConfEditor(void) {
     /* Get some pointers */
     UIButton *pDirectConn = (UIButton *)m_pWebConfEditor->getChild("DIRECTCONN");
@@ -1474,7 +1486,6 @@ namespace vapp {
         if(Clicked == UI_MSGBOX_YES) {
           /* Show the actual web config editor */
           m_bEnableWebHighscores = true;
-
           m_pWebConfEditor->showWindow(true);          
         }
         else {
@@ -1517,7 +1528,6 @@ namespace vapp {
         m_pMainMenu->enableWindow(true);
         setState(GS_MENU);
 
-#if defined(SUPPORT_WEBACCESS)        
         _ConfigureProxy();
 
         if(!m_bWebHighscoresUpdatedThisSession) {        
@@ -1536,7 +1546,6 @@ namespace vapp {
         /* Update options */
         _ImportOptions();
         
-#endif
       }      
 
       /* Direct connection selected? If so, no need to enabled proxy editing */
@@ -1550,6 +1559,7 @@ namespace vapp {
       }
     }
   }
+#endif
 
   /*===========================================================================
   Update profile editor
@@ -1636,18 +1646,22 @@ namespace vapp {
       _UpdateReplaysList();
       
       m_pProfileEditor->showWindow(false);
-      
+
+#if defined(SUPPORT_WEBACCESS)       
       /* Should we jump to the web config now? */
       if(m_Config.getBool("WebConfAtInit")) {
         _InitWebConf();
         setState(GS_EDIT_WEBCONFIG);
       }
-      else {
+      else
+#endif
+      {
         m_pMainMenu->enableChildren(true);
         m_pMainMenu->enableWindow(true);
 
         setState(GS_MENU);
       }
+
     }    
     else if(pDeleteButton->isClicked()) {
       if(m_pDeleteProfileMsgBox == NULL)
@@ -1876,7 +1890,9 @@ namespace vapp {
     if(m_pPlayInternalLevelsList->isClicked()) {
       LevelSrc *pLevelSrc = m_pPlayInternalLevelsList->getSelectedLevel();
       if(pLevelSrc != NULL) {
+#if defined(SUPPORT_WEBACCESS)
 	setLevelInfoFrameBestPlayer(pLevelSrc->getID());
+#endif
       }
       m_pPlayInternalLevelsList->setClicked(false);
     }
@@ -1884,7 +1900,9 @@ namespace vapp {
     if(m_pPlayExternalLevelsList->isClicked()) {
       LevelSrc *pLevelSrc = m_pPlayExternalLevelsList->getSelectedLevel();
       if(pLevelSrc != NULL) {
+#if defined(SUPPORT_WEBACCESS)
 	setLevelInfoFrameBestPlayer(pLevelSrc->getID());
+#endif
       }
       m_pPlayExternalLevelsList->setClicked(false);
     }
@@ -1892,14 +1910,18 @@ namespace vapp {
     if(m_pPlayNewLevelsList->isClicked()) {
       LevelSrc *pLevelSrc = m_pPlayNewLevelsList->getSelectedLevel();
       if(pLevelSrc != NULL) {
+#if defined(SUPPORT_WEBACCESS)
 	setLevelInfoFrameBestPlayer(pLevelSrc->getID());
+#endif
       }
       m_pPlayNewLevelsList->setClicked(false);
     }
 
     /* tab of level clicked ? */
     if(m_pLevelTabs->isChanged()) {
+#if defined(SUPPORT_WEBACCESS)
       m_pLevelInfoFrame->showWindow(false);      
+#endif
       m_pLevelTabs->setChanged(false);
     }
 
@@ -1939,6 +1961,7 @@ namespace vapp {
       return;
     }
 
+#if defined(SUPPORT_WEBACCESS)
     UIStatic *pNewLevelText = (UIStatic *)m_pMainMenu->getChild("NEWLEVELAVAILBLE");
     if(m_bWebLevelsToDownload) {
       pNewLevelText->showWindow(true);
@@ -1951,6 +1974,7 @@ namespace vapp {
     } else {
       pNewLevelText->showWindow(false);
     }
+#endif
 
     /* LEVEL PACKS */
     UIButton *pOpenButton = (UIButton *)m_pLevelPacksWindow->getChild("LEVELPACK_OPEN_BUTTON");
@@ -2019,15 +2043,7 @@ namespace vapp {
 #endif
 
 
-    #if !defined(SUPPORT_WEBACCESS)
-      pWebHighscores->enableWindow(false);
-      pInGameWorldRecord->enableWindow(false);
-      pINetConf->enableWindow(false);
-      pUpdHS->enableWindow(false);
-      
-      pWebHighscores->setChecked(false);
-      pInGameWorldRecord->setChecked(false);      
-    #else
+#if defined(SUPPORT_WEBACCESS)
       if(pWebHighscores->getChecked()) {
         //pInGameWorldRecord->enableWindow(true);
         pINetConf->enableWindow(true);
@@ -2042,7 +2058,7 @@ namespace vapp {
 	pCheckNewLevelsAtStartup->enableWindow(false);
 	pCheckHighscoresAtStartup->enableWindow(false);
       }
-    #endif
+#endif
     
     if(pEnableAudioButton) {
       bool t=pEnableAudioButton->getChecked();
@@ -2055,7 +2071,8 @@ namespace vapp {
       pStereoButton->enableWindow(t);
       pEnableEngineSoundButton->enableWindow(t);
     }
-    
+
+#if defined(SUPPORT_WEBACCESS)
     if(pINetConf->isClicked()) {
       pINetConf->setClicked(false);
       
@@ -2069,7 +2086,6 @@ namespace vapp {
     
     if(pUpdHS->isClicked()) {
       pUpdHS->setClicked(false);
-#if defined(SUPPORT_WEBACCESS)
       try {
 	_UpdateWebHighscores(false);
 	_UpgradeWebHighscores();    
@@ -2078,9 +2094,9 @@ namespace vapp {
       } catch(Exception &e) {
 	notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES);
       }
-#endif      
     }    
-    
+#endif    
+
     UIButton *pSaveOptions = (UIButton *)m_pOptionsWindow->getChild("SAVE_BUTTON");
     UIButton *pDefaultOptions = (UIButton *)m_pOptionsWindow->getChild("DEFAULTS_BUTTON");
     UIList *pActionKeyList = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:CONTROLS_TAB:KEY_ACTION_LIST");
@@ -2443,11 +2459,25 @@ namespace vapp {
       bool bInternal = m_Profiles.isInternal(pLevel->getID());
       
       if(bInternal) {
-	pInternalLevels->addLevel(pLevel, m_pPlayer, &m_Profiles, m_pWebHighscores);
+	pInternalLevels->addLevel(pLevel,
+				  m_pPlayer,
+				  &m_Profiles
+#if defined(SUPPORT_WEBACCESS) 
+				  ,
+				  m_pWebHighscores
+#endif
+				  );
       } else {
 	/* is external */
 	if(pLevel->getLevelPack() == "") {
-	  pExternalLevels->addLevel(pLevel, m_pPlayer, &m_Profiles, m_pWebHighscores);
+	  pExternalLevels->addLevel(pLevel,
+				    m_pPlayer,
+				    &m_Profiles
+#if defined(SUPPORT_WEBACCESS) 
+				    ,
+				    m_pWebHighscores
+#endif
+				    );
 	}
       }
     }
@@ -2803,11 +2833,10 @@ namespace vapp {
     m_Config.setBool("DisplayGhostInfo",pDisplayGhostInfo->getChecked());
     m_Config.setBool("ShowGhostTimeDiff",pDisplayGhostTimeDiff->getChecked());
 #endif
-            
-    /* The following require restart */
-    m_Config.setChanged(false);      
 
+#if defined(SUPPORT_WEBACCESS)
     m_Config.setBool("WebHighscores",pWebHighscores->getChecked());
+#endif
 
 #if defined(ALLOW_GHOST)
     UIButton *pEnableGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:ENABLE_GHOST");
@@ -2820,6 +2849,9 @@ namespace vapp {
       m_Config.setInteger("GhostSearchStrategy", *((int*)(pEntry->pvUser)));
     }
 #endif
+            
+    /* The following require restart */
+    m_Config.setChanged(false);      
 
     m_Config.setBool("AudioEnable",pEnableAudioButton->getChecked());
     

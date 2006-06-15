@@ -39,7 +39,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     void addLevel(vapp::LevelSrc *pLevel,
 		  vapp::PlayerProfile *p_player,
 		  vapp::PlayerData *p_profile,
+#if defined(SUPPORT_WEBACCESS) 
 		  WebRoom *p_pWebHighscores,
+#endif
 		  std::string p_prefix = "");
 
     void hideBestTime();
