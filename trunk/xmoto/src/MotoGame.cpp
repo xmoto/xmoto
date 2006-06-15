@@ -568,7 +568,9 @@ namespace vapp {
     /* BIKE_C */
     memset(&m_BikeC,0,sizeof(m_BikeC)); 
 
+#if defined(ALLOW_GHOST)
     m_isGhostActive = false;           
+#endif
   }
 
   /*===========================================================================

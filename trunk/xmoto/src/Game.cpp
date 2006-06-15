@@ -301,9 +301,11 @@ namespace vapp {
 //        SDL_ShowCursor(SDL_ENABLE);
         m_bShowCursor = true;
 
+#if defined(ALLOW_GHOST) 
 	/* hide ghost */
 	m_MotoGame.setGhostActive(false);
-        
+#endif        
+
         /* Finish replay */
         if(m_pReplay != NULL) m_pReplay->finishReplay(false,0.0f);
                 
@@ -340,8 +342,11 @@ namespace vapp {
 //        SDL_ShowCursor(SDL_ENABLE);
         m_bShowCursor = true;
 
+#if defined(ALLOW_GHOST)
 	/* hide ghost */
 	m_MotoGame.setGhostActive(false);
+#endif
+
         /* Finish replay */
         if(m_pReplay != NULL) m_pReplay->finishReplay(true,m_MotoGame.getFinishTime());
         
@@ -462,10 +467,7 @@ namespace vapp {
     if(s == "Low") m_Renderer.setQuality(GQ_LOW);
     else if(s == "Medium") m_Renderer.setQuality(GQ_MEDIUM);
     else if(s == "High") m_Renderer.setQuality(GQ_HIGH);
-    
-    m_bGhostMotionBlur = m_Config.getBool("GhostMotionBlur");
-    m_Renderer.setGhostMotionBlur( m_bGhostMotionBlur );
-    
+      
     /* Show mini map? */
     m_bShowMiniMap = m_Config.getBool("ShowMiniMap");
     
@@ -482,6 +484,8 @@ namespace vapp {
     m_bShowGhostTimeDiff  = m_Config.getBool("ShowGhostTimeDiff");
     m_MotoGame.setShowGhostTimeDiff(m_bShowGhostTimeDiff);
     m_GhostSearchStrategy = (enum GhostSearchStrategy) m_Config.getInteger("GhostSearchStrategy");
+    m_bGhostMotionBlur = m_Config.getBool("GhostMotionBlur");
+    m_Renderer.setGhostMotionBlur( m_bGhostMotionBlur );
 #endif
 
 #if defined(SUPPORT_WEBACCESS)
@@ -614,7 +618,10 @@ namespace vapp {
     m_Renderer.setGameObject( &m_MotoGame );        
     m_Renderer.setDebug( m_bDebugMode );
     m_Renderer.setUglyMode( m_bUglyMode );
+
+#if defined(ALLOW_GHOST)
     m_Renderer.setGhostMotionBlur( m_bGhostMotionBlur );
+#endif
     
     /* Tell collision system whether we want debug-info or not */
     m_MotoGame.getCollisionHandler()->setDebug( m_bDebugMode );

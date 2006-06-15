@@ -126,7 +126,6 @@ namespace vapp {
                  m_b50FpsMode = false;
                  m_bUglyMode = false;
                  m_pReplay = NULL;
-                 m_bGhostMotionBlur = true;
 #if defined(ALLOW_GHOST)
 		 m_pGhostReplay = NULL;
 		 m_lastGhostReplay = "";
@@ -137,6 +136,7 @@ namespace vapp {
 		 m_bShowGhostTimeDiff = true;
 		 m_GhostSearchStrategy = GHOST_STRATEGY_MYBEST;
                  m_bEnableGhostInfo = false;
+                 m_bGhostMotionBlur = true;
 #endif
 		 m_bAutosaveHighscoreReplays = true;
                  m_bRecordReplays = true;
