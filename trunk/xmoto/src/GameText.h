@@ -332,7 +332,7 @@ Central place to keep many in-game text strings
 #define CONTEXTHELP_MOTIONBLURGHOST "Make motion blur effect for the ghost (if supported by your graphics card)"
 #define CONTEXTHELP_DISPLAY_GHOST_INFO "When starting a level with a ghost, display who the ghost is of"
 #define CONTEXTHELP_DISPLAY_GHOST_TIMEDIFF "Display the time difference between the ghost and you"
-#define CONTEXTHELP_AUTOSAVEREPLAYS "Automatic saving of replays if it's a highscore"
+#define CONTEXTHELP_AUTOSAVEREPLAYS "If you make a highscore it will automatically be saved as a replay"
 #define CONTEXTHELP_VIEWTHEHIGHSCORE "View the replay of the room's highscore"
 
 #define CONTEXTHELP_ENABLE_CHECK_NEW_LEVELS_AT_STARTUP "Check new levels at startup"

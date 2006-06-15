@@ -1,4 +1,4 @@
-X-Moto 0.1.16 (alpha) 2006-
+X-Moto 0.1.16 (alpha) 2006-06-16
 --------------------------------
 
  * Ghost replays while playing.
@@ -12,8 +12,8 @@ X-Moto 0.1.16 (alpha) 2006-
  * A sound is played when you make a new highscore.
  * Optional automatic saving of replays if it's a highscore.
  * Mouse buttons can now be used to control the bike.
- * A button to view highscore's replay easily, and downloads it if it 
-   is missing.
+ * A button to view a highscore's replay easily, and downloads it if 
+   it is missing.
  * Updated to support the new Lua 5.1.
  * Faster scanning of replays.
  * Game no longer crashes if a level is using an unknown texture.

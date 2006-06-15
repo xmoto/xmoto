@@ -356,7 +356,7 @@ namespace vapp {
     pGeneralOptionsTab->showWindow(true);
     pGeneralOptionsTab->setID("GENERAL_TAB");
     
-    UIButton *pShowMiniMap = new UIButton(pGeneralOptionsTab,5,43-28,GAMETEXT_SHOWMINIMAP,(pGeneralOptionsTab->getPosition().nWidth-40)/2,28);
+    UIButton *pShowMiniMap = new UIButton(pGeneralOptionsTab,5,43-28-10,GAMETEXT_SHOWMINIMAP,(pGeneralOptionsTab->getPosition().nWidth-40)/2,28);
     pShowMiniMap->setType(UI_BUTTON_TYPE_CHECK);
     pShowMiniMap->setID("SHOWMINIMAP");
     pShowMiniMap->enableWindow(true);
@@ -364,7 +364,7 @@ namespace vapp {
     pShowMiniMap->setGroup(50023);
     pShowMiniMap->setContextHelp(CONTEXTHELP_MINI_MAP);
 
-    UIButton *pContextHelp = new UIButton(pGeneralOptionsTab,5,81-28,GAMETEXT_ENABLECONTEXTHELP,(pGeneralOptionsTab->getPosition().nWidth-40),28);
+    UIButton *pContextHelp = new UIButton(pGeneralOptionsTab,5,81-28-10,GAMETEXT_ENABLECONTEXTHELP,(pGeneralOptionsTab->getPosition().nWidth-40),28);
     pContextHelp->setType(UI_BUTTON_TYPE_CHECK);
     pContextHelp->setID("ENABLECONTEXTHELP");
     pContextHelp->enableWindow(true);
@@ -372,7 +372,7 @@ namespace vapp {
     pContextHelp->setGroup(50023);
     pContextHelp->setContextHelp(CONTEXTHELP_SHOWCONTEXTHELP);
  
-    UIButton *pAutosaveReplays = new UIButton(pGeneralOptionsTab,5,119-28,GAMETEXT_AUTOSAVEREPLAYS,(pGeneralOptionsTab->getPosition().nWidth-40),28);
+    UIButton *pAutosaveReplays = new UIButton(pGeneralOptionsTab,5,119-28-10,GAMETEXT_AUTOSAVEREPLAYS,(pGeneralOptionsTab->getPosition().nWidth-40),28);
     pAutosaveReplays->setType(UI_BUTTON_TYPE_CHECK);
     pAutosaveReplays->setID("AUTOSAVEREPLAYS");
     pAutosaveReplays->enableWindow(true);
@@ -2674,11 +2674,31 @@ namespace vapp {
       m_Config.setValue("KeyZoomOut",m_Config.getDefaultValue("KeyZoomOut"));
       m_Config.setValue("KeyZoomInit",m_Config.getDefaultValue("KeyZoomInit"));
     #endif
+    
+    #if defined(ALLOW_GHOST)
+      m_Config.setValue("GhostMotionBlur",m_Config.getDefaultValue("GhostMotionBlur"));
+      m_Config.setValue("DisplayGhostInfo",m_Config.getDefaultValue("DisplayGhostInfo"));
+      m_Config.setValue("ShowGhostTimeDiff",m_Config.getDefaultValue("ShowGhostTimeDiff"));
+    #endif
+
+    #if defined(SUPPORT_WEBACCESS)
+      m_Config.setValue("ShowInGameWorldRecord",m_Config.getDefaultValue("ShowInGameWorldRecord"));
+      m_Config.setValue("AutosaveHighscoreReplays",m_Config.getDefaultValue("AutosaveHighscoreReplays"));
+      m_Config.setValue("CheckNewLevelsAtStartup",m_Config.getDefaultValue("CheckNewLevelsAtStartup"));
+      m_Config.setValue("CheckHighscoresAtStartup",m_Config.getDefaultValue("CheckHighscoresAtStartup"));
+    #endif
+
+    m_Config.setValue("AutosaveHighscoreReplays",m_Config.getDefaultValue("AutosaveHighscoreReplays"));
 
     /* The following require restart */
     m_Config.setChanged(false);      
 
-    //m_Config.setValue("WebHighscores",m_Config.getDefaultValue("WebHighscores"));
+    m_Config.setValue("WebHighscores",m_Config.getDefaultValue("WebHighscores"));
+    
+    #if defined(ALLOW_GHOST)
+      m_Config.setValue("EnableGhost",m_Config.getDefaultValue("EnableGhost"));
+      m_Config.setValue("GhostSearchStrategy",m_Config.getDefaultValue("GhostSearchStrategy"));
+    #endif
         
     m_Config.setValue("AudioEnable",m_Config.getDefaultValue("AudioEnable"));
     m_Config.setValue("AudioSampleRate",m_Config.getDefaultValue("AudioSampleRate"));

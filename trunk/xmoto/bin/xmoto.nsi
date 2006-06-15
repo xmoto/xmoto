@@ -1,5 +1,5 @@
-Name "X-Moto 0.1.15test1"
-OutFile "xmoto-0.1.15test1-win32-setup.exe"
+Name "X-Moto 0.1.16"
+OutFile "xmoto-0.1.16-win32-setup.exe"
 InstallDir $PROGRAMFILES\XMoto
 InstallDirRegKey HKLM "Software\XMoto" "Install_Dir"
 
