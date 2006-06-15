@@ -34,6 +34,7 @@ Game.cpp around 1210 : adding a catch ; however, when the exception is
 	  } catch(Exception &e) {printf("Exception handled\n");}
 
 # for after
+* replay arch indepedance structure
 * having the information of time diff about the ghost each time you take a strawberry, because we know the information already at this time
 * BUG : move objects in script doesn't work
 * have a <----> for the lists
