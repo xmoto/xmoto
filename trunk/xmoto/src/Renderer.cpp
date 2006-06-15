@@ -89,7 +89,7 @@ namespace vapp {
         if(pTexture != NULL) {GLName = pTexture->nID;}
         else {
           Log("** Warning ** : Texture '%s' not found!",Blocks[i]->pSrcBlock->Texture.c_str());
-          getGameObject()->gameMessage(GAMETEXT_ERRORSINLEVEL,true);          
+          getGameObject()->gameMessage(GAMETEXT_MISSINGTEXTURES,true);          
         }
       }
       else {

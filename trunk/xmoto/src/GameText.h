@@ -157,6 +157,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_LOW                  "Low"
 #define GAMETEXT_MEDIUM               "Medium"
 #define GAMETEXT_MENUGFX              "Menu Graphics:"
+#define GAMETEXT_MISSINGTEXTURES      "Level references unknown textures, it could be unplayable!"
 #define GAMETEXT_MODIFYSELECTED       "Modify Selected..."
 #define GAMETEXT_MONO                 "Mono"
 #define GAMETEXT_MOTIONBLURGHOST      "Motion blur ghost"
@@ -245,7 +246,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_ZOOMINIT 	            "Reinitialize zoom"
 
 /* Context help strings */
-#define CONTEXTHELP_UPDATEHIGHSCORES "Download the latest X-Moto world records and levels from the Internet"
+#define CONTEXTHELP_UPDATEHIGHSCORES "Download the latest X-Moto world records and check for new levels"
 #define CONTEXTHELP_PROXYCONFIG "Configure how you are connected to the Internet"
 #define CONTEXTHELP_PLAY_THIS_LEVEL_AGAIN "Play this level again"
 #define CONTEXTHELP_SAVE_A_REPLAY "Save a replay for later viewing"

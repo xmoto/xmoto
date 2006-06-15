@@ -356,7 +356,7 @@ namespace vapp {
     pGeneralOptionsTab->showWindow(true);
     pGeneralOptionsTab->setID("GENERAL_TAB");
     
-    UIButton *pShowMiniMap = new UIButton(pGeneralOptionsTab,5,43,GAMETEXT_SHOWMINIMAP,(pGeneralOptionsTab->getPosition().nWidth-40)/2,28);
+    UIButton *pShowMiniMap = new UIButton(pGeneralOptionsTab,5,43-28,GAMETEXT_SHOWMINIMAP,(pGeneralOptionsTab->getPosition().nWidth-40)/2,28);
     pShowMiniMap->setType(UI_BUTTON_TYPE_CHECK);
     pShowMiniMap->setID("SHOWMINIMAP");
     pShowMiniMap->enableWindow(true);
@@ -364,7 +364,7 @@ namespace vapp {
     pShowMiniMap->setGroup(50023);
     pShowMiniMap->setContextHelp(CONTEXTHELP_MINI_MAP);
 
-    UIButton *pContextHelp = new UIButton(pGeneralOptionsTab,5,81,GAMETEXT_ENABLECONTEXTHELP,(pGeneralOptionsTab->getPosition().nWidth-40),28);
+    UIButton *pContextHelp = new UIButton(pGeneralOptionsTab,5,81-28,GAMETEXT_ENABLECONTEXTHELP,(pGeneralOptionsTab->getPosition().nWidth-40),28);
     pContextHelp->setType(UI_BUTTON_TYPE_CHECK);
     pContextHelp->setID("ENABLECONTEXTHELP");
     pContextHelp->enableWindow(true);
@@ -372,7 +372,7 @@ namespace vapp {
     pContextHelp->setGroup(50023);
     pContextHelp->setContextHelp(CONTEXTHELP_SHOWCONTEXTHELP);
  
-    UIButton *pAutosaveReplays = new UIButton(pGeneralOptionsTab,5,119,GAMETEXT_AUTOSAVEREPLAYS,(pGeneralOptionsTab->getPosition().nWidth-40),28);
+    UIButton *pAutosaveReplays = new UIButton(pGeneralOptionsTab,5,119-28,GAMETEXT_AUTOSAVEREPLAYS,(pGeneralOptionsTab->getPosition().nWidth-40),28);
     pAutosaveReplays->setType(UI_BUTTON_TYPE_CHECK);
     pAutosaveReplays->setID("AUTOSAVEREPLAYS");
     pAutosaveReplays->enableWindow(true);
