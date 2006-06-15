@@ -2,9 +2,7 @@
 * update highscores/levels doesn't really update levels, an other idea
    for the button caption ?
 * display error : missing texture instead of just "the level has a pb" ?
-* BUG : on mac os x : http://xmoto.free.fr/tmp/Letters.png
 * LevelpackList does not allow to see #tutorial 3
-* BUG : xmoto --help causes a crash (trying to free non-init data i think, related to FBO stuff)
 
 # for after
 * try to compile without WEBSUPPORT and GHOST to see the result
@@ -101,3 +99,6 @@ Fixed:
 * add highscore tab in pack and new levels
 * be able to choose "download highscore" "check for new level" at
    startup
+* BUG : xmoto --help causes a crash (trying to free non-init data i think, related to FBO stuff)
+* BUG : on mac os x : http://xmoto.free.fr/tmp/Letters.png
+   

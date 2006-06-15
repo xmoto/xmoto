@@ -225,7 +225,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_TRYAGAIN             "Try This Level Again"
 #define GAMETEXT_TUTORIAL             "Tutorial"
 #define GAMETEXT_UNKNOWNLEVEL         "(Unknown)"
-#define GAMETEXT_UPDATEHIGHSCORES     "Upd. Highscores/Levels"
+#define GAMETEXT_UPDATEHIGHSCORES     "Check WWW"
 #define GAMETEXT_UPDATINGLEVELS       "Updating level lists..."
 #define GAMETEXT_USEENVVARS           "Use Environment Vars"
 #define GAMETEXT_USEPROFILE           "Use Profile"

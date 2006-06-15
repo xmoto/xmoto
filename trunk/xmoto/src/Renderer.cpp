@@ -1066,10 +1066,7 @@ namespace vapp {
   /*===========================================================================
   Free stuff
   ===========================================================================*/
-  void GameRenderer::_Free(void) {
-    /* Free overlay */
-    m_Overlay.cleanUp();
-    
+  void GameRenderer::_Free(void) {    
     /* Free animations */
     for(int i=0;i<m_Anims.size();i++) { 
       for(int j=0;j<m_Anims[i]->m_Frames.size();j++) 
@@ -1081,6 +1078,11 @@ namespace vapp {
     for(int i=0;i<m_Particles.size();i++)
       delete m_Particles[i];
   }
+  
+  void GameRenderer::shutdown(void) {
+    /* Free overlay */
+    m_Overlay.cleanUp();
+  }  
 
   /*===========================================================================
   Debug info. Note how this is leaked into the void and nobody cares :) 

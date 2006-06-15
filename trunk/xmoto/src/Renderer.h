@@ -171,6 +171,14 @@ namespace vapp {
   ===========================================================================*/
   class SFXOverlay {
     public:
+      SFXOverlay() {
+        m_pApp = NULL;
+        m_bUseShaders = false;
+        m_VertShaderID = m_FragShaderID = m_ProgramID = 0;
+        m_DynamicTextureID = m_FrameBufferID = 0;
+        m_nOverlayWidth = m_nOverlayHeight = 0;
+      }
+    
       /* Methods */
       void init(App *pApp,int nWidth,int nHeight);
       void cleanUp(void);
@@ -215,6 +223,8 @@ namespace vapp {
     
       /* Methods */
       void init(void); /* only called at start-up, and not per-level */
+      void shutdown(void);
+      
       void render(void);
       void renderMiniMap(int x,int y,int nWidth,int nHeight);
       void prepareForNewLevel(void);

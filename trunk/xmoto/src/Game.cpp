@@ -1363,7 +1363,7 @@ namespace vapp {
       
     if(!isNoGraphics()) {
       m_Renderer.unprepareForNewLevel(); /* just to be sure, shutdown can happen quite hard */
-      
+      m_Renderer.shutdown();
       m_InputHandler.uninit();
     }
     

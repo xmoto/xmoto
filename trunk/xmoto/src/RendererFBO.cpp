@@ -99,10 +99,12 @@ namespace vapp {
   }
   
   void SFXOverlay::cleanUp(void) {
-    if(m_pApp->useFBOs()) {
-      /* Delete stuff */
-      glDeleteTextures(1,&m_DynamicTextureID);
-  	  m_pApp->glDeleteFramebuffersEXT(1,&m_FrameBufferID);  
+    if(m_pApp != NULL) {
+      if(m_pApp->useFBOs()) {
+        /* Delete stuff */
+        glDeleteTextures(1,&m_DynamicTextureID);
+  	    m_pApp->glDeleteFramebuffersEXT(1,&m_FrameBufferID);  
+  	  }
   	}
   }
 
