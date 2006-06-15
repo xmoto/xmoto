@@ -51,6 +51,14 @@ vapp::LevelSrc* UILevelList::getSelectedLevel() {
   return pLevelSrc;
 }
 
+void UILevelList::hideBestTime() {
+  setHideColumn(1);
+}
+
+void UILevelList::hideRoomBestTime() {
+  setHideColumn(2);
+}
+
 void UILevelList::addLevel(vapp::LevelSrc *pLevel,
 			   vapp::PlayerProfile *p_player,
 			   vapp::PlayerData *p_profile,

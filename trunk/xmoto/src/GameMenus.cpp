@@ -988,6 +988,15 @@ namespace vapp {
     UILevelList *pList = (UILevelList *)m_pLevelPackViewer->getChild("LEVELPACK_LEVEL_LIST");    
     pList->clear();
        
+    /* Obey hints */
+    pList->unhideAllColumns();
+    if(!m_pActiveLevelPack->bShowTimes) {
+      pList->hideBestTime();
+    }
+    if(!m_pActiveLevelPack->bShowWebTimes) {
+      pList->hideRoomBestTime();
+    }
+
     /* Add levels */
     for(int i=0;i<m_pActiveLevelPack->Levels.size();i++) {
        pList->addLevel(m_pActiveLevelPack->Levels[i], m_pPlayer, &m_Profiles, m_pWebHighscores);
