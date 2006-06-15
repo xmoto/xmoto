@@ -303,7 +303,9 @@ namespace vapp {
       /* LEVEL lists */
       UILevelList *m_pPlayExternalLevelsList;
       UILevelList *m_pPlayInternalLevelsList;
+#if defined(SUPPORT_WEBACCESS)
       UILevelList *m_pPlayNewLevelsList;
+#endif
 
 #if defined(SUPPORT_WEBACCESS)
       UIWindow *m_pLevelInfoFrame;

@@ -1907,15 +1907,15 @@ namespace vapp {
       m_pPlayExternalLevelsList->setClicked(false);
     }
 
+#if defined(SUPPORT_WEBACCESS)
     if(m_pPlayNewLevelsList->isClicked()) {
       LevelSrc *pLevelSrc = m_pPlayNewLevelsList->getSelectedLevel();
       if(pLevelSrc != NULL) {
-#if defined(SUPPORT_WEBACCESS)
 	setLevelInfoFrameBestPlayer(pLevelSrc->getID());
-#endif
       }
       m_pPlayNewLevelsList->setClicked(false);
     }
+#endif
 
     /* tab of level clicked ? */
     if(m_pLevelTabs->isChanged()) {
@@ -2183,8 +2183,10 @@ namespace vapp {
 	pLevelSrc = m_pPlayInternalLevelsList->getSelectedLevel();
       } else if(m_pPlayExternalLevelsList && !m_pPlayExternalLevelsList->isBranchHidden()) {
 	pLevelSrc = m_pPlayExternalLevelsList->getSelectedLevel();
+#if defined(SUPPORT_WEBACCESS)
       } else if(m_pPlayNewLevelsList && !m_pPlayNewLevelsList->isBranchHidden()) {
 	pLevelSrc = m_pPlayNewLevelsList->getSelectedLevel();
+#endif
       }
 
       /* Start playing it */
@@ -2205,8 +2207,10 @@ namespace vapp {
 	pLevelSrc = m_pPlayInternalLevelsList->getSelectedLevel();
       } else if(m_pPlayExternalLevelsList && !m_pPlayExternalLevelsList->isBranchHidden()) {
 	pLevelSrc = m_pPlayExternalLevelsList->getSelectedLevel();
+#if defined(SUPPORT_WEBACCESS)
       } else if(m_pPlayNewLevelsList && !m_pPlayNewLevelsList->isBranchHidden()) {
 	pLevelSrc = m_pPlayNewLevelsList->getSelectedLevel();
+#endif
       }
       
       if(pLevelSrc != NULL) {
