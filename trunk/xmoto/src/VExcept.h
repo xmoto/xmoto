@@ -35,17 +35,17 @@ namespace vapp {
       Exception(const std::string &iMsg)
         : m_Msg(iMsg) {
           #if defined(_MSC_VER) && defined(_DEBUG)
-            //__asm {
-            //  int 0x03
-            //}
+            __asm {
+              int 0x03
+            }
           #endif
       }
       Exception(const char *pc)
         : m_Msg(std::string(pc)) {
           #if defined(_MSC_VER) && defined(_DEBUG)
-            //__asm {
-            //  int 0x03
-            //}
+            __asm {
+              int 0x03
+            }
           #endif        
       }
       std::string &getMsg(void) {return m_Msg;}

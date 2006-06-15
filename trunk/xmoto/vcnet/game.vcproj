@@ -172,6 +172,9 @@
 				RelativePath="..\src\GUITabView.cpp">
 			</File>
 			<File
+				RelativePath="..\src\GUIXMoto.cpp">
+			</File>
+			<File
 				RelativePath="..\src\Input.cpp">
 			</File>
 			<File
@@ -241,6 +244,9 @@
 			</File>
 			<File
 				RelativePath="..\src\GUI.h">
+			</File>
+			<File
+				RelativePath="..\src\GUIXMoto.h">
 			</File>
 			<File
 				RelativePath="..\src\Input.h">

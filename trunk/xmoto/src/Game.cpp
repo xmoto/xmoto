@@ -917,6 +917,8 @@ namespace vapp {
     char cTemp[256];
     bool bValidGameState = true;
         
+    //SDL_Delay(30);
+        
     /* Per default, don't wait between frames */
     setFrameDelay(0);
 
