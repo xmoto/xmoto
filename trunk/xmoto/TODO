@@ -1,6 +1,7 @@
 # for 0.1.16
 
 # for after
+* add "required-xmoto-version" field to levels
 * try to compile without WEBSUPPORT and GHOST to see the result
 * "view the highscore" button is not visible for pack
 * add <xml_room> in configuration so that the player can choose the

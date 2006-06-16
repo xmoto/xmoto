@@ -53,6 +53,8 @@ Build configuration
 /* ENABLE_ZOOMING - Allow user to zoom in and out while playing */
 //#define ENABLE_ZOOMING
 
+/* ALLOW_GHOST - Allow user to see replay ghosts while playing */
+/* (BUG: disabling this will make it impossible to compile) */
 #define ALLOW_GHOST
 
 /* DO_NOT_ALLOW_WEBACCESS - Don't compile with web-access support, 
