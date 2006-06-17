@@ -37,7 +37,7 @@ namespace vapp {
     Vector2f p0,p1,p2,p3,o0,o1,o2,o3;
     Vector2f C;
     Vector2f Sv,Rc,Fc;
-      
+
     /* Draw front wheel */
     /* Ugly mode? */
     if(m_bUglyMode) {
@@ -67,18 +67,18 @@ namespace vapp {
     /* Ugly mode? */
     if(m_bUglyMode) {
       glBegin(GL_LINE_STRIP);
-      glColor3f(1,0,0);
+      glColor3ub(GET_RED(p_theme->UglyWheelColor),GET_GREEN(p_theme->UglyWheelColor),GET_BLUE(p_theme->UglyWheelColor));
       _Vertex(p0+C);    
       _Vertex(p2+C);
       glEnd();
       glBegin(GL_LINE_STRIP);
-      glColor3f(1,0,0);
+      glColor3ub(GET_RED(p_theme->UglyWheelColor),GET_GREEN(p_theme->UglyWheelColor),GET_BLUE(p_theme->UglyWheelColor));
       _Vertex(p1+C);
       _Vertex(p3+C);
       glEnd();
       int nSteps = 16;
       glBegin(GL_LINE_LOOP);              
-      glColor3f(1,0,0);
+      glColor3ub(GET_RED(p_theme->UglyWheelColor),GET_GREEN(p_theme->UglyWheelColor),GET_BLUE(p_theme->UglyWheelColor));
       for(int i=0;i<nSteps;i++) {
         float r = (3.14159f * 2.0f * (float)i)/ (float)nSteps;            
         _Vertex( Vector2f(C.x + pBikeParms->WR*sin(r),C.y + pBikeParms->WR*cos(r)) );
@@ -134,18 +134,18 @@ namespace vapp {
     /* Ugly mode? */
     if(m_bUglyMode) {
       glBegin(GL_LINE_STRIP);
-      glColor3f(1,0,0);
+      glColor3ub(GET_RED(p_theme->UglyWheelColor),GET_GREEN(p_theme->UglyWheelColor),GET_BLUE(p_theme->UglyWheelColor));
       _Vertex(p0+C);    
       _Vertex(p2+C);
       glEnd();
       glBegin(GL_LINE_STRIP);
-      glColor3f(1,0,0);
+      glColor3ub(GET_RED(p_theme->UglyWheelColor),GET_GREEN(p_theme->UglyWheelColor),GET_BLUE(p_theme->UglyWheelColor));
       _Vertex(p1+C);
       _Vertex(p3+C);
       glEnd();
       int nSteps = 16;
       glBegin(GL_LINE_LOOP);              
-      glColor3f(1,0,0);
+      glColor3ub(GET_RED(p_theme->UglyWheelColor),GET_GREEN(p_theme->UglyWheelColor),GET_BLUE(p_theme->UglyWheelColor));
       for(int i=0;i<nSteps;i++) {
         float r = (3.14159f * 2.0f * (float)i)/ (float)nSteps;            
         _Vertex( Vector2f(C.x + pBikeParms->WR*sin(r),C.y + pBikeParms->WR*cos(r)) );
@@ -297,7 +297,7 @@ namespace vapp {
       if(m_bUglyMode) {
         /* Draw it ugly */
         glBegin(GL_LINE_STRIP);
-        glColor3f(0,1,0);
+        glColor3ub(GET_RED(p_theme->UglyRiderColor),GET_GREEN(p_theme->UglyRiderColor),GET_BLUE(p_theme->UglyRiderColor));
         _Vertex(pBike->FootP);
         _Vertex(pBike->KneeP);
         _Vertex(pBike->LowerBodyP);
@@ -307,7 +307,7 @@ namespace vapp {
         glEnd();
         int nSteps = 10;
         glBegin(GL_LINE_LOOP);              
-        glColor3f(0,1,0);
+        glColor3ub(GET_RED(p_theme->UglyRiderColor),GET_GREEN(p_theme->UglyRiderColor),GET_BLUE(p_theme->UglyRiderColor));
         for(int i=0;i<nSteps;i++) {
           float r = (3.14159f * 2.0f * (float)i)/ (float)nSteps;            
           _Vertex( Vector2f(pBike->HeadP.x + pBikeParms->fHeadSize*sin(r),
@@ -451,7 +451,7 @@ namespace vapp {
       if(m_bUglyMode) {
         /* Draw it ugly */
         glBegin(GL_LINE_STRIP);
-        glColor3f(0,1,0);
+        glColor3ub(GET_RED(p_theme->UglyRiderColor),GET_GREEN(p_theme->UglyRiderColor),GET_BLUE(p_theme->UglyRiderColor));
         _Vertex(pBike->Foot2P);
         _Vertex(pBike->Knee2P);
         _Vertex(pBike->LowerBody2P);
@@ -461,7 +461,7 @@ namespace vapp {
         glEnd();
         int nSteps = 10;
         glBegin(GL_LINE_LOOP);              
-        glColor3f(0,1,0);
+        glColor3ub(GET_RED(p_theme->UglyRiderColor),GET_GREEN(p_theme->UglyRiderColor),GET_BLUE(p_theme->UglyRiderColor));
         for(int i=0;i<nSteps;i++) {
           float r = (3.14159f * 2.0f * (float)i)/ (float)nSteps;            
           _Vertex( Vector2f(pBike->Head2P.x + pBikeParms->fHeadSize*sin(r),

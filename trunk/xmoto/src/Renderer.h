@@ -164,6 +164,9 @@ namespace vapp {
     Texture *BikeRear;
     Texture *BikeFront;
     Texture *BikeWheel;
+    
+    /* For ugly mode */
+    Color UglyRiderColor,UglyWheelColor;
   };
 
 	/*===========================================================================

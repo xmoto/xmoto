@@ -218,6 +218,10 @@ namespace vapp {
     if(theme_normal.RiderTorso == NULL || theme_normal.RiderUpperLeg == NULL || 
        theme_normal.RiderLowerArm == NULL || theme_normal.RiderLowerLeg == NULL || theme_normal.RiderUpperArm == NULL)
       throw Exception("important rider texture missing");
+      
+    /* Define colors to use in -ugly mode */
+    theme_normal.UglyWheelColor = MAKE_COLOR(255,0,0,255);
+    theme_normal.UglyRiderColor = MAKE_COLOR(0,255,0,255);
 
 #if defined(ALLOW_GHOST)
     /* Load bike textures */
@@ -240,6 +244,10 @@ namespace vapp {
     if(theme_ghost.RiderTorso == NULL || theme_ghost.RiderUpperLeg == NULL || 
        theme_ghost.RiderLowerArm == NULL || theme_ghost.RiderLowerLeg == NULL || theme_ghost.RiderUpperArm == NULL)
       throw Exception("important rider texture missing");
+
+    /* Define colors to use in -ugly (for the ghost) */
+    theme_ghost.UglyWheelColor = MAKE_COLOR(100,100,128,255);
+    theme_ghost.UglyRiderColor = MAKE_COLOR(100,100,128,255);
 #endif 
     
     /* Obtain ref. to known animations */

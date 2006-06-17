@@ -242,6 +242,15 @@ namespace vapp {
     getParent()->drawCircle(Vector2f(x + nWidth/2 + (float)(pGame->getBikeState()->CenterP.x + m_Scroll.x)*MINIMAPZOOM,
                                      y + nHeight/2 - (float)(pGame->getBikeState()->CenterP.y + m_Scroll.y)*MINIMAPZOOM),
                             3,0,MAKE_COLOR(255,255,255,255),0);
+
+    #if defined(ALLOW_GHOST)
+      /* Render ghost position too? */
+      if(getGameObject()->isGhostActive()) {
+        getParent()->drawCircle(Vector2f(x + nWidth/2 + (float)(pGame->getGhostBikeState()->CenterP.x + m_Scroll.x)*MINIMAPZOOM,
+                                        y + nHeight/2 - (float)(pGame->getGhostBikeState()->CenterP.y + m_Scroll.y)*MINIMAPZOOM),
+                                3,0,MAKE_COLOR(96,96,150,255),0);
+      }
+    #endif
                             
     for(int i=0;i<pGame->getEntities().size();i++) {
       if(pGame->getEntities()[i]->Type == ET_ENDOFLEVEL) {
@@ -352,40 +361,47 @@ namespace vapp {
 
 #if defined(ALLOW_GHOST)
     if(getGameObject()->isGhostActive()) {
-      /* ... followed by the ghost ... Render into overlay? */
-      if(m_bGhostMotionBlur && getParent()->useFBOs()) {
-        m_Overlay.beginRendering();
-        m_Overlay.fade(0.15);
-      }
-      _RenderBike(getGameObject()->getGhostBikeState(), getGameObject()->getBikeParams(), &theme_ghost);
-      
-      if(m_bGhostMotionBlur && getParent()->useFBOs()) {
-        GLuint nOverlayTextureID = m_Overlay.endRendering();
-        m_Overlay.present();
-      }
-      
-      if(m_nGhostInfoTrans > 0) {
-        _RenderInGameText(m_GhostInfoPos,m_GhostInfoString,MAKE_COLOR(255,255,255,m_nGhostInfoTrans));
-        if(getGameObject()->getTime() > m_fNextGhostInfoUpdate) {
-          if(getGameObject()->getTime() - m_fNextGhostInfoUpdate > 0.05f) {
-            if(getGameObject()->getTime() > 3.0f) m_nGhostInfoTrans=0;
-            
-            m_GhostInfoPos = getGameObject()->getGhostBikeState()->CenterP + Vector2f(0,-1.5);
-          }
-          else {
-            if(getGameObject()->getTime() > 3.0f) m_nGhostInfoTrans-=16;
-            
-            m_GhostInfoVel = ((getGameObject()->getGhostBikeState()->CenterP + Vector2f(0,-1.5)) - m_GhostInfoPos) * 0.2f;
-            m_GhostInfoPos += m_GhostInfoVel;
-          }
-          m_fNextGhostInfoUpdate = getGameObject()->getTime() + 0.025f;        
+      /* Render ghost - ugly mode? */
+      if(m_bUglyMode) {
+        _RenderBike(getGameObject()->getGhostBikeState(), getGameObject()->getBikeParams(), &theme_ghost);
+      }    
+      else {
+        /* No not ugly, fancy! Render into overlay? */      
+        if(m_bGhostMotionBlur && getParent()->useFBOs()) {
+          m_Overlay.beginRendering();
+          m_Overlay.fade(0.15);
         }
-      }      
+        _RenderBike(getGameObject()->getGhostBikeState(), getGameObject()->getBikeParams(), &theme_ghost);
+        
+        if(m_bGhostMotionBlur && getParent()->useFBOs()) {
+          GLuint nOverlayTextureID = m_Overlay.endRendering();
+          m_Overlay.present();
+        }
+        
+        if(m_nGhostInfoTrans > 0) {
+          _RenderInGameText(m_GhostInfoPos,m_GhostInfoString,MAKE_COLOR(255,255,255,m_nGhostInfoTrans));
+          if(getGameObject()->getTime() > m_fNextGhostInfoUpdate) {
+            if(getGameObject()->getTime() - m_fNextGhostInfoUpdate > 0.05f) {
+              if(getGameObject()->getTime() > 3.0f) m_nGhostInfoTrans=0;
+              
+              m_GhostInfoPos = getGameObject()->getGhostBikeState()->CenterP + Vector2f(0,-1.5);
+            }
+            else {
+              if(getGameObject()->getTime() > 3.0f) m_nGhostInfoTrans-=16;
+              
+              m_GhostInfoVel = ((getGameObject()->getGhostBikeState()->CenterP + Vector2f(0,-1.5)) - m_GhostInfoPos) * 0.2f;
+              m_GhostInfoPos += m_GhostInfoVel;
+            }
+            m_fNextGhostInfoUpdate = getGameObject()->getTime() + 0.025f;        
+          }
+        }      
+      }
     }
 #endif
 
     /* ... followed by the bike ... */
     _RenderBike(getGameObject()->getBikeState(), getGameObject()->getBikeParams(), &theme_normal);
+    
     if(m_Quality == GQ_HIGH && !m_bUglyMode) {
       /* Render particles (front!) */    
       _RenderParticles();
