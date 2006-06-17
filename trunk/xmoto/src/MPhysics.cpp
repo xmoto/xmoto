@@ -163,6 +163,12 @@ namespace vapp {
       dBodyAddForce(m_RearWheelBodyID,RTotal.x,RTotal.y,0);
       dBodyAddForceAtPos(m_FrameBodyID,-RTotal.x,-RTotal.y,0,m_BikeS.RRearWheelP.x,m_BikeS.RRearWheelP.y,0);
       m_BikeS.PrevRq = Rq;
+      
+      /* Have any of the suspensions reached the "squeek-point"? (rate of compression/decompression at 
+         which they will make squeeky noises) */
+      if(Fqv.length() > PHYS_SUSP_SQUEEK_POINT || Rqv.length() > PHYS_SUSP_SQUEEK_POINT) {
+        m_bSqueeking = true;
+      }
     }    
 
     /* Apply attitude control (SIMPLISTIC!) */

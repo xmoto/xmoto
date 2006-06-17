@@ -542,6 +542,7 @@ namespace vapp {
   class MotoGame {
     public:          
       MotoGame() {m_pLevelSrc=NULL;
+                  m_bSqueeking=false;
                   clearStates();
 		  m_lastCallToEveryHundreath = 0.0;
 #if defined(ALLOW_GHOST)
@@ -591,8 +592,8 @@ namespace vapp {
       LevelSrc *getLevelSrc(void) {return m_pLevelSrc;}
       std::vector<ConvexBlock *> &getBlocks(void) {return m_Blocks;}
       BikeState *getBikeState(void) {return &m_BikeS;}
-
       BikeParams *getBikeParams() { return &m_BikeP;}
+      bool isSqueeking(void) {return m_bSqueeking;}
 
 #if defined(ALLOW_GHOST)
       BikeState *getGhostBikeState(void) {return &m_GhostBikeS;}
@@ -644,6 +645,8 @@ namespace vapp {
       DummyHelper m_Dummies[100];
       
       int m_nStillFrames;
+      
+      bool m_bSqueeking;
 
       Vector2f m_PhysGravity; /* gravity */
 

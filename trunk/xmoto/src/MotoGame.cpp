@@ -1,23 +1,23 @@
 /*=============================================================================
-  XMOTO
-  Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
+XMOTO
+Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
-  This file is part of XMOTO.
+This file is part of XMOTO.
 
-  XMOTO is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
+XMOTO is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
 
-  XMOTO is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
+XMOTO is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-  You should have received a copy of the GNU General Public License
-  along with XMOTO; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-  =============================================================================*/
+You should have received a copy of the GNU General Public License
+along with XMOTO; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+=============================================================================*/
 
 /* 
  *  Game object. Handles all of the gamestate management und so weiter.
@@ -230,6 +230,8 @@ namespace vapp {
     ===========================================================================*/
   void MotoGame::updateLevel(float fTimeStep,SerializedBikeState *pReplayState,Replay *p_replay) {
     bool v_enableScript = pReplayState == NULL; // don't use script on replay (lua action must be read from the replay)
+    
+    m_bSqueeking = false; /* no squeeking right now */
 
     /* Dummies are small markers that can show different things during debugging */
     resetDummies();

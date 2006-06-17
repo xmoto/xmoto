@@ -86,6 +86,7 @@ if you want to be able to play levels besides your own...
 #define PHYS_SLEEP_FRAMES             20     // 150
 #define PHYS_BRAKE_FACTOR             80
 #define PHYS_ENGINE_DAMP              0.4
+#define PHYS_SUSP_SQUEEK_POINT        0.03
 
 /* Wheel rolling */
 #define PHYS_ROLL_RESIST              1

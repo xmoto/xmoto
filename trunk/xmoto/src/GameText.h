@@ -109,7 +109,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_GHOST_STRATEGY_BESTOFROOM "The highscore of the room"
 #define GAMETEXT_GHOST_STRATEGY_MYBEST  "The best of my replays (on this computer)"
 #define GAMETEXT_GHOST_STRATEGY_THEBEST "The best of the replays (on this computer)"
-#define GAMETEXT_GHOSTOF              "Ghost of"
+#define GAMETEXT_GHOSTOF              "Ghost of "
 #define GAMETEXT_GHOSTTAB             "Ghost"
 #define GAMETEXT_HELP                 "Help"
 

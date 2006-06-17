@@ -106,6 +106,7 @@ namespace vapp {
                  m_bTimeDemo=false;
                  m_bShowFrameRate=false;
                  m_bEnableLevelCache=true;
+                 m_bEnableMenuMusic=false;
                  m_pQuitMsgBox=NULL;
                  m_pNotifyMsgBox=NULL;
 #if defined(SUPPORT_WEBACCESS)
@@ -126,6 +127,7 @@ namespace vapp {
                  m_b50FpsMode = false;
                  m_bUglyMode = false;
                  m_pReplay = NULL;
+                 m_pMenuMusic = NULL;
 #if defined(ALLOW_GHOST)
 		 m_pGhostReplay = NULL;
 		 m_lastGhostReplay = "";
@@ -144,7 +146,7 @@ namespace vapp {
                  m_bEnableEngineSound = true;
                  m_bCompressReplays = true;
                  m_bBenchmark = false;
-                 m_bEnableContextHelp = true;
+                 m_bEnableContextHelp = true;                 
 
 #if defined(SUPPORT_WEBACCESS)
                  m_bShowWebHighscoreInGame = false;
@@ -158,6 +160,7 @@ namespace vapp {
 		 m_bEnableCheckNewLevelsAtStartup  = true;
 		 m_bEnableCheckHighscoresAtStartup = true;
 #endif
+                  m_fLastSqueekTime = 0.0f;
                  }
                  
 #if defined(SUPPORT_WEBACCESS)                 
@@ -202,7 +205,8 @@ namespace vapp {
       /* Data */
       ReplayList m_ReplayList;                  /* Replay list */
       std::vector<LevelPack *> m_LevelPacks;    /* Level packs */
-      
+
+      bool m_bEnableMenuMusic;                  /* true: Play menu music */      
       bool m_bEnableContextHelp;                /* true: Show context help */
       bool m_bBenchmark;                        /* true: Test game performance */
       bool m_bShowFrameRate;                    /* true: frame rate */
@@ -232,11 +236,14 @@ namespace vapp {
       int m_nFrame;                             /* Frame # */
       PlayerProfile *m_pPlayer;                 /* The player's profile */
       
+      Mix_Music *m_pMenuMusic;
+      
       double m_fLastFrameTime;                  /* When the last frama was initiated */
       double m_fLastPerfStateTime;
       float m_fLastStateSerializationTime;    
       double m_fLastPhysTime;                  /* When the last physic was computed */
       double m_fStartTime;                      
+      double m_fLastSqueekTime;
       
       bool m_b50FpsMode;
       

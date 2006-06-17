@@ -145,7 +145,7 @@ namespace vapp {
       }  
       case GS_MENU: {
         //SDL_ShowCursor(SDL_ENABLE);
-        m_bShowCursor = true;
+        m_bShowCursor = true;                
         
         /* Any replays to get rid off? */
         if(m_pReplay != NULL) delete m_pReplay;
@@ -984,6 +984,12 @@ namespace vapp {
       case GS_REPLAYING:
         m_bShowCursor = false;
         //SDL_ShowCursor(SDL_DISABLE);      
+
+        /* Music playing? Not anymore that is! */
+        if(m_pMenuMusic != NULL && Mix_PlayingMusic()) {
+          Mix_FadeOutMusic(500);
+        }
+        
         break;
     }
   
@@ -1062,6 +1068,30 @@ namespace vapp {
             m_Config.setBool("NotifyAtInit",false); 
           }
         }        
+        
+        if(m_bEnableMenuMusic) {
+          /* No music playing? If so, playback time! */
+          if(m_pMenuMusic == NULL) {
+            /* No music available, try loading */
+            std::string MenuMusicPath = FS::getDataDir() + std::string("/menu.ogg");
+            const char *pc = MenuMusicPath.c_str();
+            m_pMenuMusic = Mix_LoadMUS("D:\\Musik\\36 Crazyfists\\In the Skin\\36 Crazyfists-In the Skin-04-Eracism.mp3");
+            if(m_pMenuMusic == NULL) {
+              printf("ERRRRRROR\n%s\n",Mix_GetError());
+            }
+            /* (Don't even complain the slightest if music isn't found...) */          
+          }
+          
+          if(m_pMenuMusic != NULL) {
+            if(!Mix_PlayingMusic()) {
+              /* Not playing, start it */
+              if(Mix_PlayMusic(m_pMenuMusic,-1) < 0) {
+                Log("** Warning ** : Mix_PlayMusic() failed, disabling music");
+                m_bEnableMenuMusic = false;                
+              }
+            }
+          }
+        }
 
       case GS_LEVEL_INFO_VIEWER:
       case GS_LEVELPACK_VIEWER:
@@ -1155,6 +1185,14 @@ namespace vapp {
           if(m_bEnableEngineSound) {
             /* Update engine RPM */
             m_EngineSound.setRPM( m_MotoGame.getBikeEngineRPM() ); 
+          }
+          
+          /* Squeeking? */
+          if(m_MotoGame.isSqueeking()) {
+            if(getTime() - m_fLastSqueekTime > 0.1f) {
+              //printf("SQUEEK!\n"); /* insert squeeky sound here */
+              m_fLastSqueekTime = getTime();
+            }
           }
           
 #if defined(ALLOW_GHOST)
@@ -1426,6 +1464,10 @@ namespace vapp {
 
     if(m_pPlayer != NULL) 
       m_Config.setString("DefaultProfile",m_pPlayer->PlayerName);
+
+    if(m_pMenuMusic != NULL) {
+      Mix_FreeMusic(m_pMenuMusic);
+    }
 
     Sound::uninit();
 
