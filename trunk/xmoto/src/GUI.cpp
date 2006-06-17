@@ -380,7 +380,7 @@ namespace vapp {
   /*===========================================================================
   Base painting
   ===========================================================================*/
-  void UIWindow::putText(int x,int y,std::string Text) {
+  void UIWindow::putText(int x,int y,std::string Text,bool bRotated) {
     /* Draw text at location */
     if(m_pCurFont != NULL) {
       Color c0 = MAKE_COLOR(GET_RED(getTextStyle().c0),
@@ -400,9 +400,9 @@ namespace vapp {
                             GET_BLUE(getTextStyle().c3),
                             (int)(GET_ALPHA(getTextStyle().c3)*getOpacity()/100));
       UITextDraw::printRawGrad(getFont(),getAbsPosX()+x+1,getAbsPosY()+y+1,
-                               Text,MAKE_COLOR(0,0,0,255),MAKE_COLOR(0,0,0,255),MAKE_COLOR(0,0,0,255),MAKE_COLOR(0,0,0,255));
+                               Text,MAKE_COLOR(0,0,0,255),MAKE_COLOR(0,0,0,255),MAKE_COLOR(0,0,0,255),MAKE_COLOR(0,0,0,255),bRotated);
       UITextDraw::printRawGrad(getFont(),getAbsPosX()+x,getAbsPosY()+y,
-                               Text,c0,c1,c2,c3);
+                               Text,c0,c1,c2,c3,bRotated);
     }
   }
    
@@ -772,18 +772,20 @@ FRAME_BR (187,198) (8x8)
     int wy = y - pWindow->getPosition().nY;    
     
     /* Inside window? */
-    if(wx >= 0 && wy >= 0 && wx < pWindow->getPosition().nWidth && wy < pWindow->getPosition().nHeight) {
+    if(wx >= 0 && wy >= 0 && wx < pWindow->getPosition().nWidth && wy < pWindow->getPosition().nHeight) {  
       /* Offer activation to this window first */
       if((Event == UI_ROOT_MOUSE_LBUTTON_UP || Event == UI_ROOT_MOUSE_RBUTTON_UP)
           && pWindow->offerActivation()) {
         /* Nice, acquire it. */
         deactivate(this); /* start by making sure nothing is activated */
         pWindow->setActive(true); /* then activate it */
-      }
-    
+      }      
+
       /* Recurse children */
-      for(int i=0;i<pWindow->getChildren().size();i++) {
-        if(_RootMouseEvent(pWindow->getChildren()[i],Event,wx,wy)) return true;
+      for(int i=pWindow->getChildren().size()-1;i>=0;i--) {
+        if(pWindow->getChildren()[i]->offerMouseEvent()) {
+          if(_RootMouseEvent(pWindow->getChildren()[i],Event,wx,wy)) return true;
+        }
       }
       
       /* Then it must be this */
@@ -995,7 +997,7 @@ FRAME_BR (187,198) (8x8)
     glDisable(GL_TEXTURE_2D);
   }
 
-  void UITextDraw::printRawGrad(UIFont *pFont,int x,int y,std::string Text,Color c1,Color c2,Color c3,Color c4) {  
+  void UITextDraw::printRawGrad(UIFont *pFont,int x,int y,std::string Text,Color c1,Color c2,Color c3,Color c4,bool bRotated) {  
     /* Draw text string */
     int cx=x,cy=y;
     
@@ -1007,26 +1009,95 @@ FRAME_BR (187,198) (8x8)
     for(int i=0;i<Text.size();i++) {
       int nChar = Text[i];
       if(nChar == '\n') {
-        cy += (pFont->Chars['|'].nHeight*3)/2;
-        cx = x;
+        if(bRotated) {
+          cy += (pFont->Chars['|'].nHeight*3)/2;
+          cx = x;
+        }
+        else {
+          cy += (pFont->Chars['|'].nHeight*3)/2;
+          cx = x;
+        }
       }
       else if(pFont->Chars[nChar].bAvail) {
-        glBegin(GL_POLYGON);
-        glColor4ub(GET_RED(c1),GET_GREEN(c1),GET_BLUE(c1),GET_ALPHA(c1));
-        glTexCoord2f(pFont->Chars[nChar].fX1,pFont->Chars[nChar].fY1);
-        getApp()->glVertex((cx+pFont->Chars[nChar].nOffsetX),(cy-pFont->Chars[nChar].nOffsetY));
-        glColor4ub(GET_RED(c2),GET_GREEN(c2),GET_BLUE(c2),GET_ALPHA(c2));
-        glTexCoord2f(pFont->Chars[nChar].fX2,pFont->Chars[nChar].fY1);        
-        getApp()->glVertex(cx+pFont->Chars[nChar].nWidth+pFont->Chars[nChar].nOffsetX,cy-pFont->Chars[nChar].nOffsetY);
-        glColor4ub(GET_RED(c3),GET_GREEN(c3),GET_BLUE(c3),GET_ALPHA(c3));
-        glTexCoord2f(pFont->Chars[nChar].fX2,pFont->Chars[nChar].fY2);
-        getApp()->glVertex(cx+pFont->Chars[nChar].nWidth+pFont->Chars[nChar].nOffsetX,cy+pFont->Chars[nChar].nHeight-pFont->Chars[nChar].nOffsetY);
-        glColor4ub(GET_RED(c4),GET_GREEN(c4),GET_BLUE(c4),GET_ALPHA(c4));
-        glTexCoord2f(pFont->Chars[nChar].fX1,pFont->Chars[nChar].fY2);
-        getApp()->glVertex(cx+pFont->Chars[nChar].nOffsetX,cy+pFont->Chars[nChar].nHeight-pFont->Chars[nChar].nOffsetY);
-        glEnd();
-        
-        cx += pFont->Chars[nChar].nIncX;
+        if(bRotated) {
+          //glBegin(GL_POLYGON);
+          //glColor4ub(GET_RED(c1),GET_GREEN(c1),GET_BLUE(c1),GET_ALPHA(c1));
+          //glTexCoord2f(pFont->Chars[nChar].fX1,pFont->Chars[nChar].fY1);
+          //getApp()->glVertex((cx-pFont->Chars[nChar].nOffsetY),(cy-pFont->Chars[nChar].nOffsetX));
+          //glColor4ub(GET_RED(c2),GET_GREEN(c2),GET_BLUE(c2),GET_ALPHA(c2));
+          //glTexCoord2f(pFont->Chars[nChar].fX2,pFont->Chars[nChar].fY1);        
+          //getApp()->glVertex(cx-pFont->Chars[nChar].nOffsetY,cy-pFont->Chars[nChar].nOffsetX-pFont->Chars[nChar].nWidth);
+          //glColor4ub(GET_RED(c3),GET_GREEN(c3),GET_BLUE(c3),GET_ALPHA(c3));
+          //glTexCoord2f(pFont->Chars[nChar].fX2,pFont->Chars[nChar].fY2);
+          //getApp()->glVertex(cx+pFont->Chars[nChar].nHeight-pFont->Chars[nChar].nOffsetY,cy-pFont->Chars[nChar].nOffsetX-pFont->Chars[nChar].nWidth);
+          //glColor4ub(GET_RED(c4),GET_GREEN(c4),GET_BLUE(c4),GET_ALPHA(c4));
+          //glTexCoord2f(pFont->Chars[nChar].fX1,pFont->Chars[nChar].fY2);
+          //getApp()->glVertex(cx+pFont->Chars[nChar].nHeight-pFont->Chars[nChar].nOffsetY,(cy-pFont->Chars[nChar].nOffsetX));
+          //glEnd();
+
+          glBegin(GL_POLYGON);
+          glColor4ub(GET_RED(c1),GET_GREEN(c1),GET_BLUE(c1),GET_ALPHA(c1));
+          glTexCoord2f(pFont->Chars[nChar].fX1,pFont->Chars[nChar].fY1);
+          getApp()->glVertex((cx+pFont->Chars[nChar].nOffsetX),(cy-pFont->Chars[nChar].nOffsetY));
+          glColor4ub(GET_RED(c2),GET_GREEN(c2),GET_BLUE(c2),GET_ALPHA(c2));
+          glTexCoord2f(pFont->Chars[nChar].fX2,pFont->Chars[nChar].fY1);        
+          getApp()->glVertex(cx+pFont->Chars[nChar].nWidth+pFont->Chars[nChar].nOffsetX,cy-pFont->Chars[nChar].nOffsetY);
+          glColor4ub(GET_RED(c3),GET_GREEN(c3),GET_BLUE(c3),GET_ALPHA(c3));
+          glTexCoord2f(pFont->Chars[nChar].fX2,pFont->Chars[nChar].fY2);
+          getApp()->glVertex(cx+pFont->Chars[nChar].nWidth+pFont->Chars[nChar].nOffsetX,cy+pFont->Chars[nChar].nHeight-pFont->Chars[nChar].nOffsetY);
+          glColor4ub(GET_RED(c4),GET_GREEN(c4),GET_BLUE(c4),GET_ALPHA(c4));
+          glTexCoord2f(pFont->Chars[nChar].fX1,pFont->Chars[nChar].fY2);
+          getApp()->glVertex(cx+pFont->Chars[nChar].nOffsetX,cy+pFont->Chars[nChar].nHeight-pFont->Chars[nChar].nOffsetY);
+          glEnd();
+
+          //glBegin(GL_POLYGON);
+          //glColor4ub(GET_RED(c1),GET_GREEN(c1),GET_BLUE(c1),GET_ALPHA(c1));
+          //glTexCoord2f(pFont->Chars[nChar].fX1,pFont->Chars[nChar].fY1);
+          //getApp()->glVertex((cx-pFont->Chars[nChar].nOffsetY),(cy-pFont->Chars[nChar].nOffsetX));
+          //glColor4ub(GET_RED(c2),GET_GREEN(c2),GET_BLUE(c2),GET_ALPHA(c2));
+          //glTexCoord2f(pFont->Chars[nChar].fX2,pFont->Chars[nChar].fY1);        
+          //getApp()->glVertex(cx-pFont->Chars[nChar].nOffsetY,cy-pFont->Chars[nChar].nOffsetX-pFont->Chars[nChar].nWidth);
+          //glColor4ub(GET_RED(c3),GET_GREEN(c3),GET_BLUE(c3),GET_ALPHA(c3));
+          //glTexCoord2f(pFont->Chars[nChar].fX2,pFont->Chars[nChar].fY2);
+          //getApp()->glVertex(cx+pFont->Chars[nChar].nHeight-pFont->Chars[nChar].nOffsetY,cy-pFont->Chars[nChar].nOffsetX-pFont->Chars[nChar].nWidth);
+          //glColor4ub(GET_RED(c4),GET_GREEN(c4),GET_BLUE(c4),GET_ALPHA(c4));
+          //glTexCoord2f(pFont->Chars[nChar].fX1,pFont->Chars[nChar].fY2);
+          //getApp()->glVertex(cx+pFont->Chars[nChar].nHeight-pFont->Chars[nChar].nOffsetY,(cy-pFont->Chars[nChar].nOffsetX));
+          //glEnd();
+          
+          //glDisable(GL_TEXTURE_2D);
+          //glBegin(GL_LINE_LOOP);
+          //glColor4f(1,0,0,1);          
+          //getApp()->glVertex((cx+pFont->Chars[nChar].nOffsetX),(cy-pFont->Chars[nChar].nOffsetY));
+          //glColor4f(0,1,0,1);          
+          //getApp()->glVertex(cx+pFont->Chars[nChar].nOffsetX,cy-pFont->Chars[nChar].nOffsetY-pFont->Chars[nChar].nWidth);
+          //glColor4f(0,0,1,1);          
+          //getApp()->glVertex(cx+pFont->Chars[nChar].nHeight+pFont->Chars[nChar].nOffsetX,cy-pFont->Chars[nChar].nOffsetY-pFont->Chars[nChar].nWidth);
+          //glColor4f(0,0,0,1);          
+          //getApp()->glVertex(cx+pFont->Chars[nChar].nHeight+pFont->Chars[nChar].nOffsetX,(cy-pFont->Chars[nChar].nOffsetY));
+          //glEnd();
+          //glEnable(GL_TEXTURE_2D);
+          //
+          cy += (pFont->Chars[nChar].nHeight*5)/4;
+        }
+        else {
+          glBegin(GL_POLYGON);
+          glColor4ub(GET_RED(c1),GET_GREEN(c1),GET_BLUE(c1),GET_ALPHA(c1));
+          glTexCoord2f(pFont->Chars[nChar].fX1,pFont->Chars[nChar].fY1);
+          getApp()->glVertex((cx+pFont->Chars[nChar].nOffsetX),(cy-pFont->Chars[nChar].nOffsetY));
+          glColor4ub(GET_RED(c2),GET_GREEN(c2),GET_BLUE(c2),GET_ALPHA(c2));
+          glTexCoord2f(pFont->Chars[nChar].fX2,pFont->Chars[nChar].fY1);        
+          getApp()->glVertex(cx+pFont->Chars[nChar].nWidth+pFont->Chars[nChar].nOffsetX,cy-pFont->Chars[nChar].nOffsetY);
+          glColor4ub(GET_RED(c3),GET_GREEN(c3),GET_BLUE(c3),GET_ALPHA(c3));
+          glTexCoord2f(pFont->Chars[nChar].fX2,pFont->Chars[nChar].fY2);
+          getApp()->glVertex(cx+pFont->Chars[nChar].nWidth+pFont->Chars[nChar].nOffsetX,cy+pFont->Chars[nChar].nHeight-pFont->Chars[nChar].nOffsetY);
+          glColor4ub(GET_RED(c4),GET_GREEN(c4),GET_BLUE(c4),GET_ALPHA(c4));
+          glTexCoord2f(pFont->Chars[nChar].fX1,pFont->Chars[nChar].fY2);
+          getApp()->glVertex(cx+pFont->Chars[nChar].nOffsetX,cy+pFont->Chars[nChar].nHeight-pFont->Chars[nChar].nOffsetY);
+          glEnd();
+          
+          cx += pFont->Chars[nChar].nIncX;
+        }
       }
       else
         cx += pFont->Chars['-'].nIncX;

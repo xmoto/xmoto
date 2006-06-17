@@ -324,6 +324,9 @@ namespace vapp {
 
         /* Finish replay */
         if(m_pReplay != NULL) m_pReplay->finishReplay(false,0.0f);
+
+        /* Update stats */        
+        m_GameStats.died(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->getID(),m_MotoGame.getLevelSrc()->getLevelInfo()->Name,m_MotoGame.getTime());
                 
         /* Play the DIE!!! sound */
         //Sound::playSample(m_pDieSFX);
@@ -365,6 +368,9 @@ namespace vapp {
 
         /* Finish replay */
         if(m_pReplay != NULL) m_pReplay->finishReplay(true,m_MotoGame.getFinishTime());
+
+        /* Update stats */        
+        m_GameStats.levelCompleted(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->getID(),m_MotoGame.getLevelSrc()->getLevelInfo()->Name,m_MotoGame.getFinishTime());
         
         /* A more lucky outcome of GS_PLAYING than GS_JUSTDEAD :) */
         m_pFinishMenu->showWindow(true);
@@ -467,7 +473,7 @@ namespace vapp {
       *pbWindowed = m_Config.getBool("DisplayWindowed");
     }
   }  
-
+  
   /*===========================================================================
   Update settings
   ===========================================================================*/
@@ -585,6 +591,11 @@ namespace vapp {
       /* OK, use the first then */
       m_pPlayer = m_Profiles.getProfiles()[0];
     }
+    
+    /* Update stats */
+    m_GameStats.loadXML("stats.xml");
+    if(m_pPlayer != NULL)
+      m_GameStats.xmotoStarted(m_pPlayer->PlayerName);
     
     /* Update replays */
     m_ReplayList.initFromDir();
@@ -997,6 +1008,10 @@ namespace vapp {
     if(m_pQuitMsgBox != NULL) {
       UIMsgBoxButton Button = m_pQuitMsgBox->getClicked();
       if(Button == UI_MSGBOX_YES) {
+        if(m_State == GS_PAUSE) {
+          m_GameStats.abortedLevel(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->getID(),m_MotoGame.getLevelSrc()->getLevelInfo()->Name,m_MotoGame.getTime()); 
+        }
+      
         quit();      
         delete m_pQuitMsgBox;
         m_pQuitMsgBox = NULL;
@@ -1447,6 +1462,8 @@ namespace vapp {
       delete m_LevelPacks[i];
     }
     m_LevelPacks.clear();
+    
+    m_GameStats.saveXML("stats.xml");
       
     if(!isNoGraphics()) {
       m_Renderer.unprepareForNewLevel(); /* just to be sure, shutdown can happen quite hard */
@@ -2428,10 +2445,13 @@ namespace vapp {
 #endif  
 
   void GameApp::_RestartLevel() {
+    /* Update stats */        
+    m_GameStats.levelRestarted(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->getID(),m_MotoGame.getLevelSrc()->getLevelInfo()->Name,m_MotoGame.getTime());
+  
     m_MotoGame.endLevel();
     m_InputHandler.resetScriptKeyHooks();           
     m_Renderer.unprepareForNewLevel();
-    setState(GS_PLAYING);
+    setState(GS_PLAYING);   
   }
 
   /*===========================================================================

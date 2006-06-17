@@ -37,6 +37,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "WWW.h"
 #include "WWWAppInterface.h"
 #include "GUIXMoto.h"
+#include "Stats.h"
 
 namespace vapp {
 
@@ -121,6 +122,7 @@ namespace vapp {
                  m_pSaveReplayMsgBox=NULL;
                  m_pReplaysWindow=NULL;
                  m_pLevelPacksWindow=NULL;
+                 m_pStatsReport=NULL;
                  m_pLevelPackViewer=NULL;  
                  m_pActiveLevelPack=NULL;
                  m_pGameInfoWindow=NULL;
@@ -278,6 +280,9 @@ namespace vapp {
 
 #endif
       
+      Stats m_GameStats;
+      UIWindow *m_pStatsReport;
+      
       /* Sound effects */
       SoundSample *m_pEndOfLevelSFX;
       SoundSample *m_pStrawberryPickupSFX;
@@ -309,6 +314,7 @@ namespace vapp {
       UIWindow *m_pMainMenu;
       UIMsgBox *m_pDeleteReplayMsgBox;
       UIFrame *m_pGameInfoWindow;
+      UIFrame *m_pStatsWindow;
       
       /* LEVEL lists */
       UILevelList *m_pPlayExternalLevelsList;

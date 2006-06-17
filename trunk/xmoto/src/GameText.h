@@ -43,6 +43,7 @@ Central place to keep many in-game text strings
                                       "and best times of other players?"
 #define GAMETEXT_ALLRECORDS           "All (on this computer):"
 #define GAMETEXT_ALREADYUSED          "Already used!"
+#define GAMETEXT_AND                  "and"
 #define GAMETEXT_AUDIO                "Audio"
 #define GAMETEXT_AUTHOR               "Author: "
 #define GAMETEXT_AUTOSAVEREPLAYS      "Automatic saving of replays"
@@ -160,6 +161,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_MISSINGTEXTURES      "Level references unknown textures, it could be unplayable!"
 #define GAMETEXT_MODIFYSELECTED       "Modify Selected..."
 #define GAMETEXT_MONO                 "Mono"
+#define GAMETEXT_MOSTPLAYEDLEVELSFOLLOW "Following are the most played levels:"
 #define GAMETEXT_MOTIONBLURGHOST      "Motion blur ghost"
 #define GAMETEXT_NAME                 "Name"
 #define GAMETEXT_NEWERXMOTOREQUIRED   "X-Moto %s or newer required to load level"
@@ -174,6 +176,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_NONE                 "(None)"
 #define GAMETEXT_NONEWLEVELS          "No new or updated levels available.\n\nTry again another time."
 #define GAMETEXT_NONEXTLEVEL          "No level following this one, sorry."
+#define GAMETEXT_NOSTATS              "No statistics for this profile."
 #define GAMETEXT_NOTFINISHED          "(Not finished)"
 #define GAMETEXT_NOTIFYATINIT         "Important note!\n"                                                \
                                       "\n"                                                               \
@@ -222,11 +225,14 @@ Central place to keep many in-game text strings
 #define GAMETEXT_SCRIPTED             "Scripted"
 #define GAMETEXT_SKIPPED              " (Skipped)"
 #define GAMETEXT_STARTLEVEL           "Play!"
+#define GAMETEXT_STATISTICS           "Statistics"
+#define GAMETEXT_STATS                "STATS"
 #define GAMETEXT_STEREO               "Stereo"
 #define GAMETEXT_TIME                 "Time:"
 #define GAMETEXT_TRYAGAIN             "Try This Level Again"
 #define GAMETEXT_TUTORIAL             "Tutorial"
 #define GAMETEXT_UNKNOWNLEVEL         "(Unknown)"
+#define GAMETEXT_UPDATE               "Update"
 #define GAMETEXT_UPDATEHIGHSCORES     "Check WWW"
 #define GAMETEXT_UPDATINGLEVELS       "Updating level lists..."
 #define GAMETEXT_USEENVVARS           "Use Environment Vars"
@@ -240,11 +246,17 @@ Central place to keep many in-game text strings
 #define GAMETEXT_WANTTOUPDATELEVEL    "Do you want to update level \"%s\"?\n(%s)"
 #define GAMETEXT_WARNING              "Warning:"
 #define GAMETEXT_WORLDRECORDNA        "--:--:--"
-#define GAMETEXT_WWWTAB             "WWW"
+#define GAMETEXT_WWWTAB               "WWW"
+#define GAMETEXT_XHOURS               "%d hours"  
+#define GAMETEXT_XMINUTES             "%d minutes"  
+#define GAMETEXT_XMOTOGLOBALSTATS     "X-Moto started %d times; %d plays (%d different levels),\n" \
+                                      "%d deaths, %d finishes, and %d restarts.\nTime played: %s"
+#define GAMETEXT_XMOTOLEVELSTATS      "%d plays, %d deaths, %d finishes, and %d restarts"
+#define GAMETEXT_XSECONDS             "%d seconds"  
 #define GAMETEXT_YES                  "Yes"
 #define GAMETEXT_ZOOMIN  	            "Zoom in"
 #define GAMETEXT_ZOOMOUT 	            "Zoom out"
-#define GAMETEXT_ZOOMINIT 	            "Reinitialize zoom"
+#define GAMETEXT_ZOOMINIT 	          "Reinitialize zoom"
 
 /* Context help strings */
 #define CONTEXTHELP_UPDATEHIGHSCORES "Download the latest X-Moto world records and check for new levels"
@@ -336,7 +348,10 @@ Central place to keep many in-game text strings
 #define CONTEXTHELP_AUTOSAVEREPLAYS "If you make a highscore it will automatically be saved as a replay"
 #define CONTEXTHELP_VIEWTHEHIGHSCORE "View the replay of the room's highscore"
 
-#define CONTEXTHELP_ENABLE_CHECK_NEW_LEVELS_AT_STARTUP "Check new levels at startup"
-#define CONTEXTHELP_ENABLE_CHECK_HIGHSCORES_AT_STARTUP "Check new highscores at startup"
+#define CONTEXTHELP_ENABLE_CHECK_NEW_LEVELS_AT_STARTUP "Check for new levels at startup"
+#define CONTEXTHELP_ENABLE_CHECK_HIGHSCORES_AT_STARTUP "Check for new highscores at startup"
+
+#define CONTEXTHELP_STATS "Show various statistics about X-Moto"
+#define CONTEXTHELP_UPDATESTATS "Update statistics (also happens each time X-Moto is started)"
 
 #endif

@@ -222,6 +222,9 @@
 				RelativePath="..\src\Sound.cpp">
 			</File>
 			<File
+				RelativePath="..\src\Stats.cpp">
+			</File>
+			<File
 				RelativePath="..\src\UserConfig.cpp">
 			</File>
 			<File
@@ -276,6 +279,9 @@
 			</File>
 			<File
 				RelativePath="..\src\Sound.h">
+			</File>
+			<File
+				RelativePath="..\src\Stats.h">
 			</File>
 			<File
 				RelativePath="..\src\UserConfig.h">

@@ -366,7 +366,7 @@ namespace vapp {
 	  switch(pEvent->Type) {
 	  case GAME_EVENT_PLAYER_DIES:
 	    {
-	      m_bDead = true;
+	      m_bDead = true;	      
 	    }
 	    break;
 	  case GAME_EVENT_PLAYER_ENTERS_ZONE:						

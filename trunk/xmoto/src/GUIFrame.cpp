@@ -30,7 +30,7 @@ namespace vapp {
   /*===========================================================================
   Painting
   ===========================================================================*/
-  void UIFrame::paint(void) {
+  void UIFrame::paint(void) {  
     /* This depends on the style */
     switch(m_Style) {
       case UI_FRAMESTYLE_MENU:
@@ -50,7 +50,112 @@ namespace vapp {
         putElem(getPosition().nWidth-8,8,-1,getPosition().nHeight-16,UI_ELEM_FRAME_MR,false);
         putRect(8,8,getPosition().nWidth-16,getPosition().nHeight-16,MAKE_COLOR(0,0,0,127));
         break;
+      case UI_FRAMESTYLE_LEFTTAG: {
+          int nTagWidth = 20;      
+      
+          putElem(0,0,-1,-1,UI_ELEM_FRAME_TL,false);
+          putElem(getPosition().nWidth-8,0,-1,-1,UI_ELEM_FRAME_TR,false);
+          putElem(getPosition().nWidth-8,getPosition().nHeight-8,-1,-1,UI_ELEM_FRAME_BR,false);
+          putElem(0,getPosition().nHeight-8,-1,-1,UI_ELEM_FRAME_BL,false);
+          putElem(8,0,getPosition().nWidth-16,-1,UI_ELEM_FRAME_TM,false);
+          putElem(8,getPosition().nHeight-8,getPosition().nWidth-16,-1,UI_ELEM_FRAME_BM,false);
+          putElem(0,8,-1,getPosition().nHeight-16,UI_ELEM_FRAME_ML,false);
+          putElem(getPosition().nWidth-8,8,-1,getPosition().nHeight-16,UI_ELEM_FRAME_MR,false);
+          putRect(8,8,getPosition().nWidth-16,getPosition().nHeight-16,MAKE_COLOR(0,0,0,127));
+
+          putRect(2,2,getPosition().nWidth-4,getPosition().nHeight-4,MAKE_COLOR(0,0,70,150));
+          
+          if(m_bHover)
+            setTextSolidColor(MAKE_COLOR(255,255,255,255));
+          else
+            setTextSolidColor(MAKE_COLOR(188,186,67,255));
+
+          putText(4,14,getCaption(),true);
+        }
+        break;
     }
+
+    /* Update position according to minimization/maximation? */
+    if(m_bMinimizable) {
+      if(!isActive() && !m_bMinimized) {
+        /* No longer active, minimize */
+        m_bMinimized = true;
+        m_fMinMaxTime = getApp()->getTime();
+      }    
+
+      int nTargetX,nTargetY;
+      if(m_bMinimized) {
+        //setPosition(m_nMinimizedX,m_nMinimizedY,getPosition().nWidth,getPosition().nHeight);
+        nTargetX = m_nMinimizedX;
+        nTargetY = m_nMinimizedY;
+      }
+      else {
+        //setPosition(m_nMaximizedX,m_nMaximizedY,getPosition().nWidth,getPosition().nHeight);
+        nTargetX = m_nMaximizedX;
+        nTargetY = m_nMaximizedY;
+      }
+      
+      /* Are window at target position? */
+      if(getPosition().nX != nTargetX) {
+        int nDiffX = nTargetX - getPosition().nX;
+        int nVelX = nDiffX / 10;
+        if(getPosition().nX < nTargetX && nVelX==0) nVelX = 1;
+        if(getPosition().nX > nTargetX && nVelX==0) nVelX = -1;
+        setPosition(getPosition().nX+nVelX,getPosition().nY,getPosition().nWidth,getPosition().nHeight);
+      }
+      
+      if(getPosition().nY != nTargetY) {
+        int nDiffY = nTargetY - getPosition().nY;
+        int nVelY = nDiffY / 10;
+        if(getPosition().nY < nTargetY && nVelY==0) nVelY = 1;
+        if(getPosition().nY > nTargetY && nVelY==0) nVelY = -1;
+        setPosition(getPosition().nX,getPosition().nY+nVelY,getPosition().nWidth,getPosition().nHeight);
+      }
+      
+      /* If this takes too long, just set the position */
+      if(getApp()->getTime() - m_fMinMaxTime > 1.0f) {
+        setPosition(nTargetX,nTargetY,getPosition().nWidth,getPosition().nHeight);
+      }
+    }  
+    
+    m_bHover = false;
+  }
+
+  /*===========================================================================
+  Clicking
+  ===========================================================================*/
+  void UIFrame::mouseLDown(int x,int y) {
+    m_bMinimized = !m_bMinimized;    
+    m_fMinMaxTime = getApp()->getTime();
+    
+    if(!m_bMinimized) {
+      makeActive();
+    }
+  }
+  
+  /*===========================================================================
+  Clicking
+  ===========================================================================*/
+  void UIFrame::mouseHover(int x,int y) {
+    m_bHover = true;
+  }
+  
+  /*===========================================================================
+  For minimizable frames
+  ===========================================================================*/
+  void UIFrame::makeMinimizable(int nMinX,int nMinY) {
+    m_bMinimizable = true;
+    m_bMinimized = false;
+    
+    m_nMinimizedX = nMinX;
+    m_nMinimizedY = nMinY;
+    
+    m_nMaximizedX = getPosition().nX;
+    m_nMaximizedY = getPosition().nY;
+  }
+  
+  void UIFrame::setMinimized(bool b) {
+    m_bMinimized = b;
   }
 
 };

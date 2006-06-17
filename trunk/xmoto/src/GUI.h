@@ -162,7 +162,7 @@ namespace vapp {
       static void uninitTextDrawing(void);
       static UIFont *getFont(std::string Name);
       static void printRaw(UIFont *pFont,int x,int y,std::string Text,Color c);
-      static void printRawGrad(UIFont *pFont,int x,int y,std::string Text,Color c1,Color c2,Color c3,Color c4);
+      static void printRawGrad(UIFont *pFont,int x,int y,std::string Text,Color c1,Color c2,Color c3,Color c4,bool bRotated=false);
       static int getRefCount(void);
       static App *getApp(void);
       static void getTextExt(UIFont *pFont,std::string Text,int *pnMinX,int *pnMinY,int *pnMaxX,int *pnMaxY);
@@ -221,10 +221,11 @@ namespace vapp {
       virtual bool keyDown(int nKey,int nChar) {return false;}
       virtual bool keyUp(int nKey) {return false;}
       virtual bool offerActivation(void) {return false;}
+      virtual bool offerMouseEvent(void) {return true;}
       virtual std::string subContextHelp(int x,int y) {return "";}
 
       /* Painting */            
-      void putText(int x,int y,std::string Text);      
+      void putText(int x,int y,std::string Text,bool bRotated=false);      
       void putImage(int x,int y,int nWidth,int nHeight,Texture *pImage);
       void putElem(int x,int y,int nWidth,int nHeight,UIElem Elem,bool bDisabled,bool bActive=false);
       void putRect(int x,int y,int nWidth,int nHeight,Color c);
@@ -344,14 +345,18 @@ namespace vapp {
   ===========================================================================*/
   enum UIFrameStyle {
     UI_FRAMESTYLE_MENU,                         /* "Iron-like" scaled menu */
-    UI_FRAMESTYLE_TRANS                         /* Generic transparent one */
+    UI_FRAMESTYLE_TRANS,                        /* Generic transparent one */
+    UI_FRAMESTYLE_LEFTTAG,                      /* Like above, but with left tag */
   };
   
   class UIFrame : public UIWindow {
     public:
-      UIFrame() {}
+      UIFrame() {m_bMinimizable = false;}
       UIFrame(UIWindow *pParent,int x=0,int y=0,std::string Caption="",int nWidth=0,int nHeight=0) {
         initW(pParent,x,y,Caption,nWidth,nHeight);
+
+        m_bMinimizable = false;
+        m_fMinMaxTime = 0.0f;
         
         m_Style=UI_FRAMESTYLE_TRANS;
         m_pMenuTL=UITexture::load("./Textures/UI/MenuTL.png");
@@ -362,6 +367,11 @@ namespace vapp {
     
       /* Methods */
       virtual void paint(void);
+      virtual void mouseLDown(int x,int y);
+      virtual void mouseHover(int x,int y);
+      
+      void makeMinimizable(int nMinX,int nMinY);
+      void setMinimized(bool b);
       
       /* Data interface */
       UIFrameStyle getStyle(void) {return m_Style;}
@@ -371,7 +381,14 @@ namespace vapp {
       /* Data */
       UIFrameStyle m_Style;
       
-      Texture *m_pMenuTL,*m_pMenuTR,*m_pMenuBL,*m_pMenuBR;
+      bool m_bHover;
+      bool m_bMinimizable;
+      bool m_bMinimized;
+      int m_nMinimizedX,m_nMinimizedY; /* Minimized position */
+      int m_nMaximizedX,m_nMaximizedY; /* Maximized position */
+      float m_fMinMaxTime;
+      
+      Texture *m_pMenuTL,*m_pMenuTR,*m_pMenuBL,*m_pMenuBR;      
   };
 
 	/*===========================================================================
@@ -493,6 +510,7 @@ namespace vapp {
 
       /* Methods */
       virtual void paint(void);
+      virtual bool offerMouseEvent(void) {return false;}
       
       /* Data interface */
       void setVAlign(UIAlign Align) {m_VAlign=Align;}
@@ -679,7 +697,7 @@ namespace vapp {
       virtual std::string subContextHelp(int x,int y);
       
       void setTabContextHelp(int nTab,const std::string &s);
-      
+
       /* Data interface */      
       UIWindow *getSelected(void) {
         if(!getChildren().empty() && m_nSelected >= 0 && m_nSelected < getChildren().size()) 

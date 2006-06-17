@@ -212,12 +212,6 @@ namespace vapp {
           
     m_pHelpWindow = new UIFrame(m_pMainMenu,300,(getDispHeight()*140)/600,"",getDispWidth()-300-20,getDispHeight()-40-(getDispHeight()*120)/600-10);
     m_pHelpWindow->showWindow(false);
-    UIButton *pTutorialButton = new UIButton(m_pHelpWindow,m_pHelpWindow->getPosition().nWidth-120,m_pHelpWindow->getPosition().nHeight-62,
-                                             GAMETEXT_TUTORIAL,115,57);
-    pTutorialButton->setContextHelp(CONTEXTHELP_TUTORIAL);
-    pTutorialButton->setFont(m_Renderer.getSmallFont());
-    pTutorialButton->setType(UI_BUTTON_TYPE_SMALL);
-    pTutorialButton->setID("HELP_TUTORIAL_BUTTON");
     pSomeText = new UIStatic(m_pHelpWindow,0,0,GAMETEXT_HELP,m_pHelpWindow->getPosition().nWidth,36);
     pSomeText->setFont(m_Renderer.getMediumFont());
     pSomeText = new UIStatic(m_pHelpWindow,
@@ -234,6 +228,12 @@ namespace vapp {
     pSomeText->setFont(m_Renderer.getSmallFont());
     pSomeText->setVAlign(UI_ALIGN_TOP);
     pSomeText->setHAlign(UI_ALIGN_LEFT);
+    UIButton *pTutorialButton = new UIButton(m_pHelpWindow,m_pHelpWindow->getPosition().nWidth-120,m_pHelpWindow->getPosition().nHeight-62,
+                                             GAMETEXT_TUTORIAL,115,57);
+    pTutorialButton->setContextHelp(CONTEXTHELP_TUTORIAL);
+    pTutorialButton->setFont(m_Renderer.getSmallFont());
+    pTutorialButton->setType(UI_BUTTON_TYPE_SMALL);
+    pTutorialButton->setID("HELP_TUTORIAL_BUTTON");
     
     m_pPlayWindow = new UIFrame(m_pMainMenu,300,(getDispHeight()*140)/600,"",getDispWidth()-300-20,getDispHeight()-40-(getDispHeight()*120)/600-10);      
     m_pPlayWindow->showWindow(false);
@@ -969,6 +969,19 @@ namespace vapp {
     pLV_Replays_Show->setContextHelp(CONTEXTHELP_RUN_SELECTED_REPLAY);
     pLV_Replays_List->setEnterButton( pLV_Replays_Show );
     
+    /* Build stats window */
+    m_pStatsWindow = new UIFrame(m_pMainMenu,300,(getDispHeight()*140)/600,GAMETEXT_STATS,getDispWidth()-280,getDispHeight()-40-(getDispHeight()*120)/600-10);      
+    m_pStatsWindow->setStyle(UI_FRAMESTYLE_LEFTTAG);
+    m_pStatsWindow->setFont(m_Renderer.getSmallFont());
+    m_pStatsWindow->makeMinimizable(getDispWidth()-17,(getDispHeight()*140)/600);
+    m_pStatsWindow->setMinimized(true);
+    m_pStatsWindow->setContextHelp(CONTEXTHELP_STATS);
+    m_pStatsWindow->setPosition(getDispWidth()-17,(getDispHeight()*140)/600,m_pStatsWindow->getPosition().nWidth,m_pStatsWindow->getPosition().nHeight);
+    pSomeText = new UIStatic(m_pStatsWindow,40,0,GAMETEXT_STATISTICS,m_pStatsWindow->getPosition().nWidth-80,36);
+    pSomeText->setFont(m_Renderer.getMediumFont());
+    
+    m_pStatsReport = m_GameStats.generateReport(m_pPlayer->PlayerName,m_pStatsWindow,30,36,m_pStatsWindow->getPosition().nWidth-45,m_pStatsWindow->getPosition().nHeight-36,m_Renderer.getSmallFont());
+    
     /* Hide menus */
     m_pMainMenu->showWindow(false);
     m_pPauseMenu->showWindow(false);
@@ -1167,17 +1180,23 @@ namespace vapp {
         }
         else if(m_pPauseMenuButtons[i]->getCaption() == GAMETEXT_ABORT) {
           m_pPauseMenu->showWindow(false);
+          m_GameStats.abortedLevel(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->getID(),m_MotoGame.getLevelSrc()->getLevelInfo()->Name,m_MotoGame.getTime());
+
           m_MotoGame.endLevel();
           m_InputHandler.resetScriptKeyHooks();                     
           m_Renderer.unprepareForNewLevel();
+
           setState(m_StateAfterPlaying);
           //setState(GS_MENU);          
         }
         else if(m_pPauseMenuButtons[i]->getCaption() == GAMETEXT_RESTART) {
           m_pPauseMenu->showWindow(false);
+          m_GameStats.levelRestarted(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->getID(),m_MotoGame.getLevelSrc()->getLevelInfo()->Name,m_MotoGame.getTime());
+
           m_MotoGame.endLevel();
           m_InputHandler.resetScriptKeyHooks();                     
           m_Renderer.unprepareForNewLevel();
+
           setState(GS_PLAYING);                               
         }
         else if(m_pPauseMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
@@ -1185,13 +1204,13 @@ namespace vapp {
           if(pLS != NULL) {
             std::string NextLevel = _DetermineNextLevel(pLS);
             if(NextLevel != "") {        
-              m_pPauseMenu->showWindow(false);
+              m_pPauseMenu->showWindow(false);              
+              m_GameStats.abortedLevel(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->getID(),m_MotoGame.getLevelSrc()->getLevelInfo()->Name,m_MotoGame.getTime());
               m_MotoGame.endLevel();
               m_InputHandler.resetScriptKeyHooks();                     
               m_Renderer.unprepareForNewLevel();                    
               
-              m_PlaySpecificLevel = NextLevel;
-              
+              m_PlaySpecificLevel = NextLevel;              
               setState(GS_PLAYING);                               
             }
             else {
@@ -1305,8 +1324,8 @@ namespace vapp {
           m_MotoGame.endLevel();
           m_InputHandler.resetScriptKeyHooks();                     
           m_Renderer.unprepareForNewLevel();
-//          setState(GS_MENU);
-          setState(m_StateAfterPlaying);
+//          setState(GS_MENU);          
+          setState(m_StateAfterPlaying);                   
         }
 
         /* Don't process this clickin' more than once */
@@ -2280,6 +2299,22 @@ namespace vapp {
       if(m_pDeleteReplayMsgBox == NULL)
         m_pDeleteReplayMsgBox = m_Renderer.getGUI()->msgBox(GAMETEXT_DELETEREPLAYMESSAGE,
                                                             (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));      
+    }
+    
+    /* Statistics window */
+    if(m_pStatsReport != NULL) {
+      UIButton *pUpdateReport = (UIButton *)m_pStatsReport->getChild("UPDATE_BUTTON");
+      if(pUpdateReport != NULL) {
+        if(pUpdateReport->isClicked()) {
+          m_pStatsWindow->makeActive();
+          m_pStatsWindow->setMinimized(false);
+          pUpdateReport->setClicked(false);          
+          
+          /* Update */
+          delete m_pStatsReport;
+          m_pStatsReport = m_GameStats.generateReport(m_pPlayer->PlayerName,m_pStatsWindow,30,36,m_pStatsWindow->getPosition().nWidth-45,m_pStatsWindow->getPosition().nHeight-36,m_Renderer.getSmallFont());
+        }        
+      }
     }
   }
 
