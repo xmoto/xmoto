@@ -99,6 +99,14 @@ namespace vapp {
             setState(GS_MENU);
             notifyMsg(cBuf);                        
           }
+          else if(pLevelSrc->isXMotoTooOld()) {
+            Log("** Warning ** : level '%s' specified by replay '%s' requires newer X-Moto",LevelID.c_str(),m_PlaySpecificReplay.c_str());
+            
+            char cBuf[256];
+            sprintf(cBuf,GAMETEXT_NEWERXMOTOREQUIRED,pLevelSrc->getRequiredVersion().c_str());
+            setState(GS_MENU);
+            notifyMsg(cBuf);                        
+          }
           else {    
             /* Init level */    
             m_InputHandler.resetScriptKeyHooks();                                   
@@ -177,6 +185,14 @@ namespace vapp {
           setState(GS_MENU);
           notifyMsg(cBuf);
 //          throw Exception("no level");
+        }
+        else if(pLevelSrc->isXMotoTooOld()) {
+          Log("** Warning ** : level '%s' requires newer X-Moto",m_PlaySpecificLevel.c_str());
+          
+          char cBuf[256];
+          sprintf(cBuf,GAMETEXT_NEWERXMOTOREQUIRED,pLevelSrc->getRequiredVersion().c_str());
+          setState(GS_MENU);
+          notifyMsg(cBuf);                        
         }
         else {    
           /* Start playing right away */     
@@ -907,7 +923,7 @@ namespace vapp {
   Draw menu/title screen background
   ===========================================================================*/
   void GameApp::_DrawMenuBackground(void) {
-    if(m_MenuBackgroundGraphics != MENU_GFX_OFF) {
+    if(m_MenuBackgroundGraphics != MENU_GFX_OFF && !m_bUglyMode) {
       if(m_pTitleTL != NULL)
         drawImage(Vector2f(0,0),Vector2f(getDispWidth()/2,getDispHeight()/2),m_pTitleTL);
       if(m_pTitleTR != NULL)
@@ -1304,8 +1320,10 @@ namespace vapp {
         
         if(m_State == GS_PAUSE) {
           /* Okay, nifty thing. Paused! */
-          if(m_nPauseShade < 150) m_nPauseShade+=8;
-          drawBox(Vector2f(0,0),Vector2f(getDispWidth(),getDispHeight()),0,MAKE_COLOR(0,0,0,m_nPauseShade));                                        
+          if(!m_bUglyMode) {
+            if(m_nPauseShade < 150) m_nPauseShade+=8;
+            drawBox(Vector2f(0,0),Vector2f(getDispWidth(),getDispHeight()),0,MAKE_COLOR(0,0,0,m_nPauseShade));                                        
+          }
 
           /* Update mouse stuff */
           _DispatchMouseHover();
@@ -1315,9 +1333,11 @@ namespace vapp {
         }        
         else if(m_State == GS_JUSTDEAD) {
           /* Hmm, you're dead and you know it. */
-          if(m_nJustDeadShade < 150) m_nJustDeadShade+=8;
-          drawBox(Vector2f(0,0),Vector2f(getDispWidth(),getDispHeight()),0,MAKE_COLOR(0,0,0,m_nJustDeadShade));     
-
+          if(!m_bUglyMode) {
+            if(m_nJustDeadShade < 150) m_nJustDeadShade+=8;
+            drawBox(Vector2f(0,0),Vector2f(getDispWidth(),getDispHeight()),0,MAKE_COLOR(0,0,0,m_nJustDeadShade));     
+          }
+          
           /* Update mouse stuff */
           _DispatchMouseHover();
           
@@ -1328,8 +1348,10 @@ namespace vapp {
         }        
         else if(m_State == GS_FINISHED) {
           /* Hmm, you've won and you know it. */
-          if(m_nFinishShade < 150) m_nFinishShade+=8;
-          drawBox(Vector2f(0,0),Vector2f(getDispWidth(),getDispHeight()),0,MAKE_COLOR(0,0,0,m_nFinishShade));     
+          if(!m_bUglyMode) {
+            if(m_nFinishShade < 150) m_nFinishShade+=8;
+            drawBox(Vector2f(0,0),Vector2f(getDispWidth(),getDispHeight()),0,MAKE_COLOR(0,0,0,m_nFinishShade));     
+          }
 
           /* Update mouse stuff */
           _DispatchMouseHover();
@@ -2249,6 +2271,8 @@ namespace vapp {
         
         Log("Reloading updated levels...");
         int nReloaded = 0;
+        int nTooOldXMoto = 0;
+        
         for(int i=0;i<UpdatedLvlFiles.size();i++) {
           /* Find levels by file names */
           bool bFound = false;
@@ -2276,7 +2300,7 @@ namespace vapp {
                 if(!m_Levels[j].importBinary(cCacheFileName,&Sum)) {
                   /* Not in cache, buggers. Load it from (slow) XML then. */
                   m_Levels[j].loadXML();
-                  
+                                    
                   /* Cache it now */
                   m_Levels[j].exportBinary(cCacheFileName,&Sum);
                 }
@@ -2285,10 +2309,14 @@ namespace vapp {
                 /* Just load it */
                 m_Levels[j].loadXML();       
               }
+                
+              /* Failed to load due to old xmoto? */  
+              if(m_Levels[j].isXMotoTooOld())
+                nTooOldXMoto++;
                             
               /* Add it to list of new levels as "updated" */
               if(pPlayNewLevelsList != NULL) {
-		pPlayNewLevelsList->addLevel(m_Levels+j, m_pPlayer, &m_Profiles, m_pWebHighscores, std::string("Updated: "));
+		            pPlayNewLevelsList->addLevel(m_Levels+j, m_pPlayer, &m_Profiles, m_pWebHighscores, std::string("Updated: "));
               }
               
               nReloaded++;
@@ -2296,8 +2324,12 @@ namespace vapp {
             }
           }
         }
-        Log(" %d reloaded",nReloaded);
-        Log(" %d not reloaded",UpdatedLvlFiles.size() - nReloaded);        
+        
+        Log(" %d reloaded",nReloaded);        
+        if(nTooOldXMoto > 0)
+          Log(" %d not reloaded (%d due to outdated X-Moto)",UpdatedLvlFiles.size() - nReloaded,nTooOldXMoto);        
+        else
+          Log(" %d not reloaded",UpdatedLvlFiles.size() - nReloaded);        
         
         /* Update level lists */
         _UpdateLevelLists();

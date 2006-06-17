@@ -469,7 +469,7 @@ namespace vapp {
       UI_ELEM_FRAME_BR,187,198,8,8,
       (UIElem)-1
     };
-    
+        
     int nElem = 0;
     _ElemTable *p = NULL;
     while(Table[nElem].E != -1) {

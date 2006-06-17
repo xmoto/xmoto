@@ -39,7 +39,7 @@ namespace vapp {
     
     /* HACK, right now we ignore "active" */
     //bActive = false;
-      
+              
     /* Draw button graphics */
     switch(m_State) {
       case UI_BUTTON_STATE_PRESSED:

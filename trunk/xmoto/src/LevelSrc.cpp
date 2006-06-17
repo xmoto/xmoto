@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VFileIO.h"
 
 namespace vapp {
+
   /*===========================================================================
   Unload
   ===========================================================================*/
@@ -79,7 +80,7 @@ namespace vapp {
     FS::writeLineF(pfh,"<?xml version=\"1.0\" encoding=\"utf-8\"?>");
     
     if(m_LevelPack != "")
-      FS::writeLineF(pfh,"<level id=\"%s\" levelpack=\"%s\">",m_ID.c_str(),m_LevelPack.c_str());
+      FS::writeLineF(pfh,"<level id=\"%s\" levelpack=\"%s\" rversion=\"%s\">",m_ID.c_str(),m_LevelPack.c_str(),m_RequiredVersion.c_str());
     else
       FS::writeLineF(pfh,"<level id=\"%s\">",m_ID.c_str());
     
@@ -194,229 +195,245 @@ namespace vapp {
     m_ID = _GetOption(pLevelElem,"id");
     if(m_ID == "") return; /* TODO: error */    
     
-    /* Get level pack */
-    m_LevelPack = _GetOption(pLevelElem,"levelpack");
+    /* Get required xmoto version */
+    m_RequiredVersion = _GetOption(pLevelElem,"rversion");
+    m_bXMotoTooOld = false;
+    if(m_ID != "") {
+      /* Check version */
+      if(compareVersionNumbers(App::getVersionString(),m_RequiredVersion) < 0) {
+        /* Our version is too low to load this */
+        m_bXMotoTooOld = true;
+        Log("** Warning ** : Level '%s' requires a newer version (%s) to load!",m_ID.c_str(),m_RequiredVersion.c_str());
+      }
+    }
     
     /* Set default info */
-    m_Info.Name = m_FileName;
+    m_Info.Name = m_ID;
     m_Info.Date = "";
     m_Info.Description = "";
     m_Info.Author = "";
     m_Info.Sky = "sky1";
-    
-    /* Get level <info> element */
-    TiXmlElement *pInfoElem = _FindElement(pLevelElem,std::string("info"));
-    if(pInfoElem != NULL) {
-      /* Name */
-      std::string Tmp = _GetElementText(pInfoElem,"name");
-      if(Tmp != "") m_Info.Name = Tmp;
 
-      /* Author */
-      Tmp = _GetElementText(pInfoElem,"author");
-      if(Tmp != "") m_Info.Author = Tmp;
-
-      /* Description */
-      Tmp = _GetElementText(pInfoElem,"description");
-      if(Tmp != "") m_Info.Description = Tmp;
-
-      /* Date */
-      Tmp = _GetElementText(pInfoElem,"date");
-      if(Tmp != "") m_Info.Date = Tmp;
-
-      /* Sky */
-      Tmp = _GetElementText(pInfoElem,"sky");
-      if(Tmp != "") m_Info.Sky = Tmp;
-    }
-    
-    /* Get script */
     m_ScriptFile = "";
     m_ScriptSource = "";
-    
-    TiXmlElement *pScriptElem = _FindElement(pLevelElem,std::string("script"));
-    if(pScriptElem != NULL) {
-      /* External script file specified? */
-      m_ScriptFile = _GetOption(pScriptElem,"source");      
-      
-      /* Encapsulated script? */
-      for(TiXmlNode *pScript=pScriptElem->FirstChild();pScript!=NULL;
-          pScript=pScript->NextSibling()) {
-        if(pScript->Type() == TiXmlNode::TEXT) {
-          m_ScriptSource.append(pScript->Value());
-        }
-      }
-    }    
-    
-    /* Get level limits */
+
     m_fBottomLimit = m_fLeftLimit = -50.0f;
     m_fTopLimit = m_fRightLimit = 50.0f;
-    TiXmlElement *pLimitsElem = _FindElement(pLevelElem,std::string("limits"));
-    if(pLimitsElem != NULL) {
-      m_fBottomLimit = atof( _GetOption(pLimitsElem,"bottom","-50").c_str() );
-      m_fLeftLimit = atof( _GetOption(pLimitsElem,"left","-50").c_str() );
-      m_fTopLimit = atof( _GetOption(pLimitsElem,"top","50").c_str() );
-      m_fRightLimit = atof( _GetOption(pLimitsElem,"right","50").c_str() );
-    }
-    
-    /* Get player start */
+
     m_fPlayerStartX = m_fPlayerStartY = 0.0f;
-    TiXmlElement *pPlayerStartElem = _FindElement(pLevelElem,std::string("playerstart"));
-    if(pPlayerStartElem != NULL) {
-      m_fPlayerStartX = atof( _GetOption(pPlayerStartElem,"x","0").c_str() );
-      m_fPlayerStartY = atof( _GetOption(pPlayerStartElem,"y","0").c_str() );
-    }
     
-    /* Get entities */
-    for(TiXmlElement *pElem = pLevelElem->FirstChildElement("entity"); pElem!=NULL; 
-        pElem=pElem->NextSiblingElement("entity")) {
-      /* Allocate it */
-      LevelEntity *pEntity = new LevelEntity;
-      
-      pEntity->ID = _GetOption(pElem,"id");
-      pEntity->TypeID = _GetOption(pElem,"typeid");
-      
-      TiXmlElement *pPosElem = pElem->FirstChildElement("position");
-      if(pPosElem != NULL) {
-				pEntity->fPosX = atof(_GetOption(pPosElem,"x","0").c_str());
-				pEntity->fPosY = atof(_GetOption(pPosElem,"y","0").c_str());
+    if(!m_bXMotoTooOld) {    
+      /* Get level pack */
+      m_LevelPack = _GetOption(pLevelElem,"levelpack");
+                  
+      /* Get level <info> element */
+      TiXmlElement *pInfoElem = _FindElement(pLevelElem,std::string("info"));
+      if(pInfoElem != NULL) {
+        /* Name */
+        std::string Tmp = _GetElementText(pInfoElem,"name");
+        if(Tmp != "") m_Info.Name = Tmp;
+
+        /* Author */
+        Tmp = _GetElementText(pInfoElem,"author");
+        if(Tmp != "") m_Info.Author = Tmp;
+
+        /* Description */
+        Tmp = _GetElementText(pInfoElem,"description");
+        if(Tmp != "") m_Info.Description = Tmp;
+
+        /* Date */
+        Tmp = _GetElementText(pInfoElem,"date");
+        if(Tmp != "") m_Info.Date = Tmp;
+
+        /* Sky */
+        Tmp = _GetElementText(pInfoElem,"sky");
+        if(Tmp != "") m_Info.Sky = Tmp;
       }
       
-      TiXmlElement *pSizeElem = pElem->FirstChildElement("size");
-      if(pSizeElem != NULL) {
-        pEntity->fSize = atof(_GetOption(pSizeElem,"r","0.2").c_str());
-      }
-      
-      /* Get parameters */
-      for(TiXmlElement *pParamElem = pElem->FirstChildElement("param"); pParamElem!=NULL;
-          pParamElem=pParamElem->NextSiblingElement("param")) {
-				LevelEntityParam *pParam = new LevelEntityParam;
-				pParam->Name = _GetOption(pParamElem,"name");
-				pParam->Value = _GetOption(pParamElem,"value");
-				
-				pEntity->Params.push_back( pParam );
-      }
-      
-      /* Add it to the list */
-      m_Entities.push_back( pEntity );
-		}    
-    
-    /* Get zones */
-    for(TiXmlElement *pElem = pLevelElem->FirstChildElement(); pElem!=NULL; pElem=pElem->NextSiblingElement()) {
-      if(!strcmp(pElem->Value(),"zone")) {
-        /* Got one */
-        LevelZone *pZone = new LevelZone;
+      /* Get script */
+      TiXmlElement *pScriptElem = _FindElement(pLevelElem,std::string("script"));
+      if(pScriptElem != NULL) {
+        /* External script file specified? */
+        m_ScriptFile = _GetOption(pScriptElem,"source");      
         
-        pZone->ID = _GetOption(pElem,"id");
-        
-        if(pZone->ID == "") {
-          /* TODO: error */
-          delete pZone;
-          continue;
-        }        
-        
-        /* Get primitives */
-        for(TiXmlElement *pj = pElem->FirstChildElement(); pj!=NULL; pj=pj->NextSiblingElement()) {
-          if(!strcmp(pj->Value(),"box")) {
-            /* Alloc */
-            LevelZonePrim *pPrim = new LevelZonePrim;                        
-            pPrim->Type = LZPT_BOX;
-            pPrim->fBottom = atof( _GetOption(pj,"bottom","0").c_str() );
-            pPrim->fTop = atof( _GetOption(pj,"top","0").c_str() );
-            pPrim->fLeft = atof( _GetOption(pj,"left","0").c_str() );
-            pPrim->fRight = atof( _GetOption(pj,"right","0").c_str() );
-                                    
-            /* Add it */
-            pZone->Prims.push_back( pPrim );
+        /* Encapsulated script? */
+        for(TiXmlNode *pScript=pScriptElem->FirstChild();pScript!=NULL;
+            pScript=pScript->NextSibling()) {
+          if(pScript->Type() == TiXmlNode::TEXT) {
+            m_ScriptSource.append(pScript->Value());
           }
-        }   
+        }
+      }    
+      
+      /* Get level limits */
+      TiXmlElement *pLimitsElem = _FindElement(pLevelElem,std::string("limits"));
+      if(pLimitsElem != NULL) {
+        m_fBottomLimit = atof( _GetOption(pLimitsElem,"bottom","-50").c_str() );
+        m_fLeftLimit = atof( _GetOption(pLimitsElem,"left","-50").c_str() );
+        m_fTopLimit = atof( _GetOption(pLimitsElem,"top","50").c_str() );
+        m_fRightLimit = atof( _GetOption(pLimitsElem,"right","50").c_str() );
+      }
+      
+      /* Get player start */
+      TiXmlElement *pPlayerStartElem = _FindElement(pLevelElem,std::string("playerstart"));
+      if(pPlayerStartElem != NULL) {
+        m_fPlayerStartX = atof( _GetOption(pPlayerStartElem,"x","0").c_str() );
+        m_fPlayerStartY = atof( _GetOption(pPlayerStartElem,"y","0").c_str() );
+      }
+      
+      /* Get entities */
+      for(TiXmlElement *pElem = pLevelElem->FirstChildElement("entity"); pElem!=NULL; 
+          pElem=pElem->NextSiblingElement("entity")) {
+        /* Allocate it */
+        LevelEntity *pEntity = new LevelEntity;
         
-        pZone->m_bInZone = false;     
+        pEntity->ID = _GetOption(pElem,"id");
+        pEntity->TypeID = _GetOption(pElem,"typeid");
+        
+        TiXmlElement *pPosElem = pElem->FirstChildElement("position");
+        if(pPosElem != NULL) {
+				  pEntity->fPosX = atof(_GetOption(pPosElem,"x","0").c_str());
+				  pEntity->fPosY = atof(_GetOption(pPosElem,"y","0").c_str());
+        }
+        
+        TiXmlElement *pSizeElem = pElem->FirstChildElement("size");
+        if(pSizeElem != NULL) {
+          pEntity->fSize = atof(_GetOption(pSizeElem,"r","0.2").c_str());
+        }
+        
+        /* Get parameters */
+        for(TiXmlElement *pParamElem = pElem->FirstChildElement("param"); pParamElem!=NULL;
+            pParamElem=pParamElem->NextSiblingElement("param")) {
+				  LevelEntityParam *pParam = new LevelEntityParam;
+				  pParam->Name = _GetOption(pParamElem,"name");
+				  pParam->Value = _GetOption(pParamElem,"value");
+  				
+				  pEntity->Params.push_back( pParam );
+        }
         
         /* Add it to the list */
-        m_Zones.push_back( pZone );
-      }
-    }
-    
-    /* Get blocks */
-    for(TiXmlElement *pElem = pLevelElem->FirstChildElement(); pElem!=NULL; pElem=pElem->NextSiblingElement()) {
-      if(!strcmp(pElem->Value(),"block")) {
-        /* Got one */
-        LevelBlock *pBlock = new LevelBlock;
-        
-        pBlock->fPosX = 0.0f;
-        pBlock->fPosY = 0.0f;
-        pBlock->fTextureScale = 1.0f;
-        pBlock->ID = _GetOption(pElem,"id");
-        
-        if(pBlock->ID == "") {
-          /* TODO: error */
-          delete pBlock;
-          continue;
-        }
-        
-        pBlock->Texture = "default";        
-        
-        TiXmlElement *pUseTextureElem = _FindElement(pElem,std::string("usetexture"));
-        TiXmlElement *pPositionElem = _FindElement(pElem,std::string("position"));                
-        
-        if(pUseTextureElem != NULL) {
-          pBlock->Texture = _GetOption(pUseTextureElem,"id","default");
-          pBlock->fTextureScale = atof( _GetOption(pUseTextureElem,"scale","1").c_str() );
-        }
-        if(pPositionElem != NULL) {
-          pBlock->fPosX = atof( _GetOption(pPositionElem,"x","0").c_str() );
-          pBlock->fPosY = atof( _GetOption(pPositionElem,"y","0").c_str() );      
+        m_Entities.push_back( pEntity );
+		  }    
+      
+      /* Get zones */
+      for(TiXmlElement *pElem = pLevelElem->FirstChildElement(); pElem!=NULL; pElem=pElem->NextSiblingElement()) {
+        if(!strcmp(pElem->Value(),"zone")) {
+          /* Got one */
+          LevelZone *pZone = new LevelZone;
           
-          if(_GetOption(pPositionElem,"background","false") == "true")
-            pBlock->bBackground = true;
-
-          if(_GetOption(pPositionElem,"water","false") == "true")
-            pBlock->bWater = true;
+          pZone->ID = _GetOption(pElem,"id");
+          
+          if(pZone->ID == "") {
+            /* TODO: error */
+            delete pZone;
+            continue;
+          }        
+          
+          /* Get primitives */
+          for(TiXmlElement *pj = pElem->FirstChildElement(); pj!=NULL; pj=pj->NextSiblingElement()) {
+            if(!strcmp(pj->Value(),"box")) {
+              /* Alloc */
+              LevelZonePrim *pPrim = new LevelZonePrim;                        
+              pPrim->Type = LZPT_BOX;
+              pPrim->fBottom = atof( _GetOption(pj,"bottom","0").c_str() );
+              pPrim->fTop = atof( _GetOption(pj,"top","0").c_str() );
+              pPrim->fLeft = atof( _GetOption(pj,"left","0").c_str() );
+              pPrim->fRight = atof( _GetOption(pj,"right","0").c_str() );
+                                      
+              /* Add it */
+              pZone->Prims.push_back( pPrim );
+            }
+          }   
+          
+          pZone->m_bInZone = false;     
+          
+          /* Add it to the list */
+          m_Zones.push_back( pZone );
         }
-        
-        /* Get vertices */
-        for(TiXmlElement *pj = pElem->FirstChildElement(); pj!=NULL; pj=pj->NextSiblingElement()) {
-          if(!strcmp(pj->Value(),"vertex")) {
-            /* Alloc */
-            LevelBlockVertex *pVertex = new LevelBlockVertex;
-                        
-            pVertex->bSelected = false;
-                        
-            pVertex->fX = atof( _GetOption(pj,"x","0").c_str() );
-            pVertex->fY = atof( _GetOption(pj,"y","0").c_str() );
-            pVertex->EdgeEffect = _GetOption(pj,"edge","");
-            
-            std::string k;
-            k = _GetOption(pj,"tx","");
-            if(k != "") pVertex->fTX = atof( k.c_str() );
-            else pVertex->fTX = pVertex->fX * pBlock->fTextureScale;
-            k = _GetOption(pj,"ty","");
-            if(k != "") pVertex->fTY = atof( k.c_str() );
-            else pVertex->fTY = pVertex->fY * pBlock->fTextureScale;
-            
-            pVertex->r = atoi( _GetOption(pj,"r","255").c_str() );
-            pVertex->g = atoi( _GetOption(pj,"g","255").c_str() );
-            pVertex->b = atoi( _GetOption(pj,"b","255").c_str() );
-            pVertex->a = atoi( _GetOption(pj,"a","255").c_str() );
-            
-            /* Add it */
-            pBlock->Vertices.push_back( pVertex );
-          }
-        }
-        
-        /* Add it */
-        m_Blocks.push_back( pBlock );
       }
-    }  
-    
-    /* Find out where the player starts */
-    if(getEntitiesByTypeID("PlayerStart").size()>0) {
-			LevelEntity *pPlayerStart = getEntitiesByTypeID("PlayerStart")[0];
-			m_fPlayerStartX = pPlayerStart->fPosX;
-			m_fPlayerStartY = pPlayerStart->fPosY;
-		}
-		else {
-			Log("** Warning ** : %s : No player start location found",m_FileName.c_str());
-			m_fPlayerStartX = m_fPlayerStartY = 0.0f;
+      
+      /* Get blocks */
+      for(TiXmlElement *pElem = pLevelElem->FirstChildElement(); pElem!=NULL; pElem=pElem->NextSiblingElement()) {
+        if(!strcmp(pElem->Value(),"block")) {
+          /* Got one */
+          LevelBlock *pBlock = new LevelBlock;
+          
+          pBlock->fPosX = 0.0f;
+          pBlock->fPosY = 0.0f;
+          pBlock->fTextureScale = 1.0f;
+          pBlock->ID = _GetOption(pElem,"id");
+          
+          if(pBlock->ID == "") {
+            /* TODO: error */
+            delete pBlock;
+            continue;
+          }
+          
+          pBlock->Texture = "default";        
+          
+          TiXmlElement *pUseTextureElem = _FindElement(pElem,std::string("usetexture"));
+          TiXmlElement *pPositionElem = _FindElement(pElem,std::string("position"));                
+          
+          if(pUseTextureElem != NULL) {
+            pBlock->Texture = _GetOption(pUseTextureElem,"id","default");
+            pBlock->fTextureScale = atof( _GetOption(pUseTextureElem,"scale","1").c_str() );
+          }
+          if(pPositionElem != NULL) {
+            pBlock->fPosX = atof( _GetOption(pPositionElem,"x","0").c_str() );
+            pBlock->fPosY = atof( _GetOption(pPositionElem,"y","0").c_str() );      
+            
+            if(_GetOption(pPositionElem,"background","false") == "true")
+              pBlock->bBackground = true;
+
+            if(_GetOption(pPositionElem,"water","false") == "true")
+              pBlock->bWater = true;
+          }
+          
+          /* Get vertices */
+          for(TiXmlElement *pj = pElem->FirstChildElement(); pj!=NULL; pj=pj->NextSiblingElement()) {
+            if(!strcmp(pj->Value(),"vertex")) {
+              /* Alloc */
+              LevelBlockVertex *pVertex = new LevelBlockVertex;
+                          
+              pVertex->bSelected = false;
+                          
+              pVertex->fX = atof( _GetOption(pj,"x","0").c_str() );
+              pVertex->fY = atof( _GetOption(pj,"y","0").c_str() );
+              pVertex->EdgeEffect = _GetOption(pj,"edge","");
+              
+              std::string k;
+              k = _GetOption(pj,"tx","");
+              if(k != "") pVertex->fTX = atof( k.c_str() );
+              else pVertex->fTX = pVertex->fX * pBlock->fTextureScale;
+              k = _GetOption(pj,"ty","");
+              if(k != "") pVertex->fTY = atof( k.c_str() );
+              else pVertex->fTY = pVertex->fY * pBlock->fTextureScale;
+              
+              pVertex->r = atoi( _GetOption(pj,"r","255").c_str() );
+              pVertex->g = atoi( _GetOption(pj,"g","255").c_str() );
+              pVertex->b = atoi( _GetOption(pj,"b","255").c_str() );
+              pVertex->a = atoi( _GetOption(pj,"a","255").c_str() );
+              
+              /* Add it */
+              pBlock->Vertices.push_back( pVertex );
+            }
+          }
+          
+          /* Add it */
+          m_Blocks.push_back( pBlock );
+        }
+      }  
+      
+      /* Find out where the player starts */
+      if(getEntitiesByTypeID("PlayerStart").size()>0) {
+			  LevelEntity *pPlayerStart = getEntitiesByTypeID("PlayerStart")[0];
+			  m_fPlayerStartX = pPlayerStart->fPosX;
+			  m_fPlayerStartY = pPlayerStart->fPosY;
+		  }
+		  else {
+			  Log("** Warning ** : %s : No player start location found",m_FileName.c_str());
+			  m_fPlayerStartX = m_fPlayerStartY = 0.0f;
+		  }
 		}
   }
   
@@ -573,6 +590,9 @@ namespace vapp {
   Export binary level file
   ===========================================================================*/
   void LevelSrc::exportBinary(const std::string &FileName,LevelCheckSum *pSum) {
+    /* Don't do this if we failed to load level from XML */
+    if(isXMotoTooOld()) return;
+  
     /* Export binary... */
     FileHandle *pfh = FS::openOFile(FileName);
     if(pfh == NULL) {
@@ -673,6 +693,8 @@ namespace vapp {
     bool bRet = true;
 
     m_fPlayerStartX = m_fPlayerStartY = 0.0f;
+    
+    m_bXMotoTooOld = false;
 
     /* Import binary */
     FileHandle *pfh = FS::openIFile(FileName);
@@ -836,6 +858,9 @@ namespace vapp {
     return bRet;
   }
 
+  /*===========================================================================
+  Some static helpers
+  ===========================================================================*/
   int LevelSrc::compareLevel(const LevelSrc *p_lvl1, const LevelSrc *p_lvl2) {
     if(p_lvl1->m_Info.Name == p_lvl2->m_Info.Name) {
       return 0;
@@ -847,6 +872,26 @@ namespace vapp {
 
     return -1;
   }
+  
+  int LevelSrc::compareVersionNumbers(const std::string &v1,const std::string &v2) {
+    int nMajor1=0,nMinor1=0,nRel1=0;
+    int nMajor2=0,nMinor2=0,nRel2=0;
     
+    sscanf(v1.c_str(),"%d.%d.%d",&nMajor1,&nMinor1,&nRel1);
+    sscanf(v2.c_str(),"%d.%d.%d",&nMajor2,&nMinor2,&nRel2);
+    
+    if(nMajor1 < nMajor2) return -1;
+    else if(nMajor1 > nMajor2) return 1;
+    
+    if(nMinor1 < nMinor2) return -1;
+    else if(nMinor1 > nMinor2) return 1;
+    
+    if(nRel1 < nRel2) return -1;
+    else if(nRel1 > nRel2) return 1;
+
+    /* Same versions */
+    return 0;    
+  }
+      
 };
 

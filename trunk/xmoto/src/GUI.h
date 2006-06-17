@@ -259,7 +259,7 @@ namespace vapp {
       App *getApp(void) {return m_pApp;}
       void setApp(App *pApp) {m_pApp=pApp;}
       void setID(std::string ID) {m_ID=ID;}
-      std::string getID(void) {return m_ID;}
+      std::string getID(void) {return m_ID;}      
       std::vector<UIWindow *> &getChildren(void) {return m_Children;}
       UIRect &getPosition(void) {return m_Pos;}
       void setPosition(int x,int y,int nWidth,int nHeight) {m_Pos.nX=x; m_Pos.nY=y; m_Pos.nWidth=nWidth; m_Pos.nHeight=nHeight;}

@@ -192,6 +192,9 @@ namespace vapp {
       /* Methods */
       void setState(GameState s);
       void notifyMsg(std::string Msg);      
+      
+      /* Data interface */
+      bool isUglyMode(void) {return m_bUglyMode;}
     
     private: 
       EngineSoundSimulator m_EngineSound;

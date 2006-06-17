@@ -173,6 +173,8 @@ namespace vapp {
       LevelEntity *createEntity(std::string TypeID,float x,float y);
                               
       /* Data interface */ 
+      bool isXMotoTooOld(void) {return m_bXMotoTooOld;}
+      const std::string &getRequiredVersion(void) {return m_RequiredVersion;}
       bool isScripted(void) {if(m_ScriptFile!="" || m_ScriptSource!="") return true; return false;}           
       std::string &getFileName(void) {return m_FileName;}
       void setFileName(const std::string &File) {m_FileName = File;}     
@@ -221,10 +223,13 @@ namespace vapp {
       
       const LevelCheckSum *getLevelCheckSum(void) {return &m_LevelCheckSum;}
       void setLevelMD5Sum(const std::string &s) {m_LevelCheckSum.MD5Sum = s;}
+      
       static int compareLevel(const LevelSrc *p_lvl1, const LevelSrc *p_lvl2);    
+      static int compareVersionNumbers(const std::string &v1,const std::string &v2);
 
     private:
       /* Data */
+      std::string m_RequiredVersion;  /* Required X-Moto version */
       std::string m_LevelPack;        /* In this level pack */
       XMLDocument m_XML;              /* Plain XML source */      
       std::string m_FileName;         /* Current file name */
@@ -244,6 +249,8 @@ namespace vapp {
       std::vector<LevelEntity *> m_Entities; /* Level entities */
       
       LevelCheckSum m_LevelCheckSum;
+      
+      bool m_bXMotoTooOld;            /* Flag set if our X-Moto version is too low to load level */
       
       /* Helper methods */
       TiXmlElement *_FindElement(TiXmlElement *pRoot,const std::string &Name);

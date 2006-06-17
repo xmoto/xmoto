@@ -162,6 +162,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_MONO                 "Mono"
 #define GAMETEXT_MOTIONBLURGHOST      "Motion blur ghost"
 #define GAMETEXT_NAME                 "Name"
+#define GAMETEXT_NEWERXMOTOREQUIRED   "X-Moto %s or newer required to load level"
 #define GAMETEXT_NEWHIGHSCORE         "New highscore!"
 #define GAMETEXT_NEWHIGHSCOREPERSONAL "New personal highscore!"
 #define GAMETEXT_NEWLEVELAVAIL        "%d new or updated level available. Download now?"
