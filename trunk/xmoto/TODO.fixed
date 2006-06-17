@@ -1,0 +1,28 @@
+* BUG : bug in the editor if you load and save http://xmoto.free.fr/levels/l189.lvl because  > is replaced by &gt;      
+* Make sure LUA5.1 is supported properly OR use LUA5.0 explicitly. -> see http://www.lua.org/manual/5.1/manual.html#incompat
+* BUG : xmoto crashes when some textures are missing for a level
+* display time diff for the ghost nicer
+* make a vector for replays to load them faster
+* BUG : xmoto-edit downloaded/l66.lvl then "play this level" -> "Cave
+   : level not found" because there is a space in the id
+* BUG : if www is not activated at startup, go in option, check www, then click on proxy, then ok => www is unchecked
+* BUG : update highscore button, check for new levels too
+* BUG : when you have a level to update, you update it ; it you
+   reclick on check for new level, it will reupdate it, and you can
+   continue ... it adds the levels several times in the list
+* BUG : notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES); does not work the first time we load the game called in gamemenu.cpp, line 1573 but not displayed, i don't know why
+* BUG : when you update levels, new levels is displayed again !
+* use bSomething for options instead of many calls
+* add an option for timediff with the ghost
+* BUG : if you die and save the replay, replay list is empty ; if you
+   delete one, it does not delete it
+* add highscore tab in pack and new levels
+* be able to choose "download highscore" "check for new level" at
+   startup
+* BUG : xmoto --help causes a crash (trying to free non-init data i think, related to FBO stuff)
+* BUG : on mac os x : http://xmoto.free.fr/tmp/Letters.png
+* update highscores/levels doesn't really update levels, an other idea
+   for the button caption ?
+* display error : missing texture instead of just "the level has a pb" ?
+* LevelpackList does not allow to see #tutorial 3
+* add "required-xmoto-version" field to levels
