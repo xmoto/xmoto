@@ -16,7 +16,7 @@
 
 		function OnLoad()
 			Game.SetBlockCenter("Block5",4,4)
-			return true
+			return true 
 		end
 	</script>
 	<limits left="-40.000000" right="40.000000" top="20.000000" bottom="-20.000000"/>
