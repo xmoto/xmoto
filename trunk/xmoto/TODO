@@ -1,6 +1,4 @@
-# for 0.1.16
-
-# for after
+# for 0.2.0
 * try to compile without WEBSUPPORT and GHOST to see the result
 * "view the highscore" button is not visible for pack
 * add <xml_room> in configuration so that the player can choose the
@@ -30,6 +28,7 @@ Game.cpp around 1210 : adding a catch ; however, when the exception is
    	    m_Renderer.render();
 	  } catch(Exception &e) {printf("Exception handled\n");}
 
+  UPDATE:  It appears it's only possible to produce the bug when ghost is enabled.
 
 #
 * replay arch indepedance structure
@@ -41,7 +40,6 @@ Game.cpp around 1210 : adding a catch ; however, when the exception is
 * a button "clean replays" which remove not highscore replays or
    something like it
 * check for a new version at startup
-
 
 * add a counter of uncompleted levels (priority=medium)
 * theme (for sprites) (priority=medium)

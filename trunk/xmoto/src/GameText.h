@@ -161,7 +161,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_MISSINGTEXTURES      "Level references unknown textures, it could be unplayable!"
 #define GAMETEXT_MODIFYSELECTED       "Modify Selected..."
 #define GAMETEXT_MONO                 "Mono"
-#define GAMETEXT_MOSTPLAYEDLEVELSFOLLOW "Following are the most played levels:"
+#define GAMETEXT_MOSTPLAYEDLEVELSFOLLOW "Following are your most played levels:"
 #define GAMETEXT_MOTIONBLURGHOST      "Motion blur ghost"
 #define GAMETEXT_NAME                 "Name"
 #define GAMETEXT_NEWERXMOTOREQUIRED   "X-Moto %s or newer required to load level"

@@ -961,9 +961,9 @@ namespace vapp {
   void GameApp::drawFrame(void) {
     char cTemp[256];
     bool bValidGameState = true;
-        
-    //SDL_Delay(30);
-        
+
+//   SDL_Delay(30); /* you want to simulate a slow computer? do it here! */
+                
     /* Per default, don't wait between frames */
     setFrameDelay(0);
 

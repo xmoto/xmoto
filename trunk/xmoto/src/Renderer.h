@@ -377,6 +377,10 @@ namespace vapp {
       void _DrawRotatedMarker(Vector2f Pos,dReal *pfRot);     
       void _RenderDebugInfo(void);      
       
+      void _RenderAlphaBlendedSection(Texture *pTexture,const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3);
+      void _RenderAlphaBlendedSectionSP(Texture *pTexture,const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3);
+      void _RenderCircle(int nSteps,Color CircleColor,const Vector2f &C,float fRadius);
+
       /* ... optimizing */
       std::vector<StaticGeom *> _FindGeomsByTexture(Texture *pTex);
       

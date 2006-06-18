@@ -330,8 +330,7 @@ namespace vapp {
     if(!m_bUglyMode)
 			_RenderSky();
 
-    /* Perform scaling/translation */
-    
+    /* Perform scaling/translation */    
     glScalef(m_fScale * ((float)getParent()->getDispHeight()) / getParent()->getDispWidth(), m_fScale,1);
     //glRotatef(getGameObject()->getTime()*100,0,0,1); /* Uncomment this line if you want to vomit :) */
     glTranslatef(m_Scroll.x,m_Scroll.y,0);
@@ -560,23 +559,7 @@ namespace vapp {
     float x2 = 115;
     float y2 = 23;
     
-    glEnable(GL_BLEND); 
-    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
-    glBindTexture(GL_TEXTURE_2D,pIcon->nID);
-    glEnable(GL_TEXTURE_2D);
-    glBegin(GL_POLYGON);
-    glColor3f(1,1,1);
-    glTexCoord2f(0,0);
-    getParent()->glVertex(x1,y1);
-    glTexCoord2f(1,0);
-    getParent()->glVertex(x2,y1);
-    glTexCoord2f(1,1);
-    getParent()->glVertex(x2,y2);
-    glTexCoord2f(0,1);
-    getParent()->glVertex(x1,y2);
-    glEnd();
-    glDisable(GL_TEXTURE_2D);
-    glDisable(GL_BLEND);        
+    _RenderAlphaBlendedSectionSP(pIcon,Vector2f(x2,y2),Vector2f(x1,y2),Vector2f(x1,y1),Vector2f(x2,y1));
 
     if(nQuantity > 0) {
       int tx1,ty1,tx2,ty2;
@@ -622,24 +605,8 @@ namespace vapp {
       p2 = p2 * 50.0f;
       p3 = p3 * 50.0f;
       p4 = p4 * 50.0f;
-      
-      glEnable(GL_BLEND); 
-      glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
-      glBindTexture(GL_TEXTURE_2D,m_pArrowTexture->nID);
-      glEnable(GL_TEXTURE_2D);
-      glBegin(GL_POLYGON);
-      glColor3f(1,1,1);
-      glTexCoord2f(0,0);
-      getParent()->glVertex((C+p1).x,(C+p1).y);
-      glTexCoord2f(1,0);
-      getParent()->glVertex((C+p2).x,(C+p2).y);
-      glTexCoord2f(1,1);
-      getParent()->glVertex((C+p3).x,(C+p3).y);
-      glTexCoord2f(0,1);
-      getParent()->glVertex((C+p4).x,(C+p4).y);
-      glEnd();
-      glDisable(GL_TEXTURE_2D);
-      glDisable(GL_BLEND);        
+
+      _RenderAlphaBlendedSectionSP(m_pArrowTexture,p1+C,p2+C,p3+C,p4+C);      
     }
         
     /* Messages */
@@ -679,9 +646,6 @@ namespace vapp {
     /* TODO: make type fetching faster */
     SpriteType *pType = _GetSpriteTypeByName(pSprite->SpriteType);
     if(pType != NULL) {
-      /* Get texture */
-      GLuint GLName = pType->pTexture->nID;      
-    
       /* Draw it */
       Vector2f p0,p1,p2,p3;
       
@@ -694,26 +658,10 @@ namespace vapp {
       p3 = Vector2f(pSprite->Pos.x,pSprite->Pos.y+pType->Size.y) +
            Vector2f(-pType->Center.x,-pType->Center.y);
             
-      glEnable(GL_BLEND); 
       glEnable(GL_ALPHA_TEST);
-      glAlphaFunc(GL_GEQUAL,0.5f);
-      glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
-      glBindTexture(GL_TEXTURE_2D,GLName);
-      glEnable(GL_TEXTURE_2D);
-      glBegin(GL_POLYGON);   
-      glColor3f(1,1,1);   
-      glTexCoord2f(0,1);
-      _Vertex(p0);
-      glTexCoord2f(1,1);
-      _Vertex(p1);
-      glTexCoord2f(1,0);
-      _Vertex(p2);
-      glTexCoord2f(0,0);
-      _Vertex(p3);
-      glEnd();
-      glDisable(GL_TEXTURE_2D);
+      glAlphaFunc(GL_GEQUAL,0.5f);      
+      _RenderAlphaBlendedSection(pType->pTexture,p0,p1,p2,p3);      
       glDisable(GL_ALPHA_TEST);
-      glDisable(GL_BLEND);
 
       /* Debug mode? */
       /* TODO: port to new transform */
@@ -740,9 +688,6 @@ namespace vapp {
   ===========================================================================*/
   void GameRenderer::_RenderBlocks(void) {
     MotoGame *pGame = getGameObject();
-    float cols[1000];
-    int dd=0;
-    for(dd=0;dd<1000;dd++) cols[dd]=1.0f;
 
 		/* Ugly mode? */
 		if(m_bUglyMode) {
@@ -849,7 +794,6 @@ namespace vapp {
 
     /* Render sky - but which? */
     const std::string &SkyName = pGame->getLevelSrc()->getLevelInfo()->Sky;
-//    printf("[%s]\n",SkyName.c_str());
     if(SkyName == "" || SkyName == "sky1") {
       if(m_pSkyTexture1 != NULL) {
         glBindTexture(GL_TEXTURE_2D,m_pSkyTexture1->nID);
@@ -903,7 +847,6 @@ namespace vapp {
           glTexCoord2f(-m_Scroll.x*0.015 + fDrift,m_Scroll.y*0.015+0.65);
           getParent()->glVertex(0,getParent()->getDispHeight());
           glEnd();
-
 
           glBlendFunc(GL_ONE,GL_ONE);
 
@@ -1002,8 +945,6 @@ namespace vapp {
   Helpers
   ===========================================================================*/
   void GameRenderer::_Vertex(Vector2f P) {
-    //getParent()->glVertex( getParent()->getDispWidth()/2 + (float)(P.x + m_Scroll.x)*m_fZoom,
-    //                       getParent()->getDispHeight()/2 - (float)(P.y + m_Scroll.y)*m_fZoom );
     glVertex2f(P.x,P.y);
   }
   
@@ -1045,9 +986,6 @@ namespace vapp {
   void GameRenderer::_DrawAnimation(Vector2f Pos,Animation *pAnim) {
     AnimationFrame *pFrame = pAnim->m_Frames[pAnim->m_nCurFrame];
     
-    /* Get texture */
-    GLuint GLName = pFrame->pTexture->nID;      
-  
     /* Draw it */
     Vector2f p0,p1,p2,p3;
     
@@ -1060,23 +998,7 @@ namespace vapp {
     p3 = Vector2f(Pos.x,Pos.y+pFrame->Size.y) +
           Vector2f(-pFrame->Center.x,-pFrame->Center.y);
           
-    glEnable(GL_BLEND); 
-    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
-    glBindTexture(GL_TEXTURE_2D,GLName);
-    glEnable(GL_TEXTURE_2D);
-    glBegin(GL_POLYGON);   
-    glColor3f(1,1,1);   
-    glTexCoord2f(0,1);
-    _Vertex(p0);
-    glTexCoord2f(1,1);
-    _Vertex(p1);
-    glTexCoord2f(1,0);
-    _Vertex(p2);
-    glTexCoord2f(0,0);
-    _Vertex(p3);
-    glEnd();
-    glDisable(GL_TEXTURE_2D);
-    glDisable(GL_BLEND);    
+    _RenderAlphaBlendedSection(pFrame->pTexture,p0,p1,p2,p3);              
   }
 
   /*===========================================================================
@@ -1177,23 +1099,28 @@ namespace vapp {
   void GameRenderer::showReplayHelp(float p_speed, bool bAllowRewind) {
     if(bAllowRewind) {
       if(p_speed >= 10.0) {
-	m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXT(String(">> 10")));
-      } else if(p_speed <= -10.0) {
-	m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXT(String("<<-10")));
-      } else {
-	char v_speed_str[5 + 1];
-	sprintf(v_speed_str, "% .2f", p_speed);
-	m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXT(String(v_speed_str)));
+      	m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXT(String(">> 10")));
+      } 
+      else if(p_speed <= -10.0) {
+	      m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXT(String("<<-10")));
+      } 
+      else {
+	      char v_speed_str[5 + 1];
+	      sprintf(v_speed_str, "% .2f", p_speed);
+	      m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXT(String(v_speed_str)));
       }
-    } else {
+    } 
+    else {
       if(p_speed >= 10.0) {
-	m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXTNOREWIND(String(">> 10")));
-      } else if(p_speed <= -10.0) {
-	m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXTNOREWIND(String("<<-10")));
-      } else {
-	char v_speed_str[5 + 1];
-	sprintf(v_speed_str, "% .2f", p_speed);
-	m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXTNOREWIND(String(v_speed_str)));
+	      m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXTNOREWIND(String(">> 10")));
+      } 
+      else if(p_speed <= -10.0) {
+	      m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXTNOREWIND(String("<<-10")));
+      } 
+      else {
+	      char v_speed_str[256];
+	      sprintf(v_speed_str, "% .2f", p_speed);
+	      m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXTNOREWIND(String(v_speed_str)));
       }
     }
   }
@@ -1301,6 +1228,62 @@ namespace vapp {
 
   void GameRenderer::hideMsgNewHighscore() {
     m_pInGameNewHighscore->showWindow(false);
+  }
+
+  /*===========================================================================
+  Rendering helpers
+  ===========================================================================*/
+  void GameRenderer::_RenderAlphaBlendedSection(Texture *pTexture,
+                                                const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3) {
+    glEnable(GL_BLEND); 
+    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
+    glBindTexture(GL_TEXTURE_2D,pTexture->nID);
+    glEnable(GL_TEXTURE_2D);
+    glBegin(GL_POLYGON);
+    glColor3f(1,1,1);
+    glTexCoord2f(0,1);
+    glVertex2f(p0.x,p0.y);
+    glTexCoord2f(1,1);
+    glVertex2f(p1.x,p1.y);
+    glTexCoord2f(1,0);
+    glVertex2f(p2.x,p2.y);
+    glTexCoord2f(0,0);
+    glVertex2f(p3.x,p3.y);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_BLEND);
+  }
+  
+  /* Screen-space version of the above */
+  void GameRenderer::_RenderAlphaBlendedSectionSP(Texture *pTexture,
+                                                  const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3) {
+    glEnable(GL_BLEND); 
+    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
+    glBindTexture(GL_TEXTURE_2D,pTexture->nID);
+    glEnable(GL_TEXTURE_2D);
+    glBegin(GL_POLYGON);
+    glColor3f(1,1,1);
+    glTexCoord2f(0,1);
+    getParent()->glVertex(p0.x,p0.y);
+    glTexCoord2f(1,1);
+    getParent()->glVertex(p1.x,p1.y);
+    glTexCoord2f(1,0);
+    getParent()->glVertex(p2.x,p2.y);
+    glTexCoord2f(0,0);
+    getParent()->glVertex(p3.x,p3.y);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_BLEND);
+  }
+  
+  void GameRenderer::_RenderCircle(int nSteps,Color CircleColor,const Vector2f &C,float fRadius) {
+    glBegin(GL_LINE_LOOP);              
+    glColor3ub(GET_RED(CircleColor),GET_GREEN(CircleColor),GET_BLUE(CircleColor));
+    for(int i=0;i<nSteps;i++) {
+      float r = (3.14159f * 2.0f * (float)i)/ (float)nSteps;            
+      _Vertex( Vector2f(C.x + fRadius*sin(r),C.y + fRadius*cos(r)) );
+    }      
+    glEnd();
   }
 
 };
