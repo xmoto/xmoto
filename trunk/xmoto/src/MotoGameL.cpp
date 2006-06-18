@@ -296,6 +296,33 @@ namespace vapp {
     }
     return 0;
   }  
+
+  int L_Game_SetBlockCenter(lua_State *pL) {
+    /* event for this */    
+    GameEvent *pEvent = m_pMotoGame->createGameEvent(GAME_EVENT_LUA_CALL_SETBLOCKCENTER);
+    if(pEvent != NULL) {
+      strncpy(pEvent->u.LuaCallSetBlockCenter.cBlockID,
+	      luaL_checkstring(pL,1),
+	      sizeof(pEvent->u.LuaCallSetBlockCenter.cBlockID)-1);
+      pEvent->u.LuaCallSetBlockCenter.x = X_luaL_check_number(pL,2);
+      pEvent->u.LuaCallSetBlockCenter.y = X_luaL_check_number(pL,3);
+    }
+
+    return 0;
+  }  
+    
+  int L_Game_SetBlockRotation(lua_State *pL) {
+    /* event for this */    
+    GameEvent *pEvent = m_pMotoGame->createGameEvent(GAME_EVENT_LUA_CALL_SETBLOCKROTATION);
+    if(pEvent != NULL) {
+      strncpy(pEvent->u.LuaCallSetBlockRotation.cBlockID,
+	      luaL_checkstring(pL,1),
+	      sizeof(pEvent->u.LuaCallSetBlockRotation.cBlockID)-1);
+      pEvent->u.LuaCallSetBlockRotation.fAngle = X_luaL_check_number(pL,2);
+    }
+
+    return 0;
+  }  
     
 };
 

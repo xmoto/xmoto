@@ -91,6 +91,7 @@ namespace vapp {
   ===========================================================================*/
   struct ConvexBlockVertex {
     Vector2f P;                                   /* Position of vertex */
+    Vector2f T;                                   /* Texture vertex */
   };
 
   /*===========================================================================
@@ -103,6 +104,23 @@ namespace vapp {
   
     std::vector<ConvexBlockVertex *> Vertices;    /* Vertices */
     LevelBlock *pSrcBlock;                        /* Source block */
+  };
+
+  /*===========================================================================
+  Dynamic block
+  ===========================================================================*/
+  struct DynamicBlock {
+    DynamicBlock() {
+      pSrcBlock = NULL;
+      fRotation = 0.0f;
+    }
+    
+    std::vector<ConvexBlock *> ConvexBlocks;      /* Polygons */
+    LevelBlock *pSrcBlock;                        /* Source block */
+    float fRotation;                              /* Block rotation */    
+    Vector2f Position;                            /* Block position */
+    
+    std::vector<Line *> CollisionLines;           /* Line to collide against */
   };
 
   /*===========================================================================
@@ -403,8 +421,9 @@ namespace vapp {
     GAME_EVENT_LUA_CALL_SETBLOCKPOS,
     GAME_EVENT_LUA_CALL_SETGRAVITY,
     GAME_EVENT_LUA_CALL_SETPLAYERPOSITION,
-    GAME_EVENT_LUA_CALL_SETENTITYPOS
-
+    GAME_EVENT_LUA_CALL_SETENTITYPOS,
+    GAME_EVENT_LUA_CALL_SETBLOCKCENTER,
+    GAME_EVENT_LUA_CALL_SETBLOCKROTATION
   };
   
 	/*===========================================================================
@@ -479,6 +498,16 @@ namespace vapp {
     float x,y;
   };
   
+  struct GameEventLuaCallSetBlockCenter {
+    char cBlockID[64]; /* ID of block */
+    float x,y;
+  };
+  
+  struct GameEventLuaCallSetBlockRotation {
+    char cBlockID[64]; /* ID of block */
+    float fAngle;
+  };
+  
   struct GameEvent {
     int nSeq;                         /* Sequence number */
     GameEventType Type;								/* Type of event */
@@ -498,7 +527,6 @@ namespace vapp {
       
       /* GAME_EVENT_PLAYER_TOUCHES_ENTITY */
       GameEventPlayerTouchesEntity PlayerTouchesEntity;
-
 
       /* GAME_EVENT_LUA_CALL_CLEARMESSAGES     */
       GameEventLuaCallClearmessages LuaCallClearmessages;
@@ -529,6 +557,12 @@ namespace vapp {
 
       /* GAME_EVENT_LUA_CALL_SETENTITYPOS      */
       GameEventLuaCallSetentitypos LuaCallSetentitypos;
+      
+      /* GAME_EVENT_LUA_CALL_SETBLOCKCENTER */
+      GameEventLuaCallSetBlockCenter LuaCallSetBlockCenter;
+
+      /* GAME_EVENT_LUA_CALL_SETBLOCKROTATION */
+      GameEventLuaCallSetBlockRotation LuaCallSetBlockRotation;
 
     } u;		
   };
@@ -613,6 +647,7 @@ namespace vapp {
       std::vector<Entity *> &getBSprites(void) {return m_BSprites;}
       std::vector<Entity *> &getMSprites(void) {return m_MSprites;}
       std::vector<Entity *> &getFSprites(void) {return m_FSprites;}
+      std::vector<DynamicBlock *> &getDynBlocks(void) {return m_DynBlocks;}
       std::vector<OverlayEdge *> &getOverlayEdges(void) {return m_OvEdges;}
       float getTime(void) {return m_fTime;}
       void setTime(float f) {m_fTime=f;}
@@ -671,6 +706,7 @@ namespace vapp {
       std::vector<OverlayEdge *> m_OvEdges;/* Overlay edges */
       std::vector<Entity *> m_DelSchedule;/* Entities scheduled for deletion */
       std::vector<GameMessage *> m_GameMessages;
+      std::vector<DynamicBlock *> m_DynBlocks; /* Dynamic blocks */
       
       BikeParams m_BikeP;                 /* Bike physics */      
       BikeAnchors m_BikeA;                /* Important bike anchor points */
@@ -756,7 +792,7 @@ namespace vapp {
       /* Helpers */
       void _GenerateLevel(void);          /* Called by playLevel() to 
                                              prepare the level */
-      void _CreateBlock(BSPPoly *pPoly,LevelBlock *pSrcBlock);
+      ConvexBlock *_CreateBlock(BSPPoly *pPoly,LevelBlock *pSrcBlock);
       void _CalculateBikeAnchors(void);
       int _IntersectWheelLevel(Vector2f Cp,float Cr,dContact *pContacts);
       int _IntersectWheelLine(Vector2f Cp,float Cr,int nNumContacts,dContact *pContacts,Vector2f A0,Vector2f A1);
@@ -770,6 +806,7 @@ namespace vapp {
       EntityType _TransEntityType(std::string Name);
       EdgeEffect _TransEdgeEffect(std::string Name);
       void _UpdateEntities(void);
+      DynamicBlock *_GetDynamicBlockByID(const std::string &ID);
       void _UpdateGameState(SerializedBikeState *pReplayState);
 #if defined(ALLOW_GHOST)
       /* static */ void _UpdateStateFromReplay(SerializedBikeState *pReplayState,BikeState *pBikeS);
@@ -785,6 +822,8 @@ namespace vapp {
       void _HandleReplayEvent(GameEvent *pEvent);
       void _HandleReverseReplayEvent(GameEvent *pEvent);
       
+      void _UpdateDynamicCollisionLines(void);
+      
       /* MPhysics.cpp */
       void _UpdatePhysics(float fTimeStep);
       void _InitPhysics(void);
@@ -798,6 +837,8 @@ namespace vapp {
       void _PlaceScreenArrow(float pX, float pY, float pAngle);
       void _MoveBlock(String pBlockID, float pX, float pY);
       void _SetBlockPos(String pBlockID, float pX, float pY);
+      void _SetBlockCenter(String pBlockID, float pX, float pY);
+      void _SetBlockRotation(String pBlockID, float pAngle);
     };
 
 };

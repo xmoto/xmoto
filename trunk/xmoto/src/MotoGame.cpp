@@ -58,6 +58,8 @@ namespace vapp {
   int L_Game_SetKeyHook(lua_State *pL);
   int L_Game_GetKeyByAction(lua_State *pL);
   int L_Game_Log(lua_State *pL);
+  int L_Game_SetBlockCenter(lua_State *pL);
+  int L_Game_SetBlockRotation(lua_State *pL);
   
   /* "Game" Lua library */
   static const luaL_reg g_GameFuncs[] = {
@@ -80,6 +82,8 @@ namespace vapp {
     {"SetKeyHook", L_Game_SetKeyHook},
     {"GetKeyByAction", L_Game_GetKeyByAction},
     {"Log", L_Game_Log},
+    {"SetBlockCenter",L_Game_SetBlockCenter},
+    {"SetBlockRotation",L_Game_SetBlockRotation},
     {NULL, NULL}
   };
 
@@ -223,6 +227,46 @@ namespace vapp {
   void MotoGame::clearGameMessages(void) {
     for(int i=0;i<m_GameMessages.size();i++)
       m_GameMessages[i]->fRemoveTime=0.0f;
+  }
+
+  /*===========================================================================
+  Update dynamic collision lines
+  ===========================================================================*/
+  void MotoGame::_UpdateDynamicCollisionLines(void) {
+	  std::vector<DynamicBlock *> &Blocks = getDynBlocks();
+
+		for(int i=0;i<Blocks.size();i++) {
+			/* Build rotation matrix for block */
+			float fR[4]; 
+			fR[0] = cos(Blocks[i]->fRotation); fR[1] = -sin(Blocks[i]->fRotation);
+			fR[2] = sin(Blocks[i]->fRotation); fR[3] = cos(Blocks[i]->fRotation);
+			int z = 0;
+						
+			for(int j=0;j<Blocks[i]->ConvexBlocks.size();j++) {				
+				for(int k=0;k<Blocks[i]->ConvexBlocks[j]->Vertices.size();k++) {				    
+				  int knext = k==Blocks[i]->ConvexBlocks[j]->Vertices.size()-1?0:k+1;
+				  ConvexBlockVertex *pVertex1 = Blocks[i]->ConvexBlocks[j]->Vertices[k];				  
+				  ConvexBlockVertex *pVertex2 = Blocks[i]->ConvexBlocks[j]->Vertices[knext];				  
+
+				  /* Transform vertices */
+				  Vector2f Tv1 = Vector2f(pVertex1->P.x * fR[0] + pVertex1->P.y * fR[1],
+				                          pVertex1->P.x * fR[2] + pVertex1->P.y * fR[3]);
+          Tv1 += Blocks[i]->Position;				                          
+				  Vector2f Tv2 = Vector2f(pVertex2->P.x * fR[0] + pVertex2->P.y * fR[1],
+				                          pVertex2->P.x * fR[2] + pVertex2->P.y * fR[3]);
+          Tv2 += Blocks[i]->Position;				                          
+            				  
+				  /* Update line */
+				  Blocks[i]->CollisionLines[z]->x1 = Tv1.x;
+				  Blocks[i]->CollisionLines[z]->y1 = Tv1.y;
+				  Blocks[i]->CollisionLines[z]->x2 = Tv2.x;
+				  Blocks[i]->CollisionLines[z]->y2 = Tv2.y;
+				  
+          /* Next collision line */
+				  z++;
+				}
+			}
+		}		  
   }
 
   /*===========================================================================
@@ -475,6 +519,21 @@ namespace vapp {
 					     pEvent->u.LuaCallSetplayerposition.bRight);
 	    }
 	    break;
+	    
+    case GAME_EVENT_LUA_CALL_SETBLOCKCENTER:
+      {
+        _SetBlockCenter(pEvent->u.LuaCallSetBlockCenter.cBlockID,
+          pEvent->u.LuaCallSetBlockCenter.x,
+          pEvent->u.LuaCallSetBlockCenter.y);
+      }
+      break;
+    
+    case GAME_EVENT_LUA_CALL_SETBLOCKROTATION:
+      {
+        _SetBlockRotation(pEvent->u.LuaCallSetBlockRotation.cBlockID,
+                          pEvent->u.LuaCallSetBlockRotation.fAngle);
+      }
+      break;
 
 	  }
 	}
@@ -781,6 +840,15 @@ namespace vapp {
       m_BSprites.clear();
       m_MSprites.clear();
       
+      /* Delete dynamic blocks */
+      for(int i=0;i<m_DynBlocks.size();i++) {
+        for(int j=0;j<m_DynBlocks[i]->CollisionLines.size();j++)
+          delete m_DynBlocks[i]->CollisionLines[j];
+          
+        delete m_DynBlocks[i];
+      }
+      m_DynBlocks.clear();
+      
       /* Stop physics */
       _UninitPhysics();
       
@@ -817,13 +885,13 @@ namespace vapp {
     for(int i=0;i<InBlocks.size();i++) { 
       for(int j=0;j<InBlocks[i]->Vertices.size();j++) {
         LevelBoundsMin.x = InBlocks[i]->fPosX+InBlocks[i]->Vertices[j]->fX < LevelBoundsMin.x ? 
-	  InBlocks[i]->fPosX+InBlocks[i]->Vertices[j]->fX : LevelBoundsMin.x;
+	        InBlocks[i]->fPosX+InBlocks[i]->Vertices[j]->fX : LevelBoundsMin.x;
         LevelBoundsMin.y = InBlocks[i]->fPosY+InBlocks[i]->Vertices[j]->fY < LevelBoundsMin.y ? 
-	  InBlocks[i]->fPosY+InBlocks[i]->Vertices[j]->fY : LevelBoundsMin.y;
+	        InBlocks[i]->fPosY+InBlocks[i]->Vertices[j]->fY : LevelBoundsMin.y;
         LevelBoundsMax.x = InBlocks[i]->fPosX+InBlocks[i]->Vertices[j]->fX > LevelBoundsMax.x ? 
-	  InBlocks[i]->fPosX+InBlocks[i]->Vertices[j]->fX : LevelBoundsMax.x;
+	        InBlocks[i]->fPosX+InBlocks[i]->Vertices[j]->fX : LevelBoundsMax.x;
         LevelBoundsMax.y = InBlocks[i]->fPosY+InBlocks[i]->Vertices[j]->fY > LevelBoundsMax.y ? 
-	  InBlocks[i]->fPosY+InBlocks[i]->Vertices[j]->fY : LevelBoundsMax.y;
+	        InBlocks[i]->fPosY+InBlocks[i]->Vertices[j]->fY : LevelBoundsMax.y;
       }
     }
     
@@ -835,6 +903,7 @@ namespace vapp {
     
     /* For each input block */
     int nTotalBSPErrors = 0;
+    int nDynamicBlocks = 0;
     
     for(int i=0;i<InBlocks.size();i++) {
       /* Do the "convexifying" the BSP-way. It might be overkill, but we'll
@@ -848,12 +917,12 @@ namespace vapp {
         int jnext = j+1;
         if(jnext == InBlocks[i]->Vertices.size()) jnext=0;
         
-        if(!InBlocks[i]->bBackground) {
+        if(!InBlocks[i]->bBackground && !InBlocks[i]->bDynamic) {
           /* Add line to collision handler */
           m_Collision.defineLine(InBlocks[i]->fPosX + InBlocks[i]->Vertices[j]->fX,
-				 InBlocks[i]->fPosY + InBlocks[i]->Vertices[j]->fY,
-				 InBlocks[i]->fPosX + InBlocks[i]->Vertices[jnext]->fX,
-				 InBlocks[i]->fPosY + InBlocks[i]->Vertices[jnext]->fY);
+				    InBlocks[i]->fPosY + InBlocks[i]->Vertices[j]->fY,
+				    InBlocks[i]->fPosX + InBlocks[i]->Vertices[jnext]->fX,
+				    InBlocks[i]->fPosY + InBlocks[i]->Vertices[jnext]->fY);
         }
         
         /* Add line to BSP generator */
@@ -874,26 +943,52 @@ namespace vapp {
       
       /* Compute */
       std::vector<BSPPoly *> &BSPPolys = BSPTree.compute();      
+      
+      DynamicBlock *pDyn = NULL;
+      if(InBlocks[i]->bDynamic) {
+        /* Define dynamic block */
+        pDyn = new DynamicBlock;
+        pDyn->pSrcBlock = InBlocks[i];
+        pDyn->Position = Vector2f(pDyn->pSrcBlock->fPosX,pDyn->pSrcBlock->fPosY);
+        m_DynBlocks.push_back(pDyn);
+        
+        nDynamicBlocks++;
+      }      
                   
       /* Create blocks */
       for(int j=0;j<BSPPolys.size();j++) {
-        _CreateBlock(BSPPolys[j],InBlocks[i]);
+        ConvexBlock *pConvexBlock = _CreateBlock(BSPPolys[j],InBlocks[i]);
+        
+        /* Add to dynamic block? */
+        if(pDyn != NULL) {
+          /* Define collision lines */
+          for(int k=0;k<BSPPolys[j]->Vertices.size();k++) {
+            Line *pCLine = new Line;
+            pCLine->x1 = pCLine->y1 = pCLine->x2 = pCLine->y2 = 0.0f;            
+            pDyn->CollisionLines.push_back(pCLine);
+            m_Collision.addExternalDynamicLine(pCLine);
+          }
+          
+          /* Add to list */
+          pDyn->ConvexBlocks.push_back(pConvexBlock);
+        }
       }
       Log(" %d poly%s generated from block #%d",BSPPolys.size(),BSPPolys.size()==1?"":"s",i+1);
-
+      
       /* Errors from BSP? */        
       nTotalBSPErrors += BSPTree.getNumErrors();      
     }
     
     Log(" %d special edge%s",m_OvEdges.size(),m_OvEdges.size()==1?"":"s");
     Log(" %d poly%s in total",m_Blocks.size(),m_Blocks.size()==1?"":"s");        
+    Log(" %d dynamic block%s",nDynamicBlocks,nDynamicBlocks==1?"":"s");
     
     if(nTotalBSPErrors > 0) {
       Log(" %d BSP error%s in total",nTotalBSPErrors,nTotalBSPErrors==1?"":"s");
       gameMessage(GAMETEXT_WARNING);
       gameMessage(GAMETEXT_ERRORSINLEVEL);
     }
-    
+        
     /* Create level surroundings (by limits) */    
     float fVMargin = 20,fHMargin = 20;
     ConvexBlock *pBlock; 
@@ -969,7 +1064,7 @@ namespace vapp {
   /*===========================================================================
     Create block from BSP polygon
     ===========================================================================*/
-  void MotoGame::_CreateBlock(BSPPoly *pPoly,LevelBlock *pSrcBlock) {
+  ConvexBlock *MotoGame::_CreateBlock(BSPPoly *pPoly,LevelBlock *pSrcBlock) {
     ConvexBlock *pBlock = new ConvexBlock;
     pBlock->pSrcBlock = pSrcBlock;
     
@@ -977,11 +1072,25 @@ namespace vapp {
       ConvexBlockVertex *pVertex = new ConvexBlockVertex;
       
       pVertex->P = pPoly->Vertices[i]->P;
+      pVertex->T.x = (pSrcBlock->fPosX+pVertex->P.x) * 0.25;
+      pVertex->T.y = (pSrcBlock->fPosY+pVertex->P.y) * 0.25;
       
       pBlock->Vertices.push_back( pVertex );
     }
     
     m_Blocks.push_back( pBlock );
+    return pBlock;
+  }
+  
+  /*===========================================================================
+  Find a dynamic block
+  ===========================================================================*/
+  DynamicBlock *MotoGame::_GetDynamicBlockByID(const std::string &ID) {
+    for(int i=0;i<m_DynBlocks.size();i++) {
+      if(m_DynBlocks[i]->pSrcBlock->ID == ID)
+        return m_DynBlocks[i];
+    }
+    return NULL;
   }
   
   /*===========================================================================
@@ -1461,6 +1570,21 @@ namespace vapp {
 	*/
       }
       break;
+
+    case GAME_EVENT_LUA_CALL_SETBLOCKCENTER:
+      {
+	_SetBlockCenter(pEvent->u.LuaCallSetBlockCenter.cBlockID,
+		     pEvent->u.LuaCallSetBlockCenter.x,
+		     pEvent->u.LuaCallSetBlockCenter.y);
+      }
+      break;
+      
+    case GAME_EVENT_LUA_CALL_SETBLOCKROTATION:
+      {
+        _SetBlockRotation(pEvent->u.LuaCallSetBlockRotation.cBlockID,
+                          pEvent->u.LuaCallSetBlockRotation.fAngle);
+      }
+      break;
       
     }
   }
@@ -1544,16 +1668,39 @@ namespace vapp {
   }
 
   void MotoGame::_SetBlockPos(String pBlockID, float pX, float pY) {
-    /* Find the specified block and set its position */
-    for(int i=0;i<getBlocks().size();i++) {
-      ConvexBlock *pBlock = getBlocks()[i];
-      if(pBlock->pSrcBlock->ID == pBlockID) {
-        pBlock->pSrcBlock->fPosX = pX;
-        pBlock->pSrcBlock->fPosY = pY;
-        break;
+    /* Find the specified (dynamic) block and set its position */
+    DynamicBlock *pBlock = _GetDynamicBlockByID(pBlockID);
+    if(pBlock != NULL) {
+      pBlock->Position.x = pX;
+      pBlock->Position.y = pY;
+    }    
+  }
+  
+  void MotoGame::_SetBlockCenter(String pBlockID, float pX, float pY) {
+    /* Find the specified (dynamic) block and set its center */
+    DynamicBlock *pBlock = _GetDynamicBlockByID(pBlockID);
+    if(pBlock != NULL) {
+      /* Correct all polygons in block to this new center */
+      for(int i=0;i<pBlock->ConvexBlocks.size();i++) {
+        for(int j=0;j<pBlock->ConvexBlocks[i]->Vertices.size();j++) {
+          ConvexBlockVertex *pVertex = pBlock->ConvexBlocks[i]->Vertices[j];
+          pVertex->P.x = pVertex->P.x - pX;
+          pVertex->P.y = pVertex->P.y - pY;
+        }
       }
+            
+      pBlock->Position.x += pX;
+      pBlock->Position.y += pY;
     }
   }
+
+  void MotoGame::_SetBlockRotation(String pBlockID, float pAngle) {
+    /* Find the specified (dynamic) block and set its rotation */
+    DynamicBlock *pBlock = _GetDynamicBlockByID(pBlockID);
+    if(pBlock != NULL) {
+      pBlock->fRotation = pAngle;
+    }    
+  }     
 
 #if defined(ALLOW_GHOST) 
   void MotoGame::UpdateGhostFromReplay(Replay *p_replay, SerializedBikeState *pReplayState) {

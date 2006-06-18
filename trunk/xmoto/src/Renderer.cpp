@@ -81,7 +81,7 @@ namespace vapp {
       Texture *pTexture;
       GLuint GLName = 0;
       
-      if(Blocks[i]->pSrcBlock && Blocks[i]->pSrcBlock->bBackground) continue;
+      if(Blocks[i]->pSrcBlock && (Blocks[i]->pSrcBlock->bBackground || Blocks[i]->pSrcBlock->bDynamic)) continue;
 
       if(Blocks[i]->pSrcBlock) {
         Center = Vector2f(Blocks[i]->pSrcBlock->fPosX,Blocks[i]->pSrcBlock->fPosY);
@@ -150,8 +150,8 @@ namespace vapp {
       for(int j=0;j<pPoly->nNumVertices;j++) {
         pPoly->pVertices[j].x = Center.x + Blocks[i]->Vertices[j]->P.x;
         pPoly->pVertices[j].y = Center.y + Blocks[i]->Vertices[j]->P.y;        
-        pPoly->pTexCoords[j].x = (Center.x+Blocks[i]->Vertices[j]->P.x) * 0.25;
-        pPoly->pTexCoords[j].y = (Center.y+Blocks[i]->Vertices[j]->P.y) * 0.25;
+        pPoly->pTexCoords[j].x = Blocks[i]->Vertices[j]->T.x; //(Center.x+Blocks[i]->Vertices[j]->P.x) * 0.25;
+        pPoly->pTexCoords[j].y = Blocks[i]->Vertices[j]->T.y; //(Center.y+Blocks[i]->Vertices[j]->P.y) * 0.25;
       }          
       
       nVertexBytes += pPoly->nNumVertices * ( 4 * sizeof(float) );
@@ -353,6 +353,7 @@ namespace vapp {
     }
         
     /* ... covered by blocks ... */
+    _RenderDynamicBlocks();
     _RenderBlocks();
 
     if(m_Quality != GQ_LOW && !m_bUglyMode) {
@@ -695,8 +696,57 @@ namespace vapp {
     }
   }
        
+       
   /*===========================================================================
-  Blocks
+  Blocks (dynamic)
+  ===========================================================================*/
+  void GameRenderer::_RenderDynamicBlocks(void) {
+    MotoGame *pGame = getGameObject();
+
+		/* Ugly mode? */
+		if(m_bUglyMode) {
+		}
+		else {
+		  /* Render all dynamic blocks */
+	    std::vector<DynamicBlock *> &Blocks = getGameObject()->getDynBlocks();
+	
+			for(int i=0;i<Blocks.size();i++) {
+			  /* Build rotation matrix for block */
+			  float fR[4]; 
+			  fR[0] = cos(Blocks[i]->fRotation); fR[1] = -sin(Blocks[i]->fRotation);
+			  fR[2] = sin(Blocks[i]->fRotation); fR[3] = cos(Blocks[i]->fRotation);
+			  
+			  /* Determine texture... this is so ingredibly ugly... TODO: no string lookups here */
+			  Texture *pTexture = getParent()->TexMan.getTexture(Blocks[i]->pSrcBlock->Texture);
+			  GLuint GLName = 0;
+			  if(pTexture != NULL) GLName = pTexture->nID;
+			  
+				for(int j=0;j<Blocks[i]->ConvexBlocks.size();j++) {				
+  		    glBindTexture(GL_TEXTURE_2D,GLName);				  				  
+				  glEnable(GL_TEXTURE_2D);      
+				  glBegin(GL_POLYGON);
+				  glColor3f(1,1,1);				  
+				  for(int k=0;k<Blocks[i]->ConvexBlocks[j]->Vertices.size();k++) {				    
+				    ConvexBlockVertex *pVertex = Blocks[i]->ConvexBlocks[j]->Vertices[k];
+
+				    /* Transform vertex */
+				    Vector2f Tv = Vector2f(pVertex->P.x * fR[0] + pVertex->P.y * fR[1],
+				                           pVertex->P.x * fR[2] + pVertex->P.y * fR[3]);
+            Tv += Blocks[i]->Position;				                          
+            				    
+				    /* Put vertex */
+				    glTexCoord2f(pVertex->T.x,pVertex->T.y);
+				    glVertex2f(Tv.x,Tv.y);
+					}
+					glEnd();	            
+				  glDisable(GL_TEXTURE_2D);
+				}
+			}		  
+		}
+  }
+       
+  /*===========================================================================
+  Blocks (static)
   ===========================================================================*/
   void GameRenderer::_RenderBlocks(void) {
     MotoGame *pGame = getGameObject();

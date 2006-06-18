@@ -97,6 +97,7 @@ namespace vapp {
       fPosX = fPosY = 0.0f;
       bBackground = false;
       bWater = false;
+      bDynamic = false;
     }
   
     std::string ID;           /* Block ID */

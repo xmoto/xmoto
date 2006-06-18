@@ -129,12 +129,22 @@ namespace vapp {
     /* BLOCKS */
     for(int i=0;i<m_Blocks.size();i++) {
       FS::writeLineF(pfh,"\t<block id=\"%s\">",m_Blocks[i]->ID.c_str());
-      if(m_Blocks[i]->bBackground)
-        FS::writeLineF(pfh,"\t\t<position x=\"%f\" y=\"%f\" background=\"true\"/>",m_Blocks[i]->fPosX,m_Blocks[i]->fPosY);
-      else if(m_Blocks[i]->bWater)
-        FS::writeLineF(pfh,"\t\t<position x=\"%f\" y=\"%f\" water=\"true\"/>",m_Blocks[i]->fPosX,m_Blocks[i]->fPosY);
-      else
-        FS::writeLineF(pfh,"\t\t<position x=\"%f\" y=\"%f\"/>",m_Blocks[i]->fPosX,m_Blocks[i]->fPosY);
+      if(m_Blocks[i]->bDynamic) {
+        if(m_Blocks[i]->bBackground)
+          FS::writeLineF(pfh,"\t\t<position x=\"%f\" y=\"%f\" dynamic=\"true\" background=\"true\"/>",m_Blocks[i]->fPosX,m_Blocks[i]->fPosY);
+        else if(m_Blocks[i]->bWater)
+          FS::writeLineF(pfh,"\t\t<position x=\"%f\" y=\"%f\" dynamic=\"true\" water=\"true\"/>",m_Blocks[i]->fPosX,m_Blocks[i]->fPosY);
+        else
+          FS::writeLineF(pfh,"\t\t<position x=\"%f\" y=\"%f\" dynamic=\"true\"/>",m_Blocks[i]->fPosX,m_Blocks[i]->fPosY);
+      }
+      else {
+        if(m_Blocks[i]->bBackground)
+          FS::writeLineF(pfh,"\t\t<position x=\"%f\" y=\"%f\" background=\"true\"/>",m_Blocks[i]->fPosX,m_Blocks[i]->fPosY);
+        else if(m_Blocks[i]->bWater)
+          FS::writeLineF(pfh,"\t\t<position x=\"%f\" y=\"%f\" water=\"true\"/>",m_Blocks[i]->fPosX,m_Blocks[i]->fPosY);
+        else
+          FS::writeLineF(pfh,"\t\t<position x=\"%f\" y=\"%f\"/>",m_Blocks[i]->fPosX,m_Blocks[i]->fPosY);
+      }
       FS::writeLineF(pfh,"\t\t<usetexture id=\"%s\"/>",m_Blocks[i]->Texture.c_str());
       for(int j=0;j<m_Blocks[i]->Vertices.size();j++) {
         if(m_Blocks[i]->Vertices[j]->EdgeEffect != "")
@@ -387,6 +397,12 @@ namespace vapp {
 
             if(_GetOption(pPositionElem,"water","false") == "true")
               pBlock->bWater = true;
+            
+            if(_GetOption(pPositionElem,"dynamic","false") == "true")
+              pBlock->bDynamic = true;
+              
+            //if(pBlock->bDynamic)
+            //  printf("%s: %d %d %d\n",pBlock->ID.c_str(),pBlock->bBackground,pBlock->bWater,pBlock->bDynamic);
           }
           
           /* Get vertices */
@@ -600,7 +616,7 @@ namespace vapp {
     }
     else {
       /* Write tag */
-      FS::writeBuf(pfh,"XBL1",4);
+      FS::writeBuf(pfh,"XBL2",4); /* version two includes dynamic information about blocks */
       
       /* Write CRC32 of XML */
       FS::writeInt_LE(pfh,pSum->nCRC32);
@@ -632,6 +648,7 @@ namespace vapp {
       FS::writeInt_LE(pfh,m_Blocks.size());
       for(int i=0;i<m_Blocks.size();i++) {
         FS::writeString(pfh,m_Blocks[i]->ID);
+        FS::writeBool(pfh,m_Blocks[i]->bDynamic);
         FS::writeBool(pfh,m_Blocks[i]->bBackground);
         FS::writeBool(pfh,m_Blocks[i]->bWater);
         FS::writeString(pfh,m_Blocks[i]->Texture);
@@ -709,9 +726,11 @@ namespace vapp {
       int nFormat = 0;
       if(!strcmp(cTag,"XBL1"))
         nFormat = 1;
+      else if(!strcmp(cTag,"XBL2"))
+        nFormat = 2;
         
-      if(nFormat == 1) {
-        /* Read "format 1" binary level */
+      if(nFormat == 1 || nFormat == 2) {
+        /* Read "format 1" / "format 2" binary level */
         m_LevelCheckSum.nCRC32 = pSum->nCRC32;
         
         /* Right CRC? */
@@ -760,6 +779,11 @@ namespace vapp {
           for(int i=0;i<nNumBlocks;i++) {
             LevelBlock *pBlock = new LevelBlock;
             pBlock->ID = FS::readString(pfh);
+            
+            if(nFormat == 2) {
+              pBlock->bDynamic = FS::readBool(pfh);
+            }
+            
             pBlock->bBackground = FS::readBool(pfh);
             pBlock->bWater = FS::readBool(pfh);
             pBlock->Texture = FS::readString(pfh);

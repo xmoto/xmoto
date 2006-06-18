@@ -60,6 +60,7 @@ namespace vapp {
       void reset(void);
       void setDims(float fMinX,float fMinY,float fMaxX,float fMaxY);
       void defineLine(float x1,float y1,float x2,float y2);
+      void addExternalDynamicLine(Line *pLine);
       
       bool checkLine(float x1,float y1,float x2,float y2);
       bool checkCircle(float x,float y,float r);
@@ -72,6 +73,9 @@ namespace vapp {
       
       void getStats(CollisionSystemStats *p);
       void setDebug(bool b) {m_bDebugFlag = b;}
+      
+      void clearDynamicTouched(void) {m_bDynamicTouched = false;}
+      bool isDynamicTouched(void) {return m_bDynamicTouched;}
 
       /* Debug information, evil and public... only updated if the debug flag is specified */
       std::vector<Line *> m_CheckedLines;
@@ -83,6 +87,7 @@ namespace vapp {
       /* Data */
       float m_fMinX,m_fMinY,m_fMaxX,m_fMaxY;
       std::vector<Line *> m_Lines;      
+      std::vector<Line *> m_ExternalDynamicLines; /* list NOT managed by this class */
       
       bool m_bDebugFlag;
       
@@ -91,9 +96,14 @@ namespace vapp {
       
       GridCell *m_pGrid;
       
+      bool m_bDynamicTouched;
+      
       /* Helpers */
+      bool _CheckCircleAndLine(Line *pLine,float x,float y,float r);
+      int _CollideCircleAndLine(Line *pLine,float x,float y,float r,dContact *pContacts,int nOldNumC,int nMaxC);
       void _SetWheelContactParams(dContact *pc,const Vector2f &Pos,const Vector2f &NormalT,float fDepth);
       float _CalculateDepth(const Vector2f &Cp,float Cr,Vector2f P);
+      float _CalculateCircleLineDepth(const Vector2f &Cp,float Cr,Vector2f P1,Vector2f P2);
       int _AddContactToList(dContact *pContacts,int nNumContacts,dContact *pc,int nMaxContacts);
   };
 

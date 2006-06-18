@@ -106,8 +106,8 @@ namespace vapp {
       /* Do this curve */
       m_pCurves[i].setP(0,m_pPoints[i].Pos);
       m_pCurves[i].setP(1,m_pPoints[i].c2);
-      m_pCurves[i].setP(1,m_pPoints[i+1].c1);
-      m_pCurves[i].setP(1,m_pPoints[i+1].Pos);
+      m_pCurves[i].setP(2,m_pPoints[i+1].c1);
+      m_pCurves[i].setP(3,m_pPoints[i+1].Pos);
       
       /* Calculate its length */
       m_pfCurveLengths[i] = m_pCurves[i].length();

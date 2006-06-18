@@ -129,7 +129,7 @@ namespace vapp {
     bool bSleep = false;
     
     //printf("]",m_nStillFrames);        
-    if(m_nStillFrames > PHYS_SLEEP_FRAMES) {
+    if(m_nStillFrames > PHYS_SLEEP_FRAMES && !m_Collision.isDynamicTouched()) {
       bSleep = true;
       dBodyDisable(m_FrontWheelBodyID);
       dBodyDisable(m_RearWheelBodyID);
@@ -280,6 +280,9 @@ namespace vapp {
     }
       
     /* Perform collision detection between the bike and the level blocks */
+    m_Collision.clearDynamicTouched();
+    _UpdateDynamicCollisionLines(); /* first make sure we now where the dynamic lines are */
+    
     int nNumContacts;
     dContact Contacts[100];
     

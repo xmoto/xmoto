@@ -62,6 +62,15 @@ namespace vapp {
       delete m_Lines[i];
     }
     m_Lines.clear();
+    
+    m_ExternalDynamicLines.clear();
+  }
+ 
+  /*===========================================================================
+  Add external dynamic line to the system
+  ===========================================================================*/
+  void CollisionSystem::addExternalDynamicLine(Line *pLine) {
+    m_ExternalDynamicLines.push_back(pLine);
   }
  
   /*===========================================================================
@@ -168,6 +177,45 @@ namespace vapp {
   /*===========================================================================
   Boolean check of collision between circle and system
   ===========================================================================*/
+  bool CollisionSystem::_CheckCircleAndLine(Line *pLine,float x,float y,float r) {
+    /* Is circle "behind" the line? */
+    float vx = pLine->x2 - pLine->x1;
+    float vy = pLine->y2 - pLine->y1;
+    float enx = -vy;
+    float eny = vx;
+    if(enx*x + eny*y < enx*pLine->x1 + eny*pLine->y1) {
+      /* Yes it is, can't touch */
+      return false;
+    }          
+
+    /* Too small? */
+    if(fabs(vx) < 0.0001f && fabs(vy) < 0.0001f) {
+      return false;
+    }
+    
+    /* Is line endings inside the circle? */
+    float dx1 = pLine->x1 - x;
+    float dy1 = pLine->y1 - y;
+    if(dx1*dx1 + dy1*dy1 <= r*r) {
+      /* We have a touch! */
+      return true;
+    }
+
+    float dx2 = pLine->x2 - x;
+    float dy2 = pLine->y2 - y;
+    if(dx2*dx2 + dy2*dy2 <= r*r) {
+      /* We have a touch! */
+      return true;
+    }
+              
+    /* Final check */		  
+		Vector2f T1,T2;
+		int n = intersectLineCircle2f(Vector2f(x,y),r,Vector2f(pLine->x1,pLine->y1),
+		                              Vector2f(pLine->x2,pLine->y2),T1,T2);
+    if(n>0) return true;		                                    
+    return false;
+  }
+
   bool CollisionSystem::checkCircle(float x,float y,float r) {
     /* Calculate bounding box of circle */
     float fMinX = x - r;
@@ -190,6 +238,12 @@ namespace vapp {
       m_CheckedLines.clear();
       m_CheckedCells.clear();
     }
+    
+    /* Check all external dynamic lines first... */
+    for(int k=0;k<m_ExternalDynamicLines.size();k++) {
+      if(_CheckCircleAndLine(m_ExternalDynamicLines[k],x,y,r))
+        return true;
+    }    
     
     /* For each cell we might have touched something in... */
     for(int cx=nMinCX;cx<=nMaxCX;cx++) {
@@ -214,42 +268,9 @@ namespace vapp {
         for(int j=0;j<m_pGrid[i].Lines.size();j++) {  
           if(m_bDebugFlag)
             m_CheckedLines.push_back(m_pGrid[i].Lines[j]);
-              
-          /* Is circle "behind" the line? */
-          float vx = m_pGrid[i].Lines[j]->x2 - m_pGrid[i].Lines[j]->x1;
-          float vy = m_pGrid[i].Lines[j]->y2 - m_pGrid[i].Lines[j]->y1;
-          float enx = -vy;
-          float eny = vx;
-          if(enx*x + eny*y < enx*m_pGrid[i].Lines[j]->x1 + eny*m_pGrid[i].Lines[j]->y1) {
-            /* Yes it is, can't touch */
-            continue;
-          }          
-
-          /* Too small? */
-          if(fabs(vx) < 0.0001f && fabs(vy) < 0.0001f) {
-            continue;
-          }
-          
-          /* Is line endings inside the circle? */
-          float dx1 = m_pGrid[i].Lines[j]->x1 - x;
-          float dy1 = m_pGrid[i].Lines[j]->y1 - y;
-          if(dx1*dx1 + dy1*dy1 <= r*r) {
-            /* We have a touch! */
+            
+          if(_CheckCircleAndLine(m_pGrid[i].Lines[j],x,y,r))
             return true;
-          }
-
-          float dx2 = m_pGrid[i].Lines[j]->x2 - x;
-          float dy2 = m_pGrid[i].Lines[j]->y2 - y;
-          if(dx2*dx2 + dy2*dy2 <= r*r) {
-            /* We have a touch! */
-            return true;
-          }
-                    
-          /* Final check */		  
-		      Vector2f T1,T2;
-		      int n = intersectLineCircle2f(Vector2f(x,y),r,Vector2f(m_pGrid[i].Lines[j]->x1,m_pGrid[i].Lines[j]->y1),
-		                                    Vector2f(m_pGrid[i].Lines[j]->x2,m_pGrid[i].Lines[j]->y2),T1,T2);
-          if(n>0) return true;		                                    
         }
       }
     }
@@ -316,6 +337,44 @@ namespace vapp {
     if(nMaxCX > m_nGridWidth-1) nMaxCX = m_nGridWidth-1;
     if(nMaxCY > m_nGridHeight-1) nMaxCY = m_nGridHeight-1;        
 
+    /* First check dynamic lines */
+    for(int k=0;k<m_ExternalDynamicLines.size();k++) {
+      /* <TODO: avoid code duplication here> */
+      
+      /* Is the beginning "behind" the line? */
+      float vx = m_ExternalDynamicLines[k]->x2 - m_ExternalDynamicLines[k]->x1;
+      float vy = m_ExternalDynamicLines[k]->y2 - m_ExternalDynamicLines[k]->y1;
+      float enx = -vy;
+      float eny = vx;
+      if(enx*x1 + eny*y1 < enx*m_ExternalDynamicLines[k]->x1 + eny*m_ExternalDynamicLines[k]->y1) {
+        /* Yes it is, can't touch */
+        continue;
+      }
+
+      /* Too small? */
+      if(fabs(vx) < 0.0001f && fabs(vy) < 0.0001f) {
+        continue;
+      }
+      
+      /* Try calculating intersection point */
+      Vector2f T;
+      int n = intersectLineLine2f(Vector2f(x1,y1),Vector2f(x2,y2),
+                                  Vector2f(m_ExternalDynamicLines[k]->x1,m_ExternalDynamicLines[k]->y1),
+                                  Vector2f(m_ExternalDynamicLines[k]->x2,m_ExternalDynamicLines[k]->y2),T);
+      if(n > 0) {
+        dContact c;
+        Vector2f W = Vector2f(vx,vy);
+        W.normalize();
+
+        _SetWheelContactParams(&c,T,W,0.0f);                                           
+        int nOldC = nNumC;
+        nNumC = _AddContactToList(pContacts,nNumC,&c,nMaxC);                         
+        if(nNumC != nOldC) m_bDynamicTouched = true;
+      }                                      
+
+      /* </TODO: avoid code duplication here> */
+    }              
+
     /* For each cell we might have touched something in... */
     for(int cx=nMinCX;cx<=nMaxCX;cx++) {
       for(int cy=nMinCY;cy<=nMaxCY;cy++) {
@@ -354,9 +413,7 @@ namespace vapp {
             W.normalize();
 
             _SetWheelContactParams(&c,T,W,0.0f);                                   
-            nNumC = _AddContactToList(pContacts,nNumC,&c,nMaxC);     
-            
-            //printf("WTF?!");       
+            nNumC = _AddContactToList(pContacts,nNumC,&c,nMaxC);                 
           }                                      
         }          
       }
@@ -369,6 +426,147 @@ namespace vapp {
   /*===========================================================================
   Calculate precise intersections between circle and geometry, if any
   ===========================================================================*/
+  int CollisionSystem::_CollideCircleAndLine(Line *pLine,float x,float y,float r,dContact *pContacts,int nOldNumC,int nMaxC) {
+    int nNumC = nOldNumC;
+  
+    /* Is circle "behind" the line? */
+    float vx = pLine->x2 - pLine->x1;
+    float vy = pLine->y2 - pLine->y1;
+    float enx = -vy;
+    float eny = vx;
+    if(enx*x + eny*y < enx*pLine->x1 + eny*pLine->y1) {
+      /* Yes it is, can't touch */
+      return nNumC;
+    }
+
+    /* Too small? */
+    if(fabs(vx) < 0.0001f && fabs(vy) < 0.0001f) {
+      return nNumC;
+    }
+
+    if(m_bDebugFlag)
+      m_CheckedLinesW.push_back(pLine);
+
+    /* Is line endings inside the circle? */
+    float dx1 = pLine->x1 - x;
+    float dy1 = pLine->y1 - y;
+    if(sqrt(dx1*dx1 + dy1*dy1) <= r) {
+      /* We have a touch! */
+      dContact c;
+      Vector2f W = Vector2f(-dx1,-dy1);
+      W.normalize();
+
+      _SetWheelContactParams(&c,Vector2f(pLine->x1,pLine->y1),
+                              W,_CalculateDepth(Vector2f(x,y),r,Vector2f(pLine->x1,pLine->y1)));                                   
+      nNumC = _AddContactToList(pContacts,nNumC,&c,nMaxC);            
+      return nNumC;
+    }
+
+    float dx2 = pLine->x2 - x;
+    float dy2 = pLine->y2 - y;
+    if(sqrt(dx2*dx2 + dy2*dy2) <= r) {
+      /* We have a touch! */            
+      dContact c;
+      Vector2f W = Vector2f(-dx2,-dy2);
+      W.normalize();
+
+      _SetWheelContactParams(&c,Vector2f(pLine->x2,pLine->y2),
+                              W,_CalculateDepth(Vector2f(x,y),r,Vector2f(pLine->x2,pLine->y2)));                                   
+      nNumC = _AddContactToList(pContacts,nNumC,&c,nMaxC);            
+      return nNumC;
+    }
+
+    /* Calculate intersection */
+		Vector2f T1,T2;
+		int n = intersectLineCircle2f(Vector2f(x,y),r,Vector2f(pLine->x1,pLine->y1),
+		                              Vector2f(pLine->x2,pLine->y2),T1,T2);
+    if(n>0) {
+      dContact c;
+      Vector2f W = Vector2f(enx,eny);
+      W.normalize();
+      
+      //_SetWheelContactParams(&c,T1,W,_CalculateDepth(Vector2f(x,y),r,T1));                                   
+      float fDepth = _CalculateCircleLineDepth(Vector2f(x,y),r,Vector2f(pLine->x1,pLine->y1),Vector2f(pLine->x2,pLine->y2));
+      //printf("[%f]\n",fDepth);
+      _SetWheelContactParams(&c,T1,W,fDepth); 
+      nNumC = _AddContactToList(pContacts,nNumC,&c,nMaxC);
+        
+      if(n>1) {
+        _SetWheelContactParams(&c,T2,W,fDepth); 
+//        _SetWheelContactParams(&c,T2,W,_CalculateDepth(Vector2f(x,y),r,T2));                                   
+        nNumC = _AddContactToList(pContacts,nNumC,&c,nMaxC);
+      }
+    }
+    
+    return nNumC;
+  }
+
+        //  /* Is circle "behind" the line? */
+        //  float vx = m_pGrid[i].Lines[j]->x2 - m_pGrid[i].Lines[j]->x1;
+        //  float vy = m_pGrid[i].Lines[j]->y2 - m_pGrid[i].Lines[j]->y1;
+        //  float enx = -vy;
+        //  float eny = vx;
+        //  if(enx*x + eny*y < enx*m_pGrid[i].Lines[j]->x1 + eny*m_pGrid[i].Lines[j]->y1) {
+        //    /* Yes it is, can't touch */
+        //    continue;
+        //  }
+
+        //  /* Too small? */
+        //  if(fabs(vx) < 0.0001f && fabs(vy) < 0.0001f) {
+        //    continue;
+        //  }
+
+        //  if(m_bDebugFlag)
+        //    m_CheckedLinesW.push_back(m_pGrid[i].Lines[j]);
+
+        //  /* Is line endings inside the circle? */
+        //  float dx1 = m_pGrid[i].Lines[j]->x1 - x;
+        //  float dy1 = m_pGrid[i].Lines[j]->y1 - y;
+        //  if(sqrt(dx1*dx1 + dy1*dy1) <= r) {
+        //    /* We have a touch! */
+        //    dContact c;
+        //    Vector2f W = Vector2f(-dx1,-dy1);
+        //    W.normalize();
+
+        //    _SetWheelContactParams(&c,Vector2f(m_pGrid[i].Lines[j]->x1,m_pGrid[i].Lines[j]->y1),
+        //                           W,_CalculateDepth(Vector2f(x,y),r,Vector2f(m_pGrid[i].Lines[j]->x1,m_pGrid[i].Lines[j]->y1)));                                   
+        //    nNumC = _AddContactToList(pContacts,nNumC,&c,nMaxC);            
+        //    continue;
+        //  }
+
+        //  float dx2 = m_pGrid[i].Lines[j]->x2 - x;
+        //  float dy2 = m_pGrid[i].Lines[j]->y2 - y;
+        //  if(sqrt(dx2*dx2 + dy2*dy2) <= r) {
+        //    /* We have a touch! */            
+        //    dContact c;
+        //    Vector2f W = Vector2f(-dx2,-dy2);
+        //    W.normalize();
+
+        //    _SetWheelContactParams(&c,Vector2f(m_pGrid[i].Lines[j]->x2,m_pGrid[i].Lines[j]->y2),
+        //                           W,_CalculateDepth(Vector2f(x,y),r,Vector2f(m_pGrid[i].Lines[j]->x2,m_pGrid[i].Lines[j]->y2)));                                   
+        //    nNumC = _AddContactToList(pContacts,nNumC,&c,nMaxC);            
+        //    continue;
+        //  }
+
+        //  /* Calculate intersection */
+		      //Vector2f T1,T2;
+		      //int n = intersectLineCircle2f(Vector2f(x,y),r,Vector2f(m_pGrid[i].Lines[j]->x1,m_pGrid[i].Lines[j]->y1),
+		      //                              Vector2f(m_pGrid[i].Lines[j]->x2,m_pGrid[i].Lines[j]->y2),T1,T2);
+        //  if(n>0) {
+        //    dContact c;
+        //    Vector2f W = Vector2f(enx,eny);
+        //    W.normalize();
+        //    
+        //    _SetWheelContactParams(&c,T1,W,_CalculateDepth(Vector2f(x,y),r,T1));                                   
+        //    nNumC = _AddContactToList(pContacts,nNumC,&c,nMaxC);
+        //      
+        //    if(n>1) {
+        //      _SetWheelContactParams(&c,T2,W,_CalculateDepth(Vector2f(x,y),r,T2));                                   
+        //      nNumC = _AddContactToList(pContacts,nNumC,&c,nMaxC);
+        //    }
+        //  }
+  
+  
   int CollisionSystem::collideCircle(float x,float y,float r,dContact *pContacts,int nMaxC) {
     int nNumC = 0;
   
@@ -394,6 +592,14 @@ namespace vapp {
       m_CheckedCellsW.clear();
     }
     
+    /* Collide against dynamic lines */
+    for(int k=0;k<m_ExternalDynamicLines.size();k++) {
+      int nOldC = nNumC;
+      nNumC = _CollideCircleAndLine(m_ExternalDynamicLines[k],x,y,r,pContacts,nNumC,nMaxC);
+      if(nOldC != nNumC)
+        m_bDynamicTouched = true;
+    }
+    
     /* For each cell we might have touched something in... */
     for(int cx=nMinCX;cx<=nMaxCX;cx++) {
       for(int cy=nMinCY;cy<=nMaxCY;cy++) {
@@ -415,110 +621,7 @@ namespace vapp {
         
         /* Check all lines in cell */
         for(int j=0;j<m_pGrid[i].Lines.size();j++) {
-          /* Is circle "behind" the line? */
-          float vx = m_pGrid[i].Lines[j]->x2 - m_pGrid[i].Lines[j]->x1;
-          float vy = m_pGrid[i].Lines[j]->y2 - m_pGrid[i].Lines[j]->y1;
-          float enx = -vy;
-          float eny = vx;
-          if(enx*x + eny*y < enx*m_pGrid[i].Lines[j]->x1 + eny*m_pGrid[i].Lines[j]->y1) {
-            /* Yes it is, can't touch */
-            continue;
-          }
-
-          /* Too small? */
-          if(fabs(vx) < 0.0001f && fabs(vy) < 0.0001f) {
-            continue;
-          }
-
-          if(m_bDebugFlag)
-            m_CheckedLinesW.push_back(m_pGrid[i].Lines[j]);
-
-          /* Is line endings inside the circle? */
-          float dx1 = m_pGrid[i].Lines[j]->x1 - x;
-          float dy1 = m_pGrid[i].Lines[j]->y1 - y;
-          if(sqrt(dx1*dx1 + dy1*dy1) <= r) {
-            /* We have a touch! */
-            dContact c;
-            Vector2f W = Vector2f(-dx1,-dy1);
-            W.normalize();
-
-            _SetWheelContactParams(&c,Vector2f(m_pGrid[i].Lines[j]->x1,m_pGrid[i].Lines[j]->y1),
-                                   W,_CalculateDepth(Vector2f(x,y),r,Vector2f(m_pGrid[i].Lines[j]->x1,m_pGrid[i].Lines[j]->y1)));                                   
-            nNumC = _AddContactToList(pContacts,nNumC,&c,nMaxC);            
-            continue;
-          }
-
-          float dx2 = m_pGrid[i].Lines[j]->x2 - x;
-          float dy2 = m_pGrid[i].Lines[j]->y2 - y;
-          if(sqrt(dx2*dx2 + dy2*dy2) <= r) {
-            /* We have a touch! */            
-            dContact c;
-            Vector2f W = Vector2f(-dx2,-dy2);
-            W.normalize();
-
-            _SetWheelContactParams(&c,Vector2f(m_pGrid[i].Lines[j]->x2,m_pGrid[i].Lines[j]->y2),
-                                   W,_CalculateDepth(Vector2f(x,y),r,Vector2f(m_pGrid[i].Lines[j]->x2,m_pGrid[i].Lines[j]->y2)));                                   
-            nNumC = _AddContactToList(pContacts,nNumC,&c,nMaxC);            
-            continue;
-          }
-
-          /* Calculate intersection */
-		      Vector2f T1,T2;
-		      int n = intersectLineCircle2f(Vector2f(x,y),r,Vector2f(m_pGrid[i].Lines[j]->x1,m_pGrid[i].Lines[j]->y1),
-		                                    Vector2f(m_pGrid[i].Lines[j]->x2,m_pGrid[i].Lines[j]->y2),T1,T2);
-          if(n>0) {
-            dContact c;
-            Vector2f W = Vector2f(enx,eny);
-            W.normalize();
-            
-            _SetWheelContactParams(&c,T1,W,_CalculateDepth(Vector2f(x,y),r,T1));                                   
-            nNumC = _AddContactToList(pContacts,nNumC,&c,nMaxC);
-              
-            if(n>1) {
-              _SetWheelContactParams(&c,T2,W,_CalculateDepth(Vector2f(x,y),r,T2));                                   
-              nNumC = _AddContactToList(pContacts,nNumC,&c,nMaxC);
-            }
-          }
-                    
-          ///* Calculate intersections */
-          //float rl = sqrt(vx*vx + vy*vy);
-          //vx /= rl; vy /= rl;
-          //
-          //float dx1 = x - m_pGrid[i].Lines[j]->x1;
-          //float dy1 = y - m_pGrid[i].Lines[j]->y1;
-          //float zx = -dx1, zy = -dy1;          
-          //float b = -(zx*vx + zy*vy);
-          //float det = (b * b) - (vx*vx + vy*vy)+ r*r;
-          //if(det<0.0f && det>-0.0001f) det=0.0f;
-          //if(det >= 0.0f) {
-          //  det = sqrt(det);
-          //  float i1 = b - det;
-          //  float i2 = b + det;
-          //  
-          //  if(i1>-0.0001f && i1<rl+0.0001f && i2>-0.0001f && i2<rl+0.0001f) {
-          //    tcx[nNumC] = m_pGrid[i].Lines[j]->x1 + i1 * vx;
-          //    tcy[nNumC] = m_pGrid[i].Lines[j]->y1 + i1 * vy;
-          //    nNumC++;
-          //    if(nNumC == nMaxC) return nNumC;
-
-          //    tcx[nNumC] = m_pGrid[i].Lines[j]->x1 + i2 * vx;
-          //    tcy[nNumC] = m_pGrid[i].Lines[j]->y1 + i2 * vy;
-          //    nNumC++;
-          //    if(nNumC == nMaxC) return nNumC;
-          //  }
-          //  else if(i1>-0.0001f && i1<rl+0.0001f) {
-          //    tcx[nNumC] = m_pGrid[i].Lines[j]->x1 + i1 * vx;
-          //    tcy[nNumC] = m_pGrid[i].Lines[j]->y1 + i1 * vy;
-          //    nNumC++;
-          //    if(nNumC == nMaxC) return nNumC;
-          //  }
-          //  else if(i2>-0.0001f && i2<rl+0.0001f) {
-          //    tcx[nNumC] = m_pGrid[i].Lines[j]->x1 + i2 * vx;
-          //    tcy[nNumC] = m_pGrid[i].Lines[j]->y1 + i2 * vy;
-          //    nNumC++;
-          //    if(nNumC == nMaxC) return nNumC;
-          //  }
-          //}
+          nNumC = _CollideCircleAndLine(m_pGrid[i].Lines[j],x,y,r,pContacts,nNumC,nMaxC);
         }          
       }
     }
@@ -560,6 +663,8 @@ namespace vapp {
     Vector2f Normal = NormalT;
     Normal.normalize();
     pc->geom.depth = fDepth;
+    
+    //printf("%f \n",pc->geom.depth);
     pc->geom.normal[0] = Normal.x;
     pc->geom.normal[1] = Normal.y;
     pc->geom.pos[0] = Pos.x;
@@ -578,6 +683,20 @@ namespace vapp {
     float fDepth = Cr - fDist;
     if(fDepth<0.0f) fDepth=0.0f;
     return fDepth;
+  }
+
+  float CollisionSystem::_CalculateCircleLineDepth(const Vector2f &Cp,float Cr,Vector2f P1,Vector2f P2) {
+    Vector2f N;
+    N.x = P2.y - P1.y;
+    N.y = -(P2.x - P1.x);
+    Vector2f R = P1 - Cp;
+        
+    if(N.length() > 0.0f) {     
+      N.normalize(); 
+      float f = R.x * N.x + R.y * N.y;            
+      return Cr - fabs(f);
+    }
+    return 0.0f;
   }
   
   int CollisionSystem::_AddContactToList(dContact *pContacts,int nNumContacts,dContact *pc,int nMaxContacts) {
