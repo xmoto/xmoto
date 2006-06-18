@@ -30,6 +30,12 @@ Game.cpp around 1210 : adding a catch ; however, when the exception is
 
   UPDATE:  It appears it's only possible to produce the bug when ghost is enabled.
 
+
+* BUG: When you make a room highscore, SOMETIMES! the message NEW HIGHSCORE keep in place after...
+* BUG: the window "it seems you have not OpenGL, please check your configuratino" can't be close by clicking on the ok button.
+* BUG : view highscore with up and down with keyboard does not update
+   the button
+
 #
 * replay arch indepedance structure
 * having the information of time diff about the ghost each time you take a strawberry, because we know the information already at this time
@@ -60,7 +66,7 @@ Undecided:
 * upload highscore from the game ? (require login/password room
    configuration ;-(
 * it seems that there is a bug on speed it is played (if i play
-   replays done on fast machine, it appear faster)
+   replays done on fast machine, it appear faster) http://xmoto.free.fr/replays/replay_1312.rpl
 * pb for left hand written people for the editor
 * two possibilities to show room : one to see the world highscore, one
    to see you room (optionnal)
