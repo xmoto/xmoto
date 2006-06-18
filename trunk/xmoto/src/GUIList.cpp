@@ -193,7 +193,7 @@ namespace vapp {
         if(x >= nLX && x <getPosition().nWidth-6 &&
           y >= yy && y < yy+nRowHeight) {
           /* Select this */
-          m_nSelected = i;
+	  setSelected(i);
           _NewlySelectedItem();
           
           /* AND invoke enter-button */
@@ -236,7 +236,7 @@ namespace vapp {
         if(x >= nLX && x <getPosition().nWidth-6 &&
           y >= yy && y < yy+nRowHeight) {
           /* Select this */
-          m_nSelected = i;
+	  setSelected(i);
           _NewlySelectedItem();
           break;
         }

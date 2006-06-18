@@ -11,7 +11,6 @@ Assigned to Neckelmann:
 Assigned to Nicolas:
 * theme (for sprites) (priority=high)
 * having the information of time diff about the ghost each time you take a strawberry, because we know the information already at this time(priority=medium)
-* BUG : view highscore with up and down with keyboard does not update the button(priority=high)
 * BUG : move objects in script doesn't work(priority=medium)
 * high level function for script : DynamicMove(item, srcX, srcY, dstX, dstY,
    speed, type = "linear") for example : one call manage the movement of the element(priority=medium)

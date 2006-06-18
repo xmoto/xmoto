@@ -615,6 +615,8 @@ namespace vapp {
         
 	m_bClicked = false;
 
+	m_bChanged = false;
+
         unhideAllColumns();
       }      
       virtual ~UIList() {_FreeUIList();}
@@ -639,7 +641,7 @@ namespace vapp {
       std::vector<UIListEntry *> &getEntries(void) {return m_Entries;}      
       std::vector<std::string> &getColumns(void) {return m_Columns;}
       int getSelected(void) {return m_nSelected;}
-      void setSelected(int n) {m_nSelected = n;}
+      void setSelected(int n) {m_bChanged = true; m_nSelected = n;}
       void addColumn(std::string Title,int nWidth) {m_Columns.push_back(Title); m_ColumnWidths.push_back(nWidth);}
       void setEnterButton(UIButton *pButton) {m_pEnterButton = pButton;}
       bool isItemActivated(void) {return m_bItemActivated;}
@@ -650,8 +652,12 @@ namespace vapp {
       bool isClicked(void) {return m_bClicked;}
       void setClicked(bool b) {m_bClicked=b;}
 
+      bool isChanged(void) {return m_bChanged;}
+      void setChanged(bool b) {m_bChanged=b;}
+
     private:
       /* Data */
+      bool m_bChanged;
       bool m_bSort;
       std::vector<UIListEntry *> m_Entries;
       std::vector<std::string> m_Columns;
@@ -684,7 +690,7 @@ namespace vapp {
         initW(pParent,x,y,Caption,nWidth,nHeight);        
         
         m_nSelected = 0;
-	m_bChanged = 0;
+	m_bChanged = false;
       }      
 
       /* Methods */
@@ -707,14 +713,14 @@ namespace vapp {
       void setSelected(int n) {
         m_nSelected = n;
       }
-      
+
       bool isChanged(void) {return m_bChanged;}
       void setChanged(bool b) {m_bChanged=b;}
 
     private:
       /* Data */
-      int m_nSelected;
       bool m_bChanged;
+      int m_nSelected;
       std::vector<std::string> m_TabContextHelp;
   };
 

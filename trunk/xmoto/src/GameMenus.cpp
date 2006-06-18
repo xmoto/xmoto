@@ -1906,33 +1906,33 @@ namespace vapp {
 
     /* level menu : */
     /* any list clicked ? */
-    if(m_pPlayInternalLevelsList->isClicked()) {
+    if(m_pPlayInternalLevelsList->isChanged()) {
       LevelSrc *pLevelSrc = m_pPlayInternalLevelsList->getSelectedLevel();
       if(pLevelSrc != NULL) {
 #if defined(SUPPORT_WEBACCESS)
 	setLevelInfoFrameBestPlayer(pLevelSrc->getID());
 #endif
       }
-      m_pPlayInternalLevelsList->setClicked(false);
+      m_pPlayInternalLevelsList->setChanged(false);
     }
 
-    if(m_pPlayExternalLevelsList->isClicked()) {
+    if(m_pPlayExternalLevelsList->isChanged()) {
       LevelSrc *pLevelSrc = m_pPlayExternalLevelsList->getSelectedLevel();
       if(pLevelSrc != NULL) {
 #if defined(SUPPORT_WEBACCESS)
 	setLevelInfoFrameBestPlayer(pLevelSrc->getID());
 #endif
       }
-      m_pPlayExternalLevelsList->setClicked(false);
+      m_pPlayExternalLevelsList->setChanged(false);
     }
 
 #if defined(SUPPORT_WEBACCESS)
-    if(m_pPlayNewLevelsList->isClicked()) {
+    if(m_pPlayNewLevelsList->isChanged()) {
       LevelSrc *pLevelSrc = m_pPlayNewLevelsList->getSelectedLevel();
       if(pLevelSrc != NULL) {
 	setLevelInfoFrameBestPlayer(pLevelSrc->getID());
       }
-      m_pPlayNewLevelsList->setClicked(false);
+      m_pPlayNewLevelsList->setChanged(false);
     }
 #endif
 
