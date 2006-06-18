@@ -1,54 +1,52 @@
 # for 0.2.0
-* try to compile without WEBSUPPORT and GHOST to see the result
-* "view the highscore" button is not visible for pack
+
+######################################################################
+Assigned to Neckelmann:
+* "view the highscore" button is not visible for pack(priority=high)
 * add <xml_room> in configuration so that the player can choose the
-   link to his room xml file (priority=high)
+   link to his room xml file (priority=high)(priority=high)
+* BUG: the window "it seems you have not OpenGL, please check your configuratino" can't be close by clicking on the ok button.(priority=high)
+
+######################################################################
+Assigned to Nicolas:
+* theme (for sprites) (priority=high)
+* having the information of time diff about the ghost each time you take a strawberry, because we know the information already at this time(priority=medium)
+* BUG : view highscore with up and down with keyboard does not update the button(priority=high)
+* BUG : move objects in script doesn't work(priority=medium)
+* high level function for script : DynamicMove(item, srcX, srcY, dstX, dstY,
+   speed, type = "linear") for example : one call manage the movement of the element(priority=medium)
+
+######################################################################
+Unassigned:
 * BUG : when you see level info in level pack ; then you click on ok
    -> it close the window and the levelpack window
-
+* BUG: When you make a room highscore, SOMETIMES! the message NEW HIGHSCORE keep in place after...
+* add 3 2 1 GO ! at level startup (only if the level played is
+   different from the last played)
+* have a <----> for the lists
+* it seems that there is a bug on speed it is played (if i play
+   replays done on fast machine, it appear faster) http://xmoto.free.fr/replays/replay_1312.rpl
 * BUG :
 - start a level, press very fastly (ESC-ENTER)* ; quite easy to
    reproduce (works on windows and linux)
 (gdb) run
 Starting program: /home/nicolas/progs/archives/xmoto_cvs/xmoto/xmoto
-[Thread debugging using libthread_db enabled]
-[New Thread -1226758432 (LWP 8417)]
-[New Thread -1227158608 (LWP 8420)]
-[New Thread -1250370640 (LWP 8421)]
-fatal exception : null vector normalize
-[Thread -1227158608 (zombie) exited]
-[Thread -1250370640 (zombie) exited]
-^[
 Program exited normally.
-(gdb)  
-
 Game.cpp around 1210 : adding a catch ; however, when the exception is
    catched, the level is displayed badly
    	  try {
    	    m_Renderer.render();
 	  } catch(Exception &e) {printf("Exception handled\n");}
+UPDATE:  It appears it's only possible to produce the bug when ghost is enabled.
 
-  UPDATE:  It appears it's only possible to produce the bug when ghost is enabled.
-
-
-* BUG: When you make a room highscore, SOMETIMES! the message NEW HIGHSCORE keep in place after...
-* BUG: the window "it seems you have not OpenGL, please check your configuratino" can't be close by clicking on the ok button.
-* BUG : view highscore with up and down with keyboard does not update
-   the button
-
-#
+# for later:
 * replay arch indepedance structure
-* having the information of time diff about the ghost each time you take a strawberry, because we know the information already at this time
-* BUG : move objects in script doesn't work
-* have a <----> for the lists
 * see about timeout when connection failed
 * display a nice counter for engine speed : disable this counter in replays
 * a button "clean replays" which remove not highscore replays or
    something like it
 * check for a new version at startup
-
 * add a counter of uncompleted levels (priority=medium)
-* theme (for sprites) (priority=medium)
 * add a tab : favorite levels (priority=low)
 * add 2 rooms configurations so that i can display, world highscore
    and highscore of my room (priority=low)
@@ -58,22 +56,17 @@ Game.cpp around 1210 : adding a catch ; however, when the exception is
 
 Undecided:
 * allow keep button pressed on list for people having not wheel ;-)
-* add 3 2 1 GO ! at level startup (it neckelmann agree) 
 * context information for levels : when one is selected, display
    information
 * separate personnal highscores from others (two tabs instead of a
    button, it's easiest) (it neckelmann agree)
 * upload highscore from the game ? (require login/password room
    configuration ;-(
-* it seems that there is a bug on speed it is played (if i play
-   replays done on fast machine, it appear faster) http://xmoto.free.fr/replays/replay_1312.rpl
 * pb for left hand written people for the editor
 * two possibilities to show room : one to see the world highscore, one
    to see you room (optionnal)
 * allow to run : xmoto -level l1.lvl to allow playing a level just by cliking on
    it (even if it's not in the xmoto dir)
 * display wind
-* high level function for script : DynamicMove(item, srcX, srcY, dstX, dstY,
-   speed, type = "linear") for example : one call manage the movement of the element
 
    
