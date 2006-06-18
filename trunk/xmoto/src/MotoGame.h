@@ -57,7 +57,10 @@ namespace vapp {
   ===========================================================================*/
   enum EdgeEffect {
     EE_UNASSIGNED,
-    EE_GRASS
+    EE_GRASS,
+    EE_REDBRICKS,
+    EE_GRAYBRICKS,
+    EE_BLUEBRICKS
   };
 
   /*===========================================================================
@@ -608,6 +611,7 @@ namespace vapp {
       std::vector<GameMessage *> &getGameMessage(void) {return m_GameMessages;}
       std::vector<Entity *> &getEntities(void) {return m_Entities;}
       std::vector<Entity *> &getBSprites(void) {return m_BSprites;}
+      std::vector<Entity *> &getMSprites(void) {return m_MSprites;}
       std::vector<Entity *> &getFSprites(void) {return m_FSprites;}
       std::vector<OverlayEdge *> &getOverlayEdges(void) {return m_OvEdges;}
       float getTime(void) {return m_fTime;}
@@ -662,6 +666,7 @@ namespace vapp {
       dWorldID m_WorldID;                 /* World ID */
       
       std::vector<Entity *> m_FSprites;   /* Foreground sprites */
+      std::vector<Entity *> m_MSprites;   /* "middleground" sprites */
       std::vector<Entity *> m_BSprites;   /* Background sprites */
       std::vector<OverlayEdge *> m_OvEdges;/* Overlay edges */
       std::vector<Entity *> m_DelSchedule;/* Entities scheduled for deletion */

@@ -779,6 +779,7 @@ namespace vapp {
 
       m_FSprites.clear();
       m_BSprites.clear();
+      m_MSprites.clear();
       
       /* Stop physics */
       _UninitPhysics();
@@ -1097,9 +1098,11 @@ namespace vapp {
                           
       /* Foreground/background? */
       if(pEnt->fSpriteZ > 0.0f)
-	m_FSprites.push_back(pEnt); /* TODO: keep these lists ordered! */
+	      m_FSprites.push_back(pEnt); /* TODO: keep these lists ordered! */
+      else if(pEnt->fSpriteZ == 0.0f)
+        m_MSprites.push_back(pEnt);
       else
-	m_BSprites.push_back(pEnt);
+	      m_BSprites.push_back(pEnt);
       break;
     case ET_WRECKER:
       break;
@@ -1190,6 +1193,9 @@ namespace vapp {
   
   EdgeEffect MotoGame::_TransEdgeEffect(std::string Name) {
     if(Name == "Grass") return EE_GRASS;
+    if(Name == "RedBricks") return EE_REDBRICKS;
+    if(Name == "BlueBricks") return EE_BLUEBRICKS;
+    if(Name == "GrayBricks") return EE_GRAYBRICKS;
     
     return EE_UNASSIGNED;
   }

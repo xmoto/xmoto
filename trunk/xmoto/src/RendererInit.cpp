@@ -192,6 +192,9 @@ namespace vapp {
     m_pSkyTexture2 = getParent()->TexMan.loadTexture("Textures/Effects/Sky2.jpg");
     m_pSkyTexture2Drift = getParent()->TexMan.loadTexture("Textures/Effects/Sky2Drift.jpg");        
     m_pEdgeGrass1 = getParent()->TexMan.loadTexture("Textures/Effects/EdgeGrass1.png");
+    m_pEdgeRedBricks1 = getParent()->TexMan.loadTexture("Textures/Effects/EdgeRedBricks1.jpg");
+    m_pEdgeGrayBricks1 = getParent()->TexMan.loadTexture("Textures/Effects/EdgeGrayBricks1.jpg");
+    m_pEdgeBlueBricks1 = getParent()->TexMan.loadTexture("Textures/Effects/EdgeBlueBricks1.jpg");
     
     m_pSmoke1 = getParent()->TexMan.loadTexture("Textures/Effects/Smoke1.png");
     m_pSmoke2 = getParent()->TexMan.loadTexture("Textures/Effects/Smoke2.png");

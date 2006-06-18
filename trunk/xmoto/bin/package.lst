@@ -4,6 +4,7 @@ Textures/DarkFrostGround.jpg
 Textures/Dirt.jpg
 Textures/FrostGround.jpg
 Textures/MoltenRock.jpg
+Textures/BlueBricks.jpg
 
 Sounds/Button1.ogg
 Sounds/Button3.ogg
@@ -172,6 +173,9 @@ Textures/Bikes/Wheel_Ghost.png
 
 Textures/Effects/EarthVines.png
 Textures/Effects/EdgeGrass1.png
+Textures/Effects/EdgeRedBricks1.jpg
+Textures/Effects/EdgeGrayBricks1.jpg
+Textures/Effects/EdgeBlueBricks1.jpg
 Textures/Effects/EdgeIce1.png
 Textures/Effects/Fire1.png
 Textures/Effects/Sky1.jpg
@@ -211,6 +215,10 @@ Textures/Sprites/ThisWaySignRight1.png
 Textures/Sprites/Tree1.png
 Textures/Sprites/Tree2.png
 Textures/Sprites/Tut3Sign.png
+Textures/Sprites/HStones.png
+Textures/Sprites/Bridge.png
+Textures/Sprites/CastleWindow1.png
+Textures/Sprites/CastleDoor1.png
 
 Textures/UI/MenuBL.png
 Textures/UI/MenuBR.png

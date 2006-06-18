@@ -318,6 +318,9 @@ namespace vapp {
       Texture *m_pSkyTexture2;
       Texture *m_pSkyTexture2Drift;
       Texture *m_pEdgeGrass1;
+      Texture *m_pEdgeRedBricks1;
+      Texture *m_pEdgeGrayBricks1;
+      Texture *m_pEdgeBlueBricks1;
       Animation *m_pStrawberryAnim;
       Animation *m_pFlowerAnim;
       Animation *m_pWreckerAnim;

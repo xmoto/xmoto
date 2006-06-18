@@ -354,6 +354,11 @@ namespace vapp {
         
     /* ... covered by blocks ... */
     _RenderBlocks();
+
+    if(m_Quality != GQ_LOW && !m_bUglyMode) {
+      /* ... then render "middleground" sprites ... */
+      _RenderSprites(false,false);
+    }
     
     /* ... the entities ... */
     _RenderEntities();
@@ -625,17 +630,24 @@ namespace vapp {
   ===========================================================================*/
   void GameRenderer::_RenderSprites(bool bForeground,bool bBackground) { 
     MotoGame *pGame = getGameObject();
-  
-    /* In front? */
-    if(bForeground) {
-      for(int i=0;i<pGame->getFSprites().size();i++)
-        _RenderSprite(pGame->getFSprites()[i]);
+    
+    /* Middleground? (not foreground, not background) */
+    if(!bForeground && !bBackground) {
+      for(int i=0;i<pGame->getMSprites().size();i++)
+        _RenderSprite(pGame->getMSprites()[i]);
     }
+    else {
+      /* In front? */
+      if(bForeground) {
+        for(int i=0;i<pGame->getFSprites().size();i++)
+          _RenderSprite(pGame->getFSprites()[i]);
+      }
 
-    /* Those in back? */
-    if(bBackground) {
-      for(int i=0;i<pGame->getBSprites().size();i++)
-        _RenderSprite(pGame->getBSprites()[i]);
+      /* Those in back? */
+      if(bBackground) {
+        for(int i=0;i<pGame->getBSprites().size();i++)
+          _RenderSprite(pGame->getBSprites()[i]);
+      }
     }
   }
 
@@ -760,24 +772,51 @@ namespace vapp {
 	        
 					switch(pEdge->Effect) {
 						case EE_GRASS:
-							if(m_pEdgeGrass1 != NULL) {
-								glEnable(GL_BLEND); 
-								glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
-								glBindTexture(GL_TEXTURE_2D,m_pEdgeGrass1->nID);
-								glEnable(GL_TEXTURE_2D);
-								glBegin(GL_POLYGON);
-								glColor3f(1,1,1);
-								glTexCoord2f((pEdge->pSrcBlock->fPosX+pEdge->P1.x)*0.5,0.01);
-								_Vertex(pEdge->P1 + Vector2f(pEdge->pSrcBlock->fPosX,pEdge->pSrcBlock->fPosY));
-								glTexCoord2f((pEdge->pSrcBlock->fPosX+pEdge->P2.x)*0.5,0.01);
-								_Vertex(pEdge->P2 + Vector2f(pEdge->pSrcBlock->fPosX,pEdge->pSrcBlock->fPosY));
-								glTexCoord2f((pEdge->pSrcBlock->fPosX+pEdge->P2.x)*0.5,0.99);
-								_Vertex(pEdge->P2 + Vector2f(pEdge->pSrcBlock->fPosX,pEdge->pSrcBlock->fPosY) + Vector2f(0,-0.3));
-								glTexCoord2f((pEdge->pSrcBlock->fPosX+pEdge->P1.x)*0.5,0.99);
-								_Vertex(pEdge->P1 + Vector2f(pEdge->pSrcBlock->fPosX,pEdge->pSrcBlock->fPosY) + Vector2f(0,-0.3));
-								glEnd();
-								glDisable(GL_TEXTURE_2D);
-								glDisable(GL_BLEND);
+						case EE_BLUEBRICKS:
+						case EE_GRAYBRICKS:
+						case EE_REDBRICKS: {
+						    GLuint GLName = 0;
+						    float fXScale,fDepth;
+						    if(pEdge->Effect == EE_GRASS && m_pEdgeGrass1 != NULL) {						    
+						      GLName = m_pEdgeGrass1->nID;
+						      fXScale = 0.5f;
+						      fDepth = 0.3;
+						    }
+						    else if(pEdge->Effect == EE_REDBRICKS && m_pEdgeRedBricks1 != NULL) {						    
+						      GLName = m_pEdgeRedBricks1->nID;						      
+						      fXScale = 0.8f;
+						      fDepth = 0.3;
+						    }						
+						    else if(pEdge->Effect == EE_GRAYBRICKS && m_pEdgeGrayBricks1 != NULL) {						    
+						      GLName = m_pEdgeGrayBricks1->nID;						      
+						      fXScale = 0.8f;
+						      fDepth = 0.3;
+						    }
+						    else if(pEdge->Effect == EE_BLUEBRICKS && m_pEdgeBlueBricks1 != NULL) {						    
+						      GLName = m_pEdgeBlueBricks1->nID;						      
+						      fXScale = 0.8f;
+						      fDepth = 0.3;
+						    }
+						
+							  if(GLName != 0) {
+								  glEnable(GL_BLEND); 
+								  glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
+								  glBindTexture(GL_TEXTURE_2D,GLName);
+								  glEnable(GL_TEXTURE_2D);
+								  glBegin(GL_POLYGON);
+								  glColor3f(1,1,1);
+								  glTexCoord2f((pEdge->pSrcBlock->fPosX+pEdge->P1.x)*fXScale,0.01);
+								  _Vertex(pEdge->P1 + Vector2f(pEdge->pSrcBlock->fPosX,pEdge->pSrcBlock->fPosY));
+								  glTexCoord2f((pEdge->pSrcBlock->fPosX+pEdge->P2.x)*fXScale,0.01);
+								  _Vertex(pEdge->P2 + Vector2f(pEdge->pSrcBlock->fPosX,pEdge->pSrcBlock->fPosY));
+								  glTexCoord2f((pEdge->pSrcBlock->fPosX+pEdge->P2.x)*fXScale,0.99);
+								  _Vertex(pEdge->P2 + Vector2f(pEdge->pSrcBlock->fPosX,pEdge->pSrcBlock->fPosY) + Vector2f(0,-fDepth));
+								  glTexCoord2f((pEdge->pSrcBlock->fPosX+pEdge->P1.x)*fXScale,0.99);
+								  _Vertex(pEdge->P1 + Vector2f(pEdge->pSrcBlock->fPosX,pEdge->pSrcBlock->fPosY) + Vector2f(0,-fDepth));
+								  glEnd();
+								  glDisable(GL_TEXTURE_2D);
+								  glDisable(GL_BLEND);
+							  }
 							}
 							break;
 					}
