@@ -617,6 +617,8 @@ namespace vapp {
 
 	m_bChanged = false;
 
+	m_lastRefreshTime = getApp()->getRealTime();
+
         unhideAllColumns();
       }      
       virtual ~UIList() {_FreeUIList();}
@@ -658,6 +660,7 @@ namespace vapp {
     private:
       /* Data */
       bool m_bChanged;
+      float m_lastRefreshTime;
       bool m_bSort;
       std::vector<UIListEntry *> m_Entries;
       std::vector<std::string> m_Columns;
@@ -678,6 +681,7 @@ namespace vapp {
       void _FreeUIList(void);
       void _NewlySelectedItem(void);
       void _Scroll(int nPixels);
+      void _refreshByTime();
   };
 
 	/*===========================================================================

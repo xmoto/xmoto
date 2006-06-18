@@ -28,15 +28,34 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 namespace vapp {
 
+  void UIList::_refreshByTime() {
+    float v_time = getApp()->getRealTime();
+
+    while(m_lastRefreshTime + 0.01 < v_time) {
+      
+      if(m_bScrollDownPressed) {
+	_Scroll(-1);
+      }
+      
+      if(m_bScrollUpPressed) {
+	_Scroll(1);
+      }
+      
+      m_lastRefreshTime = v_time;
+    }
+  }
+
   /*===========================================================================
   Painting
   ===========================================================================*/
   void UIList::paint(void) {
+    _refreshByTime();
+
     bool bDisabled = isDisabled();
     bool bActive = isActive();
-    
+
     m_bItemActivated = false;
-  
+
     /* Draw list frame */
     putElem(0,0,-1,-1,UI_ELEM_FRAME_TL,false);
     putElem(getPosition().nWidth-8,0,-1,-1,UI_ELEM_FRAME_TR,false);
@@ -222,11 +241,13 @@ namespace vapp {
     if(x >= nLX+nLWidth && x < nLX+nLWidth + 20 &&
        y >= 6 && y < 6+20) {
       /* Scroll up! */
+      //_Scroll(16);
       m_bScrollUpPressed = true;
     } 
     else if(x >= nLX+nLWidth && x < nLX+nLWidth + 20 &&
        y >= nLY+nLHeight-20 && y < nLY+nLHeight) {
       /* Scroll down! */
+	 // _Scroll(-16);
       m_bScrollDownPressed = true;
     }    
     else {
@@ -255,12 +276,12 @@ namespace vapp {
     if(x >= nLX+nLWidth && x < nLX+nLWidth + 20 &&
        y >= 6 && y < 26) {
       /* Scroll up! */
-      _Scroll(16);
+      //_Scroll(16);
     } 
     else if(x >= nLX+nLWidth && x < nLX+nLWidth + 20 &&
        y >= nLY+nLHeight-20 && y < nLY+nLHeight) {
       /* Scroll down! */
-      _Scroll(-16);
+      //_Scroll(-16);
     }
 
     m_bClicked = true;  
