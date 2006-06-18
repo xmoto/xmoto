@@ -106,6 +106,7 @@ namespace vapp {
     std::vector<LevelBlockVertex *> Vertices; /* Vertices of block */
     bool bBackground;         /* Background block */
     bool bWater;              /* Water block */
+    bool bDynamic;            /* Non-static geometry */
   };
 
 	/*===========================================================================

@@ -7,6 +7,8 @@ X-Moto 0.2.0 (beta) 2006-
    designers to specify the X-Moto version required to play a level.
  * Bug with in-game ghost information display fixed.
  * Player statistics.
+ * New textures, sprites, and edge effects (RedBricks, GrayBricks,
+   and BlueBricks).
 
 X-Moto 0.1.16 (alpha) 2006-06-16
 --------------------------------

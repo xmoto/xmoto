@@ -536,12 +536,14 @@ namespace vapp {
       throw Exception("getDisplayModes : No modes available.");
     }
 
+    /* Always include these to modes */
+    modes->push_back("800 X 600");
+    modes->push_back("1024 X 768");
+
     /* Check if or resolution is restricted */
     if(sdl_modes == (SDL_Rect **)-1){
       /* Should never happen */
       //Log("All resolutions available.");
-      modes->push_back("800 X 600");
-      modes->push_back("1024 X 768");
       modes->push_back("1280 X 1024");
       modes->push_back("1600 X 1200");
     } else{
