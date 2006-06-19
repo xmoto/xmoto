@@ -448,8 +448,6 @@ namespace vapp {
     m_bFirstPhysicsUpdate = false;
   }
 
-
-#if defined(ALLOW_GHOST)
   /*===========================================================================
     Update game state
     ===========================================================================*/
@@ -550,8 +548,6 @@ namespace vapp {
     pBikeS->RRearWheelP.x = m_BikeA.Rp.x*pBikeS->fFrameRot[0] + m_BikeA.Rp.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
     pBikeS->RRearWheelP.y = m_BikeA.Rp.x*pBikeS->fFrameRot[2] + m_BikeA.Rp.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;     
   }
-  
-#endif
 
   void MotoGame::_UpdateGameState(SerializedBikeState *pReplayState) {
     bool bUpdateRider=true,bUpdateAltRider=true;

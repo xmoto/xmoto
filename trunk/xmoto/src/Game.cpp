@@ -110,7 +110,7 @@ namespace vapp {
           else {    
             /* Init level */    
             m_InputHandler.resetScriptKeyHooks();                                   
-            m_MotoGame.playLevel(pLevelSrc , true);
+            m_MotoGame.playLevel(NULL, pLevelSrc , true);
             m_nFrame = 0;
             m_Renderer.prepareForNewLevel();            
             
@@ -195,38 +195,10 @@ namespace vapp {
           notifyMsg(cBuf);                        
         }
         else {    
-          /* Start playing right away */     
-          m_InputHandler.resetScriptKeyHooks();           
-          m_MotoGame.playLevel(pLevelSrc, false);
-          m_State = GS_PLAYING;        
-          m_nFrame = 0;
-          
-          if(m_pReplay != NULL) delete m_pReplay;
-          m_pReplay = NULL;
-          
-          if(m_bRecordReplays) {
-            m_pReplay = new Replay;
-            m_pReplay->createReplay("Latest.rpl",pLevelSrc->getID(),m_pPlayer->PlayerName,m_fReplayFrameRate,sizeof(SerializedBikeState));
-          }
-          
-          PlayerTimeEntry *pBestTime = m_Profiles.getBestTime(m_PlaySpecificLevel);
-          PlayerTimeEntry *pBestPTime = m_Profiles.getBestPlayerTime(m_pPlayer->PlayerName,m_PlaySpecificLevel);
-          
-          std::string T1 = "--:--:--",T2 = "--:--:--";
-          if(pBestTime != NULL)
-            T1 = formatTime(pBestTime->fFinishTime);
-          if(pBestPTime != NULL)
-            T2 = formatTime(pBestPTime->fFinishTime);
-          
-          m_Renderer.setBestTime(T1 + std::string(" / ") + T2);
-	  m_Renderer.hideReplayHelp();
-
-          /* World-record stuff */
-#if defined(SUPPORT_WEBACCESS) 
-          _UpdateWorldRecord(m_PlaySpecificLevel);
-#endif
 
 #if defined(ALLOW_GHOST)
+	  m_MotoGame.setGhostActive(false);
+
 	  /* Ghost replay */
 	  if(m_bEnableGhost) {
 	    std::string v_PlayGhostReplay;
@@ -272,8 +244,7 @@ namespace vapp {
 		/* read first state */
 		static SerializedBikeState GhostBikeState;
 		m_pGhostReplay->peekState((char *)&GhostBikeState);
-		m_MotoGame.UpdateGhostFromReplay(m_pGhostReplay, &GhostBikeState);
-
+		m_MotoGame.UpdateGhostFromReplay(&GhostBikeState);
 		/* ghost info */
 		if(m_bEnableGhostInfo) {
 		  switch(m_GhostSearchStrategy) {
@@ -301,6 +272,36 @@ namespace vapp {
 	  }
 #endif
 
+          /* Start playing right away */     
+          m_InputHandler.resetScriptKeyHooks();           
+          m_MotoGame.playLevel(m_pGhostReplay, pLevelSrc, false);
+          m_State = GS_PLAYING;        
+          m_nFrame = 0;
+          
+          if(m_pReplay != NULL) delete m_pReplay;
+          m_pReplay = NULL;
+          
+          if(m_bRecordReplays) {
+            m_pReplay = new Replay;
+            m_pReplay->createReplay("Latest.rpl",pLevelSrc->getID(),m_pPlayer->PlayerName,m_fReplayFrameRate,sizeof(SerializedBikeState));
+          }
+          
+          PlayerTimeEntry *pBestTime = m_Profiles.getBestTime(m_PlaySpecificLevel);
+          PlayerTimeEntry *pBestPTime = m_Profiles.getBestPlayerTime(m_pPlayer->PlayerName,m_PlaySpecificLevel);
+          
+          std::string T1 = "--:--:--",T2 = "--:--:--";
+          if(pBestTime != NULL)
+            T1 = formatTime(pBestTime->fFinishTime);
+          if(pBestPTime != NULL)
+            T2 = formatTime(pBestPTime->fFinishTime);
+          
+          m_Renderer.setBestTime(T1 + std::string(" / ") + T2);
+	  m_Renderer.hideReplayHelp();
+
+          /* World-record stuff */
+#if defined(SUPPORT_WEBACCESS) 
+          _UpdateWorldRecord(m_PlaySpecificLevel);
+#endif
           /* Prepare level */
           m_Renderer.prepareForNewLevel();
         }
@@ -1226,13 +1227,13 @@ namespace vapp {
 
 	      if(m_nGhostFrame%2 || m_nGhostFrame==1) {
 		/* DONT INTERPOLATED FRAME */
-		m_MotoGame.UpdateGhostFromReplay(m_pGhostReplay, &GhostBikeState);
+		m_MotoGame.UpdateGhostFromReplay(&GhostBikeState);
 	      } else {
 		/* INTERPOLATED FRAME */
 		SerializedBikeState ibs;
 		m_MotoGame.interpolateGameState(&previousGhostBikeState,
 						&GhostBikeState,&ibs,0.5f);
-		m_MotoGame.UpdateGhostFromReplay(m_pGhostReplay, &ibs);
+		m_MotoGame.UpdateGhostFromReplay(&ibs);
 	      }
 	      m_nGhostFrame++;
 	    }

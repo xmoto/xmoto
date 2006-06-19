@@ -584,12 +584,17 @@ namespace vapp {
 		  m_lastCallToEveryHundreath = 0.0;
 #if defined(ALLOW_GHOST)
 		  m_showGhostTimeDiff = true;
+		  m_isGhostActive = false;
 #endif
       }
       ~MotoGame() {endLevel();}     
     
       /* Methods */
-      void playLevel(LevelSrc *pLevelSrc, bool bIsAReplay);
+      void playLevel(
+#if defined(ALLOW_GHOST)    
+		     Replay *m_pGhostReplay,
+#endif
+		     LevelSrc *pLevelSrc, bool bIsAReplay);
       void updateLevel(float fTimeStep,SerializedBikeState *pReplayState,Replay *p_replay);
       void endLevel(void);
       
@@ -636,10 +641,9 @@ namespace vapp {
       BikeState *getGhostBikeState(void) {return &m_GhostBikeS;}
       bool isGhostActive() {return m_isGhostActive;}
       void setGhostActive(bool s) {m_isGhostActive = s;}
-      std::vector<float> m_myLastStrawberry;
-      std::vector<float> m_ghostLastStrawberry;
+      std::vector<float> m_myLastStrawberries;
+      std::vector<float> m_ghostLastStrawberries;
       float m_myDiffOfGhost; /* time diff between the ghost and the player */
-      int m_myDiffOfGhostLastStrawberry; /* last Strawberry for which the calcul has been done */
 #endif
       BikeController *getBikeController(void) {return &m_BikeC;}
       std::vector<GameMessage *> &getGameMessage(void) {return m_GameMessages;}
@@ -667,7 +671,7 @@ namespace vapp {
       void addDummy(Vector2f Pos,float r,float g,float b);
     
 #if defined(ALLOW_GHOST)  
-      void UpdateGhostFromReplay(Replay *p_replay, SerializedBikeState *pReplayState);
+      void UpdateGhostFromReplay(SerializedBikeState *pReplayState);
       float getGhostDiff() {return m_myDiffOfGhost;}
       void setShowGhostTimeDiff(bool b) { m_showGhostTimeDiff = b; }
 #endif
@@ -808,9 +812,12 @@ namespace vapp {
       void _UpdateEntities(void);
       DynamicBlock *_GetDynamicBlockByID(const std::string &ID);
       void _UpdateGameState(SerializedBikeState *pReplayState);
-#if defined(ALLOW_GHOST)
       /* static */ void _UpdateStateFromReplay(SerializedBikeState *pReplayState,BikeState *pBikeS);
+
+#if defined(ALLOW_GHOST)
       void UpdateDiffFromGhost();
+      void DisplayDiffFromGhost();
+      void InitGhostLastStrawberries(Replay *p_ghostReplay);
 #endif
       char _MapCoordTo8Bits(float fRef,float fMaxDiff,float fCoord);
       float _Map8BitsToCoord(float fRef,float fMaxDiff,char c);

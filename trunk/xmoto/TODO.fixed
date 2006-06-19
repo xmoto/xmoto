@@ -1,5 +1,6 @@
 Since 1.16
 * BUG : view highscore with up and down with keyboard does not update the button
+* having the information of time diff about the ghost each time you take a strawberry, because we know the information already at this time
 
 Before Xmoto 1.16
 * BUG : bug in the editor if you load and save http://xmoto.free.fr/levels/l189.lvl because  > is replaced by &gt;      
