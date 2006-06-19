@@ -7,6 +7,9 @@ Assigned to Neckelmann:
    link to his room xml file (priority=high)(priority=high)
 * BUG: the window "it seems you have not OpenGL, please check your configuratino" can't be close by clicking on the ok button.(priority=high)
 * BUG : move objects in script doesn't work(priority=medium)
+* I thought to one thing that could be add in the stats : the date
+   when the stats have been initialized to display : stats from
+   18/06/2006 for example. Remember that this field must be translatable
 
 ######################################################################
 Assigned to Nicolas:
