@@ -21,7 +21,9 @@ Assigned to Nicolas:
 Unassigned:
 * BUG : is it normal ?
         C.x=(getParent()->getDispWidth() * pArrow->ArrowPointerPos.x) / 800.0f;
-        C.y=(getParent()->getDispHeight() * pArrow->ArrowPointerPos.y) / 600.0f;
+        C.y=(getParent()->getDispHeight() * pArrow->ArrowPointerPos.y)
+   / 600.0f;
+        moreover, it doesn't work with the zoom
 * BUG : OnLoad() { return false; } -> segfault
 * BUG : when you see level info in level pack ; then you click on ok
    -> it close the window and the levelpack window
