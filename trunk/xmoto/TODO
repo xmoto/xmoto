@@ -24,6 +24,7 @@ Unassigned:
         C.y=(getParent()->getDispHeight() * pArrow->ArrowPointerPos.y)
    / 600.0f;
         moreover, it doesn't work with the zoom
+and Game.PlaceScreenArrow(5, 5, 225) : doesn't respect coords
 * BUG : OnLoad() { return false; } -> segfault
 * BUG : when you see level info in level pack ; then you click on ok
    -> it close the window and the levelpack window
