@@ -19,7 +19,7 @@ Assigned to Nicolas:
 
 ######################################################################
 Unassigned:
-* BUG : I can't make Game.PlaceInGameArrow work, moreover
+* BUG : is it normal ?
         C.x=(getParent()->getDispWidth() * pArrow->ArrowPointerPos.x) / 800.0f;
         C.y=(getParent()->getDispHeight() * pArrow->ArrowPointerPos.y) / 600.0f;
 * BUG : OnLoad() { return false; } -> segfault
