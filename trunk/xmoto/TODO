@@ -19,6 +19,7 @@ Assigned to Nicolas:
 
 ######################################################################
 Unassigned:
+* BUG : OnLoad() { return false; } -> segfault
 * BUG : when you see level info in level pack ; then you click on ok
    -> it close the window and the levelpack window
 * BUG: When you make a room highscore, SOMETIMES! the message NEW HIGHSCORE keep in place after...
