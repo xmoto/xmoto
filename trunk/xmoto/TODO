@@ -19,6 +19,9 @@ Assigned to Nicolas:
 
 ######################################################################
 Unassigned:
+* BUG : I can't make Game.PlaceInGameArrow work, moreover
+        C.x=(getParent()->getDispWidth() * pArrow->ArrowPointerPos.x) / 800.0f;
+        C.y=(getParent()->getDispHeight() * pArrow->ArrowPointerPos.y) / 600.0f;
 * BUG : OnLoad() { return false; } -> segfault
 * BUG : when you see level info in level pack ; then you click on ok
    -> it close the window and the levelpack window
