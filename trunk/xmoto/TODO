@@ -17,6 +17,23 @@ Assigned to Nicolas:
 * high level function for script : DynamicMove(item, srcX, srcY, dstX, dstY,
    speed, type = "linear") for example : one call manage the movement of the element(priority=medium)
 
+This works :
+function OnLoad()
+  Game.SetDynamicEntityRotation("Strawberry0", 0        ,  2, 0.05, 0, 0)
+  Game.SetDynamicEntityRotation("Strawberry0", math.pi/2,  1, 0.025, 500, 1000)
+  return true
+end
+
+This apply a rotation of "Strawberry0" ("Strawberry0" is initialized
+   on the circle or radius 2 on angle 0) ; speed is 0.05 rad/hundreath
+   from time 0 to infinite.
+Between time 5sec and 10sec, two rotations compose the movement !
+
+i must do again :
+Game.SetDynamicEntityTranslation
+and
+Game.SetDynamicEntityNone
+
 ######################################################################
 Unassigned:
 
