@@ -38,10 +38,10 @@ class SDynamicObject {
   private:
 };
 
-class SDynamicEntityRound : public SDynamicObject {
+class SDynamicEntityRotation : public SDynamicObject {
  public:
-  SDynamicEntityRound(std::string pEntity, float pCenterX, float pCenterY, float pInitAngle, float pRadius, float pSpeed);
-  ~SDynamicEntityRound();
+  SDynamicEntityRotation(std::string pEntity, float pCenterX, float pCenterY, float pInitAngle, float pRadius, float pSpeed);
+  ~SDynamicEntityRotation();
   void nextState(vapp::MotoGame* v_motoGame);
 
  private:

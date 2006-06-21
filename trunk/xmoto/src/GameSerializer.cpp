@@ -209,23 +209,23 @@ namespace vapp {
 	}
 	break;
 	
-    case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROUND:
+    case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROTATION:
       {
 	  int n;
 	  (*Buffer) >> n;
-	  if(n >= sizeof(Event.u.LuaCallSetDynamicEntityRound.cEntityID)) {
+	  if(n >= sizeof(Event.u.LuaCallSetDynamicEntityRotation.cEntityID)) {
 	    Log("** Warning ** : Entity name in replay too long, ignoring all events!");
 	    bError = true;
 	  }
 	  else {
-	    (*Buffer).readBuf(Event.u.LuaCallSetDynamicEntityRound.cEntityID,n);
-	    Event.u.LuaCallSetDynamicEntityRound.cEntityID[n] = '\0';
+	    (*Buffer).readBuf(Event.u.LuaCallSetDynamicEntityRotation.cEntityID,n);
+	    Event.u.LuaCallSetDynamicEntityRotation.cEntityID[n] = '\0';
 
-	    (*Buffer) >> Event.u.LuaCallSetDynamicEntityRound.fCenterX;
-	    (*Buffer) >> Event.u.LuaCallSetDynamicEntityRound.fCenterY;
-	    (*Buffer) >> Event.u.LuaCallSetDynamicEntityRound.fInitAngle;
-	    (*Buffer) >> Event.u.LuaCallSetDynamicEntityRound.fRadius;
-	    (*Buffer) >> Event.u.LuaCallSetDynamicEntityRound.fSpeed;
+	    (*Buffer) >> Event.u.LuaCallSetDynamicEntityRotation.fCenterX;
+	    (*Buffer) >> Event.u.LuaCallSetDynamicEntityRotation.fCenterY;
+	    (*Buffer) >> Event.u.LuaCallSetDynamicEntityRotation.fInitAngle;
+	    (*Buffer) >> Event.u.LuaCallSetDynamicEntityRotation.fRadius;
+	    (*Buffer) >> Event.u.LuaCallSetDynamicEntityRotation.fSpeed;
 
 	    bIsOk = true;
 	  }
@@ -371,18 +371,18 @@ namespace vapp {
       }
       break;
       
-    case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROUND:
+    case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROTATION:
       {
 	int i;
 	Buffer << getTime();
 	Buffer << pEvent->Type;
-	Buffer << (i=strlen(pEvent->u.LuaCallSetDynamicEntityRound.cEntityID));
-	Buffer.writeBuf(pEvent->u.LuaCallSetDynamicEntityRound.cEntityID,i);
-	Buffer << pEvent->u.LuaCallSetDynamicEntityRound.fCenterX;
-	Buffer << pEvent->u.LuaCallSetDynamicEntityRound.fCenterY;
-	Buffer << pEvent->u.LuaCallSetDynamicEntityRound.fInitAngle;
-	Buffer << pEvent->u.LuaCallSetDynamicEntityRound.fRadius;
-	Buffer << pEvent->u.LuaCallSetDynamicEntityRound.fSpeed;
+	Buffer << (i=strlen(pEvent->u.LuaCallSetDynamicEntityRotation.cEntityID));
+	Buffer.writeBuf(pEvent->u.LuaCallSetDynamicEntityRotation.cEntityID,i);
+	Buffer << pEvent->u.LuaCallSetDynamicEntityRotation.fCenterX;
+	Buffer << pEvent->u.LuaCallSetDynamicEntityRotation.fCenterY;
+	Buffer << pEvent->u.LuaCallSetDynamicEntityRotation.fInitAngle;
+	Buffer << pEvent->u.LuaCallSetDynamicEntityRotation.fRadius;
+	Buffer << pEvent->u.LuaCallSetDynamicEntityRotation.fSpeed;
       }
       break;
     }            

@@ -324,18 +324,18 @@ namespace vapp {
     return 0;
   }  
     
-  int L_Game_SetDynamicEntityRound(lua_State *pL) {
+  int L_Game_SetDynamicEntityRotation(lua_State *pL) {
     /* event for this */    
-    GameEvent *pEvent = m_pMotoGame->createGameEvent(GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROUND);
+    GameEvent *pEvent = m_pMotoGame->createGameEvent(GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROTATION);
     if(pEvent != NULL) {
-      strncpy(pEvent->u.LuaCallSetDynamicEntityRound.cEntityID,
+      strncpy(pEvent->u.LuaCallSetDynamicEntityRotation.cEntityID,
 	      luaL_checkstring(pL,1),
-	      sizeof(pEvent->u.LuaCallSetDynamicEntityRound.cEntityID)-1);
-      pEvent->u.LuaCallSetDynamicEntityRound.fCenterX = X_luaL_check_number(pL,2);
-      pEvent->u.LuaCallSetDynamicEntityRound.fCenterY = X_luaL_check_number(pL,3);
-      pEvent->u.LuaCallSetDynamicEntityRound.fInitAngle = X_luaL_check_number(pL,4);
-      pEvent->u.LuaCallSetDynamicEntityRound.fRadius    = X_luaL_check_number(pL,5);
-      pEvent->u.LuaCallSetDynamicEntityRound.fSpeed     = X_luaL_check_number(pL,6);
+	      sizeof(pEvent->u.LuaCallSetDynamicEntityRotation.cEntityID)-1);
+      pEvent->u.LuaCallSetDynamicEntityRotation.fCenterX = X_luaL_check_number(pL,2);
+      pEvent->u.LuaCallSetDynamicEntityRotation.fCenterY = X_luaL_check_number(pL,3);
+      pEvent->u.LuaCallSetDynamicEntityRotation.fInitAngle = X_luaL_check_number(pL,4);
+      pEvent->u.LuaCallSetDynamicEntityRotation.fRadius    = X_luaL_check_number(pL,5);
+      pEvent->u.LuaCallSetDynamicEntityRotation.fSpeed     = X_luaL_check_number(pL,6);
     }
     
     return 0;

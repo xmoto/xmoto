@@ -29,7 +29,7 @@ SDynamicObject::SDynamicObject() {
 SDynamicObject::~SDynamicObject() {
 }
 
-SDynamicEntityRound::SDynamicEntityRound(std::string pEntity, float pCenterX, float pCenterY, float pInitAngle, float pRadius, float pSpeed) {
+SDynamicEntityRotation::SDynamicEntityRotation(std::string pEntity, float pCenterX, float pCenterY, float pInitAngle, float pRadius, float pSpeed) {
   m_entity = pEntity;
   m_CenterX = pCenterX;
   m_CenterY = pCenterY;
@@ -38,10 +38,10 @@ SDynamicEntityRound::SDynamicEntityRound(std::string pEntity, float pCenterX, fl
   m_Speed   = pSpeed;
 }
 
-SDynamicEntityRound::~SDynamicEntityRound() {
+SDynamicEntityRotation::~SDynamicEntityRotation() {
 }
 
-void SDynamicEntityRound::nextState(vapp::MotoGame* v_motoGame) {
+void SDynamicEntityRotation::nextState(vapp::MotoGame* v_motoGame) {
   float x,y;
 
   m_Angle += m_Speed;

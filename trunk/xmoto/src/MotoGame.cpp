@@ -60,7 +60,7 @@ namespace vapp {
   int L_Game_Log(lua_State *pL);
   int L_Game_SetBlockCenter(lua_State *pL);
   int L_Game_SetBlockRotation(lua_State *pL);
-  int L_Game_SetDynamicEntityRound(lua_State *pL);
+  int L_Game_SetDynamicEntityRotation(lua_State *pL);
   
   /* "Game" Lua library */
   static const luaL_reg g_GameFuncs[] = {
@@ -85,7 +85,7 @@ namespace vapp {
     {"Log", L_Game_Log},
     {"SetBlockCenter",L_Game_SetBlockCenter},
     {"SetBlockRotation",L_Game_SetBlockRotation},
-    {"SetDynamicEntityRound", L_Game_SetDynamicEntityRound},
+    {"SetDynamicEntityRotation", L_Game_SetDynamicEntityRotation},
     {NULL, NULL}
   };
 
@@ -539,15 +539,15 @@ namespace vapp {
       }
       break;
 
-    case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROUND:
+    case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROTATION:
       {
 	m_SDynamicObjects
-	  .push_back(new SDynamicEntityRound(pEvent->u.LuaCallSetDynamicEntityRound.cEntityID,
-					     pEvent->u.LuaCallSetDynamicEntityRound.fCenterX,
-					     pEvent->u.LuaCallSetDynamicEntityRound.fCenterY,
-					     pEvent->u.LuaCallSetDynamicEntityRound.fInitAngle,
-					     pEvent->u.LuaCallSetDynamicEntityRound.fRadius,
-					     pEvent->u.LuaCallSetDynamicEntityRound.fSpeed
+	  .push_back(new SDynamicEntityRotation(pEvent->u.LuaCallSetDynamicEntityRotation.cEntityID,
+					     pEvent->u.LuaCallSetDynamicEntityRotation.fCenterX,
+					     pEvent->u.LuaCallSetDynamicEntityRotation.fCenterY,
+					     pEvent->u.LuaCallSetDynamicEntityRotation.fInitAngle,
+					     pEvent->u.LuaCallSetDynamicEntityRotation.fRadius,
+					     pEvent->u.LuaCallSetDynamicEntityRotation.fSpeed
 					     ));
       }
       break;
@@ -1611,15 +1611,15 @@ namespace vapp {
       }
       break;
       
-    case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROUND:
+    case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROTATION:
       {
 	m_SDynamicObjects
-	  .push_back(new SDynamicEntityRound(pEvent->u.LuaCallSetDynamicEntityRound.cEntityID,
-					     pEvent->u.LuaCallSetDynamicEntityRound.fCenterX,
-					     pEvent->u.LuaCallSetDynamicEntityRound.fCenterY,
-					     pEvent->u.LuaCallSetDynamicEntityRound.fInitAngle,
-					     pEvent->u.LuaCallSetDynamicEntityRound.fRadius,
-					     pEvent->u.LuaCallSetDynamicEntityRound.fSpeed
+	  .push_back(new SDynamicEntityRotation(pEvent->u.LuaCallSetDynamicEntityRotation.cEntityID,
+					     pEvent->u.LuaCallSetDynamicEntityRotation.fCenterX,
+					     pEvent->u.LuaCallSetDynamicEntityRotation.fCenterY,
+					     pEvent->u.LuaCallSetDynamicEntityRotation.fInitAngle,
+					     pEvent->u.LuaCallSetDynamicEntityRotation.fRadius,
+					     pEvent->u.LuaCallSetDynamicEntityRotation.fSpeed
 					     ));
       }
     break;
