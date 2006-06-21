@@ -19,6 +19,11 @@ Assigned to Nicolas:
 
 ######################################################################
 Unassigned:
+
+* GameEventLuaCallSetBlockCenter
+  and GameEventLuaCallSetBlockRotation
+  missing in serialisation
+
 * BUG : is it normal ?
         C.x=(getParent()->getDispWidth() * pArrow->ArrowPointerPos.x) / 800.0f;
         C.y=(getParent()->getDispHeight() * pArrow->ArrowPointerPos.y)

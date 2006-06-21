@@ -60,6 +60,7 @@ namespace vapp {
   int L_Game_Log(lua_State *pL);
   int L_Game_SetBlockCenter(lua_State *pL);
   int L_Game_SetBlockRotation(lua_State *pL);
+  int L_Game_SetDynamicEntityRound(lua_State *pL);
   
   /* "Game" Lua library */
   static const luaL_reg g_GameFuncs[] = {
@@ -84,6 +85,7 @@ namespace vapp {
     {"Log", L_Game_Log},
     {"SetBlockCenter",L_Game_SetBlockCenter},
     {"SetBlockRotation",L_Game_SetBlockRotation},
+    {"SetDynamicEntityRound", L_Game_SetDynamicEntityRound},
     {NULL, NULL}
   };
 
@@ -318,7 +320,7 @@ namespace vapp {
       
       m_bTeleport = false;
     }
-    
+  
     /* Handle game messages (keep them in place) */
     int i=0;
     while(1) {
@@ -382,15 +384,17 @@ namespace vapp {
     }
 
     /* Invoke EveryHundreath() script function */
-    if(v_enableScript) {
-      while(getTime() - m_lastCallToEveryHundreath > 0.01) {
+    /* and play script dynamic objects */
+    while(getTime() - m_lastCallToEveryHundreath > 0.01) {
+      if(v_enableScript) {
 	if(!scriptCallBool("Tick",
 			   true)) {
-	  throw Exception("level script Tick() returned false");
-	}
-	m_lastCallToEveryHundreath += 0.01;
+			     throw Exception("level script Tick() returned false");
+			   }
       }
-    } 
+      nextStateScriptDynamicObjects();
+      m_lastCallToEveryHundreath += 0.01;
+    }
 
     /* Only make a full physics update when not replaying */
     if(pReplayState == NULL) {
@@ -449,9 +453,9 @@ namespace vapp {
 
 	  case GAME_EVENT_LUA_CALL_SETENTITYPOS:
 	    {
-	      _SetEntityPos(pEvent->u.LuaCallSetentitypos.cEntityID,
-			    pEvent->u.LuaCallSetentitypos.x,
-			    pEvent->u.LuaCallSetentitypos.y);
+	      SetEntityPos(pEvent->u.LuaCallSetentitypos.cEntityID,
+			   pEvent->u.LuaCallSetentitypos.x,
+			   pEvent->u.LuaCallSetentitypos.y);
 	    }
 	    break;
 
@@ -463,17 +467,17 @@ namespace vapp {
 
 	  case GAME_EVENT_LUA_CALL_PLACEINGAMEARROW:
 	    {
-	      _PlaceInGameArrow(pEvent->u.LuaCallPlaceingamearrow.x,
-				pEvent->u.LuaCallPlaceingamearrow.y,
-				pEvent->u.LuaCallPlaceingamearrow.angle);
+	      PlaceInGameArrow(pEvent->u.LuaCallPlaceingamearrow.x,
+			       pEvent->u.LuaCallPlaceingamearrow.y,
+			       pEvent->u.LuaCallPlaceingamearrow.angle);
 	    }
 	    break;
 
 	  case GAME_EVENT_LUA_CALL_PLACESCREENARROW:
 	    {
-	      _PlaceScreenArrow(pEvent->u.LuaCallPlacescreenarrow.x,
-				pEvent->u.LuaCallPlacescreenarrow.y,
-				pEvent->u.LuaCallPlacescreenarrow.angle);  
+	      PlaceScreenArrow(pEvent->u.LuaCallPlacescreenarrow.x,
+			       pEvent->u.LuaCallPlacescreenarrow.y,
+			       pEvent->u.LuaCallPlacescreenarrow.angle);  
 	    }
 	    break;
 
@@ -491,17 +495,17 @@ namespace vapp {
 
 	  case GAME_EVENT_LUA_CALL_MOVEBLOCK:
 	    {
-	      _MoveBlock(pEvent->u.LuaCallMoveblock.cBlockID,
-			 pEvent->u.LuaCallMoveblock.x,
-			 pEvent->u.LuaCallMoveblock.y);
+	      MoveBlock(pEvent->u.LuaCallMoveblock.cBlockID,
+			pEvent->u.LuaCallMoveblock.x,
+			pEvent->u.LuaCallMoveblock.y);
 	    }
 	    break;
 
 	  case GAME_EVENT_LUA_CALL_SETBLOCKPOS:
 	    {
-	      _SetBlockPos(pEvent->u.LuaCallSetblockpos.cBlockID,
-			   pEvent->u.LuaCallSetblockpos.x,
-			   pEvent->u.LuaCallSetblockpos.y);
+	      SetBlockPos(pEvent->u.LuaCallSetblockpos.cBlockID,
+			  pEvent->u.LuaCallSetblockpos.x,
+			  pEvent->u.LuaCallSetblockpos.y);
 	    }
 	    break;
 
@@ -522,16 +526,29 @@ namespace vapp {
 	    
     case GAME_EVENT_LUA_CALL_SETBLOCKCENTER:
       {
-        _SetBlockCenter(pEvent->u.LuaCallSetBlockCenter.cBlockID,
-          pEvent->u.LuaCallSetBlockCenter.x,
-          pEvent->u.LuaCallSetBlockCenter.y);
+        SetBlockCenter(pEvent->u.LuaCallSetBlockCenter.cBlockID,
+		       pEvent->u.LuaCallSetBlockCenter.x,
+		       pEvent->u.LuaCallSetBlockCenter.y);
       }
       break;
     
     case GAME_EVENT_LUA_CALL_SETBLOCKROTATION:
       {
-        _SetBlockRotation(pEvent->u.LuaCallSetBlockRotation.cBlockID,
-                          pEvent->u.LuaCallSetBlockRotation.fAngle);
+        SetBlockRotation(pEvent->u.LuaCallSetBlockRotation.cBlockID,
+			 pEvent->u.LuaCallSetBlockRotation.fAngle);
+      }
+      break;
+
+    case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROUND:
+      {
+	m_SDynamicObjects
+	  .push_back(new SDynamicEntityRound(pEvent->u.LuaCallSetDynamicEntityRound.cEntityID,
+					     pEvent->u.LuaCallSetDynamicEntityRound.fCenterX,
+					     pEvent->u.LuaCallSetDynamicEntityRound.fCenterY,
+					     pEvent->u.LuaCallSetDynamicEntityRound.fInitAngle,
+					     pEvent->u.LuaCallSetDynamicEntityRound.fRadius,
+					     pEvent->u.LuaCallSetDynamicEntityRound.fSpeed
+					     ));
       }
       break;
 
@@ -864,6 +881,9 @@ namespace vapp {
     for(int i=0;i<m_GameMessages.size();i++)
       delete m_GameMessages[i];
     m_GameMessages.clear();
+
+    /* clean Sdynamic objects for scripts */
+    cleanScriptDynamicObjects();
   }
 
   /*===========================================================================
@@ -1502,9 +1522,9 @@ namespace vapp {
 
     case GAME_EVENT_LUA_CALL_SETENTITYPOS:
       {
-	_SetEntityPos(pEvent->u.LuaCallSetentitypos.cEntityID,
-		      pEvent->u.LuaCallSetentitypos.x,
-		      pEvent->u.LuaCallSetentitypos.y);
+	SetEntityPos(pEvent->u.LuaCallSetentitypos.cEntityID,
+		     pEvent->u.LuaCallSetentitypos.x,
+		     pEvent->u.LuaCallSetentitypos.y);
       }
       break;
 
@@ -1516,17 +1536,17 @@ namespace vapp {
       
     case GAME_EVENT_LUA_CALL_PLACEINGAMEARROW:
       {
-	_PlaceInGameArrow(pEvent->u.LuaCallPlaceingamearrow.x,
-			  pEvent->u.LuaCallPlaceingamearrow.y,
-			  pEvent->u.LuaCallPlaceingamearrow.angle);
+	PlaceInGameArrow(pEvent->u.LuaCallPlaceingamearrow.x,
+			 pEvent->u.LuaCallPlaceingamearrow.y,
+			 pEvent->u.LuaCallPlaceingamearrow.angle);
       }
       break;
       
     case GAME_EVENT_LUA_CALL_PLACESCREENARROW:
       {
-	_PlaceScreenArrow(pEvent->u.LuaCallPlaceingamearrow.x,
-			  pEvent->u.LuaCallPlaceingamearrow.y,
-			  pEvent->u.LuaCallPlaceingamearrow.angle);
+	PlaceScreenArrow(pEvent->u.LuaCallPlaceingamearrow.x,
+			 pEvent->u.LuaCallPlaceingamearrow.y,
+			 pEvent->u.LuaCallPlaceingamearrow.angle);
       }
       break;
       
@@ -1544,17 +1564,17 @@ namespace vapp {
       
     case GAME_EVENT_LUA_CALL_MOVEBLOCK:
       {
-	_MoveBlock(pEvent->u.LuaCallMoveblock.cBlockID,
-		   pEvent->u.LuaCallMoveblock.x,
-		   pEvent->u.LuaCallMoveblock.y);
+	MoveBlock(pEvent->u.LuaCallMoveblock.cBlockID,
+		  pEvent->u.LuaCallMoveblock.x,
+		  pEvent->u.LuaCallMoveblock.y);
       }
       break;
       
     case GAME_EVENT_LUA_CALL_SETBLOCKPOS:
       {
-	_SetBlockPos(pEvent->u.LuaCallSetblockpos.cBlockID,
-		     pEvent->u.LuaCallSetblockpos.x,
-		     pEvent->u.LuaCallSetblockpos.y);
+	SetBlockPos(pEvent->u.LuaCallSetblockpos.cBlockID,
+		    pEvent->u.LuaCallSetblockpos.x,
+		    pEvent->u.LuaCallSetblockpos.y);
       }
       break;
       
@@ -1578,19 +1598,32 @@ namespace vapp {
 
     case GAME_EVENT_LUA_CALL_SETBLOCKCENTER:
       {
-	_SetBlockCenter(pEvent->u.LuaCallSetBlockCenter.cBlockID,
-		     pEvent->u.LuaCallSetBlockCenter.x,
-		     pEvent->u.LuaCallSetBlockCenter.y);
+	SetBlockCenter(pEvent->u.LuaCallSetBlockCenter.cBlockID,
+		       pEvent->u.LuaCallSetBlockCenter.x,
+		       pEvent->u.LuaCallSetBlockCenter.y);
       }
       break;
       
     case GAME_EVENT_LUA_CALL_SETBLOCKROTATION:
       {
-        _SetBlockRotation(pEvent->u.LuaCallSetBlockRotation.cBlockID,
-                          pEvent->u.LuaCallSetBlockRotation.fAngle);
+        SetBlockRotation(pEvent->u.LuaCallSetBlockRotation.cBlockID,
+			 pEvent->u.LuaCallSetBlockRotation.fAngle);
       }
       break;
       
+    case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROUND:
+      {
+	m_SDynamicObjects
+	  .push_back(new SDynamicEntityRound(pEvent->u.LuaCallSetDynamicEntityRound.cEntityID,
+					     pEvent->u.LuaCallSetDynamicEntityRound.fCenterX,
+					     pEvent->u.LuaCallSetDynamicEntityRound.fCenterY,
+					     pEvent->u.LuaCallSetDynamicEntityRound.fInitAngle,
+					     pEvent->u.LuaCallSetDynamicEntityRound.fRadius,
+					     pEvent->u.LuaCallSetDynamicEntityRound.fSpeed
+					     ));
+      }
+    break;
+
     }
   }
   
@@ -1636,7 +1669,7 @@ namespace vapp {
     }
   }  
 
-  void MotoGame::_SetEntityPos(String pEntityID, float pX, float pY) {
+  void MotoGame::SetEntityPos(String pEntityID, float pX, float pY) {
     /* Find the specified entity and set its position */
     for(int i=0;i<getEntities().size();i++) {
       Entity *p = getEntities()[i];
@@ -1648,19 +1681,19 @@ namespace vapp {
     /* Entity not found */
   }
 
-  void MotoGame::_PlaceInGameArrow(float pX, float pY, float pAngle) {
+  void MotoGame::PlaceInGameArrow(float pX, float pY, float pAngle) {
     m_pMotoGame->getArrowPointer().nArrowPointerMode = 1;
     m_pMotoGame->getArrowPointer().ArrowPointerPos = Vector2f(pX, pY);
     m_pMotoGame->getArrowPointer().fArrowPointerAngle = pAngle;
   }
 
-  void MotoGame::_PlaceScreenArrow(float pX, float pY, float pAngle) {
+  void MotoGame::PlaceScreenArrow(float pX, float pY, float pAngle) {
     m_pMotoGame->getArrowPointer().nArrowPointerMode = 2;
     m_pMotoGame->getArrowPointer().ArrowPointerPos = Vector2f(pX, pY);
     m_pMotoGame->getArrowPointer().fArrowPointerAngle = pAngle;
   }
 
-  void MotoGame::_MoveBlock(String pBlockID, float pX, float pY) {
+  void MotoGame::MoveBlock(String pBlockID, float pX, float pY) {
     /* Find the specified block and move it along the given vector */
     for(int i=0;i<getBlocks().size();i++) {
       ConvexBlock *pBlock = getBlocks()[i];
@@ -1672,7 +1705,7 @@ namespace vapp {
     }
   }
 
-  void MotoGame::_SetBlockPos(String pBlockID, float pX, float pY) {
+  void MotoGame::SetBlockPos(String pBlockID, float pX, float pY) {
     /* Find the specified (dynamic) block and set its position */
     DynamicBlock *pBlock = _GetDynamicBlockByID(pBlockID);
     if(pBlock != NULL) {
@@ -1681,7 +1714,7 @@ namespace vapp {
     }    
   }
   
-  void MotoGame::_SetBlockCenter(String pBlockID, float pX, float pY) {
+  void MotoGame::SetBlockCenter(String pBlockID, float pX, float pY) {
     /* Find the specified (dynamic) block and set its center */
     DynamicBlock *pBlock = _GetDynamicBlockByID(pBlockID);
     if(pBlock != NULL) {
@@ -1699,7 +1732,7 @@ namespace vapp {
     }
   }
 
-  void MotoGame::_SetBlockRotation(String pBlockID, float pAngle) {
+  void MotoGame::SetBlockRotation(String pBlockID, float pAngle) {
     /* Find the specified (dynamic) block and set its rotation */
     DynamicBlock *pBlock = _GetDynamicBlockByID(pBlockID);
     if(pBlock != NULL) {
@@ -1754,5 +1787,18 @@ namespace vapp {
     }
   }
 #endif
+
+  void MotoGame::cleanScriptDynamicObjects() {
+    for(int i=0; i<m_SDynamicObjects.size(); i++) {
+      delete m_SDynamicObjects[i];
+    }
+    m_SDynamicObjects.clear();
+  }
+
+  void MotoGame::nextStateScriptDynamicObjects() {
+    for(int i=0; i<m_SDynamicObjects.size(); i++) {
+      m_SDynamicObjects[i]->nextState(this);
+    }
+  }
 
 };

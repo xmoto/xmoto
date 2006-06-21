@@ -324,5 +324,22 @@ namespace vapp {
     return 0;
   }  
     
+  int L_Game_SetDynamicEntityRound(lua_State *pL) {
+    /* event for this */    
+    GameEvent *pEvent = m_pMotoGame->createGameEvent(GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROUND);
+    if(pEvent != NULL) {
+      strncpy(pEvent->u.LuaCallSetDynamicEntityRound.cEntityID,
+	      luaL_checkstring(pL,1),
+	      sizeof(pEvent->u.LuaCallSetDynamicEntityRound.cEntityID)-1);
+      pEvent->u.LuaCallSetDynamicEntityRound.fCenterX = X_luaL_check_number(pL,2);
+      pEvent->u.LuaCallSetDynamicEntityRound.fCenterY = X_luaL_check_number(pL,3);
+      pEvent->u.LuaCallSetDynamicEntityRound.fInitAngle = X_luaL_check_number(pL,4);
+      pEvent->u.LuaCallSetDynamicEntityRound.fRadius    = X_luaL_check_number(pL,5);
+      pEvent->u.LuaCallSetDynamicEntityRound.fSpeed     = X_luaL_check_number(pL,6);
+    }
+    
+    return 0;
+  }
+
 };
 

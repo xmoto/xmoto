@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "BSP.h"
 #include "DBuffer.h"
 #include "Collision.h"
+#include "ScriptDynamicObjects.h"
 
 #define GAME_EVENT_QUEUE_SIZE				128
 #define GAME_EVENT_OUTGOING_BUFFER  65536
@@ -423,7 +424,9 @@ namespace vapp {
     GAME_EVENT_LUA_CALL_SETPLAYERPOSITION,
     GAME_EVENT_LUA_CALL_SETENTITYPOS,
     GAME_EVENT_LUA_CALL_SETBLOCKCENTER,
-    GAME_EVENT_LUA_CALL_SETBLOCKROTATION
+    GAME_EVENT_LUA_CALL_SETBLOCKROTATION,
+
+    GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROUND
   };
   
 	/*===========================================================================
@@ -508,6 +511,15 @@ namespace vapp {
     float fAngle;
   };
   
+  struct GameEventLuaCallSetDynamicEntityRound {
+    char cEntityID[64]; /* ID of entity */
+    float fCenterX;
+    float fCenterY;
+    float fInitAngle;
+    float fRadius;
+    float fSpeed;
+  };
+
   struct GameEvent {
     int nSeq;                         /* Sequence number */
     GameEventType Type;								/* Type of event */
@@ -563,6 +575,9 @@ namespace vapp {
 
       /* GAME_EVENT_LUA_CALL_SETBLOCKROTATION */
       GameEventLuaCallSetBlockRotation LuaCallSetBlockRotation;
+
+      /* GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROUND */
+      GameEventLuaCallSetDynamicEntityRound LuaCallSetDynamicEntityRound;
 
     } u;		
   };
@@ -676,6 +691,15 @@ namespace vapp {
       void setShowGhostTimeDiff(bool b) { m_showGhostTimeDiff = b; }
 #endif
 
+      /* action for events */
+      void SetEntityPos(String pEntityID, float pX, float pY);
+      void PlaceInGameArrow(float pX, float pY, float pAngle);
+      void PlaceScreenArrow(float pX, float pY, float pAngle);
+      void MoveBlock(String pBlockID, float pX, float pY);
+      void SetBlockPos(String pBlockID, float pX, float pY);
+      void SetBlockCenter(String pBlockID, float pX, float pY);
+      void SetBlockRotation(String pBlockID, float pAngle);
+
     private:         
       /* Data */
       int m_nGameEventQueueReadIdx,m_nGameEventQueueWriteIdx;
@@ -721,6 +745,8 @@ namespace vapp {
       bool m_isGhostActive;               /* is ghost active : must it be displayed, ... */
       bool m_showGhostTimeDiff;
 #endif
+
+      std::vector<SDynamicObject*> m_SDynamicObjects;
 
       BikeController m_BikeC;             /* Bike controller */
       
@@ -819,6 +845,10 @@ namespace vapp {
       void DisplayDiffFromGhost();
       void InitGhostLastStrawberries(Replay *p_ghostReplay);
 #endif
+
+      void cleanScriptDynamicObjects();
+      void nextStateScriptDynamicObjects();
+
       char _MapCoordTo8Bits(float fRef,float fMaxDiff,float fCoord);
       float _Map8BitsToCoord(float fRef,float fMaxDiff,char c);
       unsigned short _MatrixTo16Bits(const float *pfMatrix);
@@ -837,15 +867,6 @@ namespace vapp {
       void _UninitPhysics(void);
       void _PrepareBikePhysics(Vector2f StartPos);
       void _PrepareRider(Vector2f StartPos);
-         
-      /* action for events */
-      void _SetEntityPos(String pEntityID, float pX, float pY);
-      void _PlaceInGameArrow(float pX, float pY, float pAngle);
-      void _PlaceScreenArrow(float pX, float pY, float pAngle);
-      void _MoveBlock(String pBlockID, float pX, float pY);
-      void _SetBlockPos(String pBlockID, float pX, float pY);
-      void _SetBlockCenter(String pBlockID, float pX, float pY);
-      void _SetBlockRotation(String pBlockID, float pAngle);
     };
 
 };

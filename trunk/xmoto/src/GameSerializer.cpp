@@ -209,6 +209,29 @@ namespace vapp {
 	}
 	break;
 	
+    case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROUND:
+      {
+	  int n;
+	  (*Buffer) >> n;
+	  if(n >= sizeof(Event.u.LuaCallSetDynamicEntityRound.cEntityID)) {
+	    Log("** Warning ** : Entity name in replay too long, ignoring all events!");
+	    bError = true;
+	  }
+	  else {
+	    (*Buffer).readBuf(Event.u.LuaCallSetDynamicEntityRound.cEntityID,n);
+	    Event.u.LuaCallSetDynamicEntityRound.cEntityID[n] = '\0';
+
+	    (*Buffer) >> Event.u.LuaCallSetDynamicEntityRound.fCenterX;
+	    (*Buffer) >> Event.u.LuaCallSetDynamicEntityRound.fCenterY;
+	    (*Buffer) >> Event.u.LuaCallSetDynamicEntityRound.fInitAngle;
+	    (*Buffer) >> Event.u.LuaCallSetDynamicEntityRound.fRadius;
+	    (*Buffer) >> Event.u.LuaCallSetDynamicEntityRound.fSpeed;
+
+	    bIsOk = true;
+	  }
+      }
+      break;
+
       default:
 	Log("** Warning ** : Failed to parse game events in replay, it will probably not play right!");
 	bError = true;
@@ -348,6 +371,20 @@ namespace vapp {
       }
       break;
       
+    case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROUND:
+      {
+	int i;
+	Buffer << getTime();
+	Buffer << pEvent->Type;
+	Buffer << (i=strlen(pEvent->u.LuaCallSetDynamicEntityRound.cEntityID));
+	Buffer.writeBuf(pEvent->u.LuaCallSetDynamicEntityRound.cEntityID,i);
+	Buffer << pEvent->u.LuaCallSetDynamicEntityRound.fCenterX;
+	Buffer << pEvent->u.LuaCallSetDynamicEntityRound.fCenterY;
+	Buffer << pEvent->u.LuaCallSetDynamicEntityRound.fInitAngle;
+	Buffer << pEvent->u.LuaCallSetDynamicEntityRound.fRadius;
+	Buffer << pEvent->u.LuaCallSetDynamicEntityRound.fSpeed;
+      }
+      break;
     }            
   }
 
