@@ -341,5 +341,22 @@ namespace vapp {
     return 0;
   }
 
+  int L_Game_SetDynamicEntityTranslation(lua_State *pL) {
+    /* event for this */    
+    GameEvent *pEvent = m_pMotoGame->createGameEvent(GAME_EVENT_LUA_CALL_SETDYNAMICENTITYTRANSLATION);
+    if(pEvent != NULL) {
+      strncpy(pEvent->u.LuaCallSetDynamicEntityTranslation.cEntityID,
+	      luaL_checkstring(pL,1),
+	      sizeof(pEvent->u.LuaCallSetDynamicEntityTranslation.cEntityID)-1);
+      pEvent->u.LuaCallSetDynamicEntityTranslation.fX        = X_luaL_check_number(pL,2);
+      pEvent->u.LuaCallSetDynamicEntityTranslation.fY        = X_luaL_check_number(pL,3);
+      pEvent->u.LuaCallSetDynamicEntityTranslation.fSpeed    = X_luaL_check_number(pL,4);
+      pEvent->u.LuaCallSetDynamicEntityTranslation.startTime = X_luaL_check_number(pL,5);
+      pEvent->u.LuaCallSetDynamicEntityTranslation.endTime   = X_luaL_check_number(pL,6);
+    }
+    
+    return 0;
+  }
+
 };
 

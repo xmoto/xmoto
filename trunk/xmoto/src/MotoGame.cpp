@@ -61,6 +61,7 @@ namespace vapp {
   int L_Game_SetBlockCenter(lua_State *pL);
   int L_Game_SetBlockRotation(lua_State *pL);
   int L_Game_SetDynamicEntityRotation(lua_State *pL);
+  int L_Game_SetDynamicEntityTranslation(lua_State *pL);
   
   /* "Game" Lua library */
   static const luaL_reg g_GameFuncs[] = {
@@ -86,6 +87,7 @@ namespace vapp {
     {"SetBlockCenter",L_Game_SetBlockCenter},
     {"SetBlockRotation",L_Game_SetBlockRotation},
     {"SetDynamicEntityRotation", L_Game_SetDynamicEntityRotation},
+    {"SetDynamicEntityTranslation", L_Game_SetDynamicEntityTranslation},
     {NULL, NULL}
   };
 
@@ -548,6 +550,19 @@ namespace vapp {
 						pEvent->u.LuaCallSetDynamicEntityRotation.fSpeed,
 						pEvent->u.LuaCallSetDynamicEntityRotation.startTime,
 						pEvent->u.LuaCallSetDynamicEntityRotation.endTime
+						));
+      }
+      break;
+
+    case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYTRANSLATION:
+      {
+	m_SDynamicObjects
+	  .push_back(new SDynamicEntityTranslation(pEvent->u.LuaCallSetDynamicEntityTranslation.cEntityID,
+						pEvent->u.LuaCallSetDynamicEntityTranslation.fX,
+						pEvent->u.LuaCallSetDynamicEntityTranslation.fY,
+						pEvent->u.LuaCallSetDynamicEntityTranslation.fSpeed,
+						pEvent->u.LuaCallSetDynamicEntityTranslation.startTime,
+						pEvent->u.LuaCallSetDynamicEntityTranslation.endTime
 						));
       }
       break;
@@ -1620,6 +1635,20 @@ namespace vapp {
 						pEvent->u.LuaCallSetDynamicEntityRotation.fSpeed,
 						pEvent->u.LuaCallSetDynamicEntityRotation.startTime,
 						pEvent->u.LuaCallSetDynamicEntityRotation.endTime
+
+					     ));
+      }
+    break;
+
+    case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYTRANSLATION:
+      {
+	m_SDynamicObjects
+	  .push_back(new SDynamicEntityTranslation(pEvent->u.LuaCallSetDynamicEntityTranslation.cEntityID,
+						pEvent->u.LuaCallSetDynamicEntityTranslation.fX,
+						pEvent->u.LuaCallSetDynamicEntityTranslation.fY,
+						pEvent->u.LuaCallSetDynamicEntityTranslation.fSpeed,
+						pEvent->u.LuaCallSetDynamicEntityTranslation.startTime,
+						pEvent->u.LuaCallSetDynamicEntityTranslation.endTime
 
 					     ));
       }

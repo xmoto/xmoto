@@ -426,7 +426,8 @@ namespace vapp {
     GAME_EVENT_LUA_CALL_SETBLOCKCENTER,
     GAME_EVENT_LUA_CALL_SETBLOCKROTATION,
 
-    GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROTATION
+    GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROTATION,
+    GAME_EVENT_LUA_CALL_SETDYNAMICENTITYTRANSLATION
   };
   
 	/*===========================================================================
@@ -520,6 +521,15 @@ namespace vapp {
     int   endTime;
   };
 
+  struct GameEventLuaCallSetDynamicEntityTranslation {
+    char cEntityID[64]; /* ID of entity */
+    float fX;
+    float fY;
+    float fSpeed;
+    int   startTime;
+    int   endTime;
+  };
+
   struct GameEvent {
     int nSeq;                         /* Sequence number */
     GameEventType Type;								/* Type of event */
@@ -578,6 +588,9 @@ namespace vapp {
 
       /* GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROTATION */
       GameEventLuaCallSetDynamicEntityRotation LuaCallSetDynamicEntityRotation;
+
+      /* GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROTATION */
+      GameEventLuaCallSetDynamicEntityTranslation LuaCallSetDynamicEntityTranslation;
 
     } u;		
   };

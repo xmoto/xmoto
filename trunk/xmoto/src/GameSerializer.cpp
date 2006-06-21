@@ -232,6 +232,29 @@ namespace vapp {
       }
       break;
 
+    case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYTRANSLATION:
+      {
+	  int n;
+	  (*Buffer) >> n;
+	  if(n >= sizeof(Event.u.LuaCallSetDynamicEntityTranslation.cEntityID)) {
+	    Log("** Warning ** : Entity name in replay too long, ignoring all events!");
+	    bError = true;
+	  }
+	  else {
+	    (*Buffer).readBuf(Event.u.LuaCallSetDynamicEntityTranslation.cEntityID,n);
+	    Event.u.LuaCallSetDynamicEntityTranslation.cEntityID[n] = '\0';
+
+	    (*Buffer) >> Event.u.LuaCallSetDynamicEntityTranslation.fX;
+	    (*Buffer) >> Event.u.LuaCallSetDynamicEntityTranslation.fY;
+	    (*Buffer) >> Event.u.LuaCallSetDynamicEntityTranslation.fSpeed;
+	    (*Buffer) >> Event.u.LuaCallSetDynamicEntityTranslation.startTime;
+	    (*Buffer) >> Event.u.LuaCallSetDynamicEntityTranslation.endTime;
+
+	    bIsOk = true;
+	  }
+      }
+      break;
+
       default:
 	Log("** Warning ** : Failed to parse game events in replay, it will probably not play right!");
 	bError = true;
@@ -371,18 +394,18 @@ namespace vapp {
       }
       break;
       
-    case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROTATION:
+    case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYTRANSLATION:
       {
 	int i;
 	Buffer << getTime();
 	Buffer << pEvent->Type;
-	Buffer << (i=strlen(pEvent->u.LuaCallSetDynamicEntityRotation.cEntityID));
-	Buffer.writeBuf(pEvent->u.LuaCallSetDynamicEntityRotation.cEntityID,i);
-	Buffer << pEvent->u.LuaCallSetDynamicEntityRotation.fInitAngle;
-	Buffer << pEvent->u.LuaCallSetDynamicEntityRotation.fRadius;
-	Buffer << pEvent->u.LuaCallSetDynamicEntityRotation.fSpeed;
-	Buffer << pEvent->u.LuaCallSetDynamicEntityRotation.startTime;
-	Buffer << pEvent->u.LuaCallSetDynamicEntityRotation.endTime;
+	Buffer << (i=strlen(pEvent->u.LuaCallSetDynamicEntityTranslation.cEntityID));
+	Buffer.writeBuf(pEvent->u.LuaCallSetDynamicEntityTranslation.cEntityID,i);
+	Buffer << pEvent->u.LuaCallSetDynamicEntityTranslation.fX;
+	Buffer << pEvent->u.LuaCallSetDynamicEntityTranslation.fY;
+	Buffer << pEvent->u.LuaCallSetDynamicEntityTranslation.fSpeed;
+	Buffer << pEvent->u.LuaCallSetDynamicEntityTranslation.startTime;
+	Buffer << pEvent->u.LuaCallSetDynamicEntityTranslation.endTime;
       }
       break;
     }            

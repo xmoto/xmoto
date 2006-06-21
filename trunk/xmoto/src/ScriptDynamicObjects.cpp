@@ -51,8 +51,6 @@ bool SDynamicObject::isTimeToMove() {
 
 SDynamicEntityMove::SDynamicEntityMove(std::string pEntity, int p_startTime, int p_endTime) : SDynamicObject(p_startTime, p_endTime){
   m_entity = pEntity;
-  m_previousVx = 0.0;
-  m_previousVy = 0.0;
 }
 
 SDynamicEntityMove::~SDynamicEntityMove() {
@@ -65,12 +63,9 @@ void SDynamicEntityMove::performMove(vapp::MotoGame* v_motoGame) {
     if(p->ID == m_entity) {
       float vx, vy;
       performXY(&vx, &vy);
-
       v_motoGame->SetEntityPos(p->ID,
-			       vx + p->Pos.x - m_previousVx,
-			       vy + p->Pos.y - m_previousVy);
-      m_previousVx = vx;
-      m_previousVy = vy;
+			       vx + p->Pos.x,
+			       vy + p->Pos.y);
     }
   }
 }
@@ -82,6 +77,8 @@ SDynamicEntityRotation::SDynamicEntityRotation(std::string pEntity, float pInitA
 
   m_CenterX = cos(m_Angle) * m_Radius;
   m_CenterY = sin(m_Angle) * m_Radius;
+  m_previousVx = 0.0;
+  m_previousVy = 0.0;
 }
 
 SDynamicEntityRotation::~SDynamicEntityRotation() {
@@ -89,10 +86,15 @@ SDynamicEntityRotation::~SDynamicEntityRotation() {
 
 void SDynamicEntityRotation::performXY(float *vx, float *vy) {
   if(m_Angle >= 2 * M_PI) {m_Angle -= 2 * M_PI;} /* because of float limit */
-  
-  *vx = cos(m_Angle) * m_Radius - m_CenterX;
-  *vy = sin(m_Angle) * m_Radius - m_CenterY;
+  float x,y;
 
+  x = cos(m_Angle) * m_Radius - m_CenterX;
+  y = sin(m_Angle) * m_Radius - m_CenterY;
+  *vx = x - m_previousVx;
+  *vy = y - m_previousVy;
+
+  m_previousVx = x;
+  m_previousVy = y;
   m_Angle += m_Speed;
 }
 
@@ -104,7 +106,7 @@ SDynamicEntityTranslation::SDynamicEntityTranslation(std::string pEntity, float 
   m_Speed = pSpeed;
 
   m_sensUp = true;
-  m_Z      = m_X * m_X + m_Y * m_Y; 
+  m_Z      = sqrt(m_X * m_X + m_Y * m_Y); 
   m_moveX  = (m_Speed * m_X) / m_Z;
   m_moveY  = (m_Speed * m_Y) / m_Z;
   m_totalMoveX = 0.0;
@@ -119,11 +121,7 @@ void SDynamicEntityTranslation::performXY(float *vx, float *vy) {
 
   m_totalMoveX += *vx;
 
-  if(m_totalMoveX >= m_X) {
-    m_sensUp = !m_sensUp;
-  }
-    
-  if(m_totalMoveX <= 0) {
+  if(m_totalMoveX >= m_X || m_totalMoveX <= 0) {
     m_sensUp = !m_sensUp;
   }
 }

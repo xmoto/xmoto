@@ -29,10 +29,18 @@ This apply a rotation of "Strawberry0" ("Strawberry0" is initialized
    from time 0 to infinite.
 Between time 5sec and 10sec, two rotations compose the movement !
 
+Game.SetDynamicEntityTranslation("Strawberry0", 5, 1, .05, 0, 0)
+works !
+it translates "Strawberry0" x=5, y=1 speed=0.05 from time 0 to infinite 
+
+or
+  Game.SetDynamicEntityTranslation("Strawberry0", 8, 1, .05, 0, 500)
+  Game.SetDynamicEntityTranslation("Strawberry0", 1, 8, .05, 500,
+   1000)
+to change direction after 5sec
+
 i must do again :
-Game.SetDynamicEntityTranslation
-and
-Game.SetDynamicEntityNone
+Game.SetDynamicEntityNone to disable transformations
 
 ######################################################################
 Unassigned:

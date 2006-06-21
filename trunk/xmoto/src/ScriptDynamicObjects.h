@@ -59,8 +59,6 @@ class SDynamicEntityMove : public SDynamicObject {
 
  private:
   std::string m_entity;
-  float m_previousVx;
-  float m_previousVy;
 };
 
 class SDynamicEntityRotation : public SDynamicEntityMove {
@@ -76,6 +74,9 @@ class SDynamicEntityRotation : public SDynamicEntityMove {
 
   float m_CenterX;
   float m_CenterY;
+
+  float m_previousVx;
+  float m_previousVy;
 };
 
 class SDynamicEntityTranslation : public SDynamicEntityMove {
