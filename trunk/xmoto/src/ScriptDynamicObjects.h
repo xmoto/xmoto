@@ -88,6 +88,8 @@ class SDynamicEntityTranslation : public SDynamicEntityMove {
   float m_X1, m_Y1;
   float m_X2, m_Y2;
   float m_Speed;
+
+  float m_move;
 };
 
 

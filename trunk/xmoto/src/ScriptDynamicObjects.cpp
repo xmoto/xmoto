@@ -88,11 +88,12 @@ SDynamicEntityRotation::~SDynamicEntityRotation() {
 }
 
 void SDynamicEntityRotation::performXY(float *vx, float *vy) {
-  m_Angle += m_Speed;
   if(m_Angle >= 2 * M_PI) {m_Angle -= 2 * M_PI;} /* because of float limit */
   
   *vx = cos(m_Angle) * m_Radius - m_CenterX;
   *vy = sin(m_Angle) * m_Radius - m_CenterY;
+
+  m_Angle += m_Speed;
 }
 
 SDynamicEntityTranslation::SDynamicEntityTranslation(std::string pEntity, float pX1, float pY1, float pX2, float pY2, float pSpeed, int p_startTime, int p_endTime) : SDynamicEntityMove(pEntity, p_startTime, p_endTime) {
@@ -101,11 +102,15 @@ SDynamicEntityTranslation::SDynamicEntityTranslation(std::string pEntity, float 
   m_X2 	  = pX2;
   m_Y2 	  = pY2;
   m_Speed = pSpeed;
+
+  m_move = 0.0;
 }
 
 SDynamicEntityTranslation::~SDynamicEntityTranslation() {
 }
 
 void SDynamicEntityTranslation::performXY(float *vx, float *vy) {
+  vx = 0.0;
+  vy = 0.0;
 }
 
