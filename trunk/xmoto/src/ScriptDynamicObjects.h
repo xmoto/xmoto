@@ -80,16 +80,18 @@ class SDynamicEntityRotation : public SDynamicEntityMove {
 
 class SDynamicEntityTranslation : public SDynamicEntityMove {
  public:
-  SDynamicEntityTranslation(std::string pEntity, float pX1, float pY1, float pX2, float pY2, float pSpeed, int p_startTime, int p_endTime);
+  SDynamicEntityTranslation(std::string pEntity, float pX, float pY, float pSpeed, int p_startTime, int p_endTime);
   ~SDynamicEntityTranslation();
   void performXY(float *vx, float *vy);
 
  private:
-  float m_X1, m_Y1;
-  float m_X2, m_Y2;
+  float m_X, m_Y;
   float m_Speed;
 
-  float m_move;
+  bool m_sensUp;
+  float m_moveX;
+  float m_moveY;
+  float m_totalMoveX;
 };
 
 

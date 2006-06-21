@@ -96,21 +96,35 @@ void SDynamicEntityRotation::performXY(float *vx, float *vy) {
   m_Angle += m_Speed;
 }
 
-SDynamicEntityTranslation::SDynamicEntityTranslation(std::string pEntity, float pX1, float pY1, float pX2, float pY2, float pSpeed, int p_startTime, int p_endTime) : SDynamicEntityMove(pEntity, p_startTime, p_endTime) {
-  m_X1 	  = pX1;
-  m_Y1 	  = pY1;
-  m_X2 	  = pX2;
-  m_Y2 	  = pY2;
+SDynamicEntityTranslation::SDynamicEntityTranslation(std::string pEntity, float pX, float pY, float pSpeed, int p_startTime, int p_endTime) : SDynamicEntityMove(pEntity, p_startTime, p_endTime) {
+  float m_Z;
+
+  m_X 	  = pX;
+  m_Y 	  = pY;
   m_Speed = pSpeed;
 
-  m_move = 0.0;
+  m_sensUp = true;
+  m_Z      = m_X * m_X + m_Y * m_Y; 
+  m_moveX  = (m_Speed * m_X) / m_Z;
+  m_moveY  = (m_Speed * m_Y) / m_Z;
+  m_totalMoveX = 0.0;
 }
 
 SDynamicEntityTranslation::~SDynamicEntityTranslation() {
 }
 
 void SDynamicEntityTranslation::performXY(float *vx, float *vy) {
-  vx = 0.0;
-  vy = 0.0;
+  *vx = m_sensUp ? m_moveX : -m_moveX;
+  *vy = m_sensUp ? m_moveY : -m_moveY;
+
+  m_totalMoveX += *vx;
+
+  if(m_totalMoveX >= m_X) {
+    m_sensUp = !m_sensUp;
+  }
+    
+  if(m_totalMoveX <= 0) {
+    m_sensUp = !m_sensUp;
+  }
 }
 
