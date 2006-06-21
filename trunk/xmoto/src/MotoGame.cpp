@@ -543,12 +543,14 @@ namespace vapp {
       {
 	m_SDynamicObjects
 	  .push_back(new SDynamicEntityRotation(pEvent->u.LuaCallSetDynamicEntityRotation.cEntityID,
-					     pEvent->u.LuaCallSetDynamicEntityRotation.fCenterX,
-					     pEvent->u.LuaCallSetDynamicEntityRotation.fCenterY,
-					     pEvent->u.LuaCallSetDynamicEntityRotation.fInitAngle,
-					     pEvent->u.LuaCallSetDynamicEntityRotation.fRadius,
-					     pEvent->u.LuaCallSetDynamicEntityRotation.fSpeed
-					     ));
+						pEvent->u.LuaCallSetDynamicEntityRotation.fCenterX,
+						pEvent->u.LuaCallSetDynamicEntityRotation.fCenterY,
+						pEvent->u.LuaCallSetDynamicEntityRotation.fInitAngle,
+						pEvent->u.LuaCallSetDynamicEntityRotation.fRadius,
+						pEvent->u.LuaCallSetDynamicEntityRotation.fSpeed,
+						pEvent->u.LuaCallSetDynamicEntityRotation.startTime,
+						pEvent->u.LuaCallSetDynamicEntityRotation.endTime
+						));
       }
       break;
 
@@ -1615,11 +1617,14 @@ namespace vapp {
       {
 	m_SDynamicObjects
 	  .push_back(new SDynamicEntityRotation(pEvent->u.LuaCallSetDynamicEntityRotation.cEntityID,
-					     pEvent->u.LuaCallSetDynamicEntityRotation.fCenterX,
-					     pEvent->u.LuaCallSetDynamicEntityRotation.fCenterY,
-					     pEvent->u.LuaCallSetDynamicEntityRotation.fInitAngle,
-					     pEvent->u.LuaCallSetDynamicEntityRotation.fRadius,
-					     pEvent->u.LuaCallSetDynamicEntityRotation.fSpeed
+						pEvent->u.LuaCallSetDynamicEntityRotation.fCenterX,
+						pEvent->u.LuaCallSetDynamicEntityRotation.fCenterY,
+						pEvent->u.LuaCallSetDynamicEntityRotation.fInitAngle,
+						pEvent->u.LuaCallSetDynamicEntityRotation.fRadius,
+						pEvent->u.LuaCallSetDynamicEntityRotation.fSpeed,
+						pEvent->u.LuaCallSetDynamicEntityRotation.startTime,
+						pEvent->u.LuaCallSetDynamicEntityRotation.endTime
+
 					     ));
       }
     break;
@@ -1797,7 +1802,10 @@ namespace vapp {
 
   void MotoGame::nextStateScriptDynamicObjects() {
     for(int i=0; i<m_SDynamicObjects.size(); i++) {
-      m_SDynamicObjects[i]->nextState(this);
+      if(m_SDynamicObjects[i]->nextState(this) == true) {
+	/* the dynamic object can be removed */
+	/* to do */
+      }
     }
   }
 

@@ -29,20 +29,27 @@ namespace vapp {
 };
 
 class SDynamicObject {
-  public:
-  SDynamicObject();
+ public:
+  SDynamicObject(int p_startTime, int p_endTime);
   ~SDynamicObject();
-
-  virtual void nextState(vapp::MotoGame* v_motoGame) = 0;
   
-  private:
+  /* return false if the dynamic is finished */
+  virtual bool nextState(vapp::MotoGame* v_motoGame);
+  
+ protected:
+  bool isTimeToMove();
+  
+ private:
+  int m_time;
+  int m_startTime;
+  int m_endTime;  
 };
 
 class SDynamicEntityRotation : public SDynamicObject {
  public:
-  SDynamicEntityRotation(std::string pEntity, float pCenterX, float pCenterY, float pInitAngle, float pRadius, float pSpeed);
+  SDynamicEntityRotation(std::string pEntity, float pCenterX, float pCenterY, float pInitAngle, float pRadius, float pSpeed, int p_startTime, int p_endTime);
   ~SDynamicEntityRotation();
-  void nextState(vapp::MotoGame* v_motoGame);
+  bool nextState(vapp::MotoGame* v_motoGame);
 
  private:
   std::string m_entity;

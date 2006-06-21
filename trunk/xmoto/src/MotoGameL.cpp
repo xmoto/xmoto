@@ -336,6 +336,8 @@ namespace vapp {
       pEvent->u.LuaCallSetDynamicEntityRotation.fInitAngle = X_luaL_check_number(pL,4);
       pEvent->u.LuaCallSetDynamicEntityRotation.fRadius    = X_luaL_check_number(pL,5);
       pEvent->u.LuaCallSetDynamicEntityRotation.fSpeed     = X_luaL_check_number(pL,6);
+      pEvent->u.LuaCallSetDynamicEntityRotation.startTime  = X_luaL_check_number(pL,7);
+      pEvent->u.LuaCallSetDynamicEntityRotation.endTime    = X_luaL_check_number(pL,8);
     }
     
     return 0;

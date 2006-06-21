@@ -518,6 +518,8 @@ namespace vapp {
     float fInitAngle;
     float fRadius;
     float fSpeed;
+    int   startTime;
+    int   endTime;
   };
 
   struct GameEvent {

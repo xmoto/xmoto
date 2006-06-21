@@ -23,13 +23,28 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "MotoGame.h"
 #include "math.h"
 
-SDynamicObject::SDynamicObject() {
+SDynamicObject::SDynamicObject(int p_startTime, int p_endTime) {
+  m_time = 0;
+  m_startTime = p_startTime;
+  m_endTime   = p_endTime;
 }
 
 SDynamicObject::~SDynamicObject() {
 }
 
-SDynamicEntityRotation::SDynamicEntityRotation(std::string pEntity, float pCenterX, float pCenterY, float pInitAngle, float pRadius, float pSpeed) {
+bool SDynamicObject::nextState(vapp::MotoGame* v_motoGame) {
+  if(m_time == m_endTime) {
+    return false;
+  }
+  m_time++;
+  return true;
+}
+
+bool SDynamicObject::isTimeToMove() {
+  return m_time >= m_startTime && m_time <= m_endTime;
+}
+
+SDynamicEntityRotation::SDynamicEntityRotation(std::string pEntity, float pCenterX, float pCenterY, float pInitAngle, float pRadius, float pSpeed, int p_startTime, int p_endTime) : SDynamicObject(p_startTime, p_endTime) {
   m_entity = pEntity;
   m_CenterX = pCenterX;
   m_CenterY = pCenterY;
@@ -41,7 +56,15 @@ SDynamicEntityRotation::SDynamicEntityRotation(std::string pEntity, float pCente
 SDynamicEntityRotation::~SDynamicEntityRotation() {
 }
 
-void SDynamicEntityRotation::nextState(vapp::MotoGame* v_motoGame) {
+bool SDynamicEntityRotation::nextState(vapp::MotoGame* v_motoGame) {
+  if(SDynamicObject::nextState(v_motoGame) == false) {
+    return false;
+  }
+
+  if(isTimeToMove() == false) {
+    return true;
+  }
+
   float x,y;
 
   m_Angle += m_Speed;
@@ -51,4 +74,6 @@ void SDynamicEntityRotation::nextState(vapp::MotoGame* v_motoGame) {
   y = sin(m_Angle) * m_Radius + m_CenterY;
 
   v_motoGame->SetEntityPos(m_entity, x, y);
+
+  return true;
 }
