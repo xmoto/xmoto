@@ -513,8 +513,6 @@ namespace vapp {
   
   struct GameEventLuaCallSetDynamicEntityRotation {
     char cEntityID[64]; /* ID of entity */
-    float fCenterX;
-    float fCenterY;
     float fInitAngle;
     float fRadius;
     float fSpeed;

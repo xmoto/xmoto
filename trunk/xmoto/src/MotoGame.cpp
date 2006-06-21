@@ -543,8 +543,6 @@ namespace vapp {
       {
 	m_SDynamicObjects
 	  .push_back(new SDynamicEntityRotation(pEvent->u.LuaCallSetDynamicEntityRotation.cEntityID,
-						pEvent->u.LuaCallSetDynamicEntityRotation.fCenterX,
-						pEvent->u.LuaCallSetDynamicEntityRotation.fCenterY,
 						pEvent->u.LuaCallSetDynamicEntityRotation.fInitAngle,
 						pEvent->u.LuaCallSetDynamicEntityRotation.fRadius,
 						pEvent->u.LuaCallSetDynamicEntityRotation.fSpeed,
@@ -1617,8 +1615,6 @@ namespace vapp {
       {
 	m_SDynamicObjects
 	  .push_back(new SDynamicEntityRotation(pEvent->u.LuaCallSetDynamicEntityRotation.cEntityID,
-						pEvent->u.LuaCallSetDynamicEntityRotation.fCenterX,
-						pEvent->u.LuaCallSetDynamicEntityRotation.fCenterY,
 						pEvent->u.LuaCallSetDynamicEntityRotation.fInitAngle,
 						pEvent->u.LuaCallSetDynamicEntityRotation.fRadius,
 						pEvent->u.LuaCallSetDynamicEntityRotation.fSpeed,

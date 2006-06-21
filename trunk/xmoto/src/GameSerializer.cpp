@@ -221,8 +221,6 @@ namespace vapp {
 	    (*Buffer).readBuf(Event.u.LuaCallSetDynamicEntityRotation.cEntityID,n);
 	    Event.u.LuaCallSetDynamicEntityRotation.cEntityID[n] = '\0';
 
-	    (*Buffer) >> Event.u.LuaCallSetDynamicEntityRotation.fCenterX;
-	    (*Buffer) >> Event.u.LuaCallSetDynamicEntityRotation.fCenterY;
 	    (*Buffer) >> Event.u.LuaCallSetDynamicEntityRotation.fInitAngle;
 	    (*Buffer) >> Event.u.LuaCallSetDynamicEntityRotation.fRadius;
 	    (*Buffer) >> Event.u.LuaCallSetDynamicEntityRotation.fSpeed;
@@ -380,8 +378,6 @@ namespace vapp {
 	Buffer << pEvent->Type;
 	Buffer << (i=strlen(pEvent->u.LuaCallSetDynamicEntityRotation.cEntityID));
 	Buffer.writeBuf(pEvent->u.LuaCallSetDynamicEntityRotation.cEntityID,i);
-	Buffer << pEvent->u.LuaCallSetDynamicEntityRotation.fCenterX;
-	Buffer << pEvent->u.LuaCallSetDynamicEntityRotation.fCenterY;
 	Buffer << pEvent->u.LuaCallSetDynamicEntityRotation.fInitAngle;
 	Buffer << pEvent->u.LuaCallSetDynamicEntityRotation.fRadius;
 	Buffer << pEvent->u.LuaCallSetDynamicEntityRotation.fSpeed;

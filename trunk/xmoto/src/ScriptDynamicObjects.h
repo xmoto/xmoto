@@ -47,7 +47,7 @@ class SDynamicObject {
 
 class SDynamicEntityRotation : public SDynamicObject {
  public:
-  SDynamicEntityRotation(std::string pEntity, float pCenterX, float pCenterY, float pInitAngle, float pRadius, float pSpeed, int p_startTime, int p_endTime);
+  SDynamicEntityRotation(std::string pEntity, float pInitAngle, float pRadius, float pSpeed, int p_startTime, int p_endTime);
   ~SDynamicEntityRotation();
   bool nextState(vapp::MotoGame* v_motoGame);
 
@@ -58,6 +58,9 @@ class SDynamicEntityRotation : public SDynamicObject {
   float m_Angle;
   float m_Radius;
   float m_Speed;
+
+  float m_previousVx;
+  float m_previousVy;
 };
 
 #endif /* __SCRIPTDYNAMICOBJECTS_H__ */
