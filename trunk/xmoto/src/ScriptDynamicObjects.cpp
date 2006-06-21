@@ -33,9 +33,14 @@ SDynamicObject::~SDynamicObject() {
 }
 
 bool SDynamicObject::nextState(vapp::MotoGame* v_motoGame) {
-  if(m_time == m_endTime && m_endTime != 0.0) {
+  if(m_time >= m_endTime && m_endTime != 0.0) {
     return false;
   }
+
+  if(isTimeToMove() == true) {
+    performMove(v_motoGame);
+  }
+
   m_time++;
   return true;
 }
@@ -44,14 +49,37 @@ bool SDynamicObject::isTimeToMove() {
   return m_time >= m_startTime && (m_time <= m_endTime || m_endTime == 0.0);
 }
 
-SDynamicEntityRotation::SDynamicEntityRotation(std::string pEntity, float pInitAngle, float pRadius, float pSpeed, int p_startTime, int p_endTime) : SDynamicObject(p_startTime, p_endTime) {
+SDynamicEntityMove::SDynamicEntityMove(std::string pEntity, int p_startTime, int p_endTime) : SDynamicObject(p_startTime, p_endTime){
   m_entity = pEntity;
+  m_previousVx = 0.0;
+  m_previousVy = 0.0;
+}
+
+SDynamicEntityMove::~SDynamicEntityMove() {
+}
+
+void SDynamicEntityMove::performMove(vapp::MotoGame* v_motoGame) {
+  /* Find the specified entity and return its position */
+  for(int i=0;i<v_motoGame->getEntities().size();i++) {
+    vapp::Entity *p = v_motoGame->getEntities()[i];
+    if(p->ID == m_entity) {
+      float vx, vy;
+      performXY(&vx, &vy);
+
+      v_motoGame->SetEntityPos(p->ID,
+			       vx + p->Pos.x - m_previousVx,
+			       vy + p->Pos.y - m_previousVy);
+      m_previousVx = vx;
+      m_previousVy = vy;
+    }
+  }
+}
+
+SDynamicEntityRotation::SDynamicEntityRotation(std::string pEntity, float pInitAngle, float pRadius, float pSpeed, int p_startTime, int p_endTime) : SDynamicEntityMove(pEntity, p_startTime, p_endTime) {
   m_Angle   = pInitAngle;
   m_Radius  = pRadius;
   m_Speed   = pSpeed;
 
-  m_previousVx = 0.0;
-  m_previousVy = 0.0;
   m_CenterX = cos(m_Angle) * m_Radius;
   m_CenterY = sin(m_Angle) * m_Radius;
 }
@@ -59,35 +87,25 @@ SDynamicEntityRotation::SDynamicEntityRotation(std::string pEntity, float pInitA
 SDynamicEntityRotation::~SDynamicEntityRotation() {
 }
 
-bool SDynamicEntityRotation::nextState(vapp::MotoGame* v_motoGame) {
-  if(SDynamicObject::nextState(v_motoGame) == false) {
-    return false;
-  }
-
-  if(isTimeToMove() == false) {
-    return true;
-  }
-
-  /* Find the specified entity and return its position */
-  for(int i=0;i<v_motoGame->getEntities().size();i++) {
-    vapp::Entity *p = v_motoGame->getEntities()[i];
-    if(p->ID == m_entity) {
-      float vx, vy;
-
-      m_Angle += m_Speed;
-      if(m_Angle >= 2 * M_PI) {m_Angle -= 2 * M_PI;} /* because of float limit */
-
-      vx = cos(m_Angle) * m_Radius - m_CenterX;
-      vy = sin(m_Angle) * m_Radius - m_CenterY;
-
-      v_motoGame->SetEntityPos(m_entity,
-			       vx + p->Pos.x - m_previousVx,
-			       vy + p->Pos.y - m_previousVy);
-
-      m_previousVx = vx;
-      m_previousVy = vy;
-    }
-  }
-
-  return true;
+void SDynamicEntityRotation::performXY(float *vx, float *vy) {
+  m_Angle += m_Speed;
+  if(m_Angle >= 2 * M_PI) {m_Angle -= 2 * M_PI;} /* because of float limit */
+  
+  *vx = cos(m_Angle) * m_Radius - m_CenterX;
+  *vy = sin(m_Angle) * m_Radius - m_CenterY;
 }
+
+SDynamicEntityTranslation::SDynamicEntityTranslation(std::string pEntity, float pX1, float pY1, float pX2, float pY2, float pSpeed, int p_startTime, int p_endTime) : SDynamicEntityMove(pEntity, p_startTime, p_endTime) {
+  m_X1 	  = pX1;
+  m_Y1 	  = pY1;
+  m_X2 	  = pX2;
+  m_Y2 	  = pY2;
+  m_Speed = pSpeed;
+}
+
+SDynamicEntityTranslation::~SDynamicEntityTranslation() {
+}
+
+void SDynamicEntityTranslation::performXY(float *vx, float *vy) {
+}
+
