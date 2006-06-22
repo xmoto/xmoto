@@ -62,6 +62,7 @@ namespace vapp {
   int L_Game_SetBlockRotation(lua_State *pL);
   int L_Game_SetDynamicEntityRotation(lua_State *pL);
   int L_Game_SetDynamicEntityTranslation(lua_State *pL);
+  int L_Game_SetDynamicEntityNone(lua_State *pL);
   
   /* "Game" Lua library */
   static const luaL_reg g_GameFuncs[] = {
@@ -88,6 +89,7 @@ namespace vapp {
     {"SetBlockRotation",L_Game_SetBlockRotation},
     {"SetDynamicEntityRotation", L_Game_SetDynamicEntityRotation},
     {"SetDynamicEntityTranslation", L_Game_SetDynamicEntityTranslation},
+    {"SetDynamicEntityNone", L_Game_SetDynamicEntityNone},
     {NULL, NULL}
   };
 
@@ -564,6 +566,12 @@ namespace vapp {
 						pEvent->u.LuaCallSetDynamicEntityTranslation.startTime,
 						pEvent->u.LuaCallSetDynamicEntityTranslation.endTime
 						));
+      }
+      break;
+
+    case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYNONE:
+      {
+	removeSDynamicOfEntity(pEvent->u.LuaCallSetDynamicEntityNone.cEntityID);
       }
       break;
 
@@ -1654,6 +1662,12 @@ namespace vapp {
       }
     break;
 
+    case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYNONE:
+      {
+	removeSDynamicOfEntity(pEvent->u.LuaCallSetDynamicEntityNone.cEntityID);
+      }
+      break;
+
     }
   }
   
@@ -1830,6 +1844,19 @@ namespace vapp {
 
     while(i<m_SDynamicObjects.size()) {
       if(m_SDynamicObjects[i]->nextState(this) == false) {
+	delete m_SDynamicObjects[i];
+        m_SDynamicObjects.erase(m_SDynamicObjects.begin() + i);
+      } else {
+	i++;
+      }
+    }
+  }
+
+  void MotoGame::removeSDynamicOfEntity(std::string pEntity) {
+    int i = 0;
+
+    while(i<m_SDynamicObjects.size()) {
+      if(m_SDynamicObjects[i]->getObjectId() == pEntity) {
 	delete m_SDynamicObjects[i];
         m_SDynamicObjects.erase(m_SDynamicObjects.begin() + i);
       } else {

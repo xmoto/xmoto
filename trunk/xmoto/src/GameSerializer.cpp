@@ -255,6 +255,23 @@ namespace vapp {
       }
       break;
 
+    case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYNONE:
+      {
+	  int n;
+	  (*Buffer) >> n;
+	  if(n >= sizeof(Event.u.LuaCallSetDynamicEntityNone.cEntityID)) {
+	    Log("** Warning ** : Entity name in replay too long, ignoring all events!");
+	    bError = true;
+	  }
+	  else {
+	    (*Buffer).readBuf(Event.u.LuaCallSetDynamicEntityNone.cEntityID,n);
+	    Event.u.LuaCallSetDynamicEntityNone.cEntityID[n] = '\0';
+
+	    bIsOk = true;
+	  }
+      }
+      break;
+
       default:
 	Log("** Warning ** : Failed to parse game events in replay, it will probably not play right!");
 	bError = true;
@@ -421,6 +438,16 @@ namespace vapp {
 	Buffer << pEvent->u.LuaCallSetDynamicEntityTranslation.fPeriod;
 	Buffer << pEvent->u.LuaCallSetDynamicEntityTranslation.startTime;
 	Buffer << pEvent->u.LuaCallSetDynamicEntityTranslation.endTime;
+      }
+      break;
+
+    case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYNONE:
+      {
+	int i;
+	Buffer << getTime();
+	Buffer << pEvent->Type;
+	Buffer << (i=strlen(pEvent->u.LuaCallSetDynamicEntityNone.cEntityID));
+	Buffer.writeBuf(pEvent->u.LuaCallSetDynamicEntityNone.cEntityID,i);
       }
       break;
     }            

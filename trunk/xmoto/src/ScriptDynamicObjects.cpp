@@ -71,6 +71,10 @@ void SDynamicEntityMove::performMove(vapp::MotoGame* v_motoGame) {
   }
 }
 
+std::string SDynamicEntityMove::getObjectId() {
+  return m_entity;
+}
+
 SDynamicEntityRotation::SDynamicEntityRotation(std::string pEntity, float pInitAngle, float pRadius, float pPeriod, int p_startTime, int p_endTime) : SDynamicEntityMove(pEntity, p_startTime, p_endTime, pPeriod), SDynamicRotation(pInitAngle, pRadius, pPeriod) {
 }
 

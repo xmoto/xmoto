@@ -358,5 +358,15 @@ namespace vapp {
     return 0;
   }
 
+  int L_Game_SetDynamicEntityNone(lua_State *pL) {
+    /* event for this */    
+    GameEvent *pEvent = m_pMotoGame->createGameEvent(GAME_EVENT_LUA_CALL_SETDYNAMICENTITYNONE);
+    if(pEvent != NULL) {
+      strncpy(pEvent->u.LuaCallSetDynamicEntityNone.cEntityID,
+	      luaL_checkstring(pL,1),
+	      sizeof(pEvent->u.LuaCallSetDynamicEntityNone.cEntityID)-1);
+    }
+    return 0;
+  }
 };
 

@@ -36,6 +36,7 @@ class SDynamicObject {
   
   /* return false if the dynamic is finished */
   bool nextState(vapp::MotoGame* v_motoGame);
+  virtual std::string getObjectId() = 0;
   
  protected:
   bool isTimeToMove();
@@ -90,6 +91,7 @@ class SDynamicEntityMove : public SDynamicObject {
   ~SDynamicEntityMove();
 
   void performMove(vapp::MotoGame* p_motoGame);
+  std::string getObjectId();
 
  protected:
   virtual void performXY(float *vx, float *vy) = 0;

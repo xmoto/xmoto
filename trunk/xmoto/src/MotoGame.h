@@ -406,6 +406,9 @@ namespace vapp {
 	/*===========================================================================
 	Game event types
   ===========================================================================*/
+  /* never change the order of these values ! 
+     ALWAYS ADD VALUES at the end : (otherwise, old replays will not work !)
+  */
   enum GameEventType {
     GAME_EVENT_PLAYER_DIES,
     GAME_EVENT_PLAYER_ENTERS_ZONE,
@@ -427,7 +430,8 @@ namespace vapp {
     GAME_EVENT_LUA_CALL_SETBLOCKROTATION,
 
     GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROTATION,
-    GAME_EVENT_LUA_CALL_SETDYNAMICENTITYTRANSLATION
+    GAME_EVENT_LUA_CALL_SETDYNAMICENTITYTRANSLATION,
+    GAME_EVENT_LUA_CALL_SETDYNAMICENTITYNONE
   };
   
 	/*===========================================================================
@@ -530,6 +534,10 @@ namespace vapp {
     int   endTime;
   };
 
+  struct GameEventLuaCallSetDynamicEntityNone {
+    char cEntityID[64]; /* ID of entity */
+  };
+
   struct GameEvent {
     int nSeq;                         /* Sequence number */
     GameEventType Type;								/* Type of event */
@@ -591,6 +599,9 @@ namespace vapp {
 
       /* GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROTATION */
       GameEventLuaCallSetDynamicEntityTranslation LuaCallSetDynamicEntityTranslation;
+
+      /* GAME_EVENT_LUA_CALL_SETDYNAMICENTITYNONE */
+      GameEventLuaCallSetDynamicEntityNone LuaCallSetDynamicEntityNone;
 
     } u;		
   };
@@ -861,6 +872,7 @@ namespace vapp {
 
       void cleanScriptDynamicObjects();
       void nextStateScriptDynamicObjects();
+      void removeSDynamicOfEntity(std::string pEntity);
 
       char _MapCoordTo8Bits(float fRef,float fMaxDiff,float fCoord);
       float _Map8BitsToCoord(float fRef,float fMaxDiff,char c);
