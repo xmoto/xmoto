@@ -1826,11 +1826,15 @@ namespace vapp {
   }
 
   void MotoGame::nextStateScriptDynamicObjects() {
-    for(int i=0;i<m_SDynamicObjects.size();i++) {
-      if(m_SDynamicObjects[i]->nextState(this) == true) {
-        delete m_SDynamicObjects[i];
+    int i = 0;
+
+    while(i<m_SDynamicObjects.size()) {
+      if(m_SDynamicObjects[i]->nextState(this) == false) {
+	printf("delete object %i\n", i);
+	delete m_SDynamicObjects[i];
         m_SDynamicObjects.erase(m_SDynamicObjects.begin() + i);
-        return;
+      } else {
+	i++;
       }
     }
   }
