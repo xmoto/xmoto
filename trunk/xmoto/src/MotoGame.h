@@ -516,7 +516,7 @@ namespace vapp {
     char cEntityID[64]; /* ID of entity */
     float fInitAngle;
     float fRadius;
-    float fSpeed;
+    float fPeriod;
     int   startTime;
     int   endTime;
   };
@@ -525,7 +525,7 @@ namespace vapp {
     char cEntityID[64]; /* ID of entity */
     float fX;
     float fY;
-    float fSpeed;
+    float fPeriod;
     int   startTime;
     int   endTime;
   };

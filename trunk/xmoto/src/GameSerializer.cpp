@@ -223,7 +223,7 @@ namespace vapp {
 
 	    (*Buffer) >> Event.u.LuaCallSetDynamicEntityRotation.fInitAngle;
 	    (*Buffer) >> Event.u.LuaCallSetDynamicEntityRotation.fRadius;
-	    (*Buffer) >> Event.u.LuaCallSetDynamicEntityRotation.fSpeed;
+	    (*Buffer) >> Event.u.LuaCallSetDynamicEntityRotation.fPeriod;
 	    (*Buffer) >> Event.u.LuaCallSetDynamicEntityRotation.startTime;
 	    (*Buffer) >> Event.u.LuaCallSetDynamicEntityRotation.endTime;
 
@@ -246,7 +246,7 @@ namespace vapp {
 
 	    (*Buffer) >> Event.u.LuaCallSetDynamicEntityTranslation.fX;
 	    (*Buffer) >> Event.u.LuaCallSetDynamicEntityTranslation.fY;
-	    (*Buffer) >> Event.u.LuaCallSetDynamicEntityTranslation.fSpeed;
+	    (*Buffer) >> Event.u.LuaCallSetDynamicEntityTranslation.fPeriod;
 	    (*Buffer) >> Event.u.LuaCallSetDynamicEntityTranslation.startTime;
 	    (*Buffer) >> Event.u.LuaCallSetDynamicEntityTranslation.endTime;
 
@@ -393,7 +393,22 @@ namespace vapp {
 	Buffer << pEvent->u.LuaCallSetplayerposition.bRight;
       }
       break;
-      
+
+    case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROTATION:
+      {
+	int i;
+	Buffer << getTime();
+	Buffer << pEvent->Type;
+	Buffer << (i=strlen(pEvent->u.LuaCallSetDynamicEntityRotation.cEntityID));
+	Buffer.writeBuf(pEvent->u.LuaCallSetDynamicEntityRotation.cEntityID,i);
+	Buffer << pEvent->u.LuaCallSetDynamicEntityRotation.fInitAngle;
+	Buffer << pEvent->u.LuaCallSetDynamicEntityRotation.fRadius;
+	Buffer << pEvent->u.LuaCallSetDynamicEntityRotation.fPeriod;
+	Buffer << pEvent->u.LuaCallSetDynamicEntityRotation.startTime;
+	Buffer << pEvent->u.LuaCallSetDynamicEntityRotation.endTime;
+      }
+      break;
+
     case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYTRANSLATION:
       {
 	int i;
@@ -403,7 +418,7 @@ namespace vapp {
 	Buffer.writeBuf(pEvent->u.LuaCallSetDynamicEntityTranslation.cEntityID,i);
 	Buffer << pEvent->u.LuaCallSetDynamicEntityTranslation.fX;
 	Buffer << pEvent->u.LuaCallSetDynamicEntityTranslation.fY;
-	Buffer << pEvent->u.LuaCallSetDynamicEntityTranslation.fSpeed;
+	Buffer << pEvent->u.LuaCallSetDynamicEntityTranslation.fPeriod;
 	Buffer << pEvent->u.LuaCallSetDynamicEntityTranslation.startTime;
 	Buffer << pEvent->u.LuaCallSetDynamicEntityTranslation.endTime;
       }

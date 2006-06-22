@@ -31,7 +31,7 @@ namespace vapp {
 
 class SDynamicObject {
  public:
-  SDynamicObject(int p_startTime, int p_endTime);
+  SDynamicObject(int p_startTime, int p_endTime, float pPeriod);
   ~SDynamicObject();
   
   /* return false if the dynamic is finished */
@@ -45,11 +45,48 @@ class SDynamicObject {
   int m_time;
   int m_startTime;
   int m_endTime;
+  float m_period;
+};
+
+class SDynamicRotation {
+ public:
+  SDynamicRotation(float pInitAngle, float pRadius, float pPeriod);
+  ~SDynamicRotation();
+  void performXY(float *vx, float *vy);
+
+ private:
+  float m_Speed;
+
+  float m_Angle;
+  float m_Radius;
+
+  float m_CenterX;
+  float m_CenterY;
+
+  float m_previousVx;
+  float m_previousVy;
+};
+
+class SDynamicTranslation {
+ public:
+  SDynamicTranslation(float pX, float pY, float pPeriod);
+  ~SDynamicTranslation();
+  void performXY(float *vx, float *vy);
+
+ private:
+  float m_Speed;
+  float m_X, m_Y;
+
+  bool m_sensUp;
+  float m_moveX;
+  float m_moveY;
+  float m_totalMoveX;
+  float m_totalMoveY;
 };
 
 class SDynamicEntityMove : public SDynamicObject {
  public:
-  SDynamicEntityMove(std::string pEntity, int p_startTime, int p_endTime);
+  SDynamicEntityMove(std::string pEntity, int p_startTime, int p_endTime, float pPeriod);
   ~SDynamicEntityMove();
 
   void performMove(vapp::MotoGame* p_motoGame);
@@ -61,39 +98,24 @@ class SDynamicEntityMove : public SDynamicObject {
   std::string m_entity;
 };
 
-class SDynamicEntityRotation : public SDynamicEntityMove {
+class SDynamicEntityRotation : public SDynamicEntityMove, public SDynamicRotation {
  public:
-  SDynamicEntityRotation(std::string pEntity, float pInitAngle, float pRadius, float pSpeed, int p_startTime, int p_endTime);
+  SDynamicEntityRotation(std::string pEntity, float pInitAngle, float pRadius, float pPeriod, int p_startTime, int p_endTime);
   ~SDynamicEntityRotation();
+
   void performXY(float *vx, float *vy);
 
  private:
-  float m_Angle;
-  float m_Radius;
-  float m_Speed;
-
-  float m_CenterX;
-  float m_CenterY;
-
-  float m_previousVx;
-  float m_previousVy;
 };
 
-class SDynamicEntityTranslation : public SDynamicEntityMove {
+class SDynamicEntityTranslation : public SDynamicEntityMove, public SDynamicTranslation {
  public:
-  SDynamicEntityTranslation(std::string pEntity, float pX, float pY, float pSpeed, int p_startTime, int p_endTime);
+  SDynamicEntityTranslation(std::string pEntity, float pX, float pY, float pPeriod, int p_startTime, int p_endTime);
   ~SDynamicEntityTranslation();
+
   void performXY(float *vx, float *vy);
 
  private:
-  float m_X, m_Y;
-  float m_Speed;
-
-  bool m_sensUp;
-  float m_moveX;
-  float m_moveY;
-  float m_totalMoveX;
 };
-
 
 #endif /* __SCRIPTDYNAMICOBJECTS_H__ */

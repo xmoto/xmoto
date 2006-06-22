@@ -547,7 +547,7 @@ namespace vapp {
 	  .push_back(new SDynamicEntityRotation(pEvent->u.LuaCallSetDynamicEntityRotation.cEntityID,
 						pEvent->u.LuaCallSetDynamicEntityRotation.fInitAngle,
 						pEvent->u.LuaCallSetDynamicEntityRotation.fRadius,
-						pEvent->u.LuaCallSetDynamicEntityRotation.fSpeed,
+						pEvent->u.LuaCallSetDynamicEntityRotation.fPeriod,
 						pEvent->u.LuaCallSetDynamicEntityRotation.startTime,
 						pEvent->u.LuaCallSetDynamicEntityRotation.endTime
 						));
@@ -560,7 +560,7 @@ namespace vapp {
 	  .push_back(new SDynamicEntityTranslation(pEvent->u.LuaCallSetDynamicEntityTranslation.cEntityID,
 						pEvent->u.LuaCallSetDynamicEntityTranslation.fX,
 						pEvent->u.LuaCallSetDynamicEntityTranslation.fY,
-						pEvent->u.LuaCallSetDynamicEntityTranslation.fSpeed,
+						pEvent->u.LuaCallSetDynamicEntityTranslation.fPeriod,
 						pEvent->u.LuaCallSetDynamicEntityTranslation.startTime,
 						pEvent->u.LuaCallSetDynamicEntityTranslation.endTime
 						));
@@ -1632,7 +1632,7 @@ namespace vapp {
 	  .push_back(new SDynamicEntityRotation(pEvent->u.LuaCallSetDynamicEntityRotation.cEntityID,
 						pEvent->u.LuaCallSetDynamicEntityRotation.fInitAngle,
 						pEvent->u.LuaCallSetDynamicEntityRotation.fRadius,
-						pEvent->u.LuaCallSetDynamicEntityRotation.fSpeed,
+						pEvent->u.LuaCallSetDynamicEntityRotation.fPeriod,
 						pEvent->u.LuaCallSetDynamicEntityRotation.startTime,
 						pEvent->u.LuaCallSetDynamicEntityRotation.endTime
 
@@ -1646,7 +1646,7 @@ namespace vapp {
 	  .push_back(new SDynamicEntityTranslation(pEvent->u.LuaCallSetDynamicEntityTranslation.cEntityID,
 						pEvent->u.LuaCallSetDynamicEntityTranslation.fX,
 						pEvent->u.LuaCallSetDynamicEntityTranslation.fY,
-						pEvent->u.LuaCallSetDynamicEntityTranslation.fSpeed,
+						pEvent->u.LuaCallSetDynamicEntityTranslation.fPeriod,
 						pEvent->u.LuaCallSetDynamicEntityTranslation.startTime,
 						pEvent->u.LuaCallSetDynamicEntityTranslation.endTime
 

@@ -23,10 +23,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "MotoGame.h"
 #include "math.h"
 
-SDynamicObject::SDynamicObject(int p_startTime, int p_endTime) {
+SDynamicObject::SDynamicObject(int p_startTime, int p_endTime, float pPeriod) {
   m_time = 0;
   m_startTime = p_startTime;
   m_endTime   = p_endTime;
+  m_period    = pPeriod;
 }
 
 SDynamicObject::~SDynamicObject() {
@@ -49,7 +50,7 @@ bool SDynamicObject::isTimeToMove() {
   return m_time >= m_startTime && (m_time <= m_endTime || m_endTime == 0.0);
 }
 
-SDynamicEntityMove::SDynamicEntityMove(std::string pEntity, int p_startTime, int p_endTime) : SDynamicObject(p_startTime, p_endTime){
+SDynamicEntityMove::SDynamicEntityMove(std::string pEntity, int p_startTime, int p_endTime, float pPeriod) : SDynamicObject(p_startTime, p_endTime, pPeriod){
   m_entity = pEntity;
 }
 
@@ -70,21 +71,13 @@ void SDynamicEntityMove::performMove(vapp::MotoGame* v_motoGame) {
   }
 }
 
-SDynamicEntityRotation::SDynamicEntityRotation(std::string pEntity, float pInitAngle, float pRadius, float pSpeed, int p_startTime, int p_endTime) : SDynamicEntityMove(pEntity, p_startTime, p_endTime) {
-  m_Angle   = pInitAngle;
-  m_Radius  = pRadius;
-  m_Speed   = pSpeed;
-
-  m_CenterX = cos(m_Angle) * m_Radius;
-  m_CenterY = sin(m_Angle) * m_Radius;
-  m_previousVx = 0.0;
-  m_previousVy = 0.0;
+SDynamicEntityRotation::SDynamicEntityRotation(std::string pEntity, float pInitAngle, float pRadius, float pPeriod, int p_startTime, int p_endTime) : SDynamicEntityMove(pEntity, p_startTime, p_endTime, pPeriod), SDynamicRotation(pInitAngle, pRadius, pPeriod) {
 }
 
 SDynamicEntityRotation::~SDynamicEntityRotation() {
 }
 
-void SDynamicEntityRotation::performXY(float *vx, float *vy) {
+void SDynamicRotation::performXY(float *vx, float *vy) {
   if(m_Angle >= 2 * M_PI) {m_Angle -= 2 * M_PI;} /* because of float limit */
   float x,y;
 
@@ -98,31 +91,61 @@ void SDynamicEntityRotation::performXY(float *vx, float *vy) {
   m_Angle += m_Speed;
 }
 
-SDynamicEntityTranslation::SDynamicEntityTranslation(std::string pEntity, float pX, float pY, float pSpeed, int p_startTime, int p_endTime) : SDynamicEntityMove(pEntity, p_startTime, p_endTime) {
-  float m_Z;
-
-  m_X 	  = pX;
-  m_Y 	  = pY;
-  m_Speed = pSpeed;
-
-  m_sensUp = true;
-  m_Z      = sqrt(m_X * m_X + m_Y * m_Y); 
-  m_moveX  = (m_Speed * m_X) / m_Z;
-  m_moveY  = (m_Speed * m_Y) / m_Z;
-  m_totalMoveX = 0.0;
+SDynamicEntityTranslation::SDynamicEntityTranslation(std::string pEntity, float pX, float pY, float pPeriod, int p_startTime, int p_endTime) : SDynamicEntityMove(pEntity, p_startTime, p_endTime, pPeriod), SDynamicTranslation(pX, pY, pPeriod) {
 }
 
 SDynamicEntityTranslation::~SDynamicEntityTranslation() {
 }
 
-void SDynamicEntityTranslation::performXY(float *vx, float *vy) {
+void SDynamicTranslation::performXY(float *vx, float *vy) {
   *vx = m_sensUp ? m_moveX : -m_moveX;
   *vy = m_sensUp ? m_moveY : -m_moveY;
 
   m_totalMoveX += *vx;
+  m_totalMoveY += *vy;
 
-  if(m_totalMoveX >= m_X || m_totalMoveX <= 0) {
+  if(m_totalMoveX > m_X || m_totalMoveX < 0 || m_totalMoveY > m_Y || m_totalMoveY < 0) {
     m_sensUp = !m_sensUp;
   }
 }
 
+SDynamicRotation::SDynamicRotation(float pInitAngle, float pRadius, float pPeriod) {
+  m_Speed = (2 * M_PI) / pPeriod;
+
+  m_Angle   = pInitAngle;
+  m_Radius  = pRadius;
+
+  m_CenterX = cos(m_Angle) * m_Radius;
+  m_CenterY = sin(m_Angle) * m_Radius;
+  m_previousVx = 0.0;
+  m_previousVy = 0.0;
+}
+
+SDynamicRotation::~SDynamicRotation() {
+}
+
+SDynamicTranslation::SDynamicTranslation(float pX, float pY, float pPeriod) {
+  float m_Z;
+
+  m_X 	  = pX;
+  m_Y 	  = pY;
+
+  m_sensUp = true;
+  m_Z      = sqrt(m_X * m_X + m_Y * m_Y); 
+  m_Speed  = (m_Z * 2) / pPeriod;
+  m_moveX  = (m_Speed * m_X) / m_Z;
+  m_moveY  = (m_Speed * m_Y) / m_Z;
+  m_totalMoveX = 0.0;
+  m_totalMoveY = 0.0;
+}
+
+SDynamicTranslation::~SDynamicTranslation() {
+}
+
+void SDynamicEntityRotation::performXY(float *vx, float *vy) {
+  SDynamicRotation::performXY(vx, vy);
+}
+
+void SDynamicEntityTranslation::performXY(float *vx, float *vy) {
+  SDynamicTranslation::performXY(vx, vy);
+}

@@ -333,7 +333,7 @@ namespace vapp {
 	      sizeof(pEvent->u.LuaCallSetDynamicEntityRotation.cEntityID)-1);
       pEvent->u.LuaCallSetDynamicEntityRotation.fInitAngle = X_luaL_check_number(pL,2);
       pEvent->u.LuaCallSetDynamicEntityRotation.fRadius    = X_luaL_check_number(pL,3);
-      pEvent->u.LuaCallSetDynamicEntityRotation.fSpeed     = X_luaL_check_number(pL,4);
+      pEvent->u.LuaCallSetDynamicEntityRotation.fPeriod    = X_luaL_check_number(pL,4);
       pEvent->u.LuaCallSetDynamicEntityRotation.startTime  = X_luaL_check_number(pL,5);
       pEvent->u.LuaCallSetDynamicEntityRotation.endTime    = X_luaL_check_number(pL,6);
     }
@@ -350,7 +350,7 @@ namespace vapp {
 	      sizeof(pEvent->u.LuaCallSetDynamicEntityTranslation.cEntityID)-1);
       pEvent->u.LuaCallSetDynamicEntityTranslation.fX        = X_luaL_check_number(pL,2);
       pEvent->u.LuaCallSetDynamicEntityTranslation.fY        = X_luaL_check_number(pL,3);
-      pEvent->u.LuaCallSetDynamicEntityTranslation.fSpeed    = X_luaL_check_number(pL,4);
+      pEvent->u.LuaCallSetDynamicEntityTranslation.fPeriod   = X_luaL_check_number(pL,4);
       pEvent->u.LuaCallSetDynamicEntityTranslation.startTime = X_luaL_check_number(pL,5);
       pEvent->u.LuaCallSetDynamicEntityTranslation.endTime   = X_luaL_check_number(pL,6);
     }
