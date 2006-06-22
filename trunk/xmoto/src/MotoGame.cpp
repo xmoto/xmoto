@@ -1830,7 +1830,6 @@ namespace vapp {
 
     while(i<m_SDynamicObjects.size()) {
       if(m_SDynamicObjects[i]->nextState(this) == false) {
-	printf("delete object %i\n", i);
 	delete m_SDynamicObjects[i];
         m_SDynamicObjects.erase(m_SDynamicObjects.begin() + i);
       } else {
