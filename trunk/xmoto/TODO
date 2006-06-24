@@ -23,6 +23,12 @@ add the same for block once block move will work
 ######################################################################
 Unassigned:
 
+* collision : collision with the body : triangle with points : head,
+   wheels : because it's currently possible to touch a wecker with the
+   body and possible to touch a strawberry but that it doesn't take
+   it. However, this collision must be avaible only for entities not
+   for blocks.
+
 * GameEventLuaCallSetBlockCenter
   and GameEventLuaCallSetBlockRotation
   missing in serialisation
