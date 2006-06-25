@@ -23,6 +23,9 @@ add the same for block once block move will work
 ######################################################################
 Unassigned:
 
+* new script call :
+killPlayer() -> kill the player
+timePenallity(nbSeconds) -> increase time
 * collision : collision with the body : triangle with points : head,
    wheels : because it's currently possible to touch a wecker with the
    body and possible to touch a strawberry but that it doesn't take
