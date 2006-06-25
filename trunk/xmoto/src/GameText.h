@@ -117,12 +117,13 @@ Central place to keep many in-game text strings
 
 #define GAMETEXT_HELPTEXT(accelerate_KEY, brake_KEY, rotate_counter_clockwise_KEY, rotate_clockwise_KEY, change_direction_KEY)   \
                                         "You control your bike using the keyboard:\n"                      \
-                                        "\n"                                                               \
                                         "  " + accelerate_KEY + " - Accelerates\n"                                       \
                                         "  " + brake_KEY + " - Brakes\n"                                          \
                                         "  " + rotate_counter_clockwise_KEY + " - Rotates it counter-clockwise\n"                    \
                                         "  " + rotate_clockwise_KEY + " - Rotates it clockwise\n"                           \
                                         "  " + change_direction_KEY + " - Turns around and drives in the other direction\n"       \
+                                        "  Esc - Pause\n"       \
+                                        "  Return - Restart the level\n"       \
                                         "  F12 - Take a screenshot\n"       \
                                         "\n" \
                                         "Find all the strawberries and touch the flower to finish\n"       \
