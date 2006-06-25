@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf8" ?>
+<xmoto_theme>
+
+<sprite type="Texture" name="BlueBricks"      file="BlueBricks.jpg" />
+<sprite type="Texture" name="Bricks"          file="Bricks.jpg" />
+<sprite type="Texture" name="DarkDirt"        file="DarkDirt.jpg" />
+<sprite type="Texture" name="DarkFrostGround" file="DarkFrostGround.jpg" />
+<sprite type="Texture" name="Dirt"            file="Dirt.jpg" />
+<sprite type="Texture" name="FrostGround"     file="FrostGround.jpg" />
+<sprite type="Texture" name="MoltenRock"      file="MoltenRock.jpg" />
+
+<sprite type="BikerBody"  name="BikerBody"  file="Body1.png" />
+<sprite type="BikerFront" name="BikerFront" file="Front1.png" />
+<sprite type="BikerRear"  name="BikerRear"  file="Rear1.png" />
+<sprite type="BikerWheel" name="BikerWheel" file="Wheel1.png" />
+
+<sprite type="BikerBody"  name="BikerBodyGhost"  file="Body1_Ghost.png" />
+<sprite type="BikerFront" name="BikerFrontGhost" file="Front1_Ghost.png" />
+<sprite type="BikerRear"  name="BikerRearGhost"  file="Rear1_Ghost.png" />
+<sprite type="BikerWheel" name="BikerWheelGhost" file="Wheel1_Ghost.png" />
+
+<sprite type="RiderLowerArm" name="LowerArm" file="LowerArm1.png" />
+<sprite type="RiderLowerLeg" name="LowerLeg" file="LowerLeg1.png" />
+<sprite type="RiderTorso"    name="Torso"    file="Torso1.png" />
+<sprite type="RiderUpperArm" name="UpperArm" file="UpperArm1.png" />
+<sprite type="RiderUpperLeg" name="UpperLeg" file="UpperLeg1.png" />
+
+<sprite type="RiderLowerArm" name="LowerArmGhost" file="LowerArm_Ghost.png" />
+<sprite type="RiderLowerLeg" name="LowerLegGhost" file="LowerLeg_Ghost.png" />
+<sprite type="RiderTorso"    name="TorsoGhost"    file="Torso_Ghost.png" />
+<sprite type="RiderUpperArm" name="UpperArmGhost" file="UpperArm_Ghost.png" />
+<sprite type="RiderUpperLeg" name="UpperLegGhost" file="UpperLeg_Ghost.png" />
+
+<sprite type="Animation" name="Strawberry"  fileBase="Strawberry"  fileExtention="png" length="26" />
+<sprite type="Animation" name="FlagDown"    fileBase="FlagDown"    fileExtention="png" length="3" />
+<sprite type="Animation" name="FlagGoingUp" fileBase="FlagGoingUp" fileExtention="png" length="5" />
+<sprite type="Animation" name="FlagUp"      fileBase="FlagUp"      fileExtention="png" length="3" />
+<sprite type="Animation" name="Flower"      fileBase="Flower"      fileExtention="png" length="13" />
+<sprite type="Animation" name="Wrecker"     fileBase="Wrecker"     fileExtention="png" length="25" />
+
+<sprite type="Effect" name="Debris1"         file="Debris1.png" />
+<sprite type="Effect" name="EarthVines"      file="EarthVines.png" />
+<sprite type="Effect" name="EdgeBlueBricks1" file="EdgeBlueBricks1.jpg" />
+<sprite type="Effect" name="EdgeGrass1"      file="EdgeGrass1.png" />
+<sprite type="Effect" name="EdgeGrayBricks1" file="EdgeGrayBricks1.jpg" />
+<sprite type="Effect" name="EdgeIce1"        file="EdgeIce1.png" />
+<sprite type="Effect" name="EdgeRedBricks1"  file="EdgeRedBricks1.jpg" />
+<sprite type="Effect" name="Fire1"     	     file="Fire1.png" />
+<sprite type="Effect" name="Sky1"      	     file="Sky1.jpg" />
+<sprite type="Effect" name="Sky2Drift" 	     file="Sky2Drift.jpg" />
+<sprite type="Effect" name="Sky2"      	     file="Sky2.jpg" />
+<sprite type="Effect" name="Smoke1"    	     file="Smoke1.png" />
+<sprite type="Effect" name="Smoke2"    	     file="Smoke2.png" />
+
+<sprite type="Font" name="MFont" file="MFont.png" />
+<sprite type="Font" name="SFont" file="SFont.png" />
+
+<sprite type="Misc" name="Arrow" file="Arrow.png" />
+
+<sprite type="decoration" name="BlankSignLeft1"    file="BlankSignLeft1.png" />
+<sprite type="decoration" name="BlankSignRight1"   file="BlankSignRight1.png" />
+<sprite type="decoration" name="Bridge"            file="Bridge.png" />
+<sprite type="decoration" name="CastleDoor1"       file="CastleDoor1.png" />
+<sprite type="decoration" name="CastleWindow1"     file="CastleWindow1.png" />
+<sprite type="decoration" name="FinSignLeft1"      file="FinSignLeft1.png" />
+<sprite type="decoration" name="FinSignRight1"     file="FinSignRight1.png" />
+<sprite type="decoration" name="Grass1"            file="Grass1.png" />
+<sprite type="decoration" name="HangingVines1"     file="HangingVines1.png" />
+<sprite type="decoration" name="HangingVines2"     file="HangingVines2.png" />
+<sprite type="decoration" name="HStones" 	   file="HStones.png" />
+<sprite type="decoration" name="SnowMan" 	   file="SnowMan.png" />
+<sprite type="decoration" name="ThisWaySignLeft1"  file="ThisWaySignLeft1.png" />
+<sprite type="decoration" name="ThisWaySignRight1" file="ThisWaySignRight1.png" />
+<sprite type="decoration" name="Tree1"    	   file="Tree1.png" />
+<sprite type="decoration" name="Tree2"    	   file="Tree2.png" />
+<sprite type="decoration" name="Tut3Sign" 	   file="Tut3Sign.png" />
+
+</xmoto_theme>
