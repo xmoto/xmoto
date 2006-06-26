@@ -1174,6 +1174,18 @@ namespace vapp {
 
     return res;
   }  
+
+  bool FS::isFileReadable(std::string p_filename) {
+  /* this is not a nice way to check it */
+
+    vapp::FileHandle *FS;
+
+    if( (FS=openIFile(p_filename)) != NULL) {
+      closeFile(FS);
+      return true;
+    }
+    return false;
+  }
   
 };
 

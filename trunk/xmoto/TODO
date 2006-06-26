@@ -26,6 +26,8 @@ Unassigned:
 * new script call :
 killPlayer() -> kill the player
 timePenallity(nbSeconds) -> increase time
+be able to move camera : at least choose 3 positions middle, left or right
+
 * collision : collision with the body : triangle with points : head,
    wheels : because it's currently possible to touch a wecker with the
    body and possible to touch a strawberry but that it doesn't take

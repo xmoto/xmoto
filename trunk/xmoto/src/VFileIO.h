@@ -157,6 +157,8 @@ namespace vapp {
       static std::string getReplaysDir(void) {return m_UserDir + std::string("/Replays");}
       static std::string getLevelsDir(void) {return m_UserDir + std::string("/Levels");}
     
+      static bool isFileReadable(std::string p_filename);
+
     private:
       /* Helper functions */
       static void _ThrowFileError(FileHandle *pfh,std::string Description);

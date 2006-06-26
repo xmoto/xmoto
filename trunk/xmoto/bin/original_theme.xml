@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf8" ?>
-<xmoto_theme>
+<xmoto_theme name="Classic">
 
 <sprite type="Texture" name="BlueBricks"      file="BlueBricks.jpg" />
 <sprite type="Texture" name="Bricks"          file="Bricks.jpg" />
@@ -57,22 +57,22 @@
 
 <sprite type="Misc" name="Arrow" file="Arrow.png" />
 
-<sprite type="decoration" name="BlankSignLeft1"    file="BlankSignLeft1.png" width="1.5" height="1.5" centerX="0.75" centerY="0.1" />
-<sprite type="decoration" name="BlankSignRight1"   file="BlankSignRight1.png" width="1.5" height="1.5" centerX="0.75" centerY="0.1" />
-<sprite type="decoration" name="Bridge"            file="Bridge.png" width="4" height="1.65" centerX="2" centerY="1.65" />
-<sprite type="decoration" name="CastleDoor1"       file="CastleDoor1.png" width="4" height="4" centerX="2" centerY="0.02" />
-<sprite type="decoration" name="CastleWindow1"     file="CastleWindow1.png" width="2" height="3" centerX="1" centerY="0.02" />
-<sprite type="decoration" name="FinSignLeft1"      file="FinSignLeft1.png" width="1.5" height="1.5" centerX="0.75" centerY="0.1" />
-<sprite type="decoration" name="FinSignRight1"     file="FinSignRight1.png" width="1.5" height="1.5" centerX="0.75" centerY="0.1" />
-<sprite type="decoration" name="Grass1"            file="Grass1.png" width="0.5" height="0.5" centerX="0.25" centerY="0.15" />
-<sprite type="decoration" name="HangingVines1"     file="HangingVines1.png" width="3.0" height="4.0" centerX="1.5" centerY="3.6" />
-<sprite type="decoration" name="HangingVines2"     file="HangingVines2.png" width="3.0" height="4.0" centerX="1.5" centerY="3.6" />
-<sprite type="decoration" name="HStones" 	   file="HStones.png" width="0.8" height="2" centerX="0.4" centerY="0.03" />
-<sprite type="decoration" name="SnowMan" 	   file="SnowMan.png" width="1.5" height="2.0" centerX="0.75" centerY="0.3" />
-<sprite type="decoration" name="ThisWaySignLeft1"  file="ThisWaySignLeft1.png" width="1.5" height="1.5" centerX="0.75" centerY="0.1" />
-<sprite type="decoration" name="ThisWaySignRight1" file="ThisWaySignRight1.png" width="1.5" height="1.5" centerX="0.75" centerY="0.1" />
-<sprite type="decoration" name="Tree1"    	   file="Tree1.png" width="5" height="6" centerX="2.5" centerY="0.2" />
-<sprite type="decoration" name="Tree2"    	   file="Tree2.png" width="5" height="6" centerX="2.5" centerY="0.2" />
-<sprite type="decoration" name="Tut3Sign" 	   file="Tut3Sign.png" width="3" height="3" centerX="1.5" centerY="0.2" />
+<sprite type="Decoration" name="BlankSignLeft1"    file="BlankSignLeft1.png" width="1.5" height="1.5" centerX="0.75" centerY="0.1" />
+<sprite type="Decoration" name="BlankSignRight1"   file="BlankSignRight1.png" width="1.5" height="1.5" centerX="0.75" centerY="0.1" />
+<sprite type="Decoration" name="Bridge"            file="Bridge.png" width="4" height="1.65" centerX="2" centerY="1.65" />
+<sprite type="Decoration" name="CastleDoor1"       file="CastleDoor1.png" width="4" height="4" centerX="2" centerY="0.02" />
+<sprite type="Decoration" name="CastleWindow1"     file="CastleWindow1.png" width="2" height="3" centerX="1" centerY="0.02" />
+<sprite type="Decoration" name="FinSignLeft1"      file="FinSignLeft1.png" width="1.5" height="1.5" centerX="0.75" centerY="0.1" />
+<sprite type="Decoration" name="FinSignRight1"     file="FinSignRight1.png" width="1.5" height="1.5" centerX="0.75" centerY="0.1" />
+<sprite type="Decoration" name="Grass1"            file="Grass1.png" width="0.5" height="0.5" centerX="0.25" centerY="0.15" />
+<sprite type="Decoration" name="HangingVines1"     file="HangingVines1.png" width="3.0" height="4.0" centerX="1.5" centerY="3.6" />
+<sprite type="Decoration" name="HangingVines2"     file="HangingVines2.png" width="3.0" height="4.0" centerX="1.5" centerY="3.6" />
+<sprite type="Decoration" name="HStones" 	   file="HStones.png" width="0.8" height="2" centerX="0.4" centerY="0.03" />
+<sprite type="Decoration" name="SnowMan" 	   file="SnowMan.png" width="1.5" height="2.0" centerX="0.75" centerY="0.3" />
+<sprite type="Decoration" name="ThisWaySignLeft1"  file="ThisWaySignLeft1.png" width="1.5" height="1.5" centerX="0.75" centerY="0.1" />
+<sprite type="Decoration" name="ThisWaySignRight1" file="ThisWaySignRight1.png" width="1.5" height="1.5" centerX="0.75" centerY="0.1" />
+<sprite type="Decoration" name="Tree1"    	   file="Tree1.png" width="5" height="6" centerX="2.5" centerY="0.2" />
+<sprite type="Decoration" name="Tree2"    	   file="Tree2.png" width="5" height="6" centerX="2.5" centerY="0.2" />
+<sprite type="Decoration" name="Tut3Sign" 	   file="Tut3Sign.png" width="3" height="3" centerX="1.5" centerY="0.2" />
 
 </xmoto_theme>
