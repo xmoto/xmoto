@@ -23,6 +23,7 @@ Game.SetDynamicEntityTranslation("Strawberry0", 3, 1, 500, 0, 0)
 Game.SetDynamicEntityNone("Strawberry0")
 add the same for block once block move will work
 * add string and table lua classes
+* a texture missing -> just give an alert instead of get an exception
 
 ######################################################################
 Unassigned:
