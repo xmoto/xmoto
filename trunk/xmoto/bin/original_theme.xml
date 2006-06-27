@@ -31,12 +31,70 @@
 <sprite type="RiderUpperArm" name="UpperArmGhost" file="UpperArm_Ghost.png" />
 <sprite type="RiderUpperLeg" name="UpperLegGhost" file="UpperLeg_Ghost.png" />
 
-<sprite type="Animation" name="Strawberry"  fileBase="Strawberry"  fileExtention="png" length="26" />
-<sprite type="Animation" name="FlagDown"    fileBase="FlagDown"    fileExtention="png" length="3" />
-<sprite type="Animation" name="FlagGoingUp" fileBase="FlagGoingUp" fileExtention="png" length="5" />
-<sprite type="Animation" name="FlagUp"      fileBase="FlagUp"      fileExtention="png" length="3" />
-<sprite type="Animation" name="Flower"      fileBase="Flower"      fileExtention="png" length="13" />
-<sprite type="Animation" name="Wrecker"     fileBase="Wrecker"     fileExtention="png" length="25" />
+<sprite type="Animation" name="Strawberry"  fileBase="Strawberry"  fileExtension="png" width="1" height="1" delay="0.05">
+<frame centerX="0.5" centerY="0.5" />
+<frame centerX="0.5" centerY="0.51" />
+<frame centerX="0.5" centerY="0.52" />
+<frame centerX="0.5" centerY="0.53" />
+<frame centerX="0.5" centerY="0.54" />
+<frame centerX="0.5" centerY="0.55" />
+<frame centerX="0.5" centerY="0.56" />
+<frame centerX="0.5" centerY="0.57" />
+<frame centerX="0.5" centerY="0.58" />
+<frame centerX="0.5" centerY="0.59" />
+<frame centerX="0.5" centerY="0.60" />
+<frame centerX="0.5" centerY="0.61" />
+<frame centerX="0.5" centerY="0.62" />
+<frame centerX="0.5" centerY="0.63" />
+<frame centerX="0.5" centerY="0.62" />
+<frame centerX="0.5" centerY="0.61" />
+<frame centerX="0.5" centerY="0.60" />
+<frame centerX="0.5" centerY="0.59" />
+<frame centerX="0.5" centerY="0.58" />
+<frame centerX="0.5" centerY="0.57" />
+<frame centerX="0.5" centerY="0.56" />
+<frame centerX="0.5" centerY="0.55" />
+<frame centerX="0.5" centerY="0.54" />
+<frame centerX="0.5" centerY="0.53" />
+<frame centerX="0.5" centerY="0.52" />
+<frame centerX="0.5" centerY="0.51" />
+</sprite>
+
+<sprite type="Animation" name="FlagDown"    fileBase="FlagDown"    fileExtension="png" width="1" height="1" delay="0.05" centerX="0.5" centerY="0.5">
+<frame /><frame /><frame />
+</sprite>
+
+<sprite type="Animation" name="FlagGoingUp" fileBase="FlagGoingUp" fileExtension="png" width="1" height="1" delay="0.05" centerX="0.5" centerY="0.5">
+<frame /><frame /><frame /><frame /><frame />
+</sprite>
+
+<sprite type="Animation" name="FlagUp"      fileBase="FlagUp"      fileExtension="png" width="1" height="1" delay="0.05" centerX="0.5" centerY="0.5">
+<frame /><frame /><frame />
+</sprite>
+
+<sprite type="Animation" name="Flower"      fileBase="Flower"      fileExtension="png" width="1" height="1" delay="0.05" centerX="0.5" centerY="0.5">
+<frame centerX="0.5" centerY="0.5" />
+<frame centerX="0.5" centerY="0.51" />
+<frame centerX="0.5" centerY="0.52" />
+<frame centerX="0.5" centerY="0.53" />
+<frame centerX="0.5" centerY="0.54" />
+<frame centerX="0.5" centerY="0.55" />
+<frame centerX="0.5" centerY="0.56" />
+<frame centerX="0.5" centerY="0.56" />
+<frame centerX="0.5" centerY="0.55" />
+<frame centerX="0.5" centerY="0.54" />
+<frame centerX="0.5" centerY="0.53" />
+<frame centerX="0.5" centerY="0.52" />
+<frame centerX="0.5" centerY="0.51" />
+</sprite>
+
+<sprite type="Animation" name="Wrecker"     fileBase="Wrecker"     fileExtension="png" width="1" height="1" delay="0.05">
+<frame /><frame /><frame /><frame /><frame />
+<frame /><frame /><frame /><frame /><frame />
+<frame /><frame /><frame /><frame /><frame />
+<frame /><frame /><frame /><frame /><frame />
+<frame /><frame /><frame /><frame /><frame />
+</sprite>
 
 <sprite type="Effect" name="Debris1"         file="Debris1.png" />
 <sprite type="Effect" name="EarthVines"      file="EarthVines.png" />
