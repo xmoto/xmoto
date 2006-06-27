@@ -14,11 +14,15 @@ Assigned to Neckelmann:
 ######################################################################
 Assigned to Nicolas:
 * theme (for sprites) (priority=high)
+rm sprites.dat
+rm anims.dat
+
 * high level function for script : DynamicMove
 Game.SetDynamicEntityRotation("Strawberry0", 0, 3, 500, 0, 0)
 Game.SetDynamicEntityTranslation("Strawberry0", 3, 1, 500, 0, 0)
 Game.SetDynamicEntityNone("Strawberry0")
 add the same for block once block move will work
+* add string and table lua classes
 
 ######################################################################
 Unassigned:

@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VExcept.h"
 #include "VMath.h"
 #include "VDraw.h"
+#include "Theme.h"
 #include "VTexture.h"
 #include "Image.h"
 
@@ -117,8 +118,8 @@ namespace vapp {
       void setAppCommand(const std::string &i) {m_AppCommand=i;}
       void setFPS(float i) {m_fFramesPerSecond=i;}      
             
-      double getTime(void); 
-      double getRealTime(void);
+      static double getTime(void); 
+      static double getRealTime(void);
       std::string getTimeStamp(void);
       void quit(void);      
       static std::string formatTime(float fSecs);
@@ -163,6 +164,7 @@ namespace vapp {
       bool useShaders(void) {return m_bShadersSupported;}
       
       TextureManager TexMan;
+      Theme m_theme;
 
       /* Extensions */
       PFNGLGENBUFFERSARBPROC glGenBuffersARB;
