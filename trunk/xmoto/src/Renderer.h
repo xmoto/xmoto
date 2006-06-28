@@ -48,36 +48,6 @@ namespace vapp {
   };
 
 	/*===========================================================================
-	Animation frame
-  ===========================================================================*/
-  struct AnimationFrame { 
-    Texture *pTexture;              /* Texture handle */
-    Vector2f Size,Center;           /* Where */
-    float fDelay;                   /* How long it should be shown */
-  };
-
-	/*===========================================================================
-	Animation
-  ===========================================================================*/
-  struct Animation {
-    std::string Name;               /* Name of animation */
-    std::vector<AnimationFrame *> m_Frames; /* Frames */
-    
-    /* Run-time info */
-    double fFrameTime;
-    int m_nCurFrame;
-  };
-
-	/*===========================================================================
-	Sprite type
-  ===========================================================================*/
-  struct SpriteType {
-    std::string Name;               /* Name of type */
-    Vector2f Size,Center;           /* How to draw it */
-    Texture *pTexture;              /* Texture */
-  };
-
-	/*===========================================================================
 	Particle type
   ===========================================================================*/
   enum ParticleType {
@@ -215,7 +185,6 @@ namespace vapp {
   class GameRenderer {
     public:
       GameRenderer() {
-	m_nNumSpriteTypes=0;
 	m_bDebug=false;
 	m_Quality=GQ_HIGH;
 	m_fSpeedMultiply=1.0f;
@@ -285,10 +254,6 @@ namespace vapp {
       bool m_bDebug;
       bool m_bUglyMode;
       
-      int m_nNumSpriteTypes;
-      SpriteType m_SpriteTypes[100];
-      
-      std::vector<Animation *> m_Anims;
       UIRoot m_GUI;                 /* GUI root */
       
       Vector2f m_Scroll;
@@ -313,18 +278,6 @@ namespace vapp {
       
       UIFont *m_pMFont,*m_pSFont;
       
-      /* Misc data */
-      Texture *m_pSkyTexture1;
-      Texture *m_pSkyTexture2;
-      Texture *m_pSkyTexture2Drift;
-      Texture *m_pEdgeGrass1;
-      Texture *m_pEdgeRedBricks1;
-      Texture *m_pEdgeGrayBricks1;
-      Texture *m_pEdgeBlueBricks1;
-      Animation *m_pStrawberryAnim;
-      Animation *m_pFlowerAnim;
-      Animation *m_pWreckerAnim;
-
       TextureTheme theme_normal;
 
 #if defined(ALLOW_GHOST)
@@ -336,13 +289,6 @@ namespace vapp {
       Replay *m_pGhostReplay;
       std::string m_ReplayDesc;
 #endif      
-
-      Texture *m_pArrowTexture;
-      
-      Texture *m_pSmoke1;
-      Texture *m_pSmoke2;
-      Texture *m_pFire1;
-      Texture *m_pDirt1;
       
       GraphQuality m_Quality;
       bool m_bGhostMotionBlur;
@@ -372,11 +318,8 @@ namespace vapp {
       /* Helpers... */
       void _Vertex(Vector2f P);     /* Spit out a correctly transformed 
                                        glVertex2f() */
-      SpriteType *_GetSpriteTypeByName(std::string Name);
       void _DbgText(Vector2f P,std::string Text,Color c);
-      void _DrawAnimation(Vector2f P,Animation *pAnim);
-      Animation *_GetAnimationByName(std::string Name);
-      void _UpdateAnimations(void);
+      void _DrawAnimation(Vector2f P,AnimationSprite *pAnim);
       void _UpdateParticles(float fTimeStep);
       void _DrawRotatedMarker(Vector2f Pos,dReal *pfRot);     
       void _RenderDebugInfo(void);      

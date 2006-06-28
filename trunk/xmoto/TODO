@@ -29,6 +29,8 @@ function OnLoad()
 end
 does not work well
 
+* make error nicer when impossible to load the script
+
 * high level function for script : DynamicMove
 Game.SetDynamicEntityRotation("Strawberry0", 0, 3, 500, 0, 0)
 Game.SetDynamicEntityTranslation("Strawberry0", 3, 1, 500, 0, 0)

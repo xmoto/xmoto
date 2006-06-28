@@ -291,7 +291,6 @@ namespace vapp {
     m_pPlayTime->setCaption(getParent()->formatTime(getGameObject()->getTime()));
   
     /* Prepare for rendering frame */
-    _UpdateAnimations();
     
     if(getGameObject()->getTime() > m_fNextParticleUpdate) {
       _UpdateParticles(0.025f);
@@ -549,14 +548,15 @@ namespace vapp {
   Game status rendering
   ===========================================================================*/
   void GameRenderer::_RenderGameStatus(void) {
+    AnimationSprite* pType;
     MotoGame *pGame = getGameObject();
 
     int nStrawberriesLeft = pGame->countEntitiesByType(ET_STRAWBERRY);
-    Texture *pIcon = m_pFlowerAnim->m_Frames[0]->pTexture;
     int nQuantity = 0;
+    pType = (AnimationSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_ANIMATION, "Flower");
     
     if(nStrawberriesLeft > 0) {
-      pIcon = m_pStrawberryAnim->m_Frames[0]->pTexture;
+      pType = (AnimationSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_ANIMATION, "Strawberry");
       nQuantity = nStrawberriesLeft;
     }
             
@@ -564,8 +564,10 @@ namespace vapp {
     float y1 = -2;
     float x2 = 115;
     float y2 = 23;
-    
-    _RenderAlphaBlendedSectionSP(pIcon,Vector2f(x2,y2),Vector2f(x1,y2),Vector2f(x1,y1),Vector2f(x2,y1));
+
+    if(pType != NULL) {    
+      _RenderAlphaBlendedSectionSP(pType->getTexture(),Vector2f(x2,y2),Vector2f(x1,y2),Vector2f(x1,y1),Vector2f(x2,y1));
+    }
 
     if(nQuantity > 0) {
       int tx1,ty1,tx2,ty2;
@@ -612,7 +614,11 @@ namespace vapp {
       p3 = p3 * 50.0f;
       p4 = p4 * 50.0f;
 
-      _RenderAlphaBlendedSectionSP(m_pArrowTexture,p1+C,p2+C,p3+C,p4+C);      
+      MiscSprite* pType;
+      pType = (MiscSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_MISC, "Arrow");
+      if(pType != NULL) {
+	_RenderAlphaBlendedSectionSP(pType->getTexture(),p1+C,p2+C,p3+C,p4+C);      
+      }
     }
         
     /* Messages */
@@ -655,25 +661,26 @@ namespace vapp {
   /*===========================================================================
   Render a sprite
   ===========================================================================*/
-  void GameRenderer::_RenderSprite(Entity *pSprite) {    
-    /* TODO: make type fetching faster */
-    SpriteType *pType = _GetSpriteTypeByName(pSprite->SpriteType);
+  void GameRenderer::_RenderSprite(Entity *pSprite) {  
+    DecorationSprite* pType;
+  
+    pType = (DecorationSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_DECORATION, pSprite->SpriteType);
     if(pType != NULL) {
       /* Draw it */
       Vector2f p0,p1,p2,p3;
       
       p0 = Vector2f(pSprite->Pos.x,pSprite->Pos.y) +
-           Vector2f(-pType->Center.x,-pType->Center.y);
-      p1 = Vector2f(pSprite->Pos.x+pType->Size.x,pSprite->Pos.y) +
-           Vector2f(-pType->Center.x,-pType->Center.y);
-      p2 = Vector2f(pSprite->Pos.x+pType->Size.x,pSprite->Pos.y+pType->Size.y) +
-           Vector2f(-pType->Center.x,-pType->Center.y);
-      p3 = Vector2f(pSprite->Pos.x,pSprite->Pos.y+pType->Size.y) +
-           Vector2f(-pType->Center.x,-pType->Center.y);
+           Vector2f(-pType->getCenterX(),-pType->getCenterY());
+      p1 = Vector2f(pSprite->Pos.x+pType->getWidth(),pSprite->Pos.y) +
+           Vector2f(-pType->getCenterX(),-pType->getCenterY());
+      p2 = Vector2f(pSprite->Pos.x+pType->getWidth(),pSprite->Pos.y+pType->getHeight()) +
+           Vector2f(-pType->getCenterX(),-pType->getCenterY());
+      p3 = Vector2f(pSprite->Pos.x,pSprite->Pos.y+pType->getHeight()) +
+           Vector2f(-pType->getCenterX(),-pType->getCenterY());
             
       glEnable(GL_ALPHA_TEST);
       glAlphaFunc(GL_GEQUAL,0.5f);      
-      _RenderAlphaBlendedSection(pType->pTexture,p0,p1,p2,p3);      
+      _RenderAlphaBlendedSection(pType->getTexture(),p0,p1,p2,p3);      
       glDisable(GL_ALPHA_TEST);
 
       /* Debug mode? */
@@ -827,25 +834,41 @@ namespace vapp {
 						case EE_REDBRICKS: {
 						    GLuint GLName = 0;
 						    float fXScale,fDepth;
-						    if(pEdge->Effect == EE_GRASS && m_pEdgeGrass1 != NULL) {						    
-						      GLName = m_pEdgeGrass1->nID;
-						      fXScale = 0.5f;
-						      fDepth = 0.3;
+						    if(pEdge->Effect == EE_GRASS) {						    
+						      EffectSprite* pType;
+						      pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "EdgeGrass1");
+						      if(pType != NULL) {
+							GLName = pType->getTexture()->nID;
+							fXScale = 0.5f;
+							fDepth = 0.3;
+						      }
 						    }
-						    else if(pEdge->Effect == EE_REDBRICKS && m_pEdgeRedBricks1 != NULL) {						    
-						      GLName = m_pEdgeRedBricks1->nID;						      
-						      fXScale = 0.8f;
-						      fDepth = 0.3;
+						    else if(pEdge->Effect == EE_REDBRICKS) {						    
+						      EffectSprite* pType;
+						      pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "EdgeRedBricks1");
+						      if(pType != NULL) {
+							GLName = pType->getTexture()->nID;
+							fXScale = 0.8f;
+							fDepth = 0.3;
+						      }
 						    }						
-						    else if(pEdge->Effect == EE_GRAYBRICKS && m_pEdgeGrayBricks1 != NULL) {						    
-						      GLName = m_pEdgeGrayBricks1->nID;						      
-						      fXScale = 0.8f;
-						      fDepth = 0.3;
+						    else if(pEdge->Effect == EE_GRAYBRICKS) {
+						      EffectSprite* pType;
+						      pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "EdgeGrayBricks1");
+						      if(pType != NULL) {
+							GLName = pType->getTexture()->nID;
+							fXScale = 0.8f;
+							fDepth = 0.3;
+						      }
 						    }
-						    else if(pEdge->Effect == EE_BLUEBRICKS && m_pEdgeBlueBricks1 != NULL) {						    
-						      GLName = m_pEdgeBlueBricks1->nID;						      
-						      fXScale = 0.8f;
-						      fDepth = 0.3;
+						    else if(pEdge->Effect == EE_BLUEBRICKS) {
+						      EffectSprite* pType;
+						      pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "EdgeBlueBricks1");
+						      if(pType != NULL) {
+							GLName = pType->getTexture()->nID;
+							fXScale = 0.8f;
+							fDepth = 0.3;
+						      }
 						    }
 						
 							  if(GLName != 0) {
@@ -880,12 +903,15 @@ namespace vapp {
   ===========================================================================*/
   void GameRenderer::_RenderSky(void) {
     MotoGame *pGame = getGameObject();
+    EffectSprite* pType;
 
     /* Render sky - but which? */
     const std::string &SkyName = pGame->getLevelSrc()->getLevelInfo()->Sky;
     if(SkyName == "" || SkyName == "sky1") {
-      if(m_pSkyTexture1 != NULL) {
-        glBindTexture(GL_TEXTURE_2D,m_pSkyTexture1->nID);
+      pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Sky1");
+
+      if(pType != NULL) {
+        glBindTexture(GL_TEXTURE_2D, pType->getTexture()->nID);
         glEnable(GL_TEXTURE_2D);
         glBegin(GL_POLYGON);   
         glColor3f(1,1,1);   
@@ -902,8 +928,10 @@ namespace vapp {
       }   
     }
     else if(SkyName == "sky2") {
-      if(m_pSkyTexture2 != NULL) {
-        glBindTexture(GL_TEXTURE_2D,m_pSkyTexture2->nID);
+      pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Sky2");
+
+      if(pType != NULL) {
+        glBindTexture(GL_TEXTURE_2D, pType->getTexture()->nID);
         glEnable(GL_TEXTURE_2D);
         glBegin(GL_POLYGON);   
         glColor3f(1,1,1);   
@@ -918,8 +946,9 @@ namespace vapp {
         glEnd();
         glDisable(GL_TEXTURE_2D); 
 
-        if(m_pSkyTexture2Drift != NULL && m_Quality == GQ_HIGH) {
-          glBindTexture(GL_TEXTURE_2D,m_pSkyTexture2Drift->nID);
+	pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Sky2Drift");
+	if(pType != NULL && m_Quality == GQ_HIGH) {
+          glBindTexture(GL_TEXTURE_2D,pType->getTexture()->nID);
           glEnable(GL_TEXTURE_2D);
           glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
           glEnable(GL_BLEND);
@@ -998,24 +1027,34 @@ namespace vapp {
   ===========================================================================*/
   void GameRenderer::_RenderEntities(void) {
     MotoGame *pGame = getGameObject();
+    AnimationSprite* pType;
 
     /* Render all entities */
     std::vector<Entity *> &Entities = pGame->getEntities();    
-        
+
     for(int i=0;i<Entities.size();i++) {
       Entity *pEntity = Entities[i];
       
       if(pEntity->Type == ET_STRAWBERRY) {
         /* Draw strawberry */
-        _DrawAnimation(pEntity->Pos,m_pStrawberryAnim);
+	pType = (AnimationSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_ANIMATION, "Strawberry");
+	if(pType != NULL) {
+	  _DrawAnimation(pEntity->Pos, pType);
+	}
       }
       else if(pEntity->Type == ET_ENDOFLEVEL) {
         /* Draw end-of-level flower */
-        _DrawAnimation(pEntity->Pos,m_pFlowerAnim);
+	pType = (AnimationSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_ANIMATION, "Flower");
+	if(pType != NULL) {
+	  _DrawAnimation(pEntity->Pos, pType);
+	}
       }
       else if(pEntity->Type == ET_WRECKER) {
         /* Draw nasty wrecker */
-        _DrawAnimation(pEntity->Pos,m_pWreckerAnim);
+	pType = (AnimationSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_ANIMATION, "Wrecker");
+	if(pType != NULL) {
+	  _DrawAnimation(pEntity->Pos, pType);
+	}
       }
       
       /* If this is debug-mode, also draw entity's area of effect */
@@ -1037,12 +1076,6 @@ namespace vapp {
     glVertex2f(P.x,P.y);
   }
   
-  SpriteType *GameRenderer::_GetSpriteTypeByName(std::string Name) {
-    for(int i=0;i<m_nNumSpriteTypes;i++)
-      if(m_SpriteTypes[i].Name == Name) return &m_SpriteTypes[i];
-    return NULL;
-  }
-  
   void GameRenderer::_DbgText(Vector2f P,std::string Text,Color c) {
     Vector2f Sp = Vector2f(getParent()->getDispWidth()/2 + (float)(P.x + m_Scroll.x)*m_fZoom,
                            getParent()->getDispHeight()/2 - (float)(P.y + m_Scroll.y)*m_fZoom) -
@@ -1052,55 +1085,27 @@ namespace vapp {
   
   /*===========================================================================
   Animations
-  ===========================================================================*/
-  Animation *GameRenderer::_GetAnimationByName(std::string Name) {
-    for(int i=0;i<m_Anims.size();i++)
-      if(m_Anims[i]->Name == Name) return m_Anims[i];
-    return NULL;
-  }
-  
-  void GameRenderer::_UpdateAnimations(void) {
-    for(int i=0;i<m_Anims.size();i++) {
-      Animation *pAnim = m_Anims[i];
-    
-      /* Next frame? */
-      if(getParent()->getRealTime() > pAnim->fFrameTime+pAnim->m_Frames[pAnim->m_nCurFrame]->fDelay) {
-        pAnim->fFrameTime=getParent()->getRealTime();
-        pAnim->m_nCurFrame++;
-        if(pAnim->m_nCurFrame == pAnim->m_Frames.size()) pAnim->m_nCurFrame = 0;      
-      }
-    }
-  }    
-
-  void GameRenderer::_DrawAnimation(Vector2f Pos,Animation *pAnim) {
-    AnimationFrame *pFrame = pAnim->m_Frames[pAnim->m_nCurFrame];
-    
+  ===========================================================================*/ 
+  void GameRenderer::_DrawAnimation(Vector2f Pos,AnimationSprite *pAnim) {
     /* Draw it */
     Vector2f p0,p1,p2,p3;
     
     p0 = Vector2f(Pos.x,Pos.y) +
-          Vector2f(-pFrame->Center.x,-pFrame->Center.y);
-    p1 = Vector2f(Pos.x+pFrame->Size.x,Pos.y) +
-          Vector2f(-pFrame->Center.x,-pFrame->Center.y);
-    p2 = Vector2f(Pos.x+pFrame->Size.x,Pos.y+pFrame->Size.y) +
-          Vector2f(-pFrame->Center.x,-pFrame->Center.y);
-    p3 = Vector2f(Pos.x,Pos.y+pFrame->Size.y) +
-          Vector2f(-pFrame->Center.x,-pFrame->Center.y);
+          Vector2f(-pAnim->getCenterX(),-pAnim->getCenterY());
+    p1 = Vector2f(Pos.x+pAnim->getWidth(),Pos.y) +
+          Vector2f(-pAnim->getCenterX(),-pAnim->getCenterY());
+    p2 = Vector2f(Pos.x+pAnim->getWidth(),Pos.y+pAnim->getHeight()) +
+          Vector2f(-pAnim->getCenterX(),-pAnim->getCenterY());
+    p3 = Vector2f(Pos.x,Pos.y+pAnim->getHeight()) +
+          Vector2f(-pAnim->getCenterX(),-pAnim->getCenterY());
           
-    _RenderAlphaBlendedSection(pFrame->pTexture,p0,p1,p2,p3);              
+    _RenderAlphaBlendedSection(pAnim->getTexture(), p0, p1, p2, p3);              
   }
 
   /*===========================================================================
   Free stuff
   ===========================================================================*/
-  void GameRenderer::_Free(void) {    
-    /* Free animations */
-    for(int i=0;i<m_Anims.size();i++) { 
-      for(int j=0;j<m_Anims[i]->m_Frames.size();j++) 
-        delete m_Anims[i]->m_Frames[j];
-      delete m_Anims[i];
-    }
-    
+  void GameRenderer::_Free(void) {      
     /* Free any particles left */
     for(int i=0;i<m_Particles.size();i++)
       delete m_Particles[i];

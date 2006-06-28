@@ -235,26 +235,40 @@ namespace vapp {
   }
   
   void GameRenderer::_RenderParticles(bool bFront) {
+    EffectSprite* pType;
+
     /* Render all particles */
     for(int i=0;i<m_Particles.size();i++) {
       if(m_Particles[i]->bFront == bFront) {
         switch(m_Particles[i]->Type) {
           case PT_SMOKE1:
-            _RenderParticle(m_Particles[i]->Pos,m_pSmoke1,m_Particles[i]->fSmokeSize,
-                            m_Particles[i]->fAng,m_Particles[i]->SmokeColor);
+	    pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Smoke1");
+	    if(pType != NULL) {
+	      _RenderParticle(m_Particles[i]->Pos,pType->getTexture(),m_Particles[i]->fSmokeSize,
+			      m_Particles[i]->fAng,m_Particles[i]->SmokeColor);
+	    }
             break;
           case PT_SMOKE2:
-            _RenderParticle(m_Particles[i]->Pos,m_pSmoke2,m_Particles[i]->fSmokeSize,
-                            m_Particles[i]->fAng,m_Particles[i]->SmokeColor);
+	    pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Smoke2");
+	    if(pType != NULL) {
+	      _RenderParticle(m_Particles[i]->Pos,pType->getTexture(),m_Particles[i]->fSmokeSize,
+			      m_Particles[i]->fAng,m_Particles[i]->SmokeColor);
+	    }
             break;
           case PT_FIRE:
-            _RenderParticle(m_Particles[i]->Pos,m_pFire1,m_Particles[i]->fFireSize,
-                            m_Particles[i]->fAng,m_Particles[i]->FireColor);
+	    pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Fire1");
+	    if(pType != NULL) {
+	      _RenderParticle(m_Particles[i]->Pos,pType->getTexture(),m_Particles[i]->fFireSize,
+			      m_Particles[i]->fAng,m_Particles[i]->FireColor);
+	    }
             break;
           case PT_DEBRIS:
-            _RenderParticle(m_Particles[i]->Pos,m_pDirt1,m_Particles[i]->fDebrisSize,
-                            m_Particles[i]->fAng,m_Particles[i]->DebrisTint);
-            break;
+	    pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Debris1");
+	    if(pType != NULL) {
+	      _RenderParticle(m_Particles[i]->Pos,pType->getTexture(),m_Particles[i]->fDebrisSize,
+			      m_Particles[i]->fAng,m_Particles[i]->DebrisTint);
+	    }
+	    break;
         }
       }
     }

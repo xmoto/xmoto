@@ -24,7 +24,9 @@ common_SOURCES = src/BuiltInFont.cpp src/Image.cpp src/LevelSrc.cpp \
 	src/DBuffer.cpp \
 	src/DBuffer.h \
 	src/CRCHash.cpp \
-	src/CRCHash.h
+	src/CRCHash.h \
+	src/Theme.h \
+	src/Theme.cpp
 
 common_LDADD = $(GL_LIBS)
 

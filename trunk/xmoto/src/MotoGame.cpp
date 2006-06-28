@@ -379,7 +379,7 @@ namespace vapp {
       _UpdateEntities();
     }
     
-    /* Invoke PreDraw() script function */
+    /* Invoke PreDraw() script function - deprecated */
     if(v_enableScript) {
       if(!scriptCallBool("PreDraw",
 			 true)) {
@@ -387,7 +387,7 @@ namespace vapp {
       }
     }
 
-    /* Invoke EveryHundreath() script function */
+    /* Invoke Tick() script function */
     /* and play script dynamic objects */
     while(getTime() - m_lastCallToEveryHundreath > 0.01) {
       if(v_enableScript) {
@@ -796,6 +796,7 @@ namespace vapp {
       /* Returned WHAT? */
       if(nRet != 0) {
 	lua_close(m_pL);
+	/* should call error(0) */
 	throw Exception("failed to load level encapsulated script");
       }
 
