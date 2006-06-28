@@ -667,6 +667,7 @@ namespace vapp {
       
       if(Sound::isEnabled()) {
         /* Load sounds */
+        
         Sound::loadSample("Sounds/NewHighscore.ogg");
         //m_pDieSFX = Sound::loadSample("Sounds/Die.ogg");
         
@@ -1084,17 +1085,23 @@ namespace vapp {
             m_Config.setBool("NotifyAtInit",false); 
           }
         }        
-        
+        //m_bEnableMenuMusic = true;
         if(m_bEnableMenuMusic) {
           /* No music playing? If so, playback time! */
           if(m_pMenuMusic == NULL) {
             /* No music available, try loading */
             std::string MenuMusicPath = FS::getDataDir() + std::string("/menu.ogg");
             const char *pc = MenuMusicPath.c_str();
-            m_pMenuMusic = Mix_LoadMUS("D:\\Musik\\36 Crazyfists\\In the Skin\\36 Crazyfists-In the Skin-04-Eracism.mp3");
-            if(m_pMenuMusic == NULL) {
-              printf("ERRRRRROR\n%s\n",Mix_GetError());
-            }
+//            m_pMenuMusic = Mix_LoadMUS_RW("D:\\Musik\\36 Crazyfists\\In the Skin\\36 Crazyfists-In the Skin-04-Eracism.mp3");
+//            __asm{int 3};
+            
+	        //  SDL_RWops *rwfp;              
+			      //rwfp = SDL_RWFromFile("xmoto_title_demo1.ogg", "rb");                          
+
+         //   m_pMenuMusic = Mix_LoadMUS_RW(rwfp);
+         //   if(m_pMenuMusic == NULL) {
+         //     printf("ERRRRRROR\n%s\n",Mix_GetError());
+         //   }
             /* (Don't even complain the slightest if music isn't found...) */          
           }
           

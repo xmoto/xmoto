@@ -10,7 +10,7 @@
 	<script>
 		function Tick()
 			Game.SetBlockRotation("Block5",Game.GetTime()*0.3)
-			Game.SetBlockPos("Block5",4,0+math.sin(Game.GetTime()*0.01)*4);
+			Game.SetBlockPos("Block5",4,0+math.sin(Game.GetTime()*0.01)*4)
 			return true
 		end
 

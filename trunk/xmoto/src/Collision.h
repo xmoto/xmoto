@@ -101,9 +101,9 @@ namespace vapp {
       /* Helpers */
       bool _CheckCircleAndLine(Line *pLine,float x,float y,float r);
       int _CollideCircleAndLine(Line *pLine,float x,float y,float r,dContact *pContacts,int nOldNumC,int nMaxC);
-      void _SetWheelContactParams(dContact *pc,const Vector2f &Pos,const Vector2f &NormalT,float fDepth);
-      float _CalculateDepth(const Vector2f &Cp,float Cr,Vector2f P);
-      float _CalculateCircleLineDepth(const Vector2f &Cp,float Cr,Vector2f P1,Vector2f P2);
+      void _SetWheelContactParams(dContact *pc,const Vector2f &Pos,const Vector2f &NormalT,double fDepth);
+      double _CalculateDepth(const Vector2f &Cp,float Cr,Vector2f P);
+      double _CalculateCircleLineDepth(const Vector2f &Cp,float Cr,Vector2f P1,Vector2f P2);
       int _AddContactToList(dContact *pContacts,int nNumContacts,dContact *pc,int nMaxContacts);
   };
 

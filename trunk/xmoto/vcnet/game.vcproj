@@ -219,6 +219,9 @@
 				RelativePath="..\src\ReplayList.cpp">
 			</File>
 			<File
+				RelativePath="..\src\ScriptDynamicObjects.cpp">
+			</File>
+			<File
 				RelativePath="..\src\Sound.cpp">
 			</File>
 			<File
@@ -276,6 +279,9 @@
 			</File>
 			<File
 				RelativePath="..\src\Replay.h">
+			</File>
+			<File
+				RelativePath="..\src\ScriptDynamicObjects.h">
 			</File>
 			<File
 				RelativePath="..\src\Sound.h">

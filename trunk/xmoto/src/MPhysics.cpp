@@ -128,6 +128,7 @@ namespace vapp {
     }
     bool bSleep = false;
     
+    //printf("{%d}\n",m_Collision.isDynamicTouched());
     //printf("]",m_nStillFrames);        
     if(m_nStillFrames > PHYS_SLEEP_FRAMES && !m_Collision.isDynamicTouched()) {
       bSleep = true;
@@ -290,8 +291,13 @@ namespace vapp {
                                           even frames, rear wheel odd frames */
     nSlipFrameInterlace++;
         
+    nNumContacts = _IntersectWheelLevel( m_BikeS.FrontWheelP,m_BikeP.WR,Contacts );
+    if(m_Collision.isDynamicTouched()) {
+      if(!dBodyIsEnabled(m_FrontWheelBodyID)) dBodyEnable(m_FrontWheelBodyID);
+      if(!dBodyIsEnabled(m_RearWheelBodyID)) dBodyEnable(m_RearWheelBodyID);
+      if(!dBodyIsEnabled(m_FrameBodyID)) dBodyEnable(m_FrameBodyID);
+    }
     if(dBodyIsEnabled(m_FrontWheelBodyID)) {
-      nNumContacts = _IntersectWheelLevel( m_BikeS.FrontWheelP,m_BikeP.WR,Contacts );
       Vector2f WSP;
       for(int i=0;i<nNumContacts;i++) {
         dJointAttach(dJointCreateContact(m_WorldID,m_ContactGroup,&Contacts[i]),m_FrontWheelBodyID,0);                         
@@ -332,8 +338,13 @@ namespace vapp {
       }
     }
 
+    nNumContacts = _IntersectWheelLevel( m_BikeS.RearWheelP,m_BikeP.WR,Contacts );
+    if(m_Collision.isDynamicTouched()) {
+      if(!dBodyIsEnabled(m_FrontWheelBodyID)) dBodyEnable(m_FrontWheelBodyID);
+      if(!dBodyIsEnabled(m_RearWheelBodyID)) dBodyEnable(m_RearWheelBodyID);
+      if(!dBodyIsEnabled(m_FrameBodyID)) dBodyEnable(m_FrameBodyID);
+    }
     if(dBodyIsEnabled(m_RearWheelBodyID)) {
-      nNumContacts = _IntersectWheelLevel( m_BikeS.RearWheelP,m_BikeP.WR,Contacts );
       Vector2f WSP;
       for(int i=0;i<nNumContacts;i++) {
         dJointAttach(dJointCreateContact(m_WorldID,m_ContactGroup,&Contacts[i]),m_RearWheelBodyID,0);                         
@@ -391,7 +402,7 @@ namespace vapp {
 				}
       }
     }
-    
+        
     //m_PrevFrontWheelP = m_BikeS.FrontWheelP;
     //m_PrevRearWheelP = m_BikeS.RearWheelP;
     m_PrevHeadP = m_BikeS.HeadP;

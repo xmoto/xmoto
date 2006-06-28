@@ -1046,48 +1046,64 @@ namespace vapp {
     m_Blocks.push_back( pBlock = new ConvexBlock );    
     pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
     pVertex->P=Vector2f( m_pLevelSrc->getLeftLimit() - fHMargin, m_pLevelSrc->getTopLimit() + fVMargin);
+    pVertex->T = pVertex->P * 0.25;
     pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
     pVertex->P=Vector2f( m_pLevelSrc->getRightLimit() + fHMargin, m_pLevelSrc->getTopLimit() + fVMargin);
+    pVertex->T = pVertex->P * 0.25;
     pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
     pVertex->P=Vector2f( m_pLevelSrc->getRightLimit(), m_pLevelSrc->getTopLimit());
+    pVertex->T = pVertex->P * 0.25;
     pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
     pVertex->P=Vector2f( m_pLevelSrc->getLeftLimit(), m_pLevelSrc->getTopLimit());
+    pVertex->T = pVertex->P * 0.25;
     pBlock->pSrcBlock = NULL;
 
     /* BOTTOM */
     m_Blocks.push_back( pBlock = new ConvexBlock );    
     pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
     pVertex->P=Vector2f( m_pLevelSrc->getRightLimit(), m_pLevelSrc->getBottomLimit());
+    pVertex->T = pVertex->P * 0.25;
     pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
     pVertex->P=Vector2f( m_pLevelSrc->getRightLimit() + fHMargin, m_pLevelSrc->getBottomLimit() - fVMargin);
+    pVertex->T = pVertex->P * 0.25;
     pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
     pVertex->P=Vector2f( m_pLevelSrc->getLeftLimit() - fHMargin, m_pLevelSrc->getBottomLimit() - fVMargin);
+    pVertex->T = pVertex->P * 0.25;
     pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
     pVertex->P=Vector2f( m_pLevelSrc->getLeftLimit(), m_pLevelSrc->getBottomLimit());
+    pVertex->T = pVertex->P * 0.25;
     pBlock->pSrcBlock = NULL;
 
     /* LEFT */
     m_Blocks.push_back( pBlock = new ConvexBlock );    
     pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
     pVertex->P=Vector2f( m_pLevelSrc->getLeftLimit(), m_pLevelSrc->getTopLimit());
+    pVertex->T = pVertex->P * 0.25;
     pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
     pVertex->P=Vector2f( m_pLevelSrc->getLeftLimit(), m_pLevelSrc->getBottomLimit());
+    pVertex->T = pVertex->P * 0.25;
     pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
     pVertex->P=Vector2f( m_pLevelSrc->getLeftLimit() - fHMargin, m_pLevelSrc->getBottomLimit() - fVMargin);
+    pVertex->T = pVertex->P * 0.25;
     pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
     pVertex->P=Vector2f( m_pLevelSrc->getLeftLimit() - fHMargin, m_pLevelSrc->getTopLimit() + fVMargin);
+    pVertex->T = pVertex->P * 0.25;
     pBlock->pSrcBlock = NULL;
 
     /* RIGHT */
     m_Blocks.push_back( pBlock = new ConvexBlock );    
     pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
     pVertex->P=Vector2f( m_pLevelSrc->getRightLimit(), m_pLevelSrc->getTopLimit());
+    pVertex->T = pVertex->P * 0.25;
     pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
     pVertex->P=Vector2f( m_pLevelSrc->getRightLimit() + fHMargin, m_pLevelSrc->getTopLimit() + fVMargin);
+    pVertex->T = pVertex->P * 0.25;
     pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
     pVertex->P=Vector2f( m_pLevelSrc->getRightLimit() + fHMargin, m_pLevelSrc->getBottomLimit() - fVMargin);
+    pVertex->T = pVertex->P * 0.25;
     pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
     pVertex->P=Vector2f( m_pLevelSrc->getRightLimit(), m_pLevelSrc->getBottomLimit());
+    pVertex->T = pVertex->P * 0.25;
     pBlock->pSrcBlock = NULL;
     
     /* Give limits to collision system */
