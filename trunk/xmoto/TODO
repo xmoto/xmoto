@@ -17,6 +17,18 @@ Assigned to Nicolas:
 rm sprites.dat
 rm anims.dat
 
+* bug on script :
+function OnLoad()
+
+  Game.SetEntityPos("MyStrawberry0", 2, 2)
+  x,y = Game.GetEntityPos("MyStrawberry0")
+
+  Game.Message("MyStrawberry0 ("..x..", "..y..")")
+
+  return true
+end
+does not work well
+
 * high level function for script : DynamicMove
 Game.SetDynamicEntityRotation("Strawberry0", 0, 3, 500, 0, 0)
 Game.SetDynamicEntityTranslation("Strawberry0", 3, 1, 500, 0, 0)
