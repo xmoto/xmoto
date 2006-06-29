@@ -797,9 +797,10 @@ namespace vapp {
          
       /* Returned WHAT? */
       if(nRet != 0) {
+	std::string error_msg = std::string(lua_tostring(m_pL,-1));
 	lua_close(m_pL);
 	/* should call error(0) */
-	throw Exception("failed to load level encapsulated script");
+	throw Exception("failed to load level encapsulated script :\n" + error_msg);
       }
 
       bGotScript = true;      

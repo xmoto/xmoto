@@ -666,7 +666,7 @@ namespace vapp {
       bool scriptCallBool(std::string FuncName,bool bDefault=false);
       void scriptCallVoid(std::string FuncName);
       void scriptCallTblVoid(std::string Table,std::string FuncName);
-      
+
       /* Data interface */
       bool isFinished(void) {return m_bFinished;}
       bool isDead(void) {return m_bDead;}

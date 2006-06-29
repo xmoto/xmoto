@@ -10,7 +10,7 @@ X-Moto 0.2.0 (beta) 2006-
  * New textures, sprites, and edge effects (RedBricks, GrayBricks,
    and BlueBricks).
  * You can now keep the up and down arrows of lists pressed to list the levels
- * new script functions : SetDynamicEntityRotation,
+ * new script functions : SetDynamicEntityRotation, SetDynamicEntityTranslation
 	
 X-Moto 0.1.16 (alpha) 2006-06-16
 --------------------------------
