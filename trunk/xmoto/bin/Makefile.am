@@ -1,6 +1,6 @@
 pkgdatadir = $(datadir)/@PACKAGE@
 
-pkgdata_DATA = anims.dat editor.dat fonts.dat xmoto.bin
+pkgdata_DATA = original_theme.xml editor.dat fonts.dat xmoto.bin
 
 EXTRA_DIST = $(pkgdata_DATA)
 
