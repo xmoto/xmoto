@@ -690,7 +690,9 @@ namespace vapp {
     
     /* Create Lua state */
     m_pL = lua_open();
+    luaopen_base(m_pL);   
     luaopen_math(m_pL);
+    luaopen_table(m_pL);
     luaopen_Game(m_pL);    
     m_pMotoGame = this;
     

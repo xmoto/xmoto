@@ -34,7 +34,6 @@ Theme::~Theme() {
 }
  
 vapp::Texture* Theme::loadTexture(std::string p_fileName) {
-  printf("Load texture '%s'\n", p_fileName.c_str());
   return m_texMan.loadTexture(p_fileName.c_str());
 }
 
@@ -43,8 +42,6 @@ void Theme::load() {
 }
 
 void Theme::load(std::string p_themeFile) {
-  printf("Load the theme '%s'\n", p_themeFile.c_str());
-
   vapp::XMLDocument v_ThemeXml;
   TiXmlDocument *v_ThemeXmlData;
   TiXmlElement *v_ThemeXmlDataElement;
@@ -68,9 +65,6 @@ void Theme::load(std::string p_themeFile) {
   if(m_name == "") {
     throw vapp::Exception("error : the theme has no name !");
   }
-
-  printf("theme name is '%s'\n", m_name.c_str());
-
 
   /* get sprites */
   std::string v_spriteType;
@@ -207,19 +201,19 @@ void Theme::newAnimationSpriteFromXML(TiXmlElement *pVarElem) {
     float v_height;
     float v_delay;
 
-    pc = pVarElem->Attribute("centerX");
+    pc = pVarSubElem->Attribute("centerX");
     if(pc != NULL) {v_centerX = atof(pc);} else {v_centerX = global_centerX;}
     
-    pc = pVarElem->Attribute("centerY");
+    pc = pVarSubElem->Attribute("centerY");
     if(pc != NULL) {v_centerY = atof(pc);} else {v_centerY = global_centerY;}
     
-    pc = pVarElem->Attribute("width");
+    pc = pVarSubElem->Attribute("width");
     if(pc != NULL) {v_width = atof(pc);} else {v_width = global_width;}
     
-    pc = pVarElem->Attribute("height");
+    pc = pVarSubElem->Attribute("height");
     if(pc != NULL) {v_height = atof(pc);} else {v_height = global_height;}
 
-    pc = pVarElem->Attribute("delay");
+    pc = pVarSubElem->Attribute("delay");
     if(pc != NULL) {v_delay = atof(pc);} else {v_delay = global_delay;}
 
     v_anim->addFrame(v_centerX, v_centerY, v_width, v_height, v_delay);

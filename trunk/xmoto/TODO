@@ -45,6 +45,8 @@ Unassigned:
 * new script call :
 killPlayer() -> kill the player
 timePenallity(nbSeconds) -> increase time
+zoom
+moveCamera
 be able to move camera : at least choose 3 positions middle, left or right
 
 * collision : collision with the body : triangle with points : head,
