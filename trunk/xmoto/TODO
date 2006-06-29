@@ -14,8 +14,6 @@ Assigned to Neckelmann:
 ######################################################################
 Assigned to Nicolas:
 * theme (for sprites) (priority=high)
-rm sprites.dat
-rm anims.dat
 
 * bug on script :
 function OnLoad()
@@ -29,14 +27,11 @@ function OnLoad()
 end
 does not work well
 
-* make error nicer when impossible to load the script
-
 * high level function for script : DynamicMove
 Game.SetDynamicEntityRotation("Strawberry0", 0, 3, 500, 0, 0)
 Game.SetDynamicEntityTranslation("Strawberry0", 3, 1, 500, 0, 0)
 Game.SetDynamicEntityNone("Strawberry0")
 add the same for block once block move will work
-* add string and table lua classes
 * a texture missing -> just give an alert instead of get an exception
 
 ######################################################################

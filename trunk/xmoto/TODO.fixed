@@ -31,3 +31,5 @@ Before Xmoto 1.16
 * display error : missing texture instead of just "the level has a pb" ?
 * LevelpackList does not allow to see #tutorial 3
 * add "required-xmoto-version" field to levels
+* make error nicer when impossible to load the script
+* add string and table lua classes
