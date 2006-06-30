@@ -142,11 +142,11 @@ void Theme::newAnimationSpriteFromXML(TiXmlElement *pVarElem) {
   const char *pc;
   AnimationSprite *v_anim;
 
-  float global_centerX = 0.0;
-  float global_centerY = 0.0;
-  float global_width   = 0.0;
-  float global_height  = 0.0;
-  float global_delay   = 1.0;
+  float global_centerX = 0.5;
+  float global_centerY = 0.5;
+  float global_width   = 1.0;
+  float global_height  = 1.0;
+  float global_delay   = 0.1;
 
   pc = pVarElem->Attribute("name");
   if(pc == NULL) {return;}
