@@ -1182,6 +1182,10 @@ namespace vapp {
           m_pPauseMenu->showWindow(false);
           m_GameStats.abortedLevel(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->getID(),m_MotoGame.getLevelSrc()->getLevelInfo()->Name,m_MotoGame.getTime());
 
+#if defined(ALLOW_GHOST) 
+	  /* hide ghost */
+	  m_MotoGame.setGhostActive(false);
+#endif 
           m_MotoGame.endLevel();
           m_InputHandler.resetScriptKeyHooks();                     
           m_Renderer.unprepareForNewLevel();
@@ -1193,6 +1197,10 @@ namespace vapp {
           m_pPauseMenu->showWindow(false);
           m_GameStats.levelRestarted(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->getID(),m_MotoGame.getLevelSrc()->getLevelInfo()->Name,m_MotoGame.getTime());
 
+#if defined(ALLOW_GHOST) 
+	  /* hide ghost */
+	  m_MotoGame.setGhostActive(false);
+#endif 
           m_MotoGame.endLevel();
           m_InputHandler.resetScriptKeyHooks();                     
           m_Renderer.unprepareForNewLevel();
@@ -1206,6 +1214,10 @@ namespace vapp {
             if(NextLevel != "") {        
               m_pPauseMenu->showWindow(false);              
               m_GameStats.abortedLevel(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->getID(),m_MotoGame.getLevelSrc()->getLevelInfo()->Name,m_MotoGame.getTime());
+#if defined(ALLOW_GHOST) 
+	      /* hide ghost */
+	      m_MotoGame.setGhostActive(false);
+#endif 
               m_MotoGame.endLevel();
               m_InputHandler.resetScriptKeyHooks();                     
               m_Renderer.unprepareForNewLevel();                    
@@ -1283,6 +1295,10 @@ namespace vapp {
               m_pFinishMenu->showWindow(false);
 	      m_Renderer.hideMsgNewHighscore();
               m_pBestTimes->showWindow(false);
+#if defined(ALLOW_GHOST) 
+	      /* hide ghost */
+	      m_MotoGame.setGhostActive(false);
+#endif 
               m_MotoGame.endLevel();
               m_InputHandler.resetScriptKeyHooks();                     
               m_Renderer.unprepareForNewLevel();                    
@@ -1321,6 +1337,10 @@ namespace vapp {
           m_pFinishMenu->showWindow(false);
 	  m_Renderer.hideMsgNewHighscore();
           m_pBestTimes->showWindow(false);
+#if defined(ALLOW_GHOST) 
+	  /* hide ghost */
+	  m_MotoGame.setGhostActive(false);
+#endif 
           m_MotoGame.endLevel();
           m_InputHandler.resetScriptKeyHooks();                     
           m_Renderer.unprepareForNewLevel();
@@ -1768,6 +1788,10 @@ namespace vapp {
           LevelSrc *pCurLevel = m_MotoGame.getLevelSrc();
           m_PlaySpecificLevel = pCurLevel->getID();
           m_pJustDeadMenu->showWindow(false);
+#if defined(ALLOW_GHOST) 
+	  /* hide ghost */
+	  m_MotoGame.setGhostActive(false);
+#endif 
           m_MotoGame.endLevel();
           m_InputHandler.resetScriptKeyHooks();                     
           m_Renderer.unprepareForNewLevel();          
@@ -1779,6 +1803,10 @@ namespace vapp {
             std::string NextLevel = _DetermineNextLevel(pLS);
             if(NextLevel != "") {        
               m_pJustDeadMenu->showWindow(false);
+#if defined(ALLOW_GHOST) 
+	      /* hide ghost */
+	      m_MotoGame.setGhostActive(false);
+#endif 
               m_MotoGame.endLevel();
               m_InputHandler.resetScriptKeyHooks();                     
               m_Renderer.unprepareForNewLevel();                    
@@ -1806,6 +1834,10 @@ namespace vapp {
         }
         else if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_ABORT) {
           m_pJustDeadMenu->showWindow(false);
+#if defined(ALLOW_GHOST) 
+	  /* hide ghost */
+	  m_MotoGame.setGhostActive(false);
+#endif 
           m_MotoGame.endLevel();
           m_InputHandler.resetScriptKeyHooks();                     
           m_Renderer.unprepareForNewLevel();

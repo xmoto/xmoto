@@ -318,11 +318,6 @@ namespace vapp {
 //        SDL_ShowCursor(SDL_ENABLE);
         m_bShowCursor = true;
 
-#if defined(ALLOW_GHOST) 
-	/* hide ghost */
-	m_MotoGame.setGhostActive(false);
-#endif        
-
         /* Finish replay */
         if(m_pReplay != NULL) m_pReplay->finishReplay(false,0.0f);
 
@@ -361,11 +356,6 @@ namespace vapp {
       case GS_FINISHED: {
 //        SDL_ShowCursor(SDL_ENABLE);
         m_bShowCursor = true;
-
-#if defined(ALLOW_GHOST)
-	/* hide ghost */
-	m_MotoGame.setGhostActive(false);
-#endif
 
         /* Finish replay */
         if(m_pReplay != NULL) m_pReplay->finishReplay(true,m_MotoGame.getFinishTime());
@@ -1602,6 +1592,10 @@ namespace vapp {
               m_pFinishMenu->showWindow(false);
               m_pBestTimes->showWindow(false);
               m_pJustDeadMenu->showWindow(false);
+#if defined(ALLOW_GHOST) 
+	      /* hide ghost */
+	      m_MotoGame.setGhostActive(false);
+#endif 
               m_MotoGame.endLevel();
               m_InputHandler.resetScriptKeyHooks();                         
               m_Renderer.unprepareForNewLevel();
