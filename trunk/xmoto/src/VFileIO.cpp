@@ -875,10 +875,11 @@ namespace vapp {
         if(fp == NULL) {
           /* Good one */
           FullTo = cTemp;
-          break;        
-        }
-        fclose(fp);
-        
+          break;
+        } else {
+	  fclose(fp);
+	  i++;
+	}
         /* Next */
       }      
     }

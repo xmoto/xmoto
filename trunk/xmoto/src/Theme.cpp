@@ -67,13 +67,19 @@ void Theme::load(std::string p_themeFile) {
   }
 
   /* get sprites */
-  std::string v_spriteType;
+  loadSpritesFromXML(v_ThemeXmlDataElement);
+}
 
-  for(TiXmlElement *pVarElem = v_ThemeXmlDataElement->FirstChildElement("sprite");
+void Theme::loadSpritesFromXML(TiXmlElement *p_ThemeXmlDataElement) {
+  std::string v_spriteType;
+  const char *pc;
+  
+  for(TiXmlElement *pVarElem = p_ThemeXmlDataElement->FirstChildElement("sprite");
       pVarElem!=NULL;
       pVarElem = pVarElem->NextSiblingElement("sprite")
       ) {
     pc = pVarElem->Attribute("type");
+
     if(pc == NULL) { continue; }
     v_spriteType = pc;
 
@@ -107,9 +113,6 @@ Sprite* Theme::getSprite(enum SpriteType pSpriteType, std::string pName) {
   }
 
   return NULL;
-}
-
-void Theme::loadSprites() {
 }
 
 std::string Theme::getDefaultThemeFile() {

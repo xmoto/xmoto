@@ -412,7 +412,7 @@ namespace vapp {
 	  }
 	}
 #endif
-
+	
 	if(v_is_a_highscore) { /* best highscore */
 	  Sound::playSampleByName("Sounds/NewHighscore.ogg");
 	  if(m_pReplay != NULL && m_bAutosaveHighscoreReplays) {
@@ -2031,11 +2031,11 @@ namespace vapp {
     if(!FS::copyFile("Replays/Latest.rpl",std::string("Replays/") + RealName + std::string(".rpl"))) {
       Log("** Warning ** : Failed to save replay: %s",Name.c_str());
       notifyMsg(GAMETEXT_FAILEDTOSAVEREPLAY);
+    } else {
+      /* Update replay list to reflect changes */
+      m_ReplayList.addReplay(RealName);
+      _UpdateReplaysList();
     }
-    
-    /* Update replay list to reflect changes */
-    m_ReplayList.addReplay(RealName);
-    _UpdateReplaysList();
   }
 
   /*===========================================================================

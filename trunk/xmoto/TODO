@@ -10,6 +10,7 @@ Assigned to Neckelmann:
 * I thought to one thing that could be add in the stats : the date
    when the stats have been initialized to display : stats from
    18/06/2006 for example. Remember that this field must be translatable
+* BUG : when you have stats.xml but not players.bin = > segfault at startup
 
 ######################################################################
 Assigned to Nicolas:

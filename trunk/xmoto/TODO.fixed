@@ -34,3 +34,4 @@ Before Xmoto 1.16
 * make error nicer when impossible to load the script
 * add string and table lua classes
 * bug on new highscore when the two number a proach
+* bug on VFile.h infinite loop when try to save a replay with the same name 3 times

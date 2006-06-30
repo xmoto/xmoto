@@ -213,31 +213,6 @@ class DecorationSprite : public SimpleFrameSprite {
 
 };
 
-//class CompositionTheme {
-// public:
-//  CompositionTheme();
-//  ~CompositionTheme();
-//
-// private:
-//  void cleanComponents()
-//  vector<vapp::Texture*> m_components;
-//};
-//
-//class RiderTheme : CompositionSprite {
-// public:
-//  vapp::Texture* getBikerBody();
-//  vapp::Texture* getBikerFront();
-//  vapp::Texture* getBikerRear();
-//  vapp::Texture* getWheel();
-//  vapp::Texture* getLowerArm();
-//  vapp::Texture* getLowerLeg();
-//  vapp::Texture* getTorso();
-//  vapp::Texture* getUpperArm();
-//  vapp::Texture* getUpperLeg();
-//
-// private:
-//};
-
 class Theme {
   public:
   Theme();
@@ -255,8 +230,9 @@ class Theme {
   std::string m_name;
   std::vector<Sprite*> m_sprites;
 
-  void loadSprites();
   void cleanSprites();
+
+  void loadSpritesFromXML(TiXmlElement *p_ThemeXmlDataElement);
 
   void newAnimationSpriteFromXML(TiXmlElement *pVarElem);
   void newBikerPartSpriteFromXML(TiXmlElement *pVarElem);
