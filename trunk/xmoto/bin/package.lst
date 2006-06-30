@@ -1,12 +1,12 @@
 original_theme.xml
 
-Textures/Bricks.jpg
-Textures/DarkDirt.jpg
-Textures/DarkFrostGround.jpg
-Textures/Dirt.jpg
-Textures/FrostGround.jpg
-Textures/MoltenRock.jpg
-Textures/BlueBricks.jpg
+Textures/Textures/Bricks.jpg
+Textures/Textures/DarkDirt.jpg
+Textures/Textures/DarkFrostGround.jpg
+Textures/Textures/Dirt.jpg
+Textures/Textures/FrostGround.jpg
+Textures/Textures/MoltenRock.jpg
+Textures/Textures/BlueBricks.jpg
 
 Sounds/Button1.ogg
 Sounds/Button3.ogg

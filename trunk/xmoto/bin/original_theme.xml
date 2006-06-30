@@ -1,6 +1,30 @@
 <?xml version="1.0" encoding="utf8" ?>
 <xmoto_theme name="Classic">
 
+<component type="biker" name="player">
+ <sprite type="BikerPart" name="BikerBody"  file="Body1.png" />
+ <sprite type="BikerPart" name="BikerFront" file="Front1.png" />
+ <sprite type="BikerPart" name="BikerRear"  file="Rear1.png" />
+ <sprite type="BikerPart" name="BikerWheel" file="Wheel1.png" />
+ <sprite type="BikerPart" name="LowerArm"   file="LowerArm1.png" />
+ <sprite type="BikerPart" name="LowerLeg"   file="LowerLeg1.png" />
+ <sprite type="BikerPart" name="Torso"      file="Torso1.png" />
+ <sprite type="BikerPart" name="UpperArm"   file="UpperArm1.png" />
+ <sprite type="BikerPart" name="UpperLeg"   file="UpperLeg1.png" />
+</component>
+
+<component type="biker" name="ghost">
+ <sprite type="BikerPart" name="BikerBody"  file="Body1_Ghost.png" />
+ <sprite type="BikerPart" name="BikerFront" file="Front1_Ghost.png" />
+ <sprite type="BikerPart" name="BikerRear"  file="Rear1_Ghost.png" />
+ <sprite type="BikerPart" name="BikerWheel" file="Wheel1_Ghost.png" />
+ <sprite type="BikerPart" name="LowerArm"   file="LowerArm_Ghost.png" />
+ <sprite type="BikerPart" name="LowerLeg"   file="LowerLeg_Ghost.png" />
+ <sprite type="BikerPart" name="Torso"      file="Torso_Ghost.png" />
+ <sprite type="BikerPart" name="UpperArm"   file="UpperArm_Ghost.png" />
+ <sprite type="BikerPart" name="UpperLeg"   file="UpperLeg_Ghost.png" />
+</component>
+
 <sprite type="Texture" name="BlueBricks"      file="BlueBricks.jpg" />
 <sprite type="Texture" name="Bricks"          file="Bricks.jpg" />
 <sprite type="Texture" name="DarkDirt"        file="DarkDirt.jpg" />
@@ -8,28 +32,6 @@
 <sprite type="Texture" name="Dirt"            file="Dirt.jpg" />
 <sprite type="Texture" name="FrostGround"     file="FrostGround.jpg" />
 <sprite type="Texture" name="MoltenRock"      file="MoltenRock.jpg" />
-
-<sprite type="BikerBody"  name="BikerBody"  file="Body1.png" />
-<sprite type="BikerFront" name="BikerFront" file="Front1.png" />
-<sprite type="BikerRear"  name="BikerRear"  file="Rear1.png" />
-<sprite type="BikerWheel" name="BikerWheel" file="Wheel1.png" />
-
-<sprite type="BikerBody"  name="BikerBodyGhost"  file="Body1_Ghost.png" />
-<sprite type="BikerFront" name="BikerFrontGhost" file="Front1_Ghost.png" />
-<sprite type="BikerRear"  name="BikerRearGhost"  file="Rear1_Ghost.png" />
-<sprite type="BikerWheel" name="BikerWheelGhost" file="Wheel1_Ghost.png" />
-
-<sprite type="RiderLowerArm" name="LowerArm" file="LowerArm1.png" />
-<sprite type="RiderLowerLeg" name="LowerLeg" file="LowerLeg1.png" />
-<sprite type="RiderTorso"    name="Torso"    file="Torso1.png" />
-<sprite type="RiderUpperArm" name="UpperArm" file="UpperArm1.png" />
-<sprite type="RiderUpperLeg" name="UpperLeg" file="UpperLeg1.png" />
-
-<sprite type="RiderLowerArm" name="LowerArmGhost" file="LowerArm_Ghost.png" />
-<sprite type="RiderLowerLeg" name="LowerLegGhost" file="LowerLeg_Ghost.png" />
-<sprite type="RiderTorso"    name="TorsoGhost"    file="Torso_Ghost.png" />
-<sprite type="RiderUpperArm" name="UpperArmGhost" file="UpperArm_Ghost.png" />
-<sprite type="RiderUpperLeg" name="UpperLegGhost" file="UpperLeg_Ghost.png" />
 
 <sprite type="Animation" name="Strawberry"  fileBase="Strawberry"  fileExtension="png" width="1" height="1" delay="0.05">
 <frame centerX="0.5" centerY="0.5" />
