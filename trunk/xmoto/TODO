@@ -14,6 +14,7 @@ Assigned to Neckelmann:
 ######################################################################
 Assigned to Nicolas:
 * theme (for sprites) (priority=high)
+* bug on new highscore when the two number a proach
 
 * bug on script :
 function OnLoad()

@@ -398,7 +398,7 @@ namespace vapp {
 
 #if defined(SUPPORT_WEBACCESS) 
 	/* search a better webhighscore */
-	if(m_pWebHighscores != NULL && v_is_a_highscore == true) {
+	if(m_pWebHighscores != NULL /*&& v_is_a_highscore == true*/) {
 	  WebHighscore* wh = m_pWebHighscores->getHighscoreFromLevel(m_MotoGame.getLevelSrc()->getID());
 	  if(wh != NULL) {
 	    try {

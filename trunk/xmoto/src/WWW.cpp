@@ -189,7 +189,7 @@ float WebHighscore::getFTime() const {
   v_fsec = atof(v_sec.c_str());
   v_fhun = atof(v_hun.c_str());
 
-  return v_fmin * 60.0 + v_fsec + v_fhun / 60.0;
+  return v_fmin * 60.0 + v_fsec + v_fhun / 100.0;
 }
 
 WebRoom* WebHighscore::getRoom() const {
