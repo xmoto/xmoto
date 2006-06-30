@@ -37,6 +37,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 namespace vapp {
 
   class Replay;
+  class GameRenderer;
 
   /*===========================================================================
   Defines
@@ -431,7 +432,10 @@ namespace vapp {
 
     GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROTATION,
     GAME_EVENT_LUA_CALL_SETDYNAMICENTITYTRANSLATION,
-    GAME_EVENT_LUA_CALL_SETDYNAMICENTITYNONE
+    GAME_EVENT_LUA_CALL_SETDYNAMICENTITYNONE,
+
+    GAME_EVENT_LUA_CALL_CAMERAZOOM,
+    GAME_EVENT_LUA_CALL_CAMERAMOVE
   };
   
 	/*===========================================================================
@@ -538,6 +542,15 @@ namespace vapp {
     char cEntityID[64]; /* ID of entity */
   };
 
+  struct GameEventLuaCallCameraZoom {
+    float fZoom;
+  };
+
+  struct GameEventLuaCallCameraMove {
+    float x, y;
+  };
+
+
   struct GameEvent {
     int nSeq;                         /* Sequence number */
     GameEventType Type;								/* Type of event */
@@ -603,6 +616,12 @@ namespace vapp {
       /* GAME_EVENT_LUA_CALL_SETDYNAMICENTITYNONE */
       GameEventLuaCallSetDynamicEntityNone LuaCallSetDynamicEntityNone;
 
+      /* GAME_EVENT_LUA_CALL_CAMERAZOOM */
+      GameEventLuaCallCameraZoom LuaCallCameraZoom;
+
+      /* GAME_EVENT_LUA_CALL_CAMERAMOVE */
+      GameEventLuaCallCameraMove LuaCallCameraMove;
+
     } u;		
   };
     
@@ -625,6 +644,7 @@ namespace vapp {
 		  m_showGhostTimeDiff = true;
 		  m_isGhostActive = false;
 #endif
+		  m_renderer = NULL;
       }
       ~MotoGame() {endLevel();}     
     
@@ -724,6 +744,10 @@ namespace vapp {
       void SetBlockCenter(String pBlockID, float pX, float pY);
       void SetBlockRotation(String pBlockID, float pAngle);
 
+      void setRenderer(GameRenderer *p_renderer);
+      void CameraZoom(float pZoom);
+      void CameraMove(float p_x, float p_y);
+
     private:         
       /* Data */
       int m_nGameEventQueueReadIdx,m_nGameEventQueueWriteIdx;
@@ -769,6 +793,8 @@ namespace vapp {
       bool m_isGhostActive;               /* is ghost active : must it be displayed, ... */
       bool m_showGhostTimeDiff;
 #endif
+
+      GameRenderer *m_renderer;
 
       std::vector<SDynamicObject*> m_SDynamicObjects;
 

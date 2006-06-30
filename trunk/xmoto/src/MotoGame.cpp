@@ -63,7 +63,9 @@ namespace vapp {
   int L_Game_SetDynamicEntityRotation(lua_State *pL);
   int L_Game_SetDynamicEntityTranslation(lua_State *pL);
   int L_Game_SetDynamicEntityNone(lua_State *pL);
-  
+  int L_Game_CameraZoom(lua_State *pL);
+  int L_Game_CameraMove(lua_State *pL);
+
   /* "Game" Lua library */
   static const luaL_reg g_GameFuncs[] = {
     {"GetTime", L_Game_GetTime},
@@ -90,6 +92,8 @@ namespace vapp {
     {"SetDynamicEntityRotation", L_Game_SetDynamicEntityRotation},
     {"SetDynamicEntityTranslation", L_Game_SetDynamicEntityTranslation},
     {"SetDynamicEntityNone", L_Game_SetDynamicEntityNone},
+    {"CameraZoom", L_Game_CameraZoom},
+    {"CameraMove", L_Game_CameraMove},
     {NULL, NULL}
   };
 
@@ -575,6 +579,18 @@ namespace vapp {
       }
       break;
 
+    case GAME_EVENT_LUA_CALL_CAMERAZOOM:
+      {
+	CameraZoom(pEvent->u.LuaCallCameraZoom.fZoom);
+      }
+      break;
+
+    case GAME_EVENT_LUA_CALL_CAMERAMOVE:
+      {
+	CameraMove(pEvent->u.LuaCallCameraMove.x, pEvent->u.LuaCallCameraMove.y);
+      }
+      break;
+
 	  }
 	}
 	else break;
@@ -748,6 +764,9 @@ namespace vapp {
       InitGhostLastStrawberries(m_pGhostReplay);
     }
 #endif
+
+    m_renderer->initCamera();
+    m_renderer->initZoom();
 
     /* Clear zone flags */
     for(int i=0;i<pLevelSrc->getZoneList().size();i++)
@@ -1688,6 +1707,19 @@ namespace vapp {
       }
       break;
 
+    case GAME_EVENT_LUA_CALL_CAMERAZOOM:
+      {
+	CameraZoom(pEvent->u.LuaCallCameraZoom.fZoom);
+      }
+      break;
+
+    case GAME_EVENT_LUA_CALL_CAMERAMOVE:
+      {
+	CameraMove(pEvent->u.LuaCallCameraMove.x, pEvent->u.LuaCallCameraMove.y);
+      }
+      break;
+
+
     }
   }
   
@@ -1714,16 +1746,7 @@ namespace vapp {
       }
       break;
 
-    case GAME_EVENT_LUA_CALL_SETENTITYPOS:
-    case GAME_EVENT_LUA_CALL_CLEARMESSAGES:
-    case GAME_EVENT_LUA_CALL_PLACEINGAMEARROW:
-    case GAME_EVENT_LUA_CALL_PLACESCREENARROW:
-    case GAME_EVENT_LUA_CALL_HIDEARROW:
-    case GAME_EVENT_LUA_CALL_MESSAGE:
-    case GAME_EVENT_LUA_CALL_MOVEBLOCK:
-    case GAME_EVENT_LUA_CALL_SETBLOCKPOS:
-    case GAME_EVENT_LUA_CALL_SETGRAVITY:
-    case GAME_EVENT_LUA_CALL_SETPLAYERPOSITION:
+    default:
       {
 	/* hum : do nothing */
 	/* what can i do ?  */
@@ -1882,6 +1905,22 @@ namespace vapp {
       } else {
 	i++;
       }
+    }
+  }
+
+  void MotoGame::setRenderer(GameRenderer *p_renderer) {
+    m_renderer = p_renderer;
+  }
+
+  void MotoGame::CameraZoom(float pZoom) {
+    if(m_renderer != NULL) {
+      m_renderer->zoom(pZoom);
+    }
+  }
+   
+  void MotoGame::CameraMove(float p_x, float p_y) {
+    if(m_renderer != NULL) {
+      m_renderer->moveCamera(p_x, p_y);
     }
   }
 

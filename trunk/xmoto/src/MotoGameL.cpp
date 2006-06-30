@@ -368,5 +368,24 @@ namespace vapp {
     }
     return 0;
   }
+
+  int L_Game_CameraZoom(lua_State *pL) {
+    /* event for this */
+    GameEvent *pEvent = m_pMotoGame->createGameEvent(GAME_EVENT_LUA_CALL_CAMERAZOOM);
+    if(pEvent != NULL) {
+      pEvent->u.LuaCallCameraZoom.fZoom = X_luaL_check_number(pL,1);
+    }
+    return 0;
+  }
+
+  int L_Game_CameraMove(lua_State *pL) {
+    /* event for this */
+    GameEvent *pEvent = m_pMotoGame->createGameEvent(GAME_EVENT_LUA_CALL_CAMERAMOVE);
+    if(pEvent != NULL) {
+      pEvent->u.LuaCallCameraMove.x = X_luaL_check_number(pL,1);
+      pEvent->u.LuaCallCameraMove.y = X_luaL_check_number(pL,2);
+    }
+    return 0;
+  }
 };
 

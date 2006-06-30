@@ -282,6 +282,16 @@ namespace vapp {
     m_fScale = ZOOM_DEFAULT;
   }
 
+  void GameRenderer::moveCamera(float px, float py) {
+    m_cameraOffsetX += px;
+    m_cameraOffsetY += py;
+  }
+
+  void GameRenderer::initCamera() {
+    m_cameraOffsetX = CAMERA_OFFSETX_DEFAULT;
+    m_cameraOffsetY = CAMERA_OFFSETY_DEFAULT;
+  }
+
   /*===========================================================================
   Main rendering function
   ===========================================================================*/
@@ -332,7 +342,7 @@ namespace vapp {
     /* Perform scaling/translation */    
     glScalef(m_fScale * ((float)getParent()->getDispHeight()) / getParent()->getDispWidth(), m_fScale,1);
     //glRotatef(getGameObject()->getTime()*100,0,0,1); /* Uncomment this line if you want to vomit :) */
-    glTranslatef(m_Scroll.x,m_Scroll.y,0);
+    glTranslatef(m_Scroll.x - m_cameraOffsetX, m_Scroll.y - m_cameraOffsetY, 0);
     
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();

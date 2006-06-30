@@ -272,6 +272,21 @@ namespace vapp {
       }
       break;
 
+    case GAME_EVENT_LUA_CALL_CAMERAZOOM:
+      {
+	(*Buffer) >> Event.u.LuaCallCameraZoom.fZoom;
+	bIsOk = true;
+      }
+      break;
+
+    case GAME_EVENT_LUA_CALL_CAMERAMOVE:
+      {
+	(*Buffer) >> Event.u.LuaCallCameraMove.x;
+	(*Buffer) >> Event.u.LuaCallCameraMove.y;
+	bIsOk = true;
+      }
+      break;
+
       default:
 	Log("** Warning ** : Failed to parse game events in replay, it will probably not play right!");
 	bError = true;
@@ -448,6 +463,23 @@ namespace vapp {
 	Buffer << pEvent->Type;
 	Buffer << (i=strlen(pEvent->u.LuaCallSetDynamicEntityNone.cEntityID));
 	Buffer.writeBuf(pEvent->u.LuaCallSetDynamicEntityNone.cEntityID,i);
+      }
+      break;
+
+    case GAME_EVENT_LUA_CALL_CAMERAZOOM:
+      {
+	Buffer << getTime();
+	Buffer << pEvent->Type;
+	Buffer << pEvent->u.LuaCallCameraZoom.fZoom;
+      }
+      break;
+
+    case GAME_EVENT_LUA_CALL_CAMERAMOVE:
+      {
+	Buffer << getTime();
+	Buffer << pEvent->Type;
+	Buffer << pEvent->u.LuaCallCameraMove.x;
+	Buffer << pEvent->u.LuaCallCameraMove.y;
       }
       break;
     }            

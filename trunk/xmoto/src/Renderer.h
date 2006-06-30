@@ -29,8 +29,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Replay.h"
 
 #define ZOOM_DEFAULT 0.195f
+#define CAMERA_OFFSETX_DEFAULT 0.0
+#define CAMERA_OFFSETY_DEFAULT 0.0
 
 namespace vapp {
+
+  
 
 	/*===========================================================================
 	Quality settings
@@ -189,6 +193,8 @@ namespace vapp {
 	m_Quality=GQ_HIGH;
 	m_fSpeedMultiply=1.0f;
 	m_fScale = ZOOM_DEFAULT;
+	m_cameraOffsetX = CAMERA_OFFSETX_DEFAULT;
+	m_cameraOffsetY = CAMERA_OFFSETY_DEFAULT;
 	m_bGhostMotionBlur = true;
       }
       ~GameRenderer() {_Free();}
@@ -228,6 +234,8 @@ namespace vapp {
       void setSpeedMultiplier(float f) {m_fSpeedMultiply = f;}
       void zoom(float p_f);
       void initZoom();
+      void moveCamera(float px, float py);
+      void initCamera();
       void setGhostMotionBlur(bool b) {m_bGhostMotionBlur = b;}
       
 #if defined(ALLOW_GHOST)
@@ -243,6 +251,8 @@ namespace vapp {
     private:
       /* Data */
       float m_fScale;
+      float m_cameraOffsetX;
+      float m_cameraOffsetY;
 
       std::vector<GraphDebugInfo *> m_DebugInfo;
       

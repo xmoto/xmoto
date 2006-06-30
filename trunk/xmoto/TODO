@@ -25,12 +25,12 @@ add the same for block once block move will work
 ######################################################################
 Unassigned:
 
+* loading level is sometimes quite long
+* collision bugs : in particularity at the start of the level "the Parcour"
+
 * new script call :
 killPlayer() -> kill the player
 timePenallity(nbSeconds) -> increase time
-zoom
-moveCamera
-be able to move camera : at least choose 3 positions middle, left or right
 
 * collision : collision with the body : triangle with points : head,
    wheels : because it's currently possible to touch a wecker with the

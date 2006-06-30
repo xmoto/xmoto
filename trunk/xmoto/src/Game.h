@@ -162,7 +162,10 @@ namespace vapp {
 		 m_bEnableCheckNewLevelsAtStartup  = true;
 		 m_bEnableCheckHighscoresAtStartup = true;
 #endif
-                  m_fLastSqueekTime = 0.0f;
+		 m_fLastSqueekTime = 0.0f;
+
+
+		 m_MotoGame.setRenderer(&m_Renderer);
                  }
                  
 #if defined(SUPPORT_WEBACCESS)                 
