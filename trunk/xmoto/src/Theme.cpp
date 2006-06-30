@@ -79,14 +79,8 @@ void Theme::load(std::string p_themeFile) {
 
     if(v_spriteType == "Animation") {
       newAnimationSpriteFromXML(pVarElem);
-    } else if(v_spriteType == "BikerBody") {
-      newBikerBodySpriteFromXML(pVarElem);
-    } else if(v_spriteType == "BikerFront") {
-      newBikerFrontSpriteFromXML(pVarElem);
-    } else if(v_spriteType == "BikerRear") {
-      newBikerRearSpriteFromXML(pVarElem);
-    } else if(v_spriteType == "BikerWheel") {
-      newBikerWheelSpriteFromXML(pVarElem);
+    } else if(v_spriteType == "BikerPart") {
+      newBikerPartSpriteFromXML(pVarElem);
     } else if(v_spriteType == "Decoration") {
       newDecorationSpriteFromXML(pVarElem);
     } else if(v_spriteType == "Effect") {
@@ -95,16 +89,6 @@ void Theme::load(std::string p_themeFile) {
       newFontSpriteFromXML(pVarElem);
     } else if(v_spriteType == "Misc") {
       newMiscSpriteFromXML(pVarElem);
-    } else if(v_spriteType == "RiderLowerArm") {
-      newRiderLowerArmSpriteFromXML(pVarElem);
-    } else if(v_spriteType == "RiderLowerLeg") {
-      newRiderLowerLegSpriteFromXML(pVarElem);
-    } else if(v_spriteType == "RiderTorso") {
-      newRiderTorsoSpriteFromXML(pVarElem);
-    } else if(v_spriteType == "RiderUpperArm") {
-      newRiderUpperArmSpriteFromXML(pVarElem);
-    } else if(v_spriteType == "RiderUpperLeg") {
-      newRiderUpperLegSpriteFromXML(pVarElem);
     } else if(v_spriteType == "Texture") {
       newTextureSpriteFromXML(pVarElem);
     } else {
@@ -220,7 +204,7 @@ void Theme::newAnimationSpriteFromXML(TiXmlElement *pVarElem) {
   }
 }
 
-void Theme::newBikerBodySpriteFromXML(TiXmlElement *pVarElem) {
+void Theme::newBikerPartSpriteFromXML(TiXmlElement *pVarElem) {
   std::string v_name;
   std::string v_fileName;
   const char *pc;
@@ -233,55 +217,7 @@ void Theme::newBikerBodySpriteFromXML(TiXmlElement *pVarElem) {
   if(pc == NULL) {return;}
   v_fileName = pc;
 
-  m_sprites.push_back(new BikerBodySprite(this, v_name, v_fileName));
-}
-
-void Theme::newBikerFrontSpriteFromXML(TiXmlElement *pVarElem) {
-  std::string v_name;
-  std::string v_fileName;
-  const char *pc;
-
-  pc = pVarElem->Attribute("name");
-  if(pc == NULL) {return;}
-  v_name = pc;
-
-  pc = pVarElem->Attribute("file");
-  if(pc == NULL) {return;}
-  v_fileName = pc;
-
-  m_sprites.push_back(new BikerFrontSprite(this, v_name, v_fileName));
-}
-
-void Theme::newBikerRearSpriteFromXML(TiXmlElement *pVarElem) {
-  std::string v_name;
-  std::string v_fileName;
-  const char *pc;
-
-  pc = pVarElem->Attribute("name");
-  if(pc == NULL) {return;}
-  v_name = pc;
-
-  pc = pVarElem->Attribute("file");
-  if(pc == NULL) {return;}
-  v_fileName = pc;
-
-  m_sprites.push_back(new BikerRearSprite(this, v_name, v_fileName));
-}
-
-void Theme::newBikerWheelSpriteFromXML(TiXmlElement *pVarElem) {
-  std::string v_name;
-  std::string v_fileName;
-  const char *pc;
-
-  pc = pVarElem->Attribute("name");
-  if(pc == NULL) {return;}
-  v_name = pc;
-
-  pc = pVarElem->Attribute("file");
-  if(pc == NULL) {return;}
-  v_fileName = pc;
-
-  m_sprites.push_back(new BikerWheelSprite(this, v_name, v_fileName));
+  m_sprites.push_back(new BikerPartSprite(this, v_name, v_fileName));
 }
 
 void Theme::newDecorationSpriteFromXML(TiXmlElement *pVarElem) {
@@ -371,86 +307,6 @@ void Theme::newMiscSpriteFromXML(TiXmlElement *pVarElem) {
   v_fileName = pc;
 
   m_sprites.push_back(new MiscSprite(this, v_name, v_fileName));
-}
-
-void Theme::newRiderLowerArmSpriteFromXML(TiXmlElement *pVarElem) {
-  std::string v_name;
-  std::string v_fileName;
-  const char *pc;
-
-  pc = pVarElem->Attribute("name");
-  if(pc == NULL) {return;}
-  v_name = pc;
-
-  pc = pVarElem->Attribute("file");
-  if(pc == NULL) {return;}
-  v_fileName = pc;
-
-  m_sprites.push_back(new RiderLowerArmSprite(this, v_name, v_fileName));
-}
-
-void Theme::newRiderLowerLegSpriteFromXML(TiXmlElement *pVarElem) {
-  std::string v_name;
-  std::string v_fileName;
-  const char *pc;
-
-  pc = pVarElem->Attribute("name");
-  if(pc == NULL) {return;}
-  v_name = pc;
-
-  pc = pVarElem->Attribute("file");
-  if(pc == NULL) {return;}
-  v_fileName = pc;
-
-  m_sprites.push_back(new RiderLowerLegSprite(this, v_name, v_fileName));
-}
-
-void Theme::newRiderTorsoSpriteFromXML(TiXmlElement *pVarElem) {
-  std::string v_name;
-  std::string v_fileName;
-  const char *pc;
-
-  pc = pVarElem->Attribute("name");
-  if(pc == NULL) {return;}
-  v_name = pc;
-
-  pc = pVarElem->Attribute("file");
-  if(pc == NULL) {return;}
-  v_fileName = pc;
-
-  m_sprites.push_back(new RiderTorsoSprite(this, v_name, v_fileName));
-}
-
-void Theme::newRiderUpperArmSpriteFromXML(TiXmlElement *pVarElem) {
-  std::string v_name;
-  std::string v_fileName;
-  const char *pc;
-
-  pc = pVarElem->Attribute("name");
-  if(pc == NULL) {return;}
-  v_name = pc;
-
-  pc = pVarElem->Attribute("file");
-  if(pc == NULL) {return;}
-  v_fileName = pc;
-
-  m_sprites.push_back(new RiderUpperArmSprite(this, v_name, v_fileName));
-}
-
-void Theme::newRiderUpperLegSpriteFromXML(TiXmlElement *pVarElem) {
-  std::string v_name;
-  std::string v_fileName;
-  const char *pc;
-
-  pc = pVarElem->Attribute("name");
-  if(pc == NULL) {return;}
-  v_name = pc;
-
-  pc = pVarElem->Attribute("file");
-  if(pc == NULL) {return;}
-  v_fileName = pc;
-
-  m_sprites.push_back(new RiderUpperLegSprite(this, v_name, v_fileName));
 }
 
 void Theme::newTextureSpriteFromXML(TiXmlElement *pVarElem) {
@@ -622,44 +478,14 @@ float AnimationSpriteFrame::getDelay() const {
   return m_delay;
 }
 
-BikerBodySprite::BikerBodySprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
+BikerPartSprite::BikerPartSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
 }
 
-BikerBodySprite::~BikerBodySprite() {
+BikerPartSprite::~BikerPartSprite() {
 }
 
-enum SpriteType BikerBodySprite::getType() {
-  return SPRITE_TYPE_BIKERBODY;
-}
-
-BikerFrontSprite::BikerFrontSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
-}
-
-BikerFrontSprite::~BikerFrontSprite() {
-}
-
-enum SpriteType BikerFrontSprite::getType() {
-  return SPRITE_TYPE_BIKERFRONT;
-}
-
-BikerRearSprite::BikerRearSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
-}
-
-BikerRearSprite::~BikerRearSprite() {
-}
-
-enum SpriteType BikerRearSprite::getType() {
-  return SPRITE_TYPE_BIKERREAR;
-}
-
-BikerWheelSprite::BikerWheelSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
-}
-
-BikerWheelSprite::~BikerWheelSprite() {
-}
-
-enum SpriteType BikerWheelSprite::getType() {
-  return SPRITE_TYPE_BIKERWHEEL;
+enum SpriteType BikerPartSprite::getType() {
+  return SPRITE_TYPE_BIKERPART;
 }
 
 DecorationSprite::DecorationSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName, float p_width, float p_height, float p_centerX, float p_centerY) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
@@ -732,56 +558,6 @@ enum SpriteType MiscSprite::getType() {
 
 std::string MiscSprite::getFileDir() {
   return MISC_SPRITE_FILE_DIR;
-}
-
-RiderLowerArmSprite::RiderLowerArmSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
-}
-
-RiderLowerArmSprite::~RiderLowerArmSprite() {
-}
-
-enum SpriteType RiderLowerArmSprite::getType() {
-  return SPRITE_TYPE_RIDERLOWERARM;
-}
-
-RiderLowerLegSprite::RiderLowerLegSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
-}
-
-RiderLowerLegSprite::~RiderLowerLegSprite() {
-}
-
-enum SpriteType RiderLowerLegSprite::getType() {
-  return SPRITE_TYPE_RIDERLOWERLEG;
-}
-
-RiderTorsoSprite::RiderTorsoSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
-}
-
-RiderTorsoSprite::~RiderTorsoSprite() {
-}
-
-enum SpriteType RiderTorsoSprite::getType() {
-  return SPRITE_TYPE_RIDERTORSO;
-}
-
-RiderUpperArmSprite::RiderUpperArmSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
-}
-
-RiderUpperArmSprite::~RiderUpperArmSprite() {
-}
-
-enum SpriteType RiderUpperArmSprite::getType() {
-  return SPRITE_TYPE_RIDERUPPERARM;
-}
-
-RiderUpperLegSprite::RiderUpperLegSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
-}
-
-RiderUpperLegSprite::~RiderUpperLegSprite() {
-}
-
-enum SpriteType RiderUpperLegSprite::getType() {
-  return SPRITE_TYPE_RIDERUPPERLEG;
 }
 
 TextureSprite::TextureSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {

@@ -35,19 +35,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
   enum SpriteType {
     SPRITE_TYPE_ANIMATION,
-    SPRITE_TYPE_BIKERBODY,
-    SPRITE_TYPE_BIKERFRONT,
-    SPRITE_TYPE_BIKERREAR,
-    SPRITE_TYPE_BIKERWHEEL,
+    SPRITE_TYPE_BIKERPART,
     SPRITE_TYPE_DECORATION,
     SPRITE_TYPE_EFFECT,
     SPRITE_TYPE_FONT,
     SPRITE_TYPE_MISC,
-    SPRITE_TYPE_RIDERLOWERARM,
-    SPRITE_TYPE_RIDERLOWERLEG,
-    SPRITE_TYPE_RIDERTORSO,
-    SPRITE_TYPE_RIDERUPPERARM,
-    SPRITE_TYPE_RIDERUPPERLEG,
     SPRITE_TYPE_TEXTURE
   };
 
@@ -98,82 +90,10 @@ class TextureSprite : public SimpleFrameSprite {
  private:
 };
 
-class BikerBodySprite : public SimpleFrameSprite {
+class BikerPartSprite : public SimpleFrameSprite {
  public:
-  BikerBodySprite(Theme* p_associated_theme, std::string p_name, std::string p_filename);
-  ~BikerBodySprite();
-  enum SpriteType getType();
-
- private:
-};
-
-class BikerFrontSprite : public SimpleFrameSprite {
- public:
-  BikerFrontSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename);
-  ~BikerFrontSprite();
-  enum SpriteType getType();
-
- private:
-};
-
-class BikerRearSprite : public SimpleFrameSprite {
- public:
-  BikerRearSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename);
-  ~BikerRearSprite();
-  enum SpriteType getType();
-
- private:
-};
-
-class BikerWheelSprite : public SimpleFrameSprite {
- public:
-  BikerWheelSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename);
-  ~BikerWheelSprite();
-  enum SpriteType getType();
-
- private:
-};
-
-class RiderLowerArmSprite : public SimpleFrameSprite {
- public:
-  RiderLowerArmSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename);
-  ~RiderLowerArmSprite();
-  enum SpriteType getType();
-
- private:
-};
-
-class RiderLowerLegSprite : public SimpleFrameSprite {
- public:
-  RiderLowerLegSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename);
-  ~RiderLowerLegSprite();
-  enum SpriteType getType();
-
- private:
-};
-
-class RiderTorsoSprite : public SimpleFrameSprite {
- public:
-  RiderTorsoSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename);
-  ~RiderTorsoSprite();
-  enum SpriteType getType();
-
- private:
-};
-
-class RiderUpperArmSprite : public SimpleFrameSprite {
- public:
-  RiderUpperArmSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename);
-  ~RiderUpperArmSprite();
-  enum SpriteType getType();
-
- private:
-};
-
-class RiderUpperLegSprite : public SimpleFrameSprite {
- public:
-  RiderUpperLegSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename);
-  ~RiderUpperLegSprite();
+  BikerPartSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename);
+  ~BikerPartSprite();
   enum SpriteType getType();
 
  private:
@@ -293,6 +213,30 @@ class DecorationSprite : public SimpleFrameSprite {
 
 };
 
+//class CompositionTheme {
+// public:
+//  CompositionTheme();
+//  ~CompositionTheme();
+//
+// private:
+//  void cleanComponents()
+//  vector<vapp::Texture*> m_components;
+//};
+//
+//class RiderTheme : CompositionSprite {
+// public:
+//  vapp::Texture* getBikerBody();
+//  vapp::Texture* getBikerFront();
+//  vapp::Texture* getBikerRear();
+//  vapp::Texture* getWheel();
+//  vapp::Texture* getLowerArm();
+//  vapp::Texture* getLowerLeg();
+//  vapp::Texture* getTorso();
+//  vapp::Texture* getUpperArm();
+//  vapp::Texture* getUpperLeg();
+//
+// private:
+//};
 
 class Theme {
   public:
@@ -315,19 +259,11 @@ class Theme {
   void cleanSprites();
 
   void newAnimationSpriteFromXML(TiXmlElement *pVarElem);
-  void newBikerBodySpriteFromXML(TiXmlElement *pVarElem);
-  void newBikerFrontSpriteFromXML(TiXmlElement *pVarElem);
-  void newBikerRearSpriteFromXML(TiXmlElement *pVarElem);
-  void newBikerWheelSpriteFromXML(TiXmlElement *pVarElem);
+  void newBikerPartSpriteFromXML(TiXmlElement *pVarElem);
   void newDecorationSpriteFromXML(TiXmlElement *pVarElem);
   void newEffectSpriteFromXML(TiXmlElement *pVarElem);
   void newFontSpriteFromXML(TiXmlElement *pVarElem);
   void newMiscSpriteFromXML(TiXmlElement *pVarElem);
-  void newRiderLowerArmSpriteFromXML(TiXmlElement *pVarElem);
-  void newRiderLowerLegSpriteFromXML(TiXmlElement *pVarElem);
-  void newRiderTorsoSpriteFromXML(TiXmlElement *pVarElem);
-  void newRiderUpperArmSpriteFromXML(TiXmlElement *pVarElem);
-  void newRiderUpperLegSpriteFromXML(TiXmlElement *pVarElem);
   void newTextureSpriteFromXML(TiXmlElement *pVarElem);
 };
 

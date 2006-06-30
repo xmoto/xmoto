@@ -703,7 +703,7 @@ namespace vapp {
 
       _UpdateLoadingScreen((1.0f/9.0f) * 2,pLoadingScreen,GAMETEXT_LOADINGTEXTURES);
       
-      std::vector<std::string> TextureFiles = FS::findPhysFiles("Textures/*.jpg");
+      std::vector<std::string> TextureFiles = FS::findPhysFiles("Textures/Textures/*.jpg");
       int nLoaded=0;
       for(int i=0;i<TextureFiles.size();i++) {
         /* Ignore .. and . (and makefiles) */

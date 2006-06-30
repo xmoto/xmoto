@@ -33,3 +33,4 @@ Before Xmoto 1.16
 * add "required-xmoto-version" field to levels
 * make error nicer when impossible to load the script
 * add string and table lua classes
+* bug on new highscore when the two number a proach
