@@ -109,10 +109,8 @@ void SDynamicTranslation::performXY(float *vx, float *vy) {
   m_totalMoveY += *vy;
 
   if(
-     (m_moveX > 0 && (m_totalMoveX > m_X || m_totalMoveX < 0)) ||
-     (m_moveX < 0 && (m_totalMoveX < m_X || m_totalMoveX > 0)) ||
-     (m_moveY > 0 && (m_totalMoveY > m_Y || m_totalMoveY < 0)) ||
-     (m_moveY < 0 && (m_totalMoveY < m_Y || m_totalMoveY > 0))
+     (fabs(m_totalMoveX) < 0 || fabs(m_totalMoveX) > fabs(m_X)) ||
+     (fabs(m_totalMoveY) < 0 || fabs(m_totalMoveY) > fabs(m_Y))
      ) {
     m_sensUp = !m_sensUp;
   }
@@ -144,6 +142,7 @@ SDynamicTranslation::SDynamicTranslation(float pX, float pY, float pPeriod) {
   m_Speed  = (m_Z * 2) / pPeriod;
   m_moveX  = (m_Speed * m_X) / m_Z;
   m_moveY  = (m_Speed * m_Y) / m_Z;
+  
   m_totalMoveX = 0.0;
   m_totalMoveY = 0.0;
 }
