@@ -21,6 +21,21 @@ Game.SetDynamicEntityTranslation("Strawberry0", 3, 1, 500, 0, 0)
 Game.SetDynamicEntityNone("Strawberry0")
 add the same for block once block move will work
 * a texture missing -> just give an alert instead of get an exception
+* sometimes, the following error appears : "texture naming conflict"
+
+function testCollision(laserX, laserY, alienX, alienY)
+    -- to be remplaced by a real circle collision
+    -- made by xmoto using entity r
+    alienHalfWidth  = 0.5
+    alienHalfHeight = 0.5
+    laserHalfWidth  = 0.4
+    laserHalfHeight = 0.4
+
+    return laserX + laserHalfWidth &gt; alienX - alienHalfWidth
+          and laserX - laserHalfWidth  &lt; alienX + alienHalfWidth
+          and laserY + laserHalfHeight &gt; alienY - alienHalfHeight
+          and laserY - laserHalfHeight &lt; alienY + alienHalfHeight
+end
 
 ######################################################################
 Unassigned:
