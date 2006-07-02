@@ -163,16 +163,6 @@ Textures/Anims/FlagUp1.png
 Textures/Anims/FlagUp2.png
 Textures/Anims/FlagUp3.png
 
-Textures/Bikes/Body1.png
-Textures/Bikes/Front1.png
-Textures/Bikes/Rear1.png
-Textures/Bikes/Wheel1.png
-
-Textures/Bikes/Body_Ghost.png
-Textures/Bikes/Front_Ghost.png
-Textures/Bikes/Rear_Ghost.png
-Textures/Bikes/Wheel_Ghost.png
-
 Textures/Effects/EarthVines.png
 Textures/Effects/EdgeGrass1.png
 Textures/Effects/EdgeRedBricks1.jpg
@@ -197,12 +187,20 @@ Textures/Riders/LowerLeg1.png
 Textures/Riders/Torso1.png
 Textures/Riders/UpperArm1.png
 Textures/Riders/UpperLeg1.png
-
 Textures/Riders/LowerArm_Ghost.png
 Textures/Riders/LowerLeg_Ghost.png
 Textures/Riders/Torso_Ghost.png
 Textures/Riders/UpperArm_Ghost.png
 Textures/Riders/UpperLeg_Ghost.png
+
+Textures/Riders/Body1.png
+Textures/Riders/Front1.png
+Textures/Riders/Rear1.png
+Textures/Riders/Wheel1.png
+Textures/Riders/Body_Ghost.png
+Textures/Riders/Front_Ghost.png
+Textures/Riders/Rear_Ghost.png
+Textures/Riders/Wheel_Ghost.png
 
 Textures/Sprites/BlankSignLeft1.png
 Textures/Sprites/BlankSignRight1.png
