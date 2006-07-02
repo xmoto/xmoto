@@ -37,9 +37,13 @@ namespace vapp {
     "PushForward",     ACTION_PUSHFORWARD,       
     "ChangeDirection", ACTION_CHANGEDIR,     
     #if defined(ENABLE_ZOOMING)    
-      "ZoomIn",        ACTION_ZOOMIN,     
-      "ZoomOut",       ACTION_ZOOMOUT,
-      "ZoomInit",      ACTION_ZOOMINIT, 
+      "ZoomIn",          ACTION_ZOOMIN,     
+      "ZoomOut",         ACTION_ZOOMOUT,
+      "ZoomInit",        ACTION_ZOOMINIT,
+      "CameraMoveXUp",   ACTION_CAMERAMOVEXUP,
+      "CameraMoveXDown", ACTION_CAMERAMOVEXDOWN,
+      "CameraMoveYUp",   ACTION_CAMERAMOVEYUP,
+      "CameraMoveYDown", ACTION_CAMERAMOVEYDOWN,
     #endif
     NULL
   };
@@ -97,6 +101,17 @@ namespace vapp {
     "Middle Click",    SDL_BUTTON_MIDDLE,
     "Wheel down",      SDL_BUTTON_WHEELDOWN,
     "Wheel up",        SDL_BUTTON_WHEELUP,
+    "Pad 0", SDLK_KP0,
+    "Pad 1", SDLK_KP1,
+    "Pad 2", SDLK_KP2,
+    "Pad 3", SDLK_KP3,
+    "Pad 4", SDLK_KP4,
+    "Pad 5", SDLK_KP5,
+    "Pad 6", SDLK_KP6,
+    "Pad 7", SDLK_KP7,
+    "Pad 8", SDLK_KP8,
+    "Pad 9", SDLK_KP9,
+
     /* TODO: add more */
     NULL    
   };
@@ -327,13 +342,19 @@ namespace vapp {
 	m_nZoomIn   = _StringToKey(pConfig->getString("KeyZoomIn"));
 	m_nZoomOut  = _StringToKey(pConfig->getString("KeyZoomOut"));
 	m_nZoomInit = _StringToKey(pConfig->getString("KeyZoomInit"));
+	m_nCameraMoveXUp   = _StringToKey(pConfig->getString("KeyCameraMoveXUp"));
+	m_nCameraMoveXDown = _StringToKey(pConfig->getString("KeyCameraMoveXDown"));
+	m_nCameraMoveYUp   = _StringToKey(pConfig->getString("KeyCameraMoveYUp"));
+	m_nCameraMoveYDown = _StringToKey(pConfig->getString("KeyCameraMoveYDown"));
 	#endif
         
         /* All good? */
         if(m_nDriveKey1<0 || m_nBrakeKey1<0 || m_nPullBackKey1<0 ||
           m_nPushForwardKey1<0 || m_nChangeDirKey1<0 
           #if defined(ENABLE_ZOOMING)
-            ||m_nZoomIn<0 || m_nZoomOut <0 || m_nZoomInit <0
+            || m_nZoomIn<0 || m_nZoomOut <0 || m_nZoomInit <0
+	    || m_nCameraMoveXUp<0 || m_nCameraMoveXDown<0 
+            || m_nCameraMoveYUp<0 || m_nCameraMoveYDown<0
           #endif
 	        ) {
           Log("** Warning ** : Invalid keyboard configuration!");
@@ -425,8 +446,20 @@ namespace vapp {
 	  pGameRender->zoom(-0.002);
 	}
 	else if(m_nZoomInit == nKey) {
-	  /* Zoom out */
+	  /* Zoom init */
 	  pGameRender->initZoom();
+	}
+	else if(m_nCameraMoveXUp == nKey) {
+	  pGameRender->moveCamera(0.2, 0.0);
+	}
+	else if(m_nCameraMoveXDown == nKey) {
+	  pGameRender->moveCamera(-0.2, 0.0);
+	}
+	else if(m_nCameraMoveYUp == nKey) {
+	  pGameRender->moveCamera(0.0, 0.2);
+	}
+	else if(m_nCameraMoveYDown == nKey) {
+	  pGameRender->moveCamera(0.0, -0.2);
 	}
 #endif
 
@@ -483,6 +516,10 @@ namespace vapp {
       m_nZoomIn          = SDLK_PAGEUP;
       m_nZoomOut         = SDLK_PAGEDOWN;
       m_nZoomOut         = SDLK_HOME;
+      m_nCameraMoveXUp   = SDLK_KP6;
+      m_nCameraMoveXDown = SDLK_KP4;
+      m_nCameraMoveYUp   = SDLK_KP8;
+      m_nCameraMoveYDown = SDLK_KP2;
     #endif
   }  
 
@@ -499,6 +536,10 @@ namespace vapp {
     if(m_nZoomIn          < 0) { m_nZoomIn          = SDLK_PAGEUP;   }
     if(m_nZoomOut         < 0) { m_nZoomOut         = SDLK_PAGEDOWN; }
     if(m_nZoomInit        < 0) { m_nZoomInit        = SDLK_HOME; }
+    if(m_nCameraMoveXUp   < 0) { m_nCameraMoveXUp   = SDLK_KP6; }
+    if(m_nCameraMoveXDown < 0) { m_nCameraMoveXDown = SDLK_KP4; }
+    if(m_nCameraMoveYUp   < 0) { m_nCameraMoveYUp   = SDLK_KP8; }
+    if(m_nCameraMoveYDown < 0) { m_nCameraMoveYDown = SDLK_KP2; }
     #endif
   }
 
@@ -508,16 +549,20 @@ namespace vapp {
   std::string InputHandler::getKeyByAction(const std::string &Action) {
     if(m_ControllerModeID1 != CONTROLLER_MODE_KEYBOARD) return "?";
     
-    if(Action == "Drive") return _KeyToString(m_nDriveKey1);
-    if(Action == "Brake") return _KeyToString(m_nBrakeKey1);
-    if(Action == "PullBack") return _KeyToString(m_nPullBackKey1);
+    if(Action == "Drive")    	return _KeyToString(m_nDriveKey1);
+    if(Action == "Brake")    	return _KeyToString(m_nBrakeKey1);
+    if(Action == "PullBack") 	return _KeyToString(m_nPullBackKey1);
     if(Action == "PushForward") return _KeyToString(m_nPushForwardKey1);
-    if(Action == "ChangeDir") return _KeyToString(m_nChangeDirKey1);
+    if(Action == "ChangeDir")   return _KeyToString(m_nChangeDirKey1);
     
     #if defined(ENABLE_ZOOMING)    
-    if(Action == "ZoomIn")   return _KeyToString(m_nZoomIn);
-    if(Action == "ZoomOut")  return _KeyToString(m_nZoomOut);
-    if(Action == "ZoomInit") return _KeyToString(m_nZoomInit);
+    if(Action == "ZoomIn")   	    return _KeyToString(m_nZoomIn);
+    if(Action == "ZoomOut")  	    return _KeyToString(m_nZoomOut);
+    if(Action == "ZoomInit") 	    return _KeyToString(m_nZoomInit);
+    if(Action == "CameraMoveXUp")   return _KeyToString(m_nCameraMoveXUp);
+    if(Action == "CameraMoveXDown") return _KeyToString(m_nCameraMoveXDown);
+    if(Action == "CameraMoveYUp")   return _KeyToString(m_nCameraMoveYUp);
+    if(Action == "CameraMoveYDown") return _KeyToString(m_nCameraMoveYDown);
     #endif
 
     return "?";

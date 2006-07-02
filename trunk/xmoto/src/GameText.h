@@ -258,6 +258,10 @@ Central place to keep many in-game text strings
 #define GAMETEXT_ZOOMIN  	            "Zoom in"
 #define GAMETEXT_ZOOMOUT 	            "Zoom out"
 #define GAMETEXT_ZOOMINIT 	          "Reinitialize zoom"
+#define GAMETEXT_CAMERAMOVEXUP   "Move Camera to right"
+#define GAMETEXT_CAMERAMOVEXDOWN "Move Camera to left"
+#define GAMETEXT_CAMERAMOVEYUP   "Move Camera up"
+#define GAMETEXT_CAMERAMOVEYDOWN "Move Camera down"
 
 /* Context help strings */
 #define CONTEXTHELP_UPDATEHIGHSCORES "Download the latest X-Moto world records and check for new levels"

@@ -1932,6 +1932,10 @@ namespace vapp {
       m_Config.createVar( "KeyZoomIn",              "PageUp" );
       m_Config.createVar( "KeyZoomOut",             "PageDown" );
       m_Config.createVar( "KeyZoomInit",            "Home" );
+      m_Config.createVar( "KeyCameraMoveXUp",       "Pad 6" );
+      m_Config.createVar( "KeyCameraMoveXDown",     "Pad 4" );
+      m_Config.createVar( "KeyCameraMoveYUp",       "Pad 8" );
+      m_Config.createVar( "KeyCameraMoveYDown",     "Pad 2" );
     #endif
         
     m_Config.createVar( "JoyIdx1",                "-1" );

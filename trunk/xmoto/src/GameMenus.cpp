@@ -1135,9 +1135,13 @@ namespace vapp {
     p = pList->addEntry(GAMETEXT_CHANGEDIR); p->Text.push_back(m_Config.getString("KeyChangeDir1"));
     
     #if defined(ENABLE_ZOOMING)    
-      p = pList->addEntry(GAMETEXT_ZOOMIN); p->Text.push_back(m_Config.getString("KeyZoomIn"));
-      p = pList->addEntry(GAMETEXT_ZOOMOUT); p->Text.push_back(m_Config.getString("KeyZoomOut"));
-      p = pList->addEntry(GAMETEXT_ZOOMINIT); p->Text.push_back(m_Config.getString("KeyZoomInit"));
+    p = pList->addEntry(GAMETEXT_ZOOMIN); p->Text.push_back(m_Config.getString("KeyZoomIn"));
+    p = pList->addEntry(GAMETEXT_ZOOMOUT); p->Text.push_back(m_Config.getString("KeyZoomOut"));
+    p = pList->addEntry(GAMETEXT_ZOOMINIT); p->Text.push_back(m_Config.getString("KeyZoomInit"));   
+    p = pList->addEntry(GAMETEXT_CAMERAMOVEXUP); p->Text.push_back(m_Config.getString("KeyCameraMoveXUp"));
+    p = pList->addEntry(GAMETEXT_CAMERAMOVEXDOWN); p->Text.push_back(m_Config.getString("KeyCameraMoveXDown"));
+    p = pList->addEntry(GAMETEXT_CAMERAMOVEYUP); p->Text.push_back(m_Config.getString("KeyCameraMoveYUp"));
+    p = pList->addEntry(GAMETEXT_CAMERAMOVEYDOWN); p->Text.push_back(m_Config.getString("KeyCameraMoveYDown"));
     #endif
   }
   
@@ -2774,8 +2778,12 @@ namespace vapp {
       m_Config.setValue("KeyZoomIn",m_Config.getDefaultValue("KeyZoomIn"));
       m_Config.setValue("KeyZoomOut",m_Config.getDefaultValue("KeyZoomOut"));
       m_Config.setValue("KeyZoomInit",m_Config.getDefaultValue("KeyZoomInit"));
+      m_Config.setValue("KeyCameraMoveXUp",m_Config.getDefaultValue("KeyCameraMoveXUp"));
+      m_Config.setValue("KeyCameraMoveXDown",m_Config.getDefaultValue("KeyCameraMoveXDown"));
+      m_Config.setValue("KeyCameraMoveYUp",m_Config.getDefaultValue("KeyCameraMoveYUp"));
+      m_Config.setValue("KeyCameraMoveYDown",m_Config.getDefaultValue("KeyCameraMoveYDown"));
     #endif
-    
+
     #if defined(ALLOW_GHOST)
       m_Config.setValue("GhostMotionBlur",m_Config.getDefaultValue("GhostMotionBlur"));
       m_Config.setValue("DisplayGhostInfo",m_Config.getDefaultValue("DisplayGhostInfo"));
@@ -2869,16 +2877,32 @@ namespace vapp {
     else if(pJoystickControl->getChecked()) m_Config.setString("ControllerMode1","Joystick1");
     
     for(int i=0;i<pActionList->getEntries().size();i++) {
-      if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_DRIVE) m_Config.setString("KeyDrive1",pActionList->getEntries()[i]->Text[1]);
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_BRAKE) m_Config.setString("KeyBrake1",pActionList->getEntries()[i]->Text[1]);
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPLEFT) m_Config.setString("KeyFlipLeft1",pActionList->getEntries()[i]->Text[1]);
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPRIGHT) m_Config.setString("KeyFlipRight1",pActionList->getEntries()[i]->Text[1]);
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CHANGEDIR) m_Config.setString("KeyChangeDir1",pActionList->getEntries()[i]->Text[1]);
-      #if defined(ENABLE_ZOOMING)
-        else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_ZOOMIN) m_Config.setString("KeyZoomIn",pActionList->getEntries()[i]->Text[1]);
-        else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_ZOOMOUT) m_Config.setString("KeyZoomOut",pActionList->getEntries()[i]->Text[1]);
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_ZOOMINIT) m_Config.setString("KeyZoomInit",pActionList->getEntries()[i]->Text[1]);
-      #endif
+      if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_DRIVE)
+	m_Config.setString("KeyDrive1",pActionList->getEntries()[i]->Text[1]);
+      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_BRAKE)
+	m_Config.setString("KeyBrake1",pActionList->getEntries()[i]->Text[1]);
+      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPLEFT)
+	m_Config.setString("KeyFlipLeft1",pActionList->getEntries()[i]->Text[1]);
+      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPRIGHT)
+	m_Config.setString("KeyFlipRight1",pActionList->getEntries()[i]->Text[1]);
+      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CHANGEDIR)
+	m_Config.setString("KeyChangeDir1",pActionList->getEntries()[i]->Text[1]);
+#if defined(ENABLE_ZOOMING)
+      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_ZOOMIN)
+	m_Config.setString("KeyZoomIn",pActionList->getEntries()[i]->Text[1]);
+      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_ZOOMOUT)
+	m_Config.setString("KeyZoomOut",pActionList->getEntries()[i]->Text[1]);
+      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_ZOOMINIT)
+	m_Config.setString("KeyZoomInit",pActionList->getEntries()[i]->Text[1]);
+      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CAMERAMOVEXUP)
+	m_Config.setString("KeyCameraMoveXUp",pActionList->getEntries()[i]->Text[1]);
+      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CAMERAMOVEXDOWN)
+	m_Config.setString("KeyCameraMoveXDown",pActionList->getEntries()[i]->Text[1]);
+      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CAMERAMOVEYUP)
+	m_Config.setString("KeyCameraMoveYUp",pActionList->getEntries()[i]->Text[1]);
+      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CAMERAMOVEYDOWN)
+	m_Config.setString("KeyCameraMoveYDown",pActionList->getEntries()[i]->Text[1]);
+#endif
     }
     
     m_Config.setBool("EngineSoundEnable",pEnableEngineSoundButton->getChecked());
