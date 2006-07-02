@@ -1023,8 +1023,8 @@ namespace vapp {
         m_DynBlocks.push_back(pDyn);
         
         nDynamicBlocks++;
-      }      
-                  
+      }
+                 
       /* Create blocks */
       for(int j=0;j<BSPPolys.size();j++) {
         ConvexBlock *pConvexBlock = _CreateBlock(BSPPolys[j],InBlocks[i]);

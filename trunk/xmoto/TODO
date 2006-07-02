@@ -40,6 +40,10 @@ end
 ######################################################################
 Unassigned:
 
+* dynamic block : minimap is not updated
+* change SetBlockRotation so that it change block relalively to the
+   current position ?
+
 * loading level is sometimes quite long
 * collision bugs : in particularity at the start of the level "the Parcour"
 
