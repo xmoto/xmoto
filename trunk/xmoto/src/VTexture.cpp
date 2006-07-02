@@ -121,6 +121,15 @@ namespace vapp {
     Img TextureImage;
     Texture *pTexture = NULL;
     
+    /* Name it */
+    std::string TexName = FS::getFileBaseName(Path);
+
+    /* if the texture is already loaded, return it */
+    pTexture = getTexture(TexName);
+    if(pTexture != NULL) {
+      return pTexture;
+    }
+
     if(TextureImage.checkFile( Path,&ii )) {
       /* Valid texture size? */
       if(ii.nWidth != ii.nHeight) {
@@ -141,10 +150,7 @@ namespace vapp {
         Log("** Warning ** : TextureManager::loadTexture() : texture '%s' size is not power of two",Path.c_str());
         throw TextureError("texture size not power of two");
       }
-    
-      /* Name it */
-      std::string TexName = FS::getFileBaseName(Path);
-      
+         
       /* Load it into system memory */
       TextureImage.loadFile(Path,bSmall);
       
