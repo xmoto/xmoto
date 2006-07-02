@@ -27,6 +27,35 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class vapp::App;
 
 Theme::Theme() {
+  m_player = new BikerTheme(this,
+			    PLAYER_BODY,
+			    PLAYER_FRONT,
+			    PLAYER_REAR,
+			    PLAYER_WHEEL,
+			    PLAYER_LOWERARM,
+			    PLAYER_LOWERLEG,
+			    PLAYER_TORSO,
+			    PLAYER_UPPERARM,
+			    PLAYER_UPPERLEG,
+			    PLAYER_UGLYRIDERCOLOR,
+			    PLAYER_UGLYWHEELCOLOR
+			    );
+
+#if defined(ALLOW_GHOST)
+  m_ghost = new BikerTheme(this,
+			   GHOST_BODY,
+			   GHOST_FRONT,
+			   GHOST_REAR,
+			   GHOST_WHEEL,
+			   GHOST_LOWERARM,
+			   GHOST_LOWERLEG,
+			   GHOST_TORSO,
+			   GHOST_UPPERARM,
+			   GHOST_UPPERLEG,
+			   GHOST_UGLYRIDERCOLOR,
+			   GHOST_UGLYWHEELCOLOR
+			   );
+#endif
 }
 
 Theme::~Theme() {
@@ -328,6 +357,16 @@ void Theme::newTextureSpriteFromXML(TiXmlElement *pVarElem) {
   m_sprites.push_back(new TextureSprite(this, v_name, v_fileName));
 }
 
+BikerTheme* Theme::getPlayerTheme() {
+  return m_player;
+}
+
+#if defined(ALLOW_GHOST)
+BikerTheme* Theme::getGhostTheme() {
+  return m_ghost;
+}
+#endif
+
 Sprite::Sprite(Theme* p_associated_theme, std::string v_name) {
   m_associated_theme = p_associated_theme;
   m_name = v_name;
@@ -487,6 +526,10 @@ BikerPartSprite::BikerPartSprite(Theme* p_associated_theme, std::string p_name, 
 BikerPartSprite::~BikerPartSprite() {
 }
 
+std::string BikerPartSprite::getFileDir() {
+  return BIKERPART_SPRITE_FILE_DIR;
+}
+
 enum SpriteType BikerPartSprite::getType() {
   return SPRITE_TYPE_BIKERPART;
 }
@@ -591,4 +634,79 @@ std::string SimpleFrameSprite::getCurrentTextureFileName() {
 
 void SimpleFrameSprite::setCurrentTexture(vapp::Texture *p_texture) {
   m_texture = p_texture;
+}
+
+BikerTheme::BikerTheme(Theme* p_associated_theme,
+		       std::string p_Body,
+		       std::string p_Front,
+		       std::string p_Rear,
+		       std::string p_Wheel,
+		       std::string p_LowerArm,
+		       std::string p_LowerLeg,
+		       std::string p_Torso,
+		       std::string p_UpperArm,
+		       std::string p_UpperLeg,
+		       vapp::Color p_UglyRiderColor,
+		       vapp::Color p_UglyWheelColor
+		       ) {
+  m_associated_theme = p_associated_theme;
+  m_Body     	     = p_Body;
+  m_Front    	     = p_Front;
+  m_Rear     	     = p_Rear;
+  m_Wheel    	     = p_Wheel; 
+  m_LowerArm 	     = p_LowerArm;
+  m_LowerLeg 	     = p_LowerLeg;
+  m_Torso    	     = p_Torso;
+  m_UpperArm 	     = p_UpperArm;
+  m_UpperLeg 	     = p_UpperLeg;
+
+  m_UglyRiderColor = p_UglyRiderColor;
+  m_UglyWheelColor = p_UglyWheelColor;
+}
+ 
+BikerTheme::~BikerTheme() {
+}
+
+Sprite* BikerTheme::getBody() {
+  return m_associated_theme->getSprite(SPRITE_TYPE_BIKERPART, m_Body);
+}
+
+Sprite* BikerTheme::getFront() {
+  return m_associated_theme->getSprite(SPRITE_TYPE_BIKERPART, m_Front);
+}
+
+Sprite* BikerTheme::getRear() {
+  return m_associated_theme->getSprite(SPRITE_TYPE_BIKERPART, m_Rear);
+}
+
+Sprite* BikerTheme::getWheel() {
+  return m_associated_theme->getSprite(SPRITE_TYPE_BIKERPART, m_Wheel);
+}
+
+Sprite* BikerTheme::getLowerArm() {
+  return m_associated_theme->getSprite(SPRITE_TYPE_BIKERPART, m_LowerArm);
+}
+
+Sprite* BikerTheme::getLowerLeg() {
+  return m_associated_theme->getSprite(SPRITE_TYPE_BIKERPART, m_LowerLeg);
+}
+
+Sprite* BikerTheme::getTorso() {
+  return m_associated_theme->getSprite(SPRITE_TYPE_BIKERPART, m_Torso);
+}
+
+Sprite* BikerTheme::getUpperArm() {
+  return m_associated_theme->getSprite(SPRITE_TYPE_BIKERPART, m_UpperArm);
+}
+
+Sprite* BikerTheme::getUpperLeg() {
+  return m_associated_theme->getSprite(SPRITE_TYPE_BIKERPART, m_UpperLeg);
+}
+
+vapp::Color BikerTheme::getUglyRiderColor() {
+  return m_UglyRiderColor;
+}
+
+vapp::Color BikerTheme::getUglyWheelColor() {
+  return m_UglyWheelColor;
 }

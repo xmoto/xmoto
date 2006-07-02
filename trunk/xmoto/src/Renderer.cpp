@@ -377,7 +377,7 @@ namespace vapp {
     if(getGameObject()->isGhostActive()) {
       /* Render ghost - ugly mode? */
       if(m_bUglyMode) {
-        _RenderBike(getGameObject()->getGhostBikeState(), getGameObject()->getBikeParams(), &theme_ghost);
+        _RenderBike(getGameObject()->getGhostBikeState(), getGameObject()->getBikeParams(), m_theme->getGhostTheme());
       }    
       else {
         /* No not ugly, fancy! Render into overlay? */      
@@ -385,7 +385,7 @@ namespace vapp {
           m_Overlay.beginRendering();
           m_Overlay.fade(0.15);
         }
-        _RenderBike(getGameObject()->getGhostBikeState(), getGameObject()->getBikeParams(), &theme_ghost);
+        _RenderBike(getGameObject()->getGhostBikeState(), getGameObject()->getBikeParams(), m_theme->getGhostTheme());
         
         if(m_bGhostMotionBlur && getParent()->useFBOs()) {
           GLuint nOverlayTextureID = m_Overlay.endRendering();
@@ -414,7 +414,7 @@ namespace vapp {
 #endif
 
     /* ... followed by the bike ... */
-    _RenderBike(getGameObject()->getBikeState(), getGameObject()->getBikeParams(), &theme_normal);
+    _RenderBike(getGameObject()->getBikeState(), getGameObject()->getBikeParams(), m_theme->getPlayerTheme());
     
     if(m_Quality == GQ_HIGH && !m_bUglyMode) {
       /* Render particles (front!) */    
@@ -1388,6 +1388,10 @@ namespace vapp {
       _Vertex( Vector2f(C.x + fRadius*sin(r),C.y + fRadius*cos(r)) );
     }      
     glEnd();
+  }
+
+  void GameRenderer::setTheme(Theme *p_theme) {
+    m_theme = p_theme;
   }
 
 };

@@ -34,58 +34,6 @@ namespace vapp {
   Init at game start-up
   ===========================================================================*/
   void GameRenderer::init(void) { 
-
-    /* Load bike textures */
-    theme_normal.BikeBody = getParent()->TexMan.loadTexture("Textures/Bikes/Body1.png");
-    theme_normal.BikeRear = getParent()->TexMan.loadTexture("Textures/Bikes/Rear1.png");
-    theme_normal.BikeFront = getParent()->TexMan.loadTexture("Textures/Bikes/Front1.png");
-    theme_normal.BikeWheel = getParent()->TexMan.loadTexture("Textures/Bikes/Wheel1.png");
-    
-    if(theme_normal.BikeBody == NULL || theme_normal.BikeRear == NULL || 
-       theme_normal.BikeFront == NULL || theme_normal.BikeWheel == NULL)
-      throw Exception("important bike texture missing");
-      
-    /* Load rider textures */
-    theme_normal.RiderTorso = getParent()->TexMan.loadTexture("Textures/Riders/Torso1.png");
-    theme_normal.RiderUpperLeg = getParent()->TexMan.loadTexture("Textures/Riders/UpperLeg1.png");
-    theme_normal.RiderLowerLeg = getParent()->TexMan.loadTexture("Textures/Riders/LowerLeg1.png");
-    theme_normal.RiderUpperArm = getParent()->TexMan.loadTexture("Textures/Riders/UpperArm1.png");
-    theme_normal.RiderLowerArm = getParent()->TexMan.loadTexture("Textures/Riders/LowerArm1.png");
-
-    if(theme_normal.RiderTorso == NULL || theme_normal.RiderUpperLeg == NULL || 
-       theme_normal.RiderLowerArm == NULL || theme_normal.RiderLowerLeg == NULL || theme_normal.RiderUpperArm == NULL)
-      throw Exception("important rider texture missing");
-      
-    /* Define colors to use in -ugly mode */
-    theme_normal.UglyWheelColor = MAKE_COLOR(255,0,0,255);
-    theme_normal.UglyRiderColor = MAKE_COLOR(0,255,0,255);
-
-#if defined(ALLOW_GHOST)
-    /* Load bike textures */
-    theme_ghost.BikeBody = getParent()->TexMan.loadTexture("Textures/Bikes/Body_Ghost.png");
-    theme_ghost.BikeRear = getParent()->TexMan.loadTexture("Textures/Bikes/Rear_Ghost.png");
-    theme_ghost.BikeFront = getParent()->TexMan.loadTexture("Textures/Bikes/Front_Ghost.png");
-    theme_ghost.BikeWheel = getParent()->TexMan.loadTexture("Textures/Bikes/Wheel_Ghost.png");
-    
-    if(theme_ghost.BikeBody == NULL || theme_ghost.BikeRear == NULL || 
-       theme_ghost.BikeFront == NULL || theme_ghost.BikeWheel == NULL)
-      throw Exception("important bike texture missing");
-
-    /* Load ghost textures */
-    theme_ghost.RiderTorso = getParent()->TexMan.loadTexture("Textures/Riders/Torso_Ghost.png");
-    theme_ghost.RiderUpperLeg = getParent()->TexMan.loadTexture("Textures/Riders/UpperLeg_Ghost.png");
-    theme_ghost.RiderLowerLeg = getParent()->TexMan.loadTexture("Textures/Riders/LowerLeg_Ghost.png");
-    theme_ghost.RiderUpperArm = getParent()->TexMan.loadTexture("Textures/Riders/UpperArm_Ghost.png");
-    theme_ghost.RiderLowerArm = getParent()->TexMan.loadTexture("Textures/Riders/LowerArm_Ghost.png");
-
-    if(theme_ghost.RiderTorso == NULL || theme_ghost.RiderUpperLeg == NULL || 
-       theme_ghost.RiderLowerArm == NULL || theme_ghost.RiderLowerLeg == NULL || theme_ghost.RiderUpperArm == NULL)
-      throw Exception("important rider texture missing");
-
-    /* Define colors to use in -ugly (for the ghost) */
-    theme_ghost.UglyWheelColor = MAKE_COLOR(100,100,128,255);
-    theme_ghost.UglyRiderColor = MAKE_COLOR(100,100,128,255);
-#endif 
           
     /* Init GUI */
     getGUI()->setApp(getParent());

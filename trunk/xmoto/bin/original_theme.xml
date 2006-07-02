@@ -11,10 +11,10 @@
 <sprite type="BikerPart" name="PlayerUpperArm"   file="UpperArm1.png" />
 <sprite type="BikerPart" name="PlayerUpperLeg"   file="UpperLeg1.png" />
 
-<sprite type="BikerPart" name="GhostBikerBody"  file="Body1_Ghost.png" />
-<sprite type="BikerPart" name="GhostBikerFront" file="Front1_Ghost.png" />
-<sprite type="BikerPart" name="GhostBikerRear"  file="Rear1_Ghost.png" />
-<sprite type="BikerPart" name="GhostBikerWheel" file="Wheel1_Ghost.png" />
+<sprite type="BikerPart" name="GhostBikerBody"  file="Body_Ghost.png" />
+<sprite type="BikerPart" name="GhostBikerFront" file="Front_Ghost.png" />
+<sprite type="BikerPart" name="GhostBikerRear"  file="Rear_Ghost.png" />
+<sprite type="BikerPart" name="GhostBikerWheel" file="Wheel_Ghost.png" />
 <sprite type="BikerPart" name="GhostLowerArm"   file="LowerArm_Ghost.png" />
 <sprite type="BikerPart" name="GhostLowerLeg"   file="LowerLeg_Ghost.png" />
 <sprite type="BikerPart" name="GhostTorso"      file="Torso_Ghost.png" />

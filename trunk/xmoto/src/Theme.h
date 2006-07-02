@@ -32,6 +32,33 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define EFFECT_SPRITE_FILE_DIR     SPRITE_FILE_DIR"/Effects"
 #define MISC_SPRITE_FILE_DIR       SPRITE_FILE_DIR"/Misc"
 #define ANIMATION_SPRITE_FILE_DIR  SPRITE_FILE_DIR"/Anims"
+#define BIKERPART_SPRITE_FILE_DIR  SPRITE_FILE_DIR"/Riders"
+
+#define PLAYER_BODY     "PlayerBikerBody"
+#define PLAYER_FRONT    "PlayerBikerFront"
+#define PLAYER_REAR     "PlayerBikerRear"
+#define PLAYER_WHEEL    "PlayerBikerWheel"
+#define PLAYER_LOWERARM "PlayerLowerArm"
+#define PLAYER_LOWERLEG "PlayerLowerLeg"
+#define PLAYER_TORSO    "PlayerTorso"
+#define PLAYER_UPPERARM "PlayerUpperArm"
+#define PLAYER_UPPERLEG "PlayerUpperLeg"
+#define PLAYER_UGLYRIDERCOLOR MAKE_COLOR(0,255,0,255)
+#define PLAYER_UGLYWHEELCOLOR MAKE_COLOR(255,0,0,255)
+
+#if defined(ALLOW_GHOST)
+#define GHOST_BODY     "GhostBikerBody"
+#define GHOST_FRONT    "GhostBikerFront"
+#define GHOST_REAR     "GhostBikerRear"
+#define GHOST_WHEEL    "GhostBikerWheel"
+#define GHOST_LOWERARM "GhostLowerArm"
+#define GHOST_LOWERLEG "GhostLowerLeg"
+#define GHOST_TORSO    "GhostTorso"
+#define GHOST_UPPERARM "GhostUpperArm"
+#define GHOST_UPPERLEG "GhostUpperLeg"
+#define GHOST_UGLYRIDERCOLOR MAKE_COLOR(100,100,128,255)
+#define GHOST_UGLYWHEELCOLOR MAKE_COLOR(100,100,128,255)
+#endif
 
   enum SpriteType {
     SPRITE_TYPE_ANIMATION,
@@ -44,6 +71,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   };
 
 class Theme;
+class BikerTheme;
 
 class Sprite {
   public:
@@ -95,6 +123,8 @@ class BikerPartSprite : public SimpleFrameSprite {
   BikerPartSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename);
   ~BikerPartSprite();
   enum SpriteType getType();
+
+  std::string getFileDir();
 
  private:
 };
@@ -225,10 +255,20 @@ class Theme {
   Sprite* getSprite(enum SpriteType pSpriteType, std::string pName);
   vapp::Texture* loadTexture(std::string p_fileName);
 
+  BikerTheme* getPlayerTheme();
+#if defined(ALLOW_GHOST)
+  BikerTheme* getGhostTheme();
+#endif
+
   private:
   vapp::TextureManager m_texMan;
   std::string m_name;
   std::vector<Sprite*> m_sprites;
+
+  BikerTheme *m_player;
+#if defined(ALLOW_GHOST)
+  BikerTheme *m_ghost;
+#endif
 
   void cleanSprites();
 
@@ -241,6 +281,53 @@ class Theme {
   void newFontSpriteFromXML(TiXmlElement *pVarElem);
   void newMiscSpriteFromXML(TiXmlElement *pVarElem);
   void newTextureSpriteFromXML(TiXmlElement *pVarElem);
+};
+
+class BikerTheme {
+ public:
+  BikerTheme(Theme* p_associated_theme,
+	     std::string p_Body,
+	     std::string p_Front,
+	     std::string p_Rear,
+	     std::string p_Wheel,
+	     std::string p_LowerArm,
+	     std::string p_LowerLeg,
+	     std::string p_Torso,
+	     std::string p_UpperArm,
+	     std::string p_UpperLeg,
+	     vapp::Color p_UglyRiderColor,
+	     vapp::Color p_UglyWheelColor
+	     );
+  ~BikerTheme();
+
+  Sprite* getBody();
+  Sprite* getFront();
+  Sprite* getRear();
+  Sprite* getWheel();
+  Sprite* getLowerArm();
+  Sprite* getLowerLeg();
+  Sprite* getTorso();
+  Sprite* getUpperArm();
+  Sprite* getUpperLeg();
+
+  vapp::Color getUglyRiderColor();
+  vapp::Color getUglyWheelColor();
+
+ private:
+  Theme* m_associated_theme;
+
+  vapp::Color m_UglyRiderColor;
+  vapp::Color m_UglyWheelColor;
+  
+  std::string m_Body;
+  std::string m_Front;
+  std::string m_Rear;
+  std::string m_Wheel;
+  std::string m_LowerArm;
+  std::string m_LowerLeg;
+  std::string m_Torso;
+  std::string m_UpperArm;
+  std::string m_UpperLeg;
 };
 
 #endif /* __THEME_H__ */

@@ -125,24 +125,6 @@ namespace vapp {
     Vector2f Min,Max; /* AABB */
   };
 
-  struct TextureTheme {
-    /* rider */
-    Texture *RiderTorso;
-    Texture *RiderUpperLeg;
-    Texture *RiderLowerLeg;
-    Texture *RiderUpperArm;
-    Texture *RiderLowerArm;
-
-    /* bike */
-    Texture *BikeBody;
-    Texture *BikeRear;
-    Texture *BikeFront;
-    Texture *BikeWheel;
-    
-    /* For ugly mode */
-    Color UglyRiderColor,UglyWheelColor;
-  };
-
 	/*===========================================================================
 	Special effects overlay
   ===========================================================================*/
@@ -196,6 +178,7 @@ namespace vapp {
 	m_cameraOffsetX = CAMERA_OFFSETX_DEFAULT;
 	m_cameraOffsetY = CAMERA_OFFSETY_DEFAULT;
 	m_bGhostMotionBlur = true;
+	m_theme = NULL;
       }
       ~GameRenderer() {_Free();}
     
@@ -203,6 +186,7 @@ namespace vapp {
       void init(void); /* only called at start-up, and not per-level */
       void shutdown(void);
       
+      void setTheme(Theme *p_theme);
       void render(void);
       void renderMiniMap(int x,int y,int nWidth,int nHeight);
       void prepareForNewLevel(void);
@@ -266,6 +250,8 @@ namespace vapp {
       
       UIRoot m_GUI;                 /* GUI root */
       
+      Theme *m_theme;
+
       Vector2f m_Scroll;
       float m_fZoom;
       float m_fDesiredHorizontalScrollShift;
@@ -287,11 +273,8 @@ namespace vapp {
       float m_fSpeedMultiply;
       
       UIFont *m_pMFont,*m_pSFont;
-      
-      TextureTheme theme_normal;
 
 #if defined(ALLOW_GHOST)
-      TextureTheme theme_ghost;
       Vector2f m_GhostInfoPos,m_GhostInfoVel;
       float m_fNextGhostInfoUpdate;
       int m_nGhostInfoTrans;
@@ -313,7 +296,7 @@ namespace vapp {
       /* Subroutines */
       void _RenderSprites(bool bForeground,bool bBackground);
       void _RenderSprite(Entity *pSprite);
-      void _RenderBike(BikeState *pBike, BikeParams *pBikeParms, TextureTheme *p_theme);
+      void _RenderBike(BikeState *pBike, BikeParams *pBikeParms, BikerTheme *p_theme);
       void _RenderBlocks(void);
       void _RenderDynamicBlocks(void);
       void _RenderBackground(void);

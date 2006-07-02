@@ -168,7 +168,7 @@ namespace vapp {
     }
     else {
       Log("** Warning ** : TextureManager::loadTexture() : texture '%s' not found or invalid",Path.c_str());
-      throw TextureError("invalid or missing texture file");
+      throw TextureError(std::string("invalid or missing texture file (" + Path + ")").c_str());
     }    
     
     return pTexture;
