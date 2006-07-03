@@ -35,6 +35,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #endif
 
 #include "WWWAppInterface.h"
+#include "VApp.h"
 
 #define DEFAULT_WEBHIGHSCORES_URL         "http://xmoto.free.fr/highscores.xml"
 #define DEFAULT_WEBHIGHSCORES_FILENAME    "webhighscores.xml"
@@ -43,6 +44,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define DEFAULT_WEBLEVELS_URL             "http://xmoto.free.fr/levels.xml"
 #define DEFAULT_WEBLEVELS_FILENAME        "weblevels.xml"
 #define DEFAULT_WEBLEVELS_DIR             "downloaded"
+
+#define WWW_AGENT ("xmoto-" + vapp::App::getVersionString()).c_str()
 
 #if defined(USE_HASH_MAP)
   #ifdef __GNUC__

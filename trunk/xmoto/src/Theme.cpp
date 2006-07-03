@@ -439,7 +439,7 @@ int AnimationSprite::getCurrentFrame() {
 
   while(v_realTime > m_fFrameTime + m_frames[m_current_frame]->getDelay()) {
     m_fFrameTime = v_realTime;
-    m_current_frame;
+    m_current_frame++;
     if(m_current_frame == m_frames.size()) m_current_frame = 0;      
   }
 

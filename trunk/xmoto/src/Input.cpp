@@ -450,16 +450,16 @@ namespace vapp {
 	  pGameRender->initZoom();
 	}
 	else if(m_nCameraMoveXUp == nKey) {
-	  pGameRender->moveCamera(0.2, 0.0);
+	  pGameRender->moveCamera(1.0, 0.0);
 	}
 	else if(m_nCameraMoveXDown == nKey) {
-	  pGameRender->moveCamera(-0.2, 0.0);
+	  pGameRender->moveCamera(-1.0, 0.0);
 	}
 	else if(m_nCameraMoveYUp == nKey) {
-	  pGameRender->moveCamera(0.0, 0.2);
+	  pGameRender->moveCamera(0.0, 1.0);
 	}
 	else if(m_nCameraMoveYDown == nKey) {
-	  pGameRender->moveCamera(0.0, -0.2);
+	  pGameRender->moveCamera(0.0, -1.0);
 	}
 #endif
 

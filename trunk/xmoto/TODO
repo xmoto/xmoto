@@ -19,6 +19,8 @@ Assigned to Nicolas:
 Game.SetDynamicEntityRotation("Strawberry0", 0, 3, 500, 0, 0)
 Game.SetDynamicEntityTranslation("Strawberry0", 3, 1, 500, 0, 0)
 Game.SetDynamicEntityNone("Strawberry0")
+Game.CameraMove(x, y)
+Game.CameraZoom(z)
 add the same for block once block move will work
 * a texture missing -> just give an alert instead of get an exception
 * sometimes, the following error appears : "texture naming conflict"
@@ -39,7 +41,6 @@ end
 
 ######################################################################
 Unassigned:
-
 * dynamic block : minimap is not updated
 * change SetBlockRotation so that it change block relalively to the
    current position ?
