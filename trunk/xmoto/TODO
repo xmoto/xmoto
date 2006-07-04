@@ -25,6 +25,10 @@ add the same for block once block move will work
 * a texture missing -> just give an alert instead of get an exception
 * sometimes, the following error appears : "texture naming conflict"
 
+* compress data for web !!! : check it for windows, it works under
+   linux
+-> do the web part
+
 function testCollision(laserX, laserY, alienX, alienY)
     -- to be remplaced by a real circle collision
     -- made by xmoto using entity r

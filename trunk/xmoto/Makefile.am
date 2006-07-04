@@ -74,7 +74,9 @@ xmoto_SOURCES = $(common_SOURCES) src/BSP.cpp src/Game.cpp src/GameMain.cpp \
 	src/Stats.cpp \
 	src/Stats.h \
 	src/ScriptDynamicObjects.h \
-	src/ScriptDynamicObjects.cpp
+	src/ScriptDynamicObjects.cpp \
+	src/FileCompression.h \
+	src/FileCompression.cpp
 
 xmoto_LDADD = $(common_LDADD)
 

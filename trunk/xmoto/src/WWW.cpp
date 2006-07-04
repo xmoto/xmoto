@@ -29,6 +29,7 @@
 #endif
 #include <sys/stat.h>
 #include <vector>
+#include "FileCompression.h"
 
 ProxySettings::ProxySettings() {
   m_server       = "";
@@ -313,7 +314,7 @@ void WebRoom::fillHash() {
 
 void WebRoom::update() {
   /* download xml file */
-  FSWeb::downloadFile(m_userFilename, m_webhighscores_url, NULL, NULL, m_proxy_settings);
+  FSWeb::downloadFileBz2(m_userFilename, m_webhighscores_url, NULL, NULL, m_proxy_settings);
 }
 
 void WebRoom::upgrade() {
@@ -324,6 +325,28 @@ size_t FSWeb::writeData(void *ptr, size_t size, size_t nmemb, FILE *stream) {
   return fwrite (ptr, size, nmemb, stream);
 }
 
+void FSWeb::downloadFileBz2(const std::string &p_local_file,
+			    const std::string &p_web_file,
+			    int (*curl_progress_callback)(void *clientp,
+							  double dltotal,
+							  double dlnow,
+							  double ultotal,
+							  double ulnow),
+			    void *p_data,
+			    const ProxySettings *p_proxy_settings) {
+  std::string v_bzFile = p_local_file + ".bz2";
+
+  /* remove in case it already exists */
+  remove(v_bzFile.c_str());
+  downloadFile(v_bzFile,
+	       p_web_file + ".bz2",
+	       curl_progress_callback,
+	       p_data,
+	       p_proxy_settings
+	       );
+  FileCompression::bunzip2(v_bzFile, p_local_file);
+  remove(v_bzFile.c_str());
+}
 
 void FSWeb::downloadFile(const std::string &p_local_file,
 			 const std::string &p_web_file,
@@ -476,11 +499,11 @@ std::string WebLevels::getXmlFileName() {
 }
 
 void WebLevels::downloadXml() {
-  FSWeb::downloadFile(getXmlFileName(),
-		      m_levels_url,
-		      NULL,
-		      NULL,
-		      m_proxy_settings);
+  FSWeb::downloadFileBz2(getXmlFileName(),
+			 m_levels_url,
+			 NULL,
+			 NULL,
+			 m_proxy_settings);
 }
 
 std::string WebLevels::getDestinationDir() {
