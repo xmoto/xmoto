@@ -23,9 +23,6 @@ Game.CameraMove(x, y)
 Game.CameraZoom(z)
 add the same for block once block move will work
 * a texture missing -> just give an alert instead of get an exception
-* sometimes, the following error appears : "texture naming conflict"
-
-
 
 ######################################################################
 Unassigned:
