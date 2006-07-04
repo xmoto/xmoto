@@ -25,8 +25,8 @@ add the same for block once block move will work
 * a texture missing -> just give an alert instead of get an exception
 * sometimes, the following error appears : "texture naming conflict"
 
-* compress data for web !!! : check it for windows, it works under
-   linux
+
+
 ######################################################################
 Unassigned:
 * otherwise we could make a "standard xmoto library" of lua functions :)

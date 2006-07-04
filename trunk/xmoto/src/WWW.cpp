@@ -737,11 +737,11 @@ void WebLevels::upgrade() {
       }
       
       try {
-	FSWeb::downloadFile(v_destFile,
-			    v_url,
-			    f_curl_progress_callback,
-			    &v_data,
-			    m_proxy_settings);
+	FSWeb::downloadFileBz2(v_destFile,
+			       v_url,
+			       f_curl_progress_callback,
+			       &v_data,
+			       m_proxy_settings);
 
 	if((*it)->requireUpdate()) {
 	  m_webLevelsUpdatedDownloadedOK.push_back(v_destFile);
