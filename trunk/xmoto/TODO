@@ -27,8 +27,9 @@ add the same for block once block move will work
 
 * compress data for web !!! : check it for windows, it works under
    linux
--> do the web part
-
+######################################################################
+Unassigned:
+* otherwise we could make a "standard xmoto library" of lua functions :)
 function testCollision(laserX, laserY, alienX, alienY)
     -- to be remplaced by a real circle collision
     -- made by xmoto using entity r
@@ -42,9 +43,6 @@ function testCollision(laserX, laserY, alienX, alienY)
           and laserY + laserHalfHeight &gt; alienY - alienHalfHeight
           and laserY - laserHalfHeight &lt; alienY + alienHalfHeight
 end
-
-######################################################################
-Unassigned:
 * dynamic block : minimap is not updated
 * change SetBlockRotation so that it change block relalively to the
    current position ?
