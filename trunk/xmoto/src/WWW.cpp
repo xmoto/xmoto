@@ -30,6 +30,7 @@
 #include <sys/stat.h>
 #include <vector>
 #include "FileCompression.h"
+#include "md5sum/md5file.h"
 
 ProxySettings::ProxySettings() {
   m_server       = "";
@@ -314,7 +315,11 @@ void WebRoom::fillHash() {
 
 void WebRoom::update() {
   /* download xml file */
-  FSWeb::downloadFileBz2(m_userFilename, m_webhighscores_url, NULL, NULL, m_proxy_settings);
+  FSWeb::downloadFileBz2UsingMd5(m_userFilename,
+				 m_webhighscores_url,
+				 NULL,
+				 NULL,
+				 m_proxy_settings);
 }
 
 void WebRoom::upgrade() {
@@ -346,6 +351,61 @@ void FSWeb::downloadFileBz2(const std::string &p_local_file,
 	       );
   FileCompression::bunzip2(v_bzFile, p_local_file);
   remove(v_bzFile.c_str());
+}
+
+void FSWeb::downloadFileBz2UsingMd5(const std::string &p_local_file,
+				    const std::string &p_web_file,
+				    int (*curl_progress_callback)(void *clientp,
+								  double dltotal,
+								  double dlnow,
+								  double ultotal,
+								  double ulnow),
+				    void *p_data,
+				    const ProxySettings *p_proxy_settings) {
+  bool require_dwd = true;
+
+  try {
+    if(vapp::FS::isFileReadable(p_local_file) == true) {
+      std::string v_md5Local  = md5file(p_local_file);
+      if(v_md5Local != "") {
+	std::string v_md5File = p_local_file + ".md5";
+	
+	/* remove in case it already exists */
+	remove(v_md5File.c_str());
+	downloadFile(v_md5File,
+		     p_web_file + ".md5",
+		     NULL, /* nothing for this */
+		     NULL,
+		     p_proxy_settings
+		     );
+	FILE* fh;
+	fh = fopen(v_md5File.c_str(), "rb");
+	if(fh == NULL) {
+	  remove(v_md5File.c_str());
+	} else {
+	  char v_md5web[33];
+	  int nbread = fread(v_md5web, sizeof(char), 32, fh);
+	  if(nbread == 32) {
+	    v_md5web[32] = '\0';
+	    require_dwd = std::string(v_md5web) != v_md5Local;
+	  }
+	  
+	  fclose(fh);
+	  remove(v_md5File.c_str());
+	}
+      }
+    }
+  } catch(vapp::Exception &e) {
+    /* no pb, just dwd */
+  }
+    
+  if(require_dwd) {
+    FSWeb::downloadFileBz2(p_local_file,
+			   p_web_file,
+			   curl_progress_callback,
+			   p_data,
+			   p_proxy_settings);
+  }
 }
 
 void FSWeb::downloadFile(const std::string &p_local_file,
@@ -499,11 +559,11 @@ std::string WebLevels::getXmlFileName() {
 }
 
 void WebLevels::downloadXml() {
-  FSWeb::downloadFileBz2(getXmlFileName(),
-			 m_levels_url,
-			 NULL,
-			 NULL,
-			 m_proxy_settings);
+  FSWeb::downloadFileBz2UsingMd5(getXmlFileName(),
+				 m_levels_url,
+				 NULL,
+				 NULL,
+				 m_proxy_settings);
 }
 
 std::string WebLevels::getDestinationDir() {

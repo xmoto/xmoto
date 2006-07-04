@@ -128,6 +128,16 @@ class FSWeb {
 			      void *p_data,
 			      const ProxySettings *p_proxy_settings);
 
+  static void downloadFileBz2UsingMd5(const std::string &p_local_file,
+				      const std::string &p_web_file,
+				      int (*curl_progress_callback)(void *clientp,
+								    double dltotal,
+								    double dlnow,
+								    double ultotal,
+								    double ulnow),
+				      void *p_data,
+				      const ProxySettings *p_proxy_settings);
+
  private:
   static size_t writeData(void *ptr, size_t size, size_t nmemb, FILE *stream);
 };
