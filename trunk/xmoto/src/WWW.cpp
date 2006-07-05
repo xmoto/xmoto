@@ -381,7 +381,9 @@ void FSWeb::downloadFileBz2UsingMd5(const std::string &p_local_file,
 
 	std::string v_md5Web = md5Contentds(v_md5File);
 	remove(v_md5File.c_str());
-	require_dwd = v_md5Web != v_md5Local;
+	if(v_md5Web != "") {
+	  require_dwd = v_md5Web != v_md5Local;
+	}
       }
     }
   } catch(vapp::Exception &e) {
