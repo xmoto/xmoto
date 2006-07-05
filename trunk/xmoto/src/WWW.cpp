@@ -378,21 +378,10 @@ void FSWeb::downloadFileBz2UsingMd5(const std::string &p_local_file,
 		     NULL,
 		     p_proxy_settings
 		     );
-	FILE* fh;
-	fh = fopen(v_md5File.c_str(), "rb");
-	if(fh == NULL) {
-	  remove(v_md5File.c_str());
-	} else {
-	  char v_md5web[33];
-	  int nbread = fread(v_md5web, sizeof(char), 32, fh);
-	  if(nbread == 32) {
-	    v_md5web[32] = '\0';
-	    require_dwd = std::string(v_md5web) != v_md5Local;
-	  }
-	  
-	  fclose(fh);
-	  remove(v_md5File.c_str());
-	}
+
+	std::string v_md5Web = md5Contentds(v_md5File);
+	remove(v_md5File.c_str());
+	require_dwd = v_md5Web != v_md5Local;
       }
     }
   } catch(vapp::Exception &e) {

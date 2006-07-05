@@ -42,3 +42,23 @@ std::string md5file(std::string p_filename) {
 
   return sum;
 }
+
+std::string md5Contentds(std::string p_md5File) {
+  FILE* fh;
+  fh = fopen(p_md5File.c_str(), "rb");
+  if(fh == NULL) {
+    return "";
+  }
+   
+  char v_md5web[33];
+  int nbread = fread(v_md5web, sizeof(char), 32, fh);
+  if(nbread == 32) {
+    v_md5web[32] = '\0';
+  } else {
+    v_md5web[0] = '\0';
+  }
+    
+  fclose(fh);
+
+  return std::string(v_md5web);
+}
