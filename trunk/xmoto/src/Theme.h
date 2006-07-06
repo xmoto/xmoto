@@ -183,7 +183,7 @@ class AnimationSprite : public Sprite {
   std::string m_fileBase;
   std::string m_fileExtension;
   int m_current_frame;
-  void AnimationSprite::cleanFrames();
+  void cleanFrames();
   std::vector<AnimationSpriteFrame*> m_frames;
   float m_fFrameTime;
 };
