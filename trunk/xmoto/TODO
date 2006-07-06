@@ -24,8 +24,32 @@ Game.CameraZoom(z)
 add the same for block once block move will work
 * a texture missing -> just give an alert instead of get an exception
 
+* on xmoto 0.1.14 ALPHA, when you want to save a replay
+ which you name " " (just one space), it hangs, and all
+ your high-scores recorded since you run xmoto and the
+ replay you wanted to be saved are lost...
+
 ######################################################################
 Unassigned:
+
+*OpenGL-independent Renderer
+   I would like to port XMoto to my GP2X, a Linux-based
+ handheld game console. The main problem is that due to
+ the lack of an FPU, no OpenGL-implementations with
+ acceptable performance are available. The
+ floating-point emulation works quite good, so im sure
+ that Physics still could be done with ODE.
+ But the graphics part would have to be done with the
+ 2D-capabilities of SDL. I could write a new Renderer
+ myself, but i would have to fork the code at its
+ current state because OpenGL is tied too deep with the
+ code.
+ The renderer should be abstracted, so a SDL-Renderer
+ can be easily integrated. I think a 2D-based renderer
+ would also enable older platforms to play XMoto.
+
+* svg2xmotolvl
+
 * otherwise we could make a "standard xmoto library" of lua functions :)
 function testCollision(laserX, laserY, alienX, alienY)
     -- to be remplaced by a real circle collision
