@@ -373,7 +373,7 @@ namespace vapp {
     m_theme.load();
 
 	  /* Init drawing library */
-	  initLib(&TexMan);
+	  initLib(&m_theme);
 	  
 	  /* Output some general info */
 	  Log("GL: %s (%s)",glGetString(GL_RENDERER),glGetString(GL_VENDOR));
@@ -511,7 +511,7 @@ namespace vapp {
   
     if(!isNoGraphics()) {
       /* Uninit drawing library */
-      uninitLib(&TexMan);
+      uninitLib(&m_theme);
     }
         
     /* Shutdown SDL */

@@ -29,7 +29,7 @@
 #endif
 #include <sys/stat.h>
 #include <vector>
-#include "FileCompression.h"
+#include "compression/FileCompression.h"
 #include "md5sum/md5file.h"
 
 ProxySettings::ProxySettings() {

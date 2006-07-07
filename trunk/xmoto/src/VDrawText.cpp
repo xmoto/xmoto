@@ -91,7 +91,7 @@ namespace vapp {
 		}
   
     int cx = Pos.x,cy = Pos.y,c;
-    glBindTexture(GL_TEXTURE_2D,m_pDefaultFontTexture->nID);
+    glBindTexture(GL_TEXTURE_2D,m_pDefaultFontTex->nID);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
     int nCharsPerLine = 256 / 8;
@@ -157,45 +157,8 @@ namespace vapp {
   /*===========================================================================
   Init of text rendering
   ===========================================================================*/  
-  void DrawLib::_InitTextRendering(TextureManager *pTextureManager) {   
-    CBuiltInFont Fnt;
-      
-    /* Create texture */
-    int nImgWidth = 256, nImgHeight = 256;
-    Color *pImgData = new Color[nImgWidth * nImgHeight];
-    memset(pImgData,0,nImgWidth * nImgHeight * sizeof(Color));
-  
-    /* Fill texture with glyphs */
-    int cx=0,cy=0,w=Fnt.getCharWidth(),h=Fnt.getCharHeight();
-    for(int i=0;i<256;i++) {
-      unsigned char *pc = Fnt.fetchChar(i);
-      for(int y=0;y<h;y++) {
-        for(int x=0;x<w;x++) {
-          unsigned char *pcT = (unsigned char *)&pImgData[(cx+x) + (cy+y)*nImgWidth];
-          pcT[0] = 255;
-          pcT[1] = 255;
-          pcT[2] = 255;
-          pcT[3] = pc[x+y*w];        
-          //pImgData[(cx+x) + (cy+y)*nImgWidth] = MAKE_COLOR(pc[x+y*w],255,255,255);
-        }
-      }
-      
-      cx += w;
-      if(cx+w > nImgWidth) {
-        cx = 0;
-        cy += h;
-        if(cy+h > nImgHeight) {
-          delete [] pImgData;
-          throw TextureError("default font does not fit in texture");
-        }
-      }        
-    }
-    
-    /* Load it */
-    m_pDefaultFontTexture = pTextureManager->createTexture("default-font",(unsigned char *)pImgData,
-                                                           256,256,true);
-      
-    delete [] pImgData;
+  void DrawLib::_InitTextRendering(Theme *p_theme) {   
+    m_pDefaultFontTex = p_theme->getDefaultFont();
           
     /* Create font texture (default) */
     //m_pDefaultFontTexture = (DefaultFontTexture *)pTextureManager->loadTexture(new DefaultFontTexture,"default-font");
@@ -204,7 +167,7 @@ namespace vapp {
   /*===========================================================================
   Uninit of text rendering
   ===========================================================================*/  
-  void DrawLib::_UninitTextRendering(TextureManager *pTextureManager) {    
+  void DrawLib::_UninitTextRendering(Theme *p_theme) {    
   }
 
   /*===========================================================================

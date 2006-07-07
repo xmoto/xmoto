@@ -253,7 +253,9 @@ class Theme {
 
   std::string getDefaultThemeFile();
   Sprite* getSprite(enum SpriteType pSpriteType, std::string pName);
-  vapp::Texture* loadTexture(std::string p_fileName);
+  vapp::Texture* loadTexture(std::string p_fileName,bool bSmall=false,bool bClamp=false,bool bFilter=true);
+
+  vapp::Texture* getDefaultFont();
 
   BikerTheme* getPlayerTheme();
 #if defined(ALLOW_GHOST)
@@ -261,9 +263,13 @@ class Theme {
 #endif
 
   private:
+  void initDefaultFont();
+
   vapp::TextureManager m_texMan;
   std::string m_name;
   std::vector<Sprite*> m_sprites;
+
+  vapp::Texture *m_pDefaultFontTexture;
 
   BikerTheme *m_player;
 #if defined(ALLOW_GHOST)

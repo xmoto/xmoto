@@ -188,15 +188,15 @@ namespace vapp {
   /*===========================================================================
   Init of 2D drawing library
   ===========================================================================*/
-  void DrawLib::initLib(TextureManager *pTextureManager) {
-    _InitTextRendering(pTextureManager);
+  void DrawLib::initLib(Theme *p_theme) {
+    _InitTextRendering(p_theme);
   }
   
   /*===========================================================================
   Uninit
   ===========================================================================*/
-  void DrawLib::uninitLib(TextureManager *pTextureManager) {
-    _UninitTextRendering(pTextureManager);
+  void DrawLib::uninitLib(Theme *p_theme) {
+    _UninitTextRendering(p_theme);
   }
   
 };

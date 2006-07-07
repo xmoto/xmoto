@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "VMath.h"
 #include "VTexture.h"
+#include "Theme.h"
 
 namespace vapp {
   /*===========================================================================
@@ -52,18 +53,19 @@ namespace vapp {
       /* Protected methods */
       void setDrawDims(int nActualW,int nActualH,int w,int h) {m_nDrawWidth=w; m_nDrawHeight=h;
                                                                m_nActualWidth=nActualW; m_nActualHeight=nActualH;}
-      void initLib(TextureManager *pTextureManager);
-      void uninitLib(TextureManager *pTextureManager);
+      void initLib(Theme *p_theme);
+      void uninitLib(Theme *p_theme);
     
     private:
       /* Data */
       int m_nDrawWidth,m_nDrawHeight;     
       int m_nActualWidth,m_nActualHeight;     
-      Texture *m_pDefaultFontTexture;             
+
+    Texture *m_pDefaultFontTex;
       
       /* Public helper methods */
-      void _InitTextRendering(TextureManager *pTextureManager);
-      void _UninitTextRendering(TextureManager *pTextureManager);
+      void _InitTextRendering(Theme *p_theme);
+      void _UninitTextRendering(Theme *p_theme);
   };
   
 };

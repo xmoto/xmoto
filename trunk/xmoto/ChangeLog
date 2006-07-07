@@ -12,6 +12,7 @@ X-Moto 0.2.0 (beta) 2006-
  * You can now keep the up and down arrows of lists pressed to list the levels
  * new script functions : SetDynamicEntityRotation, SetDynamicEntityTranslation,
                           CameraZoom(z), Game.CameraMove(x, y)
+ * required libbz2 (for web transfer compression)
  * Some bugs fixed.
 	
 X-Moto 0.1.16 (alpha) 2006-06-16

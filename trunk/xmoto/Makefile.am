@@ -12,10 +12,13 @@ tinyxml_SOURCES = src/tinyxml/tinystr.cpp src/tinyxml/tinyxml.cpp \
 md5_SOURCES = src/md5sum/md5.h src/md5sum/md5.c \
 	src/md5sum/md5file.h src/md5sum/md5file.cpp
 
+compression_SOURCES = src/compression/FileCompression.h src/compression/FileCompression.cpp
+
 common_SOURCES = src/BuiltInFont.cpp src/Image.cpp src/LevelSrc.cpp \
 	src/VApp.cpp src/VBezier.cpp src/VDraw.cpp \
 	src/VDrawText.cpp src/VFileIO.cpp src/VMath.cpp src/VTexture.cpp \
-	src/VXml.cpp $(image_SOURCES) $(tinyxml_SOURCES) $(md5_SOURCES) \
+	src/VXml.cpp \
+	$(image_SOURCES) $(tinyxml_SOURCES) $(md5_SOURCES) $(compression_SOURCES) \
 	src/Image.h src/LevelSrc.h \
 	src/VApp.h src/VBezier.h src/VCommon.h src/VDraw.h \
 	src/VExcept.h src/VFileIO.h src/VMath.h src/VTexture.h src/VXml.h \
@@ -74,9 +77,7 @@ xmoto_SOURCES = $(common_SOURCES) src/BSP.cpp src/Game.cpp src/GameMain.cpp \
 	src/Stats.cpp \
 	src/Stats.h \
 	src/ScriptDynamicObjects.h \
-	src/ScriptDynamicObjects.cpp \
-	src/FileCompression.h \
-	src/FileCompression.cpp
+	src/ScriptDynamicObjects.cpp
 
 xmoto_LDADD = $(common_LDADD)
 
