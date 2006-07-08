@@ -167,6 +167,8 @@ namespace vapp {
 
 		 m_Renderer.setTheme(&m_theme);
 		 m_MotoGame.setRenderer(&m_Renderer);
+
+		 m_currentThemeName = THEME_DEFAULT_THEMENAME;
                  }
                  
 #if defined(SUPPORT_WEBACCESS)                 
@@ -198,7 +200,8 @@ namespace vapp {
       virtual void parseUserArgs(std::vector<std::string> &UserArgs);
       virtual void helpUserArgs(void);
       virtual void selectDisplayMode(int *pnWidth,int *pnHeight,int *pnBPP,bool *pbWindowed);
-      
+      virtual std::string getConfigThemeName(ThemeChoicer *p_themeChoicer);
+
       /* Methods */
       void setState(GameState s);
       void notifyMsg(std::string Msg);      
@@ -389,7 +392,8 @@ namespace vapp {
       bool m_bRecordReplays;
       float m_fReplayFrameRate;
       float m_fCurrentReplayFrameRate;
-            
+      std::string m_currentThemeName;            
+
       /* Helpers */
 #if defined(SUPPORT_WEBACCESS) 
       void _UpdateWorldRecord(const std::string &LevelID);

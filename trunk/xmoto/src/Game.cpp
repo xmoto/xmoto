@@ -465,6 +465,14 @@ namespace vapp {
     }
   }  
   
+  std::string GameApp::getConfigThemeName(ThemeChoicer *p_themeChoicer) {
+    if(p_themeChoicer->ExistThemeName(m_currentThemeName)) {
+      return m_currentThemeName;
+    }
+    /* theme of the config file doesn't exist */
+    return THEME_DEFAULT_THEMENAME;
+  }
+
   /*===========================================================================
   Update settings
   ===========================================================================*/
@@ -512,8 +520,9 @@ namespace vapp {
     /* Other settings */
     m_bEnableEngineSound = m_Config.getBool("EngineSoundEnable");
     m_bEnableContextHelp = m_Config.getBool("ContextHelp");
+    m_currentThemeName   = m_Config.getString("Theme");
+    printf("Config : Theme = %s\n", m_currentThemeName.c_str());
 
-        
     /* Cache? */
     m_bEnableLevelCache = m_Config.getBool("LevelCache");
     
@@ -566,6 +575,12 @@ namespace vapp {
     /* Init some config */
     _UpdateSettings();
     
+    /* load theme */
+    m_theme.load(m_themeChoicer.getFileName(getConfigThemeName(&m_themeChoicer)));
+
+    /* Init drawing library */
+    initLib(&m_theme);
+
     /* Profiles */
     Log("Loading profiles...");
     m_Profiles.loadFile();
@@ -1510,6 +1525,11 @@ namespace vapp {
     if(!isNoGraphics()) {
       UITextDraw::uninitTextDrawing();  
     }
+
+    if(!isNoGraphics()) {
+      /* Uninit drawing library */
+      uninitLib(&m_theme);
+    }
   }
 
   /*===========================================================================
@@ -1986,7 +2006,8 @@ namespace vapp {
     /* Webstuff */
     m_Config.createVar( "WebHighscoresURL",       DEFAULT_WEBHIGHSCORES_URL );
     m_Config.createVar( "WebLevelsURL",           DEFAULT_WEBLEVELS_URL );
-    
+    m_Config.createVar( "Theme",                  THEME_DEFAULT_THEMENAME);    
+
     /* Proxy */
     m_Config.createVar( "ProxyType",              "" ); /* (blank), HTTP, SOCKS4, or SOCKS5 */
     m_Config.createVar( "ProxyServer",            "" ); /* (may include user/pass and port) */

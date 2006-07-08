@@ -27,41 +27,43 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VTexture.h"
 #include "VFileIO.h"
 
-#define SPRITE_FILE_DIR "Textures"
-#define DECORATION_SPRITE_FILE_DIR SPRITE_FILE_DIR"/Sprites"
-#define EFFECT_SPRITE_FILE_DIR     SPRITE_FILE_DIR"/Effects"
-#define MISC_SPRITE_FILE_DIR       SPRITE_FILE_DIR"/Misc"
-#define ANIMATION_SPRITE_FILE_DIR  SPRITE_FILE_DIR"/Anims"
-#define BIKERPART_SPRITE_FILE_DIR  SPRITE_FILE_DIR"/Riders"
-#define UI_SPRITE_FILE_DIR         SPRITE_FILE_DIR"/UI"
-#define TEXTURE_SPRITE_FILE_DIR    SPRITE_FILE_DIR"/Textures"
-#define FONT_SPRITE_FILE_DIR       SPRITE_FILE_DIR"/Fonts"
+#define THEME_SPRITE_FILE_DIR "Textures"
+#define THEME_DECORATION_SPRITE_FILE_DIR THEME_SPRITE_FILE_DIR"/Sprites"
+#define THEME_EFFECT_SPRITE_FILE_DIR     THEME_SPRITE_FILE_DIR"/Effects"
+#define THEME_MISC_SPRITE_FILE_DIR       THEME_SPRITE_FILE_DIR"/Misc"
+#define THEME_ANIMATION_SPRITE_FILE_DIR  THEME_SPRITE_FILE_DIR"/Anims"
+#define THEME_BIKERPART_SPRITE_FILE_DIR  THEME_SPRITE_FILE_DIR"/Riders"
+#define THEME_UI_SPRITE_FILE_DIR         THEME_SPRITE_FILE_DIR"/UI"
+#define THEME_TEXTURE_SPRITE_FILE_DIR    THEME_SPRITE_FILE_DIR"/Textures"
+#define THEME_FONT_SPRITE_FILE_DIR       THEME_SPRITE_FILE_DIR"/Fonts"
 
-#define PLAYER_BODY     "PlayerBikerBody"
-#define PLAYER_FRONT    "PlayerBikerFront"
-#define PLAYER_REAR     "PlayerBikerRear"
-#define PLAYER_WHEEL    "PlayerBikerWheel"
-#define PLAYER_LOWERARM "PlayerLowerArm"
-#define PLAYER_LOWERLEG "PlayerLowerLeg"
-#define PLAYER_TORSO    "PlayerTorso"
-#define PLAYER_UPPERARM "PlayerUpperArm"
-#define PLAYER_UPPERLEG "PlayerUpperLeg"
-#define PLAYER_UGLYRIDERCOLOR MAKE_COLOR(0,255,0,255)
-#define PLAYER_UGLYWHEELCOLOR MAKE_COLOR(255,0,0,255)
+#define THEME_PLAYER_BODY     "PlayerBikerBody"
+#define THEME_PLAYER_FRONT    "PlayerBikerFront"
+#define THEME_PLAYER_REAR     "PlayerBikerRear"
+#define THEME_PLAYER_WHEEL    "PlayerBikerWheel"
+#define THEME_PLAYER_LOWERARM "PlayerLowerArm"
+#define THEME_PLAYER_LOWERLEG "PlayerLowerLeg"
+#define THEME_PLAYER_TORSO    "PlayerTorso"
+#define THEME_PLAYER_UPPERARM "PlayerUpperArm"
+#define THEME_PLAYER_UPPERLEG "PlayerUpperLeg"
+#define THEME_PLAYER_UGLYRIDERCOLOR MAKE_COLOR(0,255,0,255)
+#define THEME_PLAYER_UGLYWHEELCOLOR MAKE_COLOR(255,0,0,255)
 
 #if defined(ALLOW_GHOST)
-#define GHOST_BODY     "GhostBikerBody"
-#define GHOST_FRONT    "GhostBikerFront"
-#define GHOST_REAR     "GhostBikerRear"
-#define GHOST_WHEEL    "GhostBikerWheel"
-#define GHOST_LOWERARM "GhostLowerArm"
-#define GHOST_LOWERLEG "GhostLowerLeg"
-#define GHOST_TORSO    "GhostTorso"
-#define GHOST_UPPERARM "GhostUpperArm"
-#define GHOST_UPPERLEG "GhostUpperLeg"
-#define GHOST_UGLYRIDERCOLOR MAKE_COLOR(100,100,128,255)
-#define GHOST_UGLYWHEELCOLOR MAKE_COLOR(100,100,128,255)
+#define THEME_GHOST_BODY     "GhostBikerBody"
+#define THEME_GHOST_FRONT    "GhostBikerFront"
+#define THEME_GHOST_REAR     "GhostBikerRear"
+#define THEME_GHOST_WHEEL    "GhostBikerWheel"
+#define THEME_GHOST_LOWERARM "GhostLowerArm"
+#define THEME_GHOST_LOWERLEG "GhostLowerLeg"
+#define THEME_GHOST_TORSO    "GhostTorso"
+#define THEME_GHOST_UPPERARM "GhostUpperArm"
+#define THEME_GHOST_UPPERLEG "GhostUpperLeg"
+#define THEME_GHOST_UGLYRIDERCOLOR MAKE_COLOR(100,100,128,255)
+#define THEME_GHOST_UGLYWHEELCOLOR MAKE_COLOR(100,100,128,255)
 #endif
+
+#define THEME_DEFAULT_THEMENAME "Classic"
 
   enum SpriteType {
     SPRITE_TYPE_ANIMATION,
@@ -276,10 +278,7 @@ class Theme {
   Theme();
   ~Theme();
  
-  void load();
   void load(std::string p_themeFile);
-
-  std::string getDefaultThemeFile();
 
   Sprite* getSprite(enum SpriteType pSpriteType, std::string pName);
   vapp::Texture* loadTexture(std::string p_fileName,
@@ -368,6 +367,34 @@ class BikerTheme {
   std::string m_Torso;
   std::string m_UpperArm;
   std::string m_UpperLeg;
+};
+
+class ThemeChoice {
+ public:
+  ThemeChoice(std::string p_themeName, std::string p_themeFile);
+  ~ThemeChoice();
+  std::string ThemeName();
+  std::string ThemeFile();
+
+ private:
+  std::string m_themeName;
+  std::string m_themeFile;
+};
+
+class ThemeChoicer {
+ public:
+  ThemeChoicer();
+  ~ThemeChoicer();
+
+  bool ExistThemeName(std::string p_themeName);
+  std::string getFileName(std::string p_themeName);
+
+ private:
+  void cleanList();
+  void initList();
+  std::string getThemeNameFromFile(std::string p_themeFile);
+
+  std::vector<ThemeChoice*> m_choices;
 };
 
 #endif /* __THEME_H__ */

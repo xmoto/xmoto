@@ -368,13 +368,7 @@ namespace vapp {
 	  /* Enable unicode translation and key repeats */
 	  SDL_EnableUNICODE(1);    		  
 	  SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY,SDL_DEFAULT_REPEAT_INTERVAL);
-	  
-    /* load theme */
-    m_theme.load();
-
-	  /* Init drawing library */
-	  initLib(&m_theme);
-	  
+	   
 	  /* Output some general info */
 	  Log("GL: %s (%s)",glGetString(GL_RENDERER),glGetString(GL_VENDOR));
 	  if(glGetString(GL_RENDERER) == NULL || 
@@ -508,12 +502,7 @@ namespace vapp {
   void App::_Uninit(void) {
     /* Tell user app to turn off */
     userShutdown();
-  
-    if(!isNoGraphics()) {
-      /* Uninit drawing library */
-      uninitLib(&m_theme);
-    }
-        
+          
     /* Shutdown SDL */
     SDL_Quit();
   }

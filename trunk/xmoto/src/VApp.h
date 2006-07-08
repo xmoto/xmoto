@@ -164,6 +164,7 @@ namespace vapp {
       bool useShaders(void) {return m_bShadersSupported;}
       
       Theme m_theme;
+      ThemeChoicer m_themeChoicer;
 
       /* Extensions */
       PFNGLGENBUFFERSARBPROC glGenBuffersARB;
@@ -249,6 +250,7 @@ namespace vapp {
       virtual void userPreInit(void) {}
       virtual void userShutdown(void) {}
       virtual void selectDisplayMode(int *pnWidth,int *pnHeight,int *pnBPP,bool *pbWindowed) {}
+      virtual std::string getConfigThemeName(ThemeChoicer *p_themeChoicer) {}
             
     private:
       /* Private helper functions */
