@@ -521,7 +521,6 @@ namespace vapp {
     m_bEnableEngineSound = m_Config.getBool("EngineSoundEnable");
     m_bEnableContextHelp = m_Config.getBool("ContextHelp");
     m_currentThemeName   = m_Config.getString("Theme");
-    printf("Config : Theme = %s\n", m_currentThemeName.c_str());
 
     /* Cache? */
     m_bEnableLevelCache = m_Config.getBool("LevelCache");

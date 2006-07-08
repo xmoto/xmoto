@@ -802,15 +802,11 @@ vapp::Color BikerTheme::getUglyWheelColor() {
 }
 
 bool ThemeChoicer::ExistThemeName(std::string p_themeName) {
-  printf("ExistThemeName(%s)\n", p_themeName.c_str());
   for(int i=0; i<m_choices.size(); i++) {
     if(m_choices[i]->ThemeName() == p_themeName) {
-      printf("Yes !\n");
       return true;
     }
   }
-
-  printf("No !\n");
   return false;
 }
 
@@ -823,10 +819,8 @@ ThemeChoicer::~ThemeChoicer() {
 }
 
 std::string ThemeChoicer::getFileName(std::string p_themeName) {
-  printf("getFileName(%s)\n", p_themeName.c_str());
   for(int i=0; i<m_choices.size(); i++) {
     if(m_choices[i]->ThemeName() == p_themeName) {
-      printf("get %s\n", m_choices[i]->ThemeFile().c_str());
       return m_choices[i]->ThemeFile();
     }
   }
@@ -850,7 +844,6 @@ void ThemeChoicer::initList() {
     try {
       v_name = getThemeNameFromFile(v_themesFiles[i]);
       m_choices.push_back(new ThemeChoice(v_name, v_themesFiles[i]));
-      printf("Found %s\n", v_name.c_str());
     } catch(vapp::Exception &e) {
       /* anyway, give up this theme */
     }
