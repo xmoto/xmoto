@@ -670,6 +670,10 @@ enum SpriteType FontSprite::getType() {
   return SPRITE_TYPE_FONT;
 }
 
+std::string FontSprite::getFileDir() {
+  return FONT_SPRITE_FILE_DIR;
+}
+
 MiscSprite::MiscSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
 }
 

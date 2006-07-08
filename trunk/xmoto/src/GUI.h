@@ -114,7 +114,6 @@ namespace vapp {
     }
   
     std::string Name;
-    std::string Image;
     UIFontChar Chars[256];
     Texture *pTexture;
   };

@@ -35,6 +35,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define BIKERPART_SPRITE_FILE_DIR  SPRITE_FILE_DIR"/Riders"
 #define UI_SPRITE_FILE_DIR         SPRITE_FILE_DIR"/UI"
 #define TEXTURE_SPRITE_FILE_DIR    SPRITE_FILE_DIR"/Textures"
+#define FONT_SPRITE_FILE_DIR       SPRITE_FILE_DIR"/Fonts"
 
 #define PLAYER_BODY     "PlayerBikerBody"
 #define PLAYER_FRONT    "PlayerBikerFront"
@@ -123,6 +124,7 @@ class TextureSprite : public SimpleFrameSprite {
   ~TextureSprite();
   enum SpriteType getType();
 
+ protected:
   std::string getFileDir();
 
  private:
@@ -134,6 +136,7 @@ class BikerPartSprite : public SimpleFrameSprite {
   ~BikerPartSprite();
   enum SpriteType getType();
 
+ protected:
   std::string getFileDir();
 
  private:
@@ -215,6 +218,9 @@ class FontSprite : public SimpleFrameSprite {
   FontSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename);
   ~FontSprite();
   enum SpriteType getType();
+
+ protected:
+  std::string getFileDir();
 
  private:
 };

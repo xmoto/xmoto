@@ -697,21 +697,6 @@ namespace vapp {
       UITextDraw::initTextDrawing(this);
       UITexture::setApp(this);
 
-      _UpdateLoadingScreen((1.0f/9.0f) * 2,pLoadingScreen,GAMETEXT_LOADINGTEXTURES);
-      
-      /* textures are now part of theme */
-      std::vector<std::string> TextureFiles = FS::findPhysFiles("Textures/Textures/*.jpg");
-      int nLoaded=0;
-      for(int i=0;i<TextureFiles.size();i++) {
-        // Ignore .. and . (and makefiles)
-        if(TextureFiles[i].at(TextureFiles[i].length()-1) != '.' &&
-          !FS::isDir(TextureFiles[i])) {
-          if(TexMan.loadTexture(TextureFiles[i] ) != NULL)
-            nLoaded++;
-        }
-      }
-      Log(" %d texture%s loaded",nLoaded,nLoaded==1?"":"s");
-
       _UpdateLoadingScreen((1.0f/9.0f) * 3,pLoadingScreen,GAMETEXT_LOADINGMENUGRAPHICS);
         
       /* Load title screen textures + cursor + stuff */
@@ -1441,8 +1426,12 @@ namespace vapp {
         /* Level name to draw? */
         if(m_State == GS_JUSTDEAD || m_State == GS_PAUSE || m_State == GS_FINISHED &&
            m_MotoGame.getLevelSrc() != NULL) {
-          UITextDraw::printRaw(m_Renderer.getMediumFont(),0,getDispHeight()-4,m_MotoGame.getLevelSrc()->getLevelInfo()->Name,
-                               MAKE_COLOR(255,255,255,255));
+
+	  UIFont *v_font = m_Renderer.getMediumFont();
+	  if(v_font != NULL) {
+	    UITextDraw::printRaw(v_font,0,getDispHeight()-4,m_MotoGame.getLevelSrc()->getLevelInfo()->Name,
+				 MAKE_COLOR(255,255,255,255));
+	  }
         }
         
         /* Context menu? */
@@ -2578,8 +2567,11 @@ namespace vapp {
                      m_DownloadLevelsMsgBoxRect.nY+m_DownloadLevelsMsgBoxRect.nHeight-nBarHeight),
             0,MAKE_COLOR(255,0,0,255),0);
 
-    UITextDraw::printRaw(m_Renderer.getSmallFont(),m_DownloadLevelsMsgBoxRect.nX+13,m_DownloadLevelsMsgBoxRect.nY+
-                         m_DownloadLevelsMsgBoxRect.nHeight-nBarHeight-4,m_DownloadingLevel,MAKE_COLOR(255,255,255,128));
+	  UIFont *v_font = m_Renderer.getSmallFont();
+	  if(v_font != NULL) {
+	    UITextDraw::printRaw(v_font,m_DownloadLevelsMsgBoxRect.nX+13,m_DownloadLevelsMsgBoxRect.nY+
+				 m_DownloadLevelsMsgBoxRect.nHeight-nBarHeight-4,m_DownloadingLevel,MAKE_COLOR(255,255,255,128));
+	  }
     SDL_GL_SwapBuffers();            
   }
   

@@ -253,7 +253,6 @@ namespace vapp {
     
     /* Should we do some text? */
     if(m_bTextInput && m_pTextInputFont!=NULL) {      
-      UIFont *pOldFont = getFont();
       setFont(m_pTextInputFont);
       putText(16,120,m_TextInput + std::string("|"));
     }
@@ -399,10 +398,14 @@ namespace vapp {
                             GET_GREEN(getTextStyle().c3),
                             GET_BLUE(getTextStyle().c3),
                             (int)(GET_ALPHA(getTextStyle().c3)*getOpacity()/100));
-      UITextDraw::printRawGrad(getFont(),getAbsPosX()+x+1,getAbsPosY()+y+1,
-                               Text,MAKE_COLOR(0,0,0,255),MAKE_COLOR(0,0,0,255),MAKE_COLOR(0,0,0,255),MAKE_COLOR(0,0,0,255),bRotated);
-      UITextDraw::printRawGrad(getFont(),getAbsPosX()+x,getAbsPosY()+y,
-                               Text,c0,c1,c2,c3,bRotated);
+
+      UIFont *v_font = getFont();
+      if(v_font != NULL) {
+	UITextDraw::printRawGrad(v_font,getAbsPosX()+x+1,getAbsPosY()+y+1,
+				 Text,MAKE_COLOR(0,0,0,255),MAKE_COLOR(0,0,0,255),MAKE_COLOR(0,0,0,255),MAKE_COLOR(0,0,0,255),bRotated);
+	UITextDraw::printRawGrad(v_font,getAbsPosX()+x,getAbsPosY()+y,
+				 Text,c0,c1,c2,c3,bRotated);
+      }
     }
   }
    
@@ -672,8 +675,12 @@ FRAME_BR (187,198) (8x8)
         int nX1,nY1,nX2,nY2;
         getTextExt(m_CurrentContextHelp,&nX1,&nY1,&nX2,&nY2);
         
-        UITextDraw::printRaw(getFont(),getApp()->getDispWidth()-(nX2-nY1),getApp()->getDispHeight()-5,
-                            m_CurrentContextHelp,MAKE_COLOR(255,255,0,255));
+	UIFont *v_font = getFont();
+
+	if(v_font != NULL) {
+	  UITextDraw::printRaw(v_font,getApp()->getDispWidth()-(nX2-nY1),getApp()->getDispHeight()-5,
+			       m_CurrentContextHelp,MAKE_COLOR(255,255,0,255));
+	}
       }
     }
   }
@@ -881,13 +888,18 @@ FRAME_BR (187,198) (8x8)
                 Image = pc;
                 
               /* Try loading texture */
-              Texture *pTexture = getApp()->TexMan.loadTexture(std::string("./Textures/Fonts/") + Image,false,true,false);
+              Texture *pTexture = NULL;
+	      Sprite *pSprite   = getApp()->m_theme.getSprite(SPRITE_TYPE_FONT, Name);
+	      if(pSprite != NULL) {
+	      	pTexture = pSprite->getTexture(false, true, false);
+	      }
+
+
               if(pTexture == NULL)
                 Log("** Warning ** : font texture '%s' missing",Image.c_str());
               else {                  
                 /* Got an empty font */
                 UIFont *pFont = new UIFont;
-                pFont->Image = Image;
                 pFont->Name = Name;
                 pFont->pTexture = pTexture;
                 m_Fonts.push_back(pFont);

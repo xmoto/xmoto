@@ -596,15 +596,21 @@ namespace vapp {
       int tx1,ty1,tx2,ty2;
       char cBuf[256];    
       sprintf(cBuf,"%d",nQuantity);
-      UITextDraw::getTextExt(getSmallFont(),cBuf,&tx1,&ty1,&tx2,&ty2);
-      
+
+      UIFont *v_font = getSmallFont();
+      if(v_font != NULL) {
+	UITextDraw::getTextExt(v_font,cBuf,&tx1,&ty1,&tx2,&ty2);
+      }      
+
       /* Now for some evil special-case adjustments */
       int nAdjust = 0;
       if(nQuantity == 1) nAdjust = -3;
       if(nQuantity > 9) nAdjust = -2;
       
       /* Draw text */
-      UITextDraw::printRaw(getSmallFont(),nAdjust + (x1+x2)/2 - (tx2-tx1)/2,y2-(ty2-ty1)+3,cBuf,MAKE_COLOR(255,255,0,255));
+      if(v_font != NULL) {
+	UITextDraw::printRaw(v_font,nAdjust + (x1+x2)/2 - (tx2-tx1)/2,y2-(ty2-ty1)+3,cBuf,MAKE_COLOR(255,255,0,255));
+      }
     }
   }
   
@@ -649,9 +655,13 @@ namespace vapp {
       for(int i=0;i<pGame->getGameMessage().size();i++) {
         GameMessage *pMsg = pGame->getGameMessage()[i];
         int x1,y1,x2,y2;
-        UITextDraw::getTextExt(getMediumFont(),pMsg->Text,&x1,&y1,&x2,&y2);
-        UITextDraw::printRaw(getMediumFont(),400 - (x2-x1)/2,pMsg->Pos[1]*600,pMsg->Text,MAKE_COLOR(255,255,255,pMsg->nAlpha));
-      } 
+
+	UIFont *v_font = getMediumFont();
+	if(v_font != NULL) {
+	  UITextDraw::getTextExt(v_font,pMsg->Text,&x1,&y1,&x2,&y2);
+	  UITextDraw::printRaw(v_font,400 - (x2-x1)/2,pMsg->Pos[1]*600,pMsg->Text,MAKE_COLOR(255,255,255,pMsg->nAlpha));
+	}
+      }
     }
   }
   
@@ -1314,14 +1324,17 @@ namespace vapp {
       glLoadIdentity();
       
       int nMinX,nMinY,nMaxX,nMaxY;
-      UITextDraw::getTextExt(m_pSFont,Text,&nMinX,&nMinY,&nMaxX,&nMaxY);
-      int nx = vx - (nMaxX - nMinX)/2;
-      int ny = vy;
-      UITextDraw::printRaw(m_pSFont,nx-1,ny-1,Text,MAKE_COLOR(0,0,0,GET_ALPHA(c)));
-      UITextDraw::printRaw(m_pSFont,nx+1,ny-1,Text,MAKE_COLOR(0,0,0,GET_ALPHA(c)));
-      UITextDraw::printRaw(m_pSFont,nx+1,ny+1,Text,MAKE_COLOR(0,0,0,GET_ALPHA(c)));
-      UITextDraw::printRaw(m_pSFont,nx-1,ny+1,Text,MAKE_COLOR(0,0,0,GET_ALPHA(c)));
-      UITextDraw::printRaw(m_pSFont,nx,ny,Text,c);
+      if(m_pSFont != NULL) {
+	UITextDraw::getTextExt(m_pSFont,Text,&nMinX,&nMinY,&nMaxX,&nMaxY);
+
+	int nx = vx - (nMaxX - nMinX)/2;
+	int ny = vy;
+	UITextDraw::printRaw(m_pSFont,nx-1,ny-1,Text,MAKE_COLOR(0,0,0,GET_ALPHA(c)));
+	UITextDraw::printRaw(m_pSFont,nx+1,ny-1,Text,MAKE_COLOR(0,0,0,GET_ALPHA(c)));
+	UITextDraw::printRaw(m_pSFont,nx+1,ny+1,Text,MAKE_COLOR(0,0,0,GET_ALPHA(c)));
+	UITextDraw::printRaw(m_pSFont,nx-1,ny+1,Text,MAKE_COLOR(0,0,0,GET_ALPHA(c)));
+	UITextDraw::printRaw(m_pSFont,nx,ny,Text,c);
+      }	
 
       glPopMatrix();
       glMatrixMode(GL_PROJECTION);
