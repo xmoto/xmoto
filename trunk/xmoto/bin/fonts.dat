@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="uft-8"?>
 <fontdata>
-	<fontmap name="SFont" image="SFont.png">
+	<fontmap name="SFont">
 		<char i="0" x="236" y="3" w="8=" h="7" incx="8" incy="0" ox="1" oy="7"/>
 		<char i="1" x="236" y="3" w="8=" h="7" incx="8" incy="0" ox="1" oy="7"/>
 		<char i="2" x="236" y="3" w="8=" h="7" incx="8" incy="0" ox="1" oy="7"/>
@@ -257,7 +257,7 @@
 		<char i="255" x="38" y="129" w="10=" h="16" incx="8" incy="0" ox="0" oy="11"/>
 	</fontmap>
 
-	<fontmap name="MFont" image="MFont.png">
+	<fontmap name="MFont">
 		<char i="0" x="133" y="13" w="11=" h="10" incx="12" incy="0" ox="1" oy="12"/>
 		<char i="1" x="133" y="13" w="11=" h="10" incx="12" incy="0" ox="1" oy="12"/>
 		<char i="2" x="133" y="13" w="11=" h="10" incx="12" incy="0" ox="1" oy="12"/>
