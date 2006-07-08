@@ -848,7 +848,7 @@ void ThemeChoicer::initList() {
 
     try {
       v_name = getThemeNameFromFile(v_themesFiles[i]);
-      if(v_name != THEME_DEFAULT_THEMEFILE) {
+      if(v_name != THEME_DEFAULT_THEMENAME) {
 	m_choices.push_back(new ThemeChoice(v_name, v_themesFiles[i]));
       }
     } catch(vapp::Exception &e) {
@@ -857,7 +857,7 @@ void ThemeChoicer::initList() {
   }
 
   /* load original.xml if the default theme is not already loaded */
-  if(ExistThemeName(THEME_DEFAULT_THEMEFILE) == false) {
+  if(ExistThemeName(THEME_DEFAULT_THEMENAME) == false) {
     try {
       m_choices.push_back(new ThemeChoice(THEME_DEFAULT_THEMENAME, THEME_DEFAULT_THEMEFILE));
     } catch(vapp::Exception &e) {
@@ -893,6 +893,10 @@ std::string ThemeChoicer::getThemeNameFromFile(std::string p_themeFile) {
   }
   
   return m_name;
+}
+
+std::vector<ThemeChoice*> ThemeChoicer::getChoices() {
+  return m_choices;
 }
 
 ThemeChoice::ThemeChoice(std::string p_themeName, std::string p_themeFile) {

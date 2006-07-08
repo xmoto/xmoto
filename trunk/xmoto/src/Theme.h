@@ -64,7 +64,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #endif
 
 #define THEME_DEFAULT_THEMENAME "Classic"
-#define THEME_DEFAULT_THEMEFILE "Theme/highscores.xml"
+#define THEME_DEFAULT_THEMEFILE "Themes/original.xml"
 
   enum SpriteType {
     SPRITE_TYPE_ANIMATION,
@@ -389,6 +389,7 @@ class ThemeChoicer {
 
   bool ExistThemeName(std::string p_themeName);
   std::string getFileName(std::string p_themeName);
+  std::vector<ThemeChoice*> getChoices();
 
  private:
   void cleanList();

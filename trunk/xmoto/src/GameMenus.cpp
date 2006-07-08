@@ -380,6 +380,20 @@ namespace vapp {
     pAutosaveReplays->setGroup(50023);
     pAutosaveReplays->setContextHelp(CONTEXTHELP_AUTOSAVEREPLAYS);
    
+    UIList *pThemeList = new UIList(pGeneralOptionsTab,5,125,"",
+				    pGeneralOptionsTab->getPosition().nWidth-10,
+				    pGeneralOptionsTab->getPosition().nHeight-125-60);
+    pThemeList->setID("THEME_LIST");
+    pThemeList->setFont(m_Renderer.getSmallFont());
+    pThemeList->addColumn(GAMETEXT_THEME, pThemeList->getPosition().nWidth);
+
+    std::vector<ThemeChoice*> v_themeChoices;
+    v_themeChoices = m_themeChoicer.getChoices();
+    for(int i=0; i<v_themeChoices.size(); i++) {
+      pThemeList->addEntry(v_themeChoices[i]->ThemeName().c_str()); 
+    }
+    pThemeList->setContextHelp(CONTEXTHELP_THEME);
+
     UIWindow *pVideoOptionsTab = new UIWindow(pOptionsTabs,20,40,GAMETEXT_VIDEO,pOptionsTabs->getPosition().nWidth-40,pOptionsTabs->getPosition().nHeight);
     pVideoOptionsTab->enableWindow(true);
     pVideoOptionsTab->showWindow(false);
@@ -703,6 +717,8 @@ namespace vapp {
     pMotionBlurGhost->setContextHelp(CONTEXTHELP_MOTIONBLURGHOST);
 
 #endif
+
+    /* ***** */
 
     m_pLevelPacksWindow = new UIFrame(m_pMainMenu,300,(getDispHeight()*140)/600,"",getDispWidth()-300-20,getDispHeight()-40-(getDispHeight()*120)/600-10);      
     m_pLevelPacksWindow->showWindow(false);
@@ -2594,6 +2610,8 @@ namespace vapp {
     UIButton *pContextHelp = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:ENABLECONTEXTHELP");
     UIButton *pAutosaveReplays = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:AUTOSAVEREPLAYS");
 
+    UIList *pThemeList = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:THEME_LIST");
+
     UIButton *pEnableAudioButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_AUDIO");
     UIButton *p11kHzButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:RATE11KHZ");
     UIButton *p22kHzButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:RATE22KHZ");
@@ -2684,6 +2702,16 @@ namespace vapp {
     pShowMiniMap->setChecked(m_Config.getBool("ShowMiniMap"));
     pContextHelp->setChecked(m_Config.getBool("ContextHelp"));
     pAutosaveReplays->setChecked(m_Config.getBool("AutosaveHighscoreReplays"));
+
+    std::string v_themeName = m_Config.getString("Theme");
+    int nTheme = 0;
+    for(int i=0; i<pThemeList->getEntries().size(); i++) {
+      if(pThemeList->getEntries()[i]->Text[0] == v_themeName) {
+        nTheme = i;
+        break;
+      }
+    }
+    pThemeList->setSelected(nTheme);
 
     pEnableAudioButton->setChecked(m_Config.getBool("AudioEnable"));
 
@@ -2802,6 +2830,8 @@ namespace vapp {
     /* The following require restart */
     m_Config.setChanged(false);      
 
+    m_Config.setValue("Theme",m_Config.getDefaultValue("Theme"));
+
     m_Config.setValue("WebHighscores",m_Config.getDefaultValue("WebHighscores"));
     
     #if defined(ALLOW_GHOST)
@@ -2835,6 +2865,8 @@ namespace vapp {
     UIButton *pShowMiniMap = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:SHOWMINIMAP");
     UIButton *pContextHelp = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:ENABLECONTEXTHELP");
     UIButton *pAutosaveReplays = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:AUTOSAVEREPLAYS");
+    
+    UIList *pThemeList = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:THEME_LIST");
 
     UIButton *pEnableAudioButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_AUDIO");
     UIButton *p11kHzButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:RATE11KHZ");
@@ -2947,6 +2979,11 @@ namespace vapp {
             
     /* The following require restart */
     m_Config.setChanged(false);      
+
+    if(pThemeList->getSelected() >= 0 && pThemeList->getSelected() < pThemeList->getEntries().size()) {
+      UIListEntry *pEntry = pThemeList->getEntries()[pThemeList->getSelected()];
+      m_Config.setString("Theme", pEntry->Text[0]);
+    }
 
     m_Config.setBool("AudioEnable",pEnableAudioButton->getChecked());
     

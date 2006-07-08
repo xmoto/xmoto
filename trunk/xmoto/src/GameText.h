@@ -229,6 +229,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_STATISTICS           "Statistics"
 #define GAMETEXT_STATS                "STATS"
 #define GAMETEXT_STEREO               "Stereo"
+#define GAMETEXT_THEME                "Theme"
 #define GAMETEXT_TIME                 "Time:"
 #define GAMETEXT_TRYAGAIN             "Try This Level Again"
 #define GAMETEXT_TUTORIAL             "Tutorial"
@@ -358,5 +359,7 @@ Central place to keep many in-game text strings
 
 #define CONTEXTHELP_STATS "Show various statistics about X-Moto"
 #define CONTEXTHELP_UPDATESTATS "Update statistics (also happens each time X-Moto is started)"
+
+#define CONTEXTHELP_THEME "Choose the theme for Xmoto graphics"
 
 #endif

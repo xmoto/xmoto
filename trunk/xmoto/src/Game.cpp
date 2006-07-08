@@ -1936,6 +1936,8 @@ namespace vapp {
   Create the default config
   ===========================================================================*/
   void GameApp::_CreateDefaultConfig(void) {
+    m_Config.createVar( "Theme",                  THEME_DEFAULT_THEMENAME);    
+
     /* Display */
     m_Config.createVar( "DisplayWidth",           "800" );
     m_Config.createVar( "DisplayHeight",          "600" );
@@ -2005,7 +2007,6 @@ namespace vapp {
     /* Webstuff */
     m_Config.createVar( "WebHighscoresURL",       DEFAULT_WEBHIGHSCORES_URL );
     m_Config.createVar( "WebLevelsURL",           DEFAULT_WEBLEVELS_URL );
-    m_Config.createVar( "Theme",                  THEME_DEFAULT_THEMENAME);    
 
     /* Proxy */
     m_Config.createVar( "ProxyType",              "" ); /* (blank), HTTP, SOCKS4, or SOCKS5 */
