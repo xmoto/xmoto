@@ -69,7 +69,8 @@ end
    current position ?
 
 * loading level is sometimes quite long
-* collision bugs : in particularity at the start of the level "the Parcour"
+* collision bugs : in particularity at the start of the level "the
+   Parcour", "chuck norris", "ice level"
 
 * new script call :
 killPlayer() -> kill the player
