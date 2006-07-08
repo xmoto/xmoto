@@ -349,8 +349,14 @@ void FSWeb::downloadFileBz2(const std::string &p_local_file,
 	       p_data,
 	       p_proxy_settings
 	       );
-  FileCompression::bunzip2(v_bzFile, p_local_file);
-  remove(v_bzFile.c_str());
+
+  try {
+    FileCompression::bunzip2(v_bzFile, p_local_file);
+    remove(v_bzFile.c_str());
+  } catch(vapp::Exception &e) {
+    remove(v_bzFile.c_str());
+    throw e;
+  }
 }
 
 void FSWeb::downloadFileBz2UsingMd5(const std::string &p_local_file,
@@ -418,6 +424,7 @@ void FSWeb::downloadFile(const std::string &p_local_file,
 
   std::string v_proxy_server;
   std::string v_proxy_auth_str;
+  std::string v_www_agent = WWW_AGENT;
 
   /* open the file */
   if( (v_destinationFile = fopen(v_local_file_tmp.c_str(), "wb")) == false) {
@@ -437,7 +444,7 @@ void FSWeb::downloadFile(const std::string &p_local_file,
   curl_easy_setopt(v_curl, CURLOPT_WRITEFUNCTION, FSWeb::writeData);
   curl_easy_setopt(v_curl, CURLOPT_TIMEOUT, DEFAULT_TRANSFERT_TIMEOUT);
   curl_easy_setopt(v_curl, CURLOPT_CONNECTTIMEOUT, DEFAULT_TRANSFERT_CONNECT_TIMEOUT);
-  curl_easy_setopt(v_curl, CURLOPT_USERAGENT,  WWW_AGENT);
+  curl_easy_setopt(v_curl, CURLOPT_USERAGENT,  v_www_agent.c_str());
 
   /* set proxy settings */
   if(p_proxy_settings != NULL) {

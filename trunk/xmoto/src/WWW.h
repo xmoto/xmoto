@@ -45,7 +45,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define DEFAULT_WEBLEVELS_FILENAME        "weblevels.xml"
 #define DEFAULT_WEBLEVELS_DIR             "downloaded"
 
-#define WWW_AGENT ("xmoto-" + vapp::App::getVersionString()).c_str()
+#define WWW_AGENT ("xmoto-" + vapp::App::getVersionString())
 
 #if defined(USE_HASH_MAP)
   #ifdef __GNUC__
