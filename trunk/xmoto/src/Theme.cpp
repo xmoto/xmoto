@@ -204,12 +204,12 @@ Sprite* Theme::getSprite(enum SpriteType pSpriteType, std::string pName) {
 }
 
 std::string Theme::getDefaultThemeFile() {
-  if(vapp::FS::isFileReadable("custom_theme.xml")) {
-    return "custom_theme.xml";
+  if(vapp::FS::isFileReadable("Themes/weboriginal.xml")) {
+    return "Themes/weboriginal.xml";
   }
 
-  if(vapp::FS::isFileReadable("original_theme.xml")) {
-    return "original_theme.xml";
+  if(vapp::FS::isFileReadable("Themes/original.xml")) {
+    return "Themes/original.xml";
   }
 
   throw vapp::Exception("No avaible theme file !");
