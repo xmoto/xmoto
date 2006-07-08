@@ -841,9 +841,25 @@ void ThemeChoicer::initList() {
   std::string v_name;
 
   for(int i=0; i<v_themesFiles.size(); i++) {
+    /* 
+       one exception, the original.xml is loaded only if it is not replaced 
+       by an update of this theme
+    */
+
     try {
       v_name = getThemeNameFromFile(v_themesFiles[i]);
-      m_choices.push_back(new ThemeChoice(v_name, v_themesFiles[i]));
+      if(v_name != THEME_DEFAULT_THEMEFILE) {
+	m_choices.push_back(new ThemeChoice(v_name, v_themesFiles[i]));
+      }
+    } catch(vapp::Exception &e) {
+      /* anyway, give up this theme */
+    }
+  }
+
+  /* load original.xml if the default theme is not already loaded */
+  if(ExistThemeName(THEME_DEFAULT_THEMEFILE) == false) {
+    try {
+      m_choices.push_back(new ThemeChoice(THEME_DEFAULT_THEMENAME, THEME_DEFAULT_THEMEFILE));
     } catch(vapp::Exception &e) {
       /* anyway, give up this theme */
     }
