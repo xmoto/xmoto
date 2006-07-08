@@ -204,23 +204,6 @@ namespace vapp {
 		m_EntityTable.loadFile("editor.dat");
 		m_EntityTable.consoleDump();
     
-    /* Load textures */  
-    TexMan.setDefaultTextureName("Dirt");         
-    printf("Loading texture thumbnails...\n");
-    std::vector<std::string> TextureFiles = FS::findPhysFiles("Textures/*.jpg");
-    for(int i=0;i<TextureFiles.size();i++) {
-      /* Ignore .. and . */
-      if(TextureFiles[i].at(TextureFiles[i].length()-1) != '.' &&
-        !FS::isDir(TextureFiles[i])) {
-	      printf("    [%s]\n",TextureFiles[i].c_str() );
-        Texture *pTex = TexMan.loadTexture(TextureFiles[i],true);
-        if(pTex != NULL) {
-          pTex->Tag="BLK"; /* this texture is suitable for block graphics */
-        }
-      }
-    }
-    printf("  %d loaded OK\n",TextureFiles.size());
-  
     /* Determine position and size of main GUI elements */
     m_MainMenuAreaSize = Vector2f(160,getDispHeight()-132);
     m_MainMenuAreaPos  = Vector2f(getDispWidth()-m_MainMenuAreaSize.x,0);
@@ -310,7 +293,6 @@ namespace vapp {
     if(m_pLevelSrc != NULL) delete m_pLevelSrc;
     delete m_pEntityMenu;
     delete m_pMainMenu;
-    TexMan.unloadTextures();
   }
   
   /*============================================================================
@@ -437,8 +419,17 @@ namespace vapp {
             TextureSelectionTool Sel;
             std::vector<Texture *> TexList;
             
-            /* Only list textures tagged with "BLK" */
-            TexList = TexMan.fetchTaggedTextures("BLK");
+	    std::vector<Sprite*> v_sprites = m_theme.getSpritesList();
+	    Texture* v_texture;
+	    for(int i=0; i<v_sprites.size(); i++) {
+	      if(v_sprites[i]->getType() == SPRITE_TYPE_TEXTURE) {
+		v_texture = v_sprites[i]->getTexture();
+		if(v_texture != NULL) {
+		  TexList.push_back(v_texture);
+		}
+	      }
+	    }
+
             
             Vector2f A=Vector2f(17,17);
             Vector2f B=Vector2f(getDispWidth()-66,getDispHeight()-27);
@@ -1752,7 +1743,13 @@ namespace vapp {
       }      
       CommonTextureID = Blocks[i]->Texture;
     }  
-    return TexMan.getTexture(CommonTextureID);  /* TODO: throw exception if not found instead */
+
+    Sprite* v_sprite = m_theme.getSprite(SPRITE_TYPE_TEXTURE, CommonTextureID);
+    if(v_sprite == NULL) {
+      return NULL;
+    }
+
+    return v_sprite->getTexture();   
   }
   
   /*============================================================================

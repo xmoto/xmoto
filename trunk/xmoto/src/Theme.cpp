@@ -27,6 +27,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class vapp::App;
 
+std::vector<Sprite*> Theme::getSpritesList() {
+  return m_sprites;
+}
+
 void Theme::initDefaultFont() {
     CBuiltInFont Fnt;
       
@@ -110,6 +114,9 @@ Theme::Theme() {
 
 Theme::~Theme() {
   cleanSprites();
+  
+  /* Kill textures */
+  m_texMan.unloadTextures();
 }
  
 vapp::Texture* Theme::loadTexture(std::string p_fileName, bool bSmall, bool bClamp, bool bFilter) {
@@ -176,6 +183,8 @@ void Theme::loadSpritesFromXML(TiXmlElement *p_ThemeXmlDataElement) {
       newMiscSpriteFromXML(pVarElem);
     } else if(v_spriteType == "Texture") {
       newTextureSpriteFromXML(pVarElem);
+    } else if(v_spriteType == "UI") {
+      newUISpriteFromXML(pVarElem);
     } else {
       vapp::Log("Warning: unknown type '%s' in theme file !", v_spriteType.c_str());
     }
@@ -391,6 +400,22 @@ void Theme::newMiscSpriteFromXML(TiXmlElement *pVarElem) {
   m_sprites.push_back(new MiscSprite(this, v_name, v_fileName));
 }
 
+void Theme::newUISpriteFromXML(TiXmlElement *pVarElem) {
+  std::string v_name;
+  std::string v_fileName;
+  const char *pc;
+
+  pc = pVarElem->Attribute("name");
+  if(pc == NULL) {return;}
+  v_name = pc;
+
+  pc = pVarElem->Attribute("file");
+  if(pc == NULL) {return;}
+  v_fileName = pc;
+
+  m_sprites.push_back(new UISprite(this, v_name, v_fileName));
+}
+
 void Theme::newTextureSpriteFromXML(TiXmlElement *pVarElem) {
   std::string v_name;
   std::string v_fileName;
@@ -425,12 +450,15 @@ Sprite::Sprite(Theme* p_associated_theme, std::string v_name) {
 Sprite::~Sprite() {
 }
 
-vapp::Texture* Sprite::getTexture() {
+vapp::Texture* Sprite::getTexture(bool bSmall, bool bClamp, bool bFilter) {
   vapp::Texture* v_currentTexture;
 
   v_currentTexture = getCurrentTexture();
   if(v_currentTexture == NULL) {
-    v_currentTexture = m_associated_theme->loadTexture(getCurrentTextureFileName());
+    v_currentTexture = m_associated_theme->loadTexture(getCurrentTextureFileName(),
+						       bSmall,
+						       bClamp,
+						       bFilter);
     if(v_currentTexture == NULL) { 
       throw vapp::Exception("Unable to load texture '" + getCurrentTextureFileName() + "'");
     }
@@ -656,6 +684,20 @@ std::string MiscSprite::getFileDir() {
   return MISC_SPRITE_FILE_DIR;
 }
 
+UISprite::UISprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
+}
+
+UISprite::~UISprite() {
+}
+
+enum SpriteType UISprite::getType() {
+  return SPRITE_TYPE_UI;
+}
+
+std::string UISprite::getFileDir() {
+  return UI_SPRITE_FILE_DIR;
+}
+
 TextureSprite::TextureSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
 }
 
@@ -664,6 +706,10 @@ TextureSprite::~TextureSprite() {
 
 enum SpriteType TextureSprite::getType() {
   return SPRITE_TYPE_TEXTURE;
+}
+
+std::string TextureSprite::getFileDir() {
+  return TEXTURE_SPRITE_FILE_DIR;
 }
 
 SimpleFrameSprite::SimpleFrameSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : Sprite(p_associated_theme, p_name) {

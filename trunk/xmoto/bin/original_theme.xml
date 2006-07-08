@@ -21,6 +21,7 @@
 <sprite type="BikerPart" name="GhostUpperArm"   file="UpperArm_Ghost.png" />
 <sprite type="BikerPart" name="GhostUpperLeg"   file="UpperLeg_Ghost.png" />
 
+<sprite type="Texture" name="default"         file="Dirt.jpg" />
 <sprite type="Texture" name="BlueBricks"      file="BlueBricks.jpg" />
 <sprite type="Texture" name="Bricks"          file="Bricks.jpg" />
 <sprite type="Texture" name="DarkDirt"        file="DarkDirt.jpg" />
@@ -130,5 +131,16 @@
 <sprite type="Decoration" name="Tree1"    	   file="Tree1.png" width="5" height="6" centerX="2.5" centerY="0.2" />
 <sprite type="Decoration" name="Tree2"    	   file="Tree2.png" width="5" height="6" centerX="2.5" centerY="0.2" />
 <sprite type="Decoration" name="Tut3Sign" 	   file="Tut3Sign.png" width="3" height="3" centerX="1.5" centerY="0.2" />
+
+<sprite type="UI" name="Loading" 	    file="Loading.png" />
+<sprite type="UI" name="TitleBL" 	    file="TitleBL.jpg" />
+<sprite type="UI" name="TitleBR" 	    file="TitleBR.jpg" />
+<sprite type="UI" name="TitleTL" 	    file="TitleTL.jpg" />
+<sprite type="UI" name="TitleTR" 	    file="TitleTR.jpg" />
+<sprite type="UI" name="Cursor"             file="Cursor.png" />
+<sprite type="UI" name="NewLevelsAvailable" file="NewLevelsAvail.png" />
+<sprite type="UI" name="Misc"               file="Misc.png" />
+<sprite type="UI" name="MiscDisabled"       file="MiscDisabled.png" />
+<sprite type="UI" name="MiscMiscActive"     file="MiscActive.png" />
 
 </xmoto_theme>

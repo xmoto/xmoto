@@ -74,14 +74,11 @@ namespace vapp {
     
       /* Data interface */
       std::vector<Texture *> &getTextures(void) {return m_Textures;}
-      std::string &getDefaultTextureName(void) {return m_DefaultTextureName;}      
-      void setDefaultTextureName(std::string Name) {m_DefaultTextureName=Name;}
       int getTextureUsage(void) {return m_nTexSpaceUsage;}
 
     private:
       /* Data */
       std::vector<Texture *> m_Textures;      /* Textures */
-      std::string m_DefaultTextureName;       /* Name of default texture */
       
       int m_nTexSpaceUsage;                   /* Bytes of textures resident */
   };

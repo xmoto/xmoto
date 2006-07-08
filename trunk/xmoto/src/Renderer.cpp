@@ -78,23 +78,36 @@ namespace vapp {
   
     for(int i=0;i<Blocks.size();i++) {
       Vector2f Center;
+      Sprite *pSprite;
       Texture *pTexture;
       GLuint GLName = 0;
+
+      pTexture = NULL;
       
       if(Blocks[i]->pSrcBlock && (Blocks[i]->pSrcBlock->bBackground || Blocks[i]->pSrcBlock->bDynamic)) continue;
 
       if(Blocks[i]->pSrcBlock) {
         Center = Vector2f(Blocks[i]->pSrcBlock->fPosX,Blocks[i]->pSrcBlock->fPosY);
-        pTexture = getParent()->TexMan.getTexture(Blocks[i]->pSrcBlock->Texture);
-        if(pTexture != NULL) {GLName = pTexture->nID;}
-        else {
+
+	pSprite = getParent()->m_theme.getSprite(SPRITE_TYPE_TEXTURE,
+						 Blocks[i]->pSrcBlock->Texture);
+        if(pSprite != NULL) {
+	  pTexture = pSprite->getTexture();
+	  GLName = pTexture->nID;
+	} else {
           Log("** Warning ** : Texture '%s' not found!",Blocks[i]->pSrcBlock->Texture.c_str());
           getGameObject()->gameMessage(GAMETEXT_MISSINGTEXTURES,true);          
         }
       }
       else {
-        pTexture = getParent()->TexMan.getTexture("default");
-        if(pTexture != NULL) {GLName = pTexture->nID;}
+	pSprite = getParent()->m_theme.getSprite(SPRITE_TYPE_TEXTURE, "default");
+	if(pSprite != NULL) {
+	  pTexture = pSprite->getTexture();
+	}
+
+        if(pTexture != NULL) {
+	  GLName = pTexture->nID;
+	}
       }
       
       /* TODO: introduce non-static geoms and handle them differently */
@@ -734,10 +747,15 @@ namespace vapp {
 			  fR[2] = sin(Blocks[i]->fRotation); fR[3] = cos(Blocks[i]->fRotation);
 			  
 			  /* Determine texture... this is so ingredibly ugly... TODO: no string lookups here */
-			  Texture *pTexture = getParent()->TexMan.getTexture(Blocks[i]->pSrcBlock->Texture);
+			  Texture *pTexture = NULL;
+			  Sprite *pSprite;
+			  pSprite = getParent()->m_theme.getSprite(SPRITE_TYPE_TEXTURE, Blocks[i]->pSrcBlock->Texture);
+			  if(pSprite != NULL) {
+			    pTexture = pSprite->getTexture();
+			  }
 			  GLuint GLName = 0;
 			  if(pTexture != NULL) GLName = pTexture->nID;
-			  
+
 				for(int j=0;j<Blocks[i]->ConvexBlocks.size();j++) {				
   		    glBindTexture(GL_TEXTURE_2D,GLName);				  				  
 				  glEnable(GL_TEXTURE_2D);      
@@ -798,11 +816,12 @@ namespace vapp {
 			/* Render all non-background blocks */
 			/* Static geoms... */
 			for(int i=0;i<m_Geoms.size();i++) {
-			  if(m_Geoms[i]->pTexture != NULL)
-				  glBindTexture(GL_TEXTURE_2D,m_Geoms[i]->pTexture->nID);				  
-				else
-				  glBindTexture(GL_TEXTURE_2D,0);	/* no texture */
-				  
+			  if(m_Geoms[i]->pTexture != NULL) {
+			    glBindTexture(GL_TEXTURE_2D,m_Geoms[i]->pTexture->nID);
+			  } else {
+			    glBindTexture(GL_TEXTURE_2D,0);	/* no texture */
+			  }			    
+
 				glEnable(GL_TEXTURE_2D);      
 				glColor3f(1,1,1);
 	      
@@ -1015,7 +1034,13 @@ namespace vapp {
 
       /* Main body */      
       Center = Vector2f(Blocks[i]->pSrcBlock->fPosX,Blocks[i]->pSrcBlock->fPosY);
-      pTexture = getParent()->TexMan.getTexture(Blocks[i]->pSrcBlock->Texture);
+      Sprite *pSprite;
+      pSprite = getParent()->m_theme.getSprite(SPRITE_TYPE_TEXTURE, Blocks[i]->pSrcBlock->Texture);
+      if(pSprite != NULL) {
+	pTexture = pSprite->getTexture();
+      } else {
+	pTexture = NULL;
+      }
       if(pTexture != NULL) {GLName = pTexture->nID;}
     
       glBindTexture(GL_TEXTURE_2D,GLName);

@@ -178,8 +178,6 @@ namespace vapp {
   Get loaded texture by name
   ===========================================================================*/  
   Texture *TextureManager::getTexture(std::string Name) {
-    if(Name == "default") return getTexture( m_DefaultTextureName );
-    
     for(int i=0;i<m_Textures.size();i++)
       if(m_Textures[i]->Name == Name) return m_Textures[i];
     return NULL;

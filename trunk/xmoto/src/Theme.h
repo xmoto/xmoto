@@ -33,6 +33,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define MISC_SPRITE_FILE_DIR       SPRITE_FILE_DIR"/Misc"
 #define ANIMATION_SPRITE_FILE_DIR  SPRITE_FILE_DIR"/Anims"
 #define BIKERPART_SPRITE_FILE_DIR  SPRITE_FILE_DIR"/Riders"
+#define UI_SPRITE_FILE_DIR         SPRITE_FILE_DIR"/UI"
+#define TEXTURE_SPRITE_FILE_DIR    SPRITE_FILE_DIR"/Textures"
 
 #define PLAYER_BODY     "PlayerBikerBody"
 #define PLAYER_FRONT    "PlayerBikerFront"
@@ -67,7 +69,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     SPRITE_TYPE_EFFECT,
     SPRITE_TYPE_FONT,
     SPRITE_TYPE_MISC,
-    SPRITE_TYPE_TEXTURE
+    SPRITE_TYPE_TEXTURE,
+    SPRITE_TYPE_UI
   };
 
 class Theme;
@@ -81,7 +84,12 @@ class Sprite {
   virtual enum SpriteType getType() = 0;
   std::string getName();
   void load();
-  vapp::Texture* getTexture();
+
+  /* 
+     the bSmall, bClamp, bFilter parameters are considerated 
+     only the first time that getTexture is called for a given sprite
+  */
+  vapp::Texture* getTexture(bool bSmall=false, bool bClamp=false, bool bFilter=true);
 
  protected:
   virtual vapp::Texture* getCurrentTexture() = 0;
@@ -114,6 +122,8 @@ class TextureSprite : public SimpleFrameSprite {
   TextureSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename);
   ~TextureSprite();
   enum SpriteType getType();
+
+  std::string getFileDir();
 
  private:
 };
@@ -221,6 +231,18 @@ class MiscSprite : public SimpleFrameSprite {
  private:
 };
 
+class UISprite : public SimpleFrameSprite {
+ public:
+  UISprite(Theme* p_associated_theme, std::string p_name, std::string p_filename);
+  ~UISprite();
+  enum SpriteType getType();
+
+ protected:
+  std::string getFileDir();
+
+ private:
+};
+
 class DecorationSprite : public SimpleFrameSprite {
  public:
   DecorationSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename, float p_width, float p_height, float p_centerX, float p_centerY);
@@ -252,10 +274,15 @@ class Theme {
   void load(std::string p_themeFile);
 
   std::string getDefaultThemeFile();
+
   Sprite* getSprite(enum SpriteType pSpriteType, std::string pName);
-  vapp::Texture* loadTexture(std::string p_fileName,bool bSmall=false,bool bClamp=false,bool bFilter=true);
+  vapp::Texture* loadTexture(std::string p_fileName,
+			     bool bSmall=false,
+			     bool bClamp=false,
+			     bool bFilter=true);
 
   vapp::Texture* getDefaultFont();
+  std::vector<Sprite*> getSpritesList();
 
   BikerTheme* getPlayerTheme();
 #if defined(ALLOW_GHOST)
@@ -287,6 +314,7 @@ class Theme {
   void newFontSpriteFromXML(TiXmlElement *pVarElem);
   void newMiscSpriteFromXML(TiXmlElement *pVarElem);
   void newTextureSpriteFromXML(TiXmlElement *pVarElem);
+  void newUISpriteFromXML(TiXmlElement *pVarElem);
 };
 
 class BikerTheme {

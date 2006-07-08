@@ -549,6 +549,8 @@ namespace vapp {
   Initialize game
   ===========================================================================*/
   void GameApp::userInit(void) {
+    Sprite* pSprite;
+
     SDL_ShowCursor(SDL_DISABLE);        
   
     /* Reset timers */
@@ -652,9 +654,14 @@ namespace vapp {
     Texture *pLoadingScreen = NULL;
     if(!isNoGraphics()) {    
       /* Show loading screen */
-      pLoadingScreen = TexMan.loadTexture("Textures/UI/Loading.png",false,true);
+      pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "Loading");
+
+      if(pSprite != NULL) {
+	pLoadingScreen = pSprite->getTexture(false, true);
+      }
+
       _UpdateLoadingScreen((1.0f/9.0f) * 0,pLoadingScreen,GAMETEXT_LOADINGSOUNDS);
-      
+
       if(Sound::isEnabled()) {
         /* Load sounds */
         
@@ -683,20 +690,20 @@ namespace vapp {
         
         Log(" %d sound%s loaded",Sound::getNumSamples(),Sound::getNumSamples()==1?"":"s");
       }
+
       _UpdateLoadingScreen((1.0f/9.0f) * 1,pLoadingScreen,GAMETEXT_INITTEXT);
           
-      /* Find all files in the textures dir and load them */
-      TexMan.setDefaultTextureName("Dirt");
-      
+      /* Find all files in the textures dir and load them */     
       UITextDraw::initTextDrawing(this);
       UITexture::setApp(this);
 
       _UpdateLoadingScreen((1.0f/9.0f) * 2,pLoadingScreen,GAMETEXT_LOADINGTEXTURES);
       
+      /* textures are now part of theme */
       std::vector<std::string> TextureFiles = FS::findPhysFiles("Textures/Textures/*.jpg");
       int nLoaded=0;
       for(int i=0;i<TextureFiles.size();i++) {
-        /* Ignore .. and . (and makefiles) */
+        // Ignore .. and . (and makefiles)
         if(TextureFiles[i].at(TextureFiles[i].length()-1) != '.' &&
           !FS::isDir(TextureFiles[i])) {
           if(TexMan.loadTexture(TextureFiles[i] ) != NULL)
@@ -707,20 +714,43 @@ namespace vapp {
 
       _UpdateLoadingScreen((1.0f/9.0f) * 3,pLoadingScreen,GAMETEXT_LOADINGMENUGRAPHICS);
         
-      /* Check to see if we can find the default texture */
-      if(TexMan.getTexture("default") == NULL)
-        throw Exception("no valid default texture");
-        
       /* Load title screen textures + cursor + stuff */
-      m_pTitleBL = TexMan.loadTexture("Textures/UI/TitleBL.jpg",false,true);
-      m_pTitleBR = TexMan.loadTexture("Textures/UI/TitleBR.jpg",false,true);
-      m_pTitleTL = TexMan.loadTexture("Textures/UI/TitleTL.jpg",false,true);
-      m_pTitleTR = TexMan.loadTexture("Textures/UI/TitleTR.jpg",false,true);
-      
-      m_pCursor = TexMan.loadTexture("Textures/UI/Cursor.png",false,true,true);
+      m_pTitleBL = NULL;
+      pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "TitleBL");
+      if(pSprite != NULL) {
+	m_pTitleBL = pSprite->getTexture(false, true);
+      }
 
-#if defined(SUPPORT_WEBACCESS)      
-      m_pNewLevelsAvailIcon = TexMan.loadTexture("Textures/UI/NewLevelsAvail.png",false,true,true);
+      m_pTitleBR = NULL;
+      pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "TitleBR");
+      if(pSprite != NULL) {
+	m_pTitleBR = pSprite->getTexture(false, true);
+      }
+
+      m_pTitleTL = NULL;
+      pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "TitleTL");
+      if(pSprite != NULL) {
+	m_pTitleTL = pSprite->getTexture(false, true);
+      }
+
+      m_pTitleTR = NULL;
+      pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "TitleTR");
+      if(pSprite != NULL) {
+	m_pTitleTR = pSprite->getTexture(false, true);
+      }
+
+      m_pCursor = NULL;
+      pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "Cursor");
+      if(pSprite != NULL) {
+	m_pCursor = pSprite->getTexture(false, true, true);
+      }
+
+#if defined(SUPPORT_WEBACCESS)  
+      m_pNewLevelsAvailIcon = NULL;
+      pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "NewLevelsAvailable");
+      if(pSprite != NULL) {
+	m_pNewLevelsAvailIcon = pSprite->getTexture(false, true, true);
+      }
 #endif
 
       _UpdateLoadingScreen((1.0f/9.0f) * 4,pLoadingScreen,GAMETEXT_LOADINGLEVELS);
@@ -788,9 +818,6 @@ namespace vapp {
       m_Renderer.init();
       _UpdateLoadingScreen((1.0f/9.0f) * 7,pLoadingScreen,GAMETEXT_INITMENUS);
       
-      /* Bonus info */
-      Log("Total: %d kB of textures loaded",TexMan.getTextureUsage()/1024);
-
       /* Initialize menu system */
       _InitMenus();    
       _UpdateLoadingScreen((1.0f/9.0f) * 8,pLoadingScreen,GAMETEXT_UPDATINGLEVELS);
@@ -1438,9 +1465,11 @@ namespace vapp {
     
     /* Draw mouse cursor */
     if(!isNoGraphics() && m_bShowCursor) {
-      int nMX,nMY;
-      getMousePos(&nMX,&nMY);      
-      drawImage(Vector2f(nMX-2,nMY-2),Vector2f(nMX+30,nMY+30),m_pCursor);
+      if(m_pCursor != NULL) {
+	int nMX,nMY;
+	getMousePos(&nMX,&nMY);      
+	drawImage(Vector2f(nMX-2,nMY-2),Vector2f(nMX+30,nMY+30),m_pCursor);
+      }
     }
   }
 
@@ -1491,9 +1520,6 @@ namespace vapp {
 
     if(!isNoGraphics()) {
       UITextDraw::uninitTextDrawing();  
-    
-      /* Kill textures */
-      TexMan.unloadTextures();
     }
   }
 
@@ -2513,10 +2539,12 @@ namespace vapp {
         m_Renderer.getGUI()->paint();
         
         UIRect TempRect;
-        
-        int nMX,nMY;
-        getMousePos(&nMX,&nMY);      
-        drawImage(Vector2f(nMX-2,nMY-2),Vector2f(nMX+30,nMY+30),m_pCursor);
+
+	if(m_pCursor != NULL) {        
+	  int nMX,nMY;
+	  getMousePos(&nMX,&nMY);      
+	  drawImage(Vector2f(nMX-2,nMY-2),Vector2f(nMX+30,nMY+30),m_pCursor);
+	}
 
         SDL_GL_SwapBuffers();            
       }    
