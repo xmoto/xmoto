@@ -27,6 +27,49 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 namespace vapp {
 
+  UIFrame::UIFrame() {
+    m_bMinimizable = false;
+  }
+
+  UIFrame::UIFrame(UIWindow *pParent,
+		   int x, int y,
+		   std::string Caption,
+		   int nWidth, int nHeight) {
+    initW(pParent,x,y,Caption,nWidth,nHeight);
+    
+    m_bMinimizable = false;
+    m_fMinMaxTime = 0.0f;
+    
+    m_Style=UI_FRAMESTYLE_TRANS;
+    
+    m_pMenuTL = NULL;
+    m_pMenuTR = NULL;
+    m_pMenuBL = NULL;
+    m_pMenuBR = NULL;
+    
+    Sprite *pSprite;
+    pSprite = getApp()->m_theme.getSprite(SPRITE_TYPE_UI, "MenuTL");
+    if(pSprite != NULL) {
+      m_pMenuTL = pSprite->getTexture(false,true,false);
+    }
+
+    pSprite = getApp()->m_theme.getSprite(SPRITE_TYPE_UI, "MenuTR");
+    if(pSprite != NULL) {
+      m_pMenuTR = pSprite->getTexture(false,true,false);
+    }
+
+    pSprite = getApp()->m_theme.getSprite(SPRITE_TYPE_UI, "MenuBL");
+    if(pSprite != NULL) {
+      m_pMenuBL = pSprite->getTexture(false,true,false);
+    }
+
+    pSprite = getApp()->m_theme.getSprite(SPRITE_TYPE_UI, "MenuBR");
+    if(pSprite != NULL) {
+      m_pMenuBR = pSprite->getTexture(false,true,false);
+    }
+    
+  } 
+
   /*===========================================================================
   Painting
   ===========================================================================*/

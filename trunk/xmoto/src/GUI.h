@@ -135,7 +135,6 @@ namespace vapp {
   ===========================================================================*/
   class UITexture {
     public:
-      static Texture *load(std::string Name);
       static App *getApp(void);
       static void setApp(App *pApp);
       static Texture *getMiscTexture(void);
@@ -143,8 +142,6 @@ namespace vapp {
       static Texture *getMiscActiveTexture(void);
     
     private:
-      static std::vector<Texture *> m_Textures;
-      static std::vector<std::string> m_TextureNames;
       static App *m_pApp;
       
       static Texture *m_pUIElemTexture;
@@ -350,19 +347,11 @@ namespace vapp {
   
   class UIFrame : public UIWindow {
     public:
-      UIFrame() {m_bMinimizable = false;}
-      UIFrame(UIWindow *pParent,int x=0,int y=0,std::string Caption="",int nWidth=0,int nHeight=0) {
-        initW(pParent,x,y,Caption,nWidth,nHeight);
-
-        m_bMinimizable = false;
-        m_fMinMaxTime = 0.0f;
-        
-        m_Style=UI_FRAMESTYLE_TRANS;
-        m_pMenuTL=UITexture::load("./Textures/UI/MenuTL.png");
-        m_pMenuTR=UITexture::load("./Textures/UI/MenuTR.png");
-        m_pMenuBL=UITexture::load("./Textures/UI/MenuBL.png");
-        m_pMenuBR=UITexture::load("./Textures/UI/MenuBR.png");                         
-      }      
+      UIFrame();
+      UIFrame(UIWindow *pParent,
+	      int x=0,int y=0,
+	      std::string Caption="",
+	      int nWidth=0,int nHeight=0);    
     
       /* Methods */
       virtual void paint(void);
@@ -386,8 +375,7 @@ namespace vapp {
       int m_nMinimizedX,m_nMinimizedY; /* Minimized position */
       int m_nMaximizedX,m_nMaximizedY; /* Maximized position */
       float m_fMinMaxTime;
-      
-      Texture *m_pMenuTL,*m_pMenuTR,*m_pMenuBL,*m_pMenuBR;      
+      Texture *m_pMenuTL,*m_pMenuTR,*m_pMenuBL,*m_pMenuBR;
   };
 
 	/*===========================================================================
@@ -502,7 +490,12 @@ namespace vapp {
         
         m_bBackgroundShade = false;
         
-        m_pDarkBlobTexture = UITexture::load("./Textures/UI/DarkBlob.png");                         
+        m_pDarkBlobTexture = NULL;
+	Sprite *pSprite;
+	pSprite = getApp()->m_theme.getSprite(SPRITE_TYPE_UI, "DarkBlob");
+	if(pSprite != NULL) {
+	  m_pDarkBlobTexture = pSprite->getTexture(false,true,false);
+	}
         
         m_pCustomBackgroundTexture = NULL;
       }      

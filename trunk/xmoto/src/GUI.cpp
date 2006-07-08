@@ -436,6 +436,8 @@ namespace vapp {
   }
 
   void UIWindow::putElem(int x,int y,int nWidth,int nHeight,UIElem Elem,bool bDisabled,bool bActive) {
+    Texture *vTexture;
+
     struct _ElemTable {
       UIElem E; int nX,nY,nWidth,nHeight;
     };
@@ -502,10 +504,18 @@ namespace vapp {
     int cy = getAbsPosY() + y;
     
     /* Nice. Now we know what to draw */    
-    if(bDisabled) 
-      glBindTexture(GL_TEXTURE_2D,UITexture::getMiscDisabledTexture()->nID);
-    else
-      glBindTexture(GL_TEXTURE_2D,UITexture::getMiscTexture()->nID);
+    if(bDisabled) {
+      vTexture = UITexture::getMiscDisabledTexture();
+      if(vTexture != NULL) {
+	glBindTexture(GL_TEXTURE_2D, vTexture->nID);
+      }
+    }
+    else {
+      vTexture = UITexture::getMiscTexture();
+      if(vTexture != NULL) {
+	glBindTexture(GL_TEXTURE_2D, vTexture->nID);
+      }
+    }
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
@@ -533,7 +543,11 @@ namespace vapp {
       if(n<0) n=0;
       if(n>255) n=255; /* just to be sure, i'm lazy */    
       c1=c2=c3=c4=MAKE_COLOR(255,255,255,(int)(n*getOpacity()/100));
-      glBindTexture(GL_TEXTURE_2D,UITexture::getMiscActiveTexture()->nID);
+
+      vTexture = UITexture::getMiscActiveTexture();
+      if(vTexture != NULL) {
+	glBindTexture(GL_TEXTURE_2D, vTexture->nID);
+      }
       glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
       glEnable(GL_TEXTURE_2D);
       glEnable(GL_BLEND);
@@ -1172,18 +1186,7 @@ FRAME_BR (187,198) (8x8)
 
   /*===========================================================================
   Texture mangling
-  ===========================================================================*/
-  Texture *UITexture::load(std::string Name) {
-    for(int i=0;i<m_Textures.size();i++) {
-      if(m_TextureNames[i] == Name) return m_Textures[i];
-    }
-    Texture *pTex = m_pApp->TexMan.loadTexture(Name,false,true,false);
-    if(pTex == NULL) throw Exception("UI texture failed to load");
-    m_TextureNames.push_back(Name);
-    m_Textures.push_back(pTex);
-    return pTex;
-  }
-  
+  ===========================================================================*/ 
   App *UITexture::getApp(void) {
     return m_pApp;
   }
@@ -1203,14 +1206,25 @@ FRAME_BR (187,198) (8x8)
   void UITexture::setApp(App *pApp) {
     m_pApp = pApp;
     
-    m_pUIElemTexture = load("./Textures/UI/Misc.png");
-    m_pUIElemTextureD = load("./Textures/UI/MiscDisabled.png");
-    m_pUIElemTextureA = load("./Textures/UI/MiscActive.png");
+    Sprite *pSprite;
+
+    pSprite = m_pApp->m_theme.getSprite(SPRITE_TYPE_UI, "Misc");
+    if(pSprite != NULL) {
+      m_pUIElemTexture = pSprite->getTexture(false,true,false);
+    }
+
+    pSprite = m_pApp->m_theme.getSprite(SPRITE_TYPE_UI, "MiscDisabled");
+    if(pSprite != NULL) {
+      m_pUIElemTextureD = pSprite->getTexture(false,true,false);
+    }
+
+    pSprite = m_pApp->m_theme.getSprite(SPRITE_TYPE_UI, "MiscActive");
+    if(pSprite != NULL) {
+      m_pUIElemTextureA = pSprite->getTexture(false,true,false);
+    }
   }
   
   /* Static class data */  
-  std::vector<Texture *> UITexture::m_Textures;
-  std::vector<std::string> UITexture::m_TextureNames;
   App *UITexture::m_pApp = NULL;
   Texture *UITexture::m_pUIElemTexture = NULL;
   Texture *UITexture::m_pUIElemTextureD = NULL;

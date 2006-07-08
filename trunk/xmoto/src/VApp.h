@@ -164,7 +164,6 @@ namespace vapp {
       bool useShaders(void) {return m_bShadersSupported;}
       
       Theme m_theme;
-      TextureManager TexMan;
 
       /* Extensions */
       PFNGLGENBUFFERSARBPROC glGenBuffersARB;

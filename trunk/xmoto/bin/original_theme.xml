@@ -142,5 +142,10 @@
 <sprite type="UI" name="Misc"               file="Misc.png" />
 <sprite type="UI" name="MiscDisabled"       file="MiscDisabled.png" />
 <sprite type="UI" name="MiscMiscActive"     file="MiscActive.png" />
+<sprite type="UI" name="DarkBlob"           file="DarkBlob.png" />
+<sprite type="UI" name="MenuBL" 	    file="MenuBL.png" />
+<sprite type="UI" name="MenuBR" 	    file="MenuBR.png" />
+<sprite type="UI" name="MenuTL" 	    file="MenuTL.png" />
+<sprite type="UI" name="MenuTR" 	    file="MenuTR.png" />
 
 </xmoto_theme>
