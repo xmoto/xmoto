@@ -14,7 +14,17 @@ Assigned to Neckelmann:
 
 ######################################################################
 Assigned to Nicolas:
-* theme (for sprites) (priority=high)
+* themes
+- make the www part
+- reduce diff between DecorationSprite and AnimationSprite : be able
+   to load an animated tree or an unanimated strawberry
+- do not required to restart to change the theme
+- void ThemeChoicer::initList() is not good : choose user theme before
+   others
+- update levels should ask "Do you want to update themes too ?
+   (recommanded)" because new levels could required new theme entries
+
+
 * high level function for script : DynamicMove
 Game.SetDynamicEntityRotation("Strawberry0", 0, 3, 500, 0, 0)
 Game.SetDynamicEntityTranslation("Strawberry0", 3, 1, 500, 0, 0)
