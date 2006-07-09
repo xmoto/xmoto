@@ -42,6 +42,9 @@ add the same for block once block move will work
 ######################################################################
 Unassigned:
 
+* BUG : http://xmoto.free.fr/tmp/bugonlinuxppcreplays.jpg : it
+   happends on replays on linux ppc
+
 *OpenGL-independent Renderer
    I would like to port XMoto to my GP2X, a Linux-based
  handheld game console. The main problem is that due to
