@@ -64,7 +64,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #endif
 
 #define THEME_DEFAULT_THEMENAME "Classic"
-#define THEME_DEFAULT_THEMEFILE "Themes/original.xml"
 
   enum SpriteType {
     SPRITE_TYPE_ANIMATION,
