@@ -16,10 +16,12 @@
  */
 
 #include "WWW.h"
+#include "VApp.h"
 #include "VFileIO.h"
 #include "VExcept.h"
 #include "VXml.h"
 #include <curl/curl.h>
+
 #ifdef WIN32
   #include <io.h>
 #else
@@ -775,6 +777,96 @@ const std::vector<std::string> &WebLevels::getUpdatedDownloadedLevels(void) {
   return m_webLevelsUpdatedDownloadedOK;
 }
 
+WebTheme::WebTheme(std::string pName, std::string pUrl) {
+  m_name = pName;
+  m_url  = pUrl;
+}
+
+WebTheme::~WebTheme() {
+}
+
+std::string WebTheme::getName() const {
+  return m_name;
+}
+
+std::string WebTheme::getUrl() const {
+  return m_url;
+}
+
+WebThemes::WebThemes(const ProxySettings *p_proxy_settings) {
+  m_proxy_settings = p_proxy_settings;
+}
+
+WebThemes::~WebThemes() {
+  clean();
+}
+
+void WebThemes::update() {
+}
+
+void WebThemes::upgrade() {
+  clean();
+  extractThemesAvailableFromXml();
+}
+
+std::string WebThemes::getXmlFileName() {
+  return vapp::FS::getUserDir() + "/" + DEFAULT_WEBTHEMES_FILENAME;
+}
+
+void WebThemes::extractThemesAvailableFromXml() {
+  vapp::XMLDocument v_webTXml;
+  TiXmlDocument *v_webTXmlData;
+  TiXmlElement *v_webTXmlDataElement;
+  const char *pc;
+  std::string v_themeName, v_url, v_MD5sum_web;
+  
+  v_webTXml.readFromFile(getXmlFileName());
+  v_webTXmlData = v_webTXml.getLowLevelAccess();
+
+  if(v_webTXmlData == NULL) {
+    throw vapp::Exception("error : unable analyse xml theme file");
+  }
+
+  v_webTXmlDataElement = v_webTXmlData->FirstChildElement("xmoto_themes");
+  
+  if(v_webTXmlDataElement == NULL) {
+    throw vapp::Exception("error : unable analyse xml theme file");
+  }
+
+  TiXmlElement *pVarElem = v_webTXmlDataElement->FirstChildElement("theme");
+  while(pVarElem != NULL) {
+    
+    pc = pVarElem->Attribute("name");
+    if(pc != NULL) {
+      v_themeName = pc;
+	
+      pc = pVarElem->Attribute("url");
+      if(pc != NULL) {
+	v_url = pc;	 
+	  
+	pc = pVarElem->Attribute("sum");
+	if(pc != NULL) {
+	  v_MD5sum_web = pc;	
+
+	  m_availableThemes.push_back(new WebTheme(v_themeName, v_url));
+	    
+	}
+      }
+      pVarElem = pVarElem->NextSiblingElement("theme");
+    }
+  }
+}
+
+void WebThemes::clean() {
+  for(int i=0;i<m_availableThemes.size();i++) {
+    delete m_availableThemes[i];
+  }    
+
+  m_availableThemes.clear();
+}
+
+const std::vector<WebTheme*> &WebThemes::getAvailableThemes() {
+  return m_availableThemes;
+}
+
 #endif
-
-

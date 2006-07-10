@@ -230,6 +230,8 @@ Central place to keep many in-game text strings
 #define GAMETEXT_STATS                "STATS"
 #define GAMETEXT_STEREO               "Stereo"
 #define GAMETEXT_THEME                "Theme"
+#define GAMETEXT_THEMEHOSTED          "Available"
+#define GAMETEXT_THEMENOTHOSTED       "To download"
 #define GAMETEXT_TIME                 "Time:"
 #define GAMETEXT_TRYAGAIN             "Try This Level Again"
 #define GAMETEXT_TUTORIAL             "Tutorial"

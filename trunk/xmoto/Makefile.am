@@ -29,7 +29,10 @@ common_SOURCES = src/BuiltInFont.cpp src/Image.cpp src/LevelSrc.cpp \
 	src/CRCHash.cpp \
 	src/CRCHash.h \
 	src/Theme.h \
-	src/Theme.cpp
+	src/Theme.cpp \
+	src/WWW.cpp \
+	src/WWW.h \
+	src/WWWAppInterface.h
 
 common_LDADD = $(GL_LIBS)
 
@@ -67,9 +70,6 @@ xmoto_SOURCES = $(common_SOURCES) src/BSP.cpp src/Game.cpp src/GameMain.cpp \
 	src/GameSerializer.cpp \
 	src/Collision.cpp \
 	src/Collision.h \
-	src/WWW.cpp \
-	src/WWW.h \
-	src/WWWAppInterface.h \
 	src/GUIEdit.cpp \
 	src/RendererFBO.cpp \
 	src/glext.h \

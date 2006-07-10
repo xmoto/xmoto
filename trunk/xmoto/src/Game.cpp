@@ -575,7 +575,17 @@ namespace vapp {
     _UpdateSettings();
     
     /* load theme */
-    m_theme.load(m_themeChoicer.getFileName(getConfigThemeName(&m_themeChoicer)));
+    m_themeChoicer = new ThemeChoicer(
+#if defined(SUPPORT_WEBACCESS)
+				      &m_ProxySettings
+#endif
+				      );
+    try {
+      m_theme.load(m_themeChoicer->getFileName(getConfigThemeName(m_themeChoicer)));
+    } catch(Exception &e) {
+      /* unable to load the theme, load the default one */
+      m_theme.load(m_themeChoicer->getFileName(THEME_DEFAULT_THEMENAME));
+    }
 
     /* Init drawing library */
     initLib(&m_theme);
@@ -1500,6 +1510,8 @@ namespace vapp {
       m_Renderer.shutdown();
       m_InputHandler.uninit();
     }
+
+    delete m_themeChoicer;
     
     if(m_pReplay != NULL)
       delete m_pReplay;

@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <vector>
 #include "VTexture.h"
 #include "VFileIO.h"
+#include "WWW.h"
 
 #define THEME_SPRITE_FILE_DIR "Textures"
 #define THEME_DECORATION_SPRITE_FILE_DIR THEME_SPRITE_FILE_DIR"/Sprites"
@@ -371,29 +372,41 @@ class BikerTheme {
 
 class ThemeChoice {
  public:
-  ThemeChoice(std::string p_themeName, std::string p_themeFile);
+  ThemeChoice(std::string p_themeName, std::string p_themeFile, bool p_hosted);
   ~ThemeChoice();
   std::string ThemeName();
   std::string ThemeFile();
+  bool hosted();
 
  private:
   std::string m_themeName;
   std::string m_themeFile;
+  bool m_hosted;
 };
 
 class ThemeChoicer {
  public:
-  ThemeChoicer();
+  ThemeChoicer(
+#if defined(SUPPORT_WEBACCESS)
+	       const ProxySettings *p_proxy_settings
+#endif
+	       );
   ~ThemeChoicer();
 
   bool ExistThemeName(std::string p_themeName);
   std::string getFileName(std::string p_themeName);
   std::vector<ThemeChoice*> getChoices();
 
+  void updateFromWWW();
+
  private:
   void cleanList();
   void initList();
   std::string getThemeNameFromFile(std::string p_themeFile);
+  
+#if defined(SUPPORT_WEBACCESS)
+  WebThemes *m_webThemes;
+#endif
 
   std::vector<ThemeChoice*> m_choices;
 };

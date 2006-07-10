@@ -810,12 +810,24 @@ bool ThemeChoicer::ExistThemeName(std::string p_themeName) {
   return false;
 }
 
-ThemeChoicer::ThemeChoicer() {
+ThemeChoicer::ThemeChoicer(
+#if defined(SUPPORT_WEBACCESS)
+			   const ProxySettings *p_proxy_settings
+#endif
+	     ) {
+#if defined(SUPPORT_WEBACCESS)
+  m_webThemes = new WebThemes(p_proxy_settings);
+#endif
+
   initList();
 }
 
 ThemeChoicer::~ThemeChoicer() {
   cleanList();
+
+#if defined(SUPPORT_WEBACCESS)
+  delete m_webThemes;
+#endif
 }
 
 std::string ThemeChoicer::getFileName(std::string p_themeName) {
@@ -844,7 +856,7 @@ void ThemeChoicer::initList() {
     try {
       v_name = getThemeNameFromFile(v_themesFiles[i]);
       if(ExistThemeName(v_name) == false) {
-	m_choices.push_back(new ThemeChoice(v_name, v_themesFiles[i]));
+	m_choices.push_back(new ThemeChoice(v_name, v_themesFiles[i], true));
       } else {
 	vapp::Log(std::string("Theme " + v_name + " is present several times").c_str());
       }
@@ -852,6 +864,23 @@ void ThemeChoicer::initList() {
       /* anyway, give up this theme */
     }
   }
+
+#if defined(SUPPORT_WEBACCESS)
+  try {
+    /* add available theme not installed */
+    m_webThemes->upgrade();
+    std::vector<WebTheme*> v_availableThemes = m_webThemes->getAvailableThemes();
+        
+    for(int i=0; i<v_availableThemes.size(); i++) {
+      if(ExistThemeName(v_availableThemes[i]->getName()) == false) {
+	/* this theme is avaible */
+	m_choices.push_back(new ThemeChoice(v_availableThemes[i]->getName(), "", false));
+    }
+    }
+  } catch(vapp::Exception &e) {
+    /* hum, sorry, you will not see avaible theme to download */
+  }
+#endif
 }
 
 std::string ThemeChoicer::getThemeNameFromFile(std::string p_themeFile) {
@@ -887,9 +916,10 @@ std::vector<ThemeChoice*> ThemeChoicer::getChoices() {
   return m_choices;
 }
 
-ThemeChoice::ThemeChoice(std::string p_themeName, std::string p_themeFile) {
+ThemeChoice::ThemeChoice(std::string p_themeName, std::string p_themeFile, bool p_hosted) {
   m_themeName = p_themeName;
   m_themeFile = p_themeFile;
+  m_hosted    = p_hosted;
 }
 
 ThemeChoice::~ThemeChoice() {
@@ -901,4 +931,8 @@ std::string ThemeChoice::ThemeName() {
 
 std::string ThemeChoice::ThemeFile() {
   return m_themeFile;
+}
+
+bool ThemeChoice::hosted() {
+  return m_hosted;
 }

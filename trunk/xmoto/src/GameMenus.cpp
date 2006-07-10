@@ -385,12 +385,20 @@ namespace vapp {
 				    pGeneralOptionsTab->getPosition().nHeight-125-60);
     pThemeList->setID("THEME_LIST");
     pThemeList->setFont(m_Renderer.getSmallFont());
-    pThemeList->addColumn(GAMETEXT_THEME, pThemeList->getPosition().nWidth);
+    pThemeList->addColumn(GAMETEXT_THEME, (pThemeList->getPosition().nWidth*2) / 3);
+    pThemeList->addColumn("", (pThemeList->getPosition().nWidth*1) / 3);
 
     std::vector<ThemeChoice*> v_themeChoices;
-    v_themeChoices = m_themeChoicer.getChoices();
+    UIListEntry *pEntry;
+    v_themeChoices = m_themeChoicer->getChoices();
     for(int i=0; i<v_themeChoices.size(); i++) {
-      pThemeList->addEntry(v_themeChoices[i]->ThemeName().c_str()); 
+      if(v_themeChoices[i]->hosted()) {
+	pEntry = pThemeList->addEntry(v_themeChoices[i]->ThemeName().c_str());
+	pEntry->Text.push_back(GAMETEXT_THEMEHOSTED);
+      } else {
+	pEntry = pThemeList->addEntry(v_themeChoices[i]->ThemeName().c_str()); 
+	pEntry->Text.push_back(GAMETEXT_THEMENOTHOSTED);
+      }
     }
     pThemeList->setContextHelp(CONTEXTHELP_THEME);
 

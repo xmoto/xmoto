@@ -24,11 +24,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "VCommon.h"
 
-#include "VExcept.h"
-#include "VMath.h"
+//#include "VExcept.h"
+//#include "VMath.h"
 #include "VDraw.h"
-#include "Theme.h"
-#include "VTexture.h"
+//#include "VTexture.h"
 #include "Image.h"
 
 namespace vapp {
@@ -164,8 +163,7 @@ namespace vapp {
       bool useShaders(void) {return m_bShadersSupported;}
       
       Theme m_theme;
-      ThemeChoicer m_themeChoicer;
-
+      
       /* Extensions */
       PFNGLGENBUFFERSARBPROC glGenBuffersARB;
       PFNGLBINDBUFFERARBPROC glBindBufferARB;
@@ -250,7 +248,6 @@ namespace vapp {
       virtual void userPreInit(void) {}
       virtual void userShutdown(void) {}
       virtual void selectDisplayMode(int *pnWidth,int *pnHeight,int *pnBPP,bool *pbWindowed) {}
-      virtual std::string getConfigThemeName(ThemeChoicer *p_themeChoicer) {}
             
     private:
       /* Private helper functions */

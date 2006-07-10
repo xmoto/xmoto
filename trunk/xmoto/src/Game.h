@@ -288,6 +288,8 @@ namespace vapp {
 
 #endif
       
+      ThemeChoicer *m_themeChoicer;
+
       Stats m_GameStats;
       UIWindow *m_pStatsReport;
       

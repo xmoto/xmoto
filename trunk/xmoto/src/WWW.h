@@ -35,7 +35,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #endif
 
 #include "WWWAppInterface.h"
-#include "VApp.h"
 
 #define DEFAULT_WEBHIGHSCORES_URL         "http://xmoto.free.fr/highscores.xml"
 #define DEFAULT_WEBHIGHSCORES_FILENAME    "webhighscores.xml"
@@ -44,6 +43,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define DEFAULT_WEBLEVELS_URL             "http://xmoto.free.fr/levels.xml"
 #define DEFAULT_WEBLEVELS_FILENAME        "weblevels.xml"
 #define DEFAULT_WEBLEVELS_DIR             "downloaded"
+#define DEFAULT_WEBTHEMES_FILENAME        "webthemes.xml"
 
 #define WWW_AGENT ("xmoto-" + vapp::App::getVersionString())
 
@@ -271,6 +271,40 @@ class WebLevels {
 				      double dlnow,
 				      double ultotal,
 				      double ulnow);  				      
+};
+
+class WebTheme {
+ public:
+  WebTheme(std::string pName, std::string pUrl);
+  ~WebTheme();
+  std::string getName() const;
+  std::string getUrl() const;
+
+ private:
+  std::string m_name;
+  std::string m_url;
+};
+
+class WebThemes {
+ public:
+  WebThemes(const ProxySettings *p_proxy_settings);
+  ~WebThemes();
+
+  /* check for new themes to download */
+  void update(); /* throws exceptions */
+
+  /* fill the list of avaible theme ; does not required an internet connexion */
+  void upgrade();
+
+  const std::vector<WebTheme*> &getAvailableThemes();
+
+ private:
+  std::string getXmlFileName();
+  void extractThemesAvailableFromXml();
+  void clean();
+
+  const ProxySettings *m_proxy_settings;
+  std::vector<WebTheme*> m_availableThemes;
 };
 
 #endif
