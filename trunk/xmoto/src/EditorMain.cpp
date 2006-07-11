@@ -40,7 +40,12 @@ int main(int nNumArgs,char **ppcArgs) {
   /* Start application */
   try {
     /* Init file system stuff */
-    FS::init( "xmoto" );
+    try {
+      FS::init( "xmoto" );
+    }
+    catch(Exception &e) {
+      /* Maybe an evil hack, but whatever.. Full steam ahead! */
+    }
   
     /* Editor... */
     EditorApp Editor;
