@@ -113,6 +113,9 @@ Theme::Theme() {
 }
 
 Theme::~Theme() {
+  delete m_player;
+  delete m_ghost;
+
   cleanSprites();
   
   /* Kill textures */
@@ -810,11 +813,12 @@ bool ThemeChoicer::ExistThemeName(std::string p_themeName) {
   return false;
 }
 
-ThemeChoicer::ThemeChoicer(
 #if defined(SUPPORT_WEBACCESS)
-			   const ProxySettings *p_proxy_settings
+  ThemeChoicer::ThemeChoicer(const ProxySettings *p_proxy_settings) {
+#else
+  ThemeChoicer::ThemeChoicer() {  
 #endif
-	     ) {
+
 #if defined(SUPPORT_WEBACCESS)
   m_webThemes = new WebThemes(p_proxy_settings);
 #endif

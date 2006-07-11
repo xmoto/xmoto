@@ -18,6 +18,7 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/D HAVE_LIBCURL"
 				Optimization="0"
 				ImproveFloatingPointConsistency="TRUE"
 				OptimizeForProcessor="2"
@@ -63,6 +64,7 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/D HAVE_LIBCURL"
 				Optimization="3"
 				GlobalOptimizations="TRUE"
 				EnableIntrinsicFunctions="TRUE"
@@ -120,10 +122,19 @@
 				RelativePath="..\src\DBuffer.cpp">
 			</File>
 			<File
+				RelativePath="..\src\compression\FileCompression.cpp">
+			</File>
+			<File
 				RelativePath="..\src\Image.cpp">
 			</File>
 			<File
 				RelativePath="..\src\LevelSrc.cpp">
+			</File>
+			<File
+				RelativePath="..\src\md5sum\md5.c">
+			</File>
+			<File
+				RelativePath="..\src\md5sum\md5file.cpp">
 			</File>
 			<File
 				RelativePath="..\src\mmgr.cpp">
@@ -155,6 +166,9 @@
 			<File
 				RelativePath="..\src\VXml.cpp">
 			</File>
+			<File
+				RelativePath="..\src\WWW.cpp">
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -173,10 +187,19 @@
 				RelativePath="..\src\DBuffer.h">
 			</File>
 			<File
+				RelativePath="..\src\compression\FileCompression.h">
+			</File>
+			<File
 				RelativePath="..\src\Image.h">
 			</File>
 			<File
 				RelativePath="..\src\LevelSrc.h">
+			</File>
+			<File
+				RelativePath="..\src\md5sum\md5.h">
+			</File>
+			<File
+				RelativePath="..\src\md5sum\md5file.h">
 			</File>
 			<File
 				RelativePath="..\src\mmgr.h">
@@ -213,6 +236,9 @@
 			</File>
 			<File
 				RelativePath="..\src\VXml.h">
+			</File>
+			<File
+				RelativePath="..\src\WWW.h">
 			</File>
 		</Filter>
 		<Filter

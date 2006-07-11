@@ -36,7 +36,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/STACK:2500000"
-				AdditionalDependencies="libcurl.lib libode.lib lua5.1.lib SDL_mixer.lib commond.lib opengl32.lib SDL.lib SDLmain.lib zdll.lib jpeg6b.lib libpng13.lib"
+				AdditionalDependencies="libcurl.lib libode.lib lua5.1.lib SDL_mixer.lib commond.lib opengl32.lib SDL.lib SDLmain.lib zdll.lib jpeg6b.lib libpng13.lib libbz2.lib"
 				OutputFile="$(SolutionDir)/../bin/xmotod.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="$(SolutionDir)"
@@ -93,7 +93,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/STACK:2500000"
-				AdditionalDependencies="libcurl.lib libode.lib lua5.1.lib SDL_mixer.lib common.lib opengl32.lib SDL.lib SDLmain.lib zdll.lib jpeg6b.lib libpng13.lib"
+				AdditionalDependencies="libcurl.lib libode.lib lua5.1.lib SDL_mixer.lib common.lib opengl32.lib SDL.lib SDLmain.lib zdll.lib jpeg6b.lib libpng13.lib libbz2.lib"
 				OutputFile="$(SolutionDir)/../bin/xmoto.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(SolutionDir)"
@@ -180,12 +180,6 @@
 				RelativePath="..\src\Input.cpp">
 			</File>
 			<File
-				RelativePath="..\src\md5sum\md5.c">
-			</File>
-			<File
-				RelativePath="..\src\md5sum\md5file.cpp">
-			</File>
-			<File
 				RelativePath="..\src\MotoGame.cpp">
 			</File>
 			<File
@@ -230,9 +224,6 @@
 			<File
 				RelativePath="..\src\UserConfig.cpp">
 			</File>
-			<File
-				RelativePath="..\src\WWW.cpp">
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -260,12 +251,6 @@
 				RelativePath="..\src\Input.h">
 			</File>
 			<File
-				RelativePath="..\src\md5sum\md5.h">
-			</File>
-			<File
-				RelativePath="..\src\md5sum\md5file.h">
-			</File>
-			<File
 				RelativePath="..\src\MotoGame.h">
 			</File>
 			<File
@@ -291,9 +276,6 @@
 			</File>
 			<File
 				RelativePath="..\src\UserConfig.h">
-			</File>
-			<File
-				RelativePath="..\src\WWW.h">
 			</File>
 			<File
 				RelativePath="..\src\WWWAppInterface.h">

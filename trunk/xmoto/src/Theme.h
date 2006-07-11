@@ -24,6 +24,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <string>
 #include <vector>
+
+#include "BuildConfig.h"
 #include "VTexture.h"
 #include "VFileIO.h"
 #include "WWW.h"
@@ -83,7 +85,7 @@ class BikerTheme;
 class Sprite {
   public:
   Sprite(Theme* p_associated_theme, std::string v_name);
-  ~Sprite();
+  virtual ~Sprite();
 
   virtual enum SpriteType getType() = 0;
   std::string getName();
@@ -109,7 +111,7 @@ class Sprite {
 class SimpleFrameSprite : public Sprite {
  public:
   SimpleFrameSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName);
-  ~SimpleFrameSprite();
+  virtual ~SimpleFrameSprite();
 
  protected:
   vapp::Texture* getCurrentTexture();
@@ -124,7 +126,7 @@ class SimpleFrameSprite : public Sprite {
 class TextureSprite : public SimpleFrameSprite {
  public:
   TextureSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename);
-  ~TextureSprite();
+  virtual ~TextureSprite();
   enum SpriteType getType();
 
  protected:
@@ -136,7 +138,7 @@ class TextureSprite : public SimpleFrameSprite {
 class BikerPartSprite : public SimpleFrameSprite {
  public:
   BikerPartSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename);
-  ~BikerPartSprite();
+  virtual ~BikerPartSprite();
   enum SpriteType getType();
 
  protected:
@@ -156,7 +158,7 @@ class AnimationSpriteFrame {
 		       float p_height,
 		       float p_delay
 		       );
-  ~AnimationSpriteFrame();
+  virtual ~AnimationSpriteFrame();
   vapp::Texture *getTexture();
   void  setTexture(vapp::Texture *p_texture);
   float getCenterX() const;
@@ -179,7 +181,7 @@ class AnimationSpriteFrame {
 class AnimationSprite : public Sprite {
  public:
   AnimationSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileBase, std::string p_fileExtention);
-  ~AnimationSprite();
+  virtual ~AnimationSprite();
   enum SpriteType getType();
   float getCenterX();
   float getCenterY();
@@ -207,7 +209,7 @@ class AnimationSprite : public Sprite {
 class EffectSprite : public SimpleFrameSprite {
  public:
   EffectSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename);
-  ~EffectSprite();
+  virtual ~EffectSprite();
   enum SpriteType getType();
 
  protected:
@@ -219,7 +221,7 @@ class EffectSprite : public SimpleFrameSprite {
 class FontSprite : public SimpleFrameSprite {
  public:
   FontSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename);
-  ~FontSprite();
+  virtual ~FontSprite();
   enum SpriteType getType();
 
  protected:
@@ -231,7 +233,7 @@ class FontSprite : public SimpleFrameSprite {
 class MiscSprite : public SimpleFrameSprite {
  public:
   MiscSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename);
-  ~MiscSprite();
+  virtual ~MiscSprite();
   enum SpriteType getType();
 
  protected:
@@ -243,7 +245,7 @@ class MiscSprite : public SimpleFrameSprite {
 class UISprite : public SimpleFrameSprite {
  public:
   UISprite(Theme* p_associated_theme, std::string p_name, std::string p_filename);
-  ~UISprite();
+  virtual ~UISprite();
   enum SpriteType getType();
 
  protected:
@@ -255,7 +257,7 @@ class UISprite : public SimpleFrameSprite {
 class DecorationSprite : public SimpleFrameSprite {
  public:
   DecorationSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename, float p_width, float p_height, float p_centerX, float p_centerY);
-  ~DecorationSprite();
+  virtual ~DecorationSprite();
   enum SpriteType getType();
 
   float getWidth();
@@ -386,11 +388,13 @@ class ThemeChoice {
 
 class ThemeChoicer {
  public:
-  ThemeChoicer(
+
 #if defined(SUPPORT_WEBACCESS)
-	       const ProxySettings *p_proxy_settings
+  ThemeChoicer(const ProxySettings *p_proxy_settings = NULL);	       
+#else
+  ThemeChoicer(void);	       
 #endif
-	       );
+
   ~ThemeChoicer();
 
   bool ExistThemeName(std::string p_themeName);

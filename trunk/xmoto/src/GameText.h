@@ -130,7 +130,7 @@ Central place to keep many in-game text strings
                                         "the level.\n"                                                     \
                                         "\n"                                                               \
                                         "Read the README file or check out the website at\n"               \
-                                        "http://xmoto.sourceforce.net for more information."
+                                        "http://xmoto.sourceforge.net for more information."
 
 #define GAMETEXT_HIGH                 "High"
 #define GAMETEXT_INETCONF             "Internet Configuration"

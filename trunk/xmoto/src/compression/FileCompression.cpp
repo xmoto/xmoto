@@ -34,7 +34,7 @@ void FileCompression::bunzip2(std::string p_fileIN, std::string p_fileOUT) {
   int     nbWrote;
 
   // open in file
-  f_in = fopen (p_fileIN.c_str(), "r");
+  f_in = fopen (p_fileIN.c_str(), "rb");
   if (!f_in) {
     throw vapp::Exception("Unable to read file " + p_fileIN);
   }
@@ -45,7 +45,7 @@ void FileCompression::bunzip2(std::string p_fileIN, std::string p_fileOUT) {
   }
 
   //open out file
-  f_out = fopen(p_fileOUT.c_str(), "w");
+  f_out = fopen(p_fileOUT.c_str(), "wb");
   if (!f_out) {
     fclose(f_out);
     throw vapp::Exception("Unable to write file " + p_fileOUT);

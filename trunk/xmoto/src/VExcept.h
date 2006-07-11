@@ -34,7 +34,7 @@ namespace vapp {
       Exception() {}
       Exception(const std::string &iMsg)
         : m_Msg(iMsg) {
-          #if defined(_MSC_VER) && defined(_DEBUG)
+          #if defined(_MSC_VER) && defined(_DEBUG) && defined(BREAK_ON_EXCEPTION)
             __asm {
               int 0x03
             }
@@ -42,7 +42,7 @@ namespace vapp {
       }
       Exception(const char *pc)
         : m_Msg(std::string(pc)) {
-          #if defined(_MSC_VER) && defined(_DEBUG)
+          #if defined(_MSC_VER) && defined(_DEBUG) && defined(BREAK_ON_EXCEPTION)
             __asm {
               int 0x03
             }

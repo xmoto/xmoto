@@ -61,6 +61,10 @@ Build configuration
    regardless of whether libcurl is available or not */
 //#define DO_NOT_ALLOW_WEBACCESS
 
+/* BREAK_ON_EXCEPTION - (Visual C++ debug-mode only) Will break program if an
+   exception occurs */
+//#define BREAK_ON_EXCEPTION
+
 /*=============================================================================
 Misc, don't touch
 =============================================================================*/
