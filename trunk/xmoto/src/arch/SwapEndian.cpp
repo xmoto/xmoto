@@ -2,6 +2,8 @@
 #include "SwapEndian.h"
 #include <stdlib.h>
 
+typedef char byte;
+
 short  ShortSwap   (short s);
 short  ShortNoSwap (short s);
 int    LongSwap    (int   l);

@@ -1,8 +1,6 @@
 #ifndef __SWAPENDIAN_H__
 #define __SWAPENDIAN_H__
 
-typedef char byte;
-
 class SwapEndian {
  public:
   static bool bigendien;

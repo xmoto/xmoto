@@ -53,6 +53,7 @@ namespace vapp {
       if(rplInfos != NULL) {
 	      m_Replays.push_back(rplInfos);
       }
+      
     }
   }
 

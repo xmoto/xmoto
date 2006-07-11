@@ -132,11 +132,11 @@ namespace vapp {
 
     /* init endian system */ 
     SwapEndian::Swap_Init();
-    if(SwapEndian::bigendien) {
-      Log("systeme bigendien");
-    } else {
-      Log("systeme littleendien");
-    }
+    //if(SwapEndian::bigendien) {
+    //  Log("systeme bigendien");
+    //} else {
+    //  Log("systeme littleendien");
+    //}
 
     try {
       /* Parse command-line arguments */

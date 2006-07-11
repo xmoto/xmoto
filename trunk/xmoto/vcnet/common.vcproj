@@ -140,6 +140,9 @@
 				RelativePath="..\src\mmgr.cpp">
 			</File>
 			<File
+				RelativePath="..\src\arch\SwapEndian.cpp">
+			</File>
+			<File
 				RelativePath="..\src\Theme.cpp">
 			</File>
 			<File
@@ -206,6 +209,9 @@
 			</File>
 			<File
 				RelativePath="..\src\nommgr.h">
+			</File>
+			<File
+				RelativePath="..\src\arch\SwapEndian.h">
 			</File>
 			<File
 				RelativePath="..\src\Theme.h">
