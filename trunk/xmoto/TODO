@@ -1,5 +1,12 @@
 # for 0.2.0
 
+- Frame interpolation in replays doesn't work. The idea with peekState()
+  is that it should give the next state, and then there can be interpolated
+  between the current state and the next. ( = much smoother replays)
+  IMPORTANT: i've swapped the two lines in Replay::loadState(), it fixes
+  the above problem... but please check that it doesn't break anything
+  else
+
 ######################################################################
 Assigned to Neckelmann:
 * "view the highscore" button is not visible for pack(priority=high)
@@ -7,6 +14,7 @@ Assigned to Neckelmann:
    link to his room xml file (priority=high)(priority=high)
 * BUG : move objects in script doesn't work(priority=medium)
    --comment: it appears to work fine for me? see Levels/test/test.lvl
+   --comment2: okay, it doesn't work in replays...
 
 * I thought to one thing that could be add in the stats : the date
    when the stats have been initialized to display : stats from

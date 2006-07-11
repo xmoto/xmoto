@@ -402,8 +402,10 @@ namespace vapp {
   }
 
   void Replay::loadState(char *pcState) {
-    if(nextNormalState()) { /* do nothing */ }
+    /* (11th july, 2006) rasmus: i've swapped the two following lines, it apparently fixes
+       interpolation in replays, but i don't know if it break something else */  
     peekState(pcState);
+    if(nextNormalState()) { /* do nothing */ }
   }
   
   void Replay::peekState(char *pcState) {

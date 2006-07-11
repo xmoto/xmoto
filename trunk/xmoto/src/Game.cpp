@@ -1309,7 +1309,7 @@ namespace vapp {
 		m_pReplay->loadState((char *)&BikeState);
                 /* Update game */
                 m_MotoGame.updateLevel( PHYS_STEP_SIZE,&BikeState,m_pReplay ); 
-
+                
                 if(m_bEnableEngineSound) {
                   /* Update engine RPM */
                   m_EngineSound.setRPM( m_MotoGame.getBikeEngineRPM() ); 
@@ -1329,6 +1329,10 @@ namespace vapp {
 		m_pReplay->peekState((char *)&NextBikeState);
 		/* Nice. Interpolate the states! */
 		m_MotoGame.interpolateGameState(&BikeState,&NextBikeState,&ibs,0.5f);
+
+                //printf("[%f, %f]  {%f, %f}  [%f, %f]\n",BikeState.fFrameX,BikeState.fFrameY,
+                //                                        ibs.fFrameX,ibs.fFrameY,
+                //                                        NextBikeState.fFrameX,NextBikeState.fFrameY);
 		
                 /* Update game */
                 m_MotoGame.updateLevel( PHYS_STEP_SIZE,&ibs,m_pReplay );                 
