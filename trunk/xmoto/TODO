@@ -1,5 +1,9 @@
 # for 0.2.0
 
+- Themes/original.xml is in both bin/Makefile.am and bin/package.lst... 
+  that's not meaningful. Or is it the meaning that it should be both in 
+  the physical bin directory and in xmoto.bin?
+  
 - Frame interpolation in replays doesn't work. The idea with peekState()
   is that it should give the next state, and then there can be interpolated
   between the current state and the next. ( = much smoother replays)

@@ -11,7 +11,7 @@ AC_PROG_INSTALL
 AC_CHECK_LIB(jpeg, jpeg_CreateCompress, [], [AC_MSG_ERROR(libjpeg required)])
 AC_CHECK_LIB(png, png_read_image, [], [AC_MSG_ERROR(libpng required)])
 AC_CHECK_LIB(z, uncompress, [], [AC_MSG_ERROR(zlib required)])
-AC_CHECK_LIB(bz2, BZ2_bzReadOpen)
+AC_CHECK_LIB(bz2, BZ2_bzReadOpen, [], [AC_MSG_ERROR(libbz2 required)])
 AM_PATH_SDL(1.0.0, [], [AC_MSG_ERROR(SDL required)])
 AC_CHECK_LIB(SDL_mixer, Mix_OpenAudio, [], [AC_MSG_ERROR(SDL_mixer required)])
 AX_CHECK_GL()

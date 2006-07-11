@@ -49,7 +49,7 @@ Software dependencies for compiling on non-Windows platforms:
  - libcurl (3.x)
  - lua (5.x)
  - ode (0.x)
- - SDL_mixer
+ - SDL_mixer (1.2.7)
  
 Installation
 ============

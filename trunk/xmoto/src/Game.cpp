@@ -1121,16 +1121,13 @@ namespace vapp {
             /* No music available, try loading */
             std::string MenuMusicPath = FS::getDataDir() + std::string("/xmoto.ogg");
             const char *pc = MenuMusicPath.c_str();
-//            m_pMenuMusic = Mix_LoadMUS_RW("D:\\Musik\\36 Crazyfists\\In the Skin\\36 Crazyfists-In the Skin-04-Eracism.mp3");
-//            __asm{int 3};
-            
-	          SDL_RWops *rwfp;              
-			      rwfp = SDL_RWFromFile(pc, "rb");                          
-
-            m_pMenuMusic = Mix_LoadMUS_RW(rwfp);
-         //   if(m_pMenuMusic == NULL) {
-         //     printf("ERRRRRROR\n%s\n",Mix_GetError());
-         //   }
+            #if defined(_MSC_VER) /* this works around a bug in SDL_mixer 1.2.7 on Windows */
+	            SDL_RWops *rwfp;              
+			        rwfp = SDL_RWFromFile(pc, "rb");                          
+              m_pMenuMusic = Mix_LoadMUS_RW(rwfp);
+            #else
+              m_pMenuMusic = Mix_LoadMUS(pc);
+            #endif
             /* (Don't even complain the slightest if music isn't found...) */          
           }
           
