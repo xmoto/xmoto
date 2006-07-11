@@ -13,6 +13,7 @@ X-Moto 0.2.0 (beta) 2006-
    the levels.
  * Various new script functions (see MotoGameL.cpp for details).
  * Added dependency for libbz2 (for web transfer compression).
+ * Menu music and new sound effects by Jens Erler.
  * Some bugs fixed.
 	
 X-Moto 0.1.16 (alpha) 2006-06-16
