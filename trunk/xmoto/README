@@ -43,6 +43,7 @@ Software dependencies for compiling on non-Windows platforms:
  - libjpeg
  - libpng
  - zlib
+ - libbz2
  - SDL
  - GL
  - libcurl (3.x)
@@ -304,7 +305,7 @@ above mentioned licenses.
 Authors
 =======
 
-X-Moto itself is written by Rasmus Neckelmann (neckelmann@gmail.com)
+X-Moto itself is primarily written by Rasmus Neckelmann.
 
 Nicolas Adenis-Lamarre has written the code that allows interfacing
 with his X-Moto high-scores/extra levels website. He has also 
@@ -313,7 +314,7 @@ contributed a lot of other code changes to the project.
 Furthermore the following persons have contributed to the X-Moto
 project:
 
- - Brandon Ross (sound effects)
+ - Brandon Ross (some of the sound effects)
  - Pasi Kallinen (some of the built-in levels)
  - CoW (some of the built-in levels)
  - Clive Crous (one of the built-in levels)
@@ -323,6 +324,7 @@ project:
  - Thomas Kjaerulff (one of the built-in levels)
  - Emmanuel Gorse (SDL resolutions list patch)
  - Jose Alberto Coelho (MacOS X tester)
+ - Jens Erler (music and some of the sound effects)
 
 Also a warm thank-you to Yves Berquin who have written the XML parser
 used by the game (tinyxml), and to L. Peter Deutsch for his MD5 code.

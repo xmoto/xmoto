@@ -1144,6 +1144,14 @@ namespace vapp {
             }
           }
         }
+        else {
+          /* Hmm, no music please. If it's playing, stop it */
+          if(m_pMenuMusic != NULL) {
+            if(!Mix_PlayingMusic()) {
+              Mix_FadeOutMusic(500);              
+            }
+          }
+        }
 
       case GS_LEVEL_INFO_VIEWER:
       case GS_LEVELPACK_VIEWER:

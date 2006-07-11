@@ -501,7 +501,7 @@ namespace vapp {
       
       //_SetWheelContactParams(&c,T1,W,_CalculateDepth(Vector2f(x,y),r,T1));                                   
       double fDepth = _CalculateCircleLineDepth(Vector2f(x,y),r,Vector2f(pLine->x1,pLine->y1),Vector2f(pLine->x2,pLine->y2));
-      fDepth = 0.0f;
+      //fDepth = 0.0f;
       //fDepth *= 0.2;
       //printf("[%f]\n",fDepth);
       _SetWheelContactParams(&c,T1,W,fDepth); 

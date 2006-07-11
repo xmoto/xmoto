@@ -42,6 +42,7 @@ Section "Game (required)"
 	File "sprites.dat"
 	File "xmoto.bin"
 	File "xmoto.exe"
+	File "xmoto.ogg"
 	
 	File "/oname=README.txt" "..\README.txt"
 	File "/oname=COPYING.txt" "..\COPYING.txt"
