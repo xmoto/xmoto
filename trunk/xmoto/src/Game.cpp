@@ -325,7 +325,7 @@ namespace vapp {
         m_GameStats.died(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->getID(),m_MotoGame.getLevelSrc()->getLevelInfo()->Name,m_MotoGame.getTime());
                 
         /* Play the DIE!!! sound */
-        //Sound::playSample(m_pDieSFX);
+        Sound::playSampleByName("Sounds/Headcrash.ogg",0.3);
 
         /* Possible exit of GS_PLAYING, when the player is dead */
         m_pJustDeadMenu->showWindow(true);
@@ -697,8 +697,8 @@ namespace vapp {
 //        Sound::loadSample("Sounds/Button2.ogg");
         Sound::loadSample("Sounds/Button3.ogg");
         
-        Sound::loadSample("Sounds/PickUpStrawberry.ogg");
-        
+        Sound::loadSample("Sounds/PickUpStrawberry.ogg");        
+        Sound::loadSample("Sounds/Headcrash.ogg");
         //Sound::loadSample("Sounds/Squeek.ogg");
 
         m_EngineSound.addBangSample(Sound::loadSample("Sounds/Engine/00.wav"));

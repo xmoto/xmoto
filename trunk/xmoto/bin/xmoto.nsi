@@ -1,5 +1,5 @@
-Name "X-Moto 0.1.17test1"
-OutFile "xmoto-0.1.17test1-win32-setup.exe"
+Name "X-Moto 0.1.17test2"
+OutFile "xmoto-0.1.17test2-win32-setup.exe"
 InstallDir $PROGRAMFILES\XMoto
 InstallDirRegKey HKLM "Software\XMoto" "Install_Dir"
 
@@ -24,8 +24,6 @@ Section "Game (required)"
 	SectionIn RO
 	SetOutPath $INSTDIR
 	
-	File "anims.dat"
-	File "fonts.dat"
 	File "msvcr71.dll"
 	File "msvcp71.dll"
 	File "jpeg6b.dll"
@@ -39,10 +37,10 @@ Section "Game (required)"
 	File "vorbis.dll"
 	File "vorbisfile.dll"
 	File "libbz2.dll"
-	File "sprites.dat"
 	File "xmoto.bin"
 	File "xmoto.exe"
 	File "xmoto.ogg"
+	File "fonts.dat"
 	
 	File "/oname=README.txt" "..\README.txt"
 	File "/oname=COPYING.txt" "..\COPYING.txt"

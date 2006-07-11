@@ -41,9 +41,17 @@ namespace vapp {
     ReplayInfo* rplInfos;
 
     if(FS::getFileBaseName(Replay) != "Latest") {    
+      /* Already got this replay? */
+      for(int i=0;i<m_Replays.size();i++) {
+        if(m_Replays[i]->Name == Replay) {
+          /* Yeah */
+          return;
+        }
+      }
+    
       rplInfos = Replay::getReplayInfos(Replay);
       if(rplInfos != NULL) {
-	m_Replays.push_back(rplInfos);
+	      m_Replays.push_back(rplInfos);
       }
     }
   }
