@@ -383,8 +383,8 @@ namespace vapp {
       if(!strcmp(reinterpret_cast<const char *>(glGetString(GL_RENDERER)),"GDI Generic") &&
          !strcmp(reinterpret_cast<const char *>(glGetString(GL_VENDOR)),"Microsoft Corporation")) {
         Log("** Warning ** : No GL hardware acceleration!");
-        m_UserNotify = "It seems that no OpenGL hardware acceleration is available!\n"
-                       "Please make sure OpenGL is configured properly.";
+        //m_UserNotify = "It seems that no OpenGL hardware acceleration is available!\n"
+        //               "Please make sure OpenGL is configured properly.";
       }
     #endif
 	  

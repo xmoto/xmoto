@@ -9,10 +9,11 @@ X-Moto 0.2.0 (beta) 2006-
  * Player statistics.
  * New textures, sprites, and edge effects (RedBricks, GrayBricks,
    and BlueBricks).
- * You can now keep the up and down arrows of lists pressed to list the levels
- * new script functions : SetDynamicEntityRotation, SetDynamicEntityTranslation,
+ * You can now keep the up and down arrows of lists pressed to list 
+   the levels.
+ * Various new script functions (see MotoGameL.cpp for details).
                           CameraZoom(z), Game.CameraMove(x, y)
- * required libbz2 (for web transfer compression)
+ * Added dependency for libbz2 (for web transfer compression).
  * Some bugs fixed.
 	
 X-Moto 0.1.16 (alpha) 2006-06-16

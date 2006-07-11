@@ -1011,7 +1011,10 @@ namespace vapp {
     pSomeText = new UIStatic(m_pStatsWindow,40,0,GAMETEXT_STATISTICS,m_pStatsWindow->getPosition().nWidth-80,36);
     pSomeText->setFont(m_Renderer.getMediumFont());
     
-    m_pStatsReport = m_GameStats.generateReport(m_pPlayer->PlayerName,m_pStatsWindow,30,36,m_pStatsWindow->getPosition().nWidth-45,m_pStatsWindow->getPosition().nHeight-36,m_Renderer.getSmallFont());
+    if(m_pPlayer != NULL)
+      m_pStatsReport = m_GameStats.generateReport(m_pPlayer->PlayerName,m_pStatsWindow,30,36,m_pStatsWindow->getPosition().nWidth-45,m_pStatsWindow->getPosition().nHeight-36,m_Renderer.getSmallFont());
+    else
+      m_pStatsReport = m_GameStats.generateReport("",m_pStatsWindow,30,36,m_pStatsWindow->getPosition().nWidth-45,m_pStatsWindow->getPosition().nHeight-36,m_Renderer.getSmallFont());
     
     /* Hide menus */
     m_pMainMenu->showWindow(false);

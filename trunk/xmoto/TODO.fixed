@@ -8,6 +8,8 @@ Since 1.16
 * bug on VFile.h infinite loop when try to save a replay with the same name 3 times
 * compress data for web !!!
 * sometimes, the following error appears : "texture naming conflict"
+* BUG: the window "it seems you have not OpenGL, please check your configuratino" can't be close by clicking on the ok button.(priority=high)
+* BUG : when you have stats.xml but not players.bin = > segfault at startup
 
 Before Xmoto 1.16
 * BUG : bug in the editor if you load and save http://xmoto.free.fr/levels/l189.lvl because  > is replaced by &gt;      

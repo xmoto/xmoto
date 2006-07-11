@@ -5,12 +5,12 @@ Assigned to Neckelmann:
 * "view the highscore" button is not visible for pack(priority=high)
 * add <xml_room> in configuration so that the player can choose the
    link to his room xml file (priority=high)(priority=high)
-* BUG: the window "it seems you have not OpenGL, please check your configuratino" can't be close by clicking on the ok button.(priority=high)
 * BUG : move objects in script doesn't work(priority=medium)
+   --comment: it appears to work fine for me? see Levels/test/test.lvl
+
 * I thought to one thing that could be add in the stats : the date
    when the stats have been initialized to display : stats from
    18/06/2006 for example. Remember that this field must be translatable
-* BUG : when you have stats.xml but not players.bin = > segfault at startup
 
 ######################################################################
 Assigned to Nicolas:
