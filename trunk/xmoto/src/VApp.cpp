@@ -31,6 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <time.h>
 #include "VApp.h"
 #include "VFileIO.h"
+#include "arch/SwapEndian.h"
 
 namespace vapp {
 
@@ -128,6 +129,15 @@ namespace vapp {
   Main application entry point
   ===========================================================================*/
   void App::run(int nNumArgs,char **ppcArgs) {
+
+    /* init endian system */ 
+    SwapEndian::Swap_Init();
+    if(SwapEndian::bigendien) {
+      Log("systeme bigendien");
+    } else {
+      Log("systeme littleendien");
+    }
+
     try {
       /* Parse command-line arguments */
       _ParseArgs(nNumArgs,ppcArgs);        
@@ -493,7 +503,12 @@ namespace vapp {
 	  /* Set background color to black */
 	  glClearColor(0.0f,0.0f,0.0f,0.0f);
 	  glClear(GL_COLOR_BUFFER_BIT);
-	  SDL_GL_SwapBuffers();	  	      
+	  SDL_GL_SwapBuffers();	 
+
+    /* Init drawing library */
+    initLib(&m_theme);
+
+ 	      
   }
 
   /*===========================================================================
@@ -502,7 +517,12 @@ namespace vapp {
   void App::_Uninit(void) {
     /* Tell user app to turn off */
     userShutdown();
-          
+
+    if(!isNoGraphics()) {
+      /* Uninit drawing library */
+      uninitLib(&m_theme);
+    }
+
     /* Shutdown SDL */
     SDL_Quit();
   }

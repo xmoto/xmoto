@@ -176,6 +176,7 @@ namespace vapp {
   }
   
   std::string Replay::openReplay(const std::string &FileName,float *pfFrameRate,std::string &Player) {
+
     /* Open file for input */
     FileHandle *pfh = FS::openIFile(std::string("Replays/") + FileName);
     if(pfh == NULL) {
@@ -210,7 +211,7 @@ namespace vapp {
     
       /* Read level ID */
       m_LevelID = FS::readString(pfh);
-      
+
       /* Read player name */
       Player = m_PlayerName = FS::readString(pfh);
       
@@ -224,7 +225,7 @@ namespace vapp {
       /* Read finish time if any */
       m_bFinished = FS::readBool(pfh);
       m_fFinishTime = FS::readFloat(pfh);
-      
+
       /* Version 1 includes event data */
       if(nVersion == 1) {
         /* Read uncompressed size */

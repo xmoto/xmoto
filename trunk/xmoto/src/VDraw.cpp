@@ -26,6 +26,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 namespace vapp {
 
+ DrawLib::DrawLib() {
+   m_pDefaultFontTex = NULL;
+ }
+
   /*===========================================================================
   Transform an OpenGL vertex to pure 2D 
   ===========================================================================*/

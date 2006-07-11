@@ -36,6 +36,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VExcept.h"
 #include "VApp.h"
 #include "VFileIO.h"
+#include "arch/SwapEndian.h"
 
 namespace vapp {
 

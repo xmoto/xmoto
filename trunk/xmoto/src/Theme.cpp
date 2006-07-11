@@ -33,7 +33,7 @@ std::vector<Sprite*> Theme::getSpritesList() {
 
 void Theme::initDefaultFont() {
     CBuiltInFont Fnt;
-      
+
     /* Create texture */
     int nImgWidth = 256, nImgHeight = 256;
     vapp::Color *pImgData = new vapp::Color[nImgWidth * nImgHeight];

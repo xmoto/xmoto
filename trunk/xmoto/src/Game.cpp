@@ -588,9 +588,6 @@ namespace vapp {
       m_theme.load(m_themeChoicer->getFileName(THEME_DEFAULT_THEMENAME));
     }
 
-    /* Init drawing library */
-    initLib(&m_theme);
-
     /* Profiles */
     Log("Loading profiles...");
     m_Profiles.loadFile();
@@ -1550,10 +1547,6 @@ namespace vapp {
       UITextDraw::uninitTextDrawing();  
     }
 
-    if(!isNoGraphics()) {
-      /* Uninit drawing library */
-      uninitLib(&m_theme);
-    }
   }
 
   /*===========================================================================

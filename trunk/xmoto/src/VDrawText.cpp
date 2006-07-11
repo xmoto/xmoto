@@ -91,7 +91,10 @@ namespace vapp {
 		}
   
     int cx = Pos.x,cy = Pos.y,c;
-    glBindTexture(GL_TEXTURE_2D,m_pDefaultFontTex->nID);
+    if(m_pDefaultFontTex != NULL) {
+      glBindTexture(GL_TEXTURE_2D,m_pDefaultFontTex->nID);
+    }
+
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
     int nCharsPerLine = 256 / 8;

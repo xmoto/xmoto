@@ -34,6 +34,8 @@ namespace vapp {
   ===========================================================================*/
   class DrawLib {
     public:
+      DrawLib();
+
       /* Methods - low-level */
       void glVertex(float x,float y);
       void screenProjVertex(float *x,float *y);      
