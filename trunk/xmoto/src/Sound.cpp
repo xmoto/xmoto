@@ -523,12 +523,15 @@ namespace vapp {
     #endif
   }
   
-  void Sound::playSample(SoundSample *pSample) {
+  void Sound::playSample(SoundSample *pSample,float fVolume) {
     if(pSample == NULL || !isEnabled()) return;
 
     #if USE_SDL_MIXER      
       /* WHY OH WHY does this pause the game thread for 200-300 ms on linux??? :( */
-      Mix_PlayChannel(-1,pSample->pChunk,0);
+      int nChannel = Mix_PlayChannel(-1,pSample->pChunk,0);
+      if(nChannel >= 0) {
+        Mix_Volume(nChannel,(int)(fVolume * MIX_MAX_VOLUME));
+      }     
       
     #else /* Not using SDL_mixer */  
       int nSlot = _GetFreePlayerSlot();
@@ -548,10 +551,10 @@ namespace vapp {
     return NULL;
   }
   
-  void Sound::playSampleByName(const std::string &Name) {
+  void Sound::playSampleByName(const std::string &Name,float fVolume) {
     SoundSample *pSample = findSample(Name);
     if(pSample != NULL) {
-      playSample(pSample);
+      playSample(pSample,fVolume);
     }
   }
       

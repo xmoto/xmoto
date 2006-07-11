@@ -520,6 +520,7 @@ namespace vapp {
     /* Other settings */
     m_bEnableEngineSound = m_Config.getBool("EngineSoundEnable");
     m_bEnableContextHelp = m_Config.getBool("ContextHelp");
+    m_bEnableMenuMusic = m_Config.getBool("MenuMusic");
     m_currentThemeName   = m_Config.getString("Theme");
 
     /* Cache? */
@@ -697,6 +698,8 @@ namespace vapp {
         Sound::loadSample("Sounds/Button3.ogg");
         
         Sound::loadSample("Sounds/PickUpStrawberry.ogg");
+        
+        //Sound::loadSample("Sounds/Squeek.ogg");
 
         m_EngineSound.addBangSample(Sound::loadSample("Sounds/Engine/00.wav"));
         m_EngineSound.addBangSample(Sound::loadSample("Sounds/Engine/01.wav"));
@@ -1111,20 +1114,20 @@ namespace vapp {
             m_Config.setBool("NotifyAtInit",false); 
           }
         }        
-        //m_bEnableMenuMusic = true;
+
         if(m_bEnableMenuMusic) {
           /* No music playing? If so, playback time! */
           if(m_pMenuMusic == NULL) {
             /* No music available, try loading */
-            std::string MenuMusicPath = FS::getDataDir() + std::string("/menu.ogg");
+            std::string MenuMusicPath = FS::getDataDir() + std::string("/xmoto.ogg");
             const char *pc = MenuMusicPath.c_str();
 //            m_pMenuMusic = Mix_LoadMUS_RW("D:\\Musik\\36 Crazyfists\\In the Skin\\36 Crazyfists-In the Skin-04-Eracism.mp3");
 //            __asm{int 3};
             
-	        //  SDL_RWops *rwfp;              
-			      //rwfp = SDL_RWFromFile("xmoto_title_demo1.ogg", "rb");                          
+	          SDL_RWops *rwfp;              
+			      rwfp = SDL_RWFromFile(pc, "rb");                          
 
-         //   m_pMenuMusic = Mix_LoadMUS_RW(rwfp);
+            m_pMenuMusic = Mix_LoadMUS_RW(rwfp);
          //   if(m_pMenuMusic == NULL) {
          //     printf("ERRRRRROR\n%s\n",Mix_GetError());
          //   }
@@ -1240,6 +1243,7 @@ namespace vapp {
           if(m_MotoGame.isSqueeking()) {
             if(getTime() - m_fLastSqueekTime > 0.1f) {
               //printf("SQUEEK!\n"); /* insert squeeky sound here */
+              //Sound::playSampleByName("Sounds/Squeek.ogg",m_MotoGame.howMuchSqueek());
               m_fLastSqueekTime = getTime();
             }
           }
@@ -2008,6 +2012,7 @@ namespace vapp {
     m_Config.createVar( "CompressReplays",        "true" );
     m_Config.createVar( "LevelCache",             "true" );
     m_Config.createVar( "ContextHelp",            "true" );
+    m_Config.createVar( "MenuMusic",              "true" );
 
 #if defined(SUPPORT_WEBACCESS)
     m_Config.createVar( "WebHighscores",            "false" );

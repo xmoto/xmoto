@@ -87,6 +87,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_ENABLEENGINESOUND    "Enable Engine Sound"
 #define GAMETEXT_ENABLEGHOST          "Enable Ghost"
 #define GAMETEXT_ENABLEINGAMEWORLDRECORD "Show World Record in-game"
+#define GAMETEXT_ENABLEMUSIC          "Enable Music"
 #define GAMETEXT_ENABLEWEBHIGHSCORES  "Enable WWW Access"
 #define GAMETEXT_ENTERPLAYERNAME      "Enter player name:"
 #define GAMETEXT_ENTERREPLAYNAME      "Enter name of replay:"
@@ -361,7 +362,8 @@ Central place to keep many in-game text strings
 
 #define CONTEXTHELP_STATS "Show various statistics about X-Moto"
 #define CONTEXTHELP_UPDATESTATS "Update statistics (also happens each time X-Moto is started)"
+#define CONTEXTHELP_MUSIC "Enables background music in the main menu"
 
-#define CONTEXTHELP_THEME "Choose the theme for Xmoto graphics"
+#define CONTEXTHELP_THEME "Choose the X-Moto graphics theme"
 
 #endif

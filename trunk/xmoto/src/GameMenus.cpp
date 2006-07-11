@@ -585,6 +585,13 @@ namespace vapp {
     pEnableEngineSoundButton->setFont(m_Renderer.getSmallFont());
     pEnableEngineSoundButton->setContextHelp(CONTEXTHELP_ENGINE_SOUND);
     
+    UIButton *pEnableMusicButton = new UIButton(pAudioOptionsTab,5,145,GAMETEXT_ENABLEMUSIC,pAudioOptionsTab->getPosition().nWidth-10,28);
+    pEnableMusicButton->setType(UI_BUTTON_TYPE_CHECK);
+    pEnableMusicButton->setID("ENABLE_MUSIC");
+    pEnableMusicButton->enableWindow(true);
+    pEnableMusicButton->setFont(m_Renderer.getSmallFont());
+    pEnableMusicButton->setContextHelp(CONTEXTHELP_MUSIC);
+    
     UIWindow *pControlsOptionsTab = new UIWindow(pOptionsTabs,20,40,GAMETEXT_CONTROLS,pOptionsTabs->getPosition().nWidth-40,pOptionsTabs->getPosition().nHeight);                  
     pControlsOptionsTab->enableWindow(true);
     pControlsOptionsTab->showWindow(false);
@@ -2090,6 +2097,7 @@ namespace vapp {
     UIButton *pMonoButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:MONO");
     UIButton *pStereoButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:STEREO");
     UIButton *pEnableEngineSoundButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_ENGINE_SOUND");
+    UIButton *pEnableMusicButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_MUSIC");
   
 #if defined(SUPPORT_WEBACCESS)  
     UIButton *pINetConf = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:PROXYCONFIG");
@@ -2149,6 +2157,7 @@ namespace vapp {
       pMonoButton->enableWindow(t);
       pStereoButton->enableWindow(t);
       pEnableEngineSoundButton->enableWindow(t);
+      pEnableMusicButton->enableWindow(t);
     }
 
 #if defined(SUPPORT_WEBACCESS)
@@ -2629,6 +2638,7 @@ namespace vapp {
     UIButton *pMonoButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:MONO");
     UIButton *pStereoButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:STEREO");
     UIButton *pEnableEngineSoundButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_ENGINE_SOUND");
+    UIButton *pEnableMusicButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_MUSIC");
 
     UIButton *p16bpp = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:VIDEO_TAB:16BPP");
     UIButton *p32bpp = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:VIDEO_TAB:32BPP");
@@ -2652,6 +2662,7 @@ namespace vapp {
     pMonoButton->setChecked(false);
     pStereoButton->setChecked(false);
     pEnableEngineSoundButton->setChecked(false);
+    pEnableMusicButton->setChecked(false);
     
     p16bpp->setChecked(false);
     p32bpp->setChecked(false);
@@ -2744,6 +2755,7 @@ namespace vapp {
       pMonoButton->setChecked(true); /* TODO: warning */
       
     pEnableEngineSoundButton->setChecked(m_Config.getBool("EngineSoundEnable"));      
+    pEnableMusicButton->setChecked(m_Config.getBool("MenuMusic"));      
       
     switch(m_Config.getInteger("DisplayBPP")) {
       case 16: p16bpp->setChecked(true); break;
@@ -2802,6 +2814,7 @@ namespace vapp {
     m_Config.setValue("ShowMiniMap",m_Config.getDefaultValue("ShowMiniMap"));
     m_Config.setValue("ContextHelp",m_Config.getDefaultValue("ContextHelp"));
     m_Config.setValue("EngineSoundEnable",m_Config.getDefaultValue("EngineSoundEnable"));
+    m_Config.setValue("MenuMusic",m_Config.getDefaultValue("MenuMusic"));
     
     m_Config.setValue("ControllerMode1",m_Config.getDefaultValue("ControllerMode1"));
     m_Config.setValue("KeyDrive1",m_Config.getDefaultValue("KeyDrive1"));
@@ -2885,6 +2898,7 @@ namespace vapp {
     UIButton *pMonoButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:MONO");
     UIButton *pStereoButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:STEREO");
     UIButton *pEnableEngineSoundButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_ENGINE_SOUND");
+    UIButton *pEnableMusicButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_MUSIC");
     
     UIButton *p16bpp = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:VIDEO_TAB:16BPP");
     UIButton *p32bpp = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:VIDEO_TAB:32BPP");
@@ -2946,6 +2960,7 @@ namespace vapp {
     }
     
     m_Config.setBool("EngineSoundEnable",pEnableEngineSoundButton->getChecked());
+    m_Config.setBool("MenuMusic",pEnableMusicButton->getChecked());
 
 #if defined(SUPPORT_WEBACCESS)
     UIButton *pWebHighscores = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:ENABLEWEBHIGHSCORES");

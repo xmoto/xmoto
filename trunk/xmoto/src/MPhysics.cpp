@@ -168,6 +168,16 @@ namespace vapp {
       /* Have any of the suspensions reached the "squeek-point"? (rate of compression/decompression at 
          which they will make squeeky noises) */
       if(Fqv.length() > PHYS_SUSP_SQUEEK_POINT || Rqv.length() > PHYS_SUSP_SQUEEK_POINT) {
+        /* Calculate how large a sqeek it should be */
+        float fSqueekSize1 = Fqv.length() - PHYS_SUSP_SQUEEK_POINT;
+        float fSqueekSize2 = Rqv.length() - PHYS_SUSP_SQUEEK_POINT;
+        float fSqueekSize = fSqueekSize1 > fSqueekSize2 ? fSqueekSize1 : fSqueekSize2;
+        float fMaxSqueek = 0.11f;        
+        float fL = fSqueekSize / fMaxSqueek;
+        if(fL > 1.0f) fL = 1.0f;
+        m_fHowMuchSqueek = fL;                
+        //printf("%f\n",fL);
+                
         m_bSqueeking = true;
       }
     }    

@@ -695,6 +695,7 @@ namespace vapp {
       BikeState *getBikeState(void) {return &m_BikeS;}
       BikeParams *getBikeParams() { return &m_BikeP;}
       bool isSqueeking(void) {return m_bSqueeking;}
+      float howMuchSqueek(void) {return m_fHowMuchSqueek;}
 
 #if defined(ALLOW_GHOST)
       BikeState *getGhostBikeState(void) {return &m_GhostBikeS;}
@@ -762,6 +763,7 @@ namespace vapp {
       int m_nStillFrames;
       
       bool m_bSqueeking;
+      float m_fHowMuchSqueek;
 
       Vector2f m_PhysGravity; /* gravity */
 

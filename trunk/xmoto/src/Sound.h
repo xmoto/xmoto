@@ -205,9 +205,9 @@ namespace vapp {
       
       //static void playStream(std::string File);
       static SoundSample *loadSample(const std::string &File);
-      static void playSample(SoundSample *pSample);
+      static void playSample(SoundSample *pSample,float fVolume=1.0f);
       static SoundSample *findSample(const std::string &File);
-      static void playSampleByName(const std::string &Name);
+      static void playSampleByName(const std::string &Name,float fVolume=1.0f);
       
       /* Data interface */
       static bool isEnabled(void) {return m_bEnable;}
