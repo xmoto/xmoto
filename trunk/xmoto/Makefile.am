@@ -14,11 +14,15 @@ md5_SOURCES = src/md5sum/md5.h src/md5sum/md5.c \
 
 compression_SOURCES = src/compression/FileCompression.h src/compression/FileCompression.cpp
 
+arch_SOURCES = src/arch/SwapEndian.h src/arch/SwapEndian.cpp
+
 common_SOURCES = src/BuiltInFont.cpp src/Image.cpp src/LevelSrc.cpp \
 	src/VApp.cpp src/VBezier.cpp src/VDraw.cpp \
 	src/VDrawText.cpp src/VFileIO.cpp src/VMath.cpp src/VTexture.cpp \
 	src/VXml.cpp \
-	$(image_SOURCES) $(tinyxml_SOURCES) $(md5_SOURCES) $(compression_SOURCES) \
+	$(image_SOURCES) $(tinyxml_SOURCES) \
+	$(md5_SOURCES) $(compression_SOURCES) \
+	$(arch_SOURCES) \
 	src/Image.h src/LevelSrc.h \
 	src/VApp.h src/VBezier.h src/VCommon.h src/VDraw.h \
 	src/VExcept.h src/VFileIO.h src/VMath.h src/VTexture.h src/VXml.h \
