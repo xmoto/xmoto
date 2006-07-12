@@ -37,8 +37,6 @@ Assigned to Nicolas:
 - reduce diff between DecorationSprite and AnimationSprite : be able
    to load an animated tree or an unanimated strawberry
 - do not required to restart to change the theme
-- void ThemeChoicer::initList() is not good : choose user theme before
-   others
 - update levels should ask "Do you want to update themes too ?
    (recommanded)" because new levels could required new theme entries
 
