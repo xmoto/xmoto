@@ -3,6 +3,8 @@
 - Themes/original.xml is in both bin/Makefile.am and bin/package.lst... 
   that's not meaningful. Or is it the meaning that it should be both in 
   the physical bin directory and in xmoto.bin?
+===> I removed it from Makefile.am, for example, why font.dat is not
+   in the package ?
   
 - Frame interpolation in replays doesn't work. The idea with peekState()
   is that it should give the next state, and then there can be interpolated
@@ -10,6 +12,10 @@
   IMPORTANT: i've swapped the two lines in Replay::loadState(), it fixes
   the above problem... but please check that it doesn't break anything
   else
+===> i don't think it brokes something : i checked why i did, it
+   seems ok
+
+remove the lines above when you have read them
 
 ######################################################################
 Assigned to Neckelmann:
@@ -53,6 +59,8 @@ add the same for block once block move will work
 
 ######################################################################
 Unassigned:
+
+* smoke doesn't work in replay, it didn't work in .16
 
 * BUG : http://xmoto.free.fr/tmp/bugonlinuxppcreplays.jpg : it
    happends on replays on linux ppc
