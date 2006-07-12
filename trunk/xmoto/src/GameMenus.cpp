@@ -364,7 +364,7 @@ namespace vapp {
     pShowMiniMap->setGroup(50023);
     pShowMiniMap->setContextHelp(CONTEXTHELP_MINI_MAP);
 
-    UIButton *pContextHelp = new UIButton(pGeneralOptionsTab,5,81-28-10,GAMETEXT_ENABLECONTEXTHELP,(pGeneralOptionsTab->getPosition().nWidth-40),28);
+    UIButton *pContextHelp = new UIButton(pGeneralOptionsTab,5,73-28-10,GAMETEXT_ENABLECONTEXTHELP,(pGeneralOptionsTab->getPosition().nWidth-40),28);
     pContextHelp->setType(UI_BUTTON_TYPE_CHECK);
     pContextHelp->setID("ENABLECONTEXTHELP");
     pContextHelp->enableWindow(true);
@@ -372,7 +372,7 @@ namespace vapp {
     pContextHelp->setGroup(50023);
     pContextHelp->setContextHelp(CONTEXTHELP_SHOWCONTEXTHELP);
  
-    UIButton *pAutosaveReplays = new UIButton(pGeneralOptionsTab,5,119-28-10,GAMETEXT_AUTOSAVEREPLAYS,(pGeneralOptionsTab->getPosition().nWidth-40),28);
+    UIButton *pAutosaveReplays = new UIButton(pGeneralOptionsTab,5,103-28-10,GAMETEXT_AUTOSAVEREPLAYS,(pGeneralOptionsTab->getPosition().nWidth-40),28);
     pAutosaveReplays->setType(UI_BUTTON_TYPE_CHECK);
     pAutosaveReplays->setID("AUTOSAVEREPLAYS");
     pAutosaveReplays->enableWindow(true);
@@ -380,27 +380,41 @@ namespace vapp {
     pAutosaveReplays->setGroup(50023);
     pAutosaveReplays->setContextHelp(CONTEXTHELP_AUTOSAVEREPLAYS);
    
-    UIList *pThemeList = new UIList(pGeneralOptionsTab,5,125,"",
+    UIList *pThemeList = new UIList(pGeneralOptionsTab,5,105,"",
 				    pGeneralOptionsTab->getPosition().nWidth-10,
-				    pGeneralOptionsTab->getPosition().nHeight-125-60);
-    pThemeList->setID("THEME_LIST");
+				    pGeneralOptionsTab->getPosition().nHeight-125-90);
+    pThemeList->setID("THEMES_LIST");
     pThemeList->setFont(m_Renderer.getSmallFont());
-    pThemeList->addColumn(GAMETEXT_THEME, (pThemeList->getPosition().nWidth*2) / 3);
+    pThemeList->addColumn(GAMETEXT_THEMES, (pThemeList->getPosition().nWidth*2) / 3);
     pThemeList->addColumn("", (pThemeList->getPosition().nWidth*1) / 3);
+    _UpdateThemesLists();
+    pThemeList->setContextHelp(CONTEXTHELP_THEMES);
 
-    std::vector<ThemeChoice*> v_themeChoices;
-    UIListEntry *pEntry;
-    v_themeChoices = m_themeChoicer->getChoices();
-    for(int i=0; i<v_themeChoices.size(); i++) {
-      if(v_themeChoices[i]->hosted()) {
-	pEntry = pThemeList->addEntry(v_themeChoices[i]->ThemeName().c_str());
-	pEntry->Text.push_back(GAMETEXT_THEMEHOSTED);
-      } else {
-	pEntry = pThemeList->addEntry(v_themeChoices[i]->ThemeName().c_str()); 
-	pEntry->Text.push_back(GAMETEXT_THEMENOTHOSTED);
-      }
-    }
-    pThemeList->setContextHelp(CONTEXTHELP_THEME);
+#if defined(SUPPORT_WEBACCESS)
+    UIButton *pUpdateThemesButton = new UIButton(pGeneralOptionsTab,
+						 pGeneralOptionsTab->getPosition().nWidth -200 -200,
+						 pGeneralOptionsTab->getPosition().nHeight - 110,
+						 GAMETEXT_UPDATETHEMESLIST,
+						 207,
+						 57);
+    pUpdateThemesButton->setType(UI_BUTTON_TYPE_LARGE);
+    pUpdateThemesButton->setID("UPDATE_THEMES_LIST");
+    pUpdateThemesButton->enableWindow(true);
+    pUpdateThemesButton->setFont(m_Renderer.getSmallFont());
+    pUpdateThemesButton->setContextHelp(CONTEXTHELP_UPDATETHEMESLIST);
+
+    UIButton *pGetSelectedTheme = new UIButton(pGeneralOptionsTab,
+					       pGeneralOptionsTab->getPosition().nWidth -200,
+					       pGeneralOptionsTab->getPosition().nHeight - 110,
+					       GAMETEXT_GETSELECTEDTHEME,
+					       207,
+					       57);
+    pGetSelectedTheme->setType(UI_BUTTON_TYPE_LARGE);
+    pGetSelectedTheme->setID("GET_SELECTED_THEME");
+    pGetSelectedTheme->enableWindow(true);
+    pGetSelectedTheme->setFont(m_Renderer.getSmallFont());
+    pGetSelectedTheme->setContextHelp(CONTEXTHELP_GETSELECTEDTHEME);
+#endif
 
     UIWindow *pVideoOptionsTab = new UIWindow(pOptionsTabs,20,40,GAMETEXT_VIDEO,pOptionsTabs->getPosition().nWidth-40,pOptionsTabs->getPosition().nHeight);
     pVideoOptionsTab->enableWindow(true);
@@ -2110,6 +2124,9 @@ namespace vapp {
 
     UIButton *pCheckNewLevelsAtStartup = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:ENABLECHECKNEWLEVELSATSTARTUP");
     UIButton *pCheckHighscoresAtStartup = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:ENABLECHECKHIGHSCORESATSTARTUP");
+
+    UIButton *pUpdThemeList = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:UPDATE_THEMES_LIST");
+    UIButton *pUpdSelectedTheme = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:GET_SELECTED_THEME");
 #endif
 
 #if defined(ALLOW_GHOST) 
@@ -2140,6 +2157,9 @@ namespace vapp {
         pUpdHS->enableWindow(true);
 	pCheckNewLevelsAtStartup->enableWindow(true);
 	pCheckHighscoresAtStartup->enableWindow(true);
+	pUpdThemeList->enableWindow(true);
+	//pUpdSelectedTheme->enableWindow(true);
+	pUpdSelectedTheme->enableWindow(false);
       }
       else {
         //pInGameWorldRecord->enableWindow(false);
@@ -2147,6 +2167,8 @@ namespace vapp {
         pUpdHS->enableWindow(false);
 	pCheckNewLevelsAtStartup->enableWindow(false);
 	pCheckHighscoresAtStartup->enableWindow(false);
+	pUpdThemeList->enableWindow(false);
+	pUpdSelectedTheme->enableWindow(false);
       }
 #endif
     
@@ -2185,7 +2207,27 @@ namespace vapp {
       } catch(Exception &e) {
 	notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES);
       }
-    }    
+    }
+
+    if(pUpdThemeList->isClicked()) {
+      pUpdThemeList->setClicked(false);
+      try {
+	_UpdateWebThemes(false);
+	_UpdateThemesLists();
+      } catch(Exception &e) {
+	notifyMsg(GAMETEXT_FAILEDUPDATETHEMESLIST);
+      }
+    }  
+
+    if(pUpdSelectedTheme->isClicked()) {
+      pUpdSelectedTheme->setClicked(false);
+      try {
+	printf("Get selected theme : TODO\n");
+      } catch(Exception &e) {
+	notifyMsg(GAMETEXT_FAILEDGETSELECTEDTHEME);
+      }
+    } 
+ 
 #endif    
 
     UIButton *pSaveOptions = (UIButton *)m_pOptionsWindow->getChild("SAVE_BUTTON");
@@ -2594,6 +2636,23 @@ namespace vapp {
     }
   }
 
+  void GameApp::_CreateThemesList(UIList *pList) {
+    pList->clear();
+
+    std::vector<ThemeChoice*> v_themeChoices;
+    UIListEntry *pEntry;
+    v_themeChoices = m_themeChoicer->getChoices();
+    for(int i=0; i<v_themeChoices.size(); i++) {
+      if(v_themeChoices[i]->hosted()) {
+	pEntry = pList->addEntry(v_themeChoices[i]->ThemeName().c_str());
+	pEntry->Text.push_back(GAMETEXT_THEMEHOSTED);
+      } else {
+	pEntry = pList->addEntry(v_themeChoices[i]->ThemeName().c_str()); 
+	pEntry->Text.push_back(GAMETEXT_THEMENOTHOSTED);
+      }
+    }
+  }
+
   /*===========================================================================
   Fill a window with best times
   ===========================================================================*/
@@ -2630,7 +2689,7 @@ namespace vapp {
     UIButton *pContextHelp = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:ENABLECONTEXTHELP");
     UIButton *pAutosaveReplays = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:AUTOSAVEREPLAYS");
 
-    UIList *pThemeList = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:THEME_LIST");
+    UIList *pThemeList = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:THEMES_LIST");
 
     UIButton *pEnableAudioButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_AUDIO");
     UIButton *p11kHzButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:RATE11KHZ");
@@ -2890,7 +2949,7 @@ namespace vapp {
     UIButton *pContextHelp = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:ENABLECONTEXTHELP");
     UIButton *pAutosaveReplays = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:AUTOSAVEREPLAYS");
     
-    UIList *pThemeList = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:THEME_LIST");
+    UIList *pThemeList = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:THEMES_LIST");
 
     UIButton *pEnableAudioButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_AUDIO");
     UIButton *p11kHzButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:RATE11KHZ");
@@ -3107,7 +3166,7 @@ namespace vapp {
     if(found == false) {
       if(m_bEnableWebHighscores) {
 	try {
-	  _SimpleMessage(GAMETEXT_DLHIGHSCORE,&m_pDownloadHighscoreMsgBoxRect);
+	  _SimpleMessage(GAMETEXT_DLHIGHSCORE,&m_DownloadMsgBoxRect);
 	  pWH->download();
 	  
 	  m_ReplayList.addReplay(FS::getFileBaseName(pWH->getReplayName()));

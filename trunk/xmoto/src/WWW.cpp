@@ -544,6 +544,7 @@ WebLevels::WebLevels(vapp::WWWAppInterface *p_WebLevelApp,
 		     const ProxySettings *p_proxy_settings) {
   m_WebLevelApp    = p_WebLevelApp;
   m_proxy_settings = p_proxy_settings;
+  m_levels_url     = DEFAULT_WEBLEVELS_URL;
 }
 
 WebLevels::~WebLevels() {
@@ -795,6 +796,7 @@ std::string WebTheme::getUrl() const {
 
 WebThemes::WebThemes(const ProxySettings *p_proxy_settings) {
   m_proxy_settings = p_proxy_settings;
+  m_themes_url     = DEFAULT_WEBTHEMES_URL;
 }
 
 WebThemes::~WebThemes() {
@@ -802,6 +804,11 @@ WebThemes::~WebThemes() {
 }
 
 void WebThemes::update() {
+  FSWeb::downloadFileBz2UsingMd5(getXmlFileName(),
+				 m_themes_url,
+				 NULL,
+				 NULL,
+				 m_proxy_settings);
 }
 
 void WebThemes::upgrade() {
@@ -867,6 +874,10 @@ void WebThemes::clean() {
 
 const std::vector<WebTheme*> &WebThemes::getAvailableThemes() {
   return m_availableThemes;
+}
+
+void upgrade(std::string p_avaibleThemeName, bool justUpdateIt) {
+
 }
 
 #endif

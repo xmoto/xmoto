@@ -111,7 +111,7 @@ namespace vapp {
                  m_pQuitMsgBox=NULL;
                  m_pNotifyMsgBox=NULL;
 #if defined(SUPPORT_WEBACCESS)
-                 m_pDownloadLevelsMsgBox=NULL;
+                 m_pDownloadMsgBox=NULL;
                  m_pNewLevelsAvailIcon=NULL;
                  m_pWebConfEditor=NULL;
                  m_pWebConfMsgBox=NULL;
@@ -303,9 +303,8 @@ namespace vapp {
       UIMsgBox *m_pQuitMsgBox;
       UIMsgBox *m_pNotifyMsgBox;
 #if defined(SUPPORT_WEBACCESS)
-      UIMsgBox *m_pDownloadLevelsMsgBox;
-      UIRect m_DownloadLevelsMsgBoxRect;
-      UIRect m_pDownloadHighscoreMsgBoxRect;
+      UIMsgBox *m_pDownloadMsgBox;
+      UIRect m_DownloadMsgBoxRect;
 #endif            
 
       /* Main menu background / title */
@@ -413,6 +412,7 @@ namespace vapp {
       void _HandleLevelPackViewer(void);
       void _CreateLevelLists(UILevelList *pExternalLevels,UILevelList *pInternalLevels);
       void _CreateReplaysList(UIList *pList);
+      void _CreateThemesList(UIList *pList);
       void _CreateProfileList(void);
       void _CreateDefaultConfig(void);
       void _CreateLevelPackLevelList(void);
@@ -433,6 +433,7 @@ namespace vapp {
       void _UpdateSettings(void);
       void _UpdateLevelLists(void);
       void _UpdateReplaysList(void);
+      void _UpdateThemesLists(void);
       void _GameScreenshot(void);
       void _SaveReplay(const std::string &Name);
     
@@ -457,6 +458,7 @@ namespace vapp {
       void _CheckForExtraLevels(void);
       void _UpdateWebHighscores(bool bSilent);
       void _UpdateWebLevels(bool bSilent);
+      void _UpdateWebThemes(bool bSilent);
       void _UpgradeWebHighscores();
       void _DownloadExtraLevels(void);
       void _ConfigureProxy(void);

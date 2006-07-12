@@ -43,6 +43,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define DEFAULT_WEBLEVELS_URL             "http://xmoto.free.fr/levels.xml"
 #define DEFAULT_WEBLEVELS_FILENAME        "weblevels.xml"
 #define DEFAULT_WEBLEVELS_DIR             "downloaded"
+#define DEFAULT_WEBTHEMES_URL             "http://xmoto.free.fr/themes.xml"
 #define DEFAULT_WEBTHEMES_FILENAME        "webthemes.xml"
 
 #define WWW_AGENT ("xmoto-" + vapp::App::getVersionString())
@@ -296,13 +297,19 @@ class WebThemes {
   /* fill the list of avaible theme ; does not required an internet connexion */
   void upgrade();
 
+  /* download a theme or just update it if justUpdateIt it true */
+  void upgrade(std::string p_avaibleThemeName, bool justUpdateIt);
+
   const std::vector<WebTheme*> &getAvailableThemes();
+
+  void setURL(const std::string &p_url) {m_themes_url = p_url;}
 
  private:
   std::string getXmlFileName();
   void extractThemesAvailableFromXml();
   void clean();
 
+  std::string m_themes_url;
   const ProxySettings *m_proxy_settings;
   std::vector<WebTheme*> m_availableThemes;
 };

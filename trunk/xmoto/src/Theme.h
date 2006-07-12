@@ -401,7 +401,9 @@ class ThemeChoicer {
   std::string getFileName(std::string p_themeName);
   std::vector<ThemeChoice*> getChoices();
 
+#if defined(SUPPORT_WEBACCESS)
   void updateFromWWW();
+#endif
 
  private:
   void cleanList();

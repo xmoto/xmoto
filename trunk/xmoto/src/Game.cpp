@@ -54,6 +54,10 @@ namespace vapp {
     _CreateReplaysList((UIList *)m_pReplaysWindow->getChild("REPLAY_LIST"));                       
   }
 
+  void GameApp::_UpdateThemesLists(void) {
+    _CreateThemesList((UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:THEMES_LIST"));
+  }
+
   /*===========================================================================
   Change game state
   ===========================================================================*/
@@ -1060,18 +1064,18 @@ namespace vapp {
 
 #if defined(SUPPORT_WEBACCESS)
     /* And the download-levels box? */
-    else if(m_pDownloadLevelsMsgBox != NULL) {
-      UIMsgBoxButton Button = m_pDownloadLevelsMsgBox->getClicked();
+    else if(m_pDownloadMsgBox != NULL) {
+      UIMsgBoxButton Button = m_pDownloadMsgBox->getClicked();
       if(Button == UI_MSGBOX_YES) {
-        delete m_pDownloadLevelsMsgBox;
-        m_pDownloadLevelsMsgBox = NULL;
+        delete m_pDownloadMsgBox;
+        m_pDownloadMsgBox = NULL;
 
         /* Download levels! */
         _DownloadExtraLevels();
       }
       else if(Button == UI_MSGBOX_NO) {
-        delete m_pDownloadLevelsMsgBox;
-        m_pDownloadLevelsMsgBox = NULL;
+        delete m_pDownloadMsgBox;
+        m_pDownloadMsgBox = NULL;
       }
     }
 #endif       
@@ -2277,39 +2281,47 @@ namespace vapp {
 
 #if defined(SUPPORT_WEBACCESS)  
   void GameApp::_UpdateWebHighscores(bool bSilent) {
-    #if defined(SUPPORT_WEBACCESS)    
-    if(!bSilent)
-      _SimpleMessage(GAMETEXT_DLHIGHSCORES,&m_DownloadLevelsMsgBoxRect);
+    if(!bSilent) {
+      _SimpleMessage(GAMETEXT_DLHIGHSCORES,&m_DownloadMsgBoxRect);
+    }
 
-      m_bWebHighscoresUpdatedThisSession = true;
-
-      /* Try downloading the highscores */
-      m_pWebHighscores->update();
-    #endif
+    m_bWebHighscoresUpdatedThisSession = true;
+    
+    /* Try downloading the highscores */
+    m_pWebHighscores->update();
   }
 #endif
 
 #if defined(SUPPORT_WEBACCESS)  
   void GameApp::_UpdateWebLevels(bool bSilent) {
-    #if defined(SUPPORT_WEBACCESS)    
-    if(!bSilent)
-      _SimpleMessage(GAMETEXT_DLLEVELSCHECK,&m_DownloadLevelsMsgBoxRect);
+    if(!bSilent) {
+      _SimpleMessage(GAMETEXT_DLLEVELSCHECK,&m_DownloadMsgBoxRect);
+    }
 
-      /* Try download levels list */
-      if(m_pWebLevels == NULL) {
-	m_pWebLevels = new WebLevels(this,&m_ProxySettings);
-      }
-      m_pWebLevels->setURL(m_Config.getString("WebLevelsURL"));
-      Log("WWW: Checking for new or updated levels...");
-      m_pWebLevels->update();
-
-      int nULevels=0,nUBytes=0;
-      m_pWebLevels->getUpdateInfo(&nUBytes,&nULevels);
-      m_bWebLevelsToDownload = nULevels!=0;
-    #endif
+    /* Try download levels list */
+    if(m_pWebLevels == NULL) {
+      m_pWebLevels = new WebLevels(this,&m_ProxySettings);
+    }
+    m_pWebLevels->setURL(m_Config.getString("WebLevelsURL"));
+    Log("WWW: Checking for new or updated levels...");
+    m_pWebLevels->update();
+    
+    int nULevels=0,nUBytes=0;
+    m_pWebLevels->getUpdateInfo(&nUBytes,&nULevels);
+    m_bWebLevelsToDownload = nULevels!=0;
   }
 #endif
-  
+
+#if defined(SUPPORT_WEBACCESS)  
+  void GameApp::_UpdateWebThemes(bool bSilent) {
+    if(!bSilent) {
+      _SimpleMessage(GAMETEXT_DLTHEMESLISTCHECK,&m_DownloadMsgBoxRect);
+    }  
+
+    m_themeChoicer->updateFromWWW();
+  }    
+#endif
+
 #if defined(SUPPORT_WEBACCESS)  
   void GameApp::_UpgradeWebHighscores() {
     #if defined(SUPPORT_WEBACCESS)
@@ -2334,7 +2346,7 @@ namespace vapp {
       m_DownloadingLevel = "";
       
       if(m_pWebLevels != NULL) {
-        _SimpleMessage(GAMETEXT_DLLEVELS,&m_DownloadLevelsMsgBoxRect);
+        _SimpleMessage(GAMETEXT_DLLEVELS,&m_DownloadMsgBoxRect);
 
         try {                  
           Log("WWW: Downloading levels...");
@@ -2345,9 +2357,9 @@ namespace vapp {
         catch(Exception &e) {
           Log("** Warning ** : Unable to download extra levels [%s]",e.getMsg().c_str());
   
-          if(m_pDownloadLevelsMsgBox != NULL) {
-            delete m_pDownloadLevelsMsgBox;
-            m_pDownloadLevelsMsgBox = NULL;
+          if(m_pDownloadMsgBox != NULL) {
+            delete m_pDownloadMsgBox;
+            m_pDownloadMsgBox = NULL;
           }
           notifyMsg(GAMETEXT_FAILEDDLLEVELS);
           return;
@@ -2484,20 +2496,20 @@ namespace vapp {
         }        
         else {
           /* Ask user whether he want to download levels or snot */
-          if(m_pDownloadLevelsMsgBox == NULL) {
+          if(m_pDownloadMsgBox == NULL) {
             char cBuf[256];
             
             sprintf(cBuf,nULevels==1?GAMETEXT_NEWLEVELAVAIL:
                                      GAMETEXT_NEWLEVELSAVAIL,nULevels);
-            m_pDownloadLevelsMsgBox = m_Renderer.getGUI()->msgBox(cBuf,(UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
+            m_pDownloadMsgBox = m_Renderer.getGUI()->msgBox(cBuf,(UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
           }
         }
       } 
       catch(Exception &e) {
         Log("** Warning ** : Unable to check for extra levels [%s]",e.getMsg().c_str());
-        if(m_pDownloadLevelsMsgBox != NULL) {
-          delete m_pDownloadLevelsMsgBox;
-          m_pDownloadLevelsMsgBox = NULL;
+        if(m_pDownloadMsgBox != NULL) {
+          delete m_pDownloadMsgBox;
+          m_pDownloadMsgBox = NULL;
         }
         notifyMsg(GAMETEXT_FAILEDCHECKLEVELS);
       }      
@@ -2590,27 +2602,27 @@ namespace vapp {
     readEvents();
     
     _DrawMenuBackground();
-    _SimpleMessage(std::string(GAMETEXT_DLLEVELS),&m_DownloadLevelsMsgBoxRect,true);
+    _SimpleMessage(std::string(GAMETEXT_DLLEVELS),&m_DownloadMsgBoxRect,true);
     
-    drawBox(Vector2f(m_DownloadLevelsMsgBoxRect.nX+10,m_DownloadLevelsMsgBoxRect.nY+
-                                                   m_DownloadLevelsMsgBoxRect.nHeight-
+    drawBox(Vector2f(m_DownloadMsgBoxRect.nX+10,m_DownloadMsgBoxRect.nY+
+                                                   m_DownloadMsgBoxRect.nHeight-
                                                    nBarHeight*2),
-            Vector2f(m_DownloadLevelsMsgBoxRect.nX+m_DownloadLevelsMsgBoxRect.nWidth-10,
-                     m_DownloadLevelsMsgBoxRect.nY+m_DownloadLevelsMsgBoxRect.nHeight-nBarHeight),
+            Vector2f(m_DownloadMsgBoxRect.nX+m_DownloadMsgBoxRect.nWidth-10,
+                     m_DownloadMsgBoxRect.nY+m_DownloadMsgBoxRect.nHeight-nBarHeight),
             0,MAKE_COLOR(0,0,0,255),0);
             
                 
-    drawBox(Vector2f(m_DownloadLevelsMsgBoxRect.nX+10,m_DownloadLevelsMsgBoxRect.nY+
-                                                   m_DownloadLevelsMsgBoxRect.nHeight-
+    drawBox(Vector2f(m_DownloadMsgBoxRect.nX+10,m_DownloadMsgBoxRect.nY+
+                                                   m_DownloadMsgBoxRect.nHeight-
                                                    nBarHeight*2),
-            Vector2f(m_DownloadLevelsMsgBoxRect.nX+10+((m_DownloadLevelsMsgBoxRect.nWidth-20)*(int)fPercent)/100,
-                     m_DownloadLevelsMsgBoxRect.nY+m_DownloadLevelsMsgBoxRect.nHeight-nBarHeight),
+            Vector2f(m_DownloadMsgBoxRect.nX+10+((m_DownloadMsgBoxRect.nWidth-20)*(int)fPercent)/100,
+                     m_DownloadMsgBoxRect.nY+m_DownloadMsgBoxRect.nHeight-nBarHeight),
             0,MAKE_COLOR(255,0,0,255),0);
 
 	  UIFont *v_font = m_Renderer.getSmallFont();
 	  if(v_font != NULL) {
-	    UITextDraw::printRaw(v_font,m_DownloadLevelsMsgBoxRect.nX+13,m_DownloadLevelsMsgBoxRect.nY+
-				 m_DownloadLevelsMsgBoxRect.nHeight-nBarHeight-4,m_DownloadingLevel,MAKE_COLOR(255,255,255,128));
+	    UITextDraw::printRaw(v_font,m_DownloadMsgBoxRect.nX+13,m_DownloadMsgBoxRect.nY+
+				 m_DownloadMsgBoxRect.nHeight-nBarHeight-4,m_DownloadingLevel,MAKE_COLOR(255,255,255,128));
 	  }
     SDL_GL_SwapBuffers();            
   }
@@ -2784,7 +2796,7 @@ namespace vapp {
 	    if(m_bEnableWebHighscores) {
 	      /* download the replay */
 	      try {
-		_SimpleMessage(GAMETEXT_DLGHOST,&m_pDownloadHighscoreMsgBoxRect);
+		_SimpleMessage(GAMETEXT_DLGHOST,&m_DownloadMsgBoxRect);
 		v_hs->download();
 		res = std::string("Replays/") + v_replay_name + std::string(".rpl");
 		m_ReplayList.addReplay(v_replay_name);
