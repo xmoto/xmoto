@@ -876,8 +876,8 @@ const std::vector<WebTheme*> &WebThemes::getAvailableThemes() {
   return m_availableThemes;
 }
 
-void upgrade(std::string p_avaibleThemeName, bool justUpdateIt) {
-
+void WebThemes::upgrade(std::string p_themeName, bool justUpdateIt) {
+  printf("Theme '%s' to %s\n", p_themeName.c_str(), justUpdateIt ? "update" : "install");
 }
 
 #endif

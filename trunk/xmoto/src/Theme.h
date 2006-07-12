@@ -403,6 +403,7 @@ class ThemeChoicer {
 
 #if defined(SUPPORT_WEBACCESS)
   void updateFromWWW();
+  void updateThemeFromWWW(ThemeChoice* pThemeChoice);
 #endif
 
  private:

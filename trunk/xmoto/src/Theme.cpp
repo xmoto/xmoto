@@ -943,10 +943,16 @@ std::vector<ThemeChoice*> ThemeChoicer::getChoices() {
   return m_choices;
 }
 
+#if defined(SUPPORT_WEBACCESS)
 void ThemeChoicer::updateFromWWW() {
   m_webThemes->update();
   initList();
 }
+
+void ThemeChoicer::updateThemeFromWWW(ThemeChoice* pThemeChoice) {
+  m_webThemes->upgrade(pThemeChoice->ThemeName(), pThemeChoice->hosted());
+}
+#endif
 
 ThemeChoice::ThemeChoice(std::string p_themeName, std::string p_themeFile, bool p_hosted) {
   m_themeName = p_themeName;

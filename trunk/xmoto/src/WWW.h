@@ -298,7 +298,7 @@ class WebThemes {
   void upgrade();
 
   /* download a theme or just update it if justUpdateIt it true */
-  void upgrade(std::string p_avaibleThemeName, bool justUpdateIt);
+  void upgrade(std::string p_themeName, bool justUpdateIt);
 
   const std::vector<WebTheme*> &getAvailableThemes();
 

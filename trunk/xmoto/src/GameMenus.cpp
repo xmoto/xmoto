@@ -2127,6 +2127,7 @@ namespace vapp {
 
     UIButton *pUpdThemeList = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:UPDATE_THEMES_LIST");
     UIButton *pUpdSelectedTheme = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:GET_SELECTED_THEME");
+    UIList *pThemeList = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:THEMES_LIST");
 #endif
 
 #if defined(ALLOW_GHOST) 
@@ -2152,17 +2153,14 @@ namespace vapp {
 
 #if defined(SUPPORT_WEBACCESS)
       if(pWebHighscores->getChecked()) {
-        //pInGameWorldRecord->enableWindow(true);
         pINetConf->enableWindow(true);
         pUpdHS->enableWindow(true);
 	pCheckNewLevelsAtStartup->enableWindow(true);
 	pCheckHighscoresAtStartup->enableWindow(true);
 	pUpdThemeList->enableWindow(true);
-	//pUpdSelectedTheme->enableWindow(true);
-	pUpdSelectedTheme->enableWindow(false);
+	pUpdSelectedTheme->enableWindow(true);
       }
       else {
-        //pInGameWorldRecord->enableWindow(false);
         pINetConf->enableWindow(false);
         pUpdHS->enableWindow(false);
 	pCheckNewLevelsAtStartup->enableWindow(false);
@@ -2222,7 +2220,17 @@ namespace vapp {
     if(pUpdSelectedTheme->isClicked()) {
       pUpdSelectedTheme->setClicked(false);
       try {
-	printf("Get selected theme : TODO\n");
+	ThemeChoice* v_themeChoice = NULL;
+
+	if(!pThemeList->isBranchHidden() && pThemeList->getSelected()>=0) {
+	  if(!pThemeList->getEntries().empty()) {
+	    UIListEntry *pEntry = pThemeList->getEntries()[pThemeList->getSelected()];
+	    v_themeChoice = reinterpret_cast<ThemeChoice*>(pEntry->pvUser);
+	    if(v_themeChoice != NULL) {
+	      _UpdateWebTheme(v_themeChoice, false);
+	    }
+	  }
+	}
       } catch(Exception &e) {
 	notifyMsg(GAMETEXT_FAILEDGETSELECTEDTHEME);
       }
@@ -2644,10 +2652,12 @@ namespace vapp {
     v_themeChoices = m_themeChoicer->getChoices();
     for(int i=0; i<v_themeChoices.size(); i++) {
       if(v_themeChoices[i]->hosted()) {
-	pEntry = pList->addEntry(v_themeChoices[i]->ThemeName().c_str());
+	pEntry = pList->addEntry(v_themeChoices[i]->ThemeName().c_str(),
+				 reinterpret_cast<void *>(v_themeChoices[i]));
 	pEntry->Text.push_back(GAMETEXT_THEMEHOSTED);
       } else {
-	pEntry = pList->addEntry(v_themeChoices[i]->ThemeName().c_str()); 
+	pEntry = pList->addEntry(v_themeChoices[i]->ThemeName().c_str(),
+				 reinterpret_cast<void *>(v_themeChoices[i])); 
 	pEntry->Text.push_back(GAMETEXT_THEMENOTHOSTED);
       }
     }
