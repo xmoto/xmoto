@@ -380,10 +380,14 @@ class ThemeChoice {
   std::string ThemeFile();
   bool hosted();
 
+  void setRequireUpdate(bool b);
+  bool getRequireUpdate();
+
  private:
   std::string m_themeName;
   std::string m_themeFile;
   bool m_hosted;
+  bool m_requireUpdate;
 };
 
 class ThemeChoicer {

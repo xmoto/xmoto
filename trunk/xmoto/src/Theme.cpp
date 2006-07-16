@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VXml.h"
 #include "VApp.h"
 #include "BuiltInFont.h"
+#include "md5sum/md5file.h"
 
 class vapp::App;
 
@@ -902,7 +903,23 @@ void ThemeChoicer::initList() {
       if(ExistThemeName(v_availableThemes[i]->getName()) == false) {
 	/* this theme is avaible */
 	m_choices.push_back(new ThemeChoice(v_availableThemes[i]->getName(), "", false));
-    }
+      } else {
+	/* the theme already exists ; check sum */
+	for(int j=0; j<m_choices.size(); j++) {
+	  std::string v_localMd5;
+
+	  try {
+	    v_localMd5 = md5file(m_choices[j]->ThemeFile());
+	  } catch(vapp::Exception &e) {
+	    v_localMd5 = "";
+	  }
+
+	  if(v_localMd5 != v_availableThemes[i]->getSum()) {
+	    /* this theme can be updated */
+	    m_choices[j]->setRequireUpdate(true);
+	  }
+	}
+      }
     }
   } catch(vapp::Exception &e) {
     /* hum, sorry, you will not see avaible theme to download */
@@ -955,9 +972,10 @@ void ThemeChoicer::updateThemeFromWWW(ThemeChoice* pThemeChoice) {
 #endif
 
 ThemeChoice::ThemeChoice(std::string p_themeName, std::string p_themeFile, bool p_hosted) {
-  m_themeName = p_themeName;
-  m_themeFile = p_themeFile;
-  m_hosted    = p_hosted;
+  m_themeName 	  = p_themeName;
+  m_themeFile 	  = p_themeFile;
+  m_hosted    	  = p_hosted;
+  m_requireUpdate = false;
 }
 
 ThemeChoice::~ThemeChoice() {
@@ -974,3 +992,14 @@ std::string ThemeChoice::ThemeFile() {
 bool ThemeChoice::hosted() {
   return m_hosted;
 }
+
+void ThemeChoice::setRequireUpdate(bool b) {
+  m_requireUpdate = b;
+}
+ 
+bool ThemeChoice::getRequireUpdate() {
+  return m_requireUpdate;
+}
+
+
+

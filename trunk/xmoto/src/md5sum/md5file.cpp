@@ -43,7 +43,7 @@ std::string md5file(std::string p_filename) {
   return sum;
 }
 
-std::string md5Contentds(std::string p_md5File) {
+std::string md5Contents(std::string p_md5File) {
   FILE* fh;
   fh = fopen(p_md5File.c_str(), "rb");
   if(fh == NULL) {

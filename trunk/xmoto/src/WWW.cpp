@@ -387,7 +387,7 @@ void FSWeb::downloadFileBz2UsingMd5(const std::string &p_local_file,
 		     p_proxy_settings
 		     );
 
-	std::string v_md5Web = md5Contentds(v_md5File);
+	std::string v_md5Web = md5Contents(v_md5File);
 	remove(v_md5File.c_str());
 	if(v_md5Web != "") {
 	  require_dwd = v_md5Web != v_md5Local;
@@ -778,9 +778,10 @@ const std::vector<std::string> &WebLevels::getUpdatedDownloadedLevels(void) {
   return m_webLevelsUpdatedDownloadedOK;
 }
 
-WebTheme::WebTheme(std::string pName, std::string pUrl) {
+WebTheme::WebTheme(std::string pName, std::string pUrl, std::string pSum) {
   m_name = pName;
   m_url  = pUrl;
+  m_sum  = pSum;
 }
 
 WebTheme::~WebTheme() {
@@ -792,6 +793,10 @@ std::string WebTheme::getName() const {
 
 std::string WebTheme::getUrl() const {
   return m_url;
+}
+
+std::string WebTheme::getSum() const {
+  return m_sum;
 }
 
 WebThemes::WebThemes(const ProxySettings *p_proxy_settings) {
@@ -853,9 +858,9 @@ void WebThemes::extractThemesAvailableFromXml() {
 	  
 	pc = pVarElem->Attribute("sum");
 	if(pc != NULL) {
-	  v_MD5sum_web = pc;	
+	  v_MD5sum_web = pc;
 
-	  m_availableThemes.push_back(new WebTheme(v_themeName, v_url));
+	  m_availableThemes.push_back(new WebTheme(v_themeName, v_url, v_MD5sum_web));
 	    
 	}
       }

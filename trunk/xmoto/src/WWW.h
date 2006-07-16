@@ -276,14 +276,16 @@ class WebLevels {
 
 class WebTheme {
  public:
-  WebTheme(std::string pName, std::string pUrl);
+  WebTheme(std::string pName, std::string pUrl, std::string pSum);
   ~WebTheme();
   std::string getName() const;
   std::string getUrl() const;
+  std::string getSum() const;
 
  private:
   std::string m_name;
   std::string m_url;
+  std::string m_sum;
 };
 
 class WebThemes {

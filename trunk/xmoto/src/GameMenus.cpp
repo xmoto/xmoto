@@ -385,8 +385,8 @@ namespace vapp {
 				    pGeneralOptionsTab->getPosition().nHeight-125-90);
     pThemeList->setID("THEMES_LIST");
     pThemeList->setFont(m_Renderer.getSmallFont());
-    pThemeList->addColumn(GAMETEXT_THEMES, (pThemeList->getPosition().nWidth*2) / 3);
-    pThemeList->addColumn("", (pThemeList->getPosition().nWidth*1) / 3);
+    pThemeList->addColumn(GAMETEXT_THEMES, (pThemeList->getPosition().nWidth*3) / 5);
+    pThemeList->addColumn("", (pThemeList->getPosition().nWidth*2) / 5);
     _UpdateThemesLists();
     pThemeList->setContextHelp(CONTEXTHELP_THEMES);
 
@@ -2652,9 +2652,16 @@ namespace vapp {
     v_themeChoices = m_themeChoicer->getChoices();
     for(int i=0; i<v_themeChoices.size(); i++) {
       if(v_themeChoices[i]->hosted()) {
-	pEntry = pList->addEntry(v_themeChoices[i]->ThemeName().c_str(),
-				 reinterpret_cast<void *>(v_themeChoices[i]));
-	pEntry->Text.push_back(GAMETEXT_THEMEHOSTED);
+
+	if(v_themeChoices[i]->getRequireUpdate()) {
+	  pEntry = pList->addEntry(v_themeChoices[i]->ThemeName().c_str(),
+				   reinterpret_cast<void *>(v_themeChoices[i]));
+	  pEntry->Text.push_back(GAMETEXT_THEMEREQUIREUPDATE);
+	} else {
+	  pEntry = pList->addEntry(v_themeChoices[i]->ThemeName().c_str(),
+				   reinterpret_cast<void *>(v_themeChoices[i]));
+	  pEntry->Text.push_back(GAMETEXT_THEMEHOSTED);
+	}
       } else {
 	pEntry = pList->addEntry(v_themeChoices[i]->ThemeName().c_str(),
 				 reinterpret_cast<void *>(v_themeChoices[i])); 
