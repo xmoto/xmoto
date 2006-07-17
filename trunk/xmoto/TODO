@@ -41,6 +41,7 @@ add the same for block once block move will work
 ######################################################################
 Unassigned:
 
+* BUG : xmoto-edit rgeznlre -> segfault
 * BUG : ERREUR 404: Not Found : when a file is not found, no error is detected
 
 * smoke doesn't work in replay, it didn't work in .16
