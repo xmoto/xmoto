@@ -1196,45 +1196,46 @@ namespace vapp {
   }
 
   bool FS::isFileReadable(std::string p_filename) {
-    FileHandle *fh = openIFile(p_filename);
-    if(fh == NULL) {
-      return false;
-    }
-    closeFile(fh);
-    return true;
+    //FileHandle *fh = openIFile(p_filename);
+    //if(fh == NULL) {
+    //  return false;
+    //}
+    //closeFile(fh);
+    //return true;
 
-//    struct stat S;
-//
+    struct stat S;
+
 //    /* check into the package */
 //    for(int i=0; i<m_nNumPackFiles; i++) {
 //      if(m_PackFiles[i].Name == p_filename) {
 //	return true;
 //      }
 //    }
-//
-//    if(stat(p_filename.c_str(),&S) != 0) {
-//      return false;
-//    }
-//
-//    return (S.st_mode & S_IRUSR) != 0;
+
+    if(stat(p_filename.c_str(),&S) != 0) {
+      return false;
+    }
+
+    //return (S.st_mode & S_IRUSR) != 0;
+    return true;
   }
 
   bool FS::fileExists(std::string p_filename) {
     return isFileReadable(p_filename);
-//    struct stat S;
-//
-//    /* check into the package */
-//    for(int i=0; i<m_nNumPackFiles; i++) {
-//      if(m_PackFiles[i].Name == p_filename) {
-//	return true;
-//      }
-//    }
-//
-//    if(stat(p_filename.c_str(),&S) != 0) {
-//      return false;
-//    }
-//
-//    return true;
+    //struct stat S;
+
+    ///* check into the package */
+    //for(int i=0; i<m_nNumPackFiles; i++) {
+    //  if(m_PackFiles[i].Name == p_filename) {
+	   //   return true;
+    //  }
+    //}
+
+    //if(stat(p_filename.c_str(),&S) != 0) {
+    //  return false;
+    //}
+
+    //return (S.st_mode;
   }
 
   void FS::mkArborescence(std::string v_filepath) {
