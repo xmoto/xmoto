@@ -36,6 +36,7 @@ add the same for block once block move will work
 ######################################################################
 Unassigned:
 
+* make sound in themes
 * make circle for sprites, strawberries, ... in ugly mode
 * now that there is a lot of replays (dwd due to ghosts), what about put "list all" by default in the replays list ?
 * BUG : xmoto-edit rgeznlre -> segfault

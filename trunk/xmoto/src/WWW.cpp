@@ -952,12 +952,19 @@ void WebThemes::upgrade(ThemeChoice *p_themeChoice) {
 	m_WebApp->setBeingDownloadedInformation((*v_required_files)[i], true);
 
 	vapp::FS::mkAborescence(v_destinationFile);
-	
-	FSWeb::downloadFile(v_destinationFile,
-			    v_sourceFile,
-			    FSWeb::f_curl_progress_callback,
-			    &v_data,
-			    m_proxy_settings);
+
+	try {
+	  FSWeb::downloadFile(v_destinationFile,
+			      v_sourceFile,
+			      FSWeb::f_curl_progress_callback,
+			      &v_data,
+			      m_proxy_settings);
+	} catch(vapp::Exception &e) {
+	  if(m_WebApp->isCancelAsSoonAsPossible() == false) {
+	    throw e;
+	  }
+	}
+
 	v_nb_files_performed++;
       }
       m_WebApp->readEvents();
