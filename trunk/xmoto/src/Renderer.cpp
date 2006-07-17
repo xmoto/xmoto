@@ -711,83 +711,73 @@ namespace vapp {
       p3 = Vector2f(pSprite->Pos.x,pSprite->Pos.y+pType->getHeight()) +
            Vector2f(-pType->getCenterX(),-pType->getCenterY());
             
-      glEnable(GL_ALPHA_TEST);
-      glAlphaFunc(GL_GEQUAL,0.5f);      
-      _RenderAlphaBlendedSection(pType->getTexture(),p0,p1,p2,p3);      
-      glDisable(GL_ALPHA_TEST);
-
-      /* Debug mode? */
-      /* TODO: port to new transform */
-      //if(isDebug()) {
-      //  /* Sprite marker */
-      //  glBegin(GL_LINE_STRIP);      
-      //  glColor3f(1,0.5,0.2);
-      //  _Vertex(pSprite->Pos - Vector2f(0.5,0));
-      //  _Vertex(pSprite->Pos + Vector2f(0.5,0));
-      //  glEnd();
-      //  glBegin(GL_LINE_STRIP);      
-      //  glColor3f(1,0.5,0.2);
-      //  _Vertex(pSprite->Pos - Vector2f(0,0.5));
-      //  _Vertex(pSprite->Pos + Vector2f(0,0.5));
-      //  glEnd();
-      //  
-      //  _DbgText(pSprite->Pos,pSprite->ID,MAKE_COLOR(255,128,51,255));
-      //}
+      if(pType->getBlendMode() == SPRITE_BLENDMODE_ADDITIVE) {
+        _RenderAdditiveBlendedSection(pType->getTexture(),p0,p1,p2,p3);      
+      }
+      else {
+        glEnable(GL_ALPHA_TEST);
+        glAlphaFunc(GL_GEQUAL,0.5f);      
+        _RenderAlphaBlendedSection(pType->getTexture(),p0,p1,p2,p3);      
+        glDisable(GL_ALPHA_TEST);
+      }
     }
   }
-       
-       
+              
   /*===========================================================================
   Blocks (dynamic)
   ===========================================================================*/
   void GameRenderer::_RenderDynamicBlocks(void) {
     MotoGame *pGame = getGameObject();
 
-		/* Ugly mode? */
-		if(m_bUglyMode) {
-		}
-		else {
-		  /* Render all dynamic blocks */
-	    std::vector<DynamicBlock *> &Blocks = getGameObject()->getDynBlocks();
+		/* Render all dynamic blocks */
+	  std::vector<DynamicBlock *> &Blocks = getGameObject()->getDynBlocks();
 
-			for(int i=0;i<Blocks.size();i++) {						  
-			  /* Build rotation matrix for block */
-			  float fR[4]; 
-			  fR[0] = cos(Blocks[i]->fRotation); fR[1] = -sin(Blocks[i]->fRotation);
-			  fR[2] = sin(Blocks[i]->fRotation); fR[3] = cos(Blocks[i]->fRotation);
-			  
-			  /* Determine texture... this is so ingredibly ugly... TODO: no string lookups here */
-			  Texture *pTexture = NULL;
+		for(int i=0;i<Blocks.size();i++) {						  
+			/* Build rotation matrix for block */
+			float fR[4]; 
+			fR[0] = cos(Blocks[i]->fRotation); fR[1] = -sin(Blocks[i]->fRotation);
+			fR[2] = sin(Blocks[i]->fRotation); fR[3] = cos(Blocks[i]->fRotation);
+			
+			/* Determine texture... this is so ingredibly ugly... TODO: no string lookups here */
+			Texture *pTexture = NULL;
+			if(!m_bUglyMode) {
 			  Sprite *pSprite;
 			  pSprite = getParent()->m_theme.getSprite(SPRITE_TYPE_TEXTURE, Blocks[i]->pSrcBlock->Texture);
 			  if(pSprite != NULL) {
 			    pTexture = pSprite->getTexture();
 			  }
-			  GLuint GLName = 0;
-			  if(pTexture != NULL) GLName = pTexture->nID;
+			}
+			GLuint GLName = 0;
+			if(pTexture != NULL) GLName = pTexture->nID;
 
-				for(int j=0;j<Blocks[i]->ConvexBlocks.size();j++) {				
+			for(int j=0;j<Blocks[i]->ConvexBlocks.size();j++) {				
+			  if(!m_bUglyMode) {
   		    glBindTexture(GL_TEXTURE_2D,GLName);				  				  
 				  glEnable(GL_TEXTURE_2D);      
 				  glBegin(GL_POLYGON);
-				  glColor3f(1,1,1);				  
-				  for(int k=0;k<Blocks[i]->ConvexBlocks[j]->Vertices.size();k++) {				    
-				    ConvexBlockVertex *pVertex = Blocks[i]->ConvexBlocks[j]->Vertices[k];
-
-				    /* Transform vertex */
-				    Vector2f Tv = Vector2f(pVertex->P.x * fR[0] + pVertex->P.y * fR[1],
-				                           pVertex->P.x * fR[2] + pVertex->P.y * fR[3]);
-            Tv += Blocks[i]->Position;				                          
-            				    
-				    /* Put vertex */
-				    glTexCoord2f(pVertex->T.x,pVertex->T.y);
-				    glVertex2f(Tv.x,Tv.y);
-					}
-					glEnd();	            
-				  glDisable(GL_TEXTURE_2D);
 				}
-			}		  
-		}
+				else
+  				glBegin(GL_LINE_LOOP);
+				
+				glColor3f(1,1,1);				  
+				for(int k=0;k<Blocks[i]->ConvexBlocks[j]->Vertices.size();k++) {				    
+				  ConvexBlockVertex *pVertex = Blocks[i]->ConvexBlocks[j]->Vertices[k];
+
+				  /* Transform vertex */
+				  Vector2f Tv = Vector2f(pVertex->P.x * fR[0] + pVertex->P.y * fR[1],
+				                          pVertex->P.x * fR[2] + pVertex->P.y * fR[3]);
+          Tv += Blocks[i]->Position;				                          
+            				  
+				  /* Put vertex */
+				  if(!m_bUglyMode) glTexCoord2f(pVertex->T.x,pVertex->T.y);
+				  
+				  glVertex2f(Tv.x,Tv.y);
+				}
+				glEnd();	            
+				
+				if(!m_bUglyMode) glDisable(GL_TEXTURE_2D);
+			}
+		}		  
   }
        
   /*===========================================================================
@@ -802,7 +792,7 @@ namespace vapp {
 	    std::vector<LevelBlock *> &Blocks = getGameObject()->getLevelSrc()->getBlockList();
 	
 			for(int i=0;i<Blocks.size();i++) {
-				if(!Blocks[i]->bBackground) {
+				if(!Blocks[i]->bBackground && !Blocks[i]->bDynamic) {
 					glBegin(GL_LINE_LOOP);
 					glColor3f(1,1,1);
 					for(int j=0;j<Blocks[i]->Vertices.size();j++) {
@@ -1379,6 +1369,27 @@ namespace vapp {
                                                 const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3) {
     glEnable(GL_BLEND); 
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
+    glBindTexture(GL_TEXTURE_2D,pTexture->nID);
+    glEnable(GL_TEXTURE_2D);
+    glBegin(GL_POLYGON);
+    glColor3f(1,1,1);
+    glTexCoord2f(0,1);
+    glVertex2f(p0.x,p0.y);
+    glTexCoord2f(1,1);
+    glVertex2f(p1.x,p1.y);
+    glTexCoord2f(1,0);
+    glVertex2f(p2.x,p2.y);
+    glTexCoord2f(0,0);
+    glVertex2f(p3.x,p3.y);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_BLEND);
+  }
+  
+  void GameRenderer::_RenderAdditiveBlendedSection(Texture *pTexture,
+                                                   const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3) {
+    glEnable(GL_BLEND); 
+    glBlendFunc(GL_ONE,GL_ONE);         
     glBindTexture(GL_TEXTURE_2D,pTexture->nID);
     glEnable(GL_TEXTURE_2D);
     glBegin(GL_POLYGON);

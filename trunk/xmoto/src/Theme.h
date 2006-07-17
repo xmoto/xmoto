@@ -78,6 +78,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     SPRITE_TYPE_TEXTURE,
     SPRITE_TYPE_UI
   };
+  
+  enum SpriteBlendMode {
+    SPRITE_BLENDMODE_DEFAULT,
+    SPRITE_BLENDMODE_ADDITIVE
+  };
 
 class Theme;
 class BikerTheme;
@@ -89,6 +94,8 @@ class Sprite {
 
   virtual enum SpriteType getType() = 0;
   std::string getName();
+  SpriteBlendMode getBlendMode();
+  void setBlendMode(SpriteBlendMode Mode);
   void load();
 
   /* 
@@ -106,6 +113,7 @@ class Sprite {
   private:
   Theme* m_associated_theme;
   std::string m_name;
+  SpriteBlendMode m_blendmode;
 };
 
 class SimpleFrameSprite : public Sprite {
@@ -256,7 +264,7 @@ class UISprite : public SimpleFrameSprite {
 
 class DecorationSprite : public SimpleFrameSprite {
  public:
-  DecorationSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename, float p_width, float p_height, float p_centerX, float p_centerY);
+  DecorationSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename, float p_width, float p_height, float p_centerX, float p_centerY, SpriteBlendMode p_blendmode);
   virtual ~DecorationSprite();
   enum SpriteType getType();
 
@@ -323,6 +331,9 @@ class Theme {
   void newMiscSpriteFromXML(TiXmlElement *pVarElem);
   void newTextureSpriteFromXML(TiXmlElement *pVarElem);
   void newUISpriteFromXML(TiXmlElement *pVarElem);
+  
+  SpriteBlendMode strToBlendMode(const std::string &s);
+  std::string blendModeToStr(SpriteBlendMode Mode);
 };
 
 class BikerTheme {

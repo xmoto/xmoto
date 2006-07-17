@@ -36,7 +36,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/STACK:2500000"
-				AdditionalDependencies="libcurl.lib libode.lib lua5.1.lib SDL_mixer.lib commond.lib opengl32.lib SDL.lib SDLmain.lib zdll.lib jpeg6b.lib libpng13.lib libbz2d.lib"
+				AdditionalDependencies="libcurl.lib libode.lib lua5.1.lib SDL_mixer.lib commond.lib opengl32.lib SDL.lib SDLmain.lib zdll.lib jpeg6b.lib libpng13.lib"
 				OutputFile="$(SolutionDir)/../bin/xmotod.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="$(SolutionDir)"
@@ -93,7 +93,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/STACK:2500000"
-				AdditionalDependencies="libcurl.lib libode.lib lua5.1.lib SDL_mixer.lib common.lib opengl32.lib SDL.lib SDLmain.lib zdll.lib jpeg6b.lib libpng13.lib libbz2.lib"
+				AdditionalDependencies="libcurl.lib libode.lib lua5.1.lib SDL_mixer.lib common.lib opengl32.lib SDL.lib SDLmain.lib zdll.lib jpeg6b.lib libpng13.lib"
 				OutputFile="$(SolutionDir)/../bin/xmoto.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(SolutionDir)"

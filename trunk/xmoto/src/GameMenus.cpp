@@ -763,7 +763,7 @@ namespace vapp {
     pLevelPackList->setID("LEVELPACK_LIST");
     pLevelPackList->showWindow(true);
     pLevelPackList->setFont(m_Renderer.getSmallFont());
-    pLevelPackList->addColumn(GAMETEXT_LEVELPACK,128);
+    pLevelPackList->addColumn(GAMETEXT_LEVELPACK,256);
     pLevelPackList->addColumn(GAMETEXT_NUMLEVELS,200);
     //pLevelPackList->addColumn(GAMETEXT_PLAYER,128);
     pLevelPackList->setEnterButton( pOpenButton );

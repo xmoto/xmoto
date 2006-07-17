@@ -34,7 +34,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/STACK:2500000"
-				AdditionalDependencies="commond.lib opengl32.lib SDL.lib SDLmain.lib  zdll.lib jpeg6b.lib libpng13.lib  libbz2d.lib libcurl.lib"
+				AdditionalDependencies="commond.lib opengl32.lib SDL.lib SDLmain.lib  zdll.lib jpeg6b.lib libpng13.lib libcurl.lib"
 				OutputFile="$(SolutionDir)/../bin/xmoto-editd.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="$(SolutionDir)"
@@ -88,7 +88,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/STACK:2500000"
-				AdditionalDependencies="common.lib opengl32.lib SDL.lib SDLmain.lib  zdll.lib jpeg6b.lib libpng13.lib libbz2.lib libcurl.lib"
+				AdditionalDependencies="common.lib opengl32.lib SDL.lib SDLmain.lib  zdll.lib jpeg6b.lib libpng13.lib libcurl.lib"
 				OutputFile="$(SolutionDir)/../bin/xmoto-edit.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(SolutionDir)"

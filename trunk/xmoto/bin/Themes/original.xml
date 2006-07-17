@@ -131,6 +131,7 @@
 <sprite type="Decoration" name="Tree1"    	   file="Tree1.png" width="5" height="6" centerX="2.5" centerY="0.2" />
 <sprite type="Decoration" name="Tree2"    	   file="Tree2.png" width="5" height="6" centerX="2.5" centerY="0.2" />
 <sprite type="Decoration" name="Tut3Sign" 	   file="Tut3Sign.png" width="3" height="3" centerX="1.5" centerY="0.2" />
+<sprite type="Decoration" name="YellowFlare"		file="YellowFlare.png" width="2" height="2" centerX="1" centerY="1" blendmode="add"/>
 
 <sprite type="UI" name="Loading" 	    file="Loading.png" />
 <sprite type="UI" name="TitleBL" 	    file="TitleBL.jpg" />

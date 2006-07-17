@@ -1116,7 +1116,7 @@ namespace vapp {
           }
         }        
 
-        if(m_bEnableMenuMusic) {
+        if(m_bEnableMenuMusic && Sound::isEnabled()) {
           /* No music playing? If so, playback time! */
           if(m_pMenuMusic == NULL) {
             /* No music available, try loading */

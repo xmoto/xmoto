@@ -312,6 +312,7 @@ void Theme::newDecorationSpriteFromXML(TiXmlElement *pVarElem) {
   std::string v_height;
   std::string v_centerX;
   std::string v_centerY;
+  std::string v_blendmode = "default";
   const char *pc;
 
   pc = pVarElem->Attribute("name");
@@ -337,13 +338,12 @@ void Theme::newDecorationSpriteFromXML(TiXmlElement *pVarElem) {
   pc = pVarElem->Attribute("centerY");
   if(pc == NULL) {return;}
   v_centerY = pc;
+  
+  pc = pVarElem->Attribute("blendmode");
+  if(pc != NULL) v_blendmode = pc;
 
-  m_sprites.push_back(new DecorationSprite(this, v_name, v_fileName,
-					   atof(v_width.c_str()),
-					   atof(v_height.c_str()),
-					   atof(v_centerX.c_str()),
-					   atof(v_centerY.c_str())
-					   ));
+  m_sprites.push_back(new DecorationSprite(this, v_name, v_fileName,atof(v_width.c_str()),atof(v_height.c_str()),atof(v_centerX.c_str()),atof(v_centerY.c_str()),
+                      strToBlendMode(v_blendmode)));
 }
 
 void Theme::newEffectSpriteFromXML(TiXmlElement *pVarElem) {
@@ -464,6 +464,14 @@ vapp::Texture* Sprite::getTexture(bool bSmall, bool bClamp, bool bFilter) {
 
 std::string Sprite::getName() {
   return m_name;
+}
+
+SpriteBlendMode Sprite::getBlendMode() {
+  return m_blendmode;
+}
+
+void Sprite::setBlendMode(SpriteBlendMode Mode) {
+  m_blendmode = Mode;
 }
 
 std::string Sprite::getFileDir() {
@@ -606,11 +614,13 @@ enum SpriteType BikerPartSprite::getType() {
   return SPRITE_TYPE_BIKERPART;
 }
 
-DecorationSprite::DecorationSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName, float p_width, float p_height, float p_centerX, float p_centerY) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
+DecorationSprite::DecorationSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName, float p_width, float p_height, float p_centerX, float p_centerY, SpriteBlendMode BlendMode) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
   m_width   = p_width;
   m_height  = p_height;
   m_centerX = p_centerX;
   m_centerY = p_centerY;
+  
+  setBlendMode(BlendMode);
 }
 
 DecorationSprite::~DecorationSprite() {
@@ -1001,5 +1011,14 @@ bool ThemeChoice::getRequireUpdate() {
   return m_requireUpdate;
 }
 
+SpriteBlendMode Theme::strToBlendMode(const std::string &s) {
+  if(s == "add") return SPRITE_BLENDMODE_ADDITIVE;
+  return SPRITE_BLENDMODE_DEFAULT;
+}
+
+std::string Theme::blendModeToStr(SpriteBlendMode Mode) {
+  if(Mode == SPRITE_BLENDMODE_ADDITIVE) return "add";
+  return "default";
+}
 
 

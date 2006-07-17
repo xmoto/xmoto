@@ -317,6 +317,37 @@
 				RelativePath="..\src\image\tim_png.cpp">
 			</File>
 		</Filter>
+		<Filter
+			Name="bzip2"
+			Filter="">
+			<File
+				RelativePath="..\src\bzip2\blocksort.c">
+			</File>
+			<File
+				RelativePath="..\src\bzip2\bzlib.c">
+			</File>
+			<File
+				RelativePath="..\src\bzip2\bzlib.h">
+			</File>
+			<File
+				RelativePath="..\src\bzip2\bzlib_private.h">
+			</File>
+			<File
+				RelativePath="..\src\bzip2\compress.c">
+			</File>
+			<File
+				RelativePath="..\src\bzip2\crctable.c">
+			</File>
+			<File
+				RelativePath="..\src\bzip2\decompress.c">
+			</File>
+			<File
+				RelativePath="..\src\bzip2\huffman.c">
+			</File>
+			<File
+				RelativePath="..\src\bzip2\randtable.c">
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

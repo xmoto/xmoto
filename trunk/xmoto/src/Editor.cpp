@@ -281,9 +281,12 @@ namespace vapp {
     else {
       _NewLevel();
     }
+    
+    /* Load default theme */
+    m_theme.load("Themes/original.xml");
 
 		/* Output log message */
-		m_Log.msg("Ready.");		
+		m_Log.msg("Ready. (X-Moto version %s)",getVersionString().c_str());		
   }
   
   /*============================================================================
@@ -419,17 +422,16 @@ namespace vapp {
             TextureSelectionTool Sel;
             std::vector<Texture *> TexList;
             
-	    std::vector<Sprite*> v_sprites = m_theme.getSpritesList();
-	    Texture* v_texture;
-	    for(int i=0; i<v_sprites.size(); i++) {
-	      if(v_sprites[i]->getType() == SPRITE_TYPE_TEXTURE) {
-		v_texture = v_sprites[i]->getTexture();
-		if(v_texture != NULL) {
-		  TexList.push_back(v_texture);
-		}
-	      }
-	    }
-
+	          std::vector<Sprite*> v_sprites = m_theme.getSpritesList();
+	          Texture* v_texture;
+	          for(int i=0; i<v_sprites.size(); i++) {
+	            if(v_sprites[i]->getType() == SPRITE_TYPE_TEXTURE) {
+                v_texture = v_sprites[i]->getTexture();
+                if(v_texture != NULL) {
+	                TexList.push_back(v_texture);
+                }
+	            }
+	          }
             
             Vector2f A=Vector2f(17,17);
             Vector2f B=Vector2f(getDispWidth()-66,getDispHeight()-27);
