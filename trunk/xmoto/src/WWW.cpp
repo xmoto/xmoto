@@ -928,8 +928,6 @@ void WebThemes::upgrade(ThemeChoice *p_themeChoice) {
     if(vapp::FS::fileExists((*v_required_files)[i]) == false) {
       vapp::FS::mkAborescence(v_destinationFile);
 
-      printf("download %s\n", v_sourceFile.c_str());
-
       FSWeb::downloadFile(v_destinationFile,
 			  v_sourceFile,
 			  NULL,
