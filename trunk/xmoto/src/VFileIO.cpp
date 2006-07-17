@@ -1237,14 +1237,14 @@ namespace vapp {
 //    return true;
   }
 
-  void FS::mkAborescence(std::string v_filepath) {
+  void FS::mkArborescence(std::string v_filepath) {
     std::string v_parentDir = getFileDir(v_filepath);
 
     if(fileExists(v_parentDir)) {
       return;
     }
 
-    mkAborescence(v_parentDir);
+    mkArborescence(v_parentDir);
     if(mkDir(v_parentDir.c_str()) != 0) {
       throw Exception("Can't create directory " + v_parentDir);
     }

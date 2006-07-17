@@ -912,6 +912,7 @@ void WebThemes::upgrade(ThemeChoice *p_themeChoice) {
     vapp::FS::getFileBaseName(v_associated_webtheme->getUrl()) + ".xml";
 
   /* download the theme file */
+  vapp::FS::mkArborescence(v_destinationFile);
   FSWeb::downloadFileBz2UsingMd5(v_destinationFile,
 				 v_associated_webtheme->getUrl(),
 				 NULL,
@@ -951,7 +952,7 @@ void WebThemes::upgrade(ThemeChoice *p_themeChoice) {
 	m_WebApp->setTaskProgress(v_percentage);
 	m_WebApp->setBeingDownloadedInformation((*v_required_files)[i], true);
 
-	vapp::FS::mkAborescence(v_destinationFile);
+	vapp::FS::mkArborescence(v_destinationFile);
 
 	try {
 	  FSWeb::downloadFile(v_destinationFile,

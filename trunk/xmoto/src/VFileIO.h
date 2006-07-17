@@ -159,7 +159,7 @@ namespace vapp {
     
       static bool isFileReadable(std::string p_filename);
       static bool fileExists(std::string p_filename);
-      static void mkAborescence(std::string v_filepath);
+      static void mkArborescence(std::string v_filepath);
 
       // return true if p_filepath is a path from user dir
       static bool isInUserDir(std::string p_filepath);
