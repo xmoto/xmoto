@@ -2,7 +2,7 @@
 #include "SwapEndian.h"
 #include <stdlib.h>
 
-typedef char byte;
+typedef unsigned char byte;
 
 short  ShortSwap   (short s);
 short  ShortNoSwap (short s);

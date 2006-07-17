@@ -175,7 +175,7 @@ namespace vapp {
         /* WWWAppInterface implementation */ 
         virtual void setTaskProgress(float fPercent);
 
-        virtual void setBeingDownloadedLevel(const std::string &LevelName,bool p_bNew = true);
+        virtual void setBeingDownloadedInformation(const std::string &p_information,bool p_bNew = true);
         virtual void readEvents(void);
         
         virtual bool doesLevelExist(const std::string &LevelID); 
@@ -277,7 +277,7 @@ namespace vapp {
       WebRoom *m_pWebHighscores;
       WebLevels *m_pWebLevels;
       ProxySettings m_ProxySettings;
-      std::string m_DownloadingLevel;
+      std::string m_DownloadingInformation;
       float m_fDownloadTaskProgressLast;
 
       bool m_bEnableWebHighscores;              /* true: Read world highscores from website */

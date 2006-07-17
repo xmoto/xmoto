@@ -142,6 +142,12 @@ class FSWeb {
 				      void *p_data,
 				      const ProxySettings *p_proxy_settings);
 
+  static int f_curl_progress_callback(void *clientp,
+				      double dltotal,
+				      double dlnow,
+				      double ultotal,
+				      double ulnow); 
+
  private:
   static size_t writeData(void *ptr, size_t size, size_t nmemb, FILE *stream);
 };
@@ -269,12 +275,7 @@ class WebLevels {
   std::string getDestinationDir();
   std::string getDestinationFile(std::string p_url);
   void createDestinationDirIfRequired();
-  void extractLevelsToDownloadFromXml(); /* throw exceptions */
-  static int f_curl_progress_callback(void *clientp,
-				      double dltotal,
-				      double dlnow,
-				      double ultotal,
-				      double ulnow);  				      
+  void extractLevelsToDownloadFromXml(); /* throw exceptions */				      
 };
 
 class WebTheme {
@@ -293,7 +294,8 @@ class WebTheme {
 
 class WebThemes {
  public:
-  WebThemes(const ProxySettings *p_proxy_settings);
+  WebThemes(vapp::WWWAppInterface *p_WebApp,
+	    const ProxySettings *p_proxy_settings);
   ~WebThemes();
 
   /* check for new themes to download */
@@ -308,13 +310,16 @@ class WebThemes {
   const std::vector<WebTheme*> &getAvailableThemes();
 
   void setURL(const std::string &p_url) {m_themes_url = p_url;}
+  void setURLBase(const std::string &p_urlBase) {m_themes_urlBase = p_urlBase;}
 
  private:
   std::string getXmlFileName();
   void extractThemesAvailableFromXml();
   void clean();
 
+  vapp::WWWAppInterface *m_WebApp;
   std::string m_themes_url;
+  std::string m_themes_urlBase;
   const ProxySettings *m_proxy_settings;
   std::vector<WebTheme*> m_availableThemes;
 };

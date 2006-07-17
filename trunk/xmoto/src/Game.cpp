@@ -582,6 +582,7 @@ namespace vapp {
     /* load theme */
     m_themeChoicer = new ThemeChoicer(
 #if defined(SUPPORT_WEBACCESS)
+				      this,
 				      &m_ProxySettings
 #endif
 				      );
@@ -2030,6 +2031,8 @@ namespace vapp {
     /* Webstuff */
     m_Config.createVar( "WebHighscoresURL",       DEFAULT_WEBHIGHSCORES_URL );
     m_Config.createVar( "WebLevelsURL",           DEFAULT_WEBLEVELS_URL );
+    m_Config.createVar( "WebThemesURL",           DEFAULT_WEBTHEMES_URL );
+    m_Config.createVar( "WebThemesURLBase",       DEFAULT_WEBTHEMES_SPRITESURLBASE);
 
     /* Proxy */
     m_Config.createVar( "ProxyType",              "" ); /* (blank), HTTP, SOCKS4, or SOCKS5 */
@@ -2318,19 +2321,38 @@ namespace vapp {
       _SimpleMessage(GAMETEXT_DLTHEMESLISTCHECK,&m_DownloadMsgBoxRect);
     }  
 
-    m_themeChoicer->updateFromWWW();
-    _UpdateThemesLists();
+    m_themeChoicer->setURL(m_Config.getString("WebThemesURL"));
+
+    Log("WWW: Checking for new or updated themes...");
+
+    try {
+      m_DownloadingInformation = "";
+      m_themeChoicer->updateFromWWW();
+      _UpdateThemesLists();
+    } catch(Exception &e) {
+      /* file probably doesn't exist */
+      Log("** Warning ** : Failed to analyse web-themes file");		
+    }
   }    
 #endif
 
 #if defined(SUPPORT_WEBACCESS)
   void GameApp::_UpdateWebTheme(ThemeChoice* pThemeChoice, bool bSilent) {
     if(!bSilent) {
-      _SimpleMessage(std::string(GAMETEXT_DLTHEME) + " '" + pThemeChoice->ThemeName() + "'",
+      _SimpleMessage(std::string(GAMETEXT_DLTHEME),
 		     &m_DownloadMsgBoxRect);
     }
-    m_themeChoicer->updateThemeFromWWW(pThemeChoice);
-    _UpdateThemesLists();
+
+    m_themeChoicer->setURLBase(m_Config.getString("WebThemesURLBase"));
+
+    try {
+      clearCancelAsSoonAsPossible();
+      m_themeChoicer->updateThemeFromWWW(pThemeChoice);
+      _UpdateThemesLists();
+    } catch(Exception &e) {
+      /* file probably doesn't exist */
+      Log("** Warning ** : Failed to update theme ", pThemeChoice->ThemeName().c_str());		
+    }
   }
 #endif
 
@@ -2355,7 +2377,7 @@ namespace vapp {
   void GameApp::_DownloadExtraLevels(void) {
     #if defined(SUPPORT_WEBACCESS)
       /* Download extra levels */
-      m_DownloadingLevel = "";
+      m_DownloadingInformation = "";
       
       if(m_pWebLevels != NULL) {
         _SimpleMessage(GAMETEXT_DLLEVELS,&m_DownloadMsgBoxRect);
@@ -2634,13 +2656,13 @@ namespace vapp {
 	  UIFont *v_font = m_Renderer.getSmallFont();
 	  if(v_font != NULL) {
 	    UITextDraw::printRaw(v_font,m_DownloadMsgBoxRect.nX+13,m_DownloadMsgBoxRect.nY+
-				 m_DownloadMsgBoxRect.nHeight-nBarHeight-4,m_DownloadingLevel,MAKE_COLOR(255,255,255,128));
+				 m_DownloadMsgBoxRect.nHeight-nBarHeight-4,m_DownloadingInformation,MAKE_COLOR(255,255,255,128));
 	  }
     SDL_GL_SwapBuffers();            
   }
   
-  void GameApp::setBeingDownloadedLevel(const std::string &LevelName,bool bNewLevel) {
-    m_DownloadingLevel = LevelName;
+  void GameApp::setBeingDownloadedInformation(const std::string &p_information,bool bNew) {
+    m_DownloadingInformation = p_information;
   }
   
   void GameApp::readEvents(void) {

@@ -12,16 +12,11 @@ Assigned to Neckelmann:
 ######################################################################
 Assigned to Nicolas:
 * themes
-- make the www part
-- reduce diff between DecorationSprite and AnimationSprite : be able
-   to load an animated tree or an unanimated strawberry
-- do not required to restart to change the theme
+- when update -> get the same selected theme
 - update levels should ask "Do you want to update themes too ?
    (recommanded)" because new levels could required new theme entries
-- when update -> get the same selected theme
-- create var * 2 : 
- DEFAULT_WEBTHEMES_URL             "http://xmoto.free.fr/themes.xml"
- DEFAULT_WEBTHEMES_SPRITESURLBASE  "http://xmoto.free.fr/textures"
+- reduce diff between DecorationSprite and AnimationSprite : be able
+   to load an animated tree or an unanimated strawberry
 - md5sum of the sprites because of downloading errors
 
 * high level function for script : DynamicMove

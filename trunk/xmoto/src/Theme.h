@@ -412,7 +412,8 @@ class ThemeChoicer {
  public:
 
 #if defined(SUPPORT_WEBACCESS)
-  ThemeChoicer(const ProxySettings *p_proxy_settings = NULL);	       
+  ThemeChoicer(vapp::WWWAppInterface *p_WebApp = NULL,
+	       const ProxySettings *p_proxy_settings = NULL);	       
 #else
   ThemeChoicer(void);	       
 #endif
@@ -426,6 +427,9 @@ class ThemeChoicer {
 #if defined(SUPPORT_WEBACCESS)
   void updateFromWWW();
   void updateThemeFromWWW(ThemeChoice* pThemeChoice);
+
+  void setURL(const std::string &p_url);
+  void setURLBase(const std::string &p_urlBase);
 #endif
 
  private:

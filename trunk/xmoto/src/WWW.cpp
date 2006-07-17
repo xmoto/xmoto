@@ -660,28 +660,28 @@ void WebLevels::update() {
 }
 
 struct f_curl_download_data {
-  vapp::WWWAppInterface *v_WebLevelApp;
-  int v_nb_levels_to_download;
-  int v_nb_levels_performed;
+  vapp::WWWAppInterface *v_WebApp;
+  int v_nb_files_to_download;
+  int v_nb_files_performed;
 };
 
-int WebLevels::f_curl_progress_callback(void *clientp,
-					double dltotal,
-					double dlnow,
-					double ultotal,
-					double ulnow) {
+int FSWeb::f_curl_progress_callback(void *clientp,
+				    double dltotal,
+				    double dlnow,
+				    double ultotal,
+				    double ulnow) {
   f_curl_download_data *data = ((f_curl_download_data*) clientp);
   float real_percentage_already_done;
   float real_percentage_of_current_file;
 
   /* cancel if it's wanted */
-  if(data->v_WebLevelApp->isCancelAsSoonAsPossible()) {
+  if(data->v_WebApp->isCancelAsSoonAsPossible()) {
     return 1;
   }
 
   real_percentage_already_done = 
-    (((float)data->v_nb_levels_performed) * 100.0) 
-    / ((float)data->v_nb_levels_to_download);
+    (((float)data->v_nb_files_performed) * 100.0) 
+    / ((float)data->v_nb_files_to_download);
 
   /* we can't make confiance to the web server information */
   real_percentage_of_current_file = 0.0;
@@ -689,11 +689,11 @@ int WebLevels::f_curl_progress_callback(void *clientp,
     if((dlnow / dltotal) >= 0.0 && (dlnow / dltotal) <= 1.0) {
       real_percentage_of_current_file = 
 	(dlnow * 100.0) 
-	/ (((float)data->v_nb_levels_to_download) * dltotal);
+	/ (((float)data->v_nb_files_to_download) * dltotal);
     }
   }
 
-  data->v_WebLevelApp->setTaskProgress(real_percentage_already_done + real_percentage_of_current_file);
+  data->v_WebApp->setTaskProgress(real_percentage_already_done + real_percentage_of_current_file);
 
   return 0;
 }
@@ -708,8 +708,8 @@ void WebLevels::upgrade() {
   int v_nb_levels_to_download = m_webLevels.size();
   int v_nb_levels_performed  = 0;
 
-  v_data.v_WebLevelApp = m_WebLevelApp;
-  v_data.v_nb_levels_to_download = v_nb_levels_to_download;
+  v_data.v_WebApp = m_WebLevelApp;
+  v_data.v_nb_files_to_download = v_nb_levels_to_download;
 
   /* download levels */
   it = m_webLevels.begin();
@@ -718,7 +718,7 @@ void WebLevels::upgrade() {
     float v_percentage = (((float)v_nb_levels_performed) * 100.0) / ((float)v_nb_levels_to_download);
 
     m_WebLevelApp->setTaskProgress(v_percentage);
-    m_WebLevelApp->setBeingDownloadedLevel((*it)->getName(), (*it)->requireUpdate());
+    m_WebLevelApp->setBeingDownloadedInformation((*it)->getName(), (*it)->requireUpdate());
 
     /* should the level be updated */
     to_download = true;
@@ -728,7 +728,7 @@ void WebLevels::upgrade() {
     }
 
     if(to_download) {
-      v_data.v_nb_levels_performed = v_nb_levels_performed;
+      v_data.v_nb_files_performed = v_nb_levels_performed;
       std::string v_destFile;
       
       if((*it)->requireUpdate()) {
@@ -740,7 +740,7 @@ void WebLevels::upgrade() {
       try {
 	FSWeb::downloadFileBz2(v_destFile,
 			       v_url,
-			       f_curl_progress_callback,
+			       FSWeb::f_curl_progress_callback,
 			       &v_data,
 			       m_proxy_settings);
 
@@ -799,9 +799,12 @@ std::string WebTheme::getSum() const {
   return m_sum;
 }
 
-WebThemes::WebThemes(const ProxySettings *p_proxy_settings) {
+WebThemes::WebThemes(vapp::WWWAppInterface *p_WebApp,
+		     const ProxySettings *p_proxy_settings) {
   m_proxy_settings = p_proxy_settings;
   m_themes_url     = DEFAULT_WEBTHEMES_URL;
+  m_themes_urlBase = DEFAULT_WEBTHEMES_SPRITESURLBASE;
+  m_WebApp = p_WebApp;
 }
 
 WebThemes::~WebThemes() {
@@ -885,6 +888,7 @@ void WebThemes::upgrade(ThemeChoice *p_themeChoice) {
   std::string v_destinationFile;
   std::string v_sourceFile;
   WebTheme *v_associated_webtheme;
+  f_curl_download_data v_data;
 
   /* no update required */
   if(p_themeChoice->getHosted() && p_themeChoice->getRequireUpdate() == false) {
@@ -919,22 +923,49 @@ void WebThemes::upgrade(ThemeChoice *p_themeChoice) {
   std::vector<std::string> *v_required_files;
   v_theme->load(v_destinationFile);
   v_required_files = v_theme->getRequiredFiles();
+
+  int v_nb_files_to_download = 0;
   for(int i=0; i<v_required_files->size(); i++) {
-    // download v_required_files[i]
-    v_destinationFile = vapp::FS::getUserDir() + std::string("/") + (*v_required_files)[i];
-    v_sourceFile = std::string(DEFAULT_WEBTHEMES_SPRITESURLBASE) + 
-      std::string("/") + (*v_required_files)[i];
-
     if(vapp::FS::fileExists((*v_required_files)[i]) == false) {
-      vapp::FS::mkAborescence(v_destinationFile);
-
-      FSWeb::downloadFile(v_destinationFile,
-			  v_sourceFile,
-			  NULL,
-			  NULL,
-        		  m_proxy_settings);
+      v_nb_files_to_download++;
     }
   }
+  if(v_nb_files_to_download != 0) {
+
+    int v_nb_files_performed  = 0;
+    
+    v_data.v_WebApp = m_WebApp;
+    v_data.v_nb_files_to_download = v_nb_files_to_download;
+    
+    int i = 0;
+    while(i<v_required_files->size() && m_WebApp->isCancelAsSoonAsPossible() == false) {
+      // download v_required_files[i]     
+      v_destinationFile = vapp::FS::getUserDir() + std::string("/") + (*v_required_files)[i];
+      v_sourceFile = m_themes_urlBase + 
+	std::string("/") + (*v_required_files)[i];
+      
+      if(vapp::FS::fileExists((*v_required_files)[i]) == false) {
+	v_data.v_nb_files_performed = v_nb_files_performed;
+	
+	float v_percentage = (((float)v_nb_files_performed) * 100.0) / ((float)v_nb_files_to_download);
+	m_WebApp->setTaskProgress(v_percentage);
+	m_WebApp->setBeingDownloadedInformation((*v_required_files)[i], true);
+
+	vapp::FS::mkAborescence(v_destinationFile);
+	
+	FSWeb::downloadFile(v_destinationFile,
+			    v_sourceFile,
+			    FSWeb::f_curl_progress_callback,
+			    &v_data,
+			    m_proxy_settings);
+	v_nb_files_performed++;
+      }
+      m_WebApp->readEvents();
+      i++;
+    }
+    m_WebApp->setTaskProgress(100.0);
+  }
+
   delete v_theme;
 
   p_themeChoice->setRequireUpdate(false);

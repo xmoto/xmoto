@@ -38,7 +38,7 @@ namespace vapp {
     virtual void setTaskProgress(float p_percent) = 0;
 
     /* p_isNew is true if it's a new level, false if it's just an update */
-    virtual void setBeingDownloadedLevel(const std::string &p_LevelName,bool p_isNew=true) = 0;
+    virtual void setBeingDownloadedInformation(const std::string &p_information,bool p_isNew=true) = 0;
 
     virtual void readEvents() = 0;
     

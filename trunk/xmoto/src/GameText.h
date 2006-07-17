@@ -78,7 +78,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_DLHIGHSCORES         "Downloading high-scores..."
 #define GAMETEXT_DLLEVELS             "Downloading extra levels...\nPress ESC to abort.\n\n "
 #define GAMETEXT_DLLEVELSCHECK        "Checking for new levels..."
-#define GAMETEXT_DLTHEME              "Get theme"
+#define GAMETEXT_DLTHEME              "Getting the theme\nPress ESC to abort.\n\n "
 #define GAMETEXT_DLTHEMESLISTCHECK    "Checking for new themes..."
 #define GAMETEXT_DOWNLOADLEVELS       "Get More Levels!"
 #define GAMETEXT_DRIVE                "Drive"
