@@ -563,7 +563,6 @@ namespace vapp {
   ===========================================================================*/
   void GameApp::userInit(void) {
     Sprite* pSprite;
-
     SDL_ShowCursor(SDL_DISABLE);        
   
     /* Reset timers */

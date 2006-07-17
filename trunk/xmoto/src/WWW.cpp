@@ -889,7 +889,7 @@ void WebThemes::upgrade(ThemeChoice *p_themeChoice) {
   std::string v_sourceFile;
   WebTheme *v_associated_webtheme;
   f_curl_download_data v_data;
-
+  
   /* no update required */
   if(p_themeChoice->getHosted() && p_themeChoice->getRequireUpdate() == false) {
     // do nothing : it give a possibility to download file removed by mistake
@@ -937,7 +937,7 @@ void WebThemes::upgrade(ThemeChoice *p_themeChoice) {
     
     v_data.v_WebApp = m_WebApp;
     v_data.v_nb_files_to_download = v_nb_files_to_download;
-    
+
     int i = 0;
     while(i<v_required_files->size() && m_WebApp->isCancelAsSoonAsPossible() == false) {
       // download v_required_files[i]     
