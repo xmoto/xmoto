@@ -192,6 +192,26 @@ namespace vapp {
 	}
 	break;
 	
+      case GAME_EVENT_LUA_CALL_SETBLOCKCENTER:
+	{
+	  int n;
+	  (*Buffer) >> n;
+	  if(n >= sizeof(Event.u.LuaCallSetBlockCenter.cBlockID)) {
+	    Log("** Warning ** : Block name in replay too long, ignoring all events!");
+	    bError = true;
+	  }
+	  else {
+	    (*Buffer).readBuf(Event.u.LuaCallSetBlockCenter.cBlockID,n);
+	    Event.u.LuaCallSetBlockCenter.cBlockID[n] = '\0';
+
+	    (*Buffer) >> Event.u.LuaCallSetBlockCenter.x;
+	    (*Buffer) >> Event.u.LuaCallSetBlockCenter.y;
+
+	    bIsOk = true;
+	  }
+	}
+	break;
+	
       case GAME_EVENT_LUA_CALL_SETGRAVITY:
 	{
 	  (*Buffer) >> Event.u.LuaCallSetgravity.x;
@@ -404,6 +424,18 @@ namespace vapp {
 	Buffer.writeBuf(pEvent->u.LuaCallSetblockpos.cBlockID,i);
 	Buffer << pEvent->u.LuaCallSetblockpos.x;
 	Buffer << pEvent->u.LuaCallSetblockpos.y;
+      }
+      break;
+      
+    case GAME_EVENT_LUA_CALL_SETBLOCKCENTER:
+      {
+	int i;
+	Buffer << getTime();
+	Buffer << pEvent->Type;
+	Buffer << (i=strlen(pEvent->u.LuaCallSetBlockCenter.cBlockID));
+	Buffer.writeBuf(pEvent->u.LuaCallSetBlockCenter.cBlockID,i);
+	Buffer << pEvent->u.LuaCallSetBlockCenter.x;
+	Buffer << pEvent->u.LuaCallSetBlockCenter.y;
       }
       break;
       

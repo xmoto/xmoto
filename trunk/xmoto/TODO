@@ -1,31 +1,10 @@
 # for 0.2.0
 
-- Themes/original.xml is in both bin/Makefile.am and bin/package.lst... 
-  that's not meaningful. Or is it the meaning that it should be both in 
-  the physical bin directory and in xmoto.bin?
-===> I removed it from Makefile.am, for example, why font.dat is not
-   in the package ?
-  
-- Frame interpolation in replays doesn't work. The idea with peekState()
-  is that it should give the next state, and then there can be interpolated
-  between the current state and the next. ( = much smoother replays)
-  IMPORTANT: i've swapped the two lines in Replay::loadState(), it fixes
-  the above problem... but please check that it doesn't break anything
-  else
-===> i don't think it brokes something : i checked why i did, it
-   seems ok
-
-remove the lines above when you have read them
-
 ######################################################################
 Assigned to Neckelmann:
 * "view the highscore" button is not visible for pack(priority=high)
 * add <xml_room> in configuration so that the player can choose the
    link to his room xml file (priority=high)(priority=high)
-* BUG : move objects in script doesn't work(priority=medium)
-   --comment: it appears to work fine for me? see Levels/test/test.lvl
-   --comment2: okay, it doesn't work in replays...
-
 * I thought to one thing that could be add in the stats : the date
    when the stats have been initialized to display : stats from
    18/06/2006 for example. Remember that this field must be translatable
@@ -59,6 +38,10 @@ add the same for block once block move will work
 Unassigned:
 
 * smoke doesn't work in replay, it didn't work in .16
+   --comment: particles have never been present in replays. It should
+              not be a problem to add them, and it wouldn't add much
+              to the file size (no reason why actual particle 
+              positions should be the same when replaying)
 
 * BUG : http://xmoto.free.fr/tmp/bugonlinuxppcreplays.jpg : it
    happends on replays on linux ppc

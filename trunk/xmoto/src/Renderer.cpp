@@ -749,8 +749,8 @@ namespace vapp {
 		else {
 		  /* Render all dynamic blocks */
 	    std::vector<DynamicBlock *> &Blocks = getGameObject()->getDynBlocks();
-	
-			for(int i=0;i<Blocks.size();i++) {
+
+			for(int i=0;i<Blocks.size();i++) {						  
 			  /* Build rotation matrix for block */
 			  float fR[4]; 
 			  fR[0] = cos(Blocks[i]->fRotation); fR[1] = -sin(Blocks[i]->fRotation);

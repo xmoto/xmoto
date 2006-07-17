@@ -244,7 +244,6 @@ namespace vapp {
   ===========================================================================*/
   void MotoGame::_UpdateDynamicCollisionLines(void) {
 	  std::vector<DynamicBlock *> &Blocks = getDynBlocks();
-
 		for(int i=0;i<Blocks.size();i++) {
 			/* Build rotation matrix for block */
 			float fR[4]; 
@@ -864,8 +863,7 @@ namespace vapp {
       }
       else
         Log("** Warning ** : Unknown entity type '%s' for '%s'",pLEnt->TypeID.c_str(),pLEnt->ID.c_str());
-    }
-    
+    }    
 
     /* Invoke the OnLoad() script function */
     if(v_enableScript) {
@@ -1482,6 +1480,35 @@ namespace vapp {
   /*===========================================================================
     Game event queue management
     ===========================================================================*/
+  #define ETRAN(_Name) case _Name: return #_Name
+  static const char *_EventName(GameEventType Type) {
+    switch(Type) {
+      ETRAN(GAME_EVENT_PLAYER_DIES);
+      ETRAN(GAME_EVENT_PLAYER_ENTERS_ZONE);
+      ETRAN(GAME_EVENT_PLAYER_LEAVES_ZONE);
+      ETRAN(GAME_EVENT_PLAYER_TOUCHES_ENTITY);
+      ETRAN(GAME_EVENT_ENTITY_DESTROYED);
+      ETRAN(GAME_EVENT_LUA_CALL_CLEARMESSAGES);
+      ETRAN(GAME_EVENT_LUA_CALL_PLACEINGAMEARROW);
+      ETRAN(GAME_EVENT_LUA_CALL_PLACESCREENARROW);
+      ETRAN(GAME_EVENT_LUA_CALL_HIDEARROW);
+      ETRAN(GAME_EVENT_LUA_CALL_MESSAGE);
+      ETRAN(GAME_EVENT_LUA_CALL_MOVEBLOCK);
+      ETRAN(GAME_EVENT_LUA_CALL_SETBLOCKPOS);
+      ETRAN(GAME_EVENT_LUA_CALL_SETGRAVITY);
+      ETRAN(GAME_EVENT_LUA_CALL_SETPLAYERPOSITION);
+      ETRAN(GAME_EVENT_LUA_CALL_SETENTITYPOS);
+      ETRAN(GAME_EVENT_LUA_CALL_SETBLOCKCENTER);
+      ETRAN(GAME_EVENT_LUA_CALL_SETBLOCKROTATION);
+      ETRAN(GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROTATION);
+      ETRAN(GAME_EVENT_LUA_CALL_SETDYNAMICENTITYTRANSLATION);
+      ETRAN(GAME_EVENT_LUA_CALL_SETDYNAMICENTITYNONE);
+      ETRAN(GAME_EVENT_LUA_CALL_CAMERAZOOM);
+      ETRAN(GAME_EVENT_LUA_CALL_CAMERAMOVE);      
+    }
+    return "??";
+  }
+    
   GameEvent *MotoGame::createGameEvent(GameEventType Type) {
     /* Space left in queue? */
     if(getNumPendingGameEvents() < GAME_EVENT_QUEUE_SIZE - 1) {
@@ -1491,12 +1518,15 @@ namespace vapp {
       pEvent->nSeq = m_nLastEventSeq++;
       m_nGameEventQueueWriteIdx++;			
       if(m_nGameEventQueueWriteIdx == GAME_EVENT_QUEUE_SIZE) {
-	m_nGameEventQueueWriteIdx = 0;
+	      m_nGameEventQueueWriteIdx = 0;
       }
+      
+      //printf("[%s]\n",_EventName(Type));
       return pEvent;
     }
 		
     /* No */
+    //printf("[%s] (!!!)\n",_EventName(Type));
     return NULL;
   }
   
@@ -1568,6 +1598,8 @@ namespace vapp {
        primary event handling loop. That's because when playing replays, we
        only care about the most basic events - not events causing other
        events to be triggered */
+    //printf("{%s}\n",_EventName(pEvent->Type));
+       
     switch(pEvent->Type) {
     case GAME_EVENT_ENTITY_DESTROYED:
       {
@@ -1794,6 +1826,8 @@ namespace vapp {
 
   void MotoGame::SetBlockPos(String pBlockID, float pX, float pY) {
     /* Find the specified (dynamic) block and set its position */
+//    printf("MOVE BLOCK[%s]: %f,%f\n",pBlockID.c_str(),pX,pY);
+    
     DynamicBlock *pBlock = _GetDynamicBlockByID(pBlockID);
     if(pBlock != NULL) {
       pBlock->Position.x = pX;
