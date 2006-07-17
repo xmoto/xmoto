@@ -35,6 +35,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #endif
 
 #include "WWWAppInterface.h"
+#include "Theme.h"
+class ThemeChoice;
 
 #define DEFAULT_WEBHIGHSCORES_URL         "http://xmoto.free.fr/highscores.xml"
 #define DEFAULT_WEBHIGHSCORES_FILENAME    "webhighscores.xml"
@@ -45,6 +47,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define DEFAULT_WEBLEVELS_DIR             "downloaded"
 #define DEFAULT_WEBTHEMES_URL             "http://xmoto.free.fr/themes.xml"
 #define DEFAULT_WEBTHEMES_FILENAME        "webthemes.xml"
+#define DEFAULT_WEBTHEMES_SPRITESURLBASE  "http://xmoto.free.fr/sprites"
 
 #define WWW_AGENT ("xmoto-" + vapp::App::getVersionString())
 
@@ -299,8 +302,8 @@ class WebThemes {
   /* fill the list of avaible theme ; does not required an internet connexion */
   void upgrade();
 
-  /* download a theme or just update it if justUpdateIt it true */
-  void upgrade(std::string p_themeName, bool justUpdateIt);
+  /* download a theme or just update it */
+  void upgrade(ThemeChoice *p_themeChoice);
 
   const std::vector<WebTheme*> &getAvailableThemes();
 

@@ -881,8 +881,66 @@ const std::vector<WebTheme*> &WebThemes::getAvailableThemes() {
   return m_availableThemes;
 }
 
-void WebThemes::upgrade(std::string p_themeName, bool justUpdateIt) {
-  printf("Theme '%s' to %s\n", p_themeName.c_str(), justUpdateIt ? "update" : "install");
+void WebThemes::upgrade(ThemeChoice *p_themeChoice) {
+  std::string v_destinationFile;
+  std::string v_sourceFile;
+  WebTheme *v_associated_webtheme;
+
+  /* no update required */
+  if(p_themeChoice->getHosted() && p_themeChoice->getRequireUpdate() == false) {
+    // do nothing : it give a possibility to download file removed by mistake
+  }
+
+  /* find the associated webtheme */
+  v_associated_webtheme = NULL;
+  for(int i=0; i<m_availableThemes.size(); i++) {
+    if(m_availableThemes[i]->getName() == p_themeChoice->ThemeName()) {
+      v_associated_webtheme = m_availableThemes[i];
+    }
+  }
+  if(v_associated_webtheme == NULL) {
+    throw vapp::Exception("exception : can't upgrade this theme because it's not avaible on the web");
+  }
+
+  /* determine destination file */
+  v_destinationFile = 
+    vapp::FS::getUserDir() + "/" + THEMES_DIRECTORY + "/" + 
+    vapp::FS::getFileBaseName(v_associated_webtheme->getUrl()) + ".xml";
+
+  /* download the theme file */
+  FSWeb::downloadFileBz2UsingMd5(v_destinationFile,
+				 v_associated_webtheme->getUrl(),
+				 NULL,
+				 NULL,
+				 m_proxy_settings);
+
+  /* download all the files required */
+  Theme *v_theme = new Theme();
+  std::vector<std::string> *v_required_files;
+  v_theme->load(v_destinationFile);
+  v_required_files = v_theme->getRequiredFiles();
+  for(int i=0; i<v_required_files->size(); i++) {
+    // download v_required_files[i]
+    v_destinationFile = vapp::FS::getUserDir() + std::string("/") + (*v_required_files)[i];
+    v_sourceFile = std::string(DEFAULT_WEBTHEMES_SPRITESURLBASE) + 
+      std::string("/") + (*v_required_files)[i];
+
+    if(vapp::FS::fileExists((*v_required_files)[i]) == false) {
+      vapp::FS::mkAborescence(v_destinationFile);
+
+      printf("download %s\n", v_sourceFile.c_str());
+
+      FSWeb::downloadFile(v_destinationFile,
+			  v_sourceFile,
+			  NULL,
+			  NULL,
+        		  m_proxy_settings);
+    }
+  }
+  delete v_theme;
+
+  p_themeChoice->setRequireUpdate(false);
+  p_themeChoice->setHosted(true);
 }
 
 #endif

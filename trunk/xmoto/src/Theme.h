@@ -30,6 +30,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VFileIO.h"
 #include "WWW.h"
 
+class ProxySettings;
+class WebThemes;
+
+#define THEMES_DIRECTORY "Themes"
 #define THEME_SPRITE_FILE_DIR "Textures"
 #define THEME_DECORATION_SPRITE_FILE_DIR THEME_SPRITE_FILE_DIR"/Sprites"
 #define THEME_EFFECT_SPRITE_FILE_DIR     THEME_SPRITE_FILE_DIR"/Effects"
@@ -299,6 +303,7 @@ class Theme {
 
   vapp::Texture* getDefaultFont();
   std::vector<Sprite*> getSpritesList();
+  std::vector<std::string>* getRequiredFiles();
 
   BikerTheme* getPlayerTheme();
 #if defined(ALLOW_GHOST)
@@ -311,6 +316,7 @@ class Theme {
   vapp::TextureManager m_texMan;
   std::string m_name;
   std::vector<Sprite*> m_sprites;
+  std::vector<std::string> m_requiredFiles;
 
   vapp::Texture *m_pDefaultFontTexture;
 
@@ -389,10 +395,11 @@ class ThemeChoice {
   ~ThemeChoice();
   std::string ThemeName();
   std::string ThemeFile();
-  bool hosted();
 
   void setRequireUpdate(bool b);
   bool getRequireUpdate();
+  void setHosted(bool b);
+  bool getHosted();
 
  private:
   std::string m_themeName;

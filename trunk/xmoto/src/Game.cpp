@@ -2319,16 +2319,18 @@ namespace vapp {
     }  
 
     m_themeChoicer->updateFromWWW();
+    _UpdateThemesLists();
   }    
 #endif
 
 #if defined(SUPPORT_WEBACCESS)
   void GameApp::_UpdateWebTheme(ThemeChoice* pThemeChoice, bool bSilent) {
     if(!bSilent) {
-      _SimpleMessage(std::string(GAMETEXT_DLTHEME) + "'" + pThemeChoice->ThemeName() + "'",
+      _SimpleMessage(std::string(GAMETEXT_DLTHEME) + " '" + pThemeChoice->ThemeName() + "'",
 		     &m_DownloadMsgBoxRect);
     }
     m_themeChoicer->updateThemeFromWWW(pThemeChoice);
+    _UpdateThemesLists();
   }
 #endif
 

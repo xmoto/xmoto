@@ -18,7 +18,11 @@ Assigned to Nicolas:
 - do not required to restart to change the theme
 - update levels should ask "Do you want to update themes too ?
    (recommanded)" because new levels could required new theme entries
-
+- when update -> get the same selected theme
+- create var * 2 : 
+ DEFAULT_WEBTHEMES_URL             "http://xmoto.free.fr/themes.xml"
+ DEFAULT_WEBTHEMES_SPRITESURLBASE  "http://xmoto.free.fr/textures"
+- md5sum of the sprites because of downloading errors
 
 * high level function for script : DynamicMove
 Game.SetDynamicEntityRotation("Strawberry0", 0, 3, 500, 0, 0)
@@ -36,6 +40,8 @@ add the same for block once block move will work
 
 ######################################################################
 Unassigned:
+
+* BUG : ERREUR 404: Not Found : when a file is not found, no error is detected
 
 * smoke doesn't work in replay, it didn't work in .16
    --comment: particles have never been present in replays. It should
@@ -83,9 +89,6 @@ end
    current position ?
 
 * loading level is sometimes quite long
-* collision bugs : in particularity at the start of the level "the
-   Parcour", "chuck norris", "ice level"
-
 * new script call :
 killPlayer() -> kill the player
 timePenallity(nbSeconds) -> increase time
@@ -109,7 +112,6 @@ and Game.PlaceScreenArrow(5, 5, 225) : doesn't respect coords
 * BUG : OnLoad() { return false; } -> segfault
 * BUG : when you see level info in level pack ; then you click on ok
    -> it close the window and the levelpack window
-* BUG: When you make a room highscore, SOMETIMES! the message NEW HIGHSCORE keep in place after...
 * add 3 2 1 GO ! at level startup (only if the level played is
    different from the last played)
 * have a <----> for the lists

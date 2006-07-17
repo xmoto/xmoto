@@ -2211,7 +2211,6 @@ namespace vapp {
       pUpdThemeList->setClicked(false);
       try {
 	_UpdateWebThemes(false);
-	_UpdateThemesLists();
       } catch(Exception &e) {
 	notifyMsg(GAMETEXT_FAILEDUPDATETHEMESLIST);
       }
@@ -2651,7 +2650,7 @@ namespace vapp {
     UIListEntry *pEntry;
     v_themeChoices = m_themeChoicer->getChoices();
     for(int i=0; i<v_themeChoices.size(); i++) {
-      if(v_themeChoices[i]->hosted()) {
+      if(v_themeChoices[i]->getHosted()) {
 
 	if(v_themeChoices[i]->getRequireUpdate()) {
 	  pEntry = pList->addEntry(v_themeChoices[i]->ThemeName().c_str(),

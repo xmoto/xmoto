@@ -752,9 +752,13 @@ namespace vapp {
     if(n<0) n = Path.find_last_of("\\");
     if(n<0) {
       /* No directory info */
-      return std::string("./");
+      return std::string(".");
     }
-    return Path.substr(0,n+1);
+    std::string v_fileDir = Path.substr(0,n);
+    if(v_fileDir == "") {
+      v_fileDir = "/";
+    }
+    return v_fileDir;
   }
   
   /*===========================================================================
@@ -1176,18 +1180,74 @@ namespace vapp {
 
     return res;
   }  
+ 
+  bool FS::isInUserDir(std::string p_filepath) {
+    std::string v_userDir;
+    std::string v_fileDir;
+
+    v_userDir = getUserDir();
+    v_fileDir = getFileDir(p_filepath);
+
+    if(v_userDir.length() > v_fileDir.length()) {
+      return false;
+    }
+
+    return v_fileDir.substr(0, v_userDir.length()) == v_userDir;
+  }
 
   bool FS::isFileReadable(std::string p_filename) {
-  /* this is not a nice way to check it */
-
-    vapp::FileHandle *FS;
-
-    if( (FS=openIFile(p_filename)) != NULL) {
-      closeFile(FS);
-      return true;
+    FileHandle *fh = openIFile(p_filename);
+    if(fh == NULL) {
+      return false;
     }
-    return false;
+    closeFile(fh);
+    return true;
+
+//    struct stat S;
+//
+//    /* check into the package */
+//    for(int i=0; i<m_nNumPackFiles; i++) {
+//      if(m_PackFiles[i].Name == p_filename) {
+//	return true;
+//      }
+//    }
+//
+//    if(stat(p_filename.c_str(),&S) != 0) {
+//      return false;
+//    }
+//
+//    return (S.st_mode & S_IRUSR) != 0;
   }
-  
+
+  bool FS::fileExists(std::string p_filename) {
+    return isFileReadable(p_filename);
+//    struct stat S;
+//
+//    /* check into the package */
+//    for(int i=0; i<m_nNumPackFiles; i++) {
+//      if(m_PackFiles[i].Name == p_filename) {
+//	return true;
+//      }
+//    }
+//
+//    if(stat(p_filename.c_str(),&S) != 0) {
+//      return false;
+//    }
+//
+//    return true;
+  }
+
+  void FS::mkAborescence(std::string v_filepath) {
+    std::string v_parentDir = getFileDir(v_filepath);
+
+    if(fileExists(v_parentDir)) {
+      return;
+    }
+
+    mkAborescence(v_parentDir);
+    if(mkDir(v_parentDir.c_str()) != 0) {
+      throw Exception("Can't create directory " + v_parentDir);
+    }
+  }
 };
 

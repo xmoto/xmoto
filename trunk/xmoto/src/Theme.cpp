@@ -127,6 +127,10 @@ vapp::Texture* Theme::loadTexture(std::string p_fileName, bool bSmall, bool bCla
   return m_texMan.loadTexture(p_fileName.c_str(), bSmall, bClamp, bFilter);
 }
 
+std::vector<std::string>* Theme::getRequiredFiles() {
+  return &m_requiredFiles;
+}
+
 void Theme::load(std::string p_themeFile) {
   vapp::XMLDocument v_ThemeXml;
   TiXmlDocument *v_ThemeXmlData;
@@ -260,6 +264,8 @@ void Theme::newAnimationSpriteFromXML(TiXmlElement *pVarElem) {
   v_anim = new AnimationSprite(this, v_name, v_fileBase, v_fileExtension);
   m_sprites.push_back(v_anim);
 
+  int n = 0;
+  char buf[3];
   for(TiXmlElement *pVarSubElem = pVarElem->FirstChildElement("frame");
       pVarSubElem!=NULL;
       pVarSubElem = pVarSubElem->NextSiblingElement("frame")
@@ -286,6 +292,12 @@ void Theme::newAnimationSpriteFromXML(TiXmlElement *pVarElem) {
     if(pc != NULL) {v_delay = atof(pc);} else {v_delay = global_delay;}
 
     v_anim->addFrame(v_centerX, v_centerY, v_width, v_height, v_delay);
+
+    if(n < 100) {
+      sprintf(buf, "%02i", n);
+      m_requiredFiles.push_back(THEME_ANIMATION_SPRITE_FILE_DIR + std::string("/") + v_fileBase + std::string(buf) + std::string(".") + v_fileExtension);
+    }
+    n++;
   }
 }
 
@@ -303,6 +315,7 @@ void Theme::newBikerPartSpriteFromXML(TiXmlElement *pVarElem) {
   v_fileName = pc;
 
   m_sprites.push_back(new BikerPartSprite(this, v_name, v_fileName));
+  m_requiredFiles.push_back(THEME_BIKERPART_SPRITE_FILE_DIR + std::string("/") + v_fileName);
 }
 
 void Theme::newDecorationSpriteFromXML(TiXmlElement *pVarElem) {
@@ -342,8 +355,14 @@ void Theme::newDecorationSpriteFromXML(TiXmlElement *pVarElem) {
   pc = pVarElem->Attribute("blendmode");
   if(pc != NULL) v_blendmode = pc;
 
-  m_sprites.push_back(new DecorationSprite(this, v_name, v_fileName,atof(v_width.c_str()),atof(v_height.c_str()),atof(v_centerX.c_str()),atof(v_centerY.c_str()),
-                      strToBlendMode(v_blendmode)));
+  m_sprites.push_back(new DecorationSprite(this, v_name, v_fileName,
+					   atof(v_width.c_str()),
+					   atof(v_height.c_str()),
+					   atof(v_centerX.c_str()),
+					   atof(v_centerY.c_str()),
+					   strToBlendMode(v_blendmode)
+					   ));
+  m_requiredFiles.push_back(THEME_DECORATION_SPRITE_FILE_DIR + std::string("/") + v_fileName);
 }
 
 void Theme::newEffectSpriteFromXML(TiXmlElement *pVarElem) {
@@ -360,6 +379,7 @@ void Theme::newEffectSpriteFromXML(TiXmlElement *pVarElem) {
   v_fileName = pc;
 
   m_sprites.push_back(new EffectSprite(this, v_name, v_fileName));
+  m_requiredFiles.push_back(THEME_EFFECT_SPRITE_FILE_DIR + std::string("/") + v_fileName);
 }
 
 void Theme::newFontSpriteFromXML(TiXmlElement *pVarElem) {
@@ -376,6 +396,7 @@ void Theme::newFontSpriteFromXML(TiXmlElement *pVarElem) {
   v_fileName = pc;
 
   m_sprites.push_back(new FontSprite(this, v_name, v_fileName));
+  m_requiredFiles.push_back(THEME_FONT_SPRITE_FILE_DIR + std::string("/") + v_fileName);
 }
 
 void Theme::newMiscSpriteFromXML(TiXmlElement *pVarElem) {
@@ -392,6 +413,7 @@ void Theme::newMiscSpriteFromXML(TiXmlElement *pVarElem) {
   v_fileName = pc;
 
   m_sprites.push_back(new MiscSprite(this, v_name, v_fileName));
+  m_requiredFiles.push_back(THEME_MISC_SPRITE_FILE_DIR + std::string("/") + v_fileName);
 }
 
 void Theme::newUISpriteFromXML(TiXmlElement *pVarElem) {
@@ -408,6 +430,7 @@ void Theme::newUISpriteFromXML(TiXmlElement *pVarElem) {
   v_fileName = pc;
 
   m_sprites.push_back(new UISprite(this, v_name, v_fileName));
+  m_requiredFiles.push_back(THEME_UI_SPRITE_FILE_DIR + std::string("/") + v_fileName);
 }
 
 void Theme::newTextureSpriteFromXML(TiXmlElement *pVarElem) {
@@ -424,6 +447,7 @@ void Theme::newTextureSpriteFromXML(TiXmlElement *pVarElem) {
   v_fileName = pc;
 
   m_sprites.push_back(new TextureSprite(this, v_name, v_fileName));
+  m_requiredFiles.push_back(THEME_TEXTURE_SPRITE_FILE_DIR + std::string("/") + v_fileName);
 }
 
 BikerTheme* Theme::getPlayerTheme() {
@@ -864,17 +888,15 @@ void ThemeChoicer::cleanList() {
 void ThemeChoicer::initList() {
   cleanList();
 
-  std::vector<std::string> v_themesFiles = vapp::FS::findPhysFiles("Themes/*.xml", true);
+  std::vector<std::string> v_themesFiles = vapp::FS::findPhysFiles(std::string(THEMES_DIRECTORY) + std::string("/*.xml"), true);
   std::string v_name;
-  std::string v_userDir;
-  v_userDir = vapp::FS::getFileDir(vapp::FS::getUserDir() + "/Themes/file.xml");
 
   /* first, load theme which are in the user dir because, a same theme can be stored
      in files having different name
   */
   for(int i=0; i<v_themesFiles.size(); i++) {
     try {
-      if(vapp::FS::getFileDir(v_themesFiles[i]) == v_userDir) {
+      if(vapp::FS::isInUserDir(v_themesFiles[i])) {
 	v_name = getThemeNameFromFile(v_themesFiles[i]);
 	if(ExistThemeName(v_name) == false) {
 	  m_choices.push_back(new ThemeChoice(v_name, v_themesFiles[i], true));
@@ -890,7 +912,7 @@ void ThemeChoicer::initList() {
   /* load the other theme from not the user directory */
   for(int i=0; i<v_themesFiles.size(); i++) {
     try {
-      if(vapp::FS::getFileDir(v_themesFiles[i]) != v_userDir) {
+      if(vapp::FS::isInUserDir(v_themesFiles[i]) == false) {
 	v_name = getThemeNameFromFile(v_themesFiles[i]);
 	if(ExistThemeName(v_name) == false) {
 	  m_choices.push_back(new ThemeChoice(v_name, v_themesFiles[i], true));
@@ -916,17 +938,19 @@ void ThemeChoicer::initList() {
       } else {
 	/* the theme already exists ; check sum */
 	for(int j=0; j<m_choices.size(); j++) {
-	  std::string v_localMd5;
 
-	  try {
-	    v_localMd5 = md5file(m_choices[j]->ThemeFile());
-	  } catch(vapp::Exception &e) {
-	    v_localMd5 = "";
-	  }
-
-	  if(v_localMd5 != v_availableThemes[i]->getSum()) {
-	    /* this theme can be updated */
-	    m_choices[j]->setRequireUpdate(true);
+	  if(m_choices[j]->ThemeName() == v_availableThemes[i]->getName()) {
+	    std::string v_localMd5;
+	    try {
+	      v_localMd5 = md5file(m_choices[j]->ThemeFile());
+	    } catch(vapp::Exception &e) {
+	      v_localMd5 = "";
+	    }
+	    
+	    if(v_localMd5 != v_availableThemes[i]->getSum()) {
+	      /* this theme can be updated */
+	      m_choices[j]->setRequireUpdate(true);
+	    }
 	  }
 	}
       }
@@ -977,7 +1001,7 @@ void ThemeChoicer::updateFromWWW() {
 }
 
 void ThemeChoicer::updateThemeFromWWW(ThemeChoice* pThemeChoice) {
-  m_webThemes->upgrade(pThemeChoice->ThemeName(), pThemeChoice->hosted());
+  m_webThemes->upgrade(pThemeChoice);
 }
 #endif
 
@@ -999,7 +1023,7 @@ std::string ThemeChoice::ThemeFile() {
   return m_themeFile;
 }
 
-bool ThemeChoice::hosted() {
+bool ThemeChoice::getHosted() {
   return m_hosted;
 }
 
@@ -1011,6 +1035,10 @@ bool ThemeChoice::getRequireUpdate() {
   return m_requireUpdate;
 }
 
+ void ThemeChoice::setHosted(bool b) {
+   m_hosted = b;
+}
+
 SpriteBlendMode Theme::strToBlendMode(const std::string &s) {
   if(s == "add") return SPRITE_BLENDMODE_ADDITIVE;
   return SPRITE_BLENDMODE_DEFAULT;
@@ -1020,5 +1048,3 @@ std::string Theme::blendModeToStr(SpriteBlendMode Mode) {
   if(Mode == SPRITE_BLENDMODE_ADDITIVE) return "add";
   return "default";
 }
-
-

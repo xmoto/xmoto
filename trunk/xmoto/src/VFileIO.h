@@ -158,6 +158,11 @@ namespace vapp {
       static std::string getLevelsDir(void) {return m_UserDir + std::string("/Levels");}
     
       static bool isFileReadable(std::string p_filename);
+      static bool fileExists(std::string p_filename);
+      static void mkAborescence(std::string v_filepath);
+
+      // return true if p_filepath is a path from user dir
+      static bool isInUserDir(std::string p_filepath);
 
     private:
       /* Helper functions */
