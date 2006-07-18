@@ -29,11 +29,6 @@ Game.CameraZoom(z)
 add the same for block once block move will work
 * a texture missing -> just give an alert instead of get an exception
 
-* on xmoto 0.1.14 ALPHA, when you want to save a replay
- which you name " " (just one space), it hangs, and all
- your high-scores recorded since you run xmoto and the
- replay you wanted to be saved are lost...
-
 ######################################################################
 Unassigned:
 

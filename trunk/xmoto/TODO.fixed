@@ -14,6 +14,10 @@ Since 1.16
 * BUG : move objects in script doesn't work(priority=medium)
    --comment: it appears to work fine for me? see Levels/test/test.lvl
    --comment2: okay, it doesn't work in replays...
+* on xmoto 0.1.14 ALPHA, when you want to save a replay
+ which you name " " (just one space), it hangs, and all
+ your high-scores recorded since you run xmoto and the
+ replay you wanted to be saved are lost...
 
 Before Xmoto 1.16
 * BUG : bug in the editor if you load and save http://xmoto.free.fr/levels/l189.lvl because  > is replaced by &gt;      
