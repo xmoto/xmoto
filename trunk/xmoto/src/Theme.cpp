@@ -889,6 +889,15 @@ std::string ThemeChoicer::getFileName(std::string p_themeName) {
   return "";
 }
 
+ThemeChoice* ThemeChoicer::getChoiceByName(std::string p_themeName) {
+  for(int i=0; i<m_choices.size(); i++) {
+    if(m_choices[i]->ThemeName() == p_themeName) {
+      return m_choices[i];
+    }
+  }
+  return NULL;
+}
+
 void ThemeChoicer::cleanList() {
   for(int i=0; i<m_choices.size(); i++) {
     delete m_choices[i];

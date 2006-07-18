@@ -157,6 +157,7 @@ namespace vapp {
       static std::string getReplaysDir(void) {return m_UserDir + std::string("/Replays");}
       static std::string getLevelsDir(void) {return m_UserDir + std::string("/Levels");}
     
+      static bool doesDirectoryExist(std::string p_path);
       static bool isFileReadable(std::string p_filename);
       static bool fileExists(std::string p_filename);
       static void mkArborescence(std::string v_filepath);

@@ -447,6 +447,7 @@ void FSWeb::downloadFile(const std::string &p_local_file,
   curl_easy_setopt(v_curl, CURLOPT_TIMEOUT, DEFAULT_TRANSFERT_TIMEOUT);
   curl_easy_setopt(v_curl, CURLOPT_CONNECTTIMEOUT, DEFAULT_TRANSFERT_CONNECT_TIMEOUT);
   curl_easy_setopt(v_curl, CURLOPT_USERAGENT,  v_www_agent.c_str());
+  curl_easy_setopt(v_curl, CURLOPT_FAILONERROR, 1);
 
   /* set proxy settings */
   if(p_proxy_settings != NULL) {
@@ -487,6 +488,12 @@ void FSWeb::downloadFile(const std::string &p_local_file,
   res = curl_easy_perform(v_curl);
   curl_easy_cleanup(v_curl);
   fclose(v_destinationFile);
+
+  /* this is not considered as an error */
+  if(res == CURLE_ABORTED_BY_CALLBACK) {
+    remove(v_local_file_tmp.c_str());
+    return;
+  }
 
   if(res != CURLE_OK) {
     remove(v_local_file_tmp.c_str());
@@ -737,23 +744,16 @@ void WebLevels::upgrade() {
 	v_destFile = getDestinationFile(v_url);
       }
       
-      try {
-	FSWeb::downloadFileBz2(v_destFile,
-			       v_url,
-			       FSWeb::f_curl_progress_callback,
-			       &v_data,
-			       m_proxy_settings);
-
-	if((*it)->requireUpdate()) {
-	  m_webLevelsUpdatedDownloadedOK.push_back(v_destFile);
-	} else {
-	  m_webLevelsNewDownloadedOK.push_back(v_destFile);
-	}
-
-      } catch(vapp::Exception &e) {
-	if(m_WebLevelApp->isCancelAsSoonAsPossible() == false) {
-	  throw e;
-	}
+      FSWeb::downloadFileBz2(v_destFile,
+			     v_url,
+			     FSWeb::f_curl_progress_callback,
+			     &v_data,
+			     m_proxy_settings);
+      
+      if((*it)->requireUpdate()) {
+	m_webLevelsUpdatedDownloadedOK.push_back(v_destFile);
+      } else {
+	m_webLevelsNewDownloadedOK.push_back(v_destFile);
       }
     }    
 
@@ -954,18 +954,12 @@ void WebThemes::upgrade(ThemeChoice *p_themeChoice) {
 
 	vapp::FS::mkArborescence(v_destinationFile);
 
-	try {
-	  FSWeb::downloadFile(v_destinationFile,
-			      v_sourceFile,
-			      FSWeb::f_curl_progress_callback,
-			      &v_data,
-			      m_proxy_settings);
-	} catch(vapp::Exception &e) {
-	  if(m_WebApp->isCancelAsSoonAsPossible() == false) {
-	    throw e;
-	  }
-	}
-
+	FSWeb::downloadFile(v_destinationFile,
+			    v_sourceFile,
+			    FSWeb::f_curl_progress_callback,
+			    &v_data,
+			    m_proxy_settings);
+	
 	v_nb_files_performed++;
       }
       m_WebApp->readEvents();

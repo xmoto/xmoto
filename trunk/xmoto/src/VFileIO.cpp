@@ -1195,53 +1195,28 @@ namespace vapp {
     return v_fileDir.substr(0, v_userDir.length()) == v_userDir;
   }
 
-  bool FS::isFileReadable(std::string p_filename) {
-    //FileHandle *fh = openIFile(p_filename);
-    //if(fh == NULL) {
-    //  return false;
-    //}
-    //closeFile(fh);
-    //return true;
-
+  bool FS::doesDirectoryExist(std::string p_path) {
     struct stat S;
+    return stat(p_path.c_str(), &S) == 0;
+  }
 
-//    /* check into the package */
-//    for(int i=0; i<m_nNumPackFiles; i++) {
-//      if(m_PackFiles[i].Name == p_filename) {
-//	return true;
-//      }
-//    }
-
-    if(stat(p_filename.c_str(),&S) != 0) {
+  bool FS::isFileReadable(std::string p_filename) {
+    FileHandle *fh = openIFile(p_filename);
+    if(fh == NULL) {
       return false;
     }
-
-    //return (S.st_mode & S_IRUSR) != 0;
+    closeFile(fh);
     return true;
   }
 
   bool FS::fileExists(std::string p_filename) {
     return isFileReadable(p_filename);
-    //struct stat S;
-
-    ///* check into the package */
-    //for(int i=0; i<m_nNumPackFiles; i++) {
-    //  if(m_PackFiles[i].Name == p_filename) {
-	   //   return true;
-    //  }
-    //}
-
-    //if(stat(p_filename.c_str(),&S) != 0) {
-    //  return false;
-    //}
-
-    //return (S.st_mode;
   }
 
   void FS::mkArborescence(std::string v_filepath) {
     std::string v_parentDir = getFileDir(v_filepath);
 
-    if(fileExists(v_parentDir)) {
+    if(doesDirectoryExist(v_parentDir)) {
       return;
     }
 
@@ -1250,5 +1225,6 @@ namespace vapp {
       throw Exception("Can't create directory " + v_parentDir);
     }
   }
+
 };
 

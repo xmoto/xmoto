@@ -1072,6 +1072,12 @@ namespace vapp {
 
         /* Download levels! */
         _DownloadExtraLevels();
+	/* currrrent theme should be updated when there are new levels */
+	ThemeChoice* v_ThemeChoice;
+	v_ThemeChoice = m_themeChoicer->getChoiceByName(m_Config.getString("Theme"));
+	if(v_ThemeChoice != NULL) {
+	  _UpdateWebTheme(v_ThemeChoice);      
+	}
       }
       else if(Button == UI_MSGBOX_NO) {
         delete m_pDownloadMsgBox;
@@ -2336,21 +2342,23 @@ namespace vapp {
 #endif
 
 #if defined(SUPPORT_WEBACCESS)
-  void GameApp::_UpdateWebTheme(ThemeChoice* pThemeChoice, bool bSilent) {
-    if(!bSilent) {
-      _SimpleMessage(std::string(GAMETEXT_DLTHEME),
-		     &m_DownloadMsgBoxRect);
-    }
+  void GameApp::_UpdateWebTheme(ThemeChoice* pThemeChoice) {
+    m_DownloadingInformation = "";
+    _SimpleMessage(std::string(GAMETEXT_DLTHEME),
+		   &m_DownloadMsgBoxRect);
 
     m_themeChoicer->setURLBase(m_Config.getString("WebThemesURLBase"));
 
     try {
+      Log("WWW: Downloading a theme...");
       clearCancelAsSoonAsPossible();
       m_themeChoicer->updateThemeFromWWW(pThemeChoice);
       _UpdateThemesLists();
     } catch(Exception &e) {
       /* file probably doesn't exist */
       Log("** Warning ** : Failed to update theme ", pThemeChoice->ThemeName().c_str());		
+      notifyMsg(GAMETEXT_FAILEDGETSELECTEDTHEME);
+      return;
     }
   }
 #endif
@@ -2396,7 +2404,7 @@ namespace vapp {
           }
           notifyMsg(GAMETEXT_FAILEDDLLEVELS);
           return;
-        }      
+        }
 
         /* Get pointer to GUI list of new/updated levels */
         UILevelList *pPlayNewLevelsList = (UILevelList *)m_pPlayWindow->getChild("PLAY_LEVEL_TABS:PLAY_NEW_LEVELS_TAB:PLAY_NEW_LEVELS_LIST");
@@ -2505,7 +2513,6 @@ namespace vapp {
 
 #if defined(SUPPORT_WEBACCESS)  
   void GameApp::_CheckForExtraLevels(void) {
-    #if defined(SUPPORT_WEBACCESS)
       /* Check for extra levels */
       try {
         _SimpleMessage(GAMETEXT_CHECKINGFORLEVELS);
@@ -2545,8 +2552,7 @@ namespace vapp {
           m_pDownloadMsgBox = NULL;
         }
         notifyMsg(GAMETEXT_FAILEDCHECKLEVELS);
-      }      
-    #endif
+      } 
   }
 #endif  
 

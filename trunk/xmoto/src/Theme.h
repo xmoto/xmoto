@@ -423,6 +423,7 @@ class ThemeChoicer {
   bool ExistThemeName(std::string p_themeName);
   std::string getFileName(std::string p_themeName);
   std::vector<ThemeChoice*> getChoices();
+  ThemeChoice* getChoiceByName(std::string p_themeName);
 
 #if defined(SUPPORT_WEBACCESS)
   void updateFromWWW();
