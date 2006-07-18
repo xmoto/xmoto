@@ -2,6 +2,9 @@
 
 ######################################################################
 Assigned to Neckelmann:
+* BUG : kill bill if you try this level since the last recent change
+   about collision (.16), the start of the level is not the same : the
+   player does not fall as the same way
 * "view the highscore" button is not visible for pack(priority=high)
 * add <xml_room> in configuration so that the player can choose the
    link to his room xml file (priority=high)(priority=high)
@@ -12,12 +15,10 @@ Assigned to Neckelmann:
 ######################################################################
 Assigned to Nicolas:
 * themes
-- when update -> get the same selected theme
-- update levels should ask "Do you want to update themes too ?
-   (recommanded)" because new levels could required new theme entries
+!!!! I modified doesDirExist, test theme under windows !
+- BUG : display "downloading levels" instead of displaying downloading themes
 - reduce diff between DecorationSprite and AnimationSprite : be able
    to load an animated tree or an unanimated strawberry
-- md5sum of the sprites because of downloading errors
 
 * high level function for script : DynamicMove
 Game.SetDynamicEntityRotation("Strawberry0", 0, 3, 500, 0, 0)

@@ -913,11 +913,11 @@ void WebThemes::upgrade(ThemeChoice *p_themeChoice) {
 
   /* download the theme file */
   vapp::FS::mkArborescence(v_destinationFile);
-  FSWeb::downloadFileBz2UsingMd5(v_destinationFile,
-				 v_associated_webtheme->getUrl(),
-				 NULL,
-				 NULL,
-				 m_proxy_settings);
+  FSWeb::downloadFileBz2(v_destinationFile,
+			 v_associated_webtheme->getUrl(),
+			 NULL,
+			 NULL,
+			 m_proxy_settings);
 
   /* download all the files required */
   Theme *v_theme = new Theme();
