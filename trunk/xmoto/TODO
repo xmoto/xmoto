@@ -15,7 +15,6 @@ Assigned to Neckelmann:
 ######################################################################
 Assigned to Nicolas:
 * themes
-!!!! I modified doesDirExist, test theme under windows !
 - BUG : display "downloading levels" instead of displaying downloading themes
 - reduce diff between DecorationSprite and AnimationSprite : be able
    to load an animated tree or an unanimated strawberry
@@ -36,7 +35,6 @@ Unassigned:
 * make circle for sprites, strawberries, ... in ugly mode
 * now that there is a lot of replays (dwd due to ghosts), what about put "list all" by default in the replays list ?
 * BUG : xmoto-edit rgeznlre -> segfault
-* BUG : ERREUR 404: Not Found : when a file is not found, no error is detected
 
 * smoke doesn't work in replay, it didn't work in .16
    --comment: particles have never been present in replays. It should
