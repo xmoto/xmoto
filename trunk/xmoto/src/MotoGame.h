@@ -435,7 +435,11 @@ namespace vapp {
     GAME_EVENT_LUA_CALL_SETDYNAMICENTITYNONE,
 
     GAME_EVENT_LUA_CALL_CAMERAZOOM,
-    GAME_EVENT_LUA_CALL_CAMERAMOVE
+    GAME_EVENT_LUA_CALL_CAMERAMOVE,
+
+    GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKROTATION,
+    GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKTRANSLATION,
+    GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKNONE
   };
   
 	/*===========================================================================
@@ -487,12 +491,12 @@ namespace vapp {
   };
   
   struct GameEventLuaCallMoveblock {
-    char cBlockID[64]; /* ID of block */
+    char  cBlockID[64]; /* ID of block */
     float x, y;
   };
   
   struct GameEventLuaCallSetblockpos {
-    char cBlockID[64]; /* ID of block */
+    char  cBlockID[64]; /* ID of block */
     float x, y;
   };
   
@@ -506,22 +510,22 @@ namespace vapp {
   };
   
   struct GameEventLuaCallSetentitypos {
-    char cEntityID[64]; /* ID of entity */
+    char  cEntityID[64]; /* ID of entity */
     float x,y;
   };
   
   struct GameEventLuaCallSetBlockCenter {
-    char cBlockID[64]; /* ID of block */
+    char  cBlockID[64]; /* ID of block */
     float x,y;
   };
   
   struct GameEventLuaCallSetBlockRotation {
-    char cBlockID[64]; /* ID of block */
+    char  cBlockID[64]; /* ID of block */
     float fAngle;
   };
   
   struct GameEventLuaCallSetDynamicEntityRotation {
-    char cEntityID[64]; /* ID of entity */
+    char  cEntityID[64]; /* ID of entity */
     float fInitAngle;
     float fRadius;
     float fPeriod;
@@ -530,7 +534,29 @@ namespace vapp {
   };
 
   struct GameEventLuaCallSetDynamicEntityTranslation {
+    char  cEntityID[64]; /* ID of entity */
+    float fX;
+    float fY;
+    float fPeriod;
+    int   startTime;
+    int   endTime;
+  };
+ 
+  struct GameEventLuaCallSetDynamicEntityNone {
     char cEntityID[64]; /* ID of entity */
+  };
+
+  struct GameEventLuaCallSetDynamicBlockRotation {
+    char  cBlockID[64]; /* ID of block */
+    float fInitAngle;
+    float fRadius;
+    float fPeriod;
+    int   startTime;
+    int   endTime;
+  };
+
+  struct GameEventLuaCallSetDynamicBlockTranslation {
+    char  cBlockID[64]; /* ID of block */
     float fX;
     float fY;
     float fPeriod;
@@ -538,8 +564,8 @@ namespace vapp {
     int   endTime;
   };
 
-  struct GameEventLuaCallSetDynamicEntityNone {
-    char cEntityID[64]; /* ID of entity */
+  struct GameEventLuaCallSetDynamicBlockNone {
+    char cBlockID[64]; /* ID of block */
   };
 
   struct GameEventLuaCallCameraZoom {
@@ -615,6 +641,15 @@ namespace vapp {
 
       /* GAME_EVENT_LUA_CALL_SETDYNAMICENTITYNONE */
       GameEventLuaCallSetDynamicEntityNone LuaCallSetDynamicEntityNone;
+
+      /* GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKROTATION */
+      GameEventLuaCallSetDynamicBlockRotation LuaCallSetDynamicBlockRotation;
+
+      /* GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKROTATION */
+      GameEventLuaCallSetDynamicBlockTranslation LuaCallSetDynamicBlockTranslation;
+
+      /* GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKNONE */
+      GameEventLuaCallSetDynamicBlockNone LuaCallSetDynamicBlockNone;
 
       /* GAME_EVENT_LUA_CALL_CAMERAZOOM */
       GameEventLuaCallCameraZoom LuaCallCameraZoom;
@@ -900,7 +935,7 @@ namespace vapp {
 
       void cleanScriptDynamicObjects();
       void nextStateScriptDynamicObjects();
-      void removeSDynamicOfEntity(std::string pEntity);
+      void removeSDynamicOfObject(std::string pObject);
 
       char _MapCoordTo8Bits(float fRef,float fMaxDiff,float fCoord);
       float _Map8BitsToCoord(float fRef,float fMaxDiff,char c);

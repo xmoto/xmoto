@@ -5,6 +5,8 @@ Assigned to Neckelmann:
 * BUG : kill bill if you try this level since the last recent change
    about collision (.16), the start of the level is not the same : the
    player does not fall as the same way
+ -- comment : just add an information into the changelog
+
 * "view the highscore" button is not visible for pack(priority=high)
 * add <xml_room> in configuration so that the player can choose the
    link to his room xml file (priority=high)(priority=high)
@@ -18,13 +20,6 @@ Assigned to Nicolas:
 - reduce diff between DecorationSprite and AnimationSprite : be able
    to load an animated tree or an unanimated strawberry
 
-* high level function for script : DynamicMove
-Game.SetDynamicEntityRotation("Strawberry0", 0, 3, 500, 0, 0)
-Game.SetDynamicEntityTranslation("Strawberry0", 3, 1, 500, 0, 0)
-Game.SetDynamicEntityNone("Strawberry0")
-Game.CameraMove(x, y)
-Game.CameraZoom(z)
-add the same for block once block move will work
 * a texture missing -> just give an alert instead of get an exception
 
 ######################################################################

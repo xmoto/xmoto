@@ -32,7 +32,7 @@ namespace vapp {
 class SDynamicObject {
  public:
   SDynamicObject(int p_startTime, int p_endTime, float pPeriod);
-  ~SDynamicObject();
+  virtual ~SDynamicObject();
   
   /* return false if the dynamic is finished */
   bool nextState(vapp::MotoGame* v_motoGame);
@@ -52,7 +52,7 @@ class SDynamicObject {
 class SDynamicRotation {
  public:
   SDynamicRotation(float pInitAngle, float pRadius, float pPeriod);
-  ~SDynamicRotation();
+  virtual ~SDynamicRotation();
   void performXY(float *vx, float *vy);
 
  private:
@@ -71,7 +71,7 @@ class SDynamicRotation {
 class SDynamicTranslation {
  public:
   SDynamicTranslation(float pX, float pY, float pPeriod);
-  ~SDynamicTranslation();
+  virtual ~SDynamicTranslation();
   void performXY(float *vx, float *vy);
 
  private:
@@ -85,10 +85,11 @@ class SDynamicTranslation {
   float m_totalMoveY;
 };
 
+/* entity */
 class SDynamicEntityMove : public SDynamicObject {
  public:
   SDynamicEntityMove(std::string pEntity, int p_startTime, int p_endTime, float pPeriod);
-  ~SDynamicEntityMove();
+  virtual ~SDynamicEntityMove();
 
   void performMove(vapp::MotoGame* p_motoGame);
   std::string getObjectId();
@@ -103,7 +104,7 @@ class SDynamicEntityMove : public SDynamicObject {
 class SDynamicEntityRotation : public SDynamicEntityMove, public SDynamicRotation {
  public:
   SDynamicEntityRotation(std::string pEntity, float pInitAngle, float pRadius, float pPeriod, int p_startTime, int p_endTime);
-  ~SDynamicEntityRotation();
+  virtual ~SDynamicEntityRotation();
 
   void performXY(float *vx, float *vy);
 
@@ -113,7 +114,43 @@ class SDynamicEntityRotation : public SDynamicEntityMove, public SDynamicRotatio
 class SDynamicEntityTranslation : public SDynamicEntityMove, public SDynamicTranslation {
  public:
   SDynamicEntityTranslation(std::string pEntity, float pX, float pY, float pPeriod, int p_startTime, int p_endTime);
-  ~SDynamicEntityTranslation();
+  virtual ~SDynamicEntityTranslation();
+
+  void performXY(float *vx, float *vy);
+
+ private:
+};
+
+/* block */
+class SDynamicBlockMove : public SDynamicObject {
+ public:
+  SDynamicBlockMove(std::string pBlock, int p_startTime, int p_endTime, float pPeriod);
+  virtual ~SDynamicBlockMove();
+
+  void performMove(vapp::MotoGame* p_motoGame);
+  std::string getObjectId();
+
+ protected:
+  virtual void performXY(float *vx, float *vy) = 0;
+
+ private:
+  std::string m_block;
+};
+
+class SDynamicBlockRotation : public SDynamicBlockMove, public SDynamicRotation {
+ public:
+  SDynamicBlockRotation(std::string pBlock, float pInitAngle, float pRadius, float pPeriod, int p_startTime, int p_endTime);
+  virtual ~SDynamicBlockRotation();
+
+  void performXY(float *vx, float *vy);
+
+ private:
+};
+
+class SDynamicBlockTranslation : public SDynamicBlockMove, public SDynamicTranslation {
+ public:
+  SDynamicBlockTranslation(std::string pBlock, float pX, float pY, float pPeriod, int p_startTime, int p_endTime);
+  virtual ~SDynamicBlockTranslation();
 
   void performXY(float *vx, float *vy);
 

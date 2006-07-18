@@ -50,56 +50,6 @@ bool SDynamicObject::isTimeToMove() {
   return m_time >= m_startTime && (m_time <= m_endTime || m_endTime == 0.0);
 }
 
-SDynamicEntityMove::SDynamicEntityMove(std::string pEntity, int p_startTime, int p_endTime, float pPeriod) : SDynamicObject(p_startTime, p_endTime, pPeriod){
-  m_entity = pEntity;
-}
-
-SDynamicEntityMove::~SDynamicEntityMove() {
-}
-
-void SDynamicEntityMove::performMove(vapp::MotoGame* v_motoGame) {
-  /* Find the specified entity and return its position */
-  for(int i=0;i<v_motoGame->getEntities().size();i++) {
-    vapp::Entity *p = v_motoGame->getEntities()[i];
-    if(p->ID == m_entity) {
-      float vx, vy;
-      performXY(&vx, &vy);
-      v_motoGame->SetEntityPos(p->ID,
-			       vx + p->Pos.x,
-			       vy + p->Pos.y);
-    }
-  }
-}
-
-std::string SDynamicEntityMove::getObjectId() {
-  return m_entity;
-}
-
-SDynamicEntityRotation::SDynamicEntityRotation(std::string pEntity, float pInitAngle, float pRadius, float pPeriod, int p_startTime, int p_endTime) : SDynamicEntityMove(pEntity, p_startTime, p_endTime, pPeriod), SDynamicRotation(pInitAngle, pRadius, pPeriod) {
-}
-
-SDynamicEntityRotation::~SDynamicEntityRotation() {
-}
-
-void SDynamicRotation::performXY(float *vx, float *vy) {
-  if(m_Angle >= 2 * M_PI) {m_Angle -= 2 * M_PI;} /* because of float limit */
-  float x,y;
-
-  x = cos(m_Angle) * m_Radius - m_CenterX;
-  y = sin(m_Angle) * m_Radius - m_CenterY;
-  *vx = x - m_previousVx;
-  *vy = y - m_previousVy;
-
-  m_previousVx = x;
-  m_previousVy = y;
-  m_Angle += m_Speed;
-}
-
-SDynamicEntityTranslation::SDynamicEntityTranslation(std::string pEntity, float pX, float pY, float pPeriod, int p_startTime, int p_endTime) : SDynamicEntityMove(pEntity, p_startTime, p_endTime, pPeriod), SDynamicTranslation(pX, pY, pPeriod) {
-}
-
-SDynamicEntityTranslation::~SDynamicEntityTranslation() {
-}
 
 void SDynamicTranslation::performXY(float *vx, float *vy) {
   *vx = m_sensUp ? m_moveX : -m_moveX;
@@ -150,10 +100,110 @@ SDynamicTranslation::SDynamicTranslation(float pX, float pY, float pPeriod) {
 SDynamicTranslation::~SDynamicTranslation() {
 }
 
+void SDynamicRotation::performXY(float *vx, float *vy) {
+  if(m_Angle >= 2 * M_PI) {m_Angle -= 2 * M_PI;} /* because of float limit */
+  float x,y;
+
+  x = cos(m_Angle) * m_Radius - m_CenterX;
+  y = sin(m_Angle) * m_Radius - m_CenterY;
+  *vx = x - m_previousVx;
+  *vy = y - m_previousVy;
+
+  m_previousVx = x;
+  m_previousVy = y;
+  m_Angle += m_Speed;
+}
+
+/* entity */
+
+SDynamicEntityMove::SDynamicEntityMove(std::string pEntity, int p_startTime, int p_endTime, float pPeriod) : SDynamicObject(p_startTime, p_endTime, pPeriod){
+  m_entity = pEntity;
+}
+
+SDynamicEntityMove::~SDynamicEntityMove() {
+}
+
+void SDynamicEntityMove::performMove(vapp::MotoGame* v_motoGame) {
+  /* Find the specified entity and return its position */
+  for(int i=0;i<v_motoGame->getEntities().size();i++) {
+    vapp::Entity *p = v_motoGame->getEntities()[i];
+    if(p->ID == m_entity) {
+      float vx, vy;
+      performXY(&vx, &vy);
+      v_motoGame->SetEntityPos(p->ID,
+			       vx + p->Pos.x,
+			       vy + p->Pos.y);
+    }
+  }
+}
+
+std::string SDynamicEntityMove::getObjectId() {
+  return m_entity;
+}
+
+SDynamicEntityRotation::SDynamicEntityRotation(std::string pEntity, float pInitAngle, float pRadius, float pPeriod, int p_startTime, int p_endTime) : SDynamicEntityMove(pEntity, p_startTime, p_endTime, pPeriod), SDynamicRotation(pInitAngle, pRadius, pPeriod) {
+}
+
+SDynamicEntityRotation::~SDynamicEntityRotation() {
+}
+
+SDynamicEntityTranslation::SDynamicEntityTranslation(std::string pEntity, float pX, float pY, float pPeriod, int p_startTime, int p_endTime) : SDynamicEntityMove(pEntity, p_startTime, p_endTime, pPeriod), SDynamicTranslation(pX, pY, pPeriod) {
+}
+
+SDynamicEntityTranslation::~SDynamicEntityTranslation() {
+}
+
 void SDynamicEntityRotation::performXY(float *vx, float *vy) {
   SDynamicRotation::performXY(vx, vy);
 }
 
 void SDynamicEntityTranslation::performXY(float *vx, float *vy) {
+  SDynamicTranslation::performXY(vx, vy);
+}
+
+/* block */
+
+SDynamicBlockMove::SDynamicBlockMove(std::string pBlock, int p_startTime, int p_endTime, float pPeriod) : SDynamicObject(p_startTime, p_endTime, pPeriod){
+  m_block = pBlock;
+}
+
+SDynamicBlockMove::~SDynamicBlockMove() {
+}
+
+void SDynamicBlockMove::performMove(vapp::MotoGame* v_motoGame) {
+  /* Find the specified block and return its position */
+  for(int i=0;i<v_motoGame->getDynBlocks().size();i++) {
+    vapp::DynamicBlock *p = v_motoGame->getDynBlocks()[i];
+    if(p->pSrcBlock->ID == m_block) {
+      float vx, vy;
+      performXY(&vx, &vy);
+      v_motoGame->SetBlockPos(p->pSrcBlock->ID,
+			      vx + p->Position.x,
+			      vy + p->Position.y);
+    }
+  }
+}
+
+std::string SDynamicBlockMove::getObjectId() {
+  return m_block;
+}
+
+SDynamicBlockRotation::SDynamicBlockRotation(std::string pBlock, float pInitAngle, float pRadius, float pPeriod, int p_startTime, int p_endTime) : SDynamicBlockMove(pBlock, p_startTime, p_endTime, pPeriod), SDynamicRotation(pInitAngle, pRadius, pPeriod) {
+}
+
+SDynamicBlockRotation::~SDynamicBlockRotation() {
+}
+
+SDynamicBlockTranslation::SDynamicBlockTranslation(std::string pBlock, float pX, float pY, float pPeriod, int p_startTime, int p_endTime) : SDynamicBlockMove(pBlock, p_startTime, p_endTime, pPeriod), SDynamicTranslation(pX, pY, pPeriod) {
+}
+
+SDynamicBlockTranslation::~SDynamicBlockTranslation() {
+}
+
+void SDynamicBlockRotation::performXY(float *vx, float *vy) {
+  SDynamicRotation::performXY(vx, vy);
+}
+
+void SDynamicBlockTranslation::performXY(float *vx, float *vy) {
   SDynamicTranslation::performXY(vx, vy);
 }

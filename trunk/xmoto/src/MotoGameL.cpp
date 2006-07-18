@@ -42,8 +42,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   New functions: 
     Game.SetDynamicEntityRotation()
     Game.SetDynamicEntityTranslation()
+    Game.SetDynamicEntityNone()
+    Game.SetDynamicBlockRotation()
+    Game.SetDynamicBlockTranslation()
+    Game.SetDynamicBlockNone()
     Game.CameraZoom()
-    Game.CameraMove()    
+    Game.CameraMove()
   
 */
 
@@ -378,6 +382,51 @@ namespace vapp {
       strncpy(pEvent->u.LuaCallSetDynamicEntityNone.cEntityID,
 	      luaL_checkstring(pL,1),
 	      sizeof(pEvent->u.LuaCallSetDynamicEntityNone.cEntityID)-1);
+    }
+    return 0;
+  }
+
+  int L_Game_SetDynamicBlockRotation(lua_State *pL) {
+    /* event for this */    
+    GameEvent *pEvent = m_pMotoGame->createGameEvent(GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKROTATION);
+    if(pEvent != NULL) {
+      strncpy(pEvent->u.LuaCallSetDynamicBlockRotation.cBlockID,
+	      luaL_checkstring(pL,1),
+	      sizeof(pEvent->u.LuaCallSetDynamicBlockRotation.cBlockID)-1);
+      pEvent->u.LuaCallSetDynamicBlockRotation.fInitAngle = X_luaL_check_number(pL,2);
+      pEvent->u.LuaCallSetDynamicBlockRotation.fRadius    = X_luaL_check_number(pL,3);
+      pEvent->u.LuaCallSetDynamicBlockRotation.fPeriod    = X_luaL_check_number(pL,4);
+      pEvent->u.LuaCallSetDynamicBlockRotation.startTime  = X_luaL_check_number(pL,5);
+      pEvent->u.LuaCallSetDynamicBlockRotation.endTime    = X_luaL_check_number(pL,6);
+    }
+    
+    return 0;
+  }
+
+  int L_Game_SetDynamicBlockTranslation(lua_State *pL) {
+    /* event for this */    
+    GameEvent *pEvent = m_pMotoGame->createGameEvent(GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKTRANSLATION);
+    if(pEvent != NULL) {
+      strncpy(pEvent->u.LuaCallSetDynamicBlockTranslation.cBlockID,
+	      luaL_checkstring(pL,1),
+	      sizeof(pEvent->u.LuaCallSetDynamicBlockTranslation.cBlockID)-1);
+      pEvent->u.LuaCallSetDynamicBlockTranslation.fX        = X_luaL_check_number(pL,2);
+      pEvent->u.LuaCallSetDynamicBlockTranslation.fY        = X_luaL_check_number(pL,3);
+      pEvent->u.LuaCallSetDynamicBlockTranslation.fPeriod   = X_luaL_check_number(pL,4);
+      pEvent->u.LuaCallSetDynamicBlockTranslation.startTime = X_luaL_check_number(pL,5);
+      pEvent->u.LuaCallSetDynamicBlockTranslation.endTime   = X_luaL_check_number(pL,6);
+    }
+    
+    return 0;
+  }
+
+  int L_Game_SetDynamicBlockNone(lua_State *pL) {
+    /* event for this */    
+    GameEvent *pEvent = m_pMotoGame->createGameEvent(GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKNONE);
+    if(pEvent != NULL) {
+      strncpy(pEvent->u.LuaCallSetDynamicBlockNone.cBlockID,
+	      luaL_checkstring(pL,1),
+	      sizeof(pEvent->u.LuaCallSetDynamicBlockNone.cBlockID)-1);
     }
     return 0;
   }

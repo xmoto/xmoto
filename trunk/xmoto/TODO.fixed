@@ -19,6 +19,15 @@ Since 1.16
  your high-scores recorded since you run xmoto and the
  replay you wanted to be saved are lost...
 * BUG : ERREUR 404: Not Found : when a file is not found, no error is detected
+* high level function for script : DynamicMove
+Game.SetDynamicEntityRotation("Strawberry0", 0, 3, 500, 0, 0)
+Game.SetDynamicEntityTranslation("Strawberry0", 3, 1, 500, 0, 0)
+Game.SetDynamicEntityNone("Strawberry0")
+Game.SetDynamicBlockRotation("Block0", 0, 3, 500, 0, 0)
+Game.SetDynamicBlockTranslation("Block0", 3, 1, 500, 0, 0)
+Game.SetDynamicBlockNone("Block0")
+Game.CameraMove(x, y)
+Game.CameraZoom(z)
 
 Before Xmoto 1.16
 * BUG : bug in the editor if you load and save http://xmoto.free.fr/levels/l189.lvl because  > is replaced by &gt;      

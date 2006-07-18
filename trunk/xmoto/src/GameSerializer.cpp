@@ -292,6 +292,69 @@ namespace vapp {
       }
       break;
 
+    case GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKROTATION:
+      {
+	  int n;
+	  (*Buffer) >> n;
+	  if(n >= sizeof(Event.u.LuaCallSetDynamicBlockRotation.cBlockID)) {
+	    Log("** Warning ** : Block name in replay too long, ignoring all events!");
+	    bError = true;
+	  }
+	  else {
+	    (*Buffer).readBuf(Event.u.LuaCallSetDynamicBlockRotation.cBlockID,n);
+	    Event.u.LuaCallSetDynamicBlockRotation.cBlockID[n] = '\0';
+
+	    (*Buffer) >> Event.u.LuaCallSetDynamicBlockRotation.fInitAngle;
+	    (*Buffer) >> Event.u.LuaCallSetDynamicBlockRotation.fRadius;
+	    (*Buffer) >> Event.u.LuaCallSetDynamicBlockRotation.fPeriod;
+	    (*Buffer) >> Event.u.LuaCallSetDynamicBlockRotation.startTime;
+	    (*Buffer) >> Event.u.LuaCallSetDynamicBlockRotation.endTime;
+
+	    bIsOk = true;
+	  }
+      }
+      break;
+
+    case GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKTRANSLATION:
+      {
+	  int n;
+	  (*Buffer) >> n;
+	  if(n >= sizeof(Event.u.LuaCallSetDynamicBlockTranslation.cBlockID)) {
+	    Log("** Warning ** : Block name in replay too long, ignoring all events!");
+	    bError = true;
+	  }
+	  else {
+	    (*Buffer).readBuf(Event.u.LuaCallSetDynamicBlockTranslation.cBlockID,n);
+	    Event.u.LuaCallSetDynamicBlockTranslation.cBlockID[n] = '\0';
+
+	    (*Buffer) >> Event.u.LuaCallSetDynamicBlockTranslation.fX;
+	    (*Buffer) >> Event.u.LuaCallSetDynamicBlockTranslation.fY;
+	    (*Buffer) >> Event.u.LuaCallSetDynamicBlockTranslation.fPeriod;
+	    (*Buffer) >> Event.u.LuaCallSetDynamicBlockTranslation.startTime;
+	    (*Buffer) >> Event.u.LuaCallSetDynamicBlockTranslation.endTime;
+
+	    bIsOk = true;
+	  }
+      }
+      break;
+
+    case GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKNONE:
+      {
+	  int n;
+	  (*Buffer) >> n;
+	  if(n >= sizeof(Event.u.LuaCallSetDynamicBlockNone.cBlockID)) {
+	    Log("** Warning ** : Block name in replay too long, ignoring all events!");
+	    bError = true;
+	  }
+	  else {
+	    (*Buffer).readBuf(Event.u.LuaCallSetDynamicBlockNone.cBlockID,n);
+	    Event.u.LuaCallSetDynamicBlockNone.cBlockID[n] = '\0';
+
+	    bIsOk = true;
+	  }
+      }
+      break;
+
     case GAME_EVENT_LUA_CALL_CAMERAZOOM:
       {
 	(*Buffer) >> Event.u.LuaCallCameraZoom.fZoom;
@@ -495,6 +558,46 @@ namespace vapp {
 	Buffer << pEvent->Type;
 	Buffer << (i=strlen(pEvent->u.LuaCallSetDynamicEntityNone.cEntityID));
 	Buffer.writeBuf(pEvent->u.LuaCallSetDynamicEntityNone.cEntityID,i);
+      }
+      break;
+
+    case GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKROTATION:
+      {
+	int i;
+	Buffer << getTime();
+	Buffer << pEvent->Type;
+	Buffer << (i=strlen(pEvent->u.LuaCallSetDynamicBlockRotation.cBlockID));
+	Buffer.writeBuf(pEvent->u.LuaCallSetDynamicBlockRotation.cBlockID,i);
+	Buffer << pEvent->u.LuaCallSetDynamicBlockRotation.fInitAngle;
+	Buffer << pEvent->u.LuaCallSetDynamicBlockRotation.fRadius;
+	Buffer << pEvent->u.LuaCallSetDynamicBlockRotation.fPeriod;
+	Buffer << pEvent->u.LuaCallSetDynamicBlockRotation.startTime;
+	Buffer << pEvent->u.LuaCallSetDynamicBlockRotation.endTime;
+      }
+      break;
+
+    case GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKTRANSLATION:
+      {
+	int i;
+	Buffer << getTime();
+	Buffer << pEvent->Type;
+	Buffer << (i=strlen(pEvent->u.LuaCallSetDynamicBlockTranslation.cBlockID));
+	Buffer.writeBuf(pEvent->u.LuaCallSetDynamicBlockTranslation.cBlockID,i);
+	Buffer << pEvent->u.LuaCallSetDynamicBlockTranslation.fX;
+	Buffer << pEvent->u.LuaCallSetDynamicBlockTranslation.fY;
+	Buffer << pEvent->u.LuaCallSetDynamicBlockTranslation.fPeriod;
+	Buffer << pEvent->u.LuaCallSetDynamicBlockTranslation.startTime;
+	Buffer << pEvent->u.LuaCallSetDynamicBlockTranslation.endTime;
+      }
+      break;
+
+    case GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKNONE:
+      {
+	int i;
+	Buffer << getTime();
+	Buffer << pEvent->Type;
+	Buffer << (i=strlen(pEvent->u.LuaCallSetDynamicBlockNone.cBlockID));
+	Buffer.writeBuf(pEvent->u.LuaCallSetDynamicBlockNone.cBlockID,i);
       }
       break;
 
