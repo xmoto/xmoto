@@ -234,11 +234,12 @@ namespace vapp {
     MotoGame *pGame = getGameObject();
     std::vector<ConvexBlock *> &Blocks = pGame->getBlocks();
 
+    /* Render non-dynamic blocks */
     for(int i=0;i<Blocks.size();i++) {
       Vector2f Center;
 
       if(Blocks[i]->pSrcBlock) {
-        if(Blocks[i]->pSrcBlock->bBackground) continue;
+        if(Blocks[i]->pSrcBlock->bBackground || Blocks[i]->pSrcBlock->bDynamic) continue;
         Center = Vector2f(Blocks[i]->pSrcBlock->fPosX,Blocks[i]->pSrcBlock->fPosY);
       }
 
@@ -251,6 +252,38 @@ namespace vapp {
       }
       glEnd();
     }    
+    
+    std::vector<DynamicBlock *> &DynBlocks = pGame->getDynBlocks();
+
+    /* Render dynamic blocks */
+    for(int i=0;i<DynBlocks.size();i++) {
+      DynamicBlock *pDB = DynBlocks[i];
+
+			/* Build rotation matrix for block */
+			float fR[4]; 
+			fR[0] = cos(pDB->fRotation); fR[1] = -sin(pDB->fRotation);
+			fR[2] = sin(pDB->fRotation); fR[3] = cos(pDB->fRotation);
+
+      for(int j=0;j<pDB->ConvexBlocks.size();j++) {
+        ConvexBlock *pCB = pDB->ConvexBlocks[j];
+  
+        glBegin(GL_POLYGON);
+        glColor3f(0.5,0.5,0.5);
+        for(int k=0;k<pCB->Vertices.size();k++) {
+          ConvexBlockVertex *pVertex = pCB->Vertices[k];
+        
+				  /* Transform vertex */
+				  Vector2f Tv = Vector2f(pVertex->P.x * fR[0] + pVertex->P.y * fR[1],
+				                          pVertex->P.x * fR[2] + pVertex->P.y * fR[3]);
+          Tv += pDB->Position;
+            				  
+				  /* Put vertex */
+				  glTexCoord2f(pVertex->T.x,pVertex->T.y);				  
+          MINIVERTEX(Tv.x,Tv.y);                  
+        }
+        glEnd();        
+      }
+    }
     
     getParent()->drawCircle(Vector2f(x + nWidth/2 + (float)(pGame->getBikeState()->CenterP.x + m_Scroll.x)*MINIMAPZOOM,
                                      y + nHeight/2 - (float)(pGame->getBikeState()->CenterP.y + m_Scroll.y)*MINIMAPZOOM),

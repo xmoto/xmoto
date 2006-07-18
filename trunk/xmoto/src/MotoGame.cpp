@@ -1814,20 +1814,15 @@ namespace vapp {
 
   void MotoGame::MoveBlock(String pBlockID, float pX, float pY) {
     /* Find the specified block and move it along the given vector */
-    for(int i=0;i<getBlocks().size();i++) {
-      ConvexBlock *pBlock = getBlocks()[i];
-      if(pBlock->pSrcBlock->ID == pBlockID) {
-        pBlock->pSrcBlock->fPosX += pX;
-        pBlock->pSrcBlock->fPosY += pY;
-        break;
-      }
-    }
+    DynamicBlock *pBlock = _GetDynamicBlockByID(pBlockID);
+    if(pBlock != NULL) {
+      pBlock->Position.x += pX;
+      pBlock->Position.y += pY;
+    }    
   }
 
   void MotoGame::SetBlockPos(String pBlockID, float pX, float pY) {
-    /* Find the specified (dynamic) block and set its position */
-//    printf("MOVE BLOCK[%s]: %f,%f\n",pBlockID.c_str(),pX,pY);
-    
+    /* Find the specified (dynamic) block and set its position */    
     DynamicBlock *pBlock = _GetDynamicBlockByID(pBlockID);
     if(pBlock != NULL) {
       pBlock->Position.x = pX;
