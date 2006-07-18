@@ -2344,9 +2344,7 @@ namespace vapp {
 #if defined(SUPPORT_WEBACCESS)
   void GameApp::_UpdateWebTheme(ThemeChoice* pThemeChoice) {
     m_DownloadingInformation = "";
-    _SimpleMessage(std::string(GAMETEXT_DLTHEME),
-		   &m_DownloadMsgBoxRect);
-
+    m_DownloadingMessage = GAMETEXT_DLTHEME;
     m_themeChoicer->setURLBase(m_Config.getString("WebThemesURLBase"));
 
     try {
@@ -2385,10 +2383,9 @@ namespace vapp {
     #if defined(SUPPORT_WEBACCESS)
       /* Download extra levels */
       m_DownloadingInformation = "";
-      
-      if(m_pWebLevels != NULL) {
-        _SimpleMessage(GAMETEXT_DLLEVELS,&m_DownloadMsgBoxRect);
+      m_DownloadingMessage = GAMETEXT_DLLEVELS;
 
+      if(m_pWebLevels != NULL) {
         try {                  
           Log("WWW: Downloading levels...");
           clearCancelAsSoonAsPossible();
@@ -2641,7 +2638,7 @@ namespace vapp {
     readEvents();
     
     _DrawMenuBackground();
-    _SimpleMessage(std::string(GAMETEXT_DLLEVELS),&m_DownloadMsgBoxRect,true);
+    _SimpleMessage(m_DownloadingMessage,&m_DownloadMsgBoxRect,true);
     
     drawBox(Vector2f(m_DownloadMsgBoxRect.nX+10,m_DownloadMsgBoxRect.nY+
                                                    m_DownloadMsgBoxRect.nHeight-

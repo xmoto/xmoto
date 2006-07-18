@@ -15,7 +15,6 @@ Assigned to Neckelmann:
 ######################################################################
 Assigned to Nicolas:
 * themes
-- BUG : display "downloading levels" instead of displaying downloading themes
 - reduce diff between DecorationSprite and AnimationSprite : be able
    to load an animated tree or an unanimated strawberry
 
@@ -77,10 +76,6 @@ function testCollision(laserX, laserY, alienX, alienY)
           and laserY + laserHalfHeight &gt; alienY - alienHalfHeight
           and laserY - laserHalfHeight &lt; alienY + alienHalfHeight
 end
-* dynamic block : minimap is not updated
-* change SetBlockRotation so that it change block relalively to the
-   current position ?
-
 * loading level is sometimes quite long
 * new script call :
 killPlayer() -> kill the player
@@ -91,10 +86,6 @@ timePenallity(nbSeconds) -> increase time
    body and possible to touch a strawberry but that it doesn't take
    it. However, this collision must be avaible only for entities not
    for blocks.
-
-* GameEventLuaCallSetBlockCenter
-  and GameEventLuaCallSetBlockRotation
-  missing in serialisation
 
 * BUG : is it normal ?
         C.x=(getParent()->getDispWidth() * pArrow->ArrowPointerPos.x) / 800.0f;

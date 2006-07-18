@@ -278,6 +278,7 @@ namespace vapp {
       WebLevels *m_pWebLevels;
       ProxySettings m_ProxySettings;
       std::string m_DownloadingInformation;
+      std::string m_DownloadingMessage;
       float m_fDownloadTaskProgressLast;
 
       bool m_bEnableWebHighscores;              /* true: Read world highscores from website */
