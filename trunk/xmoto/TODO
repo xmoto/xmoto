@@ -17,8 +17,7 @@ Assigned to Neckelmann:
 ######################################################################
 Assigned to Nicolas:
 * themes
-- reduce diff between DecorationSprite and AnimationSprite : be able
-   to load an animated tree or an unanimated strawberry
+- not more animation in .xml ? -> be able to load an animated bike ?
 
 * a texture missing -> just give an alert instead of get an exception
 
