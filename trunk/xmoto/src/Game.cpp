@@ -2352,6 +2352,7 @@ namespace vapp {
       clearCancelAsSoonAsPossible();
       m_themeChoicer->updateThemeFromWWW(pThemeChoice);
       _UpdateThemesLists();
+      notifyMsg(GAMETEXT_THEMEUPTODATE);
     } catch(Exception &e) {
       /* file probably doesn't exist */
       Log("** Warning ** : Failed to update theme ", pThemeChoice->ThemeName().c_str());		

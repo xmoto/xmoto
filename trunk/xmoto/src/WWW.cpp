@@ -902,22 +902,31 @@ void WebThemes::upgrade(ThemeChoice *p_themeChoice) {
       v_associated_webtheme = m_availableThemes[i];
     }
   }
-  if(v_associated_webtheme == NULL) {
-    throw vapp::Exception("exception : can't upgrade this theme because it's not avaible on the web");
+
+  v_destinationFile = p_themeChoice->ThemeFile();
+
+  // theme avaible on the web get it
+  if(v_associated_webtheme != NULL) {
+
+    if(v_destinationFile == "") {
+      /* determine destination file */
+      v_destinationFile = 
+	vapp::FS::getUserDir() + "/" + THEMES_DIRECTORY + "/" + 
+	vapp::FS::getFileBaseName(v_associated_webtheme->getUrl()) + ".xml";
+    }    
+
+    /* download the theme file */
+    vapp::FS::mkArborescence(v_destinationFile);
+    FSWeb::downloadFileBz2(v_destinationFile,
+			   v_associated_webtheme->getUrl(),
+			   NULL,
+			   NULL,
+			   m_proxy_settings);
   }
 
-  /* determine destination file */
-  v_destinationFile = 
-    vapp::FS::getUserDir() + "/" + THEMES_DIRECTORY + "/" + 
-    vapp::FS::getFileBaseName(v_associated_webtheme->getUrl()) + ".xml";
-
-  /* download the theme file */
-  vapp::FS::mkArborescence(v_destinationFile);
-  FSWeb::downloadFileBz2(v_destinationFile,
-  			 v_associated_webtheme->getUrl(),
-  			 NULL,
-  			 NULL,
-  			 m_proxy_settings);
+  if(v_destinationFile == "") {
+    throw vapp::Exception("error : unable to determine theme destination file");
+  }
 
   /* download all the files required */
   Theme *v_theme = new Theme();

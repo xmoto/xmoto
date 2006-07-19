@@ -239,6 +239,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_THEMEHOSTED          "Available"
 #define GAMETEXT_THEMENOTHOSTED       "To download"
 #define GAMETEXT_THEMEREQUIREUPDATE   "To be updated"
+#define GAMETEXT_THEMEUPTODATE        "The theme is now up to date"
 #define GAMETEXT_TIME                 "Time:"
 #define GAMETEXT_TRYAGAIN             "Try This Level Again"
 #define GAMETEXT_TUTORIAL             "Tutorial"
