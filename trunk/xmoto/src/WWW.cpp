@@ -903,7 +903,10 @@ void WebThemes::upgrade(ThemeChoice *p_themeChoice) {
     }
   }
 
-  v_destinationFile = p_themeChoice->ThemeFile();
+  /* the destination file must be in the user dir */
+  if(vapp::FS::isInUserDir(p_themeChoice->ThemeFile())) {
+    v_destinationFile = p_themeChoice->ThemeFile();
+  }
 
   // theme avaible on the web get it
   if(v_associated_webtheme != NULL) {
