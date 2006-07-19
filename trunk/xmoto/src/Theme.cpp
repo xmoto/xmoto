@@ -169,6 +169,7 @@ void Theme::load(std::string p_themeFile) {
 
 void Theme::loadSpritesFromXML(TiXmlElement *p_ThemeXmlDataElement) {
   std::string v_spriteType;
+  bool v_isAnimation;
   const char *pc;
   
   for(TiXmlElement *pVarElem = p_ThemeXmlDataElement->FirstChildElement("sprite");
@@ -176,15 +177,22 @@ void Theme::loadSpritesFromXML(TiXmlElement *p_ThemeXmlDataElement) {
       pVarElem = pVarElem->NextSiblingElement("sprite")
       ) {
     pc = pVarElem->Attribute("type");
-
     if(pc == NULL) { continue; }
     v_spriteType = pc;
 
-    if(v_spriteType == "Animation") {
+    /* this is not the nice method to allow animation,
+       but initially, animation was an entire type,
+       in the future i want to make it only a method of display
+       so that all sprite type can be animated
+    */
+    pc = pVarElem->Attribute("fileBase");
+    v_isAnimation = pc != NULL;
+
+    if(v_spriteType == "Entity" && v_isAnimation) {
       newAnimationSpriteFromXML(pVarElem);
     } else if(v_spriteType == "BikerPart") {
       newBikerPartSpriteFromXML(pVarElem);
-    } else if(v_spriteType == "Decoration") {
+    } else if(v_spriteType == "Entity" && v_isAnimation == false) {
       newDecorationSpriteFromXML(pVarElem);
     } else if(v_spriteType == "Effect") {
       newEffectSpriteFromXML(pVarElem);

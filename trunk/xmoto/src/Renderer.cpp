@@ -727,7 +727,9 @@ namespace vapp {
       case ET_WRECKER:
       case ET_ENDOFLEVEL:
       case ET_STRAWBERRY:
-	_RenderSprite(pEnt);
+	if(!bForeground && !bBackground) {
+	  _RenderSprite(pEnt);
+	}
 	break;
       }
     }
