@@ -301,7 +301,6 @@ namespace vapp {
       void _RenderDynamicBlocks(void);
       void _RenderBackground(void);
       void _RenderSky(void);
-      void _RenderEntities(void);    
       void _RenderGameMessages(void); 
       void _RenderGameStatus(void);
       void _RenderParticles(bool bFront=true);
@@ -312,7 +311,6 @@ namespace vapp {
       void _Vertex(Vector2f P);     /* Spit out a correctly transformed 
                                        glVertex2f() */
       void _DbgText(Vector2f P,std::string Text,Color c);
-      void _DrawAnimation(Vector2f P,AnimationSprite *pAnim);
       void _UpdateParticles(float fTimeStep);
       void _DrawRotatedMarker(Vector2f Pos,dReal *pfRot);     
       void _RenderDebugInfo(void);      

@@ -939,10 +939,6 @@ namespace vapp {
       }
       lua_close(m_pL);
       m_pL = NULL;
-
-      m_FSprites.clear();
-      m_BSprites.clear();
-      m_MSprites.clear();
       
       /* Delete dynamic blocks */
       for(int i=0;i<m_DynBlocks.size();i++) {
@@ -1327,14 +1323,6 @@ namespace vapp {
       pEnt->SpriteType = "";
       if(pSrc != NULL)
 	pEnt->SpriteType = m_pLevelSrc->getEntityParam(pSrc,"name","");
-                          
-      /* Foreground/background? */
-      if(pEnt->fSpriteZ > 0.0f)
-	      m_FSprites.push_back(pEnt); /* TODO: keep these lists ordered! */
-      else if(pEnt->fSpriteZ == 0.0f)
-        m_MSprites.push_back(pEnt);
-      else
-	      m_BSprites.push_back(pEnt);
       break;
     case ET_WRECKER:
       break;

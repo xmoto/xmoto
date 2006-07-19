@@ -743,9 +743,6 @@ namespace vapp {
       BikeController *getBikeController(void) {return &m_BikeC;}
       std::vector<GameMessage *> &getGameMessage(void) {return m_GameMessages;}
       std::vector<Entity *> &getEntities(void) {return m_Entities;}
-      std::vector<Entity *> &getBSprites(void) {return m_BSprites;}
-      std::vector<Entity *> &getMSprites(void) {return m_MSprites;}
-      std::vector<Entity *> &getFSprites(void) {return m_FSprites;}
       std::vector<DynamicBlock *> &getDynBlocks(void) {return m_DynBlocks;}
       std::vector<OverlayEdge *> &getOverlayEdges(void) {return m_OvEdges;}
       float getTime(void) {return m_fTime;}
@@ -813,9 +810,6 @@ namespace vapp {
       std::vector<Entity *> m_Entities;   /* Entities */
       dWorldID m_WorldID;                 /* World ID */
       
-      std::vector<Entity *> m_FSprites;   /* Foreground sprites */
-      std::vector<Entity *> m_MSprites;   /* "middleground" sprites */
-      std::vector<Entity *> m_BSprites;   /* Background sprites */
       std::vector<OverlayEdge *> m_OvEdges;/* Overlay edges */
       std::vector<Entity *> m_DelSchedule;/* Entities scheduled for deletion */
       std::vector<GameMessage *> m_GameMessages;

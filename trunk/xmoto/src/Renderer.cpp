@@ -398,9 +398,9 @@ namespace vapp {
       /* Background blocks */
       _RenderBackground();
       
-      /* ... then render background sprites ... */
-      _RenderSprites(false,true);
+      /* ... then render background sprites ... */      
     }
+    _RenderSprites(false,true);
 
     if(m_Quality == GQ_HIGH && !m_bUglyMode) {
       /* Render particles (back!) */    
@@ -411,14 +411,12 @@ namespace vapp {
     _RenderDynamicBlocks();
     _RenderBlocks();
 
-    if(m_Quality != GQ_LOW && !m_bUglyMode) {
-      /* ... then render "middleground" sprites ... */
-      _RenderSprites(false,false);
-    }
+    /* ... then render "middleground" sprites ... */
+    _RenderSprites(false,false);
     
     /* ... the entities ... */
-    _RenderEntities();
-
+    //_RenderEntities();
+    
 #if defined(ALLOW_GHOST)
     if(getGameObject()->isGhostActive()) {
       /* Render ghost - ugly mode? */
@@ -467,10 +465,8 @@ namespace vapp {
       _RenderParticles();
     }
     
-    if(m_Quality != GQ_LOW && !m_bUglyMode) {
-      /* ... and finally the foreground sprites! */
-      _RenderSprites(true,false);
-    }
+    /* ... and finally the foreground sprites! */
+    _RenderSprites(true,false);
     
     //glBegin(GL_LINE_STRIP);
     //glColor3f(1,1,1);
@@ -701,25 +697,38 @@ namespace vapp {
   /*===========================================================================
   Sprite rendering main
   ===========================================================================*/
-  void GameRenderer::_RenderSprites(bool bForeground,bool bBackground) { 
+  void GameRenderer::_RenderSprites(bool bForeground,bool bBackground) {
     MotoGame *pGame = getGameObject();
-    
-    /* Middleground? (not foreground, not background) */
-    if(!bForeground && !bBackground) {
-      for(int i=0;i<pGame->getMSprites().size();i++)
-        _RenderSprite(pGame->getMSprites()[i]);
-    }
-    else {
-      /* In front? */
-      if(bForeground) {
-        for(int i=0;i<pGame->getFSprites().size();i++)
-          _RenderSprite(pGame->getFSprites()[i]);
-      }
+    Entity *pEnt;
 
-      /* Those in back? */
-      if(bBackground) {
-        for(int i=0;i<pGame->getBSprites().size();i++)
-          _RenderSprite(pGame->getBSprites()[i]);
+    for(int i=0;i<pGame->getEntities().size();i++) {
+      pEnt = pGame->getEntities()[i];
+
+      switch(pEnt->Type) {
+      case ET_SPRITE:
+
+	/* Middleground? (not foreground, not background) */
+	if(pEnt->fSpriteZ == 0.0f && !bForeground && !bBackground) {
+	  _RenderSprite(pEnt);	
+	} else {
+
+	  /* In front? */
+	  if(pEnt->fSpriteZ > 0.0f && bForeground) {
+	    _RenderSprite(pEnt);
+	  } else {
+
+	    /* Those in back? */
+	    if(pEnt->fSpriteZ < 0.0f && bBackground) {
+	      _RenderSprite(pEnt);
+	    }
+	  }
+	}
+	break;
+      case ET_WRECKER:
+      case ET_ENDOFLEVEL:
+      case ET_STRAWBERRY:
+	_RenderSprite(pEnt);
+	break;
       }
     }
   }
@@ -728,34 +737,85 @@ namespace vapp {
   Render a sprite
   ===========================================================================*/
   void GameRenderer::_RenderSprite(Entity *pSprite) {  
-    DecorationSprite* pType;
-  
-    pType = (DecorationSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_DECORATION, pSprite->SpriteType);
-    if(pType != NULL) {
+    Sprite* v_spriteType;
+    AnimationSprite* v_animationSpriteType;
+    DecorationSprite* v_decorationSpriteType;
+    float v_centerX;
+    float v_centerY;
+    float v_width;
+    float v_height;
+    std::string v_sprite_type;
+
+    switch(pSprite->Type) {
+    case ET_SPRITE:
+      v_sprite_type = pSprite->SpriteType;
+      break;
+    case ET_WRECKER:
+      v_sprite_type = "Wrecker";
+      break;
+    case ET_ENDOFLEVEL:
+      v_sprite_type = "Flower";
+      break;
+    case ET_STRAWBERRY:
+      v_sprite_type = "Strawberry";
+      break;
+    }
+
+    /* search the sprite as an animation */
+    v_animationSpriteType = (AnimationSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_ANIMATION, v_sprite_type);
+    /* if the sprite is not an animation, it's perhaps a decoration */
+    if(v_animationSpriteType != NULL) {
+      v_spriteType = v_animationSpriteType;
+      v_centerX = v_animationSpriteType->getCenterX();
+      v_centerY = v_animationSpriteType->getCenterY();
+      v_width   = v_animationSpriteType->getWidth();
+      v_height  = v_animationSpriteType->getHeight();
+    } else {
+      v_decorationSpriteType = (DecorationSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_DECORATION, v_sprite_type);
+      v_spriteType = v_decorationSpriteType;
+      if(v_decorationSpriteType != NULL) {
+	v_centerX = v_decorationSpriteType->getCenterX();
+	v_centerY = v_decorationSpriteType->getCenterY();
+	v_width   = v_decorationSpriteType->getWidth();
+	v_height  = v_decorationSpriteType->getHeight();
+      }
+    }
+
+    if(v_spriteType != NULL) {
       /* Draw it */
       Vector2f p0,p1,p2,p3;
       
       p0 = Vector2f(pSprite->Pos.x,pSprite->Pos.y) +
-           Vector2f(-pType->getCenterX(),-pType->getCenterY());
-      p1 = Vector2f(pSprite->Pos.x+pType->getWidth(),pSprite->Pos.y) +
-           Vector2f(-pType->getCenterX(),-pType->getCenterY());
-      p2 = Vector2f(pSprite->Pos.x+pType->getWidth(),pSprite->Pos.y+pType->getHeight()) +
-           Vector2f(-pType->getCenterX(),-pType->getCenterY());
-      p3 = Vector2f(pSprite->Pos.x,pSprite->Pos.y+pType->getHeight()) +
-           Vector2f(-pType->getCenterX(),-pType->getCenterY());
+      Vector2f(-v_centerX,-v_centerY);
+      p1 = Vector2f(pSprite->Pos.x+v_width,pSprite->Pos.y) +
+      Vector2f(-v_centerX,-v_centerY);
+      p2 = Vector2f(pSprite->Pos.x+v_width,pSprite->Pos.y+v_height) +
+      Vector2f(-v_centerX,-v_centerY);
+      p3 = Vector2f(pSprite->Pos.x,pSprite->Pos.y+v_height) +
+      Vector2f(-v_centerX,-v_centerY);
             
-      if(pType->getBlendMode() == SPRITE_BLENDMODE_ADDITIVE) {
-        _RenderAdditiveBlendedSection(pType->getTexture(),p0,p1,p2,p3);      
+      if(v_spriteType->getBlendMode() == SPRITE_BLENDMODE_ADDITIVE) {
+        _RenderAdditiveBlendedSection(v_spriteType->getTexture(),p0,p1,p2,p3);      
       }
       else {
         glEnable(GL_ALPHA_TEST);
         glAlphaFunc(GL_GEQUAL,0.5f);      
-        _RenderAlphaBlendedSection(pType->getTexture(),p0,p1,p2,p3);      
+        _RenderAlphaBlendedSection(v_spriteType->getTexture(),p0,p1,p2,p3);      
         glDisable(GL_ALPHA_TEST);
+      }
+    
+      /* If this is debug-mode, also draw entity's area of effect */
+      if(isDebug()) {
+        Vector2f C = Vector2f( getParent()->getDispWidth()/2 + (float)(pSprite->Pos.x + m_Scroll.x)*m_fZoom,
+                               getParent()->getDispHeight()/2 - (float)(pSprite->Pos.y + m_Scroll.y)*m_fZoom );
+        Vector2f Cr = Vector2f( getParent()->getDispWidth()/2 + (float)((pSprite->Pos.x + pSprite->fSize) + m_Scroll.x)*m_fZoom,
+                                getParent()->getDispHeight()/2 - (float)(pSprite->Pos.y + m_Scroll.y)*m_fZoom );
+        float r = (C-Cr).length();
+        getParent()->drawCircle(C,r,1,0,MAKE_COLOR(0,255,0,255));
       }
     }
   }
-              
+     
   /*===========================================================================
   Blocks (dynamic)
   ===========================================================================*/
@@ -1091,53 +1151,6 @@ namespace vapp {
   }
 
   /*===========================================================================
-  And general entity rendering
-  ===========================================================================*/
-  void GameRenderer::_RenderEntities(void) {
-    MotoGame *pGame = getGameObject();
-    AnimationSprite* pType;
-
-    /* Render all entities */
-    std::vector<Entity *> &Entities = pGame->getEntities();    
-
-    for(int i=0;i<Entities.size();i++) {
-      Entity *pEntity = Entities[i];
-      
-      if(pEntity->Type == ET_STRAWBERRY) {
-        /* Draw strawberry */
-	pType = (AnimationSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_ANIMATION, "Strawberry");
-	if(pType != NULL) {
-	  _DrawAnimation(pEntity->Pos, pType);
-	}
-      }
-      else if(pEntity->Type == ET_ENDOFLEVEL) {
-        /* Draw end-of-level flower */
-	pType = (AnimationSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_ANIMATION, "Flower");
-	if(pType != NULL) {
-	  _DrawAnimation(pEntity->Pos, pType);
-	}
-      }
-      else if(pEntity->Type == ET_WRECKER) {
-        /* Draw nasty wrecker */
-	pType = (AnimationSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_ANIMATION, "Wrecker");
-	if(pType != NULL) {
-	  _DrawAnimation(pEntity->Pos, pType);
-	}
-      }
-      
-      /* If this is debug-mode, also draw entity's area of effect */
-      if(isDebug()) {
-        Vector2f C = Vector2f( getParent()->getDispWidth()/2 + (float)(pEntity->Pos.x + m_Scroll.x)*m_fZoom,
-                               getParent()->getDispHeight()/2 - (float)(pEntity->Pos.y + m_Scroll.y)*m_fZoom );
-        Vector2f Cr = Vector2f( getParent()->getDispWidth()/2 + (float)((pEntity->Pos.x + pEntity->fSize) + m_Scroll.x)*m_fZoom,
-                                getParent()->getDispHeight()/2 - (float)(pEntity->Pos.y + m_Scroll.y)*m_fZoom );
-        float r = (C-Cr).length();
-        getParent()->drawCircle(C,r,1,0,MAKE_COLOR(0,255,0,255));
-      }
-    }
-  }
-
-  /*===========================================================================
   Helpers
   ===========================================================================*/
   void GameRenderer::_Vertex(Vector2f P) {
@@ -1150,25 +1163,6 @@ namespace vapp {
                   Vector2f(getParent()->getTextWidth(Text)/2.0f,getParent()->getTextHeight(Text)/2.0f);
     getParent()->drawText(Sp,Text,0,c,true);
   }   
-  
-  /*===========================================================================
-  Animations
-  ===========================================================================*/ 
-  void GameRenderer::_DrawAnimation(Vector2f Pos,AnimationSprite *pAnim) {
-    /* Draw it */
-    Vector2f p0,p1,p2,p3;
-    
-    p0 = Vector2f(Pos.x,Pos.y) +
-          Vector2f(-pAnim->getCenterX(),-pAnim->getCenterY());
-    p1 = Vector2f(Pos.x+pAnim->getWidth(),Pos.y) +
-          Vector2f(-pAnim->getCenterX(),-pAnim->getCenterY());
-    p2 = Vector2f(Pos.x+pAnim->getWidth(),Pos.y+pAnim->getHeight()) +
-          Vector2f(-pAnim->getCenterX(),-pAnim->getCenterY());
-    p3 = Vector2f(Pos.x,Pos.y+pAnim->getHeight()) +
-          Vector2f(-pAnim->getCenterX(),-pAnim->getCenterY());
-          
-    _RenderAlphaBlendedSection(pAnim->getTexture(), p0, p1, p2, p3);              
-  }
 
   /*===========================================================================
   Free stuff
