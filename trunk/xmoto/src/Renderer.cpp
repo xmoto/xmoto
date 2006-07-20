@@ -92,8 +92,13 @@ namespace vapp {
 	pSprite = getParent()->m_theme.getSprite(SPRITE_TYPE_TEXTURE,
 						 Blocks[i]->pSrcBlock->Texture);
         if(pSprite != NULL) {
-	  pTexture = pSprite->getTexture();
-	  GLName = pTexture->nID;
+	  try {
+	    pTexture = pSprite->getTexture();
+	    GLName = pTexture->nID;
+	  } catch(Exception &e) {
+	    Log("** Warning ** : Texture '%s' not found!",Blocks[i]->pSrcBlock->Texture.c_str());
+	    getGameObject()->gameMessage(GAMETEXT_MISSINGTEXTURES,true);   
+	  }
 	} else {
           Log("** Warning ** : Texture '%s' not found!",Blocks[i]->pSrcBlock->Texture.c_str());
           getGameObject()->gameMessage(GAMETEXT_MISSINGTEXTURES,true);          
@@ -342,6 +347,7 @@ namespace vapp {
   Main rendering function
   ===========================================================================*/
   void GameRenderer::render(void) {
+
     /* Update time */    
     m_pInGameStats->showWindow(true);
     m_pPlayTime->setCaption(getParent()->formatTime(getGameObject()->getTime()));
@@ -1131,8 +1137,13 @@ namespace vapp {
       Center = Vector2f(Blocks[i]->pSrcBlock->fPosX,Blocks[i]->pSrcBlock->fPosY);
       Sprite *pSprite;
       pSprite = getParent()->m_theme.getSprite(SPRITE_TYPE_TEXTURE, Blocks[i]->pSrcBlock->Texture);
+
       if(pSprite != NULL) {
-	pTexture = pSprite->getTexture();
+	try {
+	  pTexture = pSprite->getTexture();
+	} catch(Exception &e) {
+	  pTexture = NULL;
+	}
       } else {
 	pTexture = NULL;
       }

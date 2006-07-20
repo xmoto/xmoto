@@ -18,7 +18,6 @@
    when the stats have been initialized to display : stats from
    18/06/2006 for example. Remember that this field must be translatable
 * themes : not more animation in .xml ? -> be able to load an animated bike ?
-* a texture missing -> just give an alert instead of get an exception
 * now that there is a lot of replays (dwd due to ghosts), what about
   put "list all" by default in the replays list ?
 * BUG : xmoto-edit rgeznlre -> segfault
