@@ -1,5 +1,6 @@
-AM_CXXFLAGS = -DNOMMGR -w -DGAMEDATADIR=\"$(datadir)/@PACKAGE@\" $(GL_CFLAGS)
-AM_CFLAGS = -DNOMMGR -w -DGAMEDATADIR=\"$(datadir)/@PACKAGE@\" $(GL_CFLAGS)
+AM_CXXFLAGS = -DNOMMGR -Wall -DGAMEDATADIR=\"$(datadir)/@PACKAGE@\" $(GL_CFLAGS)
+AM_CFLAGS = -DNOMMGR -Wall -DGAMEDATADIR=\"$(datadir)/@PACKAGE@\" $(GL_CFLAGS)
+AM_LDFLAGS = -s
 
 image_SOURCES = src/image/tim.cpp src/image/tim_io_stdio.cpp \
 	src/image/tim_jpeg.cpp src/image/tim_memory_crt.cpp \
