@@ -31,7 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Collision.h"
 #include "ScriptDynamicObjects.h"
 
-#define GAME_EVENT_QUEUE_SIZE				128
+#define GAME_EVENT_QUEUE_SIZE       256
 #define GAME_EVENT_OUTGOING_BUFFER  65536
 
 namespace vapp {
