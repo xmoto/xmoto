@@ -31,9 +31,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Collision.h"
 #include "ScriptDynamicObjects.h"
 
-#define GAME_EVENT_QUEUE_SIZE       256
-#define GAME_EVENT_OUTGOING_BUFFER  65536
-
 namespace vapp {
 
   class Replay;
@@ -710,8 +707,10 @@ namespace vapp {
       float getBikeEngineSpeed();
 
       GameEvent *createGameEvent(GameEventType Type);
+      void destroyGameEvent(GameEvent *p_event);
       GameEvent *getNextGameEvent(void);
       int getNumPendingGameEvents(void);
+      void cleanEventsQueue();
       
       void setPlayerPosition(float x,float y,bool bFaceRight);
       const Vector2f &getPlayerPosition(void);
@@ -783,8 +782,7 @@ namespace vapp {
 
     private:         
       /* Data */
-      int m_nGameEventQueueReadIdx,m_nGameEventQueueWriteIdx;
-      GameEvent m_GameEventQueue[GAME_EVENT_QUEUE_SIZE];
+      std::queue<GameEvent*> m_GameEventQueue;
       
       float m_fTime,m_fLastAttitudeCon;
       float m_fFinishTime,m_fAttitudeCon;

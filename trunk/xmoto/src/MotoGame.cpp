@@ -422,7 +422,7 @@ namespace vapp {
 	    /* Encode event */
 	    _SerializeGameEventQueue(*p_replay,pEvent);
 	  }
-			  
+	  
 	  /* What event? */
 	  switch(pEvent->Type) {
 	  case GAME_EVENT_PLAYER_DIES:
@@ -463,7 +463,7 @@ namespace vapp {
 	      }
 	    }
 	    break;
-
+	    
 	  case GAME_EVENT_LUA_CALL_SETENTITYPOS:
 	    {
 	      SetEntityPos(pEvent->u.LuaCallSetentitypos.cEntityID,
@@ -471,13 +471,13 @@ namespace vapp {
 			   pEvent->u.LuaCallSetentitypos.y);
 	    }
 	    break;
-
+	    
 	  case GAME_EVENT_LUA_CALL_CLEARMESSAGES:
 	    {
 	      clearGameMessages();
 	    }
 	    break;
-
+	    
 	  case GAME_EVENT_LUA_CALL_PLACEINGAMEARROW:
 	    {
 	      PlaceInGameArrow(pEvent->u.LuaCallPlaceingamearrow.x,
@@ -485,7 +485,7 @@ namespace vapp {
 			       pEvent->u.LuaCallPlaceingamearrow.angle);
 	    }
 	    break;
-
+	    
 	  case GAME_EVENT_LUA_CALL_PLACESCREENARROW:
 	    {
 	      PlaceScreenArrow(pEvent->u.LuaCallPlacescreenarrow.x,
@@ -493,19 +493,19 @@ namespace vapp {
 			       pEvent->u.LuaCallPlacescreenarrow.angle);  
 	    }
 	    break;
-
+	    
 	  case GAME_EVENT_LUA_CALL_HIDEARROW:
 	    {
 	      getArrowPointer().nArrowPointerMode = 0;
 	    }
 	    break;
-
+	    
 	  case GAME_EVENT_LUA_CALL_MESSAGE:
 	    {
 	      gameMessage(pEvent->u.LuaCallMessage.cMessage);
 	    }
 	    break;
-
+	    
 	  case GAME_EVENT_LUA_CALL_MOVEBLOCK:
 	    {
 	      MoveBlock(pEvent->u.LuaCallMoveblock.cBlockID,
@@ -513,7 +513,7 @@ namespace vapp {
 			pEvent->u.LuaCallMoveblock.y);
 	    }
 	    break;
-
+	    
 	  case GAME_EVENT_LUA_CALL_SETBLOCKPOS:
 	    {
 	      SetBlockPos(pEvent->u.LuaCallSetblockpos.cBlockID,
@@ -521,14 +521,14 @@ namespace vapp {
 			  pEvent->u.LuaCallSetblockpos.y);
 	    }
 	    break;
-
+	    
 	  case GAME_EVENT_LUA_CALL_SETGRAVITY:
 	    {
 	      setGravity(pEvent->u.LuaCallSetgravity.x,
 			 pEvent->u.LuaCallSetgravity.y);
 	    }
 	    break;
-
+	    
 	  case GAME_EVENT_LUA_CALL_SETPLAYERPOSITION:
 	    {
 	      m_pMotoGame->setPlayerPosition(pEvent->u.LuaCallSetplayerposition.x,
@@ -537,99 +537,100 @@ namespace vapp {
 	    }
 	    break;
 	    
-    case GAME_EVENT_LUA_CALL_SETBLOCKCENTER:
-      {
-        SetBlockCenter(pEvent->u.LuaCallSetBlockCenter.cBlockID,
-		       pEvent->u.LuaCallSetBlockCenter.x,
-		       pEvent->u.LuaCallSetBlockCenter.y);
-      }
-      break;
-    
-    case GAME_EVENT_LUA_CALL_SETBLOCKROTATION:
-      {
-        SetBlockRotation(pEvent->u.LuaCallSetBlockRotation.cBlockID,
-			 pEvent->u.LuaCallSetBlockRotation.fAngle);
-      }
-      break;
-
-    case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROTATION:
-      {
-	m_SDynamicObjects
-	  .push_back(new SDynamicEntityRotation(pEvent->u.LuaCallSetDynamicEntityRotation.cEntityID,
-						pEvent->u.LuaCallSetDynamicEntityRotation.fInitAngle,
-						pEvent->u.LuaCallSetDynamicEntityRotation.fRadius,
-						pEvent->u.LuaCallSetDynamicEntityRotation.fPeriod,
-						pEvent->u.LuaCallSetDynamicEntityRotation.startTime,
-						pEvent->u.LuaCallSetDynamicEntityRotation.endTime
-						));
-      }
-      break;
-
-    case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYTRANSLATION:
-      {
-	m_SDynamicObjects
-	  .push_back(new SDynamicEntityTranslation(pEvent->u.LuaCallSetDynamicEntityTranslation.cEntityID,
-						pEvent->u.LuaCallSetDynamicEntityTranslation.fX,
-						pEvent->u.LuaCallSetDynamicEntityTranslation.fY,
-						pEvent->u.LuaCallSetDynamicEntityTranslation.fPeriod,
-						pEvent->u.LuaCallSetDynamicEntityTranslation.startTime,
-						pEvent->u.LuaCallSetDynamicEntityTranslation.endTime
-						));
-      }
-      break;
-
-    case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYNONE:
-      {
-	removeSDynamicOfObject(pEvent->u.LuaCallSetDynamicEntityNone.cEntityID);
-      }
-      break;
-
-
-    case GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKROTATION:
-      {
-	m_SDynamicObjects
-	  .push_back(new SDynamicBlockRotation(pEvent->u.LuaCallSetDynamicBlockRotation.cBlockID,
-						pEvent->u.LuaCallSetDynamicBlockRotation.fInitAngle,
-						pEvent->u.LuaCallSetDynamicBlockRotation.fRadius,
-						pEvent->u.LuaCallSetDynamicBlockRotation.fPeriod,
-						pEvent->u.LuaCallSetDynamicBlockRotation.startTime,
-						pEvent->u.LuaCallSetDynamicBlockRotation.endTime
-						));
-      }
-      break;
-
-    case GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKTRANSLATION:
-      {
-	m_SDynamicObjects
-	  .push_back(new SDynamicBlockTranslation(pEvent->u.LuaCallSetDynamicBlockTranslation.cBlockID,
-						pEvent->u.LuaCallSetDynamicBlockTranslation.fX,
-						pEvent->u.LuaCallSetDynamicBlockTranslation.fY,
-						pEvent->u.LuaCallSetDynamicBlockTranslation.fPeriod,
-						pEvent->u.LuaCallSetDynamicBlockTranslation.startTime,
-						pEvent->u.LuaCallSetDynamicBlockTranslation.endTime
-						));
-      }
-      break;
-
-    case GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKNONE:
-      {
-	removeSDynamicOfObject(pEvent->u.LuaCallSetDynamicBlockNone.cBlockID);
-      }
-      break;
-
-    case GAME_EVENT_LUA_CALL_CAMERAZOOM:
-      {
-	CameraZoom(pEvent->u.LuaCallCameraZoom.fZoom);
-      }
-      break;
-
-    case GAME_EVENT_LUA_CALL_CAMERAMOVE:
-      {
-	CameraMove(pEvent->u.LuaCallCameraMove.x, pEvent->u.LuaCallCameraMove.y);
-      }
-      break;
-
+	  case GAME_EVENT_LUA_CALL_SETBLOCKCENTER:
+	    {
+	      SetBlockCenter(pEvent->u.LuaCallSetBlockCenter.cBlockID,
+			     pEvent->u.LuaCallSetBlockCenter.x,
+			     pEvent->u.LuaCallSetBlockCenter.y);
+	    }
+	    break;
+	    
+	  case GAME_EVENT_LUA_CALL_SETBLOCKROTATION:
+	    {
+	      SetBlockRotation(pEvent->u.LuaCallSetBlockRotation.cBlockID,
+			       pEvent->u.LuaCallSetBlockRotation.fAngle);
+	    }
+	    break;
+	    
+	  case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROTATION:
+	    {
+	      m_SDynamicObjects
+		.push_back(new SDynamicEntityRotation(pEvent->u.LuaCallSetDynamicEntityRotation.cEntityID,
+						      pEvent->u.LuaCallSetDynamicEntityRotation.fInitAngle,
+						      pEvent->u.LuaCallSetDynamicEntityRotation.fRadius,
+						      pEvent->u.LuaCallSetDynamicEntityRotation.fPeriod,
+						      pEvent->u.LuaCallSetDynamicEntityRotation.startTime,
+						      pEvent->u.LuaCallSetDynamicEntityRotation.endTime
+						      ));
+	    }
+	    break;
+	    
+	  case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYTRANSLATION:
+	    {
+	      m_SDynamicObjects
+		.push_back(new SDynamicEntityTranslation(pEvent->u.LuaCallSetDynamicEntityTranslation.cEntityID,
+							 pEvent->u.LuaCallSetDynamicEntityTranslation.fX,
+							 pEvent->u.LuaCallSetDynamicEntityTranslation.fY,
+							 pEvent->u.LuaCallSetDynamicEntityTranslation.fPeriod,
+							 pEvent->u.LuaCallSetDynamicEntityTranslation.startTime,
+							 pEvent->u.LuaCallSetDynamicEntityTranslation.endTime
+							 ));
+	    }
+	    break;
+	    
+	  case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYNONE:
+	    {
+	      removeSDynamicOfObject(pEvent->u.LuaCallSetDynamicEntityNone.cEntityID);
+	    }
+	    break;
+	    
+	    
+	  case GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKROTATION:
+	    {
+	      m_SDynamicObjects
+		.push_back(new SDynamicBlockRotation(pEvent->u.LuaCallSetDynamicBlockRotation.cBlockID,
+						     pEvent->u.LuaCallSetDynamicBlockRotation.fInitAngle,
+						     pEvent->u.LuaCallSetDynamicBlockRotation.fRadius,
+						     pEvent->u.LuaCallSetDynamicBlockRotation.fPeriod,
+						     pEvent->u.LuaCallSetDynamicBlockRotation.startTime,
+						     pEvent->u.LuaCallSetDynamicBlockRotation.endTime
+						     ));
+	    }
+	    break;
+	    
+	  case GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKTRANSLATION:
+	    {
+	      m_SDynamicObjects
+		.push_back(new SDynamicBlockTranslation(pEvent->u.LuaCallSetDynamicBlockTranslation.cBlockID,
+							pEvent->u.LuaCallSetDynamicBlockTranslation.fX,
+							pEvent->u.LuaCallSetDynamicBlockTranslation.fY,
+							pEvent->u.LuaCallSetDynamicBlockTranslation.fPeriod,
+							pEvent->u.LuaCallSetDynamicBlockTranslation.startTime,
+							pEvent->u.LuaCallSetDynamicBlockTranslation.endTime
+							));
+	    }
+	    break;
+	    
+	  case GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKNONE:
+	    {
+	      removeSDynamicOfObject(pEvent->u.LuaCallSetDynamicBlockNone.cBlockID);
+	    }
+	    break;
+	    
+	  case GAME_EVENT_LUA_CALL_CAMERAZOOM:
+	    {
+	      CameraZoom(pEvent->u.LuaCallCameraZoom.fZoom);
+	    }
+	    break;
+	    
+	  case GAME_EVENT_LUA_CALL_CAMERAMOVE:
+	    {
+	      CameraMove(pEvent->u.LuaCallCameraMove.x, pEvent->u.LuaCallCameraMove.y);
+	    }
+	    break;
+	    
 	  }
+	  destroyGameEvent(pEvent);
 	}
 	else break;
       }
@@ -788,9 +789,7 @@ namespace vapp {
     m_PlayerLLegBodyID2 = NULL;
     
     m_bDead = m_bFinished = false;
-    
-    m_nGameEventQueueReadIdx = m_nGameEventQueueWriteIdx = 0;
-    
+      
     m_lastCallToEveryHundreath = 0.0;
 
 #if defined(ALLOW_GHOST)
@@ -963,6 +962,9 @@ namespace vapp {
 
     /* clean Sdynamic objects for scripts */
     cleanScriptDynamicObjects();
+
+    /* clean event queue */
+    cleanEventsQueue();
   }
 
   /*===========================================================================
@@ -1540,36 +1542,22 @@ namespace vapp {
   }
     
   GameEvent *MotoGame::createGameEvent(GameEventType Type) {
-    /* Space left in queue? */
-    if(getNumPendingGameEvents() < GAME_EVENT_QUEUE_SIZE - 1) {
-      /* Yup. */
-      GameEvent *pEvent = &m_GameEventQueue[m_nGameEventQueueWriteIdx];			
+      GameEvent *pEvent = new GameEvent();
       pEvent->Type = Type;
       pEvent->nSeq = m_nLastEventSeq++;
-      m_nGameEventQueueWriteIdx++;			
-      if(m_nGameEventQueueWriteIdx == GAME_EVENT_QUEUE_SIZE) {
-	      m_nGameEventQueueWriteIdx = 0;
-      }
-      
-      //printf("[%s]\n",_EventName(Type));
+      m_GameEventQueue.push(pEvent);
       return pEvent;
-    }
-		
-    /* No */
-    //printf("[%s] (!!!)\n",_EventName(Type));
-    return NULL;
   }
   
+  void MotoGame::destroyGameEvent(GameEvent *p_event) {
+    delete p_event;
+  }
+
   GameEvent *MotoGame::getNextGameEvent(void) {
     /* Anything in queue? */
     if(getNumPendingGameEvents() > 0) {
-      /* Get next event and advance the read idx */
-      GameEvent *pEvent = &m_GameEventQueue[m_nGameEventQueueReadIdx];
-      m_nGameEventQueueReadIdx++;
-      if(m_nGameEventQueueReadIdx == GAME_EVENT_QUEUE_SIZE) {
-	m_nGameEventQueueReadIdx = 0;
-      }
-			
+      GameEvent *pEvent = m_GameEventQueue.front();
+      m_GameEventQueue.pop();
       return pEvent;
     }
 		
@@ -1578,14 +1566,17 @@ namespace vapp {
   }
 
   int MotoGame::getNumPendingGameEvents(void) {
-    if(m_nGameEventQueueReadIdx < m_nGameEventQueueWriteIdx) {
-      return m_nGameEventQueueWriteIdx - m_nGameEventQueueReadIdx;
+    return m_GameEventQueue.size();
+  }
+
+  void MotoGame::cleanEventsQueue() {
+    GameEvent *p_event;
+
+    while(m_GameEventQueue.empty() == false) {
+      p_event = m_GameEventQueue.front();
+      m_GameEventQueue.pop();
+      destroyGameEvent(p_event);
     }
-    else if(m_nGameEventQueueReadIdx > m_nGameEventQueueWriteIdx) {
-      return GAME_EVENT_QUEUE_SIZE - m_nGameEventQueueReadIdx + m_nGameEventQueueWriteIdx;
-    }
-		
-    return 0;
   }
 
   /*===========================================================================
