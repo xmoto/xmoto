@@ -99,7 +99,7 @@ namespace vapp {
       FS::writeByte(pfh,'\t'); FS::writeByte(pfh,'\t');
       
       /* Write script and transform dangerous characters */
-      for(int i=0;i<m_ScriptSource.length();i++) {
+      for(unsigned int i=0;i<m_ScriptSource.length();i++) {
         int c = m_ScriptSource[i];
         if(c == '<') FS::writeBuf(pfh,"&lt;",4);
         else if(c == '>') FS::writeBuf(pfh,"&gt;",4);
@@ -114,7 +114,7 @@ namespace vapp {
       FS::writeLineF(pfh,"\t<script>");
       FS::writeByte(pfh,'\t'); FS::writeByte(pfh,'\t');
       /* Write script and transform dangerous characters */
-      for(int i=0;i<m_ScriptSource.length();i++) {
+      for(unsigned int i=0;i<m_ScriptSource.length();i++) {
         int c = m_ScriptSource[i];
         if(c == '<') FS::writeBuf(pfh,"&lt;",4);
         else if(c == '>') FS::writeBuf(pfh,"&gt;",4);
@@ -127,7 +127,7 @@ namespace vapp {
     FS::writeLineF(pfh,"\t<limits left=\"%f\" right=\"%f\" top=\"%f\" bottom=\"%f\"/>",m_fLeftLimit,m_fRightLimit,m_fTopLimit,m_fBottomLimit);
     
     /* BLOCKS */
-    for(int i=0;i<m_Blocks.size();i++) {
+    for(unsigned int i=0;i<m_Blocks.size();i++) {
       FS::writeLineF(pfh,"\t<block id=\"%s\">",m_Blocks[i]->ID.c_str());
       if(m_Blocks[i]->bDynamic) {
         if(m_Blocks[i]->bBackground)
@@ -146,7 +146,7 @@ namespace vapp {
           FS::writeLineF(pfh,"\t\t<position x=\"%f\" y=\"%f\"/>",m_Blocks[i]->fPosX,m_Blocks[i]->fPosY);
       }
       FS::writeLineF(pfh,"\t\t<usetexture id=\"%s\"/>",m_Blocks[i]->Texture.c_str());
-      for(int j=0;j<m_Blocks[i]->Vertices.size();j++) {
+      for(unsigned int j=0;j<m_Blocks[i]->Vertices.size();j++) {
         if(m_Blocks[i]->Vertices[j]->EdgeEffect != "")
           FS::writeLineF(pfh,"\t\t<vertex x=\"%f\" y=\"%f\" edge=\"%s\"/>",
             m_Blocks[i]->Vertices[j]->fX,m_Blocks[i]->Vertices[j]->fY,m_Blocks[i]->Vertices[j]->EdgeEffect.c_str());
@@ -158,11 +158,11 @@ namespace vapp {
     }
     
     /* ENTITIES */
-    for(int i=0;i<m_Entities.size();i++) {
+    for(unsigned int i=0;i<m_Entities.size();i++) {
 			FS::writeLineF(pfh,"\t<entity id=\"%s\" typeid=\"%s\">",m_Entities[i]->ID.c_str(),m_Entities[i]->TypeID.c_str());
 			FS::writeLineF(pfh,"\t\t<size r=\"%f\"/>",m_Entities[i]->fSize);
       FS::writeLineF(pfh,"\t\t<position x=\"%f\" y=\"%f\"/>",m_Entities[i]->fPosX,m_Entities[i]->fPosY);			
-      for(int j=0;j<m_Entities[i]->Params.size();j++) {
+      for(unsigned int j=0;j<m_Entities[i]->Params.size();j++) {
 				FS::writeLineF(pfh,"\t\t<param name=\"%s\" value=\"%s\"/>",
 					m_Entities[i]->Params[j]->Name.c_str(),m_Entities[i]->Params[j]->Value.c_str());
       }
@@ -170,9 +170,9 @@ namespace vapp {
     }
     
     /* ZONE */
-    for(int i=0;i<m_Zones.size();i++) {
+    for(unsigned int i=0;i<m_Zones.size();i++) {
       FS::writeLineF(pfh,"\t<zone id=\"%s\">",m_Zones[i]->ID.c_str());
-      for(int j=0;j<m_Zones[i]->Prims.size();j++) {
+      for(unsigned int j=0;j<m_Zones[i]->Prims.size();j++) {
         if(m_Zones[i]->Prims[j]->Type == LZPT_BOX) {
           FS::writeLineF(pfh,"\t\t<box left=\"%f\" right=\"%f\" top=\"%f\" bottom=\"%f\"/>",
                   m_Zones[i]->Prims[j]->fLeft,m_Zones[i]->Prims[j]->fRight,
@@ -646,7 +646,7 @@ namespace vapp {
       
       /* Write blocks */
       FS::writeInt_LE(pfh,m_Blocks.size());
-      for(int i=0;i<m_Blocks.size();i++) {
+      for(unsigned int i=0;i<m_Blocks.size();i++) {
         FS::writeString(pfh,m_Blocks[i]->ID);
         FS::writeBool(pfh,m_Blocks[i]->bDynamic);
         FS::writeBool(pfh,m_Blocks[i]->bBackground);
@@ -657,7 +657,7 @@ namespace vapp {
         
         FS::writeShort_LE(pfh,m_Blocks[i]->Vertices.size());
         
-        for(int j=0;j<m_Blocks[i]->Vertices.size();j++) {
+        for(unsigned int j=0;j<m_Blocks[i]->Vertices.size();j++) {
           FS::writeFloat(pfh,m_Blocks[i]->Vertices[j]->fX);
           FS::writeFloat(pfh,m_Blocks[i]->Vertices[j]->fY);
           FS::writeString(pfh,m_Blocks[i]->Vertices[j]->EdgeEffect);
@@ -666,14 +666,14 @@ namespace vapp {
       
       /* Write entities */
       FS::writeInt_LE(pfh,m_Entities.size());
-      for(int i=0;i<m_Entities.size();i++) {
+      for(unsigned int i=0;i<m_Entities.size();i++) {
 			  FS::writeString(pfh,m_Entities[i]->ID);
 			  FS::writeString(pfh,m_Entities[i]->TypeID);
 			  FS::writeFloat(pfh,m_Entities[i]->fSize);
         FS::writeFloat(pfh,m_Entities[i]->fPosX);
         FS::writeFloat(pfh,m_Entities[i]->fPosY);
         FS::writeByte(pfh,m_Entities[i]->Params.size());       
-        for(int j=0;j<m_Entities[i]->Params.size();j++) {
+        for(unsigned int j=0;j<m_Entities[i]->Params.size();j++) {
           FS::writeString(pfh,m_Entities[i]->Params[j]->Name);
           FS::writeString(pfh,m_Entities[i]->Params[j]->Value);        
         }
@@ -681,11 +681,11 @@ namespace vapp {
       
       /* Write zones */
       FS::writeInt_LE(pfh,m_Zones.size());
-      for(int i=0;i<m_Zones.size();i++) {
+      for(unsigned int i=0;i<m_Zones.size();i++) {
         FS::writeString(pfh,m_Zones[i]->ID);
         FS::writeByte(pfh,m_Zones[i]->Prims.size());
         
-        for(int j=0;j<m_Zones[i]->Prims.size();j++) {
+        for(unsigned int j=0;j<m_Zones[i]->Prims.size();j++) {
           FS::writeInt_LE(pfh,(int)m_Zones[i]->Prims[j]->Type);
         
           if(m_Zones[i]->Prims[j]->Type == LZPT_BOX) {

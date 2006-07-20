@@ -288,7 +288,7 @@ namespace vapp {
   }
   
   std::string App::formatTime(float fSecs) {
-    int nHSecs = fSecs * 100;
+    int nHSecs = (int) (fSecs * 100.0);
     char cBuf[256];
     sprintf(cBuf,"%02d:%02d:%02d",nHSecs/6000,(nHSecs%6000)/100,(nHSecs%6000)%100);
     return cBuf;
@@ -577,7 +577,7 @@ namespace vapp {
 	/* Only single */
 	bool findDouble = false;
 	//Log("size: %d", modes->size());
-	for(int j=0; j<modes->size(); j++)
+	for(unsigned int j=0; j<modes->size(); j++)
 	  if(!strcmp(tmp, (*modes)[j].c_str())){
 	    findDouble = true;
 	    break;
@@ -601,10 +601,10 @@ namespace vapp {
     //float fy = (float)(m_nDispHeight*y) / (float)getDispHeight();
     //float fw = (float)(m_nDispWidth*nWidth) / (float)getDispWidth();
     //float fh = (float)(m_nDispHeight*nHeight) / (float)getDispHeight();
-    float fx = (float)(m_nDispWidth*x) / (float)getDispWidth();
-    float fy = (float)(m_nDispHeight*y) / (float)getDispHeight();
-    float fw = (float)(m_nDispWidth*nWidth) / (float)getDispWidth();
-    float fh = (float)(m_nDispHeight*nHeight) / (float)getDispHeight();
+    //float fx = (float)(m_nDispWidth*x) / (float)getDispWidth();
+    //float fy = (float)(m_nDispHeight*y) / (float)getDispHeight();
+    //float fw = (float)(m_nDispWidth*nWidth) / (float)getDispWidth();
+    //float fh = (float)(m_nDispHeight*nHeight) / (float)getDispHeight();
   
     //glScissor(fx,m_nDispHeight - (fy+fh)-1,fw+1,fh+1);
     

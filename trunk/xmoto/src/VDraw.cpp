@@ -67,7 +67,7 @@ namespace vapp {
     }
 
     /* How many steps? */    
-    int nSteps=2.0f*(fRadius / 3.0f);
+    int nSteps= (int) (2.0f*(fRadius / 3.0f));
     if(nSteps<8) nSteps=8;
     if(nSteps>64) nSteps=64;
     

@@ -202,24 +202,24 @@ namespace vapp {
         m_fLeftLimit=fLeft; m_fRightLimit=fRight; m_fTopLimit=fTop; m_fBottomLimit=fBottom;      
       }
       LevelBlock *getBlockByID(std::string ID) {
-        for(int i=0;i<m_Blocks.size();i++) if(m_Blocks[i]->ID == ID) return m_Blocks[i];
+        for(unsigned int i=0;i<m_Blocks.size();i++) if(m_Blocks[i]->ID == ID) return m_Blocks[i];
         return NULL;
       }
       LevelZone *getZoneByID(std::string ID) {
-        for(int i=0;i<m_Zones.size();i++) if(m_Zones[i]->ID == ID) return m_Zones[i];
+        for(unsigned int i=0;i<m_Zones.size();i++) if(m_Zones[i]->ID == ID) return m_Zones[i];
         return NULL;
       }
       LevelEntity *getEntityByID(std::string ID) {
-        for(int i=0;i<m_Entities.size();i++) if(m_Entities[i]->ID == ID) return m_Entities[i];
+        for(unsigned int i=0;i<m_Entities.size();i++) if(m_Entities[i]->ID == ID) return m_Entities[i];
 				return NULL;
       }
       std::vector<LevelEntity *> getEntitiesByTypeID(std::string TypeID) {
 				std::vector<LevelEntity *> Ret;
-        for(int i=0;i<m_Entities.size();i++) if(m_Entities[i]->TypeID == TypeID) Ret.push_back(m_Entities[i]);
+        for(unsigned int i=0;i<m_Entities.size();i++) if(m_Entities[i]->TypeID == TypeID) Ret.push_back(m_Entities[i]);
 				return Ret;				
       }
       std::string getEntityParam(LevelEntity *pEnt,std::string ID,std::string Def="") {
-        for(int i=0;i<pEnt->Params.size();i++) if(pEnt->Params[i]->Name == ID) return pEnt->Params[i]->Value;
+        for(unsigned int i=0;i<pEnt->Params.size();i++) if(pEnt->Params[i]->Name == ID) return pEnt->Params[i]->Value;
         return Def;
       }
       

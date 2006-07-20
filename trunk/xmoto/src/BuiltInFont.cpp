@@ -40,7 +40,7 @@ void CBuiltInFont::_DecodeData(void) {
   unsigned char *ps = g_cBuiltInFontData;
   int is = sizeof(g_cBuiltInFontData) - 1;
   int ib = ((is-1)<<3) + *(ps++);
-  int j,i,k=0,r=0,s=0;  
+  int j,i,r=0,s=0;  
   for(i=0;i<ib;i++) {
     int bb = i>>3, bi = i&7;    
     s = sm[ps[bb] & (1<<bi) ? 1 + (s<<1) : s<<1]; /* what does this statement do? hehe */    

@@ -151,18 +151,18 @@ namespace vapp {
   ===========================================================================*/  
   Vector3f BezierShape::step(float t) {
     /* Calculate distance to travel */
-    float fDist = t * length();    
+    //float fDist = t * length();    
     
     /* Go through the curves, look for the one in question */
-    float ta = t, da = 0.0f;
-    for(int i=0;i<m_nNumPoints;i++) {
-      float t0 = da,t1 = da + m_pfCurveLengths[i];
-      if(fDist >= t0 && fDist < t1) {
+    //float ta = t, da = 0.0f;
+    //for(int i=0;i<m_nNumPoints;i++) {
+      //float t0 = da,t1 = da + m_pfCurveLengths[i];
+      //if(fDist >= t0 && fDist < t1) {
         /* Grats, you've found your curve section! */
-        float rt = ta * (m_pfCurveLengths[i] / length());
-      }
-      ta -= m_pfCurveLengths[i] / length();
-    }
+        //float rt = ta * (m_pfCurveLengths[i] / length());
+      //}
+      //ta -= m_pfCurveLengths[i] / length();
+      //}
     
     return m_pCurves[0].step(0.0f);
   }

@@ -50,6 +50,7 @@ namespace vapp {
         m_pParentApp = NULL;
         m_bShouldClose = false;
       }
+      virtual ~SubApp() {};
       
       /* Methods */
       int run(App *pParent);
@@ -107,6 +108,7 @@ namespace vapp {
              m_AppCommand="";
              m_UserNotify="";
              }
+      virtual ~App() {}
     
       /* Methods */
       void run(int nNumArgs,char **ppcArgs);
