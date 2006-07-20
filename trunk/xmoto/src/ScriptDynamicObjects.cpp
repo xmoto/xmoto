@@ -66,8 +66,12 @@ void SDynamicTranslation::performXY(float *vx, float *vy) {
   }
 }
 
-SDynamicRotation::SDynamicRotation(float pInitAngle, float pRadius, float pPeriod) {
-  m_Speed = (2 * M_PI) / pPeriod;
+SDynamicRotation::SDynamicRotation(float pInitAngle, float pRadius, float
+pPeriod) {
+  m_Speed = 0.0;
+  if(pPeriod != 0.0) {
+    m_Speed = (2 * M_PI) / pPeriod;
+  }
 
   m_Angle   = pInitAngle;
   m_Radius  = pRadius;
@@ -84,15 +88,24 @@ SDynamicRotation::~SDynamicRotation() {
 SDynamicTranslation::SDynamicTranslation(float pX, float pY, float pPeriod) {
   float m_Z;
 
-  m_X 	  = pX;
-  m_Y 	  = pY;
+  m_X     = pX;
+  m_Y     = pY;
 
   m_sensUp = true;
-  m_Z      = sqrt(m_X * m_X + m_Y * m_Y); 
-  m_Speed  = (m_Z * 2) / pPeriod;
-  m_moveX  = (m_Speed * m_X) / m_Z;
-  m_moveY  = (m_Speed * m_Y) / m_Z;
-  
+  m_Z      = sqrt(m_X * m_X + m_Y * m_Y);
+
+  m_Speed  = 0.0;
+  if(pPeriod != 0.0) {
+    m_Speed  = (m_Z * 2) / pPeriod;
+  }
+
+  m_moveX = 0.0;
+  m_moveY = 0.0;
+  if(m_Z != 0.0) {
+    m_moveX  = (m_Speed * m_X) / m_Z;
+    m_moveY  = (m_Speed * m_Y) / m_Z;
+  }
+
   m_totalMoveX = 0.0;
   m_totalMoveY = 0.0;
 }
