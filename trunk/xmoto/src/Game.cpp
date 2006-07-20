@@ -1076,7 +1076,7 @@ namespace vapp {
 	ThemeChoice* v_ThemeChoice;
 	v_ThemeChoice = m_themeChoicer->getChoiceByName(m_Config.getString("Theme"));
 	if(v_ThemeChoice != NULL) {
-	  _UpdateWebTheme(v_ThemeChoice);      
+	  _UpdateWebTheme(v_ThemeChoice, false);      
 	}
       }
       else if(Button == UI_MSGBOX_NO) {
@@ -2342,7 +2342,7 @@ namespace vapp {
 #endif
 
 #if defined(SUPPORT_WEBACCESS)
-  void GameApp::_UpdateWebTheme(ThemeChoice* pThemeChoice) {
+  void GameApp::_UpdateWebTheme(ThemeChoice* pThemeChoice, bool bNotify) {
     m_DownloadingInformation = "";
     m_DownloadingMessage = GAMETEXT_DLTHEME;
     m_themeChoicer->setURLBase(m_Config.getString("WebThemesURLBase"));
@@ -2352,7 +2352,9 @@ namespace vapp {
       clearCancelAsSoonAsPossible();
       m_themeChoicer->updateThemeFromWWW(pThemeChoice);
       _UpdateThemesLists();
-      notifyMsg(GAMETEXT_THEMEUPTODATE);
+      if(bNotify) {
+	notifyMsg(GAMETEXT_THEMEUPTODATE);
+      }
     } catch(Exception &e) {
       /* file probably doesn't exist */
       Log("** Warning ** : Failed to update theme ", pThemeChoice->ThemeName().c_str());		

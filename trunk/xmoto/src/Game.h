@@ -460,7 +460,7 @@ namespace vapp {
       void _UpdateWebHighscores(bool bSilent);
       void _UpdateWebLevels(bool bSilent);
       void _UpdateWebThemes(bool bSilent);
-      void _UpdateWebTheme(ThemeChoice* pThemeChoice);
+      void _UpdateWebTheme(ThemeChoice* pThemeChoice, bool bNotify);
       void _UpgradeWebHighscores();
       void _DownloadExtraLevels(void);
       void _ConfigureProxy(void);

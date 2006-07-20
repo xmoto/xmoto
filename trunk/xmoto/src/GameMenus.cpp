@@ -2226,7 +2226,7 @@ namespace vapp {
 	    UIListEntry *pEntry = pThemeList->getEntries()[pThemeList->getSelected()];
 	    v_themeChoice = reinterpret_cast<ThemeChoice*>(pEntry->pvUser);
 	    if(v_themeChoice != NULL) {
-	      _UpdateWebTheme(v_themeChoice);
+	      _UpdateWebTheme(v_themeChoice, true);
 	    }
 	  }
 	}
