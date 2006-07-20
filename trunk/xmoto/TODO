@@ -1,5 +1,12 @@
 # for 0.2.0
 
+* is it possible to include the speed of the dynamic blocks with lua ?
+   the aim is that normally, the moto must move on a block moving
+   horizontally
+
+* the jump of the moto with dynamic blocks is too much (is this jump
+   really necessary ?)
+
 * BUG : kill bill if you try this level since the last recent change
    about collision (.16), the start of the level is not the same : the
    player does not fall as the same way
