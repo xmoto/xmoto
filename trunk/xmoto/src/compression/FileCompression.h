@@ -29,4 +29,4 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     static void bunzip2(std::string p_fileIN, std::string p_fileOUT);
   };
 
-#endif __FILECOMPRESSION_H__
+#endif /* __FILECOMPRESSION_H__ */

@@ -873,7 +873,7 @@ void WebThemes::extractThemesAvailableFromXml() {
 }
 
 void WebThemes::clean() {
-  for(int i=0;i<m_availableThemes.size();i++) {
+  for(unsigned int i=0;i<m_availableThemes.size();i++) {
     delete m_availableThemes[i];
   }    
 
@@ -897,7 +897,7 @@ void WebThemes::upgrade(ThemeChoice *p_themeChoice) {
 
   /* find the associated webtheme */
   v_associated_webtheme = NULL;
-  for(int i=0; i<m_availableThemes.size(); i++) {
+  for(unsigned int i=0; i<m_availableThemes.size(); i++) {
     if(m_availableThemes[i]->getName() == p_themeChoice->ThemeName()) {
       v_associated_webtheme = m_availableThemes[i];
     }
@@ -938,7 +938,7 @@ void WebThemes::upgrade(ThemeChoice *p_themeChoice) {
   v_required_files = v_theme->getRequiredFiles();
 
   int v_nb_files_to_download = 0;
-  for(int i=0; i<v_required_files->size(); i++) {
+  for(unsigned int i=0; i<v_required_files->size(); i++) {
     if(vapp::FS::fileExists((*v_required_files)[i]) == false) {
       v_nb_files_to_download++;
     }
@@ -950,7 +950,7 @@ void WebThemes::upgrade(ThemeChoice *p_themeChoice) {
     v_data.v_WebApp = m_WebApp;
     v_data.v_nb_files_to_download = v_nb_files_to_download;
 
-    int i = 0;
+    unsigned int i = 0;
     while(i<v_required_files->size() && m_WebApp->isCancelAsSoonAsPossible() == false) {
       // download v_required_files[i]     
       v_destinationFile = vapp::FS::getUserDir() + std::string("/") + (*v_required_files)[i];

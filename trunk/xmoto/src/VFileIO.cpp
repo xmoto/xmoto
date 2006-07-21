@@ -53,11 +53,11 @@ namespace vapp {
   #endif
   #if !defined(_MSC_VER)
     void strlwr(char *pc) {
-      for(int i=0;i<strlen(pc);i++) pc[i] = tolower(pc[i]);
+      for(unsigned int i=0; i<strlen(pc); i++) pc[i] = tolower(pc[i]);
     }
   #endif
   mbool str_match_wildcard(char *pcMWildcard,char *pcMString,mbool CaseSensitive) {
-	  int i,nPos=0;
+	  int nPos=0;
 	  mbool PrevIsWildcard=FALSE;
 	  char c1[256],c2[256];
 	  char *pcWildcard,*pcString;
@@ -76,7 +76,7 @@ namespace vapp {
   	
 	  if(pcWildcard[0]=='\0') return TRUE;
   	
-	  for(i=0;i<strlen(pcWildcard);i++) {
+	  for(unsigned i=0; i<strlen(pcWildcard); i++) {
 		  /* If end of string is reached, we have a match */
 		  if(pcString[nPos] == '\0' && pcWildcard[i] == '\0')
 			  return TRUE;
@@ -192,7 +192,7 @@ namespace vapp {
               /* Match! */
               if(strcmp(dp->d_name,".") && strcmp(dp->d_name,"..")) {
 					      bool bFound = false;
-					      for(int k = 0;k<List.size();k++) {
+					      for(unsigned int k = 0;k<List.size();k++) {
   					      if(FS::getFileBaseName(List[k]) == FS::getFileBaseName(F)) {  
 					          bFound = true;
 					          break;
@@ -295,7 +295,7 @@ namespace vapp {
               if(strcmp(dp->d_name,".") && strcmp(dp->d_name,"..")) {
 					      std::string F = DirToSearch + std::string(dp->d_name);
 					      bool bFound = false;
-					      for(int k = 0;k<Result.size();k++) {
+					      for(unsigned int k = 0;k<Result.size();k++) {
   					      if(FS::getFileBaseName(Result[k]) == FS::getFileBaseName(F)) {  
 					          bFound = true;
 					          break;
@@ -328,7 +328,7 @@ namespace vapp {
                 if(strcmp(dp->d_name,".") && strcmp(dp->d_name,"..")) {
 					        std::string F = DirToSearch + std::string(dp->d_name);
 					        bool bFound = false;
-					        for(int k = 0;k<Result.size();k++) {
+					        for(unsigned int k = 0;k<Result.size();k++) {
     					      if(FS::getFileBaseName(Result[k]) == FS::getFileBaseName(F)) {  
 					            bFound = true;
 					            break;
@@ -362,7 +362,7 @@ namespace vapp {
                 if(strcmp(dp->d_name,".") && strcmp(dp->d_name,"..")) {
 					        std::string F = DirToSearch + std::string(dp->d_name);
 					        bool bFound = false;
-					        for(int k = 0;k<Result.size();k++) {
+					        for(unsigned int k = 0;k<Result.size();k++) {
     					      if(FS::getFileBaseName(Result[k]) == FS::getFileBaseName(F)) {  
 					            bFound = true;
 					            break;
@@ -482,7 +482,7 @@ namespace vapp {
     delete pfh;
   } 
 
-  bool FS::readBuf(FileHandle *pfh,char *pcBuf,int nBufSize) {
+  bool FS::readBuf(FileHandle *pfh,char *pcBuf, unsigned int nBufSize) {
     if(!pfh->bRead) _ThrowFileError(pfh,"readBuf -> write-only");  
     if(pfh->Type == FHT_STDIO) {
       if(fread(pcBuf,1,nBufSize,pfh->fp) != nBufSize) return false;
@@ -500,7 +500,7 @@ namespace vapp {
     return true;
   } 
   
-  bool FS::writeBuf(FileHandle *pfh,char *pcBuf,int nBufSize) {
+  bool FS::writeBuf(FileHandle *pfh, char *pcBuf, unsigned int nBufSize) {
     if(!pfh->bWrite) _ThrowFileError(pfh,"writeBuf -> read-only");  
     if(pfh->Type == FHT_STDIO) {
       if(fwrite(pcBuf,1,nBufSize,pfh->fp) != nBufSize) return false;

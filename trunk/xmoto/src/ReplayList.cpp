@@ -32,7 +32,7 @@ namespace vapp {
     std::vector<std::string> ReplayFiles;
     ReplayFiles = FS::findPhysFiles("Replays/*.rpl");
 
-    for(int i=0; i<ReplayFiles.size(); i++) {
+    for(unsigned int i=0; i<ReplayFiles.size(); i++) {
       addReplay(FS::getFileBaseName(ReplayFiles[i]));
     }
   }
@@ -42,7 +42,7 @@ namespace vapp {
 
     if(FS::getFileBaseName(Replay) != "Latest") {    
       /* Already got this replay? */
-      for(int i=0;i<m_Replays.size();i++) {
+      for(unsigned int i=0;i<m_Replays.size();i++) {
         if(m_Replays[i]->Name == Replay) {
           /* Yeah */
           return;
@@ -58,7 +58,7 @@ namespace vapp {
   }
 
   void ReplayList::delReplay(const std::string &Replay) {
-    for(int i=0;i<m_Replays.size();i++) {
+    for(unsigned int i=0;i<m_Replays.size();i++) {
       if(m_Replays[i]->Name == Replay) {
 	delete m_Replays[i];
 	m_Replays.erase( m_Replays.begin() + i );
@@ -71,7 +71,7 @@ namespace vapp {
   Clean up stuff
   ===========================================================================*/
   void ReplayList::clear(void) {
-    for(int i=0;i<m_Replays.size();i++) {
+    for(unsigned int i=0;i<m_Replays.size();i++) {
       delete m_Replays[i];
     }
     m_Replays.clear();     
@@ -85,9 +85,9 @@ namespace vapp {
     Ret = new std::vector<ReplayInfo *>;
 
     /* find replays */
-    for(int i=0;i<m_Replays.size();i++) {
-      if((PlayerName=="" || PlayerName==m_Replays[i]->Player) &&
-         (LevelID=="" || LevelID==m_Replays[i]->Level)) {
+    for(unsigned int i=0;i<m_Replays.size();i++) {
+      if((PlayerName == "" || PlayerName==m_Replays[i]->Player) &&
+         (LevelID == "" || LevelID==m_Replays[i]->Level)) {
         /* Got one */
         Ret->push_back(m_Replays[i]);
       }

@@ -211,7 +211,7 @@ void Theme::loadSpritesFromXML(TiXmlElement *p_ThemeXmlDataElement) {
 }
 
 Sprite* Theme::getSprite(enum SpriteType pSpriteType, std::string pName) {
-  for(int i=0; i<m_sprites.size(); i++) {
+  for(unsigned int i=0; i<m_sprites.size(); i++) {
     if(m_sprites[i]->getType() == pSpriteType) {
       if(m_sprites[i]->getName() == pName) {
 	return m_sprites[i];
@@ -223,7 +223,7 @@ Sprite* Theme::getSprite(enum SpriteType pSpriteType, std::string pName) {
 }
 
 void Theme::cleanSprites() {
-  for(int i=0; i<m_sprites.size(); i++) {
+  for(unsigned int i=0; i<m_sprites.size(); i++) {
     delete m_sprites[i];
   }
   m_sprites.clear();
@@ -579,7 +579,7 @@ void AnimationSprite::addFrame(float p_centerX, float p_centerY, float p_width, 
 }
 
 void AnimationSprite::cleanFrames() {
-  for(int i=0; i<m_frames.size(); i++) {
+  for(unsigned int i=0; i<m_frames.size(); i++) {
     delete m_frames[i];
   }
   m_frames.clear();
@@ -848,7 +848,7 @@ vapp::Color BikerTheme::getUglyWheelColor() {
 }
 
 bool ThemeChoicer::ExistThemeName(std::string p_themeName) {
-  for(int i=0; i<m_choices.size(); i++) {
+  for(unsigned int i=0; i<m_choices.size(); i++) {
     if(m_choices[i]->ThemeName() == p_themeName) {
       return true;
     }
@@ -889,7 +889,7 @@ ThemeChoicer::~ThemeChoicer() {
 #endif
 
 std::string ThemeChoicer::getFileName(std::string p_themeName) {
-  for(int i=0; i<m_choices.size(); i++) {
+  for(unsigned int i=0; i<m_choices.size(); i++) {
     if(m_choices[i]->ThemeName() == p_themeName) {
       return m_choices[i]->ThemeFile();
     }
@@ -898,7 +898,7 @@ std::string ThemeChoicer::getFileName(std::string p_themeName) {
 }
 
 ThemeChoice* ThemeChoicer::getChoiceByName(std::string p_themeName) {
-  for(int i=0; i<m_choices.size(); i++) {
+  for(unsigned int i=0; i<m_choices.size(); i++) {
     if(m_choices[i]->ThemeName() == p_themeName) {
       return m_choices[i];
     }
@@ -907,7 +907,7 @@ ThemeChoice* ThemeChoicer::getChoiceByName(std::string p_themeName) {
 }
 
 void ThemeChoicer::cleanList() {
-  for(int i=0; i<m_choices.size(); i++) {
+  for(unsigned int i=0; i<m_choices.size(); i++) {
     delete m_choices[i];
   }
   m_choices.clear();
@@ -922,7 +922,7 @@ void ThemeChoicer::initList() {
   /* first, load theme which are in the user dir because, a same theme can be stored
      in files having different name
   */
-  for(int i=0; i<v_themesFiles.size(); i++) {
+  for(unsigned int i=0; i<v_themesFiles.size(); i++) {
     try {
       if(vapp::FS::isInUserDir(v_themesFiles[i])) {
 	v_name = getThemeNameFromFile(v_themesFiles[i]);
@@ -938,7 +938,7 @@ void ThemeChoicer::initList() {
   }
 
   /* load the other theme from not the user directory */
-  for(int i=0; i<v_themesFiles.size(); i++) {
+  for(unsigned int i=0; i<v_themesFiles.size(); i++) {
     try {
       if(vapp::FS::isInUserDir(v_themesFiles[i]) == false) {
 	v_name = getThemeNameFromFile(v_themesFiles[i]);
@@ -959,13 +959,13 @@ void ThemeChoicer::initList() {
     m_webThemes->upgrade();
     std::vector<WebTheme*> v_availableThemes = m_webThemes->getAvailableThemes();
         
-    for(int i=0; i<v_availableThemes.size(); i++) {
+    for(unsigned int i=0; i<v_availableThemes.size(); i++) {
       if(ExistThemeName(v_availableThemes[i]->getName()) == false) {
 	/* this theme is avaible */
 	m_choices.push_back(new ThemeChoice(v_availableThemes[i]->getName(), "", false));
       } else {
 	/* the theme already exists ; check sum */
-	for(int j=0; j<m_choices.size(); j++) {
+	for(unsigned int j=0; j<m_choices.size(); j++) {
 
 	  if(m_choices[j]->ThemeName() == v_availableThemes[i]->getName()) {
 	    std::string v_localMd5;

@@ -35,7 +35,7 @@ namespace vapp {
   int DrawLib::getTextHeight(std::string Text) {
     int cx = 0,cy = 0,c;
     int h=0;
-    for(int i=0;i<Text.size();i++) {
+    for(unsigned int i=0;i<Text.size();i++) {
       c = Text[i];
       if(c==' ') {
         cx += 8;
@@ -58,7 +58,7 @@ namespace vapp {
   int DrawLib::getTextWidth(std::string Text) {
     int cx = 0,cy = 0,c;
     int w=0;
-    for(int i=0;i<Text.size();i++) {
+    for(unsigned int i=0;i<Text.size();i++) {
       c = Text[i];
       if(c==' ') {
         cx += 8;
@@ -90,7 +90,7 @@ namespace vapp {
 			drawText(Pos + Vector2f(-1,-1),Text,0,MAKE_COLOR(0,0,0,255),false);
 		}
   
-    int cx = Pos.x,cy = Pos.y,c;
+    int cx = (int) Pos.x, cy = (int) Pos.y, c;
     if(m_pDefaultFontTex != NULL) {
       glBindTexture(GL_TEXTURE_2D,m_pDefaultFontTex->nID);
     }
@@ -98,7 +98,7 @@ namespace vapp {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
     int nCharsPerLine = 256 / 8;
-    for(int i=0;i<Text.size();i++) {
+    for(unsigned int i=0;i<Text.size();i++) {
       c = Text[i];
       if(c==' ') {
         glBegin(GL_POLYGON);
@@ -114,10 +114,10 @@ namespace vapp {
         cx += 8;
       }
       else if(c=='\r') {
-        cx = Pos.x;
+        cx = (int) Pos.x;
       }
       else if(c=='\n') {
-        cx = Pos.x;
+        cx = (int) Pos.x;
         cy += 12;
       }
       else {

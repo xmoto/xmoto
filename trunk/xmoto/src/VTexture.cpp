@@ -98,7 +98,7 @@ namespace vapp {
   ===========================================================================*/  
   void TextureManager::destroyTexture(Texture *pTexture) {
     if(pTexture != NULL) {
-      for(int i=0;i<m_Textures.size();i++) {
+      for(unsigned int i=0;i<m_Textures.size();i++) {
         if(m_Textures[i] == pTexture) {
           glDeleteTextures(1,(GLuint *)&pTexture->nID);
           m_nTexSpaceUsage -= pTexture->nSize;
@@ -178,7 +178,7 @@ namespace vapp {
   Get loaded texture by name
   ===========================================================================*/  
   Texture *TextureManager::getTexture(std::string Name) {
-    for(int i=0;i<m_Textures.size();i++)
+    for(unsigned int i=0;i<m_Textures.size();i++)
       if(m_Textures[i]->Name == Name) return m_Textures[i];
     return NULL;
   }
@@ -189,7 +189,7 @@ namespace vapp {
   std::vector<Texture *> TextureManager::fetchTaggedTextures(std::string Tag) {
     std::vector<Texture *> Ret;
     
-    for(int i=0;i<m_Textures.size();i++) {
+    for(unsigned int i=0;i<m_Textures.size();i++) {
       if(m_Textures[i]->Tag == Tag) Ret.push_back(m_Textures[i]);
     }
     return Ret;

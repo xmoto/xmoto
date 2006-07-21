@@ -94,8 +94,8 @@ namespace vapp {
       static FileHandle *openIFile(std::string Path);
       static void closeFile(FileHandle *pfh);
 
-      static bool readBuf(FileHandle *pfh,char *pcBuf,int nBufSize);
-      static bool writeBuf(FileHandle *pfh,char *pcBuf,int nBufSize);     
+      static bool readBuf(FileHandle *pfh,char *pcBuf, unsigned int nBufSize);
+      static bool writeBuf(FileHandle *pfh,char *pcBuf, unsigned int nBufSize);     
       static bool setOffset(FileHandle *pfh,int nOffset);
       static bool setEnd(FileHandle *pfh);
       static int getOffset(FileHandle *pfh);
