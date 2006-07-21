@@ -195,6 +195,9 @@ namespace vapp {
   ===========================================================================*/
   class EditorMenu {
     public:
+    EditorMenu() {}
+    virtual ~EditorMenu() {}
+
       /* Virtual methods */
       virtual void itemSelected(int nItem) {}
     
@@ -216,7 +219,8 @@ namespace vapp {
     public:
       EditorMainMenu() {}
       EditorMainMenu(EditorApp *pEditor) {m_pEditor=pEditor;}
-    
+      virtual ~EditorMainMenu() {}    
+
       /* Virtual methods */
       virtual void itemSelected(int nItem);
                 
@@ -232,7 +236,8 @@ namespace vapp {
     public:
       EditorEntityMenu() {}
       EditorEntityMenu(EditorApp *pEditor) {m_pEditor=pEditor;}
-    
+      virtual ~EditorEntityMenu() {}
+
       /* Virtual methods */
       virtual void itemSelected(int nItem);
                 
@@ -346,7 +351,7 @@ namespace vapp {
       std::string _GetCommonEdgeEffect(int *pnNumSel);
       void _ApplyEdgeEffect(std::string Effect);
       void _SmoothSelectedEdges(void);
-      void _SmoothEdge(LevelBlock *pBlock,LevelBlockVertex *pEdge,int j);
+      void _SmoothEdge(LevelBlock *pBlock,LevelBlockVertex *pEdge,unsigned int j);
       LevelBlockVertex *_NextVertex(LevelBlock *pBlock,int j,int *pn);
       LevelBlockVertex *_PrevVertex(LevelBlock *pBlock,int j,int *pn);
       void _EdgeSnapCursor(void);

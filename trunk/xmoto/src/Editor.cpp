@@ -2210,7 +2210,7 @@ namespace vapp {
     return pBlock->Vertices[j - 1];
   }  
   
-  void EditorApp::_SmoothEdge(LevelBlock *pBlock,LevelBlockVertex *pEdge,int j) {
+  void EditorApp::_SmoothEdge(LevelBlock *pBlock,LevelBlockVertex *pEdge,unsigned int j) {
     /* Please don't read this (and the related ones) function! :D   I just
        caught my self thinking how this can be done in the easiest way possible 
        *Sigh* */
@@ -2295,8 +2295,8 @@ namespace vapp {
     bool bGotPoint = false;
   
     /* Find nearest edge, snap if it's close */
-    for(int i=0;i<m_pLevelSrc->getBlockList().size();i++) {
-      for(int j=0;j<m_pLevelSrc->getBlockList()[i]->Vertices.size();j++) {
+    for(unsigned int i=0;i<m_pLevelSrc->getBlockList().size();i++) {
+      for(unsigned int j=0;j<m_pLevelSrc->getBlockList()[i]->Vertices.size();j++) {
         int k;
         LevelBlockVertex *pVertex = m_pLevelSrc->getBlockList()[i]->Vertices[j];
         LevelBlockVertex *pNextVertex = _NextVertex(m_pLevelSrc->getBlockList()[i],j,&k);
@@ -2345,13 +2345,13 @@ namespace vapp {
   Deleters
   ============================================================================*/
   void EditorApp::_DeleteSelectedBlocks(void) {    
-    int i=0;
-    int nDeleted = 0;
+    unsigned int i=0;
+    unsigned int nDeleted = 0;
     while(1) {
       if(i >= m_pLevelSrc->getBlockList().size()) break;
 
       if(_IsBlockSelected(m_pLevelSrc->getBlockList()[i])) {
-        for(int j=0;j<m_pLevelSrc->getBlockList()[i]->Vertices.size();j++) {
+        for(unsigned int j=0;j<m_pLevelSrc->getBlockList()[i]->Vertices.size();j++) {
           delete m_pLevelSrc->getBlockList()[i]->Vertices[j];
         }
         delete m_pLevelSrc->getBlockList()[i];
@@ -2365,12 +2365,12 @@ namespace vapp {
   }
   
   void EditorApp::_DeleteSelectedVertices(void) {
-    int i=0;
-    int nDeleted = 0,nDeletedObjects = 0;
+    unsigned int i=0;
+    unsigned int nDeleted = 0,nDeletedObjects = 0;
     while(1) {
       if(i >= m_pLevelSrc->getBlockList().size()) break;
 
-      int j=0;
+      unsigned int j=0;
       while(1) {
         if(j >= m_pLevelSrc->getBlockList()[i]->Vertices.size()) break;
         
@@ -2383,7 +2383,7 @@ namespace vapp {
       }
       
       if(m_pLevelSrc->getBlockList()[i]->Vertices.size() < 3) {
-        for(int j=0;j<m_pLevelSrc->getBlockList()[i]->Vertices.size();j++) {
+        for(unsigned int j=0;j<m_pLevelSrc->getBlockList()[i]->Vertices.size();j++) {
           delete m_pLevelSrc->getBlockList()[i]->Vertices[j];
         }
         delete m_pLevelSrc->getBlockList()[i];
@@ -2397,13 +2397,13 @@ namespace vapp {
   }
   
   void EditorApp::_DeleteSelectedEdges(void) {
-    int i=0;
-    int nDeleted = 0,nDeletedObjects = 0;
+    unsigned int i=0;
+    unsigned int nDeleted = 0,nDeletedObjects = 0;
     bool bDeleteNext = false;
     while(1) {
       if(i >= m_pLevelSrc->getBlockList().size()) break;
 
-      int j=0;
+      unsigned int j=0;
       while(1) {
         if(j >= m_pLevelSrc->getBlockList()[i]->Vertices.size()) break;
         
@@ -2430,7 +2430,7 @@ namespace vapp {
       }
       
       if(m_pLevelSrc->getBlockList()[i]->Vertices.size() < 3) {
-        for(int j=0;j<m_pLevelSrc->getBlockList()[j]->Vertices.size();j++) {
+        for(unsigned int j=0;j<m_pLevelSrc->getBlockList()[j]->Vertices.size();j++) {
           delete m_pLevelSrc->getBlockList()[i]->Vertices[j];
         }
         delete m_pLevelSrc->getBlockList()[i];
@@ -2445,13 +2445,13 @@ namespace vapp {
   }
   
   void EditorApp::_DeleteSelectedEntities(void) {
-    int i=0;
-    int nDeleted = 0;
+    unsigned int i=0;
+    unsigned int nDeleted = 0;
     while(1) {
       if(i >= m_pLevelSrc->getEntityList().size()) break;
       
       if(m_pLevelSrc->getEntityList()[i]->bSelected) {
-        for(int j=0;j<m_pLevelSrc->getEntityList()[i]->Params.size();j++)
+        for(unsigned int j=0;j<m_pLevelSrc->getEntityList()[i]->Params.size();j++)
           delete m_pLevelSrc->getEntityList()[i]->Params[j];
         
         delete m_pLevelSrc->getEntityList()[i];
@@ -2467,7 +2467,7 @@ namespace vapp {
   Toggle selected blocks background on/off
   ============================================================================*/
   void EditorApp::_ToggleSelectedBlockBackground(void) {
-    for(int i=0;i<m_pLevelSrc->getBlockList().size();i++) {
+    for(unsigned int i=0;i<m_pLevelSrc->getBlockList().size();i++) {
       LevelBlock *pBlock = m_pLevelSrc->getBlockList()[i];
       if(_IsBlockSelected(pBlock)) {
         pBlock->bBackground = !pBlock->bBackground;
@@ -2479,7 +2479,7 @@ namespace vapp {
   Toggle selected blocks water on/off
   ============================================================================*/
   void EditorApp::_ToggleSelectedBlockWater(void) {
-    for(int i=0;i<m_pLevelSrc->getBlockList().size();i++) {
+    for(unsigned int i=0;i<m_pLevelSrc->getBlockList().size();i++) {
       LevelBlock *pBlock = m_pLevelSrc->getBlockList()[i];
       if(_IsBlockSelected(pBlock)) {
         pBlock->bWater = !pBlock->bWater;
