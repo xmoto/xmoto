@@ -188,13 +188,11 @@ namespace vapp {
     /* no event for this */
 
     /* Find the specified block and return its position */
-    for(int i=0;i<m_pMotoGame->getBlocks().size();i++) {
-      ConvexBlock *pBlock = m_pMotoGame->getBlocks()[i];
-      if(pBlock->pSrcBlock->ID == luaL_checkstring(pL,1)) {
-        lua_pushnumber(pL,pBlock->pSrcBlock->fPosX);
-        lua_pushnumber(pL,pBlock->pSrcBlock->fPosY);
-        return 2;
-      }
+    DynamicBlock *pBlock = m_pMotoGame->GetDynamicBlockByID(luaL_checkstring(pL,1));
+    if(pBlock != NULL) {
+      lua_pushnumber(pL,pBlock->Position.x);
+      lua_pushnumber(pL,pBlock->Position.y);
+      return 2;
     }
     /* Block not found, return <0,0> */
     lua_pushnumber(pL,0);

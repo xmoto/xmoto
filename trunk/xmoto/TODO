@@ -3,6 +3,15 @@
 !!! float fDist;
 src/Editor.cpp:2294: attention : «fDist» may be used uninitialized in this function
 
+--> neckelmann :
+I change the behavior of the script function getBlockPos so that it
+   gives the pos of dynamic block and not of the undynamic pos
+   (because it's more useful) ; remove this comment once you have read
+   it please.
+
+  int L_Game_GetBlockPos(lua_State *pL);
+  int L_Game_SetBlockPos(lua_State *pL);
+
 * is it possible to include the speed of the dynamic blocks with lua ?
    the aim is that normally, the moto must move on a block moving
    horizontally

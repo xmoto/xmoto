@@ -775,6 +775,7 @@ namespace vapp {
       void SetBlockPos(String pBlockID, float pX, float pY);
       void SetBlockCenter(String pBlockID, float pX, float pY);
       void SetBlockRotation(String pBlockID, float pAngle);
+      DynamicBlock *GetDynamicBlockByID(const std::string &ID);
 
       void setRenderer(GameRenderer *p_renderer);
       void CameraZoom(float pZoom);
@@ -915,7 +916,6 @@ namespace vapp {
       EntityType _TransEntityType(std::string Name);
       EdgeEffect _TransEdgeEffect(std::string Name);
       void _UpdateEntities(void);
-      DynamicBlock *_GetDynamicBlockByID(const std::string &ID);
       void _UpdateGameState(SerializedBikeState *pReplayState);
       /* static */ void _UpdateStateFromReplay(SerializedBikeState *pReplayState,BikeState *pBikeS);
 

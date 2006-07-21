@@ -1206,7 +1206,7 @@ namespace vapp {
   /*===========================================================================
   Find a dynamic block
   ===========================================================================*/
-  DynamicBlock *MotoGame::_GetDynamicBlockByID(const std::string &ID) {
+  DynamicBlock *MotoGame::GetDynamicBlockByID(const std::string &ID) {
     for(int i=0;i<m_DynBlocks.size();i++) {
       if(m_DynBlocks[i]->pSrcBlock->ID == ID)
         return m_DynBlocks[i];
@@ -1870,7 +1870,7 @@ namespace vapp {
 
   void MotoGame::MoveBlock(String pBlockID, float pX, float pY) {
     /* Find the specified block and move it along the given vector */
-    DynamicBlock *pBlock = _GetDynamicBlockByID(pBlockID);
+    DynamicBlock *pBlock = GetDynamicBlockByID(pBlockID);
     if(pBlock != NULL) {
       pBlock->Position.x += pX;
       pBlock->Position.y += pY;
@@ -1879,7 +1879,7 @@ namespace vapp {
 
   void MotoGame::SetBlockPos(String pBlockID, float pX, float pY) {
     /* Find the specified (dynamic) block and set its position */    
-    DynamicBlock *pBlock = _GetDynamicBlockByID(pBlockID);
+    DynamicBlock *pBlock = GetDynamicBlockByID(pBlockID);
     if(pBlock != NULL) {
       pBlock->Position.x = pX;
       pBlock->Position.y = pY;
@@ -1888,7 +1888,7 @@ namespace vapp {
   
   void MotoGame::SetBlockCenter(String pBlockID, float pX, float pY) {
     /* Find the specified (dynamic) block and set its center */
-    DynamicBlock *pBlock = _GetDynamicBlockByID(pBlockID);
+    DynamicBlock *pBlock = GetDynamicBlockByID(pBlockID);
     if(pBlock != NULL) {
       /* Correct all polygons in block to this new center */
       for(int i=0;i<pBlock->ConvexBlocks.size();i++) {
@@ -1906,7 +1906,7 @@ namespace vapp {
 
   void MotoGame::SetBlockRotation(String pBlockID, float pAngle) {
     /* Find the specified (dynamic) block and set its rotation */
-    DynamicBlock *pBlock = _GetDynamicBlockByID(pBlockID);
+    DynamicBlock *pBlock = GetDynamicBlockByID(pBlockID);
     if(pBlock != NULL) {
       pBlock->fRotation = pAngle;
     }    
