@@ -4,6 +4,17 @@ Maybe it's too over the top, I don't know. It's easy to remove again.
 Also, I couldn't figure out how to add the graphics... it worked at a time,
 but now it doesn't work anymore. I'll try to figure out why.
 
+-- comment: i like it : it works for me : the reason why it didn't
+   work at start : the star anim is described into original.xml ; but
+   when you update the theme from web, the original theme from the web
+   is prefered as your new one (because it includes sprites for prince
+   of persia, ...), so to conclude, the version on internet must
+   include all the sprites of the original one. To test, first time, i
+   just removed the files into my ~/.xmoto/Themes/*.xml. I will
+   updated themes from internet.
+=> stars are not in replays.
+
+
 # for 0.2.0
 ######################################################################
 Assigned to Neckelmann:
@@ -12,6 +23,10 @@ Assigned to Neckelmann:
    horizontally
  --comment: well, generally the script is totally responsible for moving
             the blocks, so the script can calculate the velocity itself.            
+ -> it is not it : i mean : when you move a block, and when you bike
+   is under it, logically, bike should move too : it's
+   physics. Currently, it doesn't work because a move is not really a
+   move, it's a teleportation, so there is no velocity.
 
 * the jump of the moto with dynamic blocks is too much (is this jump
    really necessary ?)
@@ -43,6 +58,10 @@ Assigned to Neckelmann:
 * BUG : OnLoad() { return false; } -> segfault
 * BUG : when you see level info in level pack ; then you click on ok
    -> it close the window and the levelpack window
+
+* BUG : see http://xmoto.free.fr/images/administration/download.png :
+   when you press z or other keys allowed by this level while you bike
+   is not moving at all
 
 # for after
 
