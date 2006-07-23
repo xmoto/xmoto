@@ -14,6 +14,8 @@ but now it doesn't work anymore. I'll try to figure out why.
    updated themes from internet.
 => stars are not in replays.
 
+=> i added Textures/Sprites/YellowFlare.png that i found, was i a good
+   idea ? because it was in original.xml but not in package.lst
 
 # for 0.2.0
 ######################################################################
