@@ -71,6 +71,11 @@
 <frame /><frame /><frame />
 </sprite>
 
+<sprite type="Entity" name="Star"      fileBase="Star"      fileExtension="png" width="0.5" height="0.5" delay="0.05" centerX="0.25" centerY="0.25">
+<frame /><frame /><frame /><frame /><frame /><frame /><frame /><frame />
+<frame /><frame /><frame /><frame /><frame /><frame /><frame /><frame />
+</sprite>
+
 <sprite type="Entity" name="Flower"      fileBase="Flower"      fileExtension="png" width="1" height="1" delay="0.05" centerX="0.5" centerY="0.5">
 <frame centerX="0.5" centerY="0.5" />
 <frame centerX="0.5" centerY="0.51" />

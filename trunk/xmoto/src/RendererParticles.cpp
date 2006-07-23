@@ -76,6 +76,12 @@ namespace vapp {
           p->fKillTime += 10000;
           p->fFireSeed = randomNum(0,100);
           break;
+          
+        case PT_STAR:
+          p->fAngVel = randomNum(-60,60);
+          p->Vel = Vector2f(randomNum(-2,2),randomNum(0,2));
+          p->Acc = Vector2f(0,-4);
+          break;
       }
       
       return p;
@@ -242,33 +248,42 @@ namespace vapp {
       if(m_Particles[i]->bFront == bFront) {
         switch(m_Particles[i]->Type) {
           case PT_SMOKE1:
-	    pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Smoke1");
-	    if(pType != NULL) {
-	      _RenderParticle(m_Particles[i]->Pos,pType->getTexture(),m_Particles[i]->fSmokeSize,
-			      m_Particles[i]->fAng,m_Particles[i]->SmokeColor);
-	    }
+	          pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Smoke1");
+	          if(pType != NULL) {
+	            _RenderParticle(m_Particles[i]->Pos,pType->getTexture(),m_Particles[i]->fSmokeSize,
+			            m_Particles[i]->fAng,m_Particles[i]->SmokeColor);
+	          }
             break;
           case PT_SMOKE2:
-	    pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Smoke2");
-	    if(pType != NULL) {
-	      _RenderParticle(m_Particles[i]->Pos,pType->getTexture(),m_Particles[i]->fSmokeSize,
-			      m_Particles[i]->fAng,m_Particles[i]->SmokeColor);
-	    }
+	            pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Smoke2");
+	            if(pType != NULL) {
+	              _RenderParticle(m_Particles[i]->Pos,pType->getTexture(),m_Particles[i]->fSmokeSize,
+			              m_Particles[i]->fAng,m_Particles[i]->SmokeColor);
+	            }
             break;
           case PT_FIRE:
-	    pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Fire1");
-	    if(pType != NULL) {
-	      _RenderParticle(m_Particles[i]->Pos,pType->getTexture(),m_Particles[i]->fFireSize,
-			      m_Particles[i]->fAng,m_Particles[i]->FireColor);
-	    }
+	            pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Fire1");
+	            if(pType != NULL) {
+	              _RenderParticle(m_Particles[i]->Pos,pType->getTexture(),m_Particles[i]->fFireSize,
+			              m_Particles[i]->fAng,m_Particles[i]->FireColor);
+	            }
             break;
           case PT_DEBRIS:
-	    pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Debris1");
-	    if(pType != NULL) {
-	      _RenderParticle(m_Particles[i]->Pos,pType->getTexture(),m_Particles[i]->fDebrisSize,
-			      m_Particles[i]->fAng,m_Particles[i]->DebrisTint);
-	    }
-	    break;
+	          pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Debris1");
+	          if(pType != NULL) {
+	            _RenderParticle(m_Particles[i]->Pos,pType->getTexture(),m_Particles[i]->fDebrisSize,
+			            m_Particles[i]->fAng,m_Particles[i]->DebrisTint);
+	          }
+	          break;
+	        case PT_STAR:
+	          {
+	            AnimationSprite *pStarAnim = (AnimationSprite *)getParent()->m_theme.getSprite(SPRITE_TYPE_ANIMATION,"Star");
+	            if(pStarAnim != NULL) {
+	              _RenderParticle(m_Particles[i]->Pos,pStarAnim->getTexture(),pStarAnim->getWidth(),
+			              m_Particles[i]->fAng,MAKE_COLOR(255,255,255,255));
+			        }
+	          }
+	          break; 	        
         }
       }
     }

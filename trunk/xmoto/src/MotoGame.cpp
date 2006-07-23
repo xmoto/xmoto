@@ -1446,44 +1446,49 @@ namespace vapp {
       break;
     case ET_ENDOFLEVEL:
       {
-	/* How many strawberries left? */
-	if(countEntitiesByType(ET_STRAWBERRY) == 0) {
-	  /* Level is done! */
-	  m_bFinished = true;
-	  m_fFinishTime = getTime();
-	}
+	      /* How many strawberries left? */
+	      if(countEntitiesByType(ET_STRAWBERRY) == 0) {
+	        /* Level is done! */
+	        m_bFinished = true;
+	        m_fFinishTime = getTime();
+	      }
       }
       break;
     case ET_WRECKER: 
       {
-	/* Hmm :( */
-	GameEvent *pEvent = createGameEvent(GAME_EVENT_PLAYER_DIES);        
-	if(pEvent != NULL) {
-	  pEvent->u.PlayerDies.bWrecker = true;
-	}
+	      /* Hmm :( */
+	      GameEvent *pEvent = createGameEvent(GAME_EVENT_PLAYER_DIES);        
+	      if(pEvent != NULL) {
+	        pEvent->u.PlayerDies.bWrecker = true;
+	      }
       }
       break;
     case ET_STRAWBERRY:
       {
-	/* OH... nice */
-	GameEvent *pEvent = createGameEvent(GAME_EVENT_ENTITY_DESTROYED);
-	if(pEvent != NULL) {
-	  strncpy(pEvent->u.EntityDestroyed.cEntityID,pEntity->ID.c_str(),sizeof(pEvent->u.EntityDestroyed.cEntityID)-1);
-	  pEvent->u.EntityDestroyed.Type = pEntity->Type;
-	  pEvent->u.EntityDestroyed.fSize = pEntity->fSize;
-	  pEvent->u.EntityDestroyed.fPosX = pEntity->Pos.x;
-	  pEvent->u.EntityDestroyed.fPosY = pEntity->Pos.y;
-	}                
-	/* Play yummy-yummy sound */
-	Sound::playSampleByName("Sounds/PickUpStrawberry.ogg");
+	      /* OH... nice */
+	      GameEvent *pEvent = createGameEvent(GAME_EVENT_ENTITY_DESTROYED);
+	      if(pEvent != NULL) {
+	        strncpy(pEvent->u.EntityDestroyed.cEntityID,pEntity->ID.c_str(),sizeof(pEvent->u.EntityDestroyed.cEntityID)-1);
+	        pEvent->u.EntityDestroyed.Type = pEntity->Type;
+	        pEvent->u.EntityDestroyed.fSize = pEntity->fSize;
+	        pEvent->u.EntityDestroyed.fPosX = pEntity->Pos.x;
+	        pEvent->u.EntityDestroyed.fPosY = pEntity->Pos.y;
+	      }                
+	      
+	      /* Spawn some particles */
+	      for(int i=0;i<6;i++)
+  	      m_renderer->spawnParticle(PT_STAR,pEntity->Pos,Vector2f(0,0),5);
 
-#if defined(ALLOW_GHOST)
-	if(isGhostActive() && m_showGhostTimeDiff) {
-	  m_myLastStrawberries.push_back(getTime());
-	  UpdateDiffFromGhost();
-	  DisplayDiffFromGhost();
-	}
-#endif
+	      /* Play yummy-yummy sound */
+	      Sound::playSampleByName("Sounds/PickUpStrawberry.ogg");
+
+        #if defined(ALLOW_GHOST)
+	        if(isGhostActive() && m_showGhostTimeDiff) {
+	          m_myLastStrawberries.push_back(getTime());
+	          UpdateDiffFromGhost();
+	          DisplayDiffFromGhost();
+	        }
+        #endif
       }
       break;
     }

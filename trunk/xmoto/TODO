@@ -1,28 +1,30 @@
+PLEASE NOTE:
+By the way, I've added a particle effect for when picking up strawberries.
+Maybe it's too over the top, I don't know. It's easy to remove again.
+Also, I couldn't figure out how to add the graphics... it worked at a time,
+but now it doesn't work anymore. I'll try to figure out why.
+
 # for 0.2.0
-
-!!! float fDist;
-src/Editor.cpp:2294: attention : «fDist» may be used uninitialized in this function
-
---> neckelmann :
-I change the behavior of the script function getBlockPos so that it
-   gives the pos of dynamic block and not of the undynamic pos
-   (because it's more useful) ; remove this comment once you have read
-   it please.
-
-  int L_Game_GetBlockPos(lua_State *pL);
-  int L_Game_SetBlockPos(lua_State *pL);
-
+######################################################################
+Assigned to Neckelmann:
 * is it possible to include the speed of the dynamic blocks with lua ?
    the aim is that normally, the moto must move on a block moving
    horizontally
+ --comment: well, generally the script is totally responsible for moving
+            the blocks, so the script can calculate the velocity itself.            
 
 * the jump of the moto with dynamic blocks is too much (is this jump
    really necessary ?)
+ --comment: i'd rather not touch that any more, i think it's quite stable
+            as it is. And yes, the jump is necesary, that's how the 
+            physics engine works (to seperate intersection objects/bodies
+            it tries to "push" them appart)
 
 * BUG : kill bill if you try this level since the last recent change
    about collision (.16), the start of the level is not the same : the
    player does not fall as the same way
  -- comment : just add an information into the changelog
+
 * "view the highscore" button is not visible for pack(priority=high)
 * add <xml_room> in configuration so that the player can choose the
    link to his room xml file (priority=high)(priority=high)

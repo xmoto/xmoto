@@ -29,6 +29,8 @@ Game.SetDynamicBlockNone("Block0")
 Game.CameraMove(x, y)
 Game.CameraZoom(z)
 * a texture missing -> just give an alert instead of get an exception
+!!! float fDist;
+src/Editor.cpp:2294: attention : «fDist» may be used uninitialized in this function
 
 Before Xmoto 1.16
 * BUG : bug in the editor if you load and save http://xmoto.free.fr/levels/l189.lvl because  > is replaced by &gt;      

@@ -2269,7 +2269,7 @@ namespace vapp {
   ============================================================================*/
   void EditorApp::_EntitySnapCursor(void) {
     Vector2f NearP;
-    float fDist;
+    float fDist = 0;
     bool bGotPoint = false;
   
     for(int i=0;i<m_pLevelSrc->getEntityList().size();i++) {

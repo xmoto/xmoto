@@ -33,9 +33,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define CAMERA_OFFSETY_DEFAULT 0.0
 
 namespace vapp {
-
-  
-
+ 
 	/*===========================================================================
 	Quality settings
   ===========================================================================*/
@@ -60,6 +58,7 @@ namespace vapp {
     PT_SMOKE2,
     PT_FIRE,
     PT_DEBRIS,
+    PT_STAR
   };
   
 	/*===========================================================================

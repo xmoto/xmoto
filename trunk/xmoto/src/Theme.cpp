@@ -245,7 +245,7 @@ void Theme::newAnimationSpriteFromXML(TiXmlElement *pVarElem) {
   pc = pVarElem->Attribute("name");
   if(pc == NULL) {return;}
   v_name = pc;
-
+  
   pc = pVarElem->Attribute("fileBase");
   if(pc == NULL) {return;}
   v_fileBase = pc;
