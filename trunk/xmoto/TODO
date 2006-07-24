@@ -1,7 +1,7 @@
-
-=> i added Textures/Sprites/YellowFlare.png that i found, was i a good
-   idea ? because it was in original.xml but not in package.lst
- neckelmann:  yeah, it was going there anyway.
+have you an idea why the levels starts so strangely :
+villevel6
+villevel7
+(they are new levels)
 
 # for 0.2.0
 ######################################################################
@@ -48,6 +48,7 @@ Assigned to Neckelmann:
    when you press z or other keys allowed by this level while you bike
    is not moving at all
   neckelmann: what? it's a picture of a floppy? I don't get it :)
+-> http://xmoto.free.fr/interesting_replays/ireplay_41.rpl
    
 # for after
 * make something when a perious jump is done : it is quite easy i
