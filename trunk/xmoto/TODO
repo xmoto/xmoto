@@ -34,8 +34,6 @@ Assigned to Neckelmann:
   put "list all" by default in the replays list ?
    neckelmann: it is on per default now, right?   
 * BUG : xmoto-edit rgeznlre -> segfault
-* smoke doesn't work in replay, it didn't work in .16
-   neckelmann: does it still not work? It appears to work for me
 * BUG : when you see level info in level pack ; then you click on ok
    -> it close the window and the levelpack window
 
