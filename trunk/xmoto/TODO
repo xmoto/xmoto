@@ -143,6 +143,7 @@ Undecided:
 
    
 HUM, strange on dynamic blocks :
+-> comment : it comes from the space next to the 'dynamic="true" >' != 'dynamic="true">'
 
 this make the block move (not nicely, but it works)
 
