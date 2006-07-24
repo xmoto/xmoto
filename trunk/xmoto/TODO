@@ -2,6 +2,10 @@
 ######################################################################
 Assigned to Neckelmann:
 * BUG : move a background block make it collide with the bike
+ neckelmann:  as it is now a block can not be both dynamic and background.
+              it's a limitation. Maybe it can be improved later.
+ 
+
 * BUG : see at bottom
 
 * is it possible to include the speed of the dynamic blocks with lua ?
