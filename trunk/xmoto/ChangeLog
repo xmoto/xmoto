@@ -14,6 +14,7 @@ X-Moto 0.2.0 (alpha) 2006-
  * Various new script functions (see MotoGameL.cpp for details).
  * Added dependency for libbz2 (for web transfer compression).
  * Menu music and new sound effects by Jens Erler.
+ * More graphics.
  * Better collision detection. Bike behaviour is affected slightly.
  * Custom themes (replacable graphics).
  * Some bugs fixed.

@@ -711,32 +711,31 @@ namespace vapp {
       pEnt = pGame->getEntities()[i];
 
       switch(pEnt->Type) {
-      case ET_SPRITE:
-
-	/* Middleground? (not foreground, not background) */
-	if(pEnt->fSpriteZ == 0.0f && !bForeground && !bBackground) {
-	  _RenderSprite(pEnt);	
-	} else {
-
-	  /* In front? */
-	  if(pEnt->fSpriteZ > 0.0f && bForeground) {
-	    _RenderSprite(pEnt);
-	  } else {
-
-	    /* Those in back? */
-	    if(pEnt->fSpriteZ < 0.0f && bBackground) {
-	      _RenderSprite(pEnt);
-	    }
-	  }
-	}
-	break;
-      case ET_WRECKER:
-      case ET_ENDOFLEVEL:
-      case ET_STRAWBERRY:
-	if(!bForeground && !bBackground) {
-	  _RenderSprite(pEnt);
-	}
-	break;
+        case ET_SPRITE:
+	        /* Middleground? (not foreground, not background) */
+	        if(pEnt->fSpriteZ == 0.0f && !bForeground && !bBackground) {
+	          _RenderSprite(pEnt);	
+	        } 
+	        else {
+	          /* In front? */
+	          if(pEnt->fSpriteZ > 0.0f && bForeground) {
+	            _RenderSprite(pEnt);
+	          } 
+	          else {
+	            /* Those in back? */
+	            if(pEnt->fSpriteZ < 0.0f && bBackground) {
+	              _RenderSprite(pEnt);
+	            }
+	          }
+	        }
+	        break;
+        case ET_WRECKER:
+        case ET_ENDOFLEVEL:
+        case ET_STRAWBERRY:
+	        if(!bForeground && !bBackground) {
+	          _RenderSprite(pEnt);
+	        }
+	        break;
       }
     }
   }

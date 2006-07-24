@@ -138,14 +138,13 @@ void Theme::load(std::string p_themeFile) {
   const char *pc;
 
   try {
-
     /* open the file */
     v_ThemeXml.readFromFile(p_themeFile);
     
     v_ThemeXmlData = v_ThemeXml.getLowLevelAccess();
     
     if(v_ThemeXmlData == NULL) {
-      throw vapp::Exception("error : unable analyse xml theme file");
+      throw vapp::Exception("unable to analyze xml theme file");
     }
     
     /* read the theme name */
@@ -156,14 +155,14 @@ void Theme::load(std::string p_themeFile) {
     }
     
     if(m_name == "") {
-      throw vapp::Exception("error : the theme has no name !");
+      throw vapp::Exception("unnamed theme");
     }
     
     /* get sprites */
     loadSpritesFromXML(v_ThemeXmlDataElement);
 
   } catch(vapp::Exception &e) {
-    throw vapp::Exception("error : unable analyse xml theme file");
+    throw vapp::Exception("unable to analyze xml theme file");
   }
 }
 
