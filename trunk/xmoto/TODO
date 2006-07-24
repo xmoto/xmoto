@@ -1,6 +1,8 @@
 # for 0.2.0
 ######################################################################
 Assigned to Neckelmann:
+* BUG : move a background block make it collide with the bike
+
 * is it possible to include the speed of the dynamic blocks with lua ?
    the aim is that normally, the moto must move on a block moving
    horizontally
