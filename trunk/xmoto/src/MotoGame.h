@@ -722,6 +722,7 @@ namespace vapp {
       void scriptCallTblVoid(std::string Table,std::string FuncName);
 
       /* Data interface */
+      void resetAutoDisabler(void) {m_nStillFrames=0;}
       bool isInitOK(void) {return m_bLevelInitSuccess;}
       bool isFinished(void) {return m_bFinished;}
       bool isDead(void) {return m_bDead;}
@@ -753,7 +754,7 @@ namespace vapp {
       Vector2f getWheelSpinPoint(void) {return m_WheelSpinPoint;}
       Vector2f getWheelSpinDir(void) {return m_WheelSpinDir;}
       CollisionSystem *getCollisionHandler(void) {return &m_Collision;}
-      void setGravity(float x,float y) {m_PhysGravity.x=x; m_PhysGravity.y=y;}
+      void setGravity(float x,float y) {m_PhysGravity.x=x; m_PhysGravity.y=y; resetAutoDisabler();}
       const Vector2f &getGravity(void) {return m_PhysGravity;}
         
       /* Debug */

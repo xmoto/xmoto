@@ -432,7 +432,7 @@ namespace vapp {
                 }
 	            }
 	          }
-            
+	                      
             Vector2f A=Vector2f(17,17);
             Vector2f B=Vector2f(getDispWidth()-66,getDispHeight()-27);
             //glScissor(A.x,getDispHeight() - B.y-1,B.x-A.x+1,B.y-A.y+1);

@@ -189,6 +189,8 @@ namespace vapp {
     m_TeleportDest.bDriveRight = bFaceRight;
     m_TeleportDest.Pos = Vector2f(x,y);
     m_bTeleport = true;
+    
+    resetAutoDisabler();
   }
   
   const Vector2f &MotoGame::getPlayerPosition(void) {

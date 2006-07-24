@@ -36,12 +36,6 @@ Assigned to Neckelmann:
 * BUG : xmoto-edit rgeznlre -> segfault
 * BUG : when you see level info in level pack ; then you click on ok
    -> it close the window and the levelpack window
-
-* BUG : see http://xmoto.free.fr/images/administration/download.png :
-   when you press z or other keys allowed by this level while you bike
-   is not moving at all
-  neckelmann: what? it's a picture of a floppy? I don't get it :)
--> http://xmoto.free.fr/interesting_replays/ireplay_41.rpl
    
 # for after
 * make something when a perious jump is done : it is quite easy i

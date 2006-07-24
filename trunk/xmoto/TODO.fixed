@@ -39,6 +39,21 @@ src/Editor.cpp:2294: attention : «fDist» may be used uninitialized in this fun
  -- comment : just add an information into the changelog
 * smoke doesn't work in replay, it didn't work in .16
    neckelmann: does it still not work? It appears to work for me
+* BUG : see http://xmoto.free.fr/images/administration/download.png :
+   when you press z or other keys allowed by this level while you bike
+   is not moving at all
+  neckelmann: what? it's a picture of a floppy? I don't get it :)
+-> http://xmoto.free.fr/interesting_replays/ireplay_41.rpl
+  neckelmann: it is because when the bike have been standing (almost) still 
+              for a number of frames, physics are disabled. It is to prevent
+              the bike from falling into the ground slowly. 
+              I've added a function (MotoGame::resetAutoDisabler()) which should
+              be called anytime something is changing which might affect the physics
+              AND it is absolutely certain that the physics will affect the bike.
+              I.e. it should not be called when a block is moved, as it will not always
+              affect the bike directly, but on the other hand if the gravity is changed or
+              the bike is teleported, it has to be called. 
+              Currently it's called by setGravity() and teleport-something().
 
 Before Xmoto 1.16
 * BUG : bug in the editor if you load and save http://xmoto.free.fr/levels/l189.lvl because  > is replaced by &gt;      

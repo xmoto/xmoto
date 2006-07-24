@@ -462,7 +462,6 @@ namespace vapp {
 
 //      float fDepth = _CalculateCircleLineDepth(Vector2f(x,y),r,Vector2f(pLine->x1,pLine->y1),Vector2f(pLine->x2,pLine->y2));
       double fDepth = _CalculateDepth(Vector2f(x,y),r,Vector2f(pLine->x1,pLine->y1));
-//      printf("[%f]\n",fDepth);
       _SetWheelContactParams(&c,Vector2f(pLine->x1,pLine->y1),
                               W,fDepth);                                   
       nNumC = _AddContactToList(pContacts,nNumC,&c,nMaxC);            
@@ -483,7 +482,6 @@ namespace vapp {
 
 //      float fDepth = _CalculateCircleLineDepth(Vector2f(x,y),r,Vector2f(pLine->x1,pLine->y1),Vector2f(pLine->x2,pLine->y2));
       double fDepth = _CalculateDepth(Vector2f(x,y),r,Vector2f(pLine->x2,pLine->y2));
-//      printf("[%f]\n",fDepth);
       _SetWheelContactParams(&c,Vector2f(pLine->x2,pLine->y2),
                               W,fDepth);                                   
       nNumC = _AddContactToList(pContacts,nNumC,&c,nMaxC);            
@@ -503,7 +501,11 @@ namespace vapp {
       double fDepth = _CalculateCircleLineDepth(Vector2f(x,y),r,Vector2f(pLine->x1,pLine->y1),Vector2f(pLine->x2,pLine->y2));
       //fDepth = 0.0f;
       //fDepth *= 0.2;
-      //printf("[%f]\n",fDepth);
+      //static int xxx = 0,yyy = 0;		                             
+      //xxx++;    
+      //if((xxx % 200) == 0) 
+      //  printf("%f\n",fDepth);
+        
       _SetWheelContactParams(&c,T1,W,fDepth); 
       nNumC = _AddContactToList(pContacts,nNumC,&c,nMaxC);
         

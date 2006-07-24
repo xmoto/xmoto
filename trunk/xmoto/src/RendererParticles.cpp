@@ -38,6 +38,7 @@ namespace vapp {
 
     if(pGame != NULL) {
       Particle *p = new Particle;
+      p->bFront = true;
       p->Type = Type;
       p->Pos = Pos;
       p->Vel = Vel;     
@@ -116,7 +117,9 @@ namespace vapp {
             else if(pGame->getEntities()[i]->ParticleType == "Fire") {
               for(int k=0;k<10;k++) {
                 /* Generate fire */
-                spawnParticle(PT_FIRE,pGame->getEntities()[i]->Pos,Vector2f(randomNum(-1,1),randomNum(0.1,0.3)),0);
+                Particle *pFireParticle = spawnParticle(PT_FIRE,pGame->getEntities()[i]->Pos,Vector2f(randomNum(-1,1),randomNum(0.1,0.3)),0);
+                pFireParticle->bFront = false;
+                
                 pGame->getEntities()[i]->fNextParticleTime = pGame->getTime() + randomNum(0.05,0.1f);              
               }
             }
