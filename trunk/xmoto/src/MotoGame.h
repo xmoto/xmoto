@@ -722,6 +722,7 @@ namespace vapp {
       void scriptCallTblVoid(std::string Table,std::string FuncName);
 
       /* Data interface */
+      bool isInitOK(void) {return m_bLevelInitSuccess;}
       bool isFinished(void) {return m_bFinished;}
       bool isDead(void) {return m_bDead;}
       LevelSrc *getLevelSrc(void) {return m_pLevelSrc;}
@@ -795,6 +796,7 @@ namespace vapp {
       
       bool m_bSqueeking;
       float m_fHowMuchSqueek;
+      bool m_bLevelInitSuccess;
 
       Vector2f m_PhysGravity; /* gravity */
 

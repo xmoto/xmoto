@@ -34,11 +34,11 @@ namespace vapp {
     while(m_lastRefreshTime + 0.01 < v_time) {
       
       if(m_bScrollDownPressed) {
-	_Scroll(-1);
+	      _Scroll(-1);
       }
       
       if(m_bScrollUpPressed) {
-	_Scroll(1);
+	      _Scroll(1);
       }
       
       m_lastRefreshTime = v_time;
@@ -322,11 +322,21 @@ namespace vapp {
     p->Text.push_back(Text);
     p->pvUser = pvUser;
     
+    /* Make a temp. lowercase text */
+    std::string LCText = Text;
+    for(int i=0;i<LCText.length();i++)
+      LCText[i] = tolower(LCText[i]);
+    
     /* Sorted? */
     if(m_bSort) {
       /* Yeah, keep it alphabetical, please */
       for(int i=0;i<m_Entries.size();i++) {
-        if(Text < m_Entries[i]->Text[0]) {
+        /* Make lowercase before comparing */
+        std::string LC = m_Entries[i]->Text[0];
+        for(int j=0;j<LC.length();j++)  
+          LC[j] = tolower(LC[j]);
+      
+        if(LCText < LC) {
           /* Here! */
           m_Entries.insert(m_Entries.begin() + i,p);
           return p;
@@ -422,6 +432,36 @@ namespace vapp {
       case SDLK_RIGHT:
         getRoot()->activateRight();
         return true;
+    }
+    
+    /* Maybe it's a character? If so, try jumping to a suitable place in the list */
+    if(nChar != 0) {
+      bool bContinue;
+      int nPos = 0;
+      
+      do {
+        bContinue = false;
+        
+        /* Look at character number 'nPos' in all entries */
+        for(int i=0;i<m_Entries.size();i++) {
+          int nEntryIdx = i + getSelected() + 1; /* always start looking at the next */
+          nEntryIdx %= m_Entries.size();
+        
+          if(m_Entries[nEntryIdx]->Text[0].length() > nPos) {
+            if(tolower(m_Entries[nEntryIdx]->Text[0].at(nPos)) == tolower(nChar)) {
+              /* Nice, select this one */
+              setSelected(nEntryIdx);
+              _NewlySelectedItem();              
+              bContinue = false;
+              return true;
+            }
+            
+            bContinue = true;
+          }
+        }
+        
+        nPos++;
+      } while(bContinue);
     }
     
     /* w00t? we don't want that silly keypress! */

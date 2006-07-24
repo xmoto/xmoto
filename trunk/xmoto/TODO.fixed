@@ -31,6 +31,12 @@ Game.CameraZoom(z)
 * a texture missing -> just give an alert instead of get an exception
 !!! float fDist;
 src/Editor.cpp:2294: attention : «fDist» may be used uninitialized in this function
+* BUG: => stars are not in replays.
+* BUG : OnLoad() { return false; } -> segfault
+* BUG : kill bill if you try this level since the last recent change
+   about collision (.16), the start of the level is not the same : the
+   player does not fall as the same way
+ -- comment : just add an information into the changelog
 
 Before Xmoto 1.16
 * BUG : bug in the editor if you load and save http://xmoto.free.fr/levels/l189.lvl because  > is replaced by &gt;      

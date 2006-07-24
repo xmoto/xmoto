@@ -456,10 +456,19 @@ namespace vapp {
 	    break;
 	  case GAME_EVENT_ENTITY_DESTROYED: 
 	    {
+        if(pEvent->u.EntityDestroyed.Type == ET_STRAWBERRY) {
+	        /* Spawn some particles */
+	        for(int i=0;i<6;i++)
+  	        m_renderer->spawnParticle(PT_STAR,Vector2f(pEvent->u.EntityDestroyed.fPosX,pEvent->u.EntityDestroyed.fPosY),Vector2f(0,0),5);
+
+	        /* Play yummy-yummy sound */
+	        Sound::playSampleByName("Sounds/PickUpStrawberry.ogg");
+	      }
+
 	      /* Destroy entity */
 	      Entity *pEntityToDestroy = findEntity(pEvent->u.EntityDestroyed.cEntityID);
 	      if(pEntityToDestroy != NULL) {
-		deleteEntity(pEntityToDestroy);
+		      deleteEntity(pEntityToDestroy);
 	      }
 	    }
 	    break;
@@ -735,6 +744,7 @@ namespace vapp {
 			   LevelSrc *pLevelSrc,
 			   bool bIsAReplay) {
     bool v_enableScript = bIsAReplay == false;
+    m_bLevelInitSuccess = true;
 
     /* Clean up first, just for safe's sake */
     endLevel();               
@@ -910,8 +920,10 @@ namespace vapp {
       /* if no OnLoad(), assume success */
       /* Success? */
       if(!bOnLoadSuccess) {
-	/* Hmm, the script insists that we shouldn't begin playing... */
-	endLevel();      
+	      /* Hmm, the script insists that we shouldn't begin playing... */
+	      endLevel();      
+	      
+	      m_bLevelInitSuccess = false;
       }
     }
   }
@@ -1371,32 +1383,32 @@ namespace vapp {
       Vector2f HeadPos = m_BikeS.Dir==DD_RIGHT?m_BikeS.HeadP:m_BikeS.Head2P;
 			
       if(circleTouchCircle2f(m_Entities[i]->Pos,m_Entities[i]->fSize,HeadPos,m_BikeP.fHeadSize)) {
-	if(!m_Entities[i]->bTouched) {
-	  /* Generate event */
-	  GameEvent *pEvent = createGameEvent(GAME_EVENT_PLAYER_TOUCHES_ENTITY);
-	  if(pEvent != NULL) {
-	    pEvent->u.PlayerTouchesEntity.bHead = true;						
-	    strncpy(pEvent->u.PlayerTouchesEntity.cEntityID,m_Entities[i]->ID.c_str(),sizeof(pEvent->u.PlayerTouchesEntity.cEntityID)-1);						
-	    m_Entities[i]->bTouched = true;
-	  }					
-	}
+	      if(!m_Entities[i]->bTouched) {
+	        /* Generate event */
+	        GameEvent *pEvent = createGameEvent(GAME_EVENT_PLAYER_TOUCHES_ENTITY);
+	        if(pEvent != NULL) {
+	          pEvent->u.PlayerTouchesEntity.bHead = true;						
+	          strncpy(pEvent->u.PlayerTouchesEntity.cEntityID,m_Entities[i]->ID.c_str(),sizeof(pEvent->u.PlayerTouchesEntity.cEntityID)-1);						
+	          m_Entities[i]->bTouched = true;
+	        }					
+	      }
       }
       /* Wheel then? */
       else if(circleTouchCircle2f(m_Entities[i]->Pos,m_Entities[i]->fSize,m_BikeS.FrontWheelP,m_BikeP.WR) ||
               circleTouchCircle2f(m_Entities[i]->Pos,m_Entities[i]->fSize,m_BikeS.RearWheelP,m_BikeP.WR)) {
-	if(!m_Entities[i]->bTouched) {
-	  /* Generate event */
-	  GameEvent *pEvent = createGameEvent(GAME_EVENT_PLAYER_TOUCHES_ENTITY);
-	  if(pEvent != NULL) {
-	    pEvent->u.PlayerTouchesEntity.bHead = false;
-	    strncpy(pEvent->u.PlayerTouchesEntity.cEntityID,m_Entities[i]->ID.c_str(),sizeof(pEvent->u.PlayerTouchesEntity.cEntityID)-1);
-	    m_Entities[i]->bTouched = true;
-	  }					
-	}
+	      if(!m_Entities[i]->bTouched) {
+	        /* Generate event */
+	        GameEvent *pEvent = createGameEvent(GAME_EVENT_PLAYER_TOUCHES_ENTITY);
+	        if(pEvent != NULL) {
+	          pEvent->u.PlayerTouchesEntity.bHead = false;
+	          strncpy(pEvent->u.PlayerTouchesEntity.cEntityID,m_Entities[i]->ID.c_str(),sizeof(pEvent->u.PlayerTouchesEntity.cEntityID)-1);
+	          m_Entities[i]->bTouched = true;
+	        }					
+	      }
       }      
       else {
-	/* Not touching */
-	m_Entities[i]->bTouched = false;
+	      /* Not touching */
+	      m_Entities[i]->bTouched = false;
       }
     }
   }
@@ -1475,13 +1487,6 @@ namespace vapp {
 	        pEvent->u.EntityDestroyed.fPosY = pEntity->Pos.y;
 	      }                
 	      
-	      /* Spawn some particles */
-	      for(int i=0;i<6;i++)
-  	      m_renderer->spawnParticle(PT_STAR,pEntity->Pos,Vector2f(0,0),5);
-
-	      /* Play yummy-yummy sound */
-	      Sound::playSampleByName("Sounds/PickUpStrawberry.ogg");
-
         #if defined(ALLOW_GHOST)
 	        if(isGhostActive() && m_showGhostTimeDiff) {
 	          m_myLastStrawberries.push_back(getTime());
@@ -1629,14 +1634,24 @@ namespace vapp {
     switch(pEvent->Type) {
     case GAME_EVENT_ENTITY_DESTROYED:
       {
-	/* Destroy entity */
-	Entity *pEntityToDestroy = findEntity(pEvent->u.EntityDestroyed.cEntityID);
-	if(pEntityToDestroy != NULL) {
-	  deleteEntity(pEntityToDestroy);
-	}        
-	else
-	  Log("** Warning ** : Failed to destroy entity '%s' specified by replay!",
-	      pEvent->u.EntityDestroyed.cEntityID);
+        /* Destroying a strawberry? */
+        if(pEvent->u.EntityDestroyed.Type == ET_STRAWBERRY) {
+	        /* Spawn some particles */
+	        for(int i=0;i<6;i++)
+  	        m_renderer->spawnParticle(PT_STAR,Vector2f(pEvent->u.EntityDestroyed.fPosX,pEvent->u.EntityDestroyed.fPosY),Vector2f(0,0),5);
+
+	        /* Play yummy-yummy sound */
+	        Sound::playSampleByName("Sounds/PickUpStrawberry.ogg");
+	      }
+      
+	      /* Destroy entity */
+	      Entity *pEntityToDestroy = findEntity(pEvent->u.EntityDestroyed.cEntityID);
+	      if(pEntityToDestroy != NULL) {
+	        deleteEntity(pEntityToDestroy);
+	      }        
+	      else
+	        Log("** Warning ** : Failed to destroy entity '%s' specified by replay!",
+	            pEvent->u.EntityDestroyed.cEntityID);
       }
       break;
 

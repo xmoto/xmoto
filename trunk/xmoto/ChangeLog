@@ -1,6 +1,9 @@
 X-Moto 0.2.0 (alpha) 2006-
 -------------------------------
 
+ * Yet a new version numbering policy: Last number incremented for 
+   bug-fix releases, middle one is even for official releases and 
+   uneven for development (CVS) versions.
  * No longer fancy ghost graphics in -ugly mode.
  * Ghost now visible on minimap.
  * New optional "rversion" <level> attribute, which allows level
@@ -17,7 +20,8 @@ X-Moto 0.2.0 (alpha) 2006-
  * More graphics.
  * Better collision detection. Bike behaviour is affected slightly.
  * Custom themes (replacable graphics).
- * Some bugs fixed.
+ * Press character keys to quickly navigate through level lists.
+ * Several minor improvements and some bugs fixed.
 	
 X-Moto 0.1.16 (alpha) 2006-06-16
 --------------------------------

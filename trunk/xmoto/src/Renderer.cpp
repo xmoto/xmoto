@@ -347,13 +347,11 @@ namespace vapp {
   Main rendering function
   ===========================================================================*/
   void GameRenderer::render(void) {
-
     /* Update time */    
     m_pInGameStats->showWindow(true);
     m_pPlayTime->setCaption(getParent()->formatTime(getGameObject()->getTime()));
-  
-    /* Prepare for rendering frame */
-    
+
+    /* Prepare for rendering frame */    
     if(getGameObject()->getTime() > m_fNextParticleUpdate) {
       _UpdateParticles(0.025f);
       m_fNextParticleUpdate = getGameObject()->getTime() + 0.025f; 

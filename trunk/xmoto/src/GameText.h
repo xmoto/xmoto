@@ -100,6 +100,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_FAILEDDLLEVELS       "Failed to download levels.\nCheck your Internet connection!"
 #define GAMETEXT_FAILEDDLREPLAY       "Failed to download the replay.\nCheck your Internet connection!"
 #define GAMETEXT_FAILEDGETSELECTEDTHEME "Failed to get the selected theme\nCheck your Internet connection!"
+#define GAMETEXT_FAILEDTOINITLEVEL    "Failed to initialize level!"
 #define GAMETEXT_FAILEDTOLOADREPLAY   "Failed to load replay!"
 #define GAMETEXT_FAILEDTOSAVEREPLAY   "Failed to save replay!\nMaybe you should try with another name?"
 #define GAMETEXT_FAILEDUPDATETHEMESLIST "Failed to update the theme list\nCheck your Internet connection!"
