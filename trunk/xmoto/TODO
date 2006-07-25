@@ -1,12 +1,14 @@
 # for 0.2.0
 ######################################################################
 Assigned to Neckelmann:
+
+
 * BUG : move a background block make it collide with the bike
  neckelmann:  as it is now a block can not be both dynamic and background.
               it's a limitation. Maybe it can be improved later.
  
 
-* BUG : see at bottom
+* BUG : when you rewind, starts don't move
 
 * is it possible to include the speed of the dynamic blocks with lua ?
    the aim is that normally, the moto must move on a block moving
