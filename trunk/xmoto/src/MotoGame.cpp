@@ -656,6 +656,15 @@ namespace vapp {
       _KillEntity(m_DelSchedule[i]);
     m_DelSchedule.clear();
     
+    // we don't change the sens of the wheel depending on the side, because 
+    // loops must not make done just by changing the side
+    if(m_somersaultCounter.update(m_BikeS.RearWheelP, m_BikeS.FrontWheelP)) {
+      char msg[16];
+      m_nbSomersaultCounter++;
+      sprintf(msg, "%i", m_nbSomersaultCounter);
+      gameMessage(msg);
+    }
+
     /* Remember bike pos for next time */
     //m_PrevFrontWheelP = m_BikeS.FrontWheelP;
     //m_PrevRearWheelP = m_BikeS.RearWheelP;
@@ -928,6 +937,10 @@ namespace vapp {
 	      m_bLevelInitSuccess = false;
       }
     }
+
+    /* counter of somersaultcounter */
+    m_nbSomersaultCounter = 0;
+    m_somersaultCounter.init();
 
   }
 
