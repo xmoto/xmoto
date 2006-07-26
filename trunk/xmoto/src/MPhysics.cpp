@@ -183,17 +183,11 @@ namespace vapp {
     }    
 
     /* Apply attitude control (SIMPLISTIC!) */
-    if(m_BikeC.bPullBack && getTime()-m_fLastAttitudeCon > 0.6f) {
-//      m_fAttitudeCon = 8000;
-      m_fAttitudeCon = PHYS_RIDER_ATTITUDE_TORQUE;
-      m_fLastAttitudeCon = getTime();
+    if((m_BikeC.fPull != 0.0f) && (getTime() > m_fNextAttitudeCon)) {
+      m_fAttitudeCon = m_BikeC.fPull * PHYS_RIDER_ATTITUDE_TORQUE;
+      m_fNextAttitudeCon = getTime() + (0.6f * fabsf(m_BikeC.fPull));
     }
-    else if(m_BikeC.bPushForward && getTime()-m_fLastAttitudeCon > 0.6f) {
-      m_fAttitudeCon = -PHYS_RIDER_ATTITUDE_TORQUE;
-//      m_fAttitudeCon = -8000;
-      m_fLastAttitudeCon = getTime();
-    }
-    
+   
     if(m_fAttitudeCon != 0.0f) {
       m_nStillFrames=0;
       dBodyEnable(m_FrontWheelBodyID);
@@ -253,13 +247,13 @@ namespace vapp {
     }
 
     /* Apply motor/brake torques */
-    if(m_BikeC.fBrake > 0.0f) {
+    if(m_BikeC.fDrive < 0.0f) {
       /* Brake! */        
       if(!bSleep) {
         //printf("Brake!\n");
       
-        dBodyAddTorque(m_RearWheelBodyID,0,0,-dBodyGetAngularVel(m_RearWheelBodyID)[2]*PHYS_BRAKE_FACTOR*m_BikeC.fBrake);
-        dBodyAddTorque(m_FrontWheelBodyID,0,0,-dBodyGetAngularVel(m_FrontWheelBodyID)[2]*PHYS_BRAKE_FACTOR*m_BikeC.fBrake);
+        dBodyAddTorque(m_RearWheelBodyID,0,0,dBodyGetAngularVel(m_RearWheelBodyID)[2]*PHYS_BRAKE_FACTOR*m_BikeC.fDrive);
+        dBodyAddTorque(m_FrontWheelBodyID,0,0,dBodyGetAngularVel(m_FrontWheelBodyID)[2]*PHYS_BRAKE_FACTOR*m_BikeC.fDrive);
       }
     }
     else {

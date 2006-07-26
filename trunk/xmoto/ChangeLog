@@ -22,6 +22,7 @@ X-Moto 0.2.0 (alpha) 2006-
  * Custom themes (replacable graphics).
  * Press character keys to quickly navigate through level lists.
  * Several minor improvements and some bugs fixed.
+ * patch by Christoph Sommer applied (for analogic joystick)
 	
 X-Moto 0.1.16 (alpha) 2006-06-16
 --------------------------------

@@ -30,11 +30,12 @@ namespace vapp {
   Globals
   ===========================================================================*/  
   /* Action ID to string table */
+	/*
   InputActionType InputHandler::m_ActionTypeTable[] = {
     "Drive",           ACTION_DRIVE,
     "Brake",           ACTION_BRAKE,             
-    "PullBack",        ACTION_PULLBACK,          
-    "PushForward",     ACTION_PUSHFORWARD,       
+    "Pull",            ACTION_PULL,          
+    "Push",            ACTION_PUSH,       
     "ChangeDirection", ACTION_CHANGEDIR,     
     #if defined(ENABLE_ZOOMING)    
       "ZoomIn",          ACTION_ZOOMIN,     
@@ -47,7 +48,7 @@ namespace vapp {
     #endif
     NULL
   };
-
+*/
   /* Key code to string table */  
   InputKeyMap InputHandler::m_KeyMap[] = {
     "Up",              SDLK_UP,
@@ -164,6 +165,39 @@ namespace vapp {
     SDL_QuitSubSystem(SDL_INIT_JOYSTICK);
   }
 
+  namespace {
+    /**
+     * converts a raw joystick axis value to a float, according to specified minimum and maximum values, as well as the deadzone.
+     * 
+     *                 (+)      ____
+     *           result |      /|
+     *                  |     / |
+     *                  |    /  |
+     *  (-)________ ____|___/___|____(+)
+     *             /|   |   |   |    input
+     *            / |   |   |   |
+     *           /  |   |   |   |
+     *     _____/   |   |   |   | 
+     *          |   |  (-)  |   |
+     *         neg  dead-zone  pos
+     *         
+     */
+    float joyRawToFloat(float raw, float neg, float deadzone_neg, float deadzone_pos, float pos) {
+
+      if (neg > pos) {
+	std::swap(neg, pos);
+	std::swap(deadzone_neg, deadzone_pos);
+      }
+
+      if (raw > pos) return +1.0f;
+      if (raw > deadzone_pos) return +((raw - deadzone_pos) / (pos - deadzone_pos));
+      if (raw < neg) return -1.0f;
+      if (raw < deadzone_neg) return -((raw - deadzone_neg) / (neg - deadzone_neg));
+
+      return 0.0f;
+    }
+  }
+
   /*===========================================================================
   Input device update
   ===========================================================================*/  
@@ -173,11 +207,8 @@ namespace vapp {
       SDL_JoystickUpdate();     
       
       pController->fDrive = 0.0f;      
-      pController->fBrake = 0.0f;    
-      
+      pController->fPull = 0.0f;  
       pController->bChangeDir = false;  
-      pController->bPullBack = false;  
-      pController->bPushForward = false;  
       
       /* Update buttons */
       for(int i=0;i<SDL_JoystickNumButtons(m_pActiveJoystick1);i++) {
@@ -188,93 +219,18 @@ namespace vapp {
               pController->bChangeDir = true;
             }
           }
-          
-          /* Just down */
-          if(m_nJoyButtonFlipLeft1 == i) {
-            pController->bPullBack = true;
-          }
-          else if(m_nJoyButtonFlipRight1 == i) {
-            pController->bPushForward = true;
-          }
-          
+
           m_JoyButtonsPrev[i] = true;
         }        
         else
           m_JoyButtonsPrev[i] = false;
       }
       
-      /* Get the primary axis and map it. The following nice ASCII figure
-         should explain how it is done :)
-        
-                     (+)
-                   drive
-                  throttle    _______
-                      |      /|
-                      |     / |
-                      |    /  |
-      (-)________ ____|___/___|____raw axis data (+)
-                 /|   |   |   |
-                / |   |   |   |
-               /  |   |   |   |
-         _____/   |   |   |   | 
-              |   | brake |   |
-              |   | power |   |
-              |   |  (-)  |   |
-             Min  LL     UL  Max
-             
-             
-         Min: The minimum raw axis data to expect.
-         Max: Maximum raw axis data to expect.
-         LL: Lower limit. If the data is between this and zero, nothing 
-             happens.
-         UL: Upper limit. If the data is between this and zero, nothing 
-             happens.
-         Drive throttle: A value between 0 and 1.
-         Brake power: A value between 0 and 1.
-      */
-            
-      int nRaw = -SDL_JoystickGetAxis(m_pActiveJoystick1,m_nJoyAxisPrim1);
-      
-      if(m_nJoyAxisPrimMin1 > m_nJoyAxisPrimMax1) {
-        /* Drive? */
-        if(nRaw < m_nJoyAxisPrimUL1) {
-          float f = ((float)(nRaw - m_nJoyAxisPrimUL1)) / 
-                    (float)(m_nJoyAxisPrimMax1 - m_nJoyAxisPrimUL1);
-          if(f>1.0f) f=1.0f;
-          if(f>0.0f) {
-            pController->fDrive = f;
-          }
-        }
-        /* Brake? */
-        else if(nRaw > m_nJoyAxisPrimLL1) {
-          float f = ((float)(m_nJoyAxisPrimLL1 - nRaw)) / 
-                    (float)(m_nJoyAxisPrimLL1 - m_nJoyAxisPrimMin1);
-          if(f>1.0f) f=1.0f;
-          if(f>0.0f) {
-            pController->fBrake = f;
-          }
-        }
-      }
-      else if(m_nJoyAxisPrimMin1 < m_nJoyAxisPrimMax1) {
-        /* Brake? */
-        if(nRaw > m_nJoyAxisPrimUL1) {
-          float f = ((float)(nRaw - m_nJoyAxisPrimUL1)) / 
-                    (float)(m_nJoyAxisPrimMax1 - m_nJoyAxisPrimUL1);
-          if(f>1.0f) f=1.0f;
-          if(f>0.0f) {
-            pController->fBrake = f;
-          }
-        }
-        /* Drive? */
-        else if(nRaw < m_nJoyAxisPrimLL1) {
-          float f = ((float)(m_nJoyAxisPrimLL1 - nRaw)) / 
-                    (float)(m_nJoyAxisPrimLL1 - m_nJoyAxisPrimMin1);
-          if(f>1.0f) f=1.0f;
-          if(f>0.0f) {
-            pController->fDrive = f;
-          }
-        }
-      }
+      /** Update axis */           
+      int nRawPrim = SDL_JoystickGetAxis(m_pActiveJoystick1,m_nJoyAxisPrim1);
+      pController->fDrive = -joyRawToFloat(nRawPrim, m_nJoyAxisPrimMin1, m_nJoyAxisPrimLL1, m_nJoyAxisPrimUL1, m_nJoyAxisPrimMax1);
+      int nRawSec = SDL_JoystickGetAxis(m_pActiveJoystick1,m_nJoyAxisSec1);
+      pController->fPull = -joyRawToFloat(nRawSec, m_nJoyAxisSecMin1, m_nJoyAxisSecLL1, m_nJoyAxisSecUL1, m_nJoyAxisSecMax1);
     }
   }
   
@@ -380,9 +336,14 @@ namespace vapp {
           m_nJoyAxisPrimMin1 = pConfig->getInteger("JoyAxisPrimMin1");
           m_nJoyAxisPrimUL1 = pConfig->getInteger("JoyAxisPrimUL1");
           m_nJoyAxisPrimLL1 = pConfig->getInteger("JoyAxisPrimLL1");
-          m_nJoyButtonFlipLeft1 = pConfig->getInteger("JoyButtonFlipLeft1");
-          m_nJoyButtonFlipRight1 = pConfig->getInteger("JoyButtonFlipRight1");
-          m_nJoyButtonChangeDir1 = pConfig->getInteger("JoyButtonChangeDir1");
+          
+          m_nJoyAxisSec1 = pConfig->getInteger("JoyAxisSec1");
+          m_nJoyAxisSecMax1 = pConfig->getInteger("JoyAxisSecMax1");
+          m_nJoyAxisSecMin1 = pConfig->getInteger("JoyAxisSecMin1");
+          m_nJoyAxisSecUL1 = pConfig->getInteger("JoyAxisSecUL1");
+          m_nJoyAxisSecLL1 = pConfig->getInteger("JoyAxisSecLL1");
+	  
+	  m_nJoyButtonChangeDir1 = pConfig->getInteger("JoyButtonChangeDir1");
           
           /* Init all joystick buttons */
           m_JoyButtonsPrev.clear();
@@ -426,15 +387,15 @@ namespace vapp {
           }
           else if(m_nBrakeKey1 == nKey) {
             /* Brake */
-            pController->fBrake = 1.0f;
+            pController->fDrive = -1.0f;
           }
           else if(m_nPullBackKey1 == nKey) {
             /* Pull back */
-            pController->bPullBack = true;
+            pController->fPull = 1.0f;
           }
           else if(m_nPushForwardKey1 == nKey) {
             /* Push forward */
-            pController->bPushForward = true;            
+            pController->fPull = -1.0f;            
           } 
 #if defined(ENABLE_ZOOMING)          
 	else if(m_nZoomIn == nKey) {
@@ -471,15 +432,15 @@ namespace vapp {
           }
           else if(m_nBrakeKey1 == nKey) {
             /* Don't brake */
-            pController->fBrake = 0.0f;
+            pController->fDrive = 0.0f;
           }
           else if(m_nPullBackKey1 == nKey) {
             /* Pull back */
-            pController->bPullBack = false;
+            pController->fPull = 0.0f;
           }
           else if(m_nPushForwardKey1 == nKey) {
             /* Push forward */
-            pController->bPushForward = false;            
+            pController->fPull = 0.0f;            
           }
           else if(m_nChangeDirKey1 == nKey) {
             /* Change dir */

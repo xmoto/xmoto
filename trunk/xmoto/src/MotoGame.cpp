@@ -302,7 +302,7 @@ namespace vapp {
       /* Clear stuff */
       clearStates();    
       
-      m_fLastAttitudeCon = -1000.0f;
+      m_fNextAttitudeCon = -1000.0f;
       m_fAttitudeCon = 0.0f;
       
       m_PlayerFootAnchorBodyID = NULL;
@@ -773,7 +773,7 @@ namespace vapp {
     
     m_fTime = 0.0f;
     m_fFinishTime = 0.0f;
-    m_fLastAttitudeCon = -1000.0f;
+    m_fNextAttitudeCon = -1000.0f;
     m_fAttitudeCon = 0.0f;
     
     m_nStillFrames = 0;
@@ -928,6 +928,7 @@ namespace vapp {
 	      m_bLevelInitSuccess = false;
       }
     }
+
   }
 
   /*===========================================================================

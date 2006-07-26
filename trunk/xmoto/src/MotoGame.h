@@ -74,10 +74,8 @@ namespace vapp {
   Controller struct
   ===========================================================================*/
   struct BikeController {
-    float fDrive;         /* Drive throttle (0-1) */
-    float fBrake;         /* Brake amount (0-1) */
-    bool bPullBack;       /* Pull bike back, i.e. lift front wheel */
-    bool bPushForward;    /* Push bike forward, i.e. lift rear wheel */
+    float fDrive;         /* Throttle [0; 1] or Brake [-1; 0] */
+    float fPull;          /* Pull back on the handle bar [0; 1] or push forward on the handle bar [-1; 0] */
     bool bChangeDir;      /* Change direction */
     
     /* Debug-enabled controls */
@@ -787,7 +785,7 @@ namespace vapp {
       /* Data */
       std::queue<GameEvent*> m_GameEventQueue;
       
-      float m_fTime,m_fLastAttitudeCon;
+      float m_fTime,m_fNextAttitudeCon;
       float m_fFinishTime,m_fAttitudeCon;
       
       int m_nNumDummies;
@@ -901,7 +899,7 @@ namespace vapp {
             
       /* for EveryHundreath function */
       float m_lastCallToEveryHundreath;
-                
+            
       /* Helpers */
       void _GenerateLevel(void);          /* Called by playLevel() to 
                                              prepare the level */

@@ -73,10 +73,8 @@ namespace vapp {
   
   enum InputActionTypeID {
     ACTION_NONE,
-    ACTION_DRIVE,             /* Param: Throttle (0-1) */
-    ACTION_BRAKE,             /* Param: Brake amount (0-1) */
-    ACTION_PULLBACK,          /* Param: None */
-    ACTION_PUSHFORWARD,       /* Param: None */
+    ACTION_DRIVE,             /* Param: Throttle [0; 1] or Brake [-1; 0] */
+    ACTION_PULL,              /* Param: Pull back on the handle bar [0; 1] or push forward on the handle bar [-1; 0] */
     ACTION_CHANGEDIR,         /* Param: None */
     ACTION_ZOOMIN,            /* Param: None */
     ACTION_ZOOMOUT,           /* Param: None */
@@ -85,7 +83,6 @@ namespace vapp {
     ACTION_CAMERAMOVEXDOWN,
     ACTION_CAMERAMOVEYUP,
     ACTION_CAMERAMOVEYDOWN
-
   };
     
   struct InputAction {
@@ -145,13 +142,18 @@ namespace vapp {
 
       /* For ControllerMode1 = CONTROLLER_MODE_JOYSTICK1 */
       SDL_Joystick *m_pActiveJoystick1;
-      int m_nJoyAxisPrim1;
+      int m_nJoyAxisPrim1; /**< Primary axis: Driving and braking */
       int m_nJoyAxisPrimMax1;
       int m_nJoyAxisPrimMin1;
       int m_nJoyAxisPrimUL1;
       int m_nJoyAxisPrimLL1;
-      int m_nJoyButtonFlipLeft1;
-      int m_nJoyButtonFlipRight1;
+      
+      int m_nJoyAxisSec1; /**< Secondary axis: Pulling and pushing the handle bar */
+      int m_nJoyAxisSecMax1;
+      int m_nJoyAxisSecMin1;
+      int m_nJoyAxisSecUL1;
+      int m_nJoyAxisSecLL1;
+
       int m_nJoyButtonChangeDir1;
       
       std::vector<bool> m_JoyButtonsPrev;

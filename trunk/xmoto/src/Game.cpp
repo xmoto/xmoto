@@ -2009,16 +2009,18 @@ namespace vapp {
       m_Config.createVar( "KeyCameraMoveYDown",     "Pad 2" );
     #endif
         
-    m_Config.createVar( "JoyIdx1",                "-1" );
-    m_Config.createVar( "JoyAxisPrim1",           "" );
-    m_Config.createVar( "JoyAxisPrimMax1",        "" );
-    m_Config.createVar( "JoyAxisPrimMin1",        "" );
-    m_Config.createVar( "JoyAxisPrimUL1",         "" );
-    m_Config.createVar( "JoyAxisPrimLL1",         "" );
-    m_Config.createVar( "JoyButtonFlipLeft1",     "" );
-    m_Config.createVar( "JoyButtonFlipRight1",    "" );
-    m_Config.createVar( "JoyButtonChangeDir1",    "" );
-    
+    m_Config.createVar( "JoyIdx1",                "0" );
+    m_Config.createVar( "JoyAxisPrim1",           "1" );
+    m_Config.createVar( "JoyAxisPrimMax1",        "32760" );
+    m_Config.createVar( "JoyAxisPrimMin1",        "-32760" );
+    m_Config.createVar( "JoyAxisPrimUL1",         "1024" );
+    m_Config.createVar( "JoyAxisPrimLL1",         "-1024" );
+    m_Config.createVar( "JoyAxisSec1",            "0" );
+    m_Config.createVar( "JoyAxisSecMax1",         "32760" );
+    m_Config.createVar( "JoyAxisSecMin1",         "-32760" );
+    m_Config.createVar( "JoyAxisSecUL1",          "1024" );
+    m_Config.createVar( "JoyAxisSecLL1",          "-1024" );
+    m_Config.createVar( "JoyButtonChangeDir1",    "0" );
     m_Config.createVar( "JoystickLimboArea",      "0.07" );
 
     /* Misc */
