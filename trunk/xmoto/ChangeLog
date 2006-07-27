@@ -1,4 +1,4 @@
-X-Moto 0.2.0 (alpha) 2006-
+X-Moto 0.2.0 (alpha) 2006-07-28
 -------------------------------
 
  * Yet a new version numbering policy: Last number incremented for 
@@ -22,7 +22,7 @@ X-Moto 0.2.0 (alpha) 2006-
  * Custom themes (replacable graphics).
  * Press character keys to quickly navigate through level lists.
  * Several minor improvements and some bugs fixed.
- * patch by Christoph Sommer applied (for analogic joystick)
+ * Joystick patch by Christoph Sommer applied.
 	
 X-Moto 0.1.16 (alpha) 2006-06-16
 --------------------------------

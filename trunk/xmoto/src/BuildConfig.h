@@ -27,9 +27,9 @@ Info
 =============================================================================*/
 
 #define BUILD_MAJORVERSION    0
-#define BUILD_VERSION         1
-#define BUILD_MINORVERSION    17
-#define BUILD_EXTRAINFO       "test2"
+#define BUILD_VERSION         2
+#define BUILD_MINORVERSION    0
+#define BUILD_EXTRAINFO       ""
 
 /*=============================================================================
 Build configuration
