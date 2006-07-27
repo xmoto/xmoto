@@ -32,12 +32,13 @@ class SomersaultCounter {
   void init();
   bool update(vapp::Vector2f p_wheel1, vapp::Vector2f p_wheel2);
 
+  int getTotalClockwise();
+  int getTotalCounterClockwise();
+  int getTotal();
+
   private:
   int getCurrentState(vapp::Vector2f p_wheel1, vapp::Vector2f p_wheel2);
-  bool isDetected();
-  void initWith(int s);
 
-  bool m_initialized;
   /* five states : the five last one */
   /* five because we must come back to the original one */
   /*
@@ -48,7 +49,14 @@ class SomersaultCounter {
        |
 
   */
-  int m_state[5];
+  bool m_last_initialized;
+  int m_last_state;
+  int m_min_move;
+  int m_max_move;
+  int m_current_move;
+
+  int m_nbClockwise;
+  int m_nbCounterClockwise;
 };
 
 #endif /* __SOMERSAULTCOUNTER_H__ */

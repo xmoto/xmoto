@@ -10,6 +10,7 @@ Assigned to Neckelmann:
 
 * BUG : when you rewind, starts don't move
  neckelmann:  starts? why should they move?
+ nicolas: stars
 
 * is it possible to include the speed of the dynamic blocks with lua ?
    the aim is that normally, the moto must move on a block moving
@@ -83,9 +84,13 @@ function testCollision(laserX, laserY, alienX, alienY)
           and laserY - laserHalfHeight &lt; alienY + alienHalfHeight
 end
 * loading level is sometimes quite long
+* themes : check the md5sum of the files ; don't display available if
+   it's not really available
 * new script call :
   killPlayer() -> kill the player
   timePenallity(nbSeconds) -> increase time
+  collision between sprites, between sprites and head
+  move a zone
 * collision : collision with the body : triangle with points : head,
    wheels : because it's currently possible to touch a wecker with the
    body and possible to touch a strawberry but that it doesn't take

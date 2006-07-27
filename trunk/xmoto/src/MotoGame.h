@@ -676,8 +676,6 @@ namespace vapp {
 		  m_isGhostActive = false;
 #endif
 		  m_renderer = NULL;
-
-		  m_nbSomersaultCounter = 0;
       }
       ~MotoGame() {endLevel();}     
     
@@ -831,7 +829,6 @@ namespace vapp {
       GameRenderer *m_renderer;
 
       /* count somersault */
-      int m_nbSomersaultCounter;
       SomersaultCounter m_somersaultCounter;
 
       std::vector<SDynamicObject*> m_SDynamicObjects;

@@ -311,7 +311,7 @@ namespace vapp {
       struct tm *ptm = localtime(&ATime);
 
       char cTemp[256];
-      sprintf(cTemp,"%02d:%02d %04d-%02d-%02d",ptm->tm_hour,ptm->tm_min,1900+ptm->tm_year,ptm->tm_mon,ptm->tm_mday);              
+      sprintf(cTemp,"%02d:%02d %04d-%02d-%02d",ptm->tm_hour,ptm->tm_min,1900+ptm->tm_year,ptm->tm_mon+1,ptm->tm_mday);              
                   
       pPlayer->StatsSince = cTemp;
     }

@@ -658,11 +658,12 @@ namespace vapp {
     
     // we don't change the sens of the wheel depending on the side, because 
     // loops must not make done just by changing the side
-    if(m_somersaultCounter.update(m_BikeS.RearWheelP, m_BikeS.FrontWheelP)) {
-      char msg[16];
-      m_nbSomersaultCounter++;
-      sprintf(msg, "%i", m_nbSomersaultCounter);
-      //gameMessage(msg);
+    if(pReplayState == NULL) { /* this does not work for replays */
+      if(m_somersaultCounter.update(m_BikeS.RearWheelP, m_BikeS.FrontWheelP)) {
+	char msg[16];
+	sprintf(msg, "%i", m_somersaultCounter.getTotal());
+	//gameMessage(msg);
+      }
     }
 
     /* Remember bike pos for next time */
@@ -939,7 +940,6 @@ namespace vapp {
     }
 
     /* counter of somersaultcounter */
-    m_nbSomersaultCounter = 0;
     m_somersaultCounter.init();
 
   }
