@@ -1,0 +1,49 @@
+AC_INIT(src/GameMain.cpp)
+
+dnl otherwise autoconf whines
+AC_CANONICAL_TARGET()
+AM_INIT_AUTOMAKE(xmoto,0.2.0)
+
+AC_PROG_CC
+AC_PROG_CXX
+AC_PROG_INSTALL
+
+AC_CHECK_LIB(jpeg, jpeg_CreateCompress, [], [AC_MSG_ERROR(libjpeg required)])
+AC_CHECK_LIB(png, png_read_image, [], [AC_MSG_ERROR(libpng required)])
+AC_CHECK_LIB(z, uncompress, [], [AC_MSG_ERROR(zlib required)])
+AC_CHECK_LIB(bz2, BZ2_bzReadOpen, [], [AC_MSG_ERROR(libbz2 required)])
+AM_PATH_SDL(1.0.0, [], [AC_MSG_ERROR(SDL required)])
+AC_CHECK_LIB(SDL_mixer, Mix_OpenAudio, [], [AC_MSG_ERROR(SDL_mixer required)])
+AX_CHECK_GL()
+
+AC_SEARCH_LIBS(lua_pushboolean,lua lua5.1 lua50, [], [AC_MSG_ERROR(liblua5.1, liblua50, or liblua required)])
+AC_SEARCH_LIBS(luaopen_math,lualib lualib5.1 lualib50, [], [AC_MSG_ERROR(liblualib5.1, liblualib50, or liblualib required)])
+
+dnl ***** Check lua headers, as they are prone to be located random places on random systems! *****
+dnl The following three lines where suggested by Eric Piel, but they don't seem to work on my system
+dnl AC_CHECK_HEADERS(lua.h lua/lua.h lua50/lua.h, [break], [AC_MSG_ERROR(Could not find lua.h)])
+dnl AC_CHECK_HEADERS(lauxlib.h lua/lauxlib.h lua50/lauxlib.h, [break], [AC_MSG_ERROR(Could not find luaxlib.h)])
+dnl AC_CHECK_HEADERS(lualib.h lua/lualib.h lua50/lualib.h, [break], [AC_MSG_ERROR(Could not find lualib.h)])
+
+AC_CHECK_HEADER(lua5.1/lua.h,AC_DEFINE(HAVE_LUA51_LUA_H),[])
+AC_CHECK_HEADER(lua5.1/lauxlib.h,AC_DEFINE(HAVE_LUA51_LAUXLIB_H),[])
+AC_CHECK_HEADER(lua5.1/lualib.h,AC_DEFINE(HAVE_LUA51_LUALIB_H),[])
+
+AC_CHECK_HEADER(lua50/lua.h,AC_DEFINE(HAVE_LUA50_LUA_H),[])
+AC_CHECK_HEADER(lua50/lauxlib.h,AC_DEFINE(HAVE_LUA50_LAUXLIB_H),[])
+AC_CHECK_HEADER(lua50/lualib.h,AC_DEFINE(HAVE_LUA50_LUALIB_H),[])
+
+AC_CHECK_HEADER(lua/lua.h,AC_DEFINE(HAVE_LUA_LUA_H),[])
+AC_CHECK_HEADER(lua/lauxlib.h,AC_DEFINE(HAVE_LUA_LAUXLIB_H),[])
+AC_CHECK_HEADER(lua/lualib.h,AC_DEFINE(HAVE_LUA_LUALIB_H),[])
+
+AC_CHECK_HEADER(lua.h,AC_DEFINE(HAVE_LUA_H),[])
+AC_CHECK_HEADER(lauxlib.h,AC_DEFINE(HAVE_LAUXLIB_H),[])
+AC_CHECK_HEADER(lualib.h,AC_DEFINE(HAVE_LUALIB_H),[])
+
+dnl AC_SEARCH_LIBS(dJointAttach,ode ode0, [], [AC_MSG_ERROR(libode or libode0 required)])
+AC_SEARCH_LIBS(dJointAttach,ode ode0, [], [AC_MSG_ERROR(libode or libode0 required)], -lstdc++)
+
+AC_CHECK_LIB(curl, curl_easy_init,[],[AC_MSG_WARN(online highscores disabled)])
+
+AC_OUTPUT(Makefile bin/Makefile)

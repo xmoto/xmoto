@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf8" ?>
+<xmoto_theme name="Classic">
+
+<sprite type="BikerPart" name="PlayerBikerBody"  file="Body1.png" />
+<sprite type="BikerPart" name="PlayerBikerFront" file="Front1.png" />
+<sprite type="BikerPart" name="PlayerBikerRear"  file="Rear1.png" />
+<sprite type="BikerPart" name="PlayerBikerWheel" file="Wheel1.png" />
+<sprite type="BikerPart" name="PlayerLowerArm"   file="LowerArm1.png" />
+<sprite type="BikerPart" name="PlayerLowerLeg"   file="LowerLeg1.png" />
+<sprite type="BikerPart" name="PlayerTorso"      file="Torso1.png" />
+<sprite type="BikerPart" name="PlayerUpperArm"   file="UpperArm1.png" />
+<sprite type="BikerPart" name="PlayerUpperLeg"   file="UpperLeg1.png" />
+
+<sprite type="BikerPart" name="GhostBikerBody"  file="Body_Ghost.png" />
+<sprite type="BikerPart" name="GhostBikerFront" file="Front_Ghost.png" />
+<sprite type="BikerPart" name="GhostBikerRear"  file="Rear_Ghost.png" />
+<sprite type="BikerPart" name="GhostBikerWheel" file="Wheel_Ghost.png" />
+<sprite type="BikerPart" name="GhostLowerArm"   file="LowerArm_Ghost.png" />
+<sprite type="BikerPart" name="GhostLowerLeg"   file="LowerLeg_Ghost.png" />
+<sprite type="BikerPart" name="GhostTorso"      file="Torso_Ghost.png" />
+<sprite type="BikerPart" name="GhostUpperArm"   file="UpperArm_Ghost.png" />
+<sprite type="BikerPart" name="GhostUpperLeg"   file="UpperLeg_Ghost.png" />
+
+<sprite type="Texture" name="default"         file="Dirt.jpg" />
+<sprite type="Texture" name="BlueBricks"      file="BlueBricks.jpg" />
+<sprite type="Texture" name="Bricks"          file="Bricks.jpg" />
+<sprite type="Texture" name="DarkDirt"        file="DarkDirt.jpg" />
+<sprite type="Texture" name="DarkFrostGround" file="DarkFrostGround.jpg" />
+<sprite type="Texture" name="Dirt"            file="Dirt.jpg" />
+<sprite type="Texture" name="FrostGround"     file="FrostGround.jpg" />
+<sprite type="Texture" name="MoltenRock"      file="MoltenRock.jpg" />
+<sprite type="Texture" name="Black"			  file="Black.jpg" />
+
+<sprite type="Entity" name="Strawberry"  fileBase="Strawberry"  fileExtension="png" width="1" height="1" delay="0.05">
+<frame centerX="0.5" centerY="0.5" />
+<frame centerX="0.5" centerY="0.51" />
+<frame centerX="0.5" centerY="0.52" />
+<frame centerX="0.5" centerY="0.53" />
+<frame centerX="0.5" centerY="0.54" />
+<frame centerX="0.5" centerY="0.55" />
+<frame centerX="0.5" centerY="0.56" />
+<frame centerX="0.5" centerY="0.57" />
+<frame centerX="0.5" centerY="0.58" />
+<frame centerX="0.5" centerY="0.59" />
+<frame centerX="0.5" centerY="0.60" />
+<frame centerX="0.5" centerY="0.61" />
+<frame centerX="0.5" centerY="0.62" />
+<frame centerX="0.5" centerY="0.63" />
+<frame centerX="0.5" centerY="0.62" />
+<frame centerX="0.5" centerY="0.61" />
+<frame centerX="0.5" centerY="0.60" />
+<frame centerX="0.5" centerY="0.59" />
+<frame centerX="0.5" centerY="0.58" />
+<frame centerX="0.5" centerY="0.57" />
+<frame centerX="0.5" centerY="0.56" />
+<frame centerX="0.5" centerY="0.55" />
+<frame centerX="0.5" centerY="0.54" />
+<frame centerX="0.5" centerY="0.53" />
+<frame centerX="0.5" centerY="0.52" />
+<frame centerX="0.5" centerY="0.51" />
+</sprite>
+
+<sprite type="Entity" name="FlagDown"    fileBase="FlagDown"    fileExtension="png" width="1" height="1" delay="0.05" centerX="0.5" centerY="0.5">
+<frame /><frame /><frame />
+</sprite>
+
+<sprite type="Entity" name="FlagGoingUp" fileBase="FlagGoingUp" fileExtension="png" width="1" height="1" delay="0.05" centerX="0.5" centerY="0.5">
+<frame /><frame /><frame /><frame /><frame />
+</sprite>
+
+<sprite type="Entity" name="FlagUp"      fileBase="FlagUp"      fileExtension="png" width="1" height="1" delay="0.05" centerX="0.5" centerY="0.5">
+<frame /><frame /><frame />
+</sprite>
+
+<sprite type="Entity" name="Star"      fileBase="Star"      fileExtension="png" width="0.5" height="0.5" delay="0.05" centerX="0.25" centerY="0.25">
+<frame /><frame /><frame /><frame /><frame /><frame /><frame /><frame />
+<frame /><frame /><frame /><frame /><frame /><frame /><frame /><frame />
+</sprite>
+
+<sprite type="Entity" name="Flower"      fileBase="Flower"      fileExtension="png" width="1" height="1" delay="0.05" centerX="0.5" centerY="0.5">
+<frame centerX="0.5" centerY="0.5" />
+<frame centerX="0.5" centerY="0.51" />
+<frame centerX="0.5" centerY="0.52" />
+<frame centerX="0.5" centerY="0.53" />
+<frame centerX="0.5" centerY="0.54" />
+<frame centerX="0.5" centerY="0.55" />
+<frame centerX="0.5" centerY="0.56" />
+<frame centerX="0.5" centerY="0.56" />
+<frame centerX="0.5" centerY="0.55" />
+<frame centerX="0.5" centerY="0.54" />
+<frame centerX="0.5" centerY="0.53" />
+<frame centerX="0.5" centerY="0.52" />
+<frame centerX="0.5" centerY="0.51" />
+</sprite>
+
+<sprite type="Entity" name="Wrecker"     fileBase="Wrecker"     fileExtension="png" width="1" height="1" delay="0.05">
+<frame /><frame /><frame /><frame /><frame />
+<frame /><frame /><frame /><frame /><frame />
+<frame /><frame /><frame /><frame /><frame />
+<frame /><frame /><frame /><frame /><frame />
+<frame /><frame /><frame /><frame /><frame />
+</sprite>
+
+<sprite type="Effect" name="Debris1"         file="Debris1.png" />
+<sprite type="Effect" name="EarthVines"      file="EarthVines.png" />
+<sprite type="Effect" name="EdgeBlueBricks1" file="EdgeBlueBricks1.jpg" />
+<sprite type="Effect" name="EdgeGrass1"      file="EdgeGrass1.png" />
+<sprite type="Effect" name="EdgeGrayBricks1" file="EdgeGrayBricks1.jpg" />
+<sprite type="Effect" name="EdgeIce1"        file="EdgeIce1.png" />
+<sprite type="Effect" name="EdgeRedBricks1"  file="EdgeRedBricks1.jpg" />
+<sprite type="Effect" name="Fire1"     	     file="Fire1.png" />
+<sprite type="Effect" name="Sky1"      	     file="Sky1.jpg" />
+<sprite type="Effect" name="Sky2Drift" 	     file="Sky2Drift.jpg" />
+<sprite type="Effect" name="Sky2"      	     file="Sky2.jpg" />
+<sprite type="Effect" name="Smoke1"    	     file="Smoke1.png" />
+<sprite type="Effect" name="Smoke2"    	     file="Smoke2.png" />
+
+<sprite type="Font" name="MFont" file="MFont.png" />
+<sprite type="Font" name="SFont" file="SFont.png" />
+
+<sprite type="Misc" name="Arrow" file="Arrow.png" />
+
+<sprite type="Entity" name="BlankSignLeft1"    file="BlankSignLeft1.png" width="1.5" height="1.5" centerX="0.75" centerY="0.1" />
+<sprite type="Entity" name="BlankSignRight1"   file="BlankSignRight1.png" width="1.5" height="1.5" centerX="0.75" centerY="0.1" />
+<sprite type="Entity" name="Bridge"            file="Bridge.png" width="4" height="1.65" centerX="2" centerY="1.65" />
+<sprite type="Entity" name="CastleDoor1"       file="CastleDoor1.png" width="4" height="4" centerX="2" centerY="0.02" />
+<sprite type="Entity" name="CastleWindow1"     file="CastleWindow1.png" width="2" height="3" centerX="1" centerY="0.02" />
+<sprite type="Entity" name="FinSignLeft1"      file="FinSignLeft1.png" width="1.5" height="1.5" centerX="0.75" centerY="0.1" />
+<sprite type="Entity" name="FinSignRight1"     file="FinSignRight1.png" width="1.5" height="1.5" centerX="0.75" centerY="0.1" />
+<sprite type="Entity" name="Grass1"            file="Grass1.png" width="0.5" height="0.5" centerX="0.25" centerY="0.15" />
+<sprite type="Entity" name="HangingVines1"     file="HangingVines1.png" width="3.0" height="4.0" centerX="1.5" centerY="3.6" />
+<sprite type="Entity" name="HangingVines2"     file="HangingVines2.png" width="3.0" height="4.0" centerX="1.5" centerY="3.6" />
+<sprite type="Entity" name="HStones" 	   file="HStones.png" width="0.8" height="2" centerX="0.4" centerY="0.03" />
+<sprite type="Entity" name="SnowMan" 	   file="SnowMan.png" width="1.5" height="2.0" centerX="0.75" centerY="0.3" />
+<sprite type="Entity" name="ThisWaySignLeft1"  file="ThisWaySignLeft1.png" width="1.5" height="1.5" centerX="0.75" centerY="0.1" />
+<sprite type="Entity" name="ThisWaySignRight1" file="ThisWaySignRight1.png" width="1.5" height="1.5" centerX="0.75" centerY="0.1" />
+<sprite type="Entity" name="Tree1"    	   file="Tree1.png" width="5" height="6" centerX="2.5" centerY="0.2" />
+<sprite type="Entity" name="Tree2"    	   file="Tree2.png" width="5" height="6" centerX="2.5" centerY="0.2" />
+<sprite type="Entity" name="Tut3Sign" 	   file="Tut3Sign.png" width="3" height="3" centerX="1.5" centerY="0.2" />
+<sprite type="Entity" name="YellowFlare"		file="YellowFlare.png" width="2" height="2" centerX="1" centerY="1" blendmode="add"/>
+
+<sprite type="UI" name="Loading" 	    file="Loading.png" />
+<sprite type="UI" name="TitleBL" 	    file="TitleBL.jpg" />
+<sprite type="UI" name="TitleBR" 	    file="TitleBR.jpg" />
+<sprite type="UI" name="TitleTL" 	    file="TitleTL.jpg" />
+<sprite type="UI" name="TitleTR" 	    file="TitleTR.jpg" />
+<sprite type="UI" name="Cursor"             file="Cursor.png" />
+<sprite type="UI" name="NewLevelsAvailable" file="NewLevelsAvail.png" />
+<sprite type="UI" name="Misc"               file="Misc.png" />
+<sprite type="UI" name="MiscDisabled"       file="MiscDisabled.png" />
+<sprite type="UI" name="MiscActive"         file="MiscActive.png" />
+<sprite type="UI" name="DarkBlob"           file="DarkBlob.png" />
+<sprite type="UI" name="MenuBL" 	    file="MenuBL.png" />
+<sprite type="UI" name="MenuBR" 	    file="MenuBR.png" />
+<sprite type="UI" name="MenuTL" 	    file="MenuTL.png" />
+<sprite type="UI" name="MenuTR" 	    file="MenuTR.png" />
+
+</xmoto_theme>
