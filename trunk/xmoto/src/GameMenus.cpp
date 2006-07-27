@@ -316,7 +316,7 @@ namespace vapp {
     UIButton *pListAllButton = new UIButton(m_pReplaysWindow,11+115+115,m_pReplaysWindow->getPosition().nHeight-68,GAMETEXT_LISTALL,115,57);
     pListAllButton->setFont(m_Renderer.getSmallFont());
     pListAllButton->setType(UI_BUTTON_TYPE_CHECK);
-    pListAllButton->setChecked(true);
+    pListAllButton->setChecked(false);
     pListAllButton->setID("REPLAY_LIST_ALL");
     pListAllButton->setContextHelp(CONTEXTHELP_ALL_REPLAYS);
     UIList *pReplayList = new UIList(m_pReplaysWindow,20,40,"",m_pReplaysWindow->getPosition().nWidth-40,m_pReplaysWindow->getPosition().nHeight-115);      
