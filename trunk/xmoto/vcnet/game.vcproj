@@ -216,6 +216,9 @@
 				RelativePath="..\src\ScriptDynamicObjects.cpp">
 			</File>
 			<File
+				RelativePath="..\src\SomersaultCounter.cpp">
+			</File>
+			<File
 				RelativePath="..\src\Sound.cpp">
 			</File>
 			<File
@@ -267,6 +270,9 @@
 			</File>
 			<File
 				RelativePath="..\src\ScriptDynamicObjects.h">
+			</File>
+			<File
+				RelativePath="..\src\SomersaultCounter.h">
 			</File>
 			<File
 				RelativePath="..\src\Sound.h">

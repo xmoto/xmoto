@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* 
  *  Game statistics
  */
+#include <time.h>
 #include "Stats.h"
 #include "GameText.h"
 
@@ -52,6 +53,12 @@ namespace vapp {
               pPlayer = new PlayerStats;
               pPlayer->PlayerName = pcPlayerName;
               m_Players.push_back(pPlayer);
+            }
+            
+            /* Stats since? */
+            const char *pcStatsSince = pPlayerElem->Attribute("since");
+            if(pcStatsSince != NULL) {             
+              pPlayer->StatsSince = pcStatsSince;
             }
             
             /* Read stats */
@@ -108,7 +115,7 @@ namespace vapp {
       FS::writeLineF(pfh,"<stats>");
       
       for(int i=0;i<m_Players.size();i++) {
-        FS::writeLineF(pfh,"  <player name=\"%s\">",m_Players[i]->PlayerName.c_str());
+        FS::writeLineF(pfh,"  <player name=\"%s\" since=\"%s\">",m_Players[i]->PlayerName.c_str(),m_Players[i]->StatsSince.c_str());
         
         FS::writeLineF(pfh,"    <stat tag=\"playtime\" v=\"%f\"/>",m_Players[i]->fTotalPlayTime);
         FS::writeLineF(pfh,"    <stat tag=\"xmotostarts\" v=\"%d\"/>",m_Players[i]->nXMotoStarts);
@@ -183,7 +190,7 @@ namespace vapp {
       else sprintf(cTime,GAMETEXT_XSECONDS,nSeconds);
       
       sprintf(cBuf,GAMETEXT_XMOTOGLOBALSTATS,      
-              pPlayer->nXMotoStarts,pPlayer->nLevelsPlayed,pPlayer->nDiffLevelsPlayed,pPlayer->nDeaths,pPlayer->nNumCompleted,pPlayer->nRestarts,cTime);                           
+              pPlayer->StatsSince.c_str(),pPlayer->nXMotoStarts,pPlayer->nLevelsPlayed,pPlayer->nDiffLevelsPlayed,pPlayer->nDeaths,pPlayer->nNumCompleted,pPlayer->nRestarts,cTime);                           
       
       UIStatic *pText = new UIStatic(p,0,0,cBuf,nWidth,80);
       pText->setHAlign(UI_ALIGN_LEFT);
@@ -191,13 +198,13 @@ namespace vapp {
       pText->setFont(pFont);
       
       /* Per-level stats */      
-      pText = new UIStatic(p,0,80,GAMETEXT_MOSTPLAYEDLEVELSFOLLOW,nWidth,20);
+      pText = new UIStatic(p,0,90,GAMETEXT_MOSTPLAYEDLEVELSFOLLOW,nWidth,20);
       pText->setHAlign(UI_ALIGN_LEFT);
       pText->setTextSolidColor(MAKE_COLOR(255,255,0,255));
       pText->setFont(pFont);      
       
       std::vector<LevelStats *> Levels = _GetOrderedLevels(ORDER_BY_PLAYTIME,PlayerName);
-      int cy = 100;
+      int cy = 110;
       for(int i=0;i<Levels.size();i++) {
         if(cy + 45 > nHeight) break; /* out of window */
         
@@ -297,6 +304,16 @@ namespace vapp {
       pPlayer = new PlayerStats;
       pPlayer->PlayerName = PlayerName;
       m_Players.push_back(pPlayer);
+
+      /* Note this time */
+      time_t ATime;               
+      time(&ATime);
+      struct tm *ptm = localtime(&ATime);
+
+      char cTemp[256];
+      sprintf(cTemp,"%02d:%02d %04d-%02d-%02d",ptm->tm_hour,ptm->tm_min,1900+ptm->tm_year,ptm->tm_mon,ptm->tm_mday);              
+                  
+      pPlayer->StatsSince = cTemp;
     }
     
     pPlayer->nXMotoStarts++;
@@ -308,13 +325,23 @@ namespace vapp {
   bool Stats::_DefinePlayerAndLevel(PlayerStats **ppPlayer,LevelStats **ppLevel,
                                     const std::string &PlayerName,const std::string &LevelID,const std::string &LevelName) {
     bool bNewLevel = false;                                      
-                                    
+
     *ppPlayer = _FindPlayerStats(PlayerName);
     if(*ppPlayer == NULL) {
       /* No player with that name, define it */
       *ppPlayer = new PlayerStats;
       (*ppPlayer)->PlayerName = PlayerName;
       m_Players.push_back(*ppPlayer);
+      
+      /* Note this time */
+      time_t ATime;               
+      time(&ATime);
+      struct tm *ptm = localtime(&ATime);
+
+      char cTemp[256];
+      sprintf(cTemp,"%02d:%02d %04d-%02d-%02d",ptm->tm_hour,ptm->tm_min,1900+ptm->tm_year,ptm->tm_mon,ptm->tm_mday);              
+                  
+      (*ppPlayer)->StatsSince = cTemp;
     }
     
     *ppLevel = _FindLevelStats(*ppPlayer,LevelID,LevelName);

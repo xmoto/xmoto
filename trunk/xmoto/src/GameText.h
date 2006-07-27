@@ -52,6 +52,10 @@ Central place to keep many in-game text strings
 #define GAMETEXT_BRAKE                "Brake"
 #define GAMETEXT_BUILTINLEVELS        "Built-In Levels"     
 #define GAMETEXT_BY                   "by"
+#define GAMETEXT_CAMERAMOVEXDOWN      "Move Camera to left"
+#define GAMETEXT_CAMERAMOVEXUP        "Move Camera to right"
+#define GAMETEXT_CAMERAMOVEYDOWN      "Move Camera down"
+#define GAMETEXT_CAMERAMOVEYUP        "Move Camera up"
 #define GAMETEXT_CANCEL               "Cancel"
 #define GAMETEXT_CHANGE               "Change..."
 #define GAMETEXT_CHANGEDIR            "Change direction"
@@ -263,18 +267,15 @@ Central place to keep many in-game text strings
 #define GAMETEXT_WWWTAB               "WWW"
 #define GAMETEXT_XHOURS               "%d hours"  
 #define GAMETEXT_XMINUTES             "%d minutes"  
-#define GAMETEXT_XMOTOGLOBALSTATS     "X-Moto started %d times; %d plays (%d different levels),\n" \
+#define GAMETEXT_XMOTOGLOBALSTATS     "(Stats since: %s)\n"                                         \
+                                      "X-Moto started %d times; %d plays (%d different levels),\n"  \
                                       "%d deaths, %d finishes, and %d restarts.\nTime played: %s"
 #define GAMETEXT_XMOTOLEVELSTATS      "%d plays, %d deaths, %d finishes, and %d restarts"
 #define GAMETEXT_XSECONDS             "%d seconds"  
 #define GAMETEXT_YES                  "Yes"
 #define GAMETEXT_ZOOMIN  	            "Zoom in"
-#define GAMETEXT_ZOOMOUT 	            "Zoom out"
 #define GAMETEXT_ZOOMINIT 	          "Reinitialize zoom"
-#define GAMETEXT_CAMERAMOVEXUP   "Move Camera to right"
-#define GAMETEXT_CAMERAMOVEXDOWN "Move Camera to left"
-#define GAMETEXT_CAMERAMOVEYUP   "Move Camera up"
-#define GAMETEXT_CAMERAMOVEYDOWN "Move Camera down"
+#define GAMETEXT_ZOOMOUT 	            "Zoom out"
 
 /* Context help strings */
 #define CONTEXTHELP_UPDATEHIGHSCORES "Download the latest X-Moto world records and check for new levels"

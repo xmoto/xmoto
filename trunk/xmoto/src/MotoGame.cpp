@@ -662,7 +662,7 @@ namespace vapp {
       char msg[16];
       m_nbSomersaultCounter++;
       sprintf(msg, "%i", m_nbSomersaultCounter);
-      gameMessage(msg);
+      //gameMessage(msg);
     }
 
     /* Remember bike pos for next time */

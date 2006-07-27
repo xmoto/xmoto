@@ -57,6 +57,7 @@ namespace vapp {
     }
     
     std::string PlayerName;
+    std::string StatsSince;
     
     /* Per level stats */
     std::vector<LevelStats *> Levels;
