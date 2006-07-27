@@ -68,6 +68,8 @@ namespace vapp {
   int L_Game_SetDynamicBlockNone(lua_State *pL);
   int L_Game_CameraZoom(lua_State *pL);
   int L_Game_CameraMove(lua_State *pL);
+  int L_Game_GetEntityRadius(lua_State *pL);
+  int L_Game_IsEntityTouched(lua_State *pL);
 
   /* "Game" Lua library */
   static const luaL_reg g_GameFuncs[] = {
@@ -81,12 +83,12 @@ namespace vapp {
     {"PlaceScreenArrow",  	    L_Game_PlaceScreenArrow},
     {"HideArrow",         	    L_Game_HideArrow},
     {"ClearMessages",     	    L_Game_ClearMessages},
-    {"SetGravity", 	  	    L_Game_SetGravity},
-    {"GetGravity", 	  	    L_Game_GetGravity},
+    {"SetGravity", 	  	        L_Game_SetGravity},
+    {"GetGravity", 	  	        L_Game_GetGravity},
     {"SetPlayerPosition", 	    L_Game_SetPlayerPosition},
     {"GetPlayerPosition", 	    L_Game_GetPlayerPosition},
-    {"GetEntityPos", 	  	    L_Game_GetEntityPos},
-    {"SetEntityPos", 	  	    L_Game_SetEntityPos},
+    {"GetEntityPos", 	  	      L_Game_GetEntityPos},
+    {"SetEntityPos", 	  	      L_Game_SetEntityPos},
     {"SetKeyHook",        	    L_Game_SetKeyHook},
     {"GetKeyByAction",    	    L_Game_GetKeyByAction},
     {"Log",               	    L_Game_Log},
@@ -98,8 +100,10 @@ namespace vapp {
     {"SetDynamicBlockRotation",     L_Game_SetDynamicBlockRotation},
     {"SetDynamicBlockTranslation",  L_Game_SetDynamicBlockTranslation},
     {"SetDynamicBlockNone",         L_Game_SetDynamicBlockNone},
-    {"CameraZoom", 		    L_Game_CameraZoom},
-    {"CameraMove", 		    L_Game_CameraMove},
+    {"CameraZoom", 		          L_Game_CameraZoom},
+    {"CameraMove", 		          L_Game_CameraMove},
+    {"GetEntityRadius", 		    L_Game_GetEntityRadius},
+    {"IsEntityTouched", 		    L_Game_IsEntityTouched},
     {NULL, NULL}
   };
 
@@ -1391,6 +1395,15 @@ namespace vapp {
     
     /* TODO: Warning (not found) */
   }
+  
+  Entity *MotoGame::getEntityByID(const std::string &ID) {
+    for(int i=0;i<m_Entities.size();i++) {
+      if(m_Entities[i]->ID == ID) {
+        return m_Entities[i];
+      }
+    }
+    return NULL;    
+  }  
 
   void MotoGame::_UpdateEntities(void) {
     /* Do player touch anything? */

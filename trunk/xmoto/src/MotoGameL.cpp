@@ -48,6 +48,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     Game.SetDynamicBlockNone()
     Game.CameraZoom()
     Game.CameraMove()
+    Game.GetEntityRadius()
+    Game.IsEntityTouched()
   
 */
 
@@ -265,19 +267,52 @@ namespace vapp {
     /* no event for this */
 
     /* Find the specified entity and return its position */
-    for(int i=0;i<m_pMotoGame->getEntities().size();i++) {
-      Entity *p = m_pMotoGame->getEntities()[i];
-      if(p->ID == luaL_checkstring(pL,1)) {
-        lua_pushnumber(pL,p->Pos.x);
-        lua_pushnumber(pL,p->Pos.y);
-        return 2;
-      }
+    Entity *p = m_pMotoGame->getEntityByID(luaL_checkstring(pL,1));
+    if(p != NULL) {
+      lua_pushnumber(pL,p->Pos.x);
+      lua_pushnumber(pL,p->Pos.y);
+      return 2;
     }
+
     /* Entity not found, return <0,0> */
     lua_pushnumber(pL,0);
     lua_pushnumber(pL,0);
     return 2;
   }  
+  
+  int L_Game_GetEntityRadius(lua_State *pL) {
+    /* no event for this */
+
+    /* Find the specified entity and return its radius */
+    Entity *p = m_pMotoGame->getEntityByID(luaL_checkstring(pL,1));
+    if(p != NULL) {
+      lua_pushnumber(pL,p->fSize);
+      return 1;
+    }
+
+    /* Entity not found, return 0 */
+    lua_pushnumber(pL,0);
+    return 1;
+  }
+
+  int L_Game_IsEntityTouched(lua_State *pL) {
+    /* no event for this */
+
+    /* Find the specified entity and return its touch status */
+    Entity *p = m_pMotoGame->getEntityByID(luaL_checkstring(pL,1));
+    if(p != NULL) {
+      if(p->bTouched)
+        lua_pushnumber(pL,1);
+      else
+        lua_pushnumber(pL,0);
+      return 1;
+    }
+
+    /* Entity not found, assume not touched */
+    lua_pushnumber(pL,0);
+    return 1;
+  }
+
 
   int L_Game_SetEntityPos(lua_State *pL) {
     /* event for this */

@@ -714,6 +714,8 @@ namespace vapp {
       void setPlayerPosition(float x,float y,bool bFaceRight);
       const Vector2f &getPlayerPosition(void);
       bool getPlayerFaceDir(void);
+
+      Entity *getEntityByID(const std::string &ID);
       
       /* Direct Lua interaction methods */
       bool scriptCallBool(std::string FuncName,bool bDefault=false);
