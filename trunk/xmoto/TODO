@@ -1,3 +1,6 @@
+-> i corrected a bug on stats : hope it doesn't depend on the os : the
+   month was 06 for me instead of 07
+
 # for 0.2.0
 ######################################################################
 Assigned to Neckelmann:
@@ -6,8 +9,12 @@ Assigned to Neckelmann:
 * BUG : move a background block make it collide with the bike
  neckelmann:  as it is now a block can not be both dynamic and background.
               it's a limitation. Maybe it can be improved later.
- 
 
+* do you agree if i make a lua function to get the number of
+   somersaults ? some "freestyle" could ask for figure to be done.
+   in the future, i would like make this functionnality better : time
+   in the air, time on one wheel, ...
+ 
 * BUG : when you rewind, starts don't move
  neckelmann:  starts? why should they move?
  nicolas: stars
