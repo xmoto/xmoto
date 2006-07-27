@@ -58,6 +58,12 @@ src/Editor.cpp:2294: attention : «fDist» may be used uninitialized in this fun
    when the stats have been initialized to display : stats from
    18/06/2006 for example. Remember that this field must be translatable
 * stats displayed the month-1 -> i got 2006/06/27 instead of 2006/07/27
+* BUG : when you rewind, starts don't move
+ neckelmann:  starts? why should they move?
+ nicolas: stars
+ neckelmann:  hmm, the only way to fix that is to make a "particle rewind"
+              function. It's kind of a mess to make, and I don't thinks it's
+              that important.
 
 Before Xmoto 1.16
 * BUG : bug in the editor if you load and save http://xmoto.free.fr/levels/l189.lvl because  > is replaced by &gt;      

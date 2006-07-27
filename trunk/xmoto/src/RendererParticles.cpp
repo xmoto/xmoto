@@ -208,6 +208,13 @@ namespace vapp {
     }
   }  
   
+  void GameRenderer::clearAllParticles(void) {
+    for(int i=0;i<m_Particles.size();i++) { 
+      delete m_Particles[i];
+    }
+    m_Particles.clear();
+  }
+  
   void GameRenderer::_RenderParticle(Vector2f P,Texture *pTexture,float fSize,float fAngle,Color c) {
     /* Render single particle */
     if(pTexture == NULL) return;

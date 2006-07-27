@@ -192,6 +192,7 @@ namespace vapp {
       void unprepareForNewLevel(void);
       void loadDebugInfo(std::string File);
       
+      void clearAllParticles(void);      
       Particle *spawnParticle(ParticleType Type,Vector2f Pos,Vector2f Vel,float fLifeTime);
     
       /* Data interface */
@@ -220,6 +221,7 @@ namespace vapp {
       void moveCamera(float px, float py);
       void initCamera();
       void setGhostMotionBlur(bool b) {m_bGhostMotionBlur = b;}
+      void skipBackTime(float fTime) {m_fNextParticleUpdate -= fTime;}
       
 #if defined(ALLOW_GHOST)
       void setGhostReplay(Replay *pReplay) {m_pGhostReplay = pReplay;}

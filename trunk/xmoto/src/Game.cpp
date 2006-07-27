@@ -1360,6 +1360,11 @@ namespace vapp {
             }
           }
           else bValidGameState = false;
+          
+          if(m_pReplay->getSpeed() < 0) {
+            m_Renderer.clearAllParticles();
+            m_Renderer.skipBackTime(100000);            
+          }
         }
                 
         /* Render */
@@ -1704,9 +1709,11 @@ namespace vapp {
             break;
           case SDLK_LEFT:
             /* Left arrow key: rewind */
-	    if(_IsReplayScripted(m_pReplay) == false) {
-	      m_pReplay->fastrewind(1);
-	    }
+	            if(_IsReplayScripted(m_pReplay) == false) {
+	              m_Renderer.clearAllParticles();
+	              m_Renderer.skipBackTime(1);
+	              m_pReplay->fastrewind(1);
+	            }
             break;
 	case SDLK_SPACE:
 	  /* pause */
