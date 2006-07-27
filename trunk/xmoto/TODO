@@ -14,10 +14,14 @@ Assigned to Neckelmann:
    somersaults ? some "freestyle" could ask for figure to be done.
    in the future, i would like make this functionnality better : time
    in the air, time on one wheel, ...
+  neckelmann: sounds good
  
 * BUG : when you rewind, starts don't move
  neckelmann:  starts? why should they move?
  nicolas: stars
+ neckelmann:  hmm, the only way to fix that is to make a "particle rewind"
+              function. It's kind of a mess to make, and I don't thinks it's
+              that important.
 
 * is it possible to include the speed of the dynamic blocks with lua ?
    the aim is that normally, the moto must move on a block moving
