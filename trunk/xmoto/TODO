@@ -1,3 +1,6 @@
+* feature : a replay button when you finish a level (or die) which
+   plays Latest.rpl
+
 * BUG: (21:17:09) nx:   essaye le niveau "quetsche" au départ, tu
    "tombes" sur le sol et tu as 1 qui saffiche tout seul : pour les
    saut perilleux
