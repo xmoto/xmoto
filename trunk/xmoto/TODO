@@ -1,5 +1,6 @@
 ### For 0.2.1
 
+* use acos(m_BikeS.fFrameRot[0]) for somersaults to be more precise
 * hum : make clean, make -> no rule to make xmoto-edit : so it's not corrected
 * make xmoto independant of the arch for replays
 * BUG : when you see level info in level pack ; then you click on ok
