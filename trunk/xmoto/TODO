@@ -10,7 +10,6 @@
 * BUG : move a background block make it collide with the bike
  neckelmann:  as it is now a block can not be both dynamic and background.
               it's a limitation. Maybe it can be improved later.
-* to not be able to go into the ground via the side switch
 * BUG : is it normal ?
         C.x=(getParent()->getDispWidth() * pArrow->ArrowPointerPos.x) / 800.0f;
         C.y=(getParent()->getDispHeight() * pArrow->ArrowPointerPos.y)
@@ -55,6 +54,7 @@ UPDATE:  It appears it's only possible to produce the bug when ghost is enabled.
    it's not really available
 
 ### for 0.3.0 and after
+* loadness of headcrash sound should depend on head velocity 
 * feature : a replay button when you finish a level (or die) which
    plays Latest.rpl
 * a lua function to get the number of

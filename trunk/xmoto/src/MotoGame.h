@@ -848,6 +848,7 @@ namespace vapp {
       Vector2f m_PrevFrontWheelP;         /* Prev. front wheel position */
       Vector2f m_PrevHeadP;
       Vector2f m_PrevHead2P;
+      Vector2f m_PrevActiveHead;
       
       /* Wheels spinning dirt up... muzakka! :D */
       bool m_bWheelSpin;                  /* Do it captain */

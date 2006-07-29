@@ -1859,16 +1859,16 @@ namespace vapp {
         int nX,nY;
         getMousePos(&nX,&nY);
         
-        if(nButton = SDL_BUTTON_LEFT)
+        if(nButton == SDL_BUTTON_LEFT)
           m_Renderer.getGUI()->mouseLUp(nX,nY);
-        else if(nButton = SDL_BUTTON_RIGHT)
+        else if(nButton == SDL_BUTTON_RIGHT)
           m_Renderer.getGUI()->mouseRUp(nX,nY);
         break;
 
       case GS_PLAYING:
-      /* Notify the controller */
-      m_InputHandler.handleInput(INPUT_KEY_UP,nButton,m_MotoGame.getBikeController(), &m_Renderer);
-      break;
+        /* Notify the controller */
+        m_InputHandler.handleInput(INPUT_KEY_UP,nButton,m_MotoGame.getBikeController(), &m_Renderer);
+        break;
     }
   }
 
