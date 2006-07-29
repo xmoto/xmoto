@@ -193,17 +193,18 @@ namespace vapp {
     /* Load XML document and fetch tinyxml handle */
     _UnloadLevelData();
     m_LevelCheckSum.nCRC32 = 0;
-    m_XML.readFromFile( m_FileName, /*&m_LevelCheckSum.nCRC32*/ NULL );
+    m_XML.readFromFile( m_FileName, /*&m_LevelCheckSum.nCRC32*/ NULL );    
     
     TiXmlDocument *pDoc = m_XML.getLowLevelAccess();
+    if(pDoc == NULL) throw Exception("failed to load level XML");
     
     /* Start the fantastic parsing by fetching the <level> element */
     TiXmlElement *pLevelElem = _FindElement(NULL,std::string("level"));    
-    if(pLevelElem == NULL) return; /* TODO: error */
+    if(pLevelElem == NULL) throw Exception("<level> tag not found in XML");
     
     /* Get level ID */
     m_ID = _GetOption(pLevelElem,"id");
-    if(m_ID == "") return; /* TODO: error */    
+    if(m_ID == "") throw Exception("no ID specified in level XML");
     
     /* Get required xmoto version */
     m_RequiredVersion = _GetOption(pLevelElem,"rversion");

@@ -273,10 +273,22 @@ namespace vapp {
       m_Log.msg("Loading level from '%s'...",Path.c_str());         
       m_pLevelSrc = new LevelSrc;
       m_pLevelSrc->setFileName( Path );
-      m_pLevelSrc->loadXML();
-
-      resetView();
-      setState(ES_DEFAULT);
+      try {
+        m_pLevelSrc->loadXML();
+        resetView();
+        setState(ES_DEFAULT);
+      }
+      catch(Exception &e) {
+        m_Log.msg("File '%s' failed to load, creating new instead.",m_LevelToInitLoad.c_str());
+        m_Log.msg("If you're sure that the level SHOULD work, DON'T save now, exit instead!");
+        m_Log.msg("(otherwise you might overwrite a valid level)");
+        
+        delete m_pLevelSrc;
+        m_pLevelSrc = NULL;
+        
+        _NewLevel();
+        m_pLevelSrc->setFileName( Path );
+      }
     }        
     else {
       _NewLevel();

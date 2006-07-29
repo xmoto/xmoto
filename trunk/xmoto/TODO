@@ -2,7 +2,6 @@
 
 * hum : make clean, make -> no rule to make xmoto-edit : so it's not corrected
 * make xmoto independant of the arch for replays
-* BUG : xmoto-edit rgeznlre -> segfault
 * BUG : when you see level info in level pack ; then you click on ok
    -> it close the window and the levelpack window
 * BUG : move a background block make it collide with the bike

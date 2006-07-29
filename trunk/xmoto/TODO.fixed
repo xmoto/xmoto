@@ -1,5 +1,6 @@
 Since 0.2.0
 * to not be able to go into the ground via the side switch
+* BUG : xmoto-edit rgeznlre -> segfault
 * BUG: (21:17:09) nx:   essaye le niveau "quetsche" au départ, tu
    "tombes" sur le sol et tu as 1 qui saffiche tout seul : pour les
    saut perilleux
