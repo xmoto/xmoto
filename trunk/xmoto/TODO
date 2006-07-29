@@ -1,113 +1,32 @@
-* feature : a replay button when you finish a level (or die) which
-   plays Latest.rpl
+### For 0.2.1
 
-* BUG: (21:17:09) nx:   essaye le niveau "quetsche" au départ, tu
-   "tombes" sur le sol et tu as 1 qui saffiche tout seul : pour les
-   saut perilleux
-
-* BUG : move a background block make it collide with the bike
- neckelmann:  as it is now a block can not be both dynamic and background.
-              it's a limitation. Maybe it can be improved later.
-
-* do you agree if i make a lua function to get the number of
-   somersaults ? some "freestyle" could ask for figure to be done.
-   in the future, i would like make this functionnality better : time
-   in the air, time on one wheel, ...
-  neckelmann: sounds good
- 
-* is it possible to include the speed of the dynamic blocks with lua ?
-   the aim is that normally, the moto must move on a block moving
-   horizontally
- --comment: well, generally the script is totally responsible for moving
-            the blocks, so the script can calculate the velocity itself.            
- -> it is not it : i mean : when you move a block, and when you bike
-   is under it, logically, bike should move too : it's
-   physics. Currently, it doesn't work because a move is not really a
-   move, it's a teleportation, so there is no velocity.
- neckelmann:  ahh, now i get it. Well, I can't come up with an easy way to
-              do it. One way to do it is to keep track of everywhere the
-              bike touches a dynamic block, and then calculate a suitable
-              force on the wheel manually. But I think it's going to be
-              crappy. By the way, CVS file chatting is weird :)
-
-* the jump of the moto with dynamic blocks is too much (is this jump
-   really necessary ?)
- --comment: i'd rather not touch that any more, i think it's quite stable
-            as it is. And yes, the jump is necesary, that's how the 
-            physics engine works (to seperate intersection objects/bodies
-            it tries to "push" them appart)
-
-* "view the highscore" button is not visible for pack(priority=high)
-* add <xml_room> in configuration so that the player can choose the
-   link to his room xml file (priority=high)(priority=high)
-* themes : not more animation in .xml ? -> be able to load an animated bike ?
-* now that there is a lot of replays (dwd due to ghosts), what about
-  put "list all" by default in the replays list ?
-   neckelmann: it is on per default now, right?   
+* make xmoto independant of the arch for replays
 * BUG : xmoto-edit rgeznlre -> segfault
 * BUG : when you see level info in level pack ; then you click on ok
    -> it close the window and the levelpack window
-   
-# for after
-* make something when a perious jump is done : it is quite easy i
-   think to detect them
-* to be able to move a zone ?
-* make sound in themes
-* make circle for sprites, strawberries, ... in ugly mode
-* BUG : http://xmoto.free.fr/tmp/bugonlinuxppcreplays.jpg : it
-   happends on replays on linux ppc
-*OpenGL-independent Renderer
-   I would like to port XMoto to my GP2X, a Linux-based
- handheld game console. The main problem is that due to
- the lack of an FPU, no OpenGL-implementations with
- acceptable performance are available. The
- floating-point emulation works quite good, so im sure
- that Physics still could be done with ODE.
- But the graphics part would have to be done with the
- 2D-capabilities of SDL. I could write a new Renderer
- myself, but i would have to fork the code at its
- current state because OpenGL is tied too deep with the
- code.
- The renderer should be abstracted, so a SDL-Renderer
- can be easily integrated. I think a 2D-based renderer
- would also enable older platforms to play XMoto.
-* svg2xmotolvl
-* otherwise we could make a "standard xmoto library" of lua functions :)
-function testCollision(laserX, laserY, alienX, alienY)
-    -- to be remplaced by a real circle collision
-    -- made by xmoto using entity r
-    alienHalfWidth  = 0.5
-    alienHalfHeight = 0.5
-    laserHalfWidth  = 0.4
-    laserHalfHeight = 0.4
-
-    return laserX + laserHalfWidth &gt; alienX - alienHalfWidth
-          and laserX - laserHalfWidth  &lt; alienX + alienHalfWidth
-          and laserY + laserHalfHeight &gt; alienY - alienHalfHeight
-          and laserY - laserHalfHeight &lt; alienY + alienHalfHeight
-end
-* loading level is sometimes quite long
-* themes : check the md5sum of the files ; don't display available if
-   it's not really available
-* new script call :
-  killPlayer() -> kill the player
-  timePenallity(nbSeconds) -> increase time
-  collision between sprites, between sprites and head
-  move a zone
-* collision : collision with the body : triangle with points : head,
-   wheels : because it's currently possible to touch a wecker with the
-   body and possible to touch a strawberry but that it doesn't take
-   it. However, this collision must be avaible only for entities not
-   for blocks.
+* BUG: (21:17:09) nx:   essaye le niveau "quetsche" au départ, tu
+   "tombes" sur le sol et tu as 1 qui saffiche tout seul : pour les
+   saut perilleux
+* BUG : move a background block make it collide with the bike
+ neckelmann:  as it is now a block can not be both dynamic and background.
+              it's a limitation. Maybe it can be improved later.
+* to not be able to go into the ground via the side switch
 * BUG : is it normal ?
         C.x=(getParent()->getDispWidth() * pArrow->ArrowPointerPos.x) / 800.0f;
         C.y=(getParent()->getDispHeight() * pArrow->ArrowPointerPos.y)
    / 600.0f;
         moreover, it doesn't work with the zoom
-and Game.PlaceScreenArrow(5, 5, 225) : doesn't respect coords
-* add 3 2 1 GO ! at level startup (only if the level played is
-   different from the last played)
-* have a <----> for the lists
+   and Game.PlaceScreenArrow(5, 5, 225) : doesn't respect coords
+  nicolas: in fact, arrows of script are dependant of the resolution ;
+   so i did not documented them while it's not clean :
+       The concerned functions are :
+       PlaceInGameArrow(x, y, angle)
+       Place an arrow in the game to show something to the player
+       PlaceScreenArrow(x, y, angle)
+       Place an arrow in the game to show something to the player.
+       Position is relative to the screen
+       HideArrow()
+       Hide the arrow
 * it seems that there is a bug on speed it is played (if i play
    replays done on fast machine, it appear faster) http://xmoto.free.fr/replays/replay_1312.rpl
 * BUG :
@@ -122,10 +41,47 @@ Game.cpp around 1210 : adding a catch ; however, when the exception is
    	    m_Renderer.render();
 	  } catch(Exception &e) {printf("Exception handled\n");}
 UPDATE:  It appears it's only possible to produce the bug when ghost is enabled.
-
-* if a script ask for an already used key, propose an other one
-* replay arch indepedance structure
 * see about timeout when connection failed
+
+# feature which are not really bugs for 0.2.1
+* "view the highscore" button is not visible for pack
+* make circle for sprites, strawberries, ... in ugly mode
+* when you press o in the level list and that no level start with an
+   o, it bases on the 2nd letter,...
+* loading level is sometimes quite long
+  nicolas : in fact, when you just want to see a replay (xmoto -replay
+   ...) ; it's long just for it.
+* themes : check the md5sum of the files ; don't display available if
+   it's not really available
+
+### for 0.3.0 and after
+* feature : a replay button when you finish a level (or die) which
+   plays Latest.rpl
+* a lua function to get the number of
+   somersaults ? some "freestyle" could ask for figure to be done.
+   in the future, i would like make this functionnality better : time
+   in the air, time on one wheel, ...
+* add <xml_room> in configuration so that the player can choose the
+   link to his room xml file (priority=high)(priority=high)
+* themes : not more animation in .xml ? -> be able to load an animated bike ?
+* to be able to move a zone ?
+* make sound in themes
+* svg2xmotolvl
+* we could make a "standard xmoto library" of lua functions :)
+* new script call :
+  killPlayer() -> kill the player
+  timePenallity(nbSeconds) -> increase time
+  collision between sprites, between sprites and head
+  move a zone
+* collision : collision with the body : triangle with points : head,
+   wheels : because it's currently possible to touch a wecker with the
+   body and possible to touch a strawberry but that it doesn't take
+   it. However, this collision must be avaible only for entities not
+   for blocks.
+* add 3 2 1 GO ! at level startup (only if the level played is
+   different from the last played)
+* have a <----> for the lists
+* if a script ask for an already used key, propose an other one
 * display a nice counter for engine speed : disable this counter in replays
 * a button "clean replays" which remove not highscore replays or
    something like it
@@ -137,11 +93,6 @@ UPDATE:  It appears it's only possible to produce the bug when ghost is enabled.
 * add import of players.bin (so that people playing at different
    location can merge their highscores) (priority=very low)
 * translations (priority=very low)
-
-Undecided:
-* allow keep button pressed on list for people having not wheel ;-)
-* context information for levels : when one is selected, display
-   information
 * separate personnal highscores from others (two tabs instead of a
    button, it's easiest) (it neckelmann agree)
 * upload highscore from the game ? (require login/password room
