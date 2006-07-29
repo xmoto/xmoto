@@ -641,7 +641,7 @@ namespace vapp {
         /* Should we invoke the packager? */
         if(UserArgs[i] == "-pack") {
           Packager::go();
-          exit(1); /* leaks memory, but who cares? :) */
+          exit(0); /* leaks memory, but who cares? :) */
         }
       }
     }
