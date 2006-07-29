@@ -1456,6 +1456,7 @@ namespace vapp {
   
   EdgeEffect MotoGame::_TransEdgeEffect(std::string Name) {
     if(Name == "Grass") return EE_GRASS;
+    if(Name == "GrassAlt") return EE_GRASSALT;
     if(Name == "RedBricks") return EE_REDBRICKS;
     if(Name == "BlueBricks") return EE_BLUEBRICKS;
     if(Name == "GrayBricks") return EE_GRAYBRICKS;

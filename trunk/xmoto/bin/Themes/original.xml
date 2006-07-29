@@ -105,6 +105,7 @@
 <sprite type="Effect" name="EarthVines"      file="EarthVines.png" />
 <sprite type="Effect" name="EdgeBlueBricks1" file="EdgeBlueBricks1.jpg" />
 <sprite type="Effect" name="EdgeGrass1"      file="EdgeGrass1.png" />
+<sprite type="Effect" name="EdgeGrassAlt1"      file="EdgeGrassAlt1.png" />
 <sprite type="Effect" name="EdgeGrayBricks1" file="EdgeGrayBricks1.jpg" />
 <sprite type="Effect" name="EdgeIce1"        file="EdgeIce1.png" />
 <sprite type="Effect" name="EdgeRedBricks1"  file="EdgeRedBricks1.jpg" />

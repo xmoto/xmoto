@@ -60,7 +60,8 @@ namespace vapp {
     EE_GRASS,
     EE_REDBRICKS,
     EE_GRAYBRICKS,
-    EE_BLUEBRICKS
+    EE_BLUEBRICKS,
+    EE_GRASSALT,
   };
 
   /*===========================================================================

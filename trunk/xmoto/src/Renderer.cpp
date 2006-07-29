@@ -956,6 +956,7 @@ namespace vapp {
 	        
 					switch(pEdge->Effect) {
 						case EE_GRASS:
+						case EE_GRASSALT:
 						case EE_BLUEBRICKS:
 						case EE_GRAYBRICKS:
 						case EE_REDBRICKS: {
@@ -965,36 +966,45 @@ namespace vapp {
 						      EffectSprite* pType;
 						      pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "EdgeGrass1");
 						      if(pType != NULL) {
-							GLName = pType->getTexture()->nID;
-							fXScale = 0.5f;
-							fDepth = 0.3;
+							      GLName = pType->getTexture()->nID;
+							      fXScale = 0.5f;
+							      fDepth = 0.3;
+						      }
+						    }
+						    else if(pEdge->Effect == EE_GRASSALT) {						    
+						      EffectSprite* pType;
+						      pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "EdgeGrassAlt1");
+						      if(pType != NULL) {
+							      GLName = pType->getTexture()->nID;
+							      fXScale = 0.5f;
+							      fDepth = 0.6;
 						      }
 						    }
 						    else if(pEdge->Effect == EE_REDBRICKS) {						    
 						      EffectSprite* pType;
 						      pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "EdgeRedBricks1");
 						      if(pType != NULL) {
-							GLName = pType->getTexture()->nID;
-							fXScale = 0.8f;
-							fDepth = 0.3;
+							      GLName = pType->getTexture()->nID;
+							      fXScale = 0.8f;
+							      fDepth = 0.3;
 						      }
 						    }						
 						    else if(pEdge->Effect == EE_GRAYBRICKS) {
 						      EffectSprite* pType;
 						      pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "EdgeGrayBricks1");
 						      if(pType != NULL) {
-							GLName = pType->getTexture()->nID;
-							fXScale = 0.8f;
-							fDepth = 0.3;
+							      GLName = pType->getTexture()->nID;
+							      fXScale = 0.8f;
+							      fDepth = 0.3;
 						      }
 						    }
 						    else if(pEdge->Effect == EE_BLUEBRICKS) {
 						      EffectSprite* pType;
 						      pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "EdgeBlueBricks1");
 						      if(pType != NULL) {
-							GLName = pType->getTexture()->nID;
-							fXScale = 0.8f;
-							fDepth = 0.3;
+							      GLName = pType->getTexture()->nID;
+							      fXScale = 0.8f;
+							      fDepth = 0.3;
 						      }
 						    }
 						
