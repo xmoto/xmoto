@@ -3,10 +3,10 @@ SUBDIRS = src bin
 all: xmoto xmoto-edit
 
 xmoto: src/xmoto
-	ln -s src/xmoto xmoto
+	ln -sf src/xmoto xmoto
 
 xmoto-edit: src/xmoto-edit
-	ln -s src/xmoto-edit xmoto-edit
+	ln -sf src/xmoto-edit xmoto-edit
 
 EXTRA_DIST = bootstrap
 
