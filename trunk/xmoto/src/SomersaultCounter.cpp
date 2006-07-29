@@ -68,6 +68,8 @@ bool SomersaultCounter::update(vapp::Vector2f p_wheel1, vapp::Vector2f p_wheel2)
     return false;
   }
 
+  // printf("New state : %i\n", v_current_state);
+
   /* update last state */
   int v_diff = ((v_current_state > m_last_state &&
                  (m_last_state == 1 && v_current_state == 4) == false)
@@ -99,11 +101,11 @@ bool SomersaultCounter::update(vapp::Vector2f p_wheel1, vapp::Vector2f p_wheel2)
 
 
 int SomersaultCounter::getCurrentState(vapp::Vector2f p_wheel1, vapp::Vector2f p_wheel2) {
-  if(p_wheel1.x <= p_wheel2.x && p_wheel1.y < p_wheel2.y) {
+  if(p_wheel1.x < p_wheel2.x && p_wheel1.y < p_wheel2.y) {
     return 1;
   }
 
-  if(p_wheel1.y <= p_wheel2.y) {
+  if(p_wheel1.y < p_wheel2.y) {
     return 2;
   }
 
