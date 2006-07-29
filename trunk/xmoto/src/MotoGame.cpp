@@ -257,34 +257,37 @@ namespace vapp {
   void MotoGame::_UpdateDynamicCollisionLines(void) {
 	  std::vector<DynamicBlock *> &Blocks = getDynBlocks();
 		for(int i=0;i<Blocks.size();i++) {
-			/* Build rotation matrix for block */
-			float fR[4]; 
-			fR[0] = cos(Blocks[i]->fRotation); fR[1] = -sin(Blocks[i]->fRotation);
-			fR[2] = sin(Blocks[i]->fRotation); fR[3] = cos(Blocks[i]->fRotation);
-			int z = 0;
-						
-			for(int j=0;j<Blocks[i]->ConvexBlocks.size();j++) {				
-				for(int k=0;k<Blocks[i]->ConvexBlocks[j]->Vertices.size();k++) {				    
-				  int knext = k==Blocks[i]->ConvexBlocks[j]->Vertices.size()-1?0:k+1;
-				  ConvexBlockVertex *pVertex1 = Blocks[i]->ConvexBlocks[j]->Vertices[k];				  
-				  ConvexBlockVertex *pVertex2 = Blocks[i]->ConvexBlocks[j]->Vertices[knext];				  
+		  /* Ignore background blocks */
+		  if(!Blocks[i]->bBackground) {
+			  /* Build rotation matrix for block */
+			  float fR[4]; 
+			  fR[0] = cos(Blocks[i]->fRotation); fR[1] = -sin(Blocks[i]->fRotation);
+			  fR[2] = sin(Blocks[i]->fRotation); fR[3] = cos(Blocks[i]->fRotation);
+			  int z = 0;
+  						
+			  for(int j=0;j<Blocks[i]->ConvexBlocks.size();j++) {				
+				  for(int k=0;k<Blocks[i]->ConvexBlocks[j]->Vertices.size();k++) {				    
+				    int knext = k==Blocks[i]->ConvexBlocks[j]->Vertices.size()-1?0:k+1;
+				    ConvexBlockVertex *pVertex1 = Blocks[i]->ConvexBlocks[j]->Vertices[k];				  
+				    ConvexBlockVertex *pVertex2 = Blocks[i]->ConvexBlocks[j]->Vertices[knext];				  
 
-				  /* Transform vertices */
-				  Vector2f Tv1 = Vector2f(pVertex1->P.x * fR[0] + pVertex1->P.y * fR[1],
-				                          pVertex1->P.x * fR[2] + pVertex1->P.y * fR[3]);
-          Tv1 += Blocks[i]->Position;				                          
-				  Vector2f Tv2 = Vector2f(pVertex2->P.x * fR[0] + pVertex2->P.y * fR[1],
-				                          pVertex2->P.x * fR[2] + pVertex2->P.y * fR[3]);
-          Tv2 += Blocks[i]->Position;				                          
-            				  
-				  /* Update line */
-				  Blocks[i]->CollisionLines[z]->x1 = Tv1.x;
-				  Blocks[i]->CollisionLines[z]->y1 = Tv1.y;
-				  Blocks[i]->CollisionLines[z]->x2 = Tv2.x;
-				  Blocks[i]->CollisionLines[z]->y2 = Tv2.y;
-				  
-          /* Next collision line */
-				  z++;
+				    /* Transform vertices */
+				    Vector2f Tv1 = Vector2f(pVertex1->P.x * fR[0] + pVertex1->P.y * fR[1],
+				                            pVertex1->P.x * fR[2] + pVertex1->P.y * fR[3]);
+            Tv1 += Blocks[i]->Position;				                          
+				    Vector2f Tv2 = Vector2f(pVertex2->P.x * fR[0] + pVertex2->P.y * fR[1],
+				                            pVertex2->P.x * fR[2] + pVertex2->P.y * fR[3]);
+            Tv2 += Blocks[i]->Position;				                          
+              				  
+				    /* Update line */
+				    Blocks[i]->CollisionLines[z]->x1 = Tv1.x;
+				    Blocks[i]->CollisionLines[z]->y1 = Tv1.y;
+				    Blocks[i]->CollisionLines[z]->x2 = Tv2.x;
+				    Blocks[i]->CollisionLines[z]->y2 = Tv2.y;
+  				  
+            /* Next collision line */
+				    z++;
+				  }
 				}
 			}
 		}		  
@@ -1086,6 +1089,7 @@ namespace vapp {
         /* Define dynamic block */
         pDyn = new DynamicBlock;
         pDyn->pSrcBlock = InBlocks[i];
+        pDyn->bBackground = pDyn->pSrcBlock->bBackground;
         pDyn->Position = Vector2f(pDyn->pSrcBlock->fPosX,pDyn->pSrcBlock->fPosY);
         m_DynBlocks.push_back(pDyn);
         

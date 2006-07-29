@@ -299,7 +299,7 @@ namespace vapp {
       void _RenderSprite(Entity *pSprite);
       void _RenderBike(BikeState *pBike, BikeParams *pBikeParms, BikerTheme *p_theme);
       void _RenderBlocks(void);
-      void _RenderDynamicBlocks(void);
+      void _RenderDynamicBlocks(bool bBackground=false);
       void _RenderBackground(void);
       void _RenderSky(void);
       void _RenderGameMessages(void); 

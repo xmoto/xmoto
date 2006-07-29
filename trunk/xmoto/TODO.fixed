@@ -4,6 +4,9 @@ Since 0.2.0
 * BUG: (21:17:09) nx:   essaye le niveau "quetsche" au départ, tu
    "tombes" sur le sol et tu as 1 qui saffiche tout seul : pour les
    saut perilleux
+* BUG : move a background block make it collide with the bike
+ neckelmann:  as it is now a block can not be both dynamic and background.
+              it's a limitation. Maybe it can be improved later.
 
 Since 1.16
 * BUG : view highscore with up and down with keyboard does not update the button

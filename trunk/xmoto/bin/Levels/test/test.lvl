@@ -13,65 +13,64 @@
 			Game.SetBlockPos("Block5",4,0+math.sin(Game.GetTime()*0.4)*4)
 			return true
 		end
-
 		function OnLoad()
-			Game.SetBlockCenter("Block5",4,4)
+			--Game.SetBlockCenter("Block5",4,4)
 			return true 
 		end
 	</script>
 	<limits left="-40.000000" right="40.000000" top="20.000000" bottom="-20.000000"/>
 	<block id="Block0">
-		<position x="0.500000" y="-1.500000"/>
+		<position x="0.000000" y="0.000000"/>
 		<usetexture id="Dirt"/>
-		<vertex x="-4.500000" y="1.500000" edge="GrayBricks"/>
-		<vertex x="4.500000" y="1.500000"/>
-		<vertex x="4.500000" y="-1.500000"/>
-		<vertex x="-4.500000" y="-1.500000"/>
+		<vertex x="-4.000000" y="0.000000" edge="GrayBricks"/>
+		<vertex x="5.000000" y="0.000000"/>
+		<vertex x="5.000000" y="-3.000000"/>
+		<vertex x="-4.000000" y="-3.000000"/>
 	</block>
 	<block id="Block1">
-		<position x="2.444443" y="-0.000001"/>
+		<position x="9.888890" y="-0.444444"/>
 		<usetexture id="Dirt"/>
-		<vertex x="2.555557" y="0.000001" edge="RedBricks"/>
-		<vertex x="4.555556" y="1.000000" edge="GrayBricks"/>
-		<vertex x="9.555557" y="1.000000" edge="BlueBricks"/>
-		<vertex x="10.555557" y="2.000000" edge="BlueBricks"/>
-		<vertex x="22.555557" y="2.000000"/>
-		<vertex x="22.555557" y="-3.000000"/>
-		<vertex x="8.555555" y="-3.000000"/>
-		<vertex x="5.555556" y="-2.000000"/>
-		<vertex x="2.555557" y="-2.000000"/>
+		<vertex x="-4.888890" y="0.444444" edge="RedBricks"/>
+		<vertex x="-2.888891" y="1.444443" edge="GrayBricks"/>
+		<vertex x="2.111110" y="1.444443" edge="BlueBricks"/>
+		<vertex x="3.111110" y="2.444443" edge="BlueBricks"/>
+		<vertex x="15.111110" y="2.444443"/>
+		<vertex x="15.111110" y="-2.555557"/>
+		<vertex x="1.111108" y="-2.555557"/>
+		<vertex x="-1.888891" y="-1.555557"/>
+		<vertex x="-4.888890" y="-1.555557"/>
 	</block>
 	<block id="Block2">
-		<position x="0.000000" y="0.000000"/>
+		<position x="-11.000000" y="-1.500000"/>
 		<usetexture id="default"/>
-		<vertex x="-14.000000" y="0.000000" edge="GrayBricks"/>
-		<vertex x="-8.000000" y="0.000000"/>
-		<vertex x="-8.000000" y="-3.000000"/>
-		<vertex x="-14.000000" y="-3.000000"/>
+		<vertex x="-3.000000" y="1.500000" edge="GrayBricks"/>
+		<vertex x="3.000000" y="1.500000"/>
+		<vertex x="3.000000" y="-1.500000"/>
+		<vertex x="-3.000000" y="-1.500000"/>
 	</block>
 	<block id="Block3">
-		<position x="0.000001" y="0.000000"/>
+		<position x="-5.333333" y="-0.066667"/>
 		<usetexture id="default"/>
-		<vertex x="-8.000000" y="-0.000000" edge="GrayBricks"/>
-		<vertex x="-4.000000" y="-0.000000"/>
-		<vertex x="-4.000000" y="-0.200000"/>
+		<vertex x="-2.666666" y="0.066667" edge="GrayBricks"/>
+		<vertex x="1.333334" y="0.066667"/>
+		<vertex x="1.333334" y="-0.133333"/>
 	</block>
 	<block id="Block4">
-		<position x="19.000000" y="6.500000" background="true"/>
+		<position x="0.000000" y="0.000000" background="true"/>
 		<usetexture id="BlueBricks"/>
-		<vertex x="-3.000000" y="4.500000"/>
-		<vertex x="3.000000" y="4.500000"/>
-		<vertex x="3.000000" y="-4.500000"/>
-		<vertex x="-3.000000" y="-4.500000"/>
+		<vertex x="16.000000" y="11.000000"/>
+		<vertex x="22.000000" y="11.000000"/>
+		<vertex x="22.000000" y="2.000000"/>
+		<vertex x="16.000000" y="2.000000"/>
 	</block>
 	<block id="Block5">
-		<position x="0.000000" y="-0.000000" dynamic="true"/>
+		<position x="6.000000" y="3.400000" dynamic="true" background="true"/>
 		<usetexture id="DarkDirt"/>
-		<vertex x="4.000000" y="4.000000"/>
-		<vertex x="6.000000" y="5.000000"/>
-		<vertex x="7.000000" y="4.000000"/>
-		<vertex x="7.000000" y="2.000000"/>
-		<vertex x="6.000000" y="2.000000"/>
+		<vertex x="-2.000000" y="0.600000"/>
+		<vertex x="0.000000" y="1.600000"/>
+		<vertex x="1.000000" y="0.600000"/>
+		<vertex x="1.000000" y="-1.400000"/>
+		<vertex x="0.000000" y="-1.400000"/>
 	</block>
 	<entity id="MyPlayerStart0" typeid="PlayerStart">
 		<size r="0.400000"/>

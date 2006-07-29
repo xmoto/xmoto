@@ -118,6 +118,7 @@ namespace vapp {
     LevelBlock *pSrcBlock;                        /* Source block */
     float fRotation;                              /* Block rotation */    
     Vector2f Position;                            /* Block position */
+    bool bBackground;                             /* Background block */
     
     std::vector<Line *> CollisionLines;           /* Line to collide against */
   };

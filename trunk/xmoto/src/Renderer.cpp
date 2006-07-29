@@ -263,7 +263,10 @@ namespace vapp {
     /* Render dynamic blocks */
     for(int i=0;i<DynBlocks.size();i++) {
       DynamicBlock *pDB = DynBlocks[i];
-
+      
+      /* Don't draw background blocks */
+      if(pDB->bBackground) continue;
+      
 			/* Build rotation matrix for block */
 			float fR[4]; 
 			fR[0] = cos(pDB->fRotation); fR[1] = -sin(pDB->fRotation);
@@ -400,6 +403,7 @@ namespace vapp {
       
     if(m_Quality != GQ_LOW && !m_bUglyMode) {
       /* Background blocks */
+      _RenderDynamicBlocks(true);
       _RenderBackground();
       
       /* ... then render background sprites ... */      
@@ -412,7 +416,7 @@ namespace vapp {
     }
         
     /* ... covered by blocks ... */
-    _RenderDynamicBlocks();
+    _RenderDynamicBlocks(false);
     _RenderBlocks();
 
     /* ... then render "middleground" sprites ... */
@@ -824,13 +828,16 @@ namespace vapp {
   /*===========================================================================
   Blocks (dynamic)
   ===========================================================================*/
-  void GameRenderer::_RenderDynamicBlocks(void) {
+  void GameRenderer::_RenderDynamicBlocks(bool bBackground) {
     MotoGame *pGame = getGameObject();
 
 		/* Render all dynamic blocks */
 	  std::vector<DynamicBlock *> &Blocks = getGameObject()->getDynBlocks();
 
-		for(int i=0;i<Blocks.size();i++) {						  
+		for(int i=0;i<Blocks.size();i++) {						
+		  /* Are we rendering background blocks or what? */
+		  if(Blocks[i]->bBackground != bBackground) continue;
+		  
 			/* Build rotation matrix for block */
 			float fR[4]; 
 			fR[0] = cos(Blocks[i]->fRotation); fR[1] = -sin(Blocks[i]->fRotation);
@@ -1138,7 +1145,7 @@ namespace vapp {
       Texture *pTexture;
       GLuint GLName = 0;
       
-      if(!Blocks[i]->pSrcBlock || !Blocks[i]->pSrcBlock->bBackground) continue;
+      if(!Blocks[i]->pSrcBlock || Blocks[i]->pSrcBlock->bDynamic || !Blocks[i]->pSrcBlock->bBackground) continue;
 
       /* Main body */      
       Center = Vector2f(Blocks[i]->pSrcBlock->fPosX,Blocks[i]->pSrcBlock->fPosY);

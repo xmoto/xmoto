@@ -3,11 +3,6 @@
 * use acos(m_BikeS.fFrameRot[0]) for somersaults to be more precise
 * hum : make clean, make -> no rule to make xmoto-edit : so it's not corrected
 * make xmoto independant of the arch for replays
-* BUG : when you see level info in level pack ; then you click on ok
-   -> it close the window and the levelpack window
-* BUG : move a background block make it collide with the bike
- neckelmann:  as it is now a block can not be both dynamic and background.
-              it's a limitation. Maybe it can be improved later.
 * bug on review a replay : when you forward to fast, the man does not
    go at the end of the level
 * BUG : is it normal ?
@@ -54,6 +49,9 @@ UPDATE:  It appears it's only possible to produce the bug when ghost is enabled.
    it's not really available
 
 ### for 0.3.0 and after
+* use z-buffer for depth ordering
+* BUG : when you see level info in level pack ; then you click on ok
+   -> it close the window and the levelpack window
 * loadness of headcrash sound should depend on head velocity 
 * feature : a replay button when you finish a level (or die) which
    plays Latest.rpl
