@@ -891,6 +891,8 @@ namespace vapp {
     int nNumCached = 0;
   
     for(int i=0;i<LvlFiles.size();i++) {
+      bool bLoadedOK = true;
+    
       int j = m_nNumLevels;
       if(j >= 2048) {
         Log("** Warning ** : Too many levels.");
@@ -898,67 +900,79 @@ namespace vapp {
       }
       m_nNumLevels++;
     
-      m_Levels[j].setFileName( LvlFiles[i] );
-      
-      //if(strstr(LvlFiles[i].c_str(),"l138")) {
-      //  __asm{int 3};
-      //}
-      
-      /* Determine MD5 sum of level file */
-      std::string MD5Sum = md5file( LvlFiles[i] );
-      //printf("[%s][%s]\n",MD5Sum.c_str(),LvlFiles[i].c_str());
-      m_Levels[j].setLevelMD5Sum( MD5Sum );
-
-      /* Cache or not to cache? */
       bool bCached = false;
-      if(m_bEnableLevelCache) {
-        /* Start by determining file CRC */
-        LevelCheckSum Sum;
-        m_Levels[j].probeCheckSum(&Sum);
+      try {
+        m_Levels[j].setFileName( LvlFiles[i] );
         
-        /* Determine name in cache */
-        std::string LevelFileBaseName = FS::getFileBaseName(LvlFiles[i]);
-        char cCacheFileName[1024];      
-        sprintf(cCacheFileName,"LCache/%08x%s.blv",Sum.nCRC32,LevelFileBaseName.c_str());
-                  
-        /* Got level in cache? */
-        if(!m_Levels[j].importBinary(cCacheFileName,&Sum)) {
-          /* Not in cache, buggers. Load it from (slow) XML then. */
-          m_Levels[j].loadXML();
+        //if(strstr(LvlFiles[i].c_str(),"l138")) {
+        //  __asm{int 3};
+        //}
+        
+        /* Determine MD5 sum of level file */
+        std::string MD5Sum = md5file( LvlFiles[i] );
+        //printf("[%s][%s]\n",MD5Sum.c_str(),LvlFiles[i].c_str());
+        m_Levels[j].setLevelMD5Sum( MD5Sum );
+
+        /* Cache or not to cache? */
+        if(m_bEnableLevelCache) {
+          /* Start by determining file CRC */
+          LevelCheckSum Sum;
+          m_Levels[j].probeCheckSum(&Sum);
           
-          /* Cache it now */
-          m_Levels[j].exportBinary(cCacheFileName,&Sum);
+          /* Determine name in cache */
+          std::string LevelFileBaseName = FS::getFileBaseName(LvlFiles[i]);
+          char cCacheFileName[1024];      
+          sprintf(cCacheFileName,"LCache/%08x%s.blv",Sum.nCRC32,LevelFileBaseName.c_str());
+                    
+          /* Got level in cache? */
+          if(!m_Levels[j].importBinary(cCacheFileName,&Sum)) {
+            /* Not in cache, buggers. Load it from (slow) XML then. */
+            m_Levels[j].loadXML();
+            
+            /* Cache it now */
+            m_Levels[j].exportBinary(cCacheFileName,&Sum);
+          }
+          else {
+            nNumCached++;
+            bCached = true;
+          }
         }
         else {
-          nNumCached++;
-          bCached = true;
+          /* Just load it */
+          m_Levels[j].loadXML();       
         }
       }
-      else {
-        /* Just load it */
-        m_Levels[j].loadXML();       
+      catch(Exception &e) {
+        Log("** Warning ** : Problem loading '%s' (%s)",LvlFiles[i].c_str(),e.getMsg().c_str());            
+        m_nNumLevels--;
+        if(bCached)
+          nNumCached--;
+        bLoadedOK = false;
       }
       
-      /* Check for ID conflict */
       bool bGoodLevel = true;
-      for(int k=0;k<m_nNumLevels-1;k++) {
-        if(m_Levels[k].getID() == m_Levels[j].getID()) {
-          /* Conflict! */
-          Log("** Warning ** : More than one level with ID '%s'!",m_Levels[k].getID().c_str());
-          Log("                (%s)",m_Levels[j].getFileName().c_str());
-          Log("                (%s)",m_Levels[k].getFileName().c_str());
-          if(bCached) Log("                (cached)");
-          m_nNumLevels--;
-          
-          if(bCached)
-            nNumCached--;
+
+      if(bLoadedOK) {      
+        /* Check for ID conflict */
+        for(int k=0;k<m_nNumLevels-1;k++) {
+          if(m_Levels[k].getID() == m_Levels[j].getID()) {
+            /* Conflict! */
+            Log("** Warning ** : More than one level with ID '%s'!",m_Levels[k].getID().c_str());
+            Log("                (%s)",m_Levels[j].getFileName().c_str());
+            Log("                (%s)",m_Levels[k].getFileName().c_str());
+            if(bCached) Log("                (cached)");
+            m_nNumLevels--;
             
-          bGoodLevel = false;
-          break;
+            if(bCached)
+              nNumCached--;
+              
+            bGoodLevel = false;
+            break;
+          }
         }
       }
           
-      if(bGoodLevel) {
+      if(bGoodLevel && bLoadedOK) {
         /* Update level pack manager */
         _UpdateLevelPackManager(&m_Levels[j]);
       }
@@ -2463,54 +2477,59 @@ namespace vapp {
         int nTooOldXMoto = 0;
         
         for(int i=0;i<UpdatedLvlFiles.size();i++) {
-          /* Find levels by file names */
-          bool bFound = false;
-          for(int j=0;j<m_nNumLevels;j++) {
-            if(m_Levels[j].getFileName() == UpdatedLvlFiles[i]) {
-              /* Found it... */
-              bFound = true;
+          try {
+            /* Find levels by file names */
+            bool bFound = false;
+            for(int j=0;j<m_nNumLevels;j++) {
+              if(m_Levels[j].getFileName() == UpdatedLvlFiles[i]) {
+                /* Found it... */
+                bFound = true;
 
-              /* Determine MD5 sum of level file */
-              std::string MD5Sum = md5file( UpdatedLvlFiles[i] );
-              m_Levels[j].setLevelMD5Sum( MD5Sum );
+                /* Determine MD5 sum of level file */
+                std::string MD5Sum = md5file( UpdatedLvlFiles[i] );
+                m_Levels[j].setLevelMD5Sum( MD5Sum );
 
-              /* Update cache? */
-              if(m_bEnableLevelCache) {
-                /* Start by determining file CRC */
-                LevelCheckSum Sum;
-                m_Levels[j].probeCheckSum(&Sum);
-                
-                /* Determine name in cache */
-                std::string LevelFileBaseName = FS::getFileBaseName(UpdatedLvlFiles[i]);
-                char cCacheFileName[1024];      
-                sprintf(cCacheFileName,"LCache/%08x%s.blv",Sum.nCRC32,FS::getFileBaseName(UpdatedLvlFiles[i]).c_str());
-                          
-                /* Got level in cache? */
-                if(!m_Levels[j].importBinary(cCacheFileName,&Sum)) {
-                  /* Not in cache, buggers. Load it from (slow) XML then. */
-                  m_Levels[j].loadXML();
-                                    
-                  /* Cache it now */
-                  m_Levels[j].exportBinary(cCacheFileName,&Sum);
-                }
-              }
-              else {
-                /* Just load it */
-                m_Levels[j].loadXML();       
-              }
-                
-              /* Failed to load due to old xmoto? */  
-              if(m_Levels[j].isXMotoTooOld())
-                nTooOldXMoto++;
+                /* Update cache? */
+                if(m_bEnableLevelCache) {
+                  /* Start by determining file CRC */
+                  LevelCheckSum Sum;
+                  m_Levels[j].probeCheckSum(&Sum);
+                  
+                  /* Determine name in cache */
+                  std::string LevelFileBaseName = FS::getFileBaseName(UpdatedLvlFiles[i]);
+                  char cCacheFileName[1024];      
+                  sprintf(cCacheFileName,"LCache/%08x%s.blv",Sum.nCRC32,FS::getFileBaseName(UpdatedLvlFiles[i]).c_str());
                             
-              /* Add it to list of new levels as "updated" */
-              if(pPlayNewLevelsList != NULL) {
-		            pPlayNewLevelsList->addLevel(m_Levels+j, m_pPlayer, &m_Profiles, m_pWebHighscores, std::string("Updated: "));
+                  /* Got level in cache? */
+                  if(!m_Levels[j].importBinary(cCacheFileName,&Sum)) {
+                    /* Not in cache, buggers. Load it from (slow) XML then. */
+                    m_Levels[j].loadXML();
+                                      
+                    /* Cache it now */
+                    m_Levels[j].exportBinary(cCacheFileName,&Sum);
+                  }
+                }
+                else {
+                  /* Just load it */
+                  m_Levels[j].loadXML();       
+                }
+                  
+                /* Failed to load due to old xmoto? */  
+                if(m_Levels[j].isXMotoTooOld())
+                  nTooOldXMoto++;
+                              
+                /* Add it to list of new levels as "updated" */
+                if(pPlayNewLevelsList != NULL) {
+		              pPlayNewLevelsList->addLevel(m_Levels+j, m_pPlayer, &m_Profiles, m_pWebHighscores, std::string("Updated: "));
+                }
+                
+                nReloaded++;
+                break;
               }
-              
-              nReloaded++;
-              break;
             }
+          }
+          catch(Exception &e) {
+            Log("** Warning ** : Problem updating '%s' (%s)",UpdatedLvlFiles[i].c_str(),e.getMsg().c_str());            
           }
         }
         
