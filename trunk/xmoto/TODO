@@ -5,9 +5,6 @@
 * BUG : xmoto-edit rgeznlre -> segfault
 * BUG : when you see level info in level pack ; then you click on ok
    -> it close the window and the levelpack window
-* BUG: (21:17:09) nx:   essaye le niveau "quetsche" au départ, tu
-   "tombes" sur le sol et tu as 1 qui saffiche tout seul : pour les
-   saut perilleux
 * BUG : move a background block make it collide with the bike
  neckelmann:  as it is now a block can not be both dynamic and background.
               it's a limitation. Maybe it can be improved later.
