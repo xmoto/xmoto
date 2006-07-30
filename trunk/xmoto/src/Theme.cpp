@@ -944,7 +944,8 @@ void ThemeChoicer::initList() {
 	if(ExistThemeName(v_name) == false) {
 	  m_choices.push_back(new ThemeChoice(v_name, v_themesFiles[i], true));
 	} else {
-	  vapp::Log(std::string("Theme " + v_name + " is present several times").c_str());
+	  // no warning for non user dir
+	  // vapp::Log(std::string("Theme " + v_name + " is present several times").c_str());
 	}
       }
     } catch(vapp::Exception &e) {
