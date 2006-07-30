@@ -1,5 +1,9 @@
-AM_CXXFLAGS = -DNOMMGR -Wall -DGAMEDATADIR=\"$(datadir)/@PACKAGE@\" $(GL_CFLAGS)
-AM_CFLAGS = -DNOMMGR -Wall -DGAMEDATADIR=\"$(datadir)/@PACKAGE@\" $(GL_CFLAGS)
+
+# -pedantic 
+WANTED_WARNNING=-Wcast-align -Wcast-qual -Wchar-subscripts -Wcomment -Wconversion -Wfloat-equal -Wformat -Wformat-nonliteral -Wformat-security -Wformat-y2k -Wimplicit -Wimport -Winit-self -Wuninitialized -Winline -Winvalid-pch -Wlong-long -Wmissing-braces -Wmissing-field-initializers -Wmissing-format-attribute  -Wmissing-include-dirs -Wmissing-noreturn -Wpacked -Wpadded -Wparentheses -Wpointer-arith -Wredundant-decls -Wreturn-type -Wsequence-point -Wshadow -Wswitch  -Wswitch-default  -Wswitch-enum -Wtrigraphs -Wundef -Wunknown-pragmas -Wunreachable-code -Wunused  -Wunused-function -Wunused-label -Wunused-parameter -Wunused-value -Wunused-variable -Wwrite-strings -Wvariadic-macros
+
+AM_CXXFLAGS = -DNOMMGR $(WANTED_WARNNING) -DGAMEDATADIR=\"$(datadir)/@PACKAGE@\" $(GL_CFLAGS)
+AM_CFLAGS = -DNOMMGR $(WANTED_WARNNING) -DGAMEDATADIR=\"$(datadir)/@PACKAGE@\" $(GL_CFLAGS)
 AM_LDFLAGS = -s
 
 image_SOURCES = image/tim.cpp image/tim_io_stdio.cpp \
