@@ -368,7 +368,7 @@ namespace vapp {
       bool _IsAltDown(void);
   };
 
-};
+}
 
 #endif
 

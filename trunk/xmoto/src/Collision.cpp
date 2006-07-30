@@ -669,4 +669,4 @@ namespace vapp {
     return nNumContacts;
   }
   
-};
+}

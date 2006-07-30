@@ -54,7 +54,7 @@ namespace vapp {
   ===========================================================================*/
   enum InputEventType {
     INPUT_KEY_DOWN,
-    INPUT_KEY_UP,    
+    INPUT_KEY_UP    
   };
   
   struct InputKeyMap {
@@ -171,7 +171,7 @@ namespace vapp {
       void _SetDefaultConfigToUnsetKeys();
   };
   
-};
+}
 
 
 #endif

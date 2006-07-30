@@ -97,5 +97,5 @@ namespace vapp {
     return Ret;
   }
 
-};
+}
 

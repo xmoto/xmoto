@@ -56,7 +56,7 @@ namespace vapp {
     GS_LEVEL_INFO_VIEWER,     /* In level info viewer */
     GS_LEVELPACK_VIEWER,      /* In level pack viewer */
 #if defined(SUPPORT_WEBACCESS)
-    GS_EDIT_WEBCONFIG,        /* Editing internet configuration */
+    GS_EDIT_WEBCONFIG         /* Editing internet configuration */
 #endif
   };
 
@@ -478,6 +478,6 @@ namespace vapp {
 
   };
 
-};
+}
 
 #endif

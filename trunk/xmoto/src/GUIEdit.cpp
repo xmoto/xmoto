@@ -159,4 +159,4 @@ namespace vapp {
     return false;
   }  
 
-};
+}

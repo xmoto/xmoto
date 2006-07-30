@@ -172,5 +172,5 @@ namespace vapp {
     return false;
   }
 
-};
+}
 

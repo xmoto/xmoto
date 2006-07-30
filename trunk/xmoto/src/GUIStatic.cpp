@@ -64,5 +64,5 @@ namespace vapp {
     putText(x,y,getCaption());
   }
 
-};
+}
 

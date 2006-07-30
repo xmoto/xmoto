@@ -304,5 +304,5 @@ namespace vapp {
 		m_EntityTypes.clear();
 	}
 
-};
+}
 

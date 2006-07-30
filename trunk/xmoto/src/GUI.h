@@ -340,9 +340,9 @@ namespace vapp {
 	UI frame
   ===========================================================================*/
   enum UIFrameStyle {
-    UI_FRAMESTYLE_MENU,                         /* "Iron-like" scaled menu */
-    UI_FRAMESTYLE_TRANS,                        /* Generic transparent one */
-    UI_FRAMESTYLE_LEFTTAG,                      /* Like above, but with left tag */
+    UI_FRAMESTYLE_MENU,                  /* "Iron-like" scaled menu */
+    UI_FRAMESTYLE_TRANS,                 /* Generic transparent one */
+    UI_FRAMESTYLE_LEFTTAG                /* Like above, but with left tag */
   };
   
   class UIFrame : public UIWindow {
@@ -533,7 +533,7 @@ namespace vapp {
     UI_BUTTON_TYPE_LARGE,
     UI_BUTTON_TYPE_SMALL,
     UI_BUTTON_TYPE_CHECK,
-    UI_BUTTON_TYPE_RADIO,
+    UI_BUTTON_TYPE_RADIO
   };
   
   class UIButton : public UIWindow {
@@ -788,6 +788,6 @@ namespace vapp {
       int _GetActiveIdx(UIRootActCandidate *pMap,int nNum);
   };
 
-};
+}
 
 #endif

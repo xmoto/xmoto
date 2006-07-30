@@ -3244,5 +3244,5 @@ namespace vapp {
   }
 #endif
 
-};
+}
 

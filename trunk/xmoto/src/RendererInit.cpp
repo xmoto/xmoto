@@ -103,5 +103,5 @@ namespace vapp {
     m_Overlay.init(getParent(),512,512);
   }
 
-};
+}
 

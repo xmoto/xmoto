@@ -203,5 +203,4 @@ namespace vapp {
     _UninitTextRendering(p_theme);
   }
   
-};
-
+}

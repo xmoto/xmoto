@@ -111,6 +111,6 @@ namespace vapp {
     std::string _Fix018LevelID(const std::string &s);
   };
 
-};
+}
 
 #endif

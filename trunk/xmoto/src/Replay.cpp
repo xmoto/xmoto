@@ -590,4 +590,4 @@ namespace vapp {
       return pRpl;
   }
 
-};
+}

@@ -77,5 +77,4 @@ namespace vapp {
     FS::closeFile(pfh);
   }
     
-};
-
+}

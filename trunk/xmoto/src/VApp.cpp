@@ -756,5 +756,5 @@ namespace vapp {
       parseUserArgs(UserArgs);
   }
 
-};
+}
 

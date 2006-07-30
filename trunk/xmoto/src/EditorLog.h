@@ -41,7 +41,7 @@ namespace vapp {
 			std::vector<std::string> m_Messages;
 	};
 
-};
+}
 
 #endif
 

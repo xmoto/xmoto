@@ -529,5 +529,4 @@ namespace vapp {
     return "?";
   }
 
-};
-
+}

@@ -33,7 +33,7 @@ namespace vapp {
       static void go(void);
   };
   
-};
+}
 
 #endif
 

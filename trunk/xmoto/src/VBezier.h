@@ -106,6 +106,6 @@ namespace vapp {
       float m_fLength;
   };  
   
-};
+}
 
 #endif

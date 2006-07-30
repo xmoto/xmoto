@@ -88,7 +88,7 @@ namespace vapp {
       void _NewPart(void);
   };
   
-};
+}
 
 #endif
 

@@ -253,5 +253,5 @@ namespace vapp {
     }
   }
 
-};
+}
 

@@ -66,5 +66,5 @@ namespace vapp {
 		m_Messages.clear();
 	}
 
-};
+}
 

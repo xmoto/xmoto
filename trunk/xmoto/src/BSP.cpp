@@ -516,5 +516,5 @@ namespace vapp {
     
     return pDst;
   }
-};
+}
 

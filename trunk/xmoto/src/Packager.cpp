@@ -100,5 +100,5 @@ namespace vapp {
     fclose(fp);
   }
   
-};
+}
 

@@ -149,7 +149,7 @@ namespace vapp {
       std::vector<RecordedGameEvent *> m_ReplayEvents;
   };
 
-};
+}
 
 #endif
 

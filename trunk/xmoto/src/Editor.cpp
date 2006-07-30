@@ -2499,5 +2499,4 @@ namespace vapp {
     }        
   }
       
-};
-
+}

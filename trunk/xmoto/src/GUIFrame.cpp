@@ -201,4 +201,4 @@ namespace vapp {
     m_bMinimized = b;
   }
 
-};
+}

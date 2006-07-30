@@ -1020,4 +1020,4 @@ namespace vapp {
     return nNumContacts;
   }
   
-};
+}

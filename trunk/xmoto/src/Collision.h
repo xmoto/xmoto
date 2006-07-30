@@ -107,7 +107,7 @@ namespace vapp {
       int _AddContactToList(dContact *pContacts,int nNumContacts,dContact *pc,int nMaxContacts);
   };
 
-};
+}
 
 #endif
 

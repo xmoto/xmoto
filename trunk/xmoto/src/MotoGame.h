@@ -61,7 +61,7 @@ namespace vapp {
     EE_REDBRICKS,
     EE_GRAYBRICKS,
     EE_BLUEBRICKS,
-    EE_GRASSALT,
+    EE_GRASSALT
   };
 
   /*===========================================================================
@@ -959,6 +959,6 @@ namespace vapp {
       void _PrepareRider(Vector2f StartPos);
     };
 
-};
+}
 
 #endif

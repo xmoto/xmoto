@@ -167,6 +167,4 @@ namespace vapp {
     return m_pCurves[0].step(0.0f);
   }
   
-};
-
-    
+}

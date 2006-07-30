@@ -120,7 +120,7 @@ namespace vapp {
       std::vector<LevelStats *> _GetOrderedLevels(StatOrder Order,const std::string &PlayerName);
   };
 
-};
+}
 
 #endif
 

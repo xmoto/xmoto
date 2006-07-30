@@ -1226,5 +1226,5 @@ namespace vapp {
     }
   }
 
-};
+}
 

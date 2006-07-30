@@ -277,5 +277,5 @@ namespace vapp {
       glMatrixMode(GL_MODELVIEW);
     }
   }
-};
+}
 

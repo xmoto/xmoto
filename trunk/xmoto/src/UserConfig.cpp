@@ -187,4 +187,4 @@ namespace vapp {
 	  return NULL;
 	}
 	
-};
+}

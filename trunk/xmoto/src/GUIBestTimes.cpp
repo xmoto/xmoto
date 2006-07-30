@@ -74,5 +74,5 @@ namespace vapp {
     setFont(pOldFont);
   }
 
-};
+}
 

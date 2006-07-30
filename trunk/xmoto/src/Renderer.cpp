@@ -1497,4 +1497,4 @@ namespace vapp {
     m_theme = p_theme;
   }
 
-};
+}

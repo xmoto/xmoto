@@ -482,5 +482,5 @@ namespace vapp {
     }
     return 0;
   }
-};
+}
 

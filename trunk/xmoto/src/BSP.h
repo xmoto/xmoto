@@ -101,6 +101,6 @@ namespace vapp {
       BSPPoly *_CopyPoly(BSPPoly *pDst,BSPPoly *pSrc);      
   };
 
-};
+}
 
 #endif

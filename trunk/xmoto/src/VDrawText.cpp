@@ -200,5 +200,5 @@ namespace vapp {
   //void DefaultFontTexture::unload(void) {
  // }
       
-};
+}
 

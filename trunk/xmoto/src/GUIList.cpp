@@ -503,5 +503,5 @@ namespace vapp {
   }
 
 
-};
+}
 

@@ -438,5 +438,5 @@ namespace vapp {
     return Ret;
   }
 
-};
+}
 

@@ -180,5 +180,4 @@ namespace vapp {
   void UITabView::mouseHover(int x,int y) {
   }
 
-};
-
+}

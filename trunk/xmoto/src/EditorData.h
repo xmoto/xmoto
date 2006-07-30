@@ -125,7 +125,7 @@ namespace vapp {
 			void _Free(void);
 	};
 	
-};
+}
 
 #endif
 

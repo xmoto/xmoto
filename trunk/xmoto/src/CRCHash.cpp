@@ -103,5 +103,4 @@ namespace vapp {
     return nReflection;
   }  
 
-};
-
+}

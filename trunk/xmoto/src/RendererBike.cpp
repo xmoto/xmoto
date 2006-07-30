@@ -464,5 +464,5 @@ namespace vapp {
     glEnd();
   }
   
-};
+}
 

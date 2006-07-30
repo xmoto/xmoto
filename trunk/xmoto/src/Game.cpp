@@ -2892,6 +2892,6 @@ namespace vapp {
   }
 #endif    
 
-};
+}
 
 
