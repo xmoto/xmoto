@@ -271,7 +271,7 @@ void WebRoom::fillHash() {
   v_webHSXmlData = v_webHSXml.getLowLevelAccess();
 
   if(v_webHSXmlData == NULL) {
-    throw vapp::Exception("error : unable analyse xml highscore file");
+    throw vapp::Exception("error : unable to analyze xml highscore file");
   }
 
   v_webHSXmlDataElement = v_webHSXmlData->FirstChildElement("xmoto_worldrecords");
@@ -601,13 +601,13 @@ void WebLevels::extractLevelsToDownloadFromXml() {
   v_webLXmlData = v_webLXml.getLowLevelAccess();
 
   if(v_webLXmlData == NULL) {
-    throw vapp::Exception("error : unable analyse xml level file");
+    throw vapp::Exception("error : unable to analyze xml level file");
   }
 
   v_webLXmlDataElement = v_webLXmlData->FirstChildElement("xmoto_levels");
   
   if(v_webLXmlDataElement == NULL) {
-    throw vapp::Exception("error : unable analyse xml level file");
+    throw vapp::Exception("error : unable to analyze xml level file");
   }
 
   TiXmlElement *pVarElem = v_webLXmlDataElement->FirstChildElement("level");
@@ -839,13 +839,13 @@ void WebThemes::extractThemesAvailableFromXml() {
   v_webTXmlData = v_webTXml.getLowLevelAccess();
 
   if(v_webTXmlData == NULL) {
-    throw vapp::Exception("error : unable analyse xml theme file");
+    throw vapp::Exception("error : unable to analyze xml theme file");
   }
 
   v_webTXmlDataElement = v_webTXmlData->FirstChildElement("xmoto_themes");
   
   if(v_webTXmlDataElement == NULL) {
-    throw vapp::Exception("error : unable analyse xml theme file");
+    throw vapp::Exception("error : unable to analyze xml theme file");
   }
 
   TiXmlElement *pVarElem = v_webTXmlDataElement->FirstChildElement("theme");

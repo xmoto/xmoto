@@ -223,7 +223,7 @@ namespace vapp {
         }
           
         /* Clear screen */  
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       }
       
       /* Update user app */
@@ -335,8 +335,7 @@ namespace vapp {
 		  /* In windowed mode we can't tinker with the bit-depth */
 		  m_nDispBPP=pVidInfo->vfmt->BitsPerPixel; 			
 
-	  /* Setup GL stuff - note we setup depth too, even though it isn't used
-	    at all. This is simply for completeness :) */
+	  /* Setup GL stuff */
 	  /* 2005-10-05 ... note that we no longer ask for explicit settings... it's
 	                    better to do it per auto */
 	  SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,1);	
@@ -351,8 +350,14 @@ namespace vapp {
 	        "                Now SDL will try determining a proper mode itself.",m_nDispWidth,m_nDispHeight,m_nDispBPP);
 	  
 	    /* Hmm, try letting it decide the BPP automatically */
-	    if(SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,0,nFlags)==NULL) {
-        throw Exception("SDL_SetVideoMode : " + std::string(SDL_GetError()));
+	    if(SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,0,nFlags)==NULL) {	      
+	      /* Still no luck */
+	      Log("** Warning ** : Still no luck, now we'll try 800x600 in a window.");
+	      m_nDispWidth = 800; m_nDispHeight = 600;	      
+	      m_bWindowed = true;
+  	    if(SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,0,SDL_OPENGL)==NULL) {	      
+          throw Exception("SDL_SetVideoMode : " + std::string(SDL_GetError()));
+  	    }	      
       }
     }
 		
@@ -362,6 +367,12 @@ namespace vapp {
       throw Exception("(2) SDL_GetVideoInfo : " + std::string(SDL_GetError()));
   									
 	  m_nDispBPP=pVidInfo->vfmt->BitsPerPixel;
+
+    /* Did we get a z-buffer? */    	  
+	  int nDepthBits;
+	  SDL_GL_GetAttribute(SDL_GL_DEPTH_SIZE,&nDepthBits);
+	  if(nDepthBits == 0)
+	    throw Exception("no depth buffer");  
 	
 	  /* Set window title */
 	  SDL_WM_SetCaption(m_AppName.c_str(),m_AppName.c_str());
@@ -371,6 +382,9 @@ namespace vapp {
 	  glMatrixMode(GL_PROJECTION);
 	  glLoadIdentity();
 	  glOrtho(0,m_nDispWidth,0,m_nDispHeight,-1,1);
+	  
+	  glClearDepth(1);
+	  glDepthFunc(GL_LEQUAL);
 	  
 	  glMatrixMode(GL_MODELVIEW);
 	  glLoadIdentity();		
