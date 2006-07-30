@@ -1,27 +1,16 @@
  
 <?xml version="1.0" encoding="utf-8"?>
-<level id="IsEntityTouched">
+<level id="GetEntityRadius">
 <info>
-<name>IsEntityTouched</name>
+<name>GetEntityRadius</name>
 <description></description>
 <author></author>
 <date></date>
 <sky>sky1</sky>
 </info>
 <script>
-g = -9.81
-
 function OnLoad()
-  Game.Message("Gravity is increasing while you are not touching the snowman")
-  return true
-end
-
-function Tick()
-  if(Game.IsEntityTouched("SnowMan0") == 0)
-  then
-    g = g - 0.03
-    Game.SetGravity(0, g);
-  end
+  Game.Message("Radius of the strawberry : "..Game.GetEntityRadius("Strawberry0"))
   return true
 end
 </script>

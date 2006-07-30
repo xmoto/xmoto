@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<level id="onLoad" levelpack="Test Levels">
+<level id="OnLoad" levelpack="Test Levels">
 <info>
-<name>onLoad</name>
+<name>OnLoad</name>
 <description></description>
 <author></author>
 <date></date>
