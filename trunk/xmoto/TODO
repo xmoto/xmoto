@@ -1,5 +1,8 @@
 ### For 0.2.1
 
+* exception not catched
+  nicolas:xmoto$ xmoto -replay dsfdsfd
+  fatal exception : invalid replay
 * use acos(m_BikeS.fFrameRot[0]) for somersaults to be more precise
 * hum : make clean, make -> no rule to make xmoto-edit : so it's not corrected
 * make xmoto independant of the arch for replays
