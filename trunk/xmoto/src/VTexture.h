@@ -83,7 +83,7 @@ namespace vapp {
       int m_nTexSpaceUsage;                   /* Bytes of textures resident */
   };
   
-};
+}
 
 //#include "VCommon.h"
 //#include "VExcept.h"

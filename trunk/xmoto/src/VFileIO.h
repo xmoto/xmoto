@@ -179,7 +179,7 @@ namespace vapp {
       static PackFile m_PackFiles[MAX_PACK_FILES];
   };
 
-};
+}
 
 #endif
 

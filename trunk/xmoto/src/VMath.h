@@ -307,7 +307,7 @@ namespace vapp {
 
   float randomNum(float fMin,float fMax);
     
-};
+}
 
 #endif
 

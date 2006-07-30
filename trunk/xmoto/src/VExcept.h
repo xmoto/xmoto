@@ -63,7 +63,7 @@ namespace vapp {
     private:
   };
 
-};
+}
 
 #endif
 

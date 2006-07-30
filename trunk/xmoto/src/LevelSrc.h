@@ -262,6 +262,6 @@ namespace vapp {
       void _UnloadLevelData(void);
   };
 
-};
+}
 
 #endif

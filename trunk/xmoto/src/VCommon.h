@@ -119,7 +119,7 @@ extern "C" {
       #error Missing lualib.h    
     #endif
   #endif
-};
+}
 
 #if defined(WIN32)
   #include "ode/ode.h"
@@ -167,6 +167,6 @@ namespace vapp {
   ===========================================================================*/
   typedef unsigned int Color;
 
-};
+}
 
 #endif

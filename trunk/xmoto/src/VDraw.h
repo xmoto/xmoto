@@ -70,7 +70,7 @@ namespace vapp {
       void _UninitTextRendering(Theme *p_theme);
   };
   
-};
+}
 
 #endif
 

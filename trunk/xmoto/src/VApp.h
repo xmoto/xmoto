@@ -288,7 +288,7 @@ namespace vapp {
       double m_fNextFrame;      /* Time next frame rendering should begin */
   };
 
-};
+}
 
 #endif
 

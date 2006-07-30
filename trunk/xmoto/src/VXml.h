@@ -49,7 +49,7 @@ namespace vapp {
       TiXmlDocument *m_pXML;
   };
 
-};
+}
 
 #endif
 

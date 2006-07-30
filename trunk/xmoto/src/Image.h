@@ -96,6 +96,6 @@ namespace vapp {
                     color_t *pDest,int nDestWidth,int nDestHeight);                                                    
   };
 
-};
+}
 
 #endif
