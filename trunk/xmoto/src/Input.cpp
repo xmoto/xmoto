@@ -476,7 +476,7 @@ namespace vapp {
     #if defined(ENABLE_ZOOMING)    
       m_nZoomIn          = SDLK_PAGEUP;
       m_nZoomOut         = SDLK_PAGEDOWN;
-      m_nZoomOut         = SDLK_HOME;
+      m_nZoomInit        = SDLK_HOME;
       m_nCameraMoveXUp   = SDLK_KP6;
       m_nCameraMoveXDown = SDLK_KP4;
       m_nCameraMoveYUp   = SDLK_KP8;
