@@ -666,7 +666,10 @@ namespace vapp {
     // we don't change the sens of the wheel depending on the side, because 
     // loops must not make done just by changing the side
     if(pReplayState == NULL) { /* this does not work for replays */
-      if(m_somersaultCounter.update(m_BikeS.RearWheelP, m_BikeS.FrontWheelP)) {
+      double fAngle = acos(m_BikeS.fFrameRot[0]);
+      if(m_BikeS.fFrameRot[2] < 0.0f) fAngle = 2*3.14159f - fAngle;
+
+      if(m_somersaultCounter.update(fAngle)) {
 	char msg[16];
 	sprintf(msg, "%i", m_somersaultCounter.getTotal());
 	//gameMessage(msg);

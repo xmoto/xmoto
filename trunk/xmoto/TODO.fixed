@@ -7,6 +7,10 @@ Since 0.2.0
 * BUG : move a background block make it collide with the bike
  neckelmann:  as it is now a block can not be both dynamic and background.
               it's a limitation. Maybe it can be improved later.
+* use acos(m_BikeS.fFrameRot[0]) for somersaults to be more precise
+    float fAngle = (180.0f * acos(m_BikeS.fFrameRot[0])) / 3.14159f;
+    if(m_BikeS.fFrameRot[2] < 0.0f) fAngle = 360 - fAngle;
+    printf("%f\n",fAngle);
 
 Since 1.16
 * BUG : view highscore with up and down with keyboard does not update the button

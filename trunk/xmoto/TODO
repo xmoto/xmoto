@@ -3,10 +3,6 @@
 * exception not catched
   nicolas:xmoto$ xmoto -replay dsfdsfd
   fatal exception : invalid replay
-* use acos(m_BikeS.fFrameRot[0]) for somersaults to be more precise
-    float fAngle = (180.0f * acos(m_BikeS.fFrameRot[0])) / 3.14159f;
-    if(m_BikeS.fFrameRot[2] < 0.0f) fAngle = 360 - fAngle;
-    printf("%f\n",fAngle);
 * -v verbose for www
 
 * hum : make clean, make -> no rule to make xmoto-edit : so it's not corrected
