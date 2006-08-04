@@ -7,6 +7,7 @@
     float fAngle = (180.0f * acos(m_BikeS.fFrameRot[0])) / 3.14159f;
     if(m_BikeS.fFrameRot[2] < 0.0f) fAngle = 360 - fAngle;
     printf("%f\n",fAngle);
+* -v verbose for www
 
 * hum : make clean, make -> no rule to make xmoto-edit : so it's not corrected
 * make xmoto independant of the arch for replays
@@ -56,6 +57,7 @@ UPDATE:  It appears it's only possible to produce the bug when ghost is enabled.
    it's not really available
 
 ### for 0.3.0 and after
+* xmoto -nosound
 * use z-buffer for depth ordering
 * BUG : when you see level info in level pack ; then you click on ok
    -> it close the window and the levelpack window
