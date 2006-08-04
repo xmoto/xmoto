@@ -184,7 +184,7 @@ namespace vapp {
       char cTime[512];
       int nHours = ((int)pPlayer->fTotalPlayTime) / (60 * 60);
       int nMinutes = (((int)pPlayer->fTotalPlayTime) / (60)) - nHours*60;
-      int nSeconds = (((int)pPlayer->fTotalPlayTime)) - nMinutes*60;
+      int nSeconds = (((int)pPlayer->fTotalPlayTime)) - nMinutes*60 - nHours*3600;
       if(nHours > 0) sprintf(cTime,GAMETEXT_XHOURS ", " GAMETEXT_XMINUTES ", " GAMETEXT_AND " " GAMETEXT_XSECONDS,nHours,nMinutes,nSeconds);
       else if(nMinutes > 0) sprintf(cTime,GAMETEXT_XMINUTES " " GAMETEXT_AND " " GAMETEXT_XSECONDS,nMinutes,nSeconds);
       else sprintf(cTime,GAMETEXT_XSECONDS,nSeconds);
