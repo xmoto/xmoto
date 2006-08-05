@@ -12,6 +12,7 @@ Since 0.2.0
     if(m_BikeS.fFrameRot[2] < 0.0f) fAngle = 360 - fAngle;
     printf("%f\n",fAngle);
 * -v verbose for www
+* hum : make clean, make -> no rule to make xmoto-edit : so it's not corrected
 
 Since 1.16
 * BUG : view highscore with up and down with keyboard does not update the button

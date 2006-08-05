@@ -5,7 +5,6 @@
   fatal exception : invalid replay
 * BUG : as you can see at the end of "the only smooth", the block is
    not correctly drawned
-* hum : make clean, make -> no rule to make xmoto-edit : so it's not corrected
 * make xmoto independant of the arch for replays
 * bug on review a replay : when you forward to fast, the man does not
    go at the end of the level
@@ -40,6 +39,8 @@ Game.cpp around 1210 : adding a catch ; however, when the exception is
 	  } catch(Exception &e) {printf("Exception handled\n");}
 UPDATE:  It appears it's only possible to produce the bug when ghost is enabled.
 * see about timeout when connection failed
+ comment : it seems that there is nothing to do unless reduce
+   connection timeout (or multithreading)
 
 # feature which are not really bugs for 0.2.1
 * "view the highscore" button is not visible for pack
