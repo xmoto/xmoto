@@ -52,6 +52,7 @@ UPDATE:  It appears it's only possible to produce the bug when ghost is enabled.
    ...) ; it's long just for it.
 * themes : check the md5sum of the files ; don't display available if
    it's not really available
+* "play next level" => 'play next level', 'play next level unplayed', 'play next level where your highscore is > than room highscore', 'play next level where your highscore is > than world highscore', 'play next level where your highscore is the best'
 
 ### for 0.3.0 and after
 * xmoto -nosound
