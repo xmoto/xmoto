@@ -3,7 +3,6 @@
 * exception not catched
   nicolas:xmoto$ xmoto -replay dsfdsfd
   fatal exception : invalid replay
-* -v verbose for www
 * BUG : as you can see at the end of "the only smooth", the block is
    not correctly drawned
 * hum : make clean, make -> no rule to make xmoto-edit : so it's not corrected

@@ -11,6 +11,7 @@ Since 0.2.0
     float fAngle = (180.0f * acos(m_BikeS.fFrameRot[0])) / 3.14159f;
     if(m_BikeS.fFrameRot[2] < 0.0f) fAngle = 360 - fAngle;
     printf("%f\n",fAngle);
+* -v verbose for www
 
 Since 1.16
 * BUG : view highscore with up and down with keyboard does not update the button

@@ -418,6 +418,13 @@ void FSWeb::downloadFile(const std::string &p_local_file,
 			 const ProxySettings *p_proxy_settings
 			 ) {
 
+  vapp::Verbose(std::string("downloading " + 
+			    p_web_file     +
+			    " to "         +
+			    p_local_file
+			    ).c_str()
+		);
+
   CURL *v_curl;
   CURLcode res;
   FILE *v_destinationFile;

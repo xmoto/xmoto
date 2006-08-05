@@ -39,7 +39,8 @@ namespace vapp {
   ===========================================================================*/
   void Log(const char *pcFmt,...);
   void LogRaw(const char *pcMsg);
-  
+  void Verbose(const char *pcMsg);  
+
   /*===========================================================================
   Sub-application - something that runs in the context of a parent app
   useful for ugly pop-menus, etc.
