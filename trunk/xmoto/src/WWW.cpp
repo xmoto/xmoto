@@ -519,6 +519,93 @@ void FSWeb::downloadFile(const std::string &p_local_file,
   }
 }
 
+void FSWeb::uploadReplay(std::string p_replayFilename,
+			 std::string p_id_room,
+			 std::string p_login,
+			 std::string p_password,
+			 std::string p_url_to_transfert,
+			 const ProxySettings *p_proxy_settings) {
+  CURL *v_curl;
+  CURLcode v_res;
+  std::string v_proxy_server;
+  std::string v_proxy_auth_str;
+  std::string v_www_agent = WWW_AGENT;
+
+  struct curl_httppost *v_post, *v_last;
+
+  vapp::Verbose(std::string("Uploading replay " + p_replayFilename).c_str());
+
+  v_curl = curl_easy_init();
+  if(v_curl == false) {
+    throw vapp::Exception("error : unable to init curl");	
+  }
+
+  curl_easy_setopt(v_curl, CURLOPT_URL, p_url_to_transfert.c_str());
+
+  v_post = NULL;
+  v_last = NULL;
+  
+  curl_formadd(&v_post, &v_last, CURLFORM_COPYNAME, "id_room",
+	       CURLFORM_PTRCONTENTS, p_id_room.c_str(), CURLFORM_END);
+
+  curl_formadd(&v_post, &v_last, CURLFORM_COPYNAME, "login",
+	       CURLFORM_PTRCONTENTS, p_login.c_str(), CURLFORM_END);
+
+  curl_formadd(&v_post, &v_last, CURLFORM_COPYNAME, "password",
+	       CURLFORM_PTRCONTENTS, p_password.c_str(), CURLFORM_END);
+
+  curl_formadd(&v_post, &v_last, CURLFORM_COPYNAME, "replay",
+	       CURLFORM_FILE, p_replayFilename.c_str(), CURLFORM_END);
+
+  curl_easy_setopt(v_curl, CURLOPT_HTTPPOST, v_post);
+
+  curl_easy_setopt(v_curl, CURLOPT_TIMEOUT, DEFAULT_TRANSFERT_TIMEOUT);
+  curl_easy_setopt(v_curl, CURLOPT_CONNECTTIMEOUT, DEFAULT_TRANSFERT_CONNECT_TIMEOUT);
+  curl_easy_setopt(v_curl, CURLOPT_USERAGENT,  v_www_agent.c_str());
+  curl_easy_setopt(v_curl, CURLOPT_FAILONERROR, 1);
+
+  /* set proxy settings */
+  if(p_proxy_settings != NULL) {
+    /* v_proxy_server because 
+       after call to 
+       curl_easy_setopt(v_curl, CURLOPT_PROXY, p_proxy_settings->getServer().c_str());
+       result is destroyed on call to curl_easy_perform
+    */
+    v_proxy_server = p_proxy_settings->getServer();
+    v_proxy_auth_str =
+      p_proxy_settings->getAuthentificationUser()
+      + " "
+      + p_proxy_settings->getAuthentificationPassword();
+
+    if(p_proxy_settings->useDefaultServer() == false) {
+      curl_easy_setopt(v_curl, CURLOPT_PROXY, v_proxy_server.c_str());
+    }
+    
+    if(p_proxy_settings->useDefaultPort() == false) {
+      curl_easy_setopt(v_curl, CURLOPT_PROXYPORT, p_proxy_settings->getPort());
+    }
+    
+    curl_easy_setopt(v_curl, CURLOPT_PROXYTYPE, p_proxy_settings->getType());
+   
+    if(p_proxy_settings->useDefaultAuthentification() == false) {
+      curl_easy_setopt(v_curl, CURLOPT_PROXYUSERPWD,
+		       v_proxy_auth_str.c_str());
+    }
+  }
+  /* ***** */
+
+  v_res = curl_easy_perform(v_curl);
+
+  /* CURLE_ABORTED_BY_CALLBACK is not considered as an error */
+  if(v_res != CURLE_ABORTED_BY_CALLBACK) {
+    if(v_res != CURLE_OK) {
+      curl_easy_cleanup(v_curl);
+      throw vapp::Exception("error : unable to perform curl");	
+    }
+  }
+  curl_easy_cleanup(v_curl);
+}
+
 WebLevel::WebLevel(std::string p_id, std::string p_name, std::string p_url) {
   m_id   = p_id;
   m_name = p_name;

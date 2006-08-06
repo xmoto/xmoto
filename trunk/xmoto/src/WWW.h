@@ -48,6 +48,7 @@ class ThemeChoice;
 #define DEFAULT_WEBTHEMES_URL             "http://xmoto.free.fr/themes.xml"
 #define DEFAULT_WEBTHEMES_FILENAME        "webthemes.xml"
 #define DEFAULT_WEBTHEMES_SPRITESURLBASE  "http://xmoto.free.fr/sprites"
+#define DEFAULT_UPLOADREPLAY_URL          "http://xmoto.free.fr/tools/UploadReplay.php"
 
 #define WWW_AGENT ("xmoto-" + vapp::App::getVersionString())
 
@@ -141,6 +142,13 @@ class FSWeb {
 								    double ulnow),
 				      void *p_data,
 				      const ProxySettings *p_proxy_settings);
+
+  static void uploadReplay(std::string p_replayFilename,
+			   std::string p_id_room,
+			   std::string p_login,
+			   std::string p_password,
+			   std::string p_url_to_transfert,
+			   const ProxySettings *p_proxy_settings);
 
   static int f_curl_progress_callback(void *clientp,
 				      double dltotal,
