@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "VCommon.h"
 #include "Packager.h"
+#include "arch/SwapEndian.h"
 
 namespace vapp {
  
@@ -90,7 +91,8 @@ namespace vapp {
         unsigned char c = FileList[i].length();
         fputc(c,fp);
         fwrite(FileList[i].c_str(),c,1,fp);
-        fwrite(&nSize,4,1,fp);        
+	int LnSize = SwapEndian::LittleLong(nSize);
+        fwrite(&LnSize,4,1,fp);        
         fwrite(pcBuf,nSize,1,fp);
         
         /* NEXT! */
