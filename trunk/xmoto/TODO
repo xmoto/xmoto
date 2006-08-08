@@ -1,5 +1,6 @@
 ### For 0.2.1
 
+* -s make trouble on mac os x
 * for the automatic upload, add :
   - progress bar and esc for abord
   - option for the url php
