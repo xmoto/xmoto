@@ -4,7 +4,7 @@ WANTED_WARNNING= -pedantic -Wcast-align -Wcast-qual -Wchar-subscripts -Wcomment 
 
 AM_CXXFLAGS = -DNOMMGR $(WANTED_WARNNING) -DGAMEDATADIR=\"$(datadir)/@PACKAGE@\" $(GL_CFLAGS)
 AM_CFLAGS = -DNOMMGR $(WANTED_WARNNING) -DGAMEDATADIR=\"$(datadir)/@PACKAGE@\" $(GL_CFLAGS)
-AM_LDFLAGS = -s
+#AM_LDFLAGS = -s
 
 image_SOURCES = image/tim.cpp image/tim_io_stdio.cpp \
 	image/tim_jpeg.cpp image/tim_memory_crt.cpp \
