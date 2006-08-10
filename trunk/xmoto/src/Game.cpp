@@ -413,13 +413,30 @@ namespace vapp {
 	  }
 	}
 #endif
-	
+
+#if defined(SUPPORT_WEBACCESS)
+	// disable upload button
+	for(int i=0;i<m_nNumFinishMenuButtons;i++) {
+	  if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_UPLOAD_HIGHSCORE) {
+	    m_pFinishMenuButtons[i]->enableWindow(false);
+	  }
+	}
+#endif
+
 	if(v_is_a_highscore) { /* best highscore */
 	  Sound::playSampleByName("Sounds/NewHighscore.ogg");
 	  if(m_pReplay != NULL && m_bAutosaveHighscoreReplays) {
 	    String v_replayName = Replay::giveAutomaticName();
 	    _SaveReplay(v_replayName);
 	    m_Renderer.showMsgNewBestHighscore(v_replayName);
+#if defined(SUPPORT_WEBACCESS)
+	    // enable upload button
+	    for(int i=0;i<m_nNumFinishMenuButtons;i++) {
+	      if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_UPLOAD_HIGHSCORE) {
+		m_pFinishMenuButtons[i]->enableWindow(true);
+	      }
+	    }
+#endif
 	  } else {
 	    m_Renderer.showMsgNewBestHighscore();
 	  }
@@ -439,8 +456,7 @@ namespace vapp {
 	    m_Renderer.hideMsgNewHighscore();
 	  }
 	}
-
-        break;
+	break;
       }
     }
     
@@ -2075,6 +2091,13 @@ namespace vapp {
     m_Config.createVar( "ProxyPort",              "-1" );
     //m_Config.createVar( "ProxyAuthUser",          "" ); 
     //m_Config.createVar( "ProxyAuthPwd",          "" );
+
+    /* auto upload */
+    m_Config.createVar( "WebHighscoreUploadURL"      , DEFAULT_UPLOADREPLAY_URL);
+    m_Config.createVar( "WebHighscoreUploadIdRoom"   , "");
+    m_Config.createVar( "WebHighscoreUploadLogin"    , "");
+    m_Config.createVar( "WebHighscoreUploadPassword" , ""); 
+
 #endif
     
 #if defined(ALLOW_GHOST)
@@ -2892,6 +2915,31 @@ namespace vapp {
   }
 #endif    
 
+#if defined(SUPPORT_WEBACCESS) 
+  void GameApp::_UploadHighscore() {
+    try {
+      bool v_msg_status_ok;
+      std::string v_msg;
+      clearCancelAsSoonAsPossible();
+      m_DownloadingInformation = "";
+      m_DownloadingMessage = GAMETEXT_UPLOADING_HIGHSCORE;
+      FSWeb::uploadReplay(FS::getUserDir() + "/Replays/Latest.rpl",
+			  m_Config.getString("WebHighscoreUploadIdRoom"),
+			  m_Config.getString("WebHighscoreUploadLogin"),
+			  m_Config.getString("WebHighscoreUploadPassword"),
+			  m_Config.getString("WebHighscoreUploadURL"),
+			  this,
+			  &m_ProxySettings,
+			  v_msg_status_ok,
+			  v_msg);
+      if(v_msg_status_ok) {
+	notifyMsg(v_msg);
+      } else {
+	notifyMsg(GAMETEXT_UPLOAD_HIGHSCORE_WEB_WARNING_BEFORE + v_msg);
+      }
+    } catch(Exception &e) {
+      notifyMsg(GAMETEXT_UPLOAD_HIGHSCORE_ERROR);
+    }
+  }
+#endif
 }
-
-

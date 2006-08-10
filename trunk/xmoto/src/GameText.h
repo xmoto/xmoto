@@ -253,6 +253,10 @@ Central place to keep many in-game text strings
 #define GAMETEXT_UPDATEHIGHSCORES     "Check WWW"
 #define GAMETEXT_UPDATETHEMESLIST      "Update the theme list"
 #define GAMETEXT_UPDATINGLEVELS       "Updating level lists..."
+#define GAMETEXT_UPLOAD_HIGHSCORE     "Upload the highscore"
+#define GAMETEXT_UPLOAD_HIGHSCORE_ERROR "An unexcepted error occured\nThe website has perhaps some troubles"
+#define GAMETEXT_UPLOAD_HIGHSCORE_WEB_WARNING_BEFORE "Oh no !\n"
+#define GAMETEXT_UPLOADING_HIGHSCORE  "Uploading the highscore..."
 #define GAMETEXT_USEENVVARS           "Use Environment Vars"
 #define GAMETEXT_USEPROFILE           "Use Profile"
 #define GAMETEXT_USINGHTTPPROXY       "Using HTTP Proxy"
@@ -377,5 +381,6 @@ Central place to keep many in-game text strings
 #define CONTEXTHELP_THEMES "Choose the X-Moto graphics theme"
 #define CONTEXTHELP_UPDATETHEMESLIST "Check for new themes on the web"
 #define CONTEXTHELP_GETSELECTEDTHEME "Download or update the selected theme"
+#define CONTEXTHELP_UPLOAD_HIGHSCORE "Upload the replay on the website of highscores"
 
 #endif

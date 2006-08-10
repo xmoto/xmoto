@@ -34,6 +34,16 @@
 #include "compression/FileCompression.h"
 #include "md5sum/md5file.h"
 
+struct f_curl_download_data {
+  vapp::WWWAppInterface *v_WebApp;
+  int v_nb_files_to_download;
+  int v_nb_files_performed;
+};
+
+struct f_curl_upload_data {
+  vapp::WWWAppInterface *v_WebApp;
+};
+
 ProxySettings::ProxySettings() {
   m_server       = "";
   m_port         = -1;
@@ -334,11 +344,11 @@ size_t FSWeb::writeData(void *ptr, size_t size, size_t nmemb, FILE *stream) {
 
 void FSWeb::downloadFileBz2(const std::string &p_local_file,
 			    const std::string &p_web_file,
-			    int (*curl_progress_callback)(void *clientp,
-							  double dltotal,
-							  double dlnow,
-							  double ultotal,
-							  double ulnow),
+			    int (*curl_progress_callback_download)(void *clientp,
+								   double dltotal,
+								   double dlnow,
+								   double ultotal,
+								   double ulnow),
 			    void *p_data,
 			    const ProxySettings *p_proxy_settings) {
   std::string v_bzFile = p_local_file + ".bz2";
@@ -347,7 +357,7 @@ void FSWeb::downloadFileBz2(const std::string &p_local_file,
   remove(v_bzFile.c_str());
   downloadFile(v_bzFile,
 	       p_web_file + ".bz2",
-	       curl_progress_callback,
+	       curl_progress_callback_download,
 	       p_data,
 	       p_proxy_settings
 	       );
@@ -363,11 +373,11 @@ void FSWeb::downloadFileBz2(const std::string &p_local_file,
 
 void FSWeb::downloadFileBz2UsingMd5(const std::string &p_local_file,
 				    const std::string &p_web_file,
-				    int (*curl_progress_callback)(void *clientp,
-								  double dltotal,
-								  double dlnow,
-								  double ultotal,
-								  double ulnow),
+				    int (*curl_progress_callback_download)(void *clientp,
+									   double dltotal,
+									   double dlnow,
+									   double ultotal,
+									   double ulnow),
 				    void *p_data,
 				    const ProxySettings *p_proxy_settings) {
   bool require_dwd = true;
@@ -401,7 +411,7 @@ void FSWeb::downloadFileBz2UsingMd5(const std::string &p_local_file,
   if(require_dwd) {
     FSWeb::downloadFileBz2(p_local_file,
 			   p_web_file,
-			   curl_progress_callback,
+			   curl_progress_callback_download,
 			   p_data,
 			   p_proxy_settings);
   }
@@ -409,11 +419,11 @@ void FSWeb::downloadFileBz2UsingMd5(const std::string &p_local_file,
 
 void FSWeb::downloadFile(const std::string &p_local_file,
 			 const std::string &p_web_file,
-			 int (*curl_progress_callback)(void *clientp,
-						       double dltotal,
-						       double dlnow,
-						       double ultotal,
-						       double ulnow),
+			 int (*curl_progress_callback_download)(void *clientp,
+								double dltotal,
+								double dlnow,
+								double ultotal,
+								double ulnow),
 			 void *p_data,
 			 const ProxySettings *p_proxy_settings
 			 ) {
@@ -486,9 +496,9 @@ void FSWeb::downloadFile(const std::string &p_local_file,
   }
   /* ***** */
 
-  if(curl_progress_callback != NULL) {
+  if(curl_progress_callback_download != NULL) {
     curl_easy_setopt(v_curl, CURLOPT_NOPROGRESS, false);
-    curl_easy_setopt(v_curl, CURLOPT_PROGRESSFUNCTION, curl_progress_callback);
+    curl_easy_setopt(v_curl, CURLOPT_PROGRESSFUNCTION, curl_progress_callback_download);
     curl_easy_setopt(v_curl, CURLOPT_PROGRESSDATA, p_data);
   }
 
@@ -524,19 +534,35 @@ void FSWeb::uploadReplay(std::string p_replayFilename,
 			 std::string p_login,
 			 std::string p_password,
 			 std::string p_url_to_transfert,
-			 const ProxySettings *p_proxy_settings) {
+			 vapp::WWWAppInterface *p_WebApp,
+			 const ProxySettings *p_proxy_settings,
+			 bool &p_msg_status,
+			 std::string &p_msg) {
   CURL *v_curl;
   CURLcode v_res;
   std::string v_proxy_server;
   std::string v_proxy_auth_str;
   std::string v_www_agent = WWW_AGENT;
+  f_curl_upload_data v_data;
+
+  FILE *v_destinationFile;
+  std::string v_local_file;
+  v_local_file = vapp::FS::getUserDir() + "/" + DEFAULT_REPLAYUPLOAD_MSGFILE;
+
 
   struct curl_httppost *v_post, *v_last;
 
   vapp::Verbose(std::string("Uploading replay " + p_replayFilename).c_str());
 
+  /* open the file */
+  if( (v_destinationFile = fopen(v_local_file.c_str(), "wb")) == false) {
+    throw vapp::Exception("error : unable to open output file " DEFAULT_REPLAYUPLOAD_MSGFILE);
+  }
+      
   v_curl = curl_easy_init();
   if(v_curl == false) {
+    fclose(v_destinationFile);
+    remove(v_local_file.c_str());
     throw vapp::Exception("error : unable to init curl");	
   }
 
@@ -561,6 +587,8 @@ void FSWeb::uploadReplay(std::string p_replayFilename,
 
   curl_easy_setopt(v_curl, CURLOPT_TIMEOUT, DEFAULT_TRANSFERT_TIMEOUT);
   curl_easy_setopt(v_curl, CURLOPT_CONNECTTIMEOUT, DEFAULT_TRANSFERT_CONNECT_TIMEOUT);
+  curl_easy_setopt(v_curl, CURLOPT_WRITEDATA, v_destinationFile);
+  curl_easy_setopt(v_curl, CURLOPT_WRITEFUNCTION, FSWeb::writeData);
   curl_easy_setopt(v_curl, CURLOPT_USERAGENT,  v_www_agent.c_str());
   curl_easy_setopt(v_curl, CURLOPT_FAILONERROR, 1);
 
@@ -594,16 +622,90 @@ void FSWeb::uploadReplay(std::string p_replayFilename,
   }
   /* ***** */
 
+  if(p_WebApp != NULL) {
+    v_data.v_WebApp = p_WebApp;
+
+    curl_easy_setopt(v_curl, CURLOPT_NOPROGRESS, false);
+    curl_easy_setopt(v_curl, CURLOPT_PROGRESSFUNCTION, FSWeb::f_curl_progress_callback_upload);
+    curl_easy_setopt(v_curl, CURLOPT_PROGRESSDATA, &v_data);
+  }
+
   v_res = curl_easy_perform(v_curl);
+
+  fclose(v_destinationFile);
 
   /* CURLE_ABORTED_BY_CALLBACK is not considered as an error */
   if(v_res != CURLE_ABORTED_BY_CALLBACK) {
     if(v_res != CURLE_OK) {
       curl_easy_cleanup(v_curl);
+      remove(v_local_file.c_str());
       throw vapp::Exception("error : unable to perform curl");	
     }
   }
   curl_easy_cleanup(v_curl);
+
+  /* analyse de la réponse */
+  if(v_res == CURLE_ABORTED_BY_CALLBACK) {
+    p_msg_status = 0;
+    p_msg = "Upload aborted\nYou will be able to validate it later ;-)";
+  } else {
+    uploadReplayAnalyseMsg(v_local_file, p_msg_status, p_msg);
+  }
+
+  remove(v_local_file.c_str());
+}
+
+void FSWeb::uploadReplayAnalyseMsg(std::string p_filename,
+				   bool &p_msg_status_ok,
+				   std::string &p_msg) {
+  vapp::XMLDocument v_Xml;
+  TiXmlDocument *v_XmlData;
+  TiXmlElement *v_XmlDataElement;
+  TiXmlElement *v_XmlDataElementMsg;
+  std::string v_success;
+  const char *pc;
+  TiXmlNode * pChild;
+
+  /* open the file */
+  v_Xml.readFromFile(p_filename);   
+  v_XmlData = v_Xml.getLowLevelAccess();
+  
+  if(v_XmlData == NULL) {
+    throw vapp::Exception("unable to analyze xml file result");
+  }
+  
+  /* read the res and msg */
+  v_XmlDataElement = v_XmlData->FirstChildElement("xmoto_uploadReplayResult");
+  if(v_XmlDataElement == NULL) {
+    throw vapp::Exception("unable to analyze xml file result");
+  }
+
+  pc = v_XmlDataElement->Attribute("success");
+  if(pc == NULL) {
+    throw vapp::Exception("unable to analyze xml file result");
+  }
+  v_success = pc;
+  p_msg_status_ok = v_success == "1";
+
+  v_XmlDataElementMsg = v_XmlDataElement->FirstChildElement("message");
+  if(v_XmlDataElementMsg == NULL) {
+    throw vapp::Exception("unable to analyze xml file result");
+  }
+
+  pChild = v_XmlDataElementMsg->FirstChild();
+  if(pChild == NULL) {
+    throw vapp::Exception("unable to analyze xml file result");
+  }
+
+  if(pChild->ToText() == NULL) {
+    throw vapp::Exception("unable to analyze xml file result");
+  }
+
+  pc = pChild->ToText()->Value();
+  if(pc == NULL) {
+    throw vapp::Exception("unable to analyze xml file result");
+  }
+  p_msg = pc;
 }
 
 WebLevel::WebLevel(std::string p_id, std::string p_name, std::string p_url) {
@@ -760,17 +862,37 @@ void WebLevels::update() {
   extractLevelsToDownloadFromXml();
 }
 
-struct f_curl_download_data {
-  vapp::WWWAppInterface *v_WebApp;
-  int v_nb_files_to_download;
-  int v_nb_files_performed;
-};
+int FSWeb::f_curl_progress_callback_upload(void *clientp,
+					   double dltotal,
+					   double dlnow,
+					   double ultotal,
+					   double ulnow) {
+  f_curl_download_data *data = ((f_curl_download_data*) clientp);
+  float v_percentage;
 
-int FSWeb::f_curl_progress_callback(void *clientp,
-				    double dltotal,
-				    double dlnow,
-				    double ultotal,
-				    double ulnow) {
+  /* cancel if it's wanted */
+  if(data->v_WebApp->isCancelAsSoonAsPossible()) {
+    return 1;
+  }
+
+  /* we can't make trust to the web server information */
+  v_percentage = 0.0;
+  if(ultotal > 0.0) {
+    if((ulnow / ultotal) >= 0.0 && (ulnow / ultotal) <= 1.0) {
+      v_percentage = (ulnow * 100.0) /ultotal;
+    }
+  }
+
+  data->v_WebApp->setTaskProgress(v_percentage);
+
+  return 0;
+}
+
+int FSWeb::f_curl_progress_callback_download(void *clientp,
+					     double dltotal,
+					     double dlnow,
+					     double ultotal,
+					     double ulnow) {
   f_curl_download_data *data = ((f_curl_download_data*) clientp);
   float real_percentage_already_done;
   float real_percentage_of_current_file;
@@ -784,7 +906,7 @@ int FSWeb::f_curl_progress_callback(void *clientp,
     (((float)data->v_nb_files_performed) * 100.0) 
     / ((float)data->v_nb_files_to_download);
 
-  /* we can't make confiance to the web server information */
+  /* we can't make trust to the web server information */
   real_percentage_of_current_file = 0.0;
   if(dltotal > 0.0) {
     if((dlnow / dltotal) >= 0.0 && (dlnow / dltotal) <= 1.0) {
@@ -797,6 +919,19 @@ int FSWeb::f_curl_progress_callback(void *clientp,
   data->v_WebApp->setTaskProgress(real_percentage_already_done + real_percentage_of_current_file);
 
   return 0;
+}
+
+bool WebLevels::exists(const std::string p_id) {
+  std::vector<WebLevel*>::iterator it;
+  it = m_webLevels.begin();
+  while(it != m_webLevels.end()) {
+    if((*it)->getId() == p_id) {
+      return true;
+    }
+    it++;
+  }
+
+  return false;
 }
 
 void WebLevels::upgrade() {
@@ -840,7 +975,7 @@ void WebLevels::upgrade() {
       
       FSWeb::downloadFileBz2(v_destFile,
 			     v_url,
-			     FSWeb::f_curl_progress_callback,
+			     FSWeb::f_curl_progress_callback_download,
 			     &v_data,
 			     m_proxy_settings);
       
@@ -1062,7 +1197,7 @@ void WebThemes::upgrade(ThemeChoice *p_themeChoice) {
 
 	FSWeb::downloadFile(v_destinationFile,
 			    v_sourceFile,
-			    FSWeb::f_curl_progress_callback,
+			    FSWeb::f_curl_progress_callback_download,
 			    &v_data,
 			    m_proxy_settings);
 	

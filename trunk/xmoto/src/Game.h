@@ -463,6 +463,7 @@ namespace vapp {
       void _UpdateWebTheme(ThemeChoice* pThemeChoice, bool bNotify);
       void _UpgradeWebHighscores();
       void _DownloadExtraLevels(void);
+      void _UploadHighscore();
       void _ConfigureProxy(void);
 #endif
 

@@ -1,12 +1,7 @@
 ### For 0.2.1
 
-* -s make trouble on mac os x
 * for the automatic upload, add :
-  - progress bar and esc for abord
-  - option for the url php
-  - option for the room login and password and id_room
-  - vérifier que le level est dans les weblevels avant d'envoyer car
-   sinon ca veut dire qu'il n'est pas encore validé
+  - a button on replay list to upload unuploaded replays
 
 * BUG : if webthemes does not exist and rm -rf Themes ; try to update
    classical theme without updating the list make a mistake

@@ -49,6 +49,7 @@ class ThemeChoice;
 #define DEFAULT_WEBTHEMES_FILENAME        "webthemes.xml"
 #define DEFAULT_WEBTHEMES_SPRITESURLBASE  "http://xmoto.free.fr/sprites"
 #define DEFAULT_UPLOADREPLAY_URL          "http://xmoto.free.fr/tools/UploadReplay.php"
+#define DEFAULT_REPLAYUPLOAD_MSGFILE      "UploadReplayMsg.xml"
 
 #define WWW_AGENT ("xmoto-" + vapp::App::getVersionString())
 
@@ -115,31 +116,31 @@ class FSWeb {
  public:
   static void downloadFile(const std::string &p_local_file,
 			   const std::string &p_web_file,
-			   int (*curl_progress_callback)(void *clientp,
-							 double dltotal,
-							 double dlnow,
-							 double ultotal,
-							 double ulnow),
+			   int (*curl_progress_callback_download)(void *clientp,
+								  double dltotal,
+								  double dlnow,
+								  double ultotal,
+								  double ulnow),
 			   void *p_data,
 			   const ProxySettings *p_proxy_settings);
 
   static void downloadFileBz2(const std::string &p_local_file,
 			      const std::string &p_web_file,
-			      int (*curl_progress_callback)(void *clientp,
-							    double dltotal,
-							    double dlnow,
-							    double ultotal,
-							    double ulnow),
+			      int (*curl_progress_callback_download)(void *clientp,
+								     double dltotal,
+								     double dlnow,
+								     double ultotal,
+								     double ulnow),
 			      void *p_data,
 			      const ProxySettings *p_proxy_settings);
 
   static void downloadFileBz2UsingMd5(const std::string &p_local_file,
 				      const std::string &p_web_file,
-				      int (*curl_progress_callback)(void *clientp,
-								    double dltotal,
-								    double dlnow,
-								    double ultotal,
-								    double ulnow),
+				      int (*curl_progress_callback_download)(void *clientp,
+									     double dltotal,
+									     double dlnow,
+									     double ultotal,
+									     double ulnow),
 				      void *p_data,
 				      const ProxySettings *p_proxy_settings);
 
@@ -148,16 +149,28 @@ class FSWeb {
 			   std::string p_login,
 			   std::string p_password,
 			   std::string p_url_to_transfert,
-			   const ProxySettings *p_proxy_settings);
+			   vapp::WWWAppInterface *p_WebApp,
+			   const ProxySettings *p_proxy_settings,
+			   bool &p_msg_status,
+			   std::string &p_msg);
 
-  static int f_curl_progress_callback(void *clientp,
-				      double dltotal,
-				      double dlnow,
-				      double ultotal,
-				      double ulnow); 
+  static int f_curl_progress_callback_upload(void *clientp,
+					     double dltotal,
+					     double dlnow,
+					     double ultotal,
+					     double ulnow);
+
+  static int f_curl_progress_callback_download(void *clientp,
+					       double dltotal,
+					       double dlnow,
+					       double ultotal,
+					       double ulnow);
 
  private:
   static size_t writeData(void *ptr, size_t size, size_t nmemb, FILE *stream);
+  static void   uploadReplayAnalyseMsg(std::string p_filename,
+				       bool &p_msg_status_ok,
+				       std::string &p_msg);
 };
 
 class WebHighscore {
@@ -266,6 +279,8 @@ class WebLevels {
   
   /* Set URL */
   void setURL(const std::string &p_url) {m_levels_url = p_url;}
+
+  bool exists(const std::string p_id);
 
  private:
   vapp::WWWAppInterface *m_WebLevelApp;

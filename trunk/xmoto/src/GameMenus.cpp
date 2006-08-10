@@ -33,7 +33,9 @@ namespace vapp {
   void GameApp::_InitMenus(void) {
     /* TODO: it would obviously be a good idea to put this gui stuff into
        a nice XML file instead. This really stinks */
-  
+    int i;
+    int default_button;
+
     /* Best times windows (at finish) */
     m_pBestTimes = new UIBestTimes(m_Renderer.getGUI(),10,50,"",290,500);
     m_pBestTimes->setFont(m_Renderer.getMediumFont());
@@ -42,33 +44,53 @@ namespace vapp {
     /* Initialize finish menu */
     m_pFinishMenu = new UIFrame(m_Renderer.getGUI(),300,30,"",400,540);
     m_pFinishMenu->setStyle(UI_FRAMESTYLE_MENU);
-    
-    m_pFinishMenuButtons[0] = new UIButton(m_pFinishMenu,0,0,GAMETEXT_TRYAGAIN,207,57);
-    m_pFinishMenuButtons[0]->setContextHelp(CONTEXTHELP_PLAY_THIS_LEVEL_AGAIN);
-    
-    m_pFinishMenuButtons[1] = new UIButton(m_pFinishMenu,0,0,GAMETEXT_SAVEREPLAY,207,57);
-    m_pFinishMenuButtons[1]->setContextHelp(CONTEXTHELP_SAVE_A_REPLAY);
-    if(!m_bRecordReplays) m_pFinishMenuButtons[1]->enableWindow(false);
 
-    m_pFinishMenuButtons[2] = new UIButton(m_pFinishMenu,0,0,GAMETEXT_PLAYNEXT,207,57);
-    m_pFinishMenuButtons[2]->setContextHelp(CONTEXTHELP_PLAY_NEXT_LEVEL);
+    i=0;
+
+    m_pFinishMenuButtons[i] = new UIButton(m_pFinishMenu,0,0,GAMETEXT_TRYAGAIN,207,57);
+    m_pFinishMenuButtons[i]->setContextHelp(CONTEXTHELP_PLAY_THIS_LEVEL_AGAIN);
+    i++;
+
+    m_pFinishMenuButtons[i] = new UIButton(m_pFinishMenu,0,0,GAMETEXT_PLAYNEXT,207,57);
+    m_pFinishMenuButtons[i]->setContextHelp(CONTEXTHELP_PLAY_NEXT_LEVEL);
+    default_button = i;
+    i++;
+
+    m_pFinishMenuButtons[i] = new UIButton(m_pFinishMenu,0,0,GAMETEXT_SAVEREPLAY,207,57);
+    m_pFinishMenuButtons[i]->setContextHelp(CONTEXTHELP_SAVE_A_REPLAY);
+    if(!m_bRecordReplays) m_pFinishMenuButtons[1]->enableWindow(false);
+    i++;
+
+#if defined(SUPPORT_WEBACCESS)
+    m_pFinishMenuButtons[i] = new UIButton(m_pFinishMenu,0,0,GAMETEXT_UPLOAD_HIGHSCORE,207,57);
+    m_pFinishMenuButtons[i]->setContextHelp(CONTEXTHELP_UPLOAD_HIGHSCORE);
+    m_pFinishMenuButtons[i]->enableWindow(false);
+    i++;
+#endif
+   
+    m_pFinishMenuButtons[i] = new UIButton(m_pFinishMenu,0,0,GAMETEXT_ABORT,207,57);
+    m_pFinishMenuButtons[i]->setContextHelp(CONTEXTHELP_BACK_TO_MAIN_MENU);
+    i++;
     
-    m_pFinishMenuButtons[3] = new UIButton(m_pFinishMenu,0,0,GAMETEXT_ABORT,207,57);
-    m_pFinishMenuButtons[3]->setContextHelp(CONTEXTHELP_BACK_TO_MAIN_MENU);
-    
-    m_pFinishMenuButtons[4] = new UIButton(m_pFinishMenu,0,0,GAMETEXT_QUIT,207,57);
-    m_pFinishMenuButtons[4]->setContextHelp(CONTEXTHELP_QUIT_THE_GAME);
-    m_nNumFinishMenuButtons = 5;
+    m_pFinishMenuButtons[i] = new UIButton(m_pFinishMenu,0,0,GAMETEXT_QUIT,207,57);
+    m_pFinishMenuButtons[i]->setContextHelp(CONTEXTHELP_QUIT_THE_GAME);
+    i++;
+
+    m_nNumFinishMenuButtons = i;
 
     UIStatic *pFinishText = new UIStatic(m_pFinishMenu,0,100,GAMETEXT_FINISH,m_pFinishMenu->getPosition().nWidth,36);
     pFinishText->setFont(m_Renderer.getMediumFont());
    
     for(int i=0;i<m_nNumFinishMenuButtons;i++) {
+#if defined(SUPPORT_WEBACCESS)
+      m_pFinishMenuButtons[i]->setPosition(200-207/2,m_pFinishMenu->getPosition().nHeight/2 - (m_nNumFinishMenuButtons*57)/2 + i*49 + 25,207,57);
+#else
       m_pFinishMenuButtons[i]->setPosition(200-207/2,m_pFinishMenu->getPosition().nHeight/2 - (m_nNumFinishMenuButtons*57)/2 + i*57,207,57);
+#endif
       m_pFinishMenuButtons[i]->setFont(m_Renderer.getSmallFont());
     }
 
-    m_pFinishMenu->setPrimaryChild(m_pFinishMenuButtons[2]); /* default button: Play next */
+    m_pFinishMenu->setPrimaryChild(m_pFinishMenuButtons[default_button]); /* default button: Play next */
                       
     /* Initialize pause menu */
     m_pPauseMenu = new UIFrame(m_Renderer.getGUI(),getDispWidth()/2 - 200,70,"",400,540);
@@ -1376,6 +1398,11 @@ namespace vapp {
             }          
           }
         }
+#if defined(SUPPORT_WEBACCESS) 
+        else if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_UPLOAD_HIGHSCORE) {
+	  _UploadHighscore();
+        }	
+#endif
         else if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_TRYAGAIN) {
           LevelSrc *pCurLevel = m_MotoGame.getLevelSrc();
           m_PlaySpecificLevel = pCurLevel->getID();
