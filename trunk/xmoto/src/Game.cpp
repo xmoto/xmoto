@@ -431,9 +431,11 @@ namespace vapp {
 	    m_Renderer.showMsgNewBestHighscore(v_replayName);
 #if defined(SUPPORT_WEBACCESS)
 	    // enable upload button
-	    for(int i=0;i<m_nNumFinishMenuButtons;i++) {
-	      if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_UPLOAD_HIGHSCORE) {
-		m_pFinishMenuButtons[i]->enableWindow(true);
+	    if(m_bEnableWebHighscores) {
+	      for(int i=0;i<m_nNumFinishMenuButtons;i++) {
+		if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_UPLOAD_HIGHSCORE) {
+		  m_pFinishMenuButtons[i]->enableWindow(true);
+		}
 	      }
 	    }
 #endif
