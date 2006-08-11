@@ -2455,7 +2455,7 @@ namespace vapp {
 	    ReplayInfo* rplInfos;
 	    rplInfos = Replay::getReplayInfos(pListEntry->Text[0]);
 	    if(rplInfos != NULL) {
-	      if(rplInfos->fFinishTime > 0.0) {
+	      if(rplInfos->fFinishTime > 0.0 && rplInfos->Player == m_pPlayer->PlayerName) {
 		WebHighscore* wh = m_pWebHighscores->getHighscoreFromLevel(rplInfos->Level);
 		if(wh != NULL) {
 		  pUploadHighscoreButton->enableWindow(rplInfos->fFinishTime < wh->getFTime());
