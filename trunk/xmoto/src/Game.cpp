@@ -2918,14 +2918,14 @@ namespace vapp {
 #endif    
 
 #if defined(SUPPORT_WEBACCESS) 
-  void GameApp::_UploadHighscore() {
+  void GameApp::_UploadHighscore(std::string p_replayname) {
     try {
       bool v_msg_status_ok;
       std::string v_msg;
       clearCancelAsSoonAsPossible();
       m_DownloadingInformation = "";
       m_DownloadingMessage = GAMETEXT_UPLOADING_HIGHSCORE;
-      FSWeb::uploadReplay(FS::getUserDir() + "/Replays/Latest.rpl",
+      FSWeb::uploadReplay(FS::getUserDir() + "/Replays/" + p_replayname + ".rpl",
 			  m_Config.getString("WebHighscoreUploadIdRoom"),
 			  m_Config.getString("WebHighscoreUploadLogin"),
 			  m_Config.getString("WebHighscoreUploadPassword"),

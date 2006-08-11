@@ -325,22 +325,35 @@ namespace vapp {
     m_pReplaysWindow->showWindow(false);
     pSomeText = new UIStatic(m_pReplaysWindow,0,0,GAMETEXT_REPLAYS,m_pHelpWindow->getPosition().nWidth,36);
     pSomeText->setFont(m_Renderer.getMediumFont());
-    UIButton *pShowButton = new UIButton(m_pReplaysWindow,11,m_pReplaysWindow->getPosition().nHeight-68,GAMETEXT_SHOW,115,57);
+    /* show button */
+    UIButton *pShowButton = new UIButton(m_pReplaysWindow,5,m_pReplaysWindow->getPosition().nHeight-68,GAMETEXT_SHOW,105,57);
     pShowButton->setFont(m_Renderer.getSmallFont());
     pShowButton->setType(UI_BUTTON_TYPE_SMALL);
     pShowButton->setID("REPLAY_SHOW_BUTTON");
     pShowButton->setContextHelp(CONTEXTHELP_RUN_REPLAY);
-    UIButton *pDeleteButton = new UIButton(m_pReplaysWindow,11+115,m_pReplaysWindow->getPosition().nHeight-68,GAMETEXT_DELETE,115,57);
+    /* delete button */
+    UIButton *pDeleteButton = new UIButton(m_pReplaysWindow,105,m_pReplaysWindow->getPosition().nHeight-68,GAMETEXT_DELETE,105,57);
     pDeleteButton->setFont(m_Renderer.getSmallFont());
     pDeleteButton->setType(UI_BUTTON_TYPE_SMALL);
     pDeleteButton->setID("REPLAY_DELETE_BUTTON");
     pDeleteButton->setContextHelp(CONTEXTHELP_DELETE_REPLAY);
-    UIButton *pListAllButton = new UIButton(m_pReplaysWindow,11+115+115,m_pReplaysWindow->getPosition().nHeight-68,GAMETEXT_LISTALL,115,57);
+#if defined(SUPPORT_WEBACCESS)
+    /* upload button */
+    UIButton *pUploadHighscoreButton = new UIButton(m_pReplaysWindow,199,m_pReplaysWindow->getPosition().nHeight-68,GAMETEXT_UPLOAD_HIGHSCORE,186,57);
+    pUploadHighscoreButton->setFont(m_Renderer.getSmallFont());
+    pUploadHighscoreButton->setType(UI_BUTTON_TYPE_SMALL);
+    pUploadHighscoreButton->setID("REPLAY_UPLOADHIGHSCORE_BUTTON");
+    pUploadHighscoreButton->enableWindow(false);
+    pUploadHighscoreButton->setContextHelp(CONTEXTHELP_UPLOAD_HIGHSCORE);
+#endif
+    /* filter */
+    UIButton *pListAllButton = new UIButton(m_pReplaysWindow,m_pReplaysWindow->getPosition().nWidth-105,m_pReplaysWindow->getPosition().nHeight-68,GAMETEXT_LISTALL,115,57);
     pListAllButton->setFont(m_Renderer.getSmallFont());
     pListAllButton->setType(UI_BUTTON_TYPE_CHECK);
     pListAllButton->setChecked(false);
     pListAllButton->setID("REPLAY_LIST_ALL");
     pListAllButton->setContextHelp(CONTEXTHELP_ALL_REPLAYS);
+    /* */
     UIList *pReplayList = new UIList(m_pReplaysWindow,20,40,"",m_pReplaysWindow->getPosition().nWidth-40,m_pReplaysWindow->getPosition().nHeight-115);      
     pReplayList->setID("REPLAY_LIST");
     pReplayList->showWindow(true);
@@ -1400,7 +1413,7 @@ namespace vapp {
         }
 #if defined(SUPPORT_WEBACCESS) 
         else if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_UPLOAD_HIGHSCORE) {
-	  _UploadHighscore();
+	  _UploadHighscore("Latest");
         }	
 #endif
         else if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_TRYAGAIN) {
@@ -2411,6 +2424,9 @@ namespace vapp {
     /* REPLAYS */        
     UIButton *pReplaysShowButton = (UIButton *)m_pReplaysWindow->getChild("REPLAY_SHOW_BUTTON");
     UIButton *pReplaysDeleteButton = (UIButton *)m_pReplaysWindow->getChild("REPLAY_DELETE_BUTTON");
+#if defined(SUPPORT_WEBACCESS)
+    UIButton *pUploadHighscoreButton = (UIButton *)m_pReplaysWindow->getChild("REPLAY_UPLOADHIGHSCORE_BUTTON");
+#endif
     UIButton *pReplaysListAllButton = (UIButton *)m_pReplaysWindow->getChild("REPLAY_LIST_ALL");
     UIList *pReplaysList = (UIList *)m_pReplaysWindow->getChild("REPLAY_LIST");
     
@@ -2427,6 +2443,42 @@ namespace vapp {
       _UpdateReplaysList();      
     }
     
+#if defined(SUPPORT_WEBACCESS)
+    if(pReplaysList->isChanged()) {
+      pReplaysList->setChanged(false);
+      pUploadHighscoreButton->enableWindow(false);
+
+      if(m_bEnableWebHighscores) {
+	if(pReplaysList->getSelected() >= 0 && pReplaysList->getSelected() < pReplaysList->getEntries().size()) {
+	  UIListEntry *pListEntry = pReplaysList->getEntries()[pReplaysList->getSelected()];
+	  if(pListEntry != NULL) {
+	    ReplayInfo* rplInfos;
+	    rplInfos = Replay::getReplayInfos(pListEntry->Text[0]);
+	    if(rplInfos != NULL) {
+	      if(rplInfos->fFinishTime > 0.0) {
+		WebHighscore* wh = m_pWebHighscores->getHighscoreFromLevel(rplInfos->Level);
+		if(wh != NULL) {
+		  pUploadHighscoreButton->enableWindow(rplInfos->fFinishTime < wh->getFTime());
+		}
+	      }  	      
+	      free(rplInfos);
+	    }
+	  }
+	}
+      }
+    }
+    
+    if(pUploadHighscoreButton->isClicked()) {
+      pReplaysList->setClicked(false);
+      if(pReplaysList->getSelected() >= 0 && pReplaysList->getSelected() < pReplaysList->getEntries().size()) {
+        UIListEntry *pListEntry = pReplaysList->getEntries()[pReplaysList->getSelected()];
+        if(pListEntry != NULL) {
+	  _UploadHighscore(pListEntry->Text[0]);
+	}
+      }
+    }
+#endif
+
     if(pReplaysShowButton->isClicked()) {
       /* Show replay */
       if(pReplaysList->getSelected() >= 0 && pReplaysList->getSelected() < pReplaysList->getEntries().size()) {

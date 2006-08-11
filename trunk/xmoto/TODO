@@ -1,8 +1,9 @@
 ### For 0.2.1
 
 * for the automatic upload, add :
-  - a button on replay list to upload unuploaded replays
+   check why i can't have a & in my password
 
+* NOT REALLY A BUG: calcul player offset on the screen dependant on the gravity
 * BUG : if webthemes does not exist and rm -rf Themes ; try to update
    classical theme without updating the list make a mistake
 * exception not catched

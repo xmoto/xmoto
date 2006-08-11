@@ -253,7 +253,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_UPDATEHIGHSCORES     "Check WWW"
 #define GAMETEXT_UPDATETHEMESLIST      "Update the theme list"
 #define GAMETEXT_UPDATINGLEVELS       "Updating level lists..."
-#define GAMETEXT_UPLOAD_HIGHSCORE     "Upload the highscore"
+#define GAMETEXT_UPLOAD_HIGHSCORE     "Upload highscore"
 #define GAMETEXT_UPLOAD_HIGHSCORE_ERROR "An unexcepted error occured\nThe website has perhaps some troubles"
 #define GAMETEXT_UPLOAD_HIGHSCORE_WEB_WARNING_BEFORE "Oh no !\n"
 #define GAMETEXT_UPLOADING_HIGHSCORE  "Uploading the highscore..."
