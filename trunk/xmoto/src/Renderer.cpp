@@ -50,6 +50,8 @@ namespace vapp {
 //    printf("PREPARE!!\n");
     m_fCurrentHorizontalScrollShift = 0.0f;
     m_fDesiredHorizontalScrollShift = 0.0f;
+    m_fCurrentVerticalScrollShift = 0.0f;
+    m_fDesiredVerticalScrollShift = 0.0f;
     m_fNextParticleUpdate = 0.0f;
     
     #if defined(ALLOW_GHOST)
@@ -346,6 +348,40 @@ namespace vapp {
     m_cameraOffsetY = CAMERA_OFFSETY_DEFAULT;
   }
 
+
+  void GameRenderer::guessDesiredCameraPosition(float &p_fDesiredHorizontalScrollShift,
+						float &p_fDesiredVerticalScrollShift) {
+						  
+    float normal_hoffset = 4.0;
+    float normal_voffset = 2.0;						  
+    p_fDesiredHorizontalScrollShift = 0.0;
+    p_fDesiredVerticalScrollShift   = 0.0;
+
+    p_fDesiredHorizontalScrollShift = getGameObject()->getGravity().y * normal_hoffset / 9.81;
+    if(getGameObject()->getBikeState()->Dir == DD_LEFT) {
+      p_fDesiredHorizontalScrollShift *= -1;
+    }
+
+    p_fDesiredVerticalScrollShift = getGameObject()->getGravity().x * normal_voffset / 9.81;
+    if(getGameObject()->getBikeState()->Dir == DD_RIGHT) {
+      p_fDesiredVerticalScrollShift *= -1;
+    }
+
+    /* allow maximum and maximum */
+    if(p_fDesiredHorizontalScrollShift > 9.81) {
+      p_fDesiredHorizontalScrollShift = 9.81;
+    }
+    if(p_fDesiredHorizontalScrollShift < -9.81) {
+      p_fDesiredHorizontalScrollShift = -9.81;
+    }
+    if(p_fDesiredVerticalScrollShift > 9.81) {
+      p_fDesiredVerticalScrollShift = 9.81;
+    }
+    if(p_fDesiredVerticalScrollShift < -9.81) {
+      p_fDesiredVerticalScrollShift = -9.81;
+    }
+  }
+
   /*===========================================================================
   Main rendering function
   ===========================================================================*/
@@ -364,12 +400,7 @@ namespace vapp {
     m_fZoom = 60.0f;    
     
     /* Driving direction? */
-    if(getGameObject()->getBikeState()->Dir == DD_RIGHT) {
-      m_fDesiredHorizontalScrollShift = -4;
-    }
-    else if(getGameObject()->getBikeState()->Dir == DD_LEFT) {
-      m_fDesiredHorizontalScrollShift = 4;
-    }
+    guessDesiredCameraPosition(m_fDesiredHorizontalScrollShift, m_fDesiredVerticalScrollShift);
     
     if(m_fDesiredHorizontalScrollShift != m_fCurrentHorizontalScrollShift) {
       float d = m_fDesiredHorizontalScrollShift - m_fCurrentHorizontalScrollShift;
@@ -384,7 +415,21 @@ namespace vapp {
       }
     }
 
-    m_Scroll += Vector2f(m_fCurrentHorizontalScrollShift,0.0f);
+    if(m_fDesiredVerticalScrollShift != m_fCurrentVerticalScrollShift) {
+      float d = m_fDesiredVerticalScrollShift - m_fCurrentVerticalScrollShift;
+      if(fabs(d)<0.25f) {
+        m_fCurrentVerticalScrollShift = m_fDesiredVerticalScrollShift;
+      }
+      else if(d < 0.0f) {
+        m_fCurrentVerticalScrollShift -= 0.1f * m_fSpeedMultiply;
+      }
+      else if(d > 0.0f) {
+        m_fCurrentVerticalScrollShift += 0.1f * m_fSpeedMultiply;
+      }
+    }
+
+    m_Scroll += Vector2f(m_fCurrentHorizontalScrollShift,
+			 m_fCurrentVerticalScrollShift);
 
     glLoadIdentity();
 

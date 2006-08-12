@@ -257,6 +257,9 @@ namespace vapp {
       float m_fZoom;
       float m_fDesiredHorizontalScrollShift;
       float m_fCurrentHorizontalScrollShift;
+
+      float m_fDesiredVerticalScrollShift;
+      float m_fCurrentVerticalScrollShift;
       
       UIWindow *m_pInGameStats;
       UIStatic *m_pPlayTime;   
@@ -315,7 +318,9 @@ namespace vapp {
       void _UpdateParticles(float fTimeStep);
       void _DrawRotatedMarker(Vector2f Pos,dReal *pfRot);     
       void _RenderDebugInfo(void);      
-      
+      void guessDesiredCameraPosition(float &p_fDesiredHorizontalScrollShift,
+				      float &p_fDesiredVerticalScrollShift);
+
       void _RenderAlphaBlendedSection(Texture *pTexture,const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3);
       void _RenderAdditiveBlendedSection(Texture *pTexture,const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3);
       void _RenderAlphaBlendedSectionSP(Texture *pTexture,const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3);
