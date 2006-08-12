@@ -425,20 +425,24 @@ namespace vapp {
 
 	if(v_is_a_highscore) { /* best highscore */
 	  Sound::playSampleByName("Sounds/NewHighscore.ogg");
-	  if(m_pReplay != NULL && m_bAutosaveHighscoreReplays) {
-	    String v_replayName = Replay::giveAutomaticName();
-	    _SaveReplay(v_replayName);
-	    m_Renderer.showMsgNewBestHighscore(v_replayName);
+
 #if defined(SUPPORT_WEBACCESS)
-	    // enable upload button
-	    if(m_bEnableWebHighscores) {
+	  // enable upload button
+	  if(m_bEnableWebHighscores) {
+	    if(m_pReplay != NULL) {
 	      for(int i=0;i<m_nNumFinishMenuButtons;i++) {
 		if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_UPLOAD_HIGHSCORE) {
 		  m_pFinishMenuButtons[i]->enableWindow(true);
 		}
 	      }
 	    }
+	  }
 #endif
+	  
+	  if(m_pReplay != NULL && m_bAutosaveHighscoreReplays) {
+	    String v_replayName = Replay::giveAutomaticName();
+	    _SaveReplay(v_replayName);
+	    m_Renderer.showMsgNewBestHighscore(v_replayName);
 	  } else {
 	    m_Renderer.showMsgNewBestHighscore();
 	  }
