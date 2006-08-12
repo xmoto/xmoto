@@ -368,17 +368,17 @@ namespace vapp {
     }
 
     /* allow maximum and maximum */
-    if(p_fDesiredHorizontalScrollShift > 9.81) {
-      p_fDesiredHorizontalScrollShift = 9.81;
+    if(p_fDesiredHorizontalScrollShift > normal_hoffset) {
+      p_fDesiredHorizontalScrollShift = normal_hoffset;
     }
-    if(p_fDesiredHorizontalScrollShift < -9.81) {
-      p_fDesiredHorizontalScrollShift = -9.81;
+    if(p_fDesiredHorizontalScrollShift < -normal_hoffset) {
+      p_fDesiredHorizontalScrollShift = -normal_hoffset;
     }
-    if(p_fDesiredVerticalScrollShift > 9.81) {
-      p_fDesiredVerticalScrollShift = 9.81;
+    if(p_fDesiredVerticalScrollShift > normal_voffset) {
+      p_fDesiredVerticalScrollShift = normal_voffset;
     }
-    if(p_fDesiredVerticalScrollShift < -9.81) {
-      p_fDesiredVerticalScrollShift = -9.81;
+    if(p_fDesiredVerticalScrollShift < -normal_voffset) {
+      p_fDesiredVerticalScrollShift = -normal_voffset;
     }
   }
 
