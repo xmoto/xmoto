@@ -2,6 +2,9 @@ pkgdatadir = $(datadir)/@PACKAGE@
 
 pkgdata_DATA = editor.dat fonts.dat xmoto.bin xmoto.ogg
 
+all: xmoto.bin
+	
+
 xmoto.bin: package.lst
 	if test -e package.lst; then ../src/xmoto-edit -pack; fi
 
