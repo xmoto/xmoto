@@ -329,6 +329,7 @@ class WebThemes {
 
   /* download a theme or just update it */
   void upgrade(ThemeChoice *p_themeChoice);
+  bool isUpgradable(ThemeChoice *p_themeChoice);
 
   const std::vector<WebTheme*> &getAvailableThemes();
 

@@ -249,6 +249,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_TRYAGAIN             "Try This Level Again"
 #define GAMETEXT_TUTORIAL             "Tutorial"
 #define GAMETEXT_UNKNOWNLEVEL         "(Unknown)"
+#define GAMETEXT_UNUPDATABLETHEMEONWEB "Can't update this theme !\nThe theme is not avaible on the web\nor your theme list is not up to date"
 #define GAMETEXT_UPDATE               "Update"
 #define GAMETEXT_UPDATEHIGHSCORES     "Check WWW"
 #define GAMETEXT_UPDATETHEMESLIST      "Update the theme list"

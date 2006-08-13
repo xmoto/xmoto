@@ -1113,6 +1113,15 @@ const std::vector<WebTheme*> &WebThemes::getAvailableThemes() {
   return m_availableThemes;
 }
 
+bool WebThemes::isUpgradable(ThemeChoice *p_themeChoice) {
+  for(unsigned int i=0; i<m_availableThemes.size(); i++) {
+    if(m_availableThemes[i]->getName() == p_themeChoice->ThemeName()) {
+      return true;
+    }
+  }
+  return false;
+}
+
 void WebThemes::upgrade(ThemeChoice *p_themeChoice) {
   std::string v_destinationFile;
   std::string v_sourceFile;
@@ -1132,29 +1141,30 @@ void WebThemes::upgrade(ThemeChoice *p_themeChoice) {
     }
   }
 
+  if(v_associated_webtheme == NULL) {
+    throw vapp::Exception("error : unable to find this theme on the web");
+  }
+  // theme avaible on the web get it
+
   /* the destination file must be in the user dir */
   if(vapp::FS::isInUserDir(p_themeChoice->ThemeFile())) {
     v_destinationFile = p_themeChoice->ThemeFile();
   }
 
-  // theme avaible on the web get it
-  if(v_associated_webtheme != NULL) {
-
-    if(v_destinationFile == "") {
-      /* determine destination file */
-      v_destinationFile = 
-	vapp::FS::getUserDir() + "/" + THEMES_DIRECTORY + "/" + 
-	vapp::FS::getFileBaseName(v_associated_webtheme->getUrl()) + ".xml";
-    }    
-
-    /* download the theme file */
-    vapp::FS::mkArborescence(v_destinationFile);
-    FSWeb::downloadFileBz2(v_destinationFile,
-			   v_associated_webtheme->getUrl(),
-			   NULL,
-			   NULL,
-			   m_proxy_settings);
-  }
+  if(v_destinationFile == "") {
+    /* determine destination file */
+    v_destinationFile = 
+      vapp::FS::getUserDir() + "/" + THEMES_DIRECTORY + "/" + 
+      vapp::FS::getFileBaseName(v_associated_webtheme->getUrl()) + ".xml";
+  }    
+  
+  /* download the theme file */
+  vapp::FS::mkArborescence(v_destinationFile);
+  FSWeb::downloadFileBz2(v_destinationFile,
+			 v_associated_webtheme->getUrl(),
+			 NULL,
+			 NULL,
+			 m_proxy_settings);
 
   if(v_destinationFile == "") {
     throw vapp::Exception("error : unable to determine theme destination file");

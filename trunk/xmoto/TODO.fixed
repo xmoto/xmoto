@@ -15,6 +15,7 @@ Since 0.2.0
 * hum : make clean, make -> no rule to make xmoto-edit : so it's not corrected
 * -s make trouble on mac os x
 * NOT REALLY A BUG: calcul player offset on the screen dependant on the gravity
+* BUG : if webthemes does not exist and rm -rf Themes ; try to update. classical theme without updating the list make a mistake
 
 Since 1.16
 * BUG : view highscore with up and down with keyboard does not update the button

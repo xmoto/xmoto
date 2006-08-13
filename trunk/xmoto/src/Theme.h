@@ -428,6 +428,7 @@ class ThemeChoicer {
 #if defined(SUPPORT_WEBACCESS)
   void updateFromWWW();
   void updateThemeFromWWW(ThemeChoice* pThemeChoice);
+  bool isUpdatableThemeFromWWW(ThemeChoice* pThemeChoice);
 
   void setURL(const std::string &p_url);
   void setURLBase(const std::string &p_urlBase);

@@ -2402,6 +2402,13 @@ namespace vapp {
 
 #if defined(SUPPORT_WEBACCESS)
   void GameApp::_UpdateWebTheme(ThemeChoice* pThemeChoice, bool bNotify) {
+    if(m_themeChoicer->isUpdatableThemeFromWWW(pThemeChoice) == false) {
+      if(bNotify) {
+	notifyMsg(GAMETEXT_UNUPDATABLETHEMEONWEB);
+      }
+      return;
+    }
+
     m_DownloadingInformation = "";
     m_DownloadingMessage = GAMETEXT_DLTHEME;
     m_themeChoicer->setURLBase(m_Config.getString("WebThemesURLBase"));
@@ -2417,7 +2424,9 @@ namespace vapp {
     } catch(Exception &e) {
       /* file probably doesn't exist */
       Log("** Warning ** : Failed to update theme ", pThemeChoice->ThemeName().c_str());		
-      notifyMsg(GAMETEXT_FAILEDGETSELECTEDTHEME);
+      if(bNotify) {
+	notifyMsg(GAMETEXT_FAILEDGETSELECTEDTHEME);
+      }
       return;
     }
   }

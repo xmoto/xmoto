@@ -1,9 +1,9 @@
 ### For 0.2.1
 
+* level no doubt : start ; pause 30 sec ; run very fast ->
+   http://testnitrx.free.fr/xmoto/screenshot0006.png : a block appears !
 * for the automatic upload, add :
    check why i can't have a & in my password
-* BUG : if webthemes does not exist and rm -rf Themes ; try to update
-   classical theme without updating the list make a mistake
 * exception not catched
   nicolas:xmoto$ xmoto -replay dsfdsfd
   fatal exception : invalid replay

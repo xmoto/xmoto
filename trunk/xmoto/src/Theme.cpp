@@ -1028,6 +1028,10 @@ void ThemeChoicer::updateFromWWW() {
   initList();
 }
 
+bool ThemeChoicer::isUpdatableThemeFromWWW(ThemeChoice* pThemeChoice) {
+  return m_webThemes->isUpgradable(pThemeChoice);
+}
+
 void ThemeChoicer::updateThemeFromWWW(ThemeChoice* pThemeChoice) {
   m_webThemes->upgrade(pThemeChoice);
 }
