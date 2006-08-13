@@ -255,12 +255,11 @@ namespace vapp {
 
       Vector2f m_Scroll;
       float m_fZoom;
-      float m_fDesiredHorizontalScrollShift;
       float m_fCurrentHorizontalScrollShift;
-
-      float m_fDesiredVerticalScrollShift;
       float m_fCurrentVerticalScrollShift;
-      
+      DriveDir m_previous_driver_dir; /* to move camera faster if the dir changed */
+      bool  m_recenter_camera_fast;
+
       UIWindow *m_pInGameStats;
       UIStatic *m_pPlayTime;   
       UIStatic *m_pBestTime;

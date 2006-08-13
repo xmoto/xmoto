@@ -49,11 +49,11 @@ namespace vapp {
   void GameRenderer::prepareForNewLevel(void) {
 //    printf("PREPARE!!\n");
     m_fCurrentHorizontalScrollShift = 0.0f;
-    m_fDesiredHorizontalScrollShift = 0.0f;
     m_fCurrentVerticalScrollShift = 0.0f;
-    m_fDesiredVerticalScrollShift = 0.0f;
     m_fNextParticleUpdate = 0.0f;
-    
+    m_previous_driver_dir  = DD_LEFT;    
+    m_recenter_camera_fast = true;
+
     #if defined(ALLOW_GHOST)
       /* Set initial ghost information position */
       if(getGameObject()->isGhostActive()) {
@@ -386,7 +386,24 @@ namespace vapp {
   Main rendering function
   ===========================================================================*/
   void GameRenderer::render(void) {
-    /* Update time */    
+    float v_move_camera_max;
+    float v_fDesiredHorizontalScrollShift = 0.0;
+    float v_fDesiredVerticalScrollShift   = 0.0;
+
+    /* determine if the camera must move fastly */
+    /* it must go faster if the player change of sense */
+    if(m_previous_driver_dir != getGameObject()->getBikeState()->Dir) {
+      m_recenter_camera_fast = true;
+    }
+    m_previous_driver_dir = getGameObject()->getBikeState()->Dir;
+
+    if(m_recenter_camera_fast) {
+      v_move_camera_max = 0.1;
+    } else {
+      v_move_camera_max = 0.01;
+    }
+
+    /* Update time */
     m_pInGameStats->showWindow(true);
     m_pPlayTime->setCaption(getParent()->formatTime(getGameObject()->getTime()));
 
@@ -400,31 +417,37 @@ namespace vapp {
     m_fZoom = 60.0f;    
     
     /* Driving direction? */
-    guessDesiredCameraPosition(m_fDesiredHorizontalScrollShift, m_fDesiredVerticalScrollShift);
+    guessDesiredCameraPosition(v_fDesiredHorizontalScrollShift, v_fDesiredVerticalScrollShift);
+
+    if(fabs(v_fDesiredHorizontalScrollShift - m_fCurrentHorizontalScrollShift)
+       < v_move_camera_max) {
+      /* remove fast move once the camera is set correctly */
+      m_recenter_camera_fast = false;
+    }
     
-    if(m_fDesiredHorizontalScrollShift != m_fCurrentHorizontalScrollShift) {
-      float d = m_fDesiredHorizontalScrollShift - m_fCurrentHorizontalScrollShift;
-      if(fabs(d)<0.25f) {
-        m_fCurrentHorizontalScrollShift = m_fDesiredHorizontalScrollShift;
+    if(v_fDesiredHorizontalScrollShift != m_fCurrentHorizontalScrollShift) {
+      float d = v_fDesiredHorizontalScrollShift - m_fCurrentHorizontalScrollShift;
+      if(fabs(d)<v_move_camera_max) {
+        m_fCurrentHorizontalScrollShift = v_fDesiredHorizontalScrollShift;
       }
       else if(d < 0.0f) {
-        m_fCurrentHorizontalScrollShift -= 0.1f * m_fSpeedMultiply;
+        m_fCurrentHorizontalScrollShift -= v_move_camera_max * m_fSpeedMultiply;
       }
       else if(d > 0.0f) {
-        m_fCurrentHorizontalScrollShift += 0.1f * m_fSpeedMultiply;
+        m_fCurrentHorizontalScrollShift += v_move_camera_max * m_fSpeedMultiply;
       }
     }
 
-    if(m_fDesiredVerticalScrollShift != m_fCurrentVerticalScrollShift) {
-      float d = m_fDesiredVerticalScrollShift - m_fCurrentVerticalScrollShift;
-      if(fabs(d)<0.25f) {
-        m_fCurrentVerticalScrollShift = m_fDesiredVerticalScrollShift;
+    if(v_fDesiredVerticalScrollShift != m_fCurrentVerticalScrollShift) {
+      float d = v_fDesiredVerticalScrollShift - m_fCurrentVerticalScrollShift;
+      if(fabs(d)<0.01f) {
+        m_fCurrentVerticalScrollShift = v_fDesiredVerticalScrollShift;
       }
       else if(d < 0.0f) {
-        m_fCurrentVerticalScrollShift -= 0.1f * m_fSpeedMultiply;
+        m_fCurrentVerticalScrollShift -= 0.01f * m_fSpeedMultiply;
       }
       else if(d > 0.0f) {
-        m_fCurrentVerticalScrollShift += 0.1f * m_fSpeedMultiply;
+        m_fCurrentVerticalScrollShift += 0.01f * m_fSpeedMultiply;
       }
     }
 
