@@ -1,10 +1,11 @@
-X-Moto 0.2.1 2006-
+X-Moto 0.2.1 2006- (bugs fix version)
 -------------------------------
 
+ * X-Moto is no more ALPHA !
  * tools to make smooth levels with Inkscape (by Emmanuel Gorse)
  * upload highscores from the game
  * Man pages (from debian package)
- * Some bugs fixed.
+ * Several bugs fixed.
 
 X-Moto 0.2.0 (alpha) 2006-07-28
 -------------------------------
