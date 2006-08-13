@@ -1,5 +1,5 @@
 
-WANTED_WARNNING= -pedantic -Wcast-align -Wcast-qual -Wchar-subscripts -Wcomment -Wconversion -Wfloat-equal -Wformat -Wformat-nonliteral -Wformat-security -Wformat-y2k -Wimplicit -Wimport -Wuninitialized -Winline -Wlong-long -Wmissing-braces -Wmissing-format-attribute -Wmissing-noreturn -Wpacked -Wparentheses -Wpointer-arith -Wredundant-decls -Wreturn-type -Wshadow -Wswitch  -Wswitch-default  -Wswitch-enum -Wtrigraphs -Wundef -Wunknown-pragmas -Wunused -Wunused-function -Wunused-label -Wunused-value -Wunused-variable -Wwrite-strings
+WANTED_WARNNING= -pedantic -Wcast-align -Wcast-qual -Wchar-subscripts -Wcomment -Wconversion -Wfloat-equal -Wformat -Wformat-nonliteral -Wformat-security -Wformat-y2k -Wimplicit -Wimport -Wuninitialized -Wlong-long -Wmissing-braces -Wmissing-format-attribute -Wmissing-noreturn -Wpacked -Wparentheses -Wpointer-arith -Wredundant-decls -Wreturn-type -Wshadow -Wswitch  -Wswitch-default  -Wswitch-enum -Wtrigraphs -Wundef -Wunknown-pragmas -Wunused -Wunused-function -Wunused-label -Wunused-value -Wunused-variable -Wwrite-strings
 # -Wunreachable-code
 
 AM_CXXFLAGS = -DNOMMGR $(WANTED_WARNNING) -DGAMEDATADIR=\"$(datadir)/@PACKAGE@\" $(GL_CFLAGS)
@@ -51,7 +51,7 @@ xmoto_edit_SOURCES = $(common_SOURCES) Editor.cpp EditorMain.cpp \
 	EditorData.cpp EditorLog.cpp Editor.h EditorData.h \
 	EditorLog.h Packager.cpp Packager.h
 
-xmoto_edit_LDADD = $(common_LDADD)
+xmoto_edit_LDADD = $(common_LDADD) $(SDL_LIBS)
 
 xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp GameMain.cpp \
 	GameMenus.cpp GUIBestTimes.cpp GUIButton.cpp GUI.cpp \

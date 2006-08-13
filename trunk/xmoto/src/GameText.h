@@ -192,9 +192,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_NOTFINISHED          "(Not finished)"
 #define GAMETEXT_NOTIFYATINIT         "Important note!\n"                                                \
                                       "\n"                                                               \
-                                      "This is an alpha release of X-Moto, which means that the\n"       \
-                                      "game you're experiencing right now indeed isn't the\n"            \
-                                      "final version of the game.\n"                                     \
+                                      "Thanks to play X-Moto !\n"                                     \
                                       "All kinds of feedback are highly appreciated, so the game\n"      \
                                       "can get better.\n"                                                \
                                       "Mail bugs, ideas, comments, feature requests, hatemail, etc\n"    \
@@ -224,6 +222,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_REPLAYHELPTEXT(current_speed) "Stop[esc] ||[space]  << >>[right/left keys]  < >[up/down keys]   Speed:" + current_speed + "x"
 #define GAMETEXT_REPLAYHELPTEXTNOREWIND(current_speed) "Stop[esc] ||[space] >>[left key] < >[up/down keys]   Speed:" + current_speed + "x"
   // + "a" + "X"
+#define GAMETEXT_REPLAYNOTFOUND       "Replay '%s' can't be played!"
 #define GAMETEXT_REPLAYS              "View Replays"
 #define GAMETEXT_RESTART              "Restart This Level"
 #define GAMETEXT_RESUME               "Resume Playing"

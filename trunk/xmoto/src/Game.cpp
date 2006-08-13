@@ -90,7 +90,11 @@ namespace vapp {
         std::string LevelID = m_pReplay->openReplay(m_PlaySpecificReplay,&m_fCurrentReplayFrameRate,m_ReplayPlayerName);
         if(LevelID == "") {
           Log("** Warning ** : No valid level identifier could be extracted from the replay: %s",m_PlaySpecificReplay.c_str());
-          throw Exception("invalid replay");
+          char cBuf[256];
+          sprintf(cBuf,GAMETEXT_REPLAYNOTFOUND,m_PlaySpecificReplay.c_str());
+          setState(GS_MENU);
+          notifyMsg(cBuf);
+          // throw Exception("invalid replay");
         }
         else {
           /* Fine, open the level */

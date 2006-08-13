@@ -4,9 +4,6 @@
    http://testnitrx.free.fr/xmoto/screenshot0006.png : a block appears !
 * for the automatic upload, add :
    check why i can't have a & in my password
-* exception not catched
-  nicolas:xmoto$ xmoto -replay dsfdsfd
-  fatal exception : invalid replay
 * BUG : as you can see at the end of "the only smooth", the block is
    not correctly drawned
 * make xmoto independant of the arch for replays
