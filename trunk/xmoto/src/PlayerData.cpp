@@ -24,9 +24,15 @@
  */
 #include "VFileIO.h"
 #include "PlayerData.h"
+#include "arch/SwapEndian.h"
 
 namespace vapp {
 
+  /* Return level IDs as-is */
+  std::string PlayerData::_NoFixLevelID(const std::string &s) {
+    return s;
+  }
+  
   /*===========================================================================
     Utility function to translate pre-0.1.7 level IDs to 0.1.9 level IDs
     ===========================================================================*/
@@ -59,6 +65,43 @@ namespace vapp {
     if(s == "_iL00_") return "tut1";
     return s;
   }
+  
+  /* Load the profiles from a file-handle.
+   *   fixer - function pointer to fix the names of levels
+   *   swapped - whether data is of the wrong endianness */
+  void PlayerData::_LoadFileHandle(FileHandle *pfh, LevelFixer fixer,
+      bool swapped) {
+    /* Read number of player profiles */
+    int nNumPlayerProfiles = FS::readInt_MaybeLE(pfh, swapped);
+    
+    if(nNumPlayerProfiles >= 0) {
+      /* For each player profile */
+      for(int i=0;i<nNumPlayerProfiles;i++) {
+        std::string PlayerName = FS::readString(pfh);
+        PlayerProfile *pPlayer = createProfile(PlayerName);
+        
+        if(pPlayer != NULL) {
+          int nNumCompleted = FS::readInt_MaybeLE(pfh, swapped);
+          int nNumSkipped   = FS::readInt_MaybeLE(pfh, swapped);
+          
+          for(int j=0;j<nNumCompleted;j++)
+            completeLevel(PlayerName,fixer(FS::readString(pfh)));
+          
+          for(int j=0;j<nNumSkipped;j++)
+            skipLevel(PlayerName,fixer(FS::readString(pfh)));
+           
+          while(1) {
+            std::string LevelID = fixer(FS::readString(pfh));
+            if(LevelID.length() == 0) break;
+            std::string Replay = FS::readString(pfh);
+            std::string TimeStamp = FS::readString(pfh);
+            float fTime = FS::readFloat_MaybeLE(pfh, swapped);
+            addFinishTime(PlayerName,Replay,LevelID,fTime,TimeStamp);             
+          }
+        }
+      }
+    }
+  }
 
   /*===========================================================================
     Load from binary (would rather use XML, but this makes it a bit more 
@@ -66,122 +109,41 @@ namespace vapp {
     ===========================================================================*/
   void PlayerData::loadFile(void) {
     _FreePlayerData();
-	
+    
     /* Open binary file for input */
     FileHandle *pfh = FS::openIFile("players.bin");
     if(pfh == NULL) {
       /* Nuthin */
-      return;	    
+      return;       
     }
-	  
+      
     /* Parse it */
-    int nVersion = FS::readShort(pfh);
-	  
+    short nVersion = FS::readShort_LE(pfh);
+    bool swapped = false;
+    if ((nVersion & 0xFF) == 0 && (nVersion >> 8) >= 0x10) {
+      /* It looks like this file is big-endian! */
+      swapped = true;
+      nVersion = SwapEndian::LittleShort(nVersion);
+    }
+    
+    /* If levels were moved around, swap the level numbers on the fly. */
+    LevelFixer fixer = NULL;
     if(nVersion == 0x10) {
-      /* This is the old (<= 0.1.6) players.bin file. At 0.1.7 there was a bit of moving
-	 around in the levels numbers, so if we try to load this now,  it will for sure explode.
-	 Instead, simply load it and translate the level numbers on-the-fly */
       Log("** Warning ** : Found players.bin from before version 0.1.7, trying to upgrade...\n");
-	  
-      /* Read number of player profiles */
-      int nNumPlayerProfiles = FS::readInt(pfh);
-
-      if(nNumPlayerProfiles >= 0) {
-	/* For each player profile */
-	for(int i=0;i<nNumPlayerProfiles;i++) {
-	  std::string PlayerName = FS::readString(pfh);
-	  PlayerProfile *pPlayer = createProfile(PlayerName);
-	  if(pPlayer != NULL) {
-	    int nNumCompleted = FS::readInt(pfh);
-	    int nNumSkipped   = FS::readInt(pfh);
-            
-	    for(int j=0;j<nNumCompleted;j++)
-	      completeLevel(PlayerName,_Fix016LevelID(FS::readString(pfh)));
-
-	    for(int j=0;j<nNumSkipped;j++)
-	      skipLevel(PlayerName,_Fix016LevelID(FS::readString(pfh)));
-              
-	    while(1) {
-	      std::string LevelID = _Fix016LevelID(FS::readString(pfh));
-	      if(LevelID.length() == 0) break;
-	      std::string Replay = FS::readString(pfh);
-	      std::string TimeStamp = FS::readString(pfh);
-	      float fTime = FS::readFloat(pfh);
-	      addFinishTime(PlayerName,Replay,LevelID,fTime,TimeStamp);             
-	    }
-	  }
-	}
-      }
-    }
-    else if(nVersion == 0x11) {
-      /* This is the old (<= 0.1.8) players.bin file. At 0.1.9 there was a bit of moving
-	 around in the levels numbers, so if we try to load this now,  it will for sure explode.
-	 Instead, simply load it and translate the level numbers on-the-fly */
+      fixer = _Fix016LevelID;
+    } else if(nVersion == 0x11) {
       Log("** Warning ** : Found players.bin from before version 0.1.9, trying to upgrade...\n");
-	  
-      /* Read number of player profiles */
-      int nNumPlayerProfiles = FS::readInt(pfh);
-
-      if(nNumPlayerProfiles >= 0) {
-	/* For each player profile */
-	for(int i=0;i<nNumPlayerProfiles;i++) {
-	  std::string PlayerName = FS::readString(pfh);
-	  PlayerProfile *pPlayer = createProfile(PlayerName);
-	  if(pPlayer != NULL) {
-	    int nNumCompleted = FS::readInt(pfh);
-	    int nNumSkipped   = FS::readInt(pfh);
-            
-	    for(int j=0;j<nNumCompleted;j++)
-	      completeLevel(PlayerName,_Fix018LevelID(FS::readString(pfh)));
-
-	    for(int j=0;j<nNumSkipped;j++)
-	      skipLevel(PlayerName,_Fix018LevelID(FS::readString(pfh)));
-              
-	    while(1) {
-	      std::string LevelID = _Fix018LevelID(FS::readString(pfh));
-	      if(LevelID.length() == 0) break;
-	      std::string Replay = FS::readString(pfh);
-	      std::string TimeStamp = FS::readString(pfh);
-	      float fTime = FS::readFloat(pfh);
-	      addFinishTime(PlayerName,Replay,LevelID,fTime,TimeStamp);             
-	    }
-	  }
-	}
-      }
+      fixer = _Fix018LevelID;
+    } else if(nVersion == 0x12) {
+      fixer = _NoFixLevelID; // Nothing to fix!
     }
-    else if(nVersion == 0x12) {
-      /* Read number of player profiles */
-      int nNumPlayerProfiles = FS::readInt(pfh);
-
-      if(nNumPlayerProfiles >= 0) {
-	/* For each player profile */
-	for(int i=0;i<nNumPlayerProfiles;i++) {
-	  std::string PlayerName = FS::readString(pfh);
-	  PlayerProfile *pPlayer = createProfile(PlayerName);
-	  if(pPlayer != NULL) {
-	    int nNumCompleted = FS::readInt(pfh);
-	    int nNumSkipped   = FS::readInt(pfh);
-            
-	    for(int j=0;j<nNumCompleted;j++)
-	      completeLevel(PlayerName,FS::readString(pfh));
-
-	    for(int j=0;j<nNumSkipped;j++)
-	      skipLevel(PlayerName,FS::readString(pfh));
-              
-	    while(1) {
-	      std::string LevelID =FS::readString(pfh);
-	      if(LevelID.length() == 0) break;
-	      std::string Replay = FS::readString(pfh);
-	      std::string TimeStamp = FS::readString(pfh);
-	      float fTime = FS::readFloat(pfh);
-	      addFinishTime(PlayerName,Replay,LevelID,fTime,TimeStamp);             
-	    }
-	  }
-	}
-      }
+    
+    if (fixer != NULL) {
+      _LoadFileHandle(pfh, fixer, swapped);
+    } else {
+      Log("** Warning ** : invalid/unsupported 'players.bin' file, all old stats is lost");
     }
-    else Log("** Warning ** : invalid/unsupported 'players.bin' file, all old stats is lost");
-	  
+      
     /* Clean */
     FS::closeFile(pfh);
   }
@@ -198,12 +160,12 @@ namespace vapp {
     }
 	  
     /* Write */
-    FS::writeShort(pfh,0x12);
-    FS::writeInt(pfh,m_Profiles.size());
+    FS::writeShort_LE(pfh,0x12);
+    FS::writeInt_LE(pfh,m_Profiles.size());
     for(int i=0;i<m_Profiles.size();i++) {
       FS::writeString(pfh,m_Profiles[i]->PlayerName);
-      FS::writeInt(pfh,m_Profiles[i]->Completed.size());
-      FS::writeInt(pfh,m_Profiles[i]->Skipped.size());
+      FS::writeInt_LE(pfh,m_Profiles[i]->Completed.size());
+      FS::writeInt_LE(pfh,m_Profiles[i]->Skipped.size());
 	    
       for(int j=0;j<m_Profiles[i]->Completed.size();j++)
 	FS::writeString(pfh,m_Profiles[i]->Completed[j]);	      
@@ -216,7 +178,7 @@ namespace vapp {
 	  FS::writeString(pfh,m_Profiles[i]->LevelStats[j]->LevelID);
 	  FS::writeString(pfh,m_Profiles[i]->LevelStats[j]->BestTimes[k].Replay);
 	  FS::writeString(pfh,m_Profiles[i]->LevelStats[j]->BestTimes[k].TimeStamp);
-	  FS::writeFloat(pfh,m_Profiles[i]->LevelStats[j]->BestTimes[k].fFinishTime);
+	  FS::writeFloat_LE(pfh,m_Profiles[i]->LevelStats[j]->BestTimes[k].fFinishTime);
 	}
       }
       

@@ -75,16 +75,19 @@ namespace vapp {
   	      m_pApp->glLinkProgramARB(m_ProgramID);
 
           int nStatus = 0;
-          m_pApp->glGetObjectParameterivARB(m_ProgramID,GL_OBJECT_LINK_STATUS_ARB,&nStatus);
+          m_pApp->glGetObjectParameterivARB(m_ProgramID,
+            GL_OBJECT_LINK_STATUS_ARB,(GLint*)&nStatus);
           if(!nStatus) {
             Log("-- Failed to link SFXOverlay shader program --");
             
             /* Retrieve info-log */
             int nInfoLogLen = 0;
-            m_pApp->glGetObjectParameterivARB(m_ProgramID,GL_OBJECT_INFO_LOG_LENGTH_ARB,&nInfoLogLen);
+            m_pApp->glGetObjectParameterivARB(m_ProgramID,
+              GL_OBJECT_INFO_LOG_LENGTH_ARB,(GLint*)&nInfoLogLen);
 		        char *pcInfoLog = new char[nInfoLogLen];
 		        int nCharsWritten = 0;
-		        m_pApp->glGetInfoLogARB(m_ProgramID,nInfoLogLen,&nCharsWritten,pcInfoLog);
+		        m_pApp->glGetInfoLogARB(m_ProgramID,nInfoLogLen,
+		          (GLsizei*)&nCharsWritten,pcInfoLog);
 		        LogRaw(pcInfoLog);
 		        delete [] pcInfoLog;
       			
@@ -175,17 +178,20 @@ namespace vapp {
     /* Compile it! */
     m_pApp->glCompileShaderARB(ShaderID);
     int nStatus = 0;
-    m_pApp->glGetObjectParameterivARB(ShaderID,GL_OBJECT_COMPILE_STATUS_ARB,&nStatus);
+    m_pApp->glGetObjectParameterivARB(ShaderID,
+      GL_OBJECT_COMPILE_STATUS_ARB,(GLint*)&nStatus);
     if(!nStatus) {
       _FreeShaderSource(ppc,nNumLines);
       Log("-- Failed to compile shader: %s --",File.c_str());
       
       /* Retrieve info-log */
       int nInfoLogLen = 0;
-      m_pApp->glGetObjectParameterivARB(ShaderID,GL_OBJECT_INFO_LOG_LENGTH_ARB,&nInfoLogLen);
+      m_pApp->glGetObjectParameterivARB(ShaderID,
+        GL_OBJECT_INFO_LOG_LENGTH_ARB,(GLint*)&nInfoLogLen);
 		  char *pcInfoLog = new char[nInfoLogLen];
 		  int nCharsWritten = 0;
-		  m_pApp->glGetInfoLogARB(ShaderID,nInfoLogLen,&nCharsWritten,pcInfoLog);
+		  m_pApp->glGetInfoLogARB(ShaderID,nInfoLogLen,
+		    (GLsizei*)&nCharsWritten,pcInfoLog);
 		  LogRaw(pcInfoLog);
 		  delete [] pcInfoLog;
 			

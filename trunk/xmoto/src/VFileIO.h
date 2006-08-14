@@ -133,6 +133,11 @@ namespace vapp {
       static int readInt_LE(FileHandle *pfh);
       static float readFloat_LE(FileHandle *pfh);      
       
+      /* Allow caller to specify that the order is wrong. */
+      static int readShort_MaybeLE(FileHandle *pfh, bool big); 
+      static int readInt_MaybeLE(FileHandle *pfh, bool big); 
+      static float readFloat_MaybeLE(FileHandle *pfh, bool big); 
+      
       /* For buffered reading: */
       static int readBufferedChar(FileHandle *pfh);
       static int peekNextBufferedChar(FileHandle *pfh); 

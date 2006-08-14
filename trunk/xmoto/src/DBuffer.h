@@ -49,18 +49,25 @@ namespace vapp {
       /* Methods */
       void initOutput(int nPartSize);
       void initInput(char *pcInput,int nInputSize);
-      void writeBuf(const char *pcBuf,int nBufSize);    
-      void readBuf(char *pcBuf,int nBufSize);
+      
+      template<typename _ConstIter>
+      void writeBuf(_ConstIter pcBuf,int nBufSize);
+      
+      template<typename _Iter>
+      void readBuf(_Iter pcBuf,int nBufSize);
+      
+      void writeBuf_LE(const char *pcBuf,int nBufSize);    
+      void readBuf_LE(char *pcBuf,int nBufSize);
       int numRemainingBytes(void);
       const char *convertOutputToInput(void);
       
       /* Some I/O */
       template<typename _T> void operator <<(_T n) {
-        writeBuf(reinterpret_cast<const char *>(&n),sizeof(_T));
+        writeBuf_LE(reinterpret_cast<const char *>(&n),sizeof(_T));
       }
       
       template<typename _T> void operator >>(_T &n) {
-        readBuf(reinterpret_cast<char *>(&n),sizeof(_T));
+        readBuf_LE(reinterpret_cast<char *>(&n),sizeof(_T));
       }
       
       /* Data interface */

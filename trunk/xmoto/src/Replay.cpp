@@ -34,6 +34,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <iostream>
 #include <locale>
 
+#include <arch/SwapEndian.h>
+
 namespace vapp {
 
   bool Replay::m_bEnableCompression = true;
@@ -96,18 +98,18 @@ namespace vapp {
     
     /* Write header */
     FS::writeByte(pfh,1); /* Version: 1 */
-    FS::writeInt(pfh,0x12345678); /* Endianness guard */
+    FS::writeInt_LE(pfh,0x12345678); /* Endianness guard */
     FS::writeString(pfh,m_LevelID);
     FS::writeString(pfh,m_PlayerName);
-    FS::writeFloat(pfh,m_fFrameRate);
-    FS::writeInt(pfh,m_nStateSize);
+    FS::writeFloat_LE(pfh,m_fFrameRate);
+    FS::writeInt_LE(pfh,m_nStateSize);
     FS::writeBool(pfh,m_bFinished);
-    FS::writeFloat(pfh,m_fFinishTime);
+    FS::writeFloat_LE(pfh,m_fFinishTime);
     
     /* Events */
     const char *pcUncompressedEvents = convertOutputToInput();
     int nUncompressedEventsSize = numRemainingBytes();
-    FS::writeInt(pfh,nUncompressedEventsSize);
+    FS::writeInt_LE(pfh,nUncompressedEventsSize);
     
     /* Compression? */
     if(m_bEnableCompression) {
@@ -124,7 +126,7 @@ namespace vapp {
       else {
         /* OK */        
         FS::writeBool(pfh,true); /* compression: true */
-        FS::writeInt(pfh,nDestLen);
+        FS::writeInt_LE(pfh,nDestLen);
         FS::writeBuf(pfh,(char *)pcCompressedEvents,nDestLen);
       }
       delete [] pcCompressedEvents;
@@ -136,13 +138,13 @@ namespace vapp {
     }
     
     /* Chunks */
-    if(m_Chunks.empty()) FS::writeInt(pfh,0);
+    if(m_Chunks.empty()) FS::writeInt_LE(pfh,0);
     else {        
-      FS::writeInt(pfh,m_Chunks.size());
+      FS::writeInt_LE(pfh,m_Chunks.size());
     
       /* Write chunks */    
       for(int i=0;i<m_Chunks.size();i++) {
-        FS::writeInt(pfh,m_Chunks[i].nNumStates);
+        FS::writeInt_LE(pfh,m_Chunks[i].nNumStates);
 
         /* Compression enabled? */
         if(m_bEnableCompression) {
@@ -159,7 +161,7 @@ namespace vapp {
           else {
             /* Compressed ok */
             FS::writeBool(pfh,true); /* compression: true */
-            FS::writeInt(pfh,nDestLen);
+            FS::writeInt_LE(pfh,nDestLen);
             FS::writeBuf(pfh,(char *)pcCompressed,nDestLen);
           }
           delete [] pcCompressed;        
@@ -203,7 +205,7 @@ namespace vapp {
     }
     else {
       /* Little/big endian safety check */
-      if(FS::readInt(pfh) != 0x12345678) {
+      if(FS::readInt_LE(pfh) != 0x12345678) {
         FS::closeFile(pfh);
         Log("** Warning ** : Sorry, the replay you're trying to open are not endian-compatible with your computer!");
         return "";        
@@ -216,26 +218,26 @@ namespace vapp {
       Player = m_PlayerName = FS::readString(pfh);
       
       /* Read replay frame rate */
-      m_fFrameRate = FS::readFloat(pfh);
+      m_fFrameRate = FS::readFloat_LE(pfh);
       if(pfFrameRate != NULL) *pfFrameRate = m_fFrameRate;            
 
       /* Read state size */
-      m_nStateSize = FS::readInt(pfh);
+      m_nStateSize = FS::readInt_LE(pfh);
       
       /* Read finish time if any */
       m_bFinished = FS::readBool(pfh);
-      m_fFinishTime = FS::readFloat(pfh);
+      m_fFinishTime = FS::readFloat_LE(pfh);
 
       /* Version 1 includes event data */
       if(nVersion == 1) {
         /* Read uncompressed size */
-        m_nInputEventsDataSize = FS::readInt(pfh);
+        m_nInputEventsDataSize = FS::readInt_LE(pfh);
         m_pcInputEventsData = new char [m_nInputEventsDataSize];
         
         /* Compressed? */
         if(FS::readBool(pfh)) {
           /* Compressed */          
-          int nCompressedEventsSize = FS::readInt(pfh);
+          int nCompressedEventsSize = FS::readInt_LE(pfh);
           
           char *pcCompressedEvents = new char [nCompressedEventsSize];
           FS::readBuf(pfh,pcCompressedEvents,nCompressedEventsSize);
@@ -266,16 +268,16 @@ namespace vapp {
       }
       
       /* Read chunks */
-      int nNumChunks = FS::readInt(pfh);
+      int nNumChunks = FS::readInt_LE(pfh);
       for(int i=0;i<nNumChunks;i++) {        
         ReplayStateChunk Chunk;        
-        Chunk.nNumStates = FS::readInt(pfh);
+        Chunk.nNumStates = FS::readInt_LE(pfh);
         Chunk.pcChunkData = new char [Chunk.nNumStates * m_nStateSize];
         
         /* Compressed or not compressed? */
         if(FS::readBool(pfh)) {
           /* Compressed! - read compressed size */
-          int nCompressedSize = FS::readInt(pfh);
+          int nCompressedSize = FS::readInt_LE(pfh);
           
           /* Read compressed data */
           unsigned char *pcCompressed = new unsigned char [nCompressedSize];
@@ -319,28 +321,33 @@ namespace vapp {
     return m_LevelID;
   }
       
-  void Replay::storeState(const char *pcState) {
+  void Replay::storeState(const SerializedBikeState& state) {
+    char *addr;
+    
     if(m_Chunks.empty()) {
       ReplayStateChunk Chunk;
       Chunk.pcChunkData = new char [STATES_PER_CHUNK * m_nStateSize];
       Chunk.nNumStates = 1;
-      memcpy(Chunk.pcChunkData,pcState,m_nStateSize);
+      addr = Chunk.pcChunkData;
       m_Chunks.push_back(Chunk);
     }
     else {
       int i = m_Chunks.size() - 1;
       if(m_Chunks[i].nNumStates < STATES_PER_CHUNK) {
-        memcpy(&m_Chunks[i].pcChunkData[m_Chunks[i].nNumStates * m_nStateSize],pcState,m_nStateSize);
+        addr = &m_Chunks[i].pcChunkData[m_Chunks[i].nNumStates * m_nStateSize];
         m_Chunks[i].nNumStates++;
       }
       else {
         ReplayStateChunk Chunk;
         Chunk.pcChunkData = new char [STATES_PER_CHUNK * m_nStateSize];
         Chunk.nNumStates = 1;
-        memcpy(Chunk.pcChunkData,pcState,m_nStateSize);
+        addr = Chunk.pcChunkData;
         m_Chunks.push_back(Chunk);        
       }
     }
+    
+    memcpy(addr,(const char*)&state,m_nStateSize);
+	SwapEndian::LittleSerializedBikeState(*(SerializedBikeState*)addr);
   }
   
   bool Replay::nextNormalState() {
@@ -402,18 +409,19 @@ namespace vapp {
     return true;
   }
 
-  void Replay::loadState(char *pcState) {
+  void Replay::loadState(SerializedBikeState& state) {
     /* (11th july, 2006) rasmus: i've swapped the two following lines, it apparently fixes
        interpolation in replays, but i don't know if it break something else */  
-    peekState(pcState);
+    peekState(state);
     if(nextNormalState()) { /* do nothing */ }
   }
   
-  void Replay::peekState(char *pcState) {
+  void Replay::peekState(SerializedBikeState& state) {
     /* Like loadState() but this one does not advance the cursor... it just takes a peek */
-    memcpy(pcState,
+    memcpy((char *)&state,
 	   &m_Chunks[m_nCurChunk].pcChunkData[((int)m_nCurState)*m_nStateSize],
 	   m_nStateSize);
+	SwapEndian::LittleSerializedBikeState(state);
   }
 
   //std::vector<ReplayInfo *> Replay::createReplayList(const std::string &PlayerName,const std::string &LevelIDCheck) {
@@ -429,13 +437,13 @@ namespace vapp {
     //  if(pfh != NULL) {
     //    int nVersion = FS::readByte(pfh);
     //    if(nVersion == 0 || nVersion == 1) {
-    //      if(FS::readInt(pfh) == 0x12345678) {                  
+    //      if(FS::readInt_LE(pfh) == 0x12345678) {                  
     //        std::string LevelID = FS::readString(pfh);
     //        std::string Player = FS::readString(pfh);
-    //        float fFrameRate = FS::readFloat(pfh);
-    //        int nStateSize = FS::readInt(pfh);
+    //        float fFrameRate = FS::readFloat_LE(pfh);
+    //        int nStateSize = FS::readInt_LE(pfh);
     //        bool bFinished = FS::readBool(pfh);
-    //        float fFinishTime = FS::readFloat(pfh);
+    //        float fFinishTime = FS::readFloat_LE(pfh);
     //        
     //        if((PlayerName=="" || PlayerName==Player) && FS::getFileBaseName(ReplayFiles[i]) != "Latest") {
     //          if(LevelIDCheck=="" || LevelID==LevelIDCheck) {
@@ -558,17 +566,17 @@ namespace vapp {
 	return NULL;
       }
 
-      if(FS::readInt(pfh) != 0x12345678) {   
+      if(FS::readInt_LE(pfh) != 0x12345678) {   
 	FS::closeFile(pfh);
 	return NULL;
       }
   
       std::string LevelID = FS::readString(pfh);
       std::string Player  = FS::readString(pfh);
-      float fFrameRate    = FS::readFloat(pfh);
-      int nStateSize      = FS::readInt(pfh);
+      float fFrameRate    = FS::readFloat_LE(pfh);
+      int nStateSize      = FS::readInt_LE(pfh);
       bool bFinished      = FS::readBool(pfh);
-      float fFinishTime   = FS::readFloat(pfh);
+      float fFinishTime   = FS::readFloat_LE(pfh);
                 
       ReplayInfo *pRpl     = new ReplayInfo;
       int nTimeStamp       = FS::getFileTimeStamp("Replays/" + p_ReplayName + ".rpl");

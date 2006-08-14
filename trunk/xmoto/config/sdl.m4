@@ -18,6 +18,10 @@ AC_ARG_WITH(sdl-exec-prefix,[  --with-sdl-exec-prefix=PFX Exec prefix where SDL 
             sdl_exec_prefix="$withval", sdl_exec_prefix="")
 AC_ARG_ENABLE(sdltest, [  --disable-sdltest       Do not try to compile and run a test SDL program],
 		    , enable_sdltest=yes)
+AC_ARG_WITH([sdl-framework],
+  [AS_HELP_STRING([--with-sdl-framework],[use SDL.framework on Mac OS X])],
+  sdl_framework="$withval")
+
 
   if test x$sdl_exec_prefix != x ; then
      sdl_args="$sdl_args --exec-prefix=$sdl_exec_prefix"
@@ -33,23 +37,67 @@ AC_ARG_ENABLE(sdltest, [  --disable-sdltest       Do not try to compile and run 
   fi
 
   AC_REQUIRE([AC_CANONICAL_TARGET])
-  PATH="$prefix/bin:$prefix/usr/bin:$PATH"
-  AC_PATH_PROG(SDL_CONFIG, sdl-config, no, [$PATH])
-  min_sdl_version=ifelse([$1], ,0.11.0,$1)
   AC_MSG_CHECKING(for SDL - version >= $min_sdl_version)
+  min_sdl_version=ifelse([$1], ,0.11.0,$1)
   no_sdl=""
-  if test "$SDL_CONFIG" = "no" ; then
-    no_sdl=yes
+  
+  if test "x$sdl_framework" != x; then
+    AC_DEFINE([HAVE_SDL_FRAMEWORK], [1], [Use SDL.framework on Mac OS X])
+    if test "x$sdl_framework" = xyes; then
+dnl No arg, look for it in standard locations
+      sdl_framework=""
+      for dir in "$HOME/Library" /Library; do
+        framework="$dir/Frameworks/SDL.framework"
+        if test -d "$framework"; then
+          sdl_framework="$framework"
+        fi
+      done
+    else
+dnl Arg given
+      if test -d "$sdl_framework"; then
+        :
+      else
+        sdl_framework=""
+      fi
+    fi
+    
+dnl Did we find something?
+    if test "x$sdl_framework" = x; then
+      AC_MSG_ERROR([No SDL.framework could be found!])
+    fi
+dnl Where to look for other frameworks
+    sdl_framework_dir=`dirname "$sdl_framework"`
+    SDL_CFLAGS="-I$sdl_framework/Headers"
+dnl Gotta make sure SDLmain is around!
+    SDL_LIBS="$sdl_framework/SDL -framework Cocoa -lSDLmain"
+    
+dnl Set the version vars
+    AC_REQUIRE([AC_PROG_CPP])
+    sdl_major_version=`echo SDL_MAJOR_VERSION | \
+       $CPP - $CPPFLAGS $SDL_CFLAGS -P -imacros SDL.h`
+    sdl_minor_version=`echo SDL_MINOR_VERSION | \
+       $CPP - $CPPFLAGS $SDL_CFLAGS -P -imacros SDL.h`
+    sdl_micro_version=`echo SDL_PATCHLEVEL | \
+       $CPP - $CPPFLAGS $SDL_CFLAGS -P -imacros SDL.h`
   else
-    SDL_CFLAGS=`$SDL_CONFIG $sdlconf_args --cflags`
-    SDL_LIBS=`$SDL_CONFIG $sdlconf_args --libs`
-
-    sdl_major_version=`$SDL_CONFIG $sdl_args --version | \
-           sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\1/'`
-    sdl_minor_version=`$SDL_CONFIG $sdl_args --version | \
-           sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\2/'`
-    sdl_micro_version=`$SDL_CONFIG $sdl_config_args --version | \
-           sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\3/'`
+dnl Not framework
+    PATH="$prefix/bin:$prefix/usr/bin:$PATH"
+    AC_PATH_PROG(SDL_CONFIG, sdl-config, no, [$PATH])
+    if test "$SDL_CONFIG" = "no" ; then
+      no_sdl=yes
+    else
+      SDL_CFLAGS=`$SDL_CONFIG $sdlconf_args --cflags`
+      SDL_LIBS=`$SDL_CONFIG $sdlconf_args --libs`
+      sdl_major_version=`$SDL_CONFIG $sdl_args --version | \
+             sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\1/'`
+      sdl_minor_version=`$SDL_CONFIG $sdl_args --version | \
+             sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\2/'`
+      sdl_micro_version=`$SDL_CONFIG $sdl_config_args --version | \
+             sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\3/'`
+    fi
+  fi
+  
+  if test "x$no_sdl" = x; then
     if test "x$enable_sdltest" = "xyes" ; then
       ac_save_CFLAGS="$CFLAGS"
       ac_save_CXXFLAGS="$CXXFLAGS"
@@ -177,4 +225,26 @@ int main(int argc, char *argv[])
   AC_SUBST(SDL_CFLAGS)
   AC_SUBST(SDL_LIBS)
   rm -f conf.sdltest
+])
+
+dnl Check if a SDL lib is available
+AC_DEFUN([AC_SDL_CHECK_LIB],[
+    if test "x$sdl_framework_dir" != x; then
+      CPPFLAGS="$CPPFLAGS -I$sdl_framework_dir/$1.framework/Headers"
+      LIBS="$LIBS $sdl_framework_dir/$1.framework/$1"
+      
+      ac_save_CFLAGS="$CFLAGS"
+      ac_save_LIBS="$LIBS"
+      LIBS="$LIBS $SDL_LIBS"
+      CFLAGS="$CFLAGS $SDL_CFLAGS"
+      
+      AC_MSG_CHECKING([for $1])
+      AC_LINK_IFELSE([AC_LANG_CALL([], [$2])],[$3],[$4])
+      AC_MSG_RESULT([yes])
+      
+      LIBS="$ac_save_LIBS"
+      CFLAGS="$ac_save_CFLAGS"
+    else
+      AC_CHECK_LIB($@)
+    fi
 ])

@@ -37,15 +37,23 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <stddef.h>
 
-#include <SDL/SDL.h>
-#include <SDL/SDL_mixer.h>
+#ifdef HAVE_SDL_FRAMEWORK
+  #include <SDL.h>
+  #include <SDL_mixer.h>
+#else
+  #include <SDL/SDL.h>
+  #include <SDL/SDL_mixer.h>
+#endif
+
+// Some places #define _T, which we want for a template parameter
+#undef _T
 
 /* Pull in OpenGL headers */
 //#define NO_SDL_GLEXT
 //#include <SDL/SDL_opengl.h>
 /* following scissored from SDL_opengl.h */
 #define __glext_h_  /* Don't let gl.h include glext.h */
-#if defined(__MACOSX__)
+#ifdef HAVE_APPLE_OPENGL_FRAMEWORK
 #include <OpenGL/gl.h>	/* Header File For The OpenGL Library */
 #include <OpenGL/glu.h>	/* Header File For The GLU Library */
 #elif defined(__MACOS__)
@@ -72,9 +80,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   #include <endian.h>
 #endif
 
-#if !defined(LITTLE_ENDIAN) && !defined(BIG_ENDIAN)
+#if !defined(XMOTO_LITTLE_ENDIAN) && !defined(XMOTO_BIG_ENDIAN)
   /* Assume little endian */
-  #define LITTLE_ENDIAN
+  #define XMOTO_LITTLE_ENDIAN 1
 #endif
 
 extern "C" {

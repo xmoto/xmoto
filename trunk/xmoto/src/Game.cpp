@@ -27,7 +27,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Sound.h"
 #include "PhysSettings.h"
 #include "Input.h"
-#include "md5sum/md5file.h"
 
 #if defined(SUPPORT_WEBACCESS)
   #include <curl/curl.h>
@@ -251,7 +250,7 @@ namespace vapp {
 		m_MotoGame.setGhostActive(true);
 		/* read first state */
 		static SerializedBikeState GhostBikeState;
-		m_pGhostReplay->peekState((char *)&GhostBikeState);
+		m_pGhostReplay->peekState(GhostBikeState);
 		m_MotoGame.UpdateGhostFromReplay(&GhostBikeState);
 		/* ghost info */
 		if(m_bEnableGhostInfo) {
@@ -916,96 +915,43 @@ namespace vapp {
   int GameApp::_LoadLevels(const std::vector<std::string> &LvlFiles) {
     int nNumCached = 0;
   
-    for(int i=0;i<LvlFiles.size();i++) {
-      bool bLoadedOK = true;
-    
+    for(int i=0;i<LvlFiles.size();i++) {    
       int j = m_nNumLevels;
       if(j >= 2048) {
         Log("** Warning ** : Too many levels.");
         break;
       }
-      m_nNumLevels++;
     
       bool bCached = false;
       try {
+        // Load the level
         m_Levels[j].setFileName( LvlFiles[i] );
+        bCached = m_Levels[j].load(m_bEnableLevelCache);
         
-        //if(strstr(LvlFiles[i].c_str(),"l138")) {
-        //  __asm{int 3};
-        //}
-        
-        /* Determine MD5 sum of level file */
-        std::string MD5Sum = md5file( LvlFiles[i] );
-        //printf("[%s][%s]\n",MD5Sum.c_str(),LvlFiles[i].c_str());
-        m_Levels[j].setLevelMD5Sum( MD5Sum );
-
-        /* Cache or not to cache? */
-        if(m_bEnableLevelCache) {
-          /* Start by determining file CRC */
-          LevelCheckSum Sum;
-          m_Levels[j].probeCheckSum(&Sum);
-          
-          /* Determine name in cache */
-          std::string LevelFileBaseName = FS::getFileBaseName(LvlFiles[i]);
-          char cCacheFileName[1024];      
-          sprintf(cCacheFileName,"LCache/%08x%s.blv",Sum.nCRC32,LevelFileBaseName.c_str());
-                    
-          /* Got level in cache? */
-          if(!m_Levels[j].importBinary(cCacheFileName,&Sum)) {
-            /* Not in cache, buggers. Load it from (slow) XML then. */
-            m_Levels[j].loadXML();
-            
-            /* Cache it now */
-            m_Levels[j].exportBinary(cCacheFileName,&Sum);
-          }
-          else {
-            nNumCached++;
-            bCached = true;
-          }
-        }
-        else {
-          /* Just load it */
-          m_Levels[j].loadXML();       
-        }
-      }
-      catch(Exception &e) {
-        Log("** Warning ** : Problem loading '%s' (%s)",LvlFiles[i].c_str(),e.getMsg().c_str());            
-        m_nNumLevels--;
-        if(bCached)
-          nNumCached--;
-        bLoadedOK = false;
-      }
-      
-      bool bGoodLevel = true;
-
-      if(bLoadedOK) {      
-        /* Check for ID conflict */
-        for(int k=0;k<m_nNumLevels-1;k++) {
+        // Check for ID conflict
+        for(int k=0;k<m_nNumLevels;k++) {
           if(m_Levels[k].getID() == m_Levels[j].getID()) {
             /* Conflict! */
             Log("** Warning ** : More than one level with ID '%s'!",m_Levels[k].getID().c_str());
             Log("                (%s)",m_Levels[j].getFileName().c_str());
             Log("                (%s)",m_Levels[k].getFileName().c_str());
             if(bCached) Log("                (cached)");
-            m_nNumLevels--;
-            
-            if(bCached)
-              nNumCached--;
-              
-            bGoodLevel = false;
-            break;
+            throw Exception("Duplicate level ID");
           }
         }
-      }
-          
-      if(bGoodLevel && bLoadedOK) {
+        
+        if (bCached) ++nNumCached;
+        ++m_nNumLevels;
+        
         /* Update level pack manager */
         _UpdateLevelPackManager(&m_Levels[j]);
-      }
       
-      //printf("got level [%s][%s]\n",m_Levels[j].getID().c_str(),m_Levels[j].getFileName().c_str());
+      } catch(Exception &e) {
+        Log("** Warning ** : Problem loading '%s' (%s)",
+          LvlFiles[i].c_str(),e.getMsg().c_str());            
+      }
     }
-    
+      
     return nNumCached;
   }
   
@@ -1313,11 +1259,11 @@ namespace vapp {
 	    static SerializedBikeState GhostBikeState;
 	    static SerializedBikeState previousGhostBikeState;
 
-	    m_pGhostReplay->peekState((char *)&previousGhostBikeState);
+	    m_pGhostReplay->peekState(previousGhostBikeState);
 	    if(previousGhostBikeState.fGameTime < m_MotoGame.getTime()
 	       && m_pGhostReplay->endOfFile() == false) {
 	      do {
-		m_pGhostReplay->loadState((char *)&GhostBikeState);
+		m_pGhostReplay->loadState(GhostBikeState);
 	      } while(GhostBikeState.fGameTime < m_MotoGame.getTime()
 		      && m_pGhostReplay->endOfFile() == false);
 
@@ -1344,7 +1290,7 @@ namespace vapp {
             SerializedBikeState BikeState;
             m_MotoGame.getSerializedBikeState(&BikeState);
             if(m_pReplay != NULL)
-              m_pReplay->storeState((const char *)&BikeState);              
+              m_pReplay->storeState(BikeState);              
           }
         }
         else if(m_State == GS_REPLAYING) {
@@ -1357,7 +1303,7 @@ namespace vapp {
             if(m_nFrame%2 || m_nFrame==1) {       
               /* REAL NON-INTERPOLATED FRAME */
 	      if(m_pReplay->endOfFile() == false) {
-		m_pReplay->loadState((char *)&BikeState);
+		m_pReplay->loadState(BikeState);
                 /* Update game */
                 m_MotoGame.updateLevel( PHYS_STEP_SIZE,&BikeState,m_pReplay ); 
                 
@@ -1377,7 +1323,7 @@ namespace vapp {
               /* INTERPOLATED FRAME */
               SerializedBikeState NextBikeState,ibs;
 	      if(m_pReplay->endOfFile() == false) {
-		m_pReplay->peekState((char *)&NextBikeState);
+		m_pReplay->peekState(NextBikeState);
 		/* Nice. Interpolate the states! */
 		m_MotoGame.interpolateGameState(&BikeState,&NextBikeState,&ibs,0.5f);
 
@@ -2521,41 +2467,11 @@ namespace vapp {
         for(int i=0;i<UpdatedLvlFiles.size();i++) {
           try {
             /* Find levels by file names */
-            bool bFound = false;
             for(int j=0;j<m_nNumLevels;j++) {
               if(m_Levels[j].getFileName() == UpdatedLvlFiles[i]) {
                 /* Found it... */
-                bFound = true;
-
-                /* Determine MD5 sum of level file */
-                std::string MD5Sum = md5file( UpdatedLvlFiles[i] );
-                m_Levels[j].setLevelMD5Sum( MD5Sum );
-
-                /* Update cache? */
-                if(m_bEnableLevelCache) {
-                  /* Start by determining file CRC */
-                  LevelCheckSum Sum;
-                  m_Levels[j].probeCheckSum(&Sum);
-                  
-                  /* Determine name in cache */
-                  std::string LevelFileBaseName = FS::getFileBaseName(UpdatedLvlFiles[i]);
-                  char cCacheFileName[1024];      
-                  sprintf(cCacheFileName,"LCache/%08x%s.blv",Sum.nCRC32,FS::getFileBaseName(UpdatedLvlFiles[i]).c_str());
-                            
-                  /* Got level in cache? */
-                  if(!m_Levels[j].importBinary(cCacheFileName,&Sum)) {
-                    /* Not in cache, buggers. Load it from (slow) XML then. */
-                    m_Levels[j].loadXML();
-                                      
-                    /* Cache it now */
-                    m_Levels[j].exportBinary(cCacheFileName,&Sum);
-                  }
-                }
-                else {
-                  /* Just load it */
-                  m_Levels[j].loadXML();       
-                }
-                  
+                m_Levels[j].load(m_bEnableLevelCache);
+                
                 /* Failed to load due to old xmoto? */  
                 if(m_Levels[j].isXMotoTooOld())
                   nTooOldXMoto++;

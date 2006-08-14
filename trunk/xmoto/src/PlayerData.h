@@ -105,10 +105,15 @@ namespace vapp {
     /* Data */
     std::vector<PlayerProfile *> m_Profiles;
 	    
+    
     /* Helpers */
+    typedef std::string (*LevelFixer)(const std::string &);
+    static std::string _NoFixLevelID (const std::string &);
+    static std::string _Fix016LevelID(const std::string &);
+    static std::string _Fix018LevelID(const std::string &);
+    
+    void _LoadFileHandle(FileHandle *pfh, LevelFixer fixer, bool swapped);
     void _FreePlayerData(void);
-    std::string _Fix016LevelID(const std::string &s);
-    std::string _Fix018LevelID(const std::string &s);
   };
 
 }

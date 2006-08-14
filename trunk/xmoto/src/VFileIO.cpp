@@ -636,17 +636,16 @@ namespace vapp {
   
   std::string FS::readLongString(FileHandle *pfh) {
     unsigned short v;
-    v=readShort(pfh);
+    v=readShort_LE(pfh);
     char cBuf[65536];  
     if(!readBuf(pfh,(char *)cBuf,v)) _ThrowFileError(pfh,"readLongString -> failed");
     cBuf[v] = '\0';
     return std::string(cBuf);  
   }
   
+  // We use one-byte bools
   bool FS::readBool(FileHandle *pfh) {
-    bool v;
-    if(!readBuf(pfh,(char *)&v,sizeof(v))) _ThrowFileError(pfh,"readBool -> failed");
-    return v;
+    return static_cast<bool>(readByte(pfh));
   }   
 
   void FS::writeByte(FileHandle *pfh,unsigned char v) {
@@ -675,12 +674,12 @@ namespace vapp {
   }
   
   void FS::writeLongString(FileHandle *pfh,std::string v) {
-    writeShort(pfh,v.length());
+    writeShort_LE(pfh,v.length());
     if(!writeBuf(pfh,(char *)v.c_str(),v.length())) _ThrowFileError(pfh,"writeLongString -> failed");
   }
   
   void FS::writeBool(FileHandle *pfh,bool v) {
-    if(!writeBuf(pfh,(char *)&v,sizeof(v))) _ThrowFileError(pfh,"writeBool -> failed");
+    writeByte(pfh,static_cast<unsigned char>(v));
   }
   
   void FS::writeLine(FileHandle *pfh,std::string Line) {
@@ -1141,46 +1140,48 @@ namespace vapp {
   Endian-safe I/O helpers
   ===========================================================================*/
   void FS::writeShort_LE(FileHandle *pfh,short v) {    
-    writeByte(pfh,v&0xff);
-    writeByte(pfh,(v&0xff00)>>8);
+    writeShort(pfh, SwapEndian::LittleShort(v));
   }
   
   void FS::writeInt_LE(FileHandle *pfh,int v) {
-    writeByte(pfh,v&0xff);
-    writeByte(pfh,(v&0xff00)>>8);
-    writeByte(pfh,(v&0xff0000)>>16);
-    writeByte(pfh,(v&0xff000000)>>24);
+    writeInt(pfh, SwapEndian::LittleLong(v));
   }
   
   void FS::writeFloat_LE(FileHandle *pfh,float v) {
-    writeInt_LE(pfh,*((int *)&v));    
-    //unsigned char *pc=(unsigned char *)&v;
-    //for(int i=0;i<4;i++)
-    //  writeByte(pfh,pc[i]);
+    writeFloat(pfh, SwapEndian::LittleFloat(v));
   }
   
   int FS::readShort_LE(FileHandle *pfh) {
-    unsigned char c[2];
-    readBuf(pfh,(char *)c,2);
-    return c[0]|(c[1]<<8);
+    short v = readShort(pfh);
+    return SwapEndian::LittleShort(v);
   }
   
   int FS::readInt_LE(FileHandle *pfh) {
-    unsigned char c[4];
-    readBuf(pfh,(char *)c,4);
-    return c[0]|(c[1]<<8)|(c[2]<<16)|(c[3]<<24);
+    int v = readInt(pfh);
+    return SwapEndian::LittleLong(v);
   }
 
   float FS::readFloat_LE(FileHandle *pfh) {
-    float res;
-
-    unsigned char *pc=(unsigned char *)&res;
-    for(int i=0;i<4;i++)
-    pc[i]=readByte(pfh);
-
-    return res;
+    float v = readFloat(pfh);
+    return SwapEndian::LittleFloat(v);
   }  
- 
+  
+  int FS::readShort_MaybeLE(FileHandle *pfh, bool big) {
+    short v = readShort(pfh);
+    return big ? SwapEndian::BigShort(v) : SwapEndian::LittleShort(v);
+  }
+  
+  int FS::readInt_MaybeLE(FileHandle *pfh, bool big) {
+    int v = readInt(pfh);
+    return big ? SwapEndian::BigLong(v) : SwapEndian::LittleLong(v);
+  }
+  
+  float FS::readFloat_MaybeLE(FileHandle *pfh, bool big) {
+    float v = readFloat(pfh);
+    return big ? SwapEndian::BigFloat(v) : SwapEndian::LittleFloat(v);
+  }
+  
+  
   bool FS::isInUserDir(std::string p_filepath) {
     std::string v_userDir;
     std::string v_fileDir;

@@ -1,67 +1,82 @@
 // source From Quake2
 #include "SwapEndian.h"
 #include <stdlib.h>
+#include <algorithm>
 
+using vapp::SerializedBikeState;
 typedef unsigned char byte;
 
-short  ShortSwap   (short s);
-short  ShortNoSwap (short s);
-int    LongSwap    (int   l);
-int    LongNoSwap  (int   l);
-float  FloatSwap   (float f);
-float  FloatNoSwap (float f);
-double DoubleSwap  (double d);
-double DoubleNoSwap(double d);
+static short  ShortSwap   (short s);
+static short  ShortNoSwap (short s);
+static int    LongSwap    (int   l);
+static int    LongNoSwap  (int   l);
+static float  FloatSwap   (float f);
+static float  FloatNoSwap (float f);
+static double DoubleSwap  (double d);
+static double DoubleNoSwap(double d);
+static void   SerializedBikeStateSwap  (SerializedBikeState& sbs);
+static void   SerializedBikeStateNoSwap(SerializedBikeState& sbs);
 
-short ShortSwap(short l) {
-  byte b1,b2; 
-  b1 = l&255;
-  b2 = (l>>8)&255;
-  return (b1<<8) + b2;
+
+// Generic endian swapping
+template <typename _T>
+static void SwapInPlace(_T& n) {
+  std::reverse(reinterpret_cast<byte*>(&n),
+    reinterpret_cast<byte*>(&n) + sizeof(_T));
 }
 
-short ShortNoSwap(short l) {
+template <typename _T>
+static _T SwapCopy(_T n) {
+  SwapInPlace(n);
+  return n;
+}
+
+
+static short ShortSwap(short l) {
+  return SwapCopy(l);
+}
+
+static short ShortNoSwap(short l) {
   return l;
 }
 
-int LongSwap(int l) {
-  byte b1,b2,b3,b4;  
-  b1 = l&255;
-  b2 = (l>>8)&255;
-  b3 = (l>>16)&255;
-  b4 = (l>>24)&255;  
-  return ((int)b1<<24) + ((int)b2<<16) + ((int)b3<<8) + b4;
+static int LongSwap(int l) {
+  return SwapCopy(l);
 }
 
-int LongNoSwap(int l) {
+static int LongNoSwap(int l) {
   return l;
 }
 
-float FloatSwap(float f) {
-  union {
-    float	f;
-    byte	b[4];
-  } dat1, dat2;
-  
-  dat1.f = f;
-  dat2.b[0] = dat1.b[3];
-  dat2.b[1] = dat1.b[2];
-  dat2.b[2] = dat1.b[1];
-  dat2.b[3] = dat1.b[0];
-  return dat2.f;
+static float FloatSwap(float f) {
+  return SwapCopy(f);
 }
 
-float FloatNoSwap(float f) {
+static float FloatNoSwap(float f) {
   return f;
 }
 
-double DoubleSwap(double d) {
-  /* TODO !!! */
+static double DoubleSwap(double d) {
+  return SwapCopy(d);
+}
+
+static double DoubleNoSwap(double d) {
   return d;
 }
 
-double DoubleNoSwap(double d) {
-  return d;
+static void SerializedBikeStateSwap (SerializedBikeState& sbs) {
+  SwapInPlace(sbs.fGameTime);
+  SwapInPlace(sbs.fFrameX);
+  SwapInPlace(sbs.fFrameY);
+  SwapInPlace(sbs.fMaxXDiff);
+  SwapInPlace(sbs.fMaxYDiff);
+  SwapInPlace(sbs.nRearWheelRot);
+  SwapInPlace(sbs.nFrontWheelRot);
+  SwapInPlace(sbs.nFrameRot);
+}
+
+static void SerializedBikeStateNoSwap(SerializedBikeState& sbs) {
+  // noop
 }
 
 /*
@@ -79,6 +94,10 @@ float	(*SwapEndian::_BigFloat)    (float  f) = NULL;
 float	(*SwapEndian::_LittleFloat) (float  f) = NULL;
 double	(*SwapEndian::_BigDouble)   (double d) = NULL;
 double	(*SwapEndian::_LittleDouble)(double d) = NULL;
+void	(*SwapEndian::_BigSerializedBikeState)   (SerializedBikeState& sbs)
+  = NULL;
+void	(*SwapEndian::_LittleSerializedBikeState)(SerializedBikeState& sbs)
+  = NULL;
 
 void SwapEndian::Swap_Init() {
   byte swaptest[2] = {1,0};
@@ -94,6 +113,8 @@ void SwapEndian::Swap_Init() {
     _LittleFloat  = FloatNoSwap;
     _BigDouble    = DoubleSwap;
     _LittleDouble = DoubleNoSwap;
+    _BigSerializedBikeState    = SerializedBikeStateSwap;
+    _LittleSerializedBikeState = SerializedBikeStateNoSwap;
   } else {
     bigendien    = true;
     _BigShort    = ShortNoSwap;
@@ -104,5 +125,7 @@ void SwapEndian::Swap_Init() {
     _LittleFloat = FloatSwap;
     _BigDouble    = DoubleNoSwap;
     _LittleDouble = DoubleSwap;
+    _BigSerializedBikeState    = SerializedBikeStateNoSwap;
+    _LittleSerializedBikeState = SerializedBikeStateSwap;
   }
 }

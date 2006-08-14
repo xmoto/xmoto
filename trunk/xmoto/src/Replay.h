@@ -85,9 +85,11 @@ namespace vapp {
       virtual ~Replay();
       
       /* Methods */
-      void storeState(const char *pcState);
-      void loadState(char *pcState); /* go and get the next state */  
-      void peekState(char *pcState); /* get current state */
+      void storeState(const SerializedBikeState& state);
+      /* go and get the next state */
+      void loadState(SerializedBikeState& state);  
+      void peekState(SerializedBikeState& state); /* get current state */
+      
       void createReplay(const std::string &FileName,const std::string &LevelID,const std::string &Player,float fFrameRate,int nStateSize);
       void saveReplay(void);
       std::string openReplay(const std::string &FileName,float *pfFrameRate,std::string &Player);

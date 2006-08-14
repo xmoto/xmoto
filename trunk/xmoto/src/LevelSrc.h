@@ -164,6 +164,8 @@ namespace vapp {
       ~LevelSrc() {_UnloadLevelData();}
     
       /* Methods */
+      bool load(bool cacheEnabled);
+      
       void saveXML(void);
       void loadXML(void);
       
