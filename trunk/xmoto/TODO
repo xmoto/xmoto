@@ -1,5 +1,7 @@
 ### For 0.2.1
 
+* remove the "level packs" button, remove the "internal" and "external" tabs and replace them by "All levels" tab and "Level pack" tab and make internal level a pack
+* BUG: tu peux faire get more levels une fois par session
 * xmoto-edit fezfezfezf : segfault : again 
 * level no doubt : start ; pause 30 sec ; run very fast ->
    http://testnitrx.free.fr/xmoto/screenshot0006.png : a block appears !
