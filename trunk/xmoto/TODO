@@ -74,7 +74,6 @@ UPDATE:  It appears it's only possible to produce the bug when ghost is enabled.
 * themes : not more animation in .xml ? -> be able to load an animated bike ?
 * to be able to move a zone ?
 * make sound in themes
-* svg2xmotolvl
 * we could make a "standard xmoto library" of lua functions :)
 * new script call :
   killPlayer() -> kill the player
