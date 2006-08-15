@@ -1,4 +1,4 @@
-SUBDIRS = src bin tools
+SUBDIRS = src bin tools extra
 
 man_MANS = xmoto.6.gz xmoto-edit.6.gz
 
