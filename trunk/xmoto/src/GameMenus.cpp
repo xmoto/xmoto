@@ -2459,6 +2459,8 @@ namespace vapp {
 		WebHighscore* wh = m_pWebHighscores->getHighscoreFromLevel(rplInfos->Level);
 		if(wh != NULL) {
 		  pUploadHighscoreButton->enableWindow(rplInfos->fFinishTime < wh->getFTime());
+		} else {
+		  pUploadHighscoreButton->enableWindow(true);
 		}
 	      }  	      
 	      free(rplInfos);
