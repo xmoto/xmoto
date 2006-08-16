@@ -1,5 +1,8 @@
 ### For 0.2.1
 
+* BUG : xmoto-edit : m_theme.load("Themes/original.xml") in
+   Editor.cpp, really not nice !!! a file called Themes/original.xml
+   must exists to have the last textures into xmoto-edit;
 * remove the "level packs" button, remove the "internal" and "external" tabs and replace them by "All levels" tab and "Level pack" tab and make internal level a pack
 * BUG: tu peux faire get more levels une fois par session
 * xmoto-edit fezfezfezf : segfault : again 
