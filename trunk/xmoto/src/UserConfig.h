@@ -75,6 +75,8 @@ namespace vapp {
 	    void _FreeUserConfig(void);
 	    
 	    UserConfigVar *_FindVarByName(std::string Name);
+
+	    static std::string str2xmlstr(std::string str);
 	};
 
 }

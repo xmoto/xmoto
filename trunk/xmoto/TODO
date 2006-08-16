@@ -1,5 +1,8 @@
 ### For 0.2.1
 
+* i added std::string UserConfig::str2xmlstr(std::string str),
+   but it should be put anywhere else
+
 * BUG : xmoto-edit : m_theme.load("Themes/original.xml") in
    Editor.cpp, really not nice !!! a file called Themes/original.xml
    must exists to have the last textures into xmoto-edit;
@@ -8,8 +11,6 @@
 * xmoto-edit fezfezfezf : segfault : again 
 * level no doubt : start ; pause 30 sec ; run very fast ->
    http://testnitrx.free.fr/xmoto/screenshot0006.png : a block appears !
-* for the automatic upload, add :
-   check why i can't have a & in my password
 * BUG : as you can see at the end of "the only smooth", the block is
    not correctly drawned
 * bug on review a replay : when you forward to fast, the man does not
