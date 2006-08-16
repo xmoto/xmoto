@@ -21,6 +21,7 @@ Since 0.2.0
 * ALPHA removed
 * make xmoto independant of the arch for replays
 * svg2lvl done using inkscape and a python script.
+* BUG : when you save a replay as the same name several times, replay list is not updated correctly
 
 Since 1.16
 * BUG : view highscore with up and down with keyboard does not update the button

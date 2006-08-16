@@ -86,7 +86,7 @@ namespace vapp {
       
       static std::vector<std::string> findPhysFiles(std::string Files,bool bRecurse = false);
       
-      static bool copyFile(const std::string &From,const std::string &To);
+      static bool copyFile(const std::string &From,const std::string &To, std::string &To_really_done); /* To_really_done is out : it is the name of the file really written */
       static void deleteFile(const std::string &File);
       
       static void writeLog(const std::string &s);

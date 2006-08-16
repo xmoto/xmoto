@@ -2102,12 +2102,15 @@ namespace vapp {
     }
 
     /* Try saving */
-    if(!FS::copyFile("Replays/Latest.rpl",std::string("Replays/") + RealName + std::string(".rpl"))) {
+    std::string v_outputfile;
+    if(!FS::copyFile("Replays/Latest.rpl",
+		     std::string("Replays/") + RealName + std::string(".rpl"),
+		     v_outputfile)) {
       Log("** Warning ** : Failed to save replay: %s",Name.c_str());
       notifyMsg(GAMETEXT_FAILEDTOSAVEREPLAY);
     } else {
       /* Update replay list to reflect changes */
-      m_ReplayList.addReplay(RealName);
+      m_ReplayList.addReplay(FS::getFileBaseName(v_outputfile));
       _UpdateReplaysList();
     }
   }

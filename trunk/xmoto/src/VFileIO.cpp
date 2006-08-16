@@ -842,7 +842,7 @@ namespace vapp {
   /*===========================================================================
   Copy file
   ===========================================================================*/
-  bool FS::copyFile(const std::string &From,const std::string &To) {
+  bool FS::copyFile(const std::string &From,const std::string &To, std::string &To_really_done) {
     /* All file copying must happen inside the user directory... */
     if(m_UserDir == "") {
       Log("** Warning ** : No user directory, can't copy file '%s' to '%s'",From.c_str(),To.c_str());
@@ -893,6 +893,8 @@ namespace vapp {
     if(in != NULL) {
       FILE *out = fopen(FullTo.c_str(),"wb");
       if(out != NULL) {
+	To_really_done = FullTo;
+
         /* Get input file size */
         fseek(in,0,SEEK_END);
         int nFileSize = ftell(in);
