@@ -355,12 +355,10 @@ namespace vapp {
   }
 
   bool Replay::nextState(float p_frames) {
+    m_bEndOfFile = false;
     if(m_is_paused) {
       return ! m_bEndOfFile;
     }
-
-    /* put endoffile to false ; and in the following line, put it to true if required*/
-    m_bEndOfFile = false;
 
     m_nCurState += p_frames;
 
@@ -389,7 +387,6 @@ namespace vapp {
 
       /* if that's end */
       if(m_nCurState >= m_Chunks[m_nCurChunk].nNumStates) {
-	m_bEndOfFile = true;
 	m_nCurState = m_Chunks[m_nCurChunk].nNumStates -1;
 	return false;
       }
@@ -400,7 +397,6 @@ namespace vapp {
 
       /* if that's end */
       if(m_nCurState >= m_Chunks[m_nCurChunk].nNumStates) {
-	m_bEndOfFile = true;
 	m_nCurState = m_Chunks[m_nCurChunk].nNumStates -1;
 	return false;
       }
@@ -413,6 +409,10 @@ namespace vapp {
     /* (11th july, 2006) rasmus: i've swapped the two following lines, it apparently fixes
        interpolation in replays, but i don't know if it break something else */  
     peekState(state);
+
+    m_bEndOfFile = (m_nCurChunk       == m_Chunks.size()-1 && 
+	 	    (int)m_nCurState  == m_Chunks[m_nCurChunk].nNumStates-1);
+
     if(nextNormalState()) { /* do nothing */ }
   }
   
