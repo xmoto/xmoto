@@ -76,5 +76,32 @@ namespace vapp {
     m_pXML->Print(pfh->fp);
     FS::closeFile(pfh);
   }
+
+  std::string XML::str2xmlstr(std::string str) {
+    std::string v_res = "";
+    for(int i=0; i<str.length(); i++) {
+      switch(str[i]) {
+      case '&':
+	v_res.append("&amp;");
+	break;
+      case '<':
+	v_res.append("&lt;");
+	break;
+      case '>':
+	v_res.append("&gt;");
+	break;
+      case '\"':
+	v_res.append("&quot;");
+	break;
+      case '\'':
+	v_res.append("&apos;");
+	break;
+      default:
+	char c[2] = {str[i], '\0'};
+	v_res.append(c);
+      }
+    }
+    return v_res;
+  }
     
 }

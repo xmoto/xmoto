@@ -1355,8 +1355,12 @@ namespace vapp {
                 
         /* Render */
         if(!isNoGraphics() && bValidGameState) {
-          m_Renderer.render();
-        
+	  try {
+	    m_Renderer.render();
+	  } catch(Exception &e) {
+	    printf("OUPS\n");
+	  }        
+
           if(m_bShowMiniMap) {
             if(m_MotoGame.getBikeState()->Dir == DD_LEFT)
               m_Renderer.renderMiniMap(getDispWidth()-150,getDispHeight()-100,150,100);

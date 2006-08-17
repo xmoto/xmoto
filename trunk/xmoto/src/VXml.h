@@ -49,6 +49,11 @@ namespace vapp {
       TiXmlDocument *m_pXML;
   };
 
+
+  class XML {
+  public:
+    static std::string str2xmlstr(std::string str);
+  };
 }
 
 #endif

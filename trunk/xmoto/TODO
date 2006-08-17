@@ -1,5 +1,6 @@
 ### For 0.2.1
 
+* bug : keys 1 2 3 4 5 won't work on linux (tut3)
 * BUG: Replays break on Linux/PPC. Screenshot: http://vasi.webhop.org/files/ports/xmoto/xmoto-bug.jpg
 
 * OS X stuff:
@@ -7,8 +8,6 @@
                 * Modify so it could run on a compile farm.
         * Use Application Support directory instead of ~/.xmoto on OS X
         * Better packaging for OS X (Readme, License, etc)
-
-* i added std::string UserConfig::str2xmlstr(std::string str), but it should be put anywhere else
 * remove the "level packs" button, remove the "internal" and "external" tabs and replace them by "All levels" tab and "Level pack" tab and make internal level a pack
 * BUG: tu peux faire get more levels une fois par session ? really ?!? to try
 * level no doubt : start ; pause 30 sec ; run very fast ->
@@ -50,7 +49,6 @@ UPDATE:  It appears it's only possible to produce the bug when ghost is enabled.
 * see about timeout when connection failed
  comment : it seems that there is nothing to do unless reduce
    connection timeout (or multithreading)
-* replay button when you finish a level
 
 # feature which are not really bugs for 0.2.1
 * "view the highscore" button is not visible for pack
@@ -63,6 +61,7 @@ UPDATE:  It appears it's only possible to produce the bug when ghost is enabled.
 * themes : check the md5sum of the files ; don't display available if
    it's not really available
 * "play next level" => 'play next level', 'play next level unplayed', 'play next level where your highscore is > than room highscore', 'play next level where your highscore is > than world highscore', 'play next level where your highscore is the best'
+* replay button when you finish a level (to replay the level just done)
 
 ### for 0.3.0 and after
 * xmoto -nosound

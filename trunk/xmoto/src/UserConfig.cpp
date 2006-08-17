@@ -71,7 +71,7 @@ namespace vapp {
 	    
 	    for(int i=0;i<m_Vars.size();i++) {
 	      char cBuf[256];
-	      sprintf(cBuf,"\t<var name=\"%s\" value=\"%s\"/>",str2xmlstr(m_Vars[i]->Name).c_str(),str2xmlstr(m_Vars[i]->Value).c_str());
+	      sprintf(cBuf,"\t<var name=\"%s\" value=\"%s\"/>",XML::str2xmlstr(m_Vars[i]->Name).c_str(),XML::str2xmlstr(m_Vars[i]->Value).c_str());
 	      FS::writeLine(pfh,cBuf);
 	    }
 	  
@@ -186,32 +186,5 @@ namespace vapp {
 	  }
 	  return NULL;
 	}
-
-  std::string UserConfig::str2xmlstr(std::string str) {
-    std::string v_res = "";
-    for(int i=0; i<str.length(); i++) {
-      switch(str[i]) {
-      case '&':
-	v_res.append("&amp;");
-	break;
-      case '<':
-	v_res.append("&lt;");
-	break;
-      case '>':
-	v_res.append("&gt;");
-	break;
-      case '\"':
-	v_res.append("&quot;");
-	break;
-      case '\'':
-	v_res.append("&apos;");
-	break;
-      default:
-	char c[2] = {str[i], '\0'};
-	v_res.append(c);
-      }
-    }
-    return v_res;
-  }
 	
 }
