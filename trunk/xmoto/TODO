@@ -42,6 +42,7 @@ UPDATE:  It appears it's only possible to produce the bug when ghost is enabled.
 * see about timeout when connection failed
  comment : it seems that there is nothing to do unless reduce
    connection timeout (or multithreading)
+* replay button when you finish a level
 
 # feature which are not really bugs for 0.2.1
 * "view the highscore" button is not visible for pack
