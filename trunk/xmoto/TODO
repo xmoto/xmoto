@@ -2,10 +2,9 @@
 
 * bug : keys 1 2 3 4 5 won't work on linux (tut3)
 * BUG: Replays break on Linux/PPC. Screenshot: http://vasi.webhop.org/files/ports/xmoto/xmoto-bug.jpg
-
 * OS X stuff:
         * Add Universal Binary build system to subdirectory.
-                * Modify so it could run on a compile farm.
+        * Modify so it could run on a compile farm.
         * Use Application Support directory instead of ~/.xmoto on OS X
         * Better packaging for OS X (Readme, License, etc)
 * remove the "level packs" button, remove the "internal" and "external" tabs and replace them by "All levels" tab and "Level pack" tab and make internal level a pack
