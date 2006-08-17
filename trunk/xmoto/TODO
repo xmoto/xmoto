@@ -3,7 +3,6 @@
 * i added std::string UserConfig::str2xmlstr(std::string str), but it should be put anywhere else
 * remove the "level packs" button, remove the "internal" and "external" tabs and replace them by "All levels" tab and "Level pack" tab and make internal level a pack
 * BUG: tu peux faire get more levels une fois par session ? really ?!? to try
-* xmoto-edit fezfezfezf : segfault : again 
 * level no doubt : start ; pause 30 sec ; run very fast ->
    http://testnitrx.free.fr/xmoto/screenshot0006.png : a block appears !
 * BUG : as you can see at the end of "the only smooth", the block is
