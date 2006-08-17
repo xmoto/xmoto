@@ -48,8 +48,6 @@
 * see about timeout when connection failed
  comment : it seems that there is nothing to do unless reduce
    connection timeout (or multithreading)
--> it's on renderBike that there is a pb, if you don't render the
-   bike, you have no pb
 
 # feature which are not really bugs for 0.2.1
 * "view the highscore" button is not visible for pack
