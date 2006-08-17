@@ -2556,6 +2556,10 @@ namespace vapp {
     /* Update stats */        
     m_GameStats.levelRestarted(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->getID(),m_MotoGame.getLevelSrc()->getLevelInfo()->Name,m_MotoGame.getTime());
   
+#if defined(ALLOW_GHOST) 
+    /* hide ghost */
+    m_MotoGame.setGhostActive(false);
+#endif
     m_MotoGame.endLevel();
     m_InputHandler.resetScriptKeyHooks();           
     m_Renderer.unprepareForNewLevel();

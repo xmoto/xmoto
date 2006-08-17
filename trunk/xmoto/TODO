@@ -37,18 +37,19 @@
 * BUG :
 - start a level, press very fastly (ESC-ENTER)* ; quite easy to
    reproduce (works on windows and linux)
-(gdb) run
-Starting program: /home/nicolas/progs/archives/xmoto_cvs/xmoto/xmoto
-Program exited normally.
-Game.cpp around 1210 : adding a catch ; however, when the exception is
-   catched, the level is displayed badly
-   	  try {
-   	    m_Renderer.render();
-	  } catch(Exception &e) {printf("Exception handled\n");}
-UPDATE:  It appears it's only possible to produce the bug when ghost is enabled.
+   try {
+     m_Renderer.render();
+   } in Game.cpp to catch the exception.
+   in VApp.cpp, if you replace while(SDL_PollEvent(&Event)) by
+   if(SDL_PollEvent(&Event)), the pb disappear.
+   event order threaten is ENTER then ESC
+   _RestartLevels is called
+   then the ESC is managed and it fails
 * see about timeout when connection failed
  comment : it seems that there is nothing to do unless reduce
    connection timeout (or multithreading)
+-> it's on renderBike that there is a pb, if you don't render the
+   bike, you have no pb
 
 # feature which are not really bugs for 0.2.1
 * "view the highscore" button is not visible for pack

@@ -1282,17 +1282,7 @@ namespace vapp {
         }
         else if(m_pPauseMenuButtons[i]->getCaption() == GAMETEXT_RESTART) {
           m_pPauseMenu->showWindow(false);
-          m_GameStats.levelRestarted(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->getID(),m_MotoGame.getLevelSrc()->getLevelInfo()->Name,m_MotoGame.getTime());
-
-#if defined(ALLOW_GHOST) 
-	  /* hide ghost */
-	  m_MotoGame.setGhostActive(false);
-#endif 
-          m_MotoGame.endLevel();
-          m_InputHandler.resetScriptKeyHooks();                     
-          m_Renderer.unprepareForNewLevel();
-
-          setState(GS_PLAYING);                               
+	  _RestartLevel();
         }
         else if(m_pPauseMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
           LevelSrc *pLS = _FindLevelByID(m_PlaySpecificLevel);
