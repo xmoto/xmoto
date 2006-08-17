@@ -413,7 +413,9 @@ namespace vapp {
     m_bEndOfFile = (m_nCurChunk       == m_Chunks.size()-1 && 
 	 	    (int)m_nCurState  == m_Chunks[m_nCurChunk].nNumStates-1);
 
-    if(nextNormalState()) { /* do nothing */ }
+    if(m_bEndOfFile == false) {
+      if(nextNormalState()) { /* do nothing */ }
+    }
   }
   
   void Replay::peekState(SerializedBikeState& state) {
