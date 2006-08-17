@@ -1,5 +1,13 @@
 ### For 0.2.1
 
+* BUG: Replays break on Linux/PPC. Screenshot: http://vasi.webhop.org/files/ports/xmoto/xmoto-bug.jpg
+
+* OS X stuff:
+        * Add Universal Binary build system to subdirectory.
+                * Modify so it could run on a compile farm.
+        * Use Application Support directory instead of ~/.xmoto on OS X
+        * Better packaging for OS X (Readme, License, etc)
+
 * i added std::string UserConfig::str2xmlstr(std::string str), but it should be put anywhere else
 * remove the "level packs" button, remove the "internal" and "external" tabs and replace them by "All levels" tab and "Level pack" tab and make internal level a pack
 * BUG: tu peux faire get more levels une fois par session ? really ?!? to try
