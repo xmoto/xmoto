@@ -217,12 +217,12 @@ namespace vapp {
         
     unsigned char cBikeEngineRPM;     /* Maps to a float between 400 and 5000 */
     
-    char cRearWheelX,cRearWheelY;     /* Rear wheel position */
-    char cFrontWheelX,cFrontWheelY;   /* Front wheel position */
-    char cElbowX,cElbowY;             /* Elbow position */
-    char cShoulderX,cShoulderY;       /* Shoulder position */
-    char cLowerBodyX,cLowerBodyY;     /* Ass position */
-    char cKneeX,cKneeY;               /* Knee position */
+    signed char cRearWheelX,cRearWheelY;     /* Rear wheel position */
+    signed char cFrontWheelX,cFrontWheelY;   /* Front wheel position */
+    signed char cElbowX,cElbowY;             /* Elbow position */
+    signed char cShoulderX,cShoulderY;       /* Shoulder position */
+    signed char cLowerBodyX,cLowerBodyY;     /* Ass position */
+    signed char cKneeX,cKneeY;               /* Knee position */
   };
 
   /*===========================================================================
@@ -939,8 +939,8 @@ namespace vapp {
       void nextStateScriptDynamicObjects();
       void removeSDynamicOfObject(std::string pObject);
 
-      char _MapCoordTo8Bits(float fRef,float fMaxDiff,float fCoord);
-      float _Map8BitsToCoord(float fRef,float fMaxDiff,char c);
+      signed char _MapCoordTo8Bits(float fRef,float fMaxDiff,float fCoord);
+      float _Map8BitsToCoord(float fRef,float fMaxDiff,signed char c);
       unsigned short _MatrixTo16Bits(const float *pfMatrix);
       void _16BitsToMatrix(unsigned short n16,float *pfMatrix);
       void _SerializeGameEventQueue(DBuffer &Buffer,GameEvent *pEvent);

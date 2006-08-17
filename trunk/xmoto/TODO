@@ -2,6 +2,7 @@
 
 * bug : keys 1 2 3 4 5 won't work on linux (tut3)
 * BUG: Replays break on Linux/PPC. Screenshot: http://vasi.webhop.org/files/ports/xmoto/xmoto-bug.jpg
+	* Probably fixed, waiting for verification by Marcel
 * OS X stuff:
         * Add Universal Binary build system to subdirectory.
         * Modify so it could run on a compile farm.

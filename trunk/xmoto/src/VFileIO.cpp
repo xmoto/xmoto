@@ -596,7 +596,7 @@ namespace vapp {
   }   
   
   int FS::readByte(FileHandle *pfh) {
-    char v;
+    signed char v;
     if(!readBuf(pfh,(char *)&v,sizeof(v))) _ThrowFileError(pfh,"readByte -> failed");
     return v;
   } 

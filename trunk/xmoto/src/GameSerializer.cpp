@@ -665,14 +665,15 @@ namespace vapp {
   /*===========================================================================
     Neat trick for converting floating-point numbers to 8 bits
     ===========================================================================*/
-  char MotoGame::_MapCoordTo8Bits(float fRef,float fMaxDiff,float fCoord) {
+  signed char MotoGame::_MapCoordTo8Bits(float fRef,float fMaxDiff,
+      float fCoord) {
     int n = (int)((127.0f * (fCoord-fRef))/fMaxDiff);
     if(n<-127) n=-127;
     if(n>127) n=127;
-    return (char)(n&0xff);
+    return (signed char)(n&0xff);
   }
   
-  float MotoGame::_Map8BitsToCoord(float fRef,float fMaxDiff,char c) {
+  float MotoGame::_Map8BitsToCoord(float fRef,float fMaxDiff,signed char c) {
     return fRef + (((float)c)/127.0f) * fMaxDiff;
   }
 
