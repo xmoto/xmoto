@@ -103,7 +103,7 @@ namespace vapp {
 	Texture selection tool
   ===========================================================================*/    
   class TextureSelectionTool : public SubApp {
-    public:
+   public:
       TextureSelectionTool() {
         m_nHoverIdx=m_nSelectedIdx=-1;
       }
@@ -251,7 +251,14 @@ namespace vapp {
   ===========================================================================*/
   class EditorApp : public App {
     public:
-      EditorApp() {m_pLevelSrc=NULL; m_bLeftButtonDown=false; m_pEntityToCopy=NULL; m_bJustPackage=false;}
+      EditorApp() {m_pLevelSrc=NULL; m_bLeftButtonDown=false; m_pEntityToCopy=NULL; m_bJustPackage=false;
+      m_themeChoicer = new ThemeChoicer(
+#if defined(SUPPORT_WEBACCESS)
+					NULL,
+					NULL
+#endif
+				      );
+}
     
       /* Virtual methods */
       virtual void drawFrame(void);
@@ -330,6 +337,9 @@ namespace vapp {
       /* When ES_CREATING_NEW_ENTITY */
       std::string m_NewEntityID;
       
+      /* theme */
+      ThemeChoicer *m_themeChoicer;
+
       /* Helper functions */
       void _NewLevel(void);
       float _GetAvg(std::vector<float> &x);

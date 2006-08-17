@@ -23,6 +23,7 @@ Since 0.2.0
 * svg2lvl done using inkscape and a python script.
 * BUG : when you save a replay as the same name several times, replay list is not updated correctly
 * for the automatic upload, add : check why i can't have a & in my password
+* BUG : xmoto-edit : m_theme.load("Themes/original.xml") in Editor.cpp, really not nice !!! a file called Themes/original.xml must exists to have the last textures into xmoto-edit;
 
 Since 1.16
 * BUG : view highscore with up and down with keyboard does not update the button

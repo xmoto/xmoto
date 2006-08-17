@@ -294,11 +294,11 @@ namespace vapp {
       _NewLevel();
     }
     
-    /* Load default theme */
-    m_theme.load("Themes/original.xml");
+    /* Load default theme */    
+    m_theme.load(m_themeChoicer->getFileName(THEME_DEFAULT_THEMENAME));
 
-		/* Output log message */
-		m_Log.msg("Ready. (X-Moto version %s)",getVersionString().c_str());		
+    /* Output log message */
+    m_Log.msg("Ready. (X-Moto version %s)",getVersionString().c_str());		
   }
   
   /*============================================================================
