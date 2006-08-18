@@ -106,8 +106,6 @@
 * translations (priority=very low)
 * separate personnal highscores from others (two tabs instead of a
    button, it's easiest) (it neckelmann agree)
-* upload highscore from the game ? (require login/password room
-   configuration ;-(
 * pb for left hand written people for the editor
 * two possibilities to show room : one to see the world highscore, one
    to see you room (optionnal)

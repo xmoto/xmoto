@@ -91,7 +91,8 @@ namespace vapp {
              m_bWindowed=true;
              m_fFramesPerSecond=25.0f;
              m_fNextFrame=0.0f;
-             m_bNoGraphics=false;                         
+             m_bNoGraphics=false;
+	     m_bNoWWW = false;                         
              m_bDontUseGLExtensions=false;
              m_nFrameDelay=0;
              m_bShadersSupported = false;
@@ -152,6 +153,7 @@ namespace vapp {
       float getFPS(void) {return m_fFramesPerSecond;}      
       bool isNoGraphics(void) {return m_bNoGraphics;}
       void setNoGraphics(bool b) {m_bNoGraphics = b;}
+      bool isNoWWW(void) {return m_bNoWWW;}
       static std::string getVersionString(void) {
         char cBuf[256]; sprintf(cBuf,"%d.%d.%d" BUILD_EXTRAINFO,BUILD_MAJORVERSION,BUILD_VERSION,BUILD_MINORVERSION);
         return cBuf;        
@@ -265,7 +267,8 @@ namespace vapp {
       bool m_bWindowed;         /* Windowed or not */
       float m_fFramesPerSecond; /* Force this FPS */
       bool m_bNoGraphics;       /* No-graphics mode */      
-      
+      bool m_bNoWWW;
+
       bool m_bCmdDispWidth,m_bCmdDispHeight,m_bCmdDispBPP,m_bCmdWindowed;
       
       bool m_bVBOSupported;

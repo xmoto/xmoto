@@ -740,7 +740,10 @@ namespace vapp {
       } 
       else if(!strcmp(ppcArgs[i],"-noexts")) {
         m_bDontUseGLExtensions = true;
-      }     
+      }
+      else if(!strcmp(ppcArgs[i],"-nowww")) {
+        m_bNoWWW = true;
+      }    
       else if(!strcmp(ppcArgs[i],"-h") || !strcmp(ppcArgs[i],"-?") ||
               !strcmp(ppcArgs[i],"--help") || !strcmp(ppcArgs[i],"-help")) {
         printf("%s (Version %s)\n",m_AppName.c_str(),getVersionString().c_str());
@@ -757,6 +760,7 @@ namespace vapp {
         printf("\t-q\n\t\tDon't print messages to screen, and don't save them in the log.\n");
         printf("\t-v\n\t\tBe verbose.\n");
         printf("\t-noexts\n\t\tDon't use any OpenGL extensions.\n");
+        printf("\t-nowww\n\t\tDon't allow xmoto to connect on the web.\n");
         helpUserArgs();
         printf("\n");
         

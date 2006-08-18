@@ -546,7 +546,7 @@ namespace vapp {
 #endif
 
 #if defined(SUPPORT_WEBACCESS)
-    m_bEnableWebHighscores = m_Config.getBool("WebHighscores");
+    m_bEnableWebHighscores = m_Config.getBool("WebHighscores") && isNoWWW()== false;
     m_bShowWebHighscoreInGame = m_Config.getBool("ShowInGameWorldRecord");
     m_bEnableGhostInfo = m_Config.getBool("DisplayGhostInfo");
     m_bEnableCheckNewLevelsAtStartup  = m_Config.getBool("CheckNewLevelsAtStartup");
