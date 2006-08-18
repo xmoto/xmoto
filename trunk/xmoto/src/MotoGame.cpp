@@ -906,8 +906,12 @@ namespace vapp {
     m_pLevelSrc = pLevelSrc;
     
     /* Generate extended level data to be used by the game */
-    _GenerateLevel();
-        
+    try {
+      _GenerateLevel();
+    } catch(Exception &e) {
+      m_bLevelInitSuccess = false;
+    }        
+
     /* Calculate bike stuff */
     _CalculateBikeAnchors();    
     Vector2f C( pLevelSrc->getPlayerStartX() - m_BikeA.Tp.x, pLevelSrc->getPlayerStartY() - m_BikeA.Tp.y);
