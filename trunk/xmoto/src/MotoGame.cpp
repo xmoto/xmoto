@@ -1121,7 +1121,7 @@ namespace vapp {
           pDyn->ConvexBlocks.push_back(pConvexBlock);
         }
       }
-      Log(" %d poly%s generated from block #%d",BSPPolys.size(),BSPPolys.size()==1?"":"s",i+1);
+      Log(" %d poly%s generated from block #%d (id=%s)",BSPPolys.size(),BSPPolys.size()==1?"":"s",i+1, InBlocks[i]->ID.c_str());
       
       /* Errors from BSP? */        
       nTotalBSPErrors += BSPTree.getNumErrors();      
