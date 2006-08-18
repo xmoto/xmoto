@@ -1,6 +1,8 @@
 ### For 0.2.1
 
-* bug : keys 1 2 3 4 5 won't work on linux (tut3)
+* bug : keys 1 2 3 4 5 won't work on french keybord : allow to
+   configure key action for script instead of allow the script to
+   choose the key
 * BUG: Replays break on Linux/PPC. Screenshot: http://vasi.webhop.org/files/ports/xmoto/xmoto-bug.jpg
 	* Probably fixed, waiting for verification by Marcel
 * OS X stuff:
