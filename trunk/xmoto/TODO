@@ -1,6 +1,6 @@
 ### For 0.2.1
 
-* new ghost rules : "All on the players of this computer" "All (on this computer and internet)"
+* change ghost rules : "player/players/room"
 * bug : keys 1 2 3 4 5 won't work on french keybord : allow to configure key action for script instead of allow the script to choose the key
 * BUG: Replays break on Linux/PPC. Screenshot: http://vasi.webhop.org/files/ports/xmoto/xmoto-bug.jpg
 	* Probably fixed, waiting for verification by Marcel
