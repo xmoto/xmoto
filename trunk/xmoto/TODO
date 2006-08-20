@@ -1,5 +1,7 @@
 ### For 0.2.1
 
+* if some texture are missing, but backgound in black and foreground
+   in white so that the level can be playable
 * change ghost rules : "player/players/room"
 * bug : keys 1 2 3 4 5 won't work on french keybord : allow to configure key action for script instead of allow the script to choose the key
 * BUG: Replays break on Linux/PPC. Screenshot: http://vasi.webhop.org/files/ports/xmoto/xmoto-bug.jpg
