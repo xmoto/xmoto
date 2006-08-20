@@ -1,5 +1,7 @@
 ### For 0.2.1
 
+* BE SURE THAT THEME IS INDEPENDANT OF THE COLLISION : wrecker
+   parameters : width, height, centerX, centerY
 * if some texture are missing, but backgound in black and foreground
    in white so that the level can be playable
 * change ghost rules : "player/players/room"
