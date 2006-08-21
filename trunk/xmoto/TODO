@@ -1,10 +1,7 @@
 ### For 0.2.1
 
 * Be able to change the size of a sprite as parameter in a level
-* BE SURE THAT THEME IS INDEPENDANT OF THE COLLISION : parameters
-   width, height, centerX, centerY must be on a separated file
-* if some texture are missing, but backgound in black and foreground
-   in white so that the level can be playable
+* if some texture are missing, but backgound in black and foreground in white so that the level can be playable
 * change ghost rules : "player/players/room"
 * bug : keys 1 2 3 4 5 won't work on french keybord : allow to configure key action for script instead of allow the script to choose the key
 * BUG: Replays break on Linux/PPC. Screenshot: http://vasi.webhop.org/files/ports/xmoto/xmoto-bug.jpg
@@ -55,7 +52,6 @@
 
 # feature which are not really bugs for 0.2.1
 * "view the highscore" button is not visible for pack
-* make circle for sprites, strawberries, ... in ugly mode
 * when you press o in the level list and that no level start with an
    o, it bases on the 2nd letter,...
 * loading level is sometimes quite long
