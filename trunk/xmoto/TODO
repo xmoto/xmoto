@@ -1,7 +1,8 @@
 ### For 0.2.1
 
-* BE SURE THAT THEME IS INDEPENDANT OF THE COLLISION : wrecker
-   parameters : width, height, centerX, centerY
+* Be able to change the size of a sprite as parameter in a level
+* BE SURE THAT THEME IS INDEPENDANT OF THE COLLISION : parameters
+   width, height, centerX, centerY must be on a separated file
 * if some texture are missing, but backgound in black and foreground
    in white so that the level can be playable
 * change ghost rules : "player/players/room"

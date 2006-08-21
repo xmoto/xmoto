@@ -128,6 +128,7 @@ namespace vapp {
                  m_pGameInfoWindow=NULL;
                  m_b50FpsMode = false;
                  m_bUglyMode = false;
+                 m_bTestThemeMode = false;
                  m_pReplay = NULL;
                  m_pMenuMusic = NULL;
 #if defined(ALLOW_GHOST)
@@ -208,6 +209,7 @@ namespace vapp {
       
       /* Data interface */
       bool isUglyMode(void) {return m_bUglyMode;}
+      bool isTestThemeMode(void) {return m_bTestThemeMode;}
     
     private: 
       EngineSoundSimulator m_EngineSound;
@@ -225,6 +227,7 @@ namespace vapp {
       bool m_bTimeDemo;                         /* true: (valid for replaying) - performance benchmark */
       bool m_bDebugMode;                        /* true: show debug info */
       bool m_bUglyMode;													/* true: fast 'n ugly graphics */
+      bool m_bTestThemeMode;
       bool m_bEnableEngineSound;                /* true: engine sound is enabled */
       bool m_bCompressReplays;                  /* true: compress replays with zlib */
       bool m_bEnableLevelCache;                 /* true: cache levels for faster loading */

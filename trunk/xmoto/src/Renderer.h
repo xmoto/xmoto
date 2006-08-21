@@ -202,6 +202,7 @@ namespace vapp {
       App *getParent(void) {return m_pParent;}
       void setDebug(bool bDebug) {m_bDebug = bDebug;}
       void setUglyMode(bool bUglyMode) {m_bUglyMode = bUglyMode;}
+      void setTestThemeMode(bool bTestThemeMode) {m_bTestThemeMode = bTestThemeMode;}
       bool isDebug(void) {return m_bDebug;}
       UIRoot *getGUI(void) {return &m_GUI;}
       UIFont *getSmallFont(void) {return m_pSFont;}
@@ -248,7 +249,8 @@ namespace vapp {
       
       bool m_bDebug;
       bool m_bUglyMode;
-      
+      bool m_bTestThemeMode;
+
       UIRoot m_GUI;                 /* GUI root */
       
       Theme *m_theme;

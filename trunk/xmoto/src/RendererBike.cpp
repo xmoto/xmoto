@@ -68,7 +68,18 @@ namespace vapp {
     Fc = (p0 + p1 + p2 + p3) * 0.25f + C;
     
     /* Ugly mode? */
-    if(m_bUglyMode) {
+
+    if(m_bUglyMode == false) {
+      pSprite = p_theme->getWheel();
+      if(pSprite != NULL) {
+	pTexture = pSprite->getTexture();
+	if(pTexture != NULL) {
+	  _RenderAlphaBlendedSection(pTexture,p0+C,p1+C,p2+C,p3+C);
+	}
+      }
+    }
+
+    if(m_bUglyMode || m_bTestThemeMode) {
       glBegin(GL_LINE_STRIP);
       glColor3ub(GET_RED(p_theme->getUglyWheelColor()),GET_GREEN(p_theme->getUglyWheelColor()),GET_BLUE(p_theme->getUglyWheelColor()));
       _Vertex(p0+C);    
@@ -80,15 +91,6 @@ namespace vapp {
       _Vertex(p3+C);
       glEnd();
       _RenderCircle(16,p_theme->getUglyWheelColor(),C,pBikeParms->WR);
-    }
-    else {
-      pSprite = p_theme->getWheel();
-      if(pSprite != NULL) {
-	pTexture = pSprite->getTexture();
-	if(pTexture != NULL) {
-	  _RenderAlphaBlendedSection(pTexture,p0+C,p1+C,p2+C,p3+C);
-	}
-      }
     }
 
     /* Draw rear wheel */        
@@ -118,7 +120,17 @@ namespace vapp {
     Rc = (p0 + p1 + p2 + p3) * 0.25f + C;
     
     /* Ugly mode? */
-    if(m_bUglyMode) {
+    if(m_bUglyMode == false) {
+      pSprite = p_theme->getWheel();
+      if(pSprite != NULL) {
+	pTexture = pSprite->getTexture();
+	if(pTexture != NULL) {
+	  _RenderAlphaBlendedSection(p_theme->getWheel()->getTexture(),p0+C,p1+C,p2+C,p3+C);
+	}
+      }
+    }
+
+    if(m_bUglyMode || m_bTestThemeMode) {
       glBegin(GL_LINE_STRIP);
       glColor3ub(GET_RED(p_theme->getUglyWheelColor()),GET_GREEN(p_theme->getUglyWheelColor()),GET_BLUE(p_theme->getUglyWheelColor()));
       _Vertex(p0+C);    
@@ -130,15 +142,6 @@ namespace vapp {
       _Vertex(p3+C);
       glEnd();
       _RenderCircle(16,p_theme->getUglyWheelColor(),C,pBikeParms->WR);
-    }
-    else {
-      pSprite = p_theme->getWheel();
-      if(pSprite != NULL) {
-	pTexture = pSprite->getTexture();
-	if(pTexture != NULL) {
-	  _RenderAlphaBlendedSection(p_theme->getWheel()->getTexture(),p0+C,p1+C,p2+C,p3+C);
-	}
-      }
     }
 
     if(!m_bUglyMode) {
@@ -224,20 +227,7 @@ namespace vapp {
 
     /* Draw rider */        
     if(pBike->Dir == DD_RIGHT) {
-      if(m_bUglyMode) {
-        /* Draw it ugly */
-        glBegin(GL_LINE_STRIP);
-        glColor3ub(GET_RED(p_theme->getUglyRiderColor()),GET_GREEN(p_theme->getUglyRiderColor()),GET_BLUE(p_theme->getUglyRiderColor()));
-        _Vertex(pBike->FootP);
-        _Vertex(pBike->KneeP);
-        _Vertex(pBike->LowerBodyP);
-        _Vertex(pBike->ShoulderP);
-        _Vertex(pBike->ElbowP);
-        _Vertex(pBike->HandP);
-        glEnd();
-        _RenderCircle(10,p_theme->getUglyRiderColor(),pBike->HeadP,pBikeParms->fHeadSize);
-      }
-      else {      
+      if(m_bUglyMode == false) {    
         /* Draw rider torso */
         Sv = pBike->ShoulderP - pBike->LowerBodyP;
         Sv.normalize();         
@@ -318,22 +308,23 @@ namespace vapp {
 	  }
 	}
       }
-    }
-    else if(pBike->Dir == DD_LEFT) {
-      if(m_bUglyMode) {
+
+      if(m_bUglyMode || m_bTestThemeMode) {
         /* Draw it ugly */
         glBegin(GL_LINE_STRIP);
         glColor3ub(GET_RED(p_theme->getUglyRiderColor()),GET_GREEN(p_theme->getUglyRiderColor()),GET_BLUE(p_theme->getUglyRiderColor()));
-        _Vertex(pBike->Foot2P);
-        _Vertex(pBike->Knee2P);
-        _Vertex(pBike->LowerBody2P);
-        _Vertex(pBike->Shoulder2P);
-        _Vertex(pBike->Elbow2P);
-        _Vertex(pBike->Hand2P);
+        _Vertex(pBike->FootP);
+        _Vertex(pBike->KneeP);
+        _Vertex(pBike->LowerBodyP);
+        _Vertex(pBike->ShoulderP);
+        _Vertex(pBike->ElbowP);
+        _Vertex(pBike->HandP);
         glEnd();
-        _RenderCircle(10,p_theme->getUglyRiderColor(),pBike->Head2P,pBikeParms->fHeadSize);
+        _RenderCircle(10,p_theme->getUglyRiderColor(),pBike->HeadP,pBikeParms->fHeadSize);
       }
-      else {      
+    }
+    else if(pBike->Dir == DD_LEFT) {
+      if(m_bUglyMode == false) {    
         /* Draw rider torso */
         Sv = pBike->Shoulder2P - pBike->LowerBody2P;
         Sv.normalize();         
@@ -413,6 +404,20 @@ namespace vapp {
 	    _RenderAlphaBlendedSection(pTexture,p2,p1,p0,p3);        
 	  }
 	}
+      }
+
+      if(m_bUglyMode || m_bTestThemeMode) {
+        /* Draw it ugly */
+        glBegin(GL_LINE_STRIP);
+        glColor3ub(GET_RED(p_theme->getUglyRiderColor()),GET_GREEN(p_theme->getUglyRiderColor()),GET_BLUE(p_theme->getUglyRiderColor()));
+        _Vertex(pBike->Foot2P);
+        _Vertex(pBike->Knee2P);
+        _Vertex(pBike->LowerBody2P);
+        _Vertex(pBike->Shoulder2P);
+        _Vertex(pBike->Elbow2P);
+        _Vertex(pBike->Hand2P);
+        glEnd();
+        _RenderCircle(10,p_theme->getUglyRiderColor(),pBike->Head2P,pBikeParms->fHeadSize);
       }
     }   
     

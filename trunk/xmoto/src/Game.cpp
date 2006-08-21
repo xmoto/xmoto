@@ -696,6 +696,7 @@ namespace vapp {
     m_Renderer.setGameObject( &m_MotoGame );        
     m_Renderer.setDebug( m_bDebugMode );
     m_Renderer.setUglyMode( m_bUglyMode );
+    m_Renderer.setTestThemeMode( m_bTestThemeMode );
 
 #if defined(ALLOW_GHOST)
     m_Renderer.setGhostMotionBlur( m_bGhostMotionBlur );
@@ -1922,6 +1923,9 @@ namespace vapp {
       else if(UserArgs[i] == "-ugly") {
 				m_bUglyMode = true;
       }
+      else if(UserArgs[i] == "-testTheme") {
+				m_bTestThemeMode = true;
+      }
       else if(UserArgs[i] == "-benchmark") {
 				m_bBenchmark = true;
       }
@@ -1942,6 +1946,7 @@ namespace vapp {
     printf("\t-fps\n\t\tDisplay framerate.\n");
     printf("\t-ugly\n\t\tEnable 'ugly' mode, suitable for computers without\n");
                    printf("\t\ta good OpenGL-enabled video card.\n");
+    printf("\t-testTheme\n\t\tDisplay forms around the theme to check it.\n");
     printf("\t-benchmark\n\t\tOnly meaningful when combined with -replay and\n");
                    printf("\t\t-timedemo. Useful to determine the graphics\n");
                    printf("\t\tperformance.\n");

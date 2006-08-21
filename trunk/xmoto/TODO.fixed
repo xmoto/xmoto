@@ -25,6 +25,7 @@ Since 0.2.0
 * BUG: for the automatic upload, add : check why i can't have a & in my password
 * BUG : xmoto-edit : m_theme.load("Themes/original.xml") in Editor.cpp, really not nice !!! a file called Themes/original.xml must exists to have the last textures into xmoto-edit;
 * BUG: on review a replay : when you forward to fast, the man does not go at the end of the level
+* an option to display ugly biker over the theme to test the theme
 
 Since 1.16
 * BUG : view highscore with up and down with keyboard does not update the button
