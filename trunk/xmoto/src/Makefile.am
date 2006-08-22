@@ -89,6 +89,8 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp GameMain.cpp \
 	ScriptDynamicObjects.h \
 	ScriptDynamicObjects.cpp \
 	SomersaultCounter.h \
-	SomersaultCounter.cpp
+	SomersaultCounter.cpp \
+	GameEvents.h \
+	GameEvents.cpp
 
 xmoto_LDADD = $(common_LDADD)

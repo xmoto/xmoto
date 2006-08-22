@@ -297,8 +297,6 @@ namespace vapp {
     Update game
     ===========================================================================*/
   void MotoGame::updateLevel(float fTimeStep,SerializedBikeState *pReplayState,Replay *p_replay) {
-    bool v_enableScript = pReplayState == NULL; // don't use script on replay (lua action must be read from the replay)
-    
     m_bSqueeking = false; /* no squeeking right now */
 
     /* Dummies are small markers that can show different things during debugging */
@@ -398,7 +396,7 @@ namespace vapp {
     }
     
     /* Invoke PreDraw() script function - deprecated */
-    if(v_enableScript) {
+    if(m_isScriptActiv) {
       if(!scriptCallBool("PreDraw",
 			 true)) {
 	throw Exception("level script PreDraw() returned false");
@@ -408,7 +406,7 @@ namespace vapp {
     /* Invoke Tick() script function */
     /* and play script dynamic objects */
     while(getTime() - m_lastCallToEveryHundreath > 0.01) {
-      if(v_enableScript) {
+      if(m_isScriptActiv) {
 	if(!scriptCallBool("Tick",
 			   true)) {
 			     throw Exception("level script Tick() returned false");
@@ -425,232 +423,15 @@ namespace vapp {
           
       /* Handle events generated this update */
       while(getNumPendingGameEvents() > 0) {
-	GameEvent *pEvent = getNextGameEvent();
-	if(pEvent != NULL) {
-	  if(p_replay != NULL) {
-	    /* Encode event */
-	    _SerializeGameEventQueue(*p_replay,pEvent);
-	  }
-	  
-	  /* What event? */
-	  switch(pEvent->Type) {
-	  case GAME_EVENT_PLAYER_DIES:
-	    {
-	      m_bDead = true;	      
-	    }
-	    break;
-	  case GAME_EVENT_PLAYER_ENTERS_ZONE:						
-	    {
-	      /* Notify script */
-	      if(v_enableScript) {
-		scriptCallTblVoid( pEvent->u.PlayerEntersZone.pZone->ID,"OnEnter" );
-	      }
-	    }
-	    break;
-	  case GAME_EVENT_PLAYER_LEAVES_ZONE:
-	    {
-	      if(v_enableScript) {
-		/* Notify script */
-		scriptCallTblVoid( pEvent->u.PlayerEntersZone.pZone->ID,"OnLeave" );						
-	      }
-	    }
-	    break;
-	  case GAME_EVENT_PLAYER_TOUCHES_ENTITY:
-	    {
-	      Entity *pEntityToTouch = findEntity(pEvent->u.PlayerTouchesEntity.cEntityID);
-	      if(pEntityToTouch != NULL) {
-		touchEntity(pEntityToTouch,pEvent->u.PlayerTouchesEntity.bHead, v_enableScript);
-	      }
-	    }
-	    break;
-	  case GAME_EVENT_ENTITY_DESTROYED: 
-	    {
-        if(pEvent->u.EntityDestroyed.Type == ET_STRAWBERRY) {
-	        /* Spawn some particles */
-	        for(int i=0;i<6;i++)
-  	        m_renderer->spawnParticle(PT_STAR,Vector2f(pEvent->u.EntityDestroyed.fPosX,pEvent->u.EntityDestroyed.fPosY),Vector2f(0,0),5);
-
-	        /* Play yummy-yummy sound */
-	        Sound::playSampleByName("Sounds/PickUpStrawberry.ogg");
-	      }
-
-	      /* Destroy entity */
-	      Entity *pEntityToDestroy = findEntity(pEvent->u.EntityDestroyed.cEntityID);
-	      if(pEntityToDestroy != NULL) {
-		      deleteEntity(pEntityToDestroy);
-	      }
-	    }
-	    break;
-	    
-	  case GAME_EVENT_LUA_CALL_SETENTITYPOS:
-	    {
-	      SetEntityPos(pEvent->u.LuaCallSetentitypos.cEntityID,
-			   pEvent->u.LuaCallSetentitypos.x,
-			   pEvent->u.LuaCallSetentitypos.y);
-	    }
-	    break;
-	    
-	  case GAME_EVENT_LUA_CALL_CLEARMESSAGES:
-	    {
-	      clearGameMessages();
-	    }
-	    break;
-	    
-	  case GAME_EVENT_LUA_CALL_PLACEINGAMEARROW:
-	    {
-	      PlaceInGameArrow(pEvent->u.LuaCallPlaceingamearrow.x,
-			       pEvent->u.LuaCallPlaceingamearrow.y,
-			       pEvent->u.LuaCallPlaceingamearrow.angle);
-	    }
-	    break;
-	    
-	  case GAME_EVENT_LUA_CALL_PLACESCREENARROW:
-	    {
-	      PlaceScreenArrow(pEvent->u.LuaCallPlacescreenarrow.x,
-			       pEvent->u.LuaCallPlacescreenarrow.y,
-			       pEvent->u.LuaCallPlacescreenarrow.angle);  
-	    }
-	    break;
-	    
-	  case GAME_EVENT_LUA_CALL_HIDEARROW:
-	    {
-	      getArrowPointer().nArrowPointerMode = 0;
-	    }
-	    break;
-	    
-	  case GAME_EVENT_LUA_CALL_MESSAGE:
-	    {
-	      gameMessage(pEvent->u.LuaCallMessage.cMessage);
-	    }
-	    break;
-	    
-	  case GAME_EVENT_LUA_CALL_MOVEBLOCK:
-	    {
-	      MoveBlock(pEvent->u.LuaCallMoveblock.cBlockID,
-			pEvent->u.LuaCallMoveblock.x,
-			pEvent->u.LuaCallMoveblock.y);
-	    }
-	    break;
-	    
-	  case GAME_EVENT_LUA_CALL_SETBLOCKPOS:
-	    {
-	      SetBlockPos(pEvent->u.LuaCallSetblockpos.cBlockID,
-			  pEvent->u.LuaCallSetblockpos.x,
-			  pEvent->u.LuaCallSetblockpos.y);
-	    }
-	    break;
-	    
-	  case GAME_EVENT_LUA_CALL_SETGRAVITY:
-	    {
-	      setGravity(pEvent->u.LuaCallSetgravity.x,
-			 pEvent->u.LuaCallSetgravity.y);
-	    }
-	    break;
-	    
-	  case GAME_EVENT_LUA_CALL_SETPLAYERPOSITION:
-	    {
-	      m_pMotoGame->setPlayerPosition(pEvent->u.LuaCallSetplayerposition.x,
-					     pEvent->u.LuaCallSetplayerposition.y,
-					     pEvent->u.LuaCallSetplayerposition.bRight);
-	    }
-	    break;
-	    
-	  case GAME_EVENT_LUA_CALL_SETBLOCKCENTER:
-	    {
-	      SetBlockCenter(pEvent->u.LuaCallSetBlockCenter.cBlockID,
-			     pEvent->u.LuaCallSetBlockCenter.x,
-			     pEvent->u.LuaCallSetBlockCenter.y);
-	    }
-	    break;
-	    
-	  case GAME_EVENT_LUA_CALL_SETBLOCKROTATION:
-	    {
-	      SetBlockRotation(pEvent->u.LuaCallSetBlockRotation.cBlockID,
-			       pEvent->u.LuaCallSetBlockRotation.fAngle);
-	    }
-	    break;
-	    
-	  case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROTATION:
-	    {
-	      m_SDynamicObjects
-		.push_back(new SDynamicEntityRotation(pEvent->u.LuaCallSetDynamicEntityRotation.cEntityID,
-						      pEvent->u.LuaCallSetDynamicEntityRotation.fInitAngle,
-						      pEvent->u.LuaCallSetDynamicEntityRotation.fRadius,
-						      pEvent->u.LuaCallSetDynamicEntityRotation.fPeriod,
-						      pEvent->u.LuaCallSetDynamicEntityRotation.startTime,
-						      pEvent->u.LuaCallSetDynamicEntityRotation.endTime
-						      ));
-	    }
-	    break;
-	    
-	  case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYTRANSLATION:
-	    {
-	      m_SDynamicObjects
-		.push_back(new SDynamicEntityTranslation(pEvent->u.LuaCallSetDynamicEntityTranslation.cEntityID,
-							 pEvent->u.LuaCallSetDynamicEntityTranslation.fX,
-							 pEvent->u.LuaCallSetDynamicEntityTranslation.fY,
-							 pEvent->u.LuaCallSetDynamicEntityTranslation.fPeriod,
-							 pEvent->u.LuaCallSetDynamicEntityTranslation.startTime,
-							 pEvent->u.LuaCallSetDynamicEntityTranslation.endTime
-							 ));
-	    }
-	    break;
-	    
-	  case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYNONE:
-	    {
-	      removeSDynamicOfObject(pEvent->u.LuaCallSetDynamicEntityNone.cEntityID);
-	    }
-	    break;
-	    
-	    
-	  case GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKROTATION:
-	    {
-	      m_SDynamicObjects
-		.push_back(new SDynamicBlockRotation(pEvent->u.LuaCallSetDynamicBlockRotation.cBlockID,
-						     pEvent->u.LuaCallSetDynamicBlockRotation.fInitAngle,
-						     pEvent->u.LuaCallSetDynamicBlockRotation.fRadius,
-						     pEvent->u.LuaCallSetDynamicBlockRotation.fPeriod,
-						     pEvent->u.LuaCallSetDynamicBlockRotation.startTime,
-						     pEvent->u.LuaCallSetDynamicBlockRotation.endTime
-						     ));
-	    }
-	    break;
-	    
-	  case GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKTRANSLATION:
-	    {
-	      m_SDynamicObjects
-		.push_back(new SDynamicBlockTranslation(pEvent->u.LuaCallSetDynamicBlockTranslation.cBlockID,
-							pEvent->u.LuaCallSetDynamicBlockTranslation.fX,
-							pEvent->u.LuaCallSetDynamicBlockTranslation.fY,
-							pEvent->u.LuaCallSetDynamicBlockTranslation.fPeriod,
-							pEvent->u.LuaCallSetDynamicBlockTranslation.startTime,
-							pEvent->u.LuaCallSetDynamicBlockTranslation.endTime
-							));
-	    }
-	    break;
-	    
-	  case GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKNONE:
-	    {
-	      removeSDynamicOfObject(pEvent->u.LuaCallSetDynamicBlockNone.cBlockID);
-	    }
-	    break;
-	    
-	  case GAME_EVENT_LUA_CALL_CAMERAZOOM:
-	    {
-	      CameraZoom(pEvent->u.LuaCallCameraZoom.fZoom);
-	    }
-	    break;
-	    
-	  case GAME_EVENT_LUA_CALL_CAMERAMOVE:
-	    {
-	      CameraMove(pEvent->u.LuaCallCameraMove.x, pEvent->u.LuaCallCameraMove.y);
-	    }
-	    break;
-	    
-	  }
-	  destroyGameEvent(pEvent);
+	MotoGameEvent *pEvent = getNextGameEvent();
+	if(p_replay != NULL) {
+	  /* Encode event */
+	  _SerializeGameEventQueue(*p_replay, pEvent);
 	}
-	else break;
+	  
+	/* What event? */
+	pEvent->doAction(this);
+	destroyGameEvent(pEvent);
       }
     }
     else {
@@ -765,7 +546,7 @@ namespace vapp {
 #endif
 			   LevelSrc *pLevelSrc,
 			   bool bIsAReplay) {
-    bool v_enableScript = bIsAReplay == false;
+    m_isScriptActiv = bIsAReplay == false;
     m_bLevelInitSuccess = true;
 
     /* Clean up first, just for safe's sake */
@@ -940,7 +721,7 @@ namespace vapp {
     }    
 
     /* Invoke the OnLoad() script function */
-    if(v_enableScript) {
+    if(m_isScriptActiv) {
       bool bOnLoadSuccess = scriptCallBool("OnLoad",
 					   true);
       /* if no OnLoad(), assume success */
@@ -1320,25 +1101,17 @@ namespace vapp {
       if(_DoCircleTouchZone( m_BikeS.FrontWheelP,m_BikeP.WR,pZone ) ||
          _DoCircleTouchZone( m_BikeS.RearWheelP,m_BikeP.WR,pZone )) {       
         /* In the zone -- did he just enter it? */
-        if(!pZone->m_bInZone) {
-	  /* Generate event */
-	  GameEvent *pEvent = createGameEvent(GAME_EVENT_PLAYER_ENTERS_ZONE);
-	  if(pEvent != NULL) {
-	    pZone->m_bInZone = true;
-	    pEvent->u.PlayerEntersZone.pZone = pZone;
-	  }
+        if(pZone->m_bInZone == false) {
+	  createGameEvent(new MGE_PlayerEntersZone(getTime(), pZone));
+	  pZone->m_bInZone = true;
         }
       }         
       else {
         /* Not in the zone... but was he during last update? - i.e. has 
            he just left it? */      
         if(pZone->m_bInZone) {
-	  /* Generate event */
-	  GameEvent *pEvent = createGameEvent(GAME_EVENT_PLAYER_LEAVES_ZONE);
-	  if(pEvent != NULL) {
-	    pZone->m_bInZone = false;
-	    pEvent->u.PlayerLeavesZone.pZone = pZone;
-	  }
+	  createGameEvent(new MGE_PlayerLeavesZone(getTime(), pZone));
+	  pZone->m_bInZone = false;
         }
       }
     }
@@ -1423,29 +1196,23 @@ namespace vapp {
       Vector2f HeadPos = m_BikeS.Dir==DD_RIGHT?m_BikeS.HeadP:m_BikeS.Head2P;
 			
       if(circleTouchCircle2f(m_Entities[i]->Pos,m_Entities[i]->fSize,HeadPos,m_BikeP.fHeadSize)) {
-	      if(!m_Entities[i]->bTouched) {
-	        /* Generate event */
-	        GameEvent *pEvent = createGameEvent(GAME_EVENT_PLAYER_TOUCHES_ENTITY);
-	        if(pEvent != NULL) {
-	          pEvent->u.PlayerTouchesEntity.bHead = true;						
-	          strncpy(pEvent->u.PlayerTouchesEntity.cEntityID,m_Entities[i]->ID.c_str(),sizeof(pEvent->u.PlayerTouchesEntity.cEntityID)-1);						
-	          m_Entities[i]->bTouched = true;
-	        }					
-	      }
+	if(m_Entities[i]->bTouched == false) {
+	  createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
+						      m_Entities[i]->ID,
+						      true));
+	  m_Entities[i]->bTouched = true;
+	}
       }
       /* Wheel then? */
       else if(circleTouchCircle2f(m_Entities[i]->Pos,m_Entities[i]->fSize,m_BikeS.FrontWheelP,m_BikeP.WR) ||
               circleTouchCircle2f(m_Entities[i]->Pos,m_Entities[i]->fSize,m_BikeS.RearWheelP,m_BikeP.WR)) {
-	      if(!m_Entities[i]->bTouched) {
-	        /* Generate event */
-	        GameEvent *pEvent = createGameEvent(GAME_EVENT_PLAYER_TOUCHES_ENTITY);
-	        if(pEvent != NULL) {
-	          pEvent->u.PlayerTouchesEntity.bHead = false;
-	          strncpy(pEvent->u.PlayerTouchesEntity.cEntityID,m_Entities[i]->ID.c_str(),sizeof(pEvent->u.PlayerTouchesEntity.cEntityID)-1);
-	          m_Entities[i]->bTouched = true;
-	        }					
-	      }
-      }      
+		if(m_Entities[i]->bTouched == false) {
+		  createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
+							      m_Entities[i]->ID,
+							      false));
+		  m_Entities[i]->bTouched = true;
+		}
+	      }      
       else {
 	      /* Not touching */
 	      m_Entities[i]->bTouched = false;
@@ -1485,9 +1252,9 @@ namespace vapp {
     m_DelSchedule.push_back(pEntity);
   }
   
-  void MotoGame::touchEntity(Entity *pEntity,bool bHead, bool bEnableScript) {
+  void MotoGame::touchEntity(Entity *pEntity,bool bHead) {
     /* Start by invoking scripts if any */
-    if(bEnableScript) {
+    if(m_isScriptActiv) {
       scriptCallTblVoid(pEntity->ID,"Touch");
     }    
 
@@ -1509,34 +1276,27 @@ namespace vapp {
       break;
     case ET_WRECKER: 
       {
-	      /* Hmm :( */
-	      GameEvent *pEvent = createGameEvent(GAME_EVENT_PLAYER_DIES);        
-	      if(pEvent != NULL) {
-	        pEvent->u.PlayerDies.bWrecker = true;
-	      }
+	createGameEvent(new MGE_PlayerDies(getTime(), true));
       }
       break;
     case ET_STRAWBERRY:
       {
-	      /* OH... nice */
-	      GameEvent *pEvent = createGameEvent(GAME_EVENT_ENTITY_DESTROYED);
-	      if(pEvent != NULL) {
-	        strncpy(pEvent->u.EntityDestroyed.cEntityID,pEntity->ID.c_str(),sizeof(pEvent->u.EntityDestroyed.cEntityID)-1);
-	        pEvent->u.EntityDestroyed.Type = pEntity->Type;
-	        pEvent->u.EntityDestroyed.fSize = pEntity->fSize;
-	        pEvent->u.EntityDestroyed.fPosX = pEntity->Pos.x;
-	        pEvent->u.EntityDestroyed.fPosY = pEntity->Pos.y;
-	      }                
-	      
-        #if defined(ALLOW_GHOST)
-	        if(isGhostActive() && m_showGhostTimeDiff) {
-	          m_myLastStrawberries.push_back(getTime());
-	          UpdateDiffFromGhost();
-	          DisplayDiffFromGhost();
-	        }
-        #endif
+	/* OH... nice */
+	createGameEvent(new MGE_EntityDestroyed(getTime(),
+						pEntity->ID,
+						pEntity->Type,
+						pEntity->fSize,
+						pEntity->Pos.x,
+						pEntity->Pos.y));
+#if defined(ALLOW_GHOST)
+	if(isGhostActive() && m_showGhostTimeDiff) {
+	  m_myLastStrawberries.push_back(getTime());
+	  UpdateDiffFromGhost();
+	  DisplayDiffFromGhost();
+	}
+#endif
       }
-      break;
+    break;
     }
   }
   
@@ -1592,24 +1352,20 @@ namespace vapp {
     return "??";
   }
     
-  GameEvent *MotoGame::createGameEvent(GameEventType Type) {
-      GameEvent *pEvent = new GameEvent();
-      pEvent->Type = Type;
-      pEvent->nSeq = m_nLastEventSeq++;
-      m_GameEventQueue.push(pEvent);
-      return pEvent;
+  void MotoGame::createGameEvent(MotoGameEvent *p_event) {
+    m_GameEventQueue.push(p_event);
   }
   
-  void MotoGame::destroyGameEvent(GameEvent *p_event) {
+  void MotoGame::destroyGameEvent(MotoGameEvent *p_event) {
     delete p_event;
   }
 
-  GameEvent *MotoGame::getNextGameEvent(void) {
+  MotoGameEvent* MotoGame::getNextGameEvent() {
     /* Anything in queue? */
     if(getNumPendingGameEvents() > 0) {
-      GameEvent *pEvent = m_GameEventQueue.front();
+      MotoGameEvent *v_event = m_GameEventQueue.front();
       m_GameEventQueue.pop();
-      return pEvent;
+      return v_event;
     }
 		
     /* Nope, nothing */
@@ -1621,12 +1377,12 @@ namespace vapp {
   }
 
   void MotoGame::cleanEventsQueue() {
-    GameEvent *p_event;
+    MotoGameEvent *v_event;
 
     while(m_GameEventQueue.empty() == false) {
-      p_event = m_GameEventQueue.front();
+      v_event = m_GameEventQueue.front();
       m_GameEventQueue.pop();
-      destroyGameEvent(p_event);
+      destroyGameEvent(v_event);
     }
   }
 
@@ -1642,9 +1398,9 @@ namespace vapp {
     for(int i=0;i<v_replayEvents->size();i++) {
       /* Not passed? And with a time stamp that tells it should have happened
          by now? */
-      if(!(*v_replayEvents)[i]->bPassed && (*v_replayEvents)[i]->fTime < getTime()) {
+      if(!(*v_replayEvents)[i]->bPassed && (*v_replayEvents)[i]->Event->getEventTime() < getTime()) {
         /* Nice. Handle this event, replay style */
-        _HandleReplayEvent(&((*v_replayEvents)[i]->Event));
+        _HandleReplayEvent((*v_replayEvents)[i]->Event);
         
         /* Pass it */
         (*v_replayEvents)[i]->bPassed = true;
@@ -1655,9 +1411,9 @@ namespace vapp {
        REVERSE events */
     for(int i=v_replayEvents->size()-1;i>=0;i--) {
       /* Passed? And with a time stamp larger than current time? */
-      if((*v_replayEvents)[i]->bPassed && (*v_replayEvents)[i]->fTime > getTime()) {
+      if((*v_replayEvents)[i]->bPassed && (*v_replayEvents)[i]->Event->getEventTime() > getTime()) {
         /* Nice. Handle this event, replay style BACKWARDS */
-        _HandleReverseReplayEvent(&((*v_replayEvents)[i]->Event));
+	(*v_replayEvents)[i]->Event->revert(this);
 
         /* Un-pass it */
         (*v_replayEvents)[i]->bPassed = false;
@@ -1665,245 +1421,40 @@ namespace vapp {
     }
   }
 
-  void MotoGame::_HandleReplayEvent(GameEvent *pEvent) {
-    /* Note how the number of events handled here are smaller than in the 
-       primary event handling loop. That's because when playing replays, we
-       only care about the most basic events - not events causing other
-       events to be triggered */
-    //printf("{%s}\n",_EventName(pEvent->Type));
-       
-    switch(pEvent->Type) {
-    case GAME_EVENT_ENTITY_DESTROYED:
-      {
-        /* Destroying a strawberry? */
-        if(pEvent->u.EntityDestroyed.Type == ET_STRAWBERRY) {
-	        /* Spawn some particles */
-	        for(int i=0;i<6;i++)
-  	        m_renderer->spawnParticle(PT_STAR,Vector2f(pEvent->u.EntityDestroyed.fPosX,pEvent->u.EntityDestroyed.fPosY),Vector2f(0,0),5);
-
-	        /* Play yummy-yummy sound */
-	        Sound::playSampleByName("Sounds/PickUpStrawberry.ogg");
-	      }
-      
-	      /* Destroy entity */
-	      Entity *pEntityToDestroy = findEntity(pEvent->u.EntityDestroyed.cEntityID);
-	      if(pEntityToDestroy != NULL) {
-	        deleteEntity(pEntityToDestroy);
-	      }        
-	      else
-	        Log("** Warning ** : Failed to destroy entity '%s' specified by replay!",
-	            pEvent->u.EntityDestroyed.cEntityID);
-      }
+  void MotoGame::_HandleReplayEvent(MotoGameEvent *pEvent) {     
+    switch(pEvent->getType()) {
+      GAME_EVENT_PLAYER_TOUCHES_ENTITY:
+      /* touching an entity creates events, so, don't call it */
+      case GAME_EVENT_LUA_CALL_SETPLAYERPOSITION:
+      /* don't set player position while it's already made by the game */
+      /* however, this state is recorded : you can imagine than an effect
+	 or something is done when this append to alert the player he took
+	 a teleporter
+      */
       break;
-
-    case GAME_EVENT_LUA_CALL_SETENTITYPOS:
-      {
-	SetEntityPos(pEvent->u.LuaCallSetentitypos.cEntityID,
-		     pEvent->u.LuaCallSetentitypos.x,
-		     pEvent->u.LuaCallSetentitypos.y);
-      }
+      default:
+      pEvent->doAction(this);
       break;
-
-    case GAME_EVENT_LUA_CALL_CLEARMESSAGES:
-      {
-	clearGameMessages();
-      }
-      break;
-      
-    case GAME_EVENT_LUA_CALL_PLACEINGAMEARROW:
-      {
-	PlaceInGameArrow(pEvent->u.LuaCallPlaceingamearrow.x,
-			 pEvent->u.LuaCallPlaceingamearrow.y,
-			 pEvent->u.LuaCallPlaceingamearrow.angle);
-      }
-      break;
-      
-    case GAME_EVENT_LUA_CALL_PLACESCREENARROW:
-      {
-	PlaceScreenArrow(pEvent->u.LuaCallPlaceingamearrow.x,
-			 pEvent->u.LuaCallPlaceingamearrow.y,
-			 pEvent->u.LuaCallPlaceingamearrow.angle);
-      }
-      break;
-      
-    case GAME_EVENT_LUA_CALL_HIDEARROW:
-      {
-	getArrowPointer().nArrowPointerMode = 0;
-      }
-      break;
-      
-    case GAME_EVENT_LUA_CALL_MESSAGE:
-      {
-	gameMessage(pEvent->u.LuaCallMessage.cMessage); 
-      }
-      break;
-      
-    case GAME_EVENT_LUA_CALL_MOVEBLOCK:
-      {
-	MoveBlock(pEvent->u.LuaCallMoveblock.cBlockID,
-		  pEvent->u.LuaCallMoveblock.x,
-		  pEvent->u.LuaCallMoveblock.y);
-      }
-      break;
-      
-    case GAME_EVENT_LUA_CALL_SETBLOCKPOS:
-      {
-	SetBlockPos(pEvent->u.LuaCallSetblockpos.cBlockID,
-		    pEvent->u.LuaCallSetblockpos.x,
-		    pEvent->u.LuaCallSetblockpos.y);
-      }
-      break;
-      
-    case GAME_EVENT_LUA_CALL_SETGRAVITY:
-      {
-	setGravity(pEvent->u.LuaCallSetgravity.x,
-		   pEvent->u.LuaCallSetgravity.y);
-		   
-      }
-      break;
-      
-    case GAME_EVENT_LUA_CALL_SETPLAYERPOSITION:
-      {
-	/* don't set player position while it's already made by the game */
-	/* however, this state is recorded : you can imagine than an effect
-	   or something is done when this append to alert the player he took
-	   a teleporter
-	*/
-      }
-      break;
-
-    case GAME_EVENT_LUA_CALL_SETBLOCKCENTER:
-      {
-	SetBlockCenter(pEvent->u.LuaCallSetBlockCenter.cBlockID,
-		       pEvent->u.LuaCallSetBlockCenter.x,
-		       pEvent->u.LuaCallSetBlockCenter.y);
-      }
-      break;
-      
-    case GAME_EVENT_LUA_CALL_SETBLOCKROTATION:
-      {
-        SetBlockRotation(pEvent->u.LuaCallSetBlockRotation.cBlockID,
-			 pEvent->u.LuaCallSetBlockRotation.fAngle);
-      }
-      break;
-      
-    case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROTATION:
-      {
-	m_SDynamicObjects
-	  .push_back(new SDynamicEntityRotation(pEvent->u.LuaCallSetDynamicEntityRotation.cEntityID,
-						pEvent->u.LuaCallSetDynamicEntityRotation.fInitAngle,
-						pEvent->u.LuaCallSetDynamicEntityRotation.fRadius,
-						pEvent->u.LuaCallSetDynamicEntityRotation.fPeriod,
-						pEvent->u.LuaCallSetDynamicEntityRotation.startTime,
-						pEvent->u.LuaCallSetDynamicEntityRotation.endTime
-
-					     ));
-      }
-    break;
-
-    case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYTRANSLATION:
-      {
-	m_SDynamicObjects
-	  .push_back(new SDynamicEntityTranslation(pEvent->u.LuaCallSetDynamicEntityTranslation.cEntityID,
-						pEvent->u.LuaCallSetDynamicEntityTranslation.fX,
-						pEvent->u.LuaCallSetDynamicEntityTranslation.fY,
-						pEvent->u.LuaCallSetDynamicEntityTranslation.fPeriod,
-						pEvent->u.LuaCallSetDynamicEntityTranslation.startTime,
-						pEvent->u.LuaCallSetDynamicEntityTranslation.endTime
-
-					     ));
-      }
-    break;
-
-    case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYNONE:
-      {
-	removeSDynamicOfObject(pEvent->u.LuaCallSetDynamicEntityNone.cEntityID);
-      }
-      break;
-
-    case GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKROTATION:
-      {
-	m_SDynamicObjects
-	  .push_back(new SDynamicBlockRotation(pEvent->u.LuaCallSetDynamicBlockRotation.cBlockID,
-						pEvent->u.LuaCallSetDynamicBlockRotation.fInitAngle,
-						pEvent->u.LuaCallSetDynamicBlockRotation.fRadius,
-						pEvent->u.LuaCallSetDynamicBlockRotation.fPeriod,
-						pEvent->u.LuaCallSetDynamicBlockRotation.startTime,
-						pEvent->u.LuaCallSetDynamicBlockRotation.endTime
-
-					     ));
-      }
-    break;
-
-    case GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKTRANSLATION:
-      {
-	m_SDynamicObjects
-	  .push_back(new SDynamicBlockTranslation(pEvent->u.LuaCallSetDynamicBlockTranslation.cBlockID,
-						pEvent->u.LuaCallSetDynamicBlockTranslation.fX,
-						pEvent->u.LuaCallSetDynamicBlockTranslation.fY,
-						pEvent->u.LuaCallSetDynamicBlockTranslation.fPeriod,
-						pEvent->u.LuaCallSetDynamicBlockTranslation.startTime,
-						pEvent->u.LuaCallSetDynamicBlockTranslation.endTime
-
-					     ));
-      }
-    break;
-
-    case GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKNONE:
-      {
-	removeSDynamicOfObject(pEvent->u.LuaCallSetDynamicBlockNone.cBlockID);
-      }
-      break;
-
-
-    case GAME_EVENT_LUA_CALL_CAMERAZOOM:
-      {
-	CameraZoom(pEvent->u.LuaCallCameraZoom.fZoom);
-      }
-      break;
-
-    case GAME_EVENT_LUA_CALL_CAMERAMOVE:
-      {
-	CameraMove(pEvent->u.LuaCallCameraMove.x, pEvent->u.LuaCallCameraMove.y);
-      }
-      break;
-
-
     }
   }
   
-  void MotoGame::_HandleReverseReplayEvent(GameEvent *pEvent) {
-    /* Apply events with reverse results */
-    switch(pEvent->Type) {
-    case GAME_EVENT_ENTITY_DESTROYED:
-      {
-	/* Un-destroy entity (create it :P) */
-	Entity *pEntityToDestroy = findEntity(pEvent->u.EntityDestroyed.cEntityID);
+  void MotoGame::revertEntityDestroyed(std::string p_entityID, EntityType p_type,
+				       float p_size, float p_x, float p_y) {
+    /* Un-destroy entity (create it :P) */
+	Entity *pEntityToDestroy = findEntity(p_entityID);
 	if(pEntityToDestroy == NULL) {
-	  Entity *pNew = _SpawnEntity(pEvent->u.EntityDestroyed.cEntityID,
-				      pEvent->u.EntityDestroyed.Type,
-				      Vector2f(pEvent->u.EntityDestroyed.fPosX,
-					       pEvent->u.EntityDestroyed.fPosY),
+	  Entity *pNew = _SpawnEntity(p_entityID, p_type,
+				      Vector2f(p_x, p_y),
 				      NULL);
 	  if(pNew != NULL) {
-	    pNew->fSize = pEvent->u.EntityDestroyed.fSize;
+	    pNew->fSize = p_size;
 	  }					                              
 	}        
-	else
-	  Log("** Warning ** : Failed to create entity '%s' specified by replay - it's already there!",
-	      pEvent->u.EntityDestroyed.cEntityID);
-      }
-      break;
-
-    default:
-      {
-	/* hum : do nothing */
-	/* what can i do ?  */
-      }
-      break;
-
-    }
-  }  
+	else {
+	  Log("** Warning ** : Failed to create entity '%s' - it's already there!",
+	      p_entityID);
+	}
+  }
 
   void MotoGame::SetEntityPos(String pEntityID, float pX, float pY) {
     /* Find the specified entity and set its position */
@@ -1927,6 +1478,10 @@ namespace vapp {
     m_pMotoGame->getArrowPointer().nArrowPointerMode = 2;
     m_pMotoGame->getArrowPointer().ArrowPointerPos = Vector2f(pX, pY);
     m_pMotoGame->getArrowPointer().fArrowPointerAngle = pAngle;
+  }
+
+  void MotoGame::HideArrow() {
+    getArrowPointer().nArrowPointerMode = 0;
   }
 
   void MotoGame::MoveBlock(String pBlockID, float pX, float pY) {
@@ -2009,13 +1564,15 @@ namespace vapp {
     
     /* Start looking for events */
     for(int i=0;i<v_replayEvents->size();i++) {
-      if((*v_replayEvents)[i]->Event.Type == GAME_EVENT_ENTITY_DESTROYED) {
-	EntityType v_entityType = (*v_replayEvents)[i]->Event.u.EntityDestroyed.Type;
+      MotoGameEvent *v_event = (*v_replayEvents)[i]->Event;
+
+      if(v_event->getType() == GAME_EVENT_ENTITY_DESTROYED) {
+	EntityType v_entityType = ((MGE_EntityDestroyed*)v_event)->getEntityType();
 	
 	if(v_entityType == ET_STRAWBERRY) {
 	  /* new Strawberry for ghost */
-	  m_ghostLastStrawberries.push_back((*v_replayEvents)[i]->fTime);
-      }
+	  m_ghostLastStrawberries.push_back((*v_replayEvents)[i]->Event->getEventTime());
+	}
       }
     }
   }
@@ -2070,4 +1627,54 @@ namespace vapp {
     }
   }
 
+  void MotoGame::killPlayer() {
+    m_bDead = true;
+  }
+
+  void MotoGame::playerEntersZone(LevelZone *pZone) {
+    if(m_isScriptActiv) {
+      scriptCallTblVoid(pZone->ID, "OnEnter");
+    }
+  }
+  
+  void MotoGame::playerLeavesZone(LevelZone *pZone) {
+    if(m_isScriptActiv) {
+      scriptCallTblVoid(pZone->ID, "OnLeave");
+    }
+  }
+
+  void MotoGame::playerTouchesEntity(std::string p_entityID, bool p_bTouchedWithHead) {
+    Entity *pEntityToTouch = findEntity(p_entityID);
+    if(pEntityToTouch != NULL) {
+      touchEntity(pEntityToTouch, p_bTouchedWithHead);
+    }
+  }
+
+  void MotoGame::entityDestroyed(std::string p_entityID,
+				 EntityType p_type,
+				 float p_fSize,
+				 float p_fPosX, float p_fPosY) {
+     if(p_type == ET_STRAWBERRY) {
+       /* Spawn some particles */
+       for(int i=0;i<6;i++) {
+	 m_renderer->spawnParticle(PT_STAR,Vector2f(p_fPosX, p_fPosY), Vector2f(0,0), 5);
+       }	
+
+       /* Play yummy-yummy sound */
+       Sound::playSampleByName("Sounds/PickUpStrawberry.ogg");
+     }
+
+     /* Destroy entity */
+     Entity *pEntityToDestroy = findEntity(p_entityID);
+     if(pEntityToDestroy != NULL) {
+       deleteEntity(pEntityToDestroy);
+     } else {
+       Log("** Warning ** : Failed to destroy entity '%s' !",
+	   p_entityID);
+     }
+  }
+
+  void MotoGame::addDynamicObject(SDynamicObject *p_obj) {
+    m_SDynamicObjects.push_back(p_obj);
+  }
 }

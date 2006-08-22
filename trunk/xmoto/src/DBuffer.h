@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __DBUFFER_H__
 
 #include "VCommon.h"
+#include "VExcept.h"
 
 namespace vapp {
 
@@ -62,6 +63,23 @@ namespace vapp {
       const char *convertOutputToInput(void);
       
       /* Some I/O */
+      void write(std::string s) {
+	*this << s.length();
+	*this << s.c_str();
+      }
+
+      void read(std::string &s) {
+	int n;
+	char c[256];
+	*this >> n;
+	if(n <= 0) {
+	  throw Exception("Unable to read the string !");
+	}
+	this->readBuf(c, n);
+	c[n] = '\0';
+	s = c;
+      }
+
       template<typename _T> void operator <<(_T n) {
         writeBuf_LE(reinterpret_cast<const char *>(&n),sizeof(_T));
       }

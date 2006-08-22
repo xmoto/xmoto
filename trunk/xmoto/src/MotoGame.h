@@ -22,6 +22,22 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __MOTOGAME_H__
 #define __MOTOGAME_H__
 
+namespace vapp {
+  /*===========================================================================
+    Entity object types
+    ===========================================================================*/
+  enum EntityType {
+    ET_UNASSIGNED,
+    ET_SPRITE,
+    ET_PLAYERSTART,
+    ET_ENDOFLEVEL,
+    ET_WRECKER,
+    ET_STRAWBERRY,
+    ET_PARTICLESOURCE,
+    ET_DUMMY
+  };
+}
+
 #include "VCommon.h"
 #include "VApp.h"
 #include "VMath.h"
@@ -31,9 +47,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Collision.h"
 #include "ScriptDynamicObjects.h"
 #include "SomersaultCounter.h"
+#include "GameEvents.h"
 
 namespace vapp {
 
+  class MotoGameEvent;
   class Replay;
   class GameRenderer;
 
@@ -314,23 +332,9 @@ namespace vapp {
     /* Driving */
     float fCurBrake,fCurEngine;    
   };
-  
-	/*===========================================================================
-	Entity object types
-  ===========================================================================*/
-  enum EntityType {
-    ET_UNASSIGNED,
-    ET_SPRITE,
-    ET_PLAYERSTART,
-    ET_ENDOFLEVEL,
-    ET_WRECKER,
-    ET_STRAWBERRY,
-    ET_PARTICLESOURCE,
-    ET_DUMMY
-  };
 
-	/*===========================================================================
-	Arrow pointer
+  /*===========================================================================
+  Arrow pointer
   ===========================================================================*/
   struct ArrowPointer {
     ArrowPointer() {
@@ -342,8 +346,8 @@ namespace vapp {
     float fArrowPointerAngle;
   };
   
-	/*===========================================================================
-	Entity object
+  /*===========================================================================
+  Entity object
   ===========================================================================*/
   struct Entity {
     Entity() {
@@ -382,16 +386,16 @@ namespace vapp {
     /* ET_DUMMY */
   };
 
-	/*===========================================================================
-	Requested player state
+  /*===========================================================================
+  Requested player state
   ===========================================================================*/
   struct GameReqPlayerPos {
     Vector2f Pos;
     bool bDriveRight;  
   };
 
-	/*===========================================================================
-	Game message
+  /*===========================================================================
+  Game message
   ===========================================================================*/
   struct GameMessage {
     bool bNew;                        /* Uninitialized */
@@ -401,296 +405,40 @@ namespace vapp {
     int nAlpha;                       /* Alpha amount */
     bool bOnce;                       /* Unique message */
   };  
-
-	/*===========================================================================
-	Game event types
-  ===========================================================================*/
-  /* never change the order of these values ! 
-     ALWAYS ADD VALUES at the end : (otherwise, old replays will not work !)
-  */
-  enum GameEventType {
-    GAME_EVENT_PLAYER_DIES,
-    GAME_EVENT_PLAYER_ENTERS_ZONE,
-    GAME_EVENT_PLAYER_LEAVES_ZONE,
-    GAME_EVENT_PLAYER_TOUCHES_ENTITY,
-    GAME_EVENT_ENTITY_DESTROYED,
-    
-    GAME_EVENT_LUA_CALL_CLEARMESSAGES,
-    GAME_EVENT_LUA_CALL_PLACEINGAMEARROW,
-    GAME_EVENT_LUA_CALL_PLACESCREENARROW,
-    GAME_EVENT_LUA_CALL_HIDEARROW,
-    GAME_EVENT_LUA_CALL_MESSAGE,
-    GAME_EVENT_LUA_CALL_MOVEBLOCK,
-    GAME_EVENT_LUA_CALL_SETBLOCKPOS,
-    GAME_EVENT_LUA_CALL_SETGRAVITY,
-    GAME_EVENT_LUA_CALL_SETPLAYERPOSITION,
-    GAME_EVENT_LUA_CALL_SETENTITYPOS,
-    GAME_EVENT_LUA_CALL_SETBLOCKCENTER,
-    GAME_EVENT_LUA_CALL_SETBLOCKROTATION,
-
-    GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROTATION,
-    GAME_EVENT_LUA_CALL_SETDYNAMICENTITYTRANSLATION,
-    GAME_EVENT_LUA_CALL_SETDYNAMICENTITYNONE,
-
-    GAME_EVENT_LUA_CALL_CAMERAZOOM,
-    GAME_EVENT_LUA_CALL_CAMERAMOVE,
-
-    GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKROTATION,
-    GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKTRANSLATION,
-    GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKNONE
-  };
-  
-	/*===========================================================================
-	Game event
-  ===========================================================================*/
-  struct GameEventPlayerDies {
-  	bool bWrecker;								/* Killed by wrecker */					
-  };
-  
-  struct GameEventEntityDestroyed {
-		/* Have enough information so that we can recreate the entity */
-		char cEntityID[64];					  /* ID of entity */
-		EntityType Type;              /* Type */
-		float fSize;									/* Size of it */
-		float fPosX,fPosY;					  /* Position of it */
-  };
-  
-  struct GameEventPlayerEntersZone {
-		LevelZone *pZone;							/* Pointer to zone */
-  };
-  
-  struct GameEventPlayerLeavesZone {
-		LevelZone *pZone;							/* Pointer to zone */
-  };
-  
-  struct GameEventPlayerTouchesEntity {
-		char cEntityID[64];					  /* ID of entity */
-		bool bHead;										/* Touched with head? */
-  };
-
-
-  struct GameEventLuaCallClearmessages {
-    /* nothing */
-  };
-  
-  struct GameEventLuaCallPlaceingamearrow {
-    float x, y, angle;
-  };
-  
-  struct GameEventLuaCallPlacescreenarrow {
-    float x, y, angle;
-  };
-  
-  struct GameEventLuaCallHidearrow {
-  };
-  
-  struct GameEventLuaCallMessage {
-    char cMessage[512]; /* message */
-  };
-  
-  struct GameEventLuaCallMoveblock {
-    char  cBlockID[64]; /* ID of block */
-    float x, y;
-  };
-  
-  struct GameEventLuaCallSetblockpos {
-    char  cBlockID[64]; /* ID of block */
-    float x, y;
-  };
-  
-  struct GameEventLuaCallSetgravity {
-    float x, y;
-  };
-  
-  struct GameEventLuaCallSetplayerposition {
-    float x, y;
-    bool bRight;
-  };
-  
-  struct GameEventLuaCallSetentitypos {
-    char  cEntityID[64]; /* ID of entity */
-    float x,y;
-  };
-  
-  struct GameEventLuaCallSetBlockCenter {
-    char  cBlockID[64]; /* ID of block */
-    float x,y;
-  };
-  
-  struct GameEventLuaCallSetBlockRotation {
-    char  cBlockID[64]; /* ID of block */
-    float fAngle;
-  };
-  
-  struct GameEventLuaCallSetDynamicEntityRotation {
-    char  cEntityID[64]; /* ID of entity */
-    float fInitAngle;
-    float fRadius;
-    float fPeriod;
-    int   startTime;
-    int   endTime;
-  };
-
-  struct GameEventLuaCallSetDynamicEntityTranslation {
-    char  cEntityID[64]; /* ID of entity */
-    float fX;
-    float fY;
-    float fPeriod;
-    int   startTime;
-    int   endTime;
-  };
- 
-  struct GameEventLuaCallSetDynamicEntityNone {
-    char cEntityID[64]; /* ID of entity */
-  };
-
-  struct GameEventLuaCallSetDynamicBlockRotation {
-    char  cBlockID[64]; /* ID of block */
-    float fInitAngle;
-    float fRadius;
-    float fPeriod;
-    int   startTime;
-    int   endTime;
-  };
-
-  struct GameEventLuaCallSetDynamicBlockTranslation {
-    char  cBlockID[64]; /* ID of block */
-    float fX;
-    float fY;
-    float fPeriod;
-    int   startTime;
-    int   endTime;
-  };
-
-  struct GameEventLuaCallSetDynamicBlockNone {
-    char cBlockID[64]; /* ID of block */
-  };
-
-  struct GameEventLuaCallCameraZoom {
-    float fZoom;
-  };
-
-  struct GameEventLuaCallCameraMove {
-    float x, y;
-  };
-
-
-  struct GameEvent {
-    int nSeq;                         /* Sequence number */
-    GameEventType Type;								/* Type of event */
-    
-    union GameEvent_u {								
-      /* GAME_EVENT_PLAYER_DIES */		
-      GameEventPlayerDies PlayerDies;								
-      
-      /* GAME_EVENT_ENTITY_DESTROYED */
-      GameEventEntityDestroyed EntityDestroyed;
-      
-      /* GAME_EVENT_PLAYER_ENTERS_ZONE */
-      GameEventPlayerEntersZone PlayerEntersZone;
-      
-      /* GAME_EVENT_PLAYER_LEAVES_ZONE */
-      GameEventPlayerLeavesZone PlayerLeavesZone;
-      
-      /* GAME_EVENT_PLAYER_TOUCHES_ENTITY */
-      GameEventPlayerTouchesEntity PlayerTouchesEntity;
-
-      /* GAME_EVENT_LUA_CALL_CLEARMESSAGES     */
-      GameEventLuaCallClearmessages LuaCallClearmessages;
-
-      /* GAME_EVENT_LUA_CALL_PLACEINGAMEARROW  */
-      GameEventLuaCallPlaceingamearrow LuaCallPlaceingamearrow;
-
-      /* GAME_EVENT_LUA_CALL_PLACESCREENARROW  */
-      GameEventLuaCallPlacescreenarrow LuaCallPlacescreenarrow;
-
-      /* GAME_EVENT_LUA_CALL_HIDEARROW	 */
-      GameEventLuaCallHidearrow LuaCallHidearrow;
-
-      /* GAME_EVENT_LUA_CALL_MESSAGE		 */
-      GameEventLuaCallMessage LuaCallMessage;
-
-      /* GAME_EVENT_LUA_CALL_MOVEBLOCK	 */
-      GameEventLuaCallMoveblock LuaCallMoveblock;
-
-      /* GAME_EVENT_LUA_CALL_SETBLOCKPOS	 */
-      GameEventLuaCallSetblockpos LuaCallSetblockpos;
-
-      /* GAME_EVENT_LUA_CALL_SETGRAVITY	 */
-      GameEventLuaCallSetgravity LuaCallSetgravity;
-
-      /* GAME_EVENT_LUA_CALL_SETPLAYERPOSITION */
-      GameEventLuaCallSetplayerposition LuaCallSetplayerposition;
-
-      /* GAME_EVENT_LUA_CALL_SETENTITYPOS      */
-      GameEventLuaCallSetentitypos LuaCallSetentitypos;
-      
-      /* GAME_EVENT_LUA_CALL_SETBLOCKCENTER */
-      GameEventLuaCallSetBlockCenter LuaCallSetBlockCenter;
-
-      /* GAME_EVENT_LUA_CALL_SETBLOCKROTATION */
-      GameEventLuaCallSetBlockRotation LuaCallSetBlockRotation;
-
-      /* GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROTATION */
-      GameEventLuaCallSetDynamicEntityRotation LuaCallSetDynamicEntityRotation;
-
-      /* GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROTATION */
-      GameEventLuaCallSetDynamicEntityTranslation LuaCallSetDynamicEntityTranslation;
-
-      /* GAME_EVENT_LUA_CALL_SETDYNAMICENTITYNONE */
-      GameEventLuaCallSetDynamicEntityNone LuaCallSetDynamicEntityNone;
-
-      /* GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKROTATION */
-      GameEventLuaCallSetDynamicBlockRotation LuaCallSetDynamicBlockRotation;
-
-      /* GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKROTATION */
-      GameEventLuaCallSetDynamicBlockTranslation LuaCallSetDynamicBlockTranslation;
-
-      /* GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKNONE */
-      GameEventLuaCallSetDynamicBlockNone LuaCallSetDynamicBlockNone;
-
-      /* GAME_EVENT_LUA_CALL_CAMERAZOOM */
-      GameEventLuaCallCameraZoom LuaCallCameraZoom;
-
-      /* GAME_EVENT_LUA_CALL_CAMERAMOVE */
-      GameEventLuaCallCameraMove LuaCallCameraMove;
-
-    } u;		
-  };
     
   struct RecordedGameEvent {
-    float fTime;                    /* Time of event */
-    GameEvent Event;                /* Event itself */
+    MotoGameEvent *Event;           /* Event itself */
     bool bPassed;                   /* Whether we have passed it */
   };
 
-	/*===========================================================================
-	Game object
+  /*===========================================================================
+  Game object
   ===========================================================================*/
   class MotoGame {
     public:          
       MotoGame() {m_pLevelSrc=NULL;
                   m_bSqueeking=false;
                   clearStates();
-		  m_lastCallToEveryHundreath = 0.0;
+      m_lastCallToEveryHundreath = 0.0;
 #if defined(ALLOW_GHOST)
-		  m_showGhostTimeDiff = true;
-		  m_isGhostActive = false;
+      m_showGhostTimeDiff = true;
+      m_isGhostActive = false;
 #endif
-		  m_renderer = NULL;
+      m_renderer = NULL;
+      m_isScriptActiv = false;
       }
       ~MotoGame() {endLevel();}     
     
       /* Methods */
       void playLevel(
 #if defined(ALLOW_GHOST)    
-		     Replay *m_pGhostReplay,
+         Replay *m_pGhostReplay,
 #endif
-		     LevelSrc *pLevelSrc, bool bIsAReplay);
+         LevelSrc *pLevelSrc, bool bIsAReplay);
       void updateLevel(float fTimeStep,SerializedBikeState *pReplayState,Replay *p_replay);
       void endLevel(void);
       
-      void touchEntity(Entity *pEntity,bool bHead, bool bEnableScript); 
+      void touchEntity(Entity *pEntity,bool bHead); 
       void deleteEntity(Entity *pEntity);
       int countEntitiesByType(EntityType Type);
       Entity *findEntity(const std::string &ID);
@@ -707,10 +455,10 @@ namespace vapp {
       float getBikeEngineRPM(void);
       float getBikeEngineSpeed();
 
-      GameEvent *createGameEvent(GameEventType Type);
-      void destroyGameEvent(GameEvent *p_event);
-      GameEvent *getNextGameEvent(void);
-      int getNumPendingGameEvents(void);
+      void createGameEvent(MotoGameEvent *p_event);
+      void destroyGameEvent(MotoGameEvent *p_event);
+      MotoGameEvent* getNextGameEvent();
+      int getNumPendingGameEvents();
       void cleanEventsQueue();
       
       void setPlayerPosition(float x,float y,bool bFaceRight);
@@ -776,6 +524,7 @@ namespace vapp {
       void SetEntityPos(String pEntityID, float pX, float pY);
       void PlaceInGameArrow(float pX, float pY, float pAngle);
       void PlaceScreenArrow(float pX, float pY, float pAngle);
+      void HideArrow();
       void MoveBlock(String pBlockID, float pX, float pY);
       void SetBlockPos(String pBlockID, float pX, float pY);
       void SetBlockCenter(String pBlockID, float pX, float pY);
@@ -786,9 +535,21 @@ namespace vapp {
       void CameraZoom(float pZoom);
       void CameraMove(float p_x, float p_y);
 
-    private:         
+      void killPlayer();
+      void playerEntersZone(LevelZone *pZone);
+      void playerLeavesZone(LevelZone *pZone);
+      void playerTouchesEntity(std::string p_entityID, bool p_bTouchedWithHead);
+      void entityDestroyed(std::string p_entityID, EntityType p_type,
+			   float p_fSize, float p_fPosX, float p_fPosY);
+      void addDynamicObject(SDynamicObject* p_obj);
+      void removeSDynamicOfObject(std::string pObject);
+
+      void revertEntityDestroyed(std::string p_entityID, EntityType p_type,
+				 float p_size, float p_x, float p_y);
+
+  private:         
       /* Data */
-      std::queue<GameEvent*> m_GameEventQueue;
+      std::queue<MotoGameEvent*> m_GameEventQueue;
       
       float m_fTime,m_fNextAttitudeCon;
       float m_fFinishTime,m_fAttitudeCon;
@@ -909,6 +670,8 @@ namespace vapp {
       /* for EveryHundreath function */
       float m_lastCallToEveryHundreath;
             
+      bool m_isScriptActiv; /* change this variable to activ/desactiv scripting */
+
       /* Helpers */
       void _GenerateLevel(void);          /* Called by playLevel() to 
                                              prepare the level */
@@ -937,17 +700,15 @@ namespace vapp {
 
       void cleanScriptDynamicObjects();
       void nextStateScriptDynamicObjects();
-      void removeSDynamicOfObject(std::string pObject);
 
       signed char _MapCoordTo8Bits(float fRef,float fMaxDiff,float fCoord);
       float _Map8BitsToCoord(float fRef,float fMaxDiff,signed char c);
       unsigned short _MatrixTo16Bits(const float *pfMatrix);
       void _16BitsToMatrix(unsigned short n16,float *pfMatrix);
-      void _SerializeGameEventQueue(DBuffer &Buffer,GameEvent *pEvent);
+      void _SerializeGameEventQueue(DBuffer &Buffer,MotoGameEvent *pEvent);
       
       void _UpdateReplayEvents(Replay *p_replay);
-      void _HandleReplayEvent(GameEvent *pEvent);
-      void _HandleReverseReplayEvent(GameEvent *pEvent);
+      void _HandleReplayEvent(MotoGameEvent *pEvent);
       
       void _UpdateDynamicCollisionLines(void);
       
