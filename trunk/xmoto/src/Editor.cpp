@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *  As usual, I was shocked by the level of complexity of an editor :)
  */
 #define XMOTO_EDITOR
+#include "BuildConfig.h"
 #include "Editor.h"
 #include "VFileIO.h"
 #include "VBezier.h"
@@ -37,6 +38,21 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 namespace vapp {
 
+  /*============================================================================
+  Editor app constructor
+  ============================================================================*/
+  EditorApp::EditorApp() {
+    m_pLevelSrc=NULL; 
+    m_bLeftButtonDown=false; 
+    m_pEntityToCopy=NULL; 
+    m_bJustPackage=false;
+#if defined(SUPPORT_WEBACCESS)
+    m_themeChoicer = new ThemeChoicer(NULL,NULL);         
+#else
+    m_themeChoicer = new ThemeChoicer();
+#endif
+  }
+  
   /*============================================================================
   Draw graphics
   ============================================================================*/

@@ -1,4 +1,6 @@
 Since 0.2.0
+* level no doubt : start ; pause 30 sec ; run very fast ->
+   http://testnitrx.free.fr/xmoto/screenshot0006.png : a block appears !
 * to not be able to go into the ground via the side switch
 * BUG : xmoto-edit rgeznlre -> segfault
 * BUG: (21:17:09) nx:   essaye le niveau "quetsche" au départ, tu

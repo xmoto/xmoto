@@ -15,7 +15,7 @@ class SwapEndian {
   static short	LittleShort (short  s) {return _LittleShort(s);	}
   static int	BigLong     (int    l) {return _BigLong(l);    	}
   static int	LittleLong  (int    l) {return _LittleLong(l); 	}
-  static float	BigFloat    (float  f) {return _BigFloat(f);   	}
+  static float 	BigFloat    (float  f) {return _BigFloat(f);   	}
   static float	LittleFloat (float  f) {return _LittleFloat(f);	}
   static double	BigDouble   (double d) {return _BigDouble(d);   }
   static double	LittleDouble(double d) {return _LittleDouble(d);}

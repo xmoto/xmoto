@@ -385,7 +385,7 @@ namespace vapp {
   /*===========================================================================
   Main rendering function
   ===========================================================================*/
-  void GameRenderer::render(void) {
+  void GameRenderer::render(bool bIsPaused) {
     float v_move_camera_max;
     float v_fDesiredHorizontalScrollShift = 0.0;
     float v_fDesiredVerticalScrollShift   = 0.0;
@@ -408,7 +408,7 @@ namespace vapp {
     m_pPlayTime->setCaption(getParent()->formatTime(getGameObject()->getTime()));
 
     /* Prepare for rendering frame */    
-    if(getGameObject()->getTime() > m_fNextParticleUpdate) {
+    if(getGameObject()->getTime() > m_fNextParticleUpdate && !bIsPaused) {
       _UpdateParticles(0.025f);
       m_fNextParticleUpdate = getGameObject()->getTime() + 0.025f; 
     }

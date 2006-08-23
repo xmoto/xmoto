@@ -91,6 +91,17 @@ namespace vapp {
     return NULL;
   }  
 
+  Particle *GameRenderer::_GetNewestParticle(ParticleType PType) {
+    /* Return newest particle of a given type */
+    Particle *pNewest = NULL;
+    for(int i=0;i<m_Particles.size();i++) {
+      if(m_Particles[i]->Type == PType &&
+         (pNewest==NULL || pNewest->fSpawnTime < m_Particles[i]->fSpawnTime))
+        pNewest = m_Particles[i];
+    }
+    return pNewest;
+  }
+
   void GameRenderer::_UpdateParticles(float fTimeStep) {
     MotoGame *pGame = getGameObject();
     
@@ -104,7 +115,7 @@ namespace vapp {
       {
         for(int i=0;i<pGame->getEntities().size();i++) {
           if(pGame->getEntities()[i]->Type == ET_PARTICLESOURCE && 
-            pGame->getTime()>pGame->getEntities()[i]->fNextParticleTime) {
+            pGame->getTime() > pGame->getEntities()[i]->fNextParticleTime) {
             
             if(pGame->getEntities()[i]->ParticleType == "Smoke") {
               /* Generate smoke */

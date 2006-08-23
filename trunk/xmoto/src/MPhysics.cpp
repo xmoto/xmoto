@@ -126,7 +126,7 @@ namespace vapp {
     else {
       m_nStillFrames=0;
     }
-    bool bSleep = false;
+    bool bSleep = false;        
     
     //printf("{%d}\n",m_Collision.isDynamicTouched());
     //printf("]",m_nStillFrames);        

@@ -251,14 +251,7 @@ namespace vapp {
   ===========================================================================*/
   class EditorApp : public App {
     public:
-      EditorApp() {m_pLevelSrc=NULL; m_bLeftButtonDown=false; m_pEntityToCopy=NULL; m_bJustPackage=false;
-      m_themeChoicer = new ThemeChoicer(
-#if defined(SUPPORT_WEBACCESS)
-					NULL,
-					NULL
-#endif
-				      );
-}
+      EditorApp();
     
       /* Virtual methods */
       virtual void drawFrame(void);

@@ -857,9 +857,9 @@ bool ThemeChoicer::ExistThemeName(std::string p_themeName) {
 
 #if defined(SUPPORT_WEBACCESS)
   ThemeChoicer::ThemeChoicer(vapp::WWWAppInterface *p_WebApp,
-			     const ProxySettings *p_proxy_settings) {
+			     const ProxySettings *p_proxy_settings) {			     			     
 #else
-  ThemeChoicer::ThemeChoicer() {  
+  ThemeChoicer::ThemeChoicer(void) {  
 #endif
 
 #if defined(SUPPORT_WEBACCESS)

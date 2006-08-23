@@ -987,6 +987,7 @@ namespace vapp {
   void GameApp::drawFrame(void) {
     char cTemp[256];
     bool bValidGameState = true;
+    bool bIsPaused = false;
 
 //   SDL_Delay(30); /* you want to simulate a slow computer? do it here! */
                 
@@ -1197,6 +1198,8 @@ namespace vapp {
         break;
       }
       case GS_PAUSE:
+        bIsPaused = true;
+      
       case GS_JUSTDEAD:
       case GS_FINISHED:
       case GS_REPLAYING:
@@ -1356,7 +1359,7 @@ namespace vapp {
                 
         /* Render */
         if(!isNoGraphics() && bValidGameState) {
-	  m_Renderer.render();
+	        m_Renderer.render(bIsPaused);
 
           if(m_bShowMiniMap) {
             if(m_MotoGame.getBikeState()->Dir == DD_LEFT)

@@ -460,6 +460,10 @@ namespace vapp {
     /* Remember bike pos for next time */
     //m_PrevFrontWheelP = m_BikeS.FrontWheelP;
     //m_PrevRearWheelP = m_BikeS.RearWheelP;
+    
+    //float fAngle = (180.0f * acos(m_BikeS.fFrameRot[0])) / 3.14159f;
+    //if(m_BikeS.fFrameRot[2] < 0.0f) fAngle = 360 - fAngle;
+    //printf("%f\n",fAngle);
   }
 
   /*===========================================================================
@@ -1136,11 +1140,11 @@ namespace vapp {
     case ET_SPRITE:
       pEnt->fSpriteZ = 1.0f;              
       if(pSrc != NULL)
-	pEnt->fSpriteZ = atof(m_pLevelSrc->getEntityParam(pSrc,"z","1.0").c_str());        
+	      pEnt->fSpriteZ = atof(m_pLevelSrc->getEntityParam(pSrc,"z","1.0").c_str());        
           
       pEnt->SpriteType = "";
       if(pSrc != NULL)
-	pEnt->SpriteType = m_pLevelSrc->getEntityParam(pSrc,"name","");
+	      pEnt->SpriteType = m_pLevelSrc->getEntityParam(pSrc,"name","");
       break;
     case ET_WRECKER:
       break;
@@ -1153,7 +1157,7 @@ namespace vapp {
     case ET_PARTICLESOURCE:
       pEnt->ParticleType = "";
       if(pSrc != NULL)
-	pEnt->ParticleType = m_pLevelSrc->getEntityParam(pSrc,"type","");
+	      pEnt->ParticleType = m_pLevelSrc->getEntityParam(pSrc,"type","");
       pEnt->fNextParticleTime = 0;
       break;
     default:
@@ -1657,7 +1661,7 @@ namespace vapp {
      if(p_type == ET_STRAWBERRY) {
        /* Spawn some particles */
        for(int i=0;i<6;i++) {
-	 m_renderer->spawnParticle(PT_STAR,Vector2f(p_fPosX, p_fPosY), Vector2f(0,0), 5);
+	        m_renderer->spawnParticle(PT_STAR,Vector2f(p_fPosX, p_fPosY), Vector2f(0,0), 5);
        }	
 
        /* Play yummy-yummy sound */

@@ -142,6 +142,9 @@
 				RelativePath="..\src\Game.cpp">
 			</File>
 			<File
+				RelativePath="..\src\GameEvents.cpp">
+			</File>
+			<File
 				RelativePath="..\src\GameMain.cpp">
 			</File>
 			<File
@@ -241,6 +244,9 @@
 			</File>
 			<File
 				RelativePath="..\src\Game.h">
+			</File>
+			<File
+				RelativePath="..\src\GameEvents.h">
 			</File>
 			<File
 				RelativePath="..\src\GameText.h">

@@ -423,11 +423,16 @@ namespace vapp {
     
     /* New wheel-spin particles? */
     if(getGameObject()->isWheelSpinning()) {
-      if(randomNum(0,1) < 0.8f) {
-        Particle *pNewParticle = spawnParticle(PT_DEBRIS,getGameObject()->getWheelSpinPoint(),
-                                              getGameObject()->getWheelSpinDir(),4);
-        pNewParticle->bFront = false;                                              
-      }                                             
+      Particle *pPrevDebris = _GetNewestParticle(PT_DEBRIS);
+      
+      /* Limit particles to one every 0.01 seconds */
+      if(pPrevDebris==NULL || getGameObject()->getTime() - pPrevDebris->fSpawnTime > 0.01f) {      
+        if(randomNum(0,1) < 0.8f) {
+          Particle *pNewParticle = spawnParticle(PT_DEBRIS,getGameObject()->getWheelSpinPoint(),
+                                                getGameObject()->getWheelSpinDir(),4);
+          pNewParticle->bFront = false;                                              
+        }                                             
+      }
     }
   }
 

@@ -186,7 +186,7 @@ namespace vapp {
       void shutdown(void);
       
       void setTheme(Theme *p_theme);
-      void render(void);
+      void render(bool bIsPaused = false);
       void renderMiniMap(int x,int y,int nWidth,int nHeight);
       void prepareForNewLevel(void);
       void unprepareForNewLevel(void);
@@ -317,6 +317,7 @@ namespace vapp {
                                        glVertex2f() */
       void _DbgText(Vector2f P,std::string Text,Color c);
       void _UpdateParticles(float fTimeStep);
+      Particle *_GetNewestParticle(ParticleType PType);
       void _DrawRotatedMarker(Vector2f Pos,dReal *pfRot);     
       void _RenderDebugInfo(void);      
       void guessDesiredCameraPosition(float &p_fDesiredHorizontalScrollShift,
