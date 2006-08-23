@@ -547,6 +547,8 @@ namespace vapp {
       void revertEntityDestroyed(std::string p_entityID, EntityType p_type,
 				 float p_size, float p_x, float p_y);
 
+      void createKillEntityEvent(std::string p_entityID);
+
   private:         
       /* Data */
       std::queue<MotoGameEvent*> m_GameEventQueue;

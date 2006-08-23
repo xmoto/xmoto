@@ -71,6 +71,7 @@ namespace vapp {
   int L_Game_GetEntityRadius(lua_State *pL);
   int L_Game_IsEntityTouched(lua_State *pL);
   int L_Game_KillPlayer(lua_State *pL);
+  int L_Game_KillEntity(lua_State *pL);
 
   /* "Game" Lua library */
   static const luaL_reg g_GameFuncs[] = {
@@ -106,6 +107,7 @@ namespace vapp {
     {"GetEntityRadius", 		    L_Game_GetEntityRadius},
     {"IsEntityTouched", 		    L_Game_IsEntityTouched},
     {"KillPlayer",              L_Game_KillPlayer},
+    {"KillEntity",              L_Game_KillEntity},
     {NULL, NULL}
   };
 
@@ -1682,5 +1684,21 @@ namespace vapp {
 
   void MotoGame::addDynamicObject(SDynamicObject *p_obj) {
     m_SDynamicObjects.push_back(p_obj);
+  }
+
+  void MotoGame::createKillEntityEvent(std::string p_entityID) {
+    Entity *v_entity;
+
+    v_entity = getEntityByID(p_entityID);
+    if(v_entity != NULL) {
+      createGameEvent(new MGE_EntityDestroyed(m_pMotoGame->getTime(),
+					      v_entity->ID,
+					      v_entity->Type,
+					      v_entity->fSize,
+					      v_entity->Pos.x,
+					      v_entity->Pos.y));
+    } else {
+      Log("** Warning ** : Can't destroy an entity !");
+    }
   }
 }

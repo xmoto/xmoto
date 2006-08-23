@@ -411,5 +411,10 @@ namespace vapp {
     m_pMotoGame->createGameEvent(new MGE_PlayerDies(m_pMotoGame->getTime(), false));
     return 0;
   }
+
+  int L_Game_KillEntity(lua_State *pL) {
+    m_pMotoGame->createKillEntityEvent(luaL_checkstring(pL,1));
+    return 0;
+  }
 }
 
