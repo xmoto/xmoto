@@ -166,7 +166,8 @@ namespace vapp {
       bool useVBOs(void) {return m_bVBOSupported;}
       bool useFBOs(void) {return m_bFBOSupported;}
       bool useShaders(void) {return m_bShadersSupported;}
-      
+      virtual bool isUglyMode() {return false;};
+
       Theme m_theme;
       
       /* Extensions */

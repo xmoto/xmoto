@@ -123,14 +123,16 @@ namespace vapp {
         if(!bDisabled) c = MAKE_COLOR(160,40,40,255);
         putRect(nLX,m_nScroll + nLY+i*nRowHeight,nLWidth,nRowHeight,c);       
         
-        if(bActive && !bDisabled) {
-          float s = 50 + 50*sin(getApp()->getRealTime()*10);
-          int n = (int)s;
-          if(n<0) n=0;
-          if(n>255) n=255; /* just to be sure, i'm lazy */    
-
-          putRect(nLX,m_nScroll+ nLY+i*nRowHeight,nLWidth,nRowHeight,MAKE_COLOR(255,255,255,n));                 
-        }
+	if(isUglyMode() == false) {
+	  if(bActive && !bDisabled) {
+	    float s = 50 + 50*sin(getApp()->getRealTime()*10);
+	    int n = (int)s;
+	    if(n<0) n=0;
+	    if(n>255) n=255; /* just to be sure, i'm lazy */    
+	    
+	    putRect(nLX,m_nScroll+ nLY+i*nRowHeight,nLWidth,nRowHeight,MAKE_COLOR(255,255,255,n));                 
+	  }
+	}
       }              
 
       int yy = m_nScroll+nLY+i*nRowHeight;

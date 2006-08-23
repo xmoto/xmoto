@@ -676,23 +676,28 @@ namespace vapp {
   Game status rendering
   ===========================================================================*/
   void GameRenderer::_RenderGameStatus(void) {
-    AnimationSprite* pType;
+    AnimationSprite* pType = NULL;
     MotoGame *pGame = getGameObject();
 
-    int nStrawberriesLeft = pGame->countEntitiesByType(ET_STRAWBERRY);
-    int nQuantity = 0;
-    pType = (AnimationSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_ANIMATION, "Flower");
-    
-    if(nStrawberriesLeft > 0) {
-      pType = (AnimationSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_ANIMATION, "Strawberry");
-      nQuantity = nStrawberriesLeft;
-    }
-            
     float x1 = 90;
     float y1 = -2;
     float x2 = 115;
     float y2 = 23;
 
+    int nStrawberriesLeft = pGame->countEntitiesByType(ET_STRAWBERRY);
+    int nQuantity = 0;
+
+    if(getParent()->isUglyMode() == false) {
+      pType = (AnimationSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_ANIMATION, "Flower");
+    }
+    
+    if(nStrawberriesLeft > 0) {
+      if(getParent()->isUglyMode() == false) {
+	pType = (AnimationSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_ANIMATION, "Strawberry");
+      }
+      nQuantity = nStrawberriesLeft;
+    }
+            
     if(pType != NULL) {    
       _RenderAlphaBlendedSectionSP(pType->getTexture(),Vector2f(x2,y2),Vector2f(x1,y2),Vector2f(x1,y1),Vector2f(x2,y1));
     }

@@ -39,14 +39,17 @@ namespace vapp {
     
     /* HACK, right now we ignore "active" */
     //bActive = false;
-              
+
     /* Draw button graphics */
     switch(m_State) {
       case UI_BUTTON_STATE_PRESSED:
-        if(m_bHover) {
-          switch(m_Type) {
-            case UI_BUTTON_TYPE_LARGE:
-              putElem(0,0,getPosition().nWidth,getPosition().nHeight,UI_ELEM_LARGE_BUTTON_DOWN,bDisabled,bActive);
+	if(isUglyMode()) {
+	  putRect(1, 1, getPosition().nWidth-2, getPosition().nHeight-2, MAKE_COLOR(255,255,255,255)); 
+	} else {
+	  if(m_bHover) {
+	    switch(m_Type) {
+	    case UI_BUTTON_TYPE_LARGE:
+	      putElem(0,0,getPosition().nWidth,getPosition().nHeight,UI_ELEM_LARGE_BUTTON_DOWN,bDisabled,bActive);
               break;
             case UI_BUTTON_TYPE_SMALL:
               putElem(0,0,getPosition().nWidth,getPosition().nHeight,UI_ELEM_SMALL_BUTTON_DOWN,bDisabled,bActive);
@@ -67,42 +70,68 @@ namespace vapp {
                 putElem(0,getPosition().nHeight/2 - 34/2,34,34,UI_ELEM_RADIOBUTTON_UNCHECKED_DOWN,bDisabled,bActive);
               }
               break;
-          }
-          xm=2; ym=2;
-        }
-        else {
-          switch(m_Type) {
-            case UI_BUTTON_TYPE_LARGE:
-              putElem(0,0,getPosition().nWidth,getPosition().nHeight,UI_ELEM_LARGE_BUTTON_UP,bDisabled,bActive);
-              break;
-            case UI_BUTTON_TYPE_SMALL:
-              putElem(0,0,getPosition().nWidth,getPosition().nHeight,UI_ELEM_SMALL_BUTTON_UP,bDisabled,bActive);
-              break;
-            case UI_BUTTON_TYPE_CHECK:
-              if(getChecked()) {
-                putElem(0,getPosition().nHeight/2 - 34/2,34,34,UI_ELEM_CHECKBUTTON_CHECKED_UP,bDisabled,bActive);
-              }
-              else {
-                putElem(0,getPosition().nHeight/2 - 34/2,34,34,UI_ELEM_CHECKBUTTON_UNCHECKED_UP,bDisabled,bActive);
-              }
-              break;
-            case UI_BUTTON_TYPE_RADIO:
-              if(getChecked()) {
-                putElem(0,getPosition().nHeight/2 - 34/2,34,34,UI_ELEM_RADIOBUTTON_CHECKED_UP,bDisabled,bActive);
-              }
-              else {
-                putElem(0,getPosition().nHeight/2 - 34/2,34,34,UI_ELEM_RADIOBUTTON_UNCHECKED_UP,bDisabled,bActive);
-              }
-              break;
-          }
-        }
+	    }
+	    xm=2; ym=2;
+	  } else {
+	    switch(m_Type) {
+	    case UI_BUTTON_TYPE_LARGE:
+	      putElem(0,0,getPosition().nWidth,getPosition().nHeight,UI_ELEM_LARGE_BUTTON_UP,bDisabled,bActive);
+	      break;
+	    case UI_BUTTON_TYPE_SMALL:
+	      putElem(0,0,getPosition().nWidth,getPosition().nHeight,UI_ELEM_SMALL_BUTTON_UP,bDisabled,bActive);
+	      break;
+	    case UI_BUTTON_TYPE_CHECK:
+	      if(getChecked()) {
+		putElem(0,getPosition().nHeight/2 - 34/2,34,34,UI_ELEM_CHECKBUTTON_CHECKED_UP,bDisabled,bActive);
+	      }
+	      else {
+		putElem(0,getPosition().nHeight/2 - 34/2,34,34,UI_ELEM_CHECKBUTTON_UNCHECKED_UP,bDisabled,bActive);
+	      }
+	      break;
+	    case UI_BUTTON_TYPE_RADIO:
+	      if(getChecked()) {
+		putElem(0,getPosition().nHeight/2 - 34/2,34,34,UI_ELEM_RADIOBUTTON_CHECKED_UP,bDisabled,bActive);
+	      }
+	      else {
+		putElem(0,getPosition().nHeight/2 - 34/2,34,34,UI_ELEM_RADIOBUTTON_UNCHECKED_UP,bDisabled,bActive);
+	      }
+	      break;
+	    }
+	  }
+	}
 
         if(!isMouseLDown())
           m_State = UI_BUTTON_STATE_UNPRESSED;
 
         break;
       case UI_BUTTON_STATE_UNPRESSED:
-        switch(m_Type) {
+
+	if(isUglyMode()) {
+	  switch(m_Type) {
+	  case UI_BUTTON_TYPE_LARGE:
+	  case UI_BUTTON_TYPE_SMALL:
+	    if(bDisabled) {
+	      putRect(1, 1, getPosition().nWidth-2, getPosition().nHeight-2, MAKE_COLOR(80,20,20,255)); 
+	    } else {
+	      if(bActive) {
+		putRect(1, 1, getPosition().nWidth-2, getPosition().nHeight-2, MAKE_COLOR(200,80,80,255)); 
+	      } else {
+		putRect(1, 1, getPosition().nWidth-2, getPosition().nHeight-2, MAKE_COLOR(160,40,40,255)); 
+	      }
+	    }
+	    break;
+	  case UI_BUTTON_TYPE_CHECK:
+          case UI_BUTTON_TYPE_RADIO:
+            if(getChecked()) {
+              putRect(1, 1, getPosition().nWidth-2, getPosition().nHeight-2, MAKE_COLOR(80,200,80,255));
+            } else {
+              putRect(1, 1, getPosition().nWidth-2, getPosition().nHeight-2, MAKE_COLOR(50,50,50,255));
+            }
+            break;
+	  }
+	} else {
+
+	  switch(m_Type) {
           case UI_BUTTON_TYPE_LARGE:
             putElem(0,0,getPosition().nWidth,getPosition().nHeight,UI_ELEM_LARGE_BUTTON_UP,bDisabled,bActive);
             break;
@@ -126,7 +155,8 @@ namespace vapp {
             }
             break;
         }
-        break;
+	  break;
+	}
     }
   
     int x1,y1,x2,y2,x=0,y=0;

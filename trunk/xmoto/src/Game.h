@@ -208,7 +208,7 @@ namespace vapp {
       void notifyMsg(std::string Msg);      
       
       /* Data interface */
-      bool isUglyMode(void) {return m_bUglyMode;}
+      bool isUglyMode() {return m_bUglyMode;}
       bool isTestThemeMode(void) {return m_bTestThemeMode;}
     
     private: 

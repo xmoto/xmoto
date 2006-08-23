@@ -595,8 +595,11 @@ namespace vapp {
   ===========================================================================*/
   void GameApp::userInit(void) {
     Sprite* pSprite;
-    SDL_ShowCursor(SDL_DISABLE);        
-  
+
+    if(m_bUglyMode == false) {
+      SDL_ShowCursor(SDL_DISABLE);        
+    }  
+
     /* Reset timers */
     m_fLastFrameTime = 0.0f;
     m_fLastPerfStateTime = 0.0f;
@@ -1499,7 +1502,7 @@ namespace vapp {
     }    
     
     /* Draw mouse cursor */
-    if(!isNoGraphics() && m_bShowCursor) {
+    if(!isNoGraphics() && m_bShowCursor && m_bUglyMode == false) {
       if(m_pCursor != NULL) {
 	int nMX,nMY;
 	getMousePos(&nMX,&nMY);      

@@ -281,6 +281,8 @@ namespace vapp {
       const std::string &getContextHelp(void) {return m_ContextHelp;}
       void clearMsgBoxActive(void) {m_bActiveMsgBox = false; /* pain */}
     
+      bool isUglyMode() {return getApp()->isUglyMode();}
+
     protected:
       /* Protected interface */
       void addChildW(UIWindow *pWindow);
