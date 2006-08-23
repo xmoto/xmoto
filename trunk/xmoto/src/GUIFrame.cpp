@@ -77,10 +77,12 @@ namespace vapp {
     /* This depends on the style */
     switch(m_Style) {
       case UI_FRAMESTYLE_MENU:
+      if(isUglyMode() == false) {
         putImage(0,0,getPosition().nWidth/2,getPosition().nHeight/2,m_pMenuTL);
         putImage(getPosition().nWidth/2,0,getPosition().nWidth/2,getPosition().nHeight/2,m_pMenuTR);
         putImage(getPosition().nWidth/2,getPosition().nHeight/2,getPosition().nWidth/2,getPosition().nHeight/2,m_pMenuBR);
         putImage(0,getPosition().nHeight/2,getPosition().nWidth/2,getPosition().nHeight/2,m_pMenuBL);
+      }
         break;
       case UI_FRAMESTYLE_TRANS:
         putElem(0,0,-1,-1,UI_ELEM_FRAME_TL,false);
