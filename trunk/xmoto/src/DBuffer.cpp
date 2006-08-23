@@ -166,4 +166,21 @@ namespace vapp {
     return NULL;
   }
 
+  void DBuffer::write(std::string s) {
+    *this << s.length();
+    this->writeBuf(s.c_str(), s.length());
+  }
+  
+  void DBuffer::read(std::string &s) {
+    int n;
+    char c[256];
+    *this >> n;
+    if(n <= 0) {
+      throw Exception("Unable to read the string !");
+    }
+    this->readBuf(c, n);
+    c[n] = '\0';
+    s = c;
+  }
+
 }
