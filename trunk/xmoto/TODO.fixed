@@ -29,6 +29,7 @@ Since 0.2.0
 * BUG: on review a replay : when you forward to fast, the man does not go at the end of the level
 * an option to display ugly biker over the theme to test the theme
 * make circle for sprites, strawberries, ... in ugly mode
+* lua : killPlayer() -> kill the player
 
 Since 1.16
 * BUG : view highscore with up and down with keyboard does not update the button

@@ -128,12 +128,9 @@ namespace vapp {
   }
 
   void MGE_PlayerDies::serialize(DBuffer &Buffer) {
-    // MotoGameEvent::serialize(Buffer);
-    /* todo */
   }
   
   void MGE_PlayerDies::unserialize(DBuffer &Buffer) {
-    /* todo */
   }
 
   GameEventType MGE_PlayerDies::SgetType() {

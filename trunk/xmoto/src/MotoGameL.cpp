@@ -406,5 +406,10 @@ namespace vapp {
 						    X_luaL_check_number(pL,2)));
     return 0;
   }
+
+  int L_Game_KillPlayer(lua_State *pL) {
+    m_pMotoGame->createGameEvent(new MGE_PlayerDies(m_pMotoGame->getTime(), false));
+    return 0;
+  }
 }
 

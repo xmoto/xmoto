@@ -81,7 +81,6 @@
 * make sound in themes
 * we could make a "standard xmoto library" of lua functions :)
 * new script call :
-  killPlayer() -> kill the player
   timePenallity(nbSeconds) -> increase time
   collision between sprites, between sprites and head
   move a zone

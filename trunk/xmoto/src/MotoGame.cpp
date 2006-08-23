@@ -70,6 +70,7 @@ namespace vapp {
   int L_Game_CameraMove(lua_State *pL);
   int L_Game_GetEntityRadius(lua_State *pL);
   int L_Game_IsEntityTouched(lua_State *pL);
+  int L_Game_KillPlayer(lua_State *pL);
 
   /* "Game" Lua library */
   static const luaL_reg g_GameFuncs[] = {
@@ -104,6 +105,7 @@ namespace vapp {
     {"CameraMove", 		          L_Game_CameraMove},
     {"GetEntityRadius", 		    L_Game_GetEntityRadius},
     {"IsEntityTouched", 		    L_Game_IsEntityTouched},
+    {"KillPlayer",              L_Game_KillPlayer},
     {NULL, NULL}
   };
 
