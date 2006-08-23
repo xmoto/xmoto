@@ -123,7 +123,17 @@ namespace vapp {
         if(!bDisabled) c = MAKE_COLOR(160,40,40,255);
         putRect(nLX,m_nScroll + nLY+i*nRowHeight,nLWidth,nRowHeight,c);       
         
-	if(isUglyMode() == false) {
+	if(isUglyMode()) {
+	  if(bDisabled) {
+	    putRect(nLX,m_nScroll + nLY+i*nRowHeight,nLWidth,nRowHeight,MAKE_COLOR(128,128,128,255));
+	  } else {
+	    if(bActive) {
+	      putRect(nLX,m_nScroll + nLY+i*nRowHeight,nLWidth,nRowHeight,MAKE_COLOR(200,60,60,255));
+	    } else {
+	      putRect(nLX,m_nScroll + nLY+i*nRowHeight,nLWidth,nRowHeight,MAKE_COLOR(160,40,40,255));
+	    }
+	  }
+	} else {
 	  if(bActive && !bDisabled) {
 	    float s = 50 + 50*sin(getApp()->getRealTime()*10);
 	    int n = (int)s;
