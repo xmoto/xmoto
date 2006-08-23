@@ -2439,24 +2439,24 @@ namespace vapp {
       pUploadHighscoreButton->enableWindow(false);
 
       if(m_bEnableWebHighscores) {
-	if(pReplaysList->getSelected() >= 0 && pReplaysList->getSelected() < pReplaysList->getEntries().size()) {
-	  UIListEntry *pListEntry = pReplaysList->getEntries()[pReplaysList->getSelected()];
-	  if(pListEntry != NULL) {
-	    ReplayInfo* rplInfos;
-	    rplInfos = Replay::getReplayInfos(pListEntry->Text[0]);
-	    if(rplInfos != NULL) {
-	      if(rplInfos->fFinishTime > 0.0 && rplInfos->Player == m_pPlayer->PlayerName) {
-		WebHighscore* wh = m_pWebHighscores->getHighscoreFromLevel(rplInfos->Level);
-		if(wh != NULL) {
-		  pUploadHighscoreButton->enableWindow(rplInfos->fFinishTime < wh->getFTime());
-		} else {
-		  pUploadHighscoreButton->enableWindow(true);
-		}
-	      }  	      
-	      free(rplInfos);
-	    }
-	  }
-	}
+	      if(pReplaysList->getSelected() >= 0 && pReplaysList->getSelected() < pReplaysList->getEntries().size()) {
+	        UIListEntry *pListEntry = pReplaysList->getEntries()[pReplaysList->getSelected()];
+	        if(pListEntry != NULL) {
+	          ReplayInfo* rplInfos;
+	          rplInfos = Replay::getReplayInfos(pListEntry->Text[0]);
+	          if(rplInfos != NULL) {
+	            if(rplInfos->fFinishTime > 0.0 && rplInfos->Player == m_pPlayer->PlayerName) {
+		            WebHighscore* wh = m_pWebHighscores->getHighscoreFromLevel(rplInfos->Level);
+		            if(wh != NULL) {
+		              pUploadHighscoreButton->enableWindow(rplInfos->fFinishTime < wh->getFTime());
+		            } else {
+		              pUploadHighscoreButton->enableWindow(true);
+		            }
+	            }  	      
+	            delete rplInfos; 
+	          }
+	        }
+	      }
       }
     }
     
