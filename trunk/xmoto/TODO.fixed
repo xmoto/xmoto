@@ -30,6 +30,7 @@ Since 0.2.0
 * an option to display ugly biker over the theme to test the theme
 * make circle for sprites, strawberries, ... in ugly mode
 * lua : killPlayer() -> kill the player
+* lua : killEntity() -> kill an entity
 
 Since 1.16
 * BUG : view highscore with up and down with keyboard does not update the button
