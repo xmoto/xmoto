@@ -1,5 +1,7 @@
 ### For 0.2.1
 
+* BUG ? http://forum.xmoto.free.fr/viewtopic.php?p=212#212
+* BUG : http://forum.xmoto.free.fr/viewtopic.php?p=205#205
 * Be able to change the size of a sprite as parameter in a level
 * update themes list before update a theme (otherwise, on levels
    update, it does nothing)
