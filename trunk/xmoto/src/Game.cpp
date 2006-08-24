@@ -34,6 +34,27 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 namespace vapp {
 
+  /* where could i put this function ?!? */
+  std::string splitText(const std::string &str, int p_breakLineLength) {
+    std::string v_res = "";
+    char c[2] = {' ', '\0'};    
+    int lineLength = 0;
+
+    for(int i=0; i<str.length(); i++) {
+      if((lineLength > p_breakLineLength && str[i] == ' ') ||
+	str[i] == '\n') {
+	c[0] = '\n';
+	v_res.append(c);
+	lineLength = 0;
+      } else {
+	c[0] = str[i];
+	v_res.append(c);
+	lineLength++;
+      }
+    }
+    return v_res;
+  }
+
   /* CRY! */
   extern InputHandler *m_pActiveInputHandler;
   
@@ -1207,6 +1228,7 @@ namespace vapp {
       case GS_FINISHED:
       case GS_REPLAYING:
       case GS_PLAYING: {
+	try {
         /* When did the frame start? */
         double fStartFrameTime = getTime();
         int nPhysSteps = 0;
@@ -1498,8 +1520,12 @@ namespace vapp {
           drawText(Vector2f(130,0),cTemp);
         }
         break;
+      } catch(Exception &e) {
+	setState(GS_MENU);
+	notifyMsg(splitText(e.getMsg(), 50));
       }
-    }    
+      }
+    }
     
     /* Draw mouse cursor */
     if(!isNoGraphics() && m_bShowCursor && m_bUglyMode == false) {
