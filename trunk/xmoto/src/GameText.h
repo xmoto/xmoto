@@ -395,7 +395,7 @@ Central place to keep many in-game text strings
 #define CONTEXTHELP_WWW_ROOMS_TAB "Choose where to upload/download replays, highscore lists (for more information, check the website)"
 #define CONTEXTHELP_WWW_ROOMS_LIST "Choose your room"
 #define CONTEXTHELP_UPDATEROOMSLIST "Get the rooms list from the web"
-#define CONTEXTHELP_ROOM_LOGIN "Upload of highscore require to log in (Except for WR)"
-#define CONTEXTHELP_ROOM_PASSWORD "Upload of highscore require a password (Except for WR)"
+#define CONTEXTHELP_ROOM_LOGIN "Upload of highscore requires to log in (Except for WR)"
+#define CONTEXTHELP_ROOM_PASSWORD "Upload of highscore requires a password (Except for WR)"
 
 #endif
