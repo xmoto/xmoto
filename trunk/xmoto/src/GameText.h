@@ -169,6 +169,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_LOADINGMENUGRAPHICS  "Loading menu graphics..."
 #define GAMETEXT_LOADINGSOUNDS        "Loading sounds..."
 #define GAMETEXT_LOADINGTEXTURES      "Loading textures..."
+#define GAMETEXT_LOGIN                "Login"
 #define GAMETEXT_LOW                  "Low"
 #define GAMETEXT_MEDIUM               "Medium"
 #define GAMETEXT_MENUGFX              "Menu Graphics:"
@@ -208,6 +209,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_OPTIONS              "Options"
 #define GAMETEXT_OPTIONSREQURERESTART "Some options will not take effect before next restart!"
 #define GAMETEXT_PAUSE                "Pause"
+#define GAMETEXT_PASSWORD             "Password"
 #define GAMETEXT_PERSONAL             "Personal"
 #define GAMETEXT_PERSONALRECORDS      "Personal:"
 #define GAMETEXT_PLAYER               "Player"
@@ -393,5 +395,7 @@ Central place to keep many in-game text strings
 #define CONTEXTHELP_WWW_ROOMS_TAB "Choose where to upload/download replays, highscore lists (for more information, check the website)"
 #define CONTEXTHELP_WWW_ROOMS_LIST "Choose your room"
 #define CONTEXTHELP_UPDATEROOMSLIST "Get the rooms list from the web"
+#define CONTEXTHELP_ROOM_LOGIN "Upload of highscore require to log in (Except for WR)"
+#define CONTEXTHELP_ROOM_PASSWORD "Upload of highscore require a password (Except for WR)"
 
 #endif

@@ -63,7 +63,7 @@ namespace vapp {
     else if(getVAlign() == UI_ALIGN_CENTER)
       y = getPosition().nHeight/2 - (y2-y1)/2 - y1;
     
-    putText(x,y,getCaption());
+    putText(x,y, getCaption());
   }
 
 }

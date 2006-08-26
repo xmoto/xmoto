@@ -324,6 +324,7 @@ namespace vapp {
       UIEdit(UIWindow *pParent,int x=0,int y=0,std::string Caption="",int nWidth=0,int nHeight=0) {
         initW(pParent,x,y,Caption,nWidth,nHeight);
         m_nCursorPos = 0;
+	m_hideText = false;
       }      
     
       /* Methods */
@@ -331,11 +332,12 @@ namespace vapp {
       virtual bool keyDown(int nKey,int nChar);
       
       virtual bool offerActivation(void) {return true;}
+      void hideText(bool bHideText) {m_hideText=bHideText;} 
 
     private:
       /* Data */
       int m_nCursorPos;
-    
+      bool m_hideText;    
   };
 
 	/*===========================================================================
@@ -513,12 +515,12 @@ namespace vapp {
       UIAlign getHAlign(void) {return m_HAlign;}
       void setBackgroundShade(bool b) {m_bBackgroundShade=b;}
       void setBackground(Texture *p) {m_pCustomBackgroundTexture = p;}
-      
+
     private:
       /* Data */
       UIAlign m_VAlign,m_HAlign;
       bool m_bBackgroundShade;
-      
+
       Texture *m_pDarkBlobTexture;
       Texture *m_pCustomBackgroundTexture;
   };

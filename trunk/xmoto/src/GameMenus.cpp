@@ -750,13 +750,46 @@ namespace vapp {
 
     // rooms tab
     UIList *pRoomsList = new UIList(pWWWRoomsOptionsTab,5,10,"",
-				    pWWWRoomsOptionsTab->getPosition().nWidth-10,
+				    pWWWRoomsOptionsTab->getPosition().nWidth-200,
 				    pWWWRoomsOptionsTab->getPosition().nHeight-30 - 85);
     pRoomsList->setID("ROOMS_LIST");
     pRoomsList->setFont(m_Renderer.getSmallFont());
     pRoomsList->addColumn(GAMETEXT_ROOM, pThemeList->getPosition().nWidth);
     _UpdateRoomsLists();
     pRoomsList->setContextHelp(CONTEXTHELP_WWW_ROOMS_LIST);
+
+    pSomeText = new UIStatic(pWWWRoomsOptionsTab,
+			     pWWWRoomsOptionsTab->getPosition().nWidth-180,
+			     5,
+			     GAMETEXT_LOGIN ":",
+			     100,
+			     30);
+    pSomeText->setHAlign(UI_ALIGN_LEFT);
+    pSomeText->setFont(m_Renderer.getSmallFont()); 
+    UIEdit *pRoomLoginEdit = new UIEdit(pWWWRoomsOptionsTab,
+					pWWWRoomsOptionsTab->getPosition().nWidth-180,
+					30,
+					m_Config.getString("WebHighscoreUploadLogin"),150,25);
+    pRoomLoginEdit->setFont(m_Renderer.getSmallFont());
+    pRoomLoginEdit->setID("ROOM_LOGIN");
+    pRoomLoginEdit->setContextHelp(CONTEXTHELP_ROOM_LOGIN);
+
+    pSomeText = new UIStatic(pWWWRoomsOptionsTab,
+			     pWWWRoomsOptionsTab->getPosition().nWidth-180,
+			     65,
+			     GAMETEXT_PASSWORD ":",
+			     100,
+			     30);
+    pSomeText->setHAlign(UI_ALIGN_LEFT);
+    pSomeText->setFont(m_Renderer.getSmallFont()); 
+    UIEdit *pRoomPasswordEdit = new UIEdit(pWWWRoomsOptionsTab,
+					pWWWRoomsOptionsTab->getPosition().nWidth-180,
+					90,
+					m_Config.getString("WebHighscoreUploadPassword"),150,25);
+    pRoomPasswordEdit->hideText(true);
+    pRoomPasswordEdit->setFont(m_Renderer.getSmallFont());
+    pRoomPasswordEdit->setID("ROOM_PASSWORD");
+    pRoomPasswordEdit->setContextHelp(CONTEXTHELP_ROOM_PASSWORD);
 
     UIButton *pUpdateRoomsButton = new UIButton(pWWWRoomsOptionsTab,
 						pWWWRoomsOptionsTab->getPosition().nWidth/2 - 104,
@@ -3121,6 +3154,8 @@ namespace vapp {
     m_Config.setValue("AutosaveHighscoreReplays",m_Config.getDefaultValue("AutosaveHighscoreReplays"));
 
     m_Config.setValue("WebHighscoreUploadIdRoom", m_Config.getDefaultValue("WebHighscoreUploadIdRoom"));
+    m_Config.setValue("WebHighscoreUploadLogin", m_Config.getDefaultValue("WebHighscoreUploadLogin"));
+    m_Config.setValue("WebHighscoreUploadPasword", m_Config.getDefaultValue("WebHighscoreUploadPassword"));
     
 
 
@@ -3244,6 +3279,8 @@ namespace vapp {
     UIButton *pCheckNewLevelsAtStartup = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:ENABLECHECKNEWLEVELSATSTARTUP");
     UIButton *pCheckHighscoresAtStartup = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:ENABLECHECKHIGHSCORESATSTARTUP");
     UIList *pRoomsList = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_ROOMS_TAB:ROOMS_LIST");
+    UIEdit *pRoomsLogin = (UIEdit *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_ROOMS_TAB:ROOM_LOGIN");
+    UIEdit *pRoomsPassword = (UIEdit *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_ROOMS_TAB:ROOM_PASSWORD");
 
     m_Config.setBool("ShowInGameWorldRecord",pInGameWorldRecord->getChecked());
     m_Config.setBool("AutosaveHighscoreReplays",pAutosaveReplays->getChecked());
@@ -3257,6 +3294,9 @@ namespace vapp {
       m_Config.setString("WebHighscoreUploadIdRoom", wri->getId());
       m_Config.setString("WebHighscoresURL", wri->getUrlHighscores());
     }
+
+    m_Config.setString("WebHighscoreUploadLogin", pRoomsLogin->getCaption());
+    m_Config.setString("WebHighscoreUploadPassword", pRoomsPassword->getCaption());
 
     /* set room in the list */
     std::string v_room_id = m_Config.getString("WebHighscoreUploadIdRoom");
