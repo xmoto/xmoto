@@ -683,12 +683,28 @@ namespace vapp {
 #endif
 
 #if defined(SUPPORT_WEBACCESS)
-    UIWindow *pWWWOptionsTab = new UIWindow(pOptionsTabs,20,40,GAMETEXT_WWWTAB,pOptionsTabs->getPosition().nWidth-40,pOptionsTabs->getPosition().nHeight);
+    UIWindow *pWWWOptionsTab = new UIWindow(pOptionsTabs,0,26,GAMETEXT_WWWTAB,pOptionsTabs->getPosition().nWidth,pOptionsTabs->getPosition().nHeight);
     pWWWOptionsTab->enableWindow(true);
     pWWWOptionsTab->showWindow(false);
     pWWWOptionsTab->setID("WWW_TAB");
 
-    UIButton *pEnableWebHighscores = new UIButton(pWWWOptionsTab,5,5,GAMETEXT_ENABLEWEBHIGHSCORES,(pGeneralOptionsTab->getPosition().nWidth-40),28);
+    UITabView *pWWWOptionsTabs  = new UITabView(pWWWOptionsTab,0,0,"",pWWWOptionsTab->getPosition().nWidth,pWWWOptionsTab->getPosition().nHeight-76);
+    pWWWOptionsTabs->setID("WWWOPTIONS_TABS");
+    pWWWOptionsTabs->setFont(m_Renderer.getSmallFont());
+    pWWWOptionsTabs->setTabContextHelp(0, CONTEXTHELP_WWW_MAIN_TAB);
+    pWWWOptionsTabs->setTabContextHelp(1, CONTEXTHELP_WWW_ROOMS_TAB);
+
+    UIWindow *pWWWMainOptionsTab = new UIWindow(pWWWOptionsTabs,20,40,GAMETEXT_WWWMAINTAB,pWWWOptionsTabs->getPosition().nWidth-40,pWWWOptionsTabs->getPosition().nHeight);
+    pWWWMainOptionsTab->enableWindow(true);
+    pWWWMainOptionsTab->showWindow(true);
+    pWWWMainOptionsTab->setID("WWW_MAIN_TAB");
+
+    UIWindow *pWWWRoomsOptionsTab = new UIWindow(pWWWOptionsTabs,20,40,GAMETEXT_WWWROOMSTAB,pWWWOptionsTabs->getPosition().nWidth-40,pWWWOptionsTabs->getPosition().nHeight);
+    pWWWRoomsOptionsTab->enableWindow(true);
+    pWWWRoomsOptionsTab->showWindow(false);
+    pWWWRoomsOptionsTab->setID("WWW_ROOMS_TAB");
+
+    UIButton *pEnableWebHighscores = new UIButton(pWWWMainOptionsTab,5,5,GAMETEXT_ENABLEWEBHIGHSCORES,(pGeneralOptionsTab->getPosition().nWidth-40),28);
     pEnableWebHighscores->setType(UI_BUTTON_TYPE_CHECK);
     pEnableWebHighscores->setID("ENABLEWEBHIGHSCORES");
     pEnableWebHighscores->enableWindow(true);
@@ -696,7 +712,7 @@ namespace vapp {
     pEnableWebHighscores->setGroup(50123);
     pEnableWebHighscores->setContextHelp(CONTEXTHELP_DOWNLOAD_BEST_TIMES);
 
-    UIButton *pEnableCheckNewLevelsAtStartup = new UIButton(pWWWOptionsTab,5,43,GAMETEXT_ENABLECHECKNEWLEVELSATSTARTUP,(pGeneralOptionsTab->getPosition().nWidth-40),28);
+    UIButton *pEnableCheckNewLevelsAtStartup = new UIButton(pWWWMainOptionsTab,5,43,GAMETEXT_ENABLECHECKNEWLEVELSATSTARTUP,(pGeneralOptionsTab->getPosition().nWidth-40),28);
     pEnableCheckNewLevelsAtStartup->setType(UI_BUTTON_TYPE_CHECK);
     pEnableCheckNewLevelsAtStartup->setID("ENABLECHECKNEWLEVELSATSTARTUP");
     pEnableCheckNewLevelsAtStartup->enableWindow(true);
@@ -704,7 +720,7 @@ namespace vapp {
     pEnableCheckNewLevelsAtStartup->setGroup(50123);
     pEnableCheckNewLevelsAtStartup->setContextHelp(CONTEXTHELP_ENABLE_CHECK_NEW_LEVELS_AT_STARTUP);
 
-    UIButton *pEnableCheckHighscoresAtStartup = new UIButton(pWWWOptionsTab,5,81,GAMETEXT_ENABLECHECKHIGHSCORESATSTARTUP,(pGeneralOptionsTab->getPosition().nWidth-40),28);
+    UIButton *pEnableCheckHighscoresAtStartup = new UIButton(pWWWMainOptionsTab,5,81,GAMETEXT_ENABLECHECKHIGHSCORESATSTARTUP,(pGeneralOptionsTab->getPosition().nWidth-40),28);
     pEnableCheckHighscoresAtStartup->setType(UI_BUTTON_TYPE_CHECK);
     pEnableCheckHighscoresAtStartup->setID("ENABLECHECKHIGHSCORESATSTARTUP");
     pEnableCheckHighscoresAtStartup->enableWindow(true);
@@ -712,7 +728,7 @@ namespace vapp {
     pEnableCheckHighscoresAtStartup->setGroup(50123);
     pEnableCheckHighscoresAtStartup->setContextHelp(CONTEXTHELP_ENABLE_CHECK_HIGHSCORES_AT_STARTUP);
 
-    UIButton *pInGameWorldRecord = new UIButton(pWWWOptionsTab,5,119,GAMETEXT_ENABLEINGAMEWORLDRECORD,(pGeneralOptionsTab->getPosition().nWidth-40),28);
+    UIButton *pInGameWorldRecord = new UIButton(pWWWMainOptionsTab,5,119,GAMETEXT_ENABLEINGAMEWORLDRECORD,(pGeneralOptionsTab->getPosition().nWidth-40),28);
     pInGameWorldRecord->setType(UI_BUTTON_TYPE_CHECK);
     pInGameWorldRecord->setID("INGAMEWORLDRECORD");
     pInGameWorldRecord->enableWindow(true);
@@ -720,17 +736,40 @@ namespace vapp {
     pInGameWorldRecord->setGroup(50123);
     pInGameWorldRecord->setContextHelp(CONTEXTHELP_INGAME_WORLD_RECORD);
 
-    UIButton *pINetConf = new UIButton(pWWWOptionsTab,pWWWOptionsTab->getPosition().nWidth-200,pWWWOptionsTab->getPosition().nHeight-110,GAMETEXT_PROXYCONFIG,207,57);
+    UIButton *pINetConf = new UIButton(pWWWOptionsTab,pWWWOptionsTab->getPosition().nWidth-225,pWWWOptionsTab->getPosition().nHeight-80,GAMETEXT_PROXYCONFIG,207,57);
     pINetConf->setType(UI_BUTTON_TYPE_LARGE);
     pINetConf->setID("PROXYCONFIG");
     pINetConf->setFont(m_Renderer.getSmallFont());
     pINetConf->setContextHelp(CONTEXTHELP_PROXYCONFIG);
 
-    UIButton *pUpdHS = new UIButton(pWWWOptionsTab,pWWWOptionsTab->getPosition().nWidth-200-200,pWWWOptionsTab->getPosition().nHeight-110,GAMETEXT_UPDATEHIGHSCORES,207,57);
+    UIButton *pUpdHS = new UIButton(pWWWOptionsTab,pWWWOptionsTab->getPosition().nWidth-225-200,pWWWOptionsTab->getPosition().nHeight-80,GAMETEXT_UPDATEHIGHSCORES,207,57);
     pUpdHS->setType(UI_BUTTON_TYPE_LARGE);
     pUpdHS->setID("UPDATEHIGHSCORES");
     pUpdHS->setFont(m_Renderer.getSmallFont());
     pUpdHS->setContextHelp(CONTEXTHELP_UPDATEHIGHSCORES);
+
+    // rooms tab
+    UIList *pRoomsList = new UIList(pWWWRoomsOptionsTab,5,10,"",
+				    pWWWRoomsOptionsTab->getPosition().nWidth-10,
+				    pWWWRoomsOptionsTab->getPosition().nHeight-30 - 85);
+    pRoomsList->setID("ROOMS_LIST");
+    pRoomsList->setFont(m_Renderer.getSmallFont());
+    pRoomsList->addColumn(GAMETEXT_ROOM, pThemeList->getPosition().nWidth);
+    _UpdateRoomsLists();
+    pRoomsList->setContextHelp(CONTEXTHELP_WWW_ROOMS_LIST);
+
+    UIButton *pUpdateRoomsButton = new UIButton(pWWWRoomsOptionsTab,
+						pWWWRoomsOptionsTab->getPosition().nWidth/2 - 104,
+						pWWWRoomsOptionsTab->getPosition().nHeight - 100,
+						 GAMETEXT_UPDATEROOMSSLIST,
+						 207,
+						 57);
+    pUpdateRoomsButton->setType(UI_BUTTON_TYPE_LARGE);
+    pUpdateRoomsButton->setID("UPDATE_ROOMS_LIST");
+    pUpdateRoomsButton->enableWindow(true);
+    pUpdateRoomsButton->setFont(m_Renderer.getSmallFont());
+    pUpdateRoomsButton->setContextHelp(CONTEXTHELP_UPDATEROOMSLIST);
+
 #endif
 
 #if defined(ALLOW_GHOST) 
@@ -2149,11 +2188,13 @@ namespace vapp {
 #if defined(SUPPORT_WEBACCESS)  
     UIButton *pINetConf = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:PROXYCONFIG");
     UIButton *pUpdHS = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:UPDATEHIGHSCORES");
-    UIButton *pWebHighscores = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:ENABLEWEBHIGHSCORES");
-    UIButton *pInGameWorldRecord = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:INGAMEWORLDRECORD");
+    UIButton *pWebHighscores = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:ENABLEWEBHIGHSCORES");
+    UIButton *pInGameWorldRecord = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:INGAMEWORLDRECORD");
 
-    UIButton *pCheckNewLevelsAtStartup = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:ENABLECHECKNEWLEVELSATSTARTUP");
-    UIButton *pCheckHighscoresAtStartup = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:ENABLECHECKHIGHSCORESATSTARTUP");
+    UIButton *pCheckNewLevelsAtStartup = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:ENABLECHECKNEWLEVELSATSTARTUP");
+    UIButton *pCheckHighscoresAtStartup = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:ENABLECHECKHIGHSCORESATSTARTUP");
+    UIWindow *pRoomsTab = (UIWindow *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_ROOMS_TAB");
+    UIButton *pUpdRoomsList = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_ROOMS_TAB:UPDATE_ROOMS_LIST");
 
     UIButton *pUpdThemeList = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:UPDATE_THEMES_LIST");
     UIButton *pUpdSelectedTheme = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:GET_SELECTED_THEME");
@@ -2189,6 +2230,7 @@ namespace vapp {
 	pCheckHighscoresAtStartup->enableWindow(true);
 	pUpdThemeList->enableWindow(true);
 	pUpdSelectedTheme->enableWindow(true);
+	pRoomsTab->enableWindow(true);
       }
       else {
         pINetConf->enableWindow(false);
@@ -2197,6 +2239,7 @@ namespace vapp {
 	pCheckHighscoresAtStartup->enableWindow(false);
 	pUpdThemeList->enableWindow(false);
 	pUpdSelectedTheme->enableWindow(false);
+	pRoomsTab->enableWindow(false);
       }
 #endif
     
@@ -2237,6 +2280,16 @@ namespace vapp {
       }
     }
 
+    if(pUpdRoomsList->isClicked()) {
+      pUpdRoomsList->setClicked(false);
+      try {
+    	_UpdateWebRooms(false);
+    	_UpgradeWebRooms(true);    
+      } catch(Exception &e) {
+    	notifyMsg(GAMETEXT_FAILEDDLROOMSLIST);
+      }
+    }
+    
     if(pUpdThemeList->isClicked()) {
       pUpdThemeList->setClicked(false);
       try {
@@ -2760,6 +2813,44 @@ namespace vapp {
 
   }
 
+#if defined(SUPPORT_WEBACCESS) 
+
+  void GameApp::_CreateRoomsList(UIList *pList) {
+    UIListEntry *pEntry;
+    std::string v_selected_roomName = "";
+    std::vector<WebRoomInfos*> v_webroomsInfos;
+
+    /* get selected item */
+    if(pList->getSelected() >= 0 && pList->getSelected() < pList->getEntries().size()) {
+      UIListEntry *pEntry = pList->getEntries()[pList->getSelected()];
+      v_selected_roomName = pEntry->Text[0];
+    }
+
+    /* recreate the list */
+    pList->clear();
+
+    v_webroomsInfos = m_pWebRooms->getAvailableRooms();
+    for(int i=0; i<v_webroomsInfos.size(); i++) {
+      pEntry = pList->addEntry(v_webroomsInfos[i]->getName(),
+			       reinterpret_cast<void *>(v_webroomsInfos[i])
+			       );
+    }
+
+    /* reselect the previous room */
+    if(v_selected_roomName != "") {
+      int nRoom = 0;
+      for(int i=0; i<pList->getEntries().size(); i++) {
+        if(pList->getEntries()[i]->Text[0] == v_selected_roomName) {
+          nRoom = i;
+          break;
+        }
+      }
+      pList->setSelected(nRoom);
+    }
+  }
+
+#endif
+
   /*===========================================================================
   Fill a window with best times
   ===========================================================================*/
@@ -2847,15 +2938,27 @@ namespace vapp {
     pJoystickControl->setChecked(false);
     
 #if defined(SUPPORT_WEBACCESS)
-    UIButton *pWebHighscores = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:ENABLEWEBHIGHSCORES");
-    UIButton *pInGameWorldRecord = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:INGAMEWORLDRECORD");
-    UIButton *pCheckNewLevelsAtStartup = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:ENABLECHECKNEWLEVELSATSTARTUP");
-    UIButton *pCheckHighscoresAtStartup = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:ENABLECHECKHIGHSCORESATSTARTUP");
+    UIButton *pWebHighscores = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:ENABLEWEBHIGHSCORES");
+    UIButton *pInGameWorldRecord = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:INGAMEWORLDRECORD");
+    UIButton *pCheckNewLevelsAtStartup = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:ENABLECHECKNEWLEVELSATSTARTUP");
+    UIButton *pCheckHighscoresAtStartup = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:ENABLECHECKHIGHSCORESATSTARTUP");
+    UIList *pRoomsList = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_ROOMS_TAB:ROOMS_LIST");
 
     pWebHighscores->setChecked(m_Config.getBool("WebHighscores"));
     pInGameWorldRecord->setChecked(m_Config.getBool("ShowInGameWorldRecord"));
     pCheckNewLevelsAtStartup->setChecked(m_Config.getBool("CheckNewLevelsAtStartup"));
     pCheckHighscoresAtStartup->setChecked(m_Config.getBool("CheckHighscoresAtStartup"));
+
+    /* set room in the list */
+    std::string v_room_id = m_Config.getString("WebHighscoreUploadIdRoom");
+    if(v_room_id == "") {v_room_id = DEFAULT_WEBROOM_ID;}
+    for(int i=0; i<pRoomsList->getEntries().size(); i++) {
+      WebRoomInfos* v_wri = (WebRoomInfos*)(pRoomsList->getEntries()[i]->pvUser);
+      if(v_wri->getId() == v_room_id) {
+	pRoomsList->setSelected(i);
+	break;
+      }
+    }
 #endif
 
 #if defined(ALLOW_GHOST) 
@@ -3017,6 +3120,10 @@ namespace vapp {
 
     m_Config.setValue("AutosaveHighscoreReplays",m_Config.getDefaultValue("AutosaveHighscoreReplays"));
 
+    m_Config.setValue("WebHighscoreUploadIdRoom", m_Config.getDefaultValue("WebHighscoreUploadIdRoom"));
+    
+
+
     /* The following require restart */
     m_Config.setChanged(false);      
 
@@ -3132,15 +3239,35 @@ namespace vapp {
     m_Config.setBool("MenuMusic",pEnableMusicButton->getChecked());
 
 #if defined(SUPPORT_WEBACCESS)
-    UIButton *pWebHighscores = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:ENABLEWEBHIGHSCORES");
-    UIButton *pInGameWorldRecord = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:INGAMEWORLDRECORD");
-    UIButton *pCheckNewLevelsAtStartup = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:ENABLECHECKNEWLEVELSATSTARTUP");
-    UIButton *pCheckHighscoresAtStartup = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:ENABLECHECKHIGHSCORESATSTARTUP");
+    UIButton *pWebHighscores = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:ENABLEWEBHIGHSCORES");
+    UIButton *pInGameWorldRecord = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:INGAMEWORLDRECORD");
+    UIButton *pCheckNewLevelsAtStartup = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:ENABLECHECKNEWLEVELSATSTARTUP");
+    UIButton *pCheckHighscoresAtStartup = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:ENABLECHECKHIGHSCORESATSTARTUP");
+    UIList *pRoomsList = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_ROOMS_TAB:ROOMS_LIST");
+
     m_Config.setBool("ShowInGameWorldRecord",pInGameWorldRecord->getChecked());
     m_Config.setBool("AutosaveHighscoreReplays",pAutosaveReplays->getChecked());
 
     m_Config.setBool("CheckNewLevelsAtStartup",pCheckNewLevelsAtStartup->getChecked());
     m_Config.setBool("CheckHighscoresAtStartup",pCheckHighscoresAtStartup->getChecked());
+
+    if(pRoomsList->getSelected() >= 0 &&
+       pRoomsList->getSelected() < pRoomsList->getEntries().size()) {
+      WebRoomInfos *wri = (WebRoomInfos*)(pRoomsList->getEntries()[pRoomsList->getSelected()]->pvUser);
+      m_Config.setString("WebHighscoreUploadIdRoom", wri->getId());
+      m_Config.setString("WebHighscoresURL", wri->getUrlHighscores());
+    }
+
+    /* set room in the list */
+    std::string v_room_id = m_Config.getString("WebHighscoreUploadIdRoom");
+    if(v_room_id == "") {v_room_id = DEFAULT_WEBROOM_ID;}
+    for(int i=0; i<pRoomsList->getEntries().size(); i++) {
+      WebRoomInfos* v_wri = (WebRoomInfos*)(pRoomsList->getEntries()[i]->pvUser);
+      if(v_wri->getId() == v_room_id) {
+	pRoomsList->setSelected(i);
+	break;
+      }
+    }
 #endif
 
 #if defined(ALLOW_GHOST)

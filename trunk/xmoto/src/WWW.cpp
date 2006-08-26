@@ -1225,4 +1225,110 @@ void WebThemes::upgrade(ThemeChoice *p_themeChoice) {
   p_themeChoice->setHosted(true);
 }
 
+WebRoomInfos::WebRoomInfos(std::string p_id,
+			   std::string p_name,
+			   std::string p_urlHighscores) {
+  m_id           = p_id;
+  m_name         = p_name;
+  m_urlHighscore = p_urlHighscores;
+}
+
+WebRoomInfos::~WebRoomInfos() {
+}
+
+std::string WebRoomInfos::getId() {
+  return m_id;
+}
+
+std::string WebRoomInfos::getName() {
+  return m_name;
+}
+
+std::string WebRoomInfos::getUrlHighscores() {
+  return m_urlHighscore;
+}
+
+WebRooms::WebRooms(const ProxySettings *p_proxy_settings) {
+  m_proxy_settings = p_proxy_settings;
+}
+
+WebRooms::~WebRooms() {
+  clean();
+}
+
+void WebRooms::update() {
+  FSWeb::downloadFileBz2UsingMd5(getXmlFileName(),
+				 m_rooms_url,
+				 NULL,
+				 NULL,
+				 m_proxy_settings);
+}
+
+std::string WebRooms::getXmlFileName() {
+  return vapp::FS::getUserDir() + "/" + DEFAULT_WEBROOMS_FILENAME;
+}
+
+void WebRooms::upgrade() {
+  clean();
+
+  try {
+    vapp::XMLDocument v_webRXml;
+    TiXmlDocument *v_webRXmlData;
+    TiXmlElement *v_webRXmlDataElement;
+    const char *pc;
+    std::string v_RoomName, v_RoomHighscoreUrl, v_RoomId;
+  
+    v_webRXml.readFromFile(getXmlFileName());
+    v_webRXmlData = v_webRXml.getLowLevelAccess();
+
+    if(v_webRXmlData == NULL) {
+      throw vapp::Exception("error : unable to analyze xml rooms list file");
+    }
+
+    v_webRXmlDataElement = v_webRXmlData->FirstChildElement("xmoto_rooms");
+    
+    if(v_webRXmlDataElement == NULL) {
+      throw vapp::Exception("error : unable to analyze xml rooms list file");
+    }
+    
+    TiXmlElement *pVarElem = v_webRXmlDataElement->FirstChildElement("room");
+    while(pVarElem != NULL) {
+      
+      pc = pVarElem->Attribute("name");
+      if(pc != NULL) {
+	v_RoomName = pc;
+	
+	pc = pVarElem->Attribute("highscores_url");
+	if(pc != NULL) {
+	  v_RoomHighscoreUrl = pc;	 
+	  
+	  pc = pVarElem->Attribute("id");
+	  if(pc != NULL) {
+	    v_RoomId = pc;
+	    m_availableRooms.push_back(new WebRoomInfos(v_RoomId,
+							v_RoomName,
+							v_RoomHighscoreUrl));
+	  }
+	}
+	pVarElem = pVarElem->NextSiblingElement("room");
+      }
+    }
+    
+  } catch(vapp::Exception &e) {
+    /* by default, room is highscore */
+    m_availableRooms.push_back(new WebRoomInfos(DEFAULT_WEBROOM_ID, DEFAULT_WEBROOM_NAME, DEFAULT_WEBHIGHSCORES_URL));
+  }
+}
+
+const std::vector<WebRoomInfos*> &WebRooms::getAvailableRooms() {
+  return m_availableRooms;
+}
+
+void WebRooms::clean() {
+  for(unsigned int i=0;i<m_availableRooms.size();i++) {
+    delete m_availableRooms[i];
+  }    
+  m_availableRooms.clear();
+}
+
 #endif

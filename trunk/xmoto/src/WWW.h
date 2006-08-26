@@ -50,6 +50,10 @@ class ThemeChoice;
 #define DEFAULT_WEBTHEMES_SPRITESURLBASE  "http://xmoto.free.fr/sprites"
 #define DEFAULT_UPLOADREPLAY_URL          "http://xmoto.free.fr/tools/UploadReplay.php"
 #define DEFAULT_REPLAYUPLOAD_MSGFILE      "UploadReplayMsg.xml"
+#define DEFAULT_WEBROOMS_URL              "http://xmoto.free.fr/rooms.xml"
+#define DEFAULT_WEBROOMS_FILENAME         "webrooms.xml"
+#define DEFAULT_WEBROOM_ID                "1"
+#define DEFAULT_WEBROOM_NAME              "WR"
 
 #define WWW_AGENT ("xmoto-" + vapp::App::getVersionString())
 
@@ -228,6 +232,46 @@ class WebRoom {
 
   void fillHash();
   void cleanHash();
+};
+
+class WebRoomInfos {
+ public:
+  WebRoomInfos(std::string p_id,
+	       std::string p_name,
+	       std::string p_urlHighscores);
+  ~WebRoomInfos();
+
+  std::string getId();
+  std::string getName();
+  std::string getUrlHighscores();
+
+ private:
+  std::string m_id;
+  std::string m_name;
+  std::string m_urlHighscore;
+};
+
+class WebRooms {
+ public:
+  WebRooms(const ProxySettings *p_proxy_settings);
+  ~WebRooms();
+
+  /* check for new rooms */
+  void update(); /* throws exceptions */
+
+  /* fill the list of avaible rooms ; does not required an internet connexion */
+  void upgrade();
+
+  void setURL(const std::string &p_url) {m_rooms_url = p_url;}
+  const std::vector<WebRoomInfos*> &getAvailableRooms();
+
+ private:
+  const ProxySettings *m_proxy_settings;
+  std::vector<WebRoomInfos*> m_availableRooms;
+  std::string m_rooms_url;
+
+  void clean();
+  std::string getXmlFileName();
 };
 
 class WebLevel {

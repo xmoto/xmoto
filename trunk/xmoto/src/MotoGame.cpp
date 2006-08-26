@@ -1431,7 +1431,7 @@ namespace vapp {
 
   void MotoGame::_HandleReplayEvent(MotoGameEvent *pEvent) {     
     switch(pEvent->getType()) {
-      GAME_EVENT_PLAYER_TOUCHES_ENTITY:
+      case GAME_EVENT_PLAYER_TOUCHES_ENTITY:
       /* touching an entity creates events, so, don't call it */
       case GAME_EVENT_LUA_CALL_SETPLAYERPOSITION:
       /* don't set player position while it's already made by the game */

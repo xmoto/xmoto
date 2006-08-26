@@ -32,7 +32,8 @@ Since 0.2.0
 * lua : killPlayer() -> kill the player
 * lua : killEntity() -> kill an entity
 * new-level-editor: the number of vertex generated has been optimized.
-
+* add <xml_room> in configuration so that the player can choose the
+   link to his room xml file (priority=high)(priority=high)
 
 Since 1.16
 * BUG : view highscore with up and down with keyboard does not update the button

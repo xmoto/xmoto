@@ -156,6 +156,7 @@ namespace vapp {
                  m_bEnableWebHighscores = true;
 		 m_pWebHighscores = NULL;
 		 m_pWebLevels = NULL;
+		 m_pWebRooms = NULL;
 		 m_fDownloadTaskProgressLast = 0;
 		 m_bWebHighscoresUpdatedThisSession = false;
 		 m_bWebLevelsToDownload = false;
@@ -278,6 +279,7 @@ namespace vapp {
 #if defined(SUPPORT_WEBACCESS)
       bool m_bShowWebHighscoreInGame;           /* true: Show world highscore inside the game */
       WebRoom *m_pWebHighscores;
+      WebRooms *m_pWebRooms;
       WebLevels *m_pWebLevels;
       ProxySettings m_ProxySettings;
       std::string m_DownloadingInformation;
@@ -417,6 +419,7 @@ namespace vapp {
       void _CreateLevelLists(UILevelList *pExternalLevels,UILevelList *pInternalLevels);
       void _CreateReplaysList(UIList *pList);
       void _CreateThemesList(UIList *pList);
+      void _CreateRoomsList(UIList *pList);
       void _CreateProfileList(void);
       void _CreateDefaultConfig(void);
       void _CreateLevelPackLevelList(void);
@@ -438,6 +441,7 @@ namespace vapp {
       void _UpdateLevelLists(void);
       void _UpdateReplaysList(void);
       void _UpdateThemesLists(void);
+      void _UpdateRoomsLists(void);
       void _GameScreenshot(void);
       void _SaveReplay(const std::string &Name);
     
@@ -465,6 +469,8 @@ namespace vapp {
       void _UpdateWebThemes(bool bSilent);
       void _UpdateWebTheme(ThemeChoice* pThemeChoice, bool bNotify);
       void _UpgradeWebHighscores();
+      void _UpdateWebRooms(bool bSilent);
+      void _UpgradeWebRooms(bool bUpdateMenus);
       void _DownloadExtraLevels(void);
       void _UploadHighscore(std::string p_replayname);
       void _ConfigureProxy(void);

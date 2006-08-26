@@ -1,5 +1,7 @@
 ### For 0.2.1
 
+* BUG : save a replay as 0.0.0.0 restart xmoto, it doesn't appear in
+   the list
 * to be able to give a color to a block as parameter in a level
    (instead of a texture)
 * BUG ? http://forum.xmoto.free.fr/viewtopic.php?p=212#212
@@ -78,8 +80,6 @@
    somersaults ? some "freestyle" could ask for figure to be done.
    in the future, i would like make this functionnality better : time
    in the air, time on one wheel, ...
-* add <xml_room> in configuration so that the player can choose the
-   link to his room xml file (priority=high)(priority=high)
 * themes : not more animation in .xml ? -> be able to load an animated bike ?
 * to be able to move a zone ?
 * make sound in themes

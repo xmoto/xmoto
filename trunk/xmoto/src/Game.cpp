@@ -74,6 +74,10 @@ namespace vapp {
     _CreateReplaysList((UIList *)m_pReplaysWindow->getChild("REPLAY_LIST"));                       
   }
 
+  void GameApp::_UpdateRoomsLists(void) {
+    _CreateRoomsList((UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_ROOMS_TAB:ROOMS_LIST"));
+  }
+
   void GameApp::_UpdateThemesLists(void) {
     _CreateThemesList((UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:THEMES_LIST"));
   }
@@ -881,6 +885,11 @@ namespace vapp {
       }
 
       _UpgradeWebHighscores();
+
+    if(m_pWebRooms != NULL) delete m_pWebRooms;
+    m_pWebRooms = new WebRooms(&m_ProxySettings);
+    _UpgradeWebRooms(false);
+
     #endif
         
     if(!isNoGraphics()) {
@@ -1547,6 +1556,9 @@ namespace vapp {
         
       if(m_pWebLevels != NULL)
         delete m_pWebLevels;
+
+      if(m_pWebRooms != NULL)
+      delete m_pWebRooms;  
     #endif
   
     for(int i=0;i<m_LevelPacks.size();i++) {
@@ -2074,9 +2086,10 @@ namespace vapp {
     
     /* Webstuff */
     m_Config.createVar( "WebHighscoresURL",       DEFAULT_WEBHIGHSCORES_URL );
-    m_Config.createVar( "WebLevelsURL",           DEFAULT_WEBLEVELS_URL );
-    m_Config.createVar( "WebThemesURL",           DEFAULT_WEBTHEMES_URL );
+    m_Config.createVar( "WebLevelsURL",           DEFAULT_WEBLEVELS_URL);
+    m_Config.createVar( "WebThemesURL",           DEFAULT_WEBTHEMES_URL);
     m_Config.createVar( "WebThemesURLBase",       DEFAULT_WEBTHEMES_SPRITESURLBASE);
+    m_Config.createVar( "WebRoomsURL",            DEFAULT_WEBROOMS_URL);
 
     /* Proxy */
     m_Config.createVar( "ProxyType",              "" ); /* (blank), HTTP, SOCKS4, or SOCKS5 */
@@ -2087,7 +2100,7 @@ namespace vapp {
 
     /* auto upload */
     m_Config.createVar( "WebHighscoreUploadURL"      , DEFAULT_UPLOADREPLAY_URL);
-    m_Config.createVar( "WebHighscoreUploadIdRoom"   , "");
+    m_Config.createVar( "WebHighscoreUploadIdRoom"   , DEFAULT_WEBROOM_ID);
     m_Config.createVar( "WebHighscoreUploadLogin"    , "");
     m_Config.createVar( "WebHighscoreUploadPassword" , ""); 
 
@@ -2345,6 +2358,7 @@ namespace vapp {
     m_bWebHighscoresUpdatedThisSession = true;
     
     /* Try downloading the highscores */
+    m_pWebHighscores->setWebsiteURL(m_Config.getString("WebHighscoresURL"));
     m_pWebHighscores->update();
   }
 #endif
@@ -2390,6 +2404,25 @@ namespace vapp {
   }    
 #endif
 
+#if defined(SUPPORT_WEBACCESS) 
+  void GameApp::_UpdateWebRooms(bool bSilent) {
+    if(!bSilent) {
+      _SimpleMessage(GAMETEXT_DLROOMSLISTCHECK,&m_DownloadMsgBoxRect);
+    }  
+
+    m_pWebRooms->setURL(m_Config.getString("WebRoomsURL"));
+
+    Log("WWW: Checking for rooms list...");
+
+    try {
+      m_pWebRooms->update();
+    } catch(Exception &e) {
+      /* file probably doesn't exist */
+      Log("** Warning ** : Failed to analyse update webrooms list");		
+    }
+  }
+#endif
+
 #if defined(SUPPORT_WEBACCESS)
   void GameApp::_UpdateWebTheme(ThemeChoice* pThemeChoice, bool bNotify) {
     if(m_themeChoicer->isUpdatableThemeFromWWW(pThemeChoice) == false) {
@@ -2424,7 +2457,6 @@ namespace vapp {
 
 #if defined(SUPPORT_WEBACCESS)  
   void GameApp::_UpgradeWebHighscores() {
-    #if defined(SUPPORT_WEBACCESS)
     /* Upgrade high scores */
     try {
       m_pWebHighscores->upgrade();      
@@ -2432,7 +2464,19 @@ namespace vapp {
       /* file probably doesn't exist */
       Log("** Warning ** : Failed to analyse web-highscores file");		
     }
-    #endif
+  }
+
+  void GameApp::_UpgradeWebRooms(bool bUpdateMenus) {
+    /* Upgrade high scores */
+    try {
+      m_pWebRooms->upgrade();   
+      if(bUpdateMenus) {
+	_UpdateRoomsLists();
+      }
+    } catch(Exception &e) {
+      /* file probably doesn't exist */
+      Log("** Warning ** : Failed to analyse webrooms file");		
+    }
   }
 #endif
 
