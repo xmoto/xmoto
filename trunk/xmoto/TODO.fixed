@@ -31,6 +31,8 @@ Since 0.2.0
 * make circle for sprites, strawberries, ... in ugly mode
 * lua : killPlayer() -> kill the player
 * lua : killEntity() -> kill an entity
+* new-level-editor: the number of vertex generated has been optimized.
+
 
 Since 1.16
 * BUG : view highscore with up and down with keyboard does not update the button

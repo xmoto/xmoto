@@ -127,5 +127,4 @@
 ** When you save the file as a .lvl, do an automatic 'smoothing' of the level (ie: transform shape into path. add many vertex to every path)
 ** Entities & Zone & Blocks: Need a menu with them (list them using xmoto executable)
 * do the lvl2svg convertor
-* optimize the number of vertex generated, there is to much...
 * it seems that there is a bug with transformations when you got recursive layer -> spot it out
