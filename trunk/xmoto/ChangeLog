@@ -5,6 +5,7 @@ X-Moto 0.2.1 2006- (bugs fix version)
  * ppc computer can now read and write x86 replays (patch by Dave Vasilevsky)
  * tools to make smooth levels with Inkscape (by Emmanuel Gorse)
  * upload highscores from the game
+ * webrooms configuration
  * Man pages (from debian package)
  * desktop files and icon for kde/gnome (by SnowBear)
  * -nowww option to force xmoto to not connect on the web
