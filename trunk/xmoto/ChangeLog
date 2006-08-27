@@ -10,6 +10,7 @@ X-Moto 0.2.1 2006- (bugs fix version)
  * desktop files and icon for kde/gnome (by SnowBear)
  * -nowww option to force xmoto to not connect on the web
  * -testTheme option to test your themes
+ * new functions for scripted levels
  * auto-adaptation of the camera (depending on the gravity/wind)
  * uglyer ugly mode (for slower computer)
  * Several bugs fixed.
