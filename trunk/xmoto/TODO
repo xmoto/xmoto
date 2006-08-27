@@ -1,5 +1,9 @@
 ### For 0.2.1
 
+* script :
+   add : SomersaultDone()
+         rotation for blocks         
+
 * BUG : save a replay as 0.0.0.0 restart xmoto, it doesn't appear in
    the list
 * to be able to give a color to a block as parameter in a level
