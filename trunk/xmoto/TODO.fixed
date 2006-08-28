@@ -36,6 +36,8 @@ Since 0.2.0
    link to his room xml file (priority=high)(priority=high)
 * lua call OnSomersault()
 * OnRearWheelTouchGround() OnRearWheelLeaveGround() (and the same for the other weel)
+* new-level-editor: better integration with Inkscape
+** Save as .lvl file (launch svg2lvl)
 
 Since 1.16
 * BUG : view highscore with up and down with keyboard does not update the button
