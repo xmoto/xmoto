@@ -8,8 +8,6 @@
 <sky>sky1</sky>
 </info>
 <script>
-Zone0 = {}
-
 function OnSomersault(bCounterClock)
   if(bCounterClock == 1)  
   then
