@@ -299,12 +299,12 @@ namespace vapp {
     if(nNumContacts>0) {
       if(bFrontWheelTouching == false) {
 	bFrontWheelTouching = true;
-	scriptCallVoidNumberArg("OnFrontWheelTouches", 1);
+	scriptCallVoidNumberArg("OnWheel1Touchs", 1);
       }
     } else {
       if(bFrontWheelTouching) {
 	bFrontWheelTouching = false;
-	scriptCallVoidNumberArg("OnFrontWheelTouches", 0);
+	scriptCallVoidNumberArg("OnWheel1Touchs", 0);
       }
     }
     if(m_Collision.isDynamicTouched()) {
@@ -357,12 +357,12 @@ namespace vapp {
     if(nNumContacts>0) {
       if(bRearWheelTouching == false) {
 	bRearWheelTouching = true;
-	scriptCallVoidNumberArg("OnRearWheelTouches", 1);
+	scriptCallVoidNumberArg("OnWheel2Touchs", 1);
       }
     } else {
       if(bRearWheelTouching) {
 	bRearWheelTouching = false;
-	scriptCallVoidNumberArg("OnRearWheelTouches", 0);
+	scriptCallVoidNumberArg("OnWheel2Touchs", 0);
       }
     }
 
