@@ -30,7 +30,7 @@ class SomersaultCounter {
   ~SomersaultCounter();
 
   void init();
-  bool update(double p_angle);
+  bool update(double p_angle, bool &bCounterclock);
 
   int getTotalClockwise();
   int getTotalCounterClockwise();

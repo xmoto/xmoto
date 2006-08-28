@@ -166,6 +166,23 @@ namespace vapp {
     lua_settop(m_pL,0);        
   }
   
+  void MotoGame::scriptCallVoidNumberArg(std::string FuncName, int n) {
+    /* Fetch global function */
+    lua_getglobal(m_pL,FuncName.c_str());
+    
+    /* Is it really a function and not just a pile of ****? */
+    if(lua_isfunction(m_pL,-1)) {
+      /* Call! */
+      lua_pushnumber(m_pL, n);
+      if(lua_pcall(m_pL,1,0,0) != 0) {
+        throw Exception("failed to invoke (void) " + FuncName + std::string("(): ") + std::string(lua_tostring(m_pL,-1)));
+      }      
+    }
+    
+    /* Reset Lua VM */
+    lua_settop(m_pL,0);        
+  }
+
   void MotoGame::scriptCallTblVoid(std::string Table,std::string FuncName) {
     /* Fetch global table */        
     lua_getglobal(m_pL,Table.c_str());
@@ -452,12 +469,11 @@ namespace vapp {
     // loops must not make done just by changing the side
     if(pReplayState == NULL) { /* this does not work for replays */
       double fAngle = acos(m_BikeS.fFrameRot[0]);
+      bool bCounterclock;
       if(m_BikeS.fFrameRot[2] < 0.0f) fAngle = 2*3.14159f - fAngle;
 
-      if(m_somersaultCounter.update(fAngle)) {
-	char msg[16];
-	sprintf(msg, "%i", m_somersaultCounter.getTotal());
-	//gameMessage(msg);
+      if(m_somersaultCounter.update(fAngle, bCounterclock)) {
+	scriptCallVoidNumberArg("OnSomersault", bCounterclock ? 1:0);
       }
     }
 

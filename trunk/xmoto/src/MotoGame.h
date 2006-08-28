@@ -471,6 +471,7 @@ namespace vapp {
       bool scriptCallBool(std::string FuncName,bool bDefault=false);
       void scriptCallVoid(std::string FuncName);
       void scriptCallTblVoid(std::string Table,std::string FuncName);
+      void MotoGame::scriptCallVoidNumberArg(std::string FuncName, int n);
 
       /* Data interface */
       void resetAutoDisabler(void) {m_nStillFrames=0;}

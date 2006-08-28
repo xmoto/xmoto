@@ -1,8 +1,7 @@
 ### For 0.2.1
 
 * script :
-   add : SomersaultDone()
-         rotation for blocks         
+   add : rotation for blocks         
 * Add a command line option like the one to test themes. This option could be ''testscript'' and would show zones during game (with an extra, the name of the zone).
 * BUG : save a replay as 0.0.0.0 restart xmoto, it doesn't appear in
    the list

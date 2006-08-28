@@ -50,7 +50,7 @@ int SomersaultCounter::getTotal() {
   return getTotalCounterClockwise() + getTotalClockwise();
 }
 
-bool SomersaultCounter::update(double p_angle) {
+bool SomersaultCounter::update(double p_angle, bool &bCounterclock) {
   bool   v_res;
   double v_diff;
   v_res = false;
@@ -89,8 +89,10 @@ bool SomersaultCounter::update(double p_angle) {
     /* increase number of somersaults */
     if(v_diff > 0.0) {
       m_nbClockwise++;
+      bCounterclock = true;
     } else {
       m_nbCounterClockwise++;
+      bCounterclock = false;
     }
 
     // reinit to detect a new one
