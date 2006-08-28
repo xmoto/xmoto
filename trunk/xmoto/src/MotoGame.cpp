@@ -590,7 +590,9 @@ namespace vapp {
     
     /* Clear collision system */
     m_Collision.reset();
-    
+    bFrontWheelTouching = false;
+    bRearWheelTouching  = false;    
+
     /* Clear stuff */
     clearStates();
     

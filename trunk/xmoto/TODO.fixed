@@ -35,6 +35,7 @@ Since 0.2.0
 * add <xml_room> in configuration so that the player can choose the
    link to his room xml file (priority=high)(priority=high)
 * lua call OnSomersault()
+* OnRearWheelTouchGround() OnRearWheelLeaveGround() (and the same for the other weel)
 
 Since 1.16
 * BUG : view highscore with up and down with keyboard does not update the button

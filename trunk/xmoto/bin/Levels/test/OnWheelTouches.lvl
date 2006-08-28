@@ -1,21 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<level id="OnSomersault" levelpack="Test Levels">
+<level id="OnWheelTouches" levelpack="Test Levels">
 <info>
-<name>OnSomersault</name>
+<name>OnWheelTouches</name>
 <description></description>
 <author></author>
 <date></date>
 <sky>sky1</sky>
 </info>
 <script>
-function OnSomersault(bCounterClock)
-  if(bClockWise == 1)  
+max_jump_time = 1.0 -- start at 1 to not count smaller jumps
+jump_begin    = 0.0
+touch_rear  = false
+touch_front = false
+
+function OnRearWheelTouches(bStatus)
+  if(bStatus == 1)  
   then
-    Game.Message("ClockWise Somersault")
+    updateMax()
+    touch_rear = true
   else
-    Game.Message("CounterClockWise Somersault")
+    touch_rear = false
+    jump_begin = Game.GetTime()
   end
 end
+
+function OnFrontWheelTouches(bStatus)
+  if(bStatus == 1)  
+  then
+    updateMax()
+    touch_front = true
+  else
+    touch_front = false
+    jump_begin = Game.GetTime()
+  end
+end
+
+function updateMax()
+  if(touch_rear == false and touch_front == false)
+  then
+    if(Game.GetTime() - jump_begin > max_jump_time)
+    then
+      max_jump_time = Game.GetTime() - jump_begin
+      Game.Message("New high jump: "..max_jump_time)
+    end
+  end
+end
+
 </script>
 <limits left="0" right="50" top="30" bottom="0"/>
 <block id="Block0">

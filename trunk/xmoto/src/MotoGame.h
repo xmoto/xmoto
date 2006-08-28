@@ -426,6 +426,9 @@ namespace vapp {
 #endif
       m_renderer = NULL;
       m_isScriptActiv = false;
+
+      bFrontWheelTouching = false;
+      bRearWheelTouching  = false;
       }
       ~MotoGame() {endLevel();}     
     
@@ -598,6 +601,9 @@ namespace vapp {
 
       /* count somersault */
       SomersaultCounter m_somersaultCounter;
+
+      bool bFrontWheelTouching;
+      bool bRearWheelTouching;
 
       std::vector<SDynamicObject*> m_SDynamicObjects;
 

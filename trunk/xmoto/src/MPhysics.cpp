@@ -296,6 +296,17 @@ namespace vapp {
     nSlipFrameInterlace++;
         
     nNumContacts = _IntersectWheelLevel( m_BikeS.FrontWheelP,m_BikeP.WR,Contacts );
+    if(nNumContacts>0) {
+      if(bFrontWheelTouching == false) {
+	bFrontWheelTouching = true;
+	scriptCallVoidNumberArg("OnFrontWheelTouches", 1);
+      }
+    } else {
+      if(bFrontWheelTouching) {
+	bFrontWheelTouching = false;
+	scriptCallVoidNumberArg("OnFrontWheelTouches", 0);
+      }
+    }
     if(m_Collision.isDynamicTouched()) {
       if(!dBodyIsEnabled(m_FrontWheelBodyID)) dBodyEnable(m_FrontWheelBodyID);
       if(!dBodyIsEnabled(m_RearWheelBodyID)) dBodyEnable(m_RearWheelBodyID);
@@ -343,6 +354,18 @@ namespace vapp {
     }
 
     nNumContacts = _IntersectWheelLevel( m_BikeS.RearWheelP,m_BikeP.WR,Contacts );
+    if(nNumContacts>0) {
+      if(bRearWheelTouching == false) {
+	bRearWheelTouching = true;
+	scriptCallVoidNumberArg("OnRearWheelTouches", 1);
+      }
+    } else {
+      if(bRearWheelTouching) {
+	bRearWheelTouching = false;
+	scriptCallVoidNumberArg("OnRearWheelTouches", 0);
+      }
+    }
+
     if(m_Collision.isDynamicTouched()) {
       if(!dBodyIsEnabled(m_FrontWheelBodyID)) dBodyEnable(m_FrontWheelBodyID);
       if(!dBodyIsEnabled(m_RearWheelBodyID)) dBodyEnable(m_RearWheelBodyID);
