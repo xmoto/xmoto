@@ -837,7 +837,7 @@ namespace vapp {
             LevelBlock *pBlock = new LevelBlock;
             pBlock->ID = FS::readString(pfh);
             
-            if(nFormat == 2) {
+            if(nFormat >= 2) {
               pBlock->bDynamic = FS::readBool(pfh);
             }
             
@@ -847,7 +847,7 @@ namespace vapp {
             pBlock->fPosX = FS::readFloat_LE(pfh);
             pBlock->fPosY = FS::readFloat_LE(pfh);
             
-            if(nFormat == 3) {
+            if(nFormat >= 3) {
               pBlock->fGrip = FS::readFloat_LE(pfh);
             } else {
 	      pBlock->fGrip = DEFAULT_PHYS_WHEEL_GRIP;
