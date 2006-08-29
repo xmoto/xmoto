@@ -1101,6 +1101,7 @@ namespace vapp {
         /* Download levels! */
         _DownloadExtraLevels();
 	/* currrrent theme should be updated when there are new levels */
+	_UpdateWebThemes(true);
 	ThemeChoice* v_ThemeChoice;
 	v_ThemeChoice = m_themeChoicer->getChoiceByName(m_Config.getString("Theme"));
 	if(v_ThemeChoice != NULL) {

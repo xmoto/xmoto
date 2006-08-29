@@ -10,8 +10,6 @@
 * BUG ? http://forum.xmoto.free.fr/viewtopic.php?p=212#212
 * BUG : http://forum.xmoto.free.fr/viewtopic.php?p=205#205
 * Be able to change the size of a sprite as parameter in a level
-* update themes list before update a theme (otherwise, on levels
-   update, it does nothing)
 * if some texture are missing, but backgound in black and foreground in white so that the level can be playable
 * change ghost rules : "player/players/room"
 * bug : keys 1 2 3 4 5 won't work on french keybord : allow to configure key action for script instead of allow the script to choose the key
