@@ -127,7 +127,7 @@ namespace vapp {
   /*===========================================================================
   Add blocking line to collision system
   ===========================================================================*/
-  void CollisionSystem::defineLine(float x1,float y1,float x2,float y2) {
+  void CollisionSystem::defineLine(float x1,float y1,float x2,float y2, float grip) {
     /* Define bounding box of line */
     float fLineMinX = CD_MIN(x1,x2);
     float fLineMinY = CD_MIN(y1,y2);
@@ -140,6 +140,7 @@ namespace vapp {
     pNewLine->y1 = y1;
     pNewLine->x2 = x2;
     pNewLine->y2 = y2;
+    pNewLine->fGrip = grip;
     m_Lines.push_back(pNewLine);   
     
     /* Calculate cell coordinates */
@@ -366,7 +367,7 @@ namespace vapp {
         Vector2f W = Vector2f(vx,vy);
         W.normalize();
 
-        _SetWheelContactParams(&c,T,W,0.0f);                                           
+        _SetWheelContactParams(&c,T,W,0.0f, m_ExternalDynamicLines[k]->fGrip);                                           
         int nOldC = nNumC;
         nNumC = _AddContactToList(pContacts,nNumC,&c,nMaxC);                         
         if(nNumC != nOldC) m_bDynamicTouched = true;
@@ -412,7 +413,7 @@ namespace vapp {
             Vector2f W = Vector2f(vx,vy);
             W.normalize();
 
-            _SetWheelContactParams(&c,T,W,0.0f);                                   
+            _SetWheelContactParams(&c,T,W,0.0f, m_pGrid[i].Lines[j]->fGrip);
             nNumC = _AddContactToList(pContacts,nNumC,&c,nMaxC);                 
           }                                      
         }          
@@ -426,7 +427,7 @@ namespace vapp {
   /*===========================================================================
   Calculate precise intersections between circle and geometry, if any
   ===========================================================================*/
-  int CollisionSystem::_CollideCircleAndLine(Line *pLine,float x,float y,float r,dContact *pContacts,int nOldNumC,int nMaxC) {
+  int CollisionSystem::_CollideCircleAndLine(Line *pLine,float x,float y,float r,dContact *pContacts,int nOldNumC,int nMaxC, float fGrip) {
     int nNumC = nOldNumC;
   
     /* Is circle "behind" the line? */
@@ -463,7 +464,7 @@ namespace vapp {
 //      float fDepth = _CalculateCircleLineDepth(Vector2f(x,y),r,Vector2f(pLine->x1,pLine->y1),Vector2f(pLine->x2,pLine->y2));
       double fDepth = _CalculateDepth(Vector2f(x,y),r,Vector2f(pLine->x1,pLine->y1));
       _SetWheelContactParams(&c,Vector2f(pLine->x1,pLine->y1),
-                              W,fDepth);                                   
+                              W,fDepth, fGrip);                                   
       nNumC = _AddContactToList(pContacts,nNumC,&c,nMaxC);            
       //return nNumC;
     }
@@ -483,7 +484,7 @@ namespace vapp {
 //      float fDepth = _CalculateCircleLineDepth(Vector2f(x,y),r,Vector2f(pLine->x1,pLine->y1),Vector2f(pLine->x2,pLine->y2));
       double fDepth = _CalculateDepth(Vector2f(x,y),r,Vector2f(pLine->x2,pLine->y2));
       _SetWheelContactParams(&c,Vector2f(pLine->x2,pLine->y2),
-                              W,fDepth);                                   
+                              W,fDepth, fGrip);                                   
       nNumC = _AddContactToList(pContacts,nNumC,&c,nMaxC);            
       //return nNumC;
     }
@@ -506,11 +507,11 @@ namespace vapp {
       //if((xxx % 200) == 0) 
       //  printf("%f\n",fDepth);
         
-      _SetWheelContactParams(&c,T1,W,fDepth); 
+      _SetWheelContactParams(&c,T1,W,fDepth, fGrip); 
       nNumC = _AddContactToList(pContacts,nNumC,&c,nMaxC);
         
       if(n>1) {
-        _SetWheelContactParams(&c,T2,W,fDepth); 
+        _SetWheelContactParams(&c,T2,W,fDepth, fGrip); 
 //        _SetWheelContactParams(&c,T2,W,_CalculateDepth(Vector2f(x,y),r,T2));                                   
         nNumC = _AddContactToList(pContacts,nNumC,&c,nMaxC);
       }
@@ -547,7 +548,8 @@ namespace vapp {
     /* Collide against dynamic lines */
     for(int k=0;k<m_ExternalDynamicLines.size();k++) {
       int nOldC = nNumC;
-      nNumC = _CollideCircleAndLine(m_ExternalDynamicLines[k],x,y,r,pContacts,nNumC,nMaxC);
+      nNumC = _CollideCircleAndLine(m_ExternalDynamicLines[k],x,y,r,pContacts,nNumC,nMaxC,
+				    m_ExternalDynamicLines[k]->fGrip);
 //      printf("<%d  %d  %d>\n",nNumC,nOldC,m_ExternalDynamicLines.size());
       if(nOldC != nNumC)
         m_bDynamicTouched = true;
@@ -574,7 +576,8 @@ namespace vapp {
         
         /* Check all lines in cell */
         for(int j=0;j<m_pGrid[i].Lines.size();j++) {
-          nNumC = _CollideCircleAndLine(m_pGrid[i].Lines[j],x,y,r,pContacts,nNumC,nMaxC);
+          nNumC = _CollideCircleAndLine(m_pGrid[i].Lines[j],x,y,r,pContacts,nNumC,nMaxC,
+					m_pGrid[i].Lines[j]->fGrip);
         }          
       }
     }
@@ -611,7 +614,7 @@ namespace vapp {
   /*===========================================================================
   Helpers 
   ===========================================================================*/
-  void CollisionSystem::_SetWheelContactParams(dContact *pc,const Vector2f &Pos,const Vector2f &NormalT,double fDepth) {
+  void CollisionSystem::_SetWheelContactParams(dContact *pc,const Vector2f &Pos,const Vector2f &NormalT,double fDepth, float fGrip) {
     memset(pc,0,sizeof(dContact));
     Vector2f Normal = NormalT;
     Normal.normalize();
@@ -624,7 +627,7 @@ namespace vapp {
     pc->geom.pos[0] = Pos.x;
     pc->geom.pos[1] = Pos.y;
     //pc->surface.mu = dInfinity;
-    pc->surface.mu = PHYS_WHEEL_GRIP;
+    pc->surface.mu = fGrip;
     //pc->surface.mu = 0.9; //.7; //8;
     //pc->surface.bounce = 0.3;
     pc->surface.soft_erp = PHYS_WHEEL_ERP;     

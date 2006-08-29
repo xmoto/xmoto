@@ -11,6 +11,7 @@ X-Moto 0.2.1 2006- (bugs fix version)
  * -nowww option to force xmoto to not connect on the web
  * -testTheme option to test your themes
  * new functions for scripted levels
+ * grip parameter for blocks
  * auto-adaptation of the camera (depending on the gravity/wind)
  * uglyer ugly mode (for slower computer)
  * Several bugs fixed.

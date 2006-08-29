@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "VApp.h"
 #include "VXml.h"
+#include "PhysSettings.h"
 
 namespace vapp {
 
@@ -98,6 +99,7 @@ namespace vapp {
       bBackground = false;
       bWater = false;
       bDynamic = false;
+      fGrip = DEFAULT_PHYS_WHEEL_GRIP;
     }
   
     std::string ID;           /* Block ID */
@@ -108,6 +110,7 @@ namespace vapp {
     bool bBackground;         /* Background block */
     bool bWater;              /* Water block */
     bool bDynamic;            /* Non-static geometry */
+    float fGrip;              /* GRIP of the block */
   };
 
 	/*===========================================================================

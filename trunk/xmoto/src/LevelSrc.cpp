@@ -146,6 +146,9 @@ namespace vapp {
         else
           FS::writeLineF(pfh,"\t\t<position x=\"%f\" y=\"%f\"/>",m_Blocks[i]->fPosX,m_Blocks[i]->fPosY);
       }
+      if(m_Blocks[i]->fGrip != DEFAULT_PHYS_WHEEL_GRIP) {
+	FS::writeLineF(pfh,"\t\t<physics grip=\"%f\"/>",m_Blocks[i]->fGrip);
+      }
       FS::writeLineF(pfh,"\t\t<usetexture id=\"%s\"/>",m_Blocks[i]->Texture.c_str());
       for(unsigned int j=0;j<m_Blocks[i]->Vertices.size();j++) {
         if(m_Blocks[i]->Vertices[j]->EdgeEffect != "")
@@ -385,7 +388,8 @@ namespace vapp {
           
           TiXmlElement *pUseTextureElem = _FindElement(pElem,std::string("usetexture"));
           TiXmlElement *pPositionElem = _FindElement(pElem,std::string("position"));                
-          
+	  TiXmlElement *pPhysicsElem = _FindElement(pElem,std::string("physics"));          
+
           if(pUseTextureElem != NULL) {
             pBlock->Texture = _GetOption(pUseTextureElem,"id","default");
             pBlock->fTextureScale = atof( _GetOption(pUseTextureElem,"scale","1").c_str() );
@@ -406,6 +410,13 @@ namespace vapp {
             //if(pBlock->bDynamic)
             //  printf("%s: %d %d %d\n",pBlock->ID.c_str(),pBlock->bBackground,pBlock->bWater,pBlock->bDynamic);
           }
+          if(pPhysicsElem != NULL) {
+	    char str[5];
+	    snprintf(str, 5, "%f", DEFAULT_PHYS_WHEEL_GRIP);
+	    pBlock->fGrip = atof(_GetOption(pPhysicsElem, "grip", str).c_str());
+          } else {
+	    pBlock->fGrip = DEFAULT_PHYS_WHEEL_GRIP;
+	  }
           
           /* Get vertices */
           for(TiXmlElement *pj = pElem->FirstChildElement(); pj!=NULL; pj=pj->NextSiblingElement()) {
@@ -658,8 +669,9 @@ namespace vapp {
     }
     else {
       /* Write tag */
-      FS::writeBuf(pfh,"XBL2",4); /* version two includes dynamic information about blocks */
-      
+      FS::writeBuf(pfh,"XBL3",4); /* version two includes dynamic information about blocks */
+                                  /* 3 -> includes now the grip of the block */      
+
       /* Write CRC32 of XML */
       FS::writeInt_LE(pfh,pSum->nCRC32);
          
@@ -696,7 +708,8 @@ namespace vapp {
         FS::writeString(pfh,m_Blocks[i]->Texture);
         FS::writeFloat_LE(pfh,m_Blocks[i]->fPosX);
         FS::writeFloat_LE(pfh,m_Blocks[i]->fPosY);
-        
+	FS::writeFloat_LE(pfh,m_Blocks[i]->fGrip);
+
         FS::writeShort_LE(pfh,m_Blocks[i]->Vertices.size());
         
         for(unsigned int j=0;j<m_Blocks[i]->Vertices.size();j++) {
@@ -770,8 +783,10 @@ namespace vapp {
         nFormat = 1;
       else if(!strcmp(cTag,"XBL2"))
         nFormat = 2;
+      else if(!strcmp(cTag,"XBL3"))
+        nFormat = 3;
         
-      if(nFormat == 1 || nFormat == 2) {
+      if(nFormat == 1 || nFormat == 2 || nFormat == 3) {
         /* Read "format 1" / "format 2" binary level */
         m_LevelCheckSum.nCRC32 = pSum->nCRC32;
         
@@ -832,6 +847,12 @@ namespace vapp {
             pBlock->fPosX = FS::readFloat_LE(pfh);
             pBlock->fPosY = FS::readFloat_LE(pfh);
             
+            if(nFormat == 3) {
+              pBlock->fGrip = FS::readFloat_LE(pfh);
+            } else {
+	      pBlock->fGrip = DEFAULT_PHYS_WHEEL_GRIP;
+	    }
+
             int nNumVertices = FS::readShort_LE(pfh);
             pBlock->Vertices.reserve(nNumVertices);
             for(int j=0;j<nNumVertices;j++) {

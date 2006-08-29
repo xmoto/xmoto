@@ -874,9 +874,10 @@ namespace vapp {
         if(!InBlocks[i]->bBackground && !InBlocks[i]->bDynamic) {
           /* Add line to collision handler */
           m_Collision.defineLine(InBlocks[i]->fPosX + InBlocks[i]->Vertices[j]->fX,
-				    InBlocks[i]->fPosY + InBlocks[i]->Vertices[j]->fY,
-				    InBlocks[i]->fPosX + InBlocks[i]->Vertices[jnext]->fX,
-				    InBlocks[i]->fPosY + InBlocks[i]->Vertices[jnext]->fY);
+				 InBlocks[i]->fPosY + InBlocks[i]->Vertices[j]->fY,
+				 InBlocks[i]->fPosX + InBlocks[i]->Vertices[jnext]->fX,
+				 InBlocks[i]->fPosY + InBlocks[i]->Vertices[jnext]->fY,
+				 InBlocks[i]->fGrip);
         }
         
         /* Add line to BSP generator */
@@ -919,7 +920,8 @@ namespace vapp {
           /* Define collision lines */
           for(int k=0;k<BSPPolys[j]->Vertices.size();k++) {
             Line *pCLine = new Line;
-            pCLine->x1 = pCLine->y1 = pCLine->x2 = pCLine->y2 = 0.0f;            
+            pCLine->x1 = pCLine->y1 = pCLine->x2 = pCLine->y2 = 0.0f;
+	    pCLine->fGrip = pDyn->pSrcBlock->fGrip;
             pDyn->CollisionLines.push_back(pCLine);
             m_Collision.addExternalDynamicLine(pCLine);
           }
@@ -1015,13 +1017,17 @@ namespace vapp {
     
     /* Give limits to collision system */
     m_Collision.defineLine( m_pLevelSrc->getLeftLimit(), m_pLevelSrc->getTopLimit(),
-                            m_pLevelSrc->getLeftLimit(), m_pLevelSrc->getBottomLimit() );
+                            m_pLevelSrc->getLeftLimit(), m_pLevelSrc->getBottomLimit(),
+			    DEFAULT_PHYS_WHEEL_GRIP);
     m_Collision.defineLine( m_pLevelSrc->getLeftLimit(), m_pLevelSrc->getBottomLimit(),
-                            m_pLevelSrc->getRightLimit(), m_pLevelSrc->getBottomLimit() );
+                            m_pLevelSrc->getRightLimit(), m_pLevelSrc->getBottomLimit(),
+			    DEFAULT_PHYS_WHEEL_GRIP );
     m_Collision.defineLine( m_pLevelSrc->getRightLimit(), m_pLevelSrc->getBottomLimit(),
-                            m_pLevelSrc->getRightLimit(), m_pLevelSrc->getTopLimit() );
+                            m_pLevelSrc->getRightLimit(), m_pLevelSrc->getTopLimit(),
+			    DEFAULT_PHYS_WHEEL_GRIP );
     m_Collision.defineLine( m_pLevelSrc->getRightLimit(), m_pLevelSrc->getTopLimit(),
-                            m_pLevelSrc->getLeftLimit(), m_pLevelSrc->getTopLimit() );
+                            m_pLevelSrc->getLeftLimit(), m_pLevelSrc->getTopLimit(),
+			    DEFAULT_PHYS_WHEEL_GRIP );
     
     /* Show stats about the collision system */
     CollisionSystemStats CStats;

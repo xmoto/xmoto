@@ -33,6 +33,7 @@ namespace vapp {
   /* Line */
   struct Line {
     float x1,y1,x2,y2;
+    float fGrip;
   };
   
   /* Grid cell */
@@ -59,7 +60,7 @@ namespace vapp {
       /* Methods */
       void reset(void);
       void setDims(float fMinX,float fMinY,float fMaxX,float fMaxY);
-      void defineLine(float x1,float y1,float x2,float y2);
+      void defineLine(float x1,float y1,float x2,float y2, float grip);
       void addExternalDynamicLine(Line *pLine);
       
       bool checkLine(float x1,float y1,float x2,float y2);
@@ -100,8 +101,8 @@ namespace vapp {
       
       /* Helpers */
       bool _CheckCircleAndLine(Line *pLine,float x,float y,float r);
-      int _CollideCircleAndLine(Line *pLine,float x,float y,float r,dContact *pContacts,int nOldNumC,int nMaxC);
-      void _SetWheelContactParams(dContact *pc,const Vector2f &Pos,const Vector2f &NormalT,double fDepth);
+      int _CollideCircleAndLine(Line *pLine,float x,float y,float r,dContact *pContacts,int nOldNumC,int nMaxC, float fGrip);
+      void _SetWheelContactParams(dContact *pc,const Vector2f &Pos,const Vector2f &NormalT,double fDepth, float fGrip);
       double _CalculateDepth(const Vector2f &Cp,float Cr,Vector2f P);
       double _CalculateCircleLineDepth(const Vector2f &Cp,float Cr,Vector2f P1,Vector2f P2);
       int _AddContactToList(dContact *pContacts,int nNumContacts,dContact *pc,int nMaxContacts);
