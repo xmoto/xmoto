@@ -39,6 +39,7 @@ Since 0.2.0
 * new-level-editor: better integration with Inkscape
 ** Save as .lvl file (launch svg2lvl)
 * update themes list before update a theme (otherwise, on levels update, it does nothing)
+* Be able to change the size of a sprite as parameter in a level
 
 Since 1.16
 * BUG : view highscore with up and down with keyboard does not update the button
