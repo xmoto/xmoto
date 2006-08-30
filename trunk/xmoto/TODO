@@ -1,5 +1,11 @@
 ### For 0.2.1
-
+*(20:39:54) Neckelmann:   the game should really do all this:
+zone1 = {}
+zone1a = {}
+zone1b = {}
+zone2 = {}
+zone2a = {}
+zone2b = {}
 * script :
    add : rotation for blocks         
 * Add a command line option like the one to test themes. This option could be ''testscript'' and would show zones during game (with an extra, the name of the zone).
