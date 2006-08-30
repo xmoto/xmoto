@@ -313,7 +313,17 @@ namespace vapp {
         
         TiXmlElement *pSizeElem = pElem->FirstChildElement("size");
         if(pSizeElem != NULL) {
+	  float v_width, v_height;
           pEntity->fSize = atof(_GetOption(pSizeElem,"r","0.2").c_str());
+
+	  v_width = atof(_GetOption(pSizeElem,"width","-1.0").c_str());
+	  if(v_width > 0.0) {
+	    pEntity->fWidth = v_width;
+	  }
+	  v_height = atof(_GetOption(pSizeElem,"height","-1.0").c_str());
+	  if(v_height > 0.0) {
+	    pEntity->fHeight = v_height;
+	  }
         }
         
         /* Get parameters */
@@ -670,7 +680,7 @@ namespace vapp {
     else {
       /* Write tag */
       FS::writeBuf(pfh,"XBL3",4); /* version two includes dynamic information about blocks */
-                                  /* 3 -> includes now the grip of the block */      
+                                  /* 3 -> includes now the grip of the block, width and height of the sprites */      
 
       /* Write CRC32 of XML */
       FS::writeInt_LE(pfh,pSum->nCRC32);
@@ -722,12 +732,15 @@ namespace vapp {
       /* Write entities */
       FS::writeInt_LE(pfh,m_Entities.size());
       for(unsigned int i=0;i<m_Entities.size();i++) {
-			  FS::writeString(pfh,m_Entities[i]->ID);
-			  FS::writeString(pfh,m_Entities[i]->TypeID);
-			  FS::writeFloat_LE(pfh,m_Entities[i]->fSize);
+	FS::writeString(pfh,m_Entities[i]->ID);
+	FS::writeString(pfh,m_Entities[i]->TypeID);
+	FS::writeFloat_LE(pfh,m_Entities[i]->fSize);
+        FS::writeFloat(pfh,m_Entities[i]->fWidth);       
+        FS::writeFloat(pfh,m_Entities[i]->fHeight); 
         FS::writeFloat_LE(pfh,m_Entities[i]->fPosX);
         FS::writeFloat_LE(pfh,m_Entities[i]->fPosY);
         FS::writeByte(pfh,m_Entities[i]->Params.size());       
+    
         for(unsigned int j=0;j<m_Entities[i]->Params.size();j++) {
           FS::writeString(pfh,m_Entities[i]->Params[j]->Name);
           FS::writeString(pfh,m_Entities[i]->Params[j]->Value);        
@@ -875,6 +888,11 @@ namespace vapp {
             pEnt->ID = FS::readString(pfh);
             pEnt->TypeID = FS::readString(pfh);
             pEnt->fSize = FS::readFloat_LE(pfh);
+	    if(nFormat >= 3) {
+	      pEnt->fWidth  = FS::readFloat_LE(pfh);
+	      pEnt->fHeight = FS::readFloat_LE(pfh);
+	    }
+
             pEnt->fPosX = FS::readFloat_LE(pfh);
             pEnt->fPosY = FS::readFloat_LE(pfh);
             

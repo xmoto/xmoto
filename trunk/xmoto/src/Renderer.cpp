@@ -852,16 +852,34 @@ namespace vapp {
 	v_spriteType = v_animationSpriteType;
 	v_centerX = v_animationSpriteType->getCenterX();
 	v_centerY = v_animationSpriteType->getCenterY();
-	v_width   = v_animationSpriteType->getWidth();
-	v_height  = v_animationSpriteType->getHeight();
+
+	if(pSprite->pSrc->fWidth  > 0.0) {
+	  v_width  = pSprite->pSrc->fWidth;
+	  v_height = pSprite->pSrc->fHeight;
+	  v_centerX += (pSprite->pSrc->fWidth -v_animationSpriteType->getWidth())  / 2.0;
+	  v_centerY += (pSprite->pSrc->fHeight-v_animationSpriteType->getHeight()) / 2.0;	  
+	} else {
+	  v_width  = v_animationSpriteType->getWidth();
+	  v_height = v_animationSpriteType->getHeight();
+	}
       } else {
 	v_decorationSpriteType = (DecorationSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_DECORATION, v_sprite_type);
 	v_spriteType = v_decorationSpriteType;
+	v_centerX = v_decorationSpriteType->getCenterX();
+	v_centerY = v_decorationSpriteType->getCenterY();
+
 	if(v_decorationSpriteType != NULL) {
-	  v_centerX = v_decorationSpriteType->getCenterX();
-	  v_centerY = v_decorationSpriteType->getCenterY();
-	  v_width   = v_decorationSpriteType->getWidth();
-	  v_height  = v_decorationSpriteType->getHeight();
+	  if(pSprite->pSrc->fWidth  > 0.0) {
+	    v_width  = pSprite->pSrc->fWidth;
+	    v_height = pSprite->pSrc->fHeight;
+	    /* adjust */
+	    v_centerX += (pSprite->pSrc->fWidth -v_decorationSpriteType->getWidth())  / 2.0;
+	    v_centerY += (pSprite->pSrc->fHeight-v_decorationSpriteType->getHeight()) / 2.0;
+	  } else {
+	    /* use the theme values */
+	    v_width  = v_decorationSpriteType->getWidth();
+	    v_height = v_decorationSpriteType->getWidth();
+	  }
 	}
       }
 

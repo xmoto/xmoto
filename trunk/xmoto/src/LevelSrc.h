@@ -128,12 +128,14 @@ namespace vapp {
 	    fPosX = fPosY = 0.0f;
 	    fSize = 1.0f;
 	    bSelected = false;
+	    fWidth = fHeight = -1.0;
 	  }
 	
 		std::string ID;						/* Its own identifer */
 		std::string TypeID;				/* Identifier of its type */
 		float fPosX,fPosY;				/* Position */
 		float fSize;              /* Size (radius) */
+           	float fWidth, fHeight; /* size of the picture, negativ it the theme size must be used */
 		std::vector<LevelEntityParam *> Params;	/* Parameters */
 		bool bSelected;						/* Selected in editor */
 	};
