@@ -49,10 +49,10 @@ AC_CHECK_HEADER(lualib.h,AC_DEFINE(HAVE_LUALIB_H),[])
 
 dnl AC_SEARCH_LIBS(dJointAttach,ode ode0, [], [AC_MSG_ERROR(libode or libode0 required)])
 AC_LANG_PUSH([C++])
-AC_SEARCH_LIBS(dJointAttach,ode ode0, [], [AC_MSG_ERROR(libode or libode0 required)], -lstdc++)
+AC_SEARCH_LIBS(dJointAttach,ode ode0, [XM_WWW=1], [XM_WWW=0;AC_MSG_ERROR(libode or libode0 required)], -lstdc++)
 AC_LANG_POP()
 
-AC_CHECK_LIB(curl, curl_easy_init,[XM_WWW=1],[XM_WWW=0;AC_MSG_WARN(online highscores disabled)])
+AC_CHECK_LIB(curl, curl_easy_init,[],[AC_MSG_WARN(online highscores disabled)])
 
 dnl Put GAMEDATADIR in makefiles
 AC_ARG_WITH([gamedatadir],
@@ -71,7 +71,7 @@ AC_OUTPUT(Makefile       \
           extra/Makefile         \
          )
 
-## display is something is missing
+# display is something is missing
 if test "$XM_WWW" -eq 0
 then
   echo
