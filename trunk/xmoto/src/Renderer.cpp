@@ -853,7 +853,7 @@ namespace vapp {
 	v_centerX = v_animationSpriteType->getCenterX();
 	v_centerY = v_animationSpriteType->getCenterY();
 
-	if(pSprite->pSrc->fWidth  > 0.0) {
+	if(pSprite->pSrc->fWidth > 0.0) {
 	  v_width  = pSprite->pSrc->fWidth;
 	  v_height = pSprite->pSrc->fHeight;
 	  v_centerX += (pSprite->pSrc->fWidth -v_animationSpriteType->getWidth())  / 2.0;
