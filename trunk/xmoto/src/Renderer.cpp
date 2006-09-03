@@ -865,10 +865,11 @@ namespace vapp {
       } else {
 	v_decorationSpriteType = (DecorationSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_DECORATION, v_sprite_type);
 	v_spriteType = v_decorationSpriteType;
-	v_centerX = v_decorationSpriteType->getCenterX();
-	v_centerY = v_decorationSpriteType->getCenterY();
 
 	if(v_decorationSpriteType != NULL) {
+	  v_centerX = v_decorationSpriteType->getCenterX();
+	  v_centerY = v_decorationSpriteType->getCenterY();
+
 	  if(pSprite->pSrc->fWidth  > 0.0) {
 	    v_width  = pSprite->pSrc->fWidth;
 	    v_height = pSprite->pSrc->fHeight;
