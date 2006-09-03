@@ -196,7 +196,7 @@ namespace vapp {
   void LevelSrc::loadXML(void) {
     /* Load XML document and fetch tinyxml handle */
     _UnloadLevelData();
-    m_LevelCheckSum.nCRC32 = 0;
+    m_LevelCheckSum.MD5Sum = "";
     m_XML.readFromFile( m_FileName, /*&m_LevelCheckSum.nCRC32*/ NULL );    
     
     TiXmlDocument *pDoc = m_XML.getLowLevelAccess();
@@ -493,15 +493,15 @@ namespace vapp {
       
       /* Determine name in cache */
       std::string LevelFileBaseName = FS::getFileBaseName(getFileName());
-      sprintf(cCacheFileName,"LCache/%08lx%s.blv",Sum.nCRC32,
-      LevelFileBaseName.c_str());
+      sprintf(cCacheFileName,"LCache/%s%s.blv",Sum.MD5Sum.c_str(),
+	      LevelFileBaseName.c_str());
       
       try {
         cached = importBinary(cCacheFileName,&Sum);
       } catch (Exception &e) {
         Log("** Warning **: Exception while loading binary level, will load "
-          "XML instead for '%s' (%s)", getFileName().c_str(),
-        e.getMsg().c_str());
+	    "XML instead for '%s' (%s)", getFileName().c_str(),
+	    e.getMsg().c_str());
       }
     }
     
@@ -661,8 +661,8 @@ namespace vapp {
   Calculate checksum of level XML before loading it
   ===========================================================================*/
   bool LevelSrc::probeCheckSum(LevelCheckSum *pSum) {
-    m_XML.readFromFile( m_FileName,&pSum->nCRC32 );      
-    return true;
+    pSum->MD5Sum = md5file(m_FileName);
+    return pSum->MD5Sum != "";
   }
       
   /*===========================================================================
@@ -683,8 +683,7 @@ namespace vapp {
                                   /* 3 -> includes now the grip of the block, width and height of the sprites */      
 
       /* Write CRC32 of XML */
-      FS::writeInt_LE(pfh,pSum->nCRC32);
-         
+      FS::writeString(pfh,pSum->MD5Sum);
       //if(m_ID == "") {
       //  __asm {int 3};
       //}
@@ -801,10 +800,11 @@ namespace vapp {
         
       if(nFormat == 1 || nFormat == 2 || nFormat == 3) {
         /* Read "format 1" / "format 2" binary level */
-        m_LevelCheckSum.nCRC32 = pSum->nCRC32;
+        m_LevelCheckSum.MD5Sum = pSum->MD5Sum;
         
         /* Right CRC? */
-        if(FS::readInt_LE(pfh) != pSum->nCRC32) {
+	std::string md5sum = FS::readString(pfh);
+        if(md5sum != pSum->MD5Sum) {
           Log("** Warning ** : CRC check failed, can't import: %s",FileName.c_str());
           bRet = false;
         }

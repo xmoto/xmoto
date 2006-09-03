@@ -184,7 +184,6 @@ namespace vapp {
         virtual bool shouldLevelBeUpdated(const std::string &LevelID);
 
         virtual std::string levelPathForUpdate(const std::string &p_LevelId);
-        virtual std::string levelCRC32Sum(const std::string &p_LevelId);
         virtual std::string levelMD5Sum(const std::string &LevelID);
 
 #endif

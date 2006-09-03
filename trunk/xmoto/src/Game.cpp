@@ -2787,17 +2787,6 @@ namespace vapp {
     return "";
   }
   
-  std::string GameApp::levelCRC32Sum(const std::string &p_LevelId) {
-    LevelSrc *pLevel = _FindLevelByID(p_LevelId);
-    if(pLevel != NULL) {
-      char cBuf[256];
-      const LevelCheckSum *pSum = pLevel->getLevelCheckSum();      
-      sprintf(cBuf,"%ul",pSum->nCRC32);
-      return cBuf;
-    }
-    return "";
-  }
-  
   std::string GameApp::levelMD5Sum(const std::string &LevelID) {
     LevelSrc *pLevel = _FindLevelByID(LevelID);
     if(pLevel != NULL) {

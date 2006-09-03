@@ -155,7 +155,6 @@ namespace vapp {
   Level checksum struct
   ===========================================================================*/
   struct LevelCheckSum {
-    unsigned long nCRC32;   
     std::string MD5Sum;
   };
 
