@@ -418,7 +418,9 @@ namespace vapp {
       void _CreateLevelLists(UILevelList *pExternalLevels,UILevelList *pInternalLevels);
       void _CreateReplaysList(UIList *pList);
       void _CreateThemesList(UIList *pList);
+#if defined(SUPPORT_WEBACCESS) 
       void _CreateRoomsList(UIList *pList);
+#endif
       void _CreateProfileList(void);
       void _CreateDefaultConfig(void);
       void _CreateLevelPackLevelList(void);
@@ -440,7 +442,9 @@ namespace vapp {
       void _UpdateLevelLists(void);
       void _UpdateReplaysList(void);
       void _UpdateThemesLists(void);
+#if defined(SUPPORT_WEBACCESS) 
       void _UpdateRoomsLists(void);
+#endif
       void _GameScreenshot(void);
       void _SaveReplay(const std::string &Name);
     

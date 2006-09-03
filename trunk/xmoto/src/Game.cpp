@@ -74,9 +74,11 @@ namespace vapp {
     _CreateReplaysList((UIList *)m_pReplaysWindow->getChild("REPLAY_LIST"));                       
   }
 
+#if defined(SUPPORT_WEBACCESS) 
   void GameApp::_UpdateRoomsLists(void) {
     _CreateRoomsList((UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_ROOMS_TAB:ROOMS_LIST"));
   }
+#endif
 
   void GameApp::_UpdateThemesLists(void) {
     _CreateThemesList((UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:THEMES_LIST"));
