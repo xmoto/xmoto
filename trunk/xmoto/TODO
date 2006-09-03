@@ -6,6 +6,26 @@ zone1b = {}
 zone2 = {}
 zone2a = {}
 zone2b = {}
+* bug : segfault http://xmoto.free.fr/interesting_replays/ireplay_3.rpl
+* Bug,
+scenario:
+- you touch the flower, but the is still a strawberry to take
+  => m_bFinished remains to false
+- you touch the last strawberry, but you are always touching the flower
+ => this event is not called, m_bFinished remains to false
+- you go out of the flower
+ => nothing it called, m_bFinished remains to false
+http://xmoto.free.fr/interesting_replays/ireplay_40.rpl
+
+    case ET_ENDOFLEVEL:
+      {
+	      /* How many strawberries left? */
+	      if(countEntitiesByType(ET_STRAWBERRY) == 0) {
+	        /* Level is done! */
+	        m_bFinished = true;
+	        m_fFinishTime = getTime();
+	      }
+      }
 * script :
    add : rotation for blocks         
 * Add a command line option like the one to test themes. This option could be ''testscript'' and would show zones during game (with an extra, the name of the zone).
