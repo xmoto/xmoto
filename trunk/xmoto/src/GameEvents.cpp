@@ -290,8 +290,7 @@ namespace vapp {
   }
 
   void MGE_EntityDestroyed::revert(MotoGame *p_pMotoGame) {
-    p_pMotoGame->revertEntityDestroyed(m_entityID, m_type,
-				       m_fSize, m_fPosX, m_fPosY);
+    p_pMotoGame->revertEntityDestroyed(m_entityID);
   }
 
   GameEventType MGE_EntityDestroyed::SgetType() {

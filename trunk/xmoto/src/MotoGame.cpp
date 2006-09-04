@@ -772,7 +772,7 @@ namespace vapp {
     /* If not already freed */
     if(m_pLevelSrc != NULL) {
       /* Clean up */
-      while(m_Entities.size() > 0) _KillEntity(m_Entities[0]);
+      CleanEntities();
       while(m_Blocks.size() > 0) {
         while(m_Blocks[0]->Vertices.size() > 0) {
           delete m_Blocks[0]->Vertices[0];
@@ -1202,8 +1202,8 @@ namespace vapp {
   
   void MotoGame::_KillEntity(Entity *pEnt) { /* brutal */
     for(int i=0;i<m_Entities.size();i++) {
-      if(m_Entities[i] == pEnt) {
-        delete pEnt;
+      if(m_Entities[i]->ID == pEnt->ID) {
+	m_DestroyedEntities.push_back(m_Entities[i]);
         m_Entities.erase(m_Entities.begin() + i);
         return;
       }
@@ -1212,6 +1212,18 @@ namespace vapp {
     /* TODO: Warning (not found) */
   }
   
+  void MotoGame::CleanEntities() {
+    for(unsigned int i=0;i<m_Entities.size();i++) {
+      delete m_Entities[i];
+    }    
+    m_Entities.clear();
+
+    for(unsigned int i=0;i<m_DestroyedEntities.size();i++) {
+      delete m_DestroyedEntities[i];
+    }    
+    m_DestroyedEntities.clear();
+  }
+
   Entity *MotoGame::getEntityByID(const std::string &ID) {
     for(int i=0;i<m_Entities.size();i++) {
       if(m_Entities[i]->ID == ID) {
@@ -1470,22 +1482,14 @@ namespace vapp {
     }
   }
   
-  void MotoGame::revertEntityDestroyed(std::string p_entityID, EntityType p_type,
-				       float p_size, float p_x, float p_y) {
-    /* Un-destroy entity (create it :P) */
-	Entity *pEntityToDestroy = findEntity(p_entityID);
-	if(pEntityToDestroy == NULL) {
-	  Entity *pNew = _SpawnEntity(p_entityID, p_type,
-				      Vector2f(p_x, p_y),
-				      NULL);
-	  if(pNew != NULL) {
-	    pNew->fSize = p_size;
-	  }					                              
-	}        
-	else {
-	  Log("** Warning ** : Failed to create entity '%s' - it's already there!",
-	      p_entityID);
-	}
+  void MotoGame::revertEntityDestroyed(std::string p_entityID) {
+    for(int i=0;i<m_DestroyedEntities.size();i++) {
+      if(m_DestroyedEntities[i]->ID == p_entityID) {
+	m_Entities.push_back(m_DestroyedEntities[i]);
+        m_DestroyedEntities.erase(m_DestroyedEntities.begin() + i);
+        return;
+      }
+    }
   }
 
   void MotoGame::SetEntityPos(String pEntityID, float pX, float pY) {

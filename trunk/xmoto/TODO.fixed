@@ -1,4 +1,5 @@
 Since 0.2.0
+* bug : i need entity->pSrc to draw the entity to the good position : pb, revertEntityDestroyed give a NULL value -> SEGFAULT ON REWIND !!!!!
 * level no doubt : start ; pause 30 sec ; run very fast ->
    http://testnitrx.free.fr/xmoto/screenshot0006.png : a block appears !
 * to not be able to go into the ground via the side switch

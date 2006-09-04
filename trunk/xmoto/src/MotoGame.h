@@ -548,8 +548,7 @@ namespace vapp {
       void addDynamicObject(SDynamicObject* p_obj);
       void removeSDynamicOfObject(std::string pObject);
 
-      void revertEntityDestroyed(std::string p_entityID, EntityType p_type,
-				 float p_size, float p_x, float p_y);
+      void revertEntityDestroyed(std::string p_entityID);
 
       void createKillEntityEvent(std::string p_entityID);
 
@@ -580,6 +579,7 @@ namespace vapp {
                                              level */
       std::vector<ConvexBlock *> m_Blocks;/* Blocks */
       std::vector<Entity *> m_Entities;   /* Entities */
+      std::vector<Entity *> m_DestroyedEntities; /* destroyed entities */
       dWorldID m_WorldID;                 /* World ID */
       
       std::vector<OverlayEdge *> m_OvEdges;/* Overlay edges */
@@ -695,6 +695,7 @@ namespace vapp {
       void _UpdateZones(void);
       Entity *_SpawnEntity(std::string ID,EntityType Type,Vector2f Pos,LevelEntity *pSrc);
       void _KillEntity(Entity *pEnt);
+      void CleanEntities(); /* clean memories of entities */
       EntityType _TransEntityType(std::string Name);
       EdgeEffect _TransEdgeEffect(std::string Name);
       void _UpdateEntities(void);

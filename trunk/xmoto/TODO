@@ -6,9 +6,6 @@ zone1b = {}
 zone2 = {}
 zone2a = {}
 zone2b = {}
-* bug : i need entity->pSrc to draw the entity to the good position :
-   pb, revertEntityDestroyed give a NULL value -> SEGFAULT ON REWIND !!!!!
-* bug : segfault http://xmoto.free.fr/interesting_replays/ireplay_3.rpl
 * Bug,
 scenario:
 - you touch the flower, but the is still a strawberry to take
