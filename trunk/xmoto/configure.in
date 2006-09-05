@@ -63,6 +63,9 @@ AC_ARG_WITH([gamedatadir],
 )
 AC_SUBST([GAMEDATADIR])
 
+dnl Can't build xmoto.bin if we're cross-compiling
+AM_CONDITIONAL(CROSS_COMPILING,test "$cross_compiling" = yes)
+
 AC_OUTPUT(Makefile       \
           bin/Makefile   \
           src/Makefile   \

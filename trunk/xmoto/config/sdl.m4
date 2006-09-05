@@ -37,8 +37,8 @@ AC_ARG_WITH([sdl-framework],
   fi
 
   AC_REQUIRE([AC_CANONICAL_TARGET])
-  AC_MSG_CHECKING(for SDL - version >= $min_sdl_version)
   min_sdl_version=ifelse([$1], ,0.11.0,$1)
+  AC_MSG_CHECKING(for SDL - version >= $min_sdl_version)
   no_sdl=""
   
   if test "x$sdl_framework" != x; then
@@ -74,11 +74,11 @@ dnl Gotta make sure SDLmain is around!
 dnl Set the version vars
     AC_REQUIRE([AC_PROG_CPP])
     sdl_major_version=`echo SDL_MAJOR_VERSION | \
-       $CPP - $CPPFLAGS $SDL_CFLAGS -P -imacros SDL.h`
+       $CPP - $CPPFLAGS $SDL_CFLAGS -P -imacros SDL.h | grep ^[[0-9]]`
     sdl_minor_version=`echo SDL_MINOR_VERSION | \
-       $CPP - $CPPFLAGS $SDL_CFLAGS -P -imacros SDL.h`
+       $CPP - $CPPFLAGS $SDL_CFLAGS -P -imacros SDL.h | grep ^[[0-9]]`
     sdl_micro_version=`echo SDL_PATCHLEVEL | \
-       $CPP - $CPPFLAGS $SDL_CFLAGS -P -imacros SDL.h`
+       $CPP - $CPPFLAGS $SDL_CFLAGS -P -imacros SDL.h | grep ^[[0-9]]`
   else
 dnl Not framework
     PATH="$prefix/bin:$prefix/usr/bin:$PATH"
