@@ -56,7 +56,7 @@ msgid ""
 "to the Internet to look for more levels\n"
 "and best times of other players?"
 msgstr ""
-"Autoriez-vous X-Moto à se connecter\n"
+"Autorisez-vous X-Moto à se connecter\n"
 "à Internet pour rechercher de nouveaux niveaux\n"
 "et les records des autres joueurs ?"
 
@@ -935,7 +935,7 @@ msgstr "Upload du highscore..."
 
 #: src/GameText.h:262
 msgid "Use Environment Vars"
-msgstr "Variables d'environnement"
+msgstr "Variables d'env."
 
 #: src/GameText.h:263
 msgid "Use Profile"
