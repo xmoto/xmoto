@@ -1,4 +1,12 @@
 ### For 0.2.1
+
+* password proxy
+* collision : collision with the body
+
+### for 0.3.0 and after
+* SDL_ttf or something like that for rendering text
+* --disable-www
+* Level and player name showing in the replay?
 *(20:39:54) Neckelmann:   the game should really do all this:
 zone1 = {}
 zone1a = {}
@@ -81,7 +89,6 @@ http://xmoto.free.fr/interesting_replays/ireplay_40.rpl
  comment : it seems that there is nothing to do unless reduce
    connection timeout (or multithreading)
 
-# feature which are not really bugs for 0.2.1
 * "view the highscore" button is not visible for pack
 * when you press o in the level list and that no level start with an
    o, it bases on the 2nd letter,...
@@ -93,7 +100,6 @@ http://xmoto.free.fr/interesting_replays/ireplay_40.rpl
 * "play next level" => 'play next level', 'play next level unplayed', 'play next level where your highscore is > than room highscore', 'play next level where your highscore is > than world highscore', 'play next level where your highscore is the best'
 * replay button when you finish a level (to replay the level just done)
 
-### for 0.3.0 and after
 * xmoto -nosound
 * use z-buffer for depth ordering
 * BUG : when you see level info in level pack ; then you click on ok
@@ -113,11 +119,6 @@ http://xmoto.free.fr/interesting_replays/ireplay_40.rpl
   timePenallity(nbSeconds) -> increase time
   collision between sprites, between sprites and head
   move a zone
-* collision : collision with the body : triangle with points : head,
-   wheels : because it's currently possible to touch a wecker with the
-   body and possible to touch a strawberry but that it doesn't take
-   it. However, this collision must be avaible only for entities not
-   for blocks.
 * add 3 2 1 GO ! at level startup (only if the level played is
    different from the last played)
 * have a <----> for the lists
@@ -132,7 +133,6 @@ http://xmoto.free.fr/interesting_replays/ireplay_40.rpl
    and highscore of my room (priority=low)
 * add import of players.bin (so that people playing at different
    location can merge their highscores) (priority=very low)
-* translations (priority=very low)
 * separate personnal highscores from others (two tabs instead of a
    button, it's easiest) (it neckelmann agree)
 * pb for left hand written people for the editor
@@ -143,6 +143,7 @@ http://xmoto.free.fr/interesting_replays/ireplay_40.rpl
 * display wind
 * a fonction CameraRotate and CameraAdaptToG (script)
 * A SetDynamicBlockRotation function that rotates the vertices about a center point instead of making the block go in circles.
+* network game
 
 ### For the svg2lvl script
 * create a non-regression test using a special svg file which contains every type of data we're supposed to convert and the associated level file.

@@ -3,8 +3,8 @@ WANTED_WARNNING= -w
 #WANTED_WARNNING= -pedantic -Wcast-align -Wcast-qual -Wchar-subscripts -Wcomment -Wconversion -Wfloat-equal -Wformat -Wformat-nonliteral -Wformat-security -Wformat-y2k -Wimplicit -Wimport -Wuninitialized -Wlong-long -Wmissing-braces -Wmissing-format-attribute -Wmissing-noreturn -Wpacked -Wparentheses -Wpointer-arith -Wredundant-decls -Wreturn-type -Wshadow -Wswitch  -Wswitch-default  -Wswitch-enum -Wtrigraphs -Wundef -Wunknown-pragmas -Wunused -Wunused-function -Wunused-label -Wunused-value -Wunused-variable -Wwrite-strings
 # -Wunreachable-code
 
-AM_CXXFLAGS = -DNOMMGR $(WANTED_WARNNING) -DGAMEDATADIR=\"$(GAMEDATADIR)\" $(GL_CFLAGS) $(SDL_CFLAGS)
-AM_CFLAGS = -DNOMMGR $(WANTED_WARNNING) -DGAMEDATADIR=\"$(GAMEDATADIR)\" $(GL_CFLAGS) $(SDL_CFLAGS)
+AM_CXXFLAGS = -DNOMMGR $(WANTED_WARNNING) -DGAMEDATADIR=\"$(GAMEDATADIR)\" -DLOCALESDIR=\"$(LOCALESDIR)\" $(GL_CFLAGS) $(SDL_CFLAGS)
+AM_CFLAGS = -DNOMMGR $(WANTED_WARNNING) -DGAMEDATADIR=\"$(GAMEDATADIR)\" -DLOCALESDIR=\"$(LOCALESDIR)\" $(GL_CFLAGS) $(SDL_CFLAGS)
 # AM_LDFLAGS = -s
 
 image_SOURCES = image/tim.cpp image/tim_io_stdio.cpp \
@@ -42,7 +42,9 @@ common_SOURCES = BuiltInFont.cpp Image.cpp LevelSrc.cpp \
 	Theme.cpp \
 	WWW.cpp \
 	WWW.h \
-	WWWAppInterface.h
+	WWWAppInterface.h \
+	Locales.h \
+	Locales.cpp
 
 common_LDADD = $(GL_LIBS) $(SDL_LIBS)
 

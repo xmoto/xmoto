@@ -30,7 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 			   int nWidth,int nHeight)
     :UIList(pParent, x, y, Caption, nWidth, nHeight) {
       addColumn(GAMETEXT_LEVEL, getPosition().nWidth - 175);
-      addColumn(GAMETEXT_TIME,80);  
+      addColumn(std::string(GAMETEXT_TIME) + ":",80);  
 #if defined(SUPPORT_WEBACCESS)    
       addColumn("WR:",80);  
 #endif

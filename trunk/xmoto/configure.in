@@ -54,6 +54,18 @@ AC_LANG_POP()
 
 AC_CHECK_LIB(curl, curl_easy_init,[],[AC_MSG_WARN(online highscores disabled)])
 
+ALL_LINGUAS="fr"
+AM_GNU_GETTEXT()
+
+dnl Put LOCALESDIR in makefiles
+AC_ARG_WITH([localesdir],
+  [AS_HELP_STRING([--with-localesdir=DIR],
+    [Override the default directory for locales])],
+  [LOCALESDIR="$withval"],
+  [LOCALESDIR="$datadir/locale"]
+)
+AC_SUBST([LOCALESDIR])
+
 dnl Put GAMEDATADIR in makefiles
 AC_ARG_WITH([gamedatadir],
   [AS_HELP_STRING([--with-gamedatadir=DIR],
@@ -68,6 +80,7 @@ AM_CONDITIONAL(CROSS_COMPILING,test "$cross_compiling" = yes)
 
 AC_OUTPUT(Makefile       \
           bin/Makefile   \
+          po/Makefile.in \
           src/Makefile   \
           tools/Makefile \
           tools/svg2lvl/Makefile \

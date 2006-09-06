@@ -942,7 +942,7 @@ namespace vapp {
     
     if(nTotalBSPErrors > 0) {
       Log(" %d BSP error%s in total",nTotalBSPErrors,nTotalBSPErrors==1?"":"s");
-      gameMessage(GAMETEXT_WARNING);
+      gameMessage(std::string(GAMETEXT_WARNING) + ":");
       gameMessage(GAMETEXT_ERRORSINLEVEL);
     }
         

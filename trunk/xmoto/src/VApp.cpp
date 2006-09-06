@@ -33,6 +33,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VFileIO.h"
 #include "arch/SwapEndian.h"
 
+#ifdef USE_GETTEXT
+#include "Locales.h"
+#endif
+
 namespace vapp {
 
   /*===========================================================================
@@ -134,6 +138,9 @@ namespace vapp {
   void App::run(int nNumArgs,char **ppcArgs) {
 
     /* init endian system */ 
+#ifdef USE_GETTEXT
+    Locales::init();
+#endif
     SwapEndian::Swap_Init();
     //if(SwapEndian::bigendien) {
     //  Log("systeme bigendien");

@@ -42,7 +42,7 @@ Since 0.2.0
 * update themes list before update a theme (otherwise, on levels update, it does nothing)
 * Be able to change the size of a sprite as parameter in a level
 * new-level-editor: When you save the file as a .lvl, an automatic 'smoothing' of the level is done (only blocks)
-
+* translations
 
 Since 1.16
 * BUG : view highscore with up and down with keyboard does not update the button

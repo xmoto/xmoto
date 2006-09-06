@@ -239,12 +239,12 @@ namespace vapp {
     /* Should the OK button be disabled? (if any) */
     if(m_bTextInput && m_TextInput.empty()) {
       for(int i=0;i<m_nNumButtons;i++) {
-        if(m_pButtons[i]->getCaption() == "OK") m_pButtons[i]->enableWindow(false);
+        if(m_pButtons[i]->getCaption() == GAMETEXT_OK) m_pButtons[i]->enableWindow(false);
       }
     }
     else {
       for(int i=0;i<m_nNumButtons;i++) {
-        if(m_pButtons[i]->getCaption() == "OK") m_pButtons[i]->enableWindow(true);
+        if(m_pButtons[i]->getCaption() == GAMETEXT_OK) m_pButtons[i]->enableWindow(true);
       }
     }   
   
@@ -261,12 +261,12 @@ namespace vapp {
   bool UIMsgBox::keyDown(int nKey,int nChar) {
     switch(nKey) {
       case SDLK_ESCAPE:
-        if(!setClicked("Cancel"))
-          setClicked("No");
+        if(!setClicked(GAMETEXT_CANCEL))
+          setClicked(GAMETEXT_NO);
         return true;
       case SDLK_RETURN:
         if(!m_bTextInput || !m_TextInput.empty()) {
-          setClicked("OK");
+          setClicked(GAMETEXT_OK);
           return true;
         }
         break;
@@ -342,28 +342,28 @@ namespace vapp {
     
     UIButton *pButton;
     if(Buttons & UI_MSGBOX_OK) {
-      pButton = new UIButton(pMsgBox,nCX,nCY,"OK",115,57);
+      pButton = new UIButton(pMsgBox,nCX,nCY,GAMETEXT_OK,115,57);
       pButton->setFont(getFont());
       pButton->setType(UI_BUTTON_TYPE_SMALL);
       pMsgBox->addButton(pButton);
       nCX+=115;
     }
     if(Buttons & UI_MSGBOX_CANCEL) {
-      pButton = new UIButton(pMsgBox,nCX,nCY,"Cancel",115,57);
+      pButton = new UIButton(pMsgBox,nCX,nCY,GAMETEXT_CANCEL,115,57);
       pButton->setFont(getFont());
       pButton->setType(UI_BUTTON_TYPE_SMALL);
       pMsgBox->addButton(pButton);
       nCX+=115;
     }
     if(Buttons & UI_MSGBOX_YES) {
-      pButton = new UIButton(pMsgBox,nCX,nCY,"Yes",115,57);
+      pButton = new UIButton(pMsgBox,nCX,nCY,GAMETEXT_YES,115,57);
       pButton->setFont(getFont());
       pButton->setType(UI_BUTTON_TYPE_SMALL);
       pMsgBox->addButton(pButton);
       nCX+=115;
     }
     if(Buttons & UI_MSGBOX_NO) {
-      pButton = new UIButton(pMsgBox,nCX,nCY,"No",115,57);
+      pButton = new UIButton(pMsgBox,nCX,nCY,GAMETEXT_NO,115,57);
       pButton->setFont(getFont());
       pButton->setType(UI_BUTTON_TYPE_SMALL);
       pMsgBox->addButton(pButton);

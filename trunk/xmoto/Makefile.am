@@ -1,4 +1,4 @@
-SUBDIRS = src bin tools extra
+SUBDIRS = po src bin tools extra
 
 man_MANS = xmoto.6.gz xmoto-edit.6.gz
 
@@ -10,7 +10,9 @@ xmoto: src/xmoto
 xmoto-edit: src/xmoto-edit
 	ln -sf src/xmoto-edit xmoto-edit
 
-EXTRA_DIST = $(man_MANS) bootstrap
+EXTRA_DIST = m4/ChangeLog  $(man_MANS) bootstrap
 
 uninstall-hook:
 	rm -r $(datadir)/@PACKAGE@
+
+ACLOCAL_AMFLAGS = -I m4

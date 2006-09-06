@@ -2436,7 +2436,7 @@ namespace vapp {
     }
 
     m_DownloadingInformation = "";
-    m_DownloadingMessage = GAMETEXT_DLTHEME;
+    m_DownloadingMessage = std::string(GAMETEXT_DLTHEME) + "\n\n ";
     m_themeChoicer->setURLBase(m_Config.getString("WebThemesURLBase"));
 
     try {
@@ -2491,7 +2491,7 @@ namespace vapp {
     #if defined(SUPPORT_WEBACCESS)
       /* Download extra levels */
       m_DownloadingInformation = "";
-      m_DownloadingMessage = GAMETEXT_DLLEVELS;
+      m_DownloadingMessage = std::string(GAMETEXT_DLLEVELS) + "\n\n ";
 
       if(m_pWebLevels != NULL) {
         try {                  
@@ -2664,7 +2664,7 @@ namespace vapp {
       bool bDialogBoxOpen = true;
       
       char cBuf[1024];
-      sprintf(cBuf,GAMETEXT_WANTTOUPDATELEVEL,pLevel->getLevelInfo()->Name.c_str(),
+      sprintf(cBuf,(std::string(GAMETEXT_WANTTOUPDATELEVEL) + "\n(%s)").c_str(),pLevel->getLevelInfo()->Name.c_str(),
               pLevel->getFileName().c_str());
       UIMsgBox *pMsgBox = m_Renderer.getGUI()->msgBox(cBuf,(UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
       
@@ -2950,7 +2950,7 @@ namespace vapp {
       if(v_msg_status_ok) {
 	notifyMsg(v_msg);
       } else {
-	notifyMsg(GAMETEXT_UPLOAD_HIGHSCORE_WEB_WARNING_BEFORE + v_msg);
+	notifyMsg(std::string(GAMETEXT_UPLOAD_HIGHSCORE_WEB_WARNING_BEFORE) + "\n" + v_msg);
       }
     } catch(Exception &e) {
       notifyMsg(GAMETEXT_UPLOAD_HIGHSCORE_ERROR);

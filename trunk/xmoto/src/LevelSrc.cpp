@@ -325,7 +325,7 @@ namespace vapp {
 	    pEntity->fHeight = v_height;
 	  }
         }
-        
+
         /* Get parameters */
         for(TiXmlElement *pParamElem = pElem->FirstChildElement("param"); pParamElem!=NULL;
             pParamElem=pParamElem->NextSiblingElement("param")) {
@@ -544,6 +544,8 @@ namespace vapp {
 		pEntity->TypeID = TypeID;
 		pEntity->bSelected = false;
 		pEntity->fSize = 0.2f;
+		pEntity->fWidth  = -1;
+		pEntity->fHeight = -1;
 		
 		m_Entities.push_back( pEntity );
 		

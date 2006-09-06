@@ -64,7 +64,7 @@ namespace vapp {
         m_nGhostInfoTrans = 255;
         
         if(m_pGhostReplay != NULL) {
-          m_GhostInfoString = std::string(GAMETEXT_GHOSTOF) + m_pGhostReplay->getPlayerName() +
+          m_GhostInfoString = std::string(GAMETEXT_GHOSTOF) + " " + m_pGhostReplay->getPlayerName() +
                               std::string("\n(") + m_ReplayDesc + std::string(")") +
                               std::string("\n(") + getParent()->formatTime(m_pGhostReplay->getFinishTime()) + std::string(")");
         }
@@ -1503,7 +1503,7 @@ namespace vapp {
       m_pNewHighscoreSave_str->showWindow(false);
     } else {
       m_pNewHighscoreSave_str->showWindow(true);
-      m_pNewHighscoreSave_str->setCaption("(Saved as " + p_save + ")");
+      m_pNewHighscoreSave_str->setCaption("(" + std::string(GAMETEXT_SAVE_AS) + " " + p_save + ")");
     }
   }
   
@@ -1515,7 +1515,7 @@ namespace vapp {
       m_pNewHighscoreSave_str->showWindow(false);
     } else {
       m_pNewHighscoreSave_str->showWindow(true);
-      m_pNewHighscoreSave_str->setCaption("(Saved as " + p_save + ")");
+      m_pNewHighscoreSave_str->setCaption("(" + std::string(GAMETEXT_SAVE_AS) + " " + p_save + ")");
     }
   }
 

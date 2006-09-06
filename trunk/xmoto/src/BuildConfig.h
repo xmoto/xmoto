@@ -76,5 +76,9 @@ Misc, don't touch
   #define SUPPORT_WEBACCESS
 #endif
 
+#if defined(HAVE_GETTEXT)
+  #define USE_GETTEXT
+#endif
+
 #endif
 

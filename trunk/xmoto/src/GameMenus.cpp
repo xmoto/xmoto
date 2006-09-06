@@ -199,7 +199,7 @@ namespace vapp {
     pPlayerText->setFont(m_Renderer.getMediumFont());            
     pPlayerText->setHAlign(UI_ALIGN_RIGHT);
     pPlayerText->setID("PLAYERTAG");
-    if(m_pPlayer != NULL) pPlayerText->setCaption(std::string(GAMETEXT_CURPLAYER) + m_pPlayer->PlayerName);
+    if(m_pPlayer != NULL) pPlayerText->setCaption(std::string(GAMETEXT_CURPLAYER) + ": " + m_pPlayer->PlayerName);
     
     /* new levels ? */
     UIStatic *pNewLevelText = new UIStatic(m_pMainMenu,5,-90,"",200,200);
@@ -494,7 +494,7 @@ namespace vapp {
     pRunWindowed->setFont(m_Renderer.getSmallFont());
     pRunWindowed->setContextHelp(CONTEXTHELP_RUN_IN_WINDOW);
     
-    pSomeText = new UIStatic(pVideoOptionsTab,5,208,GAMETEXT_MENUGFX,120,28);
+    pSomeText = new UIStatic(pVideoOptionsTab,5,208,std::string(GAMETEXT_MENUGFX) +":",120,28);
     pSomeText->setFont(m_Renderer.getSmallFont());    
     pSomeText->enableWindow(true);
     pSomeText->showWindow(true);
@@ -523,7 +523,7 @@ namespace vapp {
     pMenuHigh->setGroup(20024);
     pMenuHigh->setContextHelp(CONTEXTHELP_HIGH_MENU);
 
-    pSomeText = new UIStatic(pVideoOptionsTab,5,236,GAMETEXT_GAMEGFX,120,28);
+    pSomeText = new UIStatic(pVideoOptionsTab,5,236,std::string(GAMETEXT_GAMEGFX) + ":",120,28);
     pSomeText->setFont(m_Renderer.getSmallFont());    
     pSomeText->enableWindow(true);
     pSomeText->showWindow(true);
@@ -761,8 +761,8 @@ namespace vapp {
     pSomeText = new UIStatic(pWWWRoomsOptionsTab,
 			     pWWWRoomsOptionsTab->getPosition().nWidth-180,
 			     5,
-			     GAMETEXT_LOGIN ":",
-			     100,
+			     std::string(GAMETEXT_LOGIN) + ":",
+			     130,
 			     30);
     pSomeText->setHAlign(UI_ALIGN_LEFT);
     pSomeText->setFont(m_Renderer.getSmallFont()); 
@@ -777,8 +777,8 @@ namespace vapp {
     pSomeText = new UIStatic(pWWWRoomsOptionsTab,
 			     pWWWRoomsOptionsTab->getPosition().nWidth-180,
 			     65,
-			     GAMETEXT_PASSWORD ":",
-			     100,
+			     std::string(GAMETEXT_PASSWORD) + ":",
+			     130,
 			     30);
     pSomeText->setHAlign(UI_ALIGN_LEFT);
     pSomeText->setFont(m_Renderer.getSmallFont()); 
@@ -885,9 +885,9 @@ namespace vapp {
    
     #if defined(WIN32)
       /* I don't expect a windows user to know what an environment variable is */
-      #define DIRCONNTEXT GAMETEXT_DIRECTCONN
+      #define DIRCONNTEXT std::string(GAMETEXT_DIRECTCONN).c_str()
     #else
-      #define DIRCONNTEXT GAMETEXT_DIRECTCONN " / " GAMETEXT_USEENVVARS
+      #define DIRCONNTEXT (std::string(GAMETEXT_DIRECTCONN) + " / " + std::string(GAMETEXT_USEENVVARS)).c_str()
     #endif
      
     UIButton *pConn1 = new UIButton(m_pWebConfEditor,25,60,DIRCONNTEXT,(m_pWebConfEditor->getPosition().nWidth-50),28);
@@ -933,7 +933,7 @@ namespace vapp {
     pSubFrame->setStyle(UI_FRAMESTYLE_TRANS);
     pSubFrame->setID("SUBFRAME");    
     
-    pSomeText = new UIStatic(pSubFrame,25,25,GAMETEXT_PROXYSERVER,100,25);
+    pSomeText = new UIStatic(pSubFrame,25,25,std::string(GAMETEXT_PROXYSERVER) + ":",100,25);
     pSomeText->setFont(m_Renderer.getSmallFont());    
     pSomeText->setHAlign(UI_ALIGN_RIGHT);
     UIEdit *pProxyServerEdit = new UIEdit(pSubFrame,135,25,"",190,25);
@@ -941,7 +941,7 @@ namespace vapp {
     pProxyServerEdit->setID("SERVEREDIT");
     pProxyServerEdit->setContextHelp(CONTEXTHELP_PROXYSERVER);
 
-    pSomeText = new UIStatic(pSubFrame,25,55,GAMETEXT_PORT,100,25);
+    pSomeText = new UIStatic(pSubFrame,25,55,std::string(GAMETEXT_PORT) + ":",100,25);
     pSomeText->setFont(m_Renderer.getSmallFont());    
     pSomeText->setHAlign(UI_ALIGN_RIGHT);
     UIEdit *pProxyPortEdit = new UIEdit(pSubFrame,135,55,"",50,25);
@@ -1217,7 +1217,7 @@ namespace vapp {
           int n1=0,n2=0,n3=0;
           
           sscanf(pWebHS->getTime().c_str(),"%d:%d:%d",&n1,&n2,&n3);
-          sprintf(cTime, "%s: %02d:%02d:%02d (" GAMETEXT_BY " %s)", m_pWebHighscores->getRoomName().c_str(), n1,n2,n3,pWebHS->getPlayerName().c_str());
+          sprintf(cTime, std::string("%s: %02d:%02d:%02d (" + std::string(GAMETEXT_BY) + " %s)").c_str(), m_pWebHighscores->getRoomName().c_str(), n1,n2,n3,pWebHS->getPlayerName().c_str());
           pLV_BestTimes_WorldRecord->setCaption(cTime);
         }        
         else {
@@ -1260,7 +1260,7 @@ namespace vapp {
 	pEntry->Text.push_back((*Replays)[i]->Player);
 	
 	if((*Replays)[i]->fFinishTime < 0)
-	  pEntry->Text.push_back(GAMETEXT_NOTFINISHED);
+	  pEntry->Text.push_back("("+ std::string(GAMETEXT_NOTFINISHED) + ")");
 	else
 	  pEntry->Text.push_back(formatTime((*Replays)[i]->fFinishTime));
       }
@@ -1465,7 +1465,7 @@ namespace vapp {
         else if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_SAVEREPLAY) {
           if(m_pReplay != NULL) {
             if(m_pSaveReplayMsgBox == NULL) {
-              m_pSaveReplayMsgBox = m_Renderer.getGUI()->msgBox(GAMETEXT_ENTERREPLAYNAME,
+              m_pSaveReplayMsgBox = m_Renderer.getGUI()->msgBox(std::string(GAMETEXT_ENTERREPLAYNAME) + ":",
                                                                 (UIMsgBoxButton)(UI_MSGBOX_OK|UI_MSGBOX_CANCEL),
                                                                 true);
               m_pSaveReplayMsgBox->setTextInputFont(m_Renderer.getMediumFont());
@@ -1541,7 +1541,7 @@ namespace vapp {
       /* Show replay */
       if(pLV_Replays_List->getSelected() >= 0 && pLV_Replays_List->getSelected() < pLV_Replays_List->getEntries().size()) {
         UIListEntry *pListEntry = pLV_Replays_List->getEntries()[pLV_Replays_List->getSelected()];
-        if(pListEntry != NULL && !pListEntry->Text.empty() && pListEntry->Text[0] != GAMETEXT_LEVELISSCRIPTED) {
+        if(pListEntry != NULL && !pListEntry->Text.empty()) {
           /* Do it captain */
           pLV_Replays_Show->setClicked(false);
           m_pLevelInfoViewer->showWindow(false);
@@ -1605,10 +1605,10 @@ namespace vapp {
         UIStatic *pGeneralInfo_Date = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_DATE");
         UIStatic *pGeneralInfo_Description = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_DESCRIPTION");
 
-        if(pGeneralInfo_LevelName != NULL) pGeneralInfo_LevelName->setCaption(std::string(GAMETEXT_LEVELNAME) + pLevelSrc->getLevelInfo()->Name);
-        if(pGeneralInfo_Author != NULL) pGeneralInfo_Author->setCaption(std::string(GAMETEXT_AUTHOR) + pLevelSrc->getLevelInfo()->Author);
-        if(pGeneralInfo_Date != NULL) pGeneralInfo_Date->setCaption(std::string(GAMETEXT_DATE) + pLevelSrc->getLevelInfo()->Date);
-        if(pGeneralInfo_Description != NULL) pGeneralInfo_Description->setCaption(std::string(GAMETEXT_DESCRIPTION) + pLevelSrc->getLevelInfo()->Description);
+        if(pGeneralInfo_LevelName != NULL) pGeneralInfo_LevelName->setCaption(std::string(GAMETEXT_LEVELNAME) + ": " + pLevelSrc->getLevelInfo()->Name);
+        if(pGeneralInfo_Author != NULL) pGeneralInfo_Author->setCaption(std::string(GAMETEXT_AUTHOR) + ": " + pLevelSrc->getLevelInfo()->Author);
+        if(pGeneralInfo_Date != NULL) pGeneralInfo_Date->setCaption(std::string(GAMETEXT_DATE) + ": " + pLevelSrc->getLevelInfo()->Date);
+        if(pGeneralInfo_Description != NULL) pGeneralInfo_Description->setCaption(std::string(GAMETEXT_DESCRIPTION) + ": " + pLevelSrc->getLevelInfo()->Description);
             
         _UpdateLevelInfoViewerBestTimes(m_LevelInfoViewerLevel = pLevelSrc->getID());
         _UpdateLevelInfoViewerReplays(m_LevelInfoViewerLevel);
@@ -1833,7 +1833,7 @@ namespace vapp {
                         
       UIStatic *pPlayerTag = reinterpret_cast<UIStatic *>(m_pMainMenu->getChild("PLAYERTAG"));
       if(pPlayerTag) {
-        pPlayerTag->setCaption(std::string(GAMETEXT_CURPLAYER) + m_pPlayer->PlayerName);
+        pPlayerTag->setCaption(std::string(GAMETEXT_CURPLAYER) + ": " + m_pPlayer->PlayerName);
       }                   
       
       _UpdateReplaysList();
@@ -1863,7 +1863,7 @@ namespace vapp {
     }
     else if(pNewButton->isClicked()) {
       if(m_pNewProfileMsgBox == NULL) {
-        m_pNewProfileMsgBox = m_Renderer.getGUI()->msgBox(GAMETEXT_ENTERPLAYERNAME,
+        m_pNewProfileMsgBox = m_Renderer.getGUI()->msgBox(std::string(GAMETEXT_ENTERPLAYERNAME) + ":",
                                                           (UIMsgBoxButton)(UI_MSGBOX_OK|UI_MSGBOX_CANCEL),
                                                           true);
         m_pNewProfileMsgBox->setTextInputFont(m_Renderer.getMediumFont());                                                          
@@ -1887,7 +1887,7 @@ namespace vapp {
             _UpdateLevelLists();
           }
         
-          pPlayerTag->setCaption(std::string(GAMETEXT_CURPLAYER) + m_pPlayer->PlayerName);
+          pPlayerTag->setCaption(std::string(GAMETEXT_CURPLAYER) + ": " + m_pPlayer->PlayerName);
         }       
       }
     }
@@ -1978,7 +1978,7 @@ namespace vapp {
         else if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_SAVEREPLAY) {
           if(m_pReplay != NULL) {
             if(m_pSaveReplayMsgBox == NULL) {
-              m_pSaveReplayMsgBox = m_Renderer.getGUI()->msgBox(GAMETEXT_ENTERREPLAYNAME,
+              m_pSaveReplayMsgBox = m_Renderer.getGUI()->msgBox(std::string(GAMETEXT_ENTERREPLAYNAME) + ":",
                                                                 (UIMsgBoxButton)(UI_MSGBOX_OK|UI_MSGBOX_CANCEL),
                                                                 true);
               m_pSaveReplayMsgBox->setTextInputFont(m_Renderer.getMediumFont());                               
@@ -2480,10 +2480,10 @@ namespace vapp {
         UIStatic *pGeneralInfo_Date = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_DATE");
         UIStatic *pGeneralInfo_Description = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_DESCRIPTION");
 
-        if(pGeneralInfo_LevelName != NULL) pGeneralInfo_LevelName->setCaption(std::string(GAMETEXT_LEVELNAME) + pLevelSrc->getLevelInfo()->Name);
-        if(pGeneralInfo_Author != NULL) pGeneralInfo_Author->setCaption(std::string(GAMETEXT_AUTHOR) + pLevelSrc->getLevelInfo()->Author);
-        if(pGeneralInfo_Date != NULL) pGeneralInfo_Date->setCaption(std::string(GAMETEXT_DATE) + pLevelSrc->getLevelInfo()->Date);
-        if(pGeneralInfo_Description != NULL) pGeneralInfo_Description->setCaption(std::string(GAMETEXT_DESCRIPTION) + pLevelSrc->getLevelInfo()->Description);
+        if(pGeneralInfo_LevelName != NULL) pGeneralInfo_LevelName->setCaption(std::string(GAMETEXT_LEVELNAME) + ": " + pLevelSrc->getLevelInfo()->Name);
+        if(pGeneralInfo_Author != NULL) pGeneralInfo_Author->setCaption(std::string(GAMETEXT_AUTHOR) + ": " + pLevelSrc->getLevelInfo()->Author);
+        if(pGeneralInfo_Date != NULL) pGeneralInfo_Date->setCaption(std::string(GAMETEXT_DATE) + ": " + pLevelSrc->getLevelInfo()->Date);
+        if(pGeneralInfo_Description != NULL) pGeneralInfo_Description->setCaption(std::string(GAMETEXT_DESCRIPTION) + ": "  + pLevelSrc->getLevelInfo()->Description);
             
         _UpdateLevelInfoViewerBestTimes(m_LevelInfoViewerLevel = pLevelSrc->getID());
         _UpdateLevelInfoViewerReplays(m_LevelInfoViewerLevel);
@@ -2677,9 +2677,8 @@ namespace vapp {
             break;
           }
           else {
-            sprintf(cBuf,GAMETEXT_PRESSANYKEYTO
-                         "\n"
-                         GAMETEXT_ALREADYUSED,pActionList->getEntries()[nSel]->Text[0].c_str());
+            sprintf(cBuf, (std::string(GAMETEXT_PRESSANYKEYTO) + "\n" + std::string(GAMETEXT_ALREADYUSED)).c_str(),
+		    pActionList->getEntries()[nSel]->Text[0].c_str());
             _SimpleMessage(cBuf);
           }
         }
@@ -2748,7 +2747,7 @@ namespace vapp {
       
       LevelSrc *pLevel = _FindLevelByID((*Replays)[i]->Level);
       if(pLevel == NULL)
-        pEntry->Text.push_back(GAMETEXT_UNKNOWNLEVEL);
+        pEntry->Text.push_back("(" + std::string(GAMETEXT_UNKNOWNLEVEL) + ")");
       else
         pEntry->Text.push_back(pLevel->getLevelInfo()->Name);
       
@@ -3387,7 +3386,7 @@ namespace vapp {
       WebHighscore *pWH = m_pWebHighscores->getHighscoreFromLevel(pLevelID);
       if(pWH != NULL) {
 	m_pLevelInfoFrame->showWindow(true);
-	m_pBestPlayerText->setCaption(GAMETEXT_BESTPLAYER + pWH->getPlayerName());
+	m_pBestPlayerText->setCaption((std::string(GAMETEXT_BESTPLAYER) + " : " + pWH->getPlayerName()).c_str());
 	m_pLevelToShowOnViewHighscore = pLevelID;
 
 	/* search if the replay is already downloaded */
