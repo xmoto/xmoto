@@ -2098,8 +2098,8 @@ namespace vapp {
     m_Config.createVar( "ProxyType",              "" ); /* (blank), HTTP, SOCKS4, or SOCKS5 */
     m_Config.createVar( "ProxyServer",            "" ); /* (may include user/pass and port) */
     m_Config.createVar( "ProxyPort",              "-1" );
-    //m_Config.createVar( "ProxyAuthUser",          "" ); 
-    //m_Config.createVar( "ProxyAuthPwd",          "" );
+    m_Config.createVar( "ProxyAuthUser",          "" ); 
+    m_Config.createVar( "ProxyAuthPwd",           "" );
 
     /* auto upload */
     m_Config.createVar( "WebHighscoreUploadURL"      , DEFAULT_UPLOADREPLAY_URL);
@@ -2831,7 +2831,8 @@ namespace vapp {
     
     if(bFetchPortAndServer) {
       m_ProxySettings.setPort(m_Config.getInteger("ProxyPort"));
-      m_ProxySettings.setServer(m_Config.getString("ProxyServer"));      
+      m_ProxySettings.setAuthentification(m_Config.getString("ProxyAuthUser"),
+					  m_Config.getString("ProxyAuthPwd"));      
     }
   }
 #endif

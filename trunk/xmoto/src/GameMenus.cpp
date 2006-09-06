@@ -877,7 +877,7 @@ namespace vapp {
 
 #if defined(SUPPORT_WEBACCESS)
     /* Initialize internet connection configurator */
-    m_pWebConfEditor = new UIFrame(m_Renderer.getGUI(),getDispWidth()/2-206,getDispHeight()/2-385/2,"",412,385); 
+    m_pWebConfEditor = new UIFrame(m_Renderer.getGUI(),getDispWidth()/2-206,getDispHeight()/2-385/2,"",412,425); 
     m_pWebConfEditor->setStyle(UI_FRAMESTYLE_TRANS);           
     m_pWebConfEditor->showWindow(false);
     UIStatic *pWebConfEditorTitle = new UIStatic(m_pWebConfEditor,0,0,GAMETEXT_INETCONF,400,50);
@@ -933,7 +933,7 @@ namespace vapp {
     pSubFrame->setStyle(UI_FRAMESTYLE_TRANS);
     pSubFrame->setID("SUBFRAME");    
     
-    pSomeText = new UIStatic(pSubFrame,25,25,std::string(GAMETEXT_PROXYSERVER) + ":",100,25);
+    pSomeText = new UIStatic(pSubFrame,10,25,std::string(GAMETEXT_PROXYSERVER) + ":",120,25);
     pSomeText->setFont(m_Renderer.getSmallFont());    
     pSomeText->setHAlign(UI_ALIGN_RIGHT);
     UIEdit *pProxyServerEdit = new UIEdit(pSubFrame,135,25,"",190,25);
@@ -941,13 +941,32 @@ namespace vapp {
     pProxyServerEdit->setID("SERVEREDIT");
     pProxyServerEdit->setContextHelp(CONTEXTHELP_PROXYSERVER);
 
-    pSomeText = new UIStatic(pSubFrame,25,55,std::string(GAMETEXT_PORT) + ":",100,25);
+#define CONTEXTHELP_PROXYLOGIN "abc"
+#define CONTEXTHELP_PROXYPASSWORD "abc"
+
+    pSomeText = new UIStatic(pSubFrame,10,55,std::string(GAMETEXT_PORT) + ":",120,25);
     pSomeText->setFont(m_Renderer.getSmallFont());    
     pSomeText->setHAlign(UI_ALIGN_RIGHT);
     UIEdit *pProxyPortEdit = new UIEdit(pSubFrame,135,55,"",50,25);
     pProxyPortEdit->setFont(m_Renderer.getSmallFont());
     pProxyPortEdit->setID("PORTEDIT");
     pProxyPortEdit->setContextHelp(CONTEXTHELP_PROXYPORT);
+
+    pSomeText = new UIStatic(pSubFrame,10,85,std::string(GAMETEXT_LOGIN) + ":",120,25);
+    pSomeText->setFont(m_Renderer.getSmallFont());    
+    pSomeText->setHAlign(UI_ALIGN_RIGHT);
+    UIEdit *pProxyLoginEdit = new UIEdit(pSubFrame,135,85,"",190,25);
+    pProxyLoginEdit->setFont(m_Renderer.getSmallFont());
+    pProxyLoginEdit->setID("LOGINEDIT");
+    pProxyLoginEdit->setContextHelp(CONTEXTHELP_PROXYLOGIN);
+
+    pSomeText = new UIStatic(pSubFrame,10,115,std::string(GAMETEXT_PASSWORD) + ":",120,25);
+    pSomeText->setFont(m_Renderer.getSmallFont());    
+    pSomeText->setHAlign(UI_ALIGN_RIGHT);
+    UIEdit *pProxyPasswordEdit = new UIEdit(pSubFrame,135,115,"",190,25);
+    pProxyPasswordEdit->setFont(m_Renderer.getSmallFont());
+    pProxyPasswordEdit->setID("PASSWORDEDIT");
+    pProxyPasswordEdit->setContextHelp(CONTEXTHELP_PROXYPASSWORD);
 #endif
 
     /* Initialize profile editor */
@@ -1637,7 +1656,9 @@ namespace vapp {
     UIButton *pConnOK = (UIButton *)m_pWebConfEditor->getChild("PROXYOK");
     UIEdit *pServer = (UIEdit *)m_pWebConfEditor->getChild("SUBFRAME:SERVEREDIT");
     UIEdit *pPort = (UIEdit *)m_pWebConfEditor->getChild("SUBFRAME:PORTEDIT");    
-    
+    UIEdit *pLogin    = (UIEdit *)m_pWebConfEditor->getChild("SUBFRAME:LOGINEDIT"); 
+    UIEdit *pPassword = (UIEdit *)m_pWebConfEditor->getChild("SUBFRAME:PASSWORDEDIT");     
+
     pDirectConn->setChecked(false);
     pHTTPConn->setChecked(false);
     pSOCKS4Conn->setChecked(false);
@@ -1649,6 +1670,8 @@ namespace vapp {
     int n = m_Config.getInteger("ProxyPort");
     if(n > 0) sprintf(cBuf,"%d",n);
     pPort->setCaption(cBuf);
+    pLogin->setCaption(m_Config.getString("ProxyAuthUser"));
+    pPassword->setCaption(m_Config.getString("ProxyAuthPwd"));
     
     std::string s = m_Config.getString("ProxyType");
     if(s == "HTTP") pHTTPConn->setChecked(true);
@@ -1671,7 +1694,9 @@ namespace vapp {
     UIButton *pConnOK = (UIButton *)m_pWebConfEditor->getChild("PROXYOK");
     UIEdit *pServer = (UIEdit *)m_pWebConfEditor->getChild("SUBFRAME:SERVEREDIT");
     UIEdit *pPort = (UIEdit *)m_pWebConfEditor->getChild("SUBFRAME:PORTEDIT");    
-  
+    UIEdit *pLogin    = (UIEdit *)m_pWebConfEditor->getChild("SUBFRAME:LOGINEDIT"); 
+    UIEdit *pPassword = (UIEdit *)m_pWebConfEditor->getChild("SUBFRAME:PASSWORDEDIT");  
+
     /* The yes/no box open? */
     if(m_pWebConfMsgBox != NULL) {
       UIMsgBoxButton Clicked = m_pWebConfMsgBox->getClicked();
@@ -1714,6 +1739,8 @@ namespace vapp {
             m_Config.setInteger("ProxyPort",-1);          
             
           m_Config.setString("ProxyServer",pServer->getCaption());
+	  m_Config.setString("ProxyAuthUser",pLogin->getCaption());
+	  m_Config.setString("ProxyAuthPwd" ,pPassword->getCaption());
         }
 
         m_pWebConfEditor->showWindow(false);
@@ -1745,10 +1772,14 @@ namespace vapp {
       if(pDirectConn->getChecked()) {
         pServer->enableWindow(false);
         pPort->enableWindow(false);
+	pLogin->enableWindow(false);
+	pPassword->enableWindow(false);
       }            
       else {
         pServer->enableWindow(true);
         pPort->enableWindow(true);
+	pLogin->enableWindow(true);
+	pPassword->enableWindow(true);
       }
     }
   }

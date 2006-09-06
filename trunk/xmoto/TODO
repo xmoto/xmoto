@@ -1,11 +1,10 @@
 ### For 0.2.1
 
-* password proxy
 * collision : collision with the body
+* remove the "level packs" button, remove the "internal" and "external" tabs and replace them by "All levels" tab and "Level pack" tab and make internal level a pack
 
 ### for 0.3.0 and after
 * SDL_ttf or something like that for rendering text
-* --disable-www
 * Level and player name showing in the replay?
 *(20:39:54) Neckelmann:   the game should really do all this:
 zone1 = {}
@@ -52,7 +51,6 @@ http://xmoto.free.fr/interesting_replays/ireplay_40.rpl
         * Modify so it could run on a compile farm.
         * Use Application Support directory instead of ~/.xmoto on OS X
         * Better packaging for OS X (Readme, License, etc)
-* remove the "level packs" button, remove the "internal" and "external" tabs and replace them by "All levels" tab and "Level pack" tab and make internal level a pack
 * BUG: tu peux faire get more levels une fois par session ? really ?!? to try
 * BUG : as you can see at the end of "the only smooth", the block is
    not correctly drawned
