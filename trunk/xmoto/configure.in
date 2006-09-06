@@ -88,11 +88,23 @@ AC_OUTPUT(Makefile       \
          )
 
 # display is something is missing
+
+function displayRequirement {
+  STUFF="$1"
+  VAR="$2"
+  GOOD_RES="$3"
+  REQ="$4"
+
+  if test "$VAR" = "$GOOD_RES"; then
+    printf "| %10s | %10s | %20s |\n" "$STUFF" "enabled" "($REQ)"
+  else
+    printf "| %10s | %10s | %20s |\n" "$STUFF" "disabled" "($REQ missing)"
+  fi
+}
+
 echo
-echo   "+-----------+------------+----------------------+"
-if test "$ac_cv_lib_curl_curl_easy_init" = yes; then
-  printf "| WWW stuff | %10s | %20s +\n" "enabled" "(libcurl)"
-else
-  printf "| WWW stuff | %10s | %20s +\n" "disabled" "(libcurl missing)"
-fi
-echo   "+-----------+------------+----------------------+"
+echo   "+------------+------------+----------------------+"
+displayRequirement "WWW stuff" "$ac_cv_lib_curl_curl_easy_init" "yes" "libcurl"
+echo   "+------------+------------+----------------------+"
+displayRequirement "Locales" "$gt_cv_func_gnugettext1_libc" "yes" "gettext"
+echo   "+------------+------------+----------------------+"
