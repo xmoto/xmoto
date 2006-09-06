@@ -50,16 +50,9 @@ Build configuration
 /* HIDE_JOYSTICK_SUPPORT - Disable joystick config UI */
 #define HIDE_JOYSTICK_SUPPORT
 
-/* ENABLE_ZOOMING - Allow user to zoom in and out while playing */
-//#define ENABLE_ZOOMING
-
 /* ALLOW_GHOST - Allow user to see replay ghosts while playing */
 /* (BUG: disabling this will make it impossible to compile) */
 #define ALLOW_GHOST
-
-/* DO_NOT_ALLOW_WEBACCESS - Don't compile with web-access support, 
-   regardless of whether libcurl is available or not */
-//#define DO_NOT_ALLOW_WEBACCESS
 
 /* BREAK_ON_EXCEPTION - (Visual C++ debug-mode only) Will break program if an
    exception occurs */
@@ -72,11 +65,21 @@ Misc, don't touch
   #undef EMUL_800x600 /* editor don't want that */
 #endif
 
-#if defined(HAVE_LIBCURL) && !defined(DO_NOT_ALLOW_WEBACCESS)
+#ifndef ALLOW_WEBACCESS
+#define ALLOW_WEBACCESS 1
+#endif
+#if HAVE_LIBCURL == 1 && ALLOW_WEBACCESS == 1
   #define SUPPORT_WEBACCESS
 #endif
 
-#if defined(HAVE_GETTEXT)
+#ifndef ALLOW_ZOOMING
+#define ALLOW_ZOOMING 0
+#endif
+#if ALLOW_ZOOMING == 1
+  #define ENABLE_ZOOMING
+#endif
+
+#if HAVE_GETTEXT == 1
   #define USE_GETTEXT
 #endif
 

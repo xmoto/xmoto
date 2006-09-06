@@ -75,6 +75,24 @@ AC_ARG_WITH([gamedatadir],
 )
 AC_SUBST([GAMEDATADIR])
 
+dnl Put ALLOW_WEBACCESS in makefiles
+AC_ARG_WITH([enable-www],
+  [AS_HELP_STRING([--with-enable-www=0|1],
+    [Enable www])],
+  [ALLOW_WEBACCESS="$withval"],
+  [ALLOW_WEBACCESS="1"]
+)
+AC_SUBST([ALLOW_WEBACCESS])
+
+dnl Put ALLOW_ZOOMING in makefiles
+AC_ARG_WITH([enable-zoom],
+  [AS_HELP_STRING([--with-enable-zoom=0|1],
+    [Enable zoom])],
+  [ALLOW_ZOOM="$withval"],
+  [ALLOW_ZOOM="0"]
+)
+AC_SUBST([ALLOW_ZOOM])
+
 dnl Can't build xmoto.bin if we're cross-compiling
 AM_CONDITIONAL(CROSS_COMPILING,test "$cross_compiling" = yes)
 
@@ -96,15 +114,37 @@ function displayRequirement {
   REQ="$4"
 
   if test "$VAR" = "$GOOD_RES"; then
-    printf "| %10s | %10s | %20s |\n" "$STUFF" "enabled" "($REQ)"
+    printf "| %10s | %10s | %30s |\n" "$STUFF" "enabled" "($REQ)"
   else
-    printf "| %10s | %10s | %20s |\n" "$STUFF" "disabled" "($REQ missing)"
+    printf "| %10s | %10s | %30s |\n" "$STUFF" "disabled" "($REQ missing)"
   fi
 }
 
+### enable www ?
+if test -z "$with_enable_www"
+then
+  with_enable_www=1
+fi
+
+if test "$ac_cv_lib_curl_curl_easy_init" = "yes" -a "$with_enable_www" = "1"
+then
+  v_enable_www=yes
+  v_enable_www_reason="libcurl"
+else
+  v_enable_www=no
+  if test "$ac_cv_lib_curl_curl_easy_init" = "yes"
+  then
+    v_enable_www_reason="--with-enable-www=1"
+  else
+    v_enable_www_reason="libcurl"
+  fi
+fi
+
 echo
-echo   "+------------+------------+----------------------+"
-displayRequirement "WWW stuff" "$ac_cv_lib_curl_curl_easy_init" "yes" "libcurl"
-echo   "+------------+------------+----------------------+"
+echo   "+------------+------------+--------------------------------+"
+displayRequirement "WWW stuff" "$v_enable_www" "yes" "$v_enable_www_reason"
+echo   "+------------+------------+--------------------------------+"
 displayRequirement "Locales" "$gt_cv_func_gnugettext1_libc" "yes" "gettext"
-echo   "+------------+------------+----------------------+"
+echo   "+------------+------------+--------------------------------+"
+displayRequirement "Zoom" "$with_enable_zoom" "1" "--with-enable-zoom=1"
+echo   "+------------+------------+--------------------------------+"
