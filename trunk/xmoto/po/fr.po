@@ -1191,7 +1191,7 @@ msgstr "Lancer le jeu dans une fenetre"
 
 #: src/GameText.h:328
 msgid "Not so fancy menu graphics"
-msgstr "Des menus pas très jolis"
+msgstr "Des menus pas tres jolis"
 
 #: src/GameText.h:329
 msgid "A bit more fancy menu graphics"
