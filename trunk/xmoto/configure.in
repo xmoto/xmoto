@@ -88,10 +88,10 @@ dnl Put ALLOW_ZOOMING in makefiles
 AC_ARG_WITH([enable-zoom],
   [AS_HELP_STRING([--with-enable-zoom=0|1],
     [Enable zoom])],
-  [ALLOW_ZOOM="$withval"],
-  [ALLOW_ZOOM="0"]
+  [ALLOW_ZOOMING="$withval"],
+  [ALLOW_ZOOMING="0"]
 )
-AC_SUBST([ALLOW_ZOOM])
+AC_SUBST([ALLOW_ZOOMING])
 
 dnl Can't build xmoto.bin if we're cross-compiling
 AM_CONDITIONAL(CROSS_COMPILING,test "$cross_compiling" = yes)
