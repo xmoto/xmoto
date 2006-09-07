@@ -102,19 +102,19 @@ msgstr "par"
 
 #: src/GameText.h:57
 msgid "Move Camera to left"
-msgstr "Deplacer la camera a gauche"
+msgstr "Camera a gauche"
 
 #: src/GameText.h:58
 msgid "Move Camera to right"
-msgstr "Deplacer la camera a droite"
+msgstr "Camera a droite"
 
 #: src/GameText.h:59
 msgid "Move Camera down"
-msgstr "Deplacer la camera vers le bas"
+msgstr "Camera vers le bas"
 
 #: src/GameText.h:60
 msgid "Move Camera up"
-msgstr "Deplacer la camera vers le haut"
+msgstr "Camera vers le haut"
 
 #: src/GameText.h:61
 msgid "Cancel"
