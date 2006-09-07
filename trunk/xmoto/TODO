@@ -147,6 +147,7 @@ http://xmoto.free.fr/interesting_replays/ireplay_40.rpl
 * create a non-regression test using a special svg file which contains every type of data we're supposed to convert and the associated level file.
 * better integration with Inkscape
 ** When you save a file, allow the user to give: date, sky, description, author, ...
-** Entities & Zone & Blocks: Need a menu with them (list them using xmoto executable)
+** find a way to have the list of textures, particlesources, ... available from within the inkscape Effect menu. (for now, we have to wait for a new version of inkscape)
 * do the lvl2svg convertor
 * it seems that there is a bug with transformations when you got recursive layer -> spot it out
+* add grass to blocks. as we can put properties to single vertices, we have to add the grass property to the entire block, so then, the convertor script add grass only to the upper edges of the block.

@@ -44,6 +44,7 @@ Since 0.2.0
 * new-level-editor: When you save the file as a .lvl, an automatic 'smoothing' of the level is done (only blocks)
 * translations
 * password proxy for www
+* new-level-editor: you can change entities, blocks and zones properties from the Effect inkscape menu.
 
 Since 1.16
 * BUG : view highscore with up and down with keyboard does not update the button
