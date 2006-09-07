@@ -56,13 +56,13 @@ msgid ""
 "to the Internet to look for more levels\n"
 "and best times of other players?"
 msgstr ""
-"Autorisez-vous X-Moto à se connecter\n"
-"à Internet pour rechercher de nouveaux niveaux\n"
+"Autorisez-vous X-Moto a se connecter\n"
+"a Internet pour rechercher de nouveaux niveaux\n"
 "et les records des autres joueurs ?"
 
 #: src/GameText.h:47
 msgid "Already used!"
-msgstr "Dejà utilise !"
+msgstr "Deja utilise !"
 
 #: src/GameText.h:48
 msgid "and"
@@ -102,11 +102,11 @@ msgstr "par"
 
 #: src/GameText.h:57
 msgid "Move Camera to left"
-msgstr "Deplacer la camera à gauche"
+msgstr "Deplacer la camera a gauche"
 
 #: src/GameText.h:58
 msgid "Move Camera to right"
-msgstr "Deplacer la camera à droite"
+msgstr "Deplacer la camera a droite"
 
 #: src/GameText.h:59
 msgid "Move Camera down"
@@ -537,7 +537,7 @@ msgstr "Nom du niveau"
 #: src/GameText.h:160
 #, c-format
 msgid "Level '%s' not found!"
-msgstr "Niveau '%s' non trouvé !"
+msgstr "Niveau '%s' non trouve !"
 
 #: src/GameText.h:161
 msgid "Level Pack"
@@ -1447,7 +1447,7 @@ msgstr "Choisir votre salon"
 
 #: src/GameText.h:393
 msgid "Get the rooms list from the web"
-msgstr "Télécharger la liste des salons depuis le web"
+msgstr "Telecharger la liste des salons depuis le web"
 
 #: src/GameText.h:394
 msgid "Upload of highscore requires to log in (Except for WR)"
