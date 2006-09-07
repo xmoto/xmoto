@@ -549,8 +549,10 @@ namespace vapp {
       void removeSDynamicOfObject(std::string pObject);
 
       void revertEntityDestroyed(std::string p_entityID);
-
       void createKillEntityEvent(std::string p_entityID);
+
+      unsigned int getNbRemainingStrawberries();
+      void makePlayerWin();
 
   private:         
       /* Data */

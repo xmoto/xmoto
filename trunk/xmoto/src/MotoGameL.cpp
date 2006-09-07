@@ -416,5 +416,15 @@ namespace vapp {
     m_pMotoGame->createKillEntityEvent(luaL_checkstring(pL,1));
     return 0;
   }
+
+  int L_Game_RemainingStrawberries(lua_State *pL) {
+    /* no event for this */
+    lua_pushnumber(pL,m_pMotoGame->getNbRemainingStrawberries());
+    return 1;
+  }
+
+  int L_Game_WinPlayer(lua_State *pL) {
+    m_pMotoGame->makePlayerWin();
+  }
 }
 

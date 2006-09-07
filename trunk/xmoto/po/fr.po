@@ -805,7 +805,7 @@ msgstr "Sauver"
 
 #: src/GameText.h:232
 msgid "Saved as"
-msgstr "Enregistrer sous"
+msgstr "Sauve sous"
 
 #: src/GameText.h:233
 msgid "Save Replay"
