@@ -425,6 +425,7 @@ namespace vapp {
 
   int L_Game_WinPlayer(lua_State *pL) {
     m_pMotoGame->makePlayerWin();
+    return 1;
   }
 }
 
