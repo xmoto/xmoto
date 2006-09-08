@@ -1507,7 +1507,7 @@ namespace vapp {
         }        
         
         /* Level name to draw? */
-        if(m_State == GS_JUSTDEAD || m_State == GS_PAUSE || m_State == GS_FINISHED &&
+        if((m_State == GS_JUSTDEAD || m_State == GS_PAUSE || m_State == GS_FINISHED || m_State == GS_REPLAYING) &&
            m_MotoGame.getLevelSrc() != NULL) {
 
 	  UIFont *v_font = m_Renderer.getMediumFont();

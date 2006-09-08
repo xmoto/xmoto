@@ -4,7 +4,7 @@
 
 ### for 0.3.0 and after
 * SDL_ttf or something like that for rendering text
-* Level and player name showing in the replay?
+* player name showing in the replay?
 *(20:39:54) Neckelmann:   the game should really do all this:
 zone1 = {}
 zone1a = {}
