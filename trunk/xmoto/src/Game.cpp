@@ -624,6 +624,7 @@ namespace vapp {
     Sprite* pSprite;
 
     switchUglyMode(m_bUglyMode);
+    switchTestThemeMode(m_bTestThemeMode);
 
     /* Reset timers */
     m_fLastFrameTime = 0.0f;
@@ -723,7 +724,6 @@ namespace vapp {
     m_Renderer.setParent( (App *)this );
     m_Renderer.setGameObject( &m_MotoGame );        
     m_Renderer.setDebug( m_bDebugMode );
-    m_Renderer.setTestThemeMode( m_bTestThemeMode );
 
 #if defined(ALLOW_GHOST)
     m_Renderer.setGhostMotionBlur( m_bGhostMotionBlur );
@@ -1652,8 +1652,12 @@ namespace vapp {
     }
 
     if(nKey == SDLK_F1) {
-      m_bUglyMode = ! m_bUglyMode;
-      switchUglyMode(m_bUglyMode);
+      switchUglyMode(!m_bUglyMode);
+      return;        
+    }
+
+    if(nKey == SDLK_F2) {
+      switchTestThemeMode(!m_bTestThemeMode);
       return;        
     }
     
@@ -2971,11 +2975,17 @@ namespace vapp {
 #endif
 
   void GameApp::switchUglyMode(bool bUgly) {
+    m_bUglyMode = bUgly;
     if(bUgly == false) {
       SDL_ShowCursor(SDL_DISABLE);        
     } else {
       SDL_ShowCursor(SDL_ENABLE);
     }
     m_Renderer.setUglyMode(bUgly);
+  }
+
+  void GameApp::switchTestThemeMode(bool mode) {
+    m_bTestThemeMode = mode;
+    m_Renderer.setTestThemeMode(m_bTestThemeMode);
   }
 }

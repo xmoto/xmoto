@@ -490,7 +490,7 @@ namespace vapp {
 #endif
 
       void switchUglyMode(bool bUgly);
-
+      void switchTestThemeMode(bool mode);
   };
 
 }
