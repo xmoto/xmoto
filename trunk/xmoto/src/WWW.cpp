@@ -476,7 +476,7 @@ void FSWeb::downloadFile(const std::string &p_local_file,
     v_proxy_server = p_proxy_settings->getServer();
     v_proxy_auth_str =
       p_proxy_settings->getAuthentificationUser()
-      + " "
+      + ":"
       + p_proxy_settings->getAuthentificationPassword();
 
     if(p_proxy_settings->useDefaultServer() == false) {
