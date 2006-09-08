@@ -2792,7 +2792,7 @@ namespace vapp {
   std::string GameApp::levelMD5Sum(const std::string &LevelID) {
     LevelSrc *pLevel = _FindLevelByID(LevelID);
     if(pLevel != NULL) {
-      return pLevel->getLevelCheckSum()->MD5Sum;
+      return pLevel->getLevelCheckSum();
     }
 
     /* Nothing */

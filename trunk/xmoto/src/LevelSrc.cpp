@@ -196,7 +196,7 @@ namespace vapp {
   void LevelSrc::loadXML(void) {
     /* Load XML document and fetch tinyxml handle */
     _UnloadLevelData();
-    m_LevelCheckSum.MD5Sum = "";
+    m_LevelCheckSum = "";
     m_XML.readFromFile( m_FileName, /*&m_LevelCheckSum.nCRC32*/ NULL );    
     
     TiXmlDocument *pDoc = m_XML.getLowLevelAccess();
@@ -479,25 +479,19 @@ namespace vapp {
   /* Load using the best way possible. File name must already be set!
   *  Return whether or not it was loaded from the cache. */
   bool LevelSrc::load(bool cacheEnabled) {
-    char cCacheFileName[1024];
-    LevelCheckSum Sum;
-    
+    std::string cacheFileName;
     std::string MD5Sum = md5file(getFileName());
     setLevelMD5Sum(MD5Sum);
     
     // First try to load it from the cache
     bool cached = false;
     if (cacheEnabled) {
-      /* Start by determining file CRC */
-      probeCheckSum(&Sum);
-      
       /* Determine name in cache */
       std::string LevelFileBaseName = FS::getFileBaseName(getFileName());
-      sprintf(cCacheFileName,"LCache/%s%s.blv",Sum.MD5Sum.c_str(),
-	      LevelFileBaseName.c_str());
+      cacheFileName = "LCache/" + MD5Sum + LevelFileBaseName;
       
       try {
-        cached = importBinary(cCacheFileName,&Sum);
+        cached = importBinary(cacheFileName, MD5Sum);
       } catch (Exception &e) {
         Log("** Warning **: Exception while loading binary level, will load "
 	    "XML instead for '%s' (%s)", getFileName().c_str(),
@@ -507,10 +501,12 @@ namespace vapp {
     
     // If we couldn't get it from the cache, then load from (slow) XML
     if (!cached) {
-      loadXML();  
+      loadXML();
+      //      fprintf(stderr, "loadXML()\n");
+      
       
       if (cacheEnabled)
-        exportBinary(cCacheFileName,&Sum); /* Cache it now */
+        exportBinary(cacheFileName, MD5Sum); /* Cache it now */
     }
     
     return cached;
@@ -660,17 +656,9 @@ namespace vapp {
   }
   
   /*===========================================================================
-  Calculate checksum of level XML before loading it
-  ===========================================================================*/
-  bool LevelSrc::probeCheckSum(LevelCheckSum *pSum) {
-    pSum->MD5Sum = md5file(m_FileName);
-    return pSum->MD5Sum != "";
-  }
-      
-  /*===========================================================================
   Export binary level file
   ===========================================================================*/
-  void LevelSrc::exportBinary(const std::string &FileName,LevelCheckSum *pSum) {
+  void LevelSrc::exportBinary(const std::string &FileName, const std::string pSum) {
     /* Don't do this if we failed to load level from XML */
     if(isXMotoTooOld()) return;
   
@@ -685,7 +673,7 @@ namespace vapp {
                                   /* 3 -> includes now the grip of the block, width and height of the sprites */      
 
       /* Write CRC32 of XML */
-      FS::writeString(pfh,pSum->MD5Sum);
+      FS::writeString(pfh,pSum);
       //if(m_ID == "") {
       //  __asm {int 3};
       //}
@@ -774,7 +762,7 @@ namespace vapp {
   /*===========================================================================
   Import binary level file
   ===========================================================================*/
-  bool LevelSrc::importBinary(const std::string &FileName,LevelCheckSum *pSum) {
+  bool LevelSrc::importBinary(const std::string &FileName, const std::string pSum) {
     _UnloadLevelData();
     bool bRet = true;
 
@@ -802,11 +790,11 @@ namespace vapp {
         
       if(nFormat == 1 || nFormat == 2 || nFormat == 3) {
         /* Read "format 1" / "format 2" binary level */
-        m_LevelCheckSum.MD5Sum = pSum->MD5Sum;
+        m_LevelCheckSum = pSum;
         
         /* Right CRC? */
 	std::string md5sum = FS::readString(pfh);
-        if(md5sum != pSum->MD5Sum) {
+        if(md5sum != pSum) {
           Log("** Warning ** : CRC check failed, can't import: %s",FileName.c_str());
           bRet = false;
         }

@@ -152,13 +152,6 @@ namespace vapp {
   };
 
 	/*===========================================================================
-  Level checksum struct
-  ===========================================================================*/
-  struct LevelCheckSum {
-    std::string MD5Sum;
-  };
-
-	/*===========================================================================
 	Level source object - holds all stored information about a level, used by 
 	both the editor and the game itself.
   ===========================================================================*/
@@ -173,10 +166,8 @@ namespace vapp {
       void saveXML(void);
       void loadXML(void);
       
-      bool probeCheckSum(LevelCheckSum *pSum);
-      
-      void exportBinary(const std::string &FileName,LevelCheckSum *pSum);
-      bool importBinary(const std::string &FileName,LevelCheckSum *pSum);
+      void exportBinary(const std::string &FileName,std::string pSum);
+      bool importBinary(const std::string &FileName,std::string pSum);
       
       LevelEntity *createEntity(std::string TypeID,float x,float y);
                               
@@ -229,8 +220,8 @@ namespace vapp {
         return Def;
       }
       
-      const LevelCheckSum *getLevelCheckSum(void) {return &m_LevelCheckSum;}
-      void setLevelMD5Sum(const std::string &s) {m_LevelCheckSum.MD5Sum = s;}
+      std::string getLevelCheckSum(void) {return m_LevelCheckSum;}
+      void setLevelMD5Sum(const std::string &s) {m_LevelCheckSum = s;}
       
       static int compareLevel(const LevelSrc *p_lvl1, const LevelSrc *p_lvl2);    
       static int compareVersionNumbers(const std::string &v1,const std::string &v2);
@@ -256,7 +247,7 @@ namespace vapp {
       std::vector<LevelZone *> m_Zones; /* Level zones */
       std::vector<LevelEntity *> m_Entities; /* Level entities */
       
-      LevelCheckSum m_LevelCheckSum;
+      std::string m_LevelCheckSum;
       
       bool m_bXMotoTooOld;            /* Flag set if our X-Moto version is too low to load level */
       
