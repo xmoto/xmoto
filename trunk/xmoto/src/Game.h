@@ -489,6 +489,8 @@ namespace vapp {
 				      GhostSearchStrategy p_strategy);
 #endif
 
+      void switchUglyMode(bool bUgly);
+
   };
 
 }

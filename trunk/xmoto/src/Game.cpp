@@ -623,9 +623,7 @@ namespace vapp {
   void GameApp::userInit(void) {
     Sprite* pSprite;
 
-    if(m_bUglyMode == false) {
-      SDL_ShowCursor(SDL_DISABLE);        
-    }  
+    switchUglyMode(m_bUglyMode);
 
     /* Reset timers */
     m_fLastFrameTime = 0.0f;
@@ -725,7 +723,6 @@ namespace vapp {
     m_Renderer.setParent( (App *)this );
     m_Renderer.setGameObject( &m_MotoGame );        
     m_Renderer.setDebug( m_bDebugMode );
-    m_Renderer.setUglyMode( m_bUglyMode );
     m_Renderer.setTestThemeMode( m_bTestThemeMode );
 
 #if defined(ALLOW_GHOST)
@@ -1651,6 +1648,12 @@ namespace vapp {
     /* No matter what, F12 always equals a screenshot */
     if(nKey == SDLK_F12) {
       _GameScreenshot();
+      return;        
+    }
+
+    if(nKey == SDLK_F1) {
+      m_bUglyMode = ! m_bUglyMode;
+      switchUglyMode(m_bUglyMode);
       return;        
     }
     
@@ -2966,4 +2969,13 @@ namespace vapp {
     }
   }
 #endif
+
+  void GameApp::switchUglyMode(bool bUgly) {
+    if(bUgly == false) {
+      SDL_ShowCursor(SDL_DISABLE);        
+    } else {
+      SDL_ShowCursor(SDL_ENABLE);
+    }
+    m_Renderer.setUglyMode(bUgly);
+  }
 }
