@@ -879,7 +879,7 @@ namespace vapp {
 	  } else {
 	    /* use the theme values */
 	    v_width  = v_decorationSpriteType->getWidth();
-	    v_height = v_decorationSpriteType->getWidth();
+	    v_height = v_decorationSpriteType->getHeight();
 	  }
 	}
       }
