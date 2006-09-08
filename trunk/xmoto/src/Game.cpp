@@ -1506,17 +1506,25 @@ namespace vapp {
           _HandleFinishMenu();
         }        
         
-        /* Level name to draw? */
+        /* Level and player name to draw? */
         if((m_State == GS_JUSTDEAD || m_State == GS_PAUSE || m_State == GS_FINISHED || m_State == GS_REPLAYING) &&
            m_MotoGame.getLevelSrc() != NULL) {
-
 	  UIFont *v_font = m_Renderer.getMediumFont();
+	  std::string v_infos;
+	  
+	  v_infos = m_MotoGame.getLevelSrc()->getLevelInfo()->Name;
+
+	  if(m_State == GS_REPLAYING && m_pReplay != NULL) {
+	    v_infos += " (" + std::string(GAMETEXT_BY) + " " + m_pReplay->getPlayerName() + ")";
+	  }
+
 	  if(v_font != NULL) {
-	    UITextDraw::printRaw(v_font,0,getDispHeight()-4,m_MotoGame.getLevelSrc()->getLevelInfo()->Name,
+	    UITextDraw::printRaw(v_font,0,getDispHeight()-4,
+				 v_infos,
 				 MAKE_COLOR(255,255,255,255));
 	  }
         }
-        
+       
         /* Context menu? */
         if(m_State == GS_PLAYING || m_State == GS_REPLAYING || !m_bEnableContextHelp)
           m_Renderer.getGUI()->enableContextMenuDrawing(false);

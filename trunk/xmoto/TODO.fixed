@@ -47,6 +47,7 @@ Since 0.2.0
 * new-level-editor: you can change entities, blocks and zones properties from the Effect inkscape menu.
 * new-level-editor: When you save a file, the user can give: date, sky, description, author, ...
 * collision : collision with the body
+* level and player name showing in the replay?
 
 Since 1.16
 * BUG : view highscore with up and down with keyboard does not update the button
