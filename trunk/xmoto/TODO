@@ -1,6 +1,5 @@
 ### For 0.2.1
 
-* collision : collision with the body
 * remove the "level packs" button, remove the "internal" and "external" tabs and replace them by "All levels" tab and "Level pack" tab and make internal level a pack
 
 ### for 0.3.0 and after

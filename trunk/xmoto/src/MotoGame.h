@@ -701,6 +701,7 @@ namespace vapp {
       EntityType _TransEntityType(std::string Name);
       EdgeEffect _TransEdgeEffect(std::string Name);
       void _UpdateEntities(void);
+      bool touchEntityBodyExceptHead(const BikeState &pBike, const Entity &p_entity);
       void _UpdateGameState(SerializedBikeState *pReplayState);
       /* static */ void _UpdateStateFromReplay(SerializedBikeState *pReplayState,BikeState *pBikeS);
 

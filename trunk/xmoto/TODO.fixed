@@ -46,7 +46,7 @@ Since 0.2.0
 * password proxy for www
 * new-level-editor: you can change entities, blocks and zones properties from the Effect inkscape menu.
 * new-level-editor: When you save a file, the user can give: date, sky, description, author, ...
-
+* collision : collision with the body
 
 Since 1.16
 * BUG : view highscore with up and down with keyboard does not update the button

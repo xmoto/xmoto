@@ -1237,33 +1237,120 @@ namespace vapp {
     return NULL;    
   }  
 
+  bool MotoGame::touchEntityBodyExceptHead(const BikeState &pBike, const Entity &p_entity) {
+    Vector2f res1, res2;
+
+    if(pBike.Dir == DD_RIGHT) {
+      if(intersectLineCircle2f(p_entity.Pos, p_entity.fSize,
+			       pBike.FootP, pBike.KneeP,
+			       res1, res2) > 0) {
+				 return true;
+			       }
+
+      if(intersectLineCircle2f(p_entity.Pos, p_entity.fSize,
+			       pBike.KneeP, pBike.LowerBodyP,
+			       res1, res2) > 0) {
+				 return true;
+			       }
+      
+      if(intersectLineCircle2f(p_entity.Pos, p_entity.fSize,
+			       pBike.LowerBodyP, pBike.ShoulderP,
+			       res1, res2) > 0) {
+				 return true;
+			       }
+
+      if(intersectLineCircle2f(p_entity.Pos, p_entity.fSize,
+			       pBike.ShoulderP, pBike.ElbowP,
+			       res1, res2) > 0) {
+				 return true;
+			       }
+
+      if(intersectLineCircle2f(p_entity.Pos, p_entity.fSize,
+			       pBike.ElbowP, pBike.HandP,
+			       res1, res2) > 0) {
+				 return true;
+			       }
+      return false;
+    }
+
+    if(pBike.Dir == DD_LEFT) {
+      if(intersectLineCircle2f(p_entity.Pos, p_entity.fSize,
+			       pBike.Foot2P, pBike.Knee2P,
+			       res1, res2) > 0) {
+				 return true;
+			       }
+
+      if(intersectLineCircle2f(p_entity.Pos, p_entity.fSize,
+			       pBike.Knee2P, pBike.LowerBody2P,
+			       res1, res2) > 0) {
+				 return true;
+			       }
+      
+      if(intersectLineCircle2f(p_entity.Pos, p_entity.fSize,
+			       pBike.LowerBody2P, pBike.Shoulder2P,
+			       res1, res2) > 0) {
+				 return true;
+			       }
+
+      if(intersectLineCircle2f(p_entity.Pos, p_entity.fSize,
+			       pBike.Shoulder2P, pBike.Elbow2P,
+			       res1, res2) > 0) {
+				 return true;
+			       }
+
+      if(intersectLineCircle2f(p_entity.Pos, p_entity.fSize,
+			       pBike.Elbow2P, pBike.Hand2P,
+			       res1, res2) > 0) {
+				 return true;
+			       }
+      return false;
+    }
+
+    return false;
+  }
+
   void MotoGame::_UpdateEntities(void) {
+    Vector2f HeadPos = m_BikeS.Dir==DD_RIGHT?m_BikeS.HeadP:m_BikeS.Head2P;
+
     /* Do player touch anything? */
     for(int i=0;i<m_Entities.size();i++) {            
-      /* Head? */						
-      Vector2f HeadPos = m_BikeS.Dir==DD_RIGHT?m_BikeS.HeadP:m_BikeS.Head2P;
-			
-      if(circleTouchCircle2f(m_Entities[i]->Pos,m_Entities[i]->fSize,HeadPos,m_BikeP.fHeadSize)) {
+      /* Head? */
+      if(circleTouchCircle2f(m_Entities[i]->Pos,
+			     m_Entities[i]->fSize,
+			     HeadPos,
+			     m_BikeP.fHeadSize)) {
 	if(m_Entities[i]->bTouched == false) {
 	  createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
 						      m_Entities[i]->ID,
 						      true));
 	  m_Entities[i]->bTouched = true;
 	}
-      }
-      /* Wheel then? */
-      else if(circleTouchCircle2f(m_Entities[i]->Pos,m_Entities[i]->fSize,m_BikeS.FrontWheelP,m_BikeP.WR) ||
-              circleTouchCircle2f(m_Entities[i]->Pos,m_Entities[i]->fSize,m_BikeS.RearWheelP,m_BikeP.WR)) {
-		if(m_Entities[i]->bTouched == false) {
-		  createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
-							      m_Entities[i]->ID,
-							      false));
-		  m_Entities[i]->bTouched = true;
-		}
-	      }      
-      else {
-	      /* Not touching */
-	      m_Entities[i]->bTouched = false;
+
+	/* Wheel then ? */
+      } else if(circleTouchCircle2f(m_Entities[i]->Pos,
+				    m_Entities[i]->fSize,
+				    m_BikeS.FrontWheelP,
+				    m_BikeP.WR) ||
+		circleTouchCircle2f(m_Entities[i]->Pos,
+				    m_Entities[i]->fSize,
+				    m_BikeS.RearWheelP,
+				    m_BikeP.WR)) {
+	if(m_Entities[i]->bTouched == false) {
+	  createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
+						      m_Entities[i]->ID,
+						      false));
+	  m_Entities[i]->bTouched = true;
+	}
+
+	/* body then ?*/
+      } else if(touchEntityBodyExceptHead(m_BikeS, *(m_Entities[i]))) {
+	createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
+						    m_Entities[i]->ID,
+						    false));
+	m_Entities[i]->bTouched = true;
+      } else {
+	/* Not touching */
+	m_Entities[i]->bTouched = false;
       }
     }
   }
