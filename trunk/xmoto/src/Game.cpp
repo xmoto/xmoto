@@ -1444,14 +1444,15 @@ namespace vapp {
 	        m_Renderer.render(bIsPaused);
 
           if(m_bShowMiniMap && m_bUglyMode == false) {
-            if(m_MotoGame.getBikeState()->Dir == DD_LEFT && m_bShowEngineCounter == false) {
+            if(m_MotoGame.getBikeState()->Dir == DD_LEFT &&
+	       (m_bShowEngineCounter == false || m_State == GS_REPLAYING)) {
               m_Renderer.renderMiniMap(getDispWidth()-150,getDispHeight()-100,150,100);
 	    } else {
               m_Renderer.renderMiniMap(0,getDispHeight()-100,150,100);
 	    }
           }              
 
-	  if(m_bShowEngineCounter && m_bUglyMode == false) {
+	  if(m_bShowEngineCounter && m_bUglyMode == false && m_State != GS_REPLAYING) {
 	    m_Renderer.renderEngineCounter(getDispWidth()-128, getDispHeight()-128,
 					   128, 128,
 					   m_MotoGame.getBikeEngineSpeed());
