@@ -123,6 +123,26 @@ namespace vapp {
     return 1;
   }
 
+  MotoGame::MotoGame() {
+    m_pLevelSrc=NULL;
+    m_bSqueeking=false;
+    clearStates();
+    m_lastCallToEveryHundreath = 0.0;
+#if defined(ALLOW_GHOST)
+    m_showGhostTimeDiff = true;
+    m_isGhostActive = false;
+#endif
+    m_renderer = NULL;
+    m_isScriptActiv = false;
+    
+    bFrontWheelTouching = false;
+    bRearWheelTouching  = false;
+  }
+  
+  MotoGame::~MotoGame() {
+    endLevel();
+  }  
+
   /*===========================================================================
     Simple lua interaction
     ===========================================================================*/

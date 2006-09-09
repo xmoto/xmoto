@@ -177,6 +177,7 @@ namespace vapp {
 		 m_currentThemeName = THEME_DEFAULT_THEMENAME;
 
 		 m_bPrePlayAnim = true;
+		 m_bShowEngineCounter = true;
                  }
                  
 #if defined(SUPPORT_WEBACCESS)                 
@@ -234,6 +235,8 @@ namespace vapp {
       bool m_bTimeDemo;                         /* true: (valid for replaying) - performance benchmark */
       bool m_bDebugMode;                        /* true: show debug info */
       bool m_bUglyMode;													/* true: fast 'n ugly graphics */
+      bool m_bShowEngineCounter;
+
       bool m_bTestThemeMode;
       bool m_bEnableEngineSound;                /* true: engine sound is enabled */
       bool m_bCompressReplays;                  /* true: compress replays with zlib */

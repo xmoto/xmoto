@@ -3,6 +3,7 @@
 
 * remove the "level packs" button, remove the "internal" and "external" tabs and replace them by "All levels" tab and "Level pack" tab and make internal level a pack
 
+* change theme without restart
 
 * SDL_ttf or something like that for rendering text
 *(20:39:54) Neckelmann:   the game should really do all this:

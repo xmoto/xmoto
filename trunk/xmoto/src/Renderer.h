@@ -178,6 +178,7 @@ namespace vapp {
 	m_cameraOffsetY = CAMERA_OFFSETY_DEFAULT;
 	m_bGhostMotionBlur = true;
 	m_theme = NULL;
+	m_previousEngineSpeed = -1.0;
       }
       ~GameRenderer() {_Free();}
     
@@ -188,6 +189,7 @@ namespace vapp {
       void setTheme(Theme *p_theme);
       void render(bool bIsPaused = false);
       void renderMiniMap(int x,int y,int nWidth,int nHeight);
+      void renderEngineCounter(int x,int y,int nWidth,int nHeight, float pSpeed);
       void prepareForNewLevel(void);
       void unprepareForNewLevel(void);
       void loadDebugInfo(std::string File);
@@ -290,6 +292,8 @@ namespace vapp {
       std::string m_ReplayDesc;
 #endif      
       
+      float m_previousEngineSpeed;
+
       GraphQuality m_Quality;
       bool m_bGhostMotionBlur;
       

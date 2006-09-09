@@ -22,6 +22,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __MOTOGAME_H__
 #define __MOTOGAME_H__
 
+#define MOTOGAME_DEFAULT_GAME_MESSAGE_DURATION 5.0
+
 namespace vapp {
   /*===========================================================================
     Entity object types
@@ -415,88 +417,81 @@ namespace vapp {
   Game object
   ===========================================================================*/
   class MotoGame {
-    public:          
-      MotoGame() {m_pLevelSrc=NULL;
-                  m_bSqueeking=false;
-                  clearStates();
-      m_lastCallToEveryHundreath = 0.0;
-#if defined(ALLOW_GHOST)
-      m_showGhostTimeDiff = true;
-      m_isGhostActive = false;
-#endif
-      m_renderer = NULL;
-      m_isScriptActiv = false;
-
-      bFrontWheelTouching = false;
-      bRearWheelTouching  = false;
-      }
-      ~MotoGame() {endLevel();}     
+  public:          
+    MotoGame();
+    ~MotoGame();
     
-      /* Methods */
-      void prePlayLevel(
+    /* update of the structure */
+    void prePlayLevel(
 #if defined(ALLOW_GHOST)    
-			Replay *m_pGhostReplay,
+		      Replay *m_pGhostReplay,
 #endif
-			LevelSrc *pLevelSrc,
-			Replay *recordingReplay,
-			bool bIsAReplay);
+		      LevelSrc *pLevelSrc,
+		      Replay *recordingReplay,
+		      bool bIsAReplay);
 
-      void playLevel(
+    void playLevel(
 #if defined(ALLOW_GHOST)    
-		     Replay *m_pGhostReplay,
+		   Replay *m_pGhostReplay,
 #endif
-		     LevelSrc *pLevelSrc, bool bIsAReplay);
-      void updateLevel(float fTimeStep,SerializedBikeState *pReplayState,Replay *p_replay);
-      void endLevel(void);
-      
-      void touchEntity(Entity *pEntity,bool bHead); 
-      void deleteEntity(Entity *pEntity);
-      int countEntitiesByType(EntityType Type);
-      Entity *findEntity(const std::string &ID);
-      
-      void clearStates(void);
-      
-      void gameMessage(std::string Text,bool bOnce = false, float fDuration = 5.0);
-      void clearGameMessages(void);
-      void updateGameMessages();
-      
-      void getSerializedBikeState(SerializedBikeState *pState);
-      static void unserializeGameEvents(DBuffer *Buffer, std::vector<RecordedGameEvent *> *v_ReplayEvents);
-      void interpolateGameState(SerializedBikeState *pA,SerializedBikeState *pB,SerializedBikeState *p,float t);
+		   LevelSrc *pLevelSrc, bool bIsAReplay);
+    void updateLevel(float fTimeStep,SerializedBikeState *pReplayState,Replay *p_replay);
+    void endLevel(void);
 
-      float getBikeEngineRPM(void);
-      float getBikeEngineSpeed();
+    /* entities */
+    void touchEntity(Entity *pEntity, bool bHead); 
+    void deleteEntity(Entity *pEntity);
+    int countEntitiesByType(EntityType Type);
+    Entity *findEntity(const std::string &ID);
+    Entity *getEntityByID(const std::string &ID);      
 
-      void createGameEvent(MotoGameEvent *p_event);
-      void destroyGameEvent(MotoGameEvent *p_event);
-      MotoGameEvent* getNextGameEvent();
-      int getNumPendingGameEvents();
-      void cleanEventsQueue();
-      void executeEvents(Replay *p_replay);      
-
-      void setPlayerPosition(float x,float y,bool bFaceRight);
-      const Vector2f &getPlayerPosition(void);
-      bool getPlayerFaceDir(void);
-
-      Entity *getEntityByID(const std::string &ID);
+    /* messages */
+    void gameMessage(std::string Text,
+		     bool bOnce = false,
+		     float fDuration = MOTOGAME_DEFAULT_GAME_MESSAGE_DURATION);
+    void clearGameMessages();
+    void updateGameMessages();
+    std::vector<GameMessage *> &getGameMessage(void) {return m_GameMessages;}
       
-      /* Direct Lua interaction methods */
-      bool scriptCallBool(std::string FuncName,bool bDefault=false);
-      void scriptCallVoid(std::string FuncName);
-      void scriptCallTblVoid(std::string Table,std::string FuncName);
-      void scriptCallVoidNumberArg(std::string FuncName, int n);
+    /* serialization */
+    void getSerializedBikeState(SerializedBikeState *pState);
+    static void unserializeGameEvents(DBuffer *Buffer, std::vector<RecordedGameEvent *> *v_ReplayEvents);
+    void interpolateGameState(SerializedBikeState *pA,SerializedBikeState *pB,SerializedBikeState *p,float t);
 
-      /* Data interface */
-      void resetAutoDisabler(void) {m_nStillFrames=0;}
-      bool isInitOK(void) {return m_bLevelInitSuccess;}
-      bool isFinished(void) {return m_bFinished;}
-      bool isDead(void) {return m_bDead;}
-      LevelSrc *getLevelSrc(void) {return m_pLevelSrc;}
-      std::vector<ConvexBlock *> &getBlocks(void) {return m_Blocks;}
-      BikeState *getBikeState(void) {return &m_BikeS;}
-      BikeParams *getBikeParams() { return &m_BikeP;}
-      bool isSqueeking(void) {return m_bSqueeking;}
-      float howMuchSqueek(void) {return m_fHowMuchSqueek;}
+    /* events */
+    void createGameEvent(MotoGameEvent *p_event);
+    void destroyGameEvent(MotoGameEvent *p_event);
+    MotoGameEvent* getNextGameEvent();
+    int getNumPendingGameEvents();
+    void cleanEventsQueue();
+    void executeEvents(Replay *p_replay);
+
+    /* information about engine */
+    float getBikeEngineRPM(void);
+    float getBikeEngineSpeed();
+      
+    /* player */
+    void setPlayerPosition(float x,float y,bool bFaceRight);
+    const Vector2f &getPlayerPosition(void);
+    bool getPlayerFaceDir(void);
+    
+    /* Direct Lua interaction methods */
+    bool scriptCallBool(std::string FuncName,bool bDefault=false);
+    void scriptCallVoid(std::string FuncName);
+    void scriptCallTblVoid(std::string Table,std::string FuncName);
+    void scriptCallVoidNumberArg(std::string FuncName, int n);
+
+    /* Data interface */
+    void resetAutoDisabler(void) {m_nStillFrames=0;}
+    bool isInitOK(void) {return m_bLevelInitSuccess;}
+    bool isFinished(void) {return m_bFinished;}
+    bool isDead(void) {return m_bDead;}
+    LevelSrc *getLevelSrc(void) {return m_pLevelSrc;}
+    std::vector<ConvexBlock *> &getBlocks(void) {return m_Blocks;}
+    BikeState *getBikeState(void) {return &m_BikeS;}
+    BikeParams *getBikeParams() { return &m_BikeP;}
+    bool isSqueeking(void) {return m_bSqueeking;}
+    float howMuchSqueek(void) {return m_fHowMuchSqueek;}
 
 #if defined(ALLOW_GHOST)
       BikeState *getGhostBikeState(void) {return &m_GhostBikeS;}
@@ -506,8 +501,8 @@ namespace vapp {
       std::vector<float> m_ghostLastStrawberries;
       float m_myDiffOfGhost; /* time diff between the ghost and the player */
 #endif
+
       BikeController *getBikeController(void) {return &m_BikeC;}
-      std::vector<GameMessage *> &getGameMessage(void) {return m_GameMessages;}
       std::vector<Entity *> &getEntities(void) {return m_Entities;}
       std::vector<DynamicBlock *> &getDynBlocks(void) {return m_DynBlocks;}
       std::vector<OverlayEdge *> &getOverlayEdges(void) {return m_OvEdges;}
@@ -692,6 +687,8 @@ namespace vapp {
       float m_lastCallToEveryHundreath;
             
       bool m_isScriptActiv; /* change this variable to activ/desactiv scripting */
+
+      void clearStates();
 
       /* Helpers */
       void _GenerateLevel(void);          /* Called by playLevel() to 

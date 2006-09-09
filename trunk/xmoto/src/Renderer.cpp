@@ -220,7 +220,74 @@ namespace vapp {
       delete m_Geoms[i];
     }
     m_Geoms.clear();
-  }  
+  }
+
+  void GameRenderer::renderEngineCounter(int x,int y,int nWidth,int nHeight, float pSpeed) {
+
+// coords of then center ; make it dynamic would be nice
+#define ENGINECOUNTER_CENTERX      192.0
+#define ENGINECOUNTER_CENTERY      206.0
+#define ENGINECOUNTER_RADIUS       150.0
+#define ENGINECOUNTER_PICTURE_SIZE 256.0
+#define ENGINECOUNTER_CORRECT_X    0.0
+#define ENGINECOUNTER_CORRECT_Y    -30.0
+#define ENGINECOUNTER_MAX_DIFF     1.0
+
+    float pSpeed_eff;
+
+    /* don't make line too nasty */
+    if(m_previousEngineSpeed < 0.0) {
+      pSpeed_eff = pSpeed;
+    } else {
+      if( labs(pSpeed - m_previousEngineSpeed) > ENGINECOUNTER_MAX_DIFF) {
+	if(pSpeed - m_previousEngineSpeed > 0) {
+	  pSpeed_eff = m_previousEngineSpeed + ENGINECOUNTER_MAX_DIFF;
+	} else {
+	  pSpeed_eff = m_previousEngineSpeed - ENGINECOUNTER_MAX_DIFF;
+	}
+      } else {
+	pSpeed_eff = pSpeed;
+      }
+    }
+    m_previousEngineSpeed = pSpeed_eff;
+
+    Sprite *pSprite;
+    Texture *pTexture;
+    Vector2f p0, p1, p2, p3;
+    Vector2f pcenter, pdest;
+    float coefw = 1.0 / ENGINECOUNTER_PICTURE_SIZE * nWidth;
+    float coefh = 1.0 / ENGINECOUNTER_PICTURE_SIZE * nHeight;
+
+    p0 = Vector2f(x,        getParent()->getDispHeight()-y-nHeight);
+    p1 = Vector2f(x+nWidth, getParent()->getDispHeight()-y-nHeight);
+    p2 = Vector2f(x+nWidth, getParent()->getDispHeight()-y);
+    p3 = Vector2f(x,        getParent()->getDispHeight()-y);
+
+    pcenter = p3 + Vector2f(ENGINECOUNTER_CENTERX   * coefw,
+			    - ENGINECOUNTER_CENTERY * coefh); 
+    pdest    = pcenter
+    + Vector2f(ENGINECOUNTER_CORRECT_X * coefw,
+	       ENGINECOUNTER_CORRECT_Y * coefh)
+    + Vector2f(-cosf(pSpeed_eff / 360.0 * (2.0 * 3.14159))
+	       * (ENGINECOUNTER_RADIUS) * coefw,
+	       sinf(pSpeed_eff / 360.0  * (2.0 * 3.14159))
+	       * (ENGINECOUNTER_RADIUS) * coefh
+	       );
+
+
+    pSprite = (MiscSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_MISC, "EngineCounter");
+    if(pSprite != NULL) {
+      pTexture = pSprite->getTexture();
+      if(pTexture != NULL) {
+    	_RenderAlphaBlendedSection(pTexture, p0, p1, p2, p3);
+	glBegin(GL_LINE_STRIP);
+	glColor3ub(255, 50, 50);
+	_Vertex(pcenter);
+	_Vertex(pdest);
+      glEnd();
+      }
+    }
+  }
 
   /*===========================================================================
   Minimap rendering

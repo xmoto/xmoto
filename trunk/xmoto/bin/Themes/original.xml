@@ -120,6 +120,7 @@
 <sprite type="Font" name="SFont" file="SFont.png" />
 
 <sprite type="Misc" name="Arrow" file="Arrow.png" />
+<sprite type="Misc" name="EngineCounter" file="enginecounter.png" />
 
 <sprite type="Entity" name="BlankSignLeft1"    file="BlankSignLeft1.png" width="1.5" height="1.5" centerX="0.75" centerY="0.1" />
 <sprite type="Entity" name="BlankSignRight1"   file="BlankSignRight1.png" width="1.5" height="1.5" centerX="0.75" centerY="0.1" />

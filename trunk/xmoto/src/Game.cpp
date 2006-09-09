@@ -579,6 +579,9 @@ namespace vapp {
     /* Show mini map? */
     m_bShowMiniMap = m_Config.getBool("ShowMiniMap");
     
+    /* show engine counter */
+    m_bShowEngineCounter = m_Config.getBool("ShowEngineCounter");
+    
     /* Replay stuff */
     m_fReplayFrameRate = m_Config.getFloat("ReplayFrameRate");
     m_bRecordReplays = m_Config.getBool("StoreReplays");
@@ -1440,14 +1443,21 @@ namespace vapp {
         if(!isNoGraphics() && bValidGameState) {
 	        m_Renderer.render(bIsPaused);
 
-          if(m_bShowMiniMap) {
-            if(m_MotoGame.getBikeState()->Dir == DD_LEFT)
+          if(m_bShowMiniMap && m_bUglyMode == false) {
+            if(m_MotoGame.getBikeState()->Dir == DD_LEFT && m_bShowEngineCounter == false) {
               m_Renderer.renderMiniMap(getDispWidth()-150,getDispHeight()-100,150,100);
-            else if(m_MotoGame.getBikeState()->Dir == DD_RIGHT)
+	    } else {
               m_Renderer.renderMiniMap(0,getDispHeight()-100,150,100);
+	    }
           }              
+
+	  if(m_bShowEngineCounter && m_bUglyMode == false) {
+	    m_Renderer.renderEngineCounter(getDispWidth()-128, getDispHeight()-128,
+					   128, 128,
+					   m_MotoGame.getBikeEngineSpeed());
+	  } 
         }
-                
+
         /* Also only when not paused */
         if(m_State == GS_PLAYING) {        
           /* News? */
@@ -2133,6 +2143,8 @@ namespace vapp {
     m_Config.createVar( "ScreenshotFormat",       "png" );
     m_Config.createVar( "NotifyAtInit",           "true" );
     m_Config.createVar( "ShowMiniMap",            "true" );
+    m_Config.createVar( "ShowEngineCounter",      "false" );
+
     m_Config.createVar( "StoreReplays",           "true" );
     m_Config.createVar( "ReplayFrameRate",        "25" );
     m_Config.createVar( "CompressReplays",        "true" );
