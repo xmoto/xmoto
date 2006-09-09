@@ -196,8 +196,7 @@ namespace vapp {
   void LevelSrc::loadXML(void) {
     /* Load XML document and fetch tinyxml handle */
     _UnloadLevelData();
-    m_LevelCheckSum = "";
-    m_XML.readFromFile( m_FileName, /*&m_LevelCheckSum.nCRC32*/ NULL );    
+    m_XML.readFromFile( m_FileName, NULL );    
     
     TiXmlDocument *pDoc = m_XML.getLowLevelAccess();
     if(pDoc == NULL) throw Exception("failed to load level XML");
@@ -790,9 +789,7 @@ namespace vapp {
         
       if(nFormat == 1 || nFormat == 2 || nFormat == 3) {
         /* Read "format 1" / "format 2" binary level */
-        m_LevelCheckSum = pSum;
-        
-        /* Right CRC? */
+        /* Right */
 	std::string md5sum = FS::readString(pfh);
         if(md5sum != pSum) {
           Log("** Warning ** : CRC check failed, can't import: %s",FileName.c_str());

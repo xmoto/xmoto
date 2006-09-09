@@ -245,7 +245,7 @@ namespace vapp {
   /*===========================================================================
     Add game message
     ===========================================================================*/
-  void MotoGame::gameMessage(std::string Text,bool bOnce) {
+  void MotoGame::gameMessage(std::string Text,bool bOnce, float fDuration) {
     /* "unique"? */
     GameMessage *pMsg = NULL;
     
@@ -264,7 +264,7 @@ namespace vapp {
       m_GameMessages.push_back(pMsg);
     }
     
-    pMsg->fRemoveTime = getTime() + 5.0f;
+    pMsg->fRemoveTime = getTime() + fDuration;
     pMsg->bNew = true;
     pMsg->nAlpha = 255;
     pMsg->Text = Text;

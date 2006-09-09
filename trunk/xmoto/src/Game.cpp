@@ -233,26 +233,6 @@ namespace vapp {
 	notifyMsg(cBuf);                        
       }
       else {
-	/* Start playing right away */     
-	m_InputHandler.resetScriptKeyHooks();
-	if(pLevelSrc != NULL) {
-	  if(m_pReplay != NULL) delete m_pReplay;
-	  m_pReplay = NULL;
-	  
-	  if(m_bRecordReplays) {
-	    m_pReplay = new Replay;
-	    m_pReplay->createReplay("Latest.rpl",pLevelSrc->getID(),m_pPlayer->PlayerName,m_fReplayFrameRate,sizeof(SerializedBikeState));
-	  }
-
-	  m_MotoGame.prePlayLevel(m_pGhostReplay, pLevelSrc, m_pReplay, false);
-	  if(!m_MotoGame.isInitOK()) {
-	    Log("** Warning ** : failed to initialize level");
-	    setState(GS_MENU);
-	    notifyMsg(GAMETEXT_FAILEDTOINITLEVEL);
-	  }
-	}
-	m_State = GS_PREPLAYING;
-	
 #if defined(ALLOW_GHOST)
 	m_MotoGame.setGhostActive(false);
 
@@ -328,7 +308,26 @@ namespace vapp {
 	  }
 	}
 #endif
-	
+	/* Start playing right away */     
+	m_InputHandler.resetScriptKeyHooks();
+	if(pLevelSrc != NULL) {
+	  if(m_pReplay != NULL) delete m_pReplay;
+	  m_pReplay = NULL;
+	  
+	  if(m_bRecordReplays) {
+	    m_pReplay = new Replay;
+	    m_pReplay->createReplay("Latest.rpl",pLevelSrc->getID(),m_pPlayer->PlayerName,m_fReplayFrameRate,sizeof(SerializedBikeState));
+	  }
+
+	  m_MotoGame.prePlayLevel(m_pGhostReplay, pLevelSrc, m_pReplay, false);
+	  if(!m_MotoGame.isInitOK()) {
+	    Log("** Warning ** : failed to initialize level");
+	    setState(GS_MENU);
+	    notifyMsg(GAMETEXT_FAILEDTOINITLEVEL);
+	  }
+	}
+	m_State = GS_PREPLAYING;
+
 	PlayerTimeEntry *pBestTime = m_Profiles.getBestTime(m_PlaySpecificLevel);
 	PlayerTimeEntry *pBestPTime = m_Profiles.getBestPlayerTime(m_pPlayer->PlayerName,m_PlaySpecificLevel);
 	
@@ -350,7 +349,7 @@ namespace vapp {
 	m_fPrePlayStartTime = getRealTime();  // because the man can change ugly mode while the animation
 	m_fPrePlayStartInitZoom = m_Renderer.getCurrentZoom();  // because the man can change ugly mode while the animation
 	if(m_bPrePlayAnim && m_bUglyMode == false) {
-	  m_MotoGame.gameMessage(GAMETEXT_READY, true);
+	  m_MotoGame.gameMessage(GAMETEXT_READY, true, PRESTART_ANIMATION_TIME);
 	}
       }
 
@@ -1275,7 +1274,7 @@ namespace vapp {
 	    if(getRealTime() > m_fPrePlayStartTime + PRESTART_ANIMATION_TIME) {
 	      setPrePlayAnim(false); // disable anim
 	      m_Renderer.setZoom(m_fPrePlayStartInitZoom);
-	      m_MotoGame.gameMessage(GAMETEXT_GO, true);
+	      m_MotoGame.gameMessage(GAMETEXT_GO, true, 0.5);
 	      setState(GS_PLAYING);
 	    } else {
 	      setFrameDelay(10);

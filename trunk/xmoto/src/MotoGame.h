@@ -456,7 +456,7 @@ namespace vapp {
       
       void clearStates(void);
       
-      void gameMessage(std::string Text,bool bOnce = false);
+      void gameMessage(std::string Text,bool bOnce = false, float fDuration = 5.0);
       void clearGameMessages(void);
       void updateGameMessages();
       
