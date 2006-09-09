@@ -1604,4 +1604,12 @@ namespace vapp {
     m_theme = p_theme;
   }
 
+  float GameRenderer::getCurrentZoom() {
+    return m_fScale;
+  }
+
+  void GameRenderer::setZoom(float p_f) {
+    m_fScale = p_f;
+  }
+
 }

@@ -366,35 +366,7 @@ namespace vapp {
       m_bTeleport = false;
     }
   
-    /* Handle game messages (keep them in place) */
-    int i=0;
-    while(1) {
-      if(i >= m_GameMessages.size()) break;      
-      if(getTime() > m_GameMessages[i]->fRemoveTime) {
-        m_GameMessages[i]->nAlpha -= 2;
-        
-        if(m_GameMessages[i]->nAlpha <= 0) {
-          delete m_GameMessages[i];
-          m_GameMessages.erase(m_GameMessages.begin() + i);
-          i--;
-          continue;
-        }
-      }
-      Vector2f TargetPos = Vector2f(0.2f,0.5f - (m_GameMessages.size()*0.05f)/2.0f + 0.05f*i);
-      if(m_GameMessages[i]->bNew) {
-        m_GameMessages[i]->Vel = Vector2f(0,0);
-        m_GameMessages[i]->Pos = TargetPos;
-        m_GameMessages[i]->bNew = false;
-      }
-      else {
-        if(!TargetPos.almostEqual(m_GameMessages[i]->Pos)) {
-          Vector2f F = TargetPos - m_GameMessages[i]->Pos;      
-          m_GameMessages[i]->Vel += F*0.0005f;
-          m_GameMessages[i]->Pos += m_GameMessages[i]->Vel;
-        }
-      }
-      i++;
-    }
+    updateGameMessages();
     
     /* Increase time */
     if(pReplayState == NULL)
@@ -444,20 +416,8 @@ namespace vapp {
     /* Only make a full physics update when not replaying */
     if(pReplayState == NULL) {
       /* Update physics */
-      _UpdatePhysics(fTimeStep);
-          
-      /* Handle events generated this update */
-      while(getNumPendingGameEvents() > 0) {
-	MotoGameEvent *pEvent = getNextGameEvent();
-	if(p_replay != NULL) {
-	  /* Encode event */
-	  _SerializeGameEventQueue(*p_replay, pEvent);
-	}
-	  
-	/* What event? */
-	pEvent->doAction(this);
-	destroyGameEvent(pEvent);
-      }
+      _UpdatePhysics(fTimeStep);          
+      executeEvents(p_replay);
     }
     else {
       /* Well, handle replay events instead */
@@ -488,6 +448,53 @@ namespace vapp {
     //float fAngle = (180.0f * acos(m_BikeS.fFrameRot[0])) / 3.14159f;
     //if(m_BikeS.fFrameRot[2] < 0.0f) fAngle = 360 - fAngle;
     //printf("%f\n",fAngle);
+  }
+
+  void MotoGame::executeEvents(Replay *p_replay) {
+    /* Handle events generated this update */
+    while(getNumPendingGameEvents() > 0) {
+      MotoGameEvent *pEvent = getNextGameEvent();
+      if(p_replay != NULL) {
+	/* Encode event */
+	_SerializeGameEventQueue(*p_replay, pEvent);
+      }
+      
+      /* What event? */
+      pEvent->doAction(this);
+      destroyGameEvent(pEvent);
+    }
+  }
+
+  void MotoGame::updateGameMessages() {
+    /* Handle game messages (keep them in place) */
+    int i=0;
+    while(1) {
+      if(i >= m_GameMessages.size()) break;      
+      if(getTime() > m_GameMessages[i]->fRemoveTime) {
+        m_GameMessages[i]->nAlpha -= 2;
+        
+        if(m_GameMessages[i]->nAlpha <= 0) {
+          delete m_GameMessages[i];
+          m_GameMessages.erase(m_GameMessages.begin() + i);
+          i--;
+          continue;
+        }
+      }
+      Vector2f TargetPos = Vector2f(0.2f,0.5f - (m_GameMessages.size()*0.05f)/2.0f + 0.05f*i);
+      if(m_GameMessages[i]->bNew) {
+        m_GameMessages[i]->Vel = Vector2f(0,0);
+        m_GameMessages[i]->Pos = TargetPos;
+        m_GameMessages[i]->bNew = false;
+      }
+      else {
+        if(!TargetPos.almostEqual(m_GameMessages[i]->Pos)) {
+          Vector2f F = TargetPos - m_GameMessages[i]->Pos;      
+          m_GameMessages[i]->Vel += F*0.0005f;
+          m_GameMessages[i]->Pos += m_GameMessages[i]->Vel;
+        }
+      }
+      i++;
+    }
   }
 
   /*===========================================================================
@@ -568,11 +575,12 @@ namespace vapp {
   /*===========================================================================
     Prepare the specified level for playing through this game object
     ===========================================================================*/
-  void MotoGame::playLevel(
+  void MotoGame::prePlayLevel(
 #if defined(ALLOW_GHOST)    
 			   Replay *m_pGhostReplay,
 #endif
 			   LevelSrc *pLevelSrc,
+			   Replay *recordingReplay,
 			   bool bIsAReplay) {
     m_isScriptActiv = bIsAReplay == false;
     m_bLevelInitSuccess = true;
@@ -766,6 +774,22 @@ namespace vapp {
 
     /* counter of somersaultcounter */
     m_somersaultCounter.init();
+
+    /* execute events */
+    executeEvents(recordingReplay);
+
+    if(bIsAReplay == false) {
+      /* Update game state */
+      _UpdateGameState(NULL);
+    }
+  }
+
+  void MotoGame::playLevel(
+#if defined(ALLOW_GHOST)    
+			   Replay *m_pGhostReplay,
+#endif
+			   LevelSrc *pLevelSrc,
+			   bool bIsAReplay) {
 
   }
 

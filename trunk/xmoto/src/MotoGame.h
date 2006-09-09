@@ -433,11 +433,19 @@ namespace vapp {
       ~MotoGame() {endLevel();}     
     
       /* Methods */
+      void prePlayLevel(
+#if defined(ALLOW_GHOST)    
+			Replay *m_pGhostReplay,
+#endif
+			LevelSrc *pLevelSrc,
+			Replay *recordingReplay,
+			bool bIsAReplay);
+
       void playLevel(
 #if defined(ALLOW_GHOST)    
-         Replay *m_pGhostReplay,
+		     Replay *m_pGhostReplay,
 #endif
-         LevelSrc *pLevelSrc, bool bIsAReplay);
+		     LevelSrc *pLevelSrc, bool bIsAReplay);
       void updateLevel(float fTimeStep,SerializedBikeState *pReplayState,Replay *p_replay);
       void endLevel(void);
       
@@ -450,6 +458,7 @@ namespace vapp {
       
       void gameMessage(std::string Text,bool bOnce = false);
       void clearGameMessages(void);
+      void updateGameMessages();
       
       void getSerializedBikeState(SerializedBikeState *pState);
       static void unserializeGameEvents(DBuffer *Buffer, std::vector<RecordedGameEvent *> *v_ReplayEvents);
@@ -463,7 +472,8 @@ namespace vapp {
       MotoGameEvent* getNextGameEvent();
       int getNumPendingGameEvents();
       void cleanEventsQueue();
-      
+      void executeEvents(Replay *p_replay);      
+
       void setPlayerPosition(float x,float y,bool bFaceRight);
       const Vector2f &getPlayerPosition(void);
       bool getPlayerFaceDir(void);

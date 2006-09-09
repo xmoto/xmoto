@@ -112,8 +112,6 @@ http://xmoto.free.fr/interesting_replays/ireplay_40.rpl
   timePenallity(nbSeconds) -> increase time
   collision between sprites, between sprites and head
   move a zone
-* add 3 2 1 GO ! at level startup (only if the level played is
-   different from the last played)
 * have a <----> for the lists
 * if a script ask for an already used key, propose an other one
 * display a nice counter for engine speed : disable this counter in replays

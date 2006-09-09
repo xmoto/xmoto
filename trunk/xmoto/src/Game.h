@@ -39,6 +39,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GUIXMoto.h"
 #include "Stats.h"
 
+#define PRESTART_ANIMATION_TIME        1.0
+#define PRESTART_ANIMATION_REDUCE_ZOOM 0.03
+
 namespace vapp {
 
 	/*===========================================================================
@@ -47,6 +50,7 @@ namespace vapp {
   enum GameState {
     GS_UNASSIGNED = 0,
     GS_MENU,                  /* In the game menu */
+    GS_PREPLAYING,            /* Just before the game start */
     GS_PLAYING,               /* Playing the game */
     GS_PAUSE,                 /* Paused from GS_PLAYING */
     GS_JUSTDEAD,              /* Head-banging too much */
@@ -171,6 +175,8 @@ namespace vapp {
 		 m_MotoGame.setRenderer(&m_Renderer);
 
 		 m_currentThemeName = THEME_DEFAULT_THEMENAME;
+
+		 m_bPrePlayAnim = true;
                  }
                  
 #if defined(SUPPORT_WEBACCESS)                 
@@ -206,6 +212,7 @@ namespace vapp {
       /* Methods */
       void setState(GameState s);
       void notifyMsg(std::string Msg);      
+      void setPrePlayAnim(bool pEnabled);
       
       /* Data interface */
       bool isUglyMode() {return m_bUglyMode;}
@@ -294,6 +301,10 @@ namespace vapp {
 #endif
       
       ThemeChoicer *m_themeChoicer;
+
+      float m_fPrePlayStartTime;
+      bool m_bPrePlayAnim;
+      float m_fPrePlayStartInitZoom;
 
       Stats m_GameStats;
       UIWindow *m_pStatsReport;

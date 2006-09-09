@@ -218,7 +218,9 @@ namespace vapp {
       void setQuality(GraphQuality Quality) {m_Quality = Quality;}      
       void setSpeedMultiplier(float f) {m_fSpeedMultiply = f;}
       void zoom(float p_f);
+      void setZoom(float p_f);
       void initZoom();
+      float getCurrentZoom();
       void moveCamera(float px, float py);
       void initCamera();
       void setGhostMotionBlur(bool b) {m_bGhostMotionBlur = b;}

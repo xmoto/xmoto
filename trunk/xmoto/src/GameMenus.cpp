@@ -1391,7 +1391,9 @@ namespace vapp {
               m_Renderer.unprepareForNewLevel();                    
               
               m_PlaySpecificLevel = NextLevel;              
-              setState(GS_PLAYING);                               
+
+	      setPrePlayAnim(true);
+              setState(GS_PREPLAYING);
             }
             else {
               notifyMsg(GAMETEXT_NONEXTLEVEL);
@@ -1472,8 +1474,9 @@ namespace vapp {
               m_Renderer.unprepareForNewLevel();                    
               
               m_PlaySpecificLevel = NextLevel;
-              
-              setState(GS_PLAYING);                               
+
+	      setPrePlayAnim(true);
+              setState(GS_PREPLAYING);                               
             }
             else {
               notifyMsg(GAMETEXT_NONEXTLEVEL);
@@ -1603,7 +1606,7 @@ namespace vapp {
 	  m_pMainMenu->showWindow(false);      
 	  m_PlaySpecificLevel = pLevelSrc->getID();        
 	  m_StateAfterPlaying = GS_LEVELPACK_VIEWER;
-	  setState(GS_PLAYING);   
+	  setState(GS_PREPLAYING);   
 	}
     }
 
@@ -1980,7 +1983,7 @@ namespace vapp {
           m_MotoGame.endLevel();
           m_InputHandler.resetScriptKeyHooks();                     
           m_Renderer.unprepareForNewLevel();          
-          setState(GS_PLAYING);          
+          setState(GS_PREPLAYING);          
         }
         else if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
           LevelSrc *pLS = _FindLevelByID(m_PlaySpecificLevel);
@@ -1998,7 +2001,8 @@ namespace vapp {
               
               m_PlaySpecificLevel = NextLevel;
               
-              setState(GS_PLAYING);                               
+	      setPrePlayAnim(true);
+              setState(GS_PREPLAYING);                               
             }
             else {
               notifyMsg(GAMETEXT_NONEXTLEVEL);
@@ -2434,7 +2438,7 @@ namespace vapp {
         m_pMainMenu->showWindow(false);      
         m_PlaySpecificLevel = pLevelSrc->getID();
         m_StateAfterPlaying = GS_MENU;
-        setState(GS_PLAYING);
+        setState(GS_PREPLAYING);
       }
     }
     
@@ -2481,7 +2485,7 @@ namespace vapp {
         m_pMainMenu->showWindow(false);      
         m_PlaySpecificLevel = pLevelSrc->getID();
         m_StateAfterPlaying = GS_MENU;
-        setState(GS_PLAYING);
+        setState(GS_PREPLAYING);
       }
     }
     else if(pLevelInfoButton && pLevelInfoButton->isClicked()) {
