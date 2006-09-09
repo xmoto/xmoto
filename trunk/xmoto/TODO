@@ -88,9 +88,6 @@ http://xmoto.free.fr/interesting_replays/ireplay_40.rpl
 * "view the highscore" button is not visible for pack
 * when you press o in the level list and that no level start with an
    o, it bases on the 2nd letter,...
-* loading level is sometimes quite long
-  nicolas : in fact, when you just want to see a replay (xmoto -replay
-   ...) ; it's long just for it.
 * themes : check the md5sum of the files ; don't display available if
    it's not really available
 * "play next level" => 'play next level', 'play next level unplayed', 'play next level where your highscore is > than room highscore', 'play next level where your highscore is > than world highscore', 'play next level where your highscore is the best'
