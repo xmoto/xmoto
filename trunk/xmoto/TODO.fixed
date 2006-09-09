@@ -48,6 +48,7 @@ Since 0.2.0
 * new-level-editor: When you save a file, the user can give: date, sky, description, author, ...
 * collision : collision with the body
 * level and player name showing in the replay?
+* new-level-editor: add grass to blocks. as we can't put properties to single vertex, we add the grass property to the entire block, and then, the convertor script add grass only to the upper edges of the block.
 
 Since 1.16
 * BUG : view highscore with up and down with keyboard does not update the button
