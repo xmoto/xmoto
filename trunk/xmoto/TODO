@@ -1,8 +1,9 @@
-### For 0.2.1
+
+### for 0.2.2 and after
 
 * remove the "level packs" button, remove the "internal" and "external" tabs and replace them by "All levels" tab and "Level pack" tab and make internal level a pack
 
-### for 0.3.0 and after
+
 * SDL_ttf or something like that for rendering text
 *(20:39:54) Neckelmann:   the game should really do all this:
 zone1 = {}
@@ -100,10 +101,6 @@ http://xmoto.free.fr/interesting_replays/ireplay_40.rpl
 * loadness of headcrash sound should depend on head velocity 
 * feature : a replay button when you finish a level (or die) which
    plays Latest.rpl
-* a lua function to get the number of
-   somersaults ? some "freestyle" could ask for figure to be done.
-   in the future, i would like make this functionnality better : time
-   in the air, time on one wheel, ...
 * themes : not more animation in .xml ? -> be able to load an animated bike ?
 * to be able to move a zone ?
 * make sound in themes
@@ -111,7 +108,6 @@ http://xmoto.free.fr/interesting_replays/ireplay_40.rpl
 * new script call :
   timePenallity(nbSeconds) -> increase time
   collision between sprites, between sprites and head
-  move a zone
 * have a <----> for the lists
 * if a script ask for an already used key, propose an other one
 * display a nice counter for engine speed : disable this counter in replays

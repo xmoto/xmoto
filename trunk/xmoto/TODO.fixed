@@ -51,6 +51,10 @@ Since 0.2.0
 * new-level-editor: add grass to blocks. as we can't put properties to single vertex, we add the grass property to the entire block, and then, the convertor script add grass only to the upper edges of the block.
 * loading level is sometimes quite long
 * add 3 2 1 GO ! at level startup (only if the level played is different from the last played)
+* a lua function to get the number of
+   somersaults ? some "freestyle" could ask for figure to be done.
+   in the future, i would like make this functionnality better : time
+   in the air, time on one wheel, ...
 
 Since 1.16
 * BUG : view highscore with up and down with keyboard does not update the button
