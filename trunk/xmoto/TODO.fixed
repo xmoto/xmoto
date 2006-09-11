@@ -55,6 +55,7 @@ Since 0.2.0
    somersaults ? some "freestyle" could ask for figure to be done.
    in the future, i would like make this functionnality better : time
    in the air, time on one wheel, ...
+* display a nice counter for engine speed : disable this counter in replays
 
 Since 1.16
 * BUG : view highscore with up and down with keyboard does not update the button

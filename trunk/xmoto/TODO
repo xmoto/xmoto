@@ -111,7 +111,6 @@ http://xmoto.free.fr/interesting_replays/ireplay_40.rpl
   collision between sprites, between sprites and head
 * have a <----> for the lists
 * if a script ask for an already used key, propose an other one
-* display a nice counter for engine speed : disable this counter in replays
 * a button "clean replays" which remove not highscore replays or
    something like it
 * check for a new version at startup

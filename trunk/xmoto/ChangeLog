@@ -16,6 +16,7 @@ X-Moto 0.2.1 2006-09-
  * uglyer ugly mode (for slower computer)
  * translations [french] (for unix only)
  * collision between body and sprites
+ * Some minor improvements
  * Several bugs fixed.
 
 X-Moto 0.2.0 (alpha) 2006-07-28

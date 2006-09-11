@@ -391,7 +391,7 @@ namespace vapp {
     pGeneralOptionsTab->showWindow(true);
     pGeneralOptionsTab->setID("GENERAL_TAB");
     
-    UIButton *pShowMiniMap = new UIButton(pGeneralOptionsTab,5,43-28-10,GAMETEXT_SHOWMINIMAP,(pGeneralOptionsTab->getPosition().nWidth-40),28);
+    UIButton *pShowMiniMap = new UIButton(pGeneralOptionsTab,5,33-28-10,GAMETEXT_SHOWMINIMAP,(pGeneralOptionsTab->getPosition().nWidth-40),28);
     pShowMiniMap->setType(UI_BUTTON_TYPE_CHECK);
     pShowMiniMap->setID("SHOWMINIMAP");
     pShowMiniMap->enableWindow(true);
@@ -399,7 +399,15 @@ namespace vapp {
     pShowMiniMap->setGroup(50023);
     pShowMiniMap->setContextHelp(CONTEXTHELP_MINI_MAP);
 
-    UIButton *pContextHelp = new UIButton(pGeneralOptionsTab,5,73-28-10,GAMETEXT_ENABLECONTEXTHELP,(pGeneralOptionsTab->getPosition().nWidth-40),28);
+    UIButton *pShowEngineCounter = new UIButton(pGeneralOptionsTab,5,63-28-10,GAMETEXT_SHOWENGINECOUNTER,(pGeneralOptionsTab->getPosition().nWidth-40),28);
+    pShowEngineCounter->setType(UI_BUTTON_TYPE_CHECK);
+    pShowEngineCounter->setID("SHOWENGINECOUNTER");
+    pShowEngineCounter->enableWindow(true);
+    pShowEngineCounter->setFont(m_Renderer.getSmallFont());
+    pShowEngineCounter->setGroup(50023);
+    pShowEngineCounter->setContextHelp(CONTEXTHELP_ENGINE_COUNTER);
+
+    UIButton *pContextHelp = new UIButton(pGeneralOptionsTab,5,93-28-10,GAMETEXT_ENABLECONTEXTHELP,(pGeneralOptionsTab->getPosition().nWidth-40),28);
     pContextHelp->setType(UI_BUTTON_TYPE_CHECK);
     pContextHelp->setID("ENABLECONTEXTHELP");
     pContextHelp->enableWindow(true);
@@ -407,7 +415,7 @@ namespace vapp {
     pContextHelp->setGroup(50023);
     pContextHelp->setContextHelp(CONTEXTHELP_SHOWCONTEXTHELP);
  
-    UIButton *pAutosaveReplays = new UIButton(pGeneralOptionsTab,5,103-28-10,GAMETEXT_AUTOSAVEREPLAYS,(pGeneralOptionsTab->getPosition().nWidth-40),28);
+    UIButton *pAutosaveReplays = new UIButton(pGeneralOptionsTab,5,123-28-10,GAMETEXT_AUTOSAVEREPLAYS,(pGeneralOptionsTab->getPosition().nWidth-40),28);
     pAutosaveReplays->setType(UI_BUTTON_TYPE_CHECK);
     pAutosaveReplays->setID("AUTOSAVEREPLAYS");
     pAutosaveReplays->enableWindow(true);
@@ -415,7 +423,7 @@ namespace vapp {
     pAutosaveReplays->setGroup(50023);
     pAutosaveReplays->setContextHelp(CONTEXTHELP_AUTOSAVEREPLAYS);
    
-    UIList *pThemeList = new UIList(pGeneralOptionsTab,5,105,"",
+    UIList *pThemeList = new UIList(pGeneralOptionsTab,5,120,"",
 				    pGeneralOptionsTab->getPosition().nWidth-10,
 				    pGeneralOptionsTab->getPosition().nHeight-125-90);
     pThemeList->setID("THEMES_LIST");
@@ -428,7 +436,7 @@ namespace vapp {
 #if defined(SUPPORT_WEBACCESS)
     UIButton *pUpdateThemesButton = new UIButton(pGeneralOptionsTab,
 						 pGeneralOptionsTab->getPosition().nWidth -200 -200,
-						 pGeneralOptionsTab->getPosition().nHeight - 110,
+						 pGeneralOptionsTab->getPosition().nHeight - 95,
 						 GAMETEXT_UPDATETHEMESLIST,
 						 207,
 						 57);
@@ -440,7 +448,7 @@ namespace vapp {
 
     UIButton *pGetSelectedTheme = new UIButton(pGeneralOptionsTab,
 					       pGeneralOptionsTab->getPosition().nWidth -200,
-					       pGeneralOptionsTab->getPosition().nHeight - 110,
+					       pGeneralOptionsTab->getPosition().nHeight - 95,
 					       GAMETEXT_GETSELECTEDTHEME,
 					       207,
 					       57);
@@ -2950,6 +2958,7 @@ namespace vapp {
   ===========================================================================*/
   void GameApp::_ImportOptions(void) {
     UIButton *pShowMiniMap = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:SHOWMINIMAP");
+    UIButton *pShowEngineCounter = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:SHOWENGINECOUNTER");
 
     UIButton *pContextHelp = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:ENABLECONTEXTHELP");
     UIButton *pAutosaveReplays = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:AUTOSAVEREPLAYS");
@@ -3058,6 +3067,7 @@ namespace vapp {
 #endif
 
     pShowMiniMap->setChecked(m_Config.getBool("ShowMiniMap"));
+    pShowEngineCounter->setChecked(m_Config.getBool("ShowEngineCounter"));
     pContextHelp->setChecked(m_Config.getBool("ContextHelp"));
     pAutosaveReplays->setChecked(m_Config.getBool("AutosaveHighscoreReplays"));
 
@@ -3151,6 +3161,7 @@ namespace vapp {
     m_Config.setValue("GameGraphics",m_Config.getDefaultValue("GameGraphics"));
     m_Config.setValue("MenuBackgroundGraphics",m_Config.getDefaultValue("MenuBackgroundGraphics"));
     m_Config.setValue("ShowMiniMap",m_Config.getDefaultValue("ShowMiniMap"));
+    m_Config.setValue("ShowEngineCounter",m_Config.getDefaultValue("ShowEngineCounter"));
     m_Config.setValue("ContextHelp",m_Config.getDefaultValue("ContextHelp"));
     m_Config.setValue("EngineSoundEnable",m_Config.getDefaultValue("EngineSoundEnable"));
     m_Config.setValue("MenuMusic",m_Config.getDefaultValue("MenuMusic"));
@@ -3229,6 +3240,7 @@ namespace vapp {
     bool bNotify = false;
   
     UIButton *pShowMiniMap = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:SHOWMINIMAP");
+    UIButton *pShowEngineCounter = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:SHOWENGINECOUNTER");
     UIButton *pContextHelp = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:ENABLECONTEXTHELP");
     UIButton *pAutosaveReplays = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:AUTOSAVEREPLAYS");
     
@@ -3262,6 +3274,7 @@ namespace vapp {
 
     /* First all those which don't need a restart */
     m_Config.setBool("ShowMiniMap",pShowMiniMap->getChecked());
+    m_Config.setBool("ShowEngineCounter",pShowEngineCounter->getChecked());
     m_Config.setBool("ContextHelp",pContextHelp->getChecked());
     
     if(pMenuLow->getChecked()) m_Config.setString("MenuBackgroundGraphics","Low");

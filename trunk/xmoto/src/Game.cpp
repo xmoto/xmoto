@@ -2904,6 +2904,7 @@ namespace vapp {
     
     if(bFetchPortAndServer) {
       m_ProxySettings.setPort(m_Config.getInteger("ProxyPort"));
+      m_ProxySettings.setServer(m_Config.getString("ProxyServer"));
       m_ProxySettings.setAuthentification(m_Config.getString("ProxyAuthUser"),
 					  m_Config.getString("ProxyAuthPwd"));      
     }
@@ -2941,6 +2942,7 @@ namespace vapp {
 	      v_fFinishTime == -1)
 	     )
 	    {
+	      v_fFinishTime = (*Replays)[i]->fFinishTime;
 	      res = std::string("Replays/") + (*Replays)[i]->Name + std::string(".rpl");
 	    }
 	}
@@ -2954,6 +2956,7 @@ namespace vapp {
 	    v_fFinishTime == -1)
 	   )
 	  {
+	    v_fFinishTime = (*Replays)[i]->fFinishTime;
 	    res = std::string("Replays/") + (*Replays)[i]->Name + std::string(".rpl");
 	  }
       }

@@ -235,6 +235,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_SAVEREPLAY           _("Save Replay")
 #define GAMETEXT_SCREENRES            _("Screen Resolution")
 #define GAMETEXT_SHOW                 _("Show")
+#define GAMETEXT_SHOWENGINECOUNTER    _("Show engine counter")
 #define GAMETEXT_SHOWINFO             _("Info...")
 #define GAMETEXT_SHOWMINIMAP          _("Show Mini Map")
 #define GAMETEXT_SCRIPTED             _("Scripted")
@@ -395,5 +396,5 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_UPDATEROOMSLIST _("Get the rooms list from the web")
 #define CONTEXTHELP_ROOM_LOGIN _("Upload of highscore requires to log in (Except for WR)")
 #define CONTEXTHELP_ROOM_PASSWORD _("Upload of highscore requires a password (Except for WR)")
-
+#define CONTEXTHELP_ENGINE_COUNTER _("Show the engine counter when playing")
 #endif
