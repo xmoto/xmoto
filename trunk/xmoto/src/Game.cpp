@@ -1282,6 +1282,7 @@ namespace vapp {
       float m_zoomX;
       float m_zoomY;
       float m_zoomU;
+      float static_time;
 
       if(m_fPrePlayNbStrawberriesDisplayed == false && getRealTime() - m_fPrePlayStartTime > 1.5) {
 	if(m_MotoGame.getNbRemainingStrawberries() > 0) {
@@ -1296,33 +1297,37 @@ namespace vapp {
       m_zoomY = 2.0 /(m_MotoGame.getLevelSrc()->getTopLimit() - m_MotoGame.getLevelSrc()->getBottomLimit());
       m_zoomU = m_zoomX > m_zoomY ? m_zoomX : m_zoomY;
       
+      if (m_zoomX > m_zoomY){
+	static_time = (m_MotoGame.getLevelSrc()->getTopLimit() - m_MotoGame.getLevelSrc()->getBottomLimit()) / (2.0/m_zoomU);
+      }else {
+	static_time = (m_MotoGame.getLevelSrc()->getRightLimit() - m_MotoGame.getLevelSrc()->getLeftLimit()) / ((2.0 * ((float)getDispWidth() / (float)getDispHeight()))/m_zoomU);
+      }
 
-
-      if(getRealTime() > m_fPrePlayStartTime + PRESTART_STATIC_TIME + PRESTART_ANIMATION_TIME) {
+      if(getRealTime() > m_fPrePlayStartTime + static_time + PRESTART_ANIMATION_TIME) {
         setPrePlayAnim(false); // disable anim
         m_Renderer.setZoom(m_fPrePlayStartInitZoom);
         m_Renderer.setCameraPosition(m_fPrePlayStartCameraX, m_fPrePlayStartCameraY);
         m_MotoGame.gameMessage(GAMETEXT_GO, true, 0.5);
         setState(GS_PLAYING);
-      } else if(getRealTime() > m_fPrePlayStartTime + PRESTART_STATIC_TIME){
+      } else if(getRealTime() > m_fPrePlayStartTime + static_time){
         float zx, zy, zz;
 
-        zz = (PRESTART_ANIMATION_TIME + PRESTART_STATIC_TIME - getRealTime() + m_fPrePlayStartTime)
+        zz = (PRESTART_ANIMATION_TIME + static_time - getRealTime() + m_fPrePlayStartTime)
           / (PRESTART_ANIMATION_TIME) * (m_fPrePlayStartInitZoom - m_zoomU);
         m_Renderer.setZoom(m_fPrePlayStartInitZoom - zz);
         
-	/* zx = (PRESTART_ANIMATION_TIME + PRESTART_STATIC_TIME - getRealTime() + m_fPrePlayStartTime)
+	/* zx = (PRESTART_ANIMATION_TIME + static_time - getRealTime() + m_fPrePlayStartTime)
           / (PRESTART_ANIMATION_TIME) 
           * (m_fPrePlayStartCameraX - (m_MotoGame.getLevelSrc()->getRightLimit() + m_MotoGame.getLevelSrc()->getLeftLimit())/2.0);
-        zy = (PRESTART_ANIMATION_TIME + PRESTART_STATIC_TIME - getRealTime() + m_fPrePlayStartTime)
+        zy = (PRESTART_ANIMATION_TIME + static_time - getRealTime() + m_fPrePlayStartTime)
           / (PRESTART_ANIMATION_TIME) 
           * (m_fPrePlayStartCameraY - (m_MotoGame.getLevelSrc()->getBottomLimit() + m_MotoGame.getLevelSrc()->getTopLimit())/2.0);
 	  */
 	
-	zx = (PRESTART_ANIMATION_TIME + PRESTART_STATIC_TIME - getRealTime() + m_fPrePlayStartTime)
+	zx = (PRESTART_ANIMATION_TIME + static_time - getRealTime() + m_fPrePlayStartTime)
           / (PRESTART_ANIMATION_TIME) 
           * (m_fPrePlayStartCameraX - m_fPrePlayCameraLastX);
-	zy =  (PRESTART_ANIMATION_TIME + PRESTART_STATIC_TIME - getRealTime() + m_fPrePlayStartTime)
+	zy =  (PRESTART_ANIMATION_TIME + static_time - getRealTime() + m_fPrePlayStartTime)
           / (PRESTART_ANIMATION_TIME) 
           * (m_fPrePlayStartCameraY - m_fPrePlayCameraLastY);
 
@@ -1340,8 +1345,8 @@ namespace vapp {
 	  visibleHeight = 2.0/m_zoomU;
 	  cameraStartHeight= visibleHeight/2.0;
 
-	  zy = (PRESTART_STATIC_TIME - getRealTime() + m_fPrePlayStartTime)
-          / (PRESTART_STATIC_TIME) 
+	  zy = (static_time - getRealTime() + m_fPrePlayStartTime)
+          / (static_time) 
 	    * ( - (cameraStartHeight+m_MotoGame.getLevelSrc()->getBottomLimit()) + (m_MotoGame.getLevelSrc()->getTopLimit() -cameraStartHeight));
 	  
 	  m_Renderer.setCameraPosition((m_MotoGame.getLevelSrc()->getRightLimit() + m_MotoGame.getLevelSrc()->getLeftLimit())/2,m_MotoGame.getLevelSrc()->getTopLimit() -cameraStartHeight-zy);
@@ -1355,8 +1360,8 @@ namespace vapp {
 	  visibleWidth = (2.0 * ((float)getDispWidth() / (float)getDispHeight()))/m_zoomU;
 	  cameraStartLeft = visibleWidth/2.0;
 
-	  zx  = (PRESTART_STATIC_TIME - getRealTime() + m_fPrePlayStartTime)
-          / (PRESTART_STATIC_TIME) 
+	  zx  = (static_time - getRealTime() + m_fPrePlayStartTime)
+          / (static_time) 
 	    * ( - (cameraStartLeft+m_MotoGame.getLevelSrc()->getLeftLimit()) + (m_MotoGame.getLevelSrc()->getRightLimit() -cameraStartLeft)); 
 	  m_Renderer.setCameraPosition(m_MotoGame.getLevelSrc()->getRightLimit() -cameraStartLeft-zx,
 				       (m_MotoGame.getLevelSrc()->getBottomLimit() + m_MotoGame.getLevelSrc()->getTopLimit())/2);			       
