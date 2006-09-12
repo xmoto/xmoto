@@ -860,7 +860,7 @@ namespace vapp {
   UIFont *v_font = getMediumFont();
   if(v_font != NULL) {
     UITextDraw::getTextExt(v_font,pMsg->Text,&x1,&y1,&x2,&y2);
-    UITextDraw::printRaw(v_font,400 - (x2-x1)/2,pMsg->Pos[1]*600,pMsg->Text,MAKE_COLOR(255,255,255,pMsg->nAlpha));
+    UITextDraw::printRaw(v_font,getParent()->getDispWidth()/2 - (x2-x1)/2,pMsg->Pos[1]*getParent()->getDispHeight(),pMsg->Text,MAKE_COLOR(255,255,255,pMsg->nAlpha));
   }
       }
     }

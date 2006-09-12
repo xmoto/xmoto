@@ -104,6 +104,7 @@ namespace vapp {
           if(pList != NULL) {
             pList->makeActive();
           }
+	  setPrePlayAnim(true);
         }
         break;
       case GS_REPLAYING: {
@@ -1280,11 +1281,14 @@ namespace vapp {
       float m_zoomX;
       float m_zoomY;
       float m_zoomU;
+      //float cameraLastX;
+      //float cameraLastY;
 
       m_zoomX = (2.0 * ((float)getDispWidth() / (float)getDispHeight())) / (m_MotoGame.getLevelSrc()->getRightLimit() - m_MotoGame.getLevelSrc()->getLeftLimit());
       m_zoomY = 2.0 /(m_MotoGame.getLevelSrc()->getTopLimit() - m_MotoGame.getLevelSrc()->getBottomLimit());
       m_zoomU = m_zoomX > m_zoomY ? m_zoomX : m_zoomY;
       
+
 
       if(getRealTime() > m_fPrePlayStartTime + PRESTART_STATIC_TIME + PRESTART_ANIMATION_TIME) {
         setPrePlayAnim(false); // disable anim
@@ -1299,19 +1303,61 @@ namespace vapp {
           / (PRESTART_ANIMATION_TIME) * (m_fPrePlayStartInitZoom - m_zoomU);
         m_Renderer.setZoom(m_fPrePlayStartInitZoom - zz);
         
-        zx = (PRESTART_ANIMATION_TIME + PRESTART_STATIC_TIME - getRealTime() + m_fPrePlayStartTime)
+	/* zx = (PRESTART_ANIMATION_TIME + PRESTART_STATIC_TIME - getRealTime() + m_fPrePlayStartTime)
           / (PRESTART_ANIMATION_TIME) 
           * (m_fPrePlayStartCameraX - (m_MotoGame.getLevelSrc()->getRightLimit() + m_MotoGame.getLevelSrc()->getLeftLimit())/2.0);
         zy = (PRESTART_ANIMATION_TIME + PRESTART_STATIC_TIME - getRealTime() + m_fPrePlayStartTime)
           / (PRESTART_ANIMATION_TIME) 
           * (m_fPrePlayStartCameraY - (m_MotoGame.getLevelSrc()->getBottomLimit() + m_MotoGame.getLevelSrc()->getTopLimit())/2.0);
+	  */
+	
+	zx = (PRESTART_ANIMATION_TIME + PRESTART_STATIC_TIME - getRealTime() + m_fPrePlayStartTime)
+          / (PRESTART_ANIMATION_TIME) 
+          * (m_fPrePlayStartCameraX - cameraLastX);
+	zy =  (PRESTART_ANIMATION_TIME + PRESTART_STATIC_TIME - getRealTime() + m_fPrePlayStartTime)
+          / (PRESTART_ANIMATION_TIME) 
+          * (m_fPrePlayStartCameraY - cameraLastY);
 
+	  
         m_Renderer.setCameraPosition(m_fPrePlayStartCameraX-zx, m_fPrePlayStartCameraY-zy);
       } else {
         m_Renderer.setZoom(m_zoomU);
         m_MotoGame.gameMessage(m_MotoGame.getLevelSrc()->getLevelInfo()->Name, true, 1.0);
-        m_Renderer.setCameraPosition((m_MotoGame.getLevelSrc()->getRightLimit() + m_MotoGame.getLevelSrc()->getLeftLimit())/2,
-                                     (m_MotoGame.getLevelSrc()->getBottomLimit() + m_MotoGame.getLevelSrc()->getTopLimit())/2);
+	std::ostringstream nb_strawberries;
+	nb_strawberries << m_MotoGame.getNbRemainingStrawberries();
+	/*	m_MotoGame.gameMessage(nb_strawberries.str()+" Strawberries",true,1.0);*/
+        /*m_Renderer.setCameraPosition((m_MotoGame.getLevelSrc()->getRightLimit() + m_MotoGame.getLevelSrc()->getLeftLimit())/2,
+	  (m_MotoGame.getLevelSrc()->getBottomLimit() + m_MotoGame.getLevelSrc()->getTopLimit())/2);*/
+	
+	if (m_zoomX > m_zoomY) { //X<Y
+	  float zy,visibleHeight,cameraStartHeight;
+
+	  visibleHeight = 2.0/m_zoomU;
+	  cameraStartHeight= visibleHeight/2.0;
+
+	  zy = (PRESTART_STATIC_TIME - getRealTime() + m_fPrePlayStartTime)
+          / (PRESTART_STATIC_TIME) 
+	    * ( - (cameraStartHeight+m_MotoGame.getLevelSrc()->getBottomLimit()) + (m_MotoGame.getLevelSrc()->getTopLimit() -cameraStartHeight));
+	  
+	  m_Renderer.setCameraPosition((m_MotoGame.getLevelSrc()->getRightLimit() + m_MotoGame.getLevelSrc()->getLeftLimit())/2,m_MotoGame.getLevelSrc()->getTopLimit() -cameraStartHeight-zy);
+
+	  cameraLastX=(m_MotoGame.getLevelSrc()->getRightLimit() + m_MotoGame.getLevelSrc()->getLeftLimit())/2;
+	  cameraLastY=m_MotoGame.getLevelSrc()->getTopLimit() - cameraStartHeight - zy;
+
+	}else{ //X>Y
+	  float zx,visibleWidth,cameraStartLeft;
+
+	  visibleWidth = (2.0 * ((float)getDispWidth() / (float)getDispHeight()))/m_zoomU;
+	  cameraStartLeft = visibleWidth/2.0;
+
+	  zx  = (PRESTART_STATIC_TIME - getRealTime() + m_fPrePlayStartTime)
+          / (PRESTART_STATIC_TIME) 
+	    * ( - (cameraStartLeft+m_MotoGame.getLevelSrc()->getLeftLimit()) + (m_MotoGame.getLevelSrc()->getRightLimit() -cameraStartLeft)); 
+	  m_Renderer.setCameraPosition(m_MotoGame.getLevelSrc()->getRightLimit() -cameraStartLeft-zx,
+				       (m_MotoGame.getLevelSrc()->getBottomLimit() + m_MotoGame.getLevelSrc()->getTopLimit())/2);			       
+	  cameraLastX=m_MotoGame.getLevelSrc()->getRightLimit() -cameraStartLeft-zx;
+	  cameraLastY=(m_MotoGame.getLevelSrc()->getBottomLimit() + m_MotoGame.getLevelSrc()->getTopLimit())/2;
+	}
       }
     } else {
       m_Renderer.setZoom(m_fPrePlayStartInitZoom); // because the man can change ugly mode while the animation

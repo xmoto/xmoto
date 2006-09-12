@@ -72,6 +72,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <queue>
 #include <ostream>
 #include <istream>
+#include <sstream>
 
 #include <stdio.h>
 #include <math.h>

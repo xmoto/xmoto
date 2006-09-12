@@ -40,7 +40,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Stats.h"
 
 #define PRESTART_ANIMATION_TIME 2.0
-#define PRESTART_STATIC_TIME    1.0
+#define PRESTART_STATIC_TIME    2.0
+
+
+      
 
 namespace vapp {
 
@@ -153,7 +156,7 @@ namespace vapp {
                  m_bEnableEngineSound = true;
                  m_bCompressReplays = true;
                  m_bBenchmark = false;
-                 m_bEnableContextHelp = true;                 
+                 m_bEnableContextHelp = true;     
 
 #if defined(SUPPORT_WEBACCESS)
                  m_bShowWebHighscoreInGame = false;
@@ -178,7 +181,7 @@ namespace vapp {
 
      m_bPrePlayAnim = true;
      m_bShowEngineCounter = true;
-                 }
+      }
                  
 #if defined(SUPPORT_WEBACCESS)                 
         /* WWWAppInterface implementation */ 
@@ -307,6 +310,8 @@ namespace vapp {
 
       float m_fPrePlayStartTime;
       bool m_bPrePlayAnim;
+      float cameraLastX;
+      float cameraLastY;
       float m_fPrePlayStartInitZoom;
       float m_fPrePlayStartCameraX;
       float m_fPrePlayStartCameraY;
