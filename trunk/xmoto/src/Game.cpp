@@ -351,6 +351,7 @@ namespace vapp {
   m_fPrePlayStartInitZoom = m_Renderer.getCurrentZoom();  // because the man can change ugly mode while the animation
   m_fPrePlayStartCameraX = m_Renderer.getCameraPositionX();
   m_fPrePlayStartCameraY = m_Renderer.getCameraPositionY();
+  m_fPrePlayNbStrawberriesDisplayed = false;
 
     if(m_bPrePlayAnim && m_bUglyMode == false) {
       /* m_MotoGame.gameMessage(GAMETEXT_READY, true, PRESTART_ANIMATION_TIME);*/
@@ -1281,8 +1282,15 @@ namespace vapp {
       float m_zoomX;
       float m_zoomY;
       float m_zoomU;
-      //float cameraLastX;
-      //float cameraLastY;
+
+      if(m_fPrePlayNbStrawberriesDisplayed == false && getRealTime() - m_fPrePlayStartTime > 1.5) {
+	if(m_MotoGame.getNbRemainingStrawberries() > 0) {
+	  std::ostringstream nb_strawberries;
+	  nb_strawberries << m_MotoGame.getNbRemainingStrawberries();
+	  m_MotoGame.gameMessage(nb_strawberries.str()+" Strawberries", false, 0.5);
+	  m_fPrePlayNbStrawberriesDisplayed = true;
+	}
+      }
 
       m_zoomX = (2.0 * ((float)getDispWidth() / (float)getDispHeight())) / (m_MotoGame.getLevelSrc()->getRightLimit() - m_MotoGame.getLevelSrc()->getLeftLimit());
       m_zoomY = 2.0 /(m_MotoGame.getLevelSrc()->getTopLimit() - m_MotoGame.getLevelSrc()->getBottomLimit());
@@ -1313,19 +1321,16 @@ namespace vapp {
 	
 	zx = (PRESTART_ANIMATION_TIME + PRESTART_STATIC_TIME - getRealTime() + m_fPrePlayStartTime)
           / (PRESTART_ANIMATION_TIME) 
-          * (m_fPrePlayStartCameraX - cameraLastX);
+          * (m_fPrePlayStartCameraX - m_fPrePlayCameraLastX);
 	zy =  (PRESTART_ANIMATION_TIME + PRESTART_STATIC_TIME - getRealTime() + m_fPrePlayStartTime)
           / (PRESTART_ANIMATION_TIME) 
-          * (m_fPrePlayStartCameraY - cameraLastY);
+          * (m_fPrePlayStartCameraY - m_fPrePlayCameraLastY);
 
 	  
         m_Renderer.setCameraPosition(m_fPrePlayStartCameraX-zx, m_fPrePlayStartCameraY-zy);
       } else {
         m_Renderer.setZoom(m_zoomU);
         m_MotoGame.gameMessage(m_MotoGame.getLevelSrc()->getLevelInfo()->Name, true, 1.0);
-	std::ostringstream nb_strawberries;
-	nb_strawberries << m_MotoGame.getNbRemainingStrawberries();
-	/*	m_MotoGame.gameMessage(nb_strawberries.str()+" Strawberries",true,1.0);*/
         /*m_Renderer.setCameraPosition((m_MotoGame.getLevelSrc()->getRightLimit() + m_MotoGame.getLevelSrc()->getLeftLimit())/2,
 	  (m_MotoGame.getLevelSrc()->getBottomLimit() + m_MotoGame.getLevelSrc()->getTopLimit())/2);*/
 	
@@ -1341,8 +1346,8 @@ namespace vapp {
 	  
 	  m_Renderer.setCameraPosition((m_MotoGame.getLevelSrc()->getRightLimit() + m_MotoGame.getLevelSrc()->getLeftLimit())/2,m_MotoGame.getLevelSrc()->getTopLimit() -cameraStartHeight-zy);
 
-	  cameraLastX=(m_MotoGame.getLevelSrc()->getRightLimit() + m_MotoGame.getLevelSrc()->getLeftLimit())/2;
-	  cameraLastY=m_MotoGame.getLevelSrc()->getTopLimit() - cameraStartHeight - zy;
+	  m_fPrePlayCameraLastX=(m_MotoGame.getLevelSrc()->getRightLimit() + m_MotoGame.getLevelSrc()->getLeftLimit())/2;
+	  m_fPrePlayCameraLastY=m_MotoGame.getLevelSrc()->getTopLimit() - cameraStartHeight - zy;
 
 	}else{ //X>Y
 	  float zx,visibleWidth,cameraStartLeft;
@@ -1355,8 +1360,8 @@ namespace vapp {
 	    * ( - (cameraStartLeft+m_MotoGame.getLevelSrc()->getLeftLimit()) + (m_MotoGame.getLevelSrc()->getRightLimit() -cameraStartLeft)); 
 	  m_Renderer.setCameraPosition(m_MotoGame.getLevelSrc()->getRightLimit() -cameraStartLeft-zx,
 				       (m_MotoGame.getLevelSrc()->getBottomLimit() + m_MotoGame.getLevelSrc()->getTopLimit())/2);			       
-	  cameraLastX=m_MotoGame.getLevelSrc()->getRightLimit() -cameraStartLeft-zx;
-	  cameraLastY=(m_MotoGame.getLevelSrc()->getBottomLimit() + m_MotoGame.getLevelSrc()->getTopLimit())/2;
+	  m_fPrePlayCameraLastX = m_MotoGame.getLevelSrc()->getRightLimit() -cameraStartLeft-zx;
+	  m_fPrePlayCameraLastY = (m_MotoGame.getLevelSrc()->getBottomLimit() + m_MotoGame.getLevelSrc()->getTopLimit())/2;
 	}
       }
     } else {

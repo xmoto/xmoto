@@ -310,11 +310,12 @@ namespace vapp {
 
       float m_fPrePlayStartTime;
       bool m_bPrePlayAnim;
-      float cameraLastX;
-      float cameraLastY;
+      float m_fPrePlayCameraLastX;
+      float m_fPrePlayCameraLastY;
       float m_fPrePlayStartInitZoom;
       float m_fPrePlayStartCameraX;
       float m_fPrePlayStartCameraY;
+      bool  m_fPrePlayNbStrawberriesDisplayed;
 
       Stats m_GameStats;
       UIWindow *m_pStatsReport;
