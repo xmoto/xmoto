@@ -34,23 +34,23 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 namespace vapp {
  
-	/*===========================================================================
-	Quality settings
+  /*===========================================================================
+  Quality settings
   ===========================================================================*/
   enum GraphQuality {
     GQ_LOW,GQ_MEDIUM,GQ_HIGH    
   };
 
-	/*===========================================================================
-	Graphical debug info
+  /*===========================================================================
+  Graphical debug info
   ===========================================================================*/
   struct GraphDebugInfo {
     std::string Type;
     std::vector<std::string> Args;    
   };
 
-	/*===========================================================================
-	Particle type
+  /*===========================================================================
+  Particle type
   ===========================================================================*/
   enum ParticleType {
     PT_NONE,
@@ -61,8 +61,8 @@ namespace vapp {
     PT_STAR
   };
   
-	/*===========================================================================
-	Particle
+  /*===========================================================================
+  Particle
   ===========================================================================*/
   struct Particle {
     Particle() {
@@ -92,8 +92,8 @@ namespace vapp {
     float fDebrisSize;
   };
 
-	/*===========================================================================
-	Static geometry
+  /*===========================================================================
+  Static geometry
   ===========================================================================*/
   struct StaticGeomCoord {
     float x,y;
@@ -124,8 +124,8 @@ namespace vapp {
     Vector2f Min,Max; /* AABB */
   };
 
-	/*===========================================================================
-	Special effects overlay
+  /*===========================================================================
+  Special effects overlay
   ===========================================================================*/
   class SFXOverlay {
     public:
@@ -164,21 +164,21 @@ namespace vapp {
       bool _SetShaderSource(GLhandleARB ShaderID,const std::string &File);
   };
 
-	/*===========================================================================
-	Game rendering class
+  /*===========================================================================
+  Game rendering class
   ===========================================================================*/
   class GameRenderer {
     public:
       GameRenderer() {
-	m_bDebug=false;
-	m_Quality=GQ_HIGH;
-	m_fSpeedMultiply=1.0f;
-	m_fScale = ZOOM_DEFAULT;
-	m_cameraOffsetX = CAMERA_OFFSETX_DEFAULT;
-	m_cameraOffsetY = CAMERA_OFFSETY_DEFAULT;
-	m_bGhostMotionBlur = true;
-	m_theme = NULL;
-	m_previousEngineSpeed = -1.0;
+  m_bDebug=false;
+  m_Quality=GQ_HIGH;
+  m_fSpeedMultiply=1.0f;
+  m_fScale = ZOOM_DEFAULT;
+  m_cameraOffsetX = CAMERA_OFFSETX_DEFAULT;
+  m_cameraOffsetY = CAMERA_OFFSETY_DEFAULT;
+  m_bGhostMotionBlur = true;
+  m_theme = NULL;
+  m_previousEngineSpeed = -1.0;
       }
       ~GameRenderer() {_Free();}
     
@@ -224,7 +224,11 @@ namespace vapp {
       void initZoom();
       float getCurrentZoom();
       void moveCamera(float px, float py);
+      void setCameraPosition(float px, float py);
+      float getCameraPositionX();
+      float getCameraPositionY();
       void initCamera();
+      void initCameraPosition();
       void setGhostMotionBlur(bool b) {m_bGhostMotionBlur = b;}
       void skipBackTime(float fTime) {m_fNextParticleUpdate -= fTime;}
       
@@ -317,7 +321,8 @@ namespace vapp {
       void _RenderParticles(bool bFront=true);
       void _RenderParticle(Vector2f P,Texture *pTexture,float fSize,float fAngle,Color c);
       void _RenderInGameText(Vector2f P,const std::string &Text,Color c = 0xffffffff);
-      
+      void setScroll(bool isSmooth);
+
       /* Helpers... */
       void _Vertex(Vector2f P);     /* Spit out a correctly transformed 
                                        glVertex2f() */
@@ -327,7 +332,7 @@ namespace vapp {
       void _DrawRotatedMarker(Vector2f Pos,dReal *pfRot);     
       void _RenderDebugInfo(void);      
       void guessDesiredCameraPosition(float &p_fDesiredHorizontalScrollShift,
-				      float &p_fDesiredVerticalScrollShift);
+              float &p_fDesiredVerticalScrollShift);
 
       void _RenderAlphaBlendedSection(Texture *pTexture,const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3);
       void _RenderAdditiveBlendedSection(Texture *pTexture,const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3);

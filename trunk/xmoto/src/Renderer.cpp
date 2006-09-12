@@ -91,30 +91,30 @@ namespace vapp {
       if(Blocks[i]->pSrcBlock) {
         Center = Vector2f(Blocks[i]->pSrcBlock->fPosX,Blocks[i]->pSrcBlock->fPosY);
 
-	pSprite = getParent()->m_theme.getSprite(SPRITE_TYPE_TEXTURE,
-						 Blocks[i]->pSrcBlock->Texture);
+  pSprite = getParent()->m_theme.getSprite(SPRITE_TYPE_TEXTURE,
+             Blocks[i]->pSrcBlock->Texture);
         if(pSprite != NULL) {
-	  try {
-	    pTexture = pSprite->getTexture();
-	    GLName = pTexture->nID;
-	  } catch(Exception &e) {
-	    Log("** Warning ** : Texture '%s' not found!",Blocks[i]->pSrcBlock->Texture.c_str());
-	    getGameObject()->gameMessage(GAMETEXT_MISSINGTEXTURES,true);   
-	  }
-	} else {
+    try {
+      pTexture = pSprite->getTexture();
+      GLName = pTexture->nID;
+    } catch(Exception &e) {
+      Log("** Warning ** : Texture '%s' not found!",Blocks[i]->pSrcBlock->Texture.c_str());
+      getGameObject()->gameMessage(GAMETEXT_MISSINGTEXTURES,true);   
+    }
+  } else {
           Log("** Warning ** : Texture '%s' not found!",Blocks[i]->pSrcBlock->Texture.c_str());
           getGameObject()->gameMessage(GAMETEXT_MISSINGTEXTURES,true);          
         }
       }
       else {
-	pSprite = getParent()->m_theme.getSprite(SPRITE_TYPE_TEXTURE, "default");
-	if(pSprite != NULL) {
-	  pTexture = pSprite->getTexture();
-	}
+  pSprite = getParent()->m_theme.getSprite(SPRITE_TYPE_TEXTURE, "default");
+  if(pSprite != NULL) {
+    pTexture = pSprite->getTexture();
+  }
 
         if(pTexture != NULL) {
-	  GLName = pTexture->nID;
-	}
+    GLName = pTexture->nID;
+  }
       }
       
       /* TODO: introduce non-static geoms and handle them differently */
@@ -189,6 +189,8 @@ namespace vapp {
       }
     }        
     
+    setScroll(false);
+
     Log("Number of optimized geoms: %d",m_Geoms.size());
     Log("GL: %d kB vertex buffers",nVertexBytes/1024);
   }
@@ -240,13 +242,13 @@ namespace vapp {
       pSpeed_eff = pSpeed;
     } else {
       if( labs(pSpeed - m_previousEngineSpeed) > ENGINECOUNTER_MAX_DIFF) {
-	if(pSpeed - m_previousEngineSpeed > 0) {
-	  pSpeed_eff = m_previousEngineSpeed + ENGINECOUNTER_MAX_DIFF;
-	} else {
-	  pSpeed_eff = m_previousEngineSpeed - ENGINECOUNTER_MAX_DIFF;
-	}
+  if(pSpeed - m_previousEngineSpeed > 0) {
+    pSpeed_eff = m_previousEngineSpeed + ENGINECOUNTER_MAX_DIFF;
+  } else {
+    pSpeed_eff = m_previousEngineSpeed - ENGINECOUNTER_MAX_DIFF;
+  }
       } else {
-	pSpeed_eff = pSpeed;
+  pSpeed_eff = pSpeed;
       }
     }
     m_previousEngineSpeed = pSpeed_eff;
@@ -264,26 +266,26 @@ namespace vapp {
     p3 = Vector2f(x,        getParent()->getDispHeight()-y);
 
     pcenter = p3 + Vector2f(ENGINECOUNTER_CENTERX   * coefw,
-			    - ENGINECOUNTER_CENTERY * coefh); 
+          - ENGINECOUNTER_CENTERY * coefh); 
     pdest    = pcenter
     + Vector2f(ENGINECOUNTER_CORRECT_X * coefw,
-	       ENGINECOUNTER_CORRECT_Y * coefh)
+         ENGINECOUNTER_CORRECT_Y * coefh)
     + Vector2f(-cosf(pSpeed_eff / 360.0 * (2.0 * 3.14159))
-	       * (ENGINECOUNTER_RADIUS) * coefw,
-	       sinf(pSpeed_eff / 360.0  * (2.0 * 3.14159))
-	       * (ENGINECOUNTER_RADIUS) * coefh
-	       );
+         * (ENGINECOUNTER_RADIUS) * coefw,
+         sinf(pSpeed_eff / 360.0  * (2.0 * 3.14159))
+         * (ENGINECOUNTER_RADIUS) * coefh
+         );
 
 
     pSprite = (MiscSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_MISC, "EngineCounter");
     if(pSprite != NULL) {
       pTexture = pSprite->getTexture();
       if(pTexture != NULL) {
-    	_RenderAlphaBlendedSection(pTexture, p0, p1, p2, p3);
-	glBegin(GL_LINE_STRIP);
-	glColor3ub(255, 50, 50);
-	_Vertex(pcenter);
-	_Vertex(pdest);
+      _RenderAlphaBlendedSection(pTexture, p0, p1, p2, p3);
+  glBegin(GL_LINE_STRIP);
+  glColor3ub(255, 50, 50);
+  _Vertex(pcenter);
+  _Vertex(pdest);
       glEnd();
       }
     }
@@ -295,8 +297,8 @@ namespace vapp {
   #define MINIMAPZOOM 5.0f
   #define MINIMAPALPHA 128
   #define MINIVERTEX(Px,Py) \
-    getParent()->glVertex(x + nWidth/2 + (float)(Px + m_Scroll.x)*MINIMAPZOOM, \
-                          y + nHeight/2 - (float)(Py + m_Scroll.y)*MINIMAPZOOM);    
+    getParent()->glVertex(x + nWidth/2 + (float)(Px - getCameraPositionX())*MINIMAPZOOM, \
+                          y + nHeight/2 - (float)(Py - getCameraPositionY())*MINIMAPZOOM);    
 
   void GameRenderer::renderMiniMap(int x,int y,int nWidth,int nHeight) {
     getParent()->drawBox(Vector2f(x,y),Vector2f(x+nWidth,y+nHeight),1,
@@ -336,10 +338,10 @@ namespace vapp {
       /* Don't draw background blocks */
       if(pDB->bBackground) continue;
       
-			/* Build rotation matrix for block */
-			float fR[4]; 
-			fR[0] = cos(pDB->fRotation); fR[1] = -sin(pDB->fRotation);
-			fR[2] = sin(pDB->fRotation); fR[3] = cos(pDB->fRotation);
+      /* Build rotation matrix for block */
+      float fR[4]; 
+      fR[0] = cos(pDB->fRotation); fR[1] = -sin(pDB->fRotation);
+      fR[2] = sin(pDB->fRotation); fR[3] = cos(pDB->fRotation);
 
       for(int j=0;j<pDB->ConvexBlocks.size();j++) {
         ConvexBlock *pCB = pDB->ConvexBlocks[j];
@@ -349,42 +351,42 @@ namespace vapp {
         for(int k=0;k<pCB->Vertices.size();k++) {
           ConvexBlockVertex *pVertex = pCB->Vertices[k];
         
-				  /* Transform vertex */
-				  Vector2f Tv = Vector2f(pVertex->P.x * fR[0] + pVertex->P.y * fR[1],
-				                          pVertex->P.x * fR[2] + pVertex->P.y * fR[3]);
+          /* Transform vertex */
+          Vector2f Tv = Vector2f(pVertex->P.x * fR[0] + pVertex->P.y * fR[1],
+                                  pVertex->P.x * fR[2] + pVertex->P.y * fR[3]);
           Tv += pDB->Position;
-            				  
-				  /* Put vertex */
-				  glTexCoord2f(pVertex->T.x,pVertex->T.y);				  
+                      
+          /* Put vertex */
+          glTexCoord2f(pVertex->T.x,pVertex->T.y);          
           MINIVERTEX(Tv.x,Tv.y);                  
         }
         glEnd();        
       }
     }
     
-    getParent()->drawCircle(Vector2f(x + nWidth/2 + (float)(pGame->getBikeState()->CenterP.x + m_Scroll.x)*MINIMAPZOOM,
-                                     y + nHeight/2 - (float)(pGame->getBikeState()->CenterP.y + m_Scroll.y)*MINIMAPZOOM),
+    getParent()->drawCircle(Vector2f(x + nWidth/2 + (float)(pGame->getBikeState()->CenterP.x - getCameraPositionX())*MINIMAPZOOM,
+                                     y + nHeight/2 - (float)(pGame->getBikeState()->CenterP.y - getCameraPositionY())*MINIMAPZOOM),
                             3,0,MAKE_COLOR(255,255,255,255),0);
 
     #if defined(ALLOW_GHOST)
       /* Render ghost position too? */
       if(getGameObject()->isGhostActive()) {
-        getParent()->drawCircle(Vector2f(x + nWidth/2 + (float)(pGame->getGhostBikeState()->CenterP.x + m_Scroll.x)*MINIMAPZOOM,
-                                        y + nHeight/2 - (float)(pGame->getGhostBikeState()->CenterP.y + m_Scroll.y)*MINIMAPZOOM),
+        getParent()->drawCircle(Vector2f(x + nWidth/2 + (float)(pGame->getGhostBikeState()->CenterP.x - getCameraPositionX())*MINIMAPZOOM,
+                                        y + nHeight/2 - (float)(pGame->getGhostBikeState()->CenterP.y - getCameraPositionY())*MINIMAPZOOM),
                                 3,0,MAKE_COLOR(96,96,150,255),0);
       }
     #endif
                             
     for(int i=0;i<pGame->getEntities().size();i++) {
       if(pGame->getEntities()[i]->Type == ET_ENDOFLEVEL) {
-        getParent()->drawCircle(Vector2f(x + nWidth/2 + (float)(pGame->getEntities()[i]->Pos.x + m_Scroll.x)*MINIMAPZOOM,
-                                        y + nHeight/2 - (float)(pGame->getEntities()[i]->Pos.y + m_Scroll.y)*MINIMAPZOOM),
+        getParent()->drawCircle(Vector2f(x + nWidth/2 + (float)(pGame->getEntities()[i]->Pos.x - getCameraPositionX())*MINIMAPZOOM,
+                                        y + nHeight/2 - (float)(pGame->getEntities()[i]->Pos.y - getCameraPositionY())*MINIMAPZOOM),
                                 3,0,MAKE_COLOR(255,0,255,255),0);
         
       }
       else if(pGame->getEntities()[i]->Type == ET_STRAWBERRY) {
-        getParent()->drawCircle(Vector2f(x + nWidth/2 + (float)(pGame->getEntities()[i]->Pos.x + m_Scroll.x)*MINIMAPZOOM,
-                                        y + nHeight/2 - (float)(pGame->getEntities()[i]->Pos.y + m_Scroll.y)*MINIMAPZOOM),
+        getParent()->drawCircle(Vector2f(x + nWidth/2 + (float)(pGame->getEntities()[i]->Pos.x - getCameraPositionX())*MINIMAPZOOM,
+                                        y + nHeight/2 - (float)(pGame->getEntities()[i]->Pos.y - getCameraPositionY())*MINIMAPZOOM),
                                 3,0,MAKE_COLOR(255,0,0,255),0);
         
       }
@@ -405,22 +407,39 @@ namespace vapp {
     m_fScale = ZOOM_DEFAULT;
   }
 
+  void GameRenderer::setCameraPosition(float px, float py) {
+    m_cameraOffsetX = m_Scroll.x + px; //m_Scroll.x +px;
+    m_cameraOffsetY = m_Scroll.y + py; //m_Scroll.y +py;
+  }
+
   void GameRenderer::moveCamera(float px, float py) {
     m_cameraOffsetX += px;
     m_cameraOffsetY += py;
   }
 
-  void GameRenderer::initCamera() {
+  void GameRenderer::initCameraPosition() {
     m_cameraOffsetX = CAMERA_OFFSETX_DEFAULT;
     m_cameraOffsetY = CAMERA_OFFSETY_DEFAULT;
   }
 
+  void GameRenderer::initCamera() {
+    initCameraPosition();
+    initZoom();
+  }
+
+  float GameRenderer::getCameraPositionX() {
+    return -m_Scroll.x + m_cameraOffsetX;
+  }
+  
+  float GameRenderer::getCameraPositionY() {
+    return -m_Scroll.y + m_cameraOffsetY;
+  }
 
   void GameRenderer::guessDesiredCameraPosition(float &p_fDesiredHorizontalScrollShift,
-						float &p_fDesiredVerticalScrollShift) {
-						  
+            float &p_fDesiredVerticalScrollShift) {
+              
     float normal_hoffset = 4.0;
-    float normal_voffset = 2.0;						  
+    float normal_voffset = 2.0;             
     p_fDesiredHorizontalScrollShift = 0.0;
     p_fDesiredVerticalScrollShift   = 0.0;
 
@@ -453,23 +472,6 @@ namespace vapp {
   Main rendering function
   ===========================================================================*/
   void GameRenderer::render(bool bIsPaused) {
-    float v_move_camera_max;
-    float v_fDesiredHorizontalScrollShift = 0.0;
-    float v_fDesiredVerticalScrollShift   = 0.0;
-
-    /* determine if the camera must move fastly */
-    /* it must go faster if the player change of sense */
-    if(m_previous_driver_dir != getGameObject()->getBikeState()->Dir) {
-      m_recenter_camera_fast = true;
-    }
-    m_previous_driver_dir = getGameObject()->getBikeState()->Dir;
-
-    if(m_recenter_camera_fast) {
-      v_move_camera_max = 0.1;
-    } else {
-      v_move_camera_max = 0.01;
-    }
-
     /* Update time */
     m_pInGameStats->showWindow(true);
     m_pPlayTime->setCaption(getParent()->formatTime(getGameObject()->getTime()));
@@ -480,57 +482,20 @@ namespace vapp {
       m_fNextParticleUpdate = getGameObject()->getTime() + 0.025f; 
     }
     
-    m_Scroll = -getGameObject()->getBikeState()->CenterP; /* Determine scroll */    
     m_fZoom = 60.0f;    
-    
-    /* Driving direction? */
-    guessDesiredCameraPosition(v_fDesiredHorizontalScrollShift, v_fDesiredVerticalScrollShift);
-
-    if(fabs(v_fDesiredHorizontalScrollShift - m_fCurrentHorizontalScrollShift)
-       < v_move_camera_max) {
-      /* remove fast move once the camera is set correctly */
-      m_recenter_camera_fast = false;
-    }
-    
-    if(v_fDesiredHorizontalScrollShift != m_fCurrentHorizontalScrollShift) {
-      float d = v_fDesiredHorizontalScrollShift - m_fCurrentHorizontalScrollShift;
-      if(fabs(d)<v_move_camera_max) {
-        m_fCurrentHorizontalScrollShift = v_fDesiredHorizontalScrollShift;
-      }
-      else if(d < 0.0f) {
-        m_fCurrentHorizontalScrollShift -= v_move_camera_max * m_fSpeedMultiply;
-      }
-      else if(d > 0.0f) {
-        m_fCurrentHorizontalScrollShift += v_move_camera_max * m_fSpeedMultiply;
-      }
-    }
-
-    if(v_fDesiredVerticalScrollShift != m_fCurrentVerticalScrollShift) {
-      float d = v_fDesiredVerticalScrollShift - m_fCurrentVerticalScrollShift;
-      if(fabs(d)<0.01f) {
-        m_fCurrentVerticalScrollShift = v_fDesiredVerticalScrollShift;
-      }
-      else if(d < 0.0f) {
-        m_fCurrentVerticalScrollShift -= 0.01f * m_fSpeedMultiply;
-      }
-      else if(d > 0.0f) {
-        m_fCurrentVerticalScrollShift += 0.01f * m_fSpeedMultiply;
-      }
-    }
-
-    m_Scroll += Vector2f(m_fCurrentHorizontalScrollShift,
-			 m_fCurrentVerticalScrollShift);
+    setScroll(true);
+ 
 
     glLoadIdentity();
 
     /* SKY! */
     if(!m_bUglyMode)
-			_RenderSky();
+      _RenderSky();
 
     /* Perform scaling/translation */    
     glScalef(m_fScale * ((float)getParent()->getDispHeight()) / getParent()->getDispWidth(), m_fScale,1);
     //glRotatef(getGameObject()->getTime()*100,0,0,1); /* Uncomment this line if you want to vomit :) */
-    glTranslatef(m_Scroll.x - m_cameraOffsetX, m_Scroll.y - m_cameraOffsetY, 0);
+    glTranslatef(-getCameraPositionX(), -getCameraPositionY(), 0);
     
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -628,11 +593,11 @@ namespace vapp {
       CollisionSystem *pc = getGameObject()->getCollisionHandler();
       for(int i=0;i<pc->m_CheckedLines.size();i++) {
         glLineWidth(3);
- 			  glBegin(GL_LINE_STRIP);
-  		  glColor3f(1,0,0);
-  		  glVertex2f(pc->m_CheckedLines[i]->x1,pc->m_CheckedLines[i]->y1);
-  		  glVertex2f(pc->m_CheckedLines[i]->x2,pc->m_CheckedLines[i]->y2);
-  		  glEnd();
+        glBegin(GL_LINE_STRIP);
+        glColor3f(1,0,0);
+        glVertex2f(pc->m_CheckedLines[i]->x1,pc->m_CheckedLines[i]->y1);
+        glVertex2f(pc->m_CheckedLines[i]->x2,pc->m_CheckedLines[i]->y2);
+        glEnd();
         glLineWidth(2);
       }
       for(int i=0;i<pc->m_CheckedCells.size();i++) {
@@ -646,11 +611,11 @@ namespace vapp {
       }
       for(int i=0;i<pc->m_CheckedLinesW.size();i++) {
         glLineWidth(1);
- 			  glBegin(GL_LINE_STRIP);
-  		  glColor3f(0,1,0);
-  		  glVertex2f(pc->m_CheckedLinesW[i]->x1,pc->m_CheckedLinesW[i]->y1);
-  		  glVertex2f(pc->m_CheckedLinesW[i]->x2,pc->m_CheckedLinesW[i]->y2);
-  		  glEnd();
+        glBegin(GL_LINE_STRIP);
+        glColor3f(0,1,0);
+        glVertex2f(pc->m_CheckedLinesW[i]->x1,pc->m_CheckedLinesW[i]->y1);
+        glVertex2f(pc->m_CheckedLinesW[i]->x2,pc->m_CheckedLinesW[i]->y2);
+        glEnd();
         glLineWidth(1);
       }
       for(int i=0;i<pc->m_CheckedCellsW.size();i++) {
@@ -668,19 +633,19 @@ namespace vapp {
     //for(int i=0;i<LSoups.size();i++) {
     //  glLineWidth(3);
     //  for(int j=0;j<LSoups[i]->cNumLines;j++) {
-  		//	glBegin(GL_LINE_STRIP);
-	  	//	glColor3f(LSoups[i]->r,LSoups[i]->g,LSoups[i]->b);
-	  	//	glVertex2f(LSoups[i]->Lines[j].x1,LSoups[i]->Lines[j].y1);
-	  	//	glVertex2f(LSoups[i]->Lines[j].x2,LSoups[i]->Lines[j].y2);
-	  	//	glEnd();
+      //  glBegin(GL_LINE_STRIP);
+      //  glColor3f(LSoups[i]->r,LSoups[i]->g,LSoups[i]->b);
+      //  glVertex2f(LSoups[i]->Lines[j].x1,LSoups[i]->Lines[j].y1);
+      //  glVertex2f(LSoups[i]->Lines[j].x2,LSoups[i]->Lines[j].y2);
+      //  glEnd();
     //  }
     //  glLineWidth(1);
     //  glBegin(GL_LINE_LOOP);
-  		//glColor3f(LSoups[i]->r,LSoups[i]->g,LSoups[i]->b);
-  		//glVertex2f(LSoups[i]->Min.x,LSoups[i]->Min.y);
-  		//glVertex2f(LSoups[i]->Max.x,LSoups[i]->Min.y);
-  		//glVertex2f(LSoups[i]->Max.x,LSoups[i]->Max.y);
-  		//glVertex2f(LSoups[i]->Min.x,LSoups[i]->Max.y);
+      //glColor3f(LSoups[i]->r,LSoups[i]->g,LSoups[i]->b);
+      //glVertex2f(LSoups[i]->Min.x,LSoups[i]->Min.y);
+      //glVertex2f(LSoups[i]->Max.x,LSoups[i]->Min.y);
+      //glVertex2f(LSoups[i]->Max.x,LSoups[i]->Max.y);
+      //glVertex2f(LSoups[i]->Min.x,LSoups[i]->Max.y);
     //  glEnd();
     //}
         
@@ -739,6 +704,65 @@ namespace vapp {
     _RenderGameStatus();
   }
 
+  void GameRenderer::setScroll(bool isSmooth) {
+    float v_move_camera_max;
+    float v_fDesiredHorizontalScrollShift = 0.0;
+    float v_fDesiredVerticalScrollShift   = 0.0;
+
+    /* determine if the camera must move fastly */
+    /* it must go faster if the player change of sense */
+    if(m_previous_driver_dir != getGameObject()->getBikeState()->Dir) {
+      m_recenter_camera_fast = true;
+    }
+    m_previous_driver_dir = getGameObject()->getBikeState()->Dir;
+
+    if(m_recenter_camera_fast) {
+      v_move_camera_max = 0.1;
+    } else {
+      v_move_camera_max = 0.01;
+    }
+
+    m_Scroll = -getGameObject()->getBikeState()->CenterP; /* Determine scroll */       
+    
+    /* Driving direction? */
+    guessDesiredCameraPosition(v_fDesiredHorizontalScrollShift, v_fDesiredVerticalScrollShift);
+    
+    if(fabs(v_fDesiredHorizontalScrollShift - m_fCurrentHorizontalScrollShift)
+       < v_move_camera_max) {
+      /* remove fast move once the camera is set correctly */
+      m_recenter_camera_fast = false;
+    }
+    
+    if(v_fDesiredHorizontalScrollShift != m_fCurrentHorizontalScrollShift) {
+      float d = v_fDesiredHorizontalScrollShift - m_fCurrentHorizontalScrollShift;
+      if(fabs(d)<v_move_camera_max || isSmooth == false) {
+        m_fCurrentHorizontalScrollShift = v_fDesiredHorizontalScrollShift;
+      }
+      else if(d < 0.0f) {
+        m_fCurrentHorizontalScrollShift -= v_move_camera_max * m_fSpeedMultiply;
+      }
+      else if(d > 0.0f) {
+        m_fCurrentHorizontalScrollShift += v_move_camera_max * m_fSpeedMultiply;
+      }
+    }
+    
+    if(v_fDesiredVerticalScrollShift != m_fCurrentVerticalScrollShift) {
+      float d = v_fDesiredVerticalScrollShift - m_fCurrentVerticalScrollShift;
+      if(fabs(d)<0.01f || isSmooth == false) {
+        m_fCurrentVerticalScrollShift = v_fDesiredVerticalScrollShift;
+      }
+      else if(d < 0.0f) {
+        m_fCurrentVerticalScrollShift -= 0.01f * m_fSpeedMultiply;
+      }
+      else if(d > 0.0f) {
+        m_fCurrentVerticalScrollShift += 0.01f * m_fSpeedMultiply;
+      }
+    }
+    
+    m_Scroll += Vector2f(m_fCurrentHorizontalScrollShift,
+                         m_fCurrentVerticalScrollShift);
+  }
+
   /*===========================================================================
   Game status rendering
   ===========================================================================*/
@@ -760,7 +784,7 @@ namespace vapp {
     
     if(nStrawberriesLeft > 0) {
       if(getParent()->isUglyMode() == false) {
-	pType = (AnimationSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_ANIMATION, "Strawberry");
+  pType = (AnimationSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_ANIMATION, "Strawberry");
       }
       nQuantity = nStrawberriesLeft;
     }
@@ -776,7 +800,7 @@ namespace vapp {
 
       UIFont *v_font = getSmallFont();
       if(v_font != NULL) {
-	UITextDraw::getTextExt(v_font,cBuf,&tx1,&ty1,&tx2,&ty2);
+  UITextDraw::getTextExt(v_font,cBuf,&tx1,&ty1,&tx2,&ty2);
       }      
 
       /* Now for some evil special-case adjustments */
@@ -786,7 +810,7 @@ namespace vapp {
       
       /* Draw text */
       if(v_font != NULL) {
-	UITextDraw::printRaw(v_font,nAdjust + (x1+x2)/2 - (tx2-tx1)/2,y2-(ty2-ty1)+3,cBuf,MAKE_COLOR(255,255,0,255));
+  UITextDraw::printRaw(v_font,nAdjust + (x1+x2)/2 - (tx2-tx1)/2,y2-(ty2-ty1)+3,cBuf,MAKE_COLOR(255,255,0,255));
       }
     }
   }
@@ -802,8 +826,8 @@ namespace vapp {
     if(pArrow->nArrowPointerMode != 0) {
       Vector2f C;
       if(pArrow->nArrowPointerMode == 1) {          
-        C=Vector2f(getParent()->getDispWidth()/2 + (float)(pArrow->ArrowPointerPos.x + m_Scroll.x)*m_fZoom,
-                  getParent()->getDispHeight()/2 - (float)(pArrow->ArrowPointerPos.y + m_Scroll.y)*m_fZoom);      
+        C=Vector2f(getParent()->getDispWidth()/2 + (float)(pArrow->ArrowPointerPos.x - getCameraPositionX())*m_fZoom,
+                  getParent()->getDispHeight()/2 - (float)(pArrow->ArrowPointerPos.y - getCameraPositionY())*m_fZoom);      
       }
       else if(pArrow->nArrowPointerMode == 2) {          
         C.x=(getParent()->getDispWidth() * pArrow->ArrowPointerPos.x) / 800.0f;
@@ -823,7 +847,7 @@ namespace vapp {
       MiscSprite* pType;
       pType = (MiscSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_MISC, "Arrow");
       if(pType != NULL) {
-	_RenderAlphaBlendedSectionSP(pType->getTexture(),p1+C,p2+C,p3+C,p4+C);      
+  _RenderAlphaBlendedSectionSP(pType->getTexture(),p1+C,p2+C,p3+C,p4+C);      
       }
     }
         
@@ -833,11 +857,11 @@ namespace vapp {
         GameMessage *pMsg = pGame->getGameMessage()[i];
         int x1,y1,x2,y2;
 
-	UIFont *v_font = getMediumFont();
-	if(v_font != NULL) {
-	  UITextDraw::getTextExt(v_font,pMsg->Text,&x1,&y1,&x2,&y2);
-	  UITextDraw::printRaw(v_font,400 - (x2-x1)/2,pMsg->Pos[1]*600,pMsg->Text,MAKE_COLOR(255,255,255,pMsg->nAlpha));
-	}
+  UIFont *v_font = getMediumFont();
+  if(v_font != NULL) {
+    UITextDraw::getTextExt(v_font,pMsg->Text,&x1,&y1,&x2,&y2);
+    UITextDraw::printRaw(v_font,400 - (x2-x1)/2,pMsg->Pos[1]*600,pMsg->Text,MAKE_COLOR(255,255,255,pMsg->nAlpha));
+  }
       }
     }
   }
@@ -854,30 +878,30 @@ namespace vapp {
 
       switch(pEnt->Type) {
         case ET_SPRITE:
-	        /* Middleground? (not foreground, not background) */
-	        if(pEnt->fSpriteZ == 0.0f && !bForeground && !bBackground) {
-	          _RenderSprite(pEnt);	
-	        } 
-	        else {
-	          /* In front? */
-	          if(pEnt->fSpriteZ > 0.0f && bForeground) {
-	            _RenderSprite(pEnt);
-	          } 
-	          else {
-	            /* Those in back? */
-	            if(pEnt->fSpriteZ < 0.0f && bBackground) {
-	              _RenderSprite(pEnt);
-	            }
-	          }
-	        }
-	        break;
+          /* Middleground? (not foreground, not background) */
+          if(pEnt->fSpriteZ == 0.0f && !bForeground && !bBackground) {
+            _RenderSprite(pEnt);  
+          } 
+          else {
+            /* In front? */
+            if(pEnt->fSpriteZ > 0.0f && bForeground) {
+              _RenderSprite(pEnt);
+            } 
+            else {
+              /* Those in back? */
+              if(pEnt->fSpriteZ < 0.0f && bBackground) {
+                _RenderSprite(pEnt);
+              }
+            }
+          }
+          break;
         case ET_WRECKER:
         case ET_ENDOFLEVEL:
         case ET_STRAWBERRY:
-	        if(!bForeground && !bBackground) {
-	          _RenderSprite(pEnt);
-	        }
-	        break;
+          if(!bForeground && !bBackground) {
+            _RenderSprite(pEnt);
+          }
+          break;
       }
     }
   }
@@ -899,80 +923,80 @@ namespace vapp {
 
       switch(pSprite->Type) {
       case ET_SPRITE:
-	v_sprite_type = pSprite->SpriteType;
-	break;
+  v_sprite_type = pSprite->SpriteType;
+  break;
       case ET_WRECKER:
-	v_sprite_type = "Wrecker";
-	break;
+  v_sprite_type = "Wrecker";
+  break;
       case ET_ENDOFLEVEL:
-	v_sprite_type = "Flower";
-	break;
+  v_sprite_type = "Flower";
+  break;
       case ET_STRAWBERRY:
-	v_sprite_type = "Strawberry";
-	break;
+  v_sprite_type = "Strawberry";
+  break;
       }
 
       /* search the sprite as an animation */
       v_animationSpriteType = (AnimationSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_ANIMATION, v_sprite_type);
       /* if the sprite is not an animation, it's perhaps a decoration */
       if(v_animationSpriteType != NULL) {
-	v_spriteType = v_animationSpriteType;
-	v_centerX = v_animationSpriteType->getCenterX();
-	v_centerY = v_animationSpriteType->getCenterY();
+  v_spriteType = v_animationSpriteType;
+  v_centerX = v_animationSpriteType->getCenterX();
+  v_centerY = v_animationSpriteType->getCenterY();
 
-	if(pSprite->pSrc->fWidth > 0.0) {
-	  v_width  = pSprite->pSrc->fWidth;
-	  v_height = pSprite->pSrc->fHeight;
-	  v_centerX += (pSprite->pSrc->fWidth -v_animationSpriteType->getWidth())  / 2.0;
-	  v_centerY += (pSprite->pSrc->fHeight-v_animationSpriteType->getHeight()) / 2.0;	  
-	} else {
-	  v_width  = v_animationSpriteType->getWidth();
-	  v_height = v_animationSpriteType->getHeight();
-	}
+  if(pSprite->pSrc->fWidth > 0.0) {
+    v_width  = pSprite->pSrc->fWidth;
+    v_height = pSprite->pSrc->fHeight;
+    v_centerX += (pSprite->pSrc->fWidth -v_animationSpriteType->getWidth())  / 2.0;
+    v_centerY += (pSprite->pSrc->fHeight-v_animationSpriteType->getHeight()) / 2.0;   
+  } else {
+    v_width  = v_animationSpriteType->getWidth();
+    v_height = v_animationSpriteType->getHeight();
+  }
       } else {
-	v_decorationSpriteType = (DecorationSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_DECORATION, v_sprite_type);
-	v_spriteType = v_decorationSpriteType;
+  v_decorationSpriteType = (DecorationSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_DECORATION, v_sprite_type);
+  v_spriteType = v_decorationSpriteType;
 
-	if(v_decorationSpriteType != NULL) {
-	  v_centerX = v_decorationSpriteType->getCenterX();
-	  v_centerY = v_decorationSpriteType->getCenterY();
+  if(v_decorationSpriteType != NULL) {
+    v_centerX = v_decorationSpriteType->getCenterX();
+    v_centerY = v_decorationSpriteType->getCenterY();
 
-	  if(pSprite->pSrc->fWidth  > 0.0) {
-	    v_width  = pSprite->pSrc->fWidth;
-	    v_height = pSprite->pSrc->fHeight;
-	    /* adjust */
-	    v_centerX += (pSprite->pSrc->fWidth -v_decorationSpriteType->getWidth())  / 2.0;
-	    v_centerY += (pSprite->pSrc->fHeight-v_decorationSpriteType->getHeight()) / 2.0;
-	  } else {
-	    /* use the theme values */
-	    v_width  = v_decorationSpriteType->getWidth();
-	    v_height = v_decorationSpriteType->getHeight();
-	  }
-	}
+    if(pSprite->pSrc->fWidth  > 0.0) {
+      v_width  = pSprite->pSrc->fWidth;
+      v_height = pSprite->pSrc->fHeight;
+      /* adjust */
+      v_centerX += (pSprite->pSrc->fWidth -v_decorationSpriteType->getWidth())  / 2.0;
+      v_centerY += (pSprite->pSrc->fHeight-v_decorationSpriteType->getHeight()) / 2.0;
+    } else {
+      /* use the theme values */
+      v_width  = v_decorationSpriteType->getWidth();
+      v_height = v_decorationSpriteType->getHeight();
+    }
+  }
       }
 
       if(v_spriteType != NULL) {
-	/* Draw it */
-	Vector2f p0,p1,p2,p3;
-	
-	p0 = Vector2f(pSprite->Pos.x,pSprite->Pos.y) +
-	  Vector2f(-v_centerX,-v_centerY);
-	p1 = Vector2f(pSprite->Pos.x+v_width,pSprite->Pos.y) +
-	  Vector2f(-v_centerX,-v_centerY);
-	p2 = Vector2f(pSprite->Pos.x+v_width,pSprite->Pos.y+v_height) +
-	  Vector2f(-v_centerX,-v_centerY);
-	p3 = Vector2f(pSprite->Pos.x,pSprite->Pos.y+v_height) +
-	  Vector2f(-v_centerX,-v_centerY);
-	
-	if(v_spriteType->getBlendMode() == SPRITE_BLENDMODE_ADDITIVE) {
-	  _RenderAdditiveBlendedSection(v_spriteType->getTexture(),p0,p1,p2,p3);      
-	}
-	else {
-	  glEnable(GL_ALPHA_TEST);
-	  glAlphaFunc(GL_GEQUAL,0.5f);      
-	  _RenderAlphaBlendedSection(v_spriteType->getTexture(),p0,p1,p2,p3);      
-	  glDisable(GL_ALPHA_TEST);
-	}
+  /* Draw it */
+  Vector2f p0,p1,p2,p3;
+  
+  p0 = Vector2f(pSprite->Pos.x,pSprite->Pos.y) +
+    Vector2f(-v_centerX,-v_centerY);
+  p1 = Vector2f(pSprite->Pos.x+v_width,pSprite->Pos.y) +
+    Vector2f(-v_centerX,-v_centerY);
+  p2 = Vector2f(pSprite->Pos.x+v_width,pSprite->Pos.y+v_height) +
+    Vector2f(-v_centerX,-v_centerY);
+  p3 = Vector2f(pSprite->Pos.x,pSprite->Pos.y+v_height) +
+    Vector2f(-v_centerX,-v_centerY);
+  
+  if(v_spriteType->getBlendMode() == SPRITE_BLENDMODE_ADDITIVE) {
+    _RenderAdditiveBlendedSection(v_spriteType->getTexture(),p0,p1,p2,p3);      
+  }
+  else {
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GEQUAL,0.5f);      
+    _RenderAlphaBlendedSection(v_spriteType->getTexture(),p0,p1,p2,p3);      
+    glDisable(GL_ALPHA_TEST);
+  }
       }    
     }
     /* If this is debug-mode, also draw entity's area of effect */
@@ -982,17 +1006,17 @@ namespace vapp {
       
       switch(pSprite->Type) {
       case ET_WRECKER:
-	v_color = MAKE_COLOR(80,80,80,0);
-	break;
+  v_color = MAKE_COLOR(80,80,80,0);
+  break;
       case ET_ENDOFLEVEL:
-	v_color = MAKE_COLOR(255,255,255,0);
-	break;
+  v_color = MAKE_COLOR(255,255,255,0);
+  break;
       case ET_STRAWBERRY:
-	v_color = MAKE_COLOR(255,0,0,0);
-	break;
+  v_color = MAKE_COLOR(255,0,0,0);
+  break;
       default:
-	v_color = MAKE_COLOR(255,0,255,0);
-	break;
+  v_color = MAKE_COLOR(255,0,255,0);
+  break;
       }
 
       _RenderCircle(20, v_color, C, pSprite->fSize);
@@ -1005,58 +1029,58 @@ namespace vapp {
   void GameRenderer::_RenderDynamicBlocks(bool bBackground) {
     MotoGame *pGame = getGameObject();
 
-		/* Render all dynamic blocks */
-	  std::vector<DynamicBlock *> &Blocks = getGameObject()->getDynBlocks();
+    /* Render all dynamic blocks */
+    std::vector<DynamicBlock *> &Blocks = getGameObject()->getDynBlocks();
 
-		for(int i=0;i<Blocks.size();i++) {						
-		  /* Are we rendering background blocks or what? */
-		  if(Blocks[i]->bBackground != bBackground) continue;
-		  
-			/* Build rotation matrix for block */
-			float fR[4]; 
-			fR[0] = cos(Blocks[i]->fRotation); fR[1] = -sin(Blocks[i]->fRotation);
-			fR[2] = sin(Blocks[i]->fRotation); fR[3] = cos(Blocks[i]->fRotation);
-			
-			/* Determine texture... this is so ingredibly ugly... TODO: no string lookups here */
-			Texture *pTexture = NULL;
-			if(!m_bUglyMode) {
-			  Sprite *pSprite;
-			  pSprite = getParent()->m_theme.getSprite(SPRITE_TYPE_TEXTURE, Blocks[i]->pSrcBlock->Texture);
-			  if(pSprite != NULL) {
-			    pTexture = pSprite->getTexture();
-			  }
-			}
-			GLuint GLName = 0;
-			if(pTexture != NULL) GLName = pTexture->nID;
+    for(int i=0;i<Blocks.size();i++) {            
+      /* Are we rendering background blocks or what? */
+      if(Blocks[i]->bBackground != bBackground) continue;
+      
+      /* Build rotation matrix for block */
+      float fR[4]; 
+      fR[0] = cos(Blocks[i]->fRotation); fR[1] = -sin(Blocks[i]->fRotation);
+      fR[2] = sin(Blocks[i]->fRotation); fR[3] = cos(Blocks[i]->fRotation);
+      
+      /* Determine texture... this is so ingredibly ugly... TODO: no string lookups here */
+      Texture *pTexture = NULL;
+      if(!m_bUglyMode) {
+        Sprite *pSprite;
+        pSprite = getParent()->m_theme.getSprite(SPRITE_TYPE_TEXTURE, Blocks[i]->pSrcBlock->Texture);
+        if(pSprite != NULL) {
+          pTexture = pSprite->getTexture();
+        }
+      }
+      GLuint GLName = 0;
+      if(pTexture != NULL) GLName = pTexture->nID;
 
-			for(int j=0;j<Blocks[i]->ConvexBlocks.size();j++) {				
-			  if(!m_bUglyMode) {
-  		    glBindTexture(GL_TEXTURE_2D,GLName);				  				  
-				  glEnable(GL_TEXTURE_2D);      
-				  glBegin(GL_POLYGON);
-				}
-				else
-  				glBegin(GL_LINE_LOOP);
-				
-				glColor3f(1,1,1);				  
-				for(int k=0;k<Blocks[i]->ConvexBlocks[j]->Vertices.size();k++) {				    
-				  ConvexBlockVertex *pVertex = Blocks[i]->ConvexBlocks[j]->Vertices[k];
+      for(int j=0;j<Blocks[i]->ConvexBlocks.size();j++) {       
+        if(!m_bUglyMode) {
+          glBindTexture(GL_TEXTURE_2D,GLName);                    
+          glEnable(GL_TEXTURE_2D);      
+          glBegin(GL_POLYGON);
+        }
+        else
+          glBegin(GL_LINE_LOOP);
+        
+        glColor3f(1,1,1);         
+        for(int k=0;k<Blocks[i]->ConvexBlocks[j]->Vertices.size();k++) {            
+          ConvexBlockVertex *pVertex = Blocks[i]->ConvexBlocks[j]->Vertices[k];
 
-				  /* Transform vertex */
-				  Vector2f Tv = Vector2f(pVertex->P.x * fR[0] + pVertex->P.y * fR[1],
-				                          pVertex->P.x * fR[2] + pVertex->P.y * fR[3]);
-          Tv += Blocks[i]->Position;				                          
-            				  
-				  /* Put vertex */
-				  if(!m_bUglyMode) glTexCoord2f(pVertex->T.x,pVertex->T.y);
-				  
-				  glVertex2f(Tv.x,Tv.y);
-				}
-				glEnd();	            
-				
-				if(!m_bUglyMode) glDisable(GL_TEXTURE_2D);
-			}
-		}		  
+          /* Transform vertex */
+          Vector2f Tv = Vector2f(pVertex->P.x * fR[0] + pVertex->P.y * fR[1],
+                                  pVertex->P.x * fR[2] + pVertex->P.y * fR[3]);
+          Tv += Blocks[i]->Position;                                  
+                      
+          /* Put vertex */
+          if(!m_bUglyMode) glTexCoord2f(pVertex->T.x,pVertex->T.y);
+          
+          glVertex2f(Tv.x,Tv.y);
+        }
+        glEnd();              
+        
+        if(!m_bUglyMode) glDisable(GL_TEXTURE_2D);
+      }
+    }     
   }
        
   /*===========================================================================
@@ -1065,155 +1089,155 @@ namespace vapp {
   void GameRenderer::_RenderBlocks(void) {
     MotoGame *pGame = getGameObject();
 
-		/* Ugly mode? */
-		if(m_bUglyMode) {
-			/* Render all non-background blocks */
-	    std::vector<LevelBlock *> &Blocks = getGameObject()->getLevelSrc()->getBlockList();
-	
-			for(int i=0;i<Blocks.size();i++) {
-				if(!Blocks[i]->bBackground && !Blocks[i]->bDynamic) {
-					glBegin(GL_LINE_LOOP);
-					glColor3f(1,1,1);
-					for(int j=0;j<Blocks[i]->Vertices.size();j++) {
-						glVertex2f(Blocks[i]->Vertices[j]->fX + Blocks[i]->fPosX,
-						           Blocks[i]->Vertices[j]->fY + Blocks[i]->fPosY);
-					}
-					glEnd();
-				}
-			}
-			
-			/* Also render the level limits */
-			glBegin(GL_LINE_LOOP);
-			glColor3f(1,1,1);
-			glVertex2f(getGameObject()->getLevelSrc()->getLeftLimit(),getGameObject()->getLevelSrc()->getTopLimit());
-			glVertex2f(getGameObject()->getLevelSrc()->getRightLimit(),getGameObject()->getLevelSrc()->getTopLimit());
-			glVertex2f(getGameObject()->getLevelSrc()->getRightLimit(),getGameObject()->getLevelSrc()->getBottomLimit());
-			glVertex2f(getGameObject()->getLevelSrc()->getLeftLimit(),getGameObject()->getLevelSrc()->getBottomLimit());
-			glEnd();
-		}
-		else {
-			/* Render all non-background blocks */
-			/* Static geoms... */
-			for(int i=0;i<m_Geoms.size();i++) {
-			  if(m_Geoms[i]->pTexture != NULL) {
-			    glBindTexture(GL_TEXTURE_2D,m_Geoms[i]->pTexture->nID);
-			  } else {
-			    glBindTexture(GL_TEXTURE_2D,0);	/* no texture */
-			  }			    
+    /* Ugly mode? */
+    if(m_bUglyMode) {
+      /* Render all non-background blocks */
+      std::vector<LevelBlock *> &Blocks = getGameObject()->getLevelSrc()->getBlockList();
+  
+      for(int i=0;i<Blocks.size();i++) {
+        if(!Blocks[i]->bBackground && !Blocks[i]->bDynamic) {
+          glBegin(GL_LINE_LOOP);
+          glColor3f(1,1,1);
+          for(int j=0;j<Blocks[i]->Vertices.size();j++) {
+            glVertex2f(Blocks[i]->Vertices[j]->fX + Blocks[i]->fPosX,
+                       Blocks[i]->Vertices[j]->fY + Blocks[i]->fPosY);
+          }
+          glEnd();
+        }
+      }
+      
+      /* Also render the level limits */
+      glBegin(GL_LINE_LOOP);
+      glColor3f(1,1,1);
+      glVertex2f(getGameObject()->getLevelSrc()->getLeftLimit(),getGameObject()->getLevelSrc()->getTopLimit());
+      glVertex2f(getGameObject()->getLevelSrc()->getRightLimit(),getGameObject()->getLevelSrc()->getTopLimit());
+      glVertex2f(getGameObject()->getLevelSrc()->getRightLimit(),getGameObject()->getLevelSrc()->getBottomLimit());
+      glVertex2f(getGameObject()->getLevelSrc()->getLeftLimit(),getGameObject()->getLevelSrc()->getBottomLimit());
+      glEnd();
+    }
+    else {
+      /* Render all non-background blocks */
+      /* Static geoms... */
+      for(int i=0;i<m_Geoms.size();i++) {
+        if(m_Geoms[i]->pTexture != NULL) {
+          glBindTexture(GL_TEXTURE_2D,m_Geoms[i]->pTexture->nID);
+        } else {
+          glBindTexture(GL_TEXTURE_2D,0); /* no texture */
+        }         
 
-				glEnable(GL_TEXTURE_2D);      
-				glColor3f(1,1,1);
-	      
-				/* VBO optimized? */
-				if(getParent()->useVBOs()) {
-					for(int j=0;j<m_Geoms[i]->Polys.size();j++) {          
-						StaticGeomPoly *pPoly = m_Geoms[i]->Polys[j];
-						getParent()->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nVertexBufferID);
-						glVertexPointer(2,GL_FLOAT,0,(char *)NULL);
-						getParent()->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nTexCoordBufferID);
-						glTexCoordPointer(2,GL_FLOAT,0,(char *)NULL);
-						glDrawArrays(GL_POLYGON,0,pPoly->nNumVertices);
-					}      
-				}
-				else {
-					for(int j=0;j<m_Geoms[i]->Polys.size();j++) {          
-						glBegin(GL_POLYGON);
-						glColor3f(1,1,1);
-						for(int k=0;k<m_Geoms[i]->Polys[j]->nNumVertices;k++) {
-							glTexCoord2f(m_Geoms[i]->Polys[j]->pTexCoords[k].x,m_Geoms[i]->Polys[j]->pTexCoords[k].y);
-							glVertex2f(m_Geoms[i]->Polys[j]->pVertices[k].x,m_Geoms[i]->Polys[j]->pVertices[k].y);
-						}
-						glEnd();
-					}
-				}
-	            
-				glDisable(GL_TEXTURE_2D);
-			}
-	    
-			/* Render all special edges (if quality!=low) */
-			if(m_Quality != GQ_LOW) {
-				for(int i=0;i<pGame->getOverlayEdges().size();i++) {
-					OverlayEdge *pEdge = pGame->getOverlayEdges()[i];
-	        
-					switch(pEdge->Effect) {
-						case EE_GRASS:
-						case EE_GRASSALT:
-						case EE_BLUEBRICKS:
-						case EE_GRAYBRICKS:
-						case EE_REDBRICKS: {
-						    GLuint GLName = 0;
-						    float fXScale,fDepth;
-						    if(pEdge->Effect == EE_GRASS) {						    
-						      EffectSprite* pType;
-						      pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "EdgeGrass1");
-						      if(pType != NULL) {
-							      GLName = pType->getTexture()->nID;
-							      fXScale = 0.5f;
-							      fDepth = 0.3;
-						      }
-						    }
-						    else if(pEdge->Effect == EE_GRASSALT) {						    
-						      EffectSprite* pType;
-						      pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "EdgeGrassAlt1");
-						      if(pType != NULL) {
-							      GLName = pType->getTexture()->nID;
-							      fXScale = 0.5f;
-							      fDepth = 0.6;
-						      }
-						    }
-						    else if(pEdge->Effect == EE_REDBRICKS) {						    
-						      EffectSprite* pType;
-						      pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "EdgeRedBricks1");
-						      if(pType != NULL) {
-							      GLName = pType->getTexture()->nID;
-							      fXScale = 0.8f;
-							      fDepth = 0.3;
-						      }
-						    }						
-						    else if(pEdge->Effect == EE_GRAYBRICKS) {
-						      EffectSprite* pType;
-						      pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "EdgeGrayBricks1");
-						      if(pType != NULL) {
-							      GLName = pType->getTexture()->nID;
-							      fXScale = 0.8f;
-							      fDepth = 0.3;
-						      }
-						    }
-						    else if(pEdge->Effect == EE_BLUEBRICKS) {
-						      EffectSprite* pType;
-						      pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "EdgeBlueBricks1");
-						      if(pType != NULL) {
-							      GLName = pType->getTexture()->nID;
-							      fXScale = 0.8f;
-							      fDepth = 0.3;
-						      }
-						    }
-						
-							  if(GLName != 0) {
-								  glEnable(GL_BLEND); 
-								  glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
-								  glBindTexture(GL_TEXTURE_2D,GLName);
-								  glEnable(GL_TEXTURE_2D);
-								  glBegin(GL_POLYGON);
-								  glColor3f(1,1,1);
-								  glTexCoord2f((pEdge->pSrcBlock->fPosX+pEdge->P1.x)*fXScale,0.01);
-								  _Vertex(pEdge->P1 + Vector2f(pEdge->pSrcBlock->fPosX,pEdge->pSrcBlock->fPosY));
-								  glTexCoord2f((pEdge->pSrcBlock->fPosX+pEdge->P2.x)*fXScale,0.01);
-								  _Vertex(pEdge->P2 + Vector2f(pEdge->pSrcBlock->fPosX,pEdge->pSrcBlock->fPosY));
-								  glTexCoord2f((pEdge->pSrcBlock->fPosX+pEdge->P2.x)*fXScale,0.99);
-								  _Vertex(pEdge->P2 + Vector2f(pEdge->pSrcBlock->fPosX,pEdge->pSrcBlock->fPosY) + Vector2f(0,-fDepth));
-								  glTexCoord2f((pEdge->pSrcBlock->fPosX+pEdge->P1.x)*fXScale,0.99);
-								  _Vertex(pEdge->P1 + Vector2f(pEdge->pSrcBlock->fPosX,pEdge->pSrcBlock->fPosY) + Vector2f(0,-fDepth));
-								  glEnd();
-								  glDisable(GL_TEXTURE_2D);
-								  glDisable(GL_BLEND);
-							  }
-							}
-							break;
-					}
-				}
-			}
-		}
+        glEnable(GL_TEXTURE_2D);      
+        glColor3f(1,1,1);
+        
+        /* VBO optimized? */
+        if(getParent()->useVBOs()) {
+          for(int j=0;j<m_Geoms[i]->Polys.size();j++) {          
+            StaticGeomPoly *pPoly = m_Geoms[i]->Polys[j];
+            getParent()->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nVertexBufferID);
+            glVertexPointer(2,GL_FLOAT,0,(char *)NULL);
+            getParent()->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nTexCoordBufferID);
+            glTexCoordPointer(2,GL_FLOAT,0,(char *)NULL);
+            glDrawArrays(GL_POLYGON,0,pPoly->nNumVertices);
+          }      
+        }
+        else {
+          for(int j=0;j<m_Geoms[i]->Polys.size();j++) {          
+            glBegin(GL_POLYGON);
+            glColor3f(1,1,1);
+            for(int k=0;k<m_Geoms[i]->Polys[j]->nNumVertices;k++) {
+              glTexCoord2f(m_Geoms[i]->Polys[j]->pTexCoords[k].x,m_Geoms[i]->Polys[j]->pTexCoords[k].y);
+              glVertex2f(m_Geoms[i]->Polys[j]->pVertices[k].x,m_Geoms[i]->Polys[j]->pVertices[k].y);
+            }
+            glEnd();
+          }
+        }
+              
+        glDisable(GL_TEXTURE_2D);
+      }
+      
+      /* Render all special edges (if quality!=low) */
+      if(m_Quality != GQ_LOW) {
+        for(int i=0;i<pGame->getOverlayEdges().size();i++) {
+          OverlayEdge *pEdge = pGame->getOverlayEdges()[i];
+          
+          switch(pEdge->Effect) {
+            case EE_GRASS:
+            case EE_GRASSALT:
+            case EE_BLUEBRICKS:
+            case EE_GRAYBRICKS:
+            case EE_REDBRICKS: {
+                GLuint GLName = 0;
+                float fXScale,fDepth;
+                if(pEdge->Effect == EE_GRASS) {               
+                  EffectSprite* pType;
+                  pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "EdgeGrass1");
+                  if(pType != NULL) {
+                    GLName = pType->getTexture()->nID;
+                    fXScale = 0.5f;
+                    fDepth = 0.3;
+                  }
+                }
+                else if(pEdge->Effect == EE_GRASSALT) {               
+                  EffectSprite* pType;
+                  pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "EdgeGrassAlt1");
+                  if(pType != NULL) {
+                    GLName = pType->getTexture()->nID;
+                    fXScale = 0.5f;
+                    fDepth = 0.6;
+                  }
+                }
+                else if(pEdge->Effect == EE_REDBRICKS) {                
+                  EffectSprite* pType;
+                  pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "EdgeRedBricks1");
+                  if(pType != NULL) {
+                    GLName = pType->getTexture()->nID;
+                    fXScale = 0.8f;
+                    fDepth = 0.3;
+                  }
+                }           
+                else if(pEdge->Effect == EE_GRAYBRICKS) {
+                  EffectSprite* pType;
+                  pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "EdgeGrayBricks1");
+                  if(pType != NULL) {
+                    GLName = pType->getTexture()->nID;
+                    fXScale = 0.8f;
+                    fDepth = 0.3;
+                  }
+                }
+                else if(pEdge->Effect == EE_BLUEBRICKS) {
+                  EffectSprite* pType;
+                  pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "EdgeBlueBricks1");
+                  if(pType != NULL) {
+                    GLName = pType->getTexture()->nID;
+                    fXScale = 0.8f;
+                    fDepth = 0.3;
+                  }
+                }
+            
+                if(GLName != 0) {
+                  glEnable(GL_BLEND); 
+                  glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
+                  glBindTexture(GL_TEXTURE_2D,GLName);
+                  glEnable(GL_TEXTURE_2D);
+                  glBegin(GL_POLYGON);
+                  glColor3f(1,1,1);
+                  glTexCoord2f((pEdge->pSrcBlock->fPosX+pEdge->P1.x)*fXScale,0.01);
+                  _Vertex(pEdge->P1 + Vector2f(pEdge->pSrcBlock->fPosX,pEdge->pSrcBlock->fPosY));
+                  glTexCoord2f((pEdge->pSrcBlock->fPosX+pEdge->P2.x)*fXScale,0.01);
+                  _Vertex(pEdge->P2 + Vector2f(pEdge->pSrcBlock->fPosX,pEdge->pSrcBlock->fPosY));
+                  glTexCoord2f((pEdge->pSrcBlock->fPosX+pEdge->P2.x)*fXScale,0.99);
+                  _Vertex(pEdge->P2 + Vector2f(pEdge->pSrcBlock->fPosX,pEdge->pSrcBlock->fPosY) + Vector2f(0,-fDepth));
+                  glTexCoord2f((pEdge->pSrcBlock->fPosX+pEdge->P1.x)*fXScale,0.99);
+                  _Vertex(pEdge->P1 + Vector2f(pEdge->pSrcBlock->fPosX,pEdge->pSrcBlock->fPosY) + Vector2f(0,-fDepth));
+                  glEnd();
+                  glDisable(GL_TEXTURE_2D);
+                  glDisable(GL_BLEND);
+                }
+              }
+              break;
+          }
+        }
+      }
+    }
   }  
 
   /*===========================================================================
@@ -1233,13 +1257,13 @@ namespace vapp {
         glEnable(GL_TEXTURE_2D);
         glBegin(GL_POLYGON);   
         glColor3f(1,1,1);   
-        glTexCoord2f(-m_Scroll.x*0.015,m_Scroll.y*0.015);
+        glTexCoord2f(getCameraPositionX()*0.015,-getCameraPositionY()*0.015);
         getParent()->glVertex(0,0);
-        glTexCoord2f(-m_Scroll.x*0.015+0.5,m_Scroll.y*0.015);
+        glTexCoord2f(getCameraPositionX()*0.015+0.5,-getCameraPositionY()*0.015);
         getParent()->glVertex(getParent()->getDispWidth(),0);
-        glTexCoord2f(-m_Scroll.x*0.015+0.5,m_Scroll.y*0.015+0.5);
+        glTexCoord2f(getCameraPositionX()*0.015+0.5,-getCameraPositionY()*0.015+0.5);
         getParent()->glVertex(getParent()->getDispWidth(),getParent()->getDispHeight());
-        glTexCoord2f(-m_Scroll.x*0.015,m_Scroll.y*0.015+0.5);
+        glTexCoord2f(getCameraPositionX()*0.015,-getCameraPositionY()*0.015+0.5);
         getParent()->glVertex(0,getParent()->getDispHeight());
         glEnd();
         glDisable(GL_TEXTURE_2D); 
@@ -1253,19 +1277,19 @@ namespace vapp {
         glEnable(GL_TEXTURE_2D);
         glBegin(GL_POLYGON);   
         glColor3f(1,1,1);   
-        glTexCoord2f(-m_Scroll.x*0.015,m_Scroll.y*0.015);
+        glTexCoord2f(getCameraPositionX()*0.015,-getCameraPositionY()*0.015);
         getParent()->glVertex(0,0);
-        glTexCoord2f(-m_Scroll.x*0.015+0.65,m_Scroll.y*0.015);
+        glTexCoord2f(getCameraPositionX()*0.015+0.65,-getCameraPositionY()*0.015);
         getParent()->glVertex(getParent()->getDispWidth(),0);
-        glTexCoord2f(-m_Scroll.x*0.015+0.65,m_Scroll.y*0.015+0.65);
+        glTexCoord2f(getCameraPositionX()*0.015+0.65,-getCameraPositionY()*0.015+0.65);
         getParent()->glVertex(getParent()->getDispWidth(),getParent()->getDispHeight());
-        glTexCoord2f(-m_Scroll.x*0.015,m_Scroll.y*0.015+0.65);
+        glTexCoord2f(getCameraPositionX()*0.015,-getCameraPositionY()*0.015+0.65);
         getParent()->glVertex(0,getParent()->getDispHeight());
         glEnd();
         glDisable(GL_TEXTURE_2D); 
 
-	pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Sky2Drift");
-	if(pType != NULL && m_Quality == GQ_HIGH) {
+  pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Sky2Drift");
+  if(pType != NULL && m_Quality == GQ_HIGH) {
           glBindTexture(GL_TEXTURE_2D,pType->getTexture()->nID);
           glEnable(GL_TEXTURE_2D);
           glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
@@ -1274,13 +1298,13 @@ namespace vapp {
           glBegin(GL_POLYGON);   
           glColor4f(0.5,0.5,0.5,0.5f);   
           float fDrift = getParent()->getRealTime() / 25.0f;
-          glTexCoord2f(-m_Scroll.x*0.015 + fDrift,m_Scroll.y*0.015);
+          glTexCoord2f(getCameraPositionX()*0.015 + fDrift,-getCameraPositionY()*0.015);
           getParent()->glVertex(0,0);
-          glTexCoord2f(-m_Scroll.x*0.015+0.65 + fDrift,m_Scroll.y*0.015);
+          glTexCoord2f(getCameraPositionX()*0.015+0.65 + fDrift,-getCameraPositionY()*0.015);
           getParent()->glVertex(getParent()->getDispWidth(),0);
-          glTexCoord2f(-m_Scroll.x*0.015+0.65 + fDrift,m_Scroll.y*0.015+0.65);
+          glTexCoord2f(getCameraPositionX()*0.015+0.65 + fDrift,-getCameraPositionY()*0.015+0.65);
           getParent()->glVertex(getParent()->getDispWidth(),getParent()->getDispHeight());
-          glTexCoord2f(-m_Scroll.x*0.015 + fDrift,m_Scroll.y*0.015+0.65);
+          glTexCoord2f(getCameraPositionX()*0.015 + fDrift,-getCameraPositionY()*0.015+0.65);
           getParent()->glVertex(0,getParent()->getDispHeight());
           glEnd();
 
@@ -1289,13 +1313,13 @@ namespace vapp {
           glBegin(GL_POLYGON);   
           glColor3f(1,0.5,0.5);   
           fDrift = getParent()->getRealTime() / 15.0f;
-          glTexCoord2f(-m_Scroll.x*0.015 + fDrift,m_Scroll.y*0.015);
+          glTexCoord2f(getCameraPositionX()*0.015 + fDrift,-getCameraPositionY()*0.015);
           getParent()->glVertex(0,0);
-          glTexCoord2f(-m_Scroll.x*0.015+0.85 + fDrift,m_Scroll.y*0.015);
+          glTexCoord2f(getCameraPositionX()*0.015+0.85 + fDrift,-getCameraPositionY()*0.015);
           getParent()->glVertex(getParent()->getDispWidth(),0);
-          glTexCoord2f(-m_Scroll.x*0.015+0.85 + fDrift,m_Scroll.y*0.015+0.85);
+          glTexCoord2f(getCameraPositionX()*0.015+0.85 + fDrift,-getCameraPositionY()*0.015+0.85);
           getParent()->glVertex(getParent()->getDispWidth(),getParent()->getDispHeight());
-          glTexCoord2f(-m_Scroll.x*0.015 + fDrift,m_Scroll.y*0.015+0.85);
+          glTexCoord2f(getCameraPositionX()*0.015 + fDrift,-getCameraPositionY()*0.015+0.85);
           getParent()->glVertex(0,getParent()->getDispHeight());
           glEnd();
 
@@ -1327,13 +1351,13 @@ namespace vapp {
       pSprite = getParent()->m_theme.getSprite(SPRITE_TYPE_TEXTURE, Blocks[i]->pSrcBlock->Texture);
 
       if(pSprite != NULL) {
-	try {
-	  pTexture = pSprite->getTexture();
-	} catch(Exception &e) {
-	  pTexture = NULL;
-	}
+  try {
+    pTexture = pSprite->getTexture();
+  } catch(Exception &e) {
+    pTexture = NULL;
+  }
       } else {
-	pTexture = NULL;
+  pTexture = NULL;
       }
       if(pTexture != NULL) {GLName = pTexture->nID;}
     
@@ -1359,8 +1383,8 @@ namespace vapp {
   }
   
   void GameRenderer::_DbgText(Vector2f P,std::string Text,Color c) {
-    Vector2f Sp = Vector2f(getParent()->getDispWidth()/2 + (float)(P.x + m_Scroll.x)*m_fZoom,
-                           getParent()->getDispHeight()/2 - (float)(P.y + m_Scroll.y)*m_fZoom) -
+    Vector2f Sp = Vector2f(getParent()->getDispWidth()/2 + (float)(P.x - getCameraPositionX())*m_fZoom,
+                           getParent()->getDispHeight()/2 - (float)(P.y - getCameraPositionY())*m_fZoom) -
                   Vector2f(getParent()->getTextWidth(Text)/2.0f,getParent()->getTextHeight(Text)/2.0f);
     getParent()->drawText(Sp,Text,0,c,true);
   }   
@@ -1456,28 +1480,28 @@ namespace vapp {
   void GameRenderer::showReplayHelp(float p_speed, bool bAllowRewind) {
     if(bAllowRewind) {
       if(p_speed >= 10.0) {
-      	m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXT(String(">> 10")));
+        m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXT(String(">> 10")));
       } 
       else if(p_speed <= -10.0) {
-	      m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXT(String("<<-10")));
+        m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXT(String("<<-10")));
       } 
       else {
-	      char v_speed_str[5 + 1];
-	      sprintf(v_speed_str, "% .2f", p_speed);
-	      m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXT(String(v_speed_str)));
+        char v_speed_str[5 + 1];
+        sprintf(v_speed_str, "% .2f", p_speed);
+        m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXT(String(v_speed_str)));
       }
     } 
     else {
       if(p_speed >= 10.0) {
-	      m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXTNOREWIND(String(">> 10")));
+        m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXTNOREWIND(String(">> 10")));
       } 
       else if(p_speed <= -10.0) {
-	      m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXTNOREWIND(String("<<-10")));
+        m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXTNOREWIND(String("<<-10")));
       } 
       else {
-	      char v_speed_str[256];
-	      sprintf(v_speed_str, "% .2f", p_speed);
-	      m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXTNOREWIND(String(v_speed_str)));
+        char v_speed_str[256];
+        sprintf(v_speed_str, "% .2f", p_speed);
+        m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXTNOREWIND(String(v_speed_str)));
       }
     }
   }
@@ -1543,16 +1567,16 @@ namespace vapp {
       
       int nMinX,nMinY,nMaxX,nMaxY;
       if(m_pSFont != NULL) {
-	UITextDraw::getTextExt(m_pSFont,Text,&nMinX,&nMinY,&nMaxX,&nMaxY);
+  UITextDraw::getTextExt(m_pSFont,Text,&nMinX,&nMinY,&nMaxX,&nMaxY);
 
-	int nx = vx - (nMaxX - nMinX)/2;
-	int ny = vy;
-	UITextDraw::printRaw(m_pSFont,nx-1,ny-1,Text,MAKE_COLOR(0,0,0,GET_ALPHA(c)));
-	UITextDraw::printRaw(m_pSFont,nx+1,ny-1,Text,MAKE_COLOR(0,0,0,GET_ALPHA(c)));
-	UITextDraw::printRaw(m_pSFont,nx+1,ny+1,Text,MAKE_COLOR(0,0,0,GET_ALPHA(c)));
-	UITextDraw::printRaw(m_pSFont,nx-1,ny+1,Text,MAKE_COLOR(0,0,0,GET_ALPHA(c)));
-	UITextDraw::printRaw(m_pSFont,nx,ny,Text,c);
-      }	
+  int nx = vx - (nMaxX - nMinX)/2;
+  int ny = vy;
+  UITextDraw::printRaw(m_pSFont,nx-1,ny-1,Text,MAKE_COLOR(0,0,0,GET_ALPHA(c)));
+  UITextDraw::printRaw(m_pSFont,nx+1,ny-1,Text,MAKE_COLOR(0,0,0,GET_ALPHA(c)));
+  UITextDraw::printRaw(m_pSFont,nx+1,ny+1,Text,MAKE_COLOR(0,0,0,GET_ALPHA(c)));
+  UITextDraw::printRaw(m_pSFont,nx-1,ny+1,Text,MAKE_COLOR(0,0,0,GET_ALPHA(c)));
+  UITextDraw::printRaw(m_pSFont,nx,ny,Text,c);
+      } 
 
       glPopMatrix();
       glMatrixMode(GL_PROJECTION);

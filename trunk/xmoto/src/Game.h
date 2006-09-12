@@ -39,13 +39,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GUIXMoto.h"
 #include "Stats.h"
 
-#define PRESTART_ANIMATION_TIME        1.0
-#define PRESTART_ANIMATION_REDUCE_ZOOM 0.03
+#define PRESTART_ANIMATION_TIME 2.0
+#define PRESTART_STATIC_TIME    1.0
 
 namespace vapp {
 
-	/*===========================================================================
-	Overall game states
+  /*===========================================================================
+  Overall game states
   ===========================================================================*/
   enum GameState {
     GS_UNASSIGNED = 0,
@@ -64,8 +64,8 @@ namespace vapp {
 #endif
   };
 
-	/*===========================================================================
-	Menu background graphical settings
+  /*===========================================================================
+  Menu background graphical settings
   ===========================================================================*/
   enum MenuBackgroundGraphics {
     MENU_GFX_OFF,
@@ -82,8 +82,8 @@ namespace vapp {
   };
 #endif
 
-	/*===========================================================================
-	Level packs
+  /*===========================================================================
+  Level packs
   ===========================================================================*/
   struct LevelPack {
     std::string Name;
@@ -94,8 +94,8 @@ namespace vapp {
     bool bShowWebTimes;
   };
 
-	/*===========================================================================
-	Game application
+  /*===========================================================================
+  Game application
   ===========================================================================*/
   #if defined(SUPPORT_WEBACCESS)
   class GameApp : public App, public WWWAppInterface {
@@ -136,18 +136,18 @@ namespace vapp {
                  m_pReplay = NULL;
                  m_pMenuMusic = NULL;
 #if defined(ALLOW_GHOST)
-		 m_pGhostReplay = NULL;
-		 m_lastGhostReplay = "";
-		 GhostSearchStrategies[0] = GHOST_STRATEGY_MYBEST;
-		 GhostSearchStrategies[1] = GHOST_STRATEGY_THEBEST;
-		 GhostSearchStrategies[2] = GHOST_STRATEGY_BESTOFROOM;
-		 m_bEnableGhost = true;
-		 m_bShowGhostTimeDiff = true;
-		 m_GhostSearchStrategy = GHOST_STRATEGY_MYBEST;
+     m_pGhostReplay = NULL;
+     m_lastGhostReplay = "";
+     GhostSearchStrategies[0] = GHOST_STRATEGY_MYBEST;
+     GhostSearchStrategies[1] = GHOST_STRATEGY_THEBEST;
+     GhostSearchStrategies[2] = GHOST_STRATEGY_BESTOFROOM;
+     m_bEnableGhost = true;
+     m_bShowGhostTimeDiff = true;
+     m_GhostSearchStrategy = GHOST_STRATEGY_MYBEST;
                  m_bEnableGhostInfo = false;
                  m_bGhostMotionBlur = true;
 #endif
-		 m_bAutosaveHighscoreReplays = true;
+     m_bAutosaveHighscoreReplays = true;
                  m_bRecordReplays = true;
                  m_bShowCursor = true;
                  m_bEnableEngineSound = true;
@@ -158,26 +158,26 @@ namespace vapp {
 #if defined(SUPPORT_WEBACCESS)
                  m_bShowWebHighscoreInGame = false;
                  m_bEnableWebHighscores = true;
-		 m_pWebHighscores = NULL;
-		 m_pWebLevels = NULL;
-		 m_pWebRooms = NULL;
-		 m_fDownloadTaskProgressLast = 0;
-		 m_bWebHighscoresUpdatedThisSession = false;
-		 m_bWebLevelsToDownload = false;
+     m_pWebHighscores = NULL;
+     m_pWebLevels = NULL;
+     m_pWebRooms = NULL;
+     m_fDownloadTaskProgressLast = 0;
+     m_bWebHighscoresUpdatedThisSession = false;
+     m_bWebLevelsToDownload = false;
 
-		 m_bEnableCheckNewLevelsAtStartup  = true;
-		 m_bEnableCheckHighscoresAtStartup = true;
+     m_bEnableCheckNewLevelsAtStartup  = true;
+     m_bEnableCheckHighscoresAtStartup = true;
 #endif
-		 m_fLastSqueekTime = 0.0f;
+     m_fLastSqueekTime = 0.0f;
 
 
-		 m_Renderer.setTheme(&m_theme);
-		 m_MotoGame.setRenderer(&m_Renderer);
+     m_Renderer.setTheme(&m_theme);
+     m_MotoGame.setRenderer(&m_Renderer);
 
-		 m_currentThemeName = THEME_DEFAULT_THEMENAME;
+     m_currentThemeName = THEME_DEFAULT_THEMENAME;
 
-		 m_bPrePlayAnim = true;
-		 m_bShowEngineCounter = true;
+     m_bPrePlayAnim = true;
+     m_bShowEngineCounter = true;
                  }
                  
 #if defined(SUPPORT_WEBACCESS)                 
@@ -234,7 +234,7 @@ namespace vapp {
       bool m_bListReplays;                      /* true: list replays */
       bool m_bTimeDemo;                         /* true: (valid for replaying) - performance benchmark */
       bool m_bDebugMode;                        /* true: show debug info */
-      bool m_bUglyMode;													/* true: fast 'n ugly graphics */
+      bool m_bUglyMode;                         /* true: fast 'n ugly graphics */
       bool m_bShowEngineCounter;
 
       bool m_bTestThemeMode;
@@ -308,6 +308,8 @@ namespace vapp {
       float m_fPrePlayStartTime;
       bool m_bPrePlayAnim;
       float m_fPrePlayStartInitZoom;
+      float m_fPrePlayStartCameraX;
+      float m_fPrePlayStartCameraY;
 
       Stats m_GameStats;
       UIWindow *m_pStatsReport;
@@ -500,7 +502,7 @@ namespace vapp {
 
 #if defined(ALLOW_GHOST) 
       std::string _getGhostReplayPath(std::string p_levelId,
-				      GhostSearchStrategy p_strategy);
+              GhostSearchStrategy p_strategy);
 #endif
 
       void switchUglyMode(bool bUgly);
