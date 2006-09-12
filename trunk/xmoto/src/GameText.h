@@ -241,6 +241,8 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_SCRIPTED             _("Scripted")
 #define GAMETEXT_STARTLEVEL           _("Play!")
 #define GAMETEXT_STATISTICS           _("Statistics")
+#define GAMETEXT_STRAWBERRIES         _("Strawberries")
+#define GAMETEXT_STRAWBERRY           _("Strawberry")
 #define GAMETEXT_STATS                _("STATS")
 #define GAMETEXT_STEREO               _("Stereo")
 #define GAMETEXT_THEMES               _("Theme")

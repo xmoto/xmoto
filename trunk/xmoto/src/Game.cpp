@@ -353,7 +353,8 @@ namespace vapp {
   m_fPrePlayStartCameraY = m_Renderer.getCameraPositionY();
   m_fPrePlayNbStrawberriesDisplayed = false;
 
-    if(m_bPrePlayAnim && m_bUglyMode == false) {
+  if(m_bPrePlayAnim && m_bUglyMode == false) {
+    m_MotoGame.gameMessage(m_MotoGame.getLevelSrc()->getLevelInfo()->Name, false, PRESTART_ANIMATION_LEVEL_MSG_DURATION);
       /* m_MotoGame.gameMessage(GAMETEXT_READY, true, PRESTART_ANIMATION_TIME);*/
   }
       }
@@ -1284,11 +1285,15 @@ namespace vapp {
       float m_zoomU;
       float static_time;
 
-      if(m_fPrePlayNbStrawberriesDisplayed == false && getRealTime() - m_fPrePlayStartTime > 1.5) {
+      if(m_fPrePlayNbStrawberriesDisplayed == false && getRealTime() - m_fPrePlayStartTime > PRESTART_ANIMATION_TIME_BEFORE_NB_STRAWBERRIES) {
 	if(m_MotoGame.getNbRemainingStrawberries() > 0) {
 	  std::ostringstream nb_strawberries;
 	  nb_strawberries << m_MotoGame.getNbRemainingStrawberries();
-	  m_MotoGame.gameMessage(nb_strawberries.str()+" Strawberries", false, 0.5);
+	  if(m_MotoGame.getNbRemainingStrawberries() == 1) {
+	    m_MotoGame.gameMessage(nb_strawberries.str()+" "+ std::string(GAMETEXT_STRAWBERRY), false, PRESTART_ANIMATION_NB_STRAWBERRIES_MSG_DURATION);
+	  } else {
+	    m_MotoGame.gameMessage(nb_strawberries.str()+" "+ std::string(GAMETEXT_STRAWBERRIES), false, PRESTART_ANIMATION_NB_STRAWBERRIES_MSG_DURATION);
+	  }
 	  m_fPrePlayNbStrawberriesDisplayed = true;
 	}
       }
@@ -1307,7 +1312,7 @@ namespace vapp {
         setPrePlayAnim(false); // disable anim
         m_Renderer.setZoom(m_fPrePlayStartInitZoom);
         m_Renderer.setCameraPosition(m_fPrePlayStartCameraX, m_fPrePlayStartCameraY);
-        m_MotoGame.gameMessage(GAMETEXT_GO, true, 0.5);
+        m_MotoGame.gameMessage(GAMETEXT_GO, true, PRESTART_ANIMATION_GO_MSG_DURATION);
         setState(GS_PLAYING);
       } else if(getRealTime() > m_fPrePlayStartTime + static_time){
         float zx, zy, zz;
@@ -1335,7 +1340,6 @@ namespace vapp {
         m_Renderer.setCameraPosition(m_fPrePlayStartCameraX-zx, m_fPrePlayStartCameraY-zy);
       } else {
         m_Renderer.setZoom(m_zoomU);
-        m_MotoGame.gameMessage(m_MotoGame.getLevelSrc()->getLevelInfo()->Name, true, 1.0);
         /*m_Renderer.setCameraPosition((m_MotoGame.getLevelSrc()->getRightLimit() + m_MotoGame.getLevelSrc()->getLeftLimit())/2,
 	  (m_MotoGame.getLevelSrc()->getBottomLimit() + m_MotoGame.getLevelSrc()->getTopLimit())/2);*/
 	

@@ -1,4 +1,6 @@
 
+* animation prestart : a max duration, esc ou entree pour arreter l'animation
+
 ### for 0.2.2 and after
 
 * remove the "level packs" button, remove the "internal" and "external" tabs and replace them by "All levels" tab and "Level pack" tab and make internal level a pack
