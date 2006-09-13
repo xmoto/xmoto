@@ -467,7 +467,9 @@ namespace vapp {
     PFSpring = PFq * PHYS_RIDER_SPRING; 
     PFDamp = PFqv * PHYS_RIDER_DAMP;
     PFTotal = PFSpring + PFDamp;  
-    dBodyAddForce(m_PlayerFootAnchorBodyID2,PFTotal.x,PFTotal.y,0);
+    if(m_bodyDetach == false) {
+      dBodyAddForce(m_PlayerFootAnchorBodyID2,PFTotal.x,PFTotal.y,0);
+    }
     m_BikeS.PrevPFq2 = PFq;    
            
     PHq = HandRP - m_BikeS.Hand2P;
@@ -475,7 +477,9 @@ namespace vapp {
     PHSpring = PHq * PHYS_RIDER_SPRING; 
     PHDamp = PHqv * PHYS_RIDER_DAMP;
     PHTotal = PHSpring + PHDamp;  
-    dBodyAddForce(m_PlayerHandAnchorBodyID2,PHTotal.x,PHTotal.y,0);
+    if(m_bodyDetach == false) {
+      dBodyAddForce(m_PlayerHandAnchorBodyID2,PHTotal.x,PHTotal.y,0);
+    }
     m_BikeS.PrevPHq2 = PHq;    
        
     /* Perform world simulation step */
