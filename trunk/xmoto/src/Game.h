@@ -40,11 +40,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Stats.h"
 
 #define PRESTART_ANIMATION_TIME 2.0
-#define PRESTART_ANIMATION_TIME_BEFORE_NB_STRAWBERRIES  0.5
-#define PRESTART_ANIMATION_NB_STRAWBERRIES_MSG_DURATION 0.3
-#define PRESTART_ANIMATION_GO_MSG_DURATION              0.5
-#define PRESTART_ANIMATION_LEVEL_MSG_DURATION           1.0
-
+#define PRESTART_ANIMATION_LEVEL_MSG_DURATION 1.0
   
 namespace vapp {
 
@@ -316,7 +312,6 @@ namespace vapp {
       float m_fPrePlayStartInitZoom;
       float m_fPrePlayStartCameraX;
       float m_fPrePlayStartCameraY;
-      bool  m_fPrePlayNbStrawberriesDisplayed;
 
       Stats m_GameStats;
       UIWindow *m_pStatsReport;
@@ -514,6 +509,11 @@ namespace vapp {
 
       void switchUglyMode(bool bUgly);
       void switchTestThemeMode(bool mode);
+
+      void statePrestart_init();
+      void statePrestart_step();
+      void prestartAnimation_init();
+      void prestartAnimation_step();
   };
 
 }

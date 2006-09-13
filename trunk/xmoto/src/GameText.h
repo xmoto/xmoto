@@ -126,8 +126,6 @@ Central place to keep many in-game text strings
 #define GAMETEXT_GHOST_STRATEGY_THEBEST _("The best of the replays (on this computer)")
 #define GAMETEXT_GHOSTOF              _("Ghost of")
 #define GAMETEXT_GHOSTTAB             _("Ghost")
-#define GAMETEXT_READY                _("READY ?")
-#define GAMETEXT_GO                   _("GO")
 #define GAMETEXT_HELP                 _("Help")
 
 
@@ -241,8 +239,6 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_SCRIPTED             _("Scripted")
 #define GAMETEXT_STARTLEVEL           _("Play!")
 #define GAMETEXT_STATISTICS           _("Statistics")
-#define GAMETEXT_STRAWBERRIES         _("Strawberries")
-#define GAMETEXT_STRAWBERRY           _("Strawberry")
 #define GAMETEXT_STATS                _("STATS")
 #define GAMETEXT_STEREO               _("Stereo")
 #define GAMETEXT_THEMES               _("Theme")
