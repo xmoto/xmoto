@@ -1803,7 +1803,7 @@ namespace vapp {
   void MotoGame::killPlayer() {
     m_bDead = true;
     setBodyDetach(true);
-    stopEngine();
+    stopBikeControls();
   }
 
   void MotoGame::playerEntersZone(LevelZone *pZone) {
@@ -1882,7 +1882,9 @@ namespace vapp {
     m_bodyDetach = state;
   }
 
-  void MotoGame::stopEngine() {
-    m_BikeC.fDrive = 0.0f;
+  void MotoGame::stopBikeControls() {
+    m_BikeC.fDrive = 0.0f;      
+    m_BikeC.fPull = 0.0f;  
+    m_BikeC.bChangeDir = false;
   }
 }

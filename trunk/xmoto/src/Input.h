@@ -112,7 +112,7 @@ namespace vapp {
       
       void resetScriptKeyHooks(void) {m_nNumScriptKeyHooks = 0;}
       void addScriptKeyHook(MotoGame *pGame,const std::string &KeyName,const std::string &FuncName);
-      
+
       std::string getKeyByAction(const std::string &Action);
     
     private:
