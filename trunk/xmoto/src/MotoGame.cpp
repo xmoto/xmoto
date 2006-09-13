@@ -137,6 +137,8 @@ namespace vapp {
     
     bFrontWheelTouching = false;
     bRearWheelTouching  = false;
+
+    m_bodyDetach = false;
   }
   
   MotoGame::~MotoGame() {
@@ -660,7 +662,8 @@ namespace vapp {
     m_PlayerLLegBodyID2 = NULL;
     
     m_bDead = m_bFinished = false;
-      
+    setBodyDetach(false);
+
     m_lastCallToEveryHundreath = 0.0;
 
 #if defined(ALLOW_GHOST)
@@ -1797,6 +1800,7 @@ namespace vapp {
 
   void MotoGame::killPlayer() {
     m_bDead = true;
+    setBodyDetach(true);
   }
 
   void MotoGame::playerEntersZone(LevelZone *pZone) {
@@ -1869,5 +1873,9 @@ namespace vapp {
   void MotoGame::makePlayerWin() {
     m_bFinished = true;
     m_fFinishTime = getTime();
+  }
+
+  void MotoGame::setBodyDetach(bool state) {
+    m_bodyDetach = state;
   }
 }

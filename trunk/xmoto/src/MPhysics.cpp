@@ -443,16 +443,20 @@ namespace vapp {
     Vector2f PFqv = PFq - m_BikeS.PrevPFq;
     Vector2f PFSpring = PFq * PHYS_RIDER_SPRING; 
     Vector2f PFDamp = PFqv * PHYS_RIDER_DAMP;
-    Vector2f PFTotal = PFSpring + PFDamp;  
-    dBodyAddForce(m_PlayerFootAnchorBodyID,PFTotal.x,PFTotal.y,0);
+    Vector2f PFTotal = PFSpring + PFDamp;
+    if(m_bodyDetach == false) {
+      dBodyAddForce(m_PlayerFootAnchorBodyID,PFTotal.x,PFTotal.y,0);
+    }
     m_BikeS.PrevPFq = PFq;    
            
     Vector2f PHq = HandRP - m_BikeS.HandP;
     Vector2f PHqv = PHq - m_BikeS.PrevPHq;
     Vector2f PHSpring = PHq * PHYS_RIDER_SPRING; 
     Vector2f PHDamp = PHqv * PHYS_RIDER_DAMP;
-    Vector2f PHTotal = PHSpring + PHDamp;  
-    dBodyAddForce(m_PlayerHandAnchorBodyID,PHTotal.x,PHTotal.y,0);
+    Vector2f PHTotal = PHSpring + PHDamp;
+    if(m_bodyDetach == false) {
+      dBodyAddForce(m_PlayerHandAnchorBodyID,PHTotal.x,PHTotal.y,0);
+    }
     m_BikeS.PrevPHq = PHq;    
 
     FootRP = m_BikeS.WantedFoot2P;

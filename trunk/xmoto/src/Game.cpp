@@ -1116,33 +1116,33 @@ namespace vapp {
         int nPhysSteps = 0;
 
         /* Only do this when not paused */
-  if(m_State == GS_PREPLAYING) {
-    statePrestart_step();
-  } else if(m_State == GS_PLAYING) {
+	if(m_State == GS_PREPLAYING) {
+	  statePrestart_step();
+	} else if(m_State == GS_PLAYING || m_State == GS_JUSTDEAD) {
           /* Increase frame counter */
           m_nFrame++;
-
+	  
           /* Following time code is made by Eric Piel, but I took the liberty to change the minimum
              frame-miss number from 50 to 10, because it wasn't working well. */
-             
+	  
           /* reinitialise if we can't catch up */
           if (m_fLastPhysTime - getTime() < -0.1f)
             m_fLastPhysTime = getTime() - PHYS_STEP_SIZE;
-      
+	  
           /* Update game until we've catched up with the real time */
           do {
-                  m_MotoGame.updateLevel( PHYS_STEP_SIZE,NULL,m_pReplay );
+	    m_MotoGame.updateLevel( PHYS_STEP_SIZE,NULL,m_pReplay );
             m_fLastPhysTime += PHYS_STEP_SIZE;
             nPhysSteps++;
             /* don't do this infinitely, maximum miss 10 frames, then give up */
-
-      if(m_Config.getBool("LimitFramerate")) {
-        SDL_Delay(1);
-      }
-      
+	    
+	    if(m_Config.getBool("LimitFramerate")) {
+	      SDL_Delay(1);
+	    }
+	    
           } while ((m_fLastPhysTime + PHYS_STEP_SIZE <= getTime()) && (nPhysSteps < 10));
           
-//          printf("%d ",nPhysSteps);
+	  //          printf("%d ",nPhysSteps);
           m_Renderer.setSpeedMultiplier(nPhysSteps);
           
           if(!m_bTimeDemo) {
@@ -1151,7 +1151,7 @@ namespace vapp {
               while (m_fLastPhysTime > getTime());
             }
           }
-                    
+	  
           if(m_bEnableEngineSound) {
             /* Update engine RPM */
             m_EngineSound.setRPM( m_MotoGame.getBikeEngineRPM() ); 
@@ -1169,54 +1169,56 @@ namespace vapp {
 #if defined(ALLOW_GHOST)
           /* Read replay state */
           if(m_pGhostReplay != NULL) {
-      static SerializedBikeState GhostBikeState;
-      static SerializedBikeState previousGhostBikeState;
-
-      m_pGhostReplay->peekState(previousGhostBikeState);
-      if(previousGhostBikeState.fGameTime < m_MotoGame.getTime()
-         && m_pGhostReplay->endOfFile() == false) {
-        do {
-    m_pGhostReplay->loadState(GhostBikeState);
-        } while(GhostBikeState.fGameTime < m_MotoGame.getTime()
-          && m_pGhostReplay->endOfFile() == false);
-
-        if(m_nGhostFrame%2 || m_nGhostFrame==1) {
-    /* DONT INTERPOLATED FRAME */
-    m_MotoGame.UpdateGhostFromReplay(&GhostBikeState);
-        } else {
-    /* INTERPOLATED FRAME */
-    SerializedBikeState ibs;
-    m_MotoGame.interpolateGameState(&previousGhostBikeState,
-            &GhostBikeState,&ibs,0.5f);
-    m_MotoGame.UpdateGhostFromReplay(&ibs);
-        }
-        m_nGhostFrame++;
-      }
-    }
+	    static SerializedBikeState GhostBikeState;
+	    static SerializedBikeState previousGhostBikeState;
+	    
+	    m_pGhostReplay->peekState(previousGhostBikeState);
+	    if(previousGhostBikeState.fGameTime < m_MotoGame.getTime()
+	       && m_pGhostReplay->endOfFile() == false) {
+	      do {
+		m_pGhostReplay->loadState(GhostBikeState);
+	      } while(GhostBikeState.fGameTime < m_MotoGame.getTime()
+		      && m_pGhostReplay->endOfFile() == false);
+	      
+	      if(m_nGhostFrame%2 || m_nGhostFrame==1) {
+		/* DONT INTERPOLATED FRAME */
+		m_MotoGame.UpdateGhostFromReplay(&GhostBikeState);
+	      } else {
+		/* INTERPOLATED FRAME */
+		SerializedBikeState ibs;
+		m_MotoGame.interpolateGameState(&previousGhostBikeState,
+						&GhostBikeState,&ibs,0.5f);
+		m_MotoGame.UpdateGhostFromReplay(&ibs);
+	      }
+	      m_nGhostFrame++;
+	    }
+	  }
 #endif
-
-          /* We'd like to serialize the game state 25 times per second for the replay */
-          if(getRealTime() - m_fLastStateSerializationTime >= 1.0f/m_fReplayFrameRate) {
-            m_fLastStateSerializationTime = getRealTime();
-            
-            /* Get it */
-            SerializedBikeState BikeState;
-            m_MotoGame.getSerializedBikeState(&BikeState);
-            if(m_pReplay != NULL)
-              m_pReplay->storeState(BikeState);              
-          }
-        }
+	  
+	  if(m_State == GS_PLAYING) {
+	    /* We'd like to serialize the game state 25 times per second for the replay */
+	    if(getRealTime() - m_fLastStateSerializationTime >= 1.0f/m_fReplayFrameRate) {
+	      m_fLastStateSerializationTime = getRealTime();
+	      
+	      /* Get it */
+	      SerializedBikeState BikeState;
+	      m_MotoGame.getSerializedBikeState(&BikeState);
+	      if(m_pReplay != NULL)
+		m_pReplay->storeState(BikeState);              
+	    }
+	  }
+	}
         else if(m_State == GS_REPLAYING) {
           m_nFrame++;
-
+	  
           /* Read replay state */
           static SerializedBikeState BikeState;          
           if(m_pReplay != NULL) {       
             /* Even frame number: Read the next state */
             if(m_nFrame%2 || m_nFrame==1) {       
               /* REAL NON-INTERPOLATED FRAME */
-        if(m_pReplay->endOfFile() == false) {
-    m_pReplay->loadState(BikeState);
+	      if(m_pReplay->endOfFile() == false) {
+		m_pReplay->loadState(BikeState);
                 /* Update game */
                 m_MotoGame.updateLevel( PHYS_STEP_SIZE,&BikeState,m_pReplay ); 
                 
@@ -1235,15 +1237,15 @@ namespace vapp {
             else {                          
               /* INTERPOLATED FRAME */
               SerializedBikeState NextBikeState,ibs;
-        if(m_pReplay->endOfFile() == false) {
-    m_pReplay->peekState(NextBikeState);
-    /* Nice. Interpolate the states! */
-    m_MotoGame.interpolateGameState(&BikeState,&NextBikeState,&ibs,0.5f);
-
+	      if(m_pReplay->endOfFile() == false) {
+		m_pReplay->peekState(NextBikeState);
+		/* Nice. Interpolate the states! */
+		m_MotoGame.interpolateGameState(&BikeState,&NextBikeState,&ibs,0.5f);
+		
                 //printf("[%f, %f]  {%f, %f}  [%f, %f]\n",BikeState.fFrameX,BikeState.fFrameY,
                 //                                        ibs.fFrameX,ibs.fFrameY,
                 //                                        NextBikeState.fFrameX,NextBikeState.fFrameY);
-    
+		
                 /* Update game */
                 m_MotoGame.updateLevel( PHYS_STEP_SIZE,&ibs,m_pReplay );                 
               }
@@ -1265,27 +1267,27 @@ namespace vapp {
             m_Renderer.skipBackTime(100000);            
           }
         }
-                
+	
         /* Render */
         if(!isNoGraphics() && bValidGameState) {
           m_Renderer.render(bIsPaused);
-
+	  
           if(m_bShowMiniMap && m_bUglyMode == false) {
             if(m_MotoGame.getBikeState()->Dir == DD_LEFT &&
-         (m_bShowEngineCounter == false || m_State == GS_REPLAYING)) {
+	       (m_bShowEngineCounter == false || m_State == GS_REPLAYING)) {
               m_Renderer.renderMiniMap(getDispWidth()-150,getDispHeight()-100,150,100);
-      } else {
+	    } else {
               m_Renderer.renderMiniMap(0,getDispHeight()-100,150,100);
-      }
-          }              
-
-    if(m_bShowEngineCounter && m_bUglyMode == false && m_State != GS_REPLAYING) {
-      m_Renderer.renderEngineCounter(getDispWidth()-128, getDispHeight()-128,
-             128, 128,
-             m_MotoGame.getBikeEngineSpeed());
-    } 
+	    }
+          }             
+	  
+	  if(m_bShowEngineCounter && m_bUglyMode == false && m_State != GS_REPLAYING) {
+	    m_Renderer.renderEngineCounter(getDispWidth()-128, getDispHeight()-128,
+					   128, 128,
+					   m_MotoGame.getBikeEngineSpeed());
+	  } 
         }
-
+	
         /* Also only when not paused */
         if(m_State == GS_PLAYING) {        
           /* News? */
@@ -1315,7 +1317,7 @@ namespace vapp {
         }
         else if ((m_State == GS_FINISHED) || (m_State == GS_JUSTDEAD) || (m_State == GS_PAUSE)) {
           //SDL_Delay(10);
-          //setFrameDelay(10);
+          setFrameDelay(10);
         }
         else {
           /* become idle only if we hadn't to skip any frame, recently, and more globaly (80% of fps) */

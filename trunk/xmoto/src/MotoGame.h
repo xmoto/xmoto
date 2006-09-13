@@ -559,6 +559,8 @@ namespace vapp {
       unsigned int getNbRemainingStrawberries();
       void makePlayerWin();
 
+      void setBodyDetach(bool state);
+
   private:         
       /* Data */
       std::queue<MotoGameEvent*> m_GameEventQueue;
@@ -679,6 +681,8 @@ namespace vapp {
             
       dJointGroupID m_ContactGroup;       /* Contact joint group */     
       
+      bool m_bodyDetach;
+
       /* Teleport next frame? */
       bool m_bTeleport;
       GameReqPlayerPos m_TeleportDest; 
