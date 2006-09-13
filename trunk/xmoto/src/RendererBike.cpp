@@ -189,13 +189,15 @@ namespace vapp {
         p3 = pBike->RearWheelP - Vector2f(-Sv.y,Sv.x)*0.04f - Sv*0.05f;
       }
 
-      pSprite = p_theme->getFront();
-      if(pSprite != NULL) {
-	pTexture = pSprite->getTexture();
-	if(pTexture != NULL) {
-	  _RenderAlphaBlendedSection(pTexture,p3,p0,p1,p2);
-	}
-      }      
+      if(m_renderBikeFront) {
+	pSprite = p_theme->getFront();
+	if(pSprite != NULL) {
+	  pTexture = pSprite->getTexture();
+	  if(pTexture != NULL) {
+	    _RenderAlphaBlendedSection(pTexture,p3,p0,p1,p2);
+	  }
+	}    
+      }  
 
       /* Draw body/frame */
       o0 = Vector2f(-1,0.5);

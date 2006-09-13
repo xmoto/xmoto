@@ -1880,6 +1880,7 @@ namespace vapp {
 
   void MotoGame::setBodyDetach(bool state) {
     m_bodyDetach = state;
+    m_renderer->setRenderBikeFront(! m_bodyDetach);
   }
 
   void MotoGame::stopBikeControls() {
