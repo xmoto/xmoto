@@ -438,8 +438,10 @@ namespace vapp {
     /* Only make a full physics update when not replaying */
     if(pReplayState == NULL) {
       /* Update physics */
-      _UpdatePhysics(fTimeStep);          
-      executeEvents(p_replay);
+      _UpdatePhysics(fTimeStep);
+      if(isDead() == false) {
+	executeEvents(p_replay);
+      }
     }
     else {
       /* Well, handle replay events instead */
@@ -1801,6 +1803,7 @@ namespace vapp {
   void MotoGame::killPlayer() {
     m_bDead = true;
     setBodyDetach(true);
+    stopEngine();
   }
 
   void MotoGame::playerEntersZone(LevelZone *pZone) {
@@ -1877,5 +1880,9 @@ namespace vapp {
 
   void MotoGame::setBodyDetach(bool state) {
     m_bodyDetach = state;
+  }
+
+  void MotoGame::stopEngine() {
+    m_BikeC.fDrive = 0.0f;
   }
 }

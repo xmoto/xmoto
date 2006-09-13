@@ -150,9 +150,11 @@ namespace vapp {
       Vector2f Fqv = Fq - m_BikeS.PrevFq;
       Vector2f FSpring = Fq * PHYS_SUSP_SPRING; 
       Vector2f FDamp = Fqv * PHYS_SUSP_DAMP;
-      Vector2f FTotal = FSpring + FDamp;  
-      dBodyAddForce(m_FrontWheelBodyID,FTotal.x,FTotal.y,0);
-      dBodyAddForceAtPos(m_FrameBodyID,-FTotal.x,-FTotal.y,0,m_BikeS.RFrontWheelP.x,m_BikeS.RFrontWheelP.y,0);
+      Vector2f FTotal = FSpring + FDamp; 
+      if(m_bodyDetach == false || m_BikeS.Dir == DD_LEFT) { 
+	dBodyAddForce(m_FrontWheelBodyID,FTotal.x,FTotal.y,0);
+	dBodyAddForceAtPos(m_FrameBodyID,-FTotal.x,-FTotal.y,0,m_BikeS.RFrontWheelP.x,m_BikeS.RFrontWheelP.y,0);
+      }
       m_BikeS.PrevFq = Fq;
 
       /* Update rear suspension */
@@ -161,8 +163,10 @@ namespace vapp {
       Vector2f RSpring = Rq * PHYS_SUSP_SPRING; 
       Vector2f RDamp = Rqv * PHYS_SUSP_DAMP;
       Vector2f RTotal = RSpring + RDamp;   
-      dBodyAddForce(m_RearWheelBodyID,RTotal.x,RTotal.y,0);
-      dBodyAddForceAtPos(m_FrameBodyID,-RTotal.x,-RTotal.y,0,m_BikeS.RRearWheelP.x,m_BikeS.RRearWheelP.y,0);
+      if(m_bodyDetach == false || m_BikeS.Dir == DD_RIGHT) {
+	dBodyAddForce(m_RearWheelBodyID,RTotal.x,RTotal.y,0);
+	dBodyAddForceAtPos(m_FrameBodyID,-RTotal.x,-RTotal.y,0,m_BikeS.RRearWheelP.x,m_BikeS.RRearWheelP.y,0);
+      }
       m_BikeS.PrevRq = Rq;
       
       /* Have any of the suspensions reached the "squeek-point"? (rate of compression/decompression at 
@@ -446,7 +450,10 @@ namespace vapp {
     Vector2f PFTotal = PFSpring + PFDamp;
     if(m_bodyDetach == false) {
       dBodyAddForce(m_PlayerFootAnchorBodyID,PFTotal.x,PFTotal.y,0);
+    } else {
+      dBodyAddForce(m_PlayerFootAnchorBodyID, 0.0, -500.0, 0.0);
     }
+
     m_BikeS.PrevPFq = PFq;    
            
     Vector2f PHq = HandRP - m_BikeS.HandP;
@@ -456,6 +463,8 @@ namespace vapp {
     Vector2f PHTotal = PHSpring + PHDamp;
     if(m_bodyDetach == false) {
       dBodyAddForce(m_PlayerHandAnchorBodyID,PHTotal.x,PHTotal.y,0);
+    } else {
+      dBodyAddForce(m_PlayerHandAnchorBodyID, 0.0, 500.0, 0.0);
     }
     m_BikeS.PrevPHq = PHq;    
 
@@ -469,6 +478,8 @@ namespace vapp {
     PFTotal = PFSpring + PFDamp;  
     if(m_bodyDetach == false) {
       dBodyAddForce(m_PlayerFootAnchorBodyID2,PFTotal.x,PFTotal.y,0);
+    } else {
+      dBodyAddForce(m_PlayerFootAnchorBodyID2, 0.0, -500.0, 0.0);
     }
     m_BikeS.PrevPFq2 = PFq;    
            
@@ -479,6 +490,8 @@ namespace vapp {
     PHTotal = PHSpring + PHDamp;  
     if(m_bodyDetach == false) {
       dBodyAddForce(m_PlayerHandAnchorBodyID2,PHTotal.x,PHTotal.y,0);
+    } else {
+      dBodyAddForce(m_PlayerHandAnchorBodyID2, 0.0, 500.0, 0.0);
     }
     m_BikeS.PrevPHq2 = PHq;    
        

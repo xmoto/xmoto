@@ -1131,7 +1131,11 @@ namespace vapp {
 	  
           /* Update game until we've catched up with the real time */
           do {
-	    m_MotoGame.updateLevel( PHYS_STEP_SIZE,NULL,m_pReplay );
+	    if(m_State == GS_PLAYING) {
+	      m_MotoGame.updateLevel( PHYS_STEP_SIZE,NULL,m_pReplay );
+	    } else {
+	      m_MotoGame.updateLevel( PHYS_STEP_SIZE,NULL, NULL );
+	    }
             m_fLastPhysTime += PHYS_STEP_SIZE;
             nPhysSteps++;
             /* don't do this infinitely, maximum miss 10 frames, then give up */

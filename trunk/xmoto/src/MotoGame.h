@@ -560,6 +560,7 @@ namespace vapp {
       void makePlayerWin();
 
       void setBodyDetach(bool state);
+      void stopEngine();
 
   private:         
       /* Data */
