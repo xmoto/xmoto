@@ -63,9 +63,9 @@ function global_make_destination_dir {
     cpDir "bin"   "bin dat lst nsi ogg wav jpg png lvl lvs lpk xml" "$DEST_DIR" || return 1
     cpDir "po"    "po gmo"                                          "$DEST_DIR" || return 1
     cpDir "vcnet" "vcproj ico sln lib aps h rc"                     "$DEST_DIR" || return 1
-    cpDir "tools" "py inx"                                          "$DEST_DIR" || return 1
+    #cpDir "tools" "py inx"                                          "$DEST_DIR" || return 1
 
-    for i in ChangeLog README COPYING TODO BUGS tools/svg2lvl/README
+    for i in ChangeLog README COPYING TODO BUGS # tools/svg2lvl/README
     do
       cp "$i" "$DEST_DIR""/""$i"".txt" || return 1
     done
