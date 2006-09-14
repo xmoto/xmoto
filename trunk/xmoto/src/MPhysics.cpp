@@ -417,9 +417,10 @@ namespace vapp {
     }        
     
     /* body */
+    /*
     if(m_bodyDetach) {
 
-      ///*  */
+      //
       //nNumContacts = _IntersectWheelLevel(m_BikeS.Dir == DD_RIGHT ?
       //					  m_BikeS.ElbowP : m_BikeS.Elbow2P,
       //					  0.4, Contacts);
@@ -431,7 +432,7 @@ namespace vapp {
       //		     m_PlayerLArmBodyID : m_PlayerLArmBodyID2, 0);           
       //}
       //
-      ///*  */
+      //
       //nNumContacts = _IntersectWheelLevel(m_BikeS.Dir == DD_RIGHT ?
       //					  m_BikeS.ShoulderP : m_BikeS.Shoulder2P,
       //					  0.4, Contacts);
@@ -443,7 +444,7 @@ namespace vapp {
       //		     m_PlayerUArmBodyID : m_PlayerUArmBodyID2, 0);           
       //}
       //
-      ///*  */
+      //
       //nNumContacts = _IntersectWheelLevel(m_BikeS.Dir == DD_RIGHT ?
       //					  m_BikeS.KneeP : m_BikeS.Knee2P,
       //					  0.4, Contacts);
@@ -455,7 +456,7 @@ namespace vapp {
       //		     m_PlayerLLegBodyID : m_PlayerLLegBodyID2, 0);           
       //}
       //
-      ///*  */
+      //
       //nNumContacts = _IntersectWheelLevel(m_BikeS.Dir == DD_RIGHT ?
       //					  m_BikeS.LowerBodyP : m_BikeS.LowerBody2P,
       //					  0.4, Contacts);
@@ -467,7 +468,7 @@ namespace vapp {
       //		     m_PlayerULegBodyID : m_PlayerULegBodyID2, 0);           
       //}
       
-      /* hand */
+      // hand
       nNumContacts = _IntersectWheelLevel(m_BikeS.Dir == DD_RIGHT ?
       					  m_BikeS.HandP : m_BikeS.Hand2P,
       					  0.4, Contacts);
@@ -479,7 +480,7 @@ namespace vapp {
 		     m_PlayerHandAnchorBodyID : m_PlayerHandAnchorBodyID2, 0);           
       }
 
-      /* foot */
+      // foot
       nNumContacts = _IntersectWheelLevel(m_BikeS.Dir == DD_RIGHT ?
       					  m_BikeS.FootP : m_BikeS.Foot2P,
       					  0.4, Contacts);
@@ -491,6 +492,7 @@ namespace vapp {
 		     m_PlayerFootAnchorBodyID : m_PlayerFootAnchorBodyID2 , 0);           
       }
     }
+    */
 
     /* Player head */
     if(m_BikeS.Dir == DD_RIGHT) {
@@ -754,7 +756,7 @@ namespace vapp {
 
     /* Still a replay question... */
     if(pReplayState == NULL) {
-dVector3 T;
+      dVector3 T;
       
       dJointGetHingeAnchor(m_HandHingeID,T);
       m_BikeS.HandP.x = T[0]; m_BikeS.HandP.y = T[1];            /* 8 bytes */
@@ -831,7 +833,8 @@ dVector3 T;
     }
           
     Vector2f V;      
-        
+    
+    /*
     if(m_bodyDetach) {
       if(m_BikeS.Dir == DD_RIGHT) {
 	//m_BikeS.ShoulderP.x   = ((dReal *)dBodyGetPosition( m_PlayerUArmBodyID ))[0];
@@ -861,6 +864,7 @@ dVector3 T;
 	m_BikeS.Foot2P.y       = ((dReal *)dBodyGetPosition( m_PlayerFootAnchorBodyID2 ))[1];
       }
     }
+    */
 
     if(bUpdateRider) {        
       /* Calculate head position */
