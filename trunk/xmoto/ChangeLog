@@ -16,6 +16,7 @@ X-Moto 0.2.1 2006-09-
  * uglyer ugly mode (for slower computer)
  * translations [french] (for unix only)
  * collision between body and sprites
+ * level preview animation before playing (patch by Frederic Huard)
  * Some minor improvements
  * Several bugs fixed.
 

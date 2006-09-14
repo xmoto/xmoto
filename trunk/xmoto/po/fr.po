@@ -1464,9 +1464,3 @@ msgstr "L'upload d'un record necessite un compte (sauf records mondiaux)"
 #: src/GameText.h:397
 msgid "Show the engine counter when playing"
 msgstr "Afficher le compteur de vitesse quand vous jouez"
-
-#~ msgid "READY ?"
-#~ msgstr "PRET ?"
-
-#~ msgid "GO"
-#~ msgstr "GO"
