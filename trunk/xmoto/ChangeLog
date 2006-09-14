@@ -3,7 +3,6 @@ X-Moto 0.2.1 2006-09-
 
  * X-Moto is no more ALPHA !
  * ppc computer can now read and write x86 replays (patch by Dave Vasilevsky)
- * Inkscape plugin to make smooth levels (by Emmanuel Gorse)
  * upload highscores from the game
  * webrooms configuration
  * Man pages (from debian package)
@@ -11,9 +10,9 @@ X-Moto 0.2.1 2006-09-
  * -nowww option to force xmoto to not connect on the web
  * -testTheme option to test your themes
  * new functions for scripted levels
- * grip parameter for blocks (to make ice block for example)
+ * grip parameter for blocks (to make ice blocks for example)
  * auto-adaptation of the camera (depending on the gravity/wind)
- * uglyer ugly mode (for slower computer)
+ * uglyer ugly mode (for slower computer ; press F1 to switch ugly mode)
  * translations [french] (for unix only)
  * collision between body and sprites
  * level preview animation before playing (patch by Frederic Huard)

@@ -3057,21 +3057,18 @@ namespace vapp {
     prestartAnimation_step();
   }
 
-
   void GameApp::prestartAnimation_init() {
     m_fPrePlayStartTime = getRealTime();  // because the man can change ugly mode while the animation
     m_fPrePlayStartInitZoom = m_Renderer.getCurrentZoom();  // because the man can change ugly mode while the animation
     m_fPrePlayStartCameraX = m_Renderer.getCameraPositionX();
     m_fPrePlayStartCameraY = m_Renderer.getCameraPositionY();
 
-#define MARGIN_SIZE 5
-
     if(m_bPrePlayAnim && m_bUglyMode == false) {
       
       m_MotoGame.gameMessage(m_MotoGame.getLevelSrc()->getLevelInfo()->Name, false, PRESTART_ANIMATION_LEVEL_MSG_DURATION);
       
-      m_zoomX = (2.0 * ((float)getDispWidth() / (float)getDispHeight())) / (m_MotoGame.getLevelSrc()->getRightLimit() - m_MotoGame.getLevelSrc()->getLeftLimit() + 2*MARGIN_SIZE);
-      m_zoomY = 2.0 /(m_MotoGame.getLevelSrc()->getTopLimit() - m_MotoGame.getLevelSrc()->getBottomLimit()+2*MARGIN_SIZE);
+      m_zoomX = (2.0 * ((float)getDispWidth() / (float)getDispHeight())) / (m_MotoGame.getLevelSrc()->getRightLimit() - m_MotoGame.getLevelSrc()->getLeftLimit() + 2*PRESTART_ANIMATION_MARGIN_SIZE);
+      m_zoomY = 2.0 /(m_MotoGame.getLevelSrc()->getTopLimit() - m_MotoGame.getLevelSrc()->getBottomLimit()+2*PRESTART_ANIMATION_MARGIN_SIZE);
       
       if (m_zoomX > m_zoomY){
         float visibleHeight,cameraStartHeight;
@@ -3083,9 +3080,9 @@ namespace vapp {
         cameraStartHeight= visibleHeight/2.0;
         
         m_fPreCameraStartX = (m_MotoGame.getLevelSrc()->getRightLimit() + m_MotoGame.getLevelSrc()->getLeftLimit())/2;
-        m_fPreCameraStartY = m_MotoGame.getLevelSrc()->getTopLimit() - cameraStartHeight + MARGIN_SIZE;
+        m_fPreCameraStartY = m_MotoGame.getLevelSrc()->getTopLimit() - cameraStartHeight + PRESTART_ANIMATION_MARGIN_SIZE;
         m_fPreCameraFinalX = (m_MotoGame.getLevelSrc()->getRightLimit() + m_MotoGame.getLevelSrc()->getLeftLimit())/2;
-        m_fPreCameraFinalY = m_MotoGame.getLevelSrc()->getBottomLimit() + cameraStartHeight - MARGIN_SIZE;
+        m_fPreCameraFinalY = m_MotoGame.getLevelSrc()->getBottomLimit() + cameraStartHeight - PRESTART_ANIMATION_MARGIN_SIZE;
 
         if ( fabs(m_fPreCameraStartY - m_fPrePlayStartCameraY) > fabs(m_fPreCameraFinalY - m_fPrePlayStartCameraY)) {
           float f;
@@ -3103,9 +3100,9 @@ namespace vapp {
         visibleWidth = (2.0 * ((float)getDispWidth() / (float)getDispHeight()))/m_zoomU;
         cameraStartLeft = visibleWidth/2.0;
         
-        m_fPreCameraStartX = m_MotoGame.getLevelSrc()->getRightLimit() - cameraStartLeft + MARGIN_SIZE;
+        m_fPreCameraStartX = m_MotoGame.getLevelSrc()->getRightLimit() - cameraStartLeft + PRESTART_ANIMATION_MARGIN_SIZE;
         m_fPreCameraStartY = (m_MotoGame.getLevelSrc()->getBottomLimit() + m_MotoGame.getLevelSrc()->getTopLimit())/2;
-        m_fPreCameraFinalX = m_MotoGame.getLevelSrc()->getLeftLimit() + cameraStartLeft - MARGIN_SIZE;
+        m_fPreCameraFinalX = m_MotoGame.getLevelSrc()->getLeftLimit() + cameraStartLeft - PRESTART_ANIMATION_MARGIN_SIZE;
         m_fPreCameraFinalY = (m_MotoGame.getLevelSrc()->getBottomLimit() + m_MotoGame.getLevelSrc()->getTopLimit())/2;
    
         if ( fabs(m_fPreCameraStartX - m_fPrePlayStartCameraX) > fabs(m_fPreCameraFinalX - m_fPrePlayStartCameraX)) {
@@ -3128,9 +3125,9 @@ namespace vapp {
         setState(GS_PLAYING);
       } else if(getRealTime() > m_fPrePlayStartTime + static_time){
         float zx, zy, zz;
-  
-        zz = (PRESTART_ANIMATION_TIME + static_time - getRealTime() + m_fPrePlayStartTime)
-        / (PRESTART_ANIMATION_TIME) * (m_fPrePlayStartInitZoom - m_zoomU);
+
+        zz = (logf (PRESTART_ANIMATION_CURVE * ((PRESTART_ANIMATION_TIME + static_time - getRealTime() + m_fPrePlayStartTime) / (PRESTART_ANIMATION_TIME)) + 1.0)) / logf(PRESTART_ANIMATION_CURVE + 1.0) * (m_fPrePlayStartInitZoom - m_zoomU);
+        
         m_Renderer.setZoom(m_fPrePlayStartInitZoom - zz);
         
         zx = (PRESTART_ANIMATION_TIME + static_time - getRealTime() + m_fPrePlayStartTime)
@@ -3166,5 +3163,6 @@ namespace vapp {
     }
     m_MotoGame.updateGameMessages();
   }
+
 
 }

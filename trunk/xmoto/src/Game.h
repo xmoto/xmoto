@@ -41,6 +41,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #define PRESTART_ANIMATION_TIME 2.0
 #define PRESTART_ANIMATION_LEVEL_MSG_DURATION 1.0
+#define PRESTART_ANIMATION_MARGIN_SIZE 5
+#define PRESTART_ANIMATION_CURVE 3.0
   
 namespace vapp {
 
