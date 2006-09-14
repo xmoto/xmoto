@@ -1,4 +1,5 @@
-SUBDIRS = po src bin tools extra
+SUBDIRS = po src bin extra
+# tools
 
 man_MANS = xmoto.6.gz xmoto-edit.6.gz
 
