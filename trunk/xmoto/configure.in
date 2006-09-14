@@ -100,8 +100,6 @@ AC_OUTPUT(Makefile       \
           bin/Makefile   \
           po/Makefile.in \
           src/Makefile   \
-          tools/Makefile \
-          tools/svg2lvl/Makefile \
           extra/Makefile         \
          )
 
