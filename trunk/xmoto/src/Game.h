@@ -312,6 +312,14 @@ namespace vapp {
       float m_fPrePlayStartInitZoom;
       float m_fPrePlayStartCameraX;
       float m_fPrePlayStartCameraY;
+      float m_fPreCameraStartX;
+      float m_fPreCameraStartY;
+      float m_fPreCameraFinalX;
+      float m_fPreCameraFinalY;
+      float m_zoomX;
+      float m_zoomY;
+      float m_zoomU;
+      float static_time;
 
       Stats m_GameStats;
       UIWindow *m_pStatsReport;
