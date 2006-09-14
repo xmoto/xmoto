@@ -1,0 +1,8 @@
+* svg2lvl done using inkscape and a python script.
+* --better integration with Inkscape--
+** Save as .lvl file from within inkscape (launch svg2lvl)
+** When you save the file as a .lvl, an automatic 'smoothing' of the level is done (only blocks)
+** You can change entities, blocks and zones properties from the Effect inkscape menu.
+** When you save a file, the user can give: date, sky, description, author, ...
+** Add grass to blocks. as we can't put properties to single vertex, we add the grass property to the entire block, and then, the convertor script add grass only to the upper edges of the block (as in Worms)
+** Change the style of inkscape object depending on their type (different colors for background blocs, dyn blocs, strawberry, wrecker, ...) (add border to blocks if they have grass on them)

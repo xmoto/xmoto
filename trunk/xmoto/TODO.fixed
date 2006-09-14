@@ -23,7 +23,6 @@ Since 0.2.0
 * BUG: exception not catched  nicolas:xmoto$ xmoto -replay dsfdsfd  fatal exception : invalid replay
 * ALPHA removed
 * make xmoto independant of the arch for replays
-* svg2lvl done using inkscape and a python script.
 * BUG : when you save a replay as the same name several times, replay list is not updated correctly
 * BUG: for the automatic upload, add : check why i can't have a & in my password
 * BUG : xmoto-edit : m_theme.load("Themes/original.xml") in Editor.cpp, really not nice !!! a file called Themes/original.xml must exists to have the last textures into xmoto-edit;
@@ -37,18 +36,12 @@ Since 0.2.0
    link to his room xml file (priority=high)(priority=high)
 * lua call OnSomersault()
 * OnRearWheelTouchGround() OnRearWheelLeaveGround() (and the same for the other weel)
-* new-level-editor: better integration with Inkscape
-** Save as .lvl file (launch svg2lvl)
 * update themes list before update a theme (otherwise, on levels update, it does nothing)
 * Be able to change the size of a sprite as parameter in a level
-* new-level-editor: When you save the file as a .lvl, an automatic 'smoothing' of the level is done (only blocks)
 * translations
 * password proxy for www
-* new-level-editor: you can change entities, blocks and zones properties from the Effect inkscape menu.
-* new-level-editor: When you save a file, the user can give: date, sky, description, author, ...
 * collision : collision with the body
 * level and player name showing in the replay?
-* new-level-editor: add grass to blocks. as we can't put properties to single vertex, we add the grass property to the entire block, and then, the convertor script add grass only to the upper edges of the block.
 * loading level is sometimes quite long
 * add 3 2 1 GO ! at level startup (only if the level played is different from the last played)
 * a lua function to get the number of
