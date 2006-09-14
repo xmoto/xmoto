@@ -415,7 +415,7 @@ namespace vapp {
     }
     
     /* Invoke PreDraw() script function - deprecated */
-    if(m_isScriptActiv) {
+    if(m_isScriptActiv && isDead() == false) {
       if(!scriptCallBool("PreDraw",
 			 true)) {
 	throw Exception("level script PreDraw() returned false");
@@ -425,7 +425,7 @@ namespace vapp {
     /* Invoke Tick() script function */
     /* and play script dynamic objects */
     while(getTime() - m_lastCallToEveryHundreath > 0.01) {
-      if(m_isScriptActiv) {
+      if(m_isScriptActiv && isDead() == false) {
 	if(!scriptCallBool("Tick",
 			   true)) {
 			     throw Exception("level script Tick() returned false");
