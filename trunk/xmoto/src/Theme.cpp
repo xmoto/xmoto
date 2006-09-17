@@ -123,8 +123,8 @@ Theme::~Theme() {
   m_texMan.unloadTextures();
 }
  
-vapp::Texture* Theme::loadTexture(std::string p_fileName, bool bSmall, bool bClamp, bool bFilter) {
-  return m_texMan.loadTexture(p_fileName.c_str(), bSmall, bClamp, bFilter);
+vapp::Texture* Theme::loadTexture(std::string p_fileName, bool bSmall, bool bClamp, vapp::FilterMode eFilterMode) {
+  return m_texMan.loadTexture(p_fileName.c_str(), bSmall, bClamp, eFilterMode);
 }
 
 std::vector<std::string>* Theme::getRequiredFiles() {
@@ -475,7 +475,7 @@ Sprite::Sprite(Theme* p_associated_theme, std::string v_name) {
 Sprite::~Sprite() {
 }
 
-vapp::Texture* Sprite::getTexture(bool bSmall, bool bClamp, bool bFilter) {
+vapp::Texture* Sprite::getTexture(bool bSmall, bool bClamp, vapp::FilterMode eFilterMode) {
   vapp::Texture* v_currentTexture;
 
   v_currentTexture = getCurrentTexture();
@@ -483,7 +483,7 @@ vapp::Texture* Sprite::getTexture(bool bSmall, bool bClamp, bool bFilter) {
     v_currentTexture = m_associated_theme->loadTexture(getCurrentTextureFileName(),
 						       bSmall,
 						       bClamp,
-						       bFilter);
+						       eFilterMode);
     if(v_currentTexture == NULL) { 
       throw vapp::Exception("Unable to load texture '" + getCurrentTextureFileName() + "'");
     }

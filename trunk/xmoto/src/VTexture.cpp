@@ -32,7 +32,7 @@ namespace vapp {
   /*===========================================================================
   Create texture from memory
   ===========================================================================*/
-  Texture *TextureManager::createTexture(std::string Name,unsigned char *pcData,int nWidth,int nHeight,bool bAlpha,bool bClamp,bool bFilter) {
+  Texture *TextureManager::createTexture(std::string Name,unsigned char *pcData,int nWidth,int nHeight,bool bAlpha,bool bClamp, FilterMode eFilterMode) {
     /* Name free? */
     if(getTexture(Name) != NULL) {
       Log("** Warning ** : TextureManager::createTexture() : Name '%s' already in use",Name.c_str());
@@ -64,13 +64,26 @@ namespace vapp {
       pTexture->nSize = nWidth * nHeight * 3;
     }
     
-    if(bFilter) {
+    switch(eFilterMode) {
+      /* require openGL 1.4 */
+      /*
+      case FM_MIPMAP:
+      glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+      glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR_MIPMAP_NEAREST);
+      glTexParameteri(GL_TEXTURE_2D,GL_GENERATE_MIPMAP, GL_TRUE);
+      break;
+      */
+
+      case FM_LINEAR:
       glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
       glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-    }
-    else {
+      break;
+
+      case FM_NEAREST:
+      default:
       glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
       glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+      break;
     }
         
     if(bClamp) {
@@ -115,7 +128,7 @@ namespace vapp {
   /*===========================================================================
   Shortcut to loading textures from image files
   ===========================================================================*/  
-  Texture *TextureManager::loadTexture(std::string Path,bool bSmall,bool bClamp,bool bFilter) {
+  Texture *TextureManager::loadTexture(std::string Path,bool bSmall,bool bClamp, FilterMode eFilterMode) {
     /* Check file validity */
     image_info_t ii;
     Img TextureImage;
@@ -162,7 +175,7 @@ namespace vapp {
       else
         pc = TextureImage.convertToRGB24();
       
-      pTexture = createTexture(TexName,pc,TextureImage.getWidth(),TextureImage.getHeight(),bAlpha,bClamp,bFilter);
+      pTexture = createTexture(TexName,pc,TextureImage.getWidth(),TextureImage.getHeight(),bAlpha,bClamp, eFilterMode);
       
       delete [] pc;
     }

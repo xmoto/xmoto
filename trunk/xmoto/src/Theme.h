@@ -106,7 +106,7 @@ class Sprite {
      the bSmall, bClamp, bFilter parameters are considerated 
      only the first time that getTexture is called for a given sprite
   */
-  vapp::Texture* getTexture(bool bSmall=false, bool bClamp=false, bool bFilter=true);
+  vapp::Texture* getTexture(bool bSmall=false, bool bClamp=false, vapp::FilterMode eFilterMode = vapp::FM_LINEAR);
 
  protected:
   virtual vapp::Texture* getCurrentTexture() = 0;
@@ -299,7 +299,7 @@ class Theme {
   vapp::Texture* loadTexture(std::string p_fileName,
 			     bool bSmall=false,
 			     bool bClamp=false,
-			     bool bFilter=true);
+			     vapp::FilterMode eFilterMode = vapp::FM_LINEAR);
 
   vapp::Texture* getDefaultFont();
   std::vector<Sprite*> getSpritesList();

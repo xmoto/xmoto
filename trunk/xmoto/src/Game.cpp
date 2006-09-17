@@ -686,14 +686,14 @@ namespace vapp {
       m_pCursor = NULL;
       pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "Cursor");
       if(pSprite != NULL) {
-  m_pCursor = pSprite->getTexture(false, true, true);
+	m_pCursor = pSprite->getTexture(false, true, FM_LINEAR);
       }
 
 #if defined(SUPPORT_WEBACCESS)  
       m_pNewLevelsAvailIcon = NULL;
       pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "NewLevelsAvailable");
       if(pSprite != NULL) {
-  m_pNewLevelsAvailIcon = pSprite->getTexture(false, true, true);
+  m_pNewLevelsAvailIcon = pSprite->getTexture(false, true, FM_LINEAR);
       }
 #endif
 
@@ -3025,6 +3025,7 @@ namespace vapp {
 	  Log("** Warning ** : failed to initialize level");
 	  setState(GS_MENU);
 	  notifyMsg(GAMETEXT_FAILEDTOINITLEVEL);
+	  //return;
 	}
       }
       m_State = GS_PREPLAYING;

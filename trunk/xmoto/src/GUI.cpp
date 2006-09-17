@@ -905,7 +905,7 @@ FRAME_BR (187,198) (8x8)
               Texture *pTexture = NULL;
 	      Sprite *pSprite   = getApp()->m_theme.getSprite(SPRITE_TYPE_FONT, Name);
 	      if(pSprite != NULL) {
-	      	pTexture = pSprite->getTexture(false, true, false);
+	      	pTexture = pSprite->getTexture(false, true, FM_NEAREST);
 	      }
 
 
@@ -1210,17 +1210,17 @@ FRAME_BR (187,198) (8x8)
 
     pSprite = m_pApp->m_theme.getSprite(SPRITE_TYPE_UI, "Misc");
     if(pSprite != NULL) {
-      m_pUIElemTexture = pSprite->getTexture(false,true,false);
+      m_pUIElemTexture = pSprite->getTexture(false,true, FM_NEAREST);
     }
 
     pSprite = m_pApp->m_theme.getSprite(SPRITE_TYPE_UI, "MiscDisabled");
     if(pSprite != NULL) {
-      m_pUIElemTextureD = pSprite->getTexture(false,true,false);
+      m_pUIElemTextureD = pSprite->getTexture(false,true, FM_NEAREST);
     }
 
     pSprite = m_pApp->m_theme.getSprite(SPRITE_TYPE_UI, "MiscActive");
     if(pSprite != NULL) {
-      m_pUIElemTextureA = pSprite->getTexture(false,true,false);
+      m_pUIElemTextureA = pSprite->getTexture(false,true, FM_NEAREST);
     }
   }
   

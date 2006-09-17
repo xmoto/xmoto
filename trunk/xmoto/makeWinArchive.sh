@@ -67,7 +67,8 @@ function global_make_destination_dir {
 
     for i in ChangeLog README COPYING TODO BUGS # tools/svg2lvl/README
     do
-      cp "$i" "$DEST_DIR""/""$i"".txt" || return 1
+      cp "$i" "$DEST_DIR""/""$i"".txt"  || return 1
+      unix2dos "$DEST_DIR""/""$i"".txt" || return 1
     done
 
     # add windows requirements

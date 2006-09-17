@@ -27,6 +27,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 namespace vapp {
 
+  enum FilterMode {
+    FM_NEAREST,
+    FM_LINEAR,
+    FM_MIPMAP
+  };
+
   /*===========================================================================
   Our friendly texture exception friend
   ===========================================================================*/    
@@ -65,9 +71,9 @@ namespace vapp {
       TextureManager() {m_nTexSpaceUsage=0;}
     
       /* Methods */
-      Texture *createTexture(std::string Name,unsigned char *pcData,int nWidth,int nHeight,bool bAlpha=false,bool bClamp=false,bool bFilter=true);
+      Texture *createTexture(std::string Name,unsigned char *pcData,int nWidth,int nHeight,bool bAlpha=false,bool bClamp=false, FilterMode eFilterMode = FM_LINEAR);
       void destroyTexture(Texture *pTexture);
-      Texture *loadTexture(std::string Path,bool bSmall=false,bool bClamp=false,bool bFilter=true);
+      Texture *loadTexture(std::string Path,bool bSmall=false,bool bClamp=false, FilterMode eFilterMode = FM_LINEAR);
       Texture *getTexture(std::string Name);
       std::vector<Texture *> fetchTaggedTextures(std::string Tag);
       void unloadTextures(void);
