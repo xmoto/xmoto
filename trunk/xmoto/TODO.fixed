@@ -1,3 +1,6 @@
+Since 0.2.1
+* BUG : on bad levels loading
+
 Since 0.2.0
 * bug : i need entity->pSrc to draw the entity to the good position : pb, revertEntityDestroyed give a NULL value -> SEGFAULT ON REWIND !!!!!
 * level no doubt : start ; pause 30 sec ; run very fast ->

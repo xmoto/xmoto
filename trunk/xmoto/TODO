@@ -1,5 +1,4 @@
 
-* BUG : on bad levels loading
 * bzip2 not removed on windows
 * mipmapping
 so i suggest to activate mipmapping, maybe only for the highest quality setting

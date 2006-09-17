@@ -3020,12 +3020,20 @@ namespace vapp {
 	  m_pReplay->createReplay("Latest.rpl",pLevelSrc->getID(),m_pPlayer->PlayerName,m_fReplayFrameRate,sizeof(SerializedBikeState));
 	}
 
-	m_MotoGame.prePlayLevel(m_pGhostReplay, pLevelSrc, m_pReplay, false);
+	try {
+	  m_MotoGame.prePlayLevel(m_pGhostReplay, pLevelSrc, m_pReplay, false);
+	} catch(Exception &e) {
+	  Log("** Warning ** : failed to initialize level");
+	  setState(GS_MENU);
+	  notifyMsg(splitText(e.getMsg(), 50));
+	  return;
+	}
+
 	if(!m_MotoGame.isInitOK()) {
 	  Log("** Warning ** : failed to initialize level");
 	  setState(GS_MENU);
 	  notifyMsg(GAMETEXT_FAILEDTOINITLEVEL);
-	  //return;
+	  return;
 	}
       }
       m_State = GS_PREPLAYING;
