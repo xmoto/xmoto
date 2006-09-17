@@ -60,7 +60,7 @@ function global_remake_win_tree {
 
 function global_make_destination_dir {
     cpDir "src"   "cpp h c"                                         "$DEST_DIR" || return 1
-    cpDir "bin"   "bin dat lst nsi ogg wav jpg png lvl lvs lpk xml" "$DEST_DIR" || return 1
+    cpDir "bin"   "bin dat lst nsi ogg wav jpg png lvl lvs lpk xml frag vert" "$DEST_DIR" || return 1
     cpDir "po"    "po gmo"                                          "$DEST_DIR" || return 1
     cpDir "vcnet" "vcproj ico sln lib aps h rc"                     "$DEST_DIR" || return 1
     #cpDir "tools" "py inx"                                          "$DEST_DIR" || return 1
