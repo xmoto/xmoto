@@ -2,6 +2,7 @@
 
 TMP_DIR="/tmp"
 ARCHIVE_SUFFIX="-win32-src"
+NSI_FILE="bin/xmoto.nsi"
 
 function getVersion {
     if ! test -e ./configure.in
@@ -10,8 +11,22 @@ function getVersion {
     fi
 
     grep "AM_INIT_AUTOMAKE" ./configure.in | 
-    sed -e s+".*AM_INIT_AUTOMAKE(\(.*\),\(.*\)).*"+"\\1-\\2"+
+    sed -e s+".*AM_INIT_AUTOMAKE(\(.*\),\(.*\)).*"+"\\2"+
 }
+
+function updateNSIversion {
+  NSI_FILE="$1"
+  XMOTO_VERSION="$2"
+
+  cat "$NSI_FILE" | 
+  sed -e s+"^Name \".*\"$"+"Name \"X-Moto ""$XMOTO_VERSION""\""+ |
+  sed -e s+"^OutFile \".*\"$"+"OutFile \"xmoto-""$XMOTO_VERSION""-win32-setup.exe\""+ > "$NSI_FILE"_tmp
+  mv "$NSI_FILE"_tmp "$NSI_FILE"
+}
+
+updateNSIversion "$NSI_FILE" "`getVersion`"
+
+exit
 
 function make_zip {
     ZIP_DIR="$1"
@@ -79,7 +94,7 @@ function global_make_destination_dir {
 }
 
 VERSION="`getVersion`"
-VERSION_DIR="$VERSION""$ARCHIVE_SUFFIX"
+VERSION_DIR="xmoto-""$VERSION""$ARCHIVE_SUFFIX"
 DEST_DIR="$TMP_DIR""/""$VERSION_DIR"
 
 # remove previous archive  
@@ -87,6 +102,9 @@ global_remove_previous_archive || exit 1
 
 # remake win_tree
 global_remake_win_tree         || exit 1
+
+# update nsi file
+updateNSIversion
 
 # make destination dir
 mkdir "$DEST_DIR" || exit 1
