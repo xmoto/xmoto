@@ -417,10 +417,9 @@ namespace vapp {
     }        
     
     /* body */
-    /*
     if(m_bodyDetach) {
 
-      //
+      
       //nNumContacts = _IntersectWheelLevel(m_BikeS.Dir == DD_RIGHT ?
       //					  m_BikeS.ElbowP : m_BikeS.Elbow2P,
       //					  0.4, Contacts);
@@ -469,9 +468,11 @@ namespace vapp {
       //}
       
       // hand
-      nNumContacts = _IntersectWheelLevel(m_BikeS.Dir == DD_RIGHT ?
-      					  m_BikeS.HandP : m_BikeS.Hand2P,
-      					  0.4, Contacts);
+      if(m_BikeS.Dir == DD_RIGHT) {
+	nNumContacts = m_Collision.collideCircle(m_BikeS.HandP.x, m_BikeS.HandP.y, 0.1, Contacts, 100);
+      } else {
+	nNumContacts = m_Collision.collideCircle(m_BikeS.Hand2P.x, m_BikeS.Hand2P.y, 0.1, Contacts, 100);
+      }
       for(int i=0;i<nNumContacts;i++) {
         dJointAttach(dJointCreateContact(m_WorldID,
       					 m_ContactGroup,
@@ -481,9 +482,11 @@ namespace vapp {
       }
 
       // foot
-      nNumContacts = _IntersectWheelLevel(m_BikeS.Dir == DD_RIGHT ?
-      					  m_BikeS.FootP : m_BikeS.Foot2P,
-      					  0.4, Contacts);
+      if(m_BikeS.Dir == DD_RIGHT) {
+	nNumContacts = m_Collision.collideCircle(m_BikeS.FootP.x, m_BikeS.FootP.y, 0.1, Contacts, 100);
+      } else {
+	nNumContacts = m_Collision.collideCircle(m_BikeS.Foot2P.x, m_BikeS.Foot2P.y, 0.1, Contacts, 100);
+      }
       for(int i=0;i<nNumContacts;i++) {
         dJointAttach(dJointCreateContact(m_WorldID,
       					 m_ContactGroup,
@@ -492,7 +495,6 @@ namespace vapp {
 		     m_PlayerFootAnchorBodyID : m_PlayerFootAnchorBodyID2 , 0);           
       }
     }
-    */
 
     /* Player head */
     if(m_BikeS.Dir == DD_RIGHT) {
@@ -528,8 +530,6 @@ namespace vapp {
     Vector2f PFTotal = PFSpring + PFDamp;
     if(m_bodyDetach == false) {
       dBodyAddForce(m_PlayerFootAnchorBodyID,PFTotal.x,PFTotal.y,0);
-    } else {
-      dBodyAddForce(m_PlayerFootAnchorBodyID, 0.0, -500.0, 0.0);
     }
 
     m_BikeS.PrevPFq = PFq;    
@@ -541,8 +541,6 @@ namespace vapp {
     Vector2f PHTotal = PHSpring + PHDamp;
     if(m_bodyDetach == false) {
       dBodyAddForce(m_PlayerHandAnchorBodyID,PHTotal.x,PHTotal.y,0);
-    } else {
-      dBodyAddForce(m_PlayerHandAnchorBodyID, 0.0, 500.0, 0.0);
     }
     m_BikeS.PrevPHq = PHq;    
 
@@ -556,8 +554,6 @@ namespace vapp {
     PFTotal = PFSpring + PFDamp;  
     if(m_bodyDetach == false) {
       dBodyAddForce(m_PlayerFootAnchorBodyID2,PFTotal.x,PFTotal.y,0);
-    } else {
-      dBodyAddForce(m_PlayerFootAnchorBodyID2, 0.0, -500.0, 0.0);
     }
     m_BikeS.PrevPFq2 = PFq;    
            
@@ -568,8 +564,6 @@ namespace vapp {
     PHTotal = PHSpring + PHDamp;  
     if(m_bodyDetach == false) {
       dBodyAddForce(m_PlayerHandAnchorBodyID2,PHTotal.x,PHTotal.y,0);
-    } else {
-      dBodyAddForce(m_PlayerHandAnchorBodyID2, 0.0, 500.0, 0.0);
     }
     m_BikeS.PrevPHq2 = PHq;    
        
@@ -833,39 +827,6 @@ namespace vapp {
     }
           
     Vector2f V;      
-    
-    /*
-    if(m_bodyDetach) {
-      if(m_BikeS.Dir == DD_RIGHT) {
-	//m_BikeS.ShoulderP.x   = ((dReal *)dBodyGetPosition( m_PlayerUArmBodyID ))[0];
-	//m_BikeS.ShoulderP.y   = ((dReal *)dBodyGetPosition( m_PlayerUArmBodyID ))[1];
-	//m_BikeS.KneeP.x       = ((dReal *)dBodyGetPosition( m_PlayerLLegBodyID ))[0];
-	//m_BikeS.KneeP.y       = ((dReal *)dBodyGetPosition( m_PlayerLLegBodyID ))[1];
-	//m_BikeS.LowerBodyP.x  = ((dReal *)dBodyGetPosition( m_PlayerULegBodyID ))[0];
-	//m_BikeS.LowerBodyP.y  = ((dReal *)dBodyGetPosition( m_PlayerULegBodyID ))[1];
-	//m_BikeS.ElbowP.x      = ((dReal *)dBodyGetPosition( m_PlayerLArmBodyID ))[0];
-	//m_BikeS.ElbowP.y      = ((dReal *)dBodyGetPosition( m_PlayerLArmBodyID ))[1];
-	m_BikeS.HandP.x       = ((dReal *)dBodyGetPosition( m_PlayerHandAnchorBodyID ))[0];
-	m_BikeS.HandP.y       = ((dReal *)dBodyGetPosition( m_PlayerHandAnchorBodyID ))[1];
-	m_BikeS.FootP.x       = ((dReal *)dBodyGetPosition( m_PlayerFootAnchorBodyID ))[0];
-	m_BikeS.FootP.y       = ((dReal *)dBodyGetPosition( m_PlayerFootAnchorBodyID ))[1];
-      } else {
-	//m_BikeS.Shoulder2P.x   = ((dReal *)dBodyGetPosition( m_PlayerUArmBodyID2 ))[0];
-	//m_BikeS.Shoulder2P.y   = ((dReal *)dBodyGetPosition( m_PlayerUArmBodyID2 ))[1];
-	//m_BikeS.Knee2P.x       = ((dReal *)dBodyGetPosition( m_PlayerLLegBodyID2 ))[0];
-	//m_BikeS.Knee2P.y       = ((dReal *)dBodyGetPosition( m_PlayerLLegBodyID2 ))[1];
-	//m_BikeS.LowerBody2P.x  = ((dReal *)dBodyGetPosition( m_PlayerULegBodyID2 ))[0];
-	//m_BikeS.LowerBody2P.y  = ((dReal *)dBodyGetPosition( m_PlayerULegBodyID2 ))[1];
-	//m_BikeS.Elbow2P.x      = ((dReal *)dBodyGetPosition( m_PlayerLArmBodyID2 ))[0];
-	//m_BikeS.Elbow2P.y      = ((dReal *)dBodyGetPosition( m_PlayerLArmBodyID2 ))[1];
-	m_BikeS.Hand2P.x       = ((dReal *)dBodyGetPosition( m_PlayerHandAnchorBodyID2 ))[0];
-	m_BikeS.Hand2P.y       = ((dReal *)dBodyGetPosition( m_PlayerHandAnchorBodyID2 ))[1];
-	m_BikeS.Foot2P.x       = ((dReal *)dBodyGetPosition( m_PlayerFootAnchorBodyID2 ))[0];
-	m_BikeS.Foot2P.y       = ((dReal *)dBodyGetPosition( m_PlayerFootAnchorBodyID2 ))[1];
-      }
-    }
-    */
-
     if(bUpdateRider) {        
       /* Calculate head position */
       V = (m_BikeS.ShoulderP - m_BikeS.LowerBodyP);
@@ -993,7 +954,7 @@ namespace vapp {
     m_KneeHingeID = dJointCreateHinge(m_WorldID,0);
     dJointAttach(m_KneeHingeID,m_PlayerLLegBodyID,m_PlayerULegBodyID);
     dJointSetHingeAnchor(m_KneeHingeID,StartPos.x + m_BikeP.PKVx,StartPos.y + m_BikeP.PKVy,0.0f);
-    dJointSetHingeAxis(m_KneeHingeID,0,0,1);       
+    dJointSetHingeAxis(m_KneeHingeID,0,0,1);
     dJointSetHingeParam(m_KneeHingeID,dParamLoStop,0);
     dJointSetHingeParam(m_KneeHingeID,dParamHiStop,0);
     dJointSetHingeParam(m_KneeHingeID,dParamStopERP,fERP);

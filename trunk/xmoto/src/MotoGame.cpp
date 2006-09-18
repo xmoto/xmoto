@@ -664,7 +664,6 @@ namespace vapp {
     m_PlayerLLegBodyID2 = NULL;
     
     m_bDead = m_bFinished = false;
-    setBodyDetach(false);
 
     m_lastCallToEveryHundreath = 0.0;
 
@@ -745,7 +744,7 @@ namespace vapp {
     
     /* Initialize physics */
     _InitPhysics();
-    
+   
     /* Set level source reference -- this tells the world that the level is ready */
     m_pLevelSrc = pLevelSrc;
     
@@ -760,7 +759,8 @@ namespace vapp {
     _CalculateBikeAnchors();    
     Vector2f C( pLevelSrc->getPlayerStartX() - m_BikeA.Tp.x, pLevelSrc->getPlayerStartY() - m_BikeA.Tp.y);
     _PrepareBikePhysics(C);
-    
+    setBodyDetach(false);    
+
     //const dReal *pf = dBodyGetPosition(m_FrontWheelBodyID);
     //m_PrevFrontWheelP = Vector2f(pf[0],pf[1]);
     //pf = dBodyGetPosition(m_RearWheelBodyID);
