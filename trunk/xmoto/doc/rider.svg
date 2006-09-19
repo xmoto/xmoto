@@ -9,13 +9,14 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="210mm"
-   height="297mm"
+   width="500"
+   height="450"
    id="svg2"
    sodipodi:version="0.32"
    inkscape:version="0.44"
-   sodipodi:docbase="/home/nicolas/xmoto_dev/xmoto/doc"
-   sodipodi:docname="rider.svg">
+   sodipodi:docbase="/home/nicolas/progs/archives/xmoto_cvs/xmoto/doc"
+   sodipodi:docname="rider.svg"
+   version="1.0">
   <defs
      id="defs4">
     <linearGradient
@@ -73,15 +74,17 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.4"
-     inkscape:cx="328.24719"
-     inkscape:cy="836.72791"
+     inkscape:zoom="0.49497475"
+     inkscape:cx="830.86832"
+     inkscape:cy="367.50426"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      inkscape:window-width="1018"
      inkscape:window-height="705"
      inkscape:window-x="0"
-     inkscape:window-y="0" />
+     inkscape:window-y="0"
+     width="500px"
+     height="450px" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -99,12 +102,12 @@
      id="layer1">
     <path
        style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:black;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="M 245.46707,386.67165 L 313.14728,305.85945 L 243.44676,250.30106 L 239.40615,96.757875 L 292.94423,164.4381 L 372.74628,163.42794 L 370.72598,162.41779"
+       d="M 158.59395,382.63104 L 226.27416,301.81884 L 156.57364,246.26045 L 152.53303,92.717265 L 206.07111,160.39749 L 285.87316,159.38733 L 283.85286,158.37718"
        id="path1882" />
     <flowRoot
        xml:space="preserve"
        id="flowRoot1902"
-       transform="translate(28.11095,22.22336)"><flowRegion
+       transform="translate(-58.76217,18.18275)"><flowRegion
          id="flowRegion1904"><rect
            id="rect1906"
            width="117.1777"
@@ -114,7 +117,7 @@
          id="flowPara1908">ShoulderP</flowPara></flowRoot>    <flowRoot
        xml:space="preserve"
        id="flowRoot1910"
-       transform="translate(6.060915,5.050763)"><flowRegion
+       transform="translate(-80.8122,1.010153)"><flowRegion
          id="flowRegion1912"><rect
            id="rect1914"
            width="58.588848"
@@ -124,7 +127,7 @@
          id="flowPara1916">HandP</flowPara></flowRoot>    <flowRoot
        xml:space="preserve"
        id="flowRoot1918"
-       transform="translate(-98.99495,6.060915)"><flowRegion
+       transform="translate(-185.8681,2.020305)"><flowRegion
          id="flowRegion1920"><rect
            id="rect1922"
            width="110.10663"
@@ -135,7 +138,7 @@
          id="flowPara1926" /></flowRoot>    <flowRoot
        xml:space="preserve"
        id="flowRoot1928"
-       transform="translate(-11.11168,5.050763)"><flowRegion
+       transform="translate(-97.9848,1.010153)"><flowRegion
          id="flowRegion1930"><rect
            id="rect1932"
            width="90.913727"
@@ -146,7 +149,7 @@
          id="flowPara1936" /></flowRoot>    <flowRoot
        xml:space="preserve"
        id="flowRoot1938"
-       transform="translate(36.36549,1.010153)"><flowRegion
+       transform="translate(-50.50763,-3.030457)"><flowRegion
          id="flowRegion1940"><rect
            id="rect1942"
            width="92.934036"
@@ -156,7 +159,7 @@
          id="flowPara1944">FootP</flowPara></flowRoot>    <flowRoot
        xml:space="preserve"
        id="flowRoot1946"
-       transform="translate(2.020305,-6.060915)"><flowRegion
+       transform="translate(-84.85281,-10.10153)"><flowRegion
          id="flowRegion1948"><rect
            id="rect1950"
            width="94.954338"
@@ -166,7 +169,7 @@
          id="flowPara1952">ElbowP</flowPara></flowRoot>    <flowRoot
        xml:space="preserve"
        id="flowRoot1978"
-       transform="translate(-54.99996,26.42857)"
+       transform="translate(-141.8731,22.38796)"
        style="fill:#f03"><flowRegion
          id="flowRegion1980"><rect
            id="rect1982"
@@ -178,7 +181,7 @@
          id="flowPara1984">m_PlayerFootAnchorBodyID</flowPara></flowRoot>    <flowRoot
        xml:space="preserve"
        id="flowRoot1986"
-       transform="translate(77.85713,-255)"
+       transform="translate(-9.015989,-259.0406)"
        style="fill:#f03"><flowRegion
          id="flowRegion1988"><rect
            id="rect1990"
@@ -190,7 +193,7 @@
          id="flowPara1992">m_PlayerHandAnchorBodyID</flowPara></flowRoot>    <flowRoot
        xml:space="preserve"
        id="flowRoot1994"
-       transform="translate(193.5715,-111.4285)"
+       transform="translate(106.6984,-115.4691)"
        style="fill:#f03"><flowRegion
          id="flowRegion1996"><rect
            id="rect1998"
@@ -202,7 +205,7 @@
          id="flowPara2000">m_PlayerULegBodyID</flowPara></flowRoot>    <flowRoot
        xml:space="preserve"
        id="flowRoot2002"
-       transform="translate(212.8572,10)"
+       transform="translate(125.9841,5.95939)"
        style="fill:#f03"><flowRegion
          id="flowRegion2004"><rect
            id="rect2006"
@@ -214,7 +217,7 @@
          id="flowPara2008">m_PlayerLLegBodyID</flowPara></flowRoot>    <flowRoot
        xml:space="preserve"
        id="flowRoot2010"
-       transform="translate(258.5715,-159.2857)"
+       transform="translate(171.6984,-163.3263)"
        style="fill:#f03"><flowRegion
          id="flowRegion2012"><rect
            id="rect2014"
@@ -226,7 +229,7 @@
          id="flowPara2016">m_PlayerUArmBodyID</flowPara></flowRoot>    <flowRoot
        xml:space="preserve"
        id="flowRoot2018"
-       transform="translate(291.4285,-57.14287)"
+       transform="translate(204.5554,-61.18348)"
        style="fill:url(#linearGradient2048);fill-opacity:1"><flowRegion
          id="flowRegion2020"
          style="fill:url(#linearGradient2062);fill-opacity:1"><rect
@@ -240,7 +243,7 @@
          style="fill:url(#linearGradient2066);fill-opacity:1">m_PlayerLArmBodyID</flowPara></flowRoot>    <flowRoot
        xml:space="preserve"
        id="flowRoot2026"
-       transform="translate(104.9999,25.71428)"
+       transform="translate(18.12678,21.67367)"
        style="fill:#f03"><flowRegion
          id="flowRegion2028"><rect
            id="rect2030"
@@ -258,6 +261,6 @@
        sodipodi:rx="34.285713"
        sodipodi:ry="33.214287"
        d="M 260.71429 79.147896 A 34.285713 33.214287 0 1 1  192.14286,79.147896 A 34.285713 33.214287 0 1 1  260.71429 79.147896 z"
-       transform="translate(12.14285,-16.42857)" />
+       transform="translate(-74.73027,-20.46918)" />
   </g>
 </svg>
