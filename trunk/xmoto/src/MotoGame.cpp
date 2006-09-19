@@ -1881,6 +1881,24 @@ namespace vapp {
   void MotoGame::setBodyDetach(bool state) {
     m_bodyDetach = state;
     m_renderer->setRenderBikeFront(! m_bodyDetach);
+
+    if(m_bodyDetach) {
+      //dJointSetHingeParam(m_KneeHingeID,dParamLoStop, dInfinity);
+      //dJointSetHingeParam(m_KneeHingeID,dParamHiStop, dInfinity);
+
+
+      //dJointSetHingeAnchor(m_LowerBodyHingeID , dInfinity, dInfinity, 0.0f);
+      //dJointSetHingeAnchor(m_ShoulderHingeID  , dInfinity, dInfinity, 0.0f);
+      //dJointSetHingeAnchor(m_ElbowHingeID     , dInfinity, dInfinity, 0.0f);
+      //dJointSetHingeAnchor(m_FootHingeID      , dInfinity, dInfinity, 0.0f);
+      //dJointSetHingeAnchor(m_HandHingeID      , dInfinity, dInfinity, 0.0f);
+      //dJointSetHingeAnchor(m_KneeHingeID2     , 0.0f, 0.0f, 0.0f);
+      //dJointSetHingeAnchor(m_LowerBodyHingeID2, dInfinity, dInfinity, 0.0f);
+      //dJointSetHingeAnchor(m_ShoulderHingeID2 , dInfinity, dInfinity, 0.0f);
+      //dJointSetHingeAnchor(m_ElbowHingeID2    , dInfinity, dInfinity, 0.0f);
+      //dJointSetHingeAnchor(m_FootHingeID2     , dInfinity, dInfinity, 0.0f);
+      //dJointSetHingeAnchor(m_HandHingeID2     , dInfinity, dInfinity, 0.0f);
+    }
   }
 
   void MotoGame::stopBikeControls() {

@@ -722,8 +722,18 @@ namespace vapp {
       v_move_camera_max = 0.01;
     }
 
-    m_Scroll = -getGameObject()->getBikeState()->CenterP; /* Determine scroll */       
-    
+    //if(getGameObject()->isDead() == false) {
+      m_Scroll = -getGameObject()->getBikeState()->CenterP; /* Determine scroll */
+    /*
+    } else {
+      if(getGameObject()->getBikeState()->Dir == DD_RIGHT) {
+	m_Scroll = -getGameObject()->getBikeState()->HeadP;
+      } else {
+	m_Scroll = -getGameObject()->getBikeState()->Head2P;
+      }
+    }
+    */
+
     /* Driving direction? */
     guessDesiredCameraPosition(v_fDesiredHorizontalScrollShift, v_fDesiredVerticalScrollShift);
     

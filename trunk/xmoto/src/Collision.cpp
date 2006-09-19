@@ -320,7 +320,7 @@ namespace vapp {
   ===========================================================================*/
   int CollisionSystem::collideLine(float x1,float y1,float x2,float y2,dContact *pContacts,int nMaxC) {
     int nNumC = 0;
-  
+
     /* Calculate bounding box of line */
     float fMinX = CD_MIN(x1,x2);
     float fMinY = CD_MIN(y1,y2);
@@ -389,20 +389,21 @@ namespace vapp {
         /* Check all lines in cell */
         for(int j=0;j<m_pGrid[i].Lines.size();j++) {
           /* Is the beginning "behind" the line? */
+	  // nicolas : it seems not work
           float vx = m_pGrid[i].Lines[j]->x2 - m_pGrid[i].Lines[j]->x1;
           float vy = m_pGrid[i].Lines[j]->y2 - m_pGrid[i].Lines[j]->y1;
-          float enx = -vy;
-          float eny = vx;
-          if(enx*x1 + eny*y1 < enx*m_pGrid[i].Lines[j]->x1 + eny*m_pGrid[i].Lines[j]->y1) {
-            /* Yes it is, can't touch */
-            continue;
-          }
+          //float enx = -vy;
+          //float eny = vx;
+          //if(enx*x1 + eny*y1 < enx*m_pGrid[i].Lines[j]->x1 + eny*m_pGrid[i].Lines[j]->y1) {
+          //  /* Yes it is, can't touch */
+          //  continue;
+          //}
 
           /* Too small? */
           if(fabs(vx) < 0.0001f && fabs(vy) < 0.0001f) {
             continue;
           }
-          
+
           /* Try calculating intersection point */
           Vector2f T;
           int n = intersectLineLine2f(Vector2f(x1,y1),Vector2f(x2,y2),
@@ -413,7 +414,7 @@ namespace vapp {
             Vector2f W = Vector2f(vx,vy);
             W.normalize();
 
-            _SetWheelContactParams(&c,T,W,0.0f, m_pGrid[i].Lines[j]->fGrip);
+            _SetWheelContactParams(&c,T,W, 0.0f, m_pGrid[i].Lines[j]->fGrip);
             nNumC = _AddContactToList(pContacts,nNumC,&c,nMaxC);                 
           }                                      
         }          

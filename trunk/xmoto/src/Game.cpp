@@ -892,7 +892,7 @@ namespace vapp {
     bool bValidGameState = true;
     bool bIsPaused = false;
 
-//   SDL_Delay(30); /* you want to simulate a slow computer? do it here! */
+    //SDL_Delay(200); /* you want to simulate a slow computer? do it here! */
                 
     /* Per default, don't wait between frames */
     setFrameDelay(0);
