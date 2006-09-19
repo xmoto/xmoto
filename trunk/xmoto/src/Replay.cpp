@@ -56,8 +56,10 @@ namespace vapp {
   
   void Replay::_FreeReplay(void) {
     /* Get rid of replay events */
-    for(int i=0;i<m_ReplayEvents.size();i++)
+    for(int i=0;i<m_ReplayEvents.size();i++) {
+      delete m_ReplayEvents[i]->Event;
       delete m_ReplayEvents[i];
+    }
     m_ReplayEvents.clear();
 
     /* Dealloc chunks */
