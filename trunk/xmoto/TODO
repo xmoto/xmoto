@@ -1,5 +1,17 @@
 
-<aspegic500> xmoto 0.2.1 ?
+
+* I got a bug in the gentoo bugzilla:
+http://bugs.gentoo.org/147725 xmoto-0.2.1 fails with MAKEOPTS="-j2" or higher.
+You moved the xmoto target to the subdir but still wants the result in the
+top directory. But the rule here is broken
+xmoto: src/xmoto
+      ln -sf src/xmoto xmoto
+make -j2 xmoto produces
+make: *** No rule to make target `src/xmoto'.  Stop.
+yet cd src; make xmoto works. Can you please have a look at it and
+revert the change if no better solution is found? 
+
+* <aspegic500> xmoto 0.2.1 ?
 [11:25] <Fifty> yep, that's the version
 [11:26] <aspegic500> sudo dpkg -l | grep libode : have you other version of ode installed ?
 [11:27] <Fifty> libode0-dev and libode0c2
