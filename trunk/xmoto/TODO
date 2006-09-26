@@ -1,5 +1,5 @@
 
-
+* Bug: personal  times in "new levels" not updated when playing
 * I got a bug in the gentoo bugzilla:
 http://bugs.gentoo.org/147725 xmoto-0.2.1 fails with MAKEOPTS="-j2" or higher.
 You moved the xmoto target to the subdir but still wants the result in the
@@ -50,26 +50,7 @@ revert the change if no better solution is found?
 [11:42] <aspegic500> it tries to use stdc++
 
 * bzip2 not removed on windows : to test
-* mipmapping
-so i suggest to activate mipmapping, maybe only for the highest quality setting
-Jonathan Sieber at msn:   zoom out very much, more than factor 4 and then move the camera
-Jonathan Sieber at msn:   you will notice ugly noise on the textures, some sort of flickering
 
-
-### for 0.2.2 and after
-
-* remove the "level packs" button, remove the "internal" and "external" tabs and replace them by "All levels" tab and "Level pack" tab and make internal level a pack
-
-* change theme without restart
-
-* SDL_ttf or something like that for rendering text
-*(20:39:54) Neckelmann:   the game should really do all this:
-zone1 = {}
-zone1a = {}
-zone1b = {}
-zone2 = {}
-zone2a = {}
-zone2b = {}
 * Bug,
 scenario:
 - you touch the flower, but the is still a strawberry to take
@@ -89,6 +70,24 @@ http://xmoto.free.fr/interesting_replays/ireplay_40.rpl
 	        m_fFinishTime = getTime();
 	      }
       }
+* BUG: Replays break on Linux/PPC. Screenshot: http://vasi.webhop.org/files/ports/xmoto/xmoto-bug.jpg
+	* Probably fixed, waiting for verification by Marcel
+
+#############################################################################################
+### not important, not really necesary, very low urgency, or just makes thing more complex:
+
+* BUG : http://forum.xmoto.free.fr/viewtopic.php?p=205#205 (no clue how to fix)
+* BUG ? http://forum.xmoto.free.fr/viewtopic.php?p=212#212 (not really i bug methinks)
+* remove the "level packs" button, remove the "internal" and "external" tabs and replace them by "All levels" tab and "Level pack" tab and make internal level a pack
+* change theme without restart
+* SDL_ttf or something like that for rendering text
+*(20:39:54) Neckelmann:   the game should really do all this:
+zone1 = {}
+zone1a = {}
+zone1b = {}
+zone2 = {}
+zone2a = {}
+zone2b = {}
 * script :
    add : rotation for blocks         
 * Add a command line option like the one to test themes. This option could be ''testscript'' and would show zones during game (with an extra, the name of the zone).
@@ -96,13 +95,9 @@ http://xmoto.free.fr/interesting_replays/ireplay_40.rpl
    the list
 * to be able to give a color to a block as parameter in a level
    (instead of a texture)
-* BUG ? http://forum.xmoto.free.fr/viewtopic.php?p=212#212
-* BUG : http://forum.xmoto.free.fr/viewtopic.php?p=205#205
 * if some texture are missing, but backgound in black and foreground in white so that the level can be playable
 * change ghost rules : "player/players/room"
 * bug : keys 1 2 3 4 5 won't work on french keybord : allow to configure key action for script instead of allow the script to choose the key
-* BUG: Replays break on Linux/PPC. Screenshot: http://vasi.webhop.org/files/ports/xmoto/xmoto-bug.jpg
-	* Probably fixed, waiting for verification by Marcel
 * OS X stuff:
         * Add Universal Binary build system to subdirectory.
         * Modify so it could run on a compile farm.

@@ -391,7 +391,7 @@ namespace vapp {
     pGeneralOptionsTab->showWindow(true);
     pGeneralOptionsTab->setID("GENERAL_TAB");
     
-    UIButton *pShowMiniMap = new UIButton(pGeneralOptionsTab,5,33-28-10,GAMETEXT_SHOWMINIMAP,(pGeneralOptionsTab->getPosition().nWidth-40),28);
+    UIButton *pShowMiniMap = new UIButton(pGeneralOptionsTab,5,33-28-10,GAMETEXT_SHOWMINIMAP,((pGeneralOptionsTab->getPosition().nWidth-40))/2,28);
     pShowMiniMap->setType(UI_BUTTON_TYPE_CHECK);
     pShowMiniMap->setID("SHOWMINIMAP");
     pShowMiniMap->enableWindow(true);
@@ -399,13 +399,29 @@ namespace vapp {
     pShowMiniMap->setGroup(50023);
     pShowMiniMap->setContextHelp(CONTEXTHELP_MINI_MAP);
 
-    UIButton *pShowEngineCounter = new UIButton(pGeneralOptionsTab,5,63-28-10,GAMETEXT_SHOWENGINECOUNTER,(pGeneralOptionsTab->getPosition().nWidth-40),28);
+    UIButton *pShowEngineCounter = new UIButton(pGeneralOptionsTab,5,63-28-10,GAMETEXT_SHOWENGINECOUNTER,((pGeneralOptionsTab->getPosition().nWidth-40))/2,28);
     pShowEngineCounter->setType(UI_BUTTON_TYPE_CHECK);
     pShowEngineCounter->setID("SHOWENGINECOUNTER");
     pShowEngineCounter->enableWindow(true);
     pShowEngineCounter->setFont(m_Renderer.getSmallFont());
     pShowEngineCounter->setGroup(50023);
     pShowEngineCounter->setContextHelp(CONTEXTHELP_ENGINE_COUNTER);
+
+    UIButton *pInitZoom = new UIButton(pGeneralOptionsTab,5+((pGeneralOptionsTab->getPosition().nWidth-40))/2,33-28-10,GAMETEXT_INITZOOM,((pGeneralOptionsTab->getPosition().nWidth-40))/2,28);
+    pInitZoom->setType(UI_BUTTON_TYPE_CHECK);
+    pInitZoom->setID("INITZOOM");
+    pInitZoom->enableWindow(true);
+    pInitZoom->setFont(m_Renderer.getSmallFont());
+    pInitZoom->setGroup(50023);
+    pInitZoom->setContextHelp(CONTEXTHELP_INITZOOM);
+
+    UIButton *pDeathAnim = new UIButton(pGeneralOptionsTab,5+((pGeneralOptionsTab->getPosition().nWidth-40))/2,63-28-10,GAMETEXT_DEATHANIM,((pGeneralOptionsTab->getPosition().nWidth-40))/2,28);
+    pDeathAnim->setType(UI_BUTTON_TYPE_CHECK);
+    pDeathAnim->setID("DEATHANIM");
+    pDeathAnim->enableWindow(true);
+    pDeathAnim->setFont(m_Renderer.getSmallFont());
+    pDeathAnim->setGroup(50023);
+    pDeathAnim->setContextHelp(CONTEXTHELP_DEATHANIM);
 
     UIButton *pContextHelp = new UIButton(pGeneralOptionsTab,5,93-28-10,GAMETEXT_ENABLECONTEXTHELP,(pGeneralOptionsTab->getPosition().nWidth-40),28);
     pContextHelp->setType(UI_BUTTON_TYPE_CHECK);
@@ -2958,6 +2974,8 @@ namespace vapp {
   ===========================================================================*/
   void GameApp::_ImportOptions(void) {
     UIButton *pShowMiniMap = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:SHOWMINIMAP");
+    UIButton *pDeathAnim = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:DEATHANIM");
+    UIButton *pInitZoom = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:INITZOOM");
     UIButton *pShowEngineCounter = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:SHOWENGINECOUNTER");
 
     UIButton *pContextHelp = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:ENABLECONTEXTHELP");
@@ -3068,6 +3086,8 @@ namespace vapp {
 
     pShowMiniMap->setChecked(m_Config.getBool("ShowMiniMap"));
     pShowEngineCounter->setChecked(m_Config.getBool("ShowEngineCounter"));
+    pInitZoom->setChecked(m_Config.getBool("InitZoom"));
+    pDeathAnim->setChecked(m_Config.getBool("DeathAnim"));
     pContextHelp->setChecked(m_Config.getBool("ContextHelp"));
     pAutosaveReplays->setChecked(m_Config.getBool("AutosaveHighscoreReplays"));
 
@@ -3162,6 +3182,8 @@ namespace vapp {
     m_Config.setValue("MenuBackgroundGraphics",m_Config.getDefaultValue("MenuBackgroundGraphics"));
     m_Config.setValue("ShowMiniMap",m_Config.getDefaultValue("ShowMiniMap"));
     m_Config.setValue("ShowEngineCounter",m_Config.getDefaultValue("ShowEngineCounter"));
+    m_Config.setValue("InitZoom",m_Config.getDefaultValue("InitZoom"));
+    m_Config.setValue("DeathAnim",m_Config.getDefaultValue("DeathAnim"));
     m_Config.setValue("ContextHelp",m_Config.getDefaultValue("ContextHelp"));
     m_Config.setValue("EngineSoundEnable",m_Config.getDefaultValue("EngineSoundEnable"));
     m_Config.setValue("MenuMusic",m_Config.getDefaultValue("MenuMusic"));
@@ -3241,6 +3263,8 @@ namespace vapp {
   
     UIButton *pShowMiniMap = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:SHOWMINIMAP");
     UIButton *pShowEngineCounter = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:SHOWENGINECOUNTER");
+    UIButton *pDeathAnim = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:DEATHANIM");
+    UIButton *pInitZoom = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:INITZOOM");
     UIButton *pContextHelp = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:ENABLECONTEXTHELP");
     UIButton *pAutosaveReplays = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:AUTOSAVEREPLAYS");
     
@@ -3275,6 +3299,8 @@ namespace vapp {
     /* First all those which don't need a restart */
     m_Config.setBool("ShowMiniMap",pShowMiniMap->getChecked());
     m_Config.setBool("ShowEngineCounter",pShowEngineCounter->getChecked());
+    m_Config.setBool("InitZoom",pInitZoom->getChecked());
+    m_Config.setBool("DeathAnim",pDeathAnim->getChecked());
     m_Config.setBool("ContextHelp",pContextHelp->getChecked());
     
     if(pMenuLow->getChecked()) m_Config.setString("MenuBackgroundGraphics","Low");

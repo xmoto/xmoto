@@ -930,83 +930,82 @@ namespace vapp {
     std::string v_sprite_type;
 
     if(m_bUglyMode == false) {
-
       switch(pSprite->Type) {
       case ET_SPRITE:
-  v_sprite_type = pSprite->SpriteType;
-  break;
+        v_sprite_type = pSprite->SpriteType;
+        break;
       case ET_WRECKER:
-  v_sprite_type = "Wrecker";
-  break;
+        v_sprite_type = "Wrecker";
+        break;
       case ET_ENDOFLEVEL:
-  v_sprite_type = "Flower";
-  break;
+        v_sprite_type = "Flower";
+        break;
       case ET_STRAWBERRY:
-  v_sprite_type = "Strawberry";
-  break;
+        v_sprite_type = "Strawberry";
+        break;
       }
 
       /* search the sprite as an animation */
       v_animationSpriteType = (AnimationSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_ANIMATION, v_sprite_type);
       /* if the sprite is not an animation, it's perhaps a decoration */
       if(v_animationSpriteType != NULL) {
-  v_spriteType = v_animationSpriteType;
-  v_centerX = v_animationSpriteType->getCenterX();
-  v_centerY = v_animationSpriteType->getCenterY();
+        v_spriteType = v_animationSpriteType;
+        v_centerX = v_animationSpriteType->getCenterX();
+        v_centerY = v_animationSpriteType->getCenterY();
 
-  if(pSprite->pSrc->fWidth > 0.0) {
-    v_width  = pSprite->pSrc->fWidth;
-    v_height = pSprite->pSrc->fHeight;
-    v_centerX += (pSprite->pSrc->fWidth -v_animationSpriteType->getWidth())  / 2.0;
-    v_centerY += (pSprite->pSrc->fHeight-v_animationSpriteType->getHeight()) / 2.0;   
-  } else {
-    v_width  = v_animationSpriteType->getWidth();
-    v_height = v_animationSpriteType->getHeight();
-  }
+        if(pSprite->pSrc->fWidth > 0.0) {
+          v_width  = pSprite->pSrc->fWidth;
+          v_height = pSprite->pSrc->fHeight;
+          v_centerX += (pSprite->pSrc->fWidth -v_animationSpriteType->getWidth())  / 2.0;
+          v_centerY += (pSprite->pSrc->fHeight-v_animationSpriteType->getHeight()) / 2.0;   
+        } else {
+          v_width  = v_animationSpriteType->getWidth();
+          v_height = v_animationSpriteType->getHeight();
+        }
       } else {
-  v_decorationSpriteType = (DecorationSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_DECORATION, v_sprite_type);
-  v_spriteType = v_decorationSpriteType;
+        v_decorationSpriteType = (DecorationSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_DECORATION, v_sprite_type);
+        v_spriteType = v_decorationSpriteType;
 
-  if(v_decorationSpriteType != NULL) {
-    v_centerX = v_decorationSpriteType->getCenterX();
-    v_centerY = v_decorationSpriteType->getCenterY();
+        if(v_decorationSpriteType != NULL) {
+          v_centerX = v_decorationSpriteType->getCenterX();
+          v_centerY = v_decorationSpriteType->getCenterY();
 
-    if(pSprite->pSrc->fWidth  > 0.0) {
-      v_width  = pSprite->pSrc->fWidth;
-      v_height = pSprite->pSrc->fHeight;
-      /* adjust */
-      v_centerX += (pSprite->pSrc->fWidth -v_decorationSpriteType->getWidth())  / 2.0;
-      v_centerY += (pSprite->pSrc->fHeight-v_decorationSpriteType->getHeight()) / 2.0;
-    } else {
-      /* use the theme values */
-      v_width  = v_decorationSpriteType->getWidth();
-      v_height = v_decorationSpriteType->getHeight();
-    }
-  }
+          if(pSprite->pSrc->fWidth  > 0.0) {
+            v_width  = pSprite->pSrc->fWidth;
+            v_height = pSprite->pSrc->fHeight;
+            /* adjust */
+            v_centerX += (pSprite->pSrc->fWidth -v_decorationSpriteType->getWidth())  / 2.0;
+            v_centerY += (pSprite->pSrc->fHeight-v_decorationSpriteType->getHeight()) / 2.0;
+          } else {
+            /* use the theme values */
+            v_width  = v_decorationSpriteType->getWidth();
+            v_height = v_decorationSpriteType->getHeight();
+          }
+        }
       }
 
       if(v_spriteType != NULL) {
-  /* Draw it */
-  Vector2f p0,p1,p2,p3;
-  
-  p0 = Vector2f(pSprite->Pos.x,pSprite->Pos.y) +
-    Vector2f(-v_centerX,-v_centerY);
-  p1 = Vector2f(pSprite->Pos.x+v_width,pSprite->Pos.y) +
-    Vector2f(-v_centerX,-v_centerY);
-  p2 = Vector2f(pSprite->Pos.x+v_width,pSprite->Pos.y+v_height) +
-    Vector2f(-v_centerX,-v_centerY);
-  p3 = Vector2f(pSprite->Pos.x,pSprite->Pos.y+v_height) +
-    Vector2f(-v_centerX,-v_centerY);
-  
-  if(v_spriteType->getBlendMode() == SPRITE_BLENDMODE_ADDITIVE) {
-    _RenderAdditiveBlendedSection(v_spriteType->getTexture(),p0,p1,p2,p3);      
-  }
-  else {
-    glEnable(GL_ALPHA_TEST);
-    glAlphaFunc(GL_GEQUAL,0.5f);      
-    _RenderAlphaBlendedSection(v_spriteType->getTexture(),p0,p1,p2,p3);      
-    glDisable(GL_ALPHA_TEST);
-  }
+        /* Draw it */
+        Vector2f p0,p1,p2,p3;
+        
+        p0 = Vector2f(pSprite->Pos.x,pSprite->Pos.y) +
+          Vector2f(-v_centerX,-v_centerY);
+        p1 = Vector2f(pSprite->Pos.x+v_width,pSprite->Pos.y) +
+          Vector2f(-v_centerX,-v_centerY);
+        p2 = Vector2f(pSprite->Pos.x+v_width,pSprite->Pos.y+v_height) +
+          Vector2f(-v_centerX,-v_centerY);
+        p3 = Vector2f(pSprite->Pos.x,pSprite->Pos.y+v_height) +
+          Vector2f(-v_centerX,-v_centerY);
+        
+        if(v_spriteType->getBlendMode() == SPRITE_BLENDMODE_ADDITIVE) {
+          _RenderAdditiveBlendedSection(v_spriteType->getTexture(),p0,p1,p2,p3);      
+        }
+        else {
+          glEnable(GL_ALPHA_TEST);
+          glAlphaFunc(GL_GEQUAL,0.5f);      
+          _RenderAlphaBlendedSection(v_spriteType->getTexture(),p0,p1,p2,p3);      
+          glDisable(GL_ALPHA_TEST);
+        }
       }    
     }
     /* If this is debug-mode, also draw entity's area of effect */
@@ -1016,17 +1015,17 @@ namespace vapp {
       
       switch(pSprite->Type) {
       case ET_WRECKER:
-  v_color = MAKE_COLOR(80,80,80,0);
-  break;
+        v_color = MAKE_COLOR(80,255,255,0); /* Fix: color changed a bit so it's easier to spot */
+        break;
       case ET_ENDOFLEVEL:
-  v_color = MAKE_COLOR(255,255,255,0);
-  break;
+        v_color = MAKE_COLOR(255,255,0,0); /* Fix: color not same as blocks */
+        break;
       case ET_STRAWBERRY:
-  v_color = MAKE_COLOR(255,0,0,0);
-  break;
+        v_color = MAKE_COLOR(255,0,0,0);
+        break;
       default:
-  v_color = MAKE_COLOR(255,0,255,0);
-  break;
+        v_color = MAKE_COLOR(0,0,0,0); /* Fix: hard-to-see color because of entity's insignificance */
+        break;
       }
 
       _RenderCircle(20, v_color, C, pSprite->fSize);

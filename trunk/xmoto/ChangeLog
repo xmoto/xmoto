@@ -1,7 +1,17 @@
-X-Moto 0.2.1 2006-09-14
--------------------------------
+X-Moto 0.2.2 2006-
+----------------------
+ 
+ * Minimap now visible in -ugly mode again.
+ * Entity colors in -ugly mode adjusted.
+ * Ctrl-F1 to toggle -ugly mode from inside the game, Ctrl-F2 to toggle
+   theme testing mode.
+ * More in-game options.
+ * Some bugs fixed.
 
- * X-Moto is no more ALPHA !
+X-Moto 0.2.1 2006-09-14
+-----------------------
+
+ * X-Moto is no more ALPHA!
  * ppc computer can now read and write x86 replays (patch by Dave Vasilevsky)
  * upload highscores from the game
  * webrooms configuration

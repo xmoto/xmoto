@@ -474,6 +474,7 @@ namespace vapp {
     void setPlayerPosition(float x,float y,bool bFaceRight);
     const Vector2f &getPlayerPosition(void);
     bool getPlayerFaceDir(void);
+    void setDeathAnim(bool b) {m_bDeathAnimEnabled=b;}
     
     /* Direct Lua interaction methods */
     bool scriptCallBool(std::string FuncName,bool bDefault=false);
@@ -576,6 +577,7 @@ namespace vapp {
       
       bool m_bSqueeking;
       float m_fHowMuchSqueek;
+      bool m_bDeathAnimEnabled;
       bool m_bLevelInitSuccess;
 
       Vector2f m_PhysGravity; /* gravity */

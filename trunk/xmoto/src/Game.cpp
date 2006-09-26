@@ -104,7 +104,7 @@ namespace vapp {
           if(pList != NULL) {
             pList->makeActive();
           }
-    setPrePlayAnim(true);
+    setPrePlayAnim(m_bEnableInitZoom);
         }
         break;
       case GS_REPLAYING: {
@@ -191,7 +191,7 @@ namespace vapp {
         m_pMainMenu->showWindow(true);
 
   // enable the preplay animation
-  setPrePlayAnim(true);
+  setPrePlayAnim(m_bEnableInitZoom);
                   
         break;
       }
@@ -456,6 +456,8 @@ namespace vapp {
     m_bEnableContextHelp = m_Config.getBool("ContextHelp");
     m_bEnableMenuMusic = m_Config.getBool("MenuMusic");
     m_currentThemeName   = m_Config.getString("Theme");
+    m_bEnableInitZoom = m_Config.getBool("InitZoom");
+    m_bEnableDeathAnim = m_Config.getBool("DeathAnim");
 
     /* Cache? */
     m_bEnableLevelCache = m_Config.getBool("LevelCache");
@@ -892,6 +894,8 @@ namespace vapp {
     bool bValidGameState = true;
     bool bIsPaused = false;
 
+    m_MotoGame.setDeathAnim(m_bEnableDeathAnim); /* hack hack hack */
+
     //SDL_Delay(200); /* you want to simulate a slow computer? do it here! */
                 
     /* Per default, don't wait between frames */
@@ -1118,7 +1122,7 @@ namespace vapp {
         /* Only do this when not paused */
 	if(m_State == GS_PREPLAYING) {
 	  statePrestart_step();
-	} else if(m_State == GS_PLAYING || m_State == GS_JUSTDEAD) {
+	} else if(m_State == GS_PLAYING || (m_State == GS_JUSTDEAD && m_bEnableDeathAnim)) {
           /* Increase frame counter */
           m_nFrame++;
 	  
@@ -1276,7 +1280,7 @@ namespace vapp {
         if(!isNoGraphics() && bValidGameState) {
           m_Renderer.render(bIsPaused);
 	  
-          if(m_bShowMiniMap && m_bUglyMode == false) {
+          if(m_bShowMiniMap) {
             if(m_MotoGame.getBikeState()->Dir == DD_LEFT &&
 	       (m_bShowEngineCounter == false || m_State == GS_REPLAYING)) {
               m_Renderer.renderMiniMap(getDispWidth()-150,getDispHeight()-100,150,100);
@@ -1540,12 +1544,12 @@ namespace vapp {
       return;        
     }
 
-    if(nKey == SDLK_F1) {
+    if(nKey == SDLK_F1 && (SDL_GetModState()&KMOD_CTRL)) {
       switchUglyMode(!m_bUglyMode);
       return;        
     }
 
-    if(nKey == SDLK_F2) {
+    if(nKey == SDLK_F2 && (SDL_GetModState()&KMOD_CTRL)) {
       switchTestThemeMode(!m_bTestThemeMode);
       return;        
     }
@@ -1992,7 +1996,9 @@ namespace vapp {
     m_Config.createVar( "CompressReplays",        "true" );
     m_Config.createVar( "LevelCache",             "true" );
     m_Config.createVar( "ContextHelp",            "true" );
-    m_Config.createVar( "MenuMusic",              "true" );
+    m_Config.createVar( "MenuMusic",              "true" );    
+    m_Config.createVar( "InitZoom",               "false" );
+    m_Config.createVar( "DeathAnim",              "true" );
 
 #if defined(SUPPORT_WEBACCESS)
     m_Config.createVar( "WebHighscores",            "false" );
@@ -3067,10 +3073,15 @@ namespace vapp {
   }
 
   void GameApp::prestartAnimation_init() {
+    if(!m_bEnableInitZoom) {
+      setState(GS_PLAYING);
+      return;
+    }
+  
     m_fPrePlayStartTime = getRealTime();  // because the man can change ugly mode while the animation
     m_fPrePlayStartInitZoom = m_Renderer.getCurrentZoom();  // because the man can change ugly mode while the animation
     m_fPrePlayStartCameraX = m_Renderer.getCameraPositionX();
-    m_fPrePlayStartCameraY = m_Renderer.getCameraPositionY();
+    m_fPrePlayStartCameraY = m_Renderer.getCameraPositionY();       
 
     if(m_bPrePlayAnim && m_bUglyMode == false) {
       

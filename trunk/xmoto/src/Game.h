@@ -114,6 +114,8 @@ namespace vapp {
                  m_bShowFrameRate=false;
                  m_bEnableLevelCache=true;
                  m_bEnableMenuMusic=false;
+                 m_bEnableInitZoom=false;
+                 m_bEnableDeathAnim=true;
                  m_pQuitMsgBox=NULL;
                  m_pNotifyMsgBox=NULL;
 #if defined(SUPPORT_WEBACCESS)
@@ -228,6 +230,8 @@ namespace vapp {
       ReplayList m_ReplayList;                  /* Replay list */
       std::vector<LevelPack *> m_LevelPacks;    /* Level packs */
 
+      bool m_bEnableInitZoom;                   /* true: Perform initial level scroll/zoom */
+      bool m_bEnableDeathAnim;                  /* true: Bike falls apart at when dead */
       bool m_bEnableMenuMusic;                  /* true: Play menu music */      
       bool m_bEnableContextHelp;                /* true: Show context help */
       bool m_bBenchmark;                        /* true: Test game performance */

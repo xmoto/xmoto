@@ -126,6 +126,7 @@ namespace vapp {
   MotoGame::MotoGame() {
     m_pLevelSrc=NULL;
     m_bSqueeking=false;
+    m_bDeathAnimEnabled=true;
     clearStates();
     m_lastCallToEveryHundreath = 0.0;
 #if defined(ALLOW_GHOST)
@@ -1801,8 +1802,8 @@ namespace vapp {
   }
 
   void MotoGame::killPlayer() {
-    m_bDead = true;
-    setBodyDetach(true);
+    m_bDead = true;    
+    setBodyDetach(m_bDeathAnimEnabled);
     stopBikeControls();
   }
 
@@ -1883,8 +1884,11 @@ namespace vapp {
     m_renderer->setRenderBikeFront(! m_bodyDetach);
 
     if(m_bodyDetach) {
-      //dJointSetHingeParam(m_KneeHingeID,dParamLoStop, dInfinity);
-      //dJointSetHingeParam(m_KneeHingeID,dParamHiStop, dInfinity);
+      //float fERP = 0.0003; float fCFM = 0.00003f;
+      //dJointSetHingeParam(m_KneeHingeID,dParamLoStop, -0.5);
+      //dJointSetHingeParam(m_KneeHingeID,dParamHiStop, 0.1);
+      //dJointSetHingeParam(m_KneeHingeID,dParamSuspensionERP,fERP);
+      //dJointSetHingeParam(m_KneeHingeID,dParamSuspensionCFM,fCFM);
 
 
       //dJointSetHingeAnchor(m_LowerBodyHingeID , dInfinity, dInfinity, 0.0f);

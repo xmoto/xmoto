@@ -1,14 +1,7 @@
-X-Moto 0.2.0 (Alpha Release)
+X-Moto 0.2.2
 Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 http://xmoto.sourceforge.net
-
-IMPORTANT: This is an ALPHA release of the game, which means that many
-things aren't production stable. Also note that the final release of
-the game will include many more levels.
- 
-I'll strongly appreciate any bug reports, feature requests, general 
-bashing, etc. Please help making the game better.
 
 Introduction
 ============
@@ -29,7 +22,7 @@ General hardware requirements:
  - CPU: 500 MHz (a wild guess)
  - RAM: 128 MB (at least 40 MB of free memory prefered)
  - Graphics: nVidia GeForce-class card with 32 MB of video memory
- - HDD: 10 MB of free space on your hard drive.
+ - HDD: 12 MB of free space on your hard drive.
  - Software: Windows 2000/XP, Linux, Mac OS X or FreeBSD (other UNIX-like 
    OS's might be supported as well)
 
