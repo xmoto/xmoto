@@ -255,7 +255,13 @@ namespace vapp {
     pTutorialButton->setContextHelp(CONTEXTHELP_TUTORIAL);
     pTutorialButton->setFont(m_Renderer.getSmallFont());
     pTutorialButton->setType(UI_BUTTON_TYPE_SMALL);
-    pTutorialButton->setID("HELP_TUTORIAL_BUTTON");
+    pTutorialButton->setID("HELP_TUTORIAL_BUTTON");    
+    UIButton *pCreditsButton = new UIButton(m_pHelpWindow,m_pHelpWindow->getPosition().nWidth-240,m_pHelpWindow->getPosition().nHeight-62,
+                                             GAMETEXT_CREDITSBUTTON,115,57);
+    pCreditsButton->setContextHelp(CONTEXTHELP_CREDITS);
+    pCreditsButton->setFont(m_Renderer.getSmallFont());
+    pCreditsButton->setType(UI_BUTTON_TYPE_SMALL);
+    pCreditsButton->setID("HELP_CREDITS_BUTTON");
     
     m_pPlayWindow = new UIFrame(m_pMainMenu,300,(getDispHeight()*140)/600,"",getDispWidth()-300-20,getDispHeight()-40-(getDispHeight()*120)/600-10);      
     m_pPlayWindow->showWindow(false);
@@ -2452,6 +2458,7 @@ namespace vapp {
     }
     
     /* HELP */
+    /* Tutorial button clicked? */
     UIButton *pTutorialButton = (UIButton *)m_pHelpWindow->getChild("HELP_TUTORIAL_BUTTON");
     if(pTutorialButton && pTutorialButton->isClicked()) {
       pTutorialButton->setClicked(false);
@@ -2464,6 +2471,16 @@ namespace vapp {
         m_StateAfterPlaying = GS_MENU;
         setState(GS_PREPLAYING);
       }
+    }
+    /* View credits? */
+    UIButton *pCreditsButton = (UIButton *)m_pHelpWindow->getChild("HELP_CREDITS_BUTTON");
+    if(pCreditsButton && pCreditsButton->isClicked()) {
+      pCreditsButton->setClicked(false);
+      
+      m_pMainMenu->showWindow(false);      
+      m_PlaySpecificReplay = "credits.rpl";
+      m_StateAfterPlaying = GS_MENU;
+      setState(GS_CREDITSMODE);      
     }
     
     /* PLAY */

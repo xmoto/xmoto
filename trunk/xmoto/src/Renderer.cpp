@@ -46,17 +46,19 @@ namespace vapp {
   /*===========================================================================
   Called to prepare renderer for new level
   ===========================================================================*/
-  void GameRenderer::prepareForNewLevel(void) {
+  void GameRenderer::prepareForNewLevel(bool bCreditsMode) {
 //    printf("PREPARE!!\n");
     m_fCurrentHorizontalScrollShift = 0.0f;
     m_fCurrentVerticalScrollShift = 0.0f;
     m_fNextParticleUpdate = 0.0f;
     m_previous_driver_dir  = DD_LEFT;    
     m_recenter_camera_fast = true;
+    
+    m_bCreditsMode = bCreditsMode;
 
     #if defined(ALLOW_GHOST)
       /* Set initial ghost information position */
-      if(getGameObject()->isGhostActive()) {
+      if(getGameObject()->isGhostActive() && !bCreditsMode) {
         m_GhostInfoPos = getGameObject()->getGhostBikeState()->CenterP + Vector2f(0,-1.5f);
         m_GhostInfoVel = Vector2f(0,0);
 
@@ -473,8 +475,8 @@ namespace vapp {
   ===========================================================================*/
   void GameRenderer::render(bool bIsPaused) {
     /* Update time */
-    m_pInGameStats->showWindow(true);
-    m_pPlayTime->setCaption(getParent()->formatTime(getGameObject()->getTime()));
+    m_pInGameStats->showWindow(!m_bCreditsMode);
+    m_pPlayTime->setCaption(m_bCreditsMode?"":getParent()->formatTime(getGameObject()->getTime()));
 
     /* Prepare for rendering frame */    
     if(getGameObject()->getTime() > m_fNextParticleUpdate && !bIsPaused) {
@@ -485,7 +487,6 @@ namespace vapp {
     m_fZoom = 60.0f;    
     setScroll(true);
  
-
     glLoadIdentity();
 
     /* SKY! */
@@ -697,11 +698,13 @@ namespace vapp {
     glOrtho(0,getParent()->getDispWidth(),0,getParent()->getDispHeight(),-1,1);
     glMatrixMode(GL_MODELVIEW);
 
-    /* And then the game messages */
-    _RenderGameMessages();            
-    
-    /* If there's strawberries in the level, tell the user how many there's left */
-    _RenderGameStatus();
+    if(!m_bCreditsMode) {
+      /* And then the game messages */
+      _RenderGameMessages();            
+      
+      /* If there's strawberries in the level, tell the user how many there's left */
+      _RenderGameStatus();
+    }
   }
 
   void GameRenderer::setScroll(bool isSmooth) {

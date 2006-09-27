@@ -139,6 +139,9 @@
 				RelativePath="..\src\Collision.cpp">
 			</File>
 			<File
+				RelativePath="..\src\Credits.cpp">
+			</File>
+			<File
 				RelativePath="..\src\Game.cpp">
 			</File>
 			<File
@@ -241,6 +244,9 @@
 			</File>
 			<File
 				RelativePath="..\src\Collision.h">
+			</File>
+			<File
+				RelativePath="..\src\Credits.h">
 			</File>
 			<File
 				RelativePath="..\src\Game.h">

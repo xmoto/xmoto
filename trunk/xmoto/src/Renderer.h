@@ -191,7 +191,7 @@ namespace vapp {
       void render(bool bIsPaused = false);
       void renderMiniMap(int x,int y,int nWidth,int nHeight);
       void renderEngineCounter(int x,int y,int nWidth,int nHeight, float pSpeed);
-      void prepareForNewLevel(void);
+      void prepareForNewLevel(bool bCreditsMode=false);
       void unprepareForNewLevel(void);
       void loadDebugInfo(std::string File);
       
@@ -261,6 +261,7 @@ namespace vapp {
       bool m_bDebug;
       bool m_bUglyMode;
       bool m_bTestThemeMode;
+      bool m_bCreditsMode;
 
       UIRoot m_GUI;                 /* GUI root */
       

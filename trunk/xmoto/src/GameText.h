@@ -67,6 +67,61 @@ Central place to keep many in-game text strings
 #define GAMETEXT_CLOSE                _("Close")
 #define GAMETEXT_CONFIGUREJOYSTICK    _("Configure Joystick...")
 #define GAMETEXT_CONTROLS             _("Controls")
+#define GAMETEXT_CREDITS              _("Lead Programming:Rasmus Neckelmann;" \
+                                        ":Nicolas Adenis-Lamarre;" \
+                                        ":;" \
+                                        "Additional Programming:Eric Piel;" \
+                                        ":Emmanuel Gorse;" \
+                                        ":Christoph Sommer;" \
+                                        ":;" \
+                                        "Graphics:Rasmus Neckelmann;" \
+                                        ":;" \
+                                        "Audio:Jens Erler;" \
+                                        ":Brandon Ross;" \
+                                        ":;" \
+                                        "Built-in Levels:Rasmus Neckelmann;" \
+                                        ":Pasi Kallinen;" \
+                                        ":Germain Gagnerot;" \
+                                        ":Clive Crous;" \
+                                        ":Torben Green;" \
+                                        ":Thomas Kjaerulff;" \
+                                        ":;" \
+                                        "MacOS X Support:Dave Vasilevsky;" \
+                                        ":Maxime Biais;" \
+                                        ":;" \
+                                        "Website Programming:Nicolas Adenis-Lamarre;" \
+                                        ":Nx;" \
+                                        ":;" \
+                                        "Website Administration:Nicolas Adenis-Lamarre;" \
+                                        ":Valentin;" \
+                                        ":Nx;" \
+                                        ":Alrj;" \
+                                        ":;" \
+                                        "Website Localization:Felix Schl;" \
+                                        ":Nicolas Adenis-Lamarre;" \
+                                        ":Trullo;" \
+                                        ":Jj;" \
+                                        ":Vertigo;" \
+                                        ":Pol Vinogradov;" \
+                                        ":;" \
+                                        "Forum:Valentin;" \
+                                        ":;" \
+                                        "Main testers:Jose Alberto Coelho;" \
+                                        ":Frederic Huard;" \
+                                        ":;" \
+                                        "Thanks to:SnowBear (for KDE/gnome integration);" \
+                                        ":Samuel Mimram (for Debian packaging);" \
+                                        ":Dark (for Gentoo packaging);" \
+                                        ":Olivier Blin (for Mandriva packaging);" \
+                                        ":Balazs Rozsa (for across/elma);" \
+                                        ":Yves Berquin (for making tinyxml);" \
+                                        ":L. Peter Deutsch (for the MD5 code);" \
+                                        ":Jes Vestervang (for providing web space);" \
+                                        ":Kenneth (for being such a little girl);"\
+                                        ":Everyone who have made levels;" \
+                                        ":People who have provided bug reports;" \
+                                        ":Anyone who has helped in any way;")                                        
+#define GAMETEXT_CREDITSBUTTON        _("Credits")
 #define GAMETEXT_CURPLAYER            _("Player")
 #define GAMETEXT_DATE                 _("Date")
 #define GAMETEXT_DEATHANIM            _("Bike Breaks")
@@ -399,5 +454,6 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_ENGINE_COUNTER _("Show the speedometer when playing")
 #define CONTEXTHELP_DEATHANIM _("Enable animation of bike falling apart when dead")
 #define CONTEXTHELP_INITZOOM _("Automatically scroll over the level before starting playing it")
+#define CONTEXTHELP_CREDITS _("View the X-Moto credits")
 
 #endif

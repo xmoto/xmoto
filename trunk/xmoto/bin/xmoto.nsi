@@ -40,6 +40,7 @@ Section "Game (required)"
 	File "xmoto.exe"
 	File "xmoto.ogg"
 	File "fonts.dat"
+	File "credits.rpl"
 	
 	File "/oname=README.txt" "..\README.txt"
 	File "/oname=COPYING.txt" "..\COPYING.txt"

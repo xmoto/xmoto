@@ -91,6 +91,7 @@ namespace vapp {
     /* This function is called to perform a controlled game state change.
        The various states are described below in the switch-statement */  
     m_State = s;
+    m_bCreditsModeActive = false;
     
     /* Always clear context when changing state */
     m_Renderer.getGUI()->clearContext();
@@ -107,10 +108,14 @@ namespace vapp {
     setPrePlayAnim(m_bEnableInitZoom);
         }
         break;
+      case GS_CREDITSMODE:
       case GS_REPLAYING: {
         //SDL_ShowCursor(SDL_DISABLE);
         m_bShowCursor = false;
-        
+        bool bCreditsMode = (m_State == GS_CREDITSMODE);
+        m_bCreditsModeActive = bCreditsMode;
+        m_State = GS_REPLAYING;
+
         /* Open a replay for input */
         if(m_pReplay != NULL) delete m_pReplay;
         m_pReplay = new Replay;
@@ -124,6 +129,14 @@ namespace vapp {
           // throw Exception("invalid replay");
         }
         else {
+          /* Credits mode? */
+          if(bCreditsMode) {
+            if(m_pCredits == NULL)
+              m_pCredits = new Credits;
+            
+            m_pCredits->init(m_pReplay->getFinishTime(),4,4,GAMETEXT_CREDITS);
+          }
+                          
           /* Fine, open the level */
           LevelSrc *pLevelSrc = _FindLevelByID(LevelID);
           if(pLevelSrc == NULL) {
@@ -147,7 +160,7 @@ namespace vapp {
             m_InputHandler.resetScriptKeyHooks();                                   
             m_MotoGame.prePlayLevel(NULL, pLevelSrc, NULL, true);
             m_nFrame = 0;
-            m_Renderer.prepareForNewLevel();            
+            m_Renderer.prepareForNewLevel(bCreditsMode);            
             
             /* Show help string */
             if(!isNoGraphics()) {
@@ -162,14 +175,14 @@ namespace vapp {
                 T2 = formatTime(pBestPTime->fFinishTime);
               
               m_Renderer.setBestTime(T1 + std::string(" / ") + T2);
-        m_Renderer.showReplayHelp(m_pReplay->getSpeed(),
-          ! _IsReplayScripted(m_pReplay));
+              m_Renderer.showReplayHelp(m_pReplay->getSpeed(),!_IsReplayScripted(m_pReplay));
 
-              if(m_bBenchmark) m_Renderer.setBestTime("");
+              if(m_bBenchmark || bCreditsMode) m_Renderer.setBestTime("");
               
 #if defined(SUPPORT_WEBACCESS) 
               /* World-record stuff */
-              _UpdateWorldRecord(LevelID);
+              if(!bCreditsMode)
+                _UpdateWorldRecord(LevelID);
 #endif
             }
 
@@ -1280,20 +1293,20 @@ namespace vapp {
         if(!isNoGraphics() && bValidGameState) {
           m_Renderer.render(bIsPaused);
 	  
-          if(m_bShowMiniMap) {
+          if(m_bShowMiniMap && !m_bCreditsModeActive) {
             if(m_MotoGame.getBikeState()->Dir == DD_LEFT &&
 	       (m_bShowEngineCounter == false || m_State == GS_REPLAYING)) {
               m_Renderer.renderMiniMap(getDispWidth()-150,getDispHeight()-100,150,100);
-	    } else {
-              m_Renderer.renderMiniMap(0,getDispHeight()-100,150,100);
-	    }
+	          } else {
+                    m_Renderer.renderMiniMap(0,getDispHeight()-100,150,100);
+	          }
           }             
 	  
-	  if(m_bShowEngineCounter && m_bUglyMode == false && m_State != GS_REPLAYING) {
-	    m_Renderer.renderEngineCounter(getDispWidth()-128, getDispHeight()-128,
-					   128, 128,
-					   m_MotoGame.getBikeEngineSpeed());
-	  } 
+	        if(m_bShowEngineCounter && m_bUglyMode == false && m_State != GS_REPLAYING) {
+	          m_Renderer.renderEngineCounter(getDispWidth()-128, getDispHeight()-128,
+					        128, 128,
+					        m_MotoGame.getBikeEngineSpeed());
+	        } 
         }
 	
         /* Also only when not paused */
@@ -1397,22 +1410,23 @@ namespace vapp {
         }        
         
         /* Level and player name to draw? */
-        if((m_State == GS_JUSTDEAD || m_State == GS_PAUSE || m_State == GS_FINISHED || m_State == GS_REPLAYING) &&
+        if(!m_bCreditsModeActive &&
+           (m_State == GS_JUSTDEAD || m_State == GS_PAUSE || m_State == GS_FINISHED || m_State == GS_REPLAYING) &&
            m_MotoGame.getLevelSrc() != NULL) {
-    UIFont *v_font = m_Renderer.getMediumFont();
-    std::string v_infos;
-    
-    v_infos = m_MotoGame.getLevelSrc()->getLevelInfo()->Name;
+          UIFont *v_font = m_Renderer.getMediumFont();
+          std::string v_infos;
+          
+          v_infos = m_MotoGame.getLevelSrc()->getLevelInfo()->Name;
 
-    if(m_State == GS_REPLAYING && m_pReplay != NULL) {
-      v_infos += " (" + std::string(GAMETEXT_BY) + " " + m_pReplay->getPlayerName() + ")";
-    }
+          if(m_State == GS_REPLAYING && m_pReplay != NULL) {
+            v_infos += " (" + std::string(GAMETEXT_BY) + " " + m_pReplay->getPlayerName() + ")";
+          }
 
-    if(v_font != NULL) {
-      UITextDraw::printRaw(v_font,0,getDispHeight()-4,
-         v_infos,
-         MAKE_COLOR(255,255,255,255));
-    }
+          if(v_font != NULL) {
+            UITextDraw::printRaw(v_font,0,getDispHeight()-4,
+              v_infos,
+              MAKE_COLOR(255,255,255,255));
+          }
         }
        
         /* Context menu? */
@@ -1423,16 +1437,21 @@ namespace vapp {
         
         /* Draw GUI */
         m_Renderer.getGUI()->paint();        
-
+        
         /* Show frame rate */
         if(m_bShowFrameRate) {
           sprintf(cTemp,"%f",fFPS_Rate);
           drawText(Vector2f(130,0),cTemp);
         }
+        
+        /* Credits? */
+        if(m_State == GS_REPLAYING && m_bCreditsModeActive && m_pCredits!=NULL) {
+          m_pCredits->render(m_MotoGame.getTime());
+        }
         break;
       } catch(Exception &e) {
-  setState(GS_MENU);
-  notifyMsg(splitText(e.getMsg(), 50));
+        setState(GS_MENU);
+        notifyMsg(splitText(e.getMsg(), 50));
       }
       }
     }
@@ -1461,6 +1480,9 @@ namespace vapp {
       if(m_pWebRooms != NULL)
       delete m_pWebRooms;  
     #endif
+  
+    if(m_pCredits != NULL)
+      delete m_pCredits;
   
     for(int i=0;i<m_LevelPacks.size();i++) {
       delete m_LevelPacks[i];

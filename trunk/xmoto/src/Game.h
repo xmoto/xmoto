@@ -38,6 +38,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "WWWAppInterface.h"
 #include "GUIXMoto.h"
 #include "Stats.h"
+#include "Credits.h"
 
 #define PRESTART_ANIMATION_TIME 2.0
 #define PRESTART_ANIMATION_LEVEL_MSG_DURATION 1.0
@@ -61,6 +62,7 @@ namespace vapp {
     GS_REPLAYING,             /* Replaying */
     GS_LEVEL_INFO_VIEWER,     /* In level info viewer */
     GS_LEVELPACK_VIEWER,      /* In level pack viewer */
+    GS_CREDITSMODE,           /* Credits/replay */
 #if defined(SUPPORT_WEBACCESS)
     GS_EDIT_WEBCONFIG         /* Editing internet configuration */
 #endif
@@ -106,7 +108,8 @@ namespace vapp {
   #endif
     public:
       virtual ~GameApp() {}
-      GameApp() {m_bShowMiniMap=true;
+      GameApp() {m_pCredits = NULL;
+                 m_bShowMiniMap=true;
                  m_bDebugMode=false;
                  m_bListLevels=false;
                  m_bListReplays=false;
@@ -309,6 +312,8 @@ namespace vapp {
 
 #endif
       
+      bool m_bCreditsModeActive;
+      
       ThemeChoicer *m_themeChoicer;
 
       float m_fPrePlayStartTime;
@@ -430,7 +435,10 @@ namespace vapp {
       bool m_bRecordReplays;
       float m_fReplayFrameRate;
       float m_fCurrentReplayFrameRate;
-      std::string m_currentThemeName;            
+      std::string m_currentThemeName; 
+      
+      /* Credits */
+      Credits *m_pCredits;           
 
       /* Helpers */
 #if defined(SUPPORT_WEBACCESS) 

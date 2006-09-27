@@ -22,7 +22,7 @@ X-Moto 0.2.1 2006-09-14
  * new functions for scripted levels
  * grip parameter for blocks (to make ice blocks for example)
  * auto-adaptation of the camera (depending on the gravity/wind)
- * uglyer ugly mode (for slower computer ; press F1 to switch ugly mode)
+ * uglier ugly mode (for slower computer; press F1 to switch ugly mode)
  * translations [french] (for unix only)
  * collision between body and sprites
  * level preview animation before playing (patch by Frederic Huard)
