@@ -248,7 +248,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_NOTFINISHED          _("Not finished")
 #define GAMETEXT_NOTIFYATINIT         _("Important note!\n"                                                \
                                       "\n"                                                               \
-                                      "Thanks to play X-Moto !\n"                                     \
+                                      "This is an in development version of X-Moto!\n"                                     \
                                       "All kinds of feedback are highly appreciated, so the game\n"      \
                                       "can get better.\n"                                                \
                                       "Mail bugs, ideas, comments, feature requests, hatemail, etc\n"    \
