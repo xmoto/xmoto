@@ -73,6 +73,7 @@ Central place to keep many in-game text strings
                                         "Additional Programming:Eric Piel;" \
                                         ":Emmanuel Gorse;" \
                                         ":Christoph Sommer;" \
+                                        ":Frederic Huard;" \
                                         ":;" \
                                         "Graphics:Rasmus Neckelmann;" \
                                         ":;" \
