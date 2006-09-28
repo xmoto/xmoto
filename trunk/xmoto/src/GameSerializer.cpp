@@ -58,6 +58,7 @@ namespace vapp {
       }
     } catch(Exception &e) {
       Log("** Warning ** : unable to unserialize game events !");
+      throw e;
     }
   }
 

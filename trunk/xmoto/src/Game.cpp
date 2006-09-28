@@ -110,85 +110,93 @@ namespace vapp {
         break;
       case GS_CREDITSMODE:
       case GS_REPLAYING: {
-        //SDL_ShowCursor(SDL_DISABLE);
-        m_bShowCursor = false;
-        bool bCreditsMode = (m_State == GS_CREDITSMODE);
-        m_bCreditsModeActive = bCreditsMode;
-        m_State = GS_REPLAYING;
+	try {
+	  std::string LevelID;
 
-        /* Open a replay for input */
-        if(m_pReplay != NULL) delete m_pReplay;
-        m_pReplay = new Replay;
-        std::string LevelID = m_pReplay->openReplay(m_PlaySpecificReplay,&m_fCurrentReplayFrameRate,m_ReplayPlayerName);
-        if(LevelID == "") {
-          Log("** Warning ** : No valid level identifier could be extracted from the replay: %s",m_PlaySpecificReplay.c_str());
-          char cBuf[256];
-          sprintf(cBuf,GAMETEXT_REPLAYNOTFOUND,m_PlaySpecificReplay.c_str());
-          setState(GS_MENU);
-          notifyMsg(cBuf);
-          // throw Exception("invalid replay");
-        }
-        else {
-          /* Credits mode? */
-          if(bCreditsMode) {
-            if(m_pCredits == NULL)
-              m_pCredits = new Credits;
-            
-            m_pCredits->init(m_pReplay->getFinishTime(),4,4,GAMETEXT_CREDITS);
-          }
-                          
-          /* Fine, open the level */
-          LevelSrc *pLevelSrc = _FindLevelByID(LevelID);
-          if(pLevelSrc == NULL) {
-            Log("** Warning ** : level '%s' specified by replay '%s' not found",LevelID.c_str(),m_PlaySpecificReplay.c_str());
-            
-            char cBuf[256];
-            sprintf(cBuf,GAMETEXT_LEVELREQUIREDBYREPLAY,LevelID.c_str());
-            setState(GS_MENU);
-            notifyMsg(cBuf);                        
-          }
-          else if(pLevelSrc->isXMotoTooOld()) {
-            Log("** Warning ** : level '%s' specified by replay '%s' requires newer X-Moto",LevelID.c_str(),m_PlaySpecificReplay.c_str());
-            
-            char cBuf[256];
-            sprintf(cBuf,GAMETEXT_NEWERXMOTOREQUIRED,pLevelSrc->getRequiredVersion().c_str());
-            setState(GS_MENU);
-            notifyMsg(cBuf);                        
-          }
-          else {    
-            /* Init level */    
-            m_InputHandler.resetScriptKeyHooks();                                   
-            m_MotoGame.prePlayLevel(NULL, pLevelSrc, NULL, true);
-            m_nFrame = 0;
-            m_Renderer.prepareForNewLevel(bCreditsMode);            
-            
-            /* Show help string */
-            if(!isNoGraphics()) {
-              PlayerTimeEntry *pBestTime = m_Profiles.getBestTime(LevelID);
-              PlayerTimeEntry *pBestPTime = m_Profiles.getBestPlayerTime(m_pPlayer->PlayerName,LevelID);
-              
-              std::string T1 = "--:--:--",T2 = "--:--:--";
+	  //SDL_ShowCursor(SDL_DISABLE);
+	  m_bShowCursor = false;
+	  bool bCreditsMode = (m_State == GS_CREDITSMODE);
+	  m_bCreditsModeActive = bCreditsMode;
+	  m_State = GS_REPLAYING;
+	  
+	  /* Open a replay for input */
+	  if(m_pReplay != NULL) delete m_pReplay;
+	  m_pReplay = new Replay;
 
-              if(pBestTime != NULL)
-                T1 = formatTime(pBestTime->fFinishTime);
-              if(pBestPTime != NULL)
-                T2 = formatTime(pBestPTime->fFinishTime);
-              
-              m_Renderer.setBestTime(T1 + std::string(" / ") + T2);
-              m_Renderer.showReplayHelp(m_pReplay->getSpeed(),!_IsReplayScripted(m_pReplay));
-
-              if(m_bBenchmark || bCreditsMode) m_Renderer.setBestTime("");
-              
+	  LevelID = m_pReplay->openReplay(m_PlaySpecificReplay,&m_fCurrentReplayFrameRate,m_ReplayPlayerName);
+	  if(LevelID == "") {
+	    Log("** Warning ** : No valid level identifier could be extracted from the replay: %s",m_PlaySpecificReplay.c_str());
+	    char cBuf[256];
+	    sprintf(cBuf,GAMETEXT_REPLAYNOTFOUND,m_PlaySpecificReplay.c_str());
+	    setState(GS_MENU);
+	    notifyMsg(cBuf);
+	    // throw Exception("invalid replay");
+	  }
+	  else {
+	    /* Credits mode? */
+	    if(bCreditsMode) {
+	      if(m_pCredits == NULL)
+		m_pCredits = new Credits;
+	      
+	      m_pCredits->init(m_pReplay->getFinishTime(),4,4,GAMETEXT_CREDITS);
+	    }
+	    
+	    /* Fine, open the level */
+	    LevelSrc *pLevelSrc = _FindLevelByID(LevelID);
+	    if(pLevelSrc == NULL) {
+	      Log("** Warning ** : level '%s' specified by replay '%s' not found",LevelID.c_str(),m_PlaySpecificReplay.c_str());
+	      
+	      char cBuf[256];
+	      sprintf(cBuf,GAMETEXT_LEVELREQUIREDBYREPLAY,LevelID.c_str());
+	      setState(GS_MENU);
+	      notifyMsg(cBuf);                        
+	    }
+	    else if(pLevelSrc->isXMotoTooOld()) {
+	      Log("** Warning ** : level '%s' specified by replay '%s' requires newer X-Moto",LevelID.c_str(),m_PlaySpecificReplay.c_str());
+	      
+	      char cBuf[256];
+	      sprintf(cBuf,GAMETEXT_NEWERXMOTOREQUIRED,pLevelSrc->getRequiredVersion().c_str());
+	      setState(GS_MENU);
+	      notifyMsg(cBuf);                        
+	    }
+	    else {    
+	      /* Init level */    
+	      m_InputHandler.resetScriptKeyHooks();                                   
+	      m_MotoGame.prePlayLevel(NULL, pLevelSrc, NULL, true);
+	      m_nFrame = 0;
+	      m_Renderer.prepareForNewLevel(bCreditsMode);            
+	      
+	      /* Show help string */
+	      if(!isNoGraphics()) {
+		PlayerTimeEntry *pBestTime = m_Profiles.getBestTime(LevelID);
+		PlayerTimeEntry *pBestPTime = m_Profiles.getBestPlayerTime(m_pPlayer->PlayerName,LevelID);
+		
+		std::string T1 = "--:--:--",T2 = "--:--:--";
+		
+		if(pBestTime != NULL)
+		  T1 = formatTime(pBestTime->fFinishTime);
+		if(pBestPTime != NULL)
+		  T2 = formatTime(pBestPTime->fFinishTime);
+		
+		m_Renderer.setBestTime(T1 + std::string(" / ") + T2);
+		m_Renderer.showReplayHelp(m_pReplay->getSpeed(),!_IsReplayScripted(m_pReplay));
+		
+		if(m_bBenchmark || bCreditsMode) m_Renderer.setBestTime("");
+		
 #if defined(SUPPORT_WEBACCESS) 
-              /* World-record stuff */
-              if(!bCreditsMode)
-                _UpdateWorldRecord(LevelID);
+		/* World-record stuff */
+		if(!bCreditsMode)
+		  _UpdateWorldRecord(LevelID);
 #endif
-            }
-
-            m_fStartTime = getRealTime();
-          }          
-        }
+	      }
+	      
+	      m_fStartTime = getRealTime();
+	    }          
+	  }
+	} catch(Exception &e) {
+	  setState(GS_MENU);
+	  notifyMsg(splitText(e.getMsg(), 50));	  
+	}
         break;
       }  
       case GS_MENU: {
@@ -2988,16 +2996,22 @@ namespace vapp {
 	    if(m_pGhostReplay != NULL) delete m_pGhostReplay;
 	    m_pGhostReplay = new Replay;
         
-	    GhostLevelID = m_pGhostReplay->openReplay(v_PlayGhostReplay,&v_ghostReplayFrameRate,v_GhostReplayPlayerName);
-        
-	    if(GhostLevelID != "") {
-	      m_lastGhostReplay = v_PlayGhostReplay;
-	      m_Renderer.setGhostReplay(m_pGhostReplay);
-	    } else {
+	    try {
+	      GhostLevelID = m_pGhostReplay->openReplay(v_PlayGhostReplay,&v_ghostReplayFrameRate,v_GhostReplayPlayerName);
+	      if(GhostLevelID != "") {
+		m_lastGhostReplay = v_PlayGhostReplay;
+		m_Renderer.setGhostReplay(m_pGhostReplay);
+	      } else {
+		/* bad replay */
+		delete m_pGhostReplay;
+		m_pGhostReplay = NULL;
+	      }
+	    } catch(Exception &e) {
 	      /* bad replay */
 	      delete m_pGhostReplay;
 	      m_pGhostReplay = NULL;
-	    }
+	    }        
+
 	  } else {
 	    /* if last ghost loaded has the same filename, don't reload it */
 	    GhostLevelID = pLevelSrc->getID();

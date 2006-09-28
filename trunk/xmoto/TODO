@@ -12,7 +12,6 @@ yet cd src; make xmoto works. Can you please have a look at it and
 revert the change if no better solution is found?
 
 * bug on rewind on http://xmoto.free.fr/replays/replay_5297.rpl
-* segfault on playing http://xmoto.free.fr/replays/replay_5299.rpl
 * Bug: personal  times in "new levels" not updated when playing
 * I got a bug in the gentoo bugzilla:
 http://bugs.gentoo.org/147725 xmoto-0.2.1 fails with MAKEOPTS="-j2" or higher.

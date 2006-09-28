@@ -95,7 +95,9 @@ namespace vapp {
     if(MGE_CameraZoom::SgetType() == v_eventType) {
       v_event = new MGE_CameraZoom(v_fEventTime);
     } else {
-      throw new Exception("Can't unserialize !");
+      std::ostringstream error_type;
+      error_type << (int) v_eventType;
+      throw Exception("Can't unserialize ! (event of type " + error_type.str() + ")");
     }
 
     v_event->unserialize(Buffer);
