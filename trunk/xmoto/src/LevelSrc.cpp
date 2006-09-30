@@ -723,8 +723,8 @@ namespace vapp {
 	FS::writeString(pfh,m_Entities[i]->ID);
 	FS::writeString(pfh,m_Entities[i]->TypeID);
 	FS::writeFloat_LE(pfh,m_Entities[i]->fSize);
-        FS::writeFloat(pfh,m_Entities[i]->fWidth);       
-        FS::writeFloat(pfh,m_Entities[i]->fHeight); 
+        FS::writeFloat_LE(pfh,m_Entities[i]->fWidth);       
+        FS::writeFloat_LE(pfh,m_Entities[i]->fHeight); 
         FS::writeFloat_LE(pfh,m_Entities[i]->fPosX);
         FS::writeFloat_LE(pfh,m_Entities[i]->fPosY);
         FS::writeByte(pfh,m_Entities[i]->Params.size());       
