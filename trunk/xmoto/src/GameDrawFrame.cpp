@@ -241,7 +241,7 @@ namespace vapp {
     }    
     
     /* Draw mouse cursor */
-    if(!m_bShowCursor)
+    if(m_bShowCursor)
       _DrawMouseCursor();
   }
 
@@ -249,7 +249,7 @@ namespace vapp {
   Main loop utility functions
   ===========================================================================*/
   void GameApp::_DrawMouseCursor(void) {
-    if(isNoGraphics() && m_pCursor != NULL && m_bUglyMode == false) {
+    if(!isNoGraphics() && m_pCursor != NULL && m_bUglyMode == false) {
       int nMX,nMY;
       getMousePos(&nMX,&nMY);      
       drawImage(Vector2f(nMX-2,nMY-2),Vector2f(nMX+30,nMY+30),m_pCursor);
