@@ -522,12 +522,12 @@ namespace vapp {
       return;        
     }
 
-    if(nKey == SDLK_F1 && (SDL_GetModState()&KMOD_CTRL)) {
+    if(nKey == SDLK_F9) {
       switchUglyMode(!m_bUglyMode);
       return;        
     }
 
-    if(nKey == SDLK_F2 && (SDL_GetModState()&KMOD_CTRL)) {
+    if(nKey == SDLK_F10) {
       switchTestThemeMode(!m_bTestThemeMode);
       return;        
     }
