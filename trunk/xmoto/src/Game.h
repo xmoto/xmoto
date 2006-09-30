@@ -137,6 +137,8 @@ namespace vapp {
                  m_pLevelPackViewer=NULL;  
                  m_pActiveLevelPack=NULL;
                  m_pGameInfoWindow=NULL;
+                 m_fFrameTime = 0;
+                 m_fFPS_Rate = 0;
                  m_b50FpsMode = false;
                  m_bUglyMode = false;
                  m_bTestThemeMode = false;
@@ -438,7 +440,11 @@ namespace vapp {
       std::string m_currentThemeName; 
       
       /* Credits */
-      Credits *m_pCredits;           
+      Credits *m_pCredits;         
+      
+      /* Main loop statics */
+      double m_fFrameTime;
+      float m_fFPS_Rate;
 
       /* Helpers */
 #if defined(SUPPORT_WEBACCESS) 
@@ -536,6 +542,23 @@ namespace vapp {
       void statePrestart_step();
       void prestartAnimation_init();
       void prestartAnimation_step();
+      
+      std::string splitText(const std::string &str, int p_breakLineLength);
+      
+      /* Main loop utility functions */
+      void _UpdateFPSCounter(void);
+      void _PrepareFrame(void);
+      void _PreUpdateGUI(void);
+      void _PreUpdateMenu(void);
+      void _DrawMainGUI(void);
+      void _DrawMouseCursor(void);
+      int _UpdateGamePlaying(void); /* returns number of physics steps performed */
+      bool _UpdateGameReplaying(void); /* return whether the game state is valid */
+      void _PostUpdatePlaying(void);
+      void _PostUpdatePause(void);
+      void _PostUpdateJustDead(void);
+      void _PostUpdateFinished(void);
+
   };
 
 }

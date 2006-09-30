@@ -95,6 +95,8 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp GameMain.cpp \
 	GameEvents.h \
 	GameEvents.cpp \
 	Credits.h \
-	Credits.cpp
+	Credits.cpp \
+	GameInit.cpp \
+	GameDrawFrame.cpp
 
 xmoto_LDADD = $(common_LDADD)

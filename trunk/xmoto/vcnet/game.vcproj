@@ -145,7 +145,13 @@
 				RelativePath="..\src\Game.cpp">
 			</File>
 			<File
+				RelativePath="..\src\GameDrawFrame.cpp">
+			</File>
+			<File
 				RelativePath="..\src\GameEvents.cpp">
+			</File>
+			<File
+				RelativePath="..\src\GameInit.cpp">
 			</File>
 			<File
 				RelativePath="..\src\GameMain.cpp">
