@@ -3,9 +3,10 @@ X-Moto 0.2.2 2006-
  
  * Minimap now visible in -ugly mode again.
  * Entity colors in -ugly mode adjusted.
- * Ctrl-F1 to toggle -ugly mode from inside the game, Ctrl-F2 to toggle
+ * F9 to toggle -ugly mode from inside the game, F10 to toggle
    theme testing mode.
  * More in-game options.
+ * Bug about undisplayd entities on bigendian computers corrected (please remove your LCache directory)
  * Some bugs fixed.
 
 X-Moto 0.2.1 2006-09-14
