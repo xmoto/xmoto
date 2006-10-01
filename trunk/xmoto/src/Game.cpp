@@ -1235,7 +1235,7 @@ namespace vapp {
         /* Add new levels to GUI list */
         if(pPlayNewLevelsList != NULL) {
           for(int i=nOldNum;i<m_nNumLevels;i++) {
-      pPlayNewLevelsList->addLevel(m_Levels+i, m_pPlayer, &m_Profiles, m_pWebHighscores, std::string("New: "));
+            pPlayNewLevelsList->addLevel(m_Levels+i, m_pPlayer, &m_Profiles, m_pWebHighscores, std::string("New: "));
           }
         }
         

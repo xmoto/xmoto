@@ -424,7 +424,7 @@ namespace vapp {
     memcpy((char *)&state,
 	   &m_Chunks[m_nCurChunk].pcChunkData[((int)m_nCurState)*m_nStateSize],
 	   m_nStateSize);
-	SwapEndian::LittleSerializedBikeState(state);
+	  SwapEndian::LittleSerializedBikeState(state);
   }
 
   //std::vector<ReplayInfo *> Replay::createReplayList(const std::string &PlayerName,const std::string &LevelIDCheck) {

@@ -124,7 +124,7 @@
 		<vertex x="6.342011" y="5.600596"/>
 	</block>
 	<block id="Block7">
-		<position x="0.000000" y="-0.000000" background="true"/>
+		<position x="0.000000" y="0.000000" background="true"/>
 		<usetexture id="DarkDirt"/>
 		<vertex x="-13.794079" y="5.368301"/>
 		<vertex x="12.860890" y="5.414761"/>
@@ -133,7 +133,7 @@
 	</block>
 	<entity id="MyPlayerStart0" typeid="PlayerStart">
 		<size r="0.400000"/>
-		<position x="0.000000" y="0.000000"/>
+		<position x="0.016408" y="0.110506"/>
 	</entity>
 	<entity id="MyStrawberry0" typeid="Strawberry">
 		<size r="0.500000"/>

@@ -555,7 +555,7 @@ namespace vapp {
       void _DrawMainGUI(void);
       void _DrawMouseCursor(void);
       int _UpdateGamePlaying(void); /* returns number of physics steps performed */
-      bool _UpdateGameReplaying(void); /* return whether the game state is valid */
+      int _UpdateGameReplaying(void); /* return whether the game state is valid */
       void _PostUpdatePlaying(void);
       void _PostUpdatePause(void);
       void _PostUpdateJustDead(void);

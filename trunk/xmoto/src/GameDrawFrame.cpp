@@ -35,6 +35,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   #include <curl/curl.h>
 #endif
 
+/* Set the follow #define's allow you to simulate slow system */
+#define SIMULATE_SLOW_RENDERING     0 /* extra ms to add to rendering */
+#define SIMULATE_SLOW_PHYSICS       0 /* extra ms to add to physics calcs */
+
 namespace vapp {
 
   /*===========================================================================
@@ -106,7 +110,9 @@ namespace vapp {
           else if(m_State == GS_REPLAYING) {
             /* When playing back a replay, no physics update is requried - instead
                the game state is streamed out of a binary .rpl file */
-            bValidGameState = _UpdateGameReplaying();
+            nPhysSteps = _UpdateGameReplaying();
+            bValidGameState = nPhysSteps > 0;
+            //printf("%d ",nPhysSteps);
           }
 	
           /* Render */
@@ -128,6 +134,9 @@ namespace vapp {
 					                                   m_MotoGame.getBikeEngineSpeed());
 	          } 
           }
+#if SIMULATE_SLOW_RENDERING
+          SDL_Delay(SIMULATE_SLOW_RENDERING);
+#endif
 	
           /* When actually playing, check if something happened (like dying or finishing) */
           if(m_State == GS_PLAYING) {        
@@ -143,15 +152,18 @@ namespace vapp {
           
           if(m_State == GS_REPLAYING) {
             /* When replaying... */
-            nADelay = ((1.0f/m_fCurrentReplayFrameRate - (fEndFrameTime-fStartFrameTime)) * 1000.0f) * 0.5f;
+            //printf("{ %f } ",m_fCurrentReplayFrameRate);
+            if(nPhysSteps <= 1)                        
+              nADelay = ((1.0f/m_fCurrentReplayFrameRate - (fEndFrameTime-fStartFrameTime)) * 1000.0f) * 0.5;
+            //printf(" { %f }  %d\n",fEndFrameTime-fStartFrameTime,nADelay);            
           }
           else if ((m_State == GS_FINISHED) || (m_State == GS_JUSTDEAD) || (m_State == GS_PAUSE)) {
             setFrameDelay(10);
           }
           else {
             /* become idle only if we hadn't to skip any frame, recently, and more globaly (80% of fps) */
-            if ((nPhysSteps <= 1) && (m_fFPS_Rate > (0.8f / PHYS_STEP_SIZE)))
-            nADelay = ((m_fLastPhysTime + PHYS_STEP_SIZE) - fEndFrameTime) * 1000.0f;
+            if((nPhysSteps <= 1) && (m_fFPS_Rate > (0.8f / PHYS_STEP_SIZE)))
+              nADelay = ((m_fLastPhysTime + PHYS_STEP_SIZE) - fEndFrameTime) * 1000.0f;
           }
                   
           if(nADelay > 0) {
@@ -360,7 +372,7 @@ namespace vapp {
     static int nFPS_Frames = 0;
     static double fFPS_LastTime = 0.0f;
     static double fFPS_CurrentTime = 0.0f;
-    m_fFPS_Rate = 0.0f;
+    
     fFPS_CurrentTime = getRealTime();
     if(fFPS_CurrentTime - fFPS_LastTime > 1.0f && nFPS_Frames>0) {
       m_fFPS_Rate = ((float)nFPS_Frames) / (fFPS_CurrentTime - fFPS_LastTime);
@@ -424,7 +436,7 @@ namespace vapp {
   }
 
   void GameApp::_DrawMainGUI(void) {
-      /* Draw menu background */
+    /* Draw menu background */
     _DrawMenuBackground();
             
     /* Update mouse stuff */
@@ -475,6 +487,10 @@ namespace vapp {
 	    }
       m_fLastPhysTime += PHYS_STEP_SIZE;
       nPhysSteps++;
+
+#if SIMULATE_SLOW_PHYSICS
+      SDL_Delay(SIMULATE_SLOW_PHYSICS);
+#endif
 
 	    if(m_Config.getBool("LimitFramerate")) {
 	      SDL_Delay(1);
@@ -549,7 +565,8 @@ namespace vapp {
 	  return nPhysSteps;
   }  
 
-  bool GameApp::_UpdateGameReplaying(void) {
+  int GameApp::_UpdateGameReplaying(void) {
+    int nPhysSteps = 1;
     m_nFrame++;
 
     /* Read replay state */
@@ -562,7 +579,8 @@ namespace vapp {
 		      m_pReplay->loadState(BikeState);
         
           /* Update game */
-          m_MotoGame.updateLevel( PHYS_STEP_SIZE,&BikeState,m_pReplay ); 
+          m_MotoGame.updateLevel( 1/m_pReplay->getFrameRate(),&BikeState,m_pReplay ); 
+          //m_MotoGame.updateLevel( PHYS_STEP_SIZE,&BikeState,m_pReplay ); 
         
           if(m_bEnableEngineSound) {
             /* Update engine RPM */
@@ -579,14 +597,16 @@ namespace vapp {
       else {                          
         /* INTERPOLATED FRAME */
         SerializedBikeState NextBikeState,ibs;
-	      
+  	    
 	      if(m_pReplay->endOfFile() == false) {
 		      m_pReplay->peekState(NextBikeState);
 		      /* Nice. Interpolate the states! */
 		      m_MotoGame.interpolateGameState(&BikeState,&NextBikeState,&ibs,0.5f);
 
           /* Update game */
-          m_MotoGame.updateLevel( PHYS_STEP_SIZE,&ibs,m_pReplay );                 
+          //m_MotoGame.updateLevel( PHYS_STEP_SIZE,&ibs,m_pReplay );                 
+          //printf("[%f]\n",m_pReplay->getFrameRate());
+          m_MotoGame.updateLevel( 1/m_pReplay->getFrameRate(),&ibs,m_pReplay );                 
         }
       }
     
@@ -599,14 +619,16 @@ namespace vapp {
         quit();
       }
     }
-    else return false; /* something went wrong */
+    else return 0; /* something went wrong */
   
     if(m_pReplay->getSpeed() < 0) {
       m_Renderer.clearAllParticles();
       m_Renderer.skipBackTime(100000);            
     }
-    
-    return true;
+  
+	  m_Renderer.setSpeedMultiplier(nPhysSteps);    
+
+    return nPhysSteps;
   }
 
   void GameApp::_PostUpdatePlaying(void) {
