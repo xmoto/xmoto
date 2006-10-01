@@ -75,6 +75,7 @@ function Tick()
 end
 
 function TUT3_JumpToPart1()
+        Game.AddPenaltyTime(10)
 	x,y = Game.GetEntityPos("Part1")
 	Game.SetPlayerPosition(x,y,1)
 	TutorialStage = -1
@@ -82,6 +83,7 @@ function TUT3_JumpToPart1()
 end
 
 function TUT3_JumpToPart2()
+        Game.AddPenaltyTime(20)
 	x,y = Game.GetEntityPos("Part2")
 	Game.SetPlayerPosition(x,y,1)
 	TutorialStage = -1
@@ -89,6 +91,7 @@ function TUT3_JumpToPart2()
 end
 
 function TUT3_JumpToPart3()
+        Game.AddPenaltyTime(30)
 	x,y = Game.GetEntityPos("Part3")
 	Game.SetPlayerPosition(x,y,1)
 	TutorialStage = -1
@@ -96,6 +99,7 @@ function TUT3_JumpToPart3()
 end
 
 function TUT3_JumpToPart4()
+        Game.AddPenaltyTime(40)
 	x,y = Game.GetEntityPos("Part4")
 	Game.SetPlayerPosition(x,y,1)
 	TutorialStage = -1
@@ -103,6 +107,7 @@ function TUT3_JumpToPart4()
 end
 
 function TUT3_JumpToPart5()
+        Game.AddPenaltyTime(50)
 	x,y = Game.GetEntityPos("Part5")
 	Game.SetPlayerPosition(x,y,1)
 	TutorialStage = -1

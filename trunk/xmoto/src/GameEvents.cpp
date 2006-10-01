@@ -91,9 +91,10 @@ namespace vapp {
       v_event = new MGE_SetDynamicBlockNone(v_fEventTime);
     } else if(MGE_CameraMove::SgetType() == v_eventType) {
       v_event = new MGE_CameraMove(v_fEventTime);
-    } else 
-    if(MGE_CameraZoom::SgetType() == v_eventType) {
+    } else if(MGE_CameraZoom::SgetType() == v_eventType) {
       v_event = new MGE_CameraZoom(v_fEventTime);
+    } else if(MGE_PenalityTime::SgetType() == v_eventType) {
+      v_event = new MGE_PenalityTime(v_fEventTime);
     } else {
       std::ostringstream error_type;
       error_type << (int) v_eventType;
@@ -1205,6 +1206,41 @@ namespace vapp {
   }
 
   GameEventType MGE_CameraZoom::getType() {
+    return SgetType();
+  }
+
+  //////////////////////////////
+
+  MGE_PenalityTime::MGE_PenalityTime(float p_fEventTime)
+  : MotoGameEvent(p_fEventTime) {
+    m_penalityTime = 0.0;
+  }
+
+  MGE_PenalityTime::MGE_PenalityTime(float p_fEventTime, float p_penatityTime) 
+    : MotoGameEvent(p_fEventTime) {
+      m_penalityTime = p_penatityTime;
+  }
+
+  MGE_PenalityTime::~MGE_PenalityTime() {
+  }
+
+  void MGE_PenalityTime::doAction(MotoGame *p_pMotoGame) {
+    p_pMotoGame->addPenalityTime(m_penalityTime);
+  }
+
+  void MGE_PenalityTime::serialize(DBuffer &Buffer) {
+    Buffer << m_penalityTime;
+  }
+
+  void MGE_PenalityTime::unserialize(DBuffer &Buffer) {
+    Buffer >> m_penalityTime;
+  }
+ 
+  GameEventType MGE_PenalityTime::SgetType() {
+    return GAME_EVENT_LUA_CALL_PENALITY_TIME;
+  }
+
+  GameEventType MGE_PenalityTime::getType() {
     return SgetType();
   }
 

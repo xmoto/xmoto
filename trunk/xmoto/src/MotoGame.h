@@ -553,6 +553,7 @@ namespace vapp {
 			   float p_fSize, float p_fPosX, float p_fPosY);
       void addDynamicObject(SDynamicObject* p_obj);
       void removeSDynamicOfObject(std::string pObject);
+      void addPenalityTime(float fTime);
 
       void revertEntityDestroyed(std::string p_entityID);
       void createKillEntityEvent(std::string p_entityID);

@@ -74,6 +74,7 @@ namespace vapp {
   int L_Game_KillEntity(lua_State *pL);
   int L_Game_RemainingStrawberries(lua_State *pL);
   int L_Game_WinPlayer(lua_State *pL);
+  int L_Game_PenaltyTime(lua_State *pL);
 
   /* "Game" Lua library */
   static const luaL_reg g_GameFuncs[] = {
@@ -112,6 +113,7 @@ namespace vapp {
     {"KillEntity",                  L_Game_KillEntity},
     {"RemainingStrawberries",       L_Game_RemainingStrawberries},
     {"WinPlayer",                   L_Game_WinPlayer},
+    {"AddPenaltyTime",              L_Game_PenaltyTime},
     {NULL, NULL}
   };
 
@@ -1909,5 +1911,9 @@ namespace vapp {
     m_BikeC.fDrive = 0.0f;      
     m_BikeC.fPull = 0.0f;  
     m_BikeC.bChangeDir = false;
+  }
+
+  void MotoGame::addPenalityTime(float fTime) {
+    m_fTime += fTime;
   }
 }

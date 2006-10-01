@@ -54,7 +54,8 @@ namespace vapp {
     GAME_EVENT_LUA_CALL_CAMERAMOVE                  = 21,
     GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKROTATION     = 22,
     GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKTRANSLATION  = 23,
-    GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKNONE         = 24
+    GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKNONE         = 24,
+    GAME_EVENT_LUA_CALL_PENALITY_TIME               = 25
   };
 }
 
@@ -535,6 +536,21 @@ class MGE_CameraZoom : public MotoGameEvent {
   float m_zoom;
 };
 
+class MGE_PenalityTime : public MotoGameEvent {
+ public:
+  MGE_PenalityTime(float p_fEventTime);
+  MGE_PenalityTime(float p_fEventTime, float p_penatityTime);
+  ~MGE_PenalityTime();
+
+  void doAction(MotoGame *p_pMotoGame);
+  void serialize(DBuffer &Buffer);
+  void unserialize(DBuffer &Buffer);
+  static GameEventType SgetType();
+  GameEventType getType();
+
+ private:
+  float m_penalityTime;
+};
 
 }
 

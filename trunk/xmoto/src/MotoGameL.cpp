@@ -427,5 +427,12 @@ namespace vapp {
     m_pMotoGame->makePlayerWin();
     return 1;
   }
+
+  int L_Game_PenaltyTime(lua_State *pL) {
+    /* event for this */
+    m_pMotoGame->createGameEvent(new MGE_PenalityTime(m_pMotoGame->getTime(),
+						      X_luaL_check_number(pL,1)));
+    return 0;
+  }
 }
 
