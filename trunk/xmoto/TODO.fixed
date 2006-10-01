@@ -6,6 +6,7 @@ Jonathan Sieber at msn:   zoom out very much, more than factor 4 and then move t
 Jonathan Sieber at msn:   you will notice ugly noise on the textures, some sort of flickering
 * segfault on playing http://xmoto.free.fr/replays/replay_5299.rpl
 * bug of cache with bigendian proc
+* bug on rewind on http://xmoto.free.fr/replays/replay_5297.rpl
 
 Since 0.2.0
 * bug : i need entity->pSrc to draw the entity to the good position : pb, revertEntityDestroyed give a NULL value -> SEGFAULT ON REWIND !!!!!

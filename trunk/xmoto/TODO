@@ -11,7 +11,6 @@ make: *** No rule to make target `src/xmoto'.  Stop.
 yet cd src; make xmoto works. Can you please have a look at it and
 revert the change if no better solution is found?
 
-* bug on rewind on http://xmoto.free.fr/replays/replay_5297.rpl
 * Bug: personal  times in "new levels" not updated when playing
 * I got a bug in the gentoo bugzilla:
 http://bugs.gentoo.org/147725 xmoto-0.2.1 fails with MAKEOPTS="-j2" or higher.
@@ -62,7 +61,7 @@ revert the change if no better solution is found?
 [11:42] <Fifty> ah :)
 [11:42] <aspegic500> it tries to use stdc++
 
-* bzip2 not removed on windows : to test
+* bzip2 not removed on windows : corrected, to test
 
 * Bug,
 scenario:

@@ -368,15 +368,15 @@ namespace vapp {
 
       /* go on the following chunk */
       if(m_nCurState >= STATES_PER_CHUNK) { /* end of a chunk */
-	if(m_nCurChunk < m_Chunks.size() -1) {	
+	if(m_nCurChunk < m_Chunks.size() -1) {
+	  m_nCurState = m_nCurState - m_Chunks[m_nCurChunk].nNumStates -1;
 	  m_nCurChunk++;
-	  m_nCurState = m_nCurState - m_Chunks[m_nCurChunk-1].nNumStates -1;
 	}
       } else {
 	if(m_nCurState < 0.0) { /* start of a chunk */
-	  if(m_nCurChunk > 0) {	
+	  if(m_nCurChunk > 0) {
+	    m_nCurState = m_nCurState + m_Chunks[m_nCurChunk-1].nNumStates -1;
 	    m_nCurChunk--;
-	    m_nCurState = m_Chunks[m_nCurChunk-1].nNumStates -1 + m_nCurState;
 	  }
 	}
       }
