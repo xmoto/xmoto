@@ -487,7 +487,7 @@ namespace vapp {
     if (cacheEnabled) {
       /* Determine name in cache */
       std::string LevelFileBaseName = FS::getFileBaseName(getFileName());
-      cacheFileName = "LCache/" + MD5Sum + LevelFileBaseName;
+      cacheFileName = "LCache/" + MD5Sum + LevelFileBaseName + ".blv";
       
       try {
         cached = importBinary(cacheFileName, MD5Sum);

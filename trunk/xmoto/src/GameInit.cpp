@@ -307,8 +307,8 @@ namespace vapp {
     /* Should we clean the level cache? (can also be done when disabled) */
     if(m_bCleanCache) {
       /* Find all .blv-files in the directory */
-      std::vector<std::string> BlvFiles = FS::findPhysFiles("LCache/*");
-      Log("Trying to clean %d files from level caches...",BlvFiles.size());
+      std::vector<std::string> BlvFiles = FS::findPhysFiles("LCache/*.blv");
+      Log("Trying to clean %d files from level cache...",BlvFiles.size());
       int nNumDeleted = 0;
       for(int i=0;i<BlvFiles.size();i++) {
         if(FS::deleteFile(BlvFiles[i]))
