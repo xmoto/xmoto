@@ -219,7 +219,6 @@ namespace vapp {
 
       if(Sound::isEnabled()) {
         /* Load sounds */
-        
         Sound::loadSample("Sounds/NewHighscore.ogg");
         //m_pDieSFX = Sound::loadSample("Sounds/Die.ogg");
         
@@ -260,38 +259,38 @@ namespace vapp {
       m_pTitleBL = NULL;
       pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "TitleBL");
       if(pSprite != NULL) {
-  m_pTitleBL = pSprite->getTexture(false, true);
+        m_pTitleBL = pSprite->getTexture(false, true);
       }
 
       m_pTitleBR = NULL;
       pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "TitleBR");
       if(pSprite != NULL) {
-  m_pTitleBR = pSprite->getTexture(false, true);
+        m_pTitleBR = pSprite->getTexture(false, true);
       }
 
       m_pTitleTL = NULL;
       pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "TitleTL");
       if(pSprite != NULL) {
-  m_pTitleTL = pSprite->getTexture(false, true);
+        m_pTitleTL = pSprite->getTexture(false, true);
       }
 
       m_pTitleTR = NULL;
       pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "TitleTR");
       if(pSprite != NULL) {
-  m_pTitleTR = pSprite->getTexture(false, true);
+        m_pTitleTR = pSprite->getTexture(false, true);
       }
 
       m_pCursor = NULL;
       pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "Cursor");
       if(pSprite != NULL) {
-	m_pCursor = pSprite->getTexture(false, true, FM_LINEAR);
+	      m_pCursor = pSprite->getTexture(false, true, FM_LINEAR);
       }
 
 #if defined(SUPPORT_WEBACCESS)  
       m_pNewLevelsAvailIcon = NULL;
       pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "NewLevelsAvailable");
       if(pSprite != NULL) {
-  m_pNewLevelsAvailIcon = pSprite->getTexture(false, true, FM_LINEAR);
+        m_pNewLevelsAvailIcon = pSprite->getTexture(false, true, FM_LINEAR);
       }
 #endif
 
@@ -303,6 +302,19 @@ namespace vapp {
     if(m_bEnableLevelCache && !FS::isDir(LCachePath)) {
       m_bEnableLevelCache = false;
       Log("** Warning ** : Level cache directory not found, forcing caching off!");
+    }
+    
+    /* Should we clean the level cache? (can also be done when disabled) */
+    if(m_bCleanCache) {
+      /* Find all .blv-files in the directory */
+      std::vector<std::string> BlvFiles = FS::findPhysFiles("LCache/*");
+      Log("Trying to clean %d files from level caches...",BlvFiles.size());
+      int nNumDeleted = 0;
+      for(int i=0;i<BlvFiles.size();i++) {
+        if(FS::deleteFile(BlvFiles[i]))
+          nNumDeleted++;
+      }
+      Log(" %d file%s deleted succesfully",nNumDeleted,nNumDeleted==1?"":"s");
     }
      
     /* Find all .lvl files in the level dir and load them */    
@@ -550,14 +562,14 @@ namespace vapp {
       }
       else if(UserArgs[i] == "-profile") {
         if(i+1<UserArgs.size())
-          m_ForceProfile = UserArgs[++i];
+          m_ForceProfile = UserArgs[i+1];
         else
           throw SyntaxError("no profile specified");        
         i++;
       }
       else if(UserArgs[i] == "-gdebug") {
         if(i+1<UserArgs.size())
-          m_GraphDebugInfoFile = UserArgs[++i];
+          m_GraphDebugInfoFile = UserArgs[i+1];
         else
           throw SyntaxError("no debug file specified");        
         i++;
@@ -585,6 +597,9 @@ namespace vapp {
       else if(UserArgs[i] == "-benchmark") {
         m_bBenchmark = true;
       }
+      else if(UserArgs[i] == "-cleancache") {
+        m_bCleanCache = true;
+      }
     }
   }
 
@@ -601,11 +616,12 @@ namespace vapp {
     printf("\t-timedemo\n\t\tNo delaying, maximum framerate.\n");
     printf("\t-fps\n\t\tDisplay framerate.\n");
     printf("\t-ugly\n\t\tEnable 'ugly' mode, suitable for computers without\n");
-                   printf("\t\ta good OpenGL-enabled video card.\n");
+             printf("\t\ta good OpenGL-enabled video card.\n");
     printf("\t-testTheme\n\t\tDisplay forms around the theme to check it.\n");
     printf("\t-benchmark\n\t\tOnly meaningful when combined with -replay and\n");
-                   printf("\t\t-timedemo. Useful to determine the graphics\n");
-                   printf("\t\tperformance.\n");
+    printf("\t\t-timedemo. Useful to determine the graphics\n");
+             printf("\t\tperformance.\n");
+    printf("\t-cleancache\n\t\tDeletes the content of the level cache.\n");
   }  
   
   /*===========================================================================

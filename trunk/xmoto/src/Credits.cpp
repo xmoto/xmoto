@@ -24,6 +24,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "Credits.h"
 
+#define CREDITS_DARKNESS 0.55    /* a number between 0 (not darkened) and 
+                                    1 (black) */
+
 namespace vapp {
 
   Credits::Credits() {
@@ -139,7 +142,7 @@ namespace vapp {
         fFade = (m_fTime - (m_fReplayLength - m_fFadeOut)) / m_fFadeOut;
       }
             
-      fFade = 0.85 + fFade * 0.15;
+      fFade = CREDITS_DARKNESS + fFade * (1 - CREDITS_DARKNESS);
 
       int nC = (int)(fFade * 255);
       if(nC < 0) nC = 0;

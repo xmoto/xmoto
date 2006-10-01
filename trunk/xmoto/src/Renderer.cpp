@@ -1018,16 +1018,16 @@ namespace vapp {
       
       switch(pSprite->Type) {
       case ET_WRECKER:
-        v_color = MAKE_COLOR(80,255,255,0); /* Fix: color changed a bit so it's easier to spot */
+        v_color = MAKE_COLOR(80,255,255,255); /* Fix: color changed a bit so it's easier to spot */
         break;
       case ET_ENDOFLEVEL:
-        v_color = MAKE_COLOR(255,255,0,0); /* Fix: color not same as blocks */
+        v_color = MAKE_COLOR(255,255,0,255); /* Fix: color not same as blocks */
         break;
       case ET_STRAWBERRY:
-        v_color = MAKE_COLOR(255,0,0,0);
+        v_color = MAKE_COLOR(255,0,0,255);
         break;
       default:
-        v_color = MAKE_COLOR(0,0,0,0); /* Fix: hard-to-see color because of entity's insignificance */
+        v_color = MAKE_COLOR(50,50,50,255); /* Fix: hard-to-see color because of entity's insignificance */
         break;
       }
 

@@ -118,6 +118,7 @@ namespace vapp {
                  m_bEnableLevelCache=true;
                  m_bEnableMenuMusic=false;
                  m_bEnableInitZoom=false;
+                 m_bCleanCache=false;
                  m_bEnableDeathAnim=true;
                  m_pQuitMsgBox=NULL;
                  m_pNotifyMsgBox=NULL;
@@ -246,6 +247,7 @@ namespace vapp {
       bool m_bTimeDemo;                         /* true: (valid for replaying) - performance benchmark */
       bool m_bDebugMode;                        /* true: show debug info */
       bool m_bUglyMode;                         /* true: fast 'n ugly graphics */
+      bool m_bCleanCache;                       /* true: clean the level cache at startup */
       bool m_bShowEngineCounter;
 
       bool m_bTestThemeMode;

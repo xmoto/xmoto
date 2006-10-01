@@ -1,13 +1,18 @@
 X-Moto 0.2.2 2006-
 ----------------------
  
+ * IMPORTANT: People with big-endian CPUs (PowerPC, etc) should clean their
+   level cache when upgrading; that is, the first time you start the game,
+   use the -cleancache command-line argument. Alternatively delete all files
+   in your LCache/ directory.
  * Minimap now visible in -ugly mode again.
  * Entity colors in -ugly mode adjusted.
  * F9 to toggle -ugly mode from inside the game, F10 to toggle
    theme testing mode.
  * More in-game options.
- * Bug about undisplayd entities on bigendian computers corrected (please remove your LCache directory)
- * Some bugs fixed.
+ * New built-in level.
+ * Bug about undisplayed entities on big-endian computers corrected.
+ * Some other bugs fixed.
 
 X-Moto 0.2.1 2006-09-14
 -----------------------

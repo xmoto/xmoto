@@ -827,16 +827,33 @@ namespace vapp {
   
   /*===========================================================================
   Delete file
-  ===========================================================================*/
-  void FS::deleteFile(const std::string &File) {
-    /* We can only delete user files */
+  ===========================================================================*/  
+  bool FS::deleteFile(const std::string &File) {
+    std::string FullFile;
+    
     if(m_UserDir == "") {
       Log("** Warning ** : No user directory, can't delete file: %s",File.c_str());
-      return;
+      return false;
     }
     
-    std::string FullFile = m_UserDir + std::string("/") + File;
-    remove(FullFile.c_str());
+    /* Absolute file path? */
+    if(isPathAbsolute(File)) {
+      /* Yeah, check if file is in user directory - otherwise we won't delete 
+         it */
+      if(File.length() < m_UserDir.length() || File.substr(0,m_UserDir.length()) != m_UserDir) return false;
+      
+      FullFile = File;
+    }
+    else {  
+      /* We can only delete user files */      
+      FullFile = m_UserDir + std::string("/") + File;
+    }
+
+    if(remove(FullFile.c_str())) {
+      return false;
+    }
+
+    return true;
   }
   
   /*===========================================================================
