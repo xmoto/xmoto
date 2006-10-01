@@ -153,7 +153,6 @@ msgid "Controls"
 msgstr "Controles"
 
 #: src/GameText.h:70
-#, fuzzy
 msgid ""
 "Lead Programming:Rasmus Neckelmann;:Nicolas Adenis-Lamarre;:;Additional "
 "Programming:Eric Piel;:Emmanuel Gorse;:Christoph Sommer;:Frederic Huard;:;"
@@ -181,11 +180,12 @@ msgstr ""
 "Nicolas Adenis-Lamarre;:Valentin;:Nx;:Alrj;:;Traducteurs web:Felix Schl;:"
 "Nicolas Adenis-Lamarre;:Trullo;:Jj;:Vertigo;:Pol Vinogradov;:;Forum:"
 "Valentin;:;Testeurs principaux:Jose Alberto Coelho;:Frederic Huard;:;Merci a:"
-"SnowBear (integration KDE/gnome);:Samuel Mimram (Packaging Debian);:Dark "
-"(packaging Gentoo);:Olivier Blin (packaging Mandriva);:Balazs Rozsa (across/"
-"elma);:Yves Berquin (tinyxml);:L. Peter Deutsch (MD5 code);:Jes Vestervang "
-"(espace internet);:Kenneth;:A tous ceux qui ont fait des niveaux;:A tous "
-"ceux qui ont rapportes des bugs;:Aux autres qui ont contribues;"
+"SnowBear (integration KDE/gnome);:Jonathan Sieber (traduction allemande);:"
+"Samuel Mimram (Packaging Debian);:Dark (packaging Gentoo);:Olivier Blin "
+"(packaging Mandriva);:Balazs Rozsa (across/elma);:Yves Berquin (tinyxml);:L. "
+"Peter Deutsch (MD5 code);:Jes Vestervang (espace internet);:Kenneth;:A tous "
+"ceux qui ont fait des niveaux;:A tous ceux qui ont rapportes des bugs;:Aux "
+"autres qui ont contribues;"
 
 #: src/GameText.h:126
 msgid "Credits"

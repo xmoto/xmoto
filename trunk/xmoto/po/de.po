@@ -1,17 +1,18 @@
 # translation of de.po to Deutsch
 # Jonathan Sieber <jonathan_sieber@yahoo.de>, 2006.
+# 
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-10-01 22:41+0200\n"
-"PO-Revision-Date: 2006-09-15 16:26+0200\n"
+"PO-Revision-Date: 2006-10-01 23:13+0200\n"
 "Last-Translator: Jonathan Sieber <jonathan_sieber@yahoo.de>\n"
-"Language-Team: Deutsch\n"
+"Language-Team: German\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.11.2\n"
 "Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
 #: src/GameText.h:33
@@ -175,10 +176,25 @@ msgid ""
 "little girl);:Everyone who have made levels;:People who have provided bug "
 "reports;:Anyone who has helped in any way;"
 msgstr ""
+"Leitende Programmierung:Rasmus Neckelmann;:Nicolas Adenis-Lamarre;:;Weitere "
+"Programmierung:Eric Piel;:Emmanuel Gorse;:Christoph Sommer;:Frederic Huard;:;"
+"Grafik:Rasmus Neckelmann;:;Audio:Jens Erler;:Brandon Ross;:;Eingebaute "
+"Levels:Rasmus Neckelmann;:Pasi Kallinen;:Germain Gagnerot;:Clive Crous;:"
+"Torben Green;:Thomas·Kjaerulff;:;MacOS X Support:Dave Vasilevsky;:Maxime "
+"Biais;:;Websiteprogrammierung:Nicolas·Adenis-Lamarre;:Nx;:;"
+"Websiteadministration:Nicolas Adenis-Lamarre;:Valentin;:Nx;:Alrj;:;"
+"Websiteuebersetzung:Felix Schl;:Nicolas Adenis-Lamarre;:Trullo;:Jj;:Vertigo;:"
+"Pol Vinogradov;:;Forum:Valentin;:;Haupttester:Jose Alberto Coelho;:Frederic "
+"Huard;:;Danke an:SnowBear (KDE/Gnome-Integration);:Jonathan Sieber (Deutsche "
+"Ubersetzung);:Samuel Mimram(Debianpakete);:Dark (Gentoopakete);:Olivier Blin "
+"(Mandrivapakete);:Balazs Rozsa·(across/elma);:Yves Berquin (tinyxml);:L. "
+"Peter Deutsch (MD5-code);:Jes·Vestervang (Webspace);:Kenneth;:Jeder der "
+"Levels gemacht hat;:Alle Leute die Fehler berichtet haben;:Jeder der in "
+"irgendeiner Weise geholfen hat;"
 
 #: src/GameText.h:126
 msgid "Credits"
-msgstr ""
+msgstr "Credits"
 
 #: src/GameText.h:127 src/GameText.h:270
 msgid "Player"
@@ -190,7 +206,7 @@ msgstr "Datum"
 
 #: src/GameText.h:129
 msgid "Bike Breaks"
-msgstr ""
+msgstr "Rad zerbricht"
 
 #: src/GameText.h:130
 msgid "Defaults"
@@ -539,7 +555,7 @@ msgstr "Initialisiere Textrenderer"
 
 #: src/GameText.h:211
 msgid "View Level Initially"
-msgstr ""
+msgstr "Leveluebersicht"
 
 #: src/GameText.h:212
 msgid "Joystick"
@@ -709,7 +725,6 @@ msgid "Not finished"
 msgstr "Nicht beendet"
 
 #: src/GameText.h:251
-#, fuzzy
 msgid ""
 "Important note!\n"
 "\n"
@@ -724,7 +739,8 @@ msgid ""
 msgstr ""
 "Wichtiger Hinweis!\n"
 "\n"
-"Jede Art von Rückmeldung wird gerne gesehen, so das\n"
+"Diese Version von X-Moto ist noch in der Entwicklung.\n"
+"Jede Art von Rückmeldung wird gerne gesehen, so dass\n"
 "sich das Spiel verbessern kann.\n"
 "Schicke Fehler, Ideen, Kommentare, Funktionen, Beleidigungen, usw.\n"
 "an neckelmann@gmail.com\n"
@@ -861,7 +877,7 @@ msgstr "Anschauen"
 
 #: src/GameText.h:295
 msgid "Speedometer"
-msgstr ""
+msgstr "Tacho"
 
 #: src/GameText.h:296
 msgid "Info..."
@@ -1083,7 +1099,7 @@ msgstr "Herauszoomen"
 
 #: src/GameText.h:350
 msgid "Download the latest X-Moto world records and check for new levels"
-msgstr ""
+msgstr "Neuste Weltrekorde herunterladen und auf neue Levels pruefen"
 
 #: src/GameText.h:351
 msgid "Configure how you are connected to the Internet"
@@ -1511,21 +1527,20 @@ msgstr ""
 "Hochladen von Bestzeiten verlangt ein Passwort (Ausser fuer Weltrekorde)"
 
 #: src/GameText.h:456
-#, fuzzy
 msgid "Show the speedometer when playing"
-msgstr "Tachonadel beim Spielen anzeigen"
+msgstr "Tacho beim Spielen anzeigen"
 
 #: src/GameText.h:457
 msgid "Enable animation of bike falling apart when dead"
-msgstr ""
+msgstr "Todesanimation aktivieren"
 
 #: src/GameText.h:458
 msgid "Automatically scroll over the level before starting playing it"
-msgstr ""
+msgstr "Level vor dem Spielen in der Uebersicht anzeigen"
 
 #: src/GameText.h:459
 msgid "View the X-Moto credits"
-msgstr ""
+msgstr "X-Moto Credits anzeigen"
 
 #~ msgid "Show engine counter"
 #~ msgstr "Tacho anzeigen"

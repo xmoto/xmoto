@@ -111,6 +111,7 @@ Central place to keep many in-game text strings
                                         ":Frederic Huard;" \
                                         ":;" \
                                         "Thanks to:SnowBear (for KDE/gnome integration);" \
+                                        ":Jonathan Sieber (German translation);"\
                                         ":Samuel Mimram (for Debian packaging);" \
                                         ":Dark (for Gentoo packaging);" \
                                         ":Olivier Blin (for Mandriva packaging);" \

@@ -10,6 +10,7 @@ X-Moto 0.2.2 2006-
  * F9 to toggle -ugly mode from inside the game, F10 to toggle
    theme testing mode.
  * More in-game options.
+ * translations [german] (for unix only)
  * New built-in level.
  * Bug about undisplayed entities on big-endian computers corrected.
  * Some other bugs fixed.
