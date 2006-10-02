@@ -1,5 +1,5 @@
-X-Moto 0.2.2 2006-
-----------------------
+X-Moto 0.2.2 2006-10-03
+-----------------------
  
  * IMPORTANT: People with big-endian CPUs (PowerPC, etc) should clean their
    level cache when upgrading; that is, the first time you start the game,
@@ -10,7 +10,7 @@ X-Moto 0.2.2 2006-
  * F9 to toggle -ugly mode from inside the game, F10 to toggle
    theme testing mode.
  * More in-game options.
- * translations [german] (for unix only)
+ * German translation (for unix only).
  * New built-in level.
  * Bug about undisplayed entities on big-endian computers corrected.
  * Some other bugs fixed.

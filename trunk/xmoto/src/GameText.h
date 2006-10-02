@@ -111,13 +111,14 @@ Central place to keep many in-game text strings
                                         ":Frederic Huard;" \
                                         ":;" \
                                         "Thanks to:SnowBear (for KDE/gnome integration);" \
-                                        ":Jonathan Sieber (German translation);"\
+                                        ":Jonathan Sieber (for german translation);"\
                                         ":Samuel Mimram (for Debian packaging);" \
                                         ":Dark (for Gentoo packaging);" \
                                         ":Olivier Blin (for Mandriva packaging);" \
                                         ":Balazs Rozsa (for across/elma);" \
                                         ":Yves Berquin (for making tinyxml);" \
                                         ":L. Peter Deutsch (for the MD5 code);" \
+                                        ":Petter Reinholdtsen;" \
                                         ":Jes Vestervang (for providing web space);" \
                                         ":Kenneth (for being such a little girl);"\
                                         ":Everyone who have made levels;" \
