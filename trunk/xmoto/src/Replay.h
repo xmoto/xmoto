@@ -104,6 +104,9 @@ namespace vapp {
       void faster();
       void slower();
       float getSpeed() const; /* get multiple factor of the replay */
+      
+      void setSpeed(float f) {m_speed_factor = f;}
+      bool isPaused(void) {return m_is_paused;}
 
       /* Data interface */
       bool didFinish(void) {return m_bFinished;}

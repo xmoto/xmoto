@@ -568,7 +568,33 @@ namespace vapp {
   int GameApp::_UpdateGameReplaying(void) {
     int nPhysSteps = 1;
     m_nFrame++;
+    static float fGTime = 0, fRTime = 0;
 
+    /* Following (automatic replay speed adjustment) is only enabled 
+       when showing credits.  */     
+    if(m_pReplay != NULL && m_bCreditsModeActive) {
+      /* Compare game time with real time */
+      float fGCurTime = m_MotoGame.getTime();
+      float fRCurTime = getRealTime();
+      float fGDiff = fGCurTime - fGTime;
+      float fRDiff = fRCurTime - fRTime;
+      fGTime = fGCurTime;
+      fRTime = fRCurTime;
+      
+      if(fabs(fRDiff - fGDiff) > 0.01f) {            
+        if(fGDiff + 0.01f < fRDiff && !m_pReplay->isPaused() ||
+          fGDiff - 0.01f > fRDiff && !m_pReplay->isPaused()) {
+          float fControl = (fRDiff - fGDiff)*0.6;
+          if(fControl < -0.1f) fControl = -0.1f;
+          if(fControl > 0.1f) fControl = 0.1f;
+          m_pReplay->setSpeed(m_pReplay->getSpeed() + fControl);
+        }
+        
+        if(m_pReplay->getSpeed() < 0.2f) m_pReplay->setSpeed(0.2f);
+        if(m_pReplay->getSpeed() > 8.0f) m_pReplay->setSpeed(8.0);
+      }
+    }
+    
     /* Read replay state */
     static SerializedBikeState BikeState;          
     if(m_pReplay != NULL) {       
