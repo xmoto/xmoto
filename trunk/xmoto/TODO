@@ -195,3 +195,4 @@ zone2b = {}
 * a fonction CameraRotate and CameraAdaptToG (script)
 * A SetDynamicBlockRotation function that rotates the vertices about a center point instead of making the block go in circles.
 * network game
+* freestyle mode
