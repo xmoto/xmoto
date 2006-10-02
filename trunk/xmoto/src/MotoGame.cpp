@@ -1365,7 +1365,8 @@ namespace vapp {
     Vector2f HeadPos = m_BikeS.Dir==DD_RIGHT?m_BikeS.HeadP:m_BikeS.Head2P;
 
     /* Do player touch anything? */
-    for(int i=0;i<m_Entities.size();i++) {            
+    for(int i=0;i<m_Entities.size();i++) {  
+          
       /* Head? */
       if(circleTouchCircle2f(m_Entities[i]->Pos,
 			     m_Entities[i]->fSize,
@@ -1396,12 +1397,13 @@ namespace vapp {
 
 	/* body then ?*/
       } else if(touchEntityBodyExceptHead(m_BikeS, *(m_Entities[i]))) {
-	createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
-						    m_Entities[i]->ID,
-						    false));
-	m_Entities[i]->bTouched = true;
+	if(m_Entities[i]->bTouched == false) {
+	  createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
+						      m_Entities[i]->ID,
+						      false));
+	  m_Entities[i]->bTouched = true;
+	}
       } else {
-	/* Not touching */
 	m_Entities[i]->bTouched = false;
       }
     }
