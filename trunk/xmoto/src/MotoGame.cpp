@@ -944,7 +944,7 @@ namespace vapp {
         /* Is this a special edge? */
         if(InBlocks[i]->Vertices[j]->EdgeEffect != "") {
           OverlayEdge *pEdge = new OverlayEdge;
-          pEdge->Effect = _TransEdgeEffect(InBlocks[i]->Vertices[j]->EdgeEffect);
+          pEdge->Effect = InBlocks[i]->Vertices[j]->EdgeEffect;
           pEdge->P1 = Vector2f(InBlocks[i]->Vertices[j]->fX,InBlocks[i]->Vertices[j]->fY);
           pEdge->P2 = Vector2f(InBlocks[i]->Vertices[jnext]->fX,InBlocks[i]->Vertices[jnext]->fY);
           pEdge->pSrcBlock = InBlocks[i];
@@ -1419,16 +1419,6 @@ namespace vapp {
     if(Name == "Dummy") return ET_DUMMY;
     
     return ET_UNASSIGNED;
-  }
-  
-  EdgeEffect MotoGame::_TransEdgeEffect(std::string Name) {
-    if(Name == "Grass") return EE_GRASS;
-    if(Name == "GrassAlt") return EE_GRASSALT;
-    if(Name == "RedBricks") return EE_REDBRICKS;
-    if(Name == "BlueBricks") return EE_BLUEBRICKS;
-    if(Name == "GrayBricks") return EE_GRAYBRICKS;
-    
-    return EE_UNASSIGNED;
   }
 
   /*===========================================================================

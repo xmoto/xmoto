@@ -203,6 +203,8 @@ void Theme::loadSpritesFromXML(TiXmlElement *p_ThemeXmlDataElement) {
       newTextureSpriteFromXML(pVarElem);
     } else if(v_spriteType == "UI") {
       newUISpriteFromXML(pVarElem);
+    } else if(v_spriteType == "EdgeEffect") {
+      newEdgeEffectSpriteFromXML(pVarElem);
     } else {
       vapp::Log("Warning: unknown type '%s' in theme file !", v_spriteType.c_str());
     }
@@ -387,6 +389,35 @@ void Theme::newEffectSpriteFromXML(TiXmlElement *pVarElem) {
 
   m_sprites.push_back(new EffectSprite(this, v_name, v_fileName));
   m_requiredFiles.push_back(THEME_EFFECT_SPRITE_FILE_DIR + std::string("/") + v_fileName);
+}
+
+void Theme::newEdgeEffectSpriteFromXML(TiXmlElement *pVarElem) {
+  std::string v_name;
+  std::string v_fileName;
+  std::string v_scale;
+  std::string v_depth;
+  const char *pc;
+
+  pc = pVarElem->Attribute("name");
+  if(pc == NULL) {return;}
+  v_name = pc;
+
+  pc = pVarElem->Attribute("file");
+  if(pc == NULL) {return;}
+  v_fileName = pc;
+
+  pc = pVarElem->Attribute("scale");
+  if(pc == NULL) {return;}
+  v_scale = pc;
+
+  pc = pVarElem->Attribute("depth");
+  if(pc == NULL) {return;}
+  v_depth = pc;
+
+  m_sprites.push_back(new EdgeEffectSprite(this, v_name, v_fileName,
+					   atof(v_scale.c_str()),
+					   atof(v_depth.c_str())));
+  m_requiredFiles.push_back(THEME_EDGEEFFECT_SPRITE_FILE_DIR + std::string("/") + v_fileName);
 }
 
 void Theme::newFontSpriteFromXML(TiXmlElement *pVarElem) {
@@ -693,6 +724,30 @@ enum SpriteType EffectSprite::getType() {
 
 std::string EffectSprite::getFileDir() {
   return THEME_EFFECT_SPRITE_FILE_DIR;
+}
+
+EdgeEffectSprite::EdgeEffectSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename, float p_fScale, float p_fDepth) : SimpleFrameSprite(p_associated_theme, p_name, p_filename) {
+  m_fScale = p_fScale;
+  m_fDepth = p_fDepth;
+}
+
+EdgeEffectSprite::~EdgeEffectSprite() {
+}
+
+enum SpriteType EdgeEffectSprite::getType() {
+  return SPRITE_TYPE_EDGEEFFECT;
+}
+
+std::string EdgeEffectSprite::getFileDir() {
+  return THEME_EDGEEFFECT_SPRITE_FILE_DIR;
+}
+
+float EdgeEffectSprite::getScale() const {
+  return m_fScale;
+}
+
+float EdgeEffectSprite::getDepth() const {
+  return m_fDepth;
 }
 
 FontSprite::FontSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {

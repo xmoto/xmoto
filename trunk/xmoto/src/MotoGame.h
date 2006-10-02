@@ -152,7 +152,7 @@ namespace vapp {
     }
   
     Vector2f P1,P2;                               /* Point-to-point */
-    EdgeEffect Effect;                            /* What? */
+    std::string Effect;                            /* What? */
     LevelBlock *pSrcBlock;                        /* Source block */
   };
 

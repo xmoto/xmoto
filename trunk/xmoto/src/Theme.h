@@ -43,6 +43,7 @@ class WebThemes;
 #define THEME_UI_SPRITE_FILE_DIR         THEME_SPRITE_FILE_DIR"/UI"
 #define THEME_TEXTURE_SPRITE_FILE_DIR    THEME_SPRITE_FILE_DIR"/Textures"
 #define THEME_FONT_SPRITE_FILE_DIR       THEME_SPRITE_FILE_DIR"/Fonts"
+#define THEME_EDGEEFFECT_SPRITE_FILE_DIR THEME_SPRITE_FILE_DIR"/Effects"
 
 #define THEME_PLAYER_BODY     "PlayerBikerBody"
 #define THEME_PLAYER_FRONT    "PlayerBikerFront"
@@ -80,7 +81,8 @@ class WebThemes;
     SPRITE_TYPE_FONT,
     SPRITE_TYPE_MISC,
     SPRITE_TYPE_TEXTURE,
-    SPRITE_TYPE_UI
+    SPRITE_TYPE_UI,
+    SPRITE_TYPE_EDGEEFFECT
   };
   
   enum SpriteBlendMode {
@@ -230,6 +232,22 @@ class EffectSprite : public SimpleFrameSprite {
  private:
 };
 
+class EdgeEffectSprite : public SimpleFrameSprite {
+ public:
+  EdgeEffectSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename, float fScale, float fDepth);
+  virtual ~EdgeEffectSprite();
+  enum SpriteType getType();
+  float getScale() const;
+  float getDepth() const;
+
+ protected:
+  std::string getFileDir();
+
+ private:
+  float m_fScale;
+  float m_fDepth;
+};
+
 class FontSprite : public SimpleFrameSprite {
  public:
   FontSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename);
@@ -333,6 +351,7 @@ class Theme {
   void newBikerPartSpriteFromXML(TiXmlElement *pVarElem);
   void newDecorationSpriteFromXML(TiXmlElement *pVarElem);
   void newEffectSpriteFromXML(TiXmlElement *pVarElem);
+  void newEdgeEffectSpriteFromXML(TiXmlElement *pVarElem);
   void newFontSpriteFromXML(TiXmlElement *pVarElem);
   void newMiscSpriteFromXML(TiXmlElement *pVarElem);
   void newTextureSpriteFromXML(TiXmlElement *pVarElem);

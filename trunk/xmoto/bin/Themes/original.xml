@@ -103,18 +103,19 @@
 
 <sprite type="Effect" name="Debris1"         file="Debris1.png" />
 <sprite type="Effect" name="EarthVines"      file="EarthVines.png" />
-<sprite type="Effect" name="EdgeBlueBricks1" file="EdgeBlueBricks1.jpg" />
-<sprite type="Effect" name="EdgeGrass1"      file="EdgeGrass1.png" />
-<sprite type="Effect" name="EdgeGrassAlt1"      file="EdgeGrassAlt1.png" />
-<sprite type="Effect" name="EdgeGrayBricks1" file="EdgeGrayBricks1.jpg" />
-<sprite type="Effect" name="EdgeIce1"        file="EdgeIce1.png" />
-<sprite type="Effect" name="EdgeRedBricks1"  file="EdgeRedBricks1.jpg" />
 <sprite type="Effect" name="Fire1"     	     file="Fire1.png" />
 <sprite type="Effect" name="Sky1"      	     file="Sky1.jpg" />
 <sprite type="Effect" name="Sky2Drift" 	     file="Sky2Drift.jpg" />
 <sprite type="Effect" name="Sky2"      	     file="Sky2.jpg" />
 <sprite type="Effect" name="Smoke1"    	     file="Smoke1.png" />
 <sprite type="Effect" name="Smoke2"    	     file="Smoke2.png" />
+
+<sprite type="EdgeEffect" name="BlueBricks" file="EdgeBlueBricks1.jpg" scale="0.8" depth="0.3" />
+<sprite type="EdgeEffect" name="Grass"      file="EdgeGrass1.png"      scale="0.5" depth="0.3" />
+<sprite type="EdgeEffect" name="GrayBricks" file="EdgeGrayBricks1.jpg" scale="0.8" depth="0.3" />
+<sprite type="EdgeEffect" name="Ice1"       file="EdgeIce1.png"        scale="0.5" depth="0.3" />
+<sprite type="EdgeEffect" name="RedBricks"  file="EdgeRedBricks1.jpg"  scale="0.8" depth="0.3" />
+<sprite type="EdgeEffect" name="GrassAlt"   file="EdgeGrassAlt1.png"   scale="0.5" depth="0.6" />
 
 <sprite type="Font" name="MFont" file="MFont.png" />
 <sprite type="Font" name="SFont" file="SFont.png" />

@@ -1170,83 +1170,33 @@ namespace vapp {
       if(m_Quality != GQ_LOW) {
         for(int i=0;i<pGame->getOverlayEdges().size();i++) {
           OverlayEdge *pEdge = pGame->getOverlayEdges()[i];
-          
-          switch(pEdge->Effect) {
-            case EE_GRASS:
-            case EE_GRASSALT:
-            case EE_BLUEBRICKS:
-            case EE_GRAYBRICKS:
-            case EE_REDBRICKS: {
-                GLuint GLName = 0;
-                float fXScale,fDepth;
-                if(pEdge->Effect == EE_GRASS) {               
-                  EffectSprite* pType;
-                  pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "EdgeGrass1");
-                  if(pType != NULL) {
-                    GLName = pType->getTexture()->nID;
-                    fXScale = 0.5f;
-                    fDepth = 0.3;
-                  }
-                }
-                else if(pEdge->Effect == EE_GRASSALT) {               
-                  EffectSprite* pType;
-                  pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "EdgeGrassAlt1");
-                  if(pType != NULL) {
-                    GLName = pType->getTexture()->nID;
-                    fXScale = 0.5f;
-                    fDepth = 0.6;
-                  }
-                }
-                else if(pEdge->Effect == EE_REDBRICKS) {                
-                  EffectSprite* pType;
-                  pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "EdgeRedBricks1");
-                  if(pType != NULL) {
-                    GLName = pType->getTexture()->nID;
-                    fXScale = 0.8f;
-                    fDepth = 0.3;
-                  }
-                }           
-                else if(pEdge->Effect == EE_GRAYBRICKS) {
-                  EffectSprite* pType;
-                  pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "EdgeGrayBricks1");
-                  if(pType != NULL) {
-                    GLName = pType->getTexture()->nID;
-                    fXScale = 0.8f;
-                    fDepth = 0.3;
-                  }
-                }
-                else if(pEdge->Effect == EE_BLUEBRICKS) {
-                  EffectSprite* pType;
-                  pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "EdgeBlueBricks1");
-                  if(pType != NULL) {
-                    GLName = pType->getTexture()->nID;
-                    fXScale = 0.8f;
-                    fDepth = 0.3;
-                  }
-                }
-            
-                if(GLName != 0) {
-                  glEnable(GL_BLEND); 
-                  glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
-                  glBindTexture(GL_TEXTURE_2D,GLName);
-                  glEnable(GL_TEXTURE_2D);
-                  glBegin(GL_POLYGON);
-                  glColor3f(1,1,1);
-                  glTexCoord2f((pEdge->pSrcBlock->fPosX+pEdge->P1.x)*fXScale,0.01);
-                  _Vertex(pEdge->P1 + Vector2f(pEdge->pSrcBlock->fPosX,pEdge->pSrcBlock->fPosY));
-                  glTexCoord2f((pEdge->pSrcBlock->fPosX+pEdge->P2.x)*fXScale,0.01);
-                  _Vertex(pEdge->P2 + Vector2f(pEdge->pSrcBlock->fPosX,pEdge->pSrcBlock->fPosY));
-                  glTexCoord2f((pEdge->pSrcBlock->fPosX+pEdge->P2.x)*fXScale,0.99);
-                  _Vertex(pEdge->P2 + Vector2f(pEdge->pSrcBlock->fPosX,pEdge->pSrcBlock->fPosY) + Vector2f(0,-fDepth));
-                  glTexCoord2f((pEdge->pSrcBlock->fPosX+pEdge->P1.x)*fXScale,0.99);
-                  _Vertex(pEdge->P1 + Vector2f(pEdge->pSrcBlock->fPosX,pEdge->pSrcBlock->fPosY) + Vector2f(0,-fDepth));
-                  glEnd();
-                  glDisable(GL_TEXTURE_2D);
-                  glDisable(GL_BLEND);
-                }
-              }
-              break;
-          }
+	  GLuint GLName = 0;
+	  float fXScale,fDepth;
+	  EdgeEffectSprite* pType;
+	  pType = (EdgeEffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EDGEEFFECT, pEdge->Effect);
+	  if(pType != NULL) {
+	    GLName = pType->getTexture()->nID;
+	    fXScale = pType->getScale();
+	    fDepth  = pType->getDepth();
+
+	    glEnable(GL_BLEND); 
+	    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
+	    glBindTexture(GL_TEXTURE_2D,GLName);
+	    glEnable(GL_TEXTURE_2D);
+	    glBegin(GL_POLYGON);
+	    glColor3f(1,1,1);
+	    glTexCoord2f((pEdge->pSrcBlock->fPosX+pEdge->P1.x)*fXScale,0.01);
+	    _Vertex(pEdge->P1 + Vector2f(pEdge->pSrcBlock->fPosX,pEdge->pSrcBlock->fPosY));
+	    glTexCoord2f((pEdge->pSrcBlock->fPosX+pEdge->P2.x)*fXScale,0.01);
+	    _Vertex(pEdge->P2 + Vector2f(pEdge->pSrcBlock->fPosX,pEdge->pSrcBlock->fPosY));
+	    glTexCoord2f((pEdge->pSrcBlock->fPosX+pEdge->P2.x)*fXScale,0.99);
+	    _Vertex(pEdge->P2 + Vector2f(pEdge->pSrcBlock->fPosX,pEdge->pSrcBlock->fPosY) + Vector2f(0,-fDepth));
+	    glTexCoord2f((pEdge->pSrcBlock->fPosX+pEdge->P1.x)*fXScale,0.99);
+	    _Vertex(pEdge->P1 + Vector2f(pEdge->pSrcBlock->fPosX,pEdge->pSrcBlock->fPosY) + Vector2f(0,-fDepth));
+	    glEnd();
+	    glDisable(GL_TEXTURE_2D);
+	    glDisable(GL_BLEND);
+	  }
         }
       }
     }
