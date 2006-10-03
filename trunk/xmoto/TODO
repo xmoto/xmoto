@@ -1,3 +1,6 @@
+* when you die, don't display the death menu : display a message
+   "Press Enter to retry or esc to display the menu"
+
 * Bug: personal  times in "new levels" not updated when playing
 * bzip2 not removed on windows : corrected, to test
 * Bug,
