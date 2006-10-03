@@ -5,10 +5,10 @@ man_MANS = xmoto.6.gz xmoto-edit.6.gz
 
 all: xmoto xmoto-edit
 
-xmoto: src/xmoto
+xmoto: 
 	ln -sf src/xmoto xmoto
 
-xmoto-edit: src/xmoto-edit
+xmoto-edit: 
 	ln -sf src/xmoto-edit xmoto-edit
 
 EXTRA_DIST = m4/ChangeLog  $(man_MANS) bootstrap

@@ -1,3 +1,22 @@
+Since 0.2.2
+* BUG on makefile
+I got a bug in the gentoo bugzilla:
+http://bugs.gentoo.org/147725 xmoto-0.2.1 fails with MAKEOPTS="-j2" or higher.
+You moved the xmoto target to the subdir but still wants the result in the
+top directory. But the rule here is broken
+xmoto: src/xmoto
+      ln -sf src/xmoto xmoto
+make -j2 xmoto produces
+make: *** No rule to make target `src/xmoto'.  Stop.
+yet cd src; make xmoto works. Can you please have a look at it and
+revert the change if no better solution is found?
+* <aspegic500> xmoto 0.2.1 ?
+[11:39] <Fifty> ../depcomp: line 512: exec: g++: not found
+[11:39] <Fifty> make: *** [all-recursive] Error 1
+[11:42] <aspegic500> the configure don't check that g++ is installed
+[11:42] <aspegic500> but to check libode,
+[11:42] <aspegic500> it tries to use stdc++
+
 Since 0.2.1
 * BUG : on bad levels loading
 Solved partially: * mipmapping

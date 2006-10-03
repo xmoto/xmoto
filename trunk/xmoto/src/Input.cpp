@@ -408,7 +408,7 @@ namespace vapp {
 	}
 	else if(m_nZoomInit == nKey) {
 	  /* Zoom init */
-	  pGameRender->initZoom();
+	  pGameRender->initCamera();
 	}
 	else if(m_nCameraMoveXUp == nKey) {
 	  pGameRender->moveCamera(1.0, 0.0);

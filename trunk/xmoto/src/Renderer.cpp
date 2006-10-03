@@ -410,8 +410,8 @@ namespace vapp {
   }
 
   void GameRenderer::setCameraPosition(float px, float py) {
-    m_cameraOffsetX = m_Scroll.x + px; //m_Scroll.x +px;
-    m_cameraOffsetY = m_Scroll.y + py; //m_Scroll.y +py;
+    m_cameraOffsetX = m_Scroll.x + px;
+    m_cameraOffsetY = m_Scroll.y + py;
   }
 
   void GameRenderer::moveCamera(float px, float py) {

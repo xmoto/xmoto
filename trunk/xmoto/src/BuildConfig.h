@@ -28,8 +28,8 @@ Info
 
 #define BUILD_MAJORVERSION    0
 #define BUILD_VERSION         2
-#define BUILD_MINORVERSION    2
-#define BUILD_EXTRAINFO       ""
+#define BUILD_MINORVERSION    3
+#define BUILD_EXTRAINFO       "test1"
 
 /*=============================================================================
 Build configuration
