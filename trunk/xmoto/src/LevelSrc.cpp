@@ -78,12 +78,19 @@ namespace vapp {
       return;
     }
     
+
     FS::writeLineF(pfh,"<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-    
-    if(m_LevelPack != "")
-      FS::writeLineF(pfh,"<level id=\"%s\" levelpack=\"%s\" rversion=\"%s\">",m_ID.c_str(),m_LevelPack.c_str(),m_RequiredVersion.c_str());
-    else
-      FS::writeLineF(pfh,"<level id=\"%s\">",m_ID.c_str());
+
+    std::string v_levelTag;
+    v_levelTag = "<level id=\"" + m_ID + "\"";
+    if(m_LevelPack != "") {
+      v_levelTag += " levelpack=\"" + m_LevelPack + "\"";
+    }
+    if(m_RequiredVersion != "") {
+      v_levelTag += " rversion=\"" + m_RequiredVersion + "\"";
+    }
+    v_levelTag += ">";
+    FS::writeLineF(pfh, "%s", v_levelTag.c_str());
     
     /* INFO */
     FS::writeLineF(pfh,"\t<info>");
