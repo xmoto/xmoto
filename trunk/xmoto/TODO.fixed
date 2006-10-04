@@ -16,6 +16,8 @@ revert the change if no better solution is found?
 [11:42] <aspegic500> the configure don't check that g++ is installed
 [11:42] <aspegic500> but to check libode,
 [11:42] <aspegic500> it tries to use stdc++
+* rversion is not saved correctly
+* no immediate just dead menu
 
 Since 0.2.1
 * BUG : on bad levels loading
