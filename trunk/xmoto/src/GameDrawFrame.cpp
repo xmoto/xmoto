@@ -84,7 +84,8 @@ namespace vapp {
       case GS_PAUSE:
         bIsPaused = true;
               
-      case GS_JUSTDEAD:
+      case GS_DEADMENU:
+      case GS_DEADJUST:
       case GS_FINISHED:
       case GS_REPLAYING:
       case GS_PREPLAYING:
@@ -102,7 +103,7 @@ namespace vapp {
 	          /* If "preplaying" / "initial-zoom" is enabled, this is where it's done */
 	          statePrestart_step();
 	        } 
-	        else if(m_State == GS_PLAYING || (m_State == GS_JUSTDEAD && m_bEnableDeathAnim)) {
+	        else if(m_State == GS_PLAYING || ((m_State == GS_DEADMENU || m_State == GS_DEADJUST) && m_bEnableDeathAnim)) {
 	          /* When actually playing or when dead and the bike is falling apart, 
 	             a physics update is required */
 	          nPhysSteps = _UpdateGamePlaying();	          
@@ -157,7 +158,7 @@ namespace vapp {
               nADelay = ((1.0f/m_fCurrentReplayFrameRate - (fEndFrameTime-fStartFrameTime)) * 1000.0f) * 0.5;
             //printf(" { %f }  %d\n",fEndFrameTime-fStartFrameTime,nADelay);            
           }
-          else if ((m_State == GS_FINISHED) || (m_State == GS_JUSTDEAD) || (m_State == GS_PAUSE)) {
+          else if ((m_State == GS_FINISHED) || (m_State == GS_DEADMENU || m_State == GS_DEADJUST) || (m_State == GS_PAUSE)) {
             setFrameDelay(10);
           }
           else {
@@ -190,10 +191,14 @@ namespace vapp {
             /* Okay, nifty thing. Paused! */
             _PostUpdatePause();
           }        
-          else if(m_State == GS_JUSTDEAD) {
+          else if(m_State == GS_DEADJUST) {
             /* Hmm, you're dead and you know it. */
             _PostUpdateJustDead();
-          }        
+          }
+	  else if(m_State == GS_DEADMENU) {
+            /* Hmm, you're dead and you know it. */
+            _PostUpdateMenuDead();
+          }
           else if(m_State == GS_FINISHED) {
             /* Hmm, you've won and you know it. */
             _PostUpdateFinished();
@@ -201,7 +206,7 @@ namespace vapp {
         
           /* Level and player name to draw? */
           if(!m_bCreditsModeActive &&
-            (m_State == GS_JUSTDEAD || m_State == GS_PAUSE || m_State == GS_FINISHED || m_State == GS_REPLAYING) &&
+            (m_State == GS_DEADMENU || m_State == GS_DEADJUST || m_State == GS_PAUSE || m_State == GS_FINISHED || m_State == GS_REPLAYING) &&
             m_MotoGame.getLevelSrc() != NULL) {
             UIFont *v_font = m_Renderer.getMediumFont();
             std::string v_infos;
@@ -292,7 +297,7 @@ namespace vapp {
 #endif
       case GS_LEVEL_INFO_VIEWER:
       case GS_PAUSE:
-      case GS_JUSTDEAD:
+      case GS_DEADMENU:
       case GS_FINISHED:
         m_bShowCursor = true;
         //SDL_ShowCursor(SDL_ENABLE);
@@ -310,6 +315,8 @@ namespace vapp {
         }
         
         break;
+      case GS_DEADJUST:
+      break;
     }
   }  
 
@@ -661,7 +668,7 @@ namespace vapp {
     /* News? */
     if(m_MotoGame.isDead()) {
       /* You're dead maan! */
-      setState(GS_JUSTDEAD);
+      setState(GS_DEADJUST);
     }
     else if(m_MotoGame.isFinished()) {
       /* You're done maaaan! :D */
@@ -689,6 +696,13 @@ namespace vapp {
   }
 
   void GameApp::_PostUpdateJustDead(void) {
+    if(!m_bUglyMode) {
+      if(m_nJustDeadShade < 150) m_nJustDeadShade+=8;
+      drawBox(Vector2f(0,0),Vector2f(getDispWidth(),getDispHeight()),0,MAKE_COLOR(0,0,0,m_nJustDeadShade));     
+    }
+  }
+
+  void GameApp::_PostUpdateMenuDead(void) {
     if(!m_bUglyMode) {
       if(m_nJustDeadShade < 150) m_nJustDeadShade+=8;
       drawBox(Vector2f(0,0),Vector2f(getDispWidth(),getDispHeight()),0,MAKE_COLOR(0,0,0,m_nJustDeadShade));     

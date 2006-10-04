@@ -56,7 +56,8 @@ namespace vapp {
     GS_PREPLAYING,            /* Just before the game start */
     GS_PLAYING,               /* Playing the game */
     GS_PAUSE,                 /* Paused from GS_PLAYING */
-    GS_JUSTDEAD,              /* Head-banging too much */
+    GS_DEADJUST,              /* just dead */
+    GS_DEADMENU,              /* Head-banging too much */
     GS_EDIT_PROFILES,         /* In profile editor */
     GS_FINISHED,              /* Finished a level */
     GS_REPLAYING,             /* Replaying */
@@ -558,6 +559,7 @@ namespace vapp {
       int _UpdateGameReplaying(void); /* return whether the game state is valid */
       void _PostUpdatePlaying(void);
       void _PostUpdatePause(void);
+      void _PostUpdateMenuDead(void);
       void _PostUpdateJustDead(void);
       void _PostUpdateFinished(void);
 

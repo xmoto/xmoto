@@ -241,10 +241,7 @@ namespace vapp {
         /* Paused from GS_PLAYING */
         break;
       }
-      case GS_JUSTDEAD: {
-//        SDL_ShowCursor(SDL_ENABLE);
-        m_bShowCursor = true;
-
+      case GS_DEADJUST: {
         /* Finish replay */
         if(m_pReplay != NULL) m_pReplay->finishReplay(false,0.0f);
 
@@ -254,12 +251,20 @@ namespace vapp {
         /* Play the DIE!!! sound */
         Sound::playSampleByName("Sounds/Headcrash.ogg",0.3);
 
-        /* Possible exit of GS_PLAYING, when the player is dead */
-        m_pJustDeadMenu->showWindow(true);
-        m_nJustDeadShade = 0;
-        m_fCoolDownEnd = getRealTime() + 0.3f;
+	m_nJustDeadShade = 0;
+	m_MotoGame.gameMessage(GAMETEXT_JUSTDEAD_RESTART,     false, 15);
+	m_MotoGame.gameMessage(GAMETEXT_JUSTDEAD_DISPLAYMENU, false, 15);
+
         break;
       }
+    case GS_DEADMENU: {
+      m_bShowCursor = true;
+      m_pJustDeadMenu->showWindow(true);
+
+      /* Possible exit of GS_PLAYING, when the player is dead */
+      m_fCoolDownEnd = getRealTime() + 0.3f;
+      break;
+    }
       case GS_EDIT_PROFILES: {
 //        SDL_ShowCursor(SDL_ENABLE);
         m_bShowCursor = true;
@@ -290,7 +295,7 @@ namespace vapp {
         /* Update stats */        
         m_GameStats.levelCompleted(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->getID(),m_MotoGame.getLevelSrc()->getLevelInfo()->Name,m_MotoGame.getFinishTime());
         
-        /* A more lucky outcome of GS_PLAYING than GS_JUSTDEAD :) */
+        /* A more lucky outcome of GS_PLAYING than GS_DEADMENU :) */
         m_pFinishMenu->showWindow(true);
         m_pBestTimes->showWindow(true);
         m_nFinishShade = 0;            
@@ -577,8 +582,22 @@ namespace vapp {
             break;      
         }
         break;
+      case GS_DEADJUST:
+      {
+	switch(nKey) {
+	case SDLK_RETURN:
+	  m_MotoGame.clearGameMessages();
+	  _RestartLevel();
+	  break;
+	case SDLK_ESCAPE:
+	  m_MotoGame.clearGameMessages();
+	  setState(GS_DEADMENU);
+	  break;
+	}
+	break;
+      }
       case GS_FINISHED:
-      case GS_JUSTDEAD:
+      case GS_DEADMENU:
         switch(nKey) {
           case SDLK_ESCAPE:
             if(m_pSaveReplayMsgBox == NULL) {          
@@ -597,7 +616,7 @@ namespace vapp {
               setState(m_StateAfterPlaying);
             }
             else {
-              if(m_State == GS_JUSTDEAD)
+              if(m_State == GS_DEADMENU)
                 if(getRealTime() < m_fCoolDownEnd)
                   break;
                
@@ -605,7 +624,7 @@ namespace vapp {
             }
             break;
           default:
-            if(m_State == GS_JUSTDEAD)
+            if(m_State == GS_DEADMENU)
               if(getRealTime() < m_fCoolDownEnd)
                 break;
              
@@ -702,7 +721,7 @@ namespace vapp {
       case GS_EDIT_PROFILES:
       case GS_LEVEL_INFO_VIEWER:
       case GS_FINISHED:
-      case GS_JUSTDEAD:
+      case GS_DEADMENU:
       case GS_LEVELPACK_VIEWER:
       case GS_MENU:
         m_Renderer.getGUI()->keyUp(nKey);
@@ -711,6 +730,10 @@ namespace vapp {
         /* Notify the controller */
         m_InputHandler.handleInput(INPUT_KEY_UP,nKey,m_MotoGame.getBikeController(), &m_Renderer);
         break; 
+      case GS_DEADJUST:
+      {
+	break;
+      }
     }
   }
 
@@ -721,7 +744,7 @@ namespace vapp {
     switch(m_State) {
       case GS_MENU:
       case GS_PAUSE:
-      case GS_JUSTDEAD:
+      case GS_DEADMENU:
       case GS_FINISHED:
       case GS_EDIT_PROFILES:
 #if defined(SUPPORT_WEBACCESS)
@@ -736,6 +759,8 @@ namespace vapp {
           m_Renderer.getGUI()->mouseLDoubleClick(nX,nY);
         
         break;
+      case GS_DEADJUST:
+      break;
     }
   }
 
@@ -743,7 +768,7 @@ namespace vapp {
     switch(m_State) {
       case GS_MENU:
       case GS_PAUSE:
-      case GS_JUSTDEAD:
+      case GS_DEADMENU:
       case GS_FINISHED:
       case GS_EDIT_PROFILES:
 #if defined(SUPPORT_WEBACCESS)
@@ -768,7 +793,9 @@ namespace vapp {
       case GS_PLAYING:
       /* Notify the controller */
       m_InputHandler.handleInput(INPUT_KEY_DOWN,nButton,m_MotoGame.getBikeController(), &m_Renderer);
-
+      break;
+      case GS_DEADJUST:
+      break;
     }
   }
 
@@ -776,7 +803,7 @@ namespace vapp {
     switch(m_State) {
       case GS_MENU:
       case GS_PAUSE:
-      case GS_JUSTDEAD:
+      case GS_DEADMENU:
       case GS_FINISHED:
       case GS_EDIT_PROFILES:
 #if defined(SUPPORT_WEBACCESS)
@@ -797,6 +824,8 @@ namespace vapp {
         /* Notify the controller */
         m_InputHandler.handleInput(INPUT_KEY_UP,nButton,m_MotoGame.getBikeController(), &m_Renderer);
         break;
+      case GS_DEADJUST:
+      break;
     }
   }
     

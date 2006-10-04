@@ -2003,17 +2003,9 @@ namespace vapp {
                                                         (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
         }
         else if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_TRYAGAIN) {
-          LevelSrc *pCurLevel = m_MotoGame.getLevelSrc();
-          m_PlaySpecificLevel = pCurLevel->getID();
+
           m_pJustDeadMenu->showWindow(false);
-#if defined(ALLOW_GHOST) 
-	  /* hide ghost */
-	  m_MotoGame.setGhostActive(false);
-#endif 
-          m_MotoGame.endLevel();
-          m_InputHandler.resetScriptKeyHooks();                     
-          m_Renderer.unprepareForNewLevel();          
-          setState(GS_PREPLAYING);          
+	  _RestartLevel();
         }
         else if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
           LevelSrc *pLS = _FindLevelByID(m_PlaySpecificLevel);

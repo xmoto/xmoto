@@ -212,6 +212,8 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_INITZOOM             _("View Level Initially")
 #define GAMETEXT_JOYSTICK             _("Joystick")
 #define GAMETEXT_JUSTDEAD             _("Oops!")
+#define GAMETEXT_JUSTDEAD_RESTART     _("Press ENTER to restart")
+#define GAMETEXT_JUSTDEAD_DISPLAYMENU _("Press ESC to display the menu")
 #define GAMETEXT_KEY                  _("Key")
 #define GAMETEXT_KEYBOARD             _("Keyboard")
 #define GAMETEXT_LEVEL                _("Level")
