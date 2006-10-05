@@ -418,7 +418,6 @@ namespace vapp {
     
     /* body */
     if(m_bodyDetach) {
-
       /*
       // m_PlayerTorsoBody
       if(m_BikeS.Dir == DD_RIGHT) {
@@ -430,14 +429,18 @@ namespace vapp {
 					       m_BikeS.LowerBody2P.x, m_BikeS.LowerBody2P.y,
 					       Contacts, 100);
       }
+      if(nNumContacts > 0) {
+	//usleep(100000);
+      }
       for(int i=0;i<nNumContacts;i++) {
         dJointAttach(dJointCreateContact(m_WorldID,
       					 m_ContactGroup,
 					 &Contacts[i]),
 		     m_BikeS.Dir == DD_RIGHT ?
-		     m_PlayerTorsoBodyID : m_PlayerTorsoBodyID2, 0);           
+		     m_PlayerTorsoBodyID : m_PlayerTorsoBodyID2, 0);
       }
-
+      */
+      /*
       // m_PlayerLArmBodyID
       if(m_BikeS.Dir == DD_RIGHT) {
 	nNumContacts = m_Collision.collideLine(m_BikeS.ElbowP.x, m_BikeS.ElbowP.y,

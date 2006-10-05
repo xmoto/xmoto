@@ -1878,24 +1878,25 @@ namespace vapp {
     m_renderer->setRenderBikeFront(! m_bodyDetach);
 
     if(m_bodyDetach) {
-      //float fERP = 0.0003; float fCFM = 0.00003f;
-      //dJointSetHingeParam(m_KneeHingeID,dParamLoStop, -0.5);
-      //dJointSetHingeParam(m_KneeHingeID,dParamHiStop, 0.1);
-      //dJointSetHingeParam(m_KneeHingeID,dParamSuspensionERP,fERP);
-      //dJointSetHingeParam(m_KneeHingeID,dParamSuspensionCFM,fCFM);
+      dJointSetHingeParam(m_KneeHingeID,  dParamLoStop, 0.0);
+      dJointSetHingeParam(m_KneeHingeID,  dParamHiStop, 3.14159/8.0);
+      dJointSetHingeParam(m_KneeHingeID2, dParamLoStop, 3.14159/8.0 * -1.0);
+      dJointSetHingeParam(m_KneeHingeID2, dParamHiStop, 0.0         * -1.0);
 
+      dJointSetHingeParam(m_LowerBodyHingeID,  dParamLoStop,  -1.2);
+      dJointSetHingeParam(m_LowerBodyHingeID,  dParamHiStop,  0.0);
+      dJointSetHingeParam(m_LowerBodyHingeID2, dParamLoStop, 0.0  * -1.0);
+      dJointSetHingeParam(m_LowerBodyHingeID2, dParamHiStop, -1.2 * -1.0);
 
-      //dJointSetHingeAnchor(m_LowerBodyHingeID , dInfinity, dInfinity, 0.0f);
-      //dJointSetHingeAnchor(m_ShoulderHingeID  , dInfinity, dInfinity, 0.0f);
-      //dJointSetHingeAnchor(m_ElbowHingeID     , dInfinity, dInfinity, 0.0f);
-      //dJointSetHingeAnchor(m_FootHingeID      , dInfinity, dInfinity, 0.0f);
-      //dJointSetHingeAnchor(m_HandHingeID      , dInfinity, dInfinity, 0.0f);
-      //dJointSetHingeAnchor(m_KneeHingeID2     , 0.0f, 0.0f, 0.0f);
-      //dJointSetHingeAnchor(m_LowerBodyHingeID2, dInfinity, dInfinity, 0.0f);
-      //dJointSetHingeAnchor(m_ShoulderHingeID2 , dInfinity, dInfinity, 0.0f);
-      //dJointSetHingeAnchor(m_ElbowHingeID2    , dInfinity, dInfinity, 0.0f);
-      //dJointSetHingeAnchor(m_FootHingeID2     , dInfinity, dInfinity, 0.0f);
-      //dJointSetHingeAnchor(m_HandHingeID2     , dInfinity, dInfinity, 0.0f);
+      dJointSetHingeParam(m_ShoulderHingeID,  dParamLoStop, -2.0);
+      dJointSetHingeParam(m_ShoulderHingeID,  dParamHiStop,  0.0);
+      dJointSetHingeParam(m_ShoulderHingeID2, dParamLoStop,  0.0  * -1.0);
+      dJointSetHingeParam(m_ShoulderHingeID2, dParamHiStop, -2.0  * -1.0);
+
+      dJointSetHingeParam(m_ElbowHingeID,  dParamLoStop, -1.5);
+      dJointSetHingeParam(m_ElbowHingeID,  dParamHiStop, 1.0);
+      dJointSetHingeParam(m_ElbowHingeID2, dParamLoStop, 1.0   * -1.0);
+      dJointSetHingeParam(m_ElbowHingeID2, dParamHiStop, -1.5  * -1.0);
     }
   }
 

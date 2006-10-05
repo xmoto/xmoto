@@ -79,8 +79,9 @@ namespace vapp {
     return 0;
   }
   
-  int intersectLineLine2f(const Vector2f &A0,const Vector2f &A1,const Vector2f &B0,
-                          const Vector2f &B1,Vector2f &Res) {
+  int intersectLineLine2f(const Vector2f &A0, const Vector2f &A1,
+			  const Vector2f &B0, const Vector2f &B1,
+			  Vector2f &Res) {
     if(A0.almostEqual(A1) || B0.almostEqual(B1)) return 0;
                           
     Vector2f P = B0, N = Vector2f( -(B1.y-B0.y), (B1.x-B0.x) );

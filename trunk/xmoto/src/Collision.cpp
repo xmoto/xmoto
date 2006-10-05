@@ -347,10 +347,10 @@ namespace vapp {
       float vy = m_ExternalDynamicLines[k]->y2 - m_ExternalDynamicLines[k]->y1;
       float enx = -vy;
       float eny = vx;
-      if(enx*x1 + eny*y1 < enx*m_ExternalDynamicLines[k]->x1 + eny*m_ExternalDynamicLines[k]->y1) {
+      //if(enx*x1 + eny*y1 < enx*m_ExternalDynamicLines[k]->x1 + eny*m_ExternalDynamicLines[k]->y1) {
         /* Yes it is, can't touch */
-        continue;
-      }
+        //continue;
+      //}
 
       /* Too small? */
       if(fabs(vx) < 0.0001f && fabs(vy) < 0.0001f) {
@@ -401,7 +401,7 @@ namespace vapp {
 
           /* Too small? */
           if(fabs(vx) < 0.0001f && fabs(vy) < 0.0001f) {
-            continue;
+	    continue;
           }
 
           /* Try calculating intersection point */
@@ -414,8 +414,8 @@ namespace vapp {
             Vector2f W = Vector2f(vx,vy);
             W.normalize();
 
-            _SetWheelContactParams(&c,T,W, 0.0f, m_pGrid[i].Lines[j]->fGrip);
-            nNumC = _AddContactToList(pContacts,nNumC,&c,nMaxC);                 
+	    _SetWheelContactParams(&c,T,W, 0.0f, m_pGrid[i].Lines[j]->fGrip);
+	    nNumC = _AddContactToList(pContacts,nNumC,&c,nMaxC);                 
           }                                      
         }          
       }
