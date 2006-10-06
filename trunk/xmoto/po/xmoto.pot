@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-10-04 22:11+0200\n"
+"POT-Creation-Date: 2006-10-06 18:28+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -524,7 +524,7 @@ msgid "Oops!"
 msgstr ""
 
 #: src/GameText.h:215
-msgid "Press ENTER to restart"
+msgid "Press ENTER to try again"
 msgstr ""
 
 #: src/GameText.h:216
@@ -771,11 +771,11 @@ msgid "Replay"
 msgstr ""
 
 #: src/GameText.h:284
-msgid "Stop[esc] ||[space]  << >>[right/left keys]  < >[up/down keys]   Speed:"
+msgid "Stop[esc] ||[space]  << >>[left/right keys]  < >[up/down keys]   Speed:"
 msgstr ""
 
 #: src/GameText.h:285
-msgid "Stop[esc] ||[space] >>[left key] < >[up/down keys]   Speed:"
+msgid "Stop[esc] ||[space] >>[right key] < >[up/down keys]   Speed:"
 msgstr ""
 
 #: src/GameText.h:287

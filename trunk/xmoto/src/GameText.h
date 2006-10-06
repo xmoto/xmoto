@@ -281,8 +281,8 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_QUIT                 _("Quit Game")
 #define GAMETEXT_QUITMESSAGE          _("Do you really want to quit?")
 #define GAMETEXT_REPLAY               _("Replay")
-#define GAMETEXT_REPLAYHELPTEXT(current_speed) _("Stop[esc] ||[space]  << >>[right/left keys]  < >[up/down keys]   Speed:") + current_speed + "x"
-#define GAMETEXT_REPLAYHELPTEXTNOREWIND(current_speed) _("Stop[esc] ||[space] >>[left key] < >[up/down keys]   Speed:") + current_speed + "x"
+#define GAMETEXT_REPLAYHELPTEXT(current_speed) _("Stop[esc] ||[space]  << >>[left/right keys]  < >[up/down keys]   Speed:") + current_speed + "x"
+#define GAMETEXT_REPLAYHELPTEXTNOREWIND(current_speed) _("Stop[esc] ||[space] >>[right key] < >[up/down keys]   Speed:") + current_speed + "x"
   // + "a" + "X"
 #define GAMETEXT_REPLAYNOTFOUND       _("Replay '%s' can't be played!")
 #define GAMETEXT_REPLAYS              _("View Replays")

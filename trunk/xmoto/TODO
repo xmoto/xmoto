@@ -1,3 +1,6 @@
+* BUG : when death is disabled : you cannot see the message "press esc
+   or enter"
+
 * when you die, don't display the death menu : display a message
    "Press Enter to retry or esc to display the menu"
 
@@ -24,6 +27,10 @@ http://xmoto.free.fr/interesting_replays/ireplay_40.rpl
       }
 * BUG: Replays break on Linux/PPC. Screenshot: http://vasi.webhop.org/files/ports/xmoto/xmoto-bug.jpg
 	* Probably fixed, waiting for verification by Marcel
+
+* BUG (06/10/2006) : about Linux/PPC it could be a ode bug (man not displayed) : hand
+   position returned on updatePhysics() are (infinity, 0.0) for the
+   level 1 and initialisation are goods (tested with ode 0.5)
 
 #############################################################################################
 ### not important, not really necesary, very low urgency, or just makes thing more complex:
