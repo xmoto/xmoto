@@ -1,3 +1,5 @@
+
+* BUG : require to restart for zoom of level
 * BUG : when death is disabled : you cannot see the message "press esc
    or enter"
 * Bug: personal  times in "new levels" not updated when playing
