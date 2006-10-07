@@ -1,5 +1,8 @@
 X-Moto 0.2.3 2006-
- * translation [spanish, catalan] (for unix only)
+-----------------------
+
+ * Some patches from FreeBSD port applied. 
+ * Spanish and catalan translations (for unix only).
 	
 X-Moto 0.2.2 2006-10-03
 -----------------------
