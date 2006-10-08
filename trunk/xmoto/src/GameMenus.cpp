@@ -161,24 +161,21 @@ namespace vapp {
     m_pMainMenu->enableWindow(true);                                 
     
     m_pMainMenuButtons[0] = new UIButton(m_pMainMenu,0,0,GAMETEXT_LEVELS,207,57);
-    m_pMainMenuButtons[0]->setContextHelp(CONTEXTHELP_BUILT_IN_AND_EXTERNALS);
+    m_pMainMenuButtons[0]->setContextHelp(CONTEXTHELP_LEVEL_PACKS);
     
-    m_pMainMenuButtons[1] = new UIButton(m_pMainMenu,0,0,GAMETEXT_LEVELPACKS,207,57);
-    m_pMainMenuButtons[1]->setContextHelp(CONTEXTHELP_LEVEL_PACKS);
+    m_pMainMenuButtons[1] = new UIButton(m_pMainMenu,0,0,GAMETEXT_REPLAYS,207,57);
+    m_pMainMenuButtons[1]->setContextHelp(CONTEXTHELP_REPLAY_LIST);
     
-    m_pMainMenuButtons[2] = new UIButton(m_pMainMenu,0,0,GAMETEXT_REPLAYS,207,57);
-    m_pMainMenuButtons[2]->setContextHelp(CONTEXTHELP_REPLAY_LIST);
-    
-    m_pMainMenuButtons[3] = new UIButton(m_pMainMenu,0,0,GAMETEXT_OPTIONS,207,57);
-    m_pMainMenuButtons[3]->setContextHelp(CONTEXTHELP_OPTIONS);
+    m_pMainMenuButtons[2] = new UIButton(m_pMainMenu,0,0,GAMETEXT_OPTIONS,207,57);
+    m_pMainMenuButtons[2]->setContextHelp(CONTEXTHELP_OPTIONS);
 
-    m_pMainMenuButtons[4] = new UIButton(m_pMainMenu,0,0,GAMETEXT_HELP,207,57);
-    m_pMainMenuButtons[4]->setContextHelp(CONTEXTHELP_HELP);
+    m_pMainMenuButtons[3] = new UIButton(m_pMainMenu,0,0,GAMETEXT_HELP,207,57);
+    m_pMainMenuButtons[3]->setContextHelp(CONTEXTHELP_HELP);
 
-    m_pMainMenuButtons[5] = new UIButton(m_pMainMenu,0,0,GAMETEXT_QUIT,207,57);
-    m_pMainMenuButtons[5]->setContextHelp(CONTEXTHELP_QUIT_THE_GAME);
+    m_pMainMenuButtons[4] = new UIButton(m_pMainMenu,0,0,GAMETEXT_QUIT,207,57);
+    m_pMainMenuButtons[4]->setContextHelp(CONTEXTHELP_QUIT_THE_GAME);
 
-    m_nNumMainMenuButtons = 6;
+    m_nNumMainMenuButtons = 5;
     
 #if defined(SUPPORT_WEBACCESS)        
     /* level info frame */
@@ -262,70 +259,6 @@ namespace vapp {
     pCreditsButton->setFont(m_Renderer.getSmallFont());
     pCreditsButton->setType(UI_BUTTON_TYPE_SMALL);
     pCreditsButton->setID("HELP_CREDITS_BUTTON");
-    
-    m_pPlayWindow = new UIFrame(m_pMainMenu,300,(getDispHeight()*140)/600,"",getDispWidth()-300-20,getDispHeight()-40-(getDispHeight()*120)/600-10);      
-    m_pPlayWindow->showWindow(false);
-    pSomeText = new UIStatic(m_pPlayWindow,0,0,GAMETEXT_CHOOSELEVEL,m_pHelpWindow->getPosition().nWidth,36);
-    pSomeText->setFont(m_Renderer.getMediumFont());
-    m_pLevelTabs = new UITabView(m_pPlayWindow,20,40,"",m_pPlayWindow->getPosition().nWidth-40,m_pPlayWindow->getPosition().nHeight-115);
-    m_pLevelTabs->setFont(m_Renderer.getSmallFont());
-    m_pLevelTabs->setID("PLAY_LEVEL_TABS"); 
-    m_pLevelTabs->setTabContextHelp(0,CONTEXTHELP_OFFICIAL_LEVELS);
-    m_pLevelTabs->setTabContextHelp(1,CONTEXTHELP_EXTERNAL_LEVELS);
-    m_pLevelTabs->setTabContextHelp(2,CONTEXTHELP_NEW_LEVELS);
-     
-    UIButton *pGoButton = new UIButton(m_pPlayWindow,11,m_pPlayWindow->getPosition().nHeight-68,GAMETEXT_STARTLEVEL,115,57);
-    pGoButton->setContextHelp(CONTEXTHELP_PLAY_SELECTED_LEVEL);
-    pGoButton->setFont(m_Renderer.getSmallFont());
-    pGoButton->setType(UI_BUTTON_TYPE_SMALL);
-    pGoButton->setID("PLAY_GO_BUTTON");
-    UIButton *pLevelInfoButton = new UIButton(m_pPlayWindow,11+115,m_pPlayWindow->getPosition().nHeight-68,GAMETEXT_SHOWINFO,115,57);
-    pLevelInfoButton->setFont(m_Renderer.getSmallFont());
-    pLevelInfoButton->setType(UI_BUTTON_TYPE_SMALL);
-    pLevelInfoButton->setID("PLAY_LEVEL_INFO_BUTTON");
-    pLevelInfoButton->setContextHelp(CONTEXTHELP_LEVEL_INFO);
-    UIButton *pDownloadLevelsButton = new UIButton(m_pPlayWindow,m_pPlayWindow->getPosition().nWidth-207-10,m_pPlayWindow->getPosition().nHeight-68,GAMETEXT_DOWNLOADLEVELS,207,57);
-    pDownloadLevelsButton->setFont(m_Renderer.getSmallFont());
-    pDownloadLevelsButton->setType(UI_BUTTON_TYPE_LARGE);
-    pDownloadLevelsButton->setID("PLAY_DOWNLOAD_LEVELS_BUTTON");
-    pDownloadLevelsButton->setContextHelp(CONTEXTHELP_DOWNLOADLEVELS);
-
-    UIWindow *pInternalLevelsTab = new UIWindow(m_pLevelTabs,20,40,GAMETEXT_BUILTINLEVELS,m_pLevelTabs->getPosition().nWidth-40,m_pLevelTabs->getPosition().nHeight-60);
-    pInternalLevelsTab->enableWindow(true);
-    pInternalLevelsTab->setID("PLAY_INTERNAL_LEVELS_TAB");
-
-    UIWindow *pExternalLevelsTab = new UIWindow(m_pLevelTabs,20,40,GAMETEXT_EXTERNALLEVELS,m_pLevelTabs->getPosition().nWidth-40,m_pLevelTabs->getPosition().nHeight-60);
-    pExternalLevelsTab->enableWindow(true);
-    pExternalLevelsTab->showWindow(false);    
-    pExternalLevelsTab->setID("PLAY_EXTERNAL_LEVELS_TAB");
-#if defined(SUPPORT_WEBACCESS)    
-    UIWindow *pNewLevelsTab = new UIWindow(m_pLevelTabs,20,40,GAMETEXT_NEWLEVELS,m_pLevelTabs->getPosition().nWidth-40,m_pLevelTabs->getPosition().nHeight-60);
-    pNewLevelsTab->enableWindow(true);
-    pNewLevelsTab->showWindow(false);        
-    pNewLevelsTab->setID("PLAY_NEW_LEVELS_TAB");
-#endif   
-
-    pInternalLevelsTab->showWindow(true);
- 
-    m_pPlayInternalLevelsList = new UILevelList(pInternalLevelsTab,0,0,"",pInternalLevelsTab->getPosition().nWidth,pInternalLevelsTab->getPosition().nHeight);      
-    m_pPlayInternalLevelsList->setID("PLAY_INTERNAL_LEVELS_LIST");
-    m_pPlayInternalLevelsList->showWindow(true);
-    m_pPlayInternalLevelsList->setFont(m_Renderer.getSmallFont());
-    m_pPlayInternalLevelsList->setEnterButton( pGoButton );
-
-    m_pPlayExternalLevelsList = new UILevelList(pExternalLevelsTab,0,0,"",pExternalLevelsTab->getPosition().nWidth,pExternalLevelsTab->getPosition().nHeight);     
-    m_pPlayExternalLevelsList->setID("PLAY_EXTERNAL_LEVELS_LIST");
-    m_pPlayExternalLevelsList->setFont(m_Renderer.getSmallFont());
-    m_pPlayExternalLevelsList->setSort(true);
-    m_pPlayExternalLevelsList->setEnterButton( pGoButton );
-     
-#if defined(SUPPORT_WEBACCESS)
-    m_pPlayNewLevelsList = new UILevelList(pNewLevelsTab,0,0,"",pNewLevelsTab->getPosition().nWidth,pNewLevelsTab->getPosition().nHeight);      
-    m_pPlayNewLevelsList->setID("PLAY_NEW_LEVELS_LIST");
-    m_pPlayNewLevelsList->setFont(m_Renderer.getSmallFont());
-    m_pPlayNewLevelsList->setSort(true);
-    m_pPlayNewLevelsList->setEnterButton( pGoButton );        
-#endif
 
     m_pReplaysWindow = new UIFrame(m_pMainMenu,300,(getDispHeight()*140)/600,"",getDispWidth()-300-20,getDispHeight()-40-(getDispHeight()*120)/600-10);      
     m_pReplaysWindow->showWindow(false);
@@ -888,22 +821,99 @@ namespace vapp {
 
     m_pLevelPacksWindow = new UIFrame(m_pMainMenu,300,(getDispHeight()*140)/600,"",getDispWidth()-300-20,getDispHeight()-40-(getDispHeight()*120)/600-10);      
     m_pLevelPacksWindow->showWindow(false);
-    pSomeText = new UIStatic(m_pLevelPacksWindow,0,0,GAMETEXT_LEVELPACKS,m_pLevelPacksWindow->getPosition().nWidth,36);
-    pSomeText->setFont(m_Renderer.getMediumFont());    
-    UIButton *pOpenButton = new UIButton(m_pLevelPacksWindow,11,m_pLevelPacksWindow->getPosition().nHeight-68,GAMETEXT_OPEN,115,57);
+    pSomeText = new UIStatic(m_pLevelPacksWindow,0,0,GAMETEXT_LEVELS,m_pLevelPacksWindow->getPosition().nWidth,36);
+    pSomeText->setFont(m_Renderer.getMediumFont());
+
+    /* tabs of the packs */
+    m_pLevelPackTabs = new UITabView(m_pLevelPacksWindow,20,40,"",m_pLevelPacksWindow->getPosition().nWidth-40,m_pLevelPacksWindow->getPosition().nHeight-60);
+    m_pLevelPackTabs->setFont(m_Renderer.getSmallFont());
+    m_pLevelPackTabs->setID("LEVELPACK_TABS");
+    m_pLevelPackTabs->enableWindow(true);
+    m_pLevelPackTabs->showWindow(true);
+    m_pLevelPackTabs->setTabContextHelp(0,CONTEXTHELP_LEVEL_PACKS);
+    m_pLevelPackTabs->setTabContextHelp(1,CONTEXTHELP_BUILT_IN_AND_EXTERNALS);
+    m_pLevelPackTabs->setTabContextHelp(2,CONTEXTHELP_NEW_LEVELS);
+
+    /* pack tab */
+    UIWindow *pPackTab = new UIWindow(m_pLevelPackTabs,10,40,GAMETEXT_LEVELPACKS,m_pLevelPackTabs->getPosition().nWidth-20,m_pLevelPackTabs->getPosition().nHeight);
+    pPackTab->enableWindow(true);
+    pPackTab->showWindow(true);
+    pPackTab->setID("PACK_TAB");
+
+    /* open button */
+    UIButton *pOpenButton = new UIButton(pPackTab,11,pPackTab->getPosition().nHeight-57-45,GAMETEXT_OPEN,115,57);
     pOpenButton->setFont(m_Renderer.getSmallFont());
     pOpenButton->setType(UI_BUTTON_TYPE_SMALL);
     pOpenButton->setID("LEVELPACK_OPEN_BUTTON");
     pOpenButton->setContextHelp(CONTEXTHELP_VIEW_LEVEL_PACK);
-    
-    UIList *pLevelPackList = new UIList(m_pLevelPacksWindow,20,40,"",m_pLevelPacksWindow->getPosition().nWidth-40,m_pLevelPacksWindow->getPosition().nHeight-115);      
+
+    /* pack list */
+    UIList *pLevelPackList = new UIList(pPackTab,10,0,"",pPackTab->getPosition().nWidth-20,pPackTab->getPosition().nHeight-105);      
     pLevelPackList->setID("LEVELPACK_LIST");
     pLevelPackList->showWindow(true);
+    pLevelPackList->enableWindow(true);
     pLevelPackList->setFont(m_Renderer.getSmallFont());
     pLevelPackList->addColumn(GAMETEXT_LEVELPACK,256);
     pLevelPackList->addColumn(GAMETEXT_NUMLEVELS,200);
-    //pLevelPackList->addColumn(GAMETEXT_PLAYER,128);
     pLevelPackList->setEnterButton( pOpenButton );
+
+    /* all levels tab */
+    UIWindow *pAllLevelsPackTab = new UIWindow(m_pLevelPackTabs,20,40,GAMETEXT_ALL_LEVELS,m_pLevelPackTabs->getPosition().nWidth-40,m_pLevelPackTabs->getPosition().nHeight);
+    pAllLevelsPackTab->enableWindow(true);
+    pAllLevelsPackTab->showWindow(false);
+    pAllLevelsPackTab->setID("ALLLEVELS_TAB");
+
+    /* all levels button */
+    UIButton *pGoButton = new UIButton(pAllLevelsPackTab,0,pAllLevelsPackTab->getPosition().nHeight-103,GAMETEXT_STARTLEVEL,105,57);
+    pGoButton->setContextHelp(CONTEXTHELP_PLAY_SELECTED_LEVEL);
+    pGoButton->setFont(m_Renderer.getSmallFont());
+    pGoButton->setType(UI_BUTTON_TYPE_SMALL);
+    pGoButton->setID("PLAY_GO_BUTTON");
+    UIButton *pLevelInfoButton = new UIButton(pAllLevelsPackTab,105,pAllLevelsPackTab->getPosition().nHeight-103,GAMETEXT_SHOWINFO,105,57);
+    pLevelInfoButton->setFont(m_Renderer.getSmallFont());
+    pLevelInfoButton->setType(UI_BUTTON_TYPE_SMALL);
+    pLevelInfoButton->setID("PLAY_LEVEL_INFO_BUTTON");
+    pLevelInfoButton->setContextHelp(CONTEXTHELP_LEVEL_INFO);
+
+    /* all levels list */
+    m_pAllLevelsList = new UILevelList(pAllLevelsPackTab,0,0,"",pAllLevelsPackTab->getPosition().nWidth,pAllLevelsPackTab->getPosition().nHeight-105);     
+    m_pAllLevelsList->setID("ALLLEVELS_LIST");
+    m_pAllLevelsList->setFont(m_Renderer.getSmallFont());
+    m_pAllLevelsList->setSort(true);
+    m_pAllLevelsList->setEnterButton( pGoButton );
+
+    /* new levels tab */
+    UIWindow *pNewLevelsPackTab = new UIWindow(m_pLevelPackTabs,20,40,GAMETEXT_NEWLEVELS,m_pLevelPackTabs->getPosition().nWidth-40,m_pLevelPackTabs->getPosition().nHeight);
+    pNewLevelsPackTab->enableWindow(true);
+    pNewLevelsPackTab->showWindow(false);
+    pNewLevelsPackTab->setID("NEWLEVELS_TAB");
+
+    /* new levels tab buttons */
+    UIButton *pNewLevelsGoButton = new UIButton(pNewLevelsPackTab,0,pNewLevelsPackTab->getPosition().nHeight-103,GAMETEXT_STARTLEVEL,105,57);
+    pNewLevelsGoButton->setContextHelp(CONTEXTHELP_PLAY_SELECTED_LEVEL);
+    pNewLevelsGoButton->setFont(m_Renderer.getSmallFont());
+    pNewLevelsGoButton->setType(UI_BUTTON_TYPE_SMALL);
+    pNewLevelsGoButton->setID("NEW_LEVELS_PLAY_GO_BUTTON");
+    UIButton *pNewLevelsLevelInfoButton = new UIButton(pNewLevelsPackTab,105,pNewLevelsPackTab->getPosition().nHeight-103,GAMETEXT_SHOWINFO,105,57);
+    pNewLevelsLevelInfoButton->setFont(m_Renderer.getSmallFont());
+    pNewLevelsLevelInfoButton->setType(UI_BUTTON_TYPE_SMALL);
+    pNewLevelsLevelInfoButton->setID("NEW_LEVELS_PLAY_LEVEL_INFO_BUTTON");
+    pNewLevelsLevelInfoButton->setContextHelp(CONTEXTHELP_LEVEL_INFO);
+
+    UIButton *pDownloadLevelsButton = new UIButton(pNewLevelsPackTab,pNewLevelsPackTab->getPosition().nWidth-187,pNewLevelsPackTab->getPosition().nHeight-103,GAMETEXT_DOWNLOADLEVELS,187,57);
+    pDownloadLevelsButton->setFont(m_Renderer.getSmallFont());
+    pDownloadLevelsButton->setType(UI_BUTTON_TYPE_LARGE);
+    pDownloadLevelsButton->setID("NEW_LEVELS_PLAY_DOWNLOAD_LEVELS_BUTTON");
+    pDownloadLevelsButton->setContextHelp(CONTEXTHELP_DOWNLOADLEVELS);
+
+#if defined(SUPPORT_WEBACCESS)
+    /* all levels list */
+    m_pPlayNewLevelsList = new UILevelList(pNewLevelsPackTab,0,0,"",pNewLevelsPackTab->getPosition().nWidth,pNewLevelsPackTab->getPosition().nHeight-105);     
+    m_pPlayNewLevelsList->setID("NEWLEVELS_LIST");
+    m_pPlayNewLevelsList->setFont(m_Renderer.getSmallFont());
+    m_pPlayNewLevelsList->setSort(true);
+    m_pPlayNewLevelsList->setEnterButton( pNewLevelsGoButton );
+#endif
 
 #if defined(SUPPORT_WEBACCESS)
     /* Initialize internet connection configurator */
@@ -1205,6 +1215,7 @@ namespace vapp {
   ===========================================================================*/  
   void GameApp::_CreateLevelPackLevelList(void) {  
     UILevelList *pList = (UILevelList *)m_pLevelPackViewer->getChild("LEVELPACK_LEVEL_LIST");    
+    pList->setSort(true);
     pList->clear();
        
     /* Obey hints */
@@ -1353,14 +1364,22 @@ namespace vapp {
   Update level pack list
   ===========================================================================*/  
   void GameApp::_UpdateLevelPackList(void) {
-    UIList *pList = (UIList *)m_pLevelPacksWindow->getChild("LEVELPACK_LIST");
+    UIList *pList = (UIList *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:PACK_TAB:LEVELPACK_LIST");
+    pList->setSort(true);
     pList->clear();
     
     UIListEntry *p;
+    std::string p_packName;
     
     for(int i=0;i<m_LevelPacks.size();i++) {
-      p = pList->addEntry(m_LevelPacks[i]->Name);
-      char cBuf[256]; sprintf(cBuf,"%d",m_LevelPacks[i]->Levels.size());
+      p_packName = m_LevelPacks[i]->Name;
+      if(p_packName == "") {
+	p_packName = GAMETEXT_UNPACKED_LEVELS_PACK;
+      }
+
+      p = pList->addEntry(p_packName);
+      char cBuf[256];
+      sprintf(cBuf,"%d",m_LevelPacks[i]->Levels.size());
       p->Text.push_back(cBuf);
       p->pvUser = (void *)m_LevelPacks[i];
     }
@@ -2071,23 +2090,11 @@ namespace vapp {
       if(m_pMainMenuButtons[i]->isClicked()) {
         if(m_pMainMenuButtons[i]->getCaption() == GAMETEXT_LEVELS) {
 #if defined(SUPPORT_WEBACCESS)
-	  // offerActivation
 	  m_pLevelInfoFrame->showWindow(false);
 #endif
           m_pOptionsWindow->showWindow(false);
           m_pHelpWindow->showWindow(false);
           m_pReplaysWindow->showWindow(false);
-          m_pPlayWindow->showWindow(true);                    
-          m_pLevelPacksWindow->showWindow(false);                    
-        }
-        else if(m_pMainMenuButtons[i]->getCaption() == GAMETEXT_LEVELPACKS) {
-#if defined(SUPPORT_WEBACCESS)
-	  m_pLevelInfoFrame->showWindow(false);
-#endif
-          m_pOptionsWindow->showWindow(false);
-          m_pHelpWindow->showWindow(false);
-          m_pReplaysWindow->showWindow(false);
-          m_pPlayWindow->showWindow(false);                    
           m_pLevelPacksWindow->showWindow(true);                    
           
           /* Make sure all level packs are listed */
@@ -2101,7 +2108,6 @@ namespace vapp {
           m_pOptionsWindow->showWindow(true);
           m_pHelpWindow->showWindow(false);
           m_pReplaysWindow->showWindow(false);
-          m_pPlayWindow->showWindow(false);
           m_pLevelPacksWindow->showWindow(false);                    
         }
         else if(m_pMainMenuButtons[i]->getCaption() == GAMETEXT_HELP) {
@@ -2111,7 +2117,6 @@ namespace vapp {
           m_pOptionsWindow->showWindow(false);
           m_pHelpWindow->showWindow(true);
           m_pReplaysWindow->showWindow(false);
-          m_pPlayWindow->showWindow(false);
           m_pLevelPacksWindow->showWindow(false);                    
         
           if(_FindLevelByID("tut1") == NULL) {
@@ -2128,7 +2133,6 @@ namespace vapp {
           m_pOptionsWindow->showWindow(false);
           m_pHelpWindow->showWindow(false);
           m_pReplaysWindow->showWindow(true);
-          m_pPlayWindow->showWindow(false);
           m_pLevelPacksWindow->showWindow(false);                    
         }
         else if(m_pMainMenuButtons[i]->getCaption() == GAMETEXT_QUIT) {
@@ -2149,24 +2153,14 @@ namespace vapp {
 
     /* level menu : */
     /* any list clicked ? */
-    if(m_pPlayInternalLevelsList->isChanged()) {
-      LevelSrc *pLevelSrc = m_pPlayInternalLevelsList->getSelectedLevel();
+    if(m_pAllLevelsList->isChanged()) {
+      LevelSrc *pLevelSrc = m_pAllLevelsList->getSelectedLevel();
       if(pLevelSrc != NULL) {
 #if defined(SUPPORT_WEBACCESS)
 	setLevelInfoFrameBestPlayer(pLevelSrc->getID());
 #endif
       }
-      m_pPlayInternalLevelsList->setChanged(false);
-    }
-
-    if(m_pPlayExternalLevelsList->isChanged()) {
-      LevelSrc *pLevelSrc = m_pPlayExternalLevelsList->getSelectedLevel();
-      if(pLevelSrc != NULL) {
-#if defined(SUPPORT_WEBACCESS)
-	setLevelInfoFrameBestPlayer(pLevelSrc->getID());
-#endif
-      }
-      m_pPlayExternalLevelsList->setChanged(false);
+      m_pAllLevelsList->setChanged(false);
     }
 
 #if defined(SUPPORT_WEBACCESS)
@@ -2180,11 +2174,11 @@ namespace vapp {
 #endif
 
     /* tab of level clicked ? */
-    if(m_pLevelTabs->isChanged()) {
+    if(m_pLevelPackTabs->isChanged()) {
 #if defined(SUPPORT_WEBACCESS)
       m_pLevelInfoFrame->showWindow(false);      
 #endif
-      m_pLevelTabs->setChanged(false);
+      m_pLevelPackTabs->setChanged(false);
     }
 
     /* Delete replay msgbox? */
@@ -2239,8 +2233,8 @@ namespace vapp {
 #endif
 
     /* LEVEL PACKS */
-    UIButton *pOpenButton = (UIButton *)m_pLevelPacksWindow->getChild("LEVELPACK_OPEN_BUTTON");
-    UIList *pLevelPackList = (UIList *)m_pLevelPacksWindow->getChild("LEVELPACK_LIST");
+    UIButton *pOpenButton = (UIButton *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:PACK_TAB:LEVELPACK_OPEN_BUTTON");
+    UIList *pLevelPackList = (UIList *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:PACK_TAB:LEVELPACK_LIST");
     if(pOpenButton!=NULL && pLevelPackList!=NULL && pOpenButton->isClicked()) {
       /* Open level pack viewer */
       int nSel = pLevelPackList->getSelected();
@@ -2476,37 +2470,39 @@ namespace vapp {
     }
     
     /* PLAY */
-    UIButton *pPlayGoButton = (UIButton *)m_pPlayWindow->getChild("PLAY_GO_BUTTON");
-    UIButton *pPlayDLButton = (UIButton *)m_pPlayWindow->getChild("PLAY_DOWNLOAD_LEVELS_BUTTON");
-    UIButton *pLevelInfoButton = (UIButton *)m_pPlayWindow->getChild("PLAY_LEVEL_INFO_BUTTON");
+    UIButton *pPlayGoButton = (UIButton *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:ALLLEVELS_TAB:PLAY_GO_BUTTON");
+    UIButton *pLevelInfoButton = (UIButton *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:ALLLEVELS_TAB:PLAY_LEVEL_INFO_BUTTON");
 
-    if(pPlayDLButton != NULL) {
+    UIButton *pNewLevelsPlayGoButton =    (UIButton *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:NEWLEVELS_TAB:NEW_LEVELS_PLAY_GO_BUTTON");
+    UIButton *pNewLevelsLevelInfoButton = (UIButton *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:NEWLEVELS_TAB:NEW_LEVELS_PLAY_LEVEL_INFO_BUTTON");
+    UIButton *pNewLevelsPlayDLButton =    (UIButton *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:NEWLEVELS_TAB:NEW_LEVELS_PLAY_DOWNLOAD_LEVELS_BUTTON");
+
+    if(pNewLevelsPlayDLButton != NULL) {
       #if !defined(SUPPORT_WEBACCESS)
-        pPlayDLButton->enableWindow(false);
+        pNewLevelsPlayDLButton->enableWindow(false);
       #else          
         if(pWebHighscores->getChecked())
-          pPlayDLButton->enableWindow(true);
+          pNewLevelsPlayDLButton->enableWindow(true);
         else
-          pPlayDLButton->enableWindow(false);
+          pNewLevelsPlayDLButton->enableWindow(false);
       
-        if(pPlayDLButton->isClicked()) {
-          pPlayDLButton->setClicked(false);
+        if(pNewLevelsPlayDLButton->isClicked()) {
+          pNewLevelsPlayDLButton->setClicked(false);
           
           _CheckForExtraLevels();
         }
       #endif
     }
 
-    if(pPlayGoButton && pPlayGoButton->isClicked()) {
+    if(pPlayGoButton->isClicked() || pNewLevelsPlayGoButton->isClicked()) {
       pPlayGoButton->setClicked(false);
+      pNewLevelsPlayGoButton->setClicked(false);
       
       /* Find out what to play */
       LevelSrc *pLevelSrc = NULL;
 
-      if(m_pPlayInternalLevelsList && !m_pPlayInternalLevelsList->isBranchHidden()) {
-	pLevelSrc = m_pPlayInternalLevelsList->getSelectedLevel();
-      } else if(m_pPlayExternalLevelsList && !m_pPlayExternalLevelsList->isBranchHidden()) {
-	pLevelSrc = m_pPlayExternalLevelsList->getSelectedLevel();
+      if(m_pAllLevelsList && !m_pAllLevelsList->isBranchHidden()) {
+	pLevelSrc = m_pAllLevelsList->getSelectedLevel();
 #if defined(SUPPORT_WEBACCESS)
       } else if(m_pPlayNewLevelsList && !m_pPlayNewLevelsList->isBranchHidden()) {
 	pLevelSrc = m_pPlayNewLevelsList->getSelectedLevel();
@@ -2521,16 +2517,15 @@ namespace vapp {
         setState(GS_PREPLAYING);
       }
     }
-    else if(pLevelInfoButton && pLevelInfoButton->isClicked()) {
+    else if(pLevelInfoButton->isClicked() || pNewLevelsLevelInfoButton->isClicked()) {
       pLevelInfoButton->setClicked(false);
+      pNewLevelsLevelInfoButton->setClicked(false);
       
       /* Find out what level is selected */
       LevelSrc *pLevelSrc = NULL;
 
-      if(m_pPlayInternalLevelsList && !m_pPlayInternalLevelsList->isBranchHidden()) {
-	pLevelSrc = m_pPlayInternalLevelsList->getSelectedLevel();
-      } else if(m_pPlayExternalLevelsList && !m_pPlayExternalLevelsList->isBranchHidden()) {
-	pLevelSrc = m_pPlayExternalLevelsList->getSelectedLevel();
+      if(m_pAllLevelsList && !m_pAllLevelsList->isBranchHidden()) {
+	pLevelSrc = m_pAllLevelsList->getSelectedLevel();
 #if defined(SUPPORT_WEBACCESS)
       } else if(m_pPlayNewLevelsList && !m_pPlayNewLevelsList->isBranchHidden()) {
 	pLevelSrc = m_pPlayNewLevelsList->getSelectedLevel();
@@ -2558,6 +2553,7 @@ namespace vapp {
         
         /* Nice. Open the level info viewer */
         pLevelInfoButton->setActive(false);
+        pNewLevelsLevelInfoButton->setActive(false);
         m_pLevelInfoViewer->showWindow(true);
         m_pMainMenu->enableChildren(false);
         m_pMainMenu->enableWindow(false);
@@ -2828,42 +2824,21 @@ namespace vapp {
   /*===========================================================================
   Scan through loaded levels
   ===========================================================================*/
-  void GameApp::_CreateLevelLists(UILevelList *pExternalLevels,UILevelList *pInternalLevels) {
-    /* List of internal levels. Yeah, to let the user see a difference between
-       the built-ins and the ones he has installed himself, here's a list of
-       all those which should be considered internal */    
-    pExternalLevels->clear();
-    pInternalLevels->clear();
+  void GameApp::_CreateLevelLists(UILevelList *pAllLevels) {
+    pAllLevels->clear();
     
     if(m_pPlayer == NULL) return;
   
     for(int i=0;i<m_nNumLevels;i++) {
       LevelSrc *pLevel = &m_Levels[i];     
-      /* Internal or external? */
-      bool bInternal = m_Profiles.isInternal(pLevel->getID());
-      
-      if(bInternal) {
-	pInternalLevels->addLevel(pLevel,
-				  m_pPlayer,
-				  &m_Profiles
+      pAllLevels->addLevel(pLevel,
+			   m_pPlayer,
+			   &m_Profiles
 #if defined(SUPPORT_WEBACCESS) 
-				  ,
-				  m_pWebHighscores
+			   ,
+			   m_pWebHighscores
 #endif
-				  );
-      } else {
-	/* is external */
-	if(pLevel->getLevelPack() == "") {
-	  pExternalLevels->addLevel(pLevel,
-				    m_pPlayer,
-				    &m_Profiles
-#if defined(SUPPORT_WEBACCESS) 
-				    ,
-				    m_pWebHighscores
-#endif
-				    );
-	}
-      }
+			   );
     }
   }
 

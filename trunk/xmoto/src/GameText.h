@@ -40,6 +40,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_ABORT                _("Abort Playing")
 #define GAMETEXT_ACTION               _("Action")
 #define GAMETEXT_ALL                  _("All (on this computer)")
+#define GAMETEXT_ALL_LEVELS           _("All levels")
 #define GAMETEXT_ALLOWINTERNETCONN    _("Do you want to allow X-Moto connecting\n" \
                                         "to the Internet to look for more levels\n" \
                                         "and best times of other players?")
@@ -312,6 +313,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_TRYAGAIN             _("Try This Level Again")
 #define GAMETEXT_TUTORIAL             _("Tutorial")
 #define GAMETEXT_UNKNOWNLEVEL         _("Unknown")
+#define GAMETEXT_UNPACKED_LEVELS_PACK _("Unpacked levels")
 #define GAMETEXT_UNUPDATABLETHEMEONWEB _("Can't update this theme !\nThe theme is not avaible on the web\nor your theme list is not up to date")
 #define GAMETEXT_UPDATE               _("Update")
 #define GAMETEXT_UPDATEHIGHSCORES     _("Check WWW")

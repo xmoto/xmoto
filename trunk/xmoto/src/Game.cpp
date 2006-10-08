@@ -61,9 +61,8 @@ namespace vapp {
   Update levels lists - must be done after each completed level
   ===========================================================================*/
   void GameApp::_UpdateLevelLists(void) {
-    _CreateLevelLists((UILevelList *)m_pPlayWindow->getChild("PLAY_LEVEL_TABS:PLAY_EXTERNAL_LEVELS_TAB:PLAY_EXTERNAL_LEVELS_LIST"),
-                      (UILevelList *)m_pPlayWindow->getChild("PLAY_LEVEL_TABS:PLAY_INTERNAL_LEVELS_TAB:PLAY_INTERNAL_LEVELS_LIST"));
-    
+    _CreateLevelLists((UILevelList *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:ALLLEVELS_TAB:ALLLEVELS_LIST"));
+
   }
 
   /*===========================================================================
@@ -896,7 +895,6 @@ namespace vapp {
   Level packs
   ===========================================================================*/
   void GameApp::_UpdateLevelPackManager(LevelSrc *pLevelSrc) {
-    if(pLevelSrc->getLevelPack() != "") {
       /* Already a known level pack? */
       LevelPack *pPack = _FindLevelPackByName(pLevelSrc->getLevelPack());
       if(pPack == NULL) {
@@ -946,7 +944,6 @@ namespace vapp {
       
       /* Add level to pack */
       pPack->Levels.push_back(pLevelSrc);
-    }
   }
 
   LevelPack *GameApp::_FindLevelPackByName(const std::string &Name) {
@@ -958,97 +955,42 @@ namespace vapp {
   }
  
   std::string GameApp::_DetermineNextLevel(LevelSrc *pLevelSrc) {
-    int i;
-    bool v_found;
-    int v_current_level;
+    UIList *pList = NULL;
 
-    /* Look through all level sources... */
-    i = 0;
-    v_found = false;
-    while(v_found == false && i<m_nNumLevels) {
-      if(m_Levels[i].getID() == pLevelSrc->getID()) {
-        v_found = true;
-        v_current_level = i;
-      } 
-      else {
-        i++;
-      }
+    UIList *pPlayNewLevelsList = (UIList *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:NEWLEVELS_TAB:NEWLEVELS_LIST");
+    UIList *pPlayAllLevelsList = (UIList *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:ALLLEVELS_TAB:ALLLEVELS_LIST");
+    UIWindow *pPlayNewLevelsTab = (UIList *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:NEWLEVELS_TAB");
+    UIWindow *pPlayAllLevelsTab = (UIList *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:ALLLEVELS_TAB");
+
+    if(pPlayNewLevelsTab->isHidden() == false) {
+      pList = pPlayNewLevelsList;
     }
-
-    /* if not found */
-    if(v_found == false) {
-      return "";
+    if(pPlayAllLevelsTab->isHidden() == false) {
+      pList = pPlayAllLevelsList;
     }
-
-    /* determine current level type */
-    bool isCurrentPack = pLevelSrc->getLevelPack() != "";
-
-    /* case of pack */
-    if(isCurrentPack) {
-      LevelPack *pPack = _FindLevelPackByName(pLevelSrc->getLevelPack());
-      if(pPack != NULL) {
-        /* Determine next then */
-        for(int j=0; j<pPack->Levels.size()-1; j++) {
-          if(pPack->Levels[j] == pLevelSrc) {
-            return pPack->Levels[j+1]->getID();
-          }
-        }
+    
+    /* use lists */
+    if(pList != NULL) {
+      for(int i=0;i<pList->getEntries().size()-1;i++) {
+	if(pList->getEntries()[i]->pvUser == (void *)pLevelSrc) {
+	  return ((LevelSrc *)pList->getEntries()[i+1]->pvUser)->getID();
+	}
       }
       return "";
     }
 
-    /* determine current level type */
-    bool isCurrentInternal = m_Profiles.isInternal(pLevelSrc->getID());
-    
-    /* Not internal? */
-    if(!isCurrentInternal) {
-      /* Nope... make sure levels are played the same order they're listed */
-      UIWindow *pPlayNewLevelsTab = (UIList *)m_pPlayWindow->getChild("PLAY_LEVEL_TABS:PLAY_NEW_LEVELS_TAB");
-      UIWindow *pPlayExternalLevelsTab = (UIList *)m_pPlayWindow->getChild("PLAY_LEVEL_TABS:PLAY_EXTERNAL_LEVELS_TAB");
-      UIList *pPlayNewLevelsList = (UIList *)m_pPlayWindow->getChild("PLAY_LEVEL_TABS:PLAY_NEW_LEVELS_TAB:PLAY_NEW_LEVELS_LIST");
-      UIList *pPlayExternalLevelsList = (UIList *)m_pPlayWindow->getChild("PLAY_LEVEL_TABS:PLAY_EXTERNAL_LEVELS_TAB:PLAY_EXTERNAL_LEVELS_LIST");
-      
-      UIList *pList = NULL;
-            
-      if(pPlayNewLevelsTab != NULL && !pPlayNewLevelsTab->isHidden()) {
-        /* new/updated levels tab open */
-        pList = pPlayNewLevelsList;
+    /* no list opened, find the next one of the pack */
+    LevelPack *pPack = _FindLevelPackByName(pLevelSrc->getLevelPack());
+    if(pPack != NULL) {
+      /* Determine next then */
+      for(int j=0; j<pPack->Levels.size()-1; j++) {
+	if(pPack->Levels[j] == pLevelSrc) {
+	  return pPack->Levels[j+1]->getID();
+	}
       }
-      else if(pPlayExternalLevelsTab != NULL && !pPlayExternalLevelsTab->isHidden()) {
-        /* external levels tab open */
-        pList = pPlayExternalLevelsList;
-      }
-      
-      if(pList != NULL) {
-        for(int i=0;i<pList->getEntries().size()-1;i++) {
-          if(pList->getEntries()[i]->pvUser == (void *)pLevelSrc) {
-            /* This is it */
-            return ((LevelSrc *)pList->getEntries()[i+1]->pvUser)->getID();
-          }
-        }
-        
-        if(pList->getEntries()[pList->getEntries().size()-1]->pvUser == (void *)pLevelSrc)
-          return "";
-      }
+      return "";
     }
-    
-    /* find the next one */
-    i++; // from the current one
-    while(i<m_nNumLevels) {
-      bool isInternal = m_Profiles.isInternal(m_Levels[i].getID());
 
-      /* case of internal level */
-      if(isCurrentInternal && isInternal) {
-        return m_Levels[i].getID();
-      }
-     
-      /* case of external */
-      if(isCurrentInternal == false && isInternal == false) {
-        return m_Levels[i].getID();
-      }
-      
-      i++;
-    }
     return "";
   }
   
@@ -1235,24 +1177,6 @@ namespace vapp {
           return;
         }
 
-        /* Get pointer to GUI list of new/updated levels */
-        UILevelList *pPlayNewLevelsList = (UILevelList *)m_pPlayWindow->getChild("PLAY_LEVEL_TABS:PLAY_NEW_LEVELS_TAB:PLAY_NEW_LEVELS_LIST");
-        if(pPlayNewLevelsList != NULL) {
-          /* Clear list, and make sure it is visible */
-          UIWindow *pInternalTab = (UIWindow *)m_pPlayWindow->getChild("PLAY_LEVEL_TABS:PLAY_INTERNAL_LEVELS_TAB");
-          UIWindow *pExternalTab = (UIWindow *)m_pPlayWindow->getChild("PLAY_LEVEL_TABS:PLAY_EXTERNAL_LEVELS_TAB");
-          UIWindow *pNewTab = (UIWindow *)m_pPlayWindow->getChild("PLAY_LEVEL_TABS:PLAY_NEW_LEVELS_TAB");
-          if(pNewTab != NULL) pNewTab->showWindow(true);
-          if(pExternalTab != NULL) pExternalTab->showWindow(false);
-          if(pInternalTab != NULL) pInternalTab->showWindow(false);
-          
-          UITabView *pTabView = (UITabView *)m_pPlayWindow->getChild("PLAY_LEVEL_TABS");
-          if(pTabView != NULL)
-            pTabView->setSelected(2);
-          
-          pPlayNewLevelsList->clear();
-        }
-          
         /* Got some new levels... load them! */
         const std::vector<std::string> LvlFiles = m_pWebLevels->getNewDownloadedLevels();
         
@@ -1262,9 +1186,9 @@ namespace vapp {
         Log(" %d new level%s loaded",m_nNumLevels-nOldNum,(m_nNumLevels-nOldNum)==1?"":"s");
         
         /* Add new levels to GUI list */
-        if(pPlayNewLevelsList != NULL) {
+        if(m_pPlayNewLevelsList != NULL) {
           for(int i=nOldNum;i<m_nNumLevels;i++) {
-            pPlayNewLevelsList->addLevel(m_Levels+i, m_pPlayer, &m_Profiles, m_pWebHighscores, std::string("New: "));
+            m_pPlayNewLevelsList->addLevel(m_Levels+i, m_pPlayer, &m_Profiles, m_pWebHighscores, std::string("New: "));
           }
         }
         
@@ -1288,8 +1212,8 @@ namespace vapp {
                   nTooOldXMoto++;
                               
                 /* Add it to list of new levels as "updated" */
-                if(pPlayNewLevelsList != NULL) {
-                  pPlayNewLevelsList->addLevel(m_Levels+j, m_pPlayer, &m_Profiles, m_pWebHighscores, std::string("Updated: "));
+                if(m_pPlayNewLevelsList != NULL) {
+                  m_pPlayNewLevelsList->addLevel(m_Levels+j, m_pPlayer, &m_Profiles, m_pWebHighscores, std::string("Updated: "));
                 }
                 
                 nReloaded++;

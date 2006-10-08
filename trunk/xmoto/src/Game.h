@@ -364,7 +364,7 @@ namespace vapp {
       
       /* Main menu buttons and stuff */
       int m_nNumMainMenuButtons;
-      UITabView *m_pLevelTabs;
+      UITabView *m_pLevelPackTabs;
       UIButton *m_pMainMenuButtons[10];
       UIFrame *m_pOptionsWindow,*m_pHelpWindow,*m_pPlayWindow,*m_pReplaysWindow,*m_pLevelPacksWindow;
       UIWindow *m_pMainMenu;
@@ -373,8 +373,7 @@ namespace vapp {
       UIFrame *m_pStatsWindow;
       
       /* LEVEL lists */
-      UILevelList *m_pPlayExternalLevelsList;
-      UILevelList *m_pPlayInternalLevelsList;
+      UILevelList *m_pAllLevelsList;
 #if defined(SUPPORT_WEBACCESS)
       UILevelList *m_pPlayNewLevelsList;
 #endif
@@ -464,7 +463,7 @@ namespace vapp {
       void _HandleProfileEditor(void);
       void _HandleLevelInfoViewer(void);
       void _HandleLevelPackViewer(void);
-      void _CreateLevelLists(UILevelList *pExternalLevels,UILevelList *pInternalLevels);
+      void _CreateLevelLists(UILevelList *pAllLevels);
       void _CreateReplaysList(UIList *pList);
       void _CreateThemesList(UIList *pList);
 #if defined(SUPPORT_WEBACCESS) 

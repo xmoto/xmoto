@@ -193,7 +193,7 @@ namespace vapp {
       float getPlayerStartX(void) {return m_fPlayerStartX;}
       float getPlayerStartY(void) {return m_fPlayerStartY;}
       void setLevelPack(const std::string &s) {m_LevelPack = s;}
-      const std::string &getLevelPack(void) {return m_LevelPack;}
+      const std::string &getLevelPack(void);
       void setPlayerStart(float x,float y) {m_fPlayerStartX=x ;m_fPlayerStartY=y;}
       void setLimits(float fLeft,float fRight,float fTop,float fBottom) {
         m_fLeftLimit=fLeft; m_fRightLimit=fRight; m_fTopLimit=fTop; m_fBottomLimit=fBottom;      

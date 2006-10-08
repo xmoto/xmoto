@@ -991,5 +991,10 @@ namespace vapp {
     /* Same versions */
     return 0;    
   }
+
+  const std::string& LevelSrc::getLevelPack(void) {
+    return m_LevelPack;
+  }
+
 }
 

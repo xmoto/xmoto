@@ -1,3 +1,8 @@
+* for the packs
+- qd on fait un highscore, vérifier que ca met a jour les listes
+- le bouton view highscore dans les packs
+- les niveaux internes à mettre en pack
+- voir si on peut virer les numéros des niveaux internes
 
 * BUG : make a level with the id 8maximumchallengeight8 and xmoto
    -level 8maximumchallengeight8 starts the level 8
