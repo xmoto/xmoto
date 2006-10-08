@@ -1,4 +1,6 @@
 
+* BUG : make a level with the id 8maximumchallengeight8 and xmoto
+   -level 8maximumchallengeight8 starts the level 8
 * BUG : require to restart for zoom of level
 * BUG : when death is disabled : you cannot see the message "press esc
    or enter"

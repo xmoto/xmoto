@@ -287,6 +287,19 @@ namespace vapp {
   void MGE_EntityDestroyed::unserialize(DBuffer &Buffer) {
     Buffer.read(m_entityID);
     Buffer >> m_type;
+    switch(m_type) {
+    case ET_UNASSIGNED:
+    case ET_SPRITE:
+    case ET_PLAYERSTART:
+    case ET_ENDOFLEVEL:
+    case ET_WRECKER:
+    case ET_STRAWBERRY:
+    case ET_PARTICLESOURCE:
+    case ET_DUMMY:
+      break;
+    default:
+      throw Exception("Invalid entity type"); // with some compilator, an invalid value causes a segfault (on my linux box)
+    }
     Buffer >> m_fSize;
     Buffer >> m_fPosX;
     Buffer >> m_fPosY;   
