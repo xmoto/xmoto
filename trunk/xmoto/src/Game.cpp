@@ -681,12 +681,13 @@ namespace vapp {
         }
       break;
       case GS_PREPLAYING:
-      switch(nKey) {
-      case SDLK_ESCAPE:
-      case SDLK_RETURN:
+      /* any key to remove the animation */
+      //switch(nKey) {
+      //case SDLK_ESCAPE:
+      //case SDLK_RETURN:
 	m_bPrePlayAnim = false;
-	break;
-      }
+      //break;
+      //}
       break;
       case GS_PLAYING:
         switch(nKey) {

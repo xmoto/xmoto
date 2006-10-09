@@ -1,8 +1,6 @@
-* for the packs
-- bug of scrolling which make level disappear
+* packs list reorganized
 - add a button view the highscore in the pack window
 - qd on fait un highscore, vérifier que ca met a jour les listes
-- display the pack in which the level is contain in the info window
 
 * BUG : make a level with the id 8maximumchallengeight8 and xmoto
    -level 8maximumchallengeight8 starts the level 8
@@ -34,7 +32,6 @@ http://xmoto.free.fr/interesting_replays/ireplay_40.rpl
 #############################################################################################
 ### not important, not really necesary, very low urgency, or just makes thing more complex:
 
-* BUG : http://forum.xmoto.free.fr/viewtopic.php?p=205#205 (no clue how to fix)
 * BUG ? http://forum.xmoto.free.fr/viewtopic.php?p=212#212 (not really i bug methinks)
 * remove the "level packs" button, remove the "internal" and "external" tabs and replace them by "All levels" tab and "Level pack" tab and make internal level a pack
 * change theme without restart
@@ -140,5 +137,6 @@ zone2b = {}
 * display wind
 * a fonction CameraRotate and CameraAdaptToG (script)
 * A SetDynamicBlockRotation function that rotates the vertices about a center point instead of making the block go in circles.
+* a block0.Touch() function
 * network game
 * freestyle mode

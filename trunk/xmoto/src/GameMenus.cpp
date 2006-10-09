@@ -1095,25 +1095,31 @@ namespace vapp {
     pOKButton->setContextHelp(CONTEXTHELP_BACK_TO_MAIN_MENU);
     
     /* Level info viewer - general info */
-    UIStatic *pLV_Info_LevelName = new UIStatic(pLVTab_Info,0,0,"(level name goes here)",pLVTab_Info->getPosition().nWidth,40);
+    UIStatic *pLV_Info_LevelPack = new UIStatic(pLVTab_Info,0,0,"(pack name goes here)",pLVTab_Info->getPosition().nWidth,40);
+    pLV_Info_LevelPack->setID("LEVEL_VIEWER_INFO_LEVELPACK");
+    pLV_Info_LevelPack->showWindow(true);
+    pLV_Info_LevelPack->setHAlign(UI_ALIGN_LEFT);
+    pLV_Info_LevelPack->setVAlign(UI_ALIGN_TOP);
+    pLV_Info_LevelPack->setFont(m_Renderer.getSmallFont());
+    UIStatic *pLV_Info_LevelName = new UIStatic(pLVTab_Info,0,40,"(level name goes here)",pLVTab_Info->getPosition().nWidth,40);
     pLV_Info_LevelName->setID("LEVEL_VIEWER_INFO_LEVELNAME");
     pLV_Info_LevelName->showWindow(true);
     pLV_Info_LevelName->setHAlign(UI_ALIGN_LEFT);
     pLV_Info_LevelName->setVAlign(UI_ALIGN_TOP);
     pLV_Info_LevelName->setFont(m_Renderer.getSmallFont());
-    UIStatic *pLV_Info_Author = new UIStatic(pLVTab_Info,0,40,"(author goes here)",pLVTab_Info->getPosition().nWidth,40);
+    UIStatic *pLV_Info_Author = new UIStatic(pLVTab_Info,0,80,"(author goes here)",pLVTab_Info->getPosition().nWidth,40);
     pLV_Info_Author->setID("LEVEL_VIEWER_INFO_AUTHOR");
     pLV_Info_Author->showWindow(true);
     pLV_Info_Author->setHAlign(UI_ALIGN_LEFT);                
     pLV_Info_Author->setVAlign(UI_ALIGN_TOP);
     pLV_Info_Author->setFont(m_Renderer.getSmallFont());
-    UIStatic *pLV_Info_Date = new UIStatic(pLVTab_Info,0,80,"(date goes here)",pLVTab_Info->getPosition().nWidth,40);
+    UIStatic *pLV_Info_Date = new UIStatic(pLVTab_Info,0,120,"(date goes here)",pLVTab_Info->getPosition().nWidth,40);
     pLV_Info_Date->setID("LEVEL_VIEWER_INFO_DATE");
     pLV_Info_Date->showWindow(true);
     pLV_Info_Date->setHAlign(UI_ALIGN_LEFT);                
     pLV_Info_Date->setVAlign(UI_ALIGN_TOP);
     pLV_Info_Date->setFont(m_Renderer.getSmallFont());
-    UIStatic *pLV_Info_Description = new UIStatic(pLVTab_Info,0,120,"(description goes here)",pLVTab_Info->getPosition().nWidth,160);
+    UIStatic *pLV_Info_Description = new UIStatic(pLVTab_Info,0,160,"(description goes here)",pLVTab_Info->getPosition().nWidth,200);
     pLV_Info_Description->setID("LEVEL_VIEWER_INFO_DESCRIPTION");
     pLV_Info_Description->showWindow(true);
     pLV_Info_Description->setHAlign(UI_ALIGN_LEFT);                
@@ -1675,11 +1681,13 @@ namespace vapp {
         
         if(pLevelName != NULL) pLevelName->setCaption(pLevelSrc->getLevelInfo()->Name);
 
+        UIStatic *pGeneralInfo_LevelPack = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_LEVELPACK");
         UIStatic *pGeneralInfo_LevelName = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_LEVELNAME");
         UIStatic *pGeneralInfo_Author = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_AUTHOR");
         UIStatic *pGeneralInfo_Date = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_DATE");
         UIStatic *pGeneralInfo_Description = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_DESCRIPTION");
 
+        if(pGeneralInfo_LevelPack != NULL) pGeneralInfo_LevelPack->setCaption(std::string(GAMETEXT_LEVELPACK) + ": " + pLevelSrc->getLevelPack());
         if(pGeneralInfo_LevelName != NULL) pGeneralInfo_LevelName->setCaption(std::string(GAMETEXT_LEVELNAME) + ": " + pLevelSrc->getLevelInfo()->Name);
         if(pGeneralInfo_Author != NULL) pGeneralInfo_Author->setCaption(std::string(GAMETEXT_AUTHOR) + ": " + pLevelSrc->getLevelInfo()->Author);
         if(pGeneralInfo_Date != NULL) pGeneralInfo_Date->setCaption(std::string(GAMETEXT_DATE) + ": " + pLevelSrc->getLevelInfo()->Date);
@@ -2542,11 +2550,13 @@ namespace vapp {
         
         if(pLevelName != NULL) pLevelName->setCaption(pLevelSrc->getLevelInfo()->Name);
 
+        UIStatic *pGeneralInfo_LevelPack = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_LEVELPACK");
         UIStatic *pGeneralInfo_LevelName = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_LEVELNAME");
         UIStatic *pGeneralInfo_Author = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_AUTHOR");
         UIStatic *pGeneralInfo_Date = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_DATE");
         UIStatic *pGeneralInfo_Description = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_DESCRIPTION");
 
+        if(pGeneralInfo_LevelPack != NULL) pGeneralInfo_LevelPack->setCaption(std::string(GAMETEXT_LEVELPACK) + ": " + pLevelSrc->getLevelPack());
         if(pGeneralInfo_LevelName != NULL) pGeneralInfo_LevelName->setCaption(std::string(GAMETEXT_LEVELNAME) + ": " + pLevelSrc->getLevelInfo()->Name);
         if(pGeneralInfo_Author != NULL) pGeneralInfo_Author->setCaption(std::string(GAMETEXT_AUTHOR) + ": " + pLevelSrc->getLevelInfo()->Author);
         if(pGeneralInfo_Date != NULL) pGeneralInfo_Date->setCaption(std::string(GAMETEXT_DATE) + ": " + pLevelSrc->getLevelInfo()->Date);

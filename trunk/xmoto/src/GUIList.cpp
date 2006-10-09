@@ -34,11 +34,11 @@ namespace vapp {
     while(m_lastRefreshTime + 0.01 < v_time) {
       
       if(m_bScrollDownPressed) {
-	      _Scroll(-1);
+	      _Scroll(-4);
       }
       
       if(m_bScrollUpPressed) {
-	      _Scroll(1);
+	      _Scroll(4);
       }
       
       m_lastRefreshTime = v_time;
@@ -382,6 +382,7 @@ namespace vapp {
     _FreeUIList();
     m_Entries.clear();
     m_nSelected = 0;
+    m_nScroll   = 0;
   }
 
   /*===========================================================================
@@ -527,8 +528,19 @@ namespace vapp {
   Misc helpers
   ===========================================================================*/
   void UIList::_Scroll(int nPixels) {
+    int nRowHeight = 16;
+    int nHeaderHeight = 18 + 6 + 4;
+
+    if(m_nScroll+nPixels > 0) {
+      m_nScroll = 0;
+      return;
+    }
+
+    if(m_nScroll+nPixels < -nRowHeight * ((int)m_Entries.size()+1) + getPosition().nHeight - nHeaderHeight) { /* keep the cast ; under my linux box, it doesn't work without it */
+      return;
+    } 
+
     m_nScroll += nPixels;
-    if(m_nScroll > 0) m_nScroll = 0;
   }
 
 

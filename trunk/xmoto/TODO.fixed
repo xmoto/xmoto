@@ -24,6 +24,7 @@ revert the change if no better solution is found?
 * BUG (06/10/2006) : about Linux/PPC it could be a ode bug (man not displayed) : hand
    position returned on updatePhysics() are (infinity, 0.0) for the
    level 1 and initialisation are goods (tested with ode 0.5)
+  BUG : http://forum.xmoto.free.fr/viewtopic.php?p=205#205 (no clue how to fix)
 ===> update to ode 0.7
 * BUG : under linux at lease :      if(p_type == ET_STRAWBERRY) {, if
    p_type has been read from a replay and has a value not in the range
