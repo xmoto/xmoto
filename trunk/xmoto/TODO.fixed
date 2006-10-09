@@ -29,7 +29,8 @@ revert the change if no better solution is found?
 * BUG : under linux at lease :      if(p_type == ET_STRAWBERRY) {, if
    p_type has been read from a replay and has a value not in the range
 of existing types, this line causes a segfault (see replay 7097)
-
+* BUG : make a level with the id 8maximumchallengeight8 and xmoto -level 8maximumchallengeight8 starts the level 8
+* BUG : require to restart for zoom of level
 
 Since 0.2.1
 * BUG : on bad levels loading

@@ -546,12 +546,20 @@ namespace vapp {
           m_PlaySpecificLevel = UserArgs[i+1];
           
           /* If it is a plain number, it's for a internal level */
-          int nNum = atoi(m_PlaySpecificLevel.c_str());
-          if(nNum > 0) {
-            char cBuf[256];
-            sprintf(cBuf,"_iL%02d_",nNum-1);
-            m_PlaySpecificLevel = cBuf;
-          }
+	  bool v_isANumber =  true;
+	  for(int i=0; i<m_PlaySpecificLevel.length(); i++) {
+	    if(m_PlaySpecificLevel[i] < '0' || m_PlaySpecificLevel[i] > '9') {
+	      v_isANumber = false;
+	    }
+	  }
+	  if(v_isANumber) {
+	    int nNum = atoi(m_PlaySpecificLevel.c_str());
+	    if(nNum > 0) {
+	      char cBuf[256];
+	      sprintf(cBuf,"_iL%02d_",nNum-1);
+	      m_PlaySpecificLevel = cBuf;
+	    }
+	  }
         }
         else
           throw SyntaxError("no level specified");        

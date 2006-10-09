@@ -103,7 +103,7 @@ namespace vapp {
           if(pList != NULL) {
             pList->makeActive();
           }
-          setPrePlayAnim(m_bEnableInitZoom);
+          setPrePlayAnim(true);
         }
         break;
       case GS_CREDITSMODE:
@@ -210,7 +210,7 @@ namespace vapp {
         m_pMainMenu->showWindow(true);
 
         // enable the preplay animation
-        setPrePlayAnim(m_bEnableInitZoom);
+        setPrePlayAnim(true);
                   
         break;
       }
@@ -1808,18 +1808,13 @@ namespace vapp {
   }
 
   void GameApp::prestartAnimation_init() {
-    if(!m_bEnableInitZoom) {
-      setState(GS_PLAYING);
-      return;
-    }
-  
     m_fPrePlayStartTime = getRealTime();  // because the man can change ugly mode while the animation
     m_fPrePlayStartInitZoom = m_Renderer.getCurrentZoom();  // because the man can change ugly mode while the animation
     m_fPrePlayStartCameraX = m_Renderer.getCameraPositionX();
     m_fPrePlayStartCameraY = m_Renderer.getCameraPositionY();       
+    
+    if(m_bPrePlayAnim && m_bUglyMode == false && m_bEnableInitZoom) {
 
-    if(m_bPrePlayAnim && m_bUglyMode == false) {
-      
       m_MotoGame.gameMessage(m_MotoGame.getLevelSrc()->getLevelInfo()->Name, false, PRESTART_ANIMATION_LEVEL_MSG_DURATION);
       
       m_zoomX = (2.0 * ((float)getDispWidth() / (float)getDispHeight())) / (m_MotoGame.getLevelSrc()->getRightLimit() - m_MotoGame.getLevelSrc()->getLeftLimit() + 2*PRESTART_ANIMATION_MARGIN_SIZE);
@@ -1871,7 +1866,7 @@ namespace vapp {
   }
    
   void GameApp::prestartAnimation_step() {
-    if(m_bPrePlayAnim && m_bUglyMode == false) {
+    if(m_bPrePlayAnim && m_bUglyMode == false && m_bEnableInitZoom) {
       
       if(getRealTime() > m_fPrePlayStartTime + static_time + PRESTART_ANIMATION_TIME) {
         setPrePlayAnim(false); // disable anim

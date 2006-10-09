@@ -1,10 +1,7 @@
-* packs list reorganized
+* remove the "level packs" button, remove the "internal" and "external" tabs and replace them by "All levels" tab and "Level pack" tab and make internal level a pack
 - add a button view the highscore in the pack window
 - qd on fait un highscore, vérifier que ca met a jour les listes
 
-* BUG : make a level with the id 8maximumchallengeight8 and xmoto
-   -level 8maximumchallengeight8 starts the level 8
-* BUG : require to restart for zoom of level
 * BUG : when death is disabled : you cannot see the message "press esc
    or enter"
 * Bug: personal  times in "new levels" not updated when playing
@@ -33,7 +30,6 @@ http://xmoto.free.fr/interesting_replays/ireplay_40.rpl
 ### not important, not really necesary, very low urgency, or just makes thing more complex:
 
 * BUG ? http://forum.xmoto.free.fr/viewtopic.php?p=212#212 (not really i bug methinks)
-* remove the "level packs" button, remove the "internal" and "external" tabs and replace them by "All levels" tab and "Level pack" tab and make internal level a pack
 * change theme without restart
 * SDL_ttf or something like that for rendering text
 *(20:39:54) Neckelmann:   the game should really do all this:
