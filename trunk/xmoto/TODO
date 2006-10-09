@@ -1,4 +1,5 @@
 * for the packs
+- le prefix #num
 - bug of scrolling which make level disappear
 - add a button view the highscore in the pack window
 - qd on fait un highscore, vérifier que ca met a jour les listes

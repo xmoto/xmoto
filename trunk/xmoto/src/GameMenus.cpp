@@ -1231,13 +1231,14 @@ namespace vapp {
     for(int i=0;i<m_pActiveLevelPack->Levels.size();i++) {
       std::ostringstream v_level_num;
       v_level_num << i+1;
+
        pList->addLevel(m_pActiveLevelPack->Levels[i],
 		       m_pPlayer,
-		       &m_Profiles,
-#if defined(SUPPORT_WEBACCESS) 
-		       m_pWebHighscores,
+		       &m_Profiles
+#if defined(SUPPORT_WEBACCESS)
+		       ,
+		       m_pWebHighscores
 #endif
-		       "#" + v_level_num.str() + " "
 		       );
     }
   }
