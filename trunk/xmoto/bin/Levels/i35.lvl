@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<level id="_iL35_">
+<level id="_iL35_" levelpack="Built-in levels" levelpackNum="35">
 	<info>
-		<name>#36 GreenHell</name>
+		<name>GreenHell</name>
 		<description></description>
 		<author>Torben Green</author>
 		<date></date>

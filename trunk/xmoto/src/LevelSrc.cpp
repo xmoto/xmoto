@@ -86,6 +86,9 @@ namespace vapp {
     if(m_LevelPack != "") {
       v_levelTag += " levelpack=\"" + m_LevelPack + "\"";
     }
+    if(m_LevelPackNum != "") {
+      v_levelTag += " levelpackNum=\"" + m_LevelPackNum + "\"";
+    }
     if(m_RequiredVersion != "") {
       v_levelTag += " rversion=\"" + m_RequiredVersion + "\"";
     }
@@ -246,7 +249,8 @@ namespace vapp {
     if(!m_bXMotoTooOld) {    
       /* Get level pack */
       m_LevelPack = _GetOption(pLevelElem,"levelpack");
-                  
+      m_LevelPackNum = _GetOption(pLevelElem,"levelpackNum");      
+            
       /* Get level <info> element */
       TiXmlElement *pInfoElem = _FindElement(pLevelElem,std::string("info"));
       if(pInfoElem != NULL) {
@@ -675,8 +679,9 @@ namespace vapp {
     }
     else {
       /* Write tag */
-      FS::writeBuf(pfh,"XBL3",4); /* version two includes dynamic information about blocks */
+      FS::writeBuf(pfh,"XBL4", 4); /* version two includes dynamic information about blocks */
                                   /* 3 -> includes now the grip of the block, width and height of the sprites */      
+                                  /* 4 -> includes level pack num */
 
       /* Write CRC32 of XML */
       FS::writeString(pfh,pSum);
@@ -687,6 +692,7 @@ namespace vapp {
       /* Write header */
       FS::writeString(pfh,m_ID);
       FS::writeString(pfh,m_LevelPack);
+      FS::writeString(pfh,m_LevelPackNum);
       FS::writeString(pfh,m_Info.Name);
       FS::writeString(pfh,m_Info.Description);
       FS::writeString(pfh,m_Info.Author);
@@ -787,14 +793,10 @@ namespace vapp {
       FS::readBuf(pfh,(char *)cTag,4);
       cTag[4] = '\0';
       int nFormat = 0;
-      if(!strcmp(cTag,"XBL1"))
-        nFormat = 1;
-      else if(!strcmp(cTag,"XBL2"))
-        nFormat = 2;
-      else if(!strcmp(cTag,"XBL3"))
-        nFormat = 3;
-        
-      if(nFormat == 1 || nFormat == 2 || nFormat == 3) {
+      if(!strcmp(cTag,"XBL4"))
+        nFormat = 4;
+
+      if(nFormat == 4) { /* reject other formats */
         /* Read "format 1" / "format 2" binary level */
         /* Right */
 	std::string md5sum = FS::readString(pfh);
@@ -806,6 +808,7 @@ namespace vapp {
           /* Read header */
           m_ID = FS::readString(pfh);
           m_LevelPack = FS::readString(pfh);
+          m_LevelPackNum = FS::readString(pfh);
           m_Info.Name = FS::readString(pfh);
           m_Info.Description = FS::readString(pfh);
           m_Info.Author = FS::readString(pfh);
@@ -961,17 +964,57 @@ namespace vapp {
   Some static helpers
   ===========================================================================*/
   int LevelSrc::compareLevel(const LevelSrc *p_lvl1, const LevelSrc *p_lvl2) {
-    if(p_lvl1->m_Info.Name == p_lvl2->m_Info.Name) {
-      return 0;
-    }
-    
-    if(p_lvl1->m_Info.Name > p_lvl2->m_Info.Name) {
+    std::string n1, n2;
+    n1 = p_lvl1->m_Info.Name;
+    n2 = p_lvl2->m_Info.Name;
+
+    /* lowercase */
+    for(int j=0;j<n1.length();j++)  
+    n1[j] = tolower(n1[j]);
+    for(int j=0;j<n2.length();j++)  
+    n2[j] = tolower(n2[j]);
+
+    if(n1 > n2) {
       return 1;
     } 
 
-    return -1;
+    if(n1 < n2) {
+      return -1;
+    } 
+
+    return 0;
   }
   
+  int LevelSrc::compareLevelSamePack(const LevelSrc *p_lvl1, const LevelSrc *p_lvl2) {
+    std::string n1, n2;
+    
+    if(p_lvl1->m_LevelPackNum > p_lvl2->m_LevelPackNum) {
+      return 1;
+    }
+    if(p_lvl1->m_LevelPackNum < p_lvl2->m_LevelPackNum) {
+      return -1;
+    }
+
+    n1 = p_lvl1->m_Info.Name;
+    n2 = p_lvl2->m_Info.Name;
+
+    /* lowercase */
+    for(int j=0;j<n1.length();j++)  
+    n1[j] = tolower(n1[j]);
+    for(int j=0;j<n2.length();j++)  
+    n2[j] = tolower(n2[j]);
+
+    if(n1 > n2) {
+      return 1;
+    } 
+
+    if(n1 < n2) {
+      return -1;
+    } 
+
+    return 0;
+  }
+
   int LevelSrc::compareVersionNumbers(const std::string &v1,const std::string &v2) {
     int nMajor1=0,nMinor1=0,nRel1=0;
     int nMajor2=0,nMinor2=0,nRel2=0;
@@ -994,6 +1037,10 @@ namespace vapp {
 
   const std::string& LevelSrc::getLevelPack(void) {
     return m_LevelPack;
+  }
+
+  const std::string& LevelSrc::getLevelPackNum(void) {
+    return m_LevelPackNum;
   }
 
 }

@@ -194,6 +194,7 @@ namespace vapp {
       float getPlayerStartY(void) {return m_fPlayerStartY;}
       void setLevelPack(const std::string &s) {m_LevelPack = s;}
       const std::string &getLevelPack(void);
+      const std::string &getLevelPackNum(void);
       void setPlayerStart(float x,float y) {m_fPlayerStartX=x ;m_fPlayerStartY=y;}
       void setLimits(float fLeft,float fRight,float fTop,float fBottom) {
         m_fLeftLimit=fLeft; m_fRightLimit=fRight; m_fTopLimit=fTop; m_fBottomLimit=fBottom;      
@@ -224,12 +225,14 @@ namespace vapp {
       void setLevelMD5Sum(const std::string &s) {m_LevelCheckSum = s;}
       
       static int compareLevel(const LevelSrc *p_lvl1, const LevelSrc *p_lvl2);    
+      static int compareLevelSamePack(const LevelSrc *p_lvl1, const LevelSrc *p_lvl2);    
       static int compareVersionNumbers(const std::string &v1,const std::string &v2);
 
     private:
       /* Data */
       std::string m_RequiredVersion;  /* Required X-Moto version */
       std::string m_LevelPack;        /* In this level pack */
+      std::string m_LevelPackNum;     /* value to sort levels */
       XMLDocument m_XML;              /* Plain XML source */      
       std::string m_FileName;         /* Current file name */
       

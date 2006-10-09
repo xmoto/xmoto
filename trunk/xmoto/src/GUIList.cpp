@@ -343,16 +343,25 @@ namespace vapp {
     if(m_bSort) {
       /* Yeah, keep it alphabetical, please */
       for(int i=0;i<m_Entries.size();i++) {
-        /* Make lowercase before comparing */
-        std::string LC = m_Entries[i]->Text[0];
-        for(int j=0;j<LC.length();j++)  
-          LC[j] = tolower(LC[j]);
-      
-        if(LCText < LC) {
-          /* Here! */
-          m_Entries.insert(m_Entries.begin() + i,p);
-          return p;
-        }
+
+	if(pvUser != NULL && m_Entries[i]->pvUser != NULL && m_fsort != NULL) {
+	  if(m_fsort(pvUser, m_Entries[i]->pvUser) < 0) {
+	    /* Here! */
+	    m_Entries.insert(m_Entries.begin() + i,p);
+	    return p;
+	  }
+	} else {
+	  /* Make lowercase before comparing */
+	  std::string LC = m_Entries[i]->Text[0];
+	  for(int j=0;j<LC.length();j++)  
+	    LC[j] = tolower(LC[j]);
+	  
+	  if(LCText < LC) {
+	    /* Here! */
+	    m_Entries.insert(m_Entries.begin() + i,p);
+	    return p;
+	  }
+	}
       }
     }
 

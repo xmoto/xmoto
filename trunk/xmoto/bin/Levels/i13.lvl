@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<level id="_iL13_">
+<level id="_iL13_" levelpack="Built-in levels" levelpackNum="13">
 
 	<info>
-		<name>#14 Maze</name>
+		<name>Maze</name>
 		<description></description>
 		<author></author>
 		<date></date>

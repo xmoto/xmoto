@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<level id="_iL10_">
+<level id="_iL10_" levelpack="Built-in levels" levelpackNum="10">
 	<info>
-		<name>#11 Okapi</name>
+		<name>Okapi</name>
 		<description></description>
 		<author></author>
 		<date></date>

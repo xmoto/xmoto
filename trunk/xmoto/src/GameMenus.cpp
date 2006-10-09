@@ -1215,7 +1215,7 @@ namespace vapp {
   ===========================================================================*/  
   void GameApp::_CreateLevelPackLevelList(void) {  
     UILevelList *pList = (UILevelList *)m_pLevelPackViewer->getChild("LEVELPACK_LEVEL_LIST");    
-    pList->setSort(true);
+    pList->setSort(true, (int(*)(void*, void*))LevelSrc::compareLevelSamePack);
     pList->clear();
        
     /* Obey hints */
@@ -1229,13 +1229,15 @@ namespace vapp {
 
     /* Add levels */
     for(int i=0;i<m_pActiveLevelPack->Levels.size();i++) {
+      std::ostringstream v_level_num;
+      v_level_num << i+1;
        pList->addLevel(m_pActiveLevelPack->Levels[i],
 		       m_pPlayer,
-		       &m_Profiles
+		       &m_Profiles,
 #if defined(SUPPORT_WEBACCESS) 
-		       ,
-		       m_pWebHighscores
+		       m_pWebHighscores,
 #endif
+		       "#" + v_level_num.str() + " "
 		       );
     }
   }

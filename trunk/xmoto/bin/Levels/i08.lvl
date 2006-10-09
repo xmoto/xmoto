@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<level id="_iL08_">
+<level id="_iL08_" levelpack="Built-in levels" levelpackNum="08">
 
 	<info>
-		<name>#9 Island Hoppers</name>
+		<name>Island Hoppers</name>
 		<description></description>
 		<author></author>
 		<date></date>

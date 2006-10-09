@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<level id="_iL02_">
+<level id="_iL02_" levelpack="Built-in levels" levelpackNum="02">
 
 	<info>
-		<name>#3 Hillclimbing</name>
+		<name>Hillclimbing</name>
 		<description></description>
 		<author></author>
 		<date></date>

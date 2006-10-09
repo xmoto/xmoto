@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<level id="_iL07_">
+<level id="_iL07_" levelpack="Built-in levels" levelpackNum="07">
 	<info>
-		<name>#8 Paxed Echo</name>
+		<name>Paxed Echo</name>
 		<description></description>
 		<author>paxed@alt.org</author>
 		<date></date>

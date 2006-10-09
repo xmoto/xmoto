@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<level id="tut1" levelpack="Tutorials">
+<level id="tut1" levelpack="Tutorials" levelpackNum="01">
 
 	<info>
-		<name>Tutorial #1 - Basics</name>
+		<name>Basics</name>
 		<description></description>
 		<author></author>
 		<date></date>

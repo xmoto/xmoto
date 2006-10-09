@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<level id="scripted2" levelpack="Built-in Scripted Levels" rversion="0.1.17">
+<level id="scripted2" levelpack="Built-in Scripted Levels" levelpackNum="00" rversion="0.1.17">
 	<info>
 		<name>Moving Blocks</name>
 		<description>Run through running blocks</description>

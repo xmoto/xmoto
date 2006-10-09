@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<level id="_iL16_">
+<level id="_iL16_" levelpack="Built-in levels" levelpackNum="16">
 
 	<info>
-		<name>#17 Pukkelpist</name>
+		<name>Pukkelpist</name>
 		<description></description>
 		<author></author>
 		<date></date>

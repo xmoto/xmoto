@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<level id="_iL23_">
+<level id="_iL23_" levelpack="Built-in levels" levelpackNum="23">
 	<info>
-		<name>#24 Cow 1</name>
+		<name>Cow 1</name>
 		<description></description>
 		<author>cow</author>
 		<date></date>
