@@ -604,6 +604,7 @@ namespace vapp {
         m_pEnterButton = NULL;
         m_bSort = false;
 	m_fsort = NULL;
+	m_bNumeroted = false;
         m_bItemActivated = false;
         
         m_bScrollDownPressed = m_bScrollUpPressed = false;
@@ -647,7 +648,8 @@ namespace vapp {
       void setHideColumn(int n) {m_nColumnHideFlags |= (1<<n);}
       void unhideAllColumns(void) {m_nColumnHideFlags=0;}
       void setSort(bool bSort, int(*f)(void *pvUser1, void *pvUser2) = NULL) {m_bSort=bSort; m_fsort = f;}
-      
+      void setNumeroted(bool bNumeroted) {m_bNumeroted = bNumeroted;}
+
       bool isClicked(void) {return m_bClicked;}
       void setClicked(bool b) {m_bClicked=b;}
 
@@ -659,6 +661,7 @@ namespace vapp {
       bool m_bChanged;
       float m_lastRefreshTime;
       bool m_bSort;
+      bool m_bNumeroted;
       int(*m_fsort)(void *pvUser1, void *pvUser2);
       std::vector<UIListEntry *> m_Entries;
       std::vector<std::string> m_Columns;

@@ -158,7 +158,8 @@ namespace vapp {
       
         int nOldScissor[4];
         glGetIntegerv(GL_SCISSOR_BOX,(GLint *) nOldScissor);
-        
+	std::string txt_to_display;
+
         int x = 0;      
         for(int j=0;j<m_Entries[i]->Text.size();j++) {    
           if(!(m_nColumnHideFlags & (1<<j))) {
@@ -171,7 +172,14 @@ namespace vapp {
           
             /* Draw */          
             setScissor(nLX+x,yym1,m_ColumnWidths[j]-4+nExtraRoom,nLRH);
-            putText(nLX+x,nLY+y,m_Entries[i]->Text[j]);
+	    txt_to_display = m_Entries[i]->Text[j];
+	    if(j==0 && m_bNumeroted) {
+	      std::ostringstream v_num;
+	      v_num << i+1;
+
+	      txt_to_display = "#" + v_num.str() + " " + txt_to_display; 
+	    }
+            putText(nLX+x,nLY+y,txt_to_display);
             x += m_ColumnWidths[j] + nExtraRoom;                
           }
         }

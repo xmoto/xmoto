@@ -1216,6 +1216,7 @@ namespace vapp {
   void GameApp::_CreateLevelPackLevelList(void) {  
     UILevelList *pList = (UILevelList *)m_pLevelPackViewer->getChild("LEVELPACK_LEVEL_LIST");    
     pList->setSort(true, (int(*)(void*, void*))LevelSrc::compareLevelSamePack);
+    pList->setNumeroted(true);
     pList->clear();
        
     /* Obey hints */
