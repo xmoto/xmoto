@@ -602,6 +602,7 @@ namespace vapp {
             if(m_pSaveReplayMsgBox == NULL) {          
               /* Out of this game, please */
               m_pFinishMenu->showWindow(false);
+	      m_Renderer.hideMsgNewHighscore();
               m_pBestTimes->showWindow(false);
               m_pJustDeadMenu->showWindow(false);
 #if defined(ALLOW_GHOST) 
