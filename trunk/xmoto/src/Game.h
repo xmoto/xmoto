@@ -533,6 +533,11 @@ namespace vapp {
 #endif
 
 #if defined(ALLOW_GHOST) 
+      std::string _getGhostReplayPath_bestOfThePlayer(std::string p_levelId, float &p_time);
+      std::string _getGhostReplayPath_bestOfLocal(std::string p_levelId, float &p_time);
+#if defined(SUPPORT_WEBACCESS)
+      std::string _getGhostReplayPath_bestOfTheRoom(std::string p_levelId, float &p_time);
+#endif
       std::string _getGhostReplayPath(std::string p_levelId,
               GhostSearchStrategy p_strategy);
 #endif

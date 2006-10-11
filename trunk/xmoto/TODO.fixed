@@ -31,6 +31,7 @@ revert the change if no better solution is found?
 of existing types, this line causes a segfault (see replay 7097)
 * BUG : make a level with the id 8maximumchallengeight8 and xmoto -level 8maximumchallengeight8 starts the level 8
 * BUG : require to restart for zoom of level
+* change ghost rules : "player/players/room"
 
 Since 0.2.1
 * BUG : on bad levels loading

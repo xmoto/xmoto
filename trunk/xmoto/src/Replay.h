@@ -68,9 +68,10 @@ namespace vapp {
       void delReplay(const std::string &Replay);
       void clear(void);
 
+      /* you must free the list after this call */
       std::vector<ReplayInfo *>* findReplays(const std::string &PlayerName = "",
 					     const std::string &LevelID = "");
-      
+
     private:
       /* Data */
       std::vector<ReplayInfo *> m_Replays;

@@ -1500,86 +1500,133 @@ namespace vapp {
       return false; /* throw exception ? */
     }
 
-#if defined(ALLOW_GHOST) 
+#if defined(ALLOW_GHOST)
+  std::string GameApp::_getGhostReplayPath_bestOfThePlayer(std::string p_levelId, float &p_time) {
+    std::vector<ReplayInfo *> *Replays = m_ReplayList.findReplays(m_pPlayer->PlayerName,
+								  p_levelId);
+    std::string res;
+
+    p_time = -1.0;
+    res = "";
+
+    for(int i=0; i<Replays->size(); i++) {
+      if((*Replays)[i]->fFinishTime != -1.0 &&
+	 ((*Replays)[i]->fFinishTime < p_time || p_time == -1)
+	 )
+	{
+	  p_time = (*Replays)[i]->fFinishTime;
+	  res = std::string("Replays/") + (*Replays)[i]->Name + std::string(".rpl");
+	}
+    }
+
+    delete Replays;
+    return res;
+  }
+
+#if defined(SUPPORT_WEBACCESS)
+  std::string GameApp::_getGhostReplayPath_bestOfTheRoom(std::string p_levelId, float &p_time) {
+    std::vector<ReplayInfo *> *Replays = m_ReplayList.findReplays("",
+								  p_levelId);
+    std::string res;
+
+    p_time = -1.0;
+    res = "";
+
+    if(m_pWebHighscores != NULL) {
+      WebHighscore* v_hs;
+      v_hs = m_pWebHighscores->getHighscoreFromLevel(p_levelId);
+      if(v_hs != NULL) {
+	String v_replay_name = v_hs->getReplayName();
+	int i=0;
+
+	/* search if the replay is already downloaded */
+	bool found = false;
+	while(i < Replays->size() && found == false) {
+	  if((*Replays)[i]->Name == v_replay_name) {
+	    found = true;
+	  }
+	  i++;
+	}
+	if(found) {
+	  res = std::string("Replays/") + v_replay_name + std::string(".rpl");
+	} else {
+	  if(m_bEnableWebHighscores) {
+	    /* download the replay */
+	    try {
+	      _SimpleMessage(GAMETEXT_DLGHOST,&m_DownloadMsgBoxRect);
+	      v_hs->download();
+	      res = std::string("Replays/") + v_replay_name + std::string(".rpl");
+	      m_ReplayList.addReplay(v_replay_name);
+	      _UpdateReplaysList();
+	    } catch(Exception &e) {
+	      /* do nothing */
+	    }
+	  }
+	}
+      }
+    }
+
+    delete Replays;
+    return res;
+  }
+#endif
+
+  std::string GameApp::_getGhostReplayPath_bestOfLocal(std::string p_levelId, float &p_time) {
+    std::vector<ReplayInfo *> *Replays = m_ReplayList.findReplays("", p_levelId);
+    std::string res;
+    std::vector<PlayerProfile *> v_profiles = m_Profiles.getProfiles();
+
+    p_time = -1.0;
+    res = "";
+
+    for(int i=0; i<Replays->size(); i++) {
+      if((*Replays)[i]->fFinishTime != -1.0 &&
+	 ((*Replays)[i]->fFinishTime < p_time ||
+	  p_time == -1)
+	 )
+	{
+	  /* the player must be one of the profile */
+	  for(int j=0; j<v_profiles.size(); j++) {
+	    if(v_profiles[j]->PlayerName == (*Replays)[i]->Player) {
+	      p_time = (*Replays)[i]->fFinishTime;
+	      res = std::string("Replays/") + (*Replays)[i]->Name + std::string(".rpl");
+	    }
+	  }
+	}
+    }
+    delete Replays;
+    return res;
+  }
+
   std::string GameApp::_getGhostReplayPath(std::string p_levelId,
              GhostSearchStrategy p_strategy) 
   {
-    std::string res;
-    std::vector<ReplayInfo *> *Replays = m_ReplayList.findReplays("", p_levelId);
+    std::string res = "";
     float v_fFinishTime;
-    res = "";
+    std::string v_player_res;
+    float v_player_fFinishTime;
 
-    v_fFinishTime = -1.0;
     switch(p_strategy) {
-      case GHOST_STRATEGY_MYBEST:
-      for(int i=0; i<Replays->size(); i++) {
-  if((*Replays)[i]->Player == m_pPlayer->PlayerName) {
-    if((*Replays)[i]->fFinishTime != -1.0 &&
-       ((*Replays)[i]->fFinishTime < v_fFinishTime ||
-        v_fFinishTime == -1)
-       )
-      {
-        v_fFinishTime = (*Replays)[i]->fFinishTime;
-        res = std::string("Replays/") + (*Replays)[i]->Name + std::string(".rpl");
-      }
-  }
-      }
+    case GHOST_STRATEGY_MYBEST:
+      res = _getGhostReplayPath_bestOfThePlayer(p_levelId, v_fFinishTime);
       break;
-
+      
     case GHOST_STRATEGY_THEBEST:
-      for(int i=0; i<Replays->size(); i++) {
-  if((*Replays)[i]->fFinishTime != -1.0 &&
-     ((*Replays)[i]->fFinishTime < v_fFinishTime ||
-      v_fFinishTime == -1)
-     )
-    {
-      v_fFinishTime = (*Replays)[i]->fFinishTime;
-      res = std::string("Replays/") + (*Replays)[i]->Name + std::string(".rpl");
-    }
-      }
+      res = _getGhostReplayPath_bestOfLocal(p_levelId, v_fFinishTime);
       break;
-
+      
 #if defined(SUPPORT_WEBACCESS)    
-    case GHOST_STRATEGY_BESTOFROOM:
-      if(m_pWebHighscores != NULL) {
-        WebHighscore* v_hs;
-        v_hs = m_pWebHighscores->getHighscoreFromLevel(p_levelId);
-        if(v_hs != NULL) {
-          String v_replay_name = v_hs->getReplayName();
-    int i=0;
-
-    /* search if the replay is already downloaded */
-    bool found = false;
-    while(i < Replays->size() && found == false) {
-      if((*Replays)[i]->Name == v_replay_name) {
-        found = true;
-      }
-      i++;
-    }
-    if(found) {
-      res = std::string("Replays/") + v_replay_name + std::string(".rpl");
-    } else {
-      if(m_bEnableWebHighscores) {
-        /* download the replay */
-        try {
-    _SimpleMessage(GAMETEXT_DLGHOST,&m_DownloadMsgBoxRect);
-    v_hs->download();
-    res = std::string("Replays/") + v_replay_name + std::string(".rpl");
-    m_ReplayList.addReplay(v_replay_name);
-    _UpdateReplaysList();
-        } catch(Exception &e) {
-    /* do nothing */
-        }
-      }
-    }
-        }
+    case GHOST_STRATEGY_BESTOFROOM:     
+      v_player_res = _getGhostReplayPath_bestOfThePlayer(p_levelId, v_player_fFinishTime);
+      res = _getGhostReplayPath_bestOfTheRoom(p_levelId, v_fFinishTime);
+      if(v_player_fFinishTime > 0.0 && v_player_fFinishTime < v_fFinishTime) {
+	res = v_player_res;
       }
       break;
 #endif      
 
     }
 
-    delete Replays;
     return res;
   }
 #endif    

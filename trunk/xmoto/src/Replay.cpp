@@ -426,65 +426,6 @@ namespace vapp {
 	   m_nStateSize);
 	  SwapEndian::LittleSerializedBikeState(state);
   }
-
-  //std::vector<ReplayInfo *> Replay::createReplayList(const std::string &PlayerName,const std::string &LevelIDCheck) {
-  //  return ReplayList::findReplays(PlayerName,LevelIDCheck);
-  
-    //std::vector<ReplayInfo *> Ret;
-    //
-    ///* Find all replays done by the given player name */
-    //std::vector<std::string> ReplayFiles = FS::findPhysFiles("Replays/*.rpl");
-    //for(int i=0;i<ReplayFiles.size();i++) {
-    //  /* Try opening it */
-    //  FileHandle *pfh = FS::openIFile(ReplayFiles[i]);
-    //  if(pfh != NULL) {
-    //    int nVersion = FS::readByte(pfh);
-    //    if(nVersion == 0 || nVersion == 1) {
-    //      if(FS::readInt_LE(pfh) == 0x12345678) {                  
-    //        std::string LevelID = FS::readString(pfh);
-    //        std::string Player = FS::readString(pfh);
-    //        float fFrameRate = FS::readFloat_LE(pfh);
-    //        int nStateSize = FS::readInt_LE(pfh);
-    //        bool bFinished = FS::readBool(pfh);
-    //        float fFinishTime = FS::readFloat_LE(pfh);
-    //        
-    //        if((PlayerName=="" || PlayerName==Player) && FS::getFileBaseName(ReplayFiles[i]) != "Latest") {
-    //          if(LevelIDCheck=="" || LevelID==LevelIDCheck) {
-    //            /* Fine. */
-    //            ReplayInfo *pInfo = new ReplayInfo;
-    //            pInfo->Level = LevelID;
-    //            pInfo->Name = FS::getFileBaseName(ReplayFiles[i]);
-    //            pInfo->Player = Player;
-    //            pInfo->fFrameRate = fFrameRate;
-    //            
-    //            if(bFinished)
-    //              pInfo->fFinishTime = fFinishTime;
-    //            else
-    //              pInfo->fFinishTime = -1;
-    //            
-    //            Ret.push_back(pInfo);
-    //          }
-    //        }
-    //      }
-    //    }
-    //    else {
-    //      /* Not supported */
-    //    }
-    //  
-    //    FS::closeFile(pfh);
-    //  }
-    //}
-    //
-    ///* Super. */
-    //return Ret;
-  //}
-  
-  //void Replay::freeReplayList(std::vector<ReplayInfo *> &List) {
-    ///* Free list items */
-    //for(int i=0;i<List.size();i++)
-    //  delete List[i];
-    //List.clear();
-  //}
   
   void Replay::pause() {
     m_is_paused = ! m_is_paused;

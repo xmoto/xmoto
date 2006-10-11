@@ -69,7 +69,6 @@ zone2b = {}
 * to be able to give a color to a block as parameter in a level
    (instead of a texture)
 * if some texture are missing, but backgound in black and foreground in white so that the level can be playable
-* change ghost rules : "player/players/room"
 * bug : keys 1 2 3 4 5 won't work on french keybord : allow to configure key action for script instead of allow the script to choose the key
 * OS X stuff:
         * Add Universal Binary build system to subdirectory.
