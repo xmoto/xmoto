@@ -1619,7 +1619,8 @@ namespace vapp {
     case GHOST_STRATEGY_BESTOFROOM:     
       v_player_res = _getGhostReplayPath_bestOfThePlayer(p_levelId, v_player_fFinishTime);
       res = _getGhostReplayPath_bestOfTheRoom(p_levelId, v_fFinishTime);
-      if(v_player_fFinishTime > 0.0 && v_player_fFinishTime < v_fFinishTime) {
+      if(v_player_fFinishTime > 0.0 && 
+	 (v_fFinishTime < 0.0 || v_player_fFinishTime < v_fFinishTime)) {
 	res = v_player_res;
       }
       break;
