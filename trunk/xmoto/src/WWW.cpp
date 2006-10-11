@@ -551,6 +551,7 @@ void FSWeb::uploadReplay(std::string p_replayFilename,
   std::string v_local_file;
   v_local_file = vapp::FS::getUserDir() + "/" + DEFAULT_REPLAYUPLOAD_MSGFILE;
 
+  //printf("%s\n", v_local_file.c_str());
 
   struct curl_httppost *v_post, *v_last;
 
