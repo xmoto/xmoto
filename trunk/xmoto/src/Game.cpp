@@ -1539,6 +1539,8 @@ namespace vapp {
 	String v_replay_name = v_hs->getReplayName();
 	int i=0;
 
+	p_time = v_hs->getFTime();
+
 	/* search if the replay is already downloaded */
 	bool found = false;
 	while(i < Replays->size() && found == false) {
