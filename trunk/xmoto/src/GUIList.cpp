@@ -84,7 +84,7 @@ namespace vapp {
       }
     }
     putRect(6,nHeaderHeight+6,getPosition().nWidth-12 - 20,2,MAKE_COLOR(188,186,67,255));
-        
+
     /* Render list */    
     int nLX = 6, nLY = nHeaderHeight+6+4;
     int nLWidth = getPosition().nWidth-12 - 20;
@@ -107,6 +107,20 @@ namespace vapp {
     }
     else
       putElem(nLX+nLWidth,nLY+nLHeight-20,20,20,UI_ELEM_SCROLLBUTTON_DOWN_UP,false);    
+
+    /* scroll */
+    int v_scroll_height;
+    int v_scroll_pos;
+
+    float v_visible = ((float)nLHeight-20.0) / ((float)nRowHeight) +1;
+    if(v_visible >= ((float)m_Entries.size())) {
+      v_scroll_height = nLHeight-20.0;
+      v_scroll_pos    = nLY;
+    } else {
+      v_scroll_height = (int) (v_visible / ((float)m_Entries.size()) * ((float) nLHeight-20.0));
+      v_scroll_pos = (int) ( ((float)nLY) + (((float)-m_nScroll)/((float)nRowHeight)) / ((float)m_Entries.size()) * ((float) nLHeight-20.0));
+    }
+    putRect(nLX+nLWidth+2, v_scroll_pos, 16, v_scroll_height-1, MAKE_COLOR(188, 186, 67, 255));
 
     setScissor(nLX,nLY,nLWidth,nLHeight);
    
