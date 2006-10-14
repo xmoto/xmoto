@@ -1,13 +1,16 @@
 => for 0.2.3
 
 required:
-* remove the "level packs" button, remove the "internal" and "external" tabs and replace them by "All levels" tab and "Level pack" tab and make internal level a pack
 - add a button view the highscore in the pack window
-- qd on fait un highscore, vérifier que ca met a jour les listes
-
+- when you make a highscore, all the menu list are not updated (new
+   levels for example)
 * BUG : when death is disabled : you cannot see the message "press esc
    or enter"
-* bzip2 not removed on windows : corrected, to test
+
+* When i update www sometimes
+Fatal signal: Segmentation Fault (SDL Parachute Deployed)
+*** glibc detected *** corrupted double-linked list: 0xb7a6a358 ***
+it behaves sometimes since i modified the pack lists menus
 
 ===========
 * "play next level" => 'play next level', 'play next level unplayed', 'play next level where your highscore is > than room highscore', 'play next level where your highscore is > than world highscore', 'play next level where your highscore is the best'

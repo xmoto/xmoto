@@ -32,6 +32,8 @@ of existing types, this line causes a segfault (see replay 7097)
 * BUG : make a level with the id 8maximumchallengeight8 and xmoto -level 8maximumchallengeight8 starts the level 8
 * BUG : require to restart for zoom of level
 * change ghost rules : "player/players/room"
+* bzip2 not removed on windows
+* remove the "level packs" button, remove the "internal" and "external" tabs and replace them by "All levels" tab and "Level pack" tab and make internal level a pack
 
 Since 0.2.1
 * BUG : on bad levels loading
