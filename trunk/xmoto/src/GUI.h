@@ -615,6 +615,8 @@ namespace vapp {
 
 	m_bChanged = false;
 
+	m_bScrolling = false;
+
 	m_lastRefreshTime = getApp()->getRealTime();
 
         unhideAllColumns();
@@ -677,12 +679,14 @@ namespace vapp {
       bool m_bScrollUpHover,m_bScrollDownHover;
       
       bool m_bClicked;
+      bool  m_bScrolling;
 
       /* Helpers */
       void _FreeUIList(void);
       void _NewlySelectedItem(void);
       void _Scroll(int nPixels);
       void _refreshByTime();
+      void _mouseDownManageScrollBar(int x, int y);
   };
 
 	/*===========================================================================

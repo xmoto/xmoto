@@ -45,6 +45,20 @@ namespace vapp {
     }
   }
 
+  void UIList::_mouseDownManageScrollBar(int x, int y){
+    int nHeaderHeight = 18;
+    int nLX = 6, nLY = nHeaderHeight+6+4;
+    int nLWidth = getPosition().nWidth-12 - 20;
+    int nLHeight = getPosition().nHeight - nLY - 6;
+    int nRowHeight = 16;
+
+    int p = ((y - nLY) / (((float)nLHeight) - 20.0)) * ((float)m_Entries.size());
+    if(p < 0) p = 0;
+    if(p >= m_Entries.size()) p = m_Entries.size()-1;
+    setSelected(p);
+    _NewlySelectedItem();
+  }
+
   /*===========================================================================
   Painting
   ===========================================================================*/
@@ -228,8 +242,13 @@ namespace vapp {
     int nLHeight = getPosition().nHeight - nLY - 6;
     int nRowHeight = 16;    
 
+    /* is it inside the scroll bar ? */
+    if(x >= nLX+nLWidth+2 && x <= nLX+nLWidth+2+16 &&
+       y >= nLY && y<= nLY + nLHeight) {
+      _mouseDownManageScrollBar(x, y);
+    }
     /* Is it down inside one of the scroll buttons? */
-    if(x >= nLX+nLWidth && x < nLX+nLWidth + 20 &&
+    else if(x >= nLX+nLWidth && x < nLX+nLWidth + 20 &&
        y >= 6 && y < 6+20) {
       /* Scroll up! */
       m_bScrollUpPressed = true;
@@ -271,8 +290,14 @@ namespace vapp {
     int nLHeight = getPosition().nHeight - nLY - 6;
     int nRowHeight = 16;    
 
+    /* is it inside the scroll bar ? */
+    if(x >= nLX+nLWidth+2 && x <= nLX+nLWidth+2+16 &&
+       y >= nLY && y<= nLY + nLHeight) {
+      _mouseDownManageScrollBar(x, y);
+      m_bScrolling = true;
+    }
     /* Is it down inside one of the scroll buttons? */
-    if(x >= nLX+nLWidth && x < nLX+nLWidth + 20 &&
+    else if(x >= nLX+nLWidth && x < nLX+nLWidth + 20 &&
        y >= 6 && y < 6+20) {
       /* Scroll up! */
       //_Scroll(16);
@@ -318,7 +343,8 @@ namespace vapp {
       //_Scroll(-16);
     }
 
-    m_bClicked = true;  
+    m_bClicked = true;
+    m_bScrolling = false; 
   }
   
   void UIList::mouseRDown(int x,int y) {
@@ -334,8 +360,12 @@ namespace vapp {
     int nLHeight = getPosition().nHeight - nLY - 6;
     int nRowHeight = 16;    
 
+    /* is it inside the scroll bar ? */
+    if(m_bScrolling) {
+      _mouseDownManageScrollBar(x, y);
+    }
     /* Is it down inside one of the scroll buttons? */
-    if(x >= nLX+nLWidth && x < nLX+nLWidth+20 &&
+    else if(x >= nLX+nLWidth && x < nLX+nLWidth+20 &&
        y >= 6 && y < 6+20) {
       /* Scroll up! */
       m_bScrollUpHover = true;
