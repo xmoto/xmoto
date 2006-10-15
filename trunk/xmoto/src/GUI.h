@@ -643,7 +643,7 @@ namespace vapp {
       std::vector<UIListEntry *> &getEntries(void) {return m_Entries;}      
       std::vector<std::string> &getColumns(void) {return m_Columns;}
       int getSelected(void) {return m_nSelected;}
-      void setSelected(int n) {m_bChanged = true; m_nSelected = n;}
+      void setSelected(int n);
       void addColumn(std::string Title,int nWidth) {m_Columns.push_back(Title); m_ColumnWidths.push_back(nWidth);}
       void setEnterButton(UIButton *pButton) {m_pEnterButton = pButton;}
       bool isItemActivated(void) {return m_bItemActivated;}

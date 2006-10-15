@@ -1219,10 +1219,22 @@ namespace vapp {
   /*===========================================================================
   Add levels to list (level pack)
   ===========================================================================*/  
-  void GameApp::_CreateLevelPackLevelList(void) {  
+  void GameApp::_CreateLevelPackLevelList(void) {
+    if(m_pActiveLevelPack == NULL) {
+      return;
+    } 
+
     UILevelList *pList = (UILevelList *)m_pLevelPackViewer->getChild("LEVELPACK_LEVEL_LIST");    
     pList->setSort(true, (int(*)(void*, void*))LevelSrc::compareLevelSamePack);
     pList->setNumeroted(true);
+
+    /* get selected item */
+    std::string v_selected_levelName = "";
+    if(pList->getSelected() >= 0 && pList->getSelected() < pList->getEntries().size()) {
+      UIListEntry *pEntry = pList->getEntries()[pList->getSelected()];
+      v_selected_levelName = pEntry->Text[0];
+    }
+
     pList->clear();
        
     /* Obey hints */
@@ -1244,6 +1256,18 @@ namespace vapp {
 		       m_pWebHighscores
 #endif
 		       );
+    }
+
+    /* reselect the previous level */
+    if(v_selected_levelName != "") {
+      int nLevel = 0;
+      for(int i=0; i<pList->getEntries().size(); i++) {
+        if(pList->getEntries()[i]->Text[0] == v_selected_levelName) {
+          nLevel = i;
+          break;
+        }
+      }
+      pList->setSelected(nLevel);
     }
   }
   
@@ -1373,6 +1397,14 @@ namespace vapp {
   void GameApp::_UpdateLevelPackList(void) {
     UIList *pList = (UIList *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:PACK_TAB:LEVELPACK_LIST");
     pList->setSort(true);
+
+    /* get selected item */
+    std::string v_selected_packName = "";
+    if(pList->getSelected() >= 0 && pList->getSelected() < pList->getEntries().size()) {
+      UIListEntry *pEntry = pList->getEntries()[pList->getSelected()];
+      v_selected_packName = pEntry->Text[0];
+    }
+
     pList->clear();
     
     UIListEntry *p;
@@ -1391,6 +1423,18 @@ namespace vapp {
       v_level_nb << m_LevelPacks[i]->Levels.size();
       p->Text.push_back(v_level_nb.str());
       p->pvUser = (void *)m_LevelPacks[i];
+    }
+
+    /* reselect the previous pack */
+    if(v_selected_packName != "") {
+      int nPack = 0;
+      for(int i=0; i<pList->getEntries().size(); i++) {
+        if(pList->getEntries()[i]->Text[0] == v_selected_packName) {
+          nPack = i;
+          break;
+        }
+      }
+      pList->setSelected(nPack);
     }
   }
   
@@ -1818,8 +1862,8 @@ namespace vapp {
 	    _UpdateWebHighscores(false);
 	    _UpgradeWebHighscores();  
 	    _UpdateWebLevels(false);
-	    _UpdateLevelPackList();
-	    _UpdateLevelLists();
+
+	    _UpdateLevelsLists();
 	  } catch(Exception &e) {
 	    notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES);
 	  }
@@ -1924,8 +1968,7 @@ namespace vapp {
       
       if(m_pPlayer == NULL) throw Exception("failed to set profile");
 
-      _UpdateLevelPackList();
-      _UpdateLevelLists();
+      _UpdateLevelsLists();
                         
       UIStatic *pPlayerTag = reinterpret_cast<UIStatic *>(m_pMainMenu->getChild("PLAYERTAG"));
       if(pPlayerTag) {
@@ -1980,8 +2023,8 @@ namespace vapp {
           if(m_pPlayer == NULL) {
             if(m_Profiles.getProfiles().empty()) throw Exception("no valid profile");
             m_pPlayer = m_Profiles.getProfiles()[0];
-	    _UpdateLevelPackList();
-            _UpdateLevelLists();
+
+	    _UpdateLevelsLists();
           }
         
           pPlayerTag->setCaption(std::string(GAMETEXT_CURPLAYER) + ": " + m_pPlayer->PlayerName);
@@ -2372,8 +2415,8 @@ namespace vapp {
 	_UpdateWebHighscores(false);
 	_UpgradeWebHighscores();    
 	_UpdateWebLevels(false);  
-	_UpdateLevelPackList(); 
-	_UpdateLevelLists();      
+
+	_UpdateLevelsLists();
       } catch(Exception &e) {
 	notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES);
       }
@@ -2842,6 +2885,13 @@ namespace vapp {
   Scan through loaded levels
   ===========================================================================*/
   void GameApp::_CreateLevelLists(UILevelList *pAllLevels) {
+    /* get selected item */
+    std::string v_selected_levelName = "";
+    if(pAllLevels->getSelected() >= 0 && pAllLevels->getSelected() < pAllLevels->getEntries().size()) {
+      UIListEntry *pEntry = pAllLevels->getEntries()[pAllLevels->getSelected()];
+      v_selected_levelName = pEntry->Text[0];
+    }
+
     pAllLevels->clear();
     
     if(m_pPlayer == NULL) return;
@@ -2856,6 +2906,18 @@ namespace vapp {
 			   m_pWebHighscores
 #endif
 			   );
+    }
+
+    /* reselect the previous level */
+    if(v_selected_levelName != "") {
+      int nLevel = 0;
+      for(int i=0; i<pAllLevels->getEntries().size(); i++) {
+        if(pAllLevels->getEntries()[i]->Text[0] == v_selected_levelName) {
+          nLevel = i;
+          break;
+        }
+      }
+      pAllLevels->setSelected(nLevel);
     }
   }
 

@@ -56,7 +56,6 @@ namespace vapp {
     if(p < 0) p = 0;
     if(p >= m_Entries.size()) p = m_Entries.size()-1;
     setSelected(p);
-    _NewlySelectedItem();
   }
 
   /*===========================================================================
@@ -266,7 +265,6 @@ namespace vapp {
           y >= yy && y < yy+nRowHeight) {
           /* Select this */
 	  setSelected(i);
-          _NewlySelectedItem();
           
           /* AND invoke enter-button */
           if(getSelected()>=0 && getSelected()<m_Entries.size() && m_pEnterButton != NULL) {
@@ -317,7 +315,6 @@ namespace vapp {
           y >= yy && y < yy+nRowHeight) {
           /* Select this */
 	  setSelected(i);
-          _NewlySelectedItem();
           break;
         }
       }
@@ -467,7 +464,6 @@ namespace vapp {
           getRoot()->activateUp();
         else {
           setSelected(getSelected() - 1);
-          _NewlySelectedItem();
         }
         return true;
       case SDLK_DOWN:
@@ -475,7 +471,6 @@ namespace vapp {
           getRoot()->activateDown();
         else {
           setSelected(getSelected() + 1);
-          _NewlySelectedItem();
         }          
         return true;
       case SDLK_PAGEUP:
@@ -484,7 +479,6 @@ namespace vapp {
             break;
           else {
             setSelected(getSelected() - 1);
-            _NewlySelectedItem();
           }
         }
         return true;
@@ -494,7 +488,6 @@ namespace vapp {
             break;
           else {
             setSelected(getSelected() + 1);
-            _NewlySelectedItem();
           }          
         }
         return true;
@@ -525,7 +518,6 @@ namespace vapp {
             if(tolower(m_Entries[nEntryIdx]->Text[0].at(nPos)) == tolower(nChar)) {
               /* Nice, select this one */
               setSelected(nEntryIdx);
-              _NewlySelectedItem();              
               bContinue = false;
               return true;
             }
@@ -542,6 +534,12 @@ namespace vapp {
     return false;
   }
   
+  void UIList::setSelected(int n) {
+    m_bChanged = true;
+    m_nSelected = n;
+    _NewlySelectedItem();
+  }
+
   /*===========================================================================
   Called when a entry is selected
   ===========================================================================*/

@@ -1235,8 +1235,7 @@ namespace vapp {
           Log(" %d not reloaded",UpdatedLvlFiles.size() - nReloaded);        
         
         /* Update level lists */
-	_UpdateLevelPackList();
-        _UpdateLevelLists();
+	_UpdateLevelsLists();
       }            
     #endif
   }
@@ -1978,5 +1977,11 @@ namespace vapp {
       }
     }
     return n;
+  }
+
+  void GameApp::_UpdateLevelsLists() {
+    _CreateLevelPackLevelList();
+    _UpdateLevelPackList();
+    _UpdateLevelLists();
   }
 }

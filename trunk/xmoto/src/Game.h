@@ -490,6 +490,9 @@ namespace vapp {
       void _UpdateLevelLists(void);
       void _UpdateReplaysList(void);
       void _UpdateThemesLists(void);
+
+      void _UpdateLevelsLists();
+
 #if defined(SUPPORT_WEBACCESS) 
       void _UpdateRoomsLists(void);
 #endif
