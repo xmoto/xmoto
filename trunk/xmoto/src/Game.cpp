@@ -1235,6 +1235,7 @@ namespace vapp {
           Log(" %d not reloaded",UpdatedLvlFiles.size() - nReloaded);        
         
         /* Update level lists */
+	_UpdateLevelPackList();
         _UpdateLevelLists();
       }            
     #endif
@@ -1965,5 +1966,17 @@ namespace vapp {
     m_MotoGame.updateGameMessages();
   }
 
+  int GameApp::_Pack_getNumberOfLevelsFinished(LevelPack *p_levelPack) {
+    LevelSrc *v_level;
+    int n;
 
+    n = 0;
+    for(int i=0; i<p_levelPack->Levels.size(); i++) {
+      v_level = p_levelPack->Levels[i];
+      if(m_Profiles.isLevelCompleted(m_pPlayer->PlayerName, v_level->getID())) {
+	n++;
+      }
+    }
+    return n;
+  }
 }

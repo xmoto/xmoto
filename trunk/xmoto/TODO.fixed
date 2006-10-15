@@ -34,6 +34,8 @@ of existing types, this line causes a segfault (see replay 7097)
 * change ghost rules : "player/players/room"
 * bzip2 not removed on windows
 * remove the "level packs" button, remove the "internal" and "external" tabs and replace them by "All levels" tab and "Level pack" tab and make internal level a pack
+* have a scrollbar for the lists
+* add a counter of uncompleted levels (priority=medium)
 
 Since 0.2.1
 * BUG : on bad levels loading

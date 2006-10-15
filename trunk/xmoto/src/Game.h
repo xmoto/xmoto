@@ -567,6 +567,8 @@ namespace vapp {
       void _PostUpdateJustDead(void);
       void _PostUpdateFinished(void);
 
+      int _Pack_getNumberOfLevelsFinished(LevelPack *p_levelPack);
+
   };
 
 }

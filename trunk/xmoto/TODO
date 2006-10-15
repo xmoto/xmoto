@@ -7,7 +7,7 @@ required:
 * BUG : when death is disabled : you cannot see the message "press esc
    or enter"
 
-* When i update www sometimes
+* When i update lists sometimes
 Fatal signal: Segmentation Fault (SDL Parachute Deployed)
 *** glibc detected *** corrupted double-linked list: 0xb7a6a358 ***
 it behaves sometimes since i modified the pack lists menus
@@ -78,7 +78,8 @@ zone2b = {}
         * Modify so it could run on a compile farm.
         * Use Application Support directory instead of ~/.xmoto on OS X
         * Better packaging for OS X (Readme, License, etc)
-* BUG: tu peux faire get more levels une fois par session ? really ?!? to try
+* BUG: tu peux faire get more levels une fois par session ? really ?!?
+   to try : seems to be specific to windows due to a cache
 * BUG : as you can see at the end of "the only smooth", the block is
    not correctly drawned
 * it seems that there is a bug on speed it is played (if i play
@@ -116,12 +117,10 @@ zone2b = {}
 * we could make a "standard xmoto library" of lua functions :)
 * new script call :
   collision between sprites, between sprites and head
-* have a scrollbar for the lists
 * if a script ask for an already used key, propose an other one
 * a button "clean replays" which remove not highscore replays or
    something like it
 * check for a new version at startup
-* add a counter of uncompleted levels (priority=medium)
 * add a tab : favorite levels (priority=low)
 * add 2 rooms configurations so that i can display, world highscore
    and highscore of my room (priority=low)
@@ -135,7 +134,7 @@ zone2b = {}
 * allow to run : xmoto -level l1.lvl to allow playing a level just by cliking on
    it (even if it's not in the xmoto dir)
 * display wind
-* a fonction CameraRotate and CameraAdaptToG (script)
+* a fonction CameraRotate and CameraRotateAdaptToG (script)
 * A SetDynamicBlockRotation function that rotates the vertices about a center point instead of making the block go in circles.
 * a block0.Touch() function
 * network game

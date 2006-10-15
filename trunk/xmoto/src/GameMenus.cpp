@@ -1236,9 +1236,6 @@ namespace vapp {
 
     /* Add levels */
     for(int i=0;i<m_pActiveLevelPack->Levels.size();i++) {
-      std::ostringstream v_level_num;
-      v_level_num << i+1;
-
        pList->addLevel(m_pActiveLevelPack->Levels[i],
 		       m_pPlayer,
 		       &m_Profiles
@@ -1388,9 +1385,11 @@ namespace vapp {
       }
 
       p = pList->addEntry(p_packName);
-      char cBuf[256];
-      sprintf(cBuf,"%d",m_LevelPacks[i]->Levels.size());
-      p->Text.push_back(cBuf);
+      std::ostringstream v_level_nb;
+      v_level_nb << _Pack_getNumberOfLevelsFinished(m_LevelPacks[i]);
+      v_level_nb << "/";
+      v_level_nb << m_LevelPacks[i]->Levels.size();
+      p->Text.push_back(v_level_nb.str());
       p->pvUser = (void *)m_LevelPacks[i];
     }
   }
@@ -1819,6 +1818,7 @@ namespace vapp {
 	    _UpdateWebHighscores(false);
 	    _UpgradeWebHighscores();  
 	    _UpdateWebLevels(false);
+	    _UpdateLevelPackList();
 	    _UpdateLevelLists();
 	  } catch(Exception &e) {
 	    notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES);
@@ -1924,6 +1924,7 @@ namespace vapp {
       
       if(m_pPlayer == NULL) throw Exception("failed to set profile");
 
+      _UpdateLevelPackList();
       _UpdateLevelLists();
                         
       UIStatic *pPlayerTag = reinterpret_cast<UIStatic *>(m_pMainMenu->getChild("PLAYERTAG"));
@@ -1979,6 +1980,7 @@ namespace vapp {
           if(m_pPlayer == NULL) {
             if(m_Profiles.getProfiles().empty()) throw Exception("no valid profile");
             m_pPlayer = m_Profiles.getProfiles()[0];
+	    _UpdateLevelPackList();
             _UpdateLevelLists();
           }
         
@@ -2369,7 +2371,8 @@ namespace vapp {
       try {
 	_UpdateWebHighscores(false);
 	_UpgradeWebHighscores();    
-	_UpdateWebLevels(false);   
+	_UpdateWebLevels(false);  
+	_UpdateLevelPackList(); 
 	_UpdateLevelLists();      
       } catch(Exception &e) {
 	notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES);
