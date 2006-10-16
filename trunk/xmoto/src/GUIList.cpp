@@ -243,7 +243,7 @@ namespace vapp {
 
     /* is it inside the scroll bar ? */
     if(x >= nLX+nLWidth+2 && x <= nLX+nLWidth+2+16 &&
-       y >= nLY && y<= nLY + nLHeight) {
+       y >= 6+20 && y<= nLY + nLHeight - 20) {
       _mouseDownManageScrollBar(x, y);
     }
     /* Is it down inside one of the scroll buttons? */
@@ -290,7 +290,7 @@ namespace vapp {
 
     /* is it inside the scroll bar ? */
     if(x >= nLX+nLWidth+2 && x <= nLX+nLWidth+2+16 &&
-       y >= nLY && y<= nLY + nLHeight) {
+       y >= 6+20 && y<= nLY + nLHeight - 20) {
       _mouseDownManageScrollBar(x, y);
       m_bScrolling = true;
     }
