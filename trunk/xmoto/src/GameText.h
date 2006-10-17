@@ -102,6 +102,7 @@ Central place to keep many in-game text strings
                                         "Website Localization:Felix Schl;" \
                                         ":Nicolas Adenis-Lamarre;" \
                                         ":Trullo;" \
+                                        ":Afaland;" \
                                         ":Jj;" \
                                         ":Vertigo;" \
                                         ":Pol Vinogradov;" \
