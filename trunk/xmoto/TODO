@@ -21,6 +21,9 @@ It's a bit confusing to be proposed to continue or abort playing when
 one has just finished the level. The ``abort'' one should be rather
 ``quit level'' or something like that.
 
+* scroll on scroll bars is not nice if you keep the mouse clicked, go
+   out of the list ; unclick the button and go back into the list
+
 * http://bugs.debian.org/390622
 When some new levels are downloaded from the internet, they are placed
 in the "new levels" list until we try them. But if we exit and restart
