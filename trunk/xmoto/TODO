@@ -16,6 +16,22 @@ it behaves sometimes since i modified the pack lists menus
  - when a connection fails, disable network and display a message :
    "Network disabled, press F8 to enable it"
 
+* http://bugs.debian.org/335514
+It's a bit confusing to be proposed to continue or abort playing when
+one has just finished the level. The ``abort'' one should be rather
+``quit level'' or something like that.
+
+* http://bugs.debian.org/390622
+When some new levels are downloaded from the internet, they are placed
+in the "new levels" list until we try them. But if we exit and restart
+xmoto, they are moved in the "external levels" list. There are so many
+external levels that it is impossible to know which ones we already
+tried.
+So it would ge great if the new levels could remain in the "new" list
+until we try them, even if we restart xmoto.
+=> store them into an xml and reload it when the game start.
+Add a button -> clean to clean the new level list
+
 ===========
 * "play next level" => 'play next level', 'play next level unplayed', 'play next level where your highscore is > than room highscore', 'play next level where your highscore is > than world highscore', 'play next level where your highscore is the best'
 * replay button when you finish a level (to replay the level just done)
