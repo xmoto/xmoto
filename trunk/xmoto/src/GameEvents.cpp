@@ -41,7 +41,7 @@ namespace vapp {
     GameEventType v_eventType;
 
     Buffer >> v_fEventTime;
-    Buffer >> v_eventType;
+    Buffer >> ((int)v_eventType);
 
     if(MGE_PlayerDies::SgetType() == v_eventType) {
       v_event = new MGE_PlayerDies(v_fEventTime);
