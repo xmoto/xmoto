@@ -29,7 +29,136 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Packager.h"
 #include "arch/SwapEndian.h"
 
+/* 
+   How to create an xmoto.bin file:
+
+      Run xmoto-edit -pack in the xmoto bin/ directory. Make sure the file 
+      package.lst is present in the directory, and that all the files listed
+      in it is available in the directory hierachy.
+      
+   How to extract file from xmoto.bin: (NEW to xmoto 0.2.3)
+   
+      Run xmoto-edit -unpack BINFILE TARGETDIR [no_lst]
+      
+      where BINFILE is the path leading to xmoto.bin and TARGETDIR is its 
+      contained files should be extracted to. If no_lst is specified, no
+      package.lst file will be generated, otherwise it will be put in the
+      same directory as the BINFILE.      
+*/
+
 namespace vapp {
+ 
+  /*===========================================================================
+  Unpackager
+  ===========================================================================*/
+  void Packager::goUnpack(const std::string &BinFile,const std::string &OutPath,bool bWritePackageList) {
+    printf("X-Moto Data Un-Packager!\n");
+    printf("---------------------\n");  
+
+    FILE *fp_lst = NULL;    
+    
+    if(bWritePackageList) {
+      /* Determine path of package.lst */
+      std::string PackageListPath = "";
+      
+      int i = BinFile.find_last_of('/');
+      if(i<0) i = BinFile.find_last_of('\\');
+      
+      if(i>=0) {
+        PackageListPath = BinFile.substr(0,i+1) + "package.lst";
+      }
+      else {
+        PackageListPath = "package.lst";        
+      } 
+      /* TODO: maybe we should warn if we're overwriting anything... */
+      
+      printf("Writing to package list: %s\n",PackageListPath.c_str());
+      
+      fp_lst = fopen(PackageListPath.c_str(),"w");
+      if(fp_lst == NULL) printf("(Warning: failed to open file for output)\n");
+    }
+    
+    /* Try opening the .bin-file */
+    FILE *fp = fopen(BinFile.c_str(),"rb");
+    if(fp != NULL) {    
+      char cBuf[256];
+      fread(cBuf,4,1,fp);
+      if(!strncmp(cBuf,"XBI1",4)) {
+        int nNameLen;
+        while((nNameLen=fgetc(fp)) >= 0) {  
+          /* Extract name of file to extract */
+          fread(cBuf,nNameLen,1,fp);
+          cBuf[nNameLen] = '\0';
+          
+          /* Write name to package.lst file */
+          if(fp_lst != NULL)
+            fprintf(fp_lst,"%s\n",cBuf);
+            
+          printf("Extracting: %s\n",cBuf);
+
+          /* Read file size */
+          int nSize;
+          unsigned char nSizeBuf[4];
+          fread(nSizeBuf,4,1,fp);
+          nSize = nSizeBuf[0] | nSizeBuf[1] << 8 | nSizeBuf[2] << 16 | nSizeBuf[3] << 24;
+          
+          /* Open target file for output */                    
+          FILE *fp_out = createFile(OutPath,cBuf);
+          if(fp_out != NULL) {
+            /* Extract */
+            char cExtractBuf[16384];
+            int nRemaining = nSize;
+            while(nRemaining > 0) {
+              int nToExtract = sizeof(cExtractBuf)>nRemaining?nRemaining:sizeof(cExtractBuf);
+              int nExtracted = fread(cExtractBuf,1,nToExtract,fp);
+              fwrite(cExtractBuf,1,nExtracted,fp_out);
+              
+              nRemaining -= nExtracted;
+            }
+          
+            fclose(fp_out);
+          }
+          else {
+            printf("(Warning: failed to open file for output)\n");
+            
+            fseek(fp,nSize,SEEK_CUR); /* skip file */
+          }
+        }
+      }
+      else      
+        printf("!!! NOT VALID .bin FILE: %s\n",BinFile.c_str());
+        
+      fclose(fp);
+    }
+    else
+      printf("!!! NOT FOUND: %s\n",BinFile.c_str());
+      
+    if(fp_lst != NULL) fclose(fp_lst);
+  }
+ 
+  FILE *Packager::createFile(const std::string &TargetDir,const std::string &Path) {
+    /* Create sub-dirs first */
+    std::string Rem = Path;
+    std::string Extra = TargetDir;
+    int i;
+    while((i = Rem.find_first_of('/')<0?Rem.find_first_of('\\'):Rem.find_first_of('/')) >= 0) {
+      std::string SubDir = Rem.substr(0,i);
+      
+      std::string SubDirPath = Extra + "/" + SubDir;
+      Extra = SubDirPath;
+      
+      if(!FS::isDir(SubDirPath)) {
+        /* Try making dir */
+        printf("Making directory: %s\n",SubDirPath.c_str());
+        FS::mkDir(SubDirPath.c_str());                
+      }
+      
+      Rem = Rem.substr(i+1);
+    }
+    
+    /* Create file */
+    return fopen((TargetDir + "/" + Path).c_str(),"wb");
+  }
  
   /*===========================================================================
   Packager main - note that this is a VERY simplistic approach to data files

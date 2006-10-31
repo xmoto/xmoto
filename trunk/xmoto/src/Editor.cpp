@@ -671,6 +671,19 @@ namespace vapp {
           Packager::go();
           exit(0); /* leaks memory, but who cares? :) */
         }
+        if(UserArgs[i] == "-unpack") {
+          std::string BinFile = "xmoto.bin";
+          if(i+1 < UserArgs.size()) {BinFile = UserArgs[i+1]; i++;}
+                    
+          std::string OutDir = ".";
+          if(i+1 < UserArgs.size()) {OutDir = UserArgs[i+1]; i++;}
+          
+          bool bMakePackageList = true;
+          if(i+1 < UserArgs.size() && UserArgs[i+1]=="no_lst") {bMakePackageList=false; i++;}
+        
+          Packager::goUnpack(BinFile,OutDir,bMakePackageList);
+          exit(0); /* leaks memory too, but still nobody cares */
+        }
       }
     }
   }
