@@ -32,16 +32,18 @@ namespace vapp {
 
   void MotoGameEvent::serialize(DBuffer &Buffer) {
     Buffer << m_fEventTime;
-    Buffer << this->getType();
+    Buffer << (int) (this->getType());
   }
 
   MotoGameEvent* MotoGameEvent::getUnserialized(DBuffer &Buffer) {
     MotoGameEvent* v_event;
     float v_fEventTime;
     GameEventType v_eventType;
+    int i_tmp;
 
     Buffer >> v_fEventTime;
-    Buffer >> ((int)v_eventType);
+    Buffer >> i_tmp;
+    v_eventType = (GameEventType) i_tmp;
 
     if(MGE_PlayerDies::SgetType() == v_eventType) {
       v_event = new MGE_PlayerDies(v_fEventTime);
