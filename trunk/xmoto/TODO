@@ -1,5 +1,9 @@
 => for 0.2.3
 
+[13:25] <gaivota> aspegic500: I found a bug which is the following: when letting xmoto running without doing anything for some time the game crashes, althoug it keeps running
+[13:26] <aspegic500> i must go,
+[13:26] <gaivota> atm it shows a blank black screen, once before it diplayed the menu althoug the ingame was running and similar strange behaviour
+
 required:
 - add a button view the highscore in the pack window
 - when you make a highscore, new levels list is not updated

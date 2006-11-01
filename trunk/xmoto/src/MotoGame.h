@@ -73,18 +73,6 @@ namespace vapp {
   };
 
   /*===========================================================================
-  Edge effects
-  ===========================================================================*/
-  enum EdgeEffect {
-    EE_UNASSIGNED,
-    EE_GRASS,
-    EE_REDBRICKS,
-    EE_GRAYBRICKS,
-    EE_BLUEBRICKS,
-    EE_GRASSALT
-  };
-
-  /*===========================================================================
   Dummy helper - a point we'd like to track graphically
   ===========================================================================*/
   struct DummyHelper {
@@ -297,28 +285,6 @@ namespace vapp {
     Vector2f Foot2P;
     Vector2f Head2P;        /* NB! not a phys. body */
 
-    //dReal *pfPlayerTorsoPos;
-    //dReal *pfPlayerTorsoRot;
-    //dReal *pfPlayerULegPos;
-    //dReal *pfPlayerULegRot;
-    //dReal *pfPlayerLLegPos;
-    //dReal *pfPlayerLLegRot;
-    //dReal *pfPlayerUArmPos;
-    //dReal *pfPlayerUArmRot;
-    //dReal *pfPlayerLArmPos;
-    //dReal *pfPlayerLArmRot;
-
-    //dReal *pfPlayerTorso2Pos;
-    //dReal *pfPlayerTorso2Rot;
-    //dReal *pfPlayerULeg2Pos;
-    //dReal *pfPlayerULeg2Rot;
-    //dReal *pfPlayerLLeg2Pos;
-    //dReal *pfPlayerLLeg2Rot;
-    //dReal *pfPlayerUArm2Pos;
-    //dReal *pfPlayerUArm2Rot;
-    //dReal *pfPlayerLArm2Pos;
-    //dReal *pfPlayerLArm2Rot;
-
     Vector2f RRearWheelP; /* Relaxed rear wheel position */
     Vector2f RFrontWheelP;/* Relaxed front wheel position */
     Vector2f PrevRq;      /* Previous error (rear) */
@@ -332,7 +298,7 @@ namespace vapp {
     BikeAnchors *pAnchors;
     
     /* Driving */
-    float fCurBrake,fCurEngine;    
+    float fCurBrake, fCurEngine;    
   };
 
   /*===========================================================================
@@ -714,7 +680,6 @@ namespace vapp {
       void _KillEntity(Entity *pEnt);
       void CleanEntities(); /* clean memories of entities */
       EntityType _TransEntityType(std::string Name);
-      EdgeEffect _TransEdgeEffect(std::string Name);
       void _UpdateEntities(void);
       bool touchEntityBodyExceptHead(const BikeState &pBike, const Entity &p_entity);
       void _UpdateGameState(SerializedBikeState *pReplayState);
