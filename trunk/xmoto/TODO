@@ -8,6 +8,8 @@ required:
 - add a button view the highscore in the pack window
 - when you make a highscore, new levels list is not updated
 
+* virtual packs : pack of level i don't have the highscore, ...
+
 * BUG : when death is disabled : you cannot see the message "press esc
    or enter"
 
