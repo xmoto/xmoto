@@ -24,10 +24,6 @@ function updateNSIversion {
   mv "$NSI_FILE"_tmp "$NSI_FILE"
 }
 
-updateNSIversion "$NSI_FILE" "`getVersion`"
-
-exit
-
 function make_zip {
     ZIP_DIR="$1"
     ZIP_FILE="$2"
@@ -104,7 +100,7 @@ global_remove_previous_archive || exit 1
 global_remake_win_tree         || exit 1
 
 # update nsi file
-updateNSIversion
+updateNSIversion "$NSI_FILE" "`getVersion`"
 
 # make destination dir
 mkdir "$DEST_DIR" || exit 1
