@@ -24,46 +24,42 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <string>
 
-namespace vapp {
-
-  /*===========================================================================
+/*===========================================================================
   Exceptions
   ===========================================================================*/
-  class Exception {
-    public:
-      Exception() {}
-      Exception(const std::string &iMsg)
-        : m_Msg(iMsg) {
-          #if defined(_MSC_VER) && defined(_DEBUG) && defined(BREAK_ON_EXCEPTION)
-            __asm {
-              int 0x03
-            }
-          #endif
-      }
-      Exception(const char *pc)
-        : m_Msg(std::string(pc)) {
-          #if defined(_MSC_VER) && defined(_DEBUG) && defined(BREAK_ON_EXCEPTION)
-            __asm {
-              int 0x03
-            }
-          #endif        
-      }
-      std::string &getMsg(void) {return m_Msg;}
-    private: 
-      std::string m_Msg;
-  };
+class Exception {
+  public:
+  Exception() {}
+  Exception(const std::string &iMsg)
+  : m_Msg(iMsg) {
+#if defined(_MSC_VER) && defined(_DEBUG) && defined(BREAK_ON_EXCEPTION)
+    __asm {
+      int 0x03
+    }
+#endif
+  }
+  Exception(const char *pc)
+  : m_Msg(std::string(pc)) {
+#if defined(_MSC_VER) && defined(_DEBUG) && defined(BREAK_ON_EXCEPTION)
+    __asm {
+      int 0x03
+    }
+#endif        
+  }
+  std::string &getMsg(void) {return m_Msg;}
+  private: 
+  std::string m_Msg;
+};
   
-  class SyntaxError : public Exception {
-    public:
-      SyntaxError() {}
-      SyntaxError(const std::string &iMsg)
-        : Exception(iMsg) {}
-      SyntaxError(const char *pc)
-        : Exception(std::string(pc)) {}
-    private:
-  };
-
-}
+class SyntaxError : public Exception {
+ public:
+  SyntaxError() {}
+  SyntaxError(const std::string &iMsg)
+    : Exception(iMsg) {}
+  SyntaxError(const char *pc)
+    : Exception(std::string(pc)) {}
+ private:
+};
 
 #endif
 

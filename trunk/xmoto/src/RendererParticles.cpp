@@ -30,203 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 namespace vapp {
 
-  /*===========================================================================
-  Particles, rendering and management
-  ===========================================================================*/
-  Particle *GameRenderer::spawnParticle(ParticleType Type,Vector2f Pos,Vector2f Vel,float fLifeTime) {
-    MotoGame *pGame = getGameObject();
-
-    if(pGame != NULL) {
-      Particle *p = new Particle;
-      p->bFront = true;
-      p->Type = Type;
-      p->Pos = Pos;
-      p->Vel = Vel;     
-      p->fSpawnTime = pGame->getTime();
-      p->fKillTime = pGame->getTime() + fLifeTime;
-      p->Acc = Vector2f(0,0);
-      p->fAng = 0;
-      p->fAngAcc = 0;
-      p->fAngVel = 0;
-      m_Particles.push_back(p);
-      
-      int cc;
-      switch(Type) {
-        case PT_DEBRIS:
-          cc = (int)randomNum(0,250);
-          p->DebrisTint = MAKE_COLOR(cc,cc,cc,255);
-          p->Vel *= randomNum(1.5,6);
-          p->Vel.x += randomNum(-0.2,0.2);
-          p->Vel.y += randomNum(-0.2,0.2);
-          p->fAngVel = randomNum(-60,60);
-          p->fDebrisSize = randomNum(0.02f,0.05f);
-          break;
-          
-        case PT_SMOKE1:
-        case PT_SMOKE2:
-          cc = (int)randomNum(0,50);
-          p->SmokeColor = MAKE_COLOR(cc,cc,cc,255);
-          p->fSmokeSize = randomNum(0,0.2);
-          p->fAngVel = randomNum(-60,60);
-          p->fKillTime += 10000;
-          break;
-        
-        case PT_FIRE:
-          p->FireColor = MAKE_COLOR(255,255,200,255);
-          p->fFireSize = 0.1f;
-          p->fKillTime += 10000;
-          p->fFireSeed = randomNum(0,100);
-          break;
-          
-        case PT_STAR:
-          p->fAngVel = randomNum(-60,60);
-          p->Vel = Vector2f(randomNum(-2,2),randomNum(0,2));
-          p->Acc = Vector2f(0,-4);
-          break;
-      }
-      
-      return p;
-    }
-    
-    return NULL;
-  }  
-
-  Particle *GameRenderer::_GetNewestParticle(ParticleType PType) {
-    /* Return newest particle of a given type */
-    Particle *pNewest = NULL;
-    for(int i=0;i<m_Particles.size();i++) {
-      if(m_Particles[i]->Type == PType &&
-         (pNewest==NULL || pNewest->fSpawnTime < m_Particles[i]->fSpawnTime))
-        pNewest = m_Particles[i];
-    }
-    return pNewest;
-  }
-
-  void GameRenderer::_UpdateParticles(float fTimeStep) {
-    MotoGame *pGame = getGameObject();
-    
-    if(m_Quality != GQ_HIGH) {
-      /* only particles at high quality setting */
-      return;
-    }
-
-    if(pGame != NULL) {
-      /* Look for particle sources */
-      {
-        for(int i=0;i<pGame->getEntities().size();i++) {
-          if(pGame->getEntities()[i]->Type == ET_PARTICLESOURCE && 
-            pGame->getTime() > pGame->getEntities()[i]->fNextParticleTime) {
-            
-            if(pGame->getEntities()[i]->ParticleType == "Smoke") {
-              /* Generate smoke */
-              if(randomNum(0,1) < 0.5)
-                spawnParticle(PT_SMOKE1,pGame->getEntities()[i]->Pos,Vector2f(randomNum(-0.6,0.6),randomNum(0.2,0.6)),0);
-              else
-                spawnParticle(PT_SMOKE2,pGame->getEntities()[i]->Pos,Vector2f(randomNum(-0.6,0.6),randomNum(0.2,0.6)),0);
-              pGame->getEntities()[i]->fNextParticleTime = pGame->getTime() + randomNum(0.2,0.5f);
-            }
-            else if(pGame->getEntities()[i]->ParticleType == "Fire") {
-              for(int k=0;k<10;k++) {
-                /* Generate fire */
-                Particle *pFireParticle = spawnParticle(PT_FIRE,pGame->getEntities()[i]->Pos,Vector2f(randomNum(-1,1),randomNum(0.1,0.3)),0);
-                pFireParticle->bFront = false;
-                
-                pGame->getEntities()[i]->fNextParticleTime = pGame->getTime() + randomNum(0.05,0.1f);              
-              }
-            }
-          }
-        }
-      }
-    
-      /* For each particle */
-      int i=0;
-      while(1) {
-        if(i >= m_Particles.size()) break;
-        bool bKillParticle = false;
-        
-        /* Do general handling of it */
-        m_Particles[i]->Vel += m_Particles[i]->Acc * fTimeStep;
-        m_Particles[i]->Pos += m_Particles[i]->Vel * fTimeStep;
-        m_Particles[i]->fAngVel += m_Particles[i]->fAngAcc * fTimeStep;
-        m_Particles[i]->fAng += m_Particles[i]->fAngVel * fTimeStep;
-        
-        if(pGame->getTime() > m_Particles[i]->fKillTime)
-          bKillParticle = true;
-        
-        /* Do type dependant handling of it */
-        float a,c,c2;
-        
-        switch(m_Particles[i]->Type) {
-          case PT_DEBRIS:
-            m_Particles[i]->Acc = pGame->getGravity() * (-1.5f / PHYS_WORLD_GRAV);
-            c=GET_RED(m_Particles[i]->DebrisTint);
-            a=GET_ALPHA(m_Particles[i]->DebrisTint);
-            a -= 120.0f * fTimeStep;
-            if(a<0) { 
-              a=0;                       
-              bKillParticle = true;
-            }
-            m_Particles[i]->DebrisTint = MAKE_COLOR((int)c,(int)c,(int)c,(int)a);
-            break;
-          case PT_SMOKE1:
-          case PT_SMOKE2:
-            m_Particles[i]->fSmokeSize += fTimeStep * 1.3f; /* grow */
-            m_Particles[i]->Acc = Vector2f(0.2,0.5);  /* accelerate upwards */
-            c=GET_RED(m_Particles[i]->SmokeColor);
-            c += randomNum(40,50) * fTimeStep;
-            a=GET_ALPHA(m_Particles[i]->SmokeColor);
-            a -= 60.0f * fTimeStep;
-            if(c>255) c=255;
-            if(a<0) { 
-              a=0;                       
-              bKillParticle = true;
-            }
-            else
-              m_Particles[i]->SmokeColor = MAKE_COLOR((int)c,(int)c,(int)c,(int)a);
-            break;
-            
-          case PT_FIRE:
-            c=GET_GREEN(m_Particles[i]->FireColor);
-            c -= randomNum(190,210) * fTimeStep;
-            if(c<0) c=0;
-            c2=GET_BLUE(m_Particles[i]->FireColor);
-            c2 -= randomNum(400,400) * fTimeStep;
-            if(c2<0) c2=0;
-            a=GET_ALPHA(m_Particles[i]->FireColor);
-            a -= 180.0f * fTimeStep;
-            if(a<0) { 
-              a=0;                       
-              bKillParticle = true;
-            }
-            else
-              m_Particles[i]->FireColor = MAKE_COLOR(255,(int)c,(int)c2,(int)a);
-            
-            m_Particles[i]->Vel.x = sin((pGame->getTime() - 
-                                         m_Particles[i]->fSpawnTime + m_Particles[i]->fFireSeed)*randomNum(5,15)) * 0.8f
-                                      +
-                                    sin((pGame->getTime()-m_Particles[i]->fFireSeed) * 10) * 0.3;
-            m_Particles[i]->Acc.y = 2;
-            break;
-        }
-        
-        /* Show we kill it? */
-        if(bKillParticle) {
-          delete m_Particles[i];
-          m_Particles.erase(m_Particles.begin() + i);
-        }
-        else i++;
-      }
-    }
-  }  
-  
-  void GameRenderer::clearAllParticles(void) {
-    for(int i=0;i<m_Particles.size();i++) { 
-      delete m_Particles[i];
-    }
-    m_Particles.clear();
-  }
-  
-  void GameRenderer::_RenderParticle(Vector2f P,Texture *pTexture,float fSize,float fAngle,Color c) {
+  void GameRenderer::_RenderParticleDraw(Vector2f P,Texture *pTexture,float fSize,float fAngle, TColor c) {
     /* Render single particle */
     if(pTexture == NULL) return;
     
@@ -247,7 +51,7 @@ namespace vapp {
     glBindTexture(GL_TEXTURE_2D,pTexture->nID);
     glEnable(GL_TEXTURE_2D);
     glBegin(GL_POLYGON);
-    glColor4ub(GET_RED(c),GET_GREEN(c),GET_BLUE(c),GET_ALPHA(c));
+    glColor4ub(c.Red(), c.Green(), c.Blue(), c.Alpha());
     glTexCoord2f(0,0);
     _Vertex(p1);
     glTexCoord2f(1,0);
@@ -260,52 +64,81 @@ namespace vapp {
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_BLEND);            
   }
+
+  void GameRenderer::_RenderParticle(ParticlesSource *i_source) {
+    AnimationSprite *pStarAnim = (AnimationSprite *)getParent()->m_theme.getSprite(SPRITE_TYPE_ANIMATION,"Star");
+    EffectSprite* pFireType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Fire1");
+    EffectSprite* pSmoke1Type = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Smoke1");
+    EffectSprite* pSmoke2Type = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Smoke2");
+    
+    EffectSprite* pDebrisType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Debris1");
+
+    if(i_source->SpriteName() == "Star") {
+      if(pStarAnim != NULL) {
+	
+	for(unsigned j = 0; j < i_source->Particles().size(); j++) {
+	  _RenderParticleDraw(i_source->Particles()[j]->Position(),
+			      pStarAnim->getTexture(),
+			      pStarAnim->getWidth(),
+			      i_source->Particles()[j]->Angle(),
+			      i_source->Particles()[j]->Color());
+	}
+      }
+    } else if(i_source->SpriteName() == "Fire") {
+      if(pFireType != NULL) {
+	for(unsigned j = 0; j < i_source->Particles().size(); j++) {
+	  _RenderParticleDraw(i_source->Particles()[j]->Position(),
+			      pFireType->getTexture(),
+			      i_source->Particles()[j]->Size(),
+			      i_source->Particles()[j]->Angle(),
+			      i_source->Particles()[j]->Color());
+	}
+      }
+    } else if(i_source->SpriteName() == "Smoke") {
+      if(pSmoke1Type != NULL && pSmoke2Type != NULL) {
+	for(unsigned j = 0; j < i_source->Particles().size(); j++) {
+	  if(i_source->Particles()[j]->SpriteName() == "Smoke1") {
+	    _RenderParticleDraw(i_source->Particles()[j]->Position(),
+				pSmoke1Type->getTexture(),
+				i_source->Particles()[j]->Size(),
+				i_source->Particles()[j]->Angle(),
+				i_source->Particles()[j]->Color());
+	  } else if(i_source->Particles()[j]->SpriteName() == "Smoke2") {
+	    _RenderParticleDraw(i_source->Particles()[j]->Position(),
+				pSmoke2Type->getTexture(),
+				i_source->Particles()[j]->Size(),
+				i_source->Particles()[j]->Angle(),
+				i_source->Particles()[j]->Color());
+	  }
+	}
+      }
+    } else if(i_source->SpriteName() == "Debris1") {
+      if(pDebrisType != NULL) {
+	for(unsigned j = 0; j < i_source->Particles().size(); j++) {
+	  if(i_source->Particles()[j]->SpriteName() == "Debris1") {
+	    _RenderParticleDraw(i_source->Particles()[j]->Position(),
+				pDebrisType->getTexture(),
+				i_source->Particles()[j]->Size(),
+				i_source->Particles()[j]->Angle(),
+				i_source->Particles()[j]->Color());
+	  }
+	}
+      }
+    }
+  }
   
   void GameRenderer::_RenderParticles(bool bFront) {
-    EffectSprite* pType;
+    for(unsigned int i = 0; i < getGameObject()->getLevelSrc()->Entities().size(); i++) {
+      Entity* v_entity = getGameObject()->getLevelSrc()->Entities()[i];
+      if(v_entity->Type() == ET_PARTICLESOURCE) {
+	_RenderParticle((ParticlesSource*) v_entity);
+      }
+    }
 
-    /* Render all particles */
-    for(int i=0;i<m_Particles.size();i++) {
-      if(m_Particles[i]->bFront == bFront) {
-        switch(m_Particles[i]->Type) {
-          case PT_SMOKE1:
-	          pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Smoke1");
-	          if(pType != NULL) {
-	            _RenderParticle(m_Particles[i]->Pos,pType->getTexture(),m_Particles[i]->fSmokeSize,
-			            m_Particles[i]->fAng,m_Particles[i]->SmokeColor);
-	          }
-            break;
-          case PT_SMOKE2:
-	            pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Smoke2");
-	            if(pType != NULL) {
-	              _RenderParticle(m_Particles[i]->Pos,pType->getTexture(),m_Particles[i]->fSmokeSize,
-			              m_Particles[i]->fAng,m_Particles[i]->SmokeColor);
-	            }
-            break;
-          case PT_FIRE:
-	            pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Fire1");
-	            if(pType != NULL) {
-	              _RenderParticle(m_Particles[i]->Pos,pType->getTexture(),m_Particles[i]->fFireSize,
-			              m_Particles[i]->fAng,m_Particles[i]->FireColor);
-	            }
-            break;
-          case PT_DEBRIS:
-	          pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Debris1");
-	          if(pType != NULL) {
-	            _RenderParticle(m_Particles[i]->Pos,pType->getTexture(),m_Particles[i]->fDebrisSize,
-			            m_Particles[i]->fAng,m_Particles[i]->DebrisTint);
-	          }
-	          break;
-	        case PT_STAR:
-	          {
-	            AnimationSprite *pStarAnim = (AnimationSprite *)getParent()->m_theme.getSprite(SPRITE_TYPE_ANIMATION,"Star");
-	            if(pStarAnim != NULL) {
-	              _RenderParticle(m_Particles[i]->Pos,pStarAnim->getTexture(),pStarAnim->getWidth(),
-			              m_Particles[i]->fAng,MAKE_COLOR(255,255,255,255));
-			        }
-	          }
-	          break; 	        
-        }
+    for(unsigned int i = 0; i < getGameObject()->getLevelSrc()->EntitiesExterns().size(); i++) {
+      Entity* v_entity = getGameObject()->getLevelSrc()->EntitiesExterns()[i];
+      if(v_entity->Type() == ET_PARTICLESOURCE) {
+	_RenderParticle((ParticlesSource*) v_entity);
       }
     }
   }

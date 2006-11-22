@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "VCommon.h"
 #include "VApp.h"
-#include "LevelSrc.h"
+#include "xmscene/Level.h"
 #include "MotoGame.h"
 #include "VTexture.h"
 #include "Renderer.h"
@@ -92,7 +92,7 @@ namespace vapp {
   ===========================================================================*/
   struct LevelPack {
     std::string Name;
-    std::vector<LevelSrc *> Levels;
+    std::vector<Level *> Levels;
     
     /* Hints */
     bool bShowTimes;
@@ -263,7 +263,7 @@ namespace vapp {
       std::string m_ForceProfile;               /* Force this player profile */    
       std::string m_GraphDebugInfoFile;
       int m_nNumLevels;
-      LevelSrc m_Levels[2048];                  /* Array of levels */
+      Level m_Levels[2048];                  /* Array of levels */
       
       InputHandler m_InputHandler;              /* The glorious input handler */
       GameState m_State;                        /* Current state */      
@@ -452,7 +452,7 @@ namespace vapp {
 #if defined(SUPPORT_WEBACCESS) 
       void _UpdateWorldRecord(const std::string &LevelID);
 #endif
-      LevelSrc *_FindLevelByID(std::string ID);
+      Level *_FindLevelByID(std::string ID);
       void _HandleMainMenu(void);  
       void _HandlePauseMenu(void);
       void _HandleJustDeadMenu(void);
@@ -483,6 +483,9 @@ namespace vapp {
       void _DrawMenuBackground(void); 
       void _DispatchMouseHover(void);                               
       void _InitMenus(void);        
+      void _InitMenus_PlayingMenus(void);
+      void _InitMenus_MainMenu(void);
+      void _InitMenus_Others(void);
       void _ImportOptions(void);
       void _DefaultOptions(void);
       void _SaveOptions(void);
@@ -505,10 +508,10 @@ namespace vapp {
       
       int _IsKeyInUse(const std::string &Key);
       
-      void _UpdateLevelPackManager(LevelSrc *pLevelSrc);
+      void _UpdateLevelPackManager(Level *pLevelSrc);
       LevelPack *_FindLevelPackByName(const std::string &Name);
-      std::string _DetermineNextLevel(LevelSrc *pLevelSrc);
-      bool _IsThereANextLevel(LevelSrc *pLevelSrc);
+      std::string _DetermineNextLevel(Level *pLevelSrc);
+      bool _IsThereANextLevel(Level *pLevelSrc);
       
       bool _IsReplayScripted(Replay *p_pReplay);
       void _RestartLevel();

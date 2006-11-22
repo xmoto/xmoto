@@ -23,11 +23,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __EDITOR_H__
 
 #include "VApp.h"
-#include "LevelSrc.h"
+#include "xmscene/Level.h"
 #include "VTexture.h"
 
 #include "EditorData.h"
 #include "EditorLog.h"
+
+#include "xmscene/Block.h"
+#include "xmscene/Level.h"
+#include "xmscene/Entity.h"
 
 namespace vapp {
   
@@ -290,7 +294,7 @@ namespace vapp {
       Vector2f m_ViewMin,m_ViewMax;           /* Design viewport */
       EditorMainMenu *m_pMainMenu;            /* Main menu */
       EditorEntityMenu *m_pEntityMenu;				/* Entity menu */
-      LevelSrc *m_pLevelSrc;                  /* Level */
+      Level *m_pLevelSrc;                  /* Level */
       
       std::string m_LevelToInitLoad;          /* Load this level for editing */
       
@@ -307,7 +311,7 @@ namespace vapp {
       bool m_bLeftButtonDown,m_bLeftButtonClick;
       bool m_bTextureBrowserMouseHover;
       
-      LevelEntity *m_pEntityToCopy;
+      Entity *m_pEntityToCopy;
            
       EditorData m_EntityTable;								/* Available entities */
       EditorLog m_Log;												/* Log object */
@@ -342,21 +346,21 @@ namespace vapp {
       ClickTarget _AnythingAtPoint(Vector2f P,bool bSelectAtWill);
       void _ClearSelection(void);
       void _FinishMovement(Vector2f Dir);
-      bool _IsBlockSelected(LevelBlock *pBlock);
+      bool _IsBlockSelected(Block *pBlock);
       void _DrawTextureBrowser(void);
-      Texture *_GetCommonTexture(std::vector<LevelBlock *> &Blocks);       
+      Texture *_GetCommonTexture(std::vector<Block *> &Blocks);       
       void _AssignTextureToSelection(Texture *pTexture);    
-      void _SelectBlock(LevelBlock *pBlock); 
+      void _SelectBlock(Block *pBlock); 
       void _CreateEntityAtPos(std::string TypeID,Vector2f Pos);
-      void _CopyEntityAtPos(LevelEntity *pToCopy,Vector2f Pos);
-      void _DrawEntitySymbol(LevelEntity *pEntity);
-      LevelEntity *_GetSelectedEntity(void);
+      void _CopyEntityAtPos(Entity *pToCopy,Vector2f Pos);
+      void _DrawEntitySymbol(Entity *pEntity);
+      Entity *_GetSelectedEntity(void);
       std::string _GetCommonEdgeEffect(int *pnNumSel);
       void _ApplyEdgeEffect(std::string Effect);
       void _SmoothSelectedEdges(void);
-      void _SmoothEdge(LevelBlock *pBlock,LevelBlockVertex *pEdge,unsigned int j);
-      LevelBlockVertex *_NextVertex(LevelBlock *pBlock,int j,int *pn);
-      LevelBlockVertex *_PrevVertex(LevelBlock *pBlock,int j,int *pn);
+      void _SmoothEdge(Block *pBlock,BlockVertex *pEdge,unsigned int j);
+      BlockVertex *_NextVertex(Block *pBlock,int j,int *pn);
+      BlockVertex *_PrevVertex(Block *pBlock,int j,int *pn);
       void _EdgeSnapCursor(void);
       void _EntitySnapCursor(void);
       void _DeleteSelectedBlocks(void);

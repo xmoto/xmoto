@@ -31,7 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <time.h>
 #include "VApp.h"
 #include "VFileIO.h"
-#include "arch/SwapEndian.h"
+#include "helpers/SwapEndian.h"
 
 #ifdef USE_GETTEXT
 #include "Locales.h"
@@ -87,14 +87,14 @@ namespace vapp {
       
       SDL_Event Event;
       while(SDL_PollEvent(&Event)) {
-				int ch=0;
+        int ch=0;
     
         /* What event? */
         switch(Event.type) {
           case SDL_KEYDOWN: 
-						if((Event.key.keysym.unicode&0xff80)==0) {
-							ch = Event.key.keysym.unicode & 0x7F;
-						}
+            if((Event.key.keysym.unicode&0xff80)==0) {
+              ch = Event.key.keysym.unicode & 0x7F;
+            }
             keyDown(Event.key.keysym.sym,ch);            
             break;
           case SDL_KEYUP: 
@@ -185,18 +185,18 @@ namespace vapp {
         
         SDL_Event Event;
         while(SDL_PollEvent(&Event)) {
-			    int ch=0;
-			    static int nLastMouseClickX = -100,nLastMouseClickY = -100;
-			    static int nLastMouseClickButton = -100;
-			    static float fLastMouseClickTime = 0.0f;
-			    int nX,nY;
+          int ch=0;
+          static int nLastMouseClickX = -100,nLastMouseClickY = -100;
+          static int nLastMouseClickButton = -100;
+          static float fLastMouseClickTime = 0.0f;
+          int nX,nY;
 
           /* What event? */
           switch(Event.type) {
             case SDL_KEYDOWN: 
-					    if((Event.key.keysym.unicode&0xff80)==0) {
-						    ch = Event.key.keysym.unicode & 0x7F;
-					    }
+              if((Event.key.keysym.unicode&0xff80)==0) {
+                ch = Event.key.keysym.unicode & 0x7F;
+              }
               keyDown(Event.key.keysym.sym,ch);            
               break;
             case SDL_KEYUP: 
@@ -335,82 +335,82 @@ namespace vapp {
     m_nDispBPP = nDispBPP;
     m_bWindowed = bWindowed;
 
-	  /* Get some video info */
-	  const SDL_VideoInfo *pVidInfo=SDL_GetVideoInfo();
-	  if(pVidInfo==NULL)
+    /* Get some video info */
+    const SDL_VideoInfo *pVidInfo=SDL_GetVideoInfo();
+    if(pVidInfo==NULL)
       throw Exception("(1) SDL_GetVideoInfo : " + std::string(SDL_GetError()));
   
-	  /* Determine target bit depth */
-	  if(m_bWindowed) 
-		  /* In windowed mode we can't tinker with the bit-depth */
-		  m_nDispBPP=pVidInfo->vfmt->BitsPerPixel; 			
+    /* Determine target bit depth */
+    if(m_bWindowed) 
+      /* In windowed mode we can't tinker with the bit-depth */
+      m_nDispBPP=pVidInfo->vfmt->BitsPerPixel;      
 
-	  /* Setup GL stuff */
-	  /* 2005-10-05 ... note that we no longer ask for explicit settings... it's
-	                    better to do it per auto */
-	  SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,1);	
-	
-	  /* Create video flags */
-	  int nFlags = SDL_OPENGL;
-	  if(!m_bWindowed) nFlags|=SDL_FULLSCREEN;
-	
-	  /* At last, try to "set the video mode" */
-	  if(SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,m_nDispBPP,nFlags)==NULL) {
-	    Log("** Warning ** : Tried to set video mode %dx%d @ %d-bit, but SDL responded: %s\n"
-	        "                Now SDL will try determining a proper mode itself.",m_nDispWidth,m_nDispHeight,m_nDispBPP);
-	  
-	    /* Hmm, try letting it decide the BPP automatically */
-	    if(SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,0,nFlags)==NULL) {	      
-	      /* Still no luck */
-	      Log("** Warning ** : Still no luck, now we'll try 800x600 in a window.");
-	      m_nDispWidth = 800; m_nDispHeight = 600;	      
-	      m_bWindowed = true;
-  	    if(SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,0,SDL_OPENGL)==NULL) {	      
+    /* Setup GL stuff */
+    /* 2005-10-05 ... note that we no longer ask for explicit settings... it's
+                      better to do it per auto */
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,1); 
+  
+    /* Create video flags */
+    int nFlags = SDL_OPENGL;
+    if(!m_bWindowed) nFlags|=SDL_FULLSCREEN;
+  
+    /* At last, try to "set the video mode" */
+    if(SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,m_nDispBPP,nFlags)==NULL) {
+      Log("** Warning ** : Tried to set video mode %dx%d @ %d-bit, but SDL responded: %s\n"
+          "                Now SDL will try determining a proper mode itself.",m_nDispWidth,m_nDispHeight,m_nDispBPP);
+    
+      /* Hmm, try letting it decide the BPP automatically */
+      if(SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,0,nFlags)==NULL) {       
+        /* Still no luck */
+        Log("** Warning ** : Still no luck, now we'll try 800x600 in a window.");
+        m_nDispWidth = 800; m_nDispHeight = 600;        
+        m_bWindowed = true;
+        if(SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,0,SDL_OPENGL)==NULL) {       
           throw Exception("SDL_SetVideoMode : " + std::string(SDL_GetError()));
-  	    }	      
+        }       
       }
     }
-		
-	  /* Retrieve actual configuration */
-	  pVidInfo=SDL_GetVideoInfo();
-	  if(pVidInfo==NULL)
+    
+    /* Retrieve actual configuration */
+    pVidInfo=SDL_GetVideoInfo();
+    if(pVidInfo==NULL)
       throw Exception("(2) SDL_GetVideoInfo : " + std::string(SDL_GetError()));
-  									
-	  m_nDispBPP=pVidInfo->vfmt->BitsPerPixel;
+                    
+    m_nDispBPP=pVidInfo->vfmt->BitsPerPixel;
 
-    /* Did we get a z-buffer? */    	  
-	  int nDepthBits;
-	  SDL_GL_GetAttribute(SDL_GL_DEPTH_SIZE,&nDepthBits);
-	  if(nDepthBits == 0)
-	    throw Exception("no depth buffer");  
-	
-	  /* Set window title */
-	  SDL_WM_SetCaption(m_AppName.c_str(),m_AppName.c_str());
+    /* Did we get a z-buffer? */        
+    int nDepthBits;
+    SDL_GL_GetAttribute(SDL_GL_DEPTH_SIZE,&nDepthBits);
+    if(nDepthBits == 0)
+      throw Exception("no depth buffer");  
+  
+    /* Set window title */
+    SDL_WM_SetCaption(m_AppName.c_str(),m_AppName.c_str());
 
-	  /* Force OpenGL to talk 2D */
-	  glViewport(0,0,m_nDispWidth,m_nDispHeight);
-	  glMatrixMode(GL_PROJECTION);
-	  glLoadIdentity();
-	  glOrtho(0,m_nDispWidth,0,m_nDispHeight,-1,1);
-	  
-	  glClearDepth(1);
-	  glDepthFunc(GL_LEQUAL);
-	  
-	  glMatrixMode(GL_MODELVIEW);
-	  glLoadIdentity();		
-		
-	  /* Enable unicode translation and key repeats */
-	  SDL_EnableUNICODE(1);    		  
-	  SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY,SDL_DEFAULT_REPEAT_INTERVAL);
-	   
-	  /* Output some general info */
-	  Log("GL: %s (%s)",glGetString(GL_RENDERER),glGetString(GL_VENDOR));
-	  if(glGetString(GL_RENDERER) == NULL || 
-	     glGetString(GL_VENDOR) == NULL) {
-	    Log("** Warning ** : GL strings NULL!");
-	    throw Exception("GL strings are NULL!");
-	  }
-	  
+    /* Force OpenGL to talk 2D */
+    glViewport(0,0,m_nDispWidth,m_nDispHeight);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(0,m_nDispWidth,0,m_nDispHeight,-1,1);
+    
+    glClearDepth(1);
+    glDepthFunc(GL_LEQUAL);
+    
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();   
+    
+    /* Enable unicode translation and key repeats */
+    SDL_EnableUNICODE(1);         
+    SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY,SDL_DEFAULT_REPEAT_INTERVAL);
+     
+    /* Output some general info */
+    Log("GL: %s (%s)",glGetString(GL_RENDERER),glGetString(GL_VENDOR));
+    if(glGetString(GL_RENDERER) == NULL || 
+       glGetString(GL_VENDOR) == NULL) {
+      Log("** Warning ** : GL strings NULL!");
+      throw Exception("GL strings are NULL!");
+    }
+    
     /* Windows: check whether we are using the standard GDI OpenGL software driver... If
        so make sure the user is warned */
     #if defined(WIN32) 
@@ -421,61 +421,61 @@ namespace vapp {
         //               "Please make sure OpenGL is configured properly.";
       }
     #endif
-	  
-	  /* Init OpenGL extensions */
-	  if(m_bDontUseGLExtensions) {
-	    m_bVBOSupported = false;
-	    m_bFBOSupported = false;
-	    m_bShadersSupported = false;
-	  }
-	  else {
-	    m_bVBOSupported = isExtensionSupported("GL_ARB_vertex_buffer_object");
-	    m_bFBOSupported = isExtensionSupported("GL_EXT_framebuffer_object");
-	    
-	    m_bShadersSupported = isExtensionSupported("GL_ARB_fragment_shader") &&
-	                          isExtensionSupported("GL_ARB_vertex_shader") &&
-	                          isExtensionSupported("GL_ARB_shader_objects");
-	  }
-	  
-	  if(m_bVBOSupported) {
-		  glGenBuffersARB=(PFNGLGENBUFFERSARBPROC)SDL_GL_GetProcAddress("glGenBuffersARB");
-		  glBindBufferARB=(PFNGLBINDBUFFERARBPROC)SDL_GL_GetProcAddress("glBindBufferARB");
-		  glBufferDataARB=(PFNGLBUFFERDATAARBPROC)SDL_GL_GetProcAddress("glBufferDataARB");
-		  glDeleteBuffersARB=(PFNGLDELETEBUFFERSARBPROC)SDL_GL_GetProcAddress("glDeleteBuffersARB");	    
+    
+    /* Init OpenGL extensions */
+    if(m_bDontUseGLExtensions) {
+      m_bVBOSupported = false;
+      m_bFBOSupported = false;
+      m_bShadersSupported = false;
+    }
+    else {
+      m_bVBOSupported = isExtensionSupported("GL_ARB_vertex_buffer_object");
+      m_bFBOSupported = isExtensionSupported("GL_EXT_framebuffer_object");
+      
+      m_bShadersSupported = isExtensionSupported("GL_ARB_fragment_shader") &&
+                            isExtensionSupported("GL_ARB_vertex_shader") &&
+                            isExtensionSupported("GL_ARB_shader_objects");
+    }
+    
+    if(m_bVBOSupported) {
+      glGenBuffersARB=(PFNGLGENBUFFERSARBPROC)SDL_GL_GetProcAddress("glGenBuffersARB");
+      glBindBufferARB=(PFNGLBINDBUFFERARBPROC)SDL_GL_GetProcAddress("glBindBufferARB");
+      glBufferDataARB=(PFNGLBUFFERDATAARBPROC)SDL_GL_GetProcAddress("glBufferDataARB");
+      glDeleteBuffersARB=(PFNGLDELETEBUFFERSARBPROC)SDL_GL_GetProcAddress("glDeleteBuffersARB");      
 
-	    glEnableClientState( GL_VERTEX_ARRAY );		
-	    glEnableClientState( GL_TEXTURE_COORD_ARRAY );
-		  	  
-	    Log("GL: using ARB_vertex_buffer_object");	  
-	  }
-	  else
-	    Log("GL: not using ARB_vertex_buffer_object");	  
-	    
-	  if(m_bFBOSupported) {
-		  glIsRenderbufferEXT = (PFNGLISRENDERBUFFEREXTPROC)SDL_GL_GetProcAddress("glIsRenderbufferEXT");
-		  glBindRenderbufferEXT = (PFNGLBINDRENDERBUFFEREXTPROC)SDL_GL_GetProcAddress("glBindRenderbufferEXT");
-		  glDeleteRenderbuffersEXT = (PFNGLDELETERENDERBUFFERSEXTPROC)SDL_GL_GetProcAddress("glDeleteRenderbuffersEXT");
-		  glGenRenderbuffersEXT = (PFNGLGENRENDERBUFFERSEXTPROC)SDL_GL_GetProcAddress("glGenRenderbuffersEXT");
-		  glRenderbufferStorageEXT = (PFNGLRENDERBUFFERSTORAGEEXTPROC)SDL_GL_GetProcAddress("glRenderbufferStorageEXT");
-		  glGetRenderbufferParameterivEXT = (PFNGLGETRENDERBUFFERPARAMETERIVEXTPROC)SDL_GL_GetProcAddress("glGetRenderbufferParameterivEXT");
-		  glIsFramebufferEXT = (PFNGLISFRAMEBUFFEREXTPROC)SDL_GL_GetProcAddress("glIsFramebufferEXT");
-		  glBindFramebufferEXT = (PFNGLBINDFRAMEBUFFEREXTPROC)SDL_GL_GetProcAddress("glBindFramebufferEXT");
-		  glDeleteFramebuffersEXT = (PFNGLDELETEFRAMEBUFFERSEXTPROC)SDL_GL_GetProcAddress("glDeleteFramebuffersEXT");
-		  glGenFramebuffersEXT = (PFNGLGENFRAMEBUFFERSEXTPROC)SDL_GL_GetProcAddress("glGenFramebuffersEXT");
-		  glCheckFramebufferStatusEXT = (PFNGLCHECKFRAMEBUFFERSTATUSEXTPROC)SDL_GL_GetProcAddress("glCheckFramebufferStatusEXT");
-		  glFramebufferTexture1DEXT = (PFNGLFRAMEBUFFERTEXTURE1DEXTPROC)SDL_GL_GetProcAddress("glFramebufferTexture1DEXT");
-		  glFramebufferTexture2DEXT = (PFNGLFRAMEBUFFERTEXTURE2DEXTPROC)SDL_GL_GetProcAddress("glFramebufferTexture2DEXT");
-		  glFramebufferTexture3DEXT = (PFNGLFRAMEBUFFERTEXTURE3DEXTPROC)SDL_GL_GetProcAddress("glFramebufferTexture3DEXT");
-		  glFramebufferRenderbufferEXT = (PFNGLFRAMEBUFFERRENDERBUFFEREXTPROC)SDL_GL_GetProcAddress("glFramebufferRenderbufferEXT");
-		  glGetFramebufferAttachmentParameterivEXT = (PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVEXTPROC)SDL_GL_GetProcAddress("glGetFramebufferAttachmentParameterivEXT");
-		  glGenerateMipmapEXT = (PFNGLGENERATEMIPMAPEXTPROC)SDL_GL_GetProcAddress("glGenerateMipmapEXT");
-	    	  
-	    Log("GL: using EXT_framebuffer_object");
-	  }
-	  else
-	    Log("GL: not using EXT_framebuffer_object");
-	    
-	  if(m_bShadersSupported) {
+      glEnableClientState( GL_VERTEX_ARRAY );   
+      glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+          
+      Log("GL: using ARB_vertex_buffer_object");    
+    }
+    else
+      Log("GL: not using ARB_vertex_buffer_object");    
+      
+    if(m_bFBOSupported) {
+      glIsRenderbufferEXT = (PFNGLISRENDERBUFFEREXTPROC)SDL_GL_GetProcAddress("glIsRenderbufferEXT");
+      glBindRenderbufferEXT = (PFNGLBINDRENDERBUFFEREXTPROC)SDL_GL_GetProcAddress("glBindRenderbufferEXT");
+      glDeleteRenderbuffersEXT = (PFNGLDELETERENDERBUFFERSEXTPROC)SDL_GL_GetProcAddress("glDeleteRenderbuffersEXT");
+      glGenRenderbuffersEXT = (PFNGLGENRENDERBUFFERSEXTPROC)SDL_GL_GetProcAddress("glGenRenderbuffersEXT");
+      glRenderbufferStorageEXT = (PFNGLRENDERBUFFERSTORAGEEXTPROC)SDL_GL_GetProcAddress("glRenderbufferStorageEXT");
+      glGetRenderbufferParameterivEXT = (PFNGLGETRENDERBUFFERPARAMETERIVEXTPROC)SDL_GL_GetProcAddress("glGetRenderbufferParameterivEXT");
+      glIsFramebufferEXT = (PFNGLISFRAMEBUFFEREXTPROC)SDL_GL_GetProcAddress("glIsFramebufferEXT");
+      glBindFramebufferEXT = (PFNGLBINDFRAMEBUFFEREXTPROC)SDL_GL_GetProcAddress("glBindFramebufferEXT");
+      glDeleteFramebuffersEXT = (PFNGLDELETEFRAMEBUFFERSEXTPROC)SDL_GL_GetProcAddress("glDeleteFramebuffersEXT");
+      glGenFramebuffersEXT = (PFNGLGENFRAMEBUFFERSEXTPROC)SDL_GL_GetProcAddress("glGenFramebuffersEXT");
+      glCheckFramebufferStatusEXT = (PFNGLCHECKFRAMEBUFFERSTATUSEXTPROC)SDL_GL_GetProcAddress("glCheckFramebufferStatusEXT");
+      glFramebufferTexture1DEXT = (PFNGLFRAMEBUFFERTEXTURE1DEXTPROC)SDL_GL_GetProcAddress("glFramebufferTexture1DEXT");
+      glFramebufferTexture2DEXT = (PFNGLFRAMEBUFFERTEXTURE2DEXTPROC)SDL_GL_GetProcAddress("glFramebufferTexture2DEXT");
+      glFramebufferTexture3DEXT = (PFNGLFRAMEBUFFERTEXTURE3DEXTPROC)SDL_GL_GetProcAddress("glFramebufferTexture3DEXT");
+      glFramebufferRenderbufferEXT = (PFNGLFRAMEBUFFERRENDERBUFFEREXTPROC)SDL_GL_GetProcAddress("glFramebufferRenderbufferEXT");
+      glGetFramebufferAttachmentParameterivEXT = (PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVEXTPROC)SDL_GL_GetProcAddress("glGetFramebufferAttachmentParameterivEXT");
+      glGenerateMipmapEXT = (PFNGLGENERATEMIPMAPEXTPROC)SDL_GL_GetProcAddress("glGenerateMipmapEXT");
+          
+      Log("GL: using EXT_framebuffer_object");
+    }
+    else
+      Log("GL: not using EXT_framebuffer_object");
+      
+    if(m_bShadersSupported) {
       glBindAttribLocationARB = (PFNGLBINDATTRIBLOCATIONARBPROC)SDL_GL_GetProcAddress("glBindAttribLocationARB");
       glGetActiveAttribARB = (PFNGLGETACTIVEATTRIBARBPROC)SDL_GL_GetProcAddress("glGetActiveAttribARB");
       glGetAttribLocationARB = (PFNGLGETATTRIBLOCATIONARBPROC)SDL_GL_GetProcAddress("glGetAttribLocationARB");
@@ -518,21 +518,21 @@ namespace vapp {
       glGetUniformfvARB = (PFNGLGETUNIFORMFVARBPROC)SDL_GL_GetProcAddress("glGetUniformfvARB");
       glGetUniformivARB = (PFNGLGETUNIFORMIVARBPROC)SDL_GL_GetProcAddress("glGetUniformivARB");
       glGetShaderSourceARB = (PFNGLGETSHADERSOURCEARBPROC)SDL_GL_GetProcAddress("glGetShaderSourceARB");    
-	  	  
-	    Log("GL: using ARB_fragment_shader/ARB_vertex_shader/ARB_shader_objects");
-	  }
-	  else
-	    Log("GL: not using ARB_fragment_shader/ARB_vertex_shader/ARB_shader_objects");
-	  
-	  /* Set background color to black */
-	  glClearColor(0.0f,0.0f,0.0f,0.0f);
-	  glClear(GL_COLOR_BUFFER_BIT);
-	  SDL_GL_SwapBuffers();	 
+        
+      Log("GL: using ARB_fragment_shader/ARB_vertex_shader/ARB_shader_objects");
+    }
+    else
+      Log("GL: not using ARB_fragment_shader/ARB_vertex_shader/ARB_shader_objects");
+    
+    /* Set background color to black */
+    glClearColor(0.0f,0.0f,0.0f,0.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    SDL_GL_SwapBuffers();  
 
     /* Init drawing library */
     initLib(&m_theme);
 
- 	      
+        
   }
 
   /*===========================================================================
@@ -587,30 +587,30 @@ namespace vapp {
       //Log("Available Modes :");
 
       for(i=0; sdl_modes[i]; i++){
-	char tmp[128];
+  char tmp[128];
 
-	/* Menus don't fit under 800x600 */
-	if(sdl_modes[i]->w < 800 || sdl_modes[i]->h < 600)
-	  continue;
+  /* Menus don't fit under 800x600 */
+  if(sdl_modes[i]->w < 800 || sdl_modes[i]->h < 600)
+    continue;
 
-	snprintf(tmp, 126, "%d X %d",
-		sdl_modes[i]->w,
-		sdl_modes[i]->h);
-	tmp[127] = '\0';
+  snprintf(tmp, 126, "%d X %d",
+    sdl_modes[i]->w,
+    sdl_modes[i]->h);
+  tmp[127] = '\0';
 
-	/* Only single */
-	bool findDouble = false;
-	//Log("size: %d", modes->size());
-	for(unsigned int j=0; j<modes->size(); j++)
-	  if(!strcmp(tmp, (*modes)[j].c_str())){
-	    findDouble = true;
-	    break;
-	  }
+  /* Only single */
+  bool findDouble = false;
+  //Log("size: %d", modes->size());
+  for(unsigned int j=0; j<modes->size(); j++)
+    if(!strcmp(tmp, (*modes)[j].c_str())){
+      findDouble = true;
+      break;
+    }
 
-	if(!findDouble){
-	  modes->push_back(tmp);
-	  //Log("  %s", tmp);
-	}
+  if(!findDouble){
+    modes->push_back(tmp);
+    //Log("  %s", tmp);
+  }
       }
     }
 
@@ -692,13 +692,13 @@ namespace vapp {
 
     /* Read the pixels (reversed) */
     for(int i=0;i<m_nDispHeight;i++) {          
-	    glReadPixels(0,i,m_nDispWidth,1,GL_RGB,GL_UNSIGNED_BYTE,pcTemp);
-	    for(int j=0;j<m_nDispWidth;j++) {
-	      pPixels[(m_nDispHeight - i - 1)*m_nDispWidth + j] = MAKE_COLOR(
-	        pcTemp[j*3],pcTemp[j*3+1],pcTemp[j*3+2],255
-	      );
-	    }
-    }		        
+      glReadPixels(0,i,m_nDispWidth,1,GL_RGB,GL_UNSIGNED_BYTE,pcTemp);
+      for(int j=0;j<m_nDispWidth;j++) {
+        pPixels[(m_nDispHeight - i - 1)*m_nDispWidth + j] = MAKE_COLOR(
+          pcTemp[j*3],pcTemp[j*3+1],pcTemp[j*3+2],255
+        );
+      }
+    }           
     
     delete [] pcTemp;
     return pImg;            

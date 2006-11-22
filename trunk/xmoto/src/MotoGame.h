@@ -24,32 +24,20 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #define MOTOGAME_DEFAULT_GAME_MESSAGE_DURATION 5.0
 
-namespace vapp {
-  /*===========================================================================
-    Entity object types
-    ===========================================================================*/
-  enum EntityType {
-    ET_UNASSIGNED,
-    ET_SPRITE,
-    ET_PLAYERSTART,
-    ET_ENDOFLEVEL,
-    ET_WRECKER,
-    ET_STRAWBERRY,
-    ET_PARTICLESOURCE,
-    ET_DUMMY
-  };
-}
-
 #include "VCommon.h"
 #include "VApp.h"
-#include "VMath.h"
-#include "LevelSrc.h"
+#include "helpers/VMath.h"
+#include "xmscene/Level.h"
 #include "BSP.h"
 #include "DBuffer.h"
 #include "Collision.h"
 #include "ScriptDynamicObjects.h"
 #include "SomersaultCounter.h"
 #include "GameEvents.h"
+
+#include "xmscene/BasicSceneStructs.h"
+
+class Level;
 
 namespace vapp {
 
@@ -63,14 +51,6 @@ namespace vapp {
   
   /* This is the magic depth factor :)  - tweak to obtain max. stability */
   #define DEPTH_FACTOR    2
-
-  /*===========================================================================
-  Driving directions
-  ===========================================================================*/
-  enum DriveDir {
-    DD_RIGHT,
-    DD_LEFT
-  };
 
   /*===========================================================================
   Dummy helper - a point we'd like to track graphically
@@ -91,57 +71,6 @@ namespace vapp {
     /* Debug-enabled controls */
     bool bDebugDriveBack; 
     bool bDebug1;
-  };
-
-  /*===========================================================================
-  Convex block vertex
-  ===========================================================================*/
-  struct ConvexBlockVertex {
-    Vector2f P;                                   /* Position of vertex */
-    Vector2f T;                                   /* Texture vertex */
-  };
-
-  /*===========================================================================
-  Convex block
-  ===========================================================================*/
-  struct ConvexBlock {
-    ConvexBlock() {
-      pSrcBlock = NULL;
-    }
-  
-    std::vector<ConvexBlockVertex *> Vertices;    /* Vertices */
-    LevelBlock *pSrcBlock;                        /* Source block */
-  };
-
-  /*===========================================================================
-  Dynamic block
-  ===========================================================================*/
-  struct DynamicBlock {
-    DynamicBlock() {
-      pSrcBlock = NULL;
-      fRotation = 0.0f;
-    }
-    
-    std::vector<ConvexBlock *> ConvexBlocks;      /* Polygons */
-    LevelBlock *pSrcBlock;                        /* Source block */
-    float fRotation;                              /* Block rotation */    
-    Vector2f Position;                            /* Block position */
-    bool bBackground;                             /* Background block */
-    
-    std::vector<Line *> CollisionLines;           /* Line to collide against */
-  };
-
-  /*===========================================================================
-  Overlay edge (grass, effects, etc)
-  ===========================================================================*/
-  struct OverlayEdge {
-    OverlayEdge() {
-      pSrcBlock = NULL;
-    }
-  
-    Vector2f P1,P2;                               /* Point-to-point */
-    std::string Effect;                            /* What? */
-    LevelBlock *pSrcBlock;                        /* Source block */
   };
 
   /*===========================================================================
@@ -313,46 +242,6 @@ namespace vapp {
     Vector2f ArrowPointerPos;
     float fArrowPointerAngle;
   };
-  
-  /*===========================================================================
-  Entity object
-  ===========================================================================*/
-  struct Entity {
-    Entity() {
-      Type = ET_UNASSIGNED;
-      pSrc = NULL;
-      fSize = 1.0f;
-      fSpriteZ = 1;
-      fNextParticleTime = 0;
-      bTouched = false;
-    }
-  
-    std::string ID;
-    EntityType Type;
-    LevelEntity *pSrc;
-    bool bTouched;
-    
-    float fSize;                      /* Size */
-    Vector2f Pos;                     /* Position */    
-    
-    /* ET_SPRITE */
-    float fSpriteZ;
-    std::string SpriteType;
-    
-    /* ET_PLAYERSTART */
-    
-    /* ET_ENDOFLEVEL */
-    
-    /* ET_WRECKER */
-    
-    /* ET_STRAWBERRY */
-    
-    /* ET_PARTICLESOURCE */
-    std::string ParticleType;
-    float fNextParticleTime;
-    
-    /* ET_DUMMY */
-  };
 
   /*===========================================================================
   Requested player state
@@ -390,31 +279,28 @@ namespace vapp {
     /* update of the structure */
     void prePlayLevel(
 #if defined(ALLOW_GHOST)    
-		      Replay *m_pGhostReplay,
+          Replay *m_pGhostReplay,
 #endif
-		      LevelSrc *pLevelSrc,
-		      Replay *recordingReplay,
-		      bool bIsAReplay);
+          Level *pLevelSrc,
+          Replay *recordingReplay,
+          bool bIsAReplay);
 
     void playLevel(
 #if defined(ALLOW_GHOST)    
-		   Replay *m_pGhostReplay,
+       Replay *m_pGhostReplay,
 #endif
-		   LevelSrc *pLevelSrc, bool bIsAReplay);
+       Level *pLevelSrc, bool bIsAReplay);
     void updateLevel(float fTimeStep,SerializedBikeState *pReplayState,Replay *p_replay);
     void endLevel(void);
 
     /* entities */
     void touchEntity(Entity *pEntity, bool bHead); 
     void deleteEntity(Entity *pEntity);
-    int countEntitiesByType(EntityType Type);
-    Entity *findEntity(const std::string &ID);
-    Entity *getEntityByID(const std::string &ID);      
 
     /* messages */
     void gameMessage(std::string Text,
-		     bool bOnce = false,
-		     float fDuration = MOTOGAME_DEFAULT_GAME_MESSAGE_DURATION);
+         bool bOnce = false,
+         float fDuration = MOTOGAME_DEFAULT_GAME_MESSAGE_DURATION);
     void clearGameMessages();
     void updateGameMessages();
     std::vector<GameMessage *> &getGameMessage(void) {return m_GameMessages;}
@@ -453,8 +339,7 @@ namespace vapp {
     bool isInitOK(void) {return m_bLevelInitSuccess;}
     bool isFinished(void) {return m_bFinished;}
     bool isDead(void) {return m_bDead;}
-    LevelSrc *getLevelSrc(void) {return m_pLevelSrc;}
-    std::vector<ConvexBlock *> &getBlocks(void) {return m_Blocks;}
+    Level *getLevelSrc(void) {return m_pLevelSrc;}
     BikeState *getBikeState(void) {return &m_BikeS;}
     BikeParams *getBikeParams() { return &m_BikeP;}
     bool isSqueeking(void) {return m_bSqueeking;}
@@ -470,9 +355,6 @@ namespace vapp {
 #endif
 
       BikeController *getBikeController(void) {return &m_BikeC;}
-      std::vector<Entity *> &getEntities(void) {return m_Entities;}
-      std::vector<DynamicBlock *> &getDynBlocks(void) {return m_DynBlocks;}
-      std::vector<OverlayEdge *> &getOverlayEdges(void) {return m_OvEdges;}
       float getTime(void) {return m_fTime;}
       void setTime(float f) {m_fTime=f;}
       float getFinishTime(void) {return m_fFinishTime;}
@@ -505,23 +387,20 @@ namespace vapp {
       void SetBlockPos(String pBlockID, float pX, float pY);
       void SetBlockCenter(String pBlockID, float pX, float pY);
       void SetBlockRotation(String pBlockID, float pAngle);
-      DynamicBlock *GetDynamicBlockByID(const std::string &ID);
 
       void setRenderer(GameRenderer *p_renderer);
       void CameraZoom(float pZoom);
       void CameraMove(float p_x, float p_y);
 
       void killPlayer();
-      void playerEntersZone(LevelZone *pZone);
-      void playerLeavesZone(LevelZone *pZone);
+      void playerEntersZone(Zone *pZone);
+      void playerLeavesZone(Zone *pZone);
       void playerTouchesEntity(std::string p_entityID, bool p_bTouchedWithHead);
-      void entityDestroyed(std::string p_entityID, EntityType p_type,
-			   float p_fSize, float p_fPosX, float p_fPosY);
+      void entityDestroyed(const std::string& i_entityId);
       void addDynamicObject(SDynamicObject* p_obj);
       void removeSDynamicOfObject(std::string pObject);
       void addPenalityTime(float fTime);
 
-      void revertEntityDestroyed(std::string p_entityID);
       void createKillEntityEvent(std::string p_entityID);
 
       unsigned int getNbRemainingStrawberries();
@@ -529,6 +408,11 @@ namespace vapp {
 
       void setBodyDetach(bool state);
       void stopBikeControls();
+
+      bool isTouching(const Entity& i_entity) const;
+      void setTouching(Entity& i_entity, bool i_touching);     
+      bool isTouching(const Zone& i_zone) const;
+      void setTouching(Zone& i_zone, bool i_isTouching);
 
   private:         
       /* Data */
@@ -553,18 +437,14 @@ namespace vapp {
       
       CollisionSystem m_Collision;        /* Collision system */
             
-      LevelSrc *m_pLevelSrc;              /* Source of level */            
+      Level *m_pLevelSrc;              /* Source of level */            
       lua_State *m_pL;                    /* Lua state associated with the
                                              level */
-      std::vector<ConvexBlock *> m_Blocks;/* Blocks */
-      std::vector<Entity *> m_Entities;   /* Entities */
       std::vector<Entity *> m_DestroyedEntities; /* destroyed entities */
       dWorldID m_WorldID;                 /* World ID */
       
-      std::vector<OverlayEdge *> m_OvEdges;/* Overlay edges */
       std::vector<Entity *> m_DelSchedule;/* Entities scheduled for deletion */
       std::vector<GameMessage *> m_GameMessages;
-      std::vector<DynamicBlock *> m_DynBlocks; /* Dynamic blocks */
       
       BikeParams m_BikeP;                 /* Bike physics */      
       BikeAnchors m_BikeA;                /* Important bike anchor points */
@@ -661,26 +541,27 @@ namespace vapp {
       float m_lastCallToEveryHundreath;
             
       bool m_isScriptActiv; /* change this variable to activ/desactiv scripting */
+      
+      std::vector<Entity *> m_entitiesTouching;
+      std::vector<Zone *>   m_zonesTouching;
 
       void clearStates();
 
       /* Helpers */
       void _GenerateLevel(void);          /* Called by playLevel() to 
                                              prepare the level */
-      ConvexBlock *_CreateBlock(BSPPoly *pPoly,LevelBlock *pSrcBlock);
       void _CalculateBikeAnchors(void);
       int _IntersectWheelLevel(Vector2f Cp,float Cr,dContact *pContacts);
       int _IntersectWheelLine(Vector2f Cp,float Cr,int nNumContacts,dContact *pContacts,Vector2f A0,Vector2f A1);
       bool _IntersectHeadLevel(Vector2f Cp,float Cr,const Vector2f &LastCp);
       bool _IntersectHeadLine(Vector2f Cp,float Cr,Vector2f A0,Vector2f A1);
-      bool _DoCircleTouchZone(const Vector2f &Cp,float Cr,LevelZone *pZone);
+      bool _DoCircleTouchZone(const Vector2f &Cp,float Cr,Zone *pZone);
       bool _IntersectPointLevel(Vector2f Cp);
-      void _UpdateZones(void);
-      Entity *_SpawnEntity(std::string ID,EntityType Type,Vector2f Pos,LevelEntity *pSrc);
+      Entity *_SpawnEntity(std::string ID,EntityType Type,Vector2f Pos, Entity *pSrc);
       void _KillEntity(Entity *pEnt);
-      void CleanEntities(); /* clean memories of entities */
       EntityType _TransEntityType(std::string Name);
       void _UpdateEntities(void);
+      void _UpdateZones(void);
       bool touchEntityBodyExceptHead(const BikeState &pBike, const Entity &p_entity);
       void _UpdateGameState(SerializedBikeState *pReplayState);
       /* static */ void _UpdateStateFromReplay(SerializedBikeState *pReplayState,BikeState *pBikeS);

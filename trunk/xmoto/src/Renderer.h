@@ -50,49 +50,6 @@ namespace vapp {
   };
 
   /*===========================================================================
-  Particle type
-  ===========================================================================*/
-  enum ParticleType {
-    PT_NONE,
-    PT_SMOKE1,
-    PT_SMOKE2,
-    PT_FIRE,
-    PT_DEBRIS,
-    PT_STAR
-  };
-  
-  /*===========================================================================
-  Particle
-  ===========================================================================*/
-  struct Particle {
-    Particle() {
-      Type = PT_NONE;
-      bFront = true;
-    }
-    
-    /* General */
-    bool bFront;
-    ParticleType Type;
-    Vector2f Pos,Vel,Acc;       /* Position, velocity, and acceleration */
-    float fAng,fAngVel,fAngAcc; /* Angular version of the above */
-    float fSpawnTime;
-    float fKillTime;
-    
-    /* PT_SMOKE1 / PT_SMOKE2 */
-    float fSmokeSize;
-    Color SmokeColor;
-    
-    /* PT_FIRE */
-    float fFireSize;
-    Color FireColor;
-    float fFireSeed;
-    
-    /* PT_DEBRIS */
-    Color DebrisTint;
-    float fDebrisSize;
-  };
-
-  /*===========================================================================
   Static geometry
   ===========================================================================*/
   struct StaticGeomCoord {
@@ -195,9 +152,6 @@ namespace vapp {
       void unprepareForNewLevel(void);
       void loadDebugInfo(std::string File);
       
-      void clearAllParticles(void);      
-      Particle *spawnParticle(ParticleType Type,Vector2f Pos,Vector2f Vel,float fLifeTime);
-    
       /* Data interface */
       void setGameObject(MotoGame *pMotoGame) {m_pMotoGame=pMotoGame;}
       MotoGame *getGameObject(void) {return m_pMotoGame;}
@@ -231,7 +185,6 @@ namespace vapp {
       void initCamera();
       void initCameraPosition();
       void setGhostMotionBlur(bool b) {m_bGhostMotionBlur = b;}
-      void skipBackTime(float fTime) {m_fNextParticleUpdate -= fTime;}
       
 #if defined(ALLOW_GHOST)
       void setGhostReplay(Replay *pReplay) {m_pGhostReplay = pReplay;}
@@ -310,10 +263,6 @@ namespace vapp {
       /* FBO overlay */
       SFXOverlay m_Overlay;
             
-      /* Particle fun */
-      float m_fNextParticleUpdate;
-      std::vector<Particle *> m_Particles;
-      
       /* Subroutines */
       void _RenderSprites(bool bForeground,bool bBackground);
       void _RenderSprite(Entity *pSprite);
@@ -325,7 +274,8 @@ namespace vapp {
       void _RenderGameMessages(void); 
       void _RenderGameStatus(void);
       void _RenderParticles(bool bFront=true);
-      void _RenderParticle(Vector2f P,Texture *pTexture,float fSize,float fAngle,Color c);
+      void _RenderParticleDraw(Vector2f P,Texture *pTexture,float fSize,float fAngle, TColor c);
+      void _RenderParticle(ParticlesSource *i_source);
       void _RenderInGameText(Vector2f P,const std::string &Text,Color c = 0xffffffff);
       void setScroll(bool isSmooth);
 
@@ -333,8 +283,6 @@ namespace vapp {
       void _Vertex(Vector2f P);     /* Spit out a correctly transformed 
                                        glVertex2f() */
       void _DbgText(Vector2f P,std::string Text,Color c);
-      void _UpdateParticles(float fTimeStep);
-      Particle *_GetNewestParticle(ParticleType PType);
       void _DrawRotatedMarker(Vector2f Pos,dReal *pfRot);     
       void _RenderDebugInfo(void);      
       void guessDesiredCameraPosition(float &p_fDesiredHorizontalScrollShift,

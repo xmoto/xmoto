@@ -425,15 +425,11 @@ namespace vapp {
     
     /* New wheel-spin particles? */
     if(getGameObject()->isWheelSpinning()) {
-      Particle *pPrevDebris = _GetNewestParticle(PT_DEBRIS);
-      
-      /* Limit particles to one every 0.01 seconds */
-      if(pPrevDebris==NULL || getGameObject()->getTime() - pPrevDebris->fSpawnTime > 0.01f) {      
-        if(randomNum(0,1) < 0.8f) {
-          Particle *pNewParticle = spawnParticle(PT_DEBRIS,getGameObject()->getWheelSpinPoint(),
-                                                getGameObject()->getWheelSpinDir(),4);
-          pNewParticle->bFront = false;                                              
-        }                                             
+      if(randomNum(0,1) < 0.7f) {
+	ParticlesSource *v_debris;
+	v_debris = (ParticlesSource*) &(getGameObject()->getLevelSrc()->getEntityById("BikeDebris"));
+	v_debris->setDynamicPosition(getGameObject()->getWheelSpinPoint());	
+	v_debris->addParticle(getGameObject()->getWheelSpinDir(), m_pMotoGame->getTime() + 3.0);
       }
     }
   }

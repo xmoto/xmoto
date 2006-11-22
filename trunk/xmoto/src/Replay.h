@@ -70,7 +70,7 @@ namespace vapp {
 
       /* you must free the list after this call */
       std::vector<ReplayInfo *>* findReplays(const std::string &PlayerName = "",
-					     const std::string &LevelID = "");
+               const std::string &LevelID = "");
 
     private:
       /* Data */
@@ -141,7 +141,7 @@ namespace vapp {
       int m_nInputEventsDataSize;
 
       float m_speed_factor; /* nb frame to increment each time ;
-			       is a float so that manage slow */
+             is a float so that manage slow */
       bool  m_is_paused;
  
       /* Helpers */

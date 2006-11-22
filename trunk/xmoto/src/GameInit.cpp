@@ -283,7 +283,7 @@ namespace vapp {
       m_pCursor = NULL;
       pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "Cursor");
       if(pSprite != NULL) {
-	      m_pCursor = pSprite->getTexture(false, true, FM_LINEAR);
+        m_pCursor = pSprite->getTexture(false, true, FM_LINEAR);
       }
 
 #if defined(SUPPORT_WEBACCESS)  
@@ -325,7 +325,7 @@ namespace vapp {
     /* -listlevels? */
     if(m_bListLevels) {
       for(int i=0;i<m_nNumLevels;i++) {          
-        printf("%-25s %-25s %-25s\n",FS::getFileBaseName(m_Levels[i].getFileName()).c_str(),m_Levels[i].getID().c_str(),m_Levels[i].getLevelInfo()->Name.c_str());
+        printf("%-25s %-25s %-25s\n",FS::getFileBaseName(m_Levels[i].FileName()).c_str(),m_Levels[i].Id().c_str(),m_Levels[i].Name().c_str());
       }
     }
     _UpdateLoadingScreen((1.0f/9.0f) * 5,pLoadingScreen,GAMETEXT_INITRENDERER);
@@ -440,15 +440,15 @@ namespace vapp {
       try {
         // Load the level
         m_Levels[j].setFileName( LvlFiles[i] );
-        bCached = m_Levels[j].load(m_bEnableLevelCache);
+        bCached = m_Levels[j].loadFromFile(m_bEnableLevelCache);
         
         // Check for ID conflict
         for(int k=0;k<m_nNumLevels;k++) {
-          if(m_Levels[k].getID() == m_Levels[j].getID()) {
+          if(m_Levels[k].Id() == m_Levels[j].Id()) {
             /* Conflict! */
-            Log("** Warning ** : More than one level with ID '%s'!",m_Levels[k].getID().c_str());
-            Log("                (%s)",m_Levels[j].getFileName().c_str());
-            Log("                (%s)",m_Levels[k].getFileName().c_str());
+            Log("** Warning ** : More than one level with ID '%s'!",m_Levels[k].Id().c_str());
+            Log("                (%s)",m_Levels[j].FileName().c_str());
+            Log("                (%s)",m_Levels[k].FileName().c_str());
             if(bCached) Log("                (cached)");
             throw Exception("Duplicate level ID");
           }
@@ -546,20 +546,20 @@ namespace vapp {
           m_PlaySpecificLevel = UserArgs[i+1];
           
           /* If it is a plain number, it's for a internal level */
-	  bool v_isANumber =  true;
-	  for(int i=0; i<m_PlaySpecificLevel.length(); i++) {
-	    if(m_PlaySpecificLevel[i] < '0' || m_PlaySpecificLevel[i] > '9') {
-	      v_isANumber = false;
-	    }
-	  }
-	  if(v_isANumber) {
-	    int nNum = atoi(m_PlaySpecificLevel.c_str());
-	    if(nNum > 0) {
-	      char cBuf[256];
-	      sprintf(cBuf,"_iL%02d_",nNum-1);
-	      m_PlaySpecificLevel = cBuf;
-	    }
-	  }
+    bool v_isANumber =  true;
+    for(int i=0; i<m_PlaySpecificLevel.length(); i++) {
+      if(m_PlaySpecificLevel[i] < '0' || m_PlaySpecificLevel[i] > '9') {
+        v_isANumber = false;
+      }
+    }
+    if(v_isANumber) {
+      int nNum = atoi(m_PlaySpecificLevel.c_str());
+      if(nNum > 0) {
+        char cBuf[256];
+        sprintf(cBuf,"_iL%02d_",nNum-1);
+        m_PlaySpecificLevel = cBuf;
+      }
+    }
         }
         else
           throw SyntaxError("no level specified");        

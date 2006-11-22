@@ -19,35 +19,26 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __GUIXMOTO_H__
-#define __GUIXMOTO_H__
+#ifndef __COLOR_H__
+#define __COLOR_H__
 
-#include "GUI.h"
-#include "xmscene/Level.h"
-#include "PlayerData.h"
-#include "WWW.h"
-  
-  class UILevelList : public vapp::UIList {
-    public:
-    UILevelList(UIWindow *pParent,
-		int x = 0,int y = 0,
-		std::string Caption="",
-		int nWidth = 0,int nHeight = 0);
-    ~UILevelList();
-    
-    Level* getSelectedLevel();
-    void addLevel(Level *pLevel,
-		  vapp::PlayerProfile *p_player,
-		  vapp::PlayerData *p_profile,
-#if defined(SUPPORT_WEBACCESS) 
-		  WebRoom *p_pWebHighscores,
-#endif
-		  std::string p_prefix = "");
+class TColor {
+  public:
+  TColor(int i_red = 255, int i_green = 255, int i_blue = 255, int i_alpha = 0);
+  TColor(const TColor& i_color);
+  ~TColor();
 
-    void hideBestTime();
-    void hideRoomBestTime();
-    
-    private:
-  };
+  int Red()   const;
+  int Green() const;
+  int Blue()  const;
+  int Alpha() const;
+  void setRed(int i_red);
+  void setGreen(int i_green);
+  void setBlue(int i_blue);
+  void setAlpha(int i_alpha);
 
-#endif /* __GUIXMOTO_H__ */
+  private:
+  int m_red, m_green, m_blue, m_alpha;
+};
+
+#endif /* __COLOR_H__ */

@@ -22,6 +22,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __MOTOGAMEEVENT_H__
 #define __MOTOGAMEEVENT_H__
 
+#include "xmscene/BasicSceneStructs.h"
+#include "xmscene/Zone.h"
+#include "xmscene/Entity.h"
+
 namespace vapp {
   /*===========================================================================
     Game event types
@@ -70,7 +74,7 @@ class MotoGameEvent {
 
   virtual void doAction(MotoGame *p_pMotoGame)          = 0;
   virtual void serialize(DBuffer &Buffer)               = 0;
-  virtual void unserialize(DBuffer &Buffer)             = 0;
+  virtual void unserialize(DBuffer &Buffer) = 0;
   virtual void revert(MotoGame *p_pMotoGame);
   virtual GameEventType getType()                       = 0;
 
@@ -100,7 +104,7 @@ class MGE_PlayerDies : public MotoGameEvent {
 class MGE_PlayerEntersZone : public MotoGameEvent {
  public:
   MGE_PlayerEntersZone(float p_fEventTime);
-  MGE_PlayerEntersZone(float p_fEventTime, LevelZone *p_zone);
+  MGE_PlayerEntersZone(float p_fEventTime, Zone *p_zone);
   ~MGE_PlayerEntersZone();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -110,13 +114,13 @@ class MGE_PlayerEntersZone : public MotoGameEvent {
   GameEventType getType();
 
  private:
-  LevelZone *m_zone;
+  Zone *m_zone;
 };
 
 class MGE_PlayerLeavesZone : public MotoGameEvent {
  public:
   MGE_PlayerLeavesZone(float p_fEventTime);
-  MGE_PlayerLeavesZone(float p_fEventTime, LevelZone *p_zone);
+  MGE_PlayerLeavesZone(float p_fEventTime, Zone *p_zone);
   ~MGE_PlayerLeavesZone();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -126,7 +130,7 @@ class MGE_PlayerLeavesZone : public MotoGameEvent {
   GameEventType getType();
 
  private:
-  LevelZone *m_zone;
+  Zone *m_zone;
 };
 
 class MGE_PlayerTouchesEntity : public MotoGameEvent {
@@ -149,8 +153,7 @@ class MGE_PlayerTouchesEntity : public MotoGameEvent {
 class MGE_EntityDestroyed : public MotoGameEvent {
  public:
   MGE_EntityDestroyed(float p_fEventTime);
-  MGE_EntityDestroyed(float p_fEventTime, std::string p_entityID, EntityType p_type,
-                      float p_fSize, float p_fPosX, float p_fPosY);
+  MGE_EntityDestroyed(float p_fEventTime, std::string i_entityId, EntityType i_entityType, Vector2f i_entityPosition, float i_entitySize);
   ~MGE_EntityDestroyed();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -160,14 +163,13 @@ class MGE_EntityDestroyed : public MotoGameEvent {
   static GameEventType SgetType();
   GameEventType getType();
 
-  EntityType getEntityType();
+  std::string EntityId();
 
  private:
-  /* Have enough information so that we can recreate the entity */
-  std::string m_entityID;
-  EntityType  m_type;
-  float m_fSize;
-  float m_fPosX, m_fPosY;
+  std::string m_entityId;
+  EntityType  m_entityType;
+  Vector2f    m_entityPosition;
+  float       m_entitySize;
 };
 
 class MGE_ClearMessages : public MotoGameEvent {

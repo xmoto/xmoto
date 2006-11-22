@@ -19,35 +19,53 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __GUIXMOTO_H__
-#define __GUIXMOTO_H__
+#include "Color.h"
 
-#include "GUI.h"
-#include "xmscene/Level.h"
-#include "PlayerData.h"
-#include "WWW.h"
-  
-  class UILevelList : public vapp::UIList {
-    public:
-    UILevelList(UIWindow *pParent,
-		int x = 0,int y = 0,
-		std::string Caption="",
-		int nWidth = 0,int nHeight = 0);
-    ~UILevelList();
-    
-    Level* getSelectedLevel();
-    void addLevel(Level *pLevel,
-		  vapp::PlayerProfile *p_player,
-		  vapp::PlayerData *p_profile,
-#if defined(SUPPORT_WEBACCESS) 
-		  WebRoom *p_pWebHighscores,
-#endif
-		  std::string p_prefix = "");
+TColor::TColor(int i_red, int i_green, int i_blue, int i_alpha) {
+  m_red   = i_red;
+  m_green = i_green;
+  m_blue  = i_blue;
+  m_alpha = i_alpha;
+}
 
-    void hideBestTime();
-    void hideRoomBestTime();
-    
-    private:
-  };
+TColor::~TColor() {
+}
 
-#endif /* __GUIXMOTO_H__ */
+TColor::TColor(const TColor& i_color) {
+  m_red   = i_color.m_red;
+  m_green = i_color.m_green;
+  m_blue  = i_color.m_blue;
+  m_alpha = i_color.m_alpha;
+}
+
+int TColor::Red() const {
+  return m_red;
+}
+
+int TColor::Green() const {
+  return m_green;
+}
+
+int TColor::Blue() const {
+  return m_blue;
+}
+
+int TColor::Alpha() const {
+  return m_alpha;
+}
+
+void TColor::setRed(int i_red) {
+  m_red = i_red;
+}
+
+void TColor::setGreen(int i_green) {
+  m_green = i_green;
+}
+
+void TColor::setBlue(int i_blue) {
+  m_blue = i_blue;
+}
+
+void TColor::setAlpha(int i_alpha) {
+  m_alpha = i_alpha;
+}

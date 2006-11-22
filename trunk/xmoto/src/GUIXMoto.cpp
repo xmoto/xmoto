@@ -25,9 +25,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VApp.h"
 
   UILevelList::UILevelList(UIWindow *pParent,
-			   int x,int y,
-			   std::string Caption,
-			   int nWidth,int nHeight)
+         int x,int y,
+         std::string Caption,
+         int nWidth,int nHeight)
     :UIList(pParent, x, y, Caption, nWidth, nHeight) {
       addColumn(GAMETEXT_LEVEL, getPosition().nWidth - 175);
       addColumn(std::string(GAMETEXT_TIME) + ":",80);  
@@ -39,12 +39,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 UILevelList::~UILevelList() {
 }
  
-vapp::LevelSrc* UILevelList::getSelectedLevel() {
-  vapp::LevelSrc *pLevelSrc = NULL;
+Level* UILevelList::getSelectedLevel() {
+  Level *pLevelSrc = NULL;
   if(!isBranchHidden() && getSelected()>=0) {
     if(!getEntries().empty()) {
       vapp::UIListEntry *pEntry = getEntries()[getSelected()];
-      pLevelSrc = reinterpret_cast<vapp::LevelSrc *>(pEntry->pvUser);        
+      pLevelSrc = reinterpret_cast<Level *>(pEntry->pvUser);        
     }
   }
 
@@ -59,19 +59,19 @@ void UILevelList::hideRoomBestTime() {
   setHideColumn(2);
 }
 
-void UILevelList::addLevel(vapp::LevelSrc *pLevel,
-			   vapp::PlayerProfile *p_player,
-			   vapp::PlayerData *p_profile,
+void UILevelList::addLevel(Level *pLevel,
+         vapp::PlayerProfile *p_player,
+         vapp::PlayerData *p_profile,
 #if defined(SUPPORT_WEBACCESS) 
-			   WebRoom *p_pWebHighscores,
+         WebRoom *p_pWebHighscores,
 #endif
-			   std::string p_prefix) {
+         std::string p_prefix) {
   std::string Name,File;
       
-  if(pLevel->getLevelInfo()->Name != "") Name = pLevel->getLevelInfo()->Name;
+  if(pLevel->Name() != "") Name = pLevel->Name();
   else Name = "???";
 
-  if(pLevel->getFileName() != "") File = vapp::FS::getFileBaseName(pLevel->getFileName());
+  if(pLevel->FileName() != "") File = vapp::FS::getFileBaseName(pLevel->FileName());
   else File = "???";
 
   vapp::UIListEntry *pEntry = NULL;
@@ -81,7 +81,7 @@ void UILevelList::addLevel(vapp::LevelSrc *pLevel,
   
   /* Add times to list entry */
   if(pEntry != NULL) {
-    pTimeEntry = p_profile->getBestPlayerTime(p_player->PlayerName, pLevel->getID());
+    pTimeEntry = p_profile->getBestPlayerTime(p_player->PlayerName, pLevel->Id());
       
     if(pTimeEntry != NULL)
       pEntry->Text.push_back(vapp::App::formatTime(pTimeEntry->fFinishTime));
@@ -90,11 +90,11 @@ void UILevelList::addLevel(vapp::LevelSrc *pLevel,
 
 #if defined(SUPPORT_WEBACCESS)
     if(p_pWebHighscores != NULL) {    
-      WebHighscore *pWH = p_pWebHighscores->getHighscoreFromLevel(pLevel->getID());
+      WebHighscore *pWH = p_pWebHighscores->getHighscoreFromLevel(pLevel->Id());
       if(pWH != NULL)
-	pEntry->Text.push_back(pWH->getTime());
+  pEntry->Text.push_back(pWH->getTime());
       else
-	pEntry->Text.push_back(GAMETEXT_WORLDRECORDNA);
+  pEntry->Text.push_back(GAMETEXT_WORLDRECORDNA);
     }
     else
       pEntry->Text.push_back(GAMETEXT_WORLDRECORDNA);

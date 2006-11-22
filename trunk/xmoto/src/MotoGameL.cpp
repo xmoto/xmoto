@@ -103,18 +103,18 @@ namespace vapp {
   int L_Game_PlaceInGameArrow(lua_State *pL) {
     /* event for this */
     m_pMotoGame->createGameEvent(new MGE_PlaceInGameArrow(m_pMotoGame->getTime(),
-							  X_luaL_check_number(pL,1),
-							  X_luaL_check_number(pL,2),
-							  X_luaL_check_number(pL,3)));
+                X_luaL_check_number(pL,1),
+                X_luaL_check_number(pL,2),
+                X_luaL_check_number(pL,3)));
     return 0;
   }
 
   int L_Game_PlaceScreenArrow(lua_State *pL) {
     /* event for this */
     m_pMotoGame->createGameEvent(new MGE_PlaceScreenarrow(m_pMotoGame->getTime(),
-							  X_luaL_check_number(pL,1),
-							  X_luaL_check_number(pL,2),
-							  X_luaL_check_number(pL,3)));
+                X_luaL_check_number(pL,1),
+                X_luaL_check_number(pL,2),
+                X_luaL_check_number(pL,3)));
     return 0;
   }
 
@@ -146,17 +146,7 @@ namespace vapp {
   
   int L_Game_IsPlayerInZone(lua_State *pL) {
     /* no event for this */
-   
-    int nRet = FALSE;
-  
-    /* Check whether the player is in the specified zone */
-    for(int i=0;i<m_pMotoGame->getLevelSrc()->getZoneList().size();i++) {
-      LevelZone *pZone = m_pMotoGame->getLevelSrc()->getZoneList()[i];
-      if(pZone->ID == luaL_checkstring(pL,1) && pZone->m_bInZone) {
-        nRet = TRUE;
-      }
-    }    
-    lua_pushboolean(pL,nRet);
+    lua_pushboolean(pL, m_pMotoGame->isTouching(m_pMotoGame->getLevelSrc()->getZoneById(luaL_checkstring(pL, 1))) ? 1:0);
     return 1;
   }
   
@@ -164,9 +154,9 @@ namespace vapp {
     /* event for this */
 
     m_pMotoGame->createGameEvent(new MGE_MoveBlock(m_pMotoGame->getTime(),
-						   luaL_checkstring(pL,1),
-						   X_luaL_check_number(pL,2),
-						   X_luaL_check_number(pL,3)));
+               luaL_checkstring(pL,1),
+               X_luaL_check_number(pL,2),
+               X_luaL_check_number(pL,3)));
     return 0;
   }
   
@@ -174,15 +164,9 @@ namespace vapp {
     /* no event for this */
 
     /* Find the specified block and return its position */
-    DynamicBlock *pBlock = m_pMotoGame->GetDynamicBlockByID(luaL_checkstring(pL,1));
-    if(pBlock != NULL) {
-      lua_pushnumber(pL,pBlock->Position.x);
-      lua_pushnumber(pL,pBlock->Position.y);
-      return 2;
-    }
-    /* Block not found, return <0,0> */
-    lua_pushnumber(pL,0);
-    lua_pushnumber(pL,0);
+    Block &pBlock = m_pMotoGame->getLevelSrc()->getBlockById(luaL_checkstring(pL,1));
+    lua_pushnumber(pL,pBlock.DynamicPosition().x);
+    lua_pushnumber(pL,pBlock.DynamicPosition().y);
     return 2;
   }
   
@@ -190,9 +174,9 @@ namespace vapp {
     /* event for this */
 
     m_pMotoGame->createGameEvent(new MGE_SetBlockPos(m_pMotoGame->getTime(),
-						     luaL_checkstring(pL,1),
-						     X_luaL_check_number(pL,2),
-						     X_luaL_check_number(pL,3)));
+                 luaL_checkstring(pL,1),
+                 X_luaL_check_number(pL,2),
+                 X_luaL_check_number(pL,3)));
     return 0;
   }  
 
@@ -200,8 +184,8 @@ namespace vapp {
     /* event for this */
 
     m_pMotoGame->createGameEvent(new MGE_SetGravity(m_pMotoGame->getTime(),
-						    X_luaL_check_number(pL,1),
-						    X_luaL_check_number(pL,2)));
+                X_luaL_check_number(pL,1),
+                X_luaL_check_number(pL,2)));
     return 0;
   }  
 
@@ -218,9 +202,9 @@ namespace vapp {
     /* event for this */
     bool bRight = X_luaL_check_number(pL,3) > 0.0f;
     m_pMotoGame->createGameEvent(new MGE_SetPlayerPosition(m_pMotoGame->getTime(),
-							   X_luaL_check_number(pL,1),
-							   X_luaL_check_number(pL,2),
-							   bRight));
+                 X_luaL_check_number(pL,1),
+                 X_luaL_check_number(pL,2),
+                 bRight));
     return 0;
   }  
   
@@ -238,10 +222,10 @@ namespace vapp {
     /* no event for this */
 
     /* Find the specified entity and return its position */
-    Entity *p = m_pMotoGame->getEntityByID(luaL_checkstring(pL,1));
+    Entity *p = &(m_pMotoGame->getLevelSrc()->getEntityById(luaL_checkstring(pL,1)));
     if(p != NULL) {
-      lua_pushnumber(pL,p->Pos.x);
-      lua_pushnumber(pL,p->Pos.y);
+      lua_pushnumber(pL,p->DynamicPosition().x);
+      lua_pushnumber(pL,p->DynamicPosition().y);
       return 2;
     }
 
@@ -253,34 +237,13 @@ namespace vapp {
   
   int L_Game_GetEntityRadius(lua_State *pL) {
     /* no event for this */
-
-    /* Find the specified entity and return its radius */
-    Entity *p = m_pMotoGame->getEntityByID(luaL_checkstring(pL,1));
-    if(p != NULL) {
-      lua_pushnumber(pL,p->fSize);
-      return 1;
-    }
-
-    /* Entity not found, return 0 */
-    lua_pushnumber(pL,0);
+    lua_pushnumber(pL, m_pMotoGame->getLevelSrc()->getEntityById(luaL_checkstring(pL,1)).Size());
     return 1;
   }
 
   int L_Game_IsEntityTouched(lua_State *pL) {
     /* no event for this */
-
-    /* Find the specified entity and return its touch status */
-    Entity *p = m_pMotoGame->getEntityByID(luaL_checkstring(pL,1));
-    if(p != NULL) {
-      if(p->bTouched)
-        lua_pushnumber(pL,1);
-      else
-        lua_pushnumber(pL,0);
-      return 1;
-    }
-
-    /* Entity not found, assume not touched */
-    lua_pushnumber(pL,0);
+    lua_pushnumber(pL, m_pMotoGame->isTouching(m_pMotoGame->getLevelSrc()->getEntityById(luaL_checkstring(pL,1))) ? 1:0);
     return 1;
   }
 
@@ -288,9 +251,9 @@ namespace vapp {
   int L_Game_SetEntityPos(lua_State *pL) {
     /* event for this */
     m_pMotoGame->createGameEvent(new MGE_SetEntityPos(m_pMotoGame->getTime(),
-						      luaL_checkstring(pL,1),
-						      X_luaL_check_number(pL,2),
-						      X_luaL_check_number(pL,3)));
+                  luaL_checkstring(pL,1),
+                  X_luaL_check_number(pL,2),
+                  X_luaL_check_number(pL,3)));
     return 0;
   }  
   
@@ -316,94 +279,94 @@ namespace vapp {
   int L_Game_SetBlockCenter(lua_State *pL) {
     /* event for this */    
     m_pMotoGame->createGameEvent(new MGE_SetBlockCenter(m_pMotoGame->getTime(),
-							luaL_checkstring(pL,1),
-							X_luaL_check_number(pL,2),
-							X_luaL_check_number(pL,3)));
+              luaL_checkstring(pL,1),
+              X_luaL_check_number(pL,2),
+              X_luaL_check_number(pL,3)));
     return 0;
   }  
     
   int L_Game_SetBlockRotation(lua_State *pL) {
     /* event for this */    
     m_pMotoGame->createGameEvent(new MGE_SetBlockRotation(m_pMotoGame->getTime(),
-							  luaL_checkstring(pL,1),
-							  X_luaL_check_number(pL,2)));
+                luaL_checkstring(pL,1),
+                X_luaL_check_number(pL,2)));
     return 0;
   }  
     
   int L_Game_SetDynamicEntityRotation(lua_State *pL) {
     /* event for this */    
     m_pMotoGame->createGameEvent(new MGE_SetDynamicEntityRotation(m_pMotoGame->getTime(),
-								  luaL_checkstring(pL,1),
-								  X_luaL_check_number(pL,2),
-								  X_luaL_check_number(pL,3),
-								  X_luaL_check_number(pL,4),
-								  X_luaL_check_number(pL,5),
-								  X_luaL_check_number(pL,6))); 
+                  luaL_checkstring(pL,1),
+                  X_luaL_check_number(pL,2),
+                  X_luaL_check_number(pL,3),
+                  X_luaL_check_number(pL,4),
+                  X_luaL_check_number(pL,5),
+                  X_luaL_check_number(pL,6))); 
     return 0;
   }
 
   int L_Game_SetDynamicEntityTranslation(lua_State *pL) {
     /* event for this */    
     m_pMotoGame->createGameEvent(new MGE_SetDynamicEntityTranslation(m_pMotoGame->getTime(),
-								     luaL_checkstring(pL,1),
-								     X_luaL_check_number(pL,2),
-								     X_luaL_check_number(pL,3),
-								     X_luaL_check_number(pL,4),
-								     X_luaL_check_number(pL,5),
-								     X_luaL_check_number(pL,6)));
+                     luaL_checkstring(pL,1),
+                     X_luaL_check_number(pL,2),
+                     X_luaL_check_number(pL,3),
+                     X_luaL_check_number(pL,4),
+                     X_luaL_check_number(pL,5),
+                     X_luaL_check_number(pL,6)));
     return 0;
   }
 
   int L_Game_SetDynamicEntityNone(lua_State *pL) {
     /* event for this */    
     m_pMotoGame->createGameEvent(new MGE_SetDynamicEntityNone(m_pMotoGame->getTime(),
-							      luaL_checkstring(pL,1)));
+                    luaL_checkstring(pL,1)));
     return 0;
   }
 
   int L_Game_SetDynamicBlockRotation(lua_State *pL) {
     /* event for this */
     m_pMotoGame->createGameEvent(new MGE_SetDynamicBlockRotation(m_pMotoGame->getTime(),
-								 luaL_checkstring(pL,1),
-								 X_luaL_check_number(pL,2),
-								 X_luaL_check_number(pL,3),
-								 X_luaL_check_number(pL,4),
-								 X_luaL_check_number(pL,5),
-								 X_luaL_check_number(pL,6))); 
+                 luaL_checkstring(pL,1),
+                 X_luaL_check_number(pL,2),
+                 X_luaL_check_number(pL,3),
+                 X_luaL_check_number(pL,4),
+                 X_luaL_check_number(pL,5),
+                 X_luaL_check_number(pL,6))); 
     return 0;
   }
 
   int L_Game_SetDynamicBlockTranslation(lua_State *pL) {
     /* event for this */    
     m_pMotoGame->createGameEvent(new MGE_SetDynamicBlockTranslation(m_pMotoGame->getTime(),
-								    luaL_checkstring(pL,1),
-								    X_luaL_check_number(pL,2),
-								    X_luaL_check_number(pL,3),
-								    X_luaL_check_number(pL,4),
-								    X_luaL_check_number(pL,5),
-								    X_luaL_check_number(pL,6)));
+                    luaL_checkstring(pL,1),
+                    X_luaL_check_number(pL,2),
+                    X_luaL_check_number(pL,3),
+                    X_luaL_check_number(pL,4),
+                    X_luaL_check_number(pL,5),
+                    X_luaL_check_number(pL,6)));
     return 0;
   }
 
   int L_Game_SetDynamicBlockNone(lua_State *pL) {
     /* event for this */    
     m_pMotoGame->createGameEvent(new MGE_SetDynamicBlockNone(m_pMotoGame->getTime(),
-							     luaL_checkstring(pL,1)));
+                   luaL_checkstring(pL,1)));
     return 0;
   }
 
   int L_Game_CameraZoom(lua_State *pL) {
     /* event for this */
     m_pMotoGame->createGameEvent(new MGE_CameraZoom(m_pMotoGame->getTime(),
-						    X_luaL_check_number(pL,1)));
+                X_luaL_check_number(pL,1)));
     return 0;
   }
 
   int L_Game_CameraMove(lua_State *pL) {
     /* event for this */
     m_pMotoGame->createGameEvent(new MGE_CameraMove(m_pMotoGame->getTime(),
-						    X_luaL_check_number(pL,1),
-						    X_luaL_check_number(pL,2)));
+                X_luaL_check_number(pL,1),
+                X_luaL_check_number(pL,2)));
     return 0;
   }
 
@@ -431,7 +394,7 @@ namespace vapp {
   int L_Game_PenaltyTime(lua_State *pL) {
     /* event for this */
     m_pMotoGame->createGameEvent(new MGE_PenalityTime(m_pMotoGame->getTime(),
-						      X_luaL_check_number(pL,1)));
+                  X_luaL_check_number(pL,1)));
     return 0;
   }
 }

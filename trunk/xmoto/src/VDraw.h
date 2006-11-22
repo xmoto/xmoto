@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "VCommon.h"
 
-#include "VMath.h"
+#include "helpers/VMath.h"
 #include "VTexture.h"
 #include "Theme.h"
 

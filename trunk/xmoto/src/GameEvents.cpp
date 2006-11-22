@@ -153,7 +153,7 @@ namespace vapp {
       m_zone = NULL;
     }
 
-  MGE_PlayerEntersZone::MGE_PlayerEntersZone(float p_fEventTime, LevelZone *p_zone) 
+  MGE_PlayerEntersZone::MGE_PlayerEntersZone(float p_fEventTime, Zone *p_zone) 
     : MotoGameEvent(p_fEventTime) {
       m_zone = p_zone;
     }
@@ -187,7 +187,7 @@ namespace vapp {
     m_zone = NULL;
   }
 
-  MGE_PlayerLeavesZone::MGE_PlayerLeavesZone(float p_fEventTime, LevelZone *p_zone) 
+  MGE_PlayerLeavesZone::MGE_PlayerLeavesZone(float p_fEventTime, Zone *p_zone) 
     : MotoGameEvent(p_fEventTime) {
       m_zone = p_zone;
   }
@@ -196,7 +196,7 @@ namespace vapp {
   } 
   
   void MGE_PlayerLeavesZone::doAction(MotoGame *p_pMotoGame) {
-    p_pMotoGame->playerLeavesZone(m_zone);
+     p_pMotoGame->playerLeavesZone(m_zone);
   }
 
   void MGE_PlayerLeavesZone::serialize(DBuffer &Buffer) {
@@ -252,45 +252,45 @@ namespace vapp {
   //////////////////////////////
   MGE_EntityDestroyed::MGE_EntityDestroyed(float p_fEventTime) 
   : MotoGameEvent(p_fEventTime) {
-    m_entityID = "";
-    m_type = ET_UNASSIGNED;
-    m_fSize = 0.0;
-    m_fPosX = 0.0;
-    m_fPosY = 0.0;
+    m_entitySize = 0.0;
   }
 
-  MGE_EntityDestroyed::MGE_EntityDestroyed(float p_fEventTime,
-                                           std::string p_entityID, EntityType p_type,
-                                           float p_fSize, float p_fPosX, float p_fPosY) 
+  MGE_EntityDestroyed::MGE_EntityDestroyed(float p_fEventTime, std::string i_entityId, EntityType i_entityType, Vector2f i_entityPosition, float i_entitySize)
     : MotoGameEvent(p_fEventTime) {
-      m_entityID = p_entityID;
-      m_type = p_type;
-      m_fSize = p_fSize;
-      m_fPosX = p_fPosX;
-      m_fPosY = p_fPosY;
+      m_entityId       = i_entityId;
+      m_entityType     = i_entityType;
+      m_entityPosition = i_entityPosition;
+      m_entitySize     = i_entitySize;
     }
 
   MGE_EntityDestroyed::~MGE_EntityDestroyed() {
   } 
   
   void MGE_EntityDestroyed::doAction(MotoGame *p_pMotoGame) {
-    p_pMotoGame->entityDestroyed(m_entityID, m_type, m_fSize, m_fPosX, m_fPosY);
+     p_pMotoGame->entityDestroyed(m_entityId);
   }
 
   void MGE_EntityDestroyed::serialize(DBuffer &Buffer) {
     MotoGameEvent::serialize(Buffer);
-    Buffer.write(m_entityID);
-    Buffer << m_type;
-    Buffer << m_fSize;
-    Buffer << m_fPosX;
-    Buffer << m_fPosY;
+    Buffer.write(m_entityId);
+    Buffer << (int) (m_entityType);
+    Buffer << m_entitySize;
+    Buffer << m_entityPosition.x;
+    Buffer << m_entityPosition.y;
   }
   
   void MGE_EntityDestroyed::unserialize(DBuffer &Buffer) {
-    Buffer.read(m_entityID);
-    Buffer >> m_type;
-    switch(m_type) {
-    case ET_UNASSIGNED:
+
+    float v_size;
+    Vector2f v_position;
+    std::string v_entityId;
+    EntityType v_type;
+
+    Buffer.read(m_entityId);
+
+    /* no more used, kept just for compatibiliy */    
+    Buffer >> m_entityType;
+    switch(m_entityType) {
     case ET_SPRITE:
     case ET_PLAYERSTART:
     case ET_ENDOFLEVEL:
@@ -302,13 +302,13 @@ namespace vapp {
     default:
       throw Exception("Invalid entity type"); // with some compilator, an invalid value causes a segfault (on my linux box)
     }
-    Buffer >> m_fSize;
-    Buffer >> m_fPosX;
-    Buffer >> m_fPosY;   
+    Buffer >> m_entitySize;
+    Buffer >> m_entityPosition.x;
+    Buffer >> m_entityPosition.y;   
   }
 
   void MGE_EntityDestroyed::revert(MotoGame *p_pMotoGame) {
-    p_pMotoGame->revertEntityDestroyed(m_entityID);
+    p_pMotoGame->getLevelSrc()->revertEntityDestroyed(m_entityId);
   }
 
   GameEventType MGE_EntityDestroyed::SgetType() {
@@ -319,8 +319,8 @@ namespace vapp {
     return SgetType();
   }
 
-  EntityType MGE_EntityDestroyed::getEntityType() {
-    return m_type;
+  std::string MGE_EntityDestroyed::EntityId() {
+    return m_entityId;
   }
 
   //////////////////////////////
@@ -851,9 +851,9 @@ namespace vapp {
   
   void MGE_SetDynamicEntityRotation::doAction(MotoGame *p_pMotoGame) {
     p_pMotoGame->addDynamicObject(new SDynamicEntityRotation(m_entityID,
-							     m_fInitAngle, m_fRadius,
-							     m_fPeriod,
-							     m_startTime, m_endTime));
+                   m_fInitAngle, m_fRadius,
+                   m_fPeriod,
+                   m_startTime, m_endTime));
   }
 
   void MGE_SetDynamicEntityRotation::serialize(DBuffer &Buffer) {
@@ -916,9 +916,9 @@ namespace vapp {
   
   void MGE_SetDynamicEntityTranslation::doAction(MotoGame *p_pMotoGame) {
     p_pMotoGame->addDynamicObject(new SDynamicEntityTranslation(m_entityID,
-								m_x, m_y,
-								m_fPeriod,
-								m_startTime, m_endTime));
+                m_x, m_y,
+                m_fPeriod,
+                m_startTime, m_endTime));
   }
 
   void MGE_SetDynamicEntityTranslation::serialize(DBuffer &Buffer) {
@@ -1016,9 +1016,9 @@ namespace vapp {
   
   void MGE_SetDynamicBlockRotation::doAction(MotoGame *p_pMotoGame) {
     p_pMotoGame->addDynamicObject(new SDynamicBlockRotation(m_blockID,
-							    m_fInitAngle, m_fRadius,
-							    m_fPeriod,
-							    m_startTime, m_endTime));
+                  m_fInitAngle, m_fRadius,
+                  m_fPeriod,
+                  m_startTime, m_endTime));
   }
 
   void MGE_SetDynamicBlockRotation::serialize(DBuffer &Buffer) {
@@ -1081,9 +1081,9 @@ namespace vapp {
   
   void MGE_SetDynamicBlockTranslation::doAction(MotoGame *p_pMotoGame) {
     p_pMotoGame->addDynamicObject(new SDynamicBlockTranslation(m_blockID,
-							       m_x, m_y,
-							       m_fPeriod,
-							       m_startTime, m_endTime));
+                     m_x, m_y,
+                     m_fPeriod,
+                     m_startTime, m_endTime));
   }
 
   void MGE_SetDynamicBlockTranslation::serialize(DBuffer &Buffer) {

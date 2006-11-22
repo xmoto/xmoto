@@ -50,7 +50,6 @@ namespace vapp {
 //    printf("PREPARE!!\n");
     m_fCurrentHorizontalScrollShift = 0.0f;
     m_fCurrentVerticalScrollShift = 0.0f;
-    m_fNextParticleUpdate = 0.0f;
     m_previous_driver_dir  = DD_LEFT;    
     m_recenter_camera_fast = true;
     
@@ -77,119 +76,125 @@ namespace vapp {
     #endif
         
     /* Optimize scene */
-    std::vector<ConvexBlock *> &Blocks = getGameObject()->getBlocks();
+    std::vector<Block *> Blocks = getGameObject()->getLevelSrc()->Blocks();
     int nVertexBytes = 0;
   
-    for(int i=0;i<Blocks.size();i++) {
-      Vector2f Center;
-      Sprite *pSprite;
-      Texture *pTexture;
-      GLuint GLName = 0;
+    for(int i=0; i<Blocks.size(); i++) {
+      std::vector<ConvexBlock *> ConvexBlocks = Blocks[i]->ConvexBlocks();
 
-      pTexture = NULL;
-      
-      if(Blocks[i]->pSrcBlock && (Blocks[i]->pSrcBlock->bBackground || Blocks[i]->pSrcBlock->bDynamic)) continue;
+      for(int j=0; j<ConvexBlocks.size(); j++) {
 
-      if(Blocks[i]->pSrcBlock) {
-        Center = Vector2f(Blocks[i]->pSrcBlock->fPosX,Blocks[i]->pSrcBlock->fPosY);
-
-  pSprite = getParent()->m_theme.getSprite(SPRITE_TYPE_TEXTURE,
-             Blocks[i]->pSrcBlock->Texture);
-        if(pSprite != NULL) {
-    try {
-      pTexture = pSprite->getTexture();
-      GLName = pTexture->nID;
-    } catch(Exception &e) {
-      Log("** Warning ** : Texture '%s' not found!",Blocks[i]->pSrcBlock->Texture.c_str());
-      getGameObject()->gameMessage(GAMETEXT_MISSINGTEXTURES,true);   
+        Vector2f Center;
+        Sprite *pSprite;
+        Texture *pTexture;
+        GLuint GLName = 0;
+        
+        pTexture = NULL;
+        
+        if(ConvexBlocks[j]->SourceBlock() != NULL && (ConvexBlocks[j]->SourceBlock()->isBackground() || ConvexBlocks[j]->SourceBlock()->isDynamic())) continue;
+        
+        if(ConvexBlocks[j]->SourceBlock()) {
+          Center = ConvexBlocks[j]->SourceBlock()->DynamicPosition();
+          
+          pSprite = getParent()->m_theme.getSprite(SPRITE_TYPE_TEXTURE,
+                                                   ConvexBlocks[j]->SourceBlock()->Texture());
+          if(pSprite != NULL) {
+            try {
+              pTexture = pSprite->getTexture();
+              GLName = pTexture->nID;
+            } catch(Exception &e) {
+              Log("** Warning ** : Texture '%s' not found!",ConvexBlocks[j]->SourceBlock()->Texture().c_str());
+              getGameObject()->gameMessage(GAMETEXT_MISSINGTEXTURES,true);   
+            }
+          } else {
+            Log("** Warning ** : Texture '%s' not found!",ConvexBlocks[j]->SourceBlock()->Texture().c_str());
+            getGameObject()->gameMessage(GAMETEXT_MISSINGTEXTURES,true);          
+          }
+        }
+        else {
+          pSprite = getParent()->m_theme.getSprite(SPRITE_TYPE_TEXTURE, "default");
+          if(pSprite != NULL) {
+            pTexture = pSprite->getTexture();
+          }
+          
+          if(pTexture != NULL) {
+            GLName = pTexture->nID;
+          }
+        }
+        
+        /* TODO: introduce non-static geoms and handle them differently */
+        
+        /* Define its box */
+        Vector2f PBoxMin = (ConvexBlocks[j]->Vertices()[0]->Position() + Center);
+        Vector2f PBoxMax = (ConvexBlocks[j]->Vertices()[0]->Position() + Center);      
+        for(int k=0; k<ConvexBlocks[j]->Vertices().size(); k++) {
+          addPointToAABB2f(PBoxMin,PBoxMax,(ConvexBlocks[j]->Vertices()[k]->Position() + Center));
+        }      
+        
+        /* Look at our list of static geoms, see if we can find a matching texture */     
+        std::vector<StaticGeom *> GeomList = _FindGeomsByTexture(pTexture);
+        
+        /* Go through them, to see if we can find a suitable geom */
+        StaticGeom *pSuitableGeom = NULL;
+        for(int k=0; k<GeomList.size(); k++) {
+          /* Right then... if we add this polygon to this geom, how large will its 
+             bounding box be? */
+          Vector2f BoxMin = GeomList[k]->Min,BoxMax = GeomList[k]->Max;
+          if(PBoxMin.x < BoxMin.x) BoxMin.x = PBoxMin.x;
+          if(PBoxMin.y < BoxMin.y) BoxMin.y = PBoxMin.y;
+          if(PBoxMax.x > BoxMax.x) BoxMax.x = PBoxMax.x;
+          if(PBoxMax.y > BoxMax.y) BoxMax.y = PBoxMax.y;
+          
+          /* Too large? */
+          if( (BoxMax.x - BoxMin.x) < 10.0f && (BoxMax.y - BoxMin.y) < 10.0f ) {
+            /* Nope, use this */
+            pSuitableGeom = GeomList[k];
+            pSuitableGeom->Min = BoxMin;
+            pSuitableGeom->Max = BoxMax;
+            break;
+          }
+        }
+        
+        /* Did we get something? */
+        if(pSuitableGeom == NULL) {
+          /* No. Allocate new */
+          pSuitableGeom = new StaticGeom;
+          pSuitableGeom->Max = PBoxMax;
+          pSuitableGeom->Min = PBoxMin;
+          pSuitableGeom->pTexture = pTexture;
+          m_Geoms.push_back(pSuitableGeom);
+        }
+        
+        /* Nice, add polygon */
+        StaticGeomPoly *pPoly = new StaticGeomPoly;
+        pSuitableGeom->Polys.push_back(pPoly);
+        
+        pPoly->nNumVertices = ConvexBlocks[j]->Vertices().size();
+        pPoly->pVertices = new StaticGeomCoord[ pPoly->nNumVertices ];
+        pPoly->pTexCoords = new StaticGeomCoord[ pPoly->nNumVertices ];
+        
+        for(int k=0; k<pPoly->nNumVertices; k++) {
+          pPoly->pVertices[k].x = Center.x + ConvexBlocks[j]->Vertices()[k]->Position().x;
+          pPoly->pVertices[k].y = Center.y + ConvexBlocks[j]->Vertices()[k]->Position().y;        
+          pPoly->pTexCoords[k].x = ConvexBlocks[j]->Vertices()[k]->TexturePosition().x; //(Center.x+ConvexBlocks[i]->Vertices[j]->P.x) * 0.25;
+          pPoly->pTexCoords[k].y = ConvexBlocks[j]->Vertices()[k]->TexturePosition().y; //(Center.y+ConvexBlocks[i]->Vertices[j]->P.y) * 0.25;
+        }          
+        
+        nVertexBytes += pPoly->nNumVertices * ( 4 * sizeof(float) );
+        
+        /* Use VBO optimization? */
+        if(getParent()->useVBOs()) {
+          /* Copy static coordinates unto video memory */
+          getParent()->glGenBuffersARB(1, (GLuint *) &pPoly->nVertexBufferID);
+          getParent()->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nVertexBufferID);
+          getParent()->glBufferDataARB(GL_ARRAY_BUFFER_ARB,pPoly->nNumVertices*2*sizeof(float),(void *)pPoly->pVertices,GL_STATIC_DRAW_ARB);
+          
+          getParent()->glGenBuffersARB(1, (GLuint *) &pPoly->nTexCoordBufferID);
+          getParent()->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nTexCoordBufferID);
+          getParent()->glBufferDataARB(GL_ARRAY_BUFFER_ARB,pPoly->nNumVertices*2*sizeof(float),(void *)pPoly->pTexCoords,GL_STATIC_DRAW_ARB);
+        }
+      }
     }
-  } else {
-          Log("** Warning ** : Texture '%s' not found!",Blocks[i]->pSrcBlock->Texture.c_str());
-          getGameObject()->gameMessage(GAMETEXT_MISSINGTEXTURES,true);          
-        }
-      }
-      else {
-  pSprite = getParent()->m_theme.getSprite(SPRITE_TYPE_TEXTURE, "default");
-  if(pSprite != NULL) {
-    pTexture = pSprite->getTexture();
-  }
-
-        if(pTexture != NULL) {
-    GLName = pTexture->nID;
-  }
-      }
-      
-      /* TODO: introduce non-static geoms and handle them differently */
-      
-      /* Define its box */
-      Vector2f PBoxMin = (Blocks[i]->Vertices[0]->P + Center);
-      Vector2f PBoxMax = (Blocks[i]->Vertices[0]->P + Center);      
-      for(int j=0;j<Blocks[i]->Vertices.size();j++)
-        addPointToAABB2f(PBoxMin,PBoxMax,(Blocks[i]->Vertices[j]->P + Center));
-      
-      /* Look at our list of static geoms, see if we can find a matching texture */     
-      std::vector<StaticGeom *> GeomList = _FindGeomsByTexture(pTexture);
-      
-      /* Go through them, to see if we can find a suitable geom */
-      StaticGeom *pSuitableGeom = NULL;
-      for(int j=0;j<GeomList.size();j++) {
-        /* Right then... if we add this polygon to this geom, how large will its 
-           bounding box be? */
-        Vector2f BoxMin = GeomList[j]->Min,BoxMax = GeomList[j]->Max;
-        if(PBoxMin.x < BoxMin.x) BoxMin.x = PBoxMin.x;
-        if(PBoxMin.y < BoxMin.y) BoxMin.y = PBoxMin.y;
-        if(PBoxMax.x > BoxMax.x) BoxMax.x = PBoxMax.x;
-        if(PBoxMax.y > BoxMax.y) BoxMax.y = PBoxMax.y;
-        
-        /* Too large? */
-        if( (BoxMax.x - BoxMin.x) < 10.0f && (BoxMax.y - BoxMin.y) < 10.0f ) {
-          /* Nope, use this */
-          pSuitableGeom = GeomList[j];
-          pSuitableGeom->Min = BoxMin;
-          pSuitableGeom->Max = BoxMax;
-          break;
-        }
-      }
-      
-      /* Did we get something? */
-      if(pSuitableGeom == NULL) {
-        /* No. Allocate new */
-        pSuitableGeom = new StaticGeom;
-        pSuitableGeom->Max = PBoxMax;
-        pSuitableGeom->Min = PBoxMin;
-        pSuitableGeom->pTexture = pTexture;
-        m_Geoms.push_back(pSuitableGeom);
-      }
-      
-      /* Nice, add polygon */
-      StaticGeomPoly *pPoly = new StaticGeomPoly;
-      pSuitableGeom->Polys.push_back(pPoly);
-      
-      pPoly->nNumVertices = Blocks[i]->Vertices.size();
-      pPoly->pVertices = new StaticGeomCoord[ pPoly->nNumVertices ];
-      pPoly->pTexCoords = new StaticGeomCoord[ pPoly->nNumVertices ];
-      
-      for(int j=0;j<pPoly->nNumVertices;j++) {
-        pPoly->pVertices[j].x = Center.x + Blocks[i]->Vertices[j]->P.x;
-        pPoly->pVertices[j].y = Center.y + Blocks[i]->Vertices[j]->P.y;        
-        pPoly->pTexCoords[j].x = Blocks[i]->Vertices[j]->T.x; //(Center.x+Blocks[i]->Vertices[j]->P.x) * 0.25;
-        pPoly->pTexCoords[j].y = Blocks[i]->Vertices[j]->T.y; //(Center.y+Blocks[i]->Vertices[j]->P.y) * 0.25;
-      }          
-      
-      nVertexBytes += pPoly->nNumVertices * ( 4 * sizeof(float) );
-      
-      /* Use VBO optimization? */
-      if(getParent()->useVBOs()) {
-        /* Copy static coordinates unto video memory */
-        getParent()->glGenBuffersARB(1, (GLuint *) &pPoly->nVertexBufferID);
-        getParent()->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nVertexBufferID);
-        getParent()->glBufferDataARB(GL_ARRAY_BUFFER_ARB,pPoly->nNumVertices*2*sizeof(float),(void *)pPoly->pVertices,GL_STATIC_DRAW_ARB);
-        
-        getParent()->glGenBuffersARB(1, (GLuint *) &pPoly->nTexCoordBufferID);
-        getParent()->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nTexCoordBufferID);
-        getParent()->glBufferDataARB(GL_ARRAY_BUFFER_ARB,pPoly->nNumVertices*2*sizeof(float),(void *)pPoly->pTexCoords,GL_STATIC_DRAW_ARB);
-      }
-    }        
     
     setScroll(false);
 
@@ -203,11 +208,6 @@ namespace vapp {
   void GameRenderer::unprepareForNewLevel(void) {
     if(m_pInGameStats)
       m_pInGameStats->showWindow(false);
-    
-    /* Free any particles left */
-    for(int i=0;i<m_Particles.size();i++)
-      delete m_Particles[i];    
-    m_Particles.clear();
     
     /* Clean up optimized scene */
     for(int i=0;i<m_Geoms.size();i++) { 
@@ -310,94 +310,89 @@ namespace vapp {
     glLoadIdentity();
         
     MotoGame *pGame = getGameObject();
-    std::vector<ConvexBlock *> &Blocks = pGame->getBlocks();
+    std::vector<Block *> Blocks = getGameObject()->getLevelSrc()->Blocks();
 
-    /* Render non-dynamic blocks */
-    for(int i=0;i<Blocks.size();i++) {
-      Vector2f Center;
+    /* Render blocks */
+    for(int i=0; i<Blocks.size(); i++) {
 
-      if(Blocks[i]->pSrcBlock) {
-        if(Blocks[i]->pSrcBlock->bBackground || Blocks[i]->pSrcBlock->bDynamic) continue;
-        Center = Vector2f(Blocks[i]->pSrcBlock->fPosX,Blocks[i]->pSrcBlock->fPosY);
-      }
-
-      glBegin(GL_POLYGON);
-      glColor3f(0.5,0.5,0.5);
-      for(int j=0;j<Blocks[i]->Vertices.size();j++) {
-        Vector2f P = Center + Blocks[i]->Vertices[j]->P;
-        
-        MINIVERTEX(P.x,P.y);                  
-      }
-      glEnd();
-    }    
-    
-    std::vector<DynamicBlock *> &DynBlocks = pGame->getDynBlocks();
-
-    /* Render dynamic blocks */
-    for(int i=0;i<DynBlocks.size();i++) {
-      DynamicBlock *pDB = DynBlocks[i];
-      
       /* Don't draw background blocks */
-      if(pDB->bBackground) continue;
-      
-      /* Build rotation matrix for block */
-      float fR[4]; 
-      fR[0] = cos(pDB->fRotation); fR[1] = -sin(pDB->fRotation);
-      fR[2] = sin(pDB->fRotation); fR[3] = cos(pDB->fRotation);
+      if(Blocks[i]->isBackground() == false) {
+        std::vector<ConvexBlock *> ConvexBlocks = Blocks[i]->ConvexBlocks();
 
-      for(int j=0;j<pDB->ConvexBlocks.size();j++) {
-        ConvexBlock *pCB = pDB->ConvexBlocks[j];
+        for(int j=0; j<ConvexBlocks.size(); j++) {
+          Vector2f Center;
+          
+          if(ConvexBlocks[j]->SourceBlock()->isDynamic()) {
+            if(ConvexBlocks[j]->SourceBlock()) {
+              Center = ConvexBlocks[j]->SourceBlock()->DynamicPosition();
+            }
+            
+            glBegin(GL_POLYGON);
+            glColor3f(0.5,0.5,0.5);
+            for(int k=0; k<ConvexBlocks[j]->Vertices().size(); k++) {
+              Vector2f P = Center + ConvexBlocks[j]->Vertices()[k]->Position();        
+              MINIVERTEX(P.x,P.y);                  
+            }
+            glEnd();
+          } else {
+      
+            /* Build rotation matrix for block */
+            float fR[4]; 
+            fR[0] = cos(Blocks[i]->DynamicRotation()); fR[1] = -sin(Blocks[i]->DynamicRotation());
+            fR[2] = sin(Blocks[i]->DynamicRotation()); fR[3] = cos(Blocks[i]->DynamicRotation());
   
-        glBegin(GL_POLYGON);
-        glColor3f(0.5,0.5,0.5);
-        for(int k=0;k<pCB->Vertices.size();k++) {
-          ConvexBlockVertex *pVertex = pCB->Vertices[k];
-        
-          /* Transform vertex */
-          Vector2f Tv = Vector2f(pVertex->P.x * fR[0] + pVertex->P.y * fR[1],
-                                  pVertex->P.x * fR[2] + pVertex->P.y * fR[3]);
-          Tv += pDB->Position;
-                      
-          /* Put vertex */
-          glTexCoord2f(pVertex->T.x,pVertex->T.y);          
-          MINIVERTEX(Tv.x,Tv.y);                  
+            glBegin(GL_POLYGON);
+            glColor3f(0.5,0.5,0.5);
+            for(int k=0; k<ConvexBlocks[j]->Vertices().size(); k++) {
+              ConvexBlockVertex *pVertex = ConvexBlocks[j]->Vertices()[k];
+                
+              /* Transform vertex */
+              Vector2f Tv = Vector2f(pVertex->Position().x * fR[0] + pVertex->Position().y * fR[1],
+                                     pVertex->Position().x * fR[2] + pVertex->Position().y * fR[3]);
+              Tv += Blocks[i]->DynamicPosition();
+              
+              /* Put vertex */
+              glTexCoord2f(pVertex->TexturePosition().x,pVertex->TexturePosition().y);          
+              MINIVERTEX(Tv.x,Tv.y);                  
+            }
+            glEnd();
+          }
         }
-        glEnd();        
       }
     }
     
     getParent()->drawCircle(Vector2f(x + nWidth/2 + (float)(pGame->getBikeState()->CenterP.x - getCameraPositionX())*MINIMAPZOOM,
                                      y + nHeight/2 - (float)(pGame->getBikeState()->CenterP.y - getCameraPositionY())*MINIMAPZOOM),
                             3,0,MAKE_COLOR(255,255,255,255),0);
-
-    #if defined(ALLOW_GHOST)
-      /* Render ghost position too? */
-      if(getGameObject()->isGhostActive()) {
-        getParent()->drawCircle(Vector2f(x + nWidth/2 + (float)(pGame->getGhostBikeState()->CenterP.x - getCameraPositionX())*MINIMAPZOOM,
-                                        y + nHeight/2 - (float)(pGame->getGhostBikeState()->CenterP.y - getCameraPositionY())*MINIMAPZOOM),
-                                3,0,MAKE_COLOR(96,96,150,255),0);
-      }
-    #endif
-                            
-    for(int i=0;i<pGame->getEntities().size();i++) {
-      if(pGame->getEntities()[i]->Type == ET_ENDOFLEVEL) {
-        getParent()->drawCircle(Vector2f(x + nWidth/2 + (float)(pGame->getEntities()[i]->Pos.x - getCameraPositionX())*MINIMAPZOOM,
-                                        y + nHeight/2 - (float)(pGame->getEntities()[i]->Pos.y - getCameraPositionY())*MINIMAPZOOM),
+    
+#if defined(ALLOW_GHOST)
+    /* Render ghost position too? */
+    if(getGameObject()->isGhostActive()) {
+      getParent()->drawCircle(Vector2f(x + nWidth/2 + (float)(pGame->getGhostBikeState()->CenterP.x - getCameraPositionX())*MINIMAPZOOM,
+                                       y + nHeight/2 - (float)(pGame->getGhostBikeState()->CenterP.y - getCameraPositionY())*MINIMAPZOOM),
+                              3,0,MAKE_COLOR(96,96,150,255),0);
+    }
+#endif
+    
+    for(int i=0;i<pGame->getLevelSrc()->Entities().size();i++) {
+      if(pGame->getLevelSrc()->Entities()[i]->Type() == ET_ENDOFLEVEL) {
+        getParent()->drawCircle(Vector2f(x + nWidth/2 + (float)(pGame->getLevelSrc()->Entities()[i]->DynamicPosition().x - getCameraPositionX())*MINIMAPZOOM,
+                                         y + nHeight/2 - (float)(pGame->getLevelSrc()->Entities()[i]->DynamicPosition().y - getCameraPositionY())*MINIMAPZOOM),
                                 3,0,MAKE_COLOR(255,0,255,255),0);
         
       }
-      else if(pGame->getEntities()[i]->Type == ET_STRAWBERRY) {
-        getParent()->drawCircle(Vector2f(x + nWidth/2 + (float)(pGame->getEntities()[i]->Pos.x - getCameraPositionX())*MINIMAPZOOM,
-                                        y + nHeight/2 - (float)(pGame->getEntities()[i]->Pos.y - getCameraPositionY())*MINIMAPZOOM),
+      else if(pGame->getLevelSrc()->Entities()[i]->Type() == ET_STRAWBERRY) {
+        getParent()->drawCircle(Vector2f(x + nWidth/2 + (float)(pGame->getLevelSrc()->Entities()[i]->DynamicPosition().x - getCameraPositionX())*MINIMAPZOOM,
+                                         y + nHeight/2 - (float)(pGame->getLevelSrc()->Entities()[i]->DynamicPosition().y - getCameraPositionY())*MINIMAPZOOM),
                                 3,0,MAKE_COLOR(255,0,0,255),0);
         
       }
     }
-        
+    
     glDisable(GL_SCISSOR_TEST);
     getParent()->scissorGraphics(0,0,getParent()->getDispWidth(),getParent()->getDispHeight());
   }
-
+  
   void GameRenderer::zoom(float p_f) {
     m_fScale += p_f;
     if(m_fScale < 0) {
@@ -477,12 +472,6 @@ namespace vapp {
     /* Update time */
     m_pInGameStats->showWindow(!m_bCreditsMode);
     m_pPlayTime->setCaption(m_bCreditsMode?"":getParent()->formatTime(getGameObject()->getTime()));
-
-    /* Prepare for rendering frame */    
-    if(getGameObject()->getTime() > m_fNextParticleUpdate && !bIsPaused) {
-      _UpdateParticles(0.025f);
-      m_fNextParticleUpdate = getGameObject()->getTime() + 0.025f; 
-    }
     
     m_fZoom = 60.0f;    
     setScroll(true);
@@ -730,9 +719,9 @@ namespace vapp {
     /*
     } else {
       if(getGameObject()->getBikeState()->Dir == DD_RIGHT) {
-	m_Scroll = -getGameObject()->getBikeState()->HeadP;
+  m_Scroll = -getGameObject()->getBikeState()->HeadP;
       } else {
-	m_Scroll = -getGameObject()->getBikeState()->Head2P;
+  m_Scroll = -getGameObject()->getBikeState()->Head2P;
       }
     }
     */
@@ -788,7 +777,7 @@ namespace vapp {
     float x2 = 115;
     float y2 = 23;
 
-    int nStrawberriesLeft = pGame->countEntitiesByType(ET_STRAWBERRY);
+    int nStrawberriesLeft = pGame->getLevelSrc()->countEntitiesByType(ET_STRAWBERRY);
     int nQuantity = 0;
 
     if(getParent()->isUglyMode() == false) {
@@ -886,23 +875,23 @@ namespace vapp {
     MotoGame *pGame = getGameObject();
     Entity *pEnt;
 
-    for(int i=0;i<pGame->getEntities().size();i++) {
-      pEnt = pGame->getEntities()[i];
+    for(int i=0;i<pGame->getLevelSrc()->Entities().size();i++) {
+      pEnt = pGame->getLevelSrc()->Entities()[i];
 
-      switch(pEnt->Type) {
+      switch(pEnt->Type()) {
         case ET_SPRITE:
           /* Middleground? (not foreground, not background) */
-          if(pEnt->fSpriteZ == 0.0f && !bForeground && !bBackground) {
+          if(pEnt->Z() == 0.0f && !bForeground && !bBackground) {
             _RenderSprite(pEnt);  
           } 
           else {
             /* In front? */
-            if(pEnt->fSpriteZ > 0.0f && bForeground) {
+            if(pEnt->Z() > 0.0f && bForeground) {
               _RenderSprite(pEnt);
             } 
             else {
               /* Those in back? */
-              if(pEnt->fSpriteZ < 0.0f && bBackground) {
+              if(pEnt->Z() < 0.0f && bBackground) {
                 _RenderSprite(pEnt);
               }
             }
@@ -933,9 +922,9 @@ namespace vapp {
     std::string v_sprite_type;
 
     if(m_bUglyMode == false) {
-      switch(pSprite->Type) {
+      switch(pSprite->Type()) {
       case ET_SPRITE:
-        v_sprite_type = pSprite->SpriteType;
+        v_sprite_type = pSprite->SpriteName();
         break;
       case ET_WRECKER:
         v_sprite_type = "Wrecker";
@@ -956,11 +945,11 @@ namespace vapp {
         v_centerX = v_animationSpriteType->getCenterX();
         v_centerY = v_animationSpriteType->getCenterY();
 
-        if(pSprite->pSrc->fWidth > 0.0) {
-          v_width  = pSprite->pSrc->fWidth;
-          v_height = pSprite->pSrc->fHeight;
-          v_centerX += (pSprite->pSrc->fWidth -v_animationSpriteType->getWidth())  / 2.0;
-          v_centerY += (pSprite->pSrc->fHeight-v_animationSpriteType->getHeight()) / 2.0;   
+        if(pSprite->Width() > 0.0) {
+          v_width  = pSprite->Width();
+          v_height = pSprite->Height();
+          v_centerX += (pSprite->Width() -v_animationSpriteType->getWidth())  / 2.0;
+          v_centerY += (pSprite->Height()-v_animationSpriteType->getHeight()) / 2.0;   
         } else {
           v_width  = v_animationSpriteType->getWidth();
           v_height = v_animationSpriteType->getHeight();
@@ -973,12 +962,12 @@ namespace vapp {
           v_centerX = v_decorationSpriteType->getCenterX();
           v_centerY = v_decorationSpriteType->getCenterY();
 
-          if(pSprite->pSrc->fWidth  > 0.0) {
-            v_width  = pSprite->pSrc->fWidth;
-            v_height = pSprite->pSrc->fHeight;
+          if(pSprite->Width()  > 0.0) {
+            v_width  = pSprite->Width();
+            v_height = pSprite->Height();
             /* adjust */
-            v_centerX += (pSprite->pSrc->fWidth -v_decorationSpriteType->getWidth())  / 2.0;
-            v_centerY += (pSprite->pSrc->fHeight-v_decorationSpriteType->getHeight()) / 2.0;
+            v_centerX += (pSprite->Width() -v_decorationSpriteType->getWidth())  / 2.0;
+            v_centerY += (pSprite->Height()-v_decorationSpriteType->getHeight()) / 2.0;
           } else {
             /* use the theme values */
             v_width  = v_decorationSpriteType->getWidth();
@@ -991,13 +980,13 @@ namespace vapp {
         /* Draw it */
         Vector2f p0,p1,p2,p3;
         
-        p0 = Vector2f(pSprite->Pos.x,pSprite->Pos.y) +
+        p0 = Vector2f(pSprite->DynamicPosition().x,pSprite->DynamicPosition().y) +
           Vector2f(-v_centerX,-v_centerY);
-        p1 = Vector2f(pSprite->Pos.x+v_width,pSprite->Pos.y) +
+        p1 = Vector2f(pSprite->DynamicPosition().x+v_width,pSprite->DynamicPosition().y) +
           Vector2f(-v_centerX,-v_centerY);
-        p2 = Vector2f(pSprite->Pos.x+v_width,pSprite->Pos.y+v_height) +
+        p2 = Vector2f(pSprite->DynamicPosition().x+v_width,pSprite->DynamicPosition().y+v_height) +
           Vector2f(-v_centerX,-v_centerY);
-        p3 = Vector2f(pSprite->Pos.x,pSprite->Pos.y+v_height) +
+        p3 = Vector2f(pSprite->DynamicPosition().x,pSprite->DynamicPosition().y+v_height) +
           Vector2f(-v_centerX,-v_centerY);
         
         if(v_spriteType->getBlendMode() == SPRITE_BLENDMODE_ADDITIVE) {
@@ -1013,10 +1002,10 @@ namespace vapp {
     }
     /* If this is debug-mode, also draw entity's area of effect */
     if(isDebug() || m_bTestThemeMode || m_bUglyMode) {
-      Vector2f C = Vector2f(pSprite->Pos.x, pSprite->Pos.y);
+      Vector2f C = pSprite->DynamicPosition();
       Color v_color;
       
-      switch(pSprite->Type) {
+      switch(pSprite->Type()) {
       case ET_WRECKER:
         v_color = MAKE_COLOR(80,255,255,255); /* Fix: color changed a bit so it's easier to spot */
         break;
@@ -1031,7 +1020,7 @@ namespace vapp {
         break;
       }
 
-      _RenderCircle(20, v_color, C, pSprite->fSize);
+      _RenderCircle(20, v_color, C, pSprite->Size());
     }
   }
      
@@ -1042,22 +1031,24 @@ namespace vapp {
     MotoGame *pGame = getGameObject();
 
     /* Render all dynamic blocks */
-    std::vector<DynamicBlock *> &Blocks = getGameObject()->getDynBlocks();
+    std::vector<Block *> Blocks = getGameObject()->getLevelSrc()->Blocks();
 
-    for(int i=0;i<Blocks.size();i++) {            
+    for(int i=0; i<Blocks.size(); i++) {
+      if(Blocks[i]->isDynamic() == false) continue;
+            
       /* Are we rendering background blocks or what? */
-      if(Blocks[i]->bBackground != bBackground) continue;
+      if(Blocks[i]->isBackground() != bBackground) continue;
       
       /* Build rotation matrix for block */
       float fR[4]; 
-      fR[0] = cos(Blocks[i]->fRotation); fR[1] = -sin(Blocks[i]->fRotation);
-      fR[2] = sin(Blocks[i]->fRotation); fR[3] = cos(Blocks[i]->fRotation);
+      fR[0] = cos(Blocks[i]->DynamicRotation()); fR[1] = -sin(Blocks[i]->DynamicRotation());
+      fR[2] = sin(Blocks[i]->DynamicRotation()); fR[3] = cos(Blocks[i]->DynamicRotation());
       
       /* Determine texture... this is so ingredibly ugly... TODO: no string lookups here */
       Texture *pTexture = NULL;
       if(!m_bUglyMode) {
         Sprite *pSprite;
-        pSprite = getParent()->m_theme.getSprite(SPRITE_TYPE_TEXTURE, Blocks[i]->pSrcBlock->Texture);
+        pSprite = getParent()->m_theme.getSprite(SPRITE_TYPE_TEXTURE, Blocks[i]->Texture());
         if(pSprite != NULL) {
           pTexture = pSprite->getTexture();
         }
@@ -1065,32 +1056,39 @@ namespace vapp {
       GLuint GLName = 0;
       if(pTexture != NULL) GLName = pTexture->nID;
 
-      for(int j=0;j<Blocks[i]->ConvexBlocks.size();j++) {       
-        if(!m_bUglyMode) {
-          glBindTexture(GL_TEXTURE_2D,GLName);                    
-          glEnable(GL_TEXTURE_2D);      
-          glBegin(GL_POLYGON);
-        }
-        else
-          glBegin(GL_LINE_LOOP);
-        
-        glColor3f(1,1,1);         
-        for(int k=0;k<Blocks[i]->ConvexBlocks[j]->Vertices.size();k++) {            
-          ConvexBlockVertex *pVertex = Blocks[i]->ConvexBlocks[j]->Vertices[k];
-
-          /* Transform vertex */
-          Vector2f Tv = Vector2f(pVertex->P.x * fR[0] + pVertex->P.y * fR[1],
-                                  pVertex->P.x * fR[2] + pVertex->P.y * fR[3]);
-          Tv += Blocks[i]->Position;                                  
-                      
-          /* Put vertex */
-          if(!m_bUglyMode) glTexCoord2f(pVertex->T.x,pVertex->T.y);
-          
+      if(m_bUglyMode) {
+        glBegin(GL_LINE_LOOP);
+        glColor3f(1,1,1);
+        for(int j=0;j<Blocks[i]->Vertices().size();j++) {       
+          Vector2f Tv = Vector2f(Blocks[i]->Vertices()[j]->Position().x * fR[0] + Blocks[i]->Vertices()[j]->Position().y * fR[1],
+                                 Blocks[i]->Vertices()[j]->Position().x * fR[2] + Blocks[i]->Vertices()[j]->Position().y * fR[3]);
+          Tv += Blocks[i]->DynamicPosition();                                  
           glVertex2f(Tv.x,Tv.y);
         }
         glEnd();              
-        
-        if(!m_bUglyMode) glDisable(GL_TEXTURE_2D);
+      } else {
+        for(int j=0;j<Blocks[i]->ConvexBlocks().size();j++) {       
+          glBindTexture(GL_TEXTURE_2D,GLName);                    
+          glEnable(GL_TEXTURE_2D);      
+          glBegin(GL_POLYGON);
+          glColor3f(1,1,1);         
+          for(int k=0;k<Blocks[i]->ConvexBlocks()[j]->Vertices().size();k++) {            
+            ConvexBlockVertex *pVertex = Blocks[i]->ConvexBlocks()[j]->Vertices()[k];
+            
+            /* Transform vertex */
+            Vector2f Tv = Vector2f(pVertex->Position().x * fR[0] + pVertex->Position().y * fR[1],
+                                   pVertex->Position().x * fR[2] + pVertex->Position().y * fR[3]);
+            Tv += Blocks[i]->DynamicPosition();                                  
+            
+            /* Put vertex */
+            glTexCoord2f(pVertex->TexturePosition().x,pVertex->TexturePosition().y);
+            
+            glVertex2f(Tv.x,Tv.y);
+          }
+          glEnd();              
+          
+          glDisable(GL_TEXTURE_2D);
+        }
       }
     }     
   }
@@ -1104,28 +1102,21 @@ namespace vapp {
     /* Ugly mode? */
     if(m_bUglyMode) {
       /* Render all non-background blocks */
-      std::vector<LevelBlock *> &Blocks = getGameObject()->getLevelSrc()->getBlockList();
-  
+      std::vector<Block *> Blocks = getGameObject()->getLevelSrc()->Blocks();
+
       for(int i=0;i<Blocks.size();i++) {
-        if(!Blocks[i]->bBackground && !Blocks[i]->bDynamic) {
+        if(Blocks[i]->isBackground() == false && Blocks[i]->isDynamic() == false) {
+          //for(int j=0;j<Blocks[i]->ConvexBlocks().size();j++) {
           glBegin(GL_LINE_LOOP);
           glColor3f(1,1,1);
-          for(int j=0;j<Blocks[i]->Vertices.size();j++) {
-            glVertex2f(Blocks[i]->Vertices[j]->fX + Blocks[i]->fPosX,
-                       Blocks[i]->Vertices[j]->fY + Blocks[i]->fPosY);
+          for(int j=0;j<Blocks[i]->Vertices().size();j++) {
+            glVertex2f(Blocks[i]->Vertices()[j]->Position().x + Blocks[i]->DynamicPosition().x,
+                       Blocks[i]->Vertices()[j]->Position().y + Blocks[i]->DynamicPosition().y);
           }
           glEnd();
         }
       }
-      
-      /* Also render the level limits */
-      glBegin(GL_LINE_LOOP);
-      glColor3f(1,1,1);
-      glVertex2f(getGameObject()->getLevelSrc()->getLeftLimit(),getGameObject()->getLevelSrc()->getTopLimit());
-      glVertex2f(getGameObject()->getLevelSrc()->getRightLimit(),getGameObject()->getLevelSrc()->getTopLimit());
-      glVertex2f(getGameObject()->getLevelSrc()->getRightLimit(),getGameObject()->getLevelSrc()->getBottomLimit());
-      glVertex2f(getGameObject()->getLevelSrc()->getLeftLimit(),getGameObject()->getLevelSrc()->getBottomLimit());
-      glEnd();
+       
     }
     else {
       /* Render all non-background blocks */
@@ -1150,14 +1141,15 @@ namespace vapp {
             glTexCoordPointer(2,GL_FLOAT,0,(char *)NULL);
             glDrawArrays(GL_POLYGON,0,pPoly->nNumVertices);
           }      
-        }
-        else {
+        } else {
           for(int j=0;j<m_Geoms[i]->Polys.size();j++) {          
             glBegin(GL_POLYGON);
             glColor3f(1,1,1);
             for(int k=0;k<m_Geoms[i]->Polys[j]->nNumVertices;k++) {
-              glTexCoord2f(m_Geoms[i]->Polys[j]->pTexCoords[k].x,m_Geoms[i]->Polys[j]->pTexCoords[k].y);
-              glVertex2f(m_Geoms[i]->Polys[j]->pVertices[k].x,m_Geoms[i]->Polys[j]->pVertices[k].y);
+              glTexCoord2f(m_Geoms[i]->Polys[j]->pTexCoords[k].x,
+                           m_Geoms[i]->Polys[j]->pTexCoords[k].y);
+              glVertex2f(m_Geoms[i]->Polys[j]->pVertices[k].x,
+                         m_Geoms[i]->Polys[j]->pVertices[k].y);
             }
             glEnd();
           }
@@ -1168,39 +1160,52 @@ namespace vapp {
       
       /* Render all special edges (if quality!=low) */
       if(m_Quality != GQ_LOW) {
-        for(int i=0;i<pGame->getOverlayEdges().size();i++) {
-          OverlayEdge *pEdge = pGame->getOverlayEdges()[i];
-	  GLuint GLName = 0;
-	  float fXScale,fDepth;
-	  EdgeEffectSprite* pType;
-	  pType = (EdgeEffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EDGEEFFECT, pEdge->Effect);
-	  if(pType != NULL) {
-	    GLName = pType->getTexture()->nID;
-	    fXScale = pType->getScale();
-	    fDepth  = pType->getDepth();
 
-	    glEnable(GL_BLEND); 
-	    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
-	    glBindTexture(GL_TEXTURE_2D,GLName);
-	    glEnable(GL_TEXTURE_2D);
-	    glBegin(GL_POLYGON);
-	    glColor3f(1,1,1);
-	    glTexCoord2f((pEdge->pSrcBlock->fPosX+pEdge->P1.x)*fXScale,0.01);
-	    _Vertex(pEdge->P1 + Vector2f(pEdge->pSrcBlock->fPosX,pEdge->pSrcBlock->fPosY));
-	    glTexCoord2f((pEdge->pSrcBlock->fPosX+pEdge->P2.x)*fXScale,0.01);
-	    _Vertex(pEdge->P2 + Vector2f(pEdge->pSrcBlock->fPosX,pEdge->pSrcBlock->fPosY));
-	    glTexCoord2f((pEdge->pSrcBlock->fPosX+pEdge->P2.x)*fXScale,0.99);
-	    _Vertex(pEdge->P2 + Vector2f(pEdge->pSrcBlock->fPosX,pEdge->pSrcBlock->fPosY) + Vector2f(0,-fDepth));
-	    glTexCoord2f((pEdge->pSrcBlock->fPosX+pEdge->P1.x)*fXScale,0.99);
-	    _Vertex(pEdge->P1 + Vector2f(pEdge->pSrcBlock->fPosX,pEdge->pSrcBlock->fPosY) + Vector2f(0,-fDepth));
-	    glEnd();
-	    glDisable(GL_TEXTURE_2D);
-	    glDisable(GL_BLEND);
-	  }
+        std::vector<Block *> Blocks = getGameObject()->getLevelSrc()->Blocks();
+        BlockVertex *v_blockVertexA;
+        BlockVertex *v_blockVertexB;
+        for(int i=0;i<Blocks.size();i++) {
+          for(int j=0;j<Blocks[i]->Vertices().size();j++) {  
+             v_blockVertexA = Blocks[i]->Vertices()[j];
+             if(v_blockVertexA->EdgeEffect() != "") {
+               v_blockVertexB = Blocks[i]->Vertices()[(j+1)%Blocks[i]->Vertices().size()];
+
+               /* link A to B */
+               GLuint GLName = 0;
+               float fXScale,fDepth;
+               EdgeEffectSprite* pType;
+
+               pType = (EdgeEffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EDGEEFFECT, v_blockVertexA->EdgeEffect());
+
+               if(pType != NULL) {
+                 GLName = pType->getTexture()->nID;
+                 fXScale = pType->getScale();
+                 fDepth  = pType->getDepth();
+                 
+                 glEnable(GL_BLEND); 
+                 glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
+                 glBindTexture(GL_TEXTURE_2D,GLName);
+                 glEnable(GL_TEXTURE_2D);
+                 glBegin(GL_POLYGON);
+                 glColor3f(1,1,1);
+                 glTexCoord2f((Blocks[i]->DynamicPosition().x+v_blockVertexA->Position().x)*fXScale,0.01);
+                 _Vertex(v_blockVertexA->Position() + Vector2f(Blocks[i]->DynamicPosition().x,Blocks[i]->DynamicPosition().y));
+                 glTexCoord2f((Blocks[i]->DynamicPosition().x+v_blockVertexB->Position().x)*fXScale,0.01);
+                 _Vertex(v_blockVertexB->Position() + Vector2f(Blocks[i]->DynamicPosition().x,Blocks[i]->DynamicPosition().y));
+                 glTexCoord2f((Blocks[i]->DynamicPosition().x+v_blockVertexB->Position().x)*fXScale,0.99);
+                 _Vertex(v_blockVertexB->Position() + Vector2f(Blocks[i]->DynamicPosition().x,Blocks[i]->DynamicPosition().y) + Vector2f(0,-fDepth));
+                 glTexCoord2f((Blocks[i]->DynamicPosition().x+v_blockVertexA->Position().x)*fXScale,0.99);
+                 _Vertex(v_blockVertexA->Position() + Vector2f(Blocks[i]->DynamicPosition().x,Blocks[i]->DynamicPosition().y) + Vector2f(0,-fDepth));
+                 glEnd();
+                 glDisable(GL_TEXTURE_2D);
+                 glDisable(GL_BLEND);
+               }
+             }
+          }
         }
       }
     }
-  }  
+  }
 
   /*===========================================================================
   Sky.
@@ -1210,7 +1215,7 @@ namespace vapp {
     EffectSprite* pType;
 
     /* Render sky - but which? */
-    const std::string &SkyName = pGame->getLevelSrc()->getLevelInfo()->Sky;
+    const std::string &SkyName = pGame->getLevelSrc()->Sky();
     if(SkyName == "" || SkyName == "sky1") {
       pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Sky1");
 
@@ -1298,43 +1303,44 @@ namespace vapp {
     MotoGame *pGame = getGameObject();
     
     /* Render background blocks */
-    std::vector<ConvexBlock *> &Blocks = pGame->getBlocks();
+    std::vector<Block *> Blocks = pGame->getLevelSrc()->Blocks();
 
     for(int i=0;i<Blocks.size();i++) {
-      Vector2f Center;
-      Texture *pTexture;
-      GLuint GLName = 0;
-      
-      if(!Blocks[i]->pSrcBlock || Blocks[i]->pSrcBlock->bDynamic || !Blocks[i]->pSrcBlock->bBackground) continue;
-
-      /* Main body */      
-      Center = Vector2f(Blocks[i]->pSrcBlock->fPosX,Blocks[i]->pSrcBlock->fPosY);
-      Sprite *pSprite;
-      pSprite = getParent()->m_theme.getSprite(SPRITE_TYPE_TEXTURE, Blocks[i]->pSrcBlock->Texture);
-
-      if(pSprite != NULL) {
-  try {
-    pTexture = pSprite->getTexture();
-  } catch(Exception &e) {
-    pTexture = NULL;
-  }
-      } else {
-  pTexture = NULL;
+      if(Blocks[i]->isDynamic() == false && Blocks[i]->isBackground()) {
+        Vector2f Center;
+        Texture *pTexture;
+        GLuint GLName = 0;
+        
+        /* Main body */      
+        Center = Blocks[i]->DynamicPosition();
+        Sprite *pSprite;
+        pSprite = getParent()->m_theme.getSprite(SPRITE_TYPE_TEXTURE, Blocks[i]->Texture());
+        
+        if(pSprite != NULL) {
+          try {
+            pTexture = pSprite->getTexture();
+          } catch(Exception &e) {
+            pTexture = NULL;
+          }
+        } else {
+          pTexture = NULL;
+        }
+        if(pTexture != NULL) {GLName = pTexture->nID;}
+        
+        glBindTexture(GL_TEXTURE_2D,GLName);
+        glEnable(GL_TEXTURE_2D);
+        glBegin(GL_POLYGON);
+        glColor3f(1,1,1);
+        
+        for(int j=0; j<Blocks[i]->Vertices().size(); j++) {
+          glTexCoord2f((Center.x+Blocks[i]->Vertices()[j]->Position().x) * 0.25,
+                       (Center.y+Blocks[i]->Vertices()[j]->Position().y) * 0.25);
+          _Vertex( Center + Blocks[i]->Vertices()[j]->Position());                  
+        }
+        glEnd();
+        glDisable(GL_TEXTURE_2D);
       }
-      if(pTexture != NULL) {GLName = pTexture->nID;}
-    
-      glBindTexture(GL_TEXTURE_2D,GLName);
-      glEnable(GL_TEXTURE_2D);
-      glBegin(GL_POLYGON);
-      glColor3f(1,1,1);
-      for(int j=0;j<Blocks[i]->Vertices.size();j++) {
-        glTexCoord2f((Center.x+Blocks[i]->Vertices[j]->P.x) * 0.25,
-                      (Center.y+Blocks[i]->Vertices[j]->P.y) * 0.25);
-        _Vertex( Center + Blocks[i]->Vertices[j]->P );                  
-      }
-      glEnd();
-      glDisable(GL_TEXTURE_2D);
-    }        
+    }
   }
 
   /*===========================================================================
@@ -1355,9 +1361,6 @@ namespace vapp {
   Free stuff
   ===========================================================================*/
   void GameRenderer::_Free(void) {      
-    /* Free any particles left */
-    for(int i=0;i<m_Particles.size();i++)
-      delete m_Particles[i];
   }
   
   void GameRenderer::shutdown(void) {

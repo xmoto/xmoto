@@ -152,8 +152,8 @@ namespace vapp {
       Vector2f FDamp = Fqv * PHYS_SUSP_DAMP;
       Vector2f FTotal = FSpring + FDamp; 
       if(m_bodyDetach == false || m_BikeS.Dir == DD_LEFT) { 
-	dBodyAddForce(m_FrontWheelBodyID,FTotal.x,FTotal.y,0);
-	dBodyAddForceAtPos(m_FrameBodyID,-FTotal.x,-FTotal.y,0,m_BikeS.RFrontWheelP.x,m_BikeS.RFrontWheelP.y,0);
+  dBodyAddForce(m_FrontWheelBodyID,FTotal.x,FTotal.y,0);
+  dBodyAddForceAtPos(m_FrameBodyID,-FTotal.x,-FTotal.y,0,m_BikeS.RFrontWheelP.x,m_BikeS.RFrontWheelP.y,0);
       }
       m_BikeS.PrevFq = Fq;
 
@@ -164,8 +164,8 @@ namespace vapp {
       Vector2f RDamp = Rqv * PHYS_SUSP_DAMP;
       Vector2f RTotal = RSpring + RDamp;   
       if(m_bodyDetach == false || m_BikeS.Dir == DD_RIGHT) {
-	dBodyAddForce(m_RearWheelBodyID,RTotal.x,RTotal.y,0);
-	dBodyAddForceAtPos(m_FrameBodyID,-RTotal.x,-RTotal.y,0,m_BikeS.RRearWheelP.x,m_BikeS.RRearWheelP.y,0);
+  dBodyAddForce(m_RearWheelBodyID,RTotal.x,RTotal.y,0);
+  dBodyAddForceAtPos(m_FrameBodyID,-RTotal.x,-RTotal.y,0,m_BikeS.RRearWheelP.x,m_BikeS.RRearWheelP.y,0);
       }
       m_BikeS.PrevRq = Rq;
       
@@ -290,7 +290,6 @@ namespace vapp {
       
     /* Perform collision detection between the bike and the level blocks */
     m_Collision.clearDynamicTouched();
-    _UpdateDynamicCollisionLines(); /* first make sure we now where the dynamic lines are */
     
     int nNumContacts;
     dContact Contacts[100];
@@ -302,13 +301,13 @@ namespace vapp {
     nNumContacts = _IntersectWheelLevel( m_BikeS.FrontWheelP,m_BikeP.WR,Contacts );
     if(nNumContacts>0) {
       if(bFrontWheelTouching == false) {
-	bFrontWheelTouching = true;
-	scriptCallVoidNumberArg("OnWheel1Touchs", 1);
+  bFrontWheelTouching = true;
+  scriptCallVoidNumberArg("OnWheel1Touchs", 1);
       }
     } else {
       if(bFrontWheelTouching) {
-	bFrontWheelTouching = false;
-	scriptCallVoidNumberArg("OnWheel1Touchs", 0);
+  bFrontWheelTouching = false;
+  scriptCallVoidNumberArg("OnWheel1Touchs", 0);
       }
     }
     if(m_Collision.isDynamicTouched()) {
@@ -360,13 +359,13 @@ namespace vapp {
     nNumContacts = _IntersectWheelLevel( m_BikeS.RearWheelP,m_BikeP.WR,Contacts );
     if(nNumContacts>0) {
       if(bRearWheelTouching == false) {
-	bRearWheelTouching = true;
-	scriptCallVoidNumberArg("OnWheel2Touchs", 1);
+  bRearWheelTouching = true;
+  scriptCallVoidNumberArg("OnWheel2Touchs", 1);
       }
     } else {
       if(bRearWheelTouching) {
-	bRearWheelTouching = false;
-	scriptCallVoidNumberArg("OnWheel2Touchs", 0);
+  bRearWheelTouching = false;
+  scriptCallVoidNumberArg("OnWheel2Touchs", 0);
       }
     }
 
@@ -421,126 +420,126 @@ namespace vapp {
       /*
       // m_PlayerTorsoBody
       if(m_BikeS.Dir == DD_RIGHT) {
-	nNumContacts = m_Collision.collideLine(m_BikeS.ShoulderP.x, m_BikeS.ShoulderP.y,
-					       m_BikeS.LowerBodyP.x, m_BikeS.LowerBodyP.y,
-					       Contacts, 100);
+  nNumContacts = m_Collision.collideLine(m_BikeS.ShoulderP.x, m_BikeS.ShoulderP.y,
+                 m_BikeS.LowerBodyP.x, m_BikeS.LowerBodyP.y,
+                 Contacts, 100);
       } else {
-	nNumContacts = m_Collision.collideLine(m_BikeS.Shoulder2P.x,  m_BikeS.Shoulder2P.y,
-					       m_BikeS.LowerBody2P.x, m_BikeS.LowerBody2P.y,
-					       Contacts, 100);
+  nNumContacts = m_Collision.collideLine(m_BikeS.Shoulder2P.x,  m_BikeS.Shoulder2P.y,
+                 m_BikeS.LowerBody2P.x, m_BikeS.LowerBody2P.y,
+                 Contacts, 100);
       }
       if(nNumContacts > 0) {
-	//usleep(100000);
+  //usleep(100000);
       }
       for(int i=0;i<nNumContacts;i++) {
         dJointAttach(dJointCreateContact(m_WorldID,
-      					 m_ContactGroup,
-					 &Contacts[i]),
-		     m_BikeS.Dir == DD_RIGHT ?
-		     m_PlayerTorsoBodyID : m_PlayerTorsoBodyID2, 0);
+                 m_ContactGroup,
+           &Contacts[i]),
+         m_BikeS.Dir == DD_RIGHT ?
+         m_PlayerTorsoBodyID : m_PlayerTorsoBodyID2, 0);
       }
       */
       /*
       // m_PlayerLArmBodyID
       if(m_BikeS.Dir == DD_RIGHT) {
-	nNumContacts = m_Collision.collideLine(m_BikeS.ElbowP.x, m_BikeS.ElbowP.y,
-					       m_BikeS.HandP.x, m_BikeS.HandP.y,
-					       Contacts, 100);
+  nNumContacts = m_Collision.collideLine(m_BikeS.ElbowP.x, m_BikeS.ElbowP.y,
+                 m_BikeS.HandP.x, m_BikeS.HandP.y,
+                 Contacts, 100);
       } else {
-	nNumContacts = m_Collision.collideLine(m_BikeS.Elbow2P.x,  m_BikeS.Elbow2P.y,
-					       m_BikeS.Hand2P.x, m_BikeS.Hand2P.y,
-					       Contacts, 100);
+  nNumContacts = m_Collision.collideLine(m_BikeS.Elbow2P.x,  m_BikeS.Elbow2P.y,
+                 m_BikeS.Hand2P.x, m_BikeS.Hand2P.y,
+                 Contacts, 100);
       }
       for(int i=0;i<nNumContacts;i++) {
         dJointAttach(dJointCreateContact(m_WorldID,
-      					 m_ContactGroup,
-					 &Contacts[i]),
-		     m_BikeS.Dir == DD_RIGHT ?
-		     m_PlayerLArmBodyID : m_PlayerLArmBodyID2, 0);           
+                 m_ContactGroup,
+           &Contacts[i]),
+         m_BikeS.Dir == DD_RIGHT ?
+         m_PlayerLArmBodyID : m_PlayerLArmBodyID2, 0);           
       }
 
       // m_PlayerUArmBodyID
       if(m_BikeS.Dir == DD_RIGHT) {
-	nNumContacts = m_Collision.collideLine(m_BikeS.ElbowP.x, m_BikeS.ElbowP.y,
-					       m_BikeS.ShoulderP.x, m_BikeS.ShoulderP.y,
-					       Contacts, 100);
+  nNumContacts = m_Collision.collideLine(m_BikeS.ElbowP.x, m_BikeS.ElbowP.y,
+                 m_BikeS.ShoulderP.x, m_BikeS.ShoulderP.y,
+                 Contacts, 100);
       } else {
-	nNumContacts = m_Collision.collideLine(m_BikeS.Elbow2P.x,  m_BikeS.Elbow2P.y,
-					       m_BikeS.Shoulder2P.x, m_BikeS.Shoulder2P.y,
-					       Contacts, 100);
+  nNumContacts = m_Collision.collideLine(m_BikeS.Elbow2P.x,  m_BikeS.Elbow2P.y,
+                 m_BikeS.Shoulder2P.x, m_BikeS.Shoulder2P.y,
+                 Contacts, 100);
       }
       for(int i=0;i<nNumContacts;i++) {
         dJointAttach(dJointCreateContact(m_WorldID,
-      					 m_ContactGroup,
-					 &Contacts[i]),
-		     m_BikeS.Dir == DD_RIGHT ?
-		     m_PlayerUArmBodyID : m_PlayerUArmBodyID2, 0);           
+                 m_ContactGroup,
+           &Contacts[i]),
+         m_BikeS.Dir == DD_RIGHT ?
+         m_PlayerUArmBodyID : m_PlayerUArmBodyID2, 0);           
       }  
 
       // m_PlayerULegBodyID
       if(m_BikeS.Dir == DD_RIGHT) {
-	nNumContacts = m_Collision.collideLine(m_BikeS.LowerBodyP.x, m_BikeS.LowerBodyP.y,
-					       m_BikeS.KneeP.x, m_BikeS.KneeP.y,
-					       Contacts, 100);
+  nNumContacts = m_Collision.collideLine(m_BikeS.LowerBodyP.x, m_BikeS.LowerBodyP.y,
+                 m_BikeS.KneeP.x, m_BikeS.KneeP.y,
+                 Contacts, 100);
       } else {
-	nNumContacts = m_Collision.collideLine(m_BikeS.LowerBody2P.x,  m_BikeS.LowerBody2P.y,
-					       m_BikeS.Knee2P.x, m_BikeS.Knee2P.y,
-					       Contacts, 100);
+  nNumContacts = m_Collision.collideLine(m_BikeS.LowerBody2P.x,  m_BikeS.LowerBody2P.y,
+                 m_BikeS.Knee2P.x, m_BikeS.Knee2P.y,
+                 Contacts, 100);
       }
       for(int i=0;i<nNumContacts;i++) {
         dJointAttach(dJointCreateContact(m_WorldID,
-      					 m_ContactGroup,
-					 &Contacts[i]),
-		     m_BikeS.Dir == DD_RIGHT ?
-		     m_PlayerULegBodyID : m_PlayerULegBodyID2, 0);           
+                 m_ContactGroup,
+           &Contacts[i]),
+         m_BikeS.Dir == DD_RIGHT ?
+         m_PlayerULegBodyID : m_PlayerULegBodyID2, 0);           
       } 
 
       // m_PlayerLLegBodyID
       if(m_BikeS.Dir == DD_RIGHT) {
-	nNumContacts = m_Collision.collideLine(m_BikeS.KneeP.x, m_BikeS.KneeP.y,
-					       m_BikeS.FootP.x, m_BikeS.FootP.y,
-					       Contacts, 100);
+  nNumContacts = m_Collision.collideLine(m_BikeS.KneeP.x, m_BikeS.KneeP.y,
+                 m_BikeS.FootP.x, m_BikeS.FootP.y,
+                 Contacts, 100);
       } else {
-	nNumContacts = m_Collision.collideLine(m_BikeS.Knee2P.x,  m_BikeS.Knee2P.y,
-					       m_BikeS.Foot2P.x, m_BikeS.Foot2P.y,
-					       Contacts, 100);
+  nNumContacts = m_Collision.collideLine(m_BikeS.Knee2P.x,  m_BikeS.Knee2P.y,
+                 m_BikeS.Foot2P.x, m_BikeS.Foot2P.y,
+                 Contacts, 100);
       }
       for(int i=0;i<nNumContacts;i++) {
         dJointAttach(dJointCreateContact(m_WorldID,
-      					 m_ContactGroup,
-					 &Contacts[i]),
-		     m_BikeS.Dir == DD_RIGHT ?
-		     m_PlayerLLegBodyID : m_PlayerLLegBodyID2, 0);           
+                 m_ContactGroup,
+           &Contacts[i]),
+         m_BikeS.Dir == DD_RIGHT ?
+         m_PlayerLLegBodyID : m_PlayerLLegBodyID2, 0);           
       }
       */
 
       /*
       // hand
       if(m_BikeS.Dir == DD_RIGHT) {
-	nNumContacts = m_Collision.collideCircle(m_BikeS.HandP.x, m_BikeS.HandP.y, 0.1, Contacts, 100);
+  nNumContacts = m_Collision.collideCircle(m_BikeS.HandP.x, m_BikeS.HandP.y, 0.1, Contacts, 100);
       } else {
-	nNumContacts = m_Collision.collideCircle(m_BikeS.Hand2P.x, m_BikeS.Hand2P.y, 0.1, Contacts, 100);
+  nNumContacts = m_Collision.collideCircle(m_BikeS.Hand2P.x, m_BikeS.Hand2P.y, 0.1, Contacts, 100);
       }
       for(int i=0;i<nNumContacts;i++) {
         dJointAttach(dJointCreateContact(m_WorldID,
-      					 m_ContactGroup,
-					 &Contacts[i]),
-		     m_BikeS.Dir == DD_RIGHT ?
-		     m_PlayerHandAnchorBodyID : m_PlayerHandAnchorBodyID2, 0);           
+                 m_ContactGroup,
+           &Contacts[i]),
+         m_BikeS.Dir == DD_RIGHT ?
+         m_PlayerHandAnchorBodyID : m_PlayerHandAnchorBodyID2, 0);           
       }
 
       // foot
       if(m_BikeS.Dir == DD_RIGHT) {
-	nNumContacts = m_Collision.collideCircle(m_BikeS.FootP.x, m_BikeS.FootP.y, 0.1, Contacts, 100);
+  nNumContacts = m_Collision.collideCircle(m_BikeS.FootP.x, m_BikeS.FootP.y, 0.1, Contacts, 100);
       } else {
-	nNumContacts = m_Collision.collideCircle(m_BikeS.Foot2P.x, m_BikeS.Foot2P.y, 0.1, Contacts, 100);
+  nNumContacts = m_Collision.collideCircle(m_BikeS.Foot2P.x, m_BikeS.Foot2P.y, 0.1, Contacts, 100);
       }
       for(int i=0;i<nNumContacts;i++) {
         dJointAttach(dJointCreateContact(m_WorldID,
-      					 m_ContactGroup,
-      					 &Contacts[i]),
-		     m_BikeS.Dir == DD_RIGHT ?
-		     m_PlayerFootAnchorBodyID : m_PlayerFootAnchorBodyID2 , 0);           
+                 m_ContactGroup,
+                 &Contacts[i]),
+         m_BikeS.Dir == DD_RIGHT ?
+         m_PlayerFootAnchorBodyID : m_PlayerFootAnchorBodyID2 , 0);           
       }
       */
 
@@ -549,14 +548,14 @@ namespace vapp {
     /* Player head */
     if(m_BikeS.Dir == DD_RIGHT) {
       if(_IntersectHeadLevel(m_BikeS.HeadP,m_BikeP.fHeadSize,m_PrevActiveHead)) {
-	createGameEvent(new MGE_PlayerDies(getTime(), false));
+  createGameEvent(new MGE_PlayerDies(getTime(), false));
       }
       
       m_PrevActiveHead = m_BikeS.HeadP;
     }
     else if(m_BikeS.Dir == DD_LEFT) {
       if(_IntersectHeadLevel(m_BikeS.Head2P,m_BikeP.fHeadSize,m_PrevActiveHead)) {
-	createGameEvent(new MGE_PlayerDies(getTime(), false));
+  createGameEvent(new MGE_PlayerDies(getTime(), false));
       }
 
       m_PrevActiveHead = m_BikeS.Head2P;
@@ -631,7 +630,7 @@ namespace vapp {
     Update game state
     ===========================================================================*/
   void MotoGame::_UpdateStateFromReplay(SerializedBikeState *pReplayState,
-					BikeState *pBikeS) 
+          BikeState *pBikeS) 
   {
     bool bUpdateRider=true,bUpdateAltRider=true;
     
@@ -1162,7 +1161,7 @@ namespace vapp {
       dContact c[100];
       int nNumContacts = m_Collision.collideLine(LastCp.x,LastCp.y,Cp.x,Cp.y,c,100);
       if(nNumContacts > 0) {
-	return true;
+  return true;
       }
     }
     

@@ -51,10 +51,10 @@ namespace vapp {
     try {
       /* Continue until buffer is empty */
       while((*Buffer).numRemainingBytes() > sizeof(float)) {
-    	p = new RecordedGameEvent;
-    	p->bPassed = false;
-    	p->Event   = MotoGameEvent::getUnserialized(*Buffer);
-    	v_ReplayEvents->push_back(p);
+      p = new RecordedGameEvent;
+      p->bPassed = false;
+      p->Event   = MotoGameEvent::getUnserialized(*Buffer);
+      v_ReplayEvents->push_back(p);
       }
     } catch(Exception &e) {
       Log("** Warning ** : unable to unserialize game events !");

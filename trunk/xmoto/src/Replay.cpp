@@ -34,7 +34,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <iostream>
 //#include <locale> /* can this safely be removed? */
 
-#include <arch/SwapEndian.h>
+#include <helpers/SwapEndian.h>
 
 namespace vapp {
 
@@ -348,7 +348,7 @@ namespace vapp {
     }
     
     memcpy(addr,(const char*)&state,m_nStateSize);
-	SwapEndian::LittleSerializedBikeState(*(SerializedBikeState*)addr);
+  SwapEndian::LittleSerializedBikeState(*(SerializedBikeState*)addr);
   }
   
   bool Replay::nextNormalState() {
@@ -368,28 +368,28 @@ namespace vapp {
 
       /* go on the following chunk */
       if(m_nCurState >= STATES_PER_CHUNK) { /* end of a chunk */
-	if(m_nCurChunk < m_Chunks.size() -1) {
-	  m_nCurState = m_nCurState - m_Chunks[m_nCurChunk].nNumStates -1;
-	  m_nCurChunk++;
-	}
+  if(m_nCurChunk < m_Chunks.size() -1) {
+    m_nCurState = m_nCurState - m_Chunks[m_nCurChunk].nNumStates -1;
+    m_nCurChunk++;
+  }
       } else {
-	if(m_nCurState < 0.0) { /* start of a chunk */
-	  if(m_nCurChunk > 0) {
-	    m_nCurState = m_nCurState + m_Chunks[m_nCurChunk-1].nNumStates -1;
-	    m_nCurChunk--;
-	  }
-	}
+  if(m_nCurState < 0.0) { /* start of a chunk */
+    if(m_nCurChunk > 0) {
+      m_nCurState = m_nCurState + m_Chunks[m_nCurChunk-1].nNumStates -1;
+      m_nCurChunk--;
+    }
+  }
       }
 
       /* if that's the beginning */
       if(m_nCurState < 0.0) {
-	m_nCurState = 0.0;
+  m_nCurState = 0.0;
       }
 
       /* if that's end */
       if(m_nCurState >= m_Chunks[m_nCurChunk].nNumStates) {
-	m_nCurState = m_Chunks[m_nCurChunk].nNumStates -1;
-	return false;
+  m_nCurState = m_Chunks[m_nCurChunk].nNumStates -1;
+  return false;
       }
       
     } else { /* that's not the end or the start of the chunk */
@@ -398,8 +398,8 @@ namespace vapp {
 
       /* if that's end */
       if(m_nCurState >= m_Chunks[m_nCurChunk].nNumStates) {
-	m_nCurState = m_Chunks[m_nCurChunk].nNumStates -1;
-	return false;
+  m_nCurState = m_Chunks[m_nCurChunk].nNumStates -1;
+  return false;
       }
     }
     
@@ -412,7 +412,7 @@ namespace vapp {
     peekState(state);
 
     m_bEndOfFile = (m_nCurChunk       == m_Chunks.size()-1 && 
-	 	    (int)m_nCurState  == m_Chunks[m_nCurChunk].nNumStates-1);
+        (int)m_nCurState  == m_Chunks[m_nCurChunk].nNumStates-1);
 
     if(m_bEndOfFile == false) {
       if(nextNormalState()) { /* do nothing */ }
@@ -422,9 +422,9 @@ namespace vapp {
   void Replay::peekState(SerializedBikeState& state) {
     /* Like loadState() but this one does not advance the cursor... it just takes a peek */
     memcpy((char *)&state,
-	   &m_Chunks[m_nCurChunk].pcChunkData[((int)m_nCurState)*m_nStateSize],
-	   m_nStateSize);
-	  SwapEndian::LittleSerializedBikeState(state);
+     &m_Chunks[m_nCurChunk].pcChunkData[((int)m_nCurState)*m_nStateSize],
+     m_nStateSize);
+    SwapEndian::LittleSerializedBikeState(state);
   }
   
   void Replay::pause() {
@@ -501,18 +501,18 @@ namespace vapp {
       /* Try opening it */
       FileHandle *pfh = FS::openIFile("Replays/" + p_ReplayName + ".rpl");
       if(pfh == NULL) {
-	return NULL;
+  return NULL;
       }
 
       int nVersion = FS::readByte(pfh);
       if(nVersion != 0 && nVersion != 1) {
-	FS::closeFile(pfh);
-	return NULL;
+  FS::closeFile(pfh);
+  return NULL;
       }
 
       if(FS::readInt_LE(pfh) != 0x12345678) {   
-	FS::closeFile(pfh);
-	return NULL;
+  FS::closeFile(pfh);
+  return NULL;
       }
   
       std::string LevelID = FS::readString(pfh);
@@ -533,9 +533,9 @@ namespace vapp {
       pRpl->fFrameRate = fFrameRate;
 
       if(bFinished) {
-	pRpl->fFinishTime = fFinishTime;
+  pRpl->fFinishTime = fFinishTime;
       } else {
-	pRpl->fFinishTime = -1;                
+  pRpl->fFinishTime = -1;                
       }
           
       FS::closeFile(pfh);

@@ -33,10 +33,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #endif
 #include <sys/stat.h>
 
-#include "VExcept.h"
+#include "helpers/VExcept.h"
 #include "VApp.h"
 #include "VFileIO.h"
-#include "arch/SwapEndian.h"
+#include "helpers/SwapEndian.h"
 
 namespace vapp {
 
@@ -57,67 +57,67 @@ namespace vapp {
     }
   #endif
   mbool str_match_wildcard(char *pcMWildcard,char *pcMString,mbool CaseSensitive) {
-	  int nPos=0;
-	  mbool PrevIsWildcard=FALSE;
-	  char c1[256],c2[256];
-	  char *pcWildcard,*pcString;
-  	
-	  if(CaseSensitive) {
-		  pcWildcard=pcMWildcard;
-		  pcString=pcMString;
-	  }	
-	  else {
-		  strncpy(c1,pcMWildcard,sizeof(c1));
-		  strncpy(c2,pcMString,sizeof(c2));
-		  strlwr(c1); strlwr(c2);
-		  pcWildcard=c1;
-		  pcString=c2;
-	  }
-  	
-	  if(pcWildcard[0]=='\0') return TRUE;
-  	
-	  for(unsigned i=0; i<strlen(pcWildcard); i++) {
-		  /* If end of string is reached, we have a match */
-		  if(pcString[nPos] == '\0' && pcWildcard[i] == '\0')
-			  return TRUE;
-  			
-		  /* Wildcard? */
-		  if(pcWildcard[i] == '?' || pcWildcard[i] == '*') 
-			  PrevIsWildcard=TRUE;
-		  else {
-			  /* Nope. What does we accept from the string? */
-			  if(PrevIsWildcard) {
-				  /* Read string until we get the right character */
-				  while(1) {
-					  if(pcString[nPos] == '\0') 
-						  return FALSE;
-  						
-					  /* Got the char? */
-					  if(pcString[nPos] == pcWildcard[i])
-						  break;
-  						
-					  nPos++;
-				  }
-				  i--;
-  			
-				  /* Clear wildcard flag */
-				  PrevIsWildcard=FALSE;
-			  }
-			  else {
-				  /* The letter in the string MUST equal the letter in the wildcard */
-				  if(pcWildcard[i] != pcString[nPos])
-					  return FALSE;
-  						
-				  nPos++; /* Next */
-			  }
-		  }
-	  }
-  	
-	  /* Result of random debugging :) */
-	  if(PrevIsWildcard || pcString[nPos]=='\0') return TRUE;
-  	
-	  /* Not a match */
-	  return FALSE;
+    int nPos=0;
+    mbool PrevIsWildcard=FALSE;
+    char c1[256],c2[256];
+    char *pcWildcard,*pcString;
+    
+    if(CaseSensitive) {
+      pcWildcard=pcMWildcard;
+      pcString=pcMString;
+    } 
+    else {
+      strncpy(c1,pcMWildcard,sizeof(c1));
+      strncpy(c2,pcMString,sizeof(c2));
+      strlwr(c1); strlwr(c2);
+      pcWildcard=c1;
+      pcString=c2;
+    }
+    
+    if(pcWildcard[0]=='\0') return TRUE;
+    
+    for(unsigned i=0; i<strlen(pcWildcard); i++) {
+      /* If end of string is reached, we have a match */
+      if(pcString[nPos] == '\0' && pcWildcard[i] == '\0')
+        return TRUE;
+        
+      /* Wildcard? */
+      if(pcWildcard[i] == '?' || pcWildcard[i] == '*') 
+        PrevIsWildcard=TRUE;
+      else {
+        /* Nope. What does we accept from the string? */
+        if(PrevIsWildcard) {
+          /* Read string until we get the right character */
+          while(1) {
+            if(pcString[nPos] == '\0') 
+              return FALSE;
+              
+            /* Got the char? */
+            if(pcString[nPos] == pcWildcard[i])
+              break;
+              
+            nPos++;
+          }
+          i--;
+        
+          /* Clear wildcard flag */
+          PrevIsWildcard=FALSE;
+        }
+        else {
+          /* The letter in the string MUST equal the letter in the wildcard */
+          if(pcWildcard[i] != pcString[nPos])
+            return FALSE;
+              
+          nPos++; /* Next */
+        }
+      }
+    }
+    
+    /* Result of random debugging :) */
+    if(PrevIsWildcard || pcString[nPos]=='\0') return TRUE;
+    
+    /* Not a match */
+    return FALSE;
   }
 
   void FS::_ThrowFileError(FileHandle *pfh,std::string Description) {
@@ -144,18 +144,18 @@ namespace vapp {
       
       if((fh = _findfirst((Dir + std::string("/") + Wildcard).c_str(),&fd)) != -1L) {
         do {
-					if(strcmp(fd.name,".") && strcmp(fd.name,"..")) {
-					  std::string F = Dir + std::string("/") + std::string(fd.name);
-					  bool bFound = false;
-					  for(int k = 0;k<List.size();k++) {
-					    if(getFileBaseName(List[k]) == getFileBaseName(F)) {  
-					      bFound = true;
-					      break;
-					    }
-					  }
-					  if(!bFound)
-						  List.push_back(F);
-				  }
+          if(strcmp(fd.name,".") && strcmp(fd.name,"..")) {
+            std::string F = Dir + std::string("/") + std::string(fd.name);
+            bool bFound = false;
+            for(int k = 0;k<List.size();k++) {
+              if(getFileBaseName(List[k]) == getFileBaseName(F)) {  
+                bFound = true;
+                break;
+              }
+            }
+            if(!bFound)
+              List.push_back(F);
+          }
         } while(_findnext(fh,&fd)==0);
         _findclose(fh);
       }
@@ -163,44 +163,44 @@ namespace vapp {
       /* Now, recurse into sub-dirs */
       if((fh = _findfirst( (Dir + std::string("/*")).c_str(),&fd)) != -1L) {
         do {
-					if(strcmp(fd.name,".") && strcmp(fd.name,"..")) {
-					  std::string F = Dir + std::string("/") + std::string(fd.name);
+          if(strcmp(fd.name,".") && strcmp(fd.name,"..")) {
+            std::string F = Dir + std::string("/") + std::string(fd.name);
             if(isDir(F)) {
               /* Recurse! */
               _FindFilesRecursive(F,Wildcard,List);
-            }					  
-					}
-			  } while(_findnext(fh,&fd)==0);
-			  _findclose(fh);
-			}      
-	  #else
-	    std::string Dir = DirX;
-	  
+            }           
+          }
+        } while(_findnext(fh,&fd)==0);
+        _findclose(fh);
+      }      
+    #else
+      std::string Dir = DirX;
+    
       struct dirent *dp;    
       DIR *dirp = opendir(Dir.c_str());
       while(dirp) {
         if((dp = readdir(dirp)) != NULL) {
-			    std::string F = Dir + std::string(dp->d_name);
-			    if(isDir(F)) {
-			      /* Recurse... */
-            if(strcmp(dp->d_name,".") && strcmp(dp->d_name,"..")) {			      
+          std::string F = Dir + std::string(dp->d_name);
+          if(isDir(F)) {
+            /* Recurse... */
+            if(strcmp(dp->d_name,".") && strcmp(dp->d_name,"..")) {           
               _FindFilesRecursive(F + std::string("/"),Wildcard,List);
             }
-			    }
-			    else {			    
+          }
+          else {          
             if(str_match_wildcard((char *)Wildcard.c_str(),(char *)dp->d_name,true)) {
               /* Match! */
               if(strcmp(dp->d_name,".") && strcmp(dp->d_name,"..")) {
-					      bool bFound = false;
-					      for(unsigned int k = 0;k<List.size();k++) {
-  					      if(FS::getFileBaseName(List[k]) == FS::getFileBaseName(F)) {  
-					          bFound = true;
-					          break;
-					        }
-					      }
-					      if(!bFound)
-						      List.push_back(F);
-              }							
+                bool bFound = false;
+                for(unsigned int k = 0;k<List.size();k++) {
+                  if(FS::getFileBaseName(List[k]) == FS::getFileBaseName(F)) {  
+                    bFound = true;
+                    break;
+                  }
+                }
+                if(!bFound)
+                  List.push_back(F);
+              }             
             }
           }
         }
@@ -208,7 +208,7 @@ namespace vapp {
           closedir(dirp);
           break;        
         }
-      }	      
+      }       
     #endif    
   }
 
@@ -264,18 +264,18 @@ namespace vapp {
         
         if((fh = _findfirst((DirToSearch + Wildcard).c_str(),&fd)) != -1L) {
           do {
-					  if(strcmp(fd.name,".") && strcmp(fd.name,"..")) {
-					    std::string F = DirToSearch + std::string(fd.name);
-					    bool bFound = false;
-					    for(int k = 0;k<Result.size();k++) {
-					      if(FS::getFileBaseName(Result[k]) == FS::getFileBaseName(F)) {  
-					        bFound = true;
-					        break;
-					      }
-					    }
-					    if(!bFound)
-						    Result.push_back(F);
-				    }
+            if(strcmp(fd.name,".") && strcmp(fd.name,"..")) {
+              std::string F = DirToSearch + std::string(fd.name);
+              bool bFound = false;
+              for(int k = 0;k<Result.size();k++) {
+                if(FS::getFileBaseName(Result[k]) == FS::getFileBaseName(F)) {  
+                  bFound = true;
+                  break;
+                }
+              }
+              if(!bFound)
+                Result.push_back(F);
+            }
           } while(_findnext(fh,&fd)==0);
           _findclose(fh);
         }
@@ -293,17 +293,17 @@ namespace vapp {
             if(str_match_wildcard((char *)Wildcard.c_str(),(char *)dp->d_name,true)) {
               /* Match! */
               if(strcmp(dp->d_name,".") && strcmp(dp->d_name,"..")) {
-					      std::string F = DirToSearch + std::string(dp->d_name);
-					      bool bFound = false;
-					      for(unsigned int k = 0;k<Result.size();k++) {
-  					      if(FS::getFileBaseName(Result[k]) == FS::getFileBaseName(F)) {  
-					          bFound = true;
-					          break;
-					        }
-					      }
-					      if(!bFound)
-						      Result.push_back(F);
-              }							
+                std::string F = DirToSearch + std::string(dp->d_name);
+                bool bFound = false;
+                for(unsigned int k = 0;k<Result.size();k++) {
+                  if(FS::getFileBaseName(Result[k]) == FS::getFileBaseName(F)) {  
+                    bFound = true;
+                    break;
+                  }
+                }
+                if(!bFound)
+                  Result.push_back(F);
+              }             
             }
           }
           else {
@@ -326,17 +326,17 @@ namespace vapp {
               if(str_match_wildcard((char *)Wildcard.c_str(),(char *)dp->d_name,true)) {
                 /* Match! */
                 if(strcmp(dp->d_name,".") && strcmp(dp->d_name,"..")) {
-					        std::string F = DirToSearch + std::string(dp->d_name);
-					        bool bFound = false;
-					        for(unsigned int k = 0;k<Result.size();k++) {
-    					      if(FS::getFileBaseName(Result[k]) == FS::getFileBaseName(F)) {  
-					            bFound = true;
-					            break;
-					          }
-					        }
-					        if(!bFound)
-						        Result.push_back(F);
-						    }
+                  std::string F = DirToSearch + std::string(dp->d_name);
+                  bool bFound = false;
+                  for(unsigned int k = 0;k<Result.size();k++) {
+                    if(FS::getFileBaseName(Result[k]) == FS::getFileBaseName(F)) {  
+                      bFound = true;
+                      break;
+                    }
+                  }
+                  if(!bFound)
+                    Result.push_back(F);
+                }
               }
             }
             else {
@@ -360,17 +360,17 @@ namespace vapp {
               if(str_match_wildcard((char *)Wildcard.c_str(),(char *)dp->d_name,true)) {
                 /* Match! */
                 if(strcmp(dp->d_name,".") && strcmp(dp->d_name,"..")) {
-					        std::string F = DirToSearch + std::string(dp->d_name);
-					        bool bFound = false;
-					        for(unsigned int k = 0;k<Result.size();k++) {
-    					      if(FS::getFileBaseName(Result[k]) == FS::getFileBaseName(F)) {  
-					            bFound = true;
-					            break;
-					          }
-					        }
-					        if(!bFound)
-						        Result.push_back(F);
-						    }
+                  std::string F = DirToSearch + std::string(dp->d_name);
+                  bool bFound = false;
+                  for(unsigned int k = 0;k<Result.size();k++) {
+                    if(FS::getFileBaseName(Result[k]) == FS::getFileBaseName(F)) {  
+                      bFound = true;
+                      break;
+                    }
+                  }
+                  if(!bFound)
+                    Result.push_back(F);
+                }
               }
             }
             else {
@@ -898,9 +898,9 @@ namespace vapp {
           FullTo = cTemp;
           break;
         } else {
-	  fclose(fp);
-	  i++;
-	}
+    fclose(fp);
+    i++;
+  }
         /* Next */
       }      
     }
@@ -910,7 +910,7 @@ namespace vapp {
     if(in != NULL) {
       FILE *out = fopen(FullTo.c_str(),"wb");
       if(out != NULL) {
-	To_really_done = FullTo;
+  To_really_done = FullTo;
 
         /* Get input file size */
         fseek(in,0,SEEK_END);
@@ -1090,11 +1090,11 @@ namespace vapp {
       #if !defined(WIN32)
         FILE *fptest = fopen(m_BinDataFile.c_str(),"rb");
         if(fptest == NULL) {
-	        Log("Failed to find the data files! Please either install the program\n"
+          Log("Failed to find the data files! Please either install the program\n"
               "with 'make install' or 'cd' into the 'bin' directory, and start\n"
               "the program from there.\n");
          
-	        throw Exception("Can't find data!");
+          throw Exception("Can't find data!");
         }
         fclose(fptest);
       #endif

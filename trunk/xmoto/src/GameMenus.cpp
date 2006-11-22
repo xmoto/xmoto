@@ -27,12 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 namespace vapp {
 
-  /*===========================================================================
-  Create menus and hide them
-  ===========================================================================*/
-  void GameApp::_InitMenus(void) {
-    /* TODO: it would obviously be a good idea to put this gui stuff into
-       a nice XML file instead. This really stinks */
+  void GameApp::_InitMenus_PlayingMenus(void) {
     int i;
     int default_button;
 
@@ -152,7 +147,10 @@ namespace vapp {
     }
 
     m_pJustDeadMenu->setPrimaryChild(m_pJustDeadMenuButtons[0]); /* default button: Try Again */
-    
+
+  }
+
+  void GameApp::_InitMenus_MainMenu(void) {
     /* Initialize main menu */      
     m_pMainMenu = new UIWindow(m_Renderer.getGUI(),0,0,"",
                                 m_Renderer.getGUI()->getPosition().nWidth,
@@ -915,6 +913,11 @@ namespace vapp {
     m_pPlayNewLevelsList->setEnterButton( pNewLevelsGoButton );
 #endif
 
+  }
+
+  void GameApp::_InitMenus_Others(void) {
+    UIStatic *pSomeText;
+
 #if defined(SUPPORT_WEBACCESS)
     /* Initialize internet connection configurator */
     m_pWebConfEditor = new UIFrame(m_Renderer.getGUI(),getDispWidth()/2-206,getDispHeight()/2-385/2,"",412,425); 
@@ -1202,6 +1205,19 @@ namespace vapp {
     else
       m_pStatsReport = m_GameStats.generateReport("",m_pStatsWindow,30,36,m_pStatsWindow->getPosition().nWidth-45,m_pStatsWindow->getPosition().nHeight-36,m_Renderer.getSmallFont());
     
+  }
+
+  /*===========================================================================
+  Create menus and hide them
+  ===========================================================================*/
+  void GameApp::_InitMenus(void) {
+    /* TODO: it would obviously be a good idea to put this gui stuff into
+       a nice XML file instead. This really stinks */
+    
+    _InitMenus_PlayingMenus();
+    _InitMenus_MainMenu();
+    _InitMenus_Others();
+
     /* Hide menus */
     m_pMainMenu->showWindow(false);
     m_pPauseMenu->showWindow(false);
@@ -1215,7 +1231,8 @@ namespace vapp {
     /* Update options */
     _ImportOptions();
   }
-  
+
+
   /*===========================================================================
   Add levels to list (level pack)
   ===========================================================================*/  
@@ -1225,7 +1242,7 @@ namespace vapp {
     } 
 
     UILevelList *pList = (UILevelList *)m_pLevelPackViewer->getChild("LEVELPACK_LEVEL_LIST");    
-    pList->setSort(true, (int(*)(void*, void*))LevelSrc::compareLevelSamePack);
+    pList->setSort(true, (int(*)(void*, void*))Level::compareLevelSamePack);
     pList->setNumeroted(true);
 
     /* get selected item */
@@ -1446,7 +1463,7 @@ namespace vapp {
     for(int i=0;i<m_nNumPauseMenuButtons;i++) {
       if(m_pPauseMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
         /* Uhm... is it likely that there's a next level? */
-        LevelSrc *pLS = _FindLevelByID(m_PlaySpecificLevel);
+        Level *pLS = _FindLevelByID(m_PlaySpecificLevel);
         if(pLS != NULL) {
           m_pPauseMenuButtons[i]->enableWindow(_IsThereANextLevel(pLS));
         }
@@ -1460,7 +1477,7 @@ namespace vapp {
         }
         else if(m_pPauseMenuButtons[i]->getCaption() == GAMETEXT_ABORT) {
           m_pPauseMenu->showWindow(false);
-          m_GameStats.abortedLevel(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->getID(),m_MotoGame.getLevelSrc()->getLevelInfo()->Name,m_MotoGame.getTime());
+          m_GameStats.abortedLevel(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->Id(),m_MotoGame.getLevelSrc()->Name(),m_MotoGame.getTime());
 
 #if defined(ALLOW_GHOST) 
 	  /* hide ghost */
@@ -1478,12 +1495,12 @@ namespace vapp {
 	  _RestartLevel();
         }
         else if(m_pPauseMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
-          LevelSrc *pLS = _FindLevelByID(m_PlaySpecificLevel);
+          Level *pLS = _FindLevelByID(m_PlaySpecificLevel);
           if(pLS != NULL) {
             std::string NextLevel = _DetermineNextLevel(pLS);
             if(NextLevel != "") {        
               m_pPauseMenu->showWindow(false);              
-              m_GameStats.abortedLevel(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->getID(),m_MotoGame.getLevelSrc()->getLevelInfo()->Name,m_MotoGame.getTime());
+              m_GameStats.abortedLevel(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->Id(),m_MotoGame.getLevelSrc()->Name(),m_MotoGame.getTime());
 #if defined(ALLOW_GHOST) 
 	      /* hide ghost */
 	      m_MotoGame.setGhostActive(false);
@@ -1547,7 +1564,7 @@ namespace vapp {
 
       if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
         /* Uhm... is it likely that there's a next level? */
-        LevelSrc *pLS = _FindLevelByID(m_PlaySpecificLevel);
+        Level *pLS = _FindLevelByID(m_PlaySpecificLevel);
         if(pLS != NULL) {
           m_pFinishMenuButtons[i]->enableWindow(_IsThereANextLevel(pLS));
         }
@@ -1560,7 +1577,7 @@ namespace vapp {
                                                         (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
         }
         else if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
-          LevelSrc *pLS = _FindLevelByID(m_PlaySpecificLevel);
+          Level *pLS = _FindLevelByID(m_PlaySpecificLevel);
           if(pLS != NULL) {
             std::string NextLevel = _DetermineNextLevel(pLS);
             if(NextLevel != "") {        
@@ -1603,8 +1620,8 @@ namespace vapp {
         }	
 #endif
         else if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_TRYAGAIN) {
-          LevelSrc *pCurLevel = m_MotoGame.getLevelSrc();
-          m_PlaySpecificLevel = pCurLevel->getID();
+          Level *pCurLevel = m_MotoGame.getLevelSrc();
+          m_PlaySpecificLevel = pCurLevel->Id();
           m_pFinishMenu->showWindow(false);
 	  m_Renderer.hideMsgNewHighscore();
           m_pBestTimes->showWindow(false);
@@ -1702,11 +1719,11 @@ namespace vapp {
     if(pPlayButton!=NULL && pPlayButton->isClicked()) {
       pPlayButton->setClicked(false);
 
-	LevelSrc *pLevelSrc = pList->getSelectedLevel();
+	Level *pLevelSrc = pList->getSelectedLevel();
 	if(pLevelSrc != NULL) {
 	  m_pLevelPackViewer->showWindow(false);
 	  m_pMainMenu->showWindow(false);      
-	  m_PlaySpecificLevel = pLevelSrc->getID();        
+	  m_PlaySpecificLevel = pLevelSrc->Id();        
 	  m_StateAfterPlaying = GS_LEVELPACK_VIEWER;
 	  setState(GS_PREPLAYING);   
 	}
@@ -1715,14 +1732,14 @@ namespace vapp {
     if(pLevelInfoButton!=NULL && pLevelInfoButton->isClicked()) {
       pLevelInfoButton->setClicked(false);
 
-      LevelSrc *pLevelSrc = pList->getSelectedLevel();
+      Level *pLevelSrc = pList->getSelectedLevel();
       if(pLevelSrc != NULL) {
 	
         /* === OPEN LEVEL INFO VIEWER === */      
         /* Set information */
         UIStatic *pLevelName = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TITLE");
         
-        if(pLevelName != NULL) pLevelName->setCaption(pLevelSrc->getLevelInfo()->Name);
+        if(pLevelName != NULL) pLevelName->setCaption(pLevelSrc->Name());
 
         UIStatic *pGeneralInfo_LevelPack = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_LEVELPACK");
         UIStatic *pGeneralInfo_LevelName = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_LEVELNAME");
@@ -1730,13 +1747,13 @@ namespace vapp {
         UIStatic *pGeneralInfo_Date = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_DATE");
         UIStatic *pGeneralInfo_Description = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_DESCRIPTION");
 
-        if(pGeneralInfo_LevelPack != NULL) pGeneralInfo_LevelPack->setCaption(std::string(GAMETEXT_LEVELPACK) + ": " + pLevelSrc->getLevelPack());
-        if(pGeneralInfo_LevelName != NULL) pGeneralInfo_LevelName->setCaption(std::string(GAMETEXT_LEVELNAME) + ": " + pLevelSrc->getLevelInfo()->Name);
-        if(pGeneralInfo_Author != NULL) pGeneralInfo_Author->setCaption(std::string(GAMETEXT_AUTHOR) + ": " + pLevelSrc->getLevelInfo()->Author);
-        if(pGeneralInfo_Date != NULL) pGeneralInfo_Date->setCaption(std::string(GAMETEXT_DATE) + ": " + pLevelSrc->getLevelInfo()->Date);
-        if(pGeneralInfo_Description != NULL) pGeneralInfo_Description->setCaption(std::string(GAMETEXT_DESCRIPTION) + ": " + pLevelSrc->getLevelInfo()->Description);
+        if(pGeneralInfo_LevelPack != NULL) pGeneralInfo_LevelPack->setCaption(std::string(GAMETEXT_LEVELPACK) + ": " + pLevelSrc->Pack());
+        if(pGeneralInfo_LevelName != NULL) pGeneralInfo_LevelName->setCaption(std::string(GAMETEXT_LEVELNAME) + ": " + pLevelSrc->Name());
+        if(pGeneralInfo_Author != NULL) pGeneralInfo_Author->setCaption(std::string(GAMETEXT_AUTHOR) + ": " + pLevelSrc->Author());
+        if(pGeneralInfo_Date != NULL) pGeneralInfo_Date->setCaption(std::string(GAMETEXT_DATE) + ": " + pLevelSrc->Date());
+        if(pGeneralInfo_Description != NULL) pGeneralInfo_Description->setCaption(std::string(GAMETEXT_DESCRIPTION) + ": " + pLevelSrc->Description());
             
-        _UpdateLevelInfoViewerBestTimes(m_LevelInfoViewerLevel = pLevelSrc->getID());
+        _UpdateLevelInfoViewerBestTimes(m_LevelInfoViewerLevel = pLevelSrc->Id());
         _UpdateLevelInfoViewerReplays(m_LevelInfoViewerLevel);
         
         /* Nice. Open the level info viewer */
@@ -2066,7 +2083,7 @@ namespace vapp {
 
       if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
         /* Uhm... is it likely that there's a next level? */
-        LevelSrc *pLS = _FindLevelByID(m_PlaySpecificLevel);
+        Level *pLS = _FindLevelByID(m_PlaySpecificLevel);
         if(pLS != NULL) {
           m_pJustDeadMenuButtons[i]->enableWindow(_IsThereANextLevel(pLS));
         }
@@ -2084,7 +2101,7 @@ namespace vapp {
 	  _RestartLevel();
         }
         else if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
-          LevelSrc *pLS = _FindLevelByID(m_PlaySpecificLevel);
+          Level *pLS = _FindLevelByID(m_PlaySpecificLevel);
           if(pLS != NULL) {
             std::string NextLevel = _DetermineNextLevel(pLS);
             if(NextLevel != "") {        
@@ -2211,10 +2228,10 @@ namespace vapp {
     /* level menu : */
     /* any list clicked ? */
     if(m_pAllLevelsList->isChanged()) {
-      LevelSrc *pLevelSrc = m_pAllLevelsList->getSelectedLevel();
+      Level *pLevelSrc = m_pAllLevelsList->getSelectedLevel();
       if(pLevelSrc != NULL) {
 #if defined(SUPPORT_WEBACCESS)
-	setLevelInfoFrameBestPlayer(pLevelSrc->getID());
+	setLevelInfoFrameBestPlayer(pLevelSrc->Id());
 #endif
       }
       m_pAllLevelsList->setChanged(false);
@@ -2222,9 +2239,9 @@ namespace vapp {
 
 #if defined(SUPPORT_WEBACCESS)
     if(m_pPlayNewLevelsList->isChanged()) {
-      LevelSrc *pLevelSrc = m_pPlayNewLevelsList->getSelectedLevel();
+      Level *pLevelSrc = m_pPlayNewLevelsList->getSelectedLevel();
       if(pLevelSrc != NULL) {
-	setLevelInfoFrameBestPlayer(pLevelSrc->getID());
+	setLevelInfoFrameBestPlayer(pLevelSrc->Id());
       }
       m_pPlayNewLevelsList->setChanged(false);
     }
@@ -2508,10 +2525,10 @@ namespace vapp {
       pTutorialButton->setClicked(false);
       
       /* Find first tutorial level */
-      LevelSrc *pLevelSrc = _FindLevelByID("tut1");
+      Level *pLevelSrc = _FindLevelByID("tut1");
       if(pLevelSrc != NULL) {
         m_pMainMenu->showWindow(false);      
-        m_PlaySpecificLevel = pLevelSrc->getID();
+        m_PlaySpecificLevel = pLevelSrc->Id();
         m_StateAfterPlaying = GS_MENU;
         setState(GS_PREPLAYING);
       }
@@ -2557,7 +2574,7 @@ namespace vapp {
       pNewLevelsPlayGoButton->setClicked(false);
       
       /* Find out what to play */
-      LevelSrc *pLevelSrc = NULL;
+      Level *pLevelSrc = NULL;
 
       if(m_pAllLevelsList && !m_pAllLevelsList->isBranchHidden()) {
 	pLevelSrc = m_pAllLevelsList->getSelectedLevel();
@@ -2570,7 +2587,7 @@ namespace vapp {
       /* Start playing it */
       if(pLevelSrc != NULL) {
         m_pMainMenu->showWindow(false);      
-        m_PlaySpecificLevel = pLevelSrc->getID();
+        m_PlaySpecificLevel = pLevelSrc->Id();
         m_StateAfterPlaying = GS_MENU;
         setState(GS_PREPLAYING);
       }
@@ -2580,7 +2597,7 @@ namespace vapp {
       pNewLevelsLevelInfoButton->setClicked(false);
       
       /* Find out what level is selected */
-      LevelSrc *pLevelSrc = NULL;
+      Level *pLevelSrc = NULL;
 
       if(m_pAllLevelsList && !m_pAllLevelsList->isBranchHidden()) {
 	pLevelSrc = m_pAllLevelsList->getSelectedLevel();
@@ -2594,7 +2611,7 @@ namespace vapp {
         /* Set information */
         UIStatic *pLevelName = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TITLE");
         
-        if(pLevelName != NULL) pLevelName->setCaption(pLevelSrc->getLevelInfo()->Name);
+        if(pLevelName != NULL) pLevelName->setCaption(pLevelSrc->Name());
 
         UIStatic *pGeneralInfo_LevelPack = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_LEVELPACK");
         UIStatic *pGeneralInfo_LevelName = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_LEVELNAME");
@@ -2602,13 +2619,13 @@ namespace vapp {
         UIStatic *pGeneralInfo_Date = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_DATE");
         UIStatic *pGeneralInfo_Description = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_DESCRIPTION");
 
-        if(pGeneralInfo_LevelPack != NULL) pGeneralInfo_LevelPack->setCaption(std::string(GAMETEXT_LEVELPACK) + ": " + pLevelSrc->getLevelPack());
-        if(pGeneralInfo_LevelName != NULL) pGeneralInfo_LevelName->setCaption(std::string(GAMETEXT_LEVELNAME) + ": " + pLevelSrc->getLevelInfo()->Name);
-        if(pGeneralInfo_Author != NULL) pGeneralInfo_Author->setCaption(std::string(GAMETEXT_AUTHOR) + ": " + pLevelSrc->getLevelInfo()->Author);
-        if(pGeneralInfo_Date != NULL) pGeneralInfo_Date->setCaption(std::string(GAMETEXT_DATE) + ": " + pLevelSrc->getLevelInfo()->Date);
-        if(pGeneralInfo_Description != NULL) pGeneralInfo_Description->setCaption(std::string(GAMETEXT_DESCRIPTION) + ": "  + pLevelSrc->getLevelInfo()->Description);
+        if(pGeneralInfo_LevelPack != NULL) pGeneralInfo_LevelPack->setCaption(std::string(GAMETEXT_LEVELPACK) + ": " + pLevelSrc->Pack());
+        if(pGeneralInfo_LevelName != NULL) pGeneralInfo_LevelName->setCaption(std::string(GAMETEXT_LEVELNAME) + ": " + pLevelSrc->Name());
+        if(pGeneralInfo_Author != NULL) pGeneralInfo_Author->setCaption(std::string(GAMETEXT_AUTHOR) + ": " + pLevelSrc->Author());
+        if(pGeneralInfo_Date != NULL) pGeneralInfo_Date->setCaption(std::string(GAMETEXT_DATE) + ": " + pLevelSrc->Date());
+        if(pGeneralInfo_Description != NULL) pGeneralInfo_Description->setCaption(std::string(GAMETEXT_DESCRIPTION) + ": "  + pLevelSrc->Description());
             
-        _UpdateLevelInfoViewerBestTimes(m_LevelInfoViewerLevel = pLevelSrc->getID());
+        _UpdateLevelInfoViewerBestTimes(m_LevelInfoViewerLevel = pLevelSrc->Id());
         _UpdateLevelInfoViewerReplays(m_LevelInfoViewerLevel);
         
         /* Nice. Open the level info viewer */
@@ -2869,11 +2886,11 @@ namespace vapp {
     for(int i=0;i<Replays->size();i++) {
       UIListEntry *pEntry = pList->addEntry((*Replays)[i]->Name);
       
-      LevelSrc *pLevel = _FindLevelByID((*Replays)[i]->Level);
+      Level *pLevel = _FindLevelByID((*Replays)[i]->Level);
       if(pLevel == NULL)
         pEntry->Text.push_back("(" + std::string(GAMETEXT_UNKNOWNLEVEL) + ")");
       else
-        pEntry->Text.push_back(pLevel->getLevelInfo()->Name);
+        pEntry->Text.push_back(pLevel->Name());
       
       pEntry->Text.push_back((*Replays)[i]->Player);
     }
@@ -2897,7 +2914,7 @@ namespace vapp {
     if(m_pPlayer == NULL) return;
   
     for(int i=0;i<m_nNumLevels;i++) {
-      LevelSrc *pLevel = &m_Levels[i];     
+      Level *pLevel = &m_Levels[i];     
       pAllLevels->addLevel(pLevel,
 			   m_pPlayer,
 			   &m_Profiles
@@ -3617,6 +3634,7 @@ namespace vapp {
     setState(GS_REPLAYING);
   }
 #endif
+
 
 }
 

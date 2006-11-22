@@ -23,7 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *  Generic data buffer stuff.
  */
 #include "DBuffer.h"
-#include "arch/SwapEndian.h"
+#include "helpers/SwapEndian.h"
 #include <algorithm>
 
 namespace vapp {

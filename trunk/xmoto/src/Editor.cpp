@@ -199,7 +199,7 @@ namespace vapp {
         m_CurState = ES_DEFAULT;
       }
       else 
-        viewMessage(std::string("Click to place a copy of \"") + m_pEntityToCopy->ID + std::string("\", press ESC to cancel"));
+        viewMessage(std::string("Click to place a copy of \"") + m_pEntityToCopy->Id() + std::string("\", press ESC to cancel"));
     }
   }
   
@@ -287,7 +287,7 @@ namespace vapp {
     if(m_LevelToInitLoad != "") {
       std::string Path = std::string("Levels/") + m_LevelToInitLoad;			  
       m_Log.msg("Loading level from '%s'...",Path.c_str());         
-      m_pLevelSrc = new LevelSrc;
+      m_pLevelSrc = new Level();
       m_pLevelSrc->setFileName( Path );
       try {
         m_pLevelSrc->loadXML();
@@ -377,8 +377,8 @@ namespace vapp {
             /* Is this the first vertex? */
             if(m_NewBlockX.size() > 2 && fabs(m_Cursor.x - m_NewBlockX[0]) < 0.3 && fabs(m_Cursor.y - m_NewBlockY[0]) < 0.3) {
               /* Finish creation */
-              LevelBlock *pBlock = new LevelBlock;
-              m_pLevelSrc->getBlockList().push_back(pBlock);
+              Block *pBlock = new Block();
+              m_pLevelSrc->Blocks().push_back(pBlock);
               pBlock->fPosX = _GetAvg(m_NewBlockX);
               pBlock->fPosY = _GetAvg(m_NewBlockY);
               pBlock->fTextureScale = 1.0f;              
@@ -399,21 +399,7 @@ namespace vapp {
                 pVertex->b = 255;
                 pVertex->a = 255;
                 pVertex->bSelected = false;
-                
-                //int inext = i+1;
-//                int iprev = i-1;
-                //if(inext >= m_NewBlockX.size()) inext = 0;
-//                if(iprev < 0) iprev = m_NewBlockX.size()-1;
-                
-                //float ffX1 = m_NewBlockX[i] - pBlock->fPosX;
-                //float ffY1 = m_NewBlockY[i] - pBlock->fPosY;
-                //float ffX2 = m_NewBlockX[inext] - pBlock->fPosX;
-                //float ffY2 = m_NewBlockY[inext] - pBlock->fPosY;
-                //
-                //ff += ffX1*ffX2 + ffY1*ffY2;
               }
-              
-              //printf("[%f]\n",ff);
               
               setState(ES_DEFAULT);
             }
@@ -846,8 +832,8 @@ namespace vapp {
     }
     
     /* Draw blocks */
-    for(int i=0;i<m_pLevelSrc->getBlockList().size();i++) {
-      LevelBlock *pBlock = m_pLevelSrc->getBlockList()[i];
+    for(int i=0;i<m_pLevelSrc->Blocks().size();i++) {
+      LevelBlock *pBlock = m_pLevelSrc->Blocks()[i];
       Vector2f BP(pBlock->fPosX,pBlock->fPosY);
       
       if(m_SelMode != SM_BLOCKS || !_IsBlockSelected(pBlock)) {	
@@ -967,8 +953,8 @@ namespace vapp {
     }
     
     /* Draw entities */
-    for(int i=0;i<m_pLevelSrc->getEntityList().size();i++) {
-			_DrawEntitySymbol(m_pLevelSrc->getEntityList()[i]);
+    for(int i=0;i<m_pLevelSrc->Entities().size();i++) {
+			_DrawEntitySymbol(m_pLevelSrc->Entities()[i]);
     }
     
     /* Draw selection box - if in ES_SELECTING */
@@ -1464,8 +1450,8 @@ namespace vapp {
     /* Selecting entities? */
     if(m_SelMode == SM_ENTITIES) {
 			/* Yup */
-			for(int i=0;i<m_pLevelSrc->getEntityList().size();i++) {
-				LevelEntity *pEntity = m_pLevelSrc->getEntityList()[i];
+			for(int i=0;i<m_pLevelSrc->Entities().size();i++) {
+				LevelEntity *pEntity = m_pLevelSrc->Entities()[i];
 				EditorEntityType *pType = m_EntityTable.getTypeByID(pEntity->TypeID);				
 				if(pType == NULL) continue;
 				
@@ -1482,8 +1468,8 @@ namespace vapp {
 			/* No, something else */            
 			/* Select all stuff within this region */
 			/* -- first vertices... */
-			for(int i=0;i<m_pLevelSrc->getBlockList().size();i++) {
-				LevelBlock *pBlock = m_pLevelSrc->getBlockList()[i];
+			for(int i=0;i<m_pLevelSrc->Blocks().size();i++) {
+				LevelBlock *pBlock = m_pLevelSrc->Blocks()[i];
 				for(int j=0;j<pBlock->Vertices.size();j++) {
 					LevelBlockVertex *pVertex = pBlock->Vertices[j];
 					if(pointTouchAABB2f(Vector2f(pVertex->fX,pVertex->fY) + Vector2f(pBlock->fPosX,pBlock->fPosY),
@@ -1500,8 +1486,8 @@ namespace vapp {
 	    
 			/* If in edge or block selection, then look for edges too... */
 			if(m_SelMode == SM_BLOCKS || m_SelMode == SM_EDGES) {
-				for(int i=0;i<m_pLevelSrc->getBlockList().size();i++) {
-					LevelBlock *pBlock = m_pLevelSrc->getBlockList()[i];
+				for(int i=0;i<m_pLevelSrc->Blocks().size();i++) {
+					LevelBlock *pBlock = m_pLevelSrc->Blocks()[i];
 					for(int j=0;j<pBlock->Vertices.size();j++) {
 						/* Define edge */
 						LevelBlockVertex *pVertex = pBlock->Vertices[j];
@@ -1547,8 +1533,8 @@ namespace vapp {
 		/* Selecting entities? */
 		if(m_SelMode == SM_ENTITIES) {
 			/* Yes */
-			for(int i=0;i<m_pLevelSrc->getEntityList().size();i++) {
-				LevelEntity *pEntity = m_pLevelSrc->getEntityList()[i];
+			for(int i=0;i<m_pLevelSrc->Entities().size();i++) {
+				LevelEntity *pEntity = m_pLevelSrc->Entities()[i];
 				EditorEntityType *pType = m_EntityTable.getTypeByID(pEntity->TypeID);				
 				if(pType == NULL) continue;
 				
@@ -1568,8 +1554,8 @@ namespace vapp {
 		}
 		else { 
       /* No */ 
-			for(int i=0;i<m_pLevelSrc->getBlockList().size();i++) {
-				LevelBlock *pBlock = m_pLevelSrc->getBlockList()[i];
+			for(int i=0;i<m_pLevelSrc->Blocks().size();i++) {
+				LevelBlock *pBlock = m_pLevelSrc->Blocks()[i];
 				for(int j=0;j<pBlock->Vertices.size();j++) {
 					LevelBlockVertex *pVertex = pBlock->Vertices[j];
 	        
@@ -1617,8 +1603,8 @@ namespace vapp {
   ============================================================================*/    
   void EditorApp::_ClearSelection(void) {
 		/* Deselect all block-related */
-    for(int i=0;i<m_pLevelSrc->getBlockList().size();i++) {
-      LevelBlock *pBlock = m_pLevelSrc->getBlockList()[i];
+    for(int i=0;i<m_pLevelSrc->Blocks().size();i++) {
+      LevelBlock *pBlock = m_pLevelSrc->Blocks()[i];
       for(int j=0;j<pBlock->Vertices.size();j++) {
         LevelBlockVertex *pVertex = pBlock->Vertices[j];
         pVertex->bSelected = false;
@@ -1626,8 +1612,8 @@ namespace vapp {
     }    
     
     /* Deselect all entities */
-    for(int i=0;i<m_pLevelSrc->getEntityList().size();i++) {
-			LevelEntity *pEntity = m_pLevelSrc->getEntityList()[i];
+    for(int i=0;i<m_pLevelSrc->Entities().size();i++) {
+			LevelEntity *pEntity = m_pLevelSrc->Entities()[i];
 			pEntity->bSelected = false;
 		}
   }
@@ -1638,8 +1624,8 @@ namespace vapp {
   void EditorApp::_FinishMovement(Vector2f Dir) {
 		/* Moving entities? */
 		if(m_SelMode == SM_ENTITIES) {
-			for(int i=0;i<m_pLevelSrc->getEntityList().size();i++) {
-				LevelEntity *pEntity = m_pLevelSrc->getEntityList()[i];
+			for(int i=0;i<m_pLevelSrc->Entities().size();i++) {
+				LevelEntity *pEntity = m_pLevelSrc->Entities()[i];
 				if(pEntity->bSelected) {
 					pEntity->fPosX += (m_Cursor.x - m_MStart.x);
 					pEntity->fPosY += (m_Cursor.y - m_MStart.y);
@@ -1647,11 +1633,11 @@ namespace vapp {
 			}			
 		}
 		else {
-			for(int i=0;i<m_pLevelSrc->getBlockList().size();i++) {
+			for(int i=0;i<m_pLevelSrc->Blocks().size();i++) {
 				bool bUpdateBlockCoords = false;
 				Vector2f Center(0,0);
 	      
-				LevelBlock *pBlock = m_pLevelSrc->getBlockList()[i];
+				LevelBlock *pBlock = m_pLevelSrc->Blocks()[i];
 				for(int j=0;j<pBlock->Vertices.size();j++) {
 					LevelBlockVertex *pVertex = pBlock->Vertices[j];
 					if(m_SelMode == SM_VERTICES) {
@@ -1843,9 +1829,9 @@ namespace vapp {
   ============================================================================*/
 	LevelEntity *EditorApp::_GetSelectedEntity(void) {
 		LevelEntity *pRet = NULL;
-		for(int i=0;i<m_pLevelSrc->getEntityList().size();i++) {
-			if(m_pLevelSrc->getEntityList()[i]->bSelected) {
-			  if(pRet == NULL) pRet = m_pLevelSrc->getEntityList()[i];
+		for(int i=0;i<m_pLevelSrc->Entities().size();i++) {
+			if(m_pLevelSrc->Entities()[i]->bSelected) {
+			  if(pRet == NULL) pRet = m_pLevelSrc->Entities()[i];
 			  else {
 					m_Log.msg("More than one entity is selected!");
 					return NULL;
@@ -1862,9 +1848,9 @@ namespace vapp {
   std::string EditorApp::_GetCommonEdgeEffect(int *pnNumSel) {
     std::string Ret = "";
     bool bEffect = false;
-    for(int i=0;i<m_pLevelSrc->getBlockList().size();i++) {
-      for(int j=0;j<m_pLevelSrc->getBlockList()[i]->Vertices.size();j++) {
-        LevelBlockVertex *pVertex = m_pLevelSrc->getBlockList()[i]->Vertices[j];
+    for(int i=0;i<m_pLevelSrc->Blocks().size();i++) {
+      for(int j=0;j<m_pLevelSrc->Blocks()[i]->Vertices.size();j++) {
+        LevelBlockVertex *pVertex = m_pLevelSrc->Blocks()[i]->Vertices[j];
         
         if(pVertex->bSelected) {
           if(pnNumSel!=NULL) *pnNumSel = *pnNumSel+1;
@@ -1885,9 +1871,9 @@ namespace vapp {
   Apply given edge effect string to selected edges
   ============================================================================*/
   void EditorApp::_ApplyEdgeEffect(std::string Effect) {
-    for(int i=0;i<m_pLevelSrc->getBlockList().size();i++) {
-      for(int j=0;j<m_pLevelSrc->getBlockList()[i]->Vertices.size();j++) {
-        LevelBlockVertex *pVertex = m_pLevelSrc->getBlockList()[i]->Vertices[j];
+    for(int i=0;i<m_pLevelSrc->Blocks().size();i++) {
+      for(int j=0;j<m_pLevelSrc->Blocks()[i]->Vertices.size();j++) {
+        LevelBlockVertex *pVertex = m_pLevelSrc->Blocks()[i]->Vertices[j];
         if(pVertex->bSelected)
           pVertex->EdgeEffect = Effect;
       }
@@ -1940,8 +1926,8 @@ namespace vapp {
       /* Create list of selected blocks */
       std::vector<LevelBlock *> Selection;
       
-      for(int i=0;i<m_pLevelSrc->getBlockList().size();i++) {
-        LevelBlock *pBlock = m_pLevelSrc->getBlockList()[i];
+      for(int i=0;i<m_pLevelSrc->Blocks().size();i++) {
+        LevelBlock *pBlock = m_pLevelSrc->Blocks()[i];
         if(_IsBlockSelected(pBlock)) Selection.push_back(pBlock);
       }
       
@@ -1994,8 +1980,8 @@ namespace vapp {
   All textures with selected vertices will get this texture
   ============================================================================*/
   void EditorApp::_AssignTextureToSelection(Texture *pTexture) {
-    for(int i=0;i<m_pLevelSrc->getBlockList().size();i++) {
-      LevelBlock *pBlock = m_pLevelSrc->getBlockList()[i];
+    for(int i=0;i<m_pLevelSrc->Blocks().size();i++) {
+      LevelBlock *pBlock = m_pLevelSrc->Blocks()[i];
       if(_IsBlockSelected(pBlock)) {
         /* Ok. */
         pBlock->Texture = pTexture->Name;
@@ -2222,11 +2208,11 @@ namespace vapp {
     while(1) {
       bool bS = false;
           
-      for(int i=0;i<m_pLevelSrc->getBlockList().size();i++) {
-        for(int j=0;j<m_pLevelSrc->getBlockList()[i]->Vertices.size();j++) {
-          LevelBlockVertex *pVertex = m_pLevelSrc->getBlockList()[i]->Vertices[j];
+      for(int i=0;i<m_pLevelSrc->Blocks().size();i++) {
+        for(int j=0;j<m_pLevelSrc->Blocks()[i]->Vertices.size();j++) {
+          LevelBlockVertex *pVertex = m_pLevelSrc->Blocks()[i]->Vertices[j];
           if(pVertex->bSelected) {
-            _SmoothEdge(m_pLevelSrc->getBlockList()[i],pVertex,j);       
+            _SmoothEdge(m_pLevelSrc->Blocks()[i],pVertex,j);       
             bS = true;
           }
           
@@ -2313,8 +2299,8 @@ namespace vapp {
     float fDist = 0;
     bool bGotPoint = false;
   
-    for(int i=0;i<m_pLevelSrc->getEntityList().size();i++) {
-      Vector2f P = Vector2f(m_pLevelSrc->getEntityList()[i]->fPosX,m_pLevelSrc->getEntityList()[i]->fPosY);
+    for(int i=0;i<m_pLevelSrc->Entities().size();i++) {
+      Vector2f P = Vector2f(m_pLevelSrc->Entities()[i]->fPosX,m_pLevelSrc->Entities()[i]->fPosY);
       float d = (P - m_Cursor).length();
       if(!bGotPoint || d<fDist) {
         NearP = P;
@@ -2336,22 +2322,22 @@ namespace vapp {
     bool bGotPoint = false;
   
     /* Find nearest edge, snap if it's close */
-    for(unsigned int i=0;i<m_pLevelSrc->getBlockList().size();i++) {
-      for(unsigned int j=0;j<m_pLevelSrc->getBlockList()[i]->Vertices.size();j++) {
+    for(unsigned int i=0;i<m_pLevelSrc->Blocks().size();i++) {
+      for(unsigned int j=0;j<m_pLevelSrc->Blocks()[i]->Vertices.size();j++) {
         int k;
-        LevelBlockVertex *pVertex = m_pLevelSrc->getBlockList()[i]->Vertices[j];
-        LevelBlockVertex *pNextVertex = _NextVertex(m_pLevelSrc->getBlockList()[i],j,&k);
+        LevelBlockVertex *pVertex = m_pLevelSrc->Blocks()[i]->Vertices[j];
+        LevelBlockVertex *pNextVertex = _NextVertex(m_pLevelSrc->Blocks()[i],j,&k);
         
         Vector2f u(pNextVertex->fX - pVertex->fX,pNextVertex->fY - pVertex->fY);
-        Vector2f a(m_Cursor.x - (pVertex->fX + m_pLevelSrc->getBlockList()[i]->fPosX),
-                   m_Cursor.y - (pVertex->fY + m_pLevelSrc->getBlockList()[i]->fPosY));
+        Vector2f a(m_Cursor.x - (pVertex->fX + m_pLevelSrc->Blocks()[i]->fPosX),
+                   m_Cursor.y - (pVertex->fY + m_pLevelSrc->Blocks()[i]->fPosY));
                                 
         float zz = (a.dot(u) / (u.length() * u.length()));
         //printf("%f ",zz);
                 
         if(zz >= 0.0f && zz < 1.0f) {
-          Vector2f P = Vector2f(pVertex->fX+m_pLevelSrc->getBlockList()[i]->fPosX,
-                                pVertex->fY+m_pLevelSrc->getBlockList()[i]->fPosY) + u*zz;
+          Vector2f P = Vector2f(pVertex->fX+m_pLevelSrc->Blocks()[i]->fPosX,
+                                pVertex->fY+m_pLevelSrc->Blocks()[i]->fPosY) + u*zz;
           //printf(" {%f} ",(P-m_Cursor).length());
           float d = (P-m_Cursor).length();
           if( d < 5 ) {
@@ -2389,14 +2375,14 @@ namespace vapp {
     unsigned int i=0;
     unsigned int nDeleted = 0;
     while(1) {
-      if(i >= m_pLevelSrc->getBlockList().size()) break;
+      if(i >= m_pLevelSrc->Blocks().size()) break;
 
-      if(_IsBlockSelected(m_pLevelSrc->getBlockList()[i])) {
-        for(unsigned int j=0;j<m_pLevelSrc->getBlockList()[i]->Vertices.size();j++) {
-          delete m_pLevelSrc->getBlockList()[i]->Vertices[j];
+      if(_IsBlockSelected(m_pLevelSrc->Blocks()[i])) {
+        for(unsigned int j=0;j<m_pLevelSrc->Blocks()[i]->Vertices.size();j++) {
+          delete m_pLevelSrc->Blocks()[i]->Vertices[j];
         }
-        delete m_pLevelSrc->getBlockList()[i];
-        m_pLevelSrc->getBlockList().erase(m_pLevelSrc->getBlockList().begin() + i);
+        delete m_pLevelSrc->Blocks()[i];
+        m_pLevelSrc->Blocks().erase(m_pLevelSrc->Blocks().begin() + i);
         nDeleted++;      
       }
       else i++;
@@ -2409,26 +2395,26 @@ namespace vapp {
     unsigned int i=0;
     unsigned int nDeleted = 0,nDeletedObjects = 0;
     while(1) {
-      if(i >= m_pLevelSrc->getBlockList().size()) break;
+      if(i >= m_pLevelSrc->Blocks().size()) break;
 
       unsigned int j=0;
       while(1) {
-        if(j >= m_pLevelSrc->getBlockList()[i]->Vertices.size()) break;
+        if(j >= m_pLevelSrc->Blocks()[i]->Vertices.size()) break;
         
-        if(m_pLevelSrc->getBlockList()[i]->Vertices[j]->bSelected) {
-          delete m_pLevelSrc->getBlockList()[i]->Vertices[j];
-          m_pLevelSrc->getBlockList()[i]->Vertices.erase(m_pLevelSrc->getBlockList()[i]->Vertices.begin() + j);
+        if(m_pLevelSrc->Blocks()[i]->Vertices[j]->bSelected) {
+          delete m_pLevelSrc->Blocks()[i]->Vertices[j];
+          m_pLevelSrc->Blocks()[i]->Vertices.erase(m_pLevelSrc->Blocks()[i]->Vertices.begin() + j);
           nDeleted++;
         }
         else j++;
       }
       
-      if(m_pLevelSrc->getBlockList()[i]->Vertices.size() < 3) {
-        for(unsigned int j=0;j<m_pLevelSrc->getBlockList()[i]->Vertices.size();j++) {
-          delete m_pLevelSrc->getBlockList()[i]->Vertices[j];
+      if(m_pLevelSrc->Blocks()[i]->Vertices.size() < 3) {
+        for(unsigned int j=0;j<m_pLevelSrc->Blocks()[i]->Vertices.size();j++) {
+          delete m_pLevelSrc->Blocks()[i]->Vertices[j];
         }
-        delete m_pLevelSrc->getBlockList()[i];
-        m_pLevelSrc->getBlockList().erase(m_pLevelSrc->getBlockList().begin() + i);
+        delete m_pLevelSrc->Blocks()[i];
+        m_pLevelSrc->Blocks().erase(m_pLevelSrc->Blocks().begin() + i);
         nDeletedObjects++;
       }
       else i++;
@@ -2442,24 +2428,24 @@ namespace vapp {
     unsigned int nDeleted = 0,nDeletedObjects = 0;
     bool bDeleteNext = false;
     while(1) {
-      if(i >= m_pLevelSrc->getBlockList().size()) break;
+      if(i >= m_pLevelSrc->Blocks().size()) break;
 
       unsigned int j=0;
       while(1) {
-        if(j >= m_pLevelSrc->getBlockList()[i]->Vertices.size()) break;
+        if(j >= m_pLevelSrc->Blocks()[i]->Vertices.size()) break;
         
-        if(m_pLevelSrc->getBlockList()[i]->Vertices[j]->bSelected || bDeleteNext) {
-          bool bS = m_pLevelSrc->getBlockList()[i]->Vertices[j]->bSelected; 
-          delete m_pLevelSrc->getBlockList()[i]->Vertices[j];
-          m_pLevelSrc->getBlockList()[i]->Vertices.erase(m_pLevelSrc->getBlockList()[i]->Vertices.begin() + j);
+        if(m_pLevelSrc->Blocks()[i]->Vertices[j]->bSelected || bDeleteNext) {
+          bool bS = m_pLevelSrc->Blocks()[i]->Vertices[j]->bSelected; 
+          delete m_pLevelSrc->Blocks()[i]->Vertices[j];
+          m_pLevelSrc->Blocks()[i]->Vertices.erase(m_pLevelSrc->Blocks()[i]->Vertices.begin() + j);
           
           if(bS) {
             nDeleted++;
             bDeleteNext = true;
             
-            if(j == m_pLevelSrc->getBlockList()[i]->Vertices.size() - 1) {
-              delete m_pLevelSrc->getBlockList()[i]->Vertices[0];
-              m_pLevelSrc->getBlockList()[i]->Vertices.erase(m_pLevelSrc->getBlockList()[i]->Vertices.begin());              
+            if(j == m_pLevelSrc->Blocks()[i]->Vertices.size() - 1) {
+              delete m_pLevelSrc->Blocks()[i]->Vertices[0];
+              m_pLevelSrc->Blocks()[i]->Vertices.erase(m_pLevelSrc->Blocks()[i]->Vertices.begin());              
               break;
             }
           }
@@ -2470,12 +2456,12 @@ namespace vapp {
         else j++;
       }
       
-      if(m_pLevelSrc->getBlockList()[i]->Vertices.size() < 3) {
-        for(unsigned int j=0;j<m_pLevelSrc->getBlockList()[j]->Vertices.size();j++) {
-          delete m_pLevelSrc->getBlockList()[i]->Vertices[j];
+      if(m_pLevelSrc->Blocks()[i]->Vertices.size() < 3) {
+        for(unsigned int j=0;j<m_pLevelSrc->Blocks()[j]->Vertices.size();j++) {
+          delete m_pLevelSrc->Blocks()[i]->Vertices[j];
         }
-        delete m_pLevelSrc->getBlockList()[i];
-        m_pLevelSrc->getBlockList().erase(m_pLevelSrc->getBlockList().begin() + i);
+        delete m_pLevelSrc->Blocks()[i];
+        m_pLevelSrc->Blocks().erase(m_pLevelSrc->Blocks().begin() + i);
         nDeletedObjects++;
       }
       else i++;
@@ -2489,14 +2475,14 @@ namespace vapp {
     unsigned int i=0;
     unsigned int nDeleted = 0;
     while(1) {
-      if(i >= m_pLevelSrc->getEntityList().size()) break;
+      if(i >= m_pLevelSrc->Entities().size()) break;
       
-      if(m_pLevelSrc->getEntityList()[i]->bSelected) {
-        for(unsigned int j=0;j<m_pLevelSrc->getEntityList()[i]->Params.size();j++)
-          delete m_pLevelSrc->getEntityList()[i]->Params[j];
+      if(m_pLevelSrc->Entities()[i]->bSelected) {
+        for(unsigned int j=0;j<m_pLevelSrc->Entities()[i]->Params.size();j++)
+          delete m_pLevelSrc->Entities()[i]->Params[j];
         
-        delete m_pLevelSrc->getEntityList()[i];
-        m_pLevelSrc->getEntityList().erase(m_pLevelSrc->getEntityList().begin() + i);
+        delete m_pLevelSrc->Entities()[i];
+        m_pLevelSrc->Entities().erase(m_pLevelSrc->Entities().begin() + i);
         nDeleted++;
       }
       else i++;
@@ -2508,8 +2494,8 @@ namespace vapp {
   Toggle selected blocks background on/off
   ============================================================================*/
   void EditorApp::_ToggleSelectedBlockBackground(void) {
-    for(unsigned int i=0;i<m_pLevelSrc->getBlockList().size();i++) {
-      LevelBlock *pBlock = m_pLevelSrc->getBlockList()[i];
+    for(unsigned int i=0;i<m_pLevelSrc->Blocks().size();i++) {
+      LevelBlock *pBlock = m_pLevelSrc->Blocks()[i];
       if(_IsBlockSelected(pBlock)) {
         pBlock->bBackground = !pBlock->bBackground;
       }
@@ -2520,8 +2506,8 @@ namespace vapp {
   Toggle selected blocks water on/off
   ============================================================================*/
   void EditorApp::_ToggleSelectedBlockWater(void) {
-    for(unsigned int i=0;i<m_pLevelSrc->getBlockList().size();i++) {
-      LevelBlock *pBlock = m_pLevelSrc->getBlockList()[i];
+    for(unsigned int i=0;i<m_pLevelSrc->Blocks().size();i++) {
+      LevelBlock *pBlock = m_pLevelSrc->Blocks()[i];
       if(_IsBlockSelected(pBlock)) {
         pBlock->bWater = !pBlock->bWater;
       }

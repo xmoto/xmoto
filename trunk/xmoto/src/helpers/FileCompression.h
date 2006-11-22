@@ -19,35 +19,14 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __GUIXMOTO_H__
-#define __GUIXMOTO_H__
+#ifndef __FILECOMPRESSION_H__
+#define __FILECOMPRESSION_H__
 
-#include "GUI.h"
-#include "xmscene/Level.h"
-#include "PlayerData.h"
-#include "WWW.h"
-  
-  class UILevelList : public vapp::UIList {
+#include <string>
+
+  class FileCompression {
     public:
-    UILevelList(UIWindow *pParent,
-		int x = 0,int y = 0,
-		std::string Caption="",
-		int nWidth = 0,int nHeight = 0);
-    ~UILevelList();
-    
-    Level* getSelectedLevel();
-    void addLevel(Level *pLevel,
-		  vapp::PlayerProfile *p_player,
-		  vapp::PlayerData *p_profile,
-#if defined(SUPPORT_WEBACCESS) 
-		  WebRoom *p_pWebHighscores,
-#endif
-		  std::string p_prefix = "");
-
-    void hideBestTime();
-    void hideRoomBestTime();
-    
-    private:
+    static void bunzip2(std::string p_fileIN, std::string p_fileOUT);
   };
 
-#endif /* __GUIXMOTO_H__ */
+#endif /* __FILECOMPRESSION_H__ */
