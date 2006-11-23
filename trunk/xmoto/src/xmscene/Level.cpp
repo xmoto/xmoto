@@ -147,13 +147,13 @@ Zone& Level::getZoneById(const std::string& i_id) {
   throw Exception("Zone '" + i_id + "'" + " doesn't exist");
 }
 
-Entity& Level::getFirstEntityByType(EntityType i_entityType) {
+Entity& Level::getStartEntity() {
   for(unsigned int i=0; i<m_entities.size(); i++) {
-    if(m_entities[i]->Type() == i_entityType) {
+    if(m_entities[i]->SpriteName() == "PlayerStart") {
       return *(m_entities[i]);
     }
   }
-  throw Exception("Entity type searched not found");
+  throw Exception("No start found");
 }
 
 void Level::setId(const std::string& i_id) {
@@ -199,11 +199,11 @@ std::vector<Entity *>& Level::Entities() {
   return m_entities;
 }
 
-unsigned int Level::countEntitiesByType(EntityType i_type) {
+unsigned int Level::countToTakeEntities() {
   unsigned int n = 0;
   
   for(unsigned int i=0; i<m_entities.size(); i++) {
-    if(m_entities[i]->Type() == i_type) {
+    if(m_entities[i]->IsToTake()) {
       n++;
     }
   }
@@ -225,10 +225,10 @@ void Level::updateToTime(vapp::MotoGame& i_scene) {
   bool v_b;
 
   for(unsigned int i=0;i<Entities().size();i++) {
-    v_b = Entities()[i]->updateToTime(i_scene);
+    v_b = Entities()[i]->updateToTime(i_scene.getTime(), i_scene.getGravity());
   }
   for(unsigned int i=0;i<EntitiesExterns().size();i++) {
-    v_b = EntitiesExterns()[i]->updateToTime(i_scene);
+    v_b = EntitiesExterns()[i]->updateToTime(i_scene.getTime(), i_scene.getGravity());
   }
 }
 
@@ -445,7 +445,7 @@ void Level::loadXML(void) {
     }    
 
     try {
-      m_playerStart = getFirstEntityByType(ET_PLAYERSTART).InitialPosition();
+      m_playerStart = getStartEntity().InitialPosition();
     } catch(Exception &e) {
       vapp::Log("Warning : no player start entity for level %s", Id().c_str());
       m_playerStart = Vector2f(0.0, 0.0);
@@ -641,7 +641,7 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
         }
 
 	try {
-	  m_playerStart = getFirstEntityByType(ET_PLAYERSTART).InitialPosition();
+	  m_playerStart = getStartEntity().InitialPosition();
 	} catch(Exception &e) {
 	  vapp::Log("Warning : no player start entity for level %s", Id().c_str());
 	  m_playerStart = Vector2f(0.0, 0.0);

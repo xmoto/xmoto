@@ -77,7 +77,7 @@ class Level {
 
   Block&  getBlockById(const std::string& i_id);
   Entity& getEntityById(const std::string& i_id);
-  Entity& getFirstEntityByType(EntityType i_entityType);
+  Entity& getStartEntity();
   Zone&   getZoneById(const std::string& i_id);
 
   void setId(const std::string& i_id);
@@ -92,7 +92,7 @@ class Level {
   std::vector<Zone *> &TouchingZones(); /* zones that the biker is touching */
 
   void killEntity(const std::string& i_entityId);
-  unsigned int countEntitiesByType(EntityType i_type);
+  unsigned int countToTakeEntities();
   void revertEntityDestroyed(const std::string& i_entityId);
 
   static int compareLevel(const Level& i_lvl1, const Level& i_lvl2);    
@@ -130,6 +130,7 @@ class Level {
   std::vector<Entity *> m_entities; /* Level entities */
   std::vector<Entity *> m_entitiesDestroyed;
   std::vector<Entity *> m_entitiesExterns;
+  Entity               *m_startEntity; /* entity where the player start */
 
   void loadToPlayLimits();
   void exportBinary(const std::string &i_fileName, const std::string& i_sum);

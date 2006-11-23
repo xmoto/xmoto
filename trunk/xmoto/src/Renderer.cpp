@@ -375,13 +375,13 @@ namespace vapp {
 #endif
     
     for(int i=0;i<pGame->getLevelSrc()->Entities().size();i++) {
-      if(pGame->getLevelSrc()->Entities()[i]->Type() == ET_ENDOFLEVEL) {
+      if(pGame->getLevelSrc()->Entities()[i]->DoesMakeWin()) {
         getParent()->drawCircle(Vector2f(x + nWidth/2 + (float)(pGame->getLevelSrc()->Entities()[i]->DynamicPosition().x - getCameraPositionX())*MINIMAPZOOM,
                                          y + nHeight/2 - (float)(pGame->getLevelSrc()->Entities()[i]->DynamicPosition().y - getCameraPositionY())*MINIMAPZOOM),
                                 3,0,MAKE_COLOR(255,0,255,255),0);
         
       }
-      else if(pGame->getLevelSrc()->Entities()[i]->Type() == ET_STRAWBERRY) {
+      else if(pGame->getLevelSrc()->Entities()[i]->IsToTake()) {
         getParent()->drawCircle(Vector2f(x + nWidth/2 + (float)(pGame->getLevelSrc()->Entities()[i]->DynamicPosition().x - getCameraPositionX())*MINIMAPZOOM,
                                          y + nHeight/2 - (float)(pGame->getLevelSrc()->Entities()[i]->DynamicPosition().y - getCameraPositionY())*MINIMAPZOOM),
                                 3,0,MAKE_COLOR(255,0,0,255),0);
@@ -777,7 +777,7 @@ namespace vapp {
     float x2 = 115;
     float y2 = 23;
 
-    int nStrawberriesLeft = pGame->getLevelSrc()->countEntitiesByType(ET_STRAWBERRY);
+    int nStrawberriesLeft = pGame->getLevelSrc()->countToTakeEntities();
     int nQuantity = 0;
 
     if(getParent()->isUglyMode() == false) {
@@ -878,8 +878,8 @@ namespace vapp {
     for(int i=0;i<pGame->getLevelSrc()->Entities().size();i++) {
       pEnt = pGame->getLevelSrc()->Entities()[i];
 
-      switch(pEnt->Type()) {
-        case ET_SPRITE:
+      switch(pEnt->Speciality()) {
+        case ET_NONE:
           /* Middleground? (not foreground, not background) */
           if(pEnt->Z() == 0.0f && !bForeground && !bBackground) {
             _RenderSprite(pEnt);  
@@ -897,9 +897,7 @@ namespace vapp {
             }
           }
           break;
-        case ET_WRECKER:
-        case ET_ENDOFLEVEL:
-        case ET_STRAWBERRY:
+      default:
           if(!bForeground && !bBackground) {
             _RenderSprite(pEnt);
           }
@@ -922,17 +920,17 @@ namespace vapp {
     std::string v_sprite_type;
 
     if(m_bUglyMode == false) {
-      switch(pSprite->Type()) {
-      case ET_SPRITE:
+      switch(pSprite->Speciality()) {
+      case ET_NONE:
         v_sprite_type = pSprite->SpriteName();
         break;
-      case ET_WRECKER:
+      case ET_KILL:
         v_sprite_type = "Wrecker";
         break;
-      case ET_ENDOFLEVEL:
+      case ET_MAKEWIN:
         v_sprite_type = "Flower";
         break;
-      case ET_STRAWBERRY:
+      case ET_ISTOTAKE:
         v_sprite_type = "Strawberry";
         break;
       }
@@ -1005,14 +1003,14 @@ namespace vapp {
       Vector2f C = pSprite->DynamicPosition();
       Color v_color;
       
-      switch(pSprite->Type()) {
-      case ET_WRECKER:
+      switch(pSprite->Speciality()) {
+      case ET_KILL:
         v_color = MAKE_COLOR(80,255,255,255); /* Fix: color changed a bit so it's easier to spot */
         break;
-      case ET_ENDOFLEVEL:
+      case ET_MAKEWIN:
         v_color = MAKE_COLOR(255,255,0,255); /* Fix: color not same as blocks */
         break;
-      case ET_STRAWBERRY:
+      case ET_ISTOTAKE:
         v_color = MAKE_COLOR(255,0,0,255);
         break;
       default:

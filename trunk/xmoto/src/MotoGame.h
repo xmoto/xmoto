@@ -557,9 +557,8 @@ namespace vapp {
       bool _IntersectHeadLine(Vector2f Cp,float Cr,Vector2f A0,Vector2f A1);
       bool _DoCircleTouchZone(const Vector2f &Cp,float Cr,Zone *pZone);
       bool _IntersectPointLevel(Vector2f Cp);
-      Entity *_SpawnEntity(std::string ID,EntityType Type,Vector2f Pos, Entity *pSrc);
+      Entity *_SpawnEntity(std::string ID,EntitySpeciality Type,Vector2f Pos, Entity *pSrc);
       void _KillEntity(Entity *pEnt);
-      EntityType _TransEntityType(std::string Name);
       void _UpdateEntities(void);
       void _UpdateZones(void);
       bool touchEntityBodyExceptHead(const BikeState &pBike, const Entity &p_entity);

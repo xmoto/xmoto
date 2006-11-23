@@ -21,12 +21,19 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "Entity.h"
 
+#include "../VXml.h"
+#include "../PhysSettings.h"
+
 Entity::Entity(const std::string& i_id) {
-  m_id     = i_id;
-  m_size   = 1.0;
-  m_width  = -1.0;
-  m_height = -1.0;
-  m_z      = 1.0;
+  m_id          = i_id;
+  m_spriteName  = ENTITY_DEFAULT_SPRITE_NAME;
+  m_size        = ENTITY_DEFAULT_SIZE;
+  m_width       = -1.0;
+  m_height      = -1.0;
+  m_z           = ENTITY_DEFAULT_Z;
+  m_doesKill    = false;
+  m_doesMakeWin = false;
+  m_isToTake    = false;
 }
 
 Entity::~Entity() {
@@ -47,6 +54,31 @@ float Entity::Size() const {
   return m_size;
 }
 
+bool Entity::IsToTake() const {
+  return m_isToTake;
+}
+
+bool Entity::DoesMakeWin() const {
+  return m_doesMakeWin;
+}
+
+bool Entity::DoesKill() const {
+  return m_doesKill;
+}
+
+const TColor& Entity::Color() const {
+  return m_color;
+}
+
+EntitySpeciality Entity::Speciality() const {
+  if(IsToTake())    return ET_ISTOTAKE;
+  if(DoesKill())    return ET_KILL;
+  if(DoesMakeWin()) return ET_MAKEWIN;
+  if(SpriteName() == "PlayerStart") return ET_ISSTART;
+
+  return ET_NONE;
+}
+
 Vector2f Entity::InitialPosition() const {
   return m_initialPosition;
 }
@@ -61,10 +93,6 @@ float Entity::Width() const {
 
 float Entity::Height() const {
   return m_height;
-}
-
-void Entity::setType(EntityType i_type) {
-  m_type = i_type;
 }
 
 void Entity::setInitialPosition(const Vector2f& i_initialPosition) {
@@ -87,6 +115,12 @@ void Entity::setSize(float i_size) {
   m_size = i_size;
 }
 
+void Entity::setSpeciality(EntitySpeciality i_speciality) {
+  m_doesMakeWin = i_speciality == ET_MAKEWIN;
+  m_doesKill    = i_speciality == ET_KILL;
+  m_isToTake    = i_speciality == ET_ISTOTAKE;
+}
+
 void Entity::setWidth(float i_width) {
   m_width = i_width;
 }
@@ -99,35 +133,27 @@ void Entity::setZ(float i_z) {
   m_z = i_z;
 }
 
-EntityType Entity::Type() const {
-  return m_type;
+void Entity::setColor(const TColor& i_color) {
+  m_color = i_color;
 }
 
-bool Entity::updateToTime(vapp::MotoGame& i_scene) {
+bool Entity::updateToTime(float i_time, Vector2f i_gravity) {
   return false;
 }
 
-ParticlesSource::ParticlesSource(const std::string& i_id) : Entity(i_id) {
-  m_type  = ET_PARTICLESOURCE;
-  m_nextParticleTime = 0.0;
+ParticlesSource::ParticlesSource(const std::string& i_id, float i_particleTime_increment)
+  : Entity(i_id) {
+  m_nextParticleTime       = 0.0;
+  m_particleTime_increment = i_particleTime_increment;
 }
 
 ParticlesSource::~ParticlesSource() {
   deleteParticles();
 }
 
-float EntityParticle::Size() const {
-  return m_size;
-}
-
-TColor EntityParticle::Color() const {
-  return m_color;
-}
-
 void ParticlesSource::loadToPlay() {
   Entity::loadToPlay();
   m_nextParticleTime = 0.0;
-  m_particleTime_increment = 0.025;
 } 
 
 void ParticlesSource::unloadToPlay() {
@@ -136,66 +162,66 @@ void ParticlesSource::unloadToPlay() {
   deleteParticles();
 }
 
-bool ParticlesSource::updateToTime(vapp::MotoGame& i_scene) {
+bool ParticlesSource::updateToTime(float i_time, Vector2f i_gravity) {
   unsigned int i;
 
-  if(i_scene.getTime() > m_nextParticleTime) {  
+  if(i_time > m_nextParticleTime) {  
     i = 0;
     while(i < m_particles.size()) {
-      if(i_scene.getTime() > m_particles[i]->KillTime()) {
+      if(i_time > m_particles[i]->KillTime()) {
 	delete m_particles[i];
 	m_particles.erase(m_particles.begin() + i);
       } else {
-	m_particles[i]->updateToTime(i_scene);
+	m_particles[i]->updateToTime(i_time, i_gravity);
 	i++;
       }
     }
-    m_nextParticleTime = i_scene.getTime() + m_particleTime_increment;
+    m_nextParticleTime = i_time + m_particleTime_increment;
     return true;
   }
   return false;
 }
 
 ParticlesSourceSmoke::ParticlesSourceSmoke(const std::string& i_id)
-  : ParticlesSource(i_id) {
-  m_particleTime_increment = 0.050;
+  : ParticlesSource(i_id, PARTICLES_SOURCE_SMOKE_TIME_INCREMENT) {
+
 }
 
 ParticlesSourceSmoke::~ParticlesSourceSmoke() {
 }
 
 ParticlesSourceFire::ParticlesSourceFire(const std::string& i_id)
-  : ParticlesSource(i_id) {
-  m_spriteName = "Fire";
+  : ParticlesSource(i_id, PARTICLES_SOURCE_FIRE_TIME_INCREMENT) {
+  setSpriteName("Fire");
 }
 
 ParticlesSourceFire::~ParticlesSourceFire() {
 }
 
 ParticlesSourceStar::ParticlesSourceStar(const std::string& i_id)
-  : ParticlesSource(i_id) {
-  m_spriteName = "Star";
+  : ParticlesSource(i_id, PARTICLES_SOURCE_STAR_TIME_INCREMENT) {
+  setSpriteName("Star");
 }
 
 ParticlesSourceStar::~ParticlesSourceStar() {
 }
 
 ParticlesSourceDebris::ParticlesSourceDebris(const std::string& i_id)
-  : ParticlesSource(i_id) {
-  m_spriteName = "Debris1";
+  : ParticlesSource(i_id, PARTICLES_SOURCE_DEBRIS_TIME_INCREMENT) {
+  setSpriteName("Debris1");
 }
 
 ParticlesSourceDebris::~ParticlesSourceDebris() {
 }
 
-bool ParticlesSourceSmoke::updateToTime(vapp::MotoGame& i_scene) {
-  if(ParticlesSource::updateToTime(i_scene)) {
+bool ParticlesSourceSmoke::updateToTime(float i_time, Vector2f i_gravity) {
+  if(ParticlesSource::updateToTime(i_time, i_gravity)) {
     /* Generate smoke */
     if(randomNum(0,5) < 1) {
       if(randomNum(0,1) < 0.5) {
-	addParticle(Vector2f(randomNum(-0.6,0.6), randomNum(0.2,0.6)), i_scene.getTime() + 10.0, "Smoke1");
+	addParticle(Vector2f(randomNum(-0.6,0.6), randomNum(0.2,0.6)), i_time + 10.0, "Smoke1");
       } else {
-	addParticle(Vector2f(randomNum(-0.6,0.6), randomNum(0.2,0.6)), i_scene.getTime() + 10.0, "Smoke2");
+	addParticle(Vector2f(randomNum(-0.6,0.6), randomNum(0.2,0.6)), i_time + 10.0, "Smoke2");
       }
     }
     return true;
@@ -203,75 +229,84 @@ bool ParticlesSourceSmoke::updateToTime(vapp::MotoGame& i_scene) {
   return false;
 }
 
-void SmokeParticle::updateToTime(vapp::MotoGame& i_scene) {
-  EntityParticle::updateToTime(i_scene);
+bool SmokeParticle::updateToTime(float i_time, Vector2f i_gravity) {
+  EntityParticle::updateToTime(i_time, i_gravity);
 
   float v_timeStep = 0.025;
+  TColor v_color(Color());
 
-  m_size += v_timeStep * 1.0f; /* grow */
+  setSize(Size() + v_timeStep * 1.0f); /* grow */
   m_acceleration = Vector2f(0.2, 0.5);  /* accelerate upwards */
 
-  int v_c = m_color.Red() + (int)(randomNum(40,50) * v_timeStep);
-  m_color.setRed(v_c > 255 ? 255 : v_c);
-  m_color.setBlue(v_c > 255 ? 255 : v_c);
-  m_color.setGreen(v_c > 255 ? 255 : v_c);
+  int v_c = Color().Red() + (int)(randomNum(40,50) * v_timeStep);
+  v_color.setRed(v_c > 255 ? 255 : v_c);
+  v_color.setBlue(v_c > 255 ? 255 : v_c);
+  v_color.setGreen(v_c > 255 ? 255 : v_c);
 
-  int v_a = m_color.Alpha() - (int)(120.0f * v_timeStep);
+  int v_a = Color().Alpha() - (int)(120.0f * v_timeStep);
   if(v_a >= 0) {
-    m_color.setAlpha(v_a);
+    v_color.setAlpha(v_a);
+    setColor(v_color);
   } else {
-    m_killTime = i_scene.getTime();
+    m_killTime = i_time;
   }
+
+  return false;
 }
 
-void FireParticle::updateToTime(vapp::MotoGame& i_scene) {
-  EntityParticle::updateToTime(i_scene);
+bool FireParticle::updateToTime(float i_time, Vector2f i_gravity) {
+  EntityParticle::updateToTime(i_time, i_gravity);
 
   float v_timeStep = 0.035;
+  TColor v_color(Color());
 
-  int v_g = m_color.Green() - (int)(randomNum(190,210) * v_timeStep);
-  m_color.setGreen(v_g < 0 ? 0 : v_g);
+  int v_g = Color().Green() - (int)(randomNum(190,210) * v_timeStep);
+  v_color.setGreen(v_g < 0 ? 0 : v_g);
 
-  int v_b = m_color.Blue()  - (int)(randomNum(400,400) * v_timeStep);
-  m_color.setBlue(v_b < 0 ? 0 : v_b);
+  int v_b = Color().Blue()  - (int)(randomNum(400,400) * v_timeStep);
+  v_color.setBlue(v_b < 0 ? 0 : v_b);
 
-  int v_a = m_color.Alpha() - (int)(200.0f * v_timeStep);
+  int v_a = Color().Alpha() - (int)(200.0f * v_timeStep);
   if(v_a >= 0) {
-    m_color.setAlpha(v_a);
+    v_color.setAlpha(v_a);
+    setColor(v_color);
   } else {
-    m_killTime = i_scene.getTime();
+    m_killTime = i_time;
   }
       
-  m_velocity.x = sin((i_scene.getTime() - 
-		      m_spawnTime + m_fireSeed) * randomNum(5,15)) * 0.8f
+  m_velocity.x = sin((i_time + m_fireSeed) * randomNum(5,15)) * 0.8f
     +
-    sin((i_scene.getTime() - m_fireSeed) * 10) * 0.3;
+    sin((i_time - m_fireSeed) * 10) * 0.3;
   m_acceleration.y = 2.0;
+
+  return false;
 }
 
-bool ParticlesSourceFire::updateToTime(vapp::MotoGame& i_scene) {
-  if(ParticlesSource::updateToTime(i_scene)) {
+bool ParticlesSourceFire::updateToTime(float i_time, Vector2f i_gravity) {
+  if(ParticlesSource::updateToTime(i_time, i_gravity)) {
     /* Generate fire */
     for(int k=0;k<12;k++) {
       /* maximum 10s for a fire particule, but it can be destroyed before */
-      ParticlesSource::addParticle(Vector2f(randomNum(-1,1),randomNum(0.1,0.3)), i_scene.getTime() + 10.0);
+      ParticlesSource::addParticle(Vector2f(randomNum(-1,1),randomNum(0.1,0.3)), i_time + 10.0);
     }
     return true;
   }
   return false;
 }
 
-bool ParticlesSourceDebris::updateToTime(vapp::MotoGame& i_scene) {
-  return ParticlesSource::updateToTime(i_scene); 
+bool ParticlesSourceDebris::updateToTime(float i_time, Vector2f i_gravity) {
+  return ParticlesSource::updateToTime(i_time, i_gravity);
 }
 
-void EntityParticle::updateToTime(vapp::MotoGame& i_scene) {
+bool EntityParticle::updateToTime(float i_time, Vector2f i_gravity) {
   float v_timeStep = 0.025;
 
   m_velocity += m_acceleration * v_timeStep;
-  m_position += m_velocity     * v_timeStep;
+  setDynamicPosition(DynamicPosition() + m_velocity * v_timeStep);
   m_angVel   += m_angAcc       * v_timeStep;
   m_ang      += m_angVel       * v_timeStep;
+
+  return true;
 }
 
 float EntityParticle::KillTime() const {
@@ -282,37 +317,36 @@ void Entity::setDynamicPosition(const Vector2f& i_dynamicPosition) {
   m_dynamicPosition = i_dynamicPosition;
 }
 
-EntityParticle::EntityParticle(const Vector2f& i_position, const Vector2f i_velocity, float i_killTime, std::string i_spriteName) {
-  m_front    	 = true;
-  m_position 	 = i_position;
+EntityParticle::EntityParticle(const Vector2f& i_position, const Vector2f i_velocity, float i_killTime)
+: Entity("") {
+  setDynamicPosition(i_position);
   m_velocity 	 = i_velocity;
   m_killTime 	 = i_killTime;
   m_acceleration = Vector2f(0,0);
   m_ang          = 0;
   m_angAcc       = 0;
   m_angVel       = 0;
-  m_color        = TColor(255, 255, 255, 255);
-  m_size         = 0.5;
-  m_spriteName   = i_spriteName;
+  setColor(TColor(255, 255, 255, 255));
+  setSize(0.5);
 }
 
 EntityParticle::~EntityParticle() {
 }
 
 void Entity::saveXml(vapp::FileHandle *i_pfh) {
-  vapp::FS::writeLineF(i_pfh,"\t<entity id=\"%s\" typeid=\"%s\">", Id().c_str(), Entity::TypeToStr(Type()).c_str());
+  vapp::FS::writeLineF(i_pfh,"\t<entity id=\"%s\" typeid=\"%s\">", Id().c_str(), Entity::SpecialityToStr(Speciality()).c_str());
   vapp::FS::writeLineF(i_pfh,"\t\t<size r=\"%f\"/>",Size());
   vapp::FS::writeLineF(i_pfh,"\t\t<position x=\"%f\" y=\"%f\"/>", InitialPosition().x, InitialPosition().y);      
 
   vapp::FS::writeLineF(i_pfh,"\t\t<param name=\"%s\" value=\"%.2f\"/>",
                        "z", Z());
 
-  if(Type() == ET_SPRITE) {
+  if(Speciality() == ET_NONE) {
     vapp::FS::writeLineF(i_pfh,"\t\t<param name=\"%s\" value=\"%.2f\"/>",
 			 "name", SpriteName().c_str());
   }
 
-  if(Type() == ET_PARTICLESOURCE) {
+  if(Speciality() == ET_PARTICLES_SOURCE) {
     vapp::FS::writeLineF(i_pfh,"\t\t<param name=\"%s\" value=\"%.2f\"/>",
 			 "type", SpriteName().c_str());
   }
@@ -320,31 +354,31 @@ void Entity::saveXml(vapp::FileHandle *i_pfh) {
   vapp::FS::writeLineF(i_pfh,"\t</entity>");
 }
 
-EntityType Entity::TypeFromStr(std::string i_typeStr) {
-  if(i_typeStr == "PlayerStart")    return ET_PLAYERSTART;
-  if(i_typeStr == "EndOfLevel")     return ET_ENDOFLEVEL;
-  if(i_typeStr == "Wrecker")        return ET_WRECKER;
-  if(i_typeStr == "Strawberry")     return ET_STRAWBERRY;
-  if(i_typeStr == "ParticleSource") return ET_PARTICLESOURCE;
+EntitySpeciality Entity::SpecialityFromStr(std::string i_typeStr) {
+  if(i_typeStr == "PlayerStart")    return ET_ISSTART;
+  if(i_typeStr == "EndOfLevel")     return ET_MAKEWIN;
+  if(i_typeStr == "Wrecker")        return ET_KILL;
+  if(i_typeStr == "Strawberry")     return ET_ISTOTAKE;
+  if(i_typeStr == "ParticleSource") return ET_PARTICLES_SOURCE;
 
-  return ET_SPRITE;
+  return ET_NONE;
 }
 
-std::string Entity::TypeToStr(EntityType i_type) {
-  switch(i_type) {
-    case ET_PLAYERSTART :
+std::string Entity::SpecialityToStr(EntitySpeciality i_speciality) {
+  switch(i_speciality) {
+    case ET_ISSTART :
       return "PlayerStart";
       break;
-    case ET_ENDOFLEVEL :
+    case ET_MAKEWIN :
       return "EndOfLevel";
       break;
-    case ET_WRECKER :
+    case ET_KILL :
       return "Wrecker";
       break;
-    case ET_STRAWBERRY :
+    case ET_ISTOTAKE :
       return "Strawberry";
       break;
-    case ET_PARTICLESOURCE :
+    case ET_PARTICLES_SOURCE :
       return "ParticleSource";
       break;
   default:
@@ -355,7 +389,7 @@ std::string Entity::TypeToStr(EntityType i_type) {
 Entity* Entity::readFromXml(TiXmlElement *pElem) {
   std::string v_id;
   std::string v_typeId;
-  EntityType  v_type;
+  EntitySpeciality  v_speciality;
   Vector2f    v_position;
   float       v_size   = 0.2;
   float       v_height = -1.0;
@@ -367,7 +401,7 @@ Entity* Entity::readFromXml(TiXmlElement *pElem) {
   /* read xml information */
   v_id         = vapp::XML::getOption(pElem,"id");
   v_typeId     = vapp::XML::getOption(pElem,"typeid");
-  v_type       = Entity::TypeFromStr(v_typeId);
+  v_speciality = Entity::SpecialityFromStr(v_typeId);
   TiXmlElement *pPosElem = pElem->FirstChildElement("position");
   if(pPosElem != NULL) {
     v_position.x = atof(vapp::XML::getOption(pPosElem,"x","0").c_str());
@@ -398,7 +432,7 @@ Entity* Entity::readFromXml(TiXmlElement *pElem) {
   /* Create the entity */
   Entity *v_entity;
 
-  if(v_type == ET_PARTICLESOURCE) {
+  if(v_speciality == ET_PARTICLES_SOURCE) {
     if       (v_typeName == "Smoke") {
       v_entity = new ParticlesSourceSmoke(v_id);
     } else if(v_typeName == "Fire")   {
@@ -414,17 +448,17 @@ Entity* Entity::readFromXml(TiXmlElement *pElem) {
     v_entity = new Entity(v_id);
   }
 
-  switch(v_type) {
-  case ET_SPRITE:
+  switch(v_speciality) {
+  case ET_NONE:
     v_entity->setSpriteName(v_spriteName);
     break;
-  case ET_PARTICLESOURCE:
+  case ET_PARTICLES_SOURCE:
       v_entity->setSpriteName(v_typeName);
     break;
   default:
     v_entity->setSpriteName(v_typeId);
   }
-  v_entity->setType(v_type);
+  v_entity->setSpeciality(v_speciality);
   v_entity->setInitialPosition(v_position);
   v_entity->setSize(v_size);
   if(v_width > 0.0) {
@@ -440,34 +474,33 @@ Entity* Entity::readFromXml(TiXmlElement *pElem) {
 
 void Entity::saveBinary(vapp::FileHandle *i_pfh) {
   vapp::FS::writeString(i_pfh,   Id());
-  vapp::FS::writeString(i_pfh,   Entity::TypeToStr(Type()));
+  vapp::FS::writeString(i_pfh,   Entity::SpecialityToStr(Speciality()));
   vapp::FS::writeFloat_LE(i_pfh, Size());
   vapp::FS::writeFloat_LE(i_pfh, Width());       
   vapp::FS::writeFloat_LE(i_pfh, Height()); 
   vapp::FS::writeFloat_LE(i_pfh, InitialPosition().x);
   vapp::FS::writeFloat_LE(i_pfh, InitialPosition().y);
   
-  switch(Type()) {
-  case ET_SPRITE:
-  case ET_PARTICLESOURCE:
+  switch(Speciality()) {
+  case ET_NONE:
+  case ET_PARTICLES_SOURCE:
     vapp::FS::writeByte(i_pfh, 0x02);
     break;
   default:
     vapp::FS::writeByte(i_pfh, 0x01);
   }
 
-  
   std::ostringstream v_z;
   v_z << Z();
   vapp::FS::writeString(i_pfh, "z");
   vapp::FS::writeString(i_pfh, v_z.str());
 
-  if(Type() == ET_SPRITE) {
+  if(Speciality() == ET_NONE) {
     vapp::FS::writeString(i_pfh, "name");
     vapp::FS::writeString(i_pfh, SpriteName());
   }
 
-  if(Type() == ET_PARTICLESOURCE) {
+  if(Speciality() == ET_PARTICLES_SOURCE) {
     vapp::FS::writeString(i_pfh, "type");
     vapp::FS::writeString(i_pfh, SpriteName());
   }
@@ -476,7 +509,7 @@ void Entity::saveBinary(vapp::FileHandle *i_pfh) {
 Entity* Entity::readFromBinary(vapp::FileHandle *i_pfh) {
   std::string v_id;
   std::string v_typeId;
-  EntityType  v_type;
+  EntitySpeciality  v_speciality;
   Vector2f    v_position;
   float       v_size   = 0.2;
   float       v_height = -1.0;
@@ -488,7 +521,7 @@ Entity* Entity::readFromBinary(vapp::FileHandle *i_pfh) {
   /* read values */
   v_id         = vapp::FS::readString(i_pfh);
   v_typeId     = vapp::FS::readString(i_pfh);
-  v_type       = Entity::TypeFromStr(v_typeId);
+  v_speciality = Entity::SpecialityFromStr(v_typeId);
   v_size       = vapp::FS::readFloat_LE(i_pfh);
   v_width      = vapp::FS::readFloat_LE(i_pfh);
   v_height     = vapp::FS::readFloat_LE(i_pfh);
@@ -513,7 +546,7 @@ Entity* Entity::readFromBinary(vapp::FileHandle *i_pfh) {
   /* Create the entity */
   Entity *v_entity;
 
-  if(v_type == ET_PARTICLESOURCE) {
+  if(v_speciality == ET_PARTICLES_SOURCE) {
     if       (v_typeName == "Smoke") {
       v_entity = new ParticlesSourceSmoke(v_id);
     } else if(v_typeName == "Fire")   {
@@ -529,18 +562,18 @@ Entity* Entity::readFromBinary(vapp::FileHandle *i_pfh) {
     v_entity = new Entity(v_id);
   }
 
-  switch(v_type) {
-  case ET_SPRITE:
+  switch(v_speciality) {
+  case ET_NONE:
     v_entity->setSpriteName(v_spriteName);
     break;
-  case ET_PARTICLESOURCE:
+  case ET_PARTICLES_SOURCE:
       v_entity->setSpriteName(v_typeName);
     break;
   default:
     v_entity->setSpriteName(v_typeId);
   }
 
-  v_entity->setType(v_type);
+  v_entity->setSpeciality(v_speciality);
   v_entity->setInitialPosition(v_position);
   v_entity->setSize(v_size);
   if(v_width > 0.0) {
@@ -570,83 +603,87 @@ std::vector<EntityParticle *>& ParticlesSource::Particles() {
   return m_particles;
 }
 
-Vector2f EntityParticle::Position() const {
-  return m_position;
+EntitySpeciality ParticlesSource::Speciality() const {
+  return ET_PARTICLES_SOURCE;
 }
 
 float EntityParticle::Angle() const {
   return m_ang;
 }
 
-std::string EntityParticle::SpriteName() const {
-  return m_spriteName;
-}
-
 void Entity::clearAfterRewind() {
 }
 
 void ParticlesSource::addParticle(Vector2f i_velocity, float i_killTime) {
-  addParticle(i_velocity, i_killTime, m_spriteName);
+  addParticle(i_velocity, i_killTime, SpriteName());
 }
 
 void ParticlesSourceStar::addParticle(Vector2f i_velocity, float i_killTime, std::string i_spriteName) {
-  m_particles.push_back(new StarParticle(m_dynamicPosition, i_killTime, i_spriteName));
+  m_particles.push_back(new StarParticle(DynamicPosition(), i_killTime, SpriteName()));
 }
 
 StarParticle::StarParticle(const Vector2f& i_position, float i_killTime, std::string i_spriteName)
-  : EntityParticle(i_position, Vector2f(randomNum(-2,2),randomNum(0,2)), i_killTime, i_spriteName) {
+  : EntityParticle(i_position, Vector2f(randomNum(-2,2),randomNum(0,2)), i_killTime) {
   m_angVel       = randomNum(-60,60);
   m_acceleration = Vector2f(0,-4);
+  setSpriteName(i_spriteName);
 }
 
 StarParticle::~StarParticle() {
 }
 
 DebrisParticle::DebrisParticle(const Vector2f& i_position, const Vector2f i_velocity, float i_killTime, std::string i_spriteName)
-  : EntityParticle(i_position, Vector2f(randomNum(-2,2),randomNum(0,2)), i_killTime, i_spriteName) {
+  : EntityParticle(i_position, Vector2f(randomNum(-2,2),randomNum(0,2)), i_killTime) {
   m_angVel       = randomNum(-60,60);
   m_acceleration = Vector2f(0,-4);
   int cc     	 = (int) randomNum(0, 250);
-  m_color    	 = TColor(cc, cc, cc, 255);
+  setColor(TColor(cc, cc, cc, 255));
   m_velocity 	*= randomNum(1.5, 0.5);
   m_velocity 	+= Vector2f(randomNum(-0.2,0.2), randomNum(-0.2,0.2));
-  m_size     	 = randomNum(0.02f,0.04f);
+  setSize(randomNum(0.02f,0.04f));
+  setSpriteName(i_spriteName);
 }
 
 DebrisParticle::~DebrisParticle() {
 }
 
-void DebrisParticle::updateToTime(vapp::MotoGame& i_scene) {
-  EntityParticle::updateToTime(i_scene);
+bool DebrisParticle::updateToTime(float i_time, Vector2f i_gravity) {
+  EntityParticle::updateToTime(i_time, i_gravity);
 
   float v_timeStep = 0.025;
+  TColor v_color(Color());
 
-  m_acceleration = i_scene.getGravity() * (-5.5f / PHYS_WORLD_GRAV);
+  m_acceleration = i_gravity * (-5.5f / PHYS_WORLD_GRAV);
 
-  int v_a = m_color.Alpha() - (int)(120.0f * v_timeStep);
+  int v_a = v_color.Alpha() - (int)(120.0f * v_timeStep);
   if(v_a >= 0) {
-    m_color.setAlpha(v_a);
+    v_color.setAlpha(v_a);
+    setColor(v_color);
   } else {
-    m_killTime = i_scene.getTime();
+    m_killTime = i_time;
   }
+
+  return true;
 }
 
 FireParticle::FireParticle(const Vector2f& i_position, const Vector2f i_velocity, float i_killTime, std::string i_spriteName)
-  : EntityParticle(i_position, i_velocity, i_killTime, i_spriteName) {
+  : EntityParticle(i_position, i_velocity, i_killTime) {
   m_fireSeed = randomNum(0,100);
-  m_size = 0.09;
-  m_color = TColor(255,255,0,255);
+  setSize(0.09);
+  setColor(TColor(255,255,0,255));
+  setSpriteName(i_spriteName);
 }
 
 FireParticle::~FireParticle() {
 }
 
 SmokeParticle::SmokeParticle(const Vector2f& i_position, const Vector2f i_velocity, float i_killTime, std::string i_spriteName) 
-  : EntityParticle(i_position, i_velocity, i_killTime, i_spriteName) {
+  : EntityParticle(i_position, i_velocity, i_killTime) {
   int cc   = (int) randomNum(0, 50);
-  m_color  = TColor(cc, cc, cc, 255);
-  m_size   = randomNum(0, 0.2);
+  setColor(TColor(cc, cc, cc, 255));
+  setSize(randomNum(0, 0.2));
   m_angVel = randomNum(-60, 60);
+  setSpriteName(i_spriteName);
 }
 
 SmokeParticle::~SmokeParticle() {
@@ -654,13 +691,13 @@ SmokeParticle::~SmokeParticle() {
 
 
 void ParticlesSourceSmoke::addParticle(Vector2f i_velocity, float i_killTime, std::string i_spriteName) {
-  m_particles.push_back(new SmokeParticle(m_dynamicPosition, i_velocity, i_killTime, i_spriteName));
+  m_particles.push_back(new SmokeParticle(DynamicPosition(), i_velocity, i_killTime, i_spriteName));
 }
 
 void ParticlesSourceFire::addParticle(Vector2f i_velocity, float i_killTime, std::string i_spriteName) {
-  m_particles.push_back(new FireParticle(m_dynamicPosition, i_velocity, i_killTime, i_spriteName));
+  m_particles.push_back(new FireParticle(DynamicPosition(), i_velocity, i_killTime, i_spriteName));
 }
 
 void ParticlesSourceDebris::addParticle(Vector2f i_velocity, float i_killTime, std::string i_spriteName) {
-  m_particles.push_back(new DebrisParticle(m_dynamicPosition, i_velocity, i_killTime, i_spriteName));
+  m_particles.push_back(new DebrisParticle(DynamicPosition(), i_velocity, i_killTime, i_spriteName));
 }

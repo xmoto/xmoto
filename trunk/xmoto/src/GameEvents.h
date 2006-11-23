@@ -153,7 +153,7 @@ class MGE_PlayerTouchesEntity : public MotoGameEvent {
 class MGE_EntityDestroyed : public MotoGameEvent {
  public:
   MGE_EntityDestroyed(float p_fEventTime);
-  MGE_EntityDestroyed(float p_fEventTime, std::string i_entityId, EntityType i_entityType, Vector2f i_entityPosition, float i_entitySize);
+  MGE_EntityDestroyed(float p_fEventTime, std::string i_entityId, EntitySpeciality i_entityType, Vector2f i_entityPosition, float i_entitySize);
   ~MGE_EntityDestroyed();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -167,7 +167,7 @@ class MGE_EntityDestroyed : public MotoGameEvent {
 
  private:
   std::string m_entityId;
-  EntityType  m_entityType;
+  EntitySpeciality m_entityType;
   Vector2f    m_entityPosition;
   float       m_entitySize;
 };

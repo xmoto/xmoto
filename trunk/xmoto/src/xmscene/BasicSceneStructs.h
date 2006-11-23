@@ -22,14 +22,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __BASICSCENESTRUCTS_H__
 #define __BASICSCENESTRUCTS_H__
 
-enum EntityType {
-  ET_SPRITE,
-  ET_PLAYERSTART,
-  ET_ENDOFLEVEL,
-  ET_WRECKER,
-  ET_STRAWBERRY,
-  ET_PARTICLESOURCE,
-  ET_DUMMY
+/** 
+  An entity can have only one Speciality
+*/
+enum EntitySpeciality {
+  ET_NONE     	      = 1,
+  ET_ISSTART  	      = 2,
+  ET_MAKEWIN  	      = 3,
+  ET_KILL     	      = 4,
+  ET_ISTOTAKE 	      = 5,
+  ET_PARTICLES_SOURCE = 6
 };
 
 /*===========================================================================

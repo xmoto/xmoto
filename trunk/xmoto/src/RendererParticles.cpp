@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "MotoGame.h"
 #include "Renderer.h"
 #include "PhysSettings.h"
+#include "xmscene/BasicSceneStructs.h"
 
 namespace vapp {
 
@@ -77,7 +78,7 @@ namespace vapp {
       if(pStarAnim != NULL) {
 	
 	for(unsigned j = 0; j < i_source->Particles().size(); j++) {
-	  _RenderParticleDraw(i_source->Particles()[j]->Position(),
+	  _RenderParticleDraw(i_source->Particles()[j]->DynamicPosition(),
 			      pStarAnim->getTexture(),
 			      pStarAnim->getWidth(),
 			      i_source->Particles()[j]->Angle(),
@@ -87,7 +88,7 @@ namespace vapp {
     } else if(i_source->SpriteName() == "Fire") {
       if(pFireType != NULL) {
 	for(unsigned j = 0; j < i_source->Particles().size(); j++) {
-	  _RenderParticleDraw(i_source->Particles()[j]->Position(),
+	  _RenderParticleDraw(i_source->Particles()[j]->DynamicPosition(),
 			      pFireType->getTexture(),
 			      i_source->Particles()[j]->Size(),
 			      i_source->Particles()[j]->Angle(),
@@ -98,13 +99,13 @@ namespace vapp {
       if(pSmoke1Type != NULL && pSmoke2Type != NULL) {
 	for(unsigned j = 0; j < i_source->Particles().size(); j++) {
 	  if(i_source->Particles()[j]->SpriteName() == "Smoke1") {
-	    _RenderParticleDraw(i_source->Particles()[j]->Position(),
+	    _RenderParticleDraw(i_source->Particles()[j]->DynamicPosition(),
 				pSmoke1Type->getTexture(),
 				i_source->Particles()[j]->Size(),
 				i_source->Particles()[j]->Angle(),
 				i_source->Particles()[j]->Color());
 	  } else if(i_source->Particles()[j]->SpriteName() == "Smoke2") {
-	    _RenderParticleDraw(i_source->Particles()[j]->Position(),
+	    _RenderParticleDraw(i_source->Particles()[j]->DynamicPosition(),
 				pSmoke2Type->getTexture(),
 				i_source->Particles()[j]->Size(),
 				i_source->Particles()[j]->Angle(),
@@ -116,7 +117,7 @@ namespace vapp {
       if(pDebrisType != NULL) {
 	for(unsigned j = 0; j < i_source->Particles().size(); j++) {
 	  if(i_source->Particles()[j]->SpriteName() == "Debris1") {
-	    _RenderParticleDraw(i_source->Particles()[j]->Position(),
+	    _RenderParticleDraw(i_source->Particles()[j]->DynamicPosition(),
 				pDebrisType->getTexture(),
 				i_source->Particles()[j]->Size(),
 				i_source->Particles()[j]->Angle(),
@@ -130,14 +131,14 @@ namespace vapp {
   void GameRenderer::_RenderParticles(bool bFront) {
     for(unsigned int i = 0; i < getGameObject()->getLevelSrc()->Entities().size(); i++) {
       Entity* v_entity = getGameObject()->getLevelSrc()->Entities()[i];
-      if(v_entity->Type() == ET_PARTICLESOURCE) {
+      if(v_entity->Speciality() == ET_PARTICLES_SOURCE) {
 	_RenderParticle((ParticlesSource*) v_entity);
       }
     }
 
     for(unsigned int i = 0; i < getGameObject()->getLevelSrc()->EntitiesExterns().size(); i++) {
       Entity* v_entity = getGameObject()->getLevelSrc()->EntitiesExterns()[i];
-      if(v_entity->Type() == ET_PARTICLESOURCE) {
+      if(v_entity->Speciality() == ET_PARTICLES_SOURCE) {
 	_RenderParticle((ParticlesSource*) v_entity);
       }
     }

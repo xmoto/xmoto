@@ -1126,37 +1126,26 @@ namespace vapp {
       scriptCallTblVoid(pEntity->Id(),"Touch");
     }
 
-    /* What kind of entity? */
-    switch(pEntity->Type()) {
-      case ET_SPRITE:        
-      break;
-      case ET_PLAYERSTART:
-      break;
-      case ET_ENDOFLEVEL:
-      {
-        if(getNbRemainingStrawberries() == 0) {
-          makePlayerWin();
-        }
+    if(pEntity->DoesMakeWin()) {
+      if(getNbRemainingStrawberries() == 0) {
+	makePlayerWin();
       }
-      break;
-      case ET_WRECKER: 
-      {
-        createGameEvent(new MGE_PlayerDies(getTime(), true));
-      }
-      break;
-      case ET_STRAWBERRY:
-      {
-        /* OH... nice */
-        createGameEvent(new MGE_EntityDestroyed(getTime(), pEntity->Id(), pEntity->Type(), pEntity->DynamicPosition(), pEntity->Size()));
+    }
+
+    if(pEntity->DoesKill()) {
+      createGameEvent(new MGE_PlayerDies(getTime(), true));
+    }
+
+    if(pEntity->IsToTake()) {
+      /* OH... nice */
+      createGameEvent(new MGE_EntityDestroyed(getTime(), pEntity->Id(), pEntity->Speciality(), pEntity->DynamicPosition(), pEntity->Size()));
 #if defined(ALLOW_GHOST)
-        if(isGhostActive() && m_showGhostTimeDiff) {
-          m_myLastStrawberries.push_back(getTime());
-          UpdateDiffFromGhost();
-          DisplayDiffFromGhost();
-        }
-#endif
+      if(isGhostActive() && m_showGhostTimeDiff) {
+	m_myLastStrawberries.push_back(getTime());
+	UpdateDiffFromGhost();
+	DisplayDiffFromGhost();
       }
-      break;
+#endif
     }
   }
 
@@ -1357,7 +1346,7 @@ namespace vapp {
       MotoGameEvent *v_event = (*v_replayEvents)[i]->Event;
       
       if(v_event->getType() == GAME_EVENT_ENTITY_DESTROYED) {
-	if(getLevelSrc()->getEntityById(((MGE_EntityDestroyed*)v_event)->EntityId()).Type() == ET_STRAWBERRY) {
+	if(getLevelSrc()->getEntityById(((MGE_EntityDestroyed*)v_event)->EntityId()).IsToTake()) {
 	  /* new Strawberry for ghost */
 	  m_ghostLastStrawberries.push_back((*v_replayEvents)[i]->Event->getEventTime());
 	}
@@ -1441,7 +1430,7 @@ namespace vapp {
     Entity *v_entity;
     v_entity = &(getLevelSrc()->getEntityById(i_entityId));
 
-    if(v_entity->Type() == ET_STRAWBERRY) {
+    if(v_entity->IsToTake()) {
       ParticlesSource *v_stars = new ParticlesSourceStar("");
       v_stars->setInitialPosition(v_entity->DynamicPosition());
       v_stars->loadToPlay();
@@ -1467,13 +1456,13 @@ namespace vapp {
     v_entity = &(m_pLevelSrc->getEntityById(p_entityID));
     createGameEvent(new MGE_EntityDestroyed(m_pMotoGame->getTime(),
                                             v_entity->Id(),
-                                            v_entity->Type(),
+                                            v_entity->Speciality(),
                                             v_entity->DynamicPosition(),
                                             v_entity->Size()));
   }
 
   unsigned int MotoGame::getNbRemainingStrawberries() {
-    return m_pLevelSrc->countEntitiesByType(ET_STRAWBERRY);
+    return m_pLevelSrc->countToTakeEntities();
   }
 
   void MotoGame::makePlayerWin() {

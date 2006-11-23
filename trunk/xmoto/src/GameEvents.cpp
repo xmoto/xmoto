@@ -255,7 +255,7 @@ namespace vapp {
     m_entitySize = 0.0;
   }
 
-  MGE_EntityDestroyed::MGE_EntityDestroyed(float p_fEventTime, std::string i_entityId, EntityType i_entityType, Vector2f i_entityPosition, float i_entitySize)
+  MGE_EntityDestroyed::MGE_EntityDestroyed(float p_fEventTime, std::string i_entityId, EntitySpeciality i_entityType, Vector2f i_entityPosition, float i_entitySize)
     : MotoGameEvent(p_fEventTime) {
       m_entityId       = i_entityId;
       m_entityType     = i_entityType;
@@ -281,23 +281,20 @@ namespace vapp {
   
   void MGE_EntityDestroyed::unserialize(DBuffer &Buffer) {
 
-    float v_size;
     Vector2f v_position;
     std::string v_entityId;
-    EntityType v_type;
 
     Buffer.read(m_entityId);
 
     /* no more used, kept just for compatibiliy */    
     Buffer >> m_entityType;
     switch(m_entityType) {
-    case ET_SPRITE:
-    case ET_PLAYERSTART:
-    case ET_ENDOFLEVEL:
-    case ET_WRECKER:
-    case ET_STRAWBERRY:
-    case ET_PARTICLESOURCE:
-    case ET_DUMMY:
+    case ET_NONE:
+    case ET_ISSTART:
+    case ET_MAKEWIN:
+    case ET_KILL:
+    case ET_ISTOTAKE:
+    case ET_PARTICLES_SOURCE:
       break;
     default:
       throw Exception("Invalid entity type"); // with some compilator, an invalid value causes a segfault (on my linux box)
