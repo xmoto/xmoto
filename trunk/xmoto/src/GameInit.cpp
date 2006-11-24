@@ -440,7 +440,7 @@ namespace vapp {
       try {
         // Load the level
         m_Levels[j].setFileName( LvlFiles[i] );
-        bCached = m_Levels[j].loadFromFile(m_bEnableLevelCache);
+        bCached = m_Levels[j].loadReducedFromFile(m_bEnableLevelCache);
         
         // Check for ID conflict
         for(int k=0;k<m_nNumLevels;k++) {

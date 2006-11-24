@@ -490,11 +490,13 @@ void Level::loadXML(void) {
       m_blocks.push_back(Block::readFromXml(m_xmlSource, pElem));
     }  
   }
+
+  m_isBodyLoaded = true;
 }
 
 /* Load using the best way possible. File name must already be set!
   *  Return whether or not it was loaded from the cache. */
-bool Level::loadFromFile(bool cacheEnabled) {
+bool Level::loadReducedFromFile(bool cacheEnabled) {
   std::string cacheFileName;
 
   m_checkSum = md5file(FileName());
@@ -504,10 +506,10 @@ bool Level::loadFromFile(bool cacheEnabled) {
   if (cacheEnabled) {
     /* Determine name in cache */
     std::string LevelFileBaseName = vapp::FS::getFileBaseName(FileName());
-    cacheFileName = "LCache/" + m_checkSum + LevelFileBaseName + ".blv";
+    cacheFileName = getNameInCache();
     
     try {
-      cached = importBinary(cacheFileName, m_checkSum);
+      cached = importBinaryHeader(cacheFileName, m_checkSum);
     } catch (Exception &e) {
       vapp::Log("** Warning **: Exception while loading binary level, will load "
                 "XML instead for '%s' (%s)", FileName().c_str(),
@@ -523,6 +525,10 @@ bool Level::loadFromFile(bool cacheEnabled) {
   }
   
   return cached;
+}
+
+std::string Level::getNameInCache() const {
+  return "LCache/" + Checksum() + vapp::FS::getFileBaseName(FileName()) + ".blv";
 }
 
 /*===========================================================================
@@ -589,17 +595,29 @@ void Level::exportBinary(const std::string &FileName, const std::string& pSum) {
   }
 }
   
-/*===========================================================================
+bool Level::isFullyLoaded() const {
+  return m_isBodyLoaded;
+}
+
+void Level::loadFullyFromFile() {
+  if(importBinary(getNameInCache(), Checksum()) == false) {
+    throw Exception("Unable to load the file from the cache");
+  }
+}
+
+  /*===========================================================================
   Import binary level file
   ===========================================================================*/
-bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
+bool Level::importBinaryHeader(const std::string &FileName, const std::string& pSum) {
+  m_isBodyLoaded = false;
+
   unloadLevelData();
   bool bRet = true;
-
+  
   m_playerStart = Vector2f(0.0, 0.0);
     
   m_xmotoTooOld = false;
-
+  
   /* Import binary */
   vapp::FileHandle *pfh = vapp::FS::openIFile(FileName);
   if(pfh == NULL) {
@@ -613,7 +631,7 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
     int nFormat = 0;
     if(!strcmp(cTag,"XBL5"))
       nFormat = 5;
-
+    
     if(nFormat == 5) { /* reject other formats */
       /* Read "format 1" / "format 2" binary level */
       /* Right */
@@ -631,6 +649,59 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
         m_description = vapp::FS::readString(pfh);
         m_author = vapp::FS::readString(pfh);
         m_date = vapp::FS::readString(pfh);
+      }
+    } else {
+      vapp::Log("** Warning ** : Invalid binary format (%d), can't import: %s",nFormat,FileName.c_str());
+      bRet = false;
+    }
+             
+    /* clean up */
+    vapp::FS::closeFile(pfh);
+  }
+    
+  return bRet;
+}
+
+bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
+  unloadLevelData();
+  bool bRet = true;
+  
+  m_playerStart = Vector2f(0.0, 0.0);
+    
+  m_xmotoTooOld = false;
+  
+  /* Import binary */
+  vapp::FileHandle *pfh = vapp::FS::openIFile(FileName);
+  if(pfh == NULL) {
+    return false;
+  }
+  else {
+    /* Read tag - it tells something about the format */
+    char cTag[5];
+    vapp::FS::readBuf(pfh,(char *)cTag,4);
+    cTag[4] = '\0';
+    int nFormat = 0;
+    if(!strcmp(cTag,"XBL5"))
+      nFormat = 5;
+    
+    if(nFormat == 5) { /* reject other formats */
+      /* Read "format 1" / "format 2" binary level */
+      /* Right */
+      std::string md5sum = vapp::FS::readString(pfh);
+      if(md5sum != pSum) {
+        vapp::Log("** Warning ** : CRC check failed, can't import: %s",FileName.c_str());
+        bRet = false;
+      }
+      else {
+        /* Read header */
+        m_id = vapp::FS::readString(pfh);
+        m_pack = vapp::FS::readString(pfh);
+        m_packNum = vapp::FS::readString(pfh);
+        m_name = vapp::FS::readString(pfh);
+        m_description = vapp::FS::readString(pfh);
+        m_author = vapp::FS::readString(pfh);
+        m_date = vapp::FS::readString(pfh);
+
         m_sky = vapp::FS::readString(pfh);
         m_scriptFileName = vapp::FS::readString(pfh);
 
@@ -691,6 +762,7 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
     vapp::FS::closeFile(pfh);
   }
     
+  m_isBodyLoaded = bRet;
   return bRet;
 }
 

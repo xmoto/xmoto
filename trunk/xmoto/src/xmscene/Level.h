@@ -45,7 +45,10 @@ class Level {
   Level();
   ~Level();
 
-  bool loadFromFile(bool i_cacheEnabled);
+  bool loadReducedFromFile(bool i_cacheEnabled);
+  void loadFullyFromFile();
+  bool isFullyLoaded() const;
+
   void loadXML();
   void saveXML();
 
@@ -138,10 +141,13 @@ class Level {
   std::vector<Entity *> m_entitiesDestroyed;
   std::vector<Entity *> m_entitiesExterns;
   Entity               *m_startEntity; /* entity where the player start */
+  bool m_isBodyLoaded;
 
   void loadToPlayLimits();
   void exportBinary(const std::string &i_fileName, const std::string& i_sum);
   bool importBinary(const std::string &i_fileName, const std::string& i_sum);
+  bool importBinaryHeader(const std::string &i_fileName, const std::string& i_sum);
+  std::string getNameInCache() const;
   void unloadLevelData();
 
 };

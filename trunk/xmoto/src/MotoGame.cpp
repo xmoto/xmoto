@@ -576,6 +576,11 @@ namespace vapp {
     /* Clean up first, just for safe's sake */
     endLevel();               
     
+    /* load the level if not */
+    if(pLevelSrc->isFullyLoaded() == false) {
+      pLevelSrc->loadFullyFromFile();
+    }
+
     /* Set default gravity */
     m_PhysGravity.x = 0;
     m_PhysGravity.y = PHYS_WORLD_GRAV;

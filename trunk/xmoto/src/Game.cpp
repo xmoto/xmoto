@@ -1206,7 +1206,7 @@ namespace vapp {
             for(int j=0;j<m_nNumLevels;j++) {
               if(m_Levels[j].FileName() == UpdatedLvlFiles[i]) {
                 /* Found it... */
-                m_Levels[j].loadFromFile(m_bEnableLevelCache);
+                m_Levels[j].loadReducedFromFile(m_bEnableLevelCache);
                 
                 /* Failed to load due to old xmoto? */  
                 if(m_Levels[j].isXMotoTooOld())
