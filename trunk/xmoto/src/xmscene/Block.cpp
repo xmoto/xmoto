@@ -119,7 +119,7 @@ Vector2f Block::DynamicPosition() const {
 
 void Block::updateCollisionLines() {
   /* Ignore background blocks */
-  if(isBackground()) return;
+  if(isBackground() || isDynamic() == false) return;
 
   /* Build rotation matrix for block */
   float fR[4]; 
@@ -127,7 +127,7 @@ void Block::updateCollisionLines() {
   fR[1] = -sin(DynamicRotation());
   fR[2] =  sin(DynamicRotation()); 
   fR[3] =  cos(DynamicRotation());
-  int z = 0;
+  unsigned int z = 0;
   
   for(unsigned int i=0; i< m_convexBlocks.size(); i++) {       
     for(unsigned int j=0; j<m_convexBlocks[i]->Vertices().size(); j++) {            
@@ -143,7 +143,7 @@ void Block::updateCollisionLines() {
       Vector2f Tv2 = Vector2f(pVertex2->Position().x * fR[0] + pVertex2->Position().y * fR[1],
             pVertex2->Position().x * fR[2] + pVertex2->Position().y * fR[3]);
       Tv2 += m_dynamicPosition;
-      
+
       /* Update line */
       m_collisionLines[z]->x1 = Tv1.x;
       m_collisionLines[z]->y1 = Tv1.y;
@@ -169,6 +169,7 @@ void Block::setDynamicRotation(float i_dynamicRotation) {
 int Block::loadToPlay(vapp::CollisionSystem& io_collisionSystem) {
 
   m_dynamicPosition  = m_initialPosition;
+  m_dynamicRotation  = m_initialRotation;
 
   /* Do the "convexifying" the BSP-way. It might be overkill, but we'll
      probably appreciate it when the input data is very complex. It'll also 
@@ -203,6 +204,8 @@ int Block::loadToPlay(vapp::CollisionSystem& io_collisionSystem) {
     addPoly(*(v_BSPPolys[i]), io_collisionSystem);
   }
   
+  updateCollisionLines();
+
   return v_BSPTree.getNumErrors();  
 }
 
@@ -234,6 +237,11 @@ void Block::unloadToPlay() {
     delete m_convexBlocks[i];
   }
   m_convexBlocks.clear();
+
+  for(unsigned int i=0; i<m_collisionLines.size(); i++) {
+    delete m_collisionLines[i];
+  }
+  m_collisionLines.clear();
 }
 
 std::string Block::Id() const {
