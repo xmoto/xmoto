@@ -69,6 +69,7 @@ class Level {
   float BottomLimit()       const;
   Vector2f PlayerStart()    const;
   std::string Sky()         const;
+  void setLimits(float v_leftLimit, float v_rightLimit, float v_topLimit, float v_bottomLimit);
 
   std::string FileName() const;
   void setFileName(const std::string& i_filename);
@@ -81,6 +82,12 @@ class Level {
   Zone&   getZoneById(const std::string& i_id);
 
   void setId(const std::string& i_id);
+  void setName(const std::string& i_name);
+  void setDescription(const std::string& i_description);
+  void setDate(const std::string& i_date);
+  void setAuthor(const std::string& i_author);
+  void setSky(const std::string& i_sky);
+
   std::string scriptFileName() const;
   std::string scriptSource() const;
   void setScriptFileName(const std::string& i_scriptFileName);

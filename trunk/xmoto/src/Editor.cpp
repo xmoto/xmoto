@@ -377,28 +377,22 @@ namespace vapp {
             /* Is this the first vertex? */
             if(m_NewBlockX.size() > 2 && fabs(m_Cursor.x - m_NewBlockX[0]) < 0.3 && fabs(m_Cursor.y - m_NewBlockY[0]) < 0.3) {
               /* Finish creation */
-              Block *pBlock = new Block();
+              Block *pBlock = new Block(_CreateBlockName());
               m_pLevelSrc->Blocks().push_back(pBlock);
-              pBlock->fPosX = _GetAvg(m_NewBlockX);
-              pBlock->fPosY = _GetAvg(m_NewBlockY);
-              pBlock->fTextureScale = 1.0f;              
-              pBlock->ID = _CreateBlockName();
-              pBlock->Texture = "default";
+	      pBlock->setInitialPosition(Vector2f(_GetAvg(m_NewBlockX), _GetAvg(m_NewBlockY)));
+              pBlock->setTextureScale(1.0);
+              pBlock->setTexture("default");
               
               //float ff = 0;
               
               for(int i=0;i<m_NewBlockX.size();i++) {
-                LevelBlockVertex *pVertex = new LevelBlockVertex;
-                pBlock->Vertices.push_back( pVertex );
-                pVertex->fX = m_NewBlockX[i] - pBlock->fPosX;
-                pVertex->fY = m_NewBlockY[i] - pBlock->fPosY;
-                pVertex->fTX = m_NewBlockX[i]; 
-                pVertex->fTY = m_NewBlockY[i]; 
-                pVertex->r = 255;
-                pVertex->g = 255;
-                pVertex->b = 255;
-                pVertex->a = 255;
-                pVertex->bSelected = false;
+                BlockVertex *pVertex = new BlockVertex(Vector2f(
+								m_NewBlockX[i] - pBlock->InitialPosition().x,
+								m_NewBlockY[i] - pBlock->InitialPosition().y));
+                pBlock->Vertices().push_back( pVertex );
+                pVertex->setTexturePosition(Vector2f(m_NewBlockX[i], m_NewBlockY[i])); 
+		pVertex->setColor(TColor(255, 255, 255, 255));
+		///pVertex->bSelected = false;
               }
               
               setState(ES_DEFAULT);
@@ -717,8 +711,8 @@ namespace vapp {
   }
   
   void EditorApp::resetView(void) {
-    setViewRect( Vector2f(m_pLevelSrc->getLeftLimit()-2,m_pLevelSrc->getBottomLimit()-2),
-                 Vector2f(m_pLevelSrc->getRightLimit()+2,m_pLevelSrc->getTopLimit()+2));
+    setViewRect( Vector2f(m_pLevelSrc->LeftLimit()-2,m_pLevelSrc->BottomLimit()-2),
+                 Vector2f(m_pLevelSrc->RightLimit()+2,m_pLevelSrc->TopLimit()+2));
   }
   
   void EditorApp::viewDrawLine(Vector2f P0,Vector2f P1,Color Col) {
@@ -760,19 +754,19 @@ namespace vapp {
   
   void EditorApp::viewDrawGrid(void) {      
     /* Draw one-meter level grid */
-    for(float y=floor(m_pLevelSrc->getBottomLimit());y<=ceil(m_pLevelSrc->getTopLimit());y+=1.0f) {
+    for(float y=floor(m_pLevelSrc->BottomLimit());y<=ceil(m_pLevelSrc->TopLimit());y+=1.0f) {
       if(y>=m_ViewMax.y) break;
       if(y>=m_ViewMin.y) {
-        viewDrawLine( Vector2f(m_pLevelSrc->getLeftLimit(),y),
-                      Vector2f(m_pLevelSrc->getRightLimit(),y),MAKE_COLOR(120,120,120,255) );
+        viewDrawLine( Vector2f(m_pLevelSrc->LeftLimit(),y),
+                      Vector2f(m_pLevelSrc->RightLimit(),y),MAKE_COLOR(120,120,120,255) );
       }
     }
 
-    for(float x=floor(m_pLevelSrc->getLeftLimit());x<=ceil(m_pLevelSrc->getRightLimit());x+=1.0f) {
+    for(float x=floor(m_pLevelSrc->LeftLimit());x<=ceil(m_pLevelSrc->RightLimit());x+=1.0f) {
       if(x>=m_ViewMax.x) break;
       if(x>=m_ViewMin.x) {
-        viewDrawLine( Vector2f(x,m_pLevelSrc->getTopLimit()),
-                      Vector2f(x,m_pLevelSrc->getBottomLimit()),MAKE_COLOR(120,120,120,255) );
+        viewDrawLine( Vector2f(x,m_pLevelSrc->TopLimit()),
+                      Vector2f(x,m_pLevelSrc->BottomLimit()),MAKE_COLOR(120,120,120,255) );
       }
     }
     
@@ -797,30 +791,30 @@ namespace vapp {
     bool bLL=false,bRL=false,bTL=false,bBL=false;
     
     if(m_CurState == ES_MOVING_LIMITS) {
-      if(fabs(m_Cursor.x - m_pLevelSrc->getLeftLimit()) < 1.1) bLL=true;
-      if(fabs(m_Cursor.y - m_pLevelSrc->getBottomLimit()) < 1.1) bBL=true;
-      if(fabs(m_Cursor.x - m_pLevelSrc->getRightLimit()) < 1.1) bRL=true;
-      if(fabs(m_Cursor.y - m_pLevelSrc->getTopLimit()) < 1.1) bTL=true;
+      if(fabs(m_Cursor.x - m_pLevelSrc->LeftLimit()) < 1.1) bLL=true;
+      if(fabs(m_Cursor.y - m_pLevelSrc->BottomLimit()) < 1.1) bBL=true;
+      if(fabs(m_Cursor.x - m_pLevelSrc->RightLimit()) < 1.1) bRL=true;
+      if(fabs(m_Cursor.y - m_pLevelSrc->TopLimit()) < 1.1) bTL=true;
       if(SDL_GetMouseState(NULL,NULL)&SDL_BUTTON(1)) {
         if(bLL) {
           LLc = MAKE_COLOR(255,255,255,255); 
-          m_pLevelSrc->setLimits( m_Cursor.x,m_pLevelSrc->getRightLimit(),
-                                  m_pLevelSrc->getTopLimit(),m_pLevelSrc->getBottomLimit() );
+          m_pLevelSrc->setLimits( m_Cursor.x,m_pLevelSrc->RightLimit(),
+                                  m_pLevelSrc->TopLimit(),m_pLevelSrc->BottomLimit() );
         }
         if(bRL) {
           RLc = MAKE_COLOR(255,255,255,255); 
-          m_pLevelSrc->setLimits( m_pLevelSrc->getLeftLimit(),m_Cursor.x,
-                                  m_pLevelSrc->getTopLimit(),m_pLevelSrc->getBottomLimit() );
+          m_pLevelSrc->setLimits( m_pLevelSrc->LeftLimit(),m_Cursor.x,
+                                  m_pLevelSrc->TopLimit(),m_pLevelSrc->BottomLimit() );
         }
         if(bTL) {
           TLc = MAKE_COLOR(255,255,255,255); 
-          m_pLevelSrc->setLimits( m_pLevelSrc->getLeftLimit(),m_pLevelSrc->getRightLimit(),
-                                  m_Cursor.y,m_pLevelSrc->getBottomLimit() );
+          m_pLevelSrc->setLimits( m_pLevelSrc->LeftLimit(),m_pLevelSrc->RightLimit(),
+                                  m_Cursor.y,m_pLevelSrc->BottomLimit() );
         }
         if(bBL) {
           BLc = MAKE_COLOR(255,255,255,255); 
-          m_pLevelSrc->setLimits( m_pLevelSrc->getLeftLimit(),m_pLevelSrc->getRightLimit(),
-                                  m_pLevelSrc->getTopLimit(),m_Cursor.y );
+          m_pLevelSrc->setLimits( m_pLevelSrc->LeftLimit(),m_pLevelSrc->RightLimit(),
+                                  m_pLevelSrc->TopLimit(),m_Cursor.y );
         }
       }
       else {
@@ -833,61 +827,55 @@ namespace vapp {
     
     /* Draw blocks */
     for(int i=0;i<m_pLevelSrc->Blocks().size();i++) {
-      LevelBlock *pBlock = m_pLevelSrc->Blocks()[i];
-      Vector2f BP(pBlock->fPosX,pBlock->fPosY);
+      Block *pBlock = m_pLevelSrc->Blocks()[i];
+      Vector2f BP(pBlock->InitialPosition().x, pBlock->InitialPosition().y);
       
       if(m_SelMode != SM_BLOCKS || !_IsBlockSelected(pBlock)) {	
 	      bool bSelectNext = false;
 	      
-	      if(m_SelMode == SM_EDGES && pBlock->Vertices[pBlock->Vertices.size()-1]->bSelected)
-					bSelectNext = true;
+	      ///if(m_SelMode == SM_EDGES && pBlock->Vertices()[pBlock->Vertices().size()-1]->bSelected)
+	      ///			bSelectNext = true;
   
-        for(int j=0;j<pBlock->Vertices.size();j++) {
-          Vector2f P=Vector2f(pBlock->Vertices[j]->fX,pBlock->Vertices[j]->fY) + BP;
+        for(int j=0;j<pBlock->Vertices().size();j++) {
+          Vector2f P=Vector2f(pBlock->Vertices()[j]->Position().x, pBlock->Vertices()[j]->Position().y) + BP;
           int jnext = j+1;
-          if(jnext == pBlock->Vertices.size()) jnext=0;
-          Vector2f PNext=Vector2f(pBlock->Vertices[jnext]->fX,pBlock->Vertices[jnext]->fY) + BP;          
+          if(jnext == pBlock->Vertices().size()) jnext=0;
+          Vector2f PNext=Vector2f(pBlock->Vertices()[jnext]->Position().x,pBlock->Vertices()[jnext]->Position().y) + BP;          
 
           glBegin(GL_LINE_STRIP);          
-          if(pBlock->bBackground) {
-            if(pBlock->Vertices[j]->EdgeEffect != "")
+          if(pBlock->isBackground()) {
+            if(pBlock->Vertices()[j]->EdgeEffect() != "")
               glColor3f(0,0,0.5);
             else
               glColor3f(0.2,0.9,0.2);
           }
-          else if(pBlock->bWater) {
-            if(pBlock->Vertices[j]->EdgeEffect != "")
-              glColor3f(0,0,0.5);
-            else
-              glColor3f(0.2,0.2,0.9);
-          }
           else {
-            if(pBlock->Vertices[j]->EdgeEffect != "")
+            if(pBlock->Vertices()[j]->EdgeEffect() != "")
               glColor3f(0,0,1);
             else
               glColor3f(0.9,0.9,0.9);
           }
                     
-          if(m_CurState == ES_MOVING_SELECTION && 
-             (pBlock->Vertices[j]->bSelected || bSelectNext)) {
-            P+=(m_Cursor - m_MStart);
+          ///if(m_CurState == ES_MOVING_SELECTION && 
+	  /// (pBlock->Vertices()[j]->bSelected || bSelectNext)) {
+	  ///P+=(m_Cursor - m_MStart);
                         
-            if(m_SelMode == SM_EDGES && pBlock->Vertices[j]->bSelected) 
-							bSelectNext = true;		
-						else
-							bSelectNext = false;				
-          }
-          else
+	  ///if(m_SelMode == SM_EDGES && pBlock->Vertices()[j]->bSelected) 
+	  ///					bSelectNext = true;		
+	  ///				else
+	  ///					bSelectNext = false;				
+          ///}
+          ///else
 						bSelectNext = false;          
 				  
-				  if(m_CurState == ES_MOVING_SELECTION && pBlock->Vertices[jnext]->bSelected) {
-				    PNext+=(m_Cursor - m_MStart); 
-				    bSelectNext = true;
-				  }				  
-				  else if(m_CurState == ES_MOVING_SELECTION && pBlock->Vertices[j]->bSelected &&
-				     m_SelMode == SM_EDGES) {
-				    PNext+=(m_Cursor - m_MStart);
-				  }
+						///if(m_CurState == ES_MOVING_SELECTION && pBlock->Vertices()[jnext]->bSelected) {
+						/// PNext+=(m_Cursor - m_MStart); 
+						///bSelectNext = true;
+						///}				  
+						///else if(m_CurState == ES_MOVING_SELECTION && pBlock->Vertices()[j]->bSelected &&
+						///m_SelMode == SM_EDGES) {
+						///PNext+=(m_Cursor - m_MStart);
+						///}
                     
           viewVertex( P );
           viewVertex( PNext );
@@ -897,31 +885,31 @@ namespace vapp {
 
       if(m_SelMode == SM_VERTICES || m_SelMode == SM_EDGES) {      
         /* Draw selected block vertices */
-        for(int j=0;j<pBlock->Vertices.size();j++) {
-          if(pBlock->Vertices[j]->bSelected) {
-            Vector2f P=Vector2f(pBlock->Vertices[j]->fX,pBlock->Vertices[j]->fY) + BP;
-            Vector2f PNext=Vector2f(pBlock->Vertices[0]->fX,pBlock->Vertices[0]->fY) + BP;
-            if(j+1 < pBlock->Vertices.size())           
-							PNext = Vector2f(pBlock->Vertices[j+1]->fX,pBlock->Vertices[j+1]->fY) + BP;
+        for(int j=0;j<pBlock->Vertices().size();j++) {
+          ///if(pBlock->Vertices()[j]->bSelected) {
+	  ///Vector2f P=Vector2f(pBlock->Vertices()[j]->fX,pBlock->Vertices()[j]->fY) + BP;
+	  ///Vector2f PNext=Vector2f(pBlock->Vertices()[0]->fX,pBlock->Vertices()[0]->fY) + BP;
+	  ///if(j+1 < pBlock->Vertices().size())           
+	  ///					PNext = Vector2f(pBlock->Vertices()[j+1]->fX,pBlock->Vertices()[j+1]->fY) + BP;
+	  ///
+	  /// if(m_CurState == ES_MOVING_SELECTION && pBlock->Vertices()[j]->bSelected) {
+	  /// P+=(m_Cursor - m_MStart);
+	  /// PNext+=(m_Cursor - m_MStart);
+	  ///}
             
-            if(m_CurState == ES_MOVING_SELECTION && pBlock->Vertices[j]->bSelected) {
-              P+=(m_Cursor - m_MStart);
-              PNext+=(m_Cursor - m_MStart);
-            }
-            
-            if(m_SelMode == SM_EDGES) {
-							glLineWidth(3);
-							glBegin(GL_LINE_STRIP);        
-							glColor4ub(255,0,0,255);
-							viewVertex( P );
-							viewVertex( PNext );
-							glEnd();
-							glLineWidth(1);
-            }
-            else {
-							viewDrawCircle(P,-4,0,MAKE_COLOR(255,0,0,255),MAKE_COLOR(255,0,0,255));
-						}
-          }      
+	  /// if(m_SelMode == SM_EDGES) {
+	  ///					glLineWidth(3);
+	  ///					glBegin(GL_LINE_STRIP);        
+	  ///					glColor4ub(255,0,0,255);
+	  ///					viewVertex( P );
+	  ///					viewVertex( PNext );
+	  ///					glEnd();
+	  ///					glLineWidth(1);
+	  ///}
+	  ///else {
+	  ///viewDrawCircle(P,-4,0,MAKE_COLOR(255,0,0,255),MAKE_COLOR(255,0,0,255));
+							///				}
+	  ///}      
         }
       }
       else if(m_SelMode == SM_BLOCKS && _IsBlockSelected(pBlock)) {
@@ -929,8 +917,8 @@ namespace vapp {
         glLineWidth(3);
         glBegin(GL_LINE_LOOP);        
         glColor4ub(255,0,0,255);
-        for(int j=0;j<pBlock->Vertices.size();j++) {
-          Vector2f P=Vector2f(pBlock->Vertices[j]->fX,pBlock->Vertices[j]->fY) + BP;
+        for(int j=0;j<pBlock->Vertices().size();j++) {
+          Vector2f P=Vector2f(pBlock->Vertices()[j]->Position().x,pBlock->Vertices()[j]->Position().y) + BP;
           if(m_CurState == ES_MOVING_SELECTION)
             P+=(m_Cursor - m_MStart);          
           viewVertex( P );
@@ -969,14 +957,14 @@ namespace vapp {
     }
       
     /* Draw level limits */
-    viewDrawLine(Vector2f(m_pLevelSrc->getLeftLimit(),m_pLevelSrc->getBottomLimit()),
-                 Vector2f(m_pLevelSrc->getRightLimit(),m_pLevelSrc->getBottomLimit()),BLc);
-    viewDrawLine(Vector2f(m_pLevelSrc->getLeftLimit(),m_pLevelSrc->getTopLimit()),
-                 Vector2f(m_pLevelSrc->getRightLimit(),m_pLevelSrc->getTopLimit()),TLc);
-    viewDrawLine(Vector2f(m_pLevelSrc->getLeftLimit(),m_pLevelSrc->getBottomLimit()),
-                 Vector2f(m_pLevelSrc->getLeftLimit(),m_pLevelSrc->getTopLimit()),LLc);
-    viewDrawLine(Vector2f(m_pLevelSrc->getRightLimit(),m_pLevelSrc->getBottomLimit()),
-                 Vector2f(m_pLevelSrc->getRightLimit(),m_pLevelSrc->getTopLimit()),RLc);                                      
+    viewDrawLine(Vector2f(m_pLevelSrc->LeftLimit(),m_pLevelSrc->BottomLimit()),
+                 Vector2f(m_pLevelSrc->RightLimit(),m_pLevelSrc->BottomLimit()),BLc);
+    viewDrawLine(Vector2f(m_pLevelSrc->LeftLimit(),m_pLevelSrc->TopLimit()),
+                 Vector2f(m_pLevelSrc->RightLimit(),m_pLevelSrc->TopLimit()),TLc);
+    viewDrawLine(Vector2f(m_pLevelSrc->LeftLimit(),m_pLevelSrc->BottomLimit()),
+                 Vector2f(m_pLevelSrc->LeftLimit(),m_pLevelSrc->TopLimit()),LLc);
+    viewDrawLine(Vector2f(m_pLevelSrc->RightLimit(),m_pLevelSrc->BottomLimit()),
+                 Vector2f(m_pLevelSrc->RightLimit(),m_pLevelSrc->TopLimit()),RLc);                                      
   }
   
   /*============================================================================
@@ -989,17 +977,17 @@ namespace vapp {
     }
     
     /* Allocate new level */
-    m_pLevelSrc = new LevelSrc;
+    m_pLevelSrc = new Level();
     
-    m_pLevelSrc->setScriptFile(std::string(""));
-    m_pLevelSrc->setID(std::string("noname"));
+    m_pLevelSrc->setScriptFileName(std::string(""));
+    m_pLevelSrc->setId(std::string("noname"));
     m_pLevelSrc->setFileName(std::string("Levels/noname.lvl"));
     
-    m_pLevelSrc->getLevelInfo()->Name = "Unnamed Level";
-    m_pLevelSrc->getLevelInfo()->Description = "";
-    m_pLevelSrc->getLevelInfo()->Date = "";
-    m_pLevelSrc->getLevelInfo()->Author = "";
-    m_pLevelSrc->getLevelInfo()->Sky = "sky1";
+    m_pLevelSrc->setName("Unnamed Level");
+    m_pLevelSrc->setDescription("");
+    m_pLevelSrc->setDate("");
+    m_pLevelSrc->setAuthor("");
+    m_pLevelSrc->setSky("sky1");
     
     m_pLevelSrc->setLimits(-40,40,20,-20);
     
@@ -1106,7 +1094,7 @@ namespace vapp {
   Changing states
   ============================================================================*/    
   void EditorApp::setState(EditorState s,int nOptParam) {
-    LevelEntity *pEntity;
+    Entity *pEntity;
     
     m_CurState = s;
     
@@ -1119,7 +1107,7 @@ namespace vapp {
         break;
       case ES_SAVING_LEVEL:
         /* Save level! */
-        m_Log.msg("Saving level in '%s'...",m_pLevelSrc->getFileName().c_str());
+        m_Log.msg("Saving level in '%s'...",m_pLevelSrc->FileName().c_str());
         m_pLevelSrc->saveXML();
         setState(ES_DEFAULT);
         break;
@@ -1163,16 +1151,16 @@ namespace vapp {
 					int nNumEntries = 0;																																
 
           Entries[0].Name = "ID";
-          Entries[0].Value = pEntity->ID;
-          Entries[0].OrigValue = pEntity->ID;
+          Entries[0].Value = pEntity->Id();
+          Entries[0].OrigValue = pEntity->Id();
           nNumEntries = 1;
 															
-					for(int i=0;i<pEntity->Params.size();i++) {
-						Entries[nNumEntries].Name = pEntity->Params[i]->Name;
-						Entries[nNumEntries].Value = pEntity->Params[i]->Value;
-						Entries[nNumEntries].OrigValue = pEntity->Params[i]->Value;
-						nNumEntries++;
-					}
+	  ///for(int i=0;i<pEntity->Params.size();i++) {
+	  ///				Entries[nNumEntries].Name = pEntity->Params[i]->Name;
+	  ///				Entries[nNumEntries].Value = pEntity->Params[i]->Value;
+	  ///				Entries[nNumEntries].OrigValue = pEntity->Params[i]->Value;
+	  ///				nNumEntries++;
+	  ///			}
 					
 					ParamEditTool PET;
 					PET.setTable(Entries,nNumEntries);
@@ -1186,13 +1174,13 @@ namespace vapp {
 					PET.setDims(A,B);
 					
 					if(PET.run(this)) {
-						m_Log.msg("Parameters changed for '%s'.",pEntity->ID.c_str());
+						m_Log.msg("Parameters changed for '%s'.",pEntity->Id().c_str());
 						
 						/* Mkay. */
-						pEntity->ID = Entries[0].Value;
-						for(int i=0;i<pEntity->Params.size();i++) {
-						  pEntity->Params[i]->Value = Entries[i+1].Value;
-						}
+						pEntity->setId(Entries[0].Value);
+						///for(int i=0;i<pEntity->Params.size();i++) {
+						///pEntity->Params[i]->Value = Entries[i+1].Value;
+						///}
 					}
 
 					glDisable(GL_SCISSOR_TEST);
@@ -1208,28 +1196,28 @@ namespace vapp {
 				  int nNumEntries = 8;																																
 
           Entries[0].Name = "Filename";
-          Entries[0].OrigValue = Entries[0].Value = m_pLevelSrc->getFileName();
+          Entries[0].OrigValue = Entries[0].Value = m_pLevelSrc->FileName();
 
           Entries[1].Name = "ID";
-          Entries[1].OrigValue = Entries[1].Value = m_pLevelSrc->getID();
+          Entries[1].OrigValue = Entries[1].Value = m_pLevelSrc->Id();
 
           Entries[2].Name = "Script";
-          Entries[2].OrigValue = Entries[2].Value = m_pLevelSrc->getScriptFile();
+          Entries[2].OrigValue = Entries[2].Value = m_pLevelSrc->ScriptFileName();
 
           Entries[3].Name = "Name";
-          Entries[3].OrigValue = Entries[3].Value = m_pLevelSrc->getLevelInfo()->Name;
+          Entries[3].OrigValue = Entries[3].Value = m_pLevelSrc->Name();
           
           Entries[4].Name = "Date";
-          Entries[4].OrigValue = Entries[4].Value = m_pLevelSrc->getLevelInfo()->Date;
+          Entries[4].OrigValue = Entries[4].Value = m_pLevelSrc->Date();
 
           Entries[5].Name = "Author";
-          Entries[5].OrigValue = Entries[5].Value = m_pLevelSrc->getLevelInfo()->Author;
+          Entries[5].OrigValue = Entries[5].Value = m_pLevelSrc->Author();
 
           Entries[6].Name = "Description";
-          Entries[6].OrigValue = Entries[6].Value = m_pLevelSrc->getLevelInfo()->Description;
+          Entries[6].OrigValue = Entries[6].Value = m_pLevelSrc->Description();
 
           Entries[7].Name = "Sky";
-          Entries[7].OrigValue = Entries[7].Value = m_pLevelSrc->getLevelInfo()->Sky;
+          Entries[7].OrigValue = Entries[7].Value = m_pLevelSrc->Sky();
   																		
 				  ParamEditTool PET;
 				  PET.setTable(Entries,nNumEntries);
@@ -1268,14 +1256,14 @@ namespace vapp {
             
             if(ID == "") ID = "noname";
                         
-            m_pLevelSrc->setID(ID);
+            m_pLevelSrc->setId(ID);
             
-            m_pLevelSrc->setScriptFile( Entries[2].Value );
-            m_pLevelSrc->getLevelInfo()->Name = Entries[3].Value;
-            m_pLevelSrc->getLevelInfo()->Date = Entries[4].Value;
-            m_pLevelSrc->getLevelInfo()->Author = Entries[5].Value;
-            m_pLevelSrc->getLevelInfo()->Description = Entries[6].Value;          
-            m_pLevelSrc->getLevelInfo()->Sky = Entries[7].Value;          
+            m_pLevelSrc->setScriptFileName( Entries[2].Value );
+            m_pLevelSrc->setName(Entries[3].Value);
+            m_pLevelSrc->setDate(Entries[4].Value);
+            m_pLevelSrc->setAuthor(Entries[5].Value);
+            m_pLevelSrc->setDescription(Entries[6].Value);          
+            m_pLevelSrc->setSky(Entries[7].Value);          
 				  }
 
 				  glDisable(GL_SCISSOR_TEST);
@@ -1364,12 +1352,12 @@ namespace vapp {
 			  break;
 			}
 			case ES_PLAYING_LEVEL: {
-        m_Log.msg("Saving level in '%s'...",m_pLevelSrc->getFileName().c_str());
+        m_Log.msg("Saving level in '%s'...",m_pLevelSrc->FileName().c_str());
         m_pLevelSrc->saveXML();
         m_Log.msg("Playing it.");
         
         char cBuf[256];
-        sprintf(cBuf,"%s -win -level \"%s\"",XMOTOCOMMAND,m_pLevelSrc->getID().c_str());
+        sprintf(cBuf,"%s -win -level \"%s\"",XMOTOCOMMAND,m_pLevelSrc->Id().c_str());
         system(cBuf);      
         setState(ES_DEFAULT);			          
 			  break;
@@ -1417,7 +1405,12 @@ namespace vapp {
     for(int i=0;i<100000;i++) {
       char cBuf[256];
       sprintf(cBuf,"Block%d",i);
-      if(m_pLevelSrc->getBlockByID( cBuf ) == NULL) return cBuf;      
+
+      try {
+	m_pLevelSrc->getBlockById( cBuf );
+      } catch(Exception &e) {
+	return cBuf;      
+      }
     }
     throw Exception("Too many blocks");    
   }
@@ -1427,7 +1420,12 @@ namespace vapp {
     for(int i=0;i<100000;i++) {
       char cBuf[256];
       sprintf(cBuf,"Zone%d",i);
-      if(m_pLevelSrc->getZoneByID( cBuf ) == NULL) return cBuf;      
+
+      try {
+	m_pLevelSrc->getZoneById( cBuf );
+      } catch(Exception &e) {
+	return cBuf;      
+      }
     }
     throw Exception("Too many zones");    
   }
@@ -1451,16 +1449,16 @@ namespace vapp {
     if(m_SelMode == SM_ENTITIES) {
 			/* Yup */
 			for(int i=0;i<m_pLevelSrc->Entities().size();i++) {
-				LevelEntity *pEntity = m_pLevelSrc->Entities()[i];
+				Entity *pEntity = m_pLevelSrc->Entities()[i];
 				EditorEntityType *pType = m_EntityTable.getTypeByID(pEntity->TypeID);				
 				if(pType == NULL) continue;
 				
-				if(circleTouchAABB2f(Vector2f(pEntity->fPosX,pEntity->fPosY),pType->fSize,
+				if(circleTouchAABB2f(Vector2f(pEntity->InitialPosition().x,pEntity->InitialPosition().y),pType->fSize,
 				                     SMin,SMax)) {
-					pEntity->bSelected = true;
+				  ///	pEntity->bSelected = true;
 				}
 				else {
-					pEntity->bSelected = false;
+				  ///pEntity->bSelected = false;
 				}
 			}
     }
@@ -1469,17 +1467,17 @@ namespace vapp {
 			/* Select all stuff within this region */
 			/* -- first vertices... */
 			for(int i=0;i<m_pLevelSrc->Blocks().size();i++) {
-				LevelBlock *pBlock = m_pLevelSrc->Blocks()[i];
-				for(int j=0;j<pBlock->Vertices.size();j++) {
-					LevelBlockVertex *pVertex = pBlock->Vertices[j];
-					if(pointTouchAABB2f(Vector2f(pVertex->fX,pVertex->fY) + Vector2f(pBlock->fPosX,pBlock->fPosY),
+				Block *pBlock = m_pLevelSrc->Blocks()[i];
+				for(int j=0;j<pBlock->Vertices().size();j++) {
+					BlockVertex *pVertex = pBlock->Vertices[j];
+					if(pointTouchAABB2f(Vector2f(pVertex->fX,pVertex->fY) + Vector2f(pBlock->InitialPosition().x,pBlock->InitialPosition().y),
 															SMin,SMax)) {
 						/* Mkay! */
-						pVertex->bSelected = true;          
+					  ///	pVertex->bSelected = true;          
 					}
 					else {
 						/* No selection here, thank you */
-						pVertex->bSelected = false;
+					  ///	pVertex->bSelected = false;
 					}
 				}
 			}
@@ -1487,17 +1485,17 @@ namespace vapp {
 			/* If in edge or block selection, then look for edges too... */
 			if(m_SelMode == SM_BLOCKS || m_SelMode == SM_EDGES) {
 				for(int i=0;i<m_pLevelSrc->Blocks().size();i++) {
-					LevelBlock *pBlock = m_pLevelSrc->Blocks()[i];
+					Block *pBlock = m_pLevelSrc->Blocks()[i];
 					for(int j=0;j<pBlock->Vertices.size();j++) {
 						/* Define edge */
-						LevelBlockVertex *pVertex = pBlock->Vertices[j];
-						LevelBlockVertex *pNextVertex = pBlock->Vertices[0];
+						BlockVertex *pVertex = pBlock->Vertices[j];
+						BlockVertex *pNextVertex = pBlock->Vertices[0];
 						if(j+1 < pBlock->Vertices.size())
 							pNextVertex = pBlock->Vertices[j+1];
 							
 						/* Does it touch the box? */
-						if(lineTouchAABB2f(Vector2f(pVertex->fX,pVertex->fY) + Vector2f(pBlock->fPosX,pBlock->fPosY),
-															Vector2f(pNextVertex->fX,pNextVertex->fY) + Vector2f(pBlock->fPosX,pBlock->fPosY),
+						if(lineTouchAABB2f(pVertex->Position() + pBlock->InitialPosition(),
+															pNextVertex->Position() + pBlock->InitialPosition(),
 															SMin,SMax)) {
 							/* Select vertex (edge) or entire block? */
 							if(m_SelMode == SM_EDGES) 
@@ -1534,11 +1532,11 @@ namespace vapp {
 		if(m_SelMode == SM_ENTITIES) {
 			/* Yes */
 			for(int i=0;i<m_pLevelSrc->Entities().size();i++) {
-				LevelEntity *pEntity = m_pLevelSrc->Entities()[i];
+				Entity *pEntity = m_pLevelSrc->Entities()[i];
 				EditorEntityType *pType = m_EntityTable.getTypeByID(pEntity->TypeID);				
 				if(pType == NULL) continue;
 				
-				if(circleTouchAABB2f(Vector2f(pEntity->fPosX,pEntity->fPosY),pType->fSize,
+				if(circleTouchAABB2f(pEntity->InitialPosition(),pType->fSize,
 				                     SMin,SMax)) {
 					/* We found something. Is it already selected? */
 					if(pEntity->bSelected) return CT_SELECTION;
@@ -1555,12 +1553,12 @@ namespace vapp {
 		else { 
       /* No */ 
 			for(int i=0;i<m_pLevelSrc->Blocks().size();i++) {
-				LevelBlock *pBlock = m_pLevelSrc->Blocks()[i];
+				Block *pBlock = m_pLevelSrc->Blocks()[i];
 				for(int j=0;j<pBlock->Vertices.size();j++) {
-					LevelBlockVertex *pVertex = pBlock->Vertices[j];
+					BlockVertex *pVertex = pBlock->Vertices[j];
 	        
 					/* Point? */
-					if(pointTouchAABB2f(Vector2f(pVertex->fX,pVertex->fY) + Vector2f(pBlock->fPosX,pBlock->fPosY),
+					if(pointTouchAABB2f(pVertex->Position() + pBlock->InitialPosition(),
 															SMin,SMax)) {
 						/* We have a point here */
 						if(pVertex->bSelected) return CT_SELECTION;
@@ -1575,10 +1573,10 @@ namespace vapp {
 	        
 					/* Edge? */
 					if(m_SelMode == SM_BLOCKS || m_SelMode == SM_EDGES) {
-						LevelBlockVertex *pNextVertex = pBlock->Vertices[0];
+						BlockVertex *pNextVertex = pBlock->Vertices[0];
 						if(j+1 < pBlock->Vertices.size()) pNextVertex = pBlock->Vertices[j+1];
-						if(lineTouchAABB2f(Vector2f(pVertex->fX,pVertex->fY) + Vector2f(pBlock->fPosX,pBlock->fPosY),
-															Vector2f(pNextVertex->fX,pNextVertex->fY) + Vector2f(pBlock->fPosX,pBlock->fPosY),
+						if(lineTouchAABB2f(pVertex->Position() + pBlock->InitialPosition(),
+															pNextVertex->Position() + pBlock->InitialPosition(),
 															SMin,SMax)) {
 							if(pVertex->bSelected) return CT_SELECTION;
 		          
@@ -1604,16 +1602,16 @@ namespace vapp {
   void EditorApp::_ClearSelection(void) {
 		/* Deselect all block-related */
     for(int i=0;i<m_pLevelSrc->Blocks().size();i++) {
-      LevelBlock *pBlock = m_pLevelSrc->Blocks()[i];
+      Block *pBlock = m_pLevelSrc->Blocks()[i];
       for(int j=0;j<pBlock->Vertices.size();j++) {
-        LevelBlockVertex *pVertex = pBlock->Vertices[j];
+        BlockVertex *pVertex = pBlock->Vertices[j];
         pVertex->bSelected = false;
       }
     }    
     
     /* Deselect all entities */
     for(int i=0;i<m_pLevelSrc->Entities().size();i++) {
-			LevelEntity *pEntity = m_pLevelSrc->Entities()[i];
+			Entity *pEntity = m_pLevelSrc->Entities()[i];
 			pEntity->bSelected = false;
 		}
   }
@@ -1625,11 +1623,11 @@ namespace vapp {
 		/* Moving entities? */
 		if(m_SelMode == SM_ENTITIES) {
 			for(int i=0;i<m_pLevelSrc->Entities().size();i++) {
-				LevelEntity *pEntity = m_pLevelSrc->Entities()[i];
-				if(pEntity->bSelected) {
-					pEntity->fPosX += (m_Cursor.x - m_MStart.x);
-					pEntity->fPosY += (m_Cursor.y - m_MStart.y);
-				}
+				Entity *pEntity = m_pLevelSrc->Entities()[i];
+				///if(pEntity->bSelected) {
+				///pEntity->fPosX += (m_Cursor.x - m_MStart.x);
+				///pEntity->fPosY += (m_Cursor.y - m_MStart.y);
+				///}
 			}			
 		}
 		else {
@@ -1637,40 +1635,38 @@ namespace vapp {
 				bool bUpdateBlockCoords = false;
 				Vector2f Center(0,0);
 	      
-				LevelBlock *pBlock = m_pLevelSrc->Blocks()[i];
+				Block *pBlock = m_pLevelSrc->Blocks()[i];
 				for(int j=0;j<pBlock->Vertices.size();j++) {
-					LevelBlockVertex *pVertex = pBlock->Vertices[j];
+					BlockVertex *pVertex = pBlock->Vertices[j];
 					if(m_SelMode == SM_VERTICES) {
-						if(pVertex->bSelected) {
-							pVertex->fX += Dir.x;
-							pVertex->fY += Dir.y;
-						}
+					  ///if(pVertex->bSelected) {
+					  ///	pVertex->fX += Dir.x;
+					  ///	pVertex->fY += Dir.y;
+					  ///}
 					}
 					if(m_SelMode == SM_EDGES) {
-						if(pVertex->bSelected) {
-							pVertex->fX += Dir.x;
-							pVertex->fY += Dir.y;
-						}
+					  ///if(pVertex->bSelected) {
+					  ///	pVertex->fX += Dir.x;
+					  ///	pVertex->fY += Dir.y;
+					  }
 						else {
-							LevelBlockVertex *pPrev;
+							BlockVertex *pPrev;
 							if(j==0) pPrev = pBlock->Vertices[pBlock->Vertices.size()-1];
 							else pPrev = pBlock->Vertices[j-1];
 							
-							if(pPrev->bSelected) {
-								pVertex->fX += Dir.x;
-								pVertex->fY += Dir.y;
-							}
+							///if(pPrev->bSelected) {
+							///pVertex->fX += Dir.x;
+							///pVertex->fY += Dir.y;
+							///}
 						}
 					}
 					else if(m_SelMode == SM_BLOCKS) {
 						if(_IsBlockSelected(pBlock)) {
-							pVertex->fX += Dir.x;
-							pVertex->fY += Dir.y;
+						  pVertex->setPosition(pVertex->Position() + Dir());
 						}
 					}
 	        
-					Center.x += pVertex->fX;
-					Center.y += pVertex->fY;
+					Center += pVertex->Position();
 	        
 					/* TODO: Update texture coordinates and stuff! */
 	                
@@ -1682,14 +1678,12 @@ namespace vapp {
 					Center.y /= (float)pBlock->Vertices.size();
 					for(int j=0;j<pBlock->Vertices.size();j++) {
 						/* TODO: TEXTURE COORDS!!! :-O */
-						LevelBlockVertex *pVertex = pBlock->Vertices[j];
-						pVertex->fX = (pVertex->fX + pBlock->fPosX) - Center.x;
-						pVertex->fY = (pVertex->fY + pBlock->fPosY) - Center.y;                    
+						BlockVertex *pVertex = pBlock->Vertices[j];
+						pVertex->setPosition(pVertex->Position() + pBlock->InitialPosition() - Center);
 					}
 	        
 					/* Upd to new center */
-					pBlock->fPosX = Center.x;
-					pBlock->fPosY = Center.y;
+					pBlock->setInitialPosition(Center);
 				}
       }
     }    
@@ -1746,7 +1740,7 @@ namespace vapp {
   /*============================================================================
   Check if parts of the block are selected
   ============================================================================*/    
-  bool EditorApp::_IsBlockSelected(LevelBlock *pBlock) {
+  bool EditorApp::_IsBlockSelected(Block *pBlock) {
     for(int i=0;i<pBlock->Vertices.size();i++)
       if(pBlock->Vertices[i]->bSelected) return true;
     return false;
@@ -1755,7 +1749,7 @@ namespace vapp {
   /*============================================================================
   Select all vertices of block
   ============================================================================*/    
-  void EditorApp::_SelectBlock(LevelBlock *pBlock) {
+  void EditorApp::_SelectBlock(Block *pBlock) {
     for(int i=0;i<pBlock->Vertices.size();i++)
 			pBlock->Vertices[i]->bSelected = true;
   }
@@ -1763,7 +1757,7 @@ namespace vapp {
   /*============================================================================
   If all blocks in list share the same texture, return an ref to it
   ============================================================================*/    
-  Texture *EditorApp::_GetCommonTexture(std::vector<LevelBlock *> &Blocks) {
+  Texture *EditorApp::_GetCommonTexture(std::vector<Block *> &Blocks) {
     std::string CommonTextureID = "";
     
     for(int i=0;i<Blocks.size();i++) {
@@ -1785,7 +1779,7 @@ namespace vapp {
   Create an instance of the given entity-type at location
   ============================================================================*/    
 	void EditorApp::_CreateEntityAtPos(std::string TypeID,Vector2f Pos) {
-		LevelEntity *pEntity = m_pLevelSrc->createEntity(TypeID,Pos.x,Pos.y);
+		Entity *pEntity = m_pLevelSrc->createEntity(TypeID,Pos.x,Pos.y);
 		if(pEntity == NULL) return; /* TODO: visible warning */
 		
 		/* Look up type in table, and add default parameters */
@@ -1794,7 +1788,7 @@ namespace vapp {
 	    pEntity->fSize = pType->fPSize;
 	  
 			for(int i=0;i<pType->Params.size();i++) {
-				LevelEntityParam *pParam = new LevelEntityParam;
+				EntityParam *pParam = new EntityParam;
 				pParam->Name = pType->Params[i]->Name;
 				pParam->Value = pType->Params[i]->DefaultValue;
 				pEntity->Params.push_back( pParam );
@@ -1805,9 +1799,9 @@ namespace vapp {
   /*============================================================================
   Entity copying
   ============================================================================*/    
-  void EditorApp::_CopyEntityAtPos(LevelEntity *pToCopy,Vector2f Pos) {
+  void EditorApp::_CopyEntityAtPos(Entity *pToCopy,Vector2f Pos) {
     if(pToCopy != NULL) {
-		  LevelEntity *pEntity = m_pLevelSrc->createEntity(pToCopy->TypeID,Pos.x,Pos.y);
+		  Entity *pEntity = m_pLevelSrc->createEntity(pToCopy->TypeID,Pos.x,Pos.y);
 		  if(pEntity == NULL) return; /* TODO: visible warning */
 		  
 		  pEntity->bSelected = false;
@@ -1816,7 +1810,7 @@ namespace vapp {
 		  m_Log.msg("Entity '%s' copied into '%s'...",pToCopy->ID.c_str(),pEntity->ID.c_str());
 		 
 		  for(int i=0;i<pToCopy->Params.size();i++) {
-		    LevelEntityParam *pParam = new LevelEntityParam;
+		    EntityParam *pParam = new EntityParam;
 		    pParam->Name = pToCopy->Params[i]->Name;
 		    pParam->Value = pToCopy->Params[i]->Value;
 		    pEntity->Params.push_back( pParam );
@@ -1827,8 +1821,8 @@ namespace vapp {
   /*============================================================================
   Get selected entity
   ============================================================================*/
-	LevelEntity *EditorApp::_GetSelectedEntity(void) {
-		LevelEntity *pRet = NULL;
+	Entity *EditorApp::_GetSelectedEntity(void) {
+		Entity *pRet = NULL;
 		for(int i=0;i<m_pLevelSrc->Entities().size();i++) {
 			if(m_pLevelSrc->Entities()[i]->bSelected) {
 			  if(pRet == NULL) pRet = m_pLevelSrc->Entities()[i];
@@ -1850,7 +1844,7 @@ namespace vapp {
     bool bEffect = false;
     for(int i=0;i<m_pLevelSrc->Blocks().size();i++) {
       for(int j=0;j<m_pLevelSrc->Blocks()[i]->Vertices.size();j++) {
-        LevelBlockVertex *pVertex = m_pLevelSrc->Blocks()[i]->Vertices[j];
+        BlockVertex *pVertex = m_pLevelSrc->Blocks()[i]->Vertices[j];
         
         if(pVertex->bSelected) {
           if(pnNumSel!=NULL) *pnNumSel = *pnNumSel+1;
@@ -1873,7 +1867,7 @@ namespace vapp {
   void EditorApp::_ApplyEdgeEffect(std::string Effect) {
     for(int i=0;i<m_pLevelSrc->Blocks().size();i++) {
       for(int j=0;j<m_pLevelSrc->Blocks()[i]->Vertices.size();j++) {
-        LevelBlockVertex *pVertex = m_pLevelSrc->Blocks()[i]->Vertices[j];
+        BlockVertex *pVertex = m_pLevelSrc->Blocks()[i]->Vertices[j];
         if(pVertex->bSelected)
           pVertex->EdgeEffect = Effect;
       }
@@ -1883,10 +1877,10 @@ namespace vapp {
   /*============================================================================
   Draw entity symbol
   ============================================================================*/
-	void EditorApp::_DrawEntitySymbol(LevelEntity *pEntity) {
+	void EditorApp::_DrawEntitySymbol(Entity *pEntity) {
 		/* Fetch type and position */
 		EditorEntityType *pType = m_EntityTable.getTypeByID(pEntity->TypeID);
-		Vector2f Pos = Vector2f(pEntity->fPosX,pEntity->fPosY);
+		Vector2f Pos = pEntity->InitialPosition();
 		
 		if(pType == NULL) return; /* TODO: error */
 		
@@ -1924,10 +1918,10 @@ namespace vapp {
   void EditorApp::_DrawTextureBrowser(void) {
     if(m_SelMode == SM_BLOCKS) {
       /* Create list of selected blocks */
-      std::vector<LevelBlock *> Selection;
+      std::vector<Block *> Selection;
       
       for(int i=0;i<m_pLevelSrc->Blocks().size();i++) {
-        LevelBlock *pBlock = m_pLevelSrc->Blocks()[i];
+        Block *pBlock = m_pLevelSrc->Blocks()[i];
         if(_IsBlockSelected(pBlock)) Selection.push_back(pBlock);
       }
       
@@ -1981,7 +1975,7 @@ namespace vapp {
   ============================================================================*/
   void EditorApp::_AssignTextureToSelection(Texture *pTexture) {
     for(int i=0;i<m_pLevelSrc->Blocks().size();i++) {
-      LevelBlock *pBlock = m_pLevelSrc->Blocks()[i];
+      Block *pBlock = m_pLevelSrc->Blocks()[i];
       if(_IsBlockSelected(pBlock)) {
         /* Ok. */
         pBlock->Texture = pTexture->Name;
@@ -2210,7 +2204,7 @@ namespace vapp {
           
       for(int i=0;i<m_pLevelSrc->Blocks().size();i++) {
         for(int j=0;j<m_pLevelSrc->Blocks()[i]->Vertices.size();j++) {
-          LevelBlockVertex *pVertex = m_pLevelSrc->Blocks()[i]->Vertices[j];
+          BlockVertex *pVertex = m_pLevelSrc->Blocks()[i]->Vertices[j];
           if(pVertex->bSelected) {
             _SmoothEdge(m_pLevelSrc->Blocks()[i],pVertex,j);       
             bS = true;
@@ -2225,28 +2219,28 @@ namespace vapp {
     }
   }
 
-  LevelBlockVertex *EditorApp::_NextVertex(LevelBlock *pBlock,int j,int *pn) {
+  BlockVertex *EditorApp::_NextVertex(Block *pBlock,int j,int *pn) {
     if(j + 1 < pBlock->Vertices.size()) {*pn = j+1; return pBlock->Vertices[j+1];}
     *pn = 0;
     return pBlock->Vertices[0];
   }
   
-  LevelBlockVertex *EditorApp::_PrevVertex(LevelBlock *pBlock,int j,int *pn) {
+  BlockVertex *EditorApp::_PrevVertex(Block *pBlock,int j,int *pn) {
     if(j - 1 < 0) {*pn = pBlock->Vertices.size()-1; return pBlock->Vertices[pBlock->Vertices.size()-1];}
     *pn = j-1;
     return pBlock->Vertices[j - 1];
   }  
   
-  void EditorApp::_SmoothEdge(LevelBlock *pBlock,LevelBlockVertex *pEdge,unsigned int j) {
+  void EditorApp::_SmoothEdge(Block *pBlock,BlockVertex *pEdge,unsigned int j) {
     /* Please don't read this (and the related ones) function! :D   I just
        caught my self thinking how this can be done in the easiest way possible 
        *Sigh* */
 
     int k,kk,z;  
-    LevelBlockVertex *pPrevVertex = _PrevVertex(pBlock,j,&z);
-    LevelBlockVertex *pVertex = pEdge;
-    LevelBlockVertex *pNextVertex = _NextVertex(pBlock,j,&k);    
-    LevelBlockVertex *pNextNextVertex = _NextVertex(pBlock,k,&kk);    
+    BlockVertex *pPrevVertex = _PrevVertex(pBlock,j,&z);
+    BlockVertex *pVertex = pEdge;
+    BlockVertex *pNextVertex = _NextVertex(pBlock,j,&k);    
+    BlockVertex *pNextNextVertex = _NextVertex(pBlock,k,&kk);    
     
     Vector3f NewVertex;
     
@@ -2276,7 +2270,7 @@ namespace vapp {
 
     NewVertex = Curve.step(0.5);    
     
-    LevelBlockVertex *pNewVertex = new LevelBlockVertex;
+    BlockVertex *pNewVertex = new BlockVertex;
     pNewVertex->EdgeEffect = pEdge->EdgeEffect;
     pNewVertex->bSelected = false;
     pNewVertex->fX = NewVertex.x;
@@ -2300,7 +2294,7 @@ namespace vapp {
     bool bGotPoint = false;
   
     for(int i=0;i<m_pLevelSrc->Entities().size();i++) {
-      Vector2f P = Vector2f(m_pLevelSrc->Entities()[i]->fPosX,m_pLevelSrc->Entities()[i]->fPosY);
+      Vector2f P = m_pLevelSrc->Entities()[i]->InitialPosition();
       float d = (P - m_Cursor).length();
       if(!bGotPoint || d<fDist) {
         NearP = P;
@@ -2325,19 +2319,19 @@ namespace vapp {
     for(unsigned int i=0;i<m_pLevelSrc->Blocks().size();i++) {
       for(unsigned int j=0;j<m_pLevelSrc->Blocks()[i]->Vertices.size();j++) {
         int k;
-        LevelBlockVertex *pVertex = m_pLevelSrc->Blocks()[i]->Vertices[j];
-        LevelBlockVertex *pNextVertex = _NextVertex(m_pLevelSrc->Blocks()[i],j,&k);
+        BlockVertex *pVertex = m_pLevelSrc->Blocks()[i]->Vertices[j];
+        BlockVertex *pNextVertex = _NextVertex(m_pLevelSrc->Blocks()[i],j,&k);
         
         Vector2f u(pNextVertex->fX - pVertex->fX,pNextVertex->fY - pVertex->fY);
-        Vector2f a(m_Cursor.x - (pVertex->fX + m_pLevelSrc->Blocks()[i]->fPosX),
-                   m_Cursor.y - (pVertex->fY + m_pLevelSrc->Blocks()[i]->fPosY));
+        Vector2f a(m_Cursor.x - (pVertex->Position().x + m_pLevelSrc->Blocks()[i]->InitialPosition().x),
+                   m_Cursor.y - (pVertex->Position().y + m_pLevelSrc->Blocks()[i]->InitialPosition().y));
                                 
         float zz = (a.dot(u) / (u.length() * u.length()));
         //printf("%f ",zz);
                 
         if(zz >= 0.0f && zz < 1.0f) {
-          Vector2f P = Vector2f(pVertex->fX+m_pLevelSrc->Blocks()[i]->fPosX,
-                                pVertex->fY+m_pLevelSrc->Blocks()[i]->fPosY) + u*zz;
+          Vector2f P = Vector2f(pVertex->Position().x +m_pLevelSrc->Blocks()[i]->InitialPosition().x,
+                                pVertex->Position().y +m_pLevelSrc->Blocks()[i]->InitialPosition().y) + u*zz;
           //printf(" {%f} ",(P-m_Cursor).length());
           float d = (P-m_Cursor).length();
           if( d < 5 ) {
@@ -2495,9 +2489,9 @@ namespace vapp {
   ============================================================================*/
   void EditorApp::_ToggleSelectedBlockBackground(void) {
     for(unsigned int i=0;i<m_pLevelSrc->Blocks().size();i++) {
-      LevelBlock *pBlock = m_pLevelSrc->Blocks()[i];
+      Block *pBlock = m_pLevelSrc->Blocks()[i];
       if(_IsBlockSelected(pBlock)) {
-        pBlock->bBackground = !pBlock->bBackground;
+        pBlock->isBackground() = !pBlock->isBackground();
       }
     }        
   }
@@ -2507,9 +2501,8 @@ namespace vapp {
   ============================================================================*/
   void EditorApp::_ToggleSelectedBlockWater(void) {
     for(unsigned int i=0;i<m_pLevelSrc->Blocks().size();i++) {
-      LevelBlock *pBlock = m_pLevelSrc->Blocks()[i];
+      Block *pBlock = m_pLevelSrc->Blocks()[i];
       if(_IsBlockSelected(pBlock)) {
-        pBlock->bWater = !pBlock->bWater;
       }
     }        
   }

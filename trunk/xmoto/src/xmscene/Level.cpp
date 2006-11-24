@@ -91,6 +91,13 @@ float Level::TopLimit() const {
   return m_topLimit;
 }
 
+void Level::setLimits(float v_leftLimit, float v_rightLimit, float v_topLimit, float v_bottomLimit) {
+  m_leftLimit   = v_leftLimit;
+  m_rightLimit  = v_rightLimit;
+  m_topLimit    = v_topLimit;
+  m_bottomLimit = v_bottomLimit;
+}
+
 float Level::BottomLimit() const {
   return m_bottomLimit;
 }
@@ -158,6 +165,26 @@ Entity& Level::getStartEntity() {
 
 void Level::setId(const std::string& i_id) {
   m_id = i_id;
+}
+
+void Level::setName(const std::string& i_name) {
+  m_name = i_name;
+}
+
+void Level::setDescription(const std::string& i_description) {
+  m_description = i_description;
+}
+
+void Level::setDate(const std::string& i_date) {
+  m_date = i_date;
+}
+
+void Level::setAuthor(const std::string& i_author) {
+  m_author = i_author;
+}
+
+void Level::setSky(const std::string& i_sky) {
+  m_sky = i_sky;
 }
 
 std::string Level::scriptFileName() const {

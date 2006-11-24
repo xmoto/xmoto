@@ -31,6 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <time.h>
 #include "VApp.h"
 #include "VFileIO.h"
+#include "Packager.h"
 #include "helpers/SwapEndian.h"
 
 #ifdef USE_GETTEXT
@@ -712,7 +713,19 @@ namespace vapp {
   
     /* Walk through the args */
     for(int i=1;i<nNumArgs;i++) {
-      if(!strcmp(ppcArgs[i],"-nogfx")) {
+      if(!strcmp(ppcArgs[i],"-pack")) {
+	Packager::go();
+	exit(0); /* leaks memory, but who cares? :) */
+      } else if(!strcmp(ppcArgs[i],"-unpack")) {
+	std::string BinFile = "xmoto.bin";
+	if(i+1 < nNumArgs) {BinFile = ppcArgs[i+1]; i++;}
+          std::string OutDir = ".";
+          if(i+1 < nNumArgs) {OutDir = ppcArgs[i+1]; i++;}
+          bool bMakePackageList = true;
+          if(i+1 < nNumArgs && ppcArgs[i+1]=="no_lst") {bMakePackageList=false; i++;}
+          Packager::goUnpack(BinFile,OutDir,bMakePackageList);
+          exit(0); /* leaks memory too, but still nobody cares */
+      } else if(!strcmp(ppcArgs[i],"-nogfx")) {
         m_bNoGraphics = true;
       }
       else if(!strcmp(ppcArgs[i],"-res")) {

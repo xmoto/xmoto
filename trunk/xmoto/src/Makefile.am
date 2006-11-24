@@ -51,17 +51,19 @@ common_SOURCES = BuiltInFont.cpp Image.cpp \
   WWW.h \
   WWWAppInterface.h \
   Locales.h \
-  Locales.cpp
+  Locales.cpp \
+  Packager.cpp \
+  Packager.h
 
 common_LDADD = $(GL_LIBS) $(SDL_LIBS)
 
 bin_PROGRAMS = xmoto #xmoto-edit
 
-xmoto_edit_SOURCES = $(common_SOURCES) Editor.cpp EditorMain.cpp \
-  EditorData.cpp EditorLog.cpp Editor.h EditorData.h \
-  EditorLog.h Packager.cpp Packager.h
+#xmoto_edit_SOURCES = $(common_SOURCES) Editor.cpp EditorMain.cpp \
+##  EditorData.cpp EditorLog.cpp Editor.h EditorData.h \
+  EditorLog.h
 
-xmoto_edit_LDADD = $(common_LDADD)
+#xmoto_edit_LDADD = $(common_LDADD)
 
 xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp GameMain.cpp \
   GameMenus.cpp GUIBestTimes.cpp GUIButton.cpp GUI.cpp \
