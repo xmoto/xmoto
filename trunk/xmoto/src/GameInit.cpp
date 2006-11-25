@@ -35,6 +35,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   #include <curl/curl.h>
 #endif
 
+#define CURRENT_LEVEL_INDEX_FILE_VERSION 1
+
 namespace vapp {
 
   /*===========================================================================
@@ -300,8 +302,12 @@ namespace vapp {
     /* Test level cache directory */
     std::string LCachePath = FS::getUserDir() + std::string("/LCache");
     if(m_bEnableLevelCache && !FS::isDir(LCachePath)) {
-      m_bEnableLevelCache = false;
-      Log("** Warning ** : Level cache directory not found, forcing caching off!");
+      try {
+	FS::mkArborescence(LCachePath);
+      } catch(Exception &e) {
+	m_bEnableLevelCache = false;
+	Log("** Warning ** : Level cache directory can't be created, forcing caching off!");
+      }
     }
     
     /* Should we clean the level cache? (can also be done when disabled) */
@@ -319,8 +325,20 @@ namespace vapp {
      
     /* Find all .lvl files in the level dir and load them */    
     m_nNumLevels = 0;
-    std::vector<std::string> LvlFiles = FS::findPhysFiles("Levels/*.lvl",true);
-    int nNumCached = _LoadLevels(LvlFiles);
+    
+    try {
+      loadLevelsFromIndex();
+    } catch(Exception &e) {
+      Log(std::string("Unable to load levels from index:\n" + e.getMsg()).c_str());
+
+      std::vector<std::string> LvlFiles = FS::findPhysFiles("Levels/*.lvl",true);
+      int nNumCached = _LoadLevels(LvlFiles);
+      try {
+	createLevelsIndex();
+      } catch(Exception &e2) {
+	Log((std::string("Unable to create the level index:\n") + e2.getMsg()).c_str());
+      }
+    }
     
     /* -listlevels? */
     if(m_bListLevels) {
@@ -328,6 +346,7 @@ namespace vapp {
         printf("%-25s %-25s %-25s\n",FS::getFileBaseName(m_Levels[i].FileName()).c_str(),m_Levels[i].Id().c_str(),m_Levels[i].Name().c_str());
       }
     }
+
     _UpdateLoadingScreen((1.0f/9.0f) * 5,pLoadingScreen,GAMETEXT_INITRENDERER);
     
     if(m_bListLevels) {
@@ -335,9 +354,6 @@ namespace vapp {
       return;
     }
     
-    Log(" %d level%s loaded (%d from cache)",m_nNumLevels,m_nNumLevels==1?"":"s",nNumCached);
-    Log(" %d level pack%s",m_LevelPacks.size(),m_LevelPacks.size()==1?"":"s");
-
     #if defined(SUPPORT_WEBACCESS)    
       /* Fetch highscores from web? */
       if(m_pWebHighscores != NULL) delete m_pWebHighscores;
@@ -423,12 +439,67 @@ namespace vapp {
     }            
   }
   
+  std::string GameApp::LevelIndexFileName() {
+    return vapp::FS::getUserDir() + "/" + "LCache/levels.index";
+  }
+
+  void GameApp::loadLevelsFromIndex() {
+    int v_nbLevels;
+
+    vapp::FileHandle *pfh = vapp::FS::openIFile(LevelIndexFileName());
+    if(pfh == NULL) {
+      throw Exception((std::string("Unable to open file ") + LevelIndexFileName()).c_str());
+    }
+
+    try {
+      int v_version = vapp::FS::readInt_LE(pfh); /* version */
+      if(v_version != CURRENT_LEVEL_INDEX_FILE_VERSION) {
+	throw Exception("Invalid level index file version");
+      }
+      v_nbLevels = vapp::FS::readInt_LE(pfh);
+      for(int i=0; i<v_nbLevels; i++) {
+	m_Levels[i].setFileName(vapp::FS::readString(pfh));
+	m_Levels[i].importBinaryHeader(pfh);
+	_UpdateLevelPackManager(&m_Levels[i]);
+	m_nNumLevels++;
+      }
+
+    } catch(Exception &e) {
+      m_nNumLevels = 0;
+      vapp::FS::closeFile(pfh);
+      throw e;
+    }
+    vapp::FS::closeFile(pfh);
+  }
+   
+  void GameApp::createLevelsIndex() {
+    vapp::FileHandle *pfh = vapp::FS::openOFile(LevelIndexFileName());
+    if(pfh == NULL) {
+      throw Exception((std::string("Unable to open file ") + LevelIndexFileName()).c_str());
+      return;
+    }
+
+    try {
+      vapp::FS::writeInt_LE(pfh, CURRENT_LEVEL_INDEX_FILE_VERSION); /* version */
+      vapp::FS::writeInt_LE(pfh, m_nNumLevels);
+      for(int i=0; i<m_nNumLevels; i++) {
+	vapp::FS::writeString(pfh, m_Levels[i].FileName());
+	m_Levels[i].exportBinaryHeader(pfh);
+      }
+    } catch(Exception &e) {
+      vapp::FS::closeFile(pfh);
+      throw e;
+    }
+
+    vapp::FS::closeFile(pfh);
+  }
+
   /*===========================================================================
   Load some levels...
   ===========================================================================*/
   int GameApp::_LoadLevels(const std::vector<std::string> &LvlFiles) {
     int nNumCached = 0;
-  
+
     for(int i=0;i<LvlFiles.size();i++) {    
       int j = m_nNumLevels;
       if(j >= 2048) {

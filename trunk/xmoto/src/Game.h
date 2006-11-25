@@ -517,7 +517,11 @@ namespace vapp {
       void _RestartLevel();
   
       int _LoadLevels(const std::vector<std::string> &LvlFiles);
-    
+      void loadLevelsFromIndex();
+      void createLevelsIndex();
+      static std::string LevelIndexFileName();
+      void deleteLevelsIndex();
+
 #if defined(SUPPORT_WEBACCESS)
       void _InitWebConf(void);
       void _CheckForExtraLevels(void);

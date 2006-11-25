@@ -48,6 +48,8 @@ class Level {
   bool loadReducedFromFile(bool i_cacheEnabled);
   void loadFullyFromFile();
   bool isFullyLoaded() const;
+  void exportBinaryHeader(vapp::FileHandle *pfh);
+  void importBinaryHeader(vapp::FileHandle *pfh);
 
   void loadXML();
   void saveXML();
@@ -146,7 +148,7 @@ class Level {
   void loadToPlayLimits();
   void exportBinary(const std::string &i_fileName, const std::string& i_sum);
   bool importBinary(const std::string &i_fileName, const std::string& i_sum);
-  bool importBinaryHeader(const std::string &i_fileName, const std::string& i_sum);
+  bool importBinaryHeaderFromFile(const std::string &i_fileName, const std::string& i_sum);
   std::string getNameInCache() const;
   void unloadLevelData();
 

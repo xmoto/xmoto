@@ -509,7 +509,7 @@ bool Level::loadReducedFromFile(bool cacheEnabled) {
     cacheFileName = getNameInCache();
     
     try {
-      cached = importBinaryHeader(cacheFileName, m_checkSum);
+      cached = importBinaryHeaderFromFile(cacheFileName, m_checkSum);
     } catch (Exception &e) {
       vapp::Log("** Warning **: Exception while loading binary level, will load "
                 "XML instead for '%s' (%s)", FileName().c_str(),
@@ -601,65 +601,78 @@ bool Level::isFullyLoaded() const {
 
 void Level::loadFullyFromFile() {
   if(importBinary(getNameInCache(), Checksum()) == false) {
-    throw Exception("Unable to load the file from the cache");
+    loadXML();
+    exportBinary(getNameInCache(), m_checkSum);
   }
+}
+
+void Level::importBinaryHeader(vapp::FileHandle *pfh) {
+  unloadLevelData();
+
+  m_isBodyLoaded = false;  
+  m_playerStart  = Vector2f(0.0, 0.0);
+  m_xmotoTooOld  = false;
+
+  char cTag[5];
+  vapp::FS::readBuf(pfh,(char *)cTag,4);
+  cTag[4] = '\0';
+  int nFormat = 0;
+  if(!strcmp(cTag,"XBL5"))
+    nFormat = 5;
+  
+  if(nFormat != 5) {
+    throw("Old file format");
+  }
+  
+  m_checkSum    = vapp::FS::readString(pfh);
+  m_id      	= vapp::FS::readString(pfh);
+  m_pack    	= vapp::FS::readString(pfh);
+  m_packNum 	= vapp::FS::readString(pfh);
+  m_name    	= vapp::FS::readString(pfh);
+  m_description = vapp::FS::readString(pfh);
+  m_author 	= vapp::FS::readString(pfh);
+  m_date   	= vapp::FS::readString(pfh);
 }
 
   /*===========================================================================
   Import binary level file
   ===========================================================================*/
-bool Level::importBinaryHeader(const std::string &FileName, const std::string& pSum) {
-  m_isBodyLoaded = false;
-
-  unloadLevelData();
-  bool bRet = true;
-  
-  m_playerStart = Vector2f(0.0, 0.0);
-    
-  m_xmotoTooOld = false;
+bool Level::importBinaryHeaderFromFile(const std::string &FileName, const std::string& pSum) {
   
   /* Import binary */
   vapp::FileHandle *pfh = vapp::FS::openIFile(FileName);
   if(pfh == NULL) {
     return false;
   }
-  else {
-    /* Read tag - it tells something about the format */
-    char cTag[5];
-    vapp::FS::readBuf(pfh,(char *)cTag,4);
-    cTag[4] = '\0';
-    int nFormat = 0;
-    if(!strcmp(cTag,"XBL5"))
-      nFormat = 5;
-    
-    if(nFormat == 5) { /* reject other formats */
-      /* Read "format 1" / "format 2" binary level */
-      /* Right */
-      std::string md5sum = vapp::FS::readString(pfh);
-      if(md5sum != pSum) {
-        vapp::Log("** Warning ** : CRC check failed, can't import: %s",FileName.c_str());
-        bRet = false;
-      }
-      else {
-        /* Read header */
-        m_id = vapp::FS::readString(pfh);
-        m_pack = vapp::FS::readString(pfh);
-        m_packNum = vapp::FS::readString(pfh);
-        m_name = vapp::FS::readString(pfh);
-        m_description = vapp::FS::readString(pfh);
-        m_author = vapp::FS::readString(pfh);
-        m_date = vapp::FS::readString(pfh);
-      }
-    } else {
-      vapp::Log("** Warning ** : Invalid binary format (%d), can't import: %s",nFormat,FileName.c_str());
-      bRet = false;
+
+  try {
+    importBinaryHeader(pfh);
+    if(m_checkSum != pSum) {
+      vapp::Log("** Warning ** : CRC check failed, can't import: %s",FileName.c_str());
+      vapp::FS::closeFile(pfh);
+      return false;
     }
-             
-    /* clean up */
+  } catch(Exception &e) {
     vapp::FS::closeFile(pfh);
+    return false;
   }
+             
+  /* clean up */
+  vapp::FS::closeFile(pfh);
     
-  return bRet;
+  return true;
+}
+
+void Level::exportBinaryHeader(vapp::FileHandle *pfh) {
+    vapp::FS::writeBuf   (pfh,"XBL5", 4);
+    vapp::FS::writeString(pfh	    , m_checkSum);
+    vapp::FS::writeString(pfh	    , m_id);
+    vapp::FS::writeString(pfh	    , m_pack);
+    vapp::FS::writeString(pfh	    , m_packNum);
+    vapp::FS::writeString(pfh	    , m_name);
+    vapp::FS::writeString(pfh	    , m_description);
+    vapp::FS::writeString(pfh	    , m_author);
+    vapp::FS::writeString(pfh	    , m_date);
 }
 
 bool Level::importBinary(const std::string &FileName, const std::string& pSum) {

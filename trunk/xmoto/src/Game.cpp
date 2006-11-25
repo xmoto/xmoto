@@ -82,6 +82,10 @@ namespace vapp {
     _CreateThemesList((UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:THEMES_LIST"));
   }
 
+  void GameApp::deleteLevelsIndex() {
+    remove(LevelIndexFileName().c_str());
+  }
+
   /*===========================================================================
   Change game state
   ===========================================================================*/
@@ -251,9 +255,13 @@ namespace vapp {
         Sound::playSampleByName("Sounds/Headcrash.ogg",0.3);
 
   m_nJustDeadShade = 0;
-  m_MotoGame.gameMessage(GAMETEXT_JUSTDEAD_RESTART,     false, 15);
-  m_MotoGame.gameMessage(GAMETEXT_JUSTDEAD_DISPLAYMENU, false, 15);
 
+  if(m_bEnableDeathAnim) {
+    m_MotoGame.gameMessage(GAMETEXT_JUSTDEAD_RESTART,     false, 15);
+    m_MotoGame.gameMessage(GAMETEXT_JUSTDEAD_DISPLAYMENU, false, 15);
+  } else {
+    setState(GS_DEADMENU);
+  }
         break;
       }
     case GS_DEADMENU: {
@@ -534,6 +542,10 @@ namespace vapp {
     if(nKey == SDLK_F10) {
       switchTestThemeMode(!m_bTestThemeMode);
       return;        
+    }
+
+    if(nKey == SDLK_F5) {
+      deleteLevelsIndex();
     }
     
     /* If message box... */
@@ -1234,7 +1246,9 @@ namespace vapp {
           Log(" %d not reloaded",UpdatedLvlFiles.size() - nReloaded);        
         
         /* Update level lists */
-  _UpdateLevelsLists();
+	_UpdateLevelsLists();
+	deleteLevelsIndex();
+	createLevelsIndex(); /* recreate the level index */
       }            
     #endif
   }
