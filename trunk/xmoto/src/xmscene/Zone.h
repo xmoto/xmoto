@@ -49,7 +49,7 @@ class ZonePrimBox : public ZonePrim {
   ZonePrimBox(float i_left, float i_right, float i_top, float i_bottom);  
   ~ZonePrimBox();
 
-  virtual bool doesCircleTouch(const Vector2f& i_cr, float i_cr);
+  virtual bool doesCircleTouch(const Vector2f& i_cp, float i_cr);
   virtual void saveXml(vapp::FileHandle *i_pfh);
   virtual void saveBinary(vapp::FileHandle *i_pfh);
   virtual ZonePrimType Type() const;
