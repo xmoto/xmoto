@@ -285,7 +285,7 @@ bool FireParticle::updateToTime(float i_time, Vector2f i_gravity) {
 bool ParticlesSourceFire::updateToTime(float i_time, Vector2f i_gravity) {
   if(ParticlesSource::updateToTime(i_time, i_gravity)) {
     /* Generate fire */
-    for(int k=0;k<12;k++) {
+    for(int k=0;k<10;k++) {
       /* maximum 10s for a fire particule, but it can be destroyed before */
       ParticlesSource::addParticle(Vector2f(randomNum(-1,1),randomNum(0.1,0.3)), i_time + 10.0);
     }
