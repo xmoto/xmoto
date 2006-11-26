@@ -861,7 +861,11 @@ int Level::loadToPlay(vapp::CollisionSystem& p_CollisionSystem) {
   
   /* preparing blocks */
   for(unsigned int i=0; i<m_blocks.size(); i++) {
-    v_nbErrors += m_blocks[i]->loadToPlay(p_CollisionSystem);
+    try {
+      v_nbErrors += m_blocks[i]->loadToPlay(p_CollisionSystem);
+    } catch(Exception &e) {
+      throw Exception("Fail to load block '" + m_blocks[i]->Id() + "' :\n" + e.getMsg());
+    }
   }
   
   /* Spawn initial entities */

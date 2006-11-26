@@ -1833,7 +1833,7 @@ namespace vapp {
   try {
     m_MotoGame.prePlayLevel(m_pGhostReplay, pLevelSrc, m_pReplay, false);
   } catch(Exception &e) {
-    Log("** Warning ** : failed to initialize level");
+    Log(std::string("** Warning ** : failed to initialize level\n" + e.getMsg()).c_str());
     setState(GS_MENU);
     notifyMsg(splitText(e.getMsg(), 50));
     return;

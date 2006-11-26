@@ -707,6 +707,7 @@ namespace vapp {
     try {
       _GenerateLevel();
     } catch(Exception &e) {
+      Log(std::string("** Warning ** : Level generation failed !\n" + e.getMsg()).c_str());
       m_bLevelInitSuccess = false;
     }        
 
@@ -851,6 +852,7 @@ namespace vapp {
     
     m_zonesTouching.clear();
     m_entitiesTouching.clear();
+
     nTotalBSPErrors = m_pLevelSrc->loadToPlay(m_Collision);
 
     Log(" %d poly%s in total",m_pLevelSrc->Blocks().size(),m_pLevelSrc->Blocks().size()==1?"":"s");        
