@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "VCommon.h"
 #include "Packager.h"
-#include "arch/SwapEndian.h"
+#include "helpers/SwapEndian.h"
 
 /* 
    How to create an xmoto.bin file:
