@@ -37,7 +37,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/STACK:3500000"
-				AdditionalDependencies="libcurl.lib libode.lib lua5.1.lib SDL_mixer.lib commond.lib opengl32.lib SDL.lib SDLmain.lib zdll.lib jpeg6b.lib libpng13.lib"
+				AdditionalDependencies="libcurl.lib libode.lib lua5.1.lib SDL_mixer.lib opengl32.lib SDL.lib SDLmain.lib zdll.lib jpeg6b.lib libpng13.lib"
 				OutputFile="$(SolutionDir)/../bin/xmotod.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="$(SolutionDir)"
@@ -94,7 +94,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/STACK:2500000"
-				AdditionalDependencies="libcurl.lib libode.lib lua5.1.lib SDL_mixer.lib common.lib opengl32.lib SDL.lib SDLmain.lib zdll.lib jpeg6b.lib libpng13.lib"
+				AdditionalDependencies="libcurl.lib libode.lib lua5.1.lib SDL_mixer.lib opengl32.lib SDL.lib SDLmain.lib zdll.lib jpeg6b.lib libpng13.lib"
 				OutputFile="$(SolutionDir)/../bin/xmoto.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(SolutionDir)"
@@ -133,13 +133,52 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
+				RelativePath="..\src\xmscene\Block.cpp">
+			</File>
+			<File
+				RelativePath="..\src\bzip2\blocksort.c">
+			</File>
+			<File
 				RelativePath="..\src\BSP.cpp">
+			</File>
+			<File
+				RelativePath="..\src\BuiltInFont.cpp">
+			</File>
+			<File
+				RelativePath="..\src\bzip2\bzlib.c">
 			</File>
 			<File
 				RelativePath="..\src\Collision.cpp">
 			</File>
 			<File
+				RelativePath="..\src\helpers\Color.cpp">
+			</File>
+			<File
+				RelativePath="..\src\bzip2\compress.c">
+			</File>
+			<File
+				RelativePath="..\src\CRCHash.cpp">
+			</File>
+			<File
+				RelativePath="..\src\bzip2\crctable.c">
+			</File>
+			<File
 				RelativePath="..\src\Credits.cpp">
+			</File>
+			<File
+				RelativePath="..\src\DBuffer.cpp">
+			</File>
+			<File
+				RelativePath="..\src\bzip2\decompress.c">
+			</File>
+			<File
+				RelativePath="..\src\xmscene\Entity.cpp">
+			</File>
+			<File
+				RelativePath="..\src\compression\FileCompression.cpp">
+			</File>
+			<File
+				RelativePath="..\src\helpers\FileCompression.cpp">
 			</File>
 			<File
 				RelativePath="..\src\Game.cpp">
@@ -190,7 +229,28 @@
 				RelativePath="..\src\GUIXMoto.cpp">
 			</File>
 			<File
+				RelativePath="..\src\bzip2\huffman.c">
+			</File>
+			<File
+				RelativePath="..\src\Image.cpp">
+			</File>
+			<File
 				RelativePath="..\src\Input.cpp">
+			</File>
+			<File
+				RelativePath="..\src\xmscene\Level.cpp">
+			</File>
+			<File
+				RelativePath="..\src\Locales.cpp">
+			</File>
+			<File
+				RelativePath="..\src\md5sum\md5.c">
+			</File>
+			<File
+				RelativePath="..\src\md5sum\md5file.cpp">
+			</File>
+			<File
+				RelativePath="..\src\mmgr.cpp">
 			</File>
 			<File
 				RelativePath="..\src\MotoGame.cpp">
@@ -202,7 +262,13 @@
 				RelativePath="..\src\MPhysics.cpp">
 			</File>
 			<File
+				RelativePath="..\src\Packager.cpp">
+			</File>
+			<File
 				RelativePath="..\src\PlayerData.cpp">
+			</File>
+			<File
+				RelativePath="..\src\bzip2\randtable.c">
 			</File>
 			<File
 				RelativePath="..\src\Renderer.cpp">
@@ -238,7 +304,73 @@
 				RelativePath="..\src\Stats.cpp">
 			</File>
 			<File
+				RelativePath="..\src\arch\SwapEndian.cpp">
+			</File>
+			<File
+				RelativePath="..\src\helpers\SwapEndian.cpp">
+			</File>
+			<File
+				RelativePath="..\src\Theme.cpp">
+			</File>
+			<File
+				RelativePath="..\src\image\tim.cpp">
+			</File>
+			<File
+				RelativePath="..\src\image\tim_io_stdio.cpp">
+			</File>
+			<File
+				RelativePath="..\src\image\tim_jpeg.cpp">
+			</File>
+			<File
+				RelativePath="..\src\image\tim_memory_crt.cpp">
+			</File>
+			<File
+				RelativePath="..\src\image\tim_png.cpp">
+			</File>
+			<File
+				RelativePath="..\src\tinyxml\tinystr.cpp">
+			</File>
+			<File
+				RelativePath="..\src\tinyxml\tinyxml.cpp">
+			</File>
+			<File
+				RelativePath="..\src\tinyxml\tinyxmlerror.cpp">
+			</File>
+			<File
+				RelativePath="..\src\tinyxml\tinyxmlparser.cpp">
+			</File>
+			<File
 				RelativePath="..\src\UserConfig.cpp">
+			</File>
+			<File
+				RelativePath="..\src\VApp.cpp">
+			</File>
+			<File
+				RelativePath="..\src\VBezier.cpp">
+			</File>
+			<File
+				RelativePath="..\src\VDraw.cpp">
+			</File>
+			<File
+				RelativePath="..\src\VDrawText.cpp">
+			</File>
+			<File
+				RelativePath="..\src\VFileIO.cpp">
+			</File>
+			<File
+				RelativePath="..\src\helpers\VMath.cpp">
+			</File>
+			<File
+				RelativePath="..\src\VTexture.cpp">
+			</File>
+			<File
+				RelativePath="..\src\VXml.cpp">
+			</File>
+			<File
+				RelativePath="..\src\WWW.cpp">
+			</File>
+			<File
+				RelativePath="..\src\xmscene\Zone.cpp">
 			</File>
 		</Filter>
 		<Filter
@@ -246,13 +378,49 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
+				RelativePath="..\src\xmscene\BasicSceneStructs.h">
+			</File>
+			<File
+				RelativePath="..\src\xmscene\Block.h">
+			</File>
+			<File
 				RelativePath="..\src\BSP.h">
+			</File>
+			<File
+				RelativePath="..\src\BuildConfig.h">
+			</File>
+			<File
+				RelativePath="..\src\BuiltInFont.h">
+			</File>
+			<File
+				RelativePath="..\src\bzip2\bzlib.h">
+			</File>
+			<File
+				RelativePath="..\src\bzip2\bzlib_private.h">
 			</File>
 			<File
 				RelativePath="..\src\Collision.h">
 			</File>
 			<File
+				RelativePath="..\src\helpers\Color.h">
+			</File>
+			<File
+				RelativePath="..\src\CRCHash.h">
+			</File>
+			<File
 				RelativePath="..\src\Credits.h">
+			</File>
+			<File
+				RelativePath="..\src\DBuffer.h">
+			</File>
+			<File
+				RelativePath="..\src\xmscene\Entity.h">
+			</File>
+			<File
+				RelativePath="..\src\compression\FileCompression.h">
+			</File>
+			<File
+				RelativePath="..\src\helpers\FileCompression.h">
 			</File>
 			<File
 				RelativePath="..\src\Game.h">
@@ -270,10 +438,34 @@
 				RelativePath="..\src\GUIXMoto.h">
 			</File>
 			<File
+				RelativePath="..\src\Image.h">
+			</File>
+			<File
 				RelativePath="..\src\Input.h">
 			</File>
 			<File
+				RelativePath="..\src\xmscene\Level.h">
+			</File>
+			<File
+				RelativePath="..\src\Locales.h">
+			</File>
+			<File
+				RelativePath="..\src\md5sum\md5.h">
+			</File>
+			<File
+				RelativePath="..\src\md5sum\md5file.h">
+			</File>
+			<File
+				RelativePath="..\src\mmgr.h">
+			</File>
+			<File
 				RelativePath="..\src\MotoGame.h">
+			</File>
+			<File
+				RelativePath="..\src\nommgr.h">
+			</File>
+			<File
+				RelativePath="..\src\Packager.h">
 			</File>
 			<File
 				RelativePath="..\src\PhysSettings.h">
@@ -300,10 +492,61 @@
 				RelativePath="..\src\Stats.h">
 			</File>
 			<File
+				RelativePath="..\src\arch\SwapEndian.h">
+			</File>
+			<File
+				RelativePath="..\src\helpers\SwapEndian.h">
+			</File>
+			<File
+				RelativePath="..\src\Theme.h">
+			</File>
+			<File
+				RelativePath="..\src\image\tim.h">
+			</File>
+			<File
+				RelativePath="..\src\tinyxml\tinystr.h">
+			</File>
+			<File
+				RelativePath="..\src\tinyxml\tinyxml.h">
+			</File>
+			<File
 				RelativePath="..\src\UserConfig.h">
 			</File>
 			<File
+				RelativePath="..\src\VApp.h">
+			</File>
+			<File
+				RelativePath="..\src\VBezier.h">
+			</File>
+			<File
+				RelativePath="..\src\VCommon.h">
+			</File>
+			<File
+				RelativePath="..\src\VDraw.h">
+			</File>
+			<File
+				RelativePath="..\src\helpers\VExcept.h">
+			</File>
+			<File
+				RelativePath="..\src\VFileIO.h">
+			</File>
+			<File
+				RelativePath="..\src\helpers\VMath.h">
+			</File>
+			<File
+				RelativePath="..\src\VTexture.h">
+			</File>
+			<File
+				RelativePath="..\src\VXml.h">
+			</File>
+			<File
+				RelativePath="..\src\WWW.h">
+			</File>
+			<File
 				RelativePath="..\src\WWWAppInterface.h">
+			</File>
+			<File
+				RelativePath="..\src\xmscene\Zone.h">
 			</File>
 		</Filter>
 		<Filter

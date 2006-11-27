@@ -10,7 +10,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "editor", "editor.vcproj", "
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "game", "game.vcproj", "{2A0945A2-C100-4823-A2B2-453FDEB7F307}"
 	ProjectSection(ProjectDependencies) = postProject
-		{4F9E0444-3687-44A6-B489-2CDD07DB8BF3} = {4F9E0444-3687-44A6-B489-2CDD07DB8BF3}
 	EndProjectSection
 EndProject
 Global
