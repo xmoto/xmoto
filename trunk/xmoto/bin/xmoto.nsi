@@ -69,15 +69,6 @@ Section "Start Menu Shortcuts"
  
 SectionEnd
 
-Section "Level Editor"
-
-	SetOutPath $INSTDIR
-	
-	File "editor.dat"
-	File "xmoto-edit.exe"
-
-SectionEnd
-
 Section "Uninstall"
   
 	DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\XMoto"

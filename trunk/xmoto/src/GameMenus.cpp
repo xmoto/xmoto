@@ -159,7 +159,7 @@ namespace vapp {
     m_pMainMenu->enableWindow(true);                                 
     
     m_pMainMenuButtons[0] = new UIButton(m_pMainMenu,0,0,GAMETEXT_LEVELS,207,57);
-    m_pMainMenuButtons[0]->setContextHelp(CONTEXTHELP_LEVEL_PACKS);
+    m_pMainMenuButtons[0]->setContextHelp(CONTEXTHELP_LEVELS);
     
     m_pMainMenuButtons[1] = new UIButton(m_pMainMenu,0,0,GAMETEXT_REPLAYS,207,57);
     m_pMainMenuButtons[1]->setContextHelp(CONTEXTHELP_REPLAY_LIST);
