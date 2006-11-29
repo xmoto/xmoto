@@ -1,5 +1,8 @@
 => for 0.2.3
 
+render entity by Z
+render blocks by Z
+
 !!!! xmoto-edit don't compile, make it compile !!!!!
 
 [13:25] <gaivota> aspegic500: I found a bug which is the following: when letting xmoto running without doing anything for some time the game crashes, althoug it keeps running

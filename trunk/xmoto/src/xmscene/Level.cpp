@@ -544,22 +544,8 @@ void Level::exportBinary(const std::string &FileName, const std::string& pSum) {
     vapp::Log("** Warning ** : Failed to export binary: %s",FileName.c_str());
   }
   else {
-    /* Write tag */
-    vapp::FS::writeBuf(pfh,"XBL5", 4); /* version two includes dynamic information about blocks */
-    /* 3 -> includes now the grip of the block, width and height of the sprites */      
-    /* 4 -> includes level pack num */
-    /* 5 -> clean code */
-    /* Write CRC32 of XML */
-    vapp::FS::writeString(pfh,pSum);
-         
-    /* Write header */
-    vapp::FS::writeString(pfh,m_id);
-    vapp::FS::writeString(pfh,m_pack);
-    vapp::FS::writeString(pfh,m_packNum);
-    vapp::FS::writeString(pfh,m_name);
-    vapp::FS::writeString(pfh,m_description);
-    vapp::FS::writeString(pfh,m_author);
-    vapp::FS::writeString(pfh,m_date);
+    exportBinaryHeader(pfh);
+
     vapp::FS::writeString(pfh,m_sky);
     vapp::FS::writeString(pfh,m_scriptFileName);
       
@@ -664,15 +650,20 @@ bool Level::importBinaryHeaderFromFile(const std::string &FileName, const std::s
 }
 
 void Level::exportBinaryHeader(vapp::FileHandle *pfh) {
-    vapp::FS::writeBuf   (pfh,"XBL5", 4);
-    vapp::FS::writeString(pfh	    , m_checkSum);
-    vapp::FS::writeString(pfh	    , m_id);
-    vapp::FS::writeString(pfh	    , m_pack);
-    vapp::FS::writeString(pfh	    , m_packNum);
-    vapp::FS::writeString(pfh	    , m_name);
-    vapp::FS::writeString(pfh	    , m_description);
-    vapp::FS::writeString(pfh	    , m_author);
-    vapp::FS::writeString(pfh	    , m_date);
+  /* version two includes dynamic information about blocks */
+  /* 3 -> includes now the grip of the block, width and height of the sprites */      
+  /* 4 -> includes level pack num */
+  /* 5 -> clean code */
+  /* Write CRC32 of XML */
+  vapp::FS::writeBuf   (pfh,"XBL5", 4);
+  vapp::FS::writeString(pfh	    , m_checkSum);
+  vapp::FS::writeString(pfh	    , m_id);
+  vapp::FS::writeString(pfh	    , m_pack);
+  vapp::FS::writeString(pfh	    , m_packNum);
+  vapp::FS::writeString(pfh	    , m_name);
+  vapp::FS::writeString(pfh	    , m_description);
+  vapp::FS::writeString(pfh	    , m_author);
+  vapp::FS::writeString(pfh	    , m_date);
 }
 
 bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
