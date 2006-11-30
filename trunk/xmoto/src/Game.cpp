@@ -86,6 +86,13 @@ namespace vapp {
     remove(LevelIndexFileName().c_str());
   }
 
+  void GameApp::destroyLevelsPacks() {
+    for(int i=0;i<m_LevelPacks.size();i++) {
+      delete m_LevelPacks[i];
+    }
+    m_LevelPacks.clear();
+  }
+
   /*===========================================================================
   Change game state
   ===========================================================================*/
@@ -545,7 +552,9 @@ namespace vapp {
     }
 
     if(nKey == SDLK_F5) {
-      deleteLevelsIndex();
+      m_nNumLevels = 0; // remove the levels
+      loadLevelsFromFiles(false);
+      _UpdateLevelsLists();
     }
     
     /* If message box... */
@@ -1195,7 +1204,7 @@ namespace vapp {
         
         Log("Loading new levels...");
         int nOldNum = m_nNumLevels;
-        _LoadLevels(LvlFiles);
+        loadLevelsFromLvl(LvlFiles);
         Log(" %d new level%s loaded",m_nNumLevels-nOldNum,(m_nNumLevels-nOldNum)==1?"":"s");
         
         /* Add new levels to GUI list */
@@ -1997,6 +2006,12 @@ namespace vapp {
   }
 
   void GameApp::_UpdateLevelsLists() {
+
+    destroyLevelsPacks();
+    for(unsigned int i=0; i<m_nNumLevels; i++) {
+      _UpdateLevelPackManager(&(m_Levels[i]));
+    }
+
     _CreateLevelPackLevelList();
     _UpdateLevelPackList();
     _UpdateLevelLists();

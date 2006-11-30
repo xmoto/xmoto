@@ -516,11 +516,13 @@ namespace vapp {
       bool _IsReplayScripted(Replay *p_pReplay);
       void _RestartLevel();
   
-      int _LoadLevels(const std::vector<std::string> &LvlFiles);
+      void loadLevelsFromLvl(const std::vector<std::string> &LvlFiles);
+      void loadLevelsFromFiles(bool bSilent);
       void loadLevelsFromIndex();
       void createLevelsIndex();
       static std::string LevelIndexFileName();
       void deleteLevelsIndex();
+      void destroyLevelsPacks();
 
 #if defined(SUPPORT_WEBACCESS)
       void _InitWebConf(void);

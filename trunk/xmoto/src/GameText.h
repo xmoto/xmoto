@@ -282,6 +282,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_PROXYCONFIG          _("Configure Proxy...")
 #define GAMETEXT_QUIT                 _("Quit Game")
 #define GAMETEXT_QUITMESSAGE          _("Do you really want to quit?")
+#define GAMETEXT_RELOADINGLEVELS      _("Reloading levels...")
 #define GAMETEXT_REPLAY               _("Replay")
 #define GAMETEXT_REPLAYHELPTEXT(current_speed) _("Stop[esc] ||[space]  << >>[left/right keys]  < >[up/down keys]   Speed:") + current_speed + "x"
 #define GAMETEXT_REPLAYHELPTEXTNOREWIND(current_speed) _("Stop[esc] ||[space] >>[right key] < >[up/down keys]   Speed:") + current_speed + "x"

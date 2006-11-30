@@ -324,20 +324,11 @@ namespace vapp {
     }
      
     /* Find all .lvl files in the level dir and load them */    
-    m_nNumLevels = 0;
-    
     try {
       loadLevelsFromIndex();
     } catch(Exception &e) {
       Log(std::string("Unable to load levels from index:\n" + e.getMsg()).c_str());
-
-      std::vector<std::string> LvlFiles = FS::findPhysFiles("Levels/*.lvl",true);
-      int nNumCached = _LoadLevels(LvlFiles);
-      try {
-	createLevelsIndex();
-      } catch(Exception &e2) {
-	Log((std::string("Unable to create the level index:\n") + e2.getMsg()).c_str());
-      }
+      loadLevelsFromFiles(true);
     }
     
     /* -listlevels? */
@@ -397,7 +388,7 @@ namespace vapp {
       _InitMenus();    
       _UpdateLoadingScreen((1.0f/9.0f) * 8,pLoadingScreen,GAMETEXT_UPDATINGLEVELS);
 
-      _UpdateLevelLists();
+      _UpdateLevelsLists();
       _UpdateLoadingScreen((1.0f/9.0f) * 9,pLoadingScreen,GAMETEXT_INITINPUT);      
       
       /* Init input system */
@@ -439,12 +430,29 @@ namespace vapp {
     }            
   }
   
+  void GameApp::loadLevelsFromFiles(bool bSilent) {
+    if(!bSilent) {
+      _SimpleMessage(GAMETEXT_RELOADINGLEVELS, &m_DownloadMsgBoxRect);
+    }
+
+    m_nNumLevels = 0;
+    std::vector<std::string> LvlFiles = FS::findPhysFiles("Levels/*.lvl", true);
+    loadLevelsFromLvl(LvlFiles);
+    try {
+      /* then, recreate the index */
+      createLevelsIndex();
+    } catch(Exception &e2) {
+      Log((std::string("Unable to create the level index:\n") + e2.getMsg()).c_str());
+    }
+  }
+
   std::string GameApp::LevelIndexFileName() {
     return vapp::FS::getUserDir() + "/" + "LCache/levels.index";
   }
 
   void GameApp::loadLevelsFromIndex() {
     int v_nbLevels;
+    m_nNumLevels = 0;
 
     vapp::FileHandle *pfh = vapp::FS::openIFile(LevelIndexFileName());
     if(pfh == NULL) {
@@ -460,7 +468,6 @@ namespace vapp {
       for(int i=0; i<v_nbLevels; i++) {
 	m_Levels[i].setFileName(vapp::FS::readString(pfh));
 	m_Levels[i].importBinaryHeader(pfh);
-	_UpdateLevelPackManager(&m_Levels[i]);
 	m_nNumLevels++;
       }
 
@@ -473,6 +480,9 @@ namespace vapp {
   }
    
   void GameApp::createLevelsIndex() {
+    /* for windows : your must remove the file before create it */
+    remove(LevelIndexFileName().c_str());
+
     vapp::FileHandle *pfh = vapp::FS::openOFile(LevelIndexFileName());
     if(pfh == NULL) {
       throw Exception((std::string("Unable to open file ") + LevelIndexFileName()).c_str());
@@ -497,9 +507,7 @@ namespace vapp {
   /*===========================================================================
   Load some levels...
   ===========================================================================*/
-  int GameApp::_LoadLevels(const std::vector<std::string> &LvlFiles) {
-    int nNumCached = 0;
-
+  void GameApp::loadLevelsFromLvl(const std::vector<std::string> &LvlFiles) {
     for(int i=0;i<LvlFiles.size();i++) {    
       int j = m_nNumLevels;
       if(j >= 2048) {
@@ -525,19 +533,13 @@ namespace vapp {
           }
         }
         
-        if (bCached) ++nNumCached;
-        ++m_nNumLevels;
-        
-        /* Update level pack manager */
-        _UpdateLevelPackManager(&m_Levels[j]);
+        m_nNumLevels++;
       
       } catch(Exception &e) {
         Log("** Warning ** : Problem loading '%s' (%s)",
           LvlFiles[i].c_str(),e.getMsg().c_str());            
       }
     }
-      
-    return nNumCached;
   }
   
   /*===========================================================================
@@ -558,10 +560,7 @@ namespace vapp {
     if(m_pCredits != NULL)
       delete m_pCredits;
   
-    for(int i=0;i<m_LevelPacks.size();i++) {
-      delete m_LevelPacks[i];
-    }
-    m_LevelPacks.clear();
+      destroyLevelsPacks();
     
     m_GameStats.saveXML("stats.xml");
       

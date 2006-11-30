@@ -245,21 +245,20 @@ WebHighscore* WebRoom::getHighscoreFromLevel(const std::string &p_levelId) {
 }
 
 void WebRoom::cleanHash() {
-  #if defined(USE_HASH_MAP)
-    HashNamespace::hash_map<const char*, WebHighscore*, HashNamespace::hash<const char*>, highscore_str, std::allocator<WebHighscore*> >::iterator it;
+#if defined(USE_HASH_MAP)
+  HashNamespace::hash_map<const char*, WebHighscore*, HashNamespace::hash<const char*>, highscore_str, std::allocator<WebHighscore*> >::iterator it;
 
-    it = m_webhighscores.begin();
-    while(it != m_webhighscores.end()) {
-      /* can be NULL, because search on unexisting value create an entry */
-      if(it->second != NULL) { 
-        delete it->second; /* delete highscore */
-      }
-      it++;
-    } 
-  #else
-    for(int i=0;i<m_webhighscores.size();i++)
-      delete m_webhighscores[i];
-  #endif
+  for (it = m_webhighscores.begin(); it != m_webhighscores.end(); it++) {
+    /* can be NULL, because search on unexisting value create an entry */
+    if(it->second != NULL) { 
+      delete it->second; /* delete highscore */
+    }
+  }
+#else
+  for(int i=0; i<m_webhighscores.size(); i++) {
+    delete m_webhighscores[i];
+  }
+#endif
 
   /* clear hash table */
   m_webhighscores.clear();
