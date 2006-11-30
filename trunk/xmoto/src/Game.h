@@ -262,9 +262,7 @@ namespace vapp {
                                                    play this replay */                                                   
       std::string m_ForceProfile;               /* Force this player profile */    
       std::string m_GraphDebugInfoFile;
-      int m_nNumLevels;
-      Level m_Levels[2048];                  /* Array of levels */
-      
+      std::vector<Level *> m_levels; 
       InputHandler m_InputHandler;              /* The glorious input handler */
       GameState m_State;                        /* Current state */      
       GameState m_StateAfterPlaying;            /* State that should be used later */
@@ -522,7 +520,8 @@ namespace vapp {
       void createLevelsIndex();
       static std::string LevelIndexFileName();
       void deleteLevelsIndex();
-      void destroyLevelsPacks();
+      void deleteLevelsPacks();
+      void deleteLevels();
 
 #if defined(SUPPORT_WEBACCESS)
       void _InitWebConf(void);

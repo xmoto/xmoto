@@ -2913,8 +2913,8 @@ namespace vapp {
     
     if(m_pPlayer == NULL) return;
   
-    for(int i=0;i<m_nNumLevels;i++) {
-      Level *pLevel = &m_Levels[i];     
+    for(int i=0;i<m_levels.size();i++) {
+      Level *pLevel = m_levels[i];     
       pAllLevels->addLevel(pLevel,
 			   m_pPlayer,
 			   &m_Profiles

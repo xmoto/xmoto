@@ -333,8 +333,8 @@ namespace vapp {
     
     /* -listlevels? */
     if(m_bListLevels) {
-      for(int i=0;i<m_nNumLevels;i++) {          
-        printf("%-25s %-25s %-25s\n",FS::getFileBaseName(m_Levels[i].FileName()).c_str(),m_Levels[i].Id().c_str(),m_Levels[i].Name().c_str());
+      for(int i=0;i<m_levels.size();i++) {          
+        printf("%-25s %-25s %-25s\n",FS::getFileBaseName(m_levels[i]->FileName()).c_str(),m_levels[i]->Id().c_str(),m_levels[i]->Name().c_str());
       }
     }
 
@@ -435,7 +435,8 @@ namespace vapp {
       _SimpleMessage(GAMETEXT_RELOADINGLEVELS, &m_DownloadMsgBoxRect);
     }
 
-    m_nNumLevels = 0;
+    deleteLevels();
+
     std::vector<std::string> LvlFiles = FS::findPhysFiles("Levels/*.lvl", true);
     loadLevelsFromLvl(LvlFiles);
     try {
@@ -452,7 +453,8 @@ namespace vapp {
 
   void GameApp::loadLevelsFromIndex() {
     int v_nbLevels;
-    m_nNumLevels = 0;
+
+    deleteLevels();
 
     vapp::FileHandle *pfh = vapp::FS::openIFile(LevelIndexFileName());
     if(pfh == NULL) {
@@ -466,13 +468,18 @@ namespace vapp {
       }
       v_nbLevels = vapp::FS::readInt_LE(pfh);
       for(int i=0; i<v_nbLevels; i++) {
-	m_Levels[i].setFileName(vapp::FS::readString(pfh));
-	m_Levels[i].importBinaryHeader(pfh);
-	m_nNumLevels++;
+	Level *v_level = new Level();
+	try {
+	  v_level->setFileName(vapp::FS::readString(pfh));
+	  v_level->importBinaryHeader(pfh);
+	  m_levels.push_back(v_level);
+	} catch(Exception &e) {
+	  delete v_level;
+	}
       }
 
     } catch(Exception &e) {
-      m_nNumLevels = 0;
+      deleteLevels();
       vapp::FS::closeFile(pfh);
       throw e;
     }
@@ -491,10 +498,10 @@ namespace vapp {
 
     try {
       vapp::FS::writeInt_LE(pfh, CURRENT_LEVEL_INDEX_FILE_VERSION); /* version */
-      vapp::FS::writeInt_LE(pfh, m_nNumLevels);
-      for(int i=0; i<m_nNumLevels; i++) {
-	vapp::FS::writeString(pfh, m_Levels[i].FileName());
-	m_Levels[i].exportBinaryHeader(pfh);
+      vapp::FS::writeInt_LE(pfh, m_levels.size());
+      for(int i=0; i<m_levels.size(); i++) {
+	vapp::FS::writeString(pfh, m_levels[i]->FileName());
+	m_levels[i]->exportBinaryHeader(pfh);
       }
     } catch(Exception &e) {
       vapp::FS::closeFile(pfh);
@@ -509,35 +516,29 @@ namespace vapp {
   ===========================================================================*/
   void GameApp::loadLevelsFromLvl(const std::vector<std::string> &LvlFiles) {
     for(int i=0;i<LvlFiles.size();i++) {    
-      int j = m_nNumLevels;
-      if(j >= 2048) {
-        Log("** Warning ** : Too many levels.");
-        break;
-      }
-    
       bool bCached = false;
+      Level *v_level = new Level();
+
       try {
-        // Load the level
-        m_Levels[j].setFileName( LvlFiles[i] );
-        bCached = m_Levels[j].loadReducedFromFile(m_bEnableLevelCache);
+	v_level->setFileName(LvlFiles[i]);
+	bCached = v_level->loadReducedFromFile(m_bEnableLevelCache);
         
-        // Check for ID conflict
-        for(int k=0;k<m_nNumLevels;k++) {
-          if(m_Levels[k].Id() == m_Levels[j].Id()) {
-            /* Conflict! */
-            Log("** Warning ** : More than one level with ID '%s'!",m_Levels[k].Id().c_str());
-            Log("                (%s)",m_Levels[j].FileName().c_str());
-            Log("                (%s)",m_Levels[k].FileName().c_str());
-            if(bCached) Log("                (cached)");
-            throw Exception("Duplicate level ID");
-          }
-        }
-        
-        m_nNumLevels++;
-      
+	// Check for ID conflict
+	for(int k=0; k<m_levels.size(); k++) {
+	  if(m_levels[k]->Id() == v_level->Id()) {
+	    /* Conflict! */
+	    Log("** Warning ** : More than one level with ID '%s'!",m_levels[k]->Id().c_str());
+	    Log("                (%s)", v_level->FileName().c_str());
+	    Log("                (%s)", m_levels[k]->FileName().c_str());
+	    if(bCached) Log("                (cached)");
+	    throw Exception("Duplicate level ID");
+	  }
+	}
+	m_levels.push_back(v_level);        
       } catch(Exception &e) {
+	delete v_level;
         Log("** Warning ** : Problem loading '%s' (%s)",
-          LvlFiles[i].c_str(),e.getMsg().c_str());            
+	    LvlFiles[i].c_str(),e.getMsg().c_str());            
       }
     }
   }
@@ -560,8 +561,10 @@ namespace vapp {
     if(m_pCredits != NULL)
       delete m_pCredits;
   
-      destroyLevelsPacks();
+    deleteLevelsPacks();
+    deleteLevels();
     
+
     m_GameStats.saveXML("stats.xml");
       
     if(!isNoGraphics()) {

@@ -86,7 +86,7 @@ namespace vapp {
     remove(LevelIndexFileName().c_str());
   }
 
-  void GameApp::destroyLevelsPacks() {
+  void GameApp::deleteLevelsPacks() {
     for(int i=0;i<m_LevelPacks.size();i++) {
       delete m_LevelPacks[i];
     }
@@ -552,9 +552,11 @@ namespace vapp {
     }
 
     if(nKey == SDLK_F5) {
-      m_nNumLevels = 0; // remove the levels
-      loadLevelsFromFiles(false);
-      _UpdateLevelsLists();
+      if(m_State == GS_MENU) {
+	deleteLevels();
+	loadLevelsFromFiles(false);
+	_UpdateLevelsLists();
+      }
     }
     
     /* If message box... */
@@ -855,10 +857,8 @@ namespace vapp {
   ===========================================================================*/
   Level *GameApp::_FindLevelByID(std::string ID) {
     /* Look through all level sources... */
-    //printf("LOOKING FOR [%s]\n",ID.c_str());
-    for(int i=0;i<m_nNumLevels;i++) {
-      //printf("  .. is it [%s]?\n",m_Levels[i].Id().c_str());
-      if(m_Levels[i].Id() == ID) return &m_Levels[i];
+    for(unsigned int i=0; i<m_levels.size(); i++) {
+      if(m_levels[i]->Id() == ID) return m_levels[i];
     }
     return NULL; /* nothing */
   }
@@ -1203,14 +1203,14 @@ namespace vapp {
         const std::vector<std::string> LvlFiles = m_pWebLevels->getNewDownloadedLevels();
         
         Log("Loading new levels...");
-        int nOldNum = m_nNumLevels;
+        int nOldNum = m_levels.size();
         loadLevelsFromLvl(LvlFiles);
-        Log(" %d new level%s loaded",m_nNumLevels-nOldNum,(m_nNumLevels-nOldNum)==1?"":"s");
+        Log(" %d new level%s loaded", m_levels.size()-nOldNum,(m_levels.size()-nOldNum)==1?"":"s");
         
         /* Add new levels to GUI list */
         if(m_pPlayNewLevelsList != NULL) {
-          for(int i=nOldNum;i<m_nNumLevels;i++) {
-            m_pPlayNewLevelsList->addLevel(m_Levels+i, m_pPlayer, &m_Profiles, m_pWebHighscores, std::string("New: "));
+          for(int i=nOldNum;i<m_levels.size();i++) {
+            m_pPlayNewLevelsList->addLevel(m_levels[i], m_pPlayer, &m_Profiles, m_pWebHighscores, std::string("New: "));
           }
         }
         
@@ -1224,18 +1224,18 @@ namespace vapp {
         for(int i=0;i<UpdatedLvlFiles.size();i++) {
           try {
             /* Find levels by file names */
-            for(int j=0;j<m_nNumLevels;j++) {
-              if(m_Levels[j].FileName() == UpdatedLvlFiles[i]) {
+            for(int j=0;j<m_levels.size();j++) {
+              if(m_levels[j]->FileName() == UpdatedLvlFiles[i]) {
                 /* Found it... */
-                m_Levels[j].loadReducedFromFile(m_bEnableLevelCache);
+                m_levels[j]->loadReducedFromFile(m_bEnableLevelCache);
                 
                 /* Failed to load due to old xmoto? */  
-                if(m_Levels[j].isXMotoTooOld())
+                if(m_levels[j]->isXMotoTooOld())
                   nTooOldXMoto++;
                               
                 /* Add it to list of new levels as "updated" */
                 if(m_pPlayNewLevelsList != NULL) {
-                  m_pPlayNewLevelsList->addLevel(m_Levels+j, m_pPlayer, &m_Profiles, m_pWebHighscores, std::string("Updated: "));
+                  m_pPlayNewLevelsList->addLevel(m_levels[j], m_pPlayer, &m_Profiles, m_pWebHighscores, std::string("Updated: "));
                 }
                 
                 nReloaded++;
@@ -2006,14 +2006,20 @@ namespace vapp {
   }
 
   void GameApp::_UpdateLevelsLists() {
-
-    destroyLevelsPacks();
-    for(unsigned int i=0; i<m_nNumLevels; i++) {
-      _UpdateLevelPackManager(&(m_Levels[i]));
+    deleteLevelsPacks();
+    for(unsigned int i=0; i<m_levels.size(); i++) {
+      _UpdateLevelPackManager(m_levels[i]);
     }
 
     _CreateLevelPackLevelList();
     _UpdateLevelPackList();
     _UpdateLevelLists();
+  }
+
+  void GameApp::deleteLevels() {
+    for(unsigned int i=0; i<m_levels.size(); i++) {
+      delete m_levels[i];
+    }
+    m_levels.clear();
   }
 }
