@@ -46,12 +46,6 @@ required:
 * BUG : when death is disabled : you cannot see the message "press esc
    or enter"
 
-* When i update lists sometimes
-Fatal signal: Segmentation Fault (SDL Parachute Deployed)
-*** glibc detected *** corrupted double-linked list: 0xb7a6a358 ***
-it behaves sometimes since i modified the pack lists menus
-** I got that too (when I completed a level I hadn't completed before)
-
 * associate F8 to the -nowww switch (enable/disable network)
  - when a connection fails, disable network and display a message :
    "Network disabled, press F8 to enable it"

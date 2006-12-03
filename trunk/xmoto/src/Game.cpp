@@ -917,55 +917,55 @@ namespace vapp {
   Level packs
   ===========================================================================*/
   void GameApp::_UpdateLevelPackManager(Level *pLevelSrc) {
-      /* Already a known level pack? */
-      LevelPack *pPack = _FindLevelPackByName(pLevelSrc->Pack());
-      if(pPack == NULL) {
-        /* No, register it */
-        pPack = new LevelPack;
-        pPack->Name = pLevelSrc->Pack();
-        m_LevelPacks.push_back(pPack);
+    /* Already a known level pack? */
+    LevelPack *pPack = _FindLevelPackByName(pLevelSrc->Pack());
+    if(pPack == NULL) {
+      /* No, register it */
+      pPack = new LevelPack;
+      pPack->Name = pLevelSrc->Pack();
+      m_LevelPacks.push_back(pPack);
+      
+      /* Set default hints */
+      pPack->bShowTimes = true;
+      pPack->bShowWebTimes = true;
+      
+      /* Try to find a hints file for this level pack */
+      std::vector<std::string> LpkFiles = FS::findPhysFiles("Levels/*.lpk",true);
+      for(int i=0;i<LpkFiles.size();i++) {
+        XMLDocument XML; 
+        XML.readFromFile(LpkFiles[i]);
+        TiXmlDocument *pDoc = XML.getLowLevelAccess();
         
-        /* Set default hints */
-        pPack->bShowTimes = true;
-        pPack->bShowWebTimes = true;
-        
-        /* Try to find a hints file for this level pack */
-        std::vector<std::string> LpkFiles = FS::findPhysFiles("Levels/*.lpk",true);
-        for(int i=0;i<LpkFiles.size();i++) {
-          XMLDocument XML; 
-          XML.readFromFile(LpkFiles[i]);
-          TiXmlDocument *pDoc = XML.getLowLevelAccess();
-          
-          if(pDoc != NULL) {
-            TiXmlElement *pLpkHintsElem = pDoc->FirstChildElement("lpkhints");
-            if(pLpkHintsElem != NULL) {
-              /* For this level pack? */
-              const char *pcFor = pLpkHintsElem->Attribute("for");
-              if(pcFor != NULL && pPack->Name == pcFor) {
-                /* Yup. Extract hints */
-                for(TiXmlElement *pHintElem = pLpkHintsElem->FirstChildElement("hint");
-                    pHintElem != NULL; pHintElem=pHintElem->NextSiblingElement("hint")) {
-                  /* Check for known hints... */
-                  const char *pc;
+        if(pDoc != NULL) {
+          TiXmlElement *pLpkHintsElem = pDoc->FirstChildElement("lpkhints");
+          if(pLpkHintsElem != NULL) {
+            /* For this level pack? */
+            const char *pcFor = pLpkHintsElem->Attribute("for");
+            if(pcFor != NULL && pPack->Name == pcFor) {
+              /* Yup. Extract hints */
+              for(TiXmlElement *pHintElem = pLpkHintsElem->FirstChildElement("hint");
+                  pHintElem != NULL; pHintElem=pHintElem->NextSiblingElement("hint")) {
+                /* Check for known hints... */
+                const char *pc;
 
-                  pc = pHintElem->Attribute("show_times");
-                  if(pc != NULL) {
-                    pPack->bShowTimes = atoi(pc)==1;
-                  }
-
-                  pc = pHintElem->Attribute("show_wtimes");
-                  if(pc != NULL) {
-                    pPack->bShowWebTimes = atoi(pc)==1;
-                  }
+                pc = pHintElem->Attribute("show_times");
+                if(pc != NULL) {
+                  pPack->bShowTimes = atoi(pc)==1;
                 }
-              }              
-            }
+
+                pc = pHintElem->Attribute("show_wtimes");
+                if(pc != NULL) {
+                  pPack->bShowWebTimes = atoi(pc)==1;
+                }
+              }
+            }              
           }
         }
       }
-      
-      /* Add level to pack */
-      pPack->Levels.push_back(pLevelSrc);
+    }
+    
+    /* Add level to pack */
+    pPack->Levels.push_back(pLevelSrc);
   }
 
   LevelPack *GameApp::_FindLevelPackByName(const std::string &Name) {
@@ -2006,11 +2006,34 @@ namespace vapp {
   }
 
   void GameApp::_UpdateLevelsLists() {
+    /* Remember active level pack */
+    std::string ActiveLevelPackName = "";
+    bool bGotActiveLevelPack = false;
+    if(m_pActiveLevelPack != NULL) {
+      ActiveLevelPackName = m_pActiveLevelPack->Name;
+      bGotActiveLevelPack = true;
+    }
+  
+    /* Clean up level packs */
     deleteLevelsPacks();
+    
+    /* Reinstance level packs */
     for(unsigned int i=0; i<m_levels.size(); i++) {
       _UpdateLevelPackManager(m_levels[i]);
     }
+    
+    /* Should we re-select a level pack? */
+    if(bGotActiveLevelPack) {
+      for(int i=0;i<m_LevelPacks.size();i++) {
+        if(m_LevelPacks[i]->Name == ActiveLevelPackName) {  
+          /* Got it, break */
+          m_pActiveLevelPack = m_LevelPacks[i];
+          break;
+        }
+      }
+    }
 
+    /* Do Stuff */
     _CreateLevelPackLevelList();
     _UpdateLevelPackList();
     _UpdateLevelLists();

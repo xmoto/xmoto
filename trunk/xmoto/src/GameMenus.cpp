@@ -1240,7 +1240,7 @@ namespace vapp {
     if(m_pActiveLevelPack == NULL) {
       return;
     } 
-
+    
     UILevelList *pList = (UILevelList *)m_pLevelPackViewer->getChild("LEVELPACK_LEVEL_LIST");    
     pList->setSort(true, (int(*)(void*, void*))Level::compareLevelSamePack);
     pList->setNumeroted(true);

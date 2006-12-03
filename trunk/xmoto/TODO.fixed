@@ -1,4 +1,11 @@
 Since 0.2.2
+* When i update lists sometimes
+Fatal signal: Segmentation Fault (SDL Parachute Deployed)
+*** glibc detected *** corrupted double-linked list: 0xb7a6a358 ***
+it behaves sometimes since i modified the pack lists menus
+** I got that too (when I completed a level I hadn't completed before)
+** 99% sure it's fixed now. (m_pActiveLevelPack was freed but still referenced)
+
 * BUG on makefile
 I got a bug in the gentoo bugzilla:
 http://bugs.gentoo.org/147725 xmoto-0.2.1 fails with MAKEOPTS="-j2" or higher.
