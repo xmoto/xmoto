@@ -226,6 +226,9 @@
 				RelativePath="..\src\GUIXMoto.cpp">
 			</File>
 			<File
+				RelativePath="..\src\helpers\HighPrecisionTimerWin32.cpp">
+			</File>
+			<File
 				RelativePath="..\src\bzip2\huffman.c">
 			</File>
 			<File
@@ -301,10 +304,10 @@
 				RelativePath="..\src\Stats.cpp">
 			</File>
 			<File
-				RelativePath="..\src\helpers\SwapEndian.cpp">
+				RelativePath="..\src\arch\SwapEndian.cpp">
 			</File>
 			<File
-				RelativePath="..\src\arch\SwapEndian.cpp">
+				RelativePath="..\src\helpers\SwapEndian.cpp">
 			</File>
 			<File
 				RelativePath="..\src\Theme.cpp">
@@ -432,6 +435,12 @@
 				RelativePath="..\src\GUIXMoto.h">
 			</File>
 			<File
+				RelativePath="..\src\helpers\HashTbl.h">
+			</File>
+			<File
+				RelativePath="..\src\helpers\HighPrecisionTimer.h">
+			</File>
+			<File
 				RelativePath="..\src\Image.h">
 			</File>
 			<File
@@ -486,10 +495,10 @@
 				RelativePath="..\src\Stats.h">
 			</File>
 			<File
-				RelativePath="..\src\helpers\SwapEndian.h">
+				RelativePath="..\src\arch\SwapEndian.h">
 			</File>
 			<File
-				RelativePath="..\src\arch\SwapEndian.h">
+				RelativePath="..\src\helpers\SwapEndian.h">
 			</File>
 			<File
 				RelativePath="..\src\Theme.h">

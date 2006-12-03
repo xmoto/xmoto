@@ -35,7 +35,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   #include <curl/curl.h>
 #endif
 
-/* Set the follow #define's allow you to simulate slow systems */
+#include "helpers/HighPrecisionTimer.h"
+
+/* Set the following #defines to simulate slow systems */
 #define SIMULATE_SLOW_RENDERING     0 /* extra ms to add to rendering */
 #define SIMULATE_SLOW_PHYSICS       0 /* extra ms to add to physics calcs */
 
@@ -48,21 +50,27 @@ namespace vapp {
     /* This function is called by the framework as fast as possible */
     bool bIsPaused = false;
     bool bDrawFPS = false;
+    
+    HighPrecisionTimer::reset();
 
     /* Prepare frame rendering / game update */
-    _PrepareFrame();
+    _PrepareFrame();    
+    HighPrecisionTimer::checkTime("_PrepareFrame");
 
     /* Check some GUI controls */
-    _PreUpdateGUI();
+    _PreUpdateGUI();     
+    HighPrecisionTimer::checkTime("_PreUpdateGUI");
      
     /* Update FPS stuff */
     _UpdateFPSCounter();
+    HighPrecisionTimer::checkTime("_UpdateFPSCounter");
             
     /* What state? */
     switch(m_State) {
       case GS_MENU:
         /* Menu specifics */
         _PreUpdateMenu();
+        HighPrecisionTimer::checkTime("_PreUpdateMenu");
         /* Note the lack of break; the following are done for GS_MENU too */
 
       case GS_LEVEL_INFO_VIEWER:
@@ -73,6 +81,7 @@ namespace vapp {
       case GS_EDIT_PROFILES:
         /* Following is done for all the above states */
         _DrawMainGUI();
+        HighPrecisionTimer::checkTime("_DrawMainGUI");
         
         /* Show frame rate? */
         if(m_bShowFrameRate) bDrawFPS = true;
@@ -102,16 +111,19 @@ namespace vapp {
           if(m_State == GS_PREPLAYING) {
             /* If "preplaying" / "initial-zoom" is enabled, this is where it's done */
             statePrestart_step();
+            HighPrecisionTimer::checkTime("statePrestart_step");
           } 
           else if(m_State == GS_PLAYING || ((m_State == GS_DEADMENU || m_State == GS_DEADJUST) && m_bEnableDeathAnim)) {
             /* When actually playing or when dead and the bike is falling apart, 
                a physics update is required */
             nPhysSteps = _UpdateGamePlaying();            
+            HighPrecisionTimer::checkTime("_UpdateGamePlaying");
           }
           else if(m_State == GS_REPLAYING) {
             /* When playing back a replay, no physics update is requried - instead
                the game state is streamed out of a binary .rpl file */
             nPhysSteps = _UpdateGameReplaying();
+            HighPrecisionTimer::checkTime("_UpdateGameReplaying");
             bValidGameState = nPhysSteps > 0;
             //printf("%d ",nPhysSteps);
           }
@@ -119,29 +131,35 @@ namespace vapp {
           /* Render */
           if(!isNoGraphics() && bValidGameState) {
             m_Renderer.render(bIsPaused);
+            HighPrecisionTimer::checkTime("m_Renderer.render");
       
             if(m_bShowMiniMap && !m_bCreditsModeActive) {
               if(m_MotoGame.getBikeState()->Dir == DD_LEFT &&
                  (m_bShowEngineCounter == false || m_State == GS_REPLAYING)) {
                 m_Renderer.renderMiniMap(getDispWidth()-150,getDispHeight()-100,150,100);
+                HighPrecisionTimer::checkTime("m_Renderer.renderMiniMap");
               } 
               else {
                 m_Renderer.renderMiniMap(0,getDispHeight()-100,150,100);
+                HighPrecisionTimer::checkTime("m_Renderer.renderMiniMap");
               }
             }             
       
             if(m_bShowEngineCounter && m_bUglyMode == false && m_State != GS_REPLAYING) {
               m_Renderer.renderEngineCounter(getDispWidth()-128,getDispHeight()-128,128,128,
                                              m_MotoGame.getBikeEngineSpeed());
+              HighPrecisionTimer::checkTime("m_Renderer.renderEngineCounter");
             } 
           }
 #if SIMULATE_SLOW_RENDERING
           SDL_Delay(SIMULATE_SLOW_RENDERING);
+          HighPrecisionTimer::checkTime("(dummy)");
 #endif
   
           /* When actually playing, check if something happened (like dying or finishing) */
           if(m_State == GS_PLAYING) {        
             _PostUpdatePlaying();
+            HighPrecisionTimer::checkTime("_PostUpdatePlaying");
           }
         
           /* When did frame rendering end? */
@@ -186,22 +204,28 @@ namespace vapp {
             drawText(Vector2f(0,100),cBuf,MAKE_COLOR(0,0,0,255),-1);        
             nFrameCnt++;
           }
+
+          HighPrecisionTimer::checkTime("(misc)");
         
           if(m_State == GS_PAUSE) {
             /* Okay, nifty thing. Paused! */
             _PostUpdatePause();
+            HighPrecisionTimer::checkTime("_PostUpdatePause");
           }        
           else if(m_State == GS_DEADJUST) {
             /* Hmm, you're dead and you know it. */
             _PostUpdateJustDead();
+            HighPrecisionTimer::checkTime("_PostUpdateJustDead");
           }
-    else if(m_State == GS_DEADMENU) {
+          else if(m_State == GS_DEADMENU) {
             /* Hmm, you're dead and you know it. */
             _PostUpdateMenuDead();
+            HighPrecisionTimer::checkTime("_PostUpdateMenuDead");
           }
           else if(m_State == GS_FINISHED) {
             /* Hmm, you've won and you know it. */
             _PostUpdateFinished();
+            HighPrecisionTimer::checkTime("_PostUpdateFinished");
           }        
         
           /* Level and player name to draw? */
@@ -222,6 +246,7 @@ namespace vapp {
                 v_infos,
                 MAKE_COLOR(255,255,255,255));
             }
+            HighPrecisionTimer::checkTime("(level and player name)");
           }
          
           /* Context menu? */
@@ -232,10 +257,12 @@ namespace vapp {
           
           /* Draw GUI */
           m_Renderer.getGUI()->paint();        
+          HighPrecisionTimer::checkTime("m_Renderer.getGUI()->paint");
         
           /* Credits? */
           if(m_State == GS_REPLAYING && m_bCreditsModeActive && m_pCredits!=NULL) {
             m_pCredits->render(m_MotoGame.getTime());
+            HighPrecisionTimer::checkTime("m_pCredits->render");
           }
 
           /* Show frame rate */
@@ -256,6 +283,29 @@ namespace vapp {
       sprintf(cTemp,"%f",m_fFPS_Rate);
       drawText(Vector2f(130,0),cTemp);
     }    
+    
+    /* Profiling? */
+#if defined(PROFILE_MAIN_LOOP)
+    int nCurY = 60;
+    float fTotal = 0;
+    for(int i=0;i<HighPrecisionTimer::numTimeChecks();i++) {
+      HighPrecisionTimer::TimeCheck *pTc = HighPrecisionTimer::getTimeCheck(i);
+      if(pTc != NULL) {
+        fTotal += pTc->fTime;
+      }
+    }
+    for(int i=0;i<HighPrecisionTimer::numTimeChecks();i++) {
+      char cTemp[256];
+      HighPrecisionTimer::TimeCheck *pTc = HighPrecisionTimer::getTimeCheck(i);
+      if(pTc != NULL) {
+        sprintf(cTemp,"%-20s : %.0f",pTc->cWhere,pTc->fTime);
+        drawText(Vector2f(30,nCurY),cTemp);
+        sprintf(cTemp,"%.0f%%",(pTc->fTime * 100) / fTotal);
+        drawText(Vector2f(350,nCurY),cTemp);
+        nCurY += 16;
+      }
+    }
+#endif   
     
     /* Draw mouse cursor */
     if(m_bShowCursor)

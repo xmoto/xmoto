@@ -1,5 +1,9 @@
 => for 0.2.3
-
+* Sometimes when the edges of the levels are reached (for instance when being at a corner of a level), the
+  framerate drops A LOT (game gets unplayable). Can't figure out why.
+  
+* Optimize minimap rendering. On some levels (very smooth ones for instance) it takes much longer to
+  render the minimap than the actual level.
 
 => try to remove Level[2048] to solve the pb
 
@@ -46,6 +50,7 @@ required:
 Fatal signal: Segmentation Fault (SDL Parachute Deployed)
 *** glibc detected *** corrupted double-linked list: 0xb7a6a358 ***
 it behaves sometimes since i modified the pack lists menus
+** I got that too (when I completed a level I hadn't completed before)
 
 * associate F8 to the -nowww switch (enable/disable network)
  - when a connection fails, disable network and display a message :

@@ -58,6 +58,9 @@ Build configuration
    exception occurs */
 //#define BREAK_ON_EXCEPTION
 
+/* PROFILE_MAIN_LOOP - Will profile main loop (Currently only Win32) */
+//#define PROFILE_MAIN_LOOP
+
 /*=============================================================================
 Misc, don't touch
 =============================================================================*/
