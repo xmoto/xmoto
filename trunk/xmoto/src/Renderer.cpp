@@ -87,7 +87,7 @@ namespace vapp {
         Vector2f Center;
         Sprite *pSprite;
         Texture *pTexture;
-        GLuint GLName = 0;
+        GLuint GLName = 0;        
         
         pTexture = NULL;
         
@@ -121,8 +121,6 @@ namespace vapp {
             GLName = pTexture->nID;
           }
         }
-        
-        /* TODO: introduce non-static geoms and handle them differently */
         
         /* Define its box */
         Vector2f PBoxMin = (ConvexBlocks[j]->Vertices()[0]->Position() + Center);

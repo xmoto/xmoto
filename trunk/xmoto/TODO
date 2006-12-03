@@ -1,6 +1,7 @@
 => for 0.2.3
 * Sometimes when the edges of the levels are reached (for instance when being at a corner of a level), the
   framerate drops A LOT (game gets unplayable). Can't figure out why.
+  ** Update: it actually appears that the game gets slower and slower while running.
   
 * Optimize minimap rendering. On some levels (very smooth ones for instance) it takes much longer to
   render the minimap than the actual level.
