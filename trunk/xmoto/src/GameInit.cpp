@@ -562,8 +562,7 @@ namespace vapp {
       delete m_pCredits;
   
     deleteLevelsPacks();
-    deleteLevels();
-    
+    deleteLevels();    
 
     m_GameStats.saveXML("stats.xml");
       
@@ -593,6 +592,7 @@ namespace vapp {
     Sound::uninit();
 
     m_Config.saveFile();
+
     m_Profiles.saveFile();
 
     if(!isNoGraphics()) {

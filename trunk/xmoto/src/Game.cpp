@@ -1994,12 +1994,14 @@ namespace vapp {
   int GameApp::_Pack_getNumberOfLevelsFinished(LevelPack *p_levelPack) {
     Level *v_level;
     int n;
+    
+    if(m_pPlayer == NULL) return 0;
 
     n = 0;
     for(int i=0; i<p_levelPack->Levels.size(); i++) {
       v_level = p_levelPack->Levels[i];
       if(m_Profiles.isLevelCompleted(m_pPlayer->PlayerName, v_level->Id())) {
-  n++;
+        n++;
       }
     }
     return n;
