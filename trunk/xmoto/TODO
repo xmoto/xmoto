@@ -5,7 +5,9 @@
   
 * Optimize minimap rendering. On some levels (very smooth ones for instance) it takes much longer to
   render the minimap than the actual level.
-
+  
+* Sometimes memory are leaked from the event queue in m_MotoGame
+  
 => try to remove Level[2048] to solve the pb
 
 F5 then quit

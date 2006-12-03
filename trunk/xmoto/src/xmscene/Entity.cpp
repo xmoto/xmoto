@@ -219,9 +219,9 @@ bool ParticlesSourceSmoke::updateToTime(float i_time, Vector2f i_gravity) {
     /* Generate smoke */
     if(randomNum(0,5) < 1) {
       if(randomNum(0,1) < 0.5) {
-	addParticle(Vector2f(randomNum(-0.6,0.6), randomNum(0.2,0.6)), i_time + 10.0, "Smoke1");
+	      addParticle(Vector2f(randomNum(-0.6,0.6), randomNum(0.2,0.6)), i_time + 10.0, "Smoke1");
       } else {
-	addParticle(Vector2f(randomNum(-0.6,0.6), randomNum(0.2,0.6)), i_time + 10.0, "Smoke2");
+	      addParticle(Vector2f(randomNum(-0.6,0.6), randomNum(0.2,0.6)), i_time + 10.0, "Smoke2");
       }
     }
     return true;

@@ -40,6 +40,7 @@ Level::Level() {
 }
 
 Level::~Level() {
+  unloadToPlay();
   unloadLevelData();
 }
 

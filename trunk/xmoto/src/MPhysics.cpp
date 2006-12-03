@@ -548,14 +548,14 @@ namespace vapp {
     /* Player head */
     if(m_BikeS.Dir == DD_RIGHT) {
       if(_IntersectHeadLevel(m_BikeS.HeadP,m_BikeP.fHeadSize,m_PrevActiveHead)) {
-  createGameEvent(new MGE_PlayerDies(getTime(), false));
+        createGameEvent(new MGE_PlayerDies(getTime(), false));
       }
       
       m_PrevActiveHead = m_BikeS.HeadP;
     }
     else if(m_BikeS.Dir == DD_LEFT) {
       if(_IntersectHeadLevel(m_BikeS.Head2P,m_BikeP.fHeadSize,m_PrevActiveHead)) {
-  createGameEvent(new MGE_PlayerDies(getTime(), false));
+        createGameEvent(new MGE_PlayerDies(getTime(), false));
       }
 
       m_PrevActiveHead = m_BikeS.Head2P;
