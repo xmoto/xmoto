@@ -39,19 +39,19 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Theme.h"
 class ThemeChoice;
 
-#define DEFAULT_WEBHIGHSCORES_URL         "http://xmoto.free.fr/highscores.xml"
+#define DEFAULT_WEBHIGHSCORES_URL         "http://xmoto.tuxfamily.org/highscores.xml"
 #define DEFAULT_WEBHIGHSCORES_FILENAME    "webhighscores.xml"
 #define DEFAULT_TRANSFERT_TIMEOUT         240
 #define DEFAULT_TRANSFERT_CONNECT_TIMEOUT 7
-#define DEFAULT_WEBLEVELS_URL             "http://xmoto.free.fr/levels.xml"
+#define DEFAULT_WEBLEVELS_URL             "http://xmoto.tuxfamily.org/levels.xml"
 #define DEFAULT_WEBLEVELS_FILENAME        "weblevels.xml"
 #define DEFAULT_WEBLEVELS_DIR             "downloaded"
-#define DEFAULT_WEBTHEMES_URL             "http://xmoto.free.fr/themes.xml"
+#define DEFAULT_WEBTHEMES_URL             "http://xmoto.tuxfamily.org/themes.xml"
 #define DEFAULT_WEBTHEMES_FILENAME        "webthemes.xml"
-#define DEFAULT_WEBTHEMES_SPRITESURLBASE  "http://xmoto.free.fr/sprites"
-#define DEFAULT_UPLOADREPLAY_URL          "http://xmoto.free.fr/tools/UploadReplay.php"
+#define DEFAULT_WEBTHEMES_SPRITESURLBASE  "http://xmoto.tuxfamily.org/sprites"
+#define DEFAULT_UPLOADREPLAY_URL          "http://xmoto.tuxfamily.org/tools/UploadReplay.php"
 #define DEFAULT_REPLAYUPLOAD_MSGFILE      "UploadReplayMsg.xml"
-#define DEFAULT_WEBROOMS_URL              "http://xmoto.free.fr/rooms.xml"
+#define DEFAULT_WEBROOMS_URL              "http://xmoto.tuxfamily.org/rooms.xml"
 #define DEFAULT_WEBROOMS_FILENAME         "webrooms.xml"
 #define DEFAULT_WEBROOM_ID                "1"
 #define DEFAULT_WEBROOM_NAME              "WR"
