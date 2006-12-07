@@ -1046,8 +1046,16 @@ namespace vapp {
         Sprite *pSprite;
         pSprite = getParent()->m_theme.getSprite(SPRITE_TYPE_TEXTURE, Blocks[i]->Texture());
         if(pSprite != NULL) {
-          pTexture = pSprite->getTexture();
-        }
+	  try {
+	    pTexture = pSprite->getTexture();
+	  } catch(Exception &e) {
+	    Log("** Warning ** : Texture '%s' not found!", Blocks[i]->Texture().c_str());
+	    getGameObject()->gameMessage(GAMETEXT_MISSINGTEXTURES,true);  
+	  }
+        } else {
+	  Log("** Warning ** : Texture '%s' not found!", Blocks[i]->Texture().c_str());
+	  getGameObject()->gameMessage(GAMETEXT_MISSINGTEXTURES,true); 
+	}
       }
       GLuint GLName = 0;
       if(pTexture != NULL) GLName = pTexture->nID;
