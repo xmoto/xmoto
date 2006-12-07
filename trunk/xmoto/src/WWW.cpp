@@ -464,6 +464,7 @@ void FSWeb::downloadFile(const std::string &p_local_file,
   curl_easy_setopt(v_curl, CURLOPT_CONNECTTIMEOUT, DEFAULT_TRANSFERT_CONNECT_TIMEOUT);
   curl_easy_setopt(v_curl, CURLOPT_USERAGENT,  v_www_agent.c_str());
   curl_easy_setopt(v_curl, CURLOPT_FAILONERROR, 1);
+  curl_easy_setopt(v_curl, CURLOPT_FOLLOWLOCATION, 1);
 
   /* set proxy settings */
   if(p_proxy_settings != NULL) {
@@ -593,6 +594,7 @@ void FSWeb::uploadReplay(std::string p_replayFilename,
   curl_easy_setopt(v_curl, CURLOPT_WRITEFUNCTION, FSWeb::writeData);
   curl_easy_setopt(v_curl, CURLOPT_USERAGENT,  v_www_agent.c_str());
   curl_easy_setopt(v_curl, CURLOPT_FAILONERROR, 1);
+  curl_easy_setopt(v_curl, CURLOPT_FOLLOWLOCATION, 1);
 
   /* set proxy settings */
   if(p_proxy_settings != NULL) {

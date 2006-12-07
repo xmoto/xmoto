@@ -1898,7 +1898,6 @@ namespace vapp {
     _UpdateLevelPackList();
     _CreateLevelPackLevelList();
     _UpdateLevelLists();
-
   }
 
   void GameApp::reloadTheme() {

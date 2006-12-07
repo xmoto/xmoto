@@ -1,11 +1,7 @@
 => for 0.2.3
-* open a pack, close it, F5
 * random not really random...
-* yes for all when updating levels => to be tested
 * reload theme done, require tests, and some sprites (like mouse, main
    menu background) are not updated i suppose
-* xmoto -level adventure => no textures (Render.cpp line 330, because
-   there is a texture of a background block that doesn't exist)
 * Sometimes when the edges of the levels are reached (for instance when being at a corner of a level), the
   framerate drops A LOT (game gets unplayable). Can't figure out why.
   ** Update: it actually appears that the game gets slower and slower while running.
@@ -14,24 +10,6 @@
   render the minimap than the actual level.
   
 * Sometimes memory are leaked from the event queue in m_MotoGame
-
-F5 then quit
-Program received signal SIGSEGV, Segmentation fault.
-[Switching to Thread -1227438384 (LWP 6961)]
-0xb7aa3a2e in free () from /lib/tls/i686/cmov/libc.so.6
-(gdb) bt
-#0  0xb7aa3a2e in free () from /lib/tls/i686/cmov/libc.so.6
-#1  0xb7c52fc1 in operator delete () from /usr/lib/libstdc++.so.6
-#2  0xb7c2fd3d in std::string::_Rep::_M_destroy () from /usr/lib/libstdc++.so.6
-#3  0x0807e32b in ~WebHighscore (this=0xffe8ffd6)
-    at /usr/lib/gcc/i486-linux-gnu/4.1.2/../../../../include/c++/4.1.2/bits/basic_string.h:233
-#4  0x0807e51f in WebRoom::cleanHash (this=0x830d3e8) at WWW.cpp:255
-#5  0x0807e7aa in ~WebRoom (this=0x830d3e8) at WWW.cpp:226
-#6  0x08143b9e in vapp::GameApp::userShutdown (this=0xbf94a75c) at GameInit.cpp:551
-#7  0x0804fe42 in vapp::App::_Uninit (this=0xbf94a75c) at VApp.cpp:544
-#8  0x08052b7b in vapp::App::run (this=0xbf94a75c, nNumArgs=1, ppcArgs=0xbf998354) at VApp.cpp:254
-#9  0x0809ef21 in main (nNumArgs=1, ppcArgs=0xbf998354) at GameMain.cpp:52
-(gdb)   
 
 render entity by Z
 render blocks by Z
