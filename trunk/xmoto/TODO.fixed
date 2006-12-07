@@ -5,7 +5,6 @@ Fatal signal: Segmentation Fault (SDL Parachute Deployed)
 it behaves sometimes since i modified the pack lists menus
 ** I got that too (when I completed a level I hadn't completed before)
 ** 99% sure it's fixed now. (m_pActiveLevelPack was freed but still referenced)
-
 * BUG on makefile
 I got a bug in the gentoo bugzilla:
 http://bugs.gentoo.org/147725 xmoto-0.2.1 fails with MAKEOPTS="-j2" or higher.
@@ -26,7 +25,7 @@ revert the change if no better solution is found?
 * rversion is not saved correctly
 * no immediate just dead menu
 * BUG: Replays break on Linux/PPC. Screenshot: http://vasi.webhop.org/files/ports/xmoto/xmoto-bug.jpg
-	* Probably fixed, waiting for verification by Marcel
+  * Probably fixed, waiting for verification by Marcel
 
 * BUG (06/10/2006) : about Linux/PPC it could be a ode bug (man not displayed) : hand
    position returned on updatePhysics() are (infinity, 0.0) for the
@@ -43,6 +42,9 @@ of existing types, this line causes a segfault (see replay 7097)
 * remove the "level packs" button, remove the "internal" and "external" tabs and replace them by "All levels" tab and "Level pack" tab and make internal level a pack
 * have a scrollbar for the lists
 * add a counter of uncompleted levels (priority=medium)
+* BUG : when death is disabled : you cannot see the message "press esc or enter"
+* add a button view the highscore in the pack window
+* virtual packs : pack of level i don't have the highscore, ...
 
 Since 0.2.1
 * BUG : on bad levels loading

@@ -517,7 +517,7 @@ namespace vapp {
     if(getGameObject()->isGhostActive()) {
       /* Render ghost - ugly mode? */
       if(m_bUglyMode) {
-        _RenderBike(getGameObject()->getGhostBikeState(), getGameObject()->getBikeParams(), m_theme->getGhostTheme());
+        _RenderBike(getGameObject()->getGhostBikeState(), &(getGameObject()->getBikeState()->Parameters()), m_theme->getGhostTheme());
       }    
       else {
         /* No not ugly, fancy! Render into overlay? */      
@@ -525,7 +525,7 @@ namespace vapp {
           m_Overlay.beginRendering();
           m_Overlay.fade(0.15);
         }
-        _RenderBike(getGameObject()->getGhostBikeState(), getGameObject()->getBikeParams(), m_theme->getGhostTheme());
+        _RenderBike(getGameObject()->getGhostBikeState(), &(getGameObject()->getBikeState()->Parameters()), m_theme->getGhostTheme());
         
         if(m_bGhostMotionBlur && getParent()->useFBOs()) {
           GLuint nOverlayTextureID = m_Overlay.endRendering();
@@ -554,7 +554,7 @@ namespace vapp {
 #endif
 
     /* ... followed by the bike ... */
-    _RenderBike(getGameObject()->getBikeState(), getGameObject()->getBikeParams(), m_theme->getPlayerTheme());
+    _RenderBike(getGameObject()->getBikeState(), &(getGameObject()->getBikeState()->Parameters()), m_theme->getPlayerTheme());
     
     if(m_Quality == GQ_HIGH && !m_bUglyMode) {
       /* Render particles (front!) */    
@@ -1297,14 +1297,14 @@ namespace vapp {
   ===========================================================================*/
   void GameRenderer::_RenderBackground(void) { 
     MotoGame *pGame = getGameObject();
-    
+
     /* Render background blocks */
     std::vector<Block *> Blocks = pGame->getLevelSrc()->Blocks();
 
     for(int i=0;i<Blocks.size();i++) {
       if(Blocks[i]->isDynamic() == false && Blocks[i]->isBackground()) {
         Vector2f Center;
-        Texture *pTexture;
+        Texture *pTexture = NULL;
         GLuint GLName = 0;
         
         /* Main body */      
@@ -1319,14 +1319,15 @@ namespace vapp {
             pTexture = NULL;
           }
         } else {
-          pTexture = NULL;
+	  Log("** Warning ** : Texture '%s' not found!", Blocks[i]->Texture().c_str());
+	  getGameObject()->gameMessage(GAMETEXT_MISSINGTEXTURES,true);
         }
         if(pTexture != NULL) {GLName = pTexture->nID;}
         
-        glBindTexture(GL_TEXTURE_2D,GLName);
+	glBindTexture(GL_TEXTURE_2D,GLName);
         glEnable(GL_TEXTURE_2D);
         glBegin(GL_POLYGON);
-        glColor3f(1,1,1);
+	glColor3f(1,1,1);
         
         for(int j=0; j<Blocks[i]->Vertices().size(); j++) {
           glTexCoord2f((Center.x+Blocks[i]->Vertices()[j]->Position().x) * 0.25,

@@ -173,11 +173,12 @@ namespace vapp {
 	UI window
   ===========================================================================*/
   enum UIMsgBoxButton {
-    UI_MSGBOX_NOTHING   = 0,    
-    UI_MSGBOX_OK        = 1,
-    UI_MSGBOX_CANCEL    = 2,
-    UI_MSGBOX_YES       = 4,
-    UI_MSGBOX_NO        = 8
+    UI_MSGBOX_NOTHING     = 0,    
+    UI_MSGBOX_OK          = 1,
+    UI_MSGBOX_CANCEL      = 2,
+    UI_MSGBOX_YES         = 4,
+    UI_MSGBOX_NO          = 8,
+    UI_MSGBOX_YES_FOR_ALL = 16
   };
   
   class UIWindow {

@@ -82,17 +82,6 @@ namespace vapp {
     _CreateThemesList((UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:THEMES_LIST"));
   }
 
-  void GameApp::deleteLevelsIndex() {
-    remove(LevelIndexFileName().c_str());
-  }
-
-  void GameApp::deleteLevelsPacks() {
-    for(int i=0;i<m_LevelPacks.size();i++) {
-      delete m_LevelPacks[i];
-    }
-    m_LevelPacks.clear();
-  }
-
   /*===========================================================================
   Change game state
   ===========================================================================*/
@@ -137,7 +126,7 @@ namespace vapp {
             Log("** Warning ** : No valid level identifier could be extracted from the replay: %s",m_PlaySpecificReplay.c_str());
             char cBuf[256];
             sprintf(cBuf,GAMETEXT_REPLAYNOTFOUND,m_PlaySpecificReplay.c_str());
-            setState(GS_MENU);
+      setState(m_StateAfterPlaying);
             notifyMsg(cBuf);
             // throw Exception("invalid replay");
           }
@@ -151,21 +140,26 @@ namespace vapp {
             }
       
             /* Fine, open the level */
-            Level *pLevelSrc = _FindLevelByID(LevelID);
-            if(pLevelSrc == NULL) {
+            Level *pLevelSrc;
+
+      try {
+        pLevelSrc = &(m_levelsManager.LevelById(LevelID));
+      } catch(Exception &e) {
               Log("** Warning ** : level '%s' specified by replay '%s' not found",LevelID.c_str(),m_PlaySpecificReplay.c_str());
               
               char cBuf[256];
               sprintf(cBuf,GAMETEXT_LEVELREQUIREDBYREPLAY,LevelID.c_str());
-              setState(GS_MENU);
+        setState(m_StateAfterPlaying);
               notifyMsg(cBuf);                        
+        break;
             }
-            else if(pLevelSrc->isXMotoTooOld()) {
+
+            if(pLevelSrc->isXMotoTooOld()) {
               Log("** Warning ** : level '%s' specified by replay '%s' requires newer X-Moto",LevelID.c_str(),m_PlaySpecificReplay.c_str());
               
               char cBuf[256];
               sprintf(cBuf,GAMETEXT_NEWERXMOTOREQUIRED,pLevelSrc->getRequiredVersion().c_str());
-              setState(GS_MENU);
+        setState(m_StateAfterPlaying);
               notifyMsg(cBuf);                        
             }
             else {    
@@ -203,7 +197,7 @@ namespace vapp {
             }          
           }
         } catch(Exception &e) {
-          setState(GS_MENU);
+    setState(m_StateAfterPlaying);
           notifyMsg(splitText(e.getMsg(), 50));   
         }
         break;
@@ -230,16 +224,18 @@ namespace vapp {
         break;
       }
       case GS_PLAYING: {
-        Level *pLevelSrc = _FindLevelByID(m_PlaySpecificLevel);
-        if(pLevelSrc != NULL) {
+  Level *pLevelSrc;
+
+  try {
+    pLevelSrc = &(m_levelsManager.LevelById(m_PlaySpecificLevel));
           m_MotoGame.playLevel(m_pGhostReplay, pLevelSrc, false);
           m_State = GS_PLAYING;        
           m_nFrame = 0;
-        } else {
+  } catch(Exception &e) {
           Log("** Warning ** : level '%s' not found",m_PlaySpecificLevel.c_str());
           char cBuf[256];
           sprintf(cBuf,GAMETEXT_LEVELNOTFOUND,m_PlaySpecificLevel.c_str());
-          setState(GS_MENU);
+    setState(m_StateAfterPlaying);
           notifyMsg(cBuf);
         }
         break;
@@ -404,8 +400,10 @@ namespace vapp {
   }
 
   std::string GameApp::getConfigThemeName(ThemeChoicer *p_themeChoicer) {
-    if(p_themeChoicer->ExistThemeName(m_currentThemeName)) {
-      return m_currentThemeName;
+    std::string v_currentThemeName = m_Config.getString("Theme");
+
+    if(p_themeChoicer->ExistThemeName(v_currentThemeName)) {
+      return v_currentThemeName;
     }
     /* theme of the config file doesn't exist */
     return THEME_DEFAULT_THEMENAME;
@@ -462,7 +460,6 @@ namespace vapp {
     m_bEnableEngineSound = m_Config.getBool("EngineSoundEnable");
     m_bEnableContextHelp = m_Config.getBool("ContextHelp");
     m_bEnableMenuMusic = m_Config.getBool("MenuMusic");
-    m_currentThemeName   = m_Config.getString("Theme");
     m_bEnableInitZoom = m_Config.getBool("InitZoom");
     m_bEnableDeathAnim = m_Config.getBool("DeathAnim");
 
@@ -553,9 +550,9 @@ namespace vapp {
 
     if(nKey == SDLK_F5) {
       if(m_State == GS_MENU) {
-	deleteLevels();
-	loadLevelsFromFiles(false);
-	_UpdateLevelsLists();
+  _SimpleMessage(GAMETEXT_RELOADINGLEVELS, &m_DownloadMsgBoxRect);
+  m_levelsManager.reloadLevelsFromFiles(m_bEnableLevelCache);
+  _UpdateLevelsLists();
       }
     }
     
@@ -662,7 +659,7 @@ namespace vapp {
             m_MotoGame.endLevel();
             m_InputHandler.resetScriptKeyHooks();                      
             m_Renderer.unprepareForNewLevel();
-            setState(GS_MENU);            
+      setState(m_StateAfterPlaying);
             break;          
           case SDLK_RIGHT:
             /* Right arrow key: fast forward */
@@ -672,7 +669,7 @@ namespace vapp {
           case SDLK_LEFT:
             /* Left arrow key: rewind */
               if(_IsReplayScripted(m_pReplay) == false) {
-		m_MotoGame.getLevelSrc()->clearAfterRewind();
+    m_MotoGame.getLevelSrc()->clearAfterRewind();
                 m_pReplay->fastrewind(1);
               }
             break;
@@ -851,17 +848,6 @@ namespace vapp {
       break;
     }
   }
-    
-  /*===========================================================================
-  Find a level by ID
-  ===========================================================================*/
-  Level *GameApp::_FindLevelByID(std::string ID) {
-    /* Look through all level sources... */
-    for(unsigned int i=0; i<m_levels.size(); i++) {
-      if(m_levels[i]->Id() == ID) return m_levels[i];
-    }
-    return NULL; /* nothing */
-  }
       
   /*===========================================================================
   Notification popup
@@ -913,106 +899,16 @@ namespace vapp {
     }
   }
 
-  /*===========================================================================
-  Level packs
-  ===========================================================================*/
-  void GameApp::_UpdateLevelPackManager(Level *pLevelSrc) {
-    /* Already a known level pack? */
-    LevelPack *pPack = _FindLevelPackByName(pLevelSrc->Pack());
-    if(pPack == NULL) {
-      /* No, register it */
-      pPack = new LevelPack;
-      pPack->Name = pLevelSrc->Pack();
-      m_LevelPacks.push_back(pPack);
-      
-      /* Set default hints */
-      pPack->bShowTimes = true;
-      pPack->bShowWebTimes = true;
-      
-      /* Try to find a hints file for this level pack */
-      std::vector<std::string> LpkFiles = FS::findPhysFiles("Levels/*.lpk",true);
-      for(int i=0;i<LpkFiles.size();i++) {
-        XMLDocument XML; 
-        XML.readFromFile(LpkFiles[i]);
-        TiXmlDocument *pDoc = XML.getLowLevelAccess();
-        
-        if(pDoc != NULL) {
-          TiXmlElement *pLpkHintsElem = pDoc->FirstChildElement("lpkhints");
-          if(pLpkHintsElem != NULL) {
-            /* For this level pack? */
-            const char *pcFor = pLpkHintsElem->Attribute("for");
-            if(pcFor != NULL && pPack->Name == pcFor) {
-              /* Yup. Extract hints */
-              for(TiXmlElement *pHintElem = pLpkHintsElem->FirstChildElement("hint");
-                  pHintElem != NULL; pHintElem=pHintElem->NextSiblingElement("hint")) {
-                /* Check for known hints... */
-                const char *pc;
-
-                pc = pHintElem->Attribute("show_times");
-                if(pc != NULL) {
-                  pPack->bShowTimes = atoi(pc)==1;
-                }
-
-                pc = pHintElem->Attribute("show_wtimes");
-                if(pc != NULL) {
-                  pPack->bShowWebTimes = atoi(pc)==1;
-                }
-              }
-            }              
-          }
-        }
-      }
-    }
-    
-    /* Add level to pack */
-    pPack->Levels.push_back(pLevelSrc);
-  }
-
-  LevelPack *GameApp::_FindLevelPackByName(const std::string &Name) {
-    /* Look for level pack in list */
-    for(int i=0;i<m_LevelPacks.size();i++) {
-      if(m_LevelPacks[i]->Name == Name) return m_LevelPacks[i];
-    }
-    return NULL;
-  }
- 
   std::string GameApp::_DetermineNextLevel(Level *pLevelSrc) {
-    UIList *pList = NULL;
-
-    UIList *pPlayNewLevelsList = (UIList *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:NEWLEVELS_TAB:NEWLEVELS_LIST");
-    UIList *pPlayAllLevelsList = (UIList *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:ALLLEVELS_TAB:ALLLEVELS_LIST");
-    UIWindow *pPlayNewLevelsTab = (UIList *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:NEWLEVELS_TAB");
-    UIWindow *pPlayAllLevelsTab = (UIList *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:ALLLEVELS_TAB");
-
-    if(pPlayNewLevelsTab->isHidden() == false) {
-      pList = pPlayNewLevelsList;
-    }
-    if(pPlayAllLevelsTab->isHidden() == false) {
-      pList = pPlayAllLevelsList;
-    }
-    
-    /* use lists */
-    if(pList != NULL) {
-      for(int i=0;i<pList->getEntries().size()-1;i++) {
-  if(pList->getEntries()[i]->pvUser == (void *)pLevelSrc) {
-    return ((Level *)pList->getEntries()[i+1]->pvUser)->Id();
-  }
-      }
+    if(m_currentPlayingList == NULL) {
       return "";
     }
 
-    /* no list opened, find the next one of the pack */
-    LevelPack *pPack = _FindLevelPackByName(pLevelSrc->Pack());
-    if(pPack != NULL) {
-      /* Determine next then */
-      for(int j=0; j<pPack->Levels.size()-1; j++) {
-  if(pPack->Levels[j] == pLevelSrc) {
-    return pPack->Levels[j+1]->Id();
-  }
+    for(int i=0;i<m_currentPlayingList->getEntries().size()-1;i++) {
+      if(m_currentPlayingList->getEntries()[i]->pvUser == (void *)pLevelSrc) {
+  return ((Level *)m_currentPlayingList->getEntries()[i+1]->pvUser)->Id();
       }
-      return "";
     }
-
     return "";
   }
   
@@ -1132,6 +1028,7 @@ namespace vapp {
       clearCancelAsSoonAsPossible();
       m_themeChoicer->updateThemeFromWWW(pThemeChoice);
       _UpdateThemesLists();
+      reloadTheme(); /* reload the theme */
       if(bNotify) {
   notifyMsg(GAMETEXT_THEMEUPTODATE);
       }
@@ -1203,14 +1100,14 @@ namespace vapp {
         const std::vector<std::string> LvlFiles = m_pWebLevels->getNewDownloadedLevels();
         
         Log("Loading new levels...");
-        int nOldNum = m_levels.size();
-        loadLevelsFromLvl(LvlFiles);
-        Log(" %d new level%s loaded", m_levels.size()-nOldNum,(m_levels.size()-nOldNum)==1?"":"s");
+        int nOldNum = m_levelsManager.Levels().size();
+        m_levelsManager.loadLevelsFromLvl(LvlFiles, m_bEnableLevelCache);
+        Log(" %d new level%s loaded", m_levelsManager.Levels().size()-nOldNum,(m_levelsManager.Levels().size()-nOldNum)==1?"":"s");
         
         /* Add new levels to GUI list */
         if(m_pPlayNewLevelsList != NULL) {
-          for(int i=nOldNum;i<m_levels.size();i++) {
-            m_pPlayNewLevelsList->addLevel(m_levels[i], m_pPlayer, &m_Profiles, m_pWebHighscores, std::string("New: "));
+          for(int i=nOldNum;i<m_levelsManager.Levels().size();i++) {
+            m_pPlayNewLevelsList->addLevel(m_levelsManager.Levels()[i], m_pPlayer, &m_Profiles, m_pWebHighscores, std::string("New: "));
           }
         }
         
@@ -1224,18 +1121,18 @@ namespace vapp {
         for(int i=0;i<UpdatedLvlFiles.size();i++) {
           try {
             /* Find levels by file names */
-            for(int j=0;j<m_levels.size();j++) {
-              if(m_levels[j]->FileName() == UpdatedLvlFiles[i]) {
+            for(int j=0;j<m_levelsManager.Levels().size();j++) {
+              if(m_levelsManager.Levels()[j]->FileName() == UpdatedLvlFiles[i]) {
                 /* Found it... */
-                m_levels[j]->loadReducedFromFile(m_bEnableLevelCache);
+                m_levelsManager.Levels()[j]->loadReducedFromFile(m_bEnableLevelCache);
                 
                 /* Failed to load due to old xmoto? */  
-                if(m_levels[j]->isXMotoTooOld())
+                if(m_levelsManager.Levels()[j]->isXMotoTooOld())
                   nTooOldXMoto++;
                               
                 /* Add it to list of new levels as "updated" */
                 if(m_pPlayNewLevelsList != NULL) {
-                  m_pPlayNewLevelsList->addLevel(m_levels[j], m_pPlayer, &m_Profiles, m_pWebHighscores, std::string("Updated: "));
+                  m_pPlayNewLevelsList->addLevel(m_levelsManager.Levels()[j], m_pPlayer, &m_Profiles, m_pWebHighscores, std::string("Updated: "));
                 }
                 
                 nReloaded++;
@@ -1255,9 +1152,9 @@ namespace vapp {
           Log(" %d not reloaded",UpdatedLvlFiles.size() - nReloaded);        
         
         /* Update level lists */
-	_UpdateLevelsLists();
-	deleteLevelsIndex();
-	createLevelsIndex(); /* recreate the level index */
+  _UpdateLevelsLists();
+  m_levelsManager.deleteLevelsIndex();
+  m_levelsManager.createLevelsIndex(); /* recreate the level index */
       }            
     #endif
   }
@@ -1328,17 +1225,23 @@ namespace vapp {
 #if defined(SUPPORT_WEBACCESS)
         
   bool GameApp::shouldLevelBeUpdated(const std::string &LevelID) {
+    if(m_updateAutomaticallyLevels) {
+      return true;
+    }
+
     /* Hmm... ask user whether this level should be updated */
     bool bRet = true;
     
-    Level *pLevel = _FindLevelByID(LevelID);
+    Level *pLevel;
+
+    pLevel = &(m_levelsManager.LevelById(LevelID));
     if(pLevel != NULL) {
       bool bDialogBoxOpen = true;
       
       char cBuf[1024];
       sprintf(cBuf,(std::string(GAMETEXT_WANTTOUPDATELEVEL) + "\n(%s)").c_str(),pLevel->Name().c_str(),
               pLevel->FileName().c_str());
-      UIMsgBox *pMsgBox = m_Renderer.getGUI()->msgBox(cBuf,(UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
+      UIMsgBox *pMsgBox = m_Renderer.getGUI()->msgBox(cBuf,(UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO|UI_MSGBOX_YES_FOR_ALL));
       
       while(bDialogBoxOpen) {
         SDL_PumpEvents();
@@ -1363,8 +1266,11 @@ namespace vapp {
         
         UIMsgBoxButton Button = pMsgBox->getClicked();
         if(Button != UI_MSGBOX_NOTHING) {
-          if(Button != UI_MSGBOX_YES) {
+          if(Button == UI_MSGBOX_NO) {
             bRet = false;
+          }
+          if(Button == UI_MSGBOX_YES_FOR_ALL) {
+      m_updateAutomaticallyLevels = true;
           }
           bDialogBoxOpen = false;
         }
@@ -1382,12 +1288,12 @@ namespace vapp {
     drawImage(Vector2f(nMX-2,nMY-2),Vector2f(nMX+30,nMY+30),m_pCursor);
   }
 
-        SDL_GL_SwapBuffers();            
-      }    
+        SDL_GL_SwapBuffers();
+      }
       
       delete pMsgBox;
       setTaskProgress(m_fDownloadTaskProgressLast);
-    }    
+    }  
     return bRet;        
   }
         
@@ -1447,30 +1353,18 @@ namespace vapp {
     }    
   }
   
-  bool GameApp::doesLevelExist(const std::string &LevelID) {
-    return _FindLevelByID(LevelID) != NULL;
-  }
-  
   std::string GameApp::levelPathForUpdate(const std::string &p_LevelId) {
-    Level *pLevel = _FindLevelByID(p_LevelId);
-    if(pLevel != NULL) {
-      /* If level path is not absolute, this level is not updatable */
-      if(FS::isPathAbsolute(pLevel->FileName()))
-        return pLevel->FileName();
-    }
-    return "";
+    return m_levelsManager.LevelById(p_LevelId).PathForUpdate();
   }
   
   std::string GameApp::levelMD5Sum(const std::string &LevelID) {
-    Level *pLevel = _FindLevelByID(LevelID);
-    if(pLevel != NULL) {
-      return pLevel->Checksum();
-    }
-
-    /* Nothing */
-    return "";
+    return m_levelsManager.LevelById(LevelID).Checksum();
   }
     
+  bool GameApp::doesLevelExist(const std::string &p_LevelId) {
+    return m_levelsManager.doesLevelExist(p_LevelId);
+  }
+
 #endif
 
 #if defined(SUPPORT_WEBACCESS)  
@@ -1509,18 +1403,10 @@ namespace vapp {
     }
   }
 #endif
-
-    bool GameApp::_IsReplayScripted(Replay *p_pReplay) {
-      Level *pLevelSrc;
-
-      if(p_pReplay != NULL) {
-  pLevelSrc = _FindLevelByID(p_pReplay->getLevelId());
-  if(pLevelSrc != NULL) {
-    return pLevelSrc->isScripted();
+  
+  bool GameApp::_IsReplayScripted(Replay *p_pReplay) {
+    return m_levelsManager.LevelById(p_pReplay->getLevelId()).isScripted();
   }
-      }
-      return false; /* throw exception ? */
-    }
 
 #if defined(ALLOW_GHOST)
   std::string GameApp::_getGhostReplayPath_bestOfThePlayer(std::string p_levelId, float &p_time) {
@@ -1723,22 +1609,24 @@ namespace vapp {
     }
       
     /* Find the level */
-    Level *pLevelSrc = _FindLevelByID(m_PlaySpecificLevel);
-    if(pLevelSrc == NULL) {
+    Level *pLevelSrc;
+    try {
+      pLevelSrc = &(m_levelsManager.LevelById(m_PlaySpecificLevel));
+    } catch(Exception &e) {
       Log("** Warning ** : level '%s' not found",m_PlaySpecificLevel.c_str());
-  
       char cBuf[256];
       sprintf(cBuf,GAMETEXT_LEVELNOTFOUND,m_PlaySpecificLevel.c_str());
-      setState(GS_MENU);
+      setState(m_StateAfterPlaying);
       notifyMsg(cBuf);
-      //          throw Exception("no level");
+      return;
     }
-    else if(pLevelSrc->isXMotoTooOld()) {
+
+    if(pLevelSrc->isXMotoTooOld()) {
       Log("** Warning ** : level '%s' requires newer X-Moto",m_PlaySpecificLevel.c_str());
   
       char cBuf[256];
       sprintf(cBuf,GAMETEXT_NEWERXMOTOREQUIRED,pLevelSrc->getRequiredVersion().c_str());
-      setState(GS_MENU);
+      setState(m_StateAfterPlaying);
       notifyMsg(cBuf);                        
     }
     else {
@@ -1843,14 +1731,14 @@ namespace vapp {
     m_MotoGame.prePlayLevel(m_pGhostReplay, pLevelSrc, m_pReplay, false);
   } catch(Exception &e) {
     Log(std::string("** Warning ** : failed to initialize level\n" + e.getMsg()).c_str());
-    setState(GS_MENU);
+    setState(m_StateAfterPlaying);
     notifyMsg(splitText(e.getMsg(), 50));
     return;
   }
 
   if(!m_MotoGame.isInitOK()) {
     Log("** Warning ** : failed to initialize level");
-    setState(GS_MENU);
+    setState(m_StateAfterPlaying);
     notifyMsg(GAMETEXT_FAILEDTOINITLEVEL);
     return;
   }
@@ -1991,16 +1879,10 @@ namespace vapp {
     m_MotoGame.updateGameMessages();
   }
 
-  int GameApp::_Pack_getNumberOfLevelsFinished(LevelPack *p_levelPack) {
-    Level *v_level;
-    int n;
-    
-    if(m_pPlayer == NULL) return 0;
-
-    n = 0;
-    for(int i=0; i<p_levelPack->Levels.size(); i++) {
-      v_level = p_levelPack->Levels[i];
-      if(m_Profiles.isLevelCompleted(m_pPlayer->PlayerName, v_level->Id())) {
+  int GameApp::getNumberOfFinishedLevelsOfPack(LevelsPack *i_pack) {
+    int n = 0;
+    for(int i=0; i<i_pack->Levels().size(); i++) {
+      if(m_Profiles.isLevelCompleted(m_pPlayer->PlayerName, i_pack->Levels()[i]->Id())) {
         n++;
       }
     }
@@ -2008,43 +1890,23 @@ namespace vapp {
   }
 
   void GameApp::_UpdateLevelsLists() {
-    /* Remember active level pack */
-    std::string ActiveLevelPackName = "";
-    bool bGotActiveLevelPack = false;
-    if(m_pActiveLevelPack != NULL) {
-      ActiveLevelPackName = m_pActiveLevelPack->Name;
-      bGotActiveLevelPack = true;
-    }
-  
-    /* Clean up level packs */
-    deleteLevelsPacks();
+    /* remove reference to levels packs*/
+    m_pActiveLevelPack = NULL;
     
-    /* Reinstance level packs */
-    for(unsigned int i=0; i<m_levels.size(); i++) {
-      _UpdateLevelPackManager(m_levels[i]);
-    }
+    m_levelsManager.rebuildPacks(m_pWebHighscores, m_pPlayer->PlayerName);
     
-    /* Should we re-select a level pack? */
-    if(bGotActiveLevelPack) {
-      for(int i=0;i<m_LevelPacks.size();i++) {
-        if(m_LevelPacks[i]->Name == ActiveLevelPackName) {  
-          /* Got it, break */
-          m_pActiveLevelPack = m_LevelPacks[i];
-          break;
-        }
-      }
-    }
-
-    /* Do Stuff */
-    _CreateLevelPackLevelList();
     _UpdateLevelPackList();
+    _CreateLevelPackLevelList();
     _UpdateLevelLists();
+
   }
 
-  void GameApp::deleteLevels() {
-    for(unsigned int i=0; i<m_levels.size(); i++) {
-      delete m_levels[i];
+  void GameApp::reloadTheme() {
+    try {
+      m_theme.load(m_themeChoicer->getFileName(getConfigThemeName(m_themeChoicer)));
+    } catch(Exception &e) {
+      /* unable to load the theme, load the default one */
+      m_theme.load(m_themeChoicer->getFileName(THEME_DEFAULT_THEMENAME));
     }
-    m_levels.clear();
   }
 }

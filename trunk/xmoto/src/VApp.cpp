@@ -143,11 +143,14 @@ namespace vapp {
     Locales::init();
 #endif
     SwapEndian::Swap_Init();
-    //if(SwapEndian::bigendien) {
-    //  Log("systeme bigendien");
-    //} else {
-    //  Log("systeme littleendien");
-    //}
+
+    srand(time(NULL));
+
+    if(SwapEndian::bigendien) {
+      Log("Systeme is bigendien");
+    } else {
+      Log("Systeme is littleendien");
+    }
 
     try {
       /* Parse command-line arguments */

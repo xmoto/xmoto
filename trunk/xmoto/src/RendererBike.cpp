@@ -32,7 +32,7 @@ namespace vapp {
   /*===========================================================================
   Rendering of the bike
   ===========================================================================*/
-  void GameRenderer::_RenderBike(BikeState *pBike, BikeParams *pBikeParms, BikerTheme *p_theme) {
+  void GameRenderer::_RenderBike(BikeState *pBike, BikeParameters *pBikeParms, BikerTheme *p_theme) {
     Sprite *pSprite;
     Texture *pTexture;
 

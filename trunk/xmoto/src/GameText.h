@@ -288,7 +288,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_REPLAYHELPTEXTNOREWIND(current_speed) _("Stop[esc] ||[space] >>[right key] < >[up/down keys]   Speed:") + current_speed + "x"
   // + "a" + "X"
 #define GAMETEXT_REPLAYNOTFOUND       _("Replay '%s' can't be played!")
-#define GAMETEXT_REPLAYS              _("View Replays")
+#define GAMETEXT_REPLAYS              _("Replays")
 #define GAMETEXT_RESTART              _("Restart This Level")
 #define GAMETEXT_RESUME               _("Resume Playing")
 #define GAMETEXT_ROOM                 _("Room")
@@ -349,6 +349,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_XMOTOLEVELSTATS      _("%d plays, %d deaths, %d finishes, and %d restarts")
 #define GAMETEXT_XSECONDS             _("%d seconds")
 #define GAMETEXT_YES                  _("Yes")
+#define GAMETEXT_YES_FOR_ALL          _("Yes for all")
 #define GAMETEXT_ZOOMIN  	      _("Zoom in")
 #define GAMETEXT_ZOOMINIT 	      _("Reinitialize zoom")
 #define GAMETEXT_ZOOMOUT 	      _("Zoom out")

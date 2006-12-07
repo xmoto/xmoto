@@ -266,7 +266,7 @@ namespace vapp {
       /* Subroutines */
       void _RenderSprites(bool bForeground,bool bBackground);
       void _RenderSprite(Entity *pSprite);
-      void _RenderBike(BikeState *pBike, BikeParams *pBikeParms, BikerTheme *p_theme);
+      void _RenderBike(BikeState *pBike, BikeParameters *pBikeParms, BikerTheme *p_theme);
       void _RenderBlocks(void);
       void _RenderDynamicBlocks(bool bBackground=false);
       void _RenderBackground(void);

@@ -36,6 +36,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GameEvents.h"
 
 #include "xmscene/BasicSceneStructs.h"
+#include "xmscene/BikeController.h"
+#include "xmscene/BikeParameters.h"
+#include "xmscene/BikeAnchors.h"
+#include "xmscene/Bike.h"
+
+/* This is the magic depth factor :)  - tweak to obtain max. stability */
+#define DEPTH_FACTOR    2
 
 class Level;
 
@@ -44,95 +51,6 @@ namespace vapp {
   class MotoGameEvent;
   class Replay;
   class GameRenderer;
-
-  /*===========================================================================
-  Defines
-  ===========================================================================*/
-  
-  /* This is the magic depth factor :)  - tweak to obtain max. stability */
-  #define DEPTH_FACTOR    2
-
-  /*===========================================================================
-  Dummy helper - a point we'd like to track graphically
-  ===========================================================================*/
-  struct DummyHelper {
-    Vector2f Pos;         /* position */
-    float r,g,b;          /* What color? */
-  };
-
-  /*===========================================================================
-  Controller struct
-  ===========================================================================*/
-  struct BikeController {
-    float fDrive;         /* Throttle [0; 1] or Brake [-1; 0] */
-    float fPull;          /* Pull back on the handle bar [0; 1] or push forward on the handle bar [-1; 0] */
-    bool bChangeDir;      /* Change direction */
-    
-    /* Debug-enabled controls */
-    bool bDebugDriveBack; 
-    bool bDebug1;
-  };
-
-  /*===========================================================================
-  Bike params
-  ===========================================================================*/
-  struct BikeParams {
-    /* Geometrical */
-    float WR;             /* Wheel radius */
-    float Ch;             /* Center of mass height */
-    float Wb;             /* Wheel base */
-    float RVx,RVy;        /* Position of rear susp. anchor */
-    float FVx,FVy;        /* Position of front susp. anchor */
-
-    float PSVx,PSVy;      /* Position of player shoulder */
-    float PEVx,PEVy;      /* Position of player elbow */
-    float PHVx,PHVy;      /* Position of player hand */
-    float PLVx,PLVy;      /* Position of player lower body */
-    float PKVx,PKVy;      /* Position of player knee */
-    float PFVx,PFVy;      /* Position of player foot */
-    
-    float fHeadSize;      /* Radius */
-    float fNeckLength;    /* Length of neck */
-        
-    /* Physical */
-    float Wm;             /* Wheel mass [kg] */
-    float BPm;            /* Player body part mass [kg] */
-    float Fm;             /* Frame mass [kg] */
-    float IL;             /* Frame "inertia" length [m] */
-    float IH;             /* Frame "inertia" height [m] */
-        
-    /* Braking/engine performance */
-    float fMaxBrake,fMaxEngine;
-  };
-
-  /*===========================================================================
-  Bike anchor points (relative to center of mass)
-  ===========================================================================*/
-  struct BikeAnchors {
-    Vector2f Tp;          /* Point on the ground, exactly between the wheels */
-    Vector2f Rp;          /* Center of rear wheel */
-    Vector2f Fp;          /* Center of front wheel */
-    Vector2f AR;          /* Rear suspension anchor */
-    Vector2f AF;          /* Front suspension anchor */
-    Vector2f AR2;         /* Rear suspension anchor (Alt.) */
-    Vector2f AF2;         /* Front suspension anchor (Alt.) */
-
-    Vector2f PTp;         /* Player torso center */
-    Vector2f PULp;        /* Player upper leg center */
-    Vector2f PLLp;        /* Player lower leg center */
-    Vector2f PUAp;        /* Player upper arm center */
-    Vector2f PLAp;        /* Player lower arm center */
-    Vector2f PHp;         /* Player hand center */
-    Vector2f PFp;         /* Player foot center */
-
-    Vector2f PTp2;        /* Player torso center (Alt.) */
-    Vector2f PULp2;       /* Player upper leg center (Alt.) */
-    Vector2f PLLp2;       /* Player lower leg center (Alt.) */
-    Vector2f PUAp2;       /* Player upper arm center (Alt.) */
-    Vector2f PLAp2;       /* Player lower arm center (Alt.) */
-    Vector2f PHp2;        /* Player hand center (Alt.) */
-    Vector2f PFp2;        /* Player foot center (Alt.) */
-  };
 
   /*===========================================================================
   Serialized bike state
@@ -161,75 +79,7 @@ namespace vapp {
     signed char cLowerBodyX,cLowerBodyY;     /* Ass position */
     signed char cKneeX,cKneeY;               /* Knee position */
   };
-
-  /*===========================================================================
-  Bike state 
-  ===========================================================================*/
-  struct BikeState {
-    DriveDir Dir;         /* Driving left or right? */
   
-    float fBikeEngineRPM;
-  
-    Vector2f RearWheelP;  /* Rear wheel position */
-    Vector2f FrontWheelP; /* Front wheel position */
-    Vector2f SwingAnchorP;/* Swing arm anchor position */
-    Vector2f FrontAnchorP;/* Front suspension anchor position */    
-    Vector2f SwingAnchor2P;/* Swing arm anchor position (Alt.) */
-    Vector2f FrontAnchor2P;/* Front suspension anchor position (Alt.) */    
-    Vector2f CenterP;     /* Center position */
-
-    Vector2f PlayerTorsoP;/* Position of player's torso */
-    Vector2f PlayerULegP; /* Position of player's upper leg */
-    Vector2f PlayerLLegP; /* Position of player's lower leg */
-    Vector2f PlayerUArmP; /* Position of player's upper arm */
-    Vector2f PlayerLArmP; /* Position of player's upper arm */
-
-    Vector2f PlayerTorso2P;/* Position of player's torso (Alt.) */
-    Vector2f PlayerULeg2P; /* Position of player's upper leg (Alt.) */
-    Vector2f PlayerLLeg2P; /* Position of player's lower leg (Alt.) */
-    Vector2f PlayerUArm2P; /* Position of player's upper arm (Alt.) */ 
-    Vector2f PlayerLArm2P; /* Position of player's upper arm (Alt.) */
-        
-    /* Internals */
-    float fFrontWheelRot[4];
-    float fRearWheelRot[4];
-    float fFrameRot[4];
-    
-    Vector2f WantedHandP,WantedFootP;
-    Vector2f WantedHand2P,WantedFoot2P;    
-    
-    Vector2f HandP;
-    Vector2f ElbowP;
-    Vector2f ShoulderP;
-    Vector2f LowerBodyP;
-    Vector2f KneeP;
-    Vector2f FootP;
-    Vector2f HeadP;        /* NB! not a phys. body */
-
-    Vector2f Hand2P;
-    Vector2f Elbow2P;
-    Vector2f Shoulder2P;
-    Vector2f LowerBody2P;
-    Vector2f Knee2P;
-    Vector2f Foot2P;
-    Vector2f Head2P;        /* NB! not a phys. body */
-
-    Vector2f RRearWheelP; /* Relaxed rear wheel position */
-    Vector2f RFrontWheelP;/* Relaxed front wheel position */
-    Vector2f PrevRq;      /* Previous error (rear) */
-    Vector2f PrevFq;      /* Previous error (front) */
-    Vector2f PrevPFq;     /* Previous error (player foot) */
-    Vector2f PrevPHq;     /* Previous error (player hand) */
-    Vector2f PrevPFq2;    /* Previous error (player foot) (Alt.) */
-    Vector2f PrevPHq2;    /* Previous error (player hand) (Alt.) */
-    
-    /* Bonusinfo */
-    BikeAnchors *pAnchors;
-    
-    /* Driving */
-    float fCurBrake, fCurEngine;    
-  };
-
   /*===========================================================================
   Arrow pointer
   ===========================================================================*/
@@ -341,7 +191,6 @@ namespace vapp {
     bool isDead(void) {return m_bDead;}
     Level *getLevelSrc(void) {return m_pLevelSrc;}
     BikeState *getBikeState(void) {return &m_BikeS;}
-    BikeParams *getBikeParams() { return &m_BikeP;}
     bool isSqueeking(void) {return m_bSqueeking;}
     float howMuchSqueek(void) {return m_fHowMuchSqueek;}
 
@@ -366,12 +215,6 @@ namespace vapp {
       void setGravity(float x,float y) {m_PhysGravity.x=x; m_PhysGravity.y=y; resetAutoDisabler();}
       const Vector2f &getGravity(void) {return m_PhysGravity;}
         
-      /* Debug */
-      void resetDummies(void) {m_nNumDummies=0;}
-      int getNumDummies(void) {return m_nNumDummies;}
-      DummyHelper *getDummies(void) {return m_Dummies;}
-      void addDummy(Vector2f Pos,float r,float g,float b);
-    
 #if defined(ALLOW_GHOST)  
       void UpdateGhostFromReplay(SerializedBikeState *pReplayState);
       float getGhostDiff() {return m_myDiffOfGhost;}
@@ -407,7 +250,6 @@ namespace vapp {
       void makePlayerWin();
 
       void setBodyDetach(bool state);
-      void stopBikeControls();
 
       bool isTouching(const Entity& i_entity) const;
       void setTouching(Entity& i_entity, bool i_touching);     
@@ -420,9 +262,6 @@ namespace vapp {
       
       float m_fTime,m_fNextAttitudeCon;
       float m_fFinishTime,m_fAttitudeCon;
-      
-      int m_nNumDummies;
-      DummyHelper m_Dummies[100];
       
       int m_nStillFrames;
       
@@ -446,8 +285,6 @@ namespace vapp {
       std::vector<Entity *> m_DelSchedule;/* Entities scheduled for deletion */
       std::vector<GameMessage *> m_GameMessages;
       
-      BikeParams m_BikeP;                 /* Bike physics */      
-      BikeAnchors m_BikeA;                /* Important bike anchor points */
       BikeState m_BikeS;                  /* Bike state */
 
 #if defined(ALLOW_GHOST)  
@@ -550,7 +387,6 @@ namespace vapp {
       /* Helpers */
       void _GenerateLevel(void);          /* Called by playLevel() to 
                                              prepare the level */
-      void _CalculateBikeAnchors(void);
       int _IntersectWheelLevel(Vector2f Cp,float Cr,dContact *pContacts);
       int _IntersectWheelLine(Vector2f Cp,float Cr,int nNumContacts,dContact *pContacts,Vector2f A0,Vector2f A1);
       bool _IntersectHeadLevel(Vector2f Cp,float Cr,const Vector2f &LastCp);

@@ -1,6 +1,6 @@
 
-#WANTED_WARNNING= -w
-WANTED_WARNNING= -Wall
+WANTED_WARNNING= -w
+#WANTED_WARNNING= -Wall
 #WANTED_WARNNING= -pedantic -Wcast-align -Wcast-qual -Wchar-subscripts -Wcomment -Wconversion -Wfloat-equal -Wformat -Wformat-nonliteral -Wformat-security -Wformat-y2k -Wimplicit -Wimport -Wuninitialized -Wlong-long -Wmissing-braces -Wmissing-format-attribute -Wmissing-noreturn -Wpacked -Wparentheses -Wpointer-arith -Wredundant-decls -Wreturn-type -Wshadow -Wswitch  -Wswitch-default  -Wswitch-enum -Wtrigraphs -Wundef -Wunknown-pragmas -Wunused -Wunused-function -Wunused-label -Wunused-value -Wunused-variable -Wwrite-strings
 # -Wunreachable-code
 
@@ -107,6 +107,8 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp GameMain.cpp \
   Credits.cpp \
   GameInit.cpp \
   GameDrawFrame.cpp \
+  LevelsManager.h \
+  LevelsManager.cpp \
   xmscene/BasicSceneStructs.h \
   xmscene/Level.h \
   xmscene/Level.cpp \
@@ -115,6 +117,14 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp GameMain.cpp \
   xmscene/Block.h   \
   xmscene/Block.cpp \
   xmscene/Entity.h   \
-  xmscene/Entity.cpp
+  xmscene/Entity.cpp \
+  xmscene/BikeController.h \
+  xmscene/BikeController.cpp \
+  xmscene/BikeParameters.h \
+  xmscene/BikeParameters.cpp \
+  xmscene/BikeAnchors.h \
+  xmscene/BikeAnchors.cpp \
+  xmscene/Bike.h \
+  xmscene/Bike.cpp
 
 xmoto_LDADD = $(common_LDADD)

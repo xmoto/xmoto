@@ -32,7 +32,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <stdio.h>
 
 #if !defined(_MSC_VER) && !defined(__APPLE__) && !defined(__MACH__)
-  #define USE_HASH_MAP
+  //#define USE_HASH_MAP // removed because it seems to segfault i don't know why when i refresh levels using F5 and quit
 #endif
 
 #include "WWWAppInterface.h"

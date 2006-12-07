@@ -212,6 +212,7 @@ namespace vapp {
         if(m_pButtons[i]->getCaption() == GAMETEXT_CANCEL) return UI_MSGBOX_CANCEL;
         if(m_pButtons[i]->getCaption() == GAMETEXT_YES) return UI_MSGBOX_YES;
         if(m_pButtons[i]->getCaption() == GAMETEXT_NO) return UI_MSGBOX_NO;
+        if(m_pButtons[i]->getCaption() == GAMETEXT_YES_FOR_ALL) return UI_MSGBOX_YES_FOR_ALL;
       }
     }
     return UI_MSGBOX_NOTHING;
@@ -301,6 +302,7 @@ namespace vapp {
     if(Buttons & UI_MSGBOX_CANCEL) nNumButtons++;
     if(Buttons & UI_MSGBOX_YES) nNumButtons++;
     if(Buttons & UI_MSGBOX_NO) nNumButtons++;
+    if(Buttons & UI_MSGBOX_YES_FOR_ALL) nNumButtons++;
 
     /* Determine size of contents */
     int x1,y1,x2,y2;    
@@ -369,7 +371,14 @@ namespace vapp {
       pMsgBox->addButton(pButton);
       nCX+=115;
     }
-    
+    if(Buttons & UI_MSGBOX_YES_FOR_ALL) {
+      pButton = new UIButton(pMsgBox,nCX,nCY,GAMETEXT_YES_FOR_ALL,115,57);
+      pButton->setFont(getFont());
+      pButton->setType(UI_BUTTON_TYPE_SMALL);
+      pMsgBox->addButton(pButton);
+      nCX+=115;
+    }    
+
     /* Set msgbox flag */
     m_bActiveMsgBox = true;
 

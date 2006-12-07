@@ -158,33 +158,32 @@ namespace vapp {
     m_pMainMenu->showWindow(true);
     m_pMainMenu->enableWindow(true);                                 
     
-    m_pMainMenuButtons[0] = new UIButton(m_pMainMenu,0,0,GAMETEXT_LEVELS,207,57);
+    m_pMainMenuButtons[0] = new UIButton(m_pMainMenu,0,0,GAMETEXT_LEVELS,177,57);
     m_pMainMenuButtons[0]->setContextHelp(CONTEXTHELP_LEVELS);
     
-    m_pMainMenuButtons[1] = new UIButton(m_pMainMenu,0,0,GAMETEXT_REPLAYS,207,57);
+    m_pMainMenuButtons[1] = new UIButton(m_pMainMenu,0,0,GAMETEXT_REPLAYS,177,57);
     m_pMainMenuButtons[1]->setContextHelp(CONTEXTHELP_REPLAY_LIST);
     
-    m_pMainMenuButtons[2] = new UIButton(m_pMainMenu,0,0,GAMETEXT_OPTIONS,207,57);
+    m_pMainMenuButtons[2] = new UIButton(m_pMainMenu,0,0,GAMETEXT_OPTIONS,177,57);
     m_pMainMenuButtons[2]->setContextHelp(CONTEXTHELP_OPTIONS);
 
-    m_pMainMenuButtons[3] = new UIButton(m_pMainMenu,0,0,GAMETEXT_HELP,207,57);
+    m_pMainMenuButtons[3] = new UIButton(m_pMainMenu,0,0,GAMETEXT_HELP,177,57);
     m_pMainMenuButtons[3]->setContextHelp(CONTEXTHELP_HELP);
 
-    m_pMainMenuButtons[4] = new UIButton(m_pMainMenu,0,0,GAMETEXT_QUIT,207,57);
+    m_pMainMenuButtons[4] = new UIButton(m_pMainMenu,0,0,GAMETEXT_QUIT,177,57);
     m_pMainMenuButtons[4]->setContextHelp(CONTEXTHELP_QUIT_THE_GAME);
 
     m_nNumMainMenuButtons = 5;
     
 #if defined(SUPPORT_WEBACCESS)        
     /* level info frame */
-    m_pLevelInfoFrame = new UIWindow(m_pMainMenu,13,getDispHeight()/2 - (m_nNumMainMenuButtons*57)/2 + m_nNumMainMenuButtons*57,"",275,100);
+    m_pLevelInfoFrame = new UIWindow(m_pMainMenu,0,getDispHeight()/2 - (m_nNumMainMenuButtons*57)/2 + m_nNumMainMenuButtons*57,"",220,100);
     m_pLevelInfoFrame->showWindow(false);
-    m_pBestPlayerText = new UIStatic(m_pLevelInfoFrame, 0, 5,"", 275, 50);
-    m_pBestPlayerText->setHAlign(UI_ALIGN_RIGHT);
+    m_pBestPlayerText = new UIStatic(m_pLevelInfoFrame, 0, 5,"", 220, 50);
     m_pBestPlayerText->setFont(m_Renderer.getSmallFont());
     m_pBestPlayerText->setHAlign(UI_ALIGN_CENTER);
     m_pBestPlayerText->showWindow(true);
-    m_pLevelInfoViewReplayButton = new UIButton(m_pLevelInfoFrame,50,40, GAMETEXT_VIEWTHEHIGHSCORE,175,40);
+    m_pLevelInfoViewReplayButton = new UIButton(m_pLevelInfoFrame,22,40, GAMETEXT_VIEWTHEHIGHSCORE,176,40);
     m_pLevelInfoViewReplayButton->setFont(m_Renderer.getSmallFont());
     m_pLevelInfoViewReplayButton->setContextHelp(CONTEXTHELP_VIEWTHEHIGHSCORE);
 #endif
@@ -217,7 +216,7 @@ namespace vapp {
     pSomeText->setHAlign(UI_ALIGN_LEFT);
     
     for(int i=0;i<m_nNumMainMenuButtons;i++) {
-      m_pMainMenuButtons[i]->setPosition(47,getDispHeight()/2 - (m_nNumMainMenuButtons*57)/2 + i*57,207,57);
+      m_pMainMenuButtons[i]->setPosition(20,getDispHeight()/2 - (m_nNumMainMenuButtons*57)/2 + i*57,177,57);
       m_pMainMenuButtons[i]->setFont(m_Renderer.getSmallFont());
     }           
 
@@ -227,7 +226,7 @@ namespace vapp {
     //                                "",207,getDispHeight() - (20+getDispHeight()/2 + (m_nNumMainMenuButtons*57)/2));
     //m_pGameInfoWindow->showWindow(true);
           
-    m_pHelpWindow = new UIFrame(m_pMainMenu,300,(getDispHeight()*140)/600,"",getDispWidth()-300-20,getDispHeight()-40-(getDispHeight()*120)/600-10);
+    m_pHelpWindow = new UIFrame(m_pMainMenu,220,(getDispHeight()*140)/600,"",getDispWidth()-220-20,getDispHeight()-40-(getDispHeight()*120)/600-10);
     m_pHelpWindow->showWindow(false);
     pSomeText = new UIStatic(m_pHelpWindow,0,0,GAMETEXT_HELP,m_pHelpWindow->getPosition().nWidth,36);
     pSomeText->setFont(m_Renderer.getMediumFont());
@@ -258,7 +257,7 @@ namespace vapp {
     pCreditsButton->setType(UI_BUTTON_TYPE_SMALL);
     pCreditsButton->setID("HELP_CREDITS_BUTTON");
 
-    m_pReplaysWindow = new UIFrame(m_pMainMenu,300,(getDispHeight()*140)/600,"",getDispWidth()-300-20,getDispHeight()-40-(getDispHeight()*120)/600-10);      
+    m_pReplaysWindow = new UIFrame(m_pMainMenu,220,(getDispHeight()*140)/600,"",getDispWidth()-220-20,getDispHeight()-40-(getDispHeight()*120)/600-10);      
     m_pReplaysWindow->showWindow(false);
     pSomeText = new UIStatic(m_pReplaysWindow,0,0,GAMETEXT_REPLAYS,m_pHelpWindow->getPosition().nWidth,36);
     pSomeText->setFont(m_Renderer.getMediumFont());
@@ -295,14 +294,14 @@ namespace vapp {
     pReplayList->setID("REPLAY_LIST");
     pReplayList->showWindow(true);
     pReplayList->setFont(m_Renderer.getSmallFont());
-    pReplayList->addColumn(GAMETEXT_REPLAY,128);
-    pReplayList->addColumn(GAMETEXT_LEVEL,200);
+    pReplayList->addColumn(GAMETEXT_REPLAY, pReplayList->getPosition().nWidth/2 - 100);
+    pReplayList->addColumn(GAMETEXT_LEVEL,  pReplayList->getPosition().nWidth/2 - 28);
     pReplayList->addColumn(GAMETEXT_PLAYER,128);
     pReplayList->setEnterButton( pShowButton );
     
     //m_pPlayWindow->setPrimaryChild(m_pJustDeadMenuButtons[0]); /* default button: Try Again */
 
-    m_pOptionsWindow = new UIFrame(m_pMainMenu,300,(getDispHeight()*140)/600,"",getDispWidth()-300-20,getDispHeight()-40-(getDispHeight()*120)/600-10);
+    m_pOptionsWindow = new UIFrame(m_pMainMenu,220,(getDispHeight()*140)/600,"",getDispWidth()-220-20,getDispHeight()-40-(getDispHeight()*120)/600-10);
     m_pOptionsWindow->showWindow(false);
     pSomeText = new UIStatic(m_pOptionsWindow,0,0,GAMETEXT_OPTIONS,m_pHelpWindow->getPosition().nWidth,36);
     pSomeText->setFont(m_Renderer.getMediumFont());
@@ -817,7 +816,7 @@ namespace vapp {
 
     /* ***** */
 
-    m_pLevelPacksWindow = new UIFrame(m_pMainMenu,300,(getDispHeight()*140)/600,"",getDispWidth()-300-20,getDispHeight()-40-(getDispHeight()*120)/600-10);      
+    m_pLevelPacksWindow = new UIFrame(m_pMainMenu,220,(getDispHeight()*140)/600,"",getDispWidth()-220-20,getDispHeight()-40-(getDispHeight()*120)/600-10);      
     m_pLevelPacksWindow->showWindow(false);
     pSomeText = new UIStatic(m_pLevelPacksWindow,0,0,GAMETEXT_LEVELS,m_pLevelPacksWindow->getPosition().nWidth,36);
     pSomeText->setFont(m_Renderer.getMediumFont());
@@ -851,8 +850,8 @@ namespace vapp {
     pLevelPackList->showWindow(true);
     pLevelPackList->enableWindow(true);
     pLevelPackList->setFont(m_Renderer.getSmallFont());
-    pLevelPackList->addColumn(GAMETEXT_LEVELPACK,256);
-    pLevelPackList->addColumn(GAMETEXT_NUMLEVELS,200);
+    pLevelPackList->addColumn(GAMETEXT_LEVELPACK,pLevelPackList->getPosition().nWidth-150);
+    pLevelPackList->addColumn(GAMETEXT_NUMLEVELS,150);
     pLevelPackList->setEnterButton( pOpenButton );
 
     /* all levels tab */
@@ -1068,6 +1067,20 @@ namespace vapp {
     pLevelPackCancel->setID("LEVELPACK_CANCEL_BUTTON");
     pLevelPackCancel->setContextHelp(CONTEXTHELP_CLOSE_LEVEL_PACK);
 
+#if defined(SUPPORT_WEBACCESS)        
+    /* level info frame */
+    m_pPackLevelInfoFrame = new UIWindow(m_pLevelPackViewer,419,400,"",275,100);
+    m_pPackLevelInfoFrame->showWindow(false);
+    m_pPackBestPlayerText = new UIStatic(m_pPackLevelInfoFrame, 0, 5,"", 275, 50);
+    m_pPackBestPlayerText->setHAlign(UI_ALIGN_RIGHT);
+    m_pPackBestPlayerText->setFont(m_Renderer.getSmallFont());
+    m_pPackBestPlayerText->setHAlign(UI_ALIGN_CENTER);
+    m_pPackBestPlayerText->showWindow(true);
+    m_pPackLevelInfoViewReplayButton = new UIButton(m_pPackLevelInfoFrame,50,40, GAMETEXT_VIEWTHEHIGHSCORE,175,40);
+    m_pPackLevelInfoViewReplayButton->setFont(m_Renderer.getSmallFont());
+    m_pPackLevelInfoViewReplayButton->setContextHelp(CONTEXTHELP_VIEWTHEHIGHSCORE);
+#endif
+
     /* Initialize level info viewer */
     m_pLevelInfoViewer = new UIFrame(m_Renderer.getGUI(),getDispWidth()/2-350,getDispHeight()/2-250,"",700,500); 
     m_pLevelInfoViewer->setStyle(UI_FRAMESTYLE_TRANS);
@@ -1190,7 +1203,7 @@ namespace vapp {
     pLV_Replays_List->setEnterButton( pLV_Replays_Show );
     
     /* Build stats window */
-    m_pStatsWindow = new UIFrame(m_pMainMenu,300,(getDispHeight()*140)/600,GAMETEXT_STATS,getDispWidth()-280,getDispHeight()-40-(getDispHeight()*120)/600-10);      
+    m_pStatsWindow = new UIFrame(m_pMainMenu,220,(getDispHeight()*140)/600,GAMETEXT_STATS,getDispWidth()-200,getDispHeight()-40-(getDispHeight()*120)/600-10);      
     m_pStatsWindow->setStyle(UI_FRAMESTYLE_LEFTTAG);
     m_pStatsWindow->setFont(m_Renderer.getSmallFont());
     m_pStatsWindow->makeMinimizable(getDispWidth()-17,(getDispHeight()*140)/600);
@@ -1242,7 +1255,6 @@ namespace vapp {
     } 
     
     UILevelList *pList = (UILevelList *)m_pLevelPackViewer->getChild("LEVELPACK_LEVEL_LIST");    
-    pList->setSort(true, (int(*)(void*, void*))Level::compareLevelSamePack);
     pList->setNumeroted(true);
 
     /* get selected item */
@@ -1256,16 +1268,22 @@ namespace vapp {
        
     /* Obey hints */
     pList->unhideAllColumns();
-    if(!m_pActiveLevelPack->bShowTimes) {
+    if(!m_pActiveLevelPack->ShowTimes()) {
       pList->hideBestTime();
     }
-    if(!m_pActiveLevelPack->bShowWebTimes) {
+    if(!m_pActiveLevelPack->ShowWebTimes()) {
       pList->hideRoomBestTime();
     }
 
+    if(m_pActiveLevelPack->Sorted()) {
+      pList->setSort(true, (int(*)(void*, void*))Level::compareLevelSamePack);
+    } else {
+      pList->setSort(true, (int(*)(void*, void*))Level::compareLevelRandom);
+    }
+
     /* Add levels */
-    for(int i=0;i<m_pActiveLevelPack->Levels.size();i++) {
-       pList->addLevel(m_pActiveLevelPack->Levels[i],
+    for(int i=0;i<m_pActiveLevelPack->Levels().size();i++) {
+       pList->addLevel(m_pActiveLevelPack->Levels()[i],
 		       m_pPlayer,
 		       &m_Profiles
 #if defined(SUPPORT_WEBACCESS)
@@ -1427,19 +1445,19 @@ namespace vapp {
     UIListEntry *p;
     std::string p_packName;
     
-    for(int i=0;i<m_LevelPacks.size();i++) {
-      p_packName = m_LevelPacks[i]->Name;
+    for(int i=0;i<m_levelsManager.LevelsPacks().size();i++) {
+      p_packName = m_levelsManager.LevelsPacks()[i]->Name();
       if(p_packName == "") {
 	p_packName = GAMETEXT_UNPACKED_LEVELS_PACK;
       }
 
       p = pList->addEntry(p_packName);
       std::ostringstream v_level_nb;
-      v_level_nb << _Pack_getNumberOfLevelsFinished(m_LevelPacks[i]);
+      v_level_nb << getNumberOfFinishedLevelsOfPack(m_levelsManager.LevelsPacks()[i]);
       v_level_nb << "/";
-      v_level_nb << m_LevelPacks[i]->Levels.size();
+      v_level_nb << m_levelsManager.LevelsPacks()[i]->Levels().size();
       p->Text.push_back(v_level_nb.str());
-      p->pvUser = (void *)m_LevelPacks[i];
+      p->pvUser = (void *)m_levelsManager.LevelsPacks()[i];
     }
 
     /* reselect the previous pack */
@@ -1463,10 +1481,8 @@ namespace vapp {
     for(int i=0;i<m_nNumPauseMenuButtons;i++) {
       if(m_pPauseMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
         /* Uhm... is it likely that there's a next level? */
-        Level *pLS = _FindLevelByID(m_PlaySpecificLevel);
-        if(pLS != NULL) {
-          m_pPauseMenuButtons[i]->enableWindow(_IsThereANextLevel(pLS));
-        }
+        Level *pLS = &(m_levelsManager.LevelById(m_PlaySpecificLevel));
+	m_pPauseMenuButtons[i]->enableWindow(_IsThereANextLevel(pLS));
       }
 
       if(m_pPauseMenuButtons[i]->isClicked()) {
@@ -1495,29 +1511,23 @@ namespace vapp {
 	  _RestartLevel();
         }
         else if(m_pPauseMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
-          Level *pLS = _FindLevelByID(m_PlaySpecificLevel);
-          if(pLS != NULL) {
-            std::string NextLevel = _DetermineNextLevel(pLS);
-            if(NextLevel != "") {        
-              m_pPauseMenu->showWindow(false);              
-              m_GameStats.abortedLevel(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->Id(),m_MotoGame.getLevelSrc()->Name(),m_MotoGame.getTime());
+	  Level *pLS = &(m_levelsManager.LevelById(m_PlaySpecificLevel));
+	  std::string NextLevel = _DetermineNextLevel(pLS);
+	  if(NextLevel != "") {        
+	    m_pPauseMenu->showWindow(false);              
+	    m_GameStats.abortedLevel(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->Id(),m_MotoGame.getLevelSrc()->Name(),m_MotoGame.getTime());
 #if defined(ALLOW_GHOST) 
-	      /* hide ghost */
-	      m_MotoGame.setGhostActive(false);
+	    /* hide ghost */
+	    m_MotoGame.setGhostActive(false);
 #endif 
-              m_MotoGame.endLevel();
-              m_InputHandler.resetScriptKeyHooks();                     
-              m_Renderer.unprepareForNewLevel();                    
-              
-              m_PlaySpecificLevel = NextLevel;              
-
-	      setPrePlayAnim(true);
+	    m_MotoGame.endLevel();
+	    m_InputHandler.resetScriptKeyHooks();                     
+	    m_Renderer.unprepareForNewLevel();                    
+	    
+	    m_PlaySpecificLevel = NextLevel;              
+	    
+	    setPrePlayAnim(true);
               setState(GS_PREPLAYING);
-            }
-            else {
-              notifyMsg(GAMETEXT_NONEXTLEVEL);
-            }
-              
           }
         }
         else if(m_pPauseMenuButtons[i]->getCaption() == GAMETEXT_RESUME) {
@@ -1564,10 +1574,8 @@ namespace vapp {
 
       if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
         /* Uhm... is it likely that there's a next level? */
-        Level *pLS = _FindLevelByID(m_PlaySpecificLevel);
-        if(pLS != NULL) {
-          m_pFinishMenuButtons[i]->enableWindow(_IsThereANextLevel(pLS));
-        }
+	Level *pLS = &(m_levelsManager.LevelById(m_PlaySpecificLevel));
+	m_pFinishMenuButtons[i]->enableWindow(_IsThereANextLevel(pLS));
       }
       
       if(m_pFinishMenuButtons[i]->isClicked()) {
@@ -1577,30 +1585,24 @@ namespace vapp {
                                                         (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
         }
         else if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
-          Level *pLS = _FindLevelByID(m_PlaySpecificLevel);
-          if(pLS != NULL) {
-            std::string NextLevel = _DetermineNextLevel(pLS);
-            if(NextLevel != "") {        
-              m_pFinishMenu->showWindow(false);
-	      m_Renderer.hideMsgNewHighscore();
-              m_pBestTimes->showWindow(false);
+	  Level *pLS = &(m_levelsManager.LevelById(m_PlaySpecificLevel));
+	  std::string NextLevel = _DetermineNextLevel(pLS);
+	  if(NextLevel != "") {        
+	    m_pFinishMenu->showWindow(false);
+	    m_Renderer.hideMsgNewHighscore();
+	    m_pBestTimes->showWindow(false);
 #if defined(ALLOW_GHOST) 
-	      /* hide ghost */
-	      m_MotoGame.setGhostActive(false);
+	    /* hide ghost */
+	    m_MotoGame.setGhostActive(false);
 #endif 
-              m_MotoGame.endLevel();
-              m_InputHandler.resetScriptKeyHooks();                     
-              m_Renderer.unprepareForNewLevel();                    
-              
-              m_PlaySpecificLevel = NextLevel;
-
-	      setPrePlayAnim(true);
-              setState(GS_PREPLAYING);                               
-            }
-            else {
-              notifyMsg(GAMETEXT_NONEXTLEVEL);
-            }
-              
+	    m_MotoGame.endLevel();
+	    m_InputHandler.resetScriptKeyHooks();                     
+	    m_Renderer.unprepareForNewLevel();                    
+	    
+	    m_PlaySpecificLevel = NextLevel;
+	    
+	    setPrePlayAnim(true);
+	    setState(GS_PREPLAYING);                               
           }
         }
         else if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_SAVEREPLAY) {
@@ -1725,9 +1727,38 @@ namespace vapp {
 	  m_pMainMenu->showWindow(false);      
 	  m_PlaySpecificLevel = pLevelSrc->Id();        
 	  m_StateAfterPlaying = GS_LEVELPACK_VIEWER;
+	  m_currentPlayingList = pList;
 	  setState(GS_PREPLAYING);   
 	}
     }
+
+    /* level menu : */
+    /* any list clicked ? */
+    if(pList->isChanged()) {
+      pList->setChanged(false);
+      Level *pLevelSrc = pList->getSelectedLevel();
+      if(pLevelSrc != NULL) {
+#if defined(SUPPORT_WEBACCESS)
+	setLevelInfoFrameBestPlayer(pLevelSrc->Id(),
+				    m_pPackLevelInfoFrame,
+				    m_pPackLevelInfoViewReplayButton,
+				    m_pPackBestPlayerText
+				    );
+#endif
+      }
+    }
+
+#if defined(SUPPORT_WEBACCESS)
+    /* view highscore button clicked */
+    if(m_pPackLevelInfoViewReplayButton->isClicked()) {
+      m_pPackLevelInfoViewReplayButton->setClicked(false);
+      viewHighscoreOf();
+      m_pLevelPackViewer->showWindow(false);
+      m_pMainMenu->showWindow(false);      
+      m_StateAfterPlaying = GS_LEVELPACK_VIEWER;
+      setState(GS_REPLAYING); 
+    }
+#endif
 
     if(pLevelInfoButton!=NULL && pLevelInfoButton->isClicked()) {
       pLevelInfoButton->setClicked(false);
@@ -2083,10 +2114,8 @@ namespace vapp {
 
       if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
         /* Uhm... is it likely that there's a next level? */
-        Level *pLS = _FindLevelByID(m_PlaySpecificLevel);
-        if(pLS != NULL) {
-          m_pJustDeadMenuButtons[i]->enableWindow(_IsThereANextLevel(pLS));
-        }
+	Level *pLS = &(m_levelsManager.LevelById(m_PlaySpecificLevel));
+	m_pJustDeadMenuButtons[i]->enableWindow(_IsThereANextLevel(pLS));
       }
       
       if(m_pJustDeadMenuButtons[i]->isClicked()) {
@@ -2101,28 +2130,22 @@ namespace vapp {
 	  _RestartLevel();
         }
         else if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
-          Level *pLS = _FindLevelByID(m_PlaySpecificLevel);
-          if(pLS != NULL) {
-            std::string NextLevel = _DetermineNextLevel(pLS);
-            if(NextLevel != "") {        
-              m_pJustDeadMenu->showWindow(false);
+	  Level *pLS = &(m_levelsManager.LevelById(m_PlaySpecificLevel));
+	  std::string NextLevel = _DetermineNextLevel(pLS);
+	  if(NextLevel != "") {        
+	    m_pJustDeadMenu->showWindow(false);
 #if defined(ALLOW_GHOST) 
-	      /* hide ghost */
-	      m_MotoGame.setGhostActive(false);
+	    /* hide ghost */
+	    m_MotoGame.setGhostActive(false);
 #endif 
-              m_MotoGame.endLevel();
-              m_InputHandler.resetScriptKeyHooks();                     
-              m_Renderer.unprepareForNewLevel();                    
-              
-              m_PlaySpecificLevel = NextLevel;
-              
-	      setPrePlayAnim(true);
-              setState(GS_PREPLAYING);                               
-            }
-            else {
-              notifyMsg(GAMETEXT_NONEXTLEVEL);
-            }
-              
+	    m_MotoGame.endLevel();
+	    m_InputHandler.resetScriptKeyHooks();                     
+	    m_Renderer.unprepareForNewLevel();                    
+	    
+	    m_PlaySpecificLevel = NextLevel;
+	    
+	    setPrePlayAnim(true);
+	    setState(GS_PREPLAYING);                               
           }
         }
         else if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_SAVEREPLAY) {
@@ -2192,12 +2215,14 @@ namespace vapp {
           m_pHelpWindow->showWindow(true);
           m_pReplaysWindow->showWindow(false);
           m_pLevelPacksWindow->showWindow(false);                    
-        
-          if(_FindLevelByID("tut1") == NULL) {
-            /* Tutorial not found, disable button */
-            UIButton *pTutButton = (UIButton *)m_pHelpWindow->getChild("HELP_TUTORIAL_BUTTON");
-            pTutButton->enableWindow(false);
-          }
+
+	  try {
+	    m_levelsManager.LevelById("tut1");
+	  } catch(Exception &e) {
+	    /* Tutorial not found, disable button */
+	    UIButton *pTutButton = (UIButton *)m_pHelpWindow->getChild("HELP_TUTORIAL_BUTTON");
+	    pTutButton->enableWindow(false);
+	  }
         }
         else if(m_pMainMenuButtons[i]->getCaption() == GAMETEXT_REPLAYS) {
           if(m_pReplaysWindow->isHidden()) _UpdateReplaysList();
@@ -2221,6 +2246,9 @@ namespace vapp {
     /* view highscore button clicked */
     if(m_pLevelInfoViewReplayButton->isClicked()) {
       viewHighscoreOf();
+      m_pMainMenu->showWindow(false);
+      m_StateAfterPlaying = GS_MENU;
+      setState(GS_REPLAYING);
       m_pLevelInfoViewReplayButton->setClicked(false);
     }
 #endif
@@ -2231,7 +2259,11 @@ namespace vapp {
       Level *pLevelSrc = m_pAllLevelsList->getSelectedLevel();
       if(pLevelSrc != NULL) {
 #if defined(SUPPORT_WEBACCESS)
-	setLevelInfoFrameBestPlayer(pLevelSrc->Id());
+	setLevelInfoFrameBestPlayer(pLevelSrc->Id(),
+				    m_pLevelInfoFrame,
+				    m_pLevelInfoViewReplayButton,
+				    m_pBestPlayerText
+				    );
 #endif
       }
       m_pAllLevelsList->setChanged(false);
@@ -2241,7 +2273,11 @@ namespace vapp {
     if(m_pPlayNewLevelsList->isChanged()) {
       Level *pLevelSrc = m_pPlayNewLevelsList->getSelectedLevel();
       if(pLevelSrc != NULL) {
-	setLevelInfoFrameBestPlayer(pLevelSrc->Id());
+	setLevelInfoFrameBestPlayer(pLevelSrc->Id(),
+				    m_pLevelInfoFrame,
+				    m_pLevelInfoViewReplayButton,
+				    m_pBestPlayerText
+				    );
       }
       m_pPlayNewLevelsList->setChanged(false);
     }
@@ -2316,13 +2352,14 @@ namespace vapp {
         pOpenButton->setClicked(false);
         pOpenButton->setActive(false);      
 
-        m_pActiveLevelPack = (LevelPack *)pLevelPackList->getEntries()[nSel]->pvUser;
+        m_pActiveLevelPack = (LevelsPack *)pLevelPackList->getEntries()[nSel]->pvUser;
         
         UIStatic *pTitle = (UIStatic *)m_pLevelPackViewer->getChild("LEVELPACK_VIEWER_TITLE");
-        if(pTitle != NULL) pTitle->setCaption(m_pActiveLevelPack->Name);
+        if(pTitle != NULL) pTitle->setCaption(m_pActiveLevelPack->Name());
         
         _CreateLevelPackLevelList();
-        
+	m_pPackLevelInfoFrame->showWindow(false);
+
         m_pLevelPackViewer->showWindow(true);
         m_pMainMenu->enableChildren(false);
         m_pMainMenu->enableWindow(false);
@@ -2525,12 +2562,14 @@ namespace vapp {
       pTutorialButton->setClicked(false);
       
       /* Find first tutorial level */
-      Level *pLevelSrc = _FindLevelByID("tut1");
-      if(pLevelSrc != NULL) {
+      try {
+	Level *pLevelSrc = &(m_levelsManager.LevelById("tut1"));
         m_pMainMenu->showWindow(false);      
         m_PlaySpecificLevel = pLevelSrc->Id();
         m_StateAfterPlaying = GS_MENU;
+	m_currentPlayingList = NULL;
         setState(GS_PREPLAYING);
+      } catch(Exception &e) {
       }
     }
     /* View credits? */
@@ -2578,9 +2617,11 @@ namespace vapp {
 
       if(m_pAllLevelsList && !m_pAllLevelsList->isBranchHidden()) {
 	pLevelSrc = m_pAllLevelsList->getSelectedLevel();
+	m_currentPlayingList = m_pAllLevelsList;
 #if defined(SUPPORT_WEBACCESS)
       } else if(m_pPlayNewLevelsList && !m_pPlayNewLevelsList->isBranchHidden()) {
 	pLevelSrc = m_pPlayNewLevelsList->getSelectedLevel();
+	m_currentPlayingList = m_pPlayNewLevelsList;
 #endif
       }
 
@@ -2885,12 +2926,15 @@ namespace vapp {
     
     for(int i=0;i<Replays->size();i++) {
       UIListEntry *pEntry = pList->addEntry((*Replays)[i]->Name);
-      
-      Level *pLevel = _FindLevelByID((*Replays)[i]->Level);
-      if(pLevel == NULL)
-        pEntry->Text.push_back("(" + std::string(GAMETEXT_UNKNOWNLEVEL) + ")");
-      else
+
+      Level *pLevel;
+
+      try {
+	pLevel = &(m_levelsManager.LevelById((*Replays)[i]->Level));      
         pEntry->Text.push_back(pLevel->Name());
+      } catch(Exception &e) {
+        pEntry->Text.push_back("(" + std::string(GAMETEXT_UNKNOWNLEVEL) + ")");
+      }
       
       pEntry->Text.push_back((*Replays)[i]->Player);
     }
@@ -2913,8 +2957,8 @@ namespace vapp {
     
     if(m_pPlayer == NULL) return;
   
-    for(int i=0;i<m_levels.size();i++) {
-      Level *pLevel = m_levels[i];     
+    for(int i=0;i<m_levelsManager.Levels().size();i++) {
+      Level *pLevel = m_levelsManager.Levels()[i];     
       pAllLevels->addLevel(pLevel,
 			   m_pPlayer,
 			   &m_Profiles
@@ -3488,14 +3532,18 @@ namespace vapp {
       m_Config.setInteger("GhostSearchStrategy", *((int*)(pEntry->pvUser)));
     }
 #endif
-            
-    /* The following require restart */
-    m_Config.setChanged(false);      
 
     if(pThemeList->getSelected() >= 0 && pThemeList->getSelected() < pThemeList->getEntries().size()) {
       UIListEntry *pEntry = pThemeList->getEntries()[pThemeList->getSelected()];
       m_Config.setString("Theme", pEntry->Text[0]);
+      if(m_theme.Name() != pEntry->Text[0]) {
+	Log("Reloading the theme...");
+	reloadTheme();
+      }
     }
+            
+    /* The following require restart */
+    m_Config.setChanged(false);      
 
     m_Config.setBool("AudioEnable",pEnableAudioButton->getChecked());
     
@@ -3535,12 +3583,16 @@ namespace vapp {
   }
   
 #if defined(SUPPORT_WEBACCESS)
-  void GameApp::setLevelInfoFrameBestPlayer(String pLevelID) {
+  void GameApp::setLevelInfoFrameBestPlayer(String pLevelID,
+					    UIWindow *i_pLevelInfoFrame,
+					    UIButton *i_pLevelInfoViewReplayButton,
+					    UIStatic *i_pBestPlayerText
+					    ) {
     if(m_pWebHighscores != NULL) {
       WebHighscore *pWH = m_pWebHighscores->getHighscoreFromLevel(pLevelID);
       if(pWH != NULL) {
-	m_pLevelInfoFrame->showWindow(true);
-	m_pBestPlayerText->setCaption((std::string(GAMETEXT_BESTPLAYER) + " : " + pWH->getPlayerName()).c_str());
+	i_pLevelInfoFrame->showWindow(true);
+	i_pBestPlayerText->setCaption((std::string(GAMETEXT_BESTPLAYER) + " : " + pWH->getPlayerName()).c_str());
 	m_pLevelToShowOnViewHighscore = pLevelID;
 
 	/* search if the replay is already downloaded */
@@ -3557,16 +3609,16 @@ namespace vapp {
 	delete Replays;
 
 	if(found) {
-	  m_pLevelInfoViewReplayButton->enableWindow(true);
+	  i_pLevelInfoViewReplayButton->enableWindow(true);
 	} else {
-	  m_pLevelInfoViewReplayButton->enableWindow(m_bEnableWebHighscores);
+	  i_pLevelInfoViewReplayButton->enableWindow(m_bEnableWebHighscores);
 	}
       } else {
-	m_pLevelInfoFrame->showWindow(false);
+	i_pLevelInfoFrame->showWindow(false);
 	m_pLevelToShowOnViewHighscore = "";
       }
     } else {
-      m_pLevelInfoFrame->showWindow(false);
+      i_pLevelInfoFrame->showWindow(false);
       m_pLevelToShowOnViewHighscore = "";
     }
   }
@@ -3627,11 +3679,7 @@ namespace vapp {
       }
     }
 
-    /* play it */
-    m_pMainMenu->showWindow(false);
     m_PlaySpecificReplay = pWH->getReplayName();      
-    m_StateAfterPlaying = GS_MENU;
-    setState(GS_REPLAYING);
   }
 #endif
 

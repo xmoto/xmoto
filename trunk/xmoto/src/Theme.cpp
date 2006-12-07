@@ -123,6 +123,10 @@ Theme::~Theme() {
   m_texMan.unloadTextures();
 }
  
+std::string Theme::Name() const {
+  return m_name;
+}
+
 vapp::Texture* Theme::loadTexture(std::string p_fileName, bool bSmall, bool bClamp, vapp::FilterMode eFilterMode) {
   return m_texMan.loadTexture(p_fileName.c_str(), bSmall, bClamp, eFilterMode);
 }
@@ -132,6 +136,10 @@ std::vector<std::string>* Theme::getRequiredFiles() {
 }
 
 void Theme::load(std::string p_themeFile) {
+  vapp::Log(std::string("Loading theme from file " + p_themeFile).c_str());
+
+  cleanSprites(); /* removing existing sprites */
+
   vapp::XMLDocument v_ThemeXml;
   TiXmlDocument *v_ThemeXmlData;
   TiXmlElement *v_ThemeXmlDataElement;

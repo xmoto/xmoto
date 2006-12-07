@@ -795,7 +795,11 @@ int Level::compareLevel(const Level& i_lvl1, const Level& i_lvl2) {
   
   return 0;
 }
-  
+
+int Level::compareLevelRandom(const Level& i_lvl1, const Level& i_lvl2) {
+  return (randomNum(0, 1) < 0.5 ? 1 : -1);
+}
+
 int Level::compareLevelSamePack(const Level& i_lvl1, const Level& i_lvl2) {
   std::string n1, n2;
   
@@ -939,4 +943,12 @@ void Level::spawnEntity(Entity *v_entity) {
 
 std::vector<Entity *>& Level::EntitiesExterns() {
   return m_entitiesExterns;
+}
+
+std::string Level::PathForUpdate() const {
+  /* If level path is not absolute, this level is not updatable */
+  if(vapp::FS::isPathAbsolute(FileName())) {
+    return FileName();
+  }
+  return "";
 }

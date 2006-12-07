@@ -313,6 +313,7 @@ class Theme {
  
   void load(std::string p_themeFile);
 
+  std::string Name() const;
   Sprite* getSprite(enum SpriteType pSpriteType, std::string pName);
   vapp::Texture* loadTexture(std::string p_fileName,
 			     bool bSmall=false,

@@ -39,12 +39,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GUIXMoto.h"
 #include "Stats.h"
 #include "Credits.h"
+#include "LevelsManager.h"
 
 #define PRESTART_ANIMATION_TIME 2.0
 #define PRESTART_ANIMATION_LEVEL_MSG_DURATION 1.0
 #define PRESTART_ANIMATION_MARGIN_SIZE 5
 #define PRESTART_ANIMATION_CURVE 3.0
-  
+
 namespace vapp {
 
   /*===========================================================================
@@ -86,18 +87,6 @@ namespace vapp {
     GHOST_STRATEGY_BESTOFROOM
   };
 #endif
-
-  /*===========================================================================
-  Level packs
-  ===========================================================================*/
-  struct LevelPack {
-    std::string Name;
-    std::vector<Level *> Levels;
-    
-    /* Hints */
-    bool bShowTimes;
-    bool bShowWebTimes;
-  };
 
   /*===========================================================================
   Game application
@@ -146,6 +135,7 @@ namespace vapp {
                  m_bTestThemeMode = false;
                  m_pReplay = NULL;
                  m_pMenuMusic = NULL;
+		 m_updateAutomaticallyLevels = false;
 #if defined(ALLOW_GHOST)
      m_pGhostReplay = NULL;
      m_lastGhostReplay = "";
@@ -185,10 +175,10 @@ namespace vapp {
      m_Renderer.setTheme(&m_theme);
      m_MotoGame.setRenderer(&m_Renderer);
 
-     m_currentThemeName = THEME_DEFAULT_THEMENAME;
-
      m_bPrePlayAnim = true;
      m_bShowEngineCounter = true;
+
+     m_currentPlayingList = NULL;
       }
                  
 #if defined(SUPPORT_WEBACCESS)                 
@@ -198,12 +188,11 @@ namespace vapp {
         virtual void setBeingDownloadedInformation(const std::string &p_information,bool p_bNew = true);
         virtual void readEvents(void);
         
-        virtual bool doesLevelExist(const std::string &LevelID); 
         virtual bool shouldLevelBeUpdated(const std::string &LevelID);
 
         virtual std::string levelPathForUpdate(const std::string &p_LevelId);
         virtual std::string levelMD5Sum(const std::string &LevelID);
-
+	virtual bool doesLevelExist(const std::string &p_LevelId);
 #endif
       
       /* Virtual methods */
@@ -225,7 +214,8 @@ namespace vapp {
       void setState(GameState s);
       void notifyMsg(std::string Msg);      
       void setPrePlayAnim(bool pEnabled);
-      
+      void reloadTheme();
+
       /* Data interface */
       bool isUglyMode() {return m_bUglyMode;}
       bool isTestThemeMode(void) {return m_bTestThemeMode;}
@@ -235,8 +225,6 @@ namespace vapp {
     
       /* Data */
       ReplayList m_ReplayList;                  /* Replay list */
-      std::vector<LevelPack *> m_LevelPacks;    /* Level packs */
-
       bool m_bEnableInitZoom;                   /* true: Perform initial level scroll/zoom */
       bool m_bEnableDeathAnim;                  /* true: Bike falls apart at when dead */
       bool m_bEnableMenuMusic;                  /* true: Play menu music */      
@@ -262,7 +250,6 @@ namespace vapp {
                                                    play this replay */                                                   
       std::string m_ForceProfile;               /* Force this player profile */    
       std::string m_GraphDebugInfoFile;
-      std::vector<Level *> m_levels; 
       InputHandler m_InputHandler;              /* The glorious input handler */
       GameState m_State;                        /* Current state */      
       GameState m_StateAfterPlaying;            /* State that should be used later */
@@ -371,6 +358,7 @@ namespace vapp {
       UIFrame *m_pStatsWindow;
       
       /* LEVEL lists */
+      UILevelList *m_currentPlayingList;
       UILevelList *m_pAllLevelsList;
 #if defined(SUPPORT_WEBACCESS)
       UILevelList *m_pPlayNewLevelsList;
@@ -380,8 +368,16 @@ namespace vapp {
       UIWindow *m_pLevelInfoFrame;
       UIButton *m_pLevelInfoViewReplayButton;      
       UIStatic *m_pBestPlayerText;
+
+      UIWindow *m_pPackLevelInfoFrame;
+      UIButton *m_pPackLevelInfoViewReplayButton;      
+      UIStatic *m_pPackBestPlayerText;
+
       String    m_pLevelToShowOnViewHighscore;
 #endif
+
+      /* if true, don't ask for updating levels */
+      bool m_updateAutomaticallyLevels;
 
       /* In-game PAUSE menu fun */
       UIFrame *m_pPauseMenu;
@@ -418,7 +414,7 @@ namespace vapp {
 
       /* Level pack viewer fun */
       UIFrame *m_pLevelPackViewer;  
-      LevelPack *m_pActiveLevelPack;
+      LevelsPack *m_pActiveLevelPack;
       
       /* Level info viewer fun */
       UIFrame *m_pLevelInfoViewer;      
@@ -430,6 +426,8 @@ namespace vapp {
       /* Config & profiles */
       UserConfig m_Config;
       PlayerData m_Profiles;
+
+      LevelsManager m_levelsManager;
       
       /* Misc settings */
       MenuBackgroundGraphics m_MenuBackgroundGraphics;
@@ -437,7 +435,6 @@ namespace vapp {
       bool m_bRecordReplays;
       float m_fReplayFrameRate;
       float m_fCurrentReplayFrameRate;
-      std::string m_currentThemeName; 
       
       /* Credits */
       Credits *m_pCredits;         
@@ -450,7 +447,6 @@ namespace vapp {
 #if defined(SUPPORT_WEBACCESS) 
       void _UpdateWorldRecord(const std::string &LevelID);
 #endif
-      Level *_FindLevelByID(std::string ID);
       void _HandleMainMenu(void);  
       void _HandlePauseMenu(void);
       void _HandleJustDeadMenu(void);
@@ -506,23 +502,12 @@ namespace vapp {
       
       int _IsKeyInUse(const std::string &Key);
       
-      void _UpdateLevelPackManager(Level *pLevelSrc);
-      LevelPack *_FindLevelPackByName(const std::string &Name);
       std::string _DetermineNextLevel(Level *pLevelSrc);
       bool _IsThereANextLevel(Level *pLevelSrc);
       
       bool _IsReplayScripted(Replay *p_pReplay);
       void _RestartLevel();
   
-      void loadLevelsFromLvl(const std::vector<std::string> &LvlFiles);
-      void loadLevelsFromFiles(bool bSilent);
-      void loadLevelsFromIndex();
-      void createLevelsIndex();
-      static std::string LevelIndexFileName();
-      void deleteLevelsIndex();
-      void deleteLevelsPacks();
-      void deleteLevels();
-
 #if defined(SUPPORT_WEBACCESS)
       void _InitWebConf(void);
       void _CheckForExtraLevels(void);
@@ -539,7 +524,11 @@ namespace vapp {
 #endif
 
 #if defined(SUPPORT_WEBACCESS)
-      void setLevelInfoFrameBestPlayer(String pLevelID);
+      void setLevelInfoFrameBestPlayer(String pLevelID,
+				       UIWindow *i_pLevelInfoFrame,
+				       UIButton *i_pLevelInfoViewReplayButton,
+				       UIStatic *i_pBestPlayerText
+				       );
       void viewHighscoreOf();
 #endif
 
@@ -578,8 +567,7 @@ namespace vapp {
       void _PostUpdateJustDead(void);
       void _PostUpdateFinished(void);
 
-      int _Pack_getNumberOfLevelsFinished(LevelPack *p_levelPack);
-
+      int getNumberOfFinishedLevelsOfPack(LevelsPack *i_pack);
   };
 
 }

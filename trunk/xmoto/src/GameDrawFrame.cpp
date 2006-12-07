@@ -206,7 +206,7 @@ namespace vapp {
           }
 
           HighPrecisionTimer::checkTime("(misc)");
-        
+
           if(m_State == GS_PAUSE) {
             /* Okay, nifty thing. Paused! */
             _PostUpdatePause();
@@ -227,7 +227,7 @@ namespace vapp {
             _PostUpdateFinished();
             HighPrecisionTimer::checkTime("_PostUpdateFinished");
           }        
-        
+
           /* Level and player name to draw? */
           if(!m_bCreditsModeActive &&
             (m_State == GS_DEADMENU || m_State == GS_DEADJUST || m_State == GS_PAUSE || m_State == GS_FINISHED || m_State == GS_REPLAYING) &&
@@ -267,11 +267,11 @@ namespace vapp {
 
           /* Show frame rate */
           if(m_bShowFrameRate) bDrawFPS = true;
-          
+
           break;
         } 
         catch(Exception &e) {
-          setState(GS_MENU);
+    setState(m_StateAfterPlaying);
           notifyMsg(splitText(e.getMsg(), 50));
         }
       }
@@ -349,6 +349,7 @@ namespace vapp {
       case GS_PAUSE:
       case GS_DEADMENU:
       case GS_FINISHED:
+      case GS_LEVELPACK_VIEWER:
         m_bShowCursor = true;
         //SDL_ShowCursor(SDL_ENABLE);
         break;
@@ -728,9 +729,7 @@ namespace vapp {
       _MakeBestTimesWindow(m_pBestTimes,m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->Id(),
                           m_MotoGame.getFinishTime(),TimeStamp);
 
-
-      _UpdateLevelsLists();
-      
+      _UpdateLevelsLists();     
       setState(GS_FINISHED);
     }
   }

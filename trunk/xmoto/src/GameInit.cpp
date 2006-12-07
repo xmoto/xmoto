@@ -35,8 +35,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   #include <curl/curl.h>
 #endif
 
-#define CURRENT_LEVEL_INDEX_FILE_VERSION 1
-
 namespace vapp {
 
   /*===========================================================================
@@ -117,12 +115,7 @@ namespace vapp {
               &m_ProxySettings
 #endif
               );
-    try {
-      m_theme.load(m_themeChoicer->getFileName(getConfigThemeName(m_themeChoicer)));
-    } catch(Exception &e) {
-      /* unable to load the theme, load the default one */
-      m_theme.load(m_themeChoicer->getFileName(THEME_DEFAULT_THEMENAME));
-    }
+    reloadTheme();
 
     /* Profiles */
     Log("Loading profiles...");
@@ -300,42 +293,23 @@ namespace vapp {
     }
     
     /* Test level cache directory */
-    std::string LCachePath = FS::getUserDir() + std::string("/LCache");
-    if(m_bEnableLevelCache && !FS::isDir(LCachePath)) {
-      try {
-	FS::mkArborescence(LCachePath);
-      } catch(Exception &e) {
-	m_bEnableLevelCache = false;
-	Log("** Warning ** : Level cache directory can't be created, forcing caching off!");
-      }
-    }
+    LevelsManager::checkPrerequires(m_bEnableLevelCache);
     
     /* Should we clean the level cache? (can also be done when disabled) */
     if(m_bCleanCache) {
-      /* Find all .blv-files in the directory */
-      std::vector<std::string> BlvFiles = FS::findPhysFiles("LCache/*.blv");
-      Log("Trying to clean %d files from level cache...",BlvFiles.size());
-      int nNumDeleted = 0;
-      for(int i=0;i<BlvFiles.size();i++) {
-        if(FS::deleteFile(BlvFiles[i]))
-          nNumDeleted++;
-      }
-      Log(" %d file%s deleted succesfully",nNumDeleted,nNumDeleted==1?"":"s");
+      LevelsManager::cleanCache();
     }
      
-    /* Find all .lvl files in the level dir and load them */    
     try {
-      loadLevelsFromIndex();
+      m_levelsManager.loadLevelsFromIndex();
     } catch(Exception &e) {
       Log(std::string("Unable to load levels from index:\n" + e.getMsg()).c_str());
-      loadLevelsFromFiles(true);
+      m_levelsManager.reloadLevelsFromFiles(m_bEnableLevelCache);
     }
     
     /* -listlevels? */
     if(m_bListLevels) {
-      for(int i=0;i<m_levels.size();i++) {          
-        printf("%-25s %-25s %-25s\n",FS::getFileBaseName(m_levels[i]->FileName()).c_str(),m_levels[i]->Id().c_str(),m_levels[i]->Name().c_str());
-      }
+      m_levelsManager.printLevelsList();
     }
 
     _UpdateLoadingScreen((1.0f/9.0f) * 5,pLoadingScreen,GAMETEXT_INITRENDERER);
@@ -429,120 +403,7 @@ namespace vapp {
       }
     }            
   }
-  
-  void GameApp::loadLevelsFromFiles(bool bSilent) {
-    if(!bSilent) {
-      _SimpleMessage(GAMETEXT_RELOADINGLEVELS, &m_DownloadMsgBoxRect);
-    }
-
-    deleteLevels();
-
-    std::vector<std::string> LvlFiles = FS::findPhysFiles("Levels/*.lvl", true);
-    loadLevelsFromLvl(LvlFiles);
-    try {
-      /* then, recreate the index */
-      createLevelsIndex();
-    } catch(Exception &e2) {
-      Log((std::string("Unable to create the level index:\n") + e2.getMsg()).c_str());
-    }
-  }
-
-  std::string GameApp::LevelIndexFileName() {
-    return vapp::FS::getUserDir() + "/" + "LCache/levels.index";
-  }
-
-  void GameApp::loadLevelsFromIndex() {
-    int v_nbLevels;
-
-    deleteLevels();
-
-    vapp::FileHandle *pfh = vapp::FS::openIFile(LevelIndexFileName());
-    if(pfh == NULL) {
-      throw Exception((std::string("Unable to open file ") + LevelIndexFileName()).c_str());
-    }
-
-    try {
-      int v_version = vapp::FS::readInt_LE(pfh); /* version */
-      if(v_version != CURRENT_LEVEL_INDEX_FILE_VERSION) {
-	throw Exception("Invalid level index file version");
-      }
-      v_nbLevels = vapp::FS::readInt_LE(pfh);
-      for(int i=0; i<v_nbLevels; i++) {
-	Level *v_level = new Level();
-	try {
-	  v_level->setFileName(vapp::FS::readString(pfh));
-	  v_level->importBinaryHeader(pfh);
-	  m_levels.push_back(v_level);
-	} catch(Exception &e) {
-	  delete v_level;
-	}
-      }
-
-    } catch(Exception &e) {
-      deleteLevels();
-      vapp::FS::closeFile(pfh);
-      throw e;
-    }
-    vapp::FS::closeFile(pfh);
-  }
-   
-  void GameApp::createLevelsIndex() {
-    /* for windows : your must remove the file before create it */
-    remove(LevelIndexFileName().c_str());
-
-    vapp::FileHandle *pfh = vapp::FS::openOFile(LevelIndexFileName());
-    if(pfh == NULL) {
-      throw Exception((std::string("Unable to open file ") + LevelIndexFileName()).c_str());
-      return;
-    }
-
-    try {
-      vapp::FS::writeInt_LE(pfh, CURRENT_LEVEL_INDEX_FILE_VERSION); /* version */
-      vapp::FS::writeInt_LE(pfh, m_levels.size());
-      for(int i=0; i<m_levels.size(); i++) {
-	vapp::FS::writeString(pfh, m_levels[i]->FileName());
-	m_levels[i]->exportBinaryHeader(pfh);
-      }
-    } catch(Exception &e) {
-      vapp::FS::closeFile(pfh);
-      throw e;
-    }
-
-    vapp::FS::closeFile(pfh);
-  }
-
-  /*===========================================================================
-  Load some levels...
-  ===========================================================================*/
-  void GameApp::loadLevelsFromLvl(const std::vector<std::string> &LvlFiles) {
-    for(int i=0;i<LvlFiles.size();i++) {    
-      bool bCached = false;
-      Level *v_level = new Level();
-
-      try {
-	v_level->setFileName(LvlFiles[i]);
-	bCached = v_level->loadReducedFromFile(m_bEnableLevelCache);
-        
-	// Check for ID conflict
-	for(int k=0; k<m_levels.size(); k++) {
-	  if(m_levels[k]->Id() == v_level->Id()) {
-	    /* Conflict! */
-	    Log("** Warning ** : More than one level with ID '%s'!",m_levels[k]->Id().c_str());
-	    Log("                (%s)", v_level->FileName().c_str());
-	    Log("                (%s)", m_levels[k]->FileName().c_str());
-	    if(bCached) Log("                (cached)");
-	    throw Exception("Duplicate level ID");
-	  }
-	}
-	m_levels.push_back(v_level);        
-      } catch(Exception &e) {
-	delete v_level;
-        Log("** Warning ** : Problem loading '%s' (%s)",
-	    LvlFiles[i].c_str(),e.getMsg().c_str());            
-      }
-    }
-  }
-  
+    
   /*===========================================================================
   Shutdown game
   ===========================================================================*/
@@ -561,9 +422,6 @@ namespace vapp {
     if(m_pCredits != NULL)
       delete m_pCredits;
   
-    deleteLevelsPacks();
-    deleteLevels();    
-
     m_GameStats.saveXML("stats.xml");
       
     if(!isNoGraphics()) {

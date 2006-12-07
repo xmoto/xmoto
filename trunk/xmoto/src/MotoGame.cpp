@@ -257,17 +257,6 @@ namespace vapp {
   }
 
   /*===========================================================================
-    Dummy adding
-    ===========================================================================*/
-  void MotoGame::addDummy(Vector2f Pos,float r,float g,float b) {
-    m_Dummies[m_nNumDummies].Pos = Pos;
-    m_Dummies[m_nNumDummies].r = r;
-    m_Dummies[m_nNumDummies].g = g;
-    m_Dummies[m_nNumDummies].b = b;
-    m_nNumDummies++;
-  }
-
-  /*===========================================================================
     Add game message
     ===========================================================================*/
   void MotoGame::gameMessage(std::string Text,bool bOnce, float fDuration) {
@@ -307,9 +296,6 @@ namespace vapp {
   void MotoGame::updateLevel(float fTimeStep,SerializedBikeState *pReplayState,Replay *p_replay) {
     m_bSqueeking = false; /* no squeeking right now */
 
-    /* Dummies are small markers that can show different things during debugging */
-    resetDummies();
-    
     /* Going to teleport? Do it now, before we tinker to much with the state */
     if(m_bTeleport) {
       /* Clear stuff */
@@ -338,13 +324,13 @@ namespace vapp {
       _InitPhysics();
 
       /* Calculate bike stuff */
-      _CalculateBikeAnchors();    
-      Vector2f C( m_TeleportDest.Pos.x - m_BikeA.Tp.x, m_TeleportDest.Pos.y - m_BikeA.Tp.y);
+      m_BikeS.reInitializeAnchors();
+      Vector2f C( m_TeleportDest.Pos - m_BikeS.Anchors().GroundPoint());
       _PrepareBikePhysics(C);
           
       m_BikeS.Dir = m_TeleportDest.bDriveRight?DD_RIGHT:DD_LEFT;
-      
-      m_BikeS.fCurBrake = m_BikeS.fCurEngine = 0.0f;
+
+      m_BikeS.reInitializeSpeed();
       
       m_bTeleport = false;
     }
@@ -360,8 +346,8 @@ namespace vapp {
     
     /* Are we going to change direction during this update? */
     bool bChangeDir = false;
-    if(m_BikeC.bChangeDir) {
-      m_BikeC.bChangeDir = false;
+    if(m_BikeC.ChangeDir()) {
+      m_BikeC.setChangeDir(false);
       bChangeDir = true;
       
       m_BikeS.Dir = m_BikeS.Dir==DD_LEFT?DD_RIGHT:DD_LEFT; /* switch */
@@ -493,8 +479,7 @@ namespace vapp {
     m_BikeS.fBikeEngineRPM = 0.0f;
     m_BikeS.Elbow2P = Vector2f(0,0);
     m_BikeS.ElbowP = Vector2f(0,0);
-    m_BikeS.fCurBrake = 0.0f;
-    m_BikeS.fCurEngine = 0.0f;
+    m_BikeS.reInitializeSpeed();
     m_BikeS.Foot2P = Vector2f(0,0);
     m_BikeS.FootP = Vector2f(0,0);
     m_BikeS.FrontAnchor2P = Vector2f(0,0);
@@ -508,7 +493,6 @@ namespace vapp {
     m_BikeS.KneeP = Vector2f(0,0);
     m_BikeS.LowerBody2P = Vector2f(0,0);
     m_BikeS.LowerBodyP = Vector2f(0,0);
-    m_BikeS.pAnchors = NULL;
     //m_BikeS.pfFramePos = NULL;
     //m_BikeS.pfFrameRot = NULL;
     //m_BikeS.pfFrontWheelPos = NULL;
@@ -550,9 +534,6 @@ namespace vapp {
     m_BikeS.ShoulderP = Vector2f(0,0);
     m_BikeS.SwingAnchor2P = Vector2f(0,0);
     m_BikeS.SwingAnchorP = Vector2f(0,0);
-    
-    /* BIKE_P */
-    memset(&m_BikeP,0,sizeof(m_BikeP));
     
     /* BIKE_C */
     memset(&m_BikeC,0,sizeof(m_BikeC)); 
@@ -608,7 +589,6 @@ namespace vapp {
     m_fAttitudeCon = 0.0f;
     
     m_nStillFrames = 0;
-    m_nNumDummies = 0;
     
     m_nLastEventSeq = 0;
     
@@ -711,8 +691,8 @@ namespace vapp {
     }        
 
     /* Calculate bike stuff */
-    _CalculateBikeAnchors();    
-    Vector2f C( pLevelSrc->PlayerStart().x - m_BikeA.Tp.x, pLevelSrc->PlayerStart().y - m_BikeA.Tp.y);
+    m_BikeS.reInitializeAnchors();
+    Vector2f C( pLevelSrc->PlayerStart() - m_BikeS.Anchors().GroundPoint());
     _PrepareBikePhysics(C);
     setBodyDetach(false);    
 
@@ -724,7 +704,7 @@ namespace vapp {
     /* Drive left-to-right for starters */
     m_BikeS.Dir = DD_RIGHT;
     
-    m_BikeS.fCurBrake = m_BikeS.fCurEngine = 0.0f;    
+    m_BikeS.reInitializeSpeed();
     
     /* Invoke the OnLoad() script function */
     if(m_isScriptActiv) {
@@ -884,33 +864,7 @@ namespace vapp {
         CStats.fPercentageOfEmptyCells);
     Log(" %d total blocking lines",CStats.nTotalLines);
   }
-  
-  /*===========================================================================
-    Calculate important bike anchor points from parameters 
-    ===========================================================================*/
-  void MotoGame::_CalculateBikeAnchors(void) {
-    m_BikeA.Tp = Vector2f( 0, -m_BikeP.Ch );
-    m_BikeA.Rp = m_BikeA.Tp + Vector2f( -0.5f*m_BikeP.Wb, m_BikeP.WR );
-    m_BikeA.Fp = m_BikeA.Tp + Vector2f( 0.5f*m_BikeP.Wb, m_BikeP.WR );
-    m_BikeA.AR = Vector2f(m_BikeP.RVx,m_BikeP.RVy);
-    m_BikeA.AF = Vector2f(m_BikeP.FVx,m_BikeP.FVy);
-    m_BikeA.AR2 = Vector2f(-m_BikeP.RVx,m_BikeP.RVy);
-    m_BikeA.AF2 = Vector2f(-m_BikeP.FVx,m_BikeP.FVy);
-    m_BikeA.PLAp = (Vector2f(m_BikeP.PEVx,m_BikeP.PEVy) + Vector2f(m_BikeP.PHVx,m_BikeP.PHVy))*0.5f;
-    m_BikeA.PUAp = (Vector2f(m_BikeP.PEVx,m_BikeP.PEVy) + Vector2f(m_BikeP.PSVx,m_BikeP.PSVy))*0.5f;
-    m_BikeA.PLLp = (Vector2f(m_BikeP.PFVx,m_BikeP.PFVy) + Vector2f(m_BikeP.PKVx,m_BikeP.PKVy))*0.5f;
-    m_BikeA.PULp = (Vector2f(m_BikeP.PLVx,m_BikeP.PLVy) + Vector2f(m_BikeP.PKVx,m_BikeP.PKVy))*0.5f;
-    m_BikeA.PTp = (Vector2f(m_BikeP.PLVx,m_BikeP.PLVy) + Vector2f(m_BikeP.PSVx,m_BikeP.PSVy))*0.5f;
-    m_BikeA.PHp = Vector2f(m_BikeP.PHVx,m_BikeP.PHVy);
-    m_BikeA.PFp = Vector2f(m_BikeP.PFVx,m_BikeP.PFVy);
-    m_BikeA.PLAp2 = (Vector2f(-m_BikeP.PEVx,m_BikeP.PEVy) + Vector2f(-m_BikeP.PHVx,m_BikeP.PHVy))*0.5f;
-    m_BikeA.PUAp2 = (Vector2f(-m_BikeP.PEVx,m_BikeP.PEVy) + Vector2f(-m_BikeP.PSVx,m_BikeP.PSVy))*0.5f;
-    m_BikeA.PLLp2 = (Vector2f(-m_BikeP.PFVx,m_BikeP.PFVy) + Vector2f(-m_BikeP.PKVx,m_BikeP.PKVy))*0.5f;
-    m_BikeA.PULp2 = (Vector2f(-m_BikeP.PLVx,m_BikeP.PLVy) + Vector2f(-m_BikeP.PKVx,m_BikeP.PKVy))*0.5f;
-    m_BikeA.PTp2 = (Vector2f(-m_BikeP.PLVx,m_BikeP.PLVy) + Vector2f(-m_BikeP.PSVx,m_BikeP.PSVy))*0.5f;
-    m_BikeA.PHp2 = Vector2f(-m_BikeP.PHVx,m_BikeP.PHVy);
-    m_BikeA.PFp2 = Vector2f(-m_BikeP.PFVx,m_BikeP.PFVy);
-  }
+
 
   bool MotoGame::touchEntityBodyExceptHead(const BikeState &pBike, const Entity &p_entity) {
     Vector2f res1, res2;
@@ -1021,8 +975,8 @@ namespace vapp {
       Zone *pZone = m_pLevelSrc->Zones()[i];
       
       /* Check it against the wheels and the head */
-      if(pZone->doesCircleTouch(m_BikeS.FrontWheelP, m_BikeP.WR) ||
-         pZone->doesCircleTouch(m_BikeS.RearWheelP,  m_BikeP.WR)) {       
+      if(pZone->doesCircleTouch(m_BikeS.FrontWheelP, m_BikeS.Parameters().WheelRadius()) ||
+         pZone->doesCircleTouch(m_BikeS.RearWheelP,  m_BikeS.Parameters().WheelRadius())) {       
         /* In the zone -- did he just enter it? */
         if(isTouching(*pZone) == false) {
           createGameEvent(new MGE_PlayerEntersZone(getTime(), pZone));
@@ -1050,7 +1004,7 @@ namespace vapp {
       if(circleTouchCircle2f(m_pLevelSrc->Entities()[i]->DynamicPosition(),
                              m_pLevelSrc->Entities()[i]->Size(),
                              HeadPos,
-                             m_BikeP.fHeadSize)) {
+                             m_BikeS.Parameters().HeadSize())) {
         if(isTouching(*(m_pLevelSrc->Entities()[i])) == false) {
           createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
                                                       m_pLevelSrc->Entities()[i]->Id(),
@@ -1062,11 +1016,11 @@ namespace vapp {
       } else if(circleTouchCircle2f(m_pLevelSrc->Entities()[i]->DynamicPosition(),
                                     m_pLevelSrc->Entities()[i]->Size(),
                                     m_BikeS.FrontWheelP,
-                                    m_BikeP.WR) ||
+                                    m_BikeS.Parameters().WheelRadius()) ||
                 circleTouchCircle2f(m_pLevelSrc->Entities()[i]->DynamicPosition(),
                                     m_pLevelSrc->Entities()[i]->Size(),
                                     m_BikeS.RearWheelP,
-                                    m_BikeP.WR)) {
+                                    m_BikeS.Parameters().WheelRadius())) {
         if(isTouching(*(m_pLevelSrc->Entities()[i])) == false) {
           createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
                                                       m_pLevelSrc->Entities()[i]->Id(),
@@ -1413,7 +1367,7 @@ namespace vapp {
   void MotoGame::killPlayer() {
     m_bDead = true;    
     setBodyDetach(m_bDeathAnimEnabled);
-    stopBikeControls();
+    m_BikeC.stopContols();
   }
 
   void MotoGame::playerEntersZone(Zone *pZone) {
@@ -1501,12 +1455,6 @@ namespace vapp {
       dJointSetHingeParam(m_ElbowHingeID2, dParamLoStop, 1.0   * -1.0);
       dJointSetHingeParam(m_ElbowHingeID2, dParamHiStop, -1.5  * -1.0);
     }
-  }
-
-  void MotoGame::stopBikeControls() {
-    m_BikeC.fDrive = 0.0f;      
-    m_BikeC.fPull = 0.0f;  
-    m_BikeC.bChangeDir = false;
   }
 
   void MotoGame::addPenalityTime(float fTime) {

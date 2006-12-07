@@ -205,10 +205,8 @@ namespace vapp {
     /* Joystick? */
     if(m_ControllerModeID1 == CONTROLLER_MODE_JOYSTICK1 && m_pActiveJoystick1 != NULL) {
       SDL_JoystickUpdate();     
-      
-      pController->fDrive = 0.0f;      
-      pController->fPull = 0.0f;  
-      pController->bChangeDir = false;  
+
+      pController->stopContols();
       
       /* Update buttons */
       for(int i=0;i<SDL_JoystickNumButtons(m_pActiveJoystick1);i++) {
@@ -216,7 +214,7 @@ namespace vapp {
           if(!m_JoyButtonsPrev[i]) {
             /* Click! */
             if(m_nJoyButtonChangeDir1 == i) {
-              pController->bChangeDir = true;
+              pController->setChangeDir(true);
             }
           }
 
@@ -228,9 +226,9 @@ namespace vapp {
       
       /** Update axis */           
       int nRawPrim = SDL_JoystickGetAxis(m_pActiveJoystick1,m_nJoyAxisPrim1);
-      pController->fDrive = -joyRawToFloat(nRawPrim, m_nJoyAxisPrimMin1, m_nJoyAxisPrimLL1, m_nJoyAxisPrimUL1, m_nJoyAxisPrimMax1);
+      pController->setDrive(-joyRawToFloat(nRawPrim, m_nJoyAxisPrimMin1, m_nJoyAxisPrimLL1, m_nJoyAxisPrimUL1, m_nJoyAxisPrimMax1));
       int nRawSec = SDL_JoystickGetAxis(m_pActiveJoystick1,m_nJoyAxisSec1);
-      pController->fPull = -joyRawToFloat(nRawSec, m_nJoyAxisSecMin1, m_nJoyAxisSecLL1, m_nJoyAxisSecUL1, m_nJoyAxisSecMax1);
+      pController->setPull(-joyRawToFloat(nRawSec, m_nJoyAxisSecMin1, m_nJoyAxisSecLL1, m_nJoyAxisSecUL1, m_nJoyAxisSecMax1));
     }
   }
   
@@ -383,19 +381,19 @@ namespace vapp {
         case INPUT_KEY_DOWN: 
           if(m_nDriveKey1 == nKey) {
             /* Start driving */
-            pController->fDrive = 1.0f;
+            pController->setDrive(1.0f);
           }
           else if(m_nBrakeKey1 == nKey) {
             /* Brake */
-            pController->fDrive = -1.0f;
+            pController->setDrive(-1.0f);
           }
           else if(m_nPullBackKey1 == nKey) {
             /* Pull back */
-            pController->fPull = 1.0f;
+            pController->setPull(1.0f);
           }
           else if(m_nPushForwardKey1 == nKey) {
             /* Push forward */
-            pController->fPull = -1.0f;            
+            pController->setPull(-1.0f);            
           } 
 #if defined(ENABLE_ZOOMING)          
 	else if(m_nZoomIn == nKey) {
@@ -428,23 +426,23 @@ namespace vapp {
         case INPUT_KEY_UP:
           if(m_nDriveKey1 == nKey) {
             /* Stop driving */
-            pController->fDrive = 0.0f;
+            pController->setDrive(0.0f);
           }
           else if(m_nBrakeKey1 == nKey) {
             /* Don't brake */
-            pController->fDrive = 0.0f;
+            pController->setDrive(0.0f);
           }
           else if(m_nPullBackKey1 == nKey) {
             /* Pull back */
-            pController->fPull = 0.0f;
+            pController->setPull(0.0f);
           }
           else if(m_nPushForwardKey1 == nKey) {
             /* Push forward */
-            pController->fPull = 0.0f;            
+            pController->setPull(0.0f);            
           }
           else if(m_nChangeDirKey1 == nKey) {
             /* Change dir */
-            pController->bChangeDir = true;
+            pController->setChangeDir(true);
           }
           break;
       }      

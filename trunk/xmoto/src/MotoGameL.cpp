@@ -35,25 +35,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define TRUE 1
 #endif
 
-/* ChangeLog:
-
-  X-Moto 0.2.0
-  ------------
-  New functions: 
-    Game.SetDynamicEntityRotation()
-    Game.SetDynamicEntityTranslation()
-    Game.SetDynamicEntityNone()
-    Game.SetDynamicBlockRotation()
-    Game.SetDynamicBlockTranslation()
-    Game.SetDynamicBlockNone()
-    Game.CameraZoom()
-    Game.CameraMove()
-    Game.GetEntityRadius()
-    Game.IsEntityTouched()
-  
-*/
-
-
 namespace vapp {
 
   /*===========================================================================
