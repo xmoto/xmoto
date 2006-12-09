@@ -205,7 +205,7 @@ void LevelsManager::createVirtualPacks(WebRoom *i_webHighscores, std::string i_p
   }
 
   /* levels i've not finished */
-  v_pack = new LevelsPack("~ You have not finish the level");
+  v_pack = new LevelsPack("~ You have not finished the level");
   m_levelsPacks.push_back(v_pack);
   for(unsigned int i=0; i<m_levels.size(); i++) {
     if(i_profiles->isLevelCompleted(i_playerName, m_levels[i]->Id()) == false) {
