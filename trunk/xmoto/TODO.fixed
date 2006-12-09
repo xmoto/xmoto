@@ -45,6 +45,7 @@ of existing types, this line causes a segfault (see replay 7097)
 * BUG : when death is disabled : you cannot see the message "press esc or enter"
 * add a button view the highscore in the pack window
 * virtual packs : pack of level i don't have the highscore, ...
+* a virtual pack '~ I've not finished the level'
 
 Since 0.2.1
 * BUG : on bad levels loading

@@ -146,7 +146,7 @@ bool LevelsManager::doesLevelsPackExist(const std::string &i_name) const {
   return false;
 }
 
-void LevelsManager::rebuildPacks(WebRoom *i_webHighscores, std::string i_playerName) {
+void LevelsManager::rebuildPacks(WebRoom *i_webHighscores, std::string i_playerName, vapp::PlayerData *i_profiles) {
   /* delete the packs */
   for(int i=0;i<m_levelsPacks.size();i++) {
     delete m_levelsPacks[i];
@@ -164,10 +164,10 @@ void LevelsManager::rebuildPacks(WebRoom *i_webHighscores, std::string i_playerN
     }
   }
 
-  createVirtualPacks(i_webHighscores, i_playerName);
+  createVirtualPacks(i_webHighscores, i_playerName, i_profiles);
 }
 
-void LevelsManager::createVirtualPacks(WebRoom *i_webHighscores, std::string i_playerName) {
+void LevelsManager::createVirtualPacks(WebRoom *i_webHighscores, std::string i_playerName, vapp::PlayerData *i_profiles) {
   LevelsPack *v_pack;
   
   /* levels with no highscore */
@@ -202,6 +202,15 @@ void LevelsManager::createVirtualPacks(WebRoom *i_webHighscores, std::string i_p
   m_levelsPacks.push_back(v_pack);
   for(unsigned int i=0; i<m_levels.size(); i++) {
     v_pack->addLevel(m_levels[i]);
+  }
+
+  /* levels i've not finished */
+  v_pack = new LevelsPack("~ You have not finish the level");
+  m_levelsPacks.push_back(v_pack);
+  for(unsigned int i=0; i<m_levels.size(); i++) {
+    if(i_profiles->isLevelCompleted(i_playerName, m_levels[i]->Id()) == false) {
+      v_pack->addLevel(m_levels[i]);
+    }
   }
 
 }

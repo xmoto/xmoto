@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <string>
 #include "xmscene/Level.h"
+#include "PlayerData.h"
 
 class LevelsPack {
   public:
@@ -61,7 +62,7 @@ class LevelsManager {
   bool doesLevelExist(const std::string& i_id);
 
   bool doesLevelsPackExist(const std::string &i_name) const;
-  void rebuildPacks(WebRoom *i_webHighscores, std::string i_playerName);
+  void rebuildPacks(WebRoom *i_webHighscores, std::string i_playerName, vapp::PlayerData *i_profiles);
 
   /* to load or reload levels from files */
   void reloadLevelsFromFiles(bool i_enableCache);
@@ -81,7 +82,7 @@ class LevelsManager {
   void printLevelsList() const;
 
   private:
-  void createVirtualPacks(WebRoom *i_webHighscores, std::string i_playerName);
+  void createVirtualPacks(WebRoom *i_webHighscores, std::string i_playerName, vapp::PlayerData *i_profiles);
   void clean();
   static std::string LevelIndexFileName();
 
