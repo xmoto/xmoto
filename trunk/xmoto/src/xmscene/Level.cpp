@@ -608,7 +608,7 @@ void Level::importBinaryHeader(vapp::FileHandle *pfh) {
     nFormat = 5;
   
   if(nFormat != 5) {
-    throw("Old file format");
+    throw Exception("Old file format");
   }
   
   m_checkSum    = vapp::FS::readString(pfh);
@@ -625,7 +625,6 @@ void Level::importBinaryHeader(vapp::FileHandle *pfh) {
   Import binary level file
   ===========================================================================*/
 bool Level::importBinaryHeaderFromFile(const std::string &FileName, const std::string& pSum) {
-  
   /* Import binary */
   vapp::FileHandle *pfh = vapp::FS::openIFile(FileName);
   if(pfh == NULL) {
@@ -646,7 +645,7 @@ bool Level::importBinaryHeaderFromFile(const std::string &FileName, const std::s
              
   /* clean up */
   vapp::FS::closeFile(pfh);
-    
+
   return true;
 }
 
