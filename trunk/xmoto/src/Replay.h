@@ -63,10 +63,11 @@ namespace vapp {
       ~ReplayList() {clear();} /* destructor */
     
       /* Methods */
+      void initFromCache();
       void initFromDir();
-      void addReplay(const std::string &Replay);
-      void delReplay(const std::string &Replay);
-      void clear(void);
+      void addReplay(const std::string &Replay, bool i_saveCache = true);
+      void delReplay(const std::string &Replay, bool i_saveCache = true);
+      void clear(bool i_saveCache = true);
 
       /* you must free the list after this call */
       std::vector<ReplayInfo *>* findReplays(const std::string &PlayerName = "",
@@ -75,6 +76,8 @@ namespace vapp {
     private:
       /* Data */
       std::vector<ReplayInfo *> m_Replays;
+      void saveCache();
+      static std::string ReplayIndexFileName();
   };
    
   /*===========================================================================

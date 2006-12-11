@@ -550,9 +550,20 @@ namespace vapp {
 
     if(nKey == SDLK_F5) {
       if(m_State == GS_MENU) {
-  _SimpleMessage(GAMETEXT_RELOADINGLEVELS, &m_DownloadMsgBoxRect);
-  m_levelsManager.reloadLevelsFromFiles(m_bEnableLevelCache);
-  _UpdateLevelsLists();
+	if(m_pReplay != NULL) {
+	  delete m_pReplay;
+	  m_pReplay = NULL;
+	}
+	if(m_pGhostReplay != NULL) {
+	  delete m_pGhostReplay;
+	  m_pGhostReplay = NULL;
+	}
+
+	_SimpleMessage(GAMETEXT_RELOADINGLEVELS, &m_DownloadMsgBoxRect);
+	m_levelsManager.reloadLevelsFromFiles(m_bEnableLevelCache);
+	_UpdateLevelsLists();
+	_SimpleMessage(GAMETEXT_RELOADINGREPLAYS, &m_DownloadMsgBoxRect);
+	m_ReplayList.initFromDir();
       }
     }
     
@@ -1890,12 +1901,24 @@ namespace vapp {
   }
 
   void GameApp::_UpdateLevelsLists() {
+    std::string v_levelPack;
+    bool v_isset = m_pActiveLevelPack != NULL;
+
+    if(v_isset) {
+      v_levelPack = m_pActiveLevelPack->Name();
+    }
+
     /* remove reference to levels packs*/
     m_pActiveLevelPack = NULL;
     
-    if(m_pPlayer != NULL)
+    if(m_pPlayer != NULL) {
       m_levelsManager.rebuildPacks(m_pWebHighscores, m_pPlayer->PlayerName, &m_Profiles);
-    
+    }    
+
+    if(v_isset) {
+      m_pActiveLevelPack = &(m_levelsManager.LevelsPackByName(v_levelPack));
+    }
+
     _UpdateLevelPackList();
     _CreateLevelPackLevelList();
     _UpdateLevelLists();

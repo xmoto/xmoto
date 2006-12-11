@@ -140,41 +140,7 @@ namespace vapp {
     m_GameStats.loadXML("stats.xml");
     if(m_pPlayer != NULL)
       m_GameStats.xmotoStarted(m_pPlayer->PlayerName);
-    
-    /* Update replays */
-    m_ReplayList.initFromDir();
-    
-    /* List replays? */  
-    if(m_bListReplays) {
-      std::vector<ReplayInfo *> *Replays = m_ReplayList.findReplays();
-      printf("\nReplay                    Level                     Player\n");
-      printf("-----------------------------------------------------------------------\n");
-      for(int i=0;i<Replays->size();i++) {
-        std::string LevelDesc;
-        
-        if((*Replays)[i]->Level.length() == 6 &&
-           (*Replays)[i]->Level[0] == '_' && (*Replays)[i]->Level[1] == 'i' &&
-           (*Replays)[i]->Level[2] == 'L' && (*Replays)[i]->Level[5] == '_') {
-          int nNum;
-          sscanf((*Replays)[i]->Level.c_str(),"_iL%d_",&nNum);
-          char cBuf[256];
-          sprintf(cBuf,"#%d",nNum+1);
-          LevelDesc = cBuf;
-        }
-        else LevelDesc = (*Replays)[i]->Level;
-      
-        printf("%-25s %-25s %-25s\n",
-               (*Replays)[i]->Name.c_str(),
-               LevelDesc.c_str(),
-               (*Replays)[i]->Player.c_str());
-      }
-      if(Replays->empty()) printf("(none)\n");
-      delete Replays;
-      quit();
-      return;
-    }
-
-    
+   
     /* Init sound system */
     if(!isNoGraphics()) {
       Log("Initializing sound system...");
@@ -207,11 +173,52 @@ namespace vapp {
       pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "Loading");
 
       if(pSprite != NULL) {
-  pLoadingScreen = pSprite->getTexture(false, true);
+	pLoadingScreen = pSprite->getTexture(false, true);
       }
+    }
 
+    /* Update replays */
+    _UpdateLoadingScreen((1.0f/9.0f) * 0,pLoadingScreen,GAMETEXT_LOADINGREPLAYS);
+    
+    try {
+      m_ReplayList.initFromCache();
+    } catch(Exception &e) {
+      m_ReplayList.initFromDir();
+    }    
+    
+    /* List replays? */  
+    if(m_bListReplays) {
+      std::vector<ReplayInfo *> *Replays = m_ReplayList.findReplays();
+      printf("\nReplay                    Level                     Player\n");
+      printf("-----------------------------------------------------------------------\n");
+      for(int i=0;i<Replays->size();i++) {
+	std::string LevelDesc;
+	
+	if((*Replays)[i]->Level.length() == 6 &&
+	   (*Replays)[i]->Level[0] == '_' && (*Replays)[i]->Level[1] == 'i' &&
+	   (*Replays)[i]->Level[2] == 'L' && (*Replays)[i]->Level[5] == '_') {
+	  int nNum;
+	  sscanf((*Replays)[i]->Level.c_str(),"_iL%d_",&nNum);
+	  char cBuf[256];
+	  sprintf(cBuf,"#%d",nNum+1);
+	  LevelDesc = cBuf;
+	}
+	else LevelDesc = (*Replays)[i]->Level;
+	
+	printf("%-25s %-25s %-25s\n",
+	       (*Replays)[i]->Name.c_str(),
+	       LevelDesc.c_str(),
+	       (*Replays)[i]->Player.c_str());
+      }
+	if(Replays->empty()) printf("(none)\n");
+      delete Replays;
+      quit();
+      return;
+    }
+    
+    if(!isNoGraphics()) {  
       _UpdateLoadingScreen((1.0f/9.0f) * 0,pLoadingScreen,GAMETEXT_LOADINGSOUNDS);
-
+      
       if(Sound::isEnabled()) {
         /* Load sounds */
         Sound::loadSample("Sounds/NewHighscore.ogg");

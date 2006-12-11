@@ -229,6 +229,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_LISTALL              _("List All")
 #define GAMETEXT_LOADINGLEVELS        _("Loading levels...")
 #define GAMETEXT_LOADINGMENUGRAPHICS  _("Loading menu graphics...")
+#define GAMETEXT_LOADINGREPLAYS       _("Loading replays...")
 #define GAMETEXT_LOADINGSOUNDS        _("Loading sounds...")
 #define GAMETEXT_LOADINGTEXTURES      _("Loading textures...")
 #define GAMETEXT_LOGIN                _("Login")
@@ -283,6 +284,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_QUIT                 _("Quit Game")
 #define GAMETEXT_QUITMESSAGE          _("Do you really want to quit?")
 #define GAMETEXT_RELOADINGLEVELS      _("Reloading levels...")
+#define GAMETEXT_RELOADINGREPLAYS     _("Reloading replays...")
 #define GAMETEXT_REPLAY               _("Replay")
 #define GAMETEXT_REPLAYHELPTEXT(current_speed) _("Stop[esc] ||[space]  << >>[left/right keys]  < >[up/down keys]   Speed:") + current_speed + "x"
 #define GAMETEXT_REPLAYHELPTEXTNOREWIND(current_speed) _("Stop[esc] ||[space] >>[right key] < >[up/down keys]   Speed:") + current_speed + "x"
