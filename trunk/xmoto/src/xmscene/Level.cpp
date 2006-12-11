@@ -37,11 +37,12 @@ Level::Level() {
   m_rightLimit  = 0.0;
   m_topLimit    = 0.0;
   m_bottomLimit = 0.0;
+  m_xmlSource = NULL;
 }
 
 Level::~Level() {
   unloadToPlay();
-  unloadLevelData();
+  unloadLevelBody();
 }
 
 std::string Level::Id() const {
@@ -260,31 +261,6 @@ void Level::updateToTime(vapp::MotoGame& i_scene) {
   }
 }
 
-void Level::unloadLevelData() {
-
-  /* blocks */
-  for(unsigned int i=0; i<m_blocks.size(); i++) {
-    delete m_blocks[i];
-  }
-  m_blocks.clear();
-  
-  /* zones */
-  for(unsigned int i=0; i<m_zones.size(); i++) {
-    delete m_zones[i];
-  }
-  m_zones.clear();
-  
-  /* entities */
-  for(unsigned int i=0; i<m_entities.size(); i++) {
-    delete m_entities[i];
-  }
-  m_entities.clear();
-  for(unsigned int i=0; i<m_entitiesDestroyed.size(); i++) {
-    delete m_entitiesDestroyed[i];
-  }    
-  m_entitiesDestroyed.clear();
-}
-
 void Level::saveXML(void) {
   vapp::FileHandle *pfh = vapp::FS::openOFile(m_fileName);
   if(pfh == NULL) {
@@ -372,14 +348,18 @@ void Level::saveXML(void) {
 
 void Level::loadXML(void) {
   /* Load XML document and fetch tinyxml handle */
-  unloadLevelData();
-  m_xmlSource.readFromFile( m_fileName, NULL );    
+  unloadLevelBody();
+  if(m_xmlSource == NULL) {
+    m_xmlSource = new vapp::XMLDocument();
+  }
+
+  m_xmlSource->readFromFile( m_fileName, NULL );    
   
-  TiXmlDocument *pDoc = m_xmlSource.getLowLevelAccess();
+  TiXmlDocument *pDoc = m_xmlSource->getLowLevelAccess();
   if(pDoc == NULL) throw Exception("failed to load level XML");
   
   /* Start the fantastic parsing by fetching the <level> element */
-  TiXmlElement *pLevelElem = vapp::XML::findElement(m_xmlSource, NULL,std::string("level"));    
+  TiXmlElement *pLevelElem = vapp::XML::findElement(*m_xmlSource, NULL,std::string("level"));    
   if(pLevelElem == NULL) throw Exception("<level> tag not found in XML");
   
   /* Get level ID */
@@ -419,31 +399,31 @@ void Level::loadXML(void) {
     m_packNum = vapp::XML::getOption(pLevelElem,"levelpackNum");      
     
     /* Get level <info> element */
-    TiXmlElement *pInfoElem = vapp::XML::findElement(m_xmlSource, pLevelElem,std::string("info"));
+    TiXmlElement *pInfoElem = vapp::XML::findElement(*m_xmlSource, pLevelElem,std::string("info"));
     if(pInfoElem != NULL) {
       /* Name */
-      std::string Tmp = vapp::XML::getElementText(m_xmlSource, pInfoElem,"name");
+      std::string Tmp = vapp::XML::getElementText(*m_xmlSource, pInfoElem,"name");
       if(Tmp != "") m_name = Tmp;
       
       /* Author */
-      Tmp = vapp::XML::getElementText(m_xmlSource, pInfoElem,"author");
+      Tmp = vapp::XML::getElementText(*m_xmlSource, pInfoElem,"author");
       if(Tmp != "") m_author = Tmp;
       
       /* Description */
-      Tmp = vapp::XML::getElementText(m_xmlSource, pInfoElem,"description");
+      Tmp = vapp::XML::getElementText(*m_xmlSource, pInfoElem,"description");
       if(Tmp != "") m_description = Tmp;
       
       /* Date */
-      Tmp = vapp::XML::getElementText(m_xmlSource, pInfoElem,"date");
+      Tmp = vapp::XML::getElementText(*m_xmlSource, pInfoElem,"date");
       if(Tmp != "") m_date = Tmp;
       
       /* Sky */
-      Tmp = vapp::XML::getElementText(m_xmlSource, pInfoElem,"sky");
+      Tmp = vapp::XML::getElementText(*m_xmlSource, pInfoElem,"sky");
       if(Tmp != "") m_sky = Tmp;
     }
     
     /* Get script */
-    TiXmlElement *pScriptElem = vapp::XML::findElement(m_xmlSource, pLevelElem,std::string("script"));
+    TiXmlElement *pScriptElem = vapp::XML::findElement(*m_xmlSource, pLevelElem,std::string("script"));
     if(pScriptElem != NULL) {
       /* External script file specified? */
       m_scriptFileName = vapp::XML::getOption(pScriptElem,"source");      
@@ -458,14 +438,14 @@ void Level::loadXML(void) {
     }    
     
     /* Get level limits */
-    TiXmlElement *pLimitsElem = vapp::XML::findElement(m_xmlSource, pLevelElem,std::string("limits"));
+    TiXmlElement *pLimitsElem = vapp::XML::findElement(*m_xmlSource, pLevelElem,std::string("limits"));
     if(pLimitsElem != NULL) {
       m_bottomLimit = atof( vapp::XML::getOption(pLimitsElem,"bottom","-50").c_str() );
       m_leftLimit = atof( vapp::XML::getOption(pLimitsElem,"left","-50").c_str() );
       m_topLimit = atof( vapp::XML::getOption(pLimitsElem,"top","50").c_str() );
       m_rightLimit = atof( vapp::XML::getOption(pLimitsElem,"right","50").c_str() );
     }
-       
+
     /* Get entities */
     for(TiXmlElement *pElem = pLevelElem->FirstChildElement("entity"); pElem!=NULL; 
         pElem=pElem->NextSiblingElement("entity")) {
@@ -488,9 +468,12 @@ void Level::loadXML(void) {
     /* Get blocks */
     for(TiXmlElement *pElem = pLevelElem->FirstChildElement("block"); pElem!=NULL;
         pElem=pElem->NextSiblingElement("block")) {
-      m_blocks.push_back(Block::readFromXml(m_xmlSource, pElem));
+      m_blocks.push_back(Block::readFromXml(*m_xmlSource, pElem));
     }  
   }
+
+  delete m_xmlSource;
+  m_xmlSource = NULL;
 
   m_isBodyLoaded = true;
 }
@@ -521,10 +504,13 @@ bool Level::loadReducedFromFile(bool cacheEnabled) {
   // If we couldn't get it from the cache, then load from (slow) XML
   if (!cached) {
     loadXML();
-    if (cacheEnabled)
+    if (cacheEnabled) {
       exportBinary(cacheFileName, m_checkSum); /* Cache it now */
+    }
   }
   
+  unloadLevelBody(); /* remove body datas */
+
   return cached;
 }
 
@@ -594,7 +580,7 @@ void Level::loadFullyFromFile() {
 }
 
 void Level::importBinaryHeader(vapp::FileHandle *pfh) {
-  unloadLevelData();
+  unloadLevelBody();
 
   m_isBodyLoaded = false;  
   m_playerStart  = Vector2f(0.0, 0.0);
@@ -667,7 +653,7 @@ void Level::exportBinaryHeader(vapp::FileHandle *pfh) {
 }
 
 bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
-  unloadLevelData();
+  unloadLevelBody();
   bool bRet = true;
   
   m_playerStart = Vector2f(0.0, 0.0);
@@ -950,4 +936,32 @@ std::string Level::PathForUpdate() const {
     return FileName();
   }
   return "";
+}
+
+void Level::unloadLevelBody() {
+  unloadToPlay();
+
+  m_isBodyLoaded = false;
+
+  /* zones */
+  for(unsigned int i=0; i<m_zones.size(); i++) {
+    delete m_zones[i];
+  }
+  m_zones.clear();
+
+  /* blocks */
+  for(unsigned int i=0; i<m_blocks.size(); i++) {
+    delete m_blocks[i];
+  }
+  m_blocks.clear();
+
+  /* entities */
+  for(unsigned int i=0; i<m_entities.size(); i++) {
+    delete m_entities[i];
+  }
+  m_entities.clear();
+
+  if(m_xmlSource != NULL) {
+    delete m_xmlSource;
+  }
 }

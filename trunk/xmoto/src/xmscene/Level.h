@@ -133,7 +133,7 @@ class Level {
   std::string m_packNum;            /* value to sort levels */
   std::string m_sky;                /* Level sky */
   std::string m_fileName;
-  vapp::XMLDocument m_xmlSource;    /* Plain XML source */      
+  vapp::XMLDocument *m_xmlSource;    /* Plain XML source */      
   std::string m_scriptFileName;     /* Script file name */      
   std::string m_scriptSource;       /* Script source code */
   std::string m_checkSum;
@@ -153,8 +153,8 @@ class Level {
   bool importBinary(const std::string &i_fileName, const std::string& i_sum);
   bool importBinaryHeaderFromFile(const std::string &i_fileName, const std::string& i_sum);
   std::string getNameInCache() const;
-  void unloadLevelData();
 
+  void unloadLevelBody();
 };
 
 #endif
