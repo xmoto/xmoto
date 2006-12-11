@@ -1,4 +1,6 @@
 => for 0.2.3
+
+* '50 most played levels'/least : virtual package
 * a keyboard key for next level
 * random not really random...
 * reload theme done, require tests, and some sprites (like mouse, main

@@ -467,4 +467,9 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_INITZOOM _("Automatically scroll over the level before starting playing it")
 #define CONTEXTHELP_CREDITS _("View the X-Moto credits")
 
+#define VPACKAGENAME_LEVELS_WITH_NO_HIGHSCORE   _("Levels with no highscore")
+#define VPACKAGENAME_RANDOM_LEVELS              _("Random levels")
+#define VPACKAGENAME_INCOMPLETED_LEVELS         _("Levels you have not completed")
+#define VPACKAGENAME_YOU_HAVE_NOT_THE_HIGHSCORE _("Levels where you are not the highscore holder")
+
 #endif

@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "LevelsManager.h"
 #include "VXml.h"
+#include "GameText.h"
 
 #define CURRENT_LEVEL_INDEX_FILE_VERSION 1
 
@@ -172,7 +173,7 @@ void LevelsManager::createVirtualPacks(WebRoom *i_webHighscores, std::string i_p
   
   /* levels with no highscore */
   if(i_webHighscores != NULL) {
-    v_pack = new LevelsPack("~ No highscore in the room");
+    v_pack = new LevelsPack("~ " + std::string(VPACKAGENAME_LEVELS_WITH_NO_HIGHSCORE));
     m_levelsPacks.push_back(v_pack);
     for(unsigned int i=0; i<m_levels.size(); i++) {
       WebHighscore* wh = i_webHighscores->getHighscoreFromLevel(m_levels[i]->Id());
@@ -183,7 +184,7 @@ void LevelsManager::createVirtualPacks(WebRoom *i_webHighscores, std::string i_p
   }
 
   /* levels i've not the highscore */
-  v_pack = new LevelsPack("~ You have not the highscore");
+  v_pack = new LevelsPack("~ " + std::string(VPACKAGENAME_YOU_HAVE_NOT_THE_HIGHSCORE));
   m_levelsPacks.push_back(v_pack);
   for(unsigned int i=0; i<m_levels.size(); i++) {
     if(i_webHighscores != NULL) {
@@ -197,7 +198,7 @@ void LevelsManager::createVirtualPacks(WebRoom *i_webHighscores, std::string i_p
   }
 
   /* levels i've not the highscore */
-  v_pack = new LevelsPack("~ Random levels");
+  v_pack = new LevelsPack("~ " + std::string(VPACKAGENAME_RANDOM_LEVELS));
   v_pack->setSorted(false);
   m_levelsPacks.push_back(v_pack);
   for(unsigned int i=0; i<m_levels.size(); i++) {
@@ -205,7 +206,7 @@ void LevelsManager::createVirtualPacks(WebRoom *i_webHighscores, std::string i_p
   }
 
   /* levels i've not finished */
-  v_pack = new LevelsPack("~ You have not finished the level");
+  v_pack = new LevelsPack("~ " + std::string(VPACKAGENAME_INCOMPLETED_LEVELS));
   m_levelsPacks.push_back(v_pack);
   for(unsigned int i=0; i<m_levels.size(); i++) {
     if(i_profiles->isLevelCompleted(i_playerName, m_levels[i]->Id()) == false) {
