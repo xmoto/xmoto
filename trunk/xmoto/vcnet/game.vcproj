@@ -133,6 +133,18 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
+				RelativePath="..\src\xmscene\Bike.cpp">
+			</File>
+			<File
+				RelativePath="..\src\xmscene\BikeAnchors.cpp">
+			</File>
+			<File
+				RelativePath="..\src\xmscene\BikeController.cpp">
+			</File>
+			<File
+				RelativePath="..\src\xmscene\BikeParameters.cpp">
+			</File>
+			<File
 				RelativePath="..\src\xmscene\Block.cpp">
 			</File>
 			<File
@@ -239,6 +251,9 @@
 			</File>
 			<File
 				RelativePath="..\src\xmscene\Level.cpp">
+			</File>
+			<File
+				RelativePath="..\src\LevelsManager.cpp">
 			</File>
 			<File
 				RelativePath="..\src\Locales.cpp">
@@ -381,6 +396,18 @@
 				RelativePath="..\src\xmscene\BasicSceneStructs.h">
 			</File>
 			<File
+				RelativePath="..\src\xmscene\Bike.h">
+			</File>
+			<File
+				RelativePath="..\src\xmscene\BikeAnchors.h">
+			</File>
+			<File
+				RelativePath="..\src\xmscene\BikeController.h">
+			</File>
+			<File
+				RelativePath="..\src\xmscene\BikeParameters.h">
+			</File>
+			<File
 				RelativePath="..\src\xmscene\Block.h">
 			</File>
 			<File
@@ -448,6 +475,9 @@
 			</File>
 			<File
 				RelativePath="..\src\xmscene\Level.h">
+			</File>
+			<File
+				RelativePath="..\src\LevelsManager.h">
 			</File>
 			<File
 				RelativePath="..\src\Locales.h">

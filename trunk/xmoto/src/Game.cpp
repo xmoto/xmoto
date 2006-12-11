@@ -1893,7 +1893,8 @@ namespace vapp {
     /* remove reference to levels packs*/
     m_pActiveLevelPack = NULL;
     
-    m_levelsManager.rebuildPacks(m_pWebHighscores, m_pPlayer->PlayerName, &m_Profiles);
+    if(m_pPlayer != NULL)
+      m_levelsManager.rebuildPacks(m_pWebHighscores, m_pPlayer->PlayerName, &m_Profiles);
     
     _UpdateLevelPackList();
     _CreateLevelPackLevelList();
