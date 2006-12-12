@@ -1166,6 +1166,7 @@ namespace vapp {
       if(m_Quality != GQ_LOW) {
 
         std::vector<Block *> Blocks = getGameObject()->getLevelSrc()->Blocks();
+
         BlockVertex *v_blockVertexA;
         BlockVertex *v_blockVertexB;
         for(int i=0;i<Blocks.size();i++) {
@@ -1331,19 +1332,22 @@ namespace vapp {
 	  getGameObject()->gameMessage(GAMETEXT_MISSINGTEXTURES,true);
         }
         if(pTexture != NULL) {GLName = pTexture->nID;}
-        
-	glBindTexture(GL_TEXTURE_2D,GLName);
-        glEnable(GL_TEXTURE_2D);
-        glBegin(GL_POLYGON);
-	glColor3f(1,1,1);
-        
-        for(int j=0; j<Blocks[i]->Vertices().size(); j++) {
-          glTexCoord2f((Center.x+Blocks[i]->Vertices()[j]->Position().x) * 0.25,
-                       (Center.y+Blocks[i]->Vertices()[j]->Position().y) * 0.25);
-          _Vertex( Center + Blocks[i]->Vertices()[j]->Position());                  
-        }
-        glEnd();
-        glDisable(GL_TEXTURE_2D);
+               
+	for(int j=0; j<Blocks[i]->ConvexBlocks().size(); j++) {
+	  glBindTexture(GL_TEXTURE_2D,GLName);
+	  glEnable(GL_TEXTURE_2D);
+	  glBegin(GL_POLYGON);
+	  glColor3f(1,1,1);
+
+	  for(int k=0; k<Blocks[i]->ConvexBlocks()[j]->Vertices().size(); k++) {
+	    glTexCoord2f((Center.x+Blocks[i]->ConvexBlocks()[j]->Vertices()[k]->Position().x) * 0.25,
+			 (Center.y+Blocks[i]->ConvexBlocks()[j]->Vertices()[k]->Position().y) * 0.25);
+	    _Vertex( Center + Blocks[i]->ConvexBlocks()[j]->Vertices()[k]->Position());                  
+	  }
+
+	  glEnd();
+	  glDisable(GL_TEXTURE_2D);
+	}
       }
     }
   }
