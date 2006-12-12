@@ -2353,7 +2353,7 @@ namespace vapp {
         pOpenButton->setActive(false);      
 
         m_pActiveLevelPack = (LevelsPack *)pLevelPackList->getEntries()[nSel]->pvUser;
-        
+
         UIStatic *pTitle = (UIStatic *)m_pLevelPackViewer->getChild("LEVELPACK_VIEWER_TITLE");
         if(pTitle != NULL) pTitle->setCaption(m_pActiveLevelPack->Name());
         

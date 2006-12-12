@@ -561,6 +561,7 @@ namespace vapp {
 
 	_SimpleMessage(GAMETEXT_RELOADINGLEVELS, &m_DownloadMsgBoxRect);
 	m_levelsManager.reloadLevelsFromFiles(m_bEnableLevelCache);
+	m_pActiveLevelPack = NULL;
 	_UpdateLevelsLists();
 	_SimpleMessage(GAMETEXT_RELOADINGREPLAYS, &m_DownloadMsgBoxRect);
 	m_ReplayList.initFromDir();
@@ -1902,14 +1903,15 @@ namespace vapp {
 
   void GameApp::_UpdateLevelsLists() {
     std::string v_levelPack;
-    bool v_isset = m_pActiveLevelPack != NULL;
+    bool v_isset;
 
+    v_isset = (m_pActiveLevelPack != NULL);
     if(v_isset) {
       v_levelPack = m_pActiveLevelPack->Name();
-    }
 
-    /* remove reference to levels packs*/
-    m_pActiveLevelPack = NULL;
+      /* remove reference to levels packs*/
+      m_pActiveLevelPack = NULL;
+    }
     
     if(m_pPlayer != NULL) {
       m_levelsManager.rebuildPacks(m_pWebHighscores, m_pPlayer->PlayerName, &m_Profiles);
