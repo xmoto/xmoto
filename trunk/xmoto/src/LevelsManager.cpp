@@ -198,12 +198,12 @@ void LevelsManager::createVirtualPacks(WebRoom *i_webHighscores, std::string i_p
   }
 
   /* levels i've not the highscore */
-  v_pack = new LevelsPack("~ " + std::string(VPACKAGENAME_RANDOM_LEVELS));
-  v_pack->setSorted(false);
-  m_levelsPacks.push_back(v_pack);
-  for(unsigned int i=0; i<m_levels.size(); i++) {
-    v_pack->addLevel(m_levels[i]);
-  }
+  //v_pack = new LevelsPack("~ " + std::string(VPACKAGENAME_RANDOM_LEVELS));
+  //v_pack->setSorted(false);
+  //m_levelsPacks.push_back(v_pack);
+  //for(unsigned int i=0; i<m_levels.size(); i++) {
+  //  v_pack->addLevel(m_levels[i]);
+  //}
 
   /* levels i've not finished */
   v_pack = new LevelsPack("~ " + std::string(VPACKAGENAME_INCOMPLETED_LEVELS));
