@@ -59,6 +59,7 @@ class LevelsManager {
 
   LevelsPack& LevelsPackByName(const std::string &i_name);
   Level& LevelById(const std::string& i_id);
+  Level& LevelByFileName(const std::string& i_fileName);
   bool doesLevelExist(const std::string& i_id);
 
   bool doesLevelsPackExist(const std::string &i_name) const;
@@ -69,10 +70,15 @@ class LevelsManager {
   /* to load the levels from the index */
   void loadLevelsFromIndex();
   /* to load new levels */
-  void loadLevelsFromLvl(const std::vector<std::string> &LvlFiles, bool i_enableCache);
+  void loadLevelsFromLvl(const std::vector<std::string> &LvlFiles, bool i_enableCache, bool i_newLevels = false); /* set true to put the levels into the new levels list */
+
+  void updateLevelsFromLvl(const std::vector<std::string> &LvlFiles, bool i_enableCache); /* to reload levels already loaded (it will put them into the updateLevels list) */
 
   const std::vector<Level *> &Levels();
   const std::vector<LevelsPack *> &LevelsPacks();
+
+  const std::vector<Level *> &NewLevels();
+  const std::vector<Level *> &UpdatedLevels();
 
   static void checkPrerequires(bool &v_enableCache);
   void createLevelsIndex();
@@ -88,6 +94,9 @@ class LevelsManager {
 
   std::vector<Level *> m_levels;
   std::vector<LevelsPack *> m_levelsPacks;
+
+  std::vector<Level *> m_newLevels;
+  std::vector<Level *> m_updatedLevels;
 };
 
 #endif /* __LEVELSMANAGER__ */

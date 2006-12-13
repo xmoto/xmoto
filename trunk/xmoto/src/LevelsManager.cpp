@@ -116,6 +116,9 @@ LevelsManager::~LevelsManager() {
 }
  
 void LevelsManager::clean() {
+  m_newLevels.clear();
+  m_updatedLevels.clear();
+
   /* delete packs */
   for(int i=0;i<m_levelsPacks.size();i++) {
     delete m_levelsPacks[i];
@@ -214,6 +217,27 @@ void LevelsManager::createVirtualPacks(WebRoom *i_webHighscores, std::string i_p
     }
   }
 
+  /* all levels */
+  v_pack = new LevelsPack("~ " + std::string(VPACKAGENAME_ALL_LEVELS));
+  m_levelsPacks.push_back(v_pack);
+  for(unsigned int i=0; i<m_levels.size(); i++) {
+    v_pack->addLevel(m_levels[i]);
+  }
+
+  /* new levels */
+  v_pack = new LevelsPack("~ " + std::string(VPACKAGENAME_NEW_LEVELS));
+  m_levelsPacks.push_back(v_pack);
+  for(unsigned int i=0; i<m_newLevels.size(); i++) {
+    v_pack->addLevel(m_newLevels[i]);
+  }
+
+  /* updated levels */
+  v_pack = new LevelsPack("~ " + std::string(VPACKAGENAME_UPDATED_LEVELS));
+  m_levelsPacks.push_back(v_pack);
+  for(unsigned int i=0; i<m_updatedLevels.size(); i++) {
+    v_pack->addLevel(m_updatedLevels[i]);
+  }
+
 }
 
 const std::vector<Level *>& LevelsManager::Levels() {
@@ -305,7 +329,7 @@ void LevelsManager::deleteLevelsIndex() {
   remove(LevelIndexFileName().c_str());
 }
 
-void LevelsManager::loadLevelsFromLvl(const std::vector<std::string> &LvlFiles, bool i_enableCache) {
+void LevelsManager::loadLevelsFromLvl(const std::vector<std::string> &LvlFiles, bool i_enableCache, bool i_newLevels) {
   for(int i=0;i<LvlFiles.size();i++) {
     bool bCached = false;
     Level *v_level = new Level();
@@ -325,7 +349,10 @@ void LevelsManager::loadLevelsFromLvl(const std::vector<std::string> &LvlFiles, 
 	  throw Exception("Duplicate level ID");
 	}
       }
-      m_levels.push_back(v_level);        
+      m_levels.push_back(v_level);
+      if(i_newLevels) {
+	m_newLevels.push_back(v_level);
+      }
     } catch(Exception &e) {
       delete v_level;
       vapp::Log("** Warning ** : Problem loading '%s' (%s)",
@@ -364,6 +391,15 @@ Level& LevelsManager::LevelById(const std::string& i_id) {
   throw Exception(std::string("Level " + i_id + " doesn't exist").c_str());
 }
 
+Level& LevelsManager::LevelByFileName(const std::string& i_fileName) {
+  for(unsigned int i=0; i<m_levels.size(); i++) {
+    if(m_levels[i]->FileName() == i_fileName) {
+      return *(m_levels[i]);
+    }
+  }
+  throw Exception(std::string("Level " + i_fileName + " doesn't exist").c_str());
+}
+
 bool LevelsManager::doesLevelExist(const std::string& i_id) {
   for(unsigned int i=0; i<m_levels.size(); i++) {
     if(m_levels[i]->Id() == i_id) {
@@ -380,5 +416,27 @@ void LevelsManager::printLevelsList() const {
 	   m_levels[i]->Id().c_str(),
 	   m_levels[i]->Name().c_str()
 	   );
+  }
+}
+
+const std::vector<Level *>& LevelsManager::NewLevels() {
+  return m_newLevels;
+}
+
+const std::vector<Level *>& LevelsManager::UpdatedLevels() {
+  return m_updatedLevels;
+}
+
+void LevelsManager::updateLevelsFromLvl(const std::vector<std::string> &LvlFiles, bool i_enableCache) {
+  Level *v_level;
+
+  for(int i=0;i<LvlFiles.size();i++) {
+    try {
+      v_level = &(LevelByFileName(LvlFiles[i]));
+      v_level->loadReducedFromFile(i_enableCache);
+      m_updatedLevels.push_back(v_level);
+    } catch(Exception &e) {
+      vapp::Log("** Warning ** : Problem updating '%s' (%s)", LvlFiles[i].c_str(), e.getMsg().c_str());
+    }
   }
 }

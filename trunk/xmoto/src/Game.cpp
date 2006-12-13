@@ -1113,61 +1113,19 @@ namespace vapp {
         
         Log("Loading new levels...");
         int nOldNum = m_levelsManager.Levels().size();
-        m_levelsManager.loadLevelsFromLvl(LvlFiles, m_bEnableLevelCache);
+        m_levelsManager.loadLevelsFromLvl(LvlFiles, m_bEnableLevelCache, true);
         Log(" %d new level%s loaded", m_levelsManager.Levels().size()-nOldNum,(m_levelsManager.Levels().size()-nOldNum)==1?"":"s");
-        
-        /* Add new levels to GUI list */
-        if(m_pPlayNewLevelsList != NULL) {
-          for(int i=nOldNum;i<m_levelsManager.Levels().size();i++) {
-            m_pPlayNewLevelsList->addLevel(m_levelsManager.Levels()[i], m_pPlayer, &m_Profiles, m_pWebHighscores, std::string("New: "));
-          }
-        }
-        
+         
         /* Updated levels? */
-        const std::vector<std::string> UpdatedLvlFiles = m_pWebLevels->getUpdatedDownloadedLevels();
-        
         Log("Reloading updated levels...");
-        int nReloaded = 0;
-        int nTooOldXMoto = 0;
+	m_levelsManager.updateLevelsFromLvl(m_pWebLevels->getUpdatedDownloadedLevels(),
+					    m_bEnableLevelCache);
         
-        for(int i=0;i<UpdatedLvlFiles.size();i++) {
-          try {
-            /* Find levels by file names */
-            for(int j=0;j<m_levelsManager.Levels().size();j++) {
-              if(m_levelsManager.Levels()[j]->FileName() == UpdatedLvlFiles[i]) {
-                /* Found it... */
-                m_levelsManager.Levels()[j]->loadReducedFromFile(m_bEnableLevelCache);
-                
-                /* Failed to load due to old xmoto? */  
-                if(m_levelsManager.Levels()[j]->isXMotoTooOld())
-                  nTooOldXMoto++;
-                              
-                /* Add it to list of new levels as "updated" */
-                if(m_pPlayNewLevelsList != NULL) {
-                  m_pPlayNewLevelsList->addLevel(m_levelsManager.Levels()[j], m_pPlayer, &m_Profiles, m_pWebHighscores, std::string("Updated: "));
-                }
-                
-                nReloaded++;
-                break;
-              }
-            }
-          }
-          catch(Exception &e) {
-            Log("** Warning ** : Problem updating '%s' (%s)",UpdatedLvlFiles[i].c_str(),e.getMsg().c_str());            
-          }
-        }
-        
-        Log(" %d reloaded",nReloaded);        
-        if(nTooOldXMoto > 0)
-          Log(" %d not reloaded (%d due to outdated X-Moto)",UpdatedLvlFiles.size() - nReloaded,nTooOldXMoto);        
-        else
-          Log(" %d not reloaded",UpdatedLvlFiles.size() - nReloaded);        
-        
-        /* Update level lists */
-  _UpdateLevelsLists();
-  m_levelsManager.deleteLevelsIndex();
-  m_levelsManager.createLevelsIndex(); /* recreate the level index */
-      }            
+         /* Update level lists */
+	_UpdateLevelsLists();
+	m_levelsManager.deleteLevelsIndex();
+	m_levelsManager.createLevelsIndex(); /* recreate the level index */
+      }
     #endif
   }
 #endif
@@ -1924,6 +1882,18 @@ namespace vapp {
     _UpdateLevelPackList();
     _CreateLevelPackLevelList();
     _UpdateLevelLists();
+
+    /* update new levels tab */
+    m_pPlayNewLevelsList->clear();
+    if(m_pPlayNewLevelsList != NULL) {
+      for(int i=0; i<m_levelsManager.NewLevels().size(); i++) {
+	m_pPlayNewLevelsList->addLevel(m_levelsManager.NewLevels()[i], m_pPlayer, &m_Profiles, m_pWebHighscores, std::string("New: "));
+      }
+
+      for(int i=0; i<m_levelsManager.UpdatedLevels().size(); i++) {
+	m_pPlayNewLevelsList->addLevel(m_levelsManager.UpdatedLevels()[i], m_pPlayer, &m_Profiles, m_pWebHighscores, std::string("Updated: "));
+      }
+    }
   }
 
   void GameApp::reloadTheme() {
