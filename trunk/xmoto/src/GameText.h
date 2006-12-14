@@ -351,7 +351,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_XMOTOLEVELSTATS      _("%d plays, %d deaths, %d finishes, and %d restarts")
 #define GAMETEXT_XSECONDS             _("%d seconds")
 #define GAMETEXT_YES                  _("Yes")
-#define GAMETEXT_YES_FOR_ALL          _("Yes for all")
+#define GAMETEXT_YES_FOR_ALL          _("Yes to all")
 #define GAMETEXT_ZOOMIN  	      _("Zoom in")
 #define GAMETEXT_ZOOMINIT 	      _("Reinitialize zoom")
 #define GAMETEXT_ZOOMOUT 	      _("Zoom out")
