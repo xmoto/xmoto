@@ -23,10 +23,6 @@ render blocks by Z
 [13:26] <aspegic500> i must go,
 [13:26] <gaivota> atm it shows a blank black screen, once before it diplayed the menu althoug the ingame was running and similar strange behaviour
 
-required:
-- when you make a highscore, new levels list is not updated
--> i suppose it works now
-
 * associate F8 to the -nowww switch (enable/disable network)
  - when a connection fails, disable network and display a message :
    "Network disabled, press F8 to enable it"
