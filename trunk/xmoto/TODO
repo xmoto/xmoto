@@ -25,6 +25,7 @@ render blocks by Z
 
 required:
 - when you make a highscore, new levels list is not updated
+-> i suppose it works now
 
 * associate F8 to the -nowww switch (enable/disable network)
  - when a connection fails, disable network and display a message :

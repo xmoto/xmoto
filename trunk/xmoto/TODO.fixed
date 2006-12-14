@@ -46,6 +46,8 @@ of existing types, this line causes a segfault (see replay 7097)
 * add a button view the highscore in the pack window
 * virtual packs : pack of level i don't have the highscore, ...
 * a virtual pack '~ I've not finished the level'
+* new levels list saved when xmoto quit
+* don't show empty packs
 
 Since 0.2.1
 * BUG : on bad levels loading
