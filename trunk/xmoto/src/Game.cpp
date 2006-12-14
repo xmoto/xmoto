@@ -1109,16 +1109,9 @@ namespace vapp {
         }
 
         /* Got some new levels... load them! */
-        const std::vector<std::string> LvlFiles = m_pWebLevels->getNewDownloadedLevels();
-        
-        Log("Loading new levels...");
-        int nOldNum = m_levelsManager.Levels().size();
-        m_levelsManager.loadLevelsFromLvl(LvlFiles, m_bEnableLevelCache, true);
-        Log(" %d new level%s loaded", m_levelsManager.Levels().size()-nOldNum,(m_levelsManager.Levels().size()-nOldNum)==1?"":"s");
-         
-        /* Updated levels? */
-        Log("Reloading updated levels...");
-	m_levelsManager.updateLevelsFromLvl(m_pWebLevels->getUpdatedDownloadedLevels(),
+        Log("Loading new and updated levels...");
+	m_levelsManager.updateLevelsFromLvl(m_pWebLevels->getNewDownloadedLevels(),
+					    m_pWebLevels->getUpdatedDownloadedLevels(),
 					    m_bEnableLevelCache);
         
          /* Update level lists */

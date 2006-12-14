@@ -74,9 +74,14 @@ class LevelsManager {
   /* to load the levels from the index */
   void loadLevelsFromIndex();
   /* to load new levels */
-  void loadLevelsFromLvl(const std::vector<std::string> &LvlFiles, bool i_enableCache, bool i_newLevels = false); /* set true to put the levels into the new levels list */
+  void loadLevelsFromLvl(const std::vector<std::string> &LvlFiles, bool i_enableCache);
 
-  void updateLevelsFromLvl(const std::vector<std::string> &LvlFiles, bool i_enableCache); /* to reload levels already loaded (it will put them into the updateLevels list) */
+  /* to load news levels */
+  /* to reload levels already loaded (it will put them into the updateLevels list) */
+  /* create the newLevels.xml file */
+  void updateLevelsFromLvl(const std::vector<std::string> &NewLvl,
+			   const std::vector<std::string> &UpdatedLvlFileNames,
+			   bool i_enableCache);
 
   const std::vector<Level *> &Levels();
   const std::vector<LevelsPack *> &LevelsPacks();
@@ -104,6 +109,13 @@ class LevelsManager {
 
   std::vector<Level *> m_newLevels;
   std::vector<Level *> m_updatedLevels;
+
+  static std::string NewLevelsXmlFilePath();
+  void saveNewLevelsXml() const;
+  void loadNewLevelsXml();
+
+  /* is private to for externals to use updateLevelsFromLvl for new levels */
+  void loadLevelsFromLvl(const std::vector<std::string> &LvlFiles, bool i_enableCache, bool i_newLevels);
 };
 
 #endif /* __LEVELSMANAGER__ */

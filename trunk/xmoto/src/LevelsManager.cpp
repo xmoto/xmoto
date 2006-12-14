@@ -286,7 +286,13 @@ void LevelsManager::reloadLevelsFromFiles(bool i_enableCache) {
     createLevelsIndex();
   } catch(Exception &e2) {
     vapp::Log((std::string("Unable to create the level index:\n") + e2.getMsg()).c_str());
-  }  
+  }
+
+  try {
+    loadNewLevelsXml();
+  } catch(Exception &e) {
+    vapp::Log("** Warning : Unable to load NewLevels xml file");
+  }
 }
 
 std::string LevelsManager::LevelIndexFileName() {
@@ -326,6 +332,13 @@ void LevelsManager::loadLevelsFromIndex() {
     throw e;
   }
   vapp::FS::closeFile(pfh);
+
+  try {
+    loadNewLevelsXml();
+  } catch(Exception &e) {
+    vapp::Log("** Warning : Unable to load NewLevels xml file");
+  }
+
 }
    
 void LevelsManager::createLevelsIndex() {
@@ -355,6 +368,10 @@ void LevelsManager::createLevelsIndex() {
 
 void LevelsManager::deleteLevelsIndex() {
   remove(LevelIndexFileName().c_str());
+}
+
+void LevelsManager::loadLevelsFromLvl(const std::vector<std::string> &LvlFiles, bool i_enableCache) {
+  loadLevelsFromLvl(LvlFiles, i_enableCache, false);
 }
 
 void LevelsManager::loadLevelsFromLvl(const std::vector<std::string> &LvlFiles, bool i_enableCache, bool i_newLevels) {
@@ -455,16 +472,104 @@ const std::vector<Level *>& LevelsManager::UpdatedLevels() {
   return m_updatedLevels;
 }
 
-void LevelsManager::updateLevelsFromLvl(const std::vector<std::string> &LvlFiles, bool i_enableCache) {
+void LevelsManager::updateLevelsFromLvl(const std::vector<std::string> &NewLvl,
+					const std::vector<std::string> &UpdatedLvlFileNames,
+					bool i_enableCache) {
+  m_newLevels.clear();
+  m_updatedLevels.clear();
+
+  loadLevelsFromLvl(NewLvl, i_enableCache, true);  
+
   Level *v_level;
 
-  for(int i=0;i<LvlFiles.size();i++) {
+  for(int i=0;i<UpdatedLvlFileNames.size();i++) {
     try {
-      v_level = &(LevelByFileName(LvlFiles[i]));
+      v_level = &(LevelByFileName(UpdatedLvlFileNames[i]));
       v_level->loadReducedFromFile(i_enableCache);
       m_updatedLevels.push_back(v_level);
     } catch(Exception &e) {
-      vapp::Log("** Warning ** : Problem updating '%s' (%s)", LvlFiles[i].c_str(), e.getMsg().c_str());
+      vapp::Log("** Warning ** : Problem updating '%s' (%s)", UpdatedLvlFileNames[i].c_str(), e.getMsg().c_str());
     }
+  }
+
+  try {
+    saveNewLevelsXml();
+  } catch(Exception &e) {
+    vapp::Log("** Warning : Unable to save NewLevels xml file");
+  }
+}
+
+std::string LevelsManager::NewLevelsXmlFilePath() {
+  return vapp::FS::getUserDir() + "/" + "newLevels.xml";
+}
+
+void LevelsManager::saveNewLevelsXml() const {
+  remove(NewLevelsXmlFilePath().c_str());
+
+  vapp::FileHandle *pfh = vapp::FS::openOFile(NewLevelsXmlFilePath());
+  if(pfh == NULL) {
+    vapp::Log("** Warning ** : failed to open '%s'", NewLevelsXmlFilePath().c_str());
+    return;
+  }
+
+  vapp::FS::writeLineF(pfh,"<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+  vapp::FS::writeLineF(pfh,"<newLevels>");  
+
+  for(int i=0; i<m_newLevels.size(); i++) {
+    vapp::FS::writeLineF(pfh, "<level id=\"%s\" />", vapp::XML::str2xmlstr(m_newLevels[i]->Id()).c_str());
+  }
+  for(int i=0; i<m_updatedLevels.size(); i++) {
+    vapp::FS::writeLineF(pfh, "<level id=\"%s\" updated=\"true\" />", vapp::XML::str2xmlstr(m_updatedLevels[i]->Id()).c_str());
+  }
+
+  vapp::FS::writeLineF(pfh,"</newLevels>");  
+  vapp::FS::closeFile(pfh);
+}
+
+void LevelsManager::loadNewLevelsXml() {
+  m_newLevels.clear();
+  m_updatedLevels.clear();
+
+  vapp::XMLDocument v_newLevelsXml;
+  TiXmlDocument *v_newLevelsXmlData;
+  TiXmlElement *v_newLevelsXmlDataElement;
+  const char *pc;
+  std::string v_levelId, v_updated;
+  
+  v_newLevelsXml.readFromFile(NewLevelsXmlFilePath());
+  v_newLevelsXmlData = v_newLevelsXml.getLowLevelAccess();
+
+  if(v_newLevelsXmlData == NULL) {
+    throw Exception("error : unable to analyze xml newLevels file");
+  }
+
+  v_newLevelsXmlDataElement = v_newLevelsXmlData->FirstChildElement("newLevels");
+    
+  if(v_newLevelsXmlDataElement == NULL) {
+    throw Exception("error : unable to analyze xml newLevels file");
+  }
+    
+  TiXmlElement *pVarElem = v_newLevelsXmlDataElement->FirstChildElement("level");
+  while(pVarElem != NULL) {
+    v_levelId = "";
+    v_updated = "";
+
+    pc = pVarElem->Attribute("id");
+    if(pc != NULL) {
+      v_levelId = pc;
+  
+      pc = pVarElem->Attribute("updated");
+      if(pc != NULL) {
+	v_updated = pc;   
+      }
+
+      /* add the level into the list */
+      if(v_updated == "true") {
+	m_updatedLevels.push_back(&(LevelById(v_levelId)));
+      } else {
+	m_newLevels.push_back(&(LevelById(v_levelId)));
+      }
+    }
+    pVarElem = pVarElem->NextSiblingElement("level");
   }
 }
