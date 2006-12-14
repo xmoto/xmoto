@@ -476,5 +476,6 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define VPACKAGENAME_ALL_LEVELS                 _("All levels")
 #define VPACKAGENAME_NEW_LEVELS                 _("New levels")
 #define VPACKAGENAME_UPDATED_LEVELS             _("Updated levels")
+#define VPACKAGENAME_MOST_PLAYED_LEVELS         _("Most played levels")
 
 #endif

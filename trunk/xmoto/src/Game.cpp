@@ -1872,7 +1872,7 @@ namespace vapp {
     }
     
     if(m_pPlayer != NULL) {
-      m_levelsManager.rebuildPacks(m_pWebHighscores, m_pPlayer->PlayerName, &m_Profiles);
+      m_levelsManager.rebuildPacks(m_pWebHighscores, m_pPlayer->PlayerName, &m_Profiles, &m_GameStats);
     }    
 
     if(v_isset) {

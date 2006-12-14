@@ -438,5 +438,25 @@ namespace vapp {
     return Ret;
   }
 
+  int Stats::compareLevelMostPlayed(const Level& i_lvl1, const Level& i_lvl2, PlayerStats *i_playerStats) {
+    int n1;
+
+    for(unsigned int i=0; i<i_playerStats->Levels.size(); i++) {
+      if(i_playerStats->Levels[i]->LevelID == i_lvl1.Id()) {
+    	n1 = i_playerStats->Levels[i]->nPlayed;
+      }
+    }
+
+    for(unsigned int i=0; i<i_playerStats->Levels.size(); i++) {
+      if(i_playerStats->Levels[i]->LevelID == i_lvl2.Id()) {
+    	if(i_playerStats->Levels[i]->nPlayed < n1) return  1;
+    	if(i_playerStats->Levels[i]->nPlayed > n1) return -1;
+    	return 0;
+      }
+    }
+    
+    return 0;
+  }
+
 }
 

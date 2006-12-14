@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "LevelsManager.h"
 #include "VXml.h"
 #include "GameText.h"
+#include <algorithm> 
 
 #define CURRENT_LEVEL_INDEX_FILE_VERSION 1
 
@@ -150,7 +151,10 @@ bool LevelsManager::doesLevelsPackExist(const std::string &i_name) const {
   return false;
 }
 
-void LevelsManager::rebuildPacks(WebRoom *i_webHighscores, std::string i_playerName, vapp::PlayerData *i_profiles) {
+void LevelsManager::rebuildPacks(WebRoom *i_webHighscores,
+				 std::string i_playerName,
+				 vapp::PlayerData *i_profiles,
+				 vapp::Stats *i_stats) {
   /* delete the packs */
   for(int i=0;i<m_levelsPacks.size();i++) {
     delete m_levelsPacks[i];
@@ -168,10 +172,10 @@ void LevelsManager::rebuildPacks(WebRoom *i_webHighscores, std::string i_playerN
     }
   }
 
-  createVirtualPacks(i_webHighscores, i_playerName, i_profiles);
+  createVirtualPacks(i_webHighscores, i_playerName, i_profiles, i_stats);
 }
 
-void LevelsManager::createVirtualPacks(WebRoom *i_webHighscores, std::string i_playerName, vapp::PlayerData *i_profiles) {
+void LevelsManager::createVirtualPacks(WebRoom *i_webHighscores, std::string i_playerName, vapp::PlayerData *i_profiles, vapp::Stats *i_stats) {
   LevelsPack *v_pack;
   
   /* levels with no highscore */
@@ -237,6 +241,30 @@ void LevelsManager::createVirtualPacks(WebRoom *i_webHighscores, std::string i_p
   for(unsigned int i=0; i<m_updatedLevels.size(); i++) {
     v_pack->addLevel(m_updatedLevels[i]);
   }
+
+  /* most played levels */
+  // don't work
+  //vapp::PlayerStats *v_playerStats = i_stats->_FindPlayerStats(i_playerName);
+  //if(v_playerStats != NULL) {
+  //  v_pack = new LevelsPack("~ " + std::string(VPACKAGENAME_MOST_PLAYED_LEVELS));
+  //  v_pack->setSorted(false);
+  //  m_levelsPacks.push_back(v_pack);
+  //
+  //  // bad sort !!! n2
+  //  for(unsigned int i=0; i<m_levels.size(); i++) {
+  //    for(unsigned int j=0; j<m_levels.size()-1; j++) {
+  //	if(vapp::Stats::compareLevelMostPlayed(*(m_levels[i]), *(m_levels[j]), v_playerStats) != 1) {
+  //	  Level *tmp = m_levels[i];
+  //	  m_levels[i] = m_levels[j];
+  //	  m_levels[j] = tmp;
+  //	}
+  //    }
+  //  }
+  //
+  //  for(unsigned int i=0; (i<m_levels.size() && i<=20); i++) {
+  //    v_pack->addLevel(m_levels[i]);
+  //  }
+  //}
 
 }
 
