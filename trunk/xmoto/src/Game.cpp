@@ -61,7 +61,7 @@ namespace vapp {
   Update levels lists - must be done after each completed level
   ===========================================================================*/
   void GameApp::_UpdateLevelLists(void) {
-    _CreateLevelLists((UILevelList *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:ALLLEVELS_TAB:ALLLEVELS_LIST"));
+    _CreateLevelLists((UILevelList *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:ALLLEVELS_TAB:ALLLEVELS_LIST"), std::string("~ ") + VPACKAGENAME_FAVORITES_LEVELS);
 
   }
 

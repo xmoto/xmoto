@@ -457,7 +457,7 @@ namespace vapp {
       void _HandleProfileEditor(void);
       void _HandleLevelInfoViewer(void);
       void _HandleLevelPackViewer(void);
-      void _CreateLevelLists(UILevelList *pAllLevels);
+      void _CreateLevelLists(UILevelList *pAllLevels, std::string i_packageName);
       void _CreateReplaysList(UIList *pList);
       void _CreateThemesList(UIList *pList);
 #if defined(SUPPORT_WEBACCESS) 

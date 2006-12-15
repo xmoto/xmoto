@@ -96,6 +96,10 @@ class LevelsManager {
   
   void printLevelsList() const;
 
+  void addToFavorites(Level *i_level);
+  void delFromFavorites(Level *i_level);
+  const std::vector<Level *> &FavoritesLevels();
+
   private:
   void createVirtualPacks(WebRoom *i_webHighscores,
 			  std::string i_playerName,
@@ -110,9 +114,15 @@ class LevelsManager {
   std::vector<Level *> m_newLevels;
   std::vector<Level *> m_updatedLevels;
 
+  std::vector<Level *> m_favoritesLevels;
+
   static std::string NewLevelsXmlFilePath();
   void saveNewLevelsXml() const;
   void loadNewLevelsXml();
+
+  static std::string FavoritesLevelsXmlFilePath();
+  void saveFavoritesLevelsXml() const;
+  void loadFavoritesLevelsXml();
 
   /* is private to for externals to use updateLevelsFromLvl for new levels */
   void loadLevelsFromLvl(const std::vector<std::string> &LvlFiles, bool i_enableCache, bool i_newLevels);

@@ -49,6 +49,7 @@ of existing types, this line causes a segfault (see replay 7097)
 * new levels list saved when xmoto quit
 * don't show empty packs
 * when you make a highscore, new levels list is not updated
+* add a tab : favorite levels (priority=low)
 
 Since 0.2.1
 * BUG : on bad levels loading

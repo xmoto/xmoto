@@ -154,7 +154,6 @@ zone2b = {}
 * a button "clean replays" which remove not highscore replays or
    something like it
 * check for a new version at startup
-* add a tab : favorite levels (priority=low)
 * add 2 rooms configurations so that i can display, world highscore
    and highscore of my room (priority=low)
 * add import of players.bin (so that people playing at different
