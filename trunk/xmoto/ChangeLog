@@ -1,7 +1,9 @@
 X-Moto 0.2.3 2006-
 -----------------------
 
- * Significantly lowered load times due to new level and replay index. (press F5 to reload the levels if you make your own levels)
+ * Significantly lowered load times due to new level and replay index. 
+   (Press F5 to reload the levels if you make your own levels or install
+   any manually)
  * Built-in levels are now bundled as a level pack.
  * Some patches from FreeBSD port applied. 
  * Spanish and catalan translations (for unix only).

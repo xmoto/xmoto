@@ -476,8 +476,8 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_SCREENRES _("Click to select screen resolution")
 #define CONTEXTHELP_LEVELPACKNUMLEVELS _("Completed levels / total number of levels in pack")
 #define CONTEXTHELP_LEVELPACK _("Name of level pack")
-#define CONTEXTHELP_ADDTOFAVORITES _("Add the level to the favorites levels list")
-#define CONTEXTHELP_DELETEFROMFAVORITES _("Delete the level from the favorites levels list")
+#define CONTEXTHELP_ADDTOFAVORITES _("Add the level to the favorite levels list")
+#define CONTEXTHELP_DELETEFROMFAVORITES _("Delete the level from the favorite levels list")
 
 #define VPACKAGENAME_LEVELS_WITH_NO_HIGHSCORE   _("Levels with no highscore")
 #define VPACKAGENAME_RANDOM_LEVELS              _("Random levels")
@@ -487,6 +487,6 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define VPACKAGENAME_NEW_LEVELS                 _("New levels")
 #define VPACKAGENAME_UPDATED_LEVELS             _("Updated levels")
 #define VPACKAGENAME_MOST_PLAYED_LEVELS         _("Most played levels")
-#define VPACKAGENAME_FAVORITES_LEVELS            _("Favorites levels")
+#define VPACKAGENAME_FAVORITES_LEVELS            _("Favorite levels")
 
 #endif
