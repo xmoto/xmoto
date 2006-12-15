@@ -468,6 +468,12 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_DEATHANIM _("Enable animation of bike falling apart when dead")
 #define CONTEXTHELP_INITZOOM _("Automatically scroll over the level before starting playing it")
 #define CONTEXTHELP_CREDITS _("View the X-Moto credits")
+#define CONTEXTHELP_REPLAYCOL _("Name of replay")
+#define CONTEXTHELP_REPLAYLEVELCOL _("Level played in replay")
+#define CONTEXTHELP_REPLAYPLAYERCOL _("Player who recorded the replay")
+#define CONTEXTHELP_SCREENRES _("Click to select screen resolution")
+#define CONTEXTHELP_LEVELPACKNUMLEVELS _("Completed levels / total number of levels in pack")
+#define CONTEXTHELP_LEVELPACK _("Name of level pack")
 
 #define VPACKAGENAME_LEVELS_WITH_NO_HIGHSCORE   _("Levels with no highscore")
 #define VPACKAGENAME_RANDOM_LEVELS              _("Random levels")

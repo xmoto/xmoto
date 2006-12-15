@@ -604,21 +604,21 @@ namespace vapp {
         m_nSelected = 0;
         m_pEnterButton = NULL;
         m_bSort = false;
-	m_fsort = NULL;
-	m_bNumeroted = false;
+	      m_fsort = NULL;
+	      m_bNumeroted = false;
         m_bItemActivated = false;
         
         m_bScrollDownPressed = m_bScrollUpPressed = false;
         
         m_bScrollDownHover = m_bScrollUpHover = false;
         
-	m_bClicked = false;
+	      m_bClicked = false;
 
-	m_bChanged = false;
+	      m_bChanged = false;
 
-	m_bScrolling = false;
+	      m_bScrolling = false;
 
-	m_lastRefreshTime = getApp()->getRealTime();
+	      m_lastRefreshTime = getApp()->getRealTime();
 
         unhideAllColumns();
       }      
@@ -636,6 +636,8 @@ namespace vapp {
       virtual void mouseHover(int x,int y);      
       virtual bool offerActivation(void);
       virtual bool keyDown(int nKey,int nChar);
+
+      virtual std::string subContextHelp(int x,int y);
       
       UIListEntry *addEntry(std::string Text,void *pvUser=NULL);
       void clear(void);
@@ -645,7 +647,7 @@ namespace vapp {
       std::vector<std::string> &getColumns(void) {return m_Columns;}
       int getSelected(void) {return m_nSelected;}
       void setSelected(int n);
-      void addColumn(std::string Title,int nWidth) {m_Columns.push_back(Title); m_ColumnWidths.push_back(nWidth);}
+      void addColumn(std::string Title,int nWidth,const std::string &Help = "") {m_Columns.push_back(Title); m_ColumnWidths.push_back(nWidth); m_ColumnHelpStrings.push_back(Help);}
       void setEnterButton(UIButton *pButton) {m_pEnterButton = pButton;}
       bool isItemActivated(void) {return m_bItemActivated;}
       void setHideColumn(int n) {m_nColumnHideFlags |= (1<<n);}
@@ -668,6 +670,7 @@ namespace vapp {
       int(*m_fsort)(void *pvUser1, void *pvUser2);
       std::vector<UIListEntry *> m_Entries;
       std::vector<std::string> m_Columns;
+      std::vector<std::string> m_ColumnHelpStrings;
       std::vector<int> m_ColumnWidths;
       unsigned int m_nColumnHideFlags;
       int m_nSelected;

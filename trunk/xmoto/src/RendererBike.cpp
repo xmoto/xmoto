@@ -238,13 +238,13 @@ namespace vapp {
         p2 = pBike->LowerBodyP - Vector2f(-Sv.y,Sv.x)*0.24f - Sv*0.1f;
         p3 = pBike->ShoulderP - Vector2f(-Sv.y,Sv.x)*0.24f + Sv*0.46f;
 
-	pSprite = p_theme->getTorso();
-	if(pSprite != NULL) {
-	  pTexture = pSprite->getTexture();
-	  if(pTexture != NULL) {
-	    _RenderAlphaBlendedSection(pTexture,p1,p2,p3,p0);
-	  }
-	}        
+	      pSprite = p_theme->getTorso();
+	      if(pSprite != NULL) {
+	        pTexture = pSprite->getTexture();
+	        if(pTexture != NULL) {
+	          _RenderAlphaBlendedSection(pTexture,p1,p2,p3,p0);
+	        }
+	      }        
 
         /* Draw rider upper leg */
         Sv = pBike->LowerBodyP - pBike->KneeP;
@@ -254,13 +254,13 @@ namespace vapp {
         p2 = pBike->KneeP - Vector2f(-Sv.y,Sv.x)*0.15f + Sv*0.0f;
         p3 = pBike->LowerBodyP - Vector2f(-Sv.y,Sv.x)*0.1f + Sv*0.14f;
 
-	pSprite = p_theme->getUpperLeg();
-	if(pSprite != NULL) {
-	  pTexture = pSprite->getTexture();
-	  if(pTexture != NULL) {
-	    _RenderAlphaBlendedSection(pTexture,p0,p1,p2,p3);
-	  }
-	}        
+	      pSprite = p_theme->getUpperLeg();
+	      if(pSprite != NULL) {
+	        pTexture = pSprite->getTexture();
+	        if(pTexture != NULL) {
+	          _RenderAlphaBlendedSection(pTexture,p0,p1,p2,p3);
+	        }
+	      }        
 
         /* Draw rider lower leg */
         Sv = pBike->KneeP - pBike->FootP;
@@ -270,14 +270,13 @@ namespace vapp {
         p2 = pBike->FootP - Vector2f(-Sv.y,Sv.x)*0.2f;
         p3 = pBike->KneeP - Vector2f(-Sv.y,Sv.x)*0.23f + Sv*0.1f;
 
-	pSprite = p_theme->getLowerLeg();
-	if(pSprite != NULL) {
-	  pTexture = pSprite->getTexture();
-	  if(pTexture != NULL) {
-	    _RenderAlphaBlendedSection(pTexture,p1,p2,p3,p0);        
-	  }
-	}
-      }
+	      pSprite = p_theme->getLowerLeg();
+	      if(pSprite != NULL) {
+	        pTexture = pSprite->getTexture();
+	        if(pTexture != NULL) {
+	          _RenderAlphaBlendedSection(pTexture,p1,p2,p3,p0);        
+	        }
+	      }
 
         /* Draw rider upper arm */
         Sv = pBike->ShoulderP - pBike->ElbowP;
@@ -287,13 +286,13 @@ namespace vapp {
         p2 = pBike->ElbowP - Vector2f(-Sv.y,Sv.x)*0.10f - Sv*0.05f;
         p3 = pBike->ShoulderP - Vector2f(-Sv.y,Sv.x)*0.10f;
 
-	pSprite = p_theme->getUpperArm();
-	if(pSprite != NULL) {
-	  pTexture = pSprite->getTexture();
-	  if(pTexture != NULL) {
-	    _RenderAlphaBlendedSection(pTexture,p1,p2,p3,p0);
-	  }
-	}        
+	      pSprite = p_theme->getUpperArm();
+	      if(pSprite != NULL) {
+	        pTexture = pSprite->getTexture();
+	        if(pTexture != NULL) {
+	          _RenderAlphaBlendedSection(pTexture,p1,p2,p3,p0);
+	        }
+	      }        
 
         /* Draw rider lower arm */
         Sv = pBike->ElbowP - pBike->HandP;
@@ -303,13 +302,14 @@ namespace vapp {
         p2 = pBike->HandP - Vector2f(-Sv.y,Sv.x)*0.10f - Sv*0.05f;
         p3 = pBike->ElbowP - Vector2f(-Sv.y,Sv.x)*0.10f + Sv*0.09f;
         
-	pSprite = p_theme->getLowerArm();
-	if(pSprite != NULL) {
-	  pTexture = pSprite->getTexture();
-	  if(pTexture != NULL) {
-	    _RenderAlphaBlendedSection(pTexture,p3,p2,p1,p0);
-	  }
-	}        
+	      pSprite = p_theme->getLowerArm();
+	      if(pSprite != NULL) {
+	        pTexture = pSprite->getTexture();
+	        if(pTexture != NULL) {
+	          _RenderAlphaBlendedSection(pTexture,p3,p2,p1,p0);
+	        }
+	      }        
+      }
 
       if(m_bUglyMode || m_bTestThemeMode) {
         /* Draw it ugly */
@@ -335,13 +335,13 @@ namespace vapp {
         p2 = pBike->LowerBody2P - Vector2f(-Sv.y,Sv.x)*0.24f - Sv*0.1f;
         p3 = pBike->Shoulder2P - Vector2f(-Sv.y,Sv.x)*0.24f + Sv*0.46f;
 
-	pSprite = p_theme->getTorso();
-	if(pSprite != NULL) {
-	  pTexture = pSprite->getTexture();
-	  if(pTexture != NULL) {
-	    _RenderAlphaBlendedSection(pTexture,p2,p1,p0,p3);        
-	  }
-	}                
+	      pSprite = p_theme->getTorso();
+	      if(pSprite != NULL) {
+	        pTexture = pSprite->getTexture();
+	        if(pTexture != NULL) {
+	          _RenderAlphaBlendedSection(pTexture,p2,p1,p0,p3);        
+	        }
+	      }                
 
         /* Draw rider upper leg */
         Sv = pBike->LowerBody2P - pBike->Knee2P;
@@ -351,13 +351,13 @@ namespace vapp {
         p2 = pBike->Knee2P - Vector2f(-Sv.y,Sv.x)*0.15f + Sv*0.0f;
         p3 = pBike->LowerBody2P - Vector2f(-Sv.y,Sv.x)*0.1f + Sv*0.14f;
 
-	pSprite = p_theme->getUpperLeg();
-	if(pSprite != NULL) {
-	  pTexture = pSprite->getTexture();
-	  if(pTexture != NULL) {
-	    _RenderAlphaBlendedSection(pTexture,p3,p2,p1,p0);        
-	  }
-	}
+	      pSprite = p_theme->getUpperLeg();
+	      if(pSprite != NULL) {
+	        pTexture = pSprite->getTexture();
+	        if(pTexture != NULL) {
+	          _RenderAlphaBlendedSection(pTexture,p3,p2,p1,p0);        
+	        }
+	      }
 
         /* Draw rider lower leg */
         Sv = pBike->Knee2P - pBike->Foot2P;
@@ -367,13 +367,13 @@ namespace vapp {
         p2 = pBike->Foot2P - Vector2f(-Sv.y,Sv.x)*0.2f;
         p3 = pBike->Knee2P - Vector2f(-Sv.y,Sv.x)*0.23f + Sv*0.1f;
 
-	pSprite = p_theme->getLowerLeg();
-	if(pSprite != NULL) {
-	  pTexture = pSprite->getTexture();
-	  if(pTexture != NULL) {
-	    _RenderAlphaBlendedSection(pTexture,p2,p1,p0,p3);        
-	  }
-	}
+	      pSprite = p_theme->getLowerLeg();
+	      if(pSprite != NULL) {
+	        pTexture = pSprite->getTexture();
+	        if(pTexture != NULL) {
+	          _RenderAlphaBlendedSection(pTexture,p2,p1,p0,p3);        
+	        }
+	      }
 
         /* Draw rider upper arm */
         Sv = pBike->Shoulder2P - pBike->Elbow2P;
@@ -383,13 +383,13 @@ namespace vapp {
         p2 = pBike->Elbow2P - Vector2f(-Sv.y,Sv.x)*0.10f - Sv*0.05f;
         p3 = pBike->Shoulder2P - Vector2f(-Sv.y,Sv.x)*0.10f;
 
-	pSprite = p_theme->getUpperArm();
-	if(pSprite != NULL) {
-	  pTexture = pSprite->getTexture();
-	  if(pTexture != NULL) {
-	    _RenderAlphaBlendedSection(pTexture,p2,p1,p0,p3);        
-	  }
-	}        
+	      pSprite = p_theme->getUpperArm();
+	      if(pSprite != NULL) {
+	        pTexture = pSprite->getTexture();
+	        if(pTexture != NULL) {
+	          _RenderAlphaBlendedSection(pTexture,p2,p1,p0,p3);        
+	        }
+	      }        
 
         /* Draw rider lower arm */
         Sv = pBike->Elbow2P - pBike->Hand2P;
@@ -399,14 +399,13 @@ namespace vapp {
         p2 = pBike->Hand2P - Vector2f(-Sv.y,Sv.x)*0.10f - Sv*0.05f;
         p3 = pBike->Elbow2P - Vector2f(-Sv.y,Sv.x)*0.10f + Sv*0.09f;
 
-	pSprite = p_theme->getLowerArm();
-	if(pSprite != NULL) {
-	  pTexture = pSprite->getTexture();
-	  if(pTexture != NULL) {
-	    _RenderAlphaBlendedSection(pTexture,p0,p1,p2,p3);        
-	  }
-	}
-
+	      pSprite = p_theme->getLowerArm();
+	      if(pSprite != NULL) {
+	        pTexture = pSprite->getTexture();
+	        if(pTexture != NULL) {
+	          _RenderAlphaBlendedSection(pTexture,p0,p1,p2,p3);        
+	        }
+	      }
       }
 
       if(m_bUglyMode || m_bTestThemeMode) {
@@ -427,10 +426,10 @@ namespace vapp {
     /* New wheel-spin particles? */
     if(getGameObject()->isWheelSpinning()) {
       if(randomNum(0,1) < 0.7f) {
-	ParticlesSource *v_debris;
-	v_debris = (ParticlesSource*) &(getGameObject()->getLevelSrc()->getEntityById("BikeDebris"));
-	v_debris->setDynamicPosition(getGameObject()->getWheelSpinPoint());	
-	v_debris->addParticle(getGameObject()->getWheelSpinDir(), m_pMotoGame->getTime() + 3.0);
+	      ParticlesSource *v_debris;
+	      v_debris = (ParticlesSource*) &(getGameObject()->getLevelSrc()->getEntityById("BikeDebris"));
+	      v_debris->setDynamicPosition(getGameObject()->getWheelSpinPoint());	
+	      v_debris->addParticle(getGameObject()->getWheelSpinDir(), m_pMotoGame->getTime() + 3.0);
       }
     }
   }

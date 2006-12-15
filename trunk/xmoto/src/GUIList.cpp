@@ -58,6 +58,33 @@ namespace vapp {
     setSelected(p);
   }
 
+
+  /*===========================================================================
+  Context help at cursor position?
+  ===========================================================================*/
+  std::string UIList::subContextHelp(int x,int y) {
+    int nHX = 6;
+  
+    for(int i=0;i<m_Columns.size();i++) {
+      if(!(m_nColumnHideFlags & (1<<i))) {
+        int nW = m_ColumnWidths[i];
+      
+        for(int j=i+1;j<m_Columns.size();j++) {
+          if(m_nColumnHideFlags & (1<<j))
+            nW += m_ColumnWidths[i]; 
+        }           
+        
+        /* Mouse in this one? */
+        if(x >= nHX && x <= nHX + nW)
+          return m_ColumnHelpStrings[i];
+        
+        nHX += nW;
+      }
+    }
+    
+    return "";
+  }
+
   /*===========================================================================
   Painting
   ===========================================================================*/
@@ -545,7 +572,6 @@ namespace vapp {
   ===========================================================================*/
   void UIList::_NewlySelectedItem(void) {
     /* HACK HACK HACK HACK! */
-  
     int nHeaderHeight=18;
     int nLX = 6, nLY = nHeaderHeight+6+4;
     int nLWidth = getPosition().nWidth-12 - 20;

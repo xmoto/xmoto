@@ -294,9 +294,9 @@ namespace vapp {
     pReplayList->setID("REPLAY_LIST");
     pReplayList->showWindow(true);
     pReplayList->setFont(m_Renderer.getSmallFont());
-    pReplayList->addColumn(GAMETEXT_REPLAY, pReplayList->getPosition().nWidth/2 - 100);
-    pReplayList->addColumn(GAMETEXT_LEVEL,  pReplayList->getPosition().nWidth/2 - 28);
-    pReplayList->addColumn(GAMETEXT_PLAYER,128);
+    pReplayList->addColumn(GAMETEXT_REPLAY, pReplayList->getPosition().nWidth/2 - 100,CONTEXTHELP_REPLAYCOL);
+    pReplayList->addColumn(GAMETEXT_LEVEL,  pReplayList->getPosition().nWidth/2 - 28,CONTEXTHELP_REPLAYLEVELCOL);
+    pReplayList->addColumn(GAMETEXT_PLAYER,128,CONTEXTHELP_REPLAYPLAYERCOL);
     pReplayList->setEnterButton( pShowButton );
     
     //m_pPlayWindow->setPrimaryChild(m_pJustDeadMenuButtons[0]); /* default button: Try Again */
@@ -435,7 +435,7 @@ namespace vapp {
     UIList *pDispResList = new UIList(pVideoOptionsTab,5,43,"",pVideoOptionsTab->getPosition().nWidth-10,128);
     pDispResList->setID("RES_LIST");
     pDispResList->setFont(m_Renderer.getSmallFont());
-    pDispResList->addColumn(GAMETEXT_SCREENRES,pDispResList->getPosition().nWidth);
+    pDispResList->addColumn(GAMETEXT_SCREENRES,pDispResList->getPosition().nWidth,CONTEXTHELP_SCREENRES);
 
     std::vector<std::string>* modes = getDisplayModes();
     
@@ -850,8 +850,8 @@ namespace vapp {
     pLevelPackList->showWindow(true);
     pLevelPackList->enableWindow(true);
     pLevelPackList->setFont(m_Renderer.getSmallFont());
-    pLevelPackList->addColumn(GAMETEXT_LEVELPACK,pLevelPackList->getPosition().nWidth-150);
-    pLevelPackList->addColumn(GAMETEXT_NUMLEVELS,150);
+    pLevelPackList->addColumn(GAMETEXT_LEVELPACK,pLevelPackList->getPosition().nWidth-150,CONTEXTHELP_LEVELPACK);
+    pLevelPackList->addColumn(GAMETEXT_NUMLEVELS,150,CONTEXTHELP_LEVELPACKNUMLEVELS);
     pLevelPackList->setEnterButton( pOpenButton );
 
     /* all levels tab */
