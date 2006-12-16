@@ -162,6 +162,9 @@ namespace vapp {
       return; /* abort */
     }
 
+    /* Init file system stuff */
+    FS::init( "xmoto" );
+
     /* Do user pre-init */
     userPreInit();
 
