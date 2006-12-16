@@ -100,6 +100,9 @@ class LevelsManager {
   void delFromFavorites(Level *i_level);
   const std::vector<Level *> &FavoritesLevels();
 
+  /* save the files so that when you reinit, it's restored */
+  void saveXml() const;
+
   private:
   void createVirtualPacks(WebRoom *i_webHighscores,
 			  std::string i_playerName,

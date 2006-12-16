@@ -429,6 +429,7 @@ namespace vapp {
     if(m_pCredits != NULL)
       delete m_pCredits;
   
+    m_levelsManager.saveXml();
     m_GameStats.saveXML("stats.xml");
       
     if(!isNoGraphics()) {

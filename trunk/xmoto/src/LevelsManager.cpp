@@ -510,12 +510,6 @@ void LevelsManager::updateLevelsFromLvl(const std::vector<std::string> &NewLvl,
       vapp::Log("** Warning ** : Problem updating '%s' (%s)", UpdatedLvlFileNames[i].c_str(), e.getMsg().c_str());
     }
   }
-
-  try {
-    saveNewLevelsXml();
-  } catch(Exception &e) {
-    vapp::Log("** Warning : Unable to save NewLevels xml file");
-  }
 }
 
 std::string LevelsManager::NewLevelsXmlFilePath() {
@@ -609,21 +603,19 @@ void LevelsManager::addToFavorites(Level *i_level) {
     }
   }
   m_favoritesLevels.push_back(i_level);
-  saveFavoritesLevelsXml();
 }
 
 void LevelsManager::delFromFavorites(Level *i_level) {
   for(int i=0; i<m_favoritesLevels.size(); i++) {
     if(m_favoritesLevels[i] == i_level) {
       m_favoritesLevels.erase(m_favoritesLevels.begin() + i);
-      saveFavoritesLevelsXml();
       return;
     }
   }
 }
 
 void LevelsManager::saveFavoritesLevelsXml() const {
-  remove(NewLevelsXmlFilePath().c_str());
+  remove(FavoritesLevelsXmlFilePath().c_str());
 
   vapp::FileHandle *pfh = vapp::FS::openOFile(FavoritesLevelsXmlFilePath());
   if(pfh == NULL) {
@@ -677,4 +669,9 @@ void LevelsManager::loadFavoritesLevelsXml() {
     }
     pVarElem = pVarElem->NextSiblingElement("level");
   }
+}
+
+void LevelsManager::saveXml() const {
+  saveFavoritesLevelsXml();
+  saveNewLevelsXml();
 }
