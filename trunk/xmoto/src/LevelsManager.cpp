@@ -119,7 +119,7 @@ LevelsManager::~LevelsManager() {
 void LevelsManager::clean() {
   m_newLevels.clear();
   m_updatedLevels.clear();
-  m_favoritesLevels.clear();
+  m_favoriteLevels.clear();
 
   /* delete packs */
   for(int i=0;i<m_levelsPacks.size();i++) {
@@ -229,11 +229,11 @@ void LevelsManager::createVirtualPacks(WebRoom *i_webHighscores, std::string i_p
     v_pack->addLevel(m_levels[i]);
   }
 
-  /* favorites levels */
-  v_pack = new LevelsPack("~ " + std::string(VPACKAGENAME_FAVORITES_LEVELS));
+  /* favorite levels */
+  v_pack = new LevelsPack("~ " + std::string(VPACKAGENAME_FAVORITE_LEVELS));
   m_levelsPacks.push_back(v_pack);
-  for(unsigned int i=0; i<m_favoritesLevels.size(); i++) {
-    v_pack->addLevel(m_favoritesLevels[i]);
+  for(unsigned int i=0; i<m_favoriteLevels.size(); i++) {
+    v_pack->addLevel(m_favoriteLevels[i]);
   }
 
   /* new levels */
@@ -302,9 +302,9 @@ void LevelsManager::reloadLevelsFromFiles(bool i_enableCache) {
     vapp::Log("** Warning : Unable to load NewLevels xml file");
   }
   try {
-    loadFavoritesLevelsXml();
+    loadFavoriteLevelsXml();
   } catch(Exception &e) {
-    vapp::Log("** Warning : Unable to load FavoritesLevels xml file");
+    vapp::Log("** Warning : Unable to load FavoriteLevels xml file");
   }
 }
 
@@ -353,9 +353,9 @@ void LevelsManager::loadLevelsFromIndex() {
   }
 
   try {
-    loadFavoritesLevelsXml();
+    loadFavoriteLevelsXml();
   } catch(Exception &e) {
-    vapp::Log("** Warning : Unable to load FavoritesLevels xml file");
+    vapp::Log("** Warning : Unable to load FavoriteLevels xml file");
   }
 
 }
@@ -587,76 +587,76 @@ void LevelsManager::loadNewLevelsXml() {
   }
 }
 
-const std::vector<Level *>& LevelsManager::FavoritesLevels() {
-  return m_favoritesLevels;
+const std::vector<Level *>& LevelsManager::FavoriteLevels() {
+  return m_favoriteLevels;
 }
 
-std::string LevelsManager::FavoritesLevelsXmlFilePath() {
-  return vapp::FS::getUserDir() + "/" + "favoritesLevels.xml";
+std::string LevelsManager::FavoriteLevelsXmlFilePath() {
+  return vapp::FS::getUserDir() + "/" + "favoriteLevels.xml";
 }
 
-void LevelsManager::addToFavorites(Level *i_level) {
-  /* check if the level is already into the favorites list */
-  for(int i=0; i<m_favoritesLevels.size(); i++) {
-    if(m_favoritesLevels[i] == i_level) {
+void LevelsManager::addToFavorite(Level *i_level) {
+  /* check if the level is already into the favorite list */
+  for(int i=0; i<m_favoriteLevels.size(); i++) {
+    if(m_favoriteLevels[i] == i_level) {
       return;
     }
   }
-  m_favoritesLevels.push_back(i_level);
+  m_favoriteLevels.push_back(i_level);
 }
 
-void LevelsManager::delFromFavorites(Level *i_level) {
-  for(int i=0; i<m_favoritesLevels.size(); i++) {
-    if(m_favoritesLevels[i] == i_level) {
-      m_favoritesLevels.erase(m_favoritesLevels.begin() + i);
+void LevelsManager::delFromFavorite(Level *i_level) {
+  for(int i=0; i<m_favoriteLevels.size(); i++) {
+    if(m_favoriteLevels[i] == i_level) {
+      m_favoriteLevels.erase(m_favoriteLevels.begin() + i);
       return;
     }
   }
 }
 
-void LevelsManager::saveFavoritesLevelsXml() const {
-  remove(FavoritesLevelsXmlFilePath().c_str());
+void LevelsManager::saveFavoriteLevelsXml() const {
+  remove(FavoriteLevelsXmlFilePath().c_str());
 
-  vapp::FileHandle *pfh = vapp::FS::openOFile(FavoritesLevelsXmlFilePath());
+  vapp::FileHandle *pfh = vapp::FS::openOFile(FavoriteLevelsXmlFilePath());
   if(pfh == NULL) {
-    vapp::Log("** Warning ** : failed to open '%s'", FavoritesLevelsXmlFilePath().c_str());
+    vapp::Log("** Warning ** : failed to open '%s'", FavoriteLevelsXmlFilePath().c_str());
     return;
   }
 
   vapp::FS::writeLineF(pfh,"<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-  vapp::FS::writeLineF(pfh,"<favoritesLevels>");  
+  vapp::FS::writeLineF(pfh,"<favoriteLevels>");  
 
-  for(int i=0; i<m_favoritesLevels.size(); i++) {
-    vapp::FS::writeLineF(pfh, "<level id=\"%s\" />", vapp::XML::str2xmlstr(m_favoritesLevels[i]->Id()).c_str());
+  for(int i=0; i<m_favoriteLevels.size(); i++) {
+    vapp::FS::writeLineF(pfh, "<level id=\"%s\" />", vapp::XML::str2xmlstr(m_favoriteLevels[i]->Id()).c_str());
   }
 
-  vapp::FS::writeLineF(pfh,"</favoritesLevels>");  
+  vapp::FS::writeLineF(pfh,"</favoriteLevels>");  
   vapp::FS::closeFile(pfh);
 }
 
-void LevelsManager::loadFavoritesLevelsXml() {
-  m_favoritesLevels.clear();
+void LevelsManager::loadFavoriteLevelsXml() {
+  m_favoriteLevels.clear();
 
-  vapp::XMLDocument v_favoritesLevelsXml;
-  TiXmlDocument *v_favoritesLevelsXmlData;
-  TiXmlElement *v_favoritesLevelsXmlDataElement;
+  vapp::XMLDocument v_favoriteLevelsXml;
+  TiXmlDocument *v_favoriteLevelsXmlData;
+  TiXmlElement *v_favoriteLevelsXmlDataElement;
   const char *pc;
   std::string v_levelId;
   
-  v_favoritesLevelsXml.readFromFile(FavoritesLevelsXmlFilePath());
-  v_favoritesLevelsXmlData = v_favoritesLevelsXml.getLowLevelAccess();
+  v_favoriteLevelsXml.readFromFile(FavoriteLevelsXmlFilePath());
+  v_favoriteLevelsXmlData = v_favoriteLevelsXml.getLowLevelAccess();
 
-  if(v_favoritesLevelsXmlData == NULL) {
-    throw Exception("error : unable to analyze xml favoritesLevels file");
+  if(v_favoriteLevelsXmlData == NULL) {
+    throw Exception("error : unable to analyze xml favoriteLevels file");
   }
 
-  v_favoritesLevelsXmlDataElement = v_favoritesLevelsXmlData->FirstChildElement("favoritesLevels");
+  v_favoriteLevelsXmlDataElement = v_favoriteLevelsXmlData->FirstChildElement("favoriteLevels");
   
-  if(v_favoritesLevelsXmlDataElement == NULL) {
-    throw Exception("error : unable to analyze xml favoritesLevels file");
+  if(v_favoriteLevelsXmlDataElement == NULL) {
+    throw Exception("error : unable to analyze xml favoriteLevels file");
   }
     
-  TiXmlElement *pVarElem = v_favoritesLevelsXmlDataElement->FirstChildElement("level");
+  TiXmlElement *pVarElem = v_favoriteLevelsXmlDataElement->FirstChildElement("level");
   while(pVarElem != NULL) {
     v_levelId = "";
 
@@ -665,13 +665,13 @@ void LevelsManager::loadFavoritesLevelsXml() {
       v_levelId = pc;
   
       /* add the level into the list */
-      m_favoritesLevels.push_back(&(LevelById(v_levelId)));
+      m_favoriteLevels.push_back(&(LevelById(v_levelId)));
     }
     pVarElem = pVarElem->NextSiblingElement("level");
   }
 }
 
 void LevelsManager::saveXml() const {
-  saveFavoritesLevelsXml();
+  saveFavoriteLevelsXml();
   saveNewLevelsXml();
 }

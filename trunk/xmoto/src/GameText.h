@@ -38,7 +38,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_44KHZ                _("44 kHz")
 #define GAMETEXT_8BIT                 _("8-bit")
 #define GAMETEXT_ABORT                _("Abort Playing")
-#define GAMETEXT_ADDTOFAVORITES       _("Add to favorites")
+#define GAMETEXT_ADDTOFAVORITE       _("Add to favorite")
 #define GAMETEXT_ACTION               _("Action")
 #define GAMETEXT_ALL                  _("All (on this computer)")
 #define GAMETEXT_ALL_LEVELS           _("All levels")
@@ -135,7 +135,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_DELETEPLAYERMESSAGE  _("Do you really want to delete player?")
 #define GAMETEXT_DELETEREPLAYMESSAGE  _("Do you really want to delete replay?")
 #define GAMETEXT_DELETE               _("Delete")
-#define GAMETEXT_DELETEFROMFAVORITES  _("Delete from favorites")
+#define GAMETEXT_DELETEFROMFAVORITE  _("Delete from favorite")
 #define GAMETEXT_DELETEPROFILE        _("Delete")
 #define GAMETEXT_DESCRIPTION          _("Description")
 #define GAMETEXT_DISPLAYGHOSTTIMEDIFF _("Display Ghost time difference")
@@ -476,8 +476,8 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_SCREENRES _("Click to select screen resolution")
 #define CONTEXTHELP_LEVELPACKNUMLEVELS _("Completed levels / total number of levels in pack")
 #define CONTEXTHELP_LEVELPACK _("Name of level pack")
-#define CONTEXTHELP_ADDTOFAVORITES _("Add the level to the favorite levels list")
-#define CONTEXTHELP_DELETEFROMFAVORITES _("Delete the level from the favorite levels list")
+#define CONTEXTHELP_ADDTOFAVORITE _("Add the level to the favorite levels list")
+#define CONTEXTHELP_DELETEFROMFAVORITE _("Delete the level from the favorite levels list")
 
 #define VPACKAGENAME_LEVELS_WITH_NO_HIGHSCORE   _("Levels with no highscore")
 #define VPACKAGENAME_RANDOM_LEVELS              _("Random levels")
@@ -487,6 +487,6 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define VPACKAGENAME_NEW_LEVELS                 _("New levels")
 #define VPACKAGENAME_UPDATED_LEVELS             _("Updated levels")
 #define VPACKAGENAME_MOST_PLAYED_LEVELS         _("Most played levels")
-#define VPACKAGENAME_FAVORITES_LEVELS            _("Favorite levels")
+#define VPACKAGENAME_FAVORITE_LEVELS            _("Favorite levels")
 
 #endif

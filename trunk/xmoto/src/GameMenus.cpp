@@ -854,8 +854,8 @@ namespace vapp {
     pLevelPackList->addColumn(GAMETEXT_NUMLEVELS,150,CONTEXTHELP_LEVELPACKNUMLEVELS);
     pLevelPackList->setEnterButton( pOpenButton );
 
-    /* favorites levels tab */
-    UIWindow *pAllLevelsPackTab = new UIWindow(m_pLevelPackTabs,20,40,VPACKAGENAME_FAVORITES_LEVELS,m_pLevelPackTabs->getPosition().nWidth-40,m_pLevelPackTabs->getPosition().nHeight);
+    /* favorite levels tab */
+    UIWindow *pAllLevelsPackTab = new UIWindow(m_pLevelPackTabs,20,40,VPACKAGENAME_FAVORITE_LEVELS,m_pLevelPackTabs->getPosition().nWidth-40,m_pLevelPackTabs->getPosition().nHeight);
     pAllLevelsPackTab->enableWindow(true);
     pAllLevelsPackTab->showWindow(false);
     pAllLevelsPackTab->setID("ALLLEVELS_TAB");
@@ -872,11 +872,11 @@ namespace vapp {
     pLevelInfoButton->setID("PLAY_LEVEL_INFO_BUTTON");
     pLevelInfoButton->setContextHelp(CONTEXTHELP_LEVEL_INFO);
 
-    UIButton *pAddToFavoritesButton = new UIButton(pAllLevelsPackTab,pAllLevelsPackTab->getPosition().nWidth-187,pAllLevelsPackTab->getPosition().nHeight-103,GAMETEXT_DELETEFROMFAVORITES,187,57);
-    pAddToFavoritesButton->setFont(m_Renderer.getSmallFont());
-    pAddToFavoritesButton->setType(UI_BUTTON_TYPE_LARGE);
-    pAddToFavoritesButton->setID("ALL_LEVELS_DELETE_FROM_FAVORITES_BUTTON");
-    pAddToFavoritesButton->setContextHelp(CONTEXTHELP_DELETEFROMFAVORITES);
+    UIButton *pAddToFavoriteButton = new UIButton(pAllLevelsPackTab,pAllLevelsPackTab->getPosition().nWidth-187,pAllLevelsPackTab->getPosition().nHeight-103,GAMETEXT_DELETEFROMFAVORITE,187,57);
+    pAddToFavoriteButton->setFont(m_Renderer.getSmallFont());
+    pAddToFavoriteButton->setType(UI_BUTTON_TYPE_LARGE);
+    pAddToFavoriteButton->setID("ALL_LEVELS_DELETE_FROM_FAVORITE_BUTTON");
+    pAddToFavoriteButton->setContextHelp(CONTEXTHELP_DELETEFROMFAVORITE);
 
     /* all levels list */
     m_pAllLevelsList = new UILevelList(pAllLevelsPackTab,0,0,"",pAllLevelsPackTab->getPosition().nWidth,pAllLevelsPackTab->getPosition().nHeight-105);     
@@ -1069,10 +1069,10 @@ namespace vapp {
     pLevelPackInfo->setID("LEVELPACK_INFO_BUTTON");
     pLevelPackInfo->setContextHelp(CONTEXTHELP_LEVEL_INFO);
 
-    UIButton *pLevelPackAddToFavorites = new UIButton(m_pLevelPackViewer,450,164,GAMETEXT_ADDTOFAVORITES,207,57);
-    pLevelPackAddToFavorites->setFont(m_Renderer.getSmallFont());
-    pLevelPackAddToFavorites->setID("LEVELPACK_ADDTOFAVORITES_BUTTON");
-    pLevelPackAddToFavorites->setContextHelp(CONTEXTHELP_ADDTOFAVORITES);
+    UIButton *pLevelPackAddToFavorite = new UIButton(m_pLevelPackViewer,450,164,GAMETEXT_ADDTOFAVORITE,207,57);
+    pLevelPackAddToFavorite->setFont(m_Renderer.getSmallFont());
+    pLevelPackAddToFavorite->setID("LEVELPACK_ADDTOFAVORITE_BUTTON");
+    pLevelPackAddToFavorite->setContextHelp(CONTEXTHELP_ADDTOFAVORITE);
 
     UIButton *pLevelPackCancel = new UIButton(m_pLevelPackViewer,450,221,GAMETEXT_CLOSE,207,57);
     pLevelPackCancel->setFont(m_Renderer.getSmallFont());
@@ -1721,7 +1721,7 @@ namespace vapp {
     UIButton *pCancelButton = reinterpret_cast<UIButton *>(m_pLevelPackViewer->getChild("LEVELPACK_CANCEL_BUTTON"));
     UIButton *pPlayButton = reinterpret_cast<UIButton *>(m_pLevelPackViewer->getChild("LEVELPACK_PLAY_BUTTON"));
     UIButton *pLevelInfoButton = reinterpret_cast<UIButton *>(m_pLevelPackViewer->getChild("LEVELPACK_INFO_BUTTON"));
-    UIButton *pLevelAddToFavoritesButton = reinterpret_cast<UIButton *>(m_pLevelPackViewer->getChild("LEVELPACK_ADDTOFAVORITES_BUTTON"));
+    UIButton *pLevelAddToFavoriteButton = reinterpret_cast<UIButton *>(m_pLevelPackViewer->getChild("LEVELPACK_ADDTOFAVORITE_BUTTON"));
     UILevelList *pList = (UILevelList *)m_pLevelPackViewer->getChild("LEVELPACK_LEVEL_LIST");
     
     /* Check buttons */
@@ -1748,12 +1748,12 @@ namespace vapp {
 	}
     }
 
-    if(pLevelAddToFavoritesButton!=NULL && pLevelAddToFavoritesButton->isClicked()) {
-      pLevelAddToFavoritesButton->setClicked(false);
+    if(pLevelAddToFavoriteButton!=NULL && pLevelAddToFavoriteButton->isClicked()) {
+      pLevelAddToFavoriteButton->setClicked(false);
       
       Level *pLevelSrc = pList->getSelectedLevel();
       if(pLevelSrc != NULL) {
-	m_levelsManager.addToFavorites(pLevelSrc);
+	m_levelsManager.addToFavorite(pLevelSrc);
 	_UpdateLevelsLists();
       }
     }
@@ -2612,7 +2612,7 @@ namespace vapp {
     /* PLAY */
     UIButton *pPlayGoButton = (UIButton *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:ALLLEVELS_TAB:PLAY_GO_BUTTON");
     UIButton *pLevelInfoButton = (UIButton *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:ALLLEVELS_TAB:PLAY_LEVEL_INFO_BUTTON");
-    UIButton *pLevelDeleteFromFavoritesButton = (UIButton *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:ALLLEVELS_TAB:ALL_LEVELS_DELETE_FROM_FAVORITES_BUTTON");
+    UIButton *pLevelDeleteFromFavoriteButton = (UIButton *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:ALLLEVELS_TAB:ALL_LEVELS_DELETE_FROM_FAVORITE_BUTTON");
 
     UIButton *pNewLevelsPlayGoButton =    (UIButton *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:NEWLEVELS_TAB:NEW_LEVELS_PLAY_GO_BUTTON");
     UIButton *pNewLevelsLevelInfoButton = (UIButton *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:NEWLEVELS_TAB:NEW_LEVELS_PLAY_LEVEL_INFO_BUTTON");
@@ -2635,13 +2635,13 @@ namespace vapp {
       #endif
     }
 
-    if(pLevelDeleteFromFavoritesButton->isClicked()) {
+    if(pLevelDeleteFromFavoriteButton->isClicked()) {
       Level *pLevelSrc = NULL;
 
-      pLevelDeleteFromFavoritesButton->setClicked(false);
+      pLevelDeleteFromFavoriteButton->setClicked(false);
       pLevelSrc = m_pAllLevelsList->getSelectedLevel();
       if(pLevelSrc != NULL) {
-	m_levelsManager.delFromFavorites(pLevelSrc);
+	m_levelsManager.delFromFavorite(pLevelSrc);
 	_UpdateLevelsLists();
       }
     }

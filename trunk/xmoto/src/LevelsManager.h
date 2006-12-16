@@ -96,9 +96,9 @@ class LevelsManager {
   
   void printLevelsList() const;
 
-  void addToFavorites(Level *i_level);
-  void delFromFavorites(Level *i_level);
-  const std::vector<Level *> &FavoritesLevels();
+  void addToFavorite(Level *i_level);
+  void delFromFavorite(Level *i_level);
+  const std::vector<Level *> &FavoriteLevels();
 
   /* save the files so that when you reinit, it's restored */
   void saveXml() const;
@@ -117,15 +117,15 @@ class LevelsManager {
   std::vector<Level *> m_newLevels;
   std::vector<Level *> m_updatedLevels;
 
-  std::vector<Level *> m_favoritesLevels;
+  std::vector<Level *> m_favoriteLevels;
 
   static std::string NewLevelsXmlFilePath();
   void saveNewLevelsXml() const;
   void loadNewLevelsXml();
 
-  static std::string FavoritesLevelsXmlFilePath();
-  void saveFavoritesLevelsXml() const;
-  void loadFavoritesLevelsXml();
+  static std::string FavoriteLevelsXmlFilePath();
+  void saveFavoriteLevelsXml() const;
+  void loadFavoriteLevelsXml();
 
   /* is private to for externals to use updateLevelsFromLvl for new levels */
   void loadLevelsFromLvl(const std::vector<std::string> &LvlFiles, bool i_enableCache, bool i_newLevels);
