@@ -19,7 +19,43 @@ AC_CHECK_LIB(png, png_read_image, [], [AC_MSG_ERROR(libpng required)])
 AC_CHECK_LIB(bz2, BZ2_bzReadOpen, [], [AC_MSG_ERROR(libbz2 required)])
 AM_PATH_SDL(1.0.0, [], [AC_MSG_ERROR(SDL required)])
 AC_SDL_CHECK_LIB(SDL_mixer, Mix_OpenAudio, [], [AC_MSG_ERROR(SDL_mixer required)])
-AX_CHECK_GL()
+
+dnl Put OpenGL
+AC_ARG_WITH([renderer-openGl],
+  [AS_HELP_STRING([--with-renderer-openGl=0|1],
+    [RendererOpenGl])],
+  [USE_OPENGL="$withval"],
+  [USE_OPENGL="1"]
+)
+AC_SUBST([USE_OPENGL])
+
+if test "$USE_OPENGL" = "1"
+then
+  AX_CHECK_GL()
+fi
+
+dnl Put SDL_gfx
+AC_ARG_WITH([renderer-sdlGfx],
+  [AS_HELP_STRING([--with-renderer-sdlGfx=0|1],
+    [RendererSdlGfx])],
+  [USE_SDLGFX="$withval"],
+  [USE_SDLGFX="0"]
+)
+AC_SUBST([USE_SDLGFX])
+
+if test "$USE_SDLGFX" = "1"
+then
+  AC_SDL_CHECK_LIB(SDL_gfx, pixelColor, [], [AC_MSG_ERROR(SDL_gfx required)])
+
+  dnl Put SDL_gfx textured
+  AC_ARG_WITH([renderer-sdlGfxTextured],
+    [AS_HELP_STRING([--with-renderer-sdlGfxTextured=0|1],
+      [RendererSdlGfxTextured])],
+    [USE_SDLGFXTEXTURED="$withval"],
+    [USE_SDLGFXTEXTURED="0"]
+  )
+  AC_SUBST([USE_SDLGFXTEXTURED])
+fi
 
 AC_SEARCH_LIBS(lua_pushboolean,lua lua5.1 lua50, [], [AC_MSG_ERROR(liblua5.1, liblua50, or liblua required)])
 AC_SEARCH_LIBS(luaopen_math,lualib lualib5.1 lualib50, [], [AC_MSG_ERROR(liblualib5.1, liblualib50, or liblualib required)])
@@ -111,9 +147,9 @@ function displayRequirement {
   REQ="$4"
 
   if test "$VAR" = "$GOOD_RES"; then
-    printf "| %10s | %10s | %30s |\n" "$STUFF" "enabled" "($REQ)"
+    printf "| %15s | %10s | %40s |\n" "$STUFF" "enabled" "($REQ)"
   else
-    printf "| %10s | %10s | %30s |\n" "$STUFF" "disabled" "($REQ missing)"
+    printf "| %15s | %10s | %40s |\n" "$STUFF" "disabled" "($REQ missing)"
   fi
 }
 
@@ -137,11 +173,19 @@ else
   fi
 fi
 
+set > set.log
+
 echo
-echo   "+------------+------------+--------------------------------+"
+echo   "+-----------------+------------+------------------------------------------+"
 displayRequirement "WWW stuff" "$v_enable_www" "yes" "$v_enable_www_reason"
-echo   "+------------+------------+--------------------------------+"
+echo   "+-----------------+------------+------------------------------------------+"
 displayRequirement "Locales" "$gt_cv_func_gnugettext1_libc" "yes" "gettext"
-echo   "+------------+------------+--------------------------------+"
+echo   "+-----------------+------------+------------------------------------------+"
 displayRequirement "Zoom" "$with_enable_zoom" "1" "--with-enable-zoom=1"
-echo   "+------------+------------+--------------------------------+"
+echo   "+-----------------+------------+------------------------------------------+"
+displayRequirement "OpenGl" "$USE_OPENGL" "1" "--with-renderer-openGl=1"
+echo   "+-----------------+------------+------------------------------------------+"
+displayRequirement "sdlGfx" "$USE_SDLGFX" "1" "--with-renderer-sdlGfx=1"
+echo   "+-----------------+------------+------------------------------------------+"
+displayRequirement "sdlGfxTextured" "$USE_SDLGFXTEXTURED" "1" "--with-renderer-sdlGfx=1 --with-renderer-sdlGfxTextured=1"
+echo   "+-----------------+------------+------------------------------------------+"
