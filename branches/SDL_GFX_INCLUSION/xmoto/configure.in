@@ -43,18 +43,18 @@ AC_ARG_WITH([renderer-sdlGfx],
 )
 AC_SUBST([USE_SDLGFX])
 
+dnl Put SDL_gfx textured
+AC_ARG_WITH([renderer-sdlGfxTextured],
+  [AS_HELP_STRING([--with-renderer-sdlGfxTextured=0|1],
+    [RendererSdlGfxTextured])],
+  [USE_SDLGFXTEXTURED="$withval"; USE_SDLGFX="1"],
+  [USE_SDLGFXTEXTURED="0"]
+)
+AC_SUBST([USE_SDLGFXTEXTURED])
+
 if test "$USE_SDLGFX" = "1"
 then
   AC_SDL_CHECK_LIB(SDL_gfx, pixelColor, [], [AC_MSG_ERROR(SDL_gfx required)])
-
-  dnl Put SDL_gfx textured
-  AC_ARG_WITH([renderer-sdlGfxTextured],
-    [AS_HELP_STRING([--with-renderer-sdlGfxTextured=0|1],
-      [RendererSdlGfxTextured])],
-    [USE_SDLGFXTEXTURED="$withval"],
-    [USE_SDLGFXTEXTURED="0"]
-  )
-  AC_SUBST([USE_SDLGFXTEXTURED])
 fi
 
 AC_SEARCH_LIBS(lua_pushboolean,lua lua5.1 lua50, [], [AC_MSG_ERROR(liblua5.1, liblua50, or liblua required)])
@@ -147,9 +147,9 @@ function displayRequirement {
   REQ="$4"
 
   if test "$VAR" = "$GOOD_RES"; then
-    printf "| %15s | %10s | %40s |\n" "$STUFF" "enabled" "($REQ)"
+    printf "| %15s | %10s | %42s |\n" "$STUFF" "enabled" "($REQ)"
   else
-    printf "| %15s | %10s | %40s |\n" "$STUFF" "disabled" "($REQ missing)"
+    printf "| %15s | %10s | %42s |\n" "$STUFF" "disabled" "($REQ missing)"
   fi
 }
 
@@ -176,16 +176,16 @@ fi
 set > set.log
 
 echo
-echo   "+-----------------+------------+------------------------------------------+"
+echo   "+-----------------+------------+--------------------------------------------+"
 displayRequirement "WWW stuff" "$v_enable_www" "yes" "$v_enable_www_reason"
-echo   "+-----------------+------------+------------------------------------------+"
+echo   "+-----------------+------------+--------------------------------------------+"
 displayRequirement "Locales" "$gt_cv_func_gnugettext1_libc" "yes" "gettext"
-echo   "+-----------------+------------+------------------------------------------+"
+echo   "+-----------------+------------+--------------------------------------------+"
 displayRequirement "Zoom" "$with_enable_zoom" "1" "--with-enable-zoom=1"
-echo   "+-----------------+------------+------------------------------------------+"
+echo   "+-----------------+------------+--------------------------------------------+"
 displayRequirement "OpenGl" "$USE_OPENGL" "1" "--with-renderer-openGl=1"
-echo   "+-----------------+------------+------------------------------------------+"
+echo   "+-----------------+------------+--------------------------------------------+"
 displayRequirement "sdlGfx" "$USE_SDLGFX" "1" "--with-renderer-sdlGfx=1"
-echo   "+-----------------+------------+------------------------------------------+"
-displayRequirement "sdlGfxTextured" "$USE_SDLGFXTEXTURED" "1" "--with-renderer-sdlGfx=1 --with-renderer-sdlGfxTextured=1"
-echo   "+-----------------+------------+------------------------------------------+"
+echo   "+-----------------+------------+--------------------------------------------+"
+displayRequirement "sdlGfxTextured" "$USE_SDLGFXTEXTURED" "1" "--with-renderer-sdlGfxTextured=1"
+echo   "+-----------------+------------+--------------------------------------------+"
