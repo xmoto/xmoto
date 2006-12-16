@@ -760,6 +760,11 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
   Some static helpers
   ===========================================================================*/
 int Level::compareLevel(const Level& i_lvl1, const Level& i_lvl2) {
+
+  if(i_lvl1.Pack() == i_lvl2.Pack()) {
+    return compareLevelSamePack(i_lvl1, i_lvl2);
+  }
+
   std::string n1, n2;
   n1 = i_lvl1.Name();
   n2 = i_lvl2.Name();

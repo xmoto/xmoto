@@ -1288,7 +1288,7 @@ namespace vapp {
     }
 
     if(m_pActiveLevelPack->Sorted()) {
-      pList->setSort(true, (int(*)(void*, void*))Level::compareLevelSamePack);
+      pList->setSort(true, (int(*)(void*, void*))Level::compareLevel);
     } else {
       pList->setSort(true, (int(*)(void*, void*))Level::compareLevelRandom);
     }
