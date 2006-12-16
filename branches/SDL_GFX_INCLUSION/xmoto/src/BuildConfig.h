@@ -41,7 +41,7 @@ Build configuration
  * the code.
  */
 #ifndef USE_OPENGL
-  #define USE_OPENGL 0
+  #define USE_OPENGL 1
 #endif
 #if USE_OPENGL == 1
   #define ENABLE_OPENGL
@@ -55,7 +55,7 @@ Build configuration
 #endif
 
 #ifndef USE_SDLGFXTEXTURED
-  #define USE_SDLGFXTEXTURED 1
+  #define USE_SDLGFXTEXTURED 0
 #endif
 #if USE_SDLGFXTEXTURED == 1
   #define ENABLE_SDLGFXTEXTURED
