@@ -39,10 +39,7 @@ int SDL_main(int nNumArgs,char **ppcArgs) {
 int main(int nNumArgs,char **ppcArgs) {
 #endif
   /* Start application */
-  try {  
-    /* Init file system stuff */
-    FS::init( "xmoto" );
-    
+  try {     
     /* Setup basic info */
     GameApp Game;
     
