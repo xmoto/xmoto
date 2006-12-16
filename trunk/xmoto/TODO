@@ -1,6 +1,5 @@
 => for 0.2.3
 
-* cvs checkout + compilation => don't create xmoto.bin if it doesn't exist
 * just download 50 levels each time instead of 500 the first time
 * '50 most played levels'/least : virtual package
 * a keyboard key for next level
