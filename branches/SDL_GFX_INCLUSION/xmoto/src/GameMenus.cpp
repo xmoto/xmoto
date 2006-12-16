@@ -2992,10 +2992,11 @@ namespace vapp {
     }
 
     pAllLevels->clear();
-    
-    LevelsPack *v_levelsPack = &(m_levelsManager.LevelsPackByName(i_packageName));
 
     if(m_pPlayer == NULL) return;
+    
+    LevelsPack *v_levelsPack;
+    v_levelsPack = &(m_levelsManager.LevelsPackByName(i_packageName));
   
     for(int i=0;i<v_levelsPack->Levels().size();i++) {
       Level *pLevel = v_levelsPack->Levels()[i];     
