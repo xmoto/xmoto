@@ -172,7 +172,7 @@ namespace vapp {
      m_fLastSqueekTime = 0.0f;
 
 
-     m_Renderer.setTheme(&m_theme);
+     m_Renderer.setTheme(getTheme());
      m_MotoGame.setRenderer(&m_Renderer);
 
      m_bPrePlayAnim = true;

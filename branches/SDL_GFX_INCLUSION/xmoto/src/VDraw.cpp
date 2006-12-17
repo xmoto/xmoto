@@ -27,7 +27,20 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 namespace vapp {
 
  DrawLib::DrawLib() {
-   m_pDefaultFontTex = NULL;
+  m_nDispWidth=800;
+  m_nDispHeight=600;
+  m_nDispBPP=32;
+  m_bWindowed=true;
+  m_bNoGraphics=false;
+                       
+  m_bDontUseGLExtensions=false;
+  
+  m_bShadersSupported = false;
+
+  m_nLScissorX = m_nLScissorY = m_nLScissorW = m_nLScissorH = 0;
+             
+  	m_bFBOSupported = false;
+  m_pDefaultFontTex = NULL;
  }
 
   /*===========================================================================
@@ -51,7 +64,230 @@ namespace vapp {
     //*x = -1.0f + ((*x)*2.0f + 0.1f)/(float)(m_nDrawWidth);
     //*y = 1.0f - ((*y)*2.0f + 0.1f)/(float)(m_nDrawHeight);
   }
+  void DrawLib::setClipRect(int x , int y , int w , int h){
+    glScissor(x,m_nDispHeight - (y+h),w,h);
+    
+    m_nLScissorX = x;
+    m_nLScissorY = y;
+    m_nLScissorW = w;
+    m_nLScissorH = h;
+  }
+  void DrawLib::getClipRect(int *px,int *py,int *pnWidth,int *pnHeight) {
+    *px = m_nLScissorX;
+    *py = m_nLScissorY;
+    *pnWidth = m_nLScissorW;
+    *pnHeight = m_nLScissorH;
+  }  
+  
+  void DrawLib::init(int nDispWidth,int nDispHeight,int nDispBPP,bool bWindowed,Theme * ptheme){
 
+    
+    /* Set suggestions */
+    m_nDispWidth = nDispWidth;
+    m_nDispHeight = nDispHeight;
+    m_nDispBPP = nDispBPP;
+    m_bWindowed = bWindowed;
+
+    /* Get some video info */
+    const SDL_VideoInfo *pVidInfo=SDL_GetVideoInfo();
+    if(pVidInfo==NULL)
+      throw Exception("(1) SDL_GetVideoInfo : " + std::string(SDL_GetError()));
+  
+    /* Determine target bit depth */
+    if(m_bWindowed) 
+      /* In windowed mode we can't tinker with the bit-depth */
+      m_nDispBPP=pVidInfo->vfmt->BitsPerPixel;      
+
+    /* Setup GL stuff */
+    /* 2005-10-05 ... note that we no longer ask for explicit settings... it's
+                      better to do it per auto */
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,1); 
+  
+    /* Create video flags */
+    int nFlags = SDL_OPENGL;
+    if(!m_bWindowed) nFlags|=SDL_FULLSCREEN;
+  
+    /* At last, try to "set the video mode" */
+    if(SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,m_nDispBPP,nFlags)==NULL) {
+      vapp::Log("** Warning ** : Tried to set video mode %dx%d @ %d-bit, but SDL responded: %s\n"
+          "                Now SDL will try determining a proper mode itself.",m_nDispWidth,m_nDispHeight,m_nDispBPP);
+    
+      /* Hmm, try letting it decide the BPP automatically */
+      if(SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,0,nFlags)==NULL) {       
+        /* Still no luck */
+        Log("** Warning ** : Still no luck, now we'll try 800x600 in a window.");
+        m_nDispWidth = 800; m_nDispHeight = 600;        
+        m_bWindowed = true;
+        if(SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,0,SDL_OPENGL)==NULL) {       
+          throw Exception("SDL_SetVideoMode : " + std::string(SDL_GetError()));
+        }       
+      }
+    }
+    
+    /* Retrieve actual configuration */
+    pVidInfo=SDL_GetVideoInfo();
+    if(pVidInfo==NULL)
+      throw Exception("(2) SDL_GetVideoInfo : " + std::string(SDL_GetError()));
+                    
+    m_nDispBPP=pVidInfo->vfmt->BitsPerPixel;
+
+    /* Did we get a z-buffer? */        
+    int nDepthBits;
+    SDL_GL_GetAttribute(SDL_GL_DEPTH_SIZE,&nDepthBits);
+    if(nDepthBits == 0)
+      throw Exception("no depth buffer");  
+  
+
+
+    /* Force OpenGL to talk 2D */
+    glViewport(0,0,m_nDispWidth,m_nDispHeight);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(0,m_nDispWidth,0,m_nDispHeight,-1,1);
+    
+    glClearDepth(1);
+    glDepthFunc(GL_LEQUAL);
+    
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();   
+    
+    /* Enable unicode translation and key repeats */
+    SDL_EnableUNICODE(1);         
+    SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY,SDL_DEFAULT_REPEAT_INTERVAL);
+     
+    /* Output some general info */
+    Log("GL: %s (%s)",glGetString(GL_RENDERER),glGetString(GL_VENDOR));
+    if(glGetString(GL_RENDERER) == NULL || 
+       glGetString(GL_VENDOR) == NULL) {
+      Log("** Warning ** : GL strings NULL!");
+      throw Exception("GL strings are NULL!");
+    }
+    
+    /* Windows: check whether we are using the standard GDI OpenGL software driver... If
+       so make sure the user is warned */
+    #if defined(WIN32) 
+      if(!strcmp(reinterpret_cast<const char *>(glGetString(GL_RENDERER)),"GDI Generic") &&
+         !strcmp(reinterpret_cast<const char *>(glGetString(GL_VENDOR)),"Microsoft Corporation")) {
+        Log("** Warning ** : No GL hardware acceleration!");
+        //m_UserNotify = "It seems that no OpenGL hardware acceleration is available!\n"
+        //               "Please make sure OpenGL is configured properly.";
+      }
+    #endif
+    
+    /* Init OpenGL extensions */
+    if(m_bDontUseGLExtensions) {
+      m_bVBOSupported = false;
+      m_bFBOSupported = false;
+      m_bShadersSupported = false;
+    }
+    else {
+      m_bVBOSupported = isExtensionSupported("GL_ARB_vertex_buffer_object");
+      m_bFBOSupported = isExtensionSupported("GL_EXT_framebuffer_object");
+      
+      m_bShadersSupported = isExtensionSupported("GL_ARB_fragment_shader") &&
+                            isExtensionSupported("GL_ARB_vertex_shader") &&
+                            isExtensionSupported("GL_ARB_shader_objects");
+    }
+    
+    if(m_bVBOSupported) {
+      glGenBuffersARB=(PFNGLGENBUFFERSARBPROC)SDL_GL_GetProcAddress("glGenBuffersARB");
+      glBindBufferARB=(PFNGLBINDBUFFERARBPROC)SDL_GL_GetProcAddress("glBindBufferARB");
+      glBufferDataARB=(PFNGLBUFFERDATAARBPROC)SDL_GL_GetProcAddress("glBufferDataARB");
+      glDeleteBuffersARB=(PFNGLDELETEBUFFERSARBPROC)SDL_GL_GetProcAddress("glDeleteBuffersARB");      
+
+      glEnableClientState( GL_VERTEX_ARRAY );   
+      glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+          
+      Log("GL: using ARB_vertex_buffer_object");    
+    }
+    else
+      Log("GL: not using ARB_vertex_buffer_object");    
+      
+    if(m_bFBOSupported) {
+      glIsRenderbufferEXT = (PFNGLISRENDERBUFFEREXTPROC)SDL_GL_GetProcAddress("glIsRenderbufferEXT");
+      glBindRenderbufferEXT = (PFNGLBINDRENDERBUFFEREXTPROC)SDL_GL_GetProcAddress("glBindRenderbufferEXT");
+      glDeleteRenderbuffersEXT = (PFNGLDELETERENDERBUFFERSEXTPROC)SDL_GL_GetProcAddress("glDeleteRenderbuffersEXT");
+      glGenRenderbuffersEXT = (PFNGLGENRENDERBUFFERSEXTPROC)SDL_GL_GetProcAddress("glGenRenderbuffersEXT");
+      glRenderbufferStorageEXT = (PFNGLRENDERBUFFERSTORAGEEXTPROC)SDL_GL_GetProcAddress("glRenderbufferStorageEXT");
+      glGetRenderbufferParameterivEXT = (PFNGLGETRENDERBUFFERPARAMETERIVEXTPROC)SDL_GL_GetProcAddress("glGetRenderbufferParameterivEXT");
+      glIsFramebufferEXT = (PFNGLISFRAMEBUFFEREXTPROC)SDL_GL_GetProcAddress("glIsFramebufferEXT");
+      glBindFramebufferEXT = (PFNGLBINDFRAMEBUFFEREXTPROC)SDL_GL_GetProcAddress("glBindFramebufferEXT");
+      glDeleteFramebuffersEXT = (PFNGLDELETEFRAMEBUFFERSEXTPROC)SDL_GL_GetProcAddress("glDeleteFramebuffersEXT");
+      glGenFramebuffersEXT = (PFNGLGENFRAMEBUFFERSEXTPROC)SDL_GL_GetProcAddress("glGenFramebuffersEXT");
+      glCheckFramebufferStatusEXT = (PFNGLCHECKFRAMEBUFFERSTATUSEXTPROC)SDL_GL_GetProcAddress("glCheckFramebufferStatusEXT");
+      glFramebufferTexture1DEXT = (PFNGLFRAMEBUFFERTEXTURE1DEXTPROC)SDL_GL_GetProcAddress("glFramebufferTexture1DEXT");
+      glFramebufferTexture2DEXT = (PFNGLFRAMEBUFFERTEXTURE2DEXTPROC)SDL_GL_GetProcAddress("glFramebufferTexture2DEXT");
+      glFramebufferTexture3DEXT = (PFNGLFRAMEBUFFERTEXTURE3DEXTPROC)SDL_GL_GetProcAddress("glFramebufferTexture3DEXT");
+      glFramebufferRenderbufferEXT = (PFNGLFRAMEBUFFERRENDERBUFFEREXTPROC)SDL_GL_GetProcAddress("glFramebufferRenderbufferEXT");
+      glGetFramebufferAttachmentParameterivEXT = (PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVEXTPROC)SDL_GL_GetProcAddress("glGetFramebufferAttachmentParameterivEXT");
+      glGenerateMipmapEXT = (PFNGLGENERATEMIPMAPEXTPROC)SDL_GL_GetProcAddress("glGenerateMipmapEXT");
+          
+      Log("GL: using EXT_framebuffer_object");
+    }
+    else
+      Log("GL: not using EXT_framebuffer_object");
+      
+    if(m_bShadersSupported) {
+      glBindAttribLocationARB = (PFNGLBINDATTRIBLOCATIONARBPROC)SDL_GL_GetProcAddress("glBindAttribLocationARB");
+      glGetActiveAttribARB = (PFNGLGETACTIVEATTRIBARBPROC)SDL_GL_GetProcAddress("glGetActiveAttribARB");
+      glGetAttribLocationARB = (PFNGLGETATTRIBLOCATIONARBPROC)SDL_GL_GetProcAddress("glGetAttribLocationARB");
+      glDeleteObjectARB = (PFNGLDELETEOBJECTARBPROC)SDL_GL_GetProcAddress("glDeleteObjectARB");
+      glGetHandleARB = (PFNGLGETHANDLEARBPROC)SDL_GL_GetProcAddress("glGetHandleARB");
+      glDetachObjectARB = (PFNGLDETACHOBJECTARBPROC)SDL_GL_GetProcAddress("glDetachObjectARB");
+      glCreateShaderObjectARB = (PFNGLCREATESHADEROBJECTARBPROC)SDL_GL_GetProcAddress("glCreateShaderObjectARB");
+      glShaderSourceARB = (PFNGLSHADERSOURCEARBPROC)SDL_GL_GetProcAddress("glShaderSourceARB");
+      glCompileShaderARB = (PFNGLCOMPILESHADERARBPROC)SDL_GL_GetProcAddress("glCompileShaderARB");
+      glCreateProgramObjectARB = (PFNGLCREATEPROGRAMOBJECTARBPROC)SDL_GL_GetProcAddress("glCreateProgramObjectARB");
+      glAttachObjectARB = (PFNGLATTACHOBJECTARBPROC)SDL_GL_GetProcAddress("glAttachObjectARB");
+      glLinkProgramARB = (PFNGLLINKPROGRAMARBPROC)SDL_GL_GetProcAddress("glLinkProgramARB");
+      glUseProgramObjectARB = (PFNGLUSEPROGRAMOBJECTARBPROC)SDL_GL_GetProcAddress("glUseProgramObjectARB");
+      glValidateProgramARB = (PFNGLVALIDATEPROGRAMARBPROC)SDL_GL_GetProcAddress("glValidateProgramARB");
+      glUniform1fARB = (PFNGLUNIFORM1FARBPROC)SDL_GL_GetProcAddress("glUniform1fARB");
+      glUniform2fARB = (PFNGLUNIFORM2FARBPROC)SDL_GL_GetProcAddress("glUniform2fARB");
+      glUniform3fARB = (PFNGLUNIFORM3FARBPROC)SDL_GL_GetProcAddress("glUniform3fARB");
+      glUniform4fARB = (PFNGLUNIFORM4FARBPROC)SDL_GL_GetProcAddress("glUniform4fARB");
+      glUniform1iARB = (PFNGLUNIFORM1IARBPROC)SDL_GL_GetProcAddress("glUniform1iARB");
+      glUniform2iARB = (PFNGLUNIFORM2IARBPROC)SDL_GL_GetProcAddress("glUniform2iARB");
+      glUniform3iARB = (PFNGLUNIFORM3IARBPROC)SDL_GL_GetProcAddress("glUniform3iARB");
+      glUniform4iARB = (PFNGLUNIFORM4IARBPROC)SDL_GL_GetProcAddress("glUniform4iARB");
+      glUniform1fvARB = (PFNGLUNIFORM1FVARBPROC)SDL_GL_GetProcAddress("glUniform1fvARB");
+      glUniform2fvARB = (PFNGLUNIFORM2FVARBPROC)SDL_GL_GetProcAddress("glUniform2fvARB");
+      glUniform3fvARB = (PFNGLUNIFORM3FVARBPROC)SDL_GL_GetProcAddress("glUniform3fvARB");
+      glUniform4fvARB = (PFNGLUNIFORM4FVARBPROC)SDL_GL_GetProcAddress("glUniform4fvARB");
+      glUniform1ivARB = (PFNGLUNIFORM1IVARBPROC)SDL_GL_GetProcAddress("glUniform1ivARB");
+      glUniform2ivARB = (PFNGLUNIFORM2IVARBPROC)SDL_GL_GetProcAddress("glUniform2ivARB");
+      glUniform3ivARB = (PFNGLUNIFORM3IVARBPROC)SDL_GL_GetProcAddress("glUniform3ivARB");
+      glUniform4ivARB = (PFNGLUNIFORM4IVARBPROC)SDL_GL_GetProcAddress("glUniform4ivARB");
+      glUniformMatrix2fvARB = (PFNGLUNIFORMMATRIX2FVARBPROC)SDL_GL_GetProcAddress("glUniformMatrix2fvARB");
+      glUniformMatrix3fvARB = (PFNGLUNIFORMMATRIX3FVARBPROC)SDL_GL_GetProcAddress("glUniformMatrix3fvARB");
+      glUniformMatrix4fvARB = (PFNGLUNIFORMMATRIX4FVARBPROC)SDL_GL_GetProcAddress("glUniformMatrix4fvARB");
+      glGetObjectParameterfvARB = (PFNGLGETOBJECTPARAMETERFVARBPROC)SDL_GL_GetProcAddress("glGetObjectParameterfvARB");
+      glGetObjectParameterivARB = (PFNGLGETOBJECTPARAMETERIVARBPROC)SDL_GL_GetProcAddress("glGetObjectParameterivARB");
+      glGetInfoLogARB = (PFNGLGETINFOLOGARBPROC)SDL_GL_GetProcAddress("glGetInfoLogARB");
+      glGetAttachedObjectsARB = (PFNGLGETATTACHEDOBJECTSARBPROC)SDL_GL_GetProcAddress("glGetAttachedObjectsARB");
+      glGetUniformLocationARB = (PFNGLGETUNIFORMLOCATIONARBPROC)SDL_GL_GetProcAddress("glGetUniformLocationARB");
+      glGetActiveUniformARB = (PFNGLGETACTIVEUNIFORMARBPROC)SDL_GL_GetProcAddress("glGetActiveUniformARB");
+      glGetUniformfvARB = (PFNGLGETUNIFORMFVARBPROC)SDL_GL_GetProcAddress("glGetUniformfvARB");
+      glGetUniformivARB = (PFNGLGETUNIFORMIVARBPROC)SDL_GL_GetProcAddress("glGetUniformivARB");
+      glGetShaderSourceARB = (PFNGLGETSHADERSOURCEARBPROC)SDL_GL_GetProcAddress("glGetShaderSourceARB");    
+        
+      Log("GL: using ARB_fragment_shader/ARB_vertex_shader/ARB_shader_objects");
+    }
+    else
+      Log("GL: not using ARB_fragment_shader/ARB_vertex_shader/ARB_shader_objects");
+    
+    /* Set background color to black */
+    glClearColor(0.0f,0.0f,0.0f,0.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    SDL_GL_SwapBuffers();  
+
+    /* Init the Text drawing library */
+    _InitTextRendering(ptheme);
+
+}
+
+  void DrawLib::unInit(){
+  }
   /*===========================================================================
   Primitive: circle
   ===========================================================================*/
@@ -189,18 +425,62 @@ namespace vapp {
     glDisable(GL_BLEND);
   }
         
-  /*===========================================================================
-  Init of 2D drawing library
-  ===========================================================================*/
-  void DrawLib::initLib(Theme *p_theme) {
-    _InitTextRendering(p_theme);
-  }
   
   /*===========================================================================
-  Uninit
+  Check for OpenGL extension
   ===========================================================================*/
-  void DrawLib::uninitLib(Theme *p_theme) {
-    _UninitTextRendering(p_theme);
+  bool DrawLib::isExtensionSupported(std::string Ext) {
+    const unsigned char *pcExtensions = NULL;
+    const unsigned char *pcStart;
+    unsigned char *pcWhere,*pcTerminator;
+    
+    pcExtensions = glGetString(GL_EXTENSIONS);
+    if(pcExtensions == NULL) {
+      Log("Failed to determine OpenGL extensions. Try stopping all other\n"
+          "applications that might use your OpenGL hardware.\n"
+          "If it still doesn't work, please create a detailed bug report.\n"
+          );
+      throw Exception("glGetString() : NULL");
+    }
+    
+    pcStart = pcExtensions;
+    while(1) {
+      pcWhere = (unsigned char *)strstr((const char*)pcExtensions,Ext.c_str());
+      if(pcWhere == NULL) break;
+      pcTerminator = pcWhere + Ext.length();
+      if(pcWhere == pcStart || *(pcWhere-1) == ' ')
+        if(*pcTerminator == ' ' || *pcTerminator == '\0')
+          return true;
+      pcStart = pcTerminator;
+    }
+    return false;
+  }
+  
+    /*===========================================================================
+  Grab screen contents
+  ===========================================================================*/
+  Img *DrawLib::grabScreen(void) {
+    Img *pImg = new Img;
+    
+    pImg->createEmpty(m_nDispWidth,m_nDispHeight);
+    Color *pPixels = pImg->getPixels();
+    unsigned char *pcTemp = new unsigned char [m_nDispWidth*3];
+  
+    /* Select frontbuffer */
+    glReadBuffer(GL_FRONT);
+
+    /* Read the pixels (reversed) */
+    for(int i=0;i<m_nDispHeight;i++) {          
+      glReadPixels(0,i,m_nDispWidth,1,GL_RGB,GL_UNSIGNED_BYTE,pcTemp);
+      for(int j=0;j<m_nDispWidth;j++) {
+        pPixels[(m_nDispHeight - i - 1)*m_nDispWidth + j] = MAKE_COLOR(
+          pcTemp[j*3],pcTemp[j*3+1],pcTemp[j*3+2],255
+        );
+      }
+    }           
+    
+    delete [] pcTemp;
+    return pImg;            
   }
   
 }

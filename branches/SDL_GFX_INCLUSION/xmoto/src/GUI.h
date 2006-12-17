@@ -497,7 +497,7 @@ namespace vapp {
         
         m_pDarkBlobTexture = NULL;
 	Sprite *pSprite;
-	pSprite = getApp()->m_theme.getSprite(SPRITE_TYPE_UI, "DarkBlob");
+	pSprite = getApp()->getTheme()->getSprite(SPRITE_TYPE_UI, "DarkBlob");
 	if(pSprite != NULL) {
 	  m_pDarkBlobTexture = pSprite->getTexture(false,true, FM_NEAREST);
 	}

@@ -70,17 +70,17 @@ namespace vapp {
   void GameApp::_UpdateLoadingScreen(float fDone,Texture *pLoadingScreen,const std::string &NextTask) {
     if(pLoadingScreen != NULL) {
       glClear(GL_COLOR_BUFFER_BIT);
-      drawImage(Vector2f(getDispWidth()/2 - 256,getDispHeight()/2 - 40),
-                Vector2f(getDispWidth()/2 + 256,getDispHeight()/2 + 40),
+      getDrawLib()->drawImage(Vector2f(getDrawLib()->getDispWidth()/2 - 256,getDrawLib()->getDispHeight()/2 - 40),
+                Vector2f(getDrawLib()->getDispWidth()/2 + 256,getDrawLib()->getDispHeight()/2 + 40),
                 pLoadingScreen,MAKE_COLOR(255,255,255,255));
-      drawBox(Vector2f(getDispWidth()/2 + 256 - (512.0f*(1-fDone)),getDispHeight()/2 - 40),              
-              Vector2f(getDispWidth()/2 + 256,getDispHeight()/2 - 25),              
+      getDrawLib()->drawBox(Vector2f(getDrawLib()->getDispWidth()/2 + 256 - (512.0f*(1-fDone)),getDrawLib()->getDispHeight()/2 - 40),              
+              Vector2f(getDrawLib()->getDispWidth()/2 + 256,getDrawLib()->getDispHeight()/2 - 25),              
               0,MAKE_COLOR(0,0,0,128));
-      drawBox(Vector2f(getDispWidth()/2 + 256 - (512.0f*(1-fDone)),getDispHeight()/2 + 25),              
-              Vector2f(getDispWidth()/2 + 256,getDispHeight()/2 + 40),              
+      getDrawLib()->drawBox(Vector2f(getDrawLib()->getDispWidth()/2 + 256 - (512.0f*(1-fDone)),getDrawLib()->getDispHeight()/2 + 25),              
+              Vector2f(getDrawLib()->getDispWidth()/2 + 256,getDrawLib()->getDispHeight()/2 + 40),              
               0,MAKE_COLOR(0,0,0,128));
              
-      drawText(Vector2f(getDispWidth()/2 - 256,getDispHeight()/2 + 40 + 3),NextTask);
+      getDrawLib()->drawText(Vector2f(getDrawLib()->getDispWidth()/2 - 256,getDrawLib()->getDispHeight()/2 + 40 + 3),NextTask);
               
       SDL_GL_SwapBuffers();
     }
@@ -142,7 +142,7 @@ namespace vapp {
       m_GameStats.xmotoStarted(m_pPlayer->PlayerName);
    
     /* Init sound system */
-    if(!isNoGraphics()) {
+    if(!getDrawLib()->isNoGraphics()) {
       Log("Initializing sound system...");
       Sound::init(&m_Config);
       if(!Sound::isEnabled()) {
@@ -168,7 +168,7 @@ namespace vapp {
     if(m_GraphDebugInfoFile != "") m_Renderer.loadDebugInfo(m_GraphDebugInfoFile);
 
     Texture *pLoadingScreen = NULL;
-    if(!isNoGraphics()) {    
+    if(!getDrawLib()->isNoGraphics()) {    
       /* Show loading screen */
       pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "Loading");
 
@@ -216,7 +216,7 @@ namespace vapp {
       return;
     }
     
-    if(!isNoGraphics()) {  
+    if(!getDrawLib()->isNoGraphics()) {  
       _UpdateLoadingScreen((1.0f/9.0f) * 0,pLoadingScreen,GAMETEXT_LOADINGSOUNDS);
       
       if(Sound::isEnabled()) {
@@ -360,7 +360,7 @@ namespace vapp {
 
     #endif
         
-    if(!isNoGraphics()) {
+    if(!getDrawLib()->isNoGraphics()) {
       /* Initialize renderer */
       m_Renderer.init();
       _UpdateLoadingScreen((1.0f/9.0f) * 7,pLoadingScreen,GAMETEXT_INITMENUS);
@@ -377,7 +377,7 @@ namespace vapp {
     }
         
     /* What to do? */
-    if(m_PlaySpecificLevel != "" && !isNoGraphics()) {
+    if(m_PlaySpecificLevel != "" && !getDrawLib()->isNoGraphics()) {
       /* ======= PLAY SPECIFIC LEVEL ======= */
       m_StateAfterPlaying = GS_MENU;
       setState(GS_PREPLAYING);
@@ -390,7 +390,7 @@ namespace vapp {
     }
     else {
       /* Graphics? */
-      if(isNoGraphics())
+      if(getDrawLib()->isNoGraphics())
         throw Exception("menu requires graphics");
         
       /* Do we have a player profile? */
@@ -432,7 +432,7 @@ namespace vapp {
     m_levelsManager.saveXml();
     m_GameStats.saveXML("stats.xml");
       
-    if(!isNoGraphics()) {
+    if(!getDrawLib()->isNoGraphics()) {
       m_Renderer.unprepareForNewLevel(); /* just to be sure, shutdown can happen quite hard */
       m_Renderer.shutdown();
       m_InputHandler.uninit();
@@ -461,7 +461,7 @@ namespace vapp {
 
     m_Profiles.saveFile();
 
-    if(!isNoGraphics()) {
+    if(!getDrawLib()->isNoGraphics()) {
       UITextDraw::uninitTextDrawing();  
     }
   }  
@@ -523,11 +523,11 @@ namespace vapp {
       }      
       else if(UserArgs[i] == "-listlevels") {
         m_bListLevels = true;
-        setNoGraphics(true);
+        getDrawLib()->setNoGraphics(true);
       }
       else if(UserArgs[i] == "-listreplays") {
         m_bListReplays = true;
-        setNoGraphics(true);
+        getDrawLib()->setNoGraphics(true);
       }
       else if(UserArgs[i] == "-timedemo") {
         m_bTimeDemo = true;

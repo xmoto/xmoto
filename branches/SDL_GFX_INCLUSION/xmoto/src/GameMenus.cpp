@@ -88,7 +88,7 @@ namespace vapp {
     m_pFinishMenu->setPrimaryChild(m_pFinishMenuButtons[default_button]); /* default button: Play next */
                       
     /* Initialize pause menu */
-    m_pPauseMenu = new UIFrame(m_Renderer.getGUI(),getDispWidth()/2 - 200,70,"",400,540);
+    m_pPauseMenu = new UIFrame(m_Renderer.getGUI(),drawLib->getDispWidth()/2 - 200,70,"",400,540);
     m_pPauseMenu->setStyle(UI_FRAMESTYLE_MENU);
     
     m_pPauseMenuButtons[0] = new UIButton(m_pPauseMenu,0,0,GAMETEXT_RESUME,207,57);
@@ -118,7 +118,7 @@ namespace vapp {
     m_pPauseMenu->setPrimaryChild(m_pPauseMenuButtons[0]); /* default button: Resume */
     
     /* Initialize just-dead menu */
-    m_pJustDeadMenu = new UIFrame(m_Renderer.getGUI(),getDispWidth()/2 - 200,70,"",400,540);
+    m_pJustDeadMenu = new UIFrame(m_Renderer.getGUI(),drawLib->getDispWidth()/2 - 200,70,"",400,540);
     m_pJustDeadMenu->setStyle(UI_FRAMESTYLE_MENU);
     
     m_pJustDeadMenuButtons[0] = new UIButton(m_pJustDeadMenu,0,0,GAMETEXT_TRYAGAIN,207,57);
@@ -177,7 +177,7 @@ namespace vapp {
     
 #if defined(SUPPORT_WEBACCESS)        
     /* level info frame */
-    m_pLevelInfoFrame = new UIWindow(m_pMainMenu,0,getDispHeight()/2 - (m_nNumMainMenuButtons*57)/2 + m_nNumMainMenuButtons*57,"",220,100);
+    m_pLevelInfoFrame = new UIWindow(m_pMainMenu,0,drawLib->getDispHeight()/2 - (m_nNumMainMenuButtons*57)/2 + m_nNumMainMenuButtons*57,"",220,100);
     m_pLevelInfoFrame->showWindow(false);
     m_pBestPlayerText = new UIStatic(m_pLevelInfoFrame, 0, 5,"", 220, 50);
     m_pBestPlayerText->setFont(m_Renderer.getSmallFont());
@@ -189,7 +189,7 @@ namespace vapp {
 #endif
 
 //    UIStatic *pPlayerText = new UIStatic(m_pMainMenu,300,85,"",getDispWidth()-300-120,50);
-    UIStatic *pPlayerText = new UIStatic(m_pMainMenu,300,(getDispHeight()*85)/600,"",getDispWidth()-300-120,50);
+    UIStatic *pPlayerText = new UIStatic(m_pMainMenu,300,(drawLib->getDispHeight()*85)/600,"",drawLib->getDispWidth()-300-120,50);
     pPlayerText->setFont(m_Renderer.getMediumFont());            
     pPlayerText->setHAlign(UI_ALIGN_RIGHT);
     pPlayerText->setID("PLAYERTAG");
@@ -202,21 +202,21 @@ namespace vapp {
     pNewLevelText->setID("NEWLEVELAVAILBLE");
     
 //    UIButton *pChangePlayerButton = new UIButton(m_pMainMenu,getDispWidth()-115,80,GAMETEXT_CHANGE,115,57);
-    UIButton *pChangePlayerButton = new UIButton(m_pMainMenu,getDispWidth()-115,(getDispHeight()*80)/600,GAMETEXT_CHANGE,115,57);
+    UIButton *pChangePlayerButton = new UIButton(m_pMainMenu,drawLib->getDispWidth()-115,(drawLib->getDispHeight()*80)/600,GAMETEXT_CHANGE,115,57);
     pChangePlayerButton->setType(UI_BUTTON_TYPE_SMALL);
     pChangePlayerButton->setFont(m_Renderer.getSmallFont());
     pChangePlayerButton->setID("CHANGEPLAYERBUTTON");
     pChangePlayerButton->setContextHelp(CONTEXTHELP_CHANGE_PLAYER);
     
-    UIStatic *pSomeText = new UIStatic(m_pMainMenu,0,getDispHeight()-20,
+    UIStatic *pSomeText = new UIStatic(m_pMainMenu,0,drawLib->getDispHeight()-20,
                                         std::string("X-Moto/") + getVersionString(),
-                                        getDispWidth(),20);
+                                        drawLib->getDispWidth(),20);
     pSomeText->setFont(m_Renderer.getSmallFont());
     pSomeText->setVAlign(UI_ALIGN_BOTTOM);
     pSomeText->setHAlign(UI_ALIGN_LEFT);
     
     for(int i=0;i<m_nNumMainMenuButtons;i++) {
-      m_pMainMenuButtons[i]->setPosition(20,getDispHeight()/2 - (m_nNumMainMenuButtons*57)/2 + i*57,177,57);
+      m_pMainMenuButtons[i]->setPosition(20,drawLib->	getDispHeight()/2 - (m_nNumMainMenuButtons*57)/2 + i*57,177,57);
       m_pMainMenuButtons[i]->setFont(m_Renderer.getSmallFont());
     }           
 
@@ -226,7 +226,7 @@ namespace vapp {
     //                                "",207,getDispHeight() - (20+getDispHeight()/2 + (m_nNumMainMenuButtons*57)/2));
     //m_pGameInfoWindow->showWindow(true);
           
-    m_pHelpWindow = new UIFrame(m_pMainMenu,220,(getDispHeight()*140)/600,"",getDispWidth()-220-20,getDispHeight()-40-(getDispHeight()*120)/600-10);
+    m_pHelpWindow = new UIFrame(m_pMainMenu,220,(drawLib->getDispHeight()*140)/600,"",drawLib->getDispWidth()-220-20,drawLib->getDispHeight()-40-(drawLib->getDispHeight()*120)/600-10);
     m_pHelpWindow->showWindow(false);
     pSomeText = new UIStatic(m_pHelpWindow,0,0,GAMETEXT_HELP,m_pHelpWindow->getPosition().nWidth,36);
     pSomeText->setFont(m_Renderer.getMediumFont());
@@ -257,7 +257,7 @@ namespace vapp {
     pCreditsButton->setType(UI_BUTTON_TYPE_SMALL);
     pCreditsButton->setID("HELP_CREDITS_BUTTON");
 
-    m_pReplaysWindow = new UIFrame(m_pMainMenu,220,(getDispHeight()*140)/600,"",getDispWidth()-220-20,getDispHeight()-40-(getDispHeight()*120)/600-10);      
+    m_pReplaysWindow = new UIFrame(m_pMainMenu,220,(drawLib->getDispHeight()*140)/600,"",drawLib->getDispWidth()-220-20,drawLib->getDispHeight()-40-(drawLib->getDispHeight()*120)/600-10);      
     m_pReplaysWindow->showWindow(false);
     pSomeText = new UIStatic(m_pReplaysWindow,0,0,GAMETEXT_REPLAYS,m_pHelpWindow->getPosition().nWidth,36);
     pSomeText->setFont(m_Renderer.getMediumFont());
@@ -301,7 +301,7 @@ namespace vapp {
     
     //m_pPlayWindow->setPrimaryChild(m_pJustDeadMenuButtons[0]); /* default button: Try Again */
 
-    m_pOptionsWindow = new UIFrame(m_pMainMenu,220,(getDispHeight()*140)/600,"",getDispWidth()-220-20,getDispHeight()-40-(getDispHeight()*120)/600-10);
+    m_pOptionsWindow = new UIFrame(m_pMainMenu,220,(drawLib->getDispHeight()*140)/600,"",drawLib->getDispWidth()-220-20,drawLib->getDispHeight()-40-(drawLib->getDispHeight()*120)/600-10);
     m_pOptionsWindow->showWindow(false);
     pSomeText = new UIStatic(m_pOptionsWindow,0,0,GAMETEXT_OPTIONS,m_pHelpWindow->getPosition().nWidth,36);
     pSomeText->setFont(m_Renderer.getMediumFont());
@@ -816,7 +816,7 @@ namespace vapp {
 
     /* ***** */
 
-    m_pLevelPacksWindow = new UIFrame(m_pMainMenu,220,(getDispHeight()*140)/600,"",getDispWidth()-220-20,getDispHeight()-40-(getDispHeight()*120)/600-10);      
+    m_pLevelPacksWindow = new UIFrame(m_pMainMenu,220,(drawLib->getDispHeight()*140)/600,"",drawLib->getDispWidth()-220-20,drawLib->getDispHeight()-40-(drawLib->getDispHeight()*120)/600-10);      
     m_pLevelPacksWindow->showWindow(false);
     pSomeText = new UIStatic(m_pLevelPacksWindow,0,0,GAMETEXT_LEVELS,m_pLevelPacksWindow->getPosition().nWidth,36);
     pSomeText->setFont(m_Renderer.getMediumFont());
@@ -925,7 +925,7 @@ namespace vapp {
 
 #if defined(SUPPORT_WEBACCESS)
     /* Initialize internet connection configurator */
-    m_pWebConfEditor = new UIFrame(m_Renderer.getGUI(),getDispWidth()/2-206,getDispHeight()/2-385/2,"",412,425); 
+    m_pWebConfEditor = new UIFrame(m_Renderer.getGUI(),drawLib->getDispWidth()/2-206,drawLib->getDispHeight()/2-385/2,"",412,425); 
     m_pWebConfEditor->setStyle(UI_FRAMESTYLE_TRANS);           
     m_pWebConfEditor->showWindow(false);
     UIStatic *pWebConfEditorTitle = new UIStatic(m_pWebConfEditor,0,0,GAMETEXT_INETCONF,400,50);
@@ -1018,7 +1018,7 @@ namespace vapp {
 #endif
 
     /* Initialize profile editor */
-    m_pProfileEditor = new UIFrame(m_Renderer.getGUI(),getDispWidth()/2-350,getDispHeight()/2-250,"",700,500); 
+    m_pProfileEditor = new UIFrame(m_Renderer.getGUI(),drawLib->getDispWidth()/2-350,drawLib->getDispHeight()/2-250,"",700,500); 
     m_pProfileEditor->setStyle(UI_FRAMESTYLE_TRANS);           
     UIStatic *pProfileEditorTitle = new UIStatic(m_pProfileEditor,0,0,GAMETEXT_PLAYERPROFILES,700,50);
     pProfileEditorTitle->setFont(m_Renderer.getMediumFont());
@@ -1047,7 +1047,7 @@ namespace vapp {
     _CreateProfileList();
 
     /* Initialize level pack viewer */
-    m_pLevelPackViewer = new UIFrame(m_Renderer.getGUI(),getDispWidth()/2-350,getDispHeight()/2-250,"",700,500); 
+    m_pLevelPackViewer = new UIFrame(m_Renderer.getGUI(),drawLib->getDispWidth()/2-350,drawLib->getDispHeight()/2-250,"",700,500); 
     m_pLevelPackViewer->setStyle(UI_FRAMESTYLE_TRANS);           
     UIStatic *pLevelPackViewerTitle = new UIStatic(m_pLevelPackViewer,0,0,"(level pack name goes here)",700,40);
     pLevelPackViewerTitle->setID("LEVELPACK_VIEWER_TITLE");
@@ -1094,7 +1094,7 @@ namespace vapp {
 #endif
 
     /* Initialize level info viewer */
-    m_pLevelInfoViewer = new UIFrame(m_Renderer.getGUI(),getDispWidth()/2-350,getDispHeight()/2-250,"",700,500); 
+    m_pLevelInfoViewer = new UIFrame(m_Renderer.getGUI(),drawLib->getDispWidth()/2-350,drawLib->getDispHeight()/2-250,"",700,500); 
     m_pLevelInfoViewer->setStyle(UI_FRAMESTYLE_TRANS);
     UIStatic *pLevelInfoViewerTitle = new UIStatic(m_pLevelInfoViewer,0,0,"(level name goes here)",700,40);
     pLevelInfoViewerTitle->setID("LEVEL_VIEWER_TITLE");  
@@ -1215,13 +1215,13 @@ namespace vapp {
     pLV_Replays_List->setEnterButton( pLV_Replays_Show );
     
     /* Build stats window */
-    m_pStatsWindow = new UIFrame(m_pMainMenu,220,(getDispHeight()*140)/600,GAMETEXT_STATS,getDispWidth()-200,getDispHeight()-40-(getDispHeight()*120)/600-10);      
+    m_pStatsWindow = new UIFrame(m_pMainMenu,220,(drawLib->getDispHeight()*140)/600,GAMETEXT_STATS,drawLib->getDispWidth()-200,drawLib->getDispHeight()-40-(drawLib->getDispHeight()*120)/600-10);      
     m_pStatsWindow->setStyle(UI_FRAMESTYLE_LEFTTAG);
     m_pStatsWindow->setFont(m_Renderer.getSmallFont());
-    m_pStatsWindow->makeMinimizable(getDispWidth()-17,(getDispHeight()*140)/600);
+    m_pStatsWindow->makeMinimizable(drawLib->getDispWidth()-17,(drawLib->getDispHeight()*140)/600);
     m_pStatsWindow->setMinimized(true);
     m_pStatsWindow->setContextHelp(CONTEXTHELP_STATS);
-    m_pStatsWindow->setPosition(getDispWidth()-17,(getDispHeight()*140)/600,m_pStatsWindow->getPosition().nWidth,m_pStatsWindow->getPosition().nHeight);
+    m_pStatsWindow->setPosition(drawLib->getDispWidth()-17,(drawLib->getDispHeight()*140)/600,m_pStatsWindow->getPosition().nWidth,m_pStatsWindow->getPosition().nHeight);
     pSomeText = new UIStatic(m_pStatsWindow,40,0,GAMETEXT_STATISTICS,m_pStatsWindow->getPosition().nWidth-80,36);
     pSomeText->setFont(m_Renderer.getMediumFont());
     
@@ -2830,14 +2830,14 @@ namespace vapp {
   
   void GameApp::_SimpleMessage(const std::string &Msg,UIRect *pRect,bool bNoSwap) {      
     m_Renderer.getGUI()->paint();
-    drawBox(Vector2f(0,0),Vector2f(getDispWidth(),getDispHeight()),0,MAKE_COLOR(0,0,0,170),0);
+    drawLib->drawBox(Vector2f(0,0),Vector2f(drawLib->getDispWidth(),drawLib->getDispHeight()),0,MAKE_COLOR(0,0,0,170),0);
     int cx,cy;
 
     m_Renderer.getGUI()->setFont(m_Renderer.getMediumFont());
     m_Renderer.getGUI()->getTextSize(Msg.c_str(),&cx,&cy);
     
     int nW = cx + 150, nH = cy + 150;
-    int nx = getDispWidth()/2 - nW/2,ny = getDispHeight()/2 - nH/2;
+    int nx = drawLib->getDispWidth()/2 - nW/2,ny = drawLib->getDispHeight()/2 - nH/2;
     
     if(pRect != NULL) {
       pRect->nX = nx;
@@ -2856,7 +2856,7 @@ namespace vapp {
     m_Renderer.getGUI()->putElem(nx+nW-8,ny+8,-1,nH-16,UI_ELEM_FRAME_MR,false);
     m_Renderer.getGUI()->putRect(nx+8,ny+8,nW-16,nH-16,MAKE_COLOR(0,0,0,127));
 
-    m_Renderer.getGUI()->putText(getDispWidth()/2 - cx/2,getDispHeight()/2,Msg.c_str());
+    m_Renderer.getGUI()->putText(drawLib->getDispWidth()/2 - cx/2,drawLib->getDispHeight()/2,Msg.c_str());
     m_Renderer.getGUI()->setFont(m_Renderer.getSmallFont());
     
     if(!bNoSwap)

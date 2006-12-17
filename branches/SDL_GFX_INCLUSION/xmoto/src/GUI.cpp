@@ -420,7 +420,7 @@ namespace vapp {
    
   void UIWindow::putImage(int x,int y,int nWidth,int nHeight,Texture *pImage) {
     if(pImage != NULL) {
-      getApp()->drawImage(Vector2f(x+getAbsPosX(),y+getAbsPosY()),
+      getApp()->getDrawLib()->drawImage(Vector2f(x+getAbsPosX(),y+getAbsPosY()),
                           Vector2f(x+nWidth+getAbsPosX(),y+nHeight+getAbsPosY()),
                           pImage,MAKE_COLOR(255,255,255,(int)(255*getOpacity()/100)));
     }
@@ -439,7 +439,7 @@ namespace vapp {
   }
   
   void UIWindow::putRect(int x,int y,int nWidth,int nHeight,Color c) {
-    getApp()->drawBox(Vector2f(x+getAbsPosX(),y+getAbsPosY()),
+    getApp()->getDrawLib()->drawBox(Vector2f(x+getAbsPosX(),y+getAbsPosY()),
                       Vector2f(x+nWidth+getAbsPosX(),y+nHeight+getAbsPosY()),
                       0,MAKE_COLOR(GET_RED(c),GET_GREEN(c),GET_BLUE(c),(int)(GET_ALPHA(c)*getOpacity()/100)),0);
   }
@@ -531,16 +531,16 @@ namespace vapp {
     glBegin(GL_POLYGON);
     glColor4ub(GET_RED(c1),GET_GREEN(c1),GET_BLUE(c1),GET_ALPHA(c1));
     glTexCoord2f(fX1,fY1);
-    getApp()->glVertex(cx,cy);
+    getApp()->getDrawLib()->glVertex(cx,cy);
     glColor4ub(GET_RED(c2),GET_GREEN(c2),GET_BLUE(c2),GET_ALPHA(c2));
     glTexCoord2f(fX2,fY1);        
-    getApp()->glVertex(cx+w,cy);
+    getApp()->getDrawLib()->glVertex(cx+w,cy);
     glColor4ub(GET_RED(c3),GET_GREEN(c3),GET_BLUE(c3),GET_ALPHA(c3));
     glTexCoord2f(fX2,fY2);
-    getApp()->glVertex(cx+w,cy+h);
+    getApp()->getDrawLib()->glVertex(cx+w,cy+h);
     glColor4ub(GET_RED(c4),GET_GREEN(c4),GET_BLUE(c4),GET_ALPHA(c4));
     glTexCoord2f(fX1,fY2);
-    getApp()->glVertex(cx,cy+h);
+    getApp()->getDrawLib()->glVertex(cx,cy+h);
     glEnd();
     glDisable(GL_BLEND);
     glDisable(GL_TEXTURE_2D);    
@@ -563,16 +563,16 @@ namespace vapp {
       glBegin(GL_POLYGON);
       glColor4ub(GET_RED(c1),GET_GREEN(c1),GET_BLUE(c1),GET_ALPHA(c1));
       glTexCoord2f(fX1,fY1);
-      getApp()->glVertex(cx,cy);
+      getApp()->getDrawLib()->glVertex(cx,cy);
       glColor4ub(GET_RED(c2),GET_GREEN(c2),GET_BLUE(c2),GET_ALPHA(c2));
       glTexCoord2f(fX2,fY1);        
-      getApp()->glVertex(cx+w,cy);
+      getApp()->getDrawLib()->glVertex(cx+w,cy);
       glColor4ub(GET_RED(c3),GET_GREEN(c3),GET_BLUE(c3),GET_ALPHA(c3));
       glTexCoord2f(fX2,fY2);
-      getApp()->glVertex(cx+w,cy+h);
+      getApp()->getDrawLib()->glVertex(cx+w,cy+h);
       glColor4ub(GET_RED(c4),GET_GREEN(c4),GET_BLUE(c4),GET_ALPHA(c4));
       glTexCoord2f(fX1,fY2);
-      getApp()->glVertex(cx,cy+h);
+      getApp()->getDrawLib()->glVertex(cx,cy+h);
       glEnd();
       glDisable(GL_BLEND);
       glDisable(GL_TEXTURE_2D);    
@@ -665,8 +665,8 @@ FRAME_BR (187,198) (8x8)
     /* Clip to full screen */
     Screen.nX = 0;
     Screen.nY = 0;
-    Screen.nWidth = getApp()->getDispWidth();
-    Screen.nHeight = getApp()->getDispHeight();
+    Screen.nWidth = getApp()->getDrawLib()->getDispWidth();
+    Screen.nHeight = getApp()->getDrawLib()->getDispHeight();
       
     /* Draw root's children */
     glEnable(GL_SCISSOR_TEST);
@@ -685,11 +685,11 @@ FRAME_BR (187,198) (8x8)
       glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
       glBegin(GL_POLYGON);
       glColor4f(0,0,0,0);
-      getApp()->glVertex(0,getApp()->getDispHeight()-nContextHelpHeight);
-      getApp()->glVertex(getApp()->getDispWidth(),getApp()->getDispHeight()-nContextHelpHeight);
+      getApp()->getDrawLib()->glVertex(0,getApp()->getDrawLib()->getDispHeight()-nContextHelpHeight);
+      getApp()->getDrawLib()->glVertex(getApp()->getDrawLib()->getDispWidth(),getApp()->getDrawLib()->getDispHeight()-nContextHelpHeight);
       glColor4f(0,0,0,0.7);
-      getApp()->glVertex(getApp()->getDispWidth(),getApp()->getDispHeight());
-      getApp()->glVertex(0,getApp()->getDispHeight());
+      getApp()->getDrawLib()->glVertex(getApp()->getDrawLib()->getDispWidth(),getApp()->getDrawLib()->getDispHeight());
+      getApp()->getDrawLib()->glVertex(0,getApp()->getDrawLib()->getDispHeight());
       glEnd();
       glDisable(GL_BLEND);
         
@@ -701,7 +701,7 @@ FRAME_BR (187,198) (8x8)
 	UIFont *v_font = getFont();
 
 	if(v_font != NULL) {
-	  UITextDraw::printRaw(v_font,getApp()->getDispWidth()-(nX2-nY1),getApp()->getDispHeight()-5,
+	  UITextDraw::printRaw(v_font,getApp()->getDrawLib()->getDispWidth()-(nX2-nY1),getApp()->getDrawLib()->getDispHeight()-5,
 			       m_CurrentContextHelp,MAKE_COLOR(255,255,0,255));
 	}
       }
@@ -912,7 +912,7 @@ FRAME_BR (187,198) (8x8)
                 
               /* Try loading texture */
               Texture *pTexture = NULL;
-	      Sprite *pSprite   = getApp()->m_theme.getSprite(SPRITE_TYPE_FONT, Name);
+	      Sprite *pSprite   = getApp()->getTheme()->getSprite(SPRITE_TYPE_FONT, Name);
 	      if(pSprite != NULL) {
 	      	pTexture = pSprite->getTexture(false, true, FM_NEAREST);
 	      }
@@ -1013,13 +1013,13 @@ FRAME_BR (187,198) (8x8)
         glBegin(GL_POLYGON);
         glColor4ub(GET_RED(c),GET_GREEN(c),GET_BLUE(c),GET_ALPHA(c));
         glTexCoord2f(pFont->Chars[nChar].fX1,pFont->Chars[nChar].fY1);
-        getApp()->glVertex((cx+pFont->Chars[nChar].nOffsetX),(cy-pFont->Chars[nChar].nOffsetY));
+        getApp()->getDrawLib()->glVertex((cx+pFont->Chars[nChar].nOffsetX),(cy-pFont->Chars[nChar].nOffsetY));
         glTexCoord2f(pFont->Chars[nChar].fX2,pFont->Chars[nChar].fY1);        
-        getApp()->glVertex(cx+pFont->Chars[nChar].nWidth+pFont->Chars[nChar].nOffsetX,cy-pFont->Chars[nChar].nOffsetY);
+        getApp()->getDrawLib()->glVertex(cx+pFont->Chars[nChar].nWidth+pFont->Chars[nChar].nOffsetX,cy-pFont->Chars[nChar].nOffsetY);
         glTexCoord2f(pFont->Chars[nChar].fX2,pFont->Chars[nChar].fY2);
-        getApp()->glVertex(cx+pFont->Chars[nChar].nWidth+pFont->Chars[nChar].nOffsetX,cy+pFont->Chars[nChar].nHeight-pFont->Chars[nChar].nOffsetY);
+        getApp()->getDrawLib()->glVertex(cx+pFont->Chars[nChar].nWidth+pFont->Chars[nChar].nOffsetX,cy+pFont->Chars[nChar].nHeight-pFont->Chars[nChar].nOffsetY);
         glTexCoord2f(pFont->Chars[nChar].fX1,pFont->Chars[nChar].fY2);
-        getApp()->glVertex(cx+pFont->Chars[nChar].nOffsetX,cy+pFont->Chars[nChar].nHeight-pFont->Chars[nChar].nOffsetY);
+        getApp()->getDrawLib()->glVertex(cx+pFont->Chars[nChar].nOffsetX,cy+pFont->Chars[nChar].nHeight-pFont->Chars[nChar].nOffsetY);
         glEnd();
         
         cx += pFont->Chars[nChar].nIncX;
@@ -1073,16 +1073,16 @@ FRAME_BR (187,198) (8x8)
           glBegin(GL_POLYGON);
           glColor4ub(GET_RED(c1),GET_GREEN(c1),GET_BLUE(c1),GET_ALPHA(c1));
           glTexCoord2f(pFont->Chars[nChar].fX1,pFont->Chars[nChar].fY1);
-          getApp()->glVertex((cx+pFont->Chars[nChar].nOffsetX),(cy-pFont->Chars[nChar].nOffsetY));
+          getApp()->getDrawLib()->glVertex((cx+pFont->Chars[nChar].nOffsetX),(cy-pFont->Chars[nChar].nOffsetY));
           glColor4ub(GET_RED(c2),GET_GREEN(c2),GET_BLUE(c2),GET_ALPHA(c2));
           glTexCoord2f(pFont->Chars[nChar].fX2,pFont->Chars[nChar].fY1);        
-          getApp()->glVertex(cx+pFont->Chars[nChar].nWidth+pFont->Chars[nChar].nOffsetX,cy-pFont->Chars[nChar].nOffsetY);
+          getApp()->getDrawLib()->glVertex(cx+pFont->Chars[nChar].nWidth+pFont->Chars[nChar].nOffsetX,cy-pFont->Chars[nChar].nOffsetY);
           glColor4ub(GET_RED(c3),GET_GREEN(c3),GET_BLUE(c3),GET_ALPHA(c3));
           glTexCoord2f(pFont->Chars[nChar].fX2,pFont->Chars[nChar].fY2);
-          getApp()->glVertex(cx+pFont->Chars[nChar].nWidth+pFont->Chars[nChar].nOffsetX,cy+pFont->Chars[nChar].nHeight-pFont->Chars[nChar].nOffsetY);
+          getApp()->getDrawLib()->glVertex(cx+pFont->Chars[nChar].nWidth+pFont->Chars[nChar].nOffsetX,cy+pFont->Chars[nChar].nHeight-pFont->Chars[nChar].nOffsetY);
           glColor4ub(GET_RED(c4),GET_GREEN(c4),GET_BLUE(c4),GET_ALPHA(c4));
           glTexCoord2f(pFont->Chars[nChar].fX1,pFont->Chars[nChar].fY2);
-          getApp()->glVertex(cx+pFont->Chars[nChar].nOffsetX,cy+pFont->Chars[nChar].nHeight-pFont->Chars[nChar].nOffsetY);
+          getApp()->getDrawLib()->glVertex(cx+pFont->Chars[nChar].nOffsetX,cy+pFont->Chars[nChar].nHeight-pFont->Chars[nChar].nOffsetY);
           glEnd();
 
           //glBegin(GL_POLYGON);
@@ -1119,16 +1119,16 @@ FRAME_BR (187,198) (8x8)
           glBegin(GL_POLYGON);
           glColor4ub(GET_RED(c1),GET_GREEN(c1),GET_BLUE(c1),GET_ALPHA(c1));
           glTexCoord2f(pFont->Chars[nChar].fX1,pFont->Chars[nChar].fY1);
-          getApp()->glVertex((cx+pFont->Chars[nChar].nOffsetX),(cy-pFont->Chars[nChar].nOffsetY));
+          getApp()->getDrawLib()->glVertex((cx+pFont->Chars[nChar].nOffsetX),(cy-pFont->Chars[nChar].nOffsetY));
           glColor4ub(GET_RED(c2),GET_GREEN(c2),GET_BLUE(c2),GET_ALPHA(c2));
           glTexCoord2f(pFont->Chars[nChar].fX2,pFont->Chars[nChar].fY1);        
-          getApp()->glVertex(cx+pFont->Chars[nChar].nWidth+pFont->Chars[nChar].nOffsetX,cy-pFont->Chars[nChar].nOffsetY);
+          getApp()->getDrawLib()->glVertex(cx+pFont->Chars[nChar].nWidth+pFont->Chars[nChar].nOffsetX,cy-pFont->Chars[nChar].nOffsetY);
           glColor4ub(GET_RED(c3),GET_GREEN(c3),GET_BLUE(c3),GET_ALPHA(c3));
           glTexCoord2f(pFont->Chars[nChar].fX2,pFont->Chars[nChar].fY2);
-          getApp()->glVertex(cx+pFont->Chars[nChar].nWidth+pFont->Chars[nChar].nOffsetX,cy+pFont->Chars[nChar].nHeight-pFont->Chars[nChar].nOffsetY);
+          getApp()->getDrawLib()->glVertex(cx+pFont->Chars[nChar].nWidth+pFont->Chars[nChar].nOffsetX,cy+pFont->Chars[nChar].nHeight-pFont->Chars[nChar].nOffsetY);
           glColor4ub(GET_RED(c4),GET_GREEN(c4),GET_BLUE(c4),GET_ALPHA(c4));
           glTexCoord2f(pFont->Chars[nChar].fX1,pFont->Chars[nChar].fY2);
-          getApp()->glVertex(cx+pFont->Chars[nChar].nOffsetX,cy+pFont->Chars[nChar].nHeight-pFont->Chars[nChar].nOffsetY);
+          getApp()->getDrawLib()->glVertex(cx+pFont->Chars[nChar].nOffsetX,cy+pFont->Chars[nChar].nHeight-pFont->Chars[nChar].nOffsetY);
           glEnd();
           
           cx += pFont->Chars[nChar].nIncX;
@@ -1217,17 +1217,17 @@ FRAME_BR (187,198) (8x8)
     
     Sprite *pSprite;
 
-    pSprite = m_pApp->m_theme.getSprite(SPRITE_TYPE_UI, "Misc");
+    pSprite = m_pApp->getTheme()->getSprite(SPRITE_TYPE_UI, "Misc");
     if(pSprite != NULL) {
       m_pUIElemTexture = pSprite->getTexture(false,true, FM_NEAREST);
     }
 
-    pSprite = m_pApp->m_theme.getSprite(SPRITE_TYPE_UI, "MiscDisabled");
+    pSprite = m_pApp->getTheme()->getSprite(SPRITE_TYPE_UI, "MiscDisabled");
     if(pSprite != NULL) {
       m_pUIElemTextureD = pSprite->getTexture(false,true, FM_NEAREST);
     }
 
-    pSprite = m_pApp->m_theme.getSprite(SPRITE_TYPE_UI, "MiscActive");
+    pSprite = m_pApp->getTheme()->getSprite(SPRITE_TYPE_UI, "MiscActive");
     if(pSprite != NULL) {
       m_pUIElemTextureA = pSprite->getTexture(false,true, FM_NEAREST);
     }

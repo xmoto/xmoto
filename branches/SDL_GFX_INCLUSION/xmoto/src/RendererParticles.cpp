@@ -67,12 +67,12 @@ namespace vapp {
   }
 
   void GameRenderer::_RenderParticle(ParticlesSource *i_source) {
-    AnimationSprite *pStarAnim = (AnimationSprite *)getParent()->m_theme.getSprite(SPRITE_TYPE_ANIMATION,"Star");
-    EffectSprite* pFireType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Fire1");
-    EffectSprite* pSmoke1Type = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Smoke1");
-    EffectSprite* pSmoke2Type = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Smoke2");
+    AnimationSprite *pStarAnim = (AnimationSprite *)getParent()->getTheme()->getSprite(SPRITE_TYPE_ANIMATION,"Star");
+    EffectSprite* pFireType = (EffectSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_EFFECT, "Fire1");
+    EffectSprite* pSmoke1Type = (EffectSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_EFFECT, "Smoke1");
+    EffectSprite* pSmoke2Type = (EffectSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_EFFECT, "Smoke2");
     
-    EffectSprite* pDebrisType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Debris1");
+    EffectSprite* pDebrisType = (EffectSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_EFFECT, "Debris1");
 
     if(i_source->SpriteName() == "Star") {
       if(pStarAnim != NULL) {
