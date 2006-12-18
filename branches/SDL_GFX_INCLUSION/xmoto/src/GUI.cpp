@@ -511,7 +511,7 @@ namespace vapp {
     
     int cx = getAbsPosX() + x;
     int cy = getAbsPosY() + y;
-    
+#ifdef ENABLE_OPENGL    
     /* Nice. Now we know what to draw */    
     if(bDisabled) {
       vTexture = UITexture::getMiscDisabledTexture();
@@ -544,6 +544,7 @@ namespace vapp {
     glEnd();
     glDisable(GL_BLEND);
     glDisable(GL_TEXTURE_2D);    
+#endif
     
     /* Active? If so we want a nice blinking overlay */
     if(bActive) {

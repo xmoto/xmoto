@@ -52,13 +52,17 @@ namespace vapp {
   struct Texture {
     Texture() {
       nWidth = nHeight = 0;
+#ifdef ENABLE_OPENGL
       nID = 0;
+#endif
       nSize = 0;
     }
   
     std::string Name;       /* Name */
     int nWidth,nHeight;     /* Size */
+#ifdef ENABLE_OPENGL
     unsigned int nID;       /* OpenGL name */
+#endif
     std::string Tag;        /* Optional tag */
     int nSize;              /* Size in bytes */
   };

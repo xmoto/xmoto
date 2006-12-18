@@ -88,9 +88,11 @@ namespace vapp {
     public:
       SFXOverlay() {
         m_pApp = NULL;
+#ifdef ENABLE_OPENGL	
         m_bUseShaders = false;
         m_VertShaderID = m_FragShaderID = m_ProgramID = 0;
         m_DynamicTextureID = m_FrameBufferID = 0;
+#endif
         m_nOverlayWidth = m_nOverlayHeight = 0;
       }
     
@@ -98,27 +100,32 @@ namespace vapp {
       void init(App *pApp,int nWidth,int nHeight);
       void cleanUp(void);
       void beginRendering(void);
-      GLuint endRendering(void);
+      void endRendering(void);
       void fade(float f);
       void present(void);
     
     private:
+#ifdef ENABLE_OPENGL
       /* Some OpenGL handles */
       GLuint m_DynamicTextureID;
       GLuint m_FrameBufferID;      
-      int m_nOverlayWidth,m_nOverlayHeight;
-      App *m_pApp;
-      
+
       /* For shaders */
       bool m_bUseShaders;
       GLhandleARB m_VertShaderID;
       GLhandleARB m_FragShaderID;
       GLhandleARB m_ProgramID;
-      
+
       /* Helpers */
       char **_LoadShaderSource(const std::string &File,int *pnNumLines);
       void _FreeShaderSource(char **ppc,int nNumLines);
       bool _SetShaderSource(GLhandleARB ShaderID,const std::string &File);
+#endif
+      
+      
+
+      int m_nOverlayWidth,m_nOverlayHeight;
+      App *m_pApp;
   };
 
   /*===========================================================================

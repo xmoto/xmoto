@@ -127,14 +127,11 @@ namespace vapp {
 	  }
   }
   
-  GLuint SFXOverlay::endRendering(void) {
+  void SFXOverlay::endRendering(void) {
     if(m_pApp->getDrawLib()->useFBOs()) {
 	    m_pApp->getDrawLib()->glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,0);
 	    glViewport(0,0,m_pApp->getDrawLib()->getDispWidth(),m_pApp->getDrawLib()->getDispHeight());
-	    
-	    return m_DynamicTextureID;
     }
-    return 0;  
   }
 
   /*===========================================================================

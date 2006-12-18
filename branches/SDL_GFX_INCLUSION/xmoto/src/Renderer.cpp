@@ -528,7 +528,7 @@ namespace vapp {
         _RenderBike(getGameObject()->getGhostBikeState(), &(getGameObject()->getBikeState()->Parameters()), m_theme->getGhostTheme());
         
         if(m_bGhostMotionBlur && getParent()->getDrawLib()->useFBOs()) {
-          GLuint nOverlayTextureID = m_Overlay.endRendering();
+          m_Overlay.endRendering();
           m_Overlay.present();
         }
         

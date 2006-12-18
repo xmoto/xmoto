@@ -45,8 +45,11 @@ namespace vapp {
     pTexture->nWidth = nWidth;
     pTexture->nHeight = nHeight;
     pTexture->Tag = "";
+#ifdef ENABLE_OPENGL
     pTexture->nID = 0;
+#endif
     
+#ifdef ENABLE_OPENGL
     /* OpenGL magic */
     GLuint N;
     glEnable(GL_TEXTURE_2D);
@@ -100,6 +103,7 @@ namespace vapp {
     glDisable(GL_TEXTURE_2D);
     
     pTexture->nID = N;
+#endif
     
     m_nTexSpaceUsage += pTexture->nSize;
   
@@ -116,7 +120,9 @@ namespace vapp {
     if(pTexture != NULL) {
       for(unsigned int i=0;i<m_Textures.size();i++) {
         if(m_Textures[i] == pTexture) {
+#ifdef ENABLE_OPENGL
           glDeleteTextures(1,(GLuint *)&pTexture->nID);
+#endif
           m_nTexSpaceUsage -= pTexture->nSize;
           delete pTexture;
           m_Textures.erase(m_Textures.begin() + i);
