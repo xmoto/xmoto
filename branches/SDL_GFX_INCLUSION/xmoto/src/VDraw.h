@@ -74,9 +74,18 @@ namespace vapp {
       /* Methods - low-level */
       void glVertexSP(float x,float y);
       
-      void screenProjVertex(float *x,float *y);      
+      void screenProjVertex(float *x,float *y); 
+      
+      /**
+       * enables clipping and sets the clipping borders
+       **/     
       void setClipRect(int x , int y , int w , int h);
-      void getClipRect(int *px,int *py,int *pnWidth,int *pnHeight);
+      void setClipRect(SDL_Rect * i_clip_rect);
+      
+      /**
+       * returns the current screen clipping
+       **/
+      void getClipRect(int *o_px,int *o_py,int *o_pnWidth,int *o_pnHeight);
       
       /**
        * Start drawing ... used in combination with glVertex
@@ -120,6 +129,7 @@ namespace vapp {
       bool useVBOs(void) {return m_bVBOSupported;};
       bool useFBOs(void) {return m_bFBOSupported;};
       bool useShaders(void) {return m_bShadersSupported;};
+#ifdef ENABLE_OPENGL
       /**
        *keesj:TODO
        *I am not happy about all these public members:)
@@ -192,6 +202,7 @@ namespace vapp {
       PFNGLGETUNIFORMFVARBPROC glGetUniformfvARB;
       PFNGLGETUNIFORMIVARBPROC glGetUniformivARB;
       PFNGLGETSHADERSOURCEARBPROC glGetShaderSourceARB;
+#endif
       
 private:
     

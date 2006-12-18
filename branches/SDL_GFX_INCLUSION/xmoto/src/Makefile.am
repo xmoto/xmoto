@@ -31,7 +31,7 @@ helpers_SOURCES = helpers/VMath.h             \
 
 common_SOURCES = BuiltInFont.cpp Image.cpp \
   VApp.cpp VBezier.cpp VDraw.cpp \
-  VDrawText.cpp VFileIO.cpp VTexture.cpp \
+  VFileIO.cpp VTexture.cpp \
   VXml.cpp \
   $(helpers_SOURCES) \
   $(image_SOURCES) $(tinyxml_SOURCES) \

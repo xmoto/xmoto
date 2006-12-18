@@ -48,6 +48,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // Some places #define _T, which we want for a template parameter
 #undef _T
 
+#ifdef ENABLE_OPENGL
 /* Pull in OpenGL headers */
 //#define NO_SDL_GLEXT
 //#include <SDL/SDL_opengl.h>
@@ -66,6 +67,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #undef __glext_h_
 
 #include "glext.h"
+
+#endif
 
 #include <string>
 #include <vector>

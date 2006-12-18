@@ -114,14 +114,12 @@ namespace vapp {
         }
       }
     
-      /* Clear screen */  
-      glClear(GL_COLOR_BUFFER_BIT);
+      pParent->getDrawLib()->clearGraphics();
       
       /* Update */
       update();
       
-      /* Swap buffers */
-      SDL_GL_SwapBuffers();
+      pParent->getDrawLib()->flushGraphics();
     }
     
     /* Return */
@@ -169,6 +167,9 @@ namespace vapp {
     userPreInit();
     int configured_width,configured_height,configured_BPP;
     bool configured_windowed;
+    configured_width = drawLib->getDispWidth();
+    configured_height = drawLib->getDispHeight();
+    configured_BPP = drawLib->getDispBPP();
     selectDisplayMode(&configured_width,&configured_height,&configured_BPP , &configured_windowed);
         
     /* Init! */
@@ -241,7 +242,9 @@ namespace vapp {
         }
           
         /* Clear screen */  
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	drawLib->clearGraphics();
+
       }
       
       /* Update user app */
