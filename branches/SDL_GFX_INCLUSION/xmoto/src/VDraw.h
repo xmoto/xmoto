@@ -72,15 +72,37 @@ namespace vapp {
       bool getWindowed(void) {return m_bWindowed;}
       
       /* Methods - low-level */
-      void glVertex(float x,float y);
+      void glVertexSP(float x,float y);
       
       void screenProjVertex(float *x,float *y);      
       void setClipRect(int x , int y , int w , int h);
       void getClipRect(int *px,int *py,int *pnWidth,int *pnHeight);
+      
+      /**
+       * Start drawing ... used in combination with glVertex
+       **/
+      void startDraw(DrawMode mode);
+      
+      /**
+       * End draw
+       **/
+      void endDraw();
+
+      /**
+       * Clears the screen with the configured background
+       **/
+      void clearGraphics();
+      
+      /**
+       * Flush the graphics. In memory graphics will now be displayed
+       **/
+      void flushGraphics();
+      
       /* Methods - primitives */
       void drawCircle(const Vector2f &Center,float fRadius,float fBorder=1.0f,Color Back=0,Color Front=-1);
       void drawBox(const Vector2f &A,const Vector2f &B,float fBorder=1.0f,Color Back=0,Color Front=-1);      
       void drawImage(const Vector2f &A,const Vector2f &B,Texture *pTexture,Color Tint=-1);
+      
       
       /* Methods - text */
       void drawText(const Vector2f &Pos,std::string Text,Color Back=0,Color Front=-1,bool bEdge=false);

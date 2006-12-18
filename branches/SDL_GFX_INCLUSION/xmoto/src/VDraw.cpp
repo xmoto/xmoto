@@ -46,7 +46,7 @@ namespace vapp {
   /*===========================================================================
   Transform an OpenGL vertex to pure 2D 
   ===========================================================================*/
-  void DrawLib::glVertex(float x,float y) {
+  void DrawLib::glVertexSP(float x,float y) {
     //float tx = (((float)m_nActualWidth) / 2.0f) - 
 	  /*glVertex2f(-1.0f + (x*2.0f + 0.1f)/(float)(m_nActualWidth),
 					    1.0f - (y*2.0f + 0.1f)/(float)(m_nActualHeight));
@@ -313,7 +313,7 @@ namespace vapp {
       glColor4ub(GET_RED(Back),GET_GREEN(Back),GET_BLUE(Back),GET_ALPHA(Back));
       for(int i=0;i<nSteps;i++) {
         float rads = (3.14159f * 2.0f * (float)i)/ (float)nSteps;            
-        glVertex(Center.x + fRadius*sin(rads),Center.y + fRadius*cos(rads));
+        glVertexSP(Center.x + fRadius*sin(rads),Center.y + fRadius*cos(rads));
       }
       glEnd();
     }
@@ -326,10 +326,10 @@ namespace vapp {
   
         glBegin(GL_POLYGON);              
         glColor4ub(GET_RED(Front),GET_GREEN(Front),GET_BLUE(Front),GET_ALPHA(Front));
-        glVertex(Center.x + fRadius*sin(rads1),Center.y + fRadius*cos(rads1));
-        glVertex(Center.x + fRadius*sin(rads2),Center.y + fRadius*cos(rads2));
-        glVertex(Center.x + (fRadius-fBorder)*sin(rads2),Center.y + (fRadius-fBorder)*cos(rads2));
-        glVertex(Center.x + (fRadius-fBorder)*sin(rads1),Center.y + (fRadius-fBorder)*cos(rads1));
+        glVertexSP(Center.x + fRadius*sin(rads1),Center.y + fRadius*cos(rads1));
+        glVertexSP(Center.x + fRadius*sin(rads2),Center.y + fRadius*cos(rads2));
+        glVertexSP(Center.x + (fRadius-fBorder)*sin(rads2),Center.y + (fRadius-fBorder)*cos(rads2));
+        glVertexSP(Center.x + (fRadius-fBorder)*sin(rads1),Center.y + (fRadius-fBorder)*cos(rads1));
         glEnd();
       }
     }    
@@ -355,10 +355,10 @@ namespace vapp {
     if(GET_ALPHA(Back)>0) {
       glBegin(GL_POLYGON);
       glColor4ub(GET_RED(Back),GET_GREEN(Back),GET_BLUE(Back),GET_ALPHA(Back));
-      glVertex(A.x,A.y);
-      glVertex(A.x,B.y);
-      glVertex(B.x,B.y);
-      glVertex(B.x,A.y);
+      glVertexSP(A.x,A.y);
+      glVertexSP(A.x,B.y);
+      glVertexSP(B.x,B.y);
+      glVertexSP(B.x,A.y);
       glEnd();
     }
     
@@ -366,31 +366,31 @@ namespace vapp {
     if(fBorder>0.0f && GET_ALPHA(Front)>0) {
       glBegin(GL_POLYGON);
       glColor4ub(GET_RED(Front),GET_GREEN(Front),GET_BLUE(Front),GET_ALPHA(Front));
-      glVertex(A.x,A.y);
-      glVertex(A.x,B.y);
-      glVertex(A.x+fBorder,B.y);
-      glVertex(A.x+fBorder,A.y);
+      glVertexSP(A.x,A.y);
+      glVertexSP(A.x,B.y);
+      glVertexSP(A.x+fBorder,B.y);
+      glVertexSP(A.x+fBorder,A.y);
       glEnd();
       glBegin(GL_POLYGON);
       glColor4ub(GET_RED(Front),GET_GREEN(Front),GET_BLUE(Front),GET_ALPHA(Front));
-      glVertex(B.x-fBorder,A.y);
-      glVertex(B.x-fBorder,B.y);
-      glVertex(B.x,B.y);
-      glVertex(B.x,A.y);
+      glVertexSP(B.x-fBorder,A.y);
+      glVertexSP(B.x-fBorder,B.y);
+      glVertexSP(B.x,B.y);
+      glVertexSP(B.x,A.y);
       glEnd();
       glBegin(GL_POLYGON);
       glColor4ub(GET_RED(Front),GET_GREEN(Front),GET_BLUE(Front),GET_ALPHA(Front));
-      glVertex(A.x,A.y);
-      glVertex(A.x,A.y+fBorder);
-      glVertex(B.x,A.y+fBorder);
-      glVertex(B.x,A.y);
+      glVertexSP(A.x,A.y);
+      glVertexSP(A.x,A.y+fBorder);
+      glVertexSP(B.x,A.y+fBorder);
+      glVertexSP(B.x,A.y);
       glEnd();
       glBegin(GL_POLYGON);
       glColor4ub(GET_RED(Front),GET_GREEN(Front),GET_BLUE(Front),GET_ALPHA(Front));
-      glVertex(A.x,B.y-fBorder);
-      glVertex(A.x,B.y);
-      glVertex(B.x,B.y);
-      glVertex(B.x,B.y-fBorder);
+      glVertexSP(A.x,B.y-fBorder);
+      glVertexSP(A.x,B.y);
+      glVertexSP(B.x,B.y);
+      glVertexSP(B.x,B.y-fBorder);
       glEnd();
       
     }
@@ -412,13 +412,13 @@ namespace vapp {
     glBegin(GL_POLYGON);
     glColor4ub(GET_RED(Tint),GET_GREEN(Tint),GET_BLUE(Tint),GET_ALPHA(Tint));
     glTexCoord2f(0.0,0.0);
-    glVertex(A.x,A.y);
+    glVertexSP(A.x,A.y);
     glTexCoord2f(0.0,1.0);
-    glVertex(A.x,B.y);
+    glVertexSP(A.x,B.y);
     glTexCoord2f(1.0,1.0);
-    glVertex(B.x,B.y);
+    glVertexSP(B.x,B.y);
     glTexCoord2f(1.0,0.0);
-    glVertex(B.x,A.y);
+    glVertexSP(B.x,A.y);
     glEnd();
 
     glDisable(GL_TEXTURE_2D);        
@@ -483,4 +483,21 @@ namespace vapp {
     return pImg;            
   }
   
+  void DrawLib::startDraw(DrawMode mode){
+	  switch(mode){
+		  case DRAW_MODE_POLYGON:
+		    glBegin(GL_POLYGON);
+		    break;
+		  case DRAW_MODE_LINE_LOOP:
+		    glBegin(GL_LINE_LOOP);
+		    break;
+		  case DRAW_MODE_LINE_STRIP:
+		   glBegin(GL_LINE_STRIP);
+		   break;
+	  };
+  }
+  
+  void DrawLib::endDraw(){
+	glEnd();
+  }
 }

@@ -297,7 +297,7 @@ namespace vapp {
   #define MINIMAPZOOM 5.0f
   #define MINIMAPALPHA 128
   #define MINIVERTEX(Px,Py) \
-    getParent()->getDrawLib()->glVertex(x + nWidth/2 + (float)(Px - getCameraPositionX())*MINIMAPZOOM, \
+    getParent()->getDrawLib()->glVertexSP(x + nWidth/2 + (float)(Px - getCameraPositionX())*MINIMAPZOOM, \
                           y + nHeight/2 - (float)(Py - getCameraPositionY())*MINIMAPZOOM);    
 
   void GameRenderer::renderMiniMap(int x,int y,int nWidth,int nHeight) {
@@ -651,13 +651,13 @@ namespace vapp {
       //    if(pZone->Prims[u]->Type == LZPT_BOX) {
       //      glBegin(GL_LINE_LOOP);
       //      glColor3f(0,1,0);
-      //      getParent()->getDrawLib()->glVertex( getParent()->getDrawLib()->getDispWidth()/2 + (pZone->Prims[u]->fLeft + m_Scroll.x)*60.0f,
+      //      getParent()->getDrawLib()->glVertexSP( getParent()->getDrawLib()->getDispWidth()/2 + (pZone->Prims[u]->fLeft + m_Scroll.x)*60.0f,
       //                getParent()->getDrawLib()->getDispHeight()/2 - (pZone->Prims[u]->fTop + m_Scroll.y)*60.0f );
-      //      getParent()->getDrawLib()->glVertex( getParent()->getDrawLib()->getDispWidth()/2 + (pZone->Prims[u]->fRight + m_Scroll.x)*60.0f,
+      //      getParent()->getDrawLib()->glVertexSP( getParent()->getDrawLib()->getDispWidth()/2 + (pZone->Prims[u]->fRight + m_Scroll.x)*60.0f,
       //                getParent()->getDrawLib()->getDispHeight()/2 - (pZone->Prims[u]->fTop + m_Scroll.y)*60.0f );
-      //      getParent()->getDrawLib()->glVertex( getParent()->getDrawLib()->getDispWidth()/2 + (pZone->Prims[u]->fRight + m_Scroll.x)*60.0f,
+      //      getParent()->getDrawLib()->glVertexSP( getParent()->getDrawLib()->getDispWidth()/2 + (pZone->Prims[u]->fRight + m_Scroll.x)*60.0f,
       //                getParent()->getDrawLib()->getDispHeight()/2 - (pZone->Prims[u]->fBottom + m_Scroll.y)*60.0f );
-      //      getParent()->getDrawLib()->glVertex( getParent()->getDrawLib()->getDispWidth()/2 + (pZone->Prims[u]->fLeft + m_Scroll.x)*60.0f,
+      //      getParent()->getDrawLib()->glVertexSP( getParent()->getDrawLib()->getDispWidth()/2 + (pZone->Prims[u]->fLeft + m_Scroll.x)*60.0f,
       //                getParent()->getDrawLib()->getDispHeight()/2 - (pZone->Prims[u]->fBottom + m_Scroll.y)*60.0f );
       //      glEnd();
       //      
@@ -1230,13 +1230,13 @@ namespace vapp {
         glBegin(GL_POLYGON);   
         glColor3f(1,1,1);   
         glTexCoord2f(getCameraPositionX()*0.015,-getCameraPositionY()*0.015);
-        getParent()->getDrawLib()->glVertex(0,0);
+        getParent()->getDrawLib()->glVertexSP(0,0);
         glTexCoord2f(getCameraPositionX()*0.015+0.5,-getCameraPositionY()*0.015);
-        getParent()->getDrawLib()->glVertex(getParent()->getDrawLib()->getDispWidth(),0);
+        getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),0);
         glTexCoord2f(getCameraPositionX()*0.015+0.5,-getCameraPositionY()*0.015+0.5);
-        getParent()->getDrawLib()->glVertex(getParent()->getDrawLib()->getDispWidth(),getParent()->getDrawLib()->getDispHeight());
+        getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),getParent()->getDrawLib()->getDispHeight());
         glTexCoord2f(getCameraPositionX()*0.015,-getCameraPositionY()*0.015+0.5);
-        getParent()->getDrawLib()->glVertex(0,getParent()->getDrawLib()->getDispHeight());
+        getParent()->getDrawLib()->glVertexSP(0,getParent()->getDrawLib()->getDispHeight());
         glEnd();
         glDisable(GL_TEXTURE_2D); 
       }   
@@ -1250,13 +1250,13 @@ namespace vapp {
         glBegin(GL_POLYGON);   
         glColor3f(1,1,1);   
         glTexCoord2f(getCameraPositionX()*0.015,-getCameraPositionY()*0.015);
-        getParent()->getDrawLib()->glVertex(0,0);
+        getParent()->getDrawLib()->glVertexSP(0,0);
         glTexCoord2f(getCameraPositionX()*0.015+0.65,-getCameraPositionY()*0.015);
-        getParent()->getDrawLib()->glVertex(getParent()->getDrawLib()->getDispWidth(),0);
+        getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),0);
         glTexCoord2f(getCameraPositionX()*0.015+0.65,-getCameraPositionY()*0.015+0.65);
-        getParent()->getDrawLib()->glVertex(getParent()->getDrawLib()->getDispWidth(),getParent()->getDrawLib()->getDispHeight());
+        getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),getParent()->getDrawLib()->getDispHeight());
         glTexCoord2f(getCameraPositionX()*0.015,-getCameraPositionY()*0.015+0.65);
-        getParent()->getDrawLib()->glVertex(0,getParent()->getDrawLib()->getDispHeight());
+        getParent()->getDrawLib()->glVertexSP(0,getParent()->getDrawLib()->getDispHeight());
         glEnd();
         glDisable(GL_TEXTURE_2D); 
 
@@ -1271,13 +1271,13 @@ namespace vapp {
           glColor4f(0.5,0.5,0.5,0.5f);   
           float fDrift = getParent()->getRealTime() / 25.0f;
           glTexCoord2f(getCameraPositionX()*0.015 + fDrift,-getCameraPositionY()*0.015);
-          getParent()->getDrawLib()->glVertex(0,0);
+          getParent()->getDrawLib()->glVertexSP(0,0);
           glTexCoord2f(getCameraPositionX()*0.015+0.65 + fDrift,-getCameraPositionY()*0.015);
-          getParent()->getDrawLib()->glVertex(getParent()->getDrawLib()->getDispWidth(),0);
+          getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),0);
           glTexCoord2f(getCameraPositionX()*0.015+0.65 + fDrift,-getCameraPositionY()*0.015+0.65);
-          getParent()->getDrawLib()->glVertex(getParent()->getDrawLib()->getDispWidth(),getParent()->getDrawLib()->getDispHeight());
+          getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),getParent()->getDrawLib()->getDispHeight());
           glTexCoord2f(getCameraPositionX()*0.015 + fDrift,-getCameraPositionY()*0.015+0.65);
-          getParent()->getDrawLib()->glVertex(0,getParent()->getDrawLib()->getDispHeight());
+          getParent()->getDrawLib()->glVertexSP(0,getParent()->getDrawLib()->getDispHeight());
           glEnd();
 
           glBlendFunc(GL_ONE,GL_ONE);
@@ -1286,13 +1286,13 @@ namespace vapp {
           glColor3f(1,0.5,0.5);   
           fDrift = getParent()->getRealTime() / 15.0f;
           glTexCoord2f(getCameraPositionX()*0.015 + fDrift,-getCameraPositionY()*0.015);
-          getParent()->getDrawLib()->glVertex(0,0);
+          getParent()->getDrawLib()->glVertexSP(0,0);
           glTexCoord2f(getCameraPositionX()*0.015+0.85 + fDrift,-getCameraPositionY()*0.015);
-          getParent()->getDrawLib()->glVertex(getParent()->getDrawLib()->getDispWidth(),0);
+          getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),0);
           glTexCoord2f(getCameraPositionX()*0.015+0.85 + fDrift,-getCameraPositionY()*0.015+0.85);
-          getParent()->getDrawLib()->glVertex(getParent()->getDrawLib()->getDispWidth(),getParent()->getDrawLib()->getDispHeight());
+          getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),getParent()->getDrawLib()->getDispHeight());
           glTexCoord2f(getCameraPositionX()*0.015 + fDrift,-getCameraPositionY()*0.015+0.85);
-          getParent()->getDrawLib()->glVertex(0,getParent()->getDrawLib()->getDispHeight());
+          getParent()->getDrawLib()->glVertexSP(0,getParent()->getDrawLib()->getDispHeight());
           glEnd();
 
           glDisable(GL_BLEND);
@@ -1388,7 +1388,7 @@ namespace vapp {
         for(int j=0;j<m_DebugInfo[i]->Args.size()/2;j++) {
           float x = atof(m_DebugInfo[i]->Args[j*2].c_str());
           float y = atof(m_DebugInfo[i]->Args[j*2+1].c_str());
-          getParent()->getDrawLib()->glVertex(400 + x*10,300 - y*10);
+          getParent()->getDrawLib()->glVertexSP(400 + x*10,300 - y*10);
         }
         glEnd();
       }
@@ -1398,7 +1398,7 @@ namespace vapp {
         for(int j=0;j<m_DebugInfo[i]->Args.size()/2;j++) {
           float x = atof(m_DebugInfo[i]->Args[j*2].c_str());
           float y = atof(m_DebugInfo[i]->Args[j*2+1].c_str());
-          getParent()->getDrawLib()->glVertex(400 + x*10,300 - y*10);
+          getParent()->getDrawLib()->glVertexSP(400 + x*10,300 - y*10);
         }
         glEnd();
       }
@@ -1408,7 +1408,7 @@ namespace vapp {
         for(int j=0;j<m_DebugInfo[i]->Args.size()/2;j++) {
           float x = atof(m_DebugInfo[i]->Args[j*2].c_str());
           float y = atof(m_DebugInfo[i]->Args[j*2+1].c_str());
-          getParent()->getDrawLib()->glVertex(400 + x*10,300 - y*10);
+          getParent()->getDrawLib()->glVertexSP(400 + x*10,300 - y*10);
         }
         glEnd();
       }
@@ -1643,13 +1643,13 @@ namespace vapp {
     glBegin(GL_POLYGON);
     glColor3f(1,1,1);
     glTexCoord2f(0,1);
-    getParent()->getDrawLib()->glVertex(p0.x,p0.y);
+    getParent()->getDrawLib()->glVertexSP(p0.x,p0.y);
     glTexCoord2f(1,1);
-    getParent()->getDrawLib()->glVertex(p1.x,p1.y);
+    getParent()->getDrawLib()->glVertexSP(p1.x,p1.y);
     glTexCoord2f(1,0);
-    getParent()->getDrawLib()->glVertex(p2.x,p2.y);
+    getParent()->getDrawLib()->glVertexSP(p2.x,p2.y);
     glTexCoord2f(0,0);
-    getParent()->getDrawLib()->glVertex(p3.x,p3.y);
+    getParent()->getDrawLib()->glVertexSP(p3.x,p3.y);
     glEnd();
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_BLEND);
