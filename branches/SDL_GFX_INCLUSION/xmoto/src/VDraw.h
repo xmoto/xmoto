@@ -73,9 +73,12 @@ namespace vapp {
       
       /* Methods - low-level */
       void glVertexSP(float x,float y);
-      
       void screenProjVertex(float *x,float *y); 
       
+      void setColor(Color color);
+      void setColorRGB(int r,int g,int b){ setColor(MAKE_COLOR(r,g,b,255));};
+      void setColorRGBA(int r,int g,int b,int a){ setColor(MAKE_COLOR(r,g,b,a));};
+
       /**
        * enables clipping and sets the clipping borders
        **/     

@@ -509,6 +509,10 @@ namespace vapp {
 	glEnd();
   }
 
+  void DrawLib::setColor(Color color){
+    glColor4ub(GET_RED(color),GET_GREEN(color),GET_BLUE(color),GET_ALPHA(color));
+  }
+
 
 
   /*===========================================================================

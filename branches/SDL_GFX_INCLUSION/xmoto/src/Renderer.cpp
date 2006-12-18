@@ -339,8 +339,9 @@ namespace vapp {
             fR[0] = cos(Blocks[i]->DynamicRotation()); fR[1] = -sin(Blocks[i]->DynamicRotation());
             fR[2] = sin(Blocks[i]->DynamicRotation()); fR[3] = cos(Blocks[i]->DynamicRotation());
   
-            glBegin(GL_POLYGON);
-            glColor3f(0.5,0.5,0.5);
+            getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+            getParent()->getDrawLib()->setColorRGB(128,128,128);
+	    //glColor3f(1,0,0);
             for(int k=0; k<ConvexBlocks[j]->Vertices().size(); k++) {
               ConvexBlockVertex *pVertex = ConvexBlocks[j]->Vertices()[k];
                 
@@ -353,7 +354,7 @@ namespace vapp {
               glTexCoord2f(pVertex->TexturePosition().x,pVertex->TexturePosition().y);          
               MINIVERTEX(Tv.x,Tv.y);                  
             }
-            glEnd();
+             getParent()->getDrawLib()->endDraw();
           }
         }
       }
