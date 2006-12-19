@@ -43,6 +43,8 @@ namespace vapp {
              
   	m_bFBOSupported = false;
   m_pDefaultFontTex = NULL;
+  m_texture = NULL;
+  m_blendMode = BLEND_MODE_NONE;
  }
 
   /*===========================================================================
@@ -510,10 +512,44 @@ namespace vapp {
   
   void DrawLib::endDraw(){
 	glEnd();
+        if (m_texture != NULL){
+          glDisable(GL_TEXTURE_2D);
+          m_texture = NULL;
+        }
+	if (m_blendMode != BLEND_MODE_NONE){
+         glDisable(GL_BLEND);
+	}
   }
 
   void DrawLib::setColor(Color color){
     glColor4ub(GET_RED(color),GET_GREEN(color),GET_BLUE(color),GET_ALPHA(color));
+  }
+
+  void DrawLib::setTexture(Texture *texture,BlendMode blendMode){
+    setBlendMode(blendMode);
+    if (texture != NULL){
+      glBindTexture(GL_TEXTURE_2D,texture->nID);
+      glEnable(GL_TEXTURE_2D);
+    } else {
+       //so the texture is set to null
+       //if the texture was not null we need
+       //to disable the current texture
+       if (m_texture != NULL){
+         glDisable(GL_TEXTURE_2D);
+       }
+    }
+    m_texture = texture;
+  } 
+  void DrawLib::setBlendMode(BlendMode blendMode){
+    if (blendMode != BLEND_MODE_NONE){
+      glEnable(GL_BLEND);
+      glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+    } else {
+       if (m_blendMode != NULL){
+         glDisable(GL_BLEND);
+       }
+    }
+    m_blendMode = blendMode;
   }
 
 

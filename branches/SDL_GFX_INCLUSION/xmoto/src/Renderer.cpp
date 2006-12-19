@@ -87,7 +87,6 @@ namespace vapp {
         Vector2f Center;
         Sprite *pSprite;
         Texture *pTexture;
-        GLuint GLName = 0;        
         
         pTexture = NULL;
         
@@ -101,7 +100,6 @@ namespace vapp {
           if(pSprite != NULL) {
             try {
               pTexture = pSprite->getTexture();
-              GLName = pTexture->nID;
             } catch(Exception &e) {
               Log("** Warning ** : Texture '%s' not found!",ConvexBlocks[j]->SourceBlock()->Texture().c_str());
               getGameObject()->gameMessage(GAMETEXT_MISSINGTEXTURES,true);   
@@ -115,10 +113,6 @@ namespace vapp {
           pSprite = getParent()->getTheme()->getSprite(SPRITE_TYPE_TEXTURE, "default");
           if(pSprite != NULL) {
             pTexture = pSprite->getTexture();
-          }
-          
-          if(pTexture != NULL) {
-            GLName = pTexture->nID;
           }
         }
         
@@ -1061,8 +1055,6 @@ namespace vapp {
 	  getGameObject()->gameMessage(GAMETEXT_MISSINGTEXTURES,true); 
 	}
       }
-      GLuint GLName = 0;
-      if(pTexture != NULL) GLName = pTexture->nID;
 
       if(m_bUglyMode) {
 	getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_LOOP);
@@ -1076,8 +1068,7 @@ namespace vapp {
 	getParent()->getDrawLib()->endDraw();
       } else {
         for(int j=0;j<Blocks[i]->ConvexBlocks().size();j++) {       
-          glBindTexture(GL_TEXTURE_2D,GLName);                    
-          glEnable(GL_TEXTURE_2D);      
+	  getParent()->getDrawLib()->setTexture(pTexture,BLEND_MODE_NONE);
 	  getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
 	  getParent()->getDrawLib()->setColorRGB(255,255,255);
           for(int k=0;k<Blocks[i]->ConvexBlocks()[j]->Vertices().size();k++) {            
@@ -1095,7 +1086,6 @@ namespace vapp {
           }
 	  getParent()->getDrawLib()->endDraw();
           
-          glDisable(GL_TEXTURE_2D);
         }
       }
     }     
@@ -1130,13 +1120,7 @@ namespace vapp {
       /* Render all non-background blocks */
       /* Static geoms... */
       for(int i=0;i<m_Geoms.size();i++) {
-        if(m_Geoms[i]->pTexture != NULL) {
-          glBindTexture(GL_TEXTURE_2D,m_Geoms[i]->pTexture->nID);
-        } else {
-          glBindTexture(GL_TEXTURE_2D,0); /* no texture */
-        }         
-
-        glEnable(GL_TEXTURE_2D);      
+	getParent()->getDrawLib()->setTexture(m_Geoms[i]->pTexture,BLEND_MODE_NONE);
 	getParent()->getDrawLib()->setColorRGB(255,255,255);
         
         /* VBO optimized? */
@@ -1163,7 +1147,7 @@ namespace vapp {
           }
         }
               
-        glDisable(GL_TEXTURE_2D);
+	getParent()->getDrawLib()->setTexture(NULL,BLEND_MODE_NONE);
       }
       
       /* Render all special edges (if quality!=low) */
@@ -1180,21 +1164,16 @@ namespace vapp {
                v_blockVertexB = Blocks[i]->Vertices()[(j+1)%Blocks[i]->Vertices().size()];
 
                /* link A to B */
-               GLuint GLName = 0;
                float fXScale,fDepth;
                EdgeEffectSprite* pType;
 
                pType = (EdgeEffectSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_EDGEEFFECT, v_blockVertexA->EdgeEffect());
 
                if(pType != NULL) {
-                 GLName = pType->getTexture()->nID;
                  fXScale = pType->getScale();
                  fDepth  = pType->getDepth();
                  
-                 glEnable(GL_BLEND); 
-                 glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
-                 glBindTexture(GL_TEXTURE_2D,GLName);
-                 glEnable(GL_TEXTURE_2D);
+		 getParent()->getDrawLib()->setTexture(pType->getTexture(),BLEND_MODE_A);
 		 getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
 		 getParent()->getDrawLib()->setColorRGB(255,255,255);
                  glTexCoord2f((Blocks[i]->DynamicPosition().x+v_blockVertexA->Position().x)*fXScale,0.01);
@@ -1206,8 +1185,6 @@ namespace vapp {
                  glTexCoord2f((Blocks[i]->DynamicPosition().x+v_blockVertexA->Position().x)*fXScale,0.99);
                  getParent()->getDrawLib()->glVertex(v_blockVertexA->Position() + Vector2f(Blocks[i]->DynamicPosition().x,Blocks[i]->DynamicPosition().y) + Vector2f(0,-fDepth));
 		 getParent()->getDrawLib()->endDraw();
-                 glDisable(GL_TEXTURE_2D);
-                 glDisable(GL_BLEND);
                }
              }
           }
@@ -1229,8 +1206,7 @@ namespace vapp {
       pType = (EffectSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_EFFECT, "Sky1");
 
       if(pType != NULL) {
-        glBindTexture(GL_TEXTURE_2D, pType->getTexture()->nID);
-        glEnable(GL_TEXTURE_2D);
+	getParent()->getDrawLib()->setTexture(pType->getTexture(),BLEND_MODE_NONE);
 	getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
 	getParent()->getDrawLib()->setColorRGB(255,255,255);
         glTexCoord2f(getCameraPositionX()*0.015,-getCameraPositionY()*0.015);
@@ -1242,15 +1218,13 @@ namespace vapp {
         glTexCoord2f(getCameraPositionX()*0.015,-getCameraPositionY()*0.015+0.5);
         getParent()->getDrawLib()->glVertexSP(0,getParent()->getDrawLib()->getDispHeight());
 	getParent()->getDrawLib()->endDraw();
-        glDisable(GL_TEXTURE_2D); 
       }   
     }
     else if(SkyName == "sky2") {
       pType = (EffectSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_EFFECT, "Sky2");
 
       if(pType != NULL) {
-        glBindTexture(GL_TEXTURE_2D, pType->getTexture()->nID);
-        glEnable(GL_TEXTURE_2D);
+	getParent()->getDrawLib()->setTexture(pType->getTexture(),BLEND_MODE_NONE);
 	getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
 	getParent()->getDrawLib()->setColorRGB(255,255,255);
         glTexCoord2f(getCameraPositionX()*0.015,-getCameraPositionY()*0.015);
@@ -1262,14 +1236,11 @@ namespace vapp {
         glTexCoord2f(getCameraPositionX()*0.015,-getCameraPositionY()*0.015+0.65);
         getParent()->getDrawLib()->glVertexSP(0,getParent()->getDrawLib()->getDispHeight());
 	getParent()->getDrawLib()->endDraw();
-        glDisable(GL_TEXTURE_2D); 
 
   pType = (EffectSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_EFFECT, "Sky2Drift");
   if(pType != NULL && m_Quality == GQ_HIGH) {
-          glBindTexture(GL_TEXTURE_2D,pType->getTexture()->nID);
-          glEnable(GL_TEXTURE_2D);
-          glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-          glEnable(GL_BLEND);
+
+	  getParent()->getDrawLib()->setTexture(pType->getTexture(),BLEND_MODE_A);
 
 	  getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
 	  getParent()->getDrawLib()->setColorRGBA(128,128,128,128);
@@ -1284,7 +1255,7 @@ namespace vapp {
           getParent()->getDrawLib()->glVertexSP(0,getParent()->getDrawLib()->getDispHeight());
 	  getParent()->getDrawLib()->endDraw();
 
-          glBlendFunc(GL_ONE,GL_ONE);
+	  getParent()->getDrawLib()->setTexture(pType->getTexture(),BLEND_MODE_B);
 
 	  getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
 	  getParent()->getDrawLib()->setColorRGB(255,128,128);
@@ -1299,8 +1270,6 @@ namespace vapp {
           getParent()->getDrawLib()->glVertexSP(0,getParent()->getDrawLib()->getDispHeight());
 	  getParent()->getDrawLib()->endDraw();
 
-          glDisable(GL_BLEND);
-          glDisable(GL_TEXTURE_2D); 
         }
       }   
     }
@@ -1318,7 +1287,6 @@ namespace vapp {
       if(Blocks[i]->isDynamic() == false && Blocks[i]->isBackground()) {
         Vector2f Center;
         Texture *pTexture = NULL;
-        GLuint GLName = 0;
         
         /* Main body */      
         Center = Blocks[i]->DynamicPosition();
@@ -1335,11 +1303,9 @@ namespace vapp {
 	  Log("** Warning ** : Texture '%s' not found!", Blocks[i]->Texture().c_str());
 	  getGameObject()->gameMessage(GAMETEXT_MISSINGTEXTURES,true);
         }
-        if(pTexture != NULL) {GLName = pTexture->nID;}
                
 	for(int j=0; j<Blocks[i]->ConvexBlocks().size(); j++) {
-	  glBindTexture(GL_TEXTURE_2D,GLName);
-	  glEnable(GL_TEXTURE_2D);
+	  getParent()->getDrawLib()->setTexture(pTexture,BLEND_MODE_NONE);
 	  getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
 	  getParent()->getDrawLib()->setColorRGB(255,255,255);
 
@@ -1350,7 +1316,6 @@ namespace vapp {
 	  }
 
 	  getParent()->getDrawLib()->endDraw();
-	  glDisable(GL_TEXTURE_2D);
 	}
       }
     }
@@ -1597,10 +1562,7 @@ namespace vapp {
   ===========================================================================*/
   void GameRenderer::_RenderAlphaBlendedSection(Texture *pTexture,
                                                 const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3) {
-    glEnable(GL_BLEND); 
-    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
-    glBindTexture(GL_TEXTURE_2D,pTexture->nID);
-    glEnable(GL_TEXTURE_2D);
+    getParent()->getDrawLib()->setTexture(pTexture,BLEND_MODE_A);
     getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
     getParent()->getDrawLib()->setColorRGB(255,255,255);
     glTexCoord2f(0,1);
@@ -1612,16 +1574,11 @@ namespace vapp {
     glTexCoord2f(0,0);
     glVertex2f(p3.x,p3.y);
     getParent()->getDrawLib()->endDraw();
-    glDisable(GL_TEXTURE_2D);
-    glDisable(GL_BLEND);
   }
   
   void GameRenderer::_RenderAdditiveBlendedSection(Texture *pTexture,
                                                    const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3) {
-    glEnable(GL_BLEND); 
-    glBlendFunc(GL_ONE,GL_ONE);         
-    glBindTexture(GL_TEXTURE_2D,pTexture->nID);
-    glEnable(GL_TEXTURE_2D);
+    getParent()->getDrawLib()->setTexture(pTexture,BLEND_MODE_B);
     getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
     getParent()->getDrawLib()->setColorRGB(255,255,255);
     glTexCoord2f(0,1);
@@ -1633,17 +1590,13 @@ namespace vapp {
     glTexCoord2f(0,0);
     glVertex2f(p3.x,p3.y);
     getParent()->getDrawLib()->endDraw();
-    glDisable(GL_TEXTURE_2D);
     glDisable(GL_BLEND);
   }
   
   /* Screen-space version of the above */
   void GameRenderer::_RenderAlphaBlendedSectionSP(Texture *pTexture,
                                                   const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3) {
-    glEnable(GL_BLEND); 
-    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
-    glBindTexture(GL_TEXTURE_2D,pTexture->nID);
-    glEnable(GL_TEXTURE_2D);
+    getParent()->getDrawLib()->setTexture(pTexture,BLEND_MODE_A);
     getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
     getParent()->getDrawLib()->setColorRGB(255,255,255);
     glTexCoord2f(0,1);
@@ -1655,8 +1608,6 @@ namespace vapp {
     glTexCoord2f(0,0);
     getParent()->getDrawLib()->glVertexSP(p3.x,p3.y);
     getParent()->getDrawLib()->endDraw();
-    glDisable(GL_TEXTURE_2D);
-    glDisable(GL_BLEND);
   }
   
   void GameRenderer::_RenderCircle(int nSteps,Color CircleColor,const Vector2f &C,float fRadius) {

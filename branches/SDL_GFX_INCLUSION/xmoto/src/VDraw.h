@@ -45,6 +45,13 @@ namespace vapp {
     DRAW_MODE_LINE_STRIP
   };
 
+  enum BlendMode {
+    BLEND_MODE_NONE,//no blending
+    BLEND_MODE_A,   //GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA
+    BLEND_MODE_B,   //GL_ONE,GL_ONE
+
+  };
+
   /*===========================================================================
   Class with various drawing functions
   ===========================================================================*/
@@ -77,10 +84,16 @@ namespace vapp {
       //add a vertex given opengl coordinates
       void glVertex(float x,float y);
       void glVertex(Vector2f x){glVertex(x.x,x.y);};
-
       void screenProjVertex(float *x,float *y); 
       
       void setColor(Color color);
+      /**
+       * set the texure for drawing
+       * the value may be NULL to disable texure
+       * every end draw will reset the texture to NULL
+       **/
+      void setTexture(Texture * texture,BlendMode blendMode );
+      void setBlendMode(BlendMode blendMode );
       void setColorRGB(int r,int g,int b){ setColor(MAKE_COLOR(r,g,b,255));};
       void setColorRGBA(int r,int g,int b,int a){ setColor(MAKE_COLOR(r,g,b,a));};
 
@@ -221,6 +234,8 @@ private:
       bool isExtensionSupported(std::string Ext);
 
       Texture *m_pDefaultFontTex;
+      Texture *m_texture;
+      BlendMode m_blendMode;
       
       /* Public helper methods */
       void _InitTextRendering(Theme *p_theme);

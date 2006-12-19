@@ -445,7 +445,7 @@ namespace vapp {
   }
 
   void UIWindow::putElem(int x,int y,int nWidth,int nHeight,UIElem Elem,bool bDisabled,bool bActive) {
-    Texture *vTexture;
+    Texture *vTexture = NULL;
 
     struct _ElemTable {
       UIElem E; int nX,nY,nWidth,nHeight;
@@ -511,23 +511,13 @@ namespace vapp {
     
     int cx = getAbsPosX() + x;
     int cy = getAbsPosY() + y;
-#ifdef ENABLE_OPENGL    
     /* Nice. Now we know what to draw */    
     if(bDisabled) {
       vTexture = UITexture::getMiscDisabledTexture();
-      if(vTexture != NULL) {
-	glBindTexture(GL_TEXTURE_2D, vTexture->nID);
-      }
-    }
-    else {
+    } else {
       vTexture = UITexture::getMiscTexture();
-      if(vTexture != NULL) {
-	glBindTexture(GL_TEXTURE_2D, vTexture->nID);
-      }
     }
-    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_TEXTURE_2D);
-    glEnable(GL_BLEND);
+    getApp()->getDrawLib()->setTexture(vTexture,BLEND_MODE_A);
     getApp()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
     getApp()->getDrawLib()->setColor(c1);
     glTexCoord2f(fX1,fY1);
@@ -543,9 +533,6 @@ namespace vapp {
     glTexCoord2f(fX1,fY2);
     getApp()->getDrawLib()->glVertexSP(cx,cy+h);
     getApp()->getDrawLib()->endDraw();
-    glDisable(GL_BLEND);
-    glDisable(GL_TEXTURE_2D);    
-#endif
     
     /* Active? If so we want a nice blinking overlay */
     if(bActive) {
@@ -556,12 +543,7 @@ namespace vapp {
       c1=c2=c3=c4=MAKE_COLOR(255,255,255,(int)(n*getOpacity()/100));
 
       vTexture = UITexture::getMiscActiveTexture();
-      if(vTexture != NULL) {
-	glBindTexture(GL_TEXTURE_2D, vTexture->nID);
-      }
-      glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-      glEnable(GL_TEXTURE_2D);
-      glEnable(GL_BLEND);
+      getApp()->getDrawLib()->setTexture(vTexture,BLEND_MODE_A);
       getApp()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
       getApp()->getDrawLib()->setColor(c1);
       glTexCoord2f(fX1,fY1);
@@ -576,8 +558,6 @@ namespace vapp {
       glTexCoord2f(fX1,fY2);
       getApp()->getDrawLib()->glVertexSP(cx,cy+h);
       getApp()->getDrawLib()->endDraw();
-      glDisable(GL_BLEND);
-      glDisable(GL_TEXTURE_2D);    
     }
   }
   
@@ -683,8 +663,7 @@ FRAME_BR (187,198) (8x8)
       int nContextHelpHeight = 20;
       
       /* Shade out bottom of screen */
-      glEnable(GL_BLEND);
-      glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+      getApp()->getDrawLib()->setBlendMode(BLEND_MODE_A);
       getApp()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
       //glColor4f(0,0,0,0);//fully transparent??
       getApp()->getDrawLib()->setColorRGBA(0,0,0,0);
@@ -695,7 +674,6 @@ FRAME_BR (187,198) (8x8)
       getApp()->getDrawLib()->glVertexSP(getApp()->getDrawLib()->getDispWidth(),getApp()->getDrawLib()->getDispHeight());
       getApp()->getDrawLib()->glVertexSP(0,getApp()->getDrawLib()->getDispHeight());
       getApp()->getDrawLib()->endDraw();
-      glDisable(GL_BLEND);
         
       if(!m_CurrentContextHelp.empty()) {
         /* Print help string */
@@ -1002,11 +980,6 @@ FRAME_BR (187,198) (8x8)
     /* Draw text string */
     int cx=x,cy=y;
     
-    glBindTexture(GL_TEXTURE_2D,pFont->pTexture->nID);
-    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_TEXTURE_2D);
-    glEnable(GL_BLEND);
-
     for(int i=0;i<Text.size();i++) {
       int nChar = Text[i];
       if(nChar == '\n') {
@@ -1014,6 +987,7 @@ FRAME_BR (187,198) (8x8)
         cx = x;
       }
       else if(pFont->Chars[nChar].bAvail) {
+        getApp()->getDrawLib()->setTexture(pFont->pTexture,BLEND_MODE_A);
         getApp()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
 	getApp()->getDrawLib()->setColor(c);
         glTexCoord2f(pFont->Chars[nChar].fX1,pFont->Chars[nChar].fY1);
@@ -1032,17 +1006,12 @@ FRAME_BR (187,198) (8x8)
     }
     
     glDisable(GL_BLEND);
-    glDisable(GL_TEXTURE_2D);
   }
 
   void UITextDraw::printRawGrad(UIFont *pFont,int x,int y,std::string Text,Color c1,Color c2,Color c3,Color c4,bool bRotated) {  
     /* Draw text string */
     int cx=x,cy=y;
     
-    glBindTexture(GL_TEXTURE_2D,pFont->pTexture->nID);
-    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_TEXTURE_2D);
-    glEnable(GL_BLEND);
 
     for(int i=0;i<Text.size();i++) {
       int nChar = Text[i];
@@ -1073,6 +1042,7 @@ FRAME_BR (187,198) (8x8)
           //getApp()->glVertexSP(cx+pFont->Chars[nChar].nHeight-pFont->Chars[nChar].nOffsetY,(cy-pFont->Chars[nChar].nOffsetX));
           //glEnd();
 
+	  getApp()->getDrawLib()->setTexture(pFont->pTexture,BLEND_MODE_A);
 	  getApp()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
 	  getApp()->getDrawLib()->setColor(c1);
           glTexCoord2f(pFont->Chars[nChar].fX1,pFont->Chars[nChar].fY1);
@@ -1119,6 +1089,7 @@ FRAME_BR (187,198) (8x8)
           cy += (pFont->Chars[nChar].nHeight*5)/4;
         }
         else {
+	  getApp()->getDrawLib()->setTexture(pFont->pTexture,BLEND_MODE_A);
 	  getApp()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
 	  getApp()->getDrawLib()->setColor(c1);
           glTexCoord2f(pFont->Chars[nChar].fX1,pFont->Chars[nChar].fY1);
@@ -1140,9 +1111,6 @@ FRAME_BR (187,198) (8x8)
       else
         cx += pFont->Chars['-'].nIncX;
     }
-    
-    glDisable(GL_BLEND);
-    glDisable(GL_TEXTURE_2D);
   }
     
   void UITextDraw::getTextExt(UIFont *pFont,std::string Text,int *pnMinX,int *pnMinY,int *pnMaxX,int *pnMaxY) {
