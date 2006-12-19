@@ -281,14 +281,13 @@ namespace vapp {
       void _RenderGameMessages(void); 
       void _RenderGameStatus(void);
       void _RenderParticles(bool bFront=true);
+#ifdef ENABLE_OPENGL
       void _RenderParticleDraw(Vector2f P,Texture *pTexture,float fSize,float fAngle, TColor c);
+#endif
       void _RenderParticle(ParticlesSource *i_source);
       void _RenderInGameText(Vector2f P,const std::string &Text,Color c = 0xffffffff);
       void setScroll(bool isSmooth);
 
-      /* Helpers... */
-      void _Vertex(Vector2f P);     /* Spit out a correctly transformed 
-                                       glVertex2f() */
       void _DbgText(Vector2f P,std::string Text,Color c);
       void _DrawRotatedMarker(Vector2f Pos,dReal *pfRot);     
       void _RenderDebugInfo(void);      

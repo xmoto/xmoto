@@ -72,7 +72,12 @@ namespace vapp {
       bool getWindowed(void) {return m_bWindowed;}
       
       /* Methods - low-level */
+      //add a vertex given screen coordinates
       void glVertexSP(float x,float y);
+      //add a vertex given opengl coordinates
+      void glVertex(float x,float y);
+      void glVertex(Vector2f x){glVertex(x.x,x.y);};
+
       void screenProjVertex(float *x,float *y); 
       
       void setColor(Color color);

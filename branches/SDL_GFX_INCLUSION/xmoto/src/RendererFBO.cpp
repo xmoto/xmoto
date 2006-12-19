@@ -222,13 +222,13 @@ namespace vapp {
     
       glEnable(GL_BLEND);
       glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-      glBegin(GL_POLYGON);
-      glColor4f(0,0,0,f);
+      m_pApp->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+      m_pApp->getDrawLib()->setColorRGBA(0,0,0,f * 255);
       glVertex2f(0,0);
       glVertex2f(1,0);
       glVertex2f(1,1);
       glVertex2f(0,1);
-      glEnd();   
+      m_pApp->getDrawLib()->endDraw();
       glDisable(GL_BLEND);         
 
       glPopMatrix();
@@ -256,8 +256,8 @@ namespace vapp {
       
       glEnable(GL_TEXTURE_2D);
       glBindTexture(GL_TEXTURE_2D,m_DynamicTextureID);
-      glBegin(GL_POLYGON);
-      glColor3f(1,1,1);
+      m_pApp->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+      m_pApp->getDrawLib()->setColorRGB(255,255,255);
       glTexCoord2f(0,0);
       glVertex2f(0,0);
       glTexCoord2f(1,0);
@@ -266,7 +266,7 @@ namespace vapp {
       glVertex2f(m_pApp->getDrawLib()->getDispWidth(),m_pApp->getDrawLib()->getDispHeight());
       glTexCoord2f(0,1);
       glVertex2f(0,m_pApp->getDrawLib()->getDispHeight());
-      glEnd();
+      m_pApp->getDrawLib()->endDraw();
       glDisable(GL_TEXTURE_2D);
 
       glDisable(GL_BLEND);

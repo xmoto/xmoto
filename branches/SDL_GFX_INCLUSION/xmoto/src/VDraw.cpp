@@ -59,6 +59,9 @@ namespace vapp {
 	  glVertex2f(m_nActualWidth/2 - m_nDrawWidth/2 + x,
 	             m_nActualHeight - (m_nActualHeight/2 - m_nDrawHeight/2 + y));
   }
+  void DrawLib::glVertex(float x,float y) {
+	  glVertex2f(x,y);
+  }
 
   void DrawLib::screenProjVertex(float *x,float *y) {
     *y = m_nActualHeight - (*y);

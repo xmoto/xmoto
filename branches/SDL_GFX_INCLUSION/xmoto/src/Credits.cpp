@@ -171,21 +171,22 @@ namespace vapp {
         /* Render fancyness */
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);      
-        glBegin(GL_POLYGON);
-        glColor4f(0,0,0,1);
+	m_pApp->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+	m_pApp->getDrawLib()->setColorRGBA(0,0,0,255);
         m_pApp->getDrawLib()->glVertexSP(0,0); 
 	m_pApp->getDrawLib()->glVertexSP(m_pApp->getDrawLib()->getDispWidth(),0);
-        glColor4f(0,0,0,0);
+	m_pApp->getDrawLib()->setColorRGBA(0,0,0,0);
         m_pApp->getDrawLib()->glVertexSP(m_pApp->getDrawLib()->getDispWidth(),m_pApp->getDrawLib()->getDispHeight() / 6); m_pApp->getDrawLib()->glVertexSP(0,m_pApp->getDrawLib()->getDispHeight() / 6); 
-        glEnd();
-        glBegin(GL_POLYGON);
-        glColor4f(0,0,0,0);
+	m_pApp->getDrawLib()->endDraw();
+        m_pApp->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+	m_pApp->getDrawLib()->setColorRGBA(0,0,0,0);
         m_pApp->getDrawLib()->glVertexSP(0,m_pApp->getDrawLib()->getDispHeight() - m_pApp->getDrawLib()->getDispHeight() / 6); 
         m_pApp->getDrawLib()->glVertexSP(m_pApp->getDrawLib()->getDispWidth(),m_pApp->getDrawLib()->getDispHeight() - m_pApp->getDrawLib()->getDispHeight() / 6);
-        glColor4f(0,0,0,1);
+	m_pApp->getDrawLib()->setColorRGBA(0,0,0,255);
         m_pApp->getDrawLib()->glVertexSP(m_pApp->getDrawLib()->getDispWidth(),m_pApp->getDrawLib()->getDispHeight()); 
 	m_pApp->getDrawLib()->glVertexSP(0,m_pApp->getDrawLib()->getDispHeight()); 
-        glEnd();
+        m_pApp->getDrawLib()->endDraw();
+
         glDisable(GL_BLEND);
       }
       
