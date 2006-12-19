@@ -169,8 +169,7 @@ namespace vapp {
       
       if(!m_pApp->isUglyMode()) {
         /* Render fancyness */
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);      
+	m_pApp->getDrawLib()->setBlendMode(BLEND_MODE_A);
 	m_pApp->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
 	m_pApp->getDrawLib()->setColorRGBA(0,0,0,255);
         m_pApp->getDrawLib()->glVertexSP(0,0); 
@@ -178,6 +177,8 @@ namespace vapp {
 	m_pApp->getDrawLib()->setColorRGBA(0,0,0,0);
         m_pApp->getDrawLib()->glVertexSP(m_pApp->getDrawLib()->getDispWidth(),m_pApp->getDrawLib()->getDispHeight() / 6); m_pApp->getDrawLib()->glVertexSP(0,m_pApp->getDrawLib()->getDispHeight() / 6); 
 	m_pApp->getDrawLib()->endDraw();
+
+	m_pApp->getDrawLib()->setBlendMode(BLEND_MODE_A);
         m_pApp->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
 	m_pApp->getDrawLib()->setColorRGBA(0,0,0,0);
         m_pApp->getDrawLib()->glVertexSP(0,m_pApp->getDrawLib()->getDispHeight() - m_pApp->getDrawLib()->getDispHeight() / 6); 
@@ -187,7 +188,6 @@ namespace vapp {
 	m_pApp->getDrawLib()->glVertexSP(0,m_pApp->getDrawLib()->getDispHeight()); 
         m_pApp->getDrawLib()->endDraw();
 
-        glDisable(GL_BLEND);
       }
       
       if(m_fTime > m_fReplayLength - 4) {

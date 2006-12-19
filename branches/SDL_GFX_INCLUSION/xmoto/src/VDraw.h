@@ -46,10 +46,9 @@ namespace vapp {
   };
 
   enum BlendMode {
-    BLEND_MODE_NONE,//no blending
-    BLEND_MODE_A,   //GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA
-    BLEND_MODE_B,   //GL_ONE,GL_ONE
-
+    BLEND_MODE_NONE, //no blending
+    BLEND_MODE_A,    //GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA
+    BLEND_MODE_B     //GL_ONE,GL_ONE
   };
 
   /*===========================================================================
@@ -84,6 +83,8 @@ namespace vapp {
       //add a vertex given opengl coordinates
       void glVertex(float x,float y);
       void glVertex(Vector2f x){glVertex(x.x,x.y);};
+      //texture coordinate
+      void glTexCoord(float x,float y);
       void screenProjVertex(float *x,float *y); 
       
       void setColor(Color color);

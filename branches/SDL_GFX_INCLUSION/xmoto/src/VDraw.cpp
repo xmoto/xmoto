@@ -34,14 +34,10 @@ namespace vapp {
   m_nDispBPP=32;
   m_bWindowed=true;
   m_bNoGraphics=false;
-                       
   m_bDontUseGLExtensions=false;
-  
   m_bShadersSupported = false;
-
   m_nLScissorX = m_nLScissorY = m_nLScissorW = m_nLScissorH = 0;
-             
-  	m_bFBOSupported = false;
+  m_bFBOSupported = false;
   m_pDefaultFontTex = NULL;
   m_texture = NULL;
   m_blendMode = BLEND_MODE_NONE;
@@ -51,25 +47,20 @@ namespace vapp {
   Transform an OpenGL vertex to pure 2D 
   ===========================================================================*/
   void DrawLib::glVertexSP(float x,float y) {
-    //float tx = (((float)m_nActualWidth) / 2.0f) - 
-	  /*glVertex2f(-1.0f + (x*2.0f + 0.1f)/(float)(m_nActualWidth),
-					    1.0f - (y*2.0f + 0.1f)/(float)(m_nActualHeight));
-  */
-	  //glVertex2f(-1.0f + (x*2.0f + 0.1f)/(float)(m_nDrawWidth),
-			//		    1.0f - (y*2.0f + 0.1f)/(float)(m_nDrawHeight));
-	  
 	  glVertex2f(m_nActualWidth/2 - m_nDrawWidth/2 + x,
 	             m_nActualHeight - (m_nActualHeight/2 - m_nDrawHeight/2 + y));
   }
+
   void DrawLib::glVertex(float x,float y) {
 	  glVertex2f(x,y);
   }
 
+  void DrawLib::glTexCoord(float x,float y){
+    glTexCoord2f(x,y);
+  } 
+
   void DrawLib::screenProjVertex(float *x,float *y) {
     *y = m_nActualHeight - (*y);
-  
-    //*x = -1.0f + ((*x)*2.0f + 0.1f)/(float)(m_nDrawWidth);
-    //*y = 1.0f - ((*y)*2.0f + 0.1f)/(float)(m_nDrawHeight);
   }
 
   void DrawLib::setClipRect(int x , int y , int w , int h){
@@ -82,7 +73,7 @@ namespace vapp {
   }
 
   void DrawLib::setClipRect(SDL_Rect * clip_rect){
-  	this->setClipRect(clip_rect->x,clip_rect->y,clip_rect->w,clip_rect->h);
+  	setClipRect(clip_rect->x,clip_rect->y,clip_rect->w,clip_rect->h);
   }
 
   void DrawLib::getClipRect(int *px,int *py,int *pnWidth,int *pnHeight) {
@@ -540,10 +531,15 @@ namespace vapp {
     }
     m_texture = texture;
   } 
+  
   void DrawLib::setBlendMode(BlendMode blendMode){
     if (blendMode != BLEND_MODE_NONE){
       glEnable(GL_BLEND);
-      glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+      if (blendMode == BLEND_MODE_A){
+        glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+      } else {
+        glBlendFunc(GL_ONE,GL_ONE);
+      }
     } else {
        if (m_blendMode != NULL){
          glDisable(GL_BLEND);
