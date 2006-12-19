@@ -26,7 +26,195 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GUI.h"
 #include "Sound.h"
 
+#define GUILIST_SCROLL_SIZE 4
+
 namespace vapp {
+
+  int UIList::HeaderHeight() {
+    return m_headerHeight;
+  }
+  
+  int UIList::HeaderSubBorderHeight() {
+    return m_headerSubBorderHeight;
+  }
+  
+  int UIList::LineMargeX() {
+    return m_lineMargeX;
+  }
+  
+  int UIList::LineMargeY() {
+    return m_lineMargeY;
+  }
+  
+  int UIList::LinesStartX() {
+    return m_lineMargeX;
+  }
+  
+  int UIList::LinesStartY() {
+    return HeaderHeight() + HeaderSubBorderHeight() + LineMargeY();
+  }
+
+  int UIList::RowHeight() {
+    return m_rowHeight;
+  }
+    
+  int UIList::LinesWidth() {
+    return getPosition().nWidth - 2*LineMargeX() - ScrollBarArrowWidth();
+  }
+  
+  int UIList::LinesHeight() {
+    return getPosition().nHeight - LineMargeY() - LinesStartY();
+  }
+  
+  int UIList::ScrollBarArrowWidth() {
+    return m_scrollBarArrowWidth;
+  }
+  
+  int UIList::ScrollBarArrowHeight() {
+    return m_scrollBarArrowHeight;
+  }
+
+  int UIList::ScrollBarBarWidth() {
+    return ScrollBarArrowWidth();
+  }
+
+  int UIList::ScrollBarBarHeight() {
+    return getPosition().nHeight - 2*LineMargeY() - 2*ScrollBarArrowHeight();
+  }
+
+  int UIList::ScrollBarScrollerWidth() {
+    return ScrollBarArrowWidth();
+  }
+  
+  int UIList::ScrollBarScrollerHeight() {
+    float v_visible = LinesHeight() / ((float) RowHeight());
+
+    if(v_visible >= ((float)m_Entries.size())) {
+      return ScrollBarBarHeight();
+    }
+
+    return v_visible / ((float)m_Entries.size()) * ((float) ScrollBarBarHeight());
+  }
+
+  int UIList::ScrollBarScrollerStartX() {
+    return  LineMargeX() + LinesWidth();
+  }
+
+  int UIList::ScrollBarScrollerStartY() {
+    float v_visible = ScrollNbVisibleItems();
+
+    if(v_visible >= ((float)m_Entries.size())) {
+      return ScrollBarArrowHeight() + LineMargeY();
+    }
+
+    return LineMargeY() + ScrollBarArrowHeight() + (((float)-m_nScroll)/((float)RowHeight()) / ((float)m_Entries.size()) * ((float) ScrollBarBarHeight()));
+  }
+
+  void UIList::setScrollBarScrollerStartY(float y) {
+    float v_visible = ScrollNbVisibleItems();
+
+    if(v_visible >= ((float)m_Entries.size())) {
+      return;
+    }
+
+    _Scroll(-m_nScroll + ((-y + LineMargeY() + ScrollBarArrowHeight() + ScrollBarScrollerHeight()/2.0) * ((float)RowHeight()) * ((float)m_Entries.size()) / ((float) ScrollBarBarHeight())));
+  }
+
+  float UIList::ScrollNbVisibleItems() {
+    return LinesHeight() / ((float) RowHeight());
+  }
+
+  UIList::UIList(UIWindow *pParent, int x, int y, std::string Caption, int nWidth, int nHeight) {      
+    initW(pParent,x,y,Caption,nWidth,nHeight);        
+    m_nScroll = 0;
+    m_nSelected = 0;
+    m_pEnterButton = NULL;
+    m_bSort = false;
+    m_fsort = NULL;
+    m_bNumeroted = false;
+    m_bItemActivated = false;
+    m_bScrollDownPressed = m_bScrollUpPressed = false;
+    m_bScrollDownHover = m_bScrollUpHover = false;
+    m_bClicked = false;
+    m_bChanged = false;
+    m_bScrolling = false;
+    m_lastRefreshTime = getApp()->getRealTime();
+    
+    /* draw */
+    m_headerHeight    = 18;
+    m_headerSubBorderHeight = 4;
+    m_rowHeight       = 16;
+    m_lineMargeX      = 6;
+    m_lineMargeY      = 6;
+    m_scrollBarArrowWidth  = 20;
+    m_scrollBarArrowHeight = 20;
+    /* **** */
+
+    unhideAllColumns();
+  }      
+  
+  UIList::~UIList() {
+    _FreeUIList();
+  }
+
+  std::vector<UIListEntry *>& UIList::getEntries(void) {
+    return m_Entries;
+  }
+
+  std::vector<std::string>& UIList::getColumns(void) {
+    return m_Columns;
+  }
+  
+  int UIList::getSelected(void) {
+    return m_nSelected;
+  }
+
+  void UIList::addColumn(std::string Title, int nWidth, const std::string &Help) {
+    m_Columns.push_back(Title);
+    m_ColumnWidths.push_back(nWidth);
+    m_ColumnHelpStrings.push_back(Help);
+  }
+
+  void UIList::setEnterButton(UIButton *pButton) {
+    m_pEnterButton = pButton;
+  }
+
+  bool UIList::isItemActivated() {
+    return m_bItemActivated;
+  }
+
+  void UIList::setHideColumn(int n) {
+    m_nColumnHideFlags |= (1<<n);
+  }
+   
+  void UIList::unhideAllColumns(void) {
+    m_nColumnHideFlags=0;
+  }
+  
+  void UIList::setSort(bool bSort, int(*f)(void *pvUser1, void *pvUser2)) {
+    m_bSort=bSort;
+    m_fsort = f;
+  }
+  
+  void UIList::setNumeroted(bool bNumeroted) {
+    m_bNumeroted = bNumeroted;
+  }
+
+  bool UIList::isClicked(void) {
+    return m_bClicked;
+  }
+
+  void UIList::setClicked(bool b) {
+    m_bClicked=b;
+  }
+
+  bool UIList::isChanged(void) {
+    return m_bChanged;
+  }
+  
+  void UIList::setChanged(bool b) {
+    m_bChanged=b;
+  }
 
   void UIList::_refreshByTime() {
     float v_time = getApp()->getRealTime();
@@ -34,28 +222,23 @@ namespace vapp {
     while(m_lastRefreshTime + 0.01 < v_time) {
       
       if(m_bScrollDownPressed) {
-	      _Scroll(-4);
+	      _Scroll(-(GUILIST_SCROLL_SIZE));
       }
       
       if(m_bScrollUpPressed) {
-	      _Scroll(4);
+	      _Scroll(GUILIST_SCROLL_SIZE);
       }
       
       m_lastRefreshTime = v_time;
     }
   }
 
-  void UIList::_mouseDownManageScrollBar(int x, int y){
-    int nHeaderHeight = 18;
-    int nLX = 6, nLY = nHeaderHeight+6+4;
-    int nLWidth = getPosition().nWidth-12 - 20;
-    int nLHeight = getPosition().nHeight - nLY - 6;
-    int nRowHeight = 16;
-
-    int p = ((y - nLY) / (((float)nLHeight) - 20.0)) * ((float)m_Entries.size());
-    if(p < 0) p = 0;
-    if(p >= m_Entries.size()) p = m_Entries.size()-1;
-    setSelected(p);
+  void UIList::_mouseDownManageScrollBar(int x, int y) {
+    setScrollBarScrollerStartY(y);
+    //int p = ((y - ScrollBarArrowHeight()) / (float)ScrollBarBarHeight()) * ((float)m_Entries.size());
+    //if(p < 0) p = 0;
+    //if(p >= m_Entries.size()) p = m_Entries.size()-1;
+    //setSelected(p);
   }
 
 
@@ -108,12 +291,11 @@ namespace vapp {
     putRect(8,8,getPosition().nWidth-16,getPosition().nHeight-16,MAKE_COLOR(0,0,0,127));
         
     /* Draw column headers */
-    int nHeaderHeight = 18;
     int nHX = 6,nHY = 6;
     setTextSolidColor(MAKE_COLOR(188,186,67,255));
     for(int i=0;i<m_Columns.size();i++) {
       if(!(m_nColumnHideFlags & (1<<i))) {
-        putText(nHX,nHY + (nHeaderHeight*2)/3,m_Columns[i]);
+        putText(nHX,nHY + (m_headerHeight*2)/3,m_Columns[i]);
         nHX += m_ColumnWidths[i]; 
         
         /* Next columns disabled? If so, make more room to this one */
@@ -123,46 +305,32 @@ namespace vapp {
         }           
       }
     }
-    putRect(6,nHeaderHeight+6,getPosition().nWidth-12 - 20,2,MAKE_COLOR(188,186,67,255));
+    putRect(6,m_headerHeight+6,getPosition().nWidth-12 - 20,2,MAKE_COLOR(188,186,67,255));
 
     /* Render list */    
-    int nLX = 6, nLY = nHeaderHeight+6+4;
-    int nLWidth = getPosition().nWidth-12 - 20;
-    int nLHeight = getPosition().nHeight - nLY - 6;
-    int nRowHeight = 16;
-
     if(!isMouseLDown()) {
       m_bScrollDownPressed = false;
       m_bScrollUpPressed = false;
     }
 
     if(m_bScrollUpPressed && m_bScrollUpHover) {
-      putElem(nLX+nLWidth,6,20,20,UI_ELEM_SCROLLBUTTON_UP_DOWN,false);
+      putElem(m_lineMargeX+LinesWidth(),6,20,20,UI_ELEM_SCROLLBUTTON_UP_DOWN,false);
     }
     else
-      putElem(nLX+nLWidth,6,20,20,UI_ELEM_SCROLLBUTTON_UP_UP,false);
+      putElem(m_lineMargeX+LinesWidth(),6,20,20,UI_ELEM_SCROLLBUTTON_UP_UP,false);
       
     if(m_bScrollDownPressed && m_bScrollDownHover) {
-      putElem(nLX+nLWidth,nLY+nLHeight-20,20,20,UI_ELEM_SCROLLBUTTON_DOWN_DOWN,false);
+      putElem(m_lineMargeX+LinesWidth(),LinesStartY()+LinesHeight()-20,20,20,UI_ELEM_SCROLLBUTTON_DOWN_DOWN,false);
     }
     else
-      putElem(nLX+nLWidth,nLY+nLHeight-20,20,20,UI_ELEM_SCROLLBUTTON_DOWN_UP,false);    
+      putElem(m_lineMargeX+LinesWidth(),LinesStartY()+LinesHeight()-20,20,20,UI_ELEM_SCROLLBUTTON_DOWN_UP,false);    
 
     /* scroll */
-    int v_scroll_height;
-    int v_scroll_pos;
+    putRect(ScrollBarScrollerStartX() + 2, ScrollBarScrollerStartY(),
+	    ScrollBarScrollerWidth() - 4, ScrollBarScrollerHeight(),
+	    MAKE_COLOR(188, 186, 67, 255));
 
-    float v_visible = ((float)nLHeight-20.0) / ((float)nRowHeight) +1;
-    if(v_visible >= ((float)m_Entries.size())) {
-      v_scroll_height = nLHeight-20.0;
-      v_scroll_pos    = nLY;
-    } else {
-      v_scroll_height = (int) (v_visible / ((float)m_Entries.size()) * ((float) nLHeight-20.0));
-      v_scroll_pos = (int) ( ((float)nLY) + (((float)-m_nScroll)/((float)nRowHeight)) / ((float)m_Entries.size()) * ((float) nLHeight-20.0));
-    }
-    putRect(nLX+nLWidth+2, v_scroll_pos, 16, v_scroll_height-1, MAKE_COLOR(188, 186, 67, 255));
-
-    setScissor(nLX,nLY,nLWidth,nLHeight);
+    setScissor(m_lineMargeX,LinesStartY(),LinesWidth(),LinesHeight());
    
     if(!bDisabled)                     
       setTextSolidColor(MAKE_COLOR(255,255,255,255));
@@ -170,21 +338,21 @@ namespace vapp {
       setTextSolidColor(MAKE_COLOR(128,128,128,255));
     
     for(int i=0;i<m_Entries.size();i++) {
-      int y = m_nScroll + i*nRowHeight + (nRowHeight*2)/3;
+      int y = m_nScroll + i*m_rowHeight + (m_rowHeight*2)/3;
       
       if(m_nSelected == i) {
         Color c = MAKE_COLOR(70,70,70,255);
         if(!bDisabled) c = MAKE_COLOR(160,40,40,255);
-        putRect(nLX,m_nScroll + nLY+i*nRowHeight,nLWidth,nRowHeight,c);       
+        putRect(m_lineMargeX,m_nScroll + LinesStartY()+i*m_rowHeight,LinesWidth(),m_rowHeight,c);       
         
 	if(isUglyMode()) {
 	  if(bDisabled) {
-	    putRect(nLX,m_nScroll + nLY+i*nRowHeight,nLWidth,nRowHeight,MAKE_COLOR(128,128,128,255));
+	    putRect(m_lineMargeX,m_nScroll + LinesStartY()+i*m_rowHeight,LinesWidth(),m_rowHeight,MAKE_COLOR(128,128,128,255));
 	  } else {
 	    if(bActive) {
-	      putRect(nLX,m_nScroll + nLY+i*nRowHeight,nLWidth,nRowHeight,MAKE_COLOR(200,60,60,255));
+	      putRect(m_lineMargeX,m_nScroll + LinesStartY()+i*m_rowHeight,LinesWidth(),m_rowHeight,MAKE_COLOR(200,60,60,255));
 	    } else {
-	      putRect(nLX,m_nScroll + nLY+i*nRowHeight,nLWidth,nRowHeight,MAKE_COLOR(160,40,40,255));
+	      putRect(m_lineMargeX,m_nScroll + LinesStartY()+i*m_rowHeight,LinesWidth(),m_rowHeight,MAKE_COLOR(160,40,40,255));
 	    }
 	  }
 	} else {
@@ -194,20 +362,20 @@ namespace vapp {
 	    if(n<0) n=0;
 	    if(n>255) n=255; /* just to be sure, i'm lazy */    
 	    
-	    putRect(nLX,m_nScroll+ nLY+i*nRowHeight,nLWidth,nRowHeight,MAKE_COLOR(255,255,255,n));                 
+	    putRect(m_lineMargeX,m_nScroll+ LinesStartY()+i*m_rowHeight,LinesWidth(),m_rowHeight,MAKE_COLOR(255,255,255,n));                 
 	  }
 	}
       }              
 
-      int yy = m_nScroll+nLY+i*nRowHeight;
+      int yy = m_nScroll+LinesStartY()+i*m_rowHeight;
       if(yy >= getPosition().nHeight - 6) break;
-      int yy2 = m_nScroll+nLY+i*nRowHeight + nRowHeight;
-      int nLRH = nRowHeight;
-      if(yy2 >= getPosition().nHeight - 6) nLRH = nRowHeight - (yy2 - (getPosition().nHeight - 6));
-      int yym1 = m_nScroll+nLY+i*nRowHeight;
-      if(yym1 + nRowHeight > nLY) {
-        if(yym1 < nLY) {
-          yym1 += (nLY-yym1);
+      int yy2 = m_nScroll+LinesStartY()+i*m_rowHeight + m_rowHeight;
+      int nLRH = m_rowHeight;
+      if(yy2 >= getPosition().nHeight - 6) nLRH = m_rowHeight - (yy2 - (getPosition().nHeight - 6));
+      int yym1 = m_nScroll+LinesStartY()+i*m_rowHeight;
+      if(yym1 + m_rowHeight > LinesStartY()) {
+        if(yym1 < LinesStartY()) {
+          yym1 += (LinesStartY()-yym1);
         }
       
         int nOldScissor[4];
@@ -225,7 +393,7 @@ namespace vapp {
             }           
           
             /* Draw */          
-            setScissor(nLX+x,yym1,m_ColumnWidths[j]-4+nExtraRoom,nLRH);
+            setScissor(m_lineMargeX+x,yym1,m_ColumnWidths[j]-4+nExtraRoom,nLRH);
 	    txt_to_display = m_Entries[i]->Text[j];
 	    if(j==0 && m_bNumeroted) {
 	      std::ostringstream v_num;
@@ -233,7 +401,7 @@ namespace vapp {
 
 	      txt_to_display = "#" + v_num.str() + " " + txt_to_display; 
 	    }
-            putText(nLX+x,nLY+y,txt_to_display);
+            putText(m_lineMargeX+x,LinesStartY()+y,txt_to_display);
             x += m_ColumnWidths[j] + nExtraRoom;                
           }
         }
@@ -262,34 +430,28 @@ namespace vapp {
   }
   
   void UIList::mouseLDoubleClick(int x,int y) {
-    int nHeaderHeight=18;
-    int nLX = 6, nLY = nHeaderHeight+6+4;
-    int nLWidth = getPosition().nWidth-12 - 20;
-    int nLHeight = getPosition().nHeight - nLY - 6;
-    int nRowHeight = 16;    
-
     /* is it inside the scroll bar ? */
-    if(x >= nLX+nLWidth+2 && x <= nLX+nLWidth+2+16 &&
-       y >= 6+20 && y<= nLY + nLHeight - 20) {
+    if(x >= m_lineMargeX+LinesWidth()+2 && x <= m_lineMargeX+LinesWidth()+2+16 &&
+       y >= 6+20 && y<= LinesStartY() + LinesHeight() - 20) {
       _mouseDownManageScrollBar(x, y);
     }
     /* Is it down inside one of the scroll buttons? */
-    else if(x >= nLX+nLWidth && x < nLX+nLWidth + 20 &&
+    else if(x >= m_lineMargeX+LinesWidth() && x < m_lineMargeX+LinesWidth() + 20 &&
        y >= 6 && y < 6+20) {
       /* Scroll up! */
       m_bScrollUpPressed = true;
     } 
-    else if(x >= nLX+nLWidth && x < nLX+nLWidth + 20 &&
-       y >= nLY+nLHeight-20 && y < nLY+nLHeight) {
+    else if(x >= m_lineMargeX+LinesWidth() && x < m_lineMargeX+LinesWidth() + 20 &&
+       y >= LinesStartY()+LinesHeight()-20 && y < LinesStartY()+LinesHeight()) {
       /* Scroll down! */
       m_bScrollDownPressed = true;
     }    
     else {
       /* Find out what item is affected */
       for(int i=0;i<m_Entries.size();i++) {
-        int yy = m_nScroll + nLY + i*nRowHeight;
-        if(x >= nLX && x <getPosition().nWidth-6 &&
-          y >= yy && y < yy+nRowHeight) {
+        int yy = m_nScroll + LinesStartY() + i*m_rowHeight;
+        if(x >= m_lineMargeX && x <getPosition().nWidth-6 &&
+          y >= yy && y < yy+m_rowHeight) {
           /* Select this */
 	  setSelected(i);
           
@@ -309,27 +471,21 @@ namespace vapp {
   }
   
   void UIList::mouseLDown(int x,int y) {
-    int nHeaderHeight=18;
-    int nLX = 6, nLY = nHeaderHeight+6+4;
-    int nLWidth = getPosition().nWidth-12 - 20;
-    int nLHeight = getPosition().nHeight - nLY - 6;
-    int nRowHeight = 16;    
-
     /* is it inside the scroll bar ? */
-    if(x >= nLX+nLWidth+2 && x <= nLX+nLWidth+2+16 &&
-       y >= 6+20 && y<= nLY + nLHeight - 20) {
+    if(x >= m_lineMargeX+LinesWidth()+2 && x <= m_lineMargeX+LinesWidth()+2+16 &&
+       y >= 6+20 && y<= LinesStartY() + LinesHeight() - 20) {
       _mouseDownManageScrollBar(x, y);
       m_bScrolling = true;
     }
     /* Is it down inside one of the scroll buttons? */
-    else if(x >= nLX+nLWidth && x < nLX+nLWidth + 20 &&
+    else if(x >= m_lineMargeX+LinesWidth() && x < m_lineMargeX+LinesWidth() + 20 &&
        y >= 6 && y < 6+20) {
       /* Scroll up! */
       //_Scroll(16);
       m_bScrollUpPressed = true;
     } 
-    else if(x >= nLX+nLWidth && x < nLX+nLWidth + 20 &&
-       y >= nLY+nLHeight-20 && y < nLY+nLHeight) {
+    else if(x >= m_lineMargeX+LinesWidth() && x < m_lineMargeX+LinesWidth() + 20 &&
+       y >= LinesStartY()+LinesHeight()-20 && y < LinesStartY()+LinesHeight()) {
       /* Scroll down! */
 	 // _Scroll(-16);
       m_bScrollDownPressed = true;
@@ -337,9 +493,9 @@ namespace vapp {
     else {
       /* Find out what item is affected */
       for(int i=0;i<m_Entries.size();i++) {
-        int yy = m_nScroll + nLY + i*nRowHeight;
-        if(x >= nLX && x <getPosition().nWidth-6 &&
-          y >= yy && y < yy+nRowHeight) {
+        int yy = m_nScroll + LinesStartY() + i*m_rowHeight;
+        if(x >= m_lineMargeX && x <getPosition().nWidth-6 &&
+          y >= yy && y < yy+m_rowHeight) {
           /* Select this */
 	  setSelected(i);
           break;
@@ -349,20 +505,14 @@ namespace vapp {
   }
   
   void UIList::mouseLUp(int x,int y) {
-    int nHeaderHeight=18;
-    int nLX = 6, nLY = nHeaderHeight+10;
-    int nLWidth = getPosition().nWidth-32;
-    int nLHeight = getPosition().nHeight - nLY - 6;
-    int nRowHeight = 16;    
-
     /* Is it down inside one of the scroll buttons? */
-    if(x >= nLX+nLWidth && x < nLX+nLWidth + 20 &&
+    if(x >= m_lineMargeX+LinesWidth() && x < m_lineMargeX+LinesWidth() + 20 &&
        y >= 6 && y < 26) {
       /* Scroll up! */
       //_Scroll(16);
     } 
-    else if(x >= nLX+nLWidth && x < nLX+nLWidth + 20 &&
-       y >= nLY+nLHeight-20 && y < nLY+nLHeight) {
+    else if(x >= m_lineMargeX+LinesWidth() && x < m_lineMargeX+LinesWidth() + 20 &&
+       y >= LinesStartY()+LinesHeight()-20 && y < LinesStartY()+LinesHeight()) {
       /* Scroll down! */
       //_Scroll(-16);
     }
@@ -378,25 +528,19 @@ namespace vapp {
   }
 
   void UIList::mouseHover(int x,int y) {
-    int nHeaderHeight=18;
-    int nLX = 6, nLY = nHeaderHeight+6+4;
-    int nLWidth = getPosition().nWidth-12 - 20;
-    int nLHeight = getPosition().nHeight - nLY - 6;
-    int nRowHeight = 16;    
-
     /* is it inside the scroll bar ? */
     if(m_bScrolling) {
       _mouseDownManageScrollBar(x, y);
     }
     /* Is it down inside one of the scroll buttons? */
-    else if(x >= nLX+nLWidth && x < nLX+nLWidth+20 &&
+    else if(x >= m_lineMargeX+LinesWidth() && x < m_lineMargeX+LinesWidth()+20 &&
        y >= 6 && y < 6+20) {
       /* Scroll up! */
       m_bScrollUpHover = true;
     } 
 
-    if(x >= nLX+nLWidth && x < nLX+nLWidth+20 &&
-       y >= nLY+nLHeight-20 && y < nLY+nLHeight) {
+    if(x >= m_lineMargeX+LinesWidth() && x < m_lineMargeX+LinesWidth()+20 &&
+       y >= LinesStartY()+LinesHeight()-20 && y < LinesStartY()+LinesHeight()) {
       /* Scroll down! */
       m_bScrollDownHover = true;
     }    
@@ -572,23 +716,17 @@ namespace vapp {
   ===========================================================================*/
   void UIList::_NewlySelectedItem(void) {
     /* HACK HACK HACK HACK! */
-    int nHeaderHeight=18;
-    int nLX = 6, nLY = nHeaderHeight+6+4;
-    int nLWidth = getPosition().nWidth-12 - 20;
-    int nLHeight = getPosition().nHeight - nLY - 6;
-    int nRowHeight = 16;    
-    
-    int nSelY1 = m_nScroll + nLY + m_nSelected*nRowHeight;
-    int nSelY2 = m_nScroll + nLY + m_nSelected*nRowHeight + nRowHeight;
+    int nSelY1 = m_nScroll + LinesStartY() + m_nSelected*m_rowHeight;
+    int nSelY2 = m_nScroll + LinesStartY() + m_nSelected*m_rowHeight + m_rowHeight;
 
     /* Inside view? */
-    if(nSelY1 < nHeaderHeight + 6 + 4) {
+    if(nSelY1 < m_headerHeight + 6 + 4) {
       /* UP! */
-      _Scroll((nHeaderHeight + 10) - nSelY1);
+      _Scroll((m_headerHeight + 10) - nSelY1);
     }    
-    else if(nSelY2 > nHeaderHeight + 6 + 4 + nLHeight) {
+    else if(nSelY2 > m_headerHeight + 6 + 4 + LinesHeight()) {
       /* DOWN! */
-      _Scroll(nHeaderHeight + 10 + nLHeight - nSelY2);
+      _Scroll(m_headerHeight + 10 + LinesHeight() - nSelY2);
     }    
   }
   
@@ -596,21 +734,21 @@ namespace vapp {
   Misc helpers
   ===========================================================================*/
   void UIList::_Scroll(int nPixels) {
-    int nRowHeight = 16;
-    int nHeaderHeight = 18 + 6 + 4;
-
     if(m_nScroll+nPixels > 0) {
       m_nScroll = 0;
       return;
     }
 
-    if(m_nScroll+nPixels < -nRowHeight * ((int)m_Entries.size()+1) + getPosition().nHeight - nHeaderHeight) { /* keep the cast ; under my linux box, it doesn't work without it */
+    int v_scroll_max = (int)(-(float)RowHeight() * ((float)m_Entries.size() - ScrollNbVisibleItems()));
+
+    if(m_nScroll+nPixels < v_scroll_max) { /* keep the cast ; under my linux box, it doesn't work without it */
+      if(ScrollNbVisibleItems() < m_Entries.size()) {
+	m_nScroll = v_scroll_max;
+      }
       return;
     } 
 
     m_nScroll += nPixels;
   }
 
-
 }
-

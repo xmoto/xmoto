@@ -598,31 +598,8 @@ namespace vapp {
   class UIList : public UIWindow {
     public:
       UIList() {}
-      UIList(UIWindow *pParent,int x=0,int y=0,std::string Caption="",int nWidth=0,int nHeight=0) {      
-        initW(pParent,x,y,Caption,nWidth,nHeight);        
-        m_nScroll = 0;
-        m_nSelected = 0;
-        m_pEnterButton = NULL;
-        m_bSort = false;
-	      m_fsort = NULL;
-	      m_bNumeroted = false;
-        m_bItemActivated = false;
-        
-        m_bScrollDownPressed = m_bScrollUpPressed = false;
-        
-        m_bScrollDownHover = m_bScrollUpHover = false;
-        
-	      m_bClicked = false;
-
-	      m_bChanged = false;
-
-	      m_bScrolling = false;
-
-	      m_lastRefreshTime = getApp()->getRealTime();
-
-        unhideAllColumns();
-      }      
-      virtual ~UIList() {_FreeUIList();}
+      UIList(UIWindow *pParent,int x=0,int y=0,std::string Caption="",int nWidth=0,int nHeight=0);
+      virtual ~UIList();
 
       /* Methods */
       virtual void paint(void);
@@ -643,23 +620,23 @@ namespace vapp {
       void clear(void);
       
       /* Data interface */
-      std::vector<UIListEntry *> &getEntries(void) {return m_Entries;}      
-      std::vector<std::string> &getColumns(void) {return m_Columns;}
-      int getSelected(void) {return m_nSelected;}
+      std::vector<UIListEntry *> &getEntries();
+      std::vector<std::string> &getColumns();
+      int getSelected();
       void setSelected(int n);
-      void addColumn(std::string Title,int nWidth,const std::string &Help = "") {m_Columns.push_back(Title); m_ColumnWidths.push_back(nWidth); m_ColumnHelpStrings.push_back(Help);}
-      void setEnterButton(UIButton *pButton) {m_pEnterButton = pButton;}
-      bool isItemActivated(void) {return m_bItemActivated;}
-      void setHideColumn(int n) {m_nColumnHideFlags |= (1<<n);}
-      void unhideAllColumns(void) {m_nColumnHideFlags=0;}
-      void setSort(bool bSort, int(*f)(void *pvUser1, void *pvUser2) = NULL) {m_bSort=bSort; m_fsort = f;}
-      void setNumeroted(bool bNumeroted) {m_bNumeroted = bNumeroted;}
+      void addColumn(std::string Title,int nWidth,const std::string &Help = "");
+      void setEnterButton(UIButton *pButton);
+      bool isItemActivated();
+      void setHideColumn(int n);
+      void unhideAllColumns(void);
+      void setSort(bool bSort, int(*f)(void *pvUser1, void *pvUser2) = NULL);
+      void setNumeroted(bool bNumeroted);
 
-      bool isClicked(void) {return m_bClicked;}
-      void setClicked(bool b) {m_bClicked=b;}
+      bool isClicked(void);
+      void setClicked(bool b);
 
-      bool isChanged(void) {return m_bChanged;}
-      void setChanged(bool b) {m_bChanged=b;}
+      bool isChanged(void);
+      void setChanged(bool b);
 
     private:
       /* Data */
@@ -684,6 +661,35 @@ namespace vapp {
       
       bool m_bClicked;
       bool  m_bScrolling;
+
+      /* draw */
+      int HeaderHeight();
+      int HeaderSubBorderHeight();
+      int RowHeight();
+      int LineMargeX();
+      int LineMargeY();
+      int LinesStartX();
+      int LinesStartY();
+      int LinesWidth();
+      int LinesHeight();
+
+      int ScrollBarArrowWidth();
+      int ScrollBarArrowHeight();
+      int ScrollBarBarWidth();
+      int ScrollBarBarHeight();
+      int ScrollBarScrollerWidth();
+      int ScrollBarScrollerHeight();
+      int ScrollBarScrollerStartX();
+      int ScrollBarScrollerStartY();
+      void setScrollBarScrollerStartY(float y);
+      float ScrollNbVisibleItems();
+      
+      int m_headerHeight;
+      int m_headerSubBorderHeight;
+      int m_rowHeight;
+      int m_lineMargeX, m_lineMargeY;
+      int m_scrollBarArrowWidth;
+      int m_scrollBarArrowHeight;
 
       /* Helpers */
       void _FreeUIList(void);
