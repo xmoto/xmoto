@@ -1754,7 +1754,8 @@ namespace vapp {
       Level *pLevelSrc = pList->getSelectedLevel();
       if(pLevelSrc != NULL) {
 	m_levelsManager.addToFavorite(pLevelSrc);
-	_UpdateLevelsLists();
+	_UpdateLevelPackList();
+	_UpdateLevelLists();
       }
     }
 
@@ -2642,7 +2643,8 @@ namespace vapp {
       pLevelSrc = m_pAllLevelsList->getSelectedLevel();
       if(pLevelSrc != NULL) {
 	m_levelsManager.delFromFavorite(pLevelSrc);
-	_UpdateLevelsLists();
+	_UpdateLevelPackList();
+	_UpdateLevelLists();
       }
     }
 

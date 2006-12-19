@@ -34,6 +34,7 @@ class LevelsPack {
 
   std::string Name() const;
   void addLevel(Level *i_level);
+  void removeLevel(Level *i_level);
   const std::vector<Level *> &Levels();
   bool ShowTimes() const;
   bool ShowWebTimes() const;

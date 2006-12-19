@@ -81,6 +81,15 @@ void LevelsPack::addLevel(Level *i_level) {
   m_levels.push_back(i_level);
 }
 
+void LevelsPack::removeLevel(Level *i_level) {
+  for(int i=0; i<m_levels.size(); i++) {
+    if(m_levels[i] == i_level) {
+      m_levels.erase(m_levels.begin() + i);
+      return;
+    }
+  }
+}
+
 const std::vector<Level *>& LevelsPack::Levels() {
   return m_levels;
 }
@@ -603,12 +612,14 @@ void LevelsManager::addToFavorite(Level *i_level) {
     }
   }
   m_favoriteLevels.push_back(i_level);
+  LevelsPackByName("~ " + std::string(VPACKAGENAME_FAVORITE_LEVELS)).addLevel(i_level);
 }
 
 void LevelsManager::delFromFavorite(Level *i_level) {
   for(int i=0; i<m_favoriteLevels.size(); i++) {
     if(m_favoriteLevels[i] == i_level) {
       m_favoriteLevels.erase(m_favoriteLevels.begin() + i);
+      LevelsPackByName("~ " + std::string(VPACKAGENAME_FAVORITE_LEVELS)).removeLevel(i_level);
       return;
     }
   }
