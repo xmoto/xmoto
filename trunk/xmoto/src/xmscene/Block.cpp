@@ -206,6 +206,10 @@ int Block::loadToPlay(vapp::CollisionSystem& io_collisionSystem) {
   
   updateCollisionLines();
 
+  if(v_BSPTree.getNumErrors() > 0) {
+    vapp::Log("Error due to the block %s", Id().c_str());
+  }
+
   return v_BSPTree.getNumErrors();  
 }
 
