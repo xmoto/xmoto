@@ -559,11 +559,11 @@ namespace vapp {
 	  m_pGhostReplay = NULL;
 	}
 
-	_SimpleMessage(GAMETEXT_RELOADINGLEVELS, &m_DownloadMsgBoxRect);
+	_SimpleMessage(GAMETEXT_RELOADINGLEVELS, &m_InfoMsgBoxRect);
 	m_levelsManager.reloadLevelsFromFiles(m_bEnableLevelCache);
 	m_pActiveLevelPack = NULL;
 	_UpdateLevelsLists();
-	_SimpleMessage(GAMETEXT_RELOADINGREPLAYS, &m_DownloadMsgBoxRect);
+	_SimpleMessage(GAMETEXT_RELOADINGREPLAYS, &m_InfoMsgBoxRect);
 	m_ReplayList.initFromDir();
       }
     }
@@ -951,7 +951,7 @@ namespace vapp {
 #if defined(SUPPORT_WEBACCESS)  
   void GameApp::_UpdateWebHighscores(bool bSilent) {
     if(!bSilent) {
-      _SimpleMessage(GAMETEXT_DLHIGHSCORES,&m_DownloadMsgBoxRect);
+      _SimpleMessage(GAMETEXT_DLHIGHSCORES,&m_InfoMsgBoxRect);
     }
 
     m_bWebHighscoresUpdatedThisSession = true;
@@ -965,7 +965,7 @@ namespace vapp {
 #if defined(SUPPORT_WEBACCESS)  
   void GameApp::_UpdateWebLevels(bool bSilent) {
     if(!bSilent) {
-      _SimpleMessage(GAMETEXT_DLLEVELSCHECK,&m_DownloadMsgBoxRect);
+      _SimpleMessage(GAMETEXT_DLLEVELSCHECK,&m_InfoMsgBoxRect);
     }
 
     /* Try download levels list */
@@ -985,7 +985,7 @@ namespace vapp {
 #if defined(SUPPORT_WEBACCESS)  
   void GameApp::_UpdateWebThemes(bool bSilent) {
     if(!bSilent) {
-      _SimpleMessage(GAMETEXT_DLTHEMESLISTCHECK,&m_DownloadMsgBoxRect);
+      _SimpleMessage(GAMETEXT_DLTHEMESLISTCHECK,&m_InfoMsgBoxRect);
     }  
 
     m_themeChoicer->setURL(m_Config.getString("WebThemesURL"));
@@ -1006,7 +1006,7 @@ namespace vapp {
 #if defined(SUPPORT_WEBACCESS) 
   void GameApp::_UpdateWebRooms(bool bSilent) {
     if(!bSilent) {
-      _SimpleMessage(GAMETEXT_DLROOMSLISTCHECK,&m_DownloadMsgBoxRect);
+      _SimpleMessage(GAMETEXT_DLROOMSLISTCHECK,&m_InfoMsgBoxRect);
     }  
 
     m_pWebRooms->setURL(m_Config.getString("WebRoomsURL"));
@@ -1265,27 +1265,27 @@ namespace vapp {
     readEvents();
     
     _DrawMenuBackground();
-    _SimpleMessage(m_DownloadingMessage,&m_DownloadMsgBoxRect,true);
+    _SimpleMessage(m_DownloadingMessage,&m_InfoMsgBoxRect,true);
     
-    drawBox(Vector2f(m_DownloadMsgBoxRect.nX+10,m_DownloadMsgBoxRect.nY+
-                                                   m_DownloadMsgBoxRect.nHeight-
+    drawBox(Vector2f(m_InfoMsgBoxRect.nX+10,m_InfoMsgBoxRect.nY+
+                                                   m_InfoMsgBoxRect.nHeight-
                                                    nBarHeight*2),
-            Vector2f(m_DownloadMsgBoxRect.nX+m_DownloadMsgBoxRect.nWidth-10,
-                     m_DownloadMsgBoxRect.nY+m_DownloadMsgBoxRect.nHeight-nBarHeight),
+            Vector2f(m_InfoMsgBoxRect.nX+m_InfoMsgBoxRect.nWidth-10,
+                     m_InfoMsgBoxRect.nY+m_InfoMsgBoxRect.nHeight-nBarHeight),
             0,MAKE_COLOR(0,0,0,255),0);
             
                 
-    drawBox(Vector2f(m_DownloadMsgBoxRect.nX+10,m_DownloadMsgBoxRect.nY+
-                                                   m_DownloadMsgBoxRect.nHeight-
+    drawBox(Vector2f(m_InfoMsgBoxRect.nX+10,m_InfoMsgBoxRect.nY+
+                                                   m_InfoMsgBoxRect.nHeight-
                                                    nBarHeight*2),
-            Vector2f(m_DownloadMsgBoxRect.nX+10+((m_DownloadMsgBoxRect.nWidth-20)*(int)fPercent)/100,
-                     m_DownloadMsgBoxRect.nY+m_DownloadMsgBoxRect.nHeight-nBarHeight),
+            Vector2f(m_InfoMsgBoxRect.nX+10+((m_InfoMsgBoxRect.nWidth-20)*(int)fPercent)/100,
+                     m_InfoMsgBoxRect.nY+m_InfoMsgBoxRect.nHeight-nBarHeight),
             0,MAKE_COLOR(255,0,0,255),0);
 
     UIFont *v_font = m_Renderer.getSmallFont();
     if(v_font != NULL) {
-      UITextDraw::printRaw(v_font,m_DownloadMsgBoxRect.nX+13,m_DownloadMsgBoxRect.nY+
-         m_DownloadMsgBoxRect.nHeight-nBarHeight-4,m_DownloadingInformation,MAKE_COLOR(255,255,255,128));
+      UITextDraw::printRaw(v_font,m_InfoMsgBoxRect.nX+13,m_InfoMsgBoxRect.nY+
+         m_InfoMsgBoxRect.nHeight-nBarHeight-4,m_DownloadingInformation,MAKE_COLOR(255,255,255,128));
     }
     SDL_GL_SwapBuffers();            
   }
@@ -1425,7 +1425,7 @@ namespace vapp {
     if(m_bEnableWebHighscores) {
       /* download the replay */
       try {
-        _SimpleMessage(GAMETEXT_DLGHOST,&m_DownloadMsgBoxRect);
+        _SimpleMessage(GAMETEXT_DLGHOST,&m_InfoMsgBoxRect);
         v_hs->download();
         res = std::string("Replays/") + v_replay_name + std::string(".rpl");
         m_ReplayList.addReplay(v_replay_name);
@@ -1864,7 +1864,11 @@ namespace vapp {
     }
     
     if(m_pPlayer != NULL) {
-      m_levelsManager.rebuildPacks(m_pWebHighscores, m_pPlayer->PlayerName, &m_Profiles, &m_GameStats);
+      m_levelsManager.rebuildPacks(
+#if defined(SUPPORT_WEBACCESS)
+				   m_pWebHighscores,
+#endif
+				   m_pPlayer->PlayerName, &m_Profiles, &m_GameStats);
     }    
 
     if(v_isset) {
@@ -1875,6 +1879,7 @@ namespace vapp {
     _CreateLevelPackLevelList();
     _UpdateLevelLists();
 
+#if defined(SUPPORT_WEBACCESS)
     /* update new levels tab */
     m_pPlayNewLevelsList->clear();
     if(m_pPlayNewLevelsList != NULL) {
@@ -1886,6 +1891,7 @@ namespace vapp {
 	m_pPlayNewLevelsList->addLevel(m_levelsManager.UpdatedLevels()[i], m_pPlayer, &m_Profiles, m_pWebHighscores, std::string("Updated: "));
       }
     }
+#endif
   }
 
   void GameApp::reloadTheme() {

@@ -44,7 +44,7 @@ msgstr "Arreter la partie"
 
 #: src/GameText.h:41
 msgid "Add to favorite"
-msgstr ""
+msgstr "Ajouter aux favoris"
 
 #: src/GameText.h:42
 msgid "Action"
@@ -230,7 +230,7 @@ msgstr "Supprimer"
 
 #: src/GameText.h:138
 msgid "Delete from favorite"
-msgstr ""
+msgstr "Supprimer des favoris"
 
 #: src/GameText.h:140
 msgid "Description"
@@ -277,12 +277,11 @@ msgid "Checking for existing rooms..."
 msgstr "Recherche des salons existants"
 
 #: src/GameText.h:150
-#, fuzzy
 msgid ""
 "Downloading theme data required by new levels...\n"
 "Press ESC to abort."
 msgstr ""
-"Telechargement de nouveaux niveaux...\n"
+"Telechargement des nouveaux fichiers du theme...\n"
 "Appuyez sur ESC pour arreter."
 
 #: src/GameText.h:151
@@ -638,9 +637,8 @@ msgid "Loading menu graphics..."
 msgstr "Chargement du menu..."
 
 #: src/GameText.h:234
-#, fuzzy
 msgid "Loading replays..."
-msgstr "Chargement des niveaux..."
+msgstr "Chargement des replays..."
 
 #: src/GameText.h:235
 msgid "Loading sounds..."
@@ -837,14 +835,12 @@ msgid "Do you really want to quit?"
 msgstr "Voulez-vous vraiment quitter ?"
 
 #: src/GameText.h:288
-#, fuzzy
 msgid "Reloading levels..."
-msgstr "Chargement des niveaux..."
+msgstr "Rechargement des niveaux..."
 
 #: src/GameText.h:289
-#, fuzzy
 msgid "Reloading replays..."
-msgstr "Chargement des niveaux..."
+msgstr "Rechargement des replays..."
 
 #: src/GameText.h:290
 msgid "Replay"
@@ -866,9 +862,8 @@ msgid "Replay '%s' can't be played!"
 msgstr "Le replay '%s' ne peut etre visionne"
 
 #: src/GameText.h:295
-#, fuzzy
 msgid "Replays"
-msgstr "Replay"
+msgstr "Replays"
 
 #: src/GameText.h:296
 msgid "Restart This Level"
@@ -1120,7 +1115,7 @@ msgstr "Oui"
 
 #: src/GameText.h:356
 msgid "Yes to all"
-msgstr ""
+msgstr "Oui pour tous"
 
 #: src/GameText.h:357
 msgid "Zoom in"
@@ -1188,9 +1183,8 @@ msgid "Levels grouped together in level packs"
 msgstr "Packs de niveaux"
 
 #: src/GameText.h:375
-#, fuzzy
 msgid "Browse levels avaiable to you"
-msgstr "Nouveaux niveaux !"
+msgstr "Parcourir les niveaux"
 
 #: src/GameText.h:376
 msgid "View list of recorded replays"
@@ -1578,83 +1572,68 @@ msgid "View the X-Moto credits"
 msgstr "A propos d'X-Moto"
 
 #: src/GameText.h:473
-#, fuzzy
 msgid "Name of replay"
-msgstr "Entrer le nom du replay"
+msgstr "Nom du replay"
 
 #: src/GameText.h:474
-#, fuzzy
 msgid "Level played in replay"
-msgstr "Niveau '%s' requis pour le replay !"
+msgstr "Niveau du replay"
 
 #: src/GameText.h:475
-#, fuzzy
 msgid "Player who recorded the replay"
-msgstr "Voir la liste des replays"
+msgstr "Joueur qui a fait le record"
 
 #: src/GameText.h:476
-#, fuzzy
 msgid "Click to select screen resolution"
-msgstr "Choisir la resolution de l'ecran"
+msgstr "Cliquer pour choisir la resolution de l'ecran"
 
 #: src/GameText.h:477
 msgid "Completed levels / total number of levels in pack"
-msgstr ""
+msgstr "Nombre de niveaux finis / Nombre de niveaux dans le pack"
 
 #: src/GameText.h:478
-#, fuzzy
 msgid "Name of level pack"
-msgstr "Fermer le pack"
+msgstr "Nom du pack"
 
 #: src/GameText.h:479
 msgid "Add the level to the favorite levels list"
-msgstr ""
+msgstr "Ajouter le niveau a la liste des favoris"
 
 #: src/GameText.h:480
 msgid "Delete the level from the favorite levels list"
-msgstr ""
+msgstr "Supprimer le niveau de la liste des favoris"
 
 #: src/GameText.h:482
-#, fuzzy
 msgid "Levels with no highscore"
-msgstr "Voir le record"
+msgstr "Niveaux sans record"
 
 #: src/GameText.h:483
-#, fuzzy
 msgid "Random levels"
-msgstr "Niveaux non packages"
+msgstr "Niveaux aléatoires"
 
 #: src/GameText.h:484
 msgid "Levels you have not completed"
-msgstr ""
+msgstr "Niveaux que vous n'avez pas finis"
 
 #: src/GameText.h:485
-#, fuzzy
 msgid "You're not the highscore holder"
-msgstr "Voir le record"
+msgstr "Vous n'avez pas le record"
 
 #: src/GameText.h:487
-#, fuzzy
 msgid "New levels"
 msgstr "Nouveaux niveaux"
 
 #: src/GameText.h:488
-#, fuzzy
 msgid "Updated levels"
-msgstr "Niveaux non packages"
+msgstr "Niveaux mis a jour"
 
 #: src/GameText.h:489
-#, fuzzy
 msgid "Most played levels"
-msgstr "Niveaux non packages"
+msgstr "Niveaux joues le plus"
 
 #: src/GameText.h:490
-#, fuzzy
 msgid "Favorite levels"
-msgstr "Redemarrer le niveau"
-
-#~ msgid "View Replays"
-#~ msgstr "Voir les replays"
+msgstr "Niveaux favoris"
 
 #~ msgid ""
 #~ "Getting the theme\n"

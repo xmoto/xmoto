@@ -65,7 +65,10 @@ class LevelsManager {
   bool doesLevelExist(const std::string& i_id);
 
   bool doesLevelsPackExist(const std::string &i_name) const;
-  void rebuildPacks(WebRoom *i_webHighscores,
+  void rebuildPacks(
+#if defined(SUPPORT_WEBACCESS)
+		    WebRoom *i_webHighscores,
+#endif
 		    std::string i_playerName,
 		    vapp::PlayerData *i_profiles,
 		    vapp::Stats *i_stats);
@@ -105,7 +108,10 @@ class LevelsManager {
   void saveXml() const;
 
   private:
-  void createVirtualPacks(WebRoom *i_webHighscores,
+  void createVirtualPacks(
+#if defined(SUPPORT_WEBACCESS)
+			  WebRoom *i_webHighscores,
+#endif
 			  std::string i_playerName,
 			  vapp::PlayerData *i_profiles,
 			  vapp::Stats *i_stats);

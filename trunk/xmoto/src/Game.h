@@ -334,10 +334,8 @@ namespace vapp {
       /* Various popups */
       UIMsgBox *m_pQuitMsgBox;
       UIMsgBox *m_pNotifyMsgBox;
-#if defined(SUPPORT_WEBACCESS)
-      UIMsgBox *m_pDownloadMsgBox;
-      UIRect m_DownloadMsgBoxRect;
-#endif            
+      UIMsgBox *m_pInfoMsgBox;
+      UIRect m_InfoMsgBoxRect;
 
       /* Main menu background / title */
       Texture *m_pTitleBL,*m_pTitleBR,*m_pTitleTL,*m_pTitleTR;

@@ -174,7 +174,10 @@ bool LevelsManager::doesLevelsPackExist(const std::string &i_name) const {
   return false;
 }
 
-void LevelsManager::rebuildPacks(WebRoom *i_webHighscores,
+void LevelsManager::rebuildPacks(
+#if defined(SUPPORT_WEBACCESS)
+				 WebRoom *i_webHighscores,
+#endif
 				 std::string i_playerName,
 				 vapp::PlayerData *i_profiles,
 				 vapp::Stats *i_stats) {
@@ -195,12 +198,21 @@ void LevelsManager::rebuildPacks(WebRoom *i_webHighscores,
     }
   }
 
-  createVirtualPacks(i_webHighscores, i_playerName, i_profiles, i_stats);
+  createVirtualPacks(
+#if defined(SUPPORT_WEBACCESS)
+		     i_webHighscores, 
+#endif
+		     i_playerName, i_profiles, i_stats);
 }
 
-void LevelsManager::createVirtualPacks(WebRoom *i_webHighscores, std::string i_playerName, vapp::PlayerData *i_profiles, vapp::Stats *i_stats) {
+void LevelsManager::createVirtualPacks(
+#if defined(SUPPORT_WEBACCESS)
+				       WebRoom *i_webHighscores, 
+#endif
+				       std::string i_playerName, vapp::PlayerData *i_profiles, vapp::Stats *i_stats) {
   LevelsPack *v_pack;
   
+#if defined(SUPPORT_WEBACCESS)
   /* levels with no highscore */
   if(i_webHighscores != NULL) {
     v_pack = new LevelsPack("~ " + std::string(VPACKAGENAME_LEVELS_WITH_NO_HIGHSCORE));
@@ -212,7 +224,9 @@ void LevelsManager::createVirtualPacks(WebRoom *i_webHighscores, std::string i_p
       }
     }
   }
+#endif
 
+#if defined(SUPPORT_WEBACCESS)
   /* levels i've not the highscore */
   v_pack = new LevelsPack("~ " + std::string(VPACKAGENAME_YOU_HAVE_NOT_THE_HIGHSCORE));
   m_levelsPacks.push_back(v_pack);
@@ -226,6 +240,7 @@ void LevelsManager::createVirtualPacks(WebRoom *i_webHighscores, std::string i_p
       }
     }
   }
+#endif
 
   /* random levels */
 	v_pack = new LevelsPack("~ " + std::string(VPACKAGENAME_RANDOM_LEVELS));

@@ -886,6 +886,7 @@ namespace vapp {
     m_pAllLevelsList->setEnterButton( pGoButton );
 
     /* new levels tab */
+#if defined(SUPPORT_WEBACCESS)
     UIWindow *pNewLevelsPackTab = new UIWindow(m_pLevelPackTabs,20,40,GAMETEXT_NEWLEVELS,m_pLevelPackTabs->getPosition().nWidth-40,m_pLevelPackTabs->getPosition().nHeight);
     pNewLevelsPackTab->enableWindow(true);
     pNewLevelsPackTab->showWindow(false);
@@ -909,7 +910,6 @@ namespace vapp {
     pDownloadLevelsButton->setID("NEW_LEVELS_PLAY_DOWNLOAD_LEVELS_BUTTON");
     pDownloadLevelsButton->setContextHelp(CONTEXTHELP_DOWNLOADLEVELS);
 
-#if defined(SUPPORT_WEBACCESS)
     /* all levels list */
     m_pPlayNewLevelsList = new UILevelList(pNewLevelsPackTab,0,0,"",pNewLevelsPackTab->getPosition().nWidth,pNewLevelsPackTab->getPosition().nHeight-105);     
     m_pPlayNewLevelsList->setID("NEWLEVELS_LIST");
@@ -2389,8 +2389,9 @@ namespace vapp {
         if(pTitle != NULL) pTitle->setCaption(m_pActiveLevelPack->Name());
         
         _CreateLevelPackLevelList();
+#if defined(SUPPORT_WEBACCESS)
 	m_pPackLevelInfoFrame->showWindow(false);
-
+#endif
         m_pLevelPackViewer->showWindow(true);
         m_pMainMenu->enableChildren(false);
         m_pMainMenu->enableWindow(false);
@@ -2619,26 +2620,24 @@ namespace vapp {
     UIButton *pLevelInfoButton = (UIButton *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:ALLLEVELS_TAB:PLAY_LEVEL_INFO_BUTTON");
     UIButton *pLevelDeleteFromFavoriteButton = (UIButton *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:ALLLEVELS_TAB:ALL_LEVELS_DELETE_FROM_FAVORITE_BUTTON");
 
+#if defined(SUPPORT_WEBACCESS)
     UIButton *pNewLevelsPlayGoButton =    (UIButton *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:NEWLEVELS_TAB:NEW_LEVELS_PLAY_GO_BUTTON");
     UIButton *pNewLevelsLevelInfoButton = (UIButton *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:NEWLEVELS_TAB:NEW_LEVELS_PLAY_LEVEL_INFO_BUTTON");
     UIButton *pNewLevelsPlayDLButton =    (UIButton *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:NEWLEVELS_TAB:NEW_LEVELS_PLAY_DOWNLOAD_LEVELS_BUTTON");
 
     if(pNewLevelsPlayDLButton != NULL) {
-      #if !defined(SUPPORT_WEBACCESS)
-        pNewLevelsPlayDLButton->enableWindow(false);
-      #else          
-        if(pWebHighscores->getChecked())
-          pNewLevelsPlayDLButton->enableWindow(true);
-        else
-          pNewLevelsPlayDLButton->enableWindow(false);
+      if(pWebHighscores->getChecked())
+	pNewLevelsPlayDLButton->enableWindow(true);
+      else
+	pNewLevelsPlayDLButton->enableWindow(false);
       
-        if(pNewLevelsPlayDLButton->isClicked()) {
-          pNewLevelsPlayDLButton->setClicked(false);
-          
-          _CheckForExtraLevels();
-        }
-      #endif
+      if(pNewLevelsPlayDLButton->isClicked()) {
+	pNewLevelsPlayDLButton->setClicked(false);
+	
+	_CheckForExtraLevels();
+      }
     }
+#endif
 
     if(pLevelDeleteFromFavoriteButton->isClicked()) {
       Level *pLevelSrc = NULL;
@@ -2652,9 +2651,15 @@ namespace vapp {
       }
     }
 
-    if(pPlayGoButton->isClicked() || pNewLevelsPlayGoButton->isClicked()) {
+    if(pPlayGoButton->isClicked()
+#if defined(SUPPORT_WEBACCESS)
+       || pNewLevelsPlayGoButton->isClicked()
+#endif
+       ) {
       pPlayGoButton->setClicked(false);
+#if defined(SUPPORT_WEBACCESS)
       pNewLevelsPlayGoButton->setClicked(false);
+#endif
       
       /* Find out what to play */
       Level *pLevelSrc = NULL;
@@ -2677,9 +2682,15 @@ namespace vapp {
         setState(GS_PREPLAYING);
       }
     }
-    else if(pLevelInfoButton->isClicked() || pNewLevelsLevelInfoButton->isClicked()) {
+    else if(pLevelInfoButton->isClicked()
+#if defined(SUPPORT_WEBACCESS)
+	    || pNewLevelsLevelInfoButton->isClicked()
+#endif
+	    ) {
       pLevelInfoButton->setClicked(false);
+#if defined(SUPPORT_WEBACCESS)
       pNewLevelsLevelInfoButton->setClicked(false);
+#endif
       
       /* Find out what level is selected */
       Level *pLevelSrc = NULL;
@@ -2715,7 +2726,9 @@ namespace vapp {
         
         /* Nice. Open the level info viewer */
         pLevelInfoButton->setActive(false);
+#if defined(SUPPORT_WEBACCESS)
         pNewLevelsLevelInfoButton->setActive(false);
+#endif
         m_pLevelInfoViewer->showWindow(true);
         m_pMainMenu->enableChildren(false);
         m_pMainMenu->enableWindow(false);
