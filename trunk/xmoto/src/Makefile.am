@@ -28,7 +28,7 @@ helpers_SOURCES = helpers/VMath.h             \
                   helpers/FileCompression.cpp \
                   helpers/Color.h             \
                   helpers/Color.cpp           \
-                  src/helpers/HighPrecisionTimer.h
+                  helpers/HighPrecisionTimer.h
 
 common_SOURCES = BuiltInFont.cpp Image.cpp \
   VApp.cpp VBezier.cpp VDraw.cpp \
