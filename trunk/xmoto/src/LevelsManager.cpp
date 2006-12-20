@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VXml.h"
 #include "GameText.h"
 #include <algorithm> 
+#include <time.h>
 
 #define CURRENT_LEVEL_INDEX_FILE_VERSION 1
 #define VPACKAGE_NB_RANDOM_LEVELS        30
