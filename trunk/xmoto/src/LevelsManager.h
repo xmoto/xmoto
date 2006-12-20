@@ -33,7 +33,7 @@ class LevelsPack {
   ~LevelsPack();
 
   std::string Name() const;
-  void addLevel(Level *i_level);
+  void addLevel(Level *i_level, bool i_checkUnique = false);
   void removeLevel(Level *i_level);
   const std::vector<Level *> &Levels();
   bool ShowTimes() const;
@@ -119,6 +119,7 @@ class LevelsManager {
   std::vector<Level *> m_updatedLevels;
 
   std::vector<Level *> m_favoriteLevels;
+	unsigned int m_randomLevelsSeed;
 
   static std::string NewLevelsXmlFilePath();
   void saveNewLevelsXml() const;

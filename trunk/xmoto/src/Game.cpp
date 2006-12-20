@@ -921,7 +921,7 @@ namespace vapp {
   return ((Level *)m_currentPlayingList->getEntries()[i+1]->pvUser)->Id();
       }
     }
-    return "";
+    return ((Level *)m_currentPlayingList->getEntries()[0]->pvUser)->Id();
   }
   
   bool GameApp::_IsThereANextLevel(Level *pLevelSrc) {
@@ -1105,7 +1105,6 @@ namespace vapp {
             m_pDownloadMsgBox = NULL;
           }
           notifyMsg(GAMETEXT_FAILEDDLLEVELS);
-          return;
         }
 
         /* Got some new levels... load them! */

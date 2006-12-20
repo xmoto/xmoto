@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <algorithm> 
 
 #define CURRENT_LEVEL_INDEX_FILE_VERSION 1
+#define VPACKAGE_NB_RANDOM_LEVELS        30
 
 LevelsPack::LevelsPack(std::string i_name) {
   m_name         = i_name;
@@ -77,7 +78,15 @@ std::string LevelsPack::Name() const {
   return m_name;
 }
 
-void LevelsPack::addLevel(Level *i_level) {
+void LevelsPack::addLevel(Level *i_level, bool i_checkUnique) {
+	if(i_checkUnique) {
+		/* check if the level is already into the pack */
+		for(int i=0; i<m_levels.size(); i++) {
+			if(m_levels[i] == i_level) {
+				return;
+			}
+		}
+	}
   m_levels.push_back(i_level);
 }
 
@@ -119,6 +128,10 @@ void LevelsPack::setSorted(bool i_sorted) {
 }
 
 LevelsManager::LevelsManager() {
+	/* must stay the same along the game to not remake a different random list each time
+	   so that next levels, ... works
+	*/
+	m_randomLevelsSeed = (unsigned int) time(NULL);
 }
 
 LevelsManager::~LevelsManager() {
@@ -214,13 +227,16 @@ void LevelsManager::createVirtualPacks(WebRoom *i_webHighscores, std::string i_p
     }
   }
 
-  /* levels i've not the highscore */
-  //v_pack = new LevelsPack("~ " + std::string(VPACKAGENAME_RANDOM_LEVELS));
-  //v_pack->setSorted(false);
-  //m_levelsPacks.push_back(v_pack);
-  //for(unsigned int i=0; i<m_levels.size(); i++) {
-  //  v_pack->addLevel(m_levels[i]);
-  //}
+  /* random levels */
+	v_pack = new LevelsPack("~ " + std::string(VPACKAGENAME_RANDOM_LEVELS));
+  v_pack->setSorted(false);
+  m_levelsPacks.push_back(v_pack);
+	srand(m_randomLevelsSeed);
+	/* if there is only 5 levels available, don't make a pack of 30 levels for example */
+	unsigned int v_nbRandomLevels = m_levels.size() < (VPACKAGE_NB_RANDOM_LEVELS) ? m_levels.size() : VPACKAGE_NB_RANDOM_LEVELS;
+	for(unsigned int i=0; i<v_nbRandomLevels; i++) {
+		v_pack->addLevel(m_levels[randomNum(0, m_levels.size())], true); // true to be sure the same level is not twice time
+	}
 
   /* levels i've not finished */
   v_pack = new LevelsPack("~ " + std::string(VPACKAGENAME_INCOMPLETED_LEVELS));

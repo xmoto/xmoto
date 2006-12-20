@@ -529,7 +529,7 @@ namespace vapp {
 
   void UIList::mouseHover(int x,int y) {
     /* is it inside the scroll bar ? */
-    if(m_bScrolling) {
+    if(m_bScrolling && isMouseLDown()) {
       _mouseDownManageScrollBar(x, y);
     }
     /* Is it down inside one of the scroll buttons? */

@@ -1460,19 +1460,23 @@ namespace vapp {
     for(int i=0;i<m_levelsManager.LevelsPacks().size();i++) {
       /* don't show empty packs */
       if(m_levelsManager.LevelsPacks()[i]->Levels().size() != 0) {
-	p_packName = m_levelsManager.LevelsPacks()[i]->Name();
-	if(p_packName == "") {
-	  p_packName = GAMETEXT_UNPACKED_LEVELS_PACK;
-	}
+				p_packName = m_levelsManager.LevelsPacks()[i]->Name();
 
-	p = pList->addEntry(p_packName);
-	std::ostringstream v_level_nb;
-	v_level_nb << getNumberOfFinishedLevelsOfPack(m_levelsManager.LevelsPacks()[i]);
-	v_level_nb << "/";
-	v_level_nb << m_levelsManager.LevelsPacks()[i]->Levels().size();
-	p->Text.push_back(v_level_nb.str());
-	p->pvUser = (void *)m_levelsManager.LevelsPacks()[i];
-      }
+				/* the unpackaged pack exists only in debug mode */
+				if(p_packName != "" || m_bDebugMode == false) {
+					if(p_packName == "") {
+						p_packName = GAMETEXT_UNPACKED_LEVELS_PACK;
+					}
+					
+					p = pList->addEntry(p_packName);
+					std::ostringstream v_level_nb;
+					v_level_nb << getNumberOfFinishedLevelsOfPack(m_levelsManager.LevelsPacks()[i]);
+					v_level_nb << "/";
+					v_level_nb << m_levelsManager.LevelsPacks()[i]->Levels().size();
+					p->Text.push_back(v_level_nb.str());
+					p->pvUser = (void *)m_levelsManager.LevelsPacks()[i];
+				}
+			}
     }
 
     /* reselect the previous pack */

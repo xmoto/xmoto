@@ -13,7 +13,7 @@ X-Moto 0.2.3 2006-
    eventually have its own package. The -pack command-line option have been
    moved from xmoto-edit to xmoto.
  * Some changes on the user interface: Tabs reorganised and scrollbars.
- * First virtual packages
+ * Virtual packages
  * New levels list is now saved when you quit xmoto
  * Favorites levels tab
 	

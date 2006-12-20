@@ -787,7 +787,7 @@ namespace vapp {
       virtual bool keyUp(int nKey);  
       
       void deactivate(UIWindow *pWindow);
-      
+
       void enableContextMenuDrawing(bool b) {m_bShowContextMenu=b;}
       void clearContext(void) {m_CurrentContextHelp = "";}
       
