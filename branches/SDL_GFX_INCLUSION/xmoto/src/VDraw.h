@@ -32,6 +32,13 @@ namespace vapp {
   //keesj:TODO why do I need to declare the Log function here?
   void Log(const char *pcFmt,...);
 
+  //used a comparator in sdt::map
+  struct ltstr {
+    bool operator()(const char* s1, const char* s2) const {
+      return strcmp(s1, s2) < 0;
+    }
+  };
+
   /**
    * VApp draw modes to be used as argument in startDraw
    * DRAW_MODE_POLYGON is a filled polygon drawing mode
@@ -45,6 +52,9 @@ namespace vapp {
     DRAW_MODE_LINE_STRIP
   };
 
+  /**
+   * Definition of the blending mode
+   **/
   enum BlendMode {
     BLEND_MODE_NONE, //no blending
     BLEND_MODE_A,    //GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA
@@ -266,6 +276,7 @@ private:
        *keesj:TODO
        *I am not happy about all these public members:)
        **/
+#ifdef ENABLE_OPENGL
       /* Extensions */
       PFNGLGENBUFFERSARBPROC glGenBuffersARB;
       PFNGLBINDBUFFERARBPROC glBindBufferARB;
@@ -334,6 +345,7 @@ private:
       PFNGLGETUNIFORMFVARBPROC glGetUniformfvARB;
       PFNGLGETUNIFORMIVARBPROC glGetUniformivARB;
       PFNGLGETSHADERSOURCEARBPROC glGetShaderSourceARB;
+#endif
 
   };
   
@@ -427,6 +439,10 @@ private:
 
       SDL_Surface * m_screen;
 
+      //
+      Vector2f m_textureAnchorPoint;
+      Texture * m_texture;
+
       /**
        * Color used to clear the screen
        **/
@@ -440,6 +456,9 @@ private:
       std::vector<Vector2f*> m_drawingPoints;
       //Vector for keeping track of texture coorinated
       std::vector<Vector2f*> m_texturePoints;
+
+      //map to hold converted images
+      std::map< const char*, SDL_Surface *, ltstr>  m_image_cache;
 
   };
 };

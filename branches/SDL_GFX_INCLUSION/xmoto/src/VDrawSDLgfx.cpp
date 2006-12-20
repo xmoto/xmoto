@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #ifdef ENABLE_SDLGFX
 #include "SDL_gfxPrimitives.h"
+#include "SDL_rotozoom.h"
 namespace vapp {
 
 
@@ -179,8 +180,48 @@ namespace vapp {
   /*===========================================================================
   Primitive: box
   ===========================================================================*/
-  void DrawLibSDLgfx::drawImage(const Vector2f &A,const Vector2f &B,Texture *pTexture,Color Tint) {
+  void DrawLibSDLgfx::drawImage(const Vector2f &a,const Vector2f &b,Texture *pTexture,Color tint) {
+     if (pTexture->surface != NULL){
+       SDL_Rect  * dest = new SDL_Rect();
+       if (m_scale.x != 1){
+          dest->x = m_nDrawWidth/2 + (Sint16)((a.x +  m_translate.x) *  m_scale.x); 
+	  dest->y = m_nDrawHeight/2 -(Sint16)( (a.y  +  m_translate.y)*  m_scale.y);
+	  int orig_w =  (Sint16)abs(pTexture->surface->w *  m_scale.y); 
+	  int w =  (Sint16)abs((b.x - a.x ) *  m_scale.x);
+	  int h = (Sint16)abs( (b.y - a.y  )*  m_scale.y);
+	  double scalex =  1.0 * w/ pTexture->surface->w;
+	  double scaley =  1.0 *  h/ pTexture->surface->h;
+
+	  char key[255] ="" ; 
+          sprintf(key,"%s_%i_%f_%f",pTexture->Name.c_str(),0,scalex,scaley); 
+          SDL_Surface * s = NULL; 
+          std::map<const char* , SDL_Surface * >::iterator i = m_image_cache.find(key); 
+          if (  i!= m_image_cache.end()){ 
+            s= (*i).second; 
+         } else { 
+            char * keyName  = (char* )malloc(strlen(key) + 1); 
+            s= rotozoomSurfaceXY (pTexture->surface,0,scalex,scaley,SMOOTHING_ON); 
+            if (scalex < 2){//only cache smaller images
+              strcpy(keyName,key);
+              printf("addding image with key %s\n",key);
+              m_image_cache.insert(std::make_pair<>(keyName,s));
+            }
+          }
+          dest->y -= s->h;
+          SDL_BlitSurface(s,NULL /*copy all*/,m_screen, dest);
+          if (scalex >= 2){// free image if it was not cached
+            SDL_FreeSurface(s);
+          }
+       } else {
+         dest->x = (int)a.x;
+         dest->y = (int)b.y;
+         SDL_BlitSurface(pTexture->surface,NULL /*copy all*/,m_screen, dest);
+       }
+     } else {
+       printf("texture surface was not loaded\n");
+     }
   }
+
         
   
   /*===========================================================================
@@ -215,9 +256,13 @@ namespace vapp {
     }
     switch(m_drawMode){
       case DRAW_MODE_POLYGON:
-        filledPolygonRGBA(m_screen,x,y,size,GET_RED(m_color),GET_GREEN(m_color),GET_BLUE(m_color),GET_ALPHA(m_color));
+        if (m_texture != NULL){
+           texturedPolygon(m_screen,x,y,size,m_texture->surface,0,0);
+	} else {
+           filledPolygonRGBA(m_screen,x,y,size,GET_RED(m_color),GET_GREEN(m_color),GET_BLUE(m_color),GET_ALPHA(m_color));
+	}
 
-        break;
+      break;
       case DRAW_MODE_LINE_LOOP:
         polygonRGBA(m_screen,x,y,size,GET_RED(m_color),GET_GREEN(m_color),GET_BLUE(m_color),GET_ALPHA(m_color));
         break;
@@ -229,6 +274,7 @@ namespace vapp {
     } 
     m_drawingPoints.resize(0);
     m_drawMode = DRAW_MODE_NONE;
+    m_texture = NULL;
   }
 
   void DrawLibSDLgfx::setColor(Color color){
@@ -236,6 +282,7 @@ namespace vapp {
   }
 
   void DrawLibSDLgfx::setTexture(Texture *texture,BlendMode blendMode){
+     m_texture = texture;
   } 
   
   void DrawLibSDLgfx::setBlendMode(BlendMode blendMode){
@@ -277,6 +324,7 @@ namespace vapp {
         m_scale.y =1;
         m_translate.x =0;
         m_translate.y =0;
+	/*
         SDL_LockSurface(m_screen);
         if (m_bg_data ==NULL){
           m_bg_data = malloc(m_screen->format->BytesPerPixel * m_screen->w * m_screen->h);
@@ -284,6 +332,8 @@ namespace vapp {
         }
         memcpy(m_screen->pixels,m_bg_data,m_screen->format->BytesPerPixel * m_screen->w * m_screen->h);
         SDL_UnlockSurface(m_screen);
+	*/
+	SDL_FillRect(m_screen,NULL,SDL_MapRGB(m_screen->format,0,0,0));
       }
       
       /**

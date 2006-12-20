@@ -49,20 +49,25 @@ namespace vapp {
   /*===========================================================================
   Texture
   ===========================================================================*/    
+  //keesj:todo. I experimented with converting this struct to a
+  //class and extending it so that the opengl version would only
+  //contain nID and the SDL_based one the Surface pointer. I think it is
+  //a lot of work and because the game currently depends on SDL
+  //and nID is not a openGL specific structure
+  //it's 
   struct Texture {
+    public:
     Texture() {
       nWidth = nHeight = 0;
-#ifdef ENABLE_OPENGL
       nID = 0;
-#endif
+      surface =NULL;
       nSize = 0;
     }
   
     std::string Name;       /* Name */
     int nWidth,nHeight;     /* Size */
-#ifdef ENABLE_OPENGL
     unsigned int nID;       /* OpenGL name */
-#endif
+    SDL_Surface * surface;  /* SDL_surface */
     std::string Tag;        /* Optional tag */
     int nSize;              /* Size in bytes */
   };
