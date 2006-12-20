@@ -252,7 +252,7 @@ namespace vapp {
       
       if(!drawLib->isNoGraphics()) {
         /* Swap buffers */
-        SDL_GL_SwapBuffers();
+       drawLib->flushGraphics();
         
         /* Does app want us to delay a bit after the frame? */
         if(m_nFrameDelay > 0)

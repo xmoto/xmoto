@@ -25,7 +25,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VDraw.h"
 #include "BuiltInFont.h"
 
-#ifdef ENABLE_OPENGL
 namespace vapp {
 
  DrawLib::DrawLib() {
@@ -47,4 +46,3 @@ namespace vapp {
  }
 
 }
-#endif

@@ -30,7 +30,7 @@ helpers_SOURCES = helpers/VMath.h             \
                   helpers/Color.cpp
 
 common_SOURCES = BuiltInFont.cpp Image.cpp \
-  VApp.cpp VBezier.cpp VDraw.cpp VDrawOpenGL.cpp \
+  VApp.cpp VBezier.cpp VDraw.cpp VDrawOpenGL.cpp VDrawSDLgfx.cpp \
   VFileIO.cpp VTexture.cpp \
   VXml.cpp \
   $(helpers_SOURCES) \

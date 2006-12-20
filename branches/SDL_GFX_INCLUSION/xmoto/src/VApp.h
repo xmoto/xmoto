@@ -99,7 +99,12 @@ namespace vapp {
 	     m_bNoWWW = false;  
 	     m_nFrameDelay=0;
 	     //drawLib = NULL;//new DrawLib();
+#ifdef ENABLE_OPENGL
 	     drawLib = new DrawLibOpenGL();
+#endif
+#ifdef ENABLE_SDLGFX
+	     drawLib = new DrawLibSDLgfx();
+#endif
 
              }
       virtual ~App() {}

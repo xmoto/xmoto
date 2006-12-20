@@ -337,6 +337,109 @@ private:
 
   };
   
+  class DrawLibSDLgfx : public DrawLib{
+    public:
+      DrawLibSDLgfx();
+      ~DrawLibSDLgfx();
+      
+      virtual void init(int nDispWidth,int nDispHeight,int nDispBPP,bool bWindowed,Theme * ptheme);
+      virtual  void unInit();
+      /* Methods - low-level */
+      //add a vertex given screen coordinates
+      virtual void glVertexSP(float x,float y) ;
+      //add a vertex given opengl coordinates
+      virtual void glVertex(float x,float y);
+      //texture coordinate
+      virtual void glTexCoord(float x,float y) ;
+      virtual void screenProjVertex(float *x,float *y) ; 
+      
+      virtual void setColor(Color color) ;
+      /**
+       * set the texure for drawing
+       * the value may be NULL to disable texure
+       * every end draw will reset the texture to NULL
+       **/
+      virtual void setTexture(Texture * texture,BlendMode blendMode ) ;
+      virtual void setBlendMode(BlendMode blendMode ) ;
+
+      /**
+       * enables clipping and sets the clipping borders
+       **/     
+      virtual void setClipRect(int x , int y , int w , int h) ;
+      virtual void setClipRect(SDL_Rect * i_clip_rect) ;
+      virtual void setScale(float x,float y)  ;
+      virtual void setTranslate(float x,float y)  ;
+      virtual void setLineWidth(float width)  ;
+      
+      /**
+       * returns the current screen clipping
+       **/
+      virtual void getClipRect(int *o_px,int *o_py,int *o_pnWidth,int *o_pnHeight) ;
+      
+      /**
+       * Start drawing ... used in combination with glVertex
+       **/
+      virtual void startDraw(DrawMode mode) ;
+      
+      /**
+       * End draw
+       **/
+      virtual void endDraw() ;
+
+      /**
+       * Clears the screen with the configured background
+       **/
+      virtual void clearGraphics() ;
+      
+      /**
+       * Flush the graphics. In memory graphics will now be displayed
+       **/
+      virtual void flushGraphics() ;
+      
+      /* Methods - primitives */
+      virtual void drawCircle(const Vector2f &Center,float fRadius,float fBorder=1.0f,Color Back=0,Color Front=-1) ;
+      virtual void drawBox(const Vector2f &A,const Vector2f &B,float fBorder=1.0f,Color Back=0,Color Front=-1) ;      
+      virtual void drawImage(const Vector2f &A,const Vector2f &B,Texture *pTexture,Color Tint=-1) ;
+      
+      
+      /* Methods - text */
+      virtual void _InitTextRendering(Theme *p_theme);
+      virtual void _UninitTextRendering(Theme *p_theme);
+      virtual void drawText(const Vector2f &Pos,std::string Text,Color Back=0,Color Front=-1,bool bEdge=false) ;
+      virtual int getTextWidth(std::string Text) ;
+      virtual int getTextHeight(std::string Text) ;
+
+      virtual Img * grabScreen(void)  ; 
+      virtual  bool isExtensionSupported(std::string Ext);
+      private:
+      //the mode used when drawing
+      DrawMode drawMode;
+
+      //the current scale
+      Vector2f scale;
+
+      //the current translate
+      Vector2f translate;
+
+      //data buffer for drawing the background
+      void * bg_data;
+
+      SDL_Surface * screen;
+
+      /**
+       * Color used to clear the screen
+       **/
+      Color backgroundColor;
+      /**
+       * color used for the current drawing
+       **/
+      Color m_color;
+      //Vector for creating polygons
+      std::vector<Vector2f*> drawingPoints;
+      //Vector for keeping track of texture coorinated
+      std::vector<Vector2f*> texturePoints;
+
+  };
 };
 
 #endif
