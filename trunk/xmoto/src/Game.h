@@ -112,8 +112,8 @@ namespace vapp {
                  m_bEnableDeathAnim=true;
                  m_pQuitMsgBox=NULL;
                  m_pNotifyMsgBox=NULL;
+                 m_pInfoMsgBox=NULL;
 #if defined(SUPPORT_WEBACCESS)
-                 m_pDownloadMsgBox=NULL;
                  m_pNewLevelsAvailIcon=NULL;
                  m_pWebConfEditor=NULL;
                  m_pWebConfMsgBox=NULL;

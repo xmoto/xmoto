@@ -399,11 +399,11 @@ namespace vapp {
     }
 #if defined(SUPPORT_WEBACCESS)
     /* And the download-levels box? */
-    else if(m_pDownloadMsgBox != NULL) {
-      UIMsgBoxButton Button = m_pDownloadMsgBox->getClicked();
+    else if(m_pInfoMsgBox != NULL) {
+      UIMsgBoxButton Button = m_pInfoMsgBox->getClicked();
       if(Button == UI_MSGBOX_YES) {
-        delete m_pDownloadMsgBox;
-        m_pDownloadMsgBox = NULL;
+        delete m_pInfoMsgBox;
+        m_pInfoMsgBox = NULL;
 
         /* Download levels! */
         _DownloadExtraLevels();
@@ -417,8 +417,8 @@ namespace vapp {
         }
       }
       else if(Button == UI_MSGBOX_NO) {
-        delete m_pDownloadMsgBox;
-        m_pDownloadMsgBox = NULL;
+        delete m_pInfoMsgBox;
+        m_pInfoMsgBox = NULL;
       }
     }
 #endif       

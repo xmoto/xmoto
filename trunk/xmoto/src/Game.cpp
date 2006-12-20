@@ -1100,9 +1100,9 @@ namespace vapp {
         catch(Exception &e) {
           Log("** Warning ** : Unable to download extra levels [%s]",e.getMsg().c_str());
   
-          if(m_pDownloadMsgBox != NULL) {
-            delete m_pDownloadMsgBox;
-            m_pDownloadMsgBox = NULL;
+          if(m_pInfoMsgBox != NULL) {
+            delete m_pInfoMsgBox;
+            m_pInfoMsgBox = NULL;
           }
           notifyMsg(GAMETEXT_FAILEDDLLEVELS);
         }
@@ -1147,20 +1147,20 @@ namespace vapp {
         }        
         else {
           /* Ask user whether he want to download levels or snot */
-          if(m_pDownloadMsgBox == NULL) {
+          if(m_pInfoMsgBox == NULL) {
             char cBuf[256];
             
             sprintf(cBuf,nULevels==1?GAMETEXT_NEWLEVELAVAIL:
                                      GAMETEXT_NEWLEVELSAVAIL,nULevels);
-            m_pDownloadMsgBox = m_Renderer.getGUI()->msgBox(cBuf,(UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
+            m_pInfoMsgBox = m_Renderer.getGUI()->msgBox(cBuf,(UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
           }
         }
       } 
       catch(Exception &e) {
         Log("** Warning ** : Unable to check for extra levels [%s]",e.getMsg().c_str());
-        if(m_pDownloadMsgBox != NULL) {
-          delete m_pDownloadMsgBox;
-          m_pDownloadMsgBox = NULL;
+        if(m_pInfoMsgBox != NULL) {
+          delete m_pInfoMsgBox;
+          m_pInfoMsgBox = NULL;
         }
         notifyMsg(GAMETEXT_FAILEDCHECKLEVELS);
       } 

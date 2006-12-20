@@ -3704,7 +3704,7 @@ namespace vapp {
     if(found == false) {
       if(m_bEnableWebHighscores) {
 	try {
-	  _SimpleMessage(GAMETEXT_DLHIGHSCORE,&m_DownloadMsgBoxRect);
+	  _SimpleMessage(GAMETEXT_DLHIGHSCORE,&m_InfoMsgBoxRect);
 	  pWH->download();
 	  
 	  m_ReplayList.addReplay(FS::getFileBaseName(pWH->getReplayName()));
