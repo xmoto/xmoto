@@ -83,6 +83,16 @@ namespace vapp {
     *pnHeight = m_nLScissorH;
   }  
   
+  void DrawLib::setScale(float x,float y){
+    glScalef(x,y,1);
+  }
+  void DrawLib::setTranslate(float x,float y){
+    glTranslatef(x,y, 0);
+  }
+  void DrawLib::setLineWidth(float width){
+    glLineWidth(width);
+  }
+ 
   void DrawLib::init(int nDispWidth,int nDispHeight,int nDispBPP,bool bWindowed,Theme * ptheme){
 
     

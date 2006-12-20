@@ -103,6 +103,9 @@ namespace vapp {
        **/     
       void setClipRect(int x , int y , int w , int h);
       void setClipRect(SDL_Rect * i_clip_rect);
+      void setScale(float x,float y);
+      void setTranslate(float x,float y);
+      void setLineWidth(float width);
       
       /**
        * returns the current screen clipping

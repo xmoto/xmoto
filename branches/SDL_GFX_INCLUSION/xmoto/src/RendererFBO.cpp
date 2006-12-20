@@ -34,6 +34,7 @@ namespace vapp {
   Init and clean up
   ===========================================================================*/
   void SFXOverlay::init(App *pApp,int nWidth,int nHeight) {    
+#ifdef ENABLE_OPENGL
     m_pApp = pApp;
     
     m_nOverlayWidth = nWidth;
@@ -99,9 +100,11 @@ namespace vapp {
         }
   	  }  	     
   	}
+#endif
   }
   
   void SFXOverlay::cleanUp(void) {
+#ifdef ENABLE_OPENGL
     if(m_pApp != NULL) {
       if(m_pApp->getDrawLib()->useFBOs()) {
         /* Delete stuff */
@@ -109,12 +112,14 @@ namespace vapp {
   	    m_pApp->getDrawLib()->glDeleteFramebuffersEXT(1,&m_FrameBufferID);  
   	  }
   	}
+#endif
   }
 
   /*===========================================================================
   Start/stop rendering
   ===========================================================================*/
   void SFXOverlay::beginRendering(void) {
+#ifdef ENABLE_OPENGL
     if(m_pApp->getDrawLib()->useFBOs()) {
   	  glEnable(GL_TEXTURE_2D);
 
@@ -125,15 +130,19 @@ namespace vapp {
 
 	    glViewport(0,0,m_nOverlayWidth,m_nOverlayHeight);
 	  }
+#endif
   }
   
   void SFXOverlay::endRendering(void) {
+#ifdef ENABLE_OPENGL
     if(m_pApp->getDrawLib()->useFBOs()) {
 	    m_pApp->getDrawLib()->glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,0);
 	    glViewport(0,0,m_pApp->getDrawLib()->getDispWidth(),m_pApp->getDrawLib()->getDispHeight());
     }
+#endif
   }
 
+#ifdef ENABLE_OPENGL
   /*===========================================================================
   Load shader source
   ===========================================================================*/
@@ -206,11 +215,13 @@ namespace vapp {
     }
     delete [] ppc;
   }
+#endif
 
   /*===========================================================================
   Fading...
   ===========================================================================*/
   void SFXOverlay::fade(float f) {
+#ifdef ENABLE_OPENGL
     if(m_pApp->getDrawLib()->useFBOs()) {
       glMatrixMode(GL_PROJECTION);
       glPushMatrix();
@@ -236,9 +247,11 @@ namespace vapp {
       glPopMatrix();
       glMatrixMode(GL_MODELVIEW);      
     }
+#endif
   }
   
   void SFXOverlay::present(void) {
+#ifdef ENABLE_OPENGL
     if(m_pApp->getDrawLib()->useFBOs()) {   
       glMatrixMode(GL_PROJECTION);
       glPushMatrix();
@@ -279,6 +292,7 @@ namespace vapp {
       glPopMatrix();
       glMatrixMode(GL_MODELVIEW);
     }
+#endif
   }
 }
 

@@ -69,7 +69,8 @@ namespace vapp {
   ===========================================================================*/
   void GameApp::_UpdateLoadingScreen(float fDone,Texture *pLoadingScreen,const std::string &NextTask) {
     if(pLoadingScreen != NULL) {
-      glClear(GL_COLOR_BUFFER_BIT);
+      //glClear(GL_COLOR_BUFFER_BIT);
+      getDrawLib()->clearGraphics();
       getDrawLib()->drawImage(Vector2f(getDrawLib()->getDispWidth()/2 - 256,getDrawLib()->getDispHeight()/2 - 40),
                 Vector2f(getDrawLib()->getDispWidth()/2 + 256,getDrawLib()->getDispHeight()/2 + 40),
                 pLoadingScreen,MAKE_COLOR(255,255,255,255));
