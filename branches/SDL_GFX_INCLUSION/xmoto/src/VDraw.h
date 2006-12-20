@@ -157,80 +157,8 @@ namespace vapp {
       bool useVBOs(void) {return m_bVBOSupported;};
       bool useFBOs(void) {return m_bFBOSupported;};
       bool useShaders(void) {return m_bShadersSupported;};
-#ifdef ENABLE_OPENGL
-      /**
-       *keesj:TODO
-       *I am not happy about all these public members:)
-       **/
-      /* Extensions */
-      PFNGLGENBUFFERSARBPROC glGenBuffersARB;
-      PFNGLBINDBUFFERARBPROC glBindBufferARB;
-      PFNGLBUFFERDATAARBPROC glBufferDataARB;
-      PFNGLDELETEBUFFERSARBPROC glDeleteBuffersARB;
-              
-      /* Extensions (for render-to-texture) */
-      PFNGLISRENDERBUFFEREXTPROC glIsRenderbufferEXT;
-      PFNGLBINDRENDERBUFFEREXTPROC glBindRenderbufferEXT;
-      PFNGLDELETERENDERBUFFERSEXTPROC glDeleteRenderbuffersEXT;
-      PFNGLGENRENDERBUFFERSEXTPROC glGenRenderbuffersEXT;
-      PFNGLRENDERBUFFERSTORAGEEXTPROC glRenderbufferStorageEXT;
-      PFNGLGETRENDERBUFFERPARAMETERIVEXTPROC glGetRenderbufferParameterivEXT;
-      PFNGLISFRAMEBUFFEREXTPROC glIsFramebufferEXT;
-      PFNGLBINDFRAMEBUFFEREXTPROC glBindFramebufferEXT;
-      PFNGLDELETEFRAMEBUFFERSEXTPROC glDeleteFramebuffersEXT;
-      PFNGLGENFRAMEBUFFERSEXTPROC glGenFramebuffersEXT;
-      PFNGLCHECKFRAMEBUFFERSTATUSEXTPROC glCheckFramebufferStatusEXT;
-      PFNGLFRAMEBUFFERTEXTURE1DEXTPROC glFramebufferTexture1DEXT;
-      PFNGLFRAMEBUFFERTEXTURE2DEXTPROC glFramebufferTexture2DEXT;
-      PFNGLFRAMEBUFFERTEXTURE3DEXTPROC glFramebufferTexture3DEXT;
-      PFNGLFRAMEBUFFERRENDERBUFFEREXTPROC glFramebufferRenderbufferEXT;
-      PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVEXTPROC glGetFramebufferAttachmentParameterivEXT;
-      PFNGLGENERATEMIPMAPEXTPROC glGenerateMipmapEXT;         
-      
-      /* Extensions (for shaders) */
-      PFNGLBINDATTRIBLOCATIONARBPROC glBindAttribLocationARB;
-      PFNGLGETACTIVEATTRIBARBPROC glGetActiveAttribARB;
-      PFNGLGETATTRIBLOCATIONARBPROC glGetAttribLocationARB;
-      PFNGLDELETEOBJECTARBPROC glDeleteObjectARB;
-      PFNGLGETHANDLEARBPROC glGetHandleARB;
-      PFNGLDETACHOBJECTARBPROC glDetachObjectARB;
-      PFNGLCREATESHADEROBJECTARBPROC glCreateShaderObjectARB;
-      PFNGLSHADERSOURCEARBPROC glShaderSourceARB;
-      PFNGLCOMPILESHADERARBPROC glCompileShaderARB;
-      PFNGLCREATEPROGRAMOBJECTARBPROC glCreateProgramObjectARB;
-      PFNGLATTACHOBJECTARBPROC glAttachObjectARB;
-      PFNGLLINKPROGRAMARBPROC glLinkProgramARB;
-      PFNGLUSEPROGRAMOBJECTARBPROC glUseProgramObjectARB;
-      PFNGLVALIDATEPROGRAMARBPROC glValidateProgramARB;
-      PFNGLUNIFORM1FARBPROC glUniform1fARB;
-      PFNGLUNIFORM2FARBPROC glUniform2fARB;
-      PFNGLUNIFORM3FARBPROC glUniform3fARB;
-      PFNGLUNIFORM4FARBPROC glUniform4fARB;
-      PFNGLUNIFORM1IARBPROC glUniform1iARB;
-      PFNGLUNIFORM2IARBPROC glUniform2iARB;
-      PFNGLUNIFORM3IARBPROC glUniform3iARB;
-      PFNGLUNIFORM4IARBPROC glUniform4iARB;
-      PFNGLUNIFORM1FVARBPROC glUniform1fvARB;
-      PFNGLUNIFORM2FVARBPROC glUniform2fvARB;
-      PFNGLUNIFORM3FVARBPROC glUniform3fvARB;
-      PFNGLUNIFORM4FVARBPROC glUniform4fvARB;
-      PFNGLUNIFORM1IVARBPROC glUniform1ivARB;
-      PFNGLUNIFORM2IVARBPROC glUniform2ivARB;
-      PFNGLUNIFORM3IVARBPROC glUniform3ivARB;
-      PFNGLUNIFORM4IVARBPROC glUniform4ivARB;
-      PFNGLUNIFORMMATRIX2FVARBPROC glUniformMatrix2fvARB;
-      PFNGLUNIFORMMATRIX3FVARBPROC glUniformMatrix3fvARB;
-      PFNGLUNIFORMMATRIX4FVARBPROC glUniformMatrix4fvARB;
-      PFNGLGETOBJECTPARAMETERFVARBPROC glGetObjectParameterfvARB;
-      PFNGLGETOBJECTPARAMETERIVARBPROC glGetObjectParameterivARB;
-      PFNGLGETINFOLOGARBPROC glGetInfoLogARB;
-      PFNGLGETATTACHEDOBJECTSARBPROC glGetAttachedObjectsARB;
-      PFNGLGETUNIFORMLOCATIONARBPROC glGetUniformLocationARB;
-      PFNGLGETACTIVEUNIFORMARBPROC glGetActiveUniformARB;
-      PFNGLGETUNIFORMFVARBPROC glGetUniformfvARB;
-      PFNGLGETUNIFORMIVARBPROC glGetUniformivARB;
-      PFNGLGETSHADERSOURCEARBPROC glGetShaderSourceARB;
-#endif
+
+
       
       /* Data */
       int m_nDrawWidth,m_nDrawHeight;     
@@ -334,6 +262,78 @@ private:
 
       virtual Img * grabScreen(void)  ; 
       virtual  bool isExtensionSupported(std::string Ext);
+      /**
+       *keesj:TODO
+       *I am not happy about all these public members:)
+       **/
+      /* Extensions */
+      PFNGLGENBUFFERSARBPROC glGenBuffersARB;
+      PFNGLBINDBUFFERARBPROC glBindBufferARB;
+      PFNGLBUFFERDATAARBPROC glBufferDataARB;
+      PFNGLDELETEBUFFERSARBPROC glDeleteBuffersARB;
+              
+      /* Extensions (for render-to-texture) */
+      PFNGLISRENDERBUFFEREXTPROC glIsRenderbufferEXT;
+      PFNGLBINDRENDERBUFFEREXTPROC glBindRenderbufferEXT;
+      PFNGLDELETERENDERBUFFERSEXTPROC glDeleteRenderbuffersEXT;
+      PFNGLGENRENDERBUFFERSEXTPROC glGenRenderbuffersEXT;
+      PFNGLRENDERBUFFERSTORAGEEXTPROC glRenderbufferStorageEXT;
+      PFNGLGETRENDERBUFFERPARAMETERIVEXTPROC glGetRenderbufferParameterivEXT;
+      PFNGLISFRAMEBUFFEREXTPROC glIsFramebufferEXT;
+      PFNGLBINDFRAMEBUFFEREXTPROC glBindFramebufferEXT;
+      PFNGLDELETEFRAMEBUFFERSEXTPROC glDeleteFramebuffersEXT;
+      PFNGLGENFRAMEBUFFERSEXTPROC glGenFramebuffersEXT;
+      PFNGLCHECKFRAMEBUFFERSTATUSEXTPROC glCheckFramebufferStatusEXT;
+      PFNGLFRAMEBUFFERTEXTURE1DEXTPROC glFramebufferTexture1DEXT;
+      PFNGLFRAMEBUFFERTEXTURE2DEXTPROC glFramebufferTexture2DEXT;
+      PFNGLFRAMEBUFFERTEXTURE3DEXTPROC glFramebufferTexture3DEXT;
+      PFNGLFRAMEBUFFERRENDERBUFFEREXTPROC glFramebufferRenderbufferEXT;
+      PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVEXTPROC glGetFramebufferAttachmentParameterivEXT;
+      PFNGLGENERATEMIPMAPEXTPROC glGenerateMipmapEXT;         
+      
+      /* Extensions (for shaders) */
+      PFNGLBINDATTRIBLOCATIONARBPROC glBindAttribLocationARB;
+      PFNGLGETACTIVEATTRIBARBPROC glGetActiveAttribARB;
+      PFNGLGETATTRIBLOCATIONARBPROC glGetAttribLocationARB;
+      PFNGLDELETEOBJECTARBPROC glDeleteObjectARB;
+      PFNGLGETHANDLEARBPROC glGetHandleARB;
+      PFNGLDETACHOBJECTARBPROC glDetachObjectARB;
+      PFNGLCREATESHADEROBJECTARBPROC glCreateShaderObjectARB;
+      PFNGLSHADERSOURCEARBPROC glShaderSourceARB;
+      PFNGLCOMPILESHADERARBPROC glCompileShaderARB;
+      PFNGLCREATEPROGRAMOBJECTARBPROC glCreateProgramObjectARB;
+      PFNGLATTACHOBJECTARBPROC glAttachObjectARB;
+      PFNGLLINKPROGRAMARBPROC glLinkProgramARB;
+      PFNGLUSEPROGRAMOBJECTARBPROC glUseProgramObjectARB;
+      PFNGLVALIDATEPROGRAMARBPROC glValidateProgramARB;
+      PFNGLUNIFORM1FARBPROC glUniform1fARB;
+      PFNGLUNIFORM2FARBPROC glUniform2fARB;
+      PFNGLUNIFORM3FARBPROC glUniform3fARB;
+      PFNGLUNIFORM4FARBPROC glUniform4fARB;
+      PFNGLUNIFORM1IARBPROC glUniform1iARB;
+      PFNGLUNIFORM2IARBPROC glUniform2iARB;
+      PFNGLUNIFORM3IARBPROC glUniform3iARB;
+      PFNGLUNIFORM4IARBPROC glUniform4iARB;
+      PFNGLUNIFORM1FVARBPROC glUniform1fvARB;
+      PFNGLUNIFORM2FVARBPROC glUniform2fvARB;
+      PFNGLUNIFORM3FVARBPROC glUniform3fvARB;
+      PFNGLUNIFORM4FVARBPROC glUniform4fvARB;
+      PFNGLUNIFORM1IVARBPROC glUniform1ivARB;
+      PFNGLUNIFORM2IVARBPROC glUniform2ivARB;
+      PFNGLUNIFORM3IVARBPROC glUniform3ivARB;
+      PFNGLUNIFORM4IVARBPROC glUniform4ivARB;
+      PFNGLUNIFORMMATRIX2FVARBPROC glUniformMatrix2fvARB;
+      PFNGLUNIFORMMATRIX3FVARBPROC glUniformMatrix3fvARB;
+      PFNGLUNIFORMMATRIX4FVARBPROC glUniformMatrix4fvARB;
+      PFNGLGETOBJECTPARAMETERFVARBPROC glGetObjectParameterfvARB;
+      PFNGLGETOBJECTPARAMETERIVARBPROC glGetObjectParameterivARB;
+      PFNGLGETINFOLOGARBPROC glGetInfoLogARB;
+      PFNGLGETATTACHEDOBJECTSARBPROC glGetAttachedObjectsARB;
+      PFNGLGETUNIFORMLOCATIONARBPROC glGetUniformLocationARB;
+      PFNGLGETACTIVEUNIFORMARBPROC glGetActiveUniformARB;
+      PFNGLGETUNIFORMFVARBPROC glGetUniformfvARB;
+      PFNGLGETUNIFORMIVARBPROC glGetUniformivARB;
+      PFNGLGETSHADERSOURCEARBPROC glGetShaderSourceARB;
 
   };
   
@@ -412,32 +412,34 @@ private:
       virtual Img * grabScreen(void)  ; 
       virtual  bool isExtensionSupported(std::string Ext);
       private:
+      
       //the mode used when drawing
-      DrawMode drawMode;
+      DrawMode m_drawMode;
 
       //the current scale
-      Vector2f scale;
+      Vector2f m_scale;
 
       //the current translate
-      Vector2f translate;
+      Vector2f m_translate;
 
       //data buffer for drawing the background
-      void * bg_data;
+      void * m_bg_data;
 
-      SDL_Surface * screen;
+      SDL_Surface * m_screen;
 
       /**
        * Color used to clear the screen
        **/
-      Color backgroundColor;
+      Color m_backgroundColor;
       /**
        * color used for the current drawing
        **/
       Color m_color;
+      
       //Vector for creating polygons
-      std::vector<Vector2f*> drawingPoints;
+      std::vector<Vector2f*> m_drawingPoints;
       //Vector for keeping track of texture coorinated
-      std::vector<Vector2f*> texturePoints;
+      std::vector<Vector2f*> m_texturePoints;
 
   };
 };

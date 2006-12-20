@@ -44,7 +44,7 @@ namespace vapp {
       /* Create overlay */
   	  glEnable(GL_TEXTURE_2D);
 
-	    m_pApp->getDrawLib()->glGenFramebuffersEXT(1,&m_FrameBufferID);
+	    ((DrawLibOpenGL*)m_pApp->getDrawLib())->glGenFramebuffersEXT(1,&m_FrameBufferID);
 	    glGenTextures(1,&m_DynamicTextureID);
 	    glBindTexture(GL_TEXTURE_2D,m_DynamicTextureID);
 	    glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,nWidth,nHeight,0,GL_RGB,GL_UNSIGNED_BYTE,0);
@@ -58,36 +58,36 @@ namespace vapp {
   	  m_bUseShaders = m_pApp->getDrawLib()->useShaders();
   	  
   	  if(m_bUseShaders) {
-  	    m_VertShaderID = m_pApp->getDrawLib()->glCreateShaderObjectARB(GL_VERTEX_SHADER_ARB);
-  	    m_FragShaderID = m_pApp->getDrawLib()->glCreateShaderObjectARB(GL_FRAGMENT_SHADER_ARB);
+  	    m_VertShaderID = ((DrawLibOpenGL*)m_pApp->getDrawLib())->glCreateShaderObjectARB(GL_VERTEX_SHADER_ARB);
+  	    m_FragShaderID = ((DrawLibOpenGL*)m_pApp->getDrawLib())->glCreateShaderObjectARB(GL_FRAGMENT_SHADER_ARB);
     	  
   	    if(!_SetShaderSource(m_VertShaderID,"SFXOverlay.vert") ||
   	      !_SetShaderSource(m_FragShaderID,"SFXOverlay.frag"))
   	      m_bUseShaders = false;
   	    else {
   	      /* Source loaded good... Now create the program */
-  	      m_ProgramID = m_pApp->getDrawLib()->glCreateProgramObjectARB();
+  	      m_ProgramID = ((DrawLibOpenGL*)m_pApp->getDrawLib())->glCreateProgramObjectARB();
     	    
   	      /* Attach our shaders to it */
-  	      m_pApp->getDrawLib()->glAttachObjectARB(m_ProgramID,m_VertShaderID);
-  	      m_pApp->getDrawLib()->glAttachObjectARB(m_ProgramID,m_FragShaderID);
+  	      ((DrawLibOpenGL*)m_pApp->getDrawLib())->glAttachObjectARB(m_ProgramID,m_VertShaderID);
+  	      ((DrawLibOpenGL*)m_pApp->getDrawLib())->glAttachObjectARB(m_ProgramID,m_FragShaderID);
     	    
   	      /* Link it */
-  	      m_pApp->getDrawLib()->glLinkProgramARB(m_ProgramID);
+  	      ((DrawLibOpenGL*)m_pApp->getDrawLib())->glLinkProgramARB(m_ProgramID);
 
           int nStatus = 0;
-          m_pApp->getDrawLib()->glGetObjectParameterivARB(m_ProgramID,
+          ((DrawLibOpenGL*)m_pApp->getDrawLib())->glGetObjectParameterivARB(m_ProgramID,
             GL_OBJECT_LINK_STATUS_ARB,(GLint*)&nStatus);
           if(!nStatus) {
             Log("-- Failed to link SFXOverlay shader program --");
             
             /* Retrieve info-log */
             int nInfoLogLen = 0;
-            m_pApp->getDrawLib()->glGetObjectParameterivARB(m_ProgramID,
+            ((DrawLibOpenGL*)m_pApp->getDrawLib())->glGetObjectParameterivARB(m_ProgramID,
               GL_OBJECT_INFO_LOG_LENGTH_ARB,(GLint*)&nInfoLogLen);
 		        char *pcInfoLog = new char[nInfoLogLen];
 		        int nCharsWritten = 0;
-		        m_pApp->getDrawLib()->glGetInfoLogARB(m_ProgramID,nInfoLogLen,
+		        ((DrawLibOpenGL*)m_pApp->getDrawLib())->glGetInfoLogARB(m_ProgramID,nInfoLogLen,
 		          (GLsizei*)&nCharsWritten,pcInfoLog);
 		        LogRaw(pcInfoLog);
 		        delete [] pcInfoLog;
@@ -109,7 +109,7 @@ namespace vapp {
       if(m_pApp->getDrawLib()->useFBOs()) {
         /* Delete stuff */
         glDeleteTextures(1,&m_DynamicTextureID);
-  	    m_pApp->getDrawLib()->glDeleteFramebuffersEXT(1,&m_FrameBufferID);  
+  	    ((DrawLibOpenGL*)m_pApp->getDrawLib())->glDeleteFramebuffersEXT(1,&m_FrameBufferID);  
   	  }
   	}
 #endif
@@ -123,8 +123,8 @@ namespace vapp {
     if(m_pApp->getDrawLib()->useFBOs()) {
   	  glEnable(GL_TEXTURE_2D);
 
-	    m_pApp->getDrawLib()->glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,m_FrameBufferID);
-	    m_pApp->getDrawLib()->glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,GL_COLOR_ATTACHMENT0_EXT,GL_TEXTURE_2D,m_DynamicTextureID,0);
+	    ((DrawLibOpenGL*)m_pApp->getDrawLib())->glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,m_FrameBufferID);
+	    ((DrawLibOpenGL*)m_pApp->getDrawLib())->glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,GL_COLOR_ATTACHMENT0_EXT,GL_TEXTURE_2D,m_DynamicTextureID,0);
 
   	  glDisable(GL_TEXTURE_2D);
 
@@ -136,7 +136,7 @@ namespace vapp {
   void SFXOverlay::endRendering(void) {
 #ifdef ENABLE_OPENGL
     if(m_pApp->getDrawLib()->useFBOs()) {
-	    m_pApp->getDrawLib()->glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,0);
+	    ((DrawLibOpenGL*)m_pApp->getDrawLib())->glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,0);
 	    glViewport(0,0,m_pApp->getDrawLib()->getDispWidth(),m_pApp->getDrawLib()->getDispHeight());
     }
 #endif
@@ -179,12 +179,12 @@ namespace vapp {
     if(ppc == NULL) return false; /* no shader */
     
     /* Pass it to OpenGL */
-    m_pApp->getDrawLib()->glShaderSourceARB(ShaderID,nNumLines,(const GLcharARB **)ppc,NULL);
+    ((DrawLibOpenGL*)m_pApp->getDrawLib())->glShaderSourceARB(ShaderID,nNumLines,(const GLcharARB **)ppc,NULL);
     
     /* Compile it! */
-    m_pApp->getDrawLib()->glCompileShaderARB(ShaderID);
+    ((DrawLibOpenGL*)m_pApp->getDrawLib())->glCompileShaderARB(ShaderID);
     int nStatus = 0;
-    m_pApp->getDrawLib()->glGetObjectParameterivARB(ShaderID,
+    ((DrawLibOpenGL*)m_pApp->getDrawLib())->glGetObjectParameterivARB(ShaderID,
       GL_OBJECT_COMPILE_STATUS_ARB,(GLint*)&nStatus);
     if(!nStatus) {
       _FreeShaderSource(ppc,nNumLines);
@@ -192,11 +192,11 @@ namespace vapp {
       
       /* Retrieve info-log */
       int nInfoLogLen = 0;
-      m_pApp->getDrawLib()->glGetObjectParameterivARB(ShaderID,
+      ((DrawLibOpenGL*)m_pApp->getDrawLib())->glGetObjectParameterivARB(ShaderID,
         GL_OBJECT_INFO_LOG_LENGTH_ARB,(GLint*)&nInfoLogLen);
 		  char *pcInfoLog = new char[nInfoLogLen];
 		  int nCharsWritten = 0;
-		  m_pApp->getDrawLib()->glGetInfoLogARB(ShaderID,nInfoLogLen,
+		  ((DrawLibOpenGL*)m_pApp->getDrawLib())->glGetInfoLogARB(ShaderID,nInfoLogLen,
 		    (GLsizei*)&nCharsWritten,pcInfoLog);
 		  LogRaw(pcInfoLog);
 		  delete [] pcInfoLog;
@@ -262,7 +262,7 @@ namespace vapp {
       glLoadIdentity();
       
       if(m_bUseShaders)
-        m_pApp->getDrawLib()->glUseProgramObjectARB(m_ProgramID);
+        ((DrawLibOpenGL*)m_pApp->getDrawLib())->glUseProgramObjectARB(m_ProgramID);
 
       glEnable(GL_BLEND);
       glBlendFunc(GL_ONE,GL_ONE);
@@ -285,7 +285,7 @@ namespace vapp {
       glDisable(GL_BLEND);
 
       if(m_bUseShaders)
-        m_pApp->getDrawLib()->glUseProgramObjectARB(NULL);
+        ((DrawLibOpenGL*)m_pApp->getDrawLib())->glUseProgramObjectARB(NULL);
 
       glPopMatrix();
       glMatrixMode(GL_PROJECTION);

@@ -177,13 +177,13 @@ namespace vapp {
         /* Use VBO optimization? */
         if(getParent()->getDrawLib()->useVBOs()) {
           /* Copy static coordinates unto video memory */
-          getParent()->getDrawLib()->glGenBuffersARB(1, (GLuint *) &pPoly->nVertexBufferID);
-          getParent()->getDrawLib()->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nVertexBufferID);
-          getParent()->getDrawLib()->glBufferDataARB(GL_ARRAY_BUFFER_ARB,pPoly->nNumVertices*2*sizeof(float),(void *)pPoly->pVertices,GL_STATIC_DRAW_ARB);
+          ((DrawLibOpenGL*)getParent()->getDrawLib())->glGenBuffersARB(1, (GLuint *) &pPoly->nVertexBufferID);
+          ((DrawLibOpenGL*)getParent()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nVertexBufferID);
+          ((DrawLibOpenGL*)getParent()->getDrawLib())->glBufferDataARB(GL_ARRAY_BUFFER_ARB,pPoly->nNumVertices*2*sizeof(float),(void *)pPoly->pVertices,GL_STATIC_DRAW_ARB);
                                                  
-          getParent()->getDrawLib()->glGenBuffersARB(1, (GLuint *) &pPoly->nTexCoordBufferID);
-          getParent()->getDrawLib()->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nTexCoordBufferID);
-          getParent()->getDrawLib()->glBufferDataARB(GL_ARRAY_BUFFER_ARB,pPoly->nNumVertices*2*sizeof(float),(void *)pPoly->pTexCoords,GL_STATIC_DRAW_ARB);
+          ((DrawLibOpenGL*)getParent()->getDrawLib())->glGenBuffersARB(1, (GLuint *) &pPoly->nTexCoordBufferID);
+          ((DrawLibOpenGL*)getParent()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nTexCoordBufferID);
+          ((DrawLibOpenGL*)getParent()->getDrawLib())->glBufferDataARB(GL_ARRAY_BUFFER_ARB,pPoly->nNumVertices*2*sizeof(float),(void *)pPoly->pTexCoords,GL_STATIC_DRAW_ARB);
         }
 #endif
       }                                                                    
@@ -207,8 +207,8 @@ namespace vapp {
       for(int j=0;j<m_Geoms[i]->Polys.size();j++) { 
         if(m_Geoms[i]->Polys[j]->nVertexBufferID) {
 #ifdef ENABLE_OPENGL
-          getParent()->getDrawLib()->glDeleteBuffersARB(1, (GLuint *) &m_Geoms[i]->Polys[j]->nVertexBufferID);
-          getParent()->getDrawLib()->glDeleteBuffersARB(1, (GLuint *) &m_Geoms[i]->Polys[j]->nTexCoordBufferID);
+          ((DrawLibOpenGL*)getParent()->getDrawLib())->glDeleteBuffersARB(1, (GLuint *) &m_Geoms[i]->Polys[j]->nVertexBufferID);
+          ((DrawLibOpenGL*)getParent()->getDrawLib())->glDeleteBuffersARB(1, (GLuint *) &m_Geoms[i]->Polys[j]->nTexCoordBufferID);
 #endif
         }
       
@@ -1144,9 +1144,9 @@ namespace vapp {
         if(getParent()->getDrawLib()->useVBOs()) {
           for(int j=0;j<m_Geoms[i]->Polys.size();j++) {          
             StaticGeomPoly *pPoly = m_Geoms[i]->Polys[j];
-            getParent()->getDrawLib()->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nVertexBufferID);
+            ((DrawLibOpenGL*)getParent()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nVertexBufferID);
             glVertexPointer(2,GL_FLOAT,0,(char *)NULL);
-            getParent()->getDrawLib()->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nTexCoordBufferID);
+            ((DrawLibOpenGL*)getParent()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nTexCoordBufferID);
             glTexCoordPointer(2,GL_FLOAT,0,(char *)NULL);
             glDrawArrays(GL_POLYGON,0,pPoly->nNumVertices);
           }      

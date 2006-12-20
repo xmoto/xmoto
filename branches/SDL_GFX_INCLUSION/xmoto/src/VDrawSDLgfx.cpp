@@ -31,11 +31,11 @@ namespace vapp {
 
 
  DrawLibSDLgfx::~DrawLibSDLgfx(){
-   scale.x=1;
-   scale.y=1;
-   translate.x=0;
-   translate.y=0;
-   bg_data = NULL;
+   m_scale.x=1;
+   m_scale.y=1;
+   m_translate.x=0;
+   m_translate.y=0;
+   m_bg_data = NULL;
  }
 
 
@@ -46,13 +46,13 @@ namespace vapp {
   Transform an OpenGL vertex to pure 2D 
   ===========================================================================*/
   void DrawLibSDLgfx::glVertexSP(float x,float y) {
-     drawingPoints.push_back(  new Vector2f(x,y));
+     m_drawingPoints.push_back(  new Vector2f(x,y));
   }
 
   void DrawLibSDLgfx::glVertex(float x,float y) {
-     drawingPoints.push_back(  new Vector2f(
-            m_nDrawWidth/2 + ((x + translate.x) * scale.x),
-            m_nDrawHeight/2 -((y + translate.y) * scale.y)
+     m_drawingPoints.push_back(  new Vector2f(
+            m_nDrawWidth/2 + ((x + m_translate.x) * m_scale.x),
+            m_nDrawHeight/2 -((y + m_translate.y) * m_scale.y)
      ));
   }
 
@@ -73,7 +73,7 @@ namespace vapp {
   }
 
   void DrawLibSDLgfx::setClipRect(SDL_Rect * clip_rect){
-  	SDL_SetClipRect(screen,clip_rect);
+  	SDL_SetClipRect(m_screen,clip_rect);
   }
 
   void DrawLibSDLgfx::getClipRect(int *px,int *py,int *pnWidth,int *pnHeight) {
@@ -84,12 +84,12 @@ namespace vapp {
   }  
   
   void DrawLibSDLgfx::setScale(float x,float y){
-       scale.x = x * m_nDrawWidth/2;
-       scale.y = y *   m_nDrawHeight/2;
+       m_scale.x = x * m_nDrawWidth/2;
+       m_scale.y = y *   m_nDrawHeight/2;
   }
   void DrawLibSDLgfx::setTranslate(float x,float y){
-      translate.x =x;
-      translate.y =y;
+      m_translate.x =x;
+      m_translate.y =y;
   }
 
   void DrawLibSDLgfx::setLineWidth(float width){
@@ -116,17 +116,17 @@ namespace vapp {
 	  int nFlags = SDL_SRCALPHA;
 	  if(!m_bWindowed) nFlags|=SDL_FULLSCREEN;
 	  /* At last, try to "set the video mode" */
-	  if( (screen = SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,m_nDispBPP,nFlags))==NULL) {
+	  if( (m_screen = SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,m_nDispBPP,nFlags))==NULL) {
 	    Log("** Warning ** : Tried to set video mode %dx%d @ %d-bit, but SDL responded: %s\n"
 	        "                Now SDL will try determining a proper mode itself.",m_nDispWidth,m_nDispHeight,m_nDispBPP);
 	  
 	    /* Hmm, try letting it decide the BPP automatically */
-	    if( (screen = SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,0,nFlags))==NULL) {	      
+	    if( (m_screen = SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,0,nFlags))==NULL) {	      
 	      /* Still no luck */
 	      Log("** Warning ** : Still no luck, now we'll try 800x600 in a window.");
 	      m_nDispWidth = 800; m_nDispHeight = 600;	      
 	      m_bWindowed = true;
-  	    if( (screen = SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,0,SDL_OPENGL) )==NULL) {	      
+  	    if( (m_screen = SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,0,SDL_OPENGL) )==NULL) {	      
           throw Exception("SDL_SetVideoMode : " + std::string(SDL_GetError()));
   	    }	      
       }
@@ -159,7 +159,7 @@ namespace vapp {
   Primitive: circle
   ===========================================================================*/
   void DrawLibSDLgfx::drawCircle(const Vector2f &Center,float fRadius,float fBorder,Color Back,Color Front) {
-     circleRGBA(screen,(Sint16)Center.x,(Sint16)Center.y,(Sint16)fRadius ,GET_RED(Back),GET_GREEN(Back),GET_BLUE(Back),GET_ALPHA(Back));
+     circleRGBA(m_screen,(Sint16)Center.x,(Sint16)Center.y,(Sint16)fRadius ,GET_RED(Back),GET_GREEN(Back),GET_BLUE(Back),GET_ALPHA(Back));
   }
   
   /*===========================================================================
@@ -167,11 +167,11 @@ namespace vapp {
   ===========================================================================*/
   void DrawLibSDLgfx::drawBox(const Vector2f &A,const Vector2f &B,float fBorder,Color Back,Color Front) {
    if ( GET_ALPHA(Back) > 0){
-      boxRGBA(screen, A.x  , A.y , B.x  , B.y , GET_RED(Back),GET_GREEN(Back),GET_BLUE(Back),GET_ALPHA(Back));
+      boxRGBA(m_screen, A.x  , A.y , B.x  , B.y , GET_RED(Back),GET_GREEN(Back),GET_BLUE(Back),GET_ALPHA(Back));
    }
 
    if(fBorder>0.0f && GET_ALPHA(Front)>0) {
-     boxRGBA(screen, A.x, A.y, A.x +fBorder , B.y, GET_RED(Front),GET_GREEN(Front),GET_BLUE(Front
+     boxRGBA(m_screen, A.x, A.y, A.x +fBorder , B.y, GET_RED(Front),GET_GREEN(Front),GET_BLUE(Front
 ),GET_ALPHA(Front));
   }
   }
@@ -198,37 +198,37 @@ namespace vapp {
   }
   
   void DrawLibSDLgfx::startDraw(DrawMode mode){
-    drawMode = mode;
-    if(drawingPoints.size() != 0 || texturePoints.size() !=0 ){
-       printf("error drawingPoints.size(%i) of texturePoints.size(%i) was not 0 =%i\n",drawingPoints.size(),texturePoints.size());
+    m_drawMode = mode;
+    if(m_drawingPoints.size() != 0 || m_texturePoints.size() !=0 ){
+       printf("error drawingPoints.size(%i) of texturePoints.size(%i) was not 0 =%i\n",m_drawingPoints.size(),m_texturePoints.size());
     }
   }
   
   void DrawLibSDLgfx::endDraw(){
-    int size = drawingPoints.size();
+    int size = m_drawingPoints.size();
 
     Sint16 x[size];
     Sint16 y[size];
     for (int i = 0 ; i < size ; i++){
-      x[i] =  drawingPoints.at(i)->x;
-      y[i] =  drawingPoints.at(i)->y;
+      x[i] =  m_drawingPoints.at(i)->x;
+      y[i] =  m_drawingPoints.at(i)->y;
     }
-    switch(drawMode){
+    switch(m_drawMode){
       case DRAW_MODE_POLYGON:
-        filledPolygonRGBA(screen,x,y,size,GET_RED(m_color),GET_GREEN(m_color),GET_BLUE(m_color),GET_ALPHA(m_color));
+        filledPolygonRGBA(m_screen,x,y,size,GET_RED(m_color),GET_GREEN(m_color),GET_BLUE(m_color),GET_ALPHA(m_color));
 
         break;
       case DRAW_MODE_LINE_LOOP:
-        polygonRGBA(screen,x,y,size,GET_RED(m_color),GET_GREEN(m_color),GET_BLUE(m_color),GET_ALPHA(m_color));
+        polygonRGBA(m_screen,x,y,size,GET_RED(m_color),GET_GREEN(m_color),GET_BLUE(m_color),GET_ALPHA(m_color));
         break;
       case DRAW_MODE_LINE_STRIP:
         for (int f = 0 ; f < size -1 ; f++){
-          lineRGBA(screen,x[f],y[f],x[f+1],y[f+1],GET_RED(m_color),GET_GREEN(m_color),GET_BLUE(m_color),GET_ALPHA(m_color));
+          lineRGBA(m_screen,x[f],y[f],x[f+1],y[f+1],GET_RED(m_color),GET_GREEN(m_color),GET_BLUE(m_color),GET_ALPHA(m_color));
         }
         break;
     } 
-    drawingPoints.resize(0);
-    drawMode = DRAW_MODE_NONE;
+    m_drawingPoints.resize(0);
+    m_drawMode = DRAW_MODE_NONE;
   }
 
   void DrawLibSDLgfx::setColor(Color color){
@@ -263,9 +263,6 @@ namespace vapp {
   ===========================================================================*/  
   void DrawLibSDLgfx::_InitTextRendering(Theme *p_theme) {   
     m_pDefaultFontTex = p_theme->getDefaultFont();
-          
-    /* Create font texture (default) */
-    //m_pDefaultFontTexture = (DefaultFontTexture *)pTextureManager->loadTexture(new DefaultFontTexture,"default-font");
   }
   
   /*===========================================================================
@@ -274,54 +271,26 @@ namespace vapp {
   void DrawLibSDLgfx::_UninitTextRendering(Theme *p_theme) {    
   }
 
-  /*===========================================================================
-  Create a default font texture
-  ===========================================================================*/  
-  //void DefaultFontTexture::load(std::string Name,bool bSmall) {
-  //  /* Create font object */
-  //  
-  //  /* Pass it to GL */
-  //  GLuint N;
-  //  glEnable(GL_TEXTURE_2D);
-  //  glGenTextures(1,&N);    
-  //  glBindTexture(GL_TEXTURE_2D,N);
-  //  glTexImage2D(GL_TEXTURE_2D,0,4,256,256,0,GL_RGBA,GL_UNSIGNED_BYTE,(void *)pImgData);
-  //  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-  //  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-  //  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_CLAMP);
-  //  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_CLAMP);
-  //  glDisable(GL_TEXTURE_2D);
-  //  
-  //  m_TI.nID = N;
-//  }
-
-  /*===========================================================================
-  Unload a default font texture
-  ===========================================================================*/    
-  //void DefaultFontTexture::unload(void) {
- // }
-      
-
       void DrawLibSDLgfx::clearGraphics(){
         setClipRect  (NULL);
-        scale.x =1;
-        scale.y =1;
-        translate.x =0;
-        translate.y =0;
-        SDL_LockSurface(screen);
-        if (bg_data ==NULL){
-          bg_data = malloc(screen->format->BytesPerPixel * screen->w * screen->h);
-          memset(bg_data,0,screen->format->BytesPerPixel * screen->w * screen->h);
+        m_scale.x =1;
+        m_scale.y =1;
+        m_translate.x =0;
+        m_translate.y =0;
+        SDL_LockSurface(m_screen);
+        if (m_bg_data ==NULL){
+          m_bg_data = malloc(m_screen->format->BytesPerPixel * m_screen->w * m_screen->h);
+          memset(m_bg_data,0,m_screen->format->BytesPerPixel * m_screen->w * m_screen->h);
         }
-        memcpy(screen->pixels,bg_data,screen->format->BytesPerPixel * screen->w * screen->h);
-        SDL_UnlockSurface(screen);
+        memcpy(m_screen->pixels,m_bg_data,m_screen->format->BytesPerPixel * m_screen->w * m_screen->h);
+        SDL_UnlockSurface(m_screen);
       }
       
       /**
        * Flush the graphics. In memory graphics will now be displayed
        **/
       void DrawLibSDLgfx::flushGraphics(){
-        SDL_UpdateRect(screen, 0, 0, 0, 0);
+        SDL_UpdateRect(m_screen, 0, 0, 0, 0);
       }
 }
 #endif
