@@ -56,13 +56,14 @@ namespace vapp {
   ===========================================================================*/
   class DrawLib {
     public:
-      DrawLib();
+    DrawLib();
+    virtual ~DrawLib();
 
       /**
        * initialize the screen
        **/
-      void init(int nDispWidth,int nDispHeight,int nDispBPP,bool bWindowed,Theme * ptheme);
-      void unInit();
+      virtual void init(int nDispWidth,int nDispHeight,int nDispBPP,bool bWindowed,Theme * ptheme) =0;
+      virtual void unInit() =0;
       
       void setDispWidth(int width){m_nDispWidth = width;};
       int getDispWidth(void) {return m_nDispWidth;}
@@ -79,72 +80,74 @@ namespace vapp {
       
       /* Methods - low-level */
       //add a vertex given screen coordinates
-      void glVertexSP(float x,float y);
+      virtual void glVertexSP(float x,float y) =0;
       //add a vertex given opengl coordinates
-      void glVertex(float x,float y);
+      virtual void glVertex(float x,float y)=0;
+
+      //create a vertex based on a opengl 
       void glVertex(Vector2f x){glVertex(x.x,x.y);};
       //texture coordinate
-      void glTexCoord(float x,float y);
-      void screenProjVertex(float *x,float *y); 
+      virtual void glTexCoord(float x,float y)=0 ;
+      virtual void screenProjVertex(float *x,float *y) =0; 
       
-      void setColor(Color color);
+      virtual void setColor(Color color) =0;
       /**
        * set the texure for drawing
        * the value may be NULL to disable texure
        * every end draw will reset the texture to NULL
        **/
-      void setTexture(Texture * texture,BlendMode blendMode );
-      void setBlendMode(BlendMode blendMode );
+      virtual void setTexture(Texture * texture,BlendMode blendMode ) =0;
+      virtual void setBlendMode(BlendMode blendMode ) =0;
       void setColorRGB(int r,int g,int b){ setColor(MAKE_COLOR(r,g,b,255));};
       void setColorRGBA(int r,int g,int b,int a){ setColor(MAKE_COLOR(r,g,b,a));};
 
       /**
        * enables clipping and sets the clipping borders
        **/     
-      void setClipRect(int x , int y , int w , int h);
-      void setClipRect(SDL_Rect * i_clip_rect);
-      void setScale(float x,float y);
-      void setTranslate(float x,float y);
-      void setLineWidth(float width);
+      virtual void setClipRect(int x , int y , int w , int h) =0;
+      virtual void setClipRect(SDL_Rect * i_clip_rect) =0;
+      virtual void setScale(float x,float y)  =0;
+      virtual void setTranslate(float x,float y)=0  ;
+      virtual void setLineWidth(float width)  =0;
       
       /**
        * returns the current screen clipping
        **/
-      void getClipRect(int *o_px,int *o_py,int *o_pnWidth,int *o_pnHeight);
+      virtual void getClipRect(int *o_px,int *o_py,int *o_pnWidth,int *o_pnHeight) =0;
       
       /**
        * Start drawing ... used in combination with glVertex
        **/
-      void startDraw(DrawMode mode);
+      virtual void startDraw(DrawMode mode) =0;
       
       /**
        * End draw
        **/
-      void endDraw();
+      virtual void endDraw() =0;
 
       /**
        * Clears the screen with the configured background
        **/
-      void clearGraphics();
+      virtual void clearGraphics() =0;
       
       /**
        * Flush the graphics. In memory graphics will now be displayed
        **/
-      void flushGraphics();
+      virtual void flushGraphics() =0;
       
       /* Methods - primitives */
-      void drawCircle(const Vector2f &Center,float fRadius,float fBorder=1.0f,Color Back=0,Color Front=-1);
-      void drawBox(const Vector2f &A,const Vector2f &B,float fBorder=1.0f,Color Back=0,Color Front=-1);      
-      void drawImage(const Vector2f &A,const Vector2f &B,Texture *pTexture,Color Tint=-1);
+      virtual void drawCircle(const Vector2f &Center,float fRadius,float fBorder=1.0f,Color Back=0,Color Front=-1) =0;
+      virtual void drawBox(const Vector2f &A,const Vector2f &B,float fBorder=1.0f,Color Back=0,Color Front=-1) =0;      
+      virtual void drawImage(const Vector2f &A,const Vector2f &B,Texture *pTexture,Color Tint=-1) =0;
       
       
       /* Methods - text */
-      void drawText(const Vector2f &Pos,std::string Text,Color Back=0,Color Front=-1,bool bEdge=false);
-      int getTextWidth(std::string Text);
-      int getTextHeight(std::string Text);
+      virtual void drawText(const Vector2f &Pos,std::string Text,Color Back=0,Color Front=-1,bool bEdge=false) =0;
+      virtual int getTextWidth(std::string Text)  =0;
+      virtual int getTextHeight(std::string Text)  =0;
 
-      void setDontUseGLExtensions(bool dont_use){ m_bDontUseGLExtensions = dont_use;};
-      Img * grabScreen(void); 
+      void setDontUseGLExtensions(bool dont_use){ m_bDontUseGLExtensions = dont_use;} ;
+      virtual Img * grabScreen(void)  =0; 
       /*
        * set the refecence drawing size
        **/
@@ -229,35 +232,112 @@ namespace vapp {
       PFNGLGETSHADERSOURCEARBPROC glGetShaderSourceARB;
 #endif
       
-private:
-    
-
       /* Data */
       int m_nDrawWidth,m_nDrawHeight;     
       int m_nActualWidth,m_nActualHeight;     
-      bool isExtensionSupported(std::string Ext);
+      int m_nDispWidth,m_nDispHeight,m_nDispBPP; /* Screen stuff */
+      int m_nLScissorX,m_nLScissorY,m_nLScissorW,m_nLScissorH;
 
+      virtual void _InitTextRendering(Theme *p_theme) =0;
+      virtual void _UninitTextRendering(Theme *p_theme) =0;
+      
+      	
+      bool m_bWindowed;         /* Windowed or not */
+
+      virtual bool isExtensionSupported(std::string Ext) =0;
       Texture *m_pDefaultFontTex;
       Texture *m_texture;
       BlendMode m_blendMode;
       
-      /* Public helper methods */
-      void _InitTextRendering(Theme *p_theme);
-      void _UninitTextRendering(Theme *p_theme);
-      
-      	
-      int m_nDispWidth,m_nDispHeight,m_nDispBPP; /* Screen stuff */
-      bool m_bWindowed;         /* Windowed or not */
-
-      int m_nLScissorX,m_nLScissorY,m_nLScissorW,m_nLScissorH;
       bool m_bVBOSupported;
       bool m_bFBOSupported;
       bool m_bShadersSupported;
       bool m_bDontUseGLExtensions;
       bool m_bNoGraphics;       /* No-graphics mode */
+private:
+    
+
+
+  };
+
+  class DrawLibOpenGL : public DrawLib{
+    public:
+      DrawLibOpenGL();
+      ~DrawLibOpenGL();
+      
+      virtual void init(int nDispWidth,int nDispHeight,int nDispBPP,bool bWindowed,Theme * ptheme);
+      virtual  void unInit();
+      /* Methods - low-level */
+      //add a vertex given screen coordinates
+      virtual void glVertexSP(float x,float y) ;
+      //add a vertex given opengl coordinates
+      virtual void glVertex(float x,float y);
+      //texture coordinate
+      virtual void glTexCoord(float x,float y) ;
+      virtual void screenProjVertex(float *x,float *y) ; 
+      
+      virtual void setColor(Color color) ;
+      /**
+       * set the texure for drawing
+       * the value may be NULL to disable texure
+       * every end draw will reset the texture to NULL
+       **/
+      virtual void setTexture(Texture * texture,BlendMode blendMode ) ;
+      virtual void setBlendMode(BlendMode blendMode ) ;
+
+      /**
+       * enables clipping and sets the clipping borders
+       **/     
+      virtual void setClipRect(int x , int y , int w , int h) ;
+      virtual void setClipRect(SDL_Rect * i_clip_rect) ;
+      virtual void setScale(float x,float y)  ;
+      virtual void setTranslate(float x,float y)  ;
+      virtual void setLineWidth(float width)  ;
+      
+      /**
+       * returns the current screen clipping
+       **/
+      virtual void getClipRect(int *o_px,int *o_py,int *o_pnWidth,int *o_pnHeight) ;
+      
+      /**
+       * Start drawing ... used in combination with glVertex
+       **/
+      virtual void startDraw(DrawMode mode) ;
+      
+      /**
+       * End draw
+       **/
+      virtual void endDraw() ;
+
+      /**
+       * Clears the screen with the configured background
+       **/
+      virtual void clearGraphics() ;
+      
+      /**
+       * Flush the graphics. In memory graphics will now be displayed
+       **/
+      virtual void flushGraphics() ;
+      
+      /* Methods - primitives */
+      virtual void drawCircle(const Vector2f &Center,float fRadius,float fBorder=1.0f,Color Back=0,Color Front=-1) ;
+      virtual void drawBox(const Vector2f &A,const Vector2f &B,float fBorder=1.0f,Color Back=0,Color Front=-1) ;      
+      virtual void drawImage(const Vector2f &A,const Vector2f &B,Texture *pTexture,Color Tint=-1) ;
+      
+      
+      /* Methods - text */
+      virtual void _InitTextRendering(Theme *p_theme);
+      virtual void _UninitTextRendering(Theme *p_theme);
+      virtual void drawText(const Vector2f &Pos,std::string Text,Color Back=0,Color Front=-1,bool bEdge=false) ;
+      virtual int getTextWidth(std::string Text) ;
+      virtual int getTextHeight(std::string Text) ;
+
+      virtual Img * grabScreen(void)  ; 
+      virtual  bool isExtensionSupported(std::string Ext);
+
   };
   
-}
+};
 
 #endif
 
