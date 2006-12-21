@@ -688,6 +688,7 @@ namespace vapp {
     } catch(Exception &e) {
       Log(std::string("** Warning ** : Level generation failed !\n" + e.getMsg()).c_str());
       m_bLevelInitSuccess = false;
+      return;
     }        
 
     /* Calculate bike stuff */
@@ -717,6 +718,7 @@ namespace vapp {
         endLevel();      
         
         m_bLevelInitSuccess = false;
+	return;
       }
     }
 

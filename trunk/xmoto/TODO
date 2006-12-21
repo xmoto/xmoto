@@ -1,6 +1,3 @@
-* a button like f5 so that when you play, it reload the levels and
-   restart the level => a good way to develop a level having the
-   editor opened at the same time
 * when you choose keys : if a key is already attributed, it should
    assign it and set <unset> to the other one because it's not
    pleasant to have a message

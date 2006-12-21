@@ -62,6 +62,7 @@ tried.
 * change theme without restart
 * if some texture are missing, but backgound in black and foreground in white so that the level can be playable
 * BUG: tu peux faire get more levels une fois par session ?  => seems to be specific to windows due to a cache
+* a button like f5 so that when you play, it reload the levels and restart the level => a good way to develop a level having the editor opened at the same time
 
 Since 0.2.1
 * BUG : on bad levels loading

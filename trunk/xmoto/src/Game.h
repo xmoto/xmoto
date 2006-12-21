@@ -504,7 +504,7 @@ namespace vapp {
       bool _IsThereANextLevel(Level *pLevelSrc);
       
       bool _IsReplayScripted(Replay *p_pReplay);
-      void _RestartLevel();
+      void _RestartLevel(bool i_reloadLevel = false);
   
 #if defined(SUPPORT_WEBACCESS)
       void _InitWebConf(void);

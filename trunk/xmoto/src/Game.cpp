@@ -197,7 +197,7 @@ namespace vapp {
             }          
           }
         } catch(Exception &e) {
-    setState(m_StateAfterPlaying);
+	  setState(m_StateAfterPlaying);
           notifyMsg(splitText(e.getMsg(), 50));   
         }
         break;
@@ -733,6 +733,9 @@ namespace vapp {
     /* retart immediatly the level */
     _RestartLevel();
     break;
+  case SDLK_F5:
+    _RestartLevel(true);
+    break;
           default:
             /* Notify the controller */
             m_InputHandler.handleInput(INPUT_KEY_DOWN,nKey,m_MotoGame.getBikeController(), &m_Renderer);
@@ -1167,7 +1170,7 @@ namespace vapp {
   }
 #endif  
 
-  void GameApp::_RestartLevel() {
+  void GameApp::_RestartLevel(bool i_reloadLevel) {
     /* Update stats */        
     m_GameStats.levelRestarted(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->Id(),m_MotoGame.getLevelSrc()->Name(),m_MotoGame.getTime());
   
@@ -1176,8 +1179,18 @@ namespace vapp {
     m_MotoGame.setGhostActive(false);
 #endif
     m_MotoGame.endLevel();
+
     m_InputHandler.resetScriptKeyHooks();           
     m_Renderer.unprepareForNewLevel();
+
+    if(i_reloadLevel) {
+      try {
+	m_levelsManager.LevelById(m_PlaySpecificLevel).loadXML();
+      } catch(Exception &e) {
+	throw Exception("Unable to reload the level");
+      }
+    }
+
     setState(GS_PREPLAYING);   
   }
 
