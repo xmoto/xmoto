@@ -446,6 +446,23 @@ namespace vapp {
   ===========================================================================*/
   void App::_ParseArgs(int nNumArgs,char **ppcArgs) {
     std::vector<std::string> UserArgs;
+    //look if the graphical frontend is given
+    //on the command line
+#ifdef ENABLE_SDLGFX
+  //if booth options are compiled
+    for(int i=1;i<nNumArgs;i++) {
+      if(strcmp(ppcArgs[i],"-sdlgfx") == 0) {
+            if (drawLib == NULL){
+	     drawLib = new DrawLibSDLgfx();
+	    }
+      }
+    }
+#endif
+#ifdef ENABLE_OPENGL
+    if (drawLib == NULL){
+	     drawLib = new DrawLibOpenGL();
+    }
+#endif
   
     /* Walk through the args */
     for(int i=1;i<nNumArgs;i++) {
