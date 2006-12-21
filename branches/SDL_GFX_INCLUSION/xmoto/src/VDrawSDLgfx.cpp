@@ -47,6 +47,11 @@ namespace vapp {
   Transform an OpenGL vertex to pure 2D 
   ===========================================================================*/
   void DrawLibSDLgfx::glVertexSP(float x,float y) {
+    // m_scale.x =1;
+     //m_scale.y =1;
+     //m_translate.x =1;
+     //m_translate.y =1;
+
      m_drawingPoints.push_back(  new Vector2f(x,y));
   }
 
@@ -57,7 +62,11 @@ namespace vapp {
      ));
   }
 
-  void DrawLibSDLgfx::glTexCoord(float x,float y){
+  void DrawLibSDLgfx::glTexCoord(float x,float y){	  
+	  m_texturePoints.push_back(  new Vector2f(
+            ((x + m_translate.x) * m_scale.x),
+           ((y + m_translate.y) * m_scale.y)
+      ));
   } 
 
   void DrawLibSDLgfx::screenProjVertex(float *x,float *y) {
@@ -183,7 +192,7 @@ namespace vapp {
   void DrawLibSDLgfx::drawImage(const Vector2f &a,const Vector2f &b,Texture *pTexture,Color tint) {
      if (pTexture->surface != NULL){
        SDL_Rect  * dest = new SDL_Rect();
-       if (m_scale.x != 1){
+       if (m_scale.x != 1 < m_scale.x < 10){
           dest->x = m_nDrawWidth/2 + (Sint16)((a.x +  m_translate.x) *  m_scale.x); 
 	  dest->y = m_nDrawHeight/2 -(Sint16)( (a.y  +  m_translate.y)*  m_scale.y);
 	  int orig_w =  (Sint16)abs(pTexture->surface->w *  m_scale.y); 
@@ -257,7 +266,11 @@ namespace vapp {
     switch(m_drawMode){
       case DRAW_MODE_POLYGON:
         if (m_texture != NULL){
-           texturedPolygon(m_screen,x,y,size,m_texture->surface,0,0);
+	   if(m_texturePoints.size() >0 ){
+	       texturedPolygon(m_screen,x,y,size,m_texture->surface,(int)m_texturePoints.at(0)->x,(int)m_texturePoints.at(0)->y);
+	   } else {
+             texturedPolygon(m_screen,x,y,size,m_texture->surface,0,0);
+	   }
 	} else {
            filledPolygonRGBA(m_screen,x,y,size,GET_RED(m_color),GET_GREEN(m_color),GET_BLUE(m_color),GET_ALPHA(m_color));
 	}
@@ -273,6 +286,7 @@ namespace vapp {
         break;
     } 
     m_drawingPoints.resize(0);
+    m_texturePoints.resize(0);
     m_drawMode = DRAW_MODE_NONE;
     m_texture = NULL;
   }
@@ -294,15 +308,118 @@ namespace vapp {
   Text dim probing
   ===========================================================================*/  
   int DrawLibSDLgfx::getTextHeight(std::string Text) {
+	      int cx = 0,cy = 0,c;
+    int h=0;
+    for(unsigned int i=0;i<Text.size();i++) {
+      c = Text[i];
+      if(c==' ') {
+        cx += 8;
+      }
+      else if(c=='\r') {
+        cx = 0;
+      }
+      else if(c=='\n') {
+        cx = 0;
+        cy += 12;
+      }
+      else {
+        cx += 8;
+      }
+      if(cy > h) h=cx;
+    }
+    return h+12;
   }
   
   int DrawLibSDLgfx::getTextWidth(std::string Text) {
+    int cx = 0,cy = 0,c;
+    int w=0;
+    for(unsigned int i=0;i<Text.size();i++) {
+      c = Text[i];
+      if(c==' ') {
+        cx += 8;
+      }
+      else if(c=='\r') {
+        cx = 0;
+      }
+      else if(c=='\n') {
+        cx = 0;
+        cy += 12;
+      }
+      else {
+        cx += 8;
+      }
+      if(cx > w) w=cx;
+    }
+    return w;
   }
 
   /*===========================================================================
   Text drawing
   ===========================================================================*/  
   void DrawLibSDLgfx::drawText(const Vector2f &Pos,std::string Text,Color Back,Color Front,bool bEdge) {
+		if(bEdge) {
+			/* SLOOOOW */
+			drawText(Pos + Vector2f(1,1),Text,0,MAKE_COLOR(0,0,0,255),false);
+			drawText(Pos + Vector2f(-1,1),Text,0,MAKE_COLOR(0,0,0,255),false);
+			drawText(Pos + Vector2f(1,-1),Text,0,MAKE_COLOR(0,0,0,255),false);
+			drawText(Pos + Vector2f(-1,-1),Text,0,MAKE_COLOR(0,0,0,255),false);
+		}
+  
+    int cx = (int) Pos.x, cy = (int) Pos.y, c;
+    
+
+    int nCharsPerLine = 256 / 8;
+    for(unsigned int i=0;i<Text.size();i++) {
+      c = Text[i];
+      if(c==' ') {
+	
+        startDraw(DRAW_MODE_POLYGON);
+	setColor(Back);
+        glVertexSP(cx,cy);
+        glVertexSP(cx+8,cy);
+        glVertexSP(cx+8,cy+12);
+        glVertexSP(cx,cy+12);
+        endDraw();        
+        cx += 8;
+      }
+      else if(c=='\r') {
+        cx = (int) Pos.x;
+      }
+      else if(c=='\n') {
+        cx = (int) Pos.x;
+        cy += 12;
+      }
+      else {
+        int y1 = (c / nCharsPerLine) * 12;
+        int x1 = (c % nCharsPerLine) * 8;
+        int y2 = y1 + 12;
+        int x2 = x1 + 8;
+	startDraw(DRAW_MODE_POLYGON);
+        setColor(Back);
+        glVertexSP(cx,cy);
+        glVertexSP(cx+8,cy);
+        glVertexSP(cx+8,cy+12);
+        glVertexSP(cx,cy+12);
+        endDraw();
+        if (m_pDefaultFontTex == NULL){
+		printf("Can't draw with empy texture!\n");
+	}
+	setTexture(m_pDefaultFontTex,BLEND_MODE_A);
+        startDraw(DRAW_MODE_POLYGON);
+	setColor(Front);
+        glTexCoord((float)x1/256.0f,(float)y1/256.0f);
+        
+        glVertexSP(cx,cy);
+        glTexCoord((float)x2/256.0f,(float)y1/256.0f);
+        glVertexSP(cx+8,cy);
+        glTexCoord((float)x2/256.0f,(float)y2/256.0f);
+        glVertexSP(cx+8,cy+12);
+        glTexCoord((float)x1/256.0f,(float)y2/256.0f);
+        glVertexSP(cx,cy+12);
+        endDraw();
+        cx += 8;
+      }
+    }	  
   }
   
   /*===========================================================================
