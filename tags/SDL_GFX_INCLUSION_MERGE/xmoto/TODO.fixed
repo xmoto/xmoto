@@ -1,0 +1,228 @@
+Since 0.2.4
+* bug : replays cache does'nt really cache
+
+Since 0.2.2
+* When i update lists sometimes
+Fatal signal: Segmentation Fault (SDL Parachute Deployed)
+*** glibc detected *** corrupted double-linked list: 0xb7a6a358 ***
+it behaves sometimes since i modified the pack lists menus
+** I got that too (when I completed a level I hadn't completed before)
+** 99% sure it's fixed now. (m_pActiveLevelPack was freed but still referenced)
+* BUG on makefile
+I got a bug in the gentoo bugzilla:
+http://bugs.gentoo.org/147725 xmoto-0.2.1 fails with MAKEOPTS="-j2" or higher.
+You moved the xmoto target to the subdir but still wants the result in the
+top directory. But the rule here is broken
+xmoto: src/xmoto
+      ln -sf src/xmoto xmoto
+make -j2 xmoto produces
+make: *** No rule to make target `src/xmoto'.  Stop.
+yet cd src; make xmoto works. Can you please have a look at it and
+revert the change if no better solution is found?
+* <aspegic500> xmoto 0.2.1 ?
+[11:39] <Fifty> ../depcomp: line 512: exec: g++: not found
+[11:39] <Fifty> make: *** [all-recursive] Error 1
+[11:42] <aspegic500> the configure don't check that g++ is installed
+[11:42] <aspegic500> but to check libode,
+[11:42] <aspegic500> it tries to use stdc++
+* rversion is not saved correctly
+* no immediate just dead menu
+* BUG: Replays break on Linux/PPC. Screenshot: http://vasi.webhop.org/files/ports/xmoto/xmoto-bug.jpg
+  * Probably fixed, waiting for verification by Marcel
+
+* BUG (06/10/2006) : about Linux/PPC it could be a ode bug (man not displayed) : hand
+   position returned on updatePhysics() are (infinity, 0.0) for the
+   level 1 and initialisation are goods (tested with ode 0.5)
+  BUG : http://forum.xmoto.free.fr/viewtopic.php?p=205#205 (no clue how to fix)
+===> update to ode 0.7
+* BUG : under linux at lease :      if(p_type == ET_STRAWBERRY) {, if
+   p_type has been read from a replay and has a value not in the range
+of existing types, this line causes a segfault (see replay 7097)
+* BUG : make a level with the id 8maximumchallengeight8 and xmoto -level 8maximumchallengeight8 starts the level 8
+* BUG : require to restart for zoom of level
+* change ghost rules : "player/players/room"
+* bzip2 not removed on windows
+* remove the "level packs" button, remove the "internal" and "external" tabs and replace them by "All levels" tab and "Level pack" tab and make internal level a pack
+* have a scrollbar for the lists
+* add a counter of uncompleted levels (priority=medium)
+* BUG : when death is disabled : you cannot see the message "press esc or enter"
+* add a button view the highscore in the pack window
+* virtual packs : pack of level i don't have the highscore, ...
+* a virtual pack '~ I've not finished the level'
+* new levels list saved when xmoto quit
+* don't show empty packs
+* when you make a highscore, new levels list is not updated
+* add a tab : favorite levels (priority=low)
+* cvs checkout + compilation => don't create xmoto.bin if it doesn't exist
+* random pack not really random...
+* scroll on scroll bars is not nice if you keep the mouse clicked, go out of the list ; unclick the button and go back into the list
+* http://bugs.debian.org/390622
+When some new levels are downloaded from the internet, they are placed
+in the "new levels" list until we try them. But if we exit and restart
+xmoto, they are moved in the "external levels" list. There are so many
+external levels that it is impossible to know which ones we already
+tried.
+* change theme without restart
+* if some texture are missing, but backgound in black and foreground in white so that the level can be playable
+* BUG: tu peux faire get more levels une fois par session ?  => seems to be specific to windows due to a cache
+* a button like f5 so that when you play, it reload the levels and restart the level => a good way to develop a level having the editor opened at the same time
+
+Since 0.2.1
+* BUG : on bad levels loading
+Solved partially: * mipmapping
+so i suggest to activate mipmapping, maybe only for the highest quality setting
+Jonathan Sieber at msn:   zoom out very much, more than factor 4 and then move the camera
+Jonathan Sieber at msn:   you will notice ugly noise on the textures, some sort of flickering
+* segfault on playing http://xmoto.free.fr/replays/replay_5299.rpl
+* bug of cache with bigendian proc
+* bug on rewind on http://xmoto.free.fr/replays/replay_5297.rpl
+* edge style are anymore dependant of the code, but of the theme
+
+Since 0.2.0
+* bug : i need entity->pSrc to draw the entity to the good position : pb, revertEntityDestroyed give a NULL value -> SEGFAULT ON REWIND !!!!!
+* level no doubt : start ; pause 30 sec ; run very fast ->
+   http://testnitrx.free.fr/xmoto/screenshot0006.png : a block appears !
+* to not be able to go into the ground via the side switch
+* BUG : xmoto-edit rgeznlre -> segfault
+* BUG: (21:17:09) nx:   essaye le niveau "quetsche" au départ, tu
+   "tombes" sur le sol et tu as 1 qui saffiche tout seul : pour les
+   saut perilleux
+* BUG : move a background block make it collide with the bike
+ neckelmann:  as it is now a block can not be both dynamic and background.
+              it's a limitation. Maybe it can be improved later.
+* use acos(m_BikeS.fFrameRot[0]) for somersaults to be more precise
+    float fAngle = (180.0f * acos(m_BikeS.fFrameRot[0])) / 3.14159f;
+    if(m_BikeS.fFrameRot[2] < 0.0f) fAngle = 360 - fAngle;
+    printf("%f\n",fAngle);
+* -v verbose for www
+* hum : make clean, make -> no rule to make xmoto-edit : so it's not corrected
+* -s make trouble on mac os x
+* NOT REALLY A BUG: calcul player offset on the screen dependant on the gravity
+* BUG : if webthemes does not exist and rm -rf Themes ; try to update. classical theme without updating the list make a mistake
+* patch by Stefan Schweizer applied
+* BUG: exception not catched  nicolas:xmoto$ xmoto -replay dsfdsfd  fatal exception : invalid replay
+* ALPHA removed
+* make xmoto independant of the arch for replays
+* BUG : when you save a replay as the same name several times, replay list is not updated correctly
+* BUG: for the automatic upload, add : check why i can't have a & in my password
+* BUG : xmoto-edit : m_theme.load("Themes/original.xml") in Editor.cpp, really not nice !!! a file called Themes/original.xml must exists to have the last textures into xmoto-edit;
+* BUG: on review a replay : when you forward to fast, the man does not go at the end of the level
+* an option to display ugly biker over the theme to test the theme
+* make circle for sprites, strawberries, ... in ugly mode
+* lua : killPlayer() -> kill the player
+* lua : killEntity() -> kill an entity
+* new-level-editor: the number of vertex generated has been optimized.
+* add <xml_room> in configuration so that the player can choose the
+   link to his room xml file (priority=high)(priority=high)
+* lua call OnSomersault()
+* OnRearWheelTouchGround() OnRearWheelLeaveGround() (and the same for the other weel)
+* update themes list before update a theme (otherwise, on levels update, it does nothing)
+* Be able to change the size of a sprite as parameter in a level
+* translations
+* password proxy for www
+* collision : collision with the body
+* level and player name showing in the replay?
+* loading level is sometimes quite long
+* add 3 2 1 GO ! at level startup (only if the level played is different from the last played)
+* a lua function to get the number of
+   somersaults ? some "freestyle" could ask for figure to be done.
+   in the future, i would like make this functionnality better : time
+   in the air, time on one wheel, ...
+* display a nice counter for engine speed : disable this counter in replays
+
+Since 1.16
+* BUG : view highscore with up and down with keyboard does not update the button
+* having the information of time diff about the ghost each time you take a strawberry, because we know the information already at this time
+* add "required-xmoto-version" field to levels
+* make error nicer when impossible to load the script
+* add string and table lua classes
+* bug on new highscore when the two number a proach
+* bug on VFile.h infinite loop when try to save a replay with the same name 3 times
+* compress data for web !!!
+* sometimes, the following error appears : "texture naming conflict"
+* BUG: the window "it seems you have not OpenGL, please check your configuratino" can't be close by clicking on the ok button.(priority=high)
+* BUG : when you have stats.xml but not players.bin = > segfault at startup
+* ThemeChoicer::initList() is not good : choose user theme before others
+* BUG : move objects in script doesn't work(priority=medium)
+   --comment: it appears to work fine for me? see Levels/test/test.lvl
+   --comment2: okay, it doesn't work in replays...
+* on xmoto 0.1.14 ALPHA, when you want to save a replay
+ which you name " " (just one space), it hangs, and all
+ your high-scores recorded since you run xmoto and the
+ replay you wanted to be saved are lost...
+* BUG : ERREUR 404: Not Found : when a file is not found, no error is detected
+* high level function for script : DynamicMove
+Game.SetDynamicEntityRotation("Strawberry0", 0, 3, 500, 0, 0)
+Game.SetDynamicEntityTranslation("Strawberry0", 3, 1, 500, 0, 0)
+Game.SetDynamicEntityNone("Strawberry0")
+Game.SetDynamicBlockRotation("Block0", 0, 3, 500, 0, 0)
+Game.SetDynamicBlockTranslation("Block0", 3, 1, 500, 0, 0)
+Game.SetDynamicBlockNone("Block0")
+Game.CameraMove(x, y)
+Game.CameraZoom(z)
+* a texture missing -> just give an alert instead of get an exception
+!!! float fDist;
+src/Editor.cpp:2294: attention : «fDist» may be used uninitialized in this function
+* BUG: => stars are not in replays.
+* BUG : OnLoad() { return false; } -> segfault
+* BUG : kill bill if you try this level since the last recent change
+   about collision (.16), the start of the level is not the same : the
+   player does not fall as the same way
+ -- comment : just add an information into the changelog
+* smoke doesn't work in replay, it didn't work in .16
+   neckelmann: does it still not work? It appears to work for me
+* BUG : see http://xmoto.free.fr/images/administration/download.png :
+   when you press z or other keys allowed by this level while you bike
+   is not moving at all
+  neckelmann: what? it's a picture of a floppy? I don't get it :)
+-> http://xmoto.free.fr/interesting_replays/ireplay_41.rpl
+  neckelmann: it is because when the bike have been standing (almost) still 
+              for a number of frames, physics are disabled. It is to prevent
+              the bike from falling into the ground slowly. 
+              I've added a function (MotoGame::resetAutoDisabler()) which should
+              be called anytime something is changing which might affect the physics
+              AND it is absolutely certain that the physics will affect the bike.
+              I.e. it should not be called when a block is moved, as it will not always
+              affect the bike directly, but on the other hand if the gravity is changed or
+              the bike is teleported, it has to be called. 
+              Currently it's called by setGravity() and teleport-something().
+* I thought to one thing that could be add in the stats : the date
+   when the stats have been initialized to display : stats from
+   18/06/2006 for example. Remember that this field must be translatable
+* stats displayed the month-1 -> i got 2006/06/27 instead of 2006/07/27
+* BUG : when you rewind, starts don't move
+ neckelmann:  starts? why should they move?
+ nicolas: stars
+ neckelmann:  hmm, the only way to fix that is to make a "particle rewind"
+              function. It's kind of a mess to make, and I don't thinks it's
+              that important.
+
+Before Xmoto 1.16
+* BUG : bug in the editor if you load and save http://xmoto.free.fr/levels/l189.lvl because  > is replaced by &gt;      
+* Make sure LUA5.1 is supported properly OR use LUA5.0 explicitly. -> see http://www.lua.org/manual/5.1/manual.html#incompat
+* BUG : xmoto crashes when some textures are missing for a level
+* display time diff for the ghost nicer
+* make a vector for replays to load them faster
+* BUG : xmoto-edit downloaded/l66.lvl then "play this level" -> "Cave
+   : level not found" because there is a space in the id
+* BUG : if www is not activated at startup, go in option, check www, then click on proxy, then ok => www is unchecked
+* BUG : update highscore button, check for new levels too
+* BUG : when you have a level to update, you update it ; it you
+   reclick on check for new level, it will reupdate it, and you can
+   continue ... it adds the levels several times in the list
+* BUG : notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES); does not work the first time we load the game called in gamemenu.cpp, line 1573 but not displayed, i don't know why
+* BUG : when you update levels, new levels is displayed again !
+* use bSomething for options instead of many calls
+* add an option for timediff with the ghost
+* BUG : if you die and save the replay, replay list is empty ; if you
+   delete one, it does not delete it
+* add highscore tab in pack and new levels
+* be able to choose "download highscore" "check for new level" at
+   startup
+* BUG : xmoto --help causes a crash (trying to free non-init data i think, related to FBO stuff)
+* BUG : on mac os x : http://xmoto.free.fr/tmp/Letters.png
+* update highscores/levels doesn't really update levels, an other idea
+   for the button caption ?
+* display error : missing texture instead of just "the level has a pb" ?
+* LevelpackList does not allow to see #tutorial 3
+### add nothing here ###
