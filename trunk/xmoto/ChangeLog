@@ -1,5 +1,9 @@
 X-Moto 0.2.3 2006-12-22
 -----------------------
+ * Correcting a bug which made some scripted levels unplayable
+	
+X-Moto 0.2.3 2006-12-22
+-----------------------
 
  * Significantly lowered load times due to new level and replay index. 
    (Press F5 in the main menu to reload the levels if you make your
