@@ -139,6 +139,11 @@ Entity& Level::getEntityById(const std::string& i_id) {
       return *(m_entities[i]);
     }
   }
+  for(unsigned int i=0; i<m_entitiesDestroyed.size(); i++) {
+    if(m_entitiesDestroyed[i]->Id() == i_id) {
+      return *(m_entitiesDestroyed[i]);
+    }
+  }
   for(unsigned int i=0; i<m_entitiesExterns.size(); i++) {
     if(m_entitiesExterns[i]->Id() == i_id) {
       return *(m_entitiesExterns[i]);
