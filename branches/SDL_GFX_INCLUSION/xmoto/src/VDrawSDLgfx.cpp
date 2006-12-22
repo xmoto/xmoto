@@ -31,7 +31,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 namespace vapp {
   int xx_gfxPrimitivesCompareInt(const void *a, const void *b) {
     return (*(const int *)a) - (*(const int *)b);
-  } DrawLibSDLgfx::~DrawLibSDLgfx() {
+  };
+
+  DrawLibSDLgfx::~DrawLibSDLgfx() {
     m_scale.x = 1;
     m_scale.y = 1;
     m_translate.x = 0;
@@ -39,7 +41,7 @@ namespace vapp {
     m_bg_data = NULL;
     gfxPrimitivesPolyInts = NULL;
     gfxPrimitivesPolyAllocated = 0;
-  }
+  };
 
 DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
   };
@@ -57,8 +59,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 		Vector2f(m_nDrawWidth / 2 +
 			 ((x + m_translate.x) * m_scale.x),
 			 m_nDrawHeight / 2 -
-			 ((y + m_translate.y) * m_scale.y)
-		));
+			 ((y + m_translate.y) * m_scale.y)));
   }
 
   void DrawLibSDLgfx::glTexCoord(float x, float y) {
@@ -194,8 +195,8 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
   void DrawLibSDLgfx::drawBox(const Vector2f & A, const Vector2f & B,
 			      float fBorder, Color Back, Color Front) {
     if (GET_ALPHA(Back) > 0) {
-      boxRGBA(m_screen, A.x, A.y, B.x, B.y, GET_RED(Back), GET_GREEN(Back),
-	      GET_BLUE(Back), GET_ALPHA(Back));
+      boxRGBA(m_screen, A.x, A.y, B.x, B.y, GET_RED(Back),
+	      GET_GREEN(Back), GET_BLUE(Back), GET_ALPHA(Back));
     }
 
     if (fBorder > 0.0f && GET_ALPHA(Front) > 0) {
@@ -209,17 +210,17 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
   ===========================================================================*/
   void DrawLibSDLgfx::drawImage(const Vector2f & a, const Vector2f & b,
 				Texture * pTexture, Color tint) {
-    setTexture(pTexture,BLEND_MODE_A);
+    setTexture(pTexture, BLEND_MODE_A);
     startDraw(DRAW_MODE_POLYGON);
     setColor(tint);
-    glTexCoord(0.0,0.0);
-    glVertexSP(a.x,a.y);
-    glTexCoord(1.0,0.0);
-    glVertexSP(b.x,a.y);
-    glTexCoord(1.0,1.0);
-    glVertexSP(b.x,b.y);
-    glTexCoord(0.0,1.0);
-    glVertexSP(a.x,b.y);
+    glTexCoord(0.0, 0.0);
+    glVertexSP(a.x, a.y);
+    glTexCoord(1.0, 0.0);
+    glVertexSP(b.x, a.y);
+    glTexCoord(1.0, 1.0);
+    glVertexSP(b.x, b.y);
+    glTexCoord(0.0, 1.0);
+    glVertexSP(a.x, b.y);
     endDraw();
     return;
 
@@ -284,7 +285,32 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
   Grab screen contents
   ===========================================================================*/
   Img *DrawLibSDLgfx::grabScreen(void) {
-    return NULL;
+    Img *pImg = new Img;
+
+    pImg->createEmpty(m_nDispWidth, m_nDispHeight);
+    Color *pPixels = pImg->getPixels();
+
+    Uint8 red, green, blue, alpha;
+
+    SDL_LockSurface(m_screen);
+
+    for (int y = 0; y < m_screen->h; y++) {
+      for (int x = 0; x < m_screen->w; x++) {
+	void *pixel =
+	  (Uint8 *) m_screen->pixels +
+	  (x * m_screen->format->BytesPerPixel) +
+	  ((y) * (m_screen->pitch));
+	SDL_GetRGB(*(Uint32 *) pixel, m_screen->format, &red, &green,
+		   &blue);
+
+	*(Uint32 *) pPixels = MAKE_COLOR(red, green, blue, 255);
+	pPixels++;
+      }
+    }
+
+    SDL_UnlockSurface(m_screen);
+
+    return pImg;
   }
 
   void DrawLibSDLgfx::startDraw(DrawMode mode) {
@@ -339,19 +365,21 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 
 	      //x scale =
 	      //  dx_t / w = dx_p / ff
-	      if (texture_w ==1122){
+	      if (texture_w == 1122) {
 		printf("tex %s\n", m_texture->Name.c_str());
 		for (int z = 0; z < m_texturePoints.size(); z++) {
-		  printf("tex %i %3f %3f\n", z, m_texturePoints.at(z)->x,
+		  printf("tex %i %3f %3f\n", z,
+			 m_texturePoints.at(z)->x,
 			 m_texturePoints.at(z)->y);
 		}
 		for (int z = 0; z < m_drawingPoints.size(); z++) {
-		  printf("draw %i %3f %3f\n", z, m_drawingPoints.at(z)->x,
+		  printf("draw %i %3f %3f\n", z,
+			 m_drawingPoints.at(z)->x,
 			 m_drawingPoints.at(z)->y);
 		}
-		printf("dx dt %3f %3f == w %i %f pixels start_pixel %3f\n",
-		       dx_p, dx_t, texture_w, x_pixel_usage,
-		       x_start_pixel);
+		printf
+		  ("dx dt %3f %3f == w %i %f pixels start_pixel %3f\n",
+		   dx_p, dx_t, texture_w, x_pixel_usage, x_start_pixel);
 		printf
 		  ("dy p,t %3f %3f == w %i %f pixels start_pixel %3f\n",
 		   dy_p, dy_t, texture_h, y_pixel_usage, y_start_pixel);
@@ -360,17 +388,19 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 	      }
 	      if (x_zoom_factor < 30) {
 		char key[255] = "";
-		sprintf(key, "%s_%i_%.3f_%.3f", m_texture->Name.c_str(), 0,
+		sprintf(key, "%s_%i_%.3f_%.3f",
+			m_texture->Name.c_str(), 0,
 			x_zoom_factor, y_zoom_factor);
 		SDL_Surface *s = NULL;
-		std::map < const char *, SDL_Surface * >::iterator i =
-		  m_image_cache.find(key);
+		std::map < const char *,
+		  SDL_Surface * >::iterator i = m_image_cache.find(key);
 		if (i != m_image_cache.end()) {
 		  s = (*i).second;
 		} else {
 		  char *keyName = (char *)malloc(strlen(key) + 1);
 		  s =
-		    rotozoomSurfaceXY(m_texture->surface, 0, x_zoom_factor,
+		    rotozoomSurfaceXY(m_texture->surface, 0,
+				      x_zoom_factor,
 				      y_zoom_factor, SMOOTHING_ON);
 		  strcpy(keyName, key);
 		  printf("addding image with key %s\n", key);
@@ -383,11 +413,13 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 				-x_start_pixel + p1->x,
 				y_start_pixel - p1->y);
 	      } else {
-		printf("skipping because zoom factor is to large %f\n",
-		       x_zoom_factor);
+		printf
+		  ("skipping because zoom factor is to large %f\n",
+		   x_zoom_factor);
 	      }
 	    } else {
-	      texturedPolygon(m_screen, x, y, size, m_texture->surface,
+	      texturedPolygon(m_screen, x, y, size,
+			      m_texture->surface,
 			      (int)m_texturePoints.at(0)->x,
 			      (int)m_texturePoints.at(0)->y);
 	    }
@@ -414,8 +446,8 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
     case DRAW_MODE_LINE_STRIP:
       for (int f = 0; f < size - 1; f++) {
 	lineRGBA(m_screen, x[f], y[f], x[f + 1], y[f + 1],
-		 GET_RED(m_color), GET_GREEN(m_color), GET_BLUE(m_color),
-		 GET_ALPHA(m_color));
+		 GET_RED(m_color), GET_GREEN(m_color),
+		 GET_BLUE(m_color), GET_ALPHA(m_color));
       }
       break;
     }

@@ -498,9 +498,9 @@ namespace vapp {
     
     int w = nWidth;
     int h = nHeight;
-    if (h <0){
-      return;
-    }
+//    if (h <0){
+//      return;
+//    }
     if(w < 0) w = p->nWidth;
     if(h < 0) h = p->nHeight;
     
