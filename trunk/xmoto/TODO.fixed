@@ -1,3 +1,6 @@
+Since 0.2.4
+* bug : replays cache does'nt really cache
+
 Since 0.2.2
 * When i update lists sometimes
 Fatal signal: Segmentation Fault (SDL Parachute Deployed)
