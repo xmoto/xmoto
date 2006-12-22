@@ -32,12 +32,6 @@ namespace vapp {
   //keesj:TODO why do I need to declare the Log function here?
   void Log(const char *pcFmt,...);
 
-  //used a comparator in sdt::map
-  struct ltstr {
-    bool operator()(const char* s1, const char* s2) const {
-      return strcmp(s1, s2) < 0;
-    }
-  };
 
   /**
    * VApp draw modes to be used as argument in startDraw
@@ -424,6 +418,9 @@ private:
       virtual Img * grabScreen(void)  ; 
       virtual  bool isExtensionSupported(std::string Ext);
       private:
+      int xx_texturedHLine(SDL_Surface * dst, Sint16 x1, Sint16 x2, Sint16 y,SDL_Surface *texture,int texture_dx,int texture_dy);
+      int xx_texturedPolygon(SDL_Surface * dst, const Sint16 * vx, const Sint16 * vy, int n, SDL_Surface * texture,int texture_dx,int texture_dy);
+
       
       //the mode used when drawing
       DrawMode m_drawMode;
@@ -459,6 +456,9 @@ private:
 
       //map to hold converted images
       std::map< const char*, SDL_Surface *, ltstr>  m_image_cache;
+
+      int *gfxPrimitivesPolyInts;
+      int gfxPrimitivesPolyAllocated;
 
   };
 };

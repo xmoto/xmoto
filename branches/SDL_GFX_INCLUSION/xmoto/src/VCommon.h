@@ -179,6 +179,15 @@ namespace vapp {
   ===========================================================================*/
   typedef unsigned int Color;
 
+  //used a comparator in sdt::map
+  struct ltstr {
+    bool operator()(const char* s1, const char* s2) const {
+      return strcmp(s1, s2) < 0;
+    }
+  };
+
+
+
 }
 
 #endif
