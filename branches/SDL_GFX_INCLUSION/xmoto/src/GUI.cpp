@@ -519,19 +519,23 @@ namespace vapp {
     }
     getApp()->getDrawLib()->setTexture(vTexture,BLEND_MODE_A);
     getApp()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+
     getApp()->getDrawLib()->setColor(c1);
     getApp()->getDrawLib()->glTexCoord(fX1,fY1);
     getApp()->getDrawLib()->glVertexSP(cx,cy);
+
     getApp()->getDrawLib()->setColor(c2);
     getApp()->getDrawLib()->glTexCoord(fX2,fY1);        
     getApp()->getDrawLib()->glVertexSP(cx+w,cy);
+
     getApp()->getDrawLib()->setColor(c3);
-    getApp()->getDrawLib()->glTexCoord(fX2,fY1);        
-    getApp()->getDrawLib()->glTexCoord(fX2,fY2);//keesj TWICE??
+    getApp()->getDrawLib()->glTexCoord(fX2,fY2);        
     getApp()->getDrawLib()->glVertexSP(cx+w,cy+h);
+
     getApp()->getDrawLib()->setColor(c4);
     getApp()->getDrawLib()->glTexCoord(fX1,fY2);
     getApp()->getDrawLib()->glVertexSP(cx,cy+h);
+
     getApp()->getDrawLib()->endDraw();
     
     /* Active? If so we want a nice blinking overlay */
