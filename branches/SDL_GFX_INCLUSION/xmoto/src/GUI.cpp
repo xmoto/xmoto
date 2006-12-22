@@ -498,6 +498,9 @@ namespace vapp {
     
     int w = nWidth;
     int h = nHeight;
+    if (h <0){
+      return;
+    }
     if(w < 0) w = p->nWidth;
     if(h < 0) h = p->nHeight;
     
@@ -511,6 +514,7 @@ namespace vapp {
     
     int cx = getAbsPosX() + x;
     int cy = getAbsPosY() + y;
+    vTexture =NULL;
     /* Nice. Now we know what to draw */    
     if(bDisabled) {
       vTexture = UITexture::getMiscDisabledTexture();
@@ -642,6 +646,7 @@ FRAME_BR (187,198) (8x8)
         printf("Draw Rect: %d %d %d %d\n",WindowRect.nX,WindowRect.nY,WindowRect.nWidth,WindowRect.nHeight);*/
         _RootPaint(x+pWindow->getPosition().nX,y+pWindow->getPosition().nY,pWindow->getChildren()[i],&WindowRect);      
       }
+      getApp()->getDrawLib()->setClipRect(NULL);
     }
   }
   

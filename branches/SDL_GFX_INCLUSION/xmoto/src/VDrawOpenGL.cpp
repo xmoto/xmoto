@@ -65,7 +65,9 @@ namespace vapp {
   }
 
   void DrawLibOpenGL::setClipRect(SDL_Rect * clip_rect){
-  	setClipRect(clip_rect->x,clip_rect->y,clip_rect->w,clip_rect->h);
+        if (clip_rect != NULL){
+  	  setClipRect(clip_rect->x,clip_rect->y,clip_rect->w,clip_rect->h);
+	}
   }
 
   void DrawLibOpenGL::getClipRect(int *px,int *py,int *pnWidth,int *pnHeight) {

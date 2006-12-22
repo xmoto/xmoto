@@ -209,6 +209,20 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
   ===========================================================================*/
   void DrawLibSDLgfx::drawImage(const Vector2f & a, const Vector2f & b,
 				Texture * pTexture, Color tint) {
+    setTexture(pTexture,BLEND_MODE_A);
+    startDraw(DRAW_MODE_POLYGON);
+    setColor(tint);
+    glTexCoord(0.0,0.0);
+    glVertexSP(a.x,a.y);
+    glTexCoord(1.0,0.0);
+    glVertexSP(b.x,a.y);
+    glTexCoord(1.0,1.0);
+    glVertexSP(b.x,b.y);
+    glTexCoord(0.0,1.0);
+    glVertexSP(a.x,b.y);
+    endDraw();
+    return;
+
     if (pTexture->surface != NULL) {
       SDL_Rect *dest = new SDL_Rect();
       if (m_scale.x != 1 < m_scale.x < 10) {
@@ -325,7 +339,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 
 	      //x scale =
 	      //  dx_t / w = dx_p / ff
-	      if (strcmp("MkkkFont", m_texture->Name.c_str()) == 0) {
+	      if (texture_w ==1122){
 		printf("tex %s\n", m_texture->Name.c_str());
 		for (int z = 0; z < m_texturePoints.size(); z++) {
 		  printf("tex %i %3f %3f\n", z, m_texturePoints.at(z)->x,
@@ -344,9 +358,9 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 
 		printf("%f\n", y_zoom_factor);
 	      }
-	      if (x_zoom_factor < 20) {
+	      if (x_zoom_factor < 30) {
 		char key[255] = "";
-		sprintf(key, "%s_%i_%3f_%3f", m_texture->Name.c_str(), 0,
+		sprintf(key, "%s_%i_%.3f_%.3f", m_texture->Name.c_str(), 0,
 			x_zoom_factor, y_zoom_factor);
 		SDL_Surface *s = NULL;
 		std::map < const char *, SDL_Surface * >::iterator i =
