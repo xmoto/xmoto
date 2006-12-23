@@ -33,7 +33,7 @@ namespace vapp {
     return (*(const int *)a) - (*(const int *)b);
   };
 
-  DrawLibSDLgfx::~DrawLibSDLgfx() {
+DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
     m_scale.x = 1;
     m_scale.y = 1;
     m_translate.x = 0;
@@ -43,8 +43,9 @@ namespace vapp {
     gfxPrimitivesPolyAllocated = 0;
   };
 
-DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
+  DrawLibSDLgfx::~DrawLibSDLgfx() {
   };
+
 
   /*===========================================================================
   Transform an OpenGL vertex to pure 2D 
@@ -222,54 +223,6 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
     glTexCoord(0.0, 1.0);
     glVertexSP(a.x, b.y);
     endDraw();
-    return;
-
-    if (pTexture->surface != NULL) {
-      SDL_Rect *dest = new SDL_Rect();
-      if (m_scale.x != 1 < m_scale.x < 10) {
-	dest->x =
-	  m_nDrawWidth / 2 + (Sint16) ((a.x + m_translate.x) * m_scale.x);
-	dest->y =
-	  m_nDrawHeight / 2 - (Sint16) ((a.y + m_translate.y) * m_scale.y);
-	int orig_w = (Sint16) abs(pTexture->surface->w * m_scale.y);
-	int w = (Sint16) abs((b.x - a.x) * m_scale.x);
-	int h = (Sint16) abs((b.y - a.y) * m_scale.y);
-	double scalex = 1.0 * w / pTexture->surface->w;
-	double scaley = 1.0 * h / pTexture->surface->h;
-
-	char key[255] = "";
-	sprintf(key, "%s_%i_%f_%f", pTexture->Name.c_str(), 0, scalex,
-		scaley);
-	SDL_Surface *s = NULL;
-	std::map < const char *, SDL_Surface * >::iterator i =
-	  m_image_cache.find(key);
-	if (i != m_image_cache.end()) {
-	  s = (*i).second;
-	} else {
-	  char *keyName = (char *)malloc(strlen(key) + 1);
-	  s =
-	    rotozoomSurfaceXY(pTexture->surface, 0, scalex, scaley,
-			      SMOOTHING_ON);
-	  if (scalex < 2) {	//only cache smaller images
-	    strcpy(keyName, key);
-	    printf("addding image with key %s\n", key);
-	    m_image_cache.insert(std::make_pair <> (keyName, s));
-	  }
-	}
-	dest->y -= s->h;
-	SDL_BlitSurface(s, NULL /*copy all */ , m_screen, dest);
-	if (scalex >= 2) {	// free image if it was not cached
-	  SDL_FreeSurface(s);
-	}
-      } else {
-	dest->x = (int)a.x;
-	dest->y = (int)b.y;
-	SDL_BlitSurface(pTexture->surface, NULL /*copy all */ , m_screen,
-			dest);
-      }
-    } else {
-      printf("texture surface was not loaded\n");
-    }
   }
 
 
@@ -348,7 +301,58 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 	    p4 = m_drawingPoints.at(3);
 	    //lets first just try to draw the start
 	    //of the pixmap on the right place
-	    if (t1->x != t2->x && t2->y != t3->y && p1->y == p2->y) {
+	    if (t1->x != t2->x && t2->y != t3->y && p1->y != p2->y) {
+	      //find the lenght of the first segment
+	      Vector2f point1 = *p2 - *p1;
+	      Vector2f texture_p1 = *t2 - *t1;
+
+	      //float length = point1.length();
+	      float x_zoom =
+		point1.length() / (texture_p1.length() *
+				   m_texture->surface->w);
+	      float angle = atan(point1.y / point1.x) * 180 / 3.14159265;
+
+	      Vector2f point2 = *p3 - *p2;
+	      Vector2f texture_p2 = *t3 - *t2;
+	      float y_zoom =
+		point2.length() / (texture_p2.length() *
+				   m_texture->surface->w);
+
+
+	      if (point1.x < 0) {
+		angle += 180;
+	      }
+	      angle = -angle;
+
+	      char key[255] = "";
+	      sprintf(key, "rotate-%s_%.0f_%.1f_%.1f",
+		      m_texture->Name.c_str(), angle / 5, x_zoom, y_zoom);
+	      SDL_Surface *s = NULL;
+	      std::map < const char *,
+		SDL_Surface * >::iterator i = m_image_cache.find(key);
+	      if (i != m_image_cache.end()) {
+		s = (*i).second;
+	      } else {
+		char *keyName = (char *)malloc(strlen(key) + 1);
+		printf("addding image with key %s\n", key);
+		s =
+		  rotozoomSurfaceXY(m_texture->surface, angle, x_zoom,
+				    y_zoom, SMOOTHING_OFF);
+		strcpy(keyName, key);
+		m_image_cache.insert(std::make_pair <> (keyName, s));
+	      }
+
+	      //printf("x y  %f %f  %f  %f \n",point1.x,point1.y,angle, angle *  180 / 3.14159265);
+	      Vector2f middle = (*p3 + *p1) / 2;
+	      float x_start_pixel = middle.x + s->w / 2;	//(s->w /2 ) + middle.x + p1->x;
+	      float y_start_pixel = middle.y + s->h / 2;	// (s->h /2 ) + ( (int)p1->y % s->h) + p1->y;
+	      xx_texturedPolygon(m_screen, x, y, size, s, x_start_pixel,
+				 -y_start_pixel);
+
+	    } else if (t1->x != t2->x && t2->y != t3->y && p1->y == p2->y) {
+	      //we expect that the texture points are in a rectangle
+	      //if the destination points also are in a rectangle
+	      //we are acrualy just drawing an image
 	      float dx_t = t2->x - t1->x;	//delta x of texture
 	      float dx_p = p2->x - p1->x;	//delta x of pixels
 	      int texture_w = m_texture->surface->w;
@@ -356,8 +360,8 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 	      float x_zoom_factor = dx_p / x_pixel_usage;
 	      float x_start_pixel = (t1->x * texture_w) * x_zoom_factor;
 
-	      float dy_t = t3->y - t2->y;	//delta x of texture
-	      float dy_p = p3->y - p2->y;	//delta x of pixels
+	      float dy_t = t3->y - t2->y;	//delta y of texture
+	      float dy_p = p3->y - p2->y;	//delta y of pixels
 	      int texture_h = m_texture->surface->h;
 	      float y_pixel_usage = dy_t * texture_h;
 	      float y_zoom_factor = dy_p / y_pixel_usage;
@@ -386,7 +390,8 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 
 		printf("%f\n", y_zoom_factor);
 	      }
-	      if (x_zoom_factor < 30) {
+	      if (x_zoom_factor * y_zoom_factor * m_texture->surface->w *
+		  m_texture->surface->h < 4000000) {
 		char key[255] = "";
 		sprintf(key, "%s_%i_%.3f_%.3f",
 			m_texture->Name.c_str(), 0,
@@ -398,38 +403,36 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 		  s = (*i).second;
 		} else {
 		  char *keyName = (char *)malloc(strlen(key) + 1);
-		  s =
-		    rotozoomSurfaceXY(m_texture->surface, 0,
-				      x_zoom_factor,
-				      y_zoom_factor, SMOOTHING_ON);
+		  s = rotozoomSurfaceXY(m_texture->surface, 0,
+					x_zoom_factor,
+					y_zoom_factor, SMOOTHING_OFF);
 		  strcpy(keyName, key);
-		  printf("addding image with key %s\n", key);
+		  //printf("addding image with key %s\n", key);
 		  m_image_cache.insert(std::make_pair <> (keyName, s));
 		}
-		//SDL_Surface * surface = rotozoomSurface(m_texture->surface,0,x_zoom_factor,1);
-		//texturedPolygon(m_screen,x,y,size,surface,(int) p1->x -x_start_pixel ,(int) (p2->y + y_start_pixel));
-		//texturedPolygon(m_screen,x,y,size,surface,p1->x + x_start_pixel,-p1->y);
-		texturedPolygon(m_screen, x, y, size, s,
-				-x_start_pixel + p1->x,
-				y_start_pixel - p1->y);
+
+		xx_texturedPolygon(m_screen, x, y, size, s,
+				   -x_start_pixel + p1->x,
+				   y_start_pixel - p1->y);
 	      } else {
-		printf
-		  ("skipping because zoom factor is to large %f\n",
-		   x_zoom_factor);
+		//printf
+		// ("skipping because zoom factor is to large %f\n",
+		// x_zoom_factor);
 	      }
 	    } else {
-	      texturedPolygon(m_screen, x, y, size,
-			      m_texture->surface,
-			      (int)m_texturePoints.at(0)->x,
-			      (int)m_texturePoints.at(0)->y);
+	      xx_texturedPolygon(m_screen, x, y, size,
+				 m_texture->surface,
+				 (int)m_drawingPoints.at(0)->x,
+				 -(int)m_drawingPoints.at(0)->y);
 	    }
 	  } else {
-	    texturedPolygon(m_screen, x, y, size, m_texture->surface,
-			    (int)m_texturePoints.at(0)->x,
-			    (int)m_texturePoints.at(0)->y);
+	    xx_texturedPolygon(m_screen, x, y, size, m_texture->surface,
+			       (int)m_drawingPoints.at(0)->x,
+			       -(int)m_drawingPoints.at(0)->y);
 	  }
 	} else {
-	  texturedPolygon(m_screen, x, y, size, m_texture->surface, 0, 0);
+	  xx_texturedPolygon(m_screen, x, y, size, m_texture->surface, 0,
+			     0);
 	}
       } else {
 	filledPolygonRGBA(m_screen, x, y, size, GET_RED(m_color),
@@ -450,6 +453,12 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 		 GET_BLUE(m_color), GET_ALPHA(m_color));
       }
       break;
+    }
+    for (int i = 0; i < m_drawingPoints.size(); i++) {
+      delete m_drawingPoints.at(i);
+    }
+    for (int i = 0; i < m_texturePoints.size(); i++) {
+      delete m_texturePoints.at(i);
     }
     m_drawingPoints.resize(0);
     m_texturePoints.resize(0);
