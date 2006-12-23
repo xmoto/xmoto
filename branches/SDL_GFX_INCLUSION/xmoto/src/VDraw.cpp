@@ -35,6 +35,7 @@ namespace vapp {
   m_bNoGraphics=false;
   m_bDontUseGLExtensions=false;
   m_bShadersSupported = false;
+  m_bVBOSupported = false;
   m_nLScissorX = m_nLScissorY = m_nLScissorW = m_nLScissorH = 0;
   m_bFBOSupported = false;
   m_pDefaultFontTex = NULL;
