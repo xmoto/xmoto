@@ -198,13 +198,13 @@ namespace vapp {
       m_nActualHeight = nActualH;
     }
 //opengl specific to be removed
-    bool useVBOs(void) {
+    bool useVBOs() {
       return m_bVBOSupported;
     };
-    bool useFBOs(void) {
+    bool useFBOs() {
       return m_bFBOSupported;
     };
-    bool useShaders(void) {
+    bool useShaders() {
       return m_bShadersSupported;
     };
 
