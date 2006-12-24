@@ -344,7 +344,6 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 		  point1.length() / (texture_p1.length() *
 				     m_texture->surface->w);
 
-		float angle = atan(point1.y / point1.x) * 180 / 3.14159265;
 
 		Vector2f point2 = *p3 - *p2;
 		Vector2f texture_p2 = *t3 - *t2;
@@ -353,10 +352,24 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 				     m_texture->surface->h);
 
 
-		if (point1.x < 0) {
+		Vector2f point3 = *p1 - *p4;
+		float angle = atan(point3.x / point3.y) * 180 / 3.14159265;
+		float angle2 =
+		  atan(point1.x / point1.y) * 180 / 3.14159265;
+
+		//if (point1.x < 0) {
+
+		//}
+		if (point3.y < 0) {
 		  angle += 180;
 		}
-		angle = -angle;
+		if (point1.y < 0) {
+		  angle2 += 180;
+		}
+
+		if ((int)(angle - angle2 + 360) % 360 < 180) {
+		  x_zoom = -x_zoom;
+		}
 
 		char key[255] = "";
 		sprintf(key, "rotate-%s_%.0f_%.1f_%.1f",
@@ -371,7 +384,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 		  //printf("addding image with key %s\n", key);
 		  SDL_Surface *s1 =
 		    rotozoomSurfaceXY(m_texture->surface, 0, x_zoom,
-				      y_zoom, SMOOTHING_ON);
+				      y_zoom, SMOOTHING_OFF);
 		  s = rotozoomSurfaceXY(s1, angle, 1, 1, SMOOTHING_ON);
 		  SDL_FreeSurface(s1);
 		  //s = rotozoomSurfaceXY(m_texture->surface, angle , x_zoom  , y_zoom  , SMOOTHING_ON);
@@ -379,19 +392,15 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 		  m_image_cache.insert(std::make_pair <> (keyName, s));
 		}
 
-		if (strcmp(m_texture->Name.c_str(), "Body1") == 0) {
-		  //printf("!!!x,y r zoom %f %f %f  w,h %i %i\n",x_zoom, y_zoom,angle,s->w,s->h);
-
-		}
-		//printf("x y  %f %f  %f  %f \n",point1.x,point1.y,angle, angle *  180 / 3.14159265);
 		Vector2f middle = (*p3 + *p1) / 2;
 		float x_start_pixel = middle.x + s->w / 2;	//(s->w /2 ) + middle.x + p1->x;
 		float y_start_pixel = middle.y + s->h / 2;	// (s->h /2 ) + ( (int)p1->y % s->h) + p1->y;
 		xx_texturedPolygon(m_screen, x, y, size, s, x_start_pixel,
 				   -y_start_pixel);
 
-	      } else if (t1->x != t2->x && t2->y != t3->y
-			 && p1->y == p2->y) {
+	      } else if (t1->x != t2->x && t2->y != t3->y && p1->y == p2->y
+			 && p3->y == p4->y && p1->x == p4->x
+			 && p2->x == p3->x) {
 		//we expect that the texture points are in a rectangle
 		//if the destination points also are in a rectangle
 		//we are acrualy just drawing an image
