@@ -503,6 +503,9 @@ namespace vapp {
     //data buffer for drawing the background
     void *m_bg_data;
 
+    Vector2f m_min;
+    Vector2f m_max;
+
     SDL_Surface *m_screen;
 
     //
