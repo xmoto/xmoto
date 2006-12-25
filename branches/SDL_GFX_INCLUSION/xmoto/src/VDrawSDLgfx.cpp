@@ -332,8 +332,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 	      p2 = m_drawingPoints.at(1);
 	      p3 = m_drawingPoints.at(2);
 	      p4 = m_drawingPoints.at(3);
-	      //lets first just try to draw the start
-	      //of the pixmap on the right place
+
 	      if (t1->x != t2->x && t2->y != t3->y && p1->y != p2->y) {
 		//find the lenght of the first segment
 		Vector2f point1 = *p2 - *p1;
@@ -357,9 +356,6 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 		float angle2 =
 		  atan(point1.x / point1.y) * 180 / 3.14159265;
 
-		//if (point1.x < 0) {
-
-		//}
 		if (point3.y < 0) {
 		  angle += 180;
 		}
@@ -385,8 +381,13 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 		  SDL_Surface *s1 =
 		    rotozoomSurfaceXY(m_texture->surface, 0, x_zoom,
 				      y_zoom, SMOOTHING_OFF);
-		  s = rotozoomSurfaceXY(s1, angle, 1, 1, SMOOTHING_ON);
+		  SDL_Surface *s2 =
+		    rotozoomSurfaceXY(s1, angle, 1, 1, SMOOTHING_ON);
+
+		  //s = SDL_ConvertSurface(s2,m_screen->format,SDL_SRCALPHA);
+		  s = SDL_DisplayFormatAlpha(s2);
 		  SDL_FreeSurface(s1);
+		  SDL_FreeSurface(s2);
 		  //s = rotozoomSurfaceXY(m_texture->surface, angle , x_zoom  , y_zoom  , SMOOTHING_ON);
 		  strcpy(keyName, key);
 		  m_image_cache.insert(std::make_pair <> (keyName, s));
@@ -454,9 +455,11 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 		    s = (*i).second;
 		  } else {
 		    char *keyName = (char *)malloc(strlen(key) + 1);
-		    s = rotozoomSurfaceXY(m_texture->surface, 0,
-					  x_zoom_factor,
-					  y_zoom_factor, SMOOTHING_OFF);
+		    SDL_Surface *s1 =
+		      rotozoomSurfaceXY(m_texture->surface, 0,
+					x_zoom_factor,
+					y_zoom_factor, SMOOTHING_OFF);
+		    s = SDL_DisplayFormatAlpha(s1);
 		    strcpy(keyName, key);
 		    //printf("addding image with key %s\n", key);
 		    m_image_cache.insert(std::make_pair <> (keyName, s));
