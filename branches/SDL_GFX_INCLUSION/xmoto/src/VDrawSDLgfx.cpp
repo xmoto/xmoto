@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *  Simple 2D drawing library, built closely on top of OpenGL.
  */
 #include "VDraw.h"
+#include "VApp.h"
 #include "BuiltInFont.h"
 
 #ifdef ENABLE_SDLGFX
@@ -93,6 +94,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 
   void DrawLibSDLgfx::setClipRect(int x, int y, int w, int h) {
     SDL_Rect *rect = new SDL_Rect();
+
     rect->x = x;
     rect->y = y;
     rect->w = w;
@@ -135,6 +137,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 
     /* Get some video info */
     const SDL_VideoInfo *pVidInfo = SDL_GetVideoInfo();
+
     if (pVidInfo == NULL)
       throw Exception("(1) SDL_GetVideoInfo : " +
 		      std::string(SDL_GetError()));
@@ -145,6 +148,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
       m_nDispBPP = pVidInfo->vfmt->BitsPerPixel;
 
     int nFlags = SDL_SRCALPHA;
+
     if (!m_bWindowed)
       nFlags |= SDL_FULLSCREEN;
     /* At last, try to "set the video mode" */
@@ -301,6 +305,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 
 
     bool draw = true;
+
     if (m_max.x < 0 || m_min.x > m_screen->w) {
       draw = false;
       //printf("min max x %.2f %.2f\n",m_min.x,m_max.x);
@@ -313,6 +318,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
     if (draw == true) {
       Sint16 x[size];
       Sint16 y[size];
+
       for (int i = 0; i < size; i++) {
 	x[i] = m_drawingPoints.at(i)->x;
 	y[i] = m_drawingPoints.at(i)->y;
@@ -324,6 +330,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 	    if (m_texturePoints.size() == 4 && m_drawingPoints.size() == 4) {
 	      Vector2f *t1, *t2, *t3, *t4;
 	      Vector2f *p1, *p2, *p3, *p4;
+
 	      t1 = m_texturePoints.at(0);
 	      t2 = m_texturePoints.at(1);
 	      t3 = m_texturePoints.at(2);
@@ -368,6 +375,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 		}
 
 		char key[255] = "";
+
 		sprintf(key, "rotate-%s_%.0f_%.1f_%.1f",
 			m_texture->Name.c_str(), angle, x_zoom, y_zoom);
 		SDL_Surface *s = NULL;
@@ -377,6 +385,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 		  s = (*i).second;
 		} else {
 		  char *keyName = (char *)malloc(strlen(key) + 1);
+
 		  //printf("addding image with key %s\n", key);
 		  SDL_Surface *s1 =
 		    rotozoomSurfaceXY(m_texture->surface, 0, x_zoom,
@@ -396,6 +405,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 		Vector2f middle = (*p3 + *p1) / 2;
 		float x_start_pixel = middle.x + s->w / 2;	//(s->w /2 ) + middle.x + p1->x;
 		float y_start_pixel = middle.y + s->h / 2;	// (s->h /2 ) + ( (int)p1->y % s->h) + p1->y;
+
 		xx_texturedPolygon(m_screen, x, y, size, s, x_start_pixel,
 				   -y_start_pixel);
 
@@ -445,6 +455,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 		if (x_zoom_factor * y_zoom_factor * m_texture->surface->w *
 		    m_texture->surface->h < 4000000) {
 		  char key[255] = "";
+
 		  sprintf(key, "%s_%i_%.3f_%.3f",
 			  m_texture->Name.c_str(), 0,
 			  x_zoom_factor, y_zoom_factor);
@@ -459,6 +470,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 		      rotozoomSurfaceXY(m_texture->surface, 0,
 					x_zoom_factor,
 					y_zoom_factor, SMOOTHING_OFF);
+
 		    s = SDL_DisplayFormatAlpha(s1);
 		    strcpy(keyName, key);
 		    //printf("addding image with key %s\n", key);
@@ -544,6 +556,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
   int DrawLibSDLgfx::getTextHeight(std::string Text) {
     int cx = 0, cy = 0, c;
     int h = 0;
+
     for (unsigned int i = 0; i < Text.size(); i++) {
       c = Text[i];
       if (c == ' ') {
@@ -565,6 +578,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
   int DrawLibSDLgfx::getTextWidth(std::string Text) {
     int cx = 0, cy = 0, c;
     int w = 0;
+
     for (unsigned int i = 0; i < Text.size(); i++) {
       c = Text[i];
       if (c == ' ') {
@@ -604,6 +618,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 
 
     int nCharsPerLine = 256 / 8;
+
     for (unsigned int i = 0; i < Text.size(); i++) {
       c = Text[i];
       if (c == ' ') {
@@ -626,6 +641,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 	int x1 = (c % nCharsPerLine) * 8;
 	int y2 = y1 + 12;
 	int x2 = x1 + 8;
+
 	startDraw(DRAW_MODE_POLYGON);
 	setColor(Back);
 	glVertexSP(cx, cy);
@@ -839,6 +855,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
     int x2, y2;
     int ind1, ind2;
     int ints;
+
     /*
      * Sanity check 
      */

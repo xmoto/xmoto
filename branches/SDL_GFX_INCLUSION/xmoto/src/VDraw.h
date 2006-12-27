@@ -29,13 +29,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Theme.h"
 #include "Image.h"
 namespace vapp {
-  //keesj:TODO why do I need to declare the Log function here?
-  void Log(const char *pcFmt, ...);
-
-
   /**
    * VApp draw modes to be used as argument in startDraw
-   * DRAW_MODE_POLYGON is a filled polygon drawing mode
+   * DRAW_MODE_POLYGON is a filled polygon drawing mode.
+   * If a texture was given this texture will be used as filling
    * DRAW_MODE_LINE_LOOP is a polygon drawing mode (non filled)
    * DRAW_MODE_LINE_STRIP draws lines 
    **/
@@ -63,25 +60,30 @@ namespace vapp {
     DrawLib();
     virtual ~ DrawLib();
 
-      /**
-       * initialize the screen
-       **/
+    /**
+   * initialize the screen
+    **/
     virtual void init(int nDispWidth, int nDispHeight, int nDispBPP,
 		      bool bWindowed, Theme * ptheme) = 0;
+
     virtual void unInit() = 0;
 
     void setDispWidth(int width) {
       m_nDispWidth = width;
     };
+
     int getDispWidth(void) {
       return m_nDispWidth;
-    }
+    };
+
     void setNoGraphics(bool disable_graphics) {
       m_bNoGraphics = disable_graphics;
     };
+
     bool isNoGraphics() {
       return m_bNoGraphics;
     };
+
     void setDispHeight(int height) {
       m_nDispHeight = height;
     };
@@ -105,6 +107,7 @@ namespace vapp {
     /* Methods - low-level */
     //add a vertex given screen coordinates
     virtual void glVertexSP(float x, float y) = 0;
+
     //add a vertex given opengl coordinates
     virtual void glVertex(float x, float y) = 0;
 
@@ -112,11 +115,13 @@ namespace vapp {
     void glVertex(Vector2f x) {
       glVertex(x.x, x.y);
     };
+
     //texture coordinate
     virtual void glTexCoord(float x, float y) = 0;
     virtual void screenProjVertex(float *x, float *y) = 0;
 
     virtual void setColor(Color color) = 0;
+
       /**
        * set the texure for drawing
        * the value may be NULL to disable texure
@@ -127,6 +132,7 @@ namespace vapp {
     void setColorRGB(int r, int g, int b) {
       setColor(MAKE_COLOR(r, g, b, 255));
     };
+
     void setColorRGBA(int r, int g, int b, int a) {
       setColor(MAKE_COLOR(r, g, b, a));
     };
@@ -188,6 +194,7 @@ namespace vapp {
       m_bDontUseGLExtensions = dont_use;
     };
     virtual Img *grabScreen(void) = 0;
+
     /*
      * set the refecence drawing size
      **/
@@ -232,6 +239,7 @@ namespace vapp {
     bool m_bShadersSupported;
     bool m_bDontUseGLExtensions;
     bool m_bNoGraphics;		/* No-graphics mode */
+
   private:
 
 

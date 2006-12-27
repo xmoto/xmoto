@@ -28,123 +28,155 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //#include "VMath.h"
 #include "VDraw.h"
 //#include "VTexture.h"
-#include "Image.h"	
+#include "Image.h"
 
 namespace vapp {
 
-   	
+
   class App;
 
   /*===========================================================================
   Globals
   ===========================================================================*/
-  void Log(const char *pcFmt,...);
+  //keesj:todo perhaps move these functions to VCommon
+  //because they are used in the DrawLib, I don't think
+  //drawlib should depend on VApp
+  void Log(const char *pcFmt, ...);
   void LogRaw(const char *pcMsg);
-  void Verbose(const char *pcMsg);  
+  void Verbose(const char *pcMsg);
 
   /*===========================================================================
   Sub-application - something that runs in the context of a parent app
   useful for ugly pop-menus, etc.
   ===========================================================================*/
   class SubApp {
-    public:
-      SubApp() {
-        m_pParentApp = NULL;
-        m_bShouldClose = false;
-      }
-      virtual ~SubApp() {};
-      
-      /* Methods */
-      int run(App *pParent);
-            
-      /* Data interface */
-      App *getParent(void) {return m_pParentApp;}
+  public:
+    SubApp() {
+      m_pParentApp = NULL;
+      m_bShouldClose = false;
+    } virtual ~ SubApp() {
+    };
 
-      /* Protected */
-      void subClose(int nRetVal);
-      
-    protected:
-      
-      /* Virtual protected methods */
-      virtual void update(void) {}
-      virtual void keyDown(int nKey,int nChar) {}
-      virtual void keyUp(int nKey) {}
-      virtual void mouseDown(int nButton) {}
-      virtual void mouseUp(int nButton) {}
-                      
-    private: 
-      /* Data */
-      App *m_pParentApp;
-      bool m_bShouldClose;
-      int m_nRetVal;
+    /* Methods */
+    int run(App * pParent);
+
+    /* Data interface */
+    App *getParent(void) {
+      return m_pParentApp;
+    }
+
+    /* Protected */
+    void subClose(int nRetVal);
+
+  protected:
+
+    /* Virtual protected methods */
+    virtual void update(void) {
+    }
+    virtual void keyDown(int nKey, int nChar) {
+    }
+    virtual void keyUp(int nKey) {
+    }
+    virtual void mouseDown(int nButton) {
+    }
+    virtual void mouseUp(int nButton) {
+    }
+
+  private:
+    /* Data */
+    App * m_pParentApp;
+    bool m_bShouldClose;
+    int m_nRetVal;
   };
-  
+
   /*===========================================================================
   Vector graphics application base class
   ===========================================================================*/
   class App {
-    public:
-      App() {m_bQuit=false;
-             m_fAppTime=0.0f;
-             m_AppName="";
-             m_CopyrightInfo="";
-             m_AppCommand="";
-             m_UserNotify="";
-	     m_bCmdDispWidth=false;
-             m_bCmdDispHeight=false;
-             m_bCmdDispBPP=false;
-             m_bCmdWindowed=false;
-	     m_fFramesPerSecond=25.0f;
-             m_fNextFrame=0.0f;
-	     m_bNoWWW = false;  
-	     m_nFrameDelay=0;
-	     drawLib = NULL;
+  public:
+    App() {
+      m_bQuit = false;
+      m_fAppTime = 0.0f;
+      m_AppName = "";
+      m_CopyrightInfo = "";
+      m_AppCommand = "";
+      m_UserNotify = "";
+      m_bCmdDispWidth = false;
+      m_bCmdDispHeight = false;
+      m_bCmdDispBPP = false;
+      m_bCmdWindowed = false;
+      m_fFramesPerSecond = 25.0f;
+      m_fNextFrame = 0.0f;
+      m_bNoWWW = false;
+      m_nFrameDelay = 0;
+      drawLib = NULL;
 
-             }
-      virtual ~App() {}
-    
-      /* Methods */
-      void run(int nNumArgs,char **ppcArgs);
-      
-      /* Application definition */
-      void setAppName(const std::string &i) {m_AppName=i;}
-      void setCopyrightInfo(const std::string &i) {m_CopyrightInfo=i;}
-      void setAppCommand(const std::string &i) {m_AppCommand=i;}
-      void setFPS(float i) {m_fFramesPerSecond=i;}
-      static double getTime(void); 
-      static double getRealTime(void);
-      std::string getTimeStamp(void);
-      void quit(void);      
-      static std::string formatTime(float fSecs);
-      void getMousePos(int *pnX,int *pnY);        
-      bool haveMouseMoved(void);
+    } virtual ~ App() {
+    }
 
+    /* Methods */
+    void run(int nNumArgs, char **ppcArgs);
 
-
-
-      std::vector<std::string>* getDisplayModes();
-
-      void setFrameDelay(int nDelay) {m_nFrameDelay=nDelay;}
-
-      void scissorGraphics(int x,int y,int nWidth,int nHeight);
-      void getScissorGraphics(int *px,int *py,int *pnWidth,int *pnHeight);
-      Img *grabScreen(void);
+    /* Application definition */
+    void setAppName(const std::string & i) {
+      m_AppName = i;
+    }
+    void setCopyrightInfo(const std::string & i) {
+      m_CopyrightInfo = i;
+    }
+    void setAppCommand(const std::string & i) {
+      m_AppCommand = i;
+    }
+    void setFPS(float i) {
+      m_fFramesPerSecond = i;
+    }
+    static double getTime(void);
+    static double getRealTime(void);
+    std::string getTimeStamp(void);
+    void quit(void);
+    static std::string formatTime(float fSecs);
+    void getMousePos(int *pnX, int *pnY);
+    bool haveMouseMoved(void);
 
 
-      const std::string &getUserNotify(void) {return m_UserNotify;}
 
 
-      float getFPS(void) {return m_fFramesPerSecond;}      
+    std::vector < std::string > *getDisplayModes();
+
+    void setFrameDelay(int nDelay) {
+      m_nFrameDelay = nDelay;
+    }
+
+    void scissorGraphics(int x, int y, int nWidth, int nHeight);
+    void getScissorGraphics(int *px, int *py, int *pnWidth, int *pnHeight);
+    Img *grabScreen(void);
+
+
+    const std::string & getUserNotify(void) {
+      return m_UserNotify;
+    }
+
+
+    float getFPS(void) {
+      return m_fFramesPerSecond;
+    }
 //      bool isNoGraphics(void) {return m_bNoGraphics;}
 //      void setNoGraphics(bool b) {m_bNoGraphics = b;}
-      bool isNoWWW(void) {return m_bNoWWW;}
-      static std::string getVersionString(void) {
-        char cBuf[256]; sprintf(cBuf,"%d.%d.%d" BUILD_EXTRAINFO,BUILD_MAJORVERSION,BUILD_VERSION,BUILD_MINORVERSION);
-        return cBuf;        
-      }
-      
+    bool isNoWWW(void) {
+      return m_bNoWWW;
+    }
+    static std::string getVersionString(void) {
+      char cBuf[256];
 
-      virtual bool isUglyMode() {return false;};
+      sprintf(cBuf, "%d.%d.%d" BUILD_EXTRAINFO, BUILD_MAJORVERSION,
+	      BUILD_VERSION, BUILD_MINORVERSION);
+      return cBuf;
+    }
+
+
+    virtual bool isUglyMode() {
+      return false;
+    };
 
       /**
        * keesj:TOTO
@@ -156,68 +188,93 @@ namespace vapp {
        * creates a tight coupling between both.
        * while the GUI only uses the theme and the drawing functions
        **/
-      DrawLib * getDrawLib(){return drawLib; };
-      Theme * getTheme(){return &m_theme; };
-      
-      
-    protected:
-      bool isCmdDispWidth(void) {return m_bCmdDispWidth;}
-      bool isCmdDispHeight(void) {return m_bCmdDispHeight;}
-      bool isCmdDispBPP(void) {return m_bCmdDispBPP;}
-      bool isCmdDispWindowed(void) {return m_bCmdWindowed;}
-      /* Virtual protected methods */
-      virtual void drawFrame(void) {}      
-      virtual void keyDown(int nKey,int nChar) {}
-      virtual void keyUp(int nKey) {}
-      virtual void mouseDown(int nButton) {}
-      virtual void mouseDoubleClick(int nButton) {}      
-      virtual void mouseUp(int nButton) {}
-      virtual void parseUserArgs(std::vector<std::string> &UserArgs) {}
-      virtual void helpUserArgs(void) {}
-      virtual void userInit(void) {}
-      virtual void userPreInit(void) {}
-      virtual void userShutdown(void) {}
-      virtual void selectDisplayMode(int *pnWidth,int *pnHeight,int *pnBPP,bool *pbWindowed) {}
+    DrawLib *getDrawLib() {
+      return drawLib;
+    };
+    Theme *getTheme() {
+      return &m_theme;
+    };
+
+
+  protected:
+    bool isCmdDispWidth(void) {
+      return m_bCmdDispWidth;
+    }
+    bool isCmdDispHeight(void) {
+      return m_bCmdDispHeight;
+    }
+    bool isCmdDispBPP(void) {
+      return m_bCmdDispBPP;
+    }
+    bool isCmdDispWindowed(void) {
+      return m_bCmdWindowed;
+    }
+    /* Virtual protected methods */
+    virtual void drawFrame(void) {
+    }
+    virtual void keyDown(int nKey, int nChar) {
+    }
+    virtual void keyUp(int nKey) {
+    }
+    virtual void mouseDown(int nButton) {
+    }
+    virtual void mouseDoubleClick(int nButton) {
+    }
+    virtual void mouseUp(int nButton) {
+    }
+    virtual void parseUserArgs(std::vector < std::string > &UserArgs) {
+    }
+    virtual void helpUserArgs(void) {
+    }
+    virtual void userInit(void) {
+    }
+    virtual void userPreInit(void) {
+    }
+    virtual void userShutdown(void) {
+    }
+    virtual void selectDisplayMode(int *pnWidth, int *pnHeight, int *pnBPP,
+				   bool * pbWindowed) {
+    }
       /**
        * The DrawLib instance to use for this app
        **/
-      Theme m_theme;
-      DrawLib * drawLib;
-      
-    private:
-      /* Private helper functions */
-      void _Init(int nDispWidth,int nDispHeight,int nDispBPP,bool bWindowed);
-      void _Uninit(void);
-      void _ParseArgs(int nNumArgs,char **ppcArgs);
+    Theme m_theme;
+    DrawLib *drawLib;
 
-  
-      
+  private:
+    /* Private helper functions */
+    void _Init(int nDispWidth, int nDispHeight, int nDispBPP,
+	       bool bWindowed);
+    void _Uninit(void);
+    void _ParseArgs(int nNumArgs, char **ppcArgs);
 
 
-      /* Data */
-      int m_nFrameDelay; /* # of millisecs to wait after screen buffer swap */
-      
-      bool m_bNoWWW;
-      float m_fFramesPerSecond; /* Force this FPS */
 
-      
-      bool m_bCmdDispWidth,m_bCmdDispHeight,m_bCmdDispBPP,m_bCmdWindowed;
-      
-      /* User nofification */
-      std::string m_UserNotify;
-            
-      /* App def */
-      std::string m_AppName;        /* Name of app */
-      std::string m_CopyrightInfo;  /* Application copyright string */
-      std::string m_AppCommand;     /* Command to start app */           
-           
-      /* Run-time fun */
-      bool m_bQuit;             /* Quit flag */
-      double m_fAppTime;        /* Current application time */
-      double m_fNextFrame;      /* Time next frame rendering should begin */
+
+
+    /* Data */
+    int m_nFrameDelay;		/* # of millisecs to wait after screen buffer swap */
+
+    bool m_bNoWWW;
+    float m_fFramesPerSecond;	/* Force this FPS */
+
+
+    bool m_bCmdDispWidth, m_bCmdDispHeight, m_bCmdDispBPP, m_bCmdWindowed;
+
+    /* User nofification */
+    std::string m_UserNotify;
+
+    /* App def */
+    std::string m_AppName;	/* Name of app */
+    std::string m_CopyrightInfo;	/* Application copyright string */
+    std::string m_AppCommand;	/* Command to start app */
+
+    /* Run-time fun */
+    bool m_bQuit;		/* Quit flag */
+    double m_fAppTime;		/* Current application time */
+    double m_fNextFrame;	/* Time next frame rendering should begin */
   };
 
 }
 
 #endif
-
