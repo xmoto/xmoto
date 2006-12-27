@@ -109,6 +109,8 @@ namespace vapp {
       void slower();
       float getSpeed() const; /* get multiple factor of the replay */
       
+      int CurrentFrame() const;
+
       void setSpeed(float f) {m_speed_factor = f;}
       bool isPaused(void) {return m_is_paused;}
 

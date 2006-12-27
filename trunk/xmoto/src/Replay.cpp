@@ -351,6 +351,10 @@ namespace vapp {
   SwapEndian::LittleSerializedBikeState(*(SerializedBikeState*)addr);
   }
   
+  int Replay::CurrentFrame() const {
+    return m_nCurChunk * STATES_PER_CHUNK + m_nCurState + 1;
+  }
+
   bool Replay::nextNormalState() {
     return nextState(m_speed_factor);
   }
