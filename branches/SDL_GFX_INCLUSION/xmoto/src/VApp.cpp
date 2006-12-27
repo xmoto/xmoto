@@ -463,6 +463,11 @@ namespace vapp {
 	     drawLib = new DrawLibOpenGL();
     }
 #endif
+#ifdef ENABLE_SDLGFX
+    if (drawLib == NULL){
+	     drawLib = new DrawLibSDLgfx();
+    }
+#endif
   
     /* Walk through the args */
     for(int i=1;i<nNumArgs;i++) {
@@ -537,6 +542,9 @@ namespace vapp {
         printf("\t-v\n\t\tBe verbose.\n");
         printf("\t-noexts\n\t\tDon't use any OpenGL extensions.\n");
         printf("\t-nowww\n\t\tDon't allow xmoto to connect on the web.\n");
+#ifdef ENABLE_SDLGFX
+        printf("\t-sdlgfx\n\t\tSelect SDL_fgx as rendering engine.\n");
+#endif
         helpUserArgs();
         printf("\n");
         
