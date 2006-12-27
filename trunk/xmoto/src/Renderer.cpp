@@ -87,7 +87,6 @@ namespace vapp {
         Vector2f Center;
         Sprite *pSprite;
         Texture *pTexture;
-        GLuint GLName = 0;        
         
         pTexture = NULL;
         
@@ -96,12 +95,11 @@ namespace vapp {
         if(ConvexBlocks[j]->SourceBlock()) {
           Center = ConvexBlocks[j]->SourceBlock()->DynamicPosition();
           
-          pSprite = getParent()->m_theme.getSprite(SPRITE_TYPE_TEXTURE,
+          pSprite = getParent()->getTheme()->getSprite(SPRITE_TYPE_TEXTURE,
                                                    ConvexBlocks[j]->SourceBlock()->Texture());
           if(pSprite != NULL) {
             try {
               pTexture = pSprite->getTexture();
-              GLName = pTexture->nID;
             } catch(Exception &e) {
               Log("** Warning ** : Texture '%s' not found!",ConvexBlocks[j]->SourceBlock()->Texture().c_str());
               getGameObject()->gameMessage(GAMETEXT_MISSINGTEXTURES,true);   
@@ -112,13 +110,9 @@ namespace vapp {
           }
         }
         else {
-          pSprite = getParent()->m_theme.getSprite(SPRITE_TYPE_TEXTURE, "default");
+          pSprite = getParent()->getTheme()->getSprite(SPRITE_TYPE_TEXTURE, "default");
           if(pSprite != NULL) {
             pTexture = pSprite->getTexture();
-          }
-          
-          if(pTexture != NULL) {
-            GLName = pTexture->nID;
           }
         }
         
@@ -179,19 +173,20 @@ namespace vapp {
         }          
         
         nVertexBytes += pPoly->nNumVertices * ( 4 * sizeof(float) );
-        
+#ifdef ENABLE_OPENGL        
         /* Use VBO optimization? */
-        if(getParent()->useVBOs()) {
+        if(getParent()->getDrawLib()->useVBOs()) {
           /* Copy static coordinates unto video memory */
-          getParent()->glGenBuffersARB(1, (GLuint *) &pPoly->nVertexBufferID);
-          getParent()->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nVertexBufferID);
-          getParent()->glBufferDataARB(GL_ARRAY_BUFFER_ARB,pPoly->nNumVertices*2*sizeof(float),(void *)pPoly->pVertices,GL_STATIC_DRAW_ARB);
-          
-          getParent()->glGenBuffersARB(1, (GLuint *) &pPoly->nTexCoordBufferID);
-          getParent()->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nTexCoordBufferID);
-          getParent()->glBufferDataARB(GL_ARRAY_BUFFER_ARB,pPoly->nNumVertices*2*sizeof(float),(void *)pPoly->pTexCoords,GL_STATIC_DRAW_ARB);
+          ((DrawLibOpenGL*)getParent()->getDrawLib())->glGenBuffersARB(1, (GLuint *) &pPoly->nVertexBufferID);
+          ((DrawLibOpenGL*)getParent()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nVertexBufferID);
+          ((DrawLibOpenGL*)getParent()->getDrawLib())->glBufferDataARB(GL_ARRAY_BUFFER_ARB,pPoly->nNumVertices*2*sizeof(float),(void *)pPoly->pVertices,GL_STATIC_DRAW_ARB);
+                                                 
+          ((DrawLibOpenGL*)getParent()->getDrawLib())->glGenBuffersARB(1, (GLuint *) &pPoly->nTexCoordBufferID);
+          ((DrawLibOpenGL*)getParent()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nTexCoordBufferID);
+          ((DrawLibOpenGL*)getParent()->getDrawLib())->glBufferDataARB(GL_ARRAY_BUFFER_ARB,pPoly->nNumVertices*2*sizeof(float),(void *)pPoly->pTexCoords,GL_STATIC_DRAW_ARB);
         }
-      }
+#endif
+      }                                                                    
     }
     
     setScroll(false);
@@ -211,8 +206,10 @@ namespace vapp {
     for(int i=0;i<m_Geoms.size();i++) { 
       for(int j=0;j<m_Geoms[i]->Polys.size();j++) { 
         if(m_Geoms[i]->Polys[j]->nVertexBufferID) {
-          getParent()->glDeleteBuffersARB(1, (GLuint *) &m_Geoms[i]->Polys[j]->nVertexBufferID);
-          getParent()->glDeleteBuffersARB(1, (GLuint *) &m_Geoms[i]->Polys[j]->nTexCoordBufferID);
+#ifdef ENABLE_OPENGL
+          ((DrawLibOpenGL*)getParent()->getDrawLib())->glDeleteBuffersARB(1, (GLuint *) &m_Geoms[i]->Polys[j]->nVertexBufferID);
+          ((DrawLibOpenGL*)getParent()->getDrawLib())->glDeleteBuffersARB(1, (GLuint *) &m_Geoms[i]->Polys[j]->nTexCoordBufferID);
+#endif
         }
       
         delete [] m_Geoms[i]->Polys[j]->pTexCoords;
@@ -260,10 +257,10 @@ namespace vapp {
     float coefw = 1.0 / ENGINECOUNTER_PICTURE_SIZE * nWidth;
     float coefh = 1.0 / ENGINECOUNTER_PICTURE_SIZE * nHeight;
 
-    p0 = Vector2f(x,        getParent()->getDispHeight()-y-nHeight);
-    p1 = Vector2f(x+nWidth, getParent()->getDispHeight()-y-nHeight);
-    p2 = Vector2f(x+nWidth, getParent()->getDispHeight()-y);
-    p3 = Vector2f(x,        getParent()->getDispHeight()-y);
+    p0 = Vector2f(x,        getParent()->getDrawLib()->getDispHeight()-y-nHeight);
+    p1 = Vector2f(x+nWidth, getParent()->getDrawLib()->getDispHeight()-y-nHeight);
+    p2 = Vector2f(x+nWidth, getParent()->getDrawLib()->getDispHeight()-y);
+    p3 = Vector2f(x,        getParent()->getDrawLib()->getDispHeight()-y);
 
     pcenter = p3 + Vector2f(ENGINECOUNTER_CENTERX   * coefw,
           - ENGINECOUNTER_CENTERY * coefh); 
@@ -277,16 +274,16 @@ namespace vapp {
          );
 
 
-    pSprite = (MiscSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_MISC, "EngineCounter");
+    pSprite = (MiscSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_MISC, "EngineCounter");
     if(pSprite != NULL) {
       pTexture = pSprite->getTexture();
       if(pTexture != NULL) {
       _RenderAlphaBlendedSection(pTexture, p0, p1, p2, p3);
-  glBegin(GL_LINE_STRIP);
-  glColor3ub(255, 50, 50);
-  _Vertex(pcenter);
-  _Vertex(pdest);
-      glEnd();
+  getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
+  getParent()->getDrawLib()->setColorRGB(255,50,50);
+  getParent()->getDrawLib()->glVertex(pcenter);
+  getParent()->getDrawLib()->glVertex(pdest);
+  getParent()->getDrawLib()->endDraw();
       }
     }
   }
@@ -297,15 +294,17 @@ namespace vapp {
   #define MINIMAPZOOM 5.0f
   #define MINIMAPALPHA 128
   #define MINIVERTEX(Px,Py) \
-    getParent()->glVertex(x + nWidth/2 + (float)(Px - getCameraPositionX())*MINIMAPZOOM, \
+    getParent()->getDrawLib()->glVertexSP(x + nWidth/2 + (float)(Px - getCameraPositionX())*MINIMAPZOOM, \
                           y + nHeight/2 - (float)(Py - getCameraPositionY())*MINIMAPZOOM);    
 
   void GameRenderer::renderMiniMap(int x,int y,int nWidth,int nHeight) {
-    getParent()->drawBox(Vector2f(x,y),Vector2f(x+nWidth,y+nHeight),1,
+    getParent()->getDrawLib()->drawBox(Vector2f(x,y),Vector2f(x+nWidth,y+nHeight),1,
                          MAKE_COLOR(0,0,0,MINIMAPALPHA),MAKE_COLOR(255,255,255,MINIMAPALPHA));
     getParent()->scissorGraphics(x+1,y+1,nWidth-2,nHeight-2);
+#ifdef ENABLE_OPENGL
     glEnable(GL_SCISSOR_TEST);
     glLoadIdentity();
+#endif
         
     MotoGame *pGame = getGameObject();
     std::vector<Block *> Blocks = getGameObject()->getLevelSrc()->Blocks();
@@ -325,13 +324,13 @@ namespace vapp {
               Center = ConvexBlocks[j]->SourceBlock()->DynamicPosition();
             }
             
-            glBegin(GL_POLYGON);
-            glColor3f(0.5,0.5,0.5);
+            getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+            getParent()->getDrawLib()->setColorRGB(128,128,128);
             for(int k=0; k<ConvexBlocks[j]->Vertices().size(); k++) {
               Vector2f P = Center + ConvexBlocks[j]->Vertices()[k]->Position();        
               MINIVERTEX(P.x,P.y);                  
             }
-            glEnd();
+            getParent()->getDrawLib()->endDraw();
           } else {
       
             /* Build rotation matrix for block */
@@ -339,8 +338,9 @@ namespace vapp {
             fR[0] = cos(Blocks[i]->DynamicRotation()); fR[1] = -sin(Blocks[i]->DynamicRotation());
             fR[2] = sin(Blocks[i]->DynamicRotation()); fR[3] = cos(Blocks[i]->DynamicRotation());
   
-            glBegin(GL_POLYGON);
-            glColor3f(0.5,0.5,0.5);
+            getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+            getParent()->getDrawLib()->setColorRGB(128,128,128);
+	    //glColor3f(1,0,0);
             for(int k=0; k<ConvexBlocks[j]->Vertices().size(); k++) {
               ConvexBlockVertex *pVertex = ConvexBlocks[j]->Vertices()[k];
                 
@@ -350,23 +350,23 @@ namespace vapp {
               Tv += Blocks[i]->DynamicPosition();
               
               /* Put vertex */
-              glTexCoord2f(pVertex->TexturePosition().x,pVertex->TexturePosition().y);          
+              getParent()->getDrawLib()->glTexCoord(pVertex->TexturePosition().x,pVertex->TexturePosition().y);          
               MINIVERTEX(Tv.x,Tv.y);                  
             }
-            glEnd();
+            getParent()->getDrawLib()->endDraw();
           }
         }
       }
     }
     
-    getParent()->drawCircle(Vector2f(x + nWidth/2 + (float)(pGame->getBikeState()->CenterP.x - getCameraPositionX())*MINIMAPZOOM,
+    getParent()->getDrawLib()->drawCircle(Vector2f(x + nWidth/2 + (float)(pGame->getBikeState()->CenterP.x - getCameraPositionX())*MINIMAPZOOM,
                                      y + nHeight/2 - (float)(pGame->getBikeState()->CenterP.y - getCameraPositionY())*MINIMAPZOOM),
                             3,0,MAKE_COLOR(255,255,255,255),0);
     
 #if defined(ALLOW_GHOST)
     /* Render ghost position too? */
     if(getGameObject()->isGhostActive()) {
-      getParent()->drawCircle(Vector2f(x + nWidth/2 + (float)(pGame->getGhostBikeState()->CenterP.x - getCameraPositionX())*MINIMAPZOOM,
+      getParent()->getDrawLib()->drawCircle(Vector2f(x + nWidth/2 + (float)(pGame->getGhostBikeState()->CenterP.x - getCameraPositionX())*MINIMAPZOOM,
                                        y + nHeight/2 - (float)(pGame->getGhostBikeState()->CenterP.y - getCameraPositionY())*MINIMAPZOOM),
                               3,0,MAKE_COLOR(96,96,150,255),0);
     }
@@ -374,21 +374,24 @@ namespace vapp {
     
     for(int i=0;i<pGame->getLevelSrc()->Entities().size();i++) {
       if(pGame->getLevelSrc()->Entities()[i]->DoesMakeWin()) {
-        getParent()->drawCircle(Vector2f(x + nWidth/2 + (float)(pGame->getLevelSrc()->Entities()[i]->DynamicPosition().x - getCameraPositionX())*MINIMAPZOOM,
+        getParent()->getDrawLib()->drawCircle(Vector2f(x + nWidth/2 + (float)(pGame->getLevelSrc()->Entities()[i]->DynamicPosition().x - getCameraPositionX())*MINIMAPZOOM,
                                          y + nHeight/2 - (float)(pGame->getLevelSrc()->Entities()[i]->DynamicPosition().y - getCameraPositionY())*MINIMAPZOOM),
                                 3,0,MAKE_COLOR(255,0,255,255),0);
         
       }
       else if(pGame->getLevelSrc()->Entities()[i]->IsToTake()) {
-        getParent()->drawCircle(Vector2f(x + nWidth/2 + (float)(pGame->getLevelSrc()->Entities()[i]->DynamicPosition().x - getCameraPositionX())*MINIMAPZOOM,
+        getParent()->getDrawLib()->drawCircle(Vector2f(x + nWidth/2 + (float)(pGame->getLevelSrc()->Entities()[i]->DynamicPosition().x - getCameraPositionX())*MINIMAPZOOM,
                                          y + nHeight/2 - (float)(pGame->getLevelSrc()->Entities()[i]->DynamicPosition().y - getCameraPositionY())*MINIMAPZOOM),
                                 3,0,MAKE_COLOR(255,0,0,255),0);
         
       }
     }
     
+#ifdef ENABLE_OPENGL
     glDisable(GL_SCISSOR_TEST);
-    getParent()->scissorGraphics(0,0,getParent()->getDispWidth(),getParent()->getDispHeight());
+#endif
+    //keesj:todo replace with setClipRect(NULL) in drawlib
+    getParent()->scissorGraphics(0,0,getParent()->getDrawLib()->getDispWidth(),getParent()->getDrawLib()->getDispHeight());
   }
   
   void GameRenderer::zoom(float p_f) {
@@ -474,20 +477,24 @@ namespace vapp {
     m_fZoom = 60.0f;    
     setScroll(true);
  
+#ifdef ENABLE_OPENGL
     glLoadIdentity();
+#endif
 
     /* SKY! */
-    if(!m_bUglyMode)
+   if(!m_bUglyMode)
       _RenderSky();
 
     /* Perform scaling/translation */    
-    glScalef(m_fScale * ((float)getParent()->getDispHeight()) / getParent()->getDispWidth(), m_fScale,1);
+    getParent()->getDrawLib()->setScale(m_fScale * ((float)getParent()->getDrawLib()->getDispHeight()) / getParent()->getDrawLib()->getDispWidth(), m_fScale);
     //glRotatef(getGameObject()->getTime()*100,0,0,1); /* Uncomment this line if you want to vomit :) */
-    glTranslatef(-getCameraPositionX(), -getCameraPositionY(), 0);
+    getParent()->getDrawLib()->setTranslate(-getCameraPositionX(), -getCameraPositionY());
     
+#ifdef ENABLE_OPENGL
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glMatrixMode(GL_MODELVIEW);
+#endif
       
     if(m_Quality != GQ_LOW && !m_bUglyMode) {
       /* Background blocks */
@@ -521,14 +528,14 @@ namespace vapp {
       }    
       else {
         /* No not ugly, fancy! Render into overlay? */      
-        if(m_bGhostMotionBlur && getParent()->useFBOs()) {
+        if(m_bGhostMotionBlur && getParent()->getDrawLib()->useFBOs()) {
           m_Overlay.beginRendering();
           m_Overlay.fade(0.15);
         }
         _RenderBike(getGameObject()->getGhostBikeState(), &(getGameObject()->getBikeState()->Parameters()), m_theme->getGhostTheme());
         
-        if(m_bGhostMotionBlur && getParent()->useFBOs()) {
-          GLuint nOverlayTextureID = m_Overlay.endRendering();
+        if(m_bGhostMotionBlur && getParent()->getDrawLib()->useFBOs()) {
+          m_Overlay.endRendering();
           m_Overlay.present();
         }
         
@@ -580,40 +587,41 @@ namespace vapp {
       /* Draw some collision handling debug info */
       CollisionSystem *pc = getGameObject()->getCollisionHandler();
       for(int i=0;i<pc->m_CheckedLines.size();i++) {
-        glLineWidth(3);
-        glBegin(GL_LINE_STRIP);
-        glColor3f(1,0,0);
-        glVertex2f(pc->m_CheckedLines[i]->x1,pc->m_CheckedLines[i]->y1);
-        glVertex2f(pc->m_CheckedLines[i]->x2,pc->m_CheckedLines[i]->y2);
-        glEnd();
-        glLineWidth(2);
+        getParent()->getDrawLib()->setLineWidth(3);
+	getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
+	getParent()->getDrawLib()->setColorRGB(255,0,0);
+        getParent()->getDrawLib()->glVertex(pc->m_CheckedLines[i]->x1,pc->m_CheckedLines[i]->y1);
+        getParent()->getDrawLib()->glVertex(pc->m_CheckedLines[i]->x2,pc->m_CheckedLines[i]->y2);
+	getParent()->getDrawLib()->endDraw();
+        getParent()->getDrawLib()->setLineWidth(2);
       }
       for(int i=0;i<pc->m_CheckedCells.size();i++) {
-        glBegin(GL_LINE_LOOP);
-        glColor3f(1,0,0);
-        glVertex2f(pc->m_CheckedCells[i].x1,pc->m_CheckedCells[i].y1);
-        glVertex2f(pc->m_CheckedCells[i].x2,pc->m_CheckedCells[i].y1);
-        glVertex2f(pc->m_CheckedCells[i].x2,pc->m_CheckedCells[i].y2);
-        glVertex2f(pc->m_CheckedCells[i].x1,pc->m_CheckedCells[i].y2);
-        glEnd();
+	getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_LOOP);
+	getParent()->getDrawLib()->setColorRGB(255,0,0);
+
+        getParent()->getDrawLib()->glVertex(pc->m_CheckedCells[i].x1,pc->m_CheckedCells[i].y1);
+        getParent()->getDrawLib()->glVertex(pc->m_CheckedCells[i].x2,pc->m_CheckedCells[i].y1);
+        getParent()->getDrawLib()->glVertex(pc->m_CheckedCells[i].x2,pc->m_CheckedCells[i].y2);
+        getParent()->getDrawLib()->glVertex(pc->m_CheckedCells[i].x1,pc->m_CheckedCells[i].y2);
+	getParent()->getDrawLib()->endDraw();
       }
       for(int i=0;i<pc->m_CheckedLinesW.size();i++) {
-        glLineWidth(1);
-        glBegin(GL_LINE_STRIP);
-        glColor3f(0,1,0);
-        glVertex2f(pc->m_CheckedLinesW[i]->x1,pc->m_CheckedLinesW[i]->y1);
-        glVertex2f(pc->m_CheckedLinesW[i]->x2,pc->m_CheckedLinesW[i]->y2);
-        glEnd();
-        glLineWidth(1);
+        getParent()->getDrawLib()->setLineWidth(1);
+	getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
+	getParent()->getDrawLib()->setColorRGB(0,255,0);
+        getParent()->getDrawLib()->glVertex(pc->m_CheckedLinesW[i]->x1,pc->m_CheckedLinesW[i]->y1);
+        getParent()->getDrawLib()->glVertex(pc->m_CheckedLinesW[i]->x2,pc->m_CheckedLinesW[i]->y2);
+	getParent()->getDrawLib()->endDraw();
+        getParent()->getDrawLib()->setLineWidth(1);
       }
       for(int i=0;i<pc->m_CheckedCellsW.size();i++) {
-        glBegin(GL_LINE_LOOP);
-        glColor3f(0,1,0);
-        glVertex2f(pc->m_CheckedCellsW[i].x1,pc->m_CheckedCellsW[i].y1);
-        glVertex2f(pc->m_CheckedCellsW[i].x2,pc->m_CheckedCellsW[i].y1);
-        glVertex2f(pc->m_CheckedCellsW[i].x2,pc->m_CheckedCellsW[i].y2);
-        glVertex2f(pc->m_CheckedCellsW[i].x1,pc->m_CheckedCellsW[i].y2);
-        glEnd();
+	getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_LOOP);
+	getParent()->getDrawLib()->setColorRGB(0,255,0);
+        getParent()->getDrawLib()->glVertex(pc->m_CheckedCellsW[i].x1,pc->m_CheckedCellsW[i].y1);
+        getParent()->getDrawLib()->glVertex(pc->m_CheckedCellsW[i].x2,pc->m_CheckedCellsW[i].y1);
+        getParent()->getDrawLib()->glVertex(pc->m_CheckedCellsW[i].x2,pc->m_CheckedCellsW[i].y2);
+        getParent()->getDrawLib()->glVertex(pc->m_CheckedCellsW[i].x1,pc->m_CheckedCellsW[i].y2);
+	getParent()->getDrawLib()->endDraw();
       }
     }
     
@@ -651,39 +659,41 @@ namespace vapp {
       //    if(pZone->Prims[u]->Type == LZPT_BOX) {
       //      glBegin(GL_LINE_LOOP);
       //      glColor3f(0,1,0);
-      //      getParent()->glVertex( getParent()->getDispWidth()/2 + (pZone->Prims[u]->fLeft + m_Scroll.x)*60.0f,
-      //                getParent()->getDispHeight()/2 - (pZone->Prims[u]->fTop + m_Scroll.y)*60.0f );
-      //      getParent()->glVertex( getParent()->getDispWidth()/2 + (pZone->Prims[u]->fRight + m_Scroll.x)*60.0f,
-      //                getParent()->getDispHeight()/2 - (pZone->Prims[u]->fTop + m_Scroll.y)*60.0f );
-      //      getParent()->glVertex( getParent()->getDispWidth()/2 + (pZone->Prims[u]->fRight + m_Scroll.x)*60.0f,
-      //                getParent()->getDispHeight()/2 - (pZone->Prims[u]->fBottom + m_Scroll.y)*60.0f );
-      //      getParent()->glVertex( getParent()->getDispWidth()/2 + (pZone->Prims[u]->fLeft + m_Scroll.x)*60.0f,
-      //                getParent()->getDispHeight()/2 - (pZone->Prims[u]->fBottom + m_Scroll.y)*60.0f );
+      //      getParent()->getDrawLib()->glVertexSP( getParent()->getDrawLib()->getDispWidth()/2 + (pZone->Prims[u]->fLeft + m_Scroll.x)*60.0f,
+      //                getParent()->getDrawLib()->getDispHeight()/2 - (pZone->Prims[u]->fTop + m_Scroll.y)*60.0f );
+      //      getParent()->getDrawLib()->glVertexSP( getParent()->getDrawLib()->getDispWidth()/2 + (pZone->Prims[u]->fRight + m_Scroll.x)*60.0f,
+      //                getParent()->getDrawLib()->getDispHeight()/2 - (pZone->Prims[u]->fTop + m_Scroll.y)*60.0f );
+      //      getParent()->getDrawLib()->glVertexSP( getParent()->getDrawLib()->getDispWidth()/2 + (pZone->Prims[u]->fRight + m_Scroll.x)*60.0f,
+      //                getParent()->getDrawLib()->getDispHeight()/2 - (pZone->Prims[u]->fBottom + m_Scroll.y)*60.0f );
+      //      getParent()->getDrawLib()->glVertexSP( getParent()->getDrawLib()->getDispWidth()/2 + (pZone->Prims[u]->fLeft + m_Scroll.x)*60.0f,
+      //                getParent()->getDrawLib()->getDispHeight()/2 - (pZone->Prims[u]->fBottom + m_Scroll.y)*60.0f );
       //      glEnd();
       //      
-      //      Vector2f TP(getParent()->getDispWidth()/2 + (pZone->Prims[u]->fLeft + m_Scroll.x)*60.0f,
-      //                getParent()->getDispHeight()/2 - (pZone->Prims[u]->fTop + m_Scroll.y)*60.0f);
+      //      Vector2f TP(getParent()->getDrawLib()->getDispWidth()/2 + (pZone->Prims[u]->fLeft + m_Scroll.x)*60.0f,
+      //                getParent()->getDrawLib()->getDispHeight()/2 - (pZone->Prims[u]->fTop + m_Scroll.y)*60.0f);
       //      float th=12,tw=pZone->ID.length()*8;
       //      if(TP.x < 0) TP.x=0;
       //      if(TP.y < 0) TP.y=0;
-      //      if(TP.x > getParent()->getDispWidth()-pZone->ID.length()*8) TP.x=getParent()->getDispWidth()-pZone->ID.length()*8;
-      //      if(TP.y > getParent()->getDispHeight()-12) TP.y=getParent()->getDispHeight()-12;
-      //      if(TP.x > getParent()->getDispWidth()/2 + (pZone->Prims[u]->fRight + m_Scroll.x)*60.0f) continue;
-      //      if(TP.y > getParent()->getDispHeight()/2 - (pZone->Prims[u]->fBottom + m_Scroll.y)*60.0f) continue;
-      //      if(TP.x + tw < getParent()->getDispWidth()/2 + (pZone->Prims[u]->fLeft + m_Scroll.x)*60.0f) continue;
-      //      if(TP.y + th < getParent()->getDispHeight()/2 - (pZone->Prims[u]->fTop + m_Scroll.y)*60.0f) continue;
+      //      if(TP.x > getParent()->getDrawLib()->getDispWidth()-pZone->ID.length()*8) TP.x=getParent()->getDrawLib()->getDispWidth()-pZone->ID.length()*8;
+      //      if(TP.y > getParent()->getDrawLib()->getDispHeight()-12) TP.y=getParent()->getDrawLib()->getDispHeight()-12;
+      //      if(TP.x > getParent()->getDrawLib()->getDispWidth()/2 + (pZone->Prims[u]->fRight + m_Scroll.x)*60.0f) continue;
+      //      if(TP.y > getParent()->getDrawLib()->getDispHeight()/2 - (pZone->Prims[u]->fBottom + m_Scroll.y)*60.0f) continue;
+      //      if(TP.x + tw < getParent()->getDrawLib()->getDispWidth()/2 + (pZone->Prims[u]->fLeft + m_Scroll.x)*60.0f) continue;
+      //      if(TP.y + th < getParent()->getDrawLib()->getDispHeight()/2 - (pZone->Prims[u]->fTop + m_Scroll.y)*60.0f) continue;
       //      getParent()->drawText(TP,pZone->ID,0,MAKE_COLOR(0,255,0,255),true);               
       //    }
       //  }
       //}
     }        
 
+#ifdef ENABLE_OPENGL
     glLoadIdentity();
     
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(0,getParent()->getDispWidth(),0,getParent()->getDispHeight(),-1,1);
+    glOrtho(0,getParent()->getDrawLib()->getDispWidth(),0,getParent()->getDrawLib()->getDispHeight(),-1,1);
     glMatrixMode(GL_MODELVIEW);
+#endif
 
     if(!m_bCreditsMode) {
       /* And then the game messages */
@@ -779,12 +789,12 @@ namespace vapp {
     int nQuantity = 0;
 
     if(getParent()->isUglyMode() == false) {
-      pType = (AnimationSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_ANIMATION, "Flower");
+      pType = (AnimationSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_ANIMATION, "Flower");
     }
     
     if(nStrawberriesLeft > 0) {
       if(getParent()->isUglyMode() == false) {
-  pType = (AnimationSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_ANIMATION, "Strawberry");
+  pType = (AnimationSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_ANIMATION, "Strawberry");
       }
       nQuantity = nStrawberriesLeft;
     }
@@ -826,12 +836,12 @@ namespace vapp {
     if(pArrow->nArrowPointerMode != 0) {
       Vector2f C;
       if(pArrow->nArrowPointerMode == 1) {          
-        C=Vector2f(getParent()->getDispWidth()/2 + (float)(pArrow->ArrowPointerPos.x - getCameraPositionX())*m_fZoom,
-                  getParent()->getDispHeight()/2 - (float)(pArrow->ArrowPointerPos.y - getCameraPositionY())*m_fZoom);      
+        C=Vector2f(getParent()->getDrawLib()->getDispWidth()/2 + (float)(pArrow->ArrowPointerPos.x - getCameraPositionX())*m_fZoom,
+                  getParent()->getDrawLib()->getDispHeight()/2 - (float)(pArrow->ArrowPointerPos.y - getCameraPositionY())*m_fZoom);      
       }
       else if(pArrow->nArrowPointerMode == 2) {          
-        C.x=(getParent()->getDispWidth() * pArrow->ArrowPointerPos.x) / 800.0f;
-        C.y=(getParent()->getDispHeight() * pArrow->ArrowPointerPos.y) / 600.0f;
+        C.x=(getParent()->getDrawLib()->getDispWidth() * pArrow->ArrowPointerPos.x) / 800.0f;
+        C.y=(getParent()->getDrawLib()->getDispHeight() * pArrow->ArrowPointerPos.y) / 600.0f;
       }
       Vector2f p1,p2,p3,p4;
       p1 = Vector2f(1,0); p1.rotateXY(pArrow->fArrowPointerAngle);
@@ -845,7 +855,7 @@ namespace vapp {
       p4 = p4 * 50.0f;
 
       MiscSprite* pType;
-      pType = (MiscSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_MISC, "Arrow");
+      pType = (MiscSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_MISC, "Arrow");
       if(pType != NULL) {
   _RenderAlphaBlendedSectionSP(pType->getTexture(),p1+C,p2+C,p3+C,p4+C);      
       }
@@ -860,7 +870,7 @@ namespace vapp {
   UIFont *v_font = getMediumFont();
   if(v_font != NULL) {
     UITextDraw::getTextExt(v_font,pMsg->Text,&x1,&y1,&x2,&y2);
-    UITextDraw::printRaw(v_font,getParent()->getDispWidth()/2 - (x2-x1)/2,pMsg->Pos[1]*getParent()->getDispHeight(),pMsg->Text,MAKE_COLOR(255,255,255,pMsg->nAlpha));
+    UITextDraw::printRaw(v_font,getParent()->getDrawLib()->getDispWidth()/2 - (x2-x1)/2,pMsg->Pos[1]*getParent()->getDrawLib()->getDispHeight(),pMsg->Text,MAKE_COLOR(255,255,255,pMsg->nAlpha));
   }
       }
     }
@@ -934,7 +944,7 @@ namespace vapp {
       }
 
       /* search the sprite as an animation */
-      v_animationSpriteType = (AnimationSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_ANIMATION, v_sprite_type);
+      v_animationSpriteType = (AnimationSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_ANIMATION, v_sprite_type);
       /* if the sprite is not an animation, it's perhaps a decoration */
       if(v_animationSpriteType != NULL) {
         v_spriteType = v_animationSpriteType;
@@ -951,7 +961,7 @@ namespace vapp {
           v_height = v_animationSpriteType->getHeight();
         }
       } else {
-        v_decorationSpriteType = (DecorationSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_DECORATION, v_sprite_type);
+        v_decorationSpriteType = (DecorationSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_DECORATION, v_sprite_type);
         v_spriteType = v_decorationSpriteType;
 
         if(v_decorationSpriteType != NULL) {
@@ -989,10 +999,14 @@ namespace vapp {
           _RenderAdditiveBlendedSection(v_spriteType->getTexture(),p0,p1,p2,p3);      
         }
         else {
+#ifdef ENABLE_OPENGL
           glEnable(GL_ALPHA_TEST);
           glAlphaFunc(GL_GEQUAL,0.5f);      
+#endif
           _RenderAlphaBlendedSection(v_spriteType->getTexture(),p0,p1,p2,p3);      
+#ifdef ENABLE_OPENGL
           glDisable(GL_ALPHA_TEST);
+#endif
         }
       }    
     }
@@ -1044,7 +1058,7 @@ namespace vapp {
       Texture *pTexture = NULL;
       if(!m_bUglyMode) {
         Sprite *pSprite;
-        pSprite = getParent()->m_theme.getSprite(SPRITE_TYPE_TEXTURE, Blocks[i]->Texture());
+        pSprite = getParent()->getTheme()->getSprite(SPRITE_TYPE_TEXTURE, Blocks[i]->Texture());
         if(pSprite != NULL) {
 	  try {
 	    pTexture = pSprite->getTexture();
@@ -1057,25 +1071,22 @@ namespace vapp {
 	  getGameObject()->gameMessage(GAMETEXT_MISSINGTEXTURES,true); 
 	}
       }
-      GLuint GLName = 0;
-      if(pTexture != NULL) GLName = pTexture->nID;
 
       if(m_bUglyMode) {
-        glBegin(GL_LINE_LOOP);
-        glColor3f(1,1,1);
+	getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_LOOP);
+	getParent()->getDrawLib()->setColorRGB(255,255,255);
         for(int j=0;j<Blocks[i]->Vertices().size();j++) {       
           Vector2f Tv = Vector2f(Blocks[i]->Vertices()[j]->Position().x * fR[0] + Blocks[i]->Vertices()[j]->Position().y * fR[1],
                                  Blocks[i]->Vertices()[j]->Position().x * fR[2] + Blocks[i]->Vertices()[j]->Position().y * fR[3]);
           Tv += Blocks[i]->DynamicPosition();                                  
-          glVertex2f(Tv.x,Tv.y);
+          getParent()->getDrawLib()->glVertex(Tv.x,Tv.y);
         }
-        glEnd();              
+	getParent()->getDrawLib()->endDraw();
       } else {
         for(int j=0;j<Blocks[i]->ConvexBlocks().size();j++) {       
-          glBindTexture(GL_TEXTURE_2D,GLName);                    
-          glEnable(GL_TEXTURE_2D);      
-          glBegin(GL_POLYGON);
-          glColor3f(1,1,1);         
+	  getParent()->getDrawLib()->setTexture(pTexture,BLEND_MODE_NONE);
+	  getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+	  getParent()->getDrawLib()->setColorRGB(255,255,255);
           for(int k=0;k<Blocks[i]->ConvexBlocks()[j]->Vertices().size();k++) {            
             ConvexBlockVertex *pVertex = Blocks[i]->ConvexBlocks()[j]->Vertices()[k];
             
@@ -1085,13 +1096,12 @@ namespace vapp {
             Tv += Blocks[i]->DynamicPosition();                                  
             
             /* Put vertex */
-            glTexCoord2f(pVertex->TexturePosition().x,pVertex->TexturePosition().y);
+            getParent()->getDrawLib()->glTexCoord(pVertex->TexturePosition().x,pVertex->TexturePosition().y);
             
-            glVertex2f(Tv.x,Tv.y);
+            getParent()->getDrawLib()->glVertex(Tv.x,Tv.y);
           }
-          glEnd();              
+	  getParent()->getDrawLib()->endDraw();
           
-          glDisable(GL_TEXTURE_2D);
         }
       }
     }     
@@ -1111,13 +1121,13 @@ namespace vapp {
       for(int i=0;i<Blocks.size();i++) {
         if(Blocks[i]->isBackground() == false && Blocks[i]->isDynamic() == false) {
           //for(int j=0;j<Blocks[i]->ConvexBlocks().size();j++) {
-          glBegin(GL_LINE_LOOP);
-          glColor3f(1,1,1);
+          getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_LOOP);
+	  getParent()->getDrawLib()->setColorRGB(255,255,255);
           for(int j=0;j<Blocks[i]->Vertices().size();j++) {
-            glVertex2f(Blocks[i]->Vertices()[j]->Position().x + Blocks[i]->DynamicPosition().x,
+            getParent()->getDrawLib()->glVertex(Blocks[i]->Vertices()[j]->Position().x + Blocks[i]->DynamicPosition().x,
                        Blocks[i]->Vertices()[j]->Position().y + Blocks[i]->DynamicPosition().y);
           }
-          glEnd();
+	  getParent()->getDrawLib()->endDraw();
         }
       }
        
@@ -1126,40 +1136,39 @@ namespace vapp {
       /* Render all non-background blocks */
       /* Static geoms... */
       for(int i=0;i<m_Geoms.size();i++) {
-        if(m_Geoms[i]->pTexture != NULL) {
-          glBindTexture(GL_TEXTURE_2D,m_Geoms[i]->pTexture->nID);
-        } else {
-          glBindTexture(GL_TEXTURE_2D,0); /* no texture */
-        }         
-
-        glEnable(GL_TEXTURE_2D);      
-        glColor3f(1,1,1);
+	getParent()->getDrawLib()->setTexture(m_Geoms[i]->pTexture,BLEND_MODE_NONE);
+	getParent()->getDrawLib()->setColorRGB(255,255,255);
         
+#ifdef ENABLE_OPENGL
         /* VBO optimized? */
-        if(getParent()->useVBOs()) {
+        if(getParent()->getDrawLib()->useVBOs()) {
           for(int j=0;j<m_Geoms[i]->Polys.size();j++) {          
             StaticGeomPoly *pPoly = m_Geoms[i]->Polys[j];
-            getParent()->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nVertexBufferID);
+            ((DrawLibOpenGL*)getParent()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nVertexBufferID);
             glVertexPointer(2,GL_FLOAT,0,(char *)NULL);
-            getParent()->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nTexCoordBufferID);
+            ((DrawLibOpenGL*)getParent()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nTexCoordBufferID);
             glTexCoordPointer(2,GL_FLOAT,0,(char *)NULL);
             glDrawArrays(GL_POLYGON,0,pPoly->nNumVertices);
           }      
         } else {
+#endif
           for(int j=0;j<m_Geoms[i]->Polys.size();j++) {          
-            glBegin(GL_POLYGON);
-            glColor3f(1,1,1);
+	    getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+	    getParent()->getDrawLib()->setColorRGB(255,255,255);
+	    getParent()->getDrawLib()->setTexture(m_Geoms[i]->pTexture,BLEND_MODE_NONE);
             for(int k=0;k<m_Geoms[i]->Polys[j]->nNumVertices;k++) {
-              glTexCoord2f(m_Geoms[i]->Polys[j]->pTexCoords[k].x,
+              getParent()->getDrawLib()->glTexCoord(m_Geoms[i]->Polys[j]->pTexCoords[k].x,
                            m_Geoms[i]->Polys[j]->pTexCoords[k].y);
-              glVertex2f(m_Geoms[i]->Polys[j]->pVertices[k].x,
+              getParent()->getDrawLib()->glVertex(m_Geoms[i]->Polys[j]->pVertices[k].x,
                          m_Geoms[i]->Polys[j]->pVertices[k].y);
             }
-            glEnd();
+	    getParent()->getDrawLib()->endDraw();
           }
+#ifdef ENABLE_OPENGL
         }
+#endif
               
-        glDisable(GL_TEXTURE_2D);
+	getParent()->getDrawLib()->setTexture(NULL,BLEND_MODE_NONE);
       }
       
       /* Render all special edges (if quality!=low) */
@@ -1176,34 +1185,27 @@ namespace vapp {
                v_blockVertexB = Blocks[i]->Vertices()[(j+1)%Blocks[i]->Vertices().size()];
 
                /* link A to B */
-               GLuint GLName = 0;
                float fXScale,fDepth;
                EdgeEffectSprite* pType;
 
-               pType = (EdgeEffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EDGEEFFECT, v_blockVertexA->EdgeEffect());
+               pType = (EdgeEffectSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_EDGEEFFECT, v_blockVertexA->EdgeEffect());
 
                if(pType != NULL) {
-                 GLName = pType->getTexture()->nID;
                  fXScale = pType->getScale();
                  fDepth  = pType->getDepth();
                  
-                 glEnable(GL_BLEND); 
-                 glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
-                 glBindTexture(GL_TEXTURE_2D,GLName);
-                 glEnable(GL_TEXTURE_2D);
-                 glBegin(GL_POLYGON);
-                 glColor3f(1,1,1);
-                 glTexCoord2f((Blocks[i]->DynamicPosition().x+v_blockVertexA->Position().x)*fXScale,0.01);
-                 _Vertex(v_blockVertexA->Position() + Vector2f(Blocks[i]->DynamicPosition().x,Blocks[i]->DynamicPosition().y));
-                 glTexCoord2f((Blocks[i]->DynamicPosition().x+v_blockVertexB->Position().x)*fXScale,0.01);
-                 _Vertex(v_blockVertexB->Position() + Vector2f(Blocks[i]->DynamicPosition().x,Blocks[i]->DynamicPosition().y));
-                 glTexCoord2f((Blocks[i]->DynamicPosition().x+v_blockVertexB->Position().x)*fXScale,0.99);
-                 _Vertex(v_blockVertexB->Position() + Vector2f(Blocks[i]->DynamicPosition().x,Blocks[i]->DynamicPosition().y) + Vector2f(0,-fDepth));
-                 glTexCoord2f((Blocks[i]->DynamicPosition().x+v_blockVertexA->Position().x)*fXScale,0.99);
-                 _Vertex(v_blockVertexA->Position() + Vector2f(Blocks[i]->DynamicPosition().x,Blocks[i]->DynamicPosition().y) + Vector2f(0,-fDepth));
-                 glEnd();
-                 glDisable(GL_TEXTURE_2D);
-                 glDisable(GL_BLEND);
+		 getParent()->getDrawLib()->setTexture(pType->getTexture(),BLEND_MODE_A);
+		 getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+		 getParent()->getDrawLib()->setColorRGB(255,255,255);
+                 getParent()->getDrawLib()->glTexCoord((Blocks[i]->DynamicPosition().x+v_blockVertexA->Position().x)*fXScale,0.01);
+                 getParent()->getDrawLib()->glVertex(v_blockVertexA->Position() + Vector2f(Blocks[i]->DynamicPosition().x,Blocks[i]->DynamicPosition().y));
+                 getParent()->getDrawLib()->glTexCoord((Blocks[i]->DynamicPosition().x+v_blockVertexB->Position().x)*fXScale,0.01);
+                 getParent()->getDrawLib()->glVertex(v_blockVertexB->Position() + Vector2f(Blocks[i]->DynamicPosition().x,Blocks[i]->DynamicPosition().y));
+                 getParent()->getDrawLib()->glTexCoord((Blocks[i]->DynamicPosition().x+v_blockVertexB->Position().x)*fXScale,0.99);
+                 getParent()->getDrawLib()->glVertex(v_blockVertexB->Position() + Vector2f(Blocks[i]->DynamicPosition().x,Blocks[i]->DynamicPosition().y) + Vector2f(0,-fDepth));
+                 getParent()->getDrawLib()->glTexCoord((Blocks[i]->DynamicPosition().x+v_blockVertexA->Position().x)*fXScale,0.99);
+                 getParent()->getDrawLib()->glVertex(v_blockVertexA->Position() + Vector2f(Blocks[i]->DynamicPosition().x,Blocks[i]->DynamicPosition().y) + Vector2f(0,-fDepth));
+		 getParent()->getDrawLib()->endDraw();
                }
              }
           }
@@ -1222,81 +1224,73 @@ namespace vapp {
     /* Render sky - but which? */
     const std::string &SkyName = pGame->getLevelSrc()->Sky();
     if(SkyName == "" || SkyName == "sky1") {
-      pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Sky1");
+      pType = (EffectSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_EFFECT, "Sky1");
 
       if(pType != NULL) {
-        glBindTexture(GL_TEXTURE_2D, pType->getTexture()->nID);
-        glEnable(GL_TEXTURE_2D);
-        glBegin(GL_POLYGON);   
-        glColor3f(1,1,1);   
-        glTexCoord2f(getCameraPositionX()*0.015,-getCameraPositionY()*0.015);
-        getParent()->glVertex(0,0);
-        glTexCoord2f(getCameraPositionX()*0.015+0.5,-getCameraPositionY()*0.015);
-        getParent()->glVertex(getParent()->getDispWidth(),0);
-        glTexCoord2f(getCameraPositionX()*0.015+0.5,-getCameraPositionY()*0.015+0.5);
-        getParent()->glVertex(getParent()->getDispWidth(),getParent()->getDispHeight());
-        glTexCoord2f(getCameraPositionX()*0.015,-getCameraPositionY()*0.015+0.5);
-        getParent()->glVertex(0,getParent()->getDispHeight());
-        glEnd();
-        glDisable(GL_TEXTURE_2D); 
+	getParent()->getDrawLib()->setTexture(pType->getTexture(),BLEND_MODE_NONE);
+	getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+	getParent()->getDrawLib()->setColorRGB(255,255,255);
+        getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015,-getCameraPositionY()*0.015);
+        getParent()->getDrawLib()->glVertexSP(0,0);
+        getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015+0.5,-getCameraPositionY()*0.015);
+        getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),0);
+        getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015+0.5,-getCameraPositionY()*0.015+0.5);
+        getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),getParent()->getDrawLib()->getDispHeight());
+        getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015,-getCameraPositionY()*0.015+0.5);
+        getParent()->getDrawLib()->glVertexSP(0,getParent()->getDrawLib()->getDispHeight());
+	getParent()->getDrawLib()->endDraw();
       }   
     }
     else if(SkyName == "sky2") {
-      pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Sky2");
+      pType = (EffectSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_EFFECT, "Sky2");
 
       if(pType != NULL) {
-        glBindTexture(GL_TEXTURE_2D, pType->getTexture()->nID);
-        glEnable(GL_TEXTURE_2D);
-        glBegin(GL_POLYGON);   
-        glColor3f(1,1,1);   
-        glTexCoord2f(getCameraPositionX()*0.015,-getCameraPositionY()*0.015);
-        getParent()->glVertex(0,0);
-        glTexCoord2f(getCameraPositionX()*0.015+0.65,-getCameraPositionY()*0.015);
-        getParent()->glVertex(getParent()->getDispWidth(),0);
-        glTexCoord2f(getCameraPositionX()*0.015+0.65,-getCameraPositionY()*0.015+0.65);
-        getParent()->glVertex(getParent()->getDispWidth(),getParent()->getDispHeight());
-        glTexCoord2f(getCameraPositionX()*0.015,-getCameraPositionY()*0.015+0.65);
-        getParent()->glVertex(0,getParent()->getDispHeight());
-        glEnd();
-        glDisable(GL_TEXTURE_2D); 
+	getParent()->getDrawLib()->setTexture(pType->getTexture(),BLEND_MODE_NONE);
+	getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+	getParent()->getDrawLib()->setColorRGB(255,255,255);
+        getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015,-getCameraPositionY()*0.015);
+        getParent()->getDrawLib()->glVertexSP(0,0);
+        getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015+0.65,-getCameraPositionY()*0.015);
+        getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),0);
+        getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015+0.65,-getCameraPositionY()*0.015+0.65);
+        getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),getParent()->getDrawLib()->getDispHeight());
+        getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015,-getCameraPositionY()*0.015+0.65);
+        getParent()->getDrawLib()->glVertexSP(0,getParent()->getDrawLib()->getDispHeight());
+	getParent()->getDrawLib()->endDraw();
 
-  pType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Sky2Drift");
+  pType = (EffectSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_EFFECT, "Sky2Drift");
   if(pType != NULL && m_Quality == GQ_HIGH) {
-          glBindTexture(GL_TEXTURE_2D,pType->getTexture()->nID);
-          glEnable(GL_TEXTURE_2D);
-          glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-          glEnable(GL_BLEND);
 
-          glBegin(GL_POLYGON);   
-          glColor4f(0.5,0.5,0.5,0.5f);   
+	  getParent()->getDrawLib()->setTexture(pType->getTexture(),BLEND_MODE_A);
+
+	  getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+	  getParent()->getDrawLib()->setColorRGBA(128,128,128,128);
           float fDrift = getParent()->getRealTime() / 25.0f;
-          glTexCoord2f(getCameraPositionX()*0.015 + fDrift,-getCameraPositionY()*0.015);
-          getParent()->glVertex(0,0);
-          glTexCoord2f(getCameraPositionX()*0.015+0.65 + fDrift,-getCameraPositionY()*0.015);
-          getParent()->glVertex(getParent()->getDispWidth(),0);
-          glTexCoord2f(getCameraPositionX()*0.015+0.65 + fDrift,-getCameraPositionY()*0.015+0.65);
-          getParent()->glVertex(getParent()->getDispWidth(),getParent()->getDispHeight());
-          glTexCoord2f(getCameraPositionX()*0.015 + fDrift,-getCameraPositionY()*0.015+0.65);
-          getParent()->glVertex(0,getParent()->getDispHeight());
-          glEnd();
+          getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015 + fDrift,-getCameraPositionY()*0.015);
+          getParent()->getDrawLib()->glVertexSP(0,0);
+          getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015+0.65 + fDrift,-getCameraPositionY()*0.015);
+          getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),0);
+          getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015+0.65 + fDrift,-getCameraPositionY()*0.015+0.65);
+          getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),getParent()->getDrawLib()->getDispHeight());
+          getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015 + fDrift,-getCameraPositionY()*0.015+0.65);
+          getParent()->getDrawLib()->glVertexSP(0,getParent()->getDrawLib()->getDispHeight());
+	  getParent()->getDrawLib()->endDraw();
 
-          glBlendFunc(GL_ONE,GL_ONE);
+	  getParent()->getDrawLib()->setTexture(pType->getTexture(),BLEND_MODE_B);
 
-          glBegin(GL_POLYGON);   
-          glColor3f(1,0.5,0.5);   
+	  getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+	  getParent()->getDrawLib()->setColorRGB(255,128,128);
           fDrift = getParent()->getRealTime() / 15.0f;
-          glTexCoord2f(getCameraPositionX()*0.015 + fDrift,-getCameraPositionY()*0.015);
-          getParent()->glVertex(0,0);
-          glTexCoord2f(getCameraPositionX()*0.015+0.85 + fDrift,-getCameraPositionY()*0.015);
-          getParent()->glVertex(getParent()->getDispWidth(),0);
-          glTexCoord2f(getCameraPositionX()*0.015+0.85 + fDrift,-getCameraPositionY()*0.015+0.85);
-          getParent()->glVertex(getParent()->getDispWidth(),getParent()->getDispHeight());
-          glTexCoord2f(getCameraPositionX()*0.015 + fDrift,-getCameraPositionY()*0.015+0.85);
-          getParent()->glVertex(0,getParent()->getDispHeight());
-          glEnd();
+          getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015 + fDrift,-getCameraPositionY()*0.015);
+          getParent()->getDrawLib()->glVertexSP(0,0);
+          getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015+0.85 + fDrift,-getCameraPositionY()*0.015);
+          getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),0);
+          getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015+0.85 + fDrift,-getCameraPositionY()*0.015+0.85);
+          getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),getParent()->getDrawLib()->getDispHeight());
+          getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015 + fDrift,-getCameraPositionY()*0.015+0.85);
+          getParent()->getDrawLib()->glVertexSP(0,getParent()->getDrawLib()->getDispHeight());
+	  getParent()->getDrawLib()->endDraw();
 
-          glDisable(GL_BLEND);
-          glDisable(GL_TEXTURE_2D); 
         }
       }   
     }
@@ -1314,12 +1308,11 @@ namespace vapp {
       if(Blocks[i]->isDynamic() == false && Blocks[i]->isBackground()) {
         Vector2f Center;
         Texture *pTexture = NULL;
-        GLuint GLName = 0;
         
         /* Main body */      
         Center = Blocks[i]->DynamicPosition();
         Sprite *pSprite;
-        pSprite = getParent()->m_theme.getSprite(SPRITE_TYPE_TEXTURE, Blocks[i]->Texture());
+        pSprite = getParent()->getTheme()->getSprite(SPRITE_TYPE_TEXTURE, Blocks[i]->Texture());
         
         if(pSprite != NULL) {
           try {
@@ -1331,22 +1324,19 @@ namespace vapp {
 	  Log("** Warning ** : Texture '%s' not found!", Blocks[i]->Texture().c_str());
 	  getGameObject()->gameMessage(GAMETEXT_MISSINGTEXTURES,true);
         }
-        if(pTexture != NULL) {GLName = pTexture->nID;}
                
 	for(int j=0; j<Blocks[i]->ConvexBlocks().size(); j++) {
-	  glBindTexture(GL_TEXTURE_2D,GLName);
-	  glEnable(GL_TEXTURE_2D);
-	  glBegin(GL_POLYGON);
-	  glColor3f(1,1,1);
+	  getParent()->getDrawLib()->setTexture(pTexture,BLEND_MODE_NONE);
+	  getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+	  getParent()->getDrawLib()->setColorRGB(255,255,255);
 
 	  for(int k=0; k<Blocks[i]->ConvexBlocks()[j]->Vertices().size(); k++) {
-	    glTexCoord2f((Center.x+Blocks[i]->ConvexBlocks()[j]->Vertices()[k]->Position().x) * 0.25,
+	    getParent()->getDrawLib()->glTexCoord((Center.x+Blocks[i]->ConvexBlocks()[j]->Vertices()[k]->Position().x) * 0.25,
 			 (Center.y+Blocks[i]->ConvexBlocks()[j]->Vertices()[k]->Position().y) * 0.25);
-	    _Vertex( Center + Blocks[i]->ConvexBlocks()[j]->Vertices()[k]->Position());                  
+	    getParent()->getDrawLib()->glVertex( Center + Blocks[i]->ConvexBlocks()[j]->Vertices()[k]->Position());                  
 	  }
 
-	  glEnd();
-	  glDisable(GL_TEXTURE_2D);
+	  getParent()->getDrawLib()->endDraw();
 	}
       }
     }
@@ -1355,15 +1345,15 @@ namespace vapp {
   /*===========================================================================
   Helpers
   ===========================================================================*/
-  void GameRenderer::_Vertex(Vector2f P) {
-    glVertex2f(P.x,P.y);
-  }
+//  void GameRenderer::_Vertex(Vector2f P) {
+//    glVertex2f(P.x,P.y);
+//  }
   
   void GameRenderer::_DbgText(Vector2f P,std::string Text,Color c) {
-    Vector2f Sp = Vector2f(getParent()->getDispWidth()/2 + (float)(P.x - getCameraPositionX())*m_fZoom,
-                           getParent()->getDispHeight()/2 - (float)(P.y - getCameraPositionY())*m_fZoom) -
-                  Vector2f(getParent()->getTextWidth(Text)/2.0f,getParent()->getTextHeight(Text)/2.0f);
-    getParent()->drawText(Sp,Text,0,c,true);
+    Vector2f Sp = Vector2f(getParent()->getDrawLib()->getDispWidth()/2 + (float)(P.x - getCameraPositionX())*m_fZoom,
+                           getParent()->getDrawLib()->getDispHeight()/2 - (float)(P.y - getCameraPositionY())*m_fZoom) -
+                  Vector2f(getParent()->getDrawLib()->getTextWidth(Text)/2.0f,getParent()->getDrawLib()->getTextHeight(Text)/2.0f);
+    getParent()->getDrawLib()->drawText(Sp,Text,0,c,true);
   }   
 
   /*===========================================================================
@@ -1383,34 +1373,34 @@ namespace vapp {
   void GameRenderer::_RenderDebugInfo(void) {
     for(int i=0;i<m_DebugInfo.size();i++) {
       if(m_DebugInfo[i]->Type == "@WHITEPOLYGONS") {
-        glBegin(GL_LINE_LOOP);
-        glColor3f(1,1,1);
+	getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_LOOP);
+	getParent()->getDrawLib()->setColorRGB(255,255,255);
         for(int j=0;j<m_DebugInfo[i]->Args.size()/2;j++) {
           float x = atof(m_DebugInfo[i]->Args[j*2].c_str());
           float y = atof(m_DebugInfo[i]->Args[j*2+1].c_str());
-          getParent()->glVertex(400 + x*10,300 - y*10);
+          getParent()->getDrawLib()->glVertexSP(400 + x*10,300 - y*10);
         }
-        glEnd();
+	getParent()->getDrawLib()->endDraw();
       }
       else if(m_DebugInfo[i]->Type == "@REDLINES") {
-        glBegin(GL_LINE_STRIP);
-        glColor3f(1,0,0);
+	getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
+	getParent()->getDrawLib()->setColorRGB(255,0,0);
         for(int j=0;j<m_DebugInfo[i]->Args.size()/2;j++) {
           float x = atof(m_DebugInfo[i]->Args[j*2].c_str());
           float y = atof(m_DebugInfo[i]->Args[j*2+1].c_str());
-          getParent()->glVertex(400 + x*10,300 - y*10);
+          getParent()->getDrawLib()->glVertexSP(400 + x*10,300 - y*10);
         }
-        glEnd();
+	getParent()->getDrawLib()->endDraw();
       }
       else if(m_DebugInfo[i]->Type == "@GREENLINES") {
-        glBegin(GL_LINE_STRIP);
-        glColor3f(0,1,0);
+	getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
+	getParent()->getDrawLib()->setColorRGB(0,255,0);
         for(int j=0;j<m_DebugInfo[i]->Args.size()/2;j++) {
           float x = atof(m_DebugInfo[i]->Args[j*2].c_str());
           float y = atof(m_DebugInfo[i]->Args[j*2+1].c_str());
-          getParent()->glVertex(400 + x*10,300 - y*10);
+          getParent()->getDrawLib()->glVertexSP(400 + x*10,300 - y*10);
         }
-        glEnd();
+	getParent()->getDrawLib()->endDraw();
       }
     }
   }
@@ -1506,6 +1496,8 @@ namespace vapp {
   }    
   
   void GameRenderer::_RenderInGameText(Vector2f P,const std::string &Text,Color c) {
+#ifdef ENABLE_OPENGL
+    //keesj:todo i have no idea what is actualy going on here
     /* Perform manual transformation of world coordinates into screen
        coordinates */
     GLfloat fPoint[4],fTemp[4];
@@ -1522,22 +1514,28 @@ namespace vapp {
     
     MULT_GL_MATRIX(fPoint,fTemp,fModelView);
     MULT_GL_MATRIX(fTemp,fPoint,fProj);
-    
     float x = (fPoint[0] / fPoint[3] + 1.0f) / 2.0f;
     float y = 1.0f - (fPoint[1] / fPoint[3] + 1.0f) / 2.0f;
+#else
+    //keesj:TODO: I really have no clue what this function is about
+    float x = (P.x / 1.0f + 1.0f) / 2.0f;
+    float y = 1.0f - (P.y / 1.0f + 1.0f) / 2.0f;
+#endif
+    
     
     if(x > 0.0f && x < 1.0f && y > 0.0f && y < 1.0f) {    
       /* Map to viewport */
-      float vx = ((float)getParent()->getDispWidth() * x);
-      float vy = ((float)getParent()->getDispHeight() * y);
-
+      float vx = ((float)getParent()->getDrawLib()->getDispWidth() * x);
+      float vy = ((float)getParent()->getDrawLib()->getDispHeight() * y);
+#ifdef ENABLE_OPENGL
       glMatrixMode(GL_PROJECTION);
       glPushMatrix();
       glLoadIdentity();
-      glOrtho(0,getParent()->getDispWidth(),0,getParent()->getDispHeight(),-1,1);
+      glOrtho(0,getParent()->getDrawLib()->getDispWidth(),0,getParent()->getDrawLib()->getDispHeight(),-1,1);
       glMatrixMode(GL_MODELVIEW);
       glPushMatrix();
       glLoadIdentity();
+#endif
       
       int nMinX,nMinY,nMaxX,nMaxY;
       if(m_pSFont != NULL) {
@@ -1552,10 +1550,12 @@ namespace vapp {
   UITextDraw::printRaw(m_pSFont,nx,ny,Text,c);
       } 
 
+#ifdef ENABLE_OPENGL
       glPopMatrix();
       glMatrixMode(GL_PROJECTION);
       glPopMatrix();
       glMatrixMode(GL_MODELVIEW);
+#endif
       
     }
   }
@@ -1593,76 +1593,61 @@ namespace vapp {
   ===========================================================================*/
   void GameRenderer::_RenderAlphaBlendedSection(Texture *pTexture,
                                                 const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3) {
-    glEnable(GL_BLEND); 
-    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
-    glBindTexture(GL_TEXTURE_2D,pTexture->nID);
-    glEnable(GL_TEXTURE_2D);
-    glBegin(GL_POLYGON);
-    glColor3f(1,1,1);
-    glTexCoord2f(0,1);
-    glVertex2f(p0.x,p0.y);
-    glTexCoord2f(1,1);
-    glVertex2f(p1.x,p1.y);
-    glTexCoord2f(1,0);
-    glVertex2f(p2.x,p2.y);
-    glTexCoord2f(0,0);
-    glVertex2f(p3.x,p3.y);
-    glEnd();
-    glDisable(GL_TEXTURE_2D);
-    glDisable(GL_BLEND);
+    getParent()->getDrawLib()->setTexture(pTexture,BLEND_MODE_A);
+    getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+    getParent()->getDrawLib()->setColorRGB(255,255,255);
+    getParent()->getDrawLib()->glTexCoord(0,1);
+    getParent()->getDrawLib()->glVertex(p0.x,p0.y);
+    getParent()->getDrawLib()->glTexCoord(1,1);
+    getParent()->getDrawLib()->glVertex(p1.x,p1.y);
+    getParent()->getDrawLib()->glTexCoord(1,0);
+    getParent()->getDrawLib()->glVertex(p2.x,p2.y);
+    getParent()->getDrawLib()->glTexCoord(0,0);
+    getParent()->getDrawLib()->glVertex(p3.x,p3.y);
+    getParent()->getDrawLib()->endDraw();
   }
   
   void GameRenderer::_RenderAdditiveBlendedSection(Texture *pTexture,
                                                    const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3) {
-    glEnable(GL_BLEND); 
-    glBlendFunc(GL_ONE,GL_ONE);         
-    glBindTexture(GL_TEXTURE_2D,pTexture->nID);
-    glEnable(GL_TEXTURE_2D);
-    glBegin(GL_POLYGON);
-    glColor3f(1,1,1);
-    glTexCoord2f(0,1);
-    glVertex2f(p0.x,p0.y);
-    glTexCoord2f(1,1);
-    glVertex2f(p1.x,p1.y);
-    glTexCoord2f(1,0);
-    glVertex2f(p2.x,p2.y);
-    glTexCoord2f(0,0);
-    glVertex2f(p3.x,p3.y);
-    glEnd();
-    glDisable(GL_TEXTURE_2D);
-    glDisable(GL_BLEND);
+    getParent()->getDrawLib()->setTexture(pTexture,BLEND_MODE_B);
+    getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+    getParent()->getDrawLib()->setColorRGB(255,255,255);
+    getParent()->getDrawLib()->glTexCoord(0,1);
+    getParent()->getDrawLib()->glVertex(p0.x,p0.y);
+    getParent()->getDrawLib()->glTexCoord(1,1);
+    getParent()->getDrawLib()->glVertex(p1.x,p1.y);
+    getParent()->getDrawLib()->glTexCoord(1,0);
+    getParent()->getDrawLib()->glVertex(p2.x,p2.y);
+    getParent()->getDrawLib()->glTexCoord(0,0);
+    getParent()->getDrawLib()->glVertex(p3.x,p3.y);
+    getParent()->getDrawLib()->endDraw();
   }
   
   /* Screen-space version of the above */
   void GameRenderer::_RenderAlphaBlendedSectionSP(Texture *pTexture,
                                                   const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3) {
-    glEnable(GL_BLEND); 
-    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
-    glBindTexture(GL_TEXTURE_2D,pTexture->nID);
-    glEnable(GL_TEXTURE_2D);
-    glBegin(GL_POLYGON);
-    glColor3f(1,1,1);
-    glTexCoord2f(0,1);
-    getParent()->glVertex(p0.x,p0.y);
-    glTexCoord2f(1,1);
-    getParent()->glVertex(p1.x,p1.y);
-    glTexCoord2f(1,0);
-    getParent()->glVertex(p2.x,p2.y);
-    glTexCoord2f(0,0);
-    getParent()->glVertex(p3.x,p3.y);
-    glEnd();
-    glDisable(GL_TEXTURE_2D);
-    glDisable(GL_BLEND);
+    getParent()->getDrawLib()->setTexture(pTexture,BLEND_MODE_A);
+    getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+    getParent()->getDrawLib()->setColorRGB(255,255,255);
+    getParent()->getDrawLib()->glTexCoord(0,1);
+    getParent()->getDrawLib()->glVertexSP(p0.x,p0.y);
+    getParent()->getDrawLib()->glTexCoord(1,1);
+    getParent()->getDrawLib()->glVertexSP(p1.x,p1.y);
+    getParent()->getDrawLib()->glTexCoord(1,0);
+    getParent()->getDrawLib()->glVertexSP(p2.x,p2.y);
+    getParent()->getDrawLib()->glTexCoord(0,0);
+    getParent()->getDrawLib()->glVertexSP(p3.x,p3.y);
+    getParent()->getDrawLib()->endDraw();
   }
   
   void GameRenderer::_RenderCircle(int nSteps,Color CircleColor,const Vector2f &C,float fRadius) {
-    glBegin(GL_LINE_LOOP);              
-    glColor3ub(GET_RED(CircleColor),GET_GREEN(CircleColor),GET_BLUE(CircleColor));
+    getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_LOOP);
+    getParent()->getDrawLib()->setColor(CircleColor);
     for(int i=0;i<nSteps;i++) {
       float r = (3.14159f * 2.0f * (float)i)/ (float)nSteps;            
-      _Vertex( Vector2f(C.x + fRadius*sin(r),C.y + fRadius*cos(r)) );
+      getParent()->getDrawLib()->glVertex( Vector2f(C.x + fRadius*sin(r),C.y + fRadius*cos(r)) );
     }      
-    glEnd();
+    getParent()->getDrawLib()->endDraw();
   }
 
   void GameRenderer::setTheme(Theme *p_theme) {

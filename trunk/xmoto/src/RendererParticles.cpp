@@ -31,6 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 namespace vapp {
 
+#ifdef ENABLE_OPENGL
   void GameRenderer::_RenderParticleDraw(Vector2f P,Texture *pTexture,float fSize,float fAngle, TColor c) {
     /* Render single particle */
     if(pTexture == NULL) return;
@@ -51,28 +52,30 @@ namespace vapp {
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
     glBindTexture(GL_TEXTURE_2D,pTexture->nID);
     glEnable(GL_TEXTURE_2D);
-    glBegin(GL_POLYGON);
+    getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
     glColor4ub(c.Red(), c.Green(), c.Blue(), c.Alpha());
     glTexCoord2f(0,0);
-    _Vertex(p1);
+    getParent()->getDrawLib()->glVertex(p1);
     glTexCoord2f(1,0);
-    _Vertex(p2);
+    getParent()->getDrawLib()->glVertex(p2);
     glTexCoord2f(1,1);
-    _Vertex(p3);
+    getParent()->getDrawLib()->glVertex(p3);
     glTexCoord2f(0,1);
-    _Vertex(p4);
-    glEnd();
+    getParent()->getDrawLib()->glVertex(p4);
+    getParent()->getDrawLib()->endDraw();
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_BLEND);            
   }
+#endif
 
   void GameRenderer::_RenderParticle(ParticlesSource *i_source) {
-    AnimationSprite *pStarAnim = (AnimationSprite *)getParent()->m_theme.getSprite(SPRITE_TYPE_ANIMATION,"Star");
-    EffectSprite* pFireType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Fire1");
-    EffectSprite* pSmoke1Type = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Smoke1");
-    EffectSprite* pSmoke2Type = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Smoke2");
+#ifdef ENABLE_OPENGL
+    AnimationSprite *pStarAnim = (AnimationSprite *)getParent()->getTheme()->getSprite(SPRITE_TYPE_ANIMATION,"Star");
+    EffectSprite* pFireType = (EffectSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_EFFECT, "Fire1");
+    EffectSprite* pSmoke1Type = (EffectSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_EFFECT, "Smoke1");
+    EffectSprite* pSmoke2Type = (EffectSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_EFFECT, "Smoke2");
     
-    EffectSprite* pDebrisType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Debris1");
+    EffectSprite* pDebrisType = (EffectSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_EFFECT, "Debris1");
 
     if(i_source->SpriteName() == "Star") {
       if(pStarAnim != NULL) {
@@ -126,9 +129,11 @@ namespace vapp {
 	}
       }
     }
+#endif
   }
   
   void GameRenderer::_RenderParticles(bool bFront) {
+#ifdef ENABLE_OPENGL
     for(unsigned int i = 0; i < getGameObject()->getLevelSrc()->Entities().size(); i++) {
       Entity* v_entity = getGameObject()->getLevelSrc()->Entities()[i];
       if(v_entity->Speciality() == ET_PARTICLES_SOURCE) {
@@ -142,6 +147,7 @@ namespace vapp {
 	_RenderParticle((ParticlesSource*) v_entity);
       }
     }
+#endif
   }
 
 }

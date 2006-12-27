@@ -379,7 +379,8 @@ namespace vapp {
         }
       
         int nOldScissor[4];
-        glGetIntegerv(GL_SCISSOR_BOX,(GLint *) nOldScissor);
+        //glGetIntegerv(GL_SCISSOR_BOX,(GLint *) nOldScissor);
+        getApp()->getDrawLib()->getClipRect(&nOldScissor[0],&nOldScissor[1],&nOldScissor[2],&nOldScissor[3]);
 	std::string txt_to_display;
 
         int x = 0;      
@@ -406,7 +407,7 @@ namespace vapp {
           }
         }
         
-        glScissor(nOldScissor[0],nOldScissor[1],nOldScissor[2],nOldScissor[3]);
+        getApp()->getDrawLib()->setClipRect(nOldScissor[0],nOldScissor[1],nOldScissor[2],nOldScissor[3]);
       }
     }
     

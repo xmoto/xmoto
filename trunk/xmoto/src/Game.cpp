@@ -170,7 +170,7 @@ namespace vapp {
               m_Renderer.prepareForNewLevel(bCreditsMode);            
               
               /* Show help string */
-              if(!isNoGraphics()) {
+              if(!drawLib->isNoGraphics()) {
                 PlayerTimeEntry *pBestTime = m_Profiles.getBestTime(LevelID);
                 PlayerTimeEntry *pBestPTime = m_Profiles.getBestPlayerTime(m_pPlayer->PlayerName,LevelID);
                 
@@ -478,13 +478,13 @@ namespace vapp {
   void GameApp::_DrawMenuBackground(void) {
     if(m_MenuBackgroundGraphics != MENU_GFX_OFF && !m_bUglyMode) {
       if(m_pTitleTL != NULL)
-        drawImage(Vector2f(0,0),Vector2f(getDispWidth()/2,getDispHeight()/2),m_pTitleTL);
+        drawLib->drawImage(Vector2f(0,0),Vector2f(drawLib->getDispWidth()/2,drawLib->getDispHeight()/2),m_pTitleTL);
       if(m_pTitleTR != NULL)
-        drawImage(Vector2f(getDispWidth()/2,0),Vector2f(getDispWidth(),getDispHeight()/2),m_pTitleTR);
+        drawLib->drawImage(Vector2f(drawLib->getDispWidth()/2,0),Vector2f(drawLib->getDispWidth(),drawLib->getDispHeight()/2),m_pTitleTR);
       if(m_pTitleBR != NULL)
-        drawImage(Vector2f(getDispWidth()/2,getDispHeight()/2),Vector2f(getDispWidth(),getDispHeight()),m_pTitleBR);
+        drawLib->drawImage(Vector2f(drawLib->getDispWidth()/2,drawLib->getDispHeight()/2),Vector2f(drawLib->getDispWidth(),drawLib->getDispHeight()),m_pTitleBR);
       if(m_pTitleBL != NULL)
-        drawImage(Vector2f(0,getDispHeight()/2),Vector2f(getDispWidth()/2,getDispHeight()),m_pTitleBL);
+        drawLib->drawImage(Vector2f(0,drawLib->getDispHeight()/2),Vector2f(drawLib->getDispWidth()/2,drawLib->getDispHeight()),m_pTitleBL);
     }
   }
 
@@ -501,7 +501,7 @@ namespace vapp {
   Screenshooting
   ===========================================================================*/
   void GameApp::_GameScreenshot(void) {
-    Img *pShot = grabScreen();      
+    Img *pShot = getDrawLib()->grabScreen();      
     FileHandle *pfh;
     char cBuf[256];
     int nShot=0;
@@ -1185,7 +1185,9 @@ namespace vapp {
 
     if(i_reloadLevel) {
       try {
-	m_levelsManager.LevelById(m_PlaySpecificLevel).loadXML();
+	Level *v_lvl = &(m_levelsManager.LevelById(m_PlaySpecificLevel));
+	v_lvl->loadXML();
+	v_lvl->rebuildCache();
       } catch(Exception &e) {
 	throw Exception("Unable to reload the level");
       }
@@ -1260,7 +1262,7 @@ namespace vapp {
   if(m_pCursor != NULL) {        
     int nMX,nMY;
     getMousePos(&nMX,&nMY);      
-    drawImage(Vector2f(nMX-2,nMY-2),Vector2f(nMX+30,nMY+30),m_pCursor);
+    drawLib->drawImage(Vector2f(nMX-2,nMY-2),Vector2f(nMX+30,nMY+30),m_pCursor);
   }
 
         SDL_GL_SwapBuffers();
@@ -1280,15 +1282,14 @@ namespace vapp {
     _DrawMenuBackground();
     _SimpleMessage(m_DownloadingMessage,&m_InfoMsgBoxRect,true);
     
-    drawBox(Vector2f(m_InfoMsgBoxRect.nX+10,m_InfoMsgBoxRect.nY+
-                                                   m_InfoMsgBoxRect.nHeight-
+    drawLib->drawBox(Vector2f(m_InfoMsgBoxRect.nX+10,m_InfoMsgBoxRect.nY+ m_InfoMsgBoxRect.nHeight-
                                                    nBarHeight*2),
             Vector2f(m_InfoMsgBoxRect.nX+m_InfoMsgBoxRect.nWidth-10,
                      m_InfoMsgBoxRect.nY+m_InfoMsgBoxRect.nHeight-nBarHeight),
             0,MAKE_COLOR(0,0,0,255),0);
             
                 
-    drawBox(Vector2f(m_InfoMsgBoxRect.nX+10,m_InfoMsgBoxRect.nY+
+    drawLib->drawBox(Vector2f(m_InfoMsgBoxRect.nX+10,m_InfoMsgBoxRect.nY+
                                                    m_InfoMsgBoxRect.nHeight-
                                                    nBarHeight*2),
             Vector2f(m_InfoMsgBoxRect.nX+10+((m_InfoMsgBoxRect.nWidth-20)*(int)fPercent)/100,
@@ -1757,7 +1758,7 @@ namespace vapp {
 
       m_MotoGame.gameMessage(m_MotoGame.getLevelSrc()->Name(), false, PRESTART_ANIMATION_LEVEL_MSG_DURATION);
       
-      m_zoomX = (2.0 * ((float)getDispWidth() / (float)getDispHeight())) / (m_MotoGame.getLevelSrc()->RightLimit() - m_MotoGame.getLevelSrc()->LeftLimit() + 2*PRESTART_ANIMATION_MARGIN_SIZE);
+      m_zoomX = (2.0 * ((float)drawLib->getDispWidth() / (float)drawLib->getDispHeight())) / (m_MotoGame.getLevelSrc()->RightLimit() - m_MotoGame.getLevelSrc()->LeftLimit() + 2*PRESTART_ANIMATION_MARGIN_SIZE);
       m_zoomY = 2.0 /(m_MotoGame.getLevelSrc()->TopLimit() - m_MotoGame.getLevelSrc()->BottomLimit()+2*PRESTART_ANIMATION_MARGIN_SIZE);
       
       if (m_zoomX > m_zoomY){
@@ -1785,9 +1786,9 @@ namespace vapp {
         float visibleWidth,cameraStartLeft;
         
         m_zoomU=m_zoomY;
-        static_time = (m_MotoGame.getLevelSrc()->RightLimit() - m_MotoGame.getLevelSrc()->LeftLimit()) / ((2.0 * ((float)getDispWidth() / (float)getDispHeight()))/m_zoomU);
+        static_time = (m_MotoGame.getLevelSrc()->RightLimit() - m_MotoGame.getLevelSrc()->LeftLimit()) / ((2.0 * ((float)drawLib->getDispWidth() / (float)drawLib->getDispHeight()))/m_zoomU);
       
-        visibleWidth = (2.0 * ((float)getDispWidth() / (float)getDispHeight()))/m_zoomU;
+        visibleWidth = (2.0 * ((float)drawLib->getDispWidth() / (float)drawLib->getDispHeight()))/m_zoomU;
         cameraStartLeft = visibleWidth/2.0;
         
         m_fPreCameraStartX = m_MotoGame.getLevelSrc()->RightLimit() - cameraStartLeft + PRESTART_ANIMATION_MARGIN_SIZE;

@@ -1,3 +1,6 @@
+* BUG : f5 when playing does not rebuild the level cache
+* BUG : dyn blocks not displayed in ugly && dyn blocks not updated in minimap 
+
 * when you choose keys : if a key is already attributed, it should
    assign it and set <unset> to the other one because it's not
    pleasant to have a message

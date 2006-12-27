@@ -4,8 +4,8 @@ WANTED_WARNNING= -w
 #WANTED_WARNNING= -pedantic -Wcast-align -Wcast-qual -Wchar-subscripts -Wcomment -Wconversion -Wfloat-equal -Wformat -Wformat-nonliteral -Wformat-security -Wformat-y2k -Wimplicit -Wimport -Wuninitialized -Wlong-long -Wmissing-braces -Wmissing-format-attribute -Wmissing-noreturn -Wpacked -Wparentheses -Wpointer-arith -Wredundant-decls -Wreturn-type -Wshadow -Wswitch  -Wswitch-default  -Wswitch-enum -Wtrigraphs -Wundef -Wunknown-pragmas -Wunused -Wunused-function -Wunused-label -Wunused-value -Wunused-variable -Wwrite-strings
 # -Wunreachable-code
 
-AM_CXXFLAGS = -DNOMMGR $(WANTED_WARNNING) -DGAMEDATADIR=\"$(GAMEDATADIR)\" -DLOCALESDIR=\"$(LOCALESDIR)\" -DALLOW_WEBACCESS=$(ALLOW_WEBACCESS) -DALLOW_ZOOMING=$(ALLOW_ZOOMING) $(GL_CFLAGS) $(SDL_CFLAGS)
-AM_CFLAGS = -DNOMMGR $(WANTED_WARNNING) -DGAMEDATADIR=\"$(GAMEDATADIR)\" -DLOCALESDIR=\"$(LOCALESDIR)\" -DALLOW_WEBACCESS=$(ALLOW_WEBACCESS) -DALLOW_ZOOMING=$(ALLOW_ZOOMING) $(GL_CFLAGS) $(SDL_CFLAGS)
+AM_CXXFLAGS = -DNOMMGR $(WANTED_WARNNING) -DGAMEDATADIR=\"$(GAMEDATADIR)\" -DLOCALESDIR=\"$(LOCALESDIR)\" -DALLOW_WEBACCESS=$(ALLOW_WEBACCESS) -DALLOW_ZOOMING=$(ALLOW_ZOOMING) $(GL_CFLAGS) $(SDL_CFLAGS) -DUSE_OPENGL=$(USE_OPENGL) -DUSE_SDLGFX=$(USE_SDLGFX) -DUSE_SDLGFXTEXTURED=$(USE_SDLGFXTEXTURED)
+AM_CFLAGS = -DNOMMGR $(WANTED_WARNNING) -DGAMEDATADIR=\"$(GAMEDATADIR)\" -DLOCALESDIR=\"$(LOCALESDIR)\" -DALLOW_WEBACCESS=$(ALLOW_WEBACCESS) -DALLOW_ZOOMING=$(ALLOW_ZOOMING) $(GL_CFLAGS) $(SDL_CFLAGS) -DUSE_OPENGL=$(USE_OPENGL) -DUSE_SDLGFX=$(USE_SDLGFX) -DUSE_SDLGFXTEXTURED=$(USE_SDLGFXTEXTURED)
 # AM_LDFLAGS = -s
 
 image_SOURCES = image/tim.cpp image/tim_io_stdio.cpp \
@@ -31,8 +31,8 @@ helpers_SOURCES = helpers/VMath.h             \
                   helpers/HighPrecisionTimer.h
 
 common_SOURCES = BuiltInFont.cpp Image.cpp \
-  VApp.cpp VBezier.cpp VDraw.cpp \
-  VDrawText.cpp VFileIO.cpp VTexture.cpp \
+  VApp.cpp VBezier.cpp VDraw.cpp VDrawOpenGL.cpp VDrawSDLgfx.cpp \
+  VFileIO.cpp VTexture.cpp \
   VXml.cpp \
   $(helpers_SOURCES) \
   $(image_SOURCES) $(tinyxml_SOURCES) \

@@ -129,24 +129,24 @@ namespace vapp {
           }
   
           /* Render */
-          if(!isNoGraphics() && bValidGameState) {
+          if(!getDrawLib()->isNoGraphics() && bValidGameState) {
             m_Renderer.render(bIsPaused);
             HighPrecisionTimer::checkTime("m_Renderer.render");
       
             if(m_bShowMiniMap && !m_bCreditsModeActive) {
               if(m_MotoGame.getBikeState()->Dir == DD_LEFT &&
                  (m_bShowEngineCounter == false || m_State == GS_REPLAYING)) {
-                m_Renderer.renderMiniMap(getDispWidth()-150,getDispHeight()-100,150,100);
+                m_Renderer.renderMiniMap(getDrawLib()->getDispWidth()-150,getDrawLib()->getDispHeight()-100,150,100);
                 HighPrecisionTimer::checkTime("m_Renderer.renderMiniMap");
               } 
               else {
-                m_Renderer.renderMiniMap(0,getDispHeight()-100,150,100);
+                m_Renderer.renderMiniMap(0,getDrawLib()->getDispHeight()-100,150,100);
                 HighPrecisionTimer::checkTime("m_Renderer.renderMiniMap");
               }
             }             
       
             if(m_bShowEngineCounter && m_bUglyMode == false && m_State != GS_REPLAYING) {
-              m_Renderer.renderEngineCounter(getDispWidth()-128,getDispHeight()-128,128,128,
+              m_Renderer.renderEngineCounter(getDrawLib()->getDispWidth()-128,getDrawLib()->getDispHeight()-128,128,128,
                                              m_MotoGame.getBikeEngineSpeed());
               HighPrecisionTimer::checkTime("m_Renderer.renderEngineCounter");
             } 
@@ -201,7 +201,7 @@ namespace vapp {
               nFrameCnt = 0;
               m_fLastPerfStateTime = m_fFrameTime;
             }
-            drawText(Vector2f(0,100),cBuf,MAKE_COLOR(0,0,0,255),-1);        
+            getDrawLib()->drawText(Vector2f(0,100),cBuf,MAKE_COLOR(0,0,0,255),-1);        
             nFrameCnt++;
           }
 
@@ -242,7 +242,7 @@ namespace vapp {
             }
 
             if(v_font != NULL) {
-              UITextDraw::printRaw(v_font,0,getDispHeight()-4,
+              UITextDraw::printRaw(v_font,0,getDrawLib()->getDispHeight()-4,
                 v_infos,
                 MAKE_COLOR(255,255,255,255));
             }
@@ -281,7 +281,7 @@ namespace vapp {
     if(bDrawFPS) {
       char cTemp[256];        
       sprintf(cTemp,"%f",m_fFPS_Rate);
-      drawText(Vector2f(130,0),cTemp);
+      getDrawLib()->drawText(Vector2f(130,0),cTemp);
     }    
     
     /* Profiling? */
@@ -316,10 +316,10 @@ namespace vapp {
   Main loop utility functions
   ===========================================================================*/
   void GameApp::_DrawMouseCursor(void) {
-    if(!isNoGraphics() && m_pCursor != NULL && m_bUglyMode == false) {
+    if(!getDrawLib()->isNoGraphics() && m_pCursor != NULL && m_bUglyMode == false) {
       int nMX,nMY;
       getMousePos(&nMX,&nMY);      
-      drawImage(Vector2f(nMX-2,nMY-2),Vector2f(nMX+30,nMY+30),m_pCursor);
+      getDrawLib()->drawImage(Vector2f(nMX-2,nMY-2),Vector2f(nMX+30,nMY+30),m_pCursor);
     }
   }
   
@@ -330,7 +330,7 @@ namespace vapp {
     setFrameDelay(0);
     
     /* Update sound system and input */
-    if(!isNoGraphics()) {        
+    if(!getDrawLib()->isNoGraphics()) {        
       m_EngineSound.update(getRealTime());
       m_EngineSound.setRPM(0); /* per default don't have engine sound */
       Sound::update();
@@ -737,7 +737,7 @@ namespace vapp {
   void GameApp::_PostUpdatePause(void) {
     if(!m_bUglyMode) {
       if(m_nPauseShade < 150) m_nPauseShade+=8;
-      drawBox(Vector2f(0,0),Vector2f(getDispWidth(),getDispHeight()),0,MAKE_COLOR(0,0,0,m_nPauseShade));                                        
+      getDrawLib()->drawBox(Vector2f(0,0),Vector2f(getDrawLib()->getDispWidth(),getDrawLib()->getDispHeight()),0,MAKE_COLOR(0,0,0,m_nPauseShade));                                        
     }
 
     /* Update mouse stuff */
@@ -750,14 +750,14 @@ namespace vapp {
   void GameApp::_PostUpdateJustDead(void) {
     if(!m_bUglyMode) {
       if(m_nJustDeadShade < 150) m_nJustDeadShade+=8;
-      drawBox(Vector2f(0,0),Vector2f(getDispWidth(),getDispHeight()),0,MAKE_COLOR(0,0,0,m_nJustDeadShade));     
+      getDrawLib()->drawBox(Vector2f(0,0),Vector2f(getDrawLib()->getDispWidth(),getDrawLib()->getDispHeight()),0,MAKE_COLOR(0,0,0,m_nJustDeadShade));     
     }
   }
 
   void GameApp::_PostUpdateMenuDead(void) {
     if(!m_bUglyMode) {
       if(m_nJustDeadShade < 150) m_nJustDeadShade+=8;
-      drawBox(Vector2f(0,0),Vector2f(getDispWidth(),getDispHeight()),0,MAKE_COLOR(0,0,0,m_nJustDeadShade));     
+      getDrawLib()->drawBox(Vector2f(0,0),Vector2f(getDrawLib()->getDispWidth(),getDrawLib()->getDispHeight()),0,MAKE_COLOR(0,0,0,m_nJustDeadShade));     
     }
     
     /* Update mouse stuff */
@@ -772,7 +772,7 @@ namespace vapp {
   void GameApp::_PostUpdateFinished(void) {
     if(!m_bUglyMode) {
       if(m_nFinishShade < 150) m_nFinishShade+=8;
-      drawBox(Vector2f(0,0),Vector2f(getDispWidth(),getDispHeight()),0,MAKE_COLOR(0,0,0,m_nFinishShade));     
+      getDrawLib()->drawBox(Vector2f(0,0),Vector2f(getDrawLib()->getDispWidth(),getDrawLib()->getDispHeight()),0,MAKE_COLOR(0,0,0,m_nFinishShade));     
     }
 
     /* Update mouse stuff */

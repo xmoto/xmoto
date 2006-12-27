@@ -50,6 +50,7 @@ class Level {
   bool isFullyLoaded() const;
   void exportBinaryHeader(vapp::FileHandle *pfh);
   void importBinaryHeader(vapp::FileHandle *pfh);
+  void rebuildCache();
 
   void loadXML();
   void saveXML();
@@ -148,7 +149,7 @@ class Level {
   Entity               *m_startEntity; /* entity where the player start */
   bool m_isBodyLoaded;
 
-  void loadToPlayLimits();
+  void addLimits();
   void exportBinary(const std::string &i_fileName, const std::string& i_sum);
   bool importBinary(const std::string &i_fileName, const std::string& i_sum);
   bool importBinaryHeaderFromFile(const std::string &i_fileName, const std::string& i_sum);

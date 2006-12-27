@@ -476,6 +476,7 @@ void Level::loadXML(void) {
       m_blocks.push_back(Block::readFromXml(*m_xmlSource, pElem));
     }  
   }
+  addLimits();
 
   delete m_xmlSource;
   m_xmlSource = NULL;
@@ -848,8 +849,6 @@ int Level::compareVersionNumbers(const std::string &v1,const std::string &v2) {
 int Level::loadToPlay(vapp::CollisionSystem& p_CollisionSystem) {
   int v_nbErrors = 0;
 
-  loadToPlayLimits();
-  
   /* preparing blocks */
   for(unsigned int i=0; i<m_blocks.size(); i++) {
     try {
@@ -890,7 +889,7 @@ void Level::unloadToPlay() {
   m_entitiesExterns.clear();
 }
 
-void Level::loadToPlayLimits() {
+void Level::addLimits() {
   Block *pBlock;
   Vector2f v_P;
 
@@ -974,4 +973,8 @@ void Level::unloadLevelBody() {
   if(m_xmlSource != NULL) {
     delete m_xmlSource;
   }
+}
+
+void Level::rebuildCache() {
+  exportBinary(getNameInCache(), m_checkSum);
 }

@@ -114,14 +114,12 @@ namespace vapp {
         }
       }
     
-      /* Clear screen */  
-      glClear(GL_COLOR_BUFFER_BIT);
+      pParent->getDrawLib()->clearGraphics();
       
       /* Update */
       update();
       
-      /* Swap buffers */
-      SDL_GL_SwapBuffers();
+      pParent->getDrawLib()->flushGraphics();
     }
     
     /* Return */
@@ -167,17 +165,21 @@ namespace vapp {
 
     /* Do user pre-init */
     userPreInit();
-
-    selectDisplayMode(&m_nDispWidth,&m_nDispHeight,&m_nDispBPP,&m_bWindowed);
+    int configured_width,configured_height,configured_BPP;
+    bool configured_windowed;
+    configured_width = drawLib->getDispWidth();
+    configured_height = drawLib->getDispHeight();
+    configured_BPP = drawLib->getDispBPP();
+    selectDisplayMode(&configured_width,&configured_height,&configured_BPP , &configured_windowed);
         
     /* Init! */
-    _Init(m_nDispWidth,m_nDispHeight,m_nDispBPP,m_bWindowed);
-    if(!isNoGraphics()) {        
+    _Init(configured_width,configured_height,configured_BPP , configured_windowed);
+    if(!drawLib->isNoGraphics()) {        
       /* Tell DrawLib about it */
       //#if defined(EMUL_800x600)      
       //  setDrawDims(m_nDispWidth,m_nDispHeight,800,600);
       //#else
-        setDrawDims(m_nDispWidth,m_nDispHeight,m_nDispWidth,m_nDispHeight);
+        drawLib->setDrawDims(configured_width,configured_height,configured_width,configured_height);
       //#endif
     }
     
@@ -186,7 +188,7 @@ namespace vapp {
     
     /* Enter the main loop */
     while(!m_bQuit) {
-      if(!isNoGraphics()) {
+      if(!drawLib->isNoGraphics()) {
         /* Handle SDL events */            
         SDL_PumpEvents();
         
@@ -240,15 +242,17 @@ namespace vapp {
         }
           
         /* Clear screen */  
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	drawLib->clearGraphics();
+
       }
       
       /* Update user app */
       drawFrame();
       
-      if(!isNoGraphics()) {
+      if(!drawLib->isNoGraphics()) {
         /* Swap buffers */
-        SDL_GL_SwapBuffers();
+       drawLib->flushGraphics();
         
         /* Does app want us to delay a bit after the frame? */
         if(m_nFrameDelay > 0)
@@ -323,8 +327,8 @@ namespace vapp {
   Init 
   ===========================================================================*/
   void App::_Init(int nDispWidth,int nDispHeight,int nDispBPP,bool bWindowed) {
-    /* Init SDL */
-    if(isNoGraphics()) {
+	       /* Init SDL */
+    if(drawLib->isNoGraphics()) {
       if(SDL_Init(SDL_INIT_TIMER) < 0)
         throw Exception("(1) SDL_Init : " + std::string(SDL_GetError()));
       
@@ -335,211 +339,9 @@ namespace vapp {
       if(SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER) < 0)
         throw Exception("(2) SDL_Init : " + std::string(SDL_GetError()));
     }
-    
-    /* Set suggestions */
-    m_nDispWidth = nDispWidth;
-    m_nDispHeight = nDispHeight;
-    m_nDispBPP = nDispBPP;
-    m_bWindowed = bWindowed;
-
-    /* Get some video info */
-    const SDL_VideoInfo *pVidInfo=SDL_GetVideoInfo();
-    if(pVidInfo==NULL)
-      throw Exception("(1) SDL_GetVideoInfo : " + std::string(SDL_GetError()));
-  
-    /* Determine target bit depth */
-    if(m_bWindowed) 
-      /* In windowed mode we can't tinker with the bit-depth */
-      m_nDispBPP=pVidInfo->vfmt->BitsPerPixel;      
-
-    /* Setup GL stuff */
-    /* 2005-10-05 ... note that we no longer ask for explicit settings... it's
-                      better to do it per auto */
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,1); 
-  
-    /* Create video flags */
-    int nFlags = SDL_OPENGL;
-    if(!m_bWindowed) nFlags|=SDL_FULLSCREEN;
-  
-    /* At last, try to "set the video mode" */
-    if(SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,m_nDispBPP,nFlags)==NULL) {
-      Log("** Warning ** : Tried to set video mode %dx%d @ %d-bit, but SDL responded: %s\n"
-          "                Now SDL will try determining a proper mode itself.",m_nDispWidth,m_nDispHeight,m_nDispBPP);
-    
-      /* Hmm, try letting it decide the BPP automatically */
-      if(SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,0,nFlags)==NULL) {       
-        /* Still no luck */
-        Log("** Warning ** : Still no luck, now we'll try 800x600 in a window.");
-        m_nDispWidth = 800; m_nDispHeight = 600;        
-        m_bWindowed = true;
-        if(SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,0,SDL_OPENGL)==NULL) {       
-          throw Exception("SDL_SetVideoMode : " + std::string(SDL_GetError()));
-        }       
-      }
-    }
-    
-    /* Retrieve actual configuration */
-    pVidInfo=SDL_GetVideoInfo();
-    if(pVidInfo==NULL)
-      throw Exception("(2) SDL_GetVideoInfo : " + std::string(SDL_GetError()));
-                    
-    m_nDispBPP=pVidInfo->vfmt->BitsPerPixel;
-
-    /* Did we get a z-buffer? */        
-    int nDepthBits;
-    SDL_GL_GetAttribute(SDL_GL_DEPTH_SIZE,&nDepthBits);
-    if(nDepthBits == 0)
-      throw Exception("no depth buffer");  
-  
+    drawLib->init(nDispWidth,nDispHeight,nDispBPP,bWindowed,&m_theme);
     /* Set window title */
     SDL_WM_SetCaption(m_AppName.c_str(),m_AppName.c_str());
-
-    /* Force OpenGL to talk 2D */
-    glViewport(0,0,m_nDispWidth,m_nDispHeight);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(0,m_nDispWidth,0,m_nDispHeight,-1,1);
-    
-    glClearDepth(1);
-    glDepthFunc(GL_LEQUAL);
-    
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();   
-    
-    /* Enable unicode translation and key repeats */
-    SDL_EnableUNICODE(1);         
-    SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY,SDL_DEFAULT_REPEAT_INTERVAL);
-     
-    /* Output some general info */
-    Log("GL: %s (%s)",glGetString(GL_RENDERER),glGetString(GL_VENDOR));
-    if(glGetString(GL_RENDERER) == NULL || 
-       glGetString(GL_VENDOR) == NULL) {
-      Log("** Warning ** : GL strings NULL!");
-      throw Exception("GL strings are NULL!");
-    }
-    
-    /* Windows: check whether we are using the standard GDI OpenGL software driver... If
-       so make sure the user is warned */
-    #if defined(WIN32) 
-      if(!strcmp(reinterpret_cast<const char *>(glGetString(GL_RENDERER)),"GDI Generic") &&
-         !strcmp(reinterpret_cast<const char *>(glGetString(GL_VENDOR)),"Microsoft Corporation")) {
-        Log("** Warning ** : No GL hardware acceleration!");
-        //m_UserNotify = "It seems that no OpenGL hardware acceleration is available!\n"
-        //               "Please make sure OpenGL is configured properly.";
-      }
-    #endif
-    
-    /* Init OpenGL extensions */
-    if(m_bDontUseGLExtensions) {
-      m_bVBOSupported = false;
-      m_bFBOSupported = false;
-      m_bShadersSupported = false;
-    }
-    else {
-      m_bVBOSupported = isExtensionSupported("GL_ARB_vertex_buffer_object");
-      m_bFBOSupported = isExtensionSupported("GL_EXT_framebuffer_object");
-      
-      m_bShadersSupported = isExtensionSupported("GL_ARB_fragment_shader") &&
-                            isExtensionSupported("GL_ARB_vertex_shader") &&
-                            isExtensionSupported("GL_ARB_shader_objects");
-    }
-    
-    if(m_bVBOSupported) {
-      glGenBuffersARB=(PFNGLGENBUFFERSARBPROC)SDL_GL_GetProcAddress("glGenBuffersARB");
-      glBindBufferARB=(PFNGLBINDBUFFERARBPROC)SDL_GL_GetProcAddress("glBindBufferARB");
-      glBufferDataARB=(PFNGLBUFFERDATAARBPROC)SDL_GL_GetProcAddress("glBufferDataARB");
-      glDeleteBuffersARB=(PFNGLDELETEBUFFERSARBPROC)SDL_GL_GetProcAddress("glDeleteBuffersARB");      
-
-      glEnableClientState( GL_VERTEX_ARRAY );   
-      glEnableClientState( GL_TEXTURE_COORD_ARRAY );
-          
-      Log("GL: using ARB_vertex_buffer_object");    
-    }
-    else
-      Log("GL: not using ARB_vertex_buffer_object");    
-      
-    if(m_bFBOSupported) {
-      glIsRenderbufferEXT = (PFNGLISRENDERBUFFEREXTPROC)SDL_GL_GetProcAddress("glIsRenderbufferEXT");
-      glBindRenderbufferEXT = (PFNGLBINDRENDERBUFFEREXTPROC)SDL_GL_GetProcAddress("glBindRenderbufferEXT");
-      glDeleteRenderbuffersEXT = (PFNGLDELETERENDERBUFFERSEXTPROC)SDL_GL_GetProcAddress("glDeleteRenderbuffersEXT");
-      glGenRenderbuffersEXT = (PFNGLGENRENDERBUFFERSEXTPROC)SDL_GL_GetProcAddress("glGenRenderbuffersEXT");
-      glRenderbufferStorageEXT = (PFNGLRENDERBUFFERSTORAGEEXTPROC)SDL_GL_GetProcAddress("glRenderbufferStorageEXT");
-      glGetRenderbufferParameterivEXT = (PFNGLGETRENDERBUFFERPARAMETERIVEXTPROC)SDL_GL_GetProcAddress("glGetRenderbufferParameterivEXT");
-      glIsFramebufferEXT = (PFNGLISFRAMEBUFFEREXTPROC)SDL_GL_GetProcAddress("glIsFramebufferEXT");
-      glBindFramebufferEXT = (PFNGLBINDFRAMEBUFFEREXTPROC)SDL_GL_GetProcAddress("glBindFramebufferEXT");
-      glDeleteFramebuffersEXT = (PFNGLDELETEFRAMEBUFFERSEXTPROC)SDL_GL_GetProcAddress("glDeleteFramebuffersEXT");
-      glGenFramebuffersEXT = (PFNGLGENFRAMEBUFFERSEXTPROC)SDL_GL_GetProcAddress("glGenFramebuffersEXT");
-      glCheckFramebufferStatusEXT = (PFNGLCHECKFRAMEBUFFERSTATUSEXTPROC)SDL_GL_GetProcAddress("glCheckFramebufferStatusEXT");
-      glFramebufferTexture1DEXT = (PFNGLFRAMEBUFFERTEXTURE1DEXTPROC)SDL_GL_GetProcAddress("glFramebufferTexture1DEXT");
-      glFramebufferTexture2DEXT = (PFNGLFRAMEBUFFERTEXTURE2DEXTPROC)SDL_GL_GetProcAddress("glFramebufferTexture2DEXT");
-      glFramebufferTexture3DEXT = (PFNGLFRAMEBUFFERTEXTURE3DEXTPROC)SDL_GL_GetProcAddress("glFramebufferTexture3DEXT");
-      glFramebufferRenderbufferEXT = (PFNGLFRAMEBUFFERRENDERBUFFEREXTPROC)SDL_GL_GetProcAddress("glFramebufferRenderbufferEXT");
-      glGetFramebufferAttachmentParameterivEXT = (PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVEXTPROC)SDL_GL_GetProcAddress("glGetFramebufferAttachmentParameterivEXT");
-      glGenerateMipmapEXT = (PFNGLGENERATEMIPMAPEXTPROC)SDL_GL_GetProcAddress("glGenerateMipmapEXT");
-          
-      Log("GL: using EXT_framebuffer_object");
-    }
-    else
-      Log("GL: not using EXT_framebuffer_object");
-      
-    if(m_bShadersSupported) {
-      glBindAttribLocationARB = (PFNGLBINDATTRIBLOCATIONARBPROC)SDL_GL_GetProcAddress("glBindAttribLocationARB");
-      glGetActiveAttribARB = (PFNGLGETACTIVEATTRIBARBPROC)SDL_GL_GetProcAddress("glGetActiveAttribARB");
-      glGetAttribLocationARB = (PFNGLGETATTRIBLOCATIONARBPROC)SDL_GL_GetProcAddress("glGetAttribLocationARB");
-      glDeleteObjectARB = (PFNGLDELETEOBJECTARBPROC)SDL_GL_GetProcAddress("glDeleteObjectARB");
-      glGetHandleARB = (PFNGLGETHANDLEARBPROC)SDL_GL_GetProcAddress("glGetHandleARB");
-      glDetachObjectARB = (PFNGLDETACHOBJECTARBPROC)SDL_GL_GetProcAddress("glDetachObjectARB");
-      glCreateShaderObjectARB = (PFNGLCREATESHADEROBJECTARBPROC)SDL_GL_GetProcAddress("glCreateShaderObjectARB");
-      glShaderSourceARB = (PFNGLSHADERSOURCEARBPROC)SDL_GL_GetProcAddress("glShaderSourceARB");
-      glCompileShaderARB = (PFNGLCOMPILESHADERARBPROC)SDL_GL_GetProcAddress("glCompileShaderARB");
-      glCreateProgramObjectARB = (PFNGLCREATEPROGRAMOBJECTARBPROC)SDL_GL_GetProcAddress("glCreateProgramObjectARB");
-      glAttachObjectARB = (PFNGLATTACHOBJECTARBPROC)SDL_GL_GetProcAddress("glAttachObjectARB");
-      glLinkProgramARB = (PFNGLLINKPROGRAMARBPROC)SDL_GL_GetProcAddress("glLinkProgramARB");
-      glUseProgramObjectARB = (PFNGLUSEPROGRAMOBJECTARBPROC)SDL_GL_GetProcAddress("glUseProgramObjectARB");
-      glValidateProgramARB = (PFNGLVALIDATEPROGRAMARBPROC)SDL_GL_GetProcAddress("glValidateProgramARB");
-      glUniform1fARB = (PFNGLUNIFORM1FARBPROC)SDL_GL_GetProcAddress("glUniform1fARB");
-      glUniform2fARB = (PFNGLUNIFORM2FARBPROC)SDL_GL_GetProcAddress("glUniform2fARB");
-      glUniform3fARB = (PFNGLUNIFORM3FARBPROC)SDL_GL_GetProcAddress("glUniform3fARB");
-      glUniform4fARB = (PFNGLUNIFORM4FARBPROC)SDL_GL_GetProcAddress("glUniform4fARB");
-      glUniform1iARB = (PFNGLUNIFORM1IARBPROC)SDL_GL_GetProcAddress("glUniform1iARB");
-      glUniform2iARB = (PFNGLUNIFORM2IARBPROC)SDL_GL_GetProcAddress("glUniform2iARB");
-      glUniform3iARB = (PFNGLUNIFORM3IARBPROC)SDL_GL_GetProcAddress("glUniform3iARB");
-      glUniform4iARB = (PFNGLUNIFORM4IARBPROC)SDL_GL_GetProcAddress("glUniform4iARB");
-      glUniform1fvARB = (PFNGLUNIFORM1FVARBPROC)SDL_GL_GetProcAddress("glUniform1fvARB");
-      glUniform2fvARB = (PFNGLUNIFORM2FVARBPROC)SDL_GL_GetProcAddress("glUniform2fvARB");
-      glUniform3fvARB = (PFNGLUNIFORM3FVARBPROC)SDL_GL_GetProcAddress("glUniform3fvARB");
-      glUniform4fvARB = (PFNGLUNIFORM4FVARBPROC)SDL_GL_GetProcAddress("glUniform4fvARB");
-      glUniform1ivARB = (PFNGLUNIFORM1IVARBPROC)SDL_GL_GetProcAddress("glUniform1ivARB");
-      glUniform2ivARB = (PFNGLUNIFORM2IVARBPROC)SDL_GL_GetProcAddress("glUniform2ivARB");
-      glUniform3ivARB = (PFNGLUNIFORM3IVARBPROC)SDL_GL_GetProcAddress("glUniform3ivARB");
-      glUniform4ivARB = (PFNGLUNIFORM4IVARBPROC)SDL_GL_GetProcAddress("glUniform4ivARB");
-      glUniformMatrix2fvARB = (PFNGLUNIFORMMATRIX2FVARBPROC)SDL_GL_GetProcAddress("glUniformMatrix2fvARB");
-      glUniformMatrix3fvARB = (PFNGLUNIFORMMATRIX3FVARBPROC)SDL_GL_GetProcAddress("glUniformMatrix3fvARB");
-      glUniformMatrix4fvARB = (PFNGLUNIFORMMATRIX4FVARBPROC)SDL_GL_GetProcAddress("glUniformMatrix4fvARB");
-      glGetObjectParameterfvARB = (PFNGLGETOBJECTPARAMETERFVARBPROC)SDL_GL_GetProcAddress("glGetObjectParameterfvARB");
-      glGetObjectParameterivARB = (PFNGLGETOBJECTPARAMETERIVARBPROC)SDL_GL_GetProcAddress("glGetObjectParameterivARB");
-      glGetInfoLogARB = (PFNGLGETINFOLOGARBPROC)SDL_GL_GetProcAddress("glGetInfoLogARB");
-      glGetAttachedObjectsARB = (PFNGLGETATTACHEDOBJECTSARBPROC)SDL_GL_GetProcAddress("glGetAttachedObjectsARB");
-      glGetUniformLocationARB = (PFNGLGETUNIFORMLOCATIONARBPROC)SDL_GL_GetProcAddress("glGetUniformLocationARB");
-      glGetActiveUniformARB = (PFNGLGETACTIVEUNIFORMARBPROC)SDL_GL_GetProcAddress("glGetActiveUniformARB");
-      glGetUniformfvARB = (PFNGLGETUNIFORMFVARBPROC)SDL_GL_GetProcAddress("glGetUniformfvARB");
-      glGetUniformivARB = (PFNGLGETUNIFORMIVARBPROC)SDL_GL_GetProcAddress("glGetUniformivARB");
-      glGetShaderSourceARB = (PFNGLGETSHADERSOURCEARBPROC)SDL_GL_GetProcAddress("glGetShaderSourceARB");    
-        
-      Log("GL: using ARB_fragment_shader/ARB_vertex_shader/ARB_shader_objects");
-    }
-    else
-      Log("GL: not using ARB_fragment_shader/ARB_vertex_shader/ARB_shader_objects");
-    
-    /* Set background color to black */
-    glClearColor(0.0f,0.0f,0.0f,0.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-    SDL_GL_SwapBuffers();  
-
-    /* Init drawing library */
-    initLib(&m_theme);
-
-        
   }
 
   /*===========================================================================
@@ -549,11 +351,12 @@ namespace vapp {
     /* Tell user app to turn off */
     userShutdown();
 
-    if(!isNoGraphics()) {
+    if(!drawLib->isNoGraphics()) {
       /* Uninit drawing library */
-      uninitLib(&m_theme);
+      drawLib->unInit();
     }
 
+    
     /* Shutdown SDL */
     SDL_Quit();
   }
@@ -628,94 +431,43 @@ namespace vapp {
   Set/get graphics scissoring
   ===========================================================================*/
   void App::scissorGraphics(int x,int y,int nWidth,int nHeight) {
-    //float fx = (float)(m_nDispWidth*x) / (float)getDispWidth();
-    //float fy = (float)(m_nDispHeight*y) / (float)getDispHeight();
-    //float fw = (float)(m_nDispWidth*nWidth) / (float)getDispWidth();
-    //float fh = (float)(m_nDispHeight*nHeight) / (float)getDispHeight();
-    //float fx = (float)(m_nDispWidth*x) / (float)getDispWidth();
-    //float fy = (float)(m_nDispHeight*y) / (float)getDispHeight();
-    //float fw = (float)(m_nDispWidth*nWidth) / (float)getDispWidth();
-    //float fh = (float)(m_nDispHeight*nHeight) / (float)getDispHeight();
-  
-    //glScissor(fx,m_nDispHeight - (fy+fh)-1,fw+1,fh+1);
-    
-    glScissor(x,m_nDispHeight - (y+nHeight),nWidth,nHeight);
-    
-    m_nLScissorX = x;
-    m_nLScissorY = y;
-    m_nLScissorW = nWidth;
-    m_nLScissorH = nHeight;
+	  drawLib->setClipRect(x,y,nWidth,nHeight);
   }  
   
   void App::getScissorGraphics(int *px,int *py,int *pnWidth,int *pnHeight) {
-    *px = m_nLScissorX;
-    *py = m_nLScissorY;
-    *pnWidth = m_nLScissorW;
-    *pnHeight = m_nLScissorH;
+	  drawLib->getClipRect(px,py,pnWidth,pnHeight);
   }  
 
-  /*===========================================================================
-  Check for OpenGL extension
-  ===========================================================================*/
-  bool App::isExtensionSupported(std::string Ext) {
-    const unsigned char *pcExtensions = NULL;
-    const unsigned char *pcStart;
-    unsigned char *pcWhere,*pcTerminator;
-    
-    pcExtensions = glGetString(GL_EXTENSIONS);
-    if(pcExtensions == NULL) {
-      Log("Failed to determine OpenGL extensions. Try stopping all other\n"
-          "applications that might use your OpenGL hardware.\n"
-          "If it still doesn't work, please create a detailed bug report.\n"
-          );
-      throw Exception("glGetString() : NULL");
-    }
-    
-    pcStart = pcExtensions;
-    while(1) {
-      pcWhere = (unsigned char *)strstr((const char*)pcExtensions,Ext.c_str());
-      if(pcWhere == NULL) break;
-      pcTerminator = pcWhere + Ext.length();
-      if(pcWhere == pcStart || *(pcWhere-1) == ' ')
-        if(*pcTerminator == ' ' || *pcTerminator == '\0')
-          return true;
-      pcStart = pcTerminator;
-    }
-    return false;
-  }
   
-  /*===========================================================================
-  Grab screen contents
-  ===========================================================================*/
-  Img *App::grabScreen(void) {
-    Img *pImg = new Img;
-    
-    pImg->createEmpty(m_nDispWidth,m_nDispHeight);
-    Color *pPixels = pImg->getPixels();
-    unsigned char *pcTemp = new unsigned char [m_nDispWidth*3];
-  
-    /* Select frontbuffer */
-    glReadBuffer(GL_FRONT);
 
-    /* Read the pixels (reversed) */
-    for(int i=0;i<m_nDispHeight;i++) {          
-      glReadPixels(0,i,m_nDispWidth,1,GL_RGB,GL_UNSIGNED_BYTE,pcTemp);
-      for(int j=0;j<m_nDispWidth;j++) {
-        pPixels[(m_nDispHeight - i - 1)*m_nDispWidth + j] = MAKE_COLOR(
-          pcTemp[j*3],pcTemp[j*3+1],pcTemp[j*3+2],255
-        );
-      }
-    }           
-    
-    delete [] pcTemp;
-    return pImg;            
-  }
 
   /*===========================================================================
   Parse command-line arguments
   ===========================================================================*/
   void App::_ParseArgs(int nNumArgs,char **ppcArgs) {
     std::vector<std::string> UserArgs;
+    //look if the graphical frontend is given
+    //on the command line
+#ifdef ENABLE_SDLGFX
+  //if booth options are compiled
+    for(int i=1;i<nNumArgs;i++) {
+      if(strcmp(ppcArgs[i],"-sdlgfx") == 0) {
+            if (drawLib == NULL){
+	     drawLib = new DrawLibSDLgfx();
+	    }
+      }
+    }
+#endif
+#ifdef ENABLE_OPENGL
+    if (drawLib == NULL){
+	     drawLib = new DrawLibOpenGL();
+    }
+#endif
+#ifdef ENABLE_SDLGFX
+    if (drawLib == NULL){
+	     drawLib = new DrawLibSDLgfx();
+    }
+#endif
   
     /* Walk through the args */
     for(int i=1;i<nNumArgs;i++) {
@@ -732,30 +484,33 @@ namespace vapp {
           Packager::goUnpack(BinFile,OutDir,bMakePackageList);
           exit(0); /* leaks memory too, but still nobody cares */
       } else if(!strcmp(ppcArgs[i],"-nogfx")) {
-        m_bNoGraphics = true;
+        drawLib->setNoGraphics(true);
       }
       else if(!strcmp(ppcArgs[i],"-res")) {
         if(i+1 == nNumArgs) 
           throw SyntaxError("missing resolution");
-          
-        sscanf(ppcArgs[i+1],"%dx%d",&m_nDispWidth,&m_nDispHeight);
+        int configured_width , configured_height;
+        sscanf(ppcArgs[i+1],"%dx%d",&configured_width,&configured_height);
+	drawLib->setDispWidth(configured_width);
+	drawLib->setDispHeight(configured_height);
+	
         m_bCmdDispWidth = m_bCmdDispHeight = true;
         i++;
       }
       else if(!strcmp(ppcArgs[i],"-bpp")) {
         if(i+1 == nNumArgs) 
           throw SyntaxError("missing bit depth");
-          
-        m_nDispBPP = atoi(ppcArgs[i+1]);
+        int configured_bpp = atoi(ppcArgs[i+1]);
+        drawLib->setDispBPP(configured_bpp);
         m_bCmdDispBPP = true;
         i++;
       }
       else if(!strcmp(ppcArgs[i],"-fs")) {
-        m_bWindowed = false;
+        drawLib->setWindowed(false);
         m_bCmdWindowed = true;
       }
       else if(!strcmp(ppcArgs[i],"-win")) {
-        m_bWindowed = true;
+        drawLib->setWindowed(true);
         m_bCmdWindowed = true;
       }
       else if(!strcmp(ppcArgs[i],"-q")) {
@@ -765,7 +520,7 @@ namespace vapp {
         g_bVerbose = true;
       } 
       else if(!strcmp(ppcArgs[i],"-noexts")) {
-        m_bDontUseGLExtensions = true;
+        drawLib->setDontUseGLExtensions(true);
       }
       else if(!strcmp(ppcArgs[i],"-nowww")) {
         m_bNoWWW = true;
@@ -787,6 +542,9 @@ namespace vapp {
         printf("\t-v\n\t\tBe verbose.\n");
         printf("\t-noexts\n\t\tDon't use any OpenGL extensions.\n");
         printf("\t-nowww\n\t\tDon't allow xmoto to connect on the web.\n");
+#ifdef ENABLE_SDLGFX
+        printf("\t-sdlgfx\n\t\tSelect SDL_fgx as rendering engine.\n");
+#endif
         helpUserArgs();
         printf("\n");
         

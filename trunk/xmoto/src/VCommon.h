@@ -48,6 +48,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // Some places #define _T, which we want for a template parameter
 #undef _T
 
+#ifdef ENABLE_OPENGL
 /* Pull in OpenGL headers */
 //#define NO_SDL_GLEXT
 //#include <SDL/SDL_opengl.h>
@@ -67,9 +68,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "glext.h"
 
+#endif
+
 #include <string>
 #include <vector>
 #include <queue>
+#include <map>
 #include <iostream>
 #include <sstream>
 
@@ -174,6 +178,15 @@ namespace vapp {
   Types
   ===========================================================================*/
   typedef unsigned int Color;
+
+  //used a comparator in sdt::map
+  struct ltstr {
+    bool operator()(const char* s1, const char* s2) const {
+      return strcmp(s1, s2) < 0;
+    }
+  };
+
+
 
 }
 

@@ -69,7 +69,8 @@ void Theme::initDefaultFont() {
     m_pDefaultFontTexture = m_texMan.createTexture("default-font",(unsigned char *)pImgData,
                256,256,true);
       
-    delete [] pImgData;
+    //keesj:todo:idem here we can not delete the image data pointer
+    //delete [] pImgData;
 }
 
 vapp::Texture* Theme::getDefaultFont() {
