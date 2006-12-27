@@ -2,7 +2,7 @@ AC_INIT(src/GameMain.cpp)
 
 dnl otherwise autoconf whines
 AC_CANONICAL_TARGET()
-AM_INIT_AUTOMAKE(xmoto,0.2.4)
+AM_INIT_AUTOMAKE(xmoto,0.2.5)
 
 AC_PROG_CXX
 AC_PROG_CPP
@@ -147,9 +147,9 @@ function displayRequirement {
   REQ="$4"
 
   if test "$VAR" = "$GOOD_RES"; then
-    printf "| %15s | %10s | %42s |\n" "$STUFF" "enabled" "($REQ)"
+    printf "| %15s | %10s | %51s |\n" "$STUFF" "enabled" "($REQ)"
   else
-    printf "| %15s | %10s | %42s |\n" "$STUFF" "disabled" "($REQ missing)"
+    printf "| %15s | %10s | %51s |\n" "$STUFF" "disabled" "($REQ missing)"
   fi
 }
 
@@ -174,16 +174,16 @@ else
 fi
 
 echo
-echo   "+-----------------+------------+--------------------------------------------+"
+echo   "+-----------------+------------+-----------------------------------------------------+"
 displayRequirement "WWW stuff" "$v_enable_www" "yes" "$v_enable_www_reason"
-echo   "+-----------------+------------+--------------------------------------------+"
+echo   "+-----------------+------------+-----------------------------------------------------+"
 displayRequirement "Locales" "$gt_cv_func_gnugettext1_libc" "yes" "gettext"
-echo   "+-----------------+------------+--------------------------------------------+"
+echo   "+-----------------+------------+-----------------------------------------------------+"
 displayRequirement "Zoom" "$with_enable_zoom" "1" "--with-enable-zoom=1"
-echo   "+-----------------+------------+--------------------------------------------+"
+echo   "+-----------------+------------+-----------------------------------------------------+"
 displayRequirement "OpenGl" "$USE_OPENGL" "1" "--with-renderer-openGl=1"
-echo   "+-----------------+------------+--------------------------------------------+"
-displayRequirement "sdlGfx" "$USE_SDLGFX" "1" "--with-renderer-sdlGfx=1"
-echo   "+-----------------+------------+--------------------------------------------+"
-displayRequirement "sdlGfxTextured" "$USE_SDLGFXTEXTURED" "1" "--with-renderer-sdlGfxTextured=1"
-echo   "+-----------------+------------+--------------------------------------------+"
+echo   "+-----------------+------------+-----------------------------------------------------+"
+displayRequirement "sdlGfx" "$USE_SDLGFX" "1" "--with-renderer-sdlGfx=1 (unsafe)"
+echo   "+-----------------+------------+-----------------------------------------------------+"
+displayRequirement "sdlGfxTextured" "$USE_SDLGFXTEXTURED" "1" "--with-renderer-sdlGfxTextured=1 (unsafe)"
+echo   "+-----------------+------------+-----------------------------------------------------+"
