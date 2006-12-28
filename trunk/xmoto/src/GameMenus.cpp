@@ -2879,7 +2879,7 @@ namespace vapp {
     m_Renderer.getGUI()->setFont(m_Renderer.getSmallFont());
     
     if(!bNoSwap)
-      SDL_GL_SwapBuffers();
+      drawLib->flushGraphics();
   }
   
   void GameApp::_ConfigureJoystick(void) {

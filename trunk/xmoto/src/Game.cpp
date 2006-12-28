@@ -1265,7 +1265,7 @@ namespace vapp {
     drawLib->drawImage(Vector2f(nMX-2,nMY-2),Vector2f(nMX+30,nMY+30),m_pCursor);
   }
 
-        SDL_GL_SwapBuffers();
+        drawLib->flushGraphics();
       }
       
       delete pMsgBox;
@@ -1301,7 +1301,7 @@ namespace vapp {
       UITextDraw::printRaw(v_font,m_InfoMsgBoxRect.nX+13,m_InfoMsgBoxRect.nY+
          m_InfoMsgBoxRect.nHeight-nBarHeight-4,m_DownloadingInformation,MAKE_COLOR(255,255,255,128));
     }
-    SDL_GL_SwapBuffers();            
+    drawLib->flushGraphics();
   }
   
   void GameApp::setBeingDownloadedInformation(const std::string &p_information,bool bNew) {
