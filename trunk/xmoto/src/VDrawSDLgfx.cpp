@@ -301,16 +301,28 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 
   void DrawLibSDLgfx::endDraw() {
     int size = m_drawingPoints.size();
-
-
+    int x0,y0,x1,y1;
+    SDL_Rect * clip = NULL;
+    SDL_GetClipRect(m_screen,clip);
+    if (clip != NULL){
+      x0 = clip->x;
+      y0 = clip->y;
+      x1 = x0 + clip->w;
+      x1 = y0 + clip->h;
+    } else {
+      x0 =0 ;
+      y0 =0;
+      x1 = m_screen->w;
+      y1 = m_screen->h;
+    }
 
     bool draw = true;
 
-    if (m_max.x < 0 || m_min.x > m_screen->w) {
+    if (m_max.x < x0 || m_min.x > x1) {
       draw = false;
       //printf("min max x %.2f %.2f\n",m_min.x,m_max.x);
     }
-    if (m_max.y < 0 || m_min.y > m_screen->h) {
+    if (m_max.y < y0 || m_min.y > y1) {
       draw = false;
       //printf("min max y %.2f %.2f\n",m_min.y,m_max.y);
     }
@@ -394,7 +406,11 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 		    rotozoomSurfaceXY(s1, angle, 1, 1, SMOOTHING_ON);
 
 		  //s = SDL_ConvertSurface(s2,m_screen->format,SDL_SRCALPHA);
-		  s = SDL_DisplayFormatAlpha(s2);
+                    if (m_texture->isAlpha){
+		      s = SDL_DisplayFormatAlpha(s2);
+		    } else {
+		      s = SDL_DisplayFormat(s2);
+		    }
 		  SDL_FreeSurface(s1);
 		  SDL_FreeSurface(s2);
 		  //s = rotozoomSurfaceXY(m_texture->surface, angle , x_zoom  , y_zoom  , SMOOTHING_ON);
@@ -471,7 +487,11 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 					x_zoom_factor,
 					y_zoom_factor, SMOOTHING_OFF);
 
-		    s = SDL_DisplayFormatAlpha(s1);
+                    if (m_texture->isAlpha){
+		      s = SDL_DisplayFormatAlpha(s1);
+		    } else {
+		      s = SDL_DisplayFormat(s1);
+		    }
 		    strcpy(keyName, key);
 		    //printf("addding image with key %s\n", key);
 		    m_image_cache.insert(std::make_pair <> (keyName, s));
