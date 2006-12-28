@@ -45,6 +45,7 @@ namespace vapp {
     pTexture->nWidth = nWidth;
     pTexture->nHeight = nHeight;
     pTexture->Tag = "";
+    pTexture->isAlpha = bAlpha;
 #ifdef ENABLE_OPENGL
     pTexture->nID = 0;
 #endif

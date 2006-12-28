@@ -60,16 +60,18 @@ namespace vapp {
     Texture() {
       nWidth = nHeight = 0;
       nID = 0;
-      surface =NULL;
+      surface = NULL;
       nSize = 0;
+      isAlpha = false;
     }
-  
+ 
     std::string Name;       /* Name */
     int nWidth,nHeight;     /* Size */
     unsigned int nID;       /* OpenGL name */
     SDL_Surface * surface;  /* SDL_surface */
     std::string Tag;        /* Optional tag */
     int nSize;              /* Size in bytes */
+    bool isAlpha;           /* Whether the texture contains an alpha channel */
   };
 
   /*===========================================================================
