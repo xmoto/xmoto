@@ -1,3 +1,4 @@
+
 * BUG : f5 when playing does not rebuild the level cache
 * BUG : dyn blocks not displayed in ugly && dyn blocks not updated in minimap 
 
