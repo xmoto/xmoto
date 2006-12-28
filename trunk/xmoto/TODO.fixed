@@ -1,5 +1,9 @@
 Since 0.2.4
 * bug : replays cache does'nt really cache
+* BUG : qd tu joues a un niveau, et que tu mets en pause avec esc, (et que la
+pause est un peu longue), des fois en revenant, ya gave gave gave de
+particules ejectees par la roue arriere. et resultat, ca rame
+enormenent... 
 
 Since 0.2.2
 * When i update lists sometimes

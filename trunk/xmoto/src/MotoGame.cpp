@@ -387,8 +387,20 @@ namespace vapp {
     if(pReplayState == NULL) {
       /* Update physics */
       _UpdatePhysics(fTimeStep);
+
+      /* New wheel-spin particles? */
+      if(isWheelSpinning()) {
+	printf("add\n");
+	if(randomNum(0,1) < 0.7f) {
+	  ParticlesSource *v_debris;
+	  v_debris = (ParticlesSource*) &(getLevelSrc()->getEntityById("BikeDebris"));
+	  v_debris->setDynamicPosition(getWheelSpinPoint());	
+	  v_debris->addParticle(getWheelSpinDir(), m_pMotoGame->getTime() + 3.0);
+	}
+      }
+
       if(isDead() == false) {
-  executeEvents(p_replay);
+	executeEvents(p_replay);
       }
     }
     else {

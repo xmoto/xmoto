@@ -1,6 +1,9 @@
 X-Moto 0.2.5 2007-
  * SDL-GFX rendering in option (instead of OpenGL, unstable code)
+ * some bugs fixed
 
+-> increase the cache number or do something because the border of the levels when not saved into the cache
+	
 X-Moto 0.2.4 2006-12-22
 -----------------------
  * Correcting a bug which made some scripted levels unplayable

@@ -422,16 +422,6 @@ namespace vapp {
         _RenderCircle(10,p_theme->getUglyRiderColor(),pBike->Head2P,pBikeParms->fHeadSize);
       }
     }   
-    
-    /* New wheel-spin particles? */
-    if(getGameObject()->isWheelSpinning()) {
-      if(randomNum(0,1) < 0.7f) {
-	      ParticlesSource *v_debris;
-	      v_debris = (ParticlesSource*) &(getGameObject()->getLevelSrc()->getEntityById("BikeDebris"));
-	      v_debris->setDynamicPosition(getGameObject()->getWheelSpinPoint());	
-	      v_debris->addParticle(getGameObject()->getWheelSpinDir(), m_pMotoGame->getTime() + 3.0);
-      }
-    }
   }
 
   void GameRenderer::_DrawRotatedMarker(Vector2f Pos,dReal *pfRot) {
