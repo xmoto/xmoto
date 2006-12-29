@@ -7,6 +7,7 @@
 * keesj:the SDL_gfx version currently caches a lot of images . this will eventualy become to much. this is why we need a LRU hash table. 
 * keesj:graphings ,showing graphs on the screen about fps/memory usage etc
 * keesj:faster startup , smart caching etc system must run under 64 MB :)
+* keesj:define code conventions,testing procedures,release-roadbook
 
 
 * BUG : dyn blocks not displayed in ugly && dyn blocks not updated in minimap 
