@@ -1,3 +1,13 @@
+* keesj:Do not clear the screen if we are going to render the sky anyway. A few % gain here
+* keesj:SDL_gfx? cache static bloks of the minimap as image
+* keesj:create a on screen input system for text
+* keesj:create sensititive area's on the screen for gameplay
+* keesj:remove the sdlGfxTextured option 
+* keesj:test the SDL_gfx version on windows/mac
+* keesj:the SDL_gfx version currently caches a lot of images . this will eventualy become to much. this is why we need a LRU hash table. 
+* keesj:graphings ,showing graphs on the screen about fps/memory usage etc
+* keesj:faster startup , smart caching etc system must run under 64 MB :)
+
 
 * BUG : dyn blocks not displayed in ugly && dyn blocks not updated in minimap 
 
@@ -154,3 +164,5 @@ zone2b = {}
 * [20:55] <keesj> they have this great idea that you can create levels
    while walking in the level
   [20:56] <aspegic500> functions in the scripts to do that,
+
+
