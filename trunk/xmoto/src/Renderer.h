@@ -281,9 +281,7 @@ namespace vapp {
       void _RenderGameMessages(void); 
       void _RenderGameStatus(void);
       void _RenderParticles(bool bFront=true);
-#ifdef ENABLE_OPENGL
       void _RenderParticleDraw(Vector2f P,Texture *pTexture,float fSize,float fAngle, TColor c);
-#endif
       void _RenderParticle(ParticlesSource *i_source);
       void _RenderInGameText(Vector2f P,const std::string &Text,Color c = 0xffffffff);
       void setScroll(bool isSmooth);

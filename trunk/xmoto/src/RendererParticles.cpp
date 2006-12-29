@@ -49,7 +49,8 @@ namespace vapp {
     
     getParent()->getDrawLib()->setTexture(pTexture,BLEND_MODE_A);
     getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
-    glColor4ub(c.Red(), c.Green(), c.Blue(), c.Alpha());
+    //convert the TColor to a Color 
+    getParent()->getDrawLib()->setColor(MAKE_COLOR(c.Red(), c.Green(), c.Blue(), c.Alpha()));
     getParent()->getDrawLib()->glTexCoord(0,0);
     getParent()->getDrawLib()->glVertex(p1);
     getParent()->getDrawLib()->glTexCoord(1,0);
