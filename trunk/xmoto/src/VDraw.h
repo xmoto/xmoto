@@ -498,6 +498,13 @@ namespace vapp {
 			   const Sint16 * vy, int n, SDL_Surface * texture,
 			   int texture_dx, int texture_dy);
 
+    int xx_texturedHLineAlpha(SDL_Surface * dst, Sint16 x1, Sint16 x2,
+			      Sint16 y, SDL_Surface * texture,
+			      int texture_dx, int texture_dy);
+    int xx_texturedPolygonAlpha(SDL_Surface * dst, const Sint16 * vx,
+				const Sint16 * vy, int n,
+				SDL_Surface * texture, int texture_dx,
+				int texture_dy);
 
     //the mode used when drawing
     DrawMode m_drawMode;
