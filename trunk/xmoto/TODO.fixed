@@ -4,6 +4,7 @@ Since 0.2.4
 pause est un peu longue), des fois en revenant, ya gave gave gave de
 particules ejectees par la roue arriere. et resultat, ca rame
 enormenent... 
+* BUG : f5 when playing does not rebuild the level cache
 
 Since 0.2.2
 * When i update lists sometimes

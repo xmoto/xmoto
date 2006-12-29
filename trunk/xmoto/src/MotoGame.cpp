@@ -390,7 +390,6 @@ namespace vapp {
 
       /* New wheel-spin particles? */
       if(isWheelSpinning()) {
-	printf("add\n");
 	if(randomNum(0,1) < 0.7f) {
 	  ParticlesSource *v_debris;
 	  v_debris = (ParticlesSource*) &(getLevelSrc()->getEntityById("BikeDebris"));

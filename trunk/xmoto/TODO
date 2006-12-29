@@ -1,6 +1,8 @@
 
-* BUG : f5 when playing does not rebuild the level cache
 * BUG : dyn blocks not displayed in ugly && dyn blocks not updated in minimap 
+
+* it seems that there is a bug on speed it is played (if i play
+   replays done on fast machine, it appear faster) http://xmoto.free.fr/replays/replay_1312.rpl
 
 * when you choose keys : if a key is already attributed, it should
    assign it and set <unset> to the other one because it's not
@@ -17,8 +19,6 @@
 
 render entity by Z
 render blocks by Z
-
-!!!! xmoto-edit don't compile, make it compile !!!!!
 
 [13:25] <gaivota> aspegic500: I found a bug which is the following: when letting xmoto running without doing anything for some time the game crashes, althoug it keeps running
 [13:26] <aspegic500> i must go,
@@ -99,8 +99,6 @@ zone2b = {}
         * Better packaging for OS X (Readme, License, etc)
 * BUG : as you can see at the end of "the only smooth", the block is
    not correctly drawned
-* it seems that there is a bug on speed it is played (if i play
-   replays done on fast machine, it appear faster) http://xmoto.free.fr/replays/replay_1312.rpl
 * BUG :
 - start a level, press very fastly (ESC-ENTER)* ; quite easy to
    reproduce (works on windows and linux)
