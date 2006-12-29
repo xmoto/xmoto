@@ -31,7 +31,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 namespace vapp {
 
-#ifdef ENABLE_OPENGL
   void GameRenderer::_RenderParticleDraw(Vector2f P,Texture *pTexture,float fSize,float fAngle, TColor c) {
     /* Render single particle */
     if(pTexture == NULL) return;
@@ -48,28 +47,21 @@ namespace vapp {
     p3 = C + p3 * fSize;
     p4 = C + p4 * fSize;
     
-    glEnable(GL_BLEND); 
-    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
-    glBindTexture(GL_TEXTURE_2D,pTexture->nID);
-    glEnable(GL_TEXTURE_2D);
+    getParent()->getDrawLib()->setTexture(pTexture,BLEND_MODE_A);
     getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
     glColor4ub(c.Red(), c.Green(), c.Blue(), c.Alpha());
-    glTexCoord2f(0,0);
+    getParent()->getDrawLib()->glTexCoord(0,0);
     getParent()->getDrawLib()->glVertex(p1);
-    glTexCoord2f(1,0);
+    getParent()->getDrawLib()->glTexCoord(1,0);
     getParent()->getDrawLib()->glVertex(p2);
-    glTexCoord2f(1,1);
+    getParent()->getDrawLib()->glTexCoord(1,1);
     getParent()->getDrawLib()->glVertex(p3);
-    glTexCoord2f(0,1);
+    getParent()->getDrawLib()->glTexCoord(0,1);
     getParent()->getDrawLib()->glVertex(p4);
     getParent()->getDrawLib()->endDraw();
-    glDisable(GL_TEXTURE_2D);
-    glDisable(GL_BLEND);            
   }
-#endif
 
   void GameRenderer::_RenderParticle(ParticlesSource *i_source) {
-#ifdef ENABLE_OPENGL
     AnimationSprite *pStarAnim = (AnimationSprite *)getParent()->getTheme()->getSprite(SPRITE_TYPE_ANIMATION,"Star");
     EffectSprite* pFireType = (EffectSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_EFFECT, "Fire1");
     EffectSprite* pSmoke1Type = (EffectSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_EFFECT, "Smoke1");
@@ -129,11 +121,9 @@ namespace vapp {
 	}
       }
     }
-#endif
   }
   
   void GameRenderer::_RenderParticles(bool bFront) {
-#ifdef ENABLE_OPENGL
     for(unsigned int i = 0; i < getGameObject()->getLevelSrc()->Entities().size(); i++) {
       Entity* v_entity = getGameObject()->getLevelSrc()->Entities()[i];
       if(v_entity->Speciality() == ET_PARTICLES_SOURCE) {
@@ -147,7 +137,6 @@ namespace vapp {
 	_RenderParticle((ParticlesSource*) v_entity);
       }
     }
-#endif
   }
 
 }
