@@ -773,16 +773,18 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
     m_scale.y = 1;
     m_translate.x = 0;
     m_translate.y = 0;
-    /*
-       SDL_LockSurface(m_screen);
-       if (m_bg_data ==NULL){
-       m_bg_data = malloc(m_screen->format->BytesPerPixel * m_screen->w * m_screen->h);
-       memset(m_bg_data,0,m_screen->format->BytesPerPixel * m_screen->w * m_screen->h);
-       }
-       memcpy(m_screen->pixels,m_bg_data,m_screen->format->BytesPerPixel * m_screen->w * m_screen->h);
-       SDL_UnlockSurface(m_screen);
-     */
-    SDL_FillRect(m_screen, NULL, SDL_MapRGB(m_screen->format, 0, 0, 0));
+    SDL_LockSurface(m_screen);
+    if (m_bg_data == NULL) {
+      m_bg_data =
+	malloc(m_screen->format->BytesPerPixel * m_screen->w *
+	       m_screen->h);
+      memset(m_bg_data, 0,
+	     m_screen->format->BytesPerPixel * m_screen->w * m_screen->h);
+    }
+    memcpy(m_screen->pixels, m_bg_data,
+	   m_screen->format->BytesPerPixel * m_screen->w * m_screen->h);
+    SDL_UnlockSurface(m_screen);
+    //SDL_FillRect(m_screen, NULL, SDL_MapRGB(m_screen->format, 0, 0, 0));
   }
 
       /**
@@ -1124,7 +1126,16 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 
 
     //find out a what index the texture starts
-    texture_start = (abs(y + texture_dy) % texture->h) * texture->w;
+    //texture_start = (abs(y + texture_dy) % texture->h) * texture->w;
+
+    texture_start = (y + texture_dy) % texture->h;
+    if (texture_start < 0) {
+      texture_start = texture->h + texture_start;
+    }
+    //printf("texture start (h=)%i %i\n",texture_start,texture->h);
+    //texture_start =texture_start * texture->pitch;
+    texture_start = texture_start * texture->pitch / pixx;
+
     texture_x_walker = (x1 - texture_dx) % texture->w;
     if (texture_x_walker < 0) {
       texture_x_walker = texture->w + texture_x_walker;
