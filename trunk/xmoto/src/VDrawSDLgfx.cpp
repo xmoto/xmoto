@@ -172,7 +172,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 	m_bWindowed = true;
 	if ((m_screen =
 	     SDL_SetVideoMode(m_nDispWidth, m_nDispHeight, 0,
-			      SDL_OPENGL)) == NULL) {
+			      SDL_SRCALPHA)) == NULL) {
 	  throw Exception("SDL_SetVideoMode : " +
 			  std::string(SDL_GetError()));
 	}
@@ -193,7 +193,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
     SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY,
 			SDL_DEFAULT_REPEAT_INTERVAL);
 
-    Log("Using OPEN SDL_gfx implementation");
+    Log("Using SDL_gfx implementation");
 
     //setBackgroundColor(0,0,40,255);
 
