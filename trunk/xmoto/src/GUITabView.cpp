@@ -65,7 +65,6 @@ namespace vapp {
         putRect(nCX,8,x2-x1,nHeaderHeight-8,MAKE_COLOR(0,0,0,127));
         setTextSolidColor(MAKE_COLOR(188,186,67,255));
         putText(nCX,nCY,getChildren()[i]->getCaption());
-        setTextSolidColor(-1);      
       }      
       nCX += (x2-x1) + 18;
     }
