@@ -169,13 +169,13 @@ namespace vapp {
     
     startDraw(DRAW_MODE_POLYGON);
     setColor(Tint);
-    glTexCoord2f(0.0,0.0);
+    glTexCoord(0.0,0.0);
     glVertexSP(A.x,A.y);
-    glTexCoord2f(0.0,1.0);
+    glTexCoord(0.0,1.0);
     glVertexSP(A.x,B.y);
-    glTexCoord2f(1.0,1.0);
+    glTexCoord(1.0,1.0);
     glVertexSP(B.x,B.y);
-    glTexCoord2f(1.0,0.0);
+    glTexCoord(1.0,0.0);
     glVertexSP(B.x,A.y);
     endDraw();
   }
