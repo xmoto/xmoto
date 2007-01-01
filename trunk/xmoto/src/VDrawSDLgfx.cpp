@@ -430,8 +430,15 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 
 		printf("z,y zoon %f,%f\n", x_zoom_factor, y_zoom_factor);
 	      }
-	      if (x_zoom_factor * y_zoom_factor * m_texture->surface->w *
-		  m_texture->surface->h < 4000000) {
+//          //SDL does not support very large images this code is located in SDL_surface.c line 48
+//
+//        /* Next time I write a library like SDL, I'll use int for size. :) */
+//        if ( width >= 16384 || height >= 65536 ) {
+//                SDL_SetError("Width or height is too large");
+//               return(NULL);
+//        }
+	      if (x_zoom_factor * m_texture->surface->w < 16384
+		  && y_zoom_factor * m_texture->surface->h < 65536) {
 		char key[255] = "";
 
 		sprintf(key, "%s_%i_%.3f_%.3f",
