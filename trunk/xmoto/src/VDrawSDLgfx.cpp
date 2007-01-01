@@ -204,50 +204,6 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 
   void DrawLibSDLgfx::unInit() {
   }
-  /*===========================================================================
-  Primitive: circle
-  ===========================================================================*/
-  void DrawLibSDLgfx::drawCircle(const Vector2f & Center, float fRadius,
-				 float fBorder, Color Back, Color Front) {
-    circleRGBA(m_screen, (Sint16) Center.x, (Sint16) Center.y,
-	       (Sint16) fRadius, GET_RED(Back), GET_GREEN(Back),
-	       GET_BLUE(Back), GET_ALPHA(Back));
-  }
-
-  /*===========================================================================
-  Primitive: box
-  ===========================================================================*/
-  void DrawLibSDLgfx::drawBox(const Vector2f & A, const Vector2f & B,
-			      float fBorder, Color Back, Color Front) {
-    if (GET_ALPHA(Back) > 0) {
-      boxRGBA(m_screen, A.x, A.y, B.x, B.y, GET_RED(Back),
-	      GET_GREEN(Back), GET_BLUE(Back), GET_ALPHA(Back));
-    }
-
-    if (fBorder > 0.0f && GET_ALPHA(Front) > 0) {
-      boxRGBA(m_screen, A.x, A.y, A.x + fBorder, B.y, GET_RED(Front),
-	      GET_GREEN(Front), GET_BLUE(Front), GET_ALPHA(Front));
-    }
-  }
-
-  /*===========================================================================
-  Primitive: box
-  ===========================================================================*/
-  void DrawLibSDLgfx::drawImage(const Vector2f & a, const Vector2f & b,
-				Texture * pTexture, Color tint) {
-    setTexture(pTexture, BLEND_MODE_A);
-    startDraw(DRAW_MODE_POLYGON);
-    setColor(tint);
-    glTexCoord(0.0, 0.0);
-    glVertexSP(a.x, a.y);
-    glTexCoord(1.0, 0.0);
-    glVertexSP(b.x, a.y);
-    glTexCoord(1.0, 1.0);
-    glVertexSP(b.x, b.y);
-    glTexCoord(0.0, 1.0);
-    glVertexSP(a.x, b.y);
-    endDraw();
-  }
 
 
 

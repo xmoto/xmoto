@@ -46,4 +46,139 @@ namespace vapp {
  DrawLib::~DrawLib() {
  }
 
+   /*===========================================================================
+  Primitive: box
+  ===========================================================================*/
+  void DrawLib::drawBox(const Vector2f &A,const Vector2f &B,float fBorder,Color Back,Color Front) {
+    /* Alpha? */
+    bool bAlpha = false;
+    if(GET_ALPHA(Back)!=255 || GET_ALPHA(Front)!=255) bAlpha=true;
+  
+    if(bAlpha) {
+      setBlendMode(BLEND_MODE_A);
+    }
+  
+    /* Draw rectangle background */
+    if(GET_ALPHA(Back)>0) {
+      startDraw(DRAW_MODE_POLYGON);
+      setColor(Back);
+      glVertexSP(A.x,A.y);
+      glVertexSP(A.x,B.y);
+      glVertexSP(B.x,B.y);
+      glVertexSP(B.x,A.y);
+      endDraw();
+    }
+    
+    /* Draw rectangle border */
+    if(fBorder>0.0f && GET_ALPHA(Front)>0) {
+      startDraw(DRAW_MODE_POLYGON);
+      setColor(Front);
+      if(bAlpha) { setBlendMode(BLEND_MODE_A); }
+      glVertexSP(A.x,A.y);
+      glVertexSP(A.x,B.y);
+      glVertexSP(A.x+fBorder,B.y);
+      glVertexSP(A.x+fBorder,A.y);
+      endDraw();
+      startDraw(DRAW_MODE_POLYGON);
+      if(bAlpha) { setBlendMode(BLEND_MODE_A); }
+      setColor(Front);
+      glVertexSP(B.x-fBorder,A.y);
+      glVertexSP(B.x-fBorder,B.y);
+      glVertexSP(B.x,B.y);
+      glVertexSP(B.x,A.y);
+      endDraw();
+      startDraw(DRAW_MODE_POLYGON);
+      if(bAlpha) { setBlendMode(BLEND_MODE_A); }
+      setColor(Front);
+      glVertexSP(A.x,A.y);
+      glVertexSP(A.x,A.y+fBorder);
+      glVertexSP(B.x,A.y+fBorder);
+      glVertexSP(B.x,A.y);
+      endDraw();
+      startDraw(DRAW_MODE_POLYGON);
+      if(bAlpha) { setBlendMode(BLEND_MODE_A); }
+      setColor(Front);
+      setColor(Front);
+      glVertexSP(A.x,B.y-fBorder);
+      glVertexSP(A.x,B.y);
+      glVertexSP(B.x,B.y);
+      glVertexSP(B.x,B.y-fBorder);
+      endDraw();
+      
+    }
+    
+   if(bAlpha) { setBlendMode(BLEND_MODE_NONE); }
+  }
+  
+    
+  /*===========================================================================
+  Primitive: circle
+  ===========================================================================*/
+  void DrawLib::drawCircle(const Vector2f &Center,float fRadius,float fBorder,Color Back,Color Front) {
+    /* Alpha? */
+    bool bAlpha = false;
+    if(GET_ALPHA(Back)!=255 || GET_ALPHA(Front)!=255) bAlpha=true;
+    bAlpha = true;
+    
+    if(bAlpha) { setBlendMode(BLEND_MODE_A); }
+
+    /* How many steps? */    
+    int nSteps= (int) (2.0f*(fRadius / 3.0f));
+    if(nSteps<8) nSteps=8;
+    if(nSteps>64) nSteps=64;
+    
+    /* Draw circle background */
+    if(GET_ALPHA(Back)>0) {
+      startDraw(DRAW_MODE_POLYGON);
+      if(bAlpha) { setBlendMode(BLEND_MODE_A); }
+      setColor(Back);
+      for(int i=0;i<nSteps;i++) {
+        float rads = (3.14159f * 2.0f * (float)i)/ (float)nSteps;            
+        glVertexSP(Center.x + fRadius*sin(rads),Center.y + fRadius*cos(rads));
+      }
+      endDraw();
+    }
+    
+    /* Draw circle border */
+    if(fBorder>0.0f && GET_ALPHA(Front)>0) {
+      for(int i=0;i<nSteps;i++) {
+        float rads1 = (3.14159f * 2.0f * (float)i)/ (float)nSteps;            
+        float rads2 = (3.14159f * 2.0f * (float)(i+1))/ (float)nSteps;      
+  
+        startDraw(DRAW_MODE_POLYGON);              
+        if(bAlpha) { setBlendMode(BLEND_MODE_A); }
+        setColor(Front);
+        glVertexSP(Center.x + fRadius*sin(rads1),Center.y + fRadius*cos(rads1));
+        glVertexSP(Center.x + fRadius*sin(rads2),Center.y + fRadius*cos(rads2));
+        glVertexSP(Center.x + (fRadius-fBorder)*sin(rads2),Center.y + (fRadius-fBorder)*cos(rads2));
+        glVertexSP(Center.x + (fRadius-fBorder)*sin(rads1),Center.y + (fRadius-fBorder)*cos(rads1));
+        endDraw();
+      }
+    }    
+
+    /* Disable alpha again if we enabled it */
+   if(bAlpha) { setBlendMode(BLEND_MODE_NONE); }
+  }
+  
+
+  /*===========================================================================
+  Primitive: box
+  ===========================================================================*/
+  void DrawLib::drawImage(const Vector2f &A,const Vector2f &B,Texture *pTexture,Color Tint) {
+    setTexture(pTexture,BLEND_MODE_A);
+    
+    startDraw(DRAW_MODE_POLYGON);
+    setColor(Tint);
+    glTexCoord2f(0.0,0.0);
+    glVertexSP(A.x,A.y);
+    glTexCoord2f(0.0,1.0);
+    glVertexSP(A.x,B.y);
+    glTexCoord2f(1.0,1.0);
+    glVertexSP(B.x,B.y);
+    glTexCoord2f(1.0,0.0);
+    glVertexSP(B.x,A.y);
+    endDraw();
+  }
+
+
 }

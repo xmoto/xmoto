@@ -175,12 +175,12 @@ namespace vapp {
     /* Methods - primitives */
     virtual void drawCircle(const Vector2f & Center, float fRadius,
 			    float fBorder = 1.0f, Color Back =
-			    0, Color Front = -1) = 0;
+			    0, Color Front = -1) ;
     virtual void drawBox(const Vector2f & A, const Vector2f & B,
 			 float fBorder = 1.0f, Color Back =
-			 0, Color Front = -1) = 0;
+			 0, Color Front = -1) ;
     virtual void drawImage(const Vector2f & A, const Vector2f & B,
-			   Texture * pTexture, Color Tint = -1) = 0;
+			   Texture * pTexture, Color Tint = -1) ;
 
 
     /* Methods - text */
@@ -306,17 +306,6 @@ namespace vapp {
        * Flush the graphics. In memory graphics will now be displayed
        **/
     virtual void flushGraphics();
-
-    /* Methods - primitives */
-    virtual void drawCircle(const Vector2f & Center, float fRadius,
-			    float fBorder = 1.0f, Color Back =
-			    0, Color Front = -1);
-    virtual void drawBox(const Vector2f & A, const Vector2f & B,
-			 float fBorder = 1.0f, Color Back =
-			 0, Color Front = -1);
-    virtual void drawImage(const Vector2f & A, const Vector2f & B,
-			   Texture * pTexture, Color Tint = -1);
-
 
     /* Methods - text */
     virtual void _InitTextRendering(Theme * p_theme);
@@ -467,17 +456,6 @@ namespace vapp {
        * Flush the graphics. In memory graphics will now be displayed
        **/
     virtual void flushGraphics();
-
-    /* Methods - primitives */
-    virtual void drawCircle(const Vector2f & Center, float fRadius,
-			    float fBorder = 1.0f, Color Back =
-			    0, Color Front = -1);
-    virtual void drawBox(const Vector2f & A, const Vector2f & B,
-			 float fBorder = 1.0f, Color Back =
-			 0, Color Front = -1);
-    virtual void drawImage(const Vector2f & A, const Vector2f & B,
-			   Texture * pTexture, Color Tint = -1);
-
 
     /* Methods - text */
     virtual void _InitTextRendering(Theme * p_theme);
