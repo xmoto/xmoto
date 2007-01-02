@@ -166,7 +166,6 @@ namespace vapp {
   ===========================================================================*/
   void DrawLib::drawImage(const Vector2f &A,const Vector2f &B,Texture *pTexture,Color Tint) {
     setTexture(pTexture,BLEND_MODE_A);
-    
     startDraw(DRAW_MODE_POLYGON);
     setColor(Tint);
     glTexCoord(0.0,0.0);

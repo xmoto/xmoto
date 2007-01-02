@@ -397,6 +397,9 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 	      && y_zoom * m_texture->surface->h < 65536) {
 	    char key[255] = "";
 
+	    if(m_drawingPoints.size() >4){
+	      angle =0;
+	    }
 	    sprintf(key, "rotate-%s_%.0f_%.2f_%.2f",
 		    m_texture->Name.c_str(), angle, x_zoom, y_zoom);
 	    //sprintf(key, "rotate-%s_%i_%i_%i", m_texture->Name.c_str(), (int)angle, (int)60 * x_zoom , (int)60 * y_zoom );
