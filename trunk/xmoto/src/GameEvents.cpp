@@ -272,7 +272,7 @@ namespace vapp {
 
   void MGE_EntityDestroyed::serialize(DBuffer &Buffer) {
     MotoGameEvent::serialize(Buffer);
-    Buffer.write(m_entityId);
+    Buffer << m_entityId;
     Buffer << (int) (m_entityType);
     Buffer << m_entitySize;
     Buffer << m_entityPosition.x;
@@ -283,11 +283,13 @@ namespace vapp {
 
     Vector2f v_position;
     std::string v_entityId;
+    int i_tmp;
 
-    Buffer.read(m_entityId);
+    Buffer >> m_entityId;
 
     /* no more used, kept just for compatibiliy */    
-    Buffer >> m_entityType;
+    Buffer >> i_tmp;
+    m_entityType = (EntitySpeciality) i_tmp;
     switch(m_entityType) {
     case ET_NONE:
     case ET_ISSTART:
@@ -488,11 +490,11 @@ namespace vapp {
 
   void MGE_Message::serialize(DBuffer &Buffer) {
     MotoGameEvent::serialize(Buffer);
-    Buffer.write(m_message);
+    Buffer << m_message;
   }
   
   void MGE_Message::unserialize(DBuffer &Buffer) {
-    Buffer.read(m_message);
+    Buffer >> m_message;
   }
 
   GameEventType MGE_Message::SgetType() {
@@ -530,13 +532,13 @@ namespace vapp {
 
   void MGE_MoveBlock::serialize(DBuffer &Buffer) {
     MotoGameEvent::serialize(Buffer);
-    Buffer.write(m_blockID);
+    Buffer << m_blockID;
     Buffer << m_x;
     Buffer << m_y;
   }
   
   void MGE_MoveBlock::unserialize(DBuffer &Buffer) {
-    Buffer.read(m_blockID);
+    Buffer >> m_blockID;
     Buffer >> m_x;
     Buffer >> m_y;
   }
@@ -576,13 +578,13 @@ namespace vapp {
 
   void MGE_SetBlockPos::serialize(DBuffer &Buffer) {
     MotoGameEvent::serialize(Buffer);
-    Buffer.write(m_blockID);
+    Buffer << m_blockID;
     Buffer << m_x;
     Buffer << m_y;
   }
   
   void MGE_SetBlockPos::unserialize(DBuffer &Buffer) {
-    Buffer.read(m_blockID);
+    Buffer >> m_blockID;
     Buffer >> m_x;
     Buffer >> m_y;
   }
@@ -708,13 +710,13 @@ namespace vapp {
 
   void MGE_SetEntityPos::serialize(DBuffer &Buffer) {
     MotoGameEvent::serialize(Buffer);
-    Buffer.write(m_entityID);
+    Buffer << m_entityID;
     Buffer << m_x;
     Buffer << m_y;
   }
   
   void MGE_SetEntityPos::unserialize(DBuffer &Buffer) {
-    Buffer.read(m_entityID);
+    Buffer >> m_entityID;
     Buffer >> m_x;
     Buffer >> m_y;
   }
@@ -754,13 +756,13 @@ namespace vapp {
 
   void MGE_SetBlockCenter::serialize(DBuffer &Buffer) {
     MotoGameEvent::serialize(Buffer);
-    Buffer.write(m_blockID);
+    Buffer << m_blockID;
     Buffer << m_x;
     Buffer << m_y;
   }
   
   void MGE_SetBlockCenter::unserialize(DBuffer &Buffer) {
-    Buffer.read(m_blockID);
+    Buffer >> m_blockID;
     Buffer >> m_x;
     Buffer >> m_y;
   }
@@ -798,12 +800,12 @@ namespace vapp {
 
   void MGE_SetBlockRotation::serialize(DBuffer &Buffer) {
     MotoGameEvent::serialize(Buffer);
-    Buffer.write(m_blockID);
+    Buffer << m_blockID;
     Buffer << m_angle;
   }
   
   void MGE_SetBlockRotation::unserialize(DBuffer &Buffer) {
-    Buffer.read(m_blockID);
+    Buffer >> m_blockID;
     Buffer >> m_angle;
   }
 
@@ -855,7 +857,7 @@ namespace vapp {
 
   void MGE_SetDynamicEntityRotation::serialize(DBuffer &Buffer) {
     MotoGameEvent::serialize(Buffer);
-    Buffer.write(m_entityID);
+    Buffer << m_entityID;
     Buffer << m_fInitAngle;
     Buffer << m_fRadius;
     Buffer << m_fPeriod;
@@ -864,7 +866,7 @@ namespace vapp {
   }
   
   void MGE_SetDynamicEntityRotation::unserialize(DBuffer &Buffer) {
-    Buffer.read(m_entityID);
+    Buffer >> m_entityID;
     Buffer >> m_fInitAngle;
     Buffer >> m_fRadius;
     Buffer >> m_fPeriod;
@@ -920,7 +922,7 @@ namespace vapp {
 
   void MGE_SetDynamicEntityTranslation::serialize(DBuffer &Buffer) {
     MotoGameEvent::serialize(Buffer);
-    Buffer.write(m_entityID);
+    Buffer << m_entityID;
     Buffer << m_x;
     Buffer << m_y;
     Buffer << m_fPeriod;
@@ -929,7 +931,7 @@ namespace vapp {
   }
   
   void MGE_SetDynamicEntityTranslation::unserialize(DBuffer &Buffer) {
-    Buffer.read(m_entityID);
+    Buffer >> m_entityID;
     Buffer >> m_x;
     Buffer >> m_y;
     Buffer >> m_fPeriod;
@@ -966,11 +968,11 @@ namespace vapp {
 
   void MGE_SetDynamicEntityNone::serialize(DBuffer &Buffer) {
     MotoGameEvent::serialize(Buffer);
-    Buffer.write(m_entityID);
+    Buffer << m_entityID;
   }
   
   void MGE_SetDynamicEntityNone::unserialize(DBuffer &Buffer) {
-    Buffer.read(m_entityID);
+    Buffer >> m_entityID;
   }
 
   GameEventType MGE_SetDynamicEntityNone::SgetType() {
@@ -1020,7 +1022,7 @@ namespace vapp {
 
   void MGE_SetDynamicBlockRotation::serialize(DBuffer &Buffer) {
     MotoGameEvent::serialize(Buffer);
-    Buffer.write(m_blockID);
+    Buffer << m_blockID;
     Buffer << m_fInitAngle;
     Buffer << m_fRadius;
     Buffer << m_fPeriod;
@@ -1029,7 +1031,7 @@ namespace vapp {
   }
   
   void MGE_SetDynamicBlockRotation::unserialize(DBuffer &Buffer) {
-    Buffer.read(m_blockID);
+    Buffer >> m_blockID;
     Buffer >> m_fInitAngle;
     Buffer >> m_fRadius;
     Buffer >> m_fPeriod;
@@ -1085,7 +1087,7 @@ namespace vapp {
 
   void MGE_SetDynamicBlockTranslation::serialize(DBuffer &Buffer) {
     MotoGameEvent::serialize(Buffer);
-    Buffer.write(m_blockID);
+    Buffer << m_blockID;
     Buffer << m_x;
     Buffer << m_y;
     Buffer << m_fPeriod;
@@ -1094,7 +1096,7 @@ namespace vapp {
   }
   
   void MGE_SetDynamicBlockTranslation::unserialize(DBuffer &Buffer) {
-    Buffer.read(m_blockID);
+    Buffer >> m_blockID;
     Buffer >> m_x;
     Buffer >> m_y;
     Buffer >> m_fPeriod;
@@ -1131,11 +1133,11 @@ namespace vapp {
 
   void MGE_SetDynamicBlockNone::serialize(DBuffer &Buffer) {
     MotoGameEvent::serialize(Buffer);
-    Buffer.write(m_blockID);
+    Buffer << m_blockID;
   }
   
   void MGE_SetDynamicBlockNone::unserialize(DBuffer &Buffer) {
-    Buffer.read(m_blockID);
+    Buffer >> m_blockID;
   }
 
   GameEventType MGE_SetDynamicBlockNone::SgetType() {

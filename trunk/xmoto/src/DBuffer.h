@@ -63,18 +63,17 @@ namespace vapp {
       const char *convertOutputToInput(void);
       
       /* Some I/O */
-      void write(std::string s);
-
-      void read(std::string &s);
-
-      template<typename _T> void operator <<(_T n) {
-        writeBuf_LE(reinterpret_cast<const char *>(&n),sizeof(_T));
-      }
-      
-      template<typename _T> void operator >>(_T &n) {
-        readBuf_LE(reinterpret_cast<char *>(&n),sizeof(_T));
-      }
-      
+      void operator <<(bool n);
+      void operator >>(bool &n);
+      void operator <<(int n);
+      void operator >>(int &n);
+      void operator <<(unsigned int n);
+      void operator >>(unsigned int &n);
+      void operator <<(float n);
+      void operator >>(float &n);
+      void operator <<(std::string s);
+      void operator >>(std::string &s); 
+    
       /* Data interface */
       bool isOutput(void) {if(m_bInit && m_bOutput) return true; return false;}
       bool isInput(void) {if(m_bInit && !m_bOutput) return true; return false;}

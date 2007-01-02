@@ -166,12 +166,53 @@ namespace vapp {
     return NULL;
   }
 
-  void DBuffer::write(std::string s) {
+  void DBuffer::operator <<(bool n) {
+    unsigned char c;
+    c = static_cast<unsigned char>(n);
+    writeBuf_LE((char*) &c, 1);
+  }
+  
+  void DBuffer::operator >>(bool &n) {
+    unsigned char c;
+    c = static_cast<unsigned char>(n);
+    readBuf_LE((char*) &c, 1);
+  }
+  
+  void DBuffer::operator <<(int n) {
+    writeBuf_LE((char *)&n, sizeof(int));
+  }
+  
+  void DBuffer::operator >>(int &n) {
+    readBuf_LE((char *)&n, sizeof(int));
+  }
+  
+  void DBuffer::operator <<(unsigned int n) {
+    int sn;
+    sn = (int) (n);
+    *this << sn;
+    
+  }
+  
+  void DBuffer::operator >>(unsigned int &n) {
+    int sn;
+    *this >> sn;
+    n = (unsigned int) sn;
+  }
+  
+  void DBuffer::operator <<(float n) {
+    writeBuf_LE((char *)&n, sizeof(int));
+  }
+  
+  void DBuffer::operator >>(float &n) {
+    readBuf_LE((char *)&n, sizeof(int));
+  }
+
+  void DBuffer::operator <<(std::string s) {
     *this << s.length();
     this->writeBuf(s.c_str(), s.length());
   }
-  
-  void DBuffer::read(std::string &s) {
+   
+  void DBuffer::operator >>(std::string &s) {
     int n;
     char c[256];
     *this >> n;
