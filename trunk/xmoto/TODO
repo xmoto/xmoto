@@ -17,6 +17,7 @@
 * keesj:define code conventions,testing procedures,release-roadbook
 
 
+* FEATURE : windows : there's some win32 API calls that can be made to determine the application data dir
 * BUG : dyn blocks not displayed in ugly && dyn blocks not updated in minimap 
 
 * it seems that there is a bug on speed it is played (if i play
