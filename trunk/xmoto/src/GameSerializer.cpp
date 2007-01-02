@@ -50,7 +50,7 @@ namespace vapp {
 
     try {
       /* Continue until buffer is empty */
-      while((*Buffer).numRemainingBytes() > sizeof(float)) {
+      while((*Buffer).numRemainingBytes() > 0) {
       p = new RecordedGameEvent;
       p->bPassed = false;
       p->Event   = MotoGameEvent::getUnserialized(*Buffer);
