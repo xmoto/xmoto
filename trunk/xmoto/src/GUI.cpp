@@ -410,10 +410,7 @@ namespace vapp {
 
       UIFont *v_font = getFont();
       if(v_font != NULL) {
-	UITextDraw::printRawGrad(v_font,getAbsPosX()+x+1,getAbsPosY()+y+1,
-				 Text,MAKE_COLOR(0,0,0,255),MAKE_COLOR(0,0,0,255),MAKE_COLOR(0,0,0,255),MAKE_COLOR(0,0,0,255),bRotated);
-	UITextDraw::printRawGrad(v_font,getAbsPosX()+x,getAbsPosY()+y,
-				 Text,c0,c1,c2,c3,bRotated);
+	UITextDraw::printRawGrad(v_font,getAbsPosX()+x,getAbsPosY()+y, Text,c0,c1,c2,c3,bRotated);
       }
     }
   }
