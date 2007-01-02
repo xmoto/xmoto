@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   Vectors
   ===========================================================================*/
 #define VECTOR_COMPARE_EPSILON    0.001f
+#define PI 3.14159265
 
 template <typename _T>
 class Vector2 {
@@ -141,10 +142,18 @@ class Vector2 {
   }
   
   inline void rotateXY(_T deg) {            
-    _T rads=deg*((_T)3.14159f/180.0f);
+    _T rads=deg*((_T)PI/180.0f);
     _T xx=x*cos(rads)+y*sin(rads);
     y=y*cos(rads)+x*sin(rads);
     x=xx;
+  }
+  
+  /**
+   * @return the angle in degrees
+   **/
+  inline _T angle(){
+    _T v = atan2(y,x) * 180 / PI;
+    return v;
   }
   
   /* Public data */
@@ -268,7 +277,7 @@ class Vector3 {
   }
       
   inline void rotateXYZ(_T xrotate,_T yrotate,_T zrotate) {
-    _T pohf=(_T)3.14159f/180.0f;
+    _T pohf=(_T)PI/180.0f;
     _T tempx=x*cos(yrotate*pohf)-z*sin(yrotate*pohf);
     _T tempz=x*sin(yrotate*pohf)+z*cos(yrotate*pohf);
     z=tempz*cos(xrotate*pohf)-y*sin(xrotate*pohf);
