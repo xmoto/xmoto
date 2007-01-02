@@ -1,3 +1,5 @@
+* BUG : xmoto -replay bugs/onMacWontWork.rpl when you press forward on
+   this scripted level, the elevator at the correct position
 * when are texure is rotated we need to copy the texture mutplile times so it's always visible
 * keesj:real caching strategy, currently the SDL_gfx chooses to caches based on expected size of the image
   We need to implement a real caching strategy, for example a LRU hash table (least recently used hashtable
