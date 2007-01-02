@@ -208,7 +208,7 @@ namespace vapp {
   }
 
   void DBuffer::operator <<(std::string s) {
-    *this << s.length();
+    *this << (unsigned int)(s.length());
     this->writeBuf(s.c_str(), s.length());
   }
    
