@@ -29,6 +29,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifdef ENABLE_SDLGFX
 #include "SDL_gfxPrimitives.h"
 #include "SDL_rotozoom.h"
+#include "iqsort.h"
+//#define islt(a,b) ((*(const int *)a) - (*(const int *)b))
+#define islt(a,b) ((*a)<(*b))
+
+
 namespace vapp {
   int xx_gfxPrimitivesCompareInt(const void *a, const void *b) {
     return (*(const int *)a) - (*(const int *)b);
@@ -359,16 +364,12 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 	  //y_zoom = sin(angle1 * 3.14159265/ 180) * p1Scale + cos(angle1 * 3.14159265/ 180) * p2Scale;
 
 	  if (angle == 0) {
-	    if (tl1.angle() == 0) {
+	    if (tl1.angle() == 0 || tl1.angle() == 180) {
 	      x_zoom = p1Scale;
 	      y_zoom = p2Scale;
-	    } else if (tl1.angle() == 90) {
-	      x_zoom = p2Scale;
-	      y_zoom = p1Scale;
 	    } else {
 	      x_zoom = p2Scale;
 	      y_zoom = p1Scale;
-	      printf("t1.angle  %f %f\n", tl1.angle(), angle);
 	    }
 	  } else {
 	    x_zoom = p1Scale;
@@ -398,6 +399,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 
 	    sprintf(key, "rotate-%s_%.0f_%.2f_%.2f",
 		    m_texture->Name.c_str(), angle, x_zoom, y_zoom);
+	    //sprintf(key, "rotate-%s_%i_%i_%i", m_texture->Name.c_str(), (int)angle, (int)60 * x_zoom , (int)60 * y_zoom );
 	    SDL_Surface *s = NULL;
 	    std::map < const char *,
 	      SDL_Surface * >::iterator i = m_image_cache.find(key);
@@ -475,9 +477,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 
 
 	} else {
-	  filledPolygonRGBA(m_screen, x, y, size, GET_RED(m_color),
-			    GET_GREEN(m_color), GET_BLUE(m_color),
-			    GET_ALPHA(m_color));
+	  xx_filledPolygonColor(m_screen, x, y, size, m_color);
 	}
 
 	break;
@@ -914,8 +914,10 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 
       }
 
-      qsort(gfxPrimitivesPolyInts, ints, sizeof(int),
-	    xx_gfxPrimitivesCompareInt);
+      QSORT(int, gfxPrimitivesPolyInts, ints, islt);
+
+//      qsort(gfxPrimitivesPolyInts, ints, sizeof(int),
+//          xx_gfxPrimitivesCompareInt);
 
       for (i = 0; (i < ints); i += 2) {
 	xa = gfxPrimitivesPolyInts[i] + 1;
@@ -961,13 +963,22 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
      * Check visibility of hline 
      */
     if ((x1 < left) && (x2 < left)) {
-      return (0);
+      return 0;
     }
     if ((x1 > right) && (x2 > right)) {
-      return (0);
+      return 0;
     }
     if ((y < top) || (y > bottom)) {
-      return (0);
+      return 0;
+    }
+
+    /*
+     * Swap x1, x2 if required 
+     */
+    if (x1 > x2) {
+      xtmp = x1;
+      x1 = x2;
+      x2 = xtmp;
     }
 
     /*
@@ -980,14 +991,6 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
       x2 = right;
     }
 
-    /*
-     * Swap x1, x2 if required 
-     */
-    if (x1 > x2) {
-      xtmp = x1;
-      x1 = x2;
-      x2 = xtmp;
-    }
 
     /*
      * Calculate width 
@@ -1001,10 +1004,6 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
       return (0);
     }
 
-    /*
-     * Lock surface 
-     */
-    SDL_LockSurface(dst);
 
     /*
      * More variable setup 
@@ -1070,10 +1069,6 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
      */
 
 
-    /*
-     * Unlock surface 
-     */
-    SDL_UnlockSurface(dst);
 
     /*
      * Set result code 
@@ -1141,6 +1136,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
       return 0;
     }
 
+    SDL_LockSurface(dst);
     /*
      * Draw, scanning y 
      */
@@ -1176,8 +1172,10 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 
       }
 
-      qsort(gfxPrimitivesPolyInts, ints, sizeof(int),
-	    xx_gfxPrimitivesCompareInt);
+      QSORT(int, gfxPrimitivesPolyInts, ints, islt);
+
+      //qsort(gfxPrimitivesPolyInts, ints, sizeof(int),
+//          xx_gfxPrimitivesCompareInt);
 
       for (i = 0; (i < ints); i += 2) {
 	xa = gfxPrimitivesPolyInts[i] + 1;
@@ -1190,6 +1188,104 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
       }
     }
 
+
+    SDL_UnlockSurface(dst);
+    return (result);
+  }
+
+  int DrawLibSDLgfx::xx_filledPolygonColor(SDL_Surface * dst,
+					   const Sint16 * vx,
+					   const Sint16 * vy, int n,
+					   Uint32 color) {
+    int result;
+    int i;
+    int y, xa, xb;
+    int miny, maxy;
+    int x1, y1;
+    int x2, y2;
+    int ind1, ind2;
+    int ints;
+
+    /*
+     * Sanity check 
+     */
+    if (n < 3) {
+      return -1;
+    }
+
+    /*
+     * Allocate temp array, only grow array 
+     */
+    if (!gfxPrimitivesPolyAllocated) {
+      gfxPrimitivesPolyInts = (int *)malloc(sizeof(int) * n);
+      gfxPrimitivesPolyAllocated = n;
+    } else {
+      if (gfxPrimitivesPolyAllocated < n) {
+	gfxPrimitivesPolyInts =
+	  (int *)realloc(gfxPrimitivesPolyInts, sizeof(int) * n);
+	gfxPrimitivesPolyAllocated = n;
+      }
+    }
+
+    /*
+     * Determine Y maxima 
+     */
+    miny = vy[0];
+    maxy = vy[0];
+    for (i = 1; (i < n); i++) {
+      if (vy[i] < miny) {
+	miny = vy[i];
+      } else if (vy[i] > maxy) {
+	maxy = vy[i];
+      }
+    }
+
+    /*
+     * Draw, scanning y 
+     */
+    result = 0;
+    for (y = miny; (y <= maxy); y++) {
+      ints = 0;
+      for (i = 0; (i < n); i++) {
+	if (!i) {
+	  ind1 = n - 1;
+	  ind2 = 0;
+	} else {
+	  ind1 = i - 1;
+	  ind2 = i;
+	}
+	y1 = vy[ind1];
+	y2 = vy[ind2];
+	if (y1 < y2) {
+	  x1 = vx[ind1];
+	  x2 = vx[ind2];
+	} else if (y1 > y2) {
+	  y2 = vy[ind1];
+	  y1 = vy[ind2];
+	  x2 = vx[ind1];
+	  x1 = vx[ind2];
+	} else {
+	  continue;
+	}
+	if (((y >= y1) && (y < y2))
+	    || ((y == maxy) && (y > y1) && (y <= y2))) {
+	  gfxPrimitivesPolyInts[ints++] =
+	    ((65536 * (y - y1)) / (y2 - y1)) * (x2 - x1) + (65536 * x1);
+	}
+
+      }
+
+//      qsort(gfxPrimitivesPolyInts, ints, sizeof(int), gfxPrimitivesCompareInt);
+      QSORT(int, gfxPrimitivesPolyInts, ints, islt);
+
+      for (i = 0; (i < ints); i += 2) {
+	xa = gfxPrimitivesPolyInts[i] + 1;
+	xa = (xa >> 16) + ((xa & 32768) >> 15);
+	xb = gfxPrimitivesPolyInts[i + 1] - 1;
+	xb = (xb >> 16) + ((xb & 32768) >> 15);
+	result |= hlineColor(dst, xa, xb, y, color);
+      }
+    }
 
     return (result);
   }

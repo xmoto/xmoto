@@ -484,6 +484,8 @@ namespace vapp {
 				SDL_Surface * texture, int texture_dx,
 				int texture_dy);
 
+    int xx_filledPolygonColor(SDL_Surface * dst, const Sint16 * vx, const Sint16 * vy, int n, Uint32 color);
+
     //the mode used when drawing
     DrawMode m_drawMode;
 
