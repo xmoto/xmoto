@@ -96,7 +96,7 @@ namespace vapp {
       
       void createReplay(const std::string &FileName,const std::string &LevelID,const std::string &Player,float fFrameRate,int nStateSize);
       void saveReplay(void);
-      std::string openReplay(const std::string &FileName,float *pfFrameRate,std::string &Player);
+      std::string openReplay(const std::string &FileName,float *pfFrameRate,std::string &Player, bool bDisplayInformation = false);
       static void deleteReplay(std::string ReplayName);
       void reinitialize();
       std::string getLevelId();

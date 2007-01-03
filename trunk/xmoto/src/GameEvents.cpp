@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "GameEvents.h"
+#include "helpers/SwapEndian.h"
 
 namespace vapp {
 
@@ -35,7 +36,7 @@ namespace vapp {
     Buffer << (int) (this->getType());
   }
 
-  MotoGameEvent* MotoGameEvent::getUnserialized(DBuffer &Buffer) {
+  MotoGameEvent* MotoGameEvent::getUnserialized(DBuffer &Buffer, bool bDisplayInformation) {
     MotoGameEvent* v_event;
     float v_fEventTime;
     GameEventType v_eventType;
@@ -102,8 +103,11 @@ namespace vapp {
       error_type << (int) v_eventType;
       throw Exception("Can't unserialize ! (event of type " + error_type.str() + ")");
     }
-
     v_event->unserialize(Buffer);
+    if(bDisplayInformation) {
+      printf("   %6.2f %-27s\n", v_fEventTime, v_event->toString().c_str());
+    }
+
     return v_event;
   }
 
@@ -146,6 +150,9 @@ namespace vapp {
     return SgetType();
   }
 
+  std::string MGE_PlayerDies::toString() {
+    return "Player dies";
+  }
 
   //////////////////////////////
   MGE_PlayerEntersZone::MGE_PlayerEntersZone(float p_fEventTime) 
@@ -180,6 +187,9 @@ namespace vapp {
     return SgetType();
   }
 
+  std::string MGE_PlayerEntersZone::toString() {
+    return "Player enters on zone " + m_zone->Id();
+  }
 
   //////////////////////////////
   MGE_PlayerLeavesZone::MGE_PlayerLeavesZone(float p_fEventTime) 
@@ -213,6 +223,9 @@ namespace vapp {
     return SgetType();
   }
 
+  std::string MGE_PlayerLeavesZone::toString() {
+    return "Players leaves the zone " + m_zone->Id();
+  }
 
   //////////////////////////////
   MGE_PlayerTouchesEntity::MGE_PlayerTouchesEntity(float p_fEventTime) 
@@ -248,6 +261,9 @@ namespace vapp {
     return SgetType();
   }
 
+  std::string MGE_PlayerTouchesEntity::toString() {
+    return "Players touches entity " + m_entityID;
+  }
 
   //////////////////////////////
   MGE_EntityDestroyed::MGE_EntityDestroyed(float p_fEventTime) 
@@ -299,7 +315,9 @@ namespace vapp {
     case ET_PARTICLES_SOURCE:
       break;
     default:
-      throw Exception("Invalid entity type"); // with some compilator, an invalid value causes a segfault (on my linux box)
+      std::ostringstream error_type;
+      error_type << (int) m_entityType;
+      throw Exception("Invalid entity type (" + error_type.str() + ")"); // with some compilator, an invalid value causes a segfault (on my linux box)
     }
     Buffer >> m_entitySize;
     Buffer >> m_entityPosition.x;
@@ -316,6 +334,10 @@ namespace vapp {
 
   GameEventType MGE_EntityDestroyed::getType() {
     return SgetType();
+  }
+
+  std::string MGE_EntityDestroyed::toString() {
+    return "Player destroys entity " + m_entityId;
   }
 
   std::string MGE_EntityDestroyed::EntityId() {
@@ -349,6 +371,9 @@ namespace vapp {
     return SgetType();
   }
 
+  std::string MGE_ClearMessages::toString() {
+    return "Messages are cleared";
+  }
 
   //////////////////////////////
   MGE_PlaceInGameArrow::MGE_PlaceInGameArrow(float p_fEventTime) 
@@ -395,6 +420,9 @@ namespace vapp {
     return SgetType();
   }
 
+  std::string MGE_PlaceInGameArrow::toString() {
+    return "Place in game arrow";
+  }
 
   //////////////////////////////
   MGE_PlaceScreenarrow::MGE_PlaceScreenarrow(float p_fEventTime) 
@@ -441,6 +469,9 @@ namespace vapp {
     return SgetType();
   }
 
+  std::string MGE_PlaceScreenarrow::toString() {
+    return "Place screen arrow";
+  }
 
   //////////////////////////////
   MGE_HideArrow::MGE_HideArrow(float p_fEventTime) 
@@ -469,6 +500,9 @@ namespace vapp {
     return SgetType();
   }
 
+  std::string MGE_HideArrow::toString() {
+    return "Hide arrow";
+  }
 
   //////////////////////////////
   MGE_Message::MGE_Message(float p_fEventTime) 
@@ -505,6 +539,9 @@ namespace vapp {
     return SgetType();
   }
 
+  std::string MGE_Message::toString() {
+    return "Display message '" + m_message + "'";
+  }
 
   //////////////////////////////
   MGE_MoveBlock::MGE_MoveBlock(float p_fEventTime) 
@@ -551,6 +588,9 @@ namespace vapp {
     return SgetType();
   }
 
+  std::string MGE_MoveBlock::toString() {
+    return "Block " + m_blockID + " is moved";
+  }
 
   //////////////////////////////
   MGE_SetBlockPos::MGE_SetBlockPos(float p_fEventTime) 
@@ -597,6 +637,9 @@ namespace vapp {
     return SgetType();
   }
 
+  std::string MGE_SetBlockPos::toString() {
+    return "Block " + m_blockID + "'s position is changed";
+  }
 
   //////////////////////////////
   MGE_SetGravity::MGE_SetGravity(float p_fEventTime) 
@@ -637,6 +680,9 @@ namespace vapp {
     return SgetType();
   }
 
+  std::string MGE_SetGravity::toString() {
+    return "Gravity is changed";
+  }
 
   //////////////////////////////
   MGE_SetPlayerPosition::MGE_SetPlayerPosition(float p_fEventTime) 
@@ -683,6 +729,9 @@ namespace vapp {
     return SgetType();
   }
 
+  std::string MGE_SetPlayerPosition::toString() {
+    return "Teleportation of the player";
+  }
 
   //////////////////////////////
   MGE_SetEntityPos::MGE_SetEntityPos(float p_fEventTime) 
@@ -729,6 +778,9 @@ namespace vapp {
     return SgetType();
   }
 
+  std::string MGE_SetEntityPos::toString() {
+    return "Entity " + m_entityID + "'s position is changed";
+  }
 
   //////////////////////////////
   MGE_SetBlockCenter::MGE_SetBlockCenter(float p_fEventTime) 
@@ -775,6 +827,9 @@ namespace vapp {
     return SgetType();
   }
 
+  std::string MGE_SetBlockCenter::toString() {
+    return "Block " + m_blockID + "'s center is changed";
+  }
 
   //////////////////////////////
   MGE_SetBlockRotation::MGE_SetBlockRotation(float p_fEventTime) 
@@ -817,6 +872,9 @@ namespace vapp {
     return SgetType();
   }
 
+  std::string MGE_SetBlockRotation::toString() {
+    return "Block " + m_blockID + "'s rotation is changed";
+  }
 
   //////////////////////////////
   MGE_SetDynamicEntityRotation::MGE_SetDynamicEntityRotation(float p_fEventTime) 
@@ -882,6 +940,9 @@ namespace vapp {
     return SgetType();
   }
 
+  std::string MGE_SetDynamicEntityRotation::toString() {
+    return "Dynamic rotation is set for entity " + m_entityID;
+  }
 
   //////////////////////////////
   MGE_SetDynamicEntityTranslation::MGE_SetDynamicEntityTranslation(float p_fEventTime) 
@@ -947,6 +1008,9 @@ namespace vapp {
     return SgetType();
   }
 
+  std::string MGE_SetDynamicEntityTranslation::toString() {
+    return "Dynamic translation is set for entity " + m_entityID;
+  }
 
   //////////////////////////////
   MGE_SetDynamicEntityNone::MGE_SetDynamicEntityNone(float p_fEventTime) 
@@ -981,6 +1045,10 @@ namespace vapp {
 
   GameEventType MGE_SetDynamicEntityNone::getType() {
     return SgetType();
+  }
+
+  std::string MGE_SetDynamicEntityNone::toString() {
+    return "Remove dynamic for entity " + m_entityID;
   }
 
   //////////////////////////////
@@ -1047,6 +1115,9 @@ namespace vapp {
     return SgetType();
   }
 
+  std::string MGE_SetDynamicBlockRotation::toString() {
+    return "Dynamic rotation is set for block " + m_blockID;
+  }
 
   //////////////////////////////
   MGE_SetDynamicBlockTranslation::MGE_SetDynamicBlockTranslation(float p_fEventTime) 
@@ -1112,6 +1183,9 @@ namespace vapp {
     return SgetType();
   }
 
+  std::string MGE_SetDynamicBlockTranslation::toString() {
+    return "Dynamic translation is set for block " + m_blockID;
+  }
 
   //////////////////////////////
   MGE_SetDynamicBlockNone::MGE_SetDynamicBlockNone(float p_fEventTime) 
@@ -1146,6 +1220,10 @@ namespace vapp {
 
   GameEventType MGE_SetDynamicBlockNone::getType() {
     return SgetType();
+  }
+
+  std::string MGE_SetDynamicBlockNone::toString() {
+    return "Remove dynamic for block " + m_blockID;
   }
 
   //////////////////////////////
@@ -1187,6 +1265,9 @@ namespace vapp {
     return SgetType();
   }
 
+  std::string MGE_CameraMove::toString() {
+    return "Camera moves";
+  }
 
   //////////////////////////////
   MGE_CameraZoom::MGE_CameraZoom(float p_fEventTime) 
@@ -1221,6 +1302,10 @@ namespace vapp {
 
   GameEventType MGE_CameraZoom::getType() {
     return SgetType();
+  }
+
+  std::string MGE_CameraZoom::toString() {
+    return "Camera zoom is changed";
   }
 
   //////////////////////////////
@@ -1258,4 +1343,7 @@ namespace vapp {
     return SgetType();
   }
 
+  std::string MGE_PenalityTime::toString() {
+    return "Time penality";
+  }
 }

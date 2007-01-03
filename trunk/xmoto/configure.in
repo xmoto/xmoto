@@ -89,7 +89,7 @@ AC_LANG_POP()
 
 AC_CHECK_LIB(curl, curl_easy_init,[],[AC_MSG_WARN(online highscores disabled)])
 
-ALL_LINGUAS="fr de es ca"
+ALL_LINGUAS="fr de es ca sk"
 AM_GNU_GETTEXT()
 
 dnl Put LOCALESDIR in makefiles

@@ -174,8 +174,8 @@ namespace vapp {
   
   void DBuffer::operator >>(bool &n) {
     unsigned char c;
-    c = static_cast<unsigned char>(n);
     readBuf_LE((char*) &c, 1);
+    n = (c != 0x00);
   }
   
   void DBuffer::operator <<(int n) {
@@ -216,6 +216,7 @@ namespace vapp {
     int n;
     char c[256];
     *this >> n;
+
     if(n <= 0) {
       throw Exception("Unable to read the string !");
     }
@@ -223,5 +224,4 @@ namespace vapp {
     c[n] = '\0';
     s = c;
   }
-
 }

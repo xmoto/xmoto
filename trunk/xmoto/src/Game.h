@@ -155,6 +155,7 @@ namespace vapp {
                  m_bCompressReplays = true;
                  m_bBenchmark = false;
                  m_bEnableContextHelp = true;     
+		 m_bDisplayInfosReplay = false;
 
 #if defined(SUPPORT_WEBACCESS)
                  m_bShowWebHighscoreInGame = false;
@@ -170,7 +171,6 @@ namespace vapp {
      m_bEnableCheckHighscoresAtStartup = true;
 #endif
      m_fLastSqueekTime = 0.0f;
-
 
      m_Renderer.setTheme(getTheme());
      m_MotoGame.setRenderer(&m_Renderer);
@@ -238,6 +238,8 @@ namespace vapp {
       bool m_bUglyMode;                         /* true: fast 'n ugly graphics */
       bool m_bCleanCache;                       /* true: clean the level cache at startup */
       bool m_bShowEngineCounter;
+      bool m_bDisplayInfosReplay;               /* true: just display infos of a replay */
+      std::string m_InfosReplay;                /* name of the replay to display information */
 
       bool m_bTestThemeMode;
       bool m_bEnableEngineSound;                /* true: engine sound is enabled */

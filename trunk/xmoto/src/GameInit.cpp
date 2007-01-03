@@ -216,6 +216,21 @@ namespace vapp {
       return;
     }
     
+    if(m_bDisplayInfosReplay) {
+      Replay v_replay;
+      std::string v_levelId;
+      float v_frameRate;
+      std::string v_player;
+      
+      v_levelId = v_replay.openReplay(m_InfosReplay, &v_frameRate, v_player, true);
+      if(v_levelId == "") {
+	throw Exception("Invalid replay");
+      }
+      
+      quit();
+      return;	
+    }
+    
     if(!getDrawLib()->isNoGraphics()) {  
       _UpdateLoadingScreen((1.0f/9.0f) * 0,pLoadingScreen,GAMETEXT_LOADINGSOUNDS);
       
@@ -546,7 +561,17 @@ namespace vapp {
       }
       else if(UserArgs[i] == "-cleancache") {
         m_bCleanCache = true;
-      }
+     } else if(UserArgs[i] == "-replayInfos") {
+       if(i+1<UserArgs.size()) {
+	 getDrawLib()->setNoGraphics(true);
+	 m_bDisplayInfosReplay = true;
+	 m_InfosReplay = UserArgs[i+1];
+       } else
+       throw SyntaxError("no replay specified");        
+       i++;
+     } else {
+       throw SyntaxError("Invalid argument");
+     }
     }
   }
 

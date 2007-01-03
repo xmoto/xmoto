@@ -82,7 +82,7 @@ namespace vapp {
       /* Data */
       bool m_bInit;
       bool m_bOutput;
-    
+
       /* Data - for output */    
       int m_nPartSize;
       std::vector<DBufferPart *> m_Parts;
