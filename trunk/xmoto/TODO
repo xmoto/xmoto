@@ -1,6 +1,12 @@
+for 0.2.5
 * BUG : xmoto -replay bugs/onMacWontWork.rpl when you press forward on
    this scripted level, the elevator at the correct position
 * when are texure is rotated we need to copy the texture mutplile times so it's always visible
+* BUG : dyn blocks not displayed in ugly && dyn blocks not updated in minimap 
+* it seems that there is a bug on speed it is played (if i play
+   replays done on fast machine, it appear faster) http://xmoto.free.fr/replays/replay_1312.rpl
+========
+
 * keesj:real caching strategy, currently the SDL_gfx chooses to caches based on expected size of the image
   We need to implement a real caching strategy, for example a LRU hash table (least recently used hashtable
   Here is an article that might be of good use http://www.gamedev.net/reference/articles/article2240.asp)
@@ -20,10 +26,6 @@
 
 
 * FEATURE : windows : there's some win32 API calls that can be made to determine the application data dir
-* BUG : dyn blocks not displayed in ugly && dyn blocks not updated in minimap 
-
-* it seems that there is a bug on speed it is played (if i play
-   replays done on fast machine, it appear faster) http://xmoto.free.fr/replays/replay_1312.rpl
 
 * when you choose keys : if a key is already attributed, it should
    assign it and set <unset> to the other one because it's not

@@ -31,6 +31,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../md5sum/md5file.h"
 #include "../helpers/Color.h"
 
+#define CACHE_LEVEL_FORMAT_VERSION 6
+
 Level::Level() {
   m_xmotoTooOld = false;
   m_leftLimit   = 0.0;
@@ -592,14 +594,9 @@ void Level::importBinaryHeader(vapp::FileHandle *pfh) {
   m_playerStart  = Vector2f(0.0, 0.0);
   m_xmotoTooOld  = false;
 
-  char cTag[5];
-  vapp::FS::readBuf(pfh,(char *)cTag,4);
-  cTag[4] = '\0';
-  int nFormat = 0;
-  if(!strcmp(cTag,"XBL5"))
-    nFormat = 5;
+  int nFormat = vapp::FS::readInt_LE(pfh);
   
-  if(nFormat != 5) {
+  if(nFormat != CACHE_LEVEL_FORMAT_VERSION) {
     throw Exception("Old file format");
   }
   
@@ -647,7 +644,7 @@ void Level::exportBinaryHeader(vapp::FileHandle *pfh) {
   /* 4 -> includes level pack num */
   /* 5 -> clean code */
   /* Write CRC32 of XML */
-  vapp::FS::writeBuf   (pfh,"XBL5", 4);
+  vapp::FS::writeInt_LE(pfh, CACHE_LEVEL_FORMAT_VERSION);
   vapp::FS::writeString(pfh	    , m_checkSum);
   vapp::FS::writeString(pfh	    , m_id);
   vapp::FS::writeString(pfh	    , m_pack);
@@ -673,14 +670,9 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
   }
   else {
     /* Read tag - it tells something about the format */
-    char cTag[5];
-    vapp::FS::readBuf(pfh,(char *)cTag,4);
-    cTag[4] = '\0';
-    int nFormat = 0;
-    if(!strcmp(cTag,"XBL5"))
-      nFormat = 5;
+    int nFormat = vapp::FS::readInt_LE(pfh);
     
-    if(nFormat == 5) { /* reject other formats */
+    if(nFormat == CACHE_LEVEL_FORMAT_VERSION) { /* reject other formats */
       /* Read "format 1" / "format 2" binary level */
       /* Right */
       std::string md5sum = vapp::FS::readString(pfh);
