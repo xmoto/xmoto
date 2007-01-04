@@ -43,15 +43,6 @@ AC_ARG_WITH([renderer-sdlGfx],
 )
 AC_SUBST([USE_SDLGFX])
 
-dnl Put SDL_gfx textured
-AC_ARG_WITH([renderer-sdlGfxTextured],
-  [AS_HELP_STRING([--with-renderer-sdlGfxTextured=0|1],
-    [RendererSdlGfxTextured])],
-  [USE_SDLGFXTEXTURED="$withval"; USE_SDLGFX="1"],
-  [USE_SDLGFXTEXTURED="0"]
-)
-AC_SUBST([USE_SDLGFXTEXTURED])
-
 if test "$USE_SDLGFX" = "1"
 then
   AC_SDL_CHECK_LIB(SDL_gfx, pixelColor, [], [AC_MSG_ERROR(SDL_gfx required)])
@@ -184,6 +175,4 @@ echo   "+-----------------+------------+----------------------------------------
 displayRequirement "OpenGl" "$USE_OPENGL" "1" "--with-renderer-openGl=1"
 echo   "+-----------------+------------+-----------------------------------------------------+"
 displayRequirement "sdlGfx" "$USE_SDLGFX" "1" "--with-renderer-sdlGfx=1 (unsafe)"
-echo   "+-----------------+------------+-----------------------------------------------------+"
-displayRequirement "sdlGfxTextured" "$USE_SDLGFXTEXTURED" "1" "--with-renderer-sdlGfxTextured=1 (unsafe)"
 echo   "+-----------------+------------+-----------------------------------------------------+"

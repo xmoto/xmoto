@@ -25,7 +25,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <algorithm> 
 #include <time.h>
 
-#define CURRENT_LEVEL_INDEX_FILE_VERSION 1
+// increase the version to force reloading of levels
+#define CURRENT_LEVEL_INDEX_FILE_VERSION 2
 #define VPACKAGE_NB_RANDOM_LEVELS        30
 
 LevelsPack::LevelsPack(std::string i_name) {

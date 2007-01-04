@@ -37,7 +37,7 @@ Build configuration
 
 /* Rendering engine configuration. xmoto currently supports two rendering engines
  * one is openGl based and the other one is based on SDL_gfx. Here we define
- * ENABLE_OPENGL , ENABLE_SDLGFX and ENABLE_SDLGFXTEXTURED for easy use in 
+ * ENABLE_OPENGL , ENABLE_SDLGFX for easy use in 
  * the code.
  */
 #ifndef USE_OPENGL
@@ -53,14 +53,6 @@ Build configuration
 #if USE_SDLGFX == 1
   #define ENABLE_SDLGFX
 #endif
-
-#ifndef USE_SDLGFXTEXTURED
-  #define USE_SDLGFXTEXTURED 0
-#endif
-#if USE_SDLGFXTEXTURED == 1
-  #define ENABLE_SDLGFXTEXTURED
-#endif
-
 
 /* DO_NOT_LOAD_TEXTURES - Do not load texture files. This speeds up the init
    time enormously */

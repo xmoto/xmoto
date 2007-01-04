@@ -524,8 +524,9 @@ namespace vapp {
       }
       else if(!strcmp(ppcArgs[i],"-nowww")) {
         m_bNoWWW = true;
-      }    
-      else if(!strcmp(ppcArgs[i],"-h") || !strcmp(ppcArgs[i],"-?") ||
+      }  else if(strcmp(ppcArgs[i],"-sdlgfx") == 0) {
+				//
+			} else if(!strcmp(ppcArgs[i],"-h") || !strcmp(ppcArgs[i],"-?") ||
               !strcmp(ppcArgs[i],"--help") || !strcmp(ppcArgs[i],"-help")) {
         printf("%s (Version %s)\n",m_AppName.c_str(),getVersionString().c_str());
         if(m_CopyrightInfo.length()>0)
