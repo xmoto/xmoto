@@ -108,6 +108,9 @@ namespace vapp {
                  m_bEnableLevelCache=true;
                  m_bEnableMenuMusic=false;
                  m_bEnableInitZoom=false;
+								 m_autoZoom = false;
+								 m_bAutoZoomInitialized = false;
+								 m_bLockMotoGame = false;
                  m_bCleanCache=false;
                  m_bEnableDeathAnim=true;
                  m_pQuitMsgBox=NULL;
@@ -220,12 +223,16 @@ namespace vapp {
       bool isUglyMode() {return m_bUglyMode;}
       bool isTestThemeMode(void) {return m_bTestThemeMode;}
     
+			void setAutoZoom(bool bValue);
+
     private: 
       EngineSoundSimulator m_EngineSound;
     
       /* Data */
       ReplayList m_ReplayList;                  /* Replay list */
       bool m_bEnableInitZoom;                   /* true: Perform initial level scroll/zoom */
+			bool m_autoZoom;                          /* true : the key is pressed so that it zooms out to see the level */
+			bool m_bAutoZoomInitialized;
       bool m_bEnableDeathAnim;                  /* true: Bike falls apart at when dead */
       bool m_bEnableMenuMusic;                  /* true: Play menu music */      
       bool m_bEnableContextHelp;                /* true: Show context help */
@@ -443,6 +450,8 @@ namespace vapp {
       double m_fFrameTime;
       float m_fFPS_Rate;
 
+			bool m_bLockMotoGame;
+
       /* Helpers */
 #if defined(SUPPORT_WEBACCESS) 
       void _UpdateWorldRecord(const std::string &LevelID);
@@ -550,6 +559,18 @@ namespace vapp {
       void prestartAnimation_init();
       void prestartAnimation_step();
       
+			void zoomAnimation1_init();
+			bool zoomAnimation1_step();
+			void zoomAnimation1_abort();
+
+			void zoomAnimation2_init();
+			bool zoomAnimation2_step();
+			bool zoomAnimation2_unstep();
+			void zoomAnimation2_abort();
+
+			void lockMotoGame(bool bLock);
+			bool isLockedMotoGame() const;
+
       std::string splitText(const std::string &str, int p_breakLineLength);
       
       /* Main loop utility functions */
@@ -568,6 +589,8 @@ namespace vapp {
       void _PostUpdateFinished(void);
 
       int getNumberOfFinishedLevelsOfPack(LevelsPack *i_pack);
+
+			void autoZoom();
   };
 
 }

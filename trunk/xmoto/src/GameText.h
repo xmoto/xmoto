@@ -51,6 +51,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_AUDIO                _("Audio")
 #define GAMETEXT_AUTHOR               _("Author")
 #define GAMETEXT_AUTOSAVEREPLAYS      _("Automatic saving of replays")
+#define GAMETEXT_AUTOZOOM             _("Auto zoom")
 #define GAMETEXT_BESTTIMES            _("Best Times")
 #define GAMETEXT_BESTPLAYER           _("Best player")
 #define GAMETEXT_BRAKE                _("Brake")

@@ -143,6 +143,7 @@ namespace vapp {
     bRearWheelTouching  = false;
 
     m_bodyDetach = false;
+
   }
   
   MotoGame::~MotoGame() {

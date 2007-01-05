@@ -116,18 +116,26 @@ namespace vapp {
           else if(m_State == GS_PLAYING || ((m_State == GS_DEADMENU || m_State == GS_DEADJUST) && m_bEnableDeathAnim)) {
             /* When actually playing or when dead and the bike is falling apart, 
                a physics update is required */
-            nPhysSteps = _UpdateGamePlaying();            
+						if(isLockedMotoGame()) {
+							nPhysSteps = 0;
+						} else {
+							nPhysSteps = _UpdateGamePlaying();            
+						}
             HighPrecisionTimer::checkTime("_UpdateGamePlaying");
           }
           else if(m_State == GS_REPLAYING) {
             /* When playing back a replay, no physics update is requried - instead
                the game state is streamed out of a binary .rpl file */
-            nPhysSteps = _UpdateGameReplaying();
+							nPhysSteps = _UpdateGameReplaying();
             HighPrecisionTimer::checkTime("_UpdateGameReplaying");
             bValidGameState = nPhysSteps > 0;
             //printf("%d ",nPhysSteps);
           }
   
+					if(m_State == GS_PLAYING) {
+						autoZoom();
+					}
+
           /* Render */
           if(!getDrawLib()->isNoGraphics() && bValidGameState) {
             m_Renderer.render(bIsPaused);

@@ -1435,6 +1435,7 @@ namespace vapp {
     p = pList->addEntry(GAMETEXT_CAMERAMOVEXDOWN); p->Text.push_back(m_Config.getString("KeyCameraMoveXDown"));
     p = pList->addEntry(GAMETEXT_CAMERAMOVEYUP); p->Text.push_back(m_Config.getString("KeyCameraMoveYUp"));
     p = pList->addEntry(GAMETEXT_CAMERAMOVEYDOWN); p->Text.push_back(m_Config.getString("KeyCameraMoveYDown"));
+    p = pList->addEntry(GAMETEXT_AUTOZOOM); p->Text.push_back(m_Config.getString("KeyAutoZoom"));
     #endif
   }
   
@@ -3378,13 +3379,14 @@ namespace vapp {
     m_Config.setValue("KeyChangeDir1",m_Config.getDefaultValue("KeyChangeDir1"));
     
     #if defined(ENABLE_ZOOMING)
-      m_Config.setValue("KeyZoomIn",m_Config.getDefaultValue("KeyZoomIn"));
-      m_Config.setValue("KeyZoomOut",m_Config.getDefaultValue("KeyZoomOut"));
-      m_Config.setValue("KeyZoomInit",m_Config.getDefaultValue("KeyZoomInit"));
-      m_Config.setValue("KeyCameraMoveXUp",m_Config.getDefaultValue("KeyCameraMoveXUp"));
-      m_Config.setValue("KeyCameraMoveXDown",m_Config.getDefaultValue("KeyCameraMoveXDown"));
-      m_Config.setValue("KeyCameraMoveYUp",m_Config.getDefaultValue("KeyCameraMoveYUp"));
-      m_Config.setValue("KeyCameraMoveYDown",m_Config.getDefaultValue("KeyCameraMoveYDown"));
+    m_Config.setValue("KeyZoomIn",m_Config.getDefaultValue("KeyZoomIn"));
+    m_Config.setValue("KeyZoomOut",m_Config.getDefaultValue("KeyZoomOut"));
+    m_Config.setValue("KeyZoomInit",m_Config.getDefaultValue("KeyZoomInit"));
+    m_Config.setValue("KeyCameraMoveXUp",m_Config.getDefaultValue("KeyCameraMoveXUp"));
+    m_Config.setValue("KeyCameraMoveXDown",m_Config.getDefaultValue("KeyCameraMoveXDown"));
+    m_Config.setValue("KeyCameraMoveYUp",m_Config.getDefaultValue("KeyCameraMoveYUp"));
+    m_Config.setValue("KeyCameraMoveYDown",m_Config.getDefaultValue("KeyCameraMoveYDown"));
+    m_Config.setValue("KeyAutoZoom",m_Config.getDefaultValue("KeyAutoZoom"));
     #endif
 
     #if defined(ALLOW_GHOST)
@@ -3522,6 +3524,8 @@ namespace vapp {
 	m_Config.setString("KeyCameraMoveYUp",pActionList->getEntries()[i]->Text[1]);
       else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CAMERAMOVEYDOWN)
 	m_Config.setString("KeyCameraMoveYDown",pActionList->getEntries()[i]->Text[1]);
+      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_AUTOZOOM)
+	m_Config.setString("KeyAutoZoom",pActionList->getEntries()[i]->Text[1]);
 #endif
     }
     

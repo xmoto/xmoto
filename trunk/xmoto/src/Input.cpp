@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *  Input handler
  */
 #include "Input.h"
+#include "Game.h"
 
 namespace vapp {
 
@@ -300,6 +301,7 @@ namespace vapp {
 	m_nCameraMoveXDown = _StringToKey(pConfig->getString("KeyCameraMoveXDown"));
 	m_nCameraMoveYUp   = _StringToKey(pConfig->getString("KeyCameraMoveYUp"));
 	m_nCameraMoveYDown = _StringToKey(pConfig->getString("KeyCameraMoveYDown"));
+	m_nAutoZoom        = _StringToKey(pConfig->getString("KeyAutoZoom"));
 	#endif
         
         /* All good? */
@@ -307,8 +309,9 @@ namespace vapp {
           m_nPushForwardKey1<0 || m_nChangeDirKey1<0 
           #if defined(ENABLE_ZOOMING)
             || m_nZoomIn<0 || m_nZoomOut <0 || m_nZoomInit <0
-	    || m_nCameraMoveXUp<0 || m_nCameraMoveXDown<0 
+	          || m_nCameraMoveXUp<0 || m_nCameraMoveXDown<0 
             || m_nCameraMoveYUp<0 || m_nCameraMoveYDown<0
+            || m_nAutoZoom<0
           #endif
 	        ) {
           Log("** Warning ** : Invalid keyboard configuration!");
@@ -371,9 +374,10 @@ namespace vapp {
   Handle an input event
   ===========================================================================*/  
   void InputHandler::handleInput(InputEventType Type,
-				 int nKey,
-				 BikeController *pController,
-				 GameRenderer *pGameRender) {
+																 int nKey,
+																 BikeController *pController,
+																 GameRenderer *pGameRender,
+																 GameApp *pGameApp) {
     /* Update controller 1 */
     if(m_ControllerModeID1 == CONTROLLER_MODE_KEYBOARD) {
       /* Keyboard controlled */
@@ -420,6 +424,9 @@ namespace vapp {
 	else if(m_nCameraMoveYDown == nKey) {
 	  pGameRender->moveCamera(0.0, -1.0);
 	}
+	else if(m_nAutoZoom == nKey) {
+	  pGameApp->setAutoZoom(true);
+	}
 #endif
 
           break;
@@ -444,6 +451,9 @@ namespace vapp {
             /* Change dir */
             pController->setChangeDir(true);
           }
+				else if(m_nAutoZoom == nKey) {
+					pGameApp->setAutoZoom(false);
+				}
           break;
       }      
     }
@@ -479,6 +489,7 @@ namespace vapp {
       m_nCameraMoveXDown = SDLK_KP4;
       m_nCameraMoveYUp   = SDLK_KP8;
       m_nCameraMoveYDown = SDLK_KP2;
+      m_nAutoZoom        = SDLK_KP5;
     #endif
   }  
 
@@ -499,6 +510,7 @@ namespace vapp {
     if(m_nCameraMoveXDown < 0) { m_nCameraMoveXDown = SDLK_KP4; }
     if(m_nCameraMoveYUp   < 0) { m_nCameraMoveYUp   = SDLK_KP8; }
     if(m_nCameraMoveYDown < 0) { m_nCameraMoveYDown = SDLK_KP2; }
+    if(m_nAutoZoom        < 0) { m_nAutoZoom        = SDLK_KP5; }
     #endif
   }
 
@@ -515,13 +527,14 @@ namespace vapp {
     if(Action == "ChangeDir")   return _KeyToString(m_nChangeDirKey1);
     
     #if defined(ENABLE_ZOOMING)    
-    if(Action == "ZoomIn")   	    return _KeyToString(m_nZoomIn);
-    if(Action == "ZoomOut")  	    return _KeyToString(m_nZoomOut);
-    if(Action == "ZoomInit") 	    return _KeyToString(m_nZoomInit);
+    if(Action == "ZoomIn")   	    	return _KeyToString(m_nZoomIn);
+    if(Action == "ZoomOut")  	    	return _KeyToString(m_nZoomOut);
+    if(Action == "ZoomInit") 	    	return _KeyToString(m_nZoomInit);
     if(Action == "CameraMoveXUp")   return _KeyToString(m_nCameraMoveXUp);
     if(Action == "CameraMoveXDown") return _KeyToString(m_nCameraMoveXDown);
     if(Action == "CameraMoveYUp")   return _KeyToString(m_nCameraMoveYUp);
     if(Action == "CameraMoveYDown") return _KeyToString(m_nCameraMoveYDown);
+    if(Action == "AutoZoom")        return _KeyToString(m_nAutoZoom);
     #endif
 
     return "?";
