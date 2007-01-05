@@ -96,6 +96,7 @@ class Block {
   Vector2f InitialPosition() const;
   Vector2f DynamicPosition() const;
   float DynamicRotation() const;
+  Vector2f DynamicRotationCenter() const;
   bool isBackground() const;
   bool isDynamic() const;
   float Grip() const;
@@ -137,7 +138,9 @@ private:
   float m_grip;                         /* GRIP of the block */
 
   /* properties for dynamic */
-  float m_dynamicRotation;  /* Block rotation */    
+  float m_dynamicRotation;  /* Block rotation */
+  Vector2f m_currentRotationCenter;
+  Vector2f m_dynamicRotationCenter;
   Vector2f m_dynamicPosition; /* Block position */
   std::vector<vapp::Line *> m_collisionLines; /* Line to collide against */
 

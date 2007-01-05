@@ -319,43 +319,28 @@ namespace vapp {
         for(int j=0; j<ConvexBlocks.size(); j++) {
           Vector2f Center;
           
-          if(ConvexBlocks[j]->SourceBlock()->isDynamic()) {
-            if(ConvexBlocks[j]->SourceBlock()) {
-              Center = ConvexBlocks[j]->SourceBlock()->DynamicPosition();
+	  /* Build rotation matrix for block */
+	  float fR[4]; 
+	  fR[0] = cos(Blocks[i]->DynamicRotation()); fR[1] = -sin(Blocks[i]->DynamicRotation());
+	  fR[2] = sin(Blocks[i]->DynamicRotation()); fR[3] = cos(Blocks[i]->DynamicRotation());
+	  
+	  getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+	  getParent()->getDrawLib()->setColorRGB(128,128,128);
+	  //glColor3f(1,0,0);
+	  for(int k=0; k<ConvexBlocks[j]->Vertices().size(); k++) {
+	    ConvexBlockVertex *pVertex = ConvexBlocks[j]->Vertices()[k];
+	    
+	    /* Transform vertex */
+	    Vector2f Tv = Vector2f((pVertex->Position().x-Blocks[i]->DynamicRotationCenter().x) * fR[0] + (pVertex->Position().y-Blocks[i]->DynamicRotationCenter().y) * fR[1],
+				   (pVertex->Position().x-Blocks[i]->DynamicRotationCenter().x) * fR[2] + (pVertex->Position().y-Blocks[i]->DynamicRotationCenter().y) * fR[3]);
+	    Tv += Blocks[i]->DynamicPosition() + Blocks[i]->DynamicRotationCenter();
+	    
+	    /* Put vertex */
+	    getParent()->getDrawLib()->glTexCoord(pVertex->TexturePosition().x,pVertex->TexturePosition().y);          
+	    MINIVERTEX(Tv.x,Tv.y);                  
             }
-            
-            getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
-            getParent()->getDrawLib()->setColorRGB(128,128,128);
-            for(int k=0; k<ConvexBlocks[j]->Vertices().size(); k++) {
-              Vector2f P = Center + ConvexBlocks[j]->Vertices()[k]->Position();        
-              MINIVERTEX(P.x,P.y);                  
-            }
-            getParent()->getDrawLib()->endDraw();
-          } else {
-      
-            /* Build rotation matrix for block */
-            float fR[4]; 
-            fR[0] = cos(Blocks[i]->DynamicRotation()); fR[1] = -sin(Blocks[i]->DynamicRotation());
-            fR[2] = sin(Blocks[i]->DynamicRotation()); fR[3] = cos(Blocks[i]->DynamicRotation());
-  
-            getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
-            getParent()->getDrawLib()->setColorRGB(128,128,128);
-	    //glColor3f(1,0,0);
-            for(int k=0; k<ConvexBlocks[j]->Vertices().size(); k++) {
-              ConvexBlockVertex *pVertex = ConvexBlocks[j]->Vertices()[k];
-                
-              /* Transform vertex */
-              Vector2f Tv = Vector2f(pVertex->Position().x * fR[0] + pVertex->Position().y * fR[1],
-                                     pVertex->Position().x * fR[2] + pVertex->Position().y * fR[3]);
-              Tv += Blocks[i]->DynamicPosition();
-              
-              /* Put vertex */
-              getParent()->getDrawLib()->glTexCoord(pVertex->TexturePosition().x,pVertex->TexturePosition().y);          
-              MINIVERTEX(Tv.x,Tv.y);                  
-            }
-            getParent()->getDrawLib()->endDraw();
-          }
-        }
+	  getParent()->getDrawLib()->endDraw();
+	}
       }
     }
     
@@ -1076,9 +1061,9 @@ namespace vapp {
 	getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_LOOP);
 	getParent()->getDrawLib()->setColorRGB(255,255,255);
         for(int j=0;j<Blocks[i]->Vertices().size();j++) {       
-          Vector2f Tv = Vector2f(Blocks[i]->Vertices()[j]->Position().x * fR[0] + Blocks[i]->Vertices()[j]->Position().y * fR[1],
-                                 Blocks[i]->Vertices()[j]->Position().x * fR[2] + Blocks[i]->Vertices()[j]->Position().y * fR[3]);
-          Tv += Blocks[i]->DynamicPosition();                                  
+          Vector2f Tv = Vector2f((Blocks[i]->Vertices()[j]->Position().x-Blocks[i]->DynamicRotationCenter().x) * fR[0] + (Blocks[i]->Vertices()[j]->Position().y-Blocks[i]->DynamicRotationCenter().y) * fR[1],
+                                 (Blocks[i]->Vertices()[j]->Position().x-Blocks[i]->DynamicRotationCenter().x) * fR[2] + (Blocks[i]->Vertices()[j]->Position().y-Blocks[i]->DynamicRotationCenter().y) * fR[3]);
+          Tv += Blocks[i]->DynamicPosition() + Blocks[i]->DynamicRotationCenter();                                  
           getParent()->getDrawLib()->glVertex(Tv.x,Tv.y);
         }
 	getParent()->getDrawLib()->endDraw();
@@ -1091,9 +1076,9 @@ namespace vapp {
             ConvexBlockVertex *pVertex = Blocks[i]->ConvexBlocks()[j]->Vertices()[k];
             
             /* Transform vertex */
-            Vector2f Tv = Vector2f(pVertex->Position().x * fR[0] + pVertex->Position().y * fR[1],
-                                   pVertex->Position().x * fR[2] + pVertex->Position().y * fR[3]);
-            Tv += Blocks[i]->DynamicPosition();                                  
+            Vector2f Tv = Vector2f((pVertex->Position().x-Blocks[i]->DynamicRotationCenter().x) * fR[0] + (pVertex->Position().y-Blocks[i]->DynamicRotationCenter().y) * fR[1],
+                                   (pVertex->Position().x-Blocks[i]->DynamicRotationCenter().x) * fR[2] + (pVertex->Position().y-Blocks[i]->DynamicRotationCenter().y) * fR[3]);
+            Tv += Blocks[i]->DynamicPosition() + Blocks[i]->DynamicRotationCenter();
             
             /* Put vertex */
             getParent()->getDrawLib()->glTexCoord(pVertex->TexturePosition().x,pVertex->TexturePosition().y);
