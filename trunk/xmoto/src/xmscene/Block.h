@@ -139,7 +139,6 @@ private:
 
   /* properties for dynamic */
   float m_dynamicRotation;  /* Block rotation */
-  Vector2f m_currentRotationCenter;
   Vector2f m_dynamicRotationCenter;
   Vector2f m_dynamicPosition; /* Block position */
   std::vector<vapp::Line *> m_collisionLines; /* Line to collide against */

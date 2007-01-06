@@ -2,7 +2,6 @@ for 0.2.5
 * BUG : xmoto -replay bugs/onMacWontWork.rpl when you press forward on
    this scripted level, the elevator at the correct position
 * when are texure is rotated we need to copy the texture mutplile times so it's always visible
-* BUG : dyn blocks not displayed in ugly && dyn blocks not updated in minimap 
 * it seems that there is a bug on speed it is played (if i play
    replays done on fast machine, it appear faster) http://xmoto.free.fr/replays/replay_1312.rpl
 ========
