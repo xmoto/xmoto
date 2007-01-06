@@ -62,6 +62,23 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
   ===========================================================================*/
   void DrawLibSDLgfx::glVertexSP(float x, float y) {
     m_drawingPoints.push_back(new Vector2f(x, y));
+    if (m_drawingPoints.size() == 0) {
+      m_min.x = m_max.x = x;
+      m_min.y = m_max.y = y;
+    } else {
+      if (x < m_min.x) {
+	m_min.x = x;
+      }
+      if (x > m_max.x) {
+	m_max.x = x;
+      }
+      if (y < m_min.y) {
+	m_min.y = y;
+      }
+      if (y > m_max.y) {
+	m_max.y = y;
+      }
+    }
   }
 
   void DrawLibSDLgfx::glVertex(float x, float y) {
@@ -397,8 +414,8 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 	      && y_zoom * m_texture->surface->h < 65536) {
 	    char key[255] = "";
 
-	    if(m_drawingPoints.size() >4){
-	      angle =0;
+	    if (m_drawingPoints.size() > 4) {
+	      angle = 0;
 	    }
 	    sprintf(key, "rotate-%s_%.0f_%.2f_%.2f",
 		    m_texture->Name.c_str(), angle, x_zoom, y_zoom);
@@ -675,7 +692,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
     //SDL_FillRect(m_screen, NULL, SDL_MapRGB(m_screen->format, 0, 0, 0));
   }
 
-  void DrawLibSDLgfx::resetGraphics(){
+  void DrawLibSDLgfx::resetGraphics() {
     setClipRect(NULL);
     m_scale.x = 1;
     m_scale.y = 1;
