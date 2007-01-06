@@ -661,11 +661,6 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
   }
 
   void DrawLibSDLgfx::clearGraphics() {
-    setClipRect(NULL);
-    m_scale.x = 1;
-    m_scale.y = 1;
-    m_translate.x = 0;
-    m_translate.y = 0;
     SDL_LockSurface(m_screen);
     if (m_bg_data == NULL) {
       m_bg_data =
@@ -678,6 +673,14 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 	   m_screen->format->BytesPerPixel * m_screen->w * m_screen->h);
     SDL_UnlockSurface(m_screen);
     //SDL_FillRect(m_screen, NULL, SDL_MapRGB(m_screen->format, 0, 0, 0));
+  }
+
+  void DrawLibSDLgfx::resetGraphics(){
+    setClipRect(NULL);
+    m_scale.x = 1;
+    m_scale.y = 1;
+    m_translate.x = 0;
+    m_translate.y = 0;
   }
 
       /**

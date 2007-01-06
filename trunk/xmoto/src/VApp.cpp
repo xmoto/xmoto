@@ -115,6 +115,7 @@ namespace vapp {
       }
     
       pParent->getDrawLib()->clearGraphics();
+      pParent->getDrawLib()->resetGraphics();
       
       /* Update */
       update();
@@ -243,7 +244,10 @@ namespace vapp {
           
         /* Clear screen */  
         //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	drawLib->clearGraphics();
+	if (isUglyMode()){
+	  drawLib->clearGraphics();
+	}
+        drawLib->resetGraphics();
 
       }
       

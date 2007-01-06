@@ -166,6 +166,10 @@ namespace vapp {
        * Clears the screen with the configured background
        **/
     virtual void clearGraphics() = 0;
+    /**
+      * resets the state of the zoom and translation
+     **/
+    virtual void resetGraphics() {};
 
       /**
        * Flush the graphics. In memory graphics will now be displayed
@@ -451,6 +455,10 @@ namespace vapp {
        * Clears the screen with the configured background
        **/
     virtual void clearGraphics();
+      /**
+       * resets the variables like translation and rotation
+       **/
+    virtual void resetGraphics();
 
       /**
        * Flush the graphics. In memory graphics will now be displayed
