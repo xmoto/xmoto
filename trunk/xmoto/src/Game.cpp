@@ -1872,7 +1872,7 @@ namespace vapp {
 	}
 
 	bool GameApp::zoomAnimation2_step() {
-	  zoomAnimation1_step();
+	  return zoomAnimation1_step();
 	}
 
 	bool GameApp::zoomAnimation2_unstep() {
