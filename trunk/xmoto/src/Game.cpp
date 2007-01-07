@@ -486,6 +486,11 @@ namespace vapp {
         drawLib->drawImage(Vector2f(drawLib->getDispWidth()/2,drawLib->getDispHeight()/2),Vector2f(drawLib->getDispWidth(),drawLib->getDispHeight()),m_pTitleBR);
       if(m_pTitleBL != NULL)
         drawLib->drawImage(Vector2f(0,drawLib->getDispHeight()/2),Vector2f(drawLib->getDispWidth()/2,drawLib->getDispHeight()),m_pTitleBL);
+    } else if(m_MenuBackgroundGraphics == MENU_GFX_OFF){
+        //in Ugly mode the screen is cleared in the VApp main loop
+	//this is not the case when ugly mode is off.
+	//and when MENU_GFX_OFF we need to clear the screen
+        drawLib->clearGraphics();
     }
   }
 
