@@ -282,6 +282,9 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
     int x0, y0, x1, y1;
     SDL_Rect *clip = NULL;
 
+    //get the current clipping on the screen
+    //if null we must expect the be drawing 
+    //on the full screen
     SDL_GetClipRect(m_screen, clip);
     if (clip != NULL) {
       x0 = clip->x;
@@ -297,16 +300,18 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 
     bool draw = true;
 
-    if (m_max.x < x0 || m_min.x > x1) {
+    //if all the lines  are "smaller" or larger then the screen
+    //we don't need to draw
+    if (m_max.x < x0 || m_min.x > x1 || m_max.y < y0 || m_min.y > y1) {
       draw = false;
-      //printf("min max x %.2f %.2f\n",m_min.x,m_max.x);
-    }
-    if (m_max.y < y0 || m_min.y > y1) {
-      draw = false;
-      //printf("min max y %.2f %.2f\n",m_min.y,m_max.y);
     }
 
     if (draw == true) {
+      //keesj:TODO , why not just create one x/y array
+      //and use that all the time. this is also true
+      //for texture point and drawing points
+      //it will also remove the need to clean the m_texturePoints 
+      //and m_drawingPoints collection afterwards
       Sint16 x[size];
       Sint16 y[size];
 
@@ -318,22 +323,24 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
       case DRAW_MODE_POLYGON:
 	if (m_texture != NULL && m_texturePoints.size() > 2
 	    && m_drawingPoints.size() > 2) {
-	  //texture points
+	  //texture points texture point 1 2 and 3
 	  Vector2f t1, t2, t3;
 
-	  //polygon points
+	  //polygon points 1 2 3
 	  Vector2f p1, p2, p3;
 
-	  //texture line 1 2 3
-	  Vector2f tl1, tl2, tl3;
+	  //texture line 1 2  and texture diagonal line 1
+	  Vector2f tl1, tl2, tdl1;
 
-	  //polygon line 1 2 3
-	  Vector2f pl1, pl2, pl3;
+	  //polygon line 1 2  and diagonal 1
+	  Vector2f pl1, pl2, pdl1;
 
-	  //the texture verctor
+	  //the texture verctor texture points are expected to be given in 
+	  //values between 0 and 1 where 1 it a full with of the texture
 	  Vector2f texture_v =
 	    Vector2f(m_texture->surface->w, m_texture->surface->h);
 
+	  ///anchor point for the texture
 	  float x_start_pixel, y_start_pixel;
 
 	  //we only support scaling , rotation and flipping of textures
@@ -345,21 +352,29 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 	  t2 = *m_texturePoints.at(1) * texture_v;
 	  t3 = *m_texturePoints.at(2) * texture_v;
 
+	  //also get the 3 first points of the polygon
 	  p1 = *m_drawingPoints.at(0);
 	  p2 = *m_drawingPoints.at(1);
 	  p3 = *m_drawingPoints.at(2);
 
+	  //convert the texture points to line vector
+	  //that is the value of the l* describes a line 
+	  //because we substract the two points
+	  //for a polygon we at least need 3 points
+	  //I try to think of the polygon as a rectangle
+	  //this is why the two first lines are called tl 
+	  //and the third one texture diagonal line
 	  tl1 = t2 - t1;
 	  tl2 = t3 - t2;
-	  tl3 = t1 - t3;
+	  tdl1 = t1 - t3;
 
 	  pl1 = p2 - p1;
 	  pl2 = p3 - p2;
-	  pl3 = p1 - p3;
+	  pdl1 = p1 - p3;
 
 	  float p1Scale = pl1.length() / tl1.length();
 	  float p2Scale = pl2.length() / tl2.length();
-	  float p3Scale = pl3.length() / tl3.length();
+	  float p3Scale = pdl1.length() / tdl1.length();
 
 	  float x_zoom, y_zoom, angle, angle2;
 
@@ -368,7 +383,9 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 	  //the amount of zoom that the lines must perform
 
 	  angle = tl1.angle() - pl1.angle();
-	  angle2 = tl3.angle() - pl3.angle();
+	  //TODO check???
+	  angle2 = tdl1.angle() - pdl1.angle();
+
 	  //we now have two scales and two angles
 	  //and we are going to try to define a scaling that can match both
 	  //for scaling we can say that (acording to pythagoras)
@@ -457,30 +474,29 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 
 
 
-	    if (m_texture->Name == "Whewel1") {
+	    if (m_texture->Name == "XMOTO") {
 	      printf("-----------------%s---------------\n",
 		     m_texture->Name.c_str());
-	      printf("texture        %f %f %f %f %f %f\n", t1.x, t1.y,
+	      printf("texture\t%f %f %f %f %f %f\n", t1.x, t1.y,
 		     t2.x, t2.y, t3.x, t3.y);
 	      printf("drawing points %f %f %f %f %f %f\n", p1.x, p1.y,
 		     p2.x, p2.y, p3.x, p3.y);
-	      printf("scale          %f %f %f \n", p1Scale, p2Scale,
-		     p3Scale);
-	      printf("angle          %f %f %f \n", tl1.angle(),
-		     tl2.angle(), tl3.angle());
-	      printf("angle  point   %f %f %f \n", pl1.angle(),
-		     pl2.angle(), pl3.angle());
-	      printf("angle  total   %f %f %f \n",
+	      printf("scale\t%f %f %f \n", p1Scale, p2Scale, p3Scale);
+	      printf("angle\t%f %f %f \n", tl1.angle(),
+		     tl2.angle(), tdl1.angle());
+	      printf("angle  point\t%f %f %f \n", pl1.angle(),
+		     pl2.angle(), pdl1.angle());
+	      printf("angle  total\t%f %f %f \n",
 		     tl1.angle() - pl1.angle(), tl2.angle() - pl2.angle(),
-		     tl3.angle() - pl3.angle());
-	      printf("tr  %f %f \n", x_start_pixel, y_start_pixel);
-	      printf("zoom  %f %f \n", x_zoom, y_zoom);
-	      printf("rotate  %f %f\n", angle, angle2);
+		     tdl1.angle() - pdl1.angle());
+	      printf("tr\t%f %f \n", x_start_pixel, y_start_pixel);
+	      printf("zoom\t%f %f \n", x_zoom, y_zoom);
+	      printf("rotate\t%f %f\n", angle, angle2);
 
-	      printf("starx,starty  %f %f\n", x_start_pixel,
+	      printf("starx,starty\t%f %f\n", x_start_pixel,
 		     y_start_pixel);
-	      printf("direction  %f \n", pl1.angle() - pl2.angle());
-	      printf("direction2  %f \n", fff);
+	      printf("direction\t%f \n", pl1.angle() - pl2.angle());
+	      printf("direction2\t%f \n", fff);
 	    }
 	    if (m_texture->isAlpha) {
 	      xx_texturedPolygonAlpha(m_screen, x, y, size, s,
@@ -493,8 +509,6 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 	    //zoom to large
 	    printf("Zoom to large\n");
 	  }
-
-
 
 	} else {
 	  xx_filledPolygonColor(m_screen, x, y, size, m_color);
