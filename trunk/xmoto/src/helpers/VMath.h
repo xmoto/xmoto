@@ -313,6 +313,7 @@ void addPointToAABB2f(Vector2f &BMin,Vector2f &BMax,const Vector2f &Point);
 bool circleTouchCircle2f(const Vector2f &Cp1,float Cr1,const Vector2f &Cp2,float Cr2);
 
 float randomNum(float fMin,float fMax);
+int randomIntNum(int nMin, int nMax);
 
 #endif
 

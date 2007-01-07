@@ -872,11 +872,11 @@ namespace vapp {
     pLevelInfoButton->setID("PLAY_LEVEL_INFO_BUTTON");
     pLevelInfoButton->setContextHelp(CONTEXTHELP_LEVEL_INFO);
 
-    UIButton *pAddToFavoriteButton = new UIButton(pAllLevelsPackTab,pAllLevelsPackTab->getPosition().nWidth-187,pAllLevelsPackTab->getPosition().nHeight-103,GAMETEXT_DELETEFROMFAVORITE,187,57);
-    pAddToFavoriteButton->setFont(m_Renderer.getSmallFont());
-    pAddToFavoriteButton->setType(UI_BUTTON_TYPE_LARGE);
-    pAddToFavoriteButton->setID("ALL_LEVELS_DELETE_FROM_FAVORITE_BUTTON");
-    pAddToFavoriteButton->setContextHelp(CONTEXTHELP_DELETEFROMFAVORITE);
+    UIButton *pDeleteFromFavoriteButton = new UIButton(pAllLevelsPackTab,pAllLevelsPackTab->getPosition().nWidth-187,pAllLevelsPackTab->getPosition().nHeight-103,GAMETEXT_DELETEFROMFAVORITE,187,57);
+    pDeleteFromFavoriteButton->setFont(m_Renderer.getSmallFont());
+    pDeleteFromFavoriteButton->setType(UI_BUTTON_TYPE_LARGE);
+    pDeleteFromFavoriteButton->setID("ALL_LEVELS_DELETE_FROM_FAVORITE_BUTTON");
+    pDeleteFromFavoriteButton->setContextHelp(CONTEXTHELP_DELETEFROMFAVORITE);
 
     /* all levels list */
     m_pAllLevelsList = new UILevelList(pAllLevelsPackTab,0,0,"",pAllLevelsPackTab->getPosition().nWidth,pAllLevelsPackTab->getPosition().nHeight-105);     
@@ -1074,7 +1074,12 @@ namespace vapp {
     pLevelPackAddToFavorite->setID("LEVELPACK_ADDTOFAVORITE_BUTTON");
     pLevelPackAddToFavorite->setContextHelp(CONTEXTHELP_ADDTOFAVORITE);
 
-    UIButton *pLevelPackCancel = new UIButton(m_pLevelPackViewer,450,221,GAMETEXT_CLOSE,207,57);
+    UIButton *pLevelPackRandomize = new UIButton(m_pLevelPackViewer,450,221,GAMETEXT_RANDOMIZE,207,57);
+    pLevelPackRandomize->setFont(m_Renderer.getSmallFont());
+    pLevelPackRandomize->setID("LEVELPACK_RANDOMIZE_BUTTON");
+    pLevelPackRandomize->setContextHelp(CONTEXTHELP_RANDOMIZE);
+
+    UIButton *pLevelPackCancel = new UIButton(m_pLevelPackViewer,450,278,GAMETEXT_CLOSE,207,57);
     pLevelPackCancel->setFont(m_Renderer.getSmallFont());
     pLevelPackCancel->setID("LEVELPACK_CANCEL_BUTTON");
     pLevelPackCancel->setContextHelp(CONTEXTHELP_CLOSE_LEVEL_PACK);
@@ -1464,7 +1469,7 @@ namespace vapp {
 				p_packName = m_levelsManager.LevelsPacks()[i]->Name();
 
 				/* the unpackaged pack exists only in debug mode */
-				if(p_packName != "" || m_bDebugMode == false) {
+				if(p_packName != "" || m_bDebugMode) {
 					if(p_packName == "") {
 						p_packName = GAMETEXT_UNPACKED_LEVELS_PACK;
 					}
@@ -1727,6 +1732,7 @@ namespace vapp {
     UIButton *pPlayButton = reinterpret_cast<UIButton *>(m_pLevelPackViewer->getChild("LEVELPACK_PLAY_BUTTON"));
     UIButton *pLevelInfoButton = reinterpret_cast<UIButton *>(m_pLevelPackViewer->getChild("LEVELPACK_INFO_BUTTON"));
     UIButton *pLevelAddToFavoriteButton = reinterpret_cast<UIButton *>(m_pLevelPackViewer->getChild("LEVELPACK_ADDTOFAVORITE_BUTTON"));
+    UIButton *pLevelRandomizeButton = reinterpret_cast<UIButton *>(m_pLevelPackViewer->getChild("LEVELPACK_RANDOMIZE_BUTTON"));
     UILevelList *pList = (UILevelList *)m_pLevelPackViewer->getChild("LEVELPACK_LEVEL_LIST");
     
     /* Check buttons */
@@ -1762,6 +1768,12 @@ namespace vapp {
 	_UpdateLevelPackList();
 	_UpdateLevelLists();
       }
+    }
+
+    if(pLevelRandomizeButton!=NULL && pLevelRandomizeButton->isClicked()) {
+      pLevelRandomizeButton->setClicked(false);
+      
+      pList->randomize();
     }
 
     /* level menu : */

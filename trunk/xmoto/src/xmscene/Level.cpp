@@ -917,12 +917,6 @@ void Level::addLimits() {
   Blocks().push_back(pBlock);
 }
 
-void Level::clearAfterRewind() {
-  for(unsigned int i=0; i<m_entities.size(); i++) {
-    m_entities[i]->clearAfterRewind();
-  } 
-}
-
 void Level::spawnEntity(Entity *v_entity) {
   m_entitiesExterns.push_back(v_entity);
 }

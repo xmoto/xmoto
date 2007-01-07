@@ -143,7 +143,7 @@ bool Entity::updateToTime(float i_time, Vector2f i_gravity) {
 
 ParticlesSource::ParticlesSource(const std::string& i_id, float i_particleTime_increment)
   : Entity(i_id) {
-  m_nextParticleTime       = 0.0;
+  m_lastParticleTime       = 0.0;
   m_particleTime_increment = i_particleTime_increment;
 }
 
@@ -153,7 +153,7 @@ ParticlesSource::~ParticlesSource() {
 
 void ParticlesSource::loadToPlay() {
   Entity::loadToPlay();
-  m_nextParticleTime = 0.0;
+  m_lastParticleTime = 0.0;
 } 
 
 void ParticlesSource::unloadToPlay() {
@@ -165,7 +165,7 @@ void ParticlesSource::unloadToPlay() {
 bool ParticlesSource::updateToTime(float i_time, Vector2f i_gravity) {
   unsigned int i;
 
-  if(i_time > m_nextParticleTime) {  
+  if(i_time > m_lastParticleTime + m_particleTime_increment) {  
     i = 0;
     while(i < m_particles.size()) {
       if(i_time > m_particles[i]->KillTime()) {
@@ -176,8 +176,13 @@ bool ParticlesSource::updateToTime(float i_time, Vector2f i_gravity) {
 	i++;
       }
     }
-    m_nextParticleTime = i_time + m_particleTime_increment;
+    m_lastParticleTime = i_time;
     return true;
+  } else {
+    /* return in the past */
+    if(i_time < m_lastParticleTime - m_particleTime_increment) {
+      deleteParticles();   
+    }
   }
   return false;
 }
@@ -587,11 +592,6 @@ Entity* Entity::readFromBinary(vapp::FileHandle *i_pfh) {
   return v_entity;
 }
 
-void ParticlesSource::clearAfterRewind() {
-  Entity::clearAfterRewind();
-  deleteParticles();
-}
-
 void ParticlesSource::deleteParticles() {
   for(unsigned int i=0; i<m_particles.size(); i++) {
     delete m_particles[i];
@@ -609,9 +609,6 @@ EntitySpeciality ParticlesSource::Speciality() const {
 
 float EntityParticle::Angle() const {
   return m_ang;
-}
-
-void Entity::clearAfterRewind() {
 }
 
 void ParticlesSource::addParticle(Vector2f i_velocity, float i_killTime) {

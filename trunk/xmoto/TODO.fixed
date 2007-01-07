@@ -6,6 +6,9 @@ particules ejectees par la roue arriere. et resultat, ca rame
 enormenent... 
 * BUG : f5 when playing does not rebuild the level cache
 * BUG : dyn blocks not displayed in ugly && dyn blocks not updated in minimap 
+* Randomize any pack
+* BUG : particules stays on replays (i broke something, nicolas)
+* BUG : "width" "height" "centerX" "centerY" make them unrequired for sprite decoration
 
 Since 0.2.2
 * When i update lists sometimes

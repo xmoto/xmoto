@@ -125,7 +125,6 @@ class LevelsManager {
   std::vector<Level *> m_updatedLevels;
 
   std::vector<Level *> m_favoriteLevels;
-	unsigned int m_randomLevelsSeed;
 
   static std::string NewLevelsXmlFilePath();
   void saveNewLevelsXml() const;

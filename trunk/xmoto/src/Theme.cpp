@@ -253,15 +253,15 @@ void Theme::newAnimationSpriteFromXML(TiXmlElement *pVarElem) {
   float global_delay   = 0.1;
 
   pc = pVarElem->Attribute("name");
-  if(pc == NULL) {return;}
+  if(pc == NULL) {vapp::Log("** Animation with no name"); return;}
   v_name = pc;
   
   pc = pVarElem->Attribute("fileBase");
-  if(pc == NULL) {return;}
+  if(pc == NULL) {vapp::Log("** Animation with no fileBase"); return;}
   v_fileBase = pc;
 
   pc = pVarElem->Attribute("fileExtension");
-  if(pc == NULL) {return;}
+  if(pc == NULL) {vapp::Log("** Animation with no fileExtension"); return;}
   v_fileExtension = pc;
 
   pc = pVarElem->Attribute("centerX");
@@ -325,11 +325,11 @@ void Theme::newBikerPartSpriteFromXML(TiXmlElement *pVarElem) {
   const char *pc;
 
   pc = pVarElem->Attribute("name");
-  if(pc == NULL) {return;}
+  if(pc == NULL) {vapp::Log("** BikerPart with no name"); return;}
   v_name = pc;
 
   pc = pVarElem->Attribute("file");
-  if(pc == NULL) {return;}
+  if(pc == NULL) {vapp::Log("** BikerPart with no file"); return;}
   v_fileName = pc;
 
   m_sprites.push_back(new BikerPartSprite(this, v_name, v_fileName));
@@ -339,47 +339,48 @@ void Theme::newBikerPartSpriteFromXML(TiXmlElement *pVarElem) {
 void Theme::newDecorationSpriteFromXML(TiXmlElement *pVarElem) {
   std::string v_name;
   std::string v_fileName;
-  std::string v_width;
-  std::string v_height;
-  std::string v_centerX;
-  std::string v_centerY;
+  float v_width;
+  float v_height;
+  float v_centerX;
+  float v_centerY;
   std::string v_blendmode = "default";
   const char *pc;
 
+  float global_centerX = 0.5;
+  float global_centerY = 0.5;
+  float global_width   = 1.0;
+  float global_height  = 1.0;
+
   pc = pVarElem->Attribute("name");
-  if(pc == NULL) {return;}
+  if(pc == NULL) {vapp::Log("** Sprite with no name"); return;}
   v_name = pc;
 
   pc = pVarElem->Attribute("file");
-  if(pc == NULL) {return;}
+  if(pc == NULL) {vapp::Log("** Sprite with no name"); return;}
   v_fileName = pc;
 
   pc = pVarElem->Attribute("width");
-  if(pc == NULL) {return;}
-  v_width = pc;
+  if(pc != NULL) {v_width = atof(pc);} else {v_width = global_width;}
 
   pc = pVarElem->Attribute("height");
-  if(pc == NULL) {return;}
-  v_height = pc;
+  if(pc != NULL) {v_height = atof(pc);} else {v_height = global_height;}
 
   pc = pVarElem->Attribute("centerX");
-  if(pc == NULL) {return;}
-  v_centerX = pc;
+  if(pc != NULL) {v_centerX = atof(pc);} else {v_centerX = global_centerX;}
 
   pc = pVarElem->Attribute("centerY");
-  if(pc == NULL) {return;}
-  v_centerY = pc;
+  if(pc != NULL) {v_centerY = atof(pc);} else {v_centerY = global_centerY;}
   
   pc = pVarElem->Attribute("blendmode");
   if(pc != NULL) v_blendmode = pc;
 
   m_sprites.push_back(new DecorationSprite(this, v_name, v_fileName,
-             atof(v_width.c_str()),
-             atof(v_height.c_str()),
-             atof(v_centerX.c_str()),
-             atof(v_centerY.c_str()),
-             strToBlendMode(v_blendmode)
-             ));
+					   v_width,
+					   v_height,
+					   v_centerX,
+					   v_centerY,
+					   strToBlendMode(v_blendmode)
+					   ));
   m_requiredFiles.push_back(THEME_DECORATION_SPRITE_FILE_DIR + std::string("/") + v_fileName);
 }
 
@@ -389,11 +390,11 @@ void Theme::newEffectSpriteFromXML(TiXmlElement *pVarElem) {
   const char *pc;
 
   pc = pVarElem->Attribute("name");
-  if(pc == NULL) {return;}
+  if(pc == NULL) {vapp::Log("** Effect with no name"); return;}
   v_name = pc;
 
   pc = pVarElem->Attribute("file");
-  if(pc == NULL) {return;}
+  if(pc == NULL) {vapp::Log("** Effect with no file"); return;}
   v_fileName = pc;
 
   m_sprites.push_back(new EffectSprite(this, v_name, v_fileName));
@@ -408,19 +409,19 @@ void Theme::newEdgeEffectSpriteFromXML(TiXmlElement *pVarElem) {
   const char *pc;
 
   pc = pVarElem->Attribute("name");
-  if(pc == NULL) {return;}
+  if(pc == NULL) {vapp::Log("** Edge with no name"); return;}
   v_name = pc;
 
   pc = pVarElem->Attribute("file");
-  if(pc == NULL) {return;}
+  if(pc == NULL) {vapp::Log("** Edge with no file"); return;}
   v_fileName = pc;
 
   pc = pVarElem->Attribute("scale");
-  if(pc == NULL) {return;}
+  if(pc == NULL) {vapp::Log("** Edge with no scale"); return;}
   v_scale = pc;
 
   pc = pVarElem->Attribute("depth");
-  if(pc == NULL) {return;}
+  if(pc == NULL) {vapp::Log("Edge with no depth"); return;}
   v_depth = pc;
 
   m_sprites.push_back(new EdgeEffectSprite(this, v_name, v_fileName,
@@ -435,11 +436,11 @@ void Theme::newFontSpriteFromXML(TiXmlElement *pVarElem) {
   const char *pc;
 
   pc = pVarElem->Attribute("name");
-  if(pc == NULL) {return;}
+  if(pc == NULL) {vapp::Log("** Font with no name"); return;}
   v_name = pc;
 
   pc = pVarElem->Attribute("file");
-  if(pc == NULL) {return;}
+  if(pc == NULL) {vapp::Log("Font with no file"); return;}
   v_fileName = pc;
 
   m_sprites.push_back(new FontSprite(this, v_name, v_fileName));
@@ -452,11 +453,11 @@ void Theme::newMiscSpriteFromXML(TiXmlElement *pVarElem) {
   const char *pc;
 
   pc = pVarElem->Attribute("name");
-  if(pc == NULL) {return;}
+  if(pc == NULL) {vapp::Log("** Misc with no name"); return;}
   v_name = pc;
 
   pc = pVarElem->Attribute("file");
-  if(pc == NULL) {return;}
+  if(pc == NULL) {vapp::Log("** Misc with no file"); return;}
   v_fileName = pc;
 
   m_sprites.push_back(new MiscSprite(this, v_name, v_fileName));
@@ -469,11 +470,11 @@ void Theme::newUISpriteFromXML(TiXmlElement *pVarElem) {
   const char *pc;
 
   pc = pVarElem->Attribute("name");
-  if(pc == NULL) {return;}
+  if(pc == NULL) {vapp::Log("** UI with no name"); return;}
   v_name = pc;
 
   pc = pVarElem->Attribute("file");
-  if(pc == NULL) {return;}
+  if(pc == NULL) {vapp::Log("** UI with no file"); return;}
   v_fileName = pc;
 
   m_sprites.push_back(new UISprite(this, v_name, v_fileName));
@@ -486,11 +487,11 @@ void Theme::newTextureSpriteFromXML(TiXmlElement *pVarElem) {
   const char *pc;
 
   pc = pVarElem->Attribute("name");
-  if(pc == NULL) {return;}
+  if(pc == NULL) {vapp::Log("** Texture with no name"); return;}
   v_name = pc;
 
   pc = pVarElem->Attribute("file");
-  if(pc == NULL) {return;}
+  if(pc == NULL) {vapp::Log("** Texture with no file"); return;}
   v_fileName = pc;
 
   m_sprites.push_back(new TextureSprite(this, v_name, v_fileName));

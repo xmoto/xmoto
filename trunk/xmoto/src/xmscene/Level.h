@@ -116,7 +116,6 @@ class Level {
   /* because some objects like entities have an internal movement */
   void updateToTime(vapp::MotoGame& i_scene);
   /* this method calls objects because rewind in replay can required some actions (like removing particles) */
-  void clearAfterRewind();
 
   /* the entity will be destroyed by the level */
   void spawnEntity(Entity *v_entity);

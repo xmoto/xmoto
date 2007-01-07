@@ -32,6 +32,10 @@ float randomNum(float fMin,float fMax) {
   return fMin + (fMax-fMin) * ((float)rand() / (float)RAND_MAX);
 }
 
+int randomIntNum(int nMin, int nMax) {
+  return nMin + (int) (((float)nMax) * rand()/(RAND_MAX+1.0));
+}
+
 /*===========================================================================
   AABB updating
   ===========================================================================*/

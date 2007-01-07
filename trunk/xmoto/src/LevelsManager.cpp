@@ -27,7 +27,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 // increase the version to force reloading of levels
 #define CURRENT_LEVEL_INDEX_FILE_VERSION 2
-#define VPACKAGE_NB_RANDOM_LEVELS        30
 
 LevelsPack::LevelsPack(std::string i_name) {
   m_name         = i_name;
@@ -130,10 +129,6 @@ void LevelsPack::setSorted(bool i_sorted) {
 }
 
 LevelsManager::LevelsManager() {
-	/* must stay the same along the game to not remake a different random list each time
-	   so that next levels, ... works
-	*/
-	m_randomLevelsSeed = (unsigned int) time(NULL);
 }
 
 LevelsManager::~LevelsManager() {
@@ -217,7 +212,7 @@ void LevelsManager::createVirtualPacks(
 #if defined(SUPPORT_WEBACCESS)
   /* levels with no highscore */
   if(i_webHighscores != NULL) {
-    v_pack = new LevelsPack("~ " + std::string(VPACKAGENAME_LEVELS_WITH_NO_HIGHSCORE));
+    v_pack = new LevelsPack(std::string(VPACKAGENAME_LEVELS_WITH_NO_HIGHSCORE));
     m_levelsPacks.push_back(v_pack);
     for(unsigned int i=0; i<m_levels.size(); i++) {
       WebHighscore* wh = i_webHighscores->getHighscoreFromLevel(m_levels[i]->Id());
@@ -230,7 +225,7 @@ void LevelsManager::createVirtualPacks(
 
 #if defined(SUPPORT_WEBACCESS)
   /* levels i've not the highscore */
-  v_pack = new LevelsPack("~ " + std::string(VPACKAGENAME_YOU_HAVE_NOT_THE_HIGHSCORE));
+  v_pack = new LevelsPack(std::string(VPACKAGENAME_YOU_HAVE_NOT_THE_HIGHSCORE));
   m_levelsPacks.push_back(v_pack);
   for(unsigned int i=0; i<m_levels.size(); i++) {
     if(i_webHighscores != NULL) {
@@ -244,19 +239,8 @@ void LevelsManager::createVirtualPacks(
   }
 #endif
 
-  /* random levels */
-	v_pack = new LevelsPack("~ " + std::string(VPACKAGENAME_RANDOM_LEVELS));
-  v_pack->setSorted(false);
-  m_levelsPacks.push_back(v_pack);
-	srand(m_randomLevelsSeed);
-	/* if there is only 5 levels available, don't make a pack of 30 levels for example */
-	unsigned int v_nbRandomLevels = m_levels.size() < (VPACKAGE_NB_RANDOM_LEVELS) ? m_levels.size() : VPACKAGE_NB_RANDOM_LEVELS;
-	for(unsigned int i=0; i<v_nbRandomLevels; i++) {
-		v_pack->addLevel(m_levels[randomNum(0, m_levels.size())], true); // true to be sure the same level is not twice time
-	}
-
   /* levels i've not finished */
-  v_pack = new LevelsPack("~ " + std::string(VPACKAGENAME_INCOMPLETED_LEVELS));
+  v_pack = new LevelsPack(std::string(VPACKAGENAME_INCOMPLETED_LEVELS));
   m_levelsPacks.push_back(v_pack);
   for(unsigned int i=0; i<m_levels.size(); i++) {
     if(i_profiles->isLevelCompleted(i_playerName, m_levels[i]->Id()) == false) {
@@ -265,28 +249,28 @@ void LevelsManager::createVirtualPacks(
   }
 
   /* all levels */
-  v_pack = new LevelsPack("~ " + std::string(VPACKAGENAME_ALL_LEVELS));
+  v_pack = new LevelsPack(std::string(VPACKAGENAME_ALL_LEVELS));
   m_levelsPacks.push_back(v_pack);
   for(unsigned int i=0; i<m_levels.size(); i++) {
     v_pack->addLevel(m_levels[i]);
   }
 
   /* favorite levels */
-  v_pack = new LevelsPack("~ " + std::string(VPACKAGENAME_FAVORITE_LEVELS));
+  v_pack = new LevelsPack(std::string(VPACKAGENAME_FAVORITE_LEVELS));
   m_levelsPacks.push_back(v_pack);
   for(unsigned int i=0; i<m_favoriteLevels.size(); i++) {
     v_pack->addLevel(m_favoriteLevels[i]);
   }
 
   /* new levels */
-  v_pack = new LevelsPack("~ " + std::string(VPACKAGENAME_NEW_LEVELS));
+  v_pack = new LevelsPack(std::string(VPACKAGENAME_NEW_LEVELS));
   m_levelsPacks.push_back(v_pack);
   for(unsigned int i=0; i<m_newLevels.size(); i++) {
     v_pack->addLevel(m_newLevels[i]);
   }
 
   /* updated levels */
-  v_pack = new LevelsPack("~ " + std::string(VPACKAGENAME_UPDATED_LEVELS));
+  v_pack = new LevelsPack(std::string(VPACKAGENAME_UPDATED_LEVELS));
   m_levelsPacks.push_back(v_pack);
   for(unsigned int i=0; i<m_updatedLevels.size(); i++) {
     v_pack->addLevel(m_updatedLevels[i]);
@@ -645,14 +629,14 @@ void LevelsManager::addToFavorite(Level *i_level) {
     }
   }
   m_favoriteLevels.push_back(i_level);
-  LevelsPackByName("~ " + std::string(VPACKAGENAME_FAVORITE_LEVELS)).addLevel(i_level);
+  LevelsPackByName(std::string(VPACKAGENAME_FAVORITE_LEVELS)).addLevel(i_level);
 }
 
 void LevelsManager::delFromFavorite(Level *i_level) {
   for(int i=0; i<m_favoriteLevels.size(); i++) {
     if(m_favoriteLevels[i] == i_level) {
       m_favoriteLevels.erase(m_favoriteLevels.begin() + i);
-      LevelsPackByName("~ " + std::string(VPACKAGENAME_FAVORITE_LEVELS)).removeLevel(i_level);
+      LevelsPackByName(std::string(VPACKAGENAME_FAVORITE_LEVELS)).removeLevel(i_level);
       return;
     }
   }

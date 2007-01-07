@@ -632,6 +632,8 @@ namespace vapp {
       void setSort(bool bSort, int(*f)(void *pvUser1, void *pvUser2) = NULL);
       void setNumeroted(bool bNumeroted);
 
+      void randomize();
+
       bool isClicked(void);
       void setClicked(bool b);
 

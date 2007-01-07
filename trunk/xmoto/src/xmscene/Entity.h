@@ -81,7 +81,6 @@ class Entity {
   void setSpeciality(EntitySpeciality i_speciality);
 
   virtual bool updateToTime(float i_time, Vector2f i_gravity);
-  virtual void clearAfterRewind();
 
  private:
   std::string m_id;              /** Its own identifer */
@@ -105,7 +104,6 @@ class ParticlesSource : public Entity {
   virtual void loadToPlay();
   virtual void unloadToPlay();
   virtual bool updateToTime(float i_time, Vector2f i_gravity);
-  virtual void clearAfterRewind();
   void addParticle(Vector2f i_velocity, float i_killTime);
   virtual void addParticle(Vector2f i_velocity, float i_killTime, std::string i_spriteName) = 0;
   std::vector<EntityParticle *> &Particles();
@@ -115,7 +113,7 @@ class ParticlesSource : public Entity {
   std::vector<EntityParticle *> m_particles;
 
  private:
-  float       m_nextParticleTime;
+  float       m_lastParticleTime;
   float       m_particleTime_increment;
 
   void deleteParticles();

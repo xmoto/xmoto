@@ -61,7 +61,7 @@ namespace vapp {
   Update levels lists - must be done after each completed level
   ===========================================================================*/
   void GameApp::_UpdateLevelLists(void) {
-    _CreateLevelLists((UILevelList *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:ALLLEVELS_TAB:ALLLEVELS_LIST"), std::string("~ ") + VPACKAGENAME_FAVORITE_LEVELS);
+    _CreateLevelLists((UILevelList *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:ALLLEVELS_TAB:ALLLEVELS_LIST"), VPACKAGENAME_FAVORITE_LEVELS);
 
   }
 
@@ -687,7 +687,6 @@ namespace vapp {
           case SDLK_LEFT:
             /* Left arrow key: rewind */
               if(_IsReplayScripted(m_pReplay) == false) {
-    m_MotoGame.getLevelSrc()->clearAfterRewind();
                 m_pReplay->fastrewind(1);
               }
             break;
