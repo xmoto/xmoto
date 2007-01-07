@@ -13,7 +13,6 @@ for 0.2.5
   Here is an article that might be of good use http://www.gamedev.net/reference/articles/article2240.asp)
   I would also like to define the max amound of memory that may be used by the system. if this limit is reachted
   leat recently used images must be throws away
-* keesj:Do not clear the screen if we are going to render the sky anyway. A few % gain here
 * keesj:SDL_gfx? cache static bloks of the minimap as image
 * keesj:create a on screen input system for text
 * keesj:create sensititive area's on the screen for gameplay

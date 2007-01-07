@@ -1,3 +1,5 @@
+* keesj:Do not clear the screen if we are going to render the sky anyway. A few % gain here
+
 Since 0.2.4
 * bug : replays cache does'nt really cache
 * BUG : qd tu joues a un niveau, et que tu mets en pause avec esc, (et que la
