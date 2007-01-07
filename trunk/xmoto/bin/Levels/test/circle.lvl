@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<level id="circle" rversion="0.2.0">
+<level id="bug2" rversion="0.2.0">
 	<info>
-		<name>Circle</name>
-		<description></description>
-		<author></author>
-		<date></date>
+		<name>MASTERKUD Kagada Bien Hecha</name>
+		<description>Suerte, Whaaaaaaaaaaaaat</description>
+		<author>Kud</author>
+		<date>2006-11-14</date>
 		<sky>sky1</sky>
 	</info>
 	<script>
 	BlockRotation1 = 0
 	function OnLoad()
+
 	Game.SetBlockCenter("bloque0", 53, -84)
-        Game.SetBlockPos("bloque0", -74, 106)
-        Game.MoveBlock("bloque0", 1, 0)
+        Game.SetBlockPos("bloque0", -22, 22)
+	Game.MoveBlock("bloque0", 1, 0)
 	return true
 	end
 
