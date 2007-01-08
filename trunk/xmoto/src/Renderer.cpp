@@ -1150,9 +1150,9 @@ namespace vapp {
         } else {
 #endif
           for(int j=0;j<m_Geoms[i]->Polys.size();j++) {          
+	    getParent()->getDrawLib()->setTexture(m_Geoms[i]->pTexture,BLEND_MODE_NONE);
 	    getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
 	    getParent()->getDrawLib()->setColorRGB(255,255,255);
-	    getParent()->getDrawLib()->setTexture(m_Geoms[i]->pTexture,BLEND_MODE_NONE);
             for(int k=0;k<m_Geoms[i]->Polys[j]->nNumVertices;k++) {
               getParent()->getDrawLib()->glTexCoord(m_Geoms[i]->Polys[j]->pTexCoords[k].x,
                            m_Geoms[i]->Polys[j]->pTexCoords[k].y);
