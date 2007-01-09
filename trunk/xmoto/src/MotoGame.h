@@ -223,6 +223,7 @@ namespace vapp {
 
       /* action for events */
       void SetEntityPos(String pEntityID, float pX, float pY);
+      void SetEntityPos(Entity* pEntity,  float pX, float pY);
       void PlaceInGameArrow(float pX, float pY, float pAngle);
       void PlaceScreenArrow(float pX, float pY, float pAngle);
       void HideArrow();
@@ -251,10 +252,14 @@ namespace vapp {
 
       void setBodyDetach(bool state);
 
+      /* added=added to m_touching */
+      /* removed=removed from m_touching */
+      typedef enum {none, added, removed} touch;
+
       bool isTouching(const Entity& i_entity) const;
-      void setTouching(Entity& i_entity, bool i_touching);     
+      touch setTouching(Entity& i_entity, bool i_touching);     
       bool isTouching(const Zone& i_zone) const;
-      void setTouching(Zone& i_zone, bool i_isTouching);
+      touch setTouching(Zone& i_zone, bool i_isTouching);
 
   private:         
       /* Data */

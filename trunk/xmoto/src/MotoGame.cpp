@@ -961,22 +961,24 @@ namespace vapp {
     return false;
   }
 
-  void MotoGame::setTouching(Entity& i_entity, bool i_touching) {
+  MotoGame::touch MotoGame::setTouching(Entity& i_entity, bool i_touching) {
     bool v_wasTouching = isTouching(i_entity);
     if(v_wasTouching == i_touching) {
-      return;
+      return none;
     }
 
     if(i_touching) {
       m_entitiesTouching.push_back(&i_entity);
+      return added;
     } else {
       for(int i=0; i<m_entitiesTouching.size(); i++) {
         if(m_entitiesTouching[i] == &i_entity) {
           m_entitiesTouching.erase(m_entitiesTouching.begin() + i);
-          return;
+          return removed;
         }
       }
     }
+    return none;
   }
 
   
@@ -992,17 +994,15 @@ namespace vapp {
       if(pZone->doesCircleTouch(m_BikeS.FrontWheelP, m_BikeS.Parameters().WheelRadius()) ||
          pZone->doesCircleTouch(m_BikeS.RearWheelP,  m_BikeS.Parameters().WheelRadius())) {       
         /* In the zone -- did he just enter it? */
-        if(isTouching(*pZone) == false) {
+        if(setTouching(*pZone, true) == added){
           createGameEvent(new MGE_PlayerEntersZone(getTime(), pZone));
-          setTouching(*pZone, true);
         }
       }         
       else {
         /* Not in the zone... but was he during last update? - i.e. has 
            he just left it? */      
-        if(isTouching(*pZone)) {
+        if(setTouching(*pZone, false) == removed){
           createGameEvent(new MGE_PlayerLeavesZone(getTime(), pZone));
-          setTouching(*pZone, false);
         }
       }
     }
@@ -1019,11 +1019,10 @@ namespace vapp {
                              m_pLevelSrc->Entities()[i]->Size(),
                              HeadPos,
                              m_BikeS.Parameters().HeadSize())) {
-        if(isTouching(*(m_pLevelSrc->Entities()[i])) == false) {
+        if(setTouching(*(m_pLevelSrc->Entities()[i]), true) == added){
           createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
                                                       m_pLevelSrc->Entities()[i]->Id(),
                                                       true));
-          setTouching(*(m_pLevelSrc->Entities()[i]), true);
         }
         
         /* Wheel then ? */
@@ -1035,22 +1034,21 @@ namespace vapp {
                                     m_pLevelSrc->Entities()[i]->Size(),
                                     m_BikeS.RearWheelP,
                                     m_BikeS.Parameters().WheelRadius())) {
-        if(isTouching(*(m_pLevelSrc->Entities()[i])) == false) {
+        if(setTouching(*(m_pLevelSrc->Entities()[i]), true) == added){
           createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
                                                       m_pLevelSrc->Entities()[i]->Id(),
                                                       false));
-          setTouching(*(m_pLevelSrc->Entities()[i]), true);
         }
         
         /* body then ?*/
       } else if(touchEntityBodyExceptHead(m_BikeS, *(m_pLevelSrc->Entities()[i]))) {
-        if(isTouching(*(m_pLevelSrc->Entities()[i])) == false) {
+        if(setTouching(*(m_pLevelSrc->Entities()[i]), true) == added){
           createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
                                                       m_pLevelSrc->Entities()[i]->Id(),
                                                       false));
-          setTouching(*(m_pLevelSrc->Entities()[i]), true);
         }
       } else {
+	/* TODO::generate an event leaves entity */
         setTouching(*(m_pLevelSrc->Entities()[i]), false);
       }
     }
@@ -1066,22 +1064,24 @@ namespace vapp {
     return false;
   }
 
-  void MotoGame::setTouching(Zone& i_zone, bool i_isTouching) {
+  MotoGame::touch MotoGame::setTouching(Zone& i_zone, bool i_isTouching) {
     bool v_wasTouching = isTouching(i_zone);
     if(v_wasTouching == i_isTouching) {
-      return;
+      return none;
     }
     
     if(i_isTouching) {
       m_zonesTouching.push_back(&i_zone);
+      return added;
     } else {
       for(int i=0; i<m_zonesTouching.size(); i++) {
         if(m_zonesTouching[i] == &i_zone) {
           m_zonesTouching.erase(m_zonesTouching.begin() + i);
-          return;
+          return removed;
         }
       }
     }
+    return none;
   }
   
   /*===========================================================================
@@ -1245,7 +1245,12 @@ namespace vapp {
   }
 
   void MotoGame::SetEntityPos(String pEntityID, float pX, float pY) {
-    m_pLevelSrc->getEntityById(pEntityID).setDynamicPosition(Vector2f(pX, pY));
+    SetEntityPos(&(m_pLevelSrc->getEntityById(pEntityID)),
+		 pX, pY);
+  }
+
+  void MotoGame::SetEntityPos(Entity *pEntity, float pX, float pY) {
+    pEntity->setDynamicPosition(Vector2f(pX, pY));
   }
 
   void MotoGame::PlaceInGameArrow(float pX, float pY, float pAngle) {
@@ -1270,7 +1275,7 @@ namespace vapp {
   }
   
   void MotoGame::SetBlockPos(String pBlockID, float pX, float pY) {
-    m_pLevelSrc->getBlockById(pBlockID).setDynamicPositionAccordingToCenter(Vector2f(pX, pY));
+    m_pLevelSrc->getBlockById(pBlockID).setDynamicPosition(Vector2f(pX, pY));
   }
   
   void MotoGame::SetBlockCenter(String pBlockID, float pX, float pY) {
