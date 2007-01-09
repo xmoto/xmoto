@@ -482,6 +482,30 @@ namespace vapp {
     }
   }  
   
+  void GameApp::PlaySpecificLevel(std::string i_level) {
+    m_PlaySpecificLevel = i_level;
+          
+    /* If it is a plain number, it's for a internal level */
+    bool v_isANumber =  true;
+    for(int i=0; i<m_PlaySpecificLevel.length(); i++) {
+      if(m_PlaySpecificLevel[i] < '0' || m_PlaySpecificLevel[i] > '9') {
+	v_isANumber = false;
+      }
+    }
+    if(v_isANumber) {
+      int nNum = atoi(m_PlaySpecificLevel.c_str());
+      if(nNum > 0) {
+	char cBuf[256];
+	sprintf(cBuf,"_iL%02d_",nNum-1);
+	m_PlaySpecificLevel = cBuf;
+      }
+    }
+  }
+
+  void GameApp::PlaySpecificReplay(std::string i_replay) {
+    m_PlaySpecificReplay = i_replay;
+  }
+
   /*===========================================================================
   Handle a command-line passed argument
   ===========================================================================*/
@@ -490,7 +514,7 @@ namespace vapp {
     for(int i=0;i<UserArgs.size();i++) {
       if(UserArgs[i] == "-replay") {
         if(i+1<UserArgs.size()) {
-          m_PlaySpecificReplay = UserArgs[i+1];
+          PlaySpecificReplay(UserArgs[i+1]);
         }
         else
           throw SyntaxError("no replay specified");        
@@ -498,26 +522,9 @@ namespace vapp {
       }
       else if(UserArgs[i] == "-level") {
         if(i+1<UserArgs.size()) {
-          m_PlaySpecificLevel = UserArgs[i+1];
-          
-          /* If it is a plain number, it's for a internal level */
-    bool v_isANumber =  true;
-    for(int i=0; i<m_PlaySpecificLevel.length(); i++) {
-      if(m_PlaySpecificLevel[i] < '0' || m_PlaySpecificLevel[i] > '9') {
-        v_isANumber = false;
-      }
-    }
-    if(v_isANumber) {
-      int nNum = atoi(m_PlaySpecificLevel.c_str());
-      if(nNum > 0) {
-        char cBuf[256];
-        sprintf(cBuf,"_iL%02d_",nNum-1);
-        m_PlaySpecificLevel = cBuf;
-      }
-    }
-        }
-        else
-          throw SyntaxError("no level specified");        
+	  PlaySpecificLevel(UserArgs[i+1]);
+        } else
+	throw SyntaxError("no level specified");        
         i++;
       }
       else if(UserArgs[i] == "-debug") {
@@ -571,7 +578,26 @@ namespace vapp {
        throw SyntaxError("no replay specified");        
        i++;
      } else {
-       throw SyntaxError("Invalid argument");
+       /* check if the parameter is a file */
+       if(FS::fileExists(UserArgs[i])) {
+	 std::string v_extension = FS::getFileExtension(UserArgs[i]);
+
+	 if(v_extension == "rpl") {
+	   /* replays */
+	   PlaySpecificReplay(UserArgs[i]);
+	   
+	 //} else if(v_extension == "lvl") {
+	 ///* levels */
+	 //PlaySpecificLevel(UserArgs[i]);
+	   
+	 } else {
+	   /* unknown extension */
+	   throw SyntaxError("Invalid argument");
+	 }
+
+       } else {
+	 throw SyntaxError("Invalid argument");
+       }
      }
     }
   }

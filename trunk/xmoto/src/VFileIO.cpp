@@ -778,6 +778,13 @@ namespace vapp {
     return FName.substr(0,n);
   }
 
+  std::string FS::getFileExtension(std::string Path) {
+    int n;
+    n = Path.find_last_of(".");
+    if(n<0) return "";
+    return Path.substr(n+1, Path.length() - n - 1);
+  }
+
   /*=========================================================================== 
   Find out how old this file thing is... (physical file system only)
   ===========================================================================*/

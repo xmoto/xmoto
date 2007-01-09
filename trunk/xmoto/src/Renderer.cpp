@@ -981,17 +981,13 @@ namespace vapp {
 
       if(v_spriteType != NULL) {
         /* Draw it */
-        Vector2f p0,p1,p2,p3;
+				Vector2f p0,p1,p2,p3;
         
-        p0 = Vector2f(pSprite->DynamicPosition().x,pSprite->DynamicPosition().y) +
-          Vector2f(-v_centerX,-v_centerY);
-        p1 = Vector2f(pSprite->DynamicPosition().x+v_width,pSprite->DynamicPosition().y) +
-          Vector2f(-v_centerX,-v_centerY);
-        p2 = Vector2f(pSprite->DynamicPosition().x+v_width,pSprite->DynamicPosition().y+v_height) +
-          Vector2f(-v_centerX,-v_centerY);
-        p3 = Vector2f(pSprite->DynamicPosition().x,pSprite->DynamicPosition().y+v_height) +
-          Vector2f(-v_centerX,-v_centerY);
-        
+				p0 = Vector2f(pSprite->DynamicPosition().x          , pSprite->DynamicPosition().y            ) + Vector2f(-v_centerX,-v_centerY);
+				p1 = Vector2f(pSprite->DynamicPosition().x + v_width, pSprite->DynamicPosition().y            ) + Vector2f(-v_centerX,-v_centerY);
+				p2 = Vector2f(pSprite->DynamicPosition().x + v_width, pSprite->DynamicPosition().y  + v_height) + Vector2f(-v_centerX,-v_centerY);
+				p3 = Vector2f(pSprite->DynamicPosition().x          , pSprite->DynamicPosition().y  + v_height) + Vector2f(-v_centerX,-v_centerY);
+
         if(v_spriteType->getBlendMode() == SPRITE_BLENDMODE_ADDITIVE) {
           _RenderAdditiveBlendedSection(v_spriteType->getTexture(),p0,p1,p2,p3);      
         }

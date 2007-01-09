@@ -81,7 +81,8 @@ Block::Block(std::string i_id) {
   m_grip             = XM_DEFAULT_PHYS_BLOCK_GRIP;
   m_dynamicPosition  = m_initialPosition;
   m_dynamicRotation  = m_initialRotation;
-  m_dynamicRotationCenter = m_dynamicPosition;
+  m_dynamicRotationCenter = Vector2f(0.0, 0.0);
+  m_dynamicPositionCenter = Vector2f(0.0, 0.0);
   m_texture          = XM_DEFAULT_BLOCK_TEXTURE;
 }
 
@@ -104,10 +105,15 @@ Block::~Block() {
 
 void Block::setCenter(const Vector2f& i_center) {
   m_dynamicRotationCenter = i_center;
+  m_dynamicPositionCenter = i_center;
 }
 
 Vector2f Block::DynamicRotationCenter() const {
   return m_dynamicRotationCenter;
+}
+
+Vector2f Block::DynamicPositionCenter() const {
+  return m_dynamicPositionCenter;
 }
 
 float Block::DynamicRotation() const {
@@ -160,6 +166,11 @@ void Block::setDynamicPosition(const Vector2f& i_dynamicPosition) {
   updateCollisionLines();
 }
 
+void Block::setDynamicPositionAccordingToCenter(const Vector2f& i_dynamicPosition) {
+  m_dynamicPosition = i_dynamicPosition - m_dynamicPositionCenter;
+  updateCollisionLines();
+}
+
 void Block::setDynamicRotation(float i_dynamicRotation) {
   m_dynamicRotation = i_dynamicRotation;
   updateCollisionLines();
@@ -169,7 +180,8 @@ int Block::loadToPlay(vapp::CollisionSystem& io_collisionSystem) {
 
   m_dynamicPosition       = m_initialPosition;
   m_dynamicRotation       = m_initialRotation;
-  m_dynamicRotationCenter = m_dynamicPosition;
+  m_dynamicRotationCenter = Vector2f(0.0, 0.0);
+  m_dynamicPositionCenter = Vector2f(0.0, 0.0);
 
   /* Do the "convexifying" the BSP-way. It might be overkill, but we'll
      probably appreciate it when the input data is very complex. It'll also 

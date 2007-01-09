@@ -154,7 +154,8 @@ namespace vapp {
       /* File name mangling */
       static std::string getFileDir(std::string Path);
       static std::string getFileBaseName(std::string Path);
-      
+      static std::string getFileExtension(std::string Path);      
+
       /* Misc */
       static bool isDir(std::string AppDir);
       static int getFileTimeStamp(const std::string &Path);

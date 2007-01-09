@@ -81,6 +81,7 @@ class Entity {
   void setSpeciality(EntitySpeciality i_speciality);
 
   virtual bool updateToTime(float i_time, Vector2f i_gravity);
+	float Angle() const;
 
  private:
   std::string m_id;              /** Its own identifer */
@@ -94,6 +95,7 @@ class Entity {
   bool        m_doesMakeWin;
   bool        m_isToTake;
   TColor      m_color;
+	float       m_angle;
 };
 
 class ParticlesSource : public Entity {

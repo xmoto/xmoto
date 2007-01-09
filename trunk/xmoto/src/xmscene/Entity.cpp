@@ -34,6 +34,7 @@ Entity::Entity(const std::string& i_id) {
   m_doesKill    = false;
   m_doesMakeWin = false;
   m_isToTake    = false;
+  m_angle       = 0.0;
 }
 
 Entity::~Entity() {
@@ -52,6 +53,10 @@ std::string Entity::Id() const {
 
 float Entity::Size() const {
   return m_size;
+}
+
+float Entity::Angle() const {
+	return m_angle;
 }
 
 bool Entity::IsToTake() const {

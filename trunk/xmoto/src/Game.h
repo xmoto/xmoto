@@ -219,6 +219,9 @@ namespace vapp {
       void setPrePlayAnim(bool pEnabled);
       void reloadTheme();
 
+      void PlaySpecificLevel(std::string i_level);
+      void PlaySpecificReplay(std::string i_replay);
+
       /* Data interface */
       bool isUglyMode() {return m_bUglyMode;}
       bool isTestThemeMode(void) {return m_bTestThemeMode;}

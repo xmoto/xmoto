@@ -1270,7 +1270,7 @@ namespace vapp {
   }
   
   void MotoGame::SetBlockPos(String pBlockID, float pX, float pY) {
-    m_pLevelSrc->getBlockById(pBlockID).setDynamicPosition(Vector2f(pX, pY));
+    m_pLevelSrc->getBlockById(pBlockID).setDynamicPositionAccordingToCenter(Vector2f(pX, pY));
   }
   
   void MotoGame::SetBlockCenter(String pBlockID, float pX, float pY) {

@@ -11,6 +11,9 @@ enormenent...
 * Randomize any pack
 * BUG : particules stays on replays (i broke something, nicolas)
 * BUG : "width" "height" "centerX" "centerY" make them unrequired for sprite decoration
+* remove the sdlGfxTextured option 
+* "play next level" => 'play next level', 'play next level unplayed', 'play next level where your highscore is > than room highscore', 'play next level where your highscore is > than world highscore', 'play next level where your highscore is the best' => related to virtual packages
+* [20:55] <keesj> they have this great idea that you can create levels while walking in the level [20:56] <aspegic500> functions in the scripts to do that => F5 while playing
 
 Since 0.2.2
 * When i update lists sometimes

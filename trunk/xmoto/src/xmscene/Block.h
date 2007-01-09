@@ -97,6 +97,7 @@ class Block {
   Vector2f DynamicPosition() const;
   float DynamicRotation() const;
   Vector2f DynamicRotationCenter() const;
+  Vector2f DynamicPositionCenter() const;
   bool isBackground() const;
   bool isDynamic() const;
   float Grip() const;
@@ -112,7 +113,13 @@ class Block {
   void setGrip(float i_grip);
   void setCenter(const Vector2f& i_center);
 
+	/* position where to display ; do not consider block center */
   void setDynamicPosition(const Vector2f& i_dynamicPosition);
+
+	/* postion where to display - the center */
+  void setDynamicPositionAccordingToCenter(const Vector2f& i_dynamicPosition);
+
+	/* angle position ; consider of the block center */
   void setDynamicRotation(float i_dynamicRotation);
 
   int loadToPlay(vapp::CollisionSystem& io_collisionSystem); /* load for playing */
@@ -140,6 +147,7 @@ private:
   /* properties for dynamic */
   float m_dynamicRotation;  /* Block rotation */
   Vector2f m_dynamicRotationCenter;
+  Vector2f m_dynamicPositionCenter;
   Vector2f m_dynamicPosition; /* Block position */
   std::vector<vapp::Line *> m_collisionLines; /* Line to collide against */
 

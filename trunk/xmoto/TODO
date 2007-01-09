@@ -1,11 +1,18 @@
 for 0.2.5
+
+Assigned to nicolas
+* ajouter un param au sprite pour indiquer son sens idem pour un edge.
+* F5 don't fully reload the levels from sources
 * BUG : xmoto -replay bugs/onMacWontWork.rpl when you press forward on
    this scripted level, the elevator at the correct position
-* when are texure is rotated we need to copy the texture mutplile times so it's always visible
-* it seems that there is a bug on speed it is played (if i play
-   replays done on fast machine, it appear faster) http://xmoto.free.fr/replays/replay_1312.rpl
+* FEATURE : * xmoto toto.lvl to play directly a level
+* it seems that there is a bug on speed it is played (if i play replays done on fast machine, it appear faster) http://xmoto.free.fr/replays/replay_1312.rpl
 * add a tag in the .lvl to choose the border texture
-* xmoto toto.lvl to play directly a level
+* feature : a replay button when you finish a level (or die) which plays Latest.rpl
+
+* when are texure is rotated we need to copy the texture mutplile times so it's always visible
+* F5 while developping a level, if the level is scripted, it could
+   crash it and required a full F5 at the menu stage
 ========
 
 * keesj:real caching strategy, currently the SDL_gfx chooses to caches based on expected size of the image
@@ -17,13 +24,11 @@ for 0.2.5
 * keesj:create a on screen input system for text
 * keesj:create sensititive area's on the screen for gameplay
    -on the nokia 770 it is pretty easy to 
-* keesj:remove the sdlGfxTextured option 
 * keesj:test the SDL_gfx version on windows/mac
 * keesj:the SDL_gfx version currently caches a lot of images . this will eventualy become to much. this is why we need a LRU hash table. 
 * keesj:graphings ,showing graphs on the screen about fps/memory usage etc
 * keesj:faster startup , smart caching etc system must run under 64 MB :)
 * keesj:define code conventions,testing procedures,release-roadbook
-
 
 * FEATURE : windows : there's some win32 API calls that can be made to determine the application data dir
 
@@ -44,7 +49,6 @@ render entity by Z
 render blocks by Z
 
 [13:25] <gaivota> aspegic500: I found a bug which is the following: when letting xmoto running without doing anything for some time the game crashes, althoug it keeps running
-[13:26] <aspegic500> i must go,
 [13:26] <gaivota> atm it shows a blank black screen, once before it diplayed the menu althoug the ingame was running and similar strange behaviour
 
 * associate F8 to the -nowww switch (enable/disable network)
@@ -57,8 +61,6 @@ one has just finished the level. The ``abort'' one should be rather
 ``quit level'' or something like that.
 
 ===========
-* "play next level" => 'play next level', 'play next level unplayed', 'play next level where your highscore is > than room highscore', 'play next level where your highscore is > than world highscore', 'play next level where your highscore is the best'
-* replay button when you finish a level (to replay the level just done)
 * BUG : is it normal ?
         C.x=(getParent()->getDispWidth() * pArrow->ArrowPointerPos.x) / 800.0f;
         C.y=(getParent()->getDispHeight() * pArrow->ArrowPointerPos.y)
@@ -145,8 +147,6 @@ zone2b = {}
 * BUG : when you see level info in level pack ; then you click on ok
    -> it close the window and the levelpack window
 * loadness of headcrash sound should depend on head velocity 
-* feature : a replay button when you finish a level (or die) which
-   plays Latest.rpl
 * themes : not more animation in .xml ? -> be able to load an animated bike ?
 * to be able to move a zone ?
 * make sound in themes
@@ -166,14 +166,9 @@ zone2b = {}
 * pb for left hand written people for the editor
 * two possibilities to show room : one to see the world highscore, one
    to see you room (optionnal)
-* allow to run : xmoto -level l1.lvl to allow playing a level just by cliking on
-   it (even if it's not in the xmoto dir)
 * display wind
 * a fonction CameraRotate and CameraRotateAdaptToG (script)
 * A SetDynamicBlockRotation function that rotates the vertices about a center point instead of making the block go in circles.
 * a block0.Touch() function
 * network game
 * freestyle mode
-* [20:55] <keesj> they have this great idea that you can create levels
-   while walking in the level
-  [20:56] <aspegic500> functions in the scripts to do that,
