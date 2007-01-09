@@ -2,6 +2,9 @@ for 0.2.5
 
 Assigned to nicolas
 * ajouter un param au sprite pour indiquer son sens idem pour un edge.
+* PAD_5 -> to finish
+* static_cast<uint32_t>(n); for saving files
+* be able to play a music in a level
 * F5 don't fully reload the levels from sources
 * BUG : xmoto -replay bugs/onMacWontWork.rpl when you press forward on
    this scripted level, the elevator at the correct position
