@@ -40,6 +40,7 @@ Level::Level() {
   m_topLimit    = 0.0;
   m_bottomLimit = 0.0;
   m_xmlSource = NULL;
+  m_skyEffect = SKY_EFFECT1;
 }
 
 Level::~Level() {
@@ -428,7 +429,17 @@ void Level::loadXML(void) {
       Tmp = vapp::XML::getElementText(*m_xmlSource, pInfoElem,"sky");
       if(Tmp != "") m_sky = Tmp;
     }
-    
+
+    /* not nice, add something in the tags */
+    if(m_sky == "Sky2") {
+      m_skyEffect = SKY_EFFECT2;
+    } else if(m_sky == "Sky2Drift") {
+      m_skyEffect = SKY_EFFECT2DRIFT;
+    } else {
+      m_skyEffect = SKY_EFFECT1;
+    }
+
+
     /* Get script */
     TiXmlElement *pScriptElem = vapp::XML::findElement(*m_xmlSource, pLevelElem,std::string("script"));
     if(pScriptElem != NULL) {
@@ -691,6 +702,15 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
         m_date = vapp::FS::readString(pfh);
 
         m_sky = vapp::FS::readString(pfh);
+	/* not nice, add something in the tags */
+	if(m_sky == "Sky2") {
+	  m_skyEffect = SKY_EFFECT2;
+	} else if(m_sky == "Sky2Drift") {
+	  m_skyEffect = SKY_EFFECT2DRIFT;
+	} else {
+	  m_skyEffect = SKY_EFFECT1;
+	}
+
         m_scriptFileName = vapp::FS::readString(pfh);
 
         m_leftLimit = vapp::FS::readFloat_LE(pfh);
@@ -963,4 +983,8 @@ void Level::unloadLevelBody() {
 
 void Level::rebuildCache() {
   exportBinary(getNameInCache(), m_checkSum);
+}
+
+SkyEffectType Level::SkyEffect() const {
+  return m_skyEffect;
 }

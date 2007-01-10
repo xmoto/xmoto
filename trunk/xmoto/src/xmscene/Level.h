@@ -75,6 +75,7 @@ class Level {
   float BottomLimit()       const;
   Vector2f PlayerStart()    const;
   std::string Sky()         const;
+  SkyEffectType SkyEffect() const;
   void setLimits(float v_leftLimit, float v_rightLimit, float v_topLimit, float v_bottomLimit);
 
   std::string FileName() const;
@@ -147,6 +148,7 @@ class Level {
   std::vector<Entity *> m_entitiesExterns;
   Entity               *m_startEntity; /* entity where the player start */
   bool m_isBodyLoaded;
+  SkyEffectType m_skyEffect;
 
   void addLimits();
   void exportBinary(const std::string &i_fileName, const std::string& i_sum);

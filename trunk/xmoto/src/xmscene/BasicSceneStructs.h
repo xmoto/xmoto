@@ -46,4 +46,10 @@ enum ZonePrimType {
   LZPT_BOX = 1
 };
 
+enum SkyEffectType {
+  SKY_EFFECT1,
+  SKY_EFFECT2,
+  SKY_EFFECT2DRIFT
+};
+
 #endif /* __BASICSCENESTRUCTS_H__ */

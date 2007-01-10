@@ -1293,7 +1293,12 @@ namespace vapp {
     }
 
     pList->clear();
-       
+
+    // clear the filter
+    UIEdit *pLevelFilterEdit = reinterpret_cast<UIEdit *>(m_pLevelPackViewer->getChild("LEVELPACK_LEVEL_FILTER"));  
+    pLevelFilterEdit->setCaption("");
+    pList->setFilter("");
+  
     /* Obey hints */
     pList->unhideAllColumns();
     if(!m_pActiveLevelPack->ShowTimes()) {

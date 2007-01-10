@@ -1,12 +1,10 @@
-for 0.2.5
 
 Assigned to nicolas
-* sky as a texture
+* sky as a texture : to be finished : a tag in .lvl for effect + x y texture size
 * ajouter un param au sprite pour indiquer son sens idem pour un edge.
 * PAD_5 -> to finish
 * static_cast<uint32_t>(n); for saving files
 * be able to play a music in a level
-* F5 don't fully reload the levels from sources
 * BUG : xmoto -replay bugs/onMacWontWork.rpl when you press forward on
    this scripted level, the elevator at the correct position
 * FEATURE : * xmoto toto.lvl to play directly a level
@@ -17,7 +15,11 @@ Assigned to nicolas
 * when are texure is rotated we need to copy the texture mutplile times so it's always visible
 * F5 while developping a level, if the level is scripted, it could
    crash it and required a full F5 at the menu stage
+
+* BUG : --with-renderer-sdlGfx=0 --with-renderer-openGl=0 => segfault
 ========
+
+* ugly uses misc.png for border : should not
 
 * keesj:real caching strategy, currently the SDL_gfx chooses to caches based on expected size of the image
   We need to implement a real caching strategy, for example a LRU hash table (least recently used hashtable

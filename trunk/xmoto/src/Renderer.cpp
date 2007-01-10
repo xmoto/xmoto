@@ -1212,14 +1212,14 @@ namespace vapp {
   ===========================================================================*/
   void GameRenderer::_RenderSky(void) {
     MotoGame *pGame = getGameObject();
-    EffectSprite* pType;
+    TextureSprite* pType;
 
     /* Render sky - but which? */
-    const std::string &SkyName = pGame->getLevelSrc()->Sky();
-    if(SkyName == "" || SkyName == "sky1") {
-      pType = (EffectSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_EFFECT, "Sky1");
-
-      if(pType != NULL) {
+    pType = (TextureSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_TEXTURE,
+							       pGame->getLevelSrc()->Sky());
+    if(pType != NULL) {
+      switch(pGame->getLevelSrc()->SkyEffect()) {
+      case SKY_EFFECT1:
 	getParent()->getDrawLib()->setTexture(pType->getTexture(),BLEND_MODE_NONE);
 	getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
 	getParent()->getDrawLib()->setColorRGB(255,255,255);
@@ -1232,16 +1232,12 @@ namespace vapp {
         getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015,-getCameraPositionY()*0.015+0.5);
         getParent()->getDrawLib()->glVertexSP(0,getParent()->getDrawLib()->getDispHeight());
 	getParent()->getDrawLib()->endDraw();
-      }   
-    }
-    else if(SkyName == "sky2") {
-      pType = (EffectSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_EFFECT, "Sky2");
-
-      if(pType != NULL) {
+	break;
+      case SKY_EFFECT2:
 	getParent()->getDrawLib()->setTexture(pType->getTexture(),BLEND_MODE_NONE);
 	getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
 	getParent()->getDrawLib()->setColorRGB(255,255,255);
-        getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015,-getCameraPositionY()*0.015);
+	getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015,-getCameraPositionY()*0.015);
         getParent()->getDrawLib()->glVertexSP(0,0);
         getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015+0.65,-getCameraPositionY()*0.015);
         getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),0);
@@ -1250,44 +1246,43 @@ namespace vapp {
         getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015,-getCameraPositionY()*0.015+0.65);
         getParent()->getDrawLib()->glVertexSP(0,getParent()->getDrawLib()->getDispHeight());
 	getParent()->getDrawLib()->endDraw();
+	break;
+      case SKY_EFFECT2DRIFT:
+	getParent()->getDrawLib()->setTexture(pType->getTexture(),BLEND_MODE_A);
+	getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+	getParent()->getDrawLib()->setColorRGBA(128,128,128,128);
+	float fDrift = getParent()->getRealTime() / 25.0f;
+	getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015 + fDrift,-getCameraPositionY()*0.015);
+	getParent()->getDrawLib()->glVertexSP(0,0);
+	getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015+0.65 + fDrift,-getCameraPositionY()*0.015);
+	getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),0);
+	getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015+0.65 + fDrift,-getCameraPositionY()*0.015+0.65);
+	getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),getParent()->getDrawLib()->getDispHeight());
+	getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015 + fDrift,-getCameraPositionY()*0.015+0.65);
+	getParent()->getDrawLib()->glVertexSP(0,getParent()->getDrawLib()->getDispHeight());
+	getParent()->getDrawLib()->endDraw();
+	
+	getParent()->getDrawLib()->setTexture(pType->getTexture(),BLEND_MODE_B);
+	
+	getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+	getParent()->getDrawLib()->setColorRGB(255,128,128);
+	fDrift = getParent()->getRealTime() / 15.0f;
+	getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015 + fDrift,-getCameraPositionY()*0.015);
+	getParent()->getDrawLib()->glVertexSP(0,0);
+	getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015+0.85 + fDrift,-getCameraPositionY()*0.015);
+	getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),0);
+	getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015+0.85 + fDrift,-getCameraPositionY()*0.015+0.85);
+	getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),getParent()->getDrawLib()->getDispHeight());
+	getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015 + fDrift,-getCameraPositionY()*0.015+0.85);
+	getParent()->getDrawLib()->glVertexSP(0,getParent()->getDrawLib()->getDispHeight());
+	getParent()->getDrawLib()->endDraw();
+	
+      }
+    } else {
+      Log(std::string("** Invalid sky " + pGame->getLevelSrc()->Sky()).c_str());
+    } 
+  }
 
-  pType = (EffectSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_EFFECT, "Sky2Drift");
-  if(pType != NULL && m_Quality == GQ_HIGH) {
-
-	  getParent()->getDrawLib()->setTexture(pType->getTexture(),BLEND_MODE_A);
-
-	  getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
-	  getParent()->getDrawLib()->setColorRGBA(128,128,128,128);
-          float fDrift = getParent()->getRealTime() / 25.0f;
-          getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015 + fDrift,-getCameraPositionY()*0.015);
-          getParent()->getDrawLib()->glVertexSP(0,0);
-          getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015+0.65 + fDrift,-getCameraPositionY()*0.015);
-          getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),0);
-          getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015+0.65 + fDrift,-getCameraPositionY()*0.015+0.65);
-          getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),getParent()->getDrawLib()->getDispHeight());
-          getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015 + fDrift,-getCameraPositionY()*0.015+0.65);
-          getParent()->getDrawLib()->glVertexSP(0,getParent()->getDrawLib()->getDispHeight());
-	  getParent()->getDrawLib()->endDraw();
-
-	  getParent()->getDrawLib()->setTexture(pType->getTexture(),BLEND_MODE_B);
-
-	  getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
-	  getParent()->getDrawLib()->setColorRGB(255,128,128);
-          fDrift = getParent()->getRealTime() / 15.0f;
-          getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015 + fDrift,-getCameraPositionY()*0.015);
-          getParent()->getDrawLib()->glVertexSP(0,0);
-          getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015+0.85 + fDrift,-getCameraPositionY()*0.015);
-          getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),0);
-          getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015+0.85 + fDrift,-getCameraPositionY()*0.015+0.85);
-          getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),getParent()->getDrawLib()->getDispHeight());
-          getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015 + fDrift,-getCameraPositionY()*0.015+0.85);
-          getParent()->getDrawLib()->glVertexSP(0,getParent()->getDrawLib()->getDispHeight());
-	  getParent()->getDrawLib()->endDraw();
-
-        }
-      }   
-    }
-  }  
   /*===========================================================================
   And background rendering
   ===========================================================================*/
