@@ -19,6 +19,7 @@ Assigned to nicolas
 * BUG : --with-renderer-sdlGfx=0 --with-renderer-openGl=0 => segfault
 ========
 
+* script : disable a key (brake for example, ...)
 * ugly uses misc.png for border : should not
 
 * keesj:real caching strategy, currently the SDL_gfx chooses to caches based on expected size of the image
