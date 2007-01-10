@@ -1944,7 +1944,7 @@ namespace vapp {
     }
 
     _UpdateLevelPackList();
-    _CreateLevelPackLevelList();
+    _UpdateLevelPackLevelList();
     _UpdateLevelLists();
 
 #if defined(SUPPORT_WEBACCESS)

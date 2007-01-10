@@ -100,6 +100,42 @@ void UILevelList::addLevel(Level *pLevel,
       pEntry->Text.push_back(GAMETEXT_WORLDRECORDNA);
 #endif          
   }
+}  
+
+void UILevelList::updateLevelsInformations(vapp::PlayerProfile *p_player,
+					   vapp::PlayerData *p_profile
+#if defined(SUPPORT_WEBACCESS) 
+					   , WebRoom *p_pWebHighscores
+#endif
+					   ) {
+  Level *pLevel;
+  vapp::UIListEntry *pEntry;
+  vapp::PlayerTimeEntry *pTimeEntry = NULL;
+  
+  for(int i=0; i<getEntries().size(); i++) {
+    pEntry = getEntries()[i];
+    pLevel = static_cast<Level*>(pEntry->pvUser);
+
+    /* Add times to list entry */
+    pTimeEntry = p_profile->getBestPlayerTime(p_player->PlayerName, pLevel->Id());
+    
+    if(pTimeEntry != NULL)
+      pEntry->Text[1] = vapp::App::formatTime(pTimeEntry->fFinishTime);
+    else
+      pEntry->Text[1] = "--:--:--";
+    
+#if defined(SUPPORT_WEBACCESS)
+    if(p_pWebHighscores != NULL) {    
+      WebHighscore *pWH = p_pWebHighscores->getHighscoreFromLevel(pLevel->Id());
+      if(pWH != NULL)
+	pEntry->Text[2] = pWH->getTime();
+      else
+	pEntry->Text[2] = GAMETEXT_WORLDRECORDNA;
+    }
+    else
+     pEntry->Text[2] = GAMETEXT_WORLDRECORDNA;
+#endif     
+  }
 }
 
 

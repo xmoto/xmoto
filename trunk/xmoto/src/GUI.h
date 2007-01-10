@@ -600,7 +600,7 @@ namespace vapp {
   struct UIListEntry {
     std::vector<std::string> Text;
     void *pvUser;
-		bool bShown;
+    bool bShown;
   };
   
   class UIList : public UIWindow {
@@ -649,7 +649,7 @@ namespace vapp {
       bool isChanged(void);
       void setChanged(bool b);
 
-			void setFilter(std::string i_filter);
+      void setFilter(std::string i_filter);
 
     private:
       /* Data */

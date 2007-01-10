@@ -3777,6 +3777,17 @@ namespace vapp {
   }
 #endif
 
+  void GameApp::_UpdateLevelPackLevelList() {
+    UILevelList *pList = (UILevelList *)m_pLevelPackViewer->getChild("LEVELPACK_LEVEL_LIST");    
+
+    /* Update levels informations */
+    pList->updateLevelsInformations(m_pPlayer,
+				    &m_Profiles
+#if defined(SUPPORT_WEBACCESS)
+				    , m_pWebHighscores
+#endif
+				    );
+  }
 
 }
 

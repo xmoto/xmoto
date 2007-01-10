@@ -46,6 +46,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     void hideBestTime();
     void hideRoomBestTime();
+    void updateLevelsInformations(vapp::PlayerProfile *p_player,
+				  vapp::PlayerData *p_profile
+#if defined(SUPPORT_WEBACCESS) 
+				  , WebRoom *p_pWebHighscores
+#endif
+				  );
 
     private:
   };
