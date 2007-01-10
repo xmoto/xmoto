@@ -1058,7 +1058,18 @@ namespace vapp {
     pLevelPackPlay->setID("LEVELPACK_PLAY_BUTTON");
     pLevelPackPlay->setContextHelp(CONTEXTHELP_PLAY_SELECTED_LEVEL);
 
-    UILevelList *pLevelPackLevelList = new UILevelList(m_pLevelPackViewer,20,50,"",400,430);
+    pSomeText = new UIStatic(m_pLevelPackViewer, 20, 70, std::string(GAMETEXT_FILTER) + ":", 90, 25);
+    pSomeText->setFont(m_Renderer.getSmallFont());
+    pSomeText->setHAlign(UI_ALIGN_RIGHT);
+    UIEdit *pLevelFilterEdit = new UIEdit(m_pLevelPackViewer,
+																					120,
+																					70,
+																					"",200,25);
+    pLevelFilterEdit->setFont(m_Renderer.getSmallFont());
+    pLevelFilterEdit->setID("LEVELPACK_LEVEL_FILTER");
+    pLevelFilterEdit->setContextHelp(CONTEXTHELP_LEVEL_FILTER);
+
+    UILevelList *pLevelPackLevelList = new UILevelList(m_pLevelPackViewer,20,100,"",400, 380);
     pLevelPackLevelList->setFont(m_Renderer.getSmallFont());
     pLevelPackLevelList->setContextHelp(CONTEXTHELP_SELECT_LEVEL_IN_LEVEL_PACK);
     pLevelPackLevelList->setID("LEVELPACK_LEVEL_LIST");
@@ -1319,7 +1330,7 @@ namespace vapp {
           break;
         }
       }
-      pList->setSelected(nLevel);
+      pList->setRealSelected(nLevel);
     }
   }
   
@@ -1494,7 +1505,7 @@ namespace vapp {
           break;
         }
       }
-      pList->setSelected(nPack);
+      pList->setRealSelected(nPack);
     }
   }
   
@@ -1734,7 +1745,16 @@ namespace vapp {
     UIButton *pLevelAddToFavoriteButton = reinterpret_cast<UIButton *>(m_pLevelPackViewer->getChild("LEVELPACK_ADDTOFAVORITE_BUTTON"));
     UIButton *pLevelRandomizeButton = reinterpret_cast<UIButton *>(m_pLevelPackViewer->getChild("LEVELPACK_RANDOMIZE_BUTTON"));
     UILevelList *pList = (UILevelList *)m_pLevelPackViewer->getChild("LEVELPACK_LEVEL_LIST");
-    
+		UIEdit *pLevelFilterEdit = reinterpret_cast<UIEdit *>(m_pLevelPackViewer->getChild("LEVELPACK_LEVEL_FILTER"));   
+
+		/* check filter */
+		if(pLevelFilterEdit != NULL) {
+			if(pLevelFilterEdit->hasChanged()) {
+				pLevelFilterEdit->setHasChanged(false);
+				pList->setFilter(pLevelFilterEdit->getCaption());
+			}
+		}
+
     /* Check buttons */
     if(pCancelButton!=NULL && pCancelButton->isClicked()) {
       pCancelButton->setClicked(false);
@@ -2025,7 +2045,7 @@ namespace vapp {
               }
               
               m_Profiles.destroyProfile(pEntry->Text[0]);
-              pList->setSelected(0);
+              pList->setRealSelected(0);
 
               if(bSelNew) {
                 m_pPlayer = m_Profiles.getProfile(pEntry->Text[0]);
@@ -2950,7 +2970,7 @@ namespace vapp {
       /* Add all player profiles to it */
       for(int i=0;i<m_Profiles.getProfiles().size();i++) {
         if(m_pPlayer != NULL && m_pPlayer->PlayerName == m_Profiles.getProfiles()[i]->PlayerName)
-          pList->setSelected(i);
+          pList->setRealSelected(i);
       
         pList->addEntry(m_Profiles.getProfiles()[i]->PlayerName);
       }
@@ -3049,7 +3069,7 @@ namespace vapp {
           break;
         }
       }
-      pAllLevels->setSelected(nLevel);
+      pAllLevels->setRealSelected(nLevel);
     }
   }
 
@@ -3094,7 +3114,7 @@ namespace vapp {
           break;
         }
       }
-      pList->setSelected(nTheme);
+      pList->setRealSelected(nTheme);
     }
 
   }
@@ -3131,7 +3151,7 @@ namespace vapp {
           break;
         }
       }
-      pList->setSelected(nRoom);
+      pList->setRealSelected(nRoom);
     }
   }
 
@@ -3244,7 +3264,7 @@ namespace vapp {
     for(int i=0; i<pRoomsList->getEntries().size(); i++) {
       WebRoomInfos* v_wri = (WebRoomInfos*)(pRoomsList->getEntries()[i]->pvUser);
       if(v_wri->getId() == v_room_id) {
-	pRoomsList->setSelected(i);
+	pRoomsList->setRealSelected(i);
 	break;
       }
     }
@@ -3272,10 +3292,10 @@ namespace vapp {
     }
     if(nGSMode < 0) {
       /* TODO: warning */
-      pGhostStrategy->setSelected(0);
+      pGhostStrategy->setRealSelected(0);
     }
     else {
-      pGhostStrategy->setSelected(nGSMode);
+      pGhostStrategy->setRealSelected(nGSMode);
     }  
 #endif
 
@@ -3294,7 +3314,7 @@ namespace vapp {
         break;
       }
     }
-    pThemeList->setSelected(nTheme);
+    pThemeList->setRealSelected(nTheme);
 
     pEnableAudioButton->setChecked(m_Config.getBool("AudioEnable"));
 
@@ -3354,10 +3374,10 @@ namespace vapp {
     }
     if(nMode < 0) {
       /* TODO: warning */
-      pResList->setSelected(0);
+      pResList->setRealSelected(0);
     }
     else {
-      pResList->setSelected(nMode);
+      pResList->setRealSelected(nMode);
     }      
     
     /* Controls */
@@ -3575,7 +3595,7 @@ namespace vapp {
     for(int i=0; i<pRoomsList->getEntries().size(); i++) {
       WebRoomInfos* v_wri = (WebRoomInfos*)(pRoomsList->getEntries()[i]->pvUser);
       if(v_wri->getId() == v_room_id) {
-	pRoomsList->setSelected(i);
+	pRoomsList->setRealSelected(i);
 	break;
       }
     }

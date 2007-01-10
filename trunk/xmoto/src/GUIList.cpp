@@ -89,11 +89,11 @@ namespace vapp {
   int UIList::ScrollBarScrollerHeight() {
     float v_visible = LinesHeight() / ((float) RowHeight());
 
-    if(v_visible >= ((float)m_Entries.size())) {
+    if(v_visible >= ((float)m_Entries.size() - m_filteredItems)) {
       return ScrollBarBarHeight();
     }
 
-    return v_visible / ((float)m_Entries.size()) * ((float) ScrollBarBarHeight());
+    return v_visible / ((float)m_Entries.size() - m_filteredItems) * ((float) ScrollBarBarHeight());
   }
 
   int UIList::ScrollBarScrollerStartX() {
@@ -103,21 +103,21 @@ namespace vapp {
   int UIList::ScrollBarScrollerStartY() {
     float v_visible = ScrollNbVisibleItems();
 
-    if(v_visible >= ((float)m_Entries.size())) {
+    if(v_visible >= ((float)m_Entries.size() - m_filteredItems)) {
       return ScrollBarArrowHeight() + LineMargeY();
     }
 
-    return LineMargeY() + ScrollBarArrowHeight() + (((float)-m_nScroll)/((float)RowHeight()) / ((float)m_Entries.size()) * ((float) ScrollBarBarHeight()));
+    return LineMargeY() + ScrollBarArrowHeight() + (((float)-m_nScroll)/((float)RowHeight()) / ((float)m_Entries.size() - m_filteredItems) * ((float) ScrollBarBarHeight()));
   }
 
   void UIList::setScrollBarScrollerStartY(float y) {
     float v_visible = ScrollNbVisibleItems();
 
-    if(v_visible >= ((float)m_Entries.size())) {
+    if(v_visible >= ((float)m_Entries.size() - m_filteredItems)) {
       return;
     }
 
-    _Scroll(-m_nScroll + ((-y + LineMargeY() + ScrollBarArrowHeight() + ScrollBarScrollerHeight()/2.0) * ((float)RowHeight()) * ((float)m_Entries.size()) / ((float) ScrollBarBarHeight())));
+    _Scroll(-m_nScroll + ((-y + LineMargeY() + ScrollBarArrowHeight() + ScrollBarScrollerHeight()/2.0) * ((float)RowHeight()) * ((float)m_Entries.size() - m_filteredItems) / ((float) ScrollBarBarHeight())));
   }
 
   float UIList::ScrollNbVisibleItems() {
@@ -127,7 +127,8 @@ namespace vapp {
   UIList::UIList(UIWindow *pParent, int x, int y, std::string Caption, int nWidth, int nHeight) {      
     initW(pParent,x,y,Caption,nWidth,nHeight);        
     m_nScroll = 0;
-    m_nSelected = 0;
+    m_nRealSelected = 0;
+    m_nVisibleSelected = 0;
     m_pEnterButton = NULL;
     m_bSort = false;
     m_fsort = NULL;
@@ -150,6 +151,8 @@ namespace vapp {
     m_scrollBarArrowHeight = 20;
     /* **** */
 
+		m_filteredItems = 0;
+
     unhideAllColumns();
   }      
   
@@ -166,7 +169,7 @@ namespace vapp {
   }
   
   int UIList::getSelected(void) {
-    return m_nSelected;
+    return m_nRealSelected;
   }
 
   void UIList::addColumn(std::string Title, int nWidth, const std::string &Help) {
@@ -317,98 +320,106 @@ namespace vapp {
       putElem(m_lineMargeX+LinesWidth(),6,20,20,UI_ELEM_SCROLLBUTTON_UP_DOWN,false);
     }
     else
-      putElem(m_lineMargeX+LinesWidth(),6,20,20,UI_ELEM_SCROLLBUTTON_UP_UP,false);
+		putElem(m_lineMargeX+LinesWidth(),6,20,20,UI_ELEM_SCROLLBUTTON_UP_UP,false);
       
     if(m_bScrollDownPressed && m_bScrollDownHover) {
       putElem(m_lineMargeX+LinesWidth(),LinesStartY()+LinesHeight()-20,20,20,UI_ELEM_SCROLLBUTTON_DOWN_DOWN,false);
     }
     else
-      putElem(m_lineMargeX+LinesWidth(),LinesStartY()+LinesHeight()-20,20,20,UI_ELEM_SCROLLBUTTON_DOWN_UP,false);    
+		putElem(m_lineMargeX+LinesWidth(),LinesStartY()+LinesHeight()-20,20,20,UI_ELEM_SCROLLBUTTON_DOWN_UP,false);    
 
     /* scroll */
     putRect(ScrollBarScrollerStartX() + 2, ScrollBarScrollerStartY(),
-	    ScrollBarScrollerWidth() - 4, ScrollBarScrollerHeight(),
-	    MAKE_COLOR(188, 186, 67, 255));
+						ScrollBarScrollerWidth() - 4, ScrollBarScrollerHeight(),
+						MAKE_COLOR(188, 186, 67, 255));
 
     setScissor(m_lineMargeX,LinesStartY(),LinesWidth(),LinesHeight());
    
     if(!bDisabled)                     
-      setTextSolidColor(MAKE_COLOR(255,255,255,255));
+		setTextSolidColor(MAKE_COLOR(255,255,255,255));
     else
-      setTextSolidColor(MAKE_COLOR(128,128,128,255));
+		setTextSolidColor(MAKE_COLOR(128,128,128,255));
     
+		int m_numEntryDisplayed = 0;
     for(int i=0;i<m_Entries.size();i++) {
-      int y = m_nScroll + i*m_rowHeight + (m_rowHeight*2)/3;
-      
-      if(m_nSelected == i) {
-        Color c = MAKE_COLOR(70,70,70,255);
-        if(!bDisabled) c = MAKE_COLOR(160,40,40,255);
-        putRect(m_lineMargeX,m_nScroll + LinesStartY()+i*m_rowHeight,LinesWidth(),m_rowHeight,c);       
-        
-	if(isUglyMode()) {
-	  if(bDisabled) {
-	    putRect(m_lineMargeX,m_nScroll + LinesStartY()+i*m_rowHeight,LinesWidth(),m_rowHeight,MAKE_COLOR(128,128,128,255));
-	  } else {
-	    if(bActive) {
-	      putRect(m_lineMargeX,m_nScroll + LinesStartY()+i*m_rowHeight,LinesWidth(),m_rowHeight,MAKE_COLOR(200,60,60,255));
-	    } else {
-	      putRect(m_lineMargeX,m_nScroll + LinesStartY()+i*m_rowHeight,LinesWidth(),m_rowHeight,MAKE_COLOR(160,40,40,255));
-	    }
-	  }
-	} else {
-	  if(bActive && !bDisabled) {
-	    float s = 50 + 50*sin(getApp()->getRealTime()*10);
-	    int n = (int)s;
-	    if(n<0) n=0;
-	    if(n>255) n=255; /* just to be sure, i'm lazy */    
-	    
-	    putRect(m_lineMargeX,m_nScroll+ LinesStartY()+i*m_rowHeight,LinesWidth(),m_rowHeight,MAKE_COLOR(255,255,255,n));                 
-	  }
-	}
-      }              
+			if(m_Entries[i]->bShown) {
+				int y = m_nScroll + m_numEntryDisplayed*m_rowHeight + (m_rowHeight*2)/3;
+				
+				if(m_nRealSelected == i) {
+					Color c = MAKE_COLOR(70,70,70,255);
+					if(!bDisabled) c = MAKE_COLOR(160,40,40,255);
+					putRect(m_lineMargeX,m_nScroll + LinesStartY()+m_numEntryDisplayed*m_rowHeight,LinesWidth(),m_rowHeight,c);       
+					
+					if(isUglyMode()) {
+						if(bDisabled) {
+							putRect(m_lineMargeX,m_nScroll + LinesStartY()+m_numEntryDisplayed*m_rowHeight,LinesWidth(),
+											m_rowHeight,MAKE_COLOR(128,128,128,255));
+						} else {
+							if(bActive) {
+								putRect(m_lineMargeX,m_nScroll + LinesStartY()+m_numEntryDisplayed*m_rowHeight,
+												LinesWidth(),m_rowHeight,MAKE_COLOR(200,60,60,255));
+							} else {
+								putRect(m_lineMargeX,m_nScroll + LinesStartY()+m_numEntryDisplayed*m_rowHeight,
+												LinesWidth(),m_rowHeight,MAKE_COLOR(160,40,40,255));
+							}
+						}
+					} else {
+						if(bActive && !bDisabled) {
+							float s = 50 + 50*sin(getApp()->getRealTime()*10);
+							int n = (int)s;
+							if(n<0) n=0;
+							if(n>255) n=255; /* just to be sure, i'm lazy */    
+							
+							putRect(m_lineMargeX,m_nScroll+ LinesStartY()+m_numEntryDisplayed*m_rowHeight,LinesWidth(),
+											m_rowHeight,MAKE_COLOR(255,255,255,n));
+						}
+					}
+				} 
 
-      int yy = m_nScroll+LinesStartY()+i*m_rowHeight;
-      if(yy >= getPosition().nHeight - 6) break;
-      int yy2 = m_nScroll+LinesStartY()+i*m_rowHeight + m_rowHeight;
-      int nLRH = m_rowHeight;
-      if(yy2 >= getPosition().nHeight - 6) nLRH = m_rowHeight - (yy2 - (getPosition().nHeight - 6));
-      int yym1 = m_nScroll+LinesStartY()+i*m_rowHeight;
-      if(yym1 + m_rowHeight > LinesStartY()) {
-        if(yym1 < LinesStartY()) {
-          yym1 += (LinesStartY()-yym1);
-        }
-      
-        int nOldScissor[4];
-        //glGetIntegerv(GL_SCISSOR_BOX,(GLint *) nOldScissor);
-        getApp()->getDrawLib()->getClipRect(&nOldScissor[0],&nOldScissor[1],&nOldScissor[2],&nOldScissor[3]);
-	std::string txt_to_display;
-
-        int x = 0;      
-        for(int j=0;j<m_Entries[i]->Text.size();j++) {    
-          if(!(m_nColumnHideFlags & (1<<j))) {
-            /* Next columns disabled? If so, make more room to this one */
-            int nExtraRoom = 0;
-            for(int k=j+1;k<m_Columns.size();k++) {
-              if(m_nColumnHideFlags & (1<<k))
-                nExtraRoom += m_ColumnWidths[i]; 
-            }           
-          
-            /* Draw */          
-            setScissor(m_lineMargeX+x,yym1,m_ColumnWidths[j]-4+nExtraRoom,nLRH);
-	    txt_to_display = m_Entries[i]->Text[j];
-	    if(j==0 && m_bNumeroted) {
-	      std::ostringstream v_num;
-	      v_num << i+1;
-
-	      txt_to_display = "#" + v_num.str() + " " + txt_to_display; 
-	    }
-            putText(m_lineMargeX+x,LinesStartY()+y,txt_to_display);
-            x += m_ColumnWidths[j] + nExtraRoom;                
-          }
-        }
-        
-        getApp()->getDrawLib()->setClipRect(nOldScissor[0],nOldScissor[1],nOldScissor[2],nOldScissor[3]);
-      }
+				int yy = m_nScroll+LinesStartY()+m_numEntryDisplayed*m_rowHeight;
+				if(yy >= getPosition().nHeight - 6) break;
+				int yy2 = m_nScroll+LinesStartY()+m_numEntryDisplayed*m_rowHeight + m_rowHeight;
+				int nLRH = m_rowHeight;
+				if(yy2 >= getPosition().nHeight - 6) nLRH = m_rowHeight - (yy2 - (getPosition().nHeight - 6));
+				int yym1 = m_nScroll+LinesStartY()+m_numEntryDisplayed*m_rowHeight;
+				if(yym1 + m_rowHeight > LinesStartY()) {
+					if(yym1 < LinesStartY()) {
+						yym1 += (LinesStartY()-yym1);
+					}
+					
+					int nOldScissor[4];
+					//glGetIntegerv(GL_SCISSOR_BOX,(GLint *) nOldScissor);
+					getApp()->getDrawLib()->getClipRect(&nOldScissor[0],&nOldScissor[1],&nOldScissor[2],&nOldScissor[3]);
+					std::string txt_to_display;
+					
+					int x = 0;
+					for(int j=0;j<m_Entries[i]->Text.size();j++) {
+						if(!(m_nColumnHideFlags & (1<<j))) {
+							/* Next columns disabled? If so, make more room to this one */
+							int nExtraRoom = 0;
+							for(int k=j+1;k<m_Columns.size();k++) {
+								if(m_nColumnHideFlags & (1<<k))
+									nExtraRoom += m_ColumnWidths[i]; 
+							}           
+							
+							/* Draw */          
+							setScissor(m_lineMargeX+x,yym1,m_ColumnWidths[j]-4+nExtraRoom,nLRH);
+							txt_to_display = m_Entries[i]->Text[j];
+							if(j==0 && m_bNumeroted) {
+								std::ostringstream v_num;
+								v_num << m_numEntryDisplayed+1;
+								
+								txt_to_display = "#" + v_num.str() + " " + txt_to_display; 
+							}
+							putText(m_lineMargeX+x,LinesStartY()+y,txt_to_display);
+							x += m_ColumnWidths[j] + nExtraRoom;                
+						}
+					}
+					
+					getApp()->getDrawLib()->setClipRect(nOldScissor[0],nOldScissor[1],nOldScissor[2],nOldScissor[3]);
+				}
+				m_numEntryDisplayed++;
+			}
     }
     
     /* Stuff */
@@ -449,15 +460,15 @@ namespace vapp {
     }    
     else {
       /* Find out what item is affected */
-      for(int i=0;i<m_Entries.size();i++) {
+      for(int i=0;i<m_Entries.size()-m_filteredItems;i++) {
         int yy = m_nScroll + LinesStartY() + i*m_rowHeight;
         if(x >= m_lineMargeX && x <getPosition().nWidth-6 &&
           y >= yy && y < yy+m_rowHeight) {
           /* Select this */
-	  setSelected(i);
+					setVisibleSelected(i);
           
           /* AND invoke enter-button */
-          if(getSelected()>=0 && getSelected()<m_Entries.size() && m_pEnterButton != NULL) {
+          if(m_nVisibleSelected>=0 && m_nVisibleSelected<m_Entries.size()-m_filteredItems && m_pEnterButton != NULL) {
             m_pEnterButton->setClicked(true);
 
             Sound::playSampleByName("Sounds/Button3.ogg");
@@ -493,12 +504,12 @@ namespace vapp {
     }    
     else {
       /* Find out what item is affected */
-      for(int i=0;i<m_Entries.size();i++) {
+      for(int i=0;i<m_Entries.size()-m_filteredItems;i++) {
         int yy = m_nScroll + LinesStartY() + i*m_rowHeight;
         if(x >= m_lineMargeX && x <getPosition().nWidth-6 &&
           y >= yy && y < yy+m_rowHeight) {
           /* Select this */
-	  setSelected(i);
+	  setVisibleSelected(i);
           break;
         }
       }
@@ -554,7 +565,8 @@ namespace vapp {
     UIListEntry *p = new UIListEntry;        
     p->Text.push_back(Text);
     p->pvUser = pvUser;
-    
+    p->bShown = true;
+
     /* Make a temp. lowercase text */
     std::string LCText = Text;
     for(int i=0;i<LCText.length();i++)
@@ -594,7 +606,8 @@ namespace vapp {
   void UIList::clear(void) {
     _FreeUIList();
     m_Entries.clear();
-    m_nSelected = 0;
+    m_nRealSelected = 0;
+    m_nVisibleSelected = 0;
     m_nScroll   = 0;
   }
 
@@ -633,7 +646,7 @@ namespace vapp {
     switch(nKey) {
       case SDLK_RETURN: 
         /* Uhh... send this to the default button, if any. And if anything is selected */
-        if(getSelected()>=0 && getSelected()<m_Entries.size() && m_pEnterButton != NULL) {
+        if(m_nVisibleSelected>=0 && m_nVisibleSelected<m_Entries.size()-m_filteredItems && m_pEnterButton != NULL) {
           m_pEnterButton->setClicked(true);       
           
           Sound::playSampleByName("Sounds/Button3.ogg");
@@ -644,34 +657,34 @@ namespace vapp {
         return true;
     
       case SDLK_UP:
-        if(getSelected() <= 0)
+        if(m_nVisibleSelected <= 0)
           getRoot()->activateUp();
         else {
-          setSelected(getSelected() - 1);
+          setVisibleSelected(m_nVisibleSelected - 1);
         }
         return true;
       case SDLK_DOWN:
-        if(getSelected() >= m_Entries.size() - 1)
+        if(m_nVisibleSelected >= m_Entries.size()-m_filteredItems - 1)
           getRoot()->activateDown();
         else {
-          setSelected(getSelected() + 1);
+          setVisibleSelected(m_nVisibleSelected + 1);
         }          
         return true;
       case SDLK_PAGEUP:
         for(int i=0;i<10;i++) {
-          if(getSelected() <= 0)
+          if(m_nVisibleSelected <= 0)
             break;
           else {
-            setSelected(getSelected() - 1);
+            setVisibleSelected(m_nVisibleSelected - 1);
           }
         }
         return true;
       case SDLK_PAGEDOWN:
         for(int i=0;i<10;i++) {
-          if(getSelected() >= m_Entries.size() - 1)
+          if(m_nVisibleSelected >= m_Entries.size()-m_filteredItems - 1)
             break;
           else {
-            setSelected(getSelected() + 1);
+            setVisibleSelected(m_nVisibleSelected + 1);
           }          
         }
         return true;
@@ -695,19 +708,21 @@ namespace vapp {
         
         /* Look at character number 'nPos' in all entries */
         for(int i=0;i<m_Entries.size();i++) {
-          int nEntryIdx = i + getSelected() + 1; /* always start looking at the next */
-          nEntryIdx %= m_Entries.size();
+					if(m_Entries[i]->bShown) {
+						int nEntryIdx = i + m_nRealSelected + 1; /* always start looking at the next */
+						nEntryIdx %= m_Entries.size();
         
-          if(m_Entries[nEntryIdx]->Text[0].length() > nPos) {
-            if(tolower(m_Entries[nEntryIdx]->Text[0].at(nPos)) == tolower(nChar)) {
-              /* Nice, select this one */
-              setSelected(nEntryIdx);
-              bContinue = false;
-              return true;
-            }
+						if(m_Entries[nEntryIdx]->Text[0].length() > nPos) {
+							if(tolower(m_Entries[nEntryIdx]->Text[0].at(nPos)) == tolower(nChar)) {
+								/* Nice, select this one */
+								setVisibleSelected(nEntryIdx);
+								bContinue = false;
+								return true;
+							}
             
-            bContinue = true;
-          }
+							bContinue = true;
+						}
+					}
         }
         
         nPos++;
@@ -718,19 +733,56 @@ namespace vapp {
     return false;
   }
   
-  void UIList::setSelected(int n) {
+  void UIList::setRealSelected(int n) {
+		if(n>=m_Entries.size()) return;
+
     m_bChanged = true;
-    m_nSelected = n;
+		if(m_filteredItems == 0) { // special case because it happends often
+			m_nRealSelected    = n;
+			m_nVisibleSelected = n;
+		} else {
+			m_nRealSelected = n;
+			m_nVisibleSelected = 0;
+			for(int i=0; i<m_nRealSelected; i++) {
+				if(m_Entries[i]->bShown) {
+					m_nVisibleSelected++;
+				}
+			}
+		}
     _NewlySelectedItem();
   }
+
+	void UIList::setVisibleSelected(int n) {
+		if(n>=m_Entries.size()) return;
+
+		m_bChanged = true;
+		if(m_filteredItems == 0) { // special case because it happends often
+			m_nRealSelected    = n;
+			m_nVisibleSelected = n;
+		} else {
+			m_nVisibleSelected = n;
+			m_nRealSelected    = 0;
+		
+			int v=0;
+			for(int i=0; i<m_Entries.size(); i++) {
+				if(m_Entries[i]->bShown) {
+					if(v == n) {
+						m_nRealSelected = i;
+					}
+					v++;
+				}
+			}
+		}
+		_NewlySelectedItem();
+	}
 
   /*===========================================================================
   Called when a entry is selected
   ===========================================================================*/
   void UIList::_NewlySelectedItem(void) {
     /* HACK HACK HACK HACK! */
-    int nSelY1 = m_nScroll + LinesStartY() + m_nSelected*m_rowHeight;
-    int nSelY2 = m_nScroll + LinesStartY() + m_nSelected*m_rowHeight + m_rowHeight;
+    int nSelY1 = m_nScroll + LinesStartY() + m_nVisibleSelected*m_rowHeight;
+    int nSelY2 = m_nScroll + LinesStartY() + m_nVisibleSelected*m_rowHeight + m_rowHeight;
 
     /* Inside view? */
     if(nSelY1 < m_headerHeight + 6 + 4) {
@@ -752,10 +804,10 @@ namespace vapp {
       return;
     }
 
-    int v_scroll_max = (int)(-(float)RowHeight() * ((float)m_Entries.size() - ScrollNbVisibleItems()));
+    int v_scroll_max = (int)(-(float)RowHeight() * ((float)m_Entries.size() - m_filteredItems - ScrollNbVisibleItems()));
 
     if(m_nScroll+nPixels < v_scroll_max) { /* keep the cast ; under my linux box, it doesn't work without it */
-      if(ScrollNbVisibleItems() < m_Entries.size()) {
+      if(ScrollNbVisibleItems() < m_Entries.size() - m_filteredItems) {
 	m_nScroll = v_scroll_max;
       }
       return;
@@ -764,4 +816,33 @@ namespace vapp {
     m_nScroll += nPixels;
   }
 
+	void UIList::setFilter(std::string i_filter) {
+		m_filter = i_filter;
+		m_filteredItems = 0;
+
+		std::string v_entry_lower;
+		std::string v_filter_lower;
+
+		v_filter_lower = m_filter;
+		for(int j=0; j<v_filter_lower.length(); j++) {
+			v_filter_lower[j] = tolower(v_filter_lower[j]);
+		}	
+
+    for(int i=0;i<m_Entries.size();i++) {
+			v_entry_lower = m_Entries[i]->Text[0];
+			for(int j=0; j<v_entry_lower.length(); j++) {
+				v_entry_lower[j] = tolower(v_entry_lower[j]);
+			}		
+
+			int n = v_entry_lower.find(v_filter_lower, 0);
+			m_Entries[i]->bShown = n != std::string::npos;
+			if(n == std::string::npos) {
+				m_filteredItems++;
+			}
+		}
+
+		/* repair the scroll bar */
+		m_nScroll = 0;
+		setRealSelected(getSelected());
+	}
 }

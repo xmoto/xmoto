@@ -1,6 +1,7 @@
 for 0.2.5
 
 Assigned to nicolas
+* sky as a texture
 * bugs : it appears when i finish a level in the list of unfinished
    levels, when i click next level after this, the first level appears and the level list is sorted, even if it has been randomized before
 * ajouter un param au sprite pour indiquer son sens idem pour un edge.

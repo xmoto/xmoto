@@ -177,6 +177,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_FAILEDTOSAVEREPLAY   _("Failed to save replay!\nMaybe you should try with another name?")
 #define GAMETEXT_FAILEDUPDATETHEMESLIST _("Failed to update the theme list\nCheck your Internet connection!")
 #define GAMETEXT_FILE                 _("File")
+#define GAMETEXT_FILTER               _("Filter")
 #define GAMETEXT_FINISH               _("Finished!")
 #define GAMETEXT_FINISHTIME           _("Finish Time")
 #define GAMETEXT_FLIPLEFT             _("Flip left")
@@ -482,6 +483,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_ADDTOFAVORITE _("Add the level to the favorite levels list")
 #define CONTEXTHELP_DELETEFROMFAVORITE _("Delete the level from the favorite levels list")
 #define CONTEXTHELP_RANDOMIZE _("Puzzle the levels pack list")
+#define CONTEXTHELP_LEVEL_FILTER _("Put a text to limit the level list")
 
 #define VPACKAGENAME_LEVELS_WITH_NO_HIGHSCORE   _("Levels with no highscore")
 #define VPACKAGENAME_INCOMPLETED_LEVELS         _("Levels you have not completed")
