@@ -8,6 +8,9 @@ Textures/Textures/Dirt.jpg
 Textures/Textures/FrostGround.jpg
 Textures/Textures/MoltenRock.jpg
 Textures/Textures/BlueBricks.jpg
+Textures/Textures/Sky1.jpg
+Textures/Textures/Sky2.jpg
+Textures/Textures/Sky2Drift.jpg
 
 Sounds/Button1.ogg
 Sounds/Button3.ogg
@@ -194,9 +197,6 @@ Textures/Effects/EdgeGrayBricks1.jpg
 Textures/Effects/EdgeBlueBricks1.jpg
 Textures/Effects/EdgeIce1.png
 Textures/Effects/Fire1.png
-Textures/Effects/Sky1.jpg
-Textures/Effects/Sky2.jpg
-Textures/Effects/Sky2Drift.jpg
 Textures/Effects/Smoke1.png
 Textures/Effects/Smoke2.png
 Textures/Effects/Debris1.png
