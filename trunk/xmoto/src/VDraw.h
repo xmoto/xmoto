@@ -166,10 +166,12 @@ namespace vapp {
        * Clears the screen with the configured background
        **/
     virtual void clearGraphics() = 0;
+
     /**
       * resets the state of the zoom and translation
      **/
-    virtual void resetGraphics() {};
+    virtual void resetGraphics() {
+    };
 
       /**
        * Flush the graphics. In memory graphics will now be displayed
@@ -179,12 +181,12 @@ namespace vapp {
     /* Methods - primitives */
     virtual void drawCircle(const Vector2f & Center, float fRadius,
 			    float fBorder = 1.0f, Color Back =
-			    0, Color Front = -1) ;
+			    0, Color Front = -1);
     virtual void drawBox(const Vector2f & A, const Vector2f & B,
 			 float fBorder = 1.0f, Color Back =
-			 0, Color Front = -1) ;
+			 0, Color Front = -1);
     virtual void drawImage(const Vector2f & A, const Vector2f & B,
-			   Texture * pTexture, Color Tint = -1) ;
+			   Texture * pTexture, Color Tint = -1);
 
 
     /* Methods - text */
@@ -492,7 +494,8 @@ namespace vapp {
 				SDL_Surface * texture, int texture_dx,
 				int texture_dy);
 
-    int xx_filledPolygonColor(SDL_Surface * dst, const Sint16 * vx, const Sint16 * vy, int n, Uint32 color);
+    int xx_filledPolygonColor(SDL_Surface * dst, const Sint16 * vx,
+			      const Sint16 * vy, int n, Uint32 color);
 
     //the mode used when drawing
     DrawMode m_drawMode;
@@ -531,6 +534,13 @@ namespace vapp {
 
     //map to hold converted images
      std::map < const char *, SDL_Surface *, ltstr > m_image_cache;
+
+    //dynamic allocated array for the 
+    //that that is fed to the polygon filling
+    //algorithms
+    Sint16 *m_int_drawing_points_x;
+    Sint16 *m_int_drawing_points_y;
+    int m_int_drawing_points_allocated;
 
     int *gfxPrimitivesPolyInts;
     int gfxPrimitivesPolyAllocated;

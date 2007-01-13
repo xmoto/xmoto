@@ -47,6 +47,9 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
     m_bg_data = NULL;
     gfxPrimitivesPolyInts = NULL;
     gfxPrimitivesPolyAllocated = 0;
+    m_int_drawing_points_x = NULL;
+    m_int_drawing_points_y = NULL;
+    m_int_drawing_points_allocated = 0;
     m_min.x = 0;
     m_min.y = 0;
     m_max.x = 0;
@@ -312,12 +315,31 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
       //for texture point and drawing points
       //it will also remove the need to clean the m_texturePoints 
       //and m_drawingPoints collection afterwards
-      Sint16 x[size];
-      Sint16 y[size];
+
+      if (size > m_int_drawing_points_allocated) {
+	if (m_int_drawing_points_allocated == 0) {
+	  m_int_drawing_points_x =
+	    (Sint16 *) malloc(sizeof(Sint16) * size * 2);
+	  m_int_drawing_points_y =
+	    (Sint16 *) malloc(sizeof(Sint16) * size * 2);
+	  m_int_drawing_points_allocated = size * 2;
+	} else {
+	  m_int_drawing_points_x =
+	    (Sint16 *) realloc(m_int_drawing_points_x,
+			       sizeof(Sint16) *
+			       m_int_drawing_points_allocated * 2);
+	  m_int_drawing_points_y =
+	    (Sint16 *) realloc(m_int_drawing_points_y,
+			       sizeof(Sint16) *
+			       m_int_drawing_points_allocated * 2);
+	  m_int_drawing_points_allocated *= 2;
+	}
+      }
+
 
       for (int i = 0; i < size; i++) {
-	x[i] = m_drawingPoints.at(i)->x;
-	y[i] = m_drawingPoints.at(i)->y;
+	m_int_drawing_points_x[i] = m_drawingPoints.at(i)->x;
+	m_int_drawing_points_y[i] = m_drawingPoints.at(i)->y;
       }
       switch (m_drawMode) {
       case DRAW_MODE_POLYGON:
@@ -499,11 +521,13 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 	      printf("direction2\t%f \n", fff);
 	    }
 	    if (m_texture->isAlpha) {
-	      xx_texturedPolygonAlpha(m_screen, x, y, size, s,
+	      xx_texturedPolygonAlpha(m_screen, m_int_drawing_points_x,
+				      m_int_drawing_points_y, size, s,
 				      x_start_pixel, -y_start_pixel);
 	    } else {
-	      xx_texturedPolygon(m_screen, x, y, size, s, x_start_pixel,
-				 -y_start_pixel);
+	      xx_texturedPolygon(m_screen, m_int_drawing_points_x,
+				 m_int_drawing_points_y, size, s,
+				 x_start_pixel, -y_start_pixel);
 	    }
 	  } else {
 	    //zoom to large
@@ -511,20 +535,25 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 	  }
 
 	} else {
-	  xx_filledPolygonColor(m_screen, x, y, size, m_color);
+	  xx_filledPolygonColor(m_screen, m_int_drawing_points_x,
+				m_int_drawing_points_y, size, m_color);
 	}
 
 	break;
       case DRAW_MODE_LINE_LOOP:
-	polygonRGBA(m_screen, x, y, size, GET_RED(m_color),
+	polygonRGBA(m_screen, m_int_drawing_points_x,
+		    m_int_drawing_points_y, size, GET_RED(m_color),
 		    GET_GREEN(m_color), GET_BLUE(m_color),
 		    GET_ALPHA(m_color));
 	break;
       case DRAW_MODE_LINE_STRIP:
 	for (int f = 0; f < size - 1; f++) {
-	  lineRGBA(m_screen, x[f], y[f], x[f + 1], y[f + 1],
-		   GET_RED(m_color), GET_GREEN(m_color),
-		   GET_BLUE(m_color), GET_ALPHA(m_color));
+	  lineRGBA(m_screen, m_int_drawing_points_x[f],
+		   m_int_drawing_points_y[f],
+		   m_int_drawing_points_x[f + 1],
+		   m_int_drawing_points_y[f + 1], GET_RED(m_color),
+		   GET_GREEN(m_color), GET_BLUE(m_color),
+		   GET_ALPHA(m_color));
 	}
 	break;
       }
