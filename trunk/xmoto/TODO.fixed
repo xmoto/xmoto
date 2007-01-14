@@ -16,6 +16,7 @@ enormenent...
 * [20:55] <keesj> they have this great idea that you can create levels while walking in the level [20:56] <aspegic500> functions in the scripts to do that => F5 while playing
 * bugs : it appears when i finish a level in the list of unfinished levels, when i click next level after this, the first level appears and the level list is sorted, even if it has been randomized before
 * static_cast<uint32_t>(n); for saving files
+* add a tag in the .lvl to choose the border texture
 
 Since 0.2.2
 * When i update lists sometimes

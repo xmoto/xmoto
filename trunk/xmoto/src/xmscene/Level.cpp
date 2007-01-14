@@ -31,7 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../md5sum/md5file.h"
 #include "../helpers/Color.h"
 
-#define CACHE_LEVEL_FORMAT_VERSION 6
+#define CACHE_LEVEL_FORMAT_VERSION 7
 
 Level::Level() {
   m_xmotoTooOld = false;
@@ -41,6 +41,7 @@ Level::Level() {
   m_bottomLimit = 0.0;
   m_xmlSource = NULL;
   m_skyEffect = SKY_EFFECT1;
+  m_borderTexture = "";
 }
 
 Level::~Level() {
@@ -300,6 +301,7 @@ void Level::saveXML(void) {
   vapp::FS::writeLineF(pfh,"\t\t<author>%s</author>",m_author.c_str());
   vapp::FS::writeLineF(pfh,"\t\t<date>%s</date>",m_date.c_str());
   vapp::FS::writeLineF(pfh,"\t\t<sky>%s</sky>",m_sky.c_str());
+  vapp::FS::writeLineF(pfh,"\t\t<border texture=\"%s\" />",m_borderTexture.c_str());
   vapp::FS::writeLineF(pfh,"\t</info>");
   
   /* MISC */
@@ -428,6 +430,12 @@ void Level::loadXML(void) {
       /* Sky */
       Tmp = vapp::XML::getElementText(*m_xmlSource, pInfoElem,"sky");
       if(Tmp != "") m_sky = Tmp;
+
+      /* Border */
+      TiXmlElement *pBorderElem = vapp::XML::findElement(*m_xmlSource, NULL, std::string("border"));
+      if(pBorderElem != NULL) {
+	m_borderTexture = vapp::XML::getOption(pBorderElem, "texture");  
+      }
     }
 
     /* not nice, add something in the tags */
@@ -553,6 +561,7 @@ void Level::exportBinary(const std::string &FileName, const std::string& pSum) {
     exportBinaryHeader(pfh);
 
     vapp::FS::writeString(pfh,m_sky);
+    vapp::FS::writeString(pfh,m_borderTexture);
     vapp::FS::writeString(pfh,m_scriptFileName);
       
     vapp::FS::writeFloat_LE(pfh,m_leftLimit);
@@ -702,6 +711,8 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
         m_date = vapp::FS::readString(pfh);
 
         m_sky = vapp::FS::readString(pfh);
+        m_borderTexture = vapp::FS::readString(pfh);
+
 	/* not nice, add something in the tags */
 	if(m_sky == "Sky2") {
 	  m_skyEffect = SKY_EFFECT2;
@@ -909,6 +920,9 @@ void Level::addLimits() {
   float fVMargin = 20,fHMargin = 20;
 
   pBlock = new Block("LEVEL_TOP");
+  if(m_borderTexture != "") {
+    pBlock->setTexture(m_borderTexture);
+  }
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(LeftLimit()  - fHMargin, TopLimit() + fVMargin)));
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(RightLimit() + fHMargin, TopLimit() + fVMargin)));
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(RightLimit()           , TopLimit())));
@@ -916,6 +930,9 @@ void Level::addLimits() {
   Blocks().push_back(pBlock);
     
   pBlock = new Block("LEVEL_BOTTOM");
+  if(m_borderTexture != "") {
+    pBlock->setTexture(m_borderTexture);
+  }
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(RightLimit()           , BottomLimit())));
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(RightLimit() + fHMargin, BottomLimit() - fVMargin)));
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(LeftLimit()  - fHMargin, BottomLimit() - fVMargin)));
@@ -923,6 +940,9 @@ void Level::addLimits() {
   Blocks().push_back(pBlock);
 
   pBlock = new Block("LEVEL_LEFT");
+  if(m_borderTexture != "") {
+    pBlock->setTexture(m_borderTexture);
+  }
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(LeftLimit(), TopLimit())));
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(LeftLimit(), BottomLimit())));
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(LeftLimit() - fHMargin, BottomLimit() - fVMargin)));
@@ -930,6 +950,9 @@ void Level::addLimits() {
   Blocks().push_back(pBlock);
     
   pBlock = new Block("LEVEL_RIGHT");
+  if(m_borderTexture != "") {
+    pBlock->setTexture(m_borderTexture);
+  }
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(RightLimit(), TopLimit())));
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(RightLimit() + fHMargin, TopLimit() + fVMargin)));
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(RightLimit() + fHMargin, BottomLimit() - fVMargin)));

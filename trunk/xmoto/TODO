@@ -9,7 +9,6 @@ Assigned to nicolas
    this scripted level, the elevator at the correct position
 * FEATURE : * xmoto toto.lvl to play directly a level
 * it seems that there is a bug on speed it is played (if i play replays done on fast machine, it appear faster) http://xmoto.free.fr/replays/replay_1312.rpl
-* add a tag in the .lvl to choose the border texture
 * feature : a replay button when you finish a level (or die) which plays Latest.rpl
 
 * when are texure is rotated we need to copy the texture mutplile times so it's always visible

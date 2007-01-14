@@ -149,6 +149,7 @@ class Level {
   Entity               *m_startEntity; /* entity where the player start */
   bool m_isBodyLoaded;
   SkyEffectType m_skyEffect;
+  std::string m_borderTexture;
 
   void addLimits();
   void exportBinary(const std::string &i_fileName, const std::string& i_sum);
