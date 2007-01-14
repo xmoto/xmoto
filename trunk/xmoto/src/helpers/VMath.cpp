@@ -51,14 +51,51 @@ void addPointToAABB2f(Vector2f &BMin,Vector2f &BMax,const Vector2f &Point) {
   ===========================================================================*/
 int intersectLineCircle2f(const Vector2f &Cp,float Cr,const Vector2f &A0,
                           const Vector2f &A1,Vector2f &Res1,Vector2f &Res2) {
+  /* first, aabb check */
+  Vector2f line_0 = A1;
+  Vector2f line_1 = A0;
+  Vector2f circle_0 = Vector2f(Cp.x-Cr, Cp.y-Cr);
+  Vector2f circle_1 = Vector2f(Cp.x+Cr, Cp.y+Cr);
+  bool lineInversed = true;
+
+  if(A0.x < A1.x){
+    line_0 = A0;
+    line_1 = A1;
+    lineInversed = false;
+  }
+
+  if(line_1.x < circle_0.x || line_0.x > circle_1.x)
+    return 0;
+
+  if(A0.y < A1.y){
+    if(lineInversed){
+      line_0 = A0;
+      line_1 = A1;
+    }
+  } else{
+    if(! lineInversed){
+      line_0 = A1;
+      line_1 = A0;
+    }
+  }
+
+  if(line_1.y < circle_0.y || line_0.y > circle_1.y)
+    return 0;
+
+
+  /* then the slow naive one */
   /* Slooow... naiiiive.... optimize! */
   Vector2f rd = A1-A0;
-  if(A1.almostEqual(A0)) return 0;
+  if(A1.almostEqual(A0))
+    return 0;
+
   float rl = rd.normalize();
   Vector2f v = A0 - Cp;
   float b = -v.dot(rd);
   float det = (b * b) - v.dot(v) + Cr*Cr;
-  if(det<0 && det>-0.0001f) det=0;
+  if(det<0 && det>-0.0001f)
+    det=0;
+
   if(det >= 0) {
     det = sqrt(det);
     float i1 = b - det;
@@ -82,22 +119,81 @@ int intersectLineCircle2f(const Vector2f &Cp,float Cr,const Vector2f &A0,
 }
   
 int intersectLineLine2f(const Vector2f &A0, const Vector2f &A1,
-                        const Vector2f &B0, const Vector2f &B1,
-                        Vector2f &Res) {
-  if(A0.almostEqual(A1) || B0.almostEqual(B1)) return 0;
-                          
-  Vector2f P = B0, N = Vector2f( -(B1.y-B0.y), (B1.x-B0.x) );
+			       const Vector2f &B0, const Vector2f &B1,
+			       Vector2f &Res) {
+  if(A0.almostEqual(A1) || B0.almostEqual(B1))
+    return 0;
+
+  /* first, aabb check */
+  Vector2f line1_0 = A1;
+  Vector2f line1_1 = A0;
+  Vector2f line2_0 = B1;
+  Vector2f line2_1 = B0;
+  bool Ainversed = true, Binversed = true;
+
+  if(A0.x < A1.x){
+    line1_0 = A0;
+    line1_1 = A1;
+    Ainversed = false;
+  }
+  if(B0.x < B1.x){
+    line2_0 = B0;
+    line2_1 = B1;
+    Binversed = false;
+  }
+
+  if(line1_1.x < line2_0.x || line1_0.x > line2_1.x)
+    return 0;
+
+  if(A0.y < A1.y){
+    if(Ainversed){
+      line1_0 = A0;
+      line1_1 = A1;
+    }
+  } else{
+    if(! Ainversed){
+      line1_0 = A1;
+      line1_1 = A0;
+    }
+  }
+  if(B0.y < B1.y){
+    if(Binversed){
+      line2_0 = B0;
+      line2_1 = B1;
+    }
+  } else{
+    if(! Binversed){
+      line2_0 = B1;
+      line2_1 = B0;
+    }
+  }
+
+  if(line1_1.y < line2_0.y || line1_0.y > line2_1.y)
+    return 0;
+
+
+  /* then, precise check */
+  Vector2f P = B0;
+  Vector2f N = Vector2f( -(B1.y-B0.y), (B1.x-B0.x) );
+
   float den = N.dot(A1-A0);
-  if(fabs(den) < 0.0001f) return 0;
+  if(fabs(den) < 0.0001f)
+    return 0;
+
   float t = (P.dot(N) - A0.dot(N)) / den;
-  if(t<0.0f || t>1.0f) return 0;
+  if(t<0.0f || t>1.0f)
+    return 0;
     
   P = A0;
   N = Vector2f( -(A1.y-A0.y), (A1.x-A0.x) );
+
   den = N.dot(B1-B0);
-  if(fabs(den) < 0.0001f) return 0;
+  if(fabs(den) < 0.0001f)
+    return 0;
+
   t = (P.dot(N) - B0.dot(N)) / den;
-  if(t<0.0f || t>1.0f) return 0;
+  if(t<0.0f || t>1.0f)
+    return 0;
         
   Res = B0 + (B1-B0)*t;        
         
