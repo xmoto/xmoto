@@ -3,6 +3,7 @@ X-Moto 0.2.5 2007-
  * a randomize button to puzzle any package list
  * you can associate a rpl to xmoto (ie xmoto replay.rpl play the rpl file)
  * filter on lists
+ * problem with 64bits architecture should be corrected
  * some important bugs fixed
 	
 X-Moto 0.2.4 2006-12-22

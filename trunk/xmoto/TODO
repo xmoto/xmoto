@@ -4,7 +4,6 @@ Assigned to nicolas
 * sky as a texture : to be finished : a tag in .lvl for effect + x y texture size
 * ajouter un param au sprite pour indiquer son sens idem pour un edge.
 * PAD_5 -> to finish
-* static_cast<uint32_t>(n); for saving files
 * be able to play a music in a level
 * BUG : xmoto -replay bugs/onMacWontWork.rpl when you press forward on
    this scripted level, the elevator at the correct position
