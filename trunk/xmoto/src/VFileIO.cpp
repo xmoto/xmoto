@@ -608,9 +608,9 @@ namespace vapp {
   } 
   
   int FS::readInt(FileHandle *pfh) {
-    int v;
-    if(!readBuf(pfh,(char *)&v,sizeof(v))) _ThrowFileError(pfh,"readInt -> failed");
-    return v;
+    int32_t nv;
+    if(!readBuf(pfh,(char *)&nv,sizeof(4))) _ThrowFileError(pfh,"readInt -> failed");
+    return static_cast<int>(nv);
   } 
   
   float FS::readFloat(FileHandle *pfh) {
@@ -657,7 +657,9 @@ namespace vapp {
   }
   
   void FS::writeInt(FileHandle *pfh,int v) {
-    if(!writeBuf(pfh,(char *)&v,sizeof(v))) _ThrowFileError(pfh,"writeInt -> failed");
+    int32_t nv;
+    nv = static_cast<int32_t>(v);
+    if(!writeBuf(pfh,(char *)&nv, 4)) _ThrowFileError(pfh,"writeInt -> failed");
   }
   
   void FS::writeFloat(FileHandle *pfh,float v) {

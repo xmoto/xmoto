@@ -179,18 +179,20 @@ namespace vapp {
   }
   
   void DBuffer::operator <<(int n) {
-    writeBuf_LE((char *)&n, sizeof(int));
+    int32_t nv = static_cast<int32_t>(n);  
+    writeBuf_LE((char *)&nv, 4);
   }
   
   void DBuffer::operator >>(int &n) {
-    readBuf_LE((char *)&n, sizeof(int));
+    int32_t nv;
+    readBuf_LE((char *)&nv, 4);
+    n = static_cast<int>(nv);
   }
   
   void DBuffer::operator <<(unsigned int n) {
     int sn;
     sn = (int) (n);
     *this << sn;
-    
   }
   
   void DBuffer::operator >>(unsigned int &n) {

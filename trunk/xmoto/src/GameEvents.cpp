@@ -42,6 +42,33 @@ namespace vapp {
     GameEventType v_eventType;
     int i_tmp;
 
+    /**** to be able to debug the replays files */
+    //int   EType;
+    //float ETime;
+    //int   SNameL;
+    //
+    //Buffer >> ETime;
+    //Buffer >> EType;
+    //Buffer >> SNameL;
+    //
+    //printf("%i\n", EType);
+    //
+    //int n = 256;
+    //char c[n];
+    //Buffer.readBuf(c, n);
+    //c[n-1] = '\0';
+    //for(int i=0; i<n-1; i++) {
+    //  if(c[i] == '\0') {
+    //	c[i] = '0';
+    //  } else {
+    //	if( ! ( (c[i] >= 'a' && c[i] <= 'z') || (c[i] >= 'A' && c[i] <= 'Z') ) ) {
+    //	  c[i] = '@';
+    //	}
+    //  }
+    //}
+    //printf("+%s+\n", c);
+    /*****/
+
     Buffer >> v_fEventTime;
     Buffer >> i_tmp;
     v_eventType = (GameEventType) i_tmp;
