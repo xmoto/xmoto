@@ -30,6 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Zone.h"
 #include "Entity.h"
 #include "BasicSceneStructs.h"
+#include "SkyApparence.h"
 
 class Block;
 class Entity;
@@ -74,8 +75,7 @@ class Level {
   float TopLimit()          const;
   float BottomLimit()       const;
   Vector2f PlayerStart()    const;
-  std::string Sky()         const;
-  SkyEffectType SkyEffect() const;
+  const SkyApparence& Sky()        const;
   void setLimits(float v_leftLimit, float v_rightLimit, float v_topLimit, float v_bottomLimit);
 
   std::string FileName() const;
@@ -93,7 +93,6 @@ class Level {
   void setDescription(const std::string& i_description);
   void setDate(const std::string& i_date);
   void setAuthor(const std::string& i_author);
-  void setSky(const std::string& i_sky);
   void setCollisionSystem(vapp::CollisionSystem* p_CollisionSystem);
 
   std::string scriptFileName() const;
@@ -133,7 +132,6 @@ class Level {
   std::string m_requiredVersion;    /* Required X-Moto version */
   std::string m_pack;               /* In this level pack */
   std::string m_packNum;            /* value to sort levels */
-  std::string m_sky;                /* Level sky */
   std::string m_fileName;
   vapp::XMLDocument *m_xmlSource;    /* Plain XML source */      
   std::string m_scriptFileName;     /* Script file name */      
@@ -152,8 +150,8 @@ class Level {
   vapp::CollisionSystem* m_pCollisionSystem;
   /* to avoid calculate it each frame */
   int  m_nbEntitiesToTake;
-  SkyEffectType m_skyEffect;
   std::string m_borderTexture;
+  SkyApparence m_sky;
 
   void addLimits();
   void exportBinary(const std::string &i_fileName, const std::string& i_sum);

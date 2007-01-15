@@ -480,8 +480,13 @@ namespace vapp {
 
     /* SKY! */
    if(!m_bUglyMode)
-      _RenderSky();
-
+		_RenderSky(getGameObject()->getLevelSrc()->Sky().Zoom(),
+							 getGameObject()->getLevelSrc()->Sky().Offset(),
+							 getGameObject()->getLevelSrc()->Sky().TextureColor(),
+							 getGameObject()->getLevelSrc()->Sky().DriftZoom(),
+							 getGameObject()->getLevelSrc()->Sky().DriftTextureColor(),
+							 getGameObject()->getLevelSrc()->Sky().Drifted());
+		
     /* Perform scaling/translation */    
     getParent()->getDrawLib()->setScale(m_fScale * ((float)getParent()->getDrawLib()->getDispHeight()) / getParent()->getDrawLib()->getDispWidth(), m_fScale);
     //glRotatef(getGameObject()->getTime()*100,0,0,1); /* Uncomment this line if you want to vomit :) */
@@ -1210,78 +1215,64 @@ namespace vapp {
   /*===========================================================================
   Sky.
   ===========================================================================*/
-  void GameRenderer::_RenderSky(void) {
-    MotoGame *pGame = getGameObject();
-    TextureSprite* pType;
+  void GameRenderer::_RenderSky(float i_zoom, float i_offset, const TColor& i_color,
+				float i_driftZoom, const TColor& i_driftColor, bool i_drifted) {
+  MotoGame *pGame = getGameObject();
+  TextureSprite* pType;
+  float fDrift = 0.0;
+  float uZoom = 1.0 / i_zoom;
+  float uDriftZoom = 1.0 / i_driftZoom;
 
-    /* Render sky - but which? */
-    pType = (TextureSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_TEXTURE,
-							       pGame->getLevelSrc()->Sky());
-    if(pType != NULL) {
-      switch(pGame->getLevelSrc()->SkyEffect()) {
-      case SKY_EFFECT1:
-	getParent()->getDrawLib()->setTexture(pType->getTexture(),BLEND_MODE_NONE);
-	getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
-	getParent()->getDrawLib()->setColorRGB(255,255,255);
-        getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015,-getCameraPositionY()*0.015);
-        getParent()->getDrawLib()->glVertexSP(0,0);
-        getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015+0.5,-getCameraPositionY()*0.015);
-        getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),0);
-        getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015+0.5,-getCameraPositionY()*0.015+0.5);
-        getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),getParent()->getDrawLib()->getDispHeight());
-        getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015,-getCameraPositionY()*0.015+0.5);
-        getParent()->getDrawLib()->glVertexSP(0,getParent()->getDrawLib()->getDispHeight());
-	getParent()->getDrawLib()->endDraw();
-	break;
-      case SKY_EFFECT2:
-	getParent()->getDrawLib()->setTexture(pType->getTexture(),BLEND_MODE_NONE);
-	getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
-	getParent()->getDrawLib()->setColorRGB(255,255,255);
-	getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015,-getCameraPositionY()*0.015);
-        getParent()->getDrawLib()->glVertexSP(0,0);
-        getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015+0.65,-getCameraPositionY()*0.015);
-        getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),0);
-        getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015+0.65,-getCameraPositionY()*0.015+0.65);
-        getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),getParent()->getDrawLib()->getDispHeight());
-        getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015,-getCameraPositionY()*0.015+0.65);
-        getParent()->getDrawLib()->glVertexSP(0,getParent()->getDrawLib()->getDispHeight());
-	getParent()->getDrawLib()->endDraw();
-	break;
-      case SKY_EFFECT2DRIFT:
-	getParent()->getDrawLib()->setTexture(pType->getTexture(),BLEND_MODE_A);
-	getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
-	getParent()->getDrawLib()->setColorRGBA(128,128,128,128);
-	float fDrift = getParent()->getRealTime() / 25.0f;
-	getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015 + fDrift,-getCameraPositionY()*0.015);
-	getParent()->getDrawLib()->glVertexSP(0,0);
-	getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015+0.65 + fDrift,-getCameraPositionY()*0.015);
-	getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),0);
-	getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015+0.65 + fDrift,-getCameraPositionY()*0.015+0.65);
-	getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),getParent()->getDrawLib()->getDispHeight());
-	getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015 + fDrift,-getCameraPositionY()*0.015+0.65);
-	getParent()->getDrawLib()->glVertexSP(0,getParent()->getDrawLib()->getDispHeight());
-	getParent()->getDrawLib()->endDraw();
-	
-	getParent()->getDrawLib()->setTexture(pType->getTexture(),BLEND_MODE_B);
-	
-	getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
-	getParent()->getDrawLib()->setColorRGB(255,128,128);
-	fDrift = getParent()->getRealTime() / 15.0f;
-	getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015 + fDrift,-getCameraPositionY()*0.015);
-	getParent()->getDrawLib()->glVertexSP(0,0);
-	getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015+0.85 + fDrift,-getCameraPositionY()*0.015);
-	getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),0);
-	getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015+0.85 + fDrift,-getCameraPositionY()*0.015+0.85);
-	getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),getParent()->getDrawLib()->getDispHeight());
-	getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*0.015 + fDrift,-getCameraPositionY()*0.015+0.85);
-	getParent()->getDrawLib()->glVertexSP(0,getParent()->getDrawLib()->getDispHeight());
-	getParent()->getDrawLib()->endDraw();
-	
-      }
-    } else {
-      Log(std::string("** Invalid sky " + pGame->getLevelSrc()->Sky()).c_str());
-    } 
+  if(m_Quality != GQ_HIGH) {
+    i_drifted = false;
   }
+  
+  pType = (TextureSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_TEXTURE,
+							      pGame->getLevelSrc()->Sky().Texture());
+  
+  if(pType != NULL) {
+    if(i_drifted) {
+      getParent()->getDrawLib()->setTexture(pType->getTexture(), BLEND_MODE_A);
+    }
+    
+    getParent()->getDrawLib()->setTexture(pType->getTexture(),BLEND_MODE_NONE);
+    getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+    getParent()->getDrawLib()->setColorRGBA(i_color.Red() , i_color.Green(), i_color.Blue(), i_color.Alpha());
+    
+    if(i_drifted) {
+      fDrift = getParent()->getRealTime() / 25.0f;
+    }
+    
+    getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*i_offset+ fDrift,-getCameraPositionY()*i_offset);
+    getParent()->getDrawLib()->glVertexSP(0,0);
+    getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*i_offset+uZoom+ fDrift,-getCameraPositionY()*i_offset);
+    getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),0);
+    getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*i_offset+uZoom+ fDrift,-getCameraPositionY()*i_offset+uZoom);
+    getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),getParent()->getDrawLib()->getDispHeight());
+    getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*i_offset+ fDrift,-getCameraPositionY()*i_offset+uZoom);
+    getParent()->getDrawLib()->glVertexSP(0,getParent()->getDrawLib()->getDispHeight());
+    getParent()->getDrawLib()->endDraw();
+    
+    if(i_drifted) {
+      getParent()->getDrawLib()->setTexture(pType->getTexture(),BLEND_MODE_B);
+      getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+      getParent()->getDrawLib()->setColorRGBA(i_driftColor.Red(), i_driftColor.Green(), i_driftColor.Blue(), i_driftColor.Alpha());
+      fDrift = getParent()->getRealTime() / 15.0f;
+      getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*i_offset + fDrift,-getCameraPositionY()*i_offset);
+      getParent()->getDrawLib()->glVertexSP(0,0);
+      getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*i_offset+uDriftZoom + fDrift,-getCameraPositionY()*i_offset);
+      getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),0);
+      getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*i_offset+uDriftZoom + fDrift,-getCameraPositionY()*i_offset+uDriftZoom);
+      getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),getParent()->getDrawLib()->getDispHeight());
+      getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*i_offset + fDrift,-getCameraPositionY()*i_offset+uDriftZoom);
+      getParent()->getDrawLib()->glVertexSP(0,getParent()->getDrawLib()->getDispHeight());
+      getParent()->getDrawLib()->endDraw();
+    }
+  } else {
+    Log(std::string("** Invalid sky " + pGame->getLevelSrc()->Sky().Texture()).c_str());
+    getParent()->getDrawLib()->clearGraphics();
+  } 
+ }
 
   /*===========================================================================
   And background rendering

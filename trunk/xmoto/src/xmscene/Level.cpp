@@ -31,7 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../md5sum/md5file.h"
 #include "../helpers/Color.h"
 
-#define CACHE_LEVEL_FORMAT_VERSION 7
+#define CACHE_LEVEL_FORMAT_VERSION 8
 
 Level::Level() {
   m_xmotoTooOld = false;
@@ -41,7 +41,6 @@ Level::Level() {
   m_bottomLimit = 0.0;
   m_xmlSource = NULL;
   m_nbEntitiesToTake = 0;
-  m_skyEffect = SKY_EFFECT1;
   m_borderTexture = "";
 }
 
@@ -195,10 +194,6 @@ void Level::setAuthor(const std::string& i_author) {
   m_author = i_author;
 }
 
-void Level::setSky(const std::string& i_sky) {
-  m_sky = i_sky;
-}
-
 void Level::setCollisionSystem(vapp::CollisionSystem* p_CollisionSystem) {
   m_pCollisionSystem = p_CollisionSystem;
 }
@@ -223,7 +218,7 @@ std::vector<Zone *> &Level::Zones() {
   return m_zones;
 }
 
-std::string Level::Sky() const {
+const SkyApparence& Level::Sky() const {
   return m_sky;
 }
 
@@ -310,7 +305,32 @@ void Level::saveXML(void) {
   vapp::FS::writeLineF(pfh,"\t\t<description>%s</description>",m_description.c_str());
   vapp::FS::writeLineF(pfh,"\t\t<author>%s</author>",m_author.c_str());
   vapp::FS::writeLineF(pfh,"\t\t<date>%s</date>",m_date.c_str());
-  vapp::FS::writeLineF(pfh,"\t\t<sky>%s</sky>",m_sky.c_str());
+  if(m_sky.Drifted()) {
+    vapp::FS::writeLineF(pfh,
+			 "\t\t<sky zoom=\"%f\" offset=\"%f\" color_r=\"%i\" color_g=\"%i\" color_b=\"%i\" color_a=\"%i\" drifted=\"true\" driftZoom=\"%f\" driftColor_r=\"%i\" driftColor_g=\"%i\" driftColor_b=\"%i\" driftColor_a=\"%i\">%s</sky>",
+			 m_sky.Zoom(),
+			 m_sky.Offset(),
+			 m_sky.TextureColor().Red(),
+			 m_sky.TextureColor().Green(),
+			 m_sky.TextureColor().Blue(),
+			 m_sky.TextureColor().Alpha(),
+			 m_sky.DriftZoom(),
+			 m_sky.DriftTextureColor().Red(),
+			 m_sky.DriftTextureColor().Green(),
+			 m_sky.DriftTextureColor().Blue(),
+			 m_sky.DriftTextureColor().Alpha(),
+			 m_sky.Texture().c_str());
+  } else {
+    vapp::FS::writeLineF(pfh,
+			 "\t\t<sky zoom=\"%f\" offset=\"%f\" color_r=\"%i\" color_g=\"%i\" color_b=\"%i\" color_a=\"%i\">%s</sky>",
+			 m_sky.Zoom(),
+			 m_sky.Offset(),
+			 m_sky.TextureColor().Red(),
+			 m_sky.TextureColor().Green(),
+			 m_sky.TextureColor().Blue(),
+			 m_sky.TextureColor().Alpha(),
+			 m_sky.Texture().c_str());
+  }
   vapp::FS::writeLineF(pfh,"\t\t<border texture=\"%s\" />",m_borderTexture.c_str());
   vapp::FS::writeLineF(pfh,"\t</info>");
   
@@ -403,7 +423,6 @@ void Level::loadXML(void) {
   m_date = "";
   m_description = "";
   m_author = "";
-  m_sky = "sky1";
   
   m_scriptFileName = "";
   m_scriptSource = "";
@@ -438,8 +457,74 @@ void Level::loadXML(void) {
       if(Tmp != "") m_date = Tmp;
       
       /* Sky */
+      m_sky.reInit();
       Tmp = vapp::XML::getElementText(*m_xmlSource, pInfoElem,"sky");
-      if(Tmp != "") m_sky = Tmp;
+      if(Tmp != "") m_sky.setTexture(Tmp);
+
+      /* advanced sky parameters ? */
+      bool v_useAdvancedOptions = false;
+      TiXmlElement *pSkyElem = vapp::XML::findElement(*m_xmlSource, NULL, std::string("sky"));
+      std::string v_skyValue;
+      if(pSkyElem != NULL) {
+	v_skyValue = vapp::XML::getOption(pSkyElem, "zoom");
+	if(v_skyValue != "") {
+	  m_sky.setZoom(atof(v_skyValue.c_str()));
+	  v_useAdvancedOptions = true;
+	}
+	v_skyValue = vapp::XML::getOption(pSkyElem, "offset");
+	if(v_skyValue != "") {
+	  m_sky.setOffset(atof(v_skyValue.c_str()));
+	  v_useAdvancedOptions = true;
+	}
+
+	int v_r = -1, v_g = -1, v_b = -1, v_a = -1;
+	v_skyValue = vapp::XML::getOption(pSkyElem, "color_r");
+	if(v_skyValue != "") v_r = atoi(v_skyValue.c_str());
+	v_skyValue = vapp::XML::getOption(pSkyElem, "color_g");
+	if(v_skyValue != "") v_g = atoi(v_skyValue.c_str());
+	v_skyValue = vapp::XML::getOption(pSkyElem, "color_b");
+	if(v_skyValue != "") v_b = atoi(v_skyValue.c_str());
+	v_skyValue = vapp::XML::getOption(pSkyElem, "color_a");
+	if(v_skyValue != "") v_a = atoi(v_skyValue.c_str());
+	if(v_r != -1 || v_g != -1 || v_b != -1 || v_a != -1) {
+	  if(v_r == -1) v_r = 0;
+	  if(v_g == -1) v_g = 0;
+	  if(v_b == -1) v_b = 0;
+	  if(v_a == -1) v_a = 0;
+	  m_sky.setTextureColor(TColor(v_r, v_g, v_b, v_a));
+	  v_useAdvancedOptions = true;
+	}
+
+	v_skyValue = vapp::XML::getOption(pSkyElem, "drifted");
+	if(v_skyValue == "true") {
+	  m_sky.setDrifted(true);
+	  v_useAdvancedOptions = true;
+
+	  v_skyValue = vapp::XML::getOption(pSkyElem, "driftZoom");
+	  if(v_skyValue != "") m_sky.setDriftZoom(atof(v_skyValue.c_str()));
+
+	  int v_r = -1, v_g = -1, v_b = -1, v_a = -1;
+	  v_skyValue = vapp::XML::getOption(pSkyElem, "driftColor_r");
+	  if(v_skyValue != "") v_r = atoi(v_skyValue.c_str());
+	  v_skyValue = vapp::XML::getOption(pSkyElem, "driftColor_g");
+	  if(v_skyValue != "") v_g = atoi(v_skyValue.c_str());
+	  v_skyValue = vapp::XML::getOption(pSkyElem, "driftColor_b");
+	  if(v_skyValue != "") v_b = atoi(v_skyValue.c_str());
+	  v_skyValue = vapp::XML::getOption(pSkyElem, "driftColor_a");
+	  if(v_skyValue != "") v_a = atoi(v_skyValue.c_str());
+	  if(v_r != -1 || v_g != -1 || v_b != -1 || v_a != -1) {
+	    if(v_r == -1) v_r = 0;
+	    if(v_g == -1) v_g = 0;
+	    if(v_b == -1) v_b = 0;
+	    if(v_a == -1) v_a = 0;
+	    m_sky.setDriftTextureColor(TColor(v_r, v_g, v_b, v_a)); 
+	  }
+	}
+      }
+      if(v_useAdvancedOptions == false) {
+	/* set old values in case no option is used */
+	m_sky.setOldXmotoValuesFromTextureName();
+      }
 
       /* Border */
       TiXmlElement *pBorderElem = vapp::XML::findElement(*m_xmlSource, NULL, std::string("border"));
@@ -447,16 +532,6 @@ void Level::loadXML(void) {
 	m_borderTexture = vapp::XML::getOption(pBorderElem, "texture");  
       }
     }
-
-    /* not nice, add something in the tags */
-    if(m_sky == "Sky2") {
-      m_skyEffect = SKY_EFFECT2;
-    } else if(m_sky == "Sky2Drift") {
-      m_skyEffect = SKY_EFFECT2DRIFT;
-    } else {
-      m_skyEffect = SKY_EFFECT1;
-    }
-
 
     /* Get script */
     TiXmlElement *pScriptElem = vapp::XML::findElement(*m_xmlSource, pLevelElem,std::string("script"));
@@ -570,7 +645,20 @@ void Level::exportBinary(const std::string &FileName, const std::string& pSum) {
   else {
     exportBinaryHeader(pfh);
 
-    vapp::FS::writeString(pfh,m_sky);
+    vapp::FS::writeString(pfh, m_sky.Texture());
+    vapp::FS::writeFloat_LE(pfh, m_sky.Zoom());
+    vapp::FS::writeFloat_LE(pfh, m_sky.Offset());
+    vapp::FS::writeInt_LE(pfh,   m_sky.TextureColor().Red());
+    vapp::FS::writeInt_LE(pfh,   m_sky.TextureColor().Green());
+    vapp::FS::writeInt_LE(pfh,   m_sky.TextureColor().Blue());
+    vapp::FS::writeInt_LE(pfh,   m_sky.TextureColor().Alpha());
+    vapp::FS::writeBool(pfh,     m_sky.Drifted());
+    vapp::FS::writeFloat_LE(pfh, m_sky.DriftZoom());
+    vapp::FS::writeInt_LE(pfh,   m_sky.DriftTextureColor().Red());
+    vapp::FS::writeInt_LE(pfh,   m_sky.DriftTextureColor().Green());
+    vapp::FS::writeInt_LE(pfh,   m_sky.DriftTextureColor().Blue());
+    vapp::FS::writeInt_LE(pfh,   m_sky.DriftTextureColor().Alpha());
+
     vapp::FS::writeString(pfh,m_borderTexture);
     vapp::FS::writeString(pfh,m_scriptFileName);
       
@@ -720,17 +808,29 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
         m_author = vapp::FS::readString(pfh);
         m_date = vapp::FS::readString(pfh);
 
-        m_sky = vapp::FS::readString(pfh);
-        m_borderTexture = vapp::FS::readString(pfh);
+	/* sky */
+        m_sky.setTexture(vapp::FS::readString(pfh));
+	m_sky.setZoom(vapp::FS::readFloat_LE(pfh));
+	m_sky.setOffset(vapp::FS::readFloat_LE(pfh));
 
-	/* not nice, add something in the tags */
-	if(m_sky == "Sky2") {
-	  m_skyEffect = SKY_EFFECT2;
-	} else if(m_sky == "Sky2Drift") {
-	  m_skyEffect = SKY_EFFECT2DRIFT;
-	} else {
-	  m_skyEffect = SKY_EFFECT1;
-	}
+	int v_r, v_g, v_b, v_a;
+	v_r = vapp::FS::readInt_LE(pfh);
+	v_g = vapp::FS::readInt_LE(pfh);
+	v_b = vapp::FS::readInt_LE(pfh);
+	v_a = vapp::FS::readInt_LE(pfh);
+	m_sky.setTextureColor(TColor(v_r, v_g, v_b, v_a));
+
+	m_sky.setDrifted(vapp::FS::readBool(pfh));
+	m_sky.setDriftZoom(vapp::FS::readFloat_LE(pfh));
+
+	v_r = vapp::FS::readInt_LE(pfh);
+	v_g = vapp::FS::readInt_LE(pfh);
+	v_b = vapp::FS::readInt_LE(pfh);
+	v_a = vapp::FS::readInt_LE(pfh);
+	m_sky.setDriftTextureColor(TColor(v_r, v_g, v_b, v_a));
+	/* *** */
+
+        m_borderTexture = vapp::FS::readString(pfh);
 
         m_scriptFileName = vapp::FS::readString(pfh);
 
@@ -1031,8 +1131,4 @@ void Level::unloadLevelBody() {
 
 void Level::rebuildCache() {
   exportBinary(getNameInCache(), m_checkSum);
-}
-
-SkyEffectType Level::SkyEffect() const {
-  return m_skyEffect;
 }

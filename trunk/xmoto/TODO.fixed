@@ -17,6 +17,7 @@ enormenent...
 * bugs : it appears when i finish a level in the list of unfinished levels, when i click next level after this, the first level appears and the level list is sorted, even if it has been randomized before
 * static_cast<uint32_t>(n); for saving files
 * add a tag in the .lvl to choose the border texture
+* sky as a texture : tags in .lvl for effect + x y texture size
 * Add entities in the collision grid to speed collisions with entities
 * Potential bug::if a big big entity is added to a level (radius of the entity > 3.0 or 6.0), then, the biker won't touch it before beeing enough near of it. so the biker will graphically touches it, but the collision will occurs only when the biker is close enough).
 * Various speed improvements.

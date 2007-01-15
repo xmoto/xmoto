@@ -277,7 +277,8 @@ namespace vapp {
       void _RenderBlocks(void);
       void _RenderDynamicBlocks(bool bBackground=false);
       void _RenderBackground(void);
-      void _RenderSky(void);
+      void _RenderSky(float i_zoom, float i_offset, const TColor& i_color,
+		      float i_driftZoom, const TColor &i_driftColor, bool i_drifted);
       void _RenderGameMessages(void); 
       void _RenderGameStatus(void);
       void _RenderParticles(bool bFront=true);
