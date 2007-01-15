@@ -282,7 +282,7 @@ bool FireParticle::updateToTime(float i_time, Vector2f i_gravity) {
   int v_b = Color().Blue()  - (int)(randomNum(400,400) * v_timeStep);
   v_color.setBlue(v_b < 0 ? 0 : v_b);
 
-  int v_a = Color().Alpha() - (int)(200.0f * v_timeStep);
+  int v_a = Color().Alpha() - (int)(250.0f * v_timeStep);
   if(v_a >= 0) {
     v_color.setAlpha(v_a);
     setColor(v_color);
@@ -301,7 +301,7 @@ bool FireParticle::updateToTime(float i_time, Vector2f i_gravity) {
 bool ParticlesSourceFire::updateToTime(float i_time, Vector2f i_gravity) {
   if(ParticlesSource::updateToTime(i_time, i_gravity)) {
     /* Generate fire */
-    for(int k=0;k<10;k++) {
+    for(int k=0;k<3;k++) {
       /* maximum 10s for a fire particule, but it can be destroyed before */
       ParticlesSource::addParticle(Vector2f(randomNum(-1,1),randomNum(0.1,0.3)), i_time + 10.0);
     }
@@ -677,7 +677,7 @@ bool DebrisParticle::updateToTime(float i_time, Vector2f i_gravity) {
 FireParticle::FireParticle(const Vector2f& i_position, const Vector2f i_velocity, float i_killTime, std::string i_spriteName)
   : EntityParticle(i_position, i_velocity, i_killTime) {
   m_fireSeed = randomNum(0,100);
-  setSize(0.09);
+  setSize(0.17);
   setColor(TColor(255,255,0,255));
   setSpriteName(i_spriteName);
 }
