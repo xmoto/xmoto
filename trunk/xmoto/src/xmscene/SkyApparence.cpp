@@ -31,7 +31,7 @@ SkyApparence::~SkyApparence() {
 void SkyApparence::reInit() {
     m_texture     = "sky1";
     m_zoom        = 1.0;
-    m_offset      = 0.5;
+    m_offset      = 0.015;
     m_driftZoom   = 1.0;
     m_drifted     = false;
     m_color.setRed(255);
