@@ -34,7 +34,6 @@ Entity::Entity(const std::string& i_id) {
   m_doesKill    = false;
   m_doesMakeWin = false;
   m_isToTake    = false;
-  m_angle       = 0.0;
 }
 
 Entity::~Entity() {
@@ -42,6 +41,8 @@ Entity::~Entity() {
 
 void Entity::loadToPlay() {
   m_dynamicPosition = m_initialPosition;
+  /* make every entity alive */
+  setAlive(true);
 }
 
 void Entity::unloadToPlay() {
@@ -53,10 +54,6 @@ std::string Entity::Id() const {
 
 float Entity::Size() const {
   return m_size;
-}
-
-float Entity::Angle() const {
-	return m_angle;
 }
 
 bool Entity::IsToTake() const {
@@ -108,6 +105,10 @@ std::string Entity::SpriteName() const {
   return m_spriteName;
 }
 
+bool Entity::isAlive() const {
+  return m_isAlive;
+}
+
 void Entity::setSpriteName(const std::string& i_spriteName) {
   m_spriteName = i_spriteName;
 }
@@ -141,6 +142,11 @@ void Entity::setZ(float i_z) {
 void Entity::setColor(const TColor& i_color) {
   m_color = i_color;
 }
+
+void Entity::setAlive(bool alive) {
+  m_isAlive = alive;
+}
+
 
 bool Entity::updateToTime(float i_time, Vector2f i_gravity) {
   return false;

@@ -57,7 +57,8 @@ class Entity {
   float Height() const;
   const TColor& Color() const;
   std::string SpriteName() const; /* PlayerStart, Flower, EndOfLevel, Bird, ... */
-  
+  bool  isAlive() const;
+
   virtual void loadToPlay();
   virtual void unloadToPlay();
   void setDynamicPosition(const Vector2f& i_dynamicPosition);
@@ -69,6 +70,7 @@ class Entity {
   void setZ(float i_z);
   void setSpriteName(const std::string& i_spriteName);
   void setColor(const TColor& i_color);
+  void setAlive(bool alive);
 
   void saveXml(vapp::FileHandle *i_pfh);
   void saveBinary(vapp::FileHandle *i_pfh);
@@ -81,7 +83,6 @@ class Entity {
   void setSpeciality(EntitySpeciality i_speciality);
 
   virtual bool updateToTime(float i_time, Vector2f i_gravity);
-	float Angle() const;
 
  private:
   std::string m_id;              /** Its own identifer */
@@ -94,8 +95,9 @@ class Entity {
   bool        m_doesKill;
   bool        m_doesMakeWin;
   bool        m_isToTake;
+  /* Use to know if a script shall update the pos of the entity*/
+  bool        m_isAlive;
   TColor      m_color;
-	float       m_angle;
 };
 
 class ParticlesSource : public Entity {
