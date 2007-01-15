@@ -426,12 +426,15 @@ void Level::loadXML(void) {
   
   m_scriptFileName = "";
   m_scriptSource = "";
-  
+  m_borderTexture = "";
+
   m_bottomLimit = m_leftLimit = -50.0f;
   m_topLimit    = m_rightLimit = 50.0f;
   
   m_playerStart = Vector2f(0.0, 0.0);
   
+  m_sky.reInit();
+
   if(!m_xmotoTooOld) {    
     /* Get level pack */
     m_pack = vapp::XML::getOption(pLevelElem,"levelpack");
@@ -457,7 +460,6 @@ void Level::loadXML(void) {
       if(Tmp != "") m_date = Tmp;
       
       /* Sky */
-      m_sky.reInit();
       Tmp = vapp::XML::getElementText(*m_xmlSource, pInfoElem,"sky");
       if(Tmp != "") m_sky.setTexture(Tmp);
 
