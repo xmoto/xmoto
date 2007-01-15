@@ -21,6 +21,7 @@ enormenent...
 * Add entities in the collision grid to speed collisions with entities
 * Potential bug::if a big big entity is added to a level (radius of the entity > 3.0 or 6.0), then, the biker won't touch it before beeing enough near of it. so the biker will graphically touches it, but the collision will occurs only when the biker is close enough).
 * Various speed improvements.
+* a bug when cache number is updated : all level are reproposed to be dwd
 
 Since 0.2.2
 * When i update lists sometimes

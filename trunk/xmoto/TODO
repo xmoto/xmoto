@@ -1,6 +1,5 @@
 
 Assigned to nicolas
-* a bug when cache number is updated : all level are reproposed to be dwd
 * a level updated is reload from XML ?!? 
 * ajouter un param au sprite pour indiquer son sens idem pour un edge.
 * PAD_5 -> to finish

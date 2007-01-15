@@ -358,10 +358,11 @@ void LevelsManager::loadLevelsFromIndex() {
       Level *v_level = new Level();
       try {
 	v_level->setFileName(vapp::FS::readString(pfh));
-	  v_level->importBinaryHeader(pfh);
-	  m_levels.push_back(v_level);
+	v_level->importBinaryHeader(pfh);
+	m_levels.push_back(v_level);
       } catch(Exception &e) {
-	delete v_level;
+	/* if one level fails, all must fail because otherwise, some part of pfh is read badly */
+	throw e;
       }
     }
 
