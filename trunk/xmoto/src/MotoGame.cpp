@@ -136,14 +136,14 @@ namespace vapp {
     m_showGhostTimeDiff = true;
     m_isGhostActive = false;
 #endif
-    m_renderer = NULL;
+    m_renderer      = NULL;
     m_isScriptActiv = false;
-    
+    m_bIsAReplay    = false;
+
     bFrontWheelTouching = false;
     bRearWheelTouching  = false;
 
     m_bodyDetach = false;
-
   }
   
   MotoGame::~MotoGame() {
@@ -340,7 +340,7 @@ namespace vapp {
     updateGameMessages();
     
     /* Increase time */
-    if(pReplayState == NULL)
+    if(m_bIsAReplay == false)
       m_fTime += fTimeStep;
     else
       m_fTime = pReplayState->fGameTime;
@@ -358,7 +358,7 @@ namespace vapp {
     _UpdateGameState(pReplayState);
         
     /* Update misc stuff (only when not playing a replay) */
-    if(pReplayState == NULL) {
+    if(m_bIsAReplay == false) {
       _UpdateZones();
       _UpdateEntities();
     }
@@ -385,7 +385,7 @@ namespace vapp {
     }
 
     /* Only make a full physics update when not replaying */
-    if(pReplayState == NULL) {
+    if(m_bIsAReplay == false) {
       /* Update physics */
       _UpdatePhysics(fTimeStep);
 
@@ -415,7 +415,7 @@ namespace vapp {
     
     // we don't change the sens of the wheel depending on the side, because 
     // loops must not make done just by changing the side
-    if(pReplayState == NULL) { /* this does not work for replays */
+    if(m_bIsAReplay == false) { /* this does not work for replays */
       double fAngle = acos(m_BikeS.fFrameRot[0]);
       bool bCounterclock;
       if(m_BikeS.fFrameRot[2] < 0.0f) fAngle = 2*3.14159f - fAngle;
@@ -562,7 +562,8 @@ namespace vapp {
          Replay *recordingReplay,
          bool bIsAReplay) {
 
-    m_isScriptActiv = bIsAReplay == false;
+    m_bIsAReplay = bIsAReplay;
+    m_isScriptActiv = (m_bIsAReplay == false);
     m_bLevelInitSuccess = true;
 
     /* Clean up first, just for safe's sake */
@@ -588,7 +589,8 @@ namespace vapp {
     /* Clear collision system */
     m_Collision.reset();
     bFrontWheelTouching = false;
-    bRearWheelTouching  = false;    
+    bRearWheelTouching  = false;
+    pLevelSrc->setCollisionSystem(&m_Collision);
 
     /* Clear stuff */
     clearStates();
@@ -755,7 +757,7 @@ namespace vapp {
     /* execute events */
     executeEvents(recordingReplay);
 
-    if(bIsAReplay == false) {
+    if(m_bIsAReplay == false) {
       /* Update game state */
       _UpdateGameState(NULL);
     }
@@ -836,8 +838,10 @@ namespace vapp {
       }
     }
     
-    m_Collision.setDims(LevelBoundsMin.x,LevelBoundsMin.y,LevelBoundsMax.x,LevelBoundsMax.y);
-    
+    if(m_bIsAReplay == false){
+      m_Collision.setDims(LevelBoundsMin.x,LevelBoundsMin.y,LevelBoundsMax.x,LevelBoundsMax.y);
+    }
+
     Log("Generating level from %d block%s...",InBlocks.size(),InBlocks.size()==1?"":"s");
     
     /* For each input block */
@@ -846,7 +850,7 @@ namespace vapp {
     m_zonesTouching.clear();
     m_entitiesTouching.clear();
 
-    nTotalBSPErrors = m_pLevelSrc->loadToPlay(m_Collision);
+    nTotalBSPErrors = m_pLevelSrc->loadToPlay(!m_bIsAReplay);
 
     Log(" %d poly%s in total",m_pLevelSrc->Blocks().size(),m_pLevelSrc->Blocks().size()==1?"":"s");        
     
@@ -855,28 +859,30 @@ namespace vapp {
       gameMessage(std::string(GAMETEXT_WARNING) + ":");
       gameMessage(GAMETEXT_ERRORSINLEVEL);
     }
-           
-    /* Give limits to collision system */
-    m_Collision.defineLine( m_pLevelSrc->LeftLimit(), m_pLevelSrc->TopLimit(),
-                            m_pLevelSrc->LeftLimit(), m_pLevelSrc->BottomLimit(),
-                            DEFAULT_PHYS_WHEEL_GRIP);
-    m_Collision.defineLine( m_pLevelSrc->LeftLimit(), m_pLevelSrc->BottomLimit(),
-                            m_pLevelSrc->RightLimit(), m_pLevelSrc->BottomLimit(),
-                            DEFAULT_PHYS_WHEEL_GRIP );
-    m_Collision.defineLine( m_pLevelSrc->RightLimit(), m_pLevelSrc->BottomLimit(),
-                            m_pLevelSrc->RightLimit(), m_pLevelSrc->TopLimit(),
-                            DEFAULT_PHYS_WHEEL_GRIP );
-    m_Collision.defineLine( m_pLevelSrc->RightLimit(), m_pLevelSrc->TopLimit(),
-                            m_pLevelSrc->LeftLimit(), m_pLevelSrc->TopLimit(),
-                            DEFAULT_PHYS_WHEEL_GRIP );
 
-    /* Show stats about the collision system */
-    CollisionSystemStats CStats;
-    m_Collision.getStats(&CStats);
-    Log(" %dx%d grid with %.1fx%.1f cells (%.0f%% empty)",
-        CStats.nGridWidth,CStats.nGridHeight,CStats.fCellWidth,CStats.fCellHeight,
-        CStats.fPercentageOfEmptyCells);
-    Log(" %d total blocking lines",CStats.nTotalLines);
+    if(m_bIsAReplay == false){
+      /* Give limits to collision system */
+      m_Collision.defineLine( m_pLevelSrc->LeftLimit(), m_pLevelSrc->TopLimit(),
+			      m_pLevelSrc->LeftLimit(), m_pLevelSrc->BottomLimit(),
+			      DEFAULT_PHYS_WHEEL_GRIP);
+      m_Collision.defineLine( m_pLevelSrc->LeftLimit(), m_pLevelSrc->BottomLimit(),
+			      m_pLevelSrc->RightLimit(), m_pLevelSrc->BottomLimit(),
+			      DEFAULT_PHYS_WHEEL_GRIP );
+      m_Collision.defineLine( m_pLevelSrc->RightLimit(), m_pLevelSrc->BottomLimit(),
+			      m_pLevelSrc->RightLimit(), m_pLevelSrc->TopLimit(),
+			      DEFAULT_PHYS_WHEEL_GRIP );
+      m_Collision.defineLine( m_pLevelSrc->RightLimit(), m_pLevelSrc->TopLimit(),
+			      m_pLevelSrc->LeftLimit(), m_pLevelSrc->TopLimit(),
+			      DEFAULT_PHYS_WHEEL_GRIP );
+
+      /* Show stats about the collision system */
+      CollisionSystemStats CStats;
+      m_Collision.getStats(&CStats);
+      Log(" %dx%d grid with %.1fx%.1f cells (%.0f%% empty)",
+	  CStats.nGridWidth,CStats.nGridHeight,CStats.fCellWidth,CStats.fCellHeight,
+	  CStats.fPercentageOfEmptyCells);
+      Log(" %d total blocking lines",CStats.nTotalLines);
+    }
   }
 
 
@@ -1008,48 +1014,72 @@ namespace vapp {
     }
   }
 
+
   void MotoGame::_UpdateEntities(void) {
     Vector2f HeadPos = m_BikeS.Dir==DD_RIGHT?m_BikeS.HeadP:m_BikeS.Head2P;
-    
+
+    #define MIN2(a, b) ((a)>(b)?(b):(a))
+    #define MIN3(a, b, c) MIN2(MIN2((a), (b)), (c))
+    #define MAX2(a, b) ((a)>(b)?(a):(b))
+    #define MAX3(a, b, c) MAX2(MAX2((a), (b)), (c))
+
+    /* Get biker bounding box */
+    float xmin, xmax, ymin, ymax;
+    float headSize = m_BikeS.Parameters().HeadSize();
+    float wheelRadius = m_BikeS.Parameters().WheelRadius();
+    /* in case the body is outside of the aabb */
+    float securityMargin = 0.5;
+    xmin = MIN3(HeadPos[0]-headSize, m_BikeS.FrontWheelP[0]-wheelRadius, m_BikeS.RearWheelP[0]-wheelRadius) - securityMargin;
+    ymin = MIN3(HeadPos[1]-headSize, m_BikeS.FrontWheelP[1]-wheelRadius, m_BikeS.RearWheelP[1]-wheelRadius) - securityMargin;
+    xmax = MAX3(HeadPos[0]+headSize, m_BikeS.FrontWheelP[0]+wheelRadius, m_BikeS.RearWheelP[0]+wheelRadius) + securityMargin;
+    ymax = MAX3(HeadPos[1]+headSize, m_BikeS.FrontWheelP[1]+wheelRadius, m_BikeS.RearWheelP[1]+wheelRadius) + securityMargin;
+
+    std::vector<Entity*> entities = m_Collision.getEntitiesNearPosition(xmin, ymin, xmax, ymax);
+
     /* Do player touch anything? */
-    for(int i=0;i<m_pLevelSrc->Entities().size();i++) {  
-      
-      /* Head? */
-      if(circleTouchCircle2f(m_pLevelSrc->Entities()[i]->DynamicPosition(),
-                             m_pLevelSrc->Entities()[i]->Size(),
-                             HeadPos,
-                             m_BikeS.Parameters().HeadSize())) {
-        if(setTouching(*(m_pLevelSrc->Entities()[i]), true) == added){
-          createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
-                                                      m_pLevelSrc->Entities()[i]->Id(),
-                                                      true));
-        }
-        
-        /* Wheel then ? */
-      } else if(circleTouchCircle2f(m_pLevelSrc->Entities()[i]->DynamicPosition(),
-                                    m_pLevelSrc->Entities()[i]->Size(),
-                                    m_BikeS.FrontWheelP,
-                                    m_BikeS.Parameters().WheelRadius()) ||
-                circleTouchCircle2f(m_pLevelSrc->Entities()[i]->DynamicPosition(),
-                                    m_pLevelSrc->Entities()[i]->Size(),
-                                    m_BikeS.RearWheelP,
-                                    m_BikeS.Parameters().WheelRadius())) {
-        if(setTouching(*(m_pLevelSrc->Entities()[i]), true) == added){
-          createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
-                                                      m_pLevelSrc->Entities()[i]->Id(),
-                                                      false));
-        }
-        
-        /* body then ?*/
-      } else if(touchEntityBodyExceptHead(m_BikeS, *(m_pLevelSrc->Entities()[i]))) {
-        if(setTouching(*(m_pLevelSrc->Entities()[i]), true) == added){
-          createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
-                                                      m_pLevelSrc->Entities()[i]->Id(),
-                                                      false));
-        }
+    for(int i=0;i<entities.size();i++) {
+      /* Test against the biker aabb first */
+      if(true){
+	/* Head? */
+	if(circleTouchCircle2f(entities[i]->DynamicPosition(),
+			       entities[i]->Size(),
+			       HeadPos,
+			       m_BikeS.Parameters().HeadSize())) {
+	  if(setTouching(*(entities[i]), true) == added){
+	    createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
+							entities[i]->Id(),
+							true));
+	  }
+	  
+	  /* Wheel then ? */
+	} else if(circleTouchCircle2f(entities[i]->DynamicPosition(),
+				      entities[i]->Size(),
+				      m_BikeS.FrontWheelP,
+				      m_BikeS.Parameters().WheelRadius()) ||
+		  circleTouchCircle2f(entities[i]->DynamicPosition(),
+				      entities[i]->Size(),
+				      m_BikeS.RearWheelP,
+				      m_BikeS.Parameters().WheelRadius())) {
+	  if(setTouching(*(entities[i]), true) == added){
+	    createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
+							entities[i]->Id(),
+							false));
+	  }
+	  
+	  /* body then ?*/
+	} else if(touchEntityBodyExceptHead(m_BikeS, *(entities[i]))) {
+	  if(setTouching(*(entities[i]), true) == added){
+	    createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
+							entities[i]->Id(),
+							false));
+	  }
+	} else {
+	  /* TODO::generate an event "leaves entity" if needed */
+	  setTouching(*(entities[i]), false);
+	}
       } else {
-	/* TODO::generate an event leaves entity */
-        setTouching(*(m_pLevelSrc->Entities()[i]), false);
+	/* TODO::generate an event "leaves entity" if needed */
+	setTouching(*(entities[i]), false);
       }
     }
   }
@@ -1251,6 +1281,9 @@ namespace vapp {
 
   void MotoGame::SetEntityPos(Entity *pEntity, float pX, float pY) {
     pEntity->setDynamicPosition(Vector2f(pX, pY));
+    if(m_bIsAReplay == false){
+      m_Collision.moveEntity(pEntity, pX, pY);
+    }
   }
 
   void MotoGame::PlaceInGameArrow(float pX, float pY, float pAngle) {
@@ -1482,6 +1515,9 @@ namespace vapp {
 
   void MotoGame::_KillEntity(Entity *pEnt) {
     getLevelSrc()->killEntity(pEnt->Id());
+    if(m_bIsAReplay == false){
+      m_Collision.removeEntity(pEnt);
+    }
   }
 
 }

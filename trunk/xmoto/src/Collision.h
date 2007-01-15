@@ -24,8 +24,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "VCommon.h"
 #include "VApp.h"
+#include "xmscene/Entity.h"
 
 namespace vapp {
+
+  class CollisionSystem;
 
 	/*===========================================================================
 	Structs
@@ -35,12 +38,24 @@ namespace vapp {
     float x1,y1,x2,y2;
     float fGrip;
   };
-  
+
+  /* Entity */
+  struct ColEntity {
+    float x, y;
+    Entity* id;
+    /* in order to remove efficiently an entity from the grid,
+       we need to know in which cell it is */
+    /* if gridCell == -1, then it means that the entity is not in
+       the level boundaries (moved out by a script for example) */
+    int gridCell;
+  };
+
   /* Grid cell */
   struct GridCell {
     std::vector<Line *> Lines;
+    std::vector<ColEntity*> Entities;
   };
-  
+
   /* Stats */
   struct CollisionSystemStats {
     int nGridWidth,nGridHeight;
@@ -48,7 +63,7 @@ namespace vapp {
     float fPercentageOfEmptyCells;
     int nTotalLines;
   };
-  
+
 	/*===========================================================================
 	Collision detection class
   ===========================================================================*/
@@ -83,12 +98,22 @@ namespace vapp {
       std::vector<Line *> m_CheckedLinesW;
       std::vector<Line> m_CheckedCells;
       std::vector<Line> m_CheckedCellsW;
-      
+      std::vector<Entity*> m_CheckedEntities;
+
+      /* Adding zones and entities to the collision system */
+      /* In order to use space partionning with them */
+      void addEntity(Entity* id, float x, float y);
+      void removeEntity(Entity* id);
+      void moveEntity(Entity* id, float newX, float newY);
+      std::vector<Entity*> getEntitiesNearPosition(float xmin, float ymin,
+						   float xmax, float ymax);
+
     private:
       /* Data */
       float m_fMinX,m_fMinY,m_fMaxX,m_fMaxY;
       std::vector<Line *> m_Lines;      
       std::vector<Line *> m_ExternalDynamicLines; /* list NOT managed by this class */
+      std::vector<ColEntity*> m_Entities;
       
       bool m_bDebugFlag;
       
@@ -106,6 +131,11 @@ namespace vapp {
       double _CalculateDepth(const Vector2f &Cp,float Cr,Vector2f P);
       double _CalculateCircleLineDepth(const Vector2f &Cp,float Cr,Vector2f P1,Vector2f P2);
       int _AddContactToList(dContact *pContacts,int nNumContacts,dContact *pc,int nMaxContacts);
+
+      ColEntity* _getEntity(Entity* id);
+      ColEntity* _getAndRemoveEntity(Entity* id);
+      void _removeEntityFromCell(ColEntity* pEnt);
+      void _addEntityInCell(ColEntity* pEnt, float x, float y);
   };
 
 }

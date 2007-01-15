@@ -22,7 +22,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __BLOCK_H__
 #define __BLOCK_H__
 
-#include "../Collision.h"
+namespace vapp{
+  class CollisionSystem;
+  class Line;
+}
+
 #include "../helpers/VMath.h"
 #include "../helpers/Color.h"
 #include "../BSP.h"
@@ -122,7 +126,8 @@ class Block {
 	/* angle position ; consider of the block center */
   void setDynamicRotation(float i_dynamicRotation);
 
-  int loadToPlay(vapp::CollisionSystem& io_collisionSystem); /* load for playing */
+  int loadToPlay(vapp::CollisionSystem& io_collisionSystem,
+		 bool manageCollisions); /* load for playing */
   void unloadToPlay();
 
   void saveXml(vapp::FileHandle *i_pfh);

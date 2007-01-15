@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "Block.h"
+#include "../Collision.h"
 
 /* Vertex */
 ConvexBlockVertex::ConvexBlockVertex(const Vector2f& i_position, const Vector2f& i_texturePosition) {
@@ -125,8 +126,12 @@ Vector2f Block::DynamicPosition() const {
 }
 
 void Block::updateCollisionLines() {
+  bool manageCollisions = (m_collisionLines.size() != 0);
   /* Ignore background blocks */
-  if(isBackground() || isDynamic() == false) return;
+  if(isBackground()
+     || isDynamic() == false
+     || manageCollisions == false)
+    return;
 
   /* Build rotation matrix for block */
   float fR[4]; 
@@ -176,7 +181,8 @@ void Block::setDynamicRotation(float i_dynamicRotation) {
   updateCollisionLines();
 }
 
-int Block::loadToPlay(vapp::CollisionSystem& io_collisionSystem) {
+int Block::loadToPlay(vapp::CollisionSystem& io_collisionSystem,
+		      bool manageCollisions) {
 
   m_dynamicPosition       = m_initialPosition;
   m_dynamicRotation       = m_initialRotation;
@@ -193,25 +199,27 @@ int Block::loadToPlay(vapp::CollisionSystem& io_collisionSystem) {
     /* Next vertex? */
     unsigned int inext = i+1;
     if(inext == Vertices().size()) inext=0;
-    
-    /* add static lines */
-    if(isBackground() == false && isDynamic() == false) {
-      /* Add line to collision handler */
-      io_collisionSystem.defineLine(DynamicPosition().x + Vertices()[i]->Position().x,
-                                    DynamicPosition().y + Vertices()[i]->Position().y,
-                                    DynamicPosition().x + Vertices()[inext]->Position().x,
-                                    DynamicPosition().y + Vertices()[inext]->Position().y,
-                                    Grip());
-    }
-   
-    /* add dynamic lines */
-    if(isBackground() == false && isDynamic()) {
-      /* Define collision lines */
-      vapp::Line *v_line = new vapp::Line;
-      v_line->x1 = v_line->y1 = v_line->x2 = v_line->y2 = 0.0f;
-      v_line->fGrip = m_grip;
-      m_collisionLines.push_back(v_line);
-      io_collisionSystem.addExternalDynamicLine(v_line);
+
+    if(manageCollisions){
+      /* add static lines */
+      if(isBackground() == false && isDynamic() == false) {
+	/* Add line to collision handler */
+	io_collisionSystem.defineLine(DynamicPosition().x + Vertices()[i]->Position().x,
+				      DynamicPosition().y + Vertices()[i]->Position().y,
+				      DynamicPosition().x + Vertices()[inext]->Position().x,
+				      DynamicPosition().y + Vertices()[inext]->Position().y,
+				      Grip());
+      }
+      
+      /* add dynamic lines */
+      if(isBackground() == false && isDynamic()) {
+	/* Define collision lines */
+	vapp::Line *v_line = new vapp::Line;
+	v_line->x1 = v_line->y1 = v_line->x2 = v_line->y2 = 0.0f;
+	v_line->fGrip = m_grip;
+	m_collisionLines.push_back(v_line);
+	io_collisionSystem.addExternalDynamicLine(v_line);
+      }
     }
 
     /* Add line to BSP generator */

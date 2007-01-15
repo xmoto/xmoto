@@ -193,6 +193,7 @@ namespace vapp {
     BikeState *getBikeState(void) {return &m_BikeS;}
     bool isSqueeking(void) {return m_bSqueeking;}
     float howMuchSqueek(void) {return m_fHowMuchSqueek;}
+    bool isAReplay() {return m_bIsAReplay;}
 
 #if defined(ALLOW_GHOST)
       BikeState *getGhostBikeState(void) {return &m_GhostBikeS;}
@@ -383,7 +384,10 @@ namespace vapp {
       float m_lastCallToEveryHundreath;
             
       bool m_isScriptActiv; /* change this variable to activ/desactiv scripting */
-      
+      /* true if showing a replay.
+         false if user playing */
+      bool m_bIsAReplay;
+
       std::vector<Entity *> m_entitiesTouching;
       std::vector<Zone *>   m_zonesTouching;
 

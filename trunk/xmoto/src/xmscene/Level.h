@@ -57,7 +57,7 @@ class Level {
 
   /* load level so that it is possible to play */
   /* to replay a level, unload then, reload it */
-  int loadToPlay(vapp::CollisionSystem& p_CollisionSystem); /* return the number of errors found */
+  int loadToPlay(bool manageCollisions); /* return the number of errors found */
   void unloadToPlay();
 
   std::string Id()          const;
@@ -94,6 +94,7 @@ class Level {
   void setDate(const std::string& i_date);
   void setAuthor(const std::string& i_author);
   void setSky(const std::string& i_sky);
+  void setCollisionSystem(vapp::CollisionSystem* p_CollisionSystem);
 
   std::string scriptFileName() const;
   std::string scriptSource() const;
@@ -148,6 +149,9 @@ class Level {
   std::vector<Entity *> m_entitiesExterns;
   Entity               *m_startEntity; /* entity where the player start */
   bool m_isBodyLoaded;
+  vapp::CollisionSystem* m_pCollisionSystem;
+  /* to avoid calculate it each frame */
+  int  m_nbEntitiesToTake;
   SkyEffectType m_skyEffect;
   std::string m_borderTexture;
 

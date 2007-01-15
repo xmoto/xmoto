@@ -40,6 +40,7 @@ Level::Level() {
   m_topLimit    = 0.0;
   m_bottomLimit = 0.0;
   m_xmlSource = NULL;
+  m_nbEntitiesToTake = 0;
   m_skyEffect = SKY_EFFECT1;
   m_borderTexture = "";
 }
@@ -198,6 +199,10 @@ void Level::setSky(const std::string& i_sky) {
   m_sky = i_sky;
 }
 
+void Level::setCollisionSystem(vapp::CollisionSystem* p_CollisionSystem) {
+  m_pCollisionSystem = p_CollisionSystem;
+}
+
 std::string Level::scriptFileName() const {
   return m_scriptFileName;
 }
@@ -225,6 +230,10 @@ std::string Level::Sky() const {
 void Level::killEntity(const std::string& i_entityId) {
   for(unsigned int i=0; i<m_entities.size(); i++) {
     if(m_entities[i]->Id() == i_entityId) {
+      if(m_entities[i]->IsToTake()){
+	m_nbEntitiesToTake--;
+      }
+      m_entities[i]->setAlive(false);
       m_entitiesDestroyed.push_back(m_entities[i]);
       m_entities.erase(m_entities.begin() + i);
       return;
@@ -238,21 +247,22 @@ std::vector<Entity *>& Level::Entities() {
 }
 
 unsigned int Level::countToTakeEntities() {
-  unsigned int n = 0;
-  
-  for(unsigned int i=0; i<m_entities.size(); i++) {
-    if(m_entities[i]->IsToTake()) {
-      n++;
-    }
-  }
-  return n;
+  return m_nbEntitiesToTake;
 }
 
 void Level::revertEntityDestroyed(const std::string& i_entityId) {
   for(unsigned int i=0; i<m_entitiesDestroyed.size(); i++) {
     if(m_entitiesDestroyed[i]->Id() == i_entityId) {
+      m_entitiesDestroyed[i]->setAlive(true);
+
+      if(m_entitiesDestroyed[i]->IsToTake()){
+	m_nbEntitiesToTake++;
+      }
+
       m_entities.push_back(m_entitiesDestroyed[i]);
       m_entitiesDestroyed.erase(m_entitiesDestroyed.begin() + i);
+
+
       return;
     }
   }
@@ -869,13 +879,14 @@ int Level::compareVersionNumbers(const std::string &v1,const std::string &v2) {
   return 0;    
 }
 
-int Level::loadToPlay(vapp::CollisionSystem& p_CollisionSystem) {
+int Level::loadToPlay(bool manageCollisions) {
   int v_nbErrors = 0;
 
   /* preparing blocks */
   for(unsigned int i=0; i<m_blocks.size(); i++) {
     try {
-      v_nbErrors += m_blocks[i]->loadToPlay(p_CollisionSystem);
+      v_nbErrors += m_blocks[i]->loadToPlay(*m_pCollisionSystem,
+					    manageCollisions);
     } catch(Exception &e) {
       throw Exception("Fail to load block '" + m_blocks[i]->Id() + "' :\n" + e.getMsg());
     }
@@ -884,6 +895,15 @@ int Level::loadToPlay(vapp::CollisionSystem& p_CollisionSystem) {
   /* Spawn initial entities */
   for(unsigned int i=0; i<m_entities.size(); i++) {
     m_entities[i]->loadToPlay();
+    Vector2f v = m_entities[i]->DynamicPosition();
+
+    if(manageCollisions){
+      m_pCollisionSystem->addEntity(m_entities[i], v[0], v[1]);
+    }
+
+    if(m_entities[i]->IsToTake()){
+      m_nbEntitiesToTake++;
+    }
   }
   
   return v_nbErrors;
@@ -910,6 +930,8 @@ void Level::unloadToPlay() {
     delete m_entitiesExterns[i];
   }
   m_entitiesExterns.clear();
+
+  m_nbEntitiesToTake = 0;
 }
 
 void Level::addLimits() {
@@ -962,6 +984,9 @@ void Level::addLimits() {
 
 void Level::spawnEntity(Entity *v_entity) {
   m_entitiesExterns.push_back(v_entity);
+  if(v_entity->IsToTake()){
+    m_nbEntitiesToTake++;
+  }
 }
 
 std::vector<Entity *>& Level::EntitiesExterns() {

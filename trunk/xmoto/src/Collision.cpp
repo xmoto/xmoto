@@ -44,9 +44,12 @@ namespace vapp {
   #define CD_MIN(a,b)             ((a)>(b)?(b):(a))
   #define CD_MAX(a,b)             ((a)<(b)?(b):(a))
   
-  #define CD_MIN_CELL_SIZE        2.0f
-  #define CD_MAX_GRID_SIZE        16
   #define CD_EPSILON              0.01f
+
+  #define EMPTY_AND_CLEAR_VECTOR(v) for(int i=0;i<(v).size();i++) {\
+                                      delete (v)[i]; \
+                                    } \
+                                    (v).clear()
 
   /*===========================================================================
   Reset collision system
@@ -57,12 +60,10 @@ namespace vapp {
       delete [] m_pGrid;
       m_pGrid = NULL;
     }
-    
-    for(int i=0;i<m_Lines.size();i++) {
-      delete m_Lines[i];
-    }
-    m_Lines.clear();
-    
+
+    EMPTY_AND_CLEAR_VECTOR(m_Lines);
+    EMPTY_AND_CLEAR_VECTOR(m_Entities);
+
     m_ExternalDynamicLines.clear();
   }
  
@@ -72,45 +73,24 @@ namespace vapp {
   void CollisionSystem::addExternalDynamicLine(Line *pLine) {
     m_ExternalDynamicLines.push_back(pLine);
   }
- 
+
   /*===========================================================================
   Set dimensions of system
   ===========================================================================*/
   void CollisionSystem::setDims(float fMinX,float fMinY,float fMaxX,float fMaxY) {
     /* Find suitable grid properties - first horizontal */
-    int nTryGridWidth = CD_MAX_GRID_SIZE;
-    do {
-      float fCellWidth = (fMaxX - fMinX) / (float)nTryGridWidth;
-      if(fCellWidth >= CD_MIN_CELL_SIZE) {
-        m_fCellWidth = fCellWidth;
-        m_nGridWidth = nTryGridWidth;
-        break;
-      }
-      nTryGridWidth--;
-    } while(nTryGridWidth > 0);
-    
-    if(nTryGridWidth == 0) {
-      m_fCellWidth = fMaxX - fMinX;
-      m_nGridWidth = 1;
-    }
-    
+    /* The choice of the number of cell in the grid is quite
+       useless because it doesn't take care of how crowed are the cells...
+       As a consequence, I DECIDE to fix the size of the cells to 3x3. */
+
+    /* Horizontal */
+    m_nGridWidth = ceil((fMaxX - fMinX)/3.0);
+    m_fCellWidth = (fMaxX - fMinX)/m_nGridWidth;
+
     /* Then vertical */
-    int nTryGridHeight = CD_MAX_GRID_SIZE;
-    do {
-      float fCellHeight = (fMaxY - fMinY) / (float)nTryGridHeight;
-      if(fCellHeight >= CD_MIN_CELL_SIZE) {
-        m_fCellHeight = fCellHeight;
-        m_nGridHeight = nTryGridHeight;
-        break;
-      }
-      nTryGridHeight--;
-    } while(nTryGridHeight > 0);
-    
-    if(nTryGridHeight == 0) {
-      m_fCellHeight = fMaxY - fMinY;
-      m_nGridHeight = 1;
-    }
-    
+    m_nGridHeight = ceil((fMaxY - fMinY)/3.0);
+    m_fCellHeight = (fMaxY - fMinY)/m_nGridHeight;
+
     /* Set bounding box */
     m_fMinX = fMinX;
     m_fMinY = fMinY;
@@ -430,7 +410,10 @@ namespace vapp {
   ===========================================================================*/
   int CollisionSystem::_CollideCircleAndLine(Line *pLine,float x,float y,float r,dContact *pContacts,int nOldNumC,int nMaxC, float fGrip) {
     int nNumC = nOldNumC;
-  
+
+    /* First do a bounding box collision check */
+
+
     /* Is circle "behind" the line? */
     float vx = pLine->x2 - pLine->x1;
     float vy = pLine->y2 - pLine->y1;
@@ -672,5 +655,129 @@ namespace vapp {
     nNumContacts++;
     return nNumContacts;
   }
-  
+
+
+
+  void CollisionSystem::addEntity(Entity* id, float x, float y) {
+    /* Add Entity */
+    ColEntity *pNewEnt = new ColEntity;
+    pNewEnt->x = x;
+    pNewEnt->y = y;
+    pNewEnt->id = id;
+    m_Entities.push_back(pNewEnt);
+
+    _addEntityInCell(pNewEnt, x, y);
+  }
+
+
+  void CollisionSystem::removeEntity(Entity* id) {
+    ColEntity* pEnt = _getAndRemoveEntity(id);
+    _removeEntityFromCell(pEnt);
+
+    delete pEnt;
+  }
+
+
+  void CollisionSystem::moveEntity(Entity* id, float newX, float newY) {
+    ColEntity* pEnt = _getEntity(id);
+    _removeEntityFromCell(pEnt);
+    _addEntityInCell(pEnt, newX, newY);
+  }
+
+
+  std::vector<Entity*> CollisionSystem::getEntitiesNearPosition(float xmin, float ymin,
+								 float xmax, float ymax) {
+    std::vector<Entity*> entities;
+
+    int nMinCX = (int)floor(((xmin - m_fMinX - CD_EPSILON) * (float)m_nGridWidth) / (m_fMaxX - m_fMinX));
+    int nMinCY = (int)floor(((ymin - m_fMinY - CD_EPSILON) * (float)m_nGridHeight) / (m_fMaxY - m_fMinY));
+    int nMaxCX = (int)floor(((xmax - m_fMinX + CD_EPSILON) * (float)m_nGridWidth) / (m_fMaxX - m_fMinX));
+    int nMaxCY = (int)floor(((ymax - m_fMinY + CD_EPSILON) * (float)m_nGridHeight) / (m_fMaxY - m_fMinY));
+    
+    if(m_bDebugFlag) {
+      m_CheckedEntities.clear();
+    }
+
+    if(nMinCX < 0) nMinCX = 0;
+    if(nMinCY < 0) nMinCY = 0;
+    if(nMaxCX >= m_nGridWidth)  nMaxCX = m_nGridWidth;
+    if(nMaxCY >= m_nGridHeight) nMaxCY = m_nGridHeight;        
+
+    for(int i=nMinCX-1; i<=nMaxCX+1; i++){
+      if(i<0 || i>=m_nGridWidth)
+	continue;
+      for(int j=nMinCY-1; j<=nMaxCY+1; j++){
+	if(j<0 || j>=m_nGridHeight)
+	  continue;
+	int cell = i+j*m_nGridWidth;
+	std::vector<ColEntity *>& gridCellEntities = m_pGrid[cell].Entities;
+	for(int k=0; k<gridCellEntities.size(); k++){
+	  entities.push_back(gridCellEntities[k]->id);
+
+	  if(m_bDebugFlag) {
+	    m_CheckedEntities.push_back(gridCellEntities[k]->id);
+	  }
+	}
+      }
+    }
+
+    return entities;
+  }
+
+
+  ColEntity* CollisionSystem::_getEntity(Entity* id) {
+    for(int i=0; i<m_Entities.size(); i++){
+      if(m_Entities[i]->id == id){
+	return m_Entities[i];
+      }      
+    }
+
+    /* just return NULL ? */
+    throw Exception("Collision entity not found");
+  }
+
+
+  ColEntity* CollisionSystem::_getAndRemoveEntity(Entity* id) {
+    for(int i=0; i<m_Entities.size(); i++){
+      if(m_Entities[i]->id == id){
+	ColEntity* pEnt = m_Entities[i];
+	m_Entities.erase(m_Entities.begin() + i);
+	return pEnt;
+      }      
+    }
+
+    /* just return NULL ? */
+    throw Exception("Collision entity not found");
+  }
+
+
+  /* Leave the entity with a wrong gridCell, but not a pb cause it's filled from
+     the calling function and _removeEntityFromCell is a private one */
+  void CollisionSystem::_removeEntityFromCell(ColEntity* pEnt) {
+    int gridCell = pEnt->gridCell;
+    if(gridCell >= 0){
+      std::vector<ColEntity *>& gridCellEntities = m_pGrid[gridCell].Entities;
+
+      for(int i=0; i<gridCellEntities.size(); i++){
+	if(gridCellEntities[i] == pEnt){
+	  gridCellEntities.erase(gridCellEntities.begin() + i);
+	  return;
+	}
+      }
+    }
+  }
+
+
+  void CollisionSystem::_addEntityInCell(ColEntity* pEnt, float x, float y) {
+    int cx = (int)floor(((x - m_fMinX) * (float)m_nGridWidth) / (m_fMaxX - m_fMinX));
+    int cy = (int)floor(((y - m_fMinY) * (float)m_nGridHeight) / (m_fMaxY - m_fMinY));
+    
+    if(cx < 0 || cx >= m_nGridWidth || cy < 0 || cy > m_nGridHeight){
+      pEnt->gridCell = -1;
+    }
+    else{
+      pEnt->gridCell = cx + cy*m_nGridWidth;
+      m_pGrid[pEnt->gridCell].Entities.push_back(pEnt);
+    }
+  }
 }
