@@ -249,9 +249,7 @@ bool circleTouchAABB2f(const Vector2f &Cp,float Cr,const Vector2f &BMin,const Ve
 }
   
 bool pointTouchAABB2f(const Vector2f &P,const Vector2f &BMin,const Vector2f &BMax) {
-  if(P.x >= BMin.x && P.y >= BMin.y && P.x <= BMax.x && P.y <= BMax.y)
-    return true;
-  return false;
+  return (P.x >= BMin.x && P.y >= BMin.y && P.x <= BMax.x && P.y <= BMax.y);
 }
   
 bool AABBTouchAABB2f(const Vector2f &BMin1,const Vector2f &BMax1,const Vector2f &BMin2,const Vector2f &BMax2) {
@@ -259,16 +257,15 @@ bool AABBTouchAABB2f(const Vector2f &BMin1,const Vector2f &BMax1,const Vector2f 
                  BMin1.y<BMin2.y ? BMin1.y:BMin2.y );
   Vector2f FMax( BMax1.x>BMax2.x ? BMax1.x:BMax2.x, 
                  BMax1.y>BMax2.y ? BMax1.y:BMax2.y );
-  if(FMax.x-FMin.x < 0.0001f + (BMax1.x-BMin1.x)+(BMax2.x-BMin2.x) &&
-     FMax.y-FMin.y < 0.0001f + (BMax1.y-BMin1.y)+(BMax2.y-BMin2.y)) return true;
-  return false;
+
+  return (FMax.x-FMin.x < 0.0001f + (BMax1.x-BMin1.x)+(BMax2.x-BMin2.x) &&
+	  FMax.y-FMin.y < 0.0001f + (BMax1.y-BMin1.y)+(BMax2.y-BMin2.y));
 }
   
 bool circleTouchCircle2f(const Vector2f &Cp1,float Cr1,const Vector2f &Cp2,float Cr2) {
   /* Trivial test :) */
   float d = (Cp2 - Cp1).length();
-  if(d < Cr1+Cr2) return true;
-  return false;
+  return (d < Cr1+Cr2);
 }
 
 
