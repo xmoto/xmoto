@@ -15,7 +15,6 @@ Assigned to nicolas
 * F5 while developping a level, if the level is scripted, it could
    crash it and required a full F5 at the menu stage
 
-* BUG : --with-renderer-sdlGfx=0 --with-renderer-openGl=0 => segfault
 ========
 
 * script : disable a key (brake for example, ...)

@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Theme.h"
 #include "Image.h"
 namespace vapp {
+
   /**
    * VApp draw modes to be used as argument in startDraw
    * DRAW_MODE_POLYGON is a filled polygon drawing mode.
@@ -59,6 +60,9 @@ namespace vapp {
   public:
     DrawLib();
     virtual ~ DrawLib();
+
+    /* initialize a drawLib from a name */
+    static DrawLib* DrawLibFromName(std::string i_drawLibName);
 
     /**
    * initialize the screen

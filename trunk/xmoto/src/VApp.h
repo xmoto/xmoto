@@ -101,15 +101,23 @@ namespace vapp {
       m_CopyrightInfo = "";
       m_AppCommand = "";
       m_UserNotify = "";
-      m_bCmdDispWidth = false;
-      m_bCmdDispHeight = false;
-      m_bCmdDispBPP = false;
-      m_bCmdWindowed = false;
       m_fFramesPerSecond = 25.0f;
       m_fNextFrame = 0.0f;
       m_bNoWWW = false;
       m_nFrameDelay = 0;
       drawLib = NULL;
+
+      m_useGraphics = true;
+      m_useGlExtension = true;
+
+      m_CmdDispWidth = -1;
+      m_CmdDispHeight = -1;
+      m_CmdDispBpp = -1;
+      m_CmdWindowed = false;
+      m_bCmdDispWidth = false;
+      m_bCmdDispHeight = false;
+      m_bCmdDispBPP = false;
+      m_bCmdWindowed = false;
 
     } virtual ~ App() {
     }
@@ -240,6 +248,14 @@ namespace vapp {
        **/
     Theme m_theme;
     DrawLib *drawLib;
+    bool m_useGraphics;
+    bool m_useGlExtension;
+
+    int  m_CmdDispWidth;
+    int  m_CmdDispHeight;
+    int  m_CmdDispBpp;
+    bool m_CmdWindowed;
+    std::string m_drawLibName;
 
   private:
     /* Private helper functions */

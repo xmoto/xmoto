@@ -546,11 +546,11 @@ namespace vapp {
       }      
       else if(UserArgs[i] == "-listlevels") {
         m_bListLevels = true;
-        getDrawLib()->setNoGraphics(true);
+	m_useGraphics = false;
       }
       else if(UserArgs[i] == "-listreplays") {
         m_bListReplays = true;
-        getDrawLib()->setNoGraphics(true);
+	m_useGraphics = false;
       }
       else if(UserArgs[i] == "-timedemo") {
         m_bTimeDemo = true;
@@ -571,7 +571,7 @@ namespace vapp {
         m_bCleanCache = true;
      } else if(UserArgs[i] == "-replayInfos") {
        if(i+1<UserArgs.size()) {
-	 getDrawLib()->setNoGraphics(true);
+	 m_useGraphics = false;
 	 m_bDisplayInfosReplay = true;
 	 m_InfosReplay = UserArgs[i+1];
        } else

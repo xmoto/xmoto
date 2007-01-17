@@ -166,22 +166,32 @@ namespace vapp {
 
     /* Do user pre-init */
     userPreInit();
+
+    /* init drawLib */
+    drawLib = DrawLib::DrawLibFromName(m_drawLibName);
+
+    if(drawLib == NULL) {
+      throw Exception("Drawlib not initialized");
+    }
+
+    drawLib->setNoGraphics(m_useGraphics == false);
+    drawLib->setDontUseGLExtensions(m_useGraphics == false);
+
     int configured_width,configured_height,configured_BPP;
     bool configured_windowed;
-    configured_width = drawLib->getDispWidth();
-    configured_height = drawLib->getDispHeight();
-    configured_BPP = drawLib->getDispBPP();
-    selectDisplayMode(&configured_width,&configured_height,&configured_BPP , &configured_windowed);
+    /* user configuration */
+    selectDisplayMode(&configured_width, &configured_height, &configured_BPP, &configured_windowed);
         
+    /* overwrite by cmdline configuration */
+    if(isCmdDispWidth())    configured_width     = m_CmdDispWidth;
+    if(isCmdDispHeight())   configured_height    = m_CmdDispHeight;
+    if(isCmdDispBPP())      configured_BPP       = m_CmdDispBpp;
+    if(isCmdDispWindowed()) configured_windowed  = m_CmdWindowed;
+
     /* Init! */
     _Init(configured_width,configured_height,configured_BPP , configured_windowed);
     if(!drawLib->isNoGraphics()) {        
-      /* Tell DrawLib about it */
-      //#if defined(EMUL_800x600)      
-      //  setDrawDims(m_nDispWidth,m_nDispHeight,800,600);
-      //#else
-        drawLib->setDrawDims(configured_width,configured_height,configured_width,configured_height);
-      //#endif
+      drawLib->setDrawDims(configured_width,configured_height,configured_width,configured_height);
     }
     
     /* Now perform user init */
@@ -450,28 +460,6 @@ namespace vapp {
   ===========================================================================*/
   void App::_ParseArgs(int nNumArgs,char **ppcArgs) {
     std::vector<std::string> UserArgs;
-    //look if the graphical frontend is given
-    //on the command line
-#ifdef ENABLE_SDLGFX
-  //if booth options are compiled
-    for(int i=1;i<nNumArgs;i++) {
-      if(strcmp(ppcArgs[i],"-sdlgfx") == 0) {
-            if (drawLib == NULL){
-	     drawLib = new DrawLibSDLgfx();
-	    }
-      }
-    }
-#endif
-#ifdef ENABLE_OPENGL
-    if (drawLib == NULL){
-	     drawLib = new DrawLibOpenGL();
-    }
-#endif
-#ifdef ENABLE_SDLGFX
-    if (drawLib == NULL){
-	     drawLib = new DrawLibSDLgfx();
-    }
-#endif
   
     /* Walk through the args */
     for(int i=1;i<nNumArgs;i++) {
@@ -488,33 +476,28 @@ namespace vapp {
           Packager::goUnpack(BinFile,OutDir,bMakePackageList);
           exit(0); /* leaks memory too, but still nobody cares */
       } else if(!strcmp(ppcArgs[i],"-nogfx")) {
-        drawLib->setNoGraphics(true);
+	m_useGraphics = true;
       }
       else if(!strcmp(ppcArgs[i],"-res")) {
         if(i+1 == nNumArgs) 
           throw SyntaxError("missing resolution");
-        int configured_width , configured_height;
-        sscanf(ppcArgs[i+1],"%dx%d",&configured_width,&configured_height);
-	drawLib->setDispWidth(configured_width);
-	drawLib->setDispHeight(configured_height);
-	
+        sscanf(ppcArgs[i+1],"%dx%d",&m_CmdDispWidth,&m_CmdDispHeight);
         m_bCmdDispWidth = m_bCmdDispHeight = true;
         i++;
       }
       else if(!strcmp(ppcArgs[i],"-bpp")) {
         if(i+1 == nNumArgs) 
           throw SyntaxError("missing bit depth");
-        int configured_bpp = atoi(ppcArgs[i+1]);
-        drawLib->setDispBPP(configured_bpp);
+	m_CmdDispBpp = atoi(ppcArgs[i+1]);
         m_bCmdDispBPP = true;
         i++;
       }
       else if(!strcmp(ppcArgs[i],"-fs")) {
-        drawLib->setWindowed(false);
+	m_CmdWindowed = false;
         m_bCmdWindowed = true;
       }
       else if(!strcmp(ppcArgs[i],"-win")) {
-        drawLib->setWindowed(true);
+	m_CmdWindowed = true;
         m_bCmdWindowed = true;
       }
       else if(!strcmp(ppcArgs[i],"-q")) {
@@ -524,13 +507,15 @@ namespace vapp {
         g_bVerbose = true;
       } 
       else if(!strcmp(ppcArgs[i],"-noexts")) {
-        drawLib->setDontUseGLExtensions(true);
+	m_useGlExtension = false;
       }
       else if(!strcmp(ppcArgs[i],"-nowww")) {
         m_bNoWWW = true;
-      }  else if(strcmp(ppcArgs[i],"-sdlgfx") == 0) {
-				//
-			} else if(!strcmp(ppcArgs[i],"-h") || !strcmp(ppcArgs[i],"-?") ||
+#ifdef ENABLE_SDLGFX
+      } else if(!strcmp(ppcArgs[i],"-sdlgfx")) {
+	m_drawLibName = "SDLGFX";
+#endif
+      } else if(!strcmp(ppcArgs[i],"-h") || !strcmp(ppcArgs[i],"-?") ||
               !strcmp(ppcArgs[i],"--help") || !strcmp(ppcArgs[i],"-help")) {
         printf("%s (Version %s)\n",m_AppName.c_str(),getVersionString().c_str());
         if(m_CopyrightInfo.length()>0)

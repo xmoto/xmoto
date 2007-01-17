@@ -27,6 +27,24 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 namespace vapp {
 
+  DrawLib* DrawLib::DrawLibFromName(std::string i_drawLibName) {
+#ifdef ENABLE_OPENGL
+    if (i_drawLibName == "OPENGL"){
+      return new DrawLibOpenGL();
+    }
+#endif
+#ifdef ENABLE_SDLGFX
+    if (i_drawLibName == "SDLGFX"){
+      return new DrawLibSDLgfx();
+    }
+#endif
+
+#ifdef ENABLE_OPENGL
+    return new DrawLibOpenGL();
+#endif
+    return NULL;
+  }
+
  DrawLib::DrawLib() {
   m_nDispWidth=800;
   m_nDispHeight=600;

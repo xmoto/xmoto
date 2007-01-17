@@ -294,7 +294,7 @@ namespace vapp {
       bool m_bEnableGhostInfo;
 #endif
       std::string m_ReplayPlayerName;
-      
+  
       /* WWW */
 #if defined(SUPPORT_WEBACCESS)
       bool m_bShowWebHighscoreInGame;           /* true: Show world highscore inside the game */
