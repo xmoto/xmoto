@@ -211,6 +211,7 @@ namespace vapp {
       virtual void parseUserArgs(std::vector<std::string> &UserArgs);
       virtual void helpUserArgs(void);
       virtual void selectDisplayMode(int *pnWidth,int *pnHeight,int *pnBPP,bool *pbWindowed);
+      virtual std::string selectDrawLibMode();
       virtual std::string getConfigThemeName(ThemeChoicer *p_themeChoicer);
 
       /* Methods */

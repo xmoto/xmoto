@@ -39,9 +39,14 @@ namespace vapp {
     }
 #endif
 
+    /* if no name is given, try to force one renderer */
 #ifdef ENABLE_OPENGL
     return new DrawLibOpenGL();
 #endif
+#ifdef ENABLE_SDLGFX
+    return new DrawLibSDLgfx();
+#endif
+
     return NULL;
   }
 

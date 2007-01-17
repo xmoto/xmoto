@@ -168,7 +168,11 @@ namespace vapp {
     userPreInit();
 
     /* init drawLib */
-    drawLib = DrawLib::DrawLibFromName(m_drawLibName);
+    if(m_CmdDrawLibName == "") {
+      drawLib = DrawLib::DrawLibFromName(selectDrawLibMode());
+    } else {
+      drawLib = DrawLib::DrawLibFromName(m_CmdDrawLibName);
+    }
 
     if(drawLib == NULL) {
       throw Exception("Drawlib not initialized");
@@ -513,7 +517,7 @@ namespace vapp {
         m_bNoWWW = true;
 #ifdef ENABLE_SDLGFX
       } else if(!strcmp(ppcArgs[i],"-sdlgfx")) {
-	m_drawLibName = "SDLGFX";
+	m_CmdDrawLibName = "SDLGFX";
 #endif
       } else if(!strcmp(ppcArgs[i],"-h") || !strcmp(ppcArgs[i],"-?") ||
               !strcmp(ppcArgs[i],"--help") || !strcmp(ppcArgs[i],"-help")) {

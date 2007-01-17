@@ -50,20 +50,16 @@ namespace vapp {
   Select display mode
   ===========================================================================*/
   void GameApp::selectDisplayMode(int *pnWidth,int *pnHeight,int *pnBPP,bool *pbWindowed) {
-    if(!isCmdDispWidth() && !isCmdDispHeight()) {
-      *pnWidth = m_Config.getInteger("DisplayWidth");
-      *pnHeight = m_Config.getInteger("DisplayHeight");
-    }
-    
-    if(!isCmdDispBPP()) {
-      *pnBPP = m_Config.getInteger("DisplayBPP");
-    }
-    
-    if(!isCmdDispWindowed()) {
-      *pbWindowed = m_Config.getBool("DisplayWindowed");
-    }
+    *pnWidth = m_Config.getInteger("DisplayWidth");
+    *pnHeight = m_Config.getInteger("DisplayHeight");
+    *pnBPP = m_Config.getInteger("DisplayBPP");
+    *pbWindowed = m_Config.getBool("DisplayWindowed");
   }  
   
+  std::string GameApp::selectDrawLibMode() {
+    return m_Config.getString("DrawLib");
+  }
+
   /*===========================================================================
   Update loading screen
   ===========================================================================*/
@@ -636,6 +632,7 @@ namespace vapp {
     m_Config.createVar( "DisplayWindowed",        "false" );
     m_Config.createVar( "MenuBackgroundGraphics", "High" );
     m_Config.createVar( "GameGraphics",           "High" );
+    m_Config.createVar( "DrawLib",                "OPENGL" );
         
     /* Audio */
     m_Config.createVar( "AudioEnable",            "true" );

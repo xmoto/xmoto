@@ -243,6 +243,10 @@ namespace vapp {
     virtual void selectDisplayMode(int *pnWidth, int *pnHeight, int *pnBPP,
 				   bool * pbWindowed) {
     }
+
+    virtual std::string selectDrawLibMode() {
+      return "";
+    }
       /**
        * The DrawLib instance to use for this app
        **/
@@ -255,7 +259,7 @@ namespace vapp {
     int  m_CmdDispHeight;
     int  m_CmdDispBpp;
     bool m_CmdWindowed;
-    std::string m_drawLibName;
+    std::string m_CmdDrawLibName;
 
   private:
     /* Private helper functions */
