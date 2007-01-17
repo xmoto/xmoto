@@ -516,8 +516,12 @@ namespace vapp {
       else if(!strcmp(ppcArgs[i],"-nowww")) {
         m_bNoWWW = true;
 #ifdef ENABLE_SDLGFX
-      } else if(!strcmp(ppcArgs[i],"-sdlgfx")) {
-	m_CmdDrawLibName = "SDLGFX";
+      } else if(!strcmp(ppcArgs[i],"-drawlib")) {
+        if(i+1 == nNumArgs) {
+          throw SyntaxError("missing drawlib");
+	}
+	m_CmdDrawLibName = ppcArgs[i+1];
+        i++;
 #endif
       } else if(!strcmp(ppcArgs[i],"-h") || !strcmp(ppcArgs[i],"-?") ||
               !strcmp(ppcArgs[i],"--help") || !strcmp(ppcArgs[i],"-help")) {
