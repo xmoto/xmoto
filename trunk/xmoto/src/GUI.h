@@ -700,7 +700,8 @@ namespace vapp {
       int ScrollBarScrollerStartY();
       void setScrollBarScrollerStartY(float y);
       float ScrollNbVisibleItems();
-      
+      bool isScrollBarRequired();
+
       int m_headerHeight;
       int m_headerSubBorderHeight;
       int m_rowHeight;

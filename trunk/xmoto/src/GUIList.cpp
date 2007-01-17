@@ -124,6 +124,10 @@ namespace vapp {
     return LinesHeight() / ((float) RowHeight());
   }
 
+  bool UIList::isScrollBarRequired() {
+    return ScrollNbVisibleItems() < m_Entries.size();
+  }
+
   UIList::UIList(UIWindow *pParent, int x, int y, std::string Caption, int nWidth, int nHeight) {      
     initW(pParent,x,y,Caption,nWidth,nHeight);        
     m_nScroll = 0;
@@ -308,7 +312,7 @@ namespace vapp {
         }           
       }
     }
-    putRect(6,m_headerHeight+6,getPosition().nWidth-12 - 20,2,MAKE_COLOR(188,186,67,255));
+    putRect(6,m_headerHeight+6,getPosition().nWidth-12,2,MAKE_COLOR(188,186,67,255));
 
     /* Render list */    
     if(!isMouseLDown()) {
@@ -316,22 +320,24 @@ namespace vapp {
       m_bScrollUpPressed = false;
     }
 
-    if(m_bScrollUpPressed && m_bScrollUpHover) {
-      putElem(m_lineMargeX+LinesWidth(),6,20,20,UI_ELEM_SCROLLBUTTON_UP_DOWN,false);
-    }
-    else
-		putElem(m_lineMargeX+LinesWidth(),6,20,20,UI_ELEM_SCROLLBUTTON_UP_UP,false);
+    if(isScrollBarRequired()) {
+      if(m_bScrollUpPressed && m_bScrollUpHover) {
+	putElem(m_lineMargeX+LinesWidth(),6,20,20,UI_ELEM_SCROLLBUTTON_UP_DOWN,false);
+      }
+      else
+      putElem(m_lineMargeX+LinesWidth(),6,20,20,UI_ELEM_SCROLLBUTTON_UP_UP,false);
       
-    if(m_bScrollDownPressed && m_bScrollDownHover) {
-      putElem(m_lineMargeX+LinesWidth(),LinesStartY()+LinesHeight()-20,20,20,UI_ELEM_SCROLLBUTTON_DOWN_DOWN,false);
+      if(m_bScrollDownPressed && m_bScrollDownHover) {
+	putElem(m_lineMargeX+LinesWidth(),LinesStartY()+LinesHeight()-20,20,20,UI_ELEM_SCROLLBUTTON_DOWN_DOWN,false);
+      }
+      else
+      putElem(m_lineMargeX+LinesWidth(),LinesStartY()+LinesHeight()-20,20,20,UI_ELEM_SCROLLBUTTON_DOWN_UP,false);    
+      
+      /* scroll */
+      putRect(ScrollBarScrollerStartX() + 2, ScrollBarScrollerStartY(),
+	      ScrollBarScrollerWidth() - 4, ScrollBarScrollerHeight(),
+	      MAKE_COLOR(188, 186, 67, 255));
     }
-    else
-		putElem(m_lineMargeX+LinesWidth(),LinesStartY()+LinesHeight()-20,20,20,UI_ELEM_SCROLLBUTTON_DOWN_UP,false);    
-
-    /* scroll */
-    putRect(ScrollBarScrollerStartX() + 2, ScrollBarScrollerStartY(),
-						ScrollBarScrollerWidth() - 4, ScrollBarScrollerHeight(),
-						MAKE_COLOR(188, 186, 67, 255));
 
     setScissor(m_lineMargeX,LinesStartY(),LinesWidth(),LinesHeight());
    

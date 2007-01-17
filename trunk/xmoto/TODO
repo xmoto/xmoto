@@ -1,6 +1,5 @@
 
 Assigned to nicolas
-* don't display the scrollbar if it is not required
 * BUG : hum, about checksum, when you modify a level with f5 while
    playing, then it is not updated with the new level button
 * ajouter un param au sprite pour indiquer son sens idem pour un edge.

@@ -24,6 +24,7 @@ enormenent...
 * a bug when cache number is updated : all level are reproposed to be dwd
 * a level updated is reload from XML ?!? 
 * BUG : --with-renderer-sdlGfx=0 --with-renderer-openGl=0 => segfault
+* don't display the scrollbar if it is not required
 
 Since 0.2.2
 * When i update lists sometimes
