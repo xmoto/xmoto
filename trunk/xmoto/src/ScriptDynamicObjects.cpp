@@ -138,6 +138,9 @@ SDynamicEntityMove::~SDynamicEntityMove() {
 
 void SDynamicEntityMove::performMove(vapp::MotoGame* v_motoGame) {
   Entity* p = &(v_motoGame->getLevelSrc()->getEntityById(m_entity));
+  if(! p->isAlive()){
+    return;
+  }
   float vx, vy;
   performXY(&vx, &vy);
   v_motoGame->SetEntityPos(p,
