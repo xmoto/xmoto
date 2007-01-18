@@ -534,10 +534,6 @@ vapp::Texture* Sprite::getTexture(bool bSmall, bool bClamp, vapp::FilterMode eFi
   return v_currentTexture;
 }
 
-std::string Sprite::getName() {
-  return m_name;
-}
-
 SpriteBlendMode Sprite::getBlendMode() {
   return m_blendmode;
 }
@@ -680,10 +676,6 @@ BikerPartSprite::~BikerPartSprite() {
 
 std::string BikerPartSprite::getFileDir() {
   return THEME_BIKERPART_SPRITE_FILE_DIR;
-}
-
-enum SpriteType BikerPartSprite::getType() {
-  return SPRITE_TYPE_BIKERPART;
 }
 
 DecorationSprite::DecorationSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName, float p_width, float p_height, float p_centerX, float p_centerY, SpriteBlendMode BlendMode) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {

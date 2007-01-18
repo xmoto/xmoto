@@ -99,7 +99,10 @@ class Sprite {
   virtual ~Sprite();
 
   virtual enum SpriteType getType() = 0;
-  std::string getName();
+  /* called many many many times, so we inline it, and make it return a ref */
+  inline std::string& getName() {
+    return m_name;
+  }
   SpriteBlendMode getBlendMode();
   void setBlendMode(SpriteBlendMode Mode);
   void load();
@@ -153,7 +156,9 @@ class BikerPartSprite : public SimpleFrameSprite {
  public:
   BikerPartSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename);
   virtual ~BikerPartSprite();
-  enum SpriteType getType();
+  inline enum SpriteType getType() {
+    return SPRITE_TYPE_BIKERPART;
+  }
 
  protected:
   std::string getFileDir();

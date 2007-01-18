@@ -44,8 +44,16 @@ class ConvexBlockVertex {
   ConvexBlockVertex(const Vector2f& i_position, const Vector2f& i_texturePosition);
   ~ConvexBlockVertex();
 
-  Vector2f Position() const;
-  Vector2f TexturePosition() const;
+  /* called many many many times, so we inline it, and make it return a ref */
+  inline Vector2f& Position() {
+    return m_position;
+  }
+
+  /* called many many many times, so we inline it, and make it return a ref */
+  inline Vector2f& TexturePosition() {
+    return m_texturePosition;
+  }
+
   void  setPosition(const Vector2f& i_position);
 
   private:
@@ -60,8 +68,12 @@ class ConvexBlock {
  public:
   ConvexBlock(Block *i_srcBlock = NULL);
   ~ConvexBlock();
-  
-  std::vector<ConvexBlockVertex *>& Vertices();
+
+  /* called many many many times, so we inline it */
+  inline std::vector<ConvexBlockVertex *>& Vertices() {
+     return m_vertices;
+  }
+
   Block* SourceBlock() const;
 
   void addVertex(const Vector2f& i_position, const Vector2f& i_texturePosition);
@@ -78,7 +90,11 @@ class BlockVertex {
   ~BlockVertex();
 
   Vector2f Position() const;
-  std::string EdgeEffect() const; /* edge from this vertex to the following */
+  /* edge from this vertex to the following */
+  /* called many many many times, so we inline it, and make it return a ref */
+  inline std::string& EdgeEffect() {
+    return m_edgeEffect;
+  }
 
   void setTexturePosition(const Vector2f& i_texturePosition);
   void setColor(const TColor& i_color);
@@ -98,16 +114,27 @@ class Block {
   std::string Id() const;
   std::string Texture() const;
   Vector2f InitialPosition() const;
-  Vector2f DynamicPosition() const;
+  /* called many many many times, so we inline it, and make it return a ref */
+  inline Vector2f& DynamicPosition() {
+    return m_dynamicPosition;
+  }
   float DynamicRotation() const;
-  Vector2f DynamicRotationCenter() const;
+
+  /* called many many many times, so we inline it, and make it return a ref */
+  inline Vector2f& DynamicRotationCenter() {
+    return m_dynamicRotationCenter;
+  }
+
   Vector2f DynamicPositionCenter() const;
   bool isBackground() const;
   bool isDynamic() const;
   float Grip() const;
   float TextureScale() const;
   std::vector<BlockVertex *>& Vertices();
-  std::vector<ConvexBlock *>& ConvexBlocks();
+  /* called many many many times, so we inline it */
+  inline std::vector<ConvexBlock *>& ConvexBlocks() {
+    return m_convexBlocks;
+  }
 
   void setTexture(const std::string& i_texture);
   void setTextureScale(float i_textureScale);

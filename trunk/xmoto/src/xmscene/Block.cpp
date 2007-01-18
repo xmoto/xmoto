@@ -31,14 +31,6 @@ ConvexBlockVertex::ConvexBlockVertex(const Vector2f& i_position, const Vector2f&
 ConvexBlockVertex::~ConvexBlockVertex() {
 }
 
-Vector2f ConvexBlockVertex::Position() const {
-  return m_position;
-}
-
-Vector2f ConvexBlockVertex::TexturePosition()  const {
-  return m_texturePosition;
-}
-
 void ConvexBlockVertex::setPosition(const Vector2f& i_position) {
   m_position = i_position;
 }
@@ -52,10 +44,6 @@ ConvexBlock::~ConvexBlock() {
   for(unsigned int i=0; i<m_vertices.size(); i++) {
     delete m_vertices[i];
   }
-}
-
-std::vector<ConvexBlockVertex *>& ConvexBlock::Vertices() {
-  return m_vertices;
 }
 
 Block* ConvexBlock::SourceBlock() const {
@@ -111,20 +99,12 @@ void Block::setCenter(const Vector2f& i_center) {
   m_isBBoxDirty           = true;
 }
 
-Vector2f Block::DynamicRotationCenter() const {
-  return m_dynamicRotationCenter;
-}
-
 Vector2f Block::DynamicPositionCenter() const {
   return m_dynamicPositionCenter;
 }
 
 float Block::DynamicRotation() const {
   return m_dynamicRotation;
-}
-
-Vector2f Block::DynamicPosition() const {
-  return m_dynamicPosition;
 }
 
 void Block::updateCollisionLines() {
@@ -314,10 +294,6 @@ std::vector<BlockVertex *>& Block::Vertices() {
   return m_vertices;
 }
 
-std::vector<ConvexBlock *>& Block::ConvexBlocks() {
-  return m_convexBlocks;
-}
-
 void Block::setTexture(const std::string& i_texture) {
   m_texture = i_texture;
 }
@@ -363,10 +339,6 @@ BlockVertex::BlockVertex(const Vector2f& i_position, const std::string& i_edgeEf
 }
 
 BlockVertex::~BlockVertex() {
-}
-
-std::string BlockVertex::EdgeEffect() const {
-  return m_edgeEffect;
 }
 
 Vector2f BlockVertex::Position() const {
