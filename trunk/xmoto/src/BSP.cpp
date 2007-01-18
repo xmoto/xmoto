@@ -47,14 +47,16 @@ namespace vapp {
   std::vector<BSPPoly *> &BSP::compute(void) {
     /* Start by creating the root polygon - i.e. the quad that covers
        the entire region enclosed by the input linedefs */
-    Vector2f GlobalMin(1000000,1000000),GlobalMax(-1000000,-1000000);
-    
+    AABB GlobalBox;
+
     for(int i=0;i<m_Lines.size();i++) {
-      _UpdateAABB(m_Lines[i]->P0,GlobalMin,GlobalMax);
-      _UpdateAABB(m_Lines[i]->P1,GlobalMin,GlobalMax);
+      GlobalBox.addPointToAABB2f(m_Lines[i]->P0);
+      GlobalBox.addPointToAABB2f(m_Lines[i]->P1);
     }
     
     BSPPoly RootPoly;
+    Vector2f GlobalMin = GlobalBox.getBMin();
+    Vector2f GlobalMax = GlobalBox.getBMax();
     RootPoly.Vertices.push_back( new BSPVertex( Vector2f(GlobalMin.x,GlobalMin.y),Vector2f(0,0) ) ); 
     RootPoly.Vertices.push_back( new BSPVertex( Vector2f(GlobalMin.x,GlobalMax.y),Vector2f(0,0) ) ); 
     RootPoly.Vertices.push_back( new BSPVertex( Vector2f(GlobalMax.x,GlobalMax.y),Vector2f(0,0) ) ); 
