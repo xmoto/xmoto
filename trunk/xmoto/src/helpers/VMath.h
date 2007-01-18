@@ -304,13 +304,26 @@ int intersectLineCircle2f(const Vector2f &Cp,float Cr,const Vector2f &A0,const V
                           Vector2f &Res1,Vector2f &Res2);
 int intersectLineLine2f(const Vector2f &A0,const Vector2f &A1,const Vector2f &B0,
                         const Vector2f &B1,Vector2f &Res);
-  
-bool lineTouchAABB2f(const Vector2f &P0,const Vector2f &P1,const Vector2f &BMin,const Vector2f &BMax);
-bool circleTouchAABB2f(const Vector2f &Cp,float Cr,const Vector2f &BMin,const Vector2f &BMax);
-bool pointTouchAABB2f(const Vector2f &P,const Vector2f &BMin,const Vector2f &BMax);
-bool AABBTouchAABB2f(const Vector2f &BMin1,const Vector2f &BMax1,const Vector2f &BMin2,const Vector2f &BMax2);
-void addPointToAABB2f(Vector2f &BMin,Vector2f &BMax,const Vector2f &Point);
 bool circleTouchCircle2f(const Vector2f &Cp1,float Cr1,const Vector2f &Cp2,float Cr2);
+  
+class AABB {
+ public:
+  AABB();
+  void reset();
+
+  Vector2f& getBMin() {return BMin;}
+  Vector2f& getBMax() {return BMax;}
+
+  bool lineTouchAABB2f(const Vector2f &P0, const Vector2f &P1);
+  bool circleTouchAABB2f(const Vector2f &Cp, const float Cr);
+  bool pointTouchAABB2f(const Vector2f &P);
+  bool AABBTouchAABB2f(const Vector2f &BMin1, const Vector2f &BMax1);
+  void addPointToAABB2f(const Vector2f &Point);
+  void addPointToAABB2f(const float x, const float y);
+
+ private:
+  Vector2f BMin, BMax;
+};
 
 float randomNum(float fMin,float fMax);
 int randomIntNum(int nMin, int nMax);

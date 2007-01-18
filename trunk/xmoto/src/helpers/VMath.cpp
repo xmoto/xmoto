@@ -36,16 +36,96 @@ int randomIntNum(int nMin, int nMax) {
   return nMin + (int) (((float)nMax) * rand()/(RAND_MAX+1.0));
 }
 
+
 /*===========================================================================
-  AABB updating
+  AABB
   ===========================================================================*/
-void addPointToAABB2f(Vector2f &BMin,Vector2f &BMax,const Vector2f &Point) {
+AABB::AABB()
+{
+  reset();
+}
+
+void AABB::reset()
+{
+  BMin.x = BMin.y = 99999999;
+  BMax.x = BMax.y = -99999999;
+}
+
+void AABB::addPointToAABB2f(const float x, const float y){
+  if(x < BMin.x) BMin.x = x;
+  if(y < BMin.y) BMin.y = y;
+  if(x > BMax.x) BMax.x = x;
+  if(y > BMax.y) BMax.y = y;    
+}
+
+void AABB::addPointToAABB2f(const Vector2f &Point) {
   if(Point.x < BMin.x) BMin.x = Point.x;
   if(Point.y < BMin.y) BMin.y = Point.y;
   if(Point.x > BMax.x) BMax.x = Point.x;
   if(Point.y > BMax.y) BMax.y = Point.y;    
 }
+
+bool AABB::lineTouchAABB2f(const Vector2f &P0,const Vector2f &P1) {
+  if(pointTouchAABB2f(P0)) return true;
+  if(pointTouchAABB2f(P1)) return true;
+
+  if(P0.x < BMin.x && P1.x < BMin.x) return false;
+  if(P0.y < BMin.y && P1.y < BMin.y) return false;
+  if(P0.x > BMax.x && P1.x > BMax.x) return false;
+  if(P0.y > BMax.y && P1.y > BMax.y) return false;
+
+  Vector2f v = P1 - P0;
+  float x,y;
+    
+  if(v.y != 0.0f) {
+    /* Top */
+    y = BMin.y;
+    x = P0.x + v.x*(y - P0.y) / v.y;
+    if(x >= BMin.x && x < BMax.x) return true;
+
+    /* Bottom */
+    y = BMax.y;
+    x = P0.x + v.x*(y - P0.y) / v.y;
+    if(x >= BMin.x && x < BMax.x) return true;
+  }
+
+  if(v.x != 0.0f) {
+    /* Left */
+    x = BMin.x;
+    y = P0.y + v.y*(x - P0.x) / v.x;
+    if(y >= BMin.y && y < BMax.y) return true;
+
+    /* Right */
+    x = BMax.x;
+    y = P0.y + v.y*(x - P0.x) / v.x;
+    if(y >= BMin.y && y < BMax.y) return true;
+  }
+    
+  /* No touch */
+  return false;
+}
   
+bool AABB::circleTouchAABB2f(const Vector2f &Cp,float Cr) {
+  /* TODO: do this in a more precise way */
+  return AABBTouchAABB2f(Cp - Vector2f(Cr,Cr),Cp + Vector2f(Cr,Cr));
+}
+  
+bool AABB::pointTouchAABB2f(const Vector2f &P) {
+  return (P.x >= BMin.x && P.y >= BMin.y && P.x <= BMax.x && P.y <= BMax.y);
+}
+  
+bool AABB::AABBTouchAABB2f(const Vector2f &BMin1,const Vector2f &BMax1) {
+  Vector2f FMin( BMin1.x<BMin.x ? BMin1.x:BMin.x, 
+                 BMin1.y<BMin.y ? BMin1.y:BMin.y );
+  Vector2f FMax( BMax1.x>BMax.x ? BMax1.x:BMax.x, 
+                 BMax1.y>BMax.y ? BMax1.y:BMax.y );
+
+  return (FMax.x-FMin.x < 0.0001f + (BMax1.x-BMin1.x)+(BMax.x-BMin.x) &&
+	  FMax.y-FMin.y < 0.0001f + (BMax1.y-BMin1.y)+(BMax.y-BMin.y));
+}
+
+
+
 /*===========================================================================
   Vector2f intersections and stuff
   ===========================================================================*/
@@ -200,67 +280,6 @@ int intersectLineLine2f(const Vector2f &A0, const Vector2f &A1,
   return 1;
 }  
   
-/*===========================================================================
-  AABB touching
-  ===========================================================================*/
-bool lineTouchAABB2f(const Vector2f &P0,const Vector2f &P1,const Vector2f &BMin,const Vector2f &BMax) {
-  if(pointTouchAABB2f(P0,BMin,BMax)) return true;
-  if(pointTouchAABB2f(P1,BMin,BMax)) return true;
-
-  if(P0.x < BMin.x && P1.x < BMin.x) return false;
-  if(P0.y < BMin.y && P1.y < BMin.y) return false;
-  if(P0.x > BMax.x && P1.x > BMax.x) return false;
-  if(P0.y > BMax.y && P1.y > BMax.y) return false;
-
-  Vector2f v = P1 - P0;
-  float x,y;
-    
-  if(v.y != 0.0f) {
-    /* Top */
-    y = BMin.y;
-    x = P0.x + v.x*(y - P0.y) / v.y;
-    if(x >= BMin.x && x < BMax.x) return true;
-
-    /* Bottom */
-    y = BMax.y;
-    x = P0.x + v.x*(y - P0.y) / v.y;
-    if(x >= BMin.x && x < BMax.x) return true;
-  }
-
-  if(v.x != 0.0f) {
-    /* Left */
-    x = BMin.x;
-    y = P0.y + v.y*(x - P0.x) / v.x;
-    if(y >= BMin.y && y < BMax.y) return true;
-
-    /* Right */
-    x = BMax.x;
-    y = P0.y + v.y*(x - P0.x) / v.x;
-    if(y >= BMin.y && y < BMax.y) return true;
-  }
-    
-  /* No touch */
-  return false;
-}
-  
-bool circleTouchAABB2f(const Vector2f &Cp,float Cr,const Vector2f &BMin,const Vector2f &BMax) {
-  /* TODO: do this in a more precise way */
-  return AABBTouchAABB2f(Cp - Vector2f(Cr,Cr),Cp + Vector2f(Cr,Cr),BMin,BMax);
-}
-  
-bool pointTouchAABB2f(const Vector2f &P,const Vector2f &BMin,const Vector2f &BMax) {
-  return (P.x >= BMin.x && P.y >= BMin.y && P.x <= BMax.x && P.y <= BMax.y);
-}
-  
-bool AABBTouchAABB2f(const Vector2f &BMin1,const Vector2f &BMax1,const Vector2f &BMin2,const Vector2f &BMax2) {
-  Vector2f FMin( BMin1.x<BMin2.x ? BMin1.x:BMin2.x, 
-                 BMin1.y<BMin2.y ? BMin1.y:BMin2.y );
-  Vector2f FMax( BMax1.x>BMax2.x ? BMax1.x:BMax2.x, 
-                 BMax1.y>BMax2.y ? BMax1.y:BMax2.y );
-
-  return (FMax.x-FMin.x < 0.0001f + (BMax1.x-BMin1.x)+(BMax2.x-BMin2.x) &&
-	  FMax.y-FMin.y < 0.0001f + (BMax1.y-BMin1.y)+(BMax2.y-BMin2.y));
-}
   
 bool circleTouchCircle2f(const Vector2f &Cp1,float Cr1,const Vector2f &Cp2,float Cr2) {
   /* Trivial test :) */
