@@ -24,6 +24,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "Collision.h"
 #include "PhysSettings.h"
+#include "xmscene/Block.h"
+#include "xmscene/Zone.h"
+#include "xmscene/Entity.h"
 
 /* 
    Prior to version 0.1.11, the far largest time sink in the game was the 
@@ -62,16 +65,12 @@ namespace vapp {
     }
 
     EMPTY_AND_CLEAR_VECTOR(m_Lines);
-    EMPTY_AND_CLEAR_VECTOR(m_Entities);
 
-    m_ExternalDynamicLines.clear();
-  }
- 
-  /*===========================================================================
-  Add external dynamic line to the system
-  ===========================================================================*/
-  void CollisionSystem::addExternalDynamicLine(Line *pLine) {
-    m_ExternalDynamicLines.push_back(pLine);
+    m_entitiesHandler.reset();
+    m_blocksHandler.reset();
+    /* TODO::zone
+    m_zonesHandler.reset();
+    */
   }
 
   /*===========================================================================
@@ -99,7 +98,19 @@ namespace vapp {
     
     /* Allocate grid structure */
     m_pGrid = new GridCell[m_nGridWidth * m_nGridHeight];
-    
+
+    m_entitiesHandler.setDims(Vector2f(m_fMinX, m_fMinY),
+			      Vector2f(m_fMaxX, m_fMaxY),
+			      m_nGridWidth, m_nGridHeight);
+    m_blocksHandler.setDims(Vector2f(m_fMinX, m_fMinY),
+			    Vector2f(m_fMaxX, m_fMaxY),
+			    m_nGridWidth, m_nGridHeight);
+    /*TODO
+    m_zonesHandler.setDims(Vector2f(m_fMinX, m_fMinY),
+			   Vector2f(m_fMaxX, m_fMaxY),
+			   m_nGridWidth, m_nGridHeight);
+    */
+
     //printf("%dx%d grid width %.2fx%.2f cells\n",
     //       m_nGridWidth,m_nGridHeight,m_fCellWidth,m_fCellHeight);
   }
@@ -220,12 +231,23 @@ namespace vapp {
       m_CheckedCells.clear();
     }
     
-    /* Check all external dynamic lines first... */
-    for(int k=0;k<m_ExternalDynamicLines.size();k++) {
-      if(_CheckCircleAndLine(m_ExternalDynamicLines[k],x,y,r))
-        return true;
-    }    
-    
+
+    /* get dynamic blocks around */
+    AABB BBox;
+    BBox.addPointToAABB2f(fMinX, fMinY);
+    BBox.addPointToAABB2f(fMaxX, fMaxY);
+    std::vector<Block*> blocks = getDynBlocksNearPosition(BBox);
+
+    for(int i=0; i<blocks.size(); i++){
+      Block* pBlock = blocks[i];
+      std::vector<Line*>& blockLines = pBlock->getCollisionLines();
+      for(int j=0; j<blockLines.size(); j++){
+	if(_CheckCircleAndLine(blockLines[j], x, y, r)){
+	  return true;
+	}
+      }
+    }
+
     /* For each cell we might have touched something in... */
     for(int cx=nMinCX;cx<=nMaxCX;cx++) {
       for(int cy=nMinCY;cy<=nMaxCY;cy++) {
@@ -318,43 +340,49 @@ namespace vapp {
     if(nMaxCX > m_nGridWidth-1) nMaxCX = m_nGridWidth-1;
     if(nMaxCY > m_nGridHeight-1) nMaxCY = m_nGridHeight-1;        
 
-    /* First check dynamic lines */
-    for(int k=0;k<m_ExternalDynamicLines.size();k++) {
-      /* <TODO: avoid code duplication here> */
-      
-      /* Is the beginning "behind" the line? */
-      float vx = m_ExternalDynamicLines[k]->x2 - m_ExternalDynamicLines[k]->x1;
-      float vy = m_ExternalDynamicLines[k]->y2 - m_ExternalDynamicLines[k]->y1;
-      float enx = -vy;
-      float eny = vx;
-      //if(enx*x1 + eny*y1 < enx*m_ExternalDynamicLines[k]->x1 + eny*m_ExternalDynamicLines[k]->y1) {
-        /* Yes it is, can't touch */
-        //continue;
-      //}
 
-      /* Too small? */
-      if(fabs(vx) < 0.0001f && fabs(vy) < 0.0001f) {
-        continue;
+
+    /* get dynamic blocks around */
+    AABB BBox;
+    BBox.addPointToAABB2f(fMinX, fMinY);
+    BBox.addPointToAABB2f(fMaxX, fMaxY);
+    std::vector<Block*> blocks = getDynBlocksNearPosition(BBox);
+
+    for(int i=0; i<blocks.size(); i++){
+      Block* pBlock = blocks[i];
+      std::vector<Line*>& blockLines = pBlock->getCollisionLines();
+      for(int j=0; j<blockLines.size(); j++){
+
+	/* Is the beginning "behind" the line? */
+	float vx = blockLines[j]->x2 - blockLines[j]->x1;
+	float vy = blockLines[j]->y2 - blockLines[j]->y1;
+	float enx = -vy;
+	float eny = vx;
+
+	/* Too small? */
+	if(fabs(vx) < 0.0001f && fabs(vy) < 0.0001f) {
+	  continue;
+	}
+      
+	/* Try calculating intersection point */
+	Vector2f T;
+	int n = intersectLineLine2f(Vector2f(x1,y1),Vector2f(x2,y2),
+				    Vector2f(blockLines[j]->x1,blockLines[j]->y1),
+				    Vector2f(blockLines[j]->x2,blockLines[j]->y2),T);
+	if(n > 0) {
+	  dContact c;
+	  Vector2f W = Vector2f(vx,vy);
+	  W.normalize();
+
+	  _SetWheelContactParams(&c,T,W,0.0f, blockLines[j]->fGrip);                                           
+	  int nOldC = nNumC;
+	  nNumC = _AddContactToList(pContacts,nNumC,&c,nMaxC);                         
+	  if(nNumC != nOldC)
+	    m_bDynamicTouched = true;
+	}                                      
+
       }
-      
-      /* Try calculating intersection point */
-      Vector2f T;
-      int n = intersectLineLine2f(Vector2f(x1,y1),Vector2f(x2,y2),
-                                  Vector2f(m_ExternalDynamicLines[k]->x1,m_ExternalDynamicLines[k]->y1),
-                                  Vector2f(m_ExternalDynamicLines[k]->x2,m_ExternalDynamicLines[k]->y2),T);
-      if(n > 0) {
-        dContact c;
-        Vector2f W = Vector2f(vx,vy);
-        W.normalize();
-
-        _SetWheelContactParams(&c,T,W,0.0f, m_ExternalDynamicLines[k]->fGrip);                                           
-        int nOldC = nNumC;
-        nNumC = _AddContactToList(pContacts,nNumC,&c,nMaxC);                         
-        if(nNumC != nOldC) m_bDynamicTouched = true;
-      }                                      
-
-      /* </TODO: avoid code duplication here> */
-    }              
+    }
 
     /* For each cell we might have touched something in... */
     for(int cx=nMinCX;cx<=nMaxCX;cx++) {
@@ -528,17 +556,29 @@ namespace vapp {
       m_CheckedLinesW.clear();
       m_CheckedCellsW.clear();
     }
-    
-    /* Collide against dynamic lines */
-    for(int k=0;k<m_ExternalDynamicLines.size();k++) {
-      int nOldC = nNumC;
-      nNumC = _CollideCircleAndLine(m_ExternalDynamicLines[k],x,y,r,pContacts,nNumC,nMaxC,
-				    m_ExternalDynamicLines[k]->fGrip);
-//      printf("<%d  %d  %d>\n",nNumC,nOldC,m_ExternalDynamicLines.size());
-      if(nOldC != nNumC)
-        m_bDynamicTouched = true;
+
+
+
+    /* get dynamic blocks around */
+    AABB BBox;
+    BBox.addPointToAABB2f(fMinX, fMinY);
+    BBox.addPointToAABB2f(fMaxX, fMaxY);
+    std::vector<Block*> blocks = getDynBlocksNearPosition(BBox);
+
+    for(int i=0; i<blocks.size(); i++){
+      Block* pBlock = blocks[i];
+      std::vector<Line*>& blockLines = pBlock->getCollisionLines();
+      for(int j=0; j<blockLines.size(); j++){
+	int nOldC = nNumC;
+	nNumC = _CollideCircleAndLine(blockLines[j], x, y, r,
+				      pContacts,nNumC,nMaxC,
+				      blockLines[j]->fGrip);
+
+	if(nOldC != nNumC)
+	  m_bDynamicTouched = true;
+      }
     }
-    
+
     /* For each cell we might have touched something in... */
     for(int cx=nMinCX;cx<=nMaxCX;cx++) {
       for(int cy=nMinCY;cy<=nMaxCY;cy++) {
@@ -658,126 +698,291 @@ namespace vapp {
 
 
 
-  void CollisionSystem::addEntity(Entity* id, float x, float y) {
-    /* Add Entity */
-    ColEntity *pNewEnt = new ColEntity;
-    pNewEnt->x = x;
-    pNewEnt->y = y;
-    pNewEnt->id = id;
-    m_Entities.push_back(pNewEnt);
+  /* entities */
+  void CollisionSystem::addEntity(Entity* id)
+  {
+    m_entitiesHandler.addElement(id);
+  }
 
-    _addEntityInCell(pNewEnt, x, y);
+  void CollisionSystem::removeEntity(Entity* id)
+  {
+    m_entitiesHandler.removeElement(id);
+  }
+
+  void CollisionSystem::moveEntity(Entity* id)
+  {
+    m_entitiesHandler.moveElement(id);
+  }
+
+  std::vector<Entity*> CollisionSystem::getEntitiesNearPosition(AABB& BBox)
+  {
+    return m_entitiesHandler.getElementsNearPosition(BBox);
+  }
+
+  /* TODO::zones
+  void CollisionSystem::addZone(Zone* id)
+  {
+    m_zonesHandler.addElement(id);
+  }
+
+  void CollisionSystem::removeZone(Zone* id)
+  {
+    m_zonesHandler.removeElement(id);
+  }
+
+  void CollisionSystem::moveZone(Zone* id)
+  {
+    m_zonesHandler.moveElement(id);
+  }
+
+  std::vector<Zone*> CollisionSystem::getZonesNearPosition(AABB& BBox)
+  {
+    return m_zonesHandler.getElementsNearPosition(BBox);
+  }
+  */
+
+  /* dynamic blocks */
+  void CollisionSystem::addDynBlock(Block* id)
+  {
+    m_blocksHandler.addElement(id);
+  }
+
+  void CollisionSystem::removeDynBlock(Block* id)
+  {
+    m_blocksHandler.removeElement(id);
+  }
+
+  void CollisionSystem::moveDynBlock(Block* id)
+  {
+    m_blocksHandler.moveElement(id);
+  }
+
+  std::vector<Block*> CollisionSystem::getDynBlocksNearPosition(AABB& BBox)
+  {
+    return m_blocksHandler.getElementsNearPosition(BBox);
   }
 
 
-  void CollisionSystem::removeEntity(Entity* id) {
-    ColEntity* pEnt = _getAndRemoveEntity(id);
-    _removeEntityFromCell(pEnt);
 
-    delete pEnt;
+  /*=====================================================
+    Generic element handling
+  =====================================================*/
+  /*
+    Don't compile if the constructor there...
+    so, moved to the .h
+   */
+  /*
+  template <class T>
+  ElementHandler<T>::ElementHandler()
+  {
+    m_pGrid = NULL;
+    m_bDebugFlag = false;
+    m_curCheck = 0;
+    reset();
   }
+  */
 
-
-  void CollisionSystem::moveEntity(Entity* id, float newX, float newY) {
-    ColEntity* pEnt = _getEntity(id);
-    _removeEntityFromCell(pEnt);
-    _addEntityInCell(pEnt, newX, newY);
-  }
-
-
-  std::vector<Entity*> CollisionSystem::getEntitiesNearPosition(float xmin, float ymin,
-								 float xmax, float ymax) {
-    std::vector<Entity*> entities;
-
-    int nMinCX = (int)floor(((xmin - m_fMinX - CD_EPSILON) * (float)m_nGridWidth) / (m_fMaxX - m_fMinX));
-    int nMinCY = (int)floor(((ymin - m_fMinY - CD_EPSILON) * (float)m_nGridHeight) / (m_fMaxY - m_fMinY));
-    int nMaxCX = (int)floor(((xmax - m_fMinX + CD_EPSILON) * (float)m_nGridWidth) / (m_fMaxX - m_fMinX));
-    int nMaxCY = (int)floor(((ymax - m_fMinY + CD_EPSILON) * (float)m_nGridHeight) / (m_fMaxY - m_fMinY));
-    
-    if(m_bDebugFlag) {
-      m_CheckedEntities.clear();
+  template <class T> void
+  ElementHandler<T>::reset()
+  {
+    if(m_pGrid != NULL){
+      delete[] m_pGrid;
+      m_pGrid = NULL;
     }
+
+    EMPTY_AND_CLEAR_VECTOR(m_ColElements);
+  }
+
+  template <class T> void
+  ElementHandler<T>::setDims(Vector2f min, Vector2f max,
+			     int gridWidth, int gridHeight)
+  {
+    m_min = min;
+    m_max = max;
+    m_gridWidth  = gridWidth;
+    m_gridHeight = gridHeight;
+
+    m_pGrid = new GridCell[m_gridWidth * m_gridHeight];    
+  }
+
+  template <class T> void
+  ElementHandler<T>::addElement(T* id)
+  {
+    ColElement* pNewElem = new ColElement;
+    pNewElem->id = id;
+    m_ColElements.push_back(pNewElem);
+
+    _addColElementInCells(pNewElem);
+  }
+
+  template <class T> void
+  ElementHandler<T>::removeElement(T* id)
+  {
+    ColElement* pColElem = _getAndRemoveColElement(id);
+    _removeColElementFromCells(pColElem);
+
+    delete pColElem;
+  }
+
+  template <class T> void
+  ElementHandler<T>::moveElement(T* id)
+  {
+    ColElement* pColElem = _getColElement(id);
+    _removeColElementFromCells(pColElem);
+    _addColElementInCells(pColElem);
+  }
+
+  template <class T> std::vector<T*>
+  ElementHandler<T>::getElementsNearPosition(AABB& BBox)
+  {
+    std::vector<T*> elements;
+    Vector2f BMin = BBox.getBMin();
+    Vector2f BMax = BBox.getBMax();
+
+    /* grid coordonates */
+    int nMinCX = (int)floor(((BMin.x - m_min.x - CD_EPSILON) * (float)m_gridWidth)  / (m_max.x - m_min.x));
+    int nMinCY = (int)floor(((BMin.y - m_min.y - CD_EPSILON) * (float)m_gridHeight) / (m_max.y - m_min.y));
+    int nMaxCX = (int)floor(((BMax.x - m_min.x + CD_EPSILON) * (float)m_gridWidth)  / (m_max.x - m_min.x));
+    int nMaxCY = (int)floor(((BMax.y - m_min.y + CD_EPSILON) * (float)m_gridHeight) / (m_max.y - m_min.y));
 
     if(nMinCX < 0) nMinCX = 0;
     if(nMinCY < 0) nMinCY = 0;
-    if(nMaxCX >= m_nGridWidth)  nMaxCX = m_nGridWidth;
-    if(nMaxCY >= m_nGridHeight) nMaxCY = m_nGridHeight;        
+    if(nMaxCX >= m_gridWidth)  nMaxCX = m_gridWidth;
+    if(nMaxCY >= m_gridHeight) nMaxCY = m_gridHeight;        
 
-    for(int i=nMinCX-1; i<=nMaxCX+1; i++){
-      if(i<0 || i>=m_nGridWidth)
+    if(m_bDebugFlag) {
+      m_CheckedElements.clear();
+    }
+
+    /* next check */
+    m_curCheck++;
+
+    for(int i=nMinCX; i<=nMaxCX; i++){
+      if(i<0 || i>=m_gridWidth)
 	continue;
-      for(int j=nMinCY-1; j<=nMaxCY+1; j++){
-	if(j<0 || j>=m_nGridHeight)
-	  continue;
-	int cell = i+j*m_nGridWidth;
-	std::vector<ColEntity *>& gridCellEntities = m_pGrid[cell].Entities;
-	for(int k=0; k<gridCellEntities.size(); k++){
-	  entities.push_back(gridCellEntities[k]->id);
 
-	  if(m_bDebugFlag) {
-	    m_CheckedEntities.push_back(gridCellEntities[k]->id);
+      for(int j=nMinCY; j<=nMaxCY; j++){
+	if(j<0 || j>=m_gridHeight)
+	  continue;
+
+	int cell = i+j*m_gridWidth;
+	std::vector<ColElement*>& gridCellColElements = m_pGrid[cell].ColElements;
+	for(int k=0; k<gridCellColElements.size(); k++){
+	  if(gridCellColElements[k]->curCheck != m_curCheck){
+	    
+	    gridCellColElements[k]->curCheck = m_curCheck;
+
+	    elements.push_back(gridCellColElements[k]->id);
+	    
+	    if(m_bDebugFlag) {
+	      m_CheckedElements.push_back(gridCellColElements[k]->id);
+	    }
 	  }
 	}
       }
     }
 
-    return entities;
+    //printf("ElementHandler::getElementsNearPosition end\n");
+    return elements;
   }
 
+  /*=====================================================
+    Generic element handling helper functions
+  =====================================================*/
+  template <class T> void
+  ElementHandler<T>::_addColElementInCells(ColElement* pColElem)
+  {
+    /* current check */
+    pColElem->curCheck = 0;
 
-  ColEntity* CollisionSystem::_getEntity(Entity* id) {
-    for(int i=0; i<m_Entities.size(); i++){
-      if(m_Entities[i]->id == id){
-	return m_Entities[i];
-      }      
-    }
+    /* element aabb */
+    AABB BBox = pColElem->id->getAABB();
+    Vector2f BMin = BBox.getBMin();
+    Vector2f BMax = BBox.getBMax();
 
-    /* just return NULL ? */
-    throw Exception("Collision entity not found");
-  }
+    /* grid coordonates */
+    int nMinCX = (int)floor(((BMin.x - m_min.x - CD_EPSILON) * (float)m_gridWidth)  / (m_max.x - m_min.x));
+    int nMinCY = (int)floor(((BMin.y - m_min.y - CD_EPSILON) * (float)m_gridHeight) / (m_max.y - m_min.y));
+    int nMaxCX = (int)floor(((BMax.x - m_min.x + CD_EPSILON) * (float)m_gridWidth)  / (m_max.x - m_min.x));
+    int nMaxCY = (int)floor(((BMax.y - m_min.y + CD_EPSILON) * (float)m_gridHeight) / (m_max.y - m_min.y));
 
+    if(nMinCX < 0) nMinCX = 0;
+    if(nMinCY < 0) nMinCY = 0;
+    if(nMaxCX >= m_gridWidth)  nMaxCX = m_gridWidth;
+    if(nMaxCY >= m_gridHeight) nMaxCY = m_gridHeight;        
 
-  ColEntity* CollisionSystem::_getAndRemoveEntity(Entity* id) {
-    for(int i=0; i<m_Entities.size(); i++){
-      if(m_Entities[i]->id == id){
-	ColEntity* pEnt = m_Entities[i];
-	m_Entities.erase(m_Entities.begin() + i);
-	return pEnt;
-      }      
-    }
+    /* For each cells touched by the element, add it to the grid */
+    for(int i=nMinCX; i<=nMaxCX; i++){
+      if(i<0 || i>=m_gridWidth)
+	continue;
+      for(int j=nMinCY; j<=nMaxCY; j++){
+	if(j<0 || j>=m_gridHeight)
+	  continue;
+	int cell = i+j*m_gridWidth;
 
-    /* just return NULL ? */
-    throw Exception("Collision entity not found");
-  }
-
-
-  /* Leave the entity with a wrong gridCell, but not a pb cause it's filled from
-     the calling function and _removeEntityFromCell is a private one */
-  void CollisionSystem::_removeEntityFromCell(ColEntity* pEnt) {
-    int gridCell = pEnt->gridCell;
-    if(gridCell >= 0){
-      std::vector<ColEntity *>& gridCellEntities = m_pGrid[gridCell].Entities;
-
-      for(int i=0; i<gridCellEntities.size(); i++){
-	if(gridCellEntities[i] == pEnt){
-	  gridCellEntities.erase(gridCellEntities.begin() + i);
-	  return;
-	}
+	pColElem->gridCells.push_back(cell);
+	m_pGrid[cell].ColElements.push_back(pColElem);
       }
     }
   }
 
+  template <class T> void
+  ElementHandler<T>::_removeColElementFromCells(ColElement* pColElem)
+  {
+    /* for each grid cell with the ColElem in it */
+    for(int i=0; i<pColElem->gridCells.size(); i++){
+      int cell = pColElem->gridCells[i];
 
-  void CollisionSystem::_addEntityInCell(ColEntity* pEnt, float x, float y) {
-    int cx = (int)floor(((x - m_fMinX) * (float)m_nGridWidth) / (m_fMaxX - m_fMinX));
-    int cy = (int)floor(((y - m_fMinY) * (float)m_nGridHeight) / (m_fMaxY - m_fMinY));
-    
-    if(cx < 0 || cx >= m_nGridWidth || cy < 0 || cy > m_nGridHeight){
-      pEnt->gridCell = -1;
+      for(int j=0; j<m_pGrid[cell].ColElements.size(); j++){
+	if(m_pGrid[cell].ColElements[j] == pColElem){
+
+	  /* remove ColElem from cell*/
+	  m_pGrid[cell].ColElements.erase(m_pGrid[cell].ColElements.begin() + j);
+
+	  break;
+	}
+      }
     }
-    else{
-      pEnt->gridCell = cx + cy*m_nGridWidth;
-      m_pGrid[pEnt->gridCell].Entities.push_back(pEnt);
-    }
+
+    /* remove cell from ColElem*/
+    pColElem->gridCells.clear();
   }
+
+  /*==================================================
+    I can't get this two function to compile, so i put
+    them into the .h file...
+    They got problems with returning ColElement*, here
+    is gcc 4.0.3 error:
+    "Collision.cpp:898: erreur: expected constructor, destructor, or type conversion before «*» token"
+
+    If somebody knows how to fix, feel free to send a patch. 
+    ================================================*/
+
+  /*
+  template <class T> ElementHandler<T>::ColElement*
+  ElementHandler<T>::_getAndRemoveColElement(T* id)
+  {
+    for(int i=0; i<m_ColElements.size(); i++){
+      if(m_ColElements[i]->id == id){
+	ColElement* pColElem = m_ColElements[i];
+	m_ColElements.erase(m_ColElements.begin()+i);
+	return pColElem;
+      }
+    }
+    throw Exception("Collision element not found");
+  }
+  */
+  /*
+  template <class T> ElementHandler<T>::ColElement*
+  ElementHandler<T>::_getColElement(T* id)
+  {
+    for(int i=0; i<m_ColElements.size(); i++){
+      if(m_ColElements[i]->id == id){
+	return m_ColElements[i];
+      }      
+    }
+
+    throw Exception("Collision element not found");
+  }
+  */
 }
