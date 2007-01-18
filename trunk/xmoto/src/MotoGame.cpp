@@ -1018,23 +1018,28 @@ namespace vapp {
   void MotoGame::_UpdateEntities(void) {
     Vector2f HeadPos = m_BikeS.Dir==DD_RIGHT?m_BikeS.HeadP:m_BikeS.Head2P;
 
-    #define MIN2(a, b) ((a)>(b)?(b):(a))
-    #define MIN3(a, b, c) MIN2(MIN2((a), (b)), (c))
-    #define MAX2(a, b) ((a)>(b)?(a):(b))
-    #define MAX3(a, b, c) MAX2(MAX2((a), (b)), (c))
-
     /* Get biker bounding box */
-    float xmin, xmax, ymin, ymax;
+    AABB BBox;
     float headSize = m_BikeS.Parameters().HeadSize();
     float wheelRadius = m_BikeS.Parameters().WheelRadius();
     /* in case the body is outside of the aabb */
     float securityMargin = 0.5;
-    xmin = MIN3(HeadPos[0]-headSize, m_BikeS.FrontWheelP[0]-wheelRadius, m_BikeS.RearWheelP[0]-wheelRadius) - securityMargin;
-    ymin = MIN3(HeadPos[1]-headSize, m_BikeS.FrontWheelP[1]-wheelRadius, m_BikeS.RearWheelP[1]-wheelRadius) - securityMargin;
-    xmax = MAX3(HeadPos[0]+headSize, m_BikeS.FrontWheelP[0]+wheelRadius, m_BikeS.RearWheelP[0]+wheelRadius) + securityMargin;
-    ymax = MAX3(HeadPos[1]+headSize, m_BikeS.FrontWheelP[1]+wheelRadius, m_BikeS.RearWheelP[1]+wheelRadius) + securityMargin;
 
-    std::vector<Entity*> entities = m_Collision.getEntitiesNearPosition(xmin, ymin, xmax, ymax);
+    BBox.addPointToAABB2f(HeadPos[0]-headSize-securityMargin,
+			  HeadPos[1]-headSize-securityMargin);
+    BBox.addPointToAABB2f(m_BikeS.FrontWheelP[0]-wheelRadius-securityMargin,
+			  m_BikeS.FrontWheelP[1]-wheelRadius-securityMargin);
+    BBox.addPointToAABB2f(m_BikeS.RearWheelP[0]-wheelRadius-securityMargin,
+			  m_BikeS.RearWheelP[1]-wheelRadius-securityMargin);
+
+    BBox.addPointToAABB2f(HeadPos[0]+headSize+securityMargin,
+			  HeadPos[1]+headSize+securityMargin);
+    BBox.addPointToAABB2f(m_BikeS.FrontWheelP[0]+wheelRadius+securityMargin,
+			  m_BikeS.FrontWheelP[1]+wheelRadius+securityMargin);
+    BBox.addPointToAABB2f(m_BikeS.RearWheelP[0]+wheelRadius+securityMargin,
+			  m_BikeS.RearWheelP[1]+wheelRadius+securityMargin);
+
+    std::vector<Entity*> entities = m_Collision.getEntitiesNearPosition(BBox);
 
     /* Do player touch anything? */
     for(int i=0;i<entities.size();i++) {
@@ -1282,7 +1287,7 @@ namespace vapp {
   void MotoGame::SetEntityPos(Entity *pEntity, float pX, float pY) {
     pEntity->setDynamicPosition(Vector2f(pX, pY));
     if(m_bIsAReplay == false){
-      m_Collision.moveEntity(pEntity, pX, pY);
+      m_Collision.moveEntity(pEntity);
     }
   }
 

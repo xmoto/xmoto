@@ -51,6 +51,7 @@ namespace vapp {
   class MotoGameEvent;
   class Replay;
   class GameRenderer;
+  class CollisionSystem;
 
   /*===========================================================================
   Serialized bike state
