@@ -84,6 +84,8 @@ class Entity {
 
   virtual bool updateToTime(float i_time, Vector2f i_gravity);
 
+  AABB& getAABB();
+
  private:
   std::string m_id;              /** Its own identifer */
   std::string m_spriteName;      /** Name of the sprite to be drawn */
@@ -98,6 +100,9 @@ class Entity {
   /* Use to know if a script shall update the pos of the entity*/
   bool        m_isAlive;
   TColor      m_color;
+
+  AABB        m_BBox;
+  bool        m_isBBoxDirty;
 };
 
 class ParticlesSource : public Entity {

@@ -1000,7 +1000,7 @@ int Level::loadToPlay(bool manageCollisions) {
     Vector2f v = m_entities[i]->DynamicPosition();
 
     if(manageCollisions){
-      m_pCollisionSystem->addEntity(m_entities[i], v[0], v[1]);
+      m_pCollisionSystem->addEntity(m_entities[i]);
     }
 
     if(m_entities[i]->IsToTake()){

@@ -34,6 +34,8 @@ Entity::Entity(const std::string& i_id) {
   m_doesKill    = false;
   m_doesMakeWin = false;
   m_isToTake    = false;
+  m_BBox.reset();
+  m_isBBoxDirty = true;
 }
 
 Entity::~Entity() {
@@ -99,6 +101,7 @@ float Entity::Height() const {
 
 void Entity::setInitialPosition(const Vector2f& i_initialPosition) {
   m_initialPosition = i_initialPosition;
+  m_isBBoxDirty = true;
 }
 
 std::string Entity::SpriteName() const {
@@ -119,6 +122,7 @@ Vector2f Entity::DynamicPosition() const {
 
 void Entity::setSize(float i_size) {
   m_size = i_size;
+  m_isBBoxDirty = true;
 }
 
 void Entity::setSpeciality(EntitySpeciality i_speciality) {
@@ -151,6 +155,23 @@ void Entity::setAlive(bool alive) {
 bool Entity::updateToTime(float i_time, Vector2f i_gravity) {
   return false;
 }
+
+AABB& Entity::getAABB()
+{
+  if(m_isBBoxDirty == true){
+    m_BBox.reset();
+    float size = Size();
+    m_BBox.addPointToAABB2f(m_dynamicPosition.x-size,
+			    m_dynamicPosition.y-size);
+    m_BBox.addPointToAABB2f(m_dynamicPosition.x+size,
+			    m_dynamicPosition.y+size);
+
+    m_isBBoxDirty = false;
+  }
+
+  return m_BBox;
+}
+
 
 ParticlesSource::ParticlesSource(const std::string& i_id, float i_particleTime_increment)
   : Entity(i_id) {
@@ -331,6 +352,7 @@ float EntityParticle::KillTime() const {
 
 void Entity::setDynamicPosition(const Vector2f& i_dynamicPosition) {
   m_dynamicPosition = i_dynamicPosition;
+  m_isBBoxDirty = true;
 }
 
 EntityParticle::EntityParticle(const Vector2f& i_position, const Vector2f i_velocity, float i_killTime)

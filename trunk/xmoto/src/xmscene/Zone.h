@@ -75,10 +75,12 @@ class Zone {
   void saveBinary(vapp::FileHandle *i_pfh);
   static Zone* readFromXml(TiXmlElement *pElem);
   static Zone* readFromBinary(vapp::FileHandle *i_pfh);
+  AABB& getAABB() {return m_BBox;}
 
  private:
-    std::string m_id; /* Zone ID */
-    std::vector<ZonePrim *> m_prims; /* Primitives forming zone */
+  std::string m_id; /* Zone ID */
+  std::vector<ZonePrim *> m_prims; /* Primitives forming zone */
+  AABB m_BBox;
 };
 
 #endif /* __ZONE_H__ */

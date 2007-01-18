@@ -85,6 +85,7 @@ Block::Block(std::string i_id) {
   m_dynamicRotationCenter = Vector2f(0.0, 0.0);
   m_dynamicPositionCenter = Vector2f(0.0, 0.0);
   m_texture          = XM_DEFAULT_BLOCK_TEXTURE;
+  m_isBBoxDirty      = true;
 }
 
 Block::~Block() {
@@ -107,6 +108,7 @@ Block::~Block() {
 void Block::setCenter(const Vector2f& i_center) {
   m_dynamicRotationCenter = i_center;
   m_dynamicPositionCenter = i_center;
+  m_isBBoxDirty           = true;
 }
 
 Vector2f Block::DynamicRotationCenter() const {
@@ -140,12 +142,15 @@ void Block::updateCollisionLines() {
   fR[2] =  sin(DynamicRotation()); 
   fR[3] =  cos(DynamicRotation());
   unsigned int z = 0;
+
+  m_isBBoxDirty = true;
   
   for(unsigned int j=0; j<Vertices().size(); j++) {            
     unsigned int jnext = j==Vertices().size()-1? 0 : j+1;
     BlockVertex *pVertex1 = Vertices()[j];          
     BlockVertex *pVertex2 = Vertices()[jnext];          
-    
+
+
     /* Transform vertices */
     Vector2f Tv1 = Vector2f((pVertex1->Position().x-DynamicRotationCenter().x) * fR[0] + (pVertex1->Position().y-DynamicRotationCenter().y) * fR[1],
 			    (pVertex1->Position().x-DynamicRotationCenter().x) * fR[2] + (pVertex1->Position().y-DynamicRotationCenter().y) * fR[3]);
@@ -193,7 +198,7 @@ int Block::loadToPlay(vapp::CollisionSystem& io_collisionSystem,
      probably appreciate it when the input data is very complex. It'll also 
      let us handle crossing edges, and other kinds of weird input. */
   vapp::BSP v_BSPTree;
-  
+
   /* Define edges */
   for(unsigned int i=0; i<Vertices().size(); i++) {
     /* Next vertex? */
@@ -218,7 +223,7 @@ int Block::loadToPlay(vapp::CollisionSystem& io_collisionSystem,
 	v_line->x1 = v_line->y1 = v_line->x2 = v_line->y2 = 0.0f;
 	v_line->fGrip = m_grip;
 	m_collisionLines.push_back(v_line);
-	io_collisionSystem.addExternalDynamicLine(v_line);
+	// io_collisionSystem.addExternalDynamicLine(v_line);
       }
     }
 
@@ -226,6 +231,12 @@ int Block::loadToPlay(vapp::CollisionSystem& io_collisionSystem,
     v_BSPTree.addLineDef(Vertices()[i]->Position(), Vertices()[inext]->Position());
   }
   
+  /* define dynamic block in the collision system */
+  if(isBackground() == false && isDynamic()) {
+    updateCollisionLines();
+    io_collisionSystem.addDynBlock(this);
+  }
+
   /* Compute */
   std::vector<vapp::BSPPoly *> &v_BSPPolys = v_BSPTree.compute();      
   
@@ -280,6 +291,7 @@ bool Block::isDynamic() const {
 
 void Block::setInitialPosition(const Vector2f& i_initialPosition) {
   m_initialPosition  = i_initialPosition;
+  m_isBBoxDirty = true;
 }
 
 Vector2f Block::InitialPosition() const {
@@ -324,6 +336,25 @@ void Block::setDynamic(bool i_dynamic) {
 
 void Block::setGrip(float i_grip) {
   m_grip = i_grip;
+}
+
+AABB& Block::getAABB()
+{
+  if(m_isBBoxDirty == true){
+    m_BBox.reset();
+
+    for(int i=0; i<m_collisionLines.size(); i++){
+      vapp::Line* pLine = m_collisionLines[i];
+      // add only the first point because the second
+      // point of the line n is the same as the first
+      // point of the line n+1
+      m_BBox.addPointToAABB2f(pLine->x1, pLine->y1);
+    }
+
+    m_isBBoxDirty = false;
+  }
+
+  return m_BBox;
 }
 
 BlockVertex::BlockVertex(const Vector2f& i_position, const std::string& i_edgeEffect) {

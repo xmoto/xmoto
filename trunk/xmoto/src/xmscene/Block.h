@@ -134,6 +134,8 @@ class Block {
   void saveBinary(vapp::FileHandle *i_pfh);
   static Block* readFromXml(vapp::XMLDocument& i_xmlSource, TiXmlElement *pElem);
   static Block* readFromBinary(vapp::FileHandle *i_pfh);
+  AABB& getAABB();
+  std::vector<vapp::Line *>& getCollisionLines() {return m_collisionLines;}
 
 private:
   std::string m_id;           /* Block ID */
@@ -148,6 +150,8 @@ private:
   bool  m_background;                   /* Background block */
   bool  m_dynamic;
   float m_grip;                         /* GRIP of the block */
+  AABB  m_BBox;
+  bool  m_isBBoxDirty;
 
   /* properties for dynamic */
   float m_dynamicRotation;  /* Block rotation */
