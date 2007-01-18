@@ -115,17 +115,20 @@ namespace vapp {
             pTexture = pSprite->getTexture();
           }
         }
-        
+
         /* Define its box */
-        Vector2f PBoxMin = (ConvexBlocks[j]->Vertices()[0]->Position() + Center);
-        Vector2f PBoxMax = (ConvexBlocks[j]->Vertices()[0]->Position() + Center);      
+	AABB PBox;
+	PBox.addPointToAABB2f(ConvexBlocks[j]->Vertices()[0]->Position() + Center);
+	PBox.addPointToAABB2f(ConvexBlocks[j]->Vertices()[0]->Position() + Center);
         for(int k=0; k<ConvexBlocks[j]->Vertices().size(); k++) {
-          addPointToAABB2f(PBoxMin,PBoxMax,(ConvexBlocks[j]->Vertices()[k]->Position() + Center));
-        }      
-        
+          PBox.addPointToAABB2f(ConvexBlocks[j]->Vertices()[k]->Position() + Center);
+        }
+
         /* Look at our list of static geoms, see if we can find a matching texture */     
         std::vector<StaticGeom *> GeomList = _FindGeomsByTexture(pTexture);
         
+	Vector2f PBoxMin = PBox.getBMin();
+	Vector2f PBoxMax = PBox.getBMax();
         /* Go through them, to see if we can find a suitable geom */
         StaticGeom *pSuitableGeom = NULL;
         for(int k=0; k<GeomList.size(); k++) {
@@ -625,6 +628,31 @@ namespace vapp {
         getParent()->getDrawLib()->glVertex(pc->m_CheckedCellsW[i].x1,pc->m_CheckedCellsW[i].y2);
 	getParent()->getDrawLib()->endDraw();
       }
+
+      std::vector<Entity*>& v = pc->getCheckedEntities();
+      for(int i=0; i<v.size(); i++) {
+	// draw entities in the cells
+	Entity* pSprite = v[i];
+	Vector2f C = pSprite->DynamicPosition();
+	Color v_color;
+      
+	switch(pSprite->Speciality()) {
+	case ET_KILL:
+	  v_color = MAKE_COLOR(80,255,255,255); /* Fix: color changed a bit so it's easier to spot */
+	  break;
+	case ET_MAKEWIN:
+	  v_color = MAKE_COLOR(255,255,0,255); /* Fix: color not same as blocks */
+	  break;
+	case ET_ISTOTAKE:
+	  v_color = MAKE_COLOR(255,0,0,255);
+	  break;
+	default:
+	  v_color = MAKE_COLOR(50,50,50,255); /* Fix: hard-to-see color because of entity's insignificance */
+	  break;
+	}
+
+	_RenderCircle(20, v_color, C, pSprite->Size()+0.2f);
+      }
     }
     
     //const std::vector<LineSoup *> &LSoups = getGameObject()->getCollisionHandler()->getSoups();
@@ -986,13 +1014,17 @@ namespace vapp {
 
       if(v_spriteType != NULL) {
         /* Draw it */
-				Vector2f p0,p1,p2,p3;
+        Vector2f p0,p1,p2,p3;
         
-				p0 = Vector2f(pSprite->DynamicPosition().x          , pSprite->DynamicPosition().y            ) + Vector2f(-v_centerX,-v_centerY);
-				p1 = Vector2f(pSprite->DynamicPosition().x + v_width, pSprite->DynamicPosition().y            ) + Vector2f(-v_centerX,-v_centerY);
-				p2 = Vector2f(pSprite->DynamicPosition().x + v_width, pSprite->DynamicPosition().y  + v_height) + Vector2f(-v_centerX,-v_centerY);
-				p3 = Vector2f(pSprite->DynamicPosition().x          , pSprite->DynamicPosition().y  + v_height) + Vector2f(-v_centerX,-v_centerY);
-
+        p0 = Vector2f(pSprite->DynamicPosition().x,pSprite->DynamicPosition().y) +
+          Vector2f(-v_centerX,-v_centerY);
+        p1 = Vector2f(pSprite->DynamicPosition().x+v_width,pSprite->DynamicPosition().y) +
+          Vector2f(-v_centerX,-v_centerY);
+        p2 = Vector2f(pSprite->DynamicPosition().x+v_width,pSprite->DynamicPosition().y+v_height) +
+          Vector2f(-v_centerX,-v_centerY);
+        p3 = Vector2f(pSprite->DynamicPosition().x,pSprite->DynamicPosition().y+v_height) +
+          Vector2f(-v_centerX,-v_centerY);
+        
         if(v_spriteType->getBlendMode() == SPRITE_BLENDMODE_ADDITIVE) {
           _RenderAdditiveBlendedSection(v_spriteType->getTexture(),p0,p1,p2,p3);      
         }
