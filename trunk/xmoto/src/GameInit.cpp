@@ -613,8 +613,8 @@ namespace vapp {
     printf("\t-ugly\n\t\tEnable 'ugly' mode, suitable for computers without\n");
              printf("\t\ta good OpenGL-enabled video card.\n");
     printf("\t-testTheme\n\t\tDisplay forms around the theme to check it.\n");
-    printf("\t-benchmark\n\t\tOnly meaningful when combined with -replay and\n");
-    printf("\t\t-timedemo. Useful to determine the graphics\n");
+    printf("\t-benchmark\n\t\tOnly meaningful when combined with -replay\n");
+    printf("\t\tand -timedemo. Useful to determine the graphics\n");
              printf("\t\tperformance.\n");
     printf("\t-cleancache\n\t\tDeletes the content of the level cache.\n");
   }  

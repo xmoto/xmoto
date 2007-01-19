@@ -538,8 +538,12 @@ namespace vapp {
         printf("\t-v\n\t\tBe verbose.\n");
         printf("\t-noexts\n\t\tDon't use any OpenGL extensions.\n");
         printf("\t-nowww\n\t\tDon't allow xmoto to connect on the web.\n");
+//If both sdlgfx and opengl are available give the user the posibility
+//to select the draw library
 #ifdef ENABLE_SDLGFX
-        printf("\t-sdlgfx\n\t\tSelect SDL_fgx as rendering engine.\n");
+  #ifdef ENABLE_OPENGL
+        printf("\t-drawlib [OPENGL|SDLGFX]\n\t\tSelect the draw library to use.\n");
+  #endif
 #endif
         helpUserArgs();
         printf("\n");
