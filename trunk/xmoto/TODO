@@ -20,6 +20,7 @@ Assigned to nicolas
 * script : disable a key (brake for example, ...)
 * ugly uses misc.png for border : should not
 
+* SDL_GFX crashed on mac http://rafb.net/p/L95KzR62.html
 * keesj:real caching strategy, currently the SDL_gfx chooses to caches based on expected size of the image
   We need to implement a real caching strategy, for example a LRU hash table (least recently used hashtable
   Here is an article that might be of good use http://www.gamedev.net/reference/articles/article2240.asp)
