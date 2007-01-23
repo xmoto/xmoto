@@ -269,7 +269,9 @@ namespace vapp {
       
       /* FBO overlay */
       SFXOverlay m_Overlay;
-            
+
+      AABB m_screenBBox;
+
       /* Subroutines */
       void _RenderSprites(bool bForeground,bool bBackground);
       void _RenderSprite(Entity *pSprite);
