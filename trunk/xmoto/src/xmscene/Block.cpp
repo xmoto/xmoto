@@ -166,8 +166,7 @@ void Block::setDynamicRotation(float i_dynamicRotation) {
   updateCollisionLines();
 }
 
-int Block::loadToPlay(vapp::CollisionSystem& io_collisionSystem,
-		      bool manageCollisions) {
+int Block::loadToPlay(vapp::CollisionSystem& io_collisionSystem) {
 
   m_dynamicPosition       = m_initialPosition;
   m_dynamicRotation       = m_initialRotation;
@@ -185,26 +184,22 @@ int Block::loadToPlay(vapp::CollisionSystem& io_collisionSystem,
     unsigned int inext = i+1;
     if(inext == Vertices().size()) inext=0;
 
-    if(manageCollisions){
-      /* add static lines */
-      if(isBackground() == false && isDynamic() == false) {
-	/* Add line to collision handler */
-	io_collisionSystem.defineLine(DynamicPosition().x + Vertices()[i]->Position().x,
-				      DynamicPosition().y + Vertices()[i]->Position().y,
-				      DynamicPosition().x + Vertices()[inext]->Position().x,
-				      DynamicPosition().y + Vertices()[inext]->Position().y,
-				      Grip());
-      }
-      
-      /* add dynamic lines */
-      if(isBackground() == false && isDynamic()) {
-	/* Define collision lines */
-	vapp::Line *v_line = new vapp::Line;
-	v_line->x1 = v_line->y1 = v_line->x2 = v_line->y2 = 0.0f;
-	v_line->fGrip = m_grip;
-	m_collisionLines.push_back(v_line);
-	// io_collisionSystem.addExternalDynamicLine(v_line);
-      }
+    /* add static lines */
+    if(isBackground() == false && isDynamic() == false) {
+      /* Add line to collision handler */
+      io_collisionSystem.defineLine(DynamicPosition().x + Vertices()[i]->Position().x,
+				    DynamicPosition().y + Vertices()[i]->Position().y,
+				    DynamicPosition().x + Vertices()[inext]->Position().x,
+				    DynamicPosition().y + Vertices()[inext]->Position().y,
+				    Grip());
+    }      
+    /* add dynamic lines */
+    if(isBackground() == false && isDynamic()) {
+      /* Define collision lines */
+      vapp::Line *v_line = new vapp::Line;
+      v_line->x1 = v_line->y1 = v_line->x2 = v_line->y2 = 0.0f;
+      v_line->fGrip = m_grip;
+      m_collisionLines.push_back(v_line);
     }
 
     /* Add line to BSP generator */

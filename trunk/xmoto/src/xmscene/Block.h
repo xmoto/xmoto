@@ -153,8 +153,7 @@ class Block {
 	/* angle position ; consider of the block center */
   void setDynamicRotation(float i_dynamicRotation);
 
-  int loadToPlay(vapp::CollisionSystem& io_collisionSystem,
-		 bool manageCollisions); /* load for playing */
+  int loadToPlay(vapp::CollisionSystem& io_collisionSystem); /* load for playing */
   void unloadToPlay();
 
   void saveXml(vapp::FileHandle *i_pfh);
