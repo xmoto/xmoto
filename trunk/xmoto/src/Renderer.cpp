@@ -55,6 +55,8 @@ namespace vapp {
     
     m_bCreditsMode = bCreditsMode;
 
+    m_screenBBox.reset();
+
     #if defined(ALLOW_GHOST)
       /* Set initial ghost information position */
       if(getGameObject()->isGhostActive() && !bCreditsMode) {
@@ -290,7 +292,7 @@ namespace vapp {
       }
     }
   }
-
+    
   /*===========================================================================
   Minimap rendering
   ===========================================================================*/
@@ -302,88 +304,110 @@ namespace vapp {
 
   void GameRenderer::renderMiniMap(int x,int y,int nWidth,int nHeight) {
     getParent()->getDrawLib()->drawBox(Vector2f(x,y),Vector2f(x+nWidth,y+nHeight),1,
-                         MAKE_COLOR(0,0,0,MINIMAPALPHA),MAKE_COLOR(255,255,255,MINIMAPALPHA));
+				       MAKE_COLOR(0,0,0,MINIMAPALPHA),
+				       MAKE_COLOR(255,255,255,MINIMAPALPHA));
     getParent()->scissorGraphics(x+1,y+1,nWidth-2,nHeight-2);
 #ifdef ENABLE_OPENGL
     glEnable(GL_SCISSOR_TEST);
     glLoadIdentity();
 #endif
         
-    MotoGame *pGame = getGameObject();
-    std::vector<Block *> Blocks = getGameObject()->getLevelSrc()->Blocks();
-
+    /* TOFIX::Draw the static blocks only once in a texture, and reuse it after */
     /* Render blocks */
+    MotoGame *pGame = getGameObject();
+    std::vector<Block*> Blocks = getGameObject()->getLevelSrc()->Blocks();
     for(int i=0; i<Blocks.size(); i++) {
 
-      /* Don't draw background blocks */
-      if(Blocks[i]->isBackground() == false) {
-        std::vector<ConvexBlock *> ConvexBlocks = Blocks[i]->ConvexBlocks();
-
-        for(int j=0; j<ConvexBlocks.size(); j++) {
-          Vector2f Center;
-          
-	  if(Blocks[i]->isDynamic()) {
-	    /* Build rotation matrix for block */
-	    float fR[4]; 
-	    fR[0] = cos(Blocks[i]->DynamicRotation()); fR[1] = -sin(Blocks[i]->DynamicRotation());
-	    fR[2] = sin(Blocks[i]->DynamicRotation()); fR[3] = cos(Blocks[i]->DynamicRotation());
-	    
-	    getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
-	    getParent()->getDrawLib()->setColorRGB(128,128,128);
-	    //glColor3f(1,0,0);
-	    for(int k=0; k<ConvexBlocks[j]->Vertices().size(); k++) {
-	      ConvexBlockVertex *pVertex = ConvexBlocks[j]->Vertices()[k];
-	      
-	      /* Transform vertex */
-	      Vector2f Tv = Vector2f((pVertex->Position().x-Blocks[i]->DynamicRotationCenter().x) * fR[0] + (pVertex->Position().y-Blocks[i]->DynamicRotationCenter().y) * fR[1],
-				     (pVertex->Position().x-Blocks[i]->DynamicRotationCenter().x) * fR[2] + (pVertex->Position().y-Blocks[i]->DynamicRotationCenter().y) * fR[3]);
-	      Tv += Blocks[i]->DynamicPosition() + Blocks[i]->DynamicRotationCenter();
-	      
-	      /* Put vertex */
-	      getParent()->getDrawLib()->glTexCoord(pVertex->TexturePosition().x,pVertex->TexturePosition().y);          
-	      MINIVERTEX(Tv.x,Tv.y);                  
-            }
-	    getParent()->getDrawLib()->endDraw();
-	  } else { /* in case of non dynamic block, don't calcul the rotation */
-	    Center = ConvexBlocks[j]->SourceBlock()->DynamicPosition(); 	 
-	    
-	    getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON); 	 
-	    getParent()->getDrawLib()->setColorRGB(128,128,128); 	 
-	    for(int k=0; k<ConvexBlocks[j]->Vertices().size(); k++) { 	 
-	      Vector2f P = Center + ConvexBlocks[j]->Vertices()[k]->Position(); 	 
-	      MINIVERTEX(P.x,P.y); 	 
-	    } 	 
-	    getParent()->getDrawLib()->endDraw();
-	  }
+      /* Don't draw background blocks neither dynamic ones */
+      if(Blocks[i]->isBackground() == false && Blocks[i]->isDynamic() == false) {
+	std::vector<ConvexBlock *> ConvexBlocks = Blocks[i]->ConvexBlocks();
+	for(int j=0; j<ConvexBlocks.size(); j++) {
+	  Vector2f Center = ConvexBlocks[j]->SourceBlock()->DynamicPosition(); 	 
+	  
+	  getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON); 	 
+	  getParent()->getDrawLib()->setColorRGB(128,128,128);
+	  /* TOFIX::what's THAT ??!? -->> put all the vertices in a vector and draw them in one opengl call ! */
+	  for(int k=0; k<ConvexBlocks[j]->Vertices().size(); k++) { 	 
+	    Vector2f P = Center + ConvexBlocks[j]->Vertices()[k]->Position(); 	 
+	    MINIVERTEX(P.x,P.y); 	 
+	  } 	 
+	  getParent()->getDrawLib()->endDraw();
 	}
       }
     }
-    
-    getParent()->getDrawLib()->drawCircle(Vector2f(x + nWidth/2 + (float)(pGame->getBikeState()->CenterP.x - getCameraPositionX())*MINIMAPZOOM,
-                                     y + nHeight/2 - (float)(pGame->getBikeState()->CenterP.y - getCameraPositionY())*MINIMAPZOOM),
-                            3,0,MAKE_COLOR(255,255,255,255),0);
+
+    /* Render dynamic blocks */
+
+    /* get minimap AABB in level space
+      input:  position on the screen (in the minimap area)
+      output: position in the level
+    */
+#define MAP_TO_LEVEL_X(mapX) ((mapX) - x - nWidth/2)/MINIMAPZOOM  + getCameraPositionX()
+#define MAP_TO_LEVEL_Y(mapY) ((mapY) - y - nHeight/2)/MINIMAPZOOM + getCameraPositionY()
+    AABB mapBBox;
+    mapBBox.addPointToAABB2f(MAP_TO_LEVEL_X(x), MAP_TO_LEVEL_Y(y));
+    mapBBox.addPointToAABB2f(MAP_TO_LEVEL_X(x+nWidth), MAP_TO_LEVEL_Y(y+nHeight));
+
+    /* display only visible dyn blocks */
+    Blocks = pGame->getCollisionHandler()->getDynBlocksNearPosition(mapBBox);
+
+    /* TOFIX::do not calculate this again. (already done in Block.cpp) */
+    for(int i=0; i<Blocks.size(); i++) {
+      std::vector<ConvexBlock *> ConvexBlocks = Blocks[i]->ConvexBlocks();
+      for(int j=0; j<ConvexBlocks.size(); j++) {
+	getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+	getParent()->getDrawLib()->setColorRGB(128,128,128);
+	/* Build rotation matrix for block */
+	float fR[4];
+	fR[0] = cos(Blocks[i]->DynamicRotation()); fR[1] = -sin(Blocks[i]->DynamicRotation());
+	fR[2] = sin(Blocks[i]->DynamicRotation()); fR[3] = cos(Blocks[i]->DynamicRotation());
+	for(int k=0; k<ConvexBlocks[j]->Vertices().size(); k++) {
+	  ConvexBlockVertex *pVertex = ConvexBlocks[j]->Vertices()[k];
+	  
+	  /* Transform vertex */
+	  Vector2f Tv = Vector2f((pVertex->Position().x-Blocks[i]->DynamicRotationCenter().x) * fR[0] + (pVertex->Position().y-Blocks[i]->DynamicRotationCenter().y) * fR[1],
+				 (pVertex->Position().x-Blocks[i]->DynamicRotationCenter().x) * fR[2] + (pVertex->Position().y-Blocks[i]->DynamicRotationCenter().y) * fR[3]);
+	  Tv += Blocks[i]->DynamicPosition() + Blocks[i]->DynamicRotationCenter();
+	  
+	  MINIVERTEX(Tv.x,Tv.y);
+	}
+	
+	getParent()->getDrawLib()->endDraw();
+      }
+    }
+
+
+    /*
+      input: position in the level
+      output: position on the screen (draw in the minimap area)
+    */
+#define LEVEL_TO_SCREEN_X(elemPosX) (x + nWidth/2  + (float)((elemPosX) - getCameraPositionX()) * MINIMAPZOOM)
+#define LEVEL_TO_SCREEN_Y(elemPosY) (y + nHeight/2 - (float)((elemPosY) - getCameraPositionY()) * MINIMAPZOOM)
+
+    Vector2f bikePos(LEVEL_TO_SCREEN_X(pGame->getBikeState()->CenterP.x),
+		     LEVEL_TO_SCREEN_Y(pGame->getBikeState()->CenterP.y));
+    getParent()->getDrawLib()->drawCircle(bikePos, 3, 0, MAKE_COLOR(255,255,255,255), 0);
     
 #if defined(ALLOW_GHOST)
     /* Render ghost position too? */
     if(getGameObject()->isGhostActive()) {
-      getParent()->getDrawLib()->drawCircle(Vector2f(x + nWidth/2 + (float)(pGame->getGhostBikeState()->CenterP.x - getCameraPositionX())*MINIMAPZOOM,
-                                       y + nHeight/2 - (float)(pGame->getGhostBikeState()->CenterP.y - getCameraPositionY())*MINIMAPZOOM),
-                              3,0,MAKE_COLOR(96,96,150,255),0);
+      Vector2f ghostPos(LEVEL_TO_SCREEN_X(pGame->getGhostBikeState()->CenterP.x),
+			LEVEL_TO_SCREEN_Y(pGame->getGhostBikeState()->CenterP.y));
+      getParent()->getDrawLib()->drawCircle(ghostPos, 3, 0, MAKE_COLOR(96,96,150,255), 0);
     }
 #endif
-    
-    for(int i=0;i<pGame->getLevelSrc()->Entities().size();i++) {
-      if(pGame->getLevelSrc()->Entities()[i]->DoesMakeWin()) {
-        getParent()->getDrawLib()->drawCircle(Vector2f(x + nWidth/2 + (float)(pGame->getLevelSrc()->Entities()[i]->DynamicPosition().x - getCameraPositionX())*MINIMAPZOOM,
-                                         y + nHeight/2 - (float)(pGame->getLevelSrc()->Entities()[i]->DynamicPosition().y - getCameraPositionY())*MINIMAPZOOM),
-                                3,0,MAKE_COLOR(255,0,255,255),0);
-        
+
+    /* FIX::display only visible entities */
+    std::vector<Entity*> Entities = pGame->getCollisionHandler()->getEntitiesNearPosition(mapBBox);
+
+    for(int i=0;i<Entities.size();i++) {
+      Vector2f entityPos(LEVEL_TO_SCREEN_X(Entities[i]->DynamicPosition().x),
+			 LEVEL_TO_SCREEN_Y(Entities[i]->DynamicPosition().y));
+      if(Entities[i]->DoesMakeWin()) {
+        getParent()->getDrawLib()->drawCircle(entityPos, 3, 0, MAKE_COLOR(255,0,255,255), 0);
       }
-      else if(pGame->getLevelSrc()->Entities()[i]->IsToTake()) {
-        getParent()->getDrawLib()->drawCircle(Vector2f(x + nWidth/2 + (float)(pGame->getLevelSrc()->Entities()[i]->DynamicPosition().x - getCameraPositionX())*MINIMAPZOOM,
-                                         y + nHeight/2 - (float)(pGame->getLevelSrc()->Entities()[i]->DynamicPosition().y - getCameraPositionY())*MINIMAPZOOM),
-                                3,0,MAKE_COLOR(255,0,0,255),0);
-        
+      else if(Entities[i]->IsToTake()) {
+        getParent()->getDrawLib()->drawCircle(entityPos, 3, 0, MAKE_COLOR(255,0,0,255), 0);
       }
     }
     
@@ -481,17 +505,32 @@ namespace vapp {
     glLoadIdentity();
 #endif
 
+    /* calculate screen AABB to show only visible entities and dyn blocks */
+    m_screenBBox.reset();
+
+    float xScale = m_fScale * ((float)getParent()->getDrawLib()->getDispHeight()) / getParent()->getDrawLib()->getDispWidth();
+    float yScale = m_fScale;
+    // depends on zoom
+    float xCamOffset=1.0/xScale;
+    float yCamOffset=1.0/yScale;
+
+    Vector2f v1(getCameraPositionX()-xCamOffset, getCameraPositionY()-yCamOffset);
+    Vector2f v2(getCameraPositionX()+xCamOffset, getCameraPositionY()+yCamOffset);
+
+    m_screenBBox.addPointToAABB2f(v1);
+    m_screenBBox.addPointToAABB2f(v2);
+
     /* SKY! */
-   if(!m_bUglyMode)
-		_RenderSky(getGameObject()->getLevelSrc()->Sky().Zoom(),
-							 getGameObject()->getLevelSrc()->Sky().Offset(),
-							 getGameObject()->getLevelSrc()->Sky().TextureColor(),
-							 getGameObject()->getLevelSrc()->Sky().DriftZoom(),
-							 getGameObject()->getLevelSrc()->Sky().DriftTextureColor(),
-							 getGameObject()->getLevelSrc()->Sky().Drifted());
-		
+    if(!m_bUglyMode)
+    _RenderSky(getGameObject()->getLevelSrc()->Sky().Zoom(),
+	       getGameObject()->getLevelSrc()->Sky().Offset(),
+	       getGameObject()->getLevelSrc()->Sky().TextureColor(),
+	       getGameObject()->getLevelSrc()->Sky().DriftZoom(),
+	       getGameObject()->getLevelSrc()->Sky().DriftTextureColor(),
+	       getGameObject()->getLevelSrc()->Sky().Drifted());
+
     /* Perform scaling/translation */    
-    getParent()->getDrawLib()->setScale(m_fScale * ((float)getParent()->getDrawLib()->getDispHeight()) / getParent()->getDrawLib()->getDispWidth(), m_fScale);
+    getParent()->getDrawLib()->setScale(xScale, yScale);
     //glRotatef(getGameObject()->getTime()*100,0,0,1); /* Uncomment this line if you want to vomit :) */
     getParent()->getDrawLib()->setTranslate(-getCameraPositionX(), -getCameraPositionY());
     
@@ -714,7 +753,7 @@ namespace vapp {
       //    }
       //  }
       //}
-    }        
+     }        
 
 #ifdef ENABLE_OPENGL
     glLoadIdentity();
@@ -913,8 +952,27 @@ namespace vapp {
     MotoGame *pGame = getGameObject();
     Entity *pEnt;
 
-    for(int i=0;i<pGame->getLevelSrc()->Entities().size();i++) {
-      pEnt = pGame->getLevelSrc()->Entities()[i];
+    AABB screenBigger;
+    Vector2f screenMin = m_screenBBox.getBMin();
+    Vector2f screenMax = m_screenBBox.getBMax();
+    /* to avoid sprites being clipped out of the screen,
+       we draw also the nearest one */
+#define ENTITY_OFFSET 5.0f
+    screenBigger.addPointToAABB2f(screenMin.x-ENTITY_OFFSET,
+				  screenMin.y-ENTITY_OFFSET);
+    screenBigger.addPointToAABB2f(screenMax.x+ENTITY_OFFSET,
+				  screenMax.y+ENTITY_OFFSET);
+
+    /* DONE::display only visible entities */
+    std::vector<Entity*> Entities = getGameObject()->getCollisionHandler()->getEntitiesNearPosition(screenBigger);
+
+    int nbNearEntities = Entities.size();
+    int nbTotalEntities = getGameObject()->getLevelSrc()->Entities().size();
+
+    //printf("draw %d entities on %d\n", nbNearEntities, nbTotalEntities);
+
+    for(int i=0;i<Entities.size();i++) {
+      pEnt = Entities[i];
 
       switch(pEnt->Speciality()) {
         case ET_NONE:
@@ -1070,11 +1128,18 @@ namespace vapp {
   void GameRenderer::_RenderDynamicBlocks(bool bBackground) {
     MotoGame *pGame = getGameObject();
 
-    /* Render all dynamic blocks */
-    std::vector<Block *> Blocks = getGameObject()->getLevelSrc()->Blocks();
+    /* FIX::display only visible dyn blocks */
+    std::vector<Block *> Blocks = getGameObject()->getCollisionHandler()->getDynBlocksNearPosition(m_screenBBox);
+    int nbNearBlocks = Blocks.size();
+    int nbTotalBlocks = getGameObject()->getLevelSrc()->Blocks().size();
+
+    //printf("draw %d blocks on %d\n", nbNearBlocks, nbTotalBlocks);
+
+    //    /* Render all dynamic blocks */
+    //    std::vector<Block *> Blocks = getGameObject()->getLevelSrc()->Blocks();
 
     for(int i=0; i<Blocks.size(); i++) {
-      if(Blocks[i]->isDynamic() == false) continue;
+      //if(Blocks[i]->isDynamic() == false) continue;
             
       /* Are we rendering background blocks or what? */
       if(Blocks[i]->isBackground() != bBackground) continue;
