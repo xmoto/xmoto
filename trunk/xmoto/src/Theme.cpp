@@ -975,36 +975,14 @@ void ThemeChoicer::initList() {
   std::vector<std::string> v_themesFiles = vapp::FS::findPhysFiles(std::string(THEMES_DIRECTORY) + std::string("/*.xml"), true);
   std::string v_name;
 
-  /* first, load theme which are in the user dir because, a same theme can be stored
-     in files having different name
-  */
   for(unsigned int i=0; i<v_themesFiles.size(); i++) {
     try {
-      if(vapp::FS::isInUserDir(v_themesFiles[i])) {
-  v_name = getThemeNameFromFile(v_themesFiles[i]);
-  if(ExistThemeName(v_name) == false) {
-    m_choices.push_back(new ThemeChoice(v_name, v_themesFiles[i], true));
-  } else {
-    vapp::Log(std::string("Theme " + v_name + " is present several times").c_str());
-  }
-      }
-    } catch(Exception &e) {
-      /* anyway, give up this theme */
-    }
-  }
-
-  /* load the other theme from not the user directory */
-  for(unsigned int i=0; i<v_themesFiles.size(); i++) {
-    try {
-      if(vapp::FS::isInUserDir(v_themesFiles[i]) == false) {
-  v_name = getThemeNameFromFile(v_themesFiles[i]);
-  if(ExistThemeName(v_name) == false) {
-    m_choices.push_back(new ThemeChoice(v_name, v_themesFiles[i], true));
-  } else {
-    // no warning for non user dir
-    // vapp::Log(std::string("Theme " + v_name + " is present several times").c_str());
-  }
-      }
+			v_name = getThemeNameFromFile(v_themesFiles[i]);
+			if(ExistThemeName(v_name) == false) {
+				m_choices.push_back(new ThemeChoice(v_name, v_themesFiles[i], true));
+			} else {
+				vapp::Log(std::string("Theme " + v_name + " is present several times").c_str());
+			}
     } catch(Exception &e) {
       /* anyway, give up this theme */
     }
