@@ -388,7 +388,10 @@ namespace vapp {
   void DrawLibOpenGL::setTexture(Texture *texture,BlendMode blendMode){
     setBlendMode(blendMode);
     if (texture != NULL){
-      glBindTexture(GL_TEXTURE_2D,texture->nID);
+      /* bind texture only if different than the current one */
+      if(m_texture == NULL || texture->Name != m_texture->Name){
+	glBindTexture(GL_TEXTURE_2D,texture->nID);
+      }
       glEnable(GL_TEXTURE_2D);
     } else {
        //so the texture is set to null
@@ -416,8 +419,6 @@ namespace vapp {
     }
     m_blendMode = blendMode;
   }
-
-
 
   /*===========================================================================
   Text dim probing
