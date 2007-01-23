@@ -720,7 +720,7 @@ namespace vapp {
     m_BikeS.Dir = DD_RIGHT;
     
     m_BikeS.reInitializeSpeed();
-    
+
     /* Invoke the OnLoad() script function */
     if(m_isScriptActiv) {
       bool bOnLoadSuccess = scriptCallBool("OnLoad",
@@ -838,9 +838,7 @@ namespace vapp {
       }
     }
     
-    if(m_bIsAReplay == false){
-      m_Collision.setDims(LevelBoundsMin.x,LevelBoundsMin.y,LevelBoundsMax.x,LevelBoundsMax.y);
-    }
+    m_Collision.setDims(LevelBoundsMin.x,LevelBoundsMin.y,LevelBoundsMax.x,LevelBoundsMax.y);
 
     Log("Generating level from %d block%s...",InBlocks.size(),InBlocks.size()==1?"":"s");
     
@@ -850,7 +848,7 @@ namespace vapp {
     m_zonesTouching.clear();
     m_entitiesTouching.clear();
 
-    nTotalBSPErrors = m_pLevelSrc->loadToPlay(!m_bIsAReplay);
+    nTotalBSPErrors = m_pLevelSrc->loadToPlay();
 
     Log(" %d poly%s in total",m_pLevelSrc->Blocks().size(),m_pLevelSrc->Blocks().size()==1?"":"s");        
     
@@ -1286,9 +1284,7 @@ namespace vapp {
 
   void MotoGame::SetEntityPos(Entity *pEntity, float pX, float pY) {
     pEntity->setDynamicPosition(Vector2f(pX, pY));
-    if(m_bIsAReplay == false){
-      m_Collision.moveEntity(pEntity);
-    }
+    m_Collision.moveEntity(pEntity);
   }
 
   void MotoGame::PlaceInGameArrow(float pX, float pY, float pAngle) {
@@ -1310,18 +1306,25 @@ namespace vapp {
   void MotoGame::MoveBlock(String pBlockID, float pX, float pY) {
     Block& v_block = m_pLevelSrc->getBlockById(pBlockID);
     v_block.setDynamicPosition(v_block.DynamicPosition() + Vector2f(pX, pY));
+    m_Collision.moveDynBlock(&v_block);
   }
   
   void MotoGame::SetBlockPos(String pBlockID, float pX, float pY) {
-    m_pLevelSrc->getBlockById(pBlockID).setDynamicPosition(Vector2f(pX, pY));
+    Block& v_block = m_pLevelSrc->getBlockById(pBlockID);
+    v_block.setDynamicPosition(Vector2f(pX, pY));
+    m_Collision.moveDynBlock(&v_block);
   }
   
   void MotoGame::SetBlockCenter(String pBlockID, float pX, float pY) {
-    m_pLevelSrc->getBlockById(pBlockID).setCenter(Vector2f(pX, pY));
+    Block& v_block = m_pLevelSrc->getBlockById(pBlockID);
+    v_block.setCenter(Vector2f(pX, pY));
+    m_Collision.moveDynBlock(&v_block);
   }
   
   void MotoGame::SetBlockRotation(String pBlockID, float pAngle) {
-    m_pLevelSrc->getBlockById(pBlockID).setDynamicRotation(pAngle);
+    Block& v_block = m_pLevelSrc->getBlockById(pBlockID);
+    v_block.setDynamicRotation(pAngle);
+    m_Collision.moveDynBlock(&v_block);
   }     
   
 #if defined(ALLOW_GHOST) 
@@ -1520,9 +1523,9 @@ namespace vapp {
 
   void MotoGame::_KillEntity(Entity *pEnt) {
     getLevelSrc()->killEntity(pEnt->Id());
-    if(m_bIsAReplay == false){
-      m_Collision.removeEntity(pEnt);
-    }
+    /* now that rendering use the space partionnement,
+       we have to remove entity from the collision system */
+    m_Collision.removeEntity(pEnt);
   }
 
 }
