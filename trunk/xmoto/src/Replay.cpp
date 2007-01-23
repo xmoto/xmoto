@@ -369,7 +369,12 @@ namespace vapp {
       printf("%-30s:\n", "Game Events");
     }
 
+    /* unserialize events */
     MotoGame::unserializeGameEvents(this, &m_ReplayEvents, bDisplayInformation);
+    initOutput(1024);
+    for(int i=0; i<m_ReplayEvents.size(); i++) {
+      m_ReplayEvents[i]->Event->serialize(*this);
+    }
 
     return m_LevelID;
   }
