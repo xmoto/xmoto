@@ -157,8 +157,6 @@ namespace vapp {
     void setDims(float fMinX,float fMinY,float fMaxX,float fMaxY);
     void defineLine(float x1,float y1,float x2,float y2, float grip);
 
-    //    void addExternalDynamicLine(Line *pLine);
-    
     bool checkLine(float x1,float y1,float x2,float y2);
     bool checkCircle(float x,float y,float r);
     bool checkBoxFast(float fMinX,float fMinY,float fMaxX,float fMaxY);
@@ -212,9 +210,6 @@ namespace vapp {
     /* Data */
     float m_fMinX,m_fMinY,m_fMaxX,m_fMaxY;
     std::vector<Line *> m_Lines;
-
-    /* CA VA GICLER ! */
-    //std::vector<Line *> m_ExternalDynamicLines; /* list NOT managed by this class */
 
     ElementHandler<Entity> m_entitiesHandler;
     ElementHandler<Block>  m_blocksHandler;
