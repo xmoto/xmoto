@@ -25,6 +25,7 @@ enormenent...
 * a level updated is reload from XML ?!? 
 * BUG : --with-renderer-sdlGfx=0 --with-renderer-openGl=0 => segfault
 * don't display the scrollbar if it is not required
+* the_only_dude::various speed improvements.
 
 Since 0.2.2
 * When i update lists sometimes

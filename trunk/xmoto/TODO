@@ -1,5 +1,6 @@
 
 Assigned to nicolas
+* 23/01/07: no more text in xmoto cvs...
 * BUG : hum, about checksum, when you modify a level with f5 while
    playing, then it is not updated with the new level button
 * ajouter un param au sprite pour indiquer son sens idem pour un edge.
