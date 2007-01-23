@@ -58,7 +58,7 @@ class Level {
 
   /* load level so that it is possible to play */
   /* to replay a level, unload then, reload it */
-  int loadToPlay(bool manageCollisions); /* return the number of errors found */
+  int loadToPlay(); /* return the number of errors found */
   void unloadToPlay();
 
   std::string Id()          const;

@@ -255,8 +255,11 @@ void Level::revertEntityDestroyed(const std::string& i_entityId) {
       }
 
       m_entities.push_back(m_entitiesDestroyed[i]);
-      m_entitiesDestroyed.erase(m_entitiesDestroyed.begin() + i);
 
+      /* add it back to the collision system */
+      m_pCollisionSystem->addEntity(m_entitiesDestroyed[i]);
+
+      m_entitiesDestroyed.erase(m_entitiesDestroyed.begin() + i);
 
       return;
     }
@@ -981,14 +984,13 @@ int Level::compareVersionNumbers(const std::string &v1,const std::string &v2) {
   return 0;    
 }
 
-int Level::loadToPlay(bool manageCollisions) {
+int Level::loadToPlay() {
   int v_nbErrors = 0;
 
   /* preparing blocks */
   for(unsigned int i=0; i<m_blocks.size(); i++) {
     try {
-      v_nbErrors += m_blocks[i]->loadToPlay(*m_pCollisionSystem,
-					    manageCollisions);
+      v_nbErrors += m_blocks[i]->loadToPlay(*m_pCollisionSystem);
     } catch(Exception &e) {
       throw Exception("Fail to load block '" + m_blocks[i]->Id() + "' :\n" + e.getMsg());
     }
@@ -999,9 +1001,7 @@ int Level::loadToPlay(bool manageCollisions) {
     m_entities[i]->loadToPlay();
     Vector2f v = m_entities[i]->DynamicPosition();
 
-    if(manageCollisions){
-      m_pCollisionSystem->addEntity(m_entities[i]);
-    }
+    m_pCollisionSystem->addEntity(m_entities[i]);
 
     if(m_entities[i]->IsToTake()){
       m_nbEntitiesToTake++;
