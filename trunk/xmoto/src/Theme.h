@@ -98,7 +98,10 @@ class Sprite {
   Sprite(Theme* p_associated_theme, std::string v_name);
   virtual ~Sprite();
 
-  virtual enum SpriteType getType() = 0;
+  /* no inline with virtual functions, so, no longer virtual */
+  inline enum SpriteType getType() {
+    return m_type;
+  }
   /* called many many many times, so we inline it, and make it return a ref */
   inline std::string& getName() {
     return m_name;
@@ -118,6 +121,7 @@ class Sprite {
   virtual std::string getCurrentTextureFileName() = 0;
   virtual void setCurrentTexture(vapp::Texture *p_texture) = 0;
   virtual std::string getFileDir();
+  enum SpriteType m_type;
 
   private:
   Theme* m_associated_theme;
@@ -144,7 +148,6 @@ class TextureSprite : public SimpleFrameSprite {
  public:
   TextureSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename);
   virtual ~TextureSprite();
-  enum SpriteType getType();
 
  protected:
   std::string getFileDir();
@@ -156,9 +159,6 @@ class BikerPartSprite : public SimpleFrameSprite {
  public:
   BikerPartSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename);
   virtual ~BikerPartSprite();
-  inline enum SpriteType getType() {
-    return SPRITE_TYPE_BIKERPART;
-  }
 
  protected:
   std::string getFileDir();
@@ -201,7 +201,6 @@ class AnimationSprite : public Sprite {
  public:
   AnimationSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileBase, std::string p_fileExtention);
   virtual ~AnimationSprite();
-  enum SpriteType getType();
   float getCenterX();
   float getCenterY();
   float getWidth();
@@ -229,7 +228,6 @@ class EffectSprite : public SimpleFrameSprite {
  public:
   EffectSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename);
   virtual ~EffectSprite();
-  enum SpriteType getType();
 
  protected:
   std::string getFileDir();
@@ -241,7 +239,7 @@ class EdgeEffectSprite : public SimpleFrameSprite {
  public:
   EdgeEffectSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename, float fScale, float fDepth);
   virtual ~EdgeEffectSprite();
-  enum SpriteType getType();
+
   float getScale() const;
   float getDepth() const;
 
@@ -257,7 +255,6 @@ class FontSprite : public SimpleFrameSprite {
  public:
   FontSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename);
   virtual ~FontSprite();
-  enum SpriteType getType();
 
  protected:
   std::string getFileDir();
@@ -269,7 +266,6 @@ class MiscSprite : public SimpleFrameSprite {
  public:
   MiscSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename);
   virtual ~MiscSprite();
-  enum SpriteType getType();
 
  protected:
   std::string getFileDir();
@@ -281,7 +277,6 @@ class UISprite : public SimpleFrameSprite {
  public:
   UISprite(Theme* p_associated_theme, std::string p_name, std::string p_filename);
   virtual ~UISprite();
-  enum SpriteType getType();
 
  protected:
   std::string getFileDir();
@@ -293,7 +288,6 @@ class DecorationSprite : public SimpleFrameSprite {
  public:
   DecorationSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename, float p_width, float p_height, float p_centerX, float p_centerY, SpriteBlendMode p_blendmode);
   virtual ~DecorationSprite();
-  enum SpriteType getType();
 
   float getWidth();
   float getHeight();

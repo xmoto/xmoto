@@ -551,14 +551,11 @@ AnimationSprite::AnimationSprite(Theme* p_associated_theme, std::string p_name, 
   m_fileBase      = p_fileBase;
   m_fileExtension = p_fileExtention;
   m_fFrameTime    = 0.0;
+  m_type          = SPRITE_TYPE_ANIMATION;
 }
 
 AnimationSprite::~AnimationSprite() {
   cleanFrames();
-}
-
-enum SpriteType AnimationSprite::getType() {
-  return SPRITE_TYPE_ANIMATION;
 }
 
 std::string AnimationSprite::getFileDir() {
@@ -669,6 +666,7 @@ float AnimationSpriteFrame::getDelay() const {
 }
 
 BikerPartSprite::BikerPartSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
+  m_type = SPRITE_TYPE_BIKERPART;
 }
 
 BikerPartSprite::~BikerPartSprite() {
@@ -683,15 +681,12 @@ DecorationSprite::DecorationSprite(Theme* p_associated_theme, std::string p_name
   m_height  = p_height;
   m_centerX = p_centerX;
   m_centerY = p_centerY;
+  m_type    = SPRITE_TYPE_DECORATION;
   
   setBlendMode(BlendMode);
 }
 
 DecorationSprite::~DecorationSprite() {
-}
-
-enum SpriteType DecorationSprite::getType() {
-  return SPRITE_TYPE_DECORATION;
 }
 
 std::string DecorationSprite::getFileDir() {
@@ -715,13 +710,10 @@ float DecorationSprite::getCenterY() {
 }
 
 EffectSprite::EffectSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
+  m_type = SPRITE_TYPE_EFFECT;
 }
 
 EffectSprite::~EffectSprite() {
-}
-
-enum SpriteType EffectSprite::getType() {
-  return SPRITE_TYPE_EFFECT;
 }
 
 std::string EffectSprite::getFileDir() {
@@ -731,13 +723,10 @@ std::string EffectSprite::getFileDir() {
 EdgeEffectSprite::EdgeEffectSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename, float p_fScale, float p_fDepth) : SimpleFrameSprite(p_associated_theme, p_name, p_filename) {
   m_fScale = p_fScale;
   m_fDepth = p_fDepth;
+  m_type   = SPRITE_TYPE_EDGEEFFECT;
 }
 
 EdgeEffectSprite::~EdgeEffectSprite() {
-}
-
-enum SpriteType EdgeEffectSprite::getType() {
-  return SPRITE_TYPE_EDGEEFFECT;
 }
 
 std::string EdgeEffectSprite::getFileDir() {
@@ -753,13 +742,10 @@ float EdgeEffectSprite::getDepth() const {
 }
 
 FontSprite::FontSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
+  m_type = SPRITE_TYPE_FONT;
 }
 
 FontSprite::~FontSprite() {
-}
-
-enum SpriteType FontSprite::getType() {
-  return SPRITE_TYPE_FONT;
 }
 
 std::string FontSprite::getFileDir() {
@@ -767,13 +753,10 @@ std::string FontSprite::getFileDir() {
 }
 
 MiscSprite::MiscSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
+  m_type = SPRITE_TYPE_MISC;
 }
 
 MiscSprite::~MiscSprite() {
-}
-
-enum SpriteType MiscSprite::getType() {
-  return SPRITE_TYPE_MISC;
 }
 
 std::string MiscSprite::getFileDir() {
@@ -781,13 +764,10 @@ std::string MiscSprite::getFileDir() {
 }
 
 UISprite::UISprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
+  m_type = SPRITE_TYPE_UI;
 }
 
 UISprite::~UISprite() {
-}
-
-enum SpriteType UISprite::getType() {
-  return SPRITE_TYPE_UI;
 }
 
 std::string UISprite::getFileDir() {
@@ -795,13 +775,10 @@ std::string UISprite::getFileDir() {
 }
 
 TextureSprite::TextureSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
+  m_type = SPRITE_TYPE_TEXTURE;
 }
 
 TextureSprite::~TextureSprite() {
-}
-
-enum SpriteType TextureSprite::getType() {
-  return SPRITE_TYPE_TEXTURE;
 }
 
 std::string TextureSprite::getFileDir() {
