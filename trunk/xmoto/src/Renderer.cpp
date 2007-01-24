@@ -311,15 +311,25 @@ namespace vapp {
     glEnable(GL_SCISSOR_TEST);
     glLoadIdentity();
 #endif
-        
+
+    /* get minimap AABB in level space
+      input:  position on the screen (in the minimap area)
+      output: position in the level
+    */
+#define MAP_TO_LEVEL_X(mapX) ((mapX) - x - nWidth/2)/MINIMAPZOOM  + getCameraPositionX()
+#define MAP_TO_LEVEL_Y(mapY) ((mapY) - y - nHeight/2)/MINIMAPZOOM + getCameraPositionY()
+    AABB mapBBox;
+    mapBBox.addPointToAABB2f(MAP_TO_LEVEL_X(x), MAP_TO_LEVEL_Y(y));
+    mapBBox.addPointToAABB2f(MAP_TO_LEVEL_X(x+nWidth), MAP_TO_LEVEL_Y(y+nHeight));
+
     /* TOFIX::Draw the static blocks only once in a texture, and reuse it after */
     /* Render blocks */
     MotoGame *pGame = getGameObject();
-    std::vector<Block*> Blocks = getGameObject()->getLevelSrc()->Blocks();
+    std::vector<Block*> Blocks = getGameObject()->getCollisionHandler()->getStaticBlocksNearPosition(mapBBox);
     for(int i=0; i<Blocks.size(); i++) {
 
       /* Don't draw background blocks neither dynamic ones */
-      if(Blocks[i]->isBackground() == false && Blocks[i]->isDynamic() == false) {
+      if(Blocks[i]->isBackground() == false) {
 	std::vector<ConvexBlock *> ConvexBlocks = Blocks[i]->ConvexBlocks();
 	for(int j=0; j<ConvexBlocks.size(); j++) {
 	  Vector2f Center = ConvexBlocks[j]->SourceBlock()->DynamicPosition(); 	 
@@ -337,17 +347,6 @@ namespace vapp {
     }
 
     /* Render dynamic blocks */
-
-    /* get minimap AABB in level space
-      input:  position on the screen (in the minimap area)
-      output: position in the level
-    */
-#define MAP_TO_LEVEL_X(mapX) ((mapX) - x - nWidth/2)/MINIMAPZOOM  + getCameraPositionX()
-#define MAP_TO_LEVEL_Y(mapY) ((mapY) - y - nHeight/2)/MINIMAPZOOM + getCameraPositionY()
-    AABB mapBBox;
-    mapBBox.addPointToAABB2f(MAP_TO_LEVEL_X(x), MAP_TO_LEVEL_Y(y));
-    mapBBox.addPointToAABB2f(MAP_TO_LEVEL_X(x+nWidth), MAP_TO_LEVEL_Y(y+nHeight));
-
     /* display only visible dyn blocks */
     Blocks = pGame->getCollisionHandler()->getDynBlocksNearPosition(mapBBox);
 
@@ -1211,7 +1210,7 @@ namespace vapp {
     /* Ugly mode? */
     if(m_bUglyMode) {
       /* Render all non-background blocks */
-      std::vector<Block *> Blocks = getGameObject()->getLevelSrc()->Blocks();
+      std::vector<Block *> Blocks = getGameObject()->getCollisionHandler()->getStaticBlocksNearPosition(m_screenBBox);
 
       for(int i=0;i<Blocks.size();i++) {
         if(Blocks[i]->isBackground() == false && Blocks[i]->isDynamic() == false) {
@@ -1269,42 +1268,52 @@ namespace vapp {
       /* Render all special edges (if quality!=low) */
       if(m_Quality != GQ_LOW) {
 
-        std::vector<Block *> Blocks = getGameObject()->getLevelSrc()->Blocks();
+
+	std::vector<Block *> Blocks = getGameObject()->getCollisionHandler()->getStaticBlocksNearPosition(m_screenBBox);
+	std::vector<Block *> dynBlocks = getGameObject()->getCollisionHandler()->getDynBlocksNearPosition(m_screenBBox);
+
+	for(int i=0; i<dynBlocks.size(); i++){
+	  Blocks.push_back(dynBlocks[i]);
+	}
+
 
         BlockVertex *v_blockVertexA;
         BlockVertex *v_blockVertexB;
-        for(int i=0;i<Blocks.size();i++) {
-          for(int j=0;j<Blocks[i]->Vertices().size();j++) {  
-             v_blockVertexA = Blocks[i]->Vertices()[j];
-             if(v_blockVertexA->EdgeEffect() != "") {
-               v_blockVertexB = Blocks[i]->Vertices()[(j+1)%Blocks[i]->Vertices().size()];
 
-               /* link A to B */
-               float fXScale,fDepth;
-               EdgeEffectSprite* pType;
+	  for(int i=0;i<Blocks.size();i++) {
+	    for(int j=0;j<Blocks[i]->Vertices().size();j++) {  
+	      v_blockVertexA = Blocks[i]->Vertices()[j];
+	      if(v_blockVertexA->EdgeEffect() != "") {
+		v_blockVertexB = Blocks[i]->Vertices()[(j+1)%Blocks[i]->Vertices().size()];
 
-               pType = (EdgeEffectSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_EDGEEFFECT, v_blockVertexA->EdgeEffect());
+		/* link A to B */
+		float fXScale,fDepth;
+		EdgeEffectSprite* pType;
 
-               if(pType != NULL) {
-                 fXScale = pType->getScale();
-                 fDepth  = pType->getDepth();
+		pType = (EdgeEffectSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_EDGEEFFECT, v_blockVertexA->EdgeEffect());
+
+		if(pType != NULL) {
+		  fXScale = pType->getScale();
+		  fDepth  = pType->getDepth();
                  
-		 getParent()->getDrawLib()->setTexture(pType->getTexture(),BLEND_MODE_A);
-		 getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
-		 getParent()->getDrawLib()->setColorRGB(255,255,255);
-                 getParent()->getDrawLib()->glTexCoord((Blocks[i]->DynamicPosition().x+v_blockVertexA->Position().x)*fXScale,0.01);
-                 getParent()->getDrawLib()->glVertex(v_blockVertexA->Position() + Vector2f(Blocks[i]->DynamicPosition().x,Blocks[i]->DynamicPosition().y));
-                 getParent()->getDrawLib()->glTexCoord((Blocks[i]->DynamicPosition().x+v_blockVertexB->Position().x)*fXScale,0.01);
-                 getParent()->getDrawLib()->glVertex(v_blockVertexB->Position() + Vector2f(Blocks[i]->DynamicPosition().x,Blocks[i]->DynamicPosition().y));
-                 getParent()->getDrawLib()->glTexCoord((Blocks[i]->DynamicPosition().x+v_blockVertexB->Position().x)*fXScale,0.99);
-                 getParent()->getDrawLib()->glVertex(v_blockVertexB->Position() + Vector2f(Blocks[i]->DynamicPosition().x,Blocks[i]->DynamicPosition().y) + Vector2f(0,-fDepth));
-                 getParent()->getDrawLib()->glTexCoord((Blocks[i]->DynamicPosition().x+v_blockVertexA->Position().x)*fXScale,0.99);
-                 getParent()->getDrawLib()->glVertex(v_blockVertexA->Position() + Vector2f(Blocks[i]->DynamicPosition().x,Blocks[i]->DynamicPosition().y) + Vector2f(0,-fDepth));
-		 getParent()->getDrawLib()->endDraw();
-               }
-             }
-          }
-        }
+		  getParent()->getDrawLib()->setTexture(pType->getTexture(),BLEND_MODE_A);
+		  getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+		  getParent()->getDrawLib()->setColorRGB(255,255,255);
+		  getParent()->getDrawLib()->glTexCoord((Blocks[i]->DynamicPosition().x+v_blockVertexA->Position().x)*fXScale,0.01);
+		  getParent()->getDrawLib()->glVertex(v_blockVertexA->Position() + Vector2f(Blocks[i]->DynamicPosition().x,Blocks[i]->DynamicPosition().y));
+		  getParent()->getDrawLib()->glTexCoord((Blocks[i]->DynamicPosition().x+v_blockVertexB->Position().x)*fXScale,0.01);
+		  getParent()->getDrawLib()->glVertex(v_blockVertexB->Position() + Vector2f(Blocks[i]->DynamicPosition().x,Blocks[i]->DynamicPosition().y));
+		  getParent()->getDrawLib()->glTexCoord((Blocks[i]->DynamicPosition().x+v_blockVertexB->Position().x)*fXScale,0.99);
+		  getParent()->getDrawLib()->glVertex(v_blockVertexB->Position() + Vector2f(Blocks[i]->DynamicPosition().x,Blocks[i]->DynamicPosition().y) + Vector2f(0,-fDepth));
+		  getParent()->getDrawLib()->glTexCoord((Blocks[i]->DynamicPosition().x+v_blockVertexA->Position().x)*fXScale,0.99);
+		  getParent()->getDrawLib()->glVertex(v_blockVertexA->Position() + Vector2f(Blocks[i]->DynamicPosition().x,Blocks[i]->DynamicPosition().y) + Vector2f(0,-fDepth));
+		  getParent()->getDrawLib()->endDraw();
+		}
+	      }
+	    }
+	  }
+
+	
       }
     }
   }
