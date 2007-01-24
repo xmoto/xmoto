@@ -30,7 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../VXml.h"
 #include "../helpers/Color.h"
 
-#define CACHE_LEVEL_FORMAT_VERSION 8
+#define CACHE_LEVEL_FORMAT_VERSION 9
 
 Level::Level() {
   m_xmotoTooOld = false;
