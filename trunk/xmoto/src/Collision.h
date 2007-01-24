@@ -206,16 +206,20 @@ namespace vapp {
     void moveDynBlock(Block* id);
     std::vector<Block*> getDynBlocksNearPosition(AABB& BBox);
 
+    void addStaticBlock(Block* id);
+    std::vector<Block*> getStaticBlocksNearPosition(AABB& BBox);
+
   private:
     /* Data */
     float m_fMinX,m_fMinY,m_fMaxX,m_fMaxY;
     std::vector<Line *> m_Lines;
 
     ElementHandler<Entity> m_entitiesHandler;
-    ElementHandler<Block>  m_blocksHandler;
+    ElementHandler<Block>  m_dynBlocksHandler;
     /* TODO::zones
     ElementHandler<Zone>   m_zonesHandler;
     */
+    ElementHandler<Block>  m_staticBlocksHandler;
       
     bool m_bDebugFlag;
       

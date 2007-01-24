@@ -67,10 +67,11 @@ namespace vapp {
     EMPTY_AND_CLEAR_VECTOR(m_Lines);
 
     m_entitiesHandler.reset();
-    m_blocksHandler.reset();
+    m_dynBlocksHandler.reset();
     /* TODO::zone
     m_zonesHandler.reset();
     */
+    m_staticBlocksHandler.reset();
   }
 
   /*===========================================================================
@@ -102,15 +103,18 @@ namespace vapp {
     m_entitiesHandler.setDims(Vector2f(m_fMinX, m_fMinY),
 			      Vector2f(m_fMaxX, m_fMaxY),
 			      m_nGridWidth, m_nGridHeight);
-    m_blocksHandler.setDims(Vector2f(m_fMinX, m_fMinY),
-			    Vector2f(m_fMaxX, m_fMaxY),
-			    m_nGridWidth, m_nGridHeight);
+    m_dynBlocksHandler.setDims(Vector2f(m_fMinX, m_fMinY),
+			       Vector2f(m_fMaxX, m_fMaxY),
+			       m_nGridWidth, m_nGridHeight);
     /*TODO
     m_zonesHandler.setDims(Vector2f(m_fMinX, m_fMinY),
 			   Vector2f(m_fMaxX, m_fMaxY),
 			   m_nGridWidth, m_nGridHeight);
     */
-
+    m_staticBlocksHandler.setDims(Vector2f(m_fMinX, m_fMinY),
+				  Vector2f(m_fMaxX, m_fMaxY),
+				  m_nGridWidth, m_nGridHeight);
+    
     //printf("%dx%d grid width %.2fx%.2f cells\n",
     //       m_nGridWidth,m_nGridHeight,m_fCellWidth,m_fCellHeight);
   }
@@ -744,25 +748,34 @@ namespace vapp {
   /* dynamic blocks */
   void CollisionSystem::addDynBlock(Block* id)
   {
-    m_blocksHandler.addElement(id);
+    m_dynBlocksHandler.addElement(id);
   }
 
   void CollisionSystem::removeDynBlock(Block* id)
   {
-    m_blocksHandler.removeElement(id);
+    m_dynBlocksHandler.removeElement(id);
   }
 
   void CollisionSystem::moveDynBlock(Block* id)
   {
-    m_blocksHandler.moveElement(id);
+    m_dynBlocksHandler.moveElement(id);
   }
 
   std::vector<Block*> CollisionSystem::getDynBlocksNearPosition(AABB& BBox)
   {
-    return m_blocksHandler.getElementsNearPosition(BBox);
+    return m_dynBlocksHandler.getElementsNearPosition(BBox);
   }
 
 
+  void CollisionSystem::addStaticBlock(Block* id)
+  {
+    m_staticBlocksHandler.addElement(id);
+  }
+
+  std::vector<Block*> CollisionSystem::getStaticBlocksNearPosition(AABB& BBox)
+  {
+    return m_staticBlocksHandler.getElementsNearPosition(BBox);
+  }
 
   /*=====================================================
     Generic element handling
