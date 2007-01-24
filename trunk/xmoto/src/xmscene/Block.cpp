@@ -212,6 +212,10 @@ int Block::loadToPlay(vapp::CollisionSystem& io_collisionSystem) {
     io_collisionSystem.addDynBlock(this);
   }
 
+  if(isDynamic() == false){
+    io_collisionSystem.addStaticBlock(this);
+  }
+
   /* Compute */
   std::vector<vapp::BSPPoly *> &v_BSPPolys = v_BSPTree.compute();      
   
@@ -314,12 +318,18 @@ AABB& Block::getAABB()
   if(m_isBBoxDirty == true){
     m_BBox.reset();
 
-    for(int i=0; i<m_collisionLines.size(); i++){
-      vapp::Line* pLine = m_collisionLines[i];
-      // add only the first point because the second
-      // point of the line n is the same as the first
-      // point of the line n+1
-      m_BBox.addPointToAABB2f(pLine->x1, pLine->y1);
+    if(isDynamic() == true){
+      for(int i=0; i<m_collisionLines.size(); i++){
+	vapp::Line* pLine = m_collisionLines[i];
+	// add only the first point because the second
+	// point of the line n is the same as the first
+	// point of the line n+1
+	m_BBox.addPointToAABB2f(pLine->x1, pLine->y1);
+      }
+    } else{
+      for(unsigned int i=0; i<Vertices().size(); i++) {
+	m_BBox.addPointToAABB2f(DynamicPosition() + Vertices()[i]->Position());
+      }
     }
 
     m_isBBoxDirty = false;
