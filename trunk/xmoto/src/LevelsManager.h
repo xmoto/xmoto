@@ -84,8 +84,9 @@ class LevelsManager {
   /* to reload levels already loaded (it will put them into the updateLevels list) */
   /* create the newLevels.xml file */
   void updateLevelsFromLvl(const std::vector<std::string> &NewLvl,
-			   const std::vector<std::string> &UpdatedLvlFileNames,
-			   bool i_enableCache);
+													 const std::vector<std::string> &UpdatedLvlFileNames,
+													 const std::vector<std::string> &UpdatedLvlIds,
+													 bool i_enableCache);
 
   const std::vector<Level *> &Levels();
   const std::vector<LevelsPack *> &LevelsPacks();

@@ -37,6 +37,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VApp.h"
 #include "VFileIO.h"
 #include "helpers/SwapEndian.h"
+#include "md5sum/md5file.h"
 
 namespace vapp {
 
@@ -1080,69 +1081,61 @@ namespace vapp {
       Log("Data directory: %s",m_DataDir.c_str());
       m_BinDataFile = m_DataDir + std::string("/xmoto.bin");
     }
-    else {
-      Log("Data directory: (local)");    
-      m_BinDataFile = "xmoto.bin";
-
-      /* If it is UNIX and we're running in local data mode, AND we can't find the
-         xmoto.bin file, then we can safely assume the user haven't read the
-         instructions :) */
-      #if !defined(WIN32)
-        FILE *fptest = fopen(m_BinDataFile.c_str(),"rb");
-        if(fptest == NULL) {
-          Log("Failed to find the data files! Please either install the program\n"
-              "with 'make install' or 'cd' into the 'bin' directory, and start\n"
-              "the program from there.\n");
-         
-          throw Exception("Can't find data!");
-        }
-        fclose(fptest);
-      #endif
-    }
           
     /* Initialize binary data package if any */
     FILE *fp = fopen(m_BinDataFile.c_str(),"rb");
     m_nNumPackFiles = 0;
-    if(fp != NULL) {
-      Log("Initializing binary data package...\n");
-      
-      char cBuf[256];
-      fread(cBuf,4,1,fp);
-      if(!strncmp(cBuf,"XBI1",4)) {
-        int nNameLen;
-        while((nNameLen=fgetc(fp)) >= 0) {
-//          printf("%d  \n",nNameLen);
-          /* Read file name */
-          fread(cBuf,nNameLen,1,fp);
-          cBuf[nNameLen] = '\0';
-//          printf("      %s\n",cBuf);
-          
-          /* Read file size */
-          int nSize;
+    if(fp == NULL) {
+			throw Exception("Package xmoto.bin not found !");
+		}
 
-          /* Patch by Michel Daenzer (applied 2005-10-25) */
-          unsigned char nSizeBuf[4];
-          fread(nSizeBuf,4,1,fp);
-          nSize = nSizeBuf[0] | nSizeBuf[1] << 8 | nSizeBuf[2] << 16 | nSizeBuf[3] << 24;
-          
-          if(m_nNumPackFiles < MAX_PACK_FILES) {
-            m_PackFiles[m_nNumPackFiles].Name = cBuf;
-            m_PackFiles[m_nNumPackFiles].nOffset = ftell(fp);
-            m_PackFiles[m_nNumPackFiles].nSize = nSize;
-            m_nNumPackFiles ++;
-          }
-          else
-            Log("** Warning ** : Too many files in binary data package! (Limit=%d)",MAX_PACK_FILES);          
-
-          fseek(fp,nSize,SEEK_CUR);
-        }
-      }
-      else
-        Log("** Warning ** : Invalid binary data package format!");
+		Log("Initializing binary data package...\n");
       
-      fclose(fp);
-    }        
-  }
+		char cBuf[256];
+		char md5sum[256];
+		fread(cBuf,4,1,fp);
+		if(!strncmp(cBuf,"XBI2",4)) {
+			int nNameLen;
+			int md5sumLen;
+			while((nNameLen=fgetc(fp)) >= 0) {
+				//          printf("%d  \n",nNameLen);
+				/* Read file name */
+				fread(cBuf,nNameLen,1,fp);
+				cBuf[nNameLen] = '\0';
+
+				md5sumLen = fgetc(fp);
+				fread(md5sum,md5sumLen,1,fp);
+				md5sum[md5sumLen] = '\0';
+				//          printf("      %s\n",cBuf);
+				
+				/* Read file size */
+				int nSize;
+				
+				/* Patch by Michel Daenzer (applied 2005-10-25) */
+				unsigned char nSizeBuf[4];
+				fread(nSizeBuf,4,1,fp);
+				nSize = nSizeBuf[0] | nSizeBuf[1] << 8 | nSizeBuf[2] << 16 | nSizeBuf[3] << 24;
+				
+				if(m_nNumPackFiles < MAX_PACK_FILES) {
+					m_PackFiles[m_nNumPackFiles].Name = cBuf;
+					m_PackFiles[m_nNumPackFiles].md5sum = md5sum;
+					//printf("md5sum(%s) = %s\n",
+					//   m_PackFiles[m_nNumPackFiles].Name.c_str(),
+					//   m_PackFiles[m_nNumPackFiles].md5sum.c_str());
+
+					m_PackFiles[m_nNumPackFiles].nOffset = ftell(fp);
+					m_PackFiles[m_nNumPackFiles].nSize = nSize;
+					m_nNumPackFiles ++;
+				}
+				else
+					Log("** Warning ** : Too many files in binary data package! (Limit=%d)",MAX_PACK_FILES);          
+				
+				fseek(fp,nSize,SEEK_CUR);
+			}
+		} else
+			Log("** Warning ** : Invalid binary data package format!");
+		fclose(fp);
+	}     
 
   /*===========================================================================
   Hmm, for some reason I have to do this. Don't ask me why.
@@ -1246,5 +1239,35 @@ namespace vapp {
     }
   }
 
+  std::string FS::md5sum(std::string i_filePath) {
+    /* is it a file from the pack or a real file ? */
+    if(FS::isFileReal(i_filePath)) {
+      return md5file(i_filePath);
+    }
+
+    /* package */
+    for(int i=0; i<m_nNumPackFiles; i++) {              
+      if(m_PackFiles[i].Name == i_filePath ||
+	 (std::string("./") + m_PackFiles[i].Name) == i_filePath) {
+	   /* Found it, yeah. */
+	   //printf("md5sum(%s) = %s\n", m_PackFiles[i].Name.c_str(), m_PackFiles[i].md5sum.c_str());
+	   return m_PackFiles[i].md5sum;
+	 }
+    }
+    return "";
+  }
+
+
+  bool FS::isFileReal(std::string i_filePath) {
+    FILE *fp;
+
+    fp = fopen(i_filePath.c_str(), "rb");
+    if(fp == NULL) {
+      return false;
+    }
+    fclose(fp);
+
+    return true;
+  }
 }
 

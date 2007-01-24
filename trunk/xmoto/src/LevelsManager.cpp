@@ -418,7 +418,7 @@ void LevelsManager::deleteLevelsIndex() {
 
 void LevelsManager::loadLevelsFromLvl(const std::vector<std::string> &LvlFiles, bool i_enableCache) {
   loadLevelsFromLvl(LvlFiles, i_enableCache, false);
-}
+} 
 
 void LevelsManager::loadLevelsFromLvl(const std::vector<std::string> &LvlFiles, bool i_enableCache, bool i_newLevels) {
   for(int i=0;i<LvlFiles.size();i++) {
@@ -430,24 +430,15 @@ void LevelsManager::loadLevelsFromLvl(const std::vector<std::string> &LvlFiles, 
       bCached = v_level->loadReducedFromFile(i_enableCache);
       
       // Check for ID conflict
-      for(int k=0; k<m_levels.size(); k++) {
-	if(m_levels[k]->Id() == v_level->Id()) {
-	  /* Conflict! */
-	  vapp::Log("** Warning ** : More than one level with ID '%s'!",m_levels[k]->Id().c_str());
-	  vapp::Log("                (%s)", v_level->FileName().c_str());
-	  vapp::Log("                (%s)", m_levels[k]->FileName().c_str());
-	  if(bCached) vapp::Log("                (cached)");
-	  throw Exception("Duplicate level ID");
-	}
-      }
+			if(doesLevelExist(v_level->Id())) { /* LvlFiles order assure that levels of userDir are load before system levels (which allow level updates) */
+				throw Exception("Duplicate level ID");
+			}
       m_levels.push_back(v_level);
       if(i_newLevels) {
-	m_newLevels.push_back(v_level);
+				m_newLevels.push_back(v_level);
       }
     } catch(Exception &e) {
       delete v_level;
-      vapp::Log("** Warning ** : Problem loading '%s' (%s)",
-	  LvlFiles[i].c_str(),e.getMsg().c_str());            
     }
   }
 }
@@ -519,24 +510,28 @@ const std::vector<Level *>& LevelsManager::UpdatedLevels() {
 }
 
 void LevelsManager::updateLevelsFromLvl(const std::vector<std::string> &NewLvl,
-					const std::vector<std::string> &UpdatedLvlFileNames,
-					bool i_enableCache) {
+																				const std::vector<std::string> &UpdatedLvlFileNames,
+																				const std::vector<std::string> &UpdatedLvlIds,
+																				bool i_enableCache) {
   m_newLevels.clear();
   m_updatedLevels.clear();
 
   loadLevelsFromLvl(NewLvl, i_enableCache, true);  
 
   Level *v_level;
-
-  for(int i=0;i<UpdatedLvlFileNames.size();i++) {
+  for(int i=0;i<UpdatedLvlIds.size();i++) {
     try {
-      v_level = &(LevelByFileName(UpdatedLvlFileNames[i]));
+      v_level = &(LevelById(UpdatedLvlIds[i]));
+			v_level->setFileName(UpdatedLvlFileNames[i]);
       v_level->loadReducedFromFile(i_enableCache);
       m_updatedLevels.push_back(v_level);
     } catch(Exception &e) {
       vapp::Log("** Warning ** : Problem updating '%s' (%s)", UpdatedLvlFileNames[i].c_str(), e.getMsg().c_str());
     }
   }
+
+	/* recreate the level index */
+	createLevelsIndex();
 }
 
 std::string LevelsManager::NewLevelsXmlFilePath() {

@@ -72,10 +72,10 @@ Central place to keep many in-game text strings
 #define GAMETEXT_CONTROLS             _("Controls")
 #define GAMETEXT_CREDITS              _("Lead Programming:Rasmus Neckelmann;" \
                                         ":Nicolas Adenis-Lamarre;" \
+                                        ":Emmanuel Gorse;" \
                                         ":Kees Jongenburger;" \
                                         ":;" \
                                         "Additional Programming:Eric Piel;" \
-                                        ":Emmanuel Gorse;" \
                                         ":Christoph Sommer;" \
                                         ":Frederic Huard;" \
                                         ":;" \

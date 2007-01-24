@@ -1119,14 +1119,14 @@ namespace vapp {
 
         /* Got some new levels... load them! */
         Log("Loading new and updated levels...");
-	m_levelsManager.updateLevelsFromLvl(m_pWebLevels->getNewDownloadedLevels(),
-					    m_pWebLevels->getUpdatedDownloadedLevels(),
-					    m_bEnableLevelCache);
-        
+				m_pActiveLevelPack = NULL; /* the active level pack could no more exists after update */
+				m_levelsManager.updateLevelsFromLvl(m_pWebLevels->getNewDownloadedLevels(),
+																						m_pWebLevels->getUpdatedDownloadedLevels(),
+																						m_pWebLevels->getUpdatedDownloadedLevelIds(),
+																						m_bEnableLevelCache);
+
          /* Update level lists */
-	_UpdateLevelsLists();
-	m_levelsManager.deleteLevelsIndex();
-	m_levelsManager.createLevelsIndex(); /* recreate the level index */
+				_UpdateLevelsLists();
       }
     #endif
   }

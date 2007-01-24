@@ -320,12 +320,14 @@ class WebLevels {
   const std::vector<std::string> &getUpdatedDownloadedLevels();
 
   /* Get IDs of updated levels downloaded OK*/
-  const std::vector<std::string> &getUpdatedDownloadedLevelIDs();
+  const std::vector<std::string> &getUpdatedDownloadedLevelIds();
   
   /* Set URL */
   void setURL(const std::string &p_url) {m_levels_url = p_url;}
 
   bool exists(const std::string p_id);
+
+  static std::string getDestinationFile(std::string p_url);
 
  private:
   vapp::WWWAppInterface *m_WebLevelApp;
@@ -333,6 +335,7 @@ class WebLevels {
   std::vector<std::string> m_webLevelsNewDownloadedOK; /* file names of those levels 
            which where downloaded OK (so we can load them right away) and which are new */
   std::vector<std::string> m_webLevelsUpdatedDownloadedOK;
+  std::vector<std::string> m_webLevelsIdsUpdatedDownloadedOK;
 
   const ProxySettings *m_proxy_settings;
   
@@ -340,8 +343,7 @@ class WebLevels {
 
   std::string getXmlFileName();
   void downloadXml(); /* throw exceptions */
-  std::string getDestinationDir();
-  std::string getDestinationFile(std::string p_url);
+  static std::string getDestinationDir();
   void createDestinationDirIfRequired();
   void extractLevelsToDownloadFromXml(); /* throw exceptions */				      
 };

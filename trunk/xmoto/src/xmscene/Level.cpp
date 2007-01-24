@@ -28,7 +28,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Level.h"
 #include "../VFileIO.h"
 #include "../VXml.h"
-#include "../md5sum/md5file.h"
 #include "../helpers/Color.h"
 
 #define CACHE_LEVEL_FORMAT_VERSION 8
@@ -600,7 +599,7 @@ void Level::loadXML(void) {
 bool Level::loadReducedFromFile(bool cacheEnabled) {
   std::string cacheFileName;
 
-  m_checkSum = md5file(FileName());
+  m_checkSum = vapp::FS::md5sum(FileName());
 
   // First try to load it from the cache
   bool cached = false;
@@ -1096,11 +1095,14 @@ std::vector<Entity *>& Level::EntitiesExterns() {
 }
 
 std::string Level::PathForUpdate() const {
-  /* If level path is not absolute, this level is not updatable */
-  if(vapp::FS::isPathAbsolute(FileName())) {
-    return FileName();
-  }
-  return "";
+	/* if the level is in the user dir, directly update it */
+	/* else, get a new one in the user dir */
+
+	if(vapp::FS::isInUserDir(FileName())) {
+		return FileName();
+	}
+
+	return WebLevels::getDestinationFile(FileName());
 }
 
 void Level::unloadLevelBody() {
