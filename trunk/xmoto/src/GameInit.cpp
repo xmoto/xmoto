@@ -575,23 +575,13 @@ namespace vapp {
        i++;
      } else {
        /* check if the parameter is a file */
-       if(FS::fileExists(UserArgs[i])) {
-	 std::string v_extension = FS::getFileExtension(UserArgs[i]);
+       std::string v_extension = FS::getFileExtension(UserArgs[i]);
 
-	 if(v_extension == "rpl") {
-	   /* replays */
+       /* replays */
+       if(v_extension == "rpl") {
 	   PlaySpecificReplay(UserArgs[i]);
-	   
-	 //} else if(v_extension == "lvl") {
-	 ///* levels */
-	 //PlaySpecificLevel(UserArgs[i]);
-	   
-	 } else {
-	   /* unknown extension */
-	   throw SyntaxError("Invalid argument");
-	 }
-
        } else {
+	 /* unknown extension */
 	 throw SyntaxError("Invalid argument");
        }
      }

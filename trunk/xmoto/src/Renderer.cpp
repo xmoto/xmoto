@@ -552,7 +552,7 @@ namespace vapp {
       /* Render particles (back!) */    
       _RenderParticles(false);
     }
-        
+
     /* ... covered by blocks ... */
     _RenderDynamicBlocks(false);
     _RenderBlocks();
