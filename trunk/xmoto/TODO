@@ -108,13 +108,6 @@ http://xmoto.free.fr/interesting_replays/ireplay_40.rpl
 
 * BUG ? http://forum.xmoto.free.fr/viewtopic.php?p=212#212 (not really i bug methinks)
 * SDL_ttf or something like that for rendering text
-*(20:39:54) Neckelmann:   the game should really do all this:
-zone1 = {}
-zone1a = {}
-zone1b = {}
-zone2 = {}
-zone2a = {}
-zone2b = {}
 * script :
    add : rotation for blocks         
 * Add a command line option like the one to test themes. This option could be ''testscript'' and would show zones during game (with an extra, the name of the zone).
@@ -141,9 +134,6 @@ zone2b = {}
    event order threaten is ENTER then ESC
    _RestartLevels is called
    then the ESC is managed and it fails
-* see about timeout when connection failed
- comment : it seems that there is nothing to do unless reduce
-   connection timeout (or multithreading)
 * when you press o in the level list and that no level start with an
    o, it bases on the 2nd letter,...
 * themes : check the md5sum of the files ; don't display available if
