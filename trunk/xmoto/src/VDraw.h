@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VTexture.h"
 #include "Theme.h"
 #include "Image.h"
+#include "PolyDraw.h"
 namespace vapp {
 
   /**
@@ -548,6 +549,10 @@ namespace vapp {
 
     int *gfxPrimitivesPolyInts;
     int gfxPrimitivesPolyAllocated;
+    PolyDraw * polyDraw;
+    PolyDraw::Buffer screenBuffer;
+    int screenVerticles[100];
+    int nPolyTextureVertices[100];
 
   };
 };

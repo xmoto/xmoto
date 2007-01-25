@@ -32,7 +32,7 @@ helpers_SOURCES = helpers/VMath.h             \
                   iqsort.h
 
 common_SOURCES = BuiltInFont.cpp Image.cpp \
-  VApp.cpp VBezier.cpp VDraw.cpp VDrawOpenGL.cpp VDrawSDLgfx.cpp \
+  VApp.cpp VBezier.cpp VDraw.cpp VDrawOpenGL.cpp PolyDraw.cpp VDrawSDLgfx.cpp \
   VFileIO.cpp VTexture.cpp \
   VXml.cpp \
   $(helpers_SOURCES) \
