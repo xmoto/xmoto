@@ -111,7 +111,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
   }
 
   void DrawLibSDLgfx::glTexCoord(float x, float y) {
-    m_texturePoints.push_back(new Vector2f(x,  y));
+    m_texturePoints.push_back(new Vector2f(x, y));
   }
 
   void DrawLibSDLgfx::screenProjVertex(float *x, float *y) {
@@ -360,7 +360,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 
 	  char key[255] = "";
 
-	  sprintf(key, "%s", m_texture->Name.c_str());
+	  sprintf(key, "%s--", m_texture->Name.c_str());
 	  std::map < const char *,
 	    SDL_Surface * >::iterator i = m_image_cache.find(key);
 	  if (i != m_image_cache.end()) {
@@ -369,7 +369,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 	    char *keyName = (char *)malloc(strlen(key) + 1);
 
 	    //if (m_texture->isAlpha) {
-	    // s = SDL_DisplayFormatAlpha(s2);
+	    // s = SDL_DisplayFormatAlpha(m_texture->surface);
 	    //} else {
 	    s =
 	      SDL_ConvertSurface(m_texture->surface, m_screen->format,
@@ -392,15 +392,15 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 
 	  for (int i = 0; i < size; i++) {
 	    screenVerticles[i * 2] = m_drawingPoints.at(i)->x;
-	    screenVerticles[2 * i + 1] = m_drawingPoints.at(i)->y;
+	    screenVerticles[(2 * i) + 1] = m_drawingPoints.at(i)->y;
 	  }
 
 
 	  for (int i = 0; i < m_texturePoints.size(); i++) {
 	    nPolyTextureVertices[2 * i] =
-	      (int)( m_texturePoints.at(i)->x * s->w);
-	    nPolyTextureVertices[2 * i + 1] =
-	      (int) (m_texturePoints.at(i)->y  * s->h);
+	      (int)(m_texturePoints.at(i)->x * 0xff);
+	    nPolyTextureVertices[(2 * i) + 1] =
+	      (int)(m_texturePoints.at(i)->y * 0xff);
 	  }
 
 
@@ -432,7 +432,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 	break;
       }
     }
-    for (int i = 0; i < m_drawingPoints.size(); i++) {
+    for (int i = 0; i < m_texturePoints.size(); i++) {
       delete m_drawingPoints.at(i);
     }
     for (int i = 0; i < m_texturePoints.size(); i++) {
