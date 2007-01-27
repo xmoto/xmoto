@@ -132,7 +132,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_CREDITSBUTTON        _("Credits")
 #define GAMETEXT_CURPLAYER            _("Player")
 #define GAMETEXT_DATE                 _("Date")
-#define GAMETEXT_DEATHANIM            _("Bike Breaks")
+#define GAMETEXT_DEATHANIM            _("Death Animation")
 #define GAMETEXT_DEFAULTS             _("Defaults")
 #define GAMETEXT_DELETEPLAYERMESSAGE  _("Do you really want to delete player?")
 #define GAMETEXT_DELETEREPLAYMESSAGE  _("Do you really want to delete replay?")
