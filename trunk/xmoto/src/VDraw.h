@@ -543,9 +543,8 @@ namespace vapp {
     //dynamic allocated array for the 
     //that that is fed to the polygon filling
     //algorithms
-    Sint16 *m_int_drawing_points_x;
-    Sint16 *m_int_drawing_points_y;
-    int m_int_drawing_points_allocated;
+    Sint16 m_int_drawing_points_x[100];
+    Sint16 m_int_drawing_points_y[100];
 
     int *gfxPrimitivesPolyInts;
     int gfxPrimitivesPolyAllocated;

@@ -47,9 +47,6 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
     m_bg_data = NULL;
     gfxPrimitivesPolyInts = NULL;
     gfxPrimitivesPolyAllocated = 0;
-    m_int_drawing_points_x = NULL;
-    m_int_drawing_points_y = NULL;
-    m_int_drawing_points_allocated = 0;
     m_min.x = 0;
     m_min.y = 0;
     m_max.x = 0;
@@ -111,7 +108,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
   }
 
   void DrawLibSDLgfx::glTexCoord(float x, float y) {
-    m_texturePoints.push_back(new Vector2f(x, y));
+    m_texturePoints.push_back(new Vector2f(x,y));
   }
 
   void DrawLibSDLgfx::screenProjVertex(float *x, float *y) {
@@ -323,26 +320,6 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
       //for texture point and drawing points
       //it will also remove the need to clean the m_texturePoints 
       //and m_drawingPoints collection afterwards
-
-      if (size > m_int_drawing_points_allocated) {
-	if (m_int_drawing_points_allocated == 0) {
-	  m_int_drawing_points_x =
-	    (Sint16 *) malloc(sizeof(Sint16) * size * 2);
-	  m_int_drawing_points_y =
-	    (Sint16 *) malloc(sizeof(Sint16) * size * 2);
-	  m_int_drawing_points_allocated = size * 2;
-	} else {
-	  m_int_drawing_points_x =
-	    (Sint16 *) realloc(m_int_drawing_points_x,
-			       sizeof(Sint16) *
-			       m_int_drawing_points_allocated * 2);
-	  m_int_drawing_points_y =
-	    (Sint16 *) realloc(m_int_drawing_points_y,
-			       sizeof(Sint16) *
-			       m_int_drawing_points_allocated * 2);
-	  m_int_drawing_points_allocated *= 2;
-	}
-      }
 
 
       for (int i = 0; i < size; i++) {
