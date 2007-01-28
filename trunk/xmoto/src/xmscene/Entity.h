@@ -55,6 +55,8 @@ class Entity {
   float Z() const;
   float Width() const;
   float Height() const;
+  float DrawAngle() const;
+  bool  DrawReversed() const;
   const TColor& Color() const;
   std::string SpriteName() const; /* PlayerStart, Flower, EndOfLevel, Bird, ... */
   bool  isAlive() const;
@@ -67,6 +69,8 @@ class Entity {
   void setSize(float i_size);
   void setWidth(float i_width);
   void setHeight(float i_height);
+  void setDrawAngle(float i_drawAngle);
+  void setDrawReversed(bool i_drawReversed);
   void setZ(float i_z);
   void setSpriteName(const std::string& i_spriteName);
   void setColor(const TColor& i_color);
@@ -93,6 +97,8 @@ class Entity {
   Vector2f    m_dynamicPosition; /** Current position */
   float       m_size;            /** Size (radius) */
   float       m_width, m_height; /** size of the picture, negativ it the theme size must be used */
+  float       m_drawAngle;
+  bool        m_drawReversed;
   float       m_z;               /** deep coord */
   bool        m_doesKill;
   bool        m_doesMakeWin;

@@ -1,4 +1,5 @@
 X-Moto 0.2.5 2007-
+ * performences improved (better framerate)
  * SDL-GFX rendering in option (instead of OpenGL, unstable code)
  * a randomize button to puzzle any package list
  * you can associate a rpl to xmoto (ie xmoto replay.rpl play the rpl file)

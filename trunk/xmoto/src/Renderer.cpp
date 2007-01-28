@@ -1071,30 +1071,89 @@ namespace vapp {
 
       if(v_spriteType != NULL) {
         /* Draw it */
-        Vector2f p0,p1,p2,p3;
+        Vector2f p[4];
         
-        p0 = Vector2f(pSprite->DynamicPosition().x,pSprite->DynamicPosition().y) +
-          Vector2f(-v_centerX,-v_centerY);
-        p1 = Vector2f(pSprite->DynamicPosition().x+v_width,pSprite->DynamicPosition().y) +
-          Vector2f(-v_centerX,-v_centerY);
-        p2 = Vector2f(pSprite->DynamicPosition().x+v_width,pSprite->DynamicPosition().y+v_height) +
-          Vector2f(-v_centerX,-v_centerY);
-        p3 = Vector2f(pSprite->DynamicPosition().x,pSprite->DynamicPosition().y+v_height) +
-          Vector2f(-v_centerX,-v_centerY);
-        
+	p[0] = Vector2f(0.0    , 0.0);
+	p[1] = Vector2f(v_width, 0.0);
+	p[2] = Vector2f(v_width, v_height);
+	p[3] = Vector2f(0.0    , v_height);
+
+	/* positionne according the the center */
+	p[0] -= Vector2f(v_centerX, v_centerY);
+	p[1] -= Vector2f(v_centerX, v_centerY);
+	p[2] -= Vector2f(v_centerX, v_centerY);
+	p[3] -= Vector2f(v_centerX, v_centerY);
+
+	/* apply rotation */
+	if(pSprite->DrawAngle() != 0.0) { /* generally not nice to test a float and 0.0
+					 but i will be false in the majority of the time
+				       */
+	  float beta;
+	  float v_ray;
+
+	  //_RenderCircle(20, MAKE_COLOR(255,0,0,0),   pSprite->DynamicPosition()+p[0], 0.3);
+	  //_RenderCircle(20, MAKE_COLOR(0,255,0,0),   pSprite->DynamicPosition()+p[1], 0.3);
+	  //_RenderCircle(20, MAKE_COLOR(0,0,255,0),   pSprite->DynamicPosition()+p[2], 0.3);
+	  //_RenderCircle(20, MAKE_COLOR(255,255,0,0), pSprite->DynamicPosition()+p[3], 0.3);
+	  
+	  for(int i=0; i<4; i++) {
+
+	    v_ray = sqrt((p[i].x*p[i].x) + (p[i].y*p[i].y));
+	    //_RenderCircle(20, MAKE_COLOR(0,0,0,0), pSprite->DynamicPosition(), v_ray);
+
+	    if(i==2) { // blue
+	      beta = M_PI/2.0 - sin(p[i].x / v_ray);
+	    } else if(i==1) { // green;
+	      beta =  sin(p[i].y / v_ray);
+	      beta = 0;
+	    } else if(i==3) { // yellow
+	      beta = M_PI/2.0 - sin(p[i].x / v_ray);
+	    } else if(i==0) {
+	      beta =  -sin(p[i].y / v_ray);
+	      beta += M_PI;
+	    }
+
+	    p[i].x = cos(pSprite->DrawAngle() + beta) * v_ray;
+	    p[i].y = sin(pSprite->DrawAngle() + beta) * v_ray;
+	  }
+	  //pSprite->setDrawAngle(pSprite->DrawAngle() + 0.01);
+	}
+
+	/* reversed ? */
+	if(pSprite->DrawReversed()) {
+	  Vector2f v_tmp;
+	  v_tmp = p[0];
+	  p[0] = p[1];
+	  p[1] = v_tmp;
+	  v_tmp = p[2];
+	  p[2] = p[3];
+	  p[3] = v_tmp;
+	} 
+
+	/* vector to the good position */
+	p[0] += pSprite->DynamicPosition();
+	p[1] += pSprite->DynamicPosition();
+	p[2] += pSprite->DynamicPosition();
+	p[3] += pSprite->DynamicPosition();
+
         if(v_spriteType->getBlendMode() == SPRITE_BLENDMODE_ADDITIVE) {
-          _RenderAdditiveBlendedSection(v_spriteType->getTexture(),p0,p1,p2,p3);      
+          _RenderAdditiveBlendedSection(v_spriteType->getTexture(),p[0],p[1],p[2],p[3]);      
         }
         else {
 #ifdef ENABLE_OPENGL
           glEnable(GL_ALPHA_TEST);
           glAlphaFunc(GL_GEQUAL,0.5f);      
 #endif
-          _RenderAlphaBlendedSection(v_spriteType->getTexture(),p0,p1,p2,p3);      
+          _RenderAlphaBlendedSection(v_spriteType->getTexture(),p[0],p[1],p[2],p[3]);      
 #ifdef ENABLE_OPENGL
           glDisable(GL_ALPHA_TEST);
 #endif
         }
+
+	//_RenderCircle(20, MAKE_COLOR(255,0,0,0),   p[0], 0.1);
+	//_RenderCircle(20, MAKE_COLOR(0,255,0,0),   p[1], 0.1);
+	//_RenderCircle(20, MAKE_COLOR(0,0,255,0),   p[2], 0.1);
+	//_RenderCircle(20, MAKE_COLOR(255,255,0,0), p[3], 0.1);
       }    
     }
     /* If this is debug-mode, also draw entity's area of effect */

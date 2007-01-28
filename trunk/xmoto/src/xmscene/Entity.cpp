@@ -30,6 +30,8 @@ Entity::Entity(const std::string& i_id) {
   m_size        = ENTITY_DEFAULT_SIZE;
   m_width       = -1.0;
   m_height      = -1.0;
+  m_drawAngle    = 0.0;
+  m_drawReversed = false;
   m_z           = ENTITY_DEFAULT_Z;
   m_doesKill    = false;
   m_doesMakeWin = false;
@@ -99,6 +101,14 @@ float Entity::Height() const {
   return m_height;
 }
 
+float Entity::DrawAngle() const {
+  return m_drawAngle;
+}
+
+bool Entity::DrawReversed() const {
+  return m_drawReversed;
+}
+
 void Entity::setInitialPosition(const Vector2f& i_initialPosition) {
   m_initialPosition = i_initialPosition;
   m_isBBoxDirty = true;
@@ -137,6 +147,14 @@ void Entity::setWidth(float i_width) {
 
 void Entity::setHeight(float i_height) {
   m_height = i_height;
+}
+
+void Entity::setDrawAngle(float i_drawAngle) {
+  m_drawAngle = i_drawAngle;
+}
+
+void Entity::setDrawReversed(bool i_drawReversed) {
+  m_drawReversed = i_drawReversed;
 }
 
 void Entity::setZ(float i_z) {
@@ -432,6 +450,8 @@ Entity* Entity::readFromXml(TiXmlElement *pElem) {
   float       v_size   = 0.2;
   float       v_height = -1.0;
   float       v_width  = -1.0;
+  float       v_angle  = -1.0;
+  bool        v_reversed = false;
   float       v_z      = 0.5;
   std::string v_spriteName;
   std::string v_typeName;
@@ -444,6 +464,8 @@ Entity* Entity::readFromXml(TiXmlElement *pElem) {
   if(pPosElem != NULL) {
     v_position.x = atof(vapp::XML::getOption(pPosElem,"x","0").c_str());
     v_position.y = atof(vapp::XML::getOption(pPosElem,"y","0").c_str());
+    v_angle      = atof(vapp::XML::getOption(pPosElem,"angle","-1.0").c_str());
+    v_reversed   = vapp::XML::getOption(pPosElem,"reversed","false") == "true";
   }
   TiXmlElement *pSizeElem = pElem->FirstChildElement("size");
   if(pSizeElem != NULL) {
@@ -504,7 +526,11 @@ Entity* Entity::readFromXml(TiXmlElement *pElem) {
   }
   if(v_height > 0.0) {
     v_entity->setHeight(v_height);
-  }  
+  }
+  if(v_angle > 0.0) {
+    v_entity->setDrawAngle(v_angle);
+  }
+  v_entity->setDrawReversed(v_reversed);
   v_entity->setZ(v_z);
 
   return v_entity;
@@ -518,6 +544,8 @@ void Entity::saveBinary(vapp::FileHandle *i_pfh) {
   vapp::FS::writeFloat_LE(i_pfh, Height()); 
   vapp::FS::writeFloat_LE(i_pfh, InitialPosition().x);
   vapp::FS::writeFloat_LE(i_pfh, InitialPosition().y);
+  vapp::FS::writeFloat_LE(i_pfh, DrawAngle());
+  vapp::FS::writeBool(i_pfh,  DrawReversed());
   
   switch(Speciality()) {
   case ET_NONE:
@@ -552,6 +580,8 @@ Entity* Entity::readFromBinary(vapp::FileHandle *i_pfh) {
   float       v_size   = 0.2;
   float       v_height = -1.0;
   float       v_width  = -1.0;
+  float       v_angle  = -1.0;
+  bool        v_reversed = false;
   float       v_z      = 0.5;
   std::string v_spriteName;
   std::string v_typeName;
@@ -565,6 +595,8 @@ Entity* Entity::readFromBinary(vapp::FileHandle *i_pfh) {
   v_height     = vapp::FS::readFloat_LE(i_pfh);
   v_position.x = vapp::FS::readFloat_LE(i_pfh);
   v_position.y = vapp::FS::readFloat_LE(i_pfh);
+  v_angle      = vapp::FS::readFloat_LE(i_pfh);
+  v_reversed   = vapp::FS::readBool(i_pfh);
   std::string v_paramName;
   std::string v_paramValue;
   int nNumParams = vapp::FS::readByte(i_pfh);
@@ -619,7 +651,11 @@ Entity* Entity::readFromBinary(vapp::FileHandle *i_pfh) {
   }
   if(v_height > 0.0) {
     v_entity->setHeight(v_height);
-  }  
+  }
+  if(v_angle > 0.0) {
+    v_entity->setDrawAngle(v_angle);
+  }
+  v_entity->setDrawReversed(v_reversed);
   v_entity->setZ(v_z);
 
   return v_entity;
