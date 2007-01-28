@@ -371,10 +371,16 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 	    //if (m_texture->isAlpha) {
 	    // s = SDL_DisplayFormatAlpha(m_texture->surface);
 	    //} else {
-	    s =
-	      SDL_ConvertSurface(m_texture->surface, m_screen->format,
-				 SDL_HWSURFACE);
-	    //}
+	    //PolyDraw only supports textures size up to 256x256
+	    //pixels if the texture is larger we scale it down
+	    if (m_texture->surface->w > 256){
+	      double zoom =  256.0 /  m_texture->surface->w;
+	      SDL_Surface * a = zoomSurface(m_texture->surface, zoom , zoom,SMOOTHING_ON);
+	      s = SDL_ConvertSurface(a, m_screen->format, SDL_HWSURFACE);
+	      SDL_FreeSurface(a);
+	    } else {
+	     s = SDL_ConvertSurface(m_texture->surface, m_screen->format, SDL_HWSURFACE);
+	    }
 
 	    strcpy(keyName, key);
 	    m_image_cache.insert(std::make_pair <> (keyName, s));
