@@ -187,18 +187,18 @@ namespace vapp {
   /*===========================================================================
   Primitive: box
   ===========================================================================*/
-  void DrawLib::drawImage(const Vector2f &A,const Vector2f &B,Texture *pTexture,Color Tint) {
+  void DrawLib::drawImage(const Vector2f &a,const Vector2f &b,Texture *pTexture,Color Tint) {
     setTexture(pTexture,BLEND_MODE_A);
     startDraw(DRAW_MODE_POLYGON);
     setColor(Tint);
-    glTexCoord(0.0,0.0);
-    glVertexSP(A.x,A.y);
-    glTexCoord(0.0,1.0);
-    glVertexSP(A.x,B.y);
-    glTexCoord(1.0,1.0);
-    glVertexSP(B.x,B.y);
-    glTexCoord(1.0,0.0);
-    glVertexSP(B.x,A.y);
+    glTexCoord(0.0, 0.0);
+    glVertexSP(a.x, a.y);
+    glTexCoord(1.0, 0.0);
+    glVertexSP(b.x, a.y);
+    glTexCoord(1.0, 1.0);
+    glVertexSP(b.x, b.y);
+    glTexCoord(0.0, 1.0);
+    glVertexSP(a.x, b.y);
     endDraw();
   }
 

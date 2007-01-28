@@ -190,7 +190,7 @@ namespace vapp {
     virtual void drawBox(const Vector2f & A, const Vector2f & B,
 			 float fBorder = 1.0f, Color Back =
 			 0, Color Front = -1);
-    virtual void drawImage(const Vector2f & A, const Vector2f & B,
+    virtual void drawImage(const Vector2f & a, const Vector2f & b,
 			   Texture * pTexture, Color Tint = -1);
 
 
