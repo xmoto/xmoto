@@ -188,13 +188,21 @@ void PolyDraw::render(int *pnScreenVerts,int *pnTexVerts,int nNumCorners,
   if(m_pBuf->format->BytesPerPixel == 2) {
     /* This loop only works with 16-bit pixels */
     for(int y=nStartY;y<=nEndY;y++) {
-      _RenderHLine16(y,&m_pLeftEdge[y],&m_pRightEdge[y],pTexture,nWSq,nHSq,nPitchSq);
+      if (m_pLeftEdge[y].x > m_pRightEdge[y].x){
+        _RenderHLine16(y,&m_pRightEdge[y],&m_pLeftEdge[y],pTexture,nWSq,nHSq,nPitchSq);
+      } else {
+        _RenderHLine16(y,&m_pLeftEdge[y],&m_pRightEdge[y],pTexture,nWSq,nHSq,nPitchSq);
+      }
     }
   }
   else {
     /* This loop works with all pixel sizes */
     for(int y=nStartY;y<=nEndY;y++) {
-      _RenderHLine(y,&m_pLeftEdge[y],&m_pRightEdge[y],pTexture,nWSq,nHSq,nPitchSq);
+      if (m_pLeftEdge[y].x > m_pRightEdge[y].x){
+         _RenderHLine(y,&m_pRightEdge[y],&m_pLeftEdge[y],pTexture,nWSq,nHSq,nPitchSq);
+      } else {
+         _RenderHLine(y,&m_pLeftEdge[y],&m_pRightEdge[y],pTexture,nWSq,nHSq,nPitchSq);
+      }
     }
   }
 }
