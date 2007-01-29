@@ -20,6 +20,13 @@ Assigned to nicolas
 * script : disable a key (brake for example, ...)
 * ugly uses misc.png for border : should not
 
+
+====Competitions
+* dayly/weekly/monthly competition based on a few tracs , different entry levels easy medium hard
+* reset the scores once in a while
+* work on not having to validate the scores by hand
+
+===SDL_GFX
 * SDL_GFX crashed on mac http://rafb.net/p/L95KzR62.html
 * keesj:real caching strategy, currently the SDL_gfx chooses to caches based on expected size of the image
   We need to implement a real caching strategy, for example a LRU hash table (least recently used hashtable
@@ -31,10 +38,9 @@ Assigned to nicolas
 * keesj:create sensititive area's on the screen for gameplay
    -on the nokia 770 it is pretty easy to 
 * keesj:test the SDL_gfx version on windows/mac
-* keesj:the SDL_gfx version currently caches a lot of images . this will eventualy become to much. this is why we need a LRU hash table. 
-* keesj:graphings ,showing graphs on the screen about fps/memory usage etc
 * keesj:faster startup , smart caching etc system must run under 64 MB :)
 * keesj:define code conventions,testing procedures,release-roadbook
+
 
 * FEATURE : windows : there's some win32 API calls that can be made to determine the application data dir
 
