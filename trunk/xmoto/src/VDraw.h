@@ -549,7 +549,6 @@ namespace vapp {
     int *gfxPrimitivesPolyInts;
     int gfxPrimitivesPolyAllocated;
     PolyDraw * polyDraw;
-    PolyDraw::Buffer screenBuffer;
     int screenVerticles[100];
     int nPolyTextureVertices[100];
 

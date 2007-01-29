@@ -1,5 +1,6 @@
 #include <string.h>
 
+#include "VCommon.h"
 #include "PolyDraw.h"
 
 #if defined(MIN)
@@ -12,7 +13,9 @@
 #endif
 #define MAX(a,b) ((a)>(b)?(a):(b))
 
-PolyDraw::PolyDraw(Buffer *pBuf) {
+namespace vapp {
+
+PolyDraw::PolyDraw(SDL_Surface *pBuf) {
   /* Set defaults */
   m_pLeftEdge = NULL;
   m_pRightEdge = NULL;
@@ -26,17 +29,17 @@ PolyDraw::~PolyDraw() {
   _ReleaseEdgeBuffers();
 }
 
-void PolyDraw::setRenderBuffer(Buffer *pBuf) {
+void PolyDraw::setRenderBuffer(SDL_Surface *pBuf) {
   /* Do we need to allocate new edge buffers? */
-  if(m_pBuf == NULL || m_pBuf->nHeight != pBuf->nHeight) {
+  if(m_pBuf == NULL || m_pBuf->h != pBuf->h) {
     /* Yup, do it - but first free old ones */
     _ReleaseEdgeBuffers();
     
-    m_pLeftEdge = new EdgeValue[pBuf->nHeight];
-    m_pRightEdge = new EdgeValue[pBuf->nHeight];
+    m_pLeftEdge = new EdgeValue[pBuf->h];
+    m_pRightEdge = new EdgeValue[pBuf->h];
     
-    memset(m_pLeftEdge,0,pBuf->nHeight * sizeof(EdgeValue));
-    memset(m_pRightEdge,0,pBuf->nHeight * sizeof(EdgeValue));
+    memset(m_pLeftEdge,0,pBuf->h * sizeof(EdgeValue));
+    memset(m_pRightEdge,0,pBuf->h * sizeof(EdgeValue));
   }
 
   /* Set target rendering buffer */
@@ -72,7 +75,7 @@ TODO: assembler. :)  I simply don't think this code is fast enough to be of
       practical use.
 =============================================================================*/
 void PolyDraw::render(int *pnScreenVerts,int *pnTexVerts,int nNumCorners,
-                      Buffer *pTexture) {
+                      SDL_Surface *pTexture) {
   /* If no buffers, abort */
   if(m_pBuf == NULL || m_pLeftEdge == NULL || m_pRightEdge == NULL)
     return; /* TODO: maybe an exception instead? */                      
@@ -157,8 +160,8 @@ void PolyDraw::render(int *pnScreenVerts,int *pnTexVerts,int nNumCorners,
   } while(nCurrentVertex != nBottom);
   
   /* Determine 2^n size of texture */
-  int nWSq = _TexSq(pTexture->nWidth);
-  int nHSq = _TexSq(pTexture->nHeight);
+  int nWSq = _TexSq(pTexture->w);
+  int nHSq = _TexSq(pTexture->h);
   
   if(nWSq == 0 || nHSq == 0) {
     return; /* TODO: maybe a "non-power of two texture size" exception? */
@@ -170,12 +173,7 @@ void PolyDraw::render(int *pnScreenVerts,int *pnTexVerts,int nNumCorners,
   }
   
   /* Other precalc stuff */
-  int nASq = _TexSq(pTexture->nPixelAlign);
-  int nPitchSq = _TexSq(pTexture->nPitch);
-  
-  if(nASq == 0) {
-    return; /* TODO: maybe a "non-power of two pixel alignment" exception */
-  }
+  int nPitchSq = _TexSq(pTexture->pitch);
   
   if(nPitchSq == 0) {
     return; /* TODO: maybe a "non-power of two texture pitch" exception */
@@ -184,10 +182,10 @@ void PolyDraw::render(int *pnScreenVerts,int *pnTexVerts,int nNumCorners,
   /* At this point we know everything we need about the edges - now for the 
      time consuming part: rendering of the individual pixels */
   int nStartY = MAX(nTopY,0);
-  int nEndY = MIN(nBottomY,m_pBuf->nHeight-1);
+  int nEndY = MIN(nBottomY,m_pBuf->h-1);
      
   /* 16-bit color code (fast) or general code (slow)? */    
-  if(m_pBuf->nPixelSize == 2) {
+  if(m_pBuf->format->BytesPerPixel == 2) {
     /* This loop only works with 16-bit pixels */
     for(int y=nStartY;y<=nEndY;y++) {
       _RenderHLine16(y,&m_pLeftEdge[y],&m_pRightEdge[y],pTexture,nWSq,nHSq,nPitchSq);
@@ -196,7 +194,7 @@ void PolyDraw::render(int *pnScreenVerts,int *pnTexVerts,int nNumCorners,
   else {
     /* This loop works with all pixel sizes */
     for(int y=nStartY;y<=nEndY;y++) {
-      _RenderHLine(y,&m_pLeftEdge[y],&m_pRightEdge[y],pTexture,nWSq,nHSq,nPitchSq,nASq);
+      _RenderHLine(y,&m_pLeftEdge[y],&m_pRightEdge[y],pTexture,nWSq,nHSq,nPitchSq);
     }
   }
 }
@@ -231,7 +229,7 @@ void PolyDraw::_LerpEdge(int y1,int y2,EdgeValue *pEdgeBuf,
              3 divides and the 3 multiplications */
   
     /* Linear interpolation along a polygon edge */    
-    for(int y=MAX(y1,0);y<=MIN(y2,m_pBuf->nHeight-1);y++) {
+    for(int y=MAX(y1,0);y<=MIN(y2,m_pBuf->h-1);y++) {
       EdgeValue *pV = &pEdgeBuf[y];
       
       int i = y - y1;
@@ -267,9 +265,10 @@ where optimization efforts should be placed.
 TODO: implement a _RenderHLine32(), although it probably would be too slow.
 TODO: lots and lots of optimization to do :)
 =============================================================================*/
-void PolyDraw::_RenderHLine16(int y,EdgeValue *pLeft,EdgeValue *pRight,Buffer *pTexture,int nWSq,int nHSq,int nPitchSq) {
+void PolyDraw::_RenderHLine16(int y,EdgeValue *pLeft,EdgeValue *pRight,SDL_Surface *pTexture,int nWSq,int nHSq,int nPitchSq) {
   /* Determine pointer to beginning of line in target buffer */
-  short *pn = (short *)&m_pBuf->pcData[y * m_pBuf->nPitch + MAX(0,pLeft->x) * m_pBuf->nPixelAlign];
+  //short *pn = (short *)&m_pBuf->pcData[y * m_pBuf->nPitch + MAX(0,pLeft->x) * m_pBuf->nPixelAlign];
+  short *pn = (short *)&((char *)m_pBuf->pixels)[y * m_pBuf->pitch + MAX(0,pLeft->x) * m_pBuf->format->BytesPerPixel];
 
   int nXRange = pRight->x - pLeft->x;
   int nURange = pRight->u - pLeft->u;
@@ -278,19 +277,19 @@ void PolyDraw::_RenderHLine16(int y,EdgeValue *pLeft,EdgeValue *pRight,Buffer *p
   int nWRightShift = 8 - nWSq;
   int nHRightShift = 8 - nHSq;
   
-  int nPixelAlign = m_pBuf->nPixelAlign;
-  int nPixelSize = m_pBuf->nPixelSize;
+  int nPixelAlign = m_pBuf->format->BytesPerPixel;
+  int nPixelSize = m_pBuf->format->BytesPerPixel;
 
-  int nTexelAlign = pTexture->nPixelAlign;
+  int nTexelAlign = pTexture->format->BytesPerPixel;
   
-  if(nPixelSize != pTexture->nPixelSize) return; /* eeeerrorrr */
+  if(nPixelSize != pTexture->format->BytesPerPixel) return; /* eeeerrorrr */
 
-  short *pnT = (short *)pTexture->pcData;
+  short *pnT = (short *)pTexture->pixels;
 
   if(nXRange > 0) {  
     /* Linear interpolation of texture coordinates over a horizontal line of a polygon */
     int nStartX = MAX(pLeft->x,0);
-    int nEndX = MIN(pRight->x,m_pBuf->nWidth-1);
+    int nEndX = MIN(pRight->x,m_pBuf->w-1);
 
     /* Fixed-point slope of u and v interpolations */    
     int nUSlope = (nURange << 8) / nXRange;
@@ -324,9 +323,9 @@ void PolyDraw::_RenderHLine16(int y,EdgeValue *pLeft,EdgeValue *pRight,Buffer *p
   }
 }
 
-void PolyDraw::_RenderHLine(int y,EdgeValue *pLeft,EdgeValue *pRight,Buffer *pTexture,int nWSq,int nHSq,int nPitchSq,int nASq) {
+void PolyDraw::_RenderHLine(int y,EdgeValue *pLeft,EdgeValue *pRight,SDL_Surface *pTexture,int nWSq,int nHSq,int nPitchSq) {
   /* Determine pointer to beginning of line in target buffer */
-  char *pc = &m_pBuf->pcData[y * m_pBuf->nPitch + MAX(0,pLeft->x) * m_pBuf->nPixelAlign];
+  char *pc = & ((char*)m_pBuf->pixels)[y * m_pBuf->pitch + MAX(0,pLeft->x) * m_pBuf->format->BytesPerPixel];
   
   int nXRange = pRight->x - pLeft->x;
   int nURange = pRight->u - pLeft->u;
@@ -335,19 +334,19 @@ void PolyDraw::_RenderHLine(int y,EdgeValue *pLeft,EdgeValue *pRight,Buffer *pTe
   int nWRightShift = 8 - nWSq;
   int nHRightShift = 8 - nHSq;
   
-  int nPixelAlign = m_pBuf->nPixelAlign;
-  int nPixelSize = m_pBuf->nPixelSize;
+  int nPixelAlign = m_pBuf->format->BytesPerPixel;
+  int nPixelSize = m_pBuf->format->BytesPerPixel;
 
-  int nTexelAlign = pTexture->nPixelAlign;
+  int nTexelAlign = pTexture->format->BytesPerPixel;
   
-  if(nPixelSize != pTexture->nPixelSize) return; /* eeeerrorrr */
+  if(nPixelSize != pTexture->format->BytesPerPixel) return; /* eeeerrorrr */
   
-  char *pcT = pTexture->pcData;
+  char *pcT = (char*)pTexture->pixels;	
   
   if(nXRange > 0) {  
     /* Linear interpolation of texture coordinates over a horizontal line of a polygon */
     int nStartX = MAX(pLeft->x,0);
-    int nEndX = MIN(pRight->x,m_pBuf->nWidth-1);
+    int nEndX = MIN(pRight->x,m_pBuf->w-1);
 
     /* Fixed-point slope of u and v interpolations */    
     int nUSlope = (nURange << 8) / nXRange;
@@ -370,7 +369,7 @@ void PolyDraw::_RenderHLine(int y,EdgeValue *pLeft,EdgeValue *pRight,Buffer *pTe
       nV &= 0xff;
       
       /* Map (u,v) to actual texture coordinates - and do trick to get texture offset */
-      int k = ((nU >> nWRightShift) << nASq) + ((nV >> nHRightShift) << nPitchSq);
+      int k = ((nU >> nWRightShift) << pTexture->format->BytesPerPixel) + ((nV >> nHRightShift) << nPitchSq);
       
       /* Copy texel to pixel */
       memcpy(pc,&pcT[k],nPixelSize);
@@ -382,3 +381,4 @@ void PolyDraw::_RenderHLine(int y,EdgeValue *pLeft,EdgeValue *pRight,Buffer *pTe
 }
 
 
+}

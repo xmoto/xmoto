@@ -219,11 +219,11 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
     Log("Using SDL_gfx implementation");
 
 
-    screenBuffer.nPixelAlign = m_screen->format->BytesPerPixel;
-    screenBuffer.nPixelSize = m_screen->format->BytesPerPixel;
-    screenBuffer.nWidth = m_nDispWidth;
-    screenBuffer.nHeight = m_nDispHeight;
-    polyDraw = new PolyDraw(&screenBuffer);
+    //screenBuffer.nPixelAlign = m_screen->format->BytesPerPixel;
+    //screenBuffer.nPixelSize = m_screen->format->BytesPerPixel;
+    //screenBuffer.nWidth = m_nDispWidth;
+    //screenBuffer.nHeight = m_nDispHeight;
+    polyDraw = new PolyDraw(m_screen);
 
     //setBackgroundColor(0,0,40,255);
 
@@ -330,8 +330,9 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
       case DRAW_MODE_POLYGON:
 	if (m_texture != NULL) {
 	  SDL_LockSurface(m_screen);
-	  screenBuffer.pcData = (char *)m_screen->pixels;
-	  screenBuffer.nPitch = m_screen->pitch;
+	  //TODO:keesj check if the surface is still valid
+	  //screenBuffer.pcData = (char *)m_screen->pixels;
+	  //screenBuffer.nPitch = m_screen->pitch;
 	  //SDL_Surface * s = SDL_DisplayFormatAlpha(m_texture->surface);
 	  SDL_Surface *s = NULL;
 
@@ -353,10 +354,21 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 	    if (m_texture->surface->w > 256){
 	      double zoom =  256.0 /  m_texture->surface->w;
 	      SDL_Surface * a = zoomSurface(m_texture->surface, zoom , zoom,SMOOTHING_ON);
-	      s = SDL_ConvertSurface(a, m_screen->format, SDL_HWSURFACE);
+	      if (m_texture->isAlpha) {
+	        //s = SDL_DisplayFormatAlpha(a);
+	        s = SDL_ConvertSurface(a, m_screen->format, SDL_HWSURFACE);
+	      } else {
+	        s = SDL_ConvertSurface(a, m_screen->format, SDL_HWSURFACE);
+	      }
 	      SDL_FreeSurface(a);
 	    } else {
 	     s = SDL_ConvertSurface(m_texture->surface, m_screen->format, SDL_HWSURFACE);
+	      if (m_texture->isAlpha) {
+	        //s = SDL_DisplayFormatAlpha(m_texture->surface);
+	        s = SDL_ConvertSurface(m_texture->surface, m_screen->format, SDL_HWSURFACE);
+	      } else {
+	        s = SDL_ConvertSurface(m_texture->surface, m_screen->format, SDL_HWSURFACE);
+	      }
 	    }
 
 	    strcpy(keyName, key);
@@ -364,6 +376,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 	  }
 
 	  SDL_LockSurface(s);
+	  /*
 	  PolyDraw::Buffer texture;
 	  texture.pcData = (char *)s->pixels;
 	  texture.nPitch = s->pitch;
@@ -371,6 +384,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 	  texture.nPixelSize = s->format->BytesPerPixel;
 	  texture.nWidth = s->w;
 	  texture.nHeight = s->h;
+	  */
 
 
 	  for (int i = 0; i < size; i++) {
@@ -387,8 +401,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 	  }
 
 
-	  polyDraw->render(screenVerticles, nPolyTextureVertices, size,
-			   &texture);
+	  polyDraw->render(screenVerticles, nPolyTextureVertices, size, s);
 	  SDL_UnlockSurface(s);
 	  SDL_UnlockSurface(m_screen);
 	} else {

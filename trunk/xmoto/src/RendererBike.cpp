@@ -219,10 +219,11 @@ namespace vapp {
       if(pSprite != NULL) {
 	pTexture = pSprite->getTexture();
 	if(pTexture != NULL) {
-	  if(pBike->Dir == DD_RIGHT)
+	  if(pBike->Dir == DD_RIGHT) {
 	    _RenderAlphaBlendedSection(pTexture,p3+C,p2+C,p1+C,p0+C);
-	  else
+	  } else {
 	    _RenderAlphaBlendedSection(pTexture,p2+C,p3+C,p0+C,p1+C);
+	  }
 	}
       }
     }
