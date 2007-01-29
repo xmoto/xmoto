@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-01-24 23:58+0100\n"
+"POT-Creation-Date: 2007-01-28 22:41+0100\n"
 "PO-Revision-Date: 2006-09-04 19:52+0100\n"
 "Last-Translator: Nicolas Adenis-Lamarre\n"
 "Language-Team: X-Moto\n"
@@ -214,8 +214,8 @@ msgid "Date"
 msgstr "Date"
 
 #: src/GameText.h:135
-msgid "Bike Breaks"
-msgstr "Mort brutale"
+msgid "Death Animation"
+msgstr ""
 
 #: src/GameText.h:136
 msgid "Defaults"
@@ -1658,6 +1658,9 @@ msgstr "Niveaux joues le plus"
 #: src/GameText.h:495
 msgid "Favorite levels"
 msgstr "Niveaux favoris"
+
+#~ msgid "Bike Breaks"
+#~ msgstr "Mort brutale"
 
 #~ msgid ""
 #~ "Getting the theme\n"

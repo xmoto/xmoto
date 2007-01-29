@@ -1099,19 +1099,19 @@ namespace vapp {
 	  for(int i=0; i<4; i++) {
 
 	    v_ray = sqrt((p[i].x*p[i].x) + (p[i].y*p[i].y));
+			beta = 0.0;
+
 	    //_RenderCircle(20, MAKE_COLOR(0,0,0,0), pSprite->DynamicPosition(), v_ray);
 
-	    if(i==2) { // blue
-	      beta = M_PI/2.0 - sin(p[i].x / v_ray);
-	    } else if(i==1) { // green;
-	      beta =  sin(p[i].y / v_ray);
-	      beta = 0;
-	    } else if(i==3) { // yellow
-	      beta = M_PI/2.0 - sin(p[i].x / v_ray);
-	    } else if(i==0) {
-	      beta =  -sin(p[i].y / v_ray);
-	      beta += M_PI;
-	    }
+			if(p[i].x >= 0.0 && p[i].y >= 0.0) {
+				beta = acos(p[i].x / v_ray);
+			} else if(p[i].x < 0.0 && p[i].y >= 0.0) {
+				beta = acos(p[i].y / v_ray) + M_PI / 2.0;
+			} else if(p[i].x < 0.0 && p[i].y < 0.0) {
+				beta = acos(-p[i].x / v_ray) + M_PI;
+			} else {
+				beta = acos(-p[i].y / v_ray) - M_PI / 2.0;
+			}
 
 	    p[i].x = cos(pSprite->DrawAngle() + beta) * v_ray;
 	    p[i].y = sin(pSprite->DrawAngle() + beta) * v_ray;

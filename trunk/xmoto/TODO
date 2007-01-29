@@ -1,5 +1,6 @@
 
 Assigned to nicolas
+* BUG : xmoto ...rpl don't work
 * BUG : hum, about checksum, when you modify a level with f5 while
    playing, then it is not updated with the new level button
 * put under edge into the block part

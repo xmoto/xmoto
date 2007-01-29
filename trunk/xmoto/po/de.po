@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-01-24 23:58+0100\n"
+"POT-Creation-Date: 2007-01-28 22:41+0100\n"
 "PO-Revision-Date: 2006-12-21 21:14+0100\n"
 "Last-Translator: Jens Erler <mothbox@gmx.net>\n"
 "Language-Team: German\n"
@@ -220,8 +220,8 @@ msgid "Date"
 msgstr "Datum"
 
 #: src/GameText.h:135
-msgid "Bike Breaks"
-msgstr "Rad zerbricht"
+msgid "Death Animation"
+msgstr ""
 
 #: src/GameText.h:136
 msgid "Defaults"
@@ -1676,6 +1676,9 @@ msgstr "Meistgespielte Levels"
 #: src/GameText.h:495
 msgid "Favorite levels"
 msgstr "Favoriten"
+
+#~ msgid "Bike Breaks"
+#~ msgstr "Rad zerbricht"
 
 #~ msgid "View Replays"
 #~ msgstr "Replays anzeigen"
