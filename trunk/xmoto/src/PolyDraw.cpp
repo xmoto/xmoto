@@ -184,24 +184,34 @@ void PolyDraw::render(int *pnScreenVerts,int *pnTexVerts,int nNumCorners,
   int nStartY = MAX(nTopY,0);
   int nEndY = MIN(nBottomY,m_pBuf->h-1);
      
-  /* 16-bit color code (fast) or general code (slow)? */    
-  if(m_pBuf->format->BytesPerPixel == 2) {
-    /* This loop only works with 16-bit pixels */
-    for(int y=nStartY;y<=nEndY;y++) {
-      if (m_pLeftEdge[y].x > m_pRightEdge[y].x){
-        _RenderHLine16(y,&m_pRightEdge[y],&m_pLeftEdge[y],pTexture,nWSq,nHSq,nPitchSq);
-      } else {
-        _RenderHLine16(y,&m_pLeftEdge[y],&m_pRightEdge[y],pTexture,nWSq,nHSq,nPitchSq);
+  if(pTexture->format->BytesPerPixel == 4) {
+      for(int y=nStartY;y<=nEndY;y++) {
+        if (m_pLeftEdge[y].x > m_pRightEdge[y].x){
+          _RenderHLineAlpha(y,&m_pRightEdge[y],&m_pLeftEdge[y],pTexture,nWSq,nHSq,nPitchSq);
+        } else {
+          _RenderHLineAlpha(y,&m_pLeftEdge[y],&m_pRightEdge[y],pTexture,nWSq,nHSq,nPitchSq);
+        }
+      }
+  } else {
+    /* 16-bit color code (fast) or general code (slow)? */    
+    if(m_pBuf->format->BytesPerPixel == 2) {
+      /* This loop only works with 16-bit pixels */
+      for(int y=nStartY;y<=nEndY;y++) {
+        if (m_pLeftEdge[y].x > m_pRightEdge[y].x){
+          _RenderHLine16(y,&m_pRightEdge[y],&m_pLeftEdge[y],pTexture,nWSq,nHSq,nPitchSq);
+        } else {
+          _RenderHLine16(y,&m_pLeftEdge[y],&m_pRightEdge[y],pTexture,nWSq,nHSq,nPitchSq);
+        }
       }
     }
-  }
-  else {
-    /* This loop works with all pixel sizes */
-    for(int y=nStartY;y<=nEndY;y++) {
-      if (m_pLeftEdge[y].x > m_pRightEdge[y].x){
-         _RenderHLine(y,&m_pRightEdge[y],&m_pLeftEdge[y],pTexture,nWSq,nHSq,nPitchSq);
-      } else {
-         _RenderHLine(y,&m_pLeftEdge[y],&m_pRightEdge[y],pTexture,nWSq,nHSq,nPitchSq);
+    else {
+      /* This loop works with all pixel sizes */
+      for(int y=nStartY;y<=nEndY;y++) {
+        if (m_pLeftEdge[y].x > m_pRightEdge[y].x){
+           _RenderHLine(y,&m_pRightEdge[y],&m_pLeftEdge[y],pTexture,nWSq,nHSq,nPitchSq);
+        } else {
+           _RenderHLine(y,&m_pLeftEdge[y],&m_pRightEdge[y],pTexture,nWSq,nHSq,nPitchSq);
+        }
       }
     }
   }
@@ -388,5 +398,73 @@ void PolyDraw::_RenderHLine(int y,EdgeValue *pLeft,EdgeValue *pRight,SDL_Surface
   }
 }
 
+
+void PolyDraw::_RenderHLineAlpha(int y,EdgeValue *pLeft,EdgeValue *pRight,SDL_Surface *pTexture,int nWSq,int nHSq,int nPitchSq) {
+  /* Determine pointer to beginning of line in target buffer */
+  if (m_pBuf->format->BytesPerPixel != 2){
+    printf("hmm not in 16 bpp mode\n");
+    return;
+  }
+
+ //  printf("hmm not in 16 bpp mode\n");
+  Uint16 * pc =  &((Uint16*)m_pBuf->pixels)[y * m_pBuf->w + MAX(0,pLeft->x) ];
+  
+  int nXRange = pRight->x - pLeft->x;
+  int nURange = pRight->u - pLeft->u;
+  int nVRange = pRight->v - pLeft->v;
+  
+  int nWRightShift = 8 - nWSq;
+  int nHRightShift = 8 - nHSq;
+  
+  Uint32 *pcT = (Uint32*)pTexture->pixels;	
+  
+  if(nXRange > 0) {  
+    /* Linear interpolation of texture coordinates over a horizontal line of a polygon */
+    int nStartX = MAX(pLeft->x,0);
+    int nEndX = MIN(pRight->x,m_pBuf->w-1);
+
+    /* Fixed-point slope of u and v interpolations */    
+    int nUSlope = (nURange << 8) / nXRange;
+    int nVSlope = (nVRange << 8) / nXRange;
+    
+    int nSkip = nStartX - pLeft->x;
+    int nUSum = nSkip * nUSlope;
+    int nVSum = nSkip * nVSlope;
+    
+    for(int x=nStartX;x<=nEndX;x++) {
+      /* Interpolate (u,v) */
+      int nU = pLeft->u + (nUSum >> 8);
+      int nV = pLeft->v + (nVSum >> 8);
+       
+      nUSum += nUSlope;
+      nVSum += nVSlope;
+            
+      /* Make sure (u,v) are inside the texture space (defined to be (0,0) to (0xff,0xff)) */
+      nU &= 0xff;
+      nV &= 0xff;
+      
+      /* Map (u,v) to actual texture coordinates - and do trick to get texture offset */
+      //int k = ((nU) ) + ((nV >> nHRightShift) );
+      
+      //Uint32 color = pcT[nV + nU * pTexture->w];
+      //int k = ((nU >> nWRightShift) << pTexture->format->BytesPerPixel) + ((nV >> nHRightShift) << nPitchSq);
+      //int k = ((nU >> nWRightShift) ) + ((nV >> nHRightShift) << (nPitchSq -1));
+      int k = (nU >> nWRightShift) + ((nV >> nHRightShift) << nWSq);
+      Uint32 color = pcT[k ];
+      int r =  ((color &pTexture->format->Rmask) >> pTexture->format->Rshift) << pTexture->format->Rloss;
+      int g =  ((color &pTexture->format->Gmask) >> pTexture->format->Gshift) << pTexture->format->Gloss;
+      int b =  ((color &pTexture->format->Bmask) >> pTexture->format->Bshift) << pTexture->format->Bloss;
+      int a =  ((color &pTexture->format->Amask) >> pTexture->format->Ashift) << pTexture->format->Aloss;
+      if (a > 100){
+       *(Uint16*)pc = SDL_MapRGB(m_pBuf->format,r,g,b);
+      }
+      /* Copy texel to pixel */
+      //memcpy(pc,&pcT[k],nPixelSize);
+      
+      /* Next pixel */
+      pc ++;
+    }
+  }
+}
 
 }

@@ -355,8 +355,8 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 	      double zoom =  256.0 /  m_texture->surface->w;
 	      SDL_Surface * a = zoomSurface(m_texture->surface, zoom , zoom,SMOOTHING_ON);
 	      if (m_texture->isAlpha) {
-	        //s = SDL_DisplayFormatAlpha(a);
-	        s = SDL_ConvertSurface(a, m_screen->format, SDL_HWSURFACE);
+	        s = SDL_DisplayFormatAlpha(a);
+	        //s = SDL_ConvertSurface(a, m_screen->format, SDL_HWSURFACE);
 	      } else {
 	        s = SDL_ConvertSurface(a, m_screen->format, SDL_HWSURFACE);
 	      }
@@ -364,8 +364,8 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 	    } else {
 	     s = SDL_ConvertSurface(m_texture->surface, m_screen->format, SDL_HWSURFACE);
 	      if (m_texture->isAlpha) {
-	        //s = SDL_DisplayFormatAlpha(m_texture->surface);
-	        s = SDL_ConvertSurface(m_texture->surface, m_screen->format, SDL_HWSURFACE);
+	        s = SDL_DisplayFormatAlpha(m_texture->surface);
+	        //s = SDL_ConvertSurface(m_texture->surface, m_screen->format, SDL_HWSURFACE);
 	      } else {
 	        s = SDL_ConvertSurface(m_texture->surface, m_screen->format, SDL_HWSURFACE);
 	      }

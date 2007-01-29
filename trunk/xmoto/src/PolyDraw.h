@@ -31,6 +31,7 @@ class PolyDraw {
     
     void _RenderHLine(int y,EdgeValue *pLeft,EdgeValue *pRight,SDL_Surface *pTexture,int nWSq,int nHSq,int nPitchSq);
     void _RenderHLine16(int y,EdgeValue *pLeft,EdgeValue *pRight,SDL_Surface *pTexture,int nWSq,int nHSq,int nPitchSq);          
+    void _RenderHLineAlpha(int y,EdgeValue *pLeft,EdgeValue *pRight,SDL_Surface *pTexture,int nWSq,int nHSq,int nPitchSq);          
 
     int _TexSq(int n);
 };
