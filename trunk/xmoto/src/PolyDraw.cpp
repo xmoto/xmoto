@@ -401,10 +401,6 @@ void PolyDraw::_RenderHLine(int y,EdgeValue *pLeft,EdgeValue *pRight,SDL_Surface
 
 void PolyDraw::_RenderHLineAlpha(int y,EdgeValue *pLeft,EdgeValue *pRight,SDL_Surface *pTexture,int nWSq,int nHSq,int nPitchSq) {
   /* Determine pointer to beginning of line in target buffer */
-  if (m_pBuf->format->BytesPerPixel != 2){
-    printf("hmm not in 16 bpp mode\n");
-    return;
-  }
 
  //  printf("hmm not in 16 bpp mode\n");
   Uint16 * pc =  &((Uint16*)m_pBuf->pixels)[y * m_pBuf->w + MAX(0,pLeft->x) ];
@@ -455,7 +451,7 @@ void PolyDraw::_RenderHLineAlpha(int y,EdgeValue *pLeft,EdgeValue *pRight,SDL_Su
       int g =  ((color &pTexture->format->Gmask) >> pTexture->format->Gshift) << pTexture->format->Gloss;
       int b =  ((color &pTexture->format->Bmask) >> pTexture->format->Bshift) << pTexture->format->Bloss;
       int a =  ((color &pTexture->format->Amask) >> pTexture->format->Ashift) << pTexture->format->Aloss;
-      if (a > 100){
+      if (a > 0){
        *(Uint16*)pc = SDL_MapRGB(m_pBuf->format,r,g,b);
       }
       /* Copy texel to pixel */
