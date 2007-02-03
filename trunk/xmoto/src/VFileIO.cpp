@@ -1022,7 +1022,7 @@ namespace vapp {
       
       /* If user-dir isn't there, try making it */
       if(!isDir(m_UserDir)) {
-        if(FS::mkdir(m_UserDir.c_str())) { /* drwx------ */
+        if(FS::mkDir(m_UserDir.c_str())) { /* drwx------ */
           Log("** Warning ** : failed to create user directory '%s'!",m_UserDir.c_str());
         }
         if(!isDir(m_UserDir)) {
@@ -1033,7 +1033,7 @@ namespace vapp {
       
       /* If there is no Replay-dir in user-dir try making that too */
       if(!isDir(getReplaysDir())) {
-        if(FS::mkdir(getReplaysDir().c_str())) { /* drwx------ */
+        if(FS::mkDir(getReplaysDir().c_str())) { /* drwx------ */
           Log("** Warning ** : failed to create user replay directory '%s'!",(m_UserDir + std::string("/Replays")).c_str());
         }
         if(!isDir(getReplaysDir())) {
@@ -1044,7 +1044,7 @@ namespace vapp {
 
       /* Make sure we got a level cache dir */
       if(!isDir(m_UserDir + std::string("/LCache"))) {
-        if(FS::mkdir((m_UserDir + std::string("/LCache")).c_str())) { /* drwx------ */
+        if(FS::mkDir((m_UserDir + std::string("/LCache")).c_str())) { /* drwx------ */
           Log("** Warning ** : failed to create user LCache directory '%s'!",(m_UserDir + std::string("/LCache")).c_str());
         }
         if(!isDir(m_UserDir + std::string("/LCache"))) {
@@ -1055,7 +1055,7 @@ namespace vapp {
 
       /* The same goes for the /Levels dir */
       if(!isDir(getLevelsDir())) {
-        if(FS:mkdir(getLevelsDir().c_str())) { /* drwx------ */
+        if(FS::mkDir(getLevelsDir().c_str())) { /* drwx------ */
           Log("** Warning ** : failed to create user levels directory '%s'!",(m_UserDir + std::string("/Levels")).c_str());
         }
         if(!isDir(getLevelsDir())) {
