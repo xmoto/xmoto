@@ -54,12 +54,8 @@ namespace vapp {
   }
   
   void Verbose(const char *pcMsg) {
-#if defined(_MSC_VER) && defined(_DEBUG)
-    printf("%s\n",pcMsg); /* I like my stdout when debugging :P */
-#else
     if(g_bVerbose) 
     printf("%s\n",pcMsg); /* also write to stdout */
-#endif
   }
 
   void Log(const char *pcFmt,...) {

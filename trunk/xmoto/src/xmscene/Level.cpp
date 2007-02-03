@@ -1102,7 +1102,11 @@ std::string Level::PathForUpdate() const {
 		return FileName();
 	}
 
+#if defined(SUPPORT_WEBACCESS)
 	return WebLevels::getDestinationFile(FileName());
+#else
+	return "";
+#endif
 }
 
 void Level::unloadLevelBody() {

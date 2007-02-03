@@ -25,11 +25,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* Load in configuration */
 #include "BuildConfig.h"
 
-/* Warnings we don't like */
-#if defined(WIN32) && defined(_MSC_VER)
-  #pragma warning(disable : 4244 4018 4101 4244 4267 4305)
-#endif
-
 /* Misc. nice-to-have includes */
 #if defined(WIN32)
   #include <windows.h>

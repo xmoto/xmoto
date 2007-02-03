@@ -31,7 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <vector>
 #include <stdio.h>
 
-#if !defined(_MSC_VER) && !defined(__APPLE__) && !defined(__MACH__)
+#if !defined(WIN32) && !defined(__APPLE__) && !defined(__MACH__)
   //#define USE_HASH_MAP // removed because it seems to segfault i don't know why when i refresh levels using F5 and quit
 #endif
 
@@ -69,11 +69,7 @@ class ThemeChoice;
   #endif
   #else // #ifdef __GNUC__
   #include <hash_map>
-  #if (_MSC_VER >= 1300)
-  namespace HashNamespace=stdext;
-  #else
   namespace HashNamespace=std;
-  #endif
   #endif
 
   struct highscore_str {

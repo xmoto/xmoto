@@ -33,7 +33,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /*==============================================================================
 BAD BAD BAD
 ==============================================================================*/
-#if !defined(_MSC_VER)
+#if !defined(WIN32)
   static int stricmp(char *pc1,char *pc2) {
     int s1 = strlen(pc1);
     int s2 = strlen(pc2);

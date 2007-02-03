@@ -8,6 +8,8 @@ AM_CXXFLAGS = -DNOMMGR $(WANTED_WARNNING) -DGAMEDATADIR=\"$(GAMEDATADIR)\" -DLOC
 AM_CFLAGS = -DNOMMGR $(WANTED_WARNNING) -DGAMEDATADIR=\"$(GAMEDATADIR)\" -DLOCALESDIR=\"$(LOCALESDIR)\" -DALLOW_WEBACCESS=$(ALLOW_WEBACCESS) -DALLOW_ZOOMING=$(ALLOW_ZOOMING) $(GL_CFLAGS) $(SDL_CFLAGS) -DUSE_OPENGL=$(USE_OPENGL) -DUSE_SDLGFX=$(USE_SDLGFX)
 # AM_LDFLAGS = -s
 
+#AM_LDFLAGS=
+
 image_SOURCES = image/tim.cpp image/tim_io_stdio.cpp \
   image/tim_jpeg.cpp image/tim_memory_crt.cpp \
   image/tim_png.cpp image/tim.h
@@ -18,6 +20,8 @@ tinyxml_SOURCES = tinyxml/tinystr.cpp tinyxml/tinyxml.cpp \
 
 md5_SOURCES = md5sum/md5.h md5sum/md5.c \
   md5sum/md5file.h md5sum/md5file.cpp
+
+bz2_SOURCES = bzip2/blocksort.c  bzip2/bzlib.c bzip2/bzlib.h  bzip2/bzlib_private.h  bzip2/compress.c bzip2/ bzip2/crctable.c  bzip2/decompress.c  bzip2/huffman.c  bzip2/randtable.c
 
 helpers_SOURCES = helpers/VMath.h             \
                   helpers/VMath.cpp           \
@@ -35,7 +39,7 @@ common_SOURCES = BuiltInFont.cpp Image.cpp \
   VApp.cpp VBezier.cpp VDraw.cpp VDrawOpenGL.cpp PolyDraw.h PolyDraw.cpp VDrawSDLgfx.cpp \
   VFileIO.cpp VTexture.cpp \
   VXml.cpp \
-  $(helpers_SOURCES) \
+  $(helpers_SOURCES) $(bz2_SOURCES) \
   $(image_SOURCES) $(tinyxml_SOURCES) \
   $(md5_SOURCES) \
   Image.h \
@@ -57,7 +61,7 @@ common_SOURCES = BuiltInFont.cpp Image.cpp \
   Packager.cpp \
   Packager.h
 
-common_LDADD = $(GL_LIBS) $(SDL_LIBS)
+common_LDADD = $(MINGW32_LIBS) $(GL_LIBS) $(SDL_LIBS)
 
 bin_PROGRAMS = xmoto
 

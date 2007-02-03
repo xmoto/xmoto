@@ -30,19 +30,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "tim.h"
 
 extern "C" {
-  #if defined(_MSC_VER) 
-    #include "jpeglib.h"  /* use local copy */
-  #else
-    #include <jpeglib.h>  /* if not Microsoft, we want to use the shared jpeg
-                             library */
-  #endif
+  #include <jpeglib.h>
   #include "jerror.h"
 }
 
 /*==============================================================================
 Hmm, stricmp() is microsoftish
 ==============================================================================*/
-#if !defined(_MSC_VER)
+#if !defined(WIN32)
   static int stricmp(char *pc1,char *pc2) {
     int s1 = strlen(pc1);
     int s2 = strlen(pc2);

@@ -52,11 +52,11 @@ namespace vapp {
   #ifndef TRUE
   #define TRUE 1
   #endif
-  #if !defined(_MSC_VER)
-    void strlwr(char *pc) {
-      for(unsigned int i=0; i<strlen(pc); i++) pc[i] = tolower(pc[i]);
-    }
-  #endif
+
+  void strlwr(char *pc) {
+    for(unsigned int i=0; i<strlen(pc); i++) pc[i] = tolower(pc[i]);
+  }
+
   mbool str_match_wildcard(char *pcMWildcard,char *pcMString,mbool CaseSensitive) {
     int nPos=0;
     mbool PrevIsWildcard=FALSE;
@@ -1022,7 +1022,7 @@ namespace vapp {
       
       /* If user-dir isn't there, try making it */
       if(!isDir(m_UserDir)) {
-        if(mkdir(m_UserDir.c_str(),S_IRUSR|S_IWUSR|S_IRWXU)) { /* drwx------ */
+        if(FS::mkdir(m_UserDir.c_str())) { /* drwx------ */
           Log("** Warning ** : failed to create user directory '%s'!",m_UserDir.c_str());
         }
         if(!isDir(m_UserDir)) {
@@ -1033,7 +1033,7 @@ namespace vapp {
       
       /* If there is no Replay-dir in user-dir try making that too */
       if(!isDir(getReplaysDir())) {
-        if(mkdir(getReplaysDir().c_str(),S_IRUSR|S_IWUSR|S_IRWXU)) { /* drwx------ */
+        if(FS::mkdir(getReplaysDir().c_str())) { /* drwx------ */
           Log("** Warning ** : failed to create user replay directory '%s'!",(m_UserDir + std::string("/Replays")).c_str());
         }
         if(!isDir(getReplaysDir())) {
@@ -1044,7 +1044,7 @@ namespace vapp {
 
       /* Make sure we got a level cache dir */
       if(!isDir(m_UserDir + std::string("/LCache"))) {
-        if(mkdir((m_UserDir + std::string("/LCache")).c_str(),S_IRUSR|S_IWUSR|S_IRWXU)) { /* drwx------ */
+        if(FS::mkdir((m_UserDir + std::string("/LCache")).c_str())) { /* drwx------ */
           Log("** Warning ** : failed to create user LCache directory '%s'!",(m_UserDir + std::string("/LCache")).c_str());
         }
         if(!isDir(m_UserDir + std::string("/LCache"))) {
@@ -1055,7 +1055,7 @@ namespace vapp {
 
       /* The same goes for the /Levels dir */
       if(!isDir(getLevelsDir())) {
-        if(mkdir(getLevelsDir().c_str(),S_IRUSR|S_IWUSR|S_IRWXU)) { /* drwx------ */
+        if(FS:mkdir(getLevelsDir().c_str())) { /* drwx------ */
           Log("** Warning ** : failed to create user levels directory '%s'!",(m_UserDir + std::string("/Levels")).c_str());
         }
         if(!isDir(getLevelsDir())) {
@@ -1141,7 +1141,7 @@ namespace vapp {
   Hmm, for some reason I have to do this. Don't ask me why.
   ===========================================================================*/
   int FS::mkDir(const char *pcPath) {
-    #if defined(_MSC_VER)
+    #if defined(WIN32)
       return _mkdir(pcPath);
     #else
       return mkdir(pcPath,S_IRUSR|S_IWUSR|S_IRWXU);

@@ -20,7 +20,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "FileCompression.h"
-#include <bzlib.h>
+#if defined (WIN32)
+  #include "bzip2/bzlib.h"
+#else
+  #include <bzlib.h>
+#endif
 #include "VExcept.h"
 
 #define BUFSIZE 4096

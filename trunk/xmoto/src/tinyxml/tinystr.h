@@ -30,10 +30,6 @@ distribution.
 #ifndef TIXML_STRING_INCLUDED
 #define TIXML_STRING_INCLUDED
 
-#ifdef _MSC_VER
-#pragma warning( disable : 4786 )	// Debugger truncating names.
-#endif
-
 #include <assert.h>
 
 /*

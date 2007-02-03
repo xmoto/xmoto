@@ -1,17 +1,8 @@
 SUBDIRS = src bin extra po
-# tools
 
-man_MANS = xmoto.6.gz #xmoto-edit.6.gz
+man_MANS = xmoto.6.gz
 
-all: xmoto #xmoto-edit
-
-xmoto: 
-	ln -sf src/xmoto xmoto
-
-#xmoto-edit: 
-#	ln -sf src/xmoto-edit xmoto-edit
-
-EXTRA_DIST = m4/ChangeLog  $(man_MANS) bootstrap
+EXTRA_DIST = m4/ChangeLog  $(man_MANS) bootstrap mingw_linux_to_windows.sh
 
 uninstall-hook:
 	rm -r $(datadir)/@PACKAGE@

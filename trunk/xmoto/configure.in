@@ -16,7 +16,18 @@ AC_CHECK_LIB(z, uncompress, [], [AC_MSG_ERROR(zlib required)])
 
 AC_CHECK_LIB(jpeg, jpeg_CreateCompress, [], [AC_MSG_ERROR(libjpeg required)])
 AC_CHECK_LIB(png, png_read_image, [], [AC_MSG_ERROR(libpng required)])
-AC_CHECK_LIB(bz2, BZ2_bzReadOpen, [], [AC_MSG_ERROR(libbz2 required)])
+
+if test "$target_os" != "mingw32" # on windows, include libbz2
+then
+  AC_CHECK_LIB(bz2, BZ2_bzReadOpen, [], [AC_MSG_ERROR(libbz2 required)])
+fi
+
+if test "$target_os" = "mingw32" # others libraries required by mingw32
+then
+  MINGW32_LIBS="-lmingw32 -lSDLmain -lSDL -lopengl32"
+  AC_SUBST([MINGW32_LIBS])
+fi
+
 AM_PATH_SDL(1.0.0, [], [AC_MSG_ERROR(SDL required)])
 AC_SDL_CHECK_LIB(SDL_mixer, Mix_OpenAudio, [], [AC_MSG_ERROR(SDL_mixer required)])
 
@@ -176,3 +187,4 @@ displayRequirement "OpenGl" "$USE_OPENGL" "1" "--with-renderer-openGl=1"
 echo   "+-----------------+------------+-----------------------------------------------------+"
 displayRequirement "sdlGfx" "$USE_SDLGFX" "1" "--with-renderer-sdlGfx=1 (unsafe)"
 echo   "+-----------------+------------+-----------------------------------------------------+"
+echo "target os: ""$target_os"

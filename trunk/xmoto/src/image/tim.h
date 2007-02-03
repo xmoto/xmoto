@@ -27,11 +27,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 extern "C" {
 #endif
 
-/* Warnings we don't like */
-#if defined(WIN32) && defined(_MSC_VER)
-  #pragma warning(disable : 4244 4018 4101 4244 4267)
-#endif
-
 /*==============================================================================
 Basic defines
 ==============================================================================*/

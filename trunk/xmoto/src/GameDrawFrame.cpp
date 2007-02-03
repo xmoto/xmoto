@@ -471,10 +471,11 @@ namespace vapp {
         /* No music available, try loading */
         std::string MenuMusicPath = FS::getDataDir() + std::string("/xmoto.ogg");
         const char *pc = MenuMusicPath.c_str();
-        #if defined(_MSC_VER) /* this works around a bug in SDL_mixer 1.2.7 on Windows */
-          SDL_RWops *rwfp;              
-          rwfp = SDL_RWFromFile(pc, "rb");                          
-          m_pMenuMusic = Mix_LoadMUS_RW(rwfp);
+        #if defined(WIN32) /* this works around a bug in SDL_mixer 1.2.7 on Windows */
+	//SDL_RWops *rwfp;              
+	//rwfp = SDL_RWFromFile(pc, "rb");                          
+	//m_pMenuMusic = Mix_LoadMUS_RW(rwfp);
+	m_pMenuMusic = NULL;
         #else
           m_pMenuMusic = Mix_LoadMUS(pc);
         #endif
