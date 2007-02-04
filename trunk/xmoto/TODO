@@ -3,7 +3,6 @@ mingw:
 * sdlgfx: http://www.wormux.org/wiki/compile_under_mingw.php#SDL_gfx
 * gettext: http://www.wormux.org/wiki/compile_under_mingw.php
 * change the .exe icon
-* correct the music pb
 
 Assigned to nicolas
 * BUG : xmoto ...rpl don't work
