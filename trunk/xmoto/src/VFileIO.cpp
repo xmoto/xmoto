@@ -387,11 +387,12 @@ namespace vapp {
     /* Is it an absolute path? */
     if(isPathAbsolute(Path)) {    
       /* Yup, not much to do here then */
+      mkArborescence(Path);
       pfh->fp = fopen(Path.c_str(),"wb");
     }    
     else {
-      /* Nope, try the user dir. We are not going to create files relative
-         to the working-dir, that would be f*cked :) */
+      /* Nope, try the user dir */
+      mkArborescence(m_UserDir + std::string("/") + Path);
       pfh->fp = fopen((m_UserDir + std::string("/") + Path).c_str(),"wb");
     }
     

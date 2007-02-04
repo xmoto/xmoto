@@ -59,10 +59,6 @@ function fill_tmp_directory {
     unix2dos        COPYING.txt   || return 1
     cp ../ChangeLog ChangeLog.txt || return 1
     unix2dos        ChangeLog.txt || return 1
-    mkdir Replays  	      	  || return 1
-    mkdir Levels   	      	  || return 1
-    mkdir Textures 	      	  || return 1
-    mkdir LCache   	      	  || return 1
     )
 }
 
