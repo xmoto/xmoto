@@ -27,6 +27,7 @@ then
   MINGW32_LIBS="-lmingw32 -lSDLmain -lSDL -lopengl32 -mwindows xmoto_icone.o" # -mwindows to avoid dos window
   AC_SUBST([MINGW32_LIBS])
 fi
+AM_CONDITIONAL([WIN32], test "$target_os" = "mingw32")
 
 AM_PATH_SDL(1.0.0, [], [AC_MSG_ERROR(SDL required)])
 AC_SDL_CHECK_LIB(SDL_mixer, Mix_OpenAudio, [], [AC_MSG_ERROR(SDL_mixer required)])

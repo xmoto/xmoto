@@ -129,10 +129,10 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp GameMain.cpp \
   xmscene/Bike.h \
   xmscene/Bike.cpp
 
+if WIN32
+xmoto_SOURCES += xmoto_icone.ico
+.ico.o:
+	echo "1 ICON \"""$<""\"" > tmp.rc && i586-mingw32msvc-windres tmp.rc "$@"
+endif
+
 xmoto_LDADD = $(common_LDADD)
-
-xmoto_icone.rc: ../xmoto_icone.ico
-	echo '1 ICON "../xmoto_icone.ico"' > xmoto_icone.rc
-
-xmoto_icone.o:	xmoto_icone.rc
-	i586-mingw32msvc-windres xmoto_icone.rc xmoto_icone.o
