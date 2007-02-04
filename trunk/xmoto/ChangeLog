@@ -1,4 +1,5 @@
 X-Moto 0.2.5 2007-
+ * music currently doesn't work for windows
  * performences improved (better framerate)
  * SDL-GFX rendering in option (instead of OpenGL, unstable code)
  * a randomize button to puzzle any package list
