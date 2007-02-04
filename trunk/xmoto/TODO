@@ -2,7 +2,6 @@
 mingw:
 * sdlgfx: http://www.wormux.org/wiki/compile_under_mingw.php#SDL_gfx
 * gettext: http://www.wormux.org/wiki/compile_under_mingw.php
-* remove the dos window
 * change the .exe icon
 * correct the music pb
 

@@ -66,6 +66,11 @@ function make_zip {
     ZIPDIR="$1"
     ZIPFILE="$2"
 
+    if test -e "$ZIPFILE"
+	then
+	rm "$ZIPFILE" || return 1
+    fi
+
     zip -q -r "$ZIPFILE" "$ZIPDIR" || return 1
 }
 
@@ -88,8 +93,6 @@ fi
 
 if ! make_zip "$ZIPDIR" "$ZIPFILE"
 then
-    pwd
-    echo rm -rf "$ZIPDIR"
     rm -rf "$ZIPDIR"
     echo "Unable to make the zip" 1>&2
     exit 1    
