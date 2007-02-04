@@ -1,6 +1,6 @@
 pkgdatadir = $(datadir)/@PACKAGE@
 
-pkgdata_DATA = xmoto.bin
+pkgdata_DATA = xmoto.bin xmoto.ogg
 
 xmoto.bin: package.lst
 if CROSS_COMPILING

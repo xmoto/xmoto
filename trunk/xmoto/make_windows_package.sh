@@ -48,6 +48,7 @@ function fill_tmp_directory {
     cp ../src/xmoto.exe .            || return 1
     i586-mingw32msvc-strip xmoto.exe || return 1
     cp ../bin/xmoto.bin .     	     || return 1
+    cp ../bin/xmoto.ogg .     	     || return 1
     unzip -q ../mingw_lib.zip 	     || return 1
     mv mingw_lib/* .          	     || return 1
     rmdir mingw_lib           	     || return 1

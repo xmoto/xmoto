@@ -477,7 +477,7 @@ namespace vapp {
 	//m_pMenuMusic = Mix_LoadMUS_RW(rwfp);
 	m_pMenuMusic = NULL;
         #else
-          m_pMenuMusic = Mix_LoadMUS(pc);
+	m_pMenuMusic = Mix_LoadMUS(pc);
         #endif
         /* (Don't even complain the slightest if music isn't found...) */          
       }
