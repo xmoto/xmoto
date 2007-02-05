@@ -21,8 +21,6 @@ tinyxml_SOURCES = tinyxml/tinystr.cpp tinyxml/tinyxml.cpp \
 md5_SOURCES = md5sum/md5.h md5sum/md5.c \
   md5sum/md5file.h md5sum/md5file.cpp
 
-bz2_SOURCES = bzip2/blocksort.c  bzip2/bzlib.c bzip2/bzlib.h  bzip2/bzlib_private.h  bzip2/compress.c bzip2/ bzip2/crctable.c  bzip2/decompress.c  bzip2/huffman.c  bzip2/randtable.c
-
 helpers_SOURCES = helpers/VMath.h             \
                   helpers/VMath.cpp           \
                   helpers/VExcept.h           \
@@ -39,7 +37,7 @@ common_SOURCES = BuiltInFont.cpp Image.cpp \
   VApp.cpp VBezier.cpp VDraw.cpp VDrawOpenGL.cpp PolyDraw.h PolyDraw.cpp VDrawSDLgfx.cpp \
   VFileIO.cpp VTexture.cpp \
   VXml.cpp \
-  $(helpers_SOURCES) $(bz2_SOURCES) \
+  $(helpers_SOURCES) \
   $(image_SOURCES) $(tinyxml_SOURCES) \
   $(md5_SOURCES) \
   Image.h \
@@ -60,6 +58,20 @@ common_SOURCES = BuiltInFont.cpp Image.cpp \
   Locales.cpp \
   Packager.cpp \
   Packager.h
+
+bz2_SOURCES = bzip2/blocksort.c     \
+              bzip2/bzlib.c         \
+              bzip2/bzlib.h         \
+              bzip2/bzlib_private.h \
+              bzip2/compress.c      \
+              bzip2/crctable.c      \
+              bzip2/decompress.c    \
+              bzip2/huffman.c       \
+              bzip2/randtable.c
+
+if WIN32
+common_SOURCES += $(bz2_SOURCES)
+endif
 
 common_LDADD = $(MINGW32_LIBS) $(GL_LIBS) $(SDL_LIBS)
 
@@ -136,5 +148,3 @@ xmoto_SOURCES += xmoto_icone.ico
 endif
 
 xmoto_LDADD = $(common_LDADD)
-
-EXTRA_DIST = xmoto_icone.ico

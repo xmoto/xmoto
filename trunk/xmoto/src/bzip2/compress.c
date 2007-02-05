@@ -1,4 +1,3 @@
-#if defined(WIN32)
 /*-------------------------------------------------------------*/
 /*--- Compression machinery (not incl block sorting)        ---*/
 /*---                                            compress.c ---*/
@@ -714,4 +713,3 @@ void BZ2_compressBlock ( EState* s, Bool is_last_block )
 /*-------------------------------------------------------------*/
 /*--- end                                        compress.c ---*/
 /*-------------------------------------------------------------*/
-#endif
