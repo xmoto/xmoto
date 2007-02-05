@@ -23,15 +23,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __VTEXTURE_H__
 
 #include "VCommon.h"
-#include "helpers/VExcept.h"
+#include "VExcept.h"
 
 namespace vapp {
-
-  enum FilterMode {
-    FM_NEAREST,
-    FM_LINEAR,
-    FM_MIPMAP
-  };
 
   /*===========================================================================
   Our friendly texture exception friend
@@ -49,29 +43,18 @@ namespace vapp {
   /*===========================================================================
   Texture
   ===========================================================================*/    
-  //keesj:todo. I experimented with converting this struct to a
-  //class and extending it so that the opengl version would only
-  //contain nID and the SDL_based one the Surface pointer. I think it is
-  //a lot of work and because the game currently depends on SDL
-  //and nID is not a openGL specific structure
-  //it's 
   struct Texture {
-    public:
     Texture() {
       nWidth = nHeight = 0;
       nID = 0;
-      surface = NULL;
       nSize = 0;
-      isAlpha = false;
     }
- 
+  
     std::string Name;       /* Name */
     int nWidth,nHeight;     /* Size */
     unsigned int nID;       /* OpenGL name */
-    SDL_Surface * surface;  /* SDL_surface */
     std::string Tag;        /* Optional tag */
     int nSize;              /* Size in bytes */
-    bool isAlpha;           /* Whether the texture contains an alpha channel */
   };
 
   /*===========================================================================
@@ -82,9 +65,9 @@ namespace vapp {
       TextureManager() {m_nTexSpaceUsage=0;}
     
       /* Methods */
-      Texture *createTexture(std::string Name,unsigned char *pcData,int nWidth,int nHeight,bool bAlpha=false,bool bClamp=false, FilterMode eFilterMode = FM_LINEAR);
+      Texture *createTexture(std::string Name,unsigned char *pcData,int nWidth,int nHeight,bool bAlpha=false,bool bClamp=false,bool bFilter=true);
       void destroyTexture(Texture *pTexture);
-      Texture *loadTexture(std::string Path,bool bSmall=false,bool bClamp=false, FilterMode eFilterMode = FM_LINEAR);
+      Texture *loadTexture(std::string Path,bool bSmall=false,bool bClamp=false,bool bFilter=true);
       Texture *getTexture(std::string Name);
       std::vector<Texture *> fetchTaggedTextures(std::string Tag);
       void unloadTextures(void);
@@ -100,7 +83,7 @@ namespace vapp {
       int m_nTexSpaceUsage;                   /* Bytes of textures resident */
   };
   
-}
+};
 
 //#include "VCommon.h"
 //#include "VExcept.h"

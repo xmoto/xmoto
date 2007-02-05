@@ -23,20 +23,19 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __DBUFFER_H__
 
 #include "VCommon.h"
-#include "helpers/VExcept.h"
 
 namespace vapp {
 
-  /*===========================================================================
-  Output buffer section
+	/*===========================================================================
+	Output buffer section
   ===========================================================================*/
   struct DBufferPart {
     char *pcBuffer;
     int nPtr;
   };
 
-  /*===========================================================================
-  I/O buffer class
+	/*===========================================================================
+	I/O buffer class
   ===========================================================================*/
   class DBuffer {
     public:
@@ -50,30 +49,20 @@ namespace vapp {
       /* Methods */
       void initOutput(int nPartSize);
       void initInput(char *pcInput,int nInputSize);
-      
-      template<typename _ConstIter>
-      void writeBuf(_ConstIter pcBuf,int nBufSize);
-      
-      template<typename _Iter>
-      void readBuf(_Iter pcBuf,int nBufSize);
-      
-      void writeBuf_LE(const char *pcBuf,int nBufSize);    
-      void readBuf_LE(char *pcBuf,int nBufSize);
+      void writeBuf(const char *pcBuf,int nBufSize);    
+      void readBuf(char *pcBuf,int nBufSize);
       int numRemainingBytes(void);
       const char *convertOutputToInput(void);
       
       /* Some I/O */
-      void operator <<(bool n);
-      void operator >>(bool &n);
-      void operator <<(int n);
-      void operator >>(int &n);
-      void operator <<(unsigned int n);
-      void operator >>(unsigned int &n);
-      void operator <<(float n);
-      void operator >>(float &n);
-      void operator <<(std::string s);
-      void operator >>(std::string &s); 
-    
+      template<typename _T> void operator <<(_T n) {
+        writeBuf(reinterpret_cast<const char *>(&n),sizeof(_T));
+      }
+      
+      template<typename _T> void operator >>(_T &n) {
+        readBuf(reinterpret_cast<char *>(&n),sizeof(_T));
+      }
+      
       /* Data interface */
       bool isOutput(void) {if(m_bInit && m_bOutput) return true; return false;}
       bool isInput(void) {if(m_bInit && !m_bOutput) return true; return false;}
@@ -82,7 +71,7 @@ namespace vapp {
       /* Data */
       bool m_bInit;
       bool m_bOutput;
-
+    
       /* Data - for output */    
       int m_nPartSize;
       std::vector<DBufferPart *> m_Parts;
@@ -99,7 +88,7 @@ namespace vapp {
       void _NewPart(void);
   };
   
-}
+};
 
 #endif
 

@@ -31,18 +31,16 @@ namespace vapp {
   Painting
   ===========================================================================*/
   void UIStatic::paint(void) {  
-    if(isUglyMode() == false) {
-      /* Darken background? */
-      if(m_bBackgroundShade) {
-	putImage(0,0,getPosition().nWidth,getPosition().nHeight,m_pDarkBlobTexture);
-      }
+    /* Darken background? */
+    if(m_bBackgroundShade) {
+      putImage(0,0,getPosition().nWidth,getPosition().nHeight,m_pDarkBlobTexture);
+    }
     
-      /* Background image? */
-      if(m_pCustomBackgroundTexture != NULL) {
-	putImage(0,0,getPosition().nWidth,getPosition().nHeight,m_pCustomBackgroundTexture);    
-      }    
-    }  
-
+    /* Background image? */
+    if(m_pCustomBackgroundTexture != NULL) {
+      putImage(0,0,getPosition().nWidth,getPosition().nHeight,m_pCustomBackgroundTexture);    
+    }    
+  
     /* Determine text size */
     int x1,y1,x2,y2,x=0,y=0;  
     
@@ -63,8 +61,8 @@ namespace vapp {
     else if(getVAlign() == UI_ALIGN_CENTER)
       y = getPosition().nHeight/2 - (y2-y1)/2 - y1;
     
-    putText(x,y, getCaption());
+    putText(x,y,getCaption());
   }
 
-}
+};
 

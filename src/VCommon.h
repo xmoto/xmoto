@@ -25,6 +25,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* Load in configuration */
 #include "BuildConfig.h"
 
+/* Warnings we don't like */
+#if defined(WIN32) && defined(_MSC_VER)
+  #pragma warning(disable : 4244 4018 4101 4244 4267 4305)
+#endif
+
 /* Misc. nice-to-have includes */
 #if defined(WIN32)
   #include <windows.h>
@@ -32,25 +37,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <stddef.h>
 
-#ifdef HAVE_SDL_FRAMEWORK
-  #include <SDL.h>
-  #include <SDL_mixer.h>
-#else
-  #define USE_RWOPS
-  #include <SDL/SDL.h>
-  #include <SDL/SDL_mixer.h>
-#endif
+#include <SDL/SDL.h>
+#include <SDL/SDL_mixer.h>
 
-// Some places #define _T, which we want for a template parameter
-#undef _T
-
-#ifdef ENABLE_OPENGL
 /* Pull in OpenGL headers */
 //#define NO_SDL_GLEXT
 //#include <SDL/SDL_opengl.h>
 /* following scissored from SDL_opengl.h */
 #define __glext_h_  /* Don't let gl.h include glext.h */
-#ifdef HAVE_APPLE_OPENGL_FRAMEWORK
+#if defined(__MACOSX__)
 #include <OpenGL/gl.h>	/* Header File For The OpenGL Library */
 #include <OpenGL/glu.h>	/* Header File For The GLU Library */
 #elif defined(__MACOS__)
@@ -64,14 +59,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "glext.h"
 
-#endif
-
 #include <string>
 #include <vector>
 #include <queue>
-#include <map>
-#include <iostream>
-#include <sstream>
+#include <ostream>
+#include <istream>
 
 #include <stdio.h>
 #include <math.h>
@@ -80,9 +72,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   #include <endian.h>
 #endif
 
-#if !defined(XMOTO_LITTLE_ENDIAN) && !defined(XMOTO_BIG_ENDIAN)
+#if !defined(LITTLE_ENDIAN) && !defined(BIG_ENDIAN)
   /* Assume little endian */
-  #define XMOTO_LITTLE_ENDIAN 1
+  #define LITTLE_ENDIAN
 #endif
 
 extern "C" {
@@ -127,7 +119,7 @@ extern "C" {
       #error Missing lualib.h    
     #endif
   #endif
-}
+};
 
 #if defined(WIN32)
   #include "ode/ode.h"
@@ -175,15 +167,6 @@ namespace vapp {
   ===========================================================================*/
   typedef unsigned int Color;
 
-  //used a comparator in sdt::map
-  struct ltstr {
-    bool operator()(const char* s1, const char* s2) const {
-      return strcmp(s1, s2) < 0;
-    }
-  };
-
-
-
-}
+};
 
 #endif

@@ -1,9 +1,14 @@
-X-Moto 0.2.5
-Copyright (C) 2005-2007
-Rasmus Neckelmann (neckelmann@gmail.com)
-Nicolas Adenis-Lamarre (nicolas@adenis-lamarre.fr)
+X-Moto 0.2.0 (Alpha Release)
+Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 http://xmoto.sourceforge.net
+
+IMPORTANT: This is an ALPHA release of the game, which means that many
+things aren't production stable. Also note that the final release of
+the game will include many more levels.
+ 
+I'll strongly appreciate any bug reports, feature requests, general 
+bashing, etc. Please help making the game better.
 
 Introduction
 ============
@@ -22,9 +27,9 @@ System Requirements
 General hardware requirements:
 
  - CPU: 500 MHz (a wild guess)
- - RAM: 64 MB (at least 40 MB of free memory prefered)
+ - RAM: 128 MB (at least 40 MB of free memory prefered)
  - Graphics: nVidia GeForce-class card with 32 MB of video memory
- - HDD: 12 MB of free space on your hard drive.
+ - HDD: 10 MB of free space on your hard drive.
  - Software: Windows 2000/XP, Linux, Mac OS X or FreeBSD (other UNIX-like 
    OS's might be supported as well)
 
@@ -300,5 +305,28 @@ above mentioned licenses.
 Authors
 =======
 
-See the in-game credits under "Help".
+X-Moto itself is primarily written by Rasmus Neckelmann.
+
+Nicolas Adenis-Lamarre has written the code that allows interfacing
+with his X-Moto high-scores/extra levels website. He has also 
+contributed a lot of other code to the project.
+
+Furthermore the following persons have contributed to the X-Moto
+project:
+
+ - Brandon Ross (some of the sound effects)
+ - Pasi Kallinen (some of the built-in levels)
+ - CoW (some of the built-in levels)
+ - Clive Crous (one of the built-in levels)
+ - Maxime Biais (MacOS X patch)
+ - Eric Piel (various code patches)
+ - Torben Green (some of the built-in levels)
+ - Thomas Kjaerulff (one of the built-in levels)
+ - Emmanuel Gorse (SDL resolutions list patch)
+ - Jose Alberto Coelho (MacOS X tester)
+ - Jens Erler (music and some of the sound effects)
+ - Christoph Sommer (joystick patch)
+
+Also a warm thank-you to Yves Berquin who have written the XML parser
+used by the game (tinyxml), and to L. Peter Deutsch for his MD5 code.
  

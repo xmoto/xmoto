@@ -32,7 +32,7 @@ namespace vapp {
   /*===========================================================================
   Create texture from memory
   ===========================================================================*/
-  Texture *TextureManager::createTexture(std::string Name,unsigned char *pcData,int nWidth,int nHeight,bool bAlpha,bool bClamp, FilterMode eFilterMode) {
+  Texture *TextureManager::createTexture(std::string Name,unsigned char *pcData,int nWidth,int nHeight,bool bAlpha,bool bClamp,bool bFilter) {
     /* Name free? */
     if(getTexture(Name) != NULL) {
       Log("** Warning ** : TextureManager::createTexture() : Name '%s' already in use",Name.c_str());
@@ -45,12 +45,8 @@ namespace vapp {
     pTexture->nWidth = nWidth;
     pTexture->nHeight = nHeight;
     pTexture->Tag = "";
-    pTexture->isAlpha = bAlpha;
-#ifdef ENABLE_OPENGL
     pTexture->nID = 0;
-#endif
     
-#ifdef ENABLE_OPENGL
     /* OpenGL magic */
     GLuint N;
     glEnable(GL_TEXTURE_2D);
@@ -68,29 +64,13 @@ namespace vapp {
       pTexture->nSize = nWidth * nHeight * 3;
     }
     
-    switch(eFilterMode) {
-      /* require openGL 1.4 */
-      case FM_MIPMAP:
-#if defined(GL_GENERATE_MIPMAP)      
-      glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-      glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR_MIPMAP_NEAREST);
-      glTexParameteri(GL_TEXTURE_2D,GL_GENERATE_MIPMAP, GL_TRUE);
-#else
-      glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-      glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);    
-#endif      
-      break;
-      
-      case FM_LINEAR:
+    if(bFilter) {
       glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
       glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-      break;
-
-      case FM_NEAREST:
-      default:
+    }
+    else {
       glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
       glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-      break;
     }
         
     if(bClamp) {
@@ -104,26 +84,8 @@ namespace vapp {
     glDisable(GL_TEXTURE_2D);
     
     pTexture->nID = N;
-#endif
     
     m_nTexSpaceUsage += pTexture->nSize;
-        #if SDL_BYTEORDER == SDL_BIG_ENDIAN
-            Uint32 rmask = 0xff000000;
-            Uint32 gmask = 0x00ff0000;
-            Uint32 bmask = 0x0000ff00;
-            Uint32 amask = 0x000000ff;
-        #else
-            Uint32 rmask = 0x000000ff;
-            Uint32 gmask = 0x0000ff00;
-            Uint32 bmask = 0x00ff0000;
-            Uint32 amask = 0xff000000;
-        #endif
-      if(bAlpha){
-        pTexture->surface  = SDL_CreateRGBSurfaceFrom(pcData,nWidth,nHeight,32 /*bitsPerPixel */, nWidth * 4 /*pitch*/,rmask,gmask,bmask,amask);
-      } else {
-        pTexture->surface  = SDL_CreateRGBSurfaceFrom(pcData,nWidth,nHeight,24 /*bitsPerPixel */, nWidth * 3 /*pitch*/,rmask,gmask,bmask,0);
-
-      }
   
     /* Do it captain */
     m_Textures.push_back( pTexture );
@@ -138,9 +100,7 @@ namespace vapp {
     if(pTexture != NULL) {
       for(unsigned int i=0;i<m_Textures.size();i++) {
         if(m_Textures[i] == pTexture) {
-#ifdef ENABLE_OPENGL
           glDeleteTextures(1,(GLuint *)&pTexture->nID);
-#endif
           m_nTexSpaceUsage -= pTexture->nSize;
           delete pTexture;
           m_Textures.erase(m_Textures.begin() + i);
@@ -155,7 +115,7 @@ namespace vapp {
   /*===========================================================================
   Shortcut to loading textures from image files
   ===========================================================================*/  
-  Texture *TextureManager::loadTexture(std::string Path,bool bSmall,bool bClamp, FilterMode eFilterMode) {
+  Texture *TextureManager::loadTexture(std::string Path,bool bSmall,bool bClamp,bool bFilter) {
     /* Check file validity */
     image_info_t ii;
     Img TextureImage;
@@ -197,17 +157,14 @@ namespace vapp {
       /* Copy it into video memory */
       unsigned char *pc;
       bool bAlpha = TextureImage.isAlpha();
-      if(bAlpha){
+      if(bAlpha)
         pc = TextureImage.convertToRGBA32();
-      } else {
+      else
         pc = TextureImage.convertToRGB24();
-      }
       
-      pTexture = createTexture(TexName,pc,TextureImage.getWidth(),TextureImage.getHeight(),bAlpha,bClamp, eFilterMode);
+      pTexture = createTexture(TexName,pc,TextureImage.getWidth(),TextureImage.getHeight(),bAlpha,bClamp,bFilter);
       
-      //keesj:todo when using SDL surface we cannot delete the image data
-      //this is a problem.
-      //delete [] pc;
+      delete [] pc;
     }
     else {
       Log("** Warning ** : TextureManager::loadTexture() : texture '%s' not found or invalid",Path.c_str());
@@ -246,7 +203,7 @@ namespace vapp {
       destroyTexture(m_Textures[0]);
   }
   
-}
+};
 
 //
 //  /*===========================================================================

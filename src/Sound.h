@@ -242,7 +242,7 @@ namespace vapp {
       //static int _GetFreePlayerSlot(void);
   };
 
-}
+};
 
 #endif
 

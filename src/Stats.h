@@ -27,7 +27,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VFileIO.h"
 #include "VXml.h"
 #include "GUI.h"
-#include "xmscene/Level.h"
 
 namespace vapp {
 
@@ -103,18 +102,15 @@ namespace vapp {
       void abortedLevel(const std::string &PlayerName,const std::string &LevelID,const std::string &LevelName,float fPlayTime);
       void levelRestarted(const std::string &PlayerName,const std::string &LevelID,const std::string &LevelName,float fPlayTime);
       void xmotoStarted(const std::string &PlayerName);
-
-      PlayerStats *_FindPlayerStats(const std::string &PlayerName);
-      LevelStats *_FindLevelStats(PlayerStats *pPlayer,const std::string &LevelID,const std::string &LevelName);
       
-      static int compareLevelMostPlayed(const Level& i_lvl1, const Level& i_lvl2, PlayerStats *i_playerStats); 
-
     private:
       /* Data */
       std::vector<PlayerStats *> m_Players;
       
       /* Helpers */
       void _FreeStats(void);
+      PlayerStats *_FindPlayerStats(const std::string &PlayerName);
+      LevelStats *_FindLevelStats(PlayerStats *pPlayer,const std::string &LevelID,const std::string &LevelName);
       bool _DefinePlayerAndLevel(PlayerStats **ppPlayer,LevelStats **ppLevel,
                                  const std::string &PlayerName,const std::string &LevelID,const std::string &LevelName);
       std::string _ReadString(TiXmlElement *pElem,const std::string &s);
@@ -124,7 +120,7 @@ namespace vapp {
       std::vector<LevelStats *> _GetOrderedLevels(StatOrder Order,const std::string &PlayerName);
   };
 
-}
+};
 
 #endif
 

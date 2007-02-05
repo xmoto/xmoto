@@ -29,7 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Image.h"
 #include "image/tim.h"
 #include "VFileIO.h"
-#include "helpers/VExcept.h"
+#include "VExcept.h"
 
 namespace vapp {
 
@@ -37,18 +37,18 @@ namespace vapp {
   I/O driver: Callbacks
   ============================================================================*/
   void *_image_io_open(char *pcWhere,tim_io_mode_t IOMode) {
-    /* Determine mode of I/O, and open */
-    try {
-      switch(IOMode) {
-        case TIM_IM_READ: return (void *)FS::openIFile(pcWhere);
-        case TIM_IM_WRITE: return (void *)FS::openOFile(pcWhere);
-      }
-    }
-    catch (Exception &e) {
-      Log("** Warning ** : _image_io_open() - exception when opening: %s\n",pcWhere);
-    }
-    
-    return NULL; /* some prob */
+	  /* Determine mode of I/O, and open */
+	  try {
+	    switch(IOMode) {
+		    case TIM_IM_READ: return (void *)FS::openIFile(pcWhere);
+		    case TIM_IM_WRITE: return (void *)FS::openOFile(pcWhere);
+	    }
+	  }
+	  catch (Exception &e) {
+	    Log("** Warning ** : _image_io_open() - exception when opening: %s\n",pcWhere);
+	  }
+  	
+	  return NULL; /* some prob */
   }
 
   void _image_io_close(void *pvHandle) {
@@ -56,26 +56,26 @@ namespace vapp {
       FS::closeFile( (FileHandle *)pvHandle );
     }
     catch (Exception &e) {
-      Log("** Warning ** : _image_io_close() - exception when closing: %s\n",((FileHandle *)pvHandle)->Name.c_str());
+	    Log("** Warning ** : _image_io_close() - exception when closing: %s\n",((FileHandle *)pvHandle)->Name.c_str());
     }
   }
 
   int _image_io_seek(void *pvHandle,int nOffset,tim_seek_mode_t SeekMode) {  
     try {
-      switch(SeekMode) {
-        case TIM_SM_ABS: FS::setOffset((FileHandle *)pvHandle,nOffset); break; /* Absolute seeking */
-        case TIM_SM_REL: FS::setOffset((FileHandle *)pvHandle,FS::getOffset((FileHandle *)pvHandle) + nOffset); break; /* Seek relatively to current pos */
-        case TIM_SM_END: FS::setOffset((FileHandle *)pvHandle,FS::getLength((FileHandle *)pvHandle) + nOffset); break; /* Seek relatively to end */
-        default: return TIM_RV_ERR_INVALID_PARAM;
-      }
-    }
+	    switch(SeekMode) {
+		    case TIM_SM_ABS: FS::setOffset((FileHandle *)pvHandle,nOffset); break; /* Absolute seeking */
+		    case TIM_SM_REL: FS::setOffset((FileHandle *)pvHandle,FS::getOffset((FileHandle *)pvHandle) + nOffset); break; /* Seek relatively to current pos */
+		    case TIM_SM_END: FS::setOffset((FileHandle *)pvHandle,FS::getLength((FileHandle *)pvHandle) + nOffset); break; /* Seek relatively to end */
+		    default: return TIM_RV_ERR_INVALID_PARAM;
+	    }
+	  }
     catch (Exception &e) {
-      Log("** Warning ** : _image_io_seek() - exception when seeking: %s\n",((FileHandle *)pvHandle)->Name.c_str());
+	    Log("** Warning ** : _image_io_seek() - exception when seeking: %s\n",((FileHandle *)pvHandle)->Name.c_str());
       return TIM_RV_ERR_COULD_NOT_PERFORM;
-    }
-      
-    /* Return current position */
-    return FS::getLength((FileHandle *)pvHandle);
+	  }
+  		
+	  /* Return current position */
+	  return FS::getLength((FileHandle *)pvHandle);
   }
 
   int _image_io_read(void *pvHandle,void *pvBuf,int nSize) {
@@ -88,7 +88,7 @@ namespace vapp {
       }
     }
     catch (Exception &e) {
-      Log("** Warning ** : _image_io_read() - exception when reading from: %s\n",((FileHandle *)pvHandle)->Name.c_str());
+	    Log("** Warning ** : _image_io_read() - exception when reading from: %s\n",((FileHandle *)pvHandle)->Name.c_str());
     }
     
     return nRet;
@@ -102,7 +102,7 @@ namespace vapp {
       }
     }
     catch (Exception &e) {
-      Log("** Warning ** : _image_io_read() - exception when writing to: %s\n",((FileHandle *)pvHandle)->Name.c_str());
+	    Log("** Warning ** : _image_io_read() - exception when writing to: %s\n",((FileHandle *)pvHandle)->Name.c_str());
     }
     
     return nRet;
@@ -113,9 +113,9 @@ namespace vapp {
       if(FS::isEnd( (FileHandle *)pvHandle )) return TRUE;
     }
     catch (Exception &e) {
-      Log("** Warning ** : _image_io_eof() - exception thrown by FS::isEnd() when checking: %s\n",((FileHandle *)pvHandle)->Name.c_str());
+	    Log("** Warning ** : _image_io_eof() - exception thrown by FS::isEnd() when checking: %s\n",((FileHandle *)pvHandle)->Name.c_str());
     }
-    return FALSE;
+	  return FALSE;
   }
 
   /*==============================================================================
@@ -123,8 +123,8 @@ namespace vapp {
   ==============================================================================*/
 
   tim_io_t g_ImageIODrv={
-    _image_io_open,_image_io_close,_image_io_seek,_image_io_read,_image_io_write,
-    _image_io_eof
+	  _image_io_open,_image_io_close,_image_io_seek,_image_io_read,_image_io_write,
+	  _image_io_eof
   };
 
   /*=============================================================================
@@ -163,11 +163,11 @@ namespace vapp {
     freeMemory();
     
     #ifdef DO_NOT_LOAD_TEXTURES
-      /* Don't load anything, simply create bogus instead */
-      createEmpty(16,16);
-      for(int i=0;i<16*16;i++) 
-        m_pPixels[i] = MAKE_COLOR((rand()*255)/RAND_MAX,(rand()*255)/RAND_MAX,(rand()*255)/RAND_MAX,255);
-      return;       
+			/* Don't load anything, simply create bogus instead */
+			createEmpty(16,16);
+			for(int i=0;i<16*16;i++) 
+				m_pPixels[i] = MAKE_COLOR((rand()*255)/RAND_MAX,(rand()*255)/RAND_MAX,(rand()*255)/RAND_MAX,255);
+			return;				
     #endif
 
     /* Initialize image library */
@@ -495,89 +495,89 @@ namespace vapp {
   }
 
   color_t Img::_Linterp_scanline(color_t *pScan,int nSrcLen,int nDestLen,int s) {
-    int t = ((nSrcLen-1) * s) / nDestLen;
-    int v = ((nSrcLen-1) * s) % nDestLen;
-    int r1,g1,b1,a1,r2,g2,b2,a2;  
-    r1 = GET_RED(pScan[t]); g1 = GET_GREEN(pScan[t]); b1 = GET_BLUE(pScan[t]); a1 = GET_ALPHA(pScan[t]);
-    r2 = GET_RED(pScan[t+1]); g2 = GET_GREEN(pScan[t+1]); b2 = GET_BLUE(pScan[t+1]); a2 = GET_ALPHA(pScan[t+1]);
-    return MAKE_COLOR(  (r1*(nDestLen-v))/nDestLen  +  (r2*v)/nDestLen ,
-                        (g1*(nDestLen-v))/nDestLen  +  (g2*v)/nDestLen ,
-                        (b1*(nDestLen-v))/nDestLen  +  (b2*v)/nDestLen ,
-                        (a1*(nDestLen-v))/nDestLen  +  (a2*v)/nDestLen);
+	  int t = ((nSrcLen-1) * s) / nDestLen;
+	  int v = ((nSrcLen-1) * s) % nDestLen;
+	  int r1,g1,b1,a1,r2,g2,b2,a2;	
+	  r1 = GET_RED(pScan[t]); g1 = GET_GREEN(pScan[t]); b1 = GET_BLUE(pScan[t]); a1 = GET_ALPHA(pScan[t]);
+	  r2 = GET_RED(pScan[t+1]); g2 = GET_GREEN(pScan[t+1]); b2 = GET_BLUE(pScan[t+1]); a2 = GET_ALPHA(pScan[t+1]);
+	  return MAKE_COLOR(  (r1*(nDestLen-v))/nDestLen  +  (r2*v)/nDestLen ,
+	                      (g1*(nDestLen-v))/nDestLen  +  (g2*v)/nDestLen ,
+	                      (b1*(nDestLen-v))/nDestLen  +  (b2*v)/nDestLen ,
+	                      (a1*(nDestLen-v))/nDestLen  +  (a2*v)/nDestLen);
   }
 
   color_t Img::_Aa_avg_scanline(color_t *pScan,int x1,int x2) {
-    int r=0,g=0,b=0,a=0;
-    int d=0;
-    for(int i=x1;i<x2;i++) {
-      r+=GET_RED(pScan[i]); g+=GET_GREEN(pScan[i]); b+=GET_BLUE(pScan[i]); a+=GET_ALPHA(pScan[i]);
-      d++;
-    }
-    if(d==0) return pScan[x1];  
-    return MAKE_COLOR(r/d,g/d,b/d,a/d);
+	  int r=0,g=0,b=0,a=0;
+	  int d=0;
+	  for(int i=x1;i<x2;i++) {
+		  r+=GET_RED(pScan[i]); g+=GET_GREEN(pScan[i]); b+=GET_BLUE(pScan[i]); a+=GET_ALPHA(pScan[i]);
+		  d++;
+	  }
+	  if(d==0) return pScan[x1];	
+	  return MAKE_COLOR(r/d,g/d,b/d,a/d);
   }
 
   color_t Img::_Resample_scanline(color_t *pScan,int nScanLen,int nDestLen,int nx) {
-    /* Scanline... upsample, downsample, or straight copy? */
-    if(nScanLen < nDestLen)
-      return _Linterp_scanline(pScan,nScanLen,nDestLen,nx);
-    else if(nScanLen > nDestLen) {
-      int w1,w2;
-      w1 = (nx*nScanLen)/nDestLen;
-      w2 = ((nx+1)*nScanLen)/nDestLen;    
-      return _Aa_avg_scanline(pScan,w1,w2);
-    }
-    return pScan[nx];
+	  /* Scanline... upsample, downsample, or straight copy? */
+	  if(nScanLen < nDestLen)
+		  return _Linterp_scanline(pScan,nScanLen,nDestLen,nx);
+	  else if(nScanLen > nDestLen) {
+		  int w1,w2;
+		  w1 = (nx*nScanLen)/nDestLen;
+		  w2 = ((nx+1)*nScanLen)/nDestLen;		
+		  return _Aa_avg_scanline(pScan,w1,w2);
+	  }
+	  return pScan[nx];
   }
 
   void Img::_Resample(color_t *pSrc,int nSrcWidth,int nSrcHeight,
                       color_t *pDest,int nDestWidth,int nDestHeight) {
-    int nx,ny,y,y1,y2;
-    int r1,g1,b1,a1,r2,g2,b2,a2,r,g,b,a,d;  
-    color_t T1,T2,T;
-    
-    for(ny=0; ny<nDestHeight; ny++) {       
-      if(nSrcHeight < nDestHeight) {
-        /* Upsample y-axis */
-        int t = ((nSrcHeight-1) * ny) / nDestHeight;
-        int v = ((nSrcHeight-1) * ny) % nDestHeight;
-        
-        for(nx=0; nx<nDestWidth; nx++) {
-          T1 = _Resample_scanline(&pSrc[t*nSrcWidth],nSrcWidth,nDestWidth,nx);    
-          T2 = _Resample_scanline(&pSrc[(t+1)*nSrcWidth],nSrcWidth,nDestWidth,nx);    
-          
-          r1 = GET_RED(T1); g1 = GET_GREEN(T1); b1 = GET_BLUE(T1); a1 = GET_ALPHA(T1);
-          r2 = GET_RED(T2); g2 = GET_GREEN(T2); b2 = GET_BLUE(T2); a2 = GET_ALPHA(T2);
-          pDest[nDestWidth*ny + nx] = MAKE_COLOR(  (r1*(nDestHeight-v))/nDestHeight  +  (r2*v)/nDestHeight ,
-                                                  (g1*(nDestHeight-v))/nDestHeight  +  (g2*v)/nDestHeight ,
+	  int nx,ny,y,y1,y2;
+	  int r1,g1,b1,a1,r2,g2,b2,a2,r,g,b,a,d;	
+	  color_t T1,T2,T;
+  	
+	  for(ny=0; ny<nDestHeight; ny++) {				
+		  if(nSrcHeight < nDestHeight) {
+			  /* Upsample y-axis */
+			  int t = ((nSrcHeight-1) * ny) / nDestHeight;
+			  int v = ((nSrcHeight-1) * ny) % nDestHeight;
+  			
+			  for(nx=0; nx<nDestWidth; nx++) {
+				  T1 = _Resample_scanline(&pSrc[t*nSrcWidth],nSrcWidth,nDestWidth,nx);		
+				  T2 = _Resample_scanline(&pSrc[(t+1)*nSrcWidth],nSrcWidth,nDestWidth,nx);		
+  				
+				  r1 = GET_RED(T1); g1 = GET_GREEN(T1); b1 = GET_BLUE(T1); a1 = GET_ALPHA(T1);
+				  r2 = GET_RED(T2); g2 = GET_GREEN(T2); b2 = GET_BLUE(T2); a2 = GET_ALPHA(T2);
+				  pDest[nDestWidth*ny + nx] = MAKE_COLOR(  (r1*(nDestHeight-v))/nDestHeight  +  (r2*v)/nDestHeight ,
+	                                                (g1*(nDestHeight-v))/nDestHeight  +  (g2*v)/nDestHeight ,
                                                   (b1*(nDestHeight-v))/nDestHeight  +  (b2*v)/nDestHeight ,
-                                                  (a1*(nDestHeight-v))/nDestHeight  +  (a2*v)/nDestHeight);       
-        }
-      }
-      else if(nSrcHeight > nDestHeight) {
-        /* Downsample y-axis */
-        y1 = (ny*nSrcHeight)/nDestHeight;
-        y2 = ((ny+1)*nSrcHeight)/nDestHeight;   
-        for(nx=0; nx<nDestWidth; nx++) {
-          r=g=b=a=0;
-          d=0;
-          for(y=y1;y<y2;y++) {
-            T = _Resample_scanline(&pSrc[y*nSrcWidth],nSrcWidth,nDestWidth,nx);
-            r+=GET_RED(T); g+=GET_GREEN(T); b+=GET_BLUE(T); a+=GET_ALPHA(T);          
-            d++;
-          }
-          if(d!=0) pDest[nDestWidth*ny+nx] = MAKE_COLOR(r/d,g/d,b/d,a/d);
-          else pDest[nDestWidth*ny+nx] = pSrc[y1*nSrcWidth+(nx*nSrcWidth)/nDestWidth];
-        }
-      }
-      else {
-        /* Copy y-axis */
-        y = (ny * nSrcHeight) / nDestHeight;
-        for(nx=0; nx<nDestWidth; nx++)
-          pDest[nx + ny*nDestWidth] = _Resample_scanline(&pSrc[y*nSrcWidth],nSrcWidth,nDestWidth,nx);   
-      }
-    }
+                                                  (a1*(nDestHeight-v))/nDestHeight  +  (a2*v)/nDestHeight);				
+			  }
+		  }
+		  else if(nSrcHeight > nDestHeight) {
+			  /* Downsample y-axis */
+			  y1 = (ny*nSrcHeight)/nDestHeight;
+			  y2 = ((ny+1)*nSrcHeight)/nDestHeight;		
+			  for(nx=0; nx<nDestWidth; nx++) {
+				  r=g=b=a=0;
+				  d=0;
+				  for(y=y1;y<y2;y++) {
+					  T = _Resample_scanline(&pSrc[y*nSrcWidth],nSrcWidth,nDestWidth,nx);
+					  r+=GET_RED(T); g+=GET_GREEN(T);	b+=GET_BLUE(T); a+=GET_ALPHA(T);					
+					  d++;
+				  }
+				  if(d!=0) pDest[nDestWidth*ny+nx] = MAKE_COLOR(r/d,g/d,b/d,a/d);
+				  else pDest[nDestWidth*ny+nx] = pSrc[y1*nSrcWidth+(nx*nSrcWidth)/nDestWidth];
+			  }
+		  }
+		  else {
+			  /* Copy y-axis */
+			  y = (ny * nSrcHeight) / nDestHeight;
+			  for(nx=0; nx<nDestWidth; nx++)
+				  pDest[nx + ny*nDestWidth] = _Resample_scanline(&pSrc[y*nSrcWidth],nSrcWidth,nDestWidth,nx);		
+		  }
+	  }
   }
 
-}
+};
 

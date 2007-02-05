@@ -29,32 +29,25 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <string>
 #include <vector>
-#include <stdio.h>
 
-#if !defined(WIN32) && !defined(__APPLE__) && !defined(__MACH__)
-  //#define USE_HASH_MAP // removed because it seems to segfault i don't know why when i refresh levels using F5 and quit
+#if !defined(_MSC_VER) && !defined(__APPLE__) && !defined(__MACH__)
+  #define USE_HASH_MAP
 #endif
 
 #include "WWWAppInterface.h"
 #include "Theme.h"
 class ThemeChoice;
 
-#define DEFAULT_WEBHIGHSCORES_URL         "http://xmoto.tuxfamily.org/highscores.xml"
+#define DEFAULT_WEBHIGHSCORES_URL         "http://xmoto.free.fr/highscores.xml"
 #define DEFAULT_WEBHIGHSCORES_FILENAME    "webhighscores.xml"
 #define DEFAULT_TRANSFERT_TIMEOUT         240
-#define DEFAULT_TRANSFERT_CONNECT_TIMEOUT 7
-#define DEFAULT_WEBLEVELS_URL             "http://xmoto.tuxfamily.org/levels.xml"
+#define DEFAULT_TRANSFERT_CONNECT_TIMEOUT 15
+#define DEFAULT_WEBLEVELS_URL             "http://xmoto.free.fr/levels.xml"
 #define DEFAULT_WEBLEVELS_FILENAME        "weblevels.xml"
 #define DEFAULT_WEBLEVELS_DIR             "downloaded"
-#define DEFAULT_WEBTHEMES_URL             "http://xmoto.tuxfamily.org/themes.xml"
+#define DEFAULT_WEBTHEMES_URL             "http://xmoto.free.fr/themes.xml"
 #define DEFAULT_WEBTHEMES_FILENAME        "webthemes.xml"
-#define DEFAULT_WEBTHEMES_SPRITESURLBASE  "http://xmoto.tuxfamily.org/sprites"
-#define DEFAULT_UPLOADREPLAY_URL          "http://xmoto.tuxfamily.org/tools/UploadReplay.php"
-#define DEFAULT_REPLAYUPLOAD_MSGFILE      "UploadReplayMsg.xml"
-#define DEFAULT_WEBROOMS_URL              "http://xmoto.tuxfamily.org/rooms.xml"
-#define DEFAULT_WEBROOMS_FILENAME         "webrooms.xml"
-#define DEFAULT_WEBROOM_ID                "1"
-#define DEFAULT_WEBROOM_NAME              "WR"
+#define DEFAULT_WEBTHEMES_SPRITESURLBASE  "http://xmoto.free.fr/sprites"
 
 #define WWW_AGENT ("xmoto-" + vapp::App::getVersionString())
 
@@ -69,7 +62,11 @@ class ThemeChoice;
   #endif
   #else // #ifdef __GNUC__
   #include <hash_map>
+  #if (_MSC_VER >= 1300)
+  namespace HashNamespace=stdext;
+  #else
   namespace HashNamespace=std;
+  #endif
   #endif
 
   struct highscore_str {
@@ -117,61 +114,42 @@ class FSWeb {
  public:
   static void downloadFile(const std::string &p_local_file,
 			   const std::string &p_web_file,
-			   int (*curl_progress_callback_download)(void *clientp,
-								  double dltotal,
-								  double dlnow,
-								  double ultotal,
-								  double ulnow),
+			   int (*curl_progress_callback)(void *clientp,
+							 double dltotal,
+							 double dlnow,
+							 double ultotal,
+							 double ulnow),
 			   void *p_data,
 			   const ProxySettings *p_proxy_settings);
 
   static void downloadFileBz2(const std::string &p_local_file,
 			      const std::string &p_web_file,
-			      int (*curl_progress_callback_download)(void *clientp,
-								     double dltotal,
-								     double dlnow,
-								     double ultotal,
-								     double ulnow),
+			      int (*curl_progress_callback)(void *clientp,
+							    double dltotal,
+							    double dlnow,
+							    double ultotal,
+							    double ulnow),
 			      void *p_data,
 			      const ProxySettings *p_proxy_settings);
 
   static void downloadFileBz2UsingMd5(const std::string &p_local_file,
 				      const std::string &p_web_file,
-				      int (*curl_progress_callback_download)(void *clientp,
-									     double dltotal,
-									     double dlnow,
-									     double ultotal,
-									     double ulnow),
+				      int (*curl_progress_callback)(void *clientp,
+								    double dltotal,
+								    double dlnow,
+								    double ultotal,
+								    double ulnow),
 				      void *p_data,
 				      const ProxySettings *p_proxy_settings);
 
-  static void uploadReplay(std::string p_replayFilename,
-			   std::string p_id_room,
-			   std::string p_login,
-			   std::string p_password,
-			   std::string p_url_to_transfert,
-			   vapp::WWWAppInterface *p_WebApp,
-			   const ProxySettings *p_proxy_settings,
-			   bool &p_msg_status,
-			   std::string &p_msg);
-
-  static int f_curl_progress_callback_upload(void *clientp,
-					     double dltotal,
-					     double dlnow,
-					     double ultotal,
-					     double ulnow);
-
-  static int f_curl_progress_callback_download(void *clientp,
-					       double dltotal,
-					       double dlnow,
-					       double ultotal,
-					       double ulnow);
+  static int f_curl_progress_callback(void *clientp,
+				      double dltotal,
+				      double dlnow,
+				      double ultotal,
+				      double ulnow); 
 
  private:
   static size_t writeData(void *ptr, size_t size, size_t nmemb, FILE *stream);
-  static void   uploadReplayAnalyseMsg(std::string p_filename,
-				       bool &p_msg_status_ok,
-				       std::string &p_msg);
 };
 
 class WebHighscore {
@@ -231,46 +209,6 @@ class WebRoom {
   void cleanHash();
 };
 
-class WebRoomInfos {
- public:
-  WebRoomInfos(std::string p_id,
-	       std::string p_name,
-	       std::string p_urlHighscores);
-  ~WebRoomInfos();
-
-  std::string getId();
-  std::string getName();
-  std::string getUrlHighscores();
-
- private:
-  std::string m_id;
-  std::string m_name;
-  std::string m_urlHighscore;
-};
-
-class WebRooms {
- public:
-  WebRooms(const ProxySettings *p_proxy_settings);
-  ~WebRooms();
-
-  /* check for new rooms */
-  void update(); /* throws exceptions */
-
-  /* fill the list of avaible rooms ; does not required an internet connexion */
-  void upgrade();
-
-  void setURL(const std::string &p_url) {m_rooms_url = p_url;}
-  const std::vector<WebRoomInfos*> &getAvailableRooms();
-
- private:
-  const ProxySettings *m_proxy_settings;
-  std::vector<WebRoomInfos*> m_availableRooms;
-  std::string m_rooms_url;
-
-  void clean();
-  std::string getXmlFileName();
-};
-
 class WebLevel {
 public:
   WebLevel(std::string p_id, std::string p_name, std::string p_url);
@@ -316,14 +254,10 @@ class WebLevels {
   const std::vector<std::string> &getUpdatedDownloadedLevels();
 
   /* Get IDs of updated levels downloaded OK*/
-  const std::vector<std::string> &getUpdatedDownloadedLevelIds();
+  const std::vector<std::string> &getUpdatedDownloadedLevelIDs();
   
   /* Set URL */
   void setURL(const std::string &p_url) {m_levels_url = p_url;}
-
-  bool exists(const std::string p_id);
-
-  static std::string getDestinationFile(std::string p_url);
 
  private:
   vapp::WWWAppInterface *m_WebLevelApp;
@@ -331,7 +265,6 @@ class WebLevels {
   std::vector<std::string> m_webLevelsNewDownloadedOK; /* file names of those levels 
            which where downloaded OK (so we can load them right away) and which are new */
   std::vector<std::string> m_webLevelsUpdatedDownloadedOK;
-  std::vector<std::string> m_webLevelsIdsUpdatedDownloadedOK;
 
   const ProxySettings *m_proxy_settings;
   
@@ -339,7 +272,8 @@ class WebLevels {
 
   std::string getXmlFileName();
   void downloadXml(); /* throw exceptions */
-  static std::string getDestinationDir();
+  std::string getDestinationDir();
+  std::string getDestinationFile(std::string p_url);
   void createDestinationDirIfRequired();
   void extractLevelsToDownloadFromXml(); /* throw exceptions */				      
 };
@@ -372,7 +306,6 @@ class WebThemes {
 
   /* download a theme or just update it */
   void upgrade(ThemeChoice *p_themeChoice);
-  bool isUpgradable(ThemeChoice *p_themeChoice);
 
   const std::vector<WebTheme*> &getAvailableThemes();
 

@@ -20,7 +20,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "Theme.h"
-#include "helpers/VExcept.h"
+#include "VExcept.h"
 #include "VXml.h"
 #include "VApp.h"
 #include "BuiltInFont.h"
@@ -67,10 +67,9 @@ void Theme::initDefaultFont() {
     
     /* Load it */
     m_pDefaultFontTexture = m_texMan.createTexture("default-font",(unsigned char *)pImgData,
-               256,256,true);
+						   256,256,true);
       
-    //keesj:todo:idem here we can not delete the image data pointer
-    //delete [] pImgData;
+    delete [] pImgData;
 }
 
 vapp::Texture* Theme::getDefaultFont() {
@@ -84,33 +83,33 @@ Theme::Theme() {
   m_pDefaultFontTexture = NULL;
 
   m_player = new BikerTheme(this,
-          THEME_PLAYER_BODY,
-          THEME_PLAYER_FRONT,
-          THEME_PLAYER_REAR,
-          THEME_PLAYER_WHEEL,
-          THEME_PLAYER_LOWERARM,
-          THEME_PLAYER_LOWERLEG,
-          THEME_PLAYER_TORSO,
-          THEME_PLAYER_UPPERARM,
-          THEME_PLAYER_UPPERLEG,
-          THEME_PLAYER_UGLYRIDERCOLOR,
-          THEME_PLAYER_UGLYWHEELCOLOR
-          );
+			    THEME_PLAYER_BODY,
+			    THEME_PLAYER_FRONT,
+			    THEME_PLAYER_REAR,
+			    THEME_PLAYER_WHEEL,
+			    THEME_PLAYER_LOWERARM,
+			    THEME_PLAYER_LOWERLEG,
+			    THEME_PLAYER_TORSO,
+			    THEME_PLAYER_UPPERARM,
+			    THEME_PLAYER_UPPERLEG,
+			    THEME_PLAYER_UGLYRIDERCOLOR,
+			    THEME_PLAYER_UGLYWHEELCOLOR
+			    );
 
 #if defined(ALLOW_GHOST)
   m_ghost = new BikerTheme(this,
-         THEME_GHOST_BODY,
-         THEME_GHOST_FRONT,
-         THEME_GHOST_REAR,
-         THEME_GHOST_WHEEL,
-         THEME_GHOST_LOWERARM,
-         THEME_GHOST_LOWERLEG,
-         THEME_GHOST_TORSO,
-         THEME_GHOST_UPPERARM,
-         THEME_GHOST_UPPERLEG,
-         THEME_GHOST_UGLYRIDERCOLOR,
-         THEME_GHOST_UGLYWHEELCOLOR
-         );
+			   THEME_GHOST_BODY,
+			   THEME_GHOST_FRONT,
+			   THEME_GHOST_REAR,
+			   THEME_GHOST_WHEEL,
+			   THEME_GHOST_LOWERARM,
+			   THEME_GHOST_LOWERLEG,
+			   THEME_GHOST_TORSO,
+			   THEME_GHOST_UPPERARM,
+			   THEME_GHOST_UPPERLEG,
+			   THEME_GHOST_UGLYRIDERCOLOR,
+			   THEME_GHOST_UGLYWHEELCOLOR
+			   );
 #endif
 }
 
@@ -124,12 +123,8 @@ Theme::~Theme() {
   m_texMan.unloadTextures();
 }
  
-std::string Theme::Name() const {
-  return m_name;
-}
-
-vapp::Texture* Theme::loadTexture(std::string p_fileName, bool bSmall, bool bClamp, vapp::FilterMode eFilterMode) {
-  return m_texMan.loadTexture(p_fileName.c_str(), bSmall, bClamp, eFilterMode);
+vapp::Texture* Theme::loadTexture(std::string p_fileName, bool bSmall, bool bClamp, bool bFilter) {
+  return m_texMan.loadTexture(p_fileName.c_str(), bSmall, bClamp, bFilter);
 }
 
 std::vector<std::string>* Theme::getRequiredFiles() {
@@ -137,10 +132,6 @@ std::vector<std::string>* Theme::getRequiredFiles() {
 }
 
 void Theme::load(std::string p_themeFile) {
-  vapp::Log(std::string("Loading theme from file " + p_themeFile).c_str());
-
-  cleanSprites(); /* removing existing sprites */
-
   vapp::XMLDocument v_ThemeXml;
   TiXmlDocument *v_ThemeXmlData;
   TiXmlElement *v_ThemeXmlDataElement;
@@ -153,7 +144,7 @@ void Theme::load(std::string p_themeFile) {
     v_ThemeXmlData = v_ThemeXml.getLowLevelAccess();
     
     if(v_ThemeXmlData == NULL) {
-      throw Exception("unable to analyze xml theme file");
+      throw vapp::Exception("unable to analyze xml theme file");
     }
     
     /* read the theme name */
@@ -164,14 +155,14 @@ void Theme::load(std::string p_themeFile) {
     }
     
     if(m_name == "") {
-      throw Exception("unnamed theme");
+      throw vapp::Exception("unnamed theme");
     }
     
     /* get sprites */
     loadSpritesFromXML(v_ThemeXmlDataElement);
 
-  } catch(Exception &e) {
-    throw Exception("unable to analyze xml theme file");
+  } catch(vapp::Exception &e) {
+    throw vapp::Exception("unable to analyze xml theme file");
   }
 }
 
@@ -212,8 +203,6 @@ void Theme::loadSpritesFromXML(TiXmlElement *p_ThemeXmlDataElement) {
       newTextureSpriteFromXML(pVarElem);
     } else if(v_spriteType == "UI") {
       newUISpriteFromXML(pVarElem);
-    } else if(v_spriteType == "EdgeEffect") {
-      newEdgeEffectSpriteFromXML(pVarElem);
     } else {
       vapp::Log("Warning: unknown type '%s' in theme file !", v_spriteType.c_str());
     }
@@ -224,7 +213,7 @@ Sprite* Theme::getSprite(enum SpriteType pSpriteType, std::string pName) {
   for(unsigned int i=0; i<m_sprites.size(); i++) {
     if(m_sprites[i]->getType() == pSpriteType) {
       if(m_sprites[i]->getName() == pName) {
-  return m_sprites[i];
+	return m_sprites[i];
       }
     }
   }
@@ -253,15 +242,15 @@ void Theme::newAnimationSpriteFromXML(TiXmlElement *pVarElem) {
   float global_delay   = 0.1;
 
   pc = pVarElem->Attribute("name");
-  if(pc == NULL) {vapp::Log("** Animation with no name"); return;}
+  if(pc == NULL) {return;}
   v_name = pc;
   
   pc = pVarElem->Attribute("fileBase");
-  if(pc == NULL) {vapp::Log("** Animation with no fileBase"); return;}
+  if(pc == NULL) {return;}
   v_fileBase = pc;
 
   pc = pVarElem->Attribute("fileExtension");
-  if(pc == NULL) {vapp::Log("** Animation with no fileExtension"); return;}
+  if(pc == NULL) {return;}
   v_fileExtension = pc;
 
   pc = pVarElem->Attribute("centerX");
@@ -325,11 +314,11 @@ void Theme::newBikerPartSpriteFromXML(TiXmlElement *pVarElem) {
   const char *pc;
 
   pc = pVarElem->Attribute("name");
-  if(pc == NULL) {vapp::Log("** BikerPart with no name"); return;}
+  if(pc == NULL) {return;}
   v_name = pc;
 
   pc = pVarElem->Attribute("file");
-  if(pc == NULL) {vapp::Log("** BikerPart with no file"); return;}
+  if(pc == NULL) {return;}
   v_fileName = pc;
 
   m_sprites.push_back(new BikerPartSprite(this, v_name, v_fileName));
@@ -339,46 +328,45 @@ void Theme::newBikerPartSpriteFromXML(TiXmlElement *pVarElem) {
 void Theme::newDecorationSpriteFromXML(TiXmlElement *pVarElem) {
   std::string v_name;
   std::string v_fileName;
-  float v_width;
-  float v_height;
-  float v_centerX;
-  float v_centerY;
+  std::string v_width;
+  std::string v_height;
+  std::string v_centerX;
+  std::string v_centerY;
   std::string v_blendmode = "default";
   const char *pc;
 
-  float global_centerX = 0.5;
-  float global_centerY = 0.5;
-  float global_width   = 1.0;
-  float global_height  = 1.0;
-
   pc = pVarElem->Attribute("name");
-  if(pc == NULL) {vapp::Log("** Sprite with no name"); return;}
+  if(pc == NULL) {return;}
   v_name = pc;
 
   pc = pVarElem->Attribute("file");
-  if(pc == NULL) {vapp::Log("** Sprite with no name"); return;}
+  if(pc == NULL) {return;}
   v_fileName = pc;
 
   pc = pVarElem->Attribute("width");
-  if(pc != NULL) {v_width = atof(pc);} else {v_width = global_width;}
+  if(pc == NULL) {return;}
+  v_width = pc;
 
   pc = pVarElem->Attribute("height");
-  if(pc != NULL) {v_height = atof(pc);} else {v_height = global_height;}
+  if(pc == NULL) {return;}
+  v_height = pc;
 
   pc = pVarElem->Attribute("centerX");
-  if(pc != NULL) {v_centerX = atof(pc);} else {v_centerX = global_centerX;}
+  if(pc == NULL) {return;}
+  v_centerX = pc;
 
   pc = pVarElem->Attribute("centerY");
-  if(pc != NULL) {v_centerY = atof(pc);} else {v_centerY = global_centerY;}
+  if(pc == NULL) {return;}
+  v_centerY = pc;
   
   pc = pVarElem->Attribute("blendmode");
   if(pc != NULL) v_blendmode = pc;
 
   m_sprites.push_back(new DecorationSprite(this, v_name, v_fileName,
-					   v_width,
-					   v_height,
-					   v_centerX,
-					   v_centerY,
+					   atof(v_width.c_str()),
+					   atof(v_height.c_str()),
+					   atof(v_centerX.c_str()),
+					   atof(v_centerY.c_str()),
 					   strToBlendMode(v_blendmode)
 					   ));
   m_requiredFiles.push_back(THEME_DECORATION_SPRITE_FILE_DIR + std::string("/") + v_fileName);
@@ -390,44 +378,15 @@ void Theme::newEffectSpriteFromXML(TiXmlElement *pVarElem) {
   const char *pc;
 
   pc = pVarElem->Attribute("name");
-  if(pc == NULL) {vapp::Log("** Effect with no name"); return;}
+  if(pc == NULL) {return;}
   v_name = pc;
 
   pc = pVarElem->Attribute("file");
-  if(pc == NULL) {vapp::Log("** Effect with no file"); return;}
+  if(pc == NULL) {return;}
   v_fileName = pc;
 
   m_sprites.push_back(new EffectSprite(this, v_name, v_fileName));
   m_requiredFiles.push_back(THEME_EFFECT_SPRITE_FILE_DIR + std::string("/") + v_fileName);
-}
-
-void Theme::newEdgeEffectSpriteFromXML(TiXmlElement *pVarElem) {
-  std::string v_name;
-  std::string v_fileName;
-  std::string v_scale;
-  std::string v_depth;
-  const char *pc;
-
-  pc = pVarElem->Attribute("name");
-  if(pc == NULL) {vapp::Log("** Edge with no name"); return;}
-  v_name = pc;
-
-  pc = pVarElem->Attribute("file");
-  if(pc == NULL) {vapp::Log("** Edge with no file"); return;}
-  v_fileName = pc;
-
-  pc = pVarElem->Attribute("scale");
-  if(pc == NULL) {vapp::Log("** Edge with no scale"); return;}
-  v_scale = pc;
-
-  pc = pVarElem->Attribute("depth");
-  if(pc == NULL) {vapp::Log("Edge with no depth"); return;}
-  v_depth = pc;
-
-  m_sprites.push_back(new EdgeEffectSprite(this, v_name, v_fileName,
-             atof(v_scale.c_str()),
-             atof(v_depth.c_str())));
-  m_requiredFiles.push_back(THEME_EDGEEFFECT_SPRITE_FILE_DIR + std::string("/") + v_fileName);
 }
 
 void Theme::newFontSpriteFromXML(TiXmlElement *pVarElem) {
@@ -436,11 +395,11 @@ void Theme::newFontSpriteFromXML(TiXmlElement *pVarElem) {
   const char *pc;
 
   pc = pVarElem->Attribute("name");
-  if(pc == NULL) {vapp::Log("** Font with no name"); return;}
+  if(pc == NULL) {return;}
   v_name = pc;
 
   pc = pVarElem->Attribute("file");
-  if(pc == NULL) {vapp::Log("Font with no file"); return;}
+  if(pc == NULL) {return;}
   v_fileName = pc;
 
   m_sprites.push_back(new FontSprite(this, v_name, v_fileName));
@@ -453,11 +412,11 @@ void Theme::newMiscSpriteFromXML(TiXmlElement *pVarElem) {
   const char *pc;
 
   pc = pVarElem->Attribute("name");
-  if(pc == NULL) {vapp::Log("** Misc with no name"); return;}
+  if(pc == NULL) {return;}
   v_name = pc;
 
   pc = pVarElem->Attribute("file");
-  if(pc == NULL) {vapp::Log("** Misc with no file"); return;}
+  if(pc == NULL) {return;}
   v_fileName = pc;
 
   m_sprites.push_back(new MiscSprite(this, v_name, v_fileName));
@@ -470,11 +429,11 @@ void Theme::newUISpriteFromXML(TiXmlElement *pVarElem) {
   const char *pc;
 
   pc = pVarElem->Attribute("name");
-  if(pc == NULL) {vapp::Log("** UI with no name"); return;}
+  if(pc == NULL) {return;}
   v_name = pc;
 
   pc = pVarElem->Attribute("file");
-  if(pc == NULL) {vapp::Log("** UI with no file"); return;}
+  if(pc == NULL) {return;}
   v_fileName = pc;
 
   m_sprites.push_back(new UISprite(this, v_name, v_fileName));
@@ -487,11 +446,11 @@ void Theme::newTextureSpriteFromXML(TiXmlElement *pVarElem) {
   const char *pc;
 
   pc = pVarElem->Attribute("name");
-  if(pc == NULL) {vapp::Log("** Texture with no name"); return;}
+  if(pc == NULL) {return;}
   v_name = pc;
 
   pc = pVarElem->Attribute("file");
-  if(pc == NULL) {vapp::Log("** Texture with no file"); return;}
+  if(pc == NULL) {return;}
   v_fileName = pc;
 
   m_sprites.push_back(new TextureSprite(this, v_name, v_fileName));
@@ -516,22 +475,26 @@ Sprite::Sprite(Theme* p_associated_theme, std::string v_name) {
 Sprite::~Sprite() {
 }
 
-vapp::Texture* Sprite::getTexture(bool bSmall, bool bClamp, vapp::FilterMode eFilterMode) {
+vapp::Texture* Sprite::getTexture(bool bSmall, bool bClamp, bool bFilter) {
   vapp::Texture* v_currentTexture;
 
   v_currentTexture = getCurrentTexture();
   if(v_currentTexture == NULL) {
     v_currentTexture = m_associated_theme->loadTexture(getCurrentTextureFileName(),
-                   bSmall,
-                   bClamp,
-                   eFilterMode);
+						       bSmall,
+						       bClamp,
+						       bFilter);
     if(v_currentTexture == NULL) { 
-      throw Exception("Unable to load texture '" + getCurrentTextureFileName() + "'");
+      throw vapp::Exception("Unable to load texture '" + getCurrentTextureFileName() + "'");
     }
     setCurrentTexture(v_currentTexture);
   }
 
   return v_currentTexture;
+}
+
+std::string Sprite::getName() {
+  return m_name;
 }
 
 SpriteBlendMode Sprite::getBlendMode() {
@@ -551,11 +514,14 @@ AnimationSprite::AnimationSprite(Theme* p_associated_theme, std::string p_name, 
   m_fileBase      = p_fileBase;
   m_fileExtension = p_fileExtention;
   m_fFrameTime    = 0.0;
-  m_type          = SPRITE_TYPE_ANIMATION;
 }
 
 AnimationSprite::~AnimationSprite() {
   cleanFrames();
+}
+
+enum SpriteType AnimationSprite::getType() {
+  return SPRITE_TYPE_ANIMATION;
 }
 
 std::string AnimationSprite::getFileDir() {
@@ -619,11 +585,11 @@ void AnimationSprite::cleanFrames() {
 }
 
 AnimationSpriteFrame::AnimationSpriteFrame(AnimationSprite *p_associatedAnimationSprite,
-             float p_centerX,
-             float p_centerY,
-             float p_width,
-             float p_height,
-             float p_delay
+					   float p_centerX,
+					   float p_centerY,
+					   float p_width,
+					   float p_height,
+					   float p_delay
     ) {
   m_associatedAnimationSprite = p_associatedAnimationSprite;
   m_texture = NULL;
@@ -666,7 +632,6 @@ float AnimationSpriteFrame::getDelay() const {
 }
 
 BikerPartSprite::BikerPartSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
-  m_type = SPRITE_TYPE_BIKERPART;
 }
 
 BikerPartSprite::~BikerPartSprite() {
@@ -676,17 +641,24 @@ std::string BikerPartSprite::getFileDir() {
   return THEME_BIKERPART_SPRITE_FILE_DIR;
 }
 
+enum SpriteType BikerPartSprite::getType() {
+  return SPRITE_TYPE_BIKERPART;
+}
+
 DecorationSprite::DecorationSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName, float p_width, float p_height, float p_centerX, float p_centerY, SpriteBlendMode BlendMode) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
   m_width   = p_width;
   m_height  = p_height;
   m_centerX = p_centerX;
   m_centerY = p_centerY;
-  m_type    = SPRITE_TYPE_DECORATION;
   
   setBlendMode(BlendMode);
 }
 
 DecorationSprite::~DecorationSprite() {
+}
+
+enum SpriteType DecorationSprite::getType() {
+  return SPRITE_TYPE_DECORATION;
 }
 
 std::string DecorationSprite::getFileDir() {
@@ -710,42 +682,27 @@ float DecorationSprite::getCenterY() {
 }
 
 EffectSprite::EffectSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
-  m_type = SPRITE_TYPE_EFFECT;
 }
 
 EffectSprite::~EffectSprite() {
+}
+
+enum SpriteType EffectSprite::getType() {
+  return SPRITE_TYPE_EFFECT;
 }
 
 std::string EffectSprite::getFileDir() {
   return THEME_EFFECT_SPRITE_FILE_DIR;
 }
 
-EdgeEffectSprite::EdgeEffectSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename, float p_fScale, float p_fDepth) : SimpleFrameSprite(p_associated_theme, p_name, p_filename) {
-  m_fScale = p_fScale;
-  m_fDepth = p_fDepth;
-  m_type   = SPRITE_TYPE_EDGEEFFECT;
-}
-
-EdgeEffectSprite::~EdgeEffectSprite() {
-}
-
-std::string EdgeEffectSprite::getFileDir() {
-  return THEME_EDGEEFFECT_SPRITE_FILE_DIR;
-}
-
-float EdgeEffectSprite::getScale() const {
-  return m_fScale;
-}
-
-float EdgeEffectSprite::getDepth() const {
-  return m_fDepth;
-}
-
 FontSprite::FontSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
-  m_type = SPRITE_TYPE_FONT;
 }
 
 FontSprite::~FontSprite() {
+}
+
+enum SpriteType FontSprite::getType() {
+  return SPRITE_TYPE_FONT;
 }
 
 std::string FontSprite::getFileDir() {
@@ -753,10 +710,13 @@ std::string FontSprite::getFileDir() {
 }
 
 MiscSprite::MiscSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
-  m_type = SPRITE_TYPE_MISC;
 }
 
 MiscSprite::~MiscSprite() {
+}
+
+enum SpriteType MiscSprite::getType() {
+  return SPRITE_TYPE_MISC;
 }
 
 std::string MiscSprite::getFileDir() {
@@ -764,10 +724,13 @@ std::string MiscSprite::getFileDir() {
 }
 
 UISprite::UISprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
-  m_type = SPRITE_TYPE_UI;
 }
 
 UISprite::~UISprite() {
+}
+
+enum SpriteType UISprite::getType() {
+  return SPRITE_TYPE_UI;
 }
 
 std::string UISprite::getFileDir() {
@@ -775,10 +738,13 @@ std::string UISprite::getFileDir() {
 }
 
 TextureSprite::TextureSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
-  m_type = SPRITE_TYPE_TEXTURE;
 }
 
 TextureSprite::~TextureSprite() {
+}
+
+enum SpriteType TextureSprite::getType() {
+  return SPRITE_TYPE_TEXTURE;
 }
 
 std::string TextureSprite::getFileDir() {
@@ -806,28 +772,28 @@ void SimpleFrameSprite::setCurrentTexture(vapp::Texture *p_texture) {
 }
 
 BikerTheme::BikerTheme(Theme* p_associated_theme,
-           std::string p_Body,
-           std::string p_Front,
-           std::string p_Rear,
-           std::string p_Wheel,
-           std::string p_LowerArm,
-           std::string p_LowerLeg,
-           std::string p_Torso,
-           std::string p_UpperArm,
-           std::string p_UpperLeg,
-           vapp::Color p_UglyRiderColor,
-           vapp::Color p_UglyWheelColor
-           ) {
+		       std::string p_Body,
+		       std::string p_Front,
+		       std::string p_Rear,
+		       std::string p_Wheel,
+		       std::string p_LowerArm,
+		       std::string p_LowerLeg,
+		       std::string p_Torso,
+		       std::string p_UpperArm,
+		       std::string p_UpperLeg,
+		       vapp::Color p_UglyRiderColor,
+		       vapp::Color p_UglyWheelColor
+		       ) {
   m_associated_theme = p_associated_theme;
-  m_Body           = p_Body;
-  m_Front          = p_Front;
-  m_Rear           = p_Rear;
-  m_Wheel          = p_Wheel; 
-  m_LowerArm       = p_LowerArm;
-  m_LowerLeg       = p_LowerLeg;
-  m_Torso          = p_Torso;
-  m_UpperArm       = p_UpperArm;
-  m_UpperLeg       = p_UpperLeg;
+  m_Body     	     = p_Body;
+  m_Front    	     = p_Front;
+  m_Rear     	     = p_Rear;
+  m_Wheel    	     = p_Wheel; 
+  m_LowerArm 	     = p_LowerArm;
+  m_LowerLeg 	     = p_LowerLeg;
+  m_Torso    	     = p_Torso;
+  m_UpperArm 	     = p_UpperArm;
+  m_UpperLeg 	     = p_UpperLeg;
 
   m_UglyRiderColor = p_UglyRiderColor;
   m_UglyWheelColor = p_UglyWheelColor;
@@ -891,9 +857,9 @@ bool ThemeChoicer::ExistThemeName(std::string p_themeName) {
 
 #if defined(SUPPORT_WEBACCESS)
   ThemeChoicer::ThemeChoicer(vapp::WWWAppInterface *p_WebApp,
-           const ProxySettings *p_proxy_settings) {                    
+			     const ProxySettings *p_proxy_settings) {
 #else
-  ThemeChoicer::ThemeChoicer(void) {  
+  ThemeChoicer::ThemeChoicer() {  
 #endif
 
 #if defined(SUPPORT_WEBACCESS)
@@ -952,15 +918,36 @@ void ThemeChoicer::initList() {
   std::vector<std::string> v_themesFiles = vapp::FS::findPhysFiles(std::string(THEMES_DIRECTORY) + std::string("/*.xml"), true);
   std::string v_name;
 
+  /* first, load theme which are in the user dir because, a same theme can be stored
+     in files having different name
+  */
   for(unsigned int i=0; i<v_themesFiles.size(); i++) {
     try {
-			v_name = getThemeNameFromFile(v_themesFiles[i]);
-			if(ExistThemeName(v_name) == false) {
-				m_choices.push_back(new ThemeChoice(v_name, v_themesFiles[i], true));
-			} else {
-				vapp::Log(std::string("Theme " + v_name + " is present several times").c_str());
-			}
-    } catch(Exception &e) {
+      if(vapp::FS::isInUserDir(v_themesFiles[i])) {
+	v_name = getThemeNameFromFile(v_themesFiles[i]);
+	if(ExistThemeName(v_name) == false) {
+	  m_choices.push_back(new ThemeChoice(v_name, v_themesFiles[i], true));
+	} else {
+	  vapp::Log(std::string("Theme " + v_name + " is present several times").c_str());
+	}
+      }
+    } catch(vapp::Exception &e) {
+      /* anyway, give up this theme */
+    }
+  }
+
+  /* load the other theme from not the user directory */
+  for(unsigned int i=0; i<v_themesFiles.size(); i++) {
+    try {
+      if(vapp::FS::isInUserDir(v_themesFiles[i]) == false) {
+	v_name = getThemeNameFromFile(v_themesFiles[i]);
+	if(ExistThemeName(v_name) == false) {
+	  m_choices.push_back(new ThemeChoice(v_name, v_themesFiles[i], true));
+	} else {
+	  vapp::Log(std::string("Theme " + v_name + " is present several times").c_str());
+	}
+      }
+    } catch(vapp::Exception &e) {
       /* anyway, give up this theme */
     }
   }
@@ -973,29 +960,29 @@ void ThemeChoicer::initList() {
         
     for(unsigned int i=0; i<v_availableThemes.size(); i++) {
       if(ExistThemeName(v_availableThemes[i]->getName()) == false) {
-  /* this theme is avaible */
-  m_choices.push_back(new ThemeChoice(v_availableThemes[i]->getName(), "", false));
+	/* this theme is avaible */
+	m_choices.push_back(new ThemeChoice(v_availableThemes[i]->getName(), "", false));
       } else {
-  /* the theme already exists ; check sum */
-  for(unsigned int j=0; j<m_choices.size(); j++) {
+	/* the theme already exists ; check sum */
+	for(unsigned int j=0; j<m_choices.size(); j++) {
 
-    if(m_choices[j]->ThemeName() == v_availableThemes[i]->getName()) {
-      std::string v_localMd5;
-      try {
-        v_localMd5 = md5file(m_choices[j]->ThemeFile());
-      } catch(Exception &e) {
-        v_localMd5 = "";
-      }
-      
-      if(v_localMd5 != v_availableThemes[i]->getSum()) {
-        /* this theme can be updated */
-        m_choices[j]->setRequireUpdate(true);
+	  if(m_choices[j]->ThemeName() == v_availableThemes[i]->getName()) {
+	    std::string v_localMd5;
+	    try {
+	      v_localMd5 = md5file(m_choices[j]->ThemeFile());
+	    } catch(vapp::Exception &e) {
+	      v_localMd5 = "";
+	    }
+	    
+	    if(v_localMd5 != v_availableThemes[i]->getSum()) {
+	      /* this theme can be updated */
+	      m_choices[j]->setRequireUpdate(true);
+	    }
+	  }
+	}
       }
     }
-  }
-      }
-    }
-  } catch(Exception &e) {
+  } catch(vapp::Exception &e) {
     /* hum, sorry, you will not see avaible theme to download */
   }
 #endif
@@ -1013,7 +1000,7 @@ std::string ThemeChoicer::getThemeNameFromFile(std::string p_themeFile) {
   v_ThemeXmlData = v_ThemeXml.getLowLevelAccess();
   
   if(v_ThemeXmlData == NULL) {
-    throw Exception("error : unable analyse xml theme file");
+    throw vapp::Exception("error : unable analyse xml theme file");
   }
   
   /* read the theme name */
@@ -1024,7 +1011,7 @@ std::string ThemeChoicer::getThemeNameFromFile(std::string p_themeFile) {
   }
   
   if(m_name == "") {
-    throw Exception("error : the theme has no name !");
+    throw vapp::Exception("error : the theme has no name !");
   }
   
   return m_name;
@@ -1040,19 +1027,15 @@ void ThemeChoicer::updateFromWWW() {
   initList();
 }
 
-bool ThemeChoicer::isUpdatableThemeFromWWW(ThemeChoice* pThemeChoice) {
-  return m_webThemes->isUpgradable(pThemeChoice);
-}
-
 void ThemeChoicer::updateThemeFromWWW(ThemeChoice* pThemeChoice) {
   m_webThemes->upgrade(pThemeChoice);
 }
 #endif
 
 ThemeChoice::ThemeChoice(std::string p_themeName, std::string p_themeFile, bool p_hosted) {
-  m_themeName     = p_themeName;
-  m_themeFile     = p_themeFile;
-  m_hosted        = p_hosted;
+  m_themeName 	  = p_themeName;
+  m_themeFile 	  = p_themeFile;
+  m_hosted    	  = p_hosted;
   m_requireUpdate = false;
 }
 

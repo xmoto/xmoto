@@ -24,79 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "Replay.h"
 
-#define CURRENT_REPLAY_INDEX_FILE_VERSION 2
-
 namespace vapp {
-
-  void ReplayList::initFromCache() {
-    int v_nbReplays;
-    std::string v_replayName;
-
-    clear();
-
-    vapp::FileHandle *pfh = vapp::FS::openIFile(ReplayIndexFileName());
-    if(pfh == NULL) {
-      throw Exception((std::string("Unable to open file ") + ReplayIndexFileName()).c_str());
-    }
-
-    try {
-      int v_version = vapp::FS::readInt_LE(pfh); /* version */
-      if(v_version != CURRENT_REPLAY_INDEX_FILE_VERSION) {
-	throw Exception("Invalid replay index file version");
-      }
-      v_nbReplays = vapp::FS::readInt_LE(pfh);
-      for(int i=0; i<v_nbReplays; i++) {
-	try {
-	  ReplayInfo *pRpl  = new ReplayInfo;
-	  pRpl->Level       = vapp::FS::readString(pfh);
-	  pRpl->Name        = vapp::FS::readString(pfh);
-	  pRpl->Player      = vapp::FS::readString(pfh);
-	  pRpl->nTimeStamp  = vapp::FS::readInt_LE(pfh);
-	  pRpl->fFrameRate  = vapp::FS::readFloat_LE(pfh);
-	  pRpl->fFinishTime = vapp::FS::readFloat_LE(pfh);
-	  m_Replays.push_back(pRpl);
-	} catch(Exception &e) {
-	}
-      }
-    } catch(Exception &e) {
-      clear();
-      vapp::FS::closeFile(pfh);
-      throw e;
-    }
-    vapp::FS::closeFile(pfh);
-  }
-
-  void ReplayList::saveCache() {
-    /* for windows : your must remove the file before create it */
-    remove(ReplayIndexFileName().c_str());
-    
-    FileHandle *pfh = FS::openOFile(ReplayIndexFileName());
-    if(pfh == NULL) {
-      throw Exception((std::string("Unable to open file ") + ReplayIndexFileName()).c_str());
-      return;
-    }
-    
-    try {
-      vapp::FS::writeInt_LE(pfh, CURRENT_REPLAY_INDEX_FILE_VERSION); /* version */
-      vapp::FS::writeInt_LE(pfh, m_Replays.size());
-      for(int i=0; i<m_Replays.size(); i++) {
-	vapp::FS::writeString(pfh,   m_Replays[i]->Level);
-	vapp::FS::writeString(pfh,   m_Replays[i]->Name);
-	vapp::FS::writeString(pfh,   m_Replays[i]->Player);
-	vapp::FS::writeInt_LE(pfh,   m_Replays[i]->nTimeStamp);
-	vapp::FS::writeFloat_LE(pfh, m_Replays[i]->fFrameRate);
-	vapp::FS::writeFloat_LE(pfh, m_Replays[i]->fFinishTime);
-      }
-    } catch(Exception &e) {
-      vapp::FS::closeFile(pfh);
-      throw e;
-    }
-    vapp::FS::closeFile(pfh);
-  }
-
-  std::string ReplayList::ReplayIndexFileName() {
-    return vapp::FS::getUserDir() + "/" + "Replays/replays.index";
-  }
 
   void ReplayList::initFromDir() {
     this->clear();
@@ -105,37 +33,31 @@ namespace vapp {
     ReplayFiles = FS::findPhysFiles("Replays/*.rpl");
 
     for(unsigned int i=0; i<ReplayFiles.size(); i++) {
-      addReplay(FS::getFileBaseName(ReplayFiles[i]), false);
+      addReplay(FS::getFileBaseName(ReplayFiles[i]));
     }
-    saveCache();
   }
 
-  void ReplayList::addReplay(const std::string &Replay, bool i_saveCache) {
+  void ReplayList::addReplay(const std::string &Replay) {
     ReplayInfo* rplInfos;
 
-    if(FS::getFileBaseName(Replay) == "Latest") {
-      return;
-    }
-
-    /* Already got this replay? */
-    for(unsigned int i=0;i<m_Replays.size();i++) {
-      if(m_Replays[i]->Name == Replay) {
-	/* Yeah */
-	return;
+    if(FS::getFileBaseName(Replay) != "Latest") {    
+      /* Already got this replay? */
+      for(unsigned int i=0;i<m_Replays.size();i++) {
+        if(m_Replays[i]->Name == Replay) {
+          /* Yeah */
+          return;
+        }
       }
-    }
     
-    rplInfos = Replay::getReplayInfos(Replay);
-    if(rplInfos != NULL) {
-      m_Replays.push_back(rplInfos);
-    }
-
-    if(i_saveCache) {
-      saveCache();
+      rplInfos = Replay::getReplayInfos(Replay);
+      if(rplInfos != NULL) {
+	      m_Replays.push_back(rplInfos);
+      }
+      
     }
   }
 
-  void ReplayList::delReplay(const std::string &Replay, bool i_saveCache) {
+  void ReplayList::delReplay(const std::string &Replay) {
     for(unsigned int i=0;i<m_Replays.size();i++) {
       if(m_Replays[i]->Name == Replay) {
 	delete m_Replays[i];
@@ -143,20 +65,16 @@ namespace vapp {
 	break;
       }
     }
-
-    if(i_saveCache) {
-      saveCache();
-    }
   }
 
   /*===========================================================================
   Clean up stuff
   ===========================================================================*/
-  void ReplayList::clear(bool i_saveCache) {
+  void ReplayList::clear(void) {
     for(unsigned int i=0;i<m_Replays.size();i++) {
       delete m_Replays[i];
     }
-    m_Replays.clear();
+    m_Replays.clear();     
   }
   
   /*===========================================================================
@@ -179,5 +97,5 @@ namespace vapp {
     return Ret;
   }
 
-}
+};
 

@@ -41,7 +41,7 @@ namespace vapp {
       static unsigned int _ReflectCRC32(unsigned int nData,unsigned char cBits);
   };
   
-}
+};
 
 #endif
 

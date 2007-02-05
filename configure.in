@@ -2,63 +2,19 @@ AC_INIT(src/GameMain.cpp)
 
 dnl otherwise autoconf whines
 AC_CANONICAL_TARGET()
-AM_INIT_AUTOMAKE(xmoto,0.2.5)
+AM_INIT_AUTOMAKE(xmoto,0.2.0)
 
+AC_PROG_CC
 AC_PROG_CXX
-AC_PROG_CPP
 AC_PROG_INSTALL
-
-AC_C_BIGENDIAN(AC_DEFINE([XMOTO_BIG_ENDIAN]),
-  AC_DEFINE([XMOTO_LITTLE_ENDIAN]))
-
-dnl libz before png!
-AC_CHECK_LIB(z, uncompress, [], [AC_MSG_ERROR(zlib required)])
 
 AC_CHECK_LIB(jpeg, jpeg_CreateCompress, [], [AC_MSG_ERROR(libjpeg required)])
 AC_CHECK_LIB(png, png_read_image, [], [AC_MSG_ERROR(libpng required)])
-
-if test "$target_os" != "mingw32" # on windows, include libbz2
-then
-  AC_CHECK_LIB(bz2, BZ2_bzReadOpen, [], [AC_MSG_ERROR(libbz2 required)])
-fi
-
-if test "$target_os" = "mingw32" # others libraries required by mingw32
-then
-  MINGW32_LIBS="-lmingw32 -lSDLmain -lSDL -lopengl32 -mwindows xmoto_icone.o" # -mwindows to avoid dos window
-  AC_SUBST([MINGW32_LIBS])
-fi
-AM_CONDITIONAL([WIN32], test "$target_os" = "mingw32")
-
+AC_CHECK_LIB(z, uncompress, [], [AC_MSG_ERROR(zlib required)])
+AC_CHECK_LIB(bz2, BZ2_bzReadOpen, [], [AC_MSG_ERROR(libbz2 required)])
 AM_PATH_SDL(1.0.0, [], [AC_MSG_ERROR(SDL required)])
-AC_SDL_CHECK_LIB(SDL_mixer, Mix_OpenAudio, [], [AC_MSG_ERROR(SDL_mixer required)])
-
-dnl Put OpenGL
-AC_ARG_WITH([renderer-openGl],
-  [AS_HELP_STRING([--with-renderer-openGl=0|1],
-    [RendererOpenGl])],
-  [USE_OPENGL="$withval"],
-  [USE_OPENGL="1"]
-)
-AC_SUBST([USE_OPENGL])
-
-if test "$USE_OPENGL" = "1"
-then
-  AX_CHECK_GL()
-fi
-
-dnl Put SDL_gfx
-AC_ARG_WITH([renderer-sdlGfx],
-  [AS_HELP_STRING([--with-renderer-sdlGfx=0|1],
-    [RendererSdlGfx])],
-  [USE_SDLGFX="$withval"],
-  [USE_SDLGFX="0"]
-)
-AC_SUBST([USE_SDLGFX])
-
-if test "$USE_SDLGFX" = "1"
-then
-  AC_SDL_CHECK_LIB(SDL_gfx, pixelColor, [], [AC_MSG_ERROR(SDL_gfx required)])
-fi
+AC_CHECK_LIB(SDL_mixer, Mix_OpenAudio, [], [AC_MSG_ERROR(SDL_mixer required)])
+AX_CHECK_GL()
 
 AC_SEARCH_LIBS(lua_pushboolean,lua lua5.1 lua50, [], [AC_MSG_ERROR(liblua5.1, liblua50, or liblua required)])
 AC_SEARCH_LIBS(luaopen_math,lualib lualib5.1 lualib50, [], [AC_MSG_ERROR(liblualib5.1, liblualib50, or liblualib required)])
@@ -85,113 +41,9 @@ AC_CHECK_HEADER(lua.h,AC_DEFINE(HAVE_LUA_H),[])
 AC_CHECK_HEADER(lauxlib.h,AC_DEFINE(HAVE_LAUXLIB_H),[])
 AC_CHECK_HEADER(lualib.h,AC_DEFINE(HAVE_LUALIB_H),[])
 
-AC_LANG_PUSH([C++])
-
-if test "$target_os" = "mingw32" # others libraries required by mingw32
-then
-  AC_SEARCH_LIBS(dJointAttach,ode, [], [AC_MSG_ERROR(libode required)], -lstdc++ -mwindows)
-else
-  AC_SEARCH_LIBS(dJointAttach,ode, [], [AC_MSG_ERROR(libode required)], -lstdc++)
-fi
-
-AC_LANG_POP()
+dnl AC_SEARCH_LIBS(dJointAttach,ode ode0, [], [AC_MSG_ERROR(libode or libode0 required)])
+AC_SEARCH_LIBS(dJointAttach,ode ode0, [], [AC_MSG_ERROR(libode or libode0 required)], -lstdc++)
 
 AC_CHECK_LIB(curl, curl_easy_init,[],[AC_MSG_WARN(online highscores disabled)])
 
-ALL_LINGUAS="fr de es ca sk"
-AM_GNU_GETTEXT()
-
-dnl Put LOCALESDIR in makefiles
-AC_ARG_WITH([localesdir],
-  [AS_HELP_STRING([--with-localesdir=DIR],
-    [Override the default directory for locales])],
-  [LOCALESDIR="$withval"],
-  [LOCALESDIR="$datadir/locale"]
-)
-AC_SUBST([LOCALESDIR])
-
-dnl Put GAMEDATADIR in makefiles
-AC_ARG_WITH([gamedatadir],
-  [AS_HELP_STRING([--with-gamedatadir=DIR],
-    [Override the default directory for game data])],
-  [GAMEDATADIR="$withval"],
-  [GAMEDATADIR="$datadir/$PACKAGE"]
-)
-AC_SUBST([GAMEDATADIR])
-
-dnl Put ALLOW_WEBACCESS in makefiles
-AC_ARG_WITH([enable-www],
-  [AS_HELP_STRING([--with-enable-www=0|1],
-    [Enable www])],
-  [ALLOW_WEBACCESS="$withval"],
-  [ALLOW_WEBACCESS="1"]
-)
-AC_SUBST([ALLOW_WEBACCESS])
-
-dnl Put ALLOW_ZOOMING in makefiles
-AC_ARG_WITH([enable-zoom],
-  [AS_HELP_STRING([--with-enable-zoom=0|1],
-    [Enable zoom])],
-  [ALLOW_ZOOMING="$withval"],
-  [ALLOW_ZOOMING="0"]
-)
-AC_SUBST([ALLOW_ZOOMING])
-
-dnl Can't build xmoto.bin if we're cross-compiling
-AM_CONDITIONAL(CROSS_COMPILING,test "$cross_compiling" = yes)
-
-AC_OUTPUT(Makefile       \
-          bin/Makefile   \
-          po/Makefile.in \
-          src/Makefile   \
-          extra/Makefile         \
-         )
-
-# display is something is missing
-
-function displayRequirement {
-  STUFF="$1"
-  VAR="$2"
-  GOOD_RES="$3"
-  REQ="$4"
-
-  if test "$VAR" = "$GOOD_RES"; then
-    printf "| %15s | %10s | %51s |\n" "$STUFF" "enabled" "($REQ)"
-  else
-    printf "| %15s | %10s | %51s |\n" "$STUFF" "disabled" "($REQ missing)"
-  fi
-}
-
-### enable www ?
-if test -z "$with_enable_www"
-then
-  with_enable_www=1
-fi
-
-if test "$ac_cv_lib_curl_curl_easy_init" = "yes" -a "$with_enable_www" = "1"
-then
-  v_enable_www=yes
-  v_enable_www_reason="libcurl"
-else
-  v_enable_www=no
-  if test "$ac_cv_lib_curl_curl_easy_init" = "yes"
-  then
-    v_enable_www_reason="--with-enable-www=1"
-  else
-    v_enable_www_reason="libcurl"
-  fi
-fi
-
-echo
-echo   "+-----------------+------------+-----------------------------------------------------+"
-displayRequirement "WWW stuff" "$v_enable_www" "yes" "$v_enable_www_reason"
-echo   "+-----------------+------------+-----------------------------------------------------+"
-displayRequirement "Locales" "$gt_cv_func_gnugettext1_libc" "yes" "gettext"
-echo   "+-----------------+------------+-----------------------------------------------------+"
-displayRequirement "Zoom" "$with_enable_zoom" "1" "--with-enable-zoom=1"
-echo   "+-----------------+------------+-----------------------------------------------------+"
-displayRequirement "OpenGl" "$USE_OPENGL" "1" "--with-renderer-openGl=1"
-echo   "+-----------------+------------+-----------------------------------------------------+"
-displayRequirement "sdlGfx" "$USE_SDLGFX" "1" "--with-renderer-sdlGfx=1 (unsafe)"
-echo   "+-----------------+------------+-----------------------------------------------------+"
-echo "target os: ""$target_os"
+AC_OUTPUT(Makefile bin/Makefile)

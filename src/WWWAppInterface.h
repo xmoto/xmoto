@@ -67,7 +67,7 @@ namespace vapp {
     bool m_cancel_as_soon_as_possible;
   };
 
-}
+};
 
 #endif
 

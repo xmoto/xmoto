@@ -1,10 +1,6 @@
 #ifndef __SWAPENDIAN_H__
 #define __SWAPENDIAN_H__
 
-#include <iterator>
-#include "VCommon.h"	// For XMOTO_LITTLE_ENDIAN
-#include "MotoGame.h"	// For SerializedBikeState
-
 class SwapEndian {
  public:
   static bool bigendien;
@@ -15,24 +11,10 @@ class SwapEndian {
   static short	LittleShort (short  s) {return _LittleShort(s);	}
   static int	BigLong     (int    l) {return _BigLong(l);    	}
   static int	LittleLong  (int    l) {return _LittleLong(l); 	}
-  static float 	BigFloat    (float  f) {return _BigFloat(f);   	}
+  static float	BigFloat    (float  f) {return _BigFloat(f);   	}
   static float	LittleFloat (float  f) {return _LittleFloat(f);	}
   static double	BigDouble   (double d) {return _BigDouble(d);   }
   static double	LittleDouble(double d) {return _LittleDouble(d);}
-  
-  static void   BigSerializedBikeState   (vapp::SerializedBikeState& sbs)
-    { _BigSerializedBikeState   (sbs); }
-  static void   LittleSerializedBikeState(vapp::SerializedBikeState& sbs)
-    { _LittleSerializedBikeState(sbs); }
-  
-#ifdef XMOTO_LITTLE_ENDIAN
-  template <typename _T> static _T LittleIter(_T p, int) { return p; }
-#else
-  template <typename _T>
-  static std::reverse_iterator<_T> LittleIter(_T p, int len) {
-  	return std::reverse_iterator<_T>(p + len);
-  }
-#endif
   
  private:
   static short	(*_BigShort)    (short 	s);
@@ -43,8 +25,6 @@ class SwapEndian {
   static float	(*_LittleFloat) (float 	f);
   static double	(*_BigDouble)   (double d);
   static double	(*_LittleDouble)(double d);
-  static void	(*_BigSerializedBikeState)   (vapp::SerializedBikeState& sbs);
-  static void	(*_LittleSerializedBikeState)(vapp::SerializedBikeState& sbs);
 };
 
 #endif /* __SWAPENDIAN_H__ */

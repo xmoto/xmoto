@@ -34,23 +34,13 @@ namespace vapp {
   void UIEdit::paint(void) {
     bool bDisabled = isDisabled();
     bool bActive = isActive();
-    std::string v_textToDisplay;    
-
-    if(m_hideText) {
-      v_textToDisplay = "";
-      for(int i=0; i<getCaption().length(); i++) {
-	v_textToDisplay.append("*");
-      }
-    } else {
-      v_textToDisplay = getCaption();
-    }
-
+    
     /* Where should cursor be located? */
     int nCursorOffset = 0;
     int nCursorWidth = 0;
     if(m_nCursorPos<0) m_nCursorPos=0;
-    if(m_nCursorPos>v_textToDisplay.length()) m_nCursorPos=v_textToDisplay.length();
-    std::string s = v_textToDisplay.substr(0,m_nCursorPos);
+    if(m_nCursorPos>getCaption().length()) m_nCursorPos=getCaption().length();
+    std::string s = getCaption().substr(0,m_nCursorPos);
 
     int nMinX,nMinY,nMaxX,nMaxY;
     if(!s.empty()) {
@@ -58,11 +48,11 @@ namespace vapp {
       nCursorOffset = nMaxX-nMinX;
     }
     
-    if(m_nCursorPos == v_textToDisplay.length()) {
+    if(m_nCursorPos == getCaption().length()) {
       nCursorWidth = 6;
     }
     else {
-      s = v_textToDisplay.substr(m_nCursorPos,1);
+      s = getCaption().substr(m_nCursorPos,1);
       if(s==" ") {
         nCursorWidth = 6;
       }
@@ -74,7 +64,7 @@ namespace vapp {
     
     /* Draw */
     if(bDisabled)
-      putText(4,17,v_textToDisplay);
+      putText(4,17,getCaption());
           
     putElem(0,0,-1,-1,UI_ELEM_FRAME_TL,false);
     putElem(getPosition().nWidth-8,0,-1,-1,UI_ELEM_FRAME_TR,false);
@@ -94,7 +84,7 @@ namespace vapp {
           putRect(4+nCursorOffset+2,3,nCursorWidth+1,18,MAKE_COLOR(255,0,0,255));
       }      
     
-      putText(4,17,v_textToDisplay);
+      putText(4,17,getCaption());          
     }
   }
 
@@ -169,19 +159,4 @@ namespace vapp {
     return false;
   }  
 
-	void UIEdit::setHasChanged(bool b_value) {
-		m_hasChanged = b_value;
-	}
-
-	bool UIEdit::hasChanged() {
-		return m_hasChanged;
-	}
-
-	void UIEdit::setCaption(std::string Caption) {
-		if(Caption != getCaption()) {
-			 m_hasChanged = true;
-		}
-		UIWindow::setCaption(Caption);
-	}
-
-}
+};

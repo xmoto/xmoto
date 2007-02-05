@@ -71,7 +71,7 @@ namespace vapp {
 	    
 	    for(int i=0;i<m_Vars.size();i++) {
 	      char cBuf[256];
-	      sprintf(cBuf,"\t<var name=\"%s\" value=\"%s\"/>",XML::str2xmlstr(m_Vars[i]->Name).c_str(),XML::str2xmlstr(m_Vars[i]->Value).c_str());
+	      sprintf(cBuf,"\t<var name=\"%s\" value=\"%s\"/>",m_Vars[i]->Name.c_str(),m_Vars[i]->Value.c_str());
 	      FS::writeLine(pfh,cBuf);
 	    }
 	  
@@ -187,4 +187,4 @@ namespace vapp {
 	  return NULL;
 	}
 	
-}
+};

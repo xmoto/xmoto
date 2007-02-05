@@ -28,31 +28,12 @@ Info
 
 #define BUILD_MAJORVERSION    0
 #define BUILD_VERSION         2
-#define BUILD_MINORVERSION    5
-#define BUILD_EXTRAINFO       "test1"
+#define BUILD_MINORVERSION    0
+#define BUILD_EXTRAINFO       ""
 
 /*=============================================================================
 Build configuration
 =============================================================================*/
-
-/* Rendering engine configuration. xmoto currently supports two rendering engines
- * one is openGl based and the other one is based on SDL_gfx. Here we define
- * ENABLE_OPENGL , ENABLE_SDLGFX for easy use in 
- * the code.
- */
-#ifndef USE_OPENGL
-  #define USE_OPENGL 1
-#endif
-#if USE_OPENGL == 1
-  #define ENABLE_OPENGL
-#endif
-
-#ifndef USE_SDLGFX
-  #define USE_SDLGFX 0
-#endif
-#if USE_SDLGFX == 1
-  #define ENABLE_SDLGFX
-#endif
 
 /* DO_NOT_LOAD_TEXTURES - Do not load texture files. This speeds up the init
    time enormously */
@@ -69,16 +50,20 @@ Build configuration
 /* HIDE_JOYSTICK_SUPPORT - Disable joystick config UI */
 #define HIDE_JOYSTICK_SUPPORT
 
+/* ENABLE_ZOOMING - Allow user to zoom in and out while playing */
+//#define ENABLE_ZOOMING
+
 /* ALLOW_GHOST - Allow user to see replay ghosts while playing */
 /* (BUG: disabling this will make it impossible to compile) */
 #define ALLOW_GHOST
 
+/* DO_NOT_ALLOW_WEBACCESS - Don't compile with web-access support, 
+   regardless of whether libcurl is available or not */
+//#define DO_NOT_ALLOW_WEBACCESS
+
 /* BREAK_ON_EXCEPTION - (Visual C++ debug-mode only) Will break program if an
    exception occurs */
 //#define BREAK_ON_EXCEPTION
-
-/* PROFILE_MAIN_LOOP - Will profile main loop (Currently only Win32) */
-//#define PROFILE_MAIN_LOOP
 
 /*=============================================================================
 Misc, don't touch
@@ -87,25 +72,9 @@ Misc, don't touch
   #undef EMUL_800x600 /* editor don't want that */
 #endif
 
-#ifndef ALLOW_WEBACCESS
-#define ALLOW_WEBACCESS 1
-#endif
-#if HAVE_LIBCURL == 1 && ALLOW_WEBACCESS == 1
+#if defined(HAVE_LIBCURL) && !defined(DO_NOT_ALLOW_WEBACCESS)
   #define SUPPORT_WEBACCESS
 #endif
-
-#ifndef ALLOW_ZOOMING
-#define ALLOW_ZOOMING 0
-#endif
-#if ALLOW_ZOOMING == 1
-  #define ENABLE_ZOOMING
-#endif
-
-#if HAVE_GETTEXT == 1
-  #define USE_GETTEXT
-#endif
-
-
 
 #endif
 

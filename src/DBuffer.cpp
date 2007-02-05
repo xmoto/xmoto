@@ -23,8 +23,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *  Generic data buffer stuff.
  */
 #include "DBuffer.h"
-#include "helpers/SwapEndian.h"
-#include <algorithm>
 
 namespace vapp {
 
@@ -55,8 +53,7 @@ namespace vapp {
     m_bOwnData = false;
   }
 
-  template <typename _ConstIter>
-  void DBuffer::writeBuf(_ConstIter pcBuf,int nBufSize) {
+  void DBuffer::writeBuf(const char *pcBuf,int nBufSize) {
     if(isOutput() && nBufSize > 0) {    
       /* Start writing into the part */
       int nToWrite = nBufSize,i = 0;
@@ -76,26 +73,12 @@ namespace vapp {
         int nWrite = nRem < nBufSize-i ? nRem : nBufSize-i;
         
         /* Write it */
-        std::copy(pcBuf, pcBuf + nWrite,
-          &m_Parts[m_nCurPart]->pcBuffer[m_Parts[m_nCurPart]->nPtr]);
-        pcBuf += nWrite;
+        memcpy(&m_Parts[m_nCurPart]->pcBuffer[m_Parts[m_nCurPart]->nPtr],&pcBuf[i],nWrite);
         i += nWrite;
         m_Parts[m_nCurPart]->nPtr += nWrite;
         nToWrite -= nWrite;      
       }
     }   
-  }
-  
-  // Instantiations
-  template void DBuffer::writeBuf(const char *, int);
-  template void DBuffer::writeBuf(char *, int);
-  
-  void DBuffer::writeBuf_LE(const char *pcBuf,int nBufSize) {
-    if (SwapEndian::bigendien) {
-      writeBuf(std::reverse_iterator<const char *>(pcBuf + nBufSize), nBufSize);
-    } else {
-      writeBuf(pcBuf, nBufSize);
-    }
   }
 
   void DBuffer::_NewPart(void) {
@@ -106,28 +89,19 @@ namespace vapp {
     m_Parts.push_back( p );
   }
 
-  template <typename _Iter>
-  void DBuffer::readBuf(_Iter pcBuf,int nBufSize) {
+  void DBuffer::readBuf(char *pcBuf,int nBufSize) {
     if(isInput() && nBufSize > 0) {
       /* Remaining in input buffer? */
       if(m_nSize - m_nReadPtr < nBufSize) {
         /* TODO: error */
-        std::fill_n(pcBuf, nBufSize, 0);
+        memset(pcBuf,0,nBufSize);
       }
       else {
         /* Read and advance ptr */
-        std::copy(&m_pcData[m_nReadPtr], &m_pcData[m_nReadPtr] + nBufSize,
-          pcBuf);
+        memcpy(pcBuf,&m_pcData[m_nReadPtr],nBufSize);
         m_nReadPtr += nBufSize;
       }
     }
-  }
-
-  // Instantiations
-  template void DBuffer::readBuf(char *, int);
-
-  void DBuffer::readBuf_LE(char *pcBuf,int nBufSize) {
-    readBuf(SwapEndian::LittleIter(pcBuf, nBufSize), nBufSize);
   }
 
   int DBuffer::numRemainingBytes(void) {  
@@ -166,64 +140,5 @@ namespace vapp {
     return NULL;
   }
 
-  void DBuffer::operator <<(bool n) {
-    unsigned char c;
-    c = static_cast<unsigned char>(n);
-    writeBuf_LE((char*) &c, 1);
-  }
-  
-  void DBuffer::operator >>(bool &n) {
-    unsigned char c;
-    readBuf_LE((char*) &c, 1);
-    n = (c != 0x00);
-  }
-  
-  void DBuffer::operator <<(int n) {
-    int32_t nv = static_cast<int32_t>(n);  
-    writeBuf_LE((char *)&nv, 4);
-  }
-  
-  void DBuffer::operator >>(int &n) {
-    int32_t nv;
-    readBuf_LE((char *)&nv, 4);
-    n = static_cast<int>(nv);
-  }
-  
-  void DBuffer::operator <<(unsigned int n) {
-    int sn;
-    sn = (int) (n);
-    *this << sn;
-  }
-  
-  void DBuffer::operator >>(unsigned int &n) {
-    int sn;
-    *this >> sn;
-    n = (unsigned int) sn;
-  }
-  
-  void DBuffer::operator <<(float n) {
-    writeBuf_LE((char *)&n, sizeof(int));
-  }
-  
-  void DBuffer::operator >>(float &n) {
-    readBuf_LE((char *)&n, sizeof(int));
-  }
+};
 
-  void DBuffer::operator <<(std::string s) {
-    *this << (unsigned int)(s.length());
-    this->writeBuf(s.c_str(), s.length());
-  }
-   
-  void DBuffer::operator >>(std::string &s) {
-    int n;
-    char c[256];
-    *this >> n;
-
-    if(n <= 0) {
-      throw Exception("Unable to read the string !");
-    }
-    this->readBuf(c, n);
-    c[n] = '\0';
-    s = c;
-  }
-}

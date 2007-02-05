@@ -31,14 +31,9 @@ namespace vapp {
     public:
       /* Methods */
       static void go(void);
-      static void goUnpack(const std::string &BinFile,const std::string &OutPath,bool bWritePackageList);
-      
-    private:
-      /* Helpers */
-      static FILE *createFile(const std::string &TargetDir,const std::string &Path);
   };
-    
-}
+  
+};
 
 #endif
 

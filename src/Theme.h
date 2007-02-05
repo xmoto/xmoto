@@ -43,7 +43,6 @@ class WebThemes;
 #define THEME_UI_SPRITE_FILE_DIR         THEME_SPRITE_FILE_DIR"/UI"
 #define THEME_TEXTURE_SPRITE_FILE_DIR    THEME_SPRITE_FILE_DIR"/Textures"
 #define THEME_FONT_SPRITE_FILE_DIR       THEME_SPRITE_FILE_DIR"/Fonts"
-#define THEME_EDGEEFFECT_SPRITE_FILE_DIR THEME_SPRITE_FILE_DIR"/Effects"
 
 #define THEME_PLAYER_BODY     "PlayerBikerBody"
 #define THEME_PLAYER_FRONT    "PlayerBikerFront"
@@ -81,8 +80,7 @@ class WebThemes;
     SPRITE_TYPE_FONT,
     SPRITE_TYPE_MISC,
     SPRITE_TYPE_TEXTURE,
-    SPRITE_TYPE_UI,
-    SPRITE_TYPE_EDGEEFFECT
+    SPRITE_TYPE_UI
   };
   
   enum SpriteBlendMode {
@@ -98,14 +96,8 @@ class Sprite {
   Sprite(Theme* p_associated_theme, std::string v_name);
   virtual ~Sprite();
 
-  /* no inline with virtual functions, so, no longer virtual */
-  inline enum SpriteType getType() {
-    return m_type;
-  }
-  /* called many many many times, so we inline it, and make it return a ref */
-  inline std::string& getName() {
-    return m_name;
-  }
+  virtual enum SpriteType getType() = 0;
+  std::string getName();
   SpriteBlendMode getBlendMode();
   void setBlendMode(SpriteBlendMode Mode);
   void load();
@@ -114,14 +106,13 @@ class Sprite {
      the bSmall, bClamp, bFilter parameters are considerated 
      only the first time that getTexture is called for a given sprite
   */
-  vapp::Texture* getTexture(bool bSmall=false, bool bClamp=false, vapp::FilterMode eFilterMode = vapp::FM_LINEAR);
+  vapp::Texture* getTexture(bool bSmall=false, bool bClamp=false, bool bFilter=true);
 
  protected:
   virtual vapp::Texture* getCurrentTexture() = 0;
   virtual std::string getCurrentTextureFileName() = 0;
   virtual void setCurrentTexture(vapp::Texture *p_texture) = 0;
   virtual std::string getFileDir();
-  enum SpriteType m_type;
 
   private:
   Theme* m_associated_theme;
@@ -148,6 +139,7 @@ class TextureSprite : public SimpleFrameSprite {
  public:
   TextureSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename);
   virtual ~TextureSprite();
+  enum SpriteType getType();
 
  protected:
   std::string getFileDir();
@@ -159,6 +151,7 @@ class BikerPartSprite : public SimpleFrameSprite {
  public:
   BikerPartSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename);
   virtual ~BikerPartSprite();
+  enum SpriteType getType();
 
  protected:
   std::string getFileDir();
@@ -201,6 +194,7 @@ class AnimationSprite : public Sprite {
  public:
   AnimationSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileBase, std::string p_fileExtention);
   virtual ~AnimationSprite();
+  enum SpriteType getType();
   float getCenterX();
   float getCenterY();
   float getWidth();
@@ -228,33 +222,19 @@ class EffectSprite : public SimpleFrameSprite {
  public:
   EffectSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename);
   virtual ~EffectSprite();
+  enum SpriteType getType();
 
  protected:
   std::string getFileDir();
 
  private:
-};
-
-class EdgeEffectSprite : public SimpleFrameSprite {
- public:
-  EdgeEffectSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename, float fScale, float fDepth);
-  virtual ~EdgeEffectSprite();
-
-  float getScale() const;
-  float getDepth() const;
-
- protected:
-  std::string getFileDir();
-
- private:
-  float m_fScale;
-  float m_fDepth;
 };
 
 class FontSprite : public SimpleFrameSprite {
  public:
   FontSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename);
   virtual ~FontSprite();
+  enum SpriteType getType();
 
  protected:
   std::string getFileDir();
@@ -266,6 +246,7 @@ class MiscSprite : public SimpleFrameSprite {
  public:
   MiscSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename);
   virtual ~MiscSprite();
+  enum SpriteType getType();
 
  protected:
   std::string getFileDir();
@@ -277,6 +258,7 @@ class UISprite : public SimpleFrameSprite {
  public:
   UISprite(Theme* p_associated_theme, std::string p_name, std::string p_filename);
   virtual ~UISprite();
+  enum SpriteType getType();
 
  protected:
   std::string getFileDir();
@@ -288,6 +270,7 @@ class DecorationSprite : public SimpleFrameSprite {
  public:
   DecorationSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename, float p_width, float p_height, float p_centerX, float p_centerY, SpriteBlendMode p_blendmode);
   virtual ~DecorationSprite();
+  enum SpriteType getType();
 
   float getWidth();
   float getHeight();
@@ -312,12 +295,11 @@ class Theme {
  
   void load(std::string p_themeFile);
 
-  std::string Name() const;
   Sprite* getSprite(enum SpriteType pSpriteType, std::string pName);
   vapp::Texture* loadTexture(std::string p_fileName,
 			     bool bSmall=false,
 			     bool bClamp=false,
-			     vapp::FilterMode eFilterMode = vapp::FM_LINEAR);
+			     bool bFilter=true);
 
   vapp::Texture* getDefaultFont();
   std::vector<Sprite*> getSpritesList();
@@ -351,7 +333,6 @@ class Theme {
   void newBikerPartSpriteFromXML(TiXmlElement *pVarElem);
   void newDecorationSpriteFromXML(TiXmlElement *pVarElem);
   void newEffectSpriteFromXML(TiXmlElement *pVarElem);
-  void newEdgeEffectSpriteFromXML(TiXmlElement *pVarElem);
   void newFontSpriteFromXML(TiXmlElement *pVarElem);
   void newMiscSpriteFromXML(TiXmlElement *pVarElem);
   void newTextureSpriteFromXML(TiXmlElement *pVarElem);
@@ -447,7 +428,6 @@ class ThemeChoicer {
 #if defined(SUPPORT_WEBACCESS)
   void updateFromWWW();
   void updateThemeFromWWW(ThemeChoice* pThemeChoice);
-  bool isUpdatableThemeFromWWW(ThemeChoice* pThemeChoice);
 
   void setURL(const std::string &p_url);
   void setURLBase(const std::string &p_urlBase);

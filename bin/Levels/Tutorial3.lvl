@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<level id="tut3" levelpack="Tutorials" levelpackNum="03">
+<level id="tut3" levelpack="Tutorials">
 	<info>
-		<name>Rear wheel driving</name>
+		<name>Tutorial #3 - Rear wheel driving</name>
 		<description></description>
 		<author></author>
 		<date></date>

@@ -24,22 +24,22 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "VCommon.h"
 #include "VApp.h"
-#include "helpers/VMath.h"
-#include "xmscene/Level.h"
+#include "VMath.h"
+#include "LevelSrc.h"
 #include "VTexture.h"
 
 namespace vapp {
 
-  /*===========================================================================
-  Types
+	/*===========================================================================
+	Types
   ===========================================================================*/
   struct BSPLine {
     Vector2f P0,P1;                   /* Line */
     Vector2f Normal;                  /* Linenormal (meaningless, but hey :P)*/
   };  
 
-  /*===========================================================================
-  Convex polygon vertex
+	/*===========================================================================
+	Convex polygon vertex
   ===========================================================================*/
   struct BSPVertex {
     BSPVertex() {}
@@ -49,8 +49,8 @@ namespace vapp {
     Vector2f T;                       /* Texture coordinates */
   };
 
-  /*===========================================================================
-  Convex polygon
+	/*===========================================================================
+	Convex polygon
   ===========================================================================*/
   struct BSPPoly {
     BSPPoly() {
@@ -67,8 +67,8 @@ namespace vapp {
     Texture *pTexture;                /* Texture */
   };
 
-  /*===========================================================================
-  BSP class
+	/*===========================================================================
+	BSP class
   ===========================================================================*/
   class BSP {
     public:
@@ -101,6 +101,6 @@ namespace vapp {
       BSPPoly *_CopyPoly(BSPPoly *pDst,BSPPoly *pSrc);      
   };
 
-}
+};
 
 #endif

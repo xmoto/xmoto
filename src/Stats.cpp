@@ -184,9 +184,9 @@ namespace vapp {
       char cTime[512];
       int nHours = ((int)pPlayer->fTotalPlayTime) / (60 * 60);
       int nMinutes = (((int)pPlayer->fTotalPlayTime) / (60)) - nHours*60;
-      int nSeconds = (((int)pPlayer->fTotalPlayTime)) - nMinutes*60 - nHours*3600;
-      if(nHours > 0) sprintf(cTime,(std::string(GAMETEXT_XHOURS) + ", " + std::string(GAMETEXT_XMINUTES) + ", " + std::string(GAMETEXT_AND) + " " + std::string(GAMETEXT_XSECONDS)).c_str(),nHours,nMinutes,nSeconds);
-      else if(nMinutes > 0) sprintf(cTime,(std::string(GAMETEXT_XMINUTES) +  " " + std::string(GAMETEXT_AND) +  " " + std::string(GAMETEXT_XSECONDS)).c_str(),nMinutes,nSeconds);
+      int nSeconds = (((int)pPlayer->fTotalPlayTime)) - nMinutes*60;
+      if(nHours > 0) sprintf(cTime,GAMETEXT_XHOURS ", " GAMETEXT_XMINUTES ", " GAMETEXT_AND " " GAMETEXT_XSECONDS,nHours,nMinutes,nSeconds);
+      else if(nMinutes > 0) sprintf(cTime,GAMETEXT_XMINUTES " " GAMETEXT_AND " " GAMETEXT_XSECONDS,nMinutes,nSeconds);
       else sprintf(cTime,GAMETEXT_XSECONDS,nSeconds);
       
       sprintf(cBuf,GAMETEXT_XMOTOGLOBALSTATS,      
@@ -198,7 +198,7 @@ namespace vapp {
       pText->setFont(pFont);
       
       /* Per-level stats */      
-      pText = new UIStatic(p,0,90, std::string(GAMETEXT_MOSTPLAYEDLEVELSFOLLOW) + ":",nWidth,20);
+      pText = new UIStatic(p,0,90,GAMETEXT_MOSTPLAYEDLEVELSFOLLOW,nWidth,20);
       pText->setHAlign(UI_ALIGN_LEFT);
       pText->setTextSolidColor(MAKE_COLOR(255,255,0,255));
       pText->setFont(pFont);      
@@ -208,7 +208,7 @@ namespace vapp {
       for(int i=0;i<Levels.size();i++) {
         if(cy + 45 > nHeight) break; /* out of window */
         
-        sprintf(cBuf,("[%s] %s:\n   " + std::string(GAMETEXT_XMOTOLEVELSTATS)).c_str(),
+        sprintf(cBuf,"[%s] %s:\n   " GAMETEXT_XMOTOLEVELSTATS,
                 App::formatTime(Levels[i]->fPlayTime).c_str(),Levels[i]->LevelName.c_str(),
                 Levels[i]->nPlayed,Levels[i]->nDied,Levels[i]->nCompleted,Levels[i]->nRestarts);
         
@@ -438,25 +438,5 @@ namespace vapp {
     return Ret;
   }
 
-  int Stats::compareLevelMostPlayed(const Level& i_lvl1, const Level& i_lvl2, PlayerStats *i_playerStats) {
-    int n1;
-
-    for(unsigned int i=0; i<i_playerStats->Levels.size(); i++) {
-      if(i_playerStats->Levels[i]->LevelID == i_lvl1.Id()) {
-    	n1 = i_playerStats->Levels[i]->nPlayed;
-      }
-    }
-
-    for(unsigned int i=0; i<i_playerStats->Levels.size(); i++) {
-      if(i_playerStats->Levels[i]->LevelID == i_lvl2.Id()) {
-    	if(i_playerStats->Levels[i]->nPlayed < n1) return  1;
-    	if(i_playerStats->Levels[i]->nPlayed > n1) return -1;
-    	return 0;
-      }
-    }
-    
-    return 0;
-  }
-
-}
+};
 

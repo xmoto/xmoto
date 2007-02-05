@@ -24,15 +24,9 @@
  */
 #include "VFileIO.h"
 #include "PlayerData.h"
-#include "helpers/SwapEndian.h"
 
 namespace vapp {
 
-  /* Return level IDs as-is */
-  std::string PlayerData::_NoFixLevelID(const std::string &s) {
-    return s;
-  }
-  
   /*===========================================================================
     Utility function to translate pre-0.1.7 level IDs to 0.1.9 level IDs
     ===========================================================================*/
@@ -65,43 +59,6 @@ namespace vapp {
     if(s == "_iL00_") return "tut1";
     return s;
   }
-  
-  /* Load the profiles from a file-handle.
-   *   fixer - function pointer to fix the names of levels
-   *   swapped - whether data is of the wrong endianness */
-  void PlayerData::_LoadFileHandle(FileHandle *pfh, LevelFixer fixer,
-      bool swapped) {
-    /* Read number of player profiles */
-    int nNumPlayerProfiles = FS::readInt_MaybeLE(pfh, swapped);
-    
-    if(nNumPlayerProfiles >= 0) {
-      /* For each player profile */
-      for(int i=0;i<nNumPlayerProfiles;i++) {
-        std::string PlayerName = FS::readString(pfh);
-        PlayerProfile *pPlayer = createProfile(PlayerName);
-        
-        if(pPlayer != NULL) {
-          int nNumCompleted = FS::readInt_MaybeLE(pfh, swapped);
-          int nNumSkipped   = FS::readInt_MaybeLE(pfh, swapped);
-          
-          for(int j=0;j<nNumCompleted;j++)
-            completeLevel(PlayerName,fixer(FS::readString(pfh)));
-          
-          for(int j=0;j<nNumSkipped;j++)
-            skipLevel(PlayerName,fixer(FS::readString(pfh)));
-           
-          while(1) {
-            std::string LevelID = fixer(FS::readString(pfh));
-            if(LevelID.length() == 0) break;
-            std::string Replay = FS::readString(pfh);
-            std::string TimeStamp = FS::readString(pfh);
-            float fTime = FS::readFloat_MaybeLE(pfh, swapped);
-            addFinishTime(PlayerName,Replay,LevelID,fTime,TimeStamp);             
-          }
-        }
-      }
-    }
-  }
 
   /*===========================================================================
     Load from binary (would rather use XML, but this makes it a bit more 
@@ -109,41 +66,122 @@ namespace vapp {
     ===========================================================================*/
   void PlayerData::loadFile(void) {
     _FreePlayerData();
-    
+	
     /* Open binary file for input */
     FileHandle *pfh = FS::openIFile("players.bin");
     if(pfh == NULL) {
       /* Nuthin */
-      return;       
+      return;	    
     }
-      
+	  
     /* Parse it */
-    short nVersion = FS::readShort_LE(pfh);
-    bool swapped = false;
-    if ((nVersion & 0xFF) == 0 && (nVersion >> 8) >= 0x10) {
-      /* It looks like this file is big-endian! */
-      swapped = true;
-      nVersion = SwapEndian::LittleShort(nVersion);
-    }
-    
-    /* If levels were moved around, swap the level numbers on the fly. */
-    LevelFixer fixer = NULL;
+    int nVersion = FS::readShort(pfh);
+	  
     if(nVersion == 0x10) {
+      /* This is the old (<= 0.1.6) players.bin file. At 0.1.7 there was a bit of moving
+	 around in the levels numbers, so if we try to load this now,  it will for sure explode.
+	 Instead, simply load it and translate the level numbers on-the-fly */
       Log("** Warning ** : Found players.bin from before version 0.1.7, trying to upgrade...\n");
-      fixer = _Fix016LevelID;
-    } else if(nVersion == 0x11) {
+	  
+      /* Read number of player profiles */
+      int nNumPlayerProfiles = FS::readInt(pfh);
+
+      if(nNumPlayerProfiles >= 0) {
+	/* For each player profile */
+	for(int i=0;i<nNumPlayerProfiles;i++) {
+	  std::string PlayerName = FS::readString(pfh);
+	  PlayerProfile *pPlayer = createProfile(PlayerName);
+	  if(pPlayer != NULL) {
+	    int nNumCompleted = FS::readInt(pfh);
+	    int nNumSkipped   = FS::readInt(pfh);
+            
+	    for(int j=0;j<nNumCompleted;j++)
+	      completeLevel(PlayerName,_Fix016LevelID(FS::readString(pfh)));
+
+	    for(int j=0;j<nNumSkipped;j++)
+	      skipLevel(PlayerName,_Fix016LevelID(FS::readString(pfh)));
+              
+	    while(1) {
+	      std::string LevelID = _Fix016LevelID(FS::readString(pfh));
+	      if(LevelID.length() == 0) break;
+	      std::string Replay = FS::readString(pfh);
+	      std::string TimeStamp = FS::readString(pfh);
+	      float fTime = FS::readFloat(pfh);
+	      addFinishTime(PlayerName,Replay,LevelID,fTime,TimeStamp);             
+	    }
+	  }
+	}
+      }
+    }
+    else if(nVersion == 0x11) {
+      /* This is the old (<= 0.1.8) players.bin file. At 0.1.9 there was a bit of moving
+	 around in the levels numbers, so if we try to load this now,  it will for sure explode.
+	 Instead, simply load it and translate the level numbers on-the-fly */
       Log("** Warning ** : Found players.bin from before version 0.1.9, trying to upgrade...\n");
-      fixer = _Fix018LevelID;
-    } else if(nVersion == 0x12) {
-      fixer = _NoFixLevelID; // Nothing to fix!
+	  
+      /* Read number of player profiles */
+      int nNumPlayerProfiles = FS::readInt(pfh);
+
+      if(nNumPlayerProfiles >= 0) {
+	/* For each player profile */
+	for(int i=0;i<nNumPlayerProfiles;i++) {
+	  std::string PlayerName = FS::readString(pfh);
+	  PlayerProfile *pPlayer = createProfile(PlayerName);
+	  if(pPlayer != NULL) {
+	    int nNumCompleted = FS::readInt(pfh);
+	    int nNumSkipped   = FS::readInt(pfh);
+            
+	    for(int j=0;j<nNumCompleted;j++)
+	      completeLevel(PlayerName,_Fix018LevelID(FS::readString(pfh)));
+
+	    for(int j=0;j<nNumSkipped;j++)
+	      skipLevel(PlayerName,_Fix018LevelID(FS::readString(pfh)));
+              
+	    while(1) {
+	      std::string LevelID = _Fix018LevelID(FS::readString(pfh));
+	      if(LevelID.length() == 0) break;
+	      std::string Replay = FS::readString(pfh);
+	      std::string TimeStamp = FS::readString(pfh);
+	      float fTime = FS::readFloat(pfh);
+	      addFinishTime(PlayerName,Replay,LevelID,fTime,TimeStamp);             
+	    }
+	  }
+	}
+      }
     }
-    
-    if (fixer != NULL) {
-      _LoadFileHandle(pfh, fixer, swapped);
-    } else {
-      Log("** Warning ** : invalid/unsupported 'players.bin' file, all old stats is lost");
+    else if(nVersion == 0x12) {
+      /* Read number of player profiles */
+      int nNumPlayerProfiles = FS::readInt(pfh);
+
+      if(nNumPlayerProfiles >= 0) {
+	/* For each player profile */
+	for(int i=0;i<nNumPlayerProfiles;i++) {
+	  std::string PlayerName = FS::readString(pfh);
+	  PlayerProfile *pPlayer = createProfile(PlayerName);
+	  if(pPlayer != NULL) {
+	    int nNumCompleted = FS::readInt(pfh);
+	    int nNumSkipped   = FS::readInt(pfh);
+            
+	    for(int j=0;j<nNumCompleted;j++)
+	      completeLevel(PlayerName,FS::readString(pfh));
+
+	    for(int j=0;j<nNumSkipped;j++)
+	      skipLevel(PlayerName,FS::readString(pfh));
+              
+	    while(1) {
+	      std::string LevelID =FS::readString(pfh);
+	      if(LevelID.length() == 0) break;
+	      std::string Replay = FS::readString(pfh);
+	      std::string TimeStamp = FS::readString(pfh);
+	      float fTime = FS::readFloat(pfh);
+	      addFinishTime(PlayerName,Replay,LevelID,fTime,TimeStamp);             
+	    }
+	  }
+	}
+      }
     }
-      
+    else Log("** Warning ** : invalid/unsupported 'players.bin' file, all old stats is lost");
+	  
     /* Clean */
     FS::closeFile(pfh);
   }
@@ -156,39 +194,39 @@ namespace vapp {
     FileHandle *pfh = FS::openOFile("players.bin");
     if(pfh == NULL) { 
       Log("** Warning ** : failed to save 'players.bin', all new stats is lost");
-      return;     
+      return;	    
     }
-    
+	  
     /* Write */
-    FS::writeShort_LE(pfh,0x12);
-    FS::writeInt_LE(pfh,m_Profiles.size());
+    FS::writeShort(pfh,0x12);
+    FS::writeInt(pfh,m_Profiles.size());
     for(int i=0;i<m_Profiles.size();i++) {
       FS::writeString(pfh,m_Profiles[i]->PlayerName);
-      FS::writeInt_LE(pfh,m_Profiles[i]->Completed.size());
-      FS::writeInt_LE(pfh,m_Profiles[i]->Skipped.size());
-      
+      FS::writeInt(pfh,m_Profiles[i]->Completed.size());
+      FS::writeInt(pfh,m_Profiles[i]->Skipped.size());
+	    
       for(int j=0;j<m_Profiles[i]->Completed.size();j++)
-  FS::writeString(pfh,m_Profiles[i]->Completed[j]);       
+	FS::writeString(pfh,m_Profiles[i]->Completed[j]);	      
 
       for(int j=0;j<m_Profiles[i]->Skipped.size();j++)
-  FS::writeString(pfh,m_Profiles[i]->Skipped[j]);       
+	FS::writeString(pfh,m_Profiles[i]->Skipped[j]);	      
         
       for(int j=0;j<m_Profiles[i]->LevelStats.size();j++) {
-  for(int k=0;k<m_Profiles[i]->LevelStats[j]->nNumBestTimes;k++) {
-    FS::writeString(pfh,m_Profiles[i]->LevelStats[j]->LevelID);
-    FS::writeString(pfh,m_Profiles[i]->LevelStats[j]->BestTimes[k].Replay);
-    FS::writeString(pfh,m_Profiles[i]->LevelStats[j]->BestTimes[k].TimeStamp);
-    FS::writeFloat_LE(pfh,m_Profiles[i]->LevelStats[j]->BestTimes[k].fFinishTime);
-  }
+	for(int k=0;k<m_Profiles[i]->LevelStats[j]->nNumBestTimes;k++) {
+	  FS::writeString(pfh,m_Profiles[i]->LevelStats[j]->LevelID);
+	  FS::writeString(pfh,m_Profiles[i]->LevelStats[j]->BestTimes[k].Replay);
+	  FS::writeString(pfh,m_Profiles[i]->LevelStats[j]->BestTimes[k].TimeStamp);
+	  FS::writeFloat(pfh,m_Profiles[i]->LevelStats[j]->BestTimes[k].fFinishTime);
+	}
       }
       
       FS::writeByte(pfh,0);
     }
-    
+	  
     /* Clean */
-    FS::closeFile(pfh);   
+    FS::closeFile(pfh);	  
   }
-  
+	
   /*===========================================================================
     Creation and destruction of profiles
     ===========================================================================*/
@@ -197,9 +235,9 @@ namespace vapp {
       Log("** Warning ** : player profile '%s' already in use",PlayerName.c_str());
       return NULL;
     }
-  
+	
     PlayerProfile *pProfile = new PlayerProfile;
-    pProfile->PlayerName = PlayerName;    
+    pProfile->PlayerName = PlayerName;	  
     m_Profiles.push_back(pProfile);
     return pProfile;
   }
@@ -207,40 +245,40 @@ namespace vapp {
   void PlayerData::destroyProfile(std::string PlayerName) {
     for(int i=0;i<m_Profiles.size();i++) {
       if(m_Profiles[i]->PlayerName == PlayerName) {
-  for(int j=0;j<m_Profiles[i]->LevelStats.size();j++)
-    delete m_Profiles[i]->LevelStats[j];
-      
-  delete m_Profiles[i];
-  m_Profiles.erase(m_Profiles.begin() + i);
-  return;
+	for(int j=0;j<m_Profiles[i]->LevelStats.size();j++)
+	  delete m_Profiles[i]->LevelStats[j];
+	    
+	delete m_Profiles[i];
+	m_Profiles.erase(m_Profiles.begin() + i);
+	return;
       }
     }
     Log("** Warning ** : attempt to destroy unknown player profile '%s'",PlayerName.c_str());
   }
-  
+	
   /*===========================================================================
     Information about levels
     ===========================================================================*/
   bool PlayerData::isLevelCompleted(std::string PlayerName,std::string LevelID) {
     PlayerProfile *pPlayer = getProfile(PlayerName);
     if(pPlayer == NULL) return false;
-    
+	  
     for(int i=0;i<pPlayer->Completed.size();i++)
       if(pPlayer->Completed[i] == LevelID) return true;
-    
+	  
     return false;
   }
-  
+	
   bool PlayerData::isLevelSkipped(std::string PlayerName,std::string LevelID) {
     PlayerProfile *pPlayer = getProfile(PlayerName);
     if(pPlayer == NULL) return false;
-    
+	  
     for(int i=0;i<pPlayer->Skipped.size();i++)
       if(pPlayer->Skipped[i] == LevelID) return true;
-    
+	  
     return false;
   }
-  
+	
   void PlayerData::completeLevel(std::string PlayerName,std::string LevelID) {
     PlayerProfile *pPlayer = getProfile(PlayerName);
     if(pPlayer == NULL) return;
@@ -248,46 +286,62 @@ namespace vapp {
     /* If skipped, unskip it */
     for(int i=0;i<pPlayer->Skipped.size();i++) {
       if(pPlayer->Skipped[i] == LevelID) {
-  pPlayer->Skipped.erase(pPlayer->Skipped.begin() + i);
-  break;
+	pPlayer->Skipped.erase(pPlayer->Skipped.begin() + i);
+	break;
       }
     }
-    
+	  
     if(!isLevelCompleted(PlayerName,LevelID)) {
       pPlayer->Completed.push_back(LevelID);
     }
   }
-  
+	
   void PlayerData::skipLevel(std::string PlayerName,std::string LevelID) {
     if(!isLevelCompleted(PlayerName,LevelID) && !isLevelSkipped(PlayerName,LevelID)) {
       PlayerProfile *pPlayer = getProfile(PlayerName);
-      if(pPlayer != NULL) pPlayer->Skipped.push_back(LevelID);      
-    }   
+      if(pPlayer != NULL) pPlayer->Skipped.push_back(LevelID);	    
+    }	  
   }
-  
+	
+  /*===========================================================================
+    Check if a level is internal
+    ===========================================================================*/
+  bool PlayerData::isInternal(std::string LevelID) {
+    char *pcInternals[] = {INTERNAL_LEVELS, NULL};
+
+    int j = 0;
+    while(pcInternals[j] != NULL) {
+      if(!strcmp(pcInternals[j],LevelID.c_str())) {
+	return true;
+      }
+      j++;
+    }
+    return false;
+  }
+	
   /*===========================================================================
     Merge finish time
     ===========================================================================*/
   void PlayerData::addFinishTime(std::string PlayerName,
-         std::string Replay,
-         std::string LevelID,
-         float fTime,
-         std::string TimeStamp) {
+				 std::string Replay,
+				 std::string LevelID,
+				 float fTime,
+				 std::string TimeStamp) {
 
     PlayerProfile *pPlayer = getProfile(PlayerName);
     if(pPlayer == NULL) return;
-    
+	  
     /* Look for this level */
     PlayerLevelStats *pStats = NULL; 
-    
+	  
     for(int i=0;i<pPlayer->LevelStats.size();i++) {
       if(pPlayer->LevelStats[i]->LevelID == LevelID) 
-  pStats = pPlayer->LevelStats[i];
-    }   
-    
+	pStats = pPlayer->LevelStats[i];
+    }	  
+	  
     /* Is this internal? */
     completeLevel(PlayerName,LevelID);
-    
+	  
     /* Not there? Then add it */
     if(pStats == NULL) {
       pStats = new PlayerLevelStats;
@@ -295,10 +349,10 @@ namespace vapp {
       pStats->nNumBestTimes = 0;
       pPlayer->LevelStats.push_back(pStats);
     }
-    
+	  
     /* If less than 10 entries, simply add this and we're done */
     if(pStats->nNumBestTimes < 10) {
-      pStats->BestTimes[pStats->nNumBestTimes].fFinishTime = fTime;     
+      pStats->BestTimes[pStats->nNumBestTimes].fFinishTime = fTime;	    
       pStats->BestTimes[pStats->nNumBestTimes].PlayerName = PlayerName;
       pStats->BestTimes[pStats->nNumBestTimes].Replay = Replay;
       pStats->BestTimes[pStats->nNumBestTimes].TimeStamp = TimeStamp;
@@ -307,23 +361,23 @@ namespace vapp {
     else {
       /* Find poorest time in list */
       int nBadTime=-1;
-      
+	    
       for(int i=0;i<pStats->nNumBestTimes;i++) {
-  if(nBadTime<0 || pStats->BestTimes[i].fFinishTime > pStats->BestTimes[nBadTime].fFinishTime)
-    nBadTime = i;
+	if(nBadTime<0 || pStats->BestTimes[i].fFinishTime > pStats->BestTimes[nBadTime].fFinishTime)
+	  nBadTime = i;
       }
-      
+	    
       /* Should we replace it? */
       if(pStats->BestTimes[nBadTime].fFinishTime > fTime) {
-  /* Yup */
-  pStats->BestTimes[nBadTime].fFinishTime = fTime;
-  pStats->BestTimes[nBadTime].PlayerName = PlayerName;
-  pStats->BestTimes[nBadTime].Replay = Replay;
-  pStats->BestTimes[nBadTime].TimeStamp = TimeStamp;
+	/* Yup */
+	pStats->BestTimes[nBadTime].fFinishTime = fTime;
+	pStats->BestTimes[nBadTime].PlayerName = PlayerName;
+	pStats->BestTimes[nBadTime].Replay = Replay;
+	pStats->BestTimes[nBadTime].TimeStamp = TimeStamp;
       }
     }
   }
-  
+	
   /*===========================================================================
     Get global best time of level
     ===========================================================================*/
@@ -332,14 +386,14 @@ namespace vapp {
     PlayerTimeEntry *pBest = NULL;
     for(int i=0;i<m_Profiles.size();i++) {
       for(int j=0;j<m_Profiles[i]->LevelStats.size();j++) {
-  if(m_Profiles[i]->LevelStats[j]->LevelID == LevelID) {
-    for(int k=0;k<m_Profiles[i]->LevelStats[j]->nNumBestTimes;k++) {
-      if(pBest == NULL ||
-         m_Profiles[i]->LevelStats[j]->BestTimes[k].fFinishTime < pBest->fFinishTime) {
-        pBest = &m_Profiles[i]->LevelStats[j]->BestTimes[k];
-      }
-    }
-  }
+	if(m_Profiles[i]->LevelStats[j]->LevelID == LevelID) {
+	  for(int k=0;k<m_Profiles[i]->LevelStats[j]->nNumBestTimes;k++) {
+	    if(pBest == NULL ||
+	       m_Profiles[i]->LevelStats[j]->BestTimes[k].fFinishTime < pBest->fFinishTime) {
+	      pBest = &m_Profiles[i]->LevelStats[j]->BestTimes[k];
+	    }
+	  }
+	}
       }
     }
     
@@ -353,48 +407,48 @@ namespace vapp {
     /* Get best time of level */
     PlayerTimeEntry *pBest = NULL;
     PlayerProfile *pPlayer = getProfile(PlayerName);
-    if(pPlayer == NULL) return NULL;    
+    if(pPlayer == NULL) return NULL;	  
     for(int j=0;j<pPlayer->LevelStats.size();j++) {
       if(pPlayer->LevelStats[j]->LevelID == LevelID) {
-  for(int k=0;k<pPlayer->LevelStats[j]->nNumBestTimes;k++) {
-    if(pBest == NULL ||
-       pPlayer->LevelStats[j]->BestTimes[k].fFinishTime < pBest->fFinishTime) {
-      pBest = &pPlayer->LevelStats[j]->BestTimes[k];
-    }
-  }
+	for(int k=0;k<pPlayer->LevelStats[j]->nNumBestTimes;k++) {
+	  if(pBest == NULL ||
+	     pPlayer->LevelStats[j]->BestTimes[k].fFinishTime < pBest->fFinishTime) {
+	    pBest = &pPlayer->LevelStats[j]->BestTimes[k];
+	  }
+	}
       }
     }
     
     return pBest;
   }
-  
+	
   /*===========================================================================
     Create global top10 for level
     ===========================================================================*/
   std::vector<PlayerTimeEntry *> PlayerData::createLevelTop10(std::string LevelID) {
     std::vector<PlayerTimeEntry *> Top10;
-    
+	  
     for(int i=0;i<m_Profiles.size();i++) {
       for(int j=0;j<m_Profiles[i]->LevelStats.size();j++) {
-  if(m_Profiles[i]->LevelStats[j]->LevelID == LevelID) {
-    for(int k=0;k<m_Profiles[i]->LevelStats[j]->nNumBestTimes;k++) {
-      /* Merge this time into the top10 */
-      bool bMerged = false;
-      for(int z=0;z<Top10.size();z++) { 
-        if(m_Profiles[i]->LevelStats[j]->BestTimes[k].fFinishTime < Top10[z]->fFinishTime) {
-    Top10.insert(Top10.begin() + z,&m_Profiles[i]->LevelStats[j]->BestTimes[k]);
-    bMerged = true;
-    break;
-        }
-      }
+	if(m_Profiles[i]->LevelStats[j]->LevelID == LevelID) {
+	  for(int k=0;k<m_Profiles[i]->LevelStats[j]->nNumBestTimes;k++) {
+	    /* Merge this time into the top10 */
+	    bool bMerged = false;
+	    for(int z=0;z<Top10.size();z++) { 
+	      if(m_Profiles[i]->LevelStats[j]->BestTimes[k].fFinishTime < Top10[z]->fFinishTime) {
+		Top10.insert(Top10.begin() + z,&m_Profiles[i]->LevelStats[j]->BestTimes[k]);
+		bMerged = true;
+		break;
+	      }
+	    }
             
-      if(!bMerged && Top10.size() < 10) {
-        Top10.push_back(&m_Profiles[i]->LevelStats[j]->BestTimes[k]);
+	    if(!bMerged && Top10.size() < 10) {
+	      Top10.push_back(&m_Profiles[i]->LevelStats[j]->BestTimes[k]);
+	    }
+	  }
+	}
       }
-    }
-  }
-      }
-    }   
+    }	  
     
     return Top10;
   }
@@ -405,25 +459,25 @@ namespace vapp {
   std::vector<PlayerTimeEntry *> PlayerData::createPlayerOnlyLevelTop10(std::string PlayerName,std::string LevelID) {
     std::vector<PlayerTimeEntry *> Top10;
     PlayerProfile *pPlayer = getProfile(PlayerName);
-    if(pPlayer == NULL) return Top10;   
-    
+    if(pPlayer == NULL) return Top10;	  
+	  
     for(int j=0;j<pPlayer->LevelStats.size();j++) {
       if(pPlayer->LevelStats[j]->LevelID == LevelID) {
-  for(int k=0;k<pPlayer->LevelStats[j]->nNumBestTimes;k++) {
-    /* Merge this time into the top10 */
-    bool bMerged = false;
-    for(int z=0;z<Top10.size();z++) { 
-      if(pPlayer->LevelStats[j]->BestTimes[k].fFinishTime < Top10[z]->fFinishTime) {
-        Top10.insert(Top10.begin() + z,&pPlayer->LevelStats[j]->BestTimes[k]);
-        bMerged = true;
-        break;
-      }
-    }
+	for(int k=0;k<pPlayer->LevelStats[j]->nNumBestTimes;k++) {
+	  /* Merge this time into the top10 */
+	  bool bMerged = false;
+	  for(int z=0;z<Top10.size();z++) { 
+	    if(pPlayer->LevelStats[j]->BestTimes[k].fFinishTime < Top10[z]->fFinishTime) {
+	      Top10.insert(Top10.begin() + z,&pPlayer->LevelStats[j]->BestTimes[k]);
+	      bMerged = true;
+	      break;
+	    }
+	  }
           
-    if(!bMerged && Top10.size() < 10) {
-      Top10.push_back(&pPlayer->LevelStats[j]->BestTimes[k]);
-    }
-  }
+	  if(!bMerged && Top10.size() < 10) {
+	    Top10.push_back(&pPlayer->LevelStats[j]->BestTimes[k]);
+	  }
+	}
       }
     }
     
@@ -446,11 +500,11 @@ namespace vapp {
   void PlayerData::_FreePlayerData(void) {
     for(int i=0;i<m_Profiles.size();i++) {
       for(int j=0;j<m_Profiles[i]->LevelStats.size();j++)
-  delete m_Profiles[i]->LevelStats[j];
+	delete m_Profiles[i]->LevelStats[j];
       delete m_Profiles[i];
     }
-  }     
-  
+  }	    
+	
   /*===========================================================================
     Determine whether this level can be played by this player
     ===========================================================================*/
@@ -459,4 +513,4 @@ namespace vapp {
     return true;
   }
 
-}
+};

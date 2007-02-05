@@ -28,7 +28,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "BSP.h"
 #include "Sound.h"
 #include "PhysSettings.h"
-#include "xmscene/Entity.h"
 
 namespace vapp {
 
@@ -71,50 +70,40 @@ namespace vapp {
   int L_Game_CameraMove(lua_State *pL);
   int L_Game_GetEntityRadius(lua_State *pL);
   int L_Game_IsEntityTouched(lua_State *pL);
-  int L_Game_KillPlayer(lua_State *pL);
-  int L_Game_KillEntity(lua_State *pL);
-  int L_Game_RemainingStrawberries(lua_State *pL);
-  int L_Game_WinPlayer(lua_State *pL);
-  int L_Game_PenaltyTime(lua_State *pL);
 
   /* "Game" Lua library */
   static const luaL_reg g_GameFuncs[] = {
-    {"GetTime",                 L_Game_GetTime},
-    {"Message",                 L_Game_Message},
-    {"IsPlayerInZone",          L_Game_IsPlayerInZone},
-    {"MoveBlock",               L_Game_MoveBlock},
-    {"GetBlockPos",             L_Game_GetBlockPos},
-    {"SetBlockPos",             L_Game_SetBlockPos},
-    {"PlaceInGameArrow",        L_Game_PlaceInGameArrow},
-    {"PlaceScreenArrow",        L_Game_PlaceScreenArrow},
-    {"HideArrow",               L_Game_HideArrow},
-    {"ClearMessages",           L_Game_ClearMessages},
-    {"SetGravity",          L_Game_SetGravity},
-    {"GetGravity",          L_Game_GetGravity},
-    {"SetPlayerPosition",       L_Game_SetPlayerPosition},
-    {"GetPlayerPosition",       L_Game_GetPlayerPosition},
-    {"GetEntityPos",          L_Game_GetEntityPos},
-    {"SetEntityPos",          L_Game_SetEntityPos},
-    {"SetKeyHook",              L_Game_SetKeyHook},
-    {"GetKeyByAction",          L_Game_GetKeyByAction},
-    {"Log",                     L_Game_Log},
-    {"SetBlockCenter",          L_Game_SetBlockCenter},
-    {"SetBlockRotation",        L_Game_SetBlockRotation},
+    {"GetTime",        	  	    L_Game_GetTime},
+    {"Message",        	  	    L_Game_Message},
+    {"IsPlayerInZone", 	  	    L_Game_IsPlayerInZone},
+    {"MoveBlock",      	  	    L_Game_MoveBlock},
+    {"GetBlockPos",    	  	    L_Game_GetBlockPos},
+    {"SetBlockPos",    	  	    L_Game_SetBlockPos},
+    {"PlaceInGameArrow",  	    L_Game_PlaceInGameArrow},
+    {"PlaceScreenArrow",  	    L_Game_PlaceScreenArrow},
+    {"HideArrow",         	    L_Game_HideArrow},
+    {"ClearMessages",     	    L_Game_ClearMessages},
+    {"SetGravity", 	  	        L_Game_SetGravity},
+    {"GetGravity", 	  	        L_Game_GetGravity},
+    {"SetPlayerPosition", 	    L_Game_SetPlayerPosition},
+    {"GetPlayerPosition", 	    L_Game_GetPlayerPosition},
+    {"GetEntityPos", 	  	      L_Game_GetEntityPos},
+    {"SetEntityPos", 	  	      L_Game_SetEntityPos},
+    {"SetKeyHook",        	    L_Game_SetKeyHook},
+    {"GetKeyByAction",    	    L_Game_GetKeyByAction},
+    {"Log",               	    L_Game_Log},
+    {"SetBlockCenter",    	    L_Game_SetBlockCenter},
+    {"SetBlockRotation",  	    L_Game_SetBlockRotation},
     {"SetDynamicEntityRotation",    L_Game_SetDynamicEntityRotation},
     {"SetDynamicEntityTranslation", L_Game_SetDynamicEntityTranslation},
     {"SetDynamicEntityNone",        L_Game_SetDynamicEntityNone},
     {"SetDynamicBlockRotation",     L_Game_SetDynamicBlockRotation},
     {"SetDynamicBlockTranslation",  L_Game_SetDynamicBlockTranslation},
     {"SetDynamicBlockNone",         L_Game_SetDynamicBlockNone},
-    {"CameraZoom",        L_Game_CameraZoom},
-    {"CameraMove",        L_Game_CameraMove},
-    {"GetEntityRadius",       L_Game_GetEntityRadius},
-    {"IsEntityTouched",       L_Game_IsEntityTouched},
-    {"KillPlayer",                  L_Game_KillPlayer},
-    {"KillEntity",                  L_Game_KillEntity},
-    {"RemainingStrawberries",       L_Game_RemainingStrawberries},
-    {"WinPlayer",                   L_Game_WinPlayer},
-    {"AddPenaltyTime",              L_Game_PenaltyTime},
+    {"CameraZoom", 		          L_Game_CameraZoom},
+    {"CameraMove", 		          L_Game_CameraMove},
+    {"GetEntityRadius", 		    L_Game_GetEntityRadius},
+    {"IsEntityTouched", 		    L_Game_IsEntityTouched},
     {NULL, NULL}
   };
 
@@ -125,29 +114,6 @@ namespace vapp {
     luaL_openlib(pL,"Game",g_GameFuncs,0);
     return 1;
   }
-
-  MotoGame::MotoGame() {
-    m_pLevelSrc=NULL;
-    m_bSqueeking=false;
-    m_bDeathAnimEnabled=true;
-    clearStates();
-    m_lastCallToEveryHundreath = 0.0;
-#if defined(ALLOW_GHOST)
-    m_showGhostTimeDiff = true;
-    m_isGhostActive = false;
-#endif
-    m_renderer      = NULL;
-    m_isScriptActiv = false;
-    m_bIsAReplay    = false;
-
-    bFrontWheelTouching = false;
-    bRearWheelTouching  = false;
-
-    m_bodyDetach = false;
-  }
-  
-  MotoGame::~MotoGame() {
-  }  
 
   /*===========================================================================
     Simple lua interaction
@@ -196,23 +162,6 @@ namespace vapp {
     lua_settop(m_pL,0);        
   }
   
-  void MotoGame::scriptCallVoidNumberArg(std::string FuncName, int n) {
-    /* Fetch global function */
-    lua_getglobal(m_pL,FuncName.c_str());
-    
-    /* Is it really a function and not just a pile of ****? */
-    if(lua_isfunction(m_pL,-1)) {
-      /* Call! */
-      lua_pushnumber(m_pL, n);
-      if(lua_pcall(m_pL,1,0,0) != 0) {
-        throw Exception("failed to invoke (void) " + FuncName + std::string("(): ") + std::string(lua_tostring(m_pL,-1)));
-      }      
-    }
-    
-    /* Reset Lua VM */
-    lua_settop(m_pL,0);        
-  }
-
   void MotoGame::scriptCallTblVoid(std::string Table,std::string FuncName) {
     /* Fetch global table */        
     lua_getglobal(m_pL,Table.c_str());
@@ -227,7 +176,7 @@ namespace vapp {
         /* Call! */
         if(lua_pcall(m_pL,0,0,0) != 0) {
           throw Exception("failed to invoke (tbl,void) " + Table + std::string(".") + 
-        FuncName + std::string("(): ") + std::string(lua_tostring(m_pL,-1)));
+			  FuncName + std::string("(): ") + std::string(lua_tostring(m_pL,-1)));
         }              
       }
     }
@@ -258,9 +207,20 @@ namespace vapp {
   }
 
   /*===========================================================================
+    Dummy adding
+    ===========================================================================*/
+  void MotoGame::addDummy(Vector2f Pos,float r,float g,float b) {
+    m_Dummies[m_nNumDummies].Pos = Pos;
+    m_Dummies[m_nNumDummies].r = r;
+    m_Dummies[m_nNumDummies].g = g;
+    m_Dummies[m_nNumDummies].b = b;
+    m_nNumDummies++;
+  }
+
+  /*===========================================================================
     Add game message
     ===========================================================================*/
-  void MotoGame::gameMessage(std::string Text,bool bOnce, float fDuration) {
+  void MotoGame::gameMessage(std::string Text,bool bOnce) {
     /* "unique"? */
     GameMessage *pMsg = NULL;
     
@@ -279,7 +239,7 @@ namespace vapp {
       m_GameMessages.push_back(pMsg);
     }
     
-    pMsg->fRemoveTime = getTime() + fDuration;
+    pMsg->fRemoveTime = getTime() + 5.0f;
     pMsg->bNew = true;
     pMsg->nAlpha = 255;
     pMsg->Text = Text;
@@ -292,11 +252,55 @@ namespace vapp {
   }
 
   /*===========================================================================
+  Update dynamic collision lines
+  ===========================================================================*/
+  void MotoGame::_UpdateDynamicCollisionLines(void) {
+	  std::vector<DynamicBlock *> &Blocks = getDynBlocks();
+		for(int i=0;i<Blocks.size();i++) {
+			/* Build rotation matrix for block */
+			float fR[4]; 
+			fR[0] = cos(Blocks[i]->fRotation); fR[1] = -sin(Blocks[i]->fRotation);
+			fR[2] = sin(Blocks[i]->fRotation); fR[3] = cos(Blocks[i]->fRotation);
+			int z = 0;
+						
+			for(int j=0;j<Blocks[i]->ConvexBlocks.size();j++) {				
+				for(int k=0;k<Blocks[i]->ConvexBlocks[j]->Vertices.size();k++) {				    
+				  int knext = k==Blocks[i]->ConvexBlocks[j]->Vertices.size()-1?0:k+1;
+				  ConvexBlockVertex *pVertex1 = Blocks[i]->ConvexBlocks[j]->Vertices[k];				  
+				  ConvexBlockVertex *pVertex2 = Blocks[i]->ConvexBlocks[j]->Vertices[knext];				  
+
+				  /* Transform vertices */
+				  Vector2f Tv1 = Vector2f(pVertex1->P.x * fR[0] + pVertex1->P.y * fR[1],
+				                          pVertex1->P.x * fR[2] + pVertex1->P.y * fR[3]);
+          Tv1 += Blocks[i]->Position;				                          
+				  Vector2f Tv2 = Vector2f(pVertex2->P.x * fR[0] + pVertex2->P.y * fR[1],
+				                          pVertex2->P.x * fR[2] + pVertex2->P.y * fR[3]);
+          Tv2 += Blocks[i]->Position;				                          
+            				  
+				  /* Update line */
+				  Blocks[i]->CollisionLines[z]->x1 = Tv1.x;
+				  Blocks[i]->CollisionLines[z]->y1 = Tv1.y;
+				  Blocks[i]->CollisionLines[z]->x2 = Tv2.x;
+				  Blocks[i]->CollisionLines[z]->y2 = Tv2.y;
+				  
+          /* Next collision line */
+				  z++;
+				}
+			}
+		}		  
+  }
+
+  /*===========================================================================
     Update game
     ===========================================================================*/
   void MotoGame::updateLevel(float fTimeStep,SerializedBikeState *pReplayState,Replay *p_replay) {
+    bool v_enableScript = pReplayState == NULL; // don't use script on replay (lua action must be read from the replay)
+    
     m_bSqueeking = false; /* no squeeking right now */
 
+    /* Dummies are small markers that can show different things during debugging */
+    resetDummies();
+    
     /* Going to teleport? Do it now, before we tinker to much with the state */
     if(m_bTeleport) {
       /* Clear stuff */
@@ -325,131 +329,17 @@ namespace vapp {
       _InitPhysics();
 
       /* Calculate bike stuff */
-      m_BikeS.reInitializeAnchors();
-      Vector2f C( m_TeleportDest.Pos - m_BikeS.Anchors().GroundPoint());
+      _CalculateBikeAnchors();    
+      Vector2f C( m_TeleportDest.Pos.x - m_BikeA.Tp.x, m_TeleportDest.Pos.y - m_BikeA.Tp.y);
       _PrepareBikePhysics(C);
           
       m_BikeS.Dir = m_TeleportDest.bDriveRight?DD_RIGHT:DD_LEFT;
-
-      m_BikeS.reInitializeSpeed();
+      
+      m_BikeS.fCurBrake = m_BikeS.fCurEngine = 0.0f;
       
       m_bTeleport = false;
     }
-
-    getLevelSrc()->updateToTime(*this);
-    updateGameMessages();
-    
-    /* Increase time */
-    if(m_bIsAReplay == false)
-      m_fTime += fTimeStep;
-    else
-      m_fTime = pReplayState->fGameTime;
-    
-    /* Are we going to change direction during this update? */
-    bool bChangeDir = false;
-    if(m_BikeC.ChangeDir()) {
-      m_BikeC.setChangeDir(false);
-      bChangeDir = true;
-      
-      m_BikeS.Dir = m_BikeS.Dir==DD_LEFT?DD_RIGHT:DD_LEFT; /* switch */
-    }
   
-    /* Update game state */
-    _UpdateGameState(pReplayState);
-        
-    /* Update misc stuff (only when not playing a replay) */
-    if(m_bIsAReplay == false) {
-      _UpdateZones();
-      _UpdateEntities();
-    }
-    
-    /* Invoke PreDraw() script function - deprecated */
-    if(m_isScriptActiv && isDead() == false) {
-      if(!scriptCallBool("PreDraw",
-       true)) {
-  throw Exception("level script PreDraw() returned false");
-      }
-    }
-
-    /* Invoke Tick() script function */
-    /* and play script dynamic objects */
-    while(getTime() - m_lastCallToEveryHundreath > 0.01) {
-      if(m_isScriptActiv && isDead() == false) {
-  if(!scriptCallBool("Tick",
-         true)) {
-           throw Exception("level script Tick() returned false");
-         }
-      }
-      nextStateScriptDynamicObjects();
-      m_lastCallToEveryHundreath += 0.01;
-    }
-
-    /* Only make a full physics update when not replaying */
-    if(m_bIsAReplay == false) {
-      /* Update physics */
-      _UpdatePhysics(fTimeStep);
-
-      /* New wheel-spin particles? */
-      if(isWheelSpinning()) {
-	if(randomNum(0,1) < 0.7f) {
-	  ParticlesSource *v_debris;
-	  v_debris = (ParticlesSource*) &(getLevelSrc()->getEntityById("BikeDebris"));
-	  v_debris->setDynamicPosition(getWheelSpinPoint());	
-	  v_debris->addParticle(getWheelSpinDir(), m_pMotoGame->getTime() + 3.0);
-	}
-      }
-
-      if(isDead() == false) {
-	executeEvents(p_replay);
-      }
-    }
-    else {
-      /* Well, handle replay events instead */
-      _UpdateReplayEvents(p_replay);
-    }
-
-    /* Entities scheduled for termination? */
-    for(int i=0;i<m_DelSchedule.size();i++)
-      _KillEntity(m_DelSchedule[i]);
-    m_DelSchedule.clear();
-    
-    // we don't change the sens of the wheel depending on the side, because 
-    // loops must not make done just by changing the side
-    if(m_bIsAReplay == false) { /* this does not work for replays */
-      double fAngle = acos(m_BikeS.fFrameRot[0]);
-      bool bCounterclock;
-      if(m_BikeS.fFrameRot[2] < 0.0f) fAngle = 2*3.14159f - fAngle;
-
-      if(m_somersaultCounter.update(fAngle, bCounterclock)) {
-  scriptCallVoidNumberArg("OnSomersault", bCounterclock ? 1:0);
-      }
-    }
-
-    /* Remember bike pos for next time */
-    //m_PrevFrontWheelP = m_BikeS.FrontWheelP;
-    //m_PrevRearWheelP = m_BikeS.RearWheelP;
-    
-    //float fAngle = (180.0f * acos(m_BikeS.fFrameRot[0])) / 3.14159f;
-    //if(m_BikeS.fFrameRot[2] < 0.0f) fAngle = 360 - fAngle;
-    //printf("%f\n",fAngle);
-  }
-
-  void MotoGame::executeEvents(Replay *p_replay) {
-    /* Handle events generated this update */
-    while(getNumPendingGameEvents() > 0) {
-      MotoGameEvent *pEvent = getNextGameEvent();
-      if(p_replay != NULL) {
-  /* Encode event */
-  _SerializeGameEventQueue(*p_replay, pEvent);
-      }
-      
-      /* What event? */
-      pEvent->doAction(this);
-      destroyGameEvent(pEvent);
-    }
-  }
-
-  void MotoGame::updateGameMessages() {
     /* Handle game messages (keep them in place) */
     int i=0;
     while(1) {
@@ -479,6 +369,310 @@ namespace vapp {
       }
       i++;
     }
+    
+    /* Increase time */
+    if(pReplayState == NULL)
+      m_fTime += fTimeStep;
+    else
+      m_fTime = pReplayState->fGameTime;
+    
+    /* Are we going to change direction during this update? */
+    bool bChangeDir = false;
+    if(m_BikeC.bChangeDir) {
+      m_BikeC.bChangeDir = false;
+      bChangeDir = true;
+      
+      m_BikeS.Dir = m_BikeS.Dir==DD_LEFT?DD_RIGHT:DD_LEFT; /* switch */
+    }
+  
+    /* Update game state */
+    _UpdateGameState(pReplayState);
+        
+    /* Update misc stuff (only when not playing a replay) */
+    if(pReplayState == NULL) {
+      _UpdateZones();
+      _UpdateEntities();
+    }
+    
+    /* Invoke PreDraw() script function - deprecated */
+    if(v_enableScript) {
+      if(!scriptCallBool("PreDraw",
+			 true)) {
+	throw Exception("level script PreDraw() returned false");
+      }
+    }
+
+    /* Invoke Tick() script function */
+    /* and play script dynamic objects */
+    while(getTime() - m_lastCallToEveryHundreath > 0.01) {
+      if(v_enableScript) {
+	if(!scriptCallBool("Tick",
+			   true)) {
+			     throw Exception("level script Tick() returned false");
+			   }
+      }
+      nextStateScriptDynamicObjects();
+      m_lastCallToEveryHundreath += 0.01;
+    }
+
+    /* Only make a full physics update when not replaying */
+    if(pReplayState == NULL) {
+      /* Update physics */
+      _UpdatePhysics(fTimeStep);
+          
+      /* Handle events generated this update */
+      while(getNumPendingGameEvents() > 0) {
+	GameEvent *pEvent = getNextGameEvent();
+	if(pEvent != NULL) {
+	  if(p_replay != NULL) {
+	    /* Encode event */
+	    _SerializeGameEventQueue(*p_replay,pEvent);
+	  }
+	  
+	  /* What event? */
+	  switch(pEvent->Type) {
+	  case GAME_EVENT_PLAYER_DIES:
+	    {
+	      m_bDead = true;	      
+	    }
+	    break;
+	  case GAME_EVENT_PLAYER_ENTERS_ZONE:						
+	    {
+	      /* Notify script */
+	      if(v_enableScript) {
+		scriptCallTblVoid( pEvent->u.PlayerEntersZone.pZone->ID,"OnEnter" );
+	      }
+	    }
+	    break;
+	  case GAME_EVENT_PLAYER_LEAVES_ZONE:
+	    {
+	      if(v_enableScript) {
+		/* Notify script */
+		scriptCallTblVoid( pEvent->u.PlayerEntersZone.pZone->ID,"OnLeave" );						
+	      }
+	    }
+	    break;
+	  case GAME_EVENT_PLAYER_TOUCHES_ENTITY:
+	    {
+	      Entity *pEntityToTouch = findEntity(pEvent->u.PlayerTouchesEntity.cEntityID);
+	      if(pEntityToTouch != NULL) {
+		touchEntity(pEntityToTouch,pEvent->u.PlayerTouchesEntity.bHead, v_enableScript);
+	      }
+	    }
+	    break;
+	  case GAME_EVENT_ENTITY_DESTROYED: 
+	    {
+        if(pEvent->u.EntityDestroyed.Type == ET_STRAWBERRY) {
+	        /* Spawn some particles */
+	        for(int i=0;i<6;i++)
+  	        m_renderer->spawnParticle(PT_STAR,Vector2f(pEvent->u.EntityDestroyed.fPosX,pEvent->u.EntityDestroyed.fPosY),Vector2f(0,0),5);
+
+	        /* Play yummy-yummy sound */
+	        Sound::playSampleByName("Sounds/PickUpStrawberry.ogg");
+	      }
+
+	      /* Destroy entity */
+	      Entity *pEntityToDestroy = findEntity(pEvent->u.EntityDestroyed.cEntityID);
+	      if(pEntityToDestroy != NULL) {
+		      deleteEntity(pEntityToDestroy);
+	      }
+	    }
+	    break;
+	    
+	  case GAME_EVENT_LUA_CALL_SETENTITYPOS:
+	    {
+	      SetEntityPos(pEvent->u.LuaCallSetentitypos.cEntityID,
+			   pEvent->u.LuaCallSetentitypos.x,
+			   pEvent->u.LuaCallSetentitypos.y);
+	    }
+	    break;
+	    
+	  case GAME_EVENT_LUA_CALL_CLEARMESSAGES:
+	    {
+	      clearGameMessages();
+	    }
+	    break;
+	    
+	  case GAME_EVENT_LUA_CALL_PLACEINGAMEARROW:
+	    {
+	      PlaceInGameArrow(pEvent->u.LuaCallPlaceingamearrow.x,
+			       pEvent->u.LuaCallPlaceingamearrow.y,
+			       pEvent->u.LuaCallPlaceingamearrow.angle);
+	    }
+	    break;
+	    
+	  case GAME_EVENT_LUA_CALL_PLACESCREENARROW:
+	    {
+	      PlaceScreenArrow(pEvent->u.LuaCallPlacescreenarrow.x,
+			       pEvent->u.LuaCallPlacescreenarrow.y,
+			       pEvent->u.LuaCallPlacescreenarrow.angle);  
+	    }
+	    break;
+	    
+	  case GAME_EVENT_LUA_CALL_HIDEARROW:
+	    {
+	      getArrowPointer().nArrowPointerMode = 0;
+	    }
+	    break;
+	    
+	  case GAME_EVENT_LUA_CALL_MESSAGE:
+	    {
+	      gameMessage(pEvent->u.LuaCallMessage.cMessage);
+	    }
+	    break;
+	    
+	  case GAME_EVENT_LUA_CALL_MOVEBLOCK:
+	    {
+	      MoveBlock(pEvent->u.LuaCallMoveblock.cBlockID,
+			pEvent->u.LuaCallMoveblock.x,
+			pEvent->u.LuaCallMoveblock.y);
+	    }
+	    break;
+	    
+	  case GAME_EVENT_LUA_CALL_SETBLOCKPOS:
+	    {
+	      SetBlockPos(pEvent->u.LuaCallSetblockpos.cBlockID,
+			  pEvent->u.LuaCallSetblockpos.x,
+			  pEvent->u.LuaCallSetblockpos.y);
+	    }
+	    break;
+	    
+	  case GAME_EVENT_LUA_CALL_SETGRAVITY:
+	    {
+	      setGravity(pEvent->u.LuaCallSetgravity.x,
+			 pEvent->u.LuaCallSetgravity.y);
+	    }
+	    break;
+	    
+	  case GAME_EVENT_LUA_CALL_SETPLAYERPOSITION:
+	    {
+	      m_pMotoGame->setPlayerPosition(pEvent->u.LuaCallSetplayerposition.x,
+					     pEvent->u.LuaCallSetplayerposition.y,
+					     pEvent->u.LuaCallSetplayerposition.bRight);
+	    }
+	    break;
+	    
+	  case GAME_EVENT_LUA_CALL_SETBLOCKCENTER:
+	    {
+	      SetBlockCenter(pEvent->u.LuaCallSetBlockCenter.cBlockID,
+			     pEvent->u.LuaCallSetBlockCenter.x,
+			     pEvent->u.LuaCallSetBlockCenter.y);
+	    }
+	    break;
+	    
+	  case GAME_EVENT_LUA_CALL_SETBLOCKROTATION:
+	    {
+	      SetBlockRotation(pEvent->u.LuaCallSetBlockRotation.cBlockID,
+			       pEvent->u.LuaCallSetBlockRotation.fAngle);
+	    }
+	    break;
+	    
+	  case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROTATION:
+	    {
+	      m_SDynamicObjects
+		.push_back(new SDynamicEntityRotation(pEvent->u.LuaCallSetDynamicEntityRotation.cEntityID,
+						      pEvent->u.LuaCallSetDynamicEntityRotation.fInitAngle,
+						      pEvent->u.LuaCallSetDynamicEntityRotation.fRadius,
+						      pEvent->u.LuaCallSetDynamicEntityRotation.fPeriod,
+						      pEvent->u.LuaCallSetDynamicEntityRotation.startTime,
+						      pEvent->u.LuaCallSetDynamicEntityRotation.endTime
+						      ));
+	    }
+	    break;
+	    
+	  case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYTRANSLATION:
+	    {
+	      m_SDynamicObjects
+		.push_back(new SDynamicEntityTranslation(pEvent->u.LuaCallSetDynamicEntityTranslation.cEntityID,
+							 pEvent->u.LuaCallSetDynamicEntityTranslation.fX,
+							 pEvent->u.LuaCallSetDynamicEntityTranslation.fY,
+							 pEvent->u.LuaCallSetDynamicEntityTranslation.fPeriod,
+							 pEvent->u.LuaCallSetDynamicEntityTranslation.startTime,
+							 pEvent->u.LuaCallSetDynamicEntityTranslation.endTime
+							 ));
+	    }
+	    break;
+	    
+	  case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYNONE:
+	    {
+	      removeSDynamicOfObject(pEvent->u.LuaCallSetDynamicEntityNone.cEntityID);
+	    }
+	    break;
+	    
+	    
+	  case GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKROTATION:
+	    {
+	      m_SDynamicObjects
+		.push_back(new SDynamicBlockRotation(pEvent->u.LuaCallSetDynamicBlockRotation.cBlockID,
+						     pEvent->u.LuaCallSetDynamicBlockRotation.fInitAngle,
+						     pEvent->u.LuaCallSetDynamicBlockRotation.fRadius,
+						     pEvent->u.LuaCallSetDynamicBlockRotation.fPeriod,
+						     pEvent->u.LuaCallSetDynamicBlockRotation.startTime,
+						     pEvent->u.LuaCallSetDynamicBlockRotation.endTime
+						     ));
+	    }
+	    break;
+	    
+	  case GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKTRANSLATION:
+	    {
+	      m_SDynamicObjects
+		.push_back(new SDynamicBlockTranslation(pEvent->u.LuaCallSetDynamicBlockTranslation.cBlockID,
+							pEvent->u.LuaCallSetDynamicBlockTranslation.fX,
+							pEvent->u.LuaCallSetDynamicBlockTranslation.fY,
+							pEvent->u.LuaCallSetDynamicBlockTranslation.fPeriod,
+							pEvent->u.LuaCallSetDynamicBlockTranslation.startTime,
+							pEvent->u.LuaCallSetDynamicBlockTranslation.endTime
+							));
+	    }
+	    break;
+	    
+	  case GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKNONE:
+	    {
+	      removeSDynamicOfObject(pEvent->u.LuaCallSetDynamicBlockNone.cBlockID);
+	    }
+	    break;
+	    
+	  case GAME_EVENT_LUA_CALL_CAMERAZOOM:
+	    {
+	      CameraZoom(pEvent->u.LuaCallCameraZoom.fZoom);
+	    }
+	    break;
+	    
+	  case GAME_EVENT_LUA_CALL_CAMERAMOVE:
+	    {
+	      CameraMove(pEvent->u.LuaCallCameraMove.x, pEvent->u.LuaCallCameraMove.y);
+	    }
+	    break;
+	    
+	  }
+	  destroyGameEvent(pEvent);
+	}
+	else break;
+      }
+    }
+    else {
+      /* Well, handle replay events instead */
+      _UpdateReplayEvents(p_replay);
+    }
+
+    /* Entities scheduled for termination? */
+    for(int i=0;i<m_DelSchedule.size();i++)
+      _KillEntity(m_DelSchedule[i]);
+    m_DelSchedule.clear();
+    
+    // we don't change the sens of the wheel depending on the side, because 
+    // loops must not make done just by changing the side
+    if(pReplayState == NULL) { /* this does not work for replays */
+      if(m_somersaultCounter.update(m_BikeS.RearWheelP, m_BikeS.FrontWheelP)) {
+	char msg[16];
+	sprintf(msg, "%i", m_somersaultCounter.getTotal());
+	//gameMessage(msg);
+      }
+    }
+
+    /* Remember bike pos for next time */
+    //m_PrevFrontWheelP = m_BikeS.FrontWheelP;
+    //m_PrevRearWheelP = m_BikeS.RearWheelP;
   }
 
   /*===========================================================================
@@ -491,7 +685,8 @@ namespace vapp {
     m_BikeS.fBikeEngineRPM = 0.0f;
     m_BikeS.Elbow2P = Vector2f(0,0);
     m_BikeS.ElbowP = Vector2f(0,0);
-    m_BikeS.reInitializeSpeed();
+    m_BikeS.fCurBrake = 0.0f;
+    m_BikeS.fCurEngine = 0.0f;
     m_BikeS.Foot2P = Vector2f(0,0);
     m_BikeS.FootP = Vector2f(0,0);
     m_BikeS.FrontAnchor2P = Vector2f(0,0);
@@ -505,6 +700,7 @@ namespace vapp {
     m_BikeS.KneeP = Vector2f(0,0);
     m_BikeS.LowerBody2P = Vector2f(0,0);
     m_BikeS.LowerBodyP = Vector2f(0,0);
+    m_BikeS.pAnchors = NULL;
     //m_BikeS.pfFramePos = NULL;
     //m_BikeS.pfFrameRot = NULL;
     //m_BikeS.pfFrontWheelPos = NULL;
@@ -547,6 +743,9 @@ namespace vapp {
     m_BikeS.SwingAnchor2P = Vector2f(0,0);
     m_BikeS.SwingAnchorP = Vector2f(0,0);
     
+    /* BIKE_P */
+    memset(&m_BikeP,0,sizeof(m_BikeP));
+    
     /* BIKE_C */
     memset(&m_BikeC,0,sizeof(m_BikeC)); 
   }
@@ -554,26 +753,18 @@ namespace vapp {
   /*===========================================================================
     Prepare the specified level for playing through this game object
     ===========================================================================*/
-  void MotoGame::prePlayLevel(
+  void MotoGame::playLevel(
 #if defined(ALLOW_GHOST)    
-         Replay *m_pGhostReplay,
+			   Replay *m_pGhostReplay,
 #endif
-         Level *pLevelSrc,
-         Replay *recordingReplay,
-         bool bIsAReplay) {
-
-    m_bIsAReplay = bIsAReplay;
-    m_isScriptActiv = (m_bIsAReplay == false);
+			   LevelSrc *pLevelSrc,
+			   bool bIsAReplay) {
+    bool v_enableScript = bIsAReplay == false;
     m_bLevelInitSuccess = true;
 
     /* Clean up first, just for safe's sake */
     endLevel();               
     
-    /* load the level if not */
-    if(pLevelSrc->isFullyLoaded() == false) {
-      pLevelSrc->loadFullyFromFile();
-    }
-
     /* Set default gravity */
     m_PhysGravity.x = 0;
     m_PhysGravity.y = PHYS_WORLD_GRAV;
@@ -588,10 +779,7 @@ namespace vapp {
     
     /* Clear collision system */
     m_Collision.reset();
-    bFrontWheelTouching = false;
-    bRearWheelTouching  = false;
-    pLevelSrc->setCollisionSystem(&m_Collision);
-
+    
     /* Clear stuff */
     clearStates();
     
@@ -603,6 +791,7 @@ namespace vapp {
     m_fAttitudeCon = 0.0f;
     
     m_nStillFrames = 0;
+    m_nNumDummies = 0;
     
     m_nLastEventSeq = 0;
     
@@ -626,19 +815,33 @@ namespace vapp {
     m_PlayerLLegBodyID2 = NULL;
     
     m_bDead = m_bFinished = false;
-
+      
     m_lastCallToEveryHundreath = 0.0;
+
+#if defined(ALLOW_GHOST)
+    m_myLastStrawberries.clear();
+    m_ghostLastStrawberries.clear();
+    m_myDiffOfGhost = 0.0;
+
+    if(m_pGhostReplay != NULL) {
+      InitGhostLastStrawberries(m_pGhostReplay);
+    }
+#endif
 
     m_renderer->initCamera();
     m_renderer->initZoom();
 
+    /* Clear zone flags */
+    for(int i=0;i<pLevelSrc->getZoneList().size();i++)
+      pLevelSrc->getZoneList()[i]->m_bInZone = false;
+    
     /* Load and parse level script */
     bool bTryParsingEncapsulatedLevelScript = true;
     bool bNeedScript = false;
     bool bGotScript = false;
     
-    if(pLevelSrc->scriptFileName() != "") {
-      FileHandle *pfh = FS::openIFile(std::string("./Levels/") + pLevelSrc->scriptFileName());
+    if(pLevelSrc->getScriptFile() != "") {
+      FileHandle *pfh = FS::openIFile(std::string("./Levels/") + pLevelSrc->getScriptFile());
       if(pfh == NULL) {
         /* Well, file not found -- try encapsulated script */
         bNeedScript = true;
@@ -655,8 +858,8 @@ namespace vapp {
         FS::closeFile(pfh);
 
         /* Use the Lua aux lib to load the buffer */
-        int nRet = luaL_loadbuffer(m_pL,ScriptBuf.c_str(),ScriptBuf.length(),pLevelSrc->scriptFileName().c_str()) ||
-    lua_pcall(m_pL,0,0,0);    
+        int nRet = luaL_loadbuffer(m_pL,ScriptBuf.c_str(),ScriptBuf.length(),pLevelSrc->getScriptFile().c_str()) ||
+	  lua_pcall(m_pL,0,0,0);    
 
         /* Returned WHAT? */
         if(nRet != 0) {
@@ -669,17 +872,17 @@ namespace vapp {
       }       
     }    
     
-    if(bTryParsingEncapsulatedLevelScript && pLevelSrc->scriptSource() != "") {
+    if(bTryParsingEncapsulatedLevelScript && pLevelSrc->getScriptSource() != "") {
       /* Use the Lua aux lib to load the buffer */
-      int nRet = luaL_loadbuffer(m_pL,pLevelSrc->scriptSource().c_str(),pLevelSrc->scriptSource().length(),
-         pLevelSrc->FileName().c_str()) || lua_pcall(m_pL,0,0,0);    
+      int nRet = luaL_loadbuffer(m_pL,pLevelSrc->getScriptSource().c_str(),pLevelSrc->getScriptSource().length(),
+				 pLevelSrc->getFileName().c_str()) || lua_pcall(m_pL,0,0,0);    
          
       /* Returned WHAT? */
       if(nRet != 0) {
-  std::string error_msg = std::string(lua_tostring(m_pL,-1));
-  lua_close(m_pL);
-  /* should call error(0) */
-  throw Exception("failed to load level encapsulated script :\n" + error_msg);
+	std::string error_msg = std::string(lua_tostring(m_pL,-1));
+	lua_close(m_pL);
+	/* should call error(0) */
+	throw Exception("failed to load level encapsulated script :\n" + error_msg);
       }
 
       bGotScript = true;      
@@ -692,25 +895,18 @@ namespace vapp {
     
     /* Initialize physics */
     _InitPhysics();
-   
+    
     /* Set level source reference -- this tells the world that the level is ready */
     m_pLevelSrc = pLevelSrc;
     
     /* Generate extended level data to be used by the game */
-    try {
-      _GenerateLevel();
-    } catch(Exception &e) {
-      Log(std::string("** Warning ** : Level generation failed !\n" + e.getMsg()).c_str());
-      m_bLevelInitSuccess = false;
-      return;
-    }        
-
+    _GenerateLevel();
+        
     /* Calculate bike stuff */
-    m_BikeS.reInitializeAnchors();
-    Vector2f C( pLevelSrc->PlayerStart() - m_BikeS.Anchors().GroundPoint());
+    _CalculateBikeAnchors();    
+    Vector2f C( pLevelSrc->getPlayerStartX() - m_BikeA.Tp.x, pLevelSrc->getPlayerStartY() - m_BikeA.Tp.y);
     _PrepareBikePhysics(C);
-    setBodyDetach(false);    
-
+    
     //const dReal *pf = dBodyGetPosition(m_FrontWheelBodyID);
     //m_PrevFrontWheelP = Vector2f(pf[0],pf[1]);
     //pf = dBodyGetPosition(m_RearWheelBodyID);
@@ -719,57 +915,37 @@ namespace vapp {
     /* Drive left-to-right for starters */
     m_BikeS.Dir = DD_RIGHT;
     
-    m_BikeS.reInitializeSpeed();
+    m_BikeS.fCurBrake = m_BikeS.fCurEngine = 0.0f;
+    
+    /* Spawn initial entities */
+    for(int i=0;i<m_pLevelSrc->getEntityList().size();i++) {
+      LevelEntity *pLEnt = m_pLevelSrc->getEntityList()[i];
+      
+      EntityType Type = _TransEntityType(pLEnt->TypeID);
+      if(Type != ET_UNASSIGNED) {
+        _SpawnEntity(pLEnt->ID,Type,Vector2f(pLEnt->fPosX,pLEnt->fPosY),pLEnt);        
+      }
+      else
+        Log("** Warning ** : Unknown entity type '%s' for '%s'",pLEnt->TypeID.c_str(),pLEnt->ID.c_str());
+    }    
 
     /* Invoke the OnLoad() script function */
-    if(m_isScriptActiv) {
+    if(v_enableScript) {
       bool bOnLoadSuccess = scriptCallBool("OnLoad",
-             true);
+					   true);
       /* if no OnLoad(), assume success */
       /* Success? */
       if(!bOnLoadSuccess) {
-        /* Hmm, the script insists that we shouldn't begin playing... */
-        endLevel();      
-        
-        m_bLevelInitSuccess = false;
-	return;
+	      /* Hmm, the script insists that we shouldn't begin playing... */
+	      endLevel();      
+	      
+	      m_bLevelInitSuccess = false;
       }
     }
-
-#if defined(ALLOW_GHOST)
-	   m_myLastStrawberries.clear();
-	   m_ghostLastStrawberries.clear();
-	   m_myDiffOfGhost = 0.0;
-	   
-	   if(m_pGhostReplay != NULL) {
-	     InitGhostLastStrawberries(m_pGhostReplay);
-	   }
-#endif
-
-    /* add the debris particlesSource */
-    ParticlesSource *v_debris = new ParticlesSourceDebris("BikeDebris");
-    v_debris->loadToPlay();
-    getLevelSrc()->spawnEntity(v_debris);
 
     /* counter of somersaultcounter */
     m_somersaultCounter.init();
 
-    /* execute events */
-    executeEvents(recordingReplay);
-
-    if(m_bIsAReplay == false) {
-      /* Update game state */
-      _UpdateGameState(NULL);
-    }
-
-  }
-
-  void MotoGame::playLevel(
-#if defined(ALLOW_GHOST)    
-         Replay *m_pGhostReplay,
-#endif
-         Level *pLevelSrc,
-         bool bIsAReplay) {
   }
 
   /*===========================================================================
@@ -779,16 +955,34 @@ namespace vapp {
     /* If not already freed */
     if(m_pLevelSrc != NULL) {
       /* Clean up */
+      while(m_Entities.size() > 0) _KillEntity(m_Entities[0]);
+      while(m_Blocks.size() > 0) {
+        while(m_Blocks[0]->Vertices.size() > 0) {
+          delete m_Blocks[0]->Vertices[0];
+          m_Blocks[0]->Vertices.erase( m_Blocks[0]->Vertices.begin() );
+        }
+        delete m_Blocks[0];
+        m_Blocks.erase( m_Blocks.begin() );
+      }
+      while(m_OvEdges.size() > 0) {
+        delete m_OvEdges[0];
+        m_OvEdges.erase( m_OvEdges.begin() );
+      }
       lua_close(m_pL);
       m_pL = NULL;
       
+      /* Delete dynamic blocks */
+      for(int i=0;i<m_DynBlocks.size();i++) {
+        for(int j=0;j<m_DynBlocks[i]->CollisionLines.size();j++)
+          delete m_DynBlocks[i]->CollisionLines[j];
+          
+        delete m_DynBlocks[i];
+      }
+      m_DynBlocks.clear();
+      
       /* Stop physics */
       _UninitPhysics();
-
-      m_entitiesTouching.clear();
-      m_zonesTouching.clear();
-      m_pLevelSrc->unloadToPlay();      
-
+      
       /* Release reference to level source */
       m_pLevelSrc = NULL;      
     }
@@ -817,306 +1011,458 @@ namespace vapp {
     /* Ok, our primary job is to convert the set of input blocks, which CAN
        contain concave polygons, into a final set of (possibly) smaller 
        blocks that are guaranteed to be convex. */
-    std::vector<Block *> &InBlocks = m_pLevelSrc->Blocks();           
+    std::vector<LevelBlock *> &InBlocks = m_pLevelSrc->getBlockList();           
 
     /* Start by determining the bounding box of the level */
     Vector2f LevelBoundsMin,LevelBoundsMax;
-    LevelBoundsMin.x = m_pLevelSrc->LeftLimit();
-    LevelBoundsMax.x = m_pLevelSrc->RightLimit();
-    LevelBoundsMin.y = m_pLevelSrc->BottomLimit();
-    LevelBoundsMax.y = m_pLevelSrc->TopLimit();
+    LevelBoundsMin.x = m_pLevelSrc->getLeftLimit();
+    LevelBoundsMax.x = m_pLevelSrc->getRightLimit();
+    LevelBoundsMin.y = m_pLevelSrc->getBottomLimit();
+    LevelBoundsMax.y = m_pLevelSrc->getTopLimit();
     for(int i=0;i<InBlocks.size();i++) { 
-      for(int j=0;j<InBlocks[i]->Vertices().size();j++) {
-        LevelBoundsMin.x = InBlocks[i]->InitialPosition().x+InBlocks[i]->Vertices()[j]->Position().x < LevelBoundsMin.x ? 
-          InBlocks[i]->InitialPosition().x+InBlocks[i]->Vertices()[j]->Position().x : LevelBoundsMin.x;
-        LevelBoundsMin.y = InBlocks[i]->InitialPosition().y+InBlocks[i]->Vertices()[j]->Position().y < LevelBoundsMin.y ? 
-          InBlocks[i]->InitialPosition().y+InBlocks[i]->Vertices()[j]->Position().y : LevelBoundsMin.y;
-        LevelBoundsMax.x = InBlocks[i]->InitialPosition().x+InBlocks[i]->Vertices()[j]->Position().x > LevelBoundsMax.x ? 
-          InBlocks[i]->InitialPosition().x+InBlocks[i]->Vertices()[j]->Position().x : LevelBoundsMax.x;
-        LevelBoundsMax.y = InBlocks[i]->InitialPosition().y+InBlocks[i]->Vertices()[j]->Position().y > LevelBoundsMax.y ? 
-          InBlocks[i]->InitialPosition().y+InBlocks[i]->Vertices()[j]->Position().y : LevelBoundsMax.y;
+      for(int j=0;j<InBlocks[i]->Vertices.size();j++) {
+        LevelBoundsMin.x = InBlocks[i]->fPosX+InBlocks[i]->Vertices[j]->fX < LevelBoundsMin.x ? 
+	        InBlocks[i]->fPosX+InBlocks[i]->Vertices[j]->fX : LevelBoundsMin.x;
+        LevelBoundsMin.y = InBlocks[i]->fPosY+InBlocks[i]->Vertices[j]->fY < LevelBoundsMin.y ? 
+	        InBlocks[i]->fPosY+InBlocks[i]->Vertices[j]->fY : LevelBoundsMin.y;
+        LevelBoundsMax.x = InBlocks[i]->fPosX+InBlocks[i]->Vertices[j]->fX > LevelBoundsMax.x ? 
+	        InBlocks[i]->fPosX+InBlocks[i]->Vertices[j]->fX : LevelBoundsMax.x;
+        LevelBoundsMax.y = InBlocks[i]->fPosY+InBlocks[i]->Vertices[j]->fY > LevelBoundsMax.y ? 
+	        InBlocks[i]->fPosY+InBlocks[i]->Vertices[j]->fY : LevelBoundsMax.y;
       }
     }
     
     m_Collision.setDims(LevelBoundsMin.x,LevelBoundsMin.y,LevelBoundsMax.x,LevelBoundsMax.y);
-
+    //m_Collision.setSize(LevelBoundsMax.x - LevelBoundsMin.x,LevelBoundsMax.y - LevelBoundsMin.y);
+    //m_Collision.setCenter((LevelBoundsMax.x + LevelBoundsMin.x)/2.0f,(LevelBoundsMax.y + LevelBoundsMin.y)/2.0f);
+    
     Log("Generating level from %d block%s...",InBlocks.size(),InBlocks.size()==1?"":"s");
     
     /* For each input block */
     int nTotalBSPErrors = 0;
+    int nDynamicBlocks = 0;
     
-    m_zonesTouching.clear();
-    m_entitiesTouching.clear();
-
-    nTotalBSPErrors = m_pLevelSrc->loadToPlay();
-
-    Log(" %d poly%s in total",m_pLevelSrc->Blocks().size(),m_pLevelSrc->Blocks().size()==1?"":"s");        
+    for(int i=0;i<InBlocks.size();i++) {
+      /* Do the "convexifying" the BSP-way. It might be overkill, but we'll
+         probably appreciate it when the input data is very complex. It'll also 
+         let us handle crossing edges, and other kinds of weird input. */
+      BSP BSPTree;
+      
+      /* Define edges */
+      for(int j=0;j<InBlocks[i]->Vertices.size();j++) {
+        /* Next vertex? */
+        int jnext = j+1;
+        if(jnext == InBlocks[i]->Vertices.size()) jnext=0;
+        
+        if(!InBlocks[i]->bBackground && !InBlocks[i]->bDynamic) {
+          /* Add line to collision handler */
+          m_Collision.defineLine(InBlocks[i]->fPosX + InBlocks[i]->Vertices[j]->fX,
+				    InBlocks[i]->fPosY + InBlocks[i]->Vertices[j]->fY,
+				    InBlocks[i]->fPosX + InBlocks[i]->Vertices[jnext]->fX,
+				    InBlocks[i]->fPosY + InBlocks[i]->Vertices[jnext]->fY);
+        }
+        
+        /* Add line to BSP generator */
+        BSPTree.addLineDef( Vector2f(InBlocks[i]->Vertices[j]->fX,
+                                     InBlocks[i]->Vertices[j]->fY),
+                            Vector2f(InBlocks[i]->Vertices[jnext]->fX,
+                                     InBlocks[i]->Vertices[jnext]->fY) );                                             
+        /* Is this a special edge? */
+        if(InBlocks[i]->Vertices[j]->EdgeEffect != "") {
+          OverlayEdge *pEdge = new OverlayEdge;
+          pEdge->Effect = _TransEdgeEffect(InBlocks[i]->Vertices[j]->EdgeEffect);
+          pEdge->P1 = Vector2f(InBlocks[i]->Vertices[j]->fX,InBlocks[i]->Vertices[j]->fY);
+          pEdge->P2 = Vector2f(InBlocks[i]->Vertices[jnext]->fX,InBlocks[i]->Vertices[jnext]->fY);
+          pEdge->pSrcBlock = InBlocks[i];
+          m_OvEdges.push_back( pEdge );
+        }
+      }
+      
+      /* Compute */
+      std::vector<BSPPoly *> &BSPPolys = BSPTree.compute();      
+      
+      DynamicBlock *pDyn = NULL;
+      if(InBlocks[i]->bDynamic) {
+        /* Define dynamic block */
+        pDyn = new DynamicBlock;
+        pDyn->pSrcBlock = InBlocks[i];
+        pDyn->Position = Vector2f(pDyn->pSrcBlock->fPosX,pDyn->pSrcBlock->fPosY);
+        m_DynBlocks.push_back(pDyn);
+        
+        nDynamicBlocks++;
+      }
+                 
+      /* Create blocks */
+      for(int j=0;j<BSPPolys.size();j++) {
+        ConvexBlock *pConvexBlock = _CreateBlock(BSPPolys[j],InBlocks[i]);
+        
+        /* Add to dynamic block? */
+        if(pDyn != NULL) {
+          /* Define collision lines */
+          for(int k=0;k<BSPPolys[j]->Vertices.size();k++) {
+            Line *pCLine = new Line;
+            pCLine->x1 = pCLine->y1 = pCLine->x2 = pCLine->y2 = 0.0f;            
+            pDyn->CollisionLines.push_back(pCLine);
+            m_Collision.addExternalDynamicLine(pCLine);
+          }
+          
+          /* Add to list */
+          pDyn->ConvexBlocks.push_back(pConvexBlock);
+        }
+      }
+      Log(" %d poly%s generated from block #%d",BSPPolys.size(),BSPPolys.size()==1?"":"s",i+1);
+      
+      /* Errors from BSP? */        
+      nTotalBSPErrors += BSPTree.getNumErrors();      
+    }
+    
+    Log(" %d special edge%s",m_OvEdges.size(),m_OvEdges.size()==1?"":"s");
+    Log(" %d poly%s in total",m_Blocks.size(),m_Blocks.size()==1?"":"s");        
+    Log(" %d dynamic block%s",nDynamicBlocks,nDynamicBlocks==1?"":"s");
     
     if(nTotalBSPErrors > 0) {
       Log(" %d BSP error%s in total",nTotalBSPErrors,nTotalBSPErrors==1?"":"s");
-      gameMessage(std::string(GAMETEXT_WARNING) + ":");
+      gameMessage(GAMETEXT_WARNING);
       gameMessage(GAMETEXT_ERRORSINLEVEL);
     }
+        
+    /* Create level surroundings (by limits) */    
+    float fVMargin = 20,fHMargin = 20;
+    ConvexBlock *pBlock; 
+    ConvexBlockVertex *pVertex;
+    
+    /* TOP */
+    m_Blocks.push_back( pBlock = new ConvexBlock );    
+    pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
+    pVertex->P=Vector2f( m_pLevelSrc->getLeftLimit() - fHMargin, m_pLevelSrc->getTopLimit() + fVMargin);
+    pVertex->T = pVertex->P * 0.25;
+    pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
+    pVertex->P=Vector2f( m_pLevelSrc->getRightLimit() + fHMargin, m_pLevelSrc->getTopLimit() + fVMargin);
+    pVertex->T = pVertex->P * 0.25;
+    pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
+    pVertex->P=Vector2f( m_pLevelSrc->getRightLimit(), m_pLevelSrc->getTopLimit());
+    pVertex->T = pVertex->P * 0.25;
+    pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
+    pVertex->P=Vector2f( m_pLevelSrc->getLeftLimit(), m_pLevelSrc->getTopLimit());
+    pVertex->T = pVertex->P * 0.25;
+    pBlock->pSrcBlock = NULL;
 
-    if(m_bIsAReplay == false){
-      /* Give limits to collision system */
-      m_Collision.defineLine( m_pLevelSrc->LeftLimit(), m_pLevelSrc->TopLimit(),
-			      m_pLevelSrc->LeftLimit(), m_pLevelSrc->BottomLimit(),
-			      DEFAULT_PHYS_WHEEL_GRIP);
-      m_Collision.defineLine( m_pLevelSrc->LeftLimit(), m_pLevelSrc->BottomLimit(),
-			      m_pLevelSrc->RightLimit(), m_pLevelSrc->BottomLimit(),
-			      DEFAULT_PHYS_WHEEL_GRIP );
-      m_Collision.defineLine( m_pLevelSrc->RightLimit(), m_pLevelSrc->BottomLimit(),
-			      m_pLevelSrc->RightLimit(), m_pLevelSrc->TopLimit(),
-			      DEFAULT_PHYS_WHEEL_GRIP );
-      m_Collision.defineLine( m_pLevelSrc->RightLimit(), m_pLevelSrc->TopLimit(),
-			      m_pLevelSrc->LeftLimit(), m_pLevelSrc->TopLimit(),
-			      DEFAULT_PHYS_WHEEL_GRIP );
+    /* BOTTOM */
+    m_Blocks.push_back( pBlock = new ConvexBlock );    
+    pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
+    pVertex->P=Vector2f( m_pLevelSrc->getRightLimit(), m_pLevelSrc->getBottomLimit());
+    pVertex->T = pVertex->P * 0.25;
+    pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
+    pVertex->P=Vector2f( m_pLevelSrc->getRightLimit() + fHMargin, m_pLevelSrc->getBottomLimit() - fVMargin);
+    pVertex->T = pVertex->P * 0.25;
+    pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
+    pVertex->P=Vector2f( m_pLevelSrc->getLeftLimit() - fHMargin, m_pLevelSrc->getBottomLimit() - fVMargin);
+    pVertex->T = pVertex->P * 0.25;
+    pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
+    pVertex->P=Vector2f( m_pLevelSrc->getLeftLimit(), m_pLevelSrc->getBottomLimit());
+    pVertex->T = pVertex->P * 0.25;
+    pBlock->pSrcBlock = NULL;
 
-      /* Show stats about the collision system */
-      CollisionSystemStats CStats;
-      m_Collision.getStats(&CStats);
-      Log(" %dx%d grid with %.1fx%.1f cells (%.0f%% empty)",
-	  CStats.nGridWidth,CStats.nGridHeight,CStats.fCellWidth,CStats.fCellHeight,
-	  CStats.fPercentageOfEmptyCells);
-      Log(" %d total blocking lines",CStats.nTotalLines);
+    /* LEFT */
+    m_Blocks.push_back( pBlock = new ConvexBlock );    
+    pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
+    pVertex->P=Vector2f( m_pLevelSrc->getLeftLimit(), m_pLevelSrc->getTopLimit());
+    pVertex->T = pVertex->P * 0.25;
+    pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
+    pVertex->P=Vector2f( m_pLevelSrc->getLeftLimit(), m_pLevelSrc->getBottomLimit());
+    pVertex->T = pVertex->P * 0.25;
+    pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
+    pVertex->P=Vector2f( m_pLevelSrc->getLeftLimit() - fHMargin, m_pLevelSrc->getBottomLimit() - fVMargin);
+    pVertex->T = pVertex->P * 0.25;
+    pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
+    pVertex->P=Vector2f( m_pLevelSrc->getLeftLimit() - fHMargin, m_pLevelSrc->getTopLimit() + fVMargin);
+    pVertex->T = pVertex->P * 0.25;
+    pBlock->pSrcBlock = NULL;
+
+    /* RIGHT */
+    m_Blocks.push_back( pBlock = new ConvexBlock );    
+    pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
+    pVertex->P=Vector2f( m_pLevelSrc->getRightLimit(), m_pLevelSrc->getTopLimit());
+    pVertex->T = pVertex->P * 0.25;
+    pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
+    pVertex->P=Vector2f( m_pLevelSrc->getRightLimit() + fHMargin, m_pLevelSrc->getTopLimit() + fVMargin);
+    pVertex->T = pVertex->P * 0.25;
+    pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
+    pVertex->P=Vector2f( m_pLevelSrc->getRightLimit() + fHMargin, m_pLevelSrc->getBottomLimit() - fVMargin);
+    pVertex->T = pVertex->P * 0.25;
+    pBlock->Vertices.push_back( pVertex = new ConvexBlockVertex );
+    pVertex->P=Vector2f( m_pLevelSrc->getRightLimit(), m_pLevelSrc->getBottomLimit());
+    pVertex->T = pVertex->P * 0.25;
+    pBlock->pSrcBlock = NULL;
+    
+    /* Give limits to collision system */
+    m_Collision.defineLine( m_pLevelSrc->getLeftLimit(), m_pLevelSrc->getTopLimit(),
+                            m_pLevelSrc->getLeftLimit(), m_pLevelSrc->getBottomLimit() );
+    m_Collision.defineLine( m_pLevelSrc->getLeftLimit(), m_pLevelSrc->getBottomLimit(),
+                            m_pLevelSrc->getRightLimit(), m_pLevelSrc->getBottomLimit() );
+    m_Collision.defineLine( m_pLevelSrc->getRightLimit(), m_pLevelSrc->getBottomLimit(),
+                            m_pLevelSrc->getRightLimit(), m_pLevelSrc->getTopLimit() );
+    m_Collision.defineLine( m_pLevelSrc->getRightLimit(), m_pLevelSrc->getTopLimit(),
+                            m_pLevelSrc->getLeftLimit(), m_pLevelSrc->getTopLimit() );
+    
+    /* Show stats about the collision system */
+    CollisionSystemStats CStats;
+    m_Collision.getStats(&CStats);
+    Log(" %dx%d grid with %.1fx%.1f cells (%.0f%% empty)",
+        CStats.nGridWidth,CStats.nGridHeight,CStats.fCellWidth,CStats.fCellHeight,
+        CStats.fPercentageOfEmptyCells);
+    Log(" %d total blocking lines",CStats.nTotalLines);
+  }
+  
+  /*===========================================================================
+    Create block from BSP polygon
+    ===========================================================================*/
+  ConvexBlock *MotoGame::_CreateBlock(BSPPoly *pPoly,LevelBlock *pSrcBlock) {
+    ConvexBlock *pBlock = new ConvexBlock;
+    pBlock->pSrcBlock = pSrcBlock;
+    
+    for(int i=0;i<pPoly->Vertices.size();i++) {
+      ConvexBlockVertex *pVertex = new ConvexBlockVertex;
+      
+      pVertex->P = pPoly->Vertices[i]->P;
+      pVertex->T.x = (pSrcBlock->fPosX+pVertex->P.x) * 0.25;
+      pVertex->T.y = (pSrcBlock->fPosY+pVertex->P.y) * 0.25;
+      
+      pBlock->Vertices.push_back( pVertex );
     }
+    
+    m_Blocks.push_back( pBlock );
+    return pBlock;
+  }
+  
+  /*===========================================================================
+  Find a dynamic block
+  ===========================================================================*/
+  DynamicBlock *MotoGame::GetDynamicBlockByID(const std::string &ID) {
+    for(int i=0;i<m_DynBlocks.size();i++) {
+      if(m_DynBlocks[i]->pSrcBlock->ID == ID)
+        return m_DynBlocks[i];
+    }
+    return NULL;
+  }
+  
+  /*===========================================================================
+    Calculate important bike anchor points from parameters 
+    ===========================================================================*/
+  void MotoGame::_CalculateBikeAnchors(void) {
+    m_BikeA.Tp = Vector2f( 0, -m_BikeP.Ch );
+    m_BikeA.Rp = m_BikeA.Tp + Vector2f( -0.5f*m_BikeP.Wb, m_BikeP.WR );
+    m_BikeA.Fp = m_BikeA.Tp + Vector2f( 0.5f*m_BikeP.Wb, m_BikeP.WR );
+    m_BikeA.AR = Vector2f(m_BikeP.RVx,m_BikeP.RVy);
+    m_BikeA.AF = Vector2f(m_BikeP.FVx,m_BikeP.FVy);
+    m_BikeA.AR2 = Vector2f(-m_BikeP.RVx,m_BikeP.RVy);
+    m_BikeA.AF2 = Vector2f(-m_BikeP.FVx,m_BikeP.FVy);
+    m_BikeA.PLAp = (Vector2f(m_BikeP.PEVx,m_BikeP.PEVy) + Vector2f(m_BikeP.PHVx,m_BikeP.PHVy))*0.5f;
+    m_BikeA.PUAp = (Vector2f(m_BikeP.PEVx,m_BikeP.PEVy) + Vector2f(m_BikeP.PSVx,m_BikeP.PSVy))*0.5f;
+    m_BikeA.PLLp = (Vector2f(m_BikeP.PFVx,m_BikeP.PFVy) + Vector2f(m_BikeP.PKVx,m_BikeP.PKVy))*0.5f;
+    m_BikeA.PULp = (Vector2f(m_BikeP.PLVx,m_BikeP.PLVy) + Vector2f(m_BikeP.PKVx,m_BikeP.PKVy))*0.5f;
+    m_BikeA.PTp = (Vector2f(m_BikeP.PLVx,m_BikeP.PLVy) + Vector2f(m_BikeP.PSVx,m_BikeP.PSVy))*0.5f;
+    m_BikeA.PHp = Vector2f(m_BikeP.PHVx,m_BikeP.PHVy);
+    m_BikeA.PFp = Vector2f(m_BikeP.PFVx,m_BikeP.PFVy);
+    m_BikeA.PLAp2 = (Vector2f(-m_BikeP.PEVx,m_BikeP.PEVy) + Vector2f(-m_BikeP.PHVx,m_BikeP.PHVy))*0.5f;
+    m_BikeA.PUAp2 = (Vector2f(-m_BikeP.PEVx,m_BikeP.PEVy) + Vector2f(-m_BikeP.PSVx,m_BikeP.PSVy))*0.5f;
+    m_BikeA.PLLp2 = (Vector2f(-m_BikeP.PFVx,m_BikeP.PFVy) + Vector2f(-m_BikeP.PKVx,m_BikeP.PKVy))*0.5f;
+    m_BikeA.PULp2 = (Vector2f(-m_BikeP.PLVx,m_BikeP.PLVy) + Vector2f(-m_BikeP.PKVx,m_BikeP.PKVy))*0.5f;
+    m_BikeA.PTp2 = (Vector2f(-m_BikeP.PLVx,m_BikeP.PLVy) + Vector2f(-m_BikeP.PSVx,m_BikeP.PSVy))*0.5f;
+    m_BikeA.PHp2 = Vector2f(-m_BikeP.PHVx,m_BikeP.PHVy);
+    m_BikeA.PFp2 = Vector2f(-m_BikeP.PFVx,m_BikeP.PFVy);
   }
 
-
-  bool MotoGame::touchEntityBodyExceptHead(const BikeState &pBike, const Entity &p_entity) {
-    Vector2f res1, res2;
-
-    if(pBike.Dir == DD_RIGHT) {
-      if(intersectLineCircle2f(p_entity.DynamicPosition(), p_entity.Size(),
-             pBike.FootP, pBike.KneeP,
-             res1, res2) > 0) {
-         return true;
-             }
-
-      if(intersectLineCircle2f(p_entity.DynamicPosition(), p_entity.Size(),
-             pBike.KneeP, pBike.LowerBodyP,
-             res1, res2) > 0) {
-         return true;
-             }
-      
-      if(intersectLineCircle2f(p_entity.DynamicPosition(), p_entity.Size(),
-             pBike.LowerBodyP, pBike.ShoulderP,
-             res1, res2) > 0) {
-         return true;
-             }
-
-      if(intersectLineCircle2f(p_entity.DynamicPosition(), p_entity.Size(),
-             pBike.ShoulderP, pBike.ElbowP,
-             res1, res2) > 0) {
-         return true;
-             }
-
-      if(intersectLineCircle2f(p_entity.DynamicPosition(), p_entity.Size(),
-             pBike.ElbowP, pBike.HandP,
-             res1, res2) > 0) {
-         return true;
-             }
-      return false;
-    }
-
-    if(pBike.Dir == DD_LEFT) {
-      if(intersectLineCircle2f(p_entity.DynamicPosition(), p_entity.Size(),
-             pBike.Foot2P, pBike.Knee2P,
-             res1, res2) > 0) {
-         return true;
-             }
-
-      if(intersectLineCircle2f(p_entity.DynamicPosition(), p_entity.Size(),
-             pBike.Knee2P, pBike.LowerBody2P,
-             res1, res2) > 0) {
-         return true;
-             }
-      
-      if(intersectLineCircle2f(p_entity.DynamicPosition(), p_entity.Size(),
-             pBike.LowerBody2P, pBike.Shoulder2P,
-             res1, res2) > 0) {
-         return true;
-             }
-
-      if(intersectLineCircle2f(p_entity.DynamicPosition(), p_entity.Size(),
-             pBike.Shoulder2P, pBike.Elbow2P,
-             res1, res2) > 0) {
-         return true;
-             }
-
-      if(intersectLineCircle2f(p_entity.DynamicPosition(), p_entity.Size(),
-             pBike.Elbow2P, pBike.Hand2P,
-             res1, res2) > 0) {
-         return true;
-             }
-      return false;
-    }
-
-    return false;
-  }
-
-  bool MotoGame::isTouching(const Entity& i_entity) const {
-    for(int i=0; i<m_entitiesTouching.size(); i++) {
-      if(m_entitiesTouching[i] == &i_entity) {
-        return true;
+  /*===========================================================================
+    Check whether the given circle touches the zone
+    ===========================================================================*/
+  bool MotoGame::_DoCircleTouchZone(const Vector2f &Cp,float Cr,LevelZone *pZone) {
+    /* Check each zone primitive */
+    for(int i=0;i<pZone->Prims.size();i++) {
+      if(pZone->Prims[i]->Type == LZPT_BOX) {
+        /* Do simple AABB-check */
+        Vector2f CMin(Cp.x-Cr,Cp.y-Cr);
+        Vector2f CMax(Cp.x+Cr,Cp.y+Cr);        
+        Vector2f FMin(CMin.x < pZone->Prims[i]->fLeft ? CMin.x : pZone->Prims[i]->fLeft,
+                      CMin.y < pZone->Prims[i]->fBottom ? CMin.y : pZone->Prims[i]->fBottom);
+        Vector2f FMax(CMax.x > pZone->Prims[i]->fRight ? CMax.x : pZone->Prims[i]->fRight,
+                      CMax.y > pZone->Prims[i]->fTop ? CMax.y : pZone->Prims[i]->fTop);
+        if(FMax.x - FMin.x < (CMax.x - CMin.x + pZone->Prims[i]->fRight - pZone->Prims[i]->fLeft) &&
+           FMax.y - FMin.y < (CMax.y - CMin.y + pZone->Prims[i]->fTop - pZone->Prims[i]->fBottom))
+          return true; /* Touch! */
       }
     }
+    
+    /* No touching! */
     return false;
   }
-
-  MotoGame::touch MotoGame::setTouching(Entity& i_entity, bool i_touching) {
-    bool v_wasTouching = isTouching(i_entity);
-    if(v_wasTouching == i_touching) {
-      return none;
-    }
-
-    if(i_touching) {
-      m_entitiesTouching.push_back(&i_entity);
-      return added;
-    } else {
-      for(int i=0; i<m_entitiesTouching.size(); i++) {
-        if(m_entitiesTouching[i] == &i_entity) {
-          m_entitiesTouching.erase(m_entitiesTouching.begin() + i);
-          return removed;
-        }
-      }
-    }
-    return none;
-  }
-
   
   /*===========================================================================
     Update zone specific stuff -- call scripts where needed
     ===========================================================================*/
   void MotoGame::_UpdateZones(void) {
     /* Check player touching for each zone */
-    for(int i=0;i<m_pLevelSrc->Zones().size();i++) {
-      Zone *pZone = m_pLevelSrc->Zones()[i];
+    for(int i=0;i<m_pLevelSrc->getZoneList().size();i++) {
+      LevelZone *pZone = m_pLevelSrc->getZoneList()[i];
       
       /* Check it against the wheels and the head */
-      if(pZone->doesCircleTouch(m_BikeS.FrontWheelP, m_BikeS.Parameters().WheelRadius()) ||
-         pZone->doesCircleTouch(m_BikeS.RearWheelP,  m_BikeS.Parameters().WheelRadius())) {       
+      if(_DoCircleTouchZone( m_BikeS.FrontWheelP,m_BikeP.WR,pZone ) ||
+         _DoCircleTouchZone( m_BikeS.RearWheelP,m_BikeP.WR,pZone )) {       
         /* In the zone -- did he just enter it? */
-        if(setTouching(*pZone, true) == added){
-          createGameEvent(new MGE_PlayerEntersZone(getTime(), pZone));
+        if(!pZone->m_bInZone) {
+	  /* Generate event */
+	  GameEvent *pEvent = createGameEvent(GAME_EVENT_PLAYER_ENTERS_ZONE);
+	  if(pEvent != NULL) {
+	    pZone->m_bInZone = true;
+	    pEvent->u.PlayerEntersZone.pZone = pZone;
+	  }
         }
       }         
       else {
         /* Not in the zone... but was he during last update? - i.e. has 
            he just left it? */      
-        if(setTouching(*pZone, false) == removed){
-          createGameEvent(new MGE_PlayerLeavesZone(getTime(), pZone));
+        if(pZone->m_bInZone) {
+	  /* Generate event */
+	  GameEvent *pEvent = createGameEvent(GAME_EVENT_PLAYER_LEAVES_ZONE);
+	  if(pEvent != NULL) {
+	    pZone->m_bInZone = false;
+	    pEvent->u.PlayerLeavesZone.pZone = pZone;
+	  }
         }
       }
     }
-  }
-
-
-  void MotoGame::_UpdateEntities(void) {
-    Vector2f HeadPos = m_BikeS.Dir==DD_RIGHT?m_BikeS.HeadP:m_BikeS.Head2P;
-
-    /* Get biker bounding box */
-    AABB BBox;
-    float headSize = m_BikeS.Parameters().HeadSize();
-    float wheelRadius = m_BikeS.Parameters().WheelRadius();
-    /* in case the body is outside of the aabb */
-    float securityMargin = 0.5;
-
-    BBox.addPointToAABB2f(HeadPos[0]-headSize-securityMargin,
-			  HeadPos[1]-headSize-securityMargin);
-    BBox.addPointToAABB2f(m_BikeS.FrontWheelP[0]-wheelRadius-securityMargin,
-			  m_BikeS.FrontWheelP[1]-wheelRadius-securityMargin);
-    BBox.addPointToAABB2f(m_BikeS.RearWheelP[0]-wheelRadius-securityMargin,
-			  m_BikeS.RearWheelP[1]-wheelRadius-securityMargin);
-
-    BBox.addPointToAABB2f(HeadPos[0]+headSize+securityMargin,
-			  HeadPos[1]+headSize+securityMargin);
-    BBox.addPointToAABB2f(m_BikeS.FrontWheelP[0]+wheelRadius+securityMargin,
-			  m_BikeS.FrontWheelP[1]+wheelRadius+securityMargin);
-    BBox.addPointToAABB2f(m_BikeS.RearWheelP[0]+wheelRadius+securityMargin,
-			  m_BikeS.RearWheelP[1]+wheelRadius+securityMargin);
-
-    std::vector<Entity*> entities = m_Collision.getEntitiesNearPosition(BBox);
-
-    /* Do player touch anything? */
-    for(int i=0;i<entities.size();i++) {
-      /* Test against the biker aabb first */
-      if(true){
-	/* Head? */
-	if(circleTouchCircle2f(entities[i]->DynamicPosition(),
-			       entities[i]->Size(),
-			       HeadPos,
-			       m_BikeS.Parameters().HeadSize())) {
-	  if(setTouching(*(entities[i]), true) == added){
-	    createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
-							entities[i]->Id(),
-							true));
-	  }
-	  
-	  /* Wheel then ? */
-	} else if(circleTouchCircle2f(entities[i]->DynamicPosition(),
-				      entities[i]->Size(),
-				      m_BikeS.FrontWheelP,
-				      m_BikeS.Parameters().WheelRadius()) ||
-		  circleTouchCircle2f(entities[i]->DynamicPosition(),
-				      entities[i]->Size(),
-				      m_BikeS.RearWheelP,
-				      m_BikeS.Parameters().WheelRadius())) {
-	  if(setTouching(*(entities[i]), true) == added){
-	    createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
-							entities[i]->Id(),
-							false));
-	  }
-	  
-	  /* body then ?*/
-	} else if(touchEntityBodyExceptHead(m_BikeS, *(entities[i]))) {
-	  if(setTouching(*(entities[i]), true) == added){
-	    createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
-							entities[i]->Id(),
-							false));
-	  }
-	} else {
-	  /* TODO::generate an event "leaves entity" if needed */
-	  setTouching(*(entities[i]), false);
-	}
-      } else {
-	/* TODO::generate an event "leaves entity" if needed */
-	setTouching(*(entities[i]), false);
-      }
-    }
-  }
-
-
-  bool MotoGame::isTouching(const Zone& i_zone) const {
-    for(unsigned int i=0; i<m_zonesTouching.size(); i++) {
-      if(m_zonesTouching[i]->Id() == i_zone.Id()) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  MotoGame::touch MotoGame::setTouching(Zone& i_zone, bool i_isTouching) {
-    bool v_wasTouching = isTouching(i_zone);
-    if(v_wasTouching == i_isTouching) {
-      return none;
-    }
-    
-    if(i_isTouching) {
-      m_zonesTouching.push_back(&i_zone);
-      return added;
-    } else {
-      for(int i=0; i<m_zonesTouching.size(); i++) {
-        if(m_zonesTouching[i] == &i_zone) {
-          m_zonesTouching.erase(m_zonesTouching.begin() + i);
-          return removed;
-        }
-      }
-    }
-    return none;
   }
   
+  /*===========================================================================
+    Entity management
+    ===========================================================================*/
+  Entity *MotoGame::_SpawnEntity(std::string ID,EntityType Type,Vector2f Pos,LevelEntity *pSrc) {
+    /* Allocate entity */
+    Entity *pEnt = new Entity;
+    pEnt->Type = Type;
+    pEnt->pSrc = pSrc;
+    pEnt->Pos = Pos;
+    pEnt->ID = ID;
+    pEnt->fSize = 0.5f;
+    
+    if(pSrc != NULL) pEnt->fSize = pSrc->fSize;
+    
+    /* Init it */
+    switch(Type) {
+    case ET_SPRITE:
+      pEnt->fSpriteZ = 1.0f;              
+      if(pSrc != NULL)
+	pEnt->fSpriteZ = atof(m_pLevelSrc->getEntityParam(pSrc,"z","1.0").c_str());        
+          
+      pEnt->SpriteType = "";
+      if(pSrc != NULL)
+	pEnt->SpriteType = m_pLevelSrc->getEntityParam(pSrc,"name","");
+      break;
+    case ET_WRECKER:
+      break;
+    case ET_ENDOFLEVEL:
+      break;
+    case ET_PLAYERSTART:
+      break;
+    case ET_DUMMY:
+      break;
+    case ET_PARTICLESOURCE:
+      pEnt->ParticleType = "";
+      if(pSrc != NULL)
+	pEnt->ParticleType = m_pLevelSrc->getEntityParam(pSrc,"type","");
+      pEnt->fNextParticleTime = 0;
+      break;
+    default:
+      /* TODO: Warning */        
+      ;
+    }
+    
+    /* Add it */
+    m_Entities.push_back(pEnt);
+        
+    /* Return it */
+    return pEnt;
+  }
+  
+  void MotoGame::_KillEntity(Entity *pEnt) { /* brutal */
+    for(int i=0;i<m_Entities.size();i++) {
+      if(m_Entities[i] == pEnt) {
+        delete pEnt;
+        m_Entities.erase(m_Entities.begin() + i);
+        return;
+      }
+    }
+    
+    /* TODO: Warning (not found) */
+  }
+  
+  Entity *MotoGame::getEntityByID(const std::string &ID) {
+    for(int i=0;i<m_Entities.size();i++) {
+      if(m_Entities[i]->ID == ID) {
+        return m_Entities[i];
+      }
+    }
+    return NULL;    
+  }  
+
+  void MotoGame::_UpdateEntities(void) {
+    /* Do player touch anything? */
+    for(int i=0;i<m_Entities.size();i++) {            
+      /* Head? */						
+      Vector2f HeadPos = m_BikeS.Dir==DD_RIGHT?m_BikeS.HeadP:m_BikeS.Head2P;
+			
+      if(circleTouchCircle2f(m_Entities[i]->Pos,m_Entities[i]->fSize,HeadPos,m_BikeP.fHeadSize)) {
+	      if(!m_Entities[i]->bTouched) {
+	        /* Generate event */
+	        GameEvent *pEvent = createGameEvent(GAME_EVENT_PLAYER_TOUCHES_ENTITY);
+	        if(pEvent != NULL) {
+	          pEvent->u.PlayerTouchesEntity.bHead = true;						
+	          strncpy(pEvent->u.PlayerTouchesEntity.cEntityID,m_Entities[i]->ID.c_str(),sizeof(pEvent->u.PlayerTouchesEntity.cEntityID)-1);						
+	          m_Entities[i]->bTouched = true;
+	        }					
+	      }
+      }
+      /* Wheel then? */
+      else if(circleTouchCircle2f(m_Entities[i]->Pos,m_Entities[i]->fSize,m_BikeS.FrontWheelP,m_BikeP.WR) ||
+              circleTouchCircle2f(m_Entities[i]->Pos,m_Entities[i]->fSize,m_BikeS.RearWheelP,m_BikeP.WR)) {
+	      if(!m_Entities[i]->bTouched) {
+	        /* Generate event */
+	        GameEvent *pEvent = createGameEvent(GAME_EVENT_PLAYER_TOUCHES_ENTITY);
+	        if(pEvent != NULL) {
+	          pEvent->u.PlayerTouchesEntity.bHead = false;
+	          strncpy(pEvent->u.PlayerTouchesEntity.cEntityID,m_Entities[i]->ID.c_str(),sizeof(pEvent->u.PlayerTouchesEntity.cEntityID)-1);
+	          m_Entities[i]->bTouched = true;
+	        }					
+	      }
+      }      
+      else {
+	      /* Not touching */
+	      m_Entities[i]->bTouched = false;
+      }
+    }
+  }
+
+  EntityType MotoGame::_TransEntityType(std::string Name) {
+    if(Name == "Sprite") return ET_SPRITE;
+    if(Name == "PlayerStart") return ET_PLAYERSTART;
+    if(Name == "EndOfLevel") return ET_ENDOFLEVEL;
+    if(Name == "Wrecker") return ET_WRECKER;
+    if(Name == "Strawberry") return ET_STRAWBERRY;
+    if(Name == "ParticleSource") return ET_PARTICLESOURCE;
+    if(Name == "Dummy") return ET_DUMMY;
+    
+    return ET_UNASSIGNED;
+  }
+  
+  EdgeEffect MotoGame::_TransEdgeEffect(std::string Name) {
+    if(Name == "Grass") return EE_GRASS;
+    if(Name == "RedBricks") return EE_REDBRICKS;
+    if(Name == "BlueBricks") return EE_BLUEBRICKS;
+    if(Name == "GrayBricks") return EE_GRAYBRICKS;
+    
+    return EE_UNASSIGNED;
+  }
+
   /*===========================================================================
     Entity stuff (public)
     ===========================================================================*/
@@ -1127,33 +1473,76 @@ namespace vapp {
     m_DelSchedule.push_back(pEntity);
   }
   
-  void MotoGame::touchEntity(Entity *pEntity,bool bHead) {
+  void MotoGame::touchEntity(Entity *pEntity,bool bHead, bool bEnableScript) {
     /* Start by invoking scripts if any */
-    if(m_isScriptActiv) {
-      scriptCallTblVoid(pEntity->Id(),"Touch");
-    }
+    if(bEnableScript) {
+      scriptCallTblVoid(pEntity->ID,"Touch");
+    }    
 
-    if(pEntity->DoesMakeWin()) {
-      if(getNbRemainingStrawberries() == 0) {
-	makePlayerWin();
+    /* What kind of entity? */
+    switch(pEntity->Type) {
+    case ET_SPRITE:        
+      break;
+    case ET_PLAYERSTART:
+      break;
+    case ET_ENDOFLEVEL:
+      {
+	      /* How many strawberries left? */
+	      if(countEntitiesByType(ET_STRAWBERRY) == 0) {
+	        /* Level is done! */
+	        m_bFinished = true;
+	        m_fFinishTime = getTime();
+	      }
       }
-    }
-
-    if(pEntity->DoesKill()) {
-      createGameEvent(new MGE_PlayerDies(getTime(), true));
-    }
-
-    if(pEntity->IsToTake()) {
-      /* OH... nice */
-      createGameEvent(new MGE_EntityDestroyed(getTime(), pEntity->Id(), pEntity->Speciality(), pEntity->DynamicPosition(), pEntity->Size()));
-#if defined(ALLOW_GHOST)
-      if(isGhostActive() && m_showGhostTimeDiff) {
-	m_myLastStrawberries.push_back(getTime());
-	UpdateDiffFromGhost();
-	DisplayDiffFromGhost();
+      break;
+    case ET_WRECKER: 
+      {
+	      /* Hmm :( */
+	      GameEvent *pEvent = createGameEvent(GAME_EVENT_PLAYER_DIES);        
+	      if(pEvent != NULL) {
+	        pEvent->u.PlayerDies.bWrecker = true;
+	      }
       }
-#endif
+      break;
+    case ET_STRAWBERRY:
+      {
+	      /* OH... nice */
+	      GameEvent *pEvent = createGameEvent(GAME_EVENT_ENTITY_DESTROYED);
+	      if(pEvent != NULL) {
+	        strncpy(pEvent->u.EntityDestroyed.cEntityID,pEntity->ID.c_str(),sizeof(pEvent->u.EntityDestroyed.cEntityID)-1);
+	        pEvent->u.EntityDestroyed.Type = pEntity->Type;
+	        pEvent->u.EntityDestroyed.fSize = pEntity->fSize;
+	        pEvent->u.EntityDestroyed.fPosX = pEntity->Pos.x;
+	        pEvent->u.EntityDestroyed.fPosY = pEntity->Pos.y;
+	      }                
+	      
+        #if defined(ALLOW_GHOST)
+	        if(isGhostActive() && m_showGhostTimeDiff) {
+	          m_myLastStrawberries.push_back(getTime());
+	          UpdateDiffFromGhost();
+	          DisplayDiffFromGhost();
+	        }
+        #endif
+      }
+      break;
     }
+  }
+  
+  int MotoGame::countEntitiesByType(EntityType Type) {
+    int n = 0;
+  
+    /* Count entities with this type */
+    for(int i=0;i<m_Entities.size();i++)
+      if(m_Entities[i]->Type == Type) n++;
+      
+    return n;
+  }
+
+  Entity *MotoGame::findEntity(const std::string &ID) {	
+    for(int i=0;i<m_Entities.size();i++) {
+      if(m_Entities[i]->ID == ID) return m_Entities[i];
+    }
+    return NULL;
   }
 
   /*===========================================================================
@@ -1191,22 +1580,26 @@ namespace vapp {
     return "??";
   }
     
-  void MotoGame::createGameEvent(MotoGameEvent *p_event) {
-    m_GameEventQueue.push(p_event);
+  GameEvent *MotoGame::createGameEvent(GameEventType Type) {
+      GameEvent *pEvent = new GameEvent();
+      pEvent->Type = Type;
+      pEvent->nSeq = m_nLastEventSeq++;
+      m_GameEventQueue.push(pEvent);
+      return pEvent;
   }
   
-  void MotoGame::destroyGameEvent(MotoGameEvent *p_event) {
+  void MotoGame::destroyGameEvent(GameEvent *p_event) {
     delete p_event;
   }
 
-  MotoGameEvent* MotoGame::getNextGameEvent() {
+  GameEvent *MotoGame::getNextGameEvent(void) {
     /* Anything in queue? */
     if(getNumPendingGameEvents() > 0) {
-      MotoGameEvent *v_event = m_GameEventQueue.front();
+      GameEvent *pEvent = m_GameEventQueue.front();
       m_GameEventQueue.pop();
-      return v_event;
+      return pEvent;
     }
-    
+		
     /* Nope, nothing */
     return NULL;
   }
@@ -1216,12 +1609,12 @@ namespace vapp {
   }
 
   void MotoGame::cleanEventsQueue() {
-    MotoGameEvent *v_event;
+    GameEvent *p_event;
 
     while(m_GameEventQueue.empty() == false) {
-      v_event = m_GameEventQueue.front();
+      p_event = m_GameEventQueue.front();
       m_GameEventQueue.pop();
-      destroyGameEvent(v_event);
+      destroyGameEvent(p_event);
     }
   }
 
@@ -1237,9 +1630,9 @@ namespace vapp {
     for(int i=0;i<v_replayEvents->size();i++) {
       /* Not passed? And with a time stamp that tells it should have happened
          by now? */
-      if(!(*v_replayEvents)[i]->bPassed && (*v_replayEvents)[i]->Event->getEventTime() < getTime()) {
+      if(!(*v_replayEvents)[i]->bPassed && (*v_replayEvents)[i]->fTime < getTime()) {
         /* Nice. Handle this event, replay style */
-        _HandleReplayEvent((*v_replayEvents)[i]->Event);
+        _HandleReplayEvent(&((*v_replayEvents)[i]->Event));
         
         /* Pass it */
         (*v_replayEvents)[i]->bPassed = true;
@@ -1250,9 +1643,9 @@ namespace vapp {
        REVERSE events */
     for(int i=v_replayEvents->size()-1;i>=0;i--) {
       /* Passed? And with a time stamp larger than current time? */
-      if((*v_replayEvents)[i]->bPassed && (*v_replayEvents)[i]->Event->getEventTime() > getTime()) {
+      if((*v_replayEvents)[i]->bPassed && (*v_replayEvents)[i]->fTime > getTime()) {
         /* Nice. Handle this event, replay style BACKWARDS */
-  (*v_replayEvents)[i]->Event->revert(this);
+        _HandleReverseReplayEvent(&((*v_replayEvents)[i]->Event));
 
         /* Un-pass it */
         (*v_replayEvents)[i]->bPassed = false;
@@ -1260,31 +1653,256 @@ namespace vapp {
     }
   }
 
-  void MotoGame::_HandleReplayEvent(MotoGameEvent *pEvent) {     
-    switch(pEvent->getType()) {
-      case GAME_EVENT_PLAYER_TOUCHES_ENTITY:
-      /* touching an entity creates events, so, don't call it */
-      case GAME_EVENT_LUA_CALL_SETPLAYERPOSITION:
-      /* don't set player position while it's already made by the game */
-      /* however, this state is recorded : you can imagine than an effect
-   or something is done when this append to alert the player he took
-   a teleporter
-      */
+  void MotoGame::_HandleReplayEvent(GameEvent *pEvent) {
+    /* Note how the number of events handled here are smaller than in the 
+       primary event handling loop. That's because when playing replays, we
+       only care about the most basic events - not events causing other
+       events to be triggered */
+    //printf("{%s}\n",_EventName(pEvent->Type));
+       
+    switch(pEvent->Type) {
+    case GAME_EVENT_ENTITY_DESTROYED:
+      {
+        /* Destroying a strawberry? */
+        if(pEvent->u.EntityDestroyed.Type == ET_STRAWBERRY) {
+	        /* Spawn some particles */
+	        for(int i=0;i<6;i++)
+  	        m_renderer->spawnParticle(PT_STAR,Vector2f(pEvent->u.EntityDestroyed.fPosX,pEvent->u.EntityDestroyed.fPosY),Vector2f(0,0),5);
+
+	        /* Play yummy-yummy sound */
+	        Sound::playSampleByName("Sounds/PickUpStrawberry.ogg");
+	      }
+      
+	      /* Destroy entity */
+	      Entity *pEntityToDestroy = findEntity(pEvent->u.EntityDestroyed.cEntityID);
+	      if(pEntityToDestroy != NULL) {
+	        deleteEntity(pEntityToDestroy);
+	      }        
+	      else
+	        Log("** Warning ** : Failed to destroy entity '%s' specified by replay!",
+	            pEvent->u.EntityDestroyed.cEntityID);
+      }
       break;
-      default:
-      pEvent->doAction(this);
+
+    case GAME_EVENT_LUA_CALL_SETENTITYPOS:
+      {
+	SetEntityPos(pEvent->u.LuaCallSetentitypos.cEntityID,
+		     pEvent->u.LuaCallSetentitypos.x,
+		     pEvent->u.LuaCallSetentitypos.y);
+      }
       break;
+
+    case GAME_EVENT_LUA_CALL_CLEARMESSAGES:
+      {
+	clearGameMessages();
+      }
+      break;
+      
+    case GAME_EVENT_LUA_CALL_PLACEINGAMEARROW:
+      {
+	PlaceInGameArrow(pEvent->u.LuaCallPlaceingamearrow.x,
+			 pEvent->u.LuaCallPlaceingamearrow.y,
+			 pEvent->u.LuaCallPlaceingamearrow.angle);
+      }
+      break;
+      
+    case GAME_EVENT_LUA_CALL_PLACESCREENARROW:
+      {
+	PlaceScreenArrow(pEvent->u.LuaCallPlaceingamearrow.x,
+			 pEvent->u.LuaCallPlaceingamearrow.y,
+			 pEvent->u.LuaCallPlaceingamearrow.angle);
+      }
+      break;
+      
+    case GAME_EVENT_LUA_CALL_HIDEARROW:
+      {
+	getArrowPointer().nArrowPointerMode = 0;
+      }
+      break;
+      
+    case GAME_EVENT_LUA_CALL_MESSAGE:
+      {
+	gameMessage(pEvent->u.LuaCallMessage.cMessage); 
+      }
+      break;
+      
+    case GAME_EVENT_LUA_CALL_MOVEBLOCK:
+      {
+	MoveBlock(pEvent->u.LuaCallMoveblock.cBlockID,
+		  pEvent->u.LuaCallMoveblock.x,
+		  pEvent->u.LuaCallMoveblock.y);
+      }
+      break;
+      
+    case GAME_EVENT_LUA_CALL_SETBLOCKPOS:
+      {
+	SetBlockPos(pEvent->u.LuaCallSetblockpos.cBlockID,
+		    pEvent->u.LuaCallSetblockpos.x,
+		    pEvent->u.LuaCallSetblockpos.y);
+      }
+      break;
+      
+    case GAME_EVENT_LUA_CALL_SETGRAVITY:
+      {
+	setGravity(pEvent->u.LuaCallSetgravity.x,
+		   pEvent->u.LuaCallSetgravity.y);
+		   
+      }
+      break;
+      
+    case GAME_EVENT_LUA_CALL_SETPLAYERPOSITION:
+      {
+	/* don't set player position while it's already made by the game */
+	/* however, this state is recorded : you can imagine than an effect
+	   or something is done when this append to alert the player he took
+	   a teleporter
+	*/
+      }
+      break;
+
+    case GAME_EVENT_LUA_CALL_SETBLOCKCENTER:
+      {
+	SetBlockCenter(pEvent->u.LuaCallSetBlockCenter.cBlockID,
+		       pEvent->u.LuaCallSetBlockCenter.x,
+		       pEvent->u.LuaCallSetBlockCenter.y);
+      }
+      break;
+      
+    case GAME_EVENT_LUA_CALL_SETBLOCKROTATION:
+      {
+        SetBlockRotation(pEvent->u.LuaCallSetBlockRotation.cBlockID,
+			 pEvent->u.LuaCallSetBlockRotation.fAngle);
+      }
+      break;
+      
+    case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROTATION:
+      {
+	m_SDynamicObjects
+	  .push_back(new SDynamicEntityRotation(pEvent->u.LuaCallSetDynamicEntityRotation.cEntityID,
+						pEvent->u.LuaCallSetDynamicEntityRotation.fInitAngle,
+						pEvent->u.LuaCallSetDynamicEntityRotation.fRadius,
+						pEvent->u.LuaCallSetDynamicEntityRotation.fPeriod,
+						pEvent->u.LuaCallSetDynamicEntityRotation.startTime,
+						pEvent->u.LuaCallSetDynamicEntityRotation.endTime
+
+					     ));
+      }
+    break;
+
+    case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYTRANSLATION:
+      {
+	m_SDynamicObjects
+	  .push_back(new SDynamicEntityTranslation(pEvent->u.LuaCallSetDynamicEntityTranslation.cEntityID,
+						pEvent->u.LuaCallSetDynamicEntityTranslation.fX,
+						pEvent->u.LuaCallSetDynamicEntityTranslation.fY,
+						pEvent->u.LuaCallSetDynamicEntityTranslation.fPeriod,
+						pEvent->u.LuaCallSetDynamicEntityTranslation.startTime,
+						pEvent->u.LuaCallSetDynamicEntityTranslation.endTime
+
+					     ));
+      }
+    break;
+
+    case GAME_EVENT_LUA_CALL_SETDYNAMICENTITYNONE:
+      {
+	removeSDynamicOfObject(pEvent->u.LuaCallSetDynamicEntityNone.cEntityID);
+      }
+      break;
+
+    case GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKROTATION:
+      {
+	m_SDynamicObjects
+	  .push_back(new SDynamicBlockRotation(pEvent->u.LuaCallSetDynamicBlockRotation.cBlockID,
+						pEvent->u.LuaCallSetDynamicBlockRotation.fInitAngle,
+						pEvent->u.LuaCallSetDynamicBlockRotation.fRadius,
+						pEvent->u.LuaCallSetDynamicBlockRotation.fPeriod,
+						pEvent->u.LuaCallSetDynamicBlockRotation.startTime,
+						pEvent->u.LuaCallSetDynamicBlockRotation.endTime
+
+					     ));
+      }
+    break;
+
+    case GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKTRANSLATION:
+      {
+	m_SDynamicObjects
+	  .push_back(new SDynamicBlockTranslation(pEvent->u.LuaCallSetDynamicBlockTranslation.cBlockID,
+						pEvent->u.LuaCallSetDynamicBlockTranslation.fX,
+						pEvent->u.LuaCallSetDynamicBlockTranslation.fY,
+						pEvent->u.LuaCallSetDynamicBlockTranslation.fPeriod,
+						pEvent->u.LuaCallSetDynamicBlockTranslation.startTime,
+						pEvent->u.LuaCallSetDynamicBlockTranslation.endTime
+
+					     ));
+      }
+    break;
+
+    case GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKNONE:
+      {
+	removeSDynamicOfObject(pEvent->u.LuaCallSetDynamicBlockNone.cBlockID);
+      }
+      break;
+
+
+    case GAME_EVENT_LUA_CALL_CAMERAZOOM:
+      {
+	CameraZoom(pEvent->u.LuaCallCameraZoom.fZoom);
+      }
+      break;
+
+    case GAME_EVENT_LUA_CALL_CAMERAMOVE:
+      {
+	CameraMove(pEvent->u.LuaCallCameraMove.x, pEvent->u.LuaCallCameraMove.y);
+      }
+      break;
+
+
     }
   }
+  
+  void MotoGame::_HandleReverseReplayEvent(GameEvent *pEvent) {
+    /* Apply events with reverse results */
+    switch(pEvent->Type) {
+    case GAME_EVENT_ENTITY_DESTROYED:
+      {
+	/* Un-destroy entity (create it :P) */
+	Entity *pEntityToDestroy = findEntity(pEvent->u.EntityDestroyed.cEntityID);
+	if(pEntityToDestroy == NULL) {
+	  Entity *pNew = _SpawnEntity(pEvent->u.EntityDestroyed.cEntityID,
+				      pEvent->u.EntityDestroyed.Type,
+				      Vector2f(pEvent->u.EntityDestroyed.fPosX,
+					       pEvent->u.EntityDestroyed.fPosY),
+				      NULL);
+	  if(pNew != NULL) {
+	    pNew->fSize = pEvent->u.EntityDestroyed.fSize;
+	  }					                              
+	}        
+	else
+	  Log("** Warning ** : Failed to create entity '%s' specified by replay - it's already there!",
+	      pEvent->u.EntityDestroyed.cEntityID);
+      }
+      break;
+
+    default:
+      {
+	/* hum : do nothing */
+	/* what can i do ?  */
+      }
+      break;
+
+    }
+  }  
 
   void MotoGame::SetEntityPos(String pEntityID, float pX, float pY) {
-    SetEntityPos(&(m_pLevelSrc->getEntityById(pEntityID)),
-		 pX, pY);
-  }
-
-  void MotoGame::SetEntityPos(Entity *pEntity, float pX, float pY) {
-    pEntity->setDynamicPosition(Vector2f(pX, pY));
-    m_Collision.moveEntity(pEntity);
+    /* Find the specified entity and set its position */
+    for(int i=0;i<getEntities().size();i++) {
+      Entity *p = getEntities()[i];
+      if(pEntityID == p->ID) {
+	p->Pos.x = pX;
+	p->Pos.y = pY;
+      }
+    }
+    /* Entity not found */
   }
 
   void MotoGame::PlaceInGameArrow(float pX, float pY, float pAngle) {
@@ -1299,34 +1917,50 @@ namespace vapp {
     m_pMotoGame->getArrowPointer().fArrowPointerAngle = pAngle;
   }
 
-  void MotoGame::HideArrow() {
-    getArrowPointer().nArrowPointerMode = 0;
+  void MotoGame::MoveBlock(String pBlockID, float pX, float pY) {
+    /* Find the specified block and move it along the given vector */
+    DynamicBlock *pBlock = GetDynamicBlockByID(pBlockID);
+    if(pBlock != NULL) {
+      pBlock->Position.x += pX;
+      pBlock->Position.y += pY;
+    }    
   }
 
-  void MotoGame::MoveBlock(String pBlockID, float pX, float pY) {
-    Block& v_block = m_pLevelSrc->getBlockById(pBlockID);
-    v_block.setDynamicPosition(v_block.DynamicPosition() + Vector2f(pX, pY));
-    m_Collision.moveDynBlock(&v_block);
-  }
-  
   void MotoGame::SetBlockPos(String pBlockID, float pX, float pY) {
-    Block& v_block = m_pLevelSrc->getBlockById(pBlockID);
-    v_block.setDynamicPosition(Vector2f(pX, pY));
-    m_Collision.moveDynBlock(&v_block);
+    /* Find the specified (dynamic) block and set its position */    
+    DynamicBlock *pBlock = GetDynamicBlockByID(pBlockID);
+    if(pBlock != NULL) {
+      pBlock->Position.x = pX;
+      pBlock->Position.y = pY;
+    }    
   }
   
   void MotoGame::SetBlockCenter(String pBlockID, float pX, float pY) {
-    Block& v_block = m_pLevelSrc->getBlockById(pBlockID);
-    v_block.setCenter(Vector2f(pX, pY));
-    m_Collision.moveDynBlock(&v_block);
+    /* Find the specified (dynamic) block and set its center */
+    DynamicBlock *pBlock = GetDynamicBlockByID(pBlockID);
+    if(pBlock != NULL) {
+      /* Correct all polygons in block to this new center */
+      for(int i=0;i<pBlock->ConvexBlocks.size();i++) {
+        for(int j=0;j<pBlock->ConvexBlocks[i]->Vertices.size();j++) {
+          ConvexBlockVertex *pVertex = pBlock->ConvexBlocks[i]->Vertices[j];
+          pVertex->P.x = pVertex->P.x - pX;
+          pVertex->P.y = pVertex->P.y - pY;
+        }
+      }
+            
+      pBlock->Position.x += pX;
+      pBlock->Position.y += pY;
+    }
   }
-  
+
   void MotoGame::SetBlockRotation(String pBlockID, float pAngle) {
-    Block& v_block = m_pLevelSrc->getBlockById(pBlockID);
-    v_block.setDynamicRotation(pAngle);
-    m_Collision.moveDynBlock(&v_block);
+    /* Find the specified (dynamic) block and set its rotation */
+    DynamicBlock *pBlock = GetDynamicBlockByID(pBlockID);
+    if(pBlock != NULL) {
+      pBlock->fRotation = pAngle;
+    }    
   }     
-  
+
 #if defined(ALLOW_GHOST) 
   void MotoGame::UpdateGhostFromReplay(SerializedBikeState *pReplayState) {
     _UpdateStateFromReplay(pReplayState, &m_GhostBikeS);
@@ -1363,13 +1997,13 @@ namespace vapp {
     
     /* Start looking for events */
     for(int i=0;i<v_replayEvents->size();i++) {
-      MotoGameEvent *v_event = (*v_replayEvents)[i]->Event;
-      
-      if(v_event->getType() == GAME_EVENT_ENTITY_DESTROYED) {
-	if(getLevelSrc()->getEntityById(((MGE_EntityDestroyed*)v_event)->EntityId()).IsToTake()) {
+      if((*v_replayEvents)[i]->Event.Type == GAME_EVENT_ENTITY_DESTROYED) {
+	EntityType v_entityType = (*v_replayEvents)[i]->Event.u.EntityDestroyed.Type;
+	
+	if(v_entityType == ET_STRAWBERRY) {
 	  /* new Strawberry for ghost */
-	  m_ghostLastStrawberries.push_back((*v_replayEvents)[i]->Event->getEventTime());
-	}
+	  m_ghostLastStrawberries.push_back((*v_replayEvents)[i]->fTime);
+      }
       }
     }
   }
@@ -1387,10 +2021,10 @@ namespace vapp {
 
     while(i<m_SDynamicObjects.size()) {
       if(m_SDynamicObjects[i]->nextState(this) == false) {
-  delete m_SDynamicObjects[i];
+	delete m_SDynamicObjects[i];
         m_SDynamicObjects.erase(m_SDynamicObjects.begin() + i);
       } else {
-  i++;
+	i++;
       }
     }
   }
@@ -1400,10 +2034,10 @@ namespace vapp {
 
     while(i<m_SDynamicObjects.size()) {
       if(m_SDynamicObjects[i]->getObjectId() == pObject) {
-  delete m_SDynamicObjects[i];
+	delete m_SDynamicObjects[i];
         m_SDynamicObjects.erase(m_SDynamicObjects.begin() + i);
       } else {
-  i++;
+	i++;
       }
     }
   }
@@ -1424,108 +2058,4 @@ namespace vapp {
     }
   }
 
-  void MotoGame::killPlayer() {
-    m_bDead = true;    
-    setBodyDetach(m_bDeathAnimEnabled);
-    m_BikeC.stopContols();
-  }
-
-  void MotoGame::playerEntersZone(Zone *pZone) {
-    if(m_isScriptActiv) {
-      scriptCallTblVoid(pZone->Id(), "OnEnter");
-    }
-  }
-  
-  void MotoGame::playerLeavesZone(Zone *pZone) {
-    if(m_isScriptActiv) {
-      scriptCallTblVoid(pZone->Id(), "OnLeave");
-    }
-  }
-
-  void MotoGame::playerTouchesEntity(std::string p_entityID, bool p_bTouchedWithHead) {
-    touchEntity(&(getLevelSrc()->getEntityById(p_entityID)), p_bTouchedWithHead);
-  }
-
-  void MotoGame::entityDestroyed(const std::string& i_entityId) {
-    Entity *v_entity;
-    v_entity = &(getLevelSrc()->getEntityById(i_entityId));
-
-    if(v_entity->IsToTake()) {
-      ParticlesSource *v_stars = new ParticlesSourceStar("");
-      v_stars->setInitialPosition(v_entity->DynamicPosition());
-      v_stars->loadToPlay();
-      for(int i=0; i<6; i++) {
-	v_stars->addParticle(Vector2f(0,0), m_pMotoGame->getTime() + 5.0);
-      }
-      getLevelSrc()->spawnEntity(v_stars);
-      
-      /* Play yummy-yummy sound */
-      Sound::playSampleByName("Sounds/PickUpStrawberry.ogg");
-    }
-    
-    /* Destroy entity */
-    deleteEntity(v_entity);
-  }
-
-  void MotoGame::addDynamicObject(SDynamicObject *p_obj) {
-    m_SDynamicObjects.push_back(p_obj);
-  }
-
-  void MotoGame::createKillEntityEvent(std::string p_entityID) {
-    Entity *v_entity;
-    v_entity = &(m_pLevelSrc->getEntityById(p_entityID));
-    createGameEvent(new MGE_EntityDestroyed(m_pMotoGame->getTime(),
-                                            v_entity->Id(),
-                                            v_entity->Speciality(),
-                                            v_entity->DynamicPosition(),
-                                            v_entity->Size()));
-  }
-
-  unsigned int MotoGame::getNbRemainingStrawberries() {
-    return m_pLevelSrc->countToTakeEntities();
-  }
-
-  void MotoGame::makePlayerWin() {
-    m_bFinished = true;
-    m_fFinishTime = getTime();
-  }
-
-  void MotoGame::setBodyDetach(bool state) {
-    m_bodyDetach = state;
-    m_renderer->setRenderBikeFront(! m_bodyDetach);
-
-    if(m_bodyDetach) {
-      dJointSetHingeParam(m_KneeHingeID,  dParamLoStop, 0.0);
-      dJointSetHingeParam(m_KneeHingeID,  dParamHiStop, 3.14159/8.0);
-      dJointSetHingeParam(m_KneeHingeID2, dParamLoStop, 3.14159/8.0 * -1.0);
-      dJointSetHingeParam(m_KneeHingeID2, dParamHiStop, 0.0         * -1.0);
-
-      dJointSetHingeParam(m_LowerBodyHingeID,  dParamLoStop,  -1.2);
-      dJointSetHingeParam(m_LowerBodyHingeID,  dParamHiStop,  0.0);
-      dJointSetHingeParam(m_LowerBodyHingeID2, dParamLoStop, 0.0  * -1.0);
-      dJointSetHingeParam(m_LowerBodyHingeID2, dParamHiStop, -1.2 * -1.0);
-
-      dJointSetHingeParam(m_ShoulderHingeID,  dParamLoStop, -2.0);
-      dJointSetHingeParam(m_ShoulderHingeID,  dParamHiStop,  0.0);
-      dJointSetHingeParam(m_ShoulderHingeID2, dParamLoStop,  0.0  * -1.0);
-      dJointSetHingeParam(m_ShoulderHingeID2, dParamHiStop, -2.0  * -1.0);
-
-      dJointSetHingeParam(m_ElbowHingeID,  dParamLoStop, -1.5);
-      dJointSetHingeParam(m_ElbowHingeID,  dParamHiStop, 1.0);
-      dJointSetHingeParam(m_ElbowHingeID2, dParamLoStop, 1.0   * -1.0);
-      dJointSetHingeParam(m_ElbowHingeID2, dParamHiStop, -1.5  * -1.0);
-    }
-  }
-
-  void MotoGame::addPenalityTime(float fTime) {
-    m_fTime += fTime;
-  }
-
-  void MotoGame::_KillEntity(Entity *pEnt) {
-    getLevelSrc()->killEntity(pEnt->Id());
-    /* now that rendering use the space partionnement,
-       we have to remove entity from the collision system */
-    m_Collision.removeEntity(pEnt);
-  }
-
-}
+};

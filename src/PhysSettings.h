@@ -94,7 +94,7 @@ if you want to be able to play levels besides your own...
 #define PHYS_MAX_ROLL_VELOCITY        60
 
 /* Friction */
-#define DEFAULT_PHYS_WHEEL_GRIP       20
+#define PHYS_WHEEL_GRIP               20
 #define PHYS_WHEEL_ERP                0.8
 #define PHYS_WHEEL_CFM                0.00001
 

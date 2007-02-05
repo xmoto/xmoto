@@ -22,36 +22,178 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __MOTOGAME_H__
 #define __MOTOGAME_H__
 
-#define MOTOGAME_DEFAULT_GAME_MESSAGE_DURATION 5.0
-
 #include "VCommon.h"
 #include "VApp.h"
-#include "helpers/VMath.h"
-#include "xmscene/Level.h"
+#include "VMath.h"
+#include "LevelSrc.h"
 #include "BSP.h"
 #include "DBuffer.h"
 #include "Collision.h"
 #include "ScriptDynamicObjects.h"
 #include "SomersaultCounter.h"
-#include "GameEvents.h"
-
-#include "xmscene/BasicSceneStructs.h"
-#include "xmscene/BikeController.h"
-#include "xmscene/BikeParameters.h"
-#include "xmscene/BikeAnchors.h"
-#include "xmscene/Bike.h"
-
-/* This is the magic depth factor :)  - tweak to obtain max. stability */
-#define DEPTH_FACTOR    2
-
-class Level;
 
 namespace vapp {
 
-  class MotoGameEvent;
   class Replay;
   class GameRenderer;
-  class CollisionSystem;
+
+  /*===========================================================================
+  Defines
+  ===========================================================================*/
+  
+  /* This is the magic depth factor :)  - tweak to obtain max. stability */
+  #define DEPTH_FACTOR    2
+
+  /*===========================================================================
+  Driving directions
+  ===========================================================================*/
+  enum DriveDir {
+    DD_RIGHT,
+    DD_LEFT
+  };
+
+  /*===========================================================================
+  Edge effects
+  ===========================================================================*/
+  enum EdgeEffect {
+    EE_UNASSIGNED,
+    EE_GRASS,
+    EE_REDBRICKS,
+    EE_GRAYBRICKS,
+    EE_BLUEBRICKS
+  };
+
+  /*===========================================================================
+  Dummy helper - a point we'd like to track graphically
+  ===========================================================================*/
+  struct DummyHelper {
+    Vector2f Pos;         /* position */
+    float r,g,b;          /* What color? */
+  };
+
+  /*===========================================================================
+  Controller struct
+  ===========================================================================*/
+  struct BikeController {
+    float fDrive;         /* Throttle [0; 1] or Brake [-1; 0] */
+    float fPull;          /* Pull back on the handle bar [0; 1] or push forward on the handle bar [-1; 0] */
+    bool bChangeDir;      /* Change direction */
+    
+    /* Debug-enabled controls */
+    bool bDebugDriveBack; 
+    bool bDebug1;
+  };
+
+  /*===========================================================================
+  Convex block vertex
+  ===========================================================================*/
+  struct ConvexBlockVertex {
+    Vector2f P;                                   /* Position of vertex */
+    Vector2f T;                                   /* Texture vertex */
+  };
+
+  /*===========================================================================
+  Convex block
+  ===========================================================================*/
+  struct ConvexBlock {
+    ConvexBlock() {
+      pSrcBlock = NULL;
+    }
+  
+    std::vector<ConvexBlockVertex *> Vertices;    /* Vertices */
+    LevelBlock *pSrcBlock;                        /* Source block */
+  };
+
+  /*===========================================================================
+  Dynamic block
+  ===========================================================================*/
+  struct DynamicBlock {
+    DynamicBlock() {
+      pSrcBlock = NULL;
+      fRotation = 0.0f;
+    }
+    
+    std::vector<ConvexBlock *> ConvexBlocks;      /* Polygons */
+    LevelBlock *pSrcBlock;                        /* Source block */
+    float fRotation;                              /* Block rotation */    
+    Vector2f Position;                            /* Block position */
+    
+    std::vector<Line *> CollisionLines;           /* Line to collide against */
+  };
+
+  /*===========================================================================
+  Overlay edge (grass, effects, etc)
+  ===========================================================================*/
+  struct OverlayEdge {
+    OverlayEdge() {
+      pSrcBlock = NULL;
+    }
+  
+    Vector2f P1,P2;                               /* Point-to-point */
+    EdgeEffect Effect;                            /* What? */
+    LevelBlock *pSrcBlock;                        /* Source block */
+  };
+
+  /*===========================================================================
+  Bike params
+  ===========================================================================*/
+  struct BikeParams {
+    /* Geometrical */
+    float WR;             /* Wheel radius */
+    float Ch;             /* Center of mass height */
+    float Wb;             /* Wheel base */
+    float RVx,RVy;        /* Position of rear susp. anchor */
+    float FVx,FVy;        /* Position of front susp. anchor */
+
+    float PSVx,PSVy;      /* Position of player shoulder */
+    float PEVx,PEVy;      /* Position of player elbow */
+    float PHVx,PHVy;      /* Position of player hand */
+    float PLVx,PLVy;      /* Position of player lower body */
+    float PKVx,PKVy;      /* Position of player knee */
+    float PFVx,PFVy;      /* Position of player foot */
+    
+    float fHeadSize;      /* Radius */
+    float fNeckLength;    /* Length of neck */
+        
+    /* Physical */
+    float Wm;             /* Wheel mass [kg] */
+    float BPm;            /* Player body part mass [kg] */
+    float Fm;             /* Frame mass [kg] */
+    float IL;             /* Frame "inertia" length [m] */
+    float IH;             /* Frame "inertia" height [m] */
+        
+    /* Braking/engine performance */
+    float fMaxBrake,fMaxEngine;
+  };
+
+  /*===========================================================================
+  Bike anchor points (relative to center of mass)
+  ===========================================================================*/
+  struct BikeAnchors {
+    Vector2f Tp;          /* Point on the ground, exactly between the wheels */
+    Vector2f Rp;          /* Center of rear wheel */
+    Vector2f Fp;          /* Center of front wheel */
+    Vector2f AR;          /* Rear suspension anchor */
+    Vector2f AF;          /* Front suspension anchor */
+    Vector2f AR2;         /* Rear suspension anchor (Alt.) */
+    Vector2f AF2;         /* Front suspension anchor (Alt.) */
+
+    Vector2f PTp;         /* Player torso center */
+    Vector2f PULp;        /* Player upper leg center */
+    Vector2f PLLp;        /* Player lower leg center */
+    Vector2f PUAp;        /* Player upper arm center */
+    Vector2f PLAp;        /* Player lower arm center */
+    Vector2f PHp;         /* Player hand center */
+    Vector2f PFp;         /* Player foot center */
+
+    Vector2f PTp2;        /* Player torso center (Alt.) */
+    Vector2f PULp2;       /* Player upper leg center (Alt.) */
+    Vector2f PLLp2;       /* Player lower leg center (Alt.) */
+    Vector2f PUAp2;       /* Player upper arm center (Alt.) */
+    Vector2f PLAp2;       /* Player lower arm center (Alt.) */
+    Vector2f PHp2;        /* Player hand center (Alt.) */
+    Vector2f PFp2;        /* Player foot center (Alt.) */
+  };
 
   /*===========================================================================
   Serialized bike state
@@ -73,16 +215,120 @@ namespace vapp {
         
     unsigned char cBikeEngineRPM;     /* Maps to a float between 400 and 5000 */
     
-    signed char cRearWheelX,cRearWheelY;     /* Rear wheel position */
-    signed char cFrontWheelX,cFrontWheelY;   /* Front wheel position */
-    signed char cElbowX,cElbowY;             /* Elbow position */
-    signed char cShoulderX,cShoulderY;       /* Shoulder position */
-    signed char cLowerBodyX,cLowerBodyY;     /* Ass position */
-    signed char cKneeX,cKneeY;               /* Knee position */
+    char cRearWheelX,cRearWheelY;     /* Rear wheel position */
+    char cFrontWheelX,cFrontWheelY;   /* Front wheel position */
+    char cElbowX,cElbowY;             /* Elbow position */
+    char cShoulderX,cShoulderY;       /* Shoulder position */
+    char cLowerBodyX,cLowerBodyY;     /* Ass position */
+    char cKneeX,cKneeY;               /* Knee position */
+  };
+
+  /*===========================================================================
+  Bike state 
+  ===========================================================================*/
+  struct BikeState {
+    DriveDir Dir;         /* Driving left or right? */
+  
+    float fBikeEngineRPM;
+  
+    Vector2f RearWheelP;  /* Rear wheel position */
+    Vector2f FrontWheelP; /* Front wheel position */
+    Vector2f SwingAnchorP;/* Swing arm anchor position */
+    Vector2f FrontAnchorP;/* Front suspension anchor position */    
+    Vector2f SwingAnchor2P;/* Swing arm anchor position (Alt.) */
+    Vector2f FrontAnchor2P;/* Front suspension anchor position (Alt.) */    
+    Vector2f CenterP;     /* Center position */
+
+    Vector2f PlayerTorsoP;/* Position of player's torso */
+    Vector2f PlayerULegP; /* Position of player's upper leg */
+    Vector2f PlayerLLegP; /* Position of player's lower leg */
+    Vector2f PlayerUArmP; /* Position of player's upper arm */
+    Vector2f PlayerLArmP; /* Position of player's upper arm */
+
+    Vector2f PlayerTorso2P;/* Position of player's torso (Alt.) */
+    Vector2f PlayerULeg2P; /* Position of player's upper leg (Alt.) */
+    Vector2f PlayerLLeg2P; /* Position of player's lower leg (Alt.) */
+    Vector2f PlayerUArm2P; /* Position of player's upper arm (Alt.) */ 
+    Vector2f PlayerLArm2P; /* Position of player's upper arm (Alt.) */
+        
+    /* Internals */
+    float fFrontWheelRot[4];
+    float fRearWheelRot[4];
+    float fFrameRot[4];
+    
+    Vector2f WantedHandP,WantedFootP;
+    Vector2f WantedHand2P,WantedFoot2P;    
+    
+    Vector2f HandP;
+    Vector2f ElbowP;
+    Vector2f ShoulderP;
+    Vector2f LowerBodyP;
+    Vector2f KneeP;
+    Vector2f FootP;
+    Vector2f HeadP;        /* NB! not a phys. body */
+
+    Vector2f Hand2P;
+    Vector2f Elbow2P;
+    Vector2f Shoulder2P;
+    Vector2f LowerBody2P;
+    Vector2f Knee2P;
+    Vector2f Foot2P;
+    Vector2f Head2P;        /* NB! not a phys. body */
+
+    //dReal *pfPlayerTorsoPos;
+    //dReal *pfPlayerTorsoRot;
+    //dReal *pfPlayerULegPos;
+    //dReal *pfPlayerULegRot;
+    //dReal *pfPlayerLLegPos;
+    //dReal *pfPlayerLLegRot;
+    //dReal *pfPlayerUArmPos;
+    //dReal *pfPlayerUArmRot;
+    //dReal *pfPlayerLArmPos;
+    //dReal *pfPlayerLArmRot;
+
+    //dReal *pfPlayerTorso2Pos;
+    //dReal *pfPlayerTorso2Rot;
+    //dReal *pfPlayerULeg2Pos;
+    //dReal *pfPlayerULeg2Rot;
+    //dReal *pfPlayerLLeg2Pos;
+    //dReal *pfPlayerLLeg2Rot;
+    //dReal *pfPlayerUArm2Pos;
+    //dReal *pfPlayerUArm2Rot;
+    //dReal *pfPlayerLArm2Pos;
+    //dReal *pfPlayerLArm2Rot;
+
+    Vector2f RRearWheelP; /* Relaxed rear wheel position */
+    Vector2f RFrontWheelP;/* Relaxed front wheel position */
+    Vector2f PrevRq;      /* Previous error (rear) */
+    Vector2f PrevFq;      /* Previous error (front) */
+    Vector2f PrevPFq;     /* Previous error (player foot) */
+    Vector2f PrevPHq;     /* Previous error (player hand) */
+    Vector2f PrevPFq2;    /* Previous error (player foot) (Alt.) */
+    Vector2f PrevPHq2;    /* Previous error (player hand) (Alt.) */
+    
+    /* Bonusinfo */
+    BikeAnchors *pAnchors;
+    
+    /* Driving */
+    float fCurBrake,fCurEngine;    
   };
   
-  /*===========================================================================
-  Arrow pointer
+	/*===========================================================================
+	Entity object types
+  ===========================================================================*/
+  enum EntityType {
+    ET_UNASSIGNED,
+    ET_SPRITE,
+    ET_PLAYERSTART,
+    ET_ENDOFLEVEL,
+    ET_WRECKER,
+    ET_STRAWBERRY,
+    ET_PARTICLESOURCE,
+    ET_DUMMY
+  };
+
+	/*===========================================================================
+	Arrow pointer
   ===========================================================================*/
   struct ArrowPointer {
     ArrowPointer() {
@@ -93,17 +339,57 @@ namespace vapp {
     Vector2f ArrowPointerPos;
     float fArrowPointerAngle;
   };
+  
+	/*===========================================================================
+	Entity object
+  ===========================================================================*/
+  struct Entity {
+    Entity() {
+      Type = ET_UNASSIGNED;
+      pSrc = NULL;
+      fSize = 1.0f;
+      fSpriteZ = 1;
+      fNextParticleTime = 0;
+      bTouched = false;
+    }
+  
+    std::string ID;
+    EntityType Type;
+    LevelEntity *pSrc;
+    bool bTouched;
+    
+    float fSize;                      /* Size */
+    Vector2f Pos;                     /* Position */    
+    
+    /* ET_SPRITE */
+    float fSpriteZ;
+    std::string SpriteType;
+    
+    /* ET_PLAYERSTART */
+    
+    /* ET_ENDOFLEVEL */
+    
+    /* ET_WRECKER */
+    
+    /* ET_STRAWBERRY */
+    
+    /* ET_PARTICLESOURCE */
+    std::string ParticleType;
+    float fNextParticleTime;
+    
+    /* ET_DUMMY */
+  };
 
-  /*===========================================================================
-  Requested player state
+	/*===========================================================================
+	Requested player state
   ===========================================================================*/
   struct GameReqPlayerPos {
     Vector2f Pos;
     bool bDriveRight;  
   };
 
-  /*===========================================================================
-  Game message
+	/*===========================================================================
+	Game message
   ===========================================================================*/
   struct GameMessage {
     bool bNew;                        /* Uninitialized */
@@ -113,88 +399,340 @@ namespace vapp {
     int nAlpha;                       /* Alpha amount */
     bool bOnce;                       /* Unique message */
   };  
+
+	/*===========================================================================
+	Game event types
+  ===========================================================================*/
+  /* never change the order of these values ! 
+     ALWAYS ADD VALUES at the end : (otherwise, old replays will not work !)
+  */
+  enum GameEventType {
+    GAME_EVENT_PLAYER_DIES,
+    GAME_EVENT_PLAYER_ENTERS_ZONE,
+    GAME_EVENT_PLAYER_LEAVES_ZONE,
+    GAME_EVENT_PLAYER_TOUCHES_ENTITY,
+    GAME_EVENT_ENTITY_DESTROYED,
+    
+    GAME_EVENT_LUA_CALL_CLEARMESSAGES,
+    GAME_EVENT_LUA_CALL_PLACEINGAMEARROW,
+    GAME_EVENT_LUA_CALL_PLACESCREENARROW,
+    GAME_EVENT_LUA_CALL_HIDEARROW,
+    GAME_EVENT_LUA_CALL_MESSAGE,
+    GAME_EVENT_LUA_CALL_MOVEBLOCK,
+    GAME_EVENT_LUA_CALL_SETBLOCKPOS,
+    GAME_EVENT_LUA_CALL_SETGRAVITY,
+    GAME_EVENT_LUA_CALL_SETPLAYERPOSITION,
+    GAME_EVENT_LUA_CALL_SETENTITYPOS,
+    GAME_EVENT_LUA_CALL_SETBLOCKCENTER,
+    GAME_EVENT_LUA_CALL_SETBLOCKROTATION,
+
+    GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROTATION,
+    GAME_EVENT_LUA_CALL_SETDYNAMICENTITYTRANSLATION,
+    GAME_EVENT_LUA_CALL_SETDYNAMICENTITYNONE,
+
+    GAME_EVENT_LUA_CALL_CAMERAZOOM,
+    GAME_EVENT_LUA_CALL_CAMERAMOVE,
+
+    GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKROTATION,
+    GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKTRANSLATION,
+    GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKNONE
+  };
+  
+	/*===========================================================================
+	Game event
+  ===========================================================================*/
+  struct GameEventPlayerDies {
+  	bool bWrecker;								/* Killed by wrecker */					
+  };
+  
+  struct GameEventEntityDestroyed {
+		/* Have enough information so that we can recreate the entity */
+		char cEntityID[64];					  /* ID of entity */
+		EntityType Type;              /* Type */
+		float fSize;									/* Size of it */
+		float fPosX,fPosY;					  /* Position of it */
+  };
+  
+  struct GameEventPlayerEntersZone {
+		LevelZone *pZone;							/* Pointer to zone */
+  };
+  
+  struct GameEventPlayerLeavesZone {
+		LevelZone *pZone;							/* Pointer to zone */
+  };
+  
+  struct GameEventPlayerTouchesEntity {
+		char cEntityID[64];					  /* ID of entity */
+		bool bHead;										/* Touched with head? */
+  };
+
+
+  struct GameEventLuaCallClearmessages {
+    /* nothing */
+  };
+  
+  struct GameEventLuaCallPlaceingamearrow {
+    float x, y, angle;
+  };
+  
+  struct GameEventLuaCallPlacescreenarrow {
+    float x, y, angle;
+  };
+  
+  struct GameEventLuaCallHidearrow {
+  };
+  
+  struct GameEventLuaCallMessage {
+    char cMessage[512]; /* message */
+  };
+  
+  struct GameEventLuaCallMoveblock {
+    char  cBlockID[64]; /* ID of block */
+    float x, y;
+  };
+  
+  struct GameEventLuaCallSetblockpos {
+    char  cBlockID[64]; /* ID of block */
+    float x, y;
+  };
+  
+  struct GameEventLuaCallSetgravity {
+    float x, y;
+  };
+  
+  struct GameEventLuaCallSetplayerposition {
+    float x, y;
+    bool bRight;
+  };
+  
+  struct GameEventLuaCallSetentitypos {
+    char  cEntityID[64]; /* ID of entity */
+    float x,y;
+  };
+  
+  struct GameEventLuaCallSetBlockCenter {
+    char  cBlockID[64]; /* ID of block */
+    float x,y;
+  };
+  
+  struct GameEventLuaCallSetBlockRotation {
+    char  cBlockID[64]; /* ID of block */
+    float fAngle;
+  };
+  
+  struct GameEventLuaCallSetDynamicEntityRotation {
+    char  cEntityID[64]; /* ID of entity */
+    float fInitAngle;
+    float fRadius;
+    float fPeriod;
+    int   startTime;
+    int   endTime;
+  };
+
+  struct GameEventLuaCallSetDynamicEntityTranslation {
+    char  cEntityID[64]; /* ID of entity */
+    float fX;
+    float fY;
+    float fPeriod;
+    int   startTime;
+    int   endTime;
+  };
+ 
+  struct GameEventLuaCallSetDynamicEntityNone {
+    char cEntityID[64]; /* ID of entity */
+  };
+
+  struct GameEventLuaCallSetDynamicBlockRotation {
+    char  cBlockID[64]; /* ID of block */
+    float fInitAngle;
+    float fRadius;
+    float fPeriod;
+    int   startTime;
+    int   endTime;
+  };
+
+  struct GameEventLuaCallSetDynamicBlockTranslation {
+    char  cBlockID[64]; /* ID of block */
+    float fX;
+    float fY;
+    float fPeriod;
+    int   startTime;
+    int   endTime;
+  };
+
+  struct GameEventLuaCallSetDynamicBlockNone {
+    char cBlockID[64]; /* ID of block */
+  };
+
+  struct GameEventLuaCallCameraZoom {
+    float fZoom;
+  };
+
+  struct GameEventLuaCallCameraMove {
+    float x, y;
+  };
+
+
+  struct GameEvent {
+    int nSeq;                         /* Sequence number */
+    GameEventType Type;								/* Type of event */
+    
+    union GameEvent_u {								
+      /* GAME_EVENT_PLAYER_DIES */		
+      GameEventPlayerDies PlayerDies;								
+      
+      /* GAME_EVENT_ENTITY_DESTROYED */
+      GameEventEntityDestroyed EntityDestroyed;
+      
+      /* GAME_EVENT_PLAYER_ENTERS_ZONE */
+      GameEventPlayerEntersZone PlayerEntersZone;
+      
+      /* GAME_EVENT_PLAYER_LEAVES_ZONE */
+      GameEventPlayerLeavesZone PlayerLeavesZone;
+      
+      /* GAME_EVENT_PLAYER_TOUCHES_ENTITY */
+      GameEventPlayerTouchesEntity PlayerTouchesEntity;
+
+      /* GAME_EVENT_LUA_CALL_CLEARMESSAGES     */
+      GameEventLuaCallClearmessages LuaCallClearmessages;
+
+      /* GAME_EVENT_LUA_CALL_PLACEINGAMEARROW  */
+      GameEventLuaCallPlaceingamearrow LuaCallPlaceingamearrow;
+
+      /* GAME_EVENT_LUA_CALL_PLACESCREENARROW  */
+      GameEventLuaCallPlacescreenarrow LuaCallPlacescreenarrow;
+
+      /* GAME_EVENT_LUA_CALL_HIDEARROW	 */
+      GameEventLuaCallHidearrow LuaCallHidearrow;
+
+      /* GAME_EVENT_LUA_CALL_MESSAGE		 */
+      GameEventLuaCallMessage LuaCallMessage;
+
+      /* GAME_EVENT_LUA_CALL_MOVEBLOCK	 */
+      GameEventLuaCallMoveblock LuaCallMoveblock;
+
+      /* GAME_EVENT_LUA_CALL_SETBLOCKPOS	 */
+      GameEventLuaCallSetblockpos LuaCallSetblockpos;
+
+      /* GAME_EVENT_LUA_CALL_SETGRAVITY	 */
+      GameEventLuaCallSetgravity LuaCallSetgravity;
+
+      /* GAME_EVENT_LUA_CALL_SETPLAYERPOSITION */
+      GameEventLuaCallSetplayerposition LuaCallSetplayerposition;
+
+      /* GAME_EVENT_LUA_CALL_SETENTITYPOS      */
+      GameEventLuaCallSetentitypos LuaCallSetentitypos;
+      
+      /* GAME_EVENT_LUA_CALL_SETBLOCKCENTER */
+      GameEventLuaCallSetBlockCenter LuaCallSetBlockCenter;
+
+      /* GAME_EVENT_LUA_CALL_SETBLOCKROTATION */
+      GameEventLuaCallSetBlockRotation LuaCallSetBlockRotation;
+
+      /* GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROTATION */
+      GameEventLuaCallSetDynamicEntityRotation LuaCallSetDynamicEntityRotation;
+
+      /* GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROTATION */
+      GameEventLuaCallSetDynamicEntityTranslation LuaCallSetDynamicEntityTranslation;
+
+      /* GAME_EVENT_LUA_CALL_SETDYNAMICENTITYNONE */
+      GameEventLuaCallSetDynamicEntityNone LuaCallSetDynamicEntityNone;
+
+      /* GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKROTATION */
+      GameEventLuaCallSetDynamicBlockRotation LuaCallSetDynamicBlockRotation;
+
+      /* GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKROTATION */
+      GameEventLuaCallSetDynamicBlockTranslation LuaCallSetDynamicBlockTranslation;
+
+      /* GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKNONE */
+      GameEventLuaCallSetDynamicBlockNone LuaCallSetDynamicBlockNone;
+
+      /* GAME_EVENT_LUA_CALL_CAMERAZOOM */
+      GameEventLuaCallCameraZoom LuaCallCameraZoom;
+
+      /* GAME_EVENT_LUA_CALL_CAMERAMOVE */
+      GameEventLuaCallCameraMove LuaCallCameraMove;
+
+    } u;		
+  };
     
   struct RecordedGameEvent {
-    MotoGameEvent *Event;           /* Event itself */
+    float fTime;                    /* Time of event */
+    GameEvent Event;                /* Event itself */
     bool bPassed;                   /* Whether we have passed it */
   };
 
-  /*===========================================================================
-  Game object
+	/*===========================================================================
+	Game object
   ===========================================================================*/
   class MotoGame {
-  public:          
-    MotoGame();
-    ~MotoGame();
-    
-    /* update of the structure */
-    void prePlayLevel(
-#if defined(ALLOW_GHOST)    
-          Replay *m_pGhostReplay,
+    public:          
+      MotoGame() {m_pLevelSrc=NULL;
+                  m_bSqueeking=false;
+                  clearStates();
+		  m_lastCallToEveryHundreath = 0.0;
+#if defined(ALLOW_GHOST)
+		  m_showGhostTimeDiff = true;
+		  m_isGhostActive = false;
 #endif
-          Level *pLevelSrc,
-          Replay *recordingReplay,
-          bool bIsAReplay);
-
-    void playLevel(
-#if defined(ALLOW_GHOST)    
-       Replay *m_pGhostReplay,
-#endif
-       Level *pLevelSrc, bool bIsAReplay);
-    void updateLevel(float fTimeStep,SerializedBikeState *pReplayState,Replay *p_replay);
-    void endLevel(void);
-
-    /* entities */
-    void touchEntity(Entity *pEntity, bool bHead); 
-    void deleteEntity(Entity *pEntity);
-
-    /* messages */
-    void gameMessage(std::string Text,
-         bool bOnce = false,
-         float fDuration = MOTOGAME_DEFAULT_GAME_MESSAGE_DURATION);
-    void clearGameMessages();
-    void updateGameMessages();
-    std::vector<GameMessage *> &getGameMessage(void) {return m_GameMessages;}
-      
-    /* serialization */
-    void getSerializedBikeState(SerializedBikeState *pState);
-    static void unserializeGameEvents(DBuffer *Buffer, std::vector<RecordedGameEvent *> *v_ReplayEvents, bool bDisplayInformation = false);
-    void interpolateGameState(SerializedBikeState *pA,SerializedBikeState *pB,SerializedBikeState *p,float t);
-
-    /* events */
-    void createGameEvent(MotoGameEvent *p_event);
-    void destroyGameEvent(MotoGameEvent *p_event);
-    MotoGameEvent* getNextGameEvent();
-    int getNumPendingGameEvents();
-    void cleanEventsQueue();
-    void executeEvents(Replay *p_replay);
-
-    /* information about engine */
-    float getBikeEngineRPM(void);
-    float getBikeEngineSpeed();
-      
-    /* player */
-    void setPlayerPosition(float x,float y,bool bFaceRight);
-    const Vector2f &getPlayerPosition(void);
-    bool getPlayerFaceDir(void);
-    void setDeathAnim(bool b) {m_bDeathAnimEnabled=b;}
+		  m_renderer = NULL;
+      }
+      ~MotoGame() {endLevel();}     
     
-    /* Direct Lua interaction methods */
-    bool scriptCallBool(std::string FuncName,bool bDefault=false);
-    void scriptCallVoid(std::string FuncName);
-    void scriptCallTblVoid(std::string Table,std::string FuncName);
-    void scriptCallVoidNumberArg(std::string FuncName, int n);
+      /* Methods */
+      void playLevel(
+#if defined(ALLOW_GHOST)    
+		     Replay *m_pGhostReplay,
+#endif
+		     LevelSrc *pLevelSrc, bool bIsAReplay);
+      void updateLevel(float fTimeStep,SerializedBikeState *pReplayState,Replay *p_replay);
+      void endLevel(void);
+      
+      void touchEntity(Entity *pEntity,bool bHead, bool bEnableScript); 
+      void deleteEntity(Entity *pEntity);
+      int countEntitiesByType(EntityType Type);
+      Entity *findEntity(const std::string &ID);
+      
+      void clearStates(void);
+      
+      void gameMessage(std::string Text,bool bOnce = false);
+      void clearGameMessages(void);
+      
+      void getSerializedBikeState(SerializedBikeState *pState);
+      static void unserializeGameEvents(DBuffer *Buffer, std::vector<RecordedGameEvent *> *v_ReplayEvents);
+      void interpolateGameState(SerializedBikeState *pA,SerializedBikeState *pB,SerializedBikeState *p,float t);
 
-    /* Data interface */
-    void resetAutoDisabler(void) {m_nStillFrames=0;}
-    bool isInitOK(void) {return m_bLevelInitSuccess;}
-    bool isFinished(void) {return m_bFinished;}
-    bool isDead(void) {return m_bDead;}
-    Level *getLevelSrc(void) {return m_pLevelSrc;}
-    BikeState *getBikeState(void) {return &m_BikeS;}
-    bool isSqueeking(void) {return m_bSqueeking;}
-    float howMuchSqueek(void) {return m_fHowMuchSqueek;}
-    bool isAReplay() {return m_bIsAReplay;}
+      float getBikeEngineRPM(void);
+      float getBikeEngineSpeed();
+
+      GameEvent *createGameEvent(GameEventType Type);
+      void destroyGameEvent(GameEvent *p_event);
+      GameEvent *getNextGameEvent(void);
+      int getNumPendingGameEvents(void);
+      void cleanEventsQueue();
+      
+      void setPlayerPosition(float x,float y,bool bFaceRight);
+      const Vector2f &getPlayerPosition(void);
+      bool getPlayerFaceDir(void);
+
+      Entity *getEntityByID(const std::string &ID);
+      
+      /* Direct Lua interaction methods */
+      bool scriptCallBool(std::string FuncName,bool bDefault=false);
+      void scriptCallVoid(std::string FuncName);
+      void scriptCallTblVoid(std::string Table,std::string FuncName);
+
+      /* Data interface */
+      void resetAutoDisabler(void) {m_nStillFrames=0;}
+      bool isInitOK(void) {return m_bLevelInitSuccess;}
+      bool isFinished(void) {return m_bFinished;}
+      bool isDead(void) {return m_bDead;}
+      LevelSrc *getLevelSrc(void) {return m_pLevelSrc;}
+      std::vector<ConvexBlock *> &getBlocks(void) {return m_Blocks;}
+      BikeState *getBikeState(void) {return &m_BikeS;}
+      BikeParams *getBikeParams() { return &m_BikeP;}
+      bool isSqueeking(void) {return m_bSqueeking;}
+      float howMuchSqueek(void) {return m_fHowMuchSqueek;}
 
 #if defined(ALLOW_GHOST)
       BikeState *getGhostBikeState(void) {return &m_GhostBikeS;}
@@ -204,8 +742,11 @@ namespace vapp {
       std::vector<float> m_ghostLastStrawberries;
       float m_myDiffOfGhost; /* time diff between the ghost and the player */
 #endif
-
       BikeController *getBikeController(void) {return &m_BikeC;}
+      std::vector<GameMessage *> &getGameMessage(void) {return m_GameMessages;}
+      std::vector<Entity *> &getEntities(void) {return m_Entities;}
+      std::vector<DynamicBlock *> &getDynBlocks(void) {return m_DynBlocks;}
+      std::vector<OverlayEdge *> &getOverlayEdges(void) {return m_OvEdges;}
       float getTime(void) {return m_fTime;}
       void setTime(float f) {m_fTime=f;}
       float getFinishTime(void) {return m_fFinishTime;}
@@ -217,6 +758,12 @@ namespace vapp {
       void setGravity(float x,float y) {m_PhysGravity.x=x; m_PhysGravity.y=y; resetAutoDisabler();}
       const Vector2f &getGravity(void) {return m_PhysGravity;}
         
+      /* Debug */
+      void resetDummies(void) {m_nNumDummies=0;}
+      int getNumDummies(void) {return m_nNumDummies;}
+      DummyHelper *getDummies(void) {return m_Dummies;}
+      void addDummy(Vector2f Pos,float r,float g,float b);
+    
 #if defined(ALLOW_GHOST)  
       void UpdateGhostFromReplay(SerializedBikeState *pReplayState);
       float getGhostDiff() {return m_myDiffOfGhost;}
@@ -225,56 +772,32 @@ namespace vapp {
 
       /* action for events */
       void SetEntityPos(String pEntityID, float pX, float pY);
-      void SetEntityPos(Entity* pEntity,  float pX, float pY);
       void PlaceInGameArrow(float pX, float pY, float pAngle);
       void PlaceScreenArrow(float pX, float pY, float pAngle);
-      void HideArrow();
       void MoveBlock(String pBlockID, float pX, float pY);
       void SetBlockPos(String pBlockID, float pX, float pY);
       void SetBlockCenter(String pBlockID, float pX, float pY);
       void SetBlockRotation(String pBlockID, float pAngle);
+      DynamicBlock *GetDynamicBlockByID(const std::string &ID);
 
       void setRenderer(GameRenderer *p_renderer);
       void CameraZoom(float pZoom);
       void CameraMove(float p_x, float p_y);
 
-      void killPlayer();
-      void playerEntersZone(Zone *pZone);
-      void playerLeavesZone(Zone *pZone);
-      void playerTouchesEntity(std::string p_entityID, bool p_bTouchedWithHead);
-      void entityDestroyed(const std::string& i_entityId);
-      void addDynamicObject(SDynamicObject* p_obj);
-      void removeSDynamicOfObject(std::string pObject);
-      void addPenalityTime(float fTime);
-
-      void createKillEntityEvent(std::string p_entityID);
-
-      unsigned int getNbRemainingStrawberries();
-      void makePlayerWin();
-
-      void setBodyDetach(bool state);
-
-      /* added=added to m_touching */
-      /* removed=removed from m_touching */
-      typedef enum {none, added, removed} touch;
-
-      bool isTouching(const Entity& i_entity) const;
-      touch setTouching(Entity& i_entity, bool i_touching);     
-      bool isTouching(const Zone& i_zone) const;
-      touch setTouching(Zone& i_zone, bool i_isTouching);
-
-  private:         
+    private:         
       /* Data */
-      std::queue<MotoGameEvent*> m_GameEventQueue;
+      std::queue<GameEvent*> m_GameEventQueue;
       
       float m_fTime,m_fNextAttitudeCon;
       float m_fFinishTime,m_fAttitudeCon;
+      
+      int m_nNumDummies;
+      DummyHelper m_Dummies[100];
       
       int m_nStillFrames;
       
       bool m_bSqueeking;
       float m_fHowMuchSqueek;
-      bool m_bDeathAnimEnabled;
       bool m_bLevelInitSuccess;
 
       Vector2f m_PhysGravity; /* gravity */
@@ -283,15 +806,20 @@ namespace vapp {
       
       CollisionSystem m_Collision;        /* Collision system */
             
-      Level *m_pLevelSrc;              /* Source of level */            
+      LevelSrc *m_pLevelSrc;              /* Source of level */            
       lua_State *m_pL;                    /* Lua state associated with the
                                              level */
-      std::vector<Entity *> m_DestroyedEntities; /* destroyed entities */
+      std::vector<ConvexBlock *> m_Blocks;/* Blocks */
+      std::vector<Entity *> m_Entities;   /* Entities */
       dWorldID m_WorldID;                 /* World ID */
       
+      std::vector<OverlayEdge *> m_OvEdges;/* Overlay edges */
       std::vector<Entity *> m_DelSchedule;/* Entities scheduled for deletion */
       std::vector<GameMessage *> m_GameMessages;
+      std::vector<DynamicBlock *> m_DynBlocks; /* Dynamic blocks */
       
+      BikeParams m_BikeP;                 /* Bike physics */      
+      BikeAnchors m_BikeA;                /* Important bike anchor points */
       BikeState m_BikeS;                  /* Bike state */
 
 #if defined(ALLOW_GHOST)  
@@ -304,9 +832,6 @@ namespace vapp {
 
       /* count somersault */
       SomersaultCounter m_somersaultCounter;
-
-      bool bFrontWheelTouching;
-      bool bRearWheelTouching;
 
       std::vector<SDynamicObject*> m_SDynamicObjects;
 
@@ -322,7 +847,6 @@ namespace vapp {
       Vector2f m_PrevFrontWheelP;         /* Prev. front wheel position */
       Vector2f m_PrevHeadP;
       Vector2f m_PrevHead2P;
-      Vector2f m_PrevActiveHead;
       
       /* Wheels spinning dirt up... muzakka! :D */
       bool m_bWheelSpin;                  /* Do it captain */
@@ -375,8 +899,6 @@ namespace vapp {
             
       dJointGroupID m_ContactGroup;       /* Contact joint group */     
       
-      bool m_bodyDetach;
-
       /* Teleport next frame? */
       bool m_bTeleport;
       GameReqPlayerPos m_TeleportDest; 
@@ -384,30 +906,23 @@ namespace vapp {
       /* for EveryHundreath function */
       float m_lastCallToEveryHundreath;
             
-      bool m_isScriptActiv; /* change this variable to activ/desactiv scripting */
-      /* true if showing a replay.
-         false if user playing */
-      bool m_bIsAReplay;
-
-      std::vector<Entity *> m_entitiesTouching;
-      std::vector<Zone *>   m_zonesTouching;
-
-      void clearStates();
-
       /* Helpers */
       void _GenerateLevel(void);          /* Called by playLevel() to 
                                              prepare the level */
+      ConvexBlock *_CreateBlock(BSPPoly *pPoly,LevelBlock *pSrcBlock);
+      void _CalculateBikeAnchors(void);
       int _IntersectWheelLevel(Vector2f Cp,float Cr,dContact *pContacts);
       int _IntersectWheelLine(Vector2f Cp,float Cr,int nNumContacts,dContact *pContacts,Vector2f A0,Vector2f A1);
       bool _IntersectHeadLevel(Vector2f Cp,float Cr,const Vector2f &LastCp);
       bool _IntersectHeadLine(Vector2f Cp,float Cr,Vector2f A0,Vector2f A1);
-      bool _DoCircleTouchZone(const Vector2f &Cp,float Cr,Zone *pZone);
+      bool _DoCircleTouchZone(const Vector2f &Cp,float Cr,LevelZone *pZone);
       bool _IntersectPointLevel(Vector2f Cp);
-      Entity *_SpawnEntity(std::string ID,EntitySpeciality Type,Vector2f Pos, Entity *pSrc);
-      void _KillEntity(Entity *pEnt);
-      void _UpdateEntities(void);
       void _UpdateZones(void);
-      bool touchEntityBodyExceptHead(const BikeState &pBike, const Entity &p_entity);
+      Entity *_SpawnEntity(std::string ID,EntityType Type,Vector2f Pos,LevelEntity *pSrc);
+      void _KillEntity(Entity *pEnt);
+      EntityType _TransEntityType(std::string Name);
+      EdgeEffect _TransEdgeEffect(std::string Name);
+      void _UpdateEntities(void);
       void _UpdateGameState(SerializedBikeState *pReplayState);
       /* static */ void _UpdateStateFromReplay(SerializedBikeState *pReplayState,BikeState *pBikeS);
 
@@ -419,15 +934,17 @@ namespace vapp {
 
       void cleanScriptDynamicObjects();
       void nextStateScriptDynamicObjects();
+      void removeSDynamicOfObject(std::string pObject);
 
-      signed char _MapCoordTo8Bits(float fRef,float fMaxDiff,float fCoord);
-      float _Map8BitsToCoord(float fRef,float fMaxDiff,signed char c);
+      char _MapCoordTo8Bits(float fRef,float fMaxDiff,float fCoord);
+      float _Map8BitsToCoord(float fRef,float fMaxDiff,char c);
       unsigned short _MatrixTo16Bits(const float *pfMatrix);
       void _16BitsToMatrix(unsigned short n16,float *pfMatrix);
-      void _SerializeGameEventQueue(DBuffer &Buffer,MotoGameEvent *pEvent);
+      void _SerializeGameEventQueue(DBuffer &Buffer,GameEvent *pEvent);
       
       void _UpdateReplayEvents(Replay *p_replay);
-      void _HandleReplayEvent(MotoGameEvent *pEvent);
+      void _HandleReplayEvent(GameEvent *pEvent);
+      void _HandleReverseReplayEvent(GameEvent *pEvent);
       
       void _UpdateDynamicCollisionLines(void);
       
@@ -439,6 +956,6 @@ namespace vapp {
       void _PrepareRider(Vector2f StartPos);
     };
 
-}
+};
 
 #endif

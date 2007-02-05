@@ -22,7 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __SOMERSAULTCOUNTER_H__
 #define __SOMERSAULTCOUNTER_H__
 
-#include "helpers/VMath.h"
+#include "VMath.h"
 
 class SomersaultCounter {
   public:
@@ -30,18 +30,30 @@ class SomersaultCounter {
   ~SomersaultCounter();
 
   void init();
-  bool update(double p_angle, bool &bCounterclock);
+  bool update(vapp::Vector2f p_wheel1, vapp::Vector2f p_wheel2);
 
   int getTotalClockwise();
   int getTotalCounterClockwise();
   int getTotal();
 
   private:
+  int getCurrentState(vapp::Vector2f p_wheel1, vapp::Vector2f p_wheel2);
+
+  /* five states : the five last one */
+  /* five because we must come back to the original one */
+  /*
+       |
+    4  |  3
+  -----O------
+    1  |  2
+       |
+
+  */
   bool m_last_initialized;
-  double m_last_state;
-  double m_min_move;
-  double m_max_move;
-  double m_current_move;
+  int m_last_state;
+  int m_min_move;
+  int m_max_move;
+  int m_current_move;
 
   int m_nbClockwise;
   int m_nbCounterClockwise;

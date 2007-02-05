@@ -47,7 +47,6 @@ void FileCompression::bunzip2(std::string p_fileIN, std::string p_fileOUT) {
   //open out file
   f_out = fopen(p_fileOUT.c_str(), "wb");
   if (!f_out) {
-    fclose(f_in);
     fclose(f_out);
     throw vapp::Exception("Unable to write file " + p_fileOUT);
   }
@@ -61,7 +60,6 @@ void FileCompression::bunzip2(std::string p_fileIN, std::string p_fileOUT) {
       nbWrote = fwrite(buf, 1, nBuf, f_out);
       if(nbWrote != nBuf) {
 	BZ2_bzReadClose (&bzerror_in, b_in);
-	fclose(f_in);
 	fclose(f_out);
 	throw vapp::Exception("Unable to write file " + p_fileOUT);
       }
@@ -71,12 +69,10 @@ void FileCompression::bunzip2(std::string p_fileIN, std::string p_fileOUT) {
   // close in file
   if(bzerror_in != BZ_STREAM_END) {
     BZ2_bzReadClose (&bzerror_in, b_in);
-    fclose(f_in);
     fclose(f_out);
     throw vapp::Exception("Unable to read file " + p_fileIN);
   } else {
     BZ2_bzReadClose (&bzerror_in, b_in);
-    fclose(f_in);
   }
 
   // close write file

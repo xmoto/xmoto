@@ -77,6 +77,6 @@ namespace vapp {
 	    UserConfigVar *_FindVarByName(std::string Name);
 	};
 
-}
+};
 
 #endif
