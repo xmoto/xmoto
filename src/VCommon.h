@@ -25,6 +25,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* Load in configuration */
 #include "BuildConfig.h"
 
+/* Warnings we don't like */
+#if defined(WIN32) && defined(_MSC_VER)
+  #pragma warning(disable : 4244 4018 4101 4244 4267 4305)
+#endif
+
 /* Misc. nice-to-have includes */
 #if defined(WIN32)
   #include <windows.h>
@@ -36,7 +41,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   #include <SDL.h>
   #include <SDL_mixer.h>
 #else
-  #define USE_RWOPS
   #include <SDL/SDL.h>
   #include <SDL/SDL_mixer.h>
 #endif
@@ -44,7 +48,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // Some places #define _T, which we want for a template parameter
 #undef _T
 
-#ifdef ENABLE_OPENGL
 /* Pull in OpenGL headers */
 //#define NO_SDL_GLEXT
 //#include <SDL/SDL_opengl.h>
@@ -64,12 +67,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "glext.h"
 
-#endif
-
 #include <string>
 #include <vector>
 #include <queue>
-#include <map>
 #include <iostream>
 #include <sstream>
 
@@ -174,15 +174,6 @@ namespace vapp {
   Types
   ===========================================================================*/
   typedef unsigned int Color;
-
-  //used a comparator in sdt::map
-  struct ltstr {
-    bool operator()(const char* s1, const char* s2) const {
-      return strcmp(s1, s2) < 0;
-    }
-  };
-
-
 
 }
 

@@ -54,7 +54,6 @@ namespace vapp {
     }
   
     std::string Name;
-    std::string md5sum;
     int nSize,nOffset;
   };
 
@@ -155,8 +154,7 @@ namespace vapp {
       /* File name mangling */
       static std::string getFileDir(std::string Path);
       static std::string getFileBaseName(std::string Path);
-      static std::string getFileExtension(std::string Path);      
-
+      
       /* Misc */
       static bool isDir(std::string AppDir);
       static int getFileTimeStamp(const std::string &Path);
@@ -179,10 +177,6 @@ namespace vapp {
 
       // return true if p_filepath is a path from user dir
       static bool isInUserDir(std::string p_filepath);
-
-      /* return false if the file is in the package */
-      static bool isFileReal(std::string i_filePath);
-      static std::string md5sum(std::string i_filePath);
 
     private:
       /* Helper functions */

@@ -51,7 +51,6 @@ namespace vapp {
   class MotoGameEvent;
   class Replay;
   class GameRenderer;
-  class CollisionSystem;
 
   /*===========================================================================
   Serialized bike state
@@ -158,7 +157,7 @@ namespace vapp {
       
     /* serialization */
     void getSerializedBikeState(SerializedBikeState *pState);
-    static void unserializeGameEvents(DBuffer *Buffer, std::vector<RecordedGameEvent *> *v_ReplayEvents, bool bDisplayInformation = false);
+    static void unserializeGameEvents(DBuffer *Buffer, std::vector<RecordedGameEvent *> *v_ReplayEvents);
     void interpolateGameState(SerializedBikeState *pA,SerializedBikeState *pB,SerializedBikeState *p,float t);
 
     /* events */
@@ -194,7 +193,6 @@ namespace vapp {
     BikeState *getBikeState(void) {return &m_BikeS;}
     bool isSqueeking(void) {return m_bSqueeking;}
     float howMuchSqueek(void) {return m_fHowMuchSqueek;}
-    bool isAReplay() {return m_bIsAReplay;}
 
 #if defined(ALLOW_GHOST)
       BikeState *getGhostBikeState(void) {return &m_GhostBikeS;}
@@ -225,7 +223,6 @@ namespace vapp {
 
       /* action for events */
       void SetEntityPos(String pEntityID, float pX, float pY);
-      void SetEntityPos(Entity* pEntity,  float pX, float pY);
       void PlaceInGameArrow(float pX, float pY, float pAngle);
       void PlaceScreenArrow(float pX, float pY, float pAngle);
       void HideArrow();
@@ -254,14 +251,10 @@ namespace vapp {
 
       void setBodyDetach(bool state);
 
-      /* added=added to m_touching */
-      /* removed=removed from m_touching */
-      typedef enum {none, added, removed} touch;
-
       bool isTouching(const Entity& i_entity) const;
-      touch setTouching(Entity& i_entity, bool i_touching);     
+      void setTouching(Entity& i_entity, bool i_touching);     
       bool isTouching(const Zone& i_zone) const;
-      touch setTouching(Zone& i_zone, bool i_isTouching);
+      void setTouching(Zone& i_zone, bool i_isTouching);
 
   private:         
       /* Data */
@@ -385,10 +378,7 @@ namespace vapp {
       float m_lastCallToEveryHundreath;
             
       bool m_isScriptActiv; /* change this variable to activ/desactiv scripting */
-      /* true if showing a replay.
-         false if user playing */
-      bool m_bIsAReplay;
-
+      
       std::vector<Entity *> m_entitiesTouching;
       std::vector<Zone *>   m_zonesTouching;
 

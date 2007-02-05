@@ -37,7 +37,7 @@ namespace vapp {
           
     /* Init GUI */
     getGUI()->setApp(getParent());
-    getGUI()->setPosition(0,0,getParent()->getDrawLib()->getDispWidth(),getParent()->getDrawLib()->getDispHeight());
+    getGUI()->setPosition(0,0,getParent()->getDispWidth(),getParent()->getDispHeight());
     
     m_pMFont = UITextDraw::getFont("MFont");
     m_pSFont = UITextDraw::getFont("SFont");    

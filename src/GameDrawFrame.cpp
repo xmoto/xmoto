@@ -116,45 +116,37 @@ namespace vapp {
           else if(m_State == GS_PLAYING || ((m_State == GS_DEADMENU || m_State == GS_DEADJUST) && m_bEnableDeathAnim)) {
             /* When actually playing or when dead and the bike is falling apart, 
                a physics update is required */
-						if(isLockedMotoGame()) {
-							nPhysSteps = 0;
-						} else {
-							nPhysSteps = _UpdateGamePlaying();            
-						}
+            nPhysSteps = _UpdateGamePlaying();            
             HighPrecisionTimer::checkTime("_UpdateGamePlaying");
           }
           else if(m_State == GS_REPLAYING) {
             /* When playing back a replay, no physics update is requried - instead
                the game state is streamed out of a binary .rpl file */
-							nPhysSteps = _UpdateGameReplaying();
+            nPhysSteps = _UpdateGameReplaying();
             HighPrecisionTimer::checkTime("_UpdateGameReplaying");
             bValidGameState = nPhysSteps > 0;
             //printf("%d ",nPhysSteps);
           }
   
-					if(m_State == GS_PLAYING) {
-						autoZoom();
-					}
-
           /* Render */
-          if(!getDrawLib()->isNoGraphics() && bValidGameState) {
+          if(!isNoGraphics() && bValidGameState) {
             m_Renderer.render(bIsPaused);
             HighPrecisionTimer::checkTime("m_Renderer.render");
       
             if(m_bShowMiniMap && !m_bCreditsModeActive) {
               if(m_MotoGame.getBikeState()->Dir == DD_LEFT &&
                  (m_bShowEngineCounter == false || m_State == GS_REPLAYING)) {
-                m_Renderer.renderMiniMap(getDrawLib()->getDispWidth()-150,getDrawLib()->getDispHeight()-100,150,100);
+                m_Renderer.renderMiniMap(getDispWidth()-150,getDispHeight()-100,150,100);
                 HighPrecisionTimer::checkTime("m_Renderer.renderMiniMap");
               } 
               else {
-                m_Renderer.renderMiniMap(0,getDrawLib()->getDispHeight()-100,150,100);
+                m_Renderer.renderMiniMap(0,getDispHeight()-100,150,100);
                 HighPrecisionTimer::checkTime("m_Renderer.renderMiniMap");
               }
             }             
       
             if(m_bShowEngineCounter && m_bUglyMode == false && m_State != GS_REPLAYING) {
-              m_Renderer.renderEngineCounter(getDrawLib()->getDispWidth()-128,getDrawLib()->getDispHeight()-128,128,128,
+              m_Renderer.renderEngineCounter(getDispWidth()-128,getDispHeight()-128,128,128,
                                              m_MotoGame.getBikeEngineSpeed());
               HighPrecisionTimer::checkTime("m_Renderer.renderEngineCounter");
             } 
@@ -209,7 +201,7 @@ namespace vapp {
               nFrameCnt = 0;
               m_fLastPerfStateTime = m_fFrameTime;
             }
-            getDrawLib()->drawText(Vector2f(0,100),cBuf,MAKE_COLOR(0,0,0,255),-1);        
+            drawText(Vector2f(0,100),cBuf,MAKE_COLOR(0,0,0,255),-1);        
             nFrameCnt++;
           }
 
@@ -250,7 +242,7 @@ namespace vapp {
             }
 
             if(v_font != NULL) {
-              UITextDraw::printRaw(v_font,0,getDrawLib()->getDispHeight()-4,
+              UITextDraw::printRaw(v_font,0,getDispHeight()-4,
                 v_infos,
                 MAKE_COLOR(255,255,255,255));
             }
@@ -289,7 +281,7 @@ namespace vapp {
     if(bDrawFPS) {
       char cTemp[256];        
       sprintf(cTemp,"%f",m_fFPS_Rate);
-      getDrawLib()->drawText(Vector2f(130,0),cTemp);
+      drawText(Vector2f(130,0),cTemp);
     }    
     
     /* Profiling? */
@@ -324,10 +316,10 @@ namespace vapp {
   Main loop utility functions
   ===========================================================================*/
   void GameApp::_DrawMouseCursor(void) {
-    if(!getDrawLib()->isNoGraphics() && m_pCursor != NULL && m_bUglyMode == false) {
+    if(!isNoGraphics() && m_pCursor != NULL && m_bUglyMode == false) {
       int nMX,nMY;
       getMousePos(&nMX,&nMY);      
-      getDrawLib()->drawImage(Vector2f(nMX-2,nMY-2),Vector2f(nMX+30,nMY+30),m_pCursor);
+      drawImage(Vector2f(nMX-2,nMY-2),Vector2f(nMX+30,nMY+30),m_pCursor);
     }
   }
   
@@ -338,7 +330,7 @@ namespace vapp {
     setFrameDelay(0);
     
     /* Update sound system and input */
-    if(!getDrawLib()->isNoGraphics()) {        
+    if(!isNoGraphics()) {        
       m_EngineSound.update(getRealTime());
       m_EngineSound.setRPM(0); /* per default don't have engine sound */
       Sound::update();
@@ -470,13 +462,13 @@ namespace vapp {
       if(m_pMenuMusic == NULL) {
         /* No music available, try loading */
         std::string MenuMusicPath = FS::getDataDir() + std::string("/xmoto.ogg");
-        #if defined(WIN32) /* this works around a bug in SDL_mixer 1.2.7 on Windows */
-	SDL_RWops *rwfp;
-	rwfp = SDL_RWFromFile(MenuMusicPath.c_str(), "rb");
-	m_pMenuMusic = Mix_LoadMUS_RW(rwfp);
-	//m_pMenuMusic = NULL;
+        const char *pc = MenuMusicPath.c_str();
+        #if defined(_MSC_VER) /* this works around a bug in SDL_mixer 1.2.7 on Windows */
+          SDL_RWops *rwfp;              
+          rwfp = SDL_RWFromFile(pc, "rb");                          
+          m_pMenuMusic = Mix_LoadMUS_RW(rwfp);
         #else
-	m_pMenuMusic = Mix_LoadMUS(MenuMusicPath.c_str());
+          m_pMenuMusic = Mix_LoadMUS(pc);
         #endif
         /* (Don't even complain the slightest if music isn't found...) */          
       }
@@ -745,7 +737,7 @@ namespace vapp {
   void GameApp::_PostUpdatePause(void) {
     if(!m_bUglyMode) {
       if(m_nPauseShade < 150) m_nPauseShade+=8;
-      getDrawLib()->drawBox(Vector2f(0,0),Vector2f(getDrawLib()->getDispWidth(),getDrawLib()->getDispHeight()),0,MAKE_COLOR(0,0,0,m_nPauseShade));                                        
+      drawBox(Vector2f(0,0),Vector2f(getDispWidth(),getDispHeight()),0,MAKE_COLOR(0,0,0,m_nPauseShade));                                        
     }
 
     /* Update mouse stuff */
@@ -758,14 +750,14 @@ namespace vapp {
   void GameApp::_PostUpdateJustDead(void) {
     if(!m_bUglyMode) {
       if(m_nJustDeadShade < 150) m_nJustDeadShade+=8;
-      getDrawLib()->drawBox(Vector2f(0,0),Vector2f(getDrawLib()->getDispWidth(),getDrawLib()->getDispHeight()),0,MAKE_COLOR(0,0,0,m_nJustDeadShade));     
+      drawBox(Vector2f(0,0),Vector2f(getDispWidth(),getDispHeight()),0,MAKE_COLOR(0,0,0,m_nJustDeadShade));     
     }
   }
 
   void GameApp::_PostUpdateMenuDead(void) {
     if(!m_bUglyMode) {
       if(m_nJustDeadShade < 150) m_nJustDeadShade+=8;
-      getDrawLib()->drawBox(Vector2f(0,0),Vector2f(getDrawLib()->getDispWidth(),getDrawLib()->getDispHeight()),0,MAKE_COLOR(0,0,0,m_nJustDeadShade));     
+      drawBox(Vector2f(0,0),Vector2f(getDispWidth(),getDispHeight()),0,MAKE_COLOR(0,0,0,m_nJustDeadShade));     
     }
     
     /* Update mouse stuff */
@@ -780,7 +772,7 @@ namespace vapp {
   void GameApp::_PostUpdateFinished(void) {
     if(!m_bUglyMode) {
       if(m_nFinishShade < 150) m_nFinishShade+=8;
-      getDrawLib()->drawBox(Vector2f(0,0),Vector2f(getDrawLib()->getDispWidth(),getDrawLib()->getDispHeight()),0,MAKE_COLOR(0,0,0,m_nFinishShade));     
+      drawBox(Vector2f(0,0),Vector2f(getDispWidth(),getDispHeight()),0,MAKE_COLOR(0,0,0,m_nFinishShade));     
     }
 
     /* Update mouse stuff */

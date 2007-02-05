@@ -28,7 +28,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VCommon.h"
 #include "Packager.h"
 #include "helpers/SwapEndian.h"
-#include "md5sum/md5file.h"
 
 /* 
    How to create an xmoto.bin file:
@@ -83,21 +82,14 @@ namespace vapp {
     FILE *fp = fopen(BinFile.c_str(),"rb");
     if(fp != NULL) {    
       char cBuf[256];
-      char md5sum[256];
-      int md5sumLen;
-
       fread(cBuf,4,1,fp);
-      if(!strncmp(cBuf,"XBI2",4)) {
+      if(!strncmp(cBuf,"XBI1",4)) {
         int nNameLen;
         while((nNameLen=fgetc(fp)) >= 0) {  
           /* Extract name of file to extract */
           fread(cBuf,nNameLen,1,fp);
           cBuf[nNameLen] = '\0';
           
-	  md5sumLen = fgetc(fp);
-          fread(md5sum,md5sumLen,1,fp);
-          md5sum[md5sumLen] = '\0';
-
           /* Write name to package.lst file */
           if(fp_lst != NULL)
             fprintf(fp_lst,"%s\n",cBuf);
@@ -212,7 +204,7 @@ namespace vapp {
     
     /* Do it */
     fp = fopen("xmoto.bin","wb");
-    fwrite("XBI2",4,1,fp);
+    fwrite("XBI1",4,1,fp);
     for(int i=0;i<FileList.size();i++) {
       /* Open and load entire file into memory (yikes!! (but all files a pretty small :P)) */
       FILE *in = fopen(FileList[i].c_str(),"rb");
@@ -228,12 +220,6 @@ namespace vapp {
         unsigned char c = FileList[i].length();
         fputc(c,fp);
         fwrite(FileList[i].c_str(),c,1,fp);
-
-	std::string md5sum = md5file(FileList[i]);
-        c = md5sum.length();
-        fputc(c,fp);
-        fwrite(md5sum.c_str(),c,1,fp);
-
 	int LnSize = SwapEndian::LittleLong(nSize);
         fwrite(&LnSize,4,1,fp);        
         fwrite(pcBuf,nSize,1,fp);

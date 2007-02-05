@@ -137,15 +137,17 @@ SDynamicEntityMove::~SDynamicEntityMove() {
 }
 
 void SDynamicEntityMove::performMove(vapp::MotoGame* v_motoGame) {
-  Entity* p = &(v_motoGame->getLevelSrc()->getEntityById(m_entity));
-  if(! p->isAlive()){
-    return;
+  /* Find the specified entity and return its position */
+  for(int i=0;i<v_motoGame->getLevelSrc()->Entities().size();i++) {
+    Entity *p = v_motoGame->getLevelSrc()->Entities()[i];
+    if(p->Id() == m_entity) {
+      float vx, vy;
+      performXY(&vx, &vy);
+      v_motoGame->SetEntityPos(p->Id(),
+             vx + p->DynamicPosition().x,
+             vy + p->DynamicPosition().y);
+    }
   }
-  float vx, vy;
-  performXY(&vx, &vy);
-  v_motoGame->SetEntityPos(p,
-			   vx + p->DynamicPosition().x,
-			   vy + p->DynamicPosition().y);
 }
 
 std::string SDynamicEntityMove::getObjectId() {
@@ -182,12 +184,17 @@ SDynamicBlockMove::~SDynamicBlockMove() {
 }
 
 void SDynamicBlockMove::performMove(vapp::MotoGame* v_motoGame) {
-  Block *p = &(v_motoGame->getLevelSrc()->getBlockById(m_block));
-  float vx, vy;
-  performXY(&vx, &vy);
-  v_motoGame->SetBlockPos(p->Id(),
-			  vx + p->DynamicPosition().x,
-			  vy + p->DynamicPosition().y);
+  /* Find the specified block and return its position */
+  for(int i=0;i<v_motoGame->getLevelSrc()->Blocks().size();i++) {
+    Block *p = v_motoGame->getLevelSrc()->Blocks()[i];
+    if(p->Id() == m_block) {
+      float vx, vy;
+      performXY(&vx, &vy);
+      v_motoGame->SetBlockPos(p->Id(),
+                              vx + p->DynamicPosition().x,
+                              vy + p->DynamicPosition().y);
+    }
+  }
 }
 
 std::string SDynamicBlockMove::getObjectId() {

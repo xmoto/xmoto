@@ -51,7 +51,6 @@ Central place to keep many in-game text strings
 #define GAMETEXT_AUDIO                _("Audio")
 #define GAMETEXT_AUTHOR               _("Author")
 #define GAMETEXT_AUTOSAVEREPLAYS      _("Automatic saving of replays")
-#define GAMETEXT_AUTOZOOM             _("Auto zoom")
 #define GAMETEXT_BESTTIMES            _("Best Times")
 #define GAMETEXT_BESTPLAYER           _("Best player")
 #define GAMETEXT_BRAKE                _("Brake")
@@ -72,10 +71,9 @@ Central place to keep many in-game text strings
 #define GAMETEXT_CONTROLS             _("Controls")
 #define GAMETEXT_CREDITS              _("Lead Programming:Rasmus Neckelmann;" \
                                         ":Nicolas Adenis-Lamarre;" \
-                                        ":Emmanuel Gorse;" \
-                                        ":Kees Jongenburger;" \
                                         ":;" \
                                         "Additional Programming:Eric Piel;" \
+                                        ":Emmanuel Gorse;" \
                                         ":Christoph Sommer;" \
                                         ":Frederic Huard;" \
                                         ":;" \
@@ -132,7 +130,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_CREDITSBUTTON        _("Credits")
 #define GAMETEXT_CURPLAYER            _("Player")
 #define GAMETEXT_DATE                 _("Date")
-#define GAMETEXT_DEATHANIM            _("Death Animation")
+#define GAMETEXT_DEATHANIM            _("Bike Breaks")
 #define GAMETEXT_DEFAULTS             _("Defaults")
 #define GAMETEXT_DELETEPLAYERMESSAGE  _("Do you really want to delete player?")
 #define GAMETEXT_DELETEREPLAYMESSAGE  _("Do you really want to delete replay?")
@@ -177,7 +175,6 @@ Central place to keep many in-game text strings
 #define GAMETEXT_FAILEDTOSAVEREPLAY   _("Failed to save replay!\nMaybe you should try with another name?")
 #define GAMETEXT_FAILEDUPDATETHEMESLIST _("Failed to update the theme list\nCheck your Internet connection!")
 #define GAMETEXT_FILE                 _("File")
-#define GAMETEXT_FILTER               _("Filter")
 #define GAMETEXT_FINISH               _("Finished!")
 #define GAMETEXT_FINISHTIME           _("Finish Time")
 #define GAMETEXT_FLIPLEFT             _("Flip left")
@@ -205,9 +202,9 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 "  Esc - " + std::string(_("Pause")) + "\n" \
 "  Return - " + std::string(_("Restart the level")) + "\n" \
 "  F12 - " + std::string(_("Take a screenshot")) + "\n" \
-"  F5 - " + std::string(_("Reload levels from Levels dir (if you create a new level)")) + "\n" \
 "\n" \
  + std::string(_("Find all the strawberries and touch the flower to finish\nthe level.")) + "\n" \
+"\n" \
  + std::string(_("Read the README file or check out the website at\nhttp://xmoto.sourceforge.net for more information."))
 
 #define GAMETEXT_HIGH                 _("High")
@@ -288,7 +285,6 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_PROXYCONFIG          _("Configure Proxy...")
 #define GAMETEXT_QUIT                 _("Quit Game")
 #define GAMETEXT_QUITMESSAGE          _("Do you really want to quit?")
-#define GAMETEXT_RANDOMIZE            _("Randomize")
 #define GAMETEXT_RELOADINGLEVELS      _("Reloading levels...")
 #define GAMETEXT_RELOADINGREPLAYS     _("Reloading replays...")
 #define GAMETEXT_REPLAY               _("Replay")
@@ -482,10 +478,9 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_LEVELPACK _("Name of level pack")
 #define CONTEXTHELP_ADDTOFAVORITE _("Add the level to the favorite levels list")
 #define CONTEXTHELP_DELETEFROMFAVORITE _("Delete the level from the favorite levels list")
-#define CONTEXTHELP_RANDOMIZE _("Puzzle the levels pack list")
-#define CONTEXTHELP_LEVEL_FILTER _("Put a text to limit the level list")
 
 #define VPACKAGENAME_LEVELS_WITH_NO_HIGHSCORE   _("Levels with no highscore")
+#define VPACKAGENAME_RANDOM_LEVELS              _("Random levels")
 #define VPACKAGENAME_INCOMPLETED_LEVELS         _("Levels you have not completed")
 #define VPACKAGENAME_YOU_HAVE_NOT_THE_HIGHSCORE _("You're not the highscore holder")
 #define VPACKAGENAME_ALL_LEVELS                 _("All levels")

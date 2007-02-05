@@ -55,12 +55,9 @@ class Entity {
   float Z() const;
   float Width() const;
   float Height() const;
-  float DrawAngle() const;
-  bool  DrawReversed() const;
   const TColor& Color() const;
   std::string SpriteName() const; /* PlayerStart, Flower, EndOfLevel, Bird, ... */
-  bool  isAlive() const;
-
+  
   virtual void loadToPlay();
   virtual void unloadToPlay();
   void setDynamicPosition(const Vector2f& i_dynamicPosition);
@@ -69,12 +66,9 @@ class Entity {
   void setSize(float i_size);
   void setWidth(float i_width);
   void setHeight(float i_height);
-  void setDrawAngle(float i_drawAngle);
-  void setDrawReversed(bool i_drawReversed);
   void setZ(float i_z);
   void setSpriteName(const std::string& i_spriteName);
   void setColor(const TColor& i_color);
-  void setAlive(bool alive);
 
   void saveXml(vapp::FileHandle *i_pfh);
   void saveBinary(vapp::FileHandle *i_pfh);
@@ -87,8 +81,7 @@ class Entity {
   void setSpeciality(EntitySpeciality i_speciality);
 
   virtual bool updateToTime(float i_time, Vector2f i_gravity);
-
-  AABB& getAABB();
+  virtual void clearAfterRewind();
 
  private:
   std::string m_id;              /** Its own identifer */
@@ -97,18 +90,11 @@ class Entity {
   Vector2f    m_dynamicPosition; /** Current position */
   float       m_size;            /** Size (radius) */
   float       m_width, m_height; /** size of the picture, negativ it the theme size must be used */
-  float       m_drawAngle;
-  bool        m_drawReversed;
   float       m_z;               /** deep coord */
   bool        m_doesKill;
   bool        m_doesMakeWin;
   bool        m_isToTake;
-  /* Use to know if a script shall update the pos of the entity*/
-  bool        m_isAlive;
   TColor      m_color;
-
-  AABB        m_BBox;
-  bool        m_isBBoxDirty;
 };
 
 class ParticlesSource : public Entity {
@@ -119,6 +105,7 @@ class ParticlesSource : public Entity {
   virtual void loadToPlay();
   virtual void unloadToPlay();
   virtual bool updateToTime(float i_time, Vector2f i_gravity);
+  virtual void clearAfterRewind();
   void addParticle(Vector2f i_velocity, float i_killTime);
   virtual void addParticle(Vector2f i_velocity, float i_killTime, std::string i_spriteName) = 0;
   std::vector<EntityParticle *> &Particles();
@@ -128,7 +115,7 @@ class ParticlesSource : public Entity {
   std::vector<EntityParticle *> m_particles;
 
  private:
-  float       m_lastParticleTime;
+  float       m_nextParticleTime;
   float       m_particleTime_increment;
 
   void deleteParticles();

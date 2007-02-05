@@ -22,11 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __BLOCK_H__
 #define __BLOCK_H__
 
-namespace vapp{
-  class CollisionSystem;
-  class Line;
-}
-
+#include "../Collision.h"
 #include "../helpers/VMath.h"
 #include "../helpers/Color.h"
 #include "../BSP.h"
@@ -44,16 +40,8 @@ class ConvexBlockVertex {
   ConvexBlockVertex(const Vector2f& i_position, const Vector2f& i_texturePosition);
   ~ConvexBlockVertex();
 
-  /* called many many many times, so we inline it, and make it return a ref */
-  inline Vector2f& Position() {
-    return m_position;
-  }
-
-  /* called many many many times, so we inline it, and make it return a ref */
-  inline Vector2f& TexturePosition() {
-    return m_texturePosition;
-  }
-
+  Vector2f Position() const;
+  Vector2f TexturePosition() const;
   void  setPosition(const Vector2f& i_position);
 
   private:
@@ -68,12 +56,8 @@ class ConvexBlock {
  public:
   ConvexBlock(Block *i_srcBlock = NULL);
   ~ConvexBlock();
-
-  /* called many many many times, so we inline it */
-  inline std::vector<ConvexBlockVertex *>& Vertices() {
-     return m_vertices;
-  }
-
+  
+  std::vector<ConvexBlockVertex *>& Vertices();
   Block* SourceBlock() const;
 
   void addVertex(const Vector2f& i_position, const Vector2f& i_texturePosition);
@@ -90,11 +74,7 @@ class BlockVertex {
   ~BlockVertex();
 
   Vector2f Position() const;
-  /* edge from this vertex to the following */
-  /* called many many many times, so we inline it, and make it return a ref */
-  inline std::string& EdgeEffect() {
-    return m_edgeEffect;
-  }
+  std::string EdgeEffect() const; /* edge from this vertex to the following */
 
   void setTexturePosition(const Vector2f& i_texturePosition);
   void setColor(const TColor& i_color);
@@ -114,27 +94,14 @@ class Block {
   std::string Id() const;
   std::string Texture() const;
   Vector2f InitialPosition() const;
-  /* called many many many times, so we inline it, and make it return a ref */
-  inline Vector2f& DynamicPosition() {
-    return m_dynamicPosition;
-  }
+  Vector2f DynamicPosition() const;
   float DynamicRotation() const;
-
-  /* called many many many times, so we inline it, and make it return a ref */
-  inline Vector2f& DynamicRotationCenter() {
-    return m_dynamicRotationCenter;
-  }
-
-  Vector2f DynamicPositionCenter() const;
   bool isBackground() const;
   bool isDynamic() const;
   float Grip() const;
   float TextureScale() const;
   std::vector<BlockVertex *>& Vertices();
-  /* called many many many times, so we inline it */
-  inline std::vector<ConvexBlock *>& ConvexBlocks() {
-    return m_convexBlocks;
-  }
+  std::vector<ConvexBlock *>& ConvexBlocks();
 
   void setTexture(const std::string& i_texture);
   void setTextureScale(float i_textureScale);
@@ -144,13 +111,7 @@ class Block {
   void setGrip(float i_grip);
   void setCenter(const Vector2f& i_center);
 
-	/* position where to display ; do not consider block center */
   void setDynamicPosition(const Vector2f& i_dynamicPosition);
-
-	/* postion where to display - the center */
-  void setDynamicPositionAccordingToCenter(const Vector2f& i_dynamicPosition);
-
-	/* angle position ; consider of the block center */
   void setDynamicRotation(float i_dynamicRotation);
 
   int loadToPlay(vapp::CollisionSystem& io_collisionSystem); /* load for playing */
@@ -160,8 +121,6 @@ class Block {
   void saveBinary(vapp::FileHandle *i_pfh);
   static Block* readFromXml(vapp::XMLDocument& i_xmlSource, TiXmlElement *pElem);
   static Block* readFromBinary(vapp::FileHandle *i_pfh);
-  AABB& getAABB();
-  std::vector<vapp::Line *>& getCollisionLines() {return m_collisionLines;}
 
 private:
   std::string m_id;           /* Block ID */
@@ -176,13 +135,9 @@ private:
   bool  m_background;                   /* Background block */
   bool  m_dynamic;
   float m_grip;                         /* GRIP of the block */
-  AABB  m_BBox;
-  bool  m_isBBoxDirty;
 
   /* properties for dynamic */
-  float m_dynamicRotation;  /* Block rotation */
-  Vector2f m_dynamicRotationCenter;
-  Vector2f m_dynamicPositionCenter;
+  float m_dynamicRotation;  /* Block rotation */    
   Vector2f m_dynamicPosition; /* Block position */
   std::vector<vapp::Line *> m_collisionLines; /* Line to collide against */
 

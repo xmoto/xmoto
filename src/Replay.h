@@ -96,7 +96,7 @@ namespace vapp {
       
       void createReplay(const std::string &FileName,const std::string &LevelID,const std::string &Player,float fFrameRate,int nStateSize);
       void saveReplay(void);
-      std::string openReplay(const std::string &FileName,float *pfFrameRate,std::string &Player, bool bDisplayInformation = false);
+      std::string openReplay(const std::string &FileName,float *pfFrameRate,std::string &Player);
       static void deleteReplay(std::string ReplayName);
       void reinitialize();
       std::string getLevelId();
@@ -109,8 +109,6 @@ namespace vapp {
       void slower();
       float getSpeed() const; /* get multiple factor of the replay */
       
-      int CurrentFrame() const;
-
       void setSpeed(float f) {m_speed_factor = f;}
       bool isPaused(void) {return m_is_paused;}
 

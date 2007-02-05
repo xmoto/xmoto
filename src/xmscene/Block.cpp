@@ -20,7 +20,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "Block.h"
-#include "../Collision.h"
 
 /* Vertex */
 ConvexBlockVertex::ConvexBlockVertex(const Vector2f& i_position, const Vector2f& i_texturePosition) {
@@ -29,6 +28,14 @@ ConvexBlockVertex::ConvexBlockVertex(const Vector2f& i_position, const Vector2f&
 }
 
 ConvexBlockVertex::~ConvexBlockVertex() {
+}
+
+Vector2f ConvexBlockVertex::Position() const {
+  return m_position;
+}
+
+Vector2f ConvexBlockVertex::TexturePosition()  const {
+  return m_texturePosition;
 }
 
 void ConvexBlockVertex::setPosition(const Vector2f& i_position) {
@@ -44,6 +51,10 @@ ConvexBlock::~ConvexBlock() {
   for(unsigned int i=0; i<m_vertices.size(); i++) {
     delete m_vertices[i];
   }
+}
+
+std::vector<ConvexBlockVertex *>& ConvexBlock::Vertices() {
+  return m_vertices;
 }
 
 Block* ConvexBlock::SourceBlock() const {
@@ -70,10 +81,7 @@ Block::Block(std::string i_id) {
   m_grip             = XM_DEFAULT_PHYS_BLOCK_GRIP;
   m_dynamicPosition  = m_initialPosition;
   m_dynamicRotation  = m_initialRotation;
-  m_dynamicRotationCenter = Vector2f(0.0, 0.0);
-  m_dynamicPositionCenter = Vector2f(0.0, 0.0);
   m_texture          = XM_DEFAULT_BLOCK_TEXTURE;
-  m_isBBoxDirty      = true;
 }
 
 Block::~Block() {
@@ -94,26 +102,24 @@ Block::~Block() {
 }
 
 void Block::setCenter(const Vector2f& i_center) {
-  m_dynamicRotationCenter = i_center;
-  m_dynamicPositionCenter = i_center;
-  m_isBBoxDirty           = true;
-}
-
-Vector2f Block::DynamicPositionCenter() const {
-  return m_dynamicPositionCenter;
+  /* Correct all polygons in block to this new center */
+  for(unsigned int i=0; i<ConvexBlocks().size(); i++) {
+    ConvexBlocks()[i]->Move(-i_center);
+  }
+  setDynamicPosition(DynamicPosition() + i_center);
 }
 
 float Block::DynamicRotation() const {
   return m_dynamicRotation;
 }
 
+Vector2f Block::DynamicPosition() const {
+  return m_dynamicPosition;
+}
+
 void Block::updateCollisionLines() {
-  bool manageCollisions = (m_collisionLines.size() != 0);
   /* Ignore background blocks */
-  if(isBackground()
-     || isDynamic() == false
-     || manageCollisions == false)
-    return;
+  if(isBackground() || isDynamic() == false) return;
 
   /* Build rotation matrix for block */
   float fR[4]; 
@@ -122,42 +128,36 @@ void Block::updateCollisionLines() {
   fR[2] =  sin(DynamicRotation()); 
   fR[3] =  cos(DynamicRotation());
   unsigned int z = 0;
-
-  m_isBBoxDirty = true;
   
-  for(unsigned int j=0; j<Vertices().size(); j++) {            
-    unsigned int jnext = j==Vertices().size()-1? 0 : j+1;
-    BlockVertex *pVertex1 = Vertices()[j];          
-    BlockVertex *pVertex2 = Vertices()[jnext];          
+  for(unsigned int i=0; i< m_convexBlocks.size(); i++) {       
+    for(unsigned int j=0; j<m_convexBlocks[i]->Vertices().size(); j++) {            
+      unsigned int jnext = j==m_convexBlocks[i]->Vertices().size()-1? 0 : j+1;
+      ConvexBlockVertex *pVertex1 = m_convexBlocks[i]->Vertices()[j];          
+      ConvexBlockVertex *pVertex2 = m_convexBlocks[i]->Vertices()[jnext];          
+      
+      /* Transform vertices */
+      Vector2f Tv1 = Vector2f(pVertex1->Position().x * fR[0] + pVertex1->Position().y * fR[1],
+            pVertex1->Position().x * fR[2] + pVertex1->Position().y * fR[3]);
+      Tv1 += m_dynamicPosition;
+      
+      Vector2f Tv2 = Vector2f(pVertex2->Position().x * fR[0] + pVertex2->Position().y * fR[1],
+            pVertex2->Position().x * fR[2] + pVertex2->Position().y * fR[3]);
+      Tv2 += m_dynamicPosition;
 
-
-    /* Transform vertices */
-    Vector2f Tv1 = Vector2f((pVertex1->Position().x-DynamicRotationCenter().x) * fR[0] + (pVertex1->Position().y-DynamicRotationCenter().y) * fR[1],
-			    (pVertex1->Position().x-DynamicRotationCenter().x) * fR[2] + (pVertex1->Position().y-DynamicRotationCenter().y) * fR[3]);
-    Tv1 += m_dynamicPosition + DynamicRotationCenter();
-    
-    Vector2f Tv2 = Vector2f((pVertex2->Position().x-DynamicRotationCenter().x) * fR[0] + (pVertex2->Position().y-DynamicRotationCenter().y) * fR[1],
-			    (pVertex2->Position().x-DynamicRotationCenter().x) * fR[2] + (pVertex2->Position().y-DynamicRotationCenter().y) * fR[3]);
-    Tv2 += m_dynamicPosition + DynamicRotationCenter();
-    
-    /* Update line */
-    m_collisionLines[z]->x1 = Tv1.x;
-    m_collisionLines[z]->y1 = Tv1.y;
-    m_collisionLines[z]->x2 = Tv2.x;
-    m_collisionLines[z]->y2 = Tv2.y;
-    
-    /* Next collision line */
-    z++;
+      /* Update line */
+      m_collisionLines[z]->x1 = Tv1.x;
+      m_collisionLines[z]->y1 = Tv1.y;
+      m_collisionLines[z]->x2 = Tv2.x;
+      m_collisionLines[z]->y2 = Tv2.y;
+      
+      /* Next collision line */
+      z++;
+    }
   }
 }
 
 void Block::setDynamicPosition(const Vector2f& i_dynamicPosition) {
   m_dynamicPosition = i_dynamicPosition;
-  updateCollisionLines();
-}
-
-void Block::setDynamicPositionAccordingToCenter(const Vector2f& i_dynamicPosition) {
-  m_dynamicPosition = i_dynamicPosition - m_dynamicPositionCenter;
   updateCollisionLines();
 }
 
@@ -168,54 +168,34 @@ void Block::setDynamicRotation(float i_dynamicRotation) {
 
 int Block::loadToPlay(vapp::CollisionSystem& io_collisionSystem) {
 
-  m_dynamicPosition       = m_initialPosition;
-  m_dynamicRotation       = m_initialRotation;
-  m_dynamicRotationCenter = Vector2f(0.0, 0.0);
-  m_dynamicPositionCenter = Vector2f(0.0, 0.0);
+  m_dynamicPosition  = m_initialPosition;
+  m_dynamicRotation  = m_initialRotation;
 
   /* Do the "convexifying" the BSP-way. It might be overkill, but we'll
      probably appreciate it when the input data is very complex. It'll also 
      let us handle crossing edges, and other kinds of weird input. */
   vapp::BSP v_BSPTree;
-
+  
   /* Define edges */
   for(unsigned int i=0; i<Vertices().size(); i++) {
     /* Next vertex? */
     unsigned int inext = i+1;
     if(inext == Vertices().size()) inext=0;
-
+    
     /* add static lines */
     if(isBackground() == false && isDynamic() == false) {
       /* Add line to collision handler */
       io_collisionSystem.defineLine(DynamicPosition().x + Vertices()[i]->Position().x,
-				    DynamicPosition().y + Vertices()[i]->Position().y,
-				    DynamicPosition().x + Vertices()[inext]->Position().x,
-				    DynamicPosition().y + Vertices()[inext]->Position().y,
-				    Grip());
-    }      
-    /* add dynamic lines */
-    if(isBackground() == false && isDynamic()) {
-      /* Define collision lines */
-      vapp::Line *v_line = new vapp::Line;
-      v_line->x1 = v_line->y1 = v_line->x2 = v_line->y2 = 0.0f;
-      v_line->fGrip = m_grip;
-      m_collisionLines.push_back(v_line);
+                                    DynamicPosition().y + Vertices()[i]->Position().y,
+                                    DynamicPosition().x + Vertices()[inext]->Position().x,
+                                    DynamicPosition().y + Vertices()[inext]->Position().y,
+                                    Grip());
     }
-
+    
     /* Add line to BSP generator */
     v_BSPTree.addLineDef(Vertices()[i]->Position(), Vertices()[inext]->Position());
   }
   
-  /* define dynamic block in the collision system */
-  if(isBackground() == false && isDynamic()) {
-    updateCollisionLines();
-    io_collisionSystem.addDynBlock(this);
-  }
-
-  if(isDynamic() == false){
-    io_collisionSystem.addStaticBlock(this);
-  }
-
   /* Compute */
   std::vector<vapp::BSPPoly *> &v_BSPPolys = v_BSPTree.compute();      
   
@@ -242,6 +222,18 @@ void Block::addPoly(const vapp::BSPPoly& i_poly, vapp::CollisionSystem& io_colli
                                 (InitialPosition().y + i_poly.Vertices[i]->P.y) * 0.25));
   }
   m_convexBlocks.push_back(v_block);
+
+  /* add dynamic lines */
+  if(isBackground() == false && isDynamic()) {
+    /* Define collision lines */
+    for(unsigned int i=0; i<i_poly.Vertices.size(); i++) {
+      vapp::Line *v_line = new vapp::Line;
+      v_line->x1 = v_line->y1 = v_line->x2 = v_line->y2 = 0.0f;
+      v_line->fGrip = m_grip;
+      m_collisionLines.push_back(v_line);
+      io_collisionSystem.addExternalDynamicLine(v_line);
+    }
+  }
 }
 
 void Block::unloadToPlay() {
@@ -270,7 +262,6 @@ bool Block::isDynamic() const {
 
 void Block::setInitialPosition(const Vector2f& i_initialPosition) {
   m_initialPosition  = i_initialPosition;
-  m_isBBoxDirty = true;
 }
 
 Vector2f Block::InitialPosition() const {
@@ -293,6 +284,10 @@ std::vector<BlockVertex *>& Block::Vertices() {
   return m_vertices;
 }
 
+std::vector<ConvexBlock *>& Block::ConvexBlocks() {
+  return m_convexBlocks;
+}
+
 void Block::setTexture(const std::string& i_texture) {
   m_texture = i_texture;
 }
@@ -313,37 +308,16 @@ void Block::setGrip(float i_grip) {
   m_grip = i_grip;
 }
 
-AABB& Block::getAABB()
-{
-  if(m_isBBoxDirty == true){
-    m_BBox.reset();
-
-    if(isDynamic() == true){
-      for(int i=0; i<m_collisionLines.size(); i++){
-	vapp::Line* pLine = m_collisionLines[i];
-	// add only the first point because the second
-	// point of the line n is the same as the first
-	// point of the line n+1
-	m_BBox.addPointToAABB2f(pLine->x1, pLine->y1);
-      }
-    } else{
-      for(unsigned int i=0; i<Vertices().size(); i++) {
-	m_BBox.addPointToAABB2f(DynamicPosition() + Vertices()[i]->Position());
-      }
-    }
-
-    m_isBBoxDirty = false;
-  }
-
-  return m_BBox;
-}
-
 BlockVertex::BlockVertex(const Vector2f& i_position, const std::string& i_edgeEffect) {
   m_position   = i_position;
   m_edgeEffect = i_edgeEffect;
 }
 
 BlockVertex::~BlockVertex() {
+}
+
+std::string BlockVertex::EdgeEffect() const {
+  return m_edgeEffect;
 }
 
 Vector2f BlockVertex::Position() const {

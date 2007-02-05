@@ -30,50 +30,6 @@
 <sprite type="Texture" name="FrostGround"     file="FrostGround.jpg" />
 <sprite type="Texture" name="MoltenRock"      file="MoltenRock.jpg" />
 <sprite type="Texture" name="Black"			  file="Black.jpg" />
-<sprite type="Texture" name="Asphalt1" file="Asphalt1_197.jpg" />
-<sprite type="Texture" name="Asphalt2" file="Asphalt2_198.jpg" />
-<sprite type="Texture" name="BlackSea" file="BlackSea_174.jpg" />
-<sprite type="Texture" name="BlueBlue" file="BlueBlue_173.jpg" />
-<sprite type="Texture" name="BlueViolet" file="BlueViolet_172.jpg" />
-<sprite type="Texture" name="chessytoodark" file="chessytoodark_207.jpg" />
-<sprite type="Texture" name="chessy_dark" file="chessy_dark_200.jpg" />
-<sprite type="Texture" name="chessy_light" file="chessy_light_199.jpg" />
-<sprite type="Texture" name="darkwood" file="darkwood_157.jpg" />
-<sprite type="Texture" name="DarkWood2" file="DarkWood2_159.jpg" />
-<sprite type="Texture" name="DegradGreen" file="DegradGreen_169.jpg" />
-<sprite type="Texture" name="DegradOrange" file="DegradOrange_168.jpg" />
-<sprite type="Texture" name="fuego" file="fuego_189.jpg" />
-<sprite type="Texture" name="helltiles" file="helltiles_176.jpg" />
-<sprite type="Texture" name="MarbleTilePurple" file="MarbleTilePurple_179.jpg" />
-<sprite type="Texture" name="MarbleTilePurple" file="MarbleTilePurple_178.jpg" />
-<sprite type="Texture" name="Metal" file="Metal_190.jpg" />
-<sprite type="Texture" name="Metal2" file="Metal2_191.jpg" />
-<sprite type="Texture" name="Metal3" file="Metal3_192.jpg" />
-<sprite type="Texture" name="pop_background" file="pop_background.jpg" />
-<sprite type="Texture" name="pop_bricks" file="pop_bricks.jpg" />
-<sprite type="Texture" name="pop_bricks_top" file="pop_bricks_top.jpg" />
-<sprite type="Texture" name="Rust" file="Rust_193.jpg" />
-<sprite type="Texture" name="sky1" file="Sky1.jpg" />
-<sprite type="Texture" name="sky2" file="Sky2.jpg" />
-<sprite type="Texture" name="Sky2Drift" file="Sky2Drift.jpg" />
-<sprite type="Texture" name="snow" file="snow_175.jpg" />
-<sprite type="Texture" name="SolidOrange" file="SolidOrange_170.jpg" />
-<sprite type="Texture" name="Space" file="Space_194.jpg" />
-<sprite type="Texture" name="street" file="street.jpg" />
-<sprite type="Texture" name="TilesBlue" file="TilesBlue_180.jpg" />
-<sprite type="Texture" name="TilesGreen" file="TilesGreen_181.jpg" />
-<sprite type="Texture" name="TilesOrange" file="TilesOrange_182.jpg" />
-<sprite type="Texture" name="TilesRed" file="TilesRed_183.jpg" />
-<sprite type="Texture" name="TilesTeal" file="TilesTeal_184.jpg" />
-<sprite type="Texture" name="TilesYellow" file="TilesYellow_185.jpg" />
-<sprite type="Texture" name="Ubuntu" file="Ubuntu_171.jpg" />
-<sprite type="Texture" name="Wallpaper1" file="Wallpaper1_195.jpg" />
-<sprite type="Texture" name="Wallpaper2" file="Wallpaper2_196.jpg" />
-<sprite type="Texture" name="Water1" file="Water1_186.jpg" />
-<sprite type="Texture" name="Water2" file="Water2_187.jpg" />
-<sprite type="Texture" name="wood" file="wood.jpg" />
-<sprite type="Texture" name="Wood2" file="Wood2_158.jpg" />
-<sprite type="Texture" name="Yellow" file="Yellow_177.jpg" />
 
 <sprite type="Entity" name="Strawberry"  fileBase="Strawberry"  fileExtension="png" width="1" height="1" delay="0.05">
 <frame centerX="0.5" centerY="0.5" />
@@ -148,6 +104,9 @@
 <sprite type="Effect" name="Debris1"         file="Debris1.png" />
 <sprite type="Effect" name="EarthVines"      file="EarthVines.png" />
 <sprite type="Effect" name="Fire1"     	     file="Fire1.png" />
+<sprite type="Effect" name="Sky1"      	     file="Sky1.jpg" />
+<sprite type="Effect" name="Sky2Drift" 	     file="Sky2Drift.jpg" />
+<sprite type="Effect" name="Sky2"      	     file="Sky2.jpg" />
 <sprite type="Effect" name="Smoke1"    	     file="Smoke1.png" />
 <sprite type="Effect" name="Smoke2"    	     file="Smoke2.png" />
 

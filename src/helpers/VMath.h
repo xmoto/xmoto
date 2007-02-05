@@ -29,7 +29,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   Vectors
   ===========================================================================*/
 #define VECTOR_COMPARE_EPSILON    0.001f
-#define PI 3.14159265
 
 template <typename _T>
 class Vector2 {
@@ -142,18 +141,10 @@ class Vector2 {
   }
   
   inline void rotateXY(_T deg) {            
-    _T rads=deg*((_T)PI/180.0f);
+    _T rads=deg*((_T)3.14159f/180.0f);
     _T xx=x*cos(rads)+y*sin(rads);
     y=y*cos(rads)+x*sin(rads);
     x=xx;
-  }
-  
-  /**
-   * @return the angle in degrees
-   **/
-  inline _T angle(){
-    _T v = atan2(y,x) * 180 / PI;
-    return v;
   }
   
   /* Public data */
@@ -277,7 +268,7 @@ class Vector3 {
   }
       
   inline void rotateXYZ(_T xrotate,_T yrotate,_T zrotate) {
-    _T pohf=(_T)PI/180.0f;
+    _T pohf=(_T)3.14159f/180.0f;
     _T tempx=x*cos(yrotate*pohf)-z*sin(yrotate*pohf);
     _T tempz=x*sin(yrotate*pohf)+z*cos(yrotate*pohf);
     z=tempz*cos(xrotate*pohf)-y*sin(xrotate*pohf);
@@ -304,29 +295,15 @@ int intersectLineCircle2f(const Vector2f &Cp,float Cr,const Vector2f &A0,const V
                           Vector2f &Res1,Vector2f &Res2);
 int intersectLineLine2f(const Vector2f &A0,const Vector2f &A1,const Vector2f &B0,
                         const Vector2f &B1,Vector2f &Res);
-bool circleTouchCircle2f(const Vector2f &Cp1,float Cr1,const Vector2f &Cp2,float Cr2);
   
-class AABB {
- public:
-  AABB();
-  void reset();
-
-  Vector2f& getBMin() {return BMin;}
-  Vector2f& getBMax() {return BMax;}
-
-  bool lineTouchAABB2f(const Vector2f &P0, const Vector2f &P1);
-  bool circleTouchAABB2f(const Vector2f &Cp, const float Cr);
-  bool pointTouchAABB2f(const Vector2f &P);
-  bool AABBTouchAABB2f(const Vector2f &BMin1, const Vector2f &BMax1);
-  void addPointToAABB2f(const Vector2f &Point);
-  void addPointToAABB2f(const float x, const float y);
-
- private:
-  Vector2f BMin, BMax;
-};
+bool lineTouchAABB2f(const Vector2f &P0,const Vector2f &P1,const Vector2f &BMin,const Vector2f &BMax);
+bool circleTouchAABB2f(const Vector2f &Cp,float Cr,const Vector2f &BMin,const Vector2f &BMax);
+bool pointTouchAABB2f(const Vector2f &P,const Vector2f &BMin,const Vector2f &BMax);
+bool AABBTouchAABB2f(const Vector2f &BMin1,const Vector2f &BMax1,const Vector2f &BMin2,const Vector2f &BMax2);
+void addPointToAABB2f(Vector2f &BMin,Vector2f &BMax,const Vector2f &Point);
+bool circleTouchCircle2f(const Vector2f &Cp1,float Cr1,const Vector2f &Cp2,float Cr2);
 
 float randomNum(float fMin,float fMax);
-int randomIntNum(int nMin, int nMax);
 
 #endif
 

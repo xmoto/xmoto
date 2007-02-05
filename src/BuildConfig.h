@@ -28,31 +28,12 @@ Info
 
 #define BUILD_MAJORVERSION    0
 #define BUILD_VERSION         2
-#define BUILD_MINORVERSION    5
-#define BUILD_EXTRAINFO       "test1"
+#define BUILD_MINORVERSION    3
+#define BUILD_EXTRAINFO       ""
 
 /*=============================================================================
 Build configuration
 =============================================================================*/
-
-/* Rendering engine configuration. xmoto currently supports two rendering engines
- * one is openGl based and the other one is based on SDL_gfx. Here we define
- * ENABLE_OPENGL , ENABLE_SDLGFX for easy use in 
- * the code.
- */
-#ifndef USE_OPENGL
-  #define USE_OPENGL 1
-#endif
-#if USE_OPENGL == 1
-  #define ENABLE_OPENGL
-#endif
-
-#ifndef USE_SDLGFX
-  #define USE_SDLGFX 0
-#endif
-#if USE_SDLGFX == 1
-  #define ENABLE_SDLGFX
-#endif
 
 /* DO_NOT_LOAD_TEXTURES - Do not load texture files. This speeds up the init
    time enormously */
@@ -104,8 +85,6 @@ Misc, don't touch
 #if HAVE_GETTEXT == 1
   #define USE_GETTEXT
 #endif
-
-
 
 #endif
 

@@ -1,54 +1,3 @@
-
-mingw:
-* sdlgfx: http://www.wormux.org/wiki/compile_under_mingw.php#SDL_gfx
-* gettext: http://www.wormux.org/wiki/compile_under_mingw.php
-
-Assigned to nicolas
-* BUG : xmoto ...rpl don't work
-* BUG : hum, about checksum, when you modify a level with f5 while
-   playing, then it is not updated with the new level button
-* put under edge into the block part
-* PAD_5 -> to finish
-* be able to play a music in a level
-* BUG : xmoto -replay bugs/onMacWontWork.rpl when you press forward on
-   this scripted level, the elevator at the correct position
-* FEATURE : * xmoto toto.lvl to play directly a level
-* it seems that there is a bug on speed it is played (if i play replays done on fast machine, it appear faster) http://xmoto.free.fr/replays/replay_1312.rpl
-* feature : a replay button when you finish a level (or die) which plays Latest.rpl
-
-* when are texure is rotated we need to copy the texture mutplile times so it's always visible
-* F5 while developping a level, if the level is scripted, it could
-   crash it and required a full F5 at the menu stage
-
-========
-
-* script : disable a key (brake for example, ...)
-* ugly uses misc.png for border : should not
-
-
-====Competitions
-* dayly/weekly/monthly competition based on a few tracs , different entry levels easy medium hard
-* reset the scores once in a while
-* work on not having to validate the scores by hand
-
-===SDL_GFX
-* SDL_GFX crashed on mac http://rafb.net/p/L95KzR62.html
-* keesj:real caching strategy, currently the SDL_gfx chooses to caches based on expected size of the image
-  We need to implement a real caching strategy, for example a LRU hash table (least recently used hashtable
-  Here is an article that might be of good use http://www.gamedev.net/reference/articles/article2240.asp)
-  I would also like to define the max amound of memory that may be used by the system. if this limit is reachted
-  leat recently used images must be throws away
-* keesj:SDL_gfx? cache static bloks of the minimap as image
-* keesj:create a on screen input system for text
-* keesj:create sensititive area's on the screen for gameplay
-   -on the nokia 770 it is pretty easy to 
-* keesj:test the SDL_gfx version on windows/mac
-* keesj:faster startup , smart caching etc system must run under 64 MB :)
-* keesj:define code conventions,testing procedures,release-roadbook
-
-
-* FEATURE : windows : there's some win32 API calls that can be made to determine the application data dir
-
 * when you choose keys : if a key is already attributed, it should
    assign it and set <unset> to the other one because it's not
    pleasant to have a message
@@ -65,7 +14,10 @@ Assigned to nicolas
 render entity by Z
 render blocks by Z
 
+!!!! xmoto-edit don't compile, make it compile !!!!!
+
 [13:25] <gaivota> aspegic500: I found a bug which is the following: when letting xmoto running without doing anything for some time the game crashes, althoug it keeps running
+[13:26] <aspegic500> i must go,
 [13:26] <gaivota> atm it shows a blank black screen, once before it diplayed the menu althoug the ingame was running and similar strange behaviour
 
 * associate F8 to the -nowww switch (enable/disable network)
@@ -78,6 +30,8 @@ one has just finished the level. The ``abort'' one should be rather
 ``quit level'' or something like that.
 
 ===========
+* "play next level" => 'play next level', 'play next level unplayed', 'play next level where your highscore is > than room highscore', 'play next level where your highscore is > than world highscore', 'play next level where your highscore is the best'
+* replay button when you finish a level (to replay the level just done)
 * BUG : is it normal ?
         C.x=(getParent()->getDispWidth() * pArrow->ArrowPointerPos.x) / 800.0f;
         C.y=(getParent()->getDispHeight() * pArrow->ArrowPointerPos.y)
@@ -119,6 +73,13 @@ http://xmoto.free.fr/interesting_replays/ireplay_40.rpl
 
 * BUG ? http://forum.xmoto.free.fr/viewtopic.php?p=212#212 (not really i bug methinks)
 * SDL_ttf or something like that for rendering text
+*(20:39:54) Neckelmann:   the game should really do all this:
+zone1 = {}
+zone1a = {}
+zone1b = {}
+zone2 = {}
+zone2a = {}
+zone2b = {}
 * script :
    add : rotation for blocks         
 * Add a command line option like the one to test themes. This option could be ''testscript'' and would show zones during game (with an extra, the name of the zone).
@@ -134,6 +95,8 @@ http://xmoto.free.fr/interesting_replays/ireplay_40.rpl
         * Better packaging for OS X (Readme, License, etc)
 * BUG : as you can see at the end of "the only smooth", the block is
    not correctly drawned
+* it seems that there is a bug on speed it is played (if i play
+   replays done on fast machine, it appear faster) http://xmoto.free.fr/replays/replay_1312.rpl
 * BUG :
 - start a level, press very fastly (ESC-ENTER)* ; quite easy to
    reproduce (works on windows and linux)
@@ -145,6 +108,9 @@ http://xmoto.free.fr/interesting_replays/ireplay_40.rpl
    event order threaten is ENTER then ESC
    _RestartLevels is called
    then the ESC is managed and it fails
+* see about timeout when connection failed
+ comment : it seems that there is nothing to do unless reduce
+   connection timeout (or multithreading)
 * when you press o in the level list and that no level start with an
    o, it bases on the 2nd letter,...
 * themes : check the md5sum of the files ; don't display available if
@@ -154,6 +120,8 @@ http://xmoto.free.fr/interesting_replays/ireplay_40.rpl
 * BUG : when you see level info in level pack ; then you click on ok
    -> it close the window and the levelpack window
 * loadness of headcrash sound should depend on head velocity 
+* feature : a replay button when you finish a level (or die) which
+   plays Latest.rpl
 * themes : not more animation in .xml ? -> be able to load an animated bike ?
 * to be able to move a zone ?
 * make sound in themes
@@ -173,9 +141,14 @@ http://xmoto.free.fr/interesting_replays/ireplay_40.rpl
 * pb for left hand written people for the editor
 * two possibilities to show room : one to see the world highscore, one
    to see you room (optionnal)
+* allow to run : xmoto -level l1.lvl to allow playing a level just by cliking on
+   it (even if it's not in the xmoto dir)
 * display wind
 * a fonction CameraRotate and CameraRotateAdaptToG (script)
 * A SetDynamicBlockRotation function that rotates the vertices about a center point instead of making the block go in circles.
 * a block0.Touch() function
 * network game
 * freestyle mode
+* [20:55] <keesj> they have this great idea that you can create levels
+   while walking in the level
+  [20:56] <aspegic500> functions in the scripts to do that,

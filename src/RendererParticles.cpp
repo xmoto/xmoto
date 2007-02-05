@@ -47,28 +47,32 @@ namespace vapp {
     p3 = C + p3 * fSize;
     p4 = C + p4 * fSize;
     
-    getParent()->getDrawLib()->setTexture(pTexture,BLEND_MODE_A);
-    getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
-    //convert the TColor to a Color 
-    getParent()->getDrawLib()->setColor(MAKE_COLOR(c.Red(), c.Green(), c.Blue(), c.Alpha()));
-    getParent()->getDrawLib()->glTexCoord(0,0);
-    getParent()->getDrawLib()->glVertex(p1);
-    getParent()->getDrawLib()->glTexCoord(1,0);
-    getParent()->getDrawLib()->glVertex(p2);
-    getParent()->getDrawLib()->glTexCoord(1,1);
-    getParent()->getDrawLib()->glVertex(p3);
-    getParent()->getDrawLib()->glTexCoord(0,1);
-    getParent()->getDrawLib()->glVertex(p4);
-    getParent()->getDrawLib()->endDraw();
+    glEnable(GL_BLEND); 
+    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);         
+    glBindTexture(GL_TEXTURE_2D,pTexture->nID);
+    glEnable(GL_TEXTURE_2D);
+    glBegin(GL_POLYGON);
+    glColor4ub(c.Red(), c.Green(), c.Blue(), c.Alpha());
+    glTexCoord2f(0,0);
+    _Vertex(p1);
+    glTexCoord2f(1,0);
+    _Vertex(p2);
+    glTexCoord2f(1,1);
+    _Vertex(p3);
+    glTexCoord2f(0,1);
+    _Vertex(p4);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_BLEND);            
   }
 
   void GameRenderer::_RenderParticle(ParticlesSource *i_source) {
-    AnimationSprite *pStarAnim = (AnimationSprite *)getParent()->getTheme()->getSprite(SPRITE_TYPE_ANIMATION,"Star");
-    EffectSprite* pFireType = (EffectSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_EFFECT, "Fire1");
-    EffectSprite* pSmoke1Type = (EffectSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_EFFECT, "Smoke1");
-    EffectSprite* pSmoke2Type = (EffectSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_EFFECT, "Smoke2");
+    AnimationSprite *pStarAnim = (AnimationSprite *)getParent()->m_theme.getSprite(SPRITE_TYPE_ANIMATION,"Star");
+    EffectSprite* pFireType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Fire1");
+    EffectSprite* pSmoke1Type = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Smoke1");
+    EffectSprite* pSmoke2Type = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Smoke2");
     
-    EffectSprite* pDebrisType = (EffectSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_EFFECT, "Debris1");
+    EffectSprite* pDebrisType = (EffectSprite*) getParent()->m_theme.getSprite(SPRITE_TYPE_EFFECT, "Debris1");
 
     if(i_source->SpriteName() == "Star") {
       if(pStarAnim != NULL) {

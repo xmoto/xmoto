@@ -30,7 +30,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Zone.h"
 #include "Entity.h"
 #include "BasicSceneStructs.h"
-#include "SkyApparence.h"
 
 class Block;
 class Entity;
@@ -51,14 +50,13 @@ class Level {
   bool isFullyLoaded() const;
   void exportBinaryHeader(vapp::FileHandle *pfh);
   void importBinaryHeader(vapp::FileHandle *pfh);
-  void rebuildCache();
 
   void loadXML();
   void saveXML();
 
   /* load level so that it is possible to play */
   /* to replay a level, unload then, reload it */
-  int loadToPlay(); /* return the number of errors found */
+  int loadToPlay(vapp::CollisionSystem& p_CollisionSystem); /* return the number of errors found */
   void unloadToPlay();
 
   std::string Id()          const;
@@ -75,7 +73,7 @@ class Level {
   float TopLimit()          const;
   float BottomLimit()       const;
   Vector2f PlayerStart()    const;
-  const SkyApparence& Sky()        const;
+  std::string Sky()         const;
   void setLimits(float v_leftLimit, float v_rightLimit, float v_topLimit, float v_bottomLimit);
 
   std::string FileName() const;
@@ -93,7 +91,7 @@ class Level {
   void setDescription(const std::string& i_description);
   void setDate(const std::string& i_date);
   void setAuthor(const std::string& i_author);
-  void setCollisionSystem(vapp::CollisionSystem* p_CollisionSystem);
+  void setSky(const std::string& i_sky);
 
   std::string scriptFileName() const;
   std::string scriptSource() const;
@@ -117,6 +115,7 @@ class Level {
   /* because some objects like entities have an internal movement */
   void updateToTime(vapp::MotoGame& i_scene);
   /* this method calls objects because rewind in replay can required some actions (like removing particles) */
+  void clearAfterRewind();
 
   /* the entity will be destroyed by the level */
   void spawnEntity(Entity *v_entity);
@@ -132,6 +131,7 @@ class Level {
   std::string m_requiredVersion;    /* Required X-Moto version */
   std::string m_pack;               /* In this level pack */
   std::string m_packNum;            /* value to sort levels */
+  std::string m_sky;                /* Level sky */
   std::string m_fileName;
   vapp::XMLDocument *m_xmlSource;    /* Plain XML source */      
   std::string m_scriptFileName;     /* Script file name */      
@@ -147,13 +147,8 @@ class Level {
   std::vector<Entity *> m_entitiesExterns;
   Entity               *m_startEntity; /* entity where the player start */
   bool m_isBodyLoaded;
-  vapp::CollisionSystem* m_pCollisionSystem;
-  /* to avoid calculate it each frame */
-  int  m_nbEntitiesToTake;
-  std::string m_borderTexture;
-  SkyApparence m_sky;
 
-  void addLimits();
+  void loadToPlayLimits();
   void exportBinary(const std::string &i_fileName, const std::string& i_sum);
   bool importBinary(const std::string &i_fileName, const std::string& i_sum);
   bool importBinaryHeaderFromFile(const std::string &i_fileName, const std::string& i_sum);

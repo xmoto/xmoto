@@ -262,7 +262,7 @@ namespace vapp {
       UIRect &getPosition(void) {return m_Pos;}
       void setPosition(int x,int y,int nWidth,int nHeight) {m_Pos.nX=x; m_Pos.nY=y; m_Pos.nWidth=nWidth; m_Pos.nHeight=nHeight;}
       std::string getCaption(void) {return m_Caption;}
-      virtual void setCaption(std::string Caption) {m_Caption=Caption;}
+      void setCaption(std::string Caption) {m_Caption=Caption;}
       UITextStyle &getTextStyle(void) {return m_TextStyle;}
       void setTextSolidColor(Color c) {m_TextStyle.c0=m_TextStyle.c1=m_TextStyle.c2=m_TextStyle.c3=c;}
       void setTextGradientColors(Color a,Color b) {m_TextStyle.c0=m_TextStyle.c1=a; m_TextStyle.c2=m_TextStyle.c3=b;}
@@ -326,7 +326,6 @@ namespace vapp {
         initW(pParent,x,y,Caption,nWidth,nHeight);
         m_nCursorPos = 0;
 	m_hideText = false;
-  m_hasChanged = false;
       }      
     
       /* Methods */
@@ -336,16 +335,10 @@ namespace vapp {
       virtual bool offerActivation(void) {return true;}
       void hideText(bool bHideText) {m_hideText=bHideText;} 
 
-			void setCaption(std::string Caption);
-
-			void setHasChanged(bool b_value);
-			bool hasChanged();
-
     private:
       /* Data */
       int m_nCursorPos;
       bool m_hideText;    
-			bool m_hasChanged;
   };
 
 	/*===========================================================================
@@ -504,7 +497,7 @@ namespace vapp {
         
         m_pDarkBlobTexture = NULL;
 	Sprite *pSprite;
-	pSprite = getApp()->getTheme()->getSprite(SPRITE_TYPE_UI, "DarkBlob");
+	pSprite = getApp()->m_theme.getSprite(SPRITE_TYPE_UI, "DarkBlob");
 	if(pSprite != NULL) {
 	  m_pDarkBlobTexture = pSprite->getTexture(false,true, FM_NEAREST);
 	}
@@ -600,7 +593,6 @@ namespace vapp {
   struct UIListEntry {
     std::vector<std::string> Text;
     void *pvUser;
-    bool bShown;
   };
   
   class UIList : public UIWindow {
@@ -631,8 +623,7 @@ namespace vapp {
       std::vector<UIListEntry *> &getEntries();
       std::vector<std::string> &getColumns();
       int getSelected();
-      void setRealSelected(int n);
-      void setVisibleSelected(int n);
+      void setSelected(int n);
       void addColumn(std::string Title,int nWidth,const std::string &Help = "");
       void setEnterButton(UIButton *pButton);
       bool isItemActivated();
@@ -641,15 +632,11 @@ namespace vapp {
       void setSort(bool bSort, int(*f)(void *pvUser1, void *pvUser2) = NULL);
       void setNumeroted(bool bNumeroted);
 
-      void randomize();
-
       bool isClicked(void);
       void setClicked(bool b);
 
       bool isChanged(void);
       void setChanged(bool b);
-
-      void setFilter(std::string i_filter);
 
     private:
       /* Data */
@@ -663,8 +650,7 @@ namespace vapp {
       std::vector<std::string> m_ColumnHelpStrings;
       std::vector<int> m_ColumnWidths;
       unsigned int m_nColumnHideFlags;
-      int m_nRealSelected;
-			int m_nVisibleSelected;
+      int m_nSelected;
       bool m_bItemActivated;
       UIButton *m_pEnterButton; /* if not null this is the "default" button of the list, i.e. the one 
                                    that gets pressed if the list gets an enter */
@@ -675,9 +661,6 @@ namespace vapp {
       
       bool m_bClicked;
       bool  m_bScrolling;
-
-			std::string m_filter;
-			int m_filteredItems;
 
       /* draw */
       int HeaderHeight();
@@ -700,8 +683,7 @@ namespace vapp {
       int ScrollBarScrollerStartY();
       void setScrollBarScrollerStartY(float y);
       float ScrollNbVisibleItems();
-      bool isScrollBarRequired();
-
+      
       int m_headerHeight;
       int m_headerSubBorderHeight;
       int m_rowHeight;

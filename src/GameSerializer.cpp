@@ -44,16 +44,16 @@ namespace vapp {
   /*===========================================================================
     Decoding of event stream
     ===========================================================================*/
-  void MotoGame::unserializeGameEvents(DBuffer *Buffer, std::vector<RecordedGameEvent *> *v_ReplayEvents, bool bDisplayInformation) {
+  void MotoGame::unserializeGameEvents(DBuffer *Buffer, std::vector<RecordedGameEvent *> *v_ReplayEvents) {
     MotoGameEvent *v_event;
     RecordedGameEvent *p;    
 
     try {
       /* Continue until buffer is empty */
-      while((*Buffer).numRemainingBytes() > 0) {
+      while((*Buffer).numRemainingBytes() > sizeof(float)) {
       p = new RecordedGameEvent;
       p->bPassed = false;
-      p->Event   = MotoGameEvent::getUnserialized(*Buffer, bDisplayInformation);
+      p->Event   = MotoGameEvent::getUnserialized(*Buffer);
       v_ReplayEvents->push_back(p);
       }
     } catch(Exception &e) {

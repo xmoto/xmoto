@@ -34,7 +34,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <iostream>
 //#include <locale> /* can this safely be removed? */
 
-#include "helpers/SwapEndian.h"
+#include <helpers/SwapEndian.h>
 
 namespace vapp {
 
@@ -179,7 +179,7 @@ namespace vapp {
     FS::closeFile(pfh);
   }
   
-  std::string Replay::openReplay(const std::string &FileName,float *pfFrameRate,std::string &Player, bool bDisplayInformation) {
+  std::string Replay::openReplay(const std::string &FileName,float *pfFrameRate,std::string &Player) {
     /* Try opening as if it is a full path */
     FileHandle *pfh = FS::openIFile(FileName);
     if(pfh == NULL) {        
@@ -197,9 +197,6 @@ namespace vapp {
     
     /* Read header */
     int nVersion = FS::readByte(pfh); 
-    if(bDisplayInformation) {
-      printf("%-30s: %i\n", "Replay file version", nVersion);
-    }
         
     /* Supported version? */
     if(nVersion != 0 && nVersion != 1) {
@@ -217,53 +214,31 @@ namespace vapp {
     
       /* Read level ID */
       m_LevelID = FS::readString(pfh);
-      if(bDisplayInformation) {
-	printf("%-30s: %s\n", "Level Id", m_LevelID.c_str());
-      }
 
       /* Read player name */
       Player = m_PlayerName = FS::readString(pfh);
-      if(bDisplayInformation) {
-	printf("%-30s: %s\n", "Player", Player.c_str());
-      }      
-
+      
       /* Read replay frame rate */
       m_fFrameRate = FS::readFloat_LE(pfh);
       if(pfFrameRate != NULL) *pfFrameRate = m_fFrameRate;            
 
       /* Read state size */
       m_nStateSize = FS::readInt_LE(pfh);
-      if(bDisplayInformation) {
-	printf("%-30s: %i\n", "State size", m_nStateSize);
-      } 
       
       /* Read finish time if any */
       m_bFinished = FS::readBool(pfh);
       m_fFinishTime = FS::readFloat_LE(pfh);
-      if(bDisplayInformation) {
-	if(m_bFinished) {
-	  printf("%-30s: %.2f\n", "Finish time", m_fFinishTime);
-	} else {
-	  printf("%-30s: %s\n", "Finish time", "unfinished");
-	}
-      }
 
       /* Version 1 includes event data */
       if(nVersion == 1) {
         /* Read uncompressed size */
         m_nInputEventsDataSize = FS::readInt_LE(pfh);
-	if(bDisplayInformation) {
-	  printf("%-30s: %i\n", "Events data size", m_nInputEventsDataSize);
-	} 
         m_pcInputEventsData = new char [m_nInputEventsDataSize];
         
         /* Compressed? */
         if(FS::readBool(pfh)) {
           /* Compressed */          
           int nCompressedEventsSize = FS::readInt_LE(pfh);
-	  if(bDisplayInformation) {
-	    printf("%-30s: %i\n", "Compressed events data size", nCompressedEventsSize);
-	  } 
           
           char *pcCompressedEvents = new char [nCompressedEventsSize];
           FS::readBuf(pfh,pcCompressedEvents,nCompressedEventsSize);
@@ -295,36 +270,16 @@ namespace vapp {
       
       /* Read chunks */
       int nNumChunks = FS::readInt_LE(pfh);
-      if(bDisplayInformation) {
-	printf("%-30s: %i\n", "Number of chunks", nNumChunks);
-      }  
-
-      for(int i=0;i<nNumChunks;i++) {
-	if(bDisplayInformation) {
-	  printf("Chunk %02i\n", i);
-	}  
-  
+      for(int i=0;i<nNumChunks;i++) {        
         ReplayStateChunk Chunk;        
         Chunk.nNumStates = FS::readInt_LE(pfh);
-
-	if(bDisplayInformation) {
-	  printf("   %-27s: %i\n", "Number of states", Chunk.nNumStates);
-	} 
-
         Chunk.pcChunkData = new char [Chunk.nNumStates * m_nStateSize];
         
         /* Compressed or not compressed? */
         if(FS::readBool(pfh)) {
-	  if(bDisplayInformation) {
-	    printf("   %-27s: %s\n", "Compressed data", "true");
-	  } 
-
           /* Compressed! - read compressed size */
           int nCompressedSize = FS::readInt_LE(pfh);
-	  if(bDisplayInformation) {
-	    printf("   %-27s: %i\n", "Compressed states size", nCompressedSize);
-	  }
-
+          
           /* Read compressed data */
           unsigned char *pcCompressed = new unsigned char [nCompressedSize];
           FS::readBuf(pfh,(char *)pcCompressed,nCompressedSize);
@@ -346,10 +301,6 @@ namespace vapp {
           delete [] pcCompressed;
         }
         else {
-	  if(bDisplayInformation) {
-	    printf("   %-27s: %s\n", "Compressed data", "false");
-	  } 
-
           /* Not compressed! */
           FS::readBuf(pfh,Chunk.pcChunkData,m_nStateSize*Chunk.nNumStates);
         }
@@ -364,17 +315,9 @@ namespace vapp {
     m_nCurChunk = 0;
     m_nCurState = 0.0;
     
+            
     /* Reconstruct game events that are going to happen during the replay */
-    if(bDisplayInformation) {
-      printf("%-30s:\n", "Game Events");
-    }
-
-    /* unserialize events */
-    MotoGame::unserializeGameEvents(this, &m_ReplayEvents, bDisplayInformation);
-    initOutput(1024);
-    for(int i=0; i<m_ReplayEvents.size(); i++) {
-      m_ReplayEvents[i]->Event->serialize(*this);
-    }
+    MotoGame::unserializeGameEvents(this, &m_ReplayEvents);
 
     return m_LevelID;
   }
@@ -408,10 +351,6 @@ namespace vapp {
   SwapEndian::LittleSerializedBikeState(*(SerializedBikeState*)addr);
   }
   
-  int Replay::CurrentFrame() const {
-    return m_nCurChunk * STATES_PER_CHUNK + m_nCurState + 1;
-  }
-
   bool Replay::nextNormalState() {
     return nextState(m_speed_factor);
   }
@@ -562,18 +501,18 @@ namespace vapp {
       /* Try opening it */
       FileHandle *pfh = FS::openIFile("Replays/" + p_ReplayName + ".rpl");
       if(pfh == NULL) {
-	return NULL;
+  return NULL;
       }
-      
+
       int nVersion = FS::readByte(pfh);
       if(nVersion != 0 && nVersion != 1) {
-	FS::closeFile(pfh);
-	return NULL;
+  FS::closeFile(pfh);
+  return NULL;
       }
-      
+
       if(FS::readInt_LE(pfh) != 0x12345678) {   
-	FS::closeFile(pfh);
-	return NULL;
+  FS::closeFile(pfh);
+  return NULL;
       }
   
       std::string LevelID = FS::readString(pfh);
@@ -594,9 +533,9 @@ namespace vapp {
       pRpl->fFrameRate = fFrameRate;
 
       if(bFinished) {
-	pRpl->fFinishTime = fFinishTime;
+  pRpl->fFinishTime = fFinishTime;
       } else {
-	pRpl->fFinishTime = -1;                
+  pRpl->fFinishTime = -1;                
       }
           
       FS::closeFile(pfh);
