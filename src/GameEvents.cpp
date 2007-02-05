@@ -20,7 +20,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "GameEvents.h"
-#include "helpers/SwapEndian.h"
 
 namespace vapp {
 
@@ -33,45 +32,16 @@ namespace vapp {
 
   void MotoGameEvent::serialize(DBuffer &Buffer) {
     Buffer << m_fEventTime;
-    Buffer << (int) (this->getType());
+    Buffer << this->getType();
   }
 
-  MotoGameEvent* MotoGameEvent::getUnserialized(DBuffer &Buffer, bool bDisplayInformation) {
+  MotoGameEvent* MotoGameEvent::getUnserialized(DBuffer &Buffer) {
     MotoGameEvent* v_event;
     float v_fEventTime;
     GameEventType v_eventType;
-    int i_tmp;
-
-    /**** to be able to debug the replays files */
-    //int   EType;
-    //float ETime;
-    //int   SNameL;
-    //
-    //Buffer >> ETime;
-    //Buffer >> EType;
-    //Buffer >> SNameL;
-    //
-    //printf("%i\n", EType);
-    //
-    //int n = 256;
-    //char c[n];
-    //Buffer.readBuf(c, n);
-    //c[n-1] = '\0';
-    //for(int i=0; i<n-1; i++) {
-    //  if(c[i] == '\0') {
-    //	c[i] = '0';
-    //  } else {
-    //	if( ! ( (c[i] >= 'a' && c[i] <= 'z') || (c[i] >= 'A' && c[i] <= 'Z') ) ) {
-    //	  c[i] = '@';
-    //	}
-    //  }
-    //}
-    //printf("+%s+\n", c);
-    /*****/
 
     Buffer >> v_fEventTime;
-    Buffer >> i_tmp;
-    v_eventType = (GameEventType) i_tmp;
+    Buffer >> v_eventType;
 
     if(MGE_PlayerDies::SgetType() == v_eventType) {
       v_event = new MGE_PlayerDies(v_fEventTime);
@@ -130,11 +100,8 @@ namespace vapp {
       error_type << (int) v_eventType;
       throw Exception("Can't unserialize ! (event of type " + error_type.str() + ")");
     }
-    v_event->unserialize(Buffer);
-    if(bDisplayInformation) {
-      printf("   %6.2f %-27s\n", v_fEventTime, v_event->toString().c_str());
-    }
 
+    v_event->unserialize(Buffer);
     return v_event;
   }
 
@@ -177,9 +144,6 @@ namespace vapp {
     return SgetType();
   }
 
-  std::string MGE_PlayerDies::toString() {
-    return "Player dies";
-  }
 
   //////////////////////////////
   MGE_PlayerEntersZone::MGE_PlayerEntersZone(float p_fEventTime) 
@@ -187,7 +151,7 @@ namespace vapp {
       m_zone = NULL;
     }
 
-  MGE_PlayerEntersZone::MGE_PlayerEntersZone(float p_fEventTime, Zone *p_zone) 
+  MGE_PlayerEntersZone::MGE_PlayerEntersZone(float p_fEventTime, LevelZone *p_zone) 
     : MotoGameEvent(p_fEventTime) {
       m_zone = p_zone;
     }
@@ -214,9 +178,6 @@ namespace vapp {
     return SgetType();
   }
 
-  std::string MGE_PlayerEntersZone::toString() {
-    return "Player enters on zone " + m_zone->Id();
-  }
 
   //////////////////////////////
   MGE_PlayerLeavesZone::MGE_PlayerLeavesZone(float p_fEventTime) 
@@ -224,7 +185,7 @@ namespace vapp {
     m_zone = NULL;
   }
 
-  MGE_PlayerLeavesZone::MGE_PlayerLeavesZone(float p_fEventTime, Zone *p_zone) 
+  MGE_PlayerLeavesZone::MGE_PlayerLeavesZone(float p_fEventTime, LevelZone *p_zone) 
     : MotoGameEvent(p_fEventTime) {
       m_zone = p_zone;
   }
@@ -233,7 +194,7 @@ namespace vapp {
   } 
   
   void MGE_PlayerLeavesZone::doAction(MotoGame *p_pMotoGame) {
-     p_pMotoGame->playerLeavesZone(m_zone);
+    p_pMotoGame->playerLeavesZone(m_zone);
   }
 
   void MGE_PlayerLeavesZone::serialize(DBuffer &Buffer) {
@@ -250,9 +211,6 @@ namespace vapp {
     return SgetType();
   }
 
-  std::string MGE_PlayerLeavesZone::toString() {
-    return "Players leaves the zone " + m_zone->Id();
-  }
 
   //////////////////////////////
   MGE_PlayerTouchesEntity::MGE_PlayerTouchesEntity(float p_fEventTime) 
@@ -288,71 +246,54 @@ namespace vapp {
     return SgetType();
   }
 
-  std::string MGE_PlayerTouchesEntity::toString() {
-    return "Players touches entity " + m_entityID;
-  }
 
   //////////////////////////////
   MGE_EntityDestroyed::MGE_EntityDestroyed(float p_fEventTime) 
   : MotoGameEvent(p_fEventTime) {
-    m_entitySize = 0.0;
+    m_entityID = "";
+    m_type = ET_UNASSIGNED;
+    m_fSize = 0.0;
+    m_fPosX = 0.0;
+    m_fPosY = 0.0;
   }
 
-  MGE_EntityDestroyed::MGE_EntityDestroyed(float p_fEventTime, std::string i_entityId, EntitySpeciality i_entityType, Vector2f i_entityPosition, float i_entitySize)
+  MGE_EntityDestroyed::MGE_EntityDestroyed(float p_fEventTime,
+                                           std::string p_entityID, EntityType p_type,
+                                           float p_fSize, float p_fPosX, float p_fPosY) 
     : MotoGameEvent(p_fEventTime) {
-      m_entityId       = i_entityId;
-      m_entityType     = i_entityType;
-      m_entityPosition = i_entityPosition;
-      m_entitySize     = i_entitySize;
+      m_entityID = p_entityID;
+      m_type = p_type;
+      m_fSize = p_fSize;
+      m_fPosX = p_fPosX;
+      m_fPosY = p_fPosY;
     }
 
   MGE_EntityDestroyed::~MGE_EntityDestroyed() {
   } 
   
   void MGE_EntityDestroyed::doAction(MotoGame *p_pMotoGame) {
-     p_pMotoGame->entityDestroyed(m_entityId);
+    p_pMotoGame->entityDestroyed(m_entityID, m_type, m_fSize, m_fPosX, m_fPosY);
   }
 
   void MGE_EntityDestroyed::serialize(DBuffer &Buffer) {
     MotoGameEvent::serialize(Buffer);
-    Buffer << m_entityId;
-    Buffer << (int) (m_entityType);
-    Buffer << m_entitySize;
-    Buffer << m_entityPosition.x;
-    Buffer << m_entityPosition.y;
+    Buffer.write(m_entityID);
+    Buffer << m_type;
+    Buffer << m_fSize;
+    Buffer << m_fPosX;
+    Buffer << m_fPosY;
   }
   
   void MGE_EntityDestroyed::unserialize(DBuffer &Buffer) {
-
-    Vector2f v_position;
-    std::string v_entityId;
-    int i_tmp;
-
-    Buffer >> m_entityId;
-
-    /* no more used, kept just for compatibiliy */    
-    Buffer >> i_tmp;
-    m_entityType = (EntitySpeciality) i_tmp;
-    switch(m_entityType) {
-    case ET_NONE:
-    case ET_ISSTART:
-    case ET_MAKEWIN:
-    case ET_KILL:
-    case ET_ISTOTAKE:
-    case ET_PARTICLES_SOURCE:
-      break;
-    default:
-      std::ostringstream error_type;
-      error_type << (int) m_entityType;
-      throw Exception("Invalid entity type (" + error_type.str() + ")"); // with some compilator, an invalid value causes a segfault (on my linux box)
-    }
-    Buffer >> m_entitySize;
-    Buffer >> m_entityPosition.x;
-    Buffer >> m_entityPosition.y;   
+    Buffer.read(m_entityID);
+    Buffer >> m_type;
+    Buffer >> m_fSize;
+    Buffer >> m_fPosX;
+    Buffer >> m_fPosY;   
   }
 
   void MGE_EntityDestroyed::revert(MotoGame *p_pMotoGame) {
-    p_pMotoGame->getLevelSrc()->revertEntityDestroyed(m_entityId);
+    p_pMotoGame->revertEntityDestroyed(m_entityID);
   }
 
   GameEventType MGE_EntityDestroyed::SgetType() {
@@ -363,12 +304,8 @@ namespace vapp {
     return SgetType();
   }
 
-  std::string MGE_EntityDestroyed::toString() {
-    return "Player destroys entity " + m_entityId;
-  }
-
-  std::string MGE_EntityDestroyed::EntityId() {
-    return m_entityId;
+  EntityType MGE_EntityDestroyed::getEntityType() {
+    return m_type;
   }
 
   //////////////////////////////
@@ -398,9 +335,6 @@ namespace vapp {
     return SgetType();
   }
 
-  std::string MGE_ClearMessages::toString() {
-    return "Messages are cleared";
-  }
 
   //////////////////////////////
   MGE_PlaceInGameArrow::MGE_PlaceInGameArrow(float p_fEventTime) 
@@ -447,9 +381,6 @@ namespace vapp {
     return SgetType();
   }
 
-  std::string MGE_PlaceInGameArrow::toString() {
-    return "Place in game arrow";
-  }
 
   //////////////////////////////
   MGE_PlaceScreenarrow::MGE_PlaceScreenarrow(float p_fEventTime) 
@@ -496,9 +427,6 @@ namespace vapp {
     return SgetType();
   }
 
-  std::string MGE_PlaceScreenarrow::toString() {
-    return "Place screen arrow";
-  }
 
   //////////////////////////////
   MGE_HideArrow::MGE_HideArrow(float p_fEventTime) 
@@ -527,9 +455,6 @@ namespace vapp {
     return SgetType();
   }
 
-  std::string MGE_HideArrow::toString() {
-    return "Hide arrow";
-  }
 
   //////////////////////////////
   MGE_Message::MGE_Message(float p_fEventTime) 
@@ -551,11 +476,11 @@ namespace vapp {
 
   void MGE_Message::serialize(DBuffer &Buffer) {
     MotoGameEvent::serialize(Buffer);
-    Buffer << m_message;
+    Buffer.write(m_message);
   }
   
   void MGE_Message::unserialize(DBuffer &Buffer) {
-    Buffer >> m_message;
+    Buffer.read(m_message);
   }
 
   GameEventType MGE_Message::SgetType() {
@@ -566,9 +491,6 @@ namespace vapp {
     return SgetType();
   }
 
-  std::string MGE_Message::toString() {
-    return "Display message '" + m_message + "'";
-  }
 
   //////////////////////////////
   MGE_MoveBlock::MGE_MoveBlock(float p_fEventTime) 
@@ -596,13 +518,13 @@ namespace vapp {
 
   void MGE_MoveBlock::serialize(DBuffer &Buffer) {
     MotoGameEvent::serialize(Buffer);
-    Buffer << m_blockID;
+    Buffer.write(m_blockID);
     Buffer << m_x;
     Buffer << m_y;
   }
   
   void MGE_MoveBlock::unserialize(DBuffer &Buffer) {
-    Buffer >> m_blockID;
+    Buffer.read(m_blockID);
     Buffer >> m_x;
     Buffer >> m_y;
   }
@@ -615,9 +537,6 @@ namespace vapp {
     return SgetType();
   }
 
-  std::string MGE_MoveBlock::toString() {
-    return "Block " + m_blockID + " is moved";
-  }
 
   //////////////////////////////
   MGE_SetBlockPos::MGE_SetBlockPos(float p_fEventTime) 
@@ -645,13 +564,13 @@ namespace vapp {
 
   void MGE_SetBlockPos::serialize(DBuffer &Buffer) {
     MotoGameEvent::serialize(Buffer);
-    Buffer << m_blockID;
+    Buffer.write(m_blockID);
     Buffer << m_x;
     Buffer << m_y;
   }
   
   void MGE_SetBlockPos::unserialize(DBuffer &Buffer) {
-    Buffer >> m_blockID;
+    Buffer.read(m_blockID);
     Buffer >> m_x;
     Buffer >> m_y;
   }
@@ -664,9 +583,6 @@ namespace vapp {
     return SgetType();
   }
 
-  std::string MGE_SetBlockPos::toString() {
-    return "Block " + m_blockID + "'s position is changed";
-  }
 
   //////////////////////////////
   MGE_SetGravity::MGE_SetGravity(float p_fEventTime) 
@@ -707,9 +623,6 @@ namespace vapp {
     return SgetType();
   }
 
-  std::string MGE_SetGravity::toString() {
-    return "Gravity is changed";
-  }
 
   //////////////////////////////
   MGE_SetPlayerPosition::MGE_SetPlayerPosition(float p_fEventTime) 
@@ -756,9 +669,6 @@ namespace vapp {
     return SgetType();
   }
 
-  std::string MGE_SetPlayerPosition::toString() {
-    return "Teleportation of the player";
-  }
 
   //////////////////////////////
   MGE_SetEntityPos::MGE_SetEntityPos(float p_fEventTime) 
@@ -786,13 +696,13 @@ namespace vapp {
 
   void MGE_SetEntityPos::serialize(DBuffer &Buffer) {
     MotoGameEvent::serialize(Buffer);
-    Buffer << m_entityID;
+    Buffer.write(m_entityID);
     Buffer << m_x;
     Buffer << m_y;
   }
   
   void MGE_SetEntityPos::unserialize(DBuffer &Buffer) {
-    Buffer >> m_entityID;
+    Buffer.read(m_entityID);
     Buffer >> m_x;
     Buffer >> m_y;
   }
@@ -805,9 +715,6 @@ namespace vapp {
     return SgetType();
   }
 
-  std::string MGE_SetEntityPos::toString() {
-    return "Entity " + m_entityID + "'s position is changed";
-  }
 
   //////////////////////////////
   MGE_SetBlockCenter::MGE_SetBlockCenter(float p_fEventTime) 
@@ -835,13 +742,13 @@ namespace vapp {
 
   void MGE_SetBlockCenter::serialize(DBuffer &Buffer) {
     MotoGameEvent::serialize(Buffer);
-    Buffer << m_blockID;
+    Buffer.write(m_blockID);
     Buffer << m_x;
     Buffer << m_y;
   }
   
   void MGE_SetBlockCenter::unserialize(DBuffer &Buffer) {
-    Buffer >> m_blockID;
+    Buffer.read(m_blockID);
     Buffer >> m_x;
     Buffer >> m_y;
   }
@@ -854,9 +761,6 @@ namespace vapp {
     return SgetType();
   }
 
-  std::string MGE_SetBlockCenter::toString() {
-    return "Block " + m_blockID + "'s center is changed";
-  }
 
   //////////////////////////////
   MGE_SetBlockRotation::MGE_SetBlockRotation(float p_fEventTime) 
@@ -882,12 +786,12 @@ namespace vapp {
 
   void MGE_SetBlockRotation::serialize(DBuffer &Buffer) {
     MotoGameEvent::serialize(Buffer);
-    Buffer << m_blockID;
+    Buffer.write(m_blockID);
     Buffer << m_angle;
   }
   
   void MGE_SetBlockRotation::unserialize(DBuffer &Buffer) {
-    Buffer >> m_blockID;
+    Buffer.read(m_blockID);
     Buffer >> m_angle;
   }
 
@@ -899,9 +803,6 @@ namespace vapp {
     return SgetType();
   }
 
-  std::string MGE_SetBlockRotation::toString() {
-    return "Block " + m_blockID + "'s rotation is changed";
-  }
 
   //////////////////////////////
   MGE_SetDynamicEntityRotation::MGE_SetDynamicEntityRotation(float p_fEventTime) 
@@ -935,14 +836,14 @@ namespace vapp {
   
   void MGE_SetDynamicEntityRotation::doAction(MotoGame *p_pMotoGame) {
     p_pMotoGame->addDynamicObject(new SDynamicEntityRotation(m_entityID,
-                   m_fInitAngle, m_fRadius,
-                   m_fPeriod,
-                   m_startTime, m_endTime));
+							     m_fInitAngle, m_fRadius,
+							     m_fPeriod,
+							     m_startTime, m_endTime));
   }
 
   void MGE_SetDynamicEntityRotation::serialize(DBuffer &Buffer) {
     MotoGameEvent::serialize(Buffer);
-    Buffer << m_entityID;
+    Buffer.write(m_entityID);
     Buffer << m_fInitAngle;
     Buffer << m_fRadius;
     Buffer << m_fPeriod;
@@ -951,7 +852,7 @@ namespace vapp {
   }
   
   void MGE_SetDynamicEntityRotation::unserialize(DBuffer &Buffer) {
-    Buffer >> m_entityID;
+    Buffer.read(m_entityID);
     Buffer >> m_fInitAngle;
     Buffer >> m_fRadius;
     Buffer >> m_fPeriod;
@@ -967,9 +868,6 @@ namespace vapp {
     return SgetType();
   }
 
-  std::string MGE_SetDynamicEntityRotation::toString() {
-    return "Dynamic rotation is set for entity " + m_entityID;
-  }
 
   //////////////////////////////
   MGE_SetDynamicEntityTranslation::MGE_SetDynamicEntityTranslation(float p_fEventTime) 
@@ -1003,14 +901,14 @@ namespace vapp {
   
   void MGE_SetDynamicEntityTranslation::doAction(MotoGame *p_pMotoGame) {
     p_pMotoGame->addDynamicObject(new SDynamicEntityTranslation(m_entityID,
-                m_x, m_y,
-                m_fPeriod,
-                m_startTime, m_endTime));
+								m_x, m_y,
+								m_fPeriod,
+								m_startTime, m_endTime));
   }
 
   void MGE_SetDynamicEntityTranslation::serialize(DBuffer &Buffer) {
     MotoGameEvent::serialize(Buffer);
-    Buffer << m_entityID;
+    Buffer.write(m_entityID);
     Buffer << m_x;
     Buffer << m_y;
     Buffer << m_fPeriod;
@@ -1019,7 +917,7 @@ namespace vapp {
   }
   
   void MGE_SetDynamicEntityTranslation::unserialize(DBuffer &Buffer) {
-    Buffer >> m_entityID;
+    Buffer.read(m_entityID);
     Buffer >> m_x;
     Buffer >> m_y;
     Buffer >> m_fPeriod;
@@ -1035,9 +933,6 @@ namespace vapp {
     return SgetType();
   }
 
-  std::string MGE_SetDynamicEntityTranslation::toString() {
-    return "Dynamic translation is set for entity " + m_entityID;
-  }
 
   //////////////////////////////
   MGE_SetDynamicEntityNone::MGE_SetDynamicEntityNone(float p_fEventTime) 
@@ -1059,11 +954,11 @@ namespace vapp {
 
   void MGE_SetDynamicEntityNone::serialize(DBuffer &Buffer) {
     MotoGameEvent::serialize(Buffer);
-    Buffer << m_entityID;
+    Buffer.write(m_entityID);
   }
   
   void MGE_SetDynamicEntityNone::unserialize(DBuffer &Buffer) {
-    Buffer >> m_entityID;
+    Buffer.read(m_entityID);
   }
 
   GameEventType MGE_SetDynamicEntityNone::SgetType() {
@@ -1072,10 +967,6 @@ namespace vapp {
 
   GameEventType MGE_SetDynamicEntityNone::getType() {
     return SgetType();
-  }
-
-  std::string MGE_SetDynamicEntityNone::toString() {
-    return "Remove dynamic for entity " + m_entityID;
   }
 
   //////////////////////////////
@@ -1110,14 +1001,14 @@ namespace vapp {
   
   void MGE_SetDynamicBlockRotation::doAction(MotoGame *p_pMotoGame) {
     p_pMotoGame->addDynamicObject(new SDynamicBlockRotation(m_blockID,
-                  m_fInitAngle, m_fRadius,
-                  m_fPeriod,
-                  m_startTime, m_endTime));
+							    m_fInitAngle, m_fRadius,
+							    m_fPeriod,
+							    m_startTime, m_endTime));
   }
 
   void MGE_SetDynamicBlockRotation::serialize(DBuffer &Buffer) {
     MotoGameEvent::serialize(Buffer);
-    Buffer << m_blockID;
+    Buffer.write(m_blockID);
     Buffer << m_fInitAngle;
     Buffer << m_fRadius;
     Buffer << m_fPeriod;
@@ -1126,7 +1017,7 @@ namespace vapp {
   }
   
   void MGE_SetDynamicBlockRotation::unserialize(DBuffer &Buffer) {
-    Buffer >> m_blockID;
+    Buffer.read(m_blockID);
     Buffer >> m_fInitAngle;
     Buffer >> m_fRadius;
     Buffer >> m_fPeriod;
@@ -1142,9 +1033,6 @@ namespace vapp {
     return SgetType();
   }
 
-  std::string MGE_SetDynamicBlockRotation::toString() {
-    return "Dynamic rotation is set for block " + m_blockID;
-  }
 
   //////////////////////////////
   MGE_SetDynamicBlockTranslation::MGE_SetDynamicBlockTranslation(float p_fEventTime) 
@@ -1178,14 +1066,14 @@ namespace vapp {
   
   void MGE_SetDynamicBlockTranslation::doAction(MotoGame *p_pMotoGame) {
     p_pMotoGame->addDynamicObject(new SDynamicBlockTranslation(m_blockID,
-                     m_x, m_y,
-                     m_fPeriod,
-                     m_startTime, m_endTime));
+							       m_x, m_y,
+							       m_fPeriod,
+							       m_startTime, m_endTime));
   }
 
   void MGE_SetDynamicBlockTranslation::serialize(DBuffer &Buffer) {
     MotoGameEvent::serialize(Buffer);
-    Buffer << m_blockID;
+    Buffer.write(m_blockID);
     Buffer << m_x;
     Buffer << m_y;
     Buffer << m_fPeriod;
@@ -1194,7 +1082,7 @@ namespace vapp {
   }
   
   void MGE_SetDynamicBlockTranslation::unserialize(DBuffer &Buffer) {
-    Buffer >> m_blockID;
+    Buffer.read(m_blockID);
     Buffer >> m_x;
     Buffer >> m_y;
     Buffer >> m_fPeriod;
@@ -1210,9 +1098,6 @@ namespace vapp {
     return SgetType();
   }
 
-  std::string MGE_SetDynamicBlockTranslation::toString() {
-    return "Dynamic translation is set for block " + m_blockID;
-  }
 
   //////////////////////////////
   MGE_SetDynamicBlockNone::MGE_SetDynamicBlockNone(float p_fEventTime) 
@@ -1234,11 +1119,11 @@ namespace vapp {
 
   void MGE_SetDynamicBlockNone::serialize(DBuffer &Buffer) {
     MotoGameEvent::serialize(Buffer);
-    Buffer << m_blockID;
+    Buffer.write(m_blockID);
   }
   
   void MGE_SetDynamicBlockNone::unserialize(DBuffer &Buffer) {
-    Buffer >> m_blockID;
+    Buffer.read(m_blockID);
   }
 
   GameEventType MGE_SetDynamicBlockNone::SgetType() {
@@ -1247,10 +1132,6 @@ namespace vapp {
 
   GameEventType MGE_SetDynamicBlockNone::getType() {
     return SgetType();
-  }
-
-  std::string MGE_SetDynamicBlockNone::toString() {
-    return "Remove dynamic for block " + m_blockID;
   }
 
   //////////////////////////////
@@ -1292,9 +1173,6 @@ namespace vapp {
     return SgetType();
   }
 
-  std::string MGE_CameraMove::toString() {
-    return "Camera moves";
-  }
 
   //////////////////////////////
   MGE_CameraZoom::MGE_CameraZoom(float p_fEventTime) 
@@ -1329,10 +1207,6 @@ namespace vapp {
 
   GameEventType MGE_CameraZoom::getType() {
     return SgetType();
-  }
-
-  std::string MGE_CameraZoom::toString() {
-    return "Camera zoom is changed";
   }
 
   //////////////////////////////
@@ -1370,7 +1244,4 @@ namespace vapp {
     return SgetType();
   }
 
-  std::string MGE_PenalityTime::toString() {
-    return "Time penality";
-  }
 }

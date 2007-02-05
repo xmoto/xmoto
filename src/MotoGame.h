@@ -24,10 +24,26 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #define MOTOGAME_DEFAULT_GAME_MESSAGE_DURATION 5.0
 
+namespace vapp {
+  /*===========================================================================
+    Entity object types
+    ===========================================================================*/
+  enum EntityType {
+    ET_UNASSIGNED,
+    ET_SPRITE,
+    ET_PLAYERSTART,
+    ET_ENDOFLEVEL,
+    ET_WRECKER,
+    ET_STRAWBERRY,
+    ET_PARTICLESOURCE,
+    ET_DUMMY
+  };
+}
+
 #include "VCommon.h"
 #include "VApp.h"
-#include "helpers/VMath.h"
-#include "xmscene/Level.h"
+#include "VMath.h"
+#include "LevelSrc.h"
 #include "BSP.h"
 #include "DBuffer.h"
 #include "Collision.h"
@@ -35,23 +51,171 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "SomersaultCounter.h"
 #include "GameEvents.h"
 
-#include "xmscene/BasicSceneStructs.h"
-#include "xmscene/BikeController.h"
-#include "xmscene/BikeParameters.h"
-#include "xmscene/BikeAnchors.h"
-#include "xmscene/Bike.h"
-
-/* This is the magic depth factor :)  - tweak to obtain max. stability */
-#define DEPTH_FACTOR    2
-
-class Level;
-
 namespace vapp {
 
   class MotoGameEvent;
   class Replay;
   class GameRenderer;
-  class CollisionSystem;
+
+  /*===========================================================================
+  Defines
+  ===========================================================================*/
+  
+  /* This is the magic depth factor :)  - tweak to obtain max. stability */
+  #define DEPTH_FACTOR    2
+
+  /*===========================================================================
+  Driving directions
+  ===========================================================================*/
+  enum DriveDir {
+    DD_RIGHT,
+    DD_LEFT
+  };
+
+  /*===========================================================================
+  Edge effects
+  ===========================================================================*/
+  enum EdgeEffect {
+    EE_UNASSIGNED,
+    EE_GRASS,
+    EE_REDBRICKS,
+    EE_GRAYBRICKS,
+    EE_BLUEBRICKS,
+    EE_GRASSALT
+  };
+
+  /*===========================================================================
+  Dummy helper - a point we'd like to track graphically
+  ===========================================================================*/
+  struct DummyHelper {
+    Vector2f Pos;         /* position */
+    float r,g,b;          /* What color? */
+  };
+
+  /*===========================================================================
+  Controller struct
+  ===========================================================================*/
+  struct BikeController {
+    float fDrive;         /* Throttle [0; 1] or Brake [-1; 0] */
+    float fPull;          /* Pull back on the handle bar [0; 1] or push forward on the handle bar [-1; 0] */
+    bool bChangeDir;      /* Change direction */
+    
+    /* Debug-enabled controls */
+    bool bDebugDriveBack; 
+    bool bDebug1;
+  };
+
+  /*===========================================================================
+  Convex block vertex
+  ===========================================================================*/
+  struct ConvexBlockVertex {
+    Vector2f P;                                   /* Position of vertex */
+    Vector2f T;                                   /* Texture vertex */
+  };
+
+  /*===========================================================================
+  Convex block
+  ===========================================================================*/
+  struct ConvexBlock {
+    ConvexBlock() {
+      pSrcBlock = NULL;
+    }
+  
+    std::vector<ConvexBlockVertex *> Vertices;    /* Vertices */
+    LevelBlock *pSrcBlock;                        /* Source block */
+  };
+
+  /*===========================================================================
+  Dynamic block
+  ===========================================================================*/
+  struct DynamicBlock {
+    DynamicBlock() {
+      pSrcBlock = NULL;
+      fRotation = 0.0f;
+    }
+    
+    std::vector<ConvexBlock *> ConvexBlocks;      /* Polygons */
+    LevelBlock *pSrcBlock;                        /* Source block */
+    float fRotation;                              /* Block rotation */    
+    Vector2f Position;                            /* Block position */
+    bool bBackground;                             /* Background block */
+    
+    std::vector<Line *> CollisionLines;           /* Line to collide against */
+  };
+
+  /*===========================================================================
+  Overlay edge (grass, effects, etc)
+  ===========================================================================*/
+  struct OverlayEdge {
+    OverlayEdge() {
+      pSrcBlock = NULL;
+    }
+  
+    Vector2f P1,P2;                               /* Point-to-point */
+    std::string Effect;                            /* What? */
+    LevelBlock *pSrcBlock;                        /* Source block */
+  };
+
+  /*===========================================================================
+  Bike params
+  ===========================================================================*/
+  struct BikeParams {
+    /* Geometrical */
+    float WR;             /* Wheel radius */
+    float Ch;             /* Center of mass height */
+    float Wb;             /* Wheel base */
+    float RVx,RVy;        /* Position of rear susp. anchor */
+    float FVx,FVy;        /* Position of front susp. anchor */
+
+    float PSVx,PSVy;      /* Position of player shoulder */
+    float PEVx,PEVy;      /* Position of player elbow */
+    float PHVx,PHVy;      /* Position of player hand */
+    float PLVx,PLVy;      /* Position of player lower body */
+    float PKVx,PKVy;      /* Position of player knee */
+    float PFVx,PFVy;      /* Position of player foot */
+    
+    float fHeadSize;      /* Radius */
+    float fNeckLength;    /* Length of neck */
+        
+    /* Physical */
+    float Wm;             /* Wheel mass [kg] */
+    float BPm;            /* Player body part mass [kg] */
+    float Fm;             /* Frame mass [kg] */
+    float IL;             /* Frame "inertia" length [m] */
+    float IH;             /* Frame "inertia" height [m] */
+        
+    /* Braking/engine performance */
+    float fMaxBrake,fMaxEngine;
+  };
+
+  /*===========================================================================
+  Bike anchor points (relative to center of mass)
+  ===========================================================================*/
+  struct BikeAnchors {
+    Vector2f Tp;          /* Point on the ground, exactly between the wheels */
+    Vector2f Rp;          /* Center of rear wheel */
+    Vector2f Fp;          /* Center of front wheel */
+    Vector2f AR;          /* Rear suspension anchor */
+    Vector2f AF;          /* Front suspension anchor */
+    Vector2f AR2;         /* Rear suspension anchor (Alt.) */
+    Vector2f AF2;         /* Front suspension anchor (Alt.) */
+
+    Vector2f PTp;         /* Player torso center */
+    Vector2f PULp;        /* Player upper leg center */
+    Vector2f PLLp;        /* Player lower leg center */
+    Vector2f PUAp;        /* Player upper arm center */
+    Vector2f PLAp;        /* Player lower arm center */
+    Vector2f PHp;         /* Player hand center */
+    Vector2f PFp;         /* Player foot center */
+
+    Vector2f PTp2;        /* Player torso center (Alt.) */
+    Vector2f PULp2;       /* Player upper leg center (Alt.) */
+    Vector2f PLLp2;       /* Player lower leg center (Alt.) */
+    Vector2f PUAp2;       /* Player upper arm center (Alt.) */
+    Vector2f PLAp2;       /* Player lower arm center (Alt.) */
+    Vector2f PHp2;        /* Player hand center (Alt.) */
+    Vector2f PFp2;        /* Player foot center (Alt.) */
+  };
 
   /*===========================================================================
   Serialized bike state
@@ -80,7 +244,97 @@ namespace vapp {
     signed char cLowerBodyX,cLowerBodyY;     /* Ass position */
     signed char cKneeX,cKneeY;               /* Knee position */
   };
+
+  /*===========================================================================
+  Bike state 
+  ===========================================================================*/
+  struct BikeState {
+    DriveDir Dir;         /* Driving left or right? */
   
+    float fBikeEngineRPM;
+  
+    Vector2f RearWheelP;  /* Rear wheel position */
+    Vector2f FrontWheelP; /* Front wheel position */
+    Vector2f SwingAnchorP;/* Swing arm anchor position */
+    Vector2f FrontAnchorP;/* Front suspension anchor position */    
+    Vector2f SwingAnchor2P;/* Swing arm anchor position (Alt.) */
+    Vector2f FrontAnchor2P;/* Front suspension anchor position (Alt.) */    
+    Vector2f CenterP;     /* Center position */
+
+    Vector2f PlayerTorsoP;/* Position of player's torso */
+    Vector2f PlayerULegP; /* Position of player's upper leg */
+    Vector2f PlayerLLegP; /* Position of player's lower leg */
+    Vector2f PlayerUArmP; /* Position of player's upper arm */
+    Vector2f PlayerLArmP; /* Position of player's upper arm */
+
+    Vector2f PlayerTorso2P;/* Position of player's torso (Alt.) */
+    Vector2f PlayerULeg2P; /* Position of player's upper leg (Alt.) */
+    Vector2f PlayerLLeg2P; /* Position of player's lower leg (Alt.) */
+    Vector2f PlayerUArm2P; /* Position of player's upper arm (Alt.) */ 
+    Vector2f PlayerLArm2P; /* Position of player's upper arm (Alt.) */
+        
+    /* Internals */
+    float fFrontWheelRot[4];
+    float fRearWheelRot[4];
+    float fFrameRot[4];
+    
+    Vector2f WantedHandP,WantedFootP;
+    Vector2f WantedHand2P,WantedFoot2P;    
+    
+    Vector2f HandP;
+    Vector2f ElbowP;
+    Vector2f ShoulderP;
+    Vector2f LowerBodyP;
+    Vector2f KneeP;
+    Vector2f FootP;
+    Vector2f HeadP;        /* NB! not a phys. body */
+
+    Vector2f Hand2P;
+    Vector2f Elbow2P;
+    Vector2f Shoulder2P;
+    Vector2f LowerBody2P;
+    Vector2f Knee2P;
+    Vector2f Foot2P;
+    Vector2f Head2P;        /* NB! not a phys. body */
+
+    //dReal *pfPlayerTorsoPos;
+    //dReal *pfPlayerTorsoRot;
+    //dReal *pfPlayerULegPos;
+    //dReal *pfPlayerULegRot;
+    //dReal *pfPlayerLLegPos;
+    //dReal *pfPlayerLLegRot;
+    //dReal *pfPlayerUArmPos;
+    //dReal *pfPlayerUArmRot;
+    //dReal *pfPlayerLArmPos;
+    //dReal *pfPlayerLArmRot;
+
+    //dReal *pfPlayerTorso2Pos;
+    //dReal *pfPlayerTorso2Rot;
+    //dReal *pfPlayerULeg2Pos;
+    //dReal *pfPlayerULeg2Rot;
+    //dReal *pfPlayerLLeg2Pos;
+    //dReal *pfPlayerLLeg2Rot;
+    //dReal *pfPlayerUArm2Pos;
+    //dReal *pfPlayerUArm2Rot;
+    //dReal *pfPlayerLArm2Pos;
+    //dReal *pfPlayerLArm2Rot;
+
+    Vector2f RRearWheelP; /* Relaxed rear wheel position */
+    Vector2f RFrontWheelP;/* Relaxed front wheel position */
+    Vector2f PrevRq;      /* Previous error (rear) */
+    Vector2f PrevFq;      /* Previous error (front) */
+    Vector2f PrevPFq;     /* Previous error (player foot) */
+    Vector2f PrevPHq;     /* Previous error (player hand) */
+    Vector2f PrevPFq2;    /* Previous error (player foot) (Alt.) */
+    Vector2f PrevPHq2;    /* Previous error (player hand) (Alt.) */
+    
+    /* Bonusinfo */
+    BikeAnchors *pAnchors;
+    
+    /* Driving */
+    float fCurBrake,fCurEngine;    
+  };
+
   /*===========================================================================
   Arrow pointer
   ===========================================================================*/
@@ -92,6 +346,46 @@ namespace vapp {
     int nArrowPointerMode;
     Vector2f ArrowPointerPos;
     float fArrowPointerAngle;
+  };
+  
+  /*===========================================================================
+  Entity object
+  ===========================================================================*/
+  struct Entity {
+    Entity() {
+      Type = ET_UNASSIGNED;
+      pSrc = NULL;
+      fSize = 1.0f;
+      fSpriteZ = 1;
+      fNextParticleTime = 0;
+      bTouched = false;
+    }
+  
+    std::string ID;
+    EntityType Type;
+    LevelEntity *pSrc;
+    bool bTouched;
+    
+    float fSize;                      /* Size */
+    Vector2f Pos;                     /* Position */    
+    
+    /* ET_SPRITE */
+    float fSpriteZ;
+    std::string SpriteType;
+    
+    /* ET_PLAYERSTART */
+    
+    /* ET_ENDOFLEVEL */
+    
+    /* ET_WRECKER */
+    
+    /* ET_STRAWBERRY */
+    
+    /* ET_PARTICLESOURCE */
+    std::string ParticleType;
+    float fNextParticleTime;
+    
+    /* ET_DUMMY */
   };
 
   /*===========================================================================
@@ -130,35 +424,38 @@ namespace vapp {
     /* update of the structure */
     void prePlayLevel(
 #if defined(ALLOW_GHOST)    
-          Replay *m_pGhostReplay,
+		      Replay *m_pGhostReplay,
 #endif
-          Level *pLevelSrc,
-          Replay *recordingReplay,
-          bool bIsAReplay);
+		      LevelSrc *pLevelSrc,
+		      Replay *recordingReplay,
+		      bool bIsAReplay);
 
     void playLevel(
 #if defined(ALLOW_GHOST)    
-       Replay *m_pGhostReplay,
+		   Replay *m_pGhostReplay,
 #endif
-       Level *pLevelSrc, bool bIsAReplay);
+		   LevelSrc *pLevelSrc, bool bIsAReplay);
     void updateLevel(float fTimeStep,SerializedBikeState *pReplayState,Replay *p_replay);
     void endLevel(void);
 
     /* entities */
     void touchEntity(Entity *pEntity, bool bHead); 
     void deleteEntity(Entity *pEntity);
+    int countEntitiesByType(EntityType Type);
+    Entity *findEntity(const std::string &ID);
+    Entity *getEntityByID(const std::string &ID);      
 
     /* messages */
     void gameMessage(std::string Text,
-         bool bOnce = false,
-         float fDuration = MOTOGAME_DEFAULT_GAME_MESSAGE_DURATION);
+		     bool bOnce = false,
+		     float fDuration = MOTOGAME_DEFAULT_GAME_MESSAGE_DURATION);
     void clearGameMessages();
     void updateGameMessages();
     std::vector<GameMessage *> &getGameMessage(void) {return m_GameMessages;}
       
     /* serialization */
     void getSerializedBikeState(SerializedBikeState *pState);
-    static void unserializeGameEvents(DBuffer *Buffer, std::vector<RecordedGameEvent *> *v_ReplayEvents, bool bDisplayInformation = false);
+    static void unserializeGameEvents(DBuffer *Buffer, std::vector<RecordedGameEvent *> *v_ReplayEvents);
     void interpolateGameState(SerializedBikeState *pA,SerializedBikeState *pB,SerializedBikeState *p,float t);
 
     /* events */
@@ -190,11 +487,12 @@ namespace vapp {
     bool isInitOK(void) {return m_bLevelInitSuccess;}
     bool isFinished(void) {return m_bFinished;}
     bool isDead(void) {return m_bDead;}
-    Level *getLevelSrc(void) {return m_pLevelSrc;}
+    LevelSrc *getLevelSrc(void) {return m_pLevelSrc;}
+    std::vector<ConvexBlock *> &getBlocks(void) {return m_Blocks;}
     BikeState *getBikeState(void) {return &m_BikeS;}
+    BikeParams *getBikeParams() { return &m_BikeP;}
     bool isSqueeking(void) {return m_bSqueeking;}
     float howMuchSqueek(void) {return m_fHowMuchSqueek;}
-    bool isAReplay() {return m_bIsAReplay;}
 
 #if defined(ALLOW_GHOST)
       BikeState *getGhostBikeState(void) {return &m_GhostBikeS;}
@@ -206,6 +504,9 @@ namespace vapp {
 #endif
 
       BikeController *getBikeController(void) {return &m_BikeC;}
+      std::vector<Entity *> &getEntities(void) {return m_Entities;}
+      std::vector<DynamicBlock *> &getDynBlocks(void) {return m_DynBlocks;}
+      std::vector<OverlayEdge *> &getOverlayEdges(void) {return m_OvEdges;}
       float getTime(void) {return m_fTime;}
       void setTime(float f) {m_fTime=f;}
       float getFinishTime(void) {return m_fFinishTime;}
@@ -217,6 +518,12 @@ namespace vapp {
       void setGravity(float x,float y) {m_PhysGravity.x=x; m_PhysGravity.y=y; resetAutoDisabler();}
       const Vector2f &getGravity(void) {return m_PhysGravity;}
         
+      /* Debug */
+      void resetDummies(void) {m_nNumDummies=0;}
+      int getNumDummies(void) {return m_nNumDummies;}
+      DummyHelper *getDummies(void) {return m_Dummies;}
+      void addDummy(Vector2f Pos,float r,float g,float b);
+    
 #if defined(ALLOW_GHOST)  
       void UpdateGhostFromReplay(SerializedBikeState *pReplayState);
       float getGhostDiff() {return m_myDiffOfGhost;}
@@ -225,7 +532,6 @@ namespace vapp {
 
       /* action for events */
       void SetEntityPos(String pEntityID, float pX, float pY);
-      void SetEntityPos(Entity* pEntity,  float pX, float pY);
       void PlaceInGameArrow(float pX, float pY, float pAngle);
       void PlaceScreenArrow(float pX, float pY, float pAngle);
       void HideArrow();
@@ -233,35 +539,30 @@ namespace vapp {
       void SetBlockPos(String pBlockID, float pX, float pY);
       void SetBlockCenter(String pBlockID, float pX, float pY);
       void SetBlockRotation(String pBlockID, float pAngle);
+      DynamicBlock *GetDynamicBlockByID(const std::string &ID);
 
       void setRenderer(GameRenderer *p_renderer);
       void CameraZoom(float pZoom);
       void CameraMove(float p_x, float p_y);
 
       void killPlayer();
-      void playerEntersZone(Zone *pZone);
-      void playerLeavesZone(Zone *pZone);
+      void playerEntersZone(LevelZone *pZone);
+      void playerLeavesZone(LevelZone *pZone);
       void playerTouchesEntity(std::string p_entityID, bool p_bTouchedWithHead);
-      void entityDestroyed(const std::string& i_entityId);
+      void entityDestroyed(std::string p_entityID, EntityType p_type,
+			   float p_fSize, float p_fPosX, float p_fPosY);
       void addDynamicObject(SDynamicObject* p_obj);
       void removeSDynamicOfObject(std::string pObject);
       void addPenalityTime(float fTime);
 
+      void revertEntityDestroyed(std::string p_entityID);
       void createKillEntityEvent(std::string p_entityID);
 
       unsigned int getNbRemainingStrawberries();
       void makePlayerWin();
 
       void setBodyDetach(bool state);
-
-      /* added=added to m_touching */
-      /* removed=removed from m_touching */
-      typedef enum {none, added, removed} touch;
-
-      bool isTouching(const Entity& i_entity) const;
-      touch setTouching(Entity& i_entity, bool i_touching);     
-      bool isTouching(const Zone& i_zone) const;
-      touch setTouching(Zone& i_zone, bool i_isTouching);
+      void stopBikeControls();
 
   private:         
       /* Data */
@@ -269,6 +570,9 @@ namespace vapp {
       
       float m_fTime,m_fNextAttitudeCon;
       float m_fFinishTime,m_fAttitudeCon;
+      
+      int m_nNumDummies;
+      DummyHelper m_Dummies[100];
       
       int m_nStillFrames;
       
@@ -283,15 +587,21 @@ namespace vapp {
       
       CollisionSystem m_Collision;        /* Collision system */
             
-      Level *m_pLevelSrc;              /* Source of level */            
+      LevelSrc *m_pLevelSrc;              /* Source of level */            
       lua_State *m_pL;                    /* Lua state associated with the
                                              level */
+      std::vector<ConvexBlock *> m_Blocks;/* Blocks */
+      std::vector<Entity *> m_Entities;   /* Entities */
       std::vector<Entity *> m_DestroyedEntities; /* destroyed entities */
       dWorldID m_WorldID;                 /* World ID */
       
+      std::vector<OverlayEdge *> m_OvEdges;/* Overlay edges */
       std::vector<Entity *> m_DelSchedule;/* Entities scheduled for deletion */
       std::vector<GameMessage *> m_GameMessages;
+      std::vector<DynamicBlock *> m_DynBlocks; /* Dynamic blocks */
       
+      BikeParams m_BikeP;                 /* Bike physics */      
+      BikeAnchors m_BikeA;                /* Important bike anchor points */
       BikeState m_BikeS;                  /* Bike state */
 
 #if defined(ALLOW_GHOST)  
@@ -385,28 +695,27 @@ namespace vapp {
       float m_lastCallToEveryHundreath;
             
       bool m_isScriptActiv; /* change this variable to activ/desactiv scripting */
-      /* true if showing a replay.
-         false if user playing */
-      bool m_bIsAReplay;
-
-      std::vector<Entity *> m_entitiesTouching;
-      std::vector<Zone *>   m_zonesTouching;
 
       void clearStates();
 
       /* Helpers */
       void _GenerateLevel(void);          /* Called by playLevel() to 
                                              prepare the level */
+      ConvexBlock *_CreateBlock(BSPPoly *pPoly,LevelBlock *pSrcBlock);
+      void _CalculateBikeAnchors(void);
       int _IntersectWheelLevel(Vector2f Cp,float Cr,dContact *pContacts);
       int _IntersectWheelLine(Vector2f Cp,float Cr,int nNumContacts,dContact *pContacts,Vector2f A0,Vector2f A1);
       bool _IntersectHeadLevel(Vector2f Cp,float Cr,const Vector2f &LastCp);
       bool _IntersectHeadLine(Vector2f Cp,float Cr,Vector2f A0,Vector2f A1);
-      bool _DoCircleTouchZone(const Vector2f &Cp,float Cr,Zone *pZone);
+      bool _DoCircleTouchZone(const Vector2f &Cp,float Cr,LevelZone *pZone);
       bool _IntersectPointLevel(Vector2f Cp);
-      Entity *_SpawnEntity(std::string ID,EntitySpeciality Type,Vector2f Pos, Entity *pSrc);
-      void _KillEntity(Entity *pEnt);
-      void _UpdateEntities(void);
       void _UpdateZones(void);
+      Entity *_SpawnEntity(std::string ID,EntityType Type,Vector2f Pos,LevelEntity *pSrc);
+      void _KillEntity(Entity *pEnt);
+      void CleanEntities(); /* clean memories of entities */
+      EntityType _TransEntityType(std::string Name);
+      EdgeEffect _TransEdgeEffect(std::string Name);
+      void _UpdateEntities(void);
       bool touchEntityBodyExceptHead(const BikeState &pBike, const Entity &p_entity);
       void _UpdateGameState(SerializedBikeState *pReplayState);
       /* static */ void _UpdateStateFromReplay(SerializedBikeState *pReplayState,BikeState *pBikeS);

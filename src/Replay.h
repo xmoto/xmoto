@@ -63,21 +63,17 @@ namespace vapp {
       ~ReplayList() {clear();} /* destructor */
     
       /* Methods */
-      void initFromCache();
       void initFromDir();
-      void addReplay(const std::string &Replay, bool i_saveCache = true);
-      void delReplay(const std::string &Replay, bool i_saveCache = true);
-      void clear(bool i_saveCache = true);
+      void addReplay(const std::string &Replay);
+      void delReplay(const std::string &Replay);
+      void clear(void);
 
-      /* you must free the list after this call */
       std::vector<ReplayInfo *>* findReplays(const std::string &PlayerName = "",
-               const std::string &LevelID = "");
-
+					     const std::string &LevelID = "");
+      
     private:
       /* Data */
       std::vector<ReplayInfo *> m_Replays;
-      void saveCache();
-      static std::string ReplayIndexFileName();
   };
    
   /*===========================================================================
@@ -96,7 +92,7 @@ namespace vapp {
       
       void createReplay(const std::string &FileName,const std::string &LevelID,const std::string &Player,float fFrameRate,int nStateSize);
       void saveReplay(void);
-      std::string openReplay(const std::string &FileName,float *pfFrameRate,std::string &Player, bool bDisplayInformation = false);
+      std::string openReplay(const std::string &FileName,float *pfFrameRate,std::string &Player);
       static void deleteReplay(std::string ReplayName);
       void reinitialize();
       std::string getLevelId();
@@ -109,8 +105,6 @@ namespace vapp {
       void slower();
       float getSpeed() const; /* get multiple factor of the replay */
       
-      int CurrentFrame() const;
-
       void setSpeed(float f) {m_speed_factor = f;}
       bool isPaused(void) {return m_is_paused;}
 
@@ -146,7 +140,7 @@ namespace vapp {
       int m_nInputEventsDataSize;
 
       float m_speed_factor; /* nb frame to increment each time ;
-             is a float so that manage slow */
+			       is a float so that manage slow */
       bool  m_is_paused;
  
       /* Helpers */

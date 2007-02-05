@@ -32,7 +32,7 @@ namespace vapp {
   /*===========================================================================
   Rendering of the bike
   ===========================================================================*/
-  void GameRenderer::_RenderBike(BikeState *pBike, BikeParameters *pBikeParms, BikerTheme *p_theme) {
+  void GameRenderer::_RenderBike(BikeState *pBike, BikeParams *pBikeParms, BikerTheme *p_theme) {
     Sprite *pSprite;
     Texture *pTexture;
 
@@ -80,16 +80,16 @@ namespace vapp {
     }
 
     if(m_bUglyMode || m_bTestThemeMode) {
-      getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
-      getParent()->getDrawLib()->setColor(p_theme->getUglyWheelColor());
-      getParent()->getDrawLib()->glVertex(p0+C);    
-      getParent()->getDrawLib()->glVertex(p2+C);
-      getParent()->getDrawLib()->endDraw();
-      getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
-      getParent()->getDrawLib()->setColor(p_theme->getUglyWheelColor());
-      getParent()->getDrawLib()->glVertex(p1+C);
-      getParent()->getDrawLib()->glVertex(p3+C);
-      getParent()->getDrawLib()->endDraw();
+      glBegin(GL_LINE_STRIP);
+      glColor3ub(GET_RED(p_theme->getUglyWheelColor()),GET_GREEN(p_theme->getUglyWheelColor()),GET_BLUE(p_theme->getUglyWheelColor()));
+      _Vertex(p0+C);    
+      _Vertex(p2+C);
+      glEnd();
+      glBegin(GL_LINE_STRIP);
+      glColor3ub(GET_RED(p_theme->getUglyWheelColor()),GET_GREEN(p_theme->getUglyWheelColor()),GET_BLUE(p_theme->getUglyWheelColor()));
+      _Vertex(p1+C);
+      _Vertex(p3+C);
+      glEnd();
       _RenderCircle(16,p_theme->getUglyWheelColor(),C,pBikeParms->WR);
     }
 
@@ -131,16 +131,16 @@ namespace vapp {
     }
 
     if(m_bUglyMode || m_bTestThemeMode) {
-      getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
-      getParent()->getDrawLib()->setColor(p_theme->getUglyWheelColor());
-      getParent()->getDrawLib()->glVertex(p0+C);    
-      getParent()->getDrawLib()->glVertex(p2+C);
-      getParent()->getDrawLib()->endDraw();
-      getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
-      getParent()->getDrawLib()->setColor(p_theme->getUglyWheelColor());
-      getParent()->getDrawLib()->glVertex(p1+C);
-      getParent()->getDrawLib()->glVertex(p3+C);
-      getParent()->getDrawLib()->endDraw();
+      glBegin(GL_LINE_STRIP);
+      glColor3ub(GET_RED(p_theme->getUglyWheelColor()),GET_GREEN(p_theme->getUglyWheelColor()),GET_BLUE(p_theme->getUglyWheelColor()));
+      _Vertex(p0+C);    
+      _Vertex(p2+C);
+      glEnd();
+      glBegin(GL_LINE_STRIP);
+      glColor3ub(GET_RED(p_theme->getUglyWheelColor()),GET_GREEN(p_theme->getUglyWheelColor()),GET_BLUE(p_theme->getUglyWheelColor()));
+      _Vertex(p1+C);
+      _Vertex(p3+C);
+      glEnd();
       _RenderCircle(16,p_theme->getUglyWheelColor(),C,pBikeParms->WR);
     }
 
@@ -219,11 +219,10 @@ namespace vapp {
       if(pSprite != NULL) {
 	pTexture = pSprite->getTexture();
 	if(pTexture != NULL) {
-	  if(pBike->Dir == DD_RIGHT) {
+	  if(pBike->Dir == DD_RIGHT)
 	    _RenderAlphaBlendedSection(pTexture,p3+C,p2+C,p1+C,p0+C);
-	  } else {
+	  else
 	    _RenderAlphaBlendedSection(pTexture,p2+C,p3+C,p0+C,p1+C);
-	  }
 	}
       }
     }
@@ -239,45 +238,13 @@ namespace vapp {
         p2 = pBike->LowerBodyP - Vector2f(-Sv.y,Sv.x)*0.24f - Sv*0.1f;
         p3 = pBike->ShoulderP - Vector2f(-Sv.y,Sv.x)*0.24f + Sv*0.46f;
 
-	      pSprite = p_theme->getTorso();
-	      if(pSprite != NULL) {
-	        pTexture = pSprite->getTexture();
-	        if(pTexture != NULL) {
-	          _RenderAlphaBlendedSection(pTexture,p1,p2,p3,p0);
-	        }
-	      }        
-
-        /* Draw rider upper leg */
-        Sv = pBike->LowerBodyP - pBike->KneeP;
-        Sv.normalize();         
-        p0 = pBike->LowerBodyP + Vector2f(-Sv.y,Sv.x)*0.20f + Sv*0.14f;
-        p1 = pBike->KneeP + Vector2f(-Sv.y,Sv.x)*0.15f + Sv*0.0f;
-        p2 = pBike->KneeP - Vector2f(-Sv.y,Sv.x)*0.15f + Sv*0.0f;
-        p3 = pBike->LowerBodyP - Vector2f(-Sv.y,Sv.x)*0.1f + Sv*0.14f;
-
-	      pSprite = p_theme->getUpperLeg();
-	      if(pSprite != NULL) {
-	        pTexture = pSprite->getTexture();
-	        if(pTexture != NULL) {
-	          _RenderAlphaBlendedSection(pTexture,p0,p1,p2,p3);
-	        }
-	      }        
-
-        /* Draw rider lower leg */
-        Sv = pBike->KneeP - pBike->FootP;
-        Sv.normalize();         
-        p0 = pBike->KneeP + Vector2f(-Sv.y,Sv.x)*0.23f + Sv*0.01f;
-        p1 = pBike->FootP + Vector2f(-Sv.y,Sv.x)*0.2f;
-        p2 = pBike->FootP - Vector2f(-Sv.y,Sv.x)*0.2f;
-        p3 = pBike->KneeP - Vector2f(-Sv.y,Sv.x)*0.23f + Sv*0.1f;
-
-	      pSprite = p_theme->getLowerLeg();
-	      if(pSprite != NULL) {
-	        pTexture = pSprite->getTexture();
-	        if(pTexture != NULL) {
-	          _RenderAlphaBlendedSection(pTexture,p1,p2,p3,p0);        
-	        }
-	      }
+	pSprite = p_theme->getTorso();
+	if(pSprite != NULL) {
+	  pTexture = pSprite->getTexture();
+	  if(pTexture != NULL) {
+	    _RenderAlphaBlendedSection(pTexture,p1,p2,p3,p0);
+	  }
+	}        
 
         /* Draw rider upper arm */
         Sv = pBike->ShoulderP - pBike->ElbowP;
@@ -287,13 +254,13 @@ namespace vapp {
         p2 = pBike->ElbowP - Vector2f(-Sv.y,Sv.x)*0.10f - Sv*0.05f;
         p3 = pBike->ShoulderP - Vector2f(-Sv.y,Sv.x)*0.10f;
 
-	      pSprite = p_theme->getUpperArm();
-	      if(pSprite != NULL) {
-	        pTexture = pSprite->getTexture();
-	        if(pTexture != NULL) {
-	          _RenderAlphaBlendedSection(pTexture,p1,p2,p3,p0);
-	        }
-	      }        
+	pSprite = p_theme->getUpperArm();
+	if(pSprite != NULL) {
+	  pTexture = pSprite->getTexture();
+	  if(pTexture != NULL) {
+	    _RenderAlphaBlendedSection(pTexture,p1,p2,p3,p0);
+	  }
+	}        
 
         /* Draw rider lower arm */
         Sv = pBike->ElbowP - pBike->HandP;
@@ -303,26 +270,58 @@ namespace vapp {
         p2 = pBike->HandP - Vector2f(-Sv.y,Sv.x)*0.10f - Sv*0.05f;
         p3 = pBike->ElbowP - Vector2f(-Sv.y,Sv.x)*0.10f + Sv*0.09f;
         
-	      pSprite = p_theme->getLowerArm();
-	      if(pSprite != NULL) {
-	        pTexture = pSprite->getTexture();
-	        if(pTexture != NULL) {
-	          _RenderAlphaBlendedSection(pTexture,p3,p2,p1,p0);
-	        }
-	      }        
+	pSprite = p_theme->getLowerArm();
+	if(pSprite != NULL) {
+	  pTexture = pSprite->getTexture();
+	  if(pTexture != NULL) {
+	    _RenderAlphaBlendedSection(pTexture,p3,p2,p1,p0);
+	  }
+	}        
+
+        /* Draw rider upper leg */
+        Sv = pBike->LowerBodyP - pBike->KneeP;
+        Sv.normalize();         
+        p0 = pBike->LowerBodyP + Vector2f(-Sv.y,Sv.x)*0.20f + Sv*0.14f;
+        p1 = pBike->KneeP + Vector2f(-Sv.y,Sv.x)*0.15f + Sv*0.0f;
+        p2 = pBike->KneeP - Vector2f(-Sv.y,Sv.x)*0.15f + Sv*0.0f;
+        p3 = pBike->LowerBodyP - Vector2f(-Sv.y,Sv.x)*0.1f + Sv*0.14f;
+
+	pSprite = p_theme->getUpperLeg();
+	if(pSprite != NULL) {
+	  pTexture = pSprite->getTexture();
+	  if(pTexture != NULL) {
+	    _RenderAlphaBlendedSection(pTexture,p0,p1,p2,p3);
+	  }
+	}        
+
+        /* Draw rider lower leg */
+        Sv = pBike->KneeP - pBike->FootP;
+        Sv.normalize();         
+        p0 = pBike->KneeP + Vector2f(-Sv.y,Sv.x)*0.23f + Sv*0.01f;
+        p1 = pBike->FootP + Vector2f(-Sv.y,Sv.x)*0.2f;
+        p2 = pBike->FootP - Vector2f(-Sv.y,Sv.x)*0.2f;
+        p3 = pBike->KneeP - Vector2f(-Sv.y,Sv.x)*0.23f + Sv*0.1f;
+
+	pSprite = p_theme->getLowerLeg();
+	if(pSprite != NULL) {
+	  pTexture = pSprite->getTexture();
+	  if(pTexture != NULL) {
+	    _RenderAlphaBlendedSection(pTexture,p1,p2,p3,p0);        
+	  }
+	}
       }
 
       if(m_bUglyMode || m_bTestThemeMode) {
         /* Draw it ugly */
-	getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
-	getParent()->getDrawLib()->setColor(p_theme->getUglyRiderColor());
-        getParent()->getDrawLib()->glVertex(pBike->FootP);
-        getParent()->getDrawLib()->glVertex(pBike->KneeP);
-        getParent()->getDrawLib()->glVertex(pBike->LowerBodyP);
-        getParent()->getDrawLib()->glVertex(pBike->ShoulderP);
-        getParent()->getDrawLib()->glVertex(pBike->ElbowP);
-        getParent()->getDrawLib()->glVertex(pBike->HandP);
-	getParent()->getDrawLib()->endDraw();
+        glBegin(GL_LINE_STRIP);
+        glColor3ub(GET_RED(p_theme->getUglyRiderColor()),GET_GREEN(p_theme->getUglyRiderColor()),GET_BLUE(p_theme->getUglyRiderColor()));
+        _Vertex(pBike->FootP);
+        _Vertex(pBike->KneeP);
+        _Vertex(pBike->LowerBodyP);
+        _Vertex(pBike->ShoulderP);
+        _Vertex(pBike->ElbowP);
+        _Vertex(pBike->HandP);
+        glEnd();
         _RenderCircle(10,p_theme->getUglyRiderColor(),pBike->HeadP,pBikeParms->fHeadSize);
       }
     }
@@ -336,45 +335,13 @@ namespace vapp {
         p2 = pBike->LowerBody2P - Vector2f(-Sv.y,Sv.x)*0.24f - Sv*0.1f;
         p3 = pBike->Shoulder2P - Vector2f(-Sv.y,Sv.x)*0.24f + Sv*0.46f;
 
-	      pSprite = p_theme->getTorso();
-	      if(pSprite != NULL) {
-	        pTexture = pSprite->getTexture();
-	        if(pTexture != NULL) {
-	          _RenderAlphaBlendedSection(pTexture,p2,p1,p0,p3);        
-	        }
-	      }                
-
-        /* Draw rider upper leg */
-        Sv = pBike->LowerBody2P - pBike->Knee2P;
-        Sv.normalize();         
-        p0 = pBike->LowerBody2P + Vector2f(-Sv.y,Sv.x)*0.20f + Sv*0.14f;
-        p1 = pBike->Knee2P + Vector2f(-Sv.y,Sv.x)*0.15f + Sv*0.0f;
-        p2 = pBike->Knee2P - Vector2f(-Sv.y,Sv.x)*0.15f + Sv*0.0f;
-        p3 = pBike->LowerBody2P - Vector2f(-Sv.y,Sv.x)*0.1f + Sv*0.14f;
-
-	      pSprite = p_theme->getUpperLeg();
-	      if(pSprite != NULL) {
-	        pTexture = pSprite->getTexture();
-	        if(pTexture != NULL) {
-	          _RenderAlphaBlendedSection(pTexture,p3,p2,p1,p0);        
-	        }
-	      }
-
-        /* Draw rider lower leg */
-        Sv = pBike->Knee2P - pBike->Foot2P;
-        Sv.normalize();         
-        p0 = pBike->Knee2P + Vector2f(-Sv.y,Sv.x)*0.23f + Sv*0.01f;
-        p1 = pBike->Foot2P + Vector2f(-Sv.y,Sv.x)*0.2f;
-        p2 = pBike->Foot2P - Vector2f(-Sv.y,Sv.x)*0.2f;
-        p3 = pBike->Knee2P - Vector2f(-Sv.y,Sv.x)*0.23f + Sv*0.1f;
-
-	      pSprite = p_theme->getLowerLeg();
-	      if(pSprite != NULL) {
-	        pTexture = pSprite->getTexture();
-	        if(pTexture != NULL) {
-	          _RenderAlphaBlendedSection(pTexture,p2,p1,p0,p3);        
-	        }
-	      }
+	pSprite = p_theme->getTorso();
+	if(pSprite != NULL) {
+	  pTexture = pSprite->getTexture();
+	  if(pTexture != NULL) {
+	    _RenderAlphaBlendedSection(pTexture,p2,p1,p0,p3);        
+	  }
+	}                
 
         /* Draw rider upper arm */
         Sv = pBike->Shoulder2P - pBike->Elbow2P;
@@ -384,13 +351,13 @@ namespace vapp {
         p2 = pBike->Elbow2P - Vector2f(-Sv.y,Sv.x)*0.10f - Sv*0.05f;
         p3 = pBike->Shoulder2P - Vector2f(-Sv.y,Sv.x)*0.10f;
 
-	      pSprite = p_theme->getUpperArm();
-	      if(pSprite != NULL) {
-	        pTexture = pSprite->getTexture();
-	        if(pTexture != NULL) {
-	          _RenderAlphaBlendedSection(pTexture,p2,p1,p0,p3);        
-	        }
-	      }        
+	pSprite = p_theme->getUpperArm();
+	if(pSprite != NULL) {
+	  pTexture = pSprite->getTexture();
+	  if(pTexture != NULL) {
+	    _RenderAlphaBlendedSection(pTexture,p2,p1,p0,p3);        
+	  }
+	}        
 
         /* Draw rider lower arm */
         Sv = pBike->Elbow2P - pBike->Hand2P;
@@ -400,29 +367,75 @@ namespace vapp {
         p2 = pBike->Hand2P - Vector2f(-Sv.y,Sv.x)*0.10f - Sv*0.05f;
         p3 = pBike->Elbow2P - Vector2f(-Sv.y,Sv.x)*0.10f + Sv*0.09f;
 
-	      pSprite = p_theme->getLowerArm();
-	      if(pSprite != NULL) {
-	        pTexture = pSprite->getTexture();
-	        if(pTexture != NULL) {
-	          _RenderAlphaBlendedSection(pTexture,p0,p1,p2,p3);        
-	        }
-	      }
+	pSprite = p_theme->getLowerArm();
+	if(pSprite != NULL) {
+	  pTexture = pSprite->getTexture();
+	  if(pTexture != NULL) {
+	    _RenderAlphaBlendedSection(pTexture,p0,p1,p2,p3);        
+	  }
+	}
+
+        /* Draw rider upper leg */
+        Sv = pBike->LowerBody2P - pBike->Knee2P;
+        Sv.normalize();         
+        p0 = pBike->LowerBody2P + Vector2f(-Sv.y,Sv.x)*0.20f + Sv*0.14f;
+        p1 = pBike->Knee2P + Vector2f(-Sv.y,Sv.x)*0.15f + Sv*0.0f;
+        p2 = pBike->Knee2P - Vector2f(-Sv.y,Sv.x)*0.15f + Sv*0.0f;
+        p3 = pBike->LowerBody2P - Vector2f(-Sv.y,Sv.x)*0.1f + Sv*0.14f;
+
+	pSprite = p_theme->getUpperLeg();
+	if(pSprite != NULL) {
+	  pTexture = pSprite->getTexture();
+	  if(pTexture != NULL) {
+	    _RenderAlphaBlendedSection(pTexture,p3,p2,p1,p0);        
+	  }
+	}
+
+        /* Draw rider lower leg */
+        Sv = pBike->Knee2P - pBike->Foot2P;
+        Sv.normalize();         
+        p0 = pBike->Knee2P + Vector2f(-Sv.y,Sv.x)*0.23f + Sv*0.01f;
+        p1 = pBike->Foot2P + Vector2f(-Sv.y,Sv.x)*0.2f;
+        p2 = pBike->Foot2P - Vector2f(-Sv.y,Sv.x)*0.2f;
+        p3 = pBike->Knee2P - Vector2f(-Sv.y,Sv.x)*0.23f + Sv*0.1f;
+
+	pSprite = p_theme->getLowerLeg();
+	if(pSprite != NULL) {
+	  pTexture = pSprite->getTexture();
+	  if(pTexture != NULL) {
+	    _RenderAlphaBlendedSection(pTexture,p2,p1,p0,p3);        
+	  }
+	}
       }
 
       if(m_bUglyMode || m_bTestThemeMode) {
         /* Draw it ugly */
-	getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
-	getParent()->getDrawLib()->setColor(p_theme->getUglyRiderColor());
-        getParent()->getDrawLib()->glVertex(pBike->Foot2P);
-        getParent()->getDrawLib()->glVertex(pBike->Knee2P);
-        getParent()->getDrawLib()->glVertex(pBike->LowerBody2P);
-        getParent()->getDrawLib()->glVertex(pBike->Shoulder2P);
-        getParent()->getDrawLib()->glVertex(pBike->Elbow2P);
-        getParent()->getDrawLib()->glVertex(pBike->Hand2P);
-        getParent()->getDrawLib()->endDraw();
+        glBegin(GL_LINE_STRIP);
+        glColor3ub(GET_RED(p_theme->getUglyRiderColor()),GET_GREEN(p_theme->getUglyRiderColor()),GET_BLUE(p_theme->getUglyRiderColor()));
+        _Vertex(pBike->Foot2P);
+        _Vertex(pBike->Knee2P);
+        _Vertex(pBike->LowerBody2P);
+        _Vertex(pBike->Shoulder2P);
+        _Vertex(pBike->Elbow2P);
+        _Vertex(pBike->Hand2P);
+        glEnd();
         _RenderCircle(10,p_theme->getUglyRiderColor(),pBike->Head2P,pBikeParms->fHeadSize);
       }
     }   
+    
+    /* New wheel-spin particles? */
+    if(getGameObject()->isWheelSpinning()) {
+      Particle *pPrevDebris = _GetNewestParticle(PT_DEBRIS);
+      
+      /* Limit particles to one every 0.01 seconds */
+      if(pPrevDebris==NULL || getGameObject()->getTime() - pPrevDebris->fSpawnTime > 0.01f) {      
+        if(randomNum(0,1) < 0.8f) {
+          Particle *pNewParticle = spawnParticle(PT_DEBRIS,getGameObject()->getWheelSpinPoint(),
+                                                getGameObject()->getWheelSpinDir(),4);
+          pNewParticle->bFront = false;                                              
+        }                                             
+      }
+    }
   }
 
   void GameRenderer::_DrawRotatedMarker(Vector2f Pos,dReal *pfRot) {
@@ -451,16 +464,16 @@ namespace vapp {
       p3 = o3;
     }
 
-    getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
-    getParent()->getDrawLib()->setColorRGB(255,255,255);
-    getParent()->getDrawLib()->glVertex(p0+C);    
-    getParent()->getDrawLib()->glVertex(p2+C);
-    getParent()->getDrawLib()->endDraw();
-    getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
-    getParent()->getDrawLib()->setColorRGB(255,255,255);
-    getParent()->getDrawLib()->glVertex(p1+C);    
-    getParent()->getDrawLib()->glVertex(p3+C);
-    getParent()->getDrawLib()->endDraw();
+    glBegin(GL_LINE_STRIP);
+    glColor3f(1,1,1);
+    _Vertex(p0+C);    
+    _Vertex(p2+C);
+    glEnd();
+    glBegin(GL_LINE_STRIP);
+    glColor3f(1,1,1);
+    _Vertex(p1+C);    
+    _Vertex(p3+C);
+    glEnd();
   }
   
 }

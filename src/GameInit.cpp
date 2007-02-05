@@ -50,36 +50,39 @@ namespace vapp {
   Select display mode
   ===========================================================================*/
   void GameApp::selectDisplayMode(int *pnWidth,int *pnHeight,int *pnBPP,bool *pbWindowed) {
-    *pnWidth = m_Config.getInteger("DisplayWidth");
-    *pnHeight = m_Config.getInteger("DisplayHeight");
-    *pnBPP = m_Config.getInteger("DisplayBPP");
-    *pbWindowed = m_Config.getBool("DisplayWindowed");
+    if(!isCmdDispWidth() && !isCmdDispHeight()) {
+      *pnWidth = m_Config.getInteger("DisplayWidth");
+      *pnHeight = m_Config.getInteger("DisplayHeight");
+    }
+    
+    if(!isCmdDispBPP()) {
+      *pnBPP = m_Config.getInteger("DisplayBPP");
+    }
+    
+    if(!isCmdDispWindowed()) {
+      *pbWindowed = m_Config.getBool("DisplayWindowed");
+    }
   }  
   
-  std::string GameApp::selectDrawLibMode() {
-    return m_Config.getString("DrawLib");
-  }
-
   /*===========================================================================
   Update loading screen
   ===========================================================================*/
   void GameApp::_UpdateLoadingScreen(float fDone,Texture *pLoadingScreen,const std::string &NextTask) {
     if(pLoadingScreen != NULL) {
-      getDrawLib()->clearGraphics();
-      getDrawLib()->resetGraphics();
-      getDrawLib()->drawImage(Vector2f(getDrawLib()->getDispWidth()/2 - 256,getDrawLib()->getDispHeight()/2 - 40),
-                Vector2f(getDrawLib()->getDispWidth()/2 + 256,getDrawLib()->getDispHeight()/2 + 40),
+      glClear(GL_COLOR_BUFFER_BIT);
+      drawImage(Vector2f(getDispWidth()/2 - 256,getDispHeight()/2 - 40),
+                Vector2f(getDispWidth()/2 + 256,getDispHeight()/2 + 40),
                 pLoadingScreen,MAKE_COLOR(255,255,255,255));
-      getDrawLib()->drawBox(Vector2f(getDrawLib()->getDispWidth()/2 + 256 - (512.0f*(1-fDone)),getDrawLib()->getDispHeight()/2 - 40),              
-              Vector2f(getDrawLib()->getDispWidth()/2 + 256,getDrawLib()->getDispHeight()/2 - 25),              
+      drawBox(Vector2f(getDispWidth()/2 + 256 - (512.0f*(1-fDone)),getDispHeight()/2 - 40),              
+              Vector2f(getDispWidth()/2 + 256,getDispHeight()/2 - 25),              
               0,MAKE_COLOR(0,0,0,128));
-      getDrawLib()->drawBox(Vector2f(getDrawLib()->getDispWidth()/2 + 256 - (512.0f*(1-fDone)),getDrawLib()->getDispHeight()/2 + 25),              
-              Vector2f(getDrawLib()->getDispWidth()/2 + 256,getDrawLib()->getDispHeight()/2 + 40),              
+      drawBox(Vector2f(getDispWidth()/2 + 256 - (512.0f*(1-fDone)),getDispHeight()/2 + 25),              
+              Vector2f(getDispWidth()/2 + 256,getDispHeight()/2 + 40),              
               0,MAKE_COLOR(0,0,0,128));
              
-      getDrawLib()->drawText(Vector2f(getDrawLib()->getDispWidth()/2 - 256,getDrawLib()->getDispHeight()/2 + 40 + 3),NextTask);
+      drawText(Vector2f(getDispWidth()/2 - 256,getDispHeight()/2 + 40 + 3),NextTask);
               
-      getDrawLib()->flushGraphics();
+      SDL_GL_SwapBuffers();
     }
   }
   
@@ -112,7 +115,12 @@ namespace vapp {
               &m_ProxySettings
 #endif
               );
-    reloadTheme();
+    try {
+      m_theme.load(m_themeChoicer->getFileName(getConfigThemeName(m_themeChoicer)));
+    } catch(Exception &e) {
+      /* unable to load the theme, load the default one */
+      m_theme.load(m_themeChoicer->getFileName(THEME_DEFAULT_THEMENAME));
+    }
 
     /* Profiles */
     Log("Loading profiles...");
@@ -137,9 +145,43 @@ namespace vapp {
     m_GameStats.loadXML("stats.xml");
     if(m_pPlayer != NULL)
       m_GameStats.xmotoStarted(m_pPlayer->PlayerName);
-   
+    
+    /* Update replays */
+    m_ReplayList.initFromDir();
+    
+    /* List replays? */  
+    if(m_bListReplays) {
+      std::vector<ReplayInfo *> *Replays = m_ReplayList.findReplays();
+      printf("\nReplay                    Level                     Player\n");
+      printf("-----------------------------------------------------------------------\n");
+      for(int i=0;i<Replays->size();i++) {
+        std::string LevelDesc;
+        
+        if((*Replays)[i]->Level.length() == 6 &&
+           (*Replays)[i]->Level[0] == '_' && (*Replays)[i]->Level[1] == 'i' &&
+           (*Replays)[i]->Level[2] == 'L' && (*Replays)[i]->Level[5] == '_') {
+          int nNum;
+          sscanf((*Replays)[i]->Level.c_str(),"_iL%d_",&nNum);
+          char cBuf[256];
+          sprintf(cBuf,"#%d",nNum+1);
+          LevelDesc = cBuf;
+        }
+        else LevelDesc = (*Replays)[i]->Level;
+      
+        printf("%-25s %-25s %-25s\n",
+               (*Replays)[i]->Name.c_str(),
+               LevelDesc.c_str(),
+               (*Replays)[i]->Player.c_str());
+      }
+      if(Replays->empty()) printf("(none)\n");
+      delete Replays;
+      quit();
+      return;
+    }
+
+    
     /* Init sound system */
-    if(!getDrawLib()->isNoGraphics()) {
+    if(!isNoGraphics()) {
       Log("Initializing sound system...");
       Sound::init(&m_Config);
       if(!Sound::isEnabled()) {
@@ -165,72 +207,16 @@ namespace vapp {
     if(m_GraphDebugInfoFile != "") m_Renderer.loadDebugInfo(m_GraphDebugInfoFile);
 
     Texture *pLoadingScreen = NULL;
-    if(!getDrawLib()->isNoGraphics()) {    
+    if(!isNoGraphics()) {    
       /* Show loading screen */
       pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "Loading");
 
       if(pSprite != NULL) {
-	pLoadingScreen = pSprite->getTexture(false, true);
+  pLoadingScreen = pSprite->getTexture(false, true);
       }
-    }
 
-    /* Update replays */
-    _UpdateLoadingScreen((1.0f/9.0f) * 0,pLoadingScreen,GAMETEXT_LOADINGREPLAYS);
-    
-    try {
-      m_ReplayList.initFromCache();
-    } catch(Exception &e) {
-      m_ReplayList.initFromDir();
-    }    
-    
-    /* List replays? */  
-    if(m_bListReplays) {
-      std::vector<ReplayInfo *> *Replays = m_ReplayList.findReplays();
-      printf("\nReplay                    Level                     Player\n");
-      printf("-----------------------------------------------------------------------\n");
-      for(int i=0;i<Replays->size();i++) {
-	std::string LevelDesc;
-	
-	if((*Replays)[i]->Level.length() == 6 &&
-	   (*Replays)[i]->Level[0] == '_' && (*Replays)[i]->Level[1] == 'i' &&
-	   (*Replays)[i]->Level[2] == 'L' && (*Replays)[i]->Level[5] == '_') {
-	  int nNum;
-	  sscanf((*Replays)[i]->Level.c_str(),"_iL%d_",&nNum);
-	  char cBuf[256];
-	  sprintf(cBuf,"#%d",nNum+1);
-	  LevelDesc = cBuf;
-	}
-	else LevelDesc = (*Replays)[i]->Level;
-	
-	printf("%-25s %-25s %-25s\n",
-	       (*Replays)[i]->Name.c_str(),
-	       LevelDesc.c_str(),
-	       (*Replays)[i]->Player.c_str());
-      }
-	if(Replays->empty()) printf("(none)\n");
-      delete Replays;
-      quit();
-      return;
-    }
-    
-    if(m_bDisplayInfosReplay) {
-      Replay v_replay;
-      std::string v_levelId;
-      float v_frameRate;
-      std::string v_player;
-      
-      v_levelId = v_replay.openReplay(m_InfosReplay, &v_frameRate, v_player, true);
-      if(v_levelId == "") {
-	throw Exception("Invalid replay");
-      }
-      
-      quit();
-      return;	
-    }
-    
-    if(!getDrawLib()->isNoGraphics()) {  
       _UpdateLoadingScreen((1.0f/9.0f) * 0,pLoadingScreen,GAMETEXT_LOADINGSOUNDS);
-      
+
       if(Sound::isEnabled()) {
         /* Load sounds */
         Sound::loadSample("Sounds/NewHighscore.ogg");
@@ -297,7 +283,7 @@ namespace vapp {
       m_pCursor = NULL;
       pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "Cursor");
       if(pSprite != NULL) {
-        m_pCursor = pSprite->getTexture(false, true, FM_LINEAR);
+	      m_pCursor = pSprite->getTexture(false, true, FM_LINEAR);
       }
 
 #if defined(SUPPORT_WEBACCESS)  
@@ -312,25 +298,36 @@ namespace vapp {
     }
     
     /* Test level cache directory */
-    LevelsManager::checkPrerequires(m_bEnableLevelCache);
+    std::string LCachePath = FS::getUserDir() + std::string("/LCache");
+    if(m_bEnableLevelCache && !FS::isDir(LCachePath)) {
+      m_bEnableLevelCache = false;
+      Log("** Warning ** : Level cache directory not found, forcing caching off!");
+    }
     
     /* Should we clean the level cache? (can also be done when disabled) */
     if(m_bCleanCache) {
-      LevelsManager::cleanCache();
+      /* Find all .blv-files in the directory */
+      std::vector<std::string> BlvFiles = FS::findPhysFiles("LCache/*.blv");
+      Log("Trying to clean %d files from level cache...",BlvFiles.size());
+      int nNumDeleted = 0;
+      for(int i=0;i<BlvFiles.size();i++) {
+        if(FS::deleteFile(BlvFiles[i]))
+          nNumDeleted++;
+      }
+      Log(" %d file%s deleted succesfully",nNumDeleted,nNumDeleted==1?"":"s");
     }
      
-    try {
-      m_levelsManager.loadLevelsFromIndex();
-    } catch(Exception &e) {
-      Log(std::string("Unable to load levels from index:\n" + e.getMsg()).c_str());
-      m_levelsManager.reloadLevelsFromFiles(m_bEnableLevelCache);
-    }
+    /* Find all .lvl files in the level dir and load them */    
+    m_nNumLevels = 0;
+    std::vector<std::string> LvlFiles = FS::findPhysFiles("Levels/*.lvl",true);
+    int nNumCached = _LoadLevels(LvlFiles);
     
     /* -listlevels? */
     if(m_bListLevels) {
-      m_levelsManager.printLevelsList();
+      for(int i=0;i<m_nNumLevels;i++) {          
+        printf("%-25s %-25s %-25s\n",FS::getFileBaseName(m_Levels[i].getFileName()).c_str(),m_Levels[i].getID().c_str(),m_Levels[i].getLevelInfo()->Name.c_str());
+      }
     }
-
     _UpdateLoadingScreen((1.0f/9.0f) * 5,pLoadingScreen,GAMETEXT_INITRENDERER);
     
     if(m_bListLevels) {
@@ -338,6 +335,9 @@ namespace vapp {
       return;
     }
     
+    Log(" %d level%s loaded (%d from cache)",m_nNumLevels,m_nNumLevels==1?"":"s",nNumCached);
+    Log(" %d level pack%s",m_LevelPacks.size(),m_LevelPacks.size()==1?"":"s");
+
     #if defined(SUPPORT_WEBACCESS)    
       /* Fetch highscores from web? */
       if(m_pWebHighscores != NULL) delete m_pWebHighscores;
@@ -372,7 +372,7 @@ namespace vapp {
 
     #endif
         
-    if(!getDrawLib()->isNoGraphics()) {
+    if(!isNoGraphics()) {
       /* Initialize renderer */
       m_Renderer.init();
       _UpdateLoadingScreen((1.0f/9.0f) * 7,pLoadingScreen,GAMETEXT_INITMENUS);
@@ -381,7 +381,7 @@ namespace vapp {
       _InitMenus();    
       _UpdateLoadingScreen((1.0f/9.0f) * 8,pLoadingScreen,GAMETEXT_UPDATINGLEVELS);
 
-      _UpdateLevelsLists();
+      _UpdateLevelLists();
       _UpdateLoadingScreen((1.0f/9.0f) * 9,pLoadingScreen,GAMETEXT_INITINPUT);      
       
       /* Init input system */
@@ -389,7 +389,7 @@ namespace vapp {
     }
         
     /* What to do? */
-    if(m_PlaySpecificLevel != "" && !getDrawLib()->isNoGraphics()) {
+    if(m_PlaySpecificLevel != "" && !isNoGraphics()) {
       /* ======= PLAY SPECIFIC LEVEL ======= */
       m_StateAfterPlaying = GS_MENU;
       setState(GS_PREPLAYING);
@@ -402,7 +402,7 @@ namespace vapp {
     }
     else {
       /* Graphics? */
-      if(getDrawLib()->isNoGraphics())
+      if(isNoGraphics())
         throw Exception("menu requires graphics");
         
       /* Do we have a player profile? */
@@ -422,7 +422,53 @@ namespace vapp {
       }
     }            
   }
+  
+  /*===========================================================================
+  Load some levels...
+  ===========================================================================*/
+  int GameApp::_LoadLevels(const std::vector<std::string> &LvlFiles) {
+    int nNumCached = 0;
+  
+    for(int i=0;i<LvlFiles.size();i++) {    
+      int j = m_nNumLevels;
+      if(j >= 2048) {
+        Log("** Warning ** : Too many levels.");
+        break;
+      }
     
+      bool bCached = false;
+      try {
+        // Load the level
+        m_Levels[j].setFileName( LvlFiles[i] );
+        bCached = m_Levels[j].load(m_bEnableLevelCache);
+        
+        // Check for ID conflict
+        for(int k=0;k<m_nNumLevels;k++) {
+          if(m_Levels[k].getID() == m_Levels[j].getID()) {
+            /* Conflict! */
+            Log("** Warning ** : More than one level with ID '%s'!",m_Levels[k].getID().c_str());
+            Log("                (%s)",m_Levels[j].getFileName().c_str());
+            Log("                (%s)",m_Levels[k].getFileName().c_str());
+            if(bCached) Log("                (cached)");
+            throw Exception("Duplicate level ID");
+          }
+        }
+        
+        if (bCached) ++nNumCached;
+        ++m_nNumLevels;
+        
+        /* Update level pack manager */
+        _UpdateLevelPackManager(&m_Levels[j]);
+      
+      } catch(Exception &e) {
+        Log("** Warning ** : Problem loading '%s' (%s)",
+          LvlFiles[i].c_str(),e.getMsg().c_str());            
+      }
+    }
+      
+    return nNumCached;
+  }
+  
   /*===========================================================================
   Shutdown game
   ===========================================================================*/
@@ -441,10 +487,14 @@ namespace vapp {
     if(m_pCredits != NULL)
       delete m_pCredits;
   
-    m_levelsManager.saveXml();
+    for(int i=0;i<m_LevelPacks.size();i++) {
+      delete m_LevelPacks[i];
+    }
+    m_LevelPacks.clear();
+    
     m_GameStats.saveXML("stats.xml");
       
-    if(!getDrawLib()->isNoGraphics()) {
+    if(!isNoGraphics()) {
       m_Renderer.unprepareForNewLevel(); /* just to be sure, shutdown can happen quite hard */
       m_Renderer.shutdown();
       m_InputHandler.uninit();
@@ -470,38 +520,13 @@ namespace vapp {
     Sound::uninit();
 
     m_Config.saveFile();
-
     m_Profiles.saveFile();
 
-    if(!getDrawLib()->isNoGraphics()) {
+    if(!isNoGraphics()) {
       UITextDraw::uninitTextDrawing();  
     }
   }  
   
-  void GameApp::PlaySpecificLevel(std::string i_level) {
-    m_PlaySpecificLevel = i_level;
-          
-    /* If it is a plain number, it's for a internal level */
-    bool v_isANumber =  true;
-    for(int i=0; i<m_PlaySpecificLevel.length(); i++) {
-      if(m_PlaySpecificLevel[i] < '0' || m_PlaySpecificLevel[i] > '9') {
-	v_isANumber = false;
-      }
-    }
-    if(v_isANumber) {
-      int nNum = atoi(m_PlaySpecificLevel.c_str());
-      if(nNum > 0) {
-	char cBuf[256];
-	sprintf(cBuf,"_iL%02d_",nNum-1);
-	m_PlaySpecificLevel = cBuf;
-      }
-    }
-  }
-
-  void GameApp::PlaySpecificReplay(std::string i_replay) {
-    m_PlaySpecificReplay = i_replay;
-  }
-
   /*===========================================================================
   Handle a command-line passed argument
   ===========================================================================*/
@@ -510,7 +535,7 @@ namespace vapp {
     for(int i=0;i<UserArgs.size();i++) {
       if(UserArgs[i] == "-replay") {
         if(i+1<UserArgs.size()) {
-          PlaySpecificReplay(UserArgs[i+1]);
+          m_PlaySpecificReplay = UserArgs[i+1];
         }
         else
           throw SyntaxError("no replay specified");        
@@ -518,9 +543,18 @@ namespace vapp {
       }
       else if(UserArgs[i] == "-level") {
         if(i+1<UserArgs.size()) {
-	  PlaySpecificLevel(UserArgs[i+1]);
-        } else
-	throw SyntaxError("no level specified");        
+          m_PlaySpecificLevel = UserArgs[i+1];
+          
+          /* If it is a plain number, it's for a internal level */
+          int nNum = atoi(m_PlaySpecificLevel.c_str());
+          if(nNum > 0) {
+            char cBuf[256];
+            sprintf(cBuf,"_iL%02d_",nNum-1);
+            m_PlaySpecificLevel = cBuf;
+          }
+        }
+        else
+          throw SyntaxError("no level specified");        
         i++;
       }
       else if(UserArgs[i] == "-debug") {
@@ -542,11 +576,11 @@ namespace vapp {
       }      
       else if(UserArgs[i] == "-listlevels") {
         m_bListLevels = true;
-	m_useGraphics = false;
+        setNoGraphics(true);
       }
       else if(UserArgs[i] == "-listreplays") {
         m_bListReplays = true;
-	m_useGraphics = false;
+        setNoGraphics(true);
       }
       else if(UserArgs[i] == "-timedemo") {
         m_bTimeDemo = true;
@@ -565,26 +599,7 @@ namespace vapp {
       }
       else if(UserArgs[i] == "-cleancache") {
         m_bCleanCache = true;
-     } else if(UserArgs[i] == "-replayInfos") {
-       if(i+1<UserArgs.size()) {
-	 m_useGraphics = false;
-	 m_bDisplayInfosReplay = true;
-	 m_InfosReplay = UserArgs[i+1];
-       } else
-       throw SyntaxError("no replay specified");        
-       i++;
-     } else {
-       /* check if the parameter is a file */
-       std::string v_extension = FS::getFileExtension(UserArgs[i]);
-
-       /* replays */
-       if(v_extension == "rpl") {
-	   PlaySpecificReplay(UserArgs[i]);
-       } else {
-	 /* unknown extension */
-	 throw SyntaxError("Invalid argument");
-       }
-     }
+      }
     }
   }
 
@@ -603,8 +618,8 @@ namespace vapp {
     printf("\t-ugly\n\t\tEnable 'ugly' mode, suitable for computers without\n");
              printf("\t\ta good OpenGL-enabled video card.\n");
     printf("\t-testTheme\n\t\tDisplay forms around the theme to check it.\n");
-    printf("\t-benchmark\n\t\tOnly meaningful when combined with -replay\n");
-    printf("\t\tand -timedemo. Useful to determine the graphics\n");
+    printf("\t-benchmark\n\t\tOnly meaningful when combined with -replay and\n");
+    printf("\t\t-timedemo. Useful to determine the graphics\n");
              printf("\t\tperformance.\n");
     printf("\t-cleancache\n\t\tDeletes the content of the level cache.\n");
   }  
@@ -622,7 +637,6 @@ namespace vapp {
     m_Config.createVar( "DisplayWindowed",        "false" );
     m_Config.createVar( "MenuBackgroundGraphics", "High" );
     m_Config.createVar( "GameGraphics",           "High" );
-    m_Config.createVar( "DrawLib",                "OPENGL" );
         
     /* Audio */
     m_Config.createVar( "AudioEnable",            "true" );
@@ -650,7 +664,6 @@ namespace vapp {
       m_Config.createVar( "KeyCameraMoveXDown",     "Pad 4" );
       m_Config.createVar( "KeyCameraMoveYUp",       "Pad 8" );
       m_Config.createVar( "KeyCameraMoveYDown",     "Pad 2" );
-      m_Config.createVar( "KeyAutoZoom",            "Pad 5" );
     #endif
         
     m_Config.createVar( "JoyIdx1",                "0" );

@@ -126,11 +126,9 @@ int tim_png_load(tim_session_t *pSession,tim_image_t **ppImage,tim_image_info_t 
   if(setjmp(png_jmpbuf(PngPtr))) {
     png_destroy_read_struct(&PngPtr,&InfoPtr,&EndInfo);
     tim_close(pSession,Env.pvFile);
-    if(ppImage != NULL && *ppImage != NULL) {
-      tim_destroy_image(*ppImage);
-      *ppImage=NULL;
-    }
-    if(pRowPointers != NULL) tim_free(pSession,pRowPointers);
+    if(*ppImage) tim_destroy_image(*ppImage);
+    *ppImage=NULL;
+    if(pRowPointers) tim_free(pSession,pRowPointers);
     return TIM_RV_ERR_LIBRARY;
   }
 	

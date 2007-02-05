@@ -32,9 +32,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <time.h> 
 #include <ctime>
 #include <iostream>
-//#include <locale> /* can this safely be removed? */
+#include <locale>
 
-#include "helpers/SwapEndian.h"
+#include <arch/SwapEndian.h>
 
 namespace vapp {
 
@@ -179,7 +179,7 @@ namespace vapp {
     FS::closeFile(pfh);
   }
   
-  std::string Replay::openReplay(const std::string &FileName,float *pfFrameRate,std::string &Player, bool bDisplayInformation) {
+  std::string Replay::openReplay(const std::string &FileName,float *pfFrameRate,std::string &Player) {
     /* Try opening as if it is a full path */
     FileHandle *pfh = FS::openIFile(FileName);
     if(pfh == NULL) {        
@@ -197,9 +197,6 @@ namespace vapp {
     
     /* Read header */
     int nVersion = FS::readByte(pfh); 
-    if(bDisplayInformation) {
-      printf("%-30s: %i\n", "Replay file version", nVersion);
-    }
         
     /* Supported version? */
     if(nVersion != 0 && nVersion != 1) {
@@ -217,53 +214,31 @@ namespace vapp {
     
       /* Read level ID */
       m_LevelID = FS::readString(pfh);
-      if(bDisplayInformation) {
-	printf("%-30s: %s\n", "Level Id", m_LevelID.c_str());
-      }
 
       /* Read player name */
       Player = m_PlayerName = FS::readString(pfh);
-      if(bDisplayInformation) {
-	printf("%-30s: %s\n", "Player", Player.c_str());
-      }      
-
+      
       /* Read replay frame rate */
       m_fFrameRate = FS::readFloat_LE(pfh);
       if(pfFrameRate != NULL) *pfFrameRate = m_fFrameRate;            
 
       /* Read state size */
       m_nStateSize = FS::readInt_LE(pfh);
-      if(bDisplayInformation) {
-	printf("%-30s: %i\n", "State size", m_nStateSize);
-      } 
       
       /* Read finish time if any */
       m_bFinished = FS::readBool(pfh);
       m_fFinishTime = FS::readFloat_LE(pfh);
-      if(bDisplayInformation) {
-	if(m_bFinished) {
-	  printf("%-30s: %.2f\n", "Finish time", m_fFinishTime);
-	} else {
-	  printf("%-30s: %s\n", "Finish time", "unfinished");
-	}
-      }
 
       /* Version 1 includes event data */
       if(nVersion == 1) {
         /* Read uncompressed size */
         m_nInputEventsDataSize = FS::readInt_LE(pfh);
-	if(bDisplayInformation) {
-	  printf("%-30s: %i\n", "Events data size", m_nInputEventsDataSize);
-	} 
         m_pcInputEventsData = new char [m_nInputEventsDataSize];
         
         /* Compressed? */
         if(FS::readBool(pfh)) {
           /* Compressed */          
           int nCompressedEventsSize = FS::readInt_LE(pfh);
-	  if(bDisplayInformation) {
-	    printf("%-30s: %i\n", "Compressed events data size", nCompressedEventsSize);
-	  } 
           
           char *pcCompressedEvents = new char [nCompressedEventsSize];
           FS::readBuf(pfh,pcCompressedEvents,nCompressedEventsSize);
@@ -295,36 +270,16 @@ namespace vapp {
       
       /* Read chunks */
       int nNumChunks = FS::readInt_LE(pfh);
-      if(bDisplayInformation) {
-	printf("%-30s: %i\n", "Number of chunks", nNumChunks);
-      }  
-
-      for(int i=0;i<nNumChunks;i++) {
-	if(bDisplayInformation) {
-	  printf("Chunk %02i\n", i);
-	}  
-  
+      for(int i=0;i<nNumChunks;i++) {        
         ReplayStateChunk Chunk;        
         Chunk.nNumStates = FS::readInt_LE(pfh);
-
-	if(bDisplayInformation) {
-	  printf("   %-27s: %i\n", "Number of states", Chunk.nNumStates);
-	} 
-
         Chunk.pcChunkData = new char [Chunk.nNumStates * m_nStateSize];
         
         /* Compressed or not compressed? */
         if(FS::readBool(pfh)) {
-	  if(bDisplayInformation) {
-	    printf("   %-27s: %s\n", "Compressed data", "true");
-	  } 
-
           /* Compressed! - read compressed size */
           int nCompressedSize = FS::readInt_LE(pfh);
-	  if(bDisplayInformation) {
-	    printf("   %-27s: %i\n", "Compressed states size", nCompressedSize);
-	  }
-
+          
           /* Read compressed data */
           unsigned char *pcCompressed = new unsigned char [nCompressedSize];
           FS::readBuf(pfh,(char *)pcCompressed,nCompressedSize);
@@ -346,10 +301,6 @@ namespace vapp {
           delete [] pcCompressed;
         }
         else {
-	  if(bDisplayInformation) {
-	    printf("   %-27s: %s\n", "Compressed data", "false");
-	  } 
-
           /* Not compressed! */
           FS::readBuf(pfh,Chunk.pcChunkData,m_nStateSize*Chunk.nNumStates);
         }
@@ -364,17 +315,9 @@ namespace vapp {
     m_nCurChunk = 0;
     m_nCurState = 0.0;
     
+            
     /* Reconstruct game events that are going to happen during the replay */
-    if(bDisplayInformation) {
-      printf("%-30s:\n", "Game Events");
-    }
-
-    /* unserialize events */
-    MotoGame::unserializeGameEvents(this, &m_ReplayEvents, bDisplayInformation);
-    initOutput(1024);
-    for(int i=0; i<m_ReplayEvents.size(); i++) {
-      m_ReplayEvents[i]->Event->serialize(*this);
-    }
+    MotoGame::unserializeGameEvents(this, &m_ReplayEvents);
 
     return m_LevelID;
   }
@@ -405,13 +348,9 @@ namespace vapp {
     }
     
     memcpy(addr,(const char*)&state,m_nStateSize);
-  SwapEndian::LittleSerializedBikeState(*(SerializedBikeState*)addr);
+	SwapEndian::LittleSerializedBikeState(*(SerializedBikeState*)addr);
   }
   
-  int Replay::CurrentFrame() const {
-    return m_nCurChunk * STATES_PER_CHUNK + m_nCurState + 1;
-  }
-
   bool Replay::nextNormalState() {
     return nextState(m_speed_factor);
   }
@@ -429,28 +368,28 @@ namespace vapp {
 
       /* go on the following chunk */
       if(m_nCurState >= STATES_PER_CHUNK) { /* end of a chunk */
-  if(m_nCurChunk < m_Chunks.size() -1) {
-    m_nCurState = m_nCurState - m_Chunks[m_nCurChunk].nNumStates -1;
-    m_nCurChunk++;
-  }
+	if(m_nCurChunk < m_Chunks.size() -1) {
+	  m_nCurState = m_nCurState - m_Chunks[m_nCurChunk].nNumStates -1;
+	  m_nCurChunk++;
+	}
       } else {
-  if(m_nCurState < 0.0) { /* start of a chunk */
-    if(m_nCurChunk > 0) {
-      m_nCurState = m_nCurState + m_Chunks[m_nCurChunk-1].nNumStates -1;
-      m_nCurChunk--;
-    }
-  }
+	if(m_nCurState < 0.0) { /* start of a chunk */
+	  if(m_nCurChunk > 0) {
+	    m_nCurState = m_nCurState + m_Chunks[m_nCurChunk-1].nNumStates -1;
+	    m_nCurChunk--;
+	  }
+	}
       }
 
       /* if that's the beginning */
       if(m_nCurState < 0.0) {
-  m_nCurState = 0.0;
+	m_nCurState = 0.0;
       }
 
       /* if that's end */
       if(m_nCurState >= m_Chunks[m_nCurChunk].nNumStates) {
-  m_nCurState = m_Chunks[m_nCurChunk].nNumStates -1;
-  return false;
+	m_nCurState = m_Chunks[m_nCurChunk].nNumStates -1;
+	return false;
       }
       
     } else { /* that's not the end or the start of the chunk */
@@ -459,8 +398,8 @@ namespace vapp {
 
       /* if that's end */
       if(m_nCurState >= m_Chunks[m_nCurChunk].nNumStates) {
-  m_nCurState = m_Chunks[m_nCurChunk].nNumStates -1;
-  return false;
+	m_nCurState = m_Chunks[m_nCurChunk].nNumStates -1;
+	return false;
       }
     }
     
@@ -473,7 +412,7 @@ namespace vapp {
     peekState(state);
 
     m_bEndOfFile = (m_nCurChunk       == m_Chunks.size()-1 && 
-        (int)m_nCurState  == m_Chunks[m_nCurChunk].nNumStates-1);
+	 	    (int)m_nCurState  == m_Chunks[m_nCurChunk].nNumStates-1);
 
     if(m_bEndOfFile == false) {
       if(nextNormalState()) { /* do nothing */ }
@@ -483,10 +422,69 @@ namespace vapp {
   void Replay::peekState(SerializedBikeState& state) {
     /* Like loadState() but this one does not advance the cursor... it just takes a peek */
     memcpy((char *)&state,
-     &m_Chunks[m_nCurChunk].pcChunkData[((int)m_nCurState)*m_nStateSize],
-     m_nStateSize);
-    SwapEndian::LittleSerializedBikeState(state);
+	   &m_Chunks[m_nCurChunk].pcChunkData[((int)m_nCurState)*m_nStateSize],
+	   m_nStateSize);
+	  SwapEndian::LittleSerializedBikeState(state);
   }
+
+  //std::vector<ReplayInfo *> Replay::createReplayList(const std::string &PlayerName,const std::string &LevelIDCheck) {
+  //  return ReplayList::findReplays(PlayerName,LevelIDCheck);
+  
+    //std::vector<ReplayInfo *> Ret;
+    //
+    ///* Find all replays done by the given player name */
+    //std::vector<std::string> ReplayFiles = FS::findPhysFiles("Replays/*.rpl");
+    //for(int i=0;i<ReplayFiles.size();i++) {
+    //  /* Try opening it */
+    //  FileHandle *pfh = FS::openIFile(ReplayFiles[i]);
+    //  if(pfh != NULL) {
+    //    int nVersion = FS::readByte(pfh);
+    //    if(nVersion == 0 || nVersion == 1) {
+    //      if(FS::readInt_LE(pfh) == 0x12345678) {                  
+    //        std::string LevelID = FS::readString(pfh);
+    //        std::string Player = FS::readString(pfh);
+    //        float fFrameRate = FS::readFloat_LE(pfh);
+    //        int nStateSize = FS::readInt_LE(pfh);
+    //        bool bFinished = FS::readBool(pfh);
+    //        float fFinishTime = FS::readFloat_LE(pfh);
+    //        
+    //        if((PlayerName=="" || PlayerName==Player) && FS::getFileBaseName(ReplayFiles[i]) != "Latest") {
+    //          if(LevelIDCheck=="" || LevelID==LevelIDCheck) {
+    //            /* Fine. */
+    //            ReplayInfo *pInfo = new ReplayInfo;
+    //            pInfo->Level = LevelID;
+    //            pInfo->Name = FS::getFileBaseName(ReplayFiles[i]);
+    //            pInfo->Player = Player;
+    //            pInfo->fFrameRate = fFrameRate;
+    //            
+    //            if(bFinished)
+    //              pInfo->fFinishTime = fFinishTime;
+    //            else
+    //              pInfo->fFinishTime = -1;
+    //            
+    //            Ret.push_back(pInfo);
+    //          }
+    //        }
+    //      }
+    //    }
+    //    else {
+    //      /* Not supported */
+    //    }
+    //  
+    //    FS::closeFile(pfh);
+    //  }
+    //}
+    //
+    ///* Super. */
+    //return Ret;
+  //}
+  
+  //void Replay::freeReplayList(std::vector<ReplayInfo *> &List) {
+    ///* Free list items */
+    //for(int i=0;i<List.size();i++)
+    //  delete List[i];
+    //List.clear();
+  //}
   
   void Replay::pause() {
     m_is_paused = ! m_is_paused;
@@ -564,13 +562,13 @@ namespace vapp {
       if(pfh == NULL) {
 	return NULL;
       }
-      
+
       int nVersion = FS::readByte(pfh);
       if(nVersion != 0 && nVersion != 1) {
 	FS::closeFile(pfh);
 	return NULL;
       }
-      
+
       if(FS::readInt_LE(pfh) != 0x12345678) {   
 	FS::closeFile(pfh);
 	return NULL;

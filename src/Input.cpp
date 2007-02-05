@@ -23,7 +23,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *  Input handler
  */
 #include "Input.h"
-#include "Game.h"
 
 namespace vapp {
 
@@ -206,8 +205,10 @@ namespace vapp {
     /* Joystick? */
     if(m_ControllerModeID1 == CONTROLLER_MODE_JOYSTICK1 && m_pActiveJoystick1 != NULL) {
       SDL_JoystickUpdate();     
-
-      pController->stopContols();
+      
+      pController->fDrive = 0.0f;      
+      pController->fPull = 0.0f;  
+      pController->bChangeDir = false;  
       
       /* Update buttons */
       for(int i=0;i<SDL_JoystickNumButtons(m_pActiveJoystick1);i++) {
@@ -215,7 +216,7 @@ namespace vapp {
           if(!m_JoyButtonsPrev[i]) {
             /* Click! */
             if(m_nJoyButtonChangeDir1 == i) {
-              pController->setChangeDir(true);
+              pController->bChangeDir = true;
             }
           }
 
@@ -227,9 +228,9 @@ namespace vapp {
       
       /** Update axis */           
       int nRawPrim = SDL_JoystickGetAxis(m_pActiveJoystick1,m_nJoyAxisPrim1);
-      pController->setDrive(-joyRawToFloat(nRawPrim, m_nJoyAxisPrimMin1, m_nJoyAxisPrimLL1, m_nJoyAxisPrimUL1, m_nJoyAxisPrimMax1));
+      pController->fDrive = -joyRawToFloat(nRawPrim, m_nJoyAxisPrimMin1, m_nJoyAxisPrimLL1, m_nJoyAxisPrimUL1, m_nJoyAxisPrimMax1);
       int nRawSec = SDL_JoystickGetAxis(m_pActiveJoystick1,m_nJoyAxisSec1);
-      pController->setPull(-joyRawToFloat(nRawSec, m_nJoyAxisSecMin1, m_nJoyAxisSecLL1, m_nJoyAxisSecUL1, m_nJoyAxisSecMax1));
+      pController->fPull = -joyRawToFloat(nRawSec, m_nJoyAxisSecMin1, m_nJoyAxisSecLL1, m_nJoyAxisSecUL1, m_nJoyAxisSecMax1);
     }
   }
   
@@ -301,7 +302,6 @@ namespace vapp {
 	m_nCameraMoveXDown = _StringToKey(pConfig->getString("KeyCameraMoveXDown"));
 	m_nCameraMoveYUp   = _StringToKey(pConfig->getString("KeyCameraMoveYUp"));
 	m_nCameraMoveYDown = _StringToKey(pConfig->getString("KeyCameraMoveYDown"));
-	m_nAutoZoom        = _StringToKey(pConfig->getString("KeyAutoZoom"));
 	#endif
         
         /* All good? */
@@ -309,9 +309,8 @@ namespace vapp {
           m_nPushForwardKey1<0 || m_nChangeDirKey1<0 
           #if defined(ENABLE_ZOOMING)
             || m_nZoomIn<0 || m_nZoomOut <0 || m_nZoomInit <0
-	          || m_nCameraMoveXUp<0 || m_nCameraMoveXDown<0 
+	    || m_nCameraMoveXUp<0 || m_nCameraMoveXDown<0 
             || m_nCameraMoveYUp<0 || m_nCameraMoveYDown<0
-            || m_nAutoZoom<0
           #endif
 	        ) {
           Log("** Warning ** : Invalid keyboard configuration!");
@@ -374,10 +373,9 @@ namespace vapp {
   Handle an input event
   ===========================================================================*/  
   void InputHandler::handleInput(InputEventType Type,
-																 int nKey,
-																 BikeController *pController,
-																 GameRenderer *pGameRender,
-																 GameApp *pGameApp) {
+				 int nKey,
+				 BikeController *pController,
+				 GameRenderer *pGameRender) {
     /* Update controller 1 */
     if(m_ControllerModeID1 == CONTROLLER_MODE_KEYBOARD) {
       /* Keyboard controlled */
@@ -385,19 +383,19 @@ namespace vapp {
         case INPUT_KEY_DOWN: 
           if(m_nDriveKey1 == nKey) {
             /* Start driving */
-            pController->setDrive(1.0f);
+            pController->fDrive = 1.0f;
           }
           else if(m_nBrakeKey1 == nKey) {
             /* Brake */
-            pController->setDrive(-1.0f);
+            pController->fDrive = -1.0f;
           }
           else if(m_nPullBackKey1 == nKey) {
             /* Pull back */
-            pController->setPull(1.0f);
+            pController->fPull = 1.0f;
           }
           else if(m_nPushForwardKey1 == nKey) {
             /* Push forward */
-            pController->setPull(-1.0f);            
+            pController->fPull = -1.0f;            
           } 
 #if defined(ENABLE_ZOOMING)          
 	else if(m_nZoomIn == nKey) {
@@ -410,7 +408,7 @@ namespace vapp {
 	}
 	else if(m_nZoomInit == nKey) {
 	  /* Zoom init */
-	  pGameRender->initCamera();
+	  pGameRender->initZoom();
 	}
 	else if(m_nCameraMoveXUp == nKey) {
 	  pGameRender->moveCamera(1.0, 0.0);
@@ -424,36 +422,30 @@ namespace vapp {
 	else if(m_nCameraMoveYDown == nKey) {
 	  pGameRender->moveCamera(0.0, -1.0);
 	}
-	else if(m_nAutoZoom == nKey) {
-	  pGameApp->setAutoZoom(true);
-	}
 #endif
 
           break;
         case INPUT_KEY_UP:
           if(m_nDriveKey1 == nKey) {
             /* Stop driving */
-            pController->setDrive(0.0f);
+            pController->fDrive = 0.0f;
           }
           else if(m_nBrakeKey1 == nKey) {
             /* Don't brake */
-            pController->setDrive(0.0f);
+            pController->fDrive = 0.0f;
           }
           else if(m_nPullBackKey1 == nKey) {
             /* Pull back */
-            pController->setPull(0.0f);
+            pController->fPull = 0.0f;
           }
           else if(m_nPushForwardKey1 == nKey) {
             /* Push forward */
-            pController->setPull(0.0f);            
+            pController->fPull = 0.0f;            
           }
           else if(m_nChangeDirKey1 == nKey) {
             /* Change dir */
-            pController->setChangeDir(true);
+            pController->bChangeDir = true;
           }
-				else if(m_nAutoZoom == nKey) {
-					pGameApp->setAutoZoom(false);
-				}
           break;
       }      
     }
@@ -489,7 +481,6 @@ namespace vapp {
       m_nCameraMoveXDown = SDLK_KP4;
       m_nCameraMoveYUp   = SDLK_KP8;
       m_nCameraMoveYDown = SDLK_KP2;
-      m_nAutoZoom        = SDLK_KP5;
     #endif
   }  
 
@@ -510,7 +501,6 @@ namespace vapp {
     if(m_nCameraMoveXDown < 0) { m_nCameraMoveXDown = SDLK_KP4; }
     if(m_nCameraMoveYUp   < 0) { m_nCameraMoveYUp   = SDLK_KP8; }
     if(m_nCameraMoveYDown < 0) { m_nCameraMoveYDown = SDLK_KP2; }
-    if(m_nAutoZoom        < 0) { m_nAutoZoom        = SDLK_KP5; }
     #endif
   }
 
@@ -527,14 +517,13 @@ namespace vapp {
     if(Action == "ChangeDir")   return _KeyToString(m_nChangeDirKey1);
     
     #if defined(ENABLE_ZOOMING)    
-    if(Action == "ZoomIn")   	    	return _KeyToString(m_nZoomIn);
-    if(Action == "ZoomOut")  	    	return _KeyToString(m_nZoomOut);
-    if(Action == "ZoomInit") 	    	return _KeyToString(m_nZoomInit);
+    if(Action == "ZoomIn")   	    return _KeyToString(m_nZoomIn);
+    if(Action == "ZoomOut")  	    return _KeyToString(m_nZoomOut);
+    if(Action == "ZoomInit") 	    return _KeyToString(m_nZoomInit);
     if(Action == "CameraMoveXUp")   return _KeyToString(m_nCameraMoveXUp);
     if(Action == "CameraMoveXDown") return _KeyToString(m_nCameraMoveXDown);
     if(Action == "CameraMoveYUp")   return _KeyToString(m_nCameraMoveYUp);
     if(Action == "CameraMoveYDown") return _KeyToString(m_nCameraMoveYDown);
-    if(Action == "AutoZoom")        return _KeyToString(m_nAutoZoom);
     #endif
 
     return "?";

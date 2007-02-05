@@ -50,6 +50,49 @@ namespace vapp {
   };
 
   /*===========================================================================
+  Particle type
+  ===========================================================================*/
+  enum ParticleType {
+    PT_NONE,
+    PT_SMOKE1,
+    PT_SMOKE2,
+    PT_FIRE,
+    PT_DEBRIS,
+    PT_STAR
+  };
+  
+  /*===========================================================================
+  Particle
+  ===========================================================================*/
+  struct Particle {
+    Particle() {
+      Type = PT_NONE;
+      bFront = true;
+    }
+    
+    /* General */
+    bool bFront;
+    ParticleType Type;
+    Vector2f Pos,Vel,Acc;       /* Position, velocity, and acceleration */
+    float fAng,fAngVel,fAngAcc; /* Angular version of the above */
+    float fSpawnTime;
+    float fKillTime;
+    
+    /* PT_SMOKE1 / PT_SMOKE2 */
+    float fSmokeSize;
+    Color SmokeColor;
+    
+    /* PT_FIRE */
+    float fFireSize;
+    Color FireColor;
+    float fFireSeed;
+    
+    /* PT_DEBRIS */
+    Color DebrisTint;
+    float fDebrisSize;
+  };
+
+  /*===========================================================================
   Static geometry
   ===========================================================================*/
   struct StaticGeomCoord {
@@ -88,11 +131,9 @@ namespace vapp {
     public:
       SFXOverlay() {
         m_pApp = NULL;
-#ifdef ENABLE_OPENGL	
         m_bUseShaders = false;
         m_VertShaderID = m_FragShaderID = m_ProgramID = 0;
         m_DynamicTextureID = m_FrameBufferID = 0;
-#endif
         m_nOverlayWidth = m_nOverlayHeight = 0;
       }
     
@@ -100,32 +141,27 @@ namespace vapp {
       void init(App *pApp,int nWidth,int nHeight);
       void cleanUp(void);
       void beginRendering(void);
-      void endRendering(void);
+      GLuint endRendering(void);
       void fade(float f);
       void present(void);
     
     private:
-#ifdef ENABLE_OPENGL
       /* Some OpenGL handles */
       GLuint m_DynamicTextureID;
       GLuint m_FrameBufferID;      
-
+      int m_nOverlayWidth,m_nOverlayHeight;
+      App *m_pApp;
+      
       /* For shaders */
       bool m_bUseShaders;
       GLhandleARB m_VertShaderID;
       GLhandleARB m_FragShaderID;
       GLhandleARB m_ProgramID;
-
+      
       /* Helpers */
       char **_LoadShaderSource(const std::string &File,int *pnNumLines);
       void _FreeShaderSource(char **ppc,int nNumLines);
       bool _SetShaderSource(GLhandleARB ShaderID,const std::string &File);
-#endif
-      
-      
-
-      int m_nOverlayWidth,m_nOverlayHeight;
-      App *m_pApp;
   };
 
   /*===========================================================================
@@ -159,6 +195,9 @@ namespace vapp {
       void unprepareForNewLevel(void);
       void loadDebugInfo(std::string File);
       
+      void clearAllParticles(void);      
+      Particle *spawnParticle(ParticleType Type,Vector2f Pos,Vector2f Vel,float fLifeTime);
+    
       /* Data interface */
       void setGameObject(MotoGame *pMotoGame) {m_pMotoGame=pMotoGame;}
       MotoGame *getGameObject(void) {return m_pMotoGame;}
@@ -192,6 +231,7 @@ namespace vapp {
       void initCamera();
       void initCameraPosition();
       void setGhostMotionBlur(bool b) {m_bGhostMotionBlur = b;}
+      void skipBackTime(float fTime) {m_fNextParticleUpdate -= fTime;}
       
 #if defined(ALLOW_GHOST)
       void setGhostReplay(Replay *pReplay) {m_pGhostReplay = pReplay;}
@@ -269,27 +309,32 @@ namespace vapp {
       
       /* FBO overlay */
       SFXOverlay m_Overlay;
-
-      AABB m_screenBBox;
-
+            
+      /* Particle fun */
+      float m_fNextParticleUpdate;
+      std::vector<Particle *> m_Particles;
+      
       /* Subroutines */
       void _RenderSprites(bool bForeground,bool bBackground);
       void _RenderSprite(Entity *pSprite);
-      void _RenderBike(BikeState *pBike, BikeParameters *pBikeParms, BikerTheme *p_theme);
+      void _RenderBike(BikeState *pBike, BikeParams *pBikeParms, BikerTheme *p_theme);
       void _RenderBlocks(void);
       void _RenderDynamicBlocks(bool bBackground=false);
       void _RenderBackground(void);
-      void _RenderSky(float i_zoom, float i_offset, const TColor& i_color,
-		      float i_driftZoom, const TColor &i_driftColor, bool i_drifted);
+      void _RenderSky(void);
       void _RenderGameMessages(void); 
       void _RenderGameStatus(void);
       void _RenderParticles(bool bFront=true);
-      void _RenderParticleDraw(Vector2f P,Texture *pTexture,float fSize,float fAngle, TColor c);
-      void _RenderParticle(ParticlesSource *i_source);
+      void _RenderParticle(Vector2f P,Texture *pTexture,float fSize,float fAngle,Color c);
       void _RenderInGameText(Vector2f P,const std::string &Text,Color c = 0xffffffff);
       void setScroll(bool isSmooth);
 
+      /* Helpers... */
+      void _Vertex(Vector2f P);     /* Spit out a correctly transformed 
+                                       glVertex2f() */
       void _DbgText(Vector2f P,std::string Text,Color c);
+      void _UpdateParticles(float fTimeStep);
+      Particle *_GetNewestParticle(ParticleType PType);
       void _DrawRotatedMarker(Vector2f Pos,dReal *pfRot);     
       void _RenderDebugInfo(void);      
       void guessDesiredCameraPosition(float &p_fDesiredHorizontalScrollShift,

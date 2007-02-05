@@ -38,10 +38,8 @@ Central place to keep many in-game text strings
 #define GAMETEXT_44KHZ                _("44 kHz")
 #define GAMETEXT_8BIT                 _("8-bit")
 #define GAMETEXT_ABORT                _("Abort Playing")
-#define GAMETEXT_ADDTOFAVORITE       _("Add to favorite")
 #define GAMETEXT_ACTION               _("Action")
 #define GAMETEXT_ALL                  _("All (on this computer)")
-#define GAMETEXT_ALL_LEVELS           _("All levels")
 #define GAMETEXT_ALLOWINTERNETCONN    _("Do you want to allow X-Moto connecting\n" \
                                         "to the Internet to look for more levels\n" \
                                         "and best times of other players?")
@@ -51,7 +49,6 @@ Central place to keep many in-game text strings
 #define GAMETEXT_AUDIO                _("Audio")
 #define GAMETEXT_AUTHOR               _("Author")
 #define GAMETEXT_AUTOSAVEREPLAYS      _("Automatic saving of replays")
-#define GAMETEXT_AUTOZOOM             _("Auto zoom")
 #define GAMETEXT_BESTTIMES            _("Best Times")
 #define GAMETEXT_BESTPLAYER           _("Best player")
 #define GAMETEXT_BRAKE                _("Brake")
@@ -72,10 +69,9 @@ Central place to keep many in-game text strings
 #define GAMETEXT_CONTROLS             _("Controls")
 #define GAMETEXT_CREDITS              _("Lead Programming:Rasmus Neckelmann;" \
                                         ":Nicolas Adenis-Lamarre;" \
-                                        ":Emmanuel Gorse;" \
-                                        ":Kees Jongenburger;" \
                                         ":;" \
                                         "Additional Programming:Eric Piel;" \
+                                        ":Emmanuel Gorse;" \
                                         ":Christoph Sommer;" \
                                         ":Frederic Huard;" \
                                         ":;" \
@@ -105,7 +101,6 @@ Central place to keep many in-game text strings
                                         "Website Localization:Felix Schl;" \
                                         ":Nicolas Adenis-Lamarre;" \
                                         ":Trullo;" \
-                                        ":Afaland;" \
                                         ":Jj;" \
                                         ":Vertigo;" \
                                         ":Pol Vinogradov;" \
@@ -132,12 +127,11 @@ Central place to keep many in-game text strings
 #define GAMETEXT_CREDITSBUTTON        _("Credits")
 #define GAMETEXT_CURPLAYER            _("Player")
 #define GAMETEXT_DATE                 _("Date")
-#define GAMETEXT_DEATHANIM            _("Death Animation")
+#define GAMETEXT_DEATHANIM            _("Bike Breaks")
 #define GAMETEXT_DEFAULTS             _("Defaults")
 #define GAMETEXT_DELETEPLAYERMESSAGE  _("Do you really want to delete player?")
 #define GAMETEXT_DELETEREPLAYMESSAGE  _("Do you really want to delete replay?")
 #define GAMETEXT_DELETE               _("Delete")
-#define GAMETEXT_DELETEFROMFAVORITE  _("Delete from favorite")
 #define GAMETEXT_DELETEPROFILE        _("Delete")
 #define GAMETEXT_DESCRIPTION          _("Description")
 #define GAMETEXT_DISPLAYGHOSTTIMEDIFF _("Display Ghost time difference")
@@ -149,7 +143,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_DLLEVELS             _("Downloading extra levels...\nPress ESC to abort.")
 #define GAMETEXT_DLLEVELSCHECK        _("Checking for new levels...")
 #define GAMETEXT_DLROOMSLISTCHECK     _("Checking for existing rooms...")
-#define GAMETEXT_DLTHEME              _("Downloading theme data required by new levels...\nPress ESC to abort.")
+#define GAMETEXT_DLTHEME              _("Getting the theme\nPress ESC to abort.")
 #define GAMETEXT_DLTHEMESLISTCHECK    _("Checking for new themes...")
 #define GAMETEXT_DOWNLOADLEVELS       _("Get More Levels!")
 #define GAMETEXT_DRIVE                _("Drive")
@@ -177,7 +171,6 @@ Central place to keep many in-game text strings
 #define GAMETEXT_FAILEDTOSAVEREPLAY   _("Failed to save replay!\nMaybe you should try with another name?")
 #define GAMETEXT_FAILEDUPDATETHEMESLIST _("Failed to update the theme list\nCheck your Internet connection!")
 #define GAMETEXT_FILE                 _("File")
-#define GAMETEXT_FILTER               _("Filter")
 #define GAMETEXT_FINISH               _("Finished!")
 #define GAMETEXT_FINISHTIME           _("Finish Time")
 #define GAMETEXT_FLIPLEFT             _("Flip left")
@@ -205,9 +198,9 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 "  Esc - " + std::string(_("Pause")) + "\n" \
 "  Return - " + std::string(_("Restart the level")) + "\n" \
 "  F12 - " + std::string(_("Take a screenshot")) + "\n" \
-"  F5 - " + std::string(_("Reload levels from Levels dir (if you create a new level)")) + "\n" \
 "\n" \
  + std::string(_("Find all the strawberries and touch the flower to finish\nthe level.")) + "\n" \
+"\n" \
  + std::string(_("Read the README file or check out the website at\nhttp://xmoto.sourceforge.net for more information."))
 
 #define GAMETEXT_HIGH                 _("High")
@@ -219,8 +212,6 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_INITZOOM             _("View Level Initially")
 #define GAMETEXT_JOYSTICK             _("Joystick")
 #define GAMETEXT_JUSTDEAD             _("Oops!")
-#define GAMETEXT_JUSTDEAD_RESTART     _("Press ENTER to try again")
-#define GAMETEXT_JUSTDEAD_DISPLAYMENU _("Press ESC to display the menu")
 #define GAMETEXT_KEY                  _("Key")
 #define GAMETEXT_KEYBOARD             _("Keyboard")
 #define GAMETEXT_LEVEL                _("Level")
@@ -234,7 +225,6 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_LISTALL              _("List All")
 #define GAMETEXT_LOADINGLEVELS        _("Loading levels...")
 #define GAMETEXT_LOADINGMENUGRAPHICS  _("Loading menu graphics...")
-#define GAMETEXT_LOADINGREPLAYS       _("Loading replays...")
 #define GAMETEXT_LOADINGSOUNDS        _("Loading sounds...")
 #define GAMETEXT_LOADINGTEXTURES      _("Loading textures...")
 #define GAMETEXT_LOGIN                _("Login")
@@ -288,15 +278,12 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_PROXYCONFIG          _("Configure Proxy...")
 #define GAMETEXT_QUIT                 _("Quit Game")
 #define GAMETEXT_QUITMESSAGE          _("Do you really want to quit?")
-#define GAMETEXT_RANDOMIZE            _("Randomize")
-#define GAMETEXT_RELOADINGLEVELS      _("Reloading levels...")
-#define GAMETEXT_RELOADINGREPLAYS     _("Reloading replays...")
 #define GAMETEXT_REPLAY               _("Replay")
-#define GAMETEXT_REPLAYHELPTEXT(current_speed) _("Stop[esc] ||[space]  << >>[left/right keys]  < >[up/down keys]   Speed:") + current_speed + "x"
-#define GAMETEXT_REPLAYHELPTEXTNOREWIND(current_speed) _("Stop[esc] ||[space] >>[right key] < >[up/down keys]   Speed:") + current_speed + "x"
+#define GAMETEXT_REPLAYHELPTEXT(current_speed) _("Stop[esc] ||[space]  << >>[right/left keys]  < >[up/down keys]   Speed:") + current_speed + "x"
+#define GAMETEXT_REPLAYHELPTEXTNOREWIND(current_speed) _("Stop[esc] ||[space] >>[left key] < >[up/down keys]   Speed:") + current_speed + "x"
   // + "a" + "X"
 #define GAMETEXT_REPLAYNOTFOUND       _("Replay '%s' can't be played!")
-#define GAMETEXT_REPLAYS              _("Replays")
+#define GAMETEXT_REPLAYS              _("View Replays")
 #define GAMETEXT_RESTART              _("Restart This Level")
 #define GAMETEXT_RESUME               _("Resume Playing")
 #define GAMETEXT_ROOM                 _("Room")
@@ -323,7 +310,6 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_TRYAGAIN             _("Try This Level Again")
 #define GAMETEXT_TUTORIAL             _("Tutorial")
 #define GAMETEXT_UNKNOWNLEVEL         _("Unknown")
-#define GAMETEXT_UNPACKED_LEVELS_PACK _("Unpacked levels")
 #define GAMETEXT_UNUPDATABLETHEMEONWEB _("Can't update this theme !\nThe theme is not avaible on the web\nor your theme list is not up to date")
 #define GAMETEXT_UPDATE               _("Update")
 #define GAMETEXT_UPDATEHIGHSCORES     _("Check WWW")
@@ -357,7 +343,6 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_XMOTOLEVELSTATS      _("%d plays, %d deaths, %d finishes, and %d restarts")
 #define GAMETEXT_XSECONDS             _("%d seconds")
 #define GAMETEXT_YES                  _("Yes")
-#define GAMETEXT_YES_FOR_ALL          _("Yes to all")
 #define GAMETEXT_ZOOMIN  	      _("Zoom in")
 #define GAMETEXT_ZOOMINIT 	      _("Reinitialize zoom")
 #define GAMETEXT_ZOOMOUT 	      _("Zoom out")
@@ -376,7 +361,6 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_TRY_LEVEL_AGAIN _("Try this level again")
 #define CONTEXTHELP_BUILT_IN_AND_EXTERNALS _("Built-in and stand-alone external levels")
 #define CONTEXTHELP_LEVEL_PACKS _("Levels grouped together in level packs")
-#define CONTEXTHELP_LEVELS _("Browse levels avaiable to you")
 #define CONTEXTHELP_REPLAY_LIST _("View list of recorded replays")
 #define CONTEXTHELP_OPTIONS _("Configure X-Moto preferences")
 #define CONTEXTHELP_HELP _("Instructions of how to play X-Moto")
@@ -474,24 +458,5 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_DEATHANIM _("Enable animation of bike falling apart when dead")
 #define CONTEXTHELP_INITZOOM _("Automatically scroll over the level before starting playing it")
 #define CONTEXTHELP_CREDITS _("View the X-Moto credits")
-#define CONTEXTHELP_REPLAYCOL _("Name of replay")
-#define CONTEXTHELP_REPLAYLEVELCOL _("Level played in replay")
-#define CONTEXTHELP_REPLAYPLAYERCOL _("Player who recorded the replay")
-#define CONTEXTHELP_SCREENRES _("Click to select screen resolution")
-#define CONTEXTHELP_LEVELPACKNUMLEVELS _("Completed levels / total number of levels in pack")
-#define CONTEXTHELP_LEVELPACK _("Name of level pack")
-#define CONTEXTHELP_ADDTOFAVORITE _("Add the level to the favorite levels list")
-#define CONTEXTHELP_DELETEFROMFAVORITE _("Delete the level from the favorite levels list")
-#define CONTEXTHELP_RANDOMIZE _("Puzzle the levels pack list")
-#define CONTEXTHELP_LEVEL_FILTER _("Put a text to limit the level list")
-
-#define VPACKAGENAME_LEVELS_WITH_NO_HIGHSCORE   _("Levels with no highscore")
-#define VPACKAGENAME_INCOMPLETED_LEVELS         _("Levels you have not completed")
-#define VPACKAGENAME_YOU_HAVE_NOT_THE_HIGHSCORE _("You're not the highscore holder")
-#define VPACKAGENAME_ALL_LEVELS                 _("All levels")
-#define VPACKAGENAME_NEW_LEVELS                 _("New levels")
-#define VPACKAGENAME_UPDATED_LEVELS             _("Updated levels")
-#define VPACKAGENAME_MOST_PLAYED_LEVELS         _("Most played levels")
-#define VPACKAGENAME_FAVORITE_LEVELS            _("Favorite levels")
 
 #endif

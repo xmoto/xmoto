@@ -22,7 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __SOMERSAULTCOUNTER_H__
 #define __SOMERSAULTCOUNTER_H__
 
-#include "helpers/VMath.h"
+#include "VMath.h"
 
 class SomersaultCounter {
   public:

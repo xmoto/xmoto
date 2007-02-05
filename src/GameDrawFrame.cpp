@@ -35,9 +35,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   #include <curl/curl.h>
 #endif
 
-#include "helpers/HighPrecisionTimer.h"
-
-/* Set the following #defines to simulate slow systems */
+/* Set the follow #define's allow you to simulate slow system */
 #define SIMULATE_SLOW_RENDERING     0 /* extra ms to add to rendering */
 #define SIMULATE_SLOW_PHYSICS       0 /* extra ms to add to physics calcs */
 
@@ -50,27 +48,21 @@ namespace vapp {
     /* This function is called by the framework as fast as possible */
     bool bIsPaused = false;
     bool bDrawFPS = false;
-    
-    HighPrecisionTimer::reset();
 
     /* Prepare frame rendering / game update */
-    _PrepareFrame();    
-    HighPrecisionTimer::checkTime("_PrepareFrame");
+    _PrepareFrame();
 
     /* Check some GUI controls */
-    _PreUpdateGUI();     
-    HighPrecisionTimer::checkTime("_PreUpdateGUI");
+    _PreUpdateGUI();
      
     /* Update FPS stuff */
     _UpdateFPSCounter();
-    HighPrecisionTimer::checkTime("_UpdateFPSCounter");
             
     /* What state? */
     switch(m_State) {
       case GS_MENU:
         /* Menu specifics */
         _PreUpdateMenu();
-        HighPrecisionTimer::checkTime("_PreUpdateMenu");
         /* Note the lack of break; the following are done for GS_MENU too */
 
       case GS_LEVEL_INFO_VIEWER:
@@ -81,7 +73,6 @@ namespace vapp {
       case GS_EDIT_PROFILES:
         /* Following is done for all the above states */
         _DrawMainGUI();
-        HighPrecisionTimer::checkTime("_DrawMainGUI");
         
         /* Show frame rate? */
         if(m_bShowFrameRate) bDrawFPS = true;
@@ -93,8 +84,7 @@ namespace vapp {
       case GS_PAUSE:
         bIsPaused = true;
               
-      case GS_DEADMENU:
-      case GS_DEADJUST:
+      case GS_JUSTDEAD:
       case GS_FINISHED:
       case GS_REPLAYING:
       case GS_PREPLAYING:
@@ -108,66 +98,49 @@ namespace vapp {
           /* When did the frame start? */
           double fStartFrameTime = getTime();                    
 
-          if(m_State == GS_PREPLAYING) {
-            /* If "preplaying" / "initial-zoom" is enabled, this is where it's done */
-            statePrestart_step();
-            HighPrecisionTimer::checkTime("statePrestart_step");
-          } 
-          else if(m_State == GS_PLAYING || ((m_State == GS_DEADMENU || m_State == GS_DEADJUST) && m_bEnableDeathAnim)) {
-            /* When actually playing or when dead and the bike is falling apart, 
-               a physics update is required */
-						if(isLockedMotoGame()) {
-							nPhysSteps = 0;
-						} else {
-							nPhysSteps = _UpdateGamePlaying();            
-						}
-            HighPrecisionTimer::checkTime("_UpdateGamePlaying");
-          }
+	        if(m_State == GS_PREPLAYING) {
+	          /* If "preplaying" / "initial-zoom" is enabled, this is where it's done */
+	          statePrestart_step();
+	        } 
+	        else if(m_State == GS_PLAYING || (m_State == GS_JUSTDEAD && m_bEnableDeathAnim)) {
+	          /* When actually playing or when dead and the bike is falling apart, 
+	             a physics update is required */
+	          nPhysSteps = _UpdateGamePlaying();	          
+	        }
           else if(m_State == GS_REPLAYING) {
             /* When playing back a replay, no physics update is requried - instead
                the game state is streamed out of a binary .rpl file */
-							nPhysSteps = _UpdateGameReplaying();
-            HighPrecisionTimer::checkTime("_UpdateGameReplaying");
+            nPhysSteps = _UpdateGameReplaying();
             bValidGameState = nPhysSteps > 0;
             //printf("%d ",nPhysSteps);
           }
-  
-					if(m_State == GS_PLAYING) {
-						autoZoom();
-					}
-
+	
           /* Render */
-          if(!getDrawLib()->isNoGraphics() && bValidGameState) {
+          if(!isNoGraphics() && bValidGameState) {
             m_Renderer.render(bIsPaused);
-            HighPrecisionTimer::checkTime("m_Renderer.render");
-      
+  	  
             if(m_bShowMiniMap && !m_bCreditsModeActive) {
               if(m_MotoGame.getBikeState()->Dir == DD_LEFT &&
-                 (m_bShowEngineCounter == false || m_State == GS_REPLAYING)) {
-                m_Renderer.renderMiniMap(getDrawLib()->getDispWidth()-150,getDrawLib()->getDispHeight()-100,150,100);
-                HighPrecisionTimer::checkTime("m_Renderer.renderMiniMap");
-              } 
-              else {
-                m_Renderer.renderMiniMap(0,getDrawLib()->getDispHeight()-100,150,100);
-                HighPrecisionTimer::checkTime("m_Renderer.renderMiniMap");
-              }
+	               (m_bShowEngineCounter == false || m_State == GS_REPLAYING)) {
+                m_Renderer.renderMiniMap(getDispWidth()-150,getDispHeight()-100,150,100);
+	            } 
+	            else {
+                m_Renderer.renderMiniMap(0,getDispHeight()-100,150,100);
+	            }
             }             
-      
-            if(m_bShowEngineCounter && m_bUglyMode == false && m_State != GS_REPLAYING) {
-              m_Renderer.renderEngineCounter(getDrawLib()->getDispWidth()-128,getDrawLib()->getDispHeight()-128,128,128,
-                                             m_MotoGame.getBikeEngineSpeed());
-              HighPrecisionTimer::checkTime("m_Renderer.renderEngineCounter");
-            } 
+  	  
+	          if(m_bShowEngineCounter && m_bUglyMode == false && m_State != GS_REPLAYING) {
+	            m_Renderer.renderEngineCounter(getDispWidth()-128,getDispHeight()-128,128,128,
+					                                   m_MotoGame.getBikeEngineSpeed());
+	          } 
           }
 #if SIMULATE_SLOW_RENDERING
           SDL_Delay(SIMULATE_SLOW_RENDERING);
-          HighPrecisionTimer::checkTime("(dummy)");
 #endif
-  
+	
           /* When actually playing, check if something happened (like dying or finishing) */
           if(m_State == GS_PLAYING) {        
             _PostUpdatePlaying();
-            HighPrecisionTimer::checkTime("_PostUpdatePlaying");
           }
         
           /* When did frame rendering end? */
@@ -184,7 +157,7 @@ namespace vapp {
               nADelay = ((1.0f/m_fCurrentReplayFrameRate - (fEndFrameTime-fStartFrameTime)) * 1000.0f) * 0.5;
             //printf(" { %f }  %d\n",fEndFrameTime-fStartFrameTime,nADelay);            
           }
-          else if ((m_State == GS_FINISHED) || (m_State == GS_DEADMENU || m_State == GS_DEADJUST) || (m_State == GS_PAUSE)) {
+          else if ((m_State == GS_FINISHED) || (m_State == GS_JUSTDEAD) || (m_State == GS_PAUSE)) {
             setFrameDelay(10);
           }
           else {
@@ -209,52 +182,41 @@ namespace vapp {
               nFrameCnt = 0;
               m_fLastPerfStateTime = m_fFrameTime;
             }
-            getDrawLib()->drawText(Vector2f(0,100),cBuf,MAKE_COLOR(0,0,0,255),-1);        
+            drawText(Vector2f(0,100),cBuf,MAKE_COLOR(0,0,0,255),-1);        
             nFrameCnt++;
           }
-
-          HighPrecisionTimer::checkTime("(misc)");
-
+        
           if(m_State == GS_PAUSE) {
             /* Okay, nifty thing. Paused! */
             _PostUpdatePause();
-            HighPrecisionTimer::checkTime("_PostUpdatePause");
           }        
-          else if(m_State == GS_DEADJUST) {
+          else if(m_State == GS_JUSTDEAD) {
             /* Hmm, you're dead and you know it. */
             _PostUpdateJustDead();
-            HighPrecisionTimer::checkTime("_PostUpdateJustDead");
-          }
-          else if(m_State == GS_DEADMENU) {
-            /* Hmm, you're dead and you know it. */
-            _PostUpdateMenuDead();
-            HighPrecisionTimer::checkTime("_PostUpdateMenuDead");
-          }
+          }        
           else if(m_State == GS_FINISHED) {
             /* Hmm, you've won and you know it. */
             _PostUpdateFinished();
-            HighPrecisionTimer::checkTime("_PostUpdateFinished");
           }        
-
+        
           /* Level and player name to draw? */
           if(!m_bCreditsModeActive &&
-            (m_State == GS_DEADMENU || m_State == GS_DEADJUST || m_State == GS_PAUSE || m_State == GS_FINISHED || m_State == GS_REPLAYING) &&
+            (m_State == GS_JUSTDEAD || m_State == GS_PAUSE || m_State == GS_FINISHED || m_State == GS_REPLAYING) &&
             m_MotoGame.getLevelSrc() != NULL) {
             UIFont *v_font = m_Renderer.getMediumFont();
             std::string v_infos;
             
-            v_infos = m_MotoGame.getLevelSrc()->Name();
+            v_infos = m_MotoGame.getLevelSrc()->getLevelInfo()->Name;
 
             if(m_State == GS_REPLAYING && m_pReplay != NULL) {
               v_infos += " (" + std::string(GAMETEXT_BY) + " " + m_pReplay->getPlayerName() + ")";
             }
 
             if(v_font != NULL) {
-              UITextDraw::printRaw(v_font,0,getDrawLib()->getDispHeight()-4,
+              UITextDraw::printRaw(v_font,0,getDispHeight()-4,
                 v_infos,
                 MAKE_COLOR(255,255,255,255));
             }
-            HighPrecisionTimer::checkTime("(level and player name)");
           }
          
           /* Context menu? */
@@ -265,21 +227,19 @@ namespace vapp {
           
           /* Draw GUI */
           m_Renderer.getGUI()->paint();        
-          HighPrecisionTimer::checkTime("m_Renderer.getGUI()->paint");
         
           /* Credits? */
           if(m_State == GS_REPLAYING && m_bCreditsModeActive && m_pCredits!=NULL) {
             m_pCredits->render(m_MotoGame.getTime());
-            HighPrecisionTimer::checkTime("m_pCredits->render");
           }
 
           /* Show frame rate */
           if(m_bShowFrameRate) bDrawFPS = true;
-
+          
           break;
         } 
         catch(Exception &e) {
-    setState(m_StateAfterPlaying);
+          setState(GS_MENU);
           notifyMsg(splitText(e.getMsg(), 50));
         }
       }
@@ -289,31 +249,8 @@ namespace vapp {
     if(bDrawFPS) {
       char cTemp[256];        
       sprintf(cTemp,"%f",m_fFPS_Rate);
-      getDrawLib()->drawText(Vector2f(130,0),cTemp);
+      drawText(Vector2f(130,0),cTemp);
     }    
-    
-    /* Profiling? */
-#if defined(PROFILE_MAIN_LOOP)
-    int nCurY = 60;
-    float fTotal = 0;
-    for(int i=0;i<HighPrecisionTimer::numTimeChecks();i++) {
-      HighPrecisionTimer::TimeCheck *pTc = HighPrecisionTimer::getTimeCheck(i);
-      if(pTc != NULL) {
-        fTotal += pTc->fTime;
-      }
-    }
-    for(int i=0;i<HighPrecisionTimer::numTimeChecks();i++) {
-      char cTemp[256];
-      HighPrecisionTimer::TimeCheck *pTc = HighPrecisionTimer::getTimeCheck(i);
-      if(pTc != NULL) {
-        sprintf(cTemp,"%-20s : %.0f",pTc->cWhere,pTc->fTime);
-        drawText(Vector2f(30,nCurY),cTemp);
-        sprintf(cTemp,"%.0f%%",(pTc->fTime * 100) / fTotal);
-        drawText(Vector2f(350,nCurY),cTemp);
-        nCurY += 16;
-      }
-    }
-#endif   
     
     /* Draw mouse cursor */
     if(m_bShowCursor)
@@ -324,10 +261,10 @@ namespace vapp {
   Main loop utility functions
   ===========================================================================*/
   void GameApp::_DrawMouseCursor(void) {
-    if(!getDrawLib()->isNoGraphics() && m_pCursor != NULL && m_bUglyMode == false) {
+    if(!isNoGraphics() && m_pCursor != NULL && m_bUglyMode == false) {
       int nMX,nMY;
       getMousePos(&nMX,&nMY);      
-      getDrawLib()->drawImage(Vector2f(nMX-2,nMY-2),Vector2f(nMX+30,nMY+30),m_pCursor);
+      drawImage(Vector2f(nMX-2,nMY-2),Vector2f(nMX+30,nMY+30),m_pCursor);
     }
   }
   
@@ -338,7 +275,7 @@ namespace vapp {
     setFrameDelay(0);
     
     /* Update sound system and input */
-    if(!getDrawLib()->isNoGraphics()) {        
+    if(!isNoGraphics()) {        
       m_EngineSound.update(getRealTime());
       m_EngineSound.setRPM(0); /* per default don't have engine sound */
       Sound::update();
@@ -355,9 +292,8 @@ namespace vapp {
 #endif
       case GS_LEVEL_INFO_VIEWER:
       case GS_PAUSE:
-      case GS_DEADMENU:
+      case GS_JUSTDEAD:
       case GS_FINISHED:
-      case GS_LEVELPACK_VIEWER:
         m_bShowCursor = true;
         //SDL_ShowCursor(SDL_ENABLE);
         break;
@@ -374,8 +310,6 @@ namespace vapp {
         }
         
         break;
-      case GS_DEADJUST:
-      break;
     }
   }  
 
@@ -385,7 +319,7 @@ namespace vapp {
       UIMsgBoxButton Button = m_pQuitMsgBox->getClicked();
       if(Button == UI_MSGBOX_YES) {
         if(m_State == GS_PAUSE) {
-          m_GameStats.abortedLevel(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->Id(),m_MotoGame.getLevelSrc()->Name(),m_MotoGame.getTime()); 
+          m_GameStats.abortedLevel(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->getID(),m_MotoGame.getLevelSrc()->getLevelInfo()->Name,m_MotoGame.getTime()); 
         }
       
         quit();      
@@ -407,11 +341,11 @@ namespace vapp {
     }
 #if defined(SUPPORT_WEBACCESS)
     /* And the download-levels box? */
-    else if(m_pInfoMsgBox != NULL) {
-      UIMsgBoxButton Button = m_pInfoMsgBox->getClicked();
+    else if(m_pDownloadMsgBox != NULL) {
+      UIMsgBoxButton Button = m_pDownloadMsgBox->getClicked();
       if(Button == UI_MSGBOX_YES) {
-        delete m_pInfoMsgBox;
-        m_pInfoMsgBox = NULL;
+        delete m_pDownloadMsgBox;
+        m_pDownloadMsgBox = NULL;
 
         /* Download levels! */
         _DownloadExtraLevels();
@@ -425,8 +359,8 @@ namespace vapp {
         }
       }
       else if(Button == UI_MSGBOX_NO) {
-        delete m_pInfoMsgBox;
-        m_pInfoMsgBox = NULL;
+        delete m_pDownloadMsgBox;
+        m_pDownloadMsgBox = NULL;
       }
     }
 #endif       
@@ -470,13 +404,13 @@ namespace vapp {
       if(m_pMenuMusic == NULL) {
         /* No music available, try loading */
         std::string MenuMusicPath = FS::getDataDir() + std::string("/xmoto.ogg");
-        #if defined(WIN32) /* this works around a bug in SDL_mixer 1.2.7 on Windows */
-	SDL_RWops *rwfp;
-	rwfp = SDL_RWFromFile(MenuMusicPath.c_str(), "rb");
-	m_pMenuMusic = Mix_LoadMUS_RW(rwfp);
-	//m_pMenuMusic = NULL;
+        const char *pc = MenuMusicPath.c_str();
+        #if defined(_MSC_VER) /* this works around a bug in SDL_mixer 1.2.7 on Windows */
+          SDL_RWops *rwfp;              
+          rwfp = SDL_RWFromFile(pc, "rb");                          
+          m_pMenuMusic = Mix_LoadMUS_RW(rwfp);
         #else
-	m_pMenuMusic = Mix_LoadMUS(MenuMusicPath.c_str());
+          m_pMenuMusic = Mix_LoadMUS(pc);
         #endif
         /* (Don't even complain the slightest if music isn't found...) */          
       }
@@ -545,12 +479,12 @@ namespace vapp {
     /* Update game until we've catched up with the real time */
     int nPhysSteps = 0;
     do {
-      if(m_State == GS_PLAYING) {
-        m_MotoGame.updateLevel( PHYS_STEP_SIZE,NULL,m_pReplay );
-      } 
-      else {
-        m_MotoGame.updateLevel( PHYS_STEP_SIZE,NULL, NULL );
-      }
+	    if(m_State == GS_PLAYING) {
+	      m_MotoGame.updateLevel( PHYS_STEP_SIZE,NULL,m_pReplay );
+	    } 
+	    else {
+	      m_MotoGame.updateLevel( PHYS_STEP_SIZE,NULL, NULL );
+	    }
       m_fLastPhysTime += PHYS_STEP_SIZE;
       nPhysSteps++;
 
@@ -558,14 +492,14 @@ namespace vapp {
       SDL_Delay(SIMULATE_SLOW_PHYSICS);
 #endif
 
-      if(m_Config.getBool("LimitFramerate")) {
-        SDL_Delay(1);
-      }     
+	    if(m_Config.getBool("LimitFramerate")) {
+	      SDL_Delay(1);
+	    }	    
 
       /* don't do this infinitely, maximum miss 10 frames, then give up */
     } while ((m_fLastPhysTime + PHYS_STEP_SIZE <= getTime()) && (nPhysSteps < 10));
   
-    m_Renderer.setSpeedMultiplier(nPhysSteps);
+	  m_Renderer.setSpeedMultiplier(nPhysSteps);
   
     if(!m_bTimeDemo) {
       /* Never pass this point while being ahead of time, busy wait until it's time */
@@ -591,44 +525,44 @@ namespace vapp {
 #if defined(ALLOW_GHOST)
     /* Read replay state */
     if(m_pGhostReplay != NULL) {
-      static SerializedBikeState GhostBikeState;
-      static SerializedBikeState previousGhostBikeState;
+	    static SerializedBikeState GhostBikeState;
+	    static SerializedBikeState previousGhostBikeState;
       
-      m_pGhostReplay->peekState(previousGhostBikeState);
-      if(previousGhostBikeState.fGameTime < m_MotoGame.getTime() && m_pGhostReplay->endOfFile() == false) {
-        do {
-          m_pGhostReplay->loadState(GhostBikeState);
-        } while(GhostBikeState.fGameTime < m_MotoGame.getTime() && m_pGhostReplay->endOfFile() == false);
+	    m_pGhostReplay->peekState(previousGhostBikeState);
+	    if(previousGhostBikeState.fGameTime < m_MotoGame.getTime() && m_pGhostReplay->endOfFile() == false) {
+	      do {
+		      m_pGhostReplay->loadState(GhostBikeState);
+	      } while(GhostBikeState.fGameTime < m_MotoGame.getTime() && m_pGhostReplay->endOfFile() == false);
 
-        if(m_nGhostFrame%2 || m_nGhostFrame==1) {
-          /* NON-INTERPOLATED FRAME */
-          m_MotoGame.UpdateGhostFromReplay(&GhostBikeState);
-        } 
-        else {
-          /* INTERPOLATED FRAME */
-          SerializedBikeState ibs;
-          m_MotoGame.interpolateGameState(&previousGhostBikeState,&GhostBikeState,&ibs,0.5f);
-          m_MotoGame.UpdateGhostFromReplay(&ibs);
-        }
-        m_nGhostFrame++;
-      }
-    }
-#endif    
+	      if(m_nGhostFrame%2 || m_nGhostFrame==1) {
+		      /* NON-INTERPOLATED FRAME */
+		      m_MotoGame.UpdateGhostFromReplay(&GhostBikeState);
+	      } 
+	      else {
+		      /* INTERPOLATED FRAME */
+		      SerializedBikeState ibs;
+		      m_MotoGame.interpolateGameState(&previousGhostBikeState,&GhostBikeState,&ibs,0.5f);
+  	      m_MotoGame.UpdateGhostFromReplay(&ibs);
+	      }
+	      m_nGhostFrame++;
+	    }
+	  }
+#endif	  
 
-    if(m_State == GS_PLAYING) {
-      /* We'd like to serialize the game state 25 times per second for the replay */
-      if(getRealTime() - m_fLastStateSerializationTime >= 1.0f/m_fReplayFrameRate) {
-        m_fLastStateSerializationTime = getRealTime();
+	  if(m_State == GS_PLAYING) {
+	    /* We'd like to serialize the game state 25 times per second for the replay */
+	    if(getRealTime() - m_fLastStateSerializationTime >= 1.0f/m_fReplayFrameRate) {
+	      m_fLastStateSerializationTime = getRealTime();
         
-        /* Get it */
-        SerializedBikeState BikeState;
-        m_MotoGame.getSerializedBikeState(&BikeState);
-        if(m_pReplay != NULL)
-          m_pReplay->storeState(BikeState);              
-      }
-    }
-    
-    return nPhysSteps;
+	      /* Get it */
+	      SerializedBikeState BikeState;
+	      m_MotoGame.getSerializedBikeState(&BikeState);
+	      if(m_pReplay != NULL)
+		      m_pReplay->storeState(BikeState);              
+	    }
+	  }
+	  
+	  return nPhysSteps;
   }  
 
   int GameApp::_UpdateGameReplaying(void) {
@@ -667,8 +601,8 @@ namespace vapp {
       /* Even frame number: Read the next state */
       if(m_nFrame%2 || m_nFrame==1) {       
         /* REAL NON-INTERPOLATED FRAME */
-        if(m_pReplay->endOfFile() == false) {
-          m_pReplay->loadState(BikeState);
+	      if(m_pReplay->endOfFile() == false) {
+		      m_pReplay->loadState(BikeState);
         
           /* Update game */
           m_MotoGame.updateLevel( 1/m_pReplay->getFrameRate(),&BikeState,m_pReplay ); 
@@ -689,11 +623,11 @@ namespace vapp {
       else {                          
         /* INTERPOLATED FRAME */
         SerializedBikeState NextBikeState,ibs;
-        
-        if(m_pReplay->endOfFile() == false) {
-          m_pReplay->peekState(NextBikeState);
-          /* Nice. Interpolate the states! */
-          m_MotoGame.interpolateGameState(&BikeState,&NextBikeState,&ibs,0.5f);
+  	    
+	      if(m_pReplay->endOfFile() == false) {
+		      m_pReplay->peekState(NextBikeState);
+		      /* Nice. Interpolate the states! */
+		      m_MotoGame.interpolateGameState(&BikeState,&NextBikeState,&ibs,0.5f);
 
           /* Update game */
           //m_MotoGame.updateLevel( PHYS_STEP_SIZE,&ibs,m_pReplay );                 
@@ -713,12 +647,12 @@ namespace vapp {
     }
     else return 0; /* something went wrong */
   
-    //if(m_pReplay->getSpeed() < 0) {
-    //m_Renderer.clearAllParticles();
-    //m_Renderer.skipBackTime(100000);            
-    //}
+    if(m_pReplay->getSpeed() < 0) {
+      m_Renderer.clearAllParticles();
+      m_Renderer.skipBackTime(100000);            
+    }
   
-    m_Renderer.setSpeedMultiplier(nPhysSteps);    
+	  m_Renderer.setSpeedMultiplier(nPhysSteps);    
 
     return nPhysSteps;
   }
@@ -727,17 +661,16 @@ namespace vapp {
     /* News? */
     if(m_MotoGame.isDead()) {
       /* You're dead maan! */
-      setState(GS_DEADJUST);
+      setState(GS_JUSTDEAD);
     }
     else if(m_MotoGame.isFinished()) {
       /* You're done maaaan! :D */
       std::string TimeStamp = getTimeStamp();
       m_Profiles.addFinishTime(m_pPlayer->PlayerName,"",
-                              m_MotoGame.getLevelSrc()->Id(),m_MotoGame.getFinishTime(),TimeStamp); 
-      _MakeBestTimesWindow(m_pBestTimes,m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->Id(),
+                              m_MotoGame.getLevelSrc()->getID(),m_MotoGame.getFinishTime(),TimeStamp); 
+      _MakeBestTimesWindow(m_pBestTimes,m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->getID(),
                           m_MotoGame.getFinishTime(),TimeStamp);
-
-      _UpdateLevelsLists();     
+      _UpdateLevelLists();
       setState(GS_FINISHED);
     }
   }
@@ -745,7 +678,7 @@ namespace vapp {
   void GameApp::_PostUpdatePause(void) {
     if(!m_bUglyMode) {
       if(m_nPauseShade < 150) m_nPauseShade+=8;
-      getDrawLib()->drawBox(Vector2f(0,0),Vector2f(getDrawLib()->getDispWidth(),getDrawLib()->getDispHeight()),0,MAKE_COLOR(0,0,0,m_nPauseShade));                                        
+      drawBox(Vector2f(0,0),Vector2f(getDispWidth(),getDispHeight()),0,MAKE_COLOR(0,0,0,m_nPauseShade));                                        
     }
 
     /* Update mouse stuff */
@@ -758,14 +691,7 @@ namespace vapp {
   void GameApp::_PostUpdateJustDead(void) {
     if(!m_bUglyMode) {
       if(m_nJustDeadShade < 150) m_nJustDeadShade+=8;
-      getDrawLib()->drawBox(Vector2f(0,0),Vector2f(getDrawLib()->getDispWidth(),getDrawLib()->getDispHeight()),0,MAKE_COLOR(0,0,0,m_nJustDeadShade));     
-    }
-  }
-
-  void GameApp::_PostUpdateMenuDead(void) {
-    if(!m_bUglyMode) {
-      if(m_nJustDeadShade < 150) m_nJustDeadShade+=8;
-      getDrawLib()->drawBox(Vector2f(0,0),Vector2f(getDrawLib()->getDispWidth(),getDrawLib()->getDispHeight()),0,MAKE_COLOR(0,0,0,m_nJustDeadShade));     
+      drawBox(Vector2f(0,0),Vector2f(getDispWidth(),getDispHeight()),0,MAKE_COLOR(0,0,0,m_nJustDeadShade));     
     }
     
     /* Update mouse stuff */
@@ -780,7 +706,7 @@ namespace vapp {
   void GameApp::_PostUpdateFinished(void) {
     if(!m_bUglyMode) {
       if(m_nFinishShade < 150) m_nFinishShade+=8;
-      getDrawLib()->drawBox(Vector2f(0,0),Vector2f(getDrawLib()->getDispWidth(),getDrawLib()->getDispHeight()),0,MAKE_COLOR(0,0,0,m_nFinishShade));     
+      drawBox(Vector2f(0,0),Vector2f(getDispWidth(),getDispHeight()),0,MAKE_COLOR(0,0,0,m_nFinishShade));     
     }
 
     /* Update mouse stuff */

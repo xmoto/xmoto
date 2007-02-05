@@ -27,8 +27,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 namespace vapp {
 
-  /*===========================================================================
-  XML document
+	/*===========================================================================
+	XML document
   ===========================================================================*/
   class XMLDocument {
     public:
@@ -53,10 +53,6 @@ namespace vapp {
   class XML {
   public:
     static std::string str2xmlstr(std::string str);
-    static std::string getOption(TiXmlElement *pElem,std::string Name,std::string Default="");
-    static TiXmlElement *findElement(XMLDocument& i_source, TiXmlElement *pRoot,const std::string &Name); 
-    static std::string getElementText(XMLDocument& i_source, TiXmlElement *pRoot,std::string Name);
-    static void appendText(std::string &Text,const std::string &Append);
   };
 }
 

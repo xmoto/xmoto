@@ -22,10 +22,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __MOTOGAMEEVENT_H__
 #define __MOTOGAMEEVENT_H__
 
-#include "xmscene/BasicSceneStructs.h"
-#include "xmscene/Zone.h"
-#include "xmscene/Entity.h"
-
 namespace vapp {
   /*===========================================================================
     Game event types
@@ -74,13 +70,11 @@ class MotoGameEvent {
 
   virtual void doAction(MotoGame *p_pMotoGame)          = 0;
   virtual void serialize(DBuffer &Buffer)               = 0;
-  virtual void unserialize(DBuffer &Buffer) = 0;
+  virtual void unserialize(DBuffer &Buffer)             = 0;
   virtual void revert(MotoGame *p_pMotoGame);
   virtual GameEventType getType()                       = 0;
 
-  virtual std::string toString() = 0;
-
-  static MotoGameEvent* getUnserialized(DBuffer &Buffer, bool bDisplayInformation = false);
+  static MotoGameEvent* getUnserialized(DBuffer &Buffer);
   float getEventTime();
 
   protected:
@@ -99,8 +93,6 @@ class MGE_PlayerDies : public MotoGameEvent {
   static GameEventType SgetType();
   GameEventType getType();
 
-  std::string toString();
-
  private:
   bool m_bKilledByWrecker;
 };
@@ -108,7 +100,7 @@ class MGE_PlayerDies : public MotoGameEvent {
 class MGE_PlayerEntersZone : public MotoGameEvent {
  public:
   MGE_PlayerEntersZone(float p_fEventTime);
-  MGE_PlayerEntersZone(float p_fEventTime, Zone *p_zone);
+  MGE_PlayerEntersZone(float p_fEventTime, LevelZone *p_zone);
   ~MGE_PlayerEntersZone();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -117,16 +109,14 @@ class MGE_PlayerEntersZone : public MotoGameEvent {
   static GameEventType SgetType();
   GameEventType getType();
 
-  std::string toString();
-
  private:
-  Zone *m_zone;
+  LevelZone *m_zone;
 };
 
 class MGE_PlayerLeavesZone : public MotoGameEvent {
  public:
   MGE_PlayerLeavesZone(float p_fEventTime);
-  MGE_PlayerLeavesZone(float p_fEventTime, Zone *p_zone);
+  MGE_PlayerLeavesZone(float p_fEventTime, LevelZone *p_zone);
   ~MGE_PlayerLeavesZone();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -135,10 +125,8 @@ class MGE_PlayerLeavesZone : public MotoGameEvent {
   static GameEventType SgetType();
   GameEventType getType();
 
-  std::string toString();
-
  private:
-  Zone *m_zone;
+  LevelZone *m_zone;
 };
 
 class MGE_PlayerTouchesEntity : public MotoGameEvent {
@@ -153,8 +141,6 @@ class MGE_PlayerTouchesEntity : public MotoGameEvent {
   static GameEventType SgetType();
   GameEventType getType();
 
-  std::string toString();
-
  private:
     std::string m_entityID;
     bool m_bTouchedWithHead;
@@ -163,7 +149,8 @@ class MGE_PlayerTouchesEntity : public MotoGameEvent {
 class MGE_EntityDestroyed : public MotoGameEvent {
  public:
   MGE_EntityDestroyed(float p_fEventTime);
-  MGE_EntityDestroyed(float p_fEventTime, std::string i_entityId, EntitySpeciality i_entityType, Vector2f i_entityPosition, float i_entitySize);
+  MGE_EntityDestroyed(float p_fEventTime, std::string p_entityID, EntityType p_type,
+                      float p_fSize, float p_fPosX, float p_fPosY);
   ~MGE_EntityDestroyed();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -173,15 +160,14 @@ class MGE_EntityDestroyed : public MotoGameEvent {
   static GameEventType SgetType();
   GameEventType getType();
 
-  std::string toString();
-
-  std::string EntityId();
+  EntityType getEntityType();
 
  private:
-  std::string m_entityId;
-  EntitySpeciality m_entityType;
-  Vector2f    m_entityPosition;
-  float       m_entitySize;
+  /* Have enough information so that we can recreate the entity */
+  std::string m_entityID;
+  EntityType  m_type;
+  float m_fSize;
+  float m_fPosX, m_fPosY;
 };
 
 class MGE_ClearMessages : public MotoGameEvent {
@@ -194,8 +180,6 @@ class MGE_ClearMessages : public MotoGameEvent {
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
   GameEventType getType();
-
-  std::string toString();
 
  private:
 };
@@ -211,8 +195,6 @@ class MGE_PlaceInGameArrow : public MotoGameEvent {
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
   GameEventType getType();
-
-  std::string toString();
 
  private:
   float m_x, m_y;
@@ -231,8 +213,6 @@ class MGE_PlaceScreenarrow : public MotoGameEvent {
   static GameEventType SgetType();
   GameEventType getType();
 
-  std::string toString();
-
  private:
   float m_x, m_y;
   float m_angle;
@@ -249,8 +229,6 @@ class MGE_HideArrow : public MotoGameEvent {
   static GameEventType SgetType();
   GameEventType getType();
 
-  std::string toString();
-
  private:
 };
 
@@ -265,8 +243,6 @@ class MGE_Message : public MotoGameEvent {
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
   GameEventType getType();
-
-  std::string toString();
 
  private:
   std::string m_message;
@@ -283,8 +259,6 @@ class MGE_MoveBlock : public MotoGameEvent {
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
   GameEventType getType();
-
-  std::string toString();
 
  private:
   std::string m_blockID;
@@ -303,8 +277,6 @@ class MGE_SetBlockPos : public MotoGameEvent {
   static GameEventType SgetType();
   GameEventType getType();
 
-  std::string toString();
-
  private:
   std::string m_blockID;
   float m_x, m_y;
@@ -322,8 +294,6 @@ class MGE_SetGravity : public MotoGameEvent {
   static GameEventType SgetType();
   GameEventType getType();
 
-  std::string toString();
-
  private:
   float m_x, m_y;
 };
@@ -339,8 +309,6 @@ class MGE_SetPlayerPosition : public MotoGameEvent {
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
   GameEventType getType();
-
-  std::string toString();
 
  private:
   float m_x, m_y;
@@ -359,8 +327,6 @@ class MGE_SetEntityPos : public MotoGameEvent {
   static GameEventType SgetType();
   GameEventType getType();
 
-  std::string toString();
-
  private:
   std::string m_entityID;
   float m_x, m_y;
@@ -378,8 +344,6 @@ class MGE_SetBlockCenter : public MotoGameEvent {
   static GameEventType SgetType();
   GameEventType getType();
 
-  std::string toString();
-
  private:
   std::string m_blockID;
   float m_x, m_y;
@@ -396,8 +360,6 @@ class MGE_SetBlockRotation : public MotoGameEvent {
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
   GameEventType getType();
-
-  std::string toString();
 
  private:
   std::string m_blockID;
@@ -421,8 +383,6 @@ class MGE_SetDynamicEntityRotation : public MotoGameEvent {
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
   GameEventType getType();
-
-  std::string toString();
 
  private:
   std::string m_entityID;
@@ -451,8 +411,6 @@ class MGE_SetDynamicEntityTranslation : public MotoGameEvent {
   static GameEventType SgetType();
   GameEventType getType();
 
-  std::string toString();
-
  private:
   std::string m_entityID;
   float m_x, m_y;
@@ -472,8 +430,6 @@ class MGE_SetDynamicEntityNone : public MotoGameEvent {
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
   GameEventType getType();
-
-  std::string toString();
 
  private:
   std::string m_entityID;
@@ -496,8 +452,6 @@ class MGE_SetDynamicBlockRotation : public MotoGameEvent {
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
   GameEventType getType();
-
-  std::string toString();
 
  private:
   std::string m_blockID;
@@ -526,8 +480,6 @@ class MGE_SetDynamicBlockTranslation : public MotoGameEvent {
   static GameEventType SgetType();
   GameEventType getType();
 
-  std::string toString();
-
  private:
   std::string m_blockID;
   float m_x, m_y;
@@ -548,8 +500,6 @@ class MGE_SetDynamicBlockNone : public MotoGameEvent {
   static GameEventType SgetType();
   GameEventType getType();
 
-  std::string toString();
-
  private:
   std::string m_blockID;
 };
@@ -565,8 +515,6 @@ class MGE_CameraMove : public MotoGameEvent {
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
   GameEventType getType();
-
-  std::string toString();
 
  private:
   float m_moveX, m_moveY;
@@ -584,8 +532,6 @@ class MGE_CameraZoom : public MotoGameEvent {
   static GameEventType SgetType();
   GameEventType getType();
 
-  std::string toString();
-
  private:
   float m_zoom;
 };
@@ -601,8 +547,6 @@ class MGE_PenalityTime : public MotoGameEvent {
   void unserialize(DBuffer &Buffer);
   static GameEventType SgetType();
   GameEventType getType();
-
-  std::string toString();
 
  private:
   float m_penalityTime;
