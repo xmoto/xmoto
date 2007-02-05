@@ -47,6 +47,7 @@ void Entity::loadToPlay() {
   m_dynamicPosition = m_initialPosition;
   /* make every entity alive */
   setAlive(true);
+  m_isBBoxDirty = true;
 }
 
 void Entity::unloadToPlay() {
