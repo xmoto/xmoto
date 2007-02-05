@@ -127,10 +127,10 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp GameMain.cpp \
   xmscene/BikeAnchors.h \
   xmscene/BikeAnchors.cpp \
   xmscene/Bike.h \
-  xmscene/Bike.cpp \
-  xmoto_icone.ico
+  xmscene/Bike.cpp
 
 if WIN32
+xmoto_SOURCES += xmoto_icone.ico
 .ico.o:
 	echo "1 ICON \"""$<""\"" > tmp.rc && i586-mingw32msvc-windres tmp.rc "$@"
 endif
