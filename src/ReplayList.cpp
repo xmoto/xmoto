@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "Replay.h"
 
-#define CURRENT_REPLAY_INDEX_FILE_VERSION 2
+#define CURRENT_REPLAY_INDEX_FILE_VERSION 1
 
 namespace vapp {
 
@@ -47,14 +47,8 @@ namespace vapp {
       v_nbReplays = vapp::FS::readInt_LE(pfh);
       for(int i=0; i<v_nbReplays; i++) {
 	try {
-	  ReplayInfo *pRpl  = new ReplayInfo;
-	  pRpl->Level       = vapp::FS::readString(pfh);
-	  pRpl->Name        = vapp::FS::readString(pfh);
-	  pRpl->Player      = vapp::FS::readString(pfh);
-	  pRpl->nTimeStamp  = vapp::FS::readInt_LE(pfh);
-	  pRpl->fFrameRate  = vapp::FS::readFloat_LE(pfh);
-	  pRpl->fFinishTime = vapp::FS::readFloat_LE(pfh);
-	  m_Replays.push_back(pRpl);
+	  v_replayName = vapp::FS::readString(pfh);
+	  addReplay(v_replayName, false);
 	} catch(Exception &e) {
 	}
       }
@@ -80,12 +74,7 @@ namespace vapp {
       vapp::FS::writeInt_LE(pfh, CURRENT_REPLAY_INDEX_FILE_VERSION); /* version */
       vapp::FS::writeInt_LE(pfh, m_Replays.size());
       for(int i=0; i<m_Replays.size(); i++) {
-	vapp::FS::writeString(pfh,   m_Replays[i]->Level);
-	vapp::FS::writeString(pfh,   m_Replays[i]->Name);
-	vapp::FS::writeString(pfh,   m_Replays[i]->Player);
-	vapp::FS::writeInt_LE(pfh,   m_Replays[i]->nTimeStamp);
-	vapp::FS::writeFloat_LE(pfh, m_Replays[i]->fFrameRate);
-	vapp::FS::writeFloat_LE(pfh, m_Replays[i]->fFinishTime);
+	vapp::FS::writeString(pfh, m_Replays[i]->Name);
       }
     } catch(Exception &e) {
       vapp::FS::closeFile(pfh);

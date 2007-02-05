@@ -30,14 +30,10 @@ Entity::Entity(const std::string& i_id) {
   m_size        = ENTITY_DEFAULT_SIZE;
   m_width       = -1.0;
   m_height      = -1.0;
-  m_drawAngle    = 0.0;
-  m_drawReversed = false;
   m_z           = ENTITY_DEFAULT_Z;
   m_doesKill    = false;
   m_doesMakeWin = false;
   m_isToTake    = false;
-  m_BBox.reset();
-  m_isBBoxDirty = true;
 }
 
 Entity::~Entity() {
@@ -45,9 +41,6 @@ Entity::~Entity() {
 
 void Entity::loadToPlay() {
   m_dynamicPosition = m_initialPosition;
-  /* make every entity alive */
-  setAlive(true);
-  m_isBBoxDirty = true;
 }
 
 void Entity::unloadToPlay() {
@@ -102,25 +95,12 @@ float Entity::Height() const {
   return m_height;
 }
 
-float Entity::DrawAngle() const {
-  return m_drawAngle;
-}
-
-bool Entity::DrawReversed() const {
-  return m_drawReversed;
-}
-
 void Entity::setInitialPosition(const Vector2f& i_initialPosition) {
   m_initialPosition = i_initialPosition;
-  m_isBBoxDirty = true;
 }
 
 std::string Entity::SpriteName() const {
   return m_spriteName;
-}
-
-bool Entity::isAlive() const {
-  return m_isAlive;
 }
 
 void Entity::setSpriteName(const std::string& i_spriteName) {
@@ -133,7 +113,6 @@ Vector2f Entity::DynamicPosition() const {
 
 void Entity::setSize(float i_size) {
   m_size = i_size;
-  m_isBBoxDirty = true;
 }
 
 void Entity::setSpeciality(EntitySpeciality i_speciality) {
@@ -150,14 +129,6 @@ void Entity::setHeight(float i_height) {
   m_height = i_height;
 }
 
-void Entity::setDrawAngle(float i_drawAngle) {
-  m_drawAngle = i_drawAngle;
-}
-
-void Entity::setDrawReversed(bool i_drawReversed) {
-  m_drawReversed = i_drawReversed;
-}
-
 void Entity::setZ(float i_z) {
   m_z = i_z;
 }
@@ -166,35 +137,13 @@ void Entity::setColor(const TColor& i_color) {
   m_color = i_color;
 }
 
-void Entity::setAlive(bool alive) {
-  m_isAlive = alive;
-}
-
-
 bool Entity::updateToTime(float i_time, Vector2f i_gravity) {
   return false;
 }
 
-AABB& Entity::getAABB()
-{
-  if(m_isBBoxDirty == true){
-    m_BBox.reset();
-    float size = Size();
-    m_BBox.addPointToAABB2f(m_dynamicPosition.x-size,
-			    m_dynamicPosition.y-size);
-    m_BBox.addPointToAABB2f(m_dynamicPosition.x+size,
-			    m_dynamicPosition.y+size);
-
-    m_isBBoxDirty = false;
-  }
-
-  return m_BBox;
-}
-
-
 ParticlesSource::ParticlesSource(const std::string& i_id, float i_particleTime_increment)
   : Entity(i_id) {
-  m_lastParticleTime       = 0.0;
+  m_nextParticleTime       = 0.0;
   m_particleTime_increment = i_particleTime_increment;
 }
 
@@ -204,7 +153,7 @@ ParticlesSource::~ParticlesSource() {
 
 void ParticlesSource::loadToPlay() {
   Entity::loadToPlay();
-  m_lastParticleTime = 0.0;
+  m_nextParticleTime = 0.0;
 } 
 
 void ParticlesSource::unloadToPlay() {
@@ -216,7 +165,7 @@ void ParticlesSource::unloadToPlay() {
 bool ParticlesSource::updateToTime(float i_time, Vector2f i_gravity) {
   unsigned int i;
 
-  if(i_time > m_lastParticleTime + m_particleTime_increment) {  
+  if(i_time > m_nextParticleTime) {  
     i = 0;
     while(i < m_particles.size()) {
       if(i_time > m_particles[i]->KillTime()) {
@@ -227,13 +176,8 @@ bool ParticlesSource::updateToTime(float i_time, Vector2f i_gravity) {
 	i++;
       }
     }
-    m_lastParticleTime = i_time;
+    m_nextParticleTime = i_time + m_particleTime_increment;
     return true;
-  } else {
-    /* return in the past */
-    if(i_time < m_lastParticleTime - m_particleTime_increment) {
-      deleteParticles();   
-    }
   }
   return false;
 }
@@ -322,7 +266,7 @@ bool FireParticle::updateToTime(float i_time, Vector2f i_gravity) {
   int v_b = Color().Blue()  - (int)(randomNum(400,400) * v_timeStep);
   v_color.setBlue(v_b < 0 ? 0 : v_b);
 
-  int v_a = Color().Alpha() - (int)(250.0f * v_timeStep);
+  int v_a = Color().Alpha() - (int)(200.0f * v_timeStep);
   if(v_a >= 0) {
     v_color.setAlpha(v_a);
     setColor(v_color);
@@ -341,7 +285,7 @@ bool FireParticle::updateToTime(float i_time, Vector2f i_gravity) {
 bool ParticlesSourceFire::updateToTime(float i_time, Vector2f i_gravity) {
   if(ParticlesSource::updateToTime(i_time, i_gravity)) {
     /* Generate fire */
-    for(int k=0;k<3;k++) {
+    for(int k=0;k<10;k++) {
       /* maximum 10s for a fire particule, but it can be destroyed before */
       ParticlesSource::addParticle(Vector2f(randomNum(-1,1),randomNum(0.1,0.3)), i_time + 10.0);
     }
@@ -371,7 +315,6 @@ float EntityParticle::KillTime() const {
 
 void Entity::setDynamicPosition(const Vector2f& i_dynamicPosition) {
   m_dynamicPosition = i_dynamicPosition;
-  m_isBBoxDirty = true;
 }
 
 EntityParticle::EntityParticle(const Vector2f& i_position, const Vector2f i_velocity, float i_killTime)
@@ -451,8 +394,6 @@ Entity* Entity::readFromXml(TiXmlElement *pElem) {
   float       v_size   = 0.2;
   float       v_height = -1.0;
   float       v_width  = -1.0;
-  float       v_angle  = -1.0;
-  bool        v_reversed = false;
   float       v_z      = 0.5;
   std::string v_spriteName;
   std::string v_typeName;
@@ -465,8 +406,6 @@ Entity* Entity::readFromXml(TiXmlElement *pElem) {
   if(pPosElem != NULL) {
     v_position.x = atof(vapp::XML::getOption(pPosElem,"x","0").c_str());
     v_position.y = atof(vapp::XML::getOption(pPosElem,"y","0").c_str());
-    v_angle      = atof(vapp::XML::getOption(pPosElem,"angle","-1.0").c_str());
-    v_reversed   = vapp::XML::getOption(pPosElem,"reversed","false") == "true";
   }
   TiXmlElement *pSizeElem = pElem->FirstChildElement("size");
   if(pSizeElem != NULL) {
@@ -527,11 +466,7 @@ Entity* Entity::readFromXml(TiXmlElement *pElem) {
   }
   if(v_height > 0.0) {
     v_entity->setHeight(v_height);
-  }
-  if(v_angle > 0.0) {
-    v_entity->setDrawAngle(v_angle);
-  }
-  v_entity->setDrawReversed(v_reversed);
+  }  
   v_entity->setZ(v_z);
 
   return v_entity;
@@ -545,8 +480,6 @@ void Entity::saveBinary(vapp::FileHandle *i_pfh) {
   vapp::FS::writeFloat_LE(i_pfh, Height()); 
   vapp::FS::writeFloat_LE(i_pfh, InitialPosition().x);
   vapp::FS::writeFloat_LE(i_pfh, InitialPosition().y);
-  vapp::FS::writeFloat_LE(i_pfh, DrawAngle());
-  vapp::FS::writeBool(i_pfh,  DrawReversed());
   
   switch(Speciality()) {
   case ET_NONE:
@@ -581,8 +514,6 @@ Entity* Entity::readFromBinary(vapp::FileHandle *i_pfh) {
   float       v_size   = 0.2;
   float       v_height = -1.0;
   float       v_width  = -1.0;
-  float       v_angle  = -1.0;
-  bool        v_reversed = false;
   float       v_z      = 0.5;
   std::string v_spriteName;
   std::string v_typeName;
@@ -596,8 +527,6 @@ Entity* Entity::readFromBinary(vapp::FileHandle *i_pfh) {
   v_height     = vapp::FS::readFloat_LE(i_pfh);
   v_position.x = vapp::FS::readFloat_LE(i_pfh);
   v_position.y = vapp::FS::readFloat_LE(i_pfh);
-  v_angle      = vapp::FS::readFloat_LE(i_pfh);
-  v_reversed   = vapp::FS::readBool(i_pfh);
   std::string v_paramName;
   std::string v_paramValue;
   int nNumParams = vapp::FS::readByte(i_pfh);
@@ -652,14 +581,15 @@ Entity* Entity::readFromBinary(vapp::FileHandle *i_pfh) {
   }
   if(v_height > 0.0) {
     v_entity->setHeight(v_height);
-  }
-  if(v_angle > 0.0) {
-    v_entity->setDrawAngle(v_angle);
-  }
-  v_entity->setDrawReversed(v_reversed);
+  }  
   v_entity->setZ(v_z);
 
   return v_entity;
+}
+
+void ParticlesSource::clearAfterRewind() {
+  Entity::clearAfterRewind();
+  deleteParticles();
 }
 
 void ParticlesSource::deleteParticles() {
@@ -679,6 +609,9 @@ EntitySpeciality ParticlesSource::Speciality() const {
 
 float EntityParticle::Angle() const {
   return m_ang;
+}
+
+void Entity::clearAfterRewind() {
 }
 
 void ParticlesSource::addParticle(Vector2f i_velocity, float i_killTime) {
@@ -736,7 +669,7 @@ bool DebrisParticle::updateToTime(float i_time, Vector2f i_gravity) {
 FireParticle::FireParticle(const Vector2f& i_position, const Vector2f i_velocity, float i_killTime, std::string i_spriteName)
   : EntityParticle(i_position, i_velocity, i_killTime) {
   m_fireSeed = randomNum(0,100);
-  setSize(0.17);
+  setSize(0.09);
   setColor(TColor(255,255,0,255));
   setSpriteName(i_spriteName);
 }

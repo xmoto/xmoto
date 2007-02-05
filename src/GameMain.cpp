@@ -33,7 +33,7 @@ using namespace vapp;
 /*===========================================================================
 SDL main entry point
 ===========================================================================*/
-#if defined(WIN32)
+#if defined(_MSC_VER)
 int SDL_main(int nNumArgs,char **ppcArgs) {
 #else
 int main(int nNumArgs,char **ppcArgs) {

@@ -31,7 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <vector>
 #include <stdio.h>
 
-#if !defined(WIN32) && !defined(__APPLE__) && !defined(__MACH__)
+#if !defined(_MSC_VER) && !defined(__APPLE__) && !defined(__MACH__)
   //#define USE_HASH_MAP // removed because it seems to segfault i don't know why when i refresh levels using F5 and quit
 #endif
 
@@ -69,7 +69,11 @@ class ThemeChoice;
   #endif
   #else // #ifdef __GNUC__
   #include <hash_map>
+  #if (_MSC_VER >= 1300)
+  namespace HashNamespace=stdext;
+  #else
   namespace HashNamespace=std;
+  #endif
   #endif
 
   struct highscore_str {
@@ -316,14 +320,12 @@ class WebLevels {
   const std::vector<std::string> &getUpdatedDownloadedLevels();
 
   /* Get IDs of updated levels downloaded OK*/
-  const std::vector<std::string> &getUpdatedDownloadedLevelIds();
+  const std::vector<std::string> &getUpdatedDownloadedLevelIDs();
   
   /* Set URL */
   void setURL(const std::string &p_url) {m_levels_url = p_url;}
 
   bool exists(const std::string p_id);
-
-  static std::string getDestinationFile(std::string p_url);
 
  private:
   vapp::WWWAppInterface *m_WebLevelApp;
@@ -331,7 +333,6 @@ class WebLevels {
   std::vector<std::string> m_webLevelsNewDownloadedOK; /* file names of those levels 
            which where downloaded OK (so we can load them right away) and which are new */
   std::vector<std::string> m_webLevelsUpdatedDownloadedOK;
-  std::vector<std::string> m_webLevelsIdsUpdatedDownloadedOK;
 
   const ProxySettings *m_proxy_settings;
   
@@ -339,7 +340,8 @@ class WebLevels {
 
   std::string getXmlFileName();
   void downloadXml(); /* throw exceptions */
-  static std::string getDestinationDir();
+  std::string getDestinationDir();
+  std::string getDestinationFile(std::string p_url);
   void createDestinationDirIfRequired();
   void extractLevelsToDownloadFromXml(); /* throw exceptions */				      
 };

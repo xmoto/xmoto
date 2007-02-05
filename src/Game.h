@@ -108,9 +108,6 @@ namespace vapp {
                  m_bEnableLevelCache=true;
                  m_bEnableMenuMusic=false;
                  m_bEnableInitZoom=false;
-								 m_autoZoom = false;
-								 m_bAutoZoomInitialized = false;
-								 m_bLockMotoGame = false;
                  m_bCleanCache=false;
                  m_bEnableDeathAnim=true;
                  m_pQuitMsgBox=NULL;
@@ -158,7 +155,6 @@ namespace vapp {
                  m_bCompressReplays = true;
                  m_bBenchmark = false;
                  m_bEnableContextHelp = true;     
-		 m_bDisplayInfosReplay = false;
 
 #if defined(SUPPORT_WEBACCESS)
                  m_bShowWebHighscoreInGame = false;
@@ -175,7 +171,8 @@ namespace vapp {
 #endif
      m_fLastSqueekTime = 0.0f;
 
-     m_Renderer.setTheme(getTheme());
+
+     m_Renderer.setTheme(&m_theme);
      m_MotoGame.setRenderer(&m_Renderer);
 
      m_bPrePlayAnim = true;
@@ -211,7 +208,6 @@ namespace vapp {
       virtual void parseUserArgs(std::vector<std::string> &UserArgs);
       virtual void helpUserArgs(void);
       virtual void selectDisplayMode(int *pnWidth,int *pnHeight,int *pnBPP,bool *pbWindowed);
-      virtual std::string selectDrawLibMode();
       virtual std::string getConfigThemeName(ThemeChoicer *p_themeChoicer);
 
       /* Methods */
@@ -220,23 +216,16 @@ namespace vapp {
       void setPrePlayAnim(bool pEnabled);
       void reloadTheme();
 
-      void PlaySpecificLevel(std::string i_level);
-      void PlaySpecificReplay(std::string i_replay);
-
       /* Data interface */
       bool isUglyMode() {return m_bUglyMode;}
       bool isTestThemeMode(void) {return m_bTestThemeMode;}
     
-			void setAutoZoom(bool bValue);
-
     private: 
       EngineSoundSimulator m_EngineSound;
     
       /* Data */
       ReplayList m_ReplayList;                  /* Replay list */
       bool m_bEnableInitZoom;                   /* true: Perform initial level scroll/zoom */
-			bool m_autoZoom;                          /* true : the key is pressed so that it zooms out to see the level */
-			bool m_bAutoZoomInitialized;
       bool m_bEnableDeathAnim;                  /* true: Bike falls apart at when dead */
       bool m_bEnableMenuMusic;                  /* true: Play menu music */      
       bool m_bEnableContextHelp;                /* true: Show context help */
@@ -249,8 +238,6 @@ namespace vapp {
       bool m_bUglyMode;                         /* true: fast 'n ugly graphics */
       bool m_bCleanCache;                       /* true: clean the level cache at startup */
       bool m_bShowEngineCounter;
-      bool m_bDisplayInfosReplay;               /* true: just display infos of a replay */
-      std::string m_InfosReplay;                /* name of the replay to display information */
 
       bool m_bTestThemeMode;
       bool m_bEnableEngineSound;                /* true: engine sound is enabled */
@@ -295,7 +282,7 @@ namespace vapp {
       bool m_bEnableGhostInfo;
 #endif
       std::string m_ReplayPlayerName;
-  
+      
       /* WWW */
 #if defined(SUPPORT_WEBACCESS)
       bool m_bShowWebHighscoreInGame;           /* true: Show world highscore inside the game */
@@ -454,8 +441,6 @@ namespace vapp {
       double m_fFrameTime;
       float m_fFPS_Rate;
 
-			bool m_bLockMotoGame;
-
       /* Helpers */
 #if defined(SUPPORT_WEBACCESS) 
       void _UpdateWorldRecord(const std::string &LevelID);
@@ -478,8 +463,7 @@ namespace vapp {
 #endif
       void _CreateProfileList(void);
       void _CreateDefaultConfig(void);
-      void _CreateLevelPackLevelList();
-      void _UpdateLevelPackLevelList();
+      void _CreateLevelPackLevelList(void);
       void _UpdateActionKeyList(void);
       void _UpdateLevelPackList(void);
       void _UpdateLevelInfoViewerBestTimes(const std::string &LevelID);     
@@ -564,18 +548,6 @@ namespace vapp {
       void prestartAnimation_init();
       void prestartAnimation_step();
       
-			void zoomAnimation1_init();
-			bool zoomAnimation1_step();
-			void zoomAnimation1_abort();
-
-			void zoomAnimation2_init();
-			bool zoomAnimation2_step();
-			bool zoomAnimation2_unstep();
-			void zoomAnimation2_abort();
-
-			void lockMotoGame(bool bLock);
-			bool isLockedMotoGame() const;
-
       std::string splitText(const std::string &str, int p_breakLineLength);
       
       /* Main loop utility functions */
@@ -594,8 +566,6 @@ namespace vapp {
       void _PostUpdateFinished(void);
 
       int getNumberOfFinishedLevelsOfPack(LevelsPack *i_pack);
-
-			void autoZoom();
   };
 
 }

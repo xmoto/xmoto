@@ -80,16 +80,16 @@ namespace vapp {
     }
 
     if(m_bUglyMode || m_bTestThemeMode) {
-      getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
-      getParent()->getDrawLib()->setColor(p_theme->getUglyWheelColor());
-      getParent()->getDrawLib()->glVertex(p0+C);    
-      getParent()->getDrawLib()->glVertex(p2+C);
-      getParent()->getDrawLib()->endDraw();
-      getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
-      getParent()->getDrawLib()->setColor(p_theme->getUglyWheelColor());
-      getParent()->getDrawLib()->glVertex(p1+C);
-      getParent()->getDrawLib()->glVertex(p3+C);
-      getParent()->getDrawLib()->endDraw();
+      glBegin(GL_LINE_STRIP);
+      glColor3ub(GET_RED(p_theme->getUglyWheelColor()),GET_GREEN(p_theme->getUglyWheelColor()),GET_BLUE(p_theme->getUglyWheelColor()));
+      _Vertex(p0+C);    
+      _Vertex(p2+C);
+      glEnd();
+      glBegin(GL_LINE_STRIP);
+      glColor3ub(GET_RED(p_theme->getUglyWheelColor()),GET_GREEN(p_theme->getUglyWheelColor()),GET_BLUE(p_theme->getUglyWheelColor()));
+      _Vertex(p1+C);
+      _Vertex(p3+C);
+      glEnd();
       _RenderCircle(16,p_theme->getUglyWheelColor(),C,pBikeParms->WR);
     }
 
@@ -131,16 +131,16 @@ namespace vapp {
     }
 
     if(m_bUglyMode || m_bTestThemeMode) {
-      getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
-      getParent()->getDrawLib()->setColor(p_theme->getUglyWheelColor());
-      getParent()->getDrawLib()->glVertex(p0+C);    
-      getParent()->getDrawLib()->glVertex(p2+C);
-      getParent()->getDrawLib()->endDraw();
-      getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
-      getParent()->getDrawLib()->setColor(p_theme->getUglyWheelColor());
-      getParent()->getDrawLib()->glVertex(p1+C);
-      getParent()->getDrawLib()->glVertex(p3+C);
-      getParent()->getDrawLib()->endDraw();
+      glBegin(GL_LINE_STRIP);
+      glColor3ub(GET_RED(p_theme->getUglyWheelColor()),GET_GREEN(p_theme->getUglyWheelColor()),GET_BLUE(p_theme->getUglyWheelColor()));
+      _Vertex(p0+C);    
+      _Vertex(p2+C);
+      glEnd();
+      glBegin(GL_LINE_STRIP);
+      glColor3ub(GET_RED(p_theme->getUglyWheelColor()),GET_GREEN(p_theme->getUglyWheelColor()),GET_BLUE(p_theme->getUglyWheelColor()));
+      _Vertex(p1+C);
+      _Vertex(p3+C);
+      glEnd();
       _RenderCircle(16,p_theme->getUglyWheelColor(),C,pBikeParms->WR);
     }
 
@@ -219,11 +219,10 @@ namespace vapp {
       if(pSprite != NULL) {
 	pTexture = pSprite->getTexture();
 	if(pTexture != NULL) {
-	  if(pBike->Dir == DD_RIGHT) {
+	  if(pBike->Dir == DD_RIGHT)
 	    _RenderAlphaBlendedSection(pTexture,p3+C,p2+C,p1+C,p0+C);
-	  } else {
+	  else
 	    _RenderAlphaBlendedSection(pTexture,p2+C,p3+C,p0+C,p1+C);
-	  }
 	}
       }
     }
@@ -314,15 +313,15 @@ namespace vapp {
 
       if(m_bUglyMode || m_bTestThemeMode) {
         /* Draw it ugly */
-	getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
-	getParent()->getDrawLib()->setColor(p_theme->getUglyRiderColor());
-        getParent()->getDrawLib()->glVertex(pBike->FootP);
-        getParent()->getDrawLib()->glVertex(pBike->KneeP);
-        getParent()->getDrawLib()->glVertex(pBike->LowerBodyP);
-        getParent()->getDrawLib()->glVertex(pBike->ShoulderP);
-        getParent()->getDrawLib()->glVertex(pBike->ElbowP);
-        getParent()->getDrawLib()->glVertex(pBike->HandP);
-	getParent()->getDrawLib()->endDraw();
+        glBegin(GL_LINE_STRIP);
+        glColor3ub(GET_RED(p_theme->getUglyRiderColor()),GET_GREEN(p_theme->getUglyRiderColor()),GET_BLUE(p_theme->getUglyRiderColor()));
+        _Vertex(pBike->FootP);
+        _Vertex(pBike->KneeP);
+        _Vertex(pBike->LowerBodyP);
+        _Vertex(pBike->ShoulderP);
+        _Vertex(pBike->ElbowP);
+        _Vertex(pBike->HandP);
+        glEnd();
         _RenderCircle(10,p_theme->getUglyRiderColor(),pBike->HeadP,pBikeParms->fHeadSize);
       }
     }
@@ -411,18 +410,28 @@ namespace vapp {
 
       if(m_bUglyMode || m_bTestThemeMode) {
         /* Draw it ugly */
-	getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
-	getParent()->getDrawLib()->setColor(p_theme->getUglyRiderColor());
-        getParent()->getDrawLib()->glVertex(pBike->Foot2P);
-        getParent()->getDrawLib()->glVertex(pBike->Knee2P);
-        getParent()->getDrawLib()->glVertex(pBike->LowerBody2P);
-        getParent()->getDrawLib()->glVertex(pBike->Shoulder2P);
-        getParent()->getDrawLib()->glVertex(pBike->Elbow2P);
-        getParent()->getDrawLib()->glVertex(pBike->Hand2P);
-        getParent()->getDrawLib()->endDraw();
+        glBegin(GL_LINE_STRIP);
+        glColor3ub(GET_RED(p_theme->getUglyRiderColor()),GET_GREEN(p_theme->getUglyRiderColor()),GET_BLUE(p_theme->getUglyRiderColor()));
+        _Vertex(pBike->Foot2P);
+        _Vertex(pBike->Knee2P);
+        _Vertex(pBike->LowerBody2P);
+        _Vertex(pBike->Shoulder2P);
+        _Vertex(pBike->Elbow2P);
+        _Vertex(pBike->Hand2P);
+        glEnd();
         _RenderCircle(10,p_theme->getUglyRiderColor(),pBike->Head2P,pBikeParms->fHeadSize);
       }
     }   
+    
+    /* New wheel-spin particles? */
+    if(getGameObject()->isWheelSpinning()) {
+      if(randomNum(0,1) < 0.7f) {
+	      ParticlesSource *v_debris;
+	      v_debris = (ParticlesSource*) &(getGameObject()->getLevelSrc()->getEntityById("BikeDebris"));
+	      v_debris->setDynamicPosition(getGameObject()->getWheelSpinPoint());	
+	      v_debris->addParticle(getGameObject()->getWheelSpinDir(), m_pMotoGame->getTime() + 3.0);
+      }
+    }
   }
 
   void GameRenderer::_DrawRotatedMarker(Vector2f Pos,dReal *pfRot) {
@@ -451,16 +460,16 @@ namespace vapp {
       p3 = o3;
     }
 
-    getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
-    getParent()->getDrawLib()->setColorRGB(255,255,255);
-    getParent()->getDrawLib()->glVertex(p0+C);    
-    getParent()->getDrawLib()->glVertex(p2+C);
-    getParent()->getDrawLib()->endDraw();
-    getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
-    getParent()->getDrawLib()->setColorRGB(255,255,255);
-    getParent()->getDrawLib()->glVertex(p1+C);    
-    getParent()->getDrawLib()->glVertex(p3+C);
-    getParent()->getDrawLib()->endDraw();
+    glBegin(GL_LINE_STRIP);
+    glColor3f(1,1,1);
+    _Vertex(p0+C);    
+    _Vertex(p2+C);
+    glEnd();
+    glBegin(GL_LINE_STRIP);
+    glColor3f(1,1,1);
+    _Vertex(p1+C);    
+    _Vertex(p3+C);
+    glEnd();
   }
   
 }

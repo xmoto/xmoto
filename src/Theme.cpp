@@ -69,8 +69,7 @@ void Theme::initDefaultFont() {
     m_pDefaultFontTexture = m_texMan.createTexture("default-font",(unsigned char *)pImgData,
                256,256,true);
       
-    //keesj:todo:idem here we can not delete the image data pointer
-    //delete [] pImgData;
+    delete [] pImgData;
 }
 
 vapp::Texture* Theme::getDefaultFont() {
@@ -253,15 +252,15 @@ void Theme::newAnimationSpriteFromXML(TiXmlElement *pVarElem) {
   float global_delay   = 0.1;
 
   pc = pVarElem->Attribute("name");
-  if(pc == NULL) {vapp::Log("** Animation with no name"); return;}
+  if(pc == NULL) {return;}
   v_name = pc;
   
   pc = pVarElem->Attribute("fileBase");
-  if(pc == NULL) {vapp::Log("** Animation with no fileBase"); return;}
+  if(pc == NULL) {return;}
   v_fileBase = pc;
 
   pc = pVarElem->Attribute("fileExtension");
-  if(pc == NULL) {vapp::Log("** Animation with no fileExtension"); return;}
+  if(pc == NULL) {return;}
   v_fileExtension = pc;
 
   pc = pVarElem->Attribute("centerX");
@@ -325,11 +324,11 @@ void Theme::newBikerPartSpriteFromXML(TiXmlElement *pVarElem) {
   const char *pc;
 
   pc = pVarElem->Attribute("name");
-  if(pc == NULL) {vapp::Log("** BikerPart with no name"); return;}
+  if(pc == NULL) {return;}
   v_name = pc;
 
   pc = pVarElem->Attribute("file");
-  if(pc == NULL) {vapp::Log("** BikerPart with no file"); return;}
+  if(pc == NULL) {return;}
   v_fileName = pc;
 
   m_sprites.push_back(new BikerPartSprite(this, v_name, v_fileName));
@@ -339,48 +338,47 @@ void Theme::newBikerPartSpriteFromXML(TiXmlElement *pVarElem) {
 void Theme::newDecorationSpriteFromXML(TiXmlElement *pVarElem) {
   std::string v_name;
   std::string v_fileName;
-  float v_width;
-  float v_height;
-  float v_centerX;
-  float v_centerY;
+  std::string v_width;
+  std::string v_height;
+  std::string v_centerX;
+  std::string v_centerY;
   std::string v_blendmode = "default";
   const char *pc;
 
-  float global_centerX = 0.5;
-  float global_centerY = 0.5;
-  float global_width   = 1.0;
-  float global_height  = 1.0;
-
   pc = pVarElem->Attribute("name");
-  if(pc == NULL) {vapp::Log("** Sprite with no name"); return;}
+  if(pc == NULL) {return;}
   v_name = pc;
 
   pc = pVarElem->Attribute("file");
-  if(pc == NULL) {vapp::Log("** Sprite with no name"); return;}
+  if(pc == NULL) {return;}
   v_fileName = pc;
 
   pc = pVarElem->Attribute("width");
-  if(pc != NULL) {v_width = atof(pc);} else {v_width = global_width;}
+  if(pc == NULL) {return;}
+  v_width = pc;
 
   pc = pVarElem->Attribute("height");
-  if(pc != NULL) {v_height = atof(pc);} else {v_height = global_height;}
+  if(pc == NULL) {return;}
+  v_height = pc;
 
   pc = pVarElem->Attribute("centerX");
-  if(pc != NULL) {v_centerX = atof(pc);} else {v_centerX = global_centerX;}
+  if(pc == NULL) {return;}
+  v_centerX = pc;
 
   pc = pVarElem->Attribute("centerY");
-  if(pc != NULL) {v_centerY = atof(pc);} else {v_centerY = global_centerY;}
+  if(pc == NULL) {return;}
+  v_centerY = pc;
   
   pc = pVarElem->Attribute("blendmode");
   if(pc != NULL) v_blendmode = pc;
 
   m_sprites.push_back(new DecorationSprite(this, v_name, v_fileName,
-					   v_width,
-					   v_height,
-					   v_centerX,
-					   v_centerY,
-					   strToBlendMode(v_blendmode)
-					   ));
+             atof(v_width.c_str()),
+             atof(v_height.c_str()),
+             atof(v_centerX.c_str()),
+             atof(v_centerY.c_str()),
+             strToBlendMode(v_blendmode)
+             ));
   m_requiredFiles.push_back(THEME_DECORATION_SPRITE_FILE_DIR + std::string("/") + v_fileName);
 }
 
@@ -390,11 +388,11 @@ void Theme::newEffectSpriteFromXML(TiXmlElement *pVarElem) {
   const char *pc;
 
   pc = pVarElem->Attribute("name");
-  if(pc == NULL) {vapp::Log("** Effect with no name"); return;}
+  if(pc == NULL) {return;}
   v_name = pc;
 
   pc = pVarElem->Attribute("file");
-  if(pc == NULL) {vapp::Log("** Effect with no file"); return;}
+  if(pc == NULL) {return;}
   v_fileName = pc;
 
   m_sprites.push_back(new EffectSprite(this, v_name, v_fileName));
@@ -409,19 +407,19 @@ void Theme::newEdgeEffectSpriteFromXML(TiXmlElement *pVarElem) {
   const char *pc;
 
   pc = pVarElem->Attribute("name");
-  if(pc == NULL) {vapp::Log("** Edge with no name"); return;}
+  if(pc == NULL) {return;}
   v_name = pc;
 
   pc = pVarElem->Attribute("file");
-  if(pc == NULL) {vapp::Log("** Edge with no file"); return;}
+  if(pc == NULL) {return;}
   v_fileName = pc;
 
   pc = pVarElem->Attribute("scale");
-  if(pc == NULL) {vapp::Log("** Edge with no scale"); return;}
+  if(pc == NULL) {return;}
   v_scale = pc;
 
   pc = pVarElem->Attribute("depth");
-  if(pc == NULL) {vapp::Log("Edge with no depth"); return;}
+  if(pc == NULL) {return;}
   v_depth = pc;
 
   m_sprites.push_back(new EdgeEffectSprite(this, v_name, v_fileName,
@@ -436,11 +434,11 @@ void Theme::newFontSpriteFromXML(TiXmlElement *pVarElem) {
   const char *pc;
 
   pc = pVarElem->Attribute("name");
-  if(pc == NULL) {vapp::Log("** Font with no name"); return;}
+  if(pc == NULL) {return;}
   v_name = pc;
 
   pc = pVarElem->Attribute("file");
-  if(pc == NULL) {vapp::Log("Font with no file"); return;}
+  if(pc == NULL) {return;}
   v_fileName = pc;
 
   m_sprites.push_back(new FontSprite(this, v_name, v_fileName));
@@ -453,11 +451,11 @@ void Theme::newMiscSpriteFromXML(TiXmlElement *pVarElem) {
   const char *pc;
 
   pc = pVarElem->Attribute("name");
-  if(pc == NULL) {vapp::Log("** Misc with no name"); return;}
+  if(pc == NULL) {return;}
   v_name = pc;
 
   pc = pVarElem->Attribute("file");
-  if(pc == NULL) {vapp::Log("** Misc with no file"); return;}
+  if(pc == NULL) {return;}
   v_fileName = pc;
 
   m_sprites.push_back(new MiscSprite(this, v_name, v_fileName));
@@ -470,11 +468,11 @@ void Theme::newUISpriteFromXML(TiXmlElement *pVarElem) {
   const char *pc;
 
   pc = pVarElem->Attribute("name");
-  if(pc == NULL) {vapp::Log("** UI with no name"); return;}
+  if(pc == NULL) {return;}
   v_name = pc;
 
   pc = pVarElem->Attribute("file");
-  if(pc == NULL) {vapp::Log("** UI with no file"); return;}
+  if(pc == NULL) {return;}
   v_fileName = pc;
 
   m_sprites.push_back(new UISprite(this, v_name, v_fileName));
@@ -487,11 +485,11 @@ void Theme::newTextureSpriteFromXML(TiXmlElement *pVarElem) {
   const char *pc;
 
   pc = pVarElem->Attribute("name");
-  if(pc == NULL) {vapp::Log("** Texture with no name"); return;}
+  if(pc == NULL) {return;}
   v_name = pc;
 
   pc = pVarElem->Attribute("file");
-  if(pc == NULL) {vapp::Log("** Texture with no file"); return;}
+  if(pc == NULL) {return;}
   v_fileName = pc;
 
   m_sprites.push_back(new TextureSprite(this, v_name, v_fileName));
@@ -534,6 +532,10 @@ vapp::Texture* Sprite::getTexture(bool bSmall, bool bClamp, vapp::FilterMode eFi
   return v_currentTexture;
 }
 
+std::string Sprite::getName() {
+  return m_name;
+}
+
 SpriteBlendMode Sprite::getBlendMode() {
   return m_blendmode;
 }
@@ -551,11 +553,14 @@ AnimationSprite::AnimationSprite(Theme* p_associated_theme, std::string p_name, 
   m_fileBase      = p_fileBase;
   m_fileExtension = p_fileExtention;
   m_fFrameTime    = 0.0;
-  m_type          = SPRITE_TYPE_ANIMATION;
 }
 
 AnimationSprite::~AnimationSprite() {
   cleanFrames();
+}
+
+enum SpriteType AnimationSprite::getType() {
+  return SPRITE_TYPE_ANIMATION;
 }
 
 std::string AnimationSprite::getFileDir() {
@@ -666,7 +671,6 @@ float AnimationSpriteFrame::getDelay() const {
 }
 
 BikerPartSprite::BikerPartSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
-  m_type = SPRITE_TYPE_BIKERPART;
 }
 
 BikerPartSprite::~BikerPartSprite() {
@@ -676,17 +680,24 @@ std::string BikerPartSprite::getFileDir() {
   return THEME_BIKERPART_SPRITE_FILE_DIR;
 }
 
+enum SpriteType BikerPartSprite::getType() {
+  return SPRITE_TYPE_BIKERPART;
+}
+
 DecorationSprite::DecorationSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName, float p_width, float p_height, float p_centerX, float p_centerY, SpriteBlendMode BlendMode) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
   m_width   = p_width;
   m_height  = p_height;
   m_centerX = p_centerX;
   m_centerY = p_centerY;
-  m_type    = SPRITE_TYPE_DECORATION;
   
   setBlendMode(BlendMode);
 }
 
 DecorationSprite::~DecorationSprite() {
+}
+
+enum SpriteType DecorationSprite::getType() {
+  return SPRITE_TYPE_DECORATION;
 }
 
 std::string DecorationSprite::getFileDir() {
@@ -710,10 +721,13 @@ float DecorationSprite::getCenterY() {
 }
 
 EffectSprite::EffectSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
-  m_type = SPRITE_TYPE_EFFECT;
 }
 
 EffectSprite::~EffectSprite() {
+}
+
+enum SpriteType EffectSprite::getType() {
+  return SPRITE_TYPE_EFFECT;
 }
 
 std::string EffectSprite::getFileDir() {
@@ -723,10 +737,13 @@ std::string EffectSprite::getFileDir() {
 EdgeEffectSprite::EdgeEffectSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename, float p_fScale, float p_fDepth) : SimpleFrameSprite(p_associated_theme, p_name, p_filename) {
   m_fScale = p_fScale;
   m_fDepth = p_fDepth;
-  m_type   = SPRITE_TYPE_EDGEEFFECT;
 }
 
 EdgeEffectSprite::~EdgeEffectSprite() {
+}
+
+enum SpriteType EdgeEffectSprite::getType() {
+  return SPRITE_TYPE_EDGEEFFECT;
 }
 
 std::string EdgeEffectSprite::getFileDir() {
@@ -742,10 +759,13 @@ float EdgeEffectSprite::getDepth() const {
 }
 
 FontSprite::FontSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
-  m_type = SPRITE_TYPE_FONT;
 }
 
 FontSprite::~FontSprite() {
+}
+
+enum SpriteType FontSprite::getType() {
+  return SPRITE_TYPE_FONT;
 }
 
 std::string FontSprite::getFileDir() {
@@ -753,10 +773,13 @@ std::string FontSprite::getFileDir() {
 }
 
 MiscSprite::MiscSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
-  m_type = SPRITE_TYPE_MISC;
 }
 
 MiscSprite::~MiscSprite() {
+}
+
+enum SpriteType MiscSprite::getType() {
+  return SPRITE_TYPE_MISC;
 }
 
 std::string MiscSprite::getFileDir() {
@@ -764,10 +787,13 @@ std::string MiscSprite::getFileDir() {
 }
 
 UISprite::UISprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
-  m_type = SPRITE_TYPE_UI;
 }
 
 UISprite::~UISprite() {
+}
+
+enum SpriteType UISprite::getType() {
+  return SPRITE_TYPE_UI;
 }
 
 std::string UISprite::getFileDir() {
@@ -775,10 +801,13 @@ std::string UISprite::getFileDir() {
 }
 
 TextureSprite::TextureSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
-  m_type = SPRITE_TYPE_TEXTURE;
 }
 
 TextureSprite::~TextureSprite() {
+}
+
+enum SpriteType TextureSprite::getType() {
+  return SPRITE_TYPE_TEXTURE;
 }
 
 std::string TextureSprite::getFileDir() {
@@ -952,14 +981,36 @@ void ThemeChoicer::initList() {
   std::vector<std::string> v_themesFiles = vapp::FS::findPhysFiles(std::string(THEMES_DIRECTORY) + std::string("/*.xml"), true);
   std::string v_name;
 
+  /* first, load theme which are in the user dir because, a same theme can be stored
+     in files having different name
+  */
   for(unsigned int i=0; i<v_themesFiles.size(); i++) {
     try {
-			v_name = getThemeNameFromFile(v_themesFiles[i]);
-			if(ExistThemeName(v_name) == false) {
-				m_choices.push_back(new ThemeChoice(v_name, v_themesFiles[i], true));
-			} else {
-				vapp::Log(std::string("Theme " + v_name + " is present several times").c_str());
-			}
+      if(vapp::FS::isInUserDir(v_themesFiles[i])) {
+  v_name = getThemeNameFromFile(v_themesFiles[i]);
+  if(ExistThemeName(v_name) == false) {
+    m_choices.push_back(new ThemeChoice(v_name, v_themesFiles[i], true));
+  } else {
+    vapp::Log(std::string("Theme " + v_name + " is present several times").c_str());
+  }
+      }
+    } catch(Exception &e) {
+      /* anyway, give up this theme */
+    }
+  }
+
+  /* load the other theme from not the user directory */
+  for(unsigned int i=0; i<v_themesFiles.size(); i++) {
+    try {
+      if(vapp::FS::isInUserDir(v_themesFiles[i]) == false) {
+  v_name = getThemeNameFromFile(v_themesFiles[i]);
+  if(ExistThemeName(v_name) == false) {
+    m_choices.push_back(new ThemeChoice(v_name, v_themesFiles[i], true));
+  } else {
+    // no warning for non user dir
+    // vapp::Log(std::string("Theme " + v_name + " is present several times").c_str());
+  }
+      }
     } catch(Exception &e) {
       /* anyway, give up this theme */
     }

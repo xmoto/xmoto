@@ -45,12 +45,8 @@ namespace vapp {
     pTexture->nWidth = nWidth;
     pTexture->nHeight = nHeight;
     pTexture->Tag = "";
-    pTexture->isAlpha = bAlpha;
-#ifdef ENABLE_OPENGL
     pTexture->nID = 0;
-#endif
     
-#ifdef ENABLE_OPENGL
     /* OpenGL magic */
     GLuint N;
     glEnable(GL_TEXTURE_2D);
@@ -104,26 +100,8 @@ namespace vapp {
     glDisable(GL_TEXTURE_2D);
     
     pTexture->nID = N;
-#endif
     
     m_nTexSpaceUsage += pTexture->nSize;
-        #if SDL_BYTEORDER == SDL_BIG_ENDIAN
-            Uint32 rmask = 0xff000000;
-            Uint32 gmask = 0x00ff0000;
-            Uint32 bmask = 0x0000ff00;
-            Uint32 amask = 0x000000ff;
-        #else
-            Uint32 rmask = 0x000000ff;
-            Uint32 gmask = 0x0000ff00;
-            Uint32 bmask = 0x00ff0000;
-            Uint32 amask = 0xff000000;
-        #endif
-      if(bAlpha){
-        pTexture->surface  = SDL_CreateRGBSurfaceFrom(pcData,nWidth,nHeight,32 /*bitsPerPixel */, nWidth * 4 /*pitch*/,rmask,gmask,bmask,amask);
-      } else {
-        pTexture->surface  = SDL_CreateRGBSurfaceFrom(pcData,nWidth,nHeight,24 /*bitsPerPixel */, nWidth * 3 /*pitch*/,rmask,gmask,bmask,0);
-
-      }
   
     /* Do it captain */
     m_Textures.push_back( pTexture );
@@ -138,9 +116,7 @@ namespace vapp {
     if(pTexture != NULL) {
       for(unsigned int i=0;i<m_Textures.size();i++) {
         if(m_Textures[i] == pTexture) {
-#ifdef ENABLE_OPENGL
           glDeleteTextures(1,(GLuint *)&pTexture->nID);
-#endif
           m_nTexSpaceUsage -= pTexture->nSize;
           delete pTexture;
           m_Textures.erase(m_Textures.begin() + i);
@@ -197,17 +173,14 @@ namespace vapp {
       /* Copy it into video memory */
       unsigned char *pc;
       bool bAlpha = TextureImage.isAlpha();
-      if(bAlpha){
+      if(bAlpha)
         pc = TextureImage.convertToRGBA32();
-      } else {
+      else
         pc = TextureImage.convertToRGB24();
-      }
       
       pTexture = createTexture(TexName,pc,TextureImage.getWidth(),TextureImage.getHeight(),bAlpha,bClamp, eFilterMode);
       
-      //keesj:todo when using SDL surface we cannot delete the image data
-      //this is a problem.
-      //delete [] pc;
+      delete [] pc;
     }
     else {
       Log("** Warning ** : TextureManager::loadTexture() : texture '%s' not found or invalid",Path.c_str());

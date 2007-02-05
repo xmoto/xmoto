@@ -149,16 +149,16 @@ namespace vapp {
       if(nC > 255) nC = 255;
       
       if(!m_pApp->isUglyMode())
-        m_pApp->getDrawLib()->drawBox(Vector2f(0,0),Vector2f(m_pApp->getDrawLib()->getDispWidth(),m_pApp->getDrawLib()->getDispHeight()),0,MAKE_COLOR(0,0,0,nC),0);      
+        m_pApp->drawBox(Vector2f(0,0),Vector2f(m_pApp->getDispWidth(),m_pApp->getDispHeight()),0,MAKE_COLOR(0,0,0,nC),0);      
       
       /* Render text */
-      int nScroll = 20 + m_pApp->getDrawLib()->getDispHeight() - fTime * 20;
+      int nScroll = 20 + m_pApp->getDispHeight() - fTime * 20;
       int nY = 0;
       
       for(int i=0;i<m_Entries.size();i++) {
         if(nY < 0) continue;
         
-        int nX = m_pApp->getDrawLib()->getDispWidth() - m_Entries[i]->nLeftWidth - 40 - m_nWidestRight;
+        int nX = m_pApp->getDispWidth() - m_Entries[i]->nLeftWidth - 40 - m_nWidestRight;
         Color Yellow = MAKE_COLOR(255,255,64,32);
         Color White = MAKE_COLOR(255,255,255,255);
         UITextDraw::printRawGrad(m_pFont,nX,nY+nScroll,m_Entries[i]->Left,White,White,Yellow,Yellow);
@@ -169,25 +169,22 @@ namespace vapp {
       
       if(!m_pApp->isUglyMode()) {
         /* Render fancyness */
-	m_pApp->getDrawLib()->setBlendMode(BLEND_MODE_A);
-	m_pApp->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
-	m_pApp->getDrawLib()->setColorRGBA(0,0,0,255);
-        m_pApp->getDrawLib()->glVertexSP(0,0); 
-	m_pApp->getDrawLib()->glVertexSP(m_pApp->getDrawLib()->getDispWidth(),0);
-	m_pApp->getDrawLib()->setColorRGBA(0,0,0,0);
-        m_pApp->getDrawLib()->glVertexSP(m_pApp->getDrawLib()->getDispWidth(),m_pApp->getDrawLib()->getDispHeight() / 6); m_pApp->getDrawLib()->glVertexSP(0,m_pApp->getDrawLib()->getDispHeight() / 6); 
-	m_pApp->getDrawLib()->endDraw();
-
-	m_pApp->getDrawLib()->setBlendMode(BLEND_MODE_A);
-        m_pApp->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
-	m_pApp->getDrawLib()->setColorRGBA(0,0,0,0);
-        m_pApp->getDrawLib()->glVertexSP(0,m_pApp->getDrawLib()->getDispHeight() - m_pApp->getDrawLib()->getDispHeight() / 6); 
-        m_pApp->getDrawLib()->glVertexSP(m_pApp->getDrawLib()->getDispWidth(),m_pApp->getDrawLib()->getDispHeight() - m_pApp->getDrawLib()->getDispHeight() / 6);
-	m_pApp->getDrawLib()->setColorRGBA(0,0,0,255);
-        m_pApp->getDrawLib()->glVertexSP(m_pApp->getDrawLib()->getDispWidth(),m_pApp->getDrawLib()->getDispHeight()); 
-	m_pApp->getDrawLib()->glVertexSP(0,m_pApp->getDrawLib()->getDispHeight()); 
-        m_pApp->getDrawLib()->endDraw();
-
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);      
+        glBegin(GL_POLYGON);
+        glColor4f(0,0,0,1);
+        m_pApp->glVertex(0,0); m_pApp->glVertex(m_pApp->getDispWidth(),0);
+        glColor4f(0,0,0,0);
+        m_pApp->glVertex(m_pApp->getDispWidth(),m_pApp->getDispHeight() / 6); m_pApp->glVertex(0,m_pApp->getDispHeight() / 6); 
+        glEnd();
+        glBegin(GL_POLYGON);
+        glColor4f(0,0,0,0);
+        m_pApp->glVertex(0,m_pApp->getDispHeight() - m_pApp->getDispHeight() / 6); 
+        m_pApp->glVertex(m_pApp->getDispWidth(),m_pApp->getDispHeight() - m_pApp->getDispHeight() / 6);
+        glColor4f(0,0,0,1);
+        m_pApp->glVertex(m_pApp->getDispWidth(),m_pApp->getDispHeight()); m_pApp->glVertex(0,m_pApp->getDispHeight()); 
+        glEnd();
+        glDisable(GL_BLEND);
       }
       
       if(m_fTime > m_fReplayLength - 4) {
@@ -201,12 +198,12 @@ namespace vapp {
         int nTWidth = _GetStringWidth(pc);
         
         if(!m_pApp->isUglyMode()) {
-          m_pApp->getDrawLib()->drawBox(Vector2f(0,0),Vector2f(m_pApp->getDrawLib()->getDispWidth(),m_pApp->getDrawLib()->getDispHeight()),0,MAKE_COLOR(0,0,0,nC2),0);      
+          m_pApp->drawBox(Vector2f(0,0),Vector2f(m_pApp->getDispWidth(),m_pApp->getDispHeight()),0,MAKE_COLOR(0,0,0,nC2),0);      
         }
         
         Color Yellow = MAKE_COLOR(255,255,0,nC2);
         Color White = MAKE_COLOR(255,255,255,nC2);
-        UITextDraw::printRawGrad(m_pFont,m_pApp->getDrawLib()->getDispWidth()/2 - nTWidth/2,m_pApp->getDrawLib()->getDispHeight()/2,
+        UITextDraw::printRawGrad(m_pFont,m_pApp->getDispWidth()/2 - nTWidth/2,m_pApp->getDispHeight()/2,
                                  pc,White,White,Yellow,Yellow);        
       }
     }

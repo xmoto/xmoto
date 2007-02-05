@@ -166,59 +166,15 @@ namespace vapp {
     return NULL;
   }
 
-  void DBuffer::operator <<(bool n) {
-    unsigned char c;
-    c = static_cast<unsigned char>(n);
-    writeBuf_LE((char*) &c, 1);
-  }
-  
-  void DBuffer::operator >>(bool &n) {
-    unsigned char c;
-    readBuf_LE((char*) &c, 1);
-    n = (c != 0x00);
-  }
-  
-  void DBuffer::operator <<(int n) {
-    int32_t nv = static_cast<int32_t>(n);  
-    writeBuf_LE((char *)&nv, 4);
-  }
-  
-  void DBuffer::operator >>(int &n) {
-    int32_t nv;
-    readBuf_LE((char *)&nv, 4);
-    n = static_cast<int>(nv);
-  }
-  
-  void DBuffer::operator <<(unsigned int n) {
-    int sn;
-    sn = (int) (n);
-    *this << sn;
-  }
-  
-  void DBuffer::operator >>(unsigned int &n) {
-    int sn;
-    *this >> sn;
-    n = (unsigned int) sn;
-  }
-  
-  void DBuffer::operator <<(float n) {
-    writeBuf_LE((char *)&n, sizeof(int));
-  }
-  
-  void DBuffer::operator >>(float &n) {
-    readBuf_LE((char *)&n, sizeof(int));
-  }
-
-  void DBuffer::operator <<(std::string s) {
-    *this << (unsigned int)(s.length());
+  void DBuffer::write(std::string s) {
+    *this << s.length();
     this->writeBuf(s.c_str(), s.length());
   }
-   
-  void DBuffer::operator >>(std::string &s) {
+  
+  void DBuffer::read(std::string &s) {
     int n;
     char c[256];
     *this >> n;
-
     if(n <= 0) {
       throw Exception("Unable to read the string !");
     }
@@ -226,4 +182,5 @@ namespace vapp {
     c[n] = '\0';
     s = c;
   }
+
 }

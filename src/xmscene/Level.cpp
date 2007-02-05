@@ -28,9 +28,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Level.h"
 #include "../VFileIO.h"
 #include "../VXml.h"
+#include "../md5sum/md5file.h"
 #include "../helpers/Color.h"
-
-#define CACHE_LEVEL_FORMAT_VERSION 10
 
 Level::Level() {
   m_xmotoTooOld = false;
@@ -39,8 +38,6 @@ Level::Level() {
   m_topLimit    = 0.0;
   m_bottomLimit = 0.0;
   m_xmlSource = NULL;
-  m_nbEntitiesToTake = 0;
-  m_borderTexture = "";
 }
 
 Level::~Level() {
@@ -193,8 +190,8 @@ void Level::setAuthor(const std::string& i_author) {
   m_author = i_author;
 }
 
-void Level::setCollisionSystem(vapp::CollisionSystem* p_CollisionSystem) {
-  m_pCollisionSystem = p_CollisionSystem;
+void Level::setSky(const std::string& i_sky) {
+  m_sky = i_sky;
 }
 
 std::string Level::scriptFileName() const {
@@ -217,17 +214,13 @@ std::vector<Zone *> &Level::Zones() {
   return m_zones;
 }
 
-const SkyApparence& Level::Sky() const {
+std::string Level::Sky() const {
   return m_sky;
 }
 
 void Level::killEntity(const std::string& i_entityId) {
   for(unsigned int i=0; i<m_entities.size(); i++) {
     if(m_entities[i]->Id() == i_entityId) {
-      if(m_entities[i]->IsToTake()){
-	m_nbEntitiesToTake--;
-      }
-      m_entities[i]->setAlive(false);
       m_entitiesDestroyed.push_back(m_entities[i]);
       m_entities.erase(m_entities.begin() + i);
       return;
@@ -241,25 +234,21 @@ std::vector<Entity *>& Level::Entities() {
 }
 
 unsigned int Level::countToTakeEntities() {
-  return m_nbEntitiesToTake;
+  unsigned int n = 0;
+  
+  for(unsigned int i=0; i<m_entities.size(); i++) {
+    if(m_entities[i]->IsToTake()) {
+      n++;
+    }
+  }
+  return n;
 }
 
 void Level::revertEntityDestroyed(const std::string& i_entityId) {
   for(unsigned int i=0; i<m_entitiesDestroyed.size(); i++) {
     if(m_entitiesDestroyed[i]->Id() == i_entityId) {
-      m_entitiesDestroyed[i]->setAlive(true);
-
-      if(m_entitiesDestroyed[i]->IsToTake()){
-	m_nbEntitiesToTake++;
-      }
-
       m_entities.push_back(m_entitiesDestroyed[i]);
-
-      /* add it back to the collision system */
-      m_pCollisionSystem->addEntity(m_entitiesDestroyed[i]);
-
       m_entitiesDestroyed.erase(m_entitiesDestroyed.begin() + i);
-
       return;
     }
   }
@@ -307,33 +296,7 @@ void Level::saveXML(void) {
   vapp::FS::writeLineF(pfh,"\t\t<description>%s</description>",m_description.c_str());
   vapp::FS::writeLineF(pfh,"\t\t<author>%s</author>",m_author.c_str());
   vapp::FS::writeLineF(pfh,"\t\t<date>%s</date>",m_date.c_str());
-  if(m_sky.Drifted()) {
-    vapp::FS::writeLineF(pfh,
-			 "\t\t<sky zoom=\"%f\" offset=\"%f\" color_r=\"%i\" color_g=\"%i\" color_b=\"%i\" color_a=\"%i\" drifted=\"true\" driftZoom=\"%f\" driftColor_r=\"%i\" driftColor_g=\"%i\" driftColor_b=\"%i\" driftColor_a=\"%i\">%s</sky>",
-			 m_sky.Zoom(),
-			 m_sky.Offset(),
-			 m_sky.TextureColor().Red(),
-			 m_sky.TextureColor().Green(),
-			 m_sky.TextureColor().Blue(),
-			 m_sky.TextureColor().Alpha(),
-			 m_sky.DriftZoom(),
-			 m_sky.DriftTextureColor().Red(),
-			 m_sky.DriftTextureColor().Green(),
-			 m_sky.DriftTextureColor().Blue(),
-			 m_sky.DriftTextureColor().Alpha(),
-			 m_sky.Texture().c_str());
-  } else {
-    vapp::FS::writeLineF(pfh,
-			 "\t\t<sky zoom=\"%f\" offset=\"%f\" color_r=\"%i\" color_g=\"%i\" color_b=\"%i\" color_a=\"%i\">%s</sky>",
-			 m_sky.Zoom(),
-			 m_sky.Offset(),
-			 m_sky.TextureColor().Red(),
-			 m_sky.TextureColor().Green(),
-			 m_sky.TextureColor().Blue(),
-			 m_sky.TextureColor().Alpha(),
-			 m_sky.Texture().c_str());
-  }
-  vapp::FS::writeLineF(pfh,"\t\t<border texture=\"%s\" />",m_borderTexture.c_str());
+  vapp::FS::writeLineF(pfh,"\t\t<sky>%s</sky>",m_sky.c_str());
   vapp::FS::writeLineF(pfh,"\t</info>");
   
   /* MISC */
@@ -425,18 +388,16 @@ void Level::loadXML(void) {
   m_date = "";
   m_description = "";
   m_author = "";
+  m_sky = "sky1";
   
   m_scriptFileName = "";
   m_scriptSource = "";
-  m_borderTexture = "";
-
+  
   m_bottomLimit = m_leftLimit = -50.0f;
   m_topLimit    = m_rightLimit = 50.0f;
   
   m_playerStart = Vector2f(0.0, 0.0);
   
-  m_sky.reInit();
-
   if(!m_xmotoTooOld) {    
     /* Get level pack */
     m_pack = vapp::XML::getOption(pLevelElem,"levelpack");
@@ -463,80 +424,9 @@ void Level::loadXML(void) {
       
       /* Sky */
       Tmp = vapp::XML::getElementText(*m_xmlSource, pInfoElem,"sky");
-      if(Tmp != "") m_sky.setTexture(Tmp);
-
-      /* advanced sky parameters ? */
-      bool v_useAdvancedOptions = false;
-      TiXmlElement *pSkyElem = vapp::XML::findElement(*m_xmlSource, NULL, std::string("sky"));
-      std::string v_skyValue;
-      if(pSkyElem != NULL) {
-	v_skyValue = vapp::XML::getOption(pSkyElem, "zoom");
-	if(v_skyValue != "") {
-	  m_sky.setZoom(atof(v_skyValue.c_str()));
-	  v_useAdvancedOptions = true;
-	}
-	v_skyValue = vapp::XML::getOption(pSkyElem, "offset");
-	if(v_skyValue != "") {
-	  m_sky.setOffset(atof(v_skyValue.c_str()));
-	  v_useAdvancedOptions = true;
-	}
-
-	int v_r = -1, v_g = -1, v_b = -1, v_a = -1;
-	v_skyValue = vapp::XML::getOption(pSkyElem, "color_r");
-	if(v_skyValue != "") v_r = atoi(v_skyValue.c_str());
-	v_skyValue = vapp::XML::getOption(pSkyElem, "color_g");
-	if(v_skyValue != "") v_g = atoi(v_skyValue.c_str());
-	v_skyValue = vapp::XML::getOption(pSkyElem, "color_b");
-	if(v_skyValue != "") v_b = atoi(v_skyValue.c_str());
-	v_skyValue = vapp::XML::getOption(pSkyElem, "color_a");
-	if(v_skyValue != "") v_a = atoi(v_skyValue.c_str());
-	if(v_r != -1 || v_g != -1 || v_b != -1 || v_a != -1) {
-	  if(v_r == -1) v_r = 0;
-	  if(v_g == -1) v_g = 0;
-	  if(v_b == -1) v_b = 0;
-	  if(v_a == -1) v_a = 0;
-	  m_sky.setTextureColor(TColor(v_r, v_g, v_b, v_a));
-	  v_useAdvancedOptions = true;
-	}
-
-	v_skyValue = vapp::XML::getOption(pSkyElem, "drifted");
-	if(v_skyValue == "true") {
-	  m_sky.setDrifted(true);
-	  v_useAdvancedOptions = true;
-
-	  v_skyValue = vapp::XML::getOption(pSkyElem, "driftZoom");
-	  if(v_skyValue != "") m_sky.setDriftZoom(atof(v_skyValue.c_str()));
-
-	  int v_r = -1, v_g = -1, v_b = -1, v_a = -1;
-	  v_skyValue = vapp::XML::getOption(pSkyElem, "driftColor_r");
-	  if(v_skyValue != "") v_r = atoi(v_skyValue.c_str());
-	  v_skyValue = vapp::XML::getOption(pSkyElem, "driftColor_g");
-	  if(v_skyValue != "") v_g = atoi(v_skyValue.c_str());
-	  v_skyValue = vapp::XML::getOption(pSkyElem, "driftColor_b");
-	  if(v_skyValue != "") v_b = atoi(v_skyValue.c_str());
-	  v_skyValue = vapp::XML::getOption(pSkyElem, "driftColor_a");
-	  if(v_skyValue != "") v_a = atoi(v_skyValue.c_str());
-	  if(v_r != -1 || v_g != -1 || v_b != -1 || v_a != -1) {
-	    if(v_r == -1) v_r = 0;
-	    if(v_g == -1) v_g = 0;
-	    if(v_b == -1) v_b = 0;
-	    if(v_a == -1) v_a = 0;
-	    m_sky.setDriftTextureColor(TColor(v_r, v_g, v_b, v_a)); 
-	  }
-	}
-      }
-      if(v_useAdvancedOptions == false) {
-	/* set old values in case no option is used */
-	m_sky.setOldXmotoValuesFromTextureName();
-      }
-
-      /* Border */
-      TiXmlElement *pBorderElem = vapp::XML::findElement(*m_xmlSource, NULL, std::string("border"));
-      if(pBorderElem != NULL) {
-	m_borderTexture = vapp::XML::getOption(pBorderElem, "texture");  
-      }
+      if(Tmp != "") m_sky = Tmp;
     }
-
+    
     /* Get script */
     TiXmlElement *pScriptElem = vapp::XML::findElement(*m_xmlSource, pLevelElem,std::string("script"));
     if(pScriptElem != NULL) {
@@ -586,7 +476,6 @@ void Level::loadXML(void) {
       m_blocks.push_back(Block::readFromXml(*m_xmlSource, pElem));
     }  
   }
-  addLimits();
 
   delete m_xmlSource;
   m_xmlSource = NULL;
@@ -599,7 +488,7 @@ void Level::loadXML(void) {
 bool Level::loadReducedFromFile(bool cacheEnabled) {
   std::string cacheFileName;
 
-  m_checkSum = vapp::FS::md5sum(FileName());
+  m_checkSum = md5file(FileName());
 
   // First try to load it from the cache
   bool cached = false;
@@ -649,21 +538,7 @@ void Level::exportBinary(const std::string &FileName, const std::string& pSum) {
   else {
     exportBinaryHeader(pfh);
 
-    vapp::FS::writeString(pfh, m_sky.Texture());
-    vapp::FS::writeFloat_LE(pfh, m_sky.Zoom());
-    vapp::FS::writeFloat_LE(pfh, m_sky.Offset());
-    vapp::FS::writeInt_LE(pfh,   m_sky.TextureColor().Red());
-    vapp::FS::writeInt_LE(pfh,   m_sky.TextureColor().Green());
-    vapp::FS::writeInt_LE(pfh,   m_sky.TextureColor().Blue());
-    vapp::FS::writeInt_LE(pfh,   m_sky.TextureColor().Alpha());
-    vapp::FS::writeBool(pfh,     m_sky.Drifted());
-    vapp::FS::writeFloat_LE(pfh, m_sky.DriftZoom());
-    vapp::FS::writeInt_LE(pfh,   m_sky.DriftTextureColor().Red());
-    vapp::FS::writeInt_LE(pfh,   m_sky.DriftTextureColor().Green());
-    vapp::FS::writeInt_LE(pfh,   m_sky.DriftTextureColor().Blue());
-    vapp::FS::writeInt_LE(pfh,   m_sky.DriftTextureColor().Alpha());
-
-    vapp::FS::writeString(pfh,m_borderTexture);
+    vapp::FS::writeString(pfh,m_sky);
     vapp::FS::writeString(pfh,m_scriptFileName);
       
     vapp::FS::writeFloat_LE(pfh,m_leftLimit);
@@ -716,9 +591,14 @@ void Level::importBinaryHeader(vapp::FileHandle *pfh) {
   m_playerStart  = Vector2f(0.0, 0.0);
   m_xmotoTooOld  = false;
 
-  int nFormat = vapp::FS::readInt_LE(pfh);
+  char cTag[5];
+  vapp::FS::readBuf(pfh,(char *)cTag,4);
+  cTag[4] = '\0';
+  int nFormat = 0;
+  if(!strcmp(cTag,"XBL5"))
+    nFormat = 5;
   
-  if(nFormat != CACHE_LEVEL_FORMAT_VERSION) {
+  if(nFormat != 5) {
     throw Exception("Old file format");
   }
   
@@ -766,7 +646,7 @@ void Level::exportBinaryHeader(vapp::FileHandle *pfh) {
   /* 4 -> includes level pack num */
   /* 5 -> clean code */
   /* Write CRC32 of XML */
-  vapp::FS::writeInt_LE(pfh, CACHE_LEVEL_FORMAT_VERSION);
+  vapp::FS::writeBuf   (pfh,"XBL5", 4);
   vapp::FS::writeString(pfh	    , m_checkSum);
   vapp::FS::writeString(pfh	    , m_id);
   vapp::FS::writeString(pfh	    , m_pack);
@@ -792,9 +672,14 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
   }
   else {
     /* Read tag - it tells something about the format */
-    int nFormat = vapp::FS::readInt_LE(pfh);
+    char cTag[5];
+    vapp::FS::readBuf(pfh,(char *)cTag,4);
+    cTag[4] = '\0';
+    int nFormat = 0;
+    if(!strcmp(cTag,"XBL5"))
+      nFormat = 5;
     
-    if(nFormat == CACHE_LEVEL_FORMAT_VERSION) { /* reject other formats */
+    if(nFormat == 5) { /* reject other formats */
       /* Read "format 1" / "format 2" binary level */
       /* Right */
       std::string md5sum = vapp::FS::readString(pfh);
@@ -812,30 +697,7 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
         m_author = vapp::FS::readString(pfh);
         m_date = vapp::FS::readString(pfh);
 
-	/* sky */
-        m_sky.setTexture(vapp::FS::readString(pfh));
-	m_sky.setZoom(vapp::FS::readFloat_LE(pfh));
-	m_sky.setOffset(vapp::FS::readFloat_LE(pfh));
-
-	int v_r, v_g, v_b, v_a;
-	v_r = vapp::FS::readInt_LE(pfh);
-	v_g = vapp::FS::readInt_LE(pfh);
-	v_b = vapp::FS::readInt_LE(pfh);
-	v_a = vapp::FS::readInt_LE(pfh);
-	m_sky.setTextureColor(TColor(v_r, v_g, v_b, v_a));
-
-	m_sky.setDrifted(vapp::FS::readBool(pfh));
-	m_sky.setDriftZoom(vapp::FS::readFloat_LE(pfh));
-
-	v_r = vapp::FS::readInt_LE(pfh);
-	v_g = vapp::FS::readInt_LE(pfh);
-	v_b = vapp::FS::readInt_LE(pfh);
-	v_a = vapp::FS::readInt_LE(pfh);
-	m_sky.setDriftTextureColor(TColor(v_r, v_g, v_b, v_a));
-	/* *** */
-
-        m_borderTexture = vapp::FS::readString(pfh);
-
+        m_sky = vapp::FS::readString(pfh);
         m_scriptFileName = vapp::FS::readString(pfh);
 
         m_leftLimit = vapp::FS::readFloat_LE(pfh);
@@ -983,13 +845,15 @@ int Level::compareVersionNumbers(const std::string &v1,const std::string &v2) {
   return 0;    
 }
 
-int Level::loadToPlay() {
+int Level::loadToPlay(vapp::CollisionSystem& p_CollisionSystem) {
   int v_nbErrors = 0;
 
+  loadToPlayLimits();
+  
   /* preparing blocks */
   for(unsigned int i=0; i<m_blocks.size(); i++) {
     try {
-      v_nbErrors += m_blocks[i]->loadToPlay(*m_pCollisionSystem);
+      v_nbErrors += m_blocks[i]->loadToPlay(p_CollisionSystem);
     } catch(Exception &e) {
       throw Exception("Fail to load block '" + m_blocks[i]->Id() + "' :\n" + e.getMsg());
     }
@@ -998,13 +862,6 @@ int Level::loadToPlay() {
   /* Spawn initial entities */
   for(unsigned int i=0; i<m_entities.size(); i++) {
     m_entities[i]->loadToPlay();
-    Vector2f v = m_entities[i]->DynamicPosition();
-
-    m_pCollisionSystem->addEntity(m_entities[i]);
-
-    if(m_entities[i]->IsToTake()){
-      m_nbEntitiesToTake++;
-    }
   }
   
   return v_nbErrors;
@@ -1031,11 +888,9 @@ void Level::unloadToPlay() {
     delete m_entitiesExterns[i];
   }
   m_entitiesExterns.clear();
-
-  m_nbEntitiesToTake = 0;
 }
 
-void Level::addLimits() {
+void Level::loadToPlayLimits() {
   Block *pBlock;
   Vector2f v_P;
 
@@ -1043,9 +898,6 @@ void Level::addLimits() {
   float fVMargin = 20,fHMargin = 20;
 
   pBlock = new Block("LEVEL_TOP");
-  if(m_borderTexture != "") {
-    pBlock->setTexture(m_borderTexture);
-  }
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(LeftLimit()  - fHMargin, TopLimit() + fVMargin)));
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(RightLimit() + fHMargin, TopLimit() + fVMargin)));
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(RightLimit()           , TopLimit())));
@@ -1053,9 +905,6 @@ void Level::addLimits() {
   Blocks().push_back(pBlock);
     
   pBlock = new Block("LEVEL_BOTTOM");
-  if(m_borderTexture != "") {
-    pBlock->setTexture(m_borderTexture);
-  }
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(RightLimit()           , BottomLimit())));
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(RightLimit() + fHMargin, BottomLimit() - fVMargin)));
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(LeftLimit()  - fHMargin, BottomLimit() - fVMargin)));
@@ -1063,9 +912,6 @@ void Level::addLimits() {
   Blocks().push_back(pBlock);
 
   pBlock = new Block("LEVEL_LEFT");
-  if(m_borderTexture != "") {
-    pBlock->setTexture(m_borderTexture);
-  }
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(LeftLimit(), TopLimit())));
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(LeftLimit(), BottomLimit())));
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(LeftLimit() - fHMargin, BottomLimit() - fVMargin)));
@@ -1073,9 +919,6 @@ void Level::addLimits() {
   Blocks().push_back(pBlock);
     
   pBlock = new Block("LEVEL_RIGHT");
-  if(m_borderTexture != "") {
-    pBlock->setTexture(m_borderTexture);
-  }
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(RightLimit(), TopLimit())));
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(RightLimit() + fHMargin, TopLimit() + fVMargin)));
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(RightLimit() + fHMargin, BottomLimit() - fVMargin)));
@@ -1083,11 +926,14 @@ void Level::addLimits() {
   Blocks().push_back(pBlock);
 }
 
+void Level::clearAfterRewind() {
+  for(unsigned int i=0; i<m_entities.size(); i++) {
+    m_entities[i]->clearAfterRewind();
+  } 
+}
+
 void Level::spawnEntity(Entity *v_entity) {
   m_entitiesExterns.push_back(v_entity);
-  if(v_entity->IsToTake()){
-    m_nbEntitiesToTake++;
-  }
 }
 
 std::vector<Entity *>& Level::EntitiesExterns() {
@@ -1095,18 +941,11 @@ std::vector<Entity *>& Level::EntitiesExterns() {
 }
 
 std::string Level::PathForUpdate() const {
-	/* if the level is in the user dir, directly update it */
-	/* else, get a new one in the user dir */
-
-	if(vapp::FS::isInUserDir(FileName())) {
-		return FileName();
-	}
-
-#if defined(SUPPORT_WEBACCESS)
-	return WebLevels::getDestinationFile(FileName());
-#else
-	return "";
-#endif
+  /* If level path is not absolute, this level is not updatable */
+  if(vapp::FS::isPathAbsolute(FileName())) {
+    return FileName();
+  }
+  return "";
 }
 
 void Level::unloadLevelBody() {
@@ -1135,8 +974,4 @@ void Level::unloadLevelBody() {
   if(m_xmlSource != NULL) {
     delete m_xmlSource;
   }
-}
-
-void Level::rebuildCache() {
-  exportBinary(getNameInCache(), m_checkSum);
 }

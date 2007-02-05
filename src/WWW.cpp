@@ -836,13 +836,12 @@ void WebLevels::extractLevelsToDownloadFromXml() {
         m_webLevels.push_back(new WebLevel(v_levelId, v_levelName, v_url));
       } else { /* or it md5sum if different */
         if(m_WebLevelApp->levelPathForUpdate(v_levelId) != "") {
-	  if(m_WebLevelApp->levelMD5Sum(v_levelId) != v_MD5sum_web) {
-	    //printf("%s ! %s\n", m_WebLevelApp->levelMD5Sum(v_levelId).c_str(), v_MD5sum_web.c_str());
-	    WebLevel *v_lvl = new WebLevel(v_levelId, v_levelName, v_url);
-	    v_lvl->setCurrentPath(m_WebLevelApp->levelPathForUpdate(v_levelId));
-	    v_lvl->setRequireUpdate(true);
-	    m_webLevels.push_back(v_lvl);
-	  }
+    if(m_WebLevelApp->levelMD5Sum(v_levelId) != v_MD5sum_web) {
+      WebLevel *v_lvl = new WebLevel(v_levelId, v_levelName, v_url);
+      v_lvl->setCurrentPath(m_WebLevelApp->levelPathForUpdate(v_levelId));
+      v_lvl->setRequireUpdate(true);
+      m_webLevels.push_back(v_lvl);
+    }
         }
       }
     }
@@ -975,9 +974,9 @@ void WebLevels::upgrade() {
       std::string v_destFile;
       
       if((*it)->requireUpdate()) {
-				v_destFile = m_WebLevelApp->levelPathForUpdate((*it)->getId());
+  v_destFile = m_WebLevelApp->levelPathForUpdate((*it)->getId());
       } else {
-				v_destFile = getDestinationFile(v_url);
+  v_destFile = getDestinationFile(v_url);
       }
       
       FSWeb::downloadFileBz2(v_destFile,
@@ -987,10 +986,9 @@ void WebLevels::upgrade() {
            m_proxy_settings);
       
       if((*it)->requireUpdate()) {
-				m_webLevelsUpdatedDownloadedOK.push_back(v_destFile);
-				m_webLevelsIdsUpdatedDownloadedOK.push_back((*it)->getId());
+  m_webLevelsUpdatedDownloadedOK.push_back(v_destFile);
       } else {
-				m_webLevelsNewDownloadedOK.push_back(v_destFile);
+  m_webLevelsNewDownloadedOK.push_back(v_destFile);
       }
     }    
 
@@ -1014,11 +1012,6 @@ const std::vector<std::string> &WebLevels::getNewDownloadedLevels(void) {
 const std::vector<std::string> &WebLevels::getUpdatedDownloadedLevels(void) {
   return m_webLevelsUpdatedDownloadedOK;
 }
-
-const std::vector<std::string> &WebLevels::getUpdatedDownloadedLevelIds() {
-	return m_webLevelsIdsUpdatedDownloadedOK;
-}
-
 
 WebTheme::WebTheme(std::string pName, std::string pUrl, std::string pSum) {
   m_name = pName;

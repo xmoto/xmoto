@@ -1,32 +1,3 @@
-Since 0.2.4
-* bug : replays cache does'nt really cache
-* BUG : qd tu joues a un niveau, et que tu mets en pause avec esc, (et que la
-pause est un peu longue), des fois en revenant, ya gave gave gave de
-particules ejectees par la roue arriere. et resultat, ca rame
-enormenent... 
-* BUG : f5 when playing does not rebuild the level cache
-* BUG : dyn blocks not displayed in ugly && dyn blocks not updated in minimap 
-* Randomize any pack
-* BUG : particules stays on replays (i broke something, nicolas)
-* BUG : "width" "height" "centerX" "centerY" make them unrequired for sprite decoration
-* remove the sdlGfxTextured option 
-* "play next level" => 'play next level', 'play next level unplayed', 'play next level where your highscore is > than room highscore', 'play next level where your highscore is > than world highscore', 'play next level where your highscore is the best' => related to virtual packages
-* [20:55] <keesj> they have this great idea that you can create levels while walking in the level [20:56] <aspegic500> functions in the scripts to do that => F5 while playing
-* bugs : it appears when i finish a level in the list of unfinished levels, when i click next level after this, the first level appears and the level list is sorted, even if it has been randomized before
-* static_cast<uint32_t>(n); for saving files
-* add a tag in the .lvl to choose the border texture
-* sky as a texture : tags in .lvl for effect + x y texture size
-* Add entities in the collision grid to speed collisions with entities
-* Potential bug::if a big big entity is added to a level (radius of the entity > 3.0 or 6.0), then, the biker won't touch it before beeing enough near of it. so the biker will graphically touches it, but the collision will occurs only when the biker is close enough).
-* Various speed improvements.
-* a bug when cache number is updated : all level are reproposed to be dwd
-* a level updated is reload from XML ?!? 
-* BUG : --with-renderer-sdlGfx=0 --with-renderer-openGl=0 => segfault
-* don't display the scrollbar if it is not required
-* the_only_dude::various speed improvements.
-* be able to update internal levels
-* add rotation and reversed for a sprite
-
 Since 0.2.2
 * When i update lists sometimes
 Fatal signal: Segmentation Fault (SDL Parachute Deployed)

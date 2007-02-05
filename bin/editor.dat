@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- This file defines the entities placeable in the editor -->
+<editordata>
+
+	<entitytype id="EndOfLevel" size="1" psize="0.5">
+		<symbol>
+			<circle x="0" y="0" radius="1" border="1"
+			        bcolor="#00000000" fcolor="#0000ffff"/>
+			<text allign="center" vallign="center" x="0" y="0"
+			      bcolor="#00000000" fcolor="#6363ffff"
+			      caption="END"/>
+		</symbol>	
+
+		<param name="style" default="default"/>
+	</entitytype>
+	
+	<entitytype id="PlayerStart" size="1" psize="0.4">
+		<symbol>
+			<circle x="0" y="0" radius="1" border="1"
+			        bcolor="#00000000" fcolor="#0000ffff"/>
+			<text allign="center" vallign="center" x="0" y="0"
+			      bcolor="#00000000" fcolor="#6363ffff"
+			      caption="START"/>
+		</symbol>	
+	</entitytype>
+	
+	<entitytype id="Wrecker" size="1" psize="0.4">
+		<symbol>
+			<circle x="0" y="0" radius="1" border="1"
+			        bcolor="#00000000" fcolor="#ff8000ff"/>
+			<circle x="0" y="0" radius="0.25" border="2"
+			        bcolor="#00000000" fcolor="#ff0000ff"/>
+			<text allign="center" vallign="center" x="0" y="0"
+			      bcolor="#00000000" fcolor="#6363ffff"
+			      caption="X"/>			
+		</symbol>
+
+		<param name="style" default="default"/>
+	</entitytype>
+
+	<entitytype id="Sprite" size="1" psize="0.4">
+		<symbol>
+			<circle x="0" y="0" radius="1" border="3"
+			        bcolor="#00000000" fcolor="#ffff00ff"/>
+			<text allign="center" vallign="center" x="0" y="0"
+			      bcolor="#00000000" fcolor="#6363ffff"
+			      caption="SPR"/>			
+		</symbol>
+	
+		<param name="z" default="-1"/>
+		<param name="name" default="Grass1"/>
+	</entitytype>
+	
+	<entitytype id="Strawberry" size="1" psize="0.5">
+		<symbol>
+			<circle x="0" y="0" radius="1" border="3"
+			        bcolor="#00000000" fcolor="#ff8000ff"/>
+			<text allign="center" vallign="center" x="0" y="0"
+			      bcolor="#00000000" fcolor="#ff63ffff"
+			      caption="@"/>			
+		</symbol>				
+	</entitytype>
+	
+	<entitytype id="ParticleSource" size="1" psize="0.4">
+		<symbol>
+			<circle x="0" y="0" radius="1" border="3"
+			        bcolor="#00000000" fcolor="#ff8000ff"/>
+			<text allign="center" vallign="center" x="0" y="0"
+			      bcolor="#00000000" fcolor="#ff63ffff"
+			      caption="PS"/>			
+		</symbol>				
+
+		<param name="type" default="Smoke"/>
+	</entitytype>
+
+	<entitytype id="Dummy" size="1" psize="0.5">
+		<symbol>
+			<circle x="0" y="0" radius="1" border="1"
+			        bcolor="#00000000" fcolor="#0000ffff"/>
+			<circle x="0" y="0" radius="0.5" border="1"
+			        bcolor="#00000000" fcolor="#00ffffff"/>
+			<text allign="center" vallign="center" x="0" y="0"
+			      bcolor="#00000000" fcolor="#6363ffff"
+			      caption="Dummy"/>
+		</symbol>	
+	</entitytype>
+		
+</editordata>
+
+

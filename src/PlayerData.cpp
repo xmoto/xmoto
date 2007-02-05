@@ -266,6 +266,22 @@ namespace vapp {
   }
   
   /*===========================================================================
+    Check if a level is internal
+    ===========================================================================*/
+  bool PlayerData::isInternal(std::string LevelID) {
+    char *pcInternals[] = {INTERNAL_LEVELS, NULL};
+
+    int j = 0;
+    while(pcInternals[j] != NULL) {
+      if(!strcmp(pcInternals[j],LevelID.c_str())) {
+  return true;
+      }
+      j++;
+    }
+    return false;
+  }
+  
+  /*===========================================================================
     Merge finish time
     ===========================================================================*/
   void PlayerData::addFinishTime(std::string PlayerName,
