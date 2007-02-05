@@ -169,19 +169,4 @@ namespace vapp {
     return false;
   }  
 
-	void UIEdit::setHasChanged(bool b_value) {
-		m_hasChanged = b_value;
-	}
-
-	bool UIEdit::hasChanged() {
-		return m_hasChanged;
-	}
-
-	void UIEdit::setCaption(std::string Caption) {
-		if(Caption != getCaption()) {
-			 m_hasChanged = true;
-		}
-		UIWindow::setCaption(Caption);
-	}
-
 }

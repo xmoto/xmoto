@@ -173,12 +173,11 @@ namespace vapp {
 	UI window
   ===========================================================================*/
   enum UIMsgBoxButton {
-    UI_MSGBOX_NOTHING     = 0,    
-    UI_MSGBOX_OK          = 1,
-    UI_MSGBOX_CANCEL      = 2,
-    UI_MSGBOX_YES         = 4,
-    UI_MSGBOX_NO          = 8,
-    UI_MSGBOX_YES_FOR_ALL = 16
+    UI_MSGBOX_NOTHING   = 0,    
+    UI_MSGBOX_OK        = 1,
+    UI_MSGBOX_CANCEL    = 2,
+    UI_MSGBOX_YES       = 4,
+    UI_MSGBOX_NO        = 8
   };
   
   class UIWindow {
@@ -262,7 +261,7 @@ namespace vapp {
       UIRect &getPosition(void) {return m_Pos;}
       void setPosition(int x,int y,int nWidth,int nHeight) {m_Pos.nX=x; m_Pos.nY=y; m_Pos.nWidth=nWidth; m_Pos.nHeight=nHeight;}
       std::string getCaption(void) {return m_Caption;}
-      virtual void setCaption(std::string Caption) {m_Caption=Caption;}
+      void setCaption(std::string Caption) {m_Caption=Caption;}
       UITextStyle &getTextStyle(void) {return m_TextStyle;}
       void setTextSolidColor(Color c) {m_TextStyle.c0=m_TextStyle.c1=m_TextStyle.c2=m_TextStyle.c3=c;}
       void setTextGradientColors(Color a,Color b) {m_TextStyle.c0=m_TextStyle.c1=a; m_TextStyle.c2=m_TextStyle.c3=b;}
@@ -326,7 +325,6 @@ namespace vapp {
         initW(pParent,x,y,Caption,nWidth,nHeight);
         m_nCursorPos = 0;
 	m_hideText = false;
-  m_hasChanged = false;
       }      
     
       /* Methods */
@@ -336,16 +334,10 @@ namespace vapp {
       virtual bool offerActivation(void) {return true;}
       void hideText(bool bHideText) {m_hideText=bHideText;} 
 
-			void setCaption(std::string Caption);
-
-			void setHasChanged(bool b_value);
-			bool hasChanged();
-
     private:
       /* Data */
       int m_nCursorPos;
       bool m_hideText;    
-			bool m_hasChanged;
   };
 
 	/*===========================================================================
@@ -504,9 +496,9 @@ namespace vapp {
         
         m_pDarkBlobTexture = NULL;
 	Sprite *pSprite;
-	pSprite = getApp()->getTheme()->getSprite(SPRITE_TYPE_UI, "DarkBlob");
+	pSprite = getApp()->m_theme.getSprite(SPRITE_TYPE_UI, "DarkBlob");
 	if(pSprite != NULL) {
-	  m_pDarkBlobTexture = pSprite->getTexture(false,true, FM_NEAREST);
+	  m_pDarkBlobTexture = pSprite->getTexture(false,true,false);
 	}
         
         m_pCustomBackgroundTexture = NULL;
@@ -600,14 +592,32 @@ namespace vapp {
   struct UIListEntry {
     std::vector<std::string> Text;
     void *pvUser;
-    bool bShown;
   };
   
   class UIList : public UIWindow {
     public:
       UIList() {}
-      UIList(UIWindow *pParent,int x=0,int y=0,std::string Caption="",int nWidth=0,int nHeight=0);
-      virtual ~UIList();
+      UIList(UIWindow *pParent,int x=0,int y=0,std::string Caption="",int nWidth=0,int nHeight=0) {      
+        initW(pParent,x,y,Caption,nWidth,nHeight);        
+        m_nScroll = 0;
+        m_nSelected = 0;
+        m_pEnterButton = NULL;
+        m_bSort = false;
+        m_bItemActivated = false;
+        
+        m_bScrollDownPressed = m_bScrollUpPressed = false;
+        
+        m_bScrollDownHover = m_bScrollUpHover = false;
+        
+	m_bClicked = false;
+
+	m_bChanged = false;
+
+	m_lastRefreshTime = getApp()->getRealTime();
+
+        unhideAllColumns();
+      }      
+      virtual ~UIList() {_FreeUIList();}
 
       /* Methods */
       virtual void paint(void);
@@ -621,50 +631,38 @@ namespace vapp {
       virtual void mouseHover(int x,int y);      
       virtual bool offerActivation(void);
       virtual bool keyDown(int nKey,int nChar);
-
-      virtual std::string subContextHelp(int x,int y);
       
       UIListEntry *addEntry(std::string Text,void *pvUser=NULL);
       void clear(void);
       
       /* Data interface */
-      std::vector<UIListEntry *> &getEntries();
-      std::vector<std::string> &getColumns();
-      int getSelected();
-      void setRealSelected(int n);
-      void setVisibleSelected(int n);
-      void addColumn(std::string Title,int nWidth,const std::string &Help = "");
-      void setEnterButton(UIButton *pButton);
-      bool isItemActivated();
-      void setHideColumn(int n);
-      void unhideAllColumns(void);
-      void setSort(bool bSort, int(*f)(void *pvUser1, void *pvUser2) = NULL);
-      void setNumeroted(bool bNumeroted);
+      std::vector<UIListEntry *> &getEntries(void) {return m_Entries;}      
+      std::vector<std::string> &getColumns(void) {return m_Columns;}
+      int getSelected(void) {return m_nSelected;}
+      void setSelected(int n) {m_bChanged = true; m_nSelected = n;}
+      void addColumn(std::string Title,int nWidth) {m_Columns.push_back(Title); m_ColumnWidths.push_back(nWidth);}
+      void setEnterButton(UIButton *pButton) {m_pEnterButton = pButton;}
+      bool isItemActivated(void) {return m_bItemActivated;}
+      void setHideColumn(int n) {m_nColumnHideFlags |= (1<<n);}
+      void unhideAllColumns(void) {m_nColumnHideFlags=0;}
+      void setSort(bool bSort) {m_bSort=bSort;}
+      
+      bool isClicked(void) {return m_bClicked;}
+      void setClicked(bool b) {m_bClicked=b;}
 
-      void randomize();
-
-      bool isClicked(void);
-      void setClicked(bool b);
-
-      bool isChanged(void);
-      void setChanged(bool b);
-
-      void setFilter(std::string i_filter);
+      bool isChanged(void) {return m_bChanged;}
+      void setChanged(bool b) {m_bChanged=b;}
 
     private:
       /* Data */
       bool m_bChanged;
       float m_lastRefreshTime;
       bool m_bSort;
-      bool m_bNumeroted;
-      int(*m_fsort)(void *pvUser1, void *pvUser2);
       std::vector<UIListEntry *> m_Entries;
       std::vector<std::string> m_Columns;
-      std::vector<std::string> m_ColumnHelpStrings;
       std::vector<int> m_ColumnWidths;
       unsigned int m_nColumnHideFlags;
-      int m_nRealSelected;
-			int m_nVisibleSelected;
+      int m_nSelected;
       bool m_bItemActivated;
       UIButton *m_pEnterButton; /* if not null this is the "default" button of the list, i.e. the one 
                                    that gets pressed if the list gets an enter */
@@ -674,47 +672,12 @@ namespace vapp {
       bool m_bScrollUpHover,m_bScrollDownHover;
       
       bool m_bClicked;
-      bool  m_bScrolling;
-
-			std::string m_filter;
-			int m_filteredItems;
-
-      /* draw */
-      int HeaderHeight();
-      int HeaderSubBorderHeight();
-      int RowHeight();
-      int LineMargeX();
-      int LineMargeY();
-      int LinesStartX();
-      int LinesStartY();
-      int LinesWidth();
-      int LinesHeight();
-
-      int ScrollBarArrowWidth();
-      int ScrollBarArrowHeight();
-      int ScrollBarBarWidth();
-      int ScrollBarBarHeight();
-      int ScrollBarScrollerWidth();
-      int ScrollBarScrollerHeight();
-      int ScrollBarScrollerStartX();
-      int ScrollBarScrollerStartY();
-      void setScrollBarScrollerStartY(float y);
-      float ScrollNbVisibleItems();
-      bool isScrollBarRequired();
-
-      int m_headerHeight;
-      int m_headerSubBorderHeight;
-      int m_rowHeight;
-      int m_lineMargeX, m_lineMargeY;
-      int m_scrollBarArrowWidth;
-      int m_scrollBarArrowHeight;
 
       /* Helpers */
       void _FreeUIList(void);
       void _NewlySelectedItem(void);
       void _Scroll(int nPixels);
       void _refreshByTime();
-      void _mouseDownManageScrollBar(int x, int y);
   };
 
 	/*===========================================================================
@@ -805,7 +768,7 @@ namespace vapp {
       virtual bool keyUp(int nKey);  
       
       void deactivate(UIWindow *pWindow);
-
+      
       void enableContextMenuDrawing(bool b) {m_bShowContextMenu=b;}
       void clearContext(void) {m_CurrentContextHelp = "";}
       

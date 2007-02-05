@@ -48,24 +48,24 @@ namespace vapp {
     m_pMenuBR = NULL;
     
     Sprite *pSprite;
-    pSprite = getApp()->getTheme()->getSprite(SPRITE_TYPE_UI, "MenuTL");
+    pSprite = getApp()->m_theme.getSprite(SPRITE_TYPE_UI, "MenuTL");
     if(pSprite != NULL) {
-      m_pMenuTL = pSprite->getTexture(false,true, FM_NEAREST);
+      m_pMenuTL = pSprite->getTexture(false,true,false);
     }
 
-    pSprite = getApp()->getTheme()->getSprite(SPRITE_TYPE_UI, "MenuTR");
+    pSprite = getApp()->m_theme.getSprite(SPRITE_TYPE_UI, "MenuTR");
     if(pSprite != NULL) {
-      m_pMenuTR = pSprite->getTexture(false,true, FM_NEAREST);
+      m_pMenuTR = pSprite->getTexture(false,true,false);
     }
 
-    pSprite = getApp()->getTheme()->getSprite(SPRITE_TYPE_UI, "MenuBL");
+    pSprite = getApp()->m_theme.getSprite(SPRITE_TYPE_UI, "MenuBL");
     if(pSprite != NULL) {
-      m_pMenuBL = pSprite->getTexture(false,true, FM_NEAREST);
+      m_pMenuBL = pSprite->getTexture(false,true,false);
     }
 
-    pSprite = getApp()->getTheme()->getSprite(SPRITE_TYPE_UI, "MenuBR");
+    pSprite = getApp()->m_theme.getSprite(SPRITE_TYPE_UI, "MenuBR");
     if(pSprite != NULL) {
-      m_pMenuBR = pSprite->getTexture(false,true, FM_NEAREST);
+      m_pMenuBR = pSprite->getTexture(false,true,false);
     }
     
   } 

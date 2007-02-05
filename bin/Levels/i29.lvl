@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<level id="_iL29_" levelpack="Built-in levels" levelpackNum="29">
+<level id="_iL29_">
 	<info>
-		<name>Recursion</name>
+		<name>#30 Recursion</name>
 		<description>Havn't I seen that before ?</description>
 		<author>Clive Crous</author>
 		<date>09/11/2005</date>

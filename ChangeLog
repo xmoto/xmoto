@@ -1,59 +1,7 @@
-X-Moto 0.2.5 2007-
- * performences improved (better framerate)
- * SDL-GFX rendering in option (instead of OpenGL, unstable code)
- * a randomize button to puzzle any package list
- * you can associate a rpl to xmoto (ie xmoto replay.rpl play the rpl file)
- * filter on lists
- * problem with 64bits architecture should be fixed
- * texture of the level border can be changed
- * more options to draw the sky
- * mingw supported ; visual studio c++ no more supported
- * some important bugs fixed
-	
-X-Moto 0.2.4 2006-12-22
------------------------
- * Correcting a bug which made some scripted levels unplayable
-	
-X-Moto 0.2.3 2006-12-22
------------------------
-
- * Significantly lowered load times due to new level and replay index. 
-   (Press F5 in the main menu to reload the levels if you make your
-   own levels or install any manually)
- * Built-in levels are now bundled as a level pack.
- * Some patches from FreeBSD port applied. 
- * Spanish and catalan translations (for unix only).
- * New -unpack command-line option for xmoto. See top of src/Packager.cpp 
-   for details about its usage or check the wiki. 
- * xmoto-edit is no longer part of the main xmoto package, and will 
-   eventually have its own package. The -pack command-line option have been
-   moved from xmoto-edit to xmoto.
- * Some changes on the user interface: Tabs reorganised and scrollbars.
- * Virtual packages
- * New levels list is now saved when you quit xmoto
- * Favorites levels tab
-	
-X-Moto 0.2.2 2006-10-03
------------------------
- 
- * IMPORTANT: People with big-endian CPUs (PowerPC, etc) should clean their
-   level cache when upgrading; that is, the first time you start the game,
-   use the -cleancache command-line argument. Alternatively delete all files
-   in your LCache/ directory.
- * Minimap now visible in -ugly mode again.
- * Entity colors in -ugly mode adjusted.
- * F9 to toggle -ugly mode from inside the game, F10 to toggle
-   theme testing mode.
- * More in-game options.
- * German translation (for unix only).
- * New built-in level.
- * Bug about undisplayed entities on big-endian computers corrected.
- * Some other bugs fixed.
-
 X-Moto 0.2.1 2006-09-14
------------------------
+-------------------------------
 
- * X-Moto is no more ALPHA!
+ * X-Moto is no more ALPHA !
  * ppc computer can now read and write x86 replays (patch by Dave Vasilevsky)
  * upload highscores from the game
  * webrooms configuration
@@ -64,7 +12,7 @@ X-Moto 0.2.1 2006-09-14
  * new functions for scripted levels
  * grip parameter for blocks (to make ice blocks for example)
  * auto-adaptation of the camera (depending on the gravity/wind)
- * uglier ugly mode (for slower computer; press F1 to switch ugly mode)
+ * uglyer ugly mode (for slower computer ; press F1 to switch ugly mode)
  * translations [french] (for unix only)
  * collision between body and sprites
  * level preview animation before playing (patch by Frederic Huard)

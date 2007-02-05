@@ -25,6 +25,17 @@
 #include "VCommon.h"
 #include "VApp.h"
 
+#define INTERNAL_LEVELS "_iL00_", "_iL01_", "_iL02_", "_iL03_", "_iL04_", \
+                        "_iL05_", "_iL06_", "_iL07_", "_iL08_", "_iL09_", \
+                        "_iL10_", "_iL11_", "_iL12_", "_iL13_", "_iL14_", \
+                        "_iL15_", "_iL16_", "_iL17_", "_iL18_", "_iL19_", \
+                        "_iL20_", "_iL21_", "_iL22_", "_iL23_", "_iL24_", \
+                        "_iL25_", "_iL26_", "_iL27_", "_iL28_", "_iL29_", \
+                        "_iL30_", "_iL31_", "_iL32_", "_iL33_", "_iL34_", \
+                        "_iL35_", "_iL36_", "_iL37_", "_iL38_", "_iL39_", \
+                        "_iL40_", "_iL41_", "_iL42_", "_iL43_", "_iL44_", \
+                        "_iL45_","_iL46_","_iL47_","_iL48_","_iL49_"
+
 namespace vapp {
 
   /*===========================================================================
@@ -85,6 +96,8 @@ namespace vapp {
     PlayerProfile *getProfile(std::string PlayerName);
     bool isLevelAvailable(std::string PlayerName,std::string LevelID);
 	    	    
+    bool isInternal(std::string LevelID);
+	    	    	  
     /* Data interface */
     std::vector<PlayerProfile *> &getProfiles(void) {return m_Profiles;}
 	    

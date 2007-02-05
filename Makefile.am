@@ -1,8 +1,17 @@
-SUBDIRS = src bin extra po
+SUBDIRS = po src bin extra
+# tools
 
-man_MANS = xmoto.6.gz
+man_MANS = xmoto.6.gz xmoto-edit.6.gz
 
-EXTRA_DIST = m4/ChangeLog  $(man_MANS) bootstrap configure_mingw_from_linux.sh
+all: xmoto xmoto-edit
+
+xmoto: src/xmoto
+	ln -sf src/xmoto xmoto
+
+xmoto-edit: src/xmoto-edit
+	ln -sf src/xmoto-edit xmoto-edit
+
+EXTRA_DIST = m4/ChangeLog  $(man_MANS) bootstrap
 
 uninstall-hook:
 	rm -r $(datadir)/@PACKAGE@

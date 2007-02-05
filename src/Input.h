@@ -30,8 +30,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 namespace vapp {
 
-	class GameApp;
-
   /*===========================================================================
   Controller modes
   ===========================================================================*/
@@ -84,8 +82,7 @@ namespace vapp {
     ACTION_CAMERAMOVEXUP,
     ACTION_CAMERAMOVEXDOWN,
     ACTION_CAMERAMOVEYUP,
-    ACTION_CAMERAMOVEYDOWN,
-    ACTION_AUTOZOOMOUT        /* Param: None */
+    ACTION_CAMERAMOVEYDOWN
   };
     
   struct InputAction {
@@ -107,8 +104,7 @@ namespace vapp {
       
       /* Methods */
       void configure(UserConfig *pConfig);
-      void handleInput(InputEventType Type,int nKey,BikeController *pController, GameRenderer *pGameRender,
-											 GameApp *pGameApp);      
+      void handleInput(InputEventType Type,int nKey,BikeController *pController, GameRenderer *pGameRender);      
       std::string waitForKey(void);
       void updateInput(BikeController *pController);
       void init(UserConfig *pConfig);
@@ -139,7 +135,6 @@ namespace vapp {
       int m_nZoomIn;
       int m_nZoomOut;
       int m_nZoomInit;
-			int m_nAutoZoom;
       int m_nCameraMoveXUp;
       int m_nCameraMoveXDown;
       int m_nCameraMoveYUp;

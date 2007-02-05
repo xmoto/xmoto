@@ -33,11 +33,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #endif
 #include <sys/stat.h>
 
-#include "helpers/VExcept.h"
+#include "VExcept.h"
 #include "VApp.h"
 #include "VFileIO.h"
-#include "helpers/SwapEndian.h"
-#include "md5sum/md5file.h"
+#include "arch/SwapEndian.h"
 
 namespace vapp {
 
@@ -52,73 +51,73 @@ namespace vapp {
   #ifndef TRUE
   #define TRUE 1
   #endif
-
-  void strlwr(char *pc) {
-    for(unsigned int i=0; i<strlen(pc); i++) pc[i] = tolower(pc[i]);
-  }
-
+  #if !defined(_MSC_VER)
+    void strlwr(char *pc) {
+      for(unsigned int i=0; i<strlen(pc); i++) pc[i] = tolower(pc[i]);
+    }
+  #endif
   mbool str_match_wildcard(char *pcMWildcard,char *pcMString,mbool CaseSensitive) {
-    int nPos=0;
-    mbool PrevIsWildcard=FALSE;
-    char c1[256],c2[256];
-    char *pcWildcard,*pcString;
-    
-    if(CaseSensitive) {
-      pcWildcard=pcMWildcard;
-      pcString=pcMString;
-    } 
-    else {
-      strncpy(c1,pcMWildcard,sizeof(c1));
-      strncpy(c2,pcMString,sizeof(c2));
-      strlwr(c1); strlwr(c2);
-      pcWildcard=c1;
-      pcString=c2;
-    }
-    
-    if(pcWildcard[0]=='\0') return TRUE;
-    
-    for(unsigned i=0; i<strlen(pcWildcard); i++) {
-      /* If end of string is reached, we have a match */
-      if(pcString[nPos] == '\0' && pcWildcard[i] == '\0')
-        return TRUE;
-        
-      /* Wildcard? */
-      if(pcWildcard[i] == '?' || pcWildcard[i] == '*') 
-        PrevIsWildcard=TRUE;
-      else {
-        /* Nope. What does we accept from the string? */
-        if(PrevIsWildcard) {
-          /* Read string until we get the right character */
-          while(1) {
-            if(pcString[nPos] == '\0') 
-              return FALSE;
-              
-            /* Got the char? */
-            if(pcString[nPos] == pcWildcard[i])
-              break;
-              
-            nPos++;
-          }
-          i--;
-        
-          /* Clear wildcard flag */
-          PrevIsWildcard=FALSE;
-        }
-        else {
-          /* The letter in the string MUST equal the letter in the wildcard */
-          if(pcWildcard[i] != pcString[nPos])
-            return FALSE;
-              
-          nPos++; /* Next */
-        }
-      }
-    }
-    
-    /* Result of random debugging :) */
-    if(PrevIsWildcard || pcString[nPos]=='\0') return TRUE;
-    
-    /* Not a match */
-    return FALSE;
+	  int nPos=0;
+	  mbool PrevIsWildcard=FALSE;
+	  char c1[256],c2[256];
+	  char *pcWildcard,*pcString;
+  	
+	  if(CaseSensitive) {
+		  pcWildcard=pcMWildcard;
+		  pcString=pcMString;
+	  }	
+	  else {
+		  strncpy(c1,pcMWildcard,sizeof(c1));
+		  strncpy(c2,pcMString,sizeof(c2));
+		  strlwr(c1); strlwr(c2);
+		  pcWildcard=c1;
+		  pcString=c2;
+	  }
+  	
+	  if(pcWildcard[0]=='\0') return TRUE;
+  	
+	  for(unsigned i=0; i<strlen(pcWildcard); i++) {
+		  /* If end of string is reached, we have a match */
+		  if(pcString[nPos] == '\0' && pcWildcard[i] == '\0')
+			  return TRUE;
+  			
+		  /* Wildcard? */
+		  if(pcWildcard[i] == '?' || pcWildcard[i] == '*') 
+			  PrevIsWildcard=TRUE;
+		  else {
+			  /* Nope. What does we accept from the string? */
+			  if(PrevIsWildcard) {
+				  /* Read string until we get the right character */
+				  while(1) {
+					  if(pcString[nPos] == '\0') 
+						  return FALSE;
+  						
+					  /* Got the char? */
+					  if(pcString[nPos] == pcWildcard[i])
+						  break;
+  						
+					  nPos++;
+				  }
+				  i--;
+  			
+				  /* Clear wildcard flag */
+				  PrevIsWildcard=FALSE;
+			  }
+			  else {
+				  /* The letter in the string MUST equal the letter in the wildcard */
+				  if(pcWildcard[i] != pcString[nPos])
+					  return FALSE;
+  						
+				  nPos++; /* Next */
+			  }
+		  }
+	  }
+  	
+	  /* Result of random debugging :) */
+	  if(PrevIsWildcard || pcString[nPos]=='\0') return TRUE;
+  	
+	  /* Not a match */
+	  return FALSE;
   }
 
   void FS::_ThrowFileError(FileHandle *pfh,std::string Description) {
@@ -145,18 +144,18 @@ namespace vapp {
       
       if((fh = _findfirst((Dir + std::string("/") + Wildcard).c_str(),&fd)) != -1L) {
         do {
-          if(strcmp(fd.name,".") && strcmp(fd.name,"..")) {
-            std::string F = Dir + std::string("/") + std::string(fd.name);
-            bool bFound = false;
-            for(int k = 0;k<List.size();k++) {
-              if(getFileBaseName(List[k]) == getFileBaseName(F)) {  
-                bFound = true;
-                break;
-              }
-            }
-            if(!bFound)
-              List.push_back(F);
-          }
+					if(strcmp(fd.name,".") && strcmp(fd.name,"..")) {
+					  std::string F = Dir + std::string("/") + std::string(fd.name);
+					  bool bFound = false;
+					  for(int k = 0;k<List.size();k++) {
+					    if(getFileBaseName(List[k]) == getFileBaseName(F)) {  
+					      bFound = true;
+					      break;
+					    }
+					  }
+					  if(!bFound)
+						  List.push_back(F);
+				  }
         } while(_findnext(fh,&fd)==0);
         _findclose(fh);
       }
@@ -164,44 +163,44 @@ namespace vapp {
       /* Now, recurse into sub-dirs */
       if((fh = _findfirst( (Dir + std::string("/*")).c_str(),&fd)) != -1L) {
         do {
-          if(strcmp(fd.name,".") && strcmp(fd.name,"..")) {
-            std::string F = Dir + std::string("/") + std::string(fd.name);
+					if(strcmp(fd.name,".") && strcmp(fd.name,"..")) {
+					  std::string F = Dir + std::string("/") + std::string(fd.name);
             if(isDir(F)) {
               /* Recurse! */
               _FindFilesRecursive(F,Wildcard,List);
-            }           
-          }
-        } while(_findnext(fh,&fd)==0);
-        _findclose(fh);
-      }      
-    #else
-      std::string Dir = DirX;
-    
+            }					  
+					}
+			  } while(_findnext(fh,&fd)==0);
+			  _findclose(fh);
+			}      
+	  #else
+	    std::string Dir = DirX;
+	  
       struct dirent *dp;    
       DIR *dirp = opendir(Dir.c_str());
       while(dirp) {
         if((dp = readdir(dirp)) != NULL) {
-          std::string F = Dir + std::string(dp->d_name);
-          if(isDir(F)) {
-            /* Recurse... */
-            if(strcmp(dp->d_name,".") && strcmp(dp->d_name,"..")) {           
+			    std::string F = Dir + std::string(dp->d_name);
+			    if(isDir(F)) {
+			      /* Recurse... */
+            if(strcmp(dp->d_name,".") && strcmp(dp->d_name,"..")) {			      
               _FindFilesRecursive(F + std::string("/"),Wildcard,List);
             }
-          }
-          else {          
+			    }
+			    else {			    
             if(str_match_wildcard((char *)Wildcard.c_str(),(char *)dp->d_name,true)) {
               /* Match! */
               if(strcmp(dp->d_name,".") && strcmp(dp->d_name,"..")) {
-                bool bFound = false;
-                for(unsigned int k = 0;k<List.size();k++) {
-                  if(FS::getFileBaseName(List[k]) == FS::getFileBaseName(F)) {  
-                    bFound = true;
-                    break;
-                  }
-                }
-                if(!bFound)
-                  List.push_back(F);
-              }             
+					      bool bFound = false;
+					      for(unsigned int k = 0;k<List.size();k++) {
+  					      if(FS::getFileBaseName(List[k]) == FS::getFileBaseName(F)) {  
+					          bFound = true;
+					          break;
+					        }
+					      }
+					      if(!bFound)
+						      List.push_back(F);
+              }							
             }
           }
         }
@@ -209,157 +208,17 @@ namespace vapp {
           closedir(dirp);
           break;        
         }
-      }       
+      }	      
     #endif    
   }
 
   std::vector<std::string> FS::findPhysFiles(std::string Files,bool bRecurse) {
     std::vector<std::string> Result;
     std::string Wildcard;
-    std::string DataDirToSearch,AltDirToSearch,UDirToSearch = "";
+    std::string DirToSearch,AltDirToSearch,UDirToSearch = "";
     
-    /* First seperate directory from wildcard */
-    int n = Files.find_last_of('/');
-    if(n<0) {
-      /* No directory specified */
-      DataDirToSearch = m_DataDir;
-      AltDirToSearch = "";
-      Wildcard = Files;
-    }
-    else {
-      /* Seperate dir and wildcard */
-      DataDirToSearch = m_DataDir + std::string("/") + Files.substr(0,n+1);
-      UDirToSearch = m_UserDir + std::string("/") + Files.substr(0,n+1);
-      AltDirToSearch = Files.substr(0,n+1);
-      Wildcard = Files.substr(n+1);
-    }    
-
-		/* 1. find in user dir */
-		/* 2. find in data dir */
-		/* 3. find in package  */
-
-    /* Windows? */
-#ifdef WIN32
-		if(bRecurse) {
-			_FindFilesRecursive(DataDirToSearch,Wildcard,Result);
-		} else {
-			long fh;
-			struct _finddata_t fd;
-			
-			if((fh = _findfirst((DataDirToSearch + Wildcard).c_str(),&fd)) != -1L) {
-				do {
-					if(strcmp(fd.name,".") && strcmp(fd.name,"..")) {
-						std::string F = DataDirToSearch + std::string(fd.name);
-						bool bFound = false;
-						for(int k = 0;k<Result.size();k++) {
-							if(FS::getFileBaseName(Result[k]) == FS::getFileBaseName(F)) {  
-								bFound = true;
-								break;
-							}
-						}
-						if(!bFound)
-							Result.push_back(F);
-					}
-				} while(_findnext(fh,&fd)==0);
-				_findclose(fh);
-			}
-		}
-#else /* Assume linux, unix... yalla yalla... */
-		if(UDirToSearch != "") {
-			if(bRecurse) {
-				_FindFilesRecursive(UDirToSearch,Wildcard,Result);        
-			} else {
-				struct dirent *dp;    
-				DIR *dirp = opendir(UDirToSearch.c_str());
-				while(dirp) {
-					if((dp = readdir(dirp)) != NULL) {
-						if(str_match_wildcard((char *)Wildcard.c_str(),(char *)dp->d_name,true)) {
-							/* Match! */
-							if(strcmp(dp->d_name,".") && strcmp(dp->d_name,"..")) {
-								std::string F = UDirToSearch + std::string(dp->d_name);
-								bool bFound = false;
-								for(unsigned int k = 0;k<Result.size();k++) {
-									if(FS::getFileBaseName(Result[k]) == FS::getFileBaseName(F)) {  
-										bFound = true;
-										break;
-									}
-								}
-								if(!bFound)
-									Result.push_back(F);
-							}
-						}
-					} else {
-						closedir(dirp);
-						break;        
-					}
-				}
-			}
-		}
-
-		if(AltDirToSearch != UDirToSearch) {
-			if(bRecurse) {
-				_FindFilesRecursive(AltDirToSearch,Wildcard,Result);
-			} else {
-				struct dirent *dp;    
-				DIR *dirp = opendir(AltDirToSearch.c_str());
-				while(dirp) {
-					if((dp = readdir(dirp)) != NULL) {
-						if(str_match_wildcard((char *)Wildcard.c_str(),(char *)dp->d_name,true)) {
-							/* Match! */
-							if(strcmp(dp->d_name,".") && strcmp(dp->d_name,"..")) {
-								std::string F = AltDirToSearch + std::string(dp->d_name);
-								bool bFound = false;
-								for(unsigned int k = 0;k<Result.size();k++) {
-									if(FS::getFileBaseName(Result[k]) == FS::getFileBaseName(F)) {  
-										bFound = true;
-										break;
-									}
-								}
-								if(!bFound)
-									Result.push_back(F);
-							}
-						}
-					} else {
-						closedir(dirp);
-						break;        
-					}
-				}
-			}
-		}
-
-		if(DataDirToSearch != AltDirToSearch && DataDirToSearch != UDirToSearch) {
-			if(bRecurse) {
-				_FindFilesRecursive(DataDirToSearch,Wildcard,Result);
-			} else {
-				/* Search directories */
-				struct dirent *dp;    
-        DIR *dirp = opendir(DataDirToSearch.c_str());
-        while(dirp) {
-          if((dp = readdir(dirp)) != NULL) {
-            if(str_match_wildcard((char *)Wildcard.c_str(),(char *)dp->d_name,true)) {
-              /* Match! */
-              if(strcmp(dp->d_name,".") && strcmp(dp->d_name,"..")) {
-                std::string F = DataDirToSearch + std::string(dp->d_name);
-                bool bFound = false;
-                for(unsigned int k = 0;k<Result.size();k++) {
-                  if(FS::getFileBaseName(Result[k]) == FS::getFileBaseName(F)) {  
-                    bFound = true;
-                    break;
-                  }
-                }
-                if(!bFound)
-                  Result.push_back(F);
-              }             
-            }
-          } else {
-            closedir(dirp);
-            break;        
-          }
-        }
-      }
-		}
-    #endif
-		
+    //printf("FIND PHYS FILES [%s]\n",Files.c_str());
+    
     /* Look in package */
     for(int i=0;i<m_nNumPackFiles;i++) {
       /* Make sure about the directory... */
@@ -374,9 +233,158 @@ namespace vapp {
         Result.push_back(m_PackFiles[i].Name);
       }
     }
-    
-		//	for(int i=0;i<Result.size();i++) printf("%s\n",Result[i].c_str());
 
+    /* First seperate directory from wildcard */
+    int n = Files.find_last_of('/');
+    if(n<0) {
+      /* No directory specified */
+      DirToSearch = m_DataDir;
+      AltDirToSearch = m_DataDir;      
+      Wildcard = Files;
+    }
+    else {
+      /* Seperate dir and wildcard */
+      DirToSearch = m_DataDir + std::string("/") + Files.substr(0,n+1);
+      UDirToSearch = m_UserDir + std::string("/") + Files.substr(0,n+1);
+      AltDirToSearch = Files.substr(0,n+1);
+      Wildcard = Files.substr(n+1);
+    }    
+
+    /* TODO: !!!! Quick hack, clean up please */
+    
+//    printf("W=%s   D=%s  AD=%s\n",Wildcard.c_str(),DirToSearch.c_str(),AltDirToSearch.c_str());    
+    /* Windows? */
+    #ifdef WIN32
+      if(bRecurse) {
+        _FindFilesRecursive(DirToSearch,Wildcard,Result);
+      }
+      else {
+        long fh;
+        struct _finddata_t fd;
+        
+        if((fh = _findfirst((DirToSearch + Wildcard).c_str(),&fd)) != -1L) {
+          do {
+					  if(strcmp(fd.name,".") && strcmp(fd.name,"..")) {
+					    std::string F = DirToSearch + std::string(fd.name);
+					    bool bFound = false;
+					    for(int k = 0;k<Result.size();k++) {
+					      if(FS::getFileBaseName(Result[k]) == FS::getFileBaseName(F)) {  
+					        bFound = true;
+					        break;
+					      }
+					    }
+					    if(!bFound)
+						    Result.push_back(F);
+				    }
+          } while(_findnext(fh,&fd)==0);
+          _findclose(fh);
+        }
+      }
+    #else /* Assume linux, unix... yalla yalla... */
+      if(bRecurse) {
+        _FindFilesRecursive(DirToSearch,Wildcard,Result);
+      }
+      else {
+        /* Search directories */
+        struct dirent *dp;    
+        DIR *dirp = opendir(DirToSearch.c_str());
+        while(dirp) {
+          if((dp = readdir(dirp)) != NULL) {
+            if(str_match_wildcard((char *)Wildcard.c_str(),(char *)dp->d_name,true)) {
+              /* Match! */
+              if(strcmp(dp->d_name,".") && strcmp(dp->d_name,"..")) {
+					      std::string F = DirToSearch + std::string(dp->d_name);
+					      bool bFound = false;
+					      for(unsigned int k = 0;k<Result.size();k++) {
+  					      if(FS::getFileBaseName(Result[k]) == FS::getFileBaseName(F)) {  
+					          bFound = true;
+					          break;
+					        }
+					      }
+					      if(!bFound)
+						      Result.push_back(F);
+              }							
+            }
+          }
+          else {
+            closedir(dirp);
+            break;        
+          }
+        }
+      }
+      
+      if(UDirToSearch != "") {
+        if(bRecurse) {
+          _FindFilesRecursive(UDirToSearch,Wildcard,Result);        
+        }
+        else {
+          struct dirent *dp;    
+          DIR *dirp = opendir(UDirToSearch.c_str());
+          DirToSearch = UDirToSearch;
+          while(dirp) {
+            if((dp = readdir(dirp)) != NULL) {
+              if(str_match_wildcard((char *)Wildcard.c_str(),(char *)dp->d_name,true)) {
+                /* Match! */
+                if(strcmp(dp->d_name,".") && strcmp(dp->d_name,"..")) {
+					        std::string F = DirToSearch + std::string(dp->d_name);
+					        bool bFound = false;
+					        for(unsigned int k = 0;k<Result.size();k++) {
+    					      if(FS::getFileBaseName(Result[k]) == FS::getFileBaseName(F)) {  
+					            bFound = true;
+					            break;
+					          }
+					        }
+					        if(!bFound)
+						        Result.push_back(F);
+						    }
+              }
+            }
+            else {
+              closedir(dirp);
+              break;        
+            }
+          }
+        }
+      }
+
+      if(AltDirToSearch != DirToSearch) {
+        if(bRecurse) {
+          _FindFilesRecursive(AltDirToSearch,Wildcard,Result);
+        }
+        else {
+          struct dirent *dp;    
+          DIR *dirp = opendir(AltDirToSearch.c_str());
+          DirToSearch = AltDirToSearch;
+          while(dirp) {
+            if((dp = readdir(dirp)) != NULL) {
+              if(str_match_wildcard((char *)Wildcard.c_str(),(char *)dp->d_name,true)) {
+                /* Match! */
+                if(strcmp(dp->d_name,".") && strcmp(dp->d_name,"..")) {
+					        std::string F = DirToSearch + std::string(dp->d_name);
+					        bool bFound = false;
+					        for(unsigned int k = 0;k<Result.size();k++) {
+    					      if(FS::getFileBaseName(Result[k]) == FS::getFileBaseName(F)) {  
+					            bFound = true;
+					            break;
+					          }
+					        }
+					        if(!bFound)
+						        Result.push_back(F);
+						    }
+              }
+            }
+            else {
+              closedir(dirp);
+              break;        
+            }
+          }
+        }
+      }
+    #endif
+    
+    //printf("\n");
+    //for(int i=0;i<Result.size();i++) printf("%s\n",Result[i].c_str());
+    
     /* Return file listing */
     return Result;
   }
@@ -387,12 +395,11 @@ namespace vapp {
     /* Is it an absolute path? */
     if(isPathAbsolute(Path)) {    
       /* Yup, not much to do here then */
-      mkArborescence(Path);
       pfh->fp = fopen(Path.c_str(),"wb");
     }    
     else {
-      /* Nope, try the user dir */
-      mkArborescence(m_UserDir + std::string("/") + Path);
+      /* Nope, try the user dir. We are not going to create files relative
+         to the working-dir, that would be f*cked :) */
       pfh->fp = fopen((m_UserDir + std::string("/") + Path).c_str(),"wb");
     }
     
@@ -417,15 +424,15 @@ namespace vapp {
     }
     else {
       /* Try current working dir */
-      //pfh->fp = fopen(Path.c_str(),"rb");
-      //if(pfh->fp == NULL) {
-			/* No luck. Try the user-dir then */
-			pfh->fp = fopen((m_UserDir + std::string("/") + Path).c_str(),"rb");        
-			if(pfh->fp == NULL && m_bGotDataDir) {
-				/* Not there either, the data-dir is our last chance */
-				pfh->fp = fopen((m_DataDir + std::string("/") + Path).c_str(),"rb");        
-			}
-			//}
+      pfh->fp = fopen(Path.c_str(),"rb");
+      if(pfh->fp == NULL) {
+        /* No luck. Try the user-dir then */
+        pfh->fp = fopen((m_UserDir + std::string("/") + Path).c_str(),"rb");        
+        if(pfh->fp == NULL && m_bGotDataDir) {
+          /* Not there either, the data-dir is our last chance */
+          pfh->fp = fopen((m_DataDir + std::string("/") + Path).c_str(),"rb");        
+        }
+      }
       pfh->Type = FHT_STDIO;
     }
     
@@ -601,9 +608,9 @@ namespace vapp {
   } 
   
   int FS::readInt(FileHandle *pfh) {
-    int32_t nv;
-    if(!readBuf(pfh,(char *)&nv,sizeof(4))) _ThrowFileError(pfh,"readInt -> failed");
-    return static_cast<int>(nv);
+    int v;
+    if(!readBuf(pfh,(char *)&v,sizeof(v))) _ThrowFileError(pfh,"readInt -> failed");
+    return v;
   } 
   
   float FS::readFloat(FileHandle *pfh) {
@@ -650,9 +657,7 @@ namespace vapp {
   }
   
   void FS::writeInt(FileHandle *pfh,int v) {
-    int32_t nv;
-    nv = static_cast<int32_t>(v);
-    if(!writeBuf(pfh,(char *)&nv, 4)) _ThrowFileError(pfh,"writeInt -> failed");
+    if(!writeBuf(pfh,(char *)&v,sizeof(v))) _ThrowFileError(pfh,"writeInt -> failed");
   }
   
   void FS::writeFloat(FileHandle *pfh,float v) {
@@ -773,13 +778,6 @@ namespace vapp {
     return FName.substr(0,n);
   }
 
-  std::string FS::getFileExtension(std::string Path) {
-    int n;
-    n = Path.find_last_of(".");
-    if(n<0) return "";
-    return Path.substr(n+1, Path.length() - n - 1);
-  }
-
   /*=========================================================================== 
   Find out how old this file thing is... (physical file system only)
   ===========================================================================*/
@@ -829,33 +827,16 @@ namespace vapp {
   
   /*===========================================================================
   Delete file
-  ===========================================================================*/  
-  bool FS::deleteFile(const std::string &File) {
-    std::string FullFile;
-    
+  ===========================================================================*/
+  void FS::deleteFile(const std::string &File) {
+    /* We can only delete user files */
     if(m_UserDir == "") {
       Log("** Warning ** : No user directory, can't delete file: %s",File.c_str());
-      return false;
+      return;
     }
     
-    /* Absolute file path? */
-    if(isPathAbsolute(File)) {
-      /* Yeah, check if file is in user directory - otherwise we won't delete 
-         it */
-      if(File.length() < m_UserDir.length() || File.substr(0,m_UserDir.length()) != m_UserDir) return false;
-      
-      FullFile = File;
-    }
-    else {  
-      /* We can only delete user files */      
-      FullFile = m_UserDir + std::string("/") + File;
-    }
-
-    if(remove(FullFile.c_str())) {
-      return false;
-    }
-
-    return true;
+    std::string FullFile = m_UserDir + std::string("/") + File;
+    remove(FullFile.c_str());
   }
   
   /*===========================================================================
@@ -900,9 +881,9 @@ namespace vapp {
           FullTo = cTemp;
           break;
         } else {
-    fclose(fp);
-    i++;
-  }
+	  fclose(fp);
+	  i++;
+	}
         /* Next */
       }      
     }
@@ -912,7 +893,7 @@ namespace vapp {
     if(in != NULL) {
       FILE *out = fopen(FullTo.c_str(),"wb");
       if(out != NULL) {
-  To_really_done = FullTo;
+	To_really_done = FullTo;
 
         /* Get input file size */
         fseek(in,0,SEEK_END);
@@ -1023,7 +1004,7 @@ namespace vapp {
       
       /* If user-dir isn't there, try making it */
       if(!isDir(m_UserDir)) {
-        if(FS::mkDir(m_UserDir.c_str())) { /* drwx------ */
+        if(mkdir(m_UserDir.c_str(),S_IRUSR|S_IWUSR|S_IRWXU)) { /* drwx------ */
           Log("** Warning ** : failed to create user directory '%s'!",m_UserDir.c_str());
         }
         if(!isDir(m_UserDir)) {
@@ -1034,7 +1015,7 @@ namespace vapp {
       
       /* If there is no Replay-dir in user-dir try making that too */
       if(!isDir(getReplaysDir())) {
-        if(FS::mkDir(getReplaysDir().c_str())) { /* drwx------ */
+        if(mkdir(getReplaysDir().c_str(),S_IRUSR|S_IWUSR|S_IRWXU)) { /* drwx------ */
           Log("** Warning ** : failed to create user replay directory '%s'!",(m_UserDir + std::string("/Replays")).c_str());
         }
         if(!isDir(getReplaysDir())) {
@@ -1045,7 +1026,7 @@ namespace vapp {
 
       /* Make sure we got a level cache dir */
       if(!isDir(m_UserDir + std::string("/LCache"))) {
-        if(FS::mkDir((m_UserDir + std::string("/LCache")).c_str())) { /* drwx------ */
+        if(mkdir((m_UserDir + std::string("/LCache")).c_str(),S_IRUSR|S_IWUSR|S_IRWXU)) { /* drwx------ */
           Log("** Warning ** : failed to create user LCache directory '%s'!",(m_UserDir + std::string("/LCache")).c_str());
         }
         if(!isDir(m_UserDir + std::string("/LCache"))) {
@@ -1056,7 +1037,7 @@ namespace vapp {
 
       /* The same goes for the /Levels dir */
       if(!isDir(getLevelsDir())) {
-        if(FS::mkDir(getLevelsDir().c_str())) { /* drwx------ */
+        if(mkdir(getLevelsDir().c_str(),S_IRUSR|S_IWUSR|S_IRWXU)) { /* drwx------ */
           Log("** Warning ** : failed to create user levels directory '%s'!",(m_UserDir + std::string("/Levels")).c_str());
         }
         if(!isDir(getLevelsDir())) {
@@ -1082,67 +1063,75 @@ namespace vapp {
       Log("Data directory: %s",m_DataDir.c_str());
       m_BinDataFile = m_DataDir + std::string("/xmoto.bin");
     }
+    else {
+      Log("Data directory: (local)");    
+      m_BinDataFile = "xmoto.bin";
+
+      /* If it is UNIX and we're running in local data mode, AND we can't find the
+         xmoto.bin file, then we can safely assume the user haven't read the
+         instructions :) */
+      #if !defined(WIN32)
+        FILE *fptest = fopen(m_BinDataFile.c_str(),"rb");
+        if(fptest == NULL) {
+	        Log("Failed to find the data files! Please either install the program\n"
+              "with 'make install' or 'cd' into the 'bin' directory, and start\n"
+              "the program from there.\n");
+         
+	        throw Exception("Can't find data!");
+        }
+        fclose(fptest);
+      #endif
+    }
           
     /* Initialize binary data package if any */
     FILE *fp = fopen(m_BinDataFile.c_str(),"rb");
     m_nNumPackFiles = 0;
-    if(fp == NULL) {
-			throw Exception("Package xmoto.bin not found !");
-		}
-
-		Log("Initializing binary data package...\n");
+    if(fp != NULL) {
+      Log("Initializing binary data package...\n");
       
-		char cBuf[256];
-		char md5sum[256];
-		fread(cBuf,4,1,fp);
-		if(!strncmp(cBuf,"XBI2",4)) {
-			int nNameLen;
-			int md5sumLen;
-			while((nNameLen=fgetc(fp)) >= 0) {
-				//          printf("%d  \n",nNameLen);
-				/* Read file name */
-				fread(cBuf,nNameLen,1,fp);
-				cBuf[nNameLen] = '\0';
+      char cBuf[256];
+      fread(cBuf,4,1,fp);
+      if(!strncmp(cBuf,"XBI1",4)) {
+        int nNameLen;
+        while((nNameLen=fgetc(fp)) >= 0) {
+//          printf("%d  \n",nNameLen);
+          /* Read file name */
+          fread(cBuf,nNameLen,1,fp);
+          cBuf[nNameLen] = '\0';
+//          printf("      %s\n",cBuf);
+          
+          /* Read file size */
+          int nSize;
 
-				md5sumLen = fgetc(fp);
-				fread(md5sum,md5sumLen,1,fp);
-				md5sum[md5sumLen] = '\0';
-				//          printf("      %s\n",cBuf);
-				
-				/* Read file size */
-				int nSize;
-				
-				/* Patch by Michel Daenzer (applied 2005-10-25) */
-				unsigned char nSizeBuf[4];
-				fread(nSizeBuf,4,1,fp);
-				nSize = nSizeBuf[0] | nSizeBuf[1] << 8 | nSizeBuf[2] << 16 | nSizeBuf[3] << 24;
-				
-				if(m_nNumPackFiles < MAX_PACK_FILES) {
-					m_PackFiles[m_nNumPackFiles].Name = cBuf;
-					m_PackFiles[m_nNumPackFiles].md5sum = md5sum;
-					//printf("md5sum(%s) = %s\n",
-					//   m_PackFiles[m_nNumPackFiles].Name.c_str(),
-					//   m_PackFiles[m_nNumPackFiles].md5sum.c_str());
+          /* Patch by Michel Daenzer (applied 2005-10-25) */
+          unsigned char nSizeBuf[4];
+          fread(nSizeBuf,4,1,fp);
+          nSize = nSizeBuf[0] | nSizeBuf[1] << 8 | nSizeBuf[2] << 16 | nSizeBuf[3] << 24;
+          
+          if(m_nNumPackFiles < MAX_PACK_FILES) {
+            m_PackFiles[m_nNumPackFiles].Name = cBuf;
+            m_PackFiles[m_nNumPackFiles].nOffset = ftell(fp);
+            m_PackFiles[m_nNumPackFiles].nSize = nSize;
+            m_nNumPackFiles ++;
+          }
+          else
+            Log("** Warning ** : Too many files in binary data package! (Limit=%d)",MAX_PACK_FILES);          
 
-					m_PackFiles[m_nNumPackFiles].nOffset = ftell(fp);
-					m_PackFiles[m_nNumPackFiles].nSize = nSize;
-					m_nNumPackFiles ++;
-				}
-				else
-					Log("** Warning ** : Too many files in binary data package! (Limit=%d)",MAX_PACK_FILES);          
-				
-				fseek(fp,nSize,SEEK_CUR);
-			}
-		} else
-			Log("** Warning ** : Invalid binary data package format!");
-		fclose(fp);
-	}     
+          fseek(fp,nSize,SEEK_CUR);
+        }
+      }
+      else
+        Log("** Warning ** : Invalid binary data package format!");
+      
+      fclose(fp);
+    }        
+  }
 
   /*===========================================================================
   Hmm, for some reason I have to do this. Don't ask me why.
   ===========================================================================*/
   int FS::mkDir(const char *pcPath) {
-    #if defined(WIN32)
+    #if defined(_MSC_VER)
       return _mkdir(pcPath);
     #else
       return mkdir(pcPath,S_IRUSR|S_IWUSR|S_IRWXU);
@@ -1240,35 +1229,5 @@ namespace vapp {
     }
   }
 
-  std::string FS::md5sum(std::string i_filePath) {
-    /* is it a file from the pack or a real file ? */
-    if(FS::isFileReal(i_filePath)) {
-      return md5file(i_filePath);
-    }
-
-    /* package */
-    for(int i=0; i<m_nNumPackFiles; i++) {              
-      if(m_PackFiles[i].Name == i_filePath ||
-	 (std::string("./") + m_PackFiles[i].Name) == i_filePath) {
-	   /* Found it, yeah. */
-	   //printf("md5sum(%s) = %s\n", m_PackFiles[i].Name.c_str(), m_PackFiles[i].md5sum.c_str());
-	   return m_PackFiles[i].md5sum;
-	 }
-    }
-    return "";
-  }
-
-
-  bool FS::isFileReal(std::string i_filePath) {
-    FILE *fp;
-
-    fp = fopen(i_filePath.c_str(), "rb");
-    if(fp == NULL) {
-      return false;
-    }
-    fclose(fp);
-
-    return true;
-  }
 }
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<level id="tut2" levelpack="Tutorials" levelpackNum="02">
+<level id="tut2" levelpack="Tutorials">
 	<info>
-		<name>Jumping</name>
+		<name>Tutorial #2 - Jumping</name>
 		<description></description>
 		<author></author>
 		<date></date>

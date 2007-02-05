@@ -30,6 +30,11 @@ distribution.
 //  #define TIXML_USE_STL
 //#endif
 
+#ifdef _MSC_VER
+#pragma warning( disable : 4530 )
+#pragma warning( disable : 4786 )
+#endif
+
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -41,7 +46,12 @@ distribution.
 #define DEBUG
 #endif
 
+#if defined( DEBUG ) && defined( _MSC_VER )
+#include <windows.h>
+#define TIXML_LOG OutputDebugString
+#else
 #define TIXML_LOG printf
+#endif
 
 #ifdef TIXML_USE_STL
 	#include <string>

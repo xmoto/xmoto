@@ -18,7 +18,7 @@
 #include "WWW.h"
 #include "VApp.h"
 #include "VFileIO.h"
-#include "helpers/VExcept.h"
+#include "VExcept.h"
 #include "VXml.h"
 #include <curl/curl.h>
 
@@ -31,7 +31,7 @@
 #endif
 #include <sys/stat.h>
 #include <vector>
-#include "helpers/FileCompression.h"
+#include "compression/FileCompression.h"
 #include "md5sum/md5file.h"
 
 struct f_curl_download_data {
@@ -119,11 +119,11 @@ bool ProxySettings::useDefaultAuthentification() const {
 }
 
 WebHighscore::WebHighscore(WebRoom *p_room,
-         std::string p_levelId,
-         std::string p_playerName,
-         std::string p_time,
-         std::string p_rplUrl,
-         const ProxySettings *p_proxy_settings) {
+			   std::string p_levelId,
+			   std::string p_playerName,
+			   std::string p_time,
+			   std::string p_rplUrl,
+			   const ProxySettings *p_proxy_settings) {
   m_playerName  = p_playerName;
   m_time        = p_time;
   m_levelId     = p_levelId;
@@ -177,22 +177,22 @@ float WebHighscore::getFTime() const {
   /* search min */
   v_pos = v_rest.find(":", 0);
   if(v_pos == std::string::npos || v_pos == 0) {
-    throw Exception("error : invalid time in webhighscore");
+    throw vapp::Exception("error : invalid time in webhighscore");
   }
   v_min = v_rest.substr(0, v_pos);
   if(v_pos == v_rest.length() -1) {
-    throw Exception("error : invalid time in webhighscore");
+    throw vapp::Exception("error : invalid time in webhighscore");
   }
   v_rest = v_rest.substr(v_pos+1, v_rest.length() -v_pos -1);
 
   /* search sec */
   v_pos = v_rest.find(":", 0);
   if(v_pos == std::string::npos || v_pos == 0) {
-    throw Exception("error : invalid time in webhighscore");
+    throw vapp::Exception("error : invalid time in webhighscore");
   }
   v_sec = v_rest.substr(0, v_pos);
   if(v_pos == v_rest.length() -1) {
-    throw Exception("error : invalid time in webhighscore");
+    throw vapp::Exception("error : invalid time in webhighscore");
   }
   v_rest = v_rest.substr(v_pos+1, v_rest.length() -v_pos -1);
 
@@ -245,20 +245,21 @@ WebHighscore* WebRoom::getHighscoreFromLevel(const std::string &p_levelId) {
 }
 
 void WebRoom::cleanHash() {
-#if defined(USE_HASH_MAP)
-  HashNamespace::hash_map<const char*, WebHighscore*, HashNamespace::hash<const char*>, highscore_str, std::allocator<WebHighscore*> >::iterator it;
+  #if defined(USE_HASH_MAP)
+    HashNamespace::hash_map<const char*, WebHighscore*, HashNamespace::hash<const char*>, highscore_str, std::allocator<WebHighscore*> >::iterator it;
 
-  for (it = m_webhighscores.begin(); it != m_webhighscores.end(); it++) {
-    /* can be NULL, because search on unexisting value create an entry */
-    if(it->second != NULL) { 
-      delete it->second; /* delete highscore */
-    }
-  }
-#else
-  for(int i=0; i<m_webhighscores.size(); i++) {
-    delete m_webhighscores[i];
-  }
-#endif
+    it = m_webhighscores.begin();
+    while(it != m_webhighscores.end()) {
+      /* can be NULL, because search on unexisting value create an entry */
+      if(it->second != NULL) { 
+        delete it->second; /* delete highscore */
+      }
+      it++;
+    } 
+  #else
+    for(int i=0;i<m_webhighscores.size();i++)
+      delete m_webhighscores[i];
+  #endif
 
   /* clear hash table */
   m_webhighscores.clear();
@@ -280,7 +281,7 @@ void WebRoom::fillHash() {
   v_webHSXmlData = v_webHSXml.getLowLevelAccess();
 
   if(v_webHSXmlData == NULL) {
-    throw Exception("error : unable to analyze xml highscore file");
+    throw vapp::Exception("error : unable to analyze xml highscore file");
   }
 
   v_webHSXmlDataElement = v_webHSXmlData->FirstChildElement("xmoto_worldrecords");
@@ -293,9 +294,9 @@ void WebRoom::fillHash() {
     }
 
     for(TiXmlElement *pVarElem = v_webHSXmlDataElement->FirstChildElement("worldrecord");
-  pVarElem!=NULL;
-  pVarElem = pVarElem->NextSiblingElement("worldrecord")
-  ) {
+	pVarElem!=NULL;
+	pVarElem = pVarElem->NextSiblingElement("worldrecord")
+	) {
 
       pc = pVarElem->Attribute("level_id");
       if(pc == NULL) { continue; }
@@ -303,11 +304,11 @@ void WebRoom::fillHash() {
 
       pc = pVarElem->Attribute("player");
       if(pc == NULL) { continue; }
-      v_playerName = pc;   
+      v_playerName = pc;	 
 
       pc = pVarElem->Attribute("time");
       if(pc == NULL) { continue; }
-      v_time = pc;   
+      v_time = pc;	 
 
       pc = pVarElem->Attribute("replay");
       if(pc == NULL) { continue; }
@@ -327,10 +328,10 @@ void WebRoom::fillHash() {
 void WebRoom::update() {
   /* download xml file */
   FSWeb::downloadFileBz2UsingMd5(m_userFilename,
-         m_webhighscores_url,
-         NULL,
-         NULL,
-         m_proxy_settings);
+				 m_webhighscores_url,
+				 NULL,
+				 NULL,
+				 m_proxy_settings);
 }
 
 void WebRoom::upgrade() {
@@ -342,97 +343,97 @@ size_t FSWeb::writeData(void *ptr, size_t size, size_t nmemb, FILE *stream) {
 }
 
 void FSWeb::downloadFileBz2(const std::string &p_local_file,
-          const std::string &p_web_file,
-          int (*curl_progress_callback_download)(void *clientp,
-                   double dltotal,
-                   double dlnow,
-                   double ultotal,
-                   double ulnow),
-          void *p_data,
-          const ProxySettings *p_proxy_settings) {
+			    const std::string &p_web_file,
+			    int (*curl_progress_callback_download)(void *clientp,
+								   double dltotal,
+								   double dlnow,
+								   double ultotal,
+								   double ulnow),
+			    void *p_data,
+			    const ProxySettings *p_proxy_settings) {
   std::string v_bzFile = p_local_file + ".bz2";
 
   /* remove in case it already exists */
   remove(v_bzFile.c_str());
   downloadFile(v_bzFile,
-         p_web_file + ".bz2",
-         curl_progress_callback_download,
-         p_data,
-         p_proxy_settings
-         );
+	       p_web_file + ".bz2",
+	       curl_progress_callback_download,
+	       p_data,
+	       p_proxy_settings
+	       );
 
   try {
     FileCompression::bunzip2(v_bzFile, p_local_file);
     remove(v_bzFile.c_str());
-  } catch(Exception &e) {
+  } catch(vapp::Exception &e) {
     remove(v_bzFile.c_str());
     throw e;
   }
 }
 
 void FSWeb::downloadFileBz2UsingMd5(const std::string &p_local_file,
-            const std::string &p_web_file,
-            int (*curl_progress_callback_download)(void *clientp,
-                     double dltotal,
-                     double dlnow,
-                     double ultotal,
-                     double ulnow),
-            void *p_data,
-            const ProxySettings *p_proxy_settings) {
+				    const std::string &p_web_file,
+				    int (*curl_progress_callback_download)(void *clientp,
+									   double dltotal,
+									   double dlnow,
+									   double ultotal,
+									   double ulnow),
+				    void *p_data,
+				    const ProxySettings *p_proxy_settings) {
   bool require_dwd = true;
 
   try {
     if(vapp::FS::isFileReadable(p_local_file) == true) {
       std::string v_md5Local  = md5file(p_local_file);
       if(v_md5Local != "") {
-  std::string v_md5File = p_local_file + ".md5";
-  
-  /* remove in case it already exists */
-  remove(v_md5File.c_str());
-  downloadFile(v_md5File,
-         p_web_file + ".md5",
-         NULL, /* nothing for this */
-         NULL,
-         p_proxy_settings
-         );
+	std::string v_md5File = p_local_file + ".md5";
+	
+	/* remove in case it already exists */
+	remove(v_md5File.c_str());
+	downloadFile(v_md5File,
+		     p_web_file + ".md5",
+		     NULL, /* nothing for this */
+		     NULL,
+		     p_proxy_settings
+		     );
 
-  std::string v_md5Web = md5Contents(v_md5File);
-  remove(v_md5File.c_str());
-  if(v_md5Web != "") {
-    require_dwd = v_md5Web != v_md5Local;
-  }
+	std::string v_md5Web = md5Contents(v_md5File);
+	remove(v_md5File.c_str());
+	if(v_md5Web != "") {
+	  require_dwd = v_md5Web != v_md5Local;
+	}
       }
     }
-  } catch(Exception &e) {
+  } catch(vapp::Exception &e) {
     /* no pb, just dwd */
   }
     
   if(require_dwd) {
     FSWeb::downloadFileBz2(p_local_file,
-         p_web_file,
-         curl_progress_callback_download,
-         p_data,
-         p_proxy_settings);
+			   p_web_file,
+			   curl_progress_callback_download,
+			   p_data,
+			   p_proxy_settings);
   }
 }
 
 void FSWeb::downloadFile(const std::string &p_local_file,
-       const std::string &p_web_file,
-       int (*curl_progress_callback_download)(void *clientp,
-                double dltotal,
-                double dlnow,
-                double ultotal,
-                double ulnow),
-       void *p_data,
-       const ProxySettings *p_proxy_settings
-       ) {
+			 const std::string &p_web_file,
+			 int (*curl_progress_callback_download)(void *clientp,
+								double dltotal,
+								double dlnow,
+								double ultotal,
+								double ulnow),
+			 void *p_data,
+			 const ProxySettings *p_proxy_settings
+			 ) {
 
   vapp::Verbose(std::string("downloading " + 
-          p_web_file     +
-          " to "         +
-          p_local_file
-          ).c_str()
-    );
+			    p_web_file     +
+			    " to "         +
+			    p_local_file
+			    ).c_str()
+		);
 
   CURL *v_curl;
   CURLcode res;
@@ -446,15 +447,15 @@ void FSWeb::downloadFile(const std::string &p_local_file,
 
   /* open the file */
   if( (v_destinationFile = fopen(v_local_file_tmp.c_str(), "wb")) == false) {
-    throw Exception("error : unable to open output file " 
-        + v_local_file_tmp);
+    throw vapp::Exception("error : unable to open output file " 
+			  + v_local_file_tmp);
   }
 
   /* download the file */
   v_curl = curl_easy_init();
   if(v_curl == false) {
     fclose(v_destinationFile);
-    throw Exception("error : unable to init curl"); 
+    throw vapp::Exception("error : unable to init curl");	
   }
 
   curl_easy_setopt(v_curl, CURLOPT_URL, p_web_file.c_str());
@@ -464,7 +465,6 @@ void FSWeb::downloadFile(const std::string &p_local_file,
   curl_easy_setopt(v_curl, CURLOPT_CONNECTTIMEOUT, DEFAULT_TRANSFERT_CONNECT_TIMEOUT);
   curl_easy_setopt(v_curl, CURLOPT_USERAGENT,  v_www_agent.c_str());
   curl_easy_setopt(v_curl, CURLOPT_FAILONERROR, 1);
-  curl_easy_setopt(v_curl, CURLOPT_FOLLOWLOCATION, 1);
 
   /* set proxy settings */
   if(p_proxy_settings != NULL) {
@@ -493,7 +493,7 @@ void FSWeb::downloadFile(const std::string &p_local_file,
     if(p_proxy_settings->useDefaultAuthentification() == false) {
       vapp::Verbose(std::string("set proxy authentification ->" + v_proxy_auth_str).c_str());
       curl_easy_setopt(v_curl, CURLOPT_PROXYUSERPWD,
-           v_proxy_auth_str.c_str());
+		       v_proxy_auth_str.c_str());
     }
   }
   /* ***** */
@@ -516,8 +516,8 @@ void FSWeb::downloadFile(const std::string &p_local_file,
 
   if(res != CURLE_OK) {
     remove(v_local_file_tmp.c_str());
-    throw Exception("error : unable to download file "
-        + p_web_file);  
+    throw vapp::Exception("error : unable to download file "
+			  + p_web_file);	
   }
 
   /* replace file */
@@ -526,20 +526,20 @@ void FSWeb::downloadFile(const std::string &p_local_file,
   remove(p_local_file.c_str());
   if(rename(v_local_file_tmp.c_str(), p_local_file.c_str()) != 0) {
     remove(v_local_file_tmp.c_str());
-    throw Exception("error : unable to write output file " 
-        + p_local_file);
+    throw vapp::Exception("error : unable to write output file " 
+			  + p_local_file);
   }
 }
 
 void FSWeb::uploadReplay(std::string p_replayFilename,
-       std::string p_id_room,
-       std::string p_login,
-       std::string p_password,
-       std::string p_url_to_transfert,
-       vapp::WWWAppInterface *p_WebApp,
-       const ProxySettings *p_proxy_settings,
-       bool &p_msg_status,
-       std::string &p_msg) {
+			 std::string p_id_room,
+			 std::string p_login,
+			 std::string p_password,
+			 std::string p_url_to_transfert,
+			 vapp::WWWAppInterface *p_WebApp,
+			 const ProxySettings *p_proxy_settings,
+			 bool &p_msg_status,
+			 std::string &p_msg) {
   CURL *v_curl;
   CURLcode v_res;
   std::string v_proxy_server;
@@ -551,7 +551,6 @@ void FSWeb::uploadReplay(std::string p_replayFilename,
   std::string v_local_file;
   v_local_file = vapp::FS::getUserDir() + "/" + DEFAULT_REPLAYUPLOAD_MSGFILE;
 
-  //printf("%s\n", v_local_file.c_str());
 
   struct curl_httppost *v_post, *v_last;
 
@@ -559,14 +558,14 @@ void FSWeb::uploadReplay(std::string p_replayFilename,
 
   /* open the file */
   if( (v_destinationFile = fopen(v_local_file.c_str(), "wb")) == false) {
-    throw Exception("error : unable to open output file " DEFAULT_REPLAYUPLOAD_MSGFILE);
+    throw vapp::Exception("error : unable to open output file " DEFAULT_REPLAYUPLOAD_MSGFILE);
   }
       
   v_curl = curl_easy_init();
   if(v_curl == false) {
     fclose(v_destinationFile);
     remove(v_local_file.c_str());
-    throw Exception("error : unable to init curl"); 
+    throw vapp::Exception("error : unable to init curl");	
   }
 
   curl_easy_setopt(v_curl, CURLOPT_URL, p_url_to_transfert.c_str());
@@ -575,16 +574,16 @@ void FSWeb::uploadReplay(std::string p_replayFilename,
   v_last = NULL;
   
   curl_formadd(&v_post, &v_last, CURLFORM_COPYNAME, "id_room",
-         CURLFORM_PTRCONTENTS, p_id_room.c_str(), CURLFORM_END);
+	       CURLFORM_PTRCONTENTS, p_id_room.c_str(), CURLFORM_END);
 
   curl_formadd(&v_post, &v_last, CURLFORM_COPYNAME, "login",
-         CURLFORM_PTRCONTENTS, p_login.c_str(), CURLFORM_END);
+	       CURLFORM_PTRCONTENTS, p_login.c_str(), CURLFORM_END);
 
   curl_formadd(&v_post, &v_last, CURLFORM_COPYNAME, "password",
-         CURLFORM_PTRCONTENTS, p_password.c_str(), CURLFORM_END);
+	       CURLFORM_PTRCONTENTS, p_password.c_str(), CURLFORM_END);
 
   curl_formadd(&v_post, &v_last, CURLFORM_COPYNAME, "replay",
-         CURLFORM_FILE, p_replayFilename.c_str(), CURLFORM_END);
+	       CURLFORM_FILE, p_replayFilename.c_str(), CURLFORM_END);
 
   curl_easy_setopt(v_curl, CURLOPT_HTTPPOST, v_post);
 
@@ -594,7 +593,6 @@ void FSWeb::uploadReplay(std::string p_replayFilename,
   curl_easy_setopt(v_curl, CURLOPT_WRITEFUNCTION, FSWeb::writeData);
   curl_easy_setopt(v_curl, CURLOPT_USERAGENT,  v_www_agent.c_str());
   curl_easy_setopt(v_curl, CURLOPT_FAILONERROR, 1);
-  curl_easy_setopt(v_curl, CURLOPT_FOLLOWLOCATION, 1);
 
   /* set proxy settings */
   if(p_proxy_settings != NULL) {
@@ -623,7 +621,7 @@ void FSWeb::uploadReplay(std::string p_replayFilename,
     if(p_proxy_settings->useDefaultAuthentification() == false) {
       vapp::Verbose(std::string("set proxy authentification ->" + v_proxy_auth_str).c_str());
       curl_easy_setopt(v_curl, CURLOPT_PROXYUSERPWD,
-           v_proxy_auth_str.c_str());
+		       v_proxy_auth_str.c_str());
     }
   }
   /* ***** */
@@ -645,7 +643,7 @@ void FSWeb::uploadReplay(std::string p_replayFilename,
     if(v_res != CURLE_OK) {
       curl_easy_cleanup(v_curl);
       remove(v_local_file.c_str());
-      throw Exception("error : unable to perform curl");  
+      throw vapp::Exception("error : unable to perform curl");	
     }
   }
   curl_easy_cleanup(v_curl);
@@ -662,8 +660,8 @@ void FSWeb::uploadReplay(std::string p_replayFilename,
 }
 
 void FSWeb::uploadReplayAnalyseMsg(std::string p_filename,
-           bool &p_msg_status_ok,
-           std::string &p_msg) {
+				   bool &p_msg_status_ok,
+				   std::string &p_msg) {
   vapp::XMLDocument v_Xml;
   TiXmlDocument *v_XmlData;
   TiXmlElement *v_XmlDataElement;
@@ -677,39 +675,39 @@ void FSWeb::uploadReplayAnalyseMsg(std::string p_filename,
   v_XmlData = v_Xml.getLowLevelAccess();
   
   if(v_XmlData == NULL) {
-    throw Exception("unable to analyze xml file result");
+    throw vapp::Exception("unable to analyze xml file result");
   }
   
   /* read the res and msg */
   v_XmlDataElement = v_XmlData->FirstChildElement("xmoto_uploadReplayResult");
   if(v_XmlDataElement == NULL) {
-    throw Exception("unable to analyze xml file result");
+    throw vapp::Exception("unable to analyze xml file result");
   }
 
   pc = v_XmlDataElement->Attribute("success");
   if(pc == NULL) {
-    throw Exception("unable to analyze xml file result");
+    throw vapp::Exception("unable to analyze xml file result");
   }
   v_success = pc;
   p_msg_status_ok = v_success == "1";
 
   v_XmlDataElementMsg = v_XmlDataElement->FirstChildElement("message");
   if(v_XmlDataElementMsg == NULL) {
-    throw Exception("unable to analyze xml file result");
+    throw vapp::Exception("unable to analyze xml file result");
   }
 
   pChild = v_XmlDataElementMsg->FirstChild();
   if(pChild == NULL) {
-    throw Exception("unable to analyze xml file result");
+    throw vapp::Exception("unable to analyze xml file result");
   }
 
   if(pChild->ToText() == NULL) {
-    throw Exception("unable to analyze xml file result");
+    throw vapp::Exception("unable to analyze xml file result");
   }
 
   pc = pChild->ToText()->Value();
   if(pc == NULL) {
-    throw Exception("unable to analyze xml file result");
+    throw vapp::Exception("unable to analyze xml file result");
   }
   p_msg = pc;
 }
@@ -750,7 +748,7 @@ std::string WebLevel::getCurrentPath() const {
 }
 
 WebLevels::WebLevels(vapp::WWWAppInterface *p_WebLevelApp,
-         const ProxySettings *p_proxy_settings) {
+		     const ProxySettings *p_proxy_settings) {
   m_WebLevelApp    = p_WebLevelApp;
   m_proxy_settings = p_proxy_settings;
   m_levels_url     = DEFAULT_WEBLEVELS_URL;
@@ -770,10 +768,10 @@ std::string WebLevels::getXmlFileName() {
 
 void WebLevels::downloadXml() {
   FSWeb::downloadFileBz2UsingMd5(getXmlFileName(),
-         m_levels_url,
-         NULL,
-         NULL,
-         m_proxy_settings);
+				 m_levels_url,
+				 NULL,
+				 NULL,
+				 m_proxy_settings);
 }
 
 std::string WebLevels::getDestinationDir() {
@@ -786,8 +784,8 @@ void WebLevels::createDestinationDirIfRequired() {
   if(vapp::FS::isDir(v_destination_dir) == false) {
     /* no mkdir() with microsoft C */
     if(vapp::FS::mkDir(v_destination_dir.c_str()) != 0) { /* drwx------ */
-      throw Exception("error : unable to make directory "
-          + v_destination_dir); 
+      throw vapp::Exception("error : unable to make directory "
+			    + v_destination_dir);	
     }
   }
 }
@@ -803,13 +801,13 @@ void WebLevels::extractLevelsToDownloadFromXml() {
   v_webLXmlData = v_webLXml.getLowLevelAccess();
 
   if(v_webLXmlData == NULL) {
-    throw Exception("error : unable to analyze xml level file");
+    throw vapp::Exception("error : unable to analyze xml level file");
   }
 
   v_webLXmlDataElement = v_webLXmlData->FirstChildElement("xmoto_levels");
   
   if(v_webLXmlDataElement == NULL) {
-    throw Exception("error : unable to analyze xml level file");
+    throw vapp::Exception("error : unable to analyze xml level file");
   }
 
   TiXmlElement *pVarElem = v_webLXmlDataElement->FirstChildElement("level");
@@ -818,35 +816,34 @@ void WebLevels::extractLevelsToDownloadFromXml() {
     pc = pVarElem->Attribute("level_id");
     if(pc != NULL) {
       v_levelId = pc;
-  
+	
       pc = pVarElem->Attribute("name");
       if(pc != NULL) {
-  v_levelName = pc;
-  
-  pc = pVarElem->Attribute("url");
-  if(pc != NULL) {
-    v_url = pc;  
-    
-    pc = pVarElem->Attribute("sum");
-    if(pc != NULL) {
-      v_MD5sum_web = pc;  
+	v_levelName = pc;
+	
+	pc = pVarElem->Attribute("url");
+	if(pc != NULL) {
+	  v_url = pc;	 
+	  
+	  pc = pVarElem->Attribute("sum");
+	  if(pc != NULL) {
+	    v_MD5sum_web = pc;	
 
-      /* if it doesn't exist */
-      if(m_WebLevelApp->doesLevelExist(v_levelId) == false) {
-        m_webLevels.push_back(new WebLevel(v_levelId, v_levelName, v_url));
-      } else { /* or it md5sum if different */
-        if(m_WebLevelApp->levelPathForUpdate(v_levelId) != "") {
-	  if(m_WebLevelApp->levelMD5Sum(v_levelId) != v_MD5sum_web) {
-	    //printf("%s ! %s\n", m_WebLevelApp->levelMD5Sum(v_levelId).c_str(), v_MD5sum_web.c_str());
-	    WebLevel *v_lvl = new WebLevel(v_levelId, v_levelName, v_url);
-	    v_lvl->setCurrentPath(m_WebLevelApp->levelPathForUpdate(v_levelId));
-	    v_lvl->setRequireUpdate(true);
-	    m_webLevels.push_back(v_lvl);
+	    /* if it doesn't exist */
+	    if(m_WebLevelApp->doesLevelExist(v_levelId) == false) {
+	      m_webLevels.push_back(new WebLevel(v_levelId, v_levelName, v_url));
+	    } else { /* or it md5sum if different */
+	      if(m_WebLevelApp->levelPathForUpdate(v_levelId) != "") {
+		if(m_WebLevelApp->levelMD5Sum(v_levelId) != v_MD5sum_web) {
+		  WebLevel *v_lvl = new WebLevel(v_levelId, v_levelName, v_url);
+		  v_lvl->setCurrentPath(m_WebLevelApp->levelPathForUpdate(v_levelId));
+		  v_lvl->setRequireUpdate(true);
+		  m_webLevels.push_back(v_lvl);
+		}
+	      }
+	    }
 	  }
-        }
-      }
-    }
-  }
+	}
       }
       pVarElem = pVarElem->NextSiblingElement("level");
     }
@@ -870,10 +867,10 @@ void WebLevels::update() {
 }
 
 int FSWeb::f_curl_progress_callback_upload(void *clientp,
-             double dltotal,
-             double dlnow,
-             double ultotal,
-             double ulnow) {
+					   double dltotal,
+					   double dlnow,
+					   double ultotal,
+					   double ulnow) {
   f_curl_download_data *data = ((f_curl_download_data*) clientp);
   float v_percentage;
 
@@ -896,10 +893,10 @@ int FSWeb::f_curl_progress_callback_upload(void *clientp,
 }
 
 int FSWeb::f_curl_progress_callback_download(void *clientp,
-               double dltotal,
-               double dlnow,
-               double ultotal,
-               double ulnow) {
+					     double dltotal,
+					     double dlnow,
+					     double ultotal,
+					     double ulnow) {
   f_curl_download_data *data = ((f_curl_download_data*) clientp);
   float real_percentage_already_done;
   float real_percentage_of_current_file;
@@ -918,8 +915,8 @@ int FSWeb::f_curl_progress_callback_download(void *clientp,
   if(dltotal > 0.0) {
     if((dlnow / dltotal) >= 0.0 && (dlnow / dltotal) <= 1.0) {
       real_percentage_of_current_file = 
-  (dlnow * 100.0) 
-  / (((float)data->v_nb_files_to_download) * dltotal);
+	(dlnow * 100.0) 
+	/ (((float)data->v_nb_files_to_download) * dltotal);
     }
   }
 
@@ -975,22 +972,21 @@ void WebLevels::upgrade() {
       std::string v_destFile;
       
       if((*it)->requireUpdate()) {
-				v_destFile = m_WebLevelApp->levelPathForUpdate((*it)->getId());
+	v_destFile = m_WebLevelApp->levelPathForUpdate((*it)->getId());
       } else {
-				v_destFile = getDestinationFile(v_url);
+	v_destFile = getDestinationFile(v_url);
       }
       
       FSWeb::downloadFileBz2(v_destFile,
-           v_url,
-           FSWeb::f_curl_progress_callback_download,
-           &v_data,
-           m_proxy_settings);
+			     v_url,
+			     FSWeb::f_curl_progress_callback_download,
+			     &v_data,
+			     m_proxy_settings);
       
       if((*it)->requireUpdate()) {
-				m_webLevelsUpdatedDownloadedOK.push_back(v_destFile);
-				m_webLevelsIdsUpdatedDownloadedOK.push_back((*it)->getId());
+	m_webLevelsUpdatedDownloadedOK.push_back(v_destFile);
       } else {
-				m_webLevelsNewDownloadedOK.push_back(v_destFile);
+	m_webLevelsNewDownloadedOK.push_back(v_destFile);
       }
     }    
 
@@ -1015,11 +1011,6 @@ const std::vector<std::string> &WebLevels::getUpdatedDownloadedLevels(void) {
   return m_webLevelsUpdatedDownloadedOK;
 }
 
-const std::vector<std::string> &WebLevels::getUpdatedDownloadedLevelIds() {
-	return m_webLevelsIdsUpdatedDownloadedOK;
-}
-
-
 WebTheme::WebTheme(std::string pName, std::string pUrl, std::string pSum) {
   m_name = pName;
   m_url  = pUrl;
@@ -1042,7 +1033,7 @@ std::string WebTheme::getSum() const {
 }
 
 WebThemes::WebThemes(vapp::WWWAppInterface *p_WebApp,
-         const ProxySettings *p_proxy_settings) {
+		     const ProxySettings *p_proxy_settings) {
   m_proxy_settings = p_proxy_settings;
   m_themes_url     = DEFAULT_WEBTHEMES_URL;
   m_themes_urlBase = DEFAULT_WEBTHEMES_SPRITESURLBASE;
@@ -1055,10 +1046,10 @@ WebThemes::~WebThemes() {
 
 void WebThemes::update() {
   FSWeb::downloadFileBz2UsingMd5(getXmlFileName(),
-         m_themes_url,
-         NULL,
-         NULL,
-         m_proxy_settings);
+				 m_themes_url,
+				 NULL,
+				 NULL,
+				 m_proxy_settings);
 }
 
 void WebThemes::upgrade() {
@@ -1081,13 +1072,13 @@ void WebThemes::extractThemesAvailableFromXml() {
   v_webTXmlData = v_webTXml.getLowLevelAccess();
 
   if(v_webTXmlData == NULL) {
-    throw Exception("error : unable to analyze xml theme file");
+    throw vapp::Exception("error : unable to analyze xml theme file");
   }
 
   v_webTXmlDataElement = v_webTXmlData->FirstChildElement("xmoto_themes");
   
   if(v_webTXmlDataElement == NULL) {
-    throw Exception("error : unable to analyze xml theme file");
+    throw vapp::Exception("error : unable to analyze xml theme file");
   }
 
   TiXmlElement *pVarElem = v_webTXmlDataElement->FirstChildElement("theme");
@@ -1096,18 +1087,18 @@ void WebThemes::extractThemesAvailableFromXml() {
     pc = pVarElem->Attribute("name");
     if(pc != NULL) {
       v_themeName = pc;
-  
+	
       pc = pVarElem->Attribute("url");
       if(pc != NULL) {
-  v_url = pc;  
-    
-  pc = pVarElem->Attribute("sum");
-  if(pc != NULL) {
-    v_MD5sum_web = pc;
+	v_url = pc;	 
+	  
+	pc = pVarElem->Attribute("sum");
+	if(pc != NULL) {
+	  v_MD5sum_web = pc;
 
-    m_availableThemes.push_back(new WebTheme(v_themeName, v_url, v_MD5sum_web));
-      
-  }
+	  m_availableThemes.push_back(new WebTheme(v_themeName, v_url, v_MD5sum_web));
+	    
+	}
       }
       pVarElem = pVarElem->NextSiblingElement("theme");
     }
@@ -1155,7 +1146,7 @@ void WebThemes::upgrade(ThemeChoice *p_themeChoice) {
   }
 
   if(v_associated_webtheme == NULL) {
-    throw Exception("error : unable to find this theme on the web");
+    throw vapp::Exception("error : unable to find this theme on the web");
   }
   // theme avaible on the web get it
 
@@ -1174,13 +1165,13 @@ void WebThemes::upgrade(ThemeChoice *p_themeChoice) {
   /* download the theme file */
   vapp::FS::mkArborescence(v_destinationFile);
   FSWeb::downloadFileBz2(v_destinationFile,
-       v_associated_webtheme->getUrl(),
-       NULL,
-       NULL,
-       m_proxy_settings);
+			 v_associated_webtheme->getUrl(),
+			 NULL,
+			 NULL,
+			 m_proxy_settings);
 
   if(v_destinationFile == "") {
-    throw Exception("error : unable to determine theme destination file");
+    throw vapp::Exception("error : unable to determine theme destination file");
   }
 
   /* download all the files required */
@@ -1207,24 +1198,24 @@ void WebThemes::upgrade(ThemeChoice *p_themeChoice) {
       // download v_required_files[i]     
       v_destinationFile = vapp::FS::getUserDir() + std::string("/") + (*v_required_files)[i];
       v_sourceFile = m_themes_urlBase + 
-  std::string("/") + (*v_required_files)[i];
+	std::string("/") + (*v_required_files)[i];
       
       if(vapp::FS::fileExists((*v_required_files)[i]) == false) {
-  v_data.v_nb_files_performed = v_nb_files_performed;
-  
-  float v_percentage = (((float)v_nb_files_performed) * 100.0) / ((float)v_nb_files_to_download);
-  m_WebApp->setTaskProgress(v_percentage);
-  m_WebApp->setBeingDownloadedInformation((*v_required_files)[i], true);
+	v_data.v_nb_files_performed = v_nb_files_performed;
+	
+	float v_percentage = (((float)v_nb_files_performed) * 100.0) / ((float)v_nb_files_to_download);
+	m_WebApp->setTaskProgress(v_percentage);
+	m_WebApp->setBeingDownloadedInformation((*v_required_files)[i], true);
 
-  vapp::FS::mkArborescence(v_destinationFile);
+	vapp::FS::mkArborescence(v_destinationFile);
 
-  FSWeb::downloadFile(v_destinationFile,
-          v_sourceFile,
-          FSWeb::f_curl_progress_callback_download,
-          &v_data,
-          m_proxy_settings);
-  
-  v_nb_files_performed++;
+	FSWeb::downloadFile(v_destinationFile,
+			    v_sourceFile,
+			    FSWeb::f_curl_progress_callback_download,
+			    &v_data,
+			    m_proxy_settings);
+	
+	v_nb_files_performed++;
       }
       m_WebApp->readEvents();
       i++;
@@ -1239,8 +1230,8 @@ void WebThemes::upgrade(ThemeChoice *p_themeChoice) {
 }
 
 WebRoomInfos::WebRoomInfos(std::string p_id,
-         std::string p_name,
-         std::string p_urlHighscores) {
+			   std::string p_name,
+			   std::string p_urlHighscores) {
   m_id           = p_id;
   m_name         = p_name;
   m_urlHighscore = p_urlHighscores;
@@ -1271,10 +1262,10 @@ WebRooms::~WebRooms() {
 
 void WebRooms::update() {
   FSWeb::downloadFileBz2UsingMd5(getXmlFileName(),
-         m_rooms_url,
-         NULL,
-         NULL,
-         m_proxy_settings);
+				 m_rooms_url,
+				 NULL,
+				 NULL,
+				 m_proxy_settings);
 }
 
 std::string WebRooms::getXmlFileName() {
@@ -1295,13 +1286,13 @@ void WebRooms::upgrade() {
     v_webRXmlData = v_webRXml.getLowLevelAccess();
 
     if(v_webRXmlData == NULL) {
-      throw Exception("error : unable to analyze xml rooms list file");
+      throw vapp::Exception("error : unable to analyze xml rooms list file");
     }
 
     v_webRXmlDataElement = v_webRXmlData->FirstChildElement("xmoto_rooms");
     
     if(v_webRXmlDataElement == NULL) {
-      throw Exception("error : unable to analyze xml rooms list file");
+      throw vapp::Exception("error : unable to analyze xml rooms list file");
     }
     
     TiXmlElement *pVarElem = v_webRXmlDataElement->FirstChildElement("room");
@@ -1309,25 +1300,25 @@ void WebRooms::upgrade() {
       
       pc = pVarElem->Attribute("name");
       if(pc != NULL) {
-  v_RoomName = pc;
-  
-  pc = pVarElem->Attribute("highscores_url");
-  if(pc != NULL) {
-    v_RoomHighscoreUrl = pc;   
-    
-    pc = pVarElem->Attribute("id");
-    if(pc != NULL) {
-      v_RoomId = pc;
-      m_availableRooms.push_back(new WebRoomInfos(v_RoomId,
-              v_RoomName,
-              v_RoomHighscoreUrl));
-    }
-  }
-  pVarElem = pVarElem->NextSiblingElement("room");
+	v_RoomName = pc;
+	
+	pc = pVarElem->Attribute("highscores_url");
+	if(pc != NULL) {
+	  v_RoomHighscoreUrl = pc;	 
+	  
+	  pc = pVarElem->Attribute("id");
+	  if(pc != NULL) {
+	    v_RoomId = pc;
+	    m_availableRooms.push_back(new WebRoomInfos(v_RoomId,
+							v_RoomName,
+							v_RoomHighscoreUrl));
+	  }
+	}
+	pVarElem = pVarElem->NextSiblingElement("room");
       }
     }
     
-  } catch(Exception &e) {
+  } catch(vapp::Exception &e) {
     /* by default, room is highscore */
     m_availableRooms.push_back(new WebRoomInfos(DEFAULT_WEBROOM_ID, DEFAULT_WEBROOM_NAME, DEFAULT_WEBHIGHSCORES_URL));
   }

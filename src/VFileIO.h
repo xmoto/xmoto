@@ -25,14 +25,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VCommon.h"
 #include "tinyxml/tinyxml.h"
 
-#ifdef WIN32
-  #include <io.h>
-#else
-  #include <unistd.h>
-  #include <sys/types.h>
-  #include <dirent.h>
-#endif
-
 namespace vapp {
 
 	/*===========================================================================
@@ -54,7 +46,6 @@ namespace vapp {
     }
   
     std::string Name;
-    std::string md5sum;
     int nSize,nOffset;
   };
 
@@ -96,7 +87,7 @@ namespace vapp {
       static std::vector<std::string> findPhysFiles(std::string Files,bool bRecurse = false);
       
       static bool copyFile(const std::string &From,const std::string &To, std::string &To_really_done); /* To_really_done is out : it is the name of the file really written */
-      static bool deleteFile(const std::string &File);
+      static void deleteFile(const std::string &File);
       
       static void writeLog(const std::string &s);
       static FileHandle *openOFile(std::string Path);
@@ -155,8 +146,7 @@ namespace vapp {
       /* File name mangling */
       static std::string getFileDir(std::string Path);
       static std::string getFileBaseName(std::string Path);
-      static std::string getFileExtension(std::string Path);      
-
+      
       /* Misc */
       static bool isDir(std::string AppDir);
       static int getFileTimeStamp(const std::string &Path);
@@ -179,10 +169,6 @@ namespace vapp {
 
       // return true if p_filepath is a path from user dir
       static bool isInUserDir(std::string p_filepath);
-
-      /* return false if the file is in the package */
-      static bool isFileReal(std::string i_filePath);
-      static std::string md5sum(std::string i_filePath);
 
     private:
       /* Helper functions */
