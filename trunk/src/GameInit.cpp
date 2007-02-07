@@ -463,10 +463,6 @@ namespace vapp {
     if(m_pPlayer != NULL) 
       m_Config.setString("DefaultProfile",m_pPlayer->PlayerName);
 
-    if(m_pMenuMusic != NULL) {
-      Mix_FreeMusic(m_pMenuMusic);
-    }
-
     Sound::uninit();
 
     m_Config.saveFile();

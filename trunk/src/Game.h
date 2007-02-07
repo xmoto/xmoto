@@ -137,7 +137,6 @@ namespace vapp {
                  m_bUglyMode = false;
                  m_bTestThemeMode = false;
                  m_pReplay = NULL;
-                 m_pMenuMusic = NULL;
 		 m_updateAutomaticallyLevels = false;
 #if defined(ALLOW_GHOST)
      m_pGhostReplay = NULL;
@@ -270,9 +269,7 @@ namespace vapp {
       GameRenderer m_Renderer;                  /* Renderer */
       int m_nFrame;                             /* Frame # */
       PlayerProfile *m_pPlayer;                 /* The player's profile */
-      
-      Mix_Music *m_pMenuMusic;
-      
+       
       double m_fLastFrameTime;                  /* When the last frama was initiated */
       double m_fLastPerfStateTime;
       float m_fLastStateSerializationTime;    
