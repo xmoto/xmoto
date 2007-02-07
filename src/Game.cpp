@@ -104,7 +104,8 @@ namespace vapp {
 	  break;
 	case GS_PREPLAYING:
 	case GS_REPLAYING:
-	  Sound::playMusic(FS::getDataDir() + std::string("/ridealong.ogg"));
+	  Sound::stopMusic();
+	  //Sound::playMusic(FS::getDataDir() + std::string("/ridealong.ogg"));
 	  break;
 	case GS_CREDITSMODE:
 	  Sound::stopMusic();
