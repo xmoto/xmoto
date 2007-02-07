@@ -45,131 +45,6 @@ namespace vapp {
     Mix_Chunk *pChunk;
   };
 
-	///*===========================================================================
-	//Vorbis object
- // ===========================================================================*/
- // class VorbisSound;
- // 
- // struct VorbisSoundHandle {
- //   VorbisSoundHandle() {
- //     pfh = NULL;
- //     pVorbis = NULL;
- //     pvf = NULL;
- //   }
- // 
- //   FileHandle *pfh;
- //   VorbisSound *pVorbis;
- //   OggVorbis_File *pvf;
- // };
- // 
- // class VorbisSound {
- //   public:
- //     VorbisSound() {
- //       m_pfh = NULL;
- //       m_bEnd = true;
- //     }
- //   
- //     /* Methods */
- //     void openFile(std::string File);
- //     void closeFile(void);
- //     
- //     int decode(unsigned char *pcBuf,int nBufSize);
- //     bool endOfStream(void);
- //     
- //     /* Data interface */
- //     int getSampleBits(void) {return m_nSampleBits;}
- //     int getSampleRate(void) {return m_nSampleRate;}
- //     int getAvgBitRate(void) {return m_nAvgBitRate;}
- //     int getChannels(void) {return m_nChannels;}
- //     int getLength(void) {return m_nLength;}      
- //     
- //   private:
- //     /* Data */
- //     bool m_bEnd;
- //     
- //     std::string m_File;
- //     FileHandle *m_pfh;
- //     VorbisSoundHandle *m_ph;
- //     
- //     OggVorbis_File m_vf;
- //     
- //     int m_nSampleBits;
- //     int m_nSampleRate;
- //     int m_nAvgBitRate;
- //     int m_nChannels;
- //     int m_nLength;
- //     
- //     int m_nCurrentSection;
-
- //     /* Static madness */      
- //     static ov_callbacks m_Callbacks;
- //     
- // };
-
-	///*===========================================================================
-	//Sound player abstract class
- // ===========================================================================*/
- // class SoundPlayer {
- //   public:
- //     SoundPlayer() {
- //       m_bDone = false;
- //     }
- //   
- //     /* Virtual methods */
- //     virtual int fillBuffer(unsigned char *pcBuffer,int nSize) {return 0;}
- //     virtual void update(void) {}
- //     virtual void shutdownPlayer(void) {}
- //     
- //     /* Data interface */
- //     void setDone(bool b) {m_bDone = b;}
- //     bool isDone(void) {return m_bDone;}
- //     
- //   private:
- //     /* Data */
- //     bool m_bDone;   
- // };
-
-	///*===========================================================================
-	//Stream player
- // ===========================================================================*/
- // class StreamPlayer : public SoundPlayer {
- //   public:
- //     /* Virtual methods */
- //     virtual int fillBuffer(unsigned char *pcBuffer,int nSize);
- //     virtual void update(void);
- //     virtual void shutdownPlayer(void);
- //     
- //     /* Methods */
- //     void initStream(std::string File,int nBufSize);
- //     
- //   private:  
- //     /* Data */
- //     VorbisSound m_vs;
- //     int m_nBufSize,m_nWritePos,m_nReadPos;
- //     unsigned char *m_pcBuf;
- //     SDL_AudioCVT m_cvt;
- //     bool m_bNew;
- // };
-
-	///*===========================================================================
-	//Sample player
- // ===========================================================================*/
- // class SamplePlayer : public SoundPlayer {
- //   public:
- //     /* Virtual methods */
- //     virtual int fillBuffer(unsigned char *pcBuffer,int nSize);
- //     virtual void update(void);
- //     virtual void shutdownPlayer(void);
- //     
- //     /* Methods */
- //     void initSample(SoundSample *pSample);
- //     
- //   private:
- //     /* Data */
- //     SoundSample *m_pSample;
- //     int m_nPosition;
- // };
-
 	/*===========================================================================
 	Engine sound simulator (single cylinder, 4-stroke)
   ===========================================================================*/
@@ -216,6 +91,10 @@ namespace vapp {
       static int getChannels(void) {return m_nChannels;}
       static int getNumSamples(void) {return m_Samples.size();}
     
+      static void playMusic(std::string i_musicPath);
+      static void stopMusic();
+      static bool isPlayingMusic();
+
     private:
       /* SDL audio callback */
       //static void audioCallback(void *pvUserData,unsigned char *pcStream,int nLen); 
@@ -238,6 +117,8 @@ namespace vapp {
       
       static std::vector<SoundSample *> m_Samples;
       
+      static Mix_Music *m_pMenuMusic;
+
       /* Helpers */
       //static int _GetFreePlayerSlot(void);
   };

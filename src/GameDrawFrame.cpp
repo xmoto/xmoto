@@ -367,12 +367,6 @@ namespace vapp {
       case GS_REPLAYING:
         m_bShowCursor = false;
         //SDL_ShowCursor(SDL_DISABLE);      
-
-        /* Music playing? Not anymore that is! */
-        if(m_pMenuMusic != NULL && Mix_PlayingMusic()) {
-          Mix_FadeOutMusic(500);
-        }
-        
         break;
       case GS_DEADJUST:
       break;
@@ -462,41 +456,6 @@ namespace vapp {
         
         /* Don't do this again, please */
         m_Config.setBool("NotifyAtInit",false); 
-      }
-    }        
-
-    if(m_bEnableMenuMusic && Sound::isEnabled()) {
-      /* No music playing? If so, playback time! */
-      if(m_pMenuMusic == NULL) {
-        /* No music available, try loading */
-        std::string MenuMusicPath = FS::getDataDir() + std::string("/xmoto.ogg");
-        #if defined(WIN32) /* this works around a bug in SDL_mixer 1.2.7 on Windows */
-	SDL_RWops *rwfp;
-	rwfp = SDL_RWFromFile(MenuMusicPath.c_str(), "rb");
-	m_pMenuMusic = Mix_LoadMUS_RW(rwfp);
-	//m_pMenuMusic = NULL;
-        #else
-	m_pMenuMusic = Mix_LoadMUS(MenuMusicPath.c_str());
-        #endif
-        /* (Don't even complain the slightest if music isn't found...) */          
-      }
-      
-      if(m_pMenuMusic != NULL) {
-        if(!Mix_PlayingMusic()) {
-          /* Not playing, start it */
-          if(Mix_PlayMusic(m_pMenuMusic,-1) < 0) {
-            Log("** Warning ** : Mix_PlayMusic() failed, disabling music");
-            m_bEnableMenuMusic = false;                
-          }
-        }
-      }
-    }
-    else {
-      /* Hmm, no music please. If it's playing, stop it */
-      if(m_pMenuMusic != NULL) {
-        if(Mix_PlayingMusic()) {
-          Mix_FadeOutMusic(500);              
-        }
       }
     }
   }

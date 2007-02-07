@@ -3569,6 +3569,20 @@ namespace vapp {
     m_Config.setBool("EngineSoundEnable",pEnableEngineSoundButton->getChecked());
     m_Config.setBool("MenuMusic",pEnableMusicButton->getChecked());
 
+    if(pEnableEngineSoundButton->getChecked() && pEnableMusicButton->getChecked()
+       && Sound::isPlayingMusic() == false) {
+      try {
+	Sound::playMusic(FS::getDataDir() + std::string("/xmoto.ogg"));
+      } catch(Exception &e) {
+	/* hum, no music */
+      }
+    } else {
+      if((pEnableEngineSoundButton->getChecked() == false || pEnableMusicButton->getChecked() == false)
+	 && Sound::isPlayingMusic()) {
+	   Sound::stopMusic();
+	 }
+    }
+
 #if defined(SUPPORT_WEBACCESS)
     UIButton *pWebHighscores = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:ENABLEWEBHIGHSCORES");
     UIButton *pInGameWorldRecord = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:INGAMEWORLDRECORD");

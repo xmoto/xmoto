@@ -94,6 +94,31 @@ namespace vapp {
     /* Always clear context when changing state */
     m_Renderer.getGUI()->clearContext();
     
+    /* manage music */
+    if(m_bEnableMenuMusic && Sound::isEnabled()) {
+      try {
+	switch(s) {
+	case GS_MENU:
+	case GS_LEVELPACK_VIEWER:
+	  Sound::playMusic(FS::getDataDir() + std::string("/xmoto.ogg"));
+	  break;
+	case GS_PREPLAYING:
+	case GS_REPLAYING:
+	  Sound::playMusic(FS::getDataDir() + std::string("/ridealong.ogg"));
+	  break;
+	case GS_CREDITSMODE:
+	  Sound::stopMusic();
+	  break;
+	default:
+	  break;
+	}
+      } catch(Exception &e) {
+	/* don't complain about no music */
+	m_bEnableMenuMusic = false;
+	Log("** Warning ** : PlayMusic() failed, disabling music");
+      }
+    }
+
     switch(s) {
       case GS_LEVELPACK_VIEWER: {
           m_pLevelPackViewer->showWindow(true);
@@ -216,7 +241,6 @@ namespace vapp {
 
         // enable the preplay animation
         setPrePlayAnim(true);
-                  
         break;
       }
       case GS_PREPLAYING: {
@@ -225,11 +249,11 @@ namespace vapp {
       }
       case GS_PLAYING: {
 				m_bAutoZoomInitialized = false;
-  Level *pLevelSrc;
-
-  try {
-    pLevelSrc = &(m_levelsManager.LevelById(m_PlaySpecificLevel));
-          m_MotoGame.playLevel(m_pGhostReplay, pLevelSrc, false);
+        Level *pLevelSrc;
+				
+	try {
+	  pLevelSrc = &(m_levelsManager.LevelById(m_PlaySpecificLevel));
+	  m_MotoGame.playLevel(m_pGhostReplay, pLevelSrc, false);
           m_State = GS_PLAYING;        
           m_nFrame = 0;
   } catch(Exception &e) {
