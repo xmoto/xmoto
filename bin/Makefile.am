@@ -15,7 +15,7 @@ endif
 package.lst:
 	
 
-EXTRA_DIST = $(pkgdata_DATA)
+EXTRA_DIST = $(pkgdata_DATA) $(pkgMusics_DATA)
 
 
 
