@@ -66,6 +66,7 @@ class Level {
   std::string Author()      const;
   std::string Date()        const;
   std::string Description() const;
+  std::string Music()       const;
   bool isXMotoTooOld()      const;
   std::string getRequiredVersion() const;
   std::string Pack()        const;
@@ -125,10 +126,11 @@ class Level {
 
  private:
   std::string m_id;                 /* Level ID */
-  std::string m_name;             /* Name of level */
-  std::string m_author;           /* Author of level */
-  std::string m_date;             /* When it was crafted */
-  std::string m_description;      /* Description */
+  std::string m_name;               /* Name of level */
+  std::string m_author;             /* Author of level */
+  std::string m_date;               /* When it was crafted */
+  std::string m_description;        /* Description */
+  std::string m_music;              /* music */
   std::string m_requiredVersion;    /* Required X-Moto version */
   std::string m_pack;               /* In this level pack */
   std::string m_packNum;            /* value to sort levels */

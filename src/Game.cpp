@@ -90,46 +90,14 @@ namespace vapp {
        The various states are described below in the switch-statement */  
     m_State = s;
     m_bCreditsModeActive = false;
-    
+    std::string v_newMusicPlaying;
+
     /* Always clear context when changing state */
     m_Renderer.getGUI()->clearContext();
     
-    /* manage music */
-    if(m_bEnableMenuMusic && Sound::isEnabled()) {
-      try {
-	switch(s) {
-	case GS_MENU:
-	case GS_LEVELPACK_VIEWER:
-	  try {
-	    Sound::playMusic(m_theme.getMusic("menu1")->FilePath());
-	  } catch(Exception &e) {
-	    Sound::stopMusic();
-	  }
-	  break;
-	case GS_PREPLAYING:
-	case GS_REPLAYING:
-	  try {
-	    Sound::stopMusic();
-	    //Sound::playMusic(m_theme.getMusic("ridealong")->FilePath());
-	  } catch(Exception &e) {
-	    Sound::stopMusic();
-	  }
-	  break;
-	case GS_CREDITSMODE:
-	  Sound::stopMusic();
-	  break;
-	default:
-	  break;
-	}
-      } catch(Exception &e) {
-	/* don't complain about no music */
-	m_bEnableMenuMusic = false;
-	Log("** Warning ** : PlayMusic() failed, disabling music");
-      }
-    }
-
     switch(s) {
       case GS_LEVELPACK_VIEWER: {
+	v_newMusicPlaying = "menu1";
           m_pLevelPackViewer->showWindow(true);
           m_pMainMenu->showWindow(true);
           
@@ -142,6 +110,8 @@ namespace vapp {
         break;
       case GS_CREDITSMODE:
       case GS_REPLAYING: {
+	v_newMusicPlaying = "";
+
         try {
           std::string LevelID;
 
@@ -202,7 +172,8 @@ namespace vapp {
               m_MotoGame.prePlayLevel(NULL, pLevelSrc, NULL, true);
               m_nFrame = 0;
               m_Renderer.prepareForNewLevel(bCreditsMode);            
-              
+	      v_newMusicPlaying = pLevelSrc->Music();
+
               /* Show help string */
               if(!drawLib->isNoGraphics()) {
                 PlayerTimeEntry *pBestTime = m_Profiles.getBestTime(LevelID);
@@ -237,6 +208,8 @@ namespace vapp {
         break;
       }  
       case GS_MENU: {
+	v_newMusicPlaying = "menu1";
+
         //SDL_ShowCursor(SDL_ENABLE);
         m_bShowCursor = true;                
         
@@ -253,10 +226,18 @@ namespace vapp {
         break;
       }
       case GS_PREPLAYING: {
+	/* because statePrestart_init() can call setState */
+	if(m_bEnableMenuMusic && Sound::isEnabled()) {
+	  Sound::stopMusic();
+	  m_playingMusic = "";
+	}
         statePrestart_init();
+	return;
         break;
       }
       case GS_PLAYING: {
+	v_newMusicPlaying = "";
+
 				m_bAutoZoomInitialized = false;
         Level *pLevelSrc;
 				
@@ -265,6 +246,7 @@ namespace vapp {
 	  m_MotoGame.playLevel(m_pGhostReplay, pLevelSrc, false);
           m_State = GS_PLAYING;        
           m_nFrame = 0;
+	  v_newMusicPlaying = pLevelSrc->Music();
   } catch(Exception &e) {
           Log("** Warning ** : level '%s' not found",m_PlaySpecificLevel.c_str());
           char cBuf[256];
@@ -275,6 +257,7 @@ namespace vapp {
         break;
       }
       case GS_PAUSE: {
+	v_newMusicPlaying = m_playingMusic;
 //        SDL_ShowCursor(SDL_ENABLE);
         m_bShowCursor = true;
 
@@ -282,6 +265,8 @@ namespace vapp {
         break;
       }
       case GS_DEADJUST: {
+	v_newMusicPlaying = "";
+
         /* Finish replay */
         if(m_pReplay != NULL) m_pReplay->finishReplay(false,0.0f);
 
@@ -302,6 +287,8 @@ namespace vapp {
         break;
       }
     case GS_DEADMENU: {
+      v_newMusicPlaying = "";
+
       m_bShowCursor = true;
       m_pJustDeadMenu->showWindow(true);
 
@@ -310,6 +297,7 @@ namespace vapp {
       break;
     }
       case GS_EDIT_PROFILES: {
+	v_newMusicPlaying = "menu1";
 //        SDL_ShowCursor(SDL_ENABLE);
         m_bShowCursor = true;
 
@@ -321,6 +309,7 @@ namespace vapp {
 
 #if defined(SUPPORT_WEBACCESS)
       case GS_EDIT_WEBCONFIG: {
+	v_newMusicPlaying = "menu1";
         m_bShowCursor = true;
         if(m_pWebConfMsgBox != NULL) delete m_pWebConfMsgBox;
         m_pWebConfEditor->showWindow(false);
@@ -330,6 +319,8 @@ namespace vapp {
       }
 #endif
       case GS_FINISHED: {
+	v_newMusicPlaying = "";
+
 //        SDL_ShowCursor(SDL_ENABLE);
         m_bShowCursor = true;
 
@@ -431,6 +422,24 @@ namespace vapp {
     }
         
     m_fLastPhysTime = getTime() - PHYS_STEP_SIZE;
+
+    /* manage music */
+    if(m_bEnableMenuMusic && Sound::isEnabled()) {
+      if(v_newMusicPlaying != m_playingMusic) {
+	try {
+	  if(v_newMusicPlaying == "") {
+	    m_playingMusic = v_newMusicPlaying;
+	    Sound::stopMusic();
+	  } else {
+	    m_playingMusic = v_newMusicPlaying;
+	    Sound::playMusic(m_theme.getMusic(v_newMusicPlaying)->FilePath());
+	  }
+	} catch(Exception &e) {
+	  Log("** Warning ** : PlayMusic(%s) failed", v_newMusicPlaying.c_str());
+	  Sound::stopMusic();
+	}
+      }
+    }
   }
 
   std::string GameApp::getConfigThemeName(ThemeChoicer *p_themeChoicer) {

@@ -30,7 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../VXml.h"
 #include "../helpers/Color.h"
 
-#define CACHE_LEVEL_FORMAT_VERSION 10
+#define CACHE_LEVEL_FORMAT_VERSION 11
 
 Level::Level() {
   m_xmotoTooOld = false;
@@ -66,6 +66,10 @@ std::string Level::Date() const {
 
 std::string Level::Description() const {
   return m_description;
+}
+
+std::string Level::Music() const {
+  return m_music;
 }
 
 bool Level::isXMotoTooOld() const {
@@ -334,6 +338,7 @@ void Level::saveXML(void) {
 			 m_sky.Texture().c_str());
   }
   vapp::FS::writeLineF(pfh,"\t\t<border texture=\"%s\" />",m_borderTexture.c_str());
+  vapp::FS::writeLineF(pfh,"\t\t<music name=\"%s\" />", m_music.c_str());
   vapp::FS::writeLineF(pfh,"\t</info>");
   
   /* MISC */
@@ -425,6 +430,7 @@ void Level::loadXML(void) {
   m_date = "";
   m_description = "";
   m_author = "";
+  m_music = "";
   
   m_scriptFileName = "";
   m_scriptSource = "";
@@ -534,6 +540,12 @@ void Level::loadXML(void) {
       TiXmlElement *pBorderElem = vapp::XML::findElement(*m_xmlSource, NULL, std::string("border"));
       if(pBorderElem != NULL) {
 	m_borderTexture = vapp::XML::getOption(pBorderElem, "texture");  
+      }
+
+      /* Music */
+      TiXmlElement *pMusicElem = vapp::XML::findElement(*m_xmlSource, NULL, std::string("music"));
+      if(pMusicElem != NULL) {
+	m_music = vapp::XML::getOption(pMusicElem, "name");  
       }
     }
 
@@ -730,6 +742,7 @@ void Level::importBinaryHeader(vapp::FileHandle *pfh) {
   m_description = vapp::FS::readString(pfh);
   m_author 	= vapp::FS::readString(pfh);
   m_date   	= vapp::FS::readString(pfh);
+  m_music       = vapp::FS::readString(pfh);
 }
 
   /*===========================================================================
@@ -775,6 +788,7 @@ void Level::exportBinaryHeader(vapp::FileHandle *pfh) {
   vapp::FS::writeString(pfh	    , m_description);
   vapp::FS::writeString(pfh	    , m_author);
   vapp::FS::writeString(pfh	    , m_date);
+  vapp::FS::writeString(pfh	    , m_music);
 }
 
 bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
@@ -811,6 +825,7 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
         m_description = vapp::FS::readString(pfh);
         m_author = vapp::FS::readString(pfh);
         m_date = vapp::FS::readString(pfh);
+        m_music = vapp::FS::readString(pfh);
 
 	/* sky */
         m_sky.setTexture(vapp::FS::readString(pfh));
