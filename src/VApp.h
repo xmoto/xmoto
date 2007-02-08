@@ -173,14 +173,7 @@ namespace vapp {
     bool isNoWWW(void) {
       return m_bNoWWW;
     }
-    static std::string getVersionString(void) {
-      char cBuf[256];
-
-      sprintf(cBuf, "%d.%d.%d" BUILD_EXTRAINFO, BUILD_MAJORVERSION,
-	      BUILD_VERSION, BUILD_MINORVERSION);
-      return cBuf;
-    }
-
+    static std::string getVersionString();
 
     virtual bool isUglyMode() {
       return false;
