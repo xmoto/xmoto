@@ -141,12 +141,6 @@ namespace vapp {
 
     srand(time(NULL));
 
-    if(SwapEndian::bigendien) {
-      Log("Systeme is bigendien");
-    } else {
-      Log("Systeme is littleendien");
-    }
-
     try {
       /* Parse command-line arguments */
       _ParseArgs(nNumArgs,ppcArgs);        
@@ -159,6 +153,14 @@ namespace vapp {
 
     /* Init file system stuff */
     FS::init( "xmoto" );
+
+    Log("Starting xmoto $Revision$");
+    Log("compiled at "__DATE__" "__TIME__);
+    if(SwapEndian::bigendien) {
+      Log("Systeme is bigendien");
+    } else {
+      Log("Systeme is littleendien");
+    }
 
     /* Do user pre-init */
     userPreInit();
@@ -560,8 +562,8 @@ namespace vapp {
   std::string App::getVersionString(void) {
     char cBuf[256];
     
-    sprintf(cBuf, "%d.%d.%d %s (%s)", BUILD_MAJORVERSION,
-	    BUILD_VERSION, BUILD_MINORVERSION, BUILD_EXTRAINFO, "$Revision$");
+    sprintf(cBuf, "%d.%d.%d %s", BUILD_MAJORVERSION,
+	    BUILD_VERSION, BUILD_MINORVERSION, BUILD_EXTRAINFO);
     return cBuf;
   }
 
