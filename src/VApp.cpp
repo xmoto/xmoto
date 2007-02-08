@@ -154,7 +154,6 @@ namespace vapp {
     /* Init file system stuff */
     FS::init( "xmoto" );
 
-    Log("Starting xmoto $Revision$");
     Log("compiled at "__DATE__" "__TIME__);
     if(SwapEndian::bigendien) {
       Log("Systeme is bigendien");
