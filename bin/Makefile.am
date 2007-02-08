@@ -2,7 +2,7 @@ pkgdatadir = $(datadir)/@PACKAGE@
 pkgdata_DATA = xmoto.bin
 
 pkgMusicsdir = $(pkgdatadir)/Textures/Musics
-pkgMusics_DATA = Textures/Musics/menu.ogg Textures/Musics/ridealong.ogg Textures/Musics/xmoto_batcave.ogg
+pkgMusics_DATA = Textures/Musics/menu.ogg Textures/Musics/ridealong.ogg Textures/Musics/batcave.ogg
 
 xmoto.bin: package.lst
 if CROSS_COMPILING
