@@ -199,4 +199,8 @@
 <sprite type="UI" name="MenuTL" 	    file="MenuTL.png" />
 <sprite type="UI" name="MenuTR" 	    file="MenuTR.png" />
 
+<music name="menu1" file="menu.ogg" />
+<music name="rideALong" file="ridealong.ogg" />
+<music name="batcave" file="batcave.ogg" />
+
 </xmoto_theme>
