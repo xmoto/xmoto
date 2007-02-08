@@ -277,6 +277,8 @@ namespace vapp {
       double m_fStartTime;                      
       double m_fLastSqueekTime;
       
+      std::string m_playingMusic; /* name of the music played to not restart it if the same must be played on an action */
+
       bool m_b50FpsMode;
       
       Replay *m_pReplay;
