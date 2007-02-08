@@ -103,13 +103,16 @@ namespace vapp {
 	  try {
 	    Sound::playMusic(m_theme.getMusic("menu1")->FilePath());
 	  } catch(Exception &e) {
+	    Sound::stopMusic();
 	  }
 	  break;
 	case GS_PREPLAYING:
 	case GS_REPLAYING:
 	  try {
-	    Sound::playMusic(m_theme.getMusic("ridealong")->FilePath());
+	    Sound::stopMusic();
+	    //Sound::playMusic(m_theme.getMusic("ridealong")->FilePath());
 	  } catch(Exception &e) {
+	    Sound::stopMusic();
 	  }
 	  break;
 	case GS_CREDITSMODE:
