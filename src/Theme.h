@@ -44,6 +44,7 @@ class WebThemes;
 #define THEME_TEXTURE_SPRITE_FILE_DIR    THEME_SPRITE_FILE_DIR"/Textures"
 #define THEME_FONT_SPRITE_FILE_DIR       THEME_SPRITE_FILE_DIR"/Fonts"
 #define THEME_EDGEEFFECT_SPRITE_FILE_DIR THEME_SPRITE_FILE_DIR"/Effects"
+#define THEME_MUSICS_FILE_DIR            THEME_SPRITE_FILE_DIR"/Musics"
 
 #define THEME_PLAYER_BODY     "PlayerBikerBody"
 #define THEME_PLAYER_FRONT    "PlayerBikerFront"
@@ -82,7 +83,7 @@ class WebThemes;
     SPRITE_TYPE_MISC,
     SPRITE_TYPE_TEXTURE,
     SPRITE_TYPE_UI,
-    SPRITE_TYPE_EDGEEFFECT
+    SPRITE_TYPE_EDGEEFFECT,
   };
   
   enum SpriteBlendMode {
@@ -92,6 +93,21 @@ class WebThemes;
 
 class Theme;
 class BikerTheme;
+
+class Music {
+ public:
+  Music(Theme* p_associated_theme, std::string i_name, std::string i_fileName);
+  ~Music();
+
+  std::string Name() const;
+  std::string FileName() const;
+  std::string FilePath() const;
+
+ private:
+  Theme* m_associated_theme;
+  std::string m_name;
+  std::string m_fileName;
+};
 
 class Sprite {
   public:
@@ -314,6 +330,7 @@ class Theme {
 
   std::string Name() const;
   Sprite* getSprite(enum SpriteType pSpriteType, std::string pName);
+  Music* getMusic(std::string i_name);
   vapp::Texture* loadTexture(std::string p_fileName,
 			     bool bSmall=false,
 			     bool bClamp=false,
@@ -334,6 +351,7 @@ class Theme {
   vapp::TextureManager m_texMan;
   std::string m_name;
   std::vector<Sprite*> m_sprites;
+  std::vector<Music*> m_musics;
   std::vector<std::string> m_requiredFiles;
 
   vapp::Texture *m_pDefaultFontTexture;
@@ -344,6 +362,7 @@ class Theme {
 #endif
 
   void cleanSprites();
+  void cleanMusics();
 
   void loadSpritesFromXML(TiXmlElement *p_ThemeXmlDataElement);
 

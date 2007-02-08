@@ -119,7 +119,8 @@ Theme::~Theme() {
   delete m_ghost;
 
   cleanSprites();
-  
+  cleanMusics();  
+
   /* Kill textures */
   m_texMan.unloadTextures();
 }
@@ -140,6 +141,7 @@ void Theme::load(std::string p_themeFile) {
   vapp::Log(std::string("Loading theme from file " + p_themeFile).c_str());
 
   cleanSprites(); /* removing existing sprites */
+  cleanMusics();
 
   vapp::XMLDocument v_ThemeXml;
   TiXmlDocument *v_ThemeXmlData;
@@ -218,6 +220,27 @@ void Theme::loadSpritesFromXML(TiXmlElement *p_ThemeXmlDataElement) {
       vapp::Log("Warning: unknown type '%s' in theme file !", v_spriteType.c_str());
     }
   }
+
+  std::string v_musicName;
+  std::string v_musicFile;
+
+  for(TiXmlElement *pVarElem = p_ThemeXmlDataElement->FirstChildElement("music");
+      pVarElem!=NULL;
+      pVarElem = pVarElem->NextSiblingElement("music")
+      ) {
+
+    pc = pVarElem->Attribute("name");
+    if(pc == NULL) { continue; }
+    v_musicName = pc;
+
+    pc = pVarElem->Attribute("file");
+    if(pc == NULL) { continue; }
+    v_musicFile = pc;
+
+    m_musics.push_back(new Music(this, v_musicName, v_musicFile));
+    m_requiredFiles.push_back(THEME_MUSICS_FILE_DIR + std::string("/") + v_musicFile);    
+  }
+
 }
 
 Sprite* Theme::getSprite(enum SpriteType pSpriteType, std::string pName) {
@@ -232,11 +255,27 @@ Sprite* Theme::getSprite(enum SpriteType pSpriteType, std::string pName) {
   return NULL;
 }
 
+Music* Theme::getMusic(std::string i_name) {
+  for(unsigned int i=0; i<m_musics.size(); i++) {
+    if(m_musics[i]->Name() == i_name) {
+      return m_musics[i];
+    }
+  }
+  throw Exception("Music " + i_name + " not found");
+}
+
 void Theme::cleanSprites() {
   for(unsigned int i=0; i<m_sprites.size(); i++) {
     delete m_sprites[i];
   }
   m_sprites.clear();
+}
+
+void Theme::cleanMusics() {
+   for(unsigned int i=0; i<m_musics.size(); i++) {
+    delete m_musics[i];
+  }
+  m_musics.clear(); 
 }
 
 void Theme::newAnimationSpriteFromXML(TiXmlElement *pVarElem) {
@@ -1092,3 +1131,24 @@ std::string Theme::blendModeToStr(SpriteBlendMode Mode) {
   if(Mode == SPRITE_BLENDMODE_ADDITIVE) return "add";
   return "default";
 }
+
+ Music::Music(Theme* p_associated_theme, std::string i_name, std::string i_fileName) {
+   m_associated_theme = p_associated_theme;
+   m_name     	      = i_name;
+   m_fileName 	      = i_fileName;
+ }
+
+ Music::~Music() {
+ }
+
+ std::string Music::Name() const {
+   return m_name;
+ }
+
+ std::string Music::FileName() const {
+   return m_fileName;
+ }
+ 
+ std::string Music::FilePath() const {
+   return vapp::FS::FullPath(THEME_MUSICS_FILE_DIR + std::string("/") + m_fileName);
+ }

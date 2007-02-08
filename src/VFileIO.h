@@ -184,6 +184,9 @@ namespace vapp {
       static bool isFileReal(std::string i_filePath);
       static std::string md5sum(std::string i_filePath);
 
+      /* return user_dir + i_relative_path if exists or data_dir + i_relative_path */
+      static std::string FullPath(const std::string& i_relative_path);
+
     private:
       /* Helper functions */
       static void _ThrowFileError(FileHandle *pfh,std::string Description);

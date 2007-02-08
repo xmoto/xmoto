@@ -100,12 +100,17 @@ namespace vapp {
 	switch(s) {
 	case GS_MENU:
 	case GS_LEVELPACK_VIEWER:
-	  Sound::playMusic(FS::getDataDir() + std::string("/xmoto.ogg"));
+	  try {
+	    Sound::playMusic(m_theme.getMusic("menu1")->FilePath());
+	  } catch(Exception &e) {
+	  }
 	  break;
 	case GS_PREPLAYING:
 	case GS_REPLAYING:
-	  Sound::stopMusic();
-	  //Sound::playMusic(FS::getDataDir() + std::string("/ridealong.ogg"));
+	  try {
+	    Sound::playMusic(m_theme.getMusic("ridealong")->FilePath());
+	  } catch(Exception &e) {
+	  }
 	  break;
 	case GS_CREDITSMODE:
 	  Sound::stopMusic();
