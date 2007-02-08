@@ -1270,5 +1270,12 @@ namespace vapp {
 
     return true;
   }
+
+  std::string FS::FullPath(const std::string& i_relative_path) {
+    if(fileExists(getUserDir() + std::string("/") + i_relative_path)) {
+      return getUserDir() + std::string("/") + i_relative_path;
+    }
+    return getDataDir() + std::string("/") + i_relative_path;
+  }
 }
 
