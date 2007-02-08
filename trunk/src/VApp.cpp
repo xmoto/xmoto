@@ -557,5 +557,13 @@ namespace vapp {
       parseUserArgs(UserArgs);
   }
 
+  std::string App::getVersionString(void) {
+    char cBuf[256];
+    
+    sprintf(cBuf, "%d.%d.%d %s (%s)", BUILD_MAJORVERSION,
+	    BUILD_VERSION, BUILD_MINORVERSION, BUILD_EXTRAINFO, "$Revision$");
+    return cBuf;
+  }
+
 }
 
