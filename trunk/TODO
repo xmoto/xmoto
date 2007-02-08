@@ -9,7 +9,6 @@ Assigned to nicolas
    playing, then it is not updated with the new level button
 * put under edge into the block part
 * PAD_5 -> to finish
-* be able to play a music in a level
 * BUG : xmoto -replay bugs/onMacWontWork.rpl when you press forward on
    this scripted level, the elevator at the correct position
 * FEATURE : * xmoto toto.lvl to play directly a level
