@@ -100,7 +100,7 @@ namespace vapp {
       
       static void writeLog(const std::string &s);
       static FileHandle *openOFile(std::string Path);
-      static FileHandle *openIFile(std::string Path);
+      static FileHandle *openIFile(std::string Path, bool i_includeCurrentDir = false);
       static void closeFile(FileHandle *pfh);
 
       static bool readBuf(FileHandle *pfh,char *pcBuf, unsigned int nBufSize);

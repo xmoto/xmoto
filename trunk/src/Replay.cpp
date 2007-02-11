@@ -181,8 +181,8 @@ namespace vapp {
   
   std::string Replay::openReplay(const std::string &FileName,float *pfFrameRate,std::string &Player, bool bDisplayInformation) {
     /* Try opening as if it is a full path */
-    FileHandle *pfh = FS::openIFile(FileName);
-    if(pfh == NULL) {        
+    FileHandle *pfh = FS::openIFile(FileName, true);
+    if(pfh == NULL) {
       /* Open file for input */
       pfh = FS::openIFile(std::string("Replays/") + FileName);
       if(pfh == NULL) {

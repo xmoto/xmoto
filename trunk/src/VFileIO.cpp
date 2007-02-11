@@ -406,7 +406,7 @@ namespace vapp {
     return NULL;
   }
   
-  FileHandle *FS::openIFile(std::string Path) {
+  FileHandle *FS::openIFile(std::string Path, bool i_includeCurrentDir) {
     FileHandle *pfh = new FileHandle;
     
     /* Okay. Absolute path? */
@@ -416,17 +416,25 @@ namespace vapp {
       pfh->Type = FHT_STDIO;
     }
     else {
-      /* Try current working dir */
-      //pfh->fp = fopen(Path.c_str(),"rb");
-      //if(pfh->fp == NULL) {
-			/* No luck. Try the user-dir then */
-			pfh->fp = fopen((m_UserDir + std::string("/") + Path).c_str(),"rb");        
-			if(pfh->fp == NULL && m_bGotDataDir) {
-				/* Not there either, the data-dir is our last chance */
-				pfh->fp = fopen((m_DataDir + std::string("/") + Path).c_str(),"rb");        
-			}
-			//}
-      pfh->Type = FHT_STDIO;
+      /* user dir ? */
+      pfh->fp = fopen((m_UserDir + std::string("/") + Path).c_str(),"rb");        
+
+      if(pfh->fp == NULL) {
+	if(m_bGotDataDir) { /* data dir ? */
+	  pfh->fp = fopen((m_DataDir + std::string("/") + Path).c_str(),"rb");        
+	}
+
+	if(pfh->fp == NULL) {
+	  if(i_includeCurrentDir) { /* current working dir ? */
+	    pfh->fp = fopen(Path.c_str(),"rb");
+	  }
+	}
+      }
+
+      /* got something ? */
+      if(pfh->fp != NULL) {
+	pfh->Type = FHT_STDIO;
+      }
     }
     
     if(pfh->fp == NULL) {
