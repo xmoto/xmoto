@@ -27,6 +27,7 @@ enormenent...
 * be able to update internal levels
 * add rotation and reversed for a sprite
 * be able to play a music in a level
+* BUG : xmoto ...rpl don't work
 
 Since 0.2.2
 * When i update lists sometimes
