@@ -493,5 +493,8 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define VPACKAGENAME_UPDATED_LEVELS             _("Updated levels")
 #define VPACKAGENAME_MOST_PLAYED_LEVELS         _("Most played levels")
 #define VPACKAGENAME_FAVORITE_LEVELS            _("Favorite levels")
+#define VPACKAGENAME_NICEST_LEVELS              _("Nicest levels")
+#define VPACKAGENAME_HARDEST_LEVELS             _("Hardest levels")
+#define VPACKAGENAME_EASIEST_LEVELS             _("Easiest levels")
 
 #endif

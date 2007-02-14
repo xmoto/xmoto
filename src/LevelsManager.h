@@ -68,6 +68,7 @@ class LevelsManager {
   void rebuildPacks(
 #if defined(SUPPORT_WEBACCESS)
 		    WebRoom *i_webHighscores,
+		    WebLevels *i_webLevels,
 #endif
 		    std::string i_playerName,
 		    vapp::PlayerData *i_profiles,
@@ -112,6 +113,7 @@ class LevelsManager {
   void createVirtualPacks(
 #if defined(SUPPORT_WEBACCESS)
 			  WebRoom *i_webHighscores,
+			  WebLevels *i_webLevels,
 #endif
 			  std::string i_playerName,
 			  vapp::PlayerData *i_profiles,

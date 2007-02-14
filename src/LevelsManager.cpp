@@ -28,6 +28,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // increase the version to force reloading of levels
 #define CURRENT_LEVEL_INDEX_FILE_VERSION 2
 
+#define VPACKAGENAME_NICEST_MIN  4.5
+#define VPACKAGENAME_EASIEST_MAX 0.5
+#define VPACKAGENAME_HARDEST_MIN 4.5
+
 LevelsPack::LevelsPack(std::string i_name) {
   m_name         = i_name;
   m_showTimes    = true;
@@ -174,6 +178,7 @@ bool LevelsManager::doesLevelsPackExist(const std::string &i_name) const {
 void LevelsManager::rebuildPacks(
 #if defined(SUPPORT_WEBACCESS)
 				 WebRoom *i_webHighscores,
+				 WebLevels *i_webLevels,
 #endif
 				 std::string i_playerName,
 				 vapp::PlayerData *i_profiles,
@@ -197,14 +202,16 @@ void LevelsManager::rebuildPacks(
 
   createVirtualPacks(
 #if defined(SUPPORT_WEBACCESS)
-		     i_webHighscores, 
+		     i_webHighscores,
+		     i_webLevels,
 #endif
 		     i_playerName, i_profiles, i_stats);
 }
 
 void LevelsManager::createVirtualPacks(
 #if defined(SUPPORT_WEBACCESS)
-				       WebRoom *i_webHighscores, 
+				       WebRoom *i_webHighscores,
+				       WebLevels *i_webLevels,
 #endif
 				       std::string i_playerName, vapp::PlayerData *i_profiles, vapp::Stats *i_stats) {
   LevelsPack *v_pack;
@@ -275,6 +282,62 @@ void LevelsManager::createVirtualPacks(
   for(unsigned int i=0; i<m_updatedLevels.size(); i++) {
     v_pack->addLevel(m_updatedLevels[i]);
   }
+
+#if defined(SUPPORT_WEBACCESS)
+  /* nicest levels */
+  if(i_webLevels != NULL) {
+    v_pack = new LevelsPack(std::string(VPACKAGENAME_NICEST_LEVELS));
+    m_levelsPacks.push_back(v_pack);
+    for(unsigned int i=0; i<i_webLevels->getLevels().size(); i++) {
+      WebLevel *v_wlevel = i_webLevels->getLevels()[i];
+      if(v_wlevel->getQuality() >= VPACKAGENAME_NICEST_MIN) {
+	try {
+	  v_pack->addLevel(&LevelById(v_wlevel->getId()));
+	} catch(Exception &e) {
+	  /* ok, will not be in the cache */
+	}
+      }
+    }
+  }
+#endif
+
+  /* easiest levels */
+#if defined(SUPPORT_WEBACCESS)
+  /* easiest levels */
+  if(i_webLevels != NULL) {
+    v_pack = new LevelsPack(std::string(VPACKAGENAME_EASIEST_LEVELS));
+    m_levelsPacks.push_back(v_pack);
+    for(unsigned int i=0; i<i_webLevels->getLevels().size(); i++) {
+      WebLevel *v_wlevel = i_webLevels->getLevels()[i];
+      if(v_wlevel->getDifficulty() >= VPACKAGENAME_EASIEST_MAX) {
+	try {
+	  v_pack->addLevel(&LevelById(v_wlevel->getId()));
+	} catch(Exception &e) {
+	  /* ok, will not be in the cache */
+	}
+      }
+    }
+  }
+#endif
+
+  /* hardest levels */
+#if defined(SUPPORT_WEBACCESS)
+  /* hardest levels */
+  if(i_webLevels != NULL) {
+    v_pack = new LevelsPack(std::string(VPACKAGENAME_HARDEST_LEVELS));
+    m_levelsPacks.push_back(v_pack);
+    for(unsigned int i=0; i<i_webLevels->getLevels().size(); i++) {
+      WebLevel *v_wlevel = i_webLevels->getLevels()[i];
+      if(v_wlevel->getDifficulty() >= VPACKAGENAME_HARDEST_MIN) {
+	try {
+	  v_pack->addLevel(&LevelById(v_wlevel->getId()));
+	} catch(Exception &e) {
+	  /* ok, will not be in the cache */
+	}
+      }
+    }
+  }
+#endif
 
   /* most played levels */
   // don't work
