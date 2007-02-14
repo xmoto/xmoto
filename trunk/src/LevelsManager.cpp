@@ -294,7 +294,7 @@ void LevelsManager::createVirtualPacks(
 	try {
 	  v_pack->addLevel(&LevelById(v_wlevel->getId()));
 	} catch(Exception &e) {
-	  /* ok, will not be in the cache */
+	  /* ok, will not be in the pack */
 	}
       }
     }
@@ -313,7 +313,7 @@ void LevelsManager::createVirtualPacks(
 	try {
 	  v_pack->addLevel(&LevelById(v_wlevel->getId()));
 	} catch(Exception &e) {
-	  /* ok, will not be in the cache */
+	  /* ok, will not be in the oack */
 	}
       }
     }
@@ -332,7 +332,7 @@ void LevelsManager::createVirtualPacks(
 	try {
 	  v_pack->addLevel(&LevelById(v_wlevel->getId()));
 	} catch(Exception &e) {
-	  /* ok, will not be in the cache */
+	  /* ok, will not be in the pack */
 	}
       }
     }
