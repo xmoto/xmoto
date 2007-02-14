@@ -1015,7 +1015,7 @@ namespace vapp {
 #endif
 
 #if defined(SUPPORT_WEBACCESS)  
-  void GameApp::_UpdateWebLevels(bool bSilent) {
+  void GameApp::_UpdateWebLevels(bool bSilent, bool bEnableWeb) {
     if(!bSilent) {
       _SimpleMessage(GAMETEXT_DLLEVELSCHECK,&m_InfoMsgBoxRect);
     }
@@ -1026,7 +1026,7 @@ namespace vapp {
     }
     m_pWebLevels->setURL(m_Config.getString("WebLevelsURL"));
     Log("WWW: Checking for new or updated levels...");
-    m_pWebLevels->update();
+    m_pWebLevels->update(bEnableWeb);
     
     int nULevels=0,nUBytes=0;
     m_pWebLevels->getUpdateInfo(&nUBytes,&nULevels);
@@ -1977,6 +1977,7 @@ namespace vapp {
       m_levelsManager.rebuildPacks(
 #if defined(SUPPORT_WEBACCESS)
 				   m_pWebHighscores,
+				   m_pWebLevels,
 #endif
 				   m_pPlayer->PlayerName, &m_Profiles, &m_GameStats);
     }    

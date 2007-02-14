@@ -273,14 +273,19 @@ class WebRooms {
 
 class WebLevel {
 public:
-  WebLevel(std::string p_id, std::string p_name, std::string p_url);
+  WebLevel(std::string p_id, std::string p_name, std::string p_url, float p_webDifficulty, float p_webQuality);
   std::string getId() const;
   std::string getName() const;
   std::string getUrl() const;
+  float getDifficulty() const;
+  float getQuality() const;
 
   /* true if the level should be updated from the website but exists */  
   bool requireUpdate() const; /* false by default */
   void setRequireUpdate(bool p_require_update);
+
+  bool requireDownload() const; /* false by default */
+  void setRequireDownload(bool p_require_download);
 
   /* if level require update, these methods have a sense */
   void setCurrentPath(std::string p_current_path);
@@ -291,7 +296,10 @@ private:
   std::string m_name;
   std::string m_url;
   bool m_require_update;
+  bool m_require_download;
   std::string m_current_path;
+  float m_webDifficulty;
+  float m_webQuality;
 };
 
 class WebLevels {
@@ -301,7 +309,7 @@ class WebLevels {
   ~WebLevels();
 
   /* check for new levels to download */
-  void update(); /* throws exceptions */
+  void update(bool i_enableWeb = true); /* throws exceptions */
 
   /* download new levels */
   void upgrade(); /* throws exceptions */
@@ -318,12 +326,17 @@ class WebLevels {
   /* Get IDs of updated levels downloaded OK*/
   const std::vector<std::string> &getUpdatedDownloadedLevelIds();
   
+  /* Get levels informations */
+  const std::vector<WebLevel*> &getLevels();
+
   /* Set URL */
   void setURL(const std::string &p_url) {m_levels_url = p_url;}
 
   bool exists(const std::string p_id);
 
   static std::string getDestinationFile(std::string p_url);
+
+  int nbLevelsToGet() const; /* return the number of level files required to download for an upgrade */
 
  private:
   vapp::WWWAppInterface *m_WebLevelApp;

@@ -352,16 +352,28 @@ namespace vapp {
       _UpdateLoadingScreen((1.0f/9.0f) * 6,pLoadingScreen,GAMETEXT_DLHIGHSCORES);      
       _UpdateWebHighscores(bSilent);
     }
-    if(m_bEnableCheckNewLevelsAtStartup) {
-      _UpdateLoadingScreen((1.0f/9.0f) * 6,pLoadingScreen,GAMETEXT_DLLEVELSCHECK);      
-      _UpdateWebLevels(bSilent);       
-    }
   } catch(Exception &e) {
     /* No internet connection, probably... (just use the latest times, if any) */
     Log("** Warning ** : Failed to update web-highscores [%s]",e.getMsg().c_str());              
     if(!bSilent)
       notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES);
   }
+
+
+  if(m_bEnableCheckNewLevelsAtStartup) {
+    try {
+      _UpdateLoadingScreen((1.0f/9.0f) * 6,pLoadingScreen,GAMETEXT_DLLEVELSCHECK);      
+      _UpdateWebLevels(bSilent);       
+    } catch(Exception &e) {
+      /* No internet connection, probably... (just use the latest times, if any) */
+      Log("** Warning ** : Failed to update web-highscores [%s]",e.getMsg().c_str());              
+      if(!bSilent)
+	notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES);
+    }
+  } else {
+    _UpdateWebLevels(bSilent, false);
+  }
+
       }
 
       _UpgradeWebHighscores();

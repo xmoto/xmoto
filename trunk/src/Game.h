@@ -525,7 +525,7 @@ namespace vapp {
       void _InitWebConf(void);
       void _CheckForExtraLevels(void);
       void _UpdateWebHighscores(bool bSilent);
-      void _UpdateWebLevels(bool bSilent);
+      void _UpdateWebLevels(bool bSilent, bool bEnableWeb = true);
       void _UpdateWebThemes(bool bSilent);
       void _UpdateWebTheme(ThemeChoice* pThemeChoice, bool bNotify);
       void _UpgradeWebHighscores();

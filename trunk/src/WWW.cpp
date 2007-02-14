@@ -714,11 +714,15 @@ void FSWeb::uploadReplayAnalyseMsg(std::string p_filename,
   p_msg = pc;
 }
 
-WebLevel::WebLevel(std::string p_id, std::string p_name, std::string p_url) {
+WebLevel::WebLevel(std::string p_id, std::string p_name, std::string p_url,
+		   float p_webDifficulty, float p_webQuality) {
   m_id   = p_id;
   m_name = p_name;
   m_url  = p_url;
-  m_require_update = false;
+  m_require_update   = false;
+  m_require_download = false;
+  m_webDifficulty  = p_webDifficulty;
+  m_webQuality     = p_webQuality;
 }
 
 std::string WebLevel::getId() const {
@@ -733,12 +737,28 @@ std::string WebLevel::getUrl() const {
   return m_url;
 }
 
+float WebLevel::getDifficulty() const {
+  return m_webDifficulty;
+}
+
+float WebLevel::getQuality() const {
+  return m_webQuality;
+}
+
 bool WebLevel::requireUpdate() const {
   return m_require_update;
 }
 
 void WebLevel::setRequireUpdate(bool p_require_update) {
   m_require_update = p_require_update;
+}
+
+bool WebLevel::requireDownload() const {
+  return m_require_download;
+}
+
+void WebLevel::setRequireDownload(bool p_require_download) {
+  m_require_download = p_require_download;
 }
 
 void WebLevel::setCurrentPath(std::string p_current_path) {
@@ -798,7 +818,8 @@ void WebLevels::extractLevelsToDownloadFromXml() {
   TiXmlElement *v_webLXmlDataElement;
   const char *pc;
   std::string v_levelId, v_levelName, v_url, v_MD5sum_web;
-  
+  float v_difficulty, v_quality;
+
   v_webLXml.readFromFile(getXmlFileName());
   v_webLXmlData = v_webLXml.getLowLevelAccess();
 
@@ -818,30 +839,46 @@ void WebLevels::extractLevelsToDownloadFromXml() {
     pc = pVarElem->Attribute("level_id");
     if(pc != NULL) {
       v_levelId = pc;
-  
+      
       pc = pVarElem->Attribute("name");
       if(pc != NULL) {
-  v_levelName = pc;
-  
-  pc = pVarElem->Attribute("url");
-  if(pc != NULL) {
-    v_url = pc;  
-    
-    pc = pVarElem->Attribute("sum");
-    if(pc != NULL) {
-      v_MD5sum_web = pc;  
+	v_levelName = pc;
+	
+	pc = pVarElem->Attribute("url");
+	if(pc != NULL) {
+	  v_url = pc;  
+	  
+	  pc = pVarElem->Attribute("sum");
+	  if(pc != NULL) {
+	    v_MD5sum_web = pc;
+
+	    /* web informations */
+	    pc = pVarElem->Attribute("web_difficulty");
+	    if(pc != NULL) {
+	      v_difficulty = atof(pc);
+	    }
+
+	    pc = pVarElem->Attribute("web_quality");
+	    if(pc != NULL) {
+	      v_quality = atof(pc);
+	    }
 
       /* if it doesn't exist */
       if(m_WebLevelApp->doesLevelExist(v_levelId) == false) {
-        m_webLevels.push_back(new WebLevel(v_levelId, v_levelName, v_url));
+	WebLevel *v_lvl = new WebLevel(v_levelId, v_levelName, v_url, v_difficulty, v_quality);
+	v_lvl->setRequireDownload(true);
+	m_webLevels.push_back(v_lvl);
       } else { /* or it md5sum if different */
         if(m_WebLevelApp->levelPathForUpdate(v_levelId) != "") {
 	  if(m_WebLevelApp->levelMD5Sum(v_levelId) != v_MD5sum_web) {
 	    //printf("%s ! %s\n", m_WebLevelApp->levelMD5Sum(v_levelId).c_str(), v_MD5sum_web.c_str());
-	    WebLevel *v_lvl = new WebLevel(v_levelId, v_levelName, v_url);
+	    WebLevel *v_lvl = new WebLevel(v_levelId, v_levelName, v_url, v_difficulty, v_quality);
 	    v_lvl->setCurrentPath(m_WebLevelApp->levelPathForUpdate(v_levelId));
 	    v_lvl->setRequireUpdate(true);
 	    m_webLevels.push_back(v_lvl);
+	  } else {
+	    /* the level is already correct */
+	    m_webLevels.push_back(new WebLevel(v_levelId, v_levelName, v_url, v_difficulty, v_quality));
 	  }
         }
       }
@@ -857,7 +894,7 @@ std::string WebLevels::getDestinationFile(std::string p_url) {
   return getDestinationDir() + "/" + vapp::FS::getFileBaseName(p_url) + ".lvl";
 }
 
-void WebLevels::update() {
+void WebLevels::update(bool i_enableWeb) {
   /* delete levels information */
   std::vector<WebLevel*>::iterator it; 
   for(it = m_webLevels.begin(); it != m_webLevels.end(); it++) {
@@ -865,7 +902,9 @@ void WebLevels::update() {
   }
   m_webLevels.clear();
 
-  downloadXml();
+  if(i_enableWeb) {
+    downloadXml();
+  }
   extractLevelsToDownloadFromXml();
 }
 
@@ -941,6 +980,16 @@ bool WebLevels::exists(const std::string p_id) {
   return false;
 }
 
+int WebLevels::nbLevelsToGet() const {
+  int n = 0;
+  for(unsigned int i=0; i<m_webLevels.size(); i++) {
+    if(m_webLevels[i]->requireDownload() || m_webLevels[i]->requireUpdate()) {
+      n++;
+    }
+  }
+  return n;
+}
+
 void WebLevels::upgrade() {
   std::vector<WebLevel*>::iterator it;
   f_curl_download_data v_data;
@@ -948,7 +997,7 @@ void WebLevels::upgrade() {
 
   createDestinationDirIfRequired();
 
-  int v_nb_levels_to_download = m_webLevels.size();
+  int v_nb_levels_to_download = nbLevelsToGet();
   int v_nb_levels_performed  = 0;
 
   v_data.v_WebApp = m_WebLevelApp;
@@ -957,45 +1006,47 @@ void WebLevels::upgrade() {
   /* download levels */
   it = m_webLevels.begin();
   while(it != m_webLevels.end() && m_WebLevelApp->isCancelAsSoonAsPossible() == false) {
-    std::string v_url = (*it)->getUrl();
-    float v_percentage = (((float)v_nb_levels_performed) * 100.0) / ((float)v_nb_levels_to_download);
-
-    m_WebLevelApp->setTaskProgress(v_percentage);
-    m_WebLevelApp->setBeingDownloadedInformation((*it)->getName(), (*it)->requireUpdate());
-
-    /* should the level be updated */
-    to_download = true;
-    if((*it)->requireUpdate()) {
-      /* does the user want to update the level ? */
-      to_download = m_WebLevelApp->shouldLevelBeUpdated((*it)->getId());
+    if((*it)->requireUpdate() || (*it)->requireDownload()) {
+      std::string v_url = (*it)->getUrl();
+      float v_percentage = (((float)v_nb_levels_performed) * 100.0) / ((float)v_nb_levels_to_download);
+      
+      m_WebLevelApp->setTaskProgress(v_percentage);
+      m_WebLevelApp->setBeingDownloadedInformation((*it)->getName(), (*it)->requireUpdate());
+      
+      /* should the level be updated */
+      to_download = true;
+      if((*it)->requireUpdate()) {
+	/* does the user want to update the level ? */
+	to_download = m_WebLevelApp->shouldLevelBeUpdated((*it)->getId());
+      }
+      
+      if(to_download) {
+	v_data.v_nb_files_performed = v_nb_levels_performed;
+	std::string v_destFile;
+	
+	if((*it)->requireUpdate()) {
+	  v_destFile = m_WebLevelApp->levelPathForUpdate((*it)->getId());
+	} else {
+	  v_destFile = getDestinationFile(v_url);
+	}
+	
+	FSWeb::downloadFileBz2(v_destFile,
+			       v_url,
+			       FSWeb::f_curl_progress_callback_download,
+			       &v_data,
+			       m_proxy_settings);
+	
+	if((*it)->requireUpdate()) {
+	  m_webLevelsUpdatedDownloadedOK.push_back(v_destFile);
+	  m_webLevelsIdsUpdatedDownloadedOK.push_back((*it)->getId());
+	} else {
+	  m_webLevelsNewDownloadedOK.push_back(v_destFile);
+	}
+      }    
+      
+      v_nb_levels_performed++;
+      m_WebLevelApp->readEvents(); 
     }
-
-    if(to_download) {
-      v_data.v_nb_files_performed = v_nb_levels_performed;
-      std::string v_destFile;
-      
-      if((*it)->requireUpdate()) {
-				v_destFile = m_WebLevelApp->levelPathForUpdate((*it)->getId());
-      } else {
-				v_destFile = getDestinationFile(v_url);
-      }
-      
-      FSWeb::downloadFileBz2(v_destFile,
-           v_url,
-           FSWeb::f_curl_progress_callback_download,
-           &v_data,
-           m_proxy_settings);
-      
-      if((*it)->requireUpdate()) {
-				m_webLevelsUpdatedDownloadedOK.push_back(v_destFile);
-				m_webLevelsIdsUpdatedDownloadedOK.push_back((*it)->getId());
-      } else {
-				m_webLevelsNewDownloadedOK.push_back(v_destFile);
-      }
-    }    
-
-    v_nb_levels_performed++;
-    m_WebLevelApp->readEvents(); 
     it++;
   }
 
@@ -1003,7 +1054,7 @@ void WebLevels::upgrade() {
 }
 
 void WebLevels::getUpdateInfo(int *pnUBytes,int *pnULevels) {
-  if(pnULevels != NULL) *pnULevels = m_webLevels.size();
+  if(pnULevels != NULL) *pnULevels = nbLevelsToGet();
   if(pnUBytes != NULL) *pnUBytes = -1;
 }
 
@@ -1016,9 +1067,12 @@ const std::vector<std::string> &WebLevels::getUpdatedDownloadedLevels(void) {
 }
 
 const std::vector<std::string> &WebLevels::getUpdatedDownloadedLevelIds() {
-	return m_webLevelsIdsUpdatedDownloadedOK;
+  return m_webLevelsIdsUpdatedDownloadedOK;
 }
 
+const std::vector<WebLevel*> &WebLevels::getLevels() {
+  return m_webLevels;
+}
 
 WebTheme::WebTheme(std::string pName, std::string pUrl, std::string pSum) {
   m_name = pName;
