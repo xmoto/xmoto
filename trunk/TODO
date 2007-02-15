@@ -1,4 +1,6 @@
 
+* 2,5 != 2.5 for website
+
 mingw:
 * sdlgfx: http://www.wormux.org/wiki/compile_under_mingw.php#SDL_gfx
 * gettext: http://www.wormux.org/wiki/compile_under_mingw.php
