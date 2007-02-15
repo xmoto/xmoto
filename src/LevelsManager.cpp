@@ -29,7 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define CURRENT_LEVEL_INDEX_FILE_VERSION 2
 
 #define VPACKAGENAME_NICEST_MIN  4.5
-#define VPACKAGENAME_EASIEST_MAX 0.5
+#define VPACKAGENAME_EASIEST_MAX 1.5
 #define VPACKAGENAME_HARDEST_MIN 4.5
 
 LevelsPack::LevelsPack(std::string i_name) {
@@ -309,7 +309,7 @@ void LevelsManager::createVirtualPacks(
     m_levelsPacks.push_back(v_pack);
     for(unsigned int i=0; i<i_webLevels->getLevels().size(); i++) {
       WebLevel *v_wlevel = i_webLevels->getLevels()[i];
-      if(v_wlevel->getDifficulty() >= VPACKAGENAME_EASIEST_MAX) {
+      if(v_wlevel->getDifficulty() <= VPACKAGENAME_EASIEST_MAX) {
 	try {
 	  v_pack->addLevel(&LevelById(v_wlevel->getId()));
 	} catch(Exception &e) {
