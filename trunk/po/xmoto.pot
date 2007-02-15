@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-01-28 22:41+0100\n"
+"POT-Creation-Date: 2007-02-14 23:45+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1581,4 +1581,16 @@ msgstr ""
 
 #: src/GameText.h:495
 msgid "Favorite levels"
+msgstr ""
+
+#: src/GameText.h:496
+msgid "Nicest levels"
+msgstr ""
+
+#: src/GameText.h:497
+msgid "Hardest levels"
+msgstr ""
+
+#: src/GameText.h:498
+msgid "Easiest levels"
 msgstr ""
