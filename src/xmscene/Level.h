@@ -124,6 +124,10 @@ class Level {
   
   std::string PathForUpdate() const;
 
+  std::string SpriteForStrawberry() const;
+  std::string SpriteForWecker() const;
+  std::string SpriteForFlower() const;
+
  private:
   std::string m_id;                 /* Level ID */
   std::string m_name;               /* Name of level */
@@ -154,6 +158,10 @@ class Level {
   int  m_nbEntitiesToTake;
   std::string m_borderTexture;
   SkyApparence m_sky;
+
+  std::string m_rSpriteForStrawberry;
+  std::string m_rSpriteForWecker;
+  std::string m_rSpriteForFlower;
 
   void addLimits();
   void exportBinary(const std::string &i_fileName, const std::string& i_sum);
