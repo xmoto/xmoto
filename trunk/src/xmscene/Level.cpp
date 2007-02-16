@@ -30,7 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../VXml.h"
 #include "../helpers/Color.h"
 
-#define CACHE_LEVEL_FORMAT_VERSION 11
+#define CACHE_LEVEL_FORMAT_VERSION 12
 
 Level::Level() {
   m_xmotoTooOld = false;
@@ -549,6 +549,28 @@ void Level::loadXML(void) {
       }
     }
 
+    /* replacement sprites */
+    m_rSpriteForStrawberry = "";
+    m_rSpriteForWecker = "";
+    m_rSpriteForFlower = "";
+    TiXmlElement *pThemeReplaceElem = vapp::XML::findElement(*m_xmlSource, pLevelElem,std::string("theme_replacements"));
+    if(pThemeReplaceElem != NULL) {
+      /* Get replacements */
+      for(TiXmlElement *pElem = pThemeReplaceElem->FirstChildElement("sprite_replacement"); pElem!=NULL;
+	  pElem=pElem->NextSiblingElement("sprite_replacement")) {
+	std::string v_old_name = vapp::XML::getOption(pElem, "old_name");
+	std::string v_new_name = vapp::XML::getOption(pElem, "new_name");
+	/* for efficacity and before other are not required, only change main ones */
+	if        (v_old_name == "Strawberry") {
+	  m_rSpriteForStrawberry = v_new_name;
+	} else	if(v_old_name == "Wrecker") {
+	  m_rSpriteForWecker     = v_new_name;
+	} else 	if(v_old_name == "Flower") {
+	  m_rSpriteForFlower     = v_new_name;
+	}
+      }
+    }
+
     /* Get script */
     TiXmlElement *pScriptElem = vapp::XML::findElement(*m_xmlSource, pLevelElem,std::string("script"));
     if(pScriptElem != NULL) {
@@ -683,6 +705,10 @@ void Level::exportBinary(const std::string &FileName, const std::string& pSum) {
     vapp::FS::writeFloat_LE(pfh,m_topLimit);
     vapp::FS::writeFloat_LE(pfh,m_bottomLimit);
       
+    vapp::FS::writeString(pfh,m_rSpriteForStrawberry);
+    vapp::FS::writeString(pfh,m_rSpriteForFlower);
+    vapp::FS::writeString(pfh,m_rSpriteForWecker);
+
     /* Write script (if any) */
     vapp::FS::writeInt_LE(pfh,m_scriptSource.length());
     vapp::FS::writeBuf(pfh,(char *)m_scriptSource.c_str(),m_scriptSource.length());
@@ -857,6 +883,11 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
         m_rightLimit = vapp::FS::readFloat_LE(pfh);
         m_topLimit = vapp::FS::readFloat_LE(pfh);
         m_bottomLimit = vapp::FS::readFloat_LE(pfh);
+
+	/* theme replacements */
+	m_rSpriteForStrawberry = vapp::FS::readString(pfh);
+	m_rSpriteForFlower     = vapp::FS::readString(pfh);
+	m_rSpriteForWecker     = vapp::FS::readString(pfh);
 
         /* Read embedded script */
         int nScriptSourceLen = vapp::FS::readInt_LE(pfh);
@@ -1154,4 +1185,25 @@ void Level::unloadLevelBody() {
 
 void Level::rebuildCache() {
   exportBinary(getNameInCache(), m_checkSum);
+}
+
+std::string Level::SpriteForStrawberry() const {
+  if(m_rSpriteForStrawberry != "") {
+    return m_rSpriteForStrawberry;
+  }
+  return "Strawberry";
+}
+
+std::string Level::SpriteForWecker() const {
+  if(m_rSpriteForWecker != "") {
+    return m_rSpriteForWecker;
+  }
+  return "Wrecker";
+}
+
+std::string Level::SpriteForFlower() const {
+  if(m_rSpriteForFlower != "") {
+    return m_rSpriteForFlower;
+  }
+  return "Flower";
 }

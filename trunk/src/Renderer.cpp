@@ -857,12 +857,12 @@ namespace vapp {
     int nQuantity = 0;
 
     if(getParent()->isUglyMode() == false) {
-      pType = (AnimationSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_ANIMATION, "Flower");
+      pType = (AnimationSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_ANIMATION, getGameObject()->getLevelSrc()->SpriteForFlower());
     }
     
     if(nStrawberriesLeft > 0) {
       if(getParent()->isUglyMode() == false) {
-  pType = (AnimationSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_ANIMATION, "Strawberry");
+  pType = (AnimationSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_ANIMATION, getGameObject()->getLevelSrc()->SpriteForStrawberry());
       }
       nQuantity = nStrawberriesLeft;
     }
@@ -1020,13 +1020,13 @@ namespace vapp {
         v_sprite_type = pSprite->SpriteName();
         break;
       case ET_KILL:
-        v_sprite_type = "Wrecker";
+	v_sprite_type = getGameObject()->getLevelSrc()->SpriteForWecker();
         break;
       case ET_MAKEWIN:
-        v_sprite_type = "Flower";
+	v_sprite_type = getGameObject()->getLevelSrc()->SpriteForFlower();
         break;
       case ET_ISTOTAKE:
-        v_sprite_type = "Strawberry";
+	v_sprite_type = getGameObject()->getLevelSrc()->SpriteForStrawberry();
         break;
       }
 
