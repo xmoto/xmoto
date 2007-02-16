@@ -341,6 +341,24 @@ void Level::saveXML(void) {
   vapp::FS::writeLineF(pfh,"\t\t<music name=\"%s\" />", m_music.c_str());
   vapp::FS::writeLineF(pfh,"\t</info>");
   
+  /* replacement sprites */
+  if(m_rSpriteForStrawberry != "" || m_rSpriteForWecker != "" || m_rSpriteForFlower != "") {
+    vapp::FS::writeLineF(pfh,"\t<theme_replacements>");
+    if(m_rSpriteForStrawberry != "") {
+      vapp::FS::writeLineF(pfh,"\t\t<sprite_replacement old_name=\"Strawberry\" new_name=\"%s\" />",
+			   m_rSpriteForStrawberry.c_str());
+    }
+    if(m_rSpriteForWecker != "") {
+      vapp::FS::writeLineF(pfh,"\t\t<sprite_replacement old_name=\"Wrecker\" new_name=\"%s\" />",
+			   m_rSpriteForWecker.c_str());
+    }
+    if(m_rSpriteForFlower != "") {
+      vapp::FS::writeLineF(pfh,"\t\t<sprite_replacement old_name=\"Flower\" new_name=\"%s\" />",
+			   m_rSpriteForFlower.c_str());
+    }
+    vapp::FS::writeLineF(pfh,"\t</theme_replacements>");
+  }
+
   /* MISC */
   if(m_scriptFileName != "" && m_scriptSource != "") {
     vapp::FS::writeLineF(pfh,"\t<script source=\"%s\">",m_scriptFileName.c_str());
