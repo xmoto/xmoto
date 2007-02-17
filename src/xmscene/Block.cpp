@@ -74,6 +74,7 @@ Block::Block(std::string i_id) {
   m_dynamicPositionCenter = Vector2f(0.0, 0.0);
   m_texture          = XM_DEFAULT_BLOCK_TEXTURE;
   m_isBBoxDirty      = true;
+  m_geom             = -1;
 }
 
 Block::~Block() {

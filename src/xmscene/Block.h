@@ -163,6 +163,13 @@ class Block {
   AABB& getAABB();
   std::vector<vapp::Line *>& getCollisionLines() {return m_collisionLines;}
 
+  int getGeom() {
+    return m_geom;
+  }
+  void setGeom(int geom) {
+    m_geom = geom;
+  }
+
 private:
   std::string m_id;           /* Block ID */
   std::string m_texture;      /* Texture to use... */
@@ -178,6 +185,9 @@ private:
   float m_grip;                         /* GRIP of the block */
   AABB  m_BBox;
   bool  m_isBBoxDirty;
+
+  // the geom used to render the block
+  int   m_geom;
 
   /* properties for dynamic */
   float m_dynamicRotation;  /* Block rotation */
