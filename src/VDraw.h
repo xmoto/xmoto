@@ -65,6 +65,13 @@ namespace vapp {
     /* initialize a drawLib from a name */
     static DrawLib* DrawLibFromName(std::string i_drawLibName);
 
+    /* Rendering is different depending on the backend. */
+    /* it's bad design issue, for sure, but we're talking about performance here !*/
+    typedef enum {backend_None, backend_OpenGl, backend_SdlGFX} backendtype;
+    static backendtype getBackend() {
+      return m_backend;
+    }
+
     /**
    * initialize the screen
     **/
@@ -226,6 +233,9 @@ namespace vapp {
       return m_bShadersSupported;
     };
 
+    /* more open specific */
+    /* handle display lists */
+    
 
 
     /* Data */
@@ -252,9 +262,7 @@ namespace vapp {
     bool m_bNoGraphics;		/* No-graphics mode */
 
   private:
-
-
-
+    static backendtype m_backend;
   };
 
   class DrawLibOpenGL:public DrawLib {

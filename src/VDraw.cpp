@@ -27,26 +27,33 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 namespace vapp {
 
+  DrawLib::backendtype DrawLib::m_backend = DrawLib::backend_None;
+
   DrawLib* DrawLib::DrawLibFromName(std::string i_drawLibName) {
 #ifdef ENABLE_OPENGL
     if (i_drawLibName == "OPENGL"){
+      m_backend = backend_OpenGl;
       return new DrawLibOpenGL();
     }
 #endif
 #ifdef ENABLE_SDLGFX
     if (i_drawLibName == "SDLGFX"){
+      m_backend = backend_SdlGFX;
       return new DrawLibSDLgfx();
     }
 #endif
 
     /* if no name is given, try to force one renderer */
 #ifdef ENABLE_OPENGL
+    m_backend = backend_OpenGl;
     return new DrawLibOpenGL();
 #endif
 #ifdef ENABLE_SDLGFX
+    m_backend = backend_SdlGFX;
     return new DrawLibSDLgfx();
 #endif
 
+    m_backend = backend_None;
     return NULL;
   }
 
