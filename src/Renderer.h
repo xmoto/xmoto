@@ -52,30 +52,30 @@ namespace vapp {
   /*===========================================================================
   Static geometry
   ===========================================================================*/
-  struct StaticGeomCoord {
+  struct GeomCoord {
     float x,y;
   };
 
-  struct StaticGeomPoly {
-    StaticGeomPoly() {
+  struct GeomPoly {
+    GeomPoly() {
       nNumVertices = 0;
       pVertices = pTexCoords = NULL;
       nVertexBufferID = nTexCoordBufferID = 0;
     }
     
     int nNumVertices;
-    StaticGeomCoord *pVertices;
-    StaticGeomCoord *pTexCoords;
+    GeomCoord *pVertices;
+    GeomCoord *pTexCoords;
     
     unsigned int nVertexBufferID,nTexCoordBufferID;
   };
 
-  struct StaticGeom {
-    StaticGeom() {
+  struct Geom {
+    Geom() {
       pTexture = NULL;
     }
         
-    std::vector<StaticGeomPoly *> Polys;    
+    std::vector<GeomPoly *> Polys;    
     Texture *pTexture;
     
     Vector2f Min,Max; /* AABB */
@@ -129,182 +129,182 @@ namespace vapp {
   };
 
   /*===========================================================================
-  Game rendering class
-  ===========================================================================*/
+    Game rendering class
+    ===========================================================================*/
   class GameRenderer {
-    public:
-      GameRenderer() {
-  m_bDebug=false;
-  m_Quality=GQ_HIGH;
-  m_fSpeedMultiply=1.0f;
-  m_fScale = ZOOM_DEFAULT;
-  m_cameraOffsetX = CAMERA_OFFSETX_DEFAULT;
-  m_cameraOffsetY = CAMERA_OFFSETY_DEFAULT;
-  m_bGhostMotionBlur = true;
-  m_theme = NULL;
-  m_previousEngineSpeed = -1.0;
-  m_renderBikeFront = true;
-      }
-      ~GameRenderer() {_Free();}
+  public:
+    GameRenderer() {
+      m_bDebug=false;
+      m_Quality=GQ_HIGH;
+      m_fSpeedMultiply=1.0f;
+      m_fScale = ZOOM_DEFAULT;
+      m_cameraOffsetX = CAMERA_OFFSETX_DEFAULT;
+      m_cameraOffsetY = CAMERA_OFFSETY_DEFAULT;
+      m_bGhostMotionBlur = true;
+      m_theme = NULL;
+      m_previousEngineSpeed = -1.0;
+      m_renderBikeFront = true;
+    }
+    ~GameRenderer() {_Free();}
     
-      /* Methods */
-      void init(void); /* only called at start-up, and not per-level */
-      void shutdown(void);
+    /* Methods */
+    void init(void); /* only called at start-up, and not per-level */
+    void shutdown(void);
+
+    void setTheme(Theme *p_theme);
+    void render(bool bIsPaused = false);
+    void renderMiniMap(int x,int y,int nWidth,int nHeight);
+    void renderEngineCounter(int x,int y,int nWidth,int nHeight, float pSpeed);
+    void prepareForNewLevel(bool bCreditsMode=false);
+    void unprepareForNewLevel(void);
+    void loadDebugInfo(std::string File);
       
-      void setTheme(Theme *p_theme);
-      void render(bool bIsPaused = false);
-      void renderMiniMap(int x,int y,int nWidth,int nHeight);
-      void renderEngineCounter(int x,int y,int nWidth,int nHeight, float pSpeed);
-      void prepareForNewLevel(bool bCreditsMode=false);
-      void unprepareForNewLevel(void);
-      void loadDebugInfo(std::string File);
-      
-      /* Data interface */
-      void setGameObject(MotoGame *pMotoGame) {m_pMotoGame=pMotoGame;}
-      MotoGame *getGameObject(void) {return m_pMotoGame;}
-      void setParent(App *pParent) {m_pParent=pParent;}
-      App *getParent(void) {return m_pParent;}
-      void setDebug(bool bDebug) {m_bDebug = bDebug;}
-      void setUglyMode(bool bUglyMode) {m_bUglyMode = bUglyMode;}
-      void setTestThemeMode(bool bTestThemeMode) {m_bTestThemeMode = bTestThemeMode;}
-      bool isDebug(void) {return m_bDebug;}
-      UIRoot *getGUI(void) {return &m_GUI;}
-      UIFont *getSmallFont(void) {return m_pSFont;}
-      UIFont *getMediumFont(void) {return m_pMFont;}
-      void setBestTime(std::string s) {m_pBestTime->setCaption(s);}
-      void showReplayHelp(float p_speed, bool bAllowRewind);
-      void hideReplayHelp();
+    /* Data interface */
+    void setGameObject(MotoGame *pMotoGame) {m_pMotoGame=pMotoGame;}
+    MotoGame *getGameObject(void) {return m_pMotoGame;}
+    void setParent(App *pParent) {m_pParent=pParent;}
+    App *getParent(void) {return m_pParent;}
+    void setDebug(bool bDebug) {m_bDebug = bDebug;}
+    void setUglyMode(bool bUglyMode) {m_bUglyMode = bUglyMode;}
+    void setTestThemeMode(bool bTestThemeMode) {m_bTestThemeMode = bTestThemeMode;}
+    bool isDebug(void) {return m_bDebug;}
+    UIRoot *getGUI(void) {return &m_GUI;}
+    UIFont *getSmallFont(void) {return m_pSFont;}
+    UIFont *getMediumFont(void) {return m_pMFont;}
+    void setBestTime(std::string s) {m_pBestTime->setCaption(s);}
+    void showReplayHelp(float p_speed, bool bAllowRewind);
+    void hideReplayHelp();
 #if defined(SUPPORT_WEBACCESS)  
-      void setWorldRecordTime(const std::string &s) {m_pWorldRecordTime->setCaption(s);}
+    void setWorldRecordTime(const std::string &s) {m_pWorldRecordTime->setCaption(s);}
 #endif
-      void setSpeed(const std::string &s) {m_pSpeed->setCaption(s);}
-      std::string getBestTime(void) {return m_pBestTime->getCaption();}
-      void setQuality(GraphQuality Quality) {m_Quality = Quality;}      
-      void setSpeedMultiplier(float f) {m_fSpeedMultiply = f;}
-      void zoom(float p_f);
-      void setZoom(float p_f);
-      void initZoom();
-      float getCurrentZoom();
-      void moveCamera(float px, float py);
-      void setCameraPosition(float px, float py);
-      float getCameraPositionX();
-      float getCameraPositionY();
-      void initCamera();
-      void initCameraPosition();
-      void setGhostMotionBlur(bool b) {m_bGhostMotionBlur = b;}
+    void setSpeed(const std::string &s) {m_pSpeed->setCaption(s);}
+    std::string getBestTime(void) {return m_pBestTime->getCaption();}
+    void setQuality(GraphQuality Quality) {m_Quality = Quality;}      
+    void setSpeedMultiplier(float f) {m_fSpeedMultiply = f;}
+    void zoom(float p_f);
+    void setZoom(float p_f);
+    void initZoom();
+    float getCurrentZoom();
+    void moveCamera(float px, float py);
+    void setCameraPosition(float px, float py);
+    float getCameraPositionX();
+    float getCameraPositionY();
+    void initCamera();
+    void initCameraPosition();
+    void setGhostMotionBlur(bool b) {m_bGhostMotionBlur = b;}
       
 #if defined(ALLOW_GHOST)
-      void setGhostReplay(Replay *pReplay) {m_pGhostReplay = pReplay;}
-      void setGhostReplayDesc(const std::string &s) {m_ReplayDesc = s;}
+    void setGhostReplay(Replay *pReplay) {m_pGhostReplay = pReplay;}
+    void setGhostReplayDesc(const std::string &s) {m_ReplayDesc = s;}
 #endif
 
-      /* if p_save == "", nothing is displayed for p_save */
-      void showMsgNewPersonalHighscore(String p_save = "");
-      void showMsgNewBestHighscore(String p_save = "");
-      void hideMsgNewHighscore();
+    /* if p_save == "", nothing is displayed for p_save */
+    void showMsgNewPersonalHighscore(String p_save = "");
+    void showMsgNewBestHighscore(String p_save = "");
+    void hideMsgNewHighscore();
 
-      void setRenderBikeFront(bool state) { m_renderBikeFront = state;}
+    void setRenderBikeFront(bool state) { m_renderBikeFront = state;}
 
-    private:
-      /* Data */
-      float m_fScale;
-      float m_cameraOffsetX;
-      float m_cameraOffsetY;
+  private:
+    /* Data */
+    float m_fScale;
+    float m_cameraOffsetX;
+    float m_cameraOffsetY;
 
-      std::vector<GraphDebugInfo *> m_DebugInfo;
+    std::vector<GraphDebugInfo *> m_DebugInfo;
       
-      std::vector<StaticGeom *> m_Geoms;
+    std::vector<Geom *> m_StaticGeoms;
+    std::vector<Geom *> m_DynamicGeoms;
       
-      MotoGame *m_pMotoGame;        /* Game object, so we know what to draw. */
-      App *m_pParent;               /* Our owner, so we know where to draw. */
+    MotoGame *m_pMotoGame;        /* Game object, so we know what to draw. */
+    App *m_pParent;               /* Our owner, so we know where to draw. */
       
-      bool m_bDebug;
-      bool m_bUglyMode;
-      bool m_bTestThemeMode;
-      bool m_bCreditsMode;
+    bool m_bDebug;
+    bool m_bUglyMode;
+    bool m_bTestThemeMode;
+    bool m_bCreditsMode;
 
-      UIRoot m_GUI;                 /* GUI root */
+    UIRoot m_GUI;                 /* GUI root */
       
-      Theme *m_theme;
+    Theme *m_theme;
 
-      Vector2f m_Scroll;
-      float m_fZoom;
-      float m_fCurrentHorizontalScrollShift;
-      float m_fCurrentVerticalScrollShift;
-      DriveDir m_previous_driver_dir; /* to move camera faster if the dir changed */
-      bool  m_recenter_camera_fast;
+    Vector2f m_Scroll;
+    float m_fZoom;
+    float m_fCurrentHorizontalScrollShift;
+    float m_fCurrentVerticalScrollShift;
+    DriveDir m_previous_driver_dir; /* to move camera faster if the dir changed */
+    bool  m_recenter_camera_fast;
 
-      bool m_renderBikeFront;
+    bool m_renderBikeFront;
 
-      UIWindow *m_pInGameStats;
-      UIStatic *m_pPlayTime;   
-      UIStatic *m_pBestTime;
-      UIStatic *m_pReplayHelp;
+    UIWindow *m_pInGameStats;
+    UIStatic *m_pPlayTime;   
+    UIStatic *m_pBestTime;
+    UIStatic *m_pReplayHelp;
 #if defined(SUPPORT_WEBACCESS)  
-      UIStatic *m_pWorldRecordTime;
+    UIStatic *m_pWorldRecordTime;
 #endif
-      UIStatic *m_pSpeed;      
-      UIWindow *m_pInGameNewHighscore;
-      UIStatic *m_pNewHighscoreBest_str;
-      UIStatic *m_pNewHighscorePersonal_str;
-      UIStatic *m_pNewHighscoreSave_str;
+    UIStatic *m_pSpeed;      
+    UIWindow *m_pInGameNewHighscore;
+    UIStatic *m_pNewHighscoreBest_str;
+    UIStatic *m_pNewHighscorePersonal_str;
+    UIStatic *m_pNewHighscoreSave_str;
 
-      float m_fSpeedMultiply;
+    float m_fSpeedMultiply;
       
-      UIFont *m_pMFont,*m_pSFont;
+    UIFont *m_pMFont,*m_pSFont;
 
 #if defined(ALLOW_GHOST)
-      Vector2f m_GhostInfoPos,m_GhostInfoVel;
-      float m_fNextGhostInfoUpdate;
-      int m_nGhostInfoTrans;
-      std::string m_GhostInfoString;
-      Replay *m_pGhostReplay;
-      std::string m_ReplayDesc;
+    Vector2f m_GhostInfoPos,m_GhostInfoVel;
+    float m_fNextGhostInfoUpdate;
+    int m_nGhostInfoTrans;
+    std::string m_GhostInfoString;
+    Replay *m_pGhostReplay;
+    std::string m_ReplayDesc;
 #endif      
       
-      float m_previousEngineSpeed;
+    float m_previousEngineSpeed;
 
-      GraphQuality m_Quality;
-      bool m_bGhostMotionBlur;
+    GraphQuality m_Quality;
+    bool m_bGhostMotionBlur;
       
-      /* FBO overlay */
-      SFXOverlay m_Overlay;
+    /* FBO overlay */
+    SFXOverlay m_Overlay;
 
-      AABB m_screenBBox;
+    AABB m_screenBBox;
 
-      /* Subroutines */
-      void _RenderSprites(bool bForeground,bool bBackground);
-      void _RenderSprite(Entity *pSprite);
-      void _RenderBike(BikeState *pBike, BikeParameters *pBikeParms, BikerTheme *p_theme);
-      void _RenderBlocks(void);
-      void _RenderDynamicBlocks(bool bBackground=false);
-      void _RenderBackground(void);
-      void _RenderSky(float i_zoom, float i_offset, const TColor& i_color,
-		      float i_driftZoom, const TColor &i_driftColor, bool i_drifted);
-      void _RenderGameMessages(void); 
-      void _RenderGameStatus(void);
-      void _RenderParticles(bool bFront=true);
-      void _RenderParticleDraw(Vector2f P,Texture *pTexture,float fSize,float fAngle, TColor c);
-      void _RenderParticle(ParticlesSource *i_source);
-      void _RenderInGameText(Vector2f P,const std::string &Text,Color c = 0xffffffff);
-      void setScroll(bool isSmooth);
+    /* Subroutines */
+    void _RenderSprites(bool bForeground,bool bBackground);
+    void _RenderSprite(Entity *pSprite);
+    void _RenderBike(BikeState *pBike, BikeParameters *pBikeParms, BikerTheme *p_theme);
+    void _RenderBlocks(void);
+    void _RenderBlock(Block* block);
+    void _RenderDynamicBlocks(bool bBackground=false);
+    void _RenderBackground(void);
+    void _RenderSky(float i_zoom, float i_offset, const TColor& i_color,
+		    float i_driftZoom, const TColor &i_driftColor, bool i_drifted);
+    void _RenderGameMessages(void); 
+    void _RenderGameStatus(void);
+    void _RenderParticles(bool bFront=true);
+    void _RenderParticleDraw(Vector2f P,Texture *pTexture,float fSize,float fAngle, TColor c);
+    void _RenderParticle(ParticlesSource *i_source);
+    void _RenderInGameText(Vector2f P,const std::string &Text,Color c = 0xffffffff);
+    void setScroll(bool isSmooth);
 
-      void _DbgText(Vector2f P,std::string Text,Color c);
-      void _DrawRotatedMarker(Vector2f Pos,dReal *pfRot);     
-      void _RenderDebugInfo(void);      
-      void guessDesiredCameraPosition(float &p_fDesiredHorizontalScrollShift,
-              float &p_fDesiredVerticalScrollShift);
+    void _DbgText(Vector2f P,std::string Text,Color c);
+    void _DrawRotatedMarker(Vector2f Pos,dReal *pfRot);     
+    void _RenderDebugInfo(void);      
+    void guessDesiredCameraPosition(float &p_fDesiredHorizontalScrollShift,
+				    float &p_fDesiredVerticalScrollShift);
 
-      void _RenderAlphaBlendedSection(Texture *pTexture,const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3);
-      void _RenderAdditiveBlendedSection(Texture *pTexture,const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3);
-      void _RenderAlphaBlendedSectionSP(Texture *pTexture,const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3);
-      void _RenderCircle(int nSteps,Color CircleColor,const Vector2f &C,float fRadius);
+    void _RenderAlphaBlendedSection(Texture *pTexture,const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3);
+    void _RenderAdditiveBlendedSection(Texture *pTexture,const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3);
+    void _RenderAlphaBlendedSectionSP(Texture *pTexture,const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3);
+    void _RenderCircle(int nSteps,Color CircleColor,const Vector2f &C,float fRadius);
+    void _deleteGeoms(std::vector<Geom *>& geom);
 
-      /* ... optimizing */
-      std::vector<StaticGeom *> _FindGeomsByTexture(Texture *pTex);
-      
-      /* _Free */
-      void _Free(void);
+    /* _Free */
+    void _Free(void);
   };
 
 }
