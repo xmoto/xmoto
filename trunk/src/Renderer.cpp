@@ -70,8 +70,10 @@ namespace vapp {
   
     for(int i=0; i<Blocks.size(); i++) {
 
+      bool dynamicBlock = false;
       std::vector<Geom *>* pGeoms;
       if(Blocks[i]->isDynamic() == true){
+	dynamicBlock = true;
 	pGeoms = &m_DynamicGeoms;
       }
       else{
@@ -79,7 +81,14 @@ namespace vapp {
       }
 
       std::vector<ConvexBlock *> ConvexBlocks = Blocks[i]->ConvexBlocks();
-      Vector2f Center = Blocks[i]->DynamicPosition();
+      Vector2f Center;
+      if(dynamicBlock == true){
+      	Center.x = 0.0;
+      	Center.y = 0.0;
+      }
+      else{
+	Center = Blocks[i]->DynamicPosition();
+      }
       Sprite* pSprite = getParent()->getTheme()->getSprite(SPRITE_TYPE_TEXTURE,
 							   Blocks[i]->Texture());
       Texture *pTexture = NULL;
@@ -109,8 +118,8 @@ namespace vapp {
         pSuitableGeom->Polys.push_back(pPoly);
         
         pPoly->nNumVertices = ConvexBlocks[j]->Vertices().size();
-        pPoly->pVertices = new GeomCoord[ pPoly->nNumVertices ];
-        pPoly->pTexCoords = new GeomCoord[ pPoly->nNumVertices ];
+        pPoly->pVertices    = new GeomCoord[ pPoly->nNumVertices ];
+        pPoly->pTexCoords   = new GeomCoord[ pPoly->nNumVertices ];
         
         for(int k=0; k<pPoly->nNumVertices; k++) {
           pPoly->pVertices[k].x = Center.x + ConvexBlocks[j]->Vertices()[k]->Position().x;
@@ -122,24 +131,25 @@ namespace vapp {
         nVertexBytes += pPoly->nNumVertices * ( 4 * sizeof(float) );
 #ifdef ENABLE_OPENGL        
         /* Use VBO optimization? */
-        if(getParent()->getDrawLib()->useVBOs()) {
-          /* Copy static coordinates unto video memory */
-          ((DrawLibOpenGL*)getParent()->getDrawLib())->glGenBuffersARB(1, (GLuint *) &pPoly->nVertexBufferID);
-          ((DrawLibOpenGL*)getParent()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nVertexBufferID);
-          ((DrawLibOpenGL*)getParent()->getDrawLib())->glBufferDataARB(GL_ARRAY_BUFFER_ARB,pPoly->nNumVertices*2*sizeof(float),(void *)pPoly->pVertices,GL_STATIC_DRAW_ARB);
-                                                 
-          ((DrawLibOpenGL*)getParent()->getDrawLib())->glGenBuffersARB(1, (GLuint *) &pPoly->nTexCoordBufferID);
-          ((DrawLibOpenGL*)getParent()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nTexCoordBufferID);
-          ((DrawLibOpenGL*)getParent()->getDrawLib())->glBufferDataARB(GL_ARRAY_BUFFER_ARB,pPoly->nNumVertices*2*sizeof(float),(void *)pPoly->pTexCoords,GL_STATIC_DRAW_ARB);
-        }
+	if(getParent()->getDrawLib()->useVBOs()) {
+	  /* Copy static coordinates unto video memory */
+	  ((DrawLibOpenGL*)getParent()->getDrawLib())->glGenBuffersARB(1, (GLuint *) &pPoly->nVertexBufferID);
+	  ((DrawLibOpenGL*)getParent()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nVertexBufferID);
+	  ((DrawLibOpenGL*)getParent()->getDrawLib())->glBufferDataARB(GL_ARRAY_BUFFER_ARB,pPoly->nNumVertices*2*sizeof(float),(void *)pPoly->pVertices,GL_STATIC_DRAW_ARB);
+
+	  ((DrawLibOpenGL*)getParent()->getDrawLib())->glGenBuffersARB(1, (GLuint *) &pPoly->nTexCoordBufferID);
+	  ((DrawLibOpenGL*)getParent()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nTexCoordBufferID);
+	  ((DrawLibOpenGL*)getParent()->getDrawLib())->glBufferDataARB(GL_ARRAY_BUFFER_ARB,pPoly->nNumVertices*2*sizeof(float),(void *)pPoly->pTexCoords,GL_STATIC_DRAW_ARB);
+	}
 #endif
       }                                                                    
     }
     
     setScroll(false);
 
-    Log("Number of optimized geoms: %d",m_StaticGeoms.size());
-    Log("GL: %d kB vertex buffers",nVertexBytes/1024);
+    Log("Number of static  geoms: %d", m_StaticGeoms.size());
+    Log("Number of dynamic geoms: %d", m_DynamicGeoms.size());
+    Log("GL: %d kB vertex buffers",    nVertexBytes/1024);
   }
 
   /*===========================================================================
@@ -474,18 +484,18 @@ namespace vapp {
 	       getGameObject()->getLevelSrc()->Sky().DriftZoom(),
 	       getGameObject()->getLevelSrc()->Sky().DriftTextureColor(),
 	       getGameObject()->getLevelSrc()->Sky().Drifted());
-
-    /* Perform scaling/translation */    
-    getParent()->getDrawLib()->setScale(xScale, yScale);
-    //glRotatef(getGameObject()->getTime()*100,0,0,1); /* Uncomment this line if you want to vomit :) */
-    getParent()->getDrawLib()->setTranslate(-getCameraPositionX(), -getCameraPositionY());
     
 #ifdef ENABLE_OPENGL
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glMatrixMode(GL_MODELVIEW);
 #endif
-      
+
+    /* Perform scaling/translation */    
+    getParent()->getDrawLib()->setScale(xScale, yScale);
+    //glRotatef(getGameObject()->getTime()*100,0,0,1); /* Uncomment this line if you want to vomit :) */
+    getParent()->getDrawLib()->setTranslate(-getCameraPositionX(), -getCameraPositionY());
+
     if(m_Quality != GQ_LOW && !m_bUglyMode) {
       /* Background blocks */
       _RenderDynamicBlocks(true);
@@ -1050,69 +1060,132 @@ namespace vapp {
 
     /* FIX::display only visible dyn blocks */
     std::vector<Block *> Blocks = getGameObject()->getCollisionHandler()->getDynBlocksNearPosition(m_screenBBox);
-    int nbNearBlocks = Blocks.size();
-    int nbTotalBlocks = getGameObject()->getLevelSrc()->Blocks().size();
+    
+    if(m_bUglyMode) {
 
-    for(int i=0; i<Blocks.size(); i++) {
-      /* Are we rendering background blocks or what? */
-      if(Blocks[i]->isBackground() != bBackground) continue;
-      
-      /* Build rotation matrix for block */
-      float fR[4]; 
-      fR[0] = cos(Blocks[i]->DynamicRotation()); fR[1] = -sin(Blocks[i]->DynamicRotation());
-      fR[2] = sin(Blocks[i]->DynamicRotation()); fR[3] = cos(Blocks[i]->DynamicRotation());
-      
-      /* Determine texture... this is so ingredibly ugly... TODO: no string lookups here */
-      Texture *pTexture = NULL;
-      if(!m_bUglyMode) {
-        Sprite *pSprite;
-        pSprite = getParent()->getTheme()->getSprite(SPRITE_TYPE_TEXTURE, Blocks[i]->Texture());
-        if(pSprite != NULL) {
-	  try {
-	    pTexture = pSprite->getTexture();
-	  } catch(Exception &e) {
-	    Log("** Warning ** : Texture '%s' not found!", Blocks[i]->Texture().c_str());
-	    getGameObject()->gameMessage(GAMETEXT_MISSINGTEXTURES,true);  
-	  }
-        } else {
-	  Log("** Warning ** : Texture '%s' not found!", Blocks[i]->Texture().c_str());
-	  getGameObject()->gameMessage(GAMETEXT_MISSINGTEXTURES,true); 
-	}
-      }
+      for(int i=0; i<Blocks.size(); i++) {
+	/* Are we rendering background blocks or what? */
+	if(Blocks[i]->isBackground() != bBackground)
+	  continue;
 
-      if(m_bUglyMode) {
+	/* Build rotation matrix for block */
+	float fR[4];
+	float rotation = Blocks[i]->DynamicRotation();
+	fR[0] =  cos(rotation);
+	fR[2] =  sin(rotation);
+	fR[1] = -fR[2];
+	fR[3] =  fR[0];
+
+	Vector2f dynRotCenter = Blocks[i]->DynamicRotationCenter();
+	Vector2f dynPos       = Blocks[i]->DynamicPosition();
+
 	getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_LOOP);
 	getParent()->getDrawLib()->setColorRGB(255,255,255);
-        for(int j=0;j<Blocks[i]->Vertices().size();j++) {       
-          Vector2f Tv = Vector2f((Blocks[i]->Vertices()[j]->Position().x-Blocks[i]->DynamicRotationCenter().x) * fR[0] + (Blocks[i]->Vertices()[j]->Position().y-Blocks[i]->DynamicRotationCenter().y) * fR[1],
-                                 (Blocks[i]->Vertices()[j]->Position().x-Blocks[i]->DynamicRotationCenter().x) * fR[2] + (Blocks[i]->Vertices()[j]->Position().y-Blocks[i]->DynamicRotationCenter().y) * fR[3]);
-          Tv += Blocks[i]->DynamicPosition() + Blocks[i]->DynamicRotationCenter();                                  
-          getParent()->getDrawLib()->glVertex(Tv.x,Tv.y);
+
+        for(int j=0;j<Blocks[i]->Vertices().size();j++) {
+	  Vector2f vertex = Blocks[i]->Vertices()[j]->Position();
+	  /* transform vertex */
+	  Vector2f transVertex = Vector2f((vertex.x-dynRotCenter.x)*fR[0] + (vertex.y-dynRotCenter.y)*fR[1],
+					  (vertex.x-dynRotCenter.x)*fR[2] + (vertex.y-dynRotCenter.y)*fR[3]);
+	  transVertex += dynPos + dynRotCenter;
+
+          getParent()->getDrawLib()->glVertex(transVertex.x, transVertex.y);
         }
 	getParent()->getDrawLib()->endDraw();
-      } else {
-        for(int j=0;j<Blocks[i]->ConvexBlocks().size();j++) {       
-	  getParent()->getDrawLib()->setTexture(pTexture,BLEND_MODE_NONE);
-	  getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
-	  getParent()->getDrawLib()->setColorRGB(255,255,255);
-          for(int k=0;k<Blocks[i]->ConvexBlocks()[j]->Vertices().size();k++) {            
-            ConvexBlockVertex *pVertex = Blocks[i]->ConvexBlocks()[j]->Vertices()[k];
-            
-            /* Transform vertex */
-            Vector2f Tv = Vector2f((pVertex->Position().x-Blocks[i]->DynamicRotationCenter().x) * fR[0] + (pVertex->Position().y-Blocks[i]->DynamicRotationCenter().y) * fR[1],
-                                   (pVertex->Position().x-Blocks[i]->DynamicRotationCenter().x) * fR[2] + (pVertex->Position().y-Blocks[i]->DynamicRotationCenter().y) * fR[3]);
-            Tv += Blocks[i]->DynamicPosition() + Blocks[i]->DynamicRotationCenter();
-            
-            /* Put vertex */
-            getParent()->getDrawLib()->glTexCoord(pVertex->TexturePosition().x,pVertex->TexturePosition().y);
-            
-            getParent()->getDrawLib()->glVertex(Tv.x,Tv.y);
-          }
-	  getParent()->getDrawLib()->endDraw();
-          
-        }
       }
-    }     
+
+
+    } else {
+      for(int i=0; i<Blocks.size(); i++) {
+	/* Are we rendering background blocks or what? */
+	if(Blocks[i]->isBackground() != bBackground)
+	  continue;
+
+	Block* block = Blocks[i];
+	/* Build rotation matrix for block */
+	float fR[4];
+	float rotation = block->DynamicRotation();
+	Log("rad rotation: %f", rotation);
+	fR[0] =  cos(rotation);
+	fR[2] =  sin(rotation);
+	fR[1] = -fR[2];
+	fR[3] =  fR[0];
+
+	Vector2f dynRotCenter = block->DynamicRotationCenter();
+	Vector2f dynPos       = block->DynamicPosition();
+	int geom = block->getGeom();
+
+	Log("Blocks: %s", block->Id().c_str());
+	Log("rot center: %f, %f", dynRotCenter.x, dynRotCenter.y);
+
+// 57.295779524 = 180/pi
+#define rad2deg(x) ((x)*57.295779524)
+
+	if(getParent()->getDrawLib()->getBackend() == DrawLib::backend_OpenGl) {
+#ifdef ENABLE_OPENGL
+	  /* we're working with modelview matrix*/
+	  glMatrixMode(GL_MODELVIEW);
+	  glPushMatrix();
+
+	  glTranslatef(dynPos.x, dynPos.y, 0);
+	  if(rotation != 0.0){
+	    glTranslatef(dynRotCenter.x, dynRotCenter.y, 0);
+	    glRotatef(rad2deg(rotation), 0, 0, 1);
+	    glTranslatef(-dynRotCenter.x, -dynRotCenter.y, 0);
+	  }
+
+	  getParent()->getDrawLib()->setTexture(m_DynamicGeoms[geom]->pTexture, BLEND_MODE_NONE);
+	  getParent()->getDrawLib()->setColorRGB(255, 255, 255);
+
+	  /* VBO optimized? */
+	  if(getParent()->getDrawLib()->useVBOs()) {
+	    for(int j=0;j<m_DynamicGeoms[geom]->Polys.size();j++) {          
+	      GeomPoly *pPoly = m_DynamicGeoms[geom]->Polys[j];
+
+	      ((DrawLibOpenGL*)getParent()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nVertexBufferID);
+	      glVertexPointer(2,GL_FLOAT,0,(char *)NULL);
+
+	      ((DrawLibOpenGL*)getParent()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nTexCoordBufferID);
+	      glTexCoordPointer(2,GL_FLOAT,0,(char *)NULL);
+
+	      glDrawArrays(GL_POLYGON,0,pPoly->nNumVertices);
+	    }      
+	  } else {
+	    for(int j=0;j<m_DynamicGeoms[geom]->Polys.size();j++) {          
+	      GeomPoly *pPoly = m_DynamicGeoms[geom]->Polys[j];
+	      glVertexPointer(2,   GL_FLOAT, 0, pPoly->pVertices);
+	      glTexCoordPointer(2, GL_FLOAT, 0, pPoly->pTexCoords);
+	      glDrawArrays(GL_POLYGON, 0, pPoly->nNumVertices);
+	    }      
+	  }
+
+	  glPopMatrix();
+#endif
+	} else if(getParent()->getDrawLib()->getBackend() == DrawLib::backend_SdlGFX){
+
+	  for(int j=0;j<m_DynamicGeoms[geom]->Polys.size();j++) {          
+	    getParent()->getDrawLib()->setTexture(m_DynamicGeoms[geom]->pTexture,BLEND_MODE_NONE);
+	    getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+	    getParent()->getDrawLib()->setColorRGB(255,255,255);
+
+	    for(int k=0;k<m_DynamicGeoms[geom]->Polys[j]->nNumVertices;k++) {
+	      Vector2f vertex = Vector2f(m_DynamicGeoms[geom]->Polys[j]->pVertices[k].x,
+					 m_DynamicGeoms[geom]->Polys[j]->pVertices[k].y);
+	      /* transform vertex */
+	      Vector2f transVertex = Vector2f((vertex.x-dynRotCenter.x)*fR[0] + (vertex.y-dynRotCenter.y)*fR[1],
+					      (vertex.x-dynRotCenter.x)*fR[2] + (vertex.y-dynRotCenter.y)*fR[3]);
+	      transVertex += dynPos + dynRotCenter;
+
+	      getParent()->getDrawLib()->glTexCoord(m_DynamicGeoms[geom]->Polys[j]->pTexCoords[k].x,
+						    m_DynamicGeoms[geom]->Polys[j]->pTexCoords[k].y);
+	      getParent()->getDrawLib()->glVertex(transVertex.x, transVertex.y);
+	    }
+	    getParent()->getDrawLib()->endDraw();
+	  }
+
+	}
+      }
+    }
   }
 
   void GameRenderer::_RenderBlock(Block* block)
