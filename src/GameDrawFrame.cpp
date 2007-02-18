@@ -110,8 +110,16 @@ namespace vapp {
 
           if(m_State == GS_PREPLAYING) {
             /* If "preplaying" / "initial-zoom" is enabled, this is where it's done */
+	    float m_currentTime = getTime();
+
             statePrestart_step();
             HighPrecisionTimer::checkTime("statePrestart_step");
+
+	    if(!m_bTimeDemo) {
+	      /* limit framerate while PREPLAY */
+	      while(getTime() <= m_currentTime+0.01);
+	    }
+
           } 
           else if(m_State == GS_PLAYING || ((m_State == GS_DEADMENU || m_State == GS_DEADJUST) && m_bEnableDeathAnim)) {
             /* When actually playing or when dead and the bike is falling apart, 
