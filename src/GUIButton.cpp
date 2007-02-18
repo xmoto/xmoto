@@ -199,15 +199,24 @@ namespace vapp {
       
       if(m_Type == UI_BUTTON_TYPE_CHECK) {
         m_bChecked = !m_bChecked;
-	Sound::playSampleByName(getApp()->getTheme()->getSound("Button3")->FilePath());
+	try {
+	  Sound::playSampleByName(getApp()->getTheme()->getSound("Button3")->FilePath());
+	} catch(Exception &e) {
+	}
       }
       else if(m_Type == UI_BUTTON_TYPE_RADIO) {
         _UncheckGroup(getGroup());
         m_bChecked = true;
-	Sound::playSampleByName(getApp()->getTheme()->getSound("Button3")->FilePath());
+	try {
+	  Sound::playSampleByName(getApp()->getTheme()->getSound("Button3")->FilePath());
+	} catch(Exception &e) {
+	}
       }
       else {
-	Sound::playSampleByName(getApp()->getTheme()->getSound("Button1")->FilePath());
+	try {
+	  Sound::playSampleByName(getApp()->getTheme()->getSound("Button1")->FilePath());
+	} catch(Exception &e) {
+	}
       }
     }
     m_State = UI_BUTTON_STATE_UNPRESSED;
@@ -249,16 +258,25 @@ namespace vapp {
       case SDLK_RETURN:
         if(m_Type == UI_BUTTON_TYPE_CHECK) {
           m_bChecked = !m_bChecked;
-	  Sound::playSampleByName(getApp()->getTheme()->getSound("Button3")->FilePath());
-        }
+	  try {
+	    Sound::playSampleByName(getApp()->getTheme()->getSound("Button3")->FilePath());
+	  } catch(Exception &e) {
+	  }
+	}
         else if(m_Type == UI_BUTTON_TYPE_RADIO) {
           _UncheckGroup(getGroup());
           m_bChecked = true;
-	  Sound::playSampleByName(getApp()->getTheme()->getSound("Button3")->FilePath());
+	  try {
+	    Sound::playSampleByName(getApp()->getTheme()->getSound("Button3")->FilePath());
+	  } catch(Exception &e) {
+	  }
         }
         else {
           setClicked(true);
-	  Sound::playSampleByName(getApp()->getTheme()->getSound("Button1")->FilePath());
+	  try {
+	    Sound::playSampleByName(getApp()->getTheme()->getSound("Button1")->FilePath());
+	  } catch(Exception &e) {
+	  }
         }
         break;
     }
