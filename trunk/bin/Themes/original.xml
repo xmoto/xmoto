@@ -224,5 +224,6 @@
 <sound name="Engine10"         file="engine_10.wav" />
 <sound name="Engine11"         file="engine_11.wav" />
 <sound name="Engine12"         file="engine_12.wav" />
+<sound name="ring"             file="ring.ogg" />
 
 </xmoto_theme>
