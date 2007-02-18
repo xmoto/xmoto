@@ -203,10 +203,26 @@
 <music name="rideALong" file="ridealong.ogg" />
 <music name="batcave" file="batcave.ogg" />
 
-<sound name="Engine"           file="Engine.ogg" />
 <sound name="Headcrash"        file="Headcrash.ogg" />
 <sound name="NewHighscore"     file="NewHighscore.ogg" />
 <sound name="PickUpStrawberry" file="PickUpStrawberry.ogg" />
 <sound name="Squeek"           file="Squeek.ogg" />
+<sound name="Button1"          file="Button1.ogg" />
+<sound name="Button2"          file="Button2.ogg" />
+<sound name="Button3"          file="Button3.ogg" />
+<sound name="EndOfLevel"       file="EndOfLevel.ogg" />
+<sound name="Engine00"         file="engine_00.wav" />
+<sound name="Engine01"         file="engine_01.wav" />
+<sound name="Engine02"         file="engine_02.wav" />
+<sound name="Engine03"         file="engine_03.wav" />
+<sound name="Engine04"         file="engine_04.wav" />
+<sound name="Engine05"         file="engine_05.wav" />
+<sound name="Engine06"         file="engine_06.wav" />
+<sound name="Engine07"         file="engine_07.wav" />
+<sound name="Engine08"         file="engine_08.wav" />
+<sound name="Engine09"         file="engine_09.wav" />
+<sound name="Engine10"         file="engine_10.wav" />
+<sound name="Engine11"         file="engine_11.wav" />
+<sound name="Engine12"         file="engine_12.wav" />
 
 </xmoto_theme>
