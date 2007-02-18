@@ -199,15 +199,15 @@ namespace vapp {
       
       if(m_Type == UI_BUTTON_TYPE_CHECK) {
         m_bChecked = !m_bChecked;
-        Sound::playSampleByName("Sounds/Button3.ogg");
+	Sound::playSampleByName(getApp()->getTheme()->getSound("Button3")->FilePath());
       }
       else if(m_Type == UI_BUTTON_TYPE_RADIO) {
         _UncheckGroup(getGroup());
         m_bChecked = true;
-        Sound::playSampleByName("Sounds/Button3.ogg");
+	Sound::playSampleByName(getApp()->getTheme()->getSound("Button3")->FilePath());
       }
       else {
-        Sound::playSampleByName("Sounds/Button1.ogg");
+	Sound::playSampleByName(getApp()->getTheme()->getSound("Button1")->FilePath());
       }
     }
     m_State = UI_BUTTON_STATE_UNPRESSED;
@@ -249,16 +249,16 @@ namespace vapp {
       case SDLK_RETURN:
         if(m_Type == UI_BUTTON_TYPE_CHECK) {
           m_bChecked = !m_bChecked;
-          Sound::playSampleByName("Sounds/Button3.ogg");
+	  Sound::playSampleByName(getApp()->getTheme()->getSound("Button3")->FilePath());
         }
         else if(m_Type == UI_BUTTON_TYPE_RADIO) {
           _UncheckGroup(getGroup());
           m_bChecked = true;
-          Sound::playSampleByName("Sounds/Button3.ogg");
+	  Sound::playSampleByName(getApp()->getTheme()->getSound("Button3")->FilePath());
         }
         else {
           setClicked(true);
-          Sound::playSampleByName("Sounds/Button1.ogg");
+	  Sound::playSampleByName(getApp()->getTheme()->getSound("Button1")->FilePath());
         }
         break;
     }
