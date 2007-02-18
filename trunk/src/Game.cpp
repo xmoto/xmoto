@@ -1853,9 +1853,9 @@ namespace vapp {
 	}
 	
 	bool GameApp::zoomAnimation1_step() {
-		if(getRealTime() > m_fPrePlayStartTime + static_time + PRESTART_ANIMATION_TIME) {
-			return false;
-		}
+	  if(getRealTime() > m_fPrePlayStartTime + static_time + PRESTART_ANIMATION_TIME) {
+	    return false;
+	  }
 		if(getRealTime() > m_fPrePlayStartTime + static_time){
 			float zx, zy, zz;
 			
