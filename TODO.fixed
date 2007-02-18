@@ -29,6 +29,14 @@ enormenent...
 * be able to play a music in a level
 * BUG : xmoto ...rpl don't work
 * make sound in themes
+* Bug,
+scenario:
+- you touch the flower, but the is still a strawberry to take
+  => m_bFinished remains to false
+- you touch the last strawberry, but you are always touching the flower
+ => this event is not called, m_bFinished remains to false
+- you go out of the flower
+ => nothing it called, m_bFinished remains to false
 
 Since 0.2.2
 * When i update lists sometimes

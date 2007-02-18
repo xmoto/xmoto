@@ -4,6 +4,8 @@ mingw:
 * gettext: http://www.wormux.org/wiki/compile_under_mingw.php
 
 Assigned to nicolas
+* BUG : i ghost is enable, then you disable it, then you play a level
+   having a ghost -> cannot found entity
 * BUG : hum, about checksum, when you modify a level with f5 while
    playing, then it is not updated with the new level button
 * put under edge into the block part
@@ -92,25 +94,6 @@ one has just finished the level. The ``abort'' one should be rather
        Position is relative to the screen
        HideArrow()
        Hide the arrow
-* Bug,
-scenario:
-- you touch the flower, but the is still a strawberry to take
-  => m_bFinished remains to false
-- you touch the last strawberry, but you are always touching the flower
- => this event is not called, m_bFinished remains to false
-- you go out of the flower
- => nothing it called, m_bFinished remains to false
-http://xmoto.free.fr/interesting_replays/ireplay_40.rpl
-
-    case ET_ENDOFLEVEL:
-      {
-	      /* How many strawberries left? */
-	      if(countEntitiesByType(ET_STRAWBERRY) == 0) {
-	        /* Level is done! */
-	        m_bFinished = true;
-	        m_fFinishTime = getTime();
-	      }
-      }
 
 #############################################################################################
 ### not important, not really necesary, very low urgency, or just makes thing more complex:
