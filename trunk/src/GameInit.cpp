@@ -687,7 +687,7 @@ namespace vapp {
     m_Config.createVar( "LevelCache",             "true" );
     m_Config.createVar( "ContextHelp",            "true" );
     m_Config.createVar( "MenuMusic",              "true" );    
-    m_Config.createVar( "InitZoom",               "false" );
+    m_Config.createVar( "InitZoom",               "true" );
     m_Config.createVar( "DeathAnim",              "true" );
 
 #if defined(SUPPORT_WEBACCESS)
