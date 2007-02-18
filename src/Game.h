@@ -92,11 +92,12 @@ namespace vapp {
   public:
     XMMotoGameHooks();
     ~XMMotoGameHooks();
-    void setGameApp(GameApp *i_GameApp);
+    void setGameApps(GameApp *i_GameApp, MotoGame *i_MotoGame);
     void OnTakeEntity();
 
   private:
-    GameApp *m_GameApp;
+    GameApp  *m_GameApp;
+    MotoGame *m_MotoGame;
   };
 
   /*===========================================================================
@@ -184,7 +185,7 @@ namespace vapp {
      m_bEnableCheckHighscoresAtStartup = true;
 
      m_MotoGame.setHooks(&m_MotoGameHooks);
-     m_MotoGameHooks.setGameApp(this);
+     m_MotoGameHooks.setGameApps(this, &m_MotoGame);
 #endif
      m_fLastSqueekTime = 0.0f;
 

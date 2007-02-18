@@ -127,6 +127,8 @@ class Level {
   std::string SpriteForStrawberry() const;
   std::string SpriteForWecker() const;
   std::string SpriteForFlower() const;
+  std::string SpriteForStar() const;
+  std::string SoundForPickUpStrawberry() const;
 
  private:
   std::string m_id;                 /* Level ID */
@@ -162,6 +164,8 @@ class Level {
   std::string m_rSpriteForStrawberry;
   std::string m_rSpriteForWecker;
   std::string m_rSpriteForFlower;
+  std::string m_rSpriteForStar;
+  std::string m_rSoundForPickUpStrawberry;
 
   void addLimits();
   void exportBinary(const std::string &i_fileName, const std::string& i_sum);

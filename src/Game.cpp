@@ -2051,12 +2051,14 @@ namespace vapp {
   void XMMotoGameHooks::OnTakeEntity() {
     /* Play yummy-yummy sound */
     if(m_GameApp != NULL) {
-      Sound::playSampleByName(m_GameApp->getTheme()->getSound("PickUpStrawberry")->FilePath());
+      Sound::playSampleByName(m_GameApp->getTheme()->getSound
+			      (m_MotoGame->getLevelSrc()->SoundForPickUpStrawberry())->FilePath());
     }
   }
 
-  void XMMotoGameHooks::setGameApp(GameApp *i_GameApp) {
+  void XMMotoGameHooks::setGameApps(GameApp *i_GameApp, MotoGame *i_MotoGame) {
     m_GameApp = i_GameApp;
+    m_MotoGame = i_MotoGame;
   }
 
   XMMotoGameHooks::XMMotoGameHooks() {

@@ -63,25 +63,43 @@ namespace vapp {
   }
 
   void GameRenderer::_RenderParticle(ParticlesSource *i_source) {
-    AnimationSprite *pStarAnim = (AnimationSprite *)getParent()->getTheme()->getSprite(SPRITE_TYPE_ANIMATION,"Star");
-    EffectSprite* pFireType = (EffectSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_EFFECT, "Fire1");
-    EffectSprite* pSmoke1Type = (EffectSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_EFFECT, "Smoke1");
-    EffectSprite* pSmoke2Type = (EffectSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_EFFECT, "Smoke2");
-    
-    EffectSprite* pDebrisType = (EffectSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_EFFECT, "Debris1");
 
     if(i_source->SpriteName() == "Star") {
-      if(pStarAnim != NULL) {
+
+      AnimationSprite *pStarAnimation;
+      pStarAnimation = (AnimationSprite*) getParent()->getTheme()
+      ->getSprite(SPRITE_TYPE_ANIMATION, getGameObject()->getLevelSrc()->SpriteForStar());
+
+      if(pStarAnimation != NULL) {
 	
 	for(unsigned j = 0; j < i_source->Particles().size(); j++) {
 	  _RenderParticleDraw(i_source->Particles()[j]->DynamicPosition(),
-			      pStarAnim->getTexture(),
-			      pStarAnim->getWidth(),
+			      pStarAnimation->getTexture(),
+			      pStarAnimation->getWidth(),
 			      i_source->Particles()[j]->Angle(),
 			      i_source->Particles()[j]->Color());
 	}
+      } else {
+	DecorationSprite *pStarDecoration;
+
+	/* search as a simple decoration, not nice, crappy crappy */
+	pStarDecoration = (DecorationSprite*) getParent()->getTheme()
+	->getSprite(SPRITE_TYPE_DECORATION, getGameObject()->getLevelSrc()->SpriteForStar());
+	if(pStarDecoration != NULL) {
+	
+	  for(unsigned j = 0; j < i_source->Particles().size(); j++) {
+	    _RenderParticleDraw(i_source->Particles()[j]->DynamicPosition(),
+				pStarDecoration->getTexture(),
+				pStarDecoration->getWidth(),
+				i_source->Particles()[j]->Angle(),
+				i_source->Particles()[j]->Color());
+	  }
+	}
       }
     } else if(i_source->SpriteName() == "Fire") {
+      EffectSprite* pFireType = (EffectSprite*) getParent()->getTheme()
+      ->getSprite(SPRITE_TYPE_EFFECT, "Fire1");
+
       if(pFireType != NULL) {
 	for(unsigned j = 0; j < i_source->Particles().size(); j++) {
 	  _RenderParticleDraw(i_source->Particles()[j]->DynamicPosition(),
@@ -92,6 +110,11 @@ namespace vapp {
 	}
       }
     } else if(i_source->SpriteName() == "Smoke") {
+      EffectSprite* pSmoke1Type = (EffectSprite*) getParent()->getTheme()
+      ->getSprite(SPRITE_TYPE_EFFECT, "Smoke1");
+      EffectSprite* pSmoke2Type = (EffectSprite*) getParent()->getTheme()
+      ->getSprite(SPRITE_TYPE_EFFECT, "Smoke2");
+
       if(pSmoke1Type != NULL && pSmoke2Type != NULL) {
 	for(unsigned j = 0; j < i_source->Particles().size(); j++) {
 	  if(i_source->Particles()[j]->SpriteName() == "Smoke1") {
@@ -110,6 +133,9 @@ namespace vapp {
 	}
       }
     } else if(i_source->SpriteName() == "Debris1") {
+      EffectSprite* pDebrisType = (EffectSprite*) getParent()->getTheme()
+      ->getSprite(SPRITE_TYPE_EFFECT, "Debris1");
+
       if(pDebrisType != NULL) {
 	for(unsigned j = 0; j < i_source->Particles().size(); j++) {
 	  if(i_source->Particles()[j]->SpriteName() == "Debris1") {

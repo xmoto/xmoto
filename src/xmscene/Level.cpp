@@ -30,7 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../VXml.h"
 #include "../helpers/Color.h"
 
-#define CACHE_LEVEL_FORMAT_VERSION 12
+#define CACHE_LEVEL_FORMAT_VERSION 13
 
 Level::Level() {
   m_xmotoTooOld = false;
@@ -342,7 +342,12 @@ void Level::saveXML(void) {
   vapp::FS::writeLineF(pfh,"\t</info>");
   
   /* replacement sprites */
-  if(m_rSpriteForStrawberry != "" || m_rSpriteForWecker != "" || m_rSpriteForFlower != "") {
+  if(m_rSpriteForStrawberry 	 != "" ||
+     m_rSpriteForWecker     	 != "" ||
+     m_rSpriteForFlower     	 != "" ||
+     m_rSpriteForStar       	 != "" ||
+     m_rSoundForPickUpStrawberry != ""
+     ) {
     vapp::FS::writeLineF(pfh,"\t<theme_replacements>");
     if(m_rSpriteForStrawberry != "") {
       vapp::FS::writeLineF(pfh,"\t\t<sprite_replacement old_name=\"Strawberry\" new_name=\"%s\" />",
@@ -355,6 +360,14 @@ void Level::saveXML(void) {
     if(m_rSpriteForFlower != "") {
       vapp::FS::writeLineF(pfh,"\t\t<sprite_replacement old_name=\"Flower\" new_name=\"%s\" />",
 			   m_rSpriteForFlower.c_str());
+    }
+    if(m_rSpriteForStar != "") {
+      vapp::FS::writeLineF(pfh,"\t\t<sprite_replacement old_name=\"Star\" new_name=\"%s\" />",
+			   m_rSpriteForStar.c_str());
+    }
+    if(m_rSoundForPickUpStrawberry != "") {
+      vapp::FS::writeLineF(pfh,"\t\t<sound_replacement old_name=\"PickUpStrawberry\" new_name=\"%s\" />",
+			   m_rSoundForPickUpStrawberry.c_str());
     }
     vapp::FS::writeLineF(pfh,"\t</theme_replacements>");
   }
@@ -567,13 +580,16 @@ void Level::loadXML(void) {
       }
     }
 
-    /* replacement sprites */
-    m_rSpriteForStrawberry = "";
-    m_rSpriteForWecker = "";
-    m_rSpriteForFlower = "";
+    /* replacement theme */
+    m_rSpriteForStrawberry 	= "";
+    m_rSpriteForWecker 	   	= "";
+    m_rSpriteForFlower 	   	= "";
+    m_rSpriteForStar   	   	= "";
+    m_rSoundForPickUpStrawberry = "";
+
     TiXmlElement *pThemeReplaceElem = vapp::XML::findElement(*m_xmlSource, pLevelElem,std::string("theme_replacements"));
     if(pThemeReplaceElem != NULL) {
-      /* Get replacements */
+      /* Get replacements  for sprites */
       for(TiXmlElement *pElem = pThemeReplaceElem->FirstChildElement("sprite_replacement"); pElem!=NULL;
 	  pElem=pElem->NextSiblingElement("sprite_replacement")) {
 	std::string v_old_name = vapp::XML::getOption(pElem, "old_name");
@@ -585,6 +601,18 @@ void Level::loadXML(void) {
 	  m_rSpriteForWecker     = v_new_name;
 	} else 	if(v_old_name == "Flower") {
 	  m_rSpriteForFlower     = v_new_name;
+	} else 	if(v_old_name == "Star") {
+	  m_rSpriteForStar       = v_new_name;
+	}
+      }
+      /* Get replacements  for sounds */
+      for(TiXmlElement *pElem = pThemeReplaceElem->FirstChildElement("sound_replacement"); pElem!=NULL;
+	  pElem=pElem->NextSiblingElement("sound_replacement")) {
+	std::string v_old_name = vapp::XML::getOption(pElem, "old_name");
+	std::string v_new_name = vapp::XML::getOption(pElem, "new_name");
+	/* for efficacity and before other are not required, only change main ones */
+	if        (v_old_name == "PickUpStrawberry") {
+	  m_rSoundForPickUpStrawberry = v_new_name;
 	}
       }
     }
@@ -726,6 +754,8 @@ void Level::exportBinary(const std::string &FileName, const std::string& pSum) {
     vapp::FS::writeString(pfh,m_rSpriteForStrawberry);
     vapp::FS::writeString(pfh,m_rSpriteForFlower);
     vapp::FS::writeString(pfh,m_rSpriteForWecker);
+    vapp::FS::writeString(pfh,m_rSpriteForStar);
+    vapp::FS::writeString(pfh,m_rSoundForPickUpStrawberry);
 
     /* Write script (if any) */
     vapp::FS::writeInt_LE(pfh,m_scriptSource.length());
@@ -903,9 +933,11 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
         m_bottomLimit = vapp::FS::readFloat_LE(pfh);
 
 	/* theme replacements */
-	m_rSpriteForStrawberry = vapp::FS::readString(pfh);
-	m_rSpriteForFlower     = vapp::FS::readString(pfh);
-	m_rSpriteForWecker     = vapp::FS::readString(pfh);
+	m_rSpriteForStrawberry 	    = vapp::FS::readString(pfh);
+	m_rSpriteForFlower     	    = vapp::FS::readString(pfh);
+	m_rSpriteForWecker     	    = vapp::FS::readString(pfh);
+	m_rSpriteForStar       	    = vapp::FS::readString(pfh);
+	m_rSoundForPickUpStrawberry = vapp::FS::readString(pfh);
 
         /* Read embedded script */
         int nScriptSourceLen = vapp::FS::readInt_LE(pfh);
@@ -1224,4 +1256,18 @@ std::string Level::SpriteForFlower() const {
     return m_rSpriteForFlower;
   }
   return "Flower";
+}
+
+std::string Level::SpriteForStar() const {
+  if(m_rSpriteForStar != "") {
+    return m_rSpriteForStar;
+  }
+  return "Star";
+}
+
+std::string Level::SoundForPickUpStrawberry() const {
+  if(m_rSoundForPickUpStrawberry != "") {
+    return m_rSoundForPickUpStrawberry;
+  }
+  return "PickUpStrawberry";
 }
