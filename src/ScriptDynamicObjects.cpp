@@ -35,6 +35,7 @@ SDynamicObject::~SDynamicObject() {
 
 bool SDynamicObject::nextState(vapp::MotoGame* v_motoGame, int i_nbCents) {
   int v_realNbCents;
+
   v_realNbCents = i_nbCents;
 
   if(m_time >= m_endTime && m_endTime != 0.0) {
@@ -62,7 +63,6 @@ bool SDynamicObject::nextState(vapp::MotoGame* v_motoGame, int i_nbCents) {
 bool SDynamicObject::isTimeToMove() {
   return m_time >= m_startTime && (m_time <= m_endTime || m_endTime == 0.0);
 }
-
 
 void SDynamicTranslation::performXY(float *vx, float *vy) {
   *vx = m_sensUp ? m_moveX : -m_moveX;
@@ -158,11 +158,12 @@ void SDynamicEntityMove::performMove(vapp::MotoGame* v_motoGame, int i_nbCents) 
 
   for(int i=0; i<i_nbCents; i++) {
     performXY(&vx, &vy);
-  }
 
-  v_motoGame->SetEntityPos(p,
-			   vx + p->DynamicPosition().x,
-			   vy + p->DynamicPosition().y);
+    v_motoGame->SetEntityPos(p,
+			     vx + p->DynamicPosition().x,
+			     vy + p->DynamicPosition().y);
+  }  
+
 }
 
 std::string SDynamicEntityMove::getObjectId() {
@@ -204,11 +205,11 @@ void SDynamicBlockMove::performMove(vapp::MotoGame* v_motoGame, int i_nbCents) {
 
   for(int i=0; i<i_nbCents; i++) {
     performXY(&vx, &vy);
-  }
 
-  v_motoGame->SetBlockPos(p->Id(),
-			  vx + p->DynamicPosition().x,
-			  vy + p->DynamicPosition().y);
+    v_motoGame->SetBlockPos(p->Id(),
+			    vx + p->DynamicPosition().x,
+			    vy + p->DynamicPosition().y);
+  }
 }
 
 std::string SDynamicBlockMove::getObjectId() {
