@@ -215,8 +215,8 @@ namespace vapp {
       virtual void mouseRDown(int x,int y) {}
       virtual void mouseRUp(int x,int y) {}
       virtual void mouseHover(int x,int y) {}
-      virtual bool keyDown(int nKey,int nChar) {return false;}
-      virtual bool keyUp(int nKey) {return false;}
+      virtual bool keyDown(int nKey, SDLMod mod,int nChar) {return false;}
+      virtual bool keyUp(int nKey, SDLMod mod) {return false;}
       virtual bool offerActivation(void) {return false;}
       virtual bool offerMouseEvent(void) {return true;}
       virtual std::string subContextHelp(int x,int y) {return "";}
@@ -331,7 +331,7 @@ namespace vapp {
     
       /* Methods */
       virtual void paint(void);
-      virtual bool keyDown(int nKey,int nChar);
+      virtual bool keyDown(int nKey, SDLMod mod,int nChar);
       
       virtual bool offerActivation(void) {return true;}
       void hideText(bool bHideText) {m_hideText=bHideText;} 
@@ -441,7 +441,7 @@ namespace vapp {
     
       /* Virtual methods */
       virtual void paint(void);      
-      virtual bool keyDown(int nKey,int nChar);
+      virtual bool keyDown(int nKey, SDLMod mod,int nChar);
       virtual bool offerActivation(void) {if(m_bTextInput) return true; return false;}
     
       /* Methods */
@@ -485,7 +485,7 @@ namespace vapp {
       }      
 
       /* Virtual methods */
-      virtual bool keyDown(int nKey,int nChar);
+      virtual bool keyDown(int nKey, SDLMod mod,int nChar);
   };
 
 	/*===========================================================================
@@ -569,7 +569,7 @@ namespace vapp {
       virtual void mouseRUp(int x,int y);
       virtual void mouseHover(int x,int y);      
       virtual bool offerActivation(void);
-      virtual bool keyDown(int nKey,int nChar);
+      virtual bool keyDown(int nKey, SDLMod mod,int nChar);
       
       /* Data interface */
       UIButtonState getState(void) {return m_State;}
@@ -620,7 +620,7 @@ namespace vapp {
       virtual void mouseWheelDown(int x,int y);
       virtual void mouseHover(int x,int y);      
       virtual bool offerActivation(void);
-      virtual bool keyDown(int nKey,int nChar);
+      virtual bool keyDown(int nKey, SDLMod mod,int nChar);
 
       virtual std::string subContextHelp(int x,int y);
       
@@ -801,8 +801,8 @@ namespace vapp {
       virtual void mouseHover(int x,int y);
       virtual void mouseWheelUp(int x,int y);
       virtual void mouseWheelDown(int x,int y);
-      virtual bool keyDown(int nKey,int nChar);      
-      virtual bool keyUp(int nKey);  
+      virtual bool keyDown(int nKey, SDLMod mod,int nChar);      
+      virtual bool keyUp(int nKey, SDLMod mod);  
       
       void deactivate(UIWindow *pWindow);
 
@@ -820,7 +820,7 @@ namespace vapp {
       std::string m_CurrentContextHelp;
             
       /* Helpers */      
-      bool _RootKeyEvent(UIWindow *pWindow,UIRootKeyEvent Event,int nKey,int nChar);
+      bool _RootKeyEvent(UIWindow *pWindow,UIRootKeyEvent Event,int nKey, SDLMod mod,int nChar);
       bool _RootMouseEvent(UIWindow *pWindow,UIRootMouseEvent Event,int x,int y);
       void _RootPaint(int x,int y,UIWindow *pWindow,UIRect *pRect);
       void _ClipRect(UIRect *pRect,UIRect *pClipWith);

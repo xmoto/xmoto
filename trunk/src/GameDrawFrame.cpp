@@ -564,7 +564,7 @@ namespace vapp {
       m_pGhostReplay->peekState(previousGhostBikeState);
       if(previousGhostBikeState.fGameTime < m_MotoGame.getTime() && m_pGhostReplay->endOfFile() == false) {
         do {
-          m_pGhostReplay->loadState(GhostBikeState);
+	  m_pGhostReplay->loadState(GhostBikeState);
         } while(GhostBikeState.fGameTime < m_MotoGame.getTime() && m_pGhostReplay->endOfFile() == false);
 
         if(m_nGhostFrame%2 || m_nGhostFrame==1) {

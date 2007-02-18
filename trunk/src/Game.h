@@ -217,8 +217,8 @@ namespace vapp {
       virtual void userInit(void);
       virtual void userPreInit(void);
       virtual void userShutdown(void);
-      virtual void keyDown(int nKey,int nChar);
-      virtual void keyUp(int nKey);
+      virtual void keyDown(int nKey, SDLMod mod,int nChar);
+      virtual void keyUp(int nKey, SDLMod mod);
       virtual void mouseDown(int nButton);
       virtual void mouseDoubleClick(int nButton);
       virtual void mouseUp(int nButton);
@@ -241,7 +241,9 @@ namespace vapp {
       bool isUglyMode() {return m_bUglyMode;}
       bool isTestThemeMode(void) {return m_bTestThemeMode;}
     
-			void setAutoZoom(bool bValue);
+      void setAutoZoom(bool bValue);
+
+      void TeleportationCheatTo(Vector2f i_position);
 
     private: 
       EngineSoundSimulator m_EngineSound;

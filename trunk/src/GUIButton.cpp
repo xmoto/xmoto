@@ -240,7 +240,7 @@ namespace vapp {
   /*===========================================================================
   Keyboard event handling
   ===========================================================================*/
-  bool UIButton::keyDown(int nKey,int nChar) {
+  bool UIButton::keyDown(int nKey, SDLMod mod,int nChar) {
     switch(nKey) {
       case SDLK_UP:
         getRoot()->activateUp();

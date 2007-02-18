@@ -101,7 +101,7 @@ namespace vapp {
   /*===========================================================================
   Keyboard event handling
   ===========================================================================*/
-  bool UIEdit::keyDown(int nKey,int nChar) {
+  bool UIEdit::keyDown(int nKey, SDLMod mod,int nChar) {
     switch(nKey) {      
       case SDLK_UP:
         getRoot()->activateUp();

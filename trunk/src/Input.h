@@ -107,7 +107,7 @@ namespace vapp {
       
       /* Methods */
       void configure(UserConfig *pConfig);
-      void handleInput(InputEventType Type,int nKey,BikeController *pController, GameRenderer *pGameRender,
+      void handleInput(InputEventType Type,int nKey,SDLMod mod, BikeController *pController, GameRenderer *pGameRender,
 											 GameApp *pGameApp);      
       std::string waitForKey(void);
       void updateInput(BikeController *pController);

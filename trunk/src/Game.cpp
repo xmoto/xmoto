@@ -588,7 +588,7 @@ namespace vapp {
   /*===========================================================================
   Key down event
   ===========================================================================*/
-  void GameApp::keyDown(int nKey,int nChar) {
+  void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
     /* No matter what, F12 always equals a screenshot */
     if(nKey == SDLK_F12) {
       _GameScreenshot();
@@ -632,7 +632,7 @@ namespace vapp {
         m_pQuitMsgBox = NULL;
       }    
       else
-        m_Renderer.getGUI()->keyDown(nKey,nChar);      
+        m_Renderer.getGUI()->keyDown(nKey, mod, nChar);      
       return;
     }
     else if(m_pNotifyMsgBox) {
@@ -641,7 +641,7 @@ namespace vapp {
         m_pNotifyMsgBox = NULL;
       }    
       else
-        m_Renderer.getGUI()->keyDown(nKey,nChar);      
+        m_Renderer.getGUI()->keyDown(nKey, mod, nChar);      
       return;
     }
   
@@ -655,7 +655,7 @@ namespace vapp {
       case GS_LEVELPACK_VIEWER:
       case GS_MENU: {
         /* The GUI wants to know about keypresses... */
-        m_Renderer.getGUI()->keyDown(nKey,nChar);
+        m_Renderer.getGUI()->keyDown(nKey, mod,nChar);
         break;
       }
       case GS_PAUSE:
@@ -666,7 +666,7 @@ namespace vapp {
             m_State = GS_PLAYING;
             break;
           default:
-            m_Renderer.getGUI()->keyDown(nKey,nChar);
+            m_Renderer.getGUI()->keyDown(nKey, mod,nChar);
             break;      
         }
         break;
@@ -709,7 +709,7 @@ namespace vapp {
                 if(getRealTime() < m_fCoolDownEnd)
                   break;
                
-              m_Renderer.getGUI()->keyDown(nKey,nChar);
+              m_Renderer.getGUI()->keyDown(nKey, mod,nChar);
             }
             break;
           default:
@@ -717,7 +717,7 @@ namespace vapp {
               if(getRealTime() < m_fCoolDownEnd)
                 break;
              
-            m_Renderer.getGUI()->keyDown(nKey,nChar);
+            m_Renderer.getGUI()->keyDown(nKey, mod,nChar);
             break;      
         }
         break;
@@ -796,7 +796,7 @@ namespace vapp {
     break;
           default:
             /* Notify the controller */
-            m_InputHandler.handleInput(INPUT_KEY_DOWN,nKey,m_MotoGame.getBikeController(), &m_Renderer, this);
+            m_InputHandler.handleInput(INPUT_KEY_DOWN,nKey,mod,m_MotoGame.getBikeController(), &m_Renderer, this);
         }
         break; 
     }
@@ -805,7 +805,7 @@ namespace vapp {
   /*===========================================================================
   Key up event
   ===========================================================================*/
-  void GameApp::keyUp(int nKey) {
+  void GameApp::keyUp(int nKey, SDLMod mod) {
     /* What state? */
     switch(m_State) {
 #if defined(SUPPORT_WEBACCESS)
@@ -817,11 +817,11 @@ namespace vapp {
       case GS_DEADMENU:
       case GS_LEVELPACK_VIEWER:
       case GS_MENU:
-        m_Renderer.getGUI()->keyUp(nKey);
+        m_Renderer.getGUI()->keyUp(nKey, mod);
         break;
       case GS_PLAYING:
         /* Notify the controller */
-        m_InputHandler.handleInput(INPUT_KEY_UP,nKey,m_MotoGame.getBikeController(), &m_Renderer, this);
+        m_InputHandler.handleInput(INPUT_KEY_UP,nKey,mod,m_MotoGame.getBikeController(), &m_Renderer, this);
         break; 
       case GS_DEADJUST:
       {
@@ -885,7 +885,7 @@ namespace vapp {
 
       case GS_PLAYING:
       /* Notify the controller */
-      m_InputHandler.handleInput(INPUT_KEY_DOWN,nButton,m_MotoGame.getBikeController(), &m_Renderer, this);
+      m_InputHandler.handleInput(INPUT_KEY_DOWN,nButton,KMOD_NONE, m_MotoGame.getBikeController(), &m_Renderer, this);
       break;
       case GS_DEADJUST:
       break;
@@ -915,7 +915,7 @@ namespace vapp {
 
       case GS_PLAYING:
         /* Notify the controller */
-        m_InputHandler.handleInput(INPUT_KEY_UP,nButton,m_MotoGame.getBikeController(), &m_Renderer, this);
+        m_InputHandler.handleInput(INPUT_KEY_UP,nButton,KMOD_NONE, m_MotoGame.getBikeController(), &m_Renderer, this);
         break;
       case GS_DEADJUST:
       break;
@@ -2078,5 +2078,11 @@ namespace vapp {
   }
   
   XMMotoGameHooks::~XMMotoGameHooks() {
+  }
+
+  void GameApp::TeleportationCheatTo(Vector2f i_position) {
+    m_MotoGame.setPlayerPosition(i_position.x, i_position.y, true);
+    m_Renderer.initCamera();
+    m_MotoGame.addPenalityTime(900); /* 15 min of penality for that ! */
   }
 }

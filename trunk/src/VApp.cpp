@@ -92,10 +92,10 @@ namespace vapp {
             if((Event.key.keysym.unicode&0xff80)==0) {
               ch = Event.key.keysym.unicode & 0x7F;
             }
-            keyDown(Event.key.keysym.sym,ch);            
+            keyDown(Event.key.keysym.sym, Event.key.keysym.mod, ch);            
             break;
           case SDL_KEYUP: 
-            keyUp(Event.key.keysym.sym);            
+            keyUp(Event.key.keysym.sym, Event.key.keysym.mod);            
             break;
           case SDL_MOUSEBUTTONDOWN:
             mouseDown(Event.button.button);
@@ -218,10 +218,10 @@ namespace vapp {
               if((Event.key.keysym.unicode&0xff80)==0) {
                 ch = Event.key.keysym.unicode & 0x7F;
               }
-              keyDown(Event.key.keysym.sym,ch);            
+              keyDown(Event.key.keysym.sym, Event.key.keysym.mod, ch);            
               break;
             case SDL_KEYUP: 
-              keyUp(Event.key.keysym.sym);            
+              keyUp(Event.key.keysym.sym, Event.key.keysym.mod);            
               break;
             case SDL_QUIT:  
               /* Force quit */
@@ -271,7 +271,7 @@ namespace vapp {
         
         /* Does app want us to delay a bit after the frame? */
         if(m_nFrameDelay > 0)
-          SDL_Delay(m_nFrameDelay);
+	  SDL_Delay(m_nFrameDelay);
       }
     }
     
