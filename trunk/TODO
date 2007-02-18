@@ -4,6 +4,7 @@ mingw:
 * gettext: http://www.wormux.org/wiki/compile_under_mingw.php
 
 Assigned to nicolas
+* *** Warning *** : Sound Engine00 not found => segfault while playing
 * BUG : hum, about checksum, when you modify a level with f5 while
    playing, then it is not updated with the new level button
 * put under edge into the block part
