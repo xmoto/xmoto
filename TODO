@@ -154,7 +154,6 @@ http://xmoto.free.fr/interesting_replays/ireplay_40.rpl
 * loadness of headcrash sound should depend on head velocity 
 * themes : not more animation in .xml ? -> be able to load an animated bike ?
 * to be able to move a zone ?
-* make sound in themes
 * we could make a "standard xmoto library" of lua functions :)
 * new script call :
   collision between sprites, between sprites and head
