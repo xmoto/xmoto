@@ -274,7 +274,7 @@ namespace vapp {
         m_GameStats.died(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->Id(),m_MotoGame.getLevelSrc()->Name(),m_MotoGame.getTime());
                 
         /* Play the DIE!!! sound */
-        Sound::playSampleByName("Sounds/Headcrash.ogg",0.3);
+	Sound::playSampleByName(m_theme.getSound("Headcrash")->FilePath(),0.3);
 
   m_nJustDeadShade = 0;
 
@@ -380,7 +380,7 @@ namespace vapp {
 #endif
 
         if(v_is_a_highscore) { /* best highscore */
-          Sound::playSampleByName("Sounds/NewHighscore.ogg");
+	  Sound::playSampleByName(m_theme.getSound("NewHighscore")->FilePath());
 
 #if defined(SUPPORT_WEBACCESS)
         // enable upload button
@@ -404,7 +404,7 @@ namespace vapp {
         } /* ok i officially give up on indention in x-moto :P */
         } else {
           if(v_is_a_personal_highscore) { /* personal highscore */
-            Sound::playSampleByName("Sounds/NewHighscore.ogg");
+	    Sound::playSampleByName(m_theme.getSound("NewHighscore")->FilePath());
             if(m_pReplay != NULL && m_bAutosaveHighscoreReplays) {
               String v_replayName = Replay::giveAutomaticName();
               _SaveReplay(v_replayName);
@@ -2047,4 +2047,22 @@ namespace vapp {
 	bool GameApp::isLockedMotoGame() const {
 		return m_bLockMotoGame;
 	}
+
+  void XMMotoGameHooks::OnTakeEntity() {
+    /* Play yummy-yummy sound */
+    if(m_GameApp != NULL) {
+      Sound::playSampleByName(m_GameApp->getTheme()->getSound("PickUpStrawberry")->FilePath());
+    }
+  }
+
+  void XMMotoGameHooks::setGameApp(GameApp *i_GameApp) {
+    m_GameApp = i_GameApp;
+  }
+
+  XMMotoGameHooks::XMMotoGameHooks() {
+    m_GameApp = NULL;
+  }
+  
+  XMMotoGameHooks::~XMMotoGameHooks() {
+  }
 }

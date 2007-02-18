@@ -88,6 +88,17 @@ namespace vapp {
   };
 #endif
 
+  class XMMotoGameHooks : public MotoGameHooks {
+  public:
+    XMMotoGameHooks();
+    ~XMMotoGameHooks();
+    void setGameApp(GameApp *i_GameApp);
+    void OnTakeEntity();
+
+  private:
+    GameApp *m_GameApp;
+  };
+
   /*===========================================================================
   Game application
   ===========================================================================*/
@@ -171,6 +182,9 @@ namespace vapp {
 
      m_bEnableCheckNewLevelsAtStartup  = true;
      m_bEnableCheckHighscoresAtStartup = true;
+
+     m_MotoGame.setHooks(&m_MotoGameHooks);
+     m_MotoGameHooks.setGameApp(this);
 #endif
      m_fLastSqueekTime = 0.0f;
 
@@ -266,6 +280,7 @@ namespace vapp {
       GameState m_State;                        /* Current state */      
       GameState m_StateAfterPlaying;            /* State that should be used later */
       MotoGame m_MotoGame;                      /* Game object */      
+      XMMotoGameHooks m_MotoGameHooks;
       GameRenderer m_Renderer;                  /* Renderer */
       int m_nFrame;                             /* Frame # */
       PlayerProfile *m_pPlayer;                 /* The player's profile */

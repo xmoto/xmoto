@@ -144,10 +144,16 @@ namespace vapp {
     bRearWheelTouching  = false;
 
     m_bodyDetach = false;
+
+    m_motoGameHooks = NULL;
   }
   
   MotoGame::~MotoGame() {
   }  
+
+  void MotoGame::setHooks(MotoGameHooks *i_motoGameHooks) {
+    m_motoGameHooks = i_motoGameHooks;
+  }
 
   /*===========================================================================
     Simple lua interaction
@@ -1459,8 +1465,9 @@ namespace vapp {
       }
       getLevelSrc()->spawnEntity(v_stars);
       
-      /* Play yummy-yummy sound */
-      Sound::playSampleByName("Sounds/PickUpStrawberry.ogg");
+      if(m_motoGameHooks != NULL) {
+	m_motoGameHooks->OnTakeEntity();
+      }
     }
     
     /* Destroy entity */

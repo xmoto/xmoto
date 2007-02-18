@@ -122,11 +122,19 @@ namespace vapp {
   /*===========================================================================
   Game object
   ===========================================================================*/
+
+  class MotoGameHooks {
+  public:
+    virtual void OnTakeEntity() = 0;
+  };
+
   class MotoGame {
   public:          
     MotoGame();
     ~MotoGame();
     
+    void setHooks(MotoGameHooks *i_motoGameHooks);
+
     /* update of the structure */
     void prePlayLevel(
 #if defined(ALLOW_GHOST)    
@@ -272,6 +280,8 @@ namespace vapp {
       
       int m_nStillFrames;
       
+      MotoGameHooks *m_motoGameHooks;
+
       bool m_bSqueeking;
       float m_fHowMuchSqueek;
       bool m_bDeathAnimEnabled;

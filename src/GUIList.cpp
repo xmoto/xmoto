@@ -476,8 +476,7 @@ namespace vapp {
           /* AND invoke enter-button */
           if(m_nVisibleSelected>=0 && m_nVisibleSelected<m_Entries.size()-m_filteredItems && m_pEnterButton != NULL) {
             m_pEnterButton->setClicked(true);
-
-            Sound::playSampleByName("Sounds/Button3.ogg");
+	    Sound::playSampleByName(getApp()->getTheme()->getSound("Button3")->FilePath());
           }          
 
           /* Under all circumstances set the activation flag */
@@ -655,7 +654,7 @@ namespace vapp {
         if(m_nVisibleSelected>=0 && m_nVisibleSelected<m_Entries.size()-m_filteredItems && m_pEnterButton != NULL) {
           m_pEnterButton->setClicked(true);       
           
-          Sound::playSampleByName("Sounds/Button3.ogg");
+	  Sound::playSampleByName(getApp()->getTheme()->getSound("Button3")->FilePath());
         }
         
         /* Under all circumstances set the activation flag */
