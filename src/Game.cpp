@@ -1979,6 +1979,7 @@ namespace vapp {
 				   m_pWebHighscores,
 				   m_pWebLevels,
 #endif
+				   m_bDebugMode,
 				   m_pPlayer->PlayerName, &m_Profiles, &m_GameStats);
     }    
 

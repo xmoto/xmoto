@@ -496,5 +496,6 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define VPACKAGENAME_NICEST_LEVELS              _("Nicest levels")
 #define VPACKAGENAME_HARDEST_LEVELS             _("Hardest levels")
 #define VPACKAGENAME_EASIEST_LEVELS             _("Easiest levels")
+#define VPACKAGENAME_CRAPIEST_LEVELS            _("Crapiest levels")
 
 #endif

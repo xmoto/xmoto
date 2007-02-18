@@ -70,6 +70,7 @@ class LevelsManager {
 		    WebRoom *i_webHighscores,
 		    WebLevels *i_webLevels,
 #endif
+		    bool i_bDebugMode,
 		    std::string i_playerName,
 		    vapp::PlayerData *i_profiles,
 		    vapp::Stats *i_stats);
@@ -115,6 +116,7 @@ class LevelsManager {
 			  WebRoom *i_webHighscores,
 			  WebLevels *i_webLevels,
 #endif
+			  bool i_bDebugMode,
 			  std::string i_playerName,
 			  vapp::PlayerData *i_profiles,
 			  vapp::Stats *i_stats);
