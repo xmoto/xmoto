@@ -1,6 +1,6 @@
 # translation of de.po to Deutsch
 # Jonathan Sieber <jonathan_sieber@yahoo.de>, 2006.
-# corrections: Jens Erler <mothbox@gmx.net>, 2006
+# corrections: Jens Erler <mothbox@gmx.net>, 2007
 # 
 # 
 msgid ""
@@ -171,7 +171,6 @@ msgid "Controls"
 msgstr "Steuerung"
 
 #: src/GameText.h:73
-#, fuzzy
 msgid ""
 "Lead Programming:Rasmus Neckelmann;:Nicolas Adenis-Lamarre;:Emmanuel Gorse;:"
 "Kees Jongenburger;:;Additional Programming:Eric Piel;:Christoph Sommer;:"
@@ -201,7 +200,7 @@ msgstr ""
 "Websiteuebersetzung:Felix Schl;:Nicolas Adenis-Lamarre;:Trullo;:Afaland;:Jj;:"
 "Vertigo;:Pol Vinogradov;:;Forum:Valentin;:;Haupttester:Jose Alberto Coelho;:"
 "Frederic Huard;:;Danke an:SnowBear (KDE/Gnome-Integration);:Jonathan Sieber "
-"(Deutsche Ubersetzung);:Samuel Mimram(Debianpakete);:Dark (Gentoopakete);:"
+"(Deutsche Uebersetzung);:Samuel Mimram(Debianpakete);:Dark (Gentoopakete);:"
 "Olivier Blin (Mandrivapakete);:Balazs Rozsa (across/elma);:Yves Berquin "
 "(tinyxml);:L. Peter Deutsch (MD5-code);:Petter Reinholdtsen;:Jes Vestervang "
 "(Webspace);:Kenneth;:Jeder der Levels gemacht hat;:Alle Leute die Fehler "
@@ -436,9 +435,8 @@ msgid "File"
 msgstr "Datei"
 
 #: src/GameText.h:180
-#, fuzzy
 msgid "Filter"
-msgstr "Datei"
+msgstr "Filter"
 
 #: src/GameText.h:181
 msgid "Finished!"
@@ -826,7 +824,7 @@ msgstr "Spielerprofile"
 
 #: src/GameText.h:284
 msgid "Play Next Level"
-msgstr "Naechstes Level spielen"
+msgstr "Naechstes Level"
 
 #: src/GameText.h:285
 msgid "Port"
@@ -854,9 +852,8 @@ msgid "Do you really want to quit?"
 msgstr "Wirklich beenden?"
 
 #: src/GameText.h:291
-#, fuzzy
 msgid "Randomize"
-msgstr "Zufalls-Level"
+msgstr "Zufalls-Levels"
 
 #: src/GameText.h:292
 msgid "Reloading levels..."
@@ -1640,7 +1637,6 @@ msgid "Delete the level from the favorite levels list"
 msgstr "Level aus der Favoritenliste entfernen"
 
 #: src/GameText.h:485
-#, fuzzy
 msgid "Puzzle the levels pack list"
 msgstr "Paket-Liste zerwuerfeln"
 
@@ -1677,19 +1673,16 @@ msgid "Favorite levels"
 msgstr "Favoriten"
 
 #: src/GameText.h:496
-#, fuzzy
 msgid "Nicest levels"
-msgstr "Neue Level"
+msgstr "Schoenste Levels"
 
 #: src/GameText.h:497
-#, fuzzy
 msgid "Hardest levels"
-msgstr "Favoriten"
+msgstr "Schwerste Levels"
 
 #: src/GameText.h:498
-#, fuzzy
 msgid "Easiest levels"
-msgstr "Favoriten"
+msgstr "Einfachste Levels"
 
 #~ msgid "Bike Breaks"
 #~ msgstr "Rad zerbricht"
