@@ -45,6 +45,7 @@ class WebThemes;
 #define THEME_FONT_SPRITE_FILE_DIR       THEME_SPRITE_FILE_DIR"/Fonts"
 #define THEME_EDGEEFFECT_SPRITE_FILE_DIR THEME_SPRITE_FILE_DIR"/Effects"
 #define THEME_MUSICS_FILE_DIR            THEME_SPRITE_FILE_DIR"/Musics"
+#define THEME_SOUNDS_FILE_DIR            THEME_SPRITE_FILE_DIR"/Sounds"
 
 #define THEME_PLAYER_BODY     "PlayerBikerBody"
 #define THEME_PLAYER_FRONT    "PlayerBikerFront"
@@ -98,6 +99,21 @@ class Music {
  public:
   Music(Theme* p_associated_theme, std::string i_name, std::string i_fileName);
   ~Music();
+
+  std::string Name() const;
+  std::string FileName() const;
+  std::string FilePath() const;
+
+ private:
+  Theme* m_associated_theme;
+  std::string m_name;
+  std::string m_fileName;
+};
+
+class Sound {
+ public:
+  Sound(Theme* p_associated_theme, std::string i_name, std::string i_fileName);
+  ~Sound();
 
   std::string Name() const;
   std::string FileName() const;
@@ -331,6 +347,7 @@ class Theme {
   std::string Name() const;
   Sprite* getSprite(enum SpriteType pSpriteType, std::string pName);
   Music* getMusic(std::string i_name);
+  Sound* getSound(std::string i_name);
   vapp::Texture* loadTexture(std::string p_fileName,
 			     bool bSmall=false,
 			     bool bClamp=false,
@@ -338,6 +355,7 @@ class Theme {
 
   vapp::Texture* getDefaultFont();
   std::vector<Sprite*> getSpritesList();
+  std::vector<Sound*> getSoundsList();
   std::vector<std::string>* getRequiredFiles();
 
   BikerTheme* getPlayerTheme();
@@ -352,6 +370,7 @@ class Theme {
   std::string m_name;
   std::vector<Sprite*> m_sprites;
   std::vector<Music*> m_musics;
+  std::vector<Sound*> m_sounds;
   std::vector<std::string> m_requiredFiles;
 
   vapp::Texture *m_pDefaultFontTexture;
@@ -363,6 +382,7 @@ class Theme {
 
   void cleanSprites();
   void cleanMusics();
+  void cleanSounds();
 
   void loadSpritesFromXML(TiXmlElement *p_ThemeXmlDataElement);
 

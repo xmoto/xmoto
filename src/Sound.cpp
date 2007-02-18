@@ -304,7 +304,7 @@ namespace vapp {
       FileHandle *pf = FS::openIFile(File);
       if(pf == NULL) {
         SDL_FreeRW(pOps);
-        throw Exception("failed to open sample file");
+        throw Exception("failed to open sample file " + File);
       }
       
       pOps->hidden.unknown.data1 = (void *)pf;
