@@ -203,4 +203,10 @@
 <music name="rideALong" file="ridealong.ogg" />
 <music name="batcave" file="batcave.ogg" />
 
+<sound name="Engine"           file="Engine.ogg" />
+<sound name="Headcrash"        file="Headcrash.ogg" />
+<sound name="NewHighscore"     file="NewHighscore.ogg" />
+<sound name="PickUpStrawberry" file="PickUpStrawberry.ogg" />
+<sound name="Squeek"           file="Squeek.ogg" />
+
 </xmoto_theme>

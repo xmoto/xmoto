@@ -56,25 +56,25 @@ Textures/Textures/Wood2_158.jpg
 Textures/Textures/wood.jpg
 Textures/Textures/Yellow_177.jpg
 
-Sounds/Button1.ogg
-Sounds/Button3.ogg
-Sounds/PickUpStrawberry.ogg
-Sounds/NewHighscore.ogg
-Sounds/Headcrash.ogg
+Textures/Sounds/Button1.ogg
+Textures/Sounds/Button3.ogg
+Textures/Sounds/PickUpStrawberry.ogg
+Textures/Sounds/NewHighscore.ogg
+Textures/Sounds/Headcrash.ogg
 
-Sounds/Engine/00.wav
-Sounds/Engine/01.wav
-Sounds/Engine/02.wav
-Sounds/Engine/03.wav
-Sounds/Engine/04.wav
-Sounds/Engine/05.wav
-Sounds/Engine/06.wav
-Sounds/Engine/07.wav
-Sounds/Engine/08.wav
-Sounds/Engine/09.wav
-Sounds/Engine/10.wav
-Sounds/Engine/11.wav
-Sounds/Engine/12.wav
+Textures/Sounds/engine_00.wav
+Textures/Sounds/engine_01.wav
+Textures/Sounds/engine_02.wav
+Textures/Sounds/engine_03.wav
+Textures/Sounds/engine_04.wav
+Textures/Sounds/engine_05.wav
+Textures/Sounds/engine_06.wav
+Textures/Sounds/engine_07.wav
+Textures/Sounds/engine_08.wav
+Textures/Sounds/engine_09.wav
+Textures/Sounds/engine_10.wav
+Textures/Sounds/engine_11.wav
+Textures/Sounds/engine_12.wav
 
 Shaders/SFXOverlay.vert
 Shaders/SFXOverlay.frag
