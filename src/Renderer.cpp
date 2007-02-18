@@ -713,24 +713,30 @@ namespace vapp {
   Game status rendering
   ===========================================================================*/
   void GameRenderer::_RenderGameStatus(void) {
-    AnimationSprite* pType = NULL;
+    Sprite* pType = NULL;
     MotoGame *pGame = getGameObject();
 
-    float x1 = 90;
+    float x1 = 115;
     float y1 = -2;
-    float x2 = 115;
+    float x2 = 90;
     float y2 = 23;
 
     int nStrawberriesLeft = pGame->getLevelSrc()->countToTakeEntities();
     int nQuantity = 0;
 
     if(getParent()->isUglyMode() == false) {
-      pType = (AnimationSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_ANIMATION, getGameObject()->getLevelSrc()->SpriteForFlower());
+      pType = getParent()->getTheme()->getSprite(SPRITE_TYPE_ANIMATION, getGameObject()->getLevelSrc()->SpriteForFlower());
+      if(pType == NULL) {
+	pType = getParent()->getTheme()->getSprite(SPRITE_TYPE_DECORATION, getGameObject()->getLevelSrc()->SpriteForFlower());
+      }
     }
     
     if(nStrawberriesLeft > 0) {
       if(getParent()->isUglyMode() == false) {
-  pType = (AnimationSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_ANIMATION, getGameObject()->getLevelSrc()->SpriteForStrawberry());
+	pType = getParent()->getTheme()->getSprite(SPRITE_TYPE_ANIMATION, getGameObject()->getLevelSrc()->SpriteForStrawberry());
+      if(pType == NULL) {
+	pType = getParent()->getTheme()->getSprite(SPRITE_TYPE_DECORATION, getGameObject()->getLevelSrc()->SpriteForStrawberry());
+      }
       }
       nQuantity = nStrawberriesLeft;
     }
