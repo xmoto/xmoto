@@ -374,10 +374,11 @@ namespace vapp {
   Handle an input event
   ===========================================================================*/  
   void InputHandler::handleInput(InputEventType Type,
-																 int nKey,
-																 BikeController *pController,
-																 GameRenderer *pGameRender,
-																 GameApp *pGameApp) {
+				 int nKey,
+				 SDLMod mod,
+				 BikeController *pController,
+				 GameRenderer *pGameRender,
+				 GameApp *pGameApp) {
     /* Update controller 1 */
     if(m_ControllerModeID1 == CONTROLLER_MODE_KEYBOARD) {
       /* Keyboard controlled */
@@ -426,6 +427,9 @@ namespace vapp {
 	}
 	else if(m_nAutoZoom == nKey) {
 	  pGameApp->setAutoZoom(true);
+	} else if(nKey == SDLK_KP0 && ((mod & KMOD_LCTRL) == KMOD_LCTRL)) {
+	  pGameApp->TeleportationCheatTo(Vector2f(pGameRender->getCameraPositionX(),
+						  pGameRender->getCameraPositionY()));
 	}
 #endif
 

@@ -34,12 +34,12 @@ class SDynamicObject {
   virtual ~SDynamicObject();
   
   /* return false if the dynamic is finished */
-  bool nextState(vapp::MotoGame* v_motoGame);
+  bool nextState(vapp::MotoGame* v_motoGame, int i_nbCents);
   virtual std::string getObjectId() = 0;
   
  protected:
   bool isTimeToMove();
-  virtual void performMove(vapp::MotoGame* v_motoGame) = 0;  
+  virtual void performMove(vapp::MotoGame* v_motoGame, int i_nbCents) = 0;  
 
  private:
   int m_time;
@@ -90,7 +90,7 @@ class SDynamicEntityMove : public SDynamicObject {
   SDynamicEntityMove(std::string pEntity, int p_startTime, int p_endTime, float pPeriod);
   virtual ~SDynamicEntityMove();
 
-  void performMove(vapp::MotoGame* p_motoGame);
+  void performMove(vapp::MotoGame* p_motoGame, int i_nbCents);
   std::string getObjectId();
 
  protected:
@@ -126,7 +126,7 @@ class SDynamicBlockMove : public SDynamicObject {
   SDynamicBlockMove(std::string pBlock, int p_startTime, int p_endTime, float pPeriod);
   virtual ~SDynamicBlockMove();
 
-  void performMove(vapp::MotoGame* p_motoGame);
+  void performMove(vapp::MotoGame* p_motoGame, int i_nbCents);
   std::string getObjectId();
 
  protected:

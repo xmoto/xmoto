@@ -379,16 +379,18 @@ namespace vapp {
 
     /* Invoke Tick() script function */
     /* and play script dynamic objects */
+    int v_nbCents = 0;
     while(getTime() - m_lastCallToEveryHundreath > 0.01) {
       if(m_isScriptActiv && isDead() == false) {
-  if(!scriptCallBool("Tick",
-         true)) {
-           throw Exception("level script Tick() returned false");
-         }
+	if(!scriptCallBool("Tick",
+			   true)) {
+			     throw Exception("level script Tick() returned false");
+			   }
       }
-      nextStateScriptDynamicObjects();
+      v_nbCents++;
       m_lastCallToEveryHundreath += 0.01;
     }
+    nextStateScriptDynamicObjects(v_nbCents);
 
     /* Only make a full physics update when not replaying */
     if(m_bIsAReplay == false) {
@@ -1392,15 +1394,15 @@ namespace vapp {
     m_SDynamicObjects.clear();
   }
 
-  void MotoGame::nextStateScriptDynamicObjects() {
+  void MotoGame::nextStateScriptDynamicObjects(int i_nbCents) {
     int i = 0;
 
     while(i<m_SDynamicObjects.size()) {
-      if(m_SDynamicObjects[i]->nextState(this) == false) {
-  delete m_SDynamicObjects[i];
+      if(m_SDynamicObjects[i]->nextState(this, i_nbCents) == false) {
+	delete m_SDynamicObjects[i];
         m_SDynamicObjects.erase(m_SDynamicObjects.begin() + i);
       } else {
-  i++;
+	i++;
       }
     }
   }

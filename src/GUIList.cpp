@@ -650,7 +650,7 @@ namespace vapp {
   /*===========================================================================
   Up/down keys select elements
   ===========================================================================*/
-  bool UIList::keyDown(int nKey,int nChar) {
+  bool UIList::keyDown(int nKey, SDLMod mod,int nChar) {
     switch(nKey) {
       case SDLK_RETURN: 
         /* Uhh... send this to the default button, if any. And if anything is selected */

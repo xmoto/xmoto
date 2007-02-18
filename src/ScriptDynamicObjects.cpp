@@ -33,16 +33,29 @@ SDynamicObject::SDynamicObject(int p_startTime, int p_endTime, float pPeriod) {
 SDynamicObject::~SDynamicObject() {
 }
 
-bool SDynamicObject::nextState(vapp::MotoGame* v_motoGame) {
+bool SDynamicObject::nextState(vapp::MotoGame* v_motoGame, int i_nbCents) {
+  int v_realNbCents;
+  v_realNbCents = i_nbCents;
+
   if(m_time >= m_endTime && m_endTime != 0.0) {
     return false;
   }
 
-  if(isTimeToMove() == true) {
-    performMove(v_motoGame);
+  if(m_startTime > m_time) {
+    v_realNbCents -= m_startTime - m_time;
   }
 
-  m_time++;
+  if(m_time + i_nbCents > m_endTime && m_endTime != 0.0) {
+    v_realNbCents -= m_time + i_nbCents - m_endTime;
+  }
+
+  performMove(v_motoGame, v_realNbCents);
+
+  m_time += i_nbCents;
+  if(m_time >= m_endTime && m_endTime != 0.0) {
+    return false;
+  }
+
   return true;
 }
 
@@ -136,13 +149,17 @@ SDynamicEntityMove::SDynamicEntityMove(std::string pEntity, int p_startTime, int
 SDynamicEntityMove::~SDynamicEntityMove() {
 }
 
-void SDynamicEntityMove::performMove(vapp::MotoGame* v_motoGame) {
+void SDynamicEntityMove::performMove(vapp::MotoGame* v_motoGame, int i_nbCents) {
   Entity* p = &(v_motoGame->getLevelSrc()->getEntityById(m_entity));
   if(! p->isAlive()){
     return;
   }
   float vx, vy;
-  performXY(&vx, &vy);
+
+  for(int i=0; i<i_nbCents; i++) {
+    performXY(&vx, &vy);
+  }
+
   v_motoGame->SetEntityPos(p,
 			   vx + p->DynamicPosition().x,
 			   vy + p->DynamicPosition().y);
@@ -181,10 +198,14 @@ SDynamicBlockMove::SDynamicBlockMove(std::string pBlock, int p_startTime, int p_
 SDynamicBlockMove::~SDynamicBlockMove() {
 }
 
-void SDynamicBlockMove::performMove(vapp::MotoGame* v_motoGame) {
+void SDynamicBlockMove::performMove(vapp::MotoGame* v_motoGame, int i_nbCents) {
   Block *p = &(v_motoGame->getLevelSrc()->getBlockById(m_block));
   float vx, vy;
-  performXY(&vx, &vy);
+
+  for(int i=0; i<i_nbCents; i++) {
+    performXY(&vx, &vy);
+  }
+
   v_motoGame->SetBlockPos(p->Id(),
 			  vx + p->DynamicPosition().x,
 			  vy + p->DynamicPosition().y);

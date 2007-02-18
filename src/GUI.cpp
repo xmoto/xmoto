@@ -196,7 +196,7 @@ namespace vapp {
   /*===========================================================================
   Special message box for querying keypresses
   ===========================================================================*/    
-  bool UIQueryKeyBox::keyDown(int nKey,int nChar) {
+  bool UIQueryKeyBox::keyDown(int nKey, SDLMod mod,int nChar) {
     //    MessageBox(NULL,"HELLO",NULL,MB_OK);
     return false;
   }
@@ -259,7 +259,7 @@ namespace vapp {
     }
   }
   
-  bool UIMsgBox::keyDown(int nKey,int nChar) {
+  bool UIMsgBox::keyDown(int nKey, SDLMod mod,int nChar) {
     switch(nKey) {
       case SDLK_ESCAPE:
         if(!setClicked(GAMETEXT_CANCEL))
@@ -732,8 +732,8 @@ FRAME_BR (187,198) (8x8)
     _RootMouseEvent(this,UI_ROOT_MOUSE_WHEEL_DOWN,x,y);
   } 
   
-  bool UIRoot::keyDown(int nKey,int nChar) {
-    if(!_RootKeyEvent(this,UI_ROOT_KEY_DOWN,nKey,nChar)) {
+  bool UIRoot::keyDown(int nKey, SDLMod mod,int nChar) {
+    if(!_RootKeyEvent(this,UI_ROOT_KEY_DOWN,nKey,mod, nChar)) {
       switch(nKey) {
         case SDLK_UP:
           activateUp();
@@ -754,17 +754,17 @@ FRAME_BR (187,198) (8x8)
     return true;
   }
   
-  bool UIRoot::keyUp(int nKey) {
-    return _RootKeyEvent(this,UI_ROOT_KEY_UP,nKey,0);   
+  bool UIRoot::keyUp(int nKey, SDLMod mod) {
+    return _RootKeyEvent(this,UI_ROOT_KEY_UP,nKey,mod, 0);   
   }
   
-  bool UIRoot::_RootKeyEvent(UIWindow *pWindow,UIRootKeyEvent Event,int nKey,int nChar) {
+  bool UIRoot::_RootKeyEvent(UIWindow *pWindow,UIRootKeyEvent Event,int nKey, SDLMod mod,int nChar) {
     /* Hidden or disabled? */
     if(pWindow->isHidden() || pWindow->isDisabled()) return false;
         
     /* First try if any children want it */
     for(int i=0;i<pWindow->getChildren().size();i++) {
-      if(_RootKeyEvent(pWindow->getChildren()[i],Event,nKey,nChar))
+      if(_RootKeyEvent(pWindow->getChildren()[i],Event,nKey,mod,nChar))
         return true;
     } 
     
@@ -773,8 +773,8 @@ FRAME_BR (187,198) (8x8)
       bool b = false;
     
       switch(Event) {
-        case UI_ROOT_KEY_DOWN: b=pWindow->keyDown(nKey,nChar); break;
-        case UI_ROOT_KEY_UP: b=pWindow->keyUp(nKey); break;        
+        case UI_ROOT_KEY_DOWN: b=pWindow->keyDown(nKey, mod,nChar); break;
+        case UI_ROOT_KEY_UP: b=pWindow->keyUp(nKey, mod); break;        
       }
       
       return b;

@@ -73,9 +73,9 @@ namespace vapp {
     /* Virtual protected methods */
     virtual void update(void) {
     }
-    virtual void keyDown(int nKey, int nChar) {
+    virtual void keyDown(int nKey, SDLMod mod, int nChar) {
     }
-    virtual void keyUp(int nKey) {
+    virtual void keyUp(int nKey, SDLMod mod) {
     }
     virtual void mouseDown(int nButton) {
     }
@@ -213,9 +213,9 @@ namespace vapp {
     /* Virtual protected methods */
     virtual void drawFrame(void) {
     }
-    virtual void keyDown(int nKey, int nChar) {
+    virtual void keyDown(int nKey, SDLMod mod, int nChar) {
     }
-    virtual void keyUp(int nKey) {
+    virtual void keyUp(int nKey, SDLMod mod) {
     }
     virtual void mouseDown(int nButton) {
     }

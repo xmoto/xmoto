@@ -428,7 +428,7 @@ namespace vapp {
 #endif
 
       void cleanScriptDynamicObjects();
-      void nextStateScriptDynamicObjects();
+      void nextStateScriptDynamicObjects(int i_nbCents);
 
       signed char _MapCoordTo8Bits(float fRef,float fMaxDiff,float fCoord);
       float _Map8BitsToCoord(float fRef,float fMaxDiff,signed char c);
