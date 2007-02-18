@@ -28,9 +28,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // increase the version to force reloading of levels
 #define CURRENT_LEVEL_INDEX_FILE_VERSION 2
 
-#define VPACKAGENAME_NICEST_MIN  4.5
-#define VPACKAGENAME_EASIEST_MAX 1.5
-#define VPACKAGENAME_HARDEST_MIN 4.5
+#define VPACKAGENAME_CRAPIEST_MAX 1.5
+#define VPACKAGENAME_NICEST_MIN   4.5
+#define VPACKAGENAME_EASIEST_MAX  1.5
+#define VPACKAGENAME_HARDEST_MIN  4.5
 
 LevelsPack::LevelsPack(std::string i_name) {
   m_name         = i_name;
@@ -180,6 +181,7 @@ void LevelsManager::rebuildPacks(
 				 WebRoom *i_webHighscores,
 				 WebLevels *i_webLevels,
 #endif
+				 bool i_bDebugMode,
 				 std::string i_playerName,
 				 vapp::PlayerData *i_profiles,
 				 vapp::Stats *i_stats) {
@@ -205,6 +207,7 @@ void LevelsManager::rebuildPacks(
 		     i_webHighscores,
 		     i_webLevels,
 #endif
+		     i_bDebugMode,
 		     i_playerName, i_profiles, i_stats);
 }
 
@@ -213,6 +216,7 @@ void LevelsManager::createVirtualPacks(
 				       WebRoom *i_webHighscores,
 				       WebLevels *i_webLevels,
 #endif
+				       bool i_bDebugMode,
 				       std::string i_playerName, vapp::PlayerData *i_profiles, vapp::Stats *i_stats) {
   LevelsPack *v_pack;
   
@@ -295,6 +299,26 @@ void LevelsManager::createVirtualPacks(
 	  v_pack->addLevel(&LevelById(v_wlevel->getId()));
 	} catch(Exception &e) {
 	  /* ok, will not be in the pack */
+	}
+      }
+    }
+  }
+#endif
+
+#if defined(SUPPORT_WEBACCESS)
+  /* crapiest levels */
+  if(i_bDebugMode) {
+    if(i_webLevels != NULL) {
+      v_pack = new LevelsPack(std::string(VPACKAGENAME_CRAPIEST_LEVELS));
+      m_levelsPacks.push_back(v_pack);
+      for(unsigned int i=0; i<i_webLevels->getLevels().size(); i++) {
+	WebLevel *v_wlevel = i_webLevels->getLevels()[i];
+	if(v_wlevel->getQuality() <= VPACKAGENAME_CRAPIEST_MAX) {
+	  try {
+	    v_pack->addLevel(&LevelById(v_wlevel->getId()));
+	  } catch(Exception &e) {
+	    /* ok, will not be in the pack */
+	  }
 	}
       }
     }
