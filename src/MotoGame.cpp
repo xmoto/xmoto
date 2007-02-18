@@ -1291,7 +1291,10 @@ namespace vapp {
 
   void MotoGame::SetEntityPos(Entity *pEntity, float pX, float pY) {
     pEntity->setDynamicPosition(Vector2f(pX, pY));
-    m_Collision.moveEntity(pEntity);
+    // move it in the collision system only if it's not dead
+    if(pEntity->isAlive() == true){
+      m_Collision.moveEntity(pEntity);
+    }
   }
 
   void MotoGame::PlaceInGameArrow(float pX, float pY, float pAngle) {
