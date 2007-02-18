@@ -233,31 +233,30 @@ namespace vapp {
       
       if(Sound::isEnabled()) {
         /* Load sounds */
-        Sound::loadSample("Sounds/NewHighscore.ogg");
-        //m_pDieSFX = Sound::loadSample("Sounds/Die.ogg");
-        
-        Sound::loadSample("Sounds/Button1.ogg");
-//        Sound::loadSample("Sounds/Button2.ogg");
-        Sound::loadSample("Sounds/Button3.ogg");
-        
-        Sound::loadSample("Sounds/PickUpStrawberry.ogg");        
-        Sound::loadSample("Sounds/Headcrash.ogg");
-        //Sound::loadSample("Sounds/Squeek.ogg");
+	try {
 
-        m_EngineSound.addBangSample(Sound::loadSample("Sounds/Engine/00.wav"));
-        m_EngineSound.addBangSample(Sound::loadSample("Sounds/Engine/01.wav"));
-        m_EngineSound.addBangSample(Sound::loadSample("Sounds/Engine/02.wav"));
-        m_EngineSound.addBangSample(Sound::loadSample("Sounds/Engine/03.wav"));
-        m_EngineSound.addBangSample(Sound::loadSample("Sounds/Engine/04.wav"));
-        m_EngineSound.addBangSample(Sound::loadSample("Sounds/Engine/05.wav"));
-        m_EngineSound.addBangSample(Sound::loadSample("Sounds/Engine/06.wav"));
-        m_EngineSound.addBangSample(Sound::loadSample("Sounds/Engine/07.wav"));
-        m_EngineSound.addBangSample(Sound::loadSample("Sounds/Engine/08.wav"));
-        m_EngineSound.addBangSample(Sound::loadSample("Sounds/Engine/09.wav"));
-        m_EngineSound.addBangSample(Sound::loadSample("Sounds/Engine/10.wav"));
-        m_EngineSound.addBangSample(Sound::loadSample("Sounds/Engine/11.wav"));
-        m_EngineSound.addBangSample(Sound::loadSample("Sounds/Engine/12.wav"));
-        
+	  for(unsigned int i=0; i<m_theme.getSoundsList().size(); i++) {
+	    Sound::loadSample(m_theme.getSoundsList()[i]->FilePath());
+	  }
+	  
+	  m_EngineSound.addBangSample(Sound::findSample(m_theme.getSound("Engine00")->FilePath()));
+	  m_EngineSound.addBangSample(Sound::findSample(m_theme.getSound("Engine01")->FilePath()));
+	  m_EngineSound.addBangSample(Sound::findSample(m_theme.getSound("Engine02")->FilePath()));
+	  m_EngineSound.addBangSample(Sound::findSample(m_theme.getSound("Engine03")->FilePath()));
+	  m_EngineSound.addBangSample(Sound::findSample(m_theme.getSound("Engine04")->FilePath()));
+	  m_EngineSound.addBangSample(Sound::findSample(m_theme.getSound("Engine05")->FilePath()));
+	  m_EngineSound.addBangSample(Sound::findSample(m_theme.getSound("Engine06")->FilePath()));
+	  m_EngineSound.addBangSample(Sound::findSample(m_theme.getSound("Engine07")->FilePath()));
+	  m_EngineSound.addBangSample(Sound::findSample(m_theme.getSound("Engine08")->FilePath()));
+	  m_EngineSound.addBangSample(Sound::findSample(m_theme.getSound("Engine09")->FilePath()));
+	  m_EngineSound.addBangSample(Sound::findSample(m_theme.getSound("Engine10")->FilePath()));
+	  m_EngineSound.addBangSample(Sound::findSample(m_theme.getSound("Engine11")->FilePath()));
+	  m_EngineSound.addBangSample(Sound::findSample(m_theme.getSound("Engine12")->FilePath()));
+	} catch(Exception &e) {
+	  Log("*** Warning *** : %s\n", e.getMsg().c_str());
+	  /* hum, not cool */
+	}
+	
         Log(" %d sound%s loaded",Sound::getNumSamples(),Sound::getNumSamples()==1?"":"s");
       }
 

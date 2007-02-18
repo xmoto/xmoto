@@ -32,6 +32,10 @@ std::vector<Sprite*> Theme::getSpritesList() {
   return m_sprites;
 }
 
+std::vector<Sound*> Theme::getSoundsList() {
+  return m_sounds;
+}
+
 void Theme::initDefaultFont() {
     CBuiltInFont Fnt;
 
@@ -119,7 +123,8 @@ Theme::~Theme() {
   delete m_ghost;
 
   cleanSprites();
-  cleanMusics();  
+  cleanMusics();
+  cleanSounds();
 
   /* Kill textures */
   m_texMan.unloadTextures();
@@ -142,6 +147,7 @@ void Theme::load(std::string p_themeFile) {
 
   cleanSprites(); /* removing existing sprites */
   cleanMusics();
+  cleanSounds();
 
   vapp::XMLDocument v_ThemeXml;
   TiXmlDocument *v_ThemeXmlData;
@@ -221,6 +227,7 @@ void Theme::loadSpritesFromXML(TiXmlElement *p_ThemeXmlDataElement) {
     }
   }
 
+  /* get musics */
   std::string v_musicName;
   std::string v_musicFile;
 
@@ -239,6 +246,27 @@ void Theme::loadSpritesFromXML(TiXmlElement *p_ThemeXmlDataElement) {
 
     m_musics.push_back(new Music(this, v_musicName, v_musicFile));
     m_requiredFiles.push_back(THEME_MUSICS_FILE_DIR + std::string("/") + v_musicFile);    
+  }
+
+  /* get sounds */
+  std::string v_soundName;
+  std::string v_soundFile;
+
+  for(TiXmlElement *pVarElem = p_ThemeXmlDataElement->FirstChildElement("sound");
+      pVarElem!=NULL;
+      pVarElem = pVarElem->NextSiblingElement("sound")
+      ) {
+
+    pc = pVarElem->Attribute("name");
+    if(pc == NULL) { continue; }
+    v_soundName = pc;
+
+    pc = pVarElem->Attribute("file");
+    if(pc == NULL) { continue; }
+    v_soundFile = pc;
+
+    m_sounds.push_back(new Sound(this, v_soundName, v_soundFile));
+    m_requiredFiles.push_back(THEME_SOUNDS_FILE_DIR + std::string("/") + v_soundFile);    
   }
 
 }
@@ -264,6 +292,15 @@ Music* Theme::getMusic(std::string i_name) {
   throw Exception("Music " + i_name + " not found");
 }
 
+Sound* Theme::getSound(std::string i_name) {
+  for(unsigned int i=0; i<m_sounds.size(); i++) {
+    if(m_sounds[i]->Name() == i_name) {
+      return m_sounds[i];
+    }
+  }
+  throw Exception("Sound " + i_name + " not found");
+}
+
 void Theme::cleanSprites() {
   for(unsigned int i=0; i<m_sprites.size(); i++) {
     delete m_sprites[i];
@@ -276,6 +313,13 @@ void Theme::cleanMusics() {
     delete m_musics[i];
   }
   m_musics.clear(); 
+}
+
+void Theme::cleanSounds() {
+   for(unsigned int i=0; i<m_sounds.size(); i++) {
+    delete m_sounds[i];
+  }
+  m_sounds.clear(); 
 }
 
 void Theme::newAnimationSpriteFromXML(TiXmlElement *pVarElem) {
@@ -1132,23 +1176,44 @@ std::string Theme::blendModeToStr(SpriteBlendMode Mode) {
   return "default";
 }
 
- Music::Music(Theme* p_associated_theme, std::string i_name, std::string i_fileName) {
-   m_associated_theme = p_associated_theme;
-   m_name     	      = i_name;
-   m_fileName 	      = i_fileName;
- }
-
- Music::~Music() {
- }
-
- std::string Music::Name() const {
-   return m_name;
- }
-
- std::string Music::FileName() const {
-   return m_fileName;
- }
+Music::Music(Theme* p_associated_theme, std::string i_name, std::string i_fileName) {
+  m_associated_theme = p_associated_theme;
+  m_name     	      = i_name;
+  m_fileName 	      = i_fileName;
+}
  
- std::string Music::FilePath() const {
-   return vapp::FS::FullPath(THEME_MUSICS_FILE_DIR + std::string("/") + m_fileName);
- }
+Music::~Music() {
+}
+
+std::string Music::Name() const {
+  return m_name;
+}
+
+std::string Music::FileName() const {
+  return m_fileName;
+}
+ 
+std::string Music::FilePath() const {
+  return vapp::FS::FullPath(THEME_MUSICS_FILE_DIR + std::string("/") + m_fileName);
+}
+
+Sound::Sound(Theme* p_associated_theme, std::string i_name, std::string i_fileName) {
+  m_associated_theme = p_associated_theme;
+  m_name     	      = i_name;
+  m_fileName 	      = i_fileName;
+}
+ 
+Sound::~Sound() {
+}
+
+std::string Sound::Name() const {
+  return m_name;
+}
+
+std::string Sound::FileName() const {
+  return m_fileName;
+}
+ 
+std::string Sound::FilePath() const {
+  return THEME_SOUNDS_FILE_DIR + std::string("/") + m_fileName;
+}

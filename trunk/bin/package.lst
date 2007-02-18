@@ -57,11 +57,13 @@ Textures/Textures/wood.jpg
 Textures/Textures/Yellow_177.jpg
 
 Textures/Sounds/Button1.ogg
+Textures/Sounds/Button2.ogg
 Textures/Sounds/Button3.ogg
 Textures/Sounds/PickUpStrawberry.ogg
 Textures/Sounds/NewHighscore.ogg
 Textures/Sounds/Headcrash.ogg
-
+Textures/Sounds/EndOfLevel.ogg
+Textures/Sounds/Squeek.ogg
 Textures/Sounds/engine_00.wav
 Textures/Sounds/engine_01.wav
 Textures/Sounds/engine_02.wav
