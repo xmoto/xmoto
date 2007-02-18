@@ -117,7 +117,7 @@ namespace vapp {
 
 	    if(!m_bTimeDemo) {
 	      /* limit framerate while PREPLAY */
-	      while(getTime() <= m_currentTime+0.01);
+	      while(getTime() <= m_currentTime+0.01) setFrameDelay(1);
 	    }
 
           } 

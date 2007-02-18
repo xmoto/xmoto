@@ -421,16 +421,18 @@ namespace vapp {
           /* Stroke! Determine a random sample to use */
           float x = ((float)rand()) / (float)RAND_MAX; /* linux likes insanely high RAND_MAX'es */
           int i = (int)(((float)m_BangSamples.size())*x);
-          if(i<0) i = 0;
-          if(i>=m_BangSamples.size()) i = m_BangSamples.size()-1;
+	  if(i > 0) {
+	    if(i < 0) i = 0;
+	    if(i>=m_BangSamples.size()) i = m_BangSamples.size()-1;
           
-          #if defined(USE_SDL_MIXER)
+#if defined(USE_SDL_MIXER)
             /* Play it */
             Mix_PlayChannel(-1,m_BangSamples[i]->pChunk,0);
-          #endif
-          
-          m_fLastBangTime = fTime;
-        }
+#endif
+	    
+	    m_fLastBangTime = fTime;
+	  }
+	}
       }
     }
   }
