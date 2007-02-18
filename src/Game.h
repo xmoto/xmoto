@@ -119,7 +119,7 @@ namespace vapp {
                  m_bShowFrameRate=false;
                  m_bEnableLevelCache=true;
                  m_bEnableMenuMusic=false;
-                 m_bEnableInitZoom=false;
+                 m_bEnableInitZoom=true;
 								 m_autoZoom = false;
 								 m_bAutoZoomInitialized = false;
 								 m_bLockMotoGame = false;
