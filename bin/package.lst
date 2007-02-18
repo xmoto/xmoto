@@ -77,6 +77,7 @@ Textures/Sounds/engine_09.wav
 Textures/Sounds/engine_10.wav
 Textures/Sounds/engine_11.wav
 Textures/Sounds/engine_12.wav
+Textures/Sounds/ring.ogg
 
 Shaders/SFXOverlay.vert
 Shaders/SFXOverlay.frag
