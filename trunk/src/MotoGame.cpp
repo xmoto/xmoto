@@ -415,8 +415,9 @@ namespace vapp {
     }
 
     /* Entities scheduled for termination? */
-    for(int i=0;i<m_DelSchedule.size();i++)
+    for(int i=0;i<m_DelSchedule.size();i++) {
       _KillEntity(m_DelSchedule[i]);
+    }
     m_DelSchedule.clear();
     
     // we don't change the sens of the wheel depending on the side, because 
@@ -1533,6 +1534,19 @@ namespace vapp {
     /* now that rendering use the space partionnement,
        we have to remove entity from the collision system */
     m_Collision.removeEntity(pEnt);
+
+    /* special case for the last strawberry : if we are touching the end, finish the level */
+    if(getNbRemainingStrawberries() == 0) {
+      bool v_touchingMakeWin = false;
+      for(int i=0; i<m_entitiesTouching.size(); i++) {
+	if(m_entitiesTouching[i]->DoesMakeWin()) {
+	  v_touchingMakeWin = true;
+	}
+      }
+      if(v_touchingMakeWin) {
+	makePlayerWin();
+      }
+    }
   }
 
 }
