@@ -37,6 +37,7 @@ scenario:
  => this event is not called, m_bFinished remains to false
 - you go out of the flower
  => nothing it called, m_bFinished remains to false
+* [22:05] <Christoph> hm, the level "Prince of Persia" gives me the error message "Collision element not found" when I touch the switch that moves the first strawberry a second time (after the strawberry's gone)
 
 Since 0.2.2
 * When i update lists sometimes
