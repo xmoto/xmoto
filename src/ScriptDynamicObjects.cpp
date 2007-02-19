@@ -155,14 +155,17 @@ void SDynamicEntityMove::performMove(vapp::MotoGame* v_motoGame, int i_nbCents) 
     return;
   }
   float vx, vy;
+  float addvx = 0.0, addvy = 0.0;
 
   if(i_nbCents > 0) {
     for(int i=0; i<i_nbCents; i++) {
       performXY(&vx, &vy);
-      v_motoGame->SetEntityPos(p,
-			       vx + p->DynamicPosition().x,
-			       vy + p->DynamicPosition().y);
+      addvx += vx;
+      addvy += vy;
     }
+    v_motoGame->SetEntityPos(p,
+			     addvx + p->DynamicPosition().x,
+			     addvy + p->DynamicPosition().y);
   }
 }
 
@@ -202,15 +205,17 @@ SDynamicBlockMove::~SDynamicBlockMove() {
 void SDynamicBlockMove::performMove(vapp::MotoGame* v_motoGame, int i_nbCents) {
   Block *p = &(v_motoGame->getLevelSrc()->getBlockById(m_block));
   float vx, vy;
+  float addvx = 0.0, addvy = 0.0;
 
   if(i_nbCents > 0) {
     for(int i=0; i<i_nbCents; i++) {
       performXY(&vx, &vy);
-
-      v_motoGame->SetBlockPos(p->Id(),
-			      vx + p->DynamicPosition().x,
-			      vy + p->DynamicPosition().y);
-    }  
+      addvx += vx;
+      addvy += vy;
+    }
+    v_motoGame->SetBlockPos(p->Id(),
+			    addvx + p->DynamicPosition().x,
+			    addvy + p->DynamicPosition().y);
   }
 }
 
