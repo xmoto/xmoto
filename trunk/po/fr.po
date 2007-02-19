@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-02-14 23:45+0100\n"
+"POT-Creation-Date: 2007-02-19 00:39+0100\n"
 "PO-Revision-Date: 2006-09-04 19:52+0100\n"
 "Last-Translator: Nicolas Adenis-Lamarre\n"
 "Language-Team: X-Moto\n"
@@ -1672,6 +1672,11 @@ msgstr "Niveaux favoris"
 #: src/GameText.h:498
 #, fuzzy
 msgid "Easiest levels"
+msgstr "Niveaux favoris"
+
+#: src/GameText.h:499
+#, fuzzy
+msgid "Crapiest levels"
 msgstr "Niveaux favoris"
 
 #~ msgid "Bike Breaks"
