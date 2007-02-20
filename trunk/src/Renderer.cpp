@@ -878,7 +878,16 @@ namespace vapp {
           break;
       default:
           if(!bForeground && !bBackground) {
-            _RenderSprite(pEnt);
+	    switch(pEnt->Speciality()) {
+	    case ET_MAKEWIN:
+	      _RenderSprite(pEnt, m_sizeMultOfEntitiesWhichMakeWin);
+	      break;
+	    case ET_ISTOTAKE:
+	      _RenderSprite(pEnt, m_sizeMultOfEntitiesToTake);
+	      break;
+	    default:	      
+	      _RenderSprite(pEnt);
+	    }
           }
           break;
       }
@@ -888,7 +897,7 @@ namespace vapp {
   /*===========================================================================
   Render a sprite
   ===========================================================================*/
-  void GameRenderer::_RenderSprite(Entity *pSprite) {  
+  void GameRenderer::_RenderSprite(Entity *pSprite, float i_sizeMult) {  
     Sprite* v_spriteType;
     AnimationSprite* v_animationSpriteType;
     DecorationSprite* v_decorationSpriteType;
@@ -952,6 +961,13 @@ namespace vapp {
           }
         }
       }
+
+      if(i_sizeMult != 1.0) {
+	v_centerX -= (v_width  - (v_width  * i_sizeMult)) / 2.0;
+	v_centerY -= (v_height - (v_height * i_sizeMult)) / 2.0;
+	v_width  *= i_sizeMult;
+	v_height *= i_sizeMult;
+      }	
 
       if(v_spriteType != NULL) {
         /* Draw it */
@@ -1048,7 +1064,7 @@ namespace vapp {
         break;
       }
 
-      _RenderCircle(20, v_color, C, pSprite->Size());
+      _RenderCircle(20, v_color, C, pSprite->Size() * i_sizeMult);
     }
   }
      
@@ -1716,6 +1732,22 @@ namespace vapp {
 
   void GameRenderer::setZoom(float p_f) {
     m_fScale = p_f;
+  }
+
+  float GameRenderer::SizeMultOfEntitiesToTake() const {
+    return m_sizeMultOfEntitiesToTake;
+  }
+
+  float GameRenderer::SizeMultOfEntitiesWhichMakeWin() const {
+    return m_sizeMultOfEntitiesWhichMakeWin;
+  }
+
+  void GameRenderer::setSizeMultOfEntitiesToTake(float i_sizeMult) {
+    m_sizeMultOfEntitiesToTake = i_sizeMult;
+  }
+
+  void GameRenderer::setSizeMultOfEntitiesWhichMakeWin(float i_sizeMult) {
+    m_sizeMultOfEntitiesWhichMakeWin = i_sizeMult;
   }
 
 }
