@@ -42,87 +42,90 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "LevelsManager.h"
 
 #define PRESTART_ANIMATION_TIME 2.0
-#define PRESTART_ANIMATION_LEVEL_MSG_DURATION 1.0
-#define PRESTART_ANIMATION_MARGIN_SIZE 5
-#define PRESTART_ANIMATION_CURVE 3.0
+ #define INPLAY_ANIMATION_TIME 1.0
+ #define INPLAY_ANIMATION_SPEED 10
+ #define PRESTART_ANIMATION_LEVEL_MSG_DURATION 1.0
+ #define PRESTART_ANIMATION_MARGIN_SIZE 5
+ #define PRESTART_ANIMATION_CURVE 3.0
 
-namespace vapp {
+ namespace vapp {
 
-  /*===========================================================================
-  Overall game states
-  ===========================================================================*/
-  enum GameState {
-    GS_UNASSIGNED = 0,
-    GS_MENU,                  /* In the game menu */
-    GS_PREPLAYING,            /* Just before the game start */
-    GS_PLAYING,               /* Playing the game */
-    GS_PAUSE,                 /* Paused from GS_PLAYING */
-    GS_DEADJUST,              /* just dead */
-    GS_DEADMENU,              /* Head-banging too much */
-    GS_EDIT_PROFILES,         /* In profile editor */
-    GS_FINISHED,              /* Finished a level */
-    GS_REPLAYING,             /* Replaying */
-    GS_LEVEL_INFO_VIEWER,     /* In level info viewer */
-    GS_LEVELPACK_VIEWER,      /* In level pack viewer */
-    GS_CREDITSMODE,           /* Credits/replay */
-#if defined(SUPPORT_WEBACCESS)
-    GS_EDIT_WEBCONFIG         /* Editing internet configuration */
-#endif
-  };
+   /*===========================================================================
+   Overall game states
+   ===========================================================================*/
+   enum GameState {
+     GS_UNASSIGNED = 0,
+     GS_MENU,                  /* In the game menu */
+     GS_PREPLAYING,            /* Just before the game start */
+     GS_PLAYING,               /* Playing the game */
+     GS_PAUSE,                 /* Paused from GS_PLAYING */
+     GS_DEADJUST,              /* just dead */
+     GS_DEADMENU,              /* Head-banging too much */
+     GS_EDIT_PROFILES,         /* In profile editor */
+     GS_FINISHED,              /* Finished a level */
+     GS_REPLAYING,             /* Replaying */
+     GS_LEVEL_INFO_VIEWER,     /* In level info viewer */
+     GS_LEVELPACK_VIEWER,      /* In level pack viewer */
+     GS_CREDITSMODE,           /* Credits/replay */
+ #if defined(SUPPORT_WEBACCESS)
+     GS_EDIT_WEBCONFIG         /* Editing internet configuration */
+ #endif
+   };
 
-  /*===========================================================================
-  Menu background graphical settings
-  ===========================================================================*/
-  enum MenuBackgroundGraphics {
-    MENU_GFX_OFF,
-    MENU_GFX_LOW,
-    MENU_GFX_HIGH
-  };
-  
+   /*===========================================================================
+   Menu background graphical settings
+   ===========================================================================*/
+   enum MenuBackgroundGraphics {
+     MENU_GFX_OFF,
+     MENU_GFX_LOW,
+     MENU_GFX_HIGH
+   };
 
-#if defined(ALLOW_GHOST) 
-  enum GhostSearchStrategy {
-    GHOST_STRATEGY_MYBEST,
-    GHOST_STRATEGY_THEBEST,
-    GHOST_STRATEGY_BESTOFROOM
-  };
-#endif
 
-  class XMMotoGameHooks : public MotoGameHooks {
-  public:
-    XMMotoGameHooks();
-    ~XMMotoGameHooks();
-    void setGameApps(GameApp *i_GameApp, MotoGame *i_MotoGame);
-    void OnTakeEntity();
+ #if defined(ALLOW_GHOST) 
+   enum GhostSearchStrategy {
+     GHOST_STRATEGY_MYBEST,
+     GHOST_STRATEGY_THEBEST,
+     GHOST_STRATEGY_BESTOFROOM
+   };
+ #endif
 
-  private:
-    GameApp  *m_GameApp;
-    MotoGame *m_MotoGame;
-  };
+   class XMMotoGameHooks : public MotoGameHooks {
+   public:
+     XMMotoGameHooks();
+     ~XMMotoGameHooks();
+     void setGameApps(GameApp *i_GameApp, MotoGame *i_MotoGame);
+     void OnTakeEntity();
 
-  /*===========================================================================
-  Game application
-  ===========================================================================*/
-  #if defined(SUPPORT_WEBACCESS)
-  class GameApp : public App, public WWWAppInterface {
-  #else
-  class GameApp : public App {
-  #endif
-    public:
-      virtual ~GameApp() {}
-      GameApp() {m_pCredits = NULL;
-                 m_bShowMiniMap=true;
-                 m_bDebugMode=false;
-                 m_bListLevels=false;
-                 m_bListReplays=false;
-                 m_bTimeDemo=false;
-                 m_bShowFrameRate=false;
-                 m_bEnableLevelCache=true;
-                 m_bEnableMenuMusic=false;
-                 m_bEnableInitZoom=true;
-								 m_autoZoom = false;
-								 m_bAutoZoomInitialized = false;
-								 m_bLockMotoGame = false;
+   private:
+     GameApp  *m_GameApp;
+     MotoGame *m_MotoGame;
+   };
+
+   /*===========================================================================
+   Game application
+   ===========================================================================*/
+   #if defined(SUPPORT_WEBACCESS)
+   class GameApp : public App, public WWWAppInterface {
+   #else
+   class GameApp : public App {
+   #endif
+     public:
+       virtual ~GameApp() {}
+       GameApp() {m_pCredits = NULL;
+		  m_bShowMiniMap=true;
+		  m_bDebugMode=false;
+		  m_bListLevels=false;
+		  m_bListReplays=false;
+		  m_bTimeDemo=false;
+		  m_bShowFrameRate=false;
+		  m_bEnableLevelCache=true;
+		  m_bEnableMenuMusic=false;
+		  m_bEnableInitZoom=true;
+		  m_autoZoom = false;
+		  m_autoUnZoom = false;
+		  m_bAutoZoomInitialized = false;
+		  m_bLockMotoGame = false;
                  m_bCleanCache=false;
                  m_bEnableDeathAnim=true;
                  m_pQuitMsgBox=NULL;
@@ -242,6 +245,7 @@ namespace vapp {
       bool isTestThemeMode(void) {return m_bTestThemeMode;}
     
       void setAutoZoom(bool bValue);
+      void setAutoUnZoom(bool bValue);
 
       void TeleportationCheatTo(Vector2f i_position);
 
@@ -251,8 +255,9 @@ namespace vapp {
       /* Data */
       ReplayList m_ReplayList;                  /* Replay list */
       bool m_bEnableInitZoom;                   /* true: Perform initial level scroll/zoom */
-			bool m_autoZoom;                          /* true : the key is pressed so that it zooms out to see the level */
-			bool m_bAutoZoomInitialized;
+      bool m_autoZoom;                          /* true : the key is pressed so that it zooms out to see the level */
+      bool m_autoUnZoom;
+      bool m_bAutoZoomInitialized;
       bool m_bEnableDeathAnim;                  /* true: Bike falls apart at when dead */
       bool m_bEnableMenuMusic;                  /* true: Play menu music */      
       bool m_bEnableContextHelp;                /* true: Show context help */
@@ -351,6 +356,15 @@ namespace vapp {
       float m_zoomY;
       float m_zoomU;
       float static_time;
+
+      float fAnimPlayStartZoom;
+      float fAnimPlayStartCameraX; 
+      float fAnimPlayStartCameraY;
+      float fAnimPlayFinalZoom;
+      float fAnimPlayFinalCameraX1;
+      float fAnimPlayFinalCameraY1;
+      float fAnimPlayFinalCameraX2;
+      float fAnimPlayFinalCameraY2;
 
       Stats m_GameStats;
       UIWindow *m_pStatsReport;
@@ -581,17 +595,18 @@ namespace vapp {
       void prestartAnimation_init();
       void prestartAnimation_step();
       
-			void zoomAnimation1_init();
-			bool zoomAnimation1_step();
-			void zoomAnimation1_abort();
+      void zoomAnimation1_init();
+      bool zoomAnimation1_step();
+      void zoomAnimation1_abort();
+      
+      void zoomAnimation2_init();
+      bool zoomAnimation2_step();
+      void zoomAnimation2_init_unzoom();
+      bool zoomAnimation2_unstep();
+      void zoomAnimation2_abort();
 
-			void zoomAnimation2_init();
-			bool zoomAnimation2_step();
-			bool zoomAnimation2_unstep();
-			void zoomAnimation2_abort();
-
-			void lockMotoGame(bool bLock);
-			bool isLockedMotoGame() const;
+      void lockMotoGame(bool bLock);
+      bool isLockedMotoGame() const;
 
       std::string splitText(const std::string &str, int p_breakLineLength);
       

@@ -427,6 +427,7 @@ namespace vapp {
 	}
 	else if(m_nAutoZoom == nKey) {
 	  pGameApp->setAutoZoom(true);
+	  pGameApp->setAutoUnZoom(false);
 	} else if(nKey == SDLK_KP0 && ((mod & KMOD_LCTRL) == KMOD_LCTRL)) {
 	  pGameApp->TeleportationCheatTo(Vector2f(pGameRender->getCameraPositionX(),
 						  pGameRender->getCameraPositionY()));
@@ -455,9 +456,10 @@ namespace vapp {
             /* Change dir */
             pController->setChangeDir(true);
           }
-				else if(m_nAutoZoom == nKey) {
-					pGameApp->setAutoZoom(false);
-				}
+	else if(m_nAutoZoom == nKey) {
+	  pGameApp->setAutoZoom(false);
+	  pGameApp->setAutoUnZoom(true);
+	}
           break;
       }      
     }
