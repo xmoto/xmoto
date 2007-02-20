@@ -238,8 +238,8 @@ namespace vapp {
       case GS_PLAYING: {
 	v_newMusicPlaying = "";
 
-				m_bAutoZoomInitialized = false;
-        Level *pLevelSrc;
+	m_bAutoZoomInitialized = false;
+	Level *pLevelSrc;
 				
 	try {
 	  pLevelSrc = &(m_levelsManager.LevelById(m_PlaySpecificLevel));
@@ -1814,127 +1814,163 @@ namespace vapp {
     m_fPrePlayStartCameraX = m_Renderer.getCameraPositionX();
     m_fPrePlayStartCameraY = m_Renderer.getCameraPositionY();
 
-		m_zoomX = (2.0 * ((float)drawLib->getDispWidth() / (float)drawLib->getDispHeight())) / (m_MotoGame.getLevelSrc()->RightLimit() - m_MotoGame.getLevelSrc()->LeftLimit() + 2*PRESTART_ANIMATION_MARGIN_SIZE);
-		m_zoomY = 2.0 /(m_MotoGame.getLevelSrc()->TopLimit() - m_MotoGame.getLevelSrc()->BottomLimit()+2*PRESTART_ANIMATION_MARGIN_SIZE);
+    m_zoomX = (2.0 * ((float)drawLib->getDispWidth() / (float)drawLib->getDispHeight())) / (m_MotoGame.getLevelSrc()->RightLimit() - m_MotoGame.getLevelSrc()->LeftLimit() + 2*PRESTART_ANIMATION_MARGIN_SIZE);
+    m_zoomY = 2.0 /(m_MotoGame.getLevelSrc()->TopLimit() - m_MotoGame.getLevelSrc()->BottomLimit()+2*PRESTART_ANIMATION_MARGIN_SIZE);
 		
-		if (m_zoomX > m_zoomY){
-			float visibleHeight,cameraStartHeight;
+    if (m_zoomX > m_zoomY){
+      float visibleHeight,cameraStartHeight;
 			
-			m_zoomU=m_zoomX;
-			static_time = (m_MotoGame.getLevelSrc()->TopLimit() - m_MotoGame.getLevelSrc()->BottomLimit()) / (2.0/m_zoomU);
+      m_zoomU=m_zoomX;
+      static_time = (m_MotoGame.getLevelSrc()->TopLimit() - m_MotoGame.getLevelSrc()->BottomLimit()) / (2.0/m_zoomU);
 			
-			visibleHeight = 2.0/m_zoomU;
-			cameraStartHeight= visibleHeight/2.0;
+      visibleHeight = 2.0/m_zoomU;
+      cameraStartHeight= visibleHeight/2.0;
 			
-			m_fPreCameraStartX = (m_MotoGame.getLevelSrc()->RightLimit() + m_MotoGame.getLevelSrc()->LeftLimit())/2;
-			m_fPreCameraStartY = m_MotoGame.getLevelSrc()->TopLimit() - cameraStartHeight + PRESTART_ANIMATION_MARGIN_SIZE;
-			m_fPreCameraFinalX = (m_MotoGame.getLevelSrc()->RightLimit() + m_MotoGame.getLevelSrc()->LeftLimit())/2;
-			m_fPreCameraFinalY = m_MotoGame.getLevelSrc()->BottomLimit() + cameraStartHeight - PRESTART_ANIMATION_MARGIN_SIZE;
+      m_fPreCameraStartX = (m_MotoGame.getLevelSrc()->RightLimit() + m_MotoGame.getLevelSrc()->LeftLimit())/2;
+      m_fPreCameraStartY = m_MotoGame.getLevelSrc()->TopLimit() - cameraStartHeight + PRESTART_ANIMATION_MARGIN_SIZE;
+      m_fPreCameraFinalX = (m_MotoGame.getLevelSrc()->RightLimit() + m_MotoGame.getLevelSrc()->LeftLimit())/2;
+      m_fPreCameraFinalY = m_MotoGame.getLevelSrc()->BottomLimit() + cameraStartHeight - PRESTART_ANIMATION_MARGIN_SIZE;
 			
-			if ( fabs(m_fPreCameraStartY - m_fPrePlayStartCameraY) > fabs(m_fPreCameraFinalY - m_fPrePlayStartCameraY)) {
-				float f;
-				f = m_fPreCameraFinalY;
-				m_fPreCameraFinalY = m_fPreCameraStartY;
-				m_fPreCameraStartY = f;
-			}
+      if ( fabs(m_fPreCameraStartY - m_fPrePlayStartCameraY) > fabs(m_fPreCameraFinalY - m_fPrePlayStartCameraY)) {
+	float f;
+	f = m_fPreCameraFinalY;
+	m_fPreCameraFinalY = m_fPreCameraStartY;
+	m_fPreCameraStartY = f;
+      }
 			
-		}else {
-			float visibleWidth,cameraStartLeft;
+    }else {
+      float visibleWidth,cameraStartLeft;
 			
-        m_zoomU=m_zoomY;
-			static_time = (m_MotoGame.getLevelSrc()->RightLimit() - m_MotoGame.getLevelSrc()->LeftLimit()) / ((2.0 * ((float)drawLib->getDispWidth() / (float)drawLib->getDispHeight()))/m_zoomU);
+      m_zoomU=m_zoomY;
+      static_time = (m_MotoGame.getLevelSrc()->RightLimit() - m_MotoGame.getLevelSrc()->LeftLimit()) / ((2.0 * ((float)drawLib->getDispWidth() / (float)drawLib->getDispHeight()))/m_zoomU);
       
-			visibleWidth = (2.0 * ((float)drawLib->getDispWidth() / (float)drawLib->getDispHeight()))/m_zoomU;
-			cameraStartLeft = visibleWidth/2.0;
+      visibleWidth = (2.0 * ((float)drawLib->getDispWidth() / (float)drawLib->getDispHeight()))/m_zoomU;
+      cameraStartLeft = visibleWidth/2.0;
 			
-			m_fPreCameraStartX = m_MotoGame.getLevelSrc()->RightLimit() - cameraStartLeft + PRESTART_ANIMATION_MARGIN_SIZE;
-			m_fPreCameraStartY = (m_MotoGame.getLevelSrc()->BottomLimit() + m_MotoGame.getLevelSrc()->TopLimit())/2;
-			m_fPreCameraFinalX = m_MotoGame.getLevelSrc()->LeftLimit() + cameraStartLeft - PRESTART_ANIMATION_MARGIN_SIZE;
-			m_fPreCameraFinalY = (m_MotoGame.getLevelSrc()->BottomLimit() + m_MotoGame.getLevelSrc()->TopLimit())/2;
+      m_fPreCameraStartX = m_MotoGame.getLevelSrc()->RightLimit() - cameraStartLeft + PRESTART_ANIMATION_MARGIN_SIZE;
+      m_fPreCameraStartY = (m_MotoGame.getLevelSrc()->BottomLimit() + m_MotoGame.getLevelSrc()->TopLimit())/2;
+      m_fPreCameraFinalX = m_MotoGame.getLevelSrc()->LeftLimit() + cameraStartLeft - PRESTART_ANIMATION_MARGIN_SIZE;
+      m_fPreCameraFinalY = (m_MotoGame.getLevelSrc()->BottomLimit() + m_MotoGame.getLevelSrc()->TopLimit())/2;
    
-			if ( fabs(m_fPreCameraStartX - m_fPrePlayStartCameraX) > fabs(m_fPreCameraFinalX - m_fPrePlayStartCameraX)) {
-				float f;
-				f = m_fPreCameraFinalX;
-				m_fPreCameraFinalX = m_fPreCameraStartX;
-				m_fPreCameraStartX = f;
-			}
-		} 
-	}
+      if ( fabs(m_fPreCameraStartX - m_fPrePlayStartCameraX) > fabs(m_fPreCameraFinalX - m_fPrePlayStartCameraX)) {
+	float f;
+	f = m_fPreCameraFinalX;
+	m_fPreCameraFinalX = m_fPreCameraStartX;
+	m_fPreCameraStartX = f;
+      }
+    } 
+  }
 	
-	bool GameApp::zoomAnimation1_step() {
-	  if(getRealTime() > m_fPrePlayStartTime + static_time + PRESTART_ANIMATION_TIME) {
-	    return false;
-	  }
-		if(getRealTime() > m_fPrePlayStartTime + static_time){
-			float zx, zy, zz;
+  bool GameApp::zoomAnimation1_step() {
+    if(getRealTime() > m_fPrePlayStartTime + static_time + PRESTART_ANIMATION_TIME) {
+      return false;
+    }
+    if(getRealTime() > m_fPrePlayStartTime + static_time){
+      float zx, zy, zz;
 			
-			zz = (logf (PRESTART_ANIMATION_CURVE * ((PRESTART_ANIMATION_TIME + static_time - getRealTime() + m_fPrePlayStartTime) / (PRESTART_ANIMATION_TIME)) + 1.0)) / logf(PRESTART_ANIMATION_CURVE + 1.0) * (m_fPrePlayStartInitZoom - m_zoomU);
+      zz = (logf (PRESTART_ANIMATION_CURVE * ((PRESTART_ANIMATION_TIME + static_time - getRealTime() + m_fPrePlayStartTime) / (PRESTART_ANIMATION_TIME)) + 1.0)) / logf(PRESTART_ANIMATION_CURVE + 1.0) * (m_fPrePlayStartInitZoom - m_zoomU);
 			
-			m_Renderer.setZoom(m_fPrePlayStartInitZoom - zz);
+      m_Renderer.setZoom(m_fPrePlayStartInitZoom - zz);
 			
-        zx = (PRESTART_ANIMATION_TIME + static_time - getRealTime() + m_fPrePlayStartTime)
-			/ (PRESTART_ANIMATION_TIME) 
-			* (m_fPrePlayStartCameraX - m_fPrePlayCameraLastX);
-			zy =  (PRESTART_ANIMATION_TIME + static_time - getRealTime() + m_fPrePlayStartTime)
-			/ (PRESTART_ANIMATION_TIME) 
-			* (m_fPrePlayStartCameraY - m_fPrePlayCameraLastY);
+      zx = (PRESTART_ANIMATION_TIME + static_time - getRealTime() + m_fPrePlayStartTime)
+      / (PRESTART_ANIMATION_TIME) 
+      * (m_fPrePlayStartCameraX - m_fPrePlayCameraLastX);
+      zy =  (PRESTART_ANIMATION_TIME + static_time - getRealTime() + m_fPrePlayStartTime)
+      / (PRESTART_ANIMATION_TIME) 
+      * (m_fPrePlayStartCameraY - m_fPrePlayCameraLastY);
 		
-			m_Renderer.setCameraPosition(m_fPrePlayStartCameraX-zx, m_fPrePlayStartCameraY-zy);
-		} else {
-        float zx,zy;
+      m_Renderer.setCameraPosition(m_fPrePlayStartCameraX-zx, m_fPrePlayStartCameraY-zy);
+    } else {
+      float zx,zy;
         
-        m_Renderer.setZoom(m_zoomU);
+      m_Renderer.setZoom(m_zoomU);
         
-				zx  = (static_time - getRealTime() + m_fPrePlayStartTime) / (static_time) 
-				* (m_fPreCameraStartX - m_fPreCameraFinalX); 
+      zx  = (static_time - getRealTime() + m_fPrePlayStartTime) / (static_time) 
+      * (m_fPreCameraStartX - m_fPreCameraFinalX); 
 
-				zy = (static_time - getRealTime() + m_fPrePlayStartTime) / (static_time) 
-				* (m_fPreCameraStartY - m_fPreCameraFinalY);
+      zy = (static_time - getRealTime() + m_fPrePlayStartTime) / (static_time) 
+      * (m_fPreCameraStartY - m_fPreCameraFinalY);
 				
-        m_Renderer.setCameraPosition( m_fPreCameraStartX  - zx, m_fPreCameraStartY - zy);
+      m_Renderer.setCameraPosition( m_fPreCameraStartX  - zx, m_fPreCameraStartY - zy);
 				
-        m_fPrePlayCameraLastX= m_fPreCameraStartX - zx;
-        m_fPrePlayCameraLastY= m_fPreCameraStartY - zy;
-		}
-		return true;
-	}
+      m_fPrePlayCameraLastX= m_fPreCameraStartX - zx;
+      m_fPrePlayCameraLastY= m_fPreCameraStartY - zy;
+    }
+    return true;
+  }
 
-	void GameApp::zoomAnimation1_abort() {
-		m_Renderer.setZoom(m_fPrePlayStartInitZoom); // because the man can change ugly mode while the animation
-		m_Renderer.setCameraPosition(m_fPrePlayStartCameraX, m_fPrePlayStartCameraY);
-	}
+  void GameApp::zoomAnimation1_abort() {
+    m_Renderer.setZoom(m_fPrePlayStartInitZoom); // because the man can change ugly mode while the animation
+    m_Renderer.setCameraPosition(m_fPrePlayStartCameraX, m_fPrePlayStartCameraY);
+  }
 
-	void GameApp::zoomAnimation2_init() {
-	  zoomAnimation1_init();
+  void GameApp::zoomAnimation2_init() {
+    zoomAnimation1_init();
+    fAnimPlayStartZoom = m_Renderer.getCurrentZoom(); 
+    fAnimPlayStartCameraX = m_Renderer.getCameraPositionX();
+    fAnimPlayStartCameraY = m_Renderer.getCameraPositionY();
+    fAnimPlayFinalZoom = m_zoomU;
+    fAnimPlayFinalCameraX1 = m_fPreCameraStartX;
+    fAnimPlayFinalCameraY1 = m_fPreCameraStartY;
+    fAnimPlayFinalCameraX2 = m_fPreCameraFinalX;
+    fAnimPlayFinalCameraY2 = m_fPreCameraFinalY;
+    m_fPrePlayStartTime = getRealTime();
+  }
 
-	  //float fTmp;
-	  //fTmp = m_fPrePlayStartInitZoom;
-	  //m_fPrePlayStartInitZoom = m_zoomU;
-	  //m_zoomU = fTmp;
-	  //
-	  //fTmp = m_fPreCameraStartX;
-	  //m_fPreCameraStartX = m_fPreCameraFinalX;
-	  //m_fPreCameraFinalX = fTmp;
-	  //
-	  //fTmp = m_fPreCameraStartY;
-	  //m_fPreCameraStartY = m_fPreCameraFinalY;
-	  //m_fPreCameraFinalY = fTmp;
+  bool GameApp::zoomAnimation2_step() {
+    if(getRealTime() > m_fPrePlayStartTime + INPLAY_ANIMATION_TIME) {
+      float zx, zy;
+      zx = (fAnimPlayFinalCameraX1 - fAnimPlayFinalCameraX2) * (sin((getRealTime() - m_fPrePlayStartTime - INPLAY_ANIMATION_TIME) * 2 * 3.1415927 / INPLAY_ANIMATION_SPEED - 3.1415927/2) + 1) / 2;
+      zy = (fAnimPlayFinalCameraY1 - fAnimPlayFinalCameraY2) * (sin((getRealTime() - m_fPrePlayStartTime - INPLAY_ANIMATION_TIME) * 2 * 3.1415927 / INPLAY_ANIMATION_SPEED - 3.1415927/2) + 1) / 2;
+      m_Renderer.setCameraPosition(fAnimPlayFinalCameraX1 - zx,fAnimPlayFinalCameraY1 - zy);
+      return true;
+    }
+    if(getRealTime() > m_fPrePlayStartTime){
+      float zx, zy, zz, coeff;
+      coeff = (getRealTime() - m_fPrePlayStartTime) / (INPLAY_ANIMATION_TIME);
+      zx = coeff * (fAnimPlayStartCameraX - fAnimPlayFinalCameraX1);
+      zy = coeff * (fAnimPlayStartCameraY - fAnimPlayFinalCameraY1);
+      zz = coeff * (fAnimPlayStartZoom - fAnimPlayFinalZoom);
+			
+      m_Renderer.setZoom(fAnimPlayStartZoom - zz);
+      m_Renderer.setCameraPosition(fAnimPlayStartCameraX - zx,fAnimPlayStartCameraY - zy);
+    }
 		
-	}
+    return true;
+  }
 
-	bool GameApp::zoomAnimation2_step() {
-	  return zoomAnimation1_step();
-	}
+  void GameApp::zoomAnimation2_init_unzoom(){
+    m_fPrePlayStartTime = getRealTime();
+    fAnimPlayFinalZoom = fAnimPlayStartZoom;
+    fAnimPlayStartZoom = m_Renderer.getCurrentZoom();
+    fAnimPlayFinalCameraX1 = fAnimPlayStartCameraX;
+    fAnimPlayFinalCameraY1 = fAnimPlayStartCameraY;
+    fAnimPlayStartCameraX = m_Renderer.getCameraPositionX();
+    fAnimPlayStartCameraY = m_Renderer.getCameraPositionY();
+  }
 
-	bool GameApp::zoomAnimation2_unstep() {
-	  return false;
-	  //return zoomAnimation1_step();
-	}
+  bool GameApp::zoomAnimation2_unstep() {
+    if(getRealTime() > m_fPrePlayStartTime + INPLAY_ANIMATION_TIME) {
+      return false;
+    }
+    if(getRealTime() > m_fPrePlayStartTime){
+      float zx, zy, zz, coeff;
+      coeff = (getRealTime() - m_fPrePlayStartTime) / (INPLAY_ANIMATION_TIME);
+      zx = coeff * (fAnimPlayStartCameraX - fAnimPlayFinalCameraX1);
+      zy = coeff * (fAnimPlayStartCameraY - fAnimPlayFinalCameraY1);
+      zz = coeff * (fAnimPlayStartZoom - fAnimPlayFinalZoom);
+			
+      m_Renderer.setZoom(fAnimPlayStartZoom - zz);
+      m_Renderer.setCameraPosition(fAnimPlayStartCameraX - zx,fAnimPlayStartCameraY - zy);
+      return true;
+    }
+    return false;
+  }
 
-	void GameApp::zoomAnimation2_abort() {
-	  zoomAnimation1_abort();
-	}
-
+  void GameApp::zoomAnimation2_abort() {
+    m_Renderer.setZoom(fAnimPlayFinalZoom);
+    m_Renderer.setCameraPosition(fAnimPlayFinalCameraX1,fAnimPlayFinalCameraY1);
+  }
 
   void GameApp::prestartAnimation_init() {
     if(m_bPrePlayAnim && m_bEnableInitZoom && m_bUglyMode == false) {
@@ -2024,39 +2060,45 @@ namespace vapp {
     }
   }
 
-	void GameApp::setAutoZoom(bool bValue) {
-		m_autoZoom = bValue;
+  void GameApp::setAutoZoom(bool bValue) {
+    m_autoZoom = bValue;
+  }
+  
+  void GameApp::setAutoUnZoom(bool bValue) {
+    m_autoUnZoom = bValue;
+  }
+  
+  void GameApp::autoZoom() {
+    if(m_autoZoom) {
+      if(m_bAutoZoomInitialized == false) {
+	lockMotoGame(true);
+	zoomAnimation2_init();
+	m_bAutoZoomInitialized = true;
+      } else {
+	if(zoomAnimation2_step() == false) {
 	}
-
-	void GameApp::autoZoom() {
-		if(m_autoZoom) {
-			if(m_bAutoZoomInitialized == false) {
-				lockMotoGame(true);
-				zoomAnimation2_init();
-				m_bAutoZoomInitialized = true;
-			} else {
-				if(zoomAnimation2_step() == false) {
-				}
-			}
-		} else {
-			if(m_bAutoZoomInitialized == true) {
-				if(zoomAnimation2_unstep() == false) { 
-					zoomAnimation2_abort();
-					m_bAutoZoomInitialized = false;
-					lockMotoGame(false);
-				}
-			}
-		}
+      }
+    } else if (m_autoUnZoom) {
+      if(m_bAutoZoomInitialized == true) {
+	zoomAnimation2_init_unzoom();
+	m_bAutoZoomInitialized = false;
+      } else {
+	if(zoomAnimation2_unstep() == false) { 
+	  m_bAutoZoomInitialized = false;
+	  lockMotoGame(false);
 	}
+      }
+    }
+  }
 
-	void GameApp::lockMotoGame(bool bLock) {
-		m_bLockMotoGame = bLock;
-	}
-
-	bool GameApp::isLockedMotoGame() const {
-		return m_bLockMotoGame;
-	}
-
+  void GameApp::lockMotoGame(bool bLock) {
+    m_bLockMotoGame = bLock;
+  }
+  
+  bool GameApp::isLockedMotoGame() const {
+    return m_bLockMotoGame;
+  }
+  
   void XMMotoGameHooks::OnTakeEntity() {
     /* Play yummy-yummy sound */
     if(m_GameApp != NULL) {
@@ -2067,7 +2109,7 @@ namespace vapp {
       }
     }
   }
-
+  
   void XMMotoGameHooks::setGameApps(GameApp *i_GameApp, MotoGame *i_MotoGame) {
     m_GameApp = i_GameApp;
     m_MotoGame = i_MotoGame;
