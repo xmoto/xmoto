@@ -13,7 +13,6 @@ function getVersion {
 function makeNSI {
   NSI_FILENAME="$1"
   VERSION="$2"
-  MUSICS_DIR="Textures/Musics"
 
   echo "Name \"X-Moto ""$VERSION""\""
   echo "OutFile \"xmoto-""$VERSION""-win32-setup.exe\""
@@ -43,14 +42,9 @@ function makeNSI {
   echo
   echo "	File xmoto.exe"
   echo "	File xmoto.bin"
-  
-  for i in "$MUSICS_DIR"/*.ogg
-    do
-    echo "	File ""$i"
-  done
-
-  echo "      File README.txt"
-  echo "	File jpeg62.dll"
+  echo "        File /r Textures"
+  echo "        File README.txt"
+  echo "        File jpeg62.dll"
   echo "	File libcurl-4.dll"
   echo "	File libode.dll"
   echo "	File libpng12.dll"
