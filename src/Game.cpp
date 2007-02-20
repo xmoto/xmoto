@@ -2077,6 +2077,16 @@ namespace vapp {
       } else {
 	if(zoomAnimation2_step() == false) {
 	}
+
+	if(m_MotoGame.getNbRemainingStrawberries() > 0) {
+	  if(m_Renderer.SizeMultOfEntitiesToTake() <= 5.0) {
+	    m_Renderer.setSizeMultOfEntitiesToTake(m_Renderer.SizeMultOfEntitiesToTake() + 0.05);
+	  }
+	} else {
+	  if(m_Renderer.SizeMultOfEntitiesWhichMakeWin() <= 5.0) {
+	    m_Renderer.setSizeMultOfEntitiesWhichMakeWin(m_Renderer.SizeMultOfEntitiesWhichMakeWin() + 0.05);
+	  }
+	}
       }
     } else if (m_autoUnZoom) {
       if(m_bAutoZoomInitialized == true) {
@@ -2086,6 +2096,23 @@ namespace vapp {
 	if(zoomAnimation2_unstep() == false) { 
 	  m_bAutoZoomInitialized = false;
 	  lockMotoGame(false);
+
+	  if(m_MotoGame.getNbRemainingStrawberries() > 0) {
+	    m_Renderer.setSizeMultOfEntitiesToTake(1.0);
+	  } else {
+	    m_Renderer.setSizeMultOfEntitiesWhichMakeWin(1.0);
+	  }
+
+	} else {
+	  if(m_MotoGame.getNbRemainingStrawberries() > 0) {
+	    if(m_Renderer.SizeMultOfEntitiesToTake() > 1.0) {
+	      m_Renderer.setSizeMultOfEntitiesToTake(m_Renderer.SizeMultOfEntitiesToTake() - 0.05);
+	    }
+	  } else {
+	    if(m_Renderer.SizeMultOfEntitiesWhichMakeWin() > 1.0) {
+	      m_Renderer.setSizeMultOfEntitiesWhichMakeWin(m_Renderer.SizeMultOfEntitiesWhichMakeWin() - 0.05);
+	    }
+	  }
 	}
       }
     }

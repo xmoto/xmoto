@@ -144,6 +144,8 @@ namespace vapp {
       m_theme = NULL;
       m_previousEngineSpeed = -1.0;
       m_renderBikeFront = true;
+      m_sizeMultOfEntitiesToTake = 1.0;
+      m_sizeMultOfEntitiesWhichMakeWin = 1.0;
     }
     ~GameRenderer() {_Free();}
     
@@ -204,6 +206,11 @@ namespace vapp {
     void hideMsgNewHighscore();
 
     void setRenderBikeFront(bool state) { m_renderBikeFront = state;}
+
+    float SizeMultOfEntitiesToTake() const;
+    float SizeMultOfEntitiesWhichMakeWin() const;
+    void setSizeMultOfEntitiesToTake(float i_sizeMult);
+    void setSizeMultOfEntitiesWhichMakeWin(float i_sizeMult);
 
   private:
     /* Data */
@@ -273,9 +280,12 @@ namespace vapp {
 
     AABB m_screenBBox;
 
+    float m_sizeMultOfEntitiesToTake;
+    float m_sizeMultOfEntitiesWhichMakeWin;
+
     /* Subroutines */
     void _RenderSprites(bool bForeground,bool bBackground);
-    void _RenderSprite(Entity *pSprite);
+    void _RenderSprite(Entity *pSprite, float i_sizeMult = 1.0);
     void _RenderBike(BikeState *pBike, BikeParameters *pBikeParms, BikerTheme *p_theme);
     void _RenderBlocks(void);
     void _RenderBlock(Block* block);
