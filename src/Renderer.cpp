@@ -29,12 +29,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GameText.h"
 
 namespace vapp {
-  
+
+  /* to sort blocks on their texture */
+  struct AscendingTextureSort {
+    bool operator() (Block* b1, Block* b2) {
+      return b1->Texture() < b2->Texture();
+    }
+  };
+
   /*===========================================================================
   Called to prepare renderer for new level
   ===========================================================================*/
   void GameRenderer::prepareForNewLevel(bool bCreditsMode) {
-//    printf("PREPARE!!\n");
     m_fCurrentHorizontalScrollShift = 0.0f;
     m_fCurrentVerticalScrollShift = 0.0f;
     m_previous_driver_dir  = DD_LEFT;    
@@ -123,7 +129,7 @@ namespace vapp {
         
         for(int k=0; k<pPoly->nNumVertices; k++) {
           pPoly->pVertices[k].x = Center.x + ConvexBlocks[j]->Vertices()[k]->Position().x;
-          pPoly->pVertices[k].y = Center.y + ConvexBlocks[j]->Vertices()[k]->Position().y;        
+          pPoly->pVertices[k].y = Center.y + ConvexBlocks[j]->Vertices()[k]->Position().y;
           pPoly->pTexCoords[k].x = ConvexBlocks[j]->Vertices()[k]->TexturePosition().x;
           pPoly->pTexCoords[k].y = ConvexBlocks[j]->Vertices()[k]->TexturePosition().y;
         }          
@@ -286,7 +292,7 @@ namespace vapp {
     for(int i=0; i<Blocks.size(); i++) {
 
       /* Don't draw background blocks neither dynamic ones */
-      if(Blocks[i]->isBackground() == false) {
+      if(Blocks[i]->isBackground() == false && Blocks[i]->isLayer() == false) {
 	std::vector<ConvexBlock *> ConvexBlocks = Blocks[i]->ConvexBlocks();
 	for(int j=0; j<ConvexBlocks.size(); j++) {
 	  Vector2f Center = ConvexBlocks[j]->SourceBlock()->DynamicPosition(); 	 
@@ -497,6 +503,9 @@ namespace vapp {
     getParent()->getDrawLib()->setTranslate(-getCameraPositionX(), -getCameraPositionY());
 
     if(m_Quality != GQ_LOW && !m_bUglyMode) {
+      /* background level blocks */
+      _RenderBackgroundLevel();
+
       /* Background blocks */
       _RenderDynamicBlocks(true);
       _RenderBackground();
@@ -516,9 +525,6 @@ namespace vapp {
 
     /* ... then render "middleground" sprites ... */
     _RenderSprites(false,false);
-    
-    /* ... the entities ... */
-    //_RenderEntities();
     
 #if defined(ALLOW_GHOST)
     if(getGameObject()->isGhostActive()) {
@@ -570,7 +576,12 @@ namespace vapp {
     
     /* ... and finally the foreground sprites! */
     _RenderSprites(true,false);
-        
+
+    /* and finally finally, the front layer */
+    if(m_Quality != GQ_LOW && !m_bUglyMode) {
+      _RenderFrontLayer();
+    }
+
     if(isDebug()) {
       /* Draw some collision handling debug info */
       CollisionSystem *pc = getGameObject()->getCollisionHandler();
@@ -1076,7 +1087,10 @@ namespace vapp {
 
     /* FIX::display only visible dyn blocks */
     std::vector<Block *> Blocks = getGameObject()->getCollisionHandler()->getDynBlocksNearPosition(m_screenBBox);
-    
+
+    /* sort blocks on their texture */
+    std::sort(Blocks.begin(), Blocks.end(), AscendingTextureSort());
+
     if(m_bUglyMode) {
 
       for(int i=0; i<Blocks.size(); i++) {
@@ -1109,9 +1123,8 @@ namespace vapp {
         }
 	getParent()->getDrawLib()->endDraw();
       }
-
-
-    } else {
+    }
+    else {
       for(int i=0; i<Blocks.size(); i++) {
 	/* Are we rendering background blocks or what? */
 	if(Blocks[i]->isBackground() != bBackground)
@@ -1121,7 +1134,6 @@ namespace vapp {
 	/* Build rotation matrix for block */
 	float fR[4];
 	float rotation = block->DynamicRotation();
-	Log("rad rotation: %f", rotation);
 	fR[0] =  cos(rotation);
 	fR[2] =  sin(rotation);
 	fR[1] = -fR[2];
@@ -1131,14 +1143,14 @@ namespace vapp {
 	Vector2f dynPos       = block->DynamicPosition();
 	int geom = block->getGeom();
 
-	Log("Blocks: %s", block->Id().c_str());
-	Log("rot center: %f, %f", dynRotCenter.x, dynRotCenter.y);
-
 // 57.295779524 = 180/pi
 #define rad2deg(x) ((x)*57.295779524)
 
 	if(getParent()->getDrawLib()->getBackend() == DrawLib::backend_OpenGl) {
 #ifdef ENABLE_OPENGL
+	  glEnableClientState(GL_VERTEX_ARRAY);
+	  glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
 	  /* we're working with modelview matrix*/
 	  glMatrixMode(GL_MODELVIEW);
 	  glPushMatrix();
@@ -1172,10 +1184,13 @@ namespace vapp {
 	      glVertexPointer(2,   GL_FLOAT, 0, pPoly->pVertices);
 	      glTexCoordPointer(2, GL_FLOAT, 0, pPoly->pTexCoords);
 	      glDrawArrays(GL_POLYGON, 0, pPoly->nNumVertices);
-	    }      
+	    }
 	  }
 
 	  glPopMatrix();
+
+	  glDisableClientState(GL_VERTEX_ARRAY);
+	  glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 #endif
 	} else if(getParent()->getDrawLib()->getBackend() == DrawLib::backend_SdlGFX){
 
@@ -1201,6 +1216,16 @@ namespace vapp {
 
 	}
       }
+
+      /* Render all special edges (if quality!=low) */
+      if(m_Quality != GQ_LOW) {
+	for(int i=0;i<Blocks.size();i++) {
+	  if(Blocks[i]->isBackground() == bBackground){
+	    _RenderBlockEdges(Blocks[i]);
+	  }
+	}
+      }
+
     }
   }
 
@@ -1212,6 +1237,9 @@ namespace vapp {
 
     if(getParent()->getDrawLib()->getBackend() == DrawLib::backend_OpenGl) {
 #ifdef ENABLE_OPENGL
+      glEnableClientState(GL_VERTEX_ARRAY);
+      glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
       /* VBO optimized? */
       if(getParent()->getDrawLib()->useVBOs()) {
 	for(int j=0;j<m_StaticGeoms[geom]->Polys.size();j++) {          
@@ -1231,8 +1259,11 @@ namespace vapp {
 	  glVertexPointer(2,   GL_FLOAT, 0, pPoly->pVertices);
 	  glTexCoordPointer(2, GL_FLOAT, 0, pPoly->pTexCoords);
 	  glDrawArrays(GL_POLYGON, 0, pPoly->nNumVertices);
-	}      
+	}
       }
+
+      glDisableClientState(GL_VERTEX_ARRAY);
+      glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 #endif
     } else if(getParent()->getDrawLib()->getBackend() == DrawLib::backend_SdlGFX){
 
@@ -1251,91 +1282,141 @@ namespace vapp {
     }
   }
 
+  void GameRenderer::_RenderBlockEdges(Block* block, Vector2f* pTranslateVector)
+  {
+    BlockVertex* v_blockVertexA;
+    BlockVertex* v_blockVertexB;
+
+    if(getParent()->getDrawLib()->getBackend() == DrawLib::backend_SdlGFX && pTranslateVector != NULL){
+      for(int j=0; j<block->Vertices().size(); j++) {  
+	v_blockVertexA = block->Vertices()[j];
+	if(v_blockVertexA->EdgeEffect() != "") {
+	  v_blockVertexB = block->Vertices()[(j+1) % block->Vertices().size()];
+
+	  Vector2f vAPos = v_blockVertexA->Position();
+	  Vector2f vBPos = v_blockVertexB->Position();
+	  if(pTranslateVector != NULL){
+	    vAPos = vAPos + *pTranslateVector;
+	    vBPos = vBPos + *pTranslateVector;
+	  }
+
+	  /* link A to B */
+	  float fXScale,fDepth;
+	  EdgeEffectSprite* pType;
+	  pType = (EdgeEffectSprite*)getParent()->getTheme()->getSprite(SPRITE_TYPE_EDGEEFFECT, v_blockVertexA->EdgeEffect());
+
+	  if(pType != NULL) {
+	    fXScale = pType->getScale();
+	    fDepth  = pType->getDepth();
+                 
+	    getParent()->getDrawLib()->setTexture(pType->getTexture(),BLEND_MODE_A);
+	    getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+	    getParent()->getDrawLib()->setColorRGB(255,255,255);
+
+	    getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vAPos.x)*fXScale,0.01);
+	    getParent()->getDrawLib()->glVertex(vAPos + Vector2f(block->DynamicPosition().x,block->DynamicPosition().y));
+	    getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vBPos.x)*fXScale,0.01);
+	    getParent()->getDrawLib()->glVertex(vBPos + Vector2f(block->DynamicPosition().x,block->DynamicPosition().y));
+	    getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vBPos.x)*fXScale,0.99);
+	    getParent()->getDrawLib()->glVertex(vBPos + Vector2f(block->DynamicPosition().x,block->DynamicPosition().y) + Vector2f(0,-fDepth));
+	    getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vAPos.x)*fXScale,0.99);
+	    getParent()->getDrawLib()->glVertex(vAPos + Vector2f(block->DynamicPosition().x,block->DynamicPosition().y) + Vector2f(0,-fDepth));
+
+	    getParent()->getDrawLib()->endDraw();
+	  }
+	}
+      }
+    }
+    else if(getParent()->getDrawLib()->getBackend() == DrawLib::backend_OpenGl){
+      for(int j=0; j<block->Vertices().size(); j++) {  
+	v_blockVertexA = block->Vertices()[j];
+	if(v_blockVertexA->EdgeEffect() != "") {
+	  v_blockVertexB = block->Vertices()[(j+1) % block->Vertices().size()];
+
+	  /* link A to B */
+	  float fXScale,fDepth;
+	  EdgeEffectSprite* pType;
+	  pType = (EdgeEffectSprite*)getParent()->getTheme()->getSprite(SPRITE_TYPE_EDGEEFFECT, v_blockVertexA->EdgeEffect());
+
+	  if(pType != NULL) {
+	    fXScale = pType->getScale();
+	    fDepth  = pType->getDepth();
+                 
+	    getParent()->getDrawLib()->setTexture(pType->getTexture(),BLEND_MODE_A);
+	    getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+	    getParent()->getDrawLib()->setColorRGB(255,255,255);
+
+	    getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+v_blockVertexA->Position().x)*fXScale,0.01);
+	    getParent()->getDrawLib()->glVertex(v_blockVertexA->Position() + Vector2f(block->DynamicPosition().x,block->DynamicPosition().y));
+	    getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+v_blockVertexB->Position().x)*fXScale,0.01);
+	    getParent()->getDrawLib()->glVertex(v_blockVertexB->Position() + Vector2f(block->DynamicPosition().x,block->DynamicPosition().y));
+	    getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+v_blockVertexB->Position().x)*fXScale,0.99);
+	    getParent()->getDrawLib()->glVertex(v_blockVertexB->Position() + Vector2f(block->DynamicPosition().x,block->DynamicPosition().y) + Vector2f(0,-fDepth));
+	    getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+v_blockVertexA->Position().x)*fXScale,0.99);
+	    getParent()->getDrawLib()->glVertex(v_blockVertexA->Position() + Vector2f(block->DynamicPosition().x,block->DynamicPosition().y) + Vector2f(0,-fDepth));
+
+	    getParent()->getDrawLib()->endDraw();
+	  }
+	}
+      }
+    }
+  }
+
+  void GameRenderer::_RenderFrontLayer() {
+    int frontLayer = getGameObject()->getLevelSrc()->getFrontLayer();
+    if(frontLayer == -1){
+      return;
+    }
+
+    _RenderLayer(frontLayer);
+  }
+
   /*===========================================================================
   Blocks (static)
   ===========================================================================*/
   void GameRenderer::_RenderBlocks(void) {
     MotoGame *pGame = getGameObject();
 
-    /* Render all non-background blocks */
-    std::vector<Block *> Blocks = getGameObject()->getCollisionHandler()->getStaticBlocksNearPosition(m_screenBBox);
+    for(int layer=-1; layer<=0; layer++){
+      std::vector<Block *> Blocks;
 
-    /* Ugly mode? */
-    if(m_bUglyMode) {
-      for(int i=0;i<Blocks.size();i++) {
-        if(Blocks[i]->isBackground() == false && Blocks[i]->isDynamic() == false) {
-          //for(int j=0;j<Blocks[i]->ConvexBlocks().size();j++) {
-          getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_LOOP);
-	  getParent()->getDrawLib()->setColorRGB(255,255,255);
-          for(int j=0;j<Blocks[i]->Vertices().size();j++) {
-            getParent()->getDrawLib()->glVertex(Blocks[i]->Vertices()[j]->Position().x + Blocks[i]->DynamicPosition().x,
-                       Blocks[i]->Vertices()[j]->Position().y + Blocks[i]->DynamicPosition().y);
-          }
-	  getParent()->getDrawLib()->endDraw();
-        }
-      }
-    }
-    else {
       /* Render all non-background blocks */
-      /* Static geoms... */
-      for(int i=0;i<Blocks.size();i++) {
-	/* TODO::sort blocks on their textures */
+      Blocks = getGameObject()->getCollisionHandler()->getStaticBlocksNearPosition(m_screenBBox, layer);
 
-        if(Blocks[i]->isBackground() == false && Blocks[i]->isDynamic() == false) {
-	  _RenderBlock(Blocks[i]);
+      /* sort blocks on their texture */
+      std::sort(Blocks.begin(), Blocks.end(), AscendingTextureSort());
+
+      /* Ugly mode? */
+      if(m_bUglyMode) {
+	for(int i=0;i<Blocks.size();i++) {
+	  if(Blocks[i]->isBackground() == false) {
+	    getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_LOOP);
+	    getParent()->getDrawLib()->setColorRGB(255,255,255);
+	    for(int j=0;j<Blocks[i]->Vertices().size();j++) {
+	      getParent()->getDrawLib()->glVertex(Blocks[i]->Vertices()[j]->Position().x + Blocks[i]->DynamicPosition().x,
+						  Blocks[i]->Vertices()[j]->Position().y + Blocks[i]->DynamicPosition().y);
+	    }
+	    getParent()->getDrawLib()->endDraw();
+	  }
 	}
       }
-
-
-      /* Render all special edges (if quality!=low) */
-      if(m_Quality != GQ_LOW) {
-
-
-	std::vector<Block *> Blocks = getGameObject()->getCollisionHandler()->getStaticBlocksNearPosition(m_screenBBox);
-	std::vector<Block *> dynBlocks = getGameObject()->getCollisionHandler()->getDynBlocksNearPosition(m_screenBBox);
-
-	for(int i=0; i<dynBlocks.size(); i++){
-	  Blocks.push_back(dynBlocks[i]);
+      else {
+	/* Render all non-background blocks */
+	/* Static geoms... */
+	for(int i=0;i<Blocks.size();i++) {
+	  if(Blocks[i]->isBackground() == false) {
+	    _RenderBlock(Blocks[i]);
+	  }
 	}
 
-
-        BlockVertex *v_blockVertexA;
-        BlockVertex *v_blockVertexB;
-
+	/* Render all special edges (if quality!=low) */
+	if(m_Quality != GQ_LOW) {
 	  for(int i=0;i<Blocks.size();i++) {
-	    for(int j=0;j<Blocks[i]->Vertices().size();j++) {  
-	      v_blockVertexA = Blocks[i]->Vertices()[j];
-	      if(v_blockVertexA->EdgeEffect() != "") {
-		v_blockVertexB = Blocks[i]->Vertices()[(j+1)%Blocks[i]->Vertices().size()];
-
-		/* link A to B */
-		float fXScale,fDepth;
-		EdgeEffectSprite* pType;
-
-		pType = (EdgeEffectSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_EDGEEFFECT, v_blockVertexA->EdgeEffect());
-
-		if(pType != NULL) {
-		  fXScale = pType->getScale();
-		  fDepth  = pType->getDepth();
-                 
-		  getParent()->getDrawLib()->setTexture(pType->getTexture(),BLEND_MODE_A);
-		  getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
-		  getParent()->getDrawLib()->setColorRGB(255,255,255);
-		  getParent()->getDrawLib()->glTexCoord((Blocks[i]->DynamicPosition().x+v_blockVertexA->Position().x)*fXScale,0.01);
-		  getParent()->getDrawLib()->glVertex(v_blockVertexA->Position() + Vector2f(Blocks[i]->DynamicPosition().x,Blocks[i]->DynamicPosition().y));
-		  getParent()->getDrawLib()->glTexCoord((Blocks[i]->DynamicPosition().x+v_blockVertexB->Position().x)*fXScale,0.01);
-		  getParent()->getDrawLib()->glVertex(v_blockVertexB->Position() + Vector2f(Blocks[i]->DynamicPosition().x,Blocks[i]->DynamicPosition().y));
-		  getParent()->getDrawLib()->glTexCoord((Blocks[i]->DynamicPosition().x+v_blockVertexB->Position().x)*fXScale,0.99);
-		  getParent()->getDrawLib()->glVertex(v_blockVertexB->Position() + Vector2f(Blocks[i]->DynamicPosition().x,Blocks[i]->DynamicPosition().y) + Vector2f(0,-fDepth));
-		  getParent()->getDrawLib()->glTexCoord((Blocks[i]->DynamicPosition().x+v_blockVertexA->Position().x)*fXScale,0.99);
-		  getParent()->getDrawLib()->glVertex(v_blockVertexA->Position() + Vector2f(Blocks[i]->DynamicPosition().x,Blocks[i]->DynamicPosition().y) + Vector2f(0,-fDepth));
-		  getParent()->getDrawLib()->endDraw();
-		}
-	      }
+	    if(Blocks[i]->isBackground() == false) {
+	    _RenderBlockEdges(Blocks[i]);
 	    }
 	  }
-
-	
+	}
       }
     }
   }
@@ -1411,10 +1492,90 @@ namespace vapp {
     /* Render STATIC background blocks */
     std::vector<Block *> Blocks = getGameObject()->getCollisionHandler()->getStaticBlocksNearPosition(m_screenBBox);
 
+    /* sort blocks on their texture */
+    std::sort(Blocks.begin(), Blocks.end(), AscendingTextureSort());
+
     for(int i=0;i<Blocks.size();i++) {
-      if(Blocks[i]->isDynamic() == false && Blocks[i]->isBackground()) {
+      if(Blocks[i]->isBackground() == true) {
 	_RenderBlock(Blocks[i]);
       }
+    }
+
+    /* Render all special edges (if quality != low) */
+    if(m_Quality != GQ_LOW) {
+      for(int i=0;i<Blocks.size();i++) {
+	if(Blocks[i]->isBackground() == true) {
+	  _RenderBlockEdges(Blocks[i]);
+	}
+      }
+    }
+  }
+
+  void GameRenderer::_RenderLayer(int layer) {
+    float layerOffset = getGameObject()->getLevelSrc()->getLayerOffset(layer);
+    /* get bounding box in the layer depending on its offset */
+    Vector2f min = m_screenBBox.getBMin();
+    Vector2f size = m_screenBBox.getBMax() - min;
+    Vector2f newMin = min * layerOffset;
+    AABB layerBBox;
+    layerBBox.addPointToAABB2f(newMin);
+    layerBBox.addPointToAABB2f(newMin+size);
+    /* translation vector */
+    Vector2f translateVector = min - newMin;
+
+    std::vector<Block *> Blocks = getGameObject()->getCollisionHandler()->getBlocksNearPositionInLayer(layerBBox, layer);
+    /* sort blocks on their texture */
+    std::sort(Blocks.begin(), Blocks.end(), AscendingTextureSort());
+
+    if(getParent()->getDrawLib()->getBackend() == DrawLib::backend_OpenGl) {
+#ifdef ENABLE_OPENGL
+      glMatrixMode(GL_MODELVIEW);
+      glPushMatrix();
+      glTranslatef(translateVector.x, translateVector.y, 0);
+
+      for(int i=0; i<Blocks.size(); i++) {
+	Block* block = Blocks[i];
+	int geom = block->getGeom();
+
+	_RenderBlock(block);
+      }
+      /* Render all special edges (if quality!=low) */
+      if(m_Quality != GQ_LOW) {
+	for(int i=0;i<Blocks.size();i++) {
+	  _RenderBlockEdges(Blocks[i]);
+	}
+      }
+      glPopMatrix();
+#endif
+    } else if(getParent()->getDrawLib()->getBackend() == DrawLib::backend_SdlGFX){
+
+    for(int j=0;j<Blocks.size();j++) {
+      _RenderBlock(Blocks[j]);
+    }
+
+    /* Render all special edges (if quality!=low) */
+    if(m_Quality != GQ_LOW) {
+      for(int j=0;j<Blocks.size();j++) {
+	_RenderBlockEdges(Blocks[j], &translateVector);
+      }
+    }
+
+    }
+  }
+
+  void GameRenderer::_RenderBackgroundLevel(void) { 
+    MotoGame *pGame = getGameObject();
+
+    /* Render background level blocks */
+    int nbLayer = getGameObject()->getLevelSrc()->getNumberLayer();
+    int frontLayer = getGameObject()->getLevelSrc()->getFrontLayer();
+    for(int i=0; i<nbLayer; i++){
+      /* don't render the front layer */
+      if(frontLayer == i){
+	continue;
+      }
+
+      _RenderLayer(i);
     }
   }
 
