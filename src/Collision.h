@@ -78,7 +78,8 @@ namespace vapp {
     }
     void reset();
     void setDims(Vector2f min, Vector2f max,
-		 int gridWidth, int gridHeight);
+		 int gridWidth, int gridHeight,
+		 float offset=1.0);
 
     void setDebug(bool b) {
       m_bDebugFlag = b;
@@ -154,7 +155,10 @@ namespace vapp {
     
     /* Methods */
     void reset(void);
-    void setDims(float fMinX,float fMinY,float fMaxX,float fMaxY);
+    void setDims(float fMinX,float fMinY,
+		 float fMaxX,float fMaxY,
+		 int numberBackgroundLayers,
+		 std::vector<float>& layerOffsets);
     void defineLine(float x1,float y1,float x2,float y2, float grip);
 
     bool checkLine(float x1,float y1,float x2,float y2);
@@ -206,8 +210,12 @@ namespace vapp {
     void moveDynBlock(Block* id);
     std::vector<Block*> getDynBlocksNearPosition(AABB& BBox);
 
-    void addStaticBlock(Block* id);
-    std::vector<Block*> getStaticBlocksNearPosition(AABB& BBox);
+    /* -1 for actual static block layer, other value (0) for the second static layer */
+    void addStaticBlock(Block* id, int layer=-1);
+    std::vector<Block*> getStaticBlocksNearPosition(AABB& BBox, int layer=-1);
+
+    void addBlockInLayer(Block* id, int layer);
+    std::vector<Block*> getBlocksNearPositionInLayer(AABB& BBox, int layer);
 
   private:
     /* Data */
@@ -220,7 +228,9 @@ namespace vapp {
     ElementHandler<Zone>   m_zonesHandler;
     */
     ElementHandler<Block>  m_staticBlocksHandler;
-      
+    ElementHandler<Block>  m_staticBlocksHandlerSecondLayer;
+    std::vector<ElementHandler<Block>*>  m_layerBlocksHandlers;
+
     bool m_bDebugFlag;
       
     float m_fCellWidth,m_fCellHeight;
