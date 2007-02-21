@@ -30,7 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../VXml.h"
 #include "../helpers/Color.h"
 
-#define CACHE_LEVEL_FORMAT_VERSION 13
+#define CACHE_LEVEL_FORMAT_VERSION 14
 
 Level::Level() {
   m_xmotoTooOld = false;
@@ -38,9 +38,11 @@ Level::Level() {
   m_rightLimit  = 0.0;
   m_topLimit    = 0.0;
   m_bottomLimit = 0.0;
-  m_xmlSource = NULL;
+  m_xmlSource   = NULL;
   m_nbEntitiesToTake = 0;
   m_borderTexture = "";
+  m_numberLayer   = 0;
+  m_frontLayer    = -1;
 }
 
 Level::~Level() {
@@ -339,7 +341,19 @@ void Level::saveXML(void) {
   }
   vapp::FS::writeLineF(pfh,"\t\t<border texture=\"%s\" />",m_borderTexture.c_str());
   vapp::FS::writeLineF(pfh,"\t\t<music name=\"%s\" />", m_music.c_str());
+  if(m_frontLayer != -1){
+    vapp::FS::writeLineF(pfh, "\t\t<frontlayer>%d</frontlayer>", m_frontLayer);
+  }
   vapp::FS::writeLineF(pfh,"\t</info>");
+
+  if(m_numberLayer > 0){
+    vapp::FS::writeLineF(pfh, "\t\t<layeroffsets>");
+    for(int i=0; i<m_numberLayer; i++){
+      vapp::FS::writeLineF(pfh, "\t\t\t<layeroffset>%f</layeroffset>",
+			   m_layerOffsets[i]);
+    }
+    vapp::FS::writeLineF(pfh, "\t\t</layeroffsets>");
+  }
   
   /* replacement sprites */
   if(m_rSpriteForStrawberry 	 != "" ||
@@ -471,6 +485,7 @@ void Level::loadXML(void) {
   m_topLimit    = m_rightLimit = 50.0f;
   
   m_playerStart = Vector2f(0.0, 0.0);
+  m_numberLayer = 0;
   
   m_sky.reInit();
 
@@ -577,6 +592,40 @@ void Level::loadXML(void) {
       TiXmlElement *pMusicElem = vapp::XML::findElement(*m_xmlSource, NULL, std::string("music"));
       if(pMusicElem != NULL) {
 	m_music = vapp::XML::getOption(pMusicElem, "name");  
+      }
+
+      /* front layer */
+      m_frontLayer = -1;
+      Tmp = vapp::XML::getElementText(*m_xmlSource, pInfoElem, "frontlayer");
+      if(Tmp != ""){
+	m_frontLayer = atoi(Tmp.c_str());
+	vapp::Log("Level::loadXML frontlayer: [%s] [%d]", Tmp.c_str(), m_frontLayer);
+      }else{
+	vapp::Log("Level::loadXML no front layer");
+      }
+    }
+
+    /* background level offsets */
+    TiXmlElement* pLayerOffsets = vapp::XML::findElement(*m_xmlSource, NULL, std::string("layeroffsets"));
+    if(pLayerOffsets == NULL){
+      m_numberLayer = 0;
+      m_frontLayer  = -1;
+      vapp::Log("Level::loadXML no layers");
+    }
+    else {
+      for(TiXmlElement* pElem = pLayerOffsets->FirstChildElement("layeroffset");
+	  pElem!=NULL;
+	  pElem=pElem->NextSiblingElement("layeroffset")) {
+	m_numberLayer++;
+	TiXmlText *pText = pElem->FirstChild()->ToText();
+	float offset = 1.0;
+	if(pText != NULL){
+	  offset = atof(pText->Value());
+	}
+	m_layerOffsets.push_back(offset);
+      }
+      for(int i=0; i<m_numberLayer; i++){
+	vapp::Log("Level::loadXML offsets layer %d: %f", i, m_layerOffsets[i]);
       }
     }
 
@@ -729,7 +778,7 @@ void Level::exportBinary(const std::string &FileName, const std::string& pSum) {
   else {
     exportBinaryHeader(pfh);
 
-    vapp::FS::writeString(pfh, m_sky.Texture());
+    vapp::FS::writeString(pfh,   m_sky.Texture());
     vapp::FS::writeFloat_LE(pfh, m_sky.Zoom());
     vapp::FS::writeFloat_LE(pfh, m_sky.Offset());
     vapp::FS::writeInt_LE(pfh,   m_sky.TextureColor().Red());
@@ -745,17 +794,23 @@ void Level::exportBinary(const std::string &FileName, const std::string& pSum) {
 
     vapp::FS::writeString(pfh,m_borderTexture);
     vapp::FS::writeString(pfh,m_scriptFileName);
-      
+
     vapp::FS::writeFloat_LE(pfh,m_leftLimit);
     vapp::FS::writeFloat_LE(pfh,m_rightLimit);
     vapp::FS::writeFloat_LE(pfh,m_topLimit);
     vapp::FS::writeFloat_LE(pfh,m_bottomLimit);
-      
+
     vapp::FS::writeString(pfh,m_rSpriteForStrawberry);
     vapp::FS::writeString(pfh,m_rSpriteForFlower);
     vapp::FS::writeString(pfh,m_rSpriteForWecker);
     vapp::FS::writeString(pfh,m_rSpriteForStar);
     vapp::FS::writeString(pfh,m_rSoundForPickUpStrawberry);
+
+    vapp::FS::writeInt_LE(pfh, m_frontLayer);
+    vapp::FS::writeInt_LE(pfh, m_numberLayer);
+    for(int i=0; i<m_layerOffsets.size(); i++){
+      vapp::FS::writeFloat_LE(pfh, m_layerOffsets[i]);
+    }    
 
     /* Write script (if any) */
     vapp::FS::writeInt_LE(pfh,m_scriptSource.length());
@@ -938,6 +993,13 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
 	m_rSpriteForWecker     	    = vapp::FS::readString(pfh);
 	m_rSpriteForStar       	    = vapp::FS::readString(pfh);
 	m_rSoundForPickUpStrawberry = vapp::FS::readString(pfh);
+
+	/* layers */
+	m_frontLayer  = vapp::FS::readInt_LE(pfh);
+	m_numberLayer = vapp::FS::readInt_LE(pfh);
+	for(int i=0; i<m_numberLayer; i++){
+	  m_layerOffsets.push_back(vapp::FS::readFloat_LE(pfh));
+	}
 
         /* Read embedded script */
         int nScriptSourceLen = vapp::FS::readInt_LE(pfh);
@@ -1146,6 +1208,8 @@ void Level::addLimits() {
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(RightLimit() + fHMargin, TopLimit() + fVMargin)));
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(RightLimit()           , TopLimit())));
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(LeftLimit()            , TopLimit())));
+  /* move border block to the second static blocks layer */
+  pBlock->setLayer(0);
   Blocks().push_back(pBlock);
     
   pBlock = new Block("LEVEL_BOTTOM");
@@ -1156,6 +1220,7 @@ void Level::addLimits() {
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(RightLimit() + fHMargin, BottomLimit() - fVMargin)));
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(LeftLimit()  - fHMargin, BottomLimit() - fVMargin)));
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(LeftLimit()            , BottomLimit())));
+  pBlock->setLayer(0);
   Blocks().push_back(pBlock);
 
   pBlock = new Block("LEVEL_LEFT");
@@ -1166,6 +1231,7 @@ void Level::addLimits() {
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(LeftLimit(), BottomLimit())));
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(LeftLimit() - fHMargin, BottomLimit() - fVMargin)));
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(LeftLimit() - fHMargin, TopLimit() + fVMargin))); 
+  pBlock->setLayer(0);
   Blocks().push_back(pBlock);
     
   pBlock = new Block("LEVEL_RIGHT");
@@ -1176,6 +1242,7 @@ void Level::addLimits() {
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(RightLimit() + fHMargin, TopLimit() + fVMargin)));
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(RightLimit() + fHMargin, BottomLimit() - fVMargin)));
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(RightLimit(), BottomLimit())));
+  pBlock->setLayer(0);
   Blocks().push_back(pBlock);
 }
 
