@@ -19,6 +19,7 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
+#include <algorithm>
 #include "Block.h"
 #include "../Collision.h"
 
@@ -67,6 +68,7 @@ Block::Block(std::string i_id) {
   m_textureScale     = 1.0;
   m_background       = false;
   m_dynamic          = false;
+  m_isLayer  = false;
   m_grip             = XM_DEFAULT_PHYS_BLOCK_GRIP;
   m_dynamicPosition  = m_initialPosition;
   m_dynamicRotation  = m_initialRotation;
@@ -75,6 +77,7 @@ Block::Block(std::string i_id) {
   m_texture          = XM_DEFAULT_BLOCK_TEXTURE;
   m_isBBoxDirty      = true;
   m_geom             = -1;
+  m_layer            = -1;
 }
 
 Block::~Block() {
@@ -186,7 +189,7 @@ int Block::loadToPlay(vapp::CollisionSystem& io_collisionSystem) {
     if(inext == Vertices().size()) inext=0;
 
     /* add static lines */
-    if(isBackground() == false && isDynamic() == false) {
+    if(isBackground() == false && isDynamic() == false && isLayer() == false) {
       /* Add line to collision handler */
       io_collisionSystem.defineLine(DynamicPosition().x + Vertices()[i]->Position().x,
 				    DynamicPosition().y + Vertices()[i]->Position().y,
@@ -195,7 +198,7 @@ int Block::loadToPlay(vapp::CollisionSystem& io_collisionSystem) {
 				    Grip());
     }      
     /* add dynamic lines */
-    if(isBackground() == false && isDynamic()) {
+    if(isBackground() == false && isLayer() == false && isDynamic()) {
       /* Define collision lines */
       vapp::Line *v_line = new vapp::Line;
       v_line->x1 = v_line->y1 = v_line->x2 = v_line->y2 = 0.0f;
@@ -206,15 +209,20 @@ int Block::loadToPlay(vapp::CollisionSystem& io_collisionSystem) {
     /* Add line to BSP generator */
     v_BSPTree.addLineDef(Vertices()[i]->Position(), Vertices()[inext]->Position());
   }
-  
+
   /* define dynamic block in the collision system */
-  if(isBackground() == false && isDynamic()) {
+  if(isBackground() == false && isLayer() == false && isDynamic()) {
     updateCollisionLines();
     io_collisionSystem.addDynBlock(this);
   }
 
-  if(isDynamic() == false){
-    io_collisionSystem.addStaticBlock(this);
+  if(isDynamic() == false && isLayer() == false){
+    /* m_layer default to -1 */
+    io_collisionSystem.addStaticBlock(this, m_layer);
+  }
+
+  if(isLayer() == true) {
+    io_collisionSystem.addBlockInLayer(this, m_layer);
   }
 
   /* Compute */
@@ -269,6 +277,10 @@ bool Block::isDynamic() const {
   return m_dynamic;
 }
 
+bool Block::isLayer() const {
+  return m_isLayer;
+}
+
 void Block::setInitialPosition(const Vector2f& i_initialPosition) {
   m_initialPosition  = i_initialPosition;
   m_isBBoxDirty = true;
@@ -308,6 +320,10 @@ void Block::setBackground(bool i_background) {
 
 void Block::setDynamic(bool i_dynamic) {
   m_dynamic = i_dynamic;
+}
+
+void Block::setIsLayer(bool i_isLayer) {
+  m_isLayer = i_isLayer;
 }
 
 void Block::setGrip(float i_grip) {
@@ -376,6 +392,20 @@ void Block::saveXml(vapp::FileHandle *i_pfh) {
   if(isDynamic()) {
     v_position = v_position + " dynamic=\"true\"";
   }
+
+  if(isLayer()) {
+    v_position = v_position + " islayer=\"true\"";
+
+    //    if(m_layer == -1){
+    //      throw exception, a backgroundlevel block must have a layer id
+    //    }
+  }
+  if(m_layer != -1){
+    std::ostringstream layer;
+    layer << m_layer;
+    v_position = v_position + " layerid=\"" + layer.str() + "\"";
+  }
+  
   vapp::FS::writeLineF(i_pfh, (char*) v_position.c_str());
   
   if(Grip() != DEFAULT_PHYS_WHEEL_GRIP) {
@@ -418,7 +448,9 @@ Block* Block::readFromXml(vapp::XMLDocument& i_xmlSource, TiXmlElement *pElem) {
           
     pBlock->setBackground(vapp::XML::getOption(pPositionElem,"background","false") == "true");
     pBlock->setDynamic(vapp::XML::getOption(pPositionElem,"dynamic","false") == "true");
-  }
+    pBlock->setIsLayer(vapp::XML::getOption(pPositionElem,"islayer","false") == "true");
+    pBlock->setLayer(atoi(vapp::XML::getOption(pPositionElem,"layerid","-1").c_str()));
+ }
    
   if(pPhysicsElem != NULL) {
     char str[5];
@@ -472,6 +504,8 @@ void Block::saveBinary(vapp::FileHandle *i_pfh) {
       vapp::FS::writeString(i_pfh,   Id());
       vapp::FS::writeBool(i_pfh,     isBackground());
       vapp::FS::writeBool(i_pfh,     isDynamic());
+      vapp::FS::writeBool(i_pfh,     isLayer());
+      vapp::FS::writeInt_LE(i_pfh,   getLayer());
       vapp::FS::writeString(i_pfh,   Texture());
       vapp::FS::writeFloat_LE(i_pfh, InitialPosition().x);
       vapp::FS::writeFloat_LE(i_pfh, InitialPosition().y);
@@ -491,6 +525,8 @@ Block* Block::readFromBinary(vapp::FileHandle *i_pfh) {
 
   pBlock->setBackground(vapp::FS::readBool(i_pfh));
   pBlock->setDynamic(vapp::FS::readBool(i_pfh));
+  pBlock->setIsLayer(vapp::FS::readBool(i_pfh));
+  pBlock->setLayer(vapp::FS::readInt_LE(i_pfh));
   pBlock->setTexture(vapp::FS::readString(i_pfh));
 
   Vector2f v_Position;
