@@ -577,7 +577,7 @@ namespace vapp {
 
     /* Clean up first, just for safe's sake */
     endLevel();               
-    
+
     /* load the level if not */
     if(pLevelSrc->isFullyLoaded() == false) {
       pLevelSrc->loadFullyFromFile();
@@ -704,7 +704,7 @@ namespace vapp {
    
     /* Set level source reference -- this tells the world that the level is ready */
     m_pLevelSrc = pLevelSrc;
-    
+
     /* Generate extended level data to be used by the game */
     try {
       _GenerateLevel();
@@ -720,11 +720,6 @@ namespace vapp {
     _PrepareBikePhysics(C);
     setBodyDetach(false);    
 
-    //const dReal *pf = dBodyGetPosition(m_FrontWheelBodyID);
-    //m_PrevFrontWheelP = Vector2f(pf[0],pf[1]);
-    //pf = dBodyGetPosition(m_RearWheelBodyID);
-    //m_PrevRearWheelP = Vector2f(pf[0],pf[1]);
-    
     /* Drive left-to-right for starters */
     m_BikeS.Dir = DD_RIGHT;
     
@@ -846,8 +841,16 @@ namespace vapp {
           InBlocks[i]->InitialPosition().y+InBlocks[i]->Vertices()[j]->Position().y : LevelBoundsMax.y;
       }
     }
+
+    Log("MotoGame::_GenerateLevel. number of layers: %d", m_pLevelSrc->getNumberLayer());
+    for(int i=0; i<m_pLevelSrc->getNumberLayer(); i++){
+      Log("MotoGame::_GenerateLevel. offset layer %d: %f", i, m_pLevelSrc->getLayerOffset(i));
+    }
     
-    m_Collision.setDims(LevelBoundsMin.x,LevelBoundsMin.y,LevelBoundsMax.x,LevelBoundsMax.y);
+    m_Collision.setDims(LevelBoundsMin.x,LevelBoundsMin.y,
+			LevelBoundsMax.x,LevelBoundsMax.y,
+			m_pLevelSrc->getNumberLayer(),
+			m_pLevelSrc->getLayerOffsets());
 
     Log("Generating level from %d block%s...",InBlocks.size(),InBlocks.size()==1?"":"s");
     
