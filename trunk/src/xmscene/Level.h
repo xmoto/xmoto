@@ -130,6 +130,22 @@ class Level {
   std::string SpriteForStar() const;
   std::string SoundForPickUpStrawberry() const;
 
+  int getNumberLayer() {
+    return m_numberLayer;
+  }
+
+  float getLayerOffset(int layer) {
+    return m_layerOffsets[layer];
+  }
+
+  std::vector<float>& getLayerOffsets(){
+    return m_layerOffsets;
+  }
+
+  int getFrontLayer() {
+    return m_frontLayer;
+  }
+
  private:
   std::string m_id;                 /* Level ID */
   std::string m_name;               /* Name of level */
@@ -160,6 +176,12 @@ class Level {
   int  m_nbEntitiesToTake;
   std::string m_borderTexture;
   SkyApparence m_sky;
+
+  int m_numberLayer;
+  std::vector<float> m_layerOffsets;
+  /* si != -1, alors il s'agit de l'index d'un
+     back layer utilise comme front layer */
+  int m_frontLayer;
 
   std::string m_rSpriteForStrawberry;
   std::string m_rSpriteForWecker;
