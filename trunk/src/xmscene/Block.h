@@ -128,6 +128,7 @@ class Block {
   Vector2f DynamicPositionCenter() const;
   bool isBackground() const;
   bool isDynamic() const;
+  bool isLayer() const;
   float Grip() const;
   float TextureScale() const;
   std::vector<BlockVertex *>& Vertices();
@@ -141,6 +142,7 @@ class Block {
   void setInitialPosition(const Vector2f& i_initialPosition);
   void setBackground(bool i_background);
   void setDynamic(bool i_dynamic);
+  void setIsLayer(bool i_isLayer);
   void setGrip(float i_grip);
   void setCenter(const Vector2f& i_center);
 
@@ -169,7 +171,12 @@ class Block {
   void setGeom(int geom) {
     m_geom = geom;
   }
-
+  int getLayer() {
+    return m_layer;
+  }
+  void setLayer(int layer) {
+    m_layer = layer;
+  }
 private:
   std::string m_id;           /* Block ID */
   std::string m_texture;      /* Texture to use... */
@@ -182,6 +189,11 @@ private:
 
   bool  m_background;                   /* Background block */
   bool  m_dynamic;
+  bool  m_isLayer;
+  // the background layer of the block.
+  // in case of a non m_backgroundLevel, if m_layer is != -1, then it's
+  // a static block from the second static blocks layer
+  int   m_layer;
   float m_grip;                         /* GRIP of the block */
   AABB  m_BBox;
   bool  m_isBBoxDirty;
