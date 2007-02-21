@@ -72,12 +72,21 @@ namespace vapp {
     m_zonesHandler.reset();
     */
     m_staticBlocksHandler.reset();
+    m_staticBlocksHandlerSecondLayer.reset();
+
+    for(int i=0; i<m_layerBlocksHandlers.size(); i++){
+      delete m_layerBlocksHandlers[i];
+    }
+    m_layerBlocksHandlers.clear();
   }
 
   /*===========================================================================
   Set dimensions of system
   ===========================================================================*/
-  void CollisionSystem::setDims(float fMinX,float fMinY,float fMaxX,float fMaxY) {
+  void CollisionSystem::setDims(float fMinX,float fMinY,
+				float fMaxX,float fMaxY,
+				int numberBackgroundLayers,
+				std::vector<float>& layerOffsets) {
     /* Find suitable grid properties - first horizontal */
     /* The choice of the number of cell in the grid is quite
        useless because it doesn't take care of how crowed are the cells...
@@ -96,7 +105,7 @@ namespace vapp {
     m_fMinY = fMinY;
     m_fMaxX = fMaxX;
     m_fMaxY = fMaxY;
-    
+
     /* Allocate grid structure */
     m_pGrid = new GridCell[m_nGridWidth * m_nGridHeight];
 
@@ -114,6 +123,19 @@ namespace vapp {
     m_staticBlocksHandler.setDims(Vector2f(m_fMinX, m_fMinY),
 				  Vector2f(m_fMaxX, m_fMaxY),
 				  m_nGridWidth, m_nGridHeight);
+
+    m_staticBlocksHandlerSecondLayer.setDims(Vector2f(m_fMinX, m_fMinY),
+					     Vector2f(m_fMaxX, m_fMaxY),
+					     m_nGridWidth, m_nGridHeight);
+
+    for(int i=0; i<numberBackgroundLayers; i++){
+      ElementHandler<Block>* pHandler = new ElementHandler<Block>();
+      pHandler->setDims(Vector2f(m_fMinX, m_fMinY),
+			Vector2f(m_fMaxX, m_fMaxY),
+			m_nGridWidth, m_nGridHeight,
+			layerOffsets[i]);
+      m_layerBlocksHandlers.push_back(pHandler);
+    }
     
     //printf("%dx%d grid width %.2fx%.2f cells\n",
     //       m_nGridWidth,m_nGridHeight,m_fCellWidth,m_fCellHeight);
@@ -767,14 +789,34 @@ namespace vapp {
   }
 
 
-  void CollisionSystem::addStaticBlock(Block* id)
+  void CollisionSystem::addStaticBlock(Block* id, int layer)
   {
-    m_staticBlocksHandler.addElement(id);
+    if(layer == -1){
+      m_staticBlocksHandler.addElement(id);
+    }
+    else{
+      m_staticBlocksHandlerSecondLayer.addElement(id);
+    }
   }
 
-  std::vector<Block*> CollisionSystem::getStaticBlocksNearPosition(AABB& BBox)
+  std::vector<Block*> CollisionSystem::getStaticBlocksNearPosition(AABB& BBox, int layer)
   {
-    return m_staticBlocksHandler.getElementsNearPosition(BBox);
+    if(layer == -1){
+      return m_staticBlocksHandler.getElementsNearPosition(BBox);
+    }
+    else{
+      return m_staticBlocksHandlerSecondLayer.getElementsNearPosition(BBox);
+    }
+  }
+
+  void CollisionSystem::addBlockInLayer(Block* id, int layer)
+  {
+    m_layerBlocksHandlers[layer]->addElement(id);
+  }
+
+  std::vector<Block*> CollisionSystem::getBlocksNearPositionInLayer(AABB& BBox, int layer)
+  {
+    return m_layerBlocksHandlers[layer]->getElementsNearPosition(BBox);
   }
 
   /*=====================================================
@@ -808,10 +850,21 @@ namespace vapp {
 
   template <class T> void
   ElementHandler<T>::setDims(Vector2f min, Vector2f max,
-			     int gridWidth, int gridHeight)
+			     int gridWidth, int gridHeight,
+			     float offset)
   {
-    m_min = min;
-    m_max = max;
+    if(offset != 1.0){
+      m_min = min;
+      m_max = max;
+      /* resize bounding box */
+      m_min.y = m_min.y * offset;
+      m_max.x = m_max.x * offset;
+    }
+    else{
+      m_min = min;
+      m_max = max;
+    }
+
     m_gridWidth  = gridWidth;
     m_gridHeight = gridHeight;
 
