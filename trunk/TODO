@@ -1,6 +1,8 @@
 
 * two options for music : menu and ingame
 
+* BUG rotation on grass of dynamic blocks on sdlgfx
+
 mingw:
 * sdlgfx: http://www.wormux.org/wiki/compile_under_mingw.php#SDL_gfx
 * gettext: http://www.wormux.org/wiki/compile_under_mingw.php
