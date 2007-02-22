@@ -134,11 +134,11 @@ class Level {
     return m_numberLayer;
   }
 
-  float getLayerOffset(int layer) {
+  Vector2f getLayerOffset(int layer) {
     return m_layerOffsets[layer];
   }
 
-  std::vector<float>& getLayerOffsets(){
+  std::vector<Vector2f>& getLayerOffsets(){
     return m_layerOffsets;
   }
 
@@ -178,7 +178,7 @@ class Level {
   SkyApparence m_sky;
 
   int m_numberLayer;
-  std::vector<float> m_layerOffsets;
+  std::vector<Vector2f> m_layerOffsets;
   /* si != -1, alors il s'agit de l'index d'un
      back layer utilise comme front layer */
   int m_frontLayer;
