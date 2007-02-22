@@ -56,6 +56,8 @@ function makeNSI {
   echo "	File vorbis.dll"
   echo "	File vorbisfile.dll"
   echo "	File zlib1.dll"
+  echo "        File libintl3.dll.dll"
+  echo "        File libiconv2.dll.dll"
   echo "	File COPYING.txt"
   echo "	File ChangeLog.txt"
   echo
