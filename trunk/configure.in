@@ -25,7 +25,7 @@ fi
 
 if test "$target_os" = "mingw32" # others libraries required by mingw32
 then
-  MINGW32_LIBS="-lmingw32 -lSDLmain -lSDL -lopengl32 -mwindows xmoto_icone.o" # -mwindows to avoid dos window
+  MINGW32_LIBS="-lmingw32 -lSDLmain -lSDL -lopengl32 -mwindows -lintl -lode xmoto_icone.o" # -mwindows to avoid dos window
   AC_SUBST([MINGW32_LIBS])
 fi
 AM_CONDITIONAL([WIN32], test "$target_os" = "mingw32")
@@ -88,10 +88,8 @@ AC_CHECK_HEADER(lualib.h,AC_DEFINE(HAVE_LUALIB_H),[])
 
 AC_LANG_PUSH([C++])
 
-if test "$target_os" = "mingw32" # others libraries required by mingw32
+if test "$target_os" != "mingw32" # make me crazy to detect it because it compiles
 then
-  AC_SEARCH_LIBS(dJointAttach,ode, [], [AC_MSG_ERROR(libode required)], -lstdc++ -mwindows)
-else
   AC_SEARCH_LIBS(dJointAttach,ode, [], [AC_MSG_ERROR(libode required)], -lstdc++)
 fi
 
@@ -183,11 +181,21 @@ else
   fi
 fi
 
+use_gettext=no
+if test "$gt_cv_func_gnugettext1_libc" = "yes"
+then
+  use_gettext="yes"
+fi
+if test "$gt_cv_func_gnugettext1_libintl" = "yes"
+then
+  use_gettext="yes"
+fi
+
 echo
 echo   "+-----------------+------------+-----------------------------------------------------+"
 displayRequirement "WWW stuff" "$v_enable_www" "yes" "$v_enable_www_reason"
 echo   "+-----------------+------------+-----------------------------------------------------+"
-displayRequirement "Locales" "$gt_cv_func_gnugettext1_libc" "yes" "gettext"
+displayRequirement "Locales" "$use_gettext" "yes" "gettext"
 echo   "+-----------------+------------+-----------------------------------------------------+"
 displayRequirement "Zoom" "$with_enable_zoom" "1" "--with-enable-zoom=1"
 echo   "+-----------------+------------+-----------------------------------------------------+"
