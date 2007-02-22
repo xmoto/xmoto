@@ -148,7 +148,71 @@ namespace vapp {
 	  ((DrawLibOpenGL*)getParent()->getDrawLib())->glBufferDataARB(GL_ARRAY_BUFFER_ARB,pPoly->nNumVertices*2*sizeof(float),(void *)pPoly->pTexCoords,GL_STATIC_DRAW_ARB);
 	}
 #endif
-      }                                                                    
+      }
+
+#ifdef ENABLE_OPENGL
+#if 0
+      int displayList = glGenLists(1);
+      glNewList(displayList, GL_COMPILE);
+      Blocks[i]->setDisplayList(displayList);
+
+      BlockVertex* v_blockVertexA;
+      BlockVertex* v_blockVertexB;
+      Vector2f vertexPos;
+      //glPushAttrib(GL_CURRENT_BIT|GL_TEXTURE_BIT);
+      glPushAttrib(GL_ALL_ATTRIB_BITS);
+
+      /* create display list for edge rendering */
+      for(int j=0; j<Blocks[i]->Vertices().size(); j++) {  
+	v_blockVertexA = Blocks[i]->Vertices()[j];
+	if(v_blockVertexA->EdgeEffect() != "") {
+	  v_blockVertexB = Blocks[i]->Vertices()[(j+1) % Blocks[i]->Vertices().size()];
+
+	  /* link A to B */
+	  float fXScale,fDepth;
+	  EdgeEffectSprite* pType;
+	  pType = (EdgeEffectSprite*)getParent()->getTheme()->getSprite(SPRITE_TYPE_EDGEEFFECT, v_blockVertexA->EdgeEffect());
+
+	  if(pType != NULL) {
+	    fXScale = pType->getScale();
+	    fDepth  = pType->getDepth();
+                 
+	    glEnable(GL_TEXTURE_2D);
+	    glEnable(GL_BLEND);
+	    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+	    glBindTexture(GL_TEXTURE_2D, pType->getTexture()->nID);	    
+	    glBegin(GL_POLYGON);
+	    glColor4ub(255, 255, 255, 255);
+
+	    glTexCoord2f((Center.x + v_blockVertexA->Position().x)*fXScale, 0.01);
+	    vertexPos = v_blockVertexA->Position() + Center;
+	    glVertex2f(vertexPos.x, vertexPos.y);
+
+	    glTexCoord2f((Center.x + v_blockVertexB->Position().x)*fXScale, 0.01);
+	    getParent()->getDrawLib()->glVertex(v_blockVertexB->Position() + Center);
+	    glVertex2f(vertexPos.x, vertexPos.y);
+
+	    glTexCoord2f((Center.x + v_blockVertexB->Position().x)*fXScale, 0.99);
+	    vertexPos = v_blockVertexB->Position() + Center + Vector2f(0,-fDepth);
+	    glVertex2f(vertexPos.x, vertexPos.y);
+
+	    glTexCoord2f((Center.x + v_blockVertexA->Position().x)*fXScale, 0.99);
+	    vertexPos = v_blockVertexA->Position() + Center + Vector2f(0,-fDepth);
+	    glVertex2f(vertexPos.x, vertexPos.y);
+
+	    glEnd();
+	    glDisable(GL_TEXTURE_2D);
+	    glDisable(GL_BLEND);
+	  }
+	}
+      }
+
+      glPopAttrib();
+      glEndList();
+#endif
+#endif
+
+      
     }
     
     setScroll(false);
@@ -1287,7 +1351,8 @@ namespace vapp {
     BlockVertex* v_blockVertexA;
     BlockVertex* v_blockVertexB;
 
-    if(getParent()->getDrawLib()->getBackend() == DrawLib::backend_SdlGFX && pTranslateVector != NULL){
+    if(getParent()->getDrawLib()->getBackend() == DrawLib::backend_SdlGFX){
+      /* FIXME::is the edge of a dyn block rotated with the dyn block ?? */
       for(int j=0; j<block->Vertices().size(); j++) {  
 	v_blockVertexA = block->Vertices()[j];
 	if(v_blockVertexA->EdgeEffect() != "") {
@@ -1328,10 +1393,14 @@ namespace vapp {
       }
     }
     else if(getParent()->getDrawLib()->getBackend() == DrawLib::backend_OpenGl){
+      //      glCallList(block->getDisplayList());
       for(int j=0; j<block->Vertices().size(); j++) {  
 	v_blockVertexA = block->Vertices()[j];
 	if(v_blockVertexA->EdgeEffect() != "") {
 	  v_blockVertexB = block->Vertices()[(j+1) % block->Vertices().size()];
+
+	  Vector2f vAPos = v_blockVertexA->Position();
+	  Vector2f vBPos = v_blockVertexB->Position();
 
 	  /* link A to B */
 	  float fXScale,fDepth;
@@ -1346,14 +1415,14 @@ namespace vapp {
 	    getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
 	    getParent()->getDrawLib()->setColorRGB(255,255,255);
 
-	    getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+v_blockVertexA->Position().x)*fXScale,0.01);
-	    getParent()->getDrawLib()->glVertex(v_blockVertexA->Position() + Vector2f(block->DynamicPosition().x,block->DynamicPosition().y));
-	    getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+v_blockVertexB->Position().x)*fXScale,0.01);
-	    getParent()->getDrawLib()->glVertex(v_blockVertexB->Position() + Vector2f(block->DynamicPosition().x,block->DynamicPosition().y));
-	    getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+v_blockVertexB->Position().x)*fXScale,0.99);
-	    getParent()->getDrawLib()->glVertex(v_blockVertexB->Position() + Vector2f(block->DynamicPosition().x,block->DynamicPosition().y) + Vector2f(0,-fDepth));
-	    getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+v_blockVertexA->Position().x)*fXScale,0.99);
-	    getParent()->getDrawLib()->glVertex(v_blockVertexA->Position() + Vector2f(block->DynamicPosition().x,block->DynamicPosition().y) + Vector2f(0,-fDepth));
+	    getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vAPos.x)*fXScale,0.01);
+	    getParent()->getDrawLib()->glVertex(vAPos + Vector2f(block->DynamicPosition().x,block->DynamicPosition().y));
+	    getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vBPos.x)*fXScale,0.01);
+	    getParent()->getDrawLib()->glVertex(vBPos + Vector2f(block->DynamicPosition().x,block->DynamicPosition().y));
+	    getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vBPos.x)*fXScale,0.99);
+	    getParent()->getDrawLib()->glVertex(vBPos + Vector2f(block->DynamicPosition().x,block->DynamicPosition().y) + Vector2f(0,-fDepth));
+	    getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vAPos.x)*fXScale,0.99);
+	    getParent()->getDrawLib()->glVertex(vAPos + Vector2f(block->DynamicPosition().x,block->DynamicPosition().y) + Vector2f(0,-fDepth));
 
 	    getParent()->getDrawLib()->endDraw();
 	  }
@@ -1512,11 +1581,27 @@ namespace vapp {
   }
 
   void GameRenderer::_RenderLayer(int layer) {
-    float layerOffset = getGameObject()->getLevelSrc()->getLayerOffset(layer);
+    Vector2f layerOffset = getGameObject()->getLevelSrc()->getLayerOffset(layer);
     /* get bounding box in the layer depending on its offset */
     Vector2f min = m_screenBBox.getBMin();
     Vector2f size = m_screenBBox.getBMax() - min;
-    Vector2f newMin = min * layerOffset;
+
+    float width  = getGameObject()->getLevelSrc()->RightLimit() - getGameObject()->getLevelSrc()->LeftLimit();
+    float height = getGameObject()->getLevelSrc()->TopLimit()   - getGameObject()->getLevelSrc()->BottomLimit();
+
+    /* do not let min get out of the level boundaries */
+    if(min.x < getGameObject()->getLevelSrc()->LeftLimit()){
+      min.x = getGameObject()->getLevelSrc()->LeftLimit();
+    }
+    if(min.y < getGameObject()->getLevelSrc()->BottomLimit()){
+      min.y = getGameObject()->getLevelSrc()->BottomLimit();
+    }
+
+    Vector2f newMin;
+    newMin = min * layerOffset;
+    //newMin.x = (min.x + width/2.0)  * layerOffset - (width/2.0)  * layerOffset;
+    //newMin.y = (min.y + height/2.0) * layerOffset - (height/2.0) * layerOffset;
+
     AABB layerBBox;
     layerBBox.addPointToAABB2f(newMin);
     layerBBox.addPointToAABB2f(newMin+size);
