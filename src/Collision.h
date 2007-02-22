@@ -79,7 +79,7 @@ namespace vapp {
     void reset();
     void setDims(Vector2f min, Vector2f max,
 		 int gridWidth, int gridHeight,
-		 float offset=1.0);
+		 float Xoffset=1.0, float Yoffset=1.0);
 
     void setDebug(bool b) {
       m_bDebugFlag = b;
@@ -158,7 +158,7 @@ namespace vapp {
     void setDims(float fMinX,float fMinY,
 		 float fMaxX,float fMaxY,
 		 int numberBackgroundLayers,
-		 std::vector<float>& layerOffsets);
+		 std::vector<Vector2f>& layerOffsets);
     void defineLine(float x1,float y1,float x2,float y2, float grip);
 
     bool checkLine(float x1,float y1,float x2,float y2);

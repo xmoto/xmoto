@@ -844,7 +844,8 @@ namespace vapp {
 
     Log("MotoGame::_GenerateLevel. number of layers: %d", m_pLevelSrc->getNumberLayer());
     for(int i=0; i<m_pLevelSrc->getNumberLayer(); i++){
-      Log("MotoGame::_GenerateLevel. offset layer %d: %f", i, m_pLevelSrc->getLayerOffset(i));
+      Log("MotoGame::_GenerateLevel. offset layer %d: %f, %f",
+	  i, m_pLevelSrc->getLayerOffset(i).x, m_pLevelSrc->getLayerOffset(i).y);
     }
     
     m_Collision.setDims(LevelBoundsMin.x,LevelBoundsMin.y,

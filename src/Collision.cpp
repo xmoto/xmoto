@@ -86,7 +86,7 @@ namespace vapp {
   void CollisionSystem::setDims(float fMinX,float fMinY,
 				float fMaxX,float fMaxY,
 				int numberBackgroundLayers,
-				std::vector<float>& layerOffsets) {
+				std::vector<Vector2f>& layerOffsets) {
     /* Find suitable grid properties - first horizontal */
     /* The choice of the number of cell in the grid is quite
        useless because it doesn't take care of how crowed are the cells...
@@ -133,7 +133,8 @@ namespace vapp {
       pHandler->setDims(Vector2f(m_fMinX, m_fMinY),
 			Vector2f(m_fMaxX, m_fMaxY),
 			m_nGridWidth, m_nGridHeight,
-			layerOffsets[i]);
+			layerOffsets[i].x,
+			layerOffsets[i].y);
       m_layerBlocksHandlers.push_back(pHandler);
     }
     
@@ -851,14 +852,14 @@ namespace vapp {
   template <class T> void
   ElementHandler<T>::setDims(Vector2f min, Vector2f max,
 			     int gridWidth, int gridHeight,
-			     float offset)
+			     float Xoffset, float Yoffset)
   {
-    if(offset != 1.0){
+    if(Xoffset != 1.0 || Yoffset != 1.0){
       m_min = min;
       m_max = max;
       /* resize bounding box */
-      m_min.y = m_min.y * offset;
-      m_max.x = m_max.x * offset;
+      m_min.y = m_min.y * Yoffset;
+      m_max.x = m_max.x * Xoffset;
     }
     else{
       m_min = min;
