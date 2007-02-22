@@ -30,7 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../VXml.h"
 #include "../helpers/Color.h"
 
-#define CACHE_LEVEL_FORMAT_VERSION 14
+#define CACHE_LEVEL_FORMAT_VERSION 15
 
 Level::Level() {
   m_xmotoTooOld = false;
@@ -349,8 +349,8 @@ void Level::saveXML(void) {
   if(m_numberLayer > 0){
     vapp::FS::writeLineF(pfh, "\t\t<layeroffsets>");
     for(int i=0; i<m_numberLayer; i++){
-      vapp::FS::writeLineF(pfh, "\t\t\t<layeroffset>%f</layeroffset>",
-			   m_layerOffsets[i]);
+      vapp::FS::writeLineF(pfh, "\t\t\t<layeroffset x=\"%f\" y=\"%f\"/>",
+			   m_layerOffsets[i].x, m_layerOffsets[i].y);
     }
     vapp::FS::writeLineF(pfh, "\t\t</layeroffsets>");
   }
@@ -617,15 +617,14 @@ void Level::loadXML(void) {
 	  pElem!=NULL;
 	  pElem=pElem->NextSiblingElement("layeroffset")) {
 	m_numberLayer++;
-	TiXmlText *pText = pElem->FirstChild()->ToText();
-	float offset = 1.0;
-	if(pText != NULL){
-	  offset = atof(pText->Value());
-	}
+	Vector2f offset;
+	offset.x = atof(vapp::XML::getOption(pElem, "x").c_str());
+	offset.y = atof(vapp::XML::getOption(pElem, "y").c_str());
 	m_layerOffsets.push_back(offset);
       }
       for(int i=0; i<m_numberLayer; i++){
-	vapp::Log("Level::loadXML offsets layer %d: %f", i, m_layerOffsets[i]);
+	vapp::Log("Level::loadXML offsets layer %d: %f, %f",
+		  i, m_layerOffsets[i].x, m_layerOffsets[i].y);
       }
     }
 
@@ -808,8 +807,9 @@ void Level::exportBinary(const std::string &FileName, const std::string& pSum) {
 
     vapp::FS::writeInt_LE(pfh, m_frontLayer);
     vapp::FS::writeInt_LE(pfh, m_numberLayer);
-    for(int i=0; i<m_layerOffsets.size(); i++){
-      vapp::FS::writeFloat_LE(pfh, m_layerOffsets[i]);
+    for(int i=0; i<m_numberLayer; i++){
+      vapp::FS::writeFloat_LE(pfh, m_layerOffsets[i].x);
+      vapp::FS::writeFloat_LE(pfh, m_layerOffsets[i].y);
     }    
 
     /* Write script (if any) */
@@ -998,7 +998,10 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
 	m_frontLayer  = vapp::FS::readInt_LE(pfh);
 	m_numberLayer = vapp::FS::readInt_LE(pfh);
 	for(int i=0; i<m_numberLayer; i++){
-	  m_layerOffsets.push_back(vapp::FS::readFloat_LE(pfh));
+	  Vector2f offset;
+	  offset.x = vapp::FS::readFloat_LE(pfh);
+	  offset.y = vapp::FS::readFloat_LE(pfh);
+	  m_layerOffsets.push_back(offset);
 	}
 
         /* Read embedded script */
@@ -1298,6 +1301,10 @@ void Level::unloadLevelBody() {
   if(m_xmlSource != NULL) {
     delete m_xmlSource;
   }
+
+  m_numberLayer = 0;
+  m_frontLayer  = -1;
+  m_layerOffsets.clear();
 }
 
 void Level::rebuildCache() {
