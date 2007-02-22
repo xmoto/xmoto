@@ -128,7 +128,7 @@ void Block::updateCollisionLines() {
   unsigned int z = 0;
 
   m_isBBoxDirty = true;
-  
+
   for(unsigned int j=0; j<Vertices().size(); j++) {            
     unsigned int jnext = j==Vertices().size()-1? 0 : j+1;
     BlockVertex *pVertex1 = Vertices()[j];          

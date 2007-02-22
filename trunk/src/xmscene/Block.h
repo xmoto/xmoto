@@ -171,6 +171,12 @@ class Block {
   void setGeom(int geom) {
     m_geom = geom;
   }
+  int getDisplayList() {
+    return m_displayList;
+  }
+  void setDisplayList(int displayList) {
+    m_displayList = displayList;
+  }
   int getLayer() {
     return m_layer;
   }
@@ -200,6 +206,8 @@ private:
 
   // the geom used to render the block
   int   m_geom;
+  // the display list used to render the block edges in opengl
+  int   m_displayList;
 
   /* properties for dynamic */
   float m_dynamicRotation;  /* Block rotation */
