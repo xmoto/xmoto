@@ -135,7 +135,7 @@ namespace vapp {
 
     /* init endian system */ 
 #ifdef USE_GETTEXT
-    Locales::init();
+    std::string v_locale = Locales::init();
 #endif
     SwapEndian::Swap_Init();
 
@@ -160,6 +160,10 @@ namespace vapp {
     } else {
       Log("Systeme is littleendien");
     }
+
+#ifdef USE_GETTEXT
+    vapp::Log("Locales set to '%s' (directory '%s')", v_locale, LOCALESDIR);
+#endif
 
     /* Do user pre-init */
     userPreInit();
