@@ -162,7 +162,7 @@ namespace vapp {
     }
 
 #ifdef USE_GETTEXT
-    vapp::Log("Locales set to '%s' (directory '%s')", v_locale, LOCALESDIR);
+    vapp::Log("Locales set to '%s' (directory '%s')", v_locale.c_str(), LOCALESDIR);
 #endif
 
     /* Do user pre-init */
