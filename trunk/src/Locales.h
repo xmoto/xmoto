@@ -31,10 +31,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <libintl.h>
 #define _(String) gettext(String)
 #endif
+#include <string>
 
 class Locales {
   public:
-  static void init();
+  /* return the locales set */
+  static std::string init(std::string i_locale = "");
 };
 
 #endif /* __LOCALES_H__ */

@@ -107,6 +107,10 @@ AC_ARG_WITH([localesdir],
   [LOCALESDIR="$withval"],
   [LOCALESDIR="$datadir/locale"]
 )
+if test "$target_os" = "mingw32"
+then
+  LOCALESDIR="./"
+fi
 AC_SUBST([LOCALESDIR])
 
 dnl Put GAMEDATADIR in makefiles

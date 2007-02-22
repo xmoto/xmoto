@@ -23,12 +23,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <iostream>
 #include "BuildConfig.h"
 
-void Locales::init() {
+std::string Locales::init(std::string i_locale) {
 #ifdef USE_GETTEXT
   char *locale;
-  locale = setlocale(LC_MESSAGES, "");
+
+  locale = setlocale(LC_MESSAGES, i_locale.c_str());
   textdomain (PACKAGE);
   bindtextdomain (PACKAGE, LOCALESDIR);
+  return locale;
+
 #endif
+  return "";
 }
 
