@@ -43,10 +43,14 @@ class LevelsPack {
   void setShowWebTimes(bool i_showWebTimes);
   void setSorted(bool i_sorted);
 
+  std::string Group() const;
+  void setGroup(std::string i_group);
+
   private:
   void setHintsFromFile();
 
   std::string m_name;
+  std::string m_group;
   std::vector<Level *> m_levels;
   bool m_showTimes;
   bool m_showWebTimes;

@@ -340,92 +340,122 @@ namespace vapp {
     }
 
     setScissor(m_lineMargeX,LinesStartY(),LinesWidth(),LinesHeight());
-   
-    if(!bDisabled)                     
-		setTextSolidColor(MAKE_COLOR(255,255,255,255));
-    else
-		setTextSolidColor(MAKE_COLOR(128,128,128,255));
-    
-		int m_numEntryDisplayed = 0;
+      
+    int m_numEntryDisplayed = 0;
     for(int i=0;i<m_Entries.size();i++) {
-			if(m_Entries[i]->bShown) {
-				int y = m_nScroll + m_numEntryDisplayed*m_rowHeight + (m_rowHeight*2)/3;
-				
-				if(m_nRealSelected == i) {
-					Color c = MAKE_COLOR(70,70,70,255);
-					if(!bDisabled) c = MAKE_COLOR(160,40,40,255);
-					putRect(m_lineMargeX,m_nScroll + LinesStartY()+m_numEntryDisplayed*m_rowHeight,LinesWidth(),m_rowHeight,c);       
-					
-					if(isUglyMode()) {
-						if(bDisabled) {
-							putRect(m_lineMargeX,m_nScroll + LinesStartY()+m_numEntryDisplayed*m_rowHeight,LinesWidth(),
-											m_rowHeight,MAKE_COLOR(128,128,128,255));
-						} else {
-							if(bActive) {
-								putRect(m_lineMargeX,m_nScroll + LinesStartY()+m_numEntryDisplayed*m_rowHeight,
-												LinesWidth(),m_rowHeight,MAKE_COLOR(200,60,60,255));
-							} else {
-								putRect(m_lineMargeX,m_nScroll + LinesStartY()+m_numEntryDisplayed*m_rowHeight,
-												LinesWidth(),m_rowHeight,MAKE_COLOR(160,40,40,255));
-							}
-						}
-					} else {
-						if(bActive && !bDisabled) {
-							float s = 50 + 50*sin(getApp()->getRealTime()*10);
-							int n = (int)s;
-							if(n<0) n=0;
-							if(n>255) n=255; /* just to be sure, i'm lazy */    
-							
-							putRect(m_lineMargeX,m_nScroll+ LinesStartY()+m_numEntryDisplayed*m_rowHeight,LinesWidth(),
-											m_rowHeight,MAKE_COLOR(255,255,255,n));
-						}
-					}
-				} 
+      if(m_Entries[i]->bShown) {
 
-				int yy = m_nScroll+LinesStartY()+m_numEntryDisplayed*m_rowHeight;
-				if(yy >= getPosition().nHeight - 6) break;
-				int yy2 = m_nScroll+LinesStartY()+m_numEntryDisplayed*m_rowHeight + m_rowHeight;
-				int nLRH = m_rowHeight;
-				if(yy2 >= getPosition().nHeight - 6) nLRH = m_rowHeight - (yy2 - (getPosition().nHeight - 6));
-				int yym1 = m_nScroll+LinesStartY()+m_numEntryDisplayed*m_rowHeight;
-				if(yym1 + m_rowHeight > LinesStartY()) {
-					if(yym1 < LinesStartY()) {
-						yym1 += (LinesStartY()-yym1);
-					}
-					
-					int nOldScissor[4];
-					//glGetIntegerv(GL_SCISSOR_BOX,(GLint *) nOldScissor);
-					getApp()->getDrawLib()->getClipRect(&nOldScissor[0],&nOldScissor[1],&nOldScissor[2],&nOldScissor[3]);
-					std::string txt_to_display;
-					
-					int x = 0;
-					for(int j=0;j<m_Entries[i]->Text.size();j++) {
-						if(!(m_nColumnHideFlags & (1<<j))) {
-							/* Next columns disabled? If so, make more room to this one */
-							int nExtraRoom = 0;
-							for(int k=j+1;k<m_Columns.size();k++) {
-								if(m_nColumnHideFlags & (1<<k))
-									nExtraRoom += m_ColumnWidths[i]; 
-							}           
+	if(m_Entries[i]->bUseOwnProperties) {
+	  setTextSolidColor(m_Entries[i]->ownTextColor);
+	} else {
+	  if(!bDisabled)                     
+	    setTextSolidColor(MAKE_COLOR(255,255,255,255));
+	  else
+	    setTextSolidColor(MAKE_COLOR(128,128,128,255));
+	}
+
+	int y = m_nScroll + m_numEntryDisplayed*m_rowHeight + (m_rowHeight*2)/3;
+				
+	if(m_nRealSelected == i) {
+	  if(m_Entries[i]->bUseOwnProperties) {
+	    putRect(m_lineMargeX,m_nScroll + LinesStartY()+m_numEntryDisplayed*m_rowHeight,LinesWidth(),m_rowHeight,m_Entries[i]->ownSelectedColor);    
+	  } else {
+	    Color c = MAKE_COLOR(70,70,70,255);
+	    if(!bDisabled) c = MAKE_COLOR(160,40,40,255);
+	    putRect(m_lineMargeX,m_nScroll + LinesStartY()+m_numEntryDisplayed*m_rowHeight,LinesWidth(),m_rowHeight,c);       
+	  }
+			
+	  if(isUglyMode()) {
+	    if(bDisabled) {
+	      if(m_Entries[i]->ownSelectedColor == false) {
+		putRect(m_lineMargeX,m_nScroll + LinesStartY()+m_numEntryDisplayed*m_rowHeight,LinesWidth(),
+			m_rowHeight,MAKE_COLOR(128,128,128,255));
+	      }
+	    } else {
+	      if(bActive) {
+		if(m_Entries[i]->ownSelectedColor == false) {
+		  putRect(m_lineMargeX,m_nScroll + LinesStartY()+m_numEntryDisplayed*m_rowHeight,
+			  LinesWidth(),m_rowHeight,MAKE_COLOR(200,60,60,255));
+		} else {
+		  putRect(m_lineMargeX,m_nScroll + LinesStartY()+m_numEntryDisplayed*m_rowHeight,
+			  LinesWidth(),m_rowHeight,m_Entries[i]->ownSelectedColor);
+		}
+	      } else {
+		if(m_Entries[i]->ownSelectedColor == false) {
+		  putRect(m_lineMargeX,m_nScroll + LinesStartY()+m_numEntryDisplayed*m_rowHeight,
+			  LinesWidth(),m_rowHeight,MAKE_COLOR(160,40,40,255));
+		} else {
+		  putRect(m_lineMargeX,m_nScroll + LinesStartY()+m_numEntryDisplayed*m_rowHeight,
+			  LinesWidth(),m_rowHeight,m_Entries[i]->ownUnSelectedColor);
+		}
+	      }
+	    }
+	  } else {
+	    if(bActive && !bDisabled && m_Entries[i]->ownSelectedColor == false) {
+	      float s = 50 + 50*sin(getApp()->getRealTime()*10);
+	      int n = (int)s;
+	      if(n<0) n=0;
+	      if(n>255) n=255; /* just to be sure, i'm lazy */    
 							
-							/* Draw */          
-							setScissor(m_lineMargeX+x,yym1,m_ColumnWidths[j]-4+nExtraRoom,nLRH);
-							txt_to_display = m_Entries[i]->Text[j];
-							if(j==0 && m_bNumeroted) {
-								std::ostringstream v_num;
-								v_num << m_numEntryDisplayed+1;
-								
-								txt_to_display = "#" + v_num.str() + " " + txt_to_display; 
-							}
-							putText(m_lineMargeX+x,LinesStartY()+y,txt_to_display);
-							x += m_ColumnWidths[j] + nExtraRoom;                
-						}
-					}
+	      putRect(m_lineMargeX,m_nScroll+ LinesStartY()+m_numEntryDisplayed*m_rowHeight,LinesWidth(),
+		      m_rowHeight,MAKE_COLOR(255,255,255,n));
+	    }
+	  }
+	} else {
+	  if(m_Entries[i]->bUseOwnProperties) {
+	    putRect(m_lineMargeX,m_nScroll + LinesStartY()+m_numEntryDisplayed*m_rowHeight,LinesWidth(),m_rowHeight,m_Entries[i]->ownUnSelectedColor);    
+	  }
+	}
+
+	int yy = m_nScroll+LinesStartY()+m_numEntryDisplayed*m_rowHeight;
+	if(yy >= getPosition().nHeight - 6) break;
+	int yy2 = m_nScroll+LinesStartY()+m_numEntryDisplayed*m_rowHeight + m_rowHeight;
+	int nLRH = m_rowHeight;
+	if(yy2 >= getPosition().nHeight - 6) nLRH = m_rowHeight - (yy2 - (getPosition().nHeight - 6));
+	int yym1 = m_nScroll+LinesStartY()+m_numEntryDisplayed*m_rowHeight;
+	if(yym1 + m_rowHeight > LinesStartY()) {
+	  if(yym1 < LinesStartY()) {
+	    yym1 += (LinesStartY()-yym1);
+	  }
 					
-					getApp()->getDrawLib()->setClipRect(nOldScissor[0],nOldScissor[1],nOldScissor[2],nOldScissor[3]);
-				}
-				m_numEntryDisplayed++;
-			}
+	  int nOldScissor[4];
+	  //glGetIntegerv(GL_SCISSOR_BOX,(GLint *) nOldScissor);
+	  getApp()->getDrawLib()->getClipRect(&nOldScissor[0],&nOldScissor[1],&nOldScissor[2],&nOldScissor[3]);
+	  std::string txt_to_display;
+					
+	  int x = 0;
+	  for(int j=0;j<m_Entries[i]->Text.size();j++) {
+	    if(!(m_nColumnHideFlags & (1<<j))) {
+	      /* Next columns disabled? If so, make more room to this one */
+	      int nExtraRoom = 0;
+	      for(int k=j+1;k<m_Columns.size();k++) {
+		if(m_nColumnHideFlags & (1<<k))
+		  nExtraRoom += m_ColumnWidths[i]; 
+	      }           
+							
+	      /* Draw */          
+	      setScissor(m_lineMargeX+x,yym1,m_ColumnWidths[j]-4+nExtraRoom,nLRH);
+	      txt_to_display = m_Entries[i]->Text[j];
+	      if(j==0 && m_bNumeroted) {
+		std::ostringstream v_num;
+		v_num << m_numEntryDisplayed+1;
+								
+		txt_to_display = "#" + v_num.str() + " " + txt_to_display; 
+	      }
+	      if(m_Entries[i]->bUseOwnProperties) {
+		putText(m_lineMargeX+x+m_Entries[i]->ownXOffset,
+			LinesStartY()+y+m_Entries[i]->ownYOffset,txt_to_display);
+	      } else {
+		putText(m_lineMargeX+x,LinesStartY()+y,txt_to_display);
+	      }
+	      x += m_ColumnWidths[j] + nExtraRoom;                
+	    }
+	  }
+					
+	  getApp()->getDrawLib()->setClipRect(nOldScissor[0],nOldScissor[1],nOldScissor[2],nOldScissor[3]);
+	}
+	m_numEntryDisplayed++;
+      }
     }
     
     /* Stuff */
@@ -569,11 +599,17 @@ namespace vapp {
   /*===========================================================================
   Allocate entry / vice versa
   ===========================================================================*/
-  UIListEntry *UIList::addEntry(std::string Text,void *pvUser) {
+  UIListEntry *UIList::addEntry(std::string Text,void *pvUser, int i_position) {
     UIListEntry *p = new UIListEntry;        
     p->Text.push_back(Text);
     p->pvUser = pvUser;
     p->bShown = true;
+    p->bUseOwnProperties = false;
+
+    if(i_position >=0 && i_position<m_Entries.size()) {
+      m_Entries.insert(m_Entries.begin() + i_position, p);
+      return p;
+    }
 
     /* Make a temp. lowercase text */
     std::string LCText = Text;

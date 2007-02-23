@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Level.h"
 #include "PlayerData.h"
 #include "WWW.h"
+#include "LevelsManager.h"
   
   class UILevelList : public vapp::UIList {
     public:
@@ -55,5 +56,24 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     private:
   };
+
+class UIPackTree : public vapp::UIList {
+ public:
+  UIPackTree(UIWindow *pParent,
+	     int x = 0,int y = 0,
+	     std::string Caption="",
+	     int nWidth = 0,int nHeight = 0);
+  ~UIPackTree();
+
+  void addPack(LevelsPack* i_levelsPack,
+	       std::string i_categorie,
+	       int i_nbFinishedLevels,
+	       int i_nbLevels);
+  LevelsPack* getSelectedPack();
+  void setSelectedPackByName(std::string i_levelsPackName);
+
+ private:
+};
+
 
 #endif /* __GUIXMOTO_H__ */

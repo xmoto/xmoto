@@ -138,4 +138,98 @@ void UILevelList::updateLevelsInformations(vapp::PlayerProfile *p_player,
   }
 }
 
+UIPackTree::UIPackTree(UIWindow *pParent,
+		       int x, int y,
+		       std::string Caption,
+		       int nWidth, int nHeight)
+  : vapp::UIList(pParent, x, y, Caption, nWidth, nHeight) {
+  addColumn(GAMETEXT_LEVELPACK, getPosition().nWidth-150, CONTEXTHELP_LEVELPACK);
+  addColumn(GAMETEXT_NUMLEVELS, 150, CONTEXTHELP_LEVELPACKNUMLEVELS);
+}
+
+UIPackTree::~UIPackTree() {
+}
+
+void UIPackTree::addPack(LevelsPack* i_levelsPack,
+			 std::string i_categorie,
+			 int i_nbFinishedLevels,
+			 int i_nbLevels) {
+  vapp::UIListEntry *c, *p;
+
+  /* looking the categorie */
+  int found = -1;
+  for(int i=0; i<getEntries().size(); i++) {
+    if(getEntries()[i]->pvUser == NULL) {
+      if(getEntries()[i]->Text[0] == i_categorie) {
+	found = i;
+	break;
+      }
+    }
+  }
+
+  /* the categorie exists, add the entry */
+  if(found != -1) {
+    /* sort */
+    /* Make lowercase before comparing */
+    std::string LCo = i_levelsPack->Name();
+    for(int i=0; i<LCo.length(); i++)  
+      LCo[i] = tolower(LCo[i]);
+
+    int position;
+    for(position = found+1; position<getEntries().size(); position++) {
+      /* next categorie => break */
+      if(getEntries()[position]->pvUser == NULL) {
+	break;
+      }
+      /* must be done after the next entry ? */
+      std::string LC = getEntries()[position]->Text[0];
+      for(int i=0;i<LC.length();i++)  
+	LC[i] = tolower(LC[i]);
+      if(LCo < LC) {
+	break;
+      }
+    }
+    p = addEntry(i_levelsPack->Name(), NULL, position);
+  } else {
+    /* the categorie doesn't exist, add the categorie and the entry */
+    c = addEntry(i_categorie);
+    c->bUseOwnProperties  = true;
+    c->ownTextColor       = MAKE_COLOR(220,150,50,255);
+    c->ownSelectedColor   = MAKE_COLOR(50,50,70,255);
+    c->ownUnSelectedColor = MAKE_COLOR(50,50,70,255);
+    c->ownXOffset         = 30;
+    c->ownYOffset         = 2;
+    p = addEntry(i_levelsPack->Name());
+  }
+
+  std::ostringstream v_level_nb;
+  v_level_nb << i_nbFinishedLevels;
+  v_level_nb << "/";
+  v_level_nb << i_nbLevels;
+  p->Text.push_back(v_level_nb.str());
+  p->pvUser = (void *) i_levelsPack;
+}
+
+LevelsPack* UIPackTree::getSelectedPack() {
+  if(getSelected() >= 0 && getSelected() < getEntries().size()) {
+    vapp::UIListEntry *pEntry = getEntries()[getSelected()];
+    if(pEntry->pvUser != NULL) {
+      return (LevelsPack*) pEntry->pvUser;
+    }
+  }
+  return NULL;
+}
+
+void UIPackTree::setSelectedPackByName(std::string i_levelsPackName) {
+  int nPack = 0;
+  for(int i=0; i<getEntries().size(); i++) {
+    if(getEntries()[i]->pvUser != NULL) {
+      if(getEntries()[i]->Text[0] == i_levelsPackName) {
+	nPack = i;
+	break;
+      }
+    }
+  }
+  setRealSelected(nPack);
+}
 
