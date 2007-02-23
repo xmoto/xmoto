@@ -845,14 +845,12 @@ namespace vapp {
     pOpenButton->setContextHelp(CONTEXTHELP_VIEW_LEVEL_PACK);
 
     /* pack list */
-    UIList *pLevelPackList = new UIList(pPackTab,10,0,"",pPackTab->getPosition().nWidth-20,pPackTab->getPosition().nHeight-105);      
-    pLevelPackList->setID("LEVELPACK_LIST");
-    pLevelPackList->showWindow(true);
-    pLevelPackList->enableWindow(true);
-    pLevelPackList->setFont(m_Renderer.getSmallFont());
-    pLevelPackList->addColumn(GAMETEXT_LEVELPACK,pLevelPackList->getPosition().nWidth-150,CONTEXTHELP_LEVELPACK);
-    pLevelPackList->addColumn(GAMETEXT_NUMLEVELS,150,CONTEXTHELP_LEVELPACKNUMLEVELS);
-    pLevelPackList->setEnterButton( pOpenButton );
+    UIPackTree *pLevelPackTree = new UIPackTree(pPackTab,10,0,"",pPackTab->getPosition().nWidth-20,pPackTab->getPosition().nHeight-105);      
+    pLevelPackTree->setID("LEVELPACK_TREE");
+    pLevelPackTree->showWindow(true);
+    pLevelPackTree->enableWindow(true);
+    pLevelPackTree->setFont(m_Renderer.getSmallFont());
+    pLevelPackTree->setEnterButton( pOpenButton );
 
     /* favorite levels tab */
     UIWindow *pAllLevelsPackTab = new UIWindow(m_pLevelPackTabs,20,40,VPACKAGENAME_FAVORITE_LEVELS,m_pLevelPackTabs->getPosition().nWidth-40,m_pLevelPackTabs->getPosition().nHeight);
@@ -1464,19 +1462,17 @@ namespace vapp {
   Update level pack list
   ===========================================================================*/  
   void GameApp::_UpdateLevelPackList(void) {
-    UIList *pList = (UIList *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:PACK_TAB:LEVELPACK_LIST");
-    pList->setSort(true);
-
+    UIPackTree *pTree = (UIPackTree *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:PACK_TAB:LEVELPACK_TREE");
     /* get selected item */
-    std::string v_selected_packName = "";
-    if(pList->getSelected() >= 0 && pList->getSelected() < pList->getEntries().size()) {
-      UIListEntry *pEntry = pList->getEntries()[pList->getSelected()];
-      v_selected_packName = pEntry->Text[0];
-    }
+    std::string v_selected_packName;
+    LevelsPack* v_levelPack = pTree->getSelectedPack();
 
-    pList->clear();
+    if(v_levelPack != NULL) {
+      v_selected_packName = pTree->getSelectedPack()->Name();
+    }    
+
+    pTree->clear();
     
-    UIListEntry *p;
     std::string p_packName;
     
     for(int i=0;i<m_levelsManager.LevelsPacks().size();i++) {
@@ -1490,27 +1486,18 @@ namespace vapp {
 						p_packName = GAMETEXT_UNPACKED_LEVELS_PACK;
 					}
 					
-					p = pList->addEntry(p_packName);
-					std::ostringstream v_level_nb;
-					v_level_nb << getNumberOfFinishedLevelsOfPack(m_levelsManager.LevelsPacks()[i]);
-					v_level_nb << "/";
-					v_level_nb << m_levelsManager.LevelsPacks()[i]->Levels().size();
-					p->Text.push_back(v_level_nb.str());
-					p->pvUser = (void *)m_levelsManager.LevelsPacks()[i];
+					pTree->addPack(m_levelsManager.LevelsPacks()[i],
+						       m_levelsManager.LevelsPacks()[i]->Group(),
+						       getNumberOfFinishedLevelsOfPack(m_levelsManager.LevelsPacks()[i]),
+						       m_levelsManager.LevelsPacks()[i]->Levels().size());
+
 				}
 			}
     }
 
     /* reselect the previous pack */
     if(v_selected_packName != "") {
-      int nPack = 0;
-      for(int i=0; i<pList->getEntries().size(); i++) {
-        if(pList->getEntries()[i]->Text[0] == v_selected_packName) {
-          nPack = i;
-          break;
-        }
-      }
-      pList->setRealSelected(nPack);
+      pTree->setSelectedPackByName(v_selected_packName);
     }
   }
   
@@ -2413,15 +2400,16 @@ namespace vapp {
 
     /* LEVEL PACKS */
     UIButton *pOpenButton = (UIButton *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:PACK_TAB:LEVELPACK_OPEN_BUTTON");
-    UIList *pLevelPackList = (UIList *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:PACK_TAB:LEVELPACK_LIST");
-    if(pOpenButton!=NULL && pLevelPackList!=NULL && pOpenButton->isClicked()) {
+    UIPackTree *pLevelPackTree = (UIPackTree *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:PACK_TAB:LEVELPACK_TREE");
+    if(pOpenButton!=NULL && pLevelPackTree!=NULL && pOpenButton->isClicked()) {
       /* Open level pack viewer */
-      int nSel = pLevelPackList->getSelected();
-      if(nSel>=0 && nSel<pLevelPackList->getEntries().size()) {
+      LevelsPack* nSelectedPack;
+      nSelectedPack = pLevelPackTree->getSelectedPack();
+      if(nSelectedPack != NULL) {
         pOpenButton->setClicked(false);
         pOpenButton->setActive(false);      
 
-        m_pActiveLevelPack = (LevelsPack *)pLevelPackList->getEntries()[nSel]->pvUser;
+        m_pActiveLevelPack = nSelectedPack;
 
         UIStatic *pTitle = (UIStatic *)m_pLevelPackViewer->getChild("LEVELPACK_VIEWER_TITLE");
         if(pTitle != NULL) pTitle->setCaption(m_pActiveLevelPack->Name());

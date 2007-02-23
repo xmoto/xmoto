@@ -84,6 +84,14 @@ std::string LevelsPack::Name() const {
   return m_name;
 }
 
+std::string LevelsPack::Group() const {
+  return m_group;
+}
+
+void LevelsPack::setGroup(std::string i_group) {
+  m_group = i_group;
+}
+
 void LevelsPack::addLevel(Level *i_level, bool i_checkUnique) {
 	if(i_checkUnique) {
 		/* check if the level is already into the pack */
@@ -197,6 +205,7 @@ void LevelsManager::rebuildPacks(
       LevelsPackByName(m_levels[i]->Pack()).addLevel(m_levels[i]);
     } else {
       LevelsPack *v_levelsPack = new LevelsPack(m_levels[i]->Pack());
+      v_levelsPack->setGroup(GAMETEXT_PACK_STANDARD);
       v_levelsPack->addLevel(m_levels[i]);
       m_levelsPacks.push_back(v_levelsPack);
     }
@@ -224,6 +233,7 @@ void LevelsManager::createVirtualPacks(
   /* levels with no highscore */
   if(i_webHighscores != NULL) {
     v_pack = new LevelsPack(std::string(VPACKAGENAME_LEVELS_WITH_NO_HIGHSCORE));
+    v_pack->setGroup(GAMETEXT_PACK_ROOM);
     m_levelsPacks.push_back(v_pack);
     for(unsigned int i=0; i<m_levels.size(); i++) {
       WebHighscore* wh = i_webHighscores->getHighscoreFromLevel(m_levels[i]->Id());
@@ -238,6 +248,7 @@ void LevelsManager::createVirtualPacks(
   /* levels i've not the highscore */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_YOU_HAVE_NOT_THE_HIGHSCORE));
   m_levelsPacks.push_back(v_pack);
+  v_pack->setGroup(GAMETEXT_PACK_ROOM);
   for(unsigned int i=0; i<m_levels.size(); i++) {
     if(i_webHighscores != NULL) {
       WebHighscore* wh = i_webHighscores->getHighscoreFromLevel(m_levels[i]->Id());
@@ -253,6 +264,7 @@ void LevelsManager::createVirtualPacks(
   /* levels i've not finished */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_INCOMPLETED_LEVELS));
   m_levelsPacks.push_back(v_pack);
+  v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
   for(unsigned int i=0; i<m_levels.size(); i++) {
     if(i_profiles->isLevelCompleted(i_playerName, m_levels[i]->Id()) == false) {
       v_pack->addLevel(m_levels[i]);
@@ -262,6 +274,7 @@ void LevelsManager::createVirtualPacks(
   /* all levels */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_ALL_LEVELS));
   m_levelsPacks.push_back(v_pack);
+  v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
   for(unsigned int i=0; i<m_levels.size(); i++) {
     v_pack->addLevel(m_levels[i]);
   }
@@ -269,6 +282,7 @@ void LevelsManager::createVirtualPacks(
   /* favorite levels */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_FAVORITE_LEVELS));
   m_levelsPacks.push_back(v_pack);
+  v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
   for(unsigned int i=0; i<m_favoriteLevels.size(); i++) {
     v_pack->addLevel(m_favoriteLevels[i]);
   }
@@ -276,6 +290,7 @@ void LevelsManager::createVirtualPacks(
   /* new levels */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_NEW_LEVELS));
   m_levelsPacks.push_back(v_pack);
+  v_pack->setGroup(GAMETEXT_PACK_LAST);
   for(unsigned int i=0; i<m_newLevels.size(); i++) {
     v_pack->addLevel(m_newLevels[i]);
   }
@@ -283,6 +298,7 @@ void LevelsManager::createVirtualPacks(
   /* updated levels */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_UPDATED_LEVELS));
   m_levelsPacks.push_back(v_pack);
+  v_pack->setGroup(GAMETEXT_PACK_LAST);
   for(unsigned int i=0; i<m_updatedLevels.size(); i++) {
     v_pack->addLevel(m_updatedLevels[i]);
   }
@@ -292,6 +308,7 @@ void LevelsManager::createVirtualPacks(
   if(i_webLevels != NULL) {
     v_pack = new LevelsPack(std::string(VPACKAGENAME_NICEST_LEVELS));
     m_levelsPacks.push_back(v_pack);
+    v_pack->setGroup(GAMETEXT_PACK_WEBVOTES);
     for(unsigned int i=0; i<i_webLevels->getLevels().size(); i++) {
       WebLevel *v_wlevel = i_webLevels->getLevels()[i];
       if(v_wlevel->getQuality() >= VPACKAGENAME_NICEST_MIN) {
@@ -311,6 +328,7 @@ void LevelsManager::createVirtualPacks(
     if(i_webLevels != NULL) {
       v_pack = new LevelsPack(std::string(VPACKAGENAME_CRAPIEST_LEVELS));
       m_levelsPacks.push_back(v_pack);
+      v_pack->setGroup(GAMETEXT_PACK_WEBVOTES);
       for(unsigned int i=0; i<i_webLevels->getLevels().size(); i++) {
 	WebLevel *v_wlevel = i_webLevels->getLevels()[i];
 	if(v_wlevel->getQuality() <= VPACKAGENAME_CRAPIEST_MAX) {
@@ -331,6 +349,7 @@ void LevelsManager::createVirtualPacks(
   if(i_webLevels != NULL) {
     v_pack = new LevelsPack(std::string(VPACKAGENAME_EASIEST_LEVELS));
     m_levelsPacks.push_back(v_pack);
+    v_pack->setGroup(GAMETEXT_PACK_WEBVOTES);
     for(unsigned int i=0; i<i_webLevels->getLevels().size(); i++) {
       WebLevel *v_wlevel = i_webLevels->getLevels()[i];
       if(v_wlevel->getDifficulty() <= VPACKAGENAME_EASIEST_MAX) {
@@ -350,6 +369,7 @@ void LevelsManager::createVirtualPacks(
   if(i_webLevels != NULL) {
     v_pack = new LevelsPack(std::string(VPACKAGENAME_HARDEST_LEVELS));
     m_levelsPacks.push_back(v_pack);
+    v_pack->setGroup(GAMETEXT_PACK_WEBVOTES);
     for(unsigned int i=0; i<i_webLevels->getLevels().size(); i++) {
       WebLevel *v_wlevel = i_webLevels->getLevels()[i];
       if(v_wlevel->getDifficulty() >= VPACKAGENAME_HARDEST_MIN) {

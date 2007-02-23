@@ -601,6 +601,13 @@ namespace vapp {
     std::vector<std::string> Text;
     void *pvUser;
     bool bShown;
+
+    bool bUseOwnProperties;
+    Color ownTextColor;
+    Color ownSelectedColor;
+    Color ownUnSelectedColor;
+    int   ownXOffset;
+    int   ownYOffset;
   };
   
   class UIList : public UIWindow {
@@ -624,13 +631,14 @@ namespace vapp {
 
       virtual std::string subContextHelp(int x,int y);
       
-      UIListEntry *addEntry(std::string Text,void *pvUser=NULL);
+      /* if position != -1, force the entry to this position */
+      UIListEntry *addEntry(std::string Text,void *pvUser=NULL, int i_position = -1);
       void clear(void);
       
       /* Data interface */
       std::vector<UIListEntry *> &getEntries();
       std::vector<std::string> &getColumns();
-      int getSelected();
+      virtual int getSelected();
       void setRealSelected(int n);
       void setVisibleSelected(int n);
       void addColumn(std::string Title,int nWidth,const std::string &Help = "");
