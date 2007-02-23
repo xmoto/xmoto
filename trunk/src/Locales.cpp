@@ -23,13 +23,31 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <iostream>
 #include "BuildConfig.h"
 
+#define PACKAGE_LANG "xmoto"
+
 std::string Locales::init(std::string i_locale) {
 #ifdef USE_GETTEXT
   char *locale;
+  char* btd;
 
+#ifdef WIN32
+  /* gettext at 0.13 - not enought for LC_MESSAGE */
+  /* LC_CTYPE seems to work */
+  locale = setlocale(LC_CTYPE, i_locale.c_str());
+#else
   locale = setlocale(LC_MESSAGES, i_locale.c_str());
-  textdomain (PACKAGE);
-  bindtextdomain (PACKAGE, LOCALESDIR);
+#endif
+
+  if(locale == NULL) {
+    return "";
+  }
+
+
+  textdomain (PACKAGE_LANG);
+  if((btd=bindtextdomain (PACKAGE_LANG, LOCALESDIR)) == NULL) {
+    return "";
+  }
+
   return locale;
 
 #endif
