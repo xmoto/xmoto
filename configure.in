@@ -109,7 +109,7 @@ AC_ARG_WITH([localesdir],
 )
 if test "$target_os" = "mingw32"
 then
-  LOCALESDIR="./"
+  LOCALESDIR="locale"
 fi
 AC_SUBST([LOCALESDIR])
 

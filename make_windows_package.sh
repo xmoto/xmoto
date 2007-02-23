@@ -43,6 +43,7 @@ function makeNSI {
   echo "	File xmoto.exe"
   echo "	File xmoto.bin"
   echo "        File /r Textures"
+  echo "        File /r po"
   echo "        File README.txt"
   echo "        File jpeg62.dll"
   echo "	File libcurl-4.dll"
@@ -133,6 +134,15 @@ function fill_tmp_directory {
     # musics
     mkdir -p Textures/Musics         || return 1
     cp ../bin/Textures/Musics/*.ogg Textures/Musics || return 1
+
+    # langs
+    mkdir locale     || return 1
+    for PO in ../po/*.po
+      do
+      POLANG="`basename "$PO" | sed -e s+"\(\.[^\.]*\)$"+""+`"
+      mkdir -p "locale/""$POLANG""/LC_MESSAGES"            || return 1
+      cp "$PO" "locale/""$POLANG""/LC_MESSAGES""/xmoto.mo" || return 1
+    done
 
     # extra files
     cp ../README    README.txt    || return 1
