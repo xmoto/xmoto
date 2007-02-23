@@ -43,8 +43,8 @@ std::string Locales::init(std::string i_locale) {
   }
 
 
-  textdomain (PACKAGE_LANG);
-  if((btd=bindtextdomain (PACKAGE_LANG, LOCALESDIR)) == NULL) {
+  textdomain(PACKAGE_LANG);
+  if((btd=bindtextdomain(PACKAGE_LANG, LOCALESDIR)) == NULL) {
     return "";
   }
 
