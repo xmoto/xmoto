@@ -505,5 +505,6 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define VPACKAGENAME_CRAPIEST_LEVELS            _("Crapiest levels")
 #define VPACKAGENAME_SCRIPTED                   _("Scripted levels")
 #define VPACKAGENAME_MUSICAL                    _("Musical")
+#define VPACKAGENAME_BEST_DRIVER                _("By best driver")
 
 #endif
