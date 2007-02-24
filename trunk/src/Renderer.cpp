@@ -352,23 +352,27 @@ namespace vapp {
     /* TOFIX::Draw the static blocks only once in a texture, and reuse it after */
     /* Render blocks */
     MotoGame *pGame = getGameObject();
-    std::vector<Block*> Blocks = getGameObject()->getCollisionHandler()->getStaticBlocksNearPosition(mapBBox);
-    for(int i=0; i<Blocks.size(); i++) {
+    std::vector<Block*> Blocks;
 
-      /* Don't draw background blocks neither dynamic ones */
-      if(Blocks[i]->isBackground() == false && Blocks[i]->isLayer() == false) {
-	std::vector<ConvexBlock *> ConvexBlocks = Blocks[i]->ConvexBlocks();
-	for(int j=0; j<ConvexBlocks.size(); j++) {
-	  Vector2f Center = ConvexBlocks[j]->SourceBlock()->DynamicPosition(); 	 
-	  
-	  getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON); 	 
-	  getParent()->getDrawLib()->setColorRGB(128,128,128);
-	  /* TOFIX::what's THAT ??!? -->> put all the vertices in a vector and draw them in one opengl call ! */
-	  for(int k=0; k<ConvexBlocks[j]->Vertices().size(); k++) { 	 
-	    Vector2f P = Center + ConvexBlocks[j]->Vertices()[k]->Position(); 	 
-	    MINIVERTEX(P.x,P.y); 	 
-	  } 	 
-	  getParent()->getDrawLib()->endDraw();
+    for(int layer=-1; layer<=0; layer++){
+      Blocks = getGameObject()->getCollisionHandler()->getStaticBlocksNearPosition(mapBBox, layer);
+      for(int i=0; i<Blocks.size(); i++) {
+
+	/* Don't draw background blocks neither dynamic ones */
+	if(Blocks[i]->isBackground() == false && Blocks[i]->isLayer() == false) {
+	  std::vector<ConvexBlock *> ConvexBlocks = Blocks[i]->ConvexBlocks();
+	  for(int j=0; j<ConvexBlocks.size(); j++) {
+	    Vector2f Center = ConvexBlocks[j]->SourceBlock()->DynamicPosition(); 	 
+
+	    getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON); 	 
+	    getParent()->getDrawLib()->setColorRGB(128,128,128);
+	    /* TOFIX::what's THAT ??!? -->> put all the vertices in a vector and draw them in one opengl call ! */
+	    for(int k=0; k<ConvexBlocks[j]->Vertices().size(); k++) { 	 
+	      Vector2f P = Center + ConvexBlocks[j]->Vertices()[k]->Position(); 	 
+	      MINIVERTEX(P.x,P.y); 	 
+	    } 	 
+	    getParent()->getDrawLib()->endDraw();
+	  }
 	}
       }
     }
@@ -732,6 +736,7 @@ namespace vapp {
       /* If there's strawberries in the level, tell the user how many there's left */
       _RenderGameStatus();
     }
+
   }
 
   void GameRenderer::setScroll(bool isSmooth) {
@@ -1589,18 +1594,19 @@ namespace vapp {
     float width  = getGameObject()->getLevelSrc()->RightLimit() - getGameObject()->getLevelSrc()->LeftLimit();
     float height = getGameObject()->getLevelSrc()->TopLimit()   - getGameObject()->getLevelSrc()->BottomLimit();
 
+    float wMargin = 20.0;
+    float hMargin = 20.0;
+
     /* do not let min get out of the level boundaries */
-    if(min.x < getGameObject()->getLevelSrc()->LeftLimit()){
-      min.x = getGameObject()->getLevelSrc()->LeftLimit();
+    if(min.x < getGameObject()->getLevelSrc()->LeftLimit() - wMargin){
+      min.x = getGameObject()->getLevelSrc()->LeftLimit() - wMargin;
     }
-    if(min.y < getGameObject()->getLevelSrc()->BottomLimit()){
-      min.y = getGameObject()->getLevelSrc()->BottomLimit();
+    if(min.y < getGameObject()->getLevelSrc()->BottomLimit() - hMargin){
+      min.y = getGameObject()->getLevelSrc()->BottomLimit() - hMargin;
     }
 
     Vector2f newMin;
     newMin = min * layerOffset;
-    //newMin.x = (min.x + width/2.0)  * layerOffset - (width/2.0)  * layerOffset;
-    //newMin.y = (min.y + height/2.0) * layerOffset - (height/2.0) * layerOffset;
 
     AABB layerBBox;
     layerBBox.addPointToAABB2f(newMin);
