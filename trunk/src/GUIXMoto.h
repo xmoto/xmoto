@@ -69,7 +69,9 @@ class UIPackTree : public vapp::UIList {
 	       std::string i_categorie,
 	       int i_nbFinishedLevels,
 	       int i_nbLevels);
+  std::string getSelectedPackName();
   LevelsPack* getSelectedPack();
+
   void setSelectedPackByName(std::string i_levelsPackName);
 
  private:

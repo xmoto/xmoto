@@ -189,7 +189,7 @@ void UIPackTree::addPack(LevelsPack* i_levelsPack,
 	break;
       }
     }
-    p = addEntry(i_levelsPack->Name(), NULL, position);
+    p = addEntry(i_levelsPack->Name(), i_levelsPack, position);
   } else {
     /* the categorie doesn't exist, add the categorie and the entry */
     c = addEntry(i_categorie);
@@ -199,7 +199,7 @@ void UIPackTree::addPack(LevelsPack* i_levelsPack,
     c->ownUnSelectedColor = MAKE_COLOR(50,50,70,255);
     c->ownXOffset         = 30;
     c->ownYOffset         = 2;
-    p = addEntry(i_levelsPack->Name());
+    p = addEntry(i_levelsPack->Name(), i_levelsPack);
   }
 
   std::ostringstream v_level_nb;
@@ -207,7 +207,6 @@ void UIPackTree::addPack(LevelsPack* i_levelsPack,
   v_level_nb << "/";
   v_level_nb << i_nbLevels;
   p->Text.push_back(v_level_nb.str());
-  p->pvUser = (void *) i_levelsPack;
 }
 
 LevelsPack* UIPackTree::getSelectedPack() {
@@ -218,6 +217,14 @@ LevelsPack* UIPackTree::getSelectedPack() {
     }
   }
   return NULL;
+}
+
+std::string UIPackTree::getSelectedPackName() {
+  if(getSelected() >= 0 && getSelected() < getEntries().size()) {
+    vapp::UIListEntry *pEntry = getEntries()[getSelected()];
+    return pEntry->Text[0];
+  }
+  return "";
 }
 
 void UIPackTree::setSelectedPackByName(std::string i_levelsPackName) {
