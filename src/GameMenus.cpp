@@ -1464,12 +1464,7 @@ namespace vapp {
   void GameApp::_UpdateLevelPackList(void) {
     UIPackTree *pTree = (UIPackTree *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:PACK_TAB:LEVELPACK_TREE");
     /* get selected item */
-    std::string v_selected_packName;
-    LevelsPack* v_levelPack = pTree->getSelectedPack();
-
-    if(v_levelPack != NULL) {
-      v_selected_packName = pTree->getSelectedPack()->Name();
-    }    
+    std::string v_selected_packName = pTree->getSelectedPackName();
 
     pTree->clear();
     
