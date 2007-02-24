@@ -648,6 +648,7 @@ namespace vapp {
       void unhideAllColumns(void);
       void setSort(bool bSort, int(*f)(void *pvUser1, void *pvUser2) = NULL);
       void setNumeroted(bool bNumeroted);
+      std::string getSelectedEntry();
 
       void randomize();
 

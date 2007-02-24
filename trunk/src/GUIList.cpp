@@ -892,4 +892,12 @@ namespace vapp {
 		m_nScroll = 0;
 		setRealSelected(getSelected());
 	}
+
+  std::string UIList::getSelectedEntry() {
+    if(getSelected() >= 0 && getSelected() < getEntries().size()) {
+      vapp::UIListEntry *pEntry = getEntries()[getSelected()];
+      return pEntry->Text[0];
+    }
+    return "";
+  }
 }
