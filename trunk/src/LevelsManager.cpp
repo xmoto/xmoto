@@ -403,6 +403,25 @@ void LevelsManager::createVirtualPacks(
     }
   }
 
+#if defined(SUPPORT_WEBACCESS)
+  /* by winner */
+  if(i_webHighscores != NULL) {
+    for(unsigned int i=0; i<m_levels.size(); i++) {
+      WebHighscore* wh = i_webHighscores->getHighscoreFromLevel(m_levels[i]->Id());
+      if(wh != NULL) {
+	if(doesLevelsPackExist(wh->getPlayerName())) {
+	  v_pack = &LevelsPackByName(wh->getPlayerName());
+	} else {
+	  v_pack = new LevelsPack(wh->getPlayerName());
+	  v_pack->setGroup(VPACKAGENAME_BEST_DRIVER);
+	  m_levelsPacks.push_back(v_pack);
+	}
+	v_pack->addLevel(m_levels[i]);
+      }
+    }
+  }
+#endif
+
   /* by authors */
   /*
   for(unsigned int i=0; i<m_levels.size(); i++) {
