@@ -26,7 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <time.h>
 
 // increase the version to force reloading of levels
-#define CURRENT_LEVEL_INDEX_FILE_VERSION 2
+#define CURRENT_LEVEL_INDEX_FILE_VERSION 3
 
 #define VPACKAGENAME_CRAPIEST_MAX 1.5
 #define VPACKAGENAME_NICEST_MIN   4.5
@@ -199,18 +199,6 @@ void LevelsManager::rebuildPacks(
   }
   m_levelsPacks.clear();
 
-  /* reparse levels to build them */
-  for(unsigned int i=0; i<m_levels.size(); i++) {
-    if(doesLevelsPackExist(m_levels[i]->Pack())) {
-      LevelsPackByName(m_levels[i]->Pack()).addLevel(m_levels[i]);
-    } else {
-      LevelsPack *v_levelsPack = new LevelsPack(m_levels[i]->Pack());
-      v_levelsPack->setGroup(GAMETEXT_PACK_STANDARD);
-      v_levelsPack->addLevel(m_levels[i]);
-      m_levelsPacks.push_back(v_levelsPack);
-    }
-  }
-
   createVirtualPacks(
 #if defined(SUPPORT_WEBACCESS)
 		     i_webHighscores,
@@ -229,6 +217,52 @@ void LevelsManager::createVirtualPacks(
 				       std::string i_playerName, vapp::PlayerData *i_profiles, vapp::Stats *i_stats) {
   LevelsPack *v_pack;
   
+  /* levels i've not finished */
+  v_pack = new LevelsPack(std::string(VPACKAGENAME_INCOMPLETED_LEVELS));
+  m_levelsPacks.push_back(v_pack);
+  v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
+  for(unsigned int i=0; i<m_levels.size(); i++) {
+    if(i_profiles->isLevelCompleted(i_playerName, m_levels[i]->Id()) == false) {
+      v_pack->addLevel(m_levels[i]);
+    }
+  }
+
+  /* all levels */
+  v_pack = new LevelsPack(std::string(VPACKAGENAME_ALL_LEVELS));
+  m_levelsPacks.push_back(v_pack);
+  v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
+  for(unsigned int i=0; i<m_levels.size(); i++) {
+    v_pack->addLevel(m_levels[i]);
+  }
+
+  /* scripted levels */
+  v_pack = new LevelsPack(std::string(VPACKAGENAME_SCRIPTED));
+  m_levelsPacks.push_back(v_pack);
+  v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
+  for(unsigned int i=0; i<m_levels.size(); i++) {
+    if(m_levels[i]->isScripted()) {
+      v_pack->addLevel(m_levels[i]);
+    }
+  }
+
+  /* musical */
+  v_pack = new LevelsPack(std::string(VPACKAGENAME_MUSICAL));
+  m_levelsPacks.push_back(v_pack);
+  v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
+  for(unsigned int i=0; i<m_levels.size(); i++) {
+    if(m_levels[i]->Music() != "") {
+      v_pack->addLevel(m_levels[i]);
+    }
+  }
+
+  /* favorite levels */
+  v_pack = new LevelsPack(std::string(VPACKAGENAME_FAVORITE_LEVELS));
+  m_levelsPacks.push_back(v_pack);
+  v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
+  for(unsigned int i=0; i<m_favoriteLevels.size(); i++) {
+    v_pack->addLevel(m_favoriteLevels[i]);
+  }
+
 #if defined(SUPPORT_WEBACCESS)
   /* levels with no highscore */
   if(i_webHighscores != NULL) {
@@ -260,32 +294,6 @@ void LevelsManager::createVirtualPacks(
     }
   }
 #endif
-
-  /* levels i've not finished */
-  v_pack = new LevelsPack(std::string(VPACKAGENAME_INCOMPLETED_LEVELS));
-  m_levelsPacks.push_back(v_pack);
-  v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
-  for(unsigned int i=0; i<m_levels.size(); i++) {
-    if(i_profiles->isLevelCompleted(i_playerName, m_levels[i]->Id()) == false) {
-      v_pack->addLevel(m_levels[i]);
-    }
-  }
-
-  /* all levels */
-  v_pack = new LevelsPack(std::string(VPACKAGENAME_ALL_LEVELS));
-  m_levelsPacks.push_back(v_pack);
-  v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
-  for(unsigned int i=0; i<m_levels.size(); i++) {
-    v_pack->addLevel(m_levels[i]);
-  }
-
-  /* favorite levels */
-  v_pack = new LevelsPack(std::string(VPACKAGENAME_FAVORITE_LEVELS));
-  m_levelsPacks.push_back(v_pack);
-  v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
-  for(unsigned int i=0; i<m_favoriteLevels.size(); i++) {
-    v_pack->addLevel(m_favoriteLevels[i]);
-  }
 
   /* new levels */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_NEW_LEVELS));
@@ -382,6 +390,32 @@ void LevelsManager::createVirtualPacks(
     }
   }
 #endif
+
+  /* standard packs */
+  for(unsigned int i=0; i<m_levels.size(); i++) {
+    if(doesLevelsPackExist(m_levels[i]->Pack())) {
+      LevelsPackByName(m_levels[i]->Pack()).addLevel(m_levels[i]);
+    } else {
+      LevelsPack *v_levelsPack = new LevelsPack(m_levels[i]->Pack());
+      v_levelsPack->setGroup(GAMETEXT_PACK_STANDARD);
+      v_levelsPack->addLevel(m_levels[i]);
+      m_levelsPacks.push_back(v_levelsPack);
+    }
+  }
+
+  /* by authors */
+  /*
+  for(unsigned int i=0; i<m_levels.size(); i++) {
+    if(doesLevelsPackExist(m_levels[i]->Author()) == false) {
+      v_pack = new LevelsPack(m_levels[i]->Author());
+      m_levelsPacks.push_back(v_pack);
+      v_pack->setGroup(GAMETEXT_PACK_AUTHORS);
+    } else {
+      v_pack = &LevelsPackByName(m_levels[i]->Author());
+    }
+    v_pack->addLevel(m_levels[i]);
+  }
+  */
 
   /* most played levels */
   // don't work
