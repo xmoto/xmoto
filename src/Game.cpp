@@ -1867,8 +1867,8 @@ namespace vapp {
     }
     if(getRealTime() > m_fPrePlayStartTime + static_time){
       float zx, zy, zz;
-			
-      zz = (logf (PRESTART_ANIMATION_CURVE * ((PRESTART_ANIMATION_TIME + static_time - getRealTime() + m_fPrePlayStartTime) / (PRESTART_ANIMATION_TIME)) + 1.0)) / logf(PRESTART_ANIMATION_CURVE + 1.0) * (m_fPrePlayStartInitZoom - m_zoomU);
+
+      zz = logf(PRESTART_ANIMATION_CURVE * ((PRESTART_ANIMATION_TIME + static_time - getRealTime() + m_fPrePlayStartTime) / (PRESTART_ANIMATION_TIME)) + 1.0) / LOGF_PRE_ANIM_TIME_ADDED_ONE * (m_fPrePlayStartInitZoom - m_zoomU);
 			
       m_Renderer.setZoom(m_fPrePlayStartInitZoom - zz);
 			
@@ -2076,6 +2076,7 @@ namespace vapp {
 	m_bAutoZoomInitialized = true;
       } else {
 	if(zoomAnimation2_step() == false) {
+	  m_autoZoom = false;
 	}
 
 	if(m_MotoGame.getNbRemainingStrawberries() > 0) {
@@ -2095,6 +2096,7 @@ namespace vapp {
       } else {
 	if(zoomAnimation2_unstep() == false) { 
 	  m_bAutoZoomInitialized = false;
+	  m_autoUnZoom = false;
 	  lockMotoGame(false);
 
 	  if(m_MotoGame.getNbRemainingStrawberries() > 0) {
