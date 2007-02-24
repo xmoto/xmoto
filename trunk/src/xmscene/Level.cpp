@@ -30,7 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../VXml.h"
 #include "../helpers/Color.h"
 
-#define CACHE_LEVEL_FORMAT_VERSION 15
+#define CACHE_LEVEL_FORMAT_VERSION 16
 
 Level::Level() {
   m_xmotoTooOld = false;
@@ -43,6 +43,7 @@ Level::Level() {
   m_borderTexture = "";
   m_numberLayer   = 0;
   m_frontLayer    = -1;
+  m_isScripted    = false;
 }
 
 Level::~Level() {
@@ -130,7 +131,7 @@ std::string Level::Checksum() const {
 }
 
 bool Level::isScripted() const {
-  return (m_scriptFileName != "" || m_scriptSource != "");
+  return m_isScripted;
 }
 
 Block& Level::getBlockById(const std::string& i_id) {
@@ -487,6 +488,8 @@ void Level::loadXML(void) {
   m_playerStart = Vector2f(0.0, 0.0);
   m_numberLayer = 0;
   
+  m_isScripted = false;
+
   m_sky.reInit();
 
   if(!m_xmotoTooOld) {    
@@ -668,6 +671,8 @@ void Level::loadXML(void) {
     /* Get script */
     TiXmlElement *pScriptElem = vapp::XML::findElement(*m_xmlSource, pLevelElem,std::string("script"));
     if(pScriptElem != NULL) {
+      m_isScripted = true;
+
       /* External script file specified? */
       m_scriptFileName = vapp::XML::getOption(pScriptElem,"source");      
       
@@ -872,6 +877,7 @@ void Level::importBinaryHeader(vapp::FileHandle *pfh) {
   m_author 	= vapp::FS::readString(pfh);
   m_date   	= vapp::FS::readString(pfh);
   m_music       = vapp::FS::readString(pfh);
+  m_isScripted  = vapp::FS::readBool(pfh);
 }
 
   /*===========================================================================
@@ -918,6 +924,7 @@ void Level::exportBinaryHeader(vapp::FileHandle *pfh) {
   vapp::FS::writeString(pfh	    , m_author);
   vapp::FS::writeString(pfh	    , m_date);
   vapp::FS::writeString(pfh	    , m_music);
+  vapp::FS::writeBool(  pfh	    , m_isScripted);
 }
 
 bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
@@ -955,6 +962,7 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
         m_author = vapp::FS::readString(pfh);
         m_date = vapp::FS::readString(pfh);
         m_music = vapp::FS::readString(pfh);
+	m_isScripted = vapp::FS::readBool(pfh);
 
 	/* sky */
         m_sky.setTexture(vapp::FS::readString(pfh));

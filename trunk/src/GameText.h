@@ -274,6 +274,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_OPEN                 _("Open")
 #define GAMETEXT_OPTIONS              _("Options")
 #define GAMETEXT_OPTIONSREQURERESTART _("Some options will not take effect before next restart!")
+#define GAMETEXT_PACK_AUTHORS 	      _("By author")
 #define GAMETEXT_PACK_LAST 	      _("Last")
 #define GAMETEXT_PACK_ROOM 	      _("Room")
 #define GAMETEXT_PACK_SPECIAL 	      _("Special")
@@ -502,5 +503,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define VPACKAGENAME_HARDEST_LEVELS             _("Hardest levels")
 #define VPACKAGENAME_EASIEST_LEVELS             _("Easiest levels")
 #define VPACKAGENAME_CRAPIEST_LEVELS            _("Crapiest levels")
+#define VPACKAGENAME_SCRIPTED                   _("Scripted levels")
+#define VPACKAGENAME_MUSICAL                    _("Musical")
 
 #endif

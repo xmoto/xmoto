@@ -176,6 +176,7 @@ class Level {
   int  m_nbEntitiesToTake;
   std::string m_borderTexture;
   SkyApparence m_sky;
+  bool m_isScripted;
 
   int m_numberLayer;
   std::vector<Vector2f> m_layerOffsets;
