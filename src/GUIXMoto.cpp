@@ -219,14 +219,6 @@ LevelsPack* UIPackTree::getSelectedPack() {
   return NULL;
 }
 
-std::string UIPackTree::getSelectedPackName() {
-  if(getSelected() >= 0 && getSelected() < getEntries().size()) {
-    vapp::UIListEntry *pEntry = getEntries()[getSelected()];
-    return pEntry->Text[0];
-  }
-  return "";
-}
-
 void UIPackTree::setSelectedPackByName(std::string i_levelsPackName) {
   int nPack = 0;
   for(int i=0; i<getEntries().size(); i++) {
