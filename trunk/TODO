@@ -1,8 +1,7 @@
 
 * flag sprite to add
-* musics to update
 * two options for music : menu and ingame
-* hierarchical sort for pack list
+* hierarchical sort for pack list : +/- to close
 
 * BUG rotation on grass of dynamic blocks on sdlgfx
 
