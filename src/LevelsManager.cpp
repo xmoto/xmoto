@@ -33,6 +33,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define VPACKAGENAME_EASIEST_MAX  1.5
 #define VPACKAGENAME_HARDEST_MIN  4.5
 
+#define STATS_PACK_NUMBER_OF_LEVELS 50
+
 LevelsPack::LevelsPack(std::string i_name) {
   m_name         = i_name;
   m_showTimes    = true;
@@ -294,6 +296,127 @@ void LevelsManager::createVirtualPacks(
     }
   }
 #endif
+
+  /* stats */
+  vapp::PlayerStats *v_playerStats = i_stats->_FindPlayerStats(i_playerName);
+
+  /* never played levels */
+  if(v_playerStats != NULL) {
+    v_pack = new LevelsPack(std::string(VPACKAGENAME_NEVER_PLAYED));
+    v_pack->setGroup(GAMETEXT_PACK_STATS);
+    m_levelsPacks.push_back(v_pack);
+    std::vector<vapp::LevelStats *> v_levelsStats = v_playerStats->Levels;
+
+    for(unsigned int i=0; i<m_levels.size(); i++) {
+      bool found = false;
+      for(unsigned int j=0; j<v_levelsStats.size(); j++) {
+	if(m_levels[i]->Id() == v_levelsStats[j]->LevelID) {
+	  found = true;
+	}
+      }
+      if(found == false) {
+	v_pack->addLevel(m_levels[i]);
+      }
+    }
+  }
+
+  /* most played levels */
+  if(v_playerStats != NULL) {
+    v_pack = new LevelsPack(std::string(VPACKAGENAME_MOST_PLAYED));
+    v_pack->setGroup(GAMETEXT_PACK_STATS);
+    m_levelsPacks.push_back(v_pack);
+    std::vector<vapp::LevelStats *> v_levelsStats = v_playerStats->Levels;
+
+    vapp::LevelStats* v_most_played_levels[STATS_PACK_NUMBER_OF_LEVELS];
+    for(int i=0; i<STATS_PACK_NUMBER_OF_LEVELS; i++) {
+      v_most_played_levels[i] = NULL;
+    }
+    for(unsigned int i=0; i<v_levelsStats.size(); i++) {
+      int best_position = -1;
+      for(int j=STATS_PACK_NUMBER_OF_LEVELS-1; j>=0; j--) {
+    	if(v_most_played_levels[j] == NULL) {
+    	  best_position = j; /* take a free position */
+    	} else {
+    	  /* if there is no free position, take the place if it's better */
+    	  if(v_levelsStats[i]->nPlayed > v_most_played_levels[j]->nPlayed) {
+    	    /* ok, take the position if the current best position is not better */
+    	    if(best_position == -1) { /* no position already set */
+    	      best_position = j;
+    	    } else {
+    	      if(v_most_played_levels[best_position] != NULL) { /* the current best must not be free */
+    		if(v_most_played_levels[best_position]->nPlayed > v_most_played_levels[j]->nPlayed) {
+    		  best_position = j;
+    		}
+    	      }
+    	    }
+    	  }
+    	}
+      }
+      if(best_position != -1) {
+	v_most_played_levels[best_position] = v_levelsStats[i];
+      }
+    }
+    for(unsigned int i=0; i<STATS_PACK_NUMBER_OF_LEVELS; i++) {
+      if(v_most_played_levels[i] != NULL) {
+    	try {
+    	  v_pack->addLevel(&(LevelById(v_most_played_levels[i]->LevelID)));
+    	} catch(Exception &e) {
+    	  /* the level no longer exists, ok, ignore it */
+	  vapp::Log("** Warning : Level of id '%s' no longer exists (from stats file)",
+		    v_most_played_levels[i]->LevelID.c_str());
+    	}
+      }
+    }
+  }
+
+  /* less played levels */
+  if(v_playerStats != NULL) {
+    v_pack = new LevelsPack(std::string(VPACKAGENAME_LESS_PLAYED));
+    v_pack->setGroup(GAMETEXT_PACK_STATS);
+    m_levelsPacks.push_back(v_pack);
+    std::vector<vapp::LevelStats *> v_levelsStats = v_playerStats->Levels;
+
+    vapp::LevelStats* v_less_played_levels[STATS_PACK_NUMBER_OF_LEVELS];
+    for(int i=0; i<STATS_PACK_NUMBER_OF_LEVELS; i++) {
+      v_less_played_levels[i] = NULL;
+    }
+    for(unsigned int i=0; i<v_levelsStats.size(); i++) {
+      int best_position = -1;
+      for(int j=STATS_PACK_NUMBER_OF_LEVELS-1; j>=0; j--) {
+    	if(v_less_played_levels[j] == NULL) {
+    	  best_position = j; /* take a free position */
+    	} else {
+    	  /* if there is no free position, take the place if it's better */
+    	  if(v_levelsStats[i]->nPlayed < v_less_played_levels[j]->nPlayed) {
+    	    /* ok, take the position if the current best position is not better */
+    	    if(best_position == -1) { /* no position already set */
+    	      best_position = j;
+    	    } else {
+    	      if(v_less_played_levels[best_position] != NULL) { /* the current best must not be free */
+    		if(v_less_played_levels[best_position]->nPlayed < v_less_played_levels[j]->nPlayed) {
+    		  best_position = j;
+    		}
+    	      }
+    	    }
+    	  }
+    	}
+      }
+      if(best_position != -1) {
+	v_less_played_levels[best_position] = v_levelsStats[i];
+      }
+    }
+    for(unsigned int i=0; i<STATS_PACK_NUMBER_OF_LEVELS; i++) {
+      if(v_less_played_levels[i] != NULL) {
+    	try {
+    	  v_pack->addLevel(&(LevelById(v_less_played_levels[i]->LevelID)));
+    	} catch(Exception &e) {
+    	  /* the level no longer exists, ok, ignore it */
+	  vapp::Log("** Warning : Level of id '%s' no longer exists (from stats file)",
+		    v_less_played_levels[i]->LevelID.c_str());
+    	}
+      }
+    }
+  }
 
   /* new levels */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_NEW_LEVELS));

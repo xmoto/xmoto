@@ -368,7 +368,7 @@ namespace vapp {
   
   LevelStats *Stats::_FindLevelStats(PlayerStats *pPlayer,const std::string &LevelID,const std::string &LevelName) {
     for(int i=0;i<pPlayer->Levels.size();i++) {
-      if(pPlayer->Levels[i]->LevelID == LevelID && pPlayer->Levels[i]->LevelName == LevelName)
+      if(pPlayer->Levels[i]->LevelID == LevelID)
         return pPlayer->Levels[i];
     }
     return NULL;

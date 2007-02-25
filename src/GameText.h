@@ -280,6 +280,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_PACK_SPECIAL 	      _("Special")
 #define GAMETEXT_PACK_STANDARD 	      _("Standard")
 #define GAMETEXT_PACK_WEBVOTES 	      _("Web votes")
+#define GAMETEXT_PACK_STATS           _("Statistics")
 #define GAMETEXT_PAUSE                _("Pause")
 #define GAMETEXT_PASSWORD             _("Password")
 #define GAMETEXT_PERSONAL             _("Personal")
@@ -497,7 +498,6 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define VPACKAGENAME_ALL_LEVELS                 _("All levels")
 #define VPACKAGENAME_NEW_LEVELS                 _("New levels")
 #define VPACKAGENAME_UPDATED_LEVELS             _("Updated levels")
-#define VPACKAGENAME_MOST_PLAYED_LEVELS         _("Most played levels")
 #define VPACKAGENAME_FAVORITE_LEVELS            _("Favorite levels")
 #define VPACKAGENAME_NICEST_LEVELS              _("Nicest levels")
 #define VPACKAGENAME_HARDEST_LEVELS             _("Hardest levels")
@@ -506,5 +506,8 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define VPACKAGENAME_SCRIPTED                   _("Scripted levels")
 #define VPACKAGENAME_MUSICAL                    _("Musical")
 #define VPACKAGENAME_BEST_DRIVER                _("By best driver")
+#define VPACKAGENAME_NEVER_PLAYED               _("Never played levels")
+#define VPACKAGENAME_MOST_PLAYED                _("Most played levels")
+#define VPACKAGENAME_LESS_PLAYED                _("Less played levels (but played)")
 
 #endif
