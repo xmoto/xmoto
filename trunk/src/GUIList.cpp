@@ -367,13 +367,13 @@ namespace vapp {
 			
 	  if(isUglyMode()) {
 	    if(bDisabled) {
-	      if(m_Entries[i]->ownSelectedColor == false) {
+	      if(m_Entries[i]->bUseOwnProperties == false) {
 		putRect(m_lineMargeX,m_nScroll + LinesStartY()+m_numEntryDisplayed*m_rowHeight,LinesWidth(),
 			m_rowHeight,MAKE_COLOR(128,128,128,255));
 	      }
 	    } else {
 	      if(bActive) {
-		if(m_Entries[i]->ownSelectedColor == false) {
+		if(m_Entries[i]->bUseOwnProperties == false) {
 		  putRect(m_lineMargeX,m_nScroll + LinesStartY()+m_numEntryDisplayed*m_rowHeight,
 			  LinesWidth(),m_rowHeight,MAKE_COLOR(200,60,60,255));
 		} else {
@@ -381,9 +381,9 @@ namespace vapp {
 			  LinesWidth(),m_rowHeight,m_Entries[i]->ownSelectedColor);
 		}
 	      } else {
-		if(m_Entries[i]->ownSelectedColor == false) {
+		if(m_Entries[i]->bUseOwnProperties == false) {
 		  putRect(m_lineMargeX,m_nScroll + LinesStartY()+m_numEntryDisplayed*m_rowHeight,
-			  LinesWidth(),m_rowHeight,MAKE_COLOR(160,40,40,255));
+		    LinesWidth(),m_rowHeight,MAKE_COLOR(160,40,40,255));
 		} else {
 		  putRect(m_lineMargeX,m_nScroll + LinesStartY()+m_numEntryDisplayed*m_rowHeight,
 			  LinesWidth(),m_rowHeight,m_Entries[i]->ownUnSelectedColor);
@@ -391,7 +391,7 @@ namespace vapp {
 	      }
 	    }
 	  } else {
-	    if(bActive && !bDisabled && m_Entries[i]->ownSelectedColor == false) {
+	    if(bActive && !bDisabled && m_Entries[i]->bUseOwnProperties == false) {
 	      float s = 50 + 50*sin(getApp()->getRealTime()*10);
 	      int n = (int)s;
 	      if(n<0) n=0;
