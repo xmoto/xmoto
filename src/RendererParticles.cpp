@@ -151,8 +151,9 @@ namespace vapp {
   }
   
   void GameRenderer::_RenderParticles(bool bFront) {
-    for(unsigned int i = 0; i < getGameObject()->getLevelSrc()->Entities().size(); i++) {
-      Entity* v_entity = getGameObject()->getLevelSrc()->Entities()[i];
+    std::vector<Entity*> Entities = getGameObject()->getCollisionHandler()->getEntitiesNearPosition(m_screenBBox);
+    for(unsigned int i = 0; i < Entities.size(); i++) {
+      Entity* v_entity = Entities[i];
       if(v_entity->Speciality() == ET_PARTICLES_SOURCE) {
 	_RenderParticle((ParticlesSource*) v_entity);
       }
