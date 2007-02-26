@@ -137,7 +137,7 @@ function fill_tmp_directory {
 
     # langs
     mkdir locale     || return 1
-    for PO in ../po/*.po
+    for PO in ../po/*.gmo
       do
       POLANG="`basename "$PO" | sed -e s+"\(\.[^\.]*\)$"+""+`"
       mkdir -p "locale/""$POLANG""/LC_MESSAGES"            || return 1
