@@ -572,7 +572,7 @@ namespace vapp {
 
     if(m_Quality != GQ_LOW && !m_bUglyMode) {
       /* background level blocks */
-      _RenderBackgroundLevel();
+      _RenderLayers(false);
 
       /* Background blocks */
       _RenderDynamicBlocks(true);
@@ -645,9 +645,9 @@ namespace vapp {
     /* ... and finally the foreground sprites! */
     _RenderSprites(true,false);
 
-    /* and finally finally, the front layer */
+    /* and finally finally, front layers */
     if(m_Quality != GQ_LOW && !m_bUglyMode) {
-      _RenderFrontLayer();
+      _RenderLayers(true);
     }
 
     if(isDebug()) {
@@ -1351,98 +1351,47 @@ namespace vapp {
     }
   }
 
-  void GameRenderer::_RenderBlockEdges(Block* block, Vector2f* pTranslateVector)
+  void GameRenderer::_RenderBlockEdges(Block* block)
   {
     BlockVertex* v_blockVertexA;
     BlockVertex* v_blockVertexB;
 
-    if(getParent()->getDrawLib()->getBackend() == DrawLib::backend_SdlGFX){
-      /* FIXME::is the edge of a dyn block rotated with the dyn block ?? */
-      for(int j=0; j<block->Vertices().size(); j++) {  
-	v_blockVertexA = block->Vertices()[j];
-	if(v_blockVertexA->EdgeEffect() != "") {
-	  v_blockVertexB = block->Vertices()[(j+1) % block->Vertices().size()];
+    //      glCallList(block->getDisplayList());
+    /* FIXME::is the edge of a dyn block rotated with the dyn block ?? */
+    for(int j=0; j<block->Vertices().size(); j++) {  
+      v_blockVertexA = block->Vertices()[j];
+      if(v_blockVertexA->EdgeEffect() != "") {
+	v_blockVertexB = block->Vertices()[(j+1) % block->Vertices().size()];
 
-	  Vector2f vAPos = v_blockVertexA->Position();
-	  Vector2f vBPos = v_blockVertexB->Position();
-	  if(pTranslateVector != NULL){
-	    vAPos = vAPos + *pTranslateVector;
-	    vBPos = vBPos + *pTranslateVector;
-	  }
+	Vector2f vAPos = v_blockVertexA->Position();
+	Vector2f vBPos = v_blockVertexB->Position();
 
-	  /* link A to B */
-	  float fXScale,fDepth;
-	  EdgeEffectSprite* pType;
-	  pType = (EdgeEffectSprite*)getParent()->getTheme()->getSprite(SPRITE_TYPE_EDGEEFFECT, v_blockVertexA->EdgeEffect());
+	/* link A to B */
+	float fXScale,fDepth;
+	EdgeEffectSprite* pType;
+	pType = (EdgeEffectSprite*)getParent()->getTheme()->getSprite(SPRITE_TYPE_EDGEEFFECT, v_blockVertexA->EdgeEffect());
 
-	  if(pType != NULL) {
-	    fXScale = pType->getScale();
-	    fDepth  = pType->getDepth();
+	if(pType != NULL) {
+	  fXScale = pType->getScale();
+	  fDepth  = pType->getDepth();
                  
-	    getParent()->getDrawLib()->setTexture(pType->getTexture(),BLEND_MODE_A);
-	    getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
-	    getParent()->getDrawLib()->setColorRGB(255,255,255);
+	  getParent()->getDrawLib()->setTexture(pType->getTexture(),BLEND_MODE_A);
+	  getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+	  getParent()->getDrawLib()->setColorRGB(255,255,255);
 
-	    getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vAPos.x)*fXScale,0.01);
-	    getParent()->getDrawLib()->glVertex(vAPos + Vector2f(block->DynamicPosition().x,block->DynamicPosition().y));
-	    getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vBPos.x)*fXScale,0.01);
-	    getParent()->getDrawLib()->glVertex(vBPos + Vector2f(block->DynamicPosition().x,block->DynamicPosition().y));
-	    getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vBPos.x)*fXScale,0.99);
-	    getParent()->getDrawLib()->glVertex(vBPos + Vector2f(block->DynamicPosition().x,block->DynamicPosition().y) + Vector2f(0,-fDepth));
-	    getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vAPos.x)*fXScale,0.99);
-	    getParent()->getDrawLib()->glVertex(vAPos + Vector2f(block->DynamicPosition().x,block->DynamicPosition().y) + Vector2f(0,-fDepth));
+	  getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vAPos.x)*fXScale,0.01);
+	  getParent()->getDrawLib()->glVertex(vAPos + Vector2f(block->DynamicPosition().x,block->DynamicPosition().y));
+	  getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vBPos.x)*fXScale,0.01);
+	  getParent()->getDrawLib()->glVertex(vBPos + Vector2f(block->DynamicPosition().x,block->DynamicPosition().y));
+	  getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vBPos.x)*fXScale,0.99);
+	  getParent()->getDrawLib()->glVertex(vBPos + Vector2f(block->DynamicPosition().x,block->DynamicPosition().y) + Vector2f(0,-fDepth));
+	  getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vAPos.x)*fXScale,0.99);
+	  getParent()->getDrawLib()->glVertex(vAPos + Vector2f(block->DynamicPosition().x,block->DynamicPosition().y) + Vector2f(0,-fDepth));
 
-	    getParent()->getDrawLib()->endDraw();
-	  }
+	  getParent()->getDrawLib()->endDraw();
 	}
       }
     }
-    else if(getParent()->getDrawLib()->getBackend() == DrawLib::backend_OpenGl){
-      //      glCallList(block->getDisplayList());
-      for(int j=0; j<block->Vertices().size(); j++) {  
-	v_blockVertexA = block->Vertices()[j];
-	if(v_blockVertexA->EdgeEffect() != "") {
-	  v_blockVertexB = block->Vertices()[(j+1) % block->Vertices().size()];
-
-	  Vector2f vAPos = v_blockVertexA->Position();
-	  Vector2f vBPos = v_blockVertexB->Position();
-
-	  /* link A to B */
-	  float fXScale,fDepth;
-	  EdgeEffectSprite* pType;
-	  pType = (EdgeEffectSprite*)getParent()->getTheme()->getSprite(SPRITE_TYPE_EDGEEFFECT, v_blockVertexA->EdgeEffect());
-
-	  if(pType != NULL) {
-	    fXScale = pType->getScale();
-	    fDepth  = pType->getDepth();
-                 
-	    getParent()->getDrawLib()->setTexture(pType->getTexture(),BLEND_MODE_A);
-	    getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
-	    getParent()->getDrawLib()->setColorRGB(255,255,255);
-
-	    getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vAPos.x)*fXScale,0.01);
-	    getParent()->getDrawLib()->glVertex(vAPos + Vector2f(block->DynamicPosition().x,block->DynamicPosition().y));
-	    getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vBPos.x)*fXScale,0.01);
-	    getParent()->getDrawLib()->glVertex(vBPos + Vector2f(block->DynamicPosition().x,block->DynamicPosition().y));
-	    getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vBPos.x)*fXScale,0.99);
-	    getParent()->getDrawLib()->glVertex(vBPos + Vector2f(block->DynamicPosition().x,block->DynamicPosition().y) + Vector2f(0,-fDepth));
-	    getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vAPos.x)*fXScale,0.99);
-	    getParent()->getDrawLib()->glVertex(vAPos + Vector2f(block->DynamicPosition().x,block->DynamicPosition().y) + Vector2f(0,-fDepth));
-
-	    getParent()->getDrawLib()->endDraw();
-	  }
-	}
-      }
-    }
-  }
-
-  void GameRenderer::_RenderFrontLayer() {
-    int frontLayer = getGameObject()->getLevelSrc()->getFrontLayer();
-    if(frontLayer == -1){
-      return;
-    }
-
-    _RenderLayer(frontLayer);
   }
 
   /*===========================================================================
@@ -1586,7 +1535,12 @@ namespace vapp {
   }
 
   void GameRenderer::_RenderLayer(int layer) {
+    if(getParent()->getDrawLib()->getBackend() != DrawLib::backend_OpenGl) {
+      return;
+    }
+
     Vector2f layerOffset = getGameObject()->getLevelSrc()->getLayerOffset(layer);
+
     /* get bounding box in the layer depending on its offset */
     Vector2f min = m_screenBBox.getBMin();
     Vector2f size = m_screenBBox.getBMax() - min;
@@ -1594,8 +1548,8 @@ namespace vapp {
     float width  = getGameObject()->getLevelSrc()->RightLimit() - getGameObject()->getLevelSrc()->LeftLimit();
     float height = getGameObject()->getLevelSrc()->TopLimit()   - getGameObject()->getLevelSrc()->BottomLimit();
 
-    float wMargin = 20.0;
-    float hMargin = 20.0;
+    float wMargin = 10.0;
+    float hMargin = 10.0;
 
     /* do not let min get out of the level boundaries */
     if(min.x < getGameObject()->getLevelSrc()->LeftLimit() - wMargin){
@@ -1607,6 +1561,8 @@ namespace vapp {
 
     Vector2f newMin;
     newMin = min * layerOffset;
+    //newMin.x = (min.x + width/2.0)  * layerOffset.x - (width/2.0)  * layerOffset.x;
+    //newMin.y = (min.y + height/2.0) * layerOffset.y - (height/2.0) * layerOffset.y;
 
     AABB layerBBox;
     layerBBox.addPointToAABB2f(newMin);
@@ -1618,55 +1574,34 @@ namespace vapp {
     /* sort blocks on their texture */
     std::sort(Blocks.begin(), Blocks.end(), AscendingTextureSort());
 
-    if(getParent()->getDrawLib()->getBackend() == DrawLib::backend_OpenGl) {
 #ifdef ENABLE_OPENGL
-      glMatrixMode(GL_MODELVIEW);
-      glPushMatrix();
-      glTranslatef(translateVector.x, translateVector.y, 0);
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glTranslatef(translateVector.x, translateVector.y, 0);
 
-      for(int i=0; i<Blocks.size(); i++) {
-	Block* block = Blocks[i];
-	int geom = block->getGeom();
+    for(int i=0; i<Blocks.size(); i++) {
+      Block* block = Blocks[i];
+      int geom = block->getGeom();
 
-	_RenderBlock(block);
-      }
-      /* Render all special edges (if quality!=low) */
-      if(m_Quality != GQ_LOW) {
-	for(int i=0;i<Blocks.size();i++) {
-	  _RenderBlockEdges(Blocks[i]);
-	}
-      }
-      glPopMatrix();
-#endif
-    } else if(getParent()->getDrawLib()->getBackend() == DrawLib::backend_SdlGFX){
-
-    for(int j=0;j<Blocks.size();j++) {
-      _RenderBlock(Blocks[j]);
+      _RenderBlock(block);
     }
-
     /* Render all special edges (if quality!=low) */
     if(m_Quality != GQ_LOW) {
-      for(int j=0;j<Blocks.size();j++) {
-	_RenderBlockEdges(Blocks[j], &translateVector);
+      for(int i=0;i<Blocks.size();i++) {
+	_RenderBlockEdges(Blocks[i]);
       }
     }
-
-    }
+    glPopMatrix();
+#endif
   }
 
-  void GameRenderer::_RenderBackgroundLevel(void) { 
-    MotoGame *pGame = getGameObject();
-
+  void GameRenderer::_RenderLayers(bool renderFront) { 
     /* Render background level blocks */
     int nbLayer = getGameObject()->getLevelSrc()->getNumberLayer();
-    int frontLayer = getGameObject()->getLevelSrc()->getFrontLayer();
-    for(int i=0; i<nbLayer; i++){
-      /* don't render the front layer */
-      if(frontLayer == i){
-	continue;
+    for(int layer=0; layer<nbLayer; layer++){
+      if(getGameObject()->getLevelSrc()->isLayerFront(layer) == renderFront){
+	_RenderLayer(layer);
       }
-
-      _RenderLayer(i);
     }
   }
 

@@ -289,11 +289,10 @@ namespace vapp {
     void _RenderBike(BikeState *pBike, BikeParameters *pBikeParms, BikerTheme *p_theme);
     void _RenderBlocks(void);
     void _RenderBlock(Block* block);
-    void _RenderBlockEdges(Block* block, Vector2f* pTranslateVector=NULL);
+    void _RenderBlockEdges(Block* block);
     void _RenderDynamicBlocks(bool bBackground=false);
     void _RenderBackground(void);
-    void _RenderBackgroundLevel();
-    void _RenderFrontLayer();
+    void _RenderLayers(bool renderFront);
     void _RenderLayer(int layer);
     void _RenderSky(float i_zoom, float i_offset, const TColor& i_color,
 		    float i_driftZoom, const TColor &i_driftColor, bool i_drifted);
