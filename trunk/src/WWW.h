@@ -179,7 +179,8 @@ class WebHighscore {
   WebHighscore(WebRoom *p_room,
 	       std::string p_levelId,
 	       std::string p_playerName,
-	       std::string p_time,
+	       int p_day, int p_month, int p_year,
+	       std::string p_date,
 	       std::string p_rplUrl,
 	       const ProxySettings *p_proxy_settings);
   ~WebHighscore();
@@ -189,6 +190,9 @@ class WebHighscore {
 
   std::string getPlayerName() const;
   std::string getTime() const;
+  int getDateYear()  const;
+  int getDateMonth() const;
+  int getDateDay()   const;
   float       getFTime() const; /* throws exceptions */
   std::string getLevelId() const;
   WebRoom* getRoom() const;
@@ -196,6 +200,7 @@ class WebHighscore {
  private:
   std::string m_playerName;
   std::string m_time;
+  int m_day, m_month, m_year;
   std::string m_levelId;
   std::string m_rplUrl;
   std::string m_rplFilename;

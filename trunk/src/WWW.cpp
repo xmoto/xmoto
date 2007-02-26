@@ -119,10 +119,11 @@ bool ProxySettings::useDefaultAuthentification() const {
 }
 
 WebHighscore::WebHighscore(WebRoom *p_room,
-         std::string p_levelId,
-         std::string p_playerName,
-         std::string p_time,
-         std::string p_rplUrl,
+			   std::string p_levelId,
+			   std::string p_playerName,
+			   int p_day, int p_month, int p_year,
+			   std::string p_time,
+			   std::string p_rplUrl,
          const ProxySettings *p_proxy_settings) {
   m_playerName  = p_playerName;
   m_time        = p_time;
@@ -135,6 +136,21 @@ WebHighscore::WebHighscore(WebRoom *p_room,
 
   m_proxy_settings = p_proxy_settings;
   m_room = p_room;
+  m_day   = p_day;
+  m_month = p_month;
+  m_year  = p_year;
+}
+
+int WebHighscore::getDateYear() const {
+  return m_year;
+}
+
+int WebHighscore::getDateMonth() const {
+  return m_month;
+}
+
+int WebHighscore::getDateDay() const {
+  return m_day;
 }
 
 WebHighscore::~WebHighscore() {
@@ -274,6 +290,7 @@ void WebRoom::fillHash() {
   TiXmlElement *v_webHSXmlDataElement;
   const char *pc;
   std::string v_levelId, v_playerName, v_time, v_rplUrl;
+  int v_day=0, v_month=0, v_year=0;
   WebHighscore *wh;
 
   v_webHSXml.readFromFile(m_userFilename);
@@ -312,8 +329,34 @@ void WebRoom::fillHash() {
       pc = pVarElem->Attribute("replay");
       if(pc == NULL) { continue; }
       v_rplUrl = pc;
-      
-      wh = new WebHighscore(this, v_levelId, v_playerName, v_time, v_rplUrl, m_proxy_settings);
+
+      pc = pVarElem->Attribute("date");
+      if(pc != NULL) {
+	std::string v_date = pc;
+	int v_pos;
+
+	v_pos = v_date.find("/", 0);
+	if(v_pos != std::string::npos && v_pos != 0) {
+	  v_day = atoi(v_date.substr(0, v_pos).c_str());
+	  v_date = v_date.substr(v_pos+1, v_date.length() - v_pos -1);
+
+	  v_pos = v_date.find("/", 0);
+	  if(v_pos != std::string::npos && v_pos != 0) {
+	    v_month = atoi(v_date.substr(0, v_pos).c_str());
+	    v_date = v_date.substr(v_pos+1, v_date.length() - v_pos -1);
+	  }
+
+	  v_pos = v_date.find("/", 0);
+	  if(v_pos != std::string::npos && v_pos != 0) {
+	    v_year = atoi(v_date.substr(0, v_pos).c_str());
+	    v_date = v_date.substr(v_pos+1, v_date.length() - v_pos -1);
+	  }
+	}
+      }
+
+      wh = new WebHighscore(this, v_levelId, v_playerName,
+			    v_day, v_month, v_year,
+			    v_time, v_rplUrl, m_proxy_settings);
       
       #if defined(USE_HASH_MAP)
         m_webhighscores[wh->getLevelId().c_str()] = wh;
