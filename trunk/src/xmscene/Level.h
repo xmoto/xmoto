@@ -138,12 +138,12 @@ class Level {
     return m_layerOffsets[layer];
   }
 
-  std::vector<Vector2f>& getLayerOffsets(){
-    return m_layerOffsets;
+  bool isLayerFront(int layer){
+    return m_isLayerFront[layer];
   }
 
-  int getFrontLayer() {
-    return m_frontLayer;
+  std::vector<Vector2f>& getLayerOffsets(){
+    return m_layerOffsets;
   }
 
  private:
@@ -179,10 +179,9 @@ class Level {
   bool m_isScripted;
 
   int m_numberLayer;
+  /* vector is the offset, and if bool == true, then it's a front layer*/
   std::vector<Vector2f> m_layerOffsets;
-  /* si != -1, alors il s'agit de l'index d'un
-     back layer utilise comme front layer */
-  int m_frontLayer;
+  std::vector<bool>     m_isLayerFront;
 
   std::string m_rSpriteForStrawberry;
   std::string m_rSpriteForWecker;

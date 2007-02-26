@@ -30,7 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../VXml.h"
 #include "../helpers/Color.h"
 
-#define CACHE_LEVEL_FORMAT_VERSION 16
+#define CACHE_LEVEL_FORMAT_VERSION 17
 
 Level::Level() {
   m_xmotoTooOld = false;
@@ -42,7 +42,6 @@ Level::Level() {
   m_nbEntitiesToTake = 0;
   m_borderTexture = "";
   m_numberLayer   = 0;
-  m_frontLayer    = -1;
   m_isScripted    = false;
 }
 
@@ -342,16 +341,18 @@ void Level::saveXML(void) {
   }
   vapp::FS::writeLineF(pfh,"\t\t<border texture=\"%s\" />",m_borderTexture.c_str());
   vapp::FS::writeLineF(pfh,"\t\t<music name=\"%s\" />", m_music.c_str());
-  if(m_frontLayer != -1){
-    vapp::FS::writeLineF(pfh, "\t\t<frontlayer>%d</frontlayer>", m_frontLayer);
-  }
   vapp::FS::writeLineF(pfh,"\t</info>");
 
   if(m_numberLayer > 0){
     vapp::FS::writeLineF(pfh, "\t\t<layeroffsets>");
     for(int i=0; i<m_numberLayer; i++){
-      vapp::FS::writeLineF(pfh, "\t\t\t<layeroffset x=\"%f\" y=\"%f\"/>",
-			   m_layerOffsets[i].x, m_layerOffsets[i].y);
+      std::string front = "";
+      if(m_isLayerFront[i] == true){
+	front = " frontlayer=\"true\"";
+      }
+
+      vapp::FS::writeLineF(pfh, "\t\t\t<layeroffset x=\"%f\" y=\"%f\"%s/>",
+			   m_layerOffsets[i].x, m_layerOffsets[i].y, front.c_str());
     }
     vapp::FS::writeLineF(pfh, "\t\t</layeroffsets>");
   }
@@ -503,7 +504,7 @@ void Level::loadXML(void) {
       /* Name */
       std::string Tmp = vapp::XML::getElementText(*m_xmlSource, pInfoElem,"name");
       if(Tmp != "") m_name = Tmp;
-      
+
       /* Author */
       Tmp = vapp::XML::getElementText(*m_xmlSource, pInfoElem,"author");
       if(Tmp != "") m_author = Tmp;
@@ -596,38 +597,29 @@ void Level::loadXML(void) {
       if(pMusicElem != NULL) {
 	m_music = vapp::XML::getOption(pMusicElem, "name");  
       }
-
-      /* front layer */
-      m_frontLayer = -1;
-      Tmp = vapp::XML::getElementText(*m_xmlSource, pInfoElem, "frontlayer");
-      if(Tmp != ""){
-	m_frontLayer = atoi(Tmp.c_str());
-	vapp::Log("Level::loadXML frontlayer: [%s] [%d]", Tmp.c_str(), m_frontLayer);
-      }else{
-	vapp::Log("Level::loadXML no front layer");
-      }
     }
 
     /* background level offsets */
     TiXmlElement* pLayerOffsets = vapp::XML::findElement(*m_xmlSource, NULL, std::string("layeroffsets"));
     if(pLayerOffsets == NULL){
       m_numberLayer = 0;
-      m_frontLayer  = -1;
       vapp::Log("Level::loadXML no layers");
     }
     else {
       for(TiXmlElement* pElem = pLayerOffsets->FirstChildElement("layeroffset");
 	  pElem!=NULL;
 	  pElem=pElem->NextSiblingElement("layeroffset")) {
-	m_numberLayer++;
 	Vector2f offset;
 	offset.x = atof(vapp::XML::getOption(pElem, "x").c_str());
 	offset.y = atof(vapp::XML::getOption(pElem, "y").c_str());
+	m_numberLayer++;
 	m_layerOffsets.push_back(offset);
+	m_isLayerFront.push_back(vapp::XML::getOption(pElem, "frontlayer", "false") == "true");
       }
       for(int i=0; i<m_numberLayer; i++){
-	vapp::Log("Level::loadXML offsets layer %d: %f, %f",
-		  i, m_layerOffsets[i].x, m_layerOffsets[i].y);
+	vapp::Log("Level::loadXML offsets layer %d: %f, %f isfront: %s",
+		  i, m_layerOffsets[i].x, m_layerOffsets[i].y,
+		  m_isLayerFront[i]?"true":"false");
       }
     }
 
@@ -810,11 +802,11 @@ void Level::exportBinary(const std::string &FileName, const std::string& pSum) {
     vapp::FS::writeString(pfh,m_rSpriteForStar);
     vapp::FS::writeString(pfh,m_rSoundForPickUpStrawberry);
 
-    vapp::FS::writeInt_LE(pfh, m_frontLayer);
     vapp::FS::writeInt_LE(pfh, m_numberLayer);
     for(int i=0; i<m_numberLayer; i++){
       vapp::FS::writeFloat_LE(pfh, m_layerOffsets[i].x);
       vapp::FS::writeFloat_LE(pfh, m_layerOffsets[i].y);
+      vapp::FS::writeBool(pfh,     m_isLayerFront[i]);
     }    
 
     /* Write script (if any) */
@@ -1003,13 +995,13 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
 	m_rSoundForPickUpStrawberry = vapp::FS::readString(pfh);
 
 	/* layers */
-	m_frontLayer  = vapp::FS::readInt_LE(pfh);
 	m_numberLayer = vapp::FS::readInt_LE(pfh);
 	for(int i=0; i<m_numberLayer; i++){
 	  Vector2f offset;
 	  offset.x = vapp::FS::readFloat_LE(pfh);
 	  offset.y = vapp::FS::readFloat_LE(pfh);
 	  m_layerOffsets.push_back(offset);
+	  m_isLayerFront.push_back(vapp::FS::readBool(pfh));
 	}
 
         /* Read embedded script */
@@ -1311,8 +1303,8 @@ void Level::unloadLevelBody() {
   }
 
   m_numberLayer = 0;
-  m_frontLayer  = -1;
   m_layerOffsets.clear();
+  m_isLayerFront.clear();
 }
 
 void Level::rebuildCache() {
