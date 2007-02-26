@@ -297,6 +297,23 @@ void LevelsManager::createVirtualPacks(
   }
 #endif
 
+#if defined(SUPPORT_WEBACCESS)
+//  /* levels i've not the highscore */
+//  v_pack = new LevelsPack(std::string("Last highscores"));
+//  m_levelsPacks.push_back(v_pack);
+//  v_pack->setGroup(GAMETEXT_PACK_ROOM);
+//  for(unsigned int i=0; i<m_levels.size(); i++) {
+//    if(i_webHighscores != NULL) {
+//      WebHighscore* wh = i_webHighscores->getHighscoreFromLevel(m_levels[i]->Id());
+//      if(wh != NULL) {
+//	if(wh->getPlayerName() != i_playerName) {
+//	  v_pack->addLevel(m_levels[i]);
+//	}
+//      }
+//    }
+//  }
+#endif
+
   /* stats */
   vapp::PlayerStats *v_playerStats = i_stats->_FindPlayerStats(i_playerName);
 
