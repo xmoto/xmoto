@@ -199,7 +199,7 @@ namespace vapp {
             if((nPhysSteps <= 1) && (m_fFPS_Rate > (0.8f / PHYS_STEP_SIZE)))
               nADelay = ((m_fLastPhysTime + PHYS_STEP_SIZE) - fEndFrameTime) * 1000.0f;
 
-	    if(m_autoZoom || m_autoUnZoom){
+	    if(m_autoZoom){
 	      /* limit framerate while zooming (100 fps)*/
 	      double timeElapsed = getTime() - fStartFrameTime;
 	      if(timeElapsed < 0.01)
