@@ -807,13 +807,12 @@ msgstr ""
 "Einige der Einstellungen zeigen keine Wirkung bis zum naechsten Neustart!"
 
 #: src/GameText.h:277
-#, fuzzy
 msgid "By author"
 msgstr "Autor"
 
 #: src/GameText.h:278
 msgid "Last"
-msgstr ""
+msgstr "Letzte"
 
 #: src/GameText.h:279 src/GameText.h:309
 msgid "Room"
@@ -821,15 +820,15 @@ msgstr "Raum"
 
 #: src/GameText.h:280
 msgid "Special"
-msgstr ""
+msgstr "Spezial"
 
 #: src/GameText.h:281
 msgid "Standard"
-msgstr ""
+msgstr "Standart"
 
 #: src/GameText.h:282
 msgid "Web votes"
-msgstr ""
+msgstr "Web-Abstimmung"
 
 #: src/GameText.h:283 src/GameText.h:321
 msgid "Statistics"
@@ -1702,36 +1701,32 @@ msgid "Easiest levels"
 msgstr "Einfachste Levels"
 
 #: src/GameText.h:505
-#, fuzzy
 msgid "Crapiest levels"
-msgstr "Einfachste Levels"
+msgstr "Unschoenste Levels"
 
 #: src/GameText.h:506
-#, fuzzy
 msgid "Scripted levels"
-msgstr "Aktualisierte Level"
+msgstr "Geskriptete Levels"
 
 #: src/GameText.h:507
 msgid "Musical"
-msgstr ""
+msgstr "Levels mit Musik"
 
 #: src/GameText.h:508
 msgid "By best driver"
-msgstr ""
+msgstr "Bester Fahrer"
 
 #: src/GameText.h:509
-#, fuzzy
 msgid "Never played levels"
-msgstr "Meistgespielte Levels"
+msgstr "Nie gespielte Levels"
 
 #: src/GameText.h:510
 msgid "Most played levels"
 msgstr "Meistgespielte Levels"
 
 #: src/GameText.h:511
-#, fuzzy
 msgid "Less played levels (but played)"
-msgstr "Meistgespielte Levels"
+msgstr "Am wenigsten gespielte Levels"
 
 #~ msgid "Bike Breaks"
 #~ msgstr "Rad zerbricht"
