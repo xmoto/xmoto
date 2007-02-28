@@ -165,7 +165,6 @@ msgid "Controls"
 msgstr "Controles"
 
 #: src/GameText.h:73
-#, fuzzy
 msgid ""
 "Lead Programming:Rasmus Neckelmann;:Nicolas Adenis-Lamarre;:Emmanuel Gorse;:"
 "Kees Jongenburger;:;Additional Programming:Eric Piel;:Christoph Sommer;:"
@@ -185,22 +184,22 @@ msgid ""
 "levels;:People who have provided bug reports;:Anyone who has helped in any "
 "way;"
 msgstr ""
-"Desarrolladores Principales:Rasmus Neckelmann;:Nicolas Adenis-Lamarre;:;"
-"Desarrolladores adicionales:Eric Piel;:Emmanuel Gorse;:Christoph Sommer;:"
-"Frederic Huard;:;Graficos:Rasmus Neckelmann;:;Sonido:Jens Erler;:Brandon "
-"Ross;:;Niveles Internos:Rasmus Neckelmann;:Pasi Kallinen;:Germain Gagnerot;:"
-"Clive Crous;:Torben Green;:Thomas Kjaerulff;:;Soporte para MacOS X:Dave "
-"Vasilevsky;:Maxime Biais;:;Desarrolladores Web:Nicolas Adenis-Lamarre;:Nx;:;"
-"Administradores Web:Nicolas Adenis-Lamarre;:Valentin;:Nx;:Alrj;:;Traductores "
-"Web:Felix Schl;:Nicolas Adenis-Lamarre;:Trullo;:Afaland;:Jj;:Vertigo;:Pol "
-"Vinogradov;:;Foro:Valentin;:;Testers principales:Jose Alberto Coelho;:"
-"Frederic Huard;:;Gracies a:SnowBear (integracion KDE/gnome);:Jonathan Sieber "
-"(traduccion alemana);:Samuel Mimram (paquetes Debian);:Dark (paquetes "
-"Gentoo);:Olivier Blin (paquetes Mandriva);:Balazs Rozsa (por across/elma);:"
-"Yves Berquin (por hacer tinyxml);:L. Peter Deutsch (codigo MD5);:Jes "
-"Vestervang (espacio d'internet);:Kenneth;:A todos los que han hecho niveles;:"
-"A las personas que han informado de errores;:A todos los que han ayudado de "
-"alguna manera ;"
+"Desarrolladores Principales:Rasmus Neckelmann;:Nicolas Adenis-Lamarre;:"
+"Emmanuel Gorse;:Kees Jongenburger;:;Desarrolladores adicionales:Eric Piel;:"
+"Christoph Sommer;:Frederic Huard;:;Graphics:Rasmus Neckelmann;:;Sonido:Jens "
+"Erler;:Brandon Ross;:;Niveles Internos:Rasmus Neckelmann;:Pasi Kallinen;:"
+"Germain Gagnerot;:Clive Crous;:Torben Green;:Thomas Kjaerulff;:;Soporte para "
+"MacOS X:Dave Vasilevsky;:Maxime Biais;:;Desarrolladores Web:Nicolas Adenis-"
+"Lamarre;:Nx;:;Administradores Web:Nicolas Adenis-Lamarre;:Valentin;:Nx;:"
+"Alrj;:;Traductores Web:Felix Schl;:Nicolas Adenis-Lamarre;:Trullo;:Afaland;:"
+"Jj;:Vertigo;:Pol Vinogradov;:;Foro:Valentin;:;Testers principales:Jose "
+"Alberto Coelho;:Frederic Huard;:;Gracies a:SnowBear (integracion KDE/gnome);:"
+"Jonathan Sieber (traduccion alemana);:Samuel Mimram (paquetes Debian);:Dark "
+"(paquetes Gentoo);:Olivier Blin (paquetes Mandriva);:Balazs Rozsa (por "
+"across/elma);:Yves Berquin (por hacer tinyxml);:L. Peter Deutsch (codigo "
+"MD5);:Petter Reinholdtsen;:Jes Vestervang (espacio d'internet);:Kenneth (for "
+"being such a little girl);:A todos los que han hecho niveles;:A las personas "
+"que han informado de errores;:A todos los que han ayudado de alguna manera ;"
 
 #: src/GameText.h:132
 msgid "Credits"
@@ -216,7 +215,7 @@ msgstr "Fecha"
 
 #: src/GameText.h:135
 msgid "Death Animation"
-msgstr ""
+msgstr "Muerte Animada"
 
 #: src/GameText.h:136
 msgid "Defaults"
@@ -431,9 +430,8 @@ msgid "File"
 msgstr "Archivo"
 
 #: src/GameText.h:180
-#, fuzzy
 msgid "Filter"
-msgstr "Archivo"
+msgstr "Filtro"
 
 #: src/GameText.h:181
 msgid "Finished!"
@@ -533,7 +531,7 @@ msgstr "Guarda una fotografia de la pantalla"
 
 #: src/GameText.h:208
 msgid "Reload levels from Levels dir (if you create a new level)"
-msgstr ""
+msgstr "Recarga los niveles del directorio (si has creado uno nuevo)"
 
 #: src/GameText.h:210
 msgid ""
@@ -877,9 +875,8 @@ msgid "Do you really want to quit?"
 msgstr "Realmente quieres salir del juego?"
 
 #: src/GameText.h:298
-#, fuzzy
 msgid "Randomize"
-msgstr "Niveles aleatorios"
+msgstr "Aleatorios"
 
 #: src/GameText.h:299
 msgid "Reloading levels..."
@@ -1650,13 +1647,12 @@ msgid "Delete the level from the favorite levels list"
 msgstr "Eliminar el nivel a la lista de favoritos"
 
 #: src/GameText.h:492
-#, fuzzy
 msgid "Puzzle the levels pack list"
-msgstr "Cierra el Paquete"
+msgstr "Mezcla la lista de Paquetes"
 
 #: src/GameText.h:493
 msgid "Put a text to limit the level list"
-msgstr ""
+msgstr "Pon un texto para limitar la lista"
 
 #: src/GameText.h:495
 msgid "Levels with no highscore"

@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: sk\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-02-25 15:06+0100\n"
-"PO-Revision-Date: 2007-02-23 12:04+0100\n"
+"PO-Revision-Date: 2007-02-27 23:26+0100\n"
 "Last-Translator: Jozef Riha <jose1711@gmail.com\n"
 "Language-Team:  <sk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -822,11 +822,11 @@ msgstr "Miestnost"
 
 #: src/GameText.h:280
 msgid "Special"
-msgstr "Zvlastny"
+msgstr "Specialne"
 
 #: src/GameText.h:281
 msgid "Standard"
-msgstr "Standardny"
+msgstr "Standardne"
 
 #: src/GameText.h:282
 msgid "Web votes"
@@ -971,7 +971,7 @@ msgstr "Hrat!"
 
 #: src/GameText.h:322
 msgid "STATS"
-msgstr "STATS"
+msgstr "STATISTIKY"
 
 #: src/GameText.h:323
 msgid "Stereo"
@@ -1228,7 +1228,7 @@ msgstr "Levely zoskupene do levelovych balikov"
 
 #: src/GameText.h:386
 msgid "Browse levels avaiable to you"
-msgstr "Listovat levely, ktore su vam pristupne"
+msgstr "Prehliadat levely, ktore su vam pristupne"
 
 #: src/GameText.h:387
 msgid "View list of recorded replays"
@@ -1304,7 +1304,7 @@ msgstr "Vratit volby na vychodzie"
 
 #: src/GameText.h:405
 msgid "Show a map of your surroundings when playing"
-msgstr "Zobrazit mapu vasho okolia pocas hry"
+msgstr "Zobrazovat mapu vasho okolia pocas hry"
 
 #: src/GameText.h:406
 msgid "Automatically download best times off the net when the game starts"
@@ -1466,8 +1466,7 @@ msgstr "Zobrazovat pomocne retazce ako je napriklad tento"
 msgid ""
 "Let X-Moto look for more levels on the net, and install them automatically"
 msgstr ""
-"Nechat X-Moto najst viac levelov na nete a nechat ich automaticky "
-"nainstalovat"
+"Nechat X-Moto najst viac levelov na nete a automaticky ich nainstalovat"
 
 #: src/GameText.h:446
 msgid "Select this if you got a direct connection to the Internet"
@@ -1503,7 +1502,7 @@ msgstr "Nove levely a levely aktualizovane z internetu"
 
 #: src/GameText.h:455
 msgid "Show the ghost if possible in the game"
-msgstr "Ak je to mozne zobrazovat v hre ducha"
+msgstr "Zobrazovat pri hre ducha, kde je to mozne"
 
 #: src/GameText.h:456
 msgid "Choose which ghost to display"
@@ -1606,7 +1605,7 @@ msgstr "Zapnut animaciu rozpadajuceho sa motocykla pri smrti"
 
 #: src/GameText.h:482
 msgid "Automatically scroll over the level before starting playing it"
-msgstr "Automaticky prelet cez level pred jeho hranim"
+msgstr "Automaticky prelet levelom pred jeho hranim"
 
 #: src/GameText.h:483
 msgid "View the X-Moto credits"
@@ -1626,7 +1625,7 @@ msgstr "Hrac, ktory urobil zaznam"
 
 #: src/GameText.h:487
 msgid "Click to select screen resolution"
-msgstr "Kliknite a vyberte rozlisenie obrazovky"
+msgstr "Kliknutim vyberte rozlisenie obrazovky"
 
 #: src/GameText.h:488
 msgid "Completed levels / total number of levels in pack"
