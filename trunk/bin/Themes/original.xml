@@ -183,6 +183,102 @@
 <sprite type="Entity" name="Tut3Sign" 	   file="Tut3Sign.png" width="3" height="3" centerX="1.5" centerY="0.2" />
 <sprite type="Entity" name="YellowFlare"		file="YellowFlare.png" width="2" height="2" centerX="1" centerY="1" blendmode="add"/>
 
+<sprite type="Entity" name="alien" fileBase="alien_238_" fileExtension="png" width="1.0" height="1.0" centerX="0.5" centerY="0.5" delay="0.25">
+<frame />
+<frame />
+</sprite>
+
+<sprite type="Entity" name="laser" fileBase="laser_239_" fileExtension="png" width="0.8" height="0.8" centerX="0.4" centerY="0.4" delay="0.1">
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+</sprite>
+
+<sprite type="Entity" name="ring" fileBase="ring_228_" fileExtension="png" width="0.8" height="0.8" centerX="0.4" centerY="0.4" delay="0.06">
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+</sprite>
+
+<sprite type="Entity" name="evilfish" fileBase="evilfish_225_" fileExtension="png" width="1.3" height="1.3" centerX="0.65" centerY="0.65" delay="0.1">
+<frame />
+<frame />
+</sprite>
+
+<sprite type="Entity" name="eyesindark" fileBase="eyesindark_" fileExtension="png" width="1" height="1" centerX="1.50" centerY="1" delay="0.5">
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+</sprite>
+
+<sprite type="Entity" name="bird" fileBase="bird_ani_" fileExtension="png" width="1" height="1" centerX="0.5" centerY="0" delay="0.1">
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+</sprite>
+<sprite type="Entity" name="birdright" fileBase="bird_ani_right_" fileExtension="png" width="1" height="1" centerX="0.5" centerY="0" delay="0.1">
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+</sprite>
+
+<sprite type="Entity" name="zombie_fat" fileBase="zombie_animiert_" fileExtension="png" width="2.25" height="2.5" centerY="0" delay="0.15">
+<frame centerX="1.1" />
+<frame centerX="1.0" />
+<frame centerX="0.8" />
+<frame centerX="1.0" />
+<frame centerX="1.1" />
+</sprite>
+
+<sprite type="Entity" name="tomate" fileBase="tomate_" fileExtension="png" width="2.25" height="2.5" centerY="0" delay="0.5">
+<frame centerX="1.1" />
+<frame centerX="1.0" />
+<frame centerX="0.8" />
+<frame centerX="1.0" />
+</sprite>
+
+<sprite type="Entity" name="totem1" file="totem1_203.png" width="2.7" height="2.7" centerX="1.35" centerY="0.5" />
+<sprite type="Entity" name="totem2" file="totem2_206.png" width="2.7" height="2.7" centerX="1.35" centerY="0.5" />
+
+<sprite type="Entity" name="Daulphin" file="Daulphin_166.png" width="3" height="3" centerX="1.5" centerY="0.2" />
+<sprite type="Entity" name="Daulphin2" file="Daulphin2_162.png" width="3" height="3" centerX="1.5" centerY="0.2" />
+
+<sprite type="Entity" name="MultiBaloons" file="MultiBaloons_163.png" width="3" height="3" centerX="1.5" centerY="0.2" />
+<sprite type="Entity" name="Nenufart" file="Nenufart_165.png" width="3" height="3" centerX="1.5" centerY="0.2" />
+<sprite type="Entity" name="palmgrass" file="palmgrass_204.png" width="1.5" height="1.5" centerX="0.75" centerY="0.5" />
+<sprite type="Entity" name="palmtree" file="palmtree_201.png" width="5.7" height="5.7" centerX="2.85" centerY="0.5" />
+<sprite type="Entity" name="palmtree2" file="palmtree2_202.png" width="5.7" height="5.7" centerX="2.85" centerY="0.5" />
+
+<sprite type="Entity" name="HellHead" file="HellHead_167.png" width="3" height="3" centerX="1.5" centerY="0.2" />
+<sprite type="Entity" name="home01" file="home01.png" width="8" height="6" centerX="3" centerY="0" />
+
+<sprite type="Entity" name="Sun" file="Sun_161.png" width="3" height="3" centerX="1.5" centerY="0.2" />
+<sprite type="Entity" name="Earth" file="Earth_164.png" width="3" height="3" centerX="1.5" centerY="0.2" />
+<sprite type="Entity" name="dock" file="docks_Stange.png" width="1" height="3" centerX="0.5" centerY="0.25" />
+<sprite type="Entity" name="beerleft" file="beerleft_222.png" width="0.5" height="0.6" centerX="0" centerY="0.5" />
+<sprite type="Entity" name="TuxFly" file="TuxFly_160.png" width="3" height="3" centerX="1.5" centerY="0.2" />
+<sprite type="Entity" name="panel" file="panel_230.png" width="2.6" height="2.6" centerX="1.3" centerY="0.8" />
+
 <sprite type="UI" name="Loading" 	    file="Loading.png" />
 <sprite type="UI" name="TitleBL" 	    file="TitleBL.jpg" />
 <sprite type="UI" name="TitleBR" 	    file="TitleBR.jpg" />
