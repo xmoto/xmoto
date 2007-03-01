@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<level id="galaga" rversion="0.2.5">
+<level id="galaga" levelpack="Control Cup" rversion="0.2.5">
 	<info>
 		<name>AgAlAgA</name>
 		<description>Playing space invaders in xmoto is no longer a dream</description>
