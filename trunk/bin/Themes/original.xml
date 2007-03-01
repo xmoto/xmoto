@@ -157,6 +157,7 @@
 <sprite type="EdgeEffect" name="Ice1"       file="EdgeIce1.png"        scale="0.5" depth="0.3" />
 <sprite type="EdgeEffect" name="RedBricks"  file="EdgeRedBricks1.jpg"  scale="0.8" depth="0.3" />
 <sprite type="EdgeEffect" name="GrassAlt"   file="EdgeGrassAlt1.png"   scale="0.5" depth="0.6" />
+<sprite type="EdgeEffect" name="EdgeCSite1" file="EdgeCSite1_209.png" scale="0.9" depth="0.35" />
 
 <sprite type="Font" name="MFont" file="MFont.png" />
 <sprite type="Font" name="SFont" file="SFont.png" />
