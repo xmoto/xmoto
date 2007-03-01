@@ -151,7 +151,30 @@ Levels/l1050.lvl
 Levels/l1051.lvl
 Levels/l1052.lvl
 Levels/l1053.lvl
-
+Levels/l1004.lvl
+Levels/l1017.lvl
+Levels/l1031.lvl
+Levels/l228.lvl
+Levels/l229.lvl
+Levels/l230.lvl
+Levels/l317.lvl
+Levels/l369.lvl
+Levels/l257.lvl
+Levels/l1032.lvl
+Levels/l1080.lvl
+Levels/l122.lvl
+Levels/l129.lvl
+Levels/l146.lvl
+Levels/l191.lvl
+Levels/l254.lvl
+Levels/l269.lvl
+Levels/l285.lvl
+Levels/l384.lvl
+Levels/l455.lvl
+Levels/l48.lvl
+Levels/l513.lvl
+Levels/l718.lvl
+Levels/l769.lvl
 
 Textures/Anims/Flower00.png
 Textures/Anims/Flower01.png
@@ -386,6 +409,8 @@ Textures/Sprites/Sun_161.png
 Textures/Sprites/totem1_203.png
 Textures/Sprites/totem2_206.png
 Textures/Sprites/TuxFly_160.png
+
+Textures/Effects/EdgeCSite1_209.png
 
 Textures/UI/MenuBL.png
 Textures/UI/MenuBR.png
