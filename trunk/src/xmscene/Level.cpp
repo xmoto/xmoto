@@ -603,7 +603,6 @@ void Level::loadXML(void) {
     TiXmlElement* pLayerOffsets = vapp::XML::findElement(*m_xmlSource, NULL, std::string("layeroffsets"));
     if(pLayerOffsets == NULL){
       m_numberLayer = 0;
-      vapp::Log("Level::loadXML no layers");
     }
     else {
       for(TiXmlElement* pElem = pLayerOffsets->FirstChildElement("layeroffset");
