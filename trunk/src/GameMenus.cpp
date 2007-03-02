@@ -3464,7 +3464,7 @@ namespace vapp {
   
   void GameApp::_SaveOptions(void) {
     bool bNotify = false;
-  
+
     UIButton *pShowMiniMap = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:SHOWMINIMAP");
     UIButton *pShowEngineCounter = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:SHOWENGINECOUNTER");
     UIButton *pDeathAnim = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:DEATHANIM");
@@ -3517,7 +3517,7 @@ namespace vapp {
     
     if(pKeyboardControl->getChecked()) m_Config.setString("ControllerMode1","Keyboard");
     else if(pJoystickControl->getChecked()) m_Config.setString("ControllerMode1","Joystick1");
-    
+
     for(int i=0;i<pActionList->getEntries().size();i++) {
       if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_DRIVE)
 	m_Config.setString("KeyDrive1",pActionList->getEntries()[i]->Text[1]);
@@ -3555,9 +3555,9 @@ namespace vapp {
     if(pEnableEngineSoundButton->getChecked() && pEnableMusicButton->getChecked()
        && Sound::isPlayingMusic() == false) {
       try {
-	Sound::playMusic(FS::getDataDir() + std::string("/xmoto.ogg"));
+    	Sound::playMusic(m_theme.getMusic("menu1")->FilePath());
       } catch(Exception &e) {
-	/* hum, no music */
+    	/* hum, no music */
       }
     } else {
       if((pEnableEngineSoundButton->getChecked() == false || pEnableMusicButton->getChecked() == false)
@@ -3637,7 +3637,7 @@ namespace vapp {
 	reloadTheme();
       }
     }
-            
+       
     /* The following require restart */
     m_Config.setChanged(false);      
 
