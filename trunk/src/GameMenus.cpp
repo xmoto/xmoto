@@ -3550,9 +3550,10 @@ namespace vapp {
     }
     
     m_Config.setBool("EngineSoundEnable",pEnableEngineSoundButton->getChecked());
+
     m_Config.setBool("MenuMusic",pEnableMusicButton->getChecked());
 
-    if(pEnableEngineSoundButton->getChecked() && pEnableMusicButton->getChecked()
+    if(pEnableAudioButton->getChecked() && pEnableMusicButton->getChecked()
        && Sound::isPlayingMusic() == false) {
       try {
     	Sound::playMusic(m_theme.getMusic("menu1")->FilePath());
@@ -3560,7 +3561,7 @@ namespace vapp {
     	/* hum, no music */
       }
     } else {
-      if((pEnableEngineSoundButton->getChecked() == false || pEnableMusicButton->getChecked() == false)
+      if((pEnableAudioButton->getChecked() == false || pEnableMusicButton->getChecked() == false)
 	 && Sound::isPlayingMusic()) {
 	   Sound::stopMusic();
 	 }
