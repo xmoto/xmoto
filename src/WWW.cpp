@@ -848,10 +848,7 @@ void WebLevels::createDestinationDirIfRequired() {
 
   if(vapp::FS::isDir(v_destination_dir) == false) {
     /* no mkdir() with microsoft C */
-    if(vapp::FS::mkDir(v_destination_dir.c_str()) != 0) { /* drwx------ */
-      throw Exception("error : unable to make directory "
-          + v_destination_dir); 
-    }
+    vapp::FS::mkArborescence(v_destination_dir + "/file");
   }
 }
 

@@ -1243,7 +1243,7 @@ namespace vapp {
     }
 
     mkArborescence(v_parentDir);
-    if(mkDir(v_parentDir.c_str()) != 0) {
+    if(FS::mkDir(v_parentDir.c_str()) != 0) {
       throw Exception("Can't create directory " + v_parentDir);
     }
   }

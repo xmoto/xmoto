@@ -451,7 +451,9 @@ namespace vapp {
 #if defined(WIN32) /* this works around a bug in SDL_mixer 1.2.7 on Windows */
     SDL_RWops *rwfp;
     rwfp = SDL_RWFromFile(i_musicPath.c_str(), "rb");
-    m_pMenuMusic = Mix_LoadMUS_RW(rwfp);
+    if(m_pMenuMusic != NULL) {
+      m_pMenuMusic = Mix_LoadMUS_RW(rwfp);
+    }
 #else
     m_pMenuMusic = Mix_LoadMUS(i_musicPath.c_str());
 #endif
