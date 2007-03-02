@@ -610,11 +610,11 @@ const std::vector<LevelsPack *>& LevelsManager::LevelsPacks() {
   return m_levelsPacks;
 }
 
-void LevelsManager::reloadLevelsFromFiles(bool i_enableCache) {
+void LevelsManager::reloadLevelsFromFiles(bool i_enableCache, XMotoLoadLevelsInterface *i_loadLevelsInterface) {
   clean();
 
   std::vector<std::string> LvlFiles = vapp::FS::findPhysFiles("Levels/*.lvl", true);
-  loadLevelsFromLvl(LvlFiles, i_enableCache);
+  loadLevelsFromLvl(LvlFiles, i_enableCache, i_loadLevelsInterface);
   try {
     /* then, recreate the index */
     createLevelsIndex();
@@ -716,11 +716,16 @@ void LevelsManager::deleteLevelsIndex() {
   remove(LevelIndexFileName().c_str());
 }
 
-void LevelsManager::loadLevelsFromLvl(const std::vector<std::string> &LvlFiles, bool i_enableCache) {
-  loadLevelsFromLvl(LvlFiles, i_enableCache, false);
+void LevelsManager::loadLevelsFromLvl(const std::vector<std::string> &LvlFiles,
+				      bool i_enableCache,
+				      XMotoLoadLevelsInterface *i_loadLevelsInterface) {
+  loadLevelsFromLvl(LvlFiles, i_enableCache, false, i_loadLevelsInterface);
 } 
 
-void LevelsManager::loadLevelsFromLvl(const std::vector<std::string> &LvlFiles, bool i_enableCache, bool i_newLevels) {
+void LevelsManager::loadLevelsFromLvl(const std::vector<std::string> &LvlFiles,
+				      bool i_enableCache,
+				      bool i_newLevels,
+				      XMotoLoadLevelsInterface *i_loadLevelsInterface) {
   for(int i=0;i<LvlFiles.size();i++) {
     bool bCached = false;
     Level *v_level = new Level();
@@ -730,10 +735,15 @@ void LevelsManager::loadLevelsFromLvl(const std::vector<std::string> &LvlFiles, 
       bCached = v_level->loadReducedFromFile(i_enableCache);
       
       // Check for ID conflict
-			if(doesLevelExist(v_level->Id())) { /* LvlFiles order assure that levels of userDir are load before system levels (which allow level updates) */
-				throw Exception("Duplicate level ID");
-			}
+      if(doesLevelExist(v_level->Id())) { /* LvlFiles order assure that levels of userDir are load before system levels (which allow level updates) */
+	throw Exception("Duplicate level ID");
+      }
       m_levels.push_back(v_level);
+
+      if(i_loadLevelsInterface != NULL) {
+	i_loadLevelsInterface->loadLevelHook(v_level->Name(), (i*100) / LvlFiles.size());
+      }
+
       if(i_newLevels) {
 				m_newLevels.push_back(v_level);
       }

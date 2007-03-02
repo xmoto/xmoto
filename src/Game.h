@@ -40,6 +40,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Stats.h"
 #include "Credits.h"
 #include "LevelsManager.h"
+#include "XMotoLoadLevelsInterface.h"
 
 #define PRESTART_ANIMATION_TIME 2.0
 #define INPLAY_ANIMATION_TIME 1.0
@@ -109,9 +110,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
    Game application
    ===========================================================================*/
    #if defined(SUPPORT_WEBACCESS)
-   class GameApp : public App, public WWWAppInterface {
+   class GameApp : public App, public XMotoLoadLevelsInterface, public WWWAppInterface {
    #else
-   class GameApp : public App {
+   class GameApp : public App, public XMotoLoadLevelsInterface {
    #endif
      public:
        virtual ~GameApp() {}
@@ -218,6 +219,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	virtual bool doesLevelExist(const std::string &p_LevelId);
 #endif
       
+	/* load level */
+	void loadLevelHook(std::string i_level, int i_percentage);
+
       /* Virtual methods */
       virtual void drawFrame(void);
       virtual void userInit(void);

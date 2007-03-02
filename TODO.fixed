@@ -41,6 +41,7 @@ scenario:
 * limit fps while auto zoom and preplay zoom
 * bug on Levels/downloaded dir not created on windows
 * bug on sound when save options on windows
+* an animation for creating levels index
 
 Since 0.2.2
 * When i update lists sometimes

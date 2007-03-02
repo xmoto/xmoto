@@ -54,6 +54,7 @@ common_SOURCES = BuiltInFont.cpp Image.cpp \
   WWW.cpp \
   WWW.h \
   WWWAppInterface.h \
+  XMotoLoadLevelsInterface.h \
   Locales.h \
   Locales.cpp \
   Packager.cpp \
