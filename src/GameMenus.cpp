@@ -3553,19 +3553,20 @@ namespace vapp {
 
     m_Config.setBool("MenuMusic",pEnableMusicButton->getChecked());
 
-    if(pEnableAudioButton->getChecked() && pEnableMusicButton->getChecked()
-       && Sound::isPlayingMusic() == false) {
-      try {
-    	Sound::playMusic(m_theme.getMusic("menu1")->FilePath());
-      } catch(Exception &e) {
-    	/* hum, no music */
-      }
-    } else {
-      if((pEnableAudioButton->getChecked() == false || pEnableMusicButton->getChecked() == false)
-	 && Sound::isPlayingMusic()) {
-	   Sound::stopMusic();
-	 }
-    }
+    // don't play music because in the case the sound init was not done, it crashed : normal
+    //if(pEnableAudioButton->getChecked() && pEnableMusicButton->getChecked()
+    //   && Sound::isPlayingMusic() == false) {
+    //  try {
+    //	Sound::playMusic(m_theme.getMusic("menu1")->FilePath());
+    //  } catch(Exception &e) {
+    //	/* hum, no music */
+    //  }
+    //} else {
+    //if((pEnableAudioButton->getChecked() == false || pEnableMusicButton->getChecked() == false)
+    //   && Sound::isPlayingMusic()) {
+    //  Sound::stopMusic();
+    //}
+    //}
 
 #if defined(SUPPORT_WEBACCESS)
     UIButton *pWebHighscores = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:ENABLEWEBHIGHSCORES");
