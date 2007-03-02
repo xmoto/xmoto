@@ -560,7 +560,7 @@ msgid ""
 "It seems that it's the first time you load this xmoto version.\n"
 "Levels index creation. It can take some minutes."
 msgstr ""
-"Il semble que c'est la premiere fois que vous lancez cette versionde X-"
+"Il semble que c'est la premiere fois que vous lancez cette version de X-"
 "Moto.\n"
 "Creation de l'index des niveaux. Cela peut prendre du temps."
 
