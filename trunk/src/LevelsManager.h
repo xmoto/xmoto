@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Level.h"
 #include "PlayerData.h"
 #include "Stats.h"
+#include "XMotoLoadLevelsInterface.h"
 
 class LevelsPack {
   public:
@@ -80,11 +81,13 @@ class LevelsManager {
 		    vapp::Stats *i_stats);
 
   /* to load or reload levels from files */
-  void reloadLevelsFromFiles(bool i_enableCache);
+  void reloadLevelsFromFiles(bool i_enableCache, XMotoLoadLevelsInterface *i_loadLevelsInterface = NULL);
   /* to load the levels from the index */
   void loadLevelsFromIndex();
   /* to load new levels */
-  void loadLevelsFromLvl(const std::vector<std::string> &LvlFiles, bool i_enableCache);
+  void loadLevelsFromLvl(const std::vector<std::string> &LvlFiles,
+			 bool i_enableCache,
+			 XMotoLoadLevelsInterface *i_loadLevelsInterface = NULL);
 
   /* to load news levels */
   /* to reload levels already loaded (it will put them into the updateLevels list) */
@@ -144,7 +147,10 @@ class LevelsManager {
   void loadFavoriteLevelsXml();
 
   /* is private to for externals to use updateLevelsFromLvl for new levels */
-  void loadLevelsFromLvl(const std::vector<std::string> &LvlFiles, bool i_enableCache, bool i_newLevels);
+  void loadLevelsFromLvl(const std::vector<std::string> &LvlFiles,
+			 bool i_enableCache,
+			 bool i_newLevels,
+			 XMotoLoadLevelsInterface *i_loadLevelsInterface = NULL);
 };
 
 #endif /* __LEVELSMANAGER__ */

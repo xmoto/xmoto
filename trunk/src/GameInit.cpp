@@ -321,8 +321,9 @@ namespace vapp {
     try {
       m_levelsManager.loadLevelsFromIndex();
     } catch(Exception &e) {
+      _UpdateLoadingScreen((1.0f/9.0f) * 4,pLoadingScreen, GAMETEXT_INDEX_CREATION);
       Log(std::string("Unable to load levels from index:\n" + e.getMsg()).c_str());
-      m_levelsManager.reloadLevelsFromFiles(m_bEnableLevelCache);
+      m_levelsManager.reloadLevelsFromFiles(m_bEnableLevelCache, this);
     }
     
     /* -listlevels? */

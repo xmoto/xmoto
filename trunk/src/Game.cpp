@@ -2156,4 +2156,27 @@ namespace vapp {
     m_Renderer.initCamera();
     m_MotoGame.addPenalityTime(900); /* 15 min of penality for that ! */
   }
+
+  void GameApp::loadLevelHook(std::string i_level, int i_percentage) {
+    Texture *pLoadingScreen;
+    Sprite* pSprite;
+
+    pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "Loading");
+
+    if(pSprite == NULL) {
+      return;
+    }
+
+    try {
+      pLoadingScreen = pSprite->getTexture(false, true);
+    } catch(Exception &e) {
+      return;
+    }
+
+    std::ostringstream v_percentage;
+    v_percentage << i_percentage;
+    v_percentage << "%";
+
+    _UpdateLoadingScreen((1.0f/9.0f) * 4,pLoadingScreen, std::string(GAMETEXT_INDEX_CREATION) + std::string("\n") + v_percentage.str() + std::string(", ") + i_level);
+  }
 }
