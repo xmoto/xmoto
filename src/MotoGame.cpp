@@ -1470,7 +1470,7 @@ namespace vapp {
       ParticlesSource *v_stars = new ParticlesSourceStar("");
       v_stars->setInitialPosition(v_entity->DynamicPosition());
       v_stars->loadToPlay();
-      for(int i=0; i<6; i++) {
+      for(int i=0; i<3; i++) {
 	v_stars->addParticle(Vector2f(0,0), m_pMotoGame->getTime() + 5.0);
       }
       getLevelSrc()->spawnEntity(v_stars);
