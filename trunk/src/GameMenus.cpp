@@ -437,7 +437,7 @@ namespace vapp {
     pDispResList->setFont(m_Renderer.getSmallFont());
     pDispResList->addColumn(GAMETEXT_SCREENRES,pDispResList->getPosition().nWidth,CONTEXTHELP_SCREENRES);
 
-    std::vector<std::string>* modes = getDisplayModes();
+    std::vector<std::string>* modes = getDisplayModes(m_Config.getBool("DisplayWindowed"));
     
     for(int i=0; i < modes->size(); i++) {
       pDispResList->addEntry((*modes)[i].c_str());

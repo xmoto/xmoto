@@ -149,7 +149,7 @@ namespace vapp {
 
 
 
-    std::vector < std::string > *getDisplayModes();
+    std::vector < std::string > *getDisplayModes(int windowed);
 
     void setFrameDelay(int nDelay) {
       m_nFrameDelay = nDelay;
