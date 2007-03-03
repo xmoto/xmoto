@@ -28,7 +28,7 @@ Info
 
 #define BUILD_MAJORVERSION    0
 #define BUILD_VERSION         2
-#define BUILD_MINORVERSION    5
+#define BUILD_MINORVERSION    6
 #define BUILD_EXTRAINFO       ""
 
 /*=============================================================================
