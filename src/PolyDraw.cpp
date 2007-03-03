@@ -13,6 +13,8 @@
 #endif
 #define MAX(a,b) ((a)>(b)?(a):(b))
 
+#ifdef ENABLE_SDLGFX
+
 #include "SDL_gfxPrimitives.h"
 namespace vapp {
 
@@ -373,3 +375,4 @@ Various helper functions
     }
   }
 }
+#endif
