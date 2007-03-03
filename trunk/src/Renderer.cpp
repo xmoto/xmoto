@@ -1542,33 +1542,22 @@ namespace vapp {
     Vector2f layerOffset = getGameObject()->getLevelSrc()->getLayerOffset(layer);
 
     /* get bounding box in the layer depending on its offset */
-    Vector2f min = m_screenBBox.getBMin();
-    Vector2f size = m_screenBBox.getBMax() - min;
+    Vector2f size = m_screenBBox.getBMax() - m_screenBBox.getBMin();
 
-    float width  = getGameObject()->getLevelSrc()->RightLimit() - getGameObject()->getLevelSrc()->LeftLimit();
-    float height = getGameObject()->getLevelSrc()->TopLimit()   - getGameObject()->getLevelSrc()->BottomLimit();
+    Vector2f levelLeftTop = Vector2f(getGameObject()->getLevelSrc()->LeftLimit(),
+				     getGameObject()->getLevelSrc()->TopLimit());
 
-    float wMargin = 10.0;
-    float hMargin = 10.0;
+    Vector2f levelViewLeftTop = Vector2f(m_screenBBox.getBMin().x,
+					 m_screenBBox.getBMin().y+size.y);
 
-    /* do not let min get out of the level boundaries */
-    if(min.x < getGameObject()->getLevelSrc()->LeftLimit() - wMargin){
-      min.x = getGameObject()->getLevelSrc()->LeftLimit() - wMargin;
-    }
-    if(min.y < getGameObject()->getLevelSrc()->BottomLimit() - hMargin){
-      min.y = getGameObject()->getLevelSrc()->BottomLimit() - hMargin;
-    }
-
-    Vector2f newMin;
-    newMin = min * layerOffset;
-    //newMin.x = (min.x + width/2.0)  * layerOffset.x - (width/2.0)  * layerOffset.x;
-    //newMin.y = (min.y + height/2.0) * layerOffset.y - (height/2.0) * layerOffset.y;
+    Vector2f originalTranslateVector = levelViewLeftTop - levelLeftTop;
+    Vector2f translationInLayer = originalTranslateVector * layerOffset;
+    Vector2f translateVector = originalTranslateVector - translationInLayer;
 
     AABB layerBBox;
-    layerBBox.addPointToAABB2f(newMin);
-    layerBBox.addPointToAABB2f(newMin+size);
-    /* translation vector */
-    Vector2f translateVector = min - newMin;
+    layerBBox.addPointToAABB2f(levelLeftTop+translationInLayer);
+    layerBBox.addPointToAABB2f(levelLeftTop.x + translationInLayer.x + size.x,
+			       levelLeftTop.y + translationInLayer.y - size.y);
 
     std::vector<Block *> Blocks = getGameObject()->getCollisionHandler()->getBlocksNearPositionInLayer(layerBBox, layer);
     /* sort blocks on their texture */
