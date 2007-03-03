@@ -710,6 +710,18 @@ void Level::loadXML(void) {
       m_blocks.push_back(Block::readFromXml(*m_xmlSource, pElem));
     }  
   }
+
+  /* if blocks with layerid but level with no layer, throw an exception */
+  for(int i=0; i<m_blocks.size(); i++){
+    int blockLayer = m_blocks[i]->getLayer();
+    if(blockLayer != -1){
+      if((getNumberLayer() == 0) || (blockLayer >= getNumberLayer())){
+	vapp::Log("** Warning ** : Level '%s' Block '%s' as a layer, but the level has no layer", m_id.c_str(), m_blocks[i]->Id().c_str());
+	throw Exception("the block has a layer but the level is without layers");
+      }
+    }
+  }
+
   addLimits();
 
   delete m_xmlSource;
