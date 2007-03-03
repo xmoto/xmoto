@@ -383,17 +383,21 @@ namespace vapp {
   /*===========================================================================
   Return available display modes
   ===========================================================================*/
-  std::vector<std::string>* App::getDisplayModes(){
+  std::vector<std::string>* App::getDisplayModes(int windowed){
     std::vector<std::string>* modes = new std::vector<std::string>;
     SDL_Rect **sdl_modes;
     int i, nFlags;
 
-    /* Always use the fullscreen flags to be sure to
-       always get a result (no any modes available like in windowed) */
-    nFlags = SDL_OPENGL | SDL_FULLSCREEN;
+    if (windowed) {
+      sdl_modes = (SDL_Rect **)-1;
+    } else {
+      /* Always use the fullscreen flags to be sure to
+	 always get a result (no any modes available like in windowed) */
+      nFlags = SDL_OPENGL | SDL_FULLSCREEN;
 
-    /* Get available fullscreen/hardware modes */
-    sdl_modes = SDL_ListModes(NULL, nFlags);
+      /* Get available fullscreen/hardware modes */
+      sdl_modes = SDL_ListModes(NULL, nFlags);
+    }
 
     /* Check is there are any modes available */
     if(sdl_modes == (SDL_Rect **)0){
@@ -407,7 +411,7 @@ namespace vapp {
 
     /* Check if or resolution is restricted */
     if(sdl_modes == (SDL_Rect **)-1){
-      /* Should never happen */
+      /* Should never happen, except in windowed mode */
       //Log("All resolutions available.");
       modes->push_back("1280 X 1024");
       modes->push_back("1600 X 1200");
