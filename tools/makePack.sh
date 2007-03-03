@@ -33,8 +33,6 @@ xargs echo |
 tr " " "|"
 )`
 
-echo $FILTER
-
 cat "$WEBLEVELFILE" |
 grep -E "^<level[ ]*level_id=" |
 sed -e s+"^<level[ ]*level_id=\"\([^\"]*\)\" .* url=\"[^\"]*[^/\"]*/\([^/\"]*.lvl\)\".*"+"\\1 \\2"+ |
