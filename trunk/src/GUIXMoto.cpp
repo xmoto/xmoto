@@ -194,9 +194,9 @@ void UIPackTree::addPack(LevelsPack* i_levelsPack,
     /* the categorie doesn't exist, add the categorie and the entry */
     c = addEntry(i_categorie);
     c->bUseOwnProperties  = true;
-    c->ownTextColor       = MAKE_COLOR(220,150,50,255);
-    c->ownSelectedColor   = MAKE_COLOR(50,50,70,255);
-    c->ownUnSelectedColor = MAKE_COLOR(50,50,70,255);
+    c->ownTextColor       = MAKE_COLOR(207,204,71,255);
+    c->ownSelectedColor   = MAKE_COLOR(4,0,87,255);
+    c->ownUnSelectedColor = MAKE_COLOR(4,0,87,255);
     c->ownXOffset         = 30;
     c->ownYOffset         = 2;
     p = addEntry(i_levelsPack->Name(), i_levelsPack);
