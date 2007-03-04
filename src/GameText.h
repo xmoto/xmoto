@@ -78,8 +78,10 @@ Central place to keep many in-game text strings
                                         "Additional Programming:Eric Piel;" \
                                         ":Christoph Sommer;" \
                                         ":Frederic Huard;" \
+                                        ":Brice Goglin;" \
                                         ":;" \
                                         "Graphics:Rasmus Neckelmann;" \
+                                        ":Jens Erler;" \
                                         ":;" \
                                         "Audio:Jens Erler;" \
                                         ":Brandon Ross;" \
