@@ -157,6 +157,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
                  m_bTestThemeMode = false;
                  m_pReplay = NULL;
 		 m_updateAutomaticallyLevels = false;
+		 m_reloadingLevelsUser = false;
 #if defined(ALLOW_GHOST)
      m_pGhostReplay = NULL;
      m_lastGhostReplay = "";
@@ -310,6 +311,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       std::string m_playingMusic; /* name of the music played to not restart it if the same must be played on an action */
 
       bool m_b50FpsMode;
+      bool m_reloadingLevelsUser;
       
       Replay *m_pReplay;
 #if defined(ALLOW_GHOST) 
