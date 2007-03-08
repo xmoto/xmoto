@@ -188,6 +188,8 @@ Central place to keep many in-game text strings
 #define GAMETEXT_GENERAL              _("General")
 #define GAMETEXT_GENERALINFO          _("General Info")
 #define GAMETEXT_GETSELECTEDTHEME     _("Get this theme")
+#define GAMETEXT_GHOST_LOCAL          _("Local best")
+#define GAMETEXT_GHOST_BEST           _("Your best")
 #define GAMETEXT_GHOST_STRATEGIES_TYPE  _("Type")
 #define GAMETEXT_GHOST_STRATEGY_BESTOFROOM _("The highscore of the room")
 #define GAMETEXT_GHOST_STRATEGY_MYBEST  _("The best of my replays (on this computer)")

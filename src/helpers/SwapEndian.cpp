@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <algorithm>
 
-using vapp::SerializedBikeState;
 typedef unsigned char byte;
 
 static short  ShortSwap   (short s);

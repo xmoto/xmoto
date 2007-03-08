@@ -37,6 +37,98 @@ namespace vapp {
   /* CRY! */
   extern InputHandler *m_pActiveInputHandler;
   
+GameApp::~GameApp() {
+}
+
+GameApp::GameApp() {
+  m_pCredits = NULL;
+  m_bShowMiniMap=true;
+  m_bDebugMode=false;
+  m_bListLevels=false;
+  m_bListReplays=false;
+  m_bTimeDemo=false;
+  m_bShowFrameRate=false;
+  m_bEnableLevelCache=true;
+  m_bEnableMenuMusic=false;
+  m_bEnableInitZoom=true;
+  m_autoZoom = false;
+  m_autoUnZoom = false;
+  m_bAutoZoomInitialized = false;
+  m_bLockMotoGame = false;
+  m_bCleanCache=false;
+  m_bEnableDeathAnim=true;
+  m_pQuitMsgBox=NULL;
+  m_pNotifyMsgBox=NULL;
+  m_pInfoMsgBox=NULL;
+#if defined(SUPPORT_WEBACCESS)
+  m_pNewLevelsAvailIcon=NULL;
+  m_pWebConfEditor=NULL;
+  m_pWebConfMsgBox=NULL;
+#endif
+  m_pNewProfileMsgBox=NULL;
+  m_pDeleteProfileMsgBox=NULL;
+  m_pDeleteReplayMsgBox=NULL;
+  m_pSaveReplayMsgBox=NULL;
+  m_pReplaysWindow=NULL;
+  m_pLevelPacksWindow=NULL;
+  m_pStatsReport=NULL;
+  m_pLevelPackViewer=NULL;  
+  m_pActiveLevelPack=NULL;
+  m_pGameInfoWindow=NULL;
+  m_fFrameTime = 0;
+  m_fFPS_Rate = 0;
+  m_b50FpsMode = false;
+  m_bUglyMode = false;
+  m_bTestThemeMode = false;
+  m_pReplay = NULL;
+  m_updateAutomaticallyLevels = false;
+  m_reloadingLevelsUser = false;
+
+  GhostSearchStrategies[0] = GHOST_STRATEGY_MYBEST;
+  GhostSearchStrategies[1] = GHOST_STRATEGY_THEBEST;
+  GhostSearchStrategies[2] = GHOST_STRATEGY_BESTOFROOM;
+  m_bEnableGhost = true;
+  m_bShowGhostTimeDiff = true;
+  m_GhostSearchStrategy = GHOST_STRATEGY_MYBEST;
+  m_bEnableGhostInfo = false;
+  m_bGhostMotionBlur = true;
+
+  m_bAutosaveHighscoreReplays = true;
+  m_bRecordReplays = true;
+  m_bShowCursor = true;
+  m_bEnableEngineSound = true;
+  m_bCompressReplays = true;
+  m_bBenchmark = false;
+  m_bEnableContextHelp = true;     
+  m_bDisplayInfosReplay = false;
+  
+#if defined(SUPPORT_WEBACCESS)
+  m_bShowWebHighscoreInGame = false;
+  m_bEnableWebHighscores = true;
+  m_pWebHighscores = NULL;
+  m_pWebLevels = NULL;
+  m_pWebRooms = NULL;
+  m_fDownloadTaskProgressLast = 0;
+  m_bWebHighscoresUpdatedThisSession = false;
+  m_bWebLevelsToDownload = false;
+  
+  m_bEnableCheckNewLevelsAtStartup  = true;
+  m_bEnableCheckHighscoresAtStartup = true;
+  
+  m_MotoGame.setHooks(&m_MotoGameHooks);
+  m_MotoGameHooks.setGameApps(this, &m_MotoGame);
+#endif
+  m_fLastSqueekTime = 0.0f;
+  
+  m_Renderer.setTheme(getTheme());
+  m_MotoGame.setRenderer(&m_Renderer);
+  
+  m_bPrePlayAnim = true;
+  m_bShowEngineCounter = true;
+  
+  m_currentPlayingList = NULL;
+}
+    
   std::string GameApp::splitText(const std::string &str, int p_breakLineLength) {
     std::string v_res = "";
     char c[2] = {' ', '\0'};    
@@ -169,7 +261,7 @@ namespace vapp {
             else {    
               /* Init level */    
               m_InputHandler.resetScriptKeyHooks();                                   
-              m_MotoGame.prePlayLevel(NULL, pLevelSrc, NULL, true);
+              m_MotoGame.prePlayLevel(pLevelSrc, NULL, true);
               m_nFrame = 0;
               m_Renderer.prepareForNewLevel(bCreditsMode);            
 	      v_newMusicPlaying = pLevelSrc->Music();
@@ -243,7 +335,7 @@ namespace vapp {
 				
 	try {
 	  pLevelSrc = &(m_levelsManager.LevelById(m_PlaySpecificLevel));
-	  m_MotoGame.playLevel(m_pGhostReplay, pLevelSrc, false);
+	  m_MotoGame.playLevel(pLevelSrc, false);
           m_State = GS_PLAYING;        
           m_nFrame = 0;
 	  v_newMusicPlaying = pLevelSrc->Music();
@@ -490,7 +582,6 @@ namespace vapp {
     Replay::enableCompression(m_bCompressReplays);
     m_bAutosaveHighscoreReplays = m_Config.getBool("AutosaveHighscoreReplays");
 
-#if defined(ALLOW_GHOST)
     /* ghost */
     m_bEnableGhost        = m_Config.getBool("EnableGhost");
     m_bShowGhostTimeDiff  = m_Config.getBool("ShowGhostTimeDiff");
@@ -498,7 +589,6 @@ namespace vapp {
     m_GhostSearchStrategy = (enum GhostSearchStrategy) m_Config.getInteger("GhostSearchStrategy");
     m_bGhostMotionBlur = m_Config.getBool("GhostMotionBlur");
     m_Renderer.setGhostMotionBlur( m_bGhostMotionBlur );
-#endif
 
 #if defined(SUPPORT_WEBACCESS)
     m_bEnableWebHighscores = m_Config.getBool("WebHighscores") && isNoWWW()== false;
@@ -611,10 +701,6 @@ namespace vapp {
 	  delete m_pReplay;
 	  m_pReplay = NULL;
 	}
-	if(m_pGhostReplay != NULL) {
-	  delete m_pGhostReplay;
-	  m_pGhostReplay = NULL;
-	}
 
 	_SimpleMessage(GAMETEXT_RELOADINGLEVELS, &m_InfoMsgBoxRect);
 	m_reloadingLevelsUser = true;
@@ -695,10 +781,6 @@ namespace vapp {
         m_Renderer.hideMsgNewHighscore();
               m_pBestTimes->showWindow(false);
               m_pJustDeadMenu->showWindow(false);
-#if defined(ALLOW_GHOST) 
-        /* hide ghost */
-        m_MotoGame.setGhostActive(false);
-#endif 
               m_MotoGame.endLevel();
               m_InputHandler.resetScriptKeyHooks();                         
               m_Renderer.unprepareForNewLevel();
@@ -1235,10 +1317,6 @@ namespace vapp {
     /* Update stats */        
     m_GameStats.levelRestarted(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->Id(),m_MotoGame.getLevelSrc()->Name(),m_MotoGame.getTime());
   
-#if defined(ALLOW_GHOST) 
-    /* hide ghost */
-    m_MotoGame.setGhostActive(false);
-#endif
     m_MotoGame.endLevel();
 
     m_InputHandler.resetScriptKeyHooks();           
@@ -1445,7 +1523,6 @@ namespace vapp {
     return m_levelsManager.LevelById(p_pReplay->getLevelId()).isScripted();
   }
 
-#if defined(ALLOW_GHOST)
   std::string GameApp::_getGhostReplayPath_bestOfThePlayer(std::string p_levelId, float &p_time) {
     std::vector<ReplayInfo *> *Replays = m_ReplayList.findReplays(m_pPlayer->PlayerName,
                   p_levelId);
@@ -1577,7 +1654,6 @@ namespace vapp {
 
     return res;
   }
-#endif    
 
 #if defined(SUPPORT_WEBACCESS) 
   void GameApp::_UploadHighscore(std::string p_replayname) {
@@ -1664,151 +1740,90 @@ namespace vapp {
       char cBuf[256];
       sprintf(cBuf,GAMETEXT_NEWERXMOTOREQUIRED,pLevelSrc->getRequiredVersion().c_str());
       setState(m_StateAfterPlaying);
-      notifyMsg(cBuf);                        
+      notifyMsg(cBuf);     
+      return;
     }
-    else {
-#if defined(ALLOW_GHOST)
-      m_MotoGame.setGhostActive(false);
 
-      /* Ghost replay */
-      if(m_bEnableGhost) {
-  std::string v_PlayGhostReplay;
-  v_PlayGhostReplay = _getGhostReplayPath(pLevelSrc->Id(),  m_GhostSearchStrategy);
-    
-  if(v_PlayGhostReplay == "") {
-    if(m_pGhostReplay != NULL) {
-      delete m_pGhostReplay;
-      m_pGhostReplay = NULL;
-    }
-  } else {
-    std::string v_GhostReplayPlayerName;
-    float v_ghostReplayFrameRate;
-    std::string GhostLevelID;
+    /* Start playing right away */     
+    m_InputHandler.resetScriptKeyHooks();
+    if(pLevelSrc != NULL) {
+      if(m_pReplay != NULL) delete m_pReplay;
+      m_pReplay = NULL;
       
-    /* hope the man will not replace the existing replay */
-    /* i want just to be sure that levelid is the same */
-    String v_levelIdInGhost = "";
-    if(m_pGhostReplay != NULL) {
-      v_levelIdInGhost = m_pGhostReplay->getLevelId();
-    }
-
-    if(m_lastGhostReplay != v_PlayGhostReplay || 
-       v_levelIdInGhost != pLevelSrc->Id()) {
-        
-      if(m_pGhostReplay != NULL) delete m_pGhostReplay;
-      m_pGhostReplay = new Replay;
-        
+      if(m_bRecordReplays) {
+	m_pReplay = new Replay;
+	m_pReplay->createReplay("Latest.rpl",pLevelSrc->Id(),m_pPlayer->PlayerName,m_fReplayFrameRate,sizeof(SerializedBikeState));
+      }
+      
       try {
-        GhostLevelID = m_pGhostReplay->openReplay(v_PlayGhostReplay,&v_ghostReplayFrameRate,v_GhostReplayPlayerName);
-        if(GhostLevelID != "") {
-    m_lastGhostReplay = v_PlayGhostReplay;
-    m_Renderer.setGhostReplay(m_pGhostReplay);
-        } else {
-    /* bad replay */
-    delete m_pGhostReplay;
-    m_pGhostReplay = NULL;
-        }
+	m_MotoGame.prePlayLevel(pLevelSrc, m_pReplay, false);
+
+	/* add the ghosts */
+	if(m_bEnableGhost) {
+	  std::string v_PlayGhostReplay;
+	  
+	  v_PlayGhostReplay = _getGhostReplayPath(pLevelSrc->Id(), m_GhostSearchStrategy);
+	  if(v_PlayGhostReplay != "") {
+	    try {
+	      switch(m_GhostSearchStrategy) {
+	      case GHOST_STRATEGY_MYBEST:
+		m_MotoGame.addGhostFromFile(v_PlayGhostReplay, GAMETEXT_GHOST_BEST);
+		break;
+	      case GHOST_STRATEGY_THEBEST:
+		m_MotoGame.addGhostFromFile(v_PlayGhostReplay, GAMETEXT_GHOST_LOCAL);
+		break;
+#if defined(SUPPORT_WEBACCESS) 
+	      case GHOST_STRATEGY_BESTOFROOM:
+		m_MotoGame.addGhostFromFile(v_PlayGhostReplay, m_pWebHighscores->getRoomName());
+		break;
+#endif
+	      }
+	    } catch(Exception &e) {
+	      /* can't add the ghost, anyway */
+	    }
+	  }
+	}
       } catch(Exception &e) {
-        /* bad replay */
-        delete m_pGhostReplay;
-        m_pGhostReplay = NULL;
-      }        
-
-    } else {
-      /* if last ghost loaded has the same filename, don't reload it */
-      GhostLevelID = pLevelSrc->Id();
-      m_pGhostReplay->reinitialize();
-    }
+	Log(std::string("** Warning ** : failed to initialize level\n" + e.getMsg()).c_str());
+	setState(m_StateAfterPlaying);
+	notifyMsg(splitText(e.getMsg(), 50));
+	return;
+      }
       
-    if(GhostLevelID != "") {
-      m_nGhostFrame = 0;
-      m_MotoGame.setGhostActive(true);
-      /* read first state */
-      static SerializedBikeState GhostBikeState;
-      m_pGhostReplay->peekState(GhostBikeState);
-      m_MotoGame.UpdateGhostFromReplay(&GhostBikeState);
-      /* ghost info */
-      if(m_bEnableGhostInfo) {
-        switch(m_GhostSearchStrategy) {
-        case GHOST_STRATEGY_MYBEST:
-    m_Renderer.setGhostReplayDesc("Your best");
-    break;
-        case GHOST_STRATEGY_THEBEST:
-    m_Renderer.setGhostReplayDesc("Local best");
-    break;
-#if defined(SUPPORT_WEBACCESS) 
-        case GHOST_STRATEGY_BESTOFROOM:
-    m_Renderer.setGhostReplayDesc(m_pWebHighscores->getRoomName() );
-    break;
-#endif
-        default:
-    m_Renderer.setGhostReplayDesc("");
-        }
+      if(!m_MotoGame.isInitOK()) {
+	Log("** Warning ** : failed to initialize level");
+	setState(m_StateAfterPlaying);
+	notifyMsg(GAMETEXT_FAILEDTOINITLEVEL);
+	return;
       }
-      else
-        m_Renderer.setGhostReplayDesc("");
-    } else {
-      /* bad replay */
     }
-  }
-      }
-#endif
-      /* Start playing right away */     
-      m_InputHandler.resetScriptKeyHooks();
-      if(pLevelSrc != NULL) {
-  if(m_pReplay != NULL) delete m_pReplay;
-  m_pReplay = NULL;
+    m_State = GS_PREPLAYING;
     
-  if(m_bRecordReplays) {
-    m_pReplay = new Replay;
-    m_pReplay->createReplay("Latest.rpl",pLevelSrc->Id(),m_pPlayer->PlayerName,m_fReplayFrameRate,sizeof(SerializedBikeState));
-  }
-
-  try {
-    m_MotoGame.prePlayLevel(m_pGhostReplay, pLevelSrc, m_pReplay, false);
-  } catch(Exception &e) {
-    Log(std::string("** Warning ** : failed to initialize level\n" + e.getMsg()).c_str());
-    setState(m_StateAfterPlaying);
-    notifyMsg(splitText(e.getMsg(), 50));
-    return;
-  }
-
-  if(!m_MotoGame.isInitOK()) {
-    Log("** Warning ** : failed to initialize level");
-    setState(m_StateAfterPlaying);
-    notifyMsg(GAMETEXT_FAILEDTOINITLEVEL);
-    return;
-  }
-      }
-      m_State = GS_PREPLAYING;
-
-      PlayerTimeEntry *pBestTime = m_Profiles.getBestTime(m_PlaySpecificLevel);
-      PlayerTimeEntry *pBestPTime = m_Profiles.getBestPlayerTime(m_pPlayer->PlayerName,m_PlaySpecificLevel);
-  
-      std::string T1 = "--:--:--",T2 = "--:--:--";
-      if(pBestTime != NULL)
-      T1 = formatTime(pBestTime->fFinishTime);
-      if(pBestPTime != NULL)
-      T2 = formatTime(pBestPTime->fFinishTime);
-  
-      m_Renderer.setBestTime(T1 + std::string(" / ") + T2);
-      m_Renderer.hideReplayHelp();
-  
-      /* World-record stuff */
+    PlayerTimeEntry *pBestTime = m_Profiles.getBestTime(m_PlaySpecificLevel);
+    PlayerTimeEntry *pBestPTime = m_Profiles.getBestPlayerTime(m_pPlayer->PlayerName,m_PlaySpecificLevel);
+    
+    std::string T1 = "--:--:--",T2 = "--:--:--";
+    if(pBestTime != NULL)
+    T1 = formatTime(pBestTime->fFinishTime);
+    if(pBestPTime != NULL)
+    T2 = formatTime(pBestPTime->fFinishTime);
+    
+    m_Renderer.setBestTime(T1 + std::string(" / ") + T2);
+    m_Renderer.hideReplayHelp();
+    
+    /* World-record stuff */
 #if defined(SUPPORT_WEBACCESS) 
-      _UpdateWorldRecord(m_PlaySpecificLevel);
+    _UpdateWorldRecord(m_PlaySpecificLevel);
 #endif
-      /* Prepare level */
-      m_Renderer.prepareForNewLevel();
-      prestartAnimation_init();
-    }
-
+    /* Prepare level */
+    m_Renderer.prepareForNewLevel();
+    prestartAnimation_init();
   }
-
+  
   void GameApp::statePrestart_step() {
     prestartAnimation_step();
   }
-
+  
   void GameApp::zoomAnimation1_init() {
     m_fPrePlayStartTime = getRealTime();
     m_fPrePlayStartInitZoom = m_Renderer.getCurrentZoom();  // because the man can change ugly mode while the animation

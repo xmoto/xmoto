@@ -63,6 +63,16 @@ namespace vapp {
   };
 }
 
+namespace vapp {
+class MotoGameEvent;
+
+struct RecordedGameEvent {
+  vapp::MotoGameEvent *Event;     /* Event itself */
+  bool bPassed;                   /* Whether we have passed it */
+};
+
+}
+
 #include "MotoGame.h"
 
 namespace vapp {

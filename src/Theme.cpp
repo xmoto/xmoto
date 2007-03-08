@@ -101,7 +101,6 @@ Theme::Theme() {
           THEME_PLAYER_UGLYWHEELCOLOR
           );
 
-#if defined(ALLOW_GHOST)
   m_ghost = new BikerTheme(this,
          THEME_GHOST_BODY,
          THEME_GHOST_FRONT,
@@ -115,7 +114,6 @@ Theme::Theme() {
          THEME_GHOST_UGLYRIDERCOLOR,
          THEME_GHOST_UGLYWHEELCOLOR
          );
-#endif
 }
 
 Theme::~Theme() {
@@ -585,11 +583,9 @@ BikerTheme* Theme::getPlayerTheme() {
   return m_player;
 }
 
-#if defined(ALLOW_GHOST)
 BikerTheme* Theme::getGhostTheme() {
   return m_ghost;
 }
-#endif
 
 Sprite::Sprite(Theme* p_associated_theme, std::string v_name) {
   m_associated_theme = p_associated_theme;

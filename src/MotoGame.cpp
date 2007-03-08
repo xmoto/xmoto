@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Sound.h"
 #include "PhysSettings.h"
 #include "xmscene/Entity.h"
+#include "GameEvents.h"
 
 namespace vapp {
 
@@ -132,10 +133,9 @@ namespace vapp {
     m_bDeathAnimEnabled=true;
     clearStates();
     m_lastCallToEveryHundreath = 0.0;
-#if defined(ALLOW_GHOST)
+
     m_showGhostTimeDiff = true;
-    m_isGhostActive = false;
-#endif
+
     m_renderer      = NULL;
     m_isScriptActiv = false;
     m_bIsAReplay    = false;
@@ -149,7 +149,15 @@ namespace vapp {
   }
   
   MotoGame::~MotoGame() {
+    cleanGhosts();
   }  
+
+void MotoGame::cleanGhosts() {
+  for(unsigned int i=0; i<m_ghosts.size(); i++) {
+    delete m_ghosts[i];
+  }
+  m_ghosts.clear();
+}
 
   void MotoGame::setHooks(MotoGameHooks *i_motoGameHooks) {
     m_motoGameHooks = i_motoGameHooks;
@@ -343,6 +351,10 @@ namespace vapp {
     }
 
     getLevelSrc()->updateToTime(*this);
+    for(unsigned int i=0; i<m_ghosts.size(); i++) {
+      m_ghosts[i]->updateToTime(getTime());
+    }
+
     updateGameMessages();
     
     /* Increase time */
@@ -564,9 +576,6 @@ namespace vapp {
     Prepare the specified level for playing through this game object
     ===========================================================================*/
   void MotoGame::prePlayLevel(
-#if defined(ALLOW_GHOST)    
-         Replay *m_pGhostReplay,
-#endif
          Level *pLevelSrc,
          Replay *recordingReplay,
          bool bIsAReplay) {
@@ -740,15 +749,8 @@ namespace vapp {
       }
     }
 
-#if defined(ALLOW_GHOST)
-	   m_myLastStrawberries.clear();
-	   m_ghostLastStrawberries.clear();
-	   m_myDiffOfGhost = 0.0;
-	   
-	   if(m_pGhostReplay != NULL) {
-	     InitGhostLastStrawberries(m_pGhostReplay);
-	   }
-#endif
+    cleanGhosts();
+    m_myLastStrawberries.clear();
 
     /* add the debris particlesSource */
     ParticlesSource *v_debris = new ParticlesSourceDebris("BikeDebris");
@@ -768,10 +770,21 @@ namespace vapp {
 
   }
 
+  void MotoGame::addGhostFromFile(std::string i_ghostFile, std::string i_info) {
+    /* the level must be set to add a ghost */
+    if(m_pLevelSrc != NULL) {
+      Ghost* v_ghost = new Ghost(i_ghostFile);
+      v_ghost->setInfo(i_info);
+      v_ghost->initLastToTakeEntities(m_pLevelSrc);
+      m_ghosts.push_back(v_ghost);
+    }
+  }
+
+  std::vector<Ghost *>& MotoGame::Ghosts() {
+    return m_ghosts;
+  }
+
   void MotoGame::playLevel(
-#if defined(ALLOW_GHOST)    
-         Replay *m_pGhostReplay,
-#endif
          Level *pLevelSrc,
          bool bIsAReplay) {
   }
@@ -807,6 +820,8 @@ namespace vapp {
 
     /* clean event queue */
     cleanEventsQueue();
+
+    cleanGhosts();
   }
 
   /*===========================================================================
@@ -1159,13 +1174,14 @@ namespace vapp {
     if(pEntity->IsToTake()) {
       /* OH... nice */
       createGameEvent(new MGE_EntityDestroyed(getTime(), pEntity->Id(), pEntity->Speciality(), pEntity->DynamicPosition(), pEntity->Size()));
-#if defined(ALLOW_GHOST)
-      if(isGhostActive() && m_showGhostTimeDiff) {
-	m_myLastStrawberries.push_back(getTime());
-	UpdateDiffFromGhost();
-	DisplayDiffFromGhost();
+
+      m_myLastStrawberries.push_back(getTime());
+
+      for(unsigned int i=0; i<m_ghosts.size(); i++) {
+	m_ghosts[i]->updateDiffToPlayer(m_myLastStrawberries);
       }
-#endif
+      DisplayDiffFromGhost();
+
     }
   }
 
@@ -1343,54 +1359,24 @@ namespace vapp {
     m_Collision.moveDynBlock(&v_block);
   }     
   
-#if defined(ALLOW_GHOST) 
-  void MotoGame::UpdateGhostFromReplay(SerializedBikeState *pReplayState) {
-    _UpdateStateFromReplay(pReplayState, &m_GhostBikeS);
-  }
-
-  void MotoGame::UpdateDiffFromGhost() {
-    int v_myDiffOfGhostLastStrawberry;
-    
-    /* no strawberry, no update */
-    if(m_myLastStrawberries.size() == 0) {
-      return;
-    }
-    
-    v_myDiffOfGhostLastStrawberry = m_myLastStrawberries.size();
-    
-    /* the ghost did not get this number of strawberries */
-    if(m_ghostLastStrawberries.size() < v_myDiffOfGhostLastStrawberry) {
-      return;
-    }
-    
-    m_myDiffOfGhost = m_myLastStrawberries   [v_myDiffOfGhostLastStrawberry-1]
-                    - m_ghostLastStrawberries[v_myDiffOfGhostLastStrawberry-1];
-  }
-  
   void MotoGame::DisplayDiffFromGhost() {
-    char msg[256];
-    sprintf(msg, "%+.2f", m_myDiffOfGhost);
-    this->gameMessage(msg,true);
-  }
-  
-  void MotoGame::InitGhostLastStrawberries(Replay *p_ghostReplay) {
-    std::vector<RecordedGameEvent *> *v_replayEvents;
-    v_replayEvents = p_ghostReplay->getEvents();
-    
-    /* Start looking for events */
-    for(int i=0;i<v_replayEvents->size();i++) {
-      MotoGameEvent *v_event = (*v_replayEvents)[i]->Event;
-      
-      if(v_event->getType() == GAME_EVENT_ENTITY_DESTROYED) {
-	if(getLevelSrc()->getEntityById(((MGE_EntityDestroyed*)v_event)->EntityId()).IsToTake()) {
-	  /* new Strawberry for ghost */
-	  m_ghostLastStrawberries.push_back((*v_replayEvents)[i]->Event->getEventTime());
+    if(m_ghosts.size() > 0) {
+      float v_diffToGhost;
+
+      /* take the more */
+      v_diffToGhost = m_ghosts[0]->diffToPlayer();
+      for(unsigned int i=1; i<m_ghosts.size(); i++) {
+	if(m_ghosts[i]->diffToPlayer() > v_diffToGhost) {
+	  v_diffToGhost = m_ghosts[i]->diffToPlayer();
 	}
       }
+
+      char msg[256];
+      sprintf(msg, "%+.2f", v_diffToGhost);
+      this->gameMessage(msg,true);
     }
   }
-#endif
-
+  
   void MotoGame::cleanScriptDynamicObjects() {
     for(int i=0; i<m_SDynamicObjects.size(); i++) {
       delete m_SDynamicObjects[i];
