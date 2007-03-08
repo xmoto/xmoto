@@ -1,3 +1,6 @@
+X-Moto 0.2.7 2007-
+ * ghost in the replay
+
 X-Moto 0.2.6 2007-03-03
  * performances improved (better framerate)
  * SDL-GFX rendering in option (instead of OpenGL, beta code, 16 bpp only)
