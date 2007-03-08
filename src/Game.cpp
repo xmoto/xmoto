@@ -262,6 +262,35 @@ GameApp::GameApp() {
               /* Init level */    
               m_InputHandler.resetScriptKeyHooks();                                   
               m_MotoGame.prePlayLevel(pLevelSrc, NULL, true);
+
+	      /* add the ghosts */
+	      if(m_bEnableGhost) {
+		std::string v_PlayGhostReplay;
+		// add the GhostSearchStrategy ghost
+		v_PlayGhostReplay = _getGhostReplayPath(pLevelSrc->Id(), m_GhostSearchStrategy);
+		if(v_PlayGhostReplay != "") {
+		  try {
+		    switch(m_GhostSearchStrategy) {
+		    case GHOST_STRATEGY_MYBEST:
+		      m_MotoGame.addGhostFromFile(v_PlayGhostReplay, GAMETEXT_GHOST_BEST);
+		      break;
+		    case GHOST_STRATEGY_THEBEST:
+		      m_MotoGame.addGhostFromFile(v_PlayGhostReplay, GAMETEXT_GHOST_LOCAL);
+		      break;
+#if defined(SUPPORT_WEBACCESS) 
+		    case GHOST_STRATEGY_BESTOFROOM:
+		      m_MotoGame.addGhostFromFile(v_PlayGhostReplay, m_pWebHighscores->getRoomName());
+		      break;
+#endif
+		    }
+		  } catch(Exception &e) {
+		    /* can't add the ghost, anyway */
+		  }
+		}
+	      }
+	      /* *** */
+
+
               m_nFrame = 0;
               m_Renderer.prepareForNewLevel(bCreditsMode);            
 	      v_newMusicPlaying = pLevelSrc->Music();
@@ -1762,6 +1791,7 @@ GameApp::GameApp() {
 	if(m_bEnableGhost) {
 	  std::string v_PlayGhostReplay;
 	  
+	  // add the GhostSearchStrategy ghost
 	  v_PlayGhostReplay = _getGhostReplayPath(pLevelSrc->Id(), m_GhostSearchStrategy);
 	  if(v_PlayGhostReplay != "") {
 	    try {
@@ -1782,6 +1812,7 @@ GameApp::GameApp() {
 	      /* can't add the ghost, anyway */
 	    }
 	  }
+
 	}
       } catch(Exception &e) {
 	Log(std::string("** Warning ** : failed to initialize level\n" + e.getMsg()).c_str());
