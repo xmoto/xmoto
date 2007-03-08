@@ -597,7 +597,7 @@ namespace vapp {
         }
         
         if(m_nGhostInfoTrans > 0) {
-          _RenderInGameText(v_ghost->getState()->CenterP + Vector2f(0,-1.5f),
+          _RenderInGameText(v_ghost->getState()->CenterP + Vector2f(i*3.0,-1.5f),
 			    v_ghost->getDescription(),
 			    MAKE_COLOR(255,255,255,m_nGhostInfoTrans));
         }

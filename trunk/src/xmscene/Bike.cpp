@@ -149,6 +149,13 @@ void Ghost::updateToTime(float i_time) {
   static SerializedBikeState previousGhostBikeState;
     
   m_replay->peekState(previousGhostBikeState);
+
+  /* back in the past */
+  if(i_time < previousGhostBikeState.fGameTime) {
+    m_replay->fastrewind(previousGhostBikeState.fGameTime - i_time);
+    m_replay->peekState(previousGhostBikeState);
+  }
+
   if(previousGhostBikeState.fGameTime < i_time && m_replay->endOfFile() == false) {
     do {
       m_replay->loadState(GhostBikeState);

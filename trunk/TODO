@@ -1,6 +1,5 @@
 
-- ghost pour les replays
-- configuration du multighost
+- ghost for replays : a small offset : you can see it if the replay = the ghost
 
 * BUG
 [21:33] <jj> the smoke is not always rendered at the sides of the screen
