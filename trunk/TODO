@@ -1,4 +1,15 @@
 
+- ghost pour les replays
+- configuration du multighost
+
+* BUG
+[21:33] <jj> the smoke is not always rendered at the sides of the screen
+[21:33] <jj> so if I drive towards smoke, I don't see it at first, where I should see it
+[21:33] <jj> and then it suddenly appears
+[21:34] <jj> same when you drive away from smoke:
+[21:35] <jj> it suddenly dissapears just a little before it goes out the screen
+[21:35] <jj> #666 satan's challenge is a good level to see this
+
 * pack : last highscores
 * pack : last levels
 

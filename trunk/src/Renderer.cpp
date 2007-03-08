@@ -50,25 +50,8 @@ namespace vapp {
 
     m_screenBBox.reset();
 
-    #if defined(ALLOW_GHOST)
-      /* Set initial ghost information position */
-      if(getGameObject()->isGhostActive() && !bCreditsMode) {
-        m_GhostInfoPos = getGameObject()->getGhostBikeState()->CenterP + Vector2f(0,-1.5f);
-        m_GhostInfoVel = Vector2f(0,0);
-
-        m_fNextGhostInfoUpdate = 0.0f;
-        m_nGhostInfoTrans = 255;
-        
-        if(m_pGhostReplay != NULL) {
-          m_GhostInfoString = std::string(GAMETEXT_GHOSTOF) + " " + m_pGhostReplay->getPlayerName() +
-                              std::string("\n(") + m_ReplayDesc + std::string(")") +
-                              std::string("\n(") + getParent()->formatTime(m_pGhostReplay->getFinishTime()) + std::string(")");
-        }
-        
-        if(m_ReplayDesc == "")
-          m_nGhostInfoTrans = 0;
-      }
-    #endif
+    m_fNextGhostInfoUpdate = 0.0f;
+    m_nGhostInfoTrans      = 255;
         
     /* Optimize scene */
     std::vector<Block *> Blocks = getGameObject()->getLevelSrc()->Blocks();
@@ -418,14 +401,14 @@ namespace vapp {
 		     LEVEL_TO_SCREEN_Y(pGame->getBikeState()->CenterP.y));
     getParent()->getDrawLib()->drawCircle(bikePos, 3, 0, MAKE_COLOR(255,255,255,255), 0);
     
-#if defined(ALLOW_GHOST)
     /* Render ghost position too? */
-    if(getGameObject()->isGhostActive()) {
-      Vector2f ghostPos(LEVEL_TO_SCREEN_X(pGame->getGhostBikeState()->CenterP.x),
-			LEVEL_TO_SCREEN_Y(pGame->getGhostBikeState()->CenterP.y));
+    for(unsigned int i=0; i<getGameObject()->Ghosts().size(); i++) {
+      Ghost* v_ghost = getGameObject()->Ghosts()[i];
+
+      Vector2f ghostPos(LEVEL_TO_SCREEN_X(v_ghost->getState()->CenterP.x),
+			LEVEL_TO_SCREEN_Y(v_ghost->getState()->CenterP.y));
       getParent()->getDrawLib()->drawCircle(ghostPos, 3, 0, MAKE_COLOR(96,96,150,255), 0);
     }
-#endif
 
     /* FIX::display only visible entities */
     std::vector<Entity*> Entities = pGame->getCollisionHandler()->getEntitiesNearPosition(mapBBox);
@@ -594,19 +577,19 @@ namespace vapp {
     /* ... then render "middleground" sprites ... */
     _RenderSprites(false,false);
     
-#if defined(ALLOW_GHOST)
-    if(getGameObject()->isGhostActive()) {
+    for(unsigned int i=0; i<getGameObject()->Ghosts().size(); i++) {
+      Ghost* v_ghost = getGameObject()->Ghosts()[i];
+
       /* Render ghost - ugly mode? */
       if(m_bUglyMode) {
-        _RenderBike(getGameObject()->getGhostBikeState(), &(getGameObject()->getBikeState()->Parameters()), m_theme->getGhostTheme());
-      }    
-      else {
+        _RenderBike(v_ghost->getState(), &(v_ghost->getState()->Parameters()), m_theme->getGhostTheme());
+      } else {
         /* No not ugly, fancy! Render into overlay? */      
         if(m_bGhostMotionBlur && getParent()->getDrawLib()->useFBOs()) {
           m_Overlay.beginRendering();
           m_Overlay.fade(0.15);
         }
-        _RenderBike(getGameObject()->getGhostBikeState(), &(getGameObject()->getBikeState()->Parameters()), m_theme->getGhostTheme());
+	_RenderBike(v_ghost->getState(), &(v_ghost->getState()->Parameters()), m_theme->getGhostTheme());
         
         if(m_bGhostMotionBlur && getParent()->getDrawLib()->useFBOs()) {
           m_Overlay.endRendering();
@@ -614,25 +597,21 @@ namespace vapp {
         }
         
         if(m_nGhostInfoTrans > 0) {
-          _RenderInGameText(m_GhostInfoPos,m_GhostInfoString,MAKE_COLOR(255,255,255,m_nGhostInfoTrans));
-          if(getGameObject()->getTime() > m_fNextGhostInfoUpdate) {
-            if(getGameObject()->getTime() - m_fNextGhostInfoUpdate > 0.05f) {
-              if(getGameObject()->getTime() > 3.0f) m_nGhostInfoTrans=0;
-              
-              m_GhostInfoPos = getGameObject()->getGhostBikeState()->CenterP + Vector2f(0,-1.5);
-            }
-            else {
-              if(getGameObject()->getTime() > 3.0f) m_nGhostInfoTrans-=16;
-              
-              m_GhostInfoVel = ((getGameObject()->getGhostBikeState()->CenterP + Vector2f(0,-1.5)) - m_GhostInfoPos) * 0.2f;
-              m_GhostInfoPos += m_GhostInfoVel;
-            }
-            m_fNextGhostInfoUpdate = getGameObject()->getTime() + 0.025f;        
-          }
-        }      
+          _RenderInGameText(v_ghost->getState()->CenterP + Vector2f(0,-1.5f),
+			    v_ghost->getDescription(),
+			    MAKE_COLOR(255,255,255,m_nGhostInfoTrans));
+        }
       }
     }
-#endif
+
+    if(getGameObject()->getTime() > m_fNextGhostInfoUpdate) {
+      if(m_nGhostInfoTrans > 0) {
+	if(m_fNextGhostInfoUpdate > 1.5f) {
+	  m_nGhostInfoTrans-=16;
+	}
+	m_fNextGhostInfoUpdate += 0.025f;
+      }
+    }
 
     /* ... followed by the bike ... */
     _RenderBike(getGameObject()->getBikeState(), &(getGameObject()->getBikeState()->Parameters()), m_theme->getPlayerTheme());

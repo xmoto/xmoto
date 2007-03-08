@@ -20,9 +20,9 @@ class SwapEndian {
   static double	BigDouble   (double d) {return _BigDouble(d);   }
   static double	LittleDouble(double d) {return _LittleDouble(d);}
   
-  static void   BigSerializedBikeState   (vapp::SerializedBikeState& sbs)
+  static void   BigSerializedBikeState   (SerializedBikeState& sbs)
     { _BigSerializedBikeState   (sbs); }
-  static void   LittleSerializedBikeState(vapp::SerializedBikeState& sbs)
+  static void   LittleSerializedBikeState(SerializedBikeState& sbs)
     { _LittleSerializedBikeState(sbs); }
   
 #ifdef XMOTO_LITTLE_ENDIAN
@@ -43,8 +43,8 @@ class SwapEndian {
   static float	(*_LittleFloat) (float 	f);
   static double	(*_BigDouble)   (double d);
   static double	(*_LittleDouble)(double d);
-  static void	(*_BigSerializedBikeState)   (vapp::SerializedBikeState& sbs);
-  static void	(*_LittleSerializedBikeState)(vapp::SerializedBikeState& sbs);
+  static void	(*_BigSerializedBikeState)   (SerializedBikeState& sbs);
+  static void	(*_LittleSerializedBikeState)(SerializedBikeState& sbs);
 };
 
 #endif /* __SWAPENDIAN_H__ */

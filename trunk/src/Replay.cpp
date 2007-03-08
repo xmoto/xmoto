@@ -190,7 +190,7 @@ namespace vapp {
         pfh = FS::openIFile(std::string("Replays/") + FileName + std::string(".rpl"));
         if(pfh == NULL) {    
           Log("** Warning ** : Failed to open replay file for input: %s",(std::string("Replays/") + FileName).c_str());
-          return "";
+          throw Exception("Unable to open the replay");
         }
       }
     }
@@ -205,14 +205,14 @@ namespace vapp {
     if(nVersion != 0 && nVersion != 1) {
       FS::closeFile(pfh);
       Log("** Warning ** : Unsupported replay file version (%d): %s",nVersion,(std::string("Replays/") + FileName).c_str());
-      return "";
+      throw Exception("Unable to open the replay");
     }
     else {
       /* Little/big endian safety check */
       if(FS::readInt_LE(pfh) != 0x12345678) {
         FS::closeFile(pfh);
         Log("** Warning ** : Sorry, the replay you're trying to open are not endian-compatible with your computer!");
-        return "";        
+        throw Exception("Unable to open the replay");        
       }
     
       /* Read level ID */
@@ -278,7 +278,7 @@ namespace vapp {
             FS::closeFile(pfh);
             _FreeReplay();
             Log("** Warning ** : Failed to uncompress events in replay: %s",FileName.c_str());
-            return "";
+            throw Exception("Unable to open the replay");
           }
           
           /* Clean up */
@@ -339,7 +339,7 @@ namespace vapp {
             FS::closeFile(pfh);
             _FreeReplay();
             Log("** Warning ** : Failed to uncompress chunk %d in replay: %s",i,FileName.c_str());
-            return "";
+            throw Exception("Unable to open the replay");
           }
           
           /* Clean up */

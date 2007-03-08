@@ -59,7 +59,6 @@ class WebThemes;
 #define THEME_PLAYER_UGLYRIDERCOLOR MAKE_COLOR(0,255,0,255)
 #define THEME_PLAYER_UGLYWHEELCOLOR MAKE_COLOR(255,0,0,255)
 
-#if defined(ALLOW_GHOST)
 #define THEME_GHOST_BODY     "GhostBikerBody"
 #define THEME_GHOST_FRONT    "GhostBikerFront"
 #define THEME_GHOST_REAR     "GhostBikerRear"
@@ -71,7 +70,6 @@ class WebThemes;
 #define THEME_GHOST_UPPERLEG "GhostUpperLeg"
 #define THEME_GHOST_UGLYRIDERCOLOR MAKE_COLOR(100,100,128,255)
 #define THEME_GHOST_UGLYWHEELCOLOR MAKE_COLOR(100,100,128,255)
-#endif
 
 #define THEME_DEFAULT_THEMENAME "Classic"
 
@@ -359,9 +357,7 @@ class Theme {
   std::vector<std::string>* getRequiredFiles();
 
   BikerTheme* getPlayerTheme();
-#if defined(ALLOW_GHOST)
   BikerTheme* getGhostTheme();
-#endif
 
   private:
   void initDefaultFont();
@@ -376,9 +372,7 @@ class Theme {
   vapp::Texture *m_pDefaultFontTexture;
 
   BikerTheme *m_player;
-#if defined(ALLOW_GHOST)
   BikerTheme *m_ghost;
-#endif
 
   void cleanSprites();
   void cleanMusics();

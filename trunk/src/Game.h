@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VCommon.h"
 #include "VApp.h"
 #include "xmscene/Level.h"
+#include "xmscene/Bike.h"
 #include "MotoGame.h"
 #include "VTexture.h"
 #include "Renderer.h"
@@ -86,13 +87,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
    };
 
 
- #if defined(ALLOW_GHOST) 
    enum GhostSearchStrategy {
      GHOST_STRATEGY_MYBEST,
      GHOST_STRATEGY_THEBEST,
      GHOST_STRATEGY_BESTOFROOM
    };
- #endif
+
 
    class XMMotoGameHooks : public MotoGameHooks {
    public:
@@ -115,97 +115,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
    class GameApp : public App, public XMotoLoadLevelsInterface {
    #endif
      public:
-       virtual ~GameApp() {}
-       GameApp() {m_pCredits = NULL;
-		  m_bShowMiniMap=true;
-		  m_bDebugMode=false;
-		  m_bListLevels=false;
-		  m_bListReplays=false;
-		  m_bTimeDemo=false;
-		  m_bShowFrameRate=false;
-		  m_bEnableLevelCache=true;
-		  m_bEnableMenuMusic=false;
-		  m_bEnableInitZoom=true;
-		  m_autoZoom = false;
-		  m_autoUnZoom = false;
-		  m_bAutoZoomInitialized = false;
-		  m_bLockMotoGame = false;
-                 m_bCleanCache=false;
-                 m_bEnableDeathAnim=true;
-                 m_pQuitMsgBox=NULL;
-                 m_pNotifyMsgBox=NULL;
-                 m_pInfoMsgBox=NULL;
-#if defined(SUPPORT_WEBACCESS)
-                 m_pNewLevelsAvailIcon=NULL;
-                 m_pWebConfEditor=NULL;
-                 m_pWebConfMsgBox=NULL;
-#endif
-                 m_pNewProfileMsgBox=NULL;
-                 m_pDeleteProfileMsgBox=NULL;
-                 m_pDeleteReplayMsgBox=NULL;
-                 m_pSaveReplayMsgBox=NULL;
-                 m_pReplaysWindow=NULL;
-                 m_pLevelPacksWindow=NULL;
-                 m_pStatsReport=NULL;
-                 m_pLevelPackViewer=NULL;  
-                 m_pActiveLevelPack=NULL;
-                 m_pGameInfoWindow=NULL;
-                 m_fFrameTime = 0;
-                 m_fFPS_Rate = 0;
-                 m_b50FpsMode = false;
-                 m_bUglyMode = false;
-                 m_bTestThemeMode = false;
-                 m_pReplay = NULL;
-		 m_updateAutomaticallyLevels = false;
-		 m_reloadingLevelsUser = false;
-#if defined(ALLOW_GHOST)
-     m_pGhostReplay = NULL;
-     m_lastGhostReplay = "";
-     GhostSearchStrategies[0] = GHOST_STRATEGY_MYBEST;
-     GhostSearchStrategies[1] = GHOST_STRATEGY_THEBEST;
-     GhostSearchStrategies[2] = GHOST_STRATEGY_BESTOFROOM;
-     m_bEnableGhost = true;
-     m_bShowGhostTimeDiff = true;
-     m_GhostSearchStrategy = GHOST_STRATEGY_MYBEST;
-                 m_bEnableGhostInfo = false;
-                 m_bGhostMotionBlur = true;
-#endif
-     m_bAutosaveHighscoreReplays = true;
-                 m_bRecordReplays = true;
-                 m_bShowCursor = true;
-                 m_bEnableEngineSound = true;
-                 m_bCompressReplays = true;
-                 m_bBenchmark = false;
-                 m_bEnableContextHelp = true;     
-		 m_bDisplayInfosReplay = false;
-
-#if defined(SUPPORT_WEBACCESS)
-                 m_bShowWebHighscoreInGame = false;
-                 m_bEnableWebHighscores = true;
-     m_pWebHighscores = NULL;
-     m_pWebLevels = NULL;
-     m_pWebRooms = NULL;
-     m_fDownloadTaskProgressLast = 0;
-     m_bWebHighscoresUpdatedThisSession = false;
-     m_bWebLevelsToDownload = false;
-
-     m_bEnableCheckNewLevelsAtStartup  = true;
-     m_bEnableCheckHighscoresAtStartup = true;
-
-     m_MotoGame.setHooks(&m_MotoGameHooks);
-     m_MotoGameHooks.setGameApps(this, &m_MotoGame);
-#endif
-     m_fLastSqueekTime = 0.0f;
-
-     m_Renderer.setTheme(getTheme());
-     m_MotoGame.setRenderer(&m_Renderer);
-
-     m_bPrePlayAnim = true;
-     m_bShowEngineCounter = true;
-
-     m_currentPlayingList = NULL;
-      }
-                 
+     GameApp();
+     virtual ~GameApp();
+           
 #if defined(SUPPORT_WEBACCESS)                 
         /* WWWAppInterface implementation */ 
         virtual void setTaskProgress(float fPercent);
@@ -314,17 +226,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       bool m_reloadingLevelsUser;
       
       Replay *m_pReplay;
-#if defined(ALLOW_GHOST) 
-      Replay *m_pGhostReplay;
-      String m_lastGhostReplay;
-      int m_nGhostFrame;
+
       enum GhostSearchStrategy GhostSearchStrategies[3];
       bool m_bEnableGhost;
       GhostSearchStrategy m_GhostSearchStrategy;
       bool m_bShowGhostTimeDiff;
       bool m_bGhostMotionBlur;                  /* true: apply fancy motion blur to ghosts */
       bool m_bEnableGhostInfo;
-#endif
+
       std::string m_ReplayPlayerName;
   
       /* WWW */
@@ -586,7 +495,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       void viewHighscoreOf();
 #endif
 
-#if defined(ALLOW_GHOST) 
       std::string _getGhostReplayPath_bestOfThePlayer(std::string p_levelId, float &p_time);
       std::string _getGhostReplayPath_bestOfLocal(std::string p_levelId, float &p_time);
 #if defined(SUPPORT_WEBACCESS)
@@ -594,7 +502,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #endif
       std::string _getGhostReplayPath(std::string p_levelId,
               GhostSearchStrategy p_strategy);
-#endif
 
       void switchUglyMode(bool bUgly);
       void switchTestThemeMode(bool mode);

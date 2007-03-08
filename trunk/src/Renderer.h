@@ -195,11 +195,6 @@ namespace vapp {
     void initCameraPosition();
     void setGhostMotionBlur(bool b) {m_bGhostMotionBlur = b;}
       
-#if defined(ALLOW_GHOST)
-    void setGhostReplay(Replay *pReplay) {m_pGhostReplay = pReplay;}
-    void setGhostReplayDesc(const std::string &s) {m_ReplayDesc = s;}
-#endif
-
     /* if p_save == "", nothing is displayed for p_save */
     void showMsgNewPersonalHighscore(String p_save = "");
     void showMsgNewBestHighscore(String p_save = "");
@@ -261,15 +256,9 @@ namespace vapp {
       
     UIFont *m_pMFont,*m_pSFont;
 
-#if defined(ALLOW_GHOST)
-    Vector2f m_GhostInfoPos,m_GhostInfoVel;
     float m_fNextGhostInfoUpdate;
     int m_nGhostInfoTrans;
-    std::string m_GhostInfoString;
-    Replay *m_pGhostReplay;
-    std::string m_ReplayDesc;
-#endif      
-      
+
     float m_previousEngineSpeed;
 
     GraphQuality m_Quality;

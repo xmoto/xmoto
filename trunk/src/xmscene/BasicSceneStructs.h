@@ -46,4 +46,26 @@ enum ZonePrimType {
   LZPT_BOX = 1
 };
 
+/* IMPORTANT: This structure must be kept as is, otherwise replays will
+     be broken! */
+struct SerializedBikeState {
+  unsigned char cFlags;             /* State flags */
+  float fGameTime;                  /* Game time */      
+  float fFrameX,fFrameY;            /* Frame position */
+  float fMaxXDiff,fMaxYDiff;        /* Addressing space around the frame */
+  
+  unsigned short nRearWheelRot;     /* Encoded rear wheel matrix */
+  unsigned short nFrontWheelRot;    /* Encoded front wheel matrix */
+  unsigned short nFrameRot;         /* Encoded frame matrix */
+  
+  unsigned char cBikeEngineRPM;     /* Maps to a float between 400 and 5000 */
+  
+  signed char cRearWheelX,cRearWheelY;     /* Rear wheel position */
+  signed char cFrontWheelX,cFrontWheelY;   /* Front wheel position */
+  signed char cElbowX,cElbowY;             /* Elbow position */
+  signed char cShoulderX,cShoulderY;       /* Shoulder position */
+  signed char cLowerBodyX,cLowerBodyY;     /* Ass position */
+  signed char cKneeX,cKneeY;               /* Knee position */
+};
+
 #endif /* __BASICSCENESTRUCTS_H__ */

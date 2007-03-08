@@ -45,6 +45,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define DEPTH_FACTOR    2
 
 class Level;
+class BikeState;
+class Ghost;
 
 namespace vapp {
 
@@ -58,29 +60,7 @@ namespace vapp {
   ===========================================================================*/
   #define SER_BIKE_STATE_DIR_LEFT         0x01
   #define SER_BIKE_STATE_DIR_RIGHT        0x02
-  
-  /* IMPORTANT: This structure must be kept as is, otherwise replays will
-                be broken! */
-  struct SerializedBikeState {
-    unsigned char cFlags;             /* State flags */
-    float fGameTime;                  /* Game time */      
-    float fFrameX,fFrameY;            /* Frame position */
-    float fMaxXDiff,fMaxYDiff;        /* Addressing space around the frame */
-
-    unsigned short nRearWheelRot;     /* Encoded rear wheel matrix */
-    unsigned short nFrontWheelRot;    /* Encoded front wheel matrix */
-    unsigned short nFrameRot;         /* Encoded frame matrix */
-        
-    unsigned char cBikeEngineRPM;     /* Maps to a float between 400 and 5000 */
-    
-    signed char cRearWheelX,cRearWheelY;     /* Rear wheel position */
-    signed char cFrontWheelX,cFrontWheelY;   /* Front wheel position */
-    signed char cElbowX,cElbowY;             /* Elbow position */
-    signed char cShoulderX,cShoulderY;       /* Shoulder position */
-    signed char cLowerBodyX,cLowerBodyY;     /* Ass position */
-    signed char cKneeX,cKneeY;               /* Knee position */
-  };
-  
+   
   /*===========================================================================
   Arrow pointer
   ===========================================================================*/
@@ -114,11 +94,6 @@ namespace vapp {
     bool bOnce;                       /* Unique message */
   };  
     
-  struct RecordedGameEvent {
-    MotoGameEvent *Event;           /* Event itself */
-    bool bPassed;                   /* Whether we have passed it */
-  };
-
   /*===========================================================================
   Game object
   ===========================================================================*/
@@ -137,17 +112,11 @@ namespace vapp {
 
     /* update of the structure */
     void prePlayLevel(
-#if defined(ALLOW_GHOST)    
-          Replay *m_pGhostReplay,
-#endif
           Level *pLevelSrc,
           Replay *recordingReplay,
           bool bIsAReplay);
 
     void playLevel(
-#if defined(ALLOW_GHOST)    
-       Replay *m_pGhostReplay,
-#endif
        Level *pLevelSrc, bool bIsAReplay);
     void updateLevel(float fTimeStep,SerializedBikeState *pReplayState,Replay *p_replay);
     void endLevel(void);
@@ -167,7 +136,7 @@ namespace vapp {
     /* serialization */
     void getSerializedBikeState(SerializedBikeState *pState);
     static void unserializeGameEvents(DBuffer *Buffer, std::vector<RecordedGameEvent *> *v_ReplayEvents, bool bDisplayInformation = false);
-    void interpolateGameState(SerializedBikeState *pA,SerializedBikeState *pB,SerializedBikeState *p,float t);
+    static void interpolateGameState(SerializedBikeState *pA,SerializedBikeState *pB,SerializedBikeState *p,float t);
 
     /* events */
     void createGameEvent(MotoGameEvent *p_event);
@@ -204,15 +173,6 @@ namespace vapp {
     float howMuchSqueek(void) {return m_fHowMuchSqueek;}
     bool isAReplay() {return m_bIsAReplay;}
 
-#if defined(ALLOW_GHOST)
-      BikeState *getGhostBikeState(void) {return &m_GhostBikeS;}
-      bool isGhostActive() {return m_isGhostActive;}
-      void setGhostActive(bool s) {m_isGhostActive = s;}
-      std::vector<float> m_myLastStrawberries;
-      std::vector<float> m_ghostLastStrawberries;
-      float m_myDiffOfGhost; /* time diff between the ghost and the player */
-#endif
-
       BikeController *getBikeController(void) {return &m_BikeC;}
       float getTime(void) {return m_fTime;}
       void setTime(float f) {m_fTime=f;}
@@ -225,11 +185,7 @@ namespace vapp {
       void setGravity(float x,float y) {m_PhysGravity.x=x; m_PhysGravity.y=y; resetAutoDisabler();}
       const Vector2f &getGravity(void) {return m_PhysGravity;}
         
-#if defined(ALLOW_GHOST)  
-      void UpdateGhostFromReplay(SerializedBikeState *pReplayState);
-      float getGhostDiff() {return m_myDiffOfGhost;}
       void setShowGhostTimeDiff(bool b) { m_showGhostTimeDiff = b; }
-#endif
 
       /* action for events */
       void SetEntityPos(String pEntityID, float pX, float pY);
@@ -271,6 +227,11 @@ namespace vapp {
       bool isTouching(const Zone& i_zone) const;
       touch setTouching(Zone& i_zone, bool i_isTouching);
 
+      static void updateStateFromReplay(SerializedBikeState *pReplayState,BikeState *pBikeS);
+      void addGhostFromFile(std::string i_ghostFile, std::string i_info);
+
+      std::vector<Ghost *> &Ghosts();
+
   private:         
       /* Data */
       std::queue<MotoGameEvent*> m_GameEventQueue;
@@ -304,11 +265,10 @@ namespace vapp {
       
       BikeState m_BikeS;                  /* Bike state */
 
-#if defined(ALLOW_GHOST)  
-      BikeState m_GhostBikeS;             /* ghost state */
-      bool m_isGhostActive;               /* is ghost active : must it be displayed, ... */
       bool m_showGhostTimeDiff;
-#endif
+
+    std::vector<Ghost*> m_ghosts;
+    std::vector<float> m_myLastStrawberries;
 
       GameRenderer *m_renderer;
 
@@ -402,6 +362,7 @@ namespace vapp {
       std::vector<Entity *> m_entitiesTouching;
       std::vector<Zone *>   m_zonesTouching;
 
+      void cleanGhosts();
       void clearStates();
 
       /* Helpers */
@@ -419,21 +380,16 @@ namespace vapp {
       void _UpdateZones(void);
       bool touchEntityBodyExceptHead(const BikeState &pBike, const Entity &p_entity);
       void _UpdateGameState(SerializedBikeState *pReplayState);
-      /* static */ void _UpdateStateFromReplay(SerializedBikeState *pReplayState,BikeState *pBikeS);
 
-#if defined(ALLOW_GHOST)
-      void UpdateDiffFromGhost();
       void DisplayDiffFromGhost();
-      void InitGhostLastStrawberries(Replay *p_ghostReplay);
-#endif
 
       void cleanScriptDynamicObjects();
       void nextStateScriptDynamicObjects(int i_nbCents);
 
       signed char _MapCoordTo8Bits(float fRef,float fMaxDiff,float fCoord);
-      float _Map8BitsToCoord(float fRef,float fMaxDiff,signed char c);
+      static float _Map8BitsToCoord(float fRef,float fMaxDiff,signed char c);
       unsigned short _MatrixTo16Bits(const float *pfMatrix);
-      void _16BitsToMatrix(unsigned short n16,float *pfMatrix);
+      static void _16BitsToMatrix(unsigned short n16,float *pfMatrix);
       void _SerializeGameEventQueue(DBuffer &Buffer,MotoGameEvent *pEvent);
       
       void _UpdateReplayEvents(Replay *p_replay);

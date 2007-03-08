@@ -765,7 +765,6 @@ namespace vapp {
 
 #endif
 
-#if defined(ALLOW_GHOST) 
     UIWindow *pGhostOptionsTab = new UIWindow(pOptionsTabs,20,40,GAMETEXT_GHOSTTAB,pOptionsTabs->getPosition().nWidth-40,pOptionsTabs->getPosition().nHeight);
     pGhostOptionsTab->enableWindow(true);
     pGhostOptionsTab->showWindow(false);
@@ -811,8 +810,6 @@ namespace vapp {
     pMotionBlurGhost->enableWindow(true);
     pMotionBlurGhost->setFont(m_Renderer.getSmallFont());
     pMotionBlurGhost->setContextHelp(CONTEXTHELP_MOTIONBLURGHOST);
-
-#endif
 
     /* ***** */
 
@@ -1518,10 +1515,6 @@ namespace vapp {
           m_pPauseMenu->showWindow(false);
           m_GameStats.abortedLevel(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->Id(),m_MotoGame.getLevelSrc()->Name(),m_MotoGame.getTime());
 
-#if defined(ALLOW_GHOST) 
-	  /* hide ghost */
-	  m_MotoGame.setGhostActive(false);
-#endif 
           m_MotoGame.endLevel();
           m_InputHandler.resetScriptKeyHooks();                     
           m_Renderer.unprepareForNewLevel();
@@ -1539,10 +1532,6 @@ namespace vapp {
 	  if(NextLevel != "") {        
 	    m_pPauseMenu->showWindow(false);              
 	    m_GameStats.abortedLevel(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->Id(),m_MotoGame.getLevelSrc()->Name(),m_MotoGame.getTime());
-#if defined(ALLOW_GHOST) 
-	    /* hide ghost */
-	    m_MotoGame.setGhostActive(false);
-#endif 
 	    m_MotoGame.endLevel();
 	    m_InputHandler.resetScriptKeyHooks();                     
 	    m_Renderer.unprepareForNewLevel();                    
@@ -1614,10 +1603,6 @@ namespace vapp {
 	    m_pFinishMenu->showWindow(false);
 	    m_Renderer.hideMsgNewHighscore();
 	    m_pBestTimes->showWindow(false);
-#if defined(ALLOW_GHOST) 
-	    /* hide ghost */
-	    m_MotoGame.setGhostActive(false);
-#endif 
 	    m_MotoGame.endLevel();
 	    m_InputHandler.resetScriptKeyHooks();                     
 	    m_Renderer.unprepareForNewLevel();                    
@@ -1657,10 +1642,6 @@ namespace vapp {
           m_pFinishMenu->showWindow(false);
 	  m_Renderer.hideMsgNewHighscore();
           m_pBestTimes->showWindow(false);
-#if defined(ALLOW_GHOST) 
-	  /* hide ghost */
-	  m_MotoGame.setGhostActive(false);
-#endif 
           m_MotoGame.endLevel();
           m_InputHandler.resetScriptKeyHooks();                     
           m_Renderer.unprepareForNewLevel();
@@ -2185,10 +2166,6 @@ namespace vapp {
 	  std::string NextLevel = _DetermineNextLevel(pLS);
 	  if(NextLevel != "") {        
 	    m_pJustDeadMenu->showWindow(false);
-#if defined(ALLOW_GHOST) 
-	    /* hide ghost */
-	    m_MotoGame.setGhostActive(false);
-#endif 
 	    m_MotoGame.endLevel();
 	    m_InputHandler.resetScriptKeyHooks();                     
 	    m_Renderer.unprepareForNewLevel();                    
@@ -2212,10 +2189,6 @@ namespace vapp {
         }
         else if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_ABORT) {
           m_pJustDeadMenu->showWindow(false);
-#if defined(ALLOW_GHOST) 
-	  /* hide ghost */
-	  m_MotoGame.setGhostActive(false);
-#endif 
           m_MotoGame.endLevel();
           m_InputHandler.resetScriptKeyHooks();                     
           m_Renderer.unprepareForNewLevel();
@@ -2449,7 +2422,6 @@ namespace vapp {
     UIList *pThemeList = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:THEMES_LIST");
 #endif
 
-#if defined(ALLOW_GHOST) 
     UIButton *pEnableGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:ENABLE_GHOST");
     UIList *pGhostStrategy = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGIES_LIST");
     UIButton *pMotionBlurGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:MOTION_BLUR_GHOST");
@@ -2467,8 +2439,6 @@ namespace vapp {
       pDisplayGhostInfo->enableWindow(false);
       pDisplayGhostTimeDiff->enableWindow(false);
     }
-#endif
-
 
 #if defined(SUPPORT_WEBACCESS)
       if(pWebHighscores->getChecked()) {
@@ -3258,7 +3228,6 @@ namespace vapp {
     }
 #endif
 
-#if defined(ALLOW_GHOST) 
     UIButton *pEnableGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:ENABLE_GHOST");
     UIList *pGhostStrategy = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGIES_LIST");
     UIButton *pMotionBlurGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:MOTION_BLUR_GHOST");
@@ -3285,7 +3254,6 @@ namespace vapp {
     else {
       pGhostStrategy->setRealSelected(nGSMode);
     }  
-#endif
 
     pShowMiniMap->setChecked(m_Config.getBool("ShowMiniMap"));
     pShowEngineCounter->setChecked(m_Config.getBool("ShowEngineCounter"));
@@ -3409,11 +3377,9 @@ namespace vapp {
     m_Config.setValue("KeyAutoZoom",m_Config.getDefaultValue("KeyAutoZoom"));
     #endif
 
-    #if defined(ALLOW_GHOST)
       m_Config.setValue("GhostMotionBlur",m_Config.getDefaultValue("GhostMotionBlur"));
       m_Config.setValue("DisplayGhostInfo",m_Config.getDefaultValue("DisplayGhostInfo"));
       m_Config.setValue("ShowGhostTimeDiff",m_Config.getDefaultValue("ShowGhostTimeDiff"));
-    #endif
 
     #if defined(SUPPORT_WEBACCESS)
       m_Config.setValue("ShowInGameWorldRecord",m_Config.getDefaultValue("ShowInGameWorldRecord"));
@@ -3437,10 +3403,8 @@ namespace vapp {
 
     m_Config.setValue("WebHighscores",m_Config.getDefaultValue("WebHighscores"));
     
-    #if defined(ALLOW_GHOST)
       m_Config.setValue("EnableGhost",m_Config.getDefaultValue("EnableGhost"));
       m_Config.setValue("GhostSearchStrategy",m_Config.getDefaultValue("GhostSearchStrategy"));
-    #endif
         
     m_Config.setValue("AudioEnable",m_Config.getDefaultValue("AudioEnable"));
     m_Config.setValue("AudioSampleRate",m_Config.getDefaultValue("AudioSampleRate"));
@@ -3606,7 +3570,6 @@ namespace vapp {
     }
 #endif
 
-#if defined(ALLOW_GHOST)
     UIButton *pMotionBlurGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:MOTION_BLUR_GHOST");
     UIButton *pDisplayGhostInfo = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:DISPLAY_GHOST_INFO");
     UIButton *pDisplayGhostTimeDiff = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:DISPLAY_GHOST_TIMEDIFF");
@@ -3614,13 +3577,11 @@ namespace vapp {
     m_Config.setBool("GhostMotionBlur",pMotionBlurGhost->getChecked());
     m_Config.setBool("DisplayGhostInfo",pDisplayGhostInfo->getChecked());
     m_Config.setBool("ShowGhostTimeDiff",pDisplayGhostTimeDiff->getChecked());
-#endif
 
 #if defined(SUPPORT_WEBACCESS)
     m_Config.setBool("WebHighscores",pWebHighscores->getChecked());
 #endif
 
-#if defined(ALLOW_GHOST)
     UIButton *pEnableGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:ENABLE_GHOST");
     UIList *pGhostStrategy = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGIES_LIST");
 
@@ -3630,7 +3591,6 @@ namespace vapp {
       UIListEntry *pEntry = pGhostStrategy->getEntries()[pGhostStrategy->getSelected()];
       m_Config.setInteger("GhostSearchStrategy", *((int*)(pEntry->pvUser)));
     }
-#endif
 
     if(pThemeList->getSelected() >= 0 && pThemeList->getSelected() < pThemeList->getEntries().size()) {
       UIListEntry *pEntry = pThemeList->getEntries()[pThemeList->getSelected()];

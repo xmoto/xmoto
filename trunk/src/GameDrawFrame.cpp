@@ -561,33 +561,6 @@ namespace vapp {
       }
     }
   
-#if defined(ALLOW_GHOST)
-    /* Read replay state */
-    if(m_pGhostReplay != NULL) {
-      static SerializedBikeState GhostBikeState;
-      static SerializedBikeState previousGhostBikeState;
-      
-      m_pGhostReplay->peekState(previousGhostBikeState);
-      if(previousGhostBikeState.fGameTime < m_MotoGame.getTime() && m_pGhostReplay->endOfFile() == false) {
-        do {
-	  m_pGhostReplay->loadState(GhostBikeState);
-        } while(GhostBikeState.fGameTime < m_MotoGame.getTime() && m_pGhostReplay->endOfFile() == false);
-
-        if(m_nGhostFrame%2 || m_nGhostFrame==1) {
-          /* NON-INTERPOLATED FRAME */
-          m_MotoGame.UpdateGhostFromReplay(&GhostBikeState);
-        } 
-        else {
-          /* INTERPOLATED FRAME */
-          SerializedBikeState ibs;
-          m_MotoGame.interpolateGameState(&previousGhostBikeState,&GhostBikeState,&ibs,0.5f);
-          m_MotoGame.UpdateGhostFromReplay(&ibs);
-        }
-        m_nGhostFrame++;
-      }
-    }
-#endif    
-
     if(m_State == GS_PLAYING) {
       /* We'd like to serialize the game state 25 times per second for the replay */
       if(getRealTime() - m_fLastStateSerializationTime >= 1.0f/m_fReplayFrameRate) {

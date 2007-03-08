@@ -69,10 +69,6 @@ Build configuration
 /* HIDE_JOYSTICK_SUPPORT - Disable joystick config UI */
 #define HIDE_JOYSTICK_SUPPORT
 
-/* ALLOW_GHOST - Allow user to see replay ghosts while playing */
-/* (BUG: disabling this will make it impossible to compile) */
-#define ALLOW_GHOST
-
 /* BREAK_ON_EXCEPTION - (Visual C++ debug-mode only) Will break program if an
    exception occurs */
 //#define BREAK_ON_EXCEPTION

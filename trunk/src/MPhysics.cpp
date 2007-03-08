@@ -593,7 +593,7 @@ namespace vapp {
   /*===========================================================================
     Update game state
     ===========================================================================*/
-  void MotoGame::_UpdateStateFromReplay(SerializedBikeState *pReplayState,
+  void MotoGame::updateStateFromReplay(SerializedBikeState *pReplayState,
           BikeState *pBikeS) 
   {
     bool bUpdateRider=true,bUpdateAltRider=true;
@@ -613,26 +613,26 @@ namespace vapp {
     /* Update engine stuff */
     pBikeS->fBikeEngineRPM = ENGINE_MIN_RPM + (ENGINE_MAX_RPM - ENGINE_MIN_RPM) * ((float)pReplayState->cBikeEngineRPM) / 255.0f;
     
-    pBikeS->SwingAnchorP.x = m_BikeS.Anchors().AR.x*pBikeS->fFrameRot[0] + m_BikeS.Anchors().AR.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
-    pBikeS->SwingAnchorP.y = m_BikeS.Anchors().AR.x*pBikeS->fFrameRot[2] + m_BikeS.Anchors().AR.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;
-    pBikeS->FrontAnchorP.x = m_BikeS.Anchors().AF.x*pBikeS->fFrameRot[0] + m_BikeS.Anchors().AF.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
-    pBikeS->FrontAnchorP.y = m_BikeS.Anchors().AF.x*pBikeS->fFrameRot[2] + m_BikeS.Anchors().AF.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;
+    pBikeS->SwingAnchorP.x = pBikeS->Anchors().AR.x*pBikeS->fFrameRot[0] + pBikeS->Anchors().AR.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
+    pBikeS->SwingAnchorP.y = pBikeS->Anchors().AR.x*pBikeS->fFrameRot[2] + pBikeS->Anchors().AR.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;
+    pBikeS->FrontAnchorP.x = pBikeS->Anchors().AF.x*pBikeS->fFrameRot[0] + pBikeS->Anchors().AF.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
+    pBikeS->FrontAnchorP.y = pBikeS->Anchors().AF.x*pBikeS->fFrameRot[2] + pBikeS->Anchors().AF.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;
     
-    pBikeS->SwingAnchor2P.x = m_BikeS.Anchors().AR2.x*pBikeS->fFrameRot[0] + m_BikeS.Anchors().AR2.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
-    pBikeS->SwingAnchor2P.y = m_BikeS.Anchors().AR2.x*pBikeS->fFrameRot[2] + m_BikeS.Anchors().AR2.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;
-    pBikeS->FrontAnchor2P.x = m_BikeS.Anchors().AF2.x*pBikeS->fFrameRot[0] + m_BikeS.Anchors().AF2.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
-    pBikeS->FrontAnchor2P.y = m_BikeS.Anchors().AF2.x*pBikeS->fFrameRot[2] + m_BikeS.Anchors().AF2.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;
+    pBikeS->SwingAnchor2P.x = pBikeS->Anchors().AR2.x*pBikeS->fFrameRot[0] + pBikeS->Anchors().AR2.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
+    pBikeS->SwingAnchor2P.y = pBikeS->Anchors().AR2.x*pBikeS->fFrameRot[2] + pBikeS->Anchors().AR2.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;
+    pBikeS->FrontAnchor2P.x = pBikeS->Anchors().AF2.x*pBikeS->fFrameRot[0] + pBikeS->Anchors().AF2.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
+    pBikeS->FrontAnchor2P.y = pBikeS->Anchors().AF2.x*pBikeS->fFrameRot[2] + pBikeS->Anchors().AF2.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;
     
     /* Calculate desired hand/foot positions */
-    pBikeS->WantedFootP.x = m_BikeS.Anchors().PFp.x*pBikeS->fFrameRot[0] + m_BikeS.Anchors().PFp.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
-    pBikeS->WantedFootP.y = m_BikeS.Anchors().PFp.x*pBikeS->fFrameRot[2] + m_BikeS.Anchors().PFp.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;
-    pBikeS->WantedHandP.x = m_BikeS.Anchors().PHp.x*pBikeS->fFrameRot[0] + m_BikeS.Anchors().PHp.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
-    pBikeS->WantedHandP.y = m_BikeS.Anchors().PHp.x*pBikeS->fFrameRot[2] + m_BikeS.Anchors().PHp.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;    
+    pBikeS->WantedFootP.x = pBikeS->Anchors().PFp.x*pBikeS->fFrameRot[0] + pBikeS->Anchors().PFp.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
+    pBikeS->WantedFootP.y = pBikeS->Anchors().PFp.x*pBikeS->fFrameRot[2] + pBikeS->Anchors().PFp.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;
+    pBikeS->WantedHandP.x = pBikeS->Anchors().PHp.x*pBikeS->fFrameRot[0] + pBikeS->Anchors().PHp.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
+    pBikeS->WantedHandP.y = pBikeS->Anchors().PHp.x*pBikeS->fFrameRot[2] + pBikeS->Anchors().PHp.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;    
     
-    pBikeS->WantedFoot2P.x = m_BikeS.Anchors().PFp2.x*pBikeS->fFrameRot[0] + m_BikeS.Anchors().PFp2.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
-    pBikeS->WantedFoot2P.y = m_BikeS.Anchors().PFp2.x*pBikeS->fFrameRot[2] + m_BikeS.Anchors().PFp2.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;
-    pBikeS->WantedHand2P.x = m_BikeS.Anchors().PHp2.x*pBikeS->fFrameRot[0] + m_BikeS.Anchors().PHp2.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
-    pBikeS->WantedHand2P.y = m_BikeS.Anchors().PHp2.x*pBikeS->fFrameRot[2] + m_BikeS.Anchors().PHp2.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;    
+    pBikeS->WantedFoot2P.x = pBikeS->Anchors().PFp2.x*pBikeS->fFrameRot[0] + pBikeS->Anchors().PFp2.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
+    pBikeS->WantedFoot2P.y = pBikeS->Anchors().PFp2.x*pBikeS->fFrameRot[2] + pBikeS->Anchors().PFp2.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;
+    pBikeS->WantedHand2P.x = pBikeS->Anchors().PHp2.x*pBikeS->fFrameRot[0] + pBikeS->Anchors().PHp2.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
+    pBikeS->WantedHand2P.y = pBikeS->Anchors().PHp2.x*pBikeS->fFrameRot[2] + pBikeS->Anchors().PHp2.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;    
     
     /* Get hinges from serialized state */
     if(pReplayState->cFlags & SER_BIKE_STATE_DIR_RIGHT) {
@@ -674,21 +674,21 @@ namespace vapp {
       /* Calculate head position */
       V = (pBikeS->ShoulderP - pBikeS->LowerBodyP);
       V.normalize();
-      pBikeS->HeadP = pBikeS->ShoulderP + V*m_BikeS.Parameters().fNeckLength;
+      pBikeS->HeadP = pBikeS->ShoulderP + V*pBikeS->Parameters().fNeckLength;
     }
     
     if(bUpdateAltRider) {
       /* Calculate head position (Alt.) */
       V = (pBikeS->Shoulder2P - pBikeS->LowerBody2P);
       V.normalize();
-      pBikeS->Head2P = pBikeS->Shoulder2P + V*m_BikeS.Parameters().fNeckLength;
+      pBikeS->Head2P = pBikeS->Shoulder2P + V*pBikeS->Parameters().fNeckLength;
     }
     
     /* Internally we'd like to know the abs. relaxed position of the wheels */
-    pBikeS->RFrontWheelP.x = m_BikeS.Anchors().Fp.x*pBikeS->fFrameRot[0] + m_BikeS.Anchors().Fp.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
-    pBikeS->RFrontWheelP.y = m_BikeS.Anchors().Fp.x*pBikeS->fFrameRot[2] + m_BikeS.Anchors().Fp.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;
-    pBikeS->RRearWheelP.x = m_BikeS.Anchors().Rp.x*pBikeS->fFrameRot[0] + m_BikeS.Anchors().Rp.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
-    pBikeS->RRearWheelP.y = m_BikeS.Anchors().Rp.x*pBikeS->fFrameRot[2] + m_BikeS.Anchors().Rp.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;     
+    pBikeS->RFrontWheelP.x = pBikeS->Anchors().Fp.x*pBikeS->fFrameRot[0] + pBikeS->Anchors().Fp.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
+    pBikeS->RFrontWheelP.y = pBikeS->Anchors().Fp.x*pBikeS->fFrameRot[2] + pBikeS->Anchors().Fp.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;
+    pBikeS->RRearWheelP.x = pBikeS->Anchors().Rp.x*pBikeS->fFrameRot[0] + pBikeS->Anchors().Rp.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
+    pBikeS->RRearWheelP.y = pBikeS->Anchors().Rp.x*pBikeS->fFrameRot[2] + pBikeS->Anchors().Rp.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;     
   }
 
   void MotoGame::_UpdateGameState(SerializedBikeState *pReplayState) {

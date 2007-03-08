@@ -152,9 +152,7 @@ namespace vapp {
     m_Renderer.setGameObject( &m_MotoGame );        
     m_Renderer.setDebug( m_bDebugMode );
 
-#if defined(ALLOW_GHOST)
     m_Renderer.setGhostMotionBlur( m_bGhostMotionBlur );
-#endif
     
     /* Tell collision system whether we want debug-info or not */
     m_MotoGame.getCollisionHandler()->setDebug( m_bDebugMode );
@@ -467,11 +465,6 @@ namespace vapp {
     if(m_pReplay != NULL)
       delete m_pReplay;
 
-#if defined(ALLOW_GHOST)
-      if(m_pGhostReplay != NULL)
-      delete m_pGhostReplay;
-#endif  
-
     if(m_pPlayer != NULL) 
       m_Config.setString("DefaultProfile",m_pPlayer->PlayerName);
 
@@ -720,13 +713,11 @@ namespace vapp {
 
 #endif
     
-#if defined(ALLOW_GHOST)
     m_Config.createVar( "EnableGhost"        , "true");
     m_Config.createVar( "GhostSearchStrategy", "0");
     m_Config.createVar( "ShowGhostTimeDiff"  , "true");
     m_Config.createVar( "DisplayGhostInfo"   , "false");
     m_Config.createVar( "GhostMotionBlur"    , "true" );
-#endif
   }
   
 }

@@ -26,6 +26,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "BasicSceneStructs.h"
 #include "BikeAnchors.h"
 
+class Level;
+
+namespace vapp {
+  class Replay;
+}
+
 class BikeState {
   public:
     DriveDir Dir;         /* Driving left or right? */
@@ -104,6 +110,28 @@ class BikeState {
   float m_curBrake, m_curEngine;    
   BikeParameters m_bikeParameters;
   BikeAnchors    m_bikeAnchors;
+};
+
+class Ghost {
+ public:
+  Ghost(std::string i_replayFile);
+  ~Ghost();
+
+  BikeState* getState();
+  void initLastToTakeEntities(Level* i_level);
+  void updateDiffToPlayer(std::vector<float> &i_lastToTakeEntities);
+  float diffToPlayer() const;
+  void updateToTime(float i_time);
+  void setInfo(std::string i_info);
+  std::string getDescription() const;
+
+ private:
+  vapp::Replay* m_replay;
+  BikeState m_bikeState;
+  std::vector<float> m_lastToTakeEntities;
+  float m_diffToPlayer; /* time diff between the ghost and the player */
+  int m_nFrame;
+  std::string m_info;
 };
 
 #endif /* __BIKE_H__ */
