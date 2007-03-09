@@ -1,6 +1,9 @@
 
 - ghost for replays : a small offset : you can see it if the replay = the ghost
 
+* PERFORMANCE : rebuildLevelsPacks is very slow particularly on
+   windows with a lot of levels
+
 * BUG
 [21:33] <jj> the smoke is not always rendered at the sides of the screen
 [21:33] <jj> so if I drive towards smoke, I don't see it at first, where I should see it

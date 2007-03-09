@@ -596,7 +596,7 @@ namespace vapp {
           m_Overlay.present();
         }
         
-        if(m_nGhostInfoTrans > 0) {
+        if(m_nGhostInfoTrans > 0 && m_displayGhostInformation) {
           _RenderInGameText(v_ghost->getState()->CenterP + Vector2f(i*3.0,-1.5f),
 			    v_ghost->getDescription(),
 			    MAKE_COLOR(255,255,255,m_nGhostInfoTrans));
@@ -1905,4 +1905,7 @@ namespace vapp {
     m_sizeMultOfEntitiesWhichMakeWin = i_sizeMult;
   }
 
+  void GameRenderer::setGhostDisplayInformation(bool i_display) {
+    m_displayGhostInformation = i_display;
+  }
 }
