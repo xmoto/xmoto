@@ -141,6 +141,7 @@ namespace vapp {
       m_cameraOffsetX = CAMERA_OFFSETX_DEFAULT;
       m_cameraOffsetY = CAMERA_OFFSETY_DEFAULT;
       m_bGhostMotionBlur = true;
+      m_displayGhostInformation = false;
       m_theme = NULL;
       m_previousEngineSpeed = -1.0;
       m_renderBikeFront = true;
@@ -194,7 +195,8 @@ namespace vapp {
     void initCamera();
     void initCameraPosition();
     void setGhostMotionBlur(bool b) {m_bGhostMotionBlur = b;}
-      
+    void setGhostDisplayInformation(bool i_display);
+
     /* if p_save == "", nothing is displayed for p_save */
     void showMsgNewPersonalHighscore(String p_save = "");
     void showMsgNewBestHighscore(String p_save = "");
@@ -258,6 +260,7 @@ namespace vapp {
 
     float m_fNextGhostInfoUpdate;
     int m_nGhostInfoTrans;
+    bool m_displayGhostInformation;
 
     float m_previousEngineSpeed;
 

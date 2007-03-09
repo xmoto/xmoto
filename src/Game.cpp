@@ -619,10 +619,12 @@ GameApp::GameApp() {
     m_bGhostMotionBlur = m_Config.getBool("GhostMotionBlur");
     m_Renderer.setGhostMotionBlur( m_bGhostMotionBlur );
 
+    m_bEnableGhostInfo = m_Config.getBool("DisplayGhostInfo");
+    m_Renderer.setGhostDisplayInformation(m_bEnableGhostInfo);
+
 #if defined(SUPPORT_WEBACCESS)
     m_bEnableWebHighscores = m_Config.getBool("WebHighscores") && isNoWWW()== false;
     m_bShowWebHighscoreInGame = m_Config.getBool("ShowInGameWorldRecord");
-    m_bEnableGhostInfo = m_Config.getBool("DisplayGhostInfo");
     m_bEnableCheckNewLevelsAtStartup  = m_Config.getBool("CheckNewLevelsAtStartup");
     m_bEnableCheckHighscoresAtStartup = m_Config.getBool("CheckHighscoresAtStartup");
 #endif
