@@ -30,7 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../VXml.h"
 #include "../helpers/Color.h"
 
-#define CACHE_LEVEL_FORMAT_VERSION 17
+#define CACHE_LEVEL_FORMAT_VERSION 18
 
 Level::Level() {
   m_xmotoTooOld = false;
@@ -1223,7 +1223,7 @@ void Level::addLimits() {
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(RightLimit()           , TopLimit())));
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(LeftLimit()            , TopLimit())));
   /* move border block to the second static blocks layer */
-  pBlock->setLayer(0);
+  pBlock->setIsLayer(true);
   Blocks().push_back(pBlock);
     
   pBlock = new Block("LEVEL_BOTTOM");
@@ -1234,7 +1234,7 @@ void Level::addLimits() {
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(RightLimit() + fHMargin, BottomLimit() - fVMargin)));
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(LeftLimit()  - fHMargin, BottomLimit() - fVMargin)));
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(LeftLimit()            , BottomLimit())));
-  pBlock->setLayer(0);
+  pBlock->setIsLayer(true);
   Blocks().push_back(pBlock);
 
   pBlock = new Block("LEVEL_LEFT");
@@ -1245,7 +1245,7 @@ void Level::addLimits() {
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(LeftLimit(), BottomLimit())));
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(LeftLimit() - fHMargin, BottomLimit() - fVMargin)));
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(LeftLimit() - fHMargin, TopLimit() + fVMargin))); 
-  pBlock->setLayer(0);
+  pBlock->setIsLayer(true);
   Blocks().push_back(pBlock);
     
   pBlock = new Block("LEVEL_RIGHT");
@@ -1256,7 +1256,7 @@ void Level::addLimits() {
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(RightLimit() + fHMargin, TopLimit() + fVMargin)));
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(RightLimit() + fHMargin, BottomLimit() - fVMargin)));
   pBlock->Vertices().push_back(new BlockVertex(Vector2f(RightLimit(), BottomLimit())));
-  pBlock->setLayer(0);
+  pBlock->setIsLayer(true);
   Blocks().push_back(pBlock);
 }
 

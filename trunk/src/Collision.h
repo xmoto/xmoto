@@ -211,7 +211,7 @@ namespace vapp {
     std::vector<Block*> getDynBlocksNearPosition(AABB& BBox);
 
     /* -1 for actual static block layer, other value (0) for the second static layer */
-    void addStaticBlock(Block* id, int layer=-1);
+    void addStaticBlock(Block* id, bool inFrontLayer=false);
     std::vector<Block*> getStaticBlocksNearPosition(AABB& BBox, int layer=-1);
 
     void addBlockInLayer(Block* id, int layer);
