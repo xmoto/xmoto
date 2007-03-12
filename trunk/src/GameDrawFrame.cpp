@@ -683,7 +683,7 @@ namespace vapp {
       _MakeBestTimesWindow(m_pBestTimes,m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->Id(),
                           m_MotoGame.getFinishTime(),TimeStamp);
 
-      _UpdateLevelsLists();     
+      //_UpdateLevelsLists();     
       setState(GS_FINISHED);
     }
   }
