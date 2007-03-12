@@ -388,7 +388,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_TRY_LEVEL_AGAIN _("Try this level again")
 #define CONTEXTHELP_BUILT_IN_AND_EXTERNALS _("Built-in and stand-alone external levels")
 #define CONTEXTHELP_LEVEL_PACKS _("Levels grouped together in level packs")
-#define CONTEXTHELP_LEVELS _("Browse levels avaiable to you")
+#define CONTEXTHELP_LEVELS _("Browse levels available to you")
 #define CONTEXTHELP_REPLAY_LIST _("View list of recorded replays")
 #define CONTEXTHELP_OPTIONS _("Configure X-Moto preferences")
 #define CONTEXTHELP_HELP _("Instructions of how to play X-Moto")
