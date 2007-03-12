@@ -790,13 +790,13 @@ namespace vapp {
   }
 
 
-  void CollisionSystem::addStaticBlock(Block* id, int layer)
+  void CollisionSystem::addStaticBlock(Block* id, bool inFrontLayer)
   {
-    if(layer == -1){
-      m_staticBlocksHandler.addElement(id);
+    if(inFrontLayer == true){
+      m_staticBlocksHandlerSecondLayer.addElement(id);
     }
     else{
-      m_staticBlocksHandlerSecondLayer.addElement(id);
+      m_staticBlocksHandler.addElement(id);
     }
   }
 

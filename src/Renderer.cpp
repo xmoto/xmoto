@@ -342,7 +342,7 @@ namespace vapp {
       for(int i=0; i<Blocks.size(); i++) {
 
 	/* Don't draw background blocks neither dynamic ones */
-	if(Blocks[i]->isBackground() == false && Blocks[i]->isLayer() == false) {
+	if(Blocks[i]->isBackground() == false && Blocks[i]->getLayer() == -1) {
 	  std::vector<ConvexBlock *> ConvexBlocks = Blocks[i]->ConvexBlocks();
 	  for(int j=0; j<ConvexBlocks.size(); j++) {
 	    Vector2f Center = ConvexBlocks[j]->SourceBlock()->DynamicPosition(); 	 

@@ -189,7 +189,7 @@ int Block::loadToPlay(vapp::CollisionSystem& io_collisionSystem) {
     if(inext == Vertices().size()) inext=0;
 
     /* add static lines */
-    if(isBackground() == false && isDynamic() == false && isLayer() == false) {
+    if(isBackground() == false && isDynamic() == false && m_layer == -1) {
       /* Add line to collision handler */
       io_collisionSystem.defineLine(DynamicPosition().x + Vertices()[i]->Position().x,
 				    DynamicPosition().y + Vertices()[i]->Position().y,
@@ -216,12 +216,11 @@ int Block::loadToPlay(vapp::CollisionSystem& io_collisionSystem) {
     io_collisionSystem.addDynBlock(this);
   }
 
-  if(isDynamic() == false && isLayer() == false){
-    /* m_layer default to -1 */
-    io_collisionSystem.addStaticBlock(this, m_layer);
+  if(isDynamic() == false && m_layer == -1){
+    io_collisionSystem.addStaticBlock(this, isLayer());
   }
 
-  if(isLayer() == true) {
+  if(isLayer() == true && m_layer != -1) {
     io_collisionSystem.addBlockInLayer(this, m_layer);
   }
 
