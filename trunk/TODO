@@ -1,4 +1,4 @@
-
+- street texture missing
 - ghost for replays : a small offset : you can see it if the replay = the ghost
 
 * PERFORMANCE : rebuildLevelsPacks is very slow particularly on
