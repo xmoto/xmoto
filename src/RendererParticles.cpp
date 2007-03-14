@@ -151,7 +151,18 @@ namespace vapp {
   }
   
   void GameRenderer::_RenderParticles(bool bFront) {
-    std::vector<Entity*> Entities = getGameObject()->getCollisionHandler()->getEntitiesNearPosition(m_screenBBox);
+    AABB screenBigger;
+    Vector2f screenMin = m_screenBBox.getBMin();
+    Vector2f screenMax = m_screenBBox.getBMax();
+    /* to avoid sprites being clipped out of the screen,
+       we draw also the nearest one */
+#define ENTITY_OFFSET 5.0f
+    screenBigger.addPointToAABB2f(screenMin.x-ENTITY_OFFSET,
+				  screenMin.y-ENTITY_OFFSET);
+    screenBigger.addPointToAABB2f(screenMax.x+ENTITY_OFFSET,
+				  screenMax.y+ENTITY_OFFSET);
+
+    std::vector<Entity*> Entities = getGameObject()->getCollisionHandler()->getEntitiesNearPosition(screenBigger);
     for(unsigned int i = 0; i < Entities.size(); i++) {
       Entity* v_entity = Entities[i];
       if(v_entity->Speciality() == ET_PARTICLES_SOURCE) {
