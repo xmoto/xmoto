@@ -1,11 +1,11 @@
-X-Moto 0.2.7 2007-
+X-Moto 0.2.7 2007-03-14
  * add ghost while replaying
  * bug fixed:
  ** correct the second layer of static blocks
  ** particle sources are no longer clipped out of the screen
  ** windows specific bugs : music
- ** man page corrected
- ** and mores bug fixed...
+ ** man page fixed
+ ** and more bug fixed...
 	
 X-Moto 0.2.6 2007-03-03
  * performances improved (better framerate)
