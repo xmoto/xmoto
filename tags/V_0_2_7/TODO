@@ -1,0 +1,177 @@
+
+- ghost for replays : a small offset : you can see it if the replay = the ghost
+
+* PERFORMANCE : rebuildLevelsPacks is very slow particularly on
+   windows with a lot of levels
+
+* BUG
+
+* pack : last highscores
+* pack : last levels
+
+* flag sprite to add
+* two options for music : menu and ingame
+* hierarchical sort for pack list : +/- to close
+
+* BUG rotation on grass of dynamic blocks on sdlgfx
+
+mingw:
+* sdlgfx: http://www.wormux.org/wiki/compile_under_mingw.php#SDL_gfx
+* gettext: http://www.wormux.org/wiki/compile_under_mingw.php
+
+Assigned to nicolas
+* BUG : i ghost is enable, then you disable it, then you play a level
+   having a ghost -> cannot found entity
+* BUG : hum, about checksum, when you modify a level with f5 while
+   playing, then it is not updated with the new level button
+* put under edge into the block part
+* PAD_5 -> to finish
+* BUG : xmoto -replay bugs/onMacWontWork.rpl when you press forward on
+   this scripted level, the elevator at the correct position
+* FEATURE : * xmoto toto.lvl to play directly a level
+* it seems that there is a bug on speed it is played (if i play replays done on fast machine, it appear faster) http://xmoto.free.fr/replays/replay_1312.rpl
+* feature : a replay button when you finish a level (or die) which plays Latest.rpl
+
+* when are texure is rotated we need to copy the texture mutplile times so it's always visible
+* F5 while developping a level, if the level is scripted, it could
+   crash it and required a full F5 at the menu stage
+
+========
+
+* script : disable a key (brake for example, ...)
+* ugly uses misc.png for border : should not
+
+
+====Competitions
+* dayly/weekly/monthly competition based on a few tracs , different entry levels easy medium hard
+* reset the scores once in a while
+* work on not having to validate the scores by hand
+
+===SDL_GFX
+* SDL_GFX crashed on mac http://rafb.net/p/L95KzR62.html
+* keesj:real caching strategy, currently the SDL_gfx chooses to caches based on expected size of the image
+  We need to implement a real caching strategy, for example a LRU hash table (least recently used hashtable
+  Here is an article that might be of good use http://www.gamedev.net/reference/articles/article2240.asp)
+  I would also like to define the max amound of memory that may be used by the system. if this limit is reachted
+  leat recently used images must be throws away
+* keesj:SDL_gfx? cache static bloks of the minimap as image
+* keesj:create a on screen input system for text
+* keesj:create sensititive area's on the screen for gameplay
+   -on the nokia 770 it is pretty easy to 
+* keesj:test the SDL_gfx version on windows/mac
+* keesj:faster startup , smart caching etc system must run under 64 MB :)
+* keesj:define code conventions,testing procedures,release-roadbook
+
+
+* FEATURE : windows : there's some win32 API calls that can be made to determine the application data dir
+
+* when you choose keys : if a key is already attributed, it should
+   assign it and set <unset> to the other one because it's not
+   pleasant to have a message
+* '50 most played levels'/least : virtual package
+* a keyboard key for next level
+* reload theme done, require tests, and some sprites (like mouse, main menu background) are not updated i suppose
+* Sometimes when the edges of the levels are reached (for instance when being at a corner of a level), the
+  framerate drops A LOT (game gets unplayable). Can't figure out why.
+  ** Update: it actually appears that the game gets slower and slower while running.
+* Optimize minimap rendering. On some levels (very smooth ones for instance) it takes much longer to
+  render the minimap than the actual level.
+* Sometimes memory are leaked from the event queue in m_MotoGame
+
+render entity by Z
+render blocks by Z
+
+[13:25] <gaivota> aspegic500: I found a bug which is the following: when letting xmoto running without doing anything for some time the game crashes, althoug it keeps running
+[13:26] <gaivota> atm it shows a blank black screen, once before it diplayed the menu althoug the ingame was running and similar strange behaviour
+
+* associate F8 to the -nowww switch (enable/disable network)
+ - when a connection fails, disable network and display a message :
+   "Network disabled, press F8 to enable it"
+
+* http://bugs.debian.org/335514
+It's a bit confusing to be proposed to continue or abort playing when
+one has just finished the level. The ``abort'' one should be rather
+``quit level'' or something like that.
+
+===========
+* BUG : is it normal ?
+        C.x=(getParent()->getDispWidth() * pArrow->ArrowPointerPos.x) / 800.0f;
+        C.y=(getParent()->getDispHeight() * pArrow->ArrowPointerPos.y)
+   / 600.0f;
+        moreover, it doesn't work with the zoom
+   and Game.PlaceScreenArrow(5, 5, 225) : doesn't respect coords
+  nicolas: in fact, arrows of script are dependant of the resolution ;
+   so i did not documented them while it's not clean :
+       The concerned functions are :
+       PlaceInGameArrow(x, y, angle)
+       Place an arrow in the game to show something to the player
+       PlaceScreenArrow(x, y, angle)
+       Place an arrow in the game to show something to the player.
+       Position is relative to the screen
+       HideArrow()
+       Hide the arrow
+
+#############################################################################################
+### not important, not really necesary, very low urgency, or just makes thing more complex:
+
+* BUG ? http://forum.xmoto.free.fr/viewtopic.php?p=212#212 (not really i bug methinks)
+* SDL_ttf or something like that for rendering text
+* script :
+   add : rotation for blocks         
+* Add a command line option like the one to test themes. This option could be ''testscript'' and would show zones during game (with an extra, the name of the zone).
+* BUG : save a replay as 0.0.0.0 restart xmoto, it doesn't appear in
+   the list
+* to be able to give a color to a block as parameter in a level
+   (instead of a texture)
+* bug : keys 1 2 3 4 5 won't work on french keybord : allow to configure key action for script instead of allow the script to choose the key
+* OS X stuff:
+        * Add Universal Binary build system to subdirectory.
+        * Modify so it could run on a compile farm.
+        * Use Application Support directory instead of ~/.xmoto on OS X
+        * Better packaging for OS X (Readme, License, etc)
+* BUG : as you can see at the end of "the only smooth", the block is
+   not correctly drawned
+* BUG :
+- start a level, press very fastly (ESC-ENTER)* ; quite easy to
+   reproduce (works on windows and linux)
+   try {
+     m_Renderer.render();
+   } in Game.cpp to catch the exception.
+   in VApp.cpp, if you replace while(SDL_PollEvent(&Event)) by
+   if(SDL_PollEvent(&Event)), the pb disappear.
+   event order threaten is ENTER then ESC
+   _RestartLevels is called
+   then the ESC is managed and it fails
+* when you press o in the level list and that no level start with an
+   o, it bases on the 2nd letter,...
+* themes : check the md5sum of the files ; don't display available if
+   it's not really available
+* xmoto -nosound
+* use z-buffer for depth ordering
+* BUG : when you see level info in level pack ; then you click on ok
+   -> it close the window and the levelpack window
+* loadness of headcrash sound should depend on head velocity 
+* themes : not more animation in .xml ? -> be able to load an animated bike ?
+* to be able to move a zone ?
+* we could make a "standard xmoto library" of lua functions :)
+* new script call :
+  collision between sprites, between sprites and head
+* if a script ask for an already used key, propose an other one
+* a button "clean replays" which remove not highscore replays or
+   something like it
+* check for a new version at startup
+* add 2 rooms configurations so that i can display, world highscore
+   and highscore of my room (priority=low)
+* add import of players.bin (so that people playing at different
+   location can merge their highscores) (priority=very low)
+* separate personnal highscores from others (two tabs instead of a
+   button, it's easiest) (it neckelmann agree)
+* pb for left hand written people for the editor
+* two possibilities to show room : one to see the world highscore, one
+   to see you room (optionnal)
+* display wind
+* a fonction CameraRotate and CameraRotateAdaptToG (script)
+* A SetDynamicBlockRotation function that rotates the vertices about a center point instead of making the block go in circles.
+* a block0.Touch() function
+* network game
+* freestyle mode
