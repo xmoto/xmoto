@@ -75,6 +75,12 @@
 <sprite type="Texture" name="Wood2" file="Wood2_158.jpg" />
 <sprite type="Texture" name="Yellow" file="Yellow_177.jpg" />
 <sprite type="Texture" name="Red1" file="Red1_215.jpg" />
+<sprite type="Texture" name="BlueDiag" file="BlueDiag_214.png" />
+<sprite type="Texture" name="chessybackground" file="chessybackground_242.jpg" />
+<sprite type="Texture" name="chessymiddle" file="chessymiddle_241.jpg" />
+<sprite type="Texture" name="ComicClouds" file="ComicClouds_213.jpg" />
+<sprite type="Texture" name="Grass1" file="Grass1_210.png" />
+<sprite type="Texture" name="Grass2" file="Grass2_211.jpg" />
 
 <sprite type="Entity" name="Strawberry"  fileBase="Strawberry"  fileExtension="png" width="1" height="1" delay="0.05">
 <frame centerX="0.5" centerY="0.5" />
