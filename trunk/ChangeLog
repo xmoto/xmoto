@@ -3,6 +3,7 @@ X-Moto 0.2.7 2007-
  * bug fixed:
  ** correct the second layer of static blocks
  ** particle sources are no longer clipped out of the screen
+ ** windows specific bugs : music
  ** and mores bug fixed...
 	
 X-Moto 0.2.6 2007-03-03
