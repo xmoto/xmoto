@@ -212,7 +212,7 @@ GameApp::GameApp() {
           m_State = GS_REPLAYING;
 	  
 	  try {
-	    v_replayBiker = m_MotoGame.addSimpleGhostFromFile(m_PlaySpecificReplay, true);
+	    v_replayBiker = m_MotoGame.addSimpleGhostFromFile(m_PlaySpecificReplay, true, &m_theme);
 	    m_Renderer.setPlayerToFollow(v_replayBiker);
 	  } catch(Exception &e) {
 	    setState(m_StateAfterPlaying);
@@ -267,14 +267,14 @@ GameApp::GameApp() {
 	      try {
 		switch(m_GhostSearchStrategy) {
 		case GHOST_STRATEGY_MYBEST:
-		  m_MotoGame.addGhostFromFile(v_PlayGhostReplay, GAMETEXT_GHOST_BEST, false);
+		  m_MotoGame.addGhostFromFile(v_PlayGhostReplay, GAMETEXT_GHOST_BEST, false, &m_theme);
 		  break;
 		case GHOST_STRATEGY_THEBEST:
-		  m_MotoGame.addGhostFromFile(v_PlayGhostReplay, GAMETEXT_GHOST_LOCAL, false);
+		  m_MotoGame.addGhostFromFile(v_PlayGhostReplay, GAMETEXT_GHOST_LOCAL, false, &m_theme);
 		  break;
 #if defined(SUPPORT_WEBACCESS) 
 		case GHOST_STRATEGY_BESTOFROOM:
-		  m_MotoGame.addGhostFromFile(v_PlayGhostReplay, m_pWebHighscores->getRoomName(), false);
+		  m_MotoGame.addGhostFromFile(v_PlayGhostReplay, m_pWebHighscores->getRoomName(), false, &m_theme);
 		  break;
 #endif
 		}
@@ -1811,14 +1811,14 @@ GameApp::GameApp() {
 	    try {
 	      switch(m_GhostSearchStrategy) {
 	      case GHOST_STRATEGY_MYBEST:
-		m_MotoGame.addGhostFromFile(v_PlayGhostReplay, GAMETEXT_GHOST_BEST, false);
+		m_MotoGame.addGhostFromFile(v_PlayGhostReplay, GAMETEXT_GHOST_BEST, false, &m_theme);
 		break;
 	      case GHOST_STRATEGY_THEBEST:
-		m_MotoGame.addGhostFromFile(v_PlayGhostReplay, GAMETEXT_GHOST_LOCAL, false);
+		m_MotoGame.addGhostFromFile(v_PlayGhostReplay, GAMETEXT_GHOST_LOCAL, false, &m_theme);
 		break;
 #if defined(SUPPORT_WEBACCESS) 
 	      case GHOST_STRATEGY_BESTOFROOM:
-		m_MotoGame.addGhostFromFile(v_PlayGhostReplay, m_pWebHighscores->getRoomName(), false);
+		m_MotoGame.addGhostFromFile(v_PlayGhostReplay, m_pWebHighscores->getRoomName(), false, &m_theme);
 		break;
 #endif
 	      }

@@ -131,12 +131,16 @@ class BikeState {
 
 class Biker {
  public:
+  Biker(Theme *i_theme);
   virtual BikeState* getState();
   virtual bool getRenderBikeFront() = 0; /* display the bikefront ? (for detach) */
   virtual float getBikeEngineSpeed() = 0; /* engine speed */
+  virtual float getBikeEngineRPM();
+  virtual void  updateToTime(float i_time);
 
  protected:
   BikeState m_bikeState;
+  vapp::EngineSoundSimulator m_EngineSound;
 };
 
 class PlayerBiker : public Biker {
@@ -164,7 +168,6 @@ class PlayerBiker : public Biker {
   touch setTouching(Zone& i_zone, bool i_isTouching);
 
   float getBikeEngineSpeed();
-  float getBikeEngineRPM();
   bool  isWheelSpinning();
   Vector2f getWheelSpinPoint();
   Vector2f getWheelSpinDir();
@@ -182,7 +185,6 @@ class PlayerBiker : public Biker {
   bool m_bFirstPhysicsUpdate;
   bool m_bodyDetach;
   OnBikerHooks* m_bikerHooks;
-  vapp::EngineSoundSimulator m_EngineSound;
 
   float m_fAttitudeCon;
   float m_fNextAttitudeCon;
@@ -276,7 +278,7 @@ class PlayerBiker : public Biker {
 
 class Ghost : public Biker {
  public:
-  Ghost(std::string i_replayFile, bool i_isActiv);
+  Ghost(std::string i_replayFile, bool i_isActiv, Theme *i_theme);
   ~Ghost();
 
   std::string playerName();

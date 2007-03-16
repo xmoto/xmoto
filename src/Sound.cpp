@@ -413,6 +413,8 @@ namespace vapp {
   ==============================================================================*/
   void EngineSoundSimulator::update(float fTime) {
     if(Sound::isEnabled()) {
+      if(fTime < m_fLastBangTime) m_fLastBangTime = fTime; /* manage back in the past */
+
       if(m_fRPM > 100.0f) {
         /* Calculate the delay between the samples */
         float fInterval = (60.0f / m_fRPM) * 1.0f;

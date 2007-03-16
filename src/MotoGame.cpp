@@ -595,14 +595,14 @@ void MotoGame::cleanPlayers() {
     }
   }
 
-  Ghost* MotoGame::addSimpleGhostFromFile(std::string i_ghostFile, bool i_isActiv) {
+  Ghost* MotoGame::addSimpleGhostFromFile(std::string i_ghostFile, bool i_isActiv, Theme *i_theme) {
     Ghost* v_ghost = NULL;
-    v_ghost = new Ghost(i_ghostFile, i_isActiv);
+    v_ghost = new Ghost(i_ghostFile, i_isActiv, i_theme);
     m_ghosts.push_back(v_ghost);
     return v_ghost;
   }
 
-  Ghost* MotoGame::addGhostFromFile(std::string i_ghostFile, std::string i_info, bool i_isActiv) {
+  Ghost* MotoGame::addGhostFromFile(std::string i_ghostFile, std::string i_info, bool i_isActiv, Theme *i_theme) {
     Ghost* v_ghost = NULL;
 
     /* the level must be set to add a ghost */
@@ -610,7 +610,7 @@ void MotoGame::cleanPlayers() {
       throw Exception("No level defined");
     }
 
-    v_ghost = new Ghost(i_ghostFile, i_isActiv);
+    v_ghost = new Ghost(i_ghostFile, i_isActiv, i_theme);
     v_ghost->setInfo(i_info);
     v_ghost->initLastToTakeEntities(m_pLevelSrc);
     m_ghosts.push_back(v_ghost);
