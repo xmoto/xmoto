@@ -203,8 +203,8 @@ namespace vapp {
       void setGravity(float x,float y);
       const Vector2f &getGravity(void);
 
-      Ghost* addSimpleGhostFromFile(std::string i_ghostFile, bool i_isActiv);
-      Ghost* addGhostFromFile(std::string i_ghostFile, std::string i_info, bool i_isActiv);
+      Ghost* addSimpleGhostFromFile(std::string i_ghostFile, bool i_isActiv, Theme *i_theme);
+      Ghost* addGhostFromFile(std::string i_ghostFile, std::string i_info, bool i_isActiv, Theme *i_theme);
       PlayerBiker* addPlayerBiker(Vector2f i_position, DriveDir i_direction, Theme *i_theme);
 
       std::vector<Ghost *> &Ghosts();

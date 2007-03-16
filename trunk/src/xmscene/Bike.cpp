@@ -128,7 +128,42 @@ BikeState* Biker::getState() {
   return &m_bikeState;
 }
 
-Ghost::Ghost(std::string i_replayFile, bool i_isActiv) {
+Biker::Biker(Theme *i_theme) {
+  /* sound engine */
+  if(vapp::Sound::isEnabled()) {
+    try {
+      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine00")->FilePath()));
+      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine01")->FilePath()));
+      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine02")->FilePath()));
+      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine03")->FilePath()));
+      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine04")->FilePath()));
+      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine05")->FilePath()));
+      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine06")->FilePath()));
+      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine07")->FilePath()));
+      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine08")->FilePath()));
+      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine09")->FilePath()));
+      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine10")->FilePath()));
+      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine11")->FilePath()));
+      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine12")->FilePath()));
+    } catch(Exception &e) {
+      /* hum, no nice */
+    }
+  }
+}
+
+float Biker::getBikeEngineRPM() {
+  return m_bikeState.fBikeEngineRPM;
+}
+
+void Biker::updateToTime(float i_time) {
+  /* sound */
+  if(vapp::Sound::isEnabled()) {
+    m_EngineSound.setRPM(getBikeEngineRPM()); 
+    m_EngineSound.update(i_time);
+  }
+}
+
+Ghost::Ghost(std::string i_replayFile, bool i_isActiv, Theme *i_theme) : Biker(i_theme) {
   std::string v_levelId;
   std::string v_playerName;
   float v_framerate;
@@ -235,6 +270,8 @@ void Ghost::updateDiffToPlayer(std::vector<float> &i_lastToTakeEntities) {
 }
 
 void Ghost::updateToTime(float i_time, vapp::MotoGame *i_motogame) {
+  Biker::updateToTime(i_time);
+
   /* Read replay state */
   static SerializedBikeState GhostBikeState;
   static SerializedBikeState previousGhostBikeState;
@@ -242,9 +279,14 @@ void Ghost::updateToTime(float i_time, vapp::MotoGame *i_motogame) {
   m_replay->peekState(previousGhostBikeState);
 
   /* back in the past */
-  if(i_time < previousGhostBikeState.fGameTime) {
+  if(previousGhostBikeState.fGameTime > i_time + 1.0/m_replay->getFrameRate()*2.0) { // *2.0 to let a marge if frames are dropped
     m_replay->fastrewind(previousGhostBikeState.fGameTime - i_time);
     m_replay->peekState(previousGhostBikeState);
+  }
+  
+  /* stop the motor at the end */
+  if(m_replay->endOfFile()) {
+    m_bikeState.fBikeEngineRPM = 0.0;
   }
 
   if(previousGhostBikeState.fGameTime < i_time && m_replay->endOfFile() == false) {
@@ -255,12 +297,11 @@ void Ghost::updateToTime(float i_time, vapp::MotoGame *i_motogame) {
     if(m_nFrame%2 || m_nFrame==1) {
       /* NON-INTERPOLATED FRAME */
       BikeState::updateStateFromReplay(&GhostBikeState, &m_bikeState);
-    } 
-    else {
+    } else {
       /* INTERPOLATED FRAME */
-	SerializedBikeState ibs;
-	BikeState::interpolateGameState(&previousGhostBikeState,&GhostBikeState,&ibs,0.5f);
-	BikeState::updateStateFromReplay(&ibs, &m_bikeState);
+      SerializedBikeState ibs;
+      BikeState::interpolateGameState(&previousGhostBikeState,&GhostBikeState,&ibs,0.5f);
+      BikeState::updateStateFromReplay(&ibs, &m_bikeState);
     }
     m_nFrame++;
   }
@@ -286,7 +327,8 @@ float Ghost::getBikeEngineSpeed() {
   return 0.0; /* unable to know it */
 }
 
-PlayerBiker::PlayerBiker(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity, Theme *i_theme) {
+PlayerBiker::PlayerBiker(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity, Theme *i_theme)
+: Biker(i_theme) {
   m_somersaultCounter.init();
 
   bFrontWheelTouching = false;
@@ -305,27 +347,6 @@ PlayerBiker::PlayerBiker(Vector2f i_position, DriveDir i_direction, Vector2f i_g
   initPhysics(i_gravity);
   initToPosition(i_position, i_direction, i_gravity);
   m_bikerHooks = NULL;
-
-  /* sound engine */
-  if(vapp::Sound::isEnabled()) {
-    try {
-      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine00")->FilePath()));
-      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine01")->FilePath()));
-      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine02")->FilePath()));
-      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine03")->FilePath()));
-      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine04")->FilePath()));
-      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine05")->FilePath()));
-      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine06")->FilePath()));
-      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine07")->FilePath()));
-      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine08")->FilePath()));
-      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine09")->FilePath()));
-      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine10")->FilePath()));
-      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine11")->FilePath()));
-      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine12")->FilePath()));
-    } catch(Exception &e) {
-      /* hum, no nice */
-    }
-  }
 }
 
 PlayerBiker::~PlayerBiker() {
@@ -333,8 +354,9 @@ PlayerBiker::~PlayerBiker() {
 }
 
 void PlayerBiker::updateToTime(float i_time, float i_timeStep, vapp::CollisionSystem *v_collisionSystem, Vector2f i_gravity) {
-  m_bSqueeking = false; /* no squeeking right now */
+  Biker::updateToTime(i_time);
 
+  m_bSqueeking = false; /* no squeeking right now */
   updatePhysics(i_time, i_timeStep, v_collisionSystem, i_gravity);
   updateGameState();
 
@@ -354,12 +376,6 @@ void PlayerBiker::updateToTime(float i_time, float i_timeStep, vapp::CollisionSy
     bChangeDir = true;
     
     m_bikeState.Dir = m_bikeState.Dir==DD_LEFT?DD_RIGHT:DD_LEFT; /* switch */
-  }
-
-  /* sound */
-  if(vapp::Sound::isEnabled()) {
-    m_EngineSound.setRPM(getBikeEngineRPM()); 
-    m_EngineSound.update(i_time);
   }
 
   /* somersault */
@@ -1134,11 +1150,6 @@ float PlayerBiker::getBikeEngineSpeed() {
   speed = (fWheelAngVel * PHYS_WHEEL_RADIUS * 3.6);
   return speed >= 0.0 ? speed : -speed;
 }
-
-float PlayerBiker::getBikeEngineRPM() {
-  return m_bikeState.fBikeEngineRPM;
-}
-
 
   void PlayerBiker::updateGameState() {
     bool bUpdateRider=true,bUpdateAltRider=true;
