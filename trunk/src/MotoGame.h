@@ -36,7 +36,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GameEvents.h"
 
 #include "xmscene/BasicSceneStructs.h"
-#include "xmscene/BikeController.h"
 #include "xmscene/BikeParameters.h"
 #include "xmscene/BikeAnchors.h"
 #include "xmscene/Bike.h"
@@ -47,6 +46,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class Level;
 class BikeState;
 class Ghost;
+class MotoGameOnBikerHooks;
 
 namespace vapp {
 
@@ -114,11 +114,11 @@ namespace vapp {
     void prePlayLevel(
           Level *pLevelSrc,
           Replay *recordingReplay,
-          bool bIsAReplay);
+          bool i_playEvents);
 
     void playLevel(
-       Level *pLevelSrc, bool bIsAReplay);
-    void updateLevel(float fTimeStep,SerializedBikeState *pReplayState,Replay *p_replay);
+       Level *pLevelSrc);
+    void updateLevel(float fTimeStep, Replay *i_recordedReplay);
     void endLevel(void);
 
     /* entities */
@@ -134,9 +134,8 @@ namespace vapp {
     std::vector<GameMessage *> &getGameMessage(void) {return m_GameMessages;}
       
     /* serialization */
-    void getSerializedBikeState(SerializedBikeState *pState);
+    static void getSerializedBikeState(BikeState *i_bikeState, float i_fTime, SerializedBikeState *pState);
     static void unserializeGameEvents(DBuffer *Buffer, std::vector<RecordedGameEvent *> *v_ReplayEvents, bool bDisplayInformation = false);
-    static void interpolateGameState(SerializedBikeState *pA,SerializedBikeState *pB,SerializedBikeState *p,float t);
 
     /* events */
     void createGameEvent(MotoGameEvent *p_event);
@@ -146,14 +145,10 @@ namespace vapp {
     void cleanEventsQueue();
     void executeEvents(Replay *p_replay);
 
-    /* information about engine */
-    float getBikeEngineRPM(void);
-    float getBikeEngineSpeed();
-      
     /* player */
     void setPlayerPosition(float x,float y,bool bFaceRight);
-    const Vector2f &getPlayerPosition(void);
-    bool getPlayerFaceDir(void);
+    const Vector2f &getPlayerPosition(int n);
+    bool getPlayerFaceDir(int n);
     void setDeathAnim(bool b) {m_bDeathAnimEnabled=b;}
     
     /* Direct Lua interaction methods */
@@ -163,27 +158,16 @@ namespace vapp {
     void scriptCallVoidNumberArg(std::string FuncName, int n);
 
     /* Data interface */
-    void resetAutoDisabler(void) {m_nStillFrames=0;}
     bool isInitOK(void) {return m_bLevelInitSuccess;}
     bool isFinished(void) {return m_bFinished;}
     bool isDead(void) {return m_bDead;}
     Level *getLevelSrc(void) {return m_pLevelSrc;}
-    BikeState *getBikeState(void) {return &m_BikeS;}
-    bool isSqueeking(void) {return m_bSqueeking;}
-    float howMuchSqueek(void) {return m_fHowMuchSqueek;}
-    bool isAReplay() {return m_bIsAReplay;}
 
-      BikeController *getBikeController(void) {return &m_BikeC;}
       float getTime(void) {return m_fTime;}
       void setTime(float f) {m_fTime=f;}
       float getFinishTime(void) {return m_fFinishTime;}
       ArrowPointer &getArrowPointer(void) {return m_Arrow;}
-      bool isWheelSpinning(void) {return m_bWheelSpin;}
-      Vector2f getWheelSpinPoint(void) {return m_WheelSpinPoint;}
-      Vector2f getWheelSpinDir(void) {return m_WheelSpinDir;}
       CollisionSystem *getCollisionHandler(void) {return &m_Collision;}
-      void setGravity(float x,float y) {m_PhysGravity.x=x; m_PhysGravity.y=y; resetAutoDisabler();}
-      const Vector2f &getGravity(void) {return m_PhysGravity;}
         
       void setShowGhostTimeDiff(bool b) { m_showGhostTimeDiff = b; }
 
@@ -216,35 +200,44 @@ namespace vapp {
       unsigned int getNbRemainingStrawberries();
       void makePlayerWin();
 
-      void setBodyDetach(bool state);
+      void setGravity(float x,float y);
+      const Vector2f &getGravity(void);
 
-      /* added=added to m_touching */
-      /* removed=removed from m_touching */
-      typedef enum {none, added, removed} touch;
-
-      bool isTouching(const Entity& i_entity) const;
-      touch setTouching(Entity& i_entity, bool i_touching);     
-      bool isTouching(const Zone& i_zone) const;
-      touch setTouching(Zone& i_zone, bool i_isTouching);
-
-      static void updateStateFromReplay(SerializedBikeState *pReplayState,BikeState *pBikeS);
-      void addGhostFromFile(std::string i_ghostFile, std::string i_info);
+      Ghost* addSimpleGhostFromFile(std::string i_ghostFile, bool i_isActiv);
+      Ghost* addGhostFromFile(std::string i_ghostFile, std::string i_info, bool i_isActiv);
+      PlayerBiker* addPlayerBiker(Vector2f i_position, DriveDir i_direction, Theme *i_theme);
 
       std::vector<Ghost *> &Ghosts();
+      std::vector<PlayerBiker*> &Players();
+
+      bool doesPlayEvents() const;
+
+      void fastforward(float fSeconds);
+      void fastrewind(float fSeconds);
+      void pause();
+      void faster();
+      void slower();
+      float getSpeed() const;
+      void setSpeed(float f);
+      bool isPaused();
+
+      void handleEvent(MotoGameEvent *pEvent);
 
   private:         
       /* Data */
       std::queue<MotoGameEvent*> m_GameEventQueue;
       
-      float m_fTime,m_fNextAttitudeCon;
-      float m_fFinishTime,m_fAttitudeCon;
+      float m_fTime;
+      float m_fFinishTime;
       
-      int m_nStillFrames;
-      
+      float m_fLastStateSerializationTime; 
+
+      float m_speed_factor; /* nb hundreadths to increment each time ;
+			       is a float so that manage slow */
+      bool  m_is_paused;
+
       MotoGameHooks *m_motoGameHooks;
 
-      bool m_bSqueeking;
-      float m_fHowMuchSqueek;
       bool m_bDeathAnimEnabled;
       bool m_bLevelInitSuccess;
 
@@ -258,12 +251,11 @@ namespace vapp {
       lua_State *m_pL;                    /* Lua state associated with the
                                              level */
       std::vector<Entity *> m_DestroyedEntities; /* destroyed entities */
-      dWorldID m_WorldID;                 /* World ID */
       
       std::vector<Entity *> m_DelSchedule;/* Entities scheduled for deletion */
       std::vector<GameMessage *> m_GameMessages;
       
-      BikeState m_BikeS;                  /* Bike state */
+      std::vector<PlayerBiker*> m_players;
 
       bool m_showGhostTimeDiff;
 
@@ -272,106 +264,23 @@ namespace vapp {
 
       GameRenderer *m_renderer;
 
-      /* count somersault */
-      SomersaultCounter m_somersaultCounter;
-
-      bool bFrontWheelTouching;
-      bool bRearWheelTouching;
-
       std::vector<SDynamicObject*> m_SDynamicObjects;
 
-      BikeController m_BikeC;             /* Bike controller */
-      
       bool m_bFinished,m_bDead;           /* Yir */
       
       int m_nLastEventSeq;
       
-      bool m_bFirstPhysicsUpdate;
-
-      Vector2f m_PrevRearWheelP;          /* Prev. rear wheel position */
-      Vector2f m_PrevFrontWheelP;         /* Prev. front wheel position */
-      Vector2f m_PrevHeadP;
-      Vector2f m_PrevHead2P;
-      Vector2f m_PrevActiveHead;
-      
-      /* Wheels spinning dirt up... muzakka! :D */
-      bool m_bWheelSpin;                  /* Do it captain */
-      Vector2f m_WheelSpinPoint,m_WheelSpinDir; /* Where and how much */
-      
-      /* Data - bike bodies, joints and masses */
-      dBodyID m_FrameBodyID;              /* Frame of bike */
-      dMass m_FrameMass;              
-      dBodyID m_RearWheelBodyID;          /* Rear wheel of bike */
-      dMass m_RearWheelMass;
-      dBodyID m_FrontWheelBodyID;         /* Front wheel of bike */
-      dMass m_FrontWheelMass;    
-        
-      dBodyID m_PlayerTorsoBodyID;
-      dMass m_PlayerTorsoMass;
-      dBodyID m_PlayerLArmBodyID;
-      dMass m_PlayerLArmMass;
-      dBodyID m_PlayerUArmBodyID;
-      dMass m_PlayerUArmMass;
-      dBodyID m_PlayerLLegBodyID;
-      dMass m_PlayerLLegMass;
-      dBodyID m_PlayerULegBodyID;
-      dMass m_PlayerULegMass;
-      dBodyID m_PlayerHandAnchorBodyID;
-      dMass m_PlayerHandAnchorMass;
-      dBodyID m_PlayerFootAnchorBodyID;
-      dMass m_PlayerFootAnchorMass;
-      
-      dJointID m_FootHingeID;
-      dJointID m_KneeHingeID;
-      dJointID m_LowerBodyHingeID;
-      dJointID m_ShoulderHingeID;
-      dJointID m_ElbowHingeID;
-      dJointID m_HandHingeID;
-
-      dBodyID m_PlayerTorsoBodyID2;
-      dBodyID m_PlayerLArmBodyID2;
-      dBodyID m_PlayerUArmBodyID2;
-      dBodyID m_PlayerLLegBodyID2;
-      dBodyID m_PlayerULegBodyID2;
-      dBodyID m_PlayerHandAnchorBodyID2;
-      dBodyID m_PlayerFootAnchorBodyID2;
-      
-      dJointID m_FootHingeID2;
-      dJointID m_KneeHingeID2;
-      dJointID m_LowerBodyHingeID2;
-      dJointID m_ShoulderHingeID2;
-      dJointID m_ElbowHingeID2;
-      dJointID m_HandHingeID2;
-            
-      dJointGroupID m_ContactGroup;       /* Contact joint group */     
-      
-      bool m_bodyDetach;
-
-      /* Teleport next frame? */
-      bool m_bTeleport;
-      GameReqPlayerPos m_TeleportDest; 
-            
       /* for EveryHundreath function */
       float m_lastCallToEveryHundreath;
             
-      bool m_isScriptActiv; /* change this variable to activ/desactiv scripting */
-      /* true if showing a replay.
-         false if user playing */
-      bool m_bIsAReplay;
-
-      std::vector<Entity *> m_entitiesTouching;
-      std::vector<Zone *>   m_zonesTouching;
+      bool m_playEvents;
 
       void cleanGhosts();
-      void clearStates();
+      void cleanPlayers();
 
       /* Helpers */
       void _GenerateLevel(void);          /* Called by playLevel() to 
                                              prepare the level */
-      int _IntersectWheelLevel(Vector2f Cp,float Cr,dContact *pContacts);
-      int _IntersectWheelLine(Vector2f Cp,float Cr,int nNumContacts,dContact *pContacts,Vector2f A0,Vector2f A1);
-      bool _IntersectHeadLevel(Vector2f Cp,float Cr,const Vector2f &LastCp);
-      bool _IntersectHeadLine(Vector2f Cp,float Cr,Vector2f A0,Vector2f A1);
       bool _DoCircleTouchZone(const Vector2f &Cp,float Cr,Zone *pZone);
       bool _IntersectPointLevel(Vector2f Cp);
       Entity *_SpawnEntity(std::string ID,EntitySpeciality Type,Vector2f Pos, Entity *pSrc);
@@ -379,32 +288,30 @@ namespace vapp {
       void _UpdateEntities(void);
       void _UpdateZones(void);
       bool touchEntityBodyExceptHead(const BikeState &pBike, const Entity &p_entity);
-      void _UpdateGameState(SerializedBikeState *pReplayState);
 
       void DisplayDiffFromGhost();
 
       void cleanScriptDynamicObjects();
       void nextStateScriptDynamicObjects(int i_nbCents);
 
-      signed char _MapCoordTo8Bits(float fRef,float fMaxDiff,float fCoord);
-      static float _Map8BitsToCoord(float fRef,float fMaxDiff,signed char c);
-      unsigned short _MatrixTo16Bits(const float *pfMatrix);
-      static void _16BitsToMatrix(unsigned short n16,float *pfMatrix);
-      void _SerializeGameEventQueue(DBuffer &Buffer,MotoGameEvent *pEvent);
-      
-      void _UpdateReplayEvents(Replay *p_replay);
-      void _HandleReplayEvent(MotoGameEvent *pEvent);
-      
+      void _SerializeGameEventQueue(DBuffer &Buffer,MotoGameEvent *pEvent);      
       void _UpdateDynamicCollisionLines(void);
       
-      /* MPhysics.cpp */
-      void _UpdatePhysics(float fTimeStep);
-      void _InitPhysics(void);
-      void _UninitPhysics(void);
-      void _PrepareBikePhysics(Vector2f StartPos);
-      void _PrepareRider(Vector2f StartPos);
     };
 
 }
+
+class MotoGameOnBikerHooks : public OnBikerHooks {
+ public:
+  MotoGameOnBikerHooks(vapp::MotoGame* i_motoGame, int i_playerNumber);
+  virtual ~MotoGameOnBikerHooks();
+  void onSomersaultDone(bool i_counterclock);
+  void onWheelTouches(int i_wheel, bool i_touch);
+  void onHeadTouches();
+
+ private:
+  vapp::MotoGame* m_motoGame;
+  int m_playerNumber;
+};
 
 #endif

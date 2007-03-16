@@ -25,11 +25,6 @@ Vector2f BikeAnchors::GroundPoint() const {
   return Tp;
 }
 
-float BikeAnchors::RearSuspension() const {
-  //return AR;
-  return 0.0;
-}
-
 void BikeAnchors::update(const BikeParameters &i_bikeParameters) {
   Tp = Vector2f( 0, -i_bikeParameters.Ch );
   Rp = Tp + Vector2f( -0.5f*i_bikeParameters.Wb, i_bikeParameters.WR );

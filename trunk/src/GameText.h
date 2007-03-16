@@ -55,6 +55,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_BESTTIMES            _("Best Times")
 #define GAMETEXT_BESTPLAYER           _("Best player")
 #define GAMETEXT_BRAKE                _("Brake")
+#define GAMETEXT_BRAKE2               _("Brake 2")
 #define GAMETEXT_BUILTINLEVELS        _("Built-In Levels")
 #define GAMETEXT_BY                   _("by")
 #define GAMETEXT_CAMERAMOVEXDOWN      _("Move Camera to left")
@@ -64,6 +65,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_CANCEL               _("Cancel")
 #define GAMETEXT_CHANGE               _("Change...")
 #define GAMETEXT_CHANGEDIR            _("Change direction")
+#define GAMETEXT_CHANGEDIR2           _("Change direction 2")
 #define GAMETEXT_CHANGEKEY            _("Change Key...")
 #define GAMETEXT_CHECKINGFORLEVELS    _("Checking for new or updated levels...")
 #define GAMETEXT_CHOOSELEVEL          _("Choose Level")
@@ -155,6 +157,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_DLTHEMESLISTCHECK    _("Checking for new themes...")
 #define GAMETEXT_DOWNLOADLEVELS       _("Get More Levels!")
 #define GAMETEXT_DRIVE                _("Drive")
+#define GAMETEXT_DRIVE2               _("Drive 2")
 #define GAMETEXT_ENABLEAUDIO          _("Enable Audio")
 #define GAMETEXT_ENABLECHECKNEWLEVELSATSTARTUP  _("Check new levels at startup")
 #define GAMETEXT_ENABLECHECKHIGHSCORESATSTARTUP _("Check new highscores at startup")
@@ -183,7 +186,9 @@ Central place to keep many in-game text strings
 #define GAMETEXT_FINISH               _("Finished!")
 #define GAMETEXT_FINISHTIME           _("Finish Time")
 #define GAMETEXT_FLIPLEFT             _("Flip left")
+#define GAMETEXT_FLIPLEFT2            _("Flip left 2")
 #define GAMETEXT_FLIPRIGHT            _("Flip right")
+#define GAMETEXT_FLIPRIGHT2           _("Flip right 2")
 #define GAMETEXT_GAMEGFX              _("Game Graphics")
 #define GAMETEXT_GENERAL              _("General")
 #define GAMETEXT_GENERALINFO          _("General Info")
@@ -307,7 +312,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_REPLAYHELPTEXT(current_speed) _("Stop[esc] ||[space]  << >>[left/right keys]  < >[up/down keys]   Speed:") + current_speed + "x"
 #define GAMETEXT_REPLAYHELPTEXTNOREWIND(current_speed) _("Stop[esc] ||[space] >>[right key] < >[up/down keys]   Speed:") + current_speed + "x"
   // + "a" + "X"
-#define GAMETEXT_REPLAYNOTFOUND       _("Replay '%s' can't be played!")
+#define GAMETEXT_REPLAYNOTFOUND       _("The replay can't be played!")
 #define GAMETEXT_REPLAYS              _("Replays")
 #define GAMETEXT_RESTART              _("Restart This Level")
 #define GAMETEXT_RESUME               _("Resume Playing")

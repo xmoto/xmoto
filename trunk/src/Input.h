@@ -107,10 +107,14 @@ namespace vapp {
       
       /* Methods */
       void configure(UserConfig *pConfig);
-      void handleInput(InputEventType Type,int nKey,SDLMod mod, BikeController *pController, GameRenderer *pGameRender,
-											 GameApp *pGameApp);      
+      void handleInput(InputEventType Type,int nKey,SDLMod mod,
+		       BikeController *pController,
+		       int i_player,
+		       GameRenderer *pGameRender,
+		       GameApp *pGameApp);      
       std::string waitForKey(void);
-      void updateInput(BikeController *pController);
+      void updateInput(BikeController *pController,
+		       int i_player);
       void init(UserConfig *pConfig);
       void uninit(void);
       
@@ -125,7 +129,8 @@ namespace vapp {
       int m_nNumScriptKeyHooks;
       InputScriptKeyHook m_ScriptKeyHooks[MAX_SCRIPT_KEY_HOOKS];
       
-      ControllerModeID m_ControllerModeID1;      
+      ControllerModeID m_ControllerModeID1;
+      ControllerModeID m_ControllerModeID2;
       InputAction m_ActiveAction;
 
       std::vector<SDL_Joystick *> m_Joysticks;
@@ -136,6 +141,11 @@ namespace vapp {
       int m_nPullBackKey1;
       int m_nPushForwardKey1;
       int m_nChangeDirKey1;
+      int m_nDriveKey2;
+      int m_nBrakeKey2;
+      int m_nPullBackKey2;
+      int m_nPushForwardKey2;
+      int m_nChangeDirKey2;
       int m_nZoomIn;
       int m_nZoomOut;
       int m_nZoomInit;
@@ -152,15 +162,13 @@ namespace vapp {
       int m_nJoyAxisPrimMin1;
       int m_nJoyAxisPrimUL1;
       int m_nJoyAxisPrimLL1;
-      
       int m_nJoyAxisSec1; /**< Secondary axis: Pulling and pushing the handle bar */
       int m_nJoyAxisSecMax1;
       int m_nJoyAxisSecMin1;
       int m_nJoyAxisSecUL1;
       int m_nJoyAxisSecLL1;
-
       int m_nJoyButtonChangeDir1;
-      
+     
       std::vector<bool> m_JoyButtonsPrev;
       
       /* Static data */

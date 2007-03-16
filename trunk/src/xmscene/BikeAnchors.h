@@ -29,7 +29,6 @@ class BikeAnchors {
   public:
   Vector2f GroundPoint() const;
   void update(const BikeParameters &i_bikeParameters);
-  float RearSuspension() const;
 
   //  private:
   Vector2f Tp;          /* Point on the ground, exactly between the wheels */

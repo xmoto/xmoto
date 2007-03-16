@@ -153,7 +153,7 @@ namespace vapp {
       m_Joysticks.push_back( SDL_JoystickOpen(i) );
     }
         
-    m_pActiveJoystick1 = NULL;        
+    m_pActiveJoystick1 = NULL;
   }
   
   void InputHandler::uninit(void) {
@@ -202,9 +202,13 @@ namespace vapp {
   /*===========================================================================
   Input device update
   ===========================================================================*/  
-  void InputHandler::updateInput(BikeController *pController) {
+  void InputHandler::updateInput(BikeController *pController,
+				 int i_player) {
+    /* joystick only for player one */
+    if(i_player != 0) {return;}
+
     /* Joystick? */
-    if(m_ControllerModeID1 == CONTROLLER_MODE_JOYSTICK1 && m_pActiveJoystick1 != NULL) {
+     if(m_ControllerModeID1 == CONTROLLER_MODE_JOYSTICK1 && m_pActiveJoystick1 != NULL) {
       SDL_JoystickUpdate();     
 
       pController->stopContols();
@@ -293,6 +297,12 @@ namespace vapp {
         m_nPushForwardKey1 = _StringToKey(pConfig->getString("KeyFlipRight1"));
         m_nChangeDirKey1 = _StringToKey(pConfig->getString("KeyChangeDir1"));
 
+        m_nDriveKey2 = _StringToKey(pConfig->getString("KeyDrive2"));
+        m_nBrakeKey2 = _StringToKey(pConfig->getString("KeyBrake2"));
+        m_nPullBackKey2 = _StringToKey(pConfig->getString("KeyFlipLeft2"));
+        m_nPushForwardKey2 = _StringToKey(pConfig->getString("KeyFlipRight2"));
+        m_nChangeDirKey2 = _StringToKey(pConfig->getString("KeyChangeDir2"));
+
         #if defined(ENABLE_ZOOMING)          
 	m_nZoomIn   = _StringToKey(pConfig->getString("KeyZoomIn"));
 	m_nZoomOut  = _StringToKey(pConfig->getString("KeyZoomOut"));
@@ -306,7 +316,9 @@ namespace vapp {
         
         /* All good? */
         if(m_nDriveKey1<0 || m_nBrakeKey1<0 || m_nPullBackKey1<0 ||
-          m_nPushForwardKey1<0 || m_nChangeDirKey1<0 
+	   m_nPushForwardKey1<0 || m_nChangeDirKey1<0 ||
+	   m_nDriveKey2<0 || m_nBrakeKey2<0 || m_nPullBackKey2<0 ||
+	   m_nPushForwardKey2<0 || m_nChangeDirKey2<0 
           #if defined(ENABLE_ZOOMING)
             || m_nZoomIn<0 || m_nZoomOut <0 || m_nZoomInit <0
 	          || m_nCameraMoveXUp<0 || m_nCameraMoveXDown<0 
@@ -377,6 +389,7 @@ namespace vapp {
 				 int nKey,
 				 SDLMod mod,
 				 BikeController *pController,
+				 int i_player,
 				 GameRenderer *pGameRender,
 				 GameApp *pGameApp) {
     /* Update controller 1 */
@@ -384,6 +397,7 @@ namespace vapp {
       /* Keyboard controlled */
       switch(Type) {
         case INPUT_KEY_DOWN: 
+	if(i_player == 0) {
           if(m_nDriveKey1 == nKey) {
             /* Start driving */
             pController->setDrive(1.0f);
@@ -399,9 +413,28 @@ namespace vapp {
           else if(m_nPushForwardKey1 == nKey) {
             /* Push forward */
             pController->setPull(-1.0f);            
+          }
+	} else if(i_player == 1) {
+          if(m_nDriveKey2 == nKey) {
+            /* Start driving */
+            pController->setDrive(1.0f);
+          }
+          else if(m_nBrakeKey2 == nKey) {
+            /* Brake */
+            pController->setDrive(-1.0f);
+          }
+          else if(m_nPullBackKey2 == nKey) {
+            /* Pull back */
+            pController->setPull(1.0f);
+          }
+          else if(m_nPushForwardKey2 == nKey) {
+            /* Push forward */
+            pController->setPull(-1.0f);            
           } 
+	}
+
 #if defined(ENABLE_ZOOMING)          
-	else if(m_nZoomIn == nKey) {
+	if(m_nZoomIn == nKey) {
 	  /* Zoom in */
 	  pGameRender->zoom(0.002);
 	} 
@@ -436,6 +469,7 @@ namespace vapp {
 
           break;
         case INPUT_KEY_UP:
+	if(i_player == 0) {
           if(m_nDriveKey1 == nKey) {
             /* Stop driving */
             pController->setDrive(0.0f);
@@ -456,7 +490,30 @@ namespace vapp {
             /* Change dir */
             pController->setChangeDir(true);
           }
-	else if(m_nAutoZoom == nKey) {
+	} else if(i_player == 1) {
+          if(m_nDriveKey2 == nKey) {
+            /* Stop driving */
+            pController->setDrive(0.0f);
+          }
+          else if(m_nBrakeKey2 == nKey) {
+            /* Don't brake */
+            pController->setDrive(0.0f);
+          }
+          else if(m_nPullBackKey2 == nKey) {
+            /* Pull back */
+            pController->setPull(0.0f);
+          }
+          else if(m_nPushForwardKey2 == nKey) {
+            /* Push forward */
+            pController->setPull(0.0f);            
+          }
+          else if(m_nChangeDirKey2 == nKey) {
+            /* Change dir */
+            pController->setChangeDir(true);
+          }
+	}
+
+	if(m_nAutoZoom == nKey) {
 	  pGameApp->setAutoZoom(false);
 	  pGameApp->setAutoUnZoom(true);
 	}
@@ -486,6 +543,12 @@ namespace vapp {
     m_nPullBackKey1    = SDLK_LEFT;
     m_nPushForwardKey1 = SDLK_RIGHT;
     m_nChangeDirKey1   = SDLK_SPACE;
+
+    m_nDriveKey2       = SDLK_a;
+    m_nBrakeKey2       = SDLK_q;
+    m_nPullBackKey2    = SDLK_z;
+    m_nPushForwardKey2 = SDLK_e;
+    m_nChangeDirKey2   = SDLK_w;
     
     #if defined(ENABLE_ZOOMING)    
       m_nZoomIn          = SDLK_PAGEUP;
@@ -507,7 +570,13 @@ namespace vapp {
     if(m_nPullBackKey1    < 0) { m_nPullBackKey1    = SDLK_LEFT;     }
     if(m_nPushForwardKey1 < 0) { m_nPushForwardKey1 = SDLK_RIGHT;    }
     if(m_nChangeDirKey1   < 0) { m_nChangeDirKey1   = SDLK_SPACE;    }
-    
+ 
+    if(m_nDriveKey2       < 0) { m_nDriveKey2 	    = SDLK_a;       }
+    if(m_nBrakeKey2       < 0) { m_nBrakeKey2 	    = SDLK_q;     }
+    if(m_nPullBackKey2    < 0) { m_nPullBackKey2    = SDLK_z;     }
+    if(m_nPushForwardKey2 < 0) { m_nPushForwardKey2 = SDLK_e;    }
+    if(m_nChangeDirKey2   < 0) { m_nChangeDirKey2   = SDLK_w;    }
+   
     #if defined(ENABLE_ZOOMING)
     if(m_nZoomIn          < 0) { m_nZoomIn          = SDLK_PAGEUP;   }
     if(m_nZoomOut         < 0) { m_nZoomOut         = SDLK_PAGEDOWN; }
@@ -531,6 +600,12 @@ namespace vapp {
     if(Action == "PullBack") 	return _KeyToString(m_nPullBackKey1);
     if(Action == "PushForward") return _KeyToString(m_nPushForwardKey1);
     if(Action == "ChangeDir")   return _KeyToString(m_nChangeDirKey1);
+
+    if(Action == "Drive 2")    	  return _KeyToString(m_nDriveKey2);
+    if(Action == "Brake 2")    	  return _KeyToString(m_nBrakeKey2);
+    if(Action == "PullBack 2") 	  return _KeyToString(m_nPullBackKey2);
+    if(Action == "PushForward 2") return _KeyToString(m_nPushForwardKey2);
+    if(Action == "ChangeDir 2")   return _KeyToString(m_nChangeDirKey2);
     
     #if defined(ENABLE_ZOOMING)    
     if(Action == "ZoomIn")   	    	return _KeyToString(m_nZoomIn);

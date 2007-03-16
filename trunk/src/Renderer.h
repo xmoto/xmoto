@@ -144,9 +144,11 @@ namespace vapp {
       m_displayGhostInformation = false;
       m_theme = NULL;
       m_previousEngineSpeed = -1.0;
-      m_renderBikeFront = true;
       m_sizeMultOfEntitiesToTake = 1.0;
       m_sizeMultOfEntitiesWhichMakeWin = 1.0;
+      m_playerToFollow = NULL;
+      m_showMinimap = true;
+      m_showEngineCounter = true;
     }
     ~GameRenderer() {_Free();}
     
@@ -202,18 +204,27 @@ namespace vapp {
     void showMsgNewBestHighscore(String p_save = "");
     void hideMsgNewHighscore();
 
-    void setRenderBikeFront(bool state) { m_renderBikeFront = state;}
-
     float SizeMultOfEntitiesToTake() const;
     float SizeMultOfEntitiesWhichMakeWin() const;
     void setSizeMultOfEntitiesToTake(float i_sizeMult);
     void setSizeMultOfEntitiesWhichMakeWin(float i_sizeMult);
+
+    void setPlayerToFollow(Biker* i_playerToFollow);
+
+    bool showMinimap() const;
+    bool showEngineCounter() const;
+    void setShowMinimap(bool i_value);
+    void setShowEngineCounter(bool i_value);
+
+    void switchFollow();
 
   private:
     /* Data */
     float m_fScale;
     float m_cameraOffsetX;
     float m_cameraOffsetY;
+
+    Biker* m_playerToFollow;
 
     std::vector<GraphDebugInfo *> m_DebugInfo;
       
@@ -239,8 +250,6 @@ namespace vapp {
     DriveDir m_previous_driver_dir; /* to move camera faster if the dir changed */
     bool  m_recenter_camera_fast;
 
-    bool m_renderBikeFront;
-
     UIWindow *m_pInGameStats;
     UIStatic *m_pPlayTime;   
     UIStatic *m_pBestTime;
@@ -264,6 +273,9 @@ namespace vapp {
 
     float m_previousEngineSpeed;
 
+    bool m_showMinimap;
+    bool m_showEngineCounter;
+
     GraphQuality m_Quality;
     bool m_bGhostMotionBlur;
       
@@ -278,7 +290,7 @@ namespace vapp {
     /* Subroutines */
     void _RenderSprites(bool bForeground,bool bBackground);
     void _RenderSprite(Entity *pSprite, float i_sizeMult = 1.0);
-    void _RenderBike(BikeState *pBike, BikeParameters *pBikeParms, BikerTheme *p_theme);
+    void _RenderBike(BikeState *pBike, BikeParameters *pBikeParms, BikerTheme *p_theme, bool i_renderBikeFront = true);
     void _RenderBlocks(void);
     void _RenderBlock(Block* block);
     void _RenderBlockEdges(Block* block);
@@ -295,6 +307,8 @@ namespace vapp {
     void _RenderParticle(ParticlesSource *i_source);
     void _RenderInGameText(Vector2f P,const std::string &Text,Color c = 0xffffffff);
     void setScroll(bool isSmooth);
+
+    void _RenderGhost(Ghost* i_ghost, int i);
 
     void _DbgText(Vector2f P,std::string Text,Color c);
     void _DrawRotatedMarker(Vector2f Pos,dReal *pfRot);     

@@ -46,8 +46,6 @@ namespace vapp {
     m_fFinishTime = 0.0f;
     m_pcInputEventsData = NULL;
     m_nInputEventsDataSize = 0;
-    m_speed_factor = 1.0;
-    m_is_paused = false;
   }
       
   Replay::~Replay() {
@@ -194,27 +192,26 @@ namespace vapp {
         }
       }
     }
-    
+
     /* Read header */
     int nVersion = FS::readByte(pfh); 
     if(bDisplayInformation) {
       printf("%-30s: %i\n", "Replay file version", nVersion);
     }
-        
+       
     /* Supported version? */
     if(nVersion != 0 && nVersion != 1) {
       FS::closeFile(pfh);
       Log("** Warning ** : Unsupported replay file version (%d): %s",nVersion,(std::string("Replays/") + FileName).c_str());
       throw Exception("Unable to open the replay");
-    }
-    else {
+    } else {
       /* Little/big endian safety check */
       if(FS::readInt_LE(pfh) != 0x12345678) {
         FS::closeFile(pfh);
         Log("** Warning ** : Sorry, the replay you're trying to open are not endian-compatible with your computer!");
         throw Exception("Unable to open the replay");        
       }
-    
+  
       /* Read level ID */
       m_LevelID = FS::readString(pfh);
       if(bDisplayInformation) {
@@ -413,14 +410,11 @@ namespace vapp {
   }
 
   bool Replay::nextNormalState() {
-    return nextState(m_speed_factor);
+    return nextState(1);
   }
 
   bool Replay::nextState(float p_frames) {
     m_bEndOfFile = false;
-    if(m_is_paused) {
-      return ! m_bEndOfFile;
-    }
 
     m_nCurState += p_frames;
 
@@ -488,41 +482,6 @@ namespace vapp {
     SwapEndian::LittleSerializedBikeState(state);
   }
   
-  void Replay::pause() {
-    m_is_paused = ! m_is_paused;
-  }
-
-  void Replay::faster() {
-    if(m_is_paused == false) {
-      m_speed_factor += REPLAY_SPEED_INCREMENT;
-    }
-  }
-
-  void Replay::slower() {
-    if(m_is_paused == false) {
-      m_speed_factor -= REPLAY_SPEED_INCREMENT;
-    }
-  }
-
-  float Replay::getSpeed() const {
-    if(m_is_paused) {
-      return 0.0;
-    }
-    return m_speed_factor;
-  }
-
-  void Replay::fastforward(float fSeconds) {
-    /* How many states should we move forward? */
-    float nNumStates = (fSeconds * m_fFrameRate);
-    nextState(nNumStates);
-  }
-
-  void Replay::fastrewind(float fSeconds) {
-    /* How many states should we move forward? */
-    float nNumStates = (fSeconds * m_fFrameRate);
-    nextState(-nNumStates);
-  }  
-
   std::string Replay::giveAutomaticName() {
     time_t date;
     time(&date);
@@ -538,8 +497,6 @@ namespace vapp {
     m_nCurChunk = 0;
     m_nCurState = 0.0;
     m_bEndOfFile = false;
-    m_speed_factor = 1;
-    m_is_paused = false;
 
     /* resetting events */
     for(int i=0;i<m_ReplayEvents.size();i++) {
@@ -602,5 +559,17 @@ namespace vapp {
       FS::closeFile(pfh);
       return pRpl;
   }
+
+  void Replay::fastforward(float fSeconds) {
+    /* How many states should we move forward? */
+    float nNumStates = (fSeconds * m_fFrameRate);
+    nextState(nNumStates);
+  }
+
+  void Replay::fastrewind(float fSeconds) {
+    /* How many states should we move forward? */
+    float nNumStates = (fSeconds * m_fFrameRate);
+    nextState(-nNumStates);
+  } 
 
 }

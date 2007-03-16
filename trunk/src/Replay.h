@@ -28,7 +28,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "DBuffer.h"
 #include "MotoGame.h"
 
-#define REPLAY_SPEED_INCREMENT 0.25
 #define STATES_PER_CHUNK 512
 
 namespace vapp {
@@ -102,17 +101,10 @@ namespace vapp {
       std::string getLevelId();
 
       void finishReplay(bool bFinished,float fFinishTime);
-      void fastforward(float fSeconds);
-      void fastrewind(float fSeconds);
-      void pause();
-      void faster();
-      void slower();
-      float getSpeed() const; /* get multiple factor of the replay */
-      
       int CurrentFrame() const;
 
-      void setSpeed(float f) {m_speed_factor = f;}
-      bool isPaused(void) {return m_is_paused;}
+      void fastforward(float fSeconds);
+      void fastrewind(float fSeconds);
 
       /* Data interface */
       bool didFinish(void) {return m_bFinished;}
@@ -144,10 +136,6 @@ namespace vapp {
       float m_fFinishTime;
       char *m_pcInputEventsData;
       int m_nInputEventsDataSize;
-
-      float m_speed_factor; /* nb frame to increment each time ;
-             is a float so that manage slow */
-      bool  m_is_paused;
  
       /* Helpers */
       void _FreeReplay(void);

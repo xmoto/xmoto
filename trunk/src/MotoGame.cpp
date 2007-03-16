@@ -31,6 +31,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Entity.h"
 #include "GameEvents.h"
 
+#define REPLAY_SPEED_INCREMENT 0.25
+
 namespace vapp {
 
   /*===========================================================================
@@ -129,26 +131,23 @@ namespace vapp {
 
   MotoGame::MotoGame() {
     m_pLevelSrc=NULL;
-    m_bSqueeking=false;
     m_bDeathAnimEnabled=true;
-    clearStates();
     m_lastCallToEveryHundreath = 0.0;
 
     m_showGhostTimeDiff = true;
 
     m_renderer      = NULL;
-    m_isScriptActiv = false;
-    m_bIsAReplay    = false;
-
-    bFrontWheelTouching = false;
-    bRearWheelTouching  = false;
-
-    m_bodyDetach = false;
-
     m_motoGameHooks = NULL;
+
+    m_speed_factor = 0.01;
+    m_is_paused = false;
+    m_playEvents = true;
+
+    m_fLastStateSerializationTime = -100.0f; /* loong time ago :) */
   }
   
   MotoGame::~MotoGame() {
+    cleanPlayers();
     cleanGhosts();
   }  
 
@@ -157,6 +156,14 @@ void MotoGame::cleanGhosts() {
     delete m_ghosts[i];
   }
   m_ghosts.clear();
+}
+
+void MotoGame::cleanPlayers() {
+  for(unsigned int i=0; i<m_players.size(); i++) {
+    delete m_players[i]->getOnBikerHooks();
+    delete m_players[i];
+  }
+  m_players.clear();
 }
 
   void MotoGame::setHooks(MotoGameHooks *i_motoGameHooks) {
@@ -254,21 +261,25 @@ void MotoGame::cleanGhosts() {
     Teleporting
     ===========================================================================*/
   void MotoGame::setPlayerPosition(float x,float y,bool bFaceRight) {
-    /* Request teleport next frame */
-    m_TeleportDest.bDriveRight = bFaceRight;
-    m_TeleportDest.Pos = Vector2f(x,y);
-    m_bTeleport = true;
-    
-    resetAutoDisabler();
+    /* Going to teleport? Do it now, before we tinker to much with the state */
+    for(unsigned int i=0; i<m_players.size(); i++) {
+      m_players[i]->resetAutoDisabler();
+      m_players[i]->initToPosition(Vector2f(x,y), bFaceRight?DD_RIGHT:DD_LEFT, m_PhysGravity);
+    }      
   }
   
-  const Vector2f &MotoGame::getPlayerPosition(void) {
-    return m_BikeS.CenterP;
+  const Vector2f &MotoGame::getPlayerPosition(int n) {
+    if(m_players.size() > n) {
+      return m_players[n]->getState()->CenterP;
+    }
+    throw Exception("Invalid player number");
   }
   
-  bool MotoGame::getPlayerFaceDir(void) {
-    if(m_BikeS.Dir == DD_RIGHT) return true;
-    else return false;
+  bool MotoGame::getPlayerFaceDir(int n) {
+    if(m_players.size() > n) {
+      return m_players[n]->getState()->Dir == DD_RIGHT;
+    }
+    throw Exception("Invalid player number");
   }
 
   /*===========================================================================
@@ -308,92 +319,35 @@ void MotoGame::cleanGhosts() {
   /*===========================================================================
     Update game
     ===========================================================================*/
-  void MotoGame::updateLevel(float fTimeStep,SerializedBikeState *pReplayState,Replay *p_replay) {
-    m_bSqueeking = false; /* no squeeking right now */
-
-    /* Going to teleport? Do it now, before we tinker to much with the state */
-    if(m_bTeleport) {
-      /* Clear stuff */
-      clearStates();    
-      
-      m_fNextAttitudeCon = -1000.0f;
-      m_fAttitudeCon = 0.0f;
-      
-      m_PlayerFootAnchorBodyID = NULL;
-      m_PlayerHandAnchorBodyID = NULL;
-      m_PlayerTorsoBodyID = NULL;
-      m_PlayerUArmBodyID = NULL;
-      m_PlayerLArmBodyID = NULL;
-      m_PlayerULegBodyID = NULL;
-      m_PlayerLLegBodyID = NULL;
-      m_PlayerFootAnchorBodyID2 = NULL;
-      m_PlayerHandAnchorBodyID2 = NULL;
-      m_PlayerTorsoBodyID2 = NULL;
-      m_PlayerUArmBodyID2 = NULL;
-      m_PlayerLArmBodyID2 = NULL;
-      m_PlayerULegBodyID2 = NULL;
-      m_PlayerLLegBodyID2 = NULL;
-
-      /* Restart physics */
-      _UninitPhysics();
-      _InitPhysics();
-
-      /* Calculate bike stuff */
-      m_BikeS.reInitializeAnchors();
-      Vector2f C( m_TeleportDest.Pos - m_BikeS.Anchors().GroundPoint());
-      _PrepareBikePhysics(C);
-          
-      m_BikeS.Dir = m_TeleportDest.bDriveRight?DD_RIGHT:DD_LEFT;
-
-      m_BikeS.reInitializeSpeed();
-      
-      m_bTeleport = false;
-    }
+  void MotoGame::updateLevel(float fTimeStep, Replay *i_recordedReplay) {
+    if(m_is_paused) return;
 
     getLevelSrc()->updateToTime(*this);
-    for(unsigned int i=0; i<m_ghosts.size(); i++) {
-      m_ghosts[i]->updateToTime(getTime());
-    }
 
     updateGameMessages();
     
     /* Increase time */
-    if(m_bIsAReplay == false)
-      m_fTime += fTimeStep;
-    else
-      m_fTime = pReplayState->fGameTime;
-    
-    /* Are we going to change direction during this update? */
-    bool bChangeDir = false;
-    if(m_BikeC.ChangeDir()) {
-      m_BikeC.setChangeDir(false);
-      bChangeDir = true;
-      
-      m_BikeS.Dir = m_BikeS.Dir==DD_LEFT?DD_RIGHT:DD_LEFT; /* switch */
-    }
-  
-    /* Update game state */
-    _UpdateGameState(pReplayState);
-        
+    m_fTime += fTimeStep;
+     
     /* Update misc stuff (only when not playing a replay) */
-    if(m_bIsAReplay == false) {
+    if(m_playEvents) {
       _UpdateZones();
       _UpdateEntities();
     }
     
     /* Invoke PreDraw() script function - deprecated */
-    if(m_isScriptActiv && isDead() == false) {
+    if(m_playEvents && isDead() == false) {
       if(!scriptCallBool("PreDraw",
-       true)) {
-  throw Exception("level script PreDraw() returned false");
-      }
+			 true)) {
+			   throw Exception("level script PreDraw() returned false");
+			 }
     }
 
     /* Invoke Tick() script function */
     /* and play script dynamic objects */
     int v_nbCents = 0;
     while(getTime() - m_lastCallToEveryHundreath > 0.01) {
-      if(m_isScriptActiv && isDead() == false) {
+      if(m_playEvents && isDead() == false) {
 	if(!scriptCallBool("Tick",
 			   true)) {
 			     throw Exception("level script Tick() returned false");
@@ -404,28 +358,43 @@ void MotoGame::cleanGhosts() {
     }
     nextStateScriptDynamicObjects(v_nbCents);
 
-    /* Only make a full physics update when not replaying */
-    if(m_bIsAReplay == false) {
-      /* Update physics */
-      _UpdatePhysics(fTimeStep);
+    for(unsigned int i=0; i<m_ghosts.size(); i++) {
+      m_ghosts[i]->updateToTime(getTime(), this);
+    }
 
-      /* New wheel-spin particles? */
-      if(isWheelSpinning()) {
-	if(randomNum(0,1) < 0.7f) {
-	  ParticlesSource *v_debris;
-	  v_debris = (ParticlesSource*) &(getLevelSrc()->getEntityById("BikeDebris"));
-	  v_debris->setDynamicPosition(getWheelSpinPoint());	
-	  v_debris->addParticle(getWheelSpinDir(), m_pMotoGame->getTime() + 3.0);
+    for(unsigned int i=0; i<m_players.size(); i++) {
+      m_players[i]->updateToTime(m_fTime, fTimeStep, &m_Collision, m_PhysGravity);
+      
+      if(m_playEvents) {
+	/* New wheel-spin particles? */
+	if(m_players[i]->isWheelSpinning()) {
+	  if(randomNum(0,1) < 0.7f) {
+	    ParticlesSource *v_debris;
+	    v_debris = (ParticlesSource*) &(getLevelSrc()->getEntityById("BikeDebris"));
+	    v_debris->setDynamicPosition(m_players[i]->getWheelSpinPoint());	
+	    v_debris->addParticle(m_players[i]->getWheelSpinDir(), getTime() + 3.0);
+	  }
 	}
       }
-
-      if(isDead() == false) {
-	executeEvents(p_replay);
-      }
     }
-    else {
-      /* Well, handle replay events instead */
-      _UpdateReplayEvents(p_replay);
+
+    executeEvents(i_recordedReplay);
+
+    /* save the replay */
+    if(i_recordedReplay != NULL) {
+      /* We'd like to serialize the game state 25 times per second for the replay */
+      if(getTime() - m_fLastStateSerializationTime >= 1.0f/i_recordedReplay->getFrameRate()) {
+        m_fLastStateSerializationTime = getTime();
+        
+        /* Get it */
+	/* only store the state if 1 player plays */
+	if(Players().size() == 1) {
+	  SerializedBikeState BikeState;
+	  getSerializedBikeState(Players()[0]->getState(), getTime(), &BikeState);
+	  if(i_recordedReplay != NULL)
+	    i_recordedReplay->storeState(BikeState);              
+	}
+      }
     }
 
     /* Entities scheduled for termination? */
@@ -433,26 +402,6 @@ void MotoGame::cleanGhosts() {
       _KillEntity(m_DelSchedule[i]);
     }
     m_DelSchedule.clear();
-    
-    // we don't change the sens of the wheel depending on the side, because 
-    // loops must not make done just by changing the side
-    if(m_bIsAReplay == false) { /* this does not work for replays */
-      double fAngle = acos(m_BikeS.fFrameRot[0]);
-      bool bCounterclock;
-      if(m_BikeS.fFrameRot[2] < 0.0f) fAngle = 2*3.14159f - fAngle;
-
-      if(m_somersaultCounter.update(fAngle, bCounterclock)) {
-  scriptCallVoidNumberArg("OnSomersault", bCounterclock ? 1:0);
-      }
-    }
-
-    /* Remember bike pos for next time */
-    //m_PrevFrontWheelP = m_BikeS.FrontWheelP;
-    //m_PrevRearWheelP = m_BikeS.RearWheelP;
-    
-    //float fAngle = (180.0f * acos(m_BikeS.fFrameRot[0])) / 3.14159f;
-    //if(m_BikeS.fFrameRot[2] < 0.0f) fAngle = 360 - fAngle;
-    //printf("%f\n",fAngle);
   }
 
   void MotoGame::executeEvents(Replay *p_replay) {
@@ -503,98 +452,20 @@ void MotoGame::cleanGhosts() {
   }
 
   /*===========================================================================
-    State/stuff clearing
-    ===========================================================================*/
-  void MotoGame::clearStates(void) {      
-    /* BIKE_S */
-    m_BikeS.CenterP = Vector2f(0,0);
-    m_BikeS.Dir = DD_RIGHT;
-    m_BikeS.fBikeEngineRPM = 0.0f;
-    m_BikeS.Elbow2P = Vector2f(0,0);
-    m_BikeS.ElbowP = Vector2f(0,0);
-    m_BikeS.reInitializeSpeed();
-    m_BikeS.Foot2P = Vector2f(0,0);
-    m_BikeS.FootP = Vector2f(0,0);
-    m_BikeS.FrontAnchor2P = Vector2f(0,0);
-    m_BikeS.FrontAnchorP = Vector2f(0,0);
-    m_BikeS.FrontWheelP = Vector2f(0,0);
-    m_BikeS.Hand2P = Vector2f(0,0);
-    m_BikeS.HandP = Vector2f(0,0);
-    m_BikeS.Head2P = Vector2f(0,0);
-    m_BikeS.HeadP = Vector2f(0,0);
-    m_BikeS.Knee2P = Vector2f(0,0);
-    m_BikeS.KneeP = Vector2f(0,0);
-    m_BikeS.LowerBody2P = Vector2f(0,0);
-    m_BikeS.LowerBodyP = Vector2f(0,0);
-    //m_BikeS.pfFramePos = NULL;
-    //m_BikeS.pfFrameRot = NULL;
-    //m_BikeS.pfFrontWheelPos = NULL;
-    //m_BikeS.pfFrontWheelRot = NULL;
-    //m_BikeS.pfRearWheelPos = NULL;
-    //m_BikeS.pfRearWheelRot = NULL;
-    //m_BikeS.pfPlayerLArmPos = NULL;
-    //m_BikeS.pfPlayerUArmPos = NULL;
-    //m_BikeS.pfPlayerLLegPos = NULL;
-    //m_BikeS.pfPlayerULegPos = NULL;
-    //m_BikeS.pfPlayerTorsoPos = NULL;
-    //m_BikeS.pfPlayerTorsoRot = NULL;
-    m_BikeS.PlayerLArmP = Vector2f(0,0);
-    m_BikeS.PlayerLLegP = Vector2f(0,0);
-    m_BikeS.PlayerTorsoP = Vector2f(0,0);
-    m_BikeS.PlayerUArmP = Vector2f(0,0);
-    m_BikeS.PlayerULegP = Vector2f(0,0);
-    //m_BikeS.pfPlayerLArm2Pos = NULL;
-    //m_BikeS.pfPlayerUArm2Pos = NULL;
-    //m_BikeS.pfPlayerLLeg2Pos = NULL;
-    //m_BikeS.pfPlayerULeg2Pos = NULL;
-    //m_BikeS.pfPlayerTorso2Pos = NULL;
-    //m_BikeS.pfPlayerTorso2Rot = NULL;
-    m_BikeS.PlayerLArm2P = Vector2f(0,0);
-    m_BikeS.PlayerLLeg2P = Vector2f(0,0);
-    m_BikeS.PlayerTorso2P = Vector2f(0,0);
-    m_BikeS.PlayerUArm2P = Vector2f(0,0);
-    m_BikeS.PlayerULeg2P = Vector2f(0,0);
-    m_BikeS.PrevFq = Vector2f(0,0);
-    m_BikeS.PrevRq = Vector2f(0,0);
-    m_BikeS.PrevPFq = Vector2f(0,0);
-    m_BikeS.PrevPHq = Vector2f(0,0);
-    m_BikeS.PrevPFq2 = Vector2f(0,0);
-    m_BikeS.PrevPHq2 = Vector2f(0,0);
-    m_BikeS.RearWheelP = Vector2f(0,0);
-    m_BikeS.RFrontWheelP = Vector2f(0,0);
-    m_BikeS.RRearWheelP = Vector2f(0,0);
-    m_BikeS.Shoulder2P = Vector2f(0,0);
-    m_BikeS.ShoulderP = Vector2f(0,0);
-    m_BikeS.SwingAnchor2P = Vector2f(0,0);
-    m_BikeS.SwingAnchorP = Vector2f(0,0);
-    
-    /* BIKE_C */
-    memset(&m_BikeC,0,sizeof(m_BikeC)); 
-  }
-
-  /*===========================================================================
     Prepare the specified level for playing through this game object
     ===========================================================================*/
   void MotoGame::prePlayLevel(
          Level *pLevelSrc,
          Replay *recordingReplay,
-         bool bIsAReplay) {
+         bool i_playEvents) {
 
-    m_bIsAReplay = bIsAReplay;
-    m_isScriptActiv = (m_bIsAReplay == false);
+	   m_playEvents = i_playEvents;
     m_bLevelInitSuccess = true;
-
-    /* Clean up first, just for safe's sake */
-    endLevel();               
 
     /* load the level if not */
     if(pLevelSrc->isFullyLoaded() == false) {
       pLevelSrc->loadFullyFromFile();
     }
-
-    /* Set default gravity */
-    m_PhysGravity.x = 0;
-    m_PhysGravity.y = PHYS_WORLD_GRAV;
     
     /* Create Lua state */
     m_pL = lua_open();
@@ -606,43 +477,19 @@ void MotoGame::cleanGhosts() {
     
     /* Clear collision system */
     m_Collision.reset();
-    bFrontWheelTouching = false;
-    bRearWheelTouching  = false;
     pLevelSrc->setCollisionSystem(&m_Collision);
 
-    /* Clear stuff */
-    clearStates();
-    
-    m_bWheelSpin = false;
-    
+    /* Set default gravity */
+    m_PhysGravity.x = 0;
+    m_PhysGravity.y = PHYS_WORLD_GRAV;
+
     m_fTime = 0.0f;
     m_fFinishTime = 0.0f;
-    m_fNextAttitudeCon = -1000.0f;
-    m_fAttitudeCon = 0.0f;
-    
-    m_nStillFrames = 0;
-    
+       
     m_nLastEventSeq = 0;
     
     m_Arrow.nArrowPointerMode = 0;
-
-    m_bTeleport=false;
-        
-    m_PlayerFootAnchorBodyID = NULL;
-    m_PlayerHandAnchorBodyID = NULL;
-    m_PlayerTorsoBodyID = NULL;
-    m_PlayerUArmBodyID = NULL;
-    m_PlayerLArmBodyID = NULL;
-    m_PlayerULegBodyID = NULL;
-    m_PlayerLLegBodyID = NULL;
-    m_PlayerFootAnchorBodyID2 = NULL;
-    m_PlayerHandAnchorBodyID2 = NULL;
-    m_PlayerTorsoBodyID2 = NULL;
-    m_PlayerUArmBodyID2 = NULL;
-    m_PlayerLArmBodyID2 = NULL;
-    m_PlayerULegBodyID2 = NULL;
-    m_PlayerLLegBodyID2 = NULL;
-    
+ 
     m_bDead = m_bFinished = false;
 
     m_lastCallToEveryHundreath = 0.0;
@@ -708,9 +555,6 @@ void MotoGame::cleanGhosts() {
       throw Exception("failed to get level script");
     }
     
-    /* Initialize physics */
-    _InitPhysics();
-   
     /* Set level source reference -- this tells the world that the level is ready */
     m_pLevelSrc = pLevelSrc;
 
@@ -723,19 +567,8 @@ void MotoGame::cleanGhosts() {
       return;
     }        
 
-    /* Calculate bike stuff */
-    m_BikeS.reInitializeAnchors();
-    Vector2f C( pLevelSrc->PlayerStart() - m_BikeS.Anchors().GroundPoint());
-    _PrepareBikePhysics(C);
-    setBodyDetach(false);    
-
-    /* Drive left-to-right for starters */
-    m_BikeS.Dir = DD_RIGHT;
-    
-    m_BikeS.reInitializeSpeed();
-
     /* Invoke the OnLoad() script function */
-    if(m_isScriptActiv) {
+    if(m_playEvents) {
       bool bOnLoadSuccess = scriptCallBool("OnLoad",
              true);
       /* if no OnLoad(), assume success */
@@ -749,7 +582,6 @@ void MotoGame::cleanGhosts() {
       }
     }
 
-    cleanGhosts();
     m_myLastStrawberries.clear();
 
     /* add the debris particlesSource */
@@ -757,36 +589,44 @@ void MotoGame::cleanGhosts() {
     v_debris->loadToPlay();
     getLevelSrc()->spawnEntity(v_debris);
 
-    /* counter of somersaultcounter */
-    m_somersaultCounter.init();
-
     /* execute events */
-    executeEvents(recordingReplay);
-
-    if(m_bIsAReplay == false) {
-      /* Update game state */
-      _UpdateGameState(NULL);
+    if(m_playEvents) {
+      executeEvents(recordingReplay);
     }
-
   }
 
-  void MotoGame::addGhostFromFile(std::string i_ghostFile, std::string i_info) {
+  Ghost* MotoGame::addSimpleGhostFromFile(std::string i_ghostFile, bool i_isActiv) {
+    Ghost* v_ghost = NULL;
+    v_ghost = new Ghost(i_ghostFile, i_isActiv);
+    m_ghosts.push_back(v_ghost);
+    return v_ghost;
+  }
+
+  Ghost* MotoGame::addGhostFromFile(std::string i_ghostFile, std::string i_info, bool i_isActiv) {
+    Ghost* v_ghost = NULL;
+
     /* the level must be set to add a ghost */
-    if(m_pLevelSrc != NULL) {
-      Ghost* v_ghost = new Ghost(i_ghostFile);
-      v_ghost->setInfo(i_info);
-      v_ghost->initLastToTakeEntities(m_pLevelSrc);
-      m_ghosts.push_back(v_ghost);
+    if(m_pLevelSrc == NULL) {
+      throw Exception("No level defined");
     }
+
+    v_ghost = new Ghost(i_ghostFile, i_isActiv);
+    v_ghost->setInfo(i_info);
+    v_ghost->initLastToTakeEntities(m_pLevelSrc);
+    m_ghosts.push_back(v_ghost);
+    return v_ghost;
   }
 
   std::vector<Ghost *>& MotoGame::Ghosts() {
     return m_ghosts;
   }
 
+  std::vector<PlayerBiker *>& MotoGame::Players() {
+    return m_players;
+  }
+
   void MotoGame::playLevel(
-         Level *pLevelSrc,
-         bool bIsAReplay) {
+         Level *pLevelSrc) {
   }
 
   /*===========================================================================
@@ -798,12 +638,7 @@ void MotoGame::cleanGhosts() {
       /* Clean up */
       lua_close(m_pL);
       m_pL = NULL;
-      
-      /* Stop physics */
-      _UninitPhysics();
 
-      m_entitiesTouching.clear();
-      m_zonesTouching.clear();
       m_pLevelSrc->unloadToPlay();      
 
       /* Release reference to level source */
@@ -821,6 +656,7 @@ void MotoGame::cleanGhosts() {
     /* clean event queue */
     cleanEventsQueue();
 
+    cleanPlayers();
     cleanGhosts();
   }
 
@@ -873,9 +709,6 @@ void MotoGame::cleanGhosts() {
     /* For each input block */
     int nTotalBSPErrors = 0;
     
-    m_zonesTouching.clear();
-    m_entitiesTouching.clear();
-
     nTotalBSPErrors = m_pLevelSrc->loadToPlay();
 
     Log(" %d poly%s in total",m_pLevelSrc->Blocks().size(),m_pLevelSrc->Blocks().size()==1?"":"s");        
@@ -886,7 +719,7 @@ void MotoGame::cleanGhosts() {
       gameMessage(GAMETEXT_ERRORSINLEVEL);
     }
 
-    if(m_bIsAReplay == false){
+    if(m_playEvents){
       /* Give limits to collision system */
       m_Collision.defineLine( m_pLevelSrc->LeftLimit(), m_pLevelSrc->TopLimit(),
 			      m_pLevelSrc->LeftLimit(), m_pLevelSrc->BottomLimit(),
@@ -984,35 +817,6 @@ void MotoGame::cleanGhosts() {
     return false;
   }
 
-  bool MotoGame::isTouching(const Entity& i_entity) const {
-    for(int i=0; i<m_entitiesTouching.size(); i++) {
-      if(m_entitiesTouching[i] == &i_entity) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  MotoGame::touch MotoGame::setTouching(Entity& i_entity, bool i_touching) {
-    bool v_wasTouching = isTouching(i_entity);
-    if(v_wasTouching == i_touching) {
-      return none;
-    }
-
-    if(i_touching) {
-      m_entitiesTouching.push_back(&i_entity);
-      return added;
-    } else {
-      for(int i=0; i<m_entitiesTouching.size(); i++) {
-        if(m_entitiesTouching[i] == &i_entity) {
-          m_entitiesTouching.erase(m_entitiesTouching.begin() + i);
-          return removed;
-        }
-      }
-    }
-    return none;
-  }
-
   
   /*===========================================================================
     Update zone specific stuff -- call scripts where needed
@@ -1021,128 +825,105 @@ void MotoGame::cleanGhosts() {
     /* Check player touching for each zone */
     for(int i=0;i<m_pLevelSrc->Zones().size();i++) {
       Zone *pZone = m_pLevelSrc->Zones()[i];
-      
-      /* Check it against the wheels and the head */
-      if(pZone->doesCircleTouch(m_BikeS.FrontWheelP, m_BikeS.Parameters().WheelRadius()) ||
-         pZone->doesCircleTouch(m_BikeS.RearWheelP,  m_BikeS.Parameters().WheelRadius())) {       
-        /* In the zone -- did he just enter it? */
-        if(setTouching(*pZone, true) == added){
-          createGameEvent(new MGE_PlayerEntersZone(getTime(), pZone));
-        }
-      }         
-      else {
-        /* Not in the zone... but was he during last update? - i.e. has 
-           he just left it? */      
-        if(setTouching(*pZone, false) == removed){
-          createGameEvent(new MGE_PlayerLeavesZone(getTime(), pZone));
-        }
+
+      for(unsigned int j=0; j<m_players.size(); j++) {
+	PlayerBiker* v_player = m_players[j];
+     
+	/* Check it against the wheels and the head */
+	if(pZone->doesCircleTouch(v_player->getState()->FrontWheelP, v_player->getState()->Parameters().WheelRadius()) ||
+	   pZone->doesCircleTouch(v_player->getState()->RearWheelP,  v_player->getState()->Parameters().WheelRadius())) {       
+	  /* In the zone -- did he just enter it? */
+	  if(v_player->setTouching(*pZone, true) == PlayerBiker::added){
+	    createGameEvent(new MGE_PlayerEntersZone(getTime(), pZone));
+	  }
+	} else {
+	  /* Not in the zone... but was he during last update? - i.e. has 
+	     he just left it? */      
+	  if(v_player->setTouching(*pZone, false) == PlayerBiker::removed){
+	    createGameEvent(new MGE_PlayerLeavesZone(getTime(), pZone));
+	  }
+	}
       }
     }
   }
 
 
   void MotoGame::_UpdateEntities(void) {
-    Vector2f HeadPos = m_BikeS.Dir==DD_RIGHT?m_BikeS.HeadP:m_BikeS.Head2P;
+    for(unsigned int j=0; j<m_players.size(); j++) {
+      PlayerBiker* v_player = m_players[j];
 
-    /* Get biker bounding box */
-    AABB BBox;
-    float headSize = m_BikeS.Parameters().HeadSize();
-    float wheelRadius = m_BikeS.Parameters().WheelRadius();
-    /* in case the body is outside of the aabb */
-    float securityMargin = 0.5;
+      Vector2f HeadPos = v_player->getState()->Dir==DD_RIGHT?v_player->getState()->HeadP:v_player->getState()->Head2P;
 
-    BBox.addPointToAABB2f(HeadPos[0]-headSize-securityMargin,
-			  HeadPos[1]-headSize-securityMargin);
-    BBox.addPointToAABB2f(m_BikeS.FrontWheelP[0]-wheelRadius-securityMargin,
-			  m_BikeS.FrontWheelP[1]-wheelRadius-securityMargin);
-    BBox.addPointToAABB2f(m_BikeS.RearWheelP[0]-wheelRadius-securityMargin,
-			  m_BikeS.RearWheelP[1]-wheelRadius-securityMargin);
+      /* Get biker bounding box */
+      AABB BBox;
+      float headSize = v_player->getState()->Parameters().HeadSize();
+      float wheelRadius = v_player->getState()->Parameters().WheelRadius();
+      /* in case the body is outside of the aabb */
+      float securityMargin = 0.5;
+      
+      BBox.addPointToAABB2f(HeadPos[0]-headSize-securityMargin,
+			    HeadPos[1]-headSize-securityMargin);
+      BBox.addPointToAABB2f(v_player->getState()->FrontWheelP[0]-wheelRadius-securityMargin,
+			    v_player->getState()->FrontWheelP[1]-wheelRadius-securityMargin);
+      BBox.addPointToAABB2f(v_player->getState()->RearWheelP[0]-wheelRadius-securityMargin,
+			    v_player->getState()->RearWheelP[1]-wheelRadius-securityMargin);
 
-    BBox.addPointToAABB2f(HeadPos[0]+headSize+securityMargin,
-			  HeadPos[1]+headSize+securityMargin);
-    BBox.addPointToAABB2f(m_BikeS.FrontWheelP[0]+wheelRadius+securityMargin,
-			  m_BikeS.FrontWheelP[1]+wheelRadius+securityMargin);
-    BBox.addPointToAABB2f(m_BikeS.RearWheelP[0]+wheelRadius+securityMargin,
-			  m_BikeS.RearWheelP[1]+wheelRadius+securityMargin);
-
-    std::vector<Entity*> entities = m_Collision.getEntitiesNearPosition(BBox);
-
-    /* Do player touch anything? */
-    for(int i=0;i<entities.size();i++) {
-      /* Test against the biker aabb first */
-      if(true){
-	/* Head? */
-	if(circleTouchCircle2f(entities[i]->DynamicPosition(),
-			       entities[i]->Size(),
-			       HeadPos,
-			       m_BikeS.Parameters().HeadSize())) {
-	  if(setTouching(*(entities[i]), true) == added){
-	    createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
-							entities[i]->Id(),
-							true));
-	  }
-	  
-	  /* Wheel then ? */
-	} else if(circleTouchCircle2f(entities[i]->DynamicPosition(),
-				      entities[i]->Size(),
-				      m_BikeS.FrontWheelP,
-				      m_BikeS.Parameters().WheelRadius()) ||
-		  circleTouchCircle2f(entities[i]->DynamicPosition(),
-				      entities[i]->Size(),
-				      m_BikeS.RearWheelP,
-				      m_BikeS.Parameters().WheelRadius())) {
-	  if(setTouching(*(entities[i]), true) == added){
-	    createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
-							entities[i]->Id(),
-							false));
-	  }
-	  
-	  /* body then ?*/
-	} else if(touchEntityBodyExceptHead(m_BikeS, *(entities[i]))) {
-	  if(setTouching(*(entities[i]), true) == added){
-	    createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
-							entities[i]->Id(),
-							false));
+      BBox.addPointToAABB2f(HeadPos[0]+headSize+securityMargin,
+			    HeadPos[1]+headSize+securityMargin);
+      BBox.addPointToAABB2f(v_player->getState()->FrontWheelP[0]+wheelRadius+securityMargin,
+			    v_player->getState()->FrontWheelP[1]+wheelRadius+securityMargin);
+      BBox.addPointToAABB2f(v_player->getState()->RearWheelP[0]+wheelRadius+securityMargin,
+			    v_player->getState()->RearWheelP[1]+wheelRadius+securityMargin);
+      
+      std::vector<Entity*> entities = m_Collision.getEntitiesNearPosition(BBox);
+      
+      /* Do player touch anything? */
+      for(int i=0;i<entities.size();i++) {
+	/* Test against the biker aabb first */
+	if(true){
+	  /* Head? */
+	  if(circleTouchCircle2f(entities[i]->DynamicPosition(),
+				 entities[i]->Size(),
+				 HeadPos,
+				 v_player->getState()->Parameters().HeadSize())) {
+	    if(v_player->setTouching(*(entities[i]), true) == PlayerBiker::added){
+	      createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
+							  entities[i]->Id(),
+							  true));
+	    }
+	    
+	    /* Wheel then ? */
+	  } else if(circleTouchCircle2f(entities[i]->DynamicPosition(),
+					entities[i]->Size(),
+					v_player->getState()->FrontWheelP,
+					v_player->getState()->Parameters().WheelRadius()) ||
+		    circleTouchCircle2f(entities[i]->DynamicPosition(),
+					entities[i]->Size(),
+					v_player->getState()->RearWheelP,
+					v_player->getState()->Parameters().WheelRadius())) {
+	    if(v_player->setTouching(*(entities[i]), true) == PlayerBiker::added){
+	      createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
+							  entities[i]->Id(),
+							  false));
+	    }
+	    
+	    /* body then ?*/
+	  } else if(touchEntityBodyExceptHead(*(v_player->getState()), *(entities[i]))) {
+	    if(v_player->setTouching(*(entities[i]), true) == PlayerBiker::added){
+	      createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
+							  entities[i]->Id(),
+							  false));
+	    }
+	  } else {
+	    /* TODO::generate an event "leaves entity" if needed */
+	    v_player->setTouching(*(entities[i]), false);
 	  }
 	} else {
 	  /* TODO::generate an event "leaves entity" if needed */
-	  setTouching(*(entities[i]), false);
+	  v_player->setTouching(*(entities[i]), false);
 	}
-      } else {
-	/* TODO::generate an event "leaves entity" if needed */
-	setTouching(*(entities[i]), false);
       }
     }
-  }
-
-
-  bool MotoGame::isTouching(const Zone& i_zone) const {
-    for(unsigned int i=0; i<m_zonesTouching.size(); i++) {
-      if(m_zonesTouching[i]->Id() == i_zone.Id()) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  MotoGame::touch MotoGame::setTouching(Zone& i_zone, bool i_isTouching) {
-    bool v_wasTouching = isTouching(i_zone);
-    if(v_wasTouching == i_isTouching) {
-      return none;
-    }
-    
-    if(i_isTouching) {
-      m_zonesTouching.push_back(&i_zone);
-      return added;
-    } else {
-      for(int i=0; i<m_zonesTouching.size(); i++) {
-        if(m_zonesTouching[i] == &i_zone) {
-          m_zonesTouching.erase(m_zonesTouching.begin() + i);
-          return removed;
-        }
-      }
-    }
-    return none;
   }
   
   /*===========================================================================
@@ -1157,7 +938,7 @@ void MotoGame::cleanGhosts() {
   
   void MotoGame::touchEntity(Entity *pEntity,bool bHead) {
     /* Start by invoking scripts if any */
-    if(m_isScriptActiv) {
+    if(m_playEvents) {
       scriptCallTblVoid(pEntity->Id(),"Touch");
     }
 
@@ -1254,42 +1035,7 @@ void MotoGame::cleanGhosts() {
     }
   }
 
-  /*===========================================================================
-    Update recorded replay events
-    ===========================================================================*/
-  void MotoGame::_UpdateReplayEvents(Replay *p_replay) {
-    std::vector<RecordedGameEvent *> *v_replayEvents;
-
-    v_replayEvents = p_replay->getEvents();
-
-    /* Start looking for events that should be passed */
-    for(int i=0;i<v_replayEvents->size();i++) {
-      /* Not passed? And with a time stamp that tells it should have happened
-         by now? */
-      if(!(*v_replayEvents)[i]->bPassed && (*v_replayEvents)[i]->Event->getEventTime() < getTime()) {
-        /* Nice. Handle this event, replay style */
-        _HandleReplayEvent((*v_replayEvents)[i]->Event);
-        
-        /* Pass it */
-        (*v_replayEvents)[i]->bPassed = true;
-      }
-    }
-
-    /* Now see if we have moved back in time and whether we should apply some
-       REVERSE events */
-    for(int i=v_replayEvents->size()-1;i>=0;i--) {
-      /* Passed? And with a time stamp larger than current time? */
-      if((*v_replayEvents)[i]->bPassed && (*v_replayEvents)[i]->Event->getEventTime() > getTime()) {
-        /* Nice. Handle this event, replay style BACKWARDS */
-  (*v_replayEvents)[i]->Event->revert(this);
-
-        /* Un-pass it */
-        (*v_replayEvents)[i]->bPassed = false;
-      }
-    }
-  }
-
-  void MotoGame::_HandleReplayEvent(MotoGameEvent *pEvent) {     
+  void MotoGame::handleEvent(MotoGameEvent *pEvent) {     
     switch(pEvent->getType()) {
       case GAME_EVENT_PLAYER_TOUCHES_ENTITY:
       /* touching an entity creates events, so, don't call it */
@@ -1320,15 +1066,15 @@ void MotoGame::cleanGhosts() {
   }
 
   void MotoGame::PlaceInGameArrow(float pX, float pY, float pAngle) {
-    m_pMotoGame->getArrowPointer().nArrowPointerMode = 1;
-    m_pMotoGame->getArrowPointer().ArrowPointerPos = Vector2f(pX, pY);
-    m_pMotoGame->getArrowPointer().fArrowPointerAngle = pAngle;
+    getArrowPointer().nArrowPointerMode = 1;
+    getArrowPointer().ArrowPointerPos = Vector2f(pX, pY);
+    getArrowPointer().fArrowPointerAngle = pAngle;
   }
 
   void MotoGame::PlaceScreenArrow(float pX, float pY, float pAngle) {
-    m_pMotoGame->getArrowPointer().nArrowPointerMode = 2;
-    m_pMotoGame->getArrowPointer().ArrowPointerPos = Vector2f(pX, pY);
-    m_pMotoGame->getArrowPointer().fArrowPointerAngle = pAngle;
+    getArrowPointer().nArrowPointerMode = 2;
+    getArrowPointer().ArrowPointerPos = Vector2f(pX, pY);
+    getArrowPointer().fArrowPointerAngle = pAngle;
   }
 
   void MotoGame::HideArrow() {
@@ -1428,18 +1174,24 @@ void MotoGame::cleanGhosts() {
 
   void MotoGame::killPlayer() {
     m_bDead = true;    
-    setBodyDetach(m_bDeathAnimEnabled);
-    m_BikeC.stopContols();
+
+    for(unsigned int i=0; i<m_players.size(); i++) {
+      if(m_bDeathAnimEnabled) {
+	m_players[i]->resetAutoDisabler();
+	m_players[i]->setBodyDetach(true);
+      }
+      m_players[i]->getControler()->stopContols();
+    }
   }
 
   void MotoGame::playerEntersZone(Zone *pZone) {
-    if(m_isScriptActiv) {
+    if(m_playEvents) {
       scriptCallTblVoid(pZone->Id(), "OnEnter");
     }
   }
   
   void MotoGame::playerLeavesZone(Zone *pZone) {
-    if(m_isScriptActiv) {
+    if(m_playEvents) {
       scriptCallTblVoid(pZone->Id(), "OnLeave");
     }
   }
@@ -1457,7 +1209,7 @@ void MotoGame::cleanGhosts() {
       v_stars->setInitialPosition(v_entity->DynamicPosition());
       v_stars->loadToPlay();
       for(int i=0; i<3; i++) {
-	v_stars->addParticle(Vector2f(0,0), m_pMotoGame->getTime() + 5.0);
+	v_stars->addParticle(Vector2f(0,0), getTime() + 5.0);
       }
       getLevelSrc()->spawnEntity(v_stars);
       
@@ -1477,7 +1229,7 @@ void MotoGame::cleanGhosts() {
   void MotoGame::createKillEntityEvent(std::string p_entityID) {
     Entity *v_entity;
     v_entity = &(m_pLevelSrc->getEntityById(p_entityID));
-    createGameEvent(new MGE_EntityDestroyed(m_pMotoGame->getTime(),
+    createGameEvent(new MGE_EntityDestroyed(getTime(),
                                             v_entity->Id(),
                                             v_entity->Speciality(),
                                             v_entity->DynamicPosition(),
@@ -1493,33 +1245,6 @@ void MotoGame::cleanGhosts() {
     m_fFinishTime = getTime();
   }
 
-  void MotoGame::setBodyDetach(bool state) {
-    m_bodyDetach = state;
-    m_renderer->setRenderBikeFront(! m_bodyDetach);
-
-    if(m_bodyDetach) {
-      dJointSetHingeParam(m_KneeHingeID,  dParamLoStop, 0.0);
-      dJointSetHingeParam(m_KneeHingeID,  dParamHiStop, 3.14159/8.0);
-      dJointSetHingeParam(m_KneeHingeID2, dParamLoStop, 3.14159/8.0 * -1.0);
-      dJointSetHingeParam(m_KneeHingeID2, dParamHiStop, 0.0         * -1.0);
-
-      dJointSetHingeParam(m_LowerBodyHingeID,  dParamLoStop,  -1.2);
-      dJointSetHingeParam(m_LowerBodyHingeID,  dParamHiStop,  0.0);
-      dJointSetHingeParam(m_LowerBodyHingeID2, dParamLoStop, 0.0  * -1.0);
-      dJointSetHingeParam(m_LowerBodyHingeID2, dParamHiStop, -1.2 * -1.0);
-
-      dJointSetHingeParam(m_ShoulderHingeID,  dParamLoStop, -2.0);
-      dJointSetHingeParam(m_ShoulderHingeID,  dParamHiStop,  0.0);
-      dJointSetHingeParam(m_ShoulderHingeID2, dParamLoStop,  0.0  * -1.0);
-      dJointSetHingeParam(m_ShoulderHingeID2, dParamHiStop, -2.0  * -1.0);
-
-      dJointSetHingeParam(m_ElbowHingeID,  dParamLoStop, -1.5);
-      dJointSetHingeParam(m_ElbowHingeID,  dParamHiStop, 1.0);
-      dJointSetHingeParam(m_ElbowHingeID2, dParamLoStop, 1.0   * -1.0);
-      dJointSetHingeParam(m_ElbowHingeID2, dParamHiStop, -1.5  * -1.0);
-    }
-  }
-
   void MotoGame::addPenalityTime(float fTime) {
     m_fTime += fTime;
   }
@@ -1533,15 +1258,114 @@ void MotoGame::cleanGhosts() {
     /* special case for the last strawberry : if we are touching the end, finish the level */
     if(getNbRemainingStrawberries() == 0) {
       bool v_touchingMakeWin = false;
-      for(int i=0; i<m_entitiesTouching.size(); i++) {
-	if(m_entitiesTouching[i]->DoesMakeWin()) {
-	  v_touchingMakeWin = true;
+      
+      for(int j=0; j<m_players.size(); j++) {
+	for(int i=0; i<m_players[j]->EntitiesTouching().size(); i++) {
+	  if(m_players[j]->EntitiesTouching()[i]->DoesMakeWin()) {
+	    v_touchingMakeWin = true;
+	  }
 	}
       }
+
       if(v_touchingMakeWin) {
 	makePlayerWin();
       }
     }
   }
 
+
+  PlayerBiker* MotoGame::addPlayerBiker(Vector2f i_position, DriveDir i_direction, Theme *i_theme) {
+    PlayerBiker* v_playerBiker = new PlayerBiker(i_position, i_direction, m_PhysGravity, i_theme);
+    v_playerBiker->setOnBikerHooks(new MotoGameOnBikerHooks(this, m_players.size()));
+    m_players.push_back(v_playerBiker);
+    return v_playerBiker;
+  }
+
+  void MotoGame::setGravity(float x,float y) {
+    m_PhysGravity.x=x;
+    m_PhysGravity.y=y;
+
+    for(unsigned int i=0; i<m_players.size(); i++) {
+      m_players[i]->resetAutoDisabler();
+    }
+  }
+
+  const Vector2f & MotoGame::getGravity() {
+    return m_PhysGravity;
+  }
+
+  void MotoGame::pause() {
+    m_is_paused = ! m_is_paused;
+  }
+
+  float MotoGame::getSpeed() const {
+    if(m_is_paused) {
+      return 0.0;
+    }
+    return m_speed_factor;
+  }
+
+  void MotoGame::slower() {
+    if(m_is_paused == false) {
+      m_speed_factor -= REPLAY_SPEED_INCREMENT;
+    }
+  }
+
+  void MotoGame::faster() {
+    if(m_is_paused == false) {
+      m_speed_factor += REPLAY_SPEED_INCREMENT;
+    }
+  }
+
+  void MotoGame::fastforward(float fSeconds) {
+    m_fTime += fSeconds;
+  }
+
+  void MotoGame::fastrewind(float fSeconds) {
+    m_fTime -= fSeconds;
+    if(m_fTime < 0.0) m_fTime = 0.0;
+  }
+
+  bool MotoGame::doesPlayEvents() const {
+    return m_playEvents;
+  }
 }
+
+MotoGameOnBikerHooks::MotoGameOnBikerHooks(vapp::MotoGame* i_motoGame, int i_playerNumber) {
+  m_motoGame = i_motoGame;
+  m_playerNumber = i_playerNumber;
+}
+
+MotoGameOnBikerHooks::~MotoGameOnBikerHooks() {
+}
+
+void MotoGameOnBikerHooks::onSomersaultDone(bool i_counterclock) {
+  if(m_playerNumber != 0) return;
+  if(m_motoGame->doesPlayEvents() == false) return;
+
+  m_motoGame->scriptCallVoidNumberArg("OnSomersault", i_counterclock ? 1:0);
+}
+
+void MotoGameOnBikerHooks::onWheelTouches(int i_wheel, bool i_touch) {
+  if(m_playerNumber != 0) return;
+  if(m_motoGame->doesPlayEvents() == false) return;
+
+  if(i_wheel == 1) {
+    if(i_touch) {
+      m_motoGame->scriptCallVoidNumberArg("OnWheel1Touchs", 1);
+    } else {
+      m_motoGame->scriptCallVoidNumberArg("OnWheel1Touchs", 0);
+    }
+  } else {
+    if(i_touch) {
+      m_motoGame->scriptCallVoidNumberArg("OnWheel2Touchs", 1);
+    } else {
+      m_motoGame->scriptCallVoidNumberArg("OnWheel2Touchs", 0);
+    }
+  }
+}
+
+void MotoGameOnBikerHooks::onHeadTouches() {
+  m_motoGame->createGameEvent(new vapp::MGE_PlayerDies(m_motoGame->getTime(), false));
+}
+

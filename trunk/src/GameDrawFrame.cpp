@@ -35,8 +35,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   #include <curl/curl.h>
 #endif
 
-#include "helpers/HighPrecisionTimer.h"
-
 /* Set the following #defines to simulate slow systems */
 #define SIMULATE_SLOW_RENDERING     0 /* extra ms to add to rendering */
 #define SIMULATE_SLOW_PHYSICS       0 /* extra ms to add to physics calcs */
@@ -51,26 +49,20 @@ namespace vapp {
     bool bIsPaused = false;
     bool bDrawFPS = false;
     
-    HighPrecisionTimer::reset();
-
     /* Prepare frame rendering / game update */
     _PrepareFrame();    
-    HighPrecisionTimer::checkTime("_PrepareFrame");
 
     /* Check some GUI controls */
     _PreUpdateGUI();     
-    HighPrecisionTimer::checkTime("_PreUpdateGUI");
      
     /* Update FPS stuff */
     _UpdateFPSCounter();
-    HighPrecisionTimer::checkTime("_UpdateFPSCounter");
             
     /* What state? */
     switch(m_State) {
       case GS_MENU:
         /* Menu specifics */
         _PreUpdateMenu();
-        HighPrecisionTimer::checkTime("_PreUpdateMenu");
         /* Note the lack of break; the following are done for GS_MENU too */
 
       case GS_LEVEL_INFO_VIEWER:
@@ -81,7 +73,6 @@ namespace vapp {
       case GS_EDIT_PROFILES:
         /* Following is done for all the above states */
         _DrawMainGUI();
-        HighPrecisionTimer::checkTime("_DrawMainGUI");
         
         /* Show frame rate? */
         if(m_bShowFrameRate) bDrawFPS = true;
@@ -103,7 +94,6 @@ namespace vapp {
            the game, not the main menu) */
         try {
           int nPhysSteps = 0;
-          bool bValidGameState = true;
         
           /* When did the frame start? */
           double fStartFrameTime = getTime();                    
@@ -111,7 +101,6 @@ namespace vapp {
           if(m_State == GS_PREPLAYING) {
             /* If "preplaying" / "initial-zoom" is enabled, this is where it's done */
             statePrestart_step();
-            HighPrecisionTimer::checkTime("statePrestart_step");
 
 	    if(!m_bTimeDemo) {
 	      /* limit framerate while PREPLAY (100 fps)*/
@@ -119,62 +108,38 @@ namespace vapp {
 	      if(timeElapsed < 0.01)
 		setFrameDelay(10 - (int)(timeElapsed*1000.0));
 	    }
-          } 
-          else if(m_State == GS_PLAYING || ((m_State == GS_DEADMENU || m_State == GS_DEADJUST) && m_bEnableDeathAnim)) {
+          } else if(m_State == GS_PLAYING ||
+		    ((m_State == GS_DEADMENU || m_State == GS_DEADJUST) && m_bEnableDeathAnim)
+		    ) {
             /* When actually playing or when dead and the bike is falling apart, 
                a physics update is required */
-						if(isLockedMotoGame()) {
-							nPhysSteps = 0;
-						} else {
-							nPhysSteps = _UpdateGamePlaying();            
-						}
-            HighPrecisionTimer::checkTime("_UpdateGamePlaying");
+	    if(isLockedMotoGame()) {
+	      nPhysSteps = 0;
+	    } else {
+	      nPhysSteps = _UpdateGamePlaying();            
+	    }
           }
           else if(m_State == GS_REPLAYING) {
             /* When playing back a replay, no physics update is requried - instead
                the game state is streamed out of a binary .rpl file */
-							nPhysSteps = _UpdateGameReplaying();
-            HighPrecisionTimer::checkTime("_UpdateGameReplaying");
-            bValidGameState = nPhysSteps > 0;
-            //printf("%d ",nPhysSteps);
+	    nPhysSteps = _UpdateGamePlaying();
           }
   
-					if(m_State == GS_PLAYING) {
-						autoZoom();
-					}
+	  if(m_State == GS_PLAYING) {
+	    autoZoom();
+	  }
 
           /* Render */
-          if(!getDrawLib()->isNoGraphics() && bValidGameState) {
+          if(!getDrawLib()->isNoGraphics()) {
             m_Renderer.render(bIsPaused);
-            HighPrecisionTimer::checkTime("m_Renderer.render");
-      
-            if(m_bShowMiniMap && !m_bCreditsModeActive) {
-              if(m_MotoGame.getBikeState()->Dir == DD_LEFT &&
-                 (m_bShowEngineCounter == false || m_State == GS_REPLAYING)) {
-                m_Renderer.renderMiniMap(getDrawLib()->getDispWidth()-150,getDrawLib()->getDispHeight()-100,150,100);
-                HighPrecisionTimer::checkTime("m_Renderer.renderMiniMap");
-              } 
-              else {
-                m_Renderer.renderMiniMap(0,getDrawLib()->getDispHeight()-100,150,100);
-                HighPrecisionTimer::checkTime("m_Renderer.renderMiniMap");
-              }
-            }             
-      
-            if(m_bShowEngineCounter && m_bUglyMode == false && m_State != GS_REPLAYING) {
-              m_Renderer.renderEngineCounter(getDrawLib()->getDispWidth()-128,getDrawLib()->getDispHeight()-128,128,128,
-                                             m_MotoGame.getBikeEngineSpeed());
-              HighPrecisionTimer::checkTime("m_Renderer.renderEngineCounter");
-            } 
           }
 #if SIMULATE_SLOW_RENDERING
           SDL_Delay(SIMULATE_SLOW_RENDERING);
-          HighPrecisionTimer::checkTime("(dummy)");
 #endif
   
           /* When actually playing, check if something happened (like dying or finishing) */
           if(m_State == GS_PLAYING) {        
             _PostUpdatePlaying();
-            HighPrecisionTimer::checkTime("_PostUpdatePlaying");
           }
         
           /* When did frame rendering end? */
@@ -184,17 +149,9 @@ namespace vapp {
              desired frame rate */
           int nADelay = 0;    
           
-          if(m_State == GS_REPLAYING) {
-            /* When replaying... */
-            //printf("{ %f } ",m_fCurrentReplayFrameRate);
-            if(nPhysSteps <= 1)                        
-              nADelay = ((1.0f/m_fCurrentReplayFrameRate - (fEndFrameTime-fStartFrameTime)) * 1000.0f) * 0.5;
-            //printf(" { %f }  %d\n",fEndFrameTime-fStartFrameTime,nADelay);            
-          }
-          else if ((m_State == GS_FINISHED) || (m_State == GS_DEADMENU || m_State == GS_DEADJUST) || (m_State == GS_PAUSE)) {
+	  if ((m_State == GS_FINISHED) || (m_State == GS_DEADMENU || m_State == GS_DEADJUST) || (m_State == GS_PAUSE)) {
             setFrameDelay(10);
-          }
-          else {
+          } else {
             /* become idle only if we hadn't to skip any frame, recently, and more globaly (80% of fps) */
             if((nPhysSteps <= 1) && (m_fFPS_Rate > (0.8f / PHYS_STEP_SIZE)))
               nADelay = ((m_fLastPhysTime + PHYS_STEP_SIZE) - fEndFrameTime) * 1000.0f;
@@ -227,27 +184,22 @@ namespace vapp {
             nFrameCnt++;
           }
 
-          HighPrecisionTimer::checkTime("(misc)");
 
           if(m_State == GS_PAUSE) {
             /* Okay, nifty thing. Paused! */
             _PostUpdatePause();
-            HighPrecisionTimer::checkTime("_PostUpdatePause");
           }        
           else if(m_State == GS_DEADJUST) {
             /* Hmm, you're dead and you know it. */
             _PostUpdateJustDead();
-            HighPrecisionTimer::checkTime("_PostUpdateJustDead");
           }
           else if(m_State == GS_DEADMENU) {
             /* Hmm, you're dead and you know it. */
             _PostUpdateMenuDead();
-            HighPrecisionTimer::checkTime("_PostUpdateMenuDead");
           }
           else if(m_State == GS_FINISHED) {
             /* Hmm, you've won and you know it. */
             _PostUpdateFinished();
-            HighPrecisionTimer::checkTime("_PostUpdateFinished");
           }        
 
           /* Level and player name to draw? */
@@ -256,20 +208,7 @@ namespace vapp {
             m_MotoGame.getLevelSrc() != NULL) {
             UIFont *v_font = m_Renderer.getMediumFont();
             std::string v_infos;
-            
-            v_infos = m_MotoGame.getLevelSrc()->Name();
-
-            if(m_State == GS_REPLAYING && m_pReplay != NULL) {
-              v_infos += " (" + std::string(GAMETEXT_BY) + " " + m_pReplay->getPlayerName() + ")";
-            }
-
-            if(v_font != NULL) {
-              UITextDraw::printRaw(v_font,0,getDrawLib()->getDispHeight()-4,
-                v_infos,
-                MAKE_COLOR(255,255,255,255));
-            }
-            HighPrecisionTimer::checkTime("(level and player name)");
-          }
+	  }
          
           /* Context menu? */
           if(m_State == GS_PREPLAYING || m_State == GS_PLAYING || m_State == GS_REPLAYING || !m_bEnableContextHelp)
@@ -279,12 +218,10 @@ namespace vapp {
           
           /* Draw GUI */
           m_Renderer.getGUI()->paint();        
-          HighPrecisionTimer::checkTime("m_Renderer.getGUI()->paint");
         
           /* Credits? */
           if(m_State == GS_REPLAYING && m_bCreditsModeActive && m_pCredits!=NULL) {
             m_pCredits->render(m_MotoGame.getTime());
-            HighPrecisionTimer::checkTime("m_pCredits->render");
           }
 
           /* Show frame rate */
@@ -305,30 +242,7 @@ namespace vapp {
       sprintf(cTemp,"%f",m_fFPS_Rate);
       getDrawLib()->drawText(Vector2f(130,0),cTemp);
     }    
-    
-    /* Profiling? */
-#if defined(PROFILE_MAIN_LOOP)
-    int nCurY = 60;
-    float fTotal = 0;
-    for(int i=0;i<HighPrecisionTimer::numTimeChecks();i++) {
-      HighPrecisionTimer::TimeCheck *pTc = HighPrecisionTimer::getTimeCheck(i);
-      if(pTc != NULL) {
-        fTotal += pTc->fTime;
-      }
-    }
-    for(int i=0;i<HighPrecisionTimer::numTimeChecks();i++) {
-      char cTemp[256];
-      HighPrecisionTimer::TimeCheck *pTc = HighPrecisionTimer::getTimeCheck(i);
-      if(pTc != NULL) {
-        sprintf(cTemp,"%-20s : %.0f",pTc->cWhere,pTc->fTime);
-        drawText(Vector2f(30,nCurY),cTemp);
-        sprintf(cTemp,"%.0f%%",(pTc->fTime * 100) / fTotal);
-        drawText(Vector2f(350,nCurY),cTemp);
-        nCurY += 16;
-      }
-    }
-#endif   
-    
+       
     /* Draw mouse cursor */
     if(m_bShowCursor)
       _DrawMouseCursor();
@@ -353,11 +267,11 @@ namespace vapp {
     
     /* Update sound system and input */
     if(!getDrawLib()->isNoGraphics()) {        
-      m_EngineSound.update(getRealTime());
-      m_EngineSound.setRPM(0); /* per default don't have engine sound */
       Sound::update();
-      
-      m_InputHandler.updateInput(m_MotoGame.getBikeController());
+
+      for(unsigned int i=0; i<m_MotoGame.Players().size(); i++) {
+	m_InputHandler.updateInput(m_MotoGame.Players()[i]->getControler(), i);
+      }
     }    
     
     /* Whether or not we should have a mouse cursor? */
@@ -518,11 +432,8 @@ namespace vapp {
     /* Update game until we've catched up with the real time */
     int nPhysSteps = 0;
     do {
-      if(m_State == GS_PLAYING) {
-        m_MotoGame.updateLevel( PHYS_STEP_SIZE,NULL,m_pReplay );
-      } 
-      else {
-        m_MotoGame.updateLevel( PHYS_STEP_SIZE,NULL, NULL );
+      if(m_State == GS_PLAYING || m_State == GS_DEADJUST || m_State == GS_REPLAYING) {
+        m_MotoGame.updateLevel(PHYS_STEP_SIZE, m_pJustPlayReplay);
       }
       m_fLastPhysTime += PHYS_STEP_SIZE;
       nPhysSteps++;
@@ -531,49 +442,18 @@ namespace vapp {
       SDL_Delay(SIMULATE_SLOW_PHYSICS);
 #endif
 
-      if(m_Config.getBool("LimitFramerate")) {
-        SDL_Delay(1);
-      }     
-
       /* don't do this infinitely, maximum miss 10 frames, then give up */
     } while ((m_fLastPhysTime + PHYS_STEP_SIZE <= getTime()) && (nPhysSteps < 10));
   
     m_Renderer.setSpeedMultiplier(nPhysSteps);
   
-    if(!m_bTimeDemo) {
+    if(m_bTimeDemo == false) {
       /* Never pass this point while being ahead of time, busy wait until it's time */
       if(nPhysSteps <= 1) {  
         while (m_fLastPhysTime > getTime());
       }
     }
-
-    if(m_bEnableEngineSound) {
-      /* Update engine RPM */
-      m_EngineSound.setRPM( m_MotoGame.getBikeEngineRPM() ); 
-    }
-  
-    /* Squeeking? */
-    if(m_MotoGame.isSqueeking()) {
-      if(getTime() - m_fLastSqueekTime > 0.1f) {
-        /* (this is crappy, not enabled) */
-        //Sound::playSampleByName("Sounds/Squeek.ogg",m_MotoGame.howMuchSqueek());
-        m_fLastSqueekTime = getTime();
-      }
-    }
-  
-    if(m_State == GS_PLAYING) {
-      /* We'd like to serialize the game state 25 times per second for the replay */
-      if(getRealTime() - m_fLastStateSerializationTime >= 1.0f/m_fReplayFrameRate) {
-        m_fLastStateSerializationTime = getRealTime();
-        
-        /* Get it */
-        SerializedBikeState BikeState;
-        m_MotoGame.getSerializedBikeState(&BikeState);
-        if(m_pReplay != NULL)
-          m_pReplay->storeState(BikeState);              
-      }
-    }
-    
+      
     return nPhysSteps;
   }  
 
@@ -584,86 +464,89 @@ namespace vapp {
 
     /* Following (automatic replay speed adjustment) is only enabled 
        when showing credits.  */     
-    if(m_pReplay != NULL && m_bCreditsModeActive) {
-      /* Compare game time with real time */
-      float fGCurTime = m_MotoGame.getTime();
-      float fRCurTime = getRealTime();
-      float fGDiff = fGCurTime - fGTime;
-      float fRDiff = fRCurTime - fRTime;
-      fGTime = fGCurTime;
-      fRTime = fRCurTime;
-      
-      if(fabs(fRDiff - fGDiff) > 0.01f) {            
-        if(fGDiff + 0.01f < fRDiff && !m_pReplay->isPaused() ||
-          fGDiff - 0.01f > fRDiff && !m_pReplay->isPaused()) {
-          float fControl = (fRDiff - fGDiff)*0.6;
-          if(fControl < -0.1f) fControl = -0.1f;
-          if(fControl > 0.1f) fControl = 0.1f;
-          m_pReplay->setSpeed(m_pReplay->getSpeed() + fControl);
-        }
-        
-        if(m_pReplay->getSpeed() < 0.2f) m_pReplay->setSpeed(0.2f);
-        if(m_pReplay->getSpeed() > 8.0f) m_pReplay->setSpeed(8.0);
-      }
-    }
-    
-    /* Read replay state */
-    static SerializedBikeState BikeState;          
-    if(m_pReplay != NULL) {       
-      /* Even frame number: Read the next state */
-      if(m_nFrame%2 || m_nFrame==1) {       
-        /* REAL NON-INTERPOLATED FRAME */
-        if(m_pReplay->endOfFile() == false) {
-          m_pReplay->loadState(BikeState);
-        
-          /* Update game */
-          m_MotoGame.updateLevel( 1/m_pReplay->getFrameRate(),&BikeState,m_pReplay ); 
-          //m_MotoGame.updateLevel( PHYS_STEP_SIZE,&BikeState,m_pReplay ); 
-        
-          if(m_bEnableEngineSound) {
-            /* Update engine RPM */
-            m_EngineSound.setRPM( m_MotoGame.getBikeEngineRPM() ); 
-          }
-        }
-        else {
-          if(m_pReplay->didFinish()) {
-            /* Make sure that it's the same finish time */
-            m_MotoGame.setTime(m_pReplay->getFinishTime());
-          }
-        }
-      }
-      else {                          
-        /* INTERPOLATED FRAME */
-        SerializedBikeState NextBikeState,ibs;
-        
-        if(m_pReplay->endOfFile() == false) {
-          m_pReplay->peekState(NextBikeState);
-          /* Nice. Interpolate the states! */
-          m_MotoGame.interpolateGameState(&BikeState,&NextBikeState,&ibs,0.5f);
 
-          /* Update game */
-          //m_MotoGame.updateLevel( PHYS_STEP_SIZE,&ibs,m_pReplay );                 
-          //printf("[%f]\n",m_pReplay->getFrameRate());
-          m_MotoGame.updateLevel( 1/m_pReplay->getFrameRate(),&ibs,m_pReplay );                 
-        }
-      }
-    
-      /* Benchmarking and finished? If so, print the report and quit */
-      if(m_pReplay->endOfFile() && m_bBenchmark) {
-        double fBenchmarkTime = getRealTime() - m_fStartTime;
-        printf("\n");
-        printf(" * %d frames rendered in %.0f seconds\n",m_nFrame,fBenchmarkTime);
-        printf(" * Average framerate: %.1f fps\n",((double)m_nFrame) / fBenchmarkTime);
-        quit();
-      }
-    }
-    else return 0; /* something went wrong */
-  
-    //if(m_pReplay->getSpeed() < 0) {
-    //m_Renderer.clearAllParticles();
-    //m_Renderer.skipBackTime(100000);            
+    //m_MotoGame.updateLevel( PHYS_STEP_SIZE,NULL, NULL );
+
+    //for(unsigned int i=0; i<m_replayBikers.size(); i++) {
+    //ReplayBiker *v_replayBiker = m_replayBikers[i];  
+      //      m_MotoGame.updateLevel( 1/v_replayBiker->framerate(),
+      //		      NULL, NULL ); 
     //}
-  
+
+    //toto
+    //if(m_pReplay != NULL && m_bCreditsModeActive) {
+    //  /* Compare game time with real time */
+    //  float fGCurTime = m_MotoGame.getTime();
+    //  float fRCurTime = getRealTime();
+    //  float fGDiff = fGCurTime - fGTime;
+    //  float fRDiff = fRCurTime - fRTime;
+    //  fGTime = fGCurTime;
+    //  fRTime = fRCurTime;
+    //  
+    //  if(fabs(fRDiff - fGDiff) > 0.01f) {            
+    //    if(fGDiff + 0.01f < fRDiff && !m_pReplay->isPaused() ||
+    //      fGDiff - 0.01f > fRDiff && !m_pReplay->isPaused()) {
+    //      float fControl = (fRDiff - fGDiff)*0.6;
+    //      if(fControl < -0.1f) fControl = -0.1f;
+    //      if(fControl > 0.1f) fControl = 0.1f;
+    //      m_pReplay->setSpeed(m_pReplay->getSpeed() + fControl);
+    //    }
+    //    
+    //    if(m_pReplay->getSpeed() < 0.2f) m_pReplay->setSpeed(0.2f);
+    //    if(m_pReplay->getSpeed() > 8.0f) m_pReplay->setSpeed(8.0);
+    //  }
+    //}
+    /* Read replay state */
+    //static SerializedBikeState BikeState;          
+    //if(m_pReplay != NULL) {       
+    //  /* Even frame number: Read the next state */
+    //  if(m_nFrame%2 || m_nFrame==1) {       
+    //    /* REAL NON-INTERPOLATED FRAME */
+    //    if(m_pReplay->endOfFile() == false) {
+    //      m_pReplay->loadState(BikeState);
+    //    
+    //      /* Update game */
+    //      m_MotoGame.updateLevel( 1/m_pReplay->getFrameRate(),&BikeState,m_pReplay ); 
+    //      //m_MotoGame.updateLevel( PHYS_STEP_SIZE,&BikeState,m_pReplay ); 
+    //    
+    //      if(m_bEnableEngineSound) {
+    //        /* Update engine RPM */
+    //        m_EngineSound.setRPM( m_MotoGame.getBikeEngineRPM() ); 
+    //      }
+    //    }
+    //    else {
+    //      if(m_pReplay->didFinish()) {
+    //        /* Make sure that it's the same finish time */
+    //        m_MotoGame.setTime(m_pReplay->getFinishTime());
+    //      }
+    //    }
+    //  } else {                          
+    //    /* INTERPOLATED FRAME */
+    //    SerializedBikeState NextBikeState,ibs;
+    //    
+    //    if(m_pReplay->endOfFile() == false) {
+    //      m_pReplay->peekState(NextBikeState);
+    //      /* Nice. Interpolate the states! */
+    //      m_MotoGame.interpolateGameState(&BikeState,&NextBikeState,&ibs,0.5f);
+    //
+    //      /* Update game */
+    //      //m_MotoGame.updateLevel( PHYS_STEP_SIZE,&ibs,m_pReplay );                 
+    //      //printf("[%f]\n",m_pReplay->getFrameRate());
+    //      m_MotoGame.updateLevel( 1/m_pReplay->getFrameRate(),&ibs,m_pReplay );                 
+    //    }
+    //  }
+    //
+    //  /* Benchmarking and finished? If so, print the report and quit */
+    //  if(m_pReplay->endOfFile() && m_bBenchmark) {
+    //    double fBenchmarkTime = getRealTime() - m_fStartTime;
+    //    printf("\n");
+    //    printf(" * %d frames rendered in %.0f seconds\n",m_nFrame,fBenchmarkTime);
+    //    printf(" * Average framerate: %.1f fps\n",((double)m_nFrame) / fBenchmarkTime);
+    //    quit();
+    //  }
+    //}
+    //else return 0; /* something went wrong */
+   
     m_Renderer.setSpeedMultiplier(nPhysSteps);    
 
     return nPhysSteps;
