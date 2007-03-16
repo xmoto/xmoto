@@ -169,9 +169,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
       void TeleportationCheatTo(Vector2f i_position);
 
-    private: 
-      EngineSoundSimulator m_EngineSound;
-    
+      bool creditsModeActive();
+
+    private:   
       /* Data */
       ReplayList m_ReplayList;                  /* Replay list */
       bool m_bEnableInitZoom;                   /* true: Perform initial level scroll/zoom */
@@ -189,7 +189,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       bool m_bDebugMode;                        /* true: show debug info */
       bool m_bUglyMode;                         /* true: fast 'n ugly graphics */
       bool m_bCleanCache;                       /* true: clean the level cache at startup */
-      bool m_bShowEngineCounter;
       bool m_bDisplayInfosReplay;               /* true: just display infos of a replay */
       std::string m_InfosReplay;                /* name of the replay to display information */
 
@@ -214,18 +213,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       PlayerProfile *m_pPlayer;                 /* The player's profile */
        
       double m_fLastFrameTime;                  /* When the last frama was initiated */
-      double m_fLastPerfStateTime;
-      float m_fLastStateSerializationTime;    
+      double m_fLastPerfStateTime;   
       double m_fLastPhysTime;                  /* When the last physic was computed */
       double m_fStartTime;                      
-      double m_fLastSqueekTime;
       
       std::string m_playingMusic; /* name of the music played to not restart it if the same must be played on an action */
 
       bool m_b50FpsMode;
       bool m_reloadingLevelsUser;
       
-      Replay *m_pReplay;
+      Replay *m_pJustPlayReplay;
 
       enum GhostSearchStrategy GhostSearchStrategies[3];
       bool m_bEnableGhost;
@@ -234,8 +231,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       bool m_bGhostMotionBlur;                  /* true: apply fancy motion blur to ghosts */
       bool m_bEnableGhostInfo;
 
-      std::string m_ReplayPlayerName;
-  
       /* WWW */
 #if defined(SUPPORT_WEBACCESS)
       bool m_bShowWebHighscoreInGame;           /* true: Show world highscore inside the game */
@@ -394,7 +389,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       bool m_bShowMiniMap;
       bool m_bRecordReplays;
       float m_fReplayFrameRate;
-      float m_fCurrentReplayFrameRate;
       
       /* Credits */
       Credits *m_pCredits;         
@@ -468,7 +462,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       std::string _DetermineNextLevel(Level *pLevelSrc);
       bool _IsThereANextLevel(Level *pLevelSrc);
       
-      bool _IsReplayScripted(Replay *p_pReplay);
       void _RestartLevel(bool i_reloadLevel = false);
   
 #if defined(SUPPORT_WEBACCESS)

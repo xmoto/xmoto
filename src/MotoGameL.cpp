@@ -127,7 +127,15 @@ namespace vapp {
   
   int L_Game_IsPlayerInZone(lua_State *pL) {
     /* no event for this */
-    lua_pushboolean(pL, m_pMotoGame->isTouching(m_pMotoGame->getLevelSrc()->getZoneById(luaL_checkstring(pL, 1))) ? 1:0);
+    bool res = false;
+    Zone* v_zone = &(m_pMotoGame->getLevelSrc()->getZoneById(luaL_checkstring(pL, 1)));
+
+    if(m_pMotoGame->Players().size() > 0) {
+      if(m_pMotoGame->Players()[0]->isTouching(*v_zone)) {
+	res = true;
+      }
+    }
+    lua_pushboolean(pL, res?1:0);
     return 1;
   }
   
@@ -174,8 +182,8 @@ namespace vapp {
     /* no event for this */
 
     /* Get gravity */
-    lua_pushnumber(pL,m_pMotoGame->getGravity().x);
-    lua_pushnumber(pL,m_pMotoGame->getGravity().y);    
+    lua_pushnumber(pL, m_pMotoGame->getGravity().x);
+    lua_pushnumber(pL, m_pMotoGame->getGravity().y);    
     return 2;
   }
 
@@ -191,11 +199,19 @@ namespace vapp {
   
   int L_Game_GetPlayerPosition(lua_State *pL) {
     /* no event for this */
+    float x = 0.0, y = 0.0;
+    DriveDir v_direction = DD_RIGHT;
 
-    /* Get player position */
-    lua_pushnumber(pL,m_pMotoGame->getPlayerPosition().x);
-    lua_pushnumber(pL,m_pMotoGame->getPlayerPosition().y);
-    lua_pushnumber(pL,m_pMotoGame->getPlayerFaceDir());
+    if(m_pMotoGame->Players().size() > 0) {
+      x = m_pMotoGame->Players()[0]->getState()->CenterP.x;
+      y = m_pMotoGame->Players()[0]->getState()->CenterP.y;
+      v_direction = m_pMotoGame->Players()[0]->getState()->Dir;
+    }
+
+    lua_pushnumber(pL, x);
+    lua_pushnumber(pL, y);
+    lua_pushnumber(pL, v_direction);
+
     return 3;
   }
 
@@ -224,7 +240,13 @@ namespace vapp {
 
   int L_Game_IsEntityTouched(lua_State *pL) {
     /* no event for this */
-    lua_pushnumber(pL, m_pMotoGame->isTouching(m_pMotoGame->getLevelSrc()->getEntityById(luaL_checkstring(pL,1))) ? 1:0);
+
+    bool v_touch = false;
+    if(m_pMotoGame->Players().size() > 0) {
+      v_touch = m_pMotoGame->Players()[0]->isTouching(m_pMotoGame->getLevelSrc()->getEntityById(luaL_checkstring(pL,1)));
+    }
+
+    lua_pushnumber(pL, v_touch? 1:0);
     return 1;
   }
 

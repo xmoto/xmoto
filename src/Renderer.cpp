@@ -397,9 +397,11 @@ namespace vapp {
 #define LEVEL_TO_SCREEN_X(elemPosX) (x + nWidth/2  + (float)((elemPosX) - getCameraPositionX()) * MINIMAPZOOM)
 #define LEVEL_TO_SCREEN_Y(elemPosY) (y + nHeight/2 - (float)((elemPosY) - getCameraPositionY()) * MINIMAPZOOM)
 
-    Vector2f bikePos(LEVEL_TO_SCREEN_X(pGame->getBikeState()->CenterP.x),
-		     LEVEL_TO_SCREEN_Y(pGame->getBikeState()->CenterP.y));
-    getParent()->getDrawLib()->drawCircle(bikePos, 3, 0, MAKE_COLOR(255,255,255,255), 0);
+    for(unsigned int i=0; i<getGameObject()->Players().size(); i++) {
+      Vector2f bikePos(LEVEL_TO_SCREEN_X(getGameObject()->Players()[i]->getState()->CenterP.x),
+		       LEVEL_TO_SCREEN_Y(getGameObject()->Players()[i]->getState()->CenterP.y));
+      getParent()->getDrawLib()->drawCircle(bikePos, 3, 0, MAKE_COLOR(255,255,255,255), 0);
+    }
     
     /* Render ghost position too? */
     for(unsigned int i=0; i<getGameObject()->Ghosts().size(); i++) {
@@ -472,19 +474,23 @@ namespace vapp {
 
   void GameRenderer::guessDesiredCameraPosition(float &p_fDesiredHorizontalScrollShift,
             float &p_fDesiredVerticalScrollShift) {
-              
+
     float normal_hoffset = 4.0;
     float normal_voffset = 2.0;             
     p_fDesiredHorizontalScrollShift = 0.0;
     p_fDesiredVerticalScrollShift   = 0.0;
 
+    if(m_playerToFollow == NULL) {
+      return;
+    }
+
     p_fDesiredHorizontalScrollShift = getGameObject()->getGravity().y * normal_hoffset / 9.81;
-    if(getGameObject()->getBikeState()->Dir == DD_LEFT) {
+    if(m_playerToFollow->getState()->Dir == DD_LEFT) {
       p_fDesiredHorizontalScrollShift *= -1;
     }
 
     p_fDesiredVerticalScrollShift = getGameObject()->getGravity().x * normal_voffset / 9.81;
-    if(getGameObject()->getBikeState()->Dir == DD_RIGHT) {
+    if(m_playerToFollow->getState()->Dir == DD_RIGHT) {
       p_fDesiredVerticalScrollShift *= -1;
     }
 
@@ -500,6 +506,31 @@ namespace vapp {
     }
     if(p_fDesiredVerticalScrollShift < -normal_voffset) {
       p_fDesiredVerticalScrollShift = -normal_voffset;
+    }
+  }
+
+  void GameRenderer::_RenderGhost(Ghost* i_ghost, int i) {
+    /* Render ghost - ugly mode? */
+    if(m_bUglyMode) {
+      _RenderBike(i_ghost->getState(), &(i_ghost->getState()->Parameters()), m_theme->getGhostTheme());
+    } else {
+      /* No not ugly, fancy! Render into overlay? */      
+      if(m_bGhostMotionBlur && getParent()->getDrawLib()->useFBOs()) {
+	m_Overlay.beginRendering();
+	m_Overlay.fade(0.15);
+      }
+      _RenderBike(i_ghost->getState(), &(i_ghost->getState()->Parameters()), m_theme->getGhostTheme());
+	  
+      if(m_bGhostMotionBlur && getParent()->getDrawLib()->useFBOs()) {
+	m_Overlay.endRendering();
+	m_Overlay.present();
+      }
+	  
+      if(m_nGhostInfoTrans > 0 && m_displayGhostInformation) {
+	_RenderInGameText(i_ghost->getState()->CenterP + Vector2f(i*3.0,-1.5f),
+			  i_ghost->getDescription(),
+			  MAKE_COLOR(255,255,255,m_nGhostInfoTrans));
+      }
     }
   }
 
@@ -576,34 +607,45 @@ namespace vapp {
 
     /* ... then render "middleground" sprites ... */
     _RenderSprites(false,false);
-    
+
+    /* ghosts */
+    bool v_found = false;
+    int v_found_i = 0;
     for(unsigned int i=0; i<getGameObject()->Ghosts().size(); i++) {
       Ghost* v_ghost = getGameObject()->Ghosts()[i];
-
-      /* Render ghost - ugly mode? */
-      if(m_bUglyMode) {
-        _RenderBike(v_ghost->getState(), &(v_ghost->getState()->Parameters()), m_theme->getGhostTheme());
+      if(v_ghost != m_playerToFollow) {
+	_RenderGhost(v_ghost, i);
       } else {
-        /* No not ugly, fancy! Render into overlay? */      
-        if(m_bGhostMotionBlur && getParent()->getDrawLib()->useFBOs()) {
-          m_Overlay.beginRendering();
-          m_Overlay.fade(0.15);
-        }
-	_RenderBike(v_ghost->getState(), &(v_ghost->getState()->Parameters()), m_theme->getGhostTheme());
-        
-        if(m_bGhostMotionBlur && getParent()->getDrawLib()->useFBOs()) {
-          m_Overlay.endRendering();
-          m_Overlay.present();
-        }
-        
-        if(m_nGhostInfoTrans > 0 && m_displayGhostInformation) {
-          _RenderInGameText(v_ghost->getState()->CenterP + Vector2f(i*3.0,-1.5f),
-			    v_ghost->getDescription(),
-			    MAKE_COLOR(255,255,255,m_nGhostInfoTrans));
-        }
+	v_found = true;
+	v_found_i = i;
       }
     }
+    /* draw the player to follow over the others */
+    if(v_found) {
+      _RenderGhost(getGameObject()->Ghosts()[v_found_i], v_found_i);
+    }
 
+    /* ... followed by the bike ... */
+    v_found = false;
+    for(unsigned int i=0; i<getGameObject()->Players().size(); i++) {
+      PlayerBiker* v_player = getGameObject()->Players()[i];
+      if(v_player != m_playerToFollow) {
+	_RenderBike(v_player->getState(),
+		    &(v_player->getState()->Parameters()),
+		    m_theme->getPlayerTheme(),
+		    v_player->getRenderBikeFront());
+      } else {
+	v_found = true;
+      }
+    }
+    if(v_found) {
+      _RenderBike(m_playerToFollow->getState(),
+		  &(m_playerToFollow->getState()->Parameters()),
+		  m_theme->getPlayerTheme(),
+		  m_playerToFollow->getRenderBikeFront());
+    }
+
+    /* ghost information */
     if(getGameObject()->getTime() > m_fNextGhostInfoUpdate) {
       if(m_nGhostInfoTrans > 0) {
 	if(m_fNextGhostInfoUpdate > 1.5f) {
@@ -612,9 +654,6 @@ namespace vapp {
 	m_fNextGhostInfoUpdate += 0.025f;
       }
     }
-
-    /* ... followed by the bike ... */
-    _RenderBike(getGameObject()->getBikeState(), &(getGameObject()->getBikeState()->Parameters()), m_theme->getPlayerTheme());
     
     if(m_Quality == GQ_HIGH && !m_bUglyMode) {
       /* Render particles (front!) */    
@@ -697,7 +736,7 @@ namespace vapp {
 
       /* Render debug info */
       _RenderDebugInfo();
-     }        
+    }
 
 #ifdef ENABLE_OPENGL
     glLoadIdentity();
@@ -716,6 +755,23 @@ namespace vapp {
       _RenderGameStatus();
     }
 
+    /* minimap + counter */
+    if(m_playerToFollow != NULL) {
+      if(showMinimap() && m_bCreditsMode == false) {
+    	if(m_playerToFollow->getState()->Dir == DD_LEFT && showEngineCounter() == false) {
+	  renderMiniMap(getParent()->getDrawLib()->getDispWidth()-150,
+			getParent()->getDrawLib()->getDispHeight()-100,150,100);
+	} else {
+	  renderMiniMap(0,getParent()->getDrawLib()->getDispHeight()-100,150,100);
+	}
+      }
+      if(showEngineCounter() && m_bUglyMode == false) {
+    	renderEngineCounter(getParent()->getDrawLib()->getDispWidth()-128,
+			    getParent()->getDrawLib()->getDispHeight()-128,128,128,
+    			    m_playerToFollow->getBikeEngineSpeed());
+      }
+    }
+
   }
 
   void GameRenderer::setScroll(bool isSmooth) {
@@ -723,12 +779,16 @@ namespace vapp {
     float v_fDesiredHorizontalScrollShift = 0.0;
     float v_fDesiredVerticalScrollShift   = 0.0;
 
+    if(m_playerToFollow == NULL) {
+      return;
+    }
+
     /* determine if the camera must move fastly */
     /* it must go faster if the player change of sense */
-    if(m_previous_driver_dir != getGameObject()->getBikeState()->Dir) {
+    if(m_previous_driver_dir != m_playerToFollow->getState()->Dir) {
       m_recenter_camera_fast = true;
     }
-    m_previous_driver_dir = getGameObject()->getBikeState()->Dir;
+    m_previous_driver_dir = m_playerToFollow->getState()->Dir;
 
     if(m_recenter_camera_fast) {
       v_move_camera_max = 0.1;
@@ -737,7 +797,7 @@ namespace vapp {
     }
 
     /* Determine scroll */
-    m_Scroll = -getGameObject()->getBikeState()->CenterP;
+    m_Scroll = -m_playerToFollow->getState()->CenterP;
 
     /* Driving direction? */
     guessDesiredCameraPosition(v_fDesiredHorizontalScrollShift, v_fDesiredVerticalScrollShift);
@@ -1907,5 +1967,61 @@ namespace vapp {
 
   void GameRenderer::setGhostDisplayInformation(bool i_display) {
     m_displayGhostInformation = i_display;
+  }
+
+  void GameRenderer::setPlayerToFollow(Biker* i_playerToFollow) {
+    m_playerToFollow = i_playerToFollow;
+  }
+
+  bool GameRenderer::showMinimap() const {
+    return m_showMinimap;
+  }
+
+  bool GameRenderer::showEngineCounter() const {
+    return m_showEngineCounter;
+  }
+
+  void GameRenderer::setShowMinimap(bool i_value) {
+    m_showMinimap = i_value;
+  }
+
+  void GameRenderer::setShowEngineCounter(bool i_value) {
+    m_showEngineCounter = i_value;
+  }
+
+  void GameRenderer::switchFollow() {
+    if(m_playerToFollow == NULL) return;
+
+    /* search into the player */
+    for(unsigned i=0; i<getGameObject()->Players().size(); i++) {
+      if(getGameObject()->Players()[i] == m_playerToFollow) {
+	if(i<getGameObject()->Players().size()-1) {
+	  m_playerToFollow = getGameObject()->Players()[i+1];
+	} else {
+	  if(getGameObject()->Ghosts().size() > 0) {
+	    m_playerToFollow = getGameObject()->Ghosts()[0];
+	  } else {
+	    m_playerToFollow = getGameObject()->Players()[0];
+	  }
+	}
+	return;
+      }
+    }
+
+    /* search into the ghost */
+    for(unsigned i=0; i<getGameObject()->Ghosts().size(); i++) {
+      if(getGameObject()->Ghosts()[i] == m_playerToFollow) {
+	if(i<getGameObject()->Ghosts().size()-1) {
+	  m_playerToFollow = getGameObject()->Ghosts()[i+1];
+	} else {
+	  if(getGameObject()->Players().size() > 0) {
+	    m_playerToFollow = getGameObject()->Players()[0];
+	  } else {
+	    m_playerToFollow = getGameObject()->Ghosts()[0];
+	  }
+	}
+	return;
+      }
+    }
   }
 }

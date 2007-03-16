@@ -414,8 +414,7 @@ namespace vapp {
       /* Yes ma'am */
       pfh->fp = fopen(Path.c_str(),"rb");      
       pfh->Type = FHT_STDIO;
-    }
-    else {
+    } else {
       /* user dir ? */
       pfh->fp = fopen((m_UserDir + std::string("/") + Path).c_str(),"rb");        
 
@@ -456,20 +455,21 @@ namespace vapp {
       }      
     }
     
-    if(pfh->fp != NULL) { 
-      pfh->bRead = true;
-      pfh->Name = Path;
-      
-      if(pfh->Type == FHT_STDIO) {
-        fseek(pfh->fp,0,SEEK_END);
-        pfh->nSize = ftell(pfh->fp);
-        fseek(pfh->fp,0,SEEK_SET);        
-      }
-      return pfh;
+    if(pfh->fp == NULL) { 
+      delete pfh;
+      return NULL;
     }
-    
-    delete pfh;
-    return NULL;
+
+
+    pfh->bRead = true;
+    pfh->Name = Path;
+      
+    if(pfh->Type == FHT_STDIO) {
+      fseek(pfh->fp,0,SEEK_END);
+      pfh->nSize = ftell(pfh->fp);
+      fseek(pfh->fp,0,SEEK_SET);        
+    }
+    return pfh;
   }
     
   void FS::closeFile(FileHandle *pfh) {

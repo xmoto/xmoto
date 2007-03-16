@@ -32,7 +32,7 @@ namespace vapp {
   /*===========================================================================
   Rendering of the bike
   ===========================================================================*/
-  void GameRenderer::_RenderBike(BikeState *pBike, BikeParameters *pBikeParms, BikerTheme *p_theme) {
+  void GameRenderer::_RenderBike(BikeState *pBike, BikeParameters *pBikeParms, BikerTheme *p_theme, bool i_renderBikeFront) {
     Sprite *pSprite;
     Texture *pTexture;
 
@@ -189,7 +189,7 @@ namespace vapp {
         p3 = pBike->RearWheelP - Vector2f(-Sv.y,Sv.x)*0.04f - Sv*0.05f;
       }
 
-      if(m_renderBikeFront) {
+      if(i_renderBikeFront) {
 	pSprite = p_theme->getFront();
 	if(pSprite != NULL) {
 	  pTexture = pSprite->getTexture();

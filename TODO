@@ -1,8 +1,55 @@
-- street texture missing
-- ghost for replays : a small offset : you can see it if the replay = the ghost
+            v_infos = m_MotoGame.getLevelSrc()->Name();
 
-* PERFORMANCE : rebuildLevelsPacks is very slow particularly on
-   windows with a lot of levels
+	    if(m_State == GS_REPLAYING) {
+	      if(m_replayBikers.size() > 0) {
+		v_infos += " (" + std::string(GAMETEXT_BY) + " " + m_replayBikers[0]->playerName() + ")";
+	      }
+	    }
+
+            if(v_font != NULL) {
+              UITextDraw::printRaw(v_font,0,getDrawLib()->getDispHeight()-4,
+                v_infos,
+                MAKE_COLOR(255,255,255,255));
+            }
+
+******
+
+
+  void Replay::fastforward(float fSeconds) {
+    /* How many states should we move forward? */
+    float nNumStates = (fSeconds * m_fFrameRate);
+    nextState(nNumStates);
+  }
+
+  void Replay::fastrewind(float fSeconds) {
+    /* How many states should we move forward? */
+    float nNumStates = (fSeconds * m_fFrameRate);
+    nextState(-nNumStates);
+  }  
+
+*******
+
+- son de la moto dans un replay
+- sauvegarde d'un replay
+- le temps final d'un replay
+- le mode ralenti dans un replay
+- la manette à plusieurs
+- son de la moto : en replay
+- vérifier toutes les fontions de script : enter/out zone, touch entity
+- vérifier les sauts périeux, en particulier la réinitialisation
+- son à checker dans un replay
+- script : vérifier toutes les fonctions
+- réparer les replays, les scripts ne doivent pas se lancer dans un replay
+- ghost for replays : a small offset : you can see it if the replay = the ghost
+- pas de saveReplay en multijoueurs
+- victoire à celui qui vit
+- virer les appels au getValue de la config dans la boucle de jeu
+
+[20:53] <Christoph> can someone watch the world record replay of "MASTERKUD Padrinos magicos"? it aborts with the error "Entity 'MySprite18' doesn't exist" at position 52:47 (with xmoto-0.2.6)
+
+
+******************
+* PERFORMANCE : rebuildLevelsPacks is very slow particularly on windows with a lot of levels : sqlite
 
 * BUG
 

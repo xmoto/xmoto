@@ -1442,6 +1442,12 @@ namespace vapp {
     p = pList->addEntry(GAMETEXT_FLIPLEFT); p->Text.push_back(m_Config.getString("KeyFlipLeft1"));
     p = pList->addEntry(GAMETEXT_FLIPRIGHT); p->Text.push_back(m_Config.getString("KeyFlipRight1"));
     p = pList->addEntry(GAMETEXT_CHANGEDIR); p->Text.push_back(m_Config.getString("KeyChangeDir1"));
+
+    p = pList->addEntry(GAMETEXT_DRIVE2); p->Text.push_back(m_Config.getString("KeyDrive2"));
+    p = pList->addEntry(GAMETEXT_BRAKE2); p->Text.push_back(m_Config.getString("KeyBrake2"));
+    p = pList->addEntry(GAMETEXT_FLIPLEFT2); p->Text.push_back(m_Config.getString("KeyFlipLeft2"));
+    p = pList->addEntry(GAMETEXT_FLIPRIGHT2); p->Text.push_back(m_Config.getString("KeyFlipRight2"));
+    p = pList->addEntry(GAMETEXT_CHANGEDIR2); p->Text.push_back(m_Config.getString("KeyChangeDir2"));
     
     #if defined(ENABLE_ZOOMING)    
     p = pList->addEntry(GAMETEXT_ZOOMIN); p->Text.push_back(m_Config.getString("KeyZoomIn"));
@@ -1515,6 +1521,7 @@ namespace vapp {
           m_pPauseMenu->showWindow(false);
           m_GameStats.abortedLevel(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->Id(),m_MotoGame.getLevelSrc()->Name(),m_MotoGame.getTime());
 
+	  m_Renderer.setPlayerToFollow(NULL);
           m_MotoGame.endLevel();
           m_InputHandler.resetScriptKeyHooks();                     
           m_Renderer.unprepareForNewLevel();
@@ -1532,6 +1539,7 @@ namespace vapp {
 	  if(NextLevel != "") {        
 	    m_pPauseMenu->showWindow(false);              
 	    m_GameStats.abortedLevel(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->Id(),m_MotoGame.getLevelSrc()->Name(),m_MotoGame.getTime());
+	    m_Renderer.setPlayerToFollow(NULL);
 	    m_MotoGame.endLevel();
 	    m_InputHandler.resetScriptKeyHooks();                     
 	    m_Renderer.unprepareForNewLevel();                    
@@ -1576,7 +1584,7 @@ namespace vapp {
     for(int i=0;i<m_nNumFinishMenuButtons;i++) {
       if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_SAVEREPLAY) {
         /* Have we recorded a replay? If not then disable the "Save Replay" button */
-        if(m_pReplay == NULL) {
+        if(m_pJustPlayReplay == NULL) {
           m_pFinishMenuButtons[i]->enableWindow(false);
         }
         else {
@@ -1603,6 +1611,7 @@ namespace vapp {
 	    m_pFinishMenu->showWindow(false);
 	    m_Renderer.hideMsgNewHighscore();
 	    m_pBestTimes->showWindow(false);
+	    m_Renderer.setPlayerToFollow(NULL);
 	    m_MotoGame.endLevel();
 	    m_InputHandler.resetScriptKeyHooks();                     
 	    m_Renderer.unprepareForNewLevel();                    
@@ -1614,7 +1623,7 @@ namespace vapp {
           }
         }
         else if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_SAVEREPLAY) {
-          if(m_pReplay != NULL) {
+          if(m_pJustPlayReplay != NULL) {
             if(m_pSaveReplayMsgBox == NULL) {
               m_pSaveReplayMsgBox = m_Renderer.getGUI()->msgBox(std::string(GAMETEXT_ENTERREPLAYNAME) + ":",
                                                                 (UIMsgBoxButton)(UI_MSGBOX_OK|UI_MSGBOX_CANCEL),
@@ -1642,6 +1651,7 @@ namespace vapp {
           m_pFinishMenu->showWindow(false);
 	  m_Renderer.hideMsgNewHighscore();
           m_pBestTimes->showWindow(false);
+	  m_Renderer.setPlayerToFollow(NULL);
           m_MotoGame.endLevel();
           m_InputHandler.resetScriptKeyHooks();                     
           m_Renderer.unprepareForNewLevel();
@@ -2136,7 +2146,7 @@ namespace vapp {
     for(int i=0;i<m_nNumJustDeadMenuButtons;i++) {
       if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_SAVEREPLAY) {
         /* Have we recorded a replay? If not then disable the "Save Replay" button */
-        if(m_pReplay == NULL) {
+        if(m_pJustPlayReplay == NULL) {
           m_pJustDeadMenuButtons[i]->enableWindow(false);
         }
         else {
@@ -2166,6 +2176,7 @@ namespace vapp {
 	  std::string NextLevel = _DetermineNextLevel(pLS);
 	  if(NextLevel != "") {        
 	    m_pJustDeadMenu->showWindow(false);
+	    m_Renderer.setPlayerToFollow(NULL);
 	    m_MotoGame.endLevel();
 	    m_InputHandler.resetScriptKeyHooks();                     
 	    m_Renderer.unprepareForNewLevel();                    
@@ -2177,7 +2188,7 @@ namespace vapp {
           }
         }
         else if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_SAVEREPLAY) {
-          if(m_pReplay != NULL) {
+          if(m_pJustPlayReplay != NULL) {
             if(m_pSaveReplayMsgBox == NULL) {
               m_pSaveReplayMsgBox = m_Renderer.getGUI()->msgBox(std::string(GAMETEXT_ENTERREPLAYNAME) + ":",
                                                                 (UIMsgBoxButton)(UI_MSGBOX_OK|UI_MSGBOX_CANCEL),
@@ -2189,6 +2200,7 @@ namespace vapp {
         }
         else if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_ABORT) {
           m_pJustDeadMenu->showWindow(false);
+	  m_Renderer.setPlayerToFollow(NULL);
           m_MotoGame.endLevel();
           m_InputHandler.resetScriptKeyHooks();                     
           m_Renderer.unprepareForNewLevel();
@@ -3365,6 +3377,12 @@ namespace vapp {
     m_Config.setValue("KeyFlipLeft1",m_Config.getDefaultValue("KeyFlipLeft1"));
     m_Config.setValue("KeyFlipRight1",m_Config.getDefaultValue("KeyFlipRight1"));
     m_Config.setValue("KeyChangeDir1",m_Config.getDefaultValue("KeyChangeDir1"));
+    m_Config.setValue("ControllerMode2",m_Config.getDefaultValue("ControllerMode2"));
+    m_Config.setValue("KeyDrive2",m_Config.getDefaultValue("KeyDrive2"));
+    m_Config.setValue("KeyBrake2",m_Config.getDefaultValue("KeyBrake2"));
+    m_Config.setValue("KeyFlipLeft2",m_Config.getDefaultValue("KeyFlipLeft2"));
+    m_Config.setValue("KeyFlipRight2",m_Config.getDefaultValue("KeyFlipRight2"));
+    m_Config.setValue("KeyChangeDir2",m_Config.getDefaultValue("KeyChangeDir2"));
     
     #if defined(ENABLE_ZOOMING)
     m_Config.setValue("KeyZoomIn",m_Config.getDefaultValue("KeyZoomIn"));
@@ -3493,6 +3511,16 @@ namespace vapp {
 	m_Config.setString("KeyFlipRight1",pActionList->getEntries()[i]->Text[1]);
       else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CHANGEDIR)
 	m_Config.setString("KeyChangeDir1",pActionList->getEntries()[i]->Text[1]);
+      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_DRIVE2)
+	m_Config.setString("KeyDrive2",pActionList->getEntries()[i]->Text[1]);
+      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_BRAKE2)
+	m_Config.setString("KeyBrake2",pActionList->getEntries()[i]->Text[1]);
+      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPLEFT2)
+	m_Config.setString("KeyFlipLeft2",pActionList->getEntries()[i]->Text[1]);
+      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPRIGHT2)
+	m_Config.setString("KeyFlipRight2",pActionList->getEntries()[i]->Text[1]);
+      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CHANGEDIR2)
+	m_Config.setString("KeyChangeDir2",pActionList->getEntries()[i]->Text[1]);
 #if defined(ENABLE_ZOOMING)
       else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_ZOOMIN)
 	m_Config.setString("KeyZoomIn",pActionList->getEntries()[i]->Text[1]);

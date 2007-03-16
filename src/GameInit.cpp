@@ -232,24 +232,9 @@ namespace vapp {
       if(Sound::isEnabled()) {
         /* Load sounds */
 	try {
-
 	  for(unsigned int i=0; i<m_theme.getSoundsList().size(); i++) {
 	    Sound::loadSample(m_theme.getSoundsList()[i]->FilePath());
 	  }
-	  
-	  m_EngineSound.addBangSample(Sound::findSample(m_theme.getSound("Engine00")->FilePath()));
-	  m_EngineSound.addBangSample(Sound::findSample(m_theme.getSound("Engine01")->FilePath()));
-	  m_EngineSound.addBangSample(Sound::findSample(m_theme.getSound("Engine02")->FilePath()));
-	  m_EngineSound.addBangSample(Sound::findSample(m_theme.getSound("Engine03")->FilePath()));
-	  m_EngineSound.addBangSample(Sound::findSample(m_theme.getSound("Engine04")->FilePath()));
-	  m_EngineSound.addBangSample(Sound::findSample(m_theme.getSound("Engine05")->FilePath()));
-	  m_EngineSound.addBangSample(Sound::findSample(m_theme.getSound("Engine06")->FilePath()));
-	  m_EngineSound.addBangSample(Sound::findSample(m_theme.getSound("Engine07")->FilePath()));
-	  m_EngineSound.addBangSample(Sound::findSample(m_theme.getSound("Engine08")->FilePath()));
-	  m_EngineSound.addBangSample(Sound::findSample(m_theme.getSound("Engine09")->FilePath()));
-	  m_EngineSound.addBangSample(Sound::findSample(m_theme.getSound("Engine10")->FilePath()));
-	  m_EngineSound.addBangSample(Sound::findSample(m_theme.getSound("Engine11")->FilePath()));
-	  m_EngineSound.addBangSample(Sound::findSample(m_theme.getSound("Engine12")->FilePath()));
 	} catch(Exception &e) {
 	  Log("*** Warning *** : %s\n", e.getMsg().c_str());
 	  /* hum, not cool */
@@ -462,8 +447,8 @@ namespace vapp {
 
     delete m_themeChoicer;
     
-    if(m_pReplay != NULL)
-      delete m_pReplay;
+    if(m_pJustPlayReplay != NULL)
+      delete m_pJustPlayReplay;
 
     if(m_pPlayer != NULL) 
       m_Config.setString("DefaultProfile",m_pPlayer->PlayerName);
@@ -639,9 +624,14 @@ namespace vapp {
     m_Config.createVar( "KeyFlipLeft1",           "Left" );
     m_Config.createVar( "KeyFlipRight1",          "Right" );
     m_Config.createVar( "KeyChangeDir1",          "Space" );
+    m_Config.createVar( "ControllerMode2",        "Keyboard" );
+    m_Config.createVar( "KeyDrive2",              "A" );
+    m_Config.createVar( "KeyBrake2",              "Q" );
+    m_Config.createVar( "KeyFlipLeft2",           "Z" );
+    m_Config.createVar( "KeyFlipRight2",          "E" );
+    m_Config.createVar( "KeyChangeDir2",          "W" );
     
     m_Config.createVar( "AutosaveHighscoreReplays", "true");
-    m_Config.createVar("LimitFramerate", "false");
 
     #if defined(ENABLE_ZOOMING)
       m_Config.createVar( "KeyZoomIn",              "PageUp" );
@@ -653,7 +643,8 @@ namespace vapp {
       m_Config.createVar( "KeyCameraMoveYDown",     "Pad 2" );
       m_Config.createVar( "KeyAutoZoom",            "Pad 5" );
     #endif
-        
+       
+    /* joystick */
     m_Config.createVar( "JoyIdx1",                "0" );
     m_Config.createVar( "JoyAxisPrim1",           "1" );
     m_Config.createVar( "JoyAxisPrimMax1",        "32760" );
@@ -666,7 +657,6 @@ namespace vapp {
     m_Config.createVar( "JoyAxisSecUL1",          "1024" );
     m_Config.createVar( "JoyAxisSecLL1",          "-1024" );
     m_Config.createVar( "JoyButtonChangeDir1",    "0" );
-    m_Config.createVar( "JoystickLimboArea",      "0.07" );
 
     /* Misc */
     m_Config.createVar( "DefaultProfile",         "" );
