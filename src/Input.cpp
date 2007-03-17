@@ -279,95 +279,86 @@ namespace vapp {
     _SetDefaultConfig();
   
     /* Get controller mode? (Keyboard or joystick) */
-    std::string ControllerMode = pConfig->getString("ControllerMode1");    
-    if(ControllerMode != "Keyboard" && ControllerMode != "Joystick1") {
-      ControllerMode = "Keyboard"; /* go default then */
+    std::string ControllerMode1 = pConfig->getString("ControllerMode1");    
+    if(ControllerMode1 != "Keyboard" && ControllerMode1 != "Joystick1") {
+      ControllerMode1 = "Keyboard"; /* go default then */
       Log("** Warning ** : 'ControllerMode1' must be either 'Keyboard' or 'Joystick1'!");
     }
 
-    while(1) {    
-      /* Get settings for mode */
-      if(ControllerMode == "Keyboard") {
-        /* We're using the keyboard */
-        m_ControllerModeID1 = CONTROLLER_MODE_KEYBOARD;
-        
-        m_nDriveKey1 = _StringToKey(pConfig->getString("KeyDrive1"));
-        m_nBrakeKey1 = _StringToKey(pConfig->getString("KeyBrake1"));
-        m_nPullBackKey1 = _StringToKey(pConfig->getString("KeyFlipLeft1"));
-        m_nPushForwardKey1 = _StringToKey(pConfig->getString("KeyFlipRight1"));
-        m_nChangeDirKey1 = _StringToKey(pConfig->getString("KeyChangeDir1"));
+    /* Get settings for mode */
+    if(ControllerMode1 == "Keyboard") {
+      /* We're using the keyboard */
+      m_ControllerModeID1 = CONTROLLER_MODE_KEYBOARD;
+      m_nDriveKey1 = _StringToKey(pConfig->getString("KeyDrive1"));
+      m_nBrakeKey1 = _StringToKey(pConfig->getString("KeyBrake1"));
+      m_nPullBackKey1 = _StringToKey(pConfig->getString("KeyFlipLeft1"));
+      m_nPushForwardKey1 = _StringToKey(pConfig->getString("KeyFlipRight1"));
+      m_nChangeDirKey1 = _StringToKey(pConfig->getString("KeyChangeDir1"));
+    } else {
+      /* We're using joystick 1 */
+      m_ControllerModeID1 = CONTROLLER_MODE_JOYSTICK1;      
+      
+      int nIdx = pConfig->getInteger("JoyIdx1");
 
-        m_nDriveKey2 = _StringToKey(pConfig->getString("KeyDrive2"));
-        m_nBrakeKey2 = _StringToKey(pConfig->getString("KeyBrake2"));
-        m_nPullBackKey2 = _StringToKey(pConfig->getString("KeyFlipLeft2"));
-        m_nPushForwardKey2 = _StringToKey(pConfig->getString("KeyFlipRight2"));
-        m_nChangeDirKey2 = _StringToKey(pConfig->getString("KeyChangeDir2"));
+      if(nIdx >= 0) {
+	m_pActiveJoystick1 = m_Joysticks[nIdx];
+	
+	/* Okay, fetch the rest of the config */          
+	m_nJoyAxisPrim1 = pConfig->getInteger("JoyAxisPrim1");
+	m_nJoyAxisPrimMax1 = pConfig->getInteger("JoyAxisPrimMax1");
+	m_nJoyAxisPrimMin1 = pConfig->getInteger("JoyAxisPrimMin1");
+	m_nJoyAxisPrimUL1 = pConfig->getInteger("JoyAxisPrimUL1");
+	m_nJoyAxisPrimLL1 = pConfig->getInteger("JoyAxisPrimLL1");
+	
+	m_nJoyAxisSec1 = pConfig->getInteger("JoyAxisSec1");
+	m_nJoyAxisSecMax1 = pConfig->getInteger("JoyAxisSecMax1");
+	m_nJoyAxisSecMin1 = pConfig->getInteger("JoyAxisSecMin1");
+	m_nJoyAxisSecUL1 = pConfig->getInteger("JoyAxisSecUL1");
+	m_nJoyAxisSecLL1 = pConfig->getInteger("JoyAxisSecLL1");
+	
+	m_nJoyButtonChangeDir1 = pConfig->getInteger("JoyButtonChangeDir1");
+	
+	/* Init all joystick buttons */
+	m_JoyButtonsPrev.clear();
+	for(int i=0;i<SDL_JoystickNumButtons(m_pActiveJoystick1);i++) {
+	  m_JoyButtonsPrev.push_back(false);
+	}
+	
+      }
+    }
 
-        #if defined(ENABLE_ZOOMING)          
-	m_nZoomIn   = _StringToKey(pConfig->getString("KeyZoomIn"));
-	m_nZoomOut  = _StringToKey(pConfig->getString("KeyZoomOut"));
-	m_nZoomInit = _StringToKey(pConfig->getString("KeyZoomInit"));
-	m_nCameraMoveXUp   = _StringToKey(pConfig->getString("KeyCameraMoveXUp"));
-	m_nCameraMoveXDown = _StringToKey(pConfig->getString("KeyCameraMoveXDown"));
-	m_nCameraMoveYUp   = _StringToKey(pConfig->getString("KeyCameraMoveYUp"));
-	m_nCameraMoveYDown = _StringToKey(pConfig->getString("KeyCameraMoveYDown"));
-	m_nAutoZoom        = _StringToKey(pConfig->getString("KeyAutoZoom"));
-	#endif
-        
-        /* All good? */
-        if(m_nDriveKey1<0 || m_nBrakeKey1<0 || m_nPullBackKey1<0 ||
-	   m_nPushForwardKey1<0 || m_nChangeDirKey1<0 ||
-	   m_nDriveKey2<0 || m_nBrakeKey2<0 || m_nPullBackKey2<0 ||
-	   m_nPushForwardKey2<0 || m_nChangeDirKey2<0 
-          #if defined(ENABLE_ZOOMING)
-            || m_nZoomIn<0 || m_nZoomOut <0 || m_nZoomInit <0
-	          || m_nCameraMoveXUp<0 || m_nCameraMoveXDown<0 
-            || m_nCameraMoveYUp<0 || m_nCameraMoveYDown<0
-            || m_nAutoZoom<0
-          #endif
-	        ) {
-          Log("** Warning ** : Invalid keyboard configuration!");
-	  _SetDefaultConfigToUnsetKeys();
-        }
-        break;
-      }
-      else if(ControllerMode == "Joystick1") {
-        /* We're using joystick 1 */
-        m_ControllerModeID1 = CONTROLLER_MODE_JOYSTICK1;      
-        
-        int nIdx = pConfig->getInteger("JoyIdx1");
-        if(nIdx < 0) {
-          Log("** Warning ** : Joystick is not configured, falling back to keyboard!");
-          ControllerMode = "Keyboard";
-        }
-        else {
-          m_pActiveJoystick1 = m_Joysticks[nIdx];
-        
-          /* Okay, fetch the rest of the config */          
-          m_nJoyAxisPrim1 = pConfig->getInteger("JoyAxisPrim1");
-          m_nJoyAxisPrimMax1 = pConfig->getInteger("JoyAxisPrimMax1");
-          m_nJoyAxisPrimMin1 = pConfig->getInteger("JoyAxisPrimMin1");
-          m_nJoyAxisPrimUL1 = pConfig->getInteger("JoyAxisPrimUL1");
-          m_nJoyAxisPrimLL1 = pConfig->getInteger("JoyAxisPrimLL1");
-          
-          m_nJoyAxisSec1 = pConfig->getInteger("JoyAxisSec1");
-          m_nJoyAxisSecMax1 = pConfig->getInteger("JoyAxisSecMax1");
-          m_nJoyAxisSecMin1 = pConfig->getInteger("JoyAxisSecMin1");
-          m_nJoyAxisSecUL1 = pConfig->getInteger("JoyAxisSecUL1");
-          m_nJoyAxisSecLL1 = pConfig->getInteger("JoyAxisSecLL1");
-	  
-	  m_nJoyButtonChangeDir1 = pConfig->getInteger("JoyButtonChangeDir1");
-          
-          /* Init all joystick buttons */
-          m_JoyButtonsPrev.clear();
-          for(int i=0;i<SDL_JoystickNumButtons(m_pActiveJoystick1);i++) {
-            m_JoyButtonsPrev.push_back(false);
-          }
-          
-          break;
-        }
-      }
-    }      
+    m_nDriveKey2 = _StringToKey(pConfig->getString("KeyDrive2"));
+    m_nBrakeKey2 = _StringToKey(pConfig->getString("KeyBrake2"));
+    m_nPullBackKey2 = _StringToKey(pConfig->getString("KeyFlipLeft2"));
+    m_nPushForwardKey2 = _StringToKey(pConfig->getString("KeyFlipRight2"));
+    m_nChangeDirKey2 = _StringToKey(pConfig->getString("KeyChangeDir2"));
+    
+#if defined(ENABLE_ZOOMING)          
+    m_nZoomIn   = _StringToKey(pConfig->getString("KeyZoomIn"));
+    m_nZoomOut  = _StringToKey(pConfig->getString("KeyZoomOut"));
+    m_nZoomInit = _StringToKey(pConfig->getString("KeyZoomInit"));
+    m_nCameraMoveXUp   = _StringToKey(pConfig->getString("KeyCameraMoveXUp"));
+    m_nCameraMoveXDown = _StringToKey(pConfig->getString("KeyCameraMoveXDown"));
+    m_nCameraMoveYUp   = _StringToKey(pConfig->getString("KeyCameraMoveYUp"));
+    m_nCameraMoveYDown = _StringToKey(pConfig->getString("KeyCameraMoveYDown"));
+    m_nAutoZoom        = _StringToKey(pConfig->getString("KeyAutoZoom"));
+#endif
+    
+    /* All good? */
+    if(m_nDriveKey1<0 || m_nBrakeKey1<0 || m_nPullBackKey1<0 ||
+       m_nPushForwardKey1<0 || m_nChangeDirKey1<0 ||
+       m_nDriveKey2<0 || m_nBrakeKey2<0 || m_nPullBackKey2<0 ||
+       m_nPushForwardKey2<0 || m_nChangeDirKey2<0 
+#if defined(ENABLE_ZOOMING)
+       || m_nZoomIn<0 || m_nZoomOut <0 || m_nZoomInit <0
+       || m_nCameraMoveXUp<0 || m_nCameraMoveXDown<0 
+       || m_nCameraMoveYUp<0 || m_nCameraMoveYDown<0
+       || m_nAutoZoom<0
+#endif
+       ) {
+      Log("** Warning ** : Invalid keyboard configuration!");
+      _SetDefaultConfigToUnsetKeys();
+    }    
   }
   
   /*===========================================================================
@@ -393,133 +384,131 @@ namespace vapp {
 				 GameRenderer *pGameRender,
 				 GameApp *pGameApp) {
     /* Update controller 1 */
-    if(m_ControllerModeID1 == CONTROLLER_MODE_KEYBOARD) {
-      /* Keyboard controlled */
-      switch(Type) {
-        case INPUT_KEY_DOWN: 
-	if(i_player == 0) {
-          if(m_nDriveKey1 == nKey) {
-            /* Start driving */
-            pController->setDrive(1.0f);
-          }
-          else if(m_nBrakeKey1 == nKey) {
-            /* Brake */
-            pController->setDrive(-1.0f);
-          }
-          else if(m_nPullBackKey1 == nKey) {
-            /* Pull back */
+    /* Keyboard controlled */
+    switch(Type) {
+      case INPUT_KEY_DOWN: 
+      if(i_player == 0 && m_ControllerModeID1 == CONTROLLER_MODE_KEYBOARD) {
+	if(m_nDriveKey1 == nKey) {
+	  /* Start driving */
+	  pController->setDrive(1.0f);
+	}
+	else if(m_nBrakeKey1 == nKey) {
+	  /* Brake */
+	  pController->setDrive(-1.0f);
+	}
+	else if(m_nPullBackKey1 == nKey) {
+	  /* Pull back */
             pController->setPull(1.0f);
-          }
-          else if(m_nPushForwardKey1 == nKey) {
-            /* Push forward */
-            pController->setPull(-1.0f);            
-          }
-	} else if(i_player == 1) {
-          if(m_nDriveKey2 == nKey) {
-            /* Start driving */
-            pController->setDrive(1.0f);
-          }
-          else if(m_nBrakeKey2 == nKey) {
-            /* Brake */
-            pController->setDrive(-1.0f);
-          }
+	}
+	else if(m_nPushForwardKey1 == nKey) {
+	  /* Push forward */
+	  pController->setPull(-1.0f);            
+	}
+      } else if(i_player == 1) {
+	if(m_nDriveKey2 == nKey) {
+	  /* Start driving */
+	  pController->setDrive(1.0f);
+	}
+	else if(m_nBrakeKey2 == nKey) {
+	  /* Brake */
+	  pController->setDrive(-1.0f);
+	}
           else if(m_nPullBackKey2 == nKey) {
             /* Pull back */
             pController->setPull(1.0f);
           }
-          else if(m_nPushForwardKey2 == nKey) {
-            /* Push forward */
-            pController->setPull(-1.0f);            
-          } 
-	}
+	else if(m_nPushForwardKey2 == nKey) {
+	  /* Push forward */
+	  pController->setPull(-1.0f);            
+	} 
+      }
 
 #if defined(ENABLE_ZOOMING)          
-	if(m_nZoomIn == nKey) {
-	  /* Zoom in */
-	  pGameRender->zoom(0.002);
-	} 
-	else if(m_nZoomOut == nKey) {
-	  /* Zoom out */
-	  pGameRender->zoom(-0.002);
-	}
-	else if(m_nZoomInit == nKey) {
-	  /* Zoom init */
-	  pGameRender->initCamera();
-	}
-	else if(m_nCameraMoveXUp == nKey) {
-	  pGameRender->moveCamera(1.0, 0.0);
-	}
-	else if(m_nCameraMoveXDown == nKey) {
-	  pGameRender->moveCamera(-1.0, 0.0);
-	}
-	else if(m_nCameraMoveYUp == nKey) {
+      if(m_nZoomIn == nKey) {
+	/* Zoom in */
+	pGameRender->zoom(0.002);
+      } 
+      else if(m_nZoomOut == nKey) {
+	/* Zoom out */
+	pGameRender->zoom(-0.002);
+      }
+      else if(m_nZoomInit == nKey) {
+	/* Zoom init */
+	pGameRender->initCamera();
+      }
+      else if(m_nCameraMoveXUp == nKey) {
+	pGameRender->moveCamera(1.0, 0.0);
+      }
+      else if(m_nCameraMoveXDown == nKey) {
+	pGameRender->moveCamera(-1.0, 0.0);
+      }
+      else if(m_nCameraMoveYUp == nKey) {
 	  pGameRender->moveCamera(0.0, 1.0);
-	}
-	else if(m_nCameraMoveYDown == nKey) {
-	  pGameRender->moveCamera(0.0, -1.0);
-	}
-	else if(m_nAutoZoom == nKey) {
-	  pGameApp->setAutoZoom(true);
-	  pGameApp->setAutoUnZoom(false);
-	} else if(nKey == SDLK_KP0 && ((mod & KMOD_LCTRL) == KMOD_LCTRL)) {
-	  pGameApp->TeleportationCheatTo(Vector2f(pGameRender->getCameraPositionX(),
-						  pGameRender->getCameraPositionY()));
-	}
+      }
+      else if(m_nCameraMoveYDown == nKey) {
+	pGameRender->moveCamera(0.0, -1.0);
+      }
+      else if(m_nAutoZoom == nKey) {
+	pGameApp->setAutoZoom(true);
+	pGameApp->setAutoUnZoom(false);
+      } else if(nKey == SDLK_KP0 && ((mod & KMOD_LCTRL) == KMOD_LCTRL)) {
+	pGameApp->TeleportationCheatTo(Vector2f(pGameRender->getCameraPositionX(),
+						pGameRender->getCameraPositionY()));
+      }
 #endif
-
-          break;
-        case INPUT_KEY_UP:
-	if(i_player == 0) {
-          if(m_nDriveKey1 == nKey) {
-            /* Stop driving */
-            pController->setDrive(0.0f);
-          }
-          else if(m_nBrakeKey1 == nKey) {
-            /* Don't brake */
-            pController->setDrive(0.0f);
-          }
-          else if(m_nPullBackKey1 == nKey) {
-            /* Pull back */
-            pController->setPull(0.0f);
-          }
-          else if(m_nPushForwardKey1 == nKey) {
-            /* Push forward */
-            pController->setPull(0.0f);            
-          }
-          else if(m_nChangeDirKey1 == nKey) {
-            /* Change dir */
-            pController->setChangeDir(true);
-          }
-	} else if(i_player == 1) {
-          if(m_nDriveKey2 == nKey) {
-            /* Stop driving */
-            pController->setDrive(0.0f);
-          }
-          else if(m_nBrakeKey2 == nKey) {
-            /* Don't brake */
-            pController->setDrive(0.0f);
-          }
-          else if(m_nPullBackKey2 == nKey) {
-            /* Pull back */
-            pController->setPull(0.0f);
-          }
-          else if(m_nPushForwardKey2 == nKey) {
-            /* Push forward */
-            pController->setPull(0.0f);            
-          }
-          else if(m_nChangeDirKey2 == nKey) {
-            /* Change dir */
-            pController->setChangeDir(true);
-          }
+      
+      break;
+      case INPUT_KEY_UP:
+      if(i_player == 0 && m_ControllerModeID1 == CONTROLLER_MODE_KEYBOARD) {
+	if(m_nDriveKey1 == nKey) {
+	  /* Stop driving */
+	  pController->setDrive(0.0f);
 	}
-
-	if(m_nAutoZoom == nKey) {
-	  pGameApp->setAutoZoom(false);
-	  pGameApp->setAutoUnZoom(true);
+	else if(m_nBrakeKey1 == nKey) {
+	  /* Don't brake */
+	  pController->setDrive(0.0f);
 	}
-          break;
-      }      
-    }
+	else if(m_nPullBackKey1 == nKey) {
+	  /* Pull back */
+	  pController->setPull(0.0f);
+	}
+	else if(m_nPushForwardKey1 == nKey) {
+	  /* Push forward */
+	  pController->setPull(0.0f);            
+	}
+	else if(m_nChangeDirKey1 == nKey) {
+	  /* Change dir */
+	  pController->setChangeDir(true);
+	}
+      } else if(i_player == 1) {
+	if(m_nDriveKey2 == nKey) {
+	  /* Stop driving */
+	  pController->setDrive(0.0f);
+	}
+	else if(m_nBrakeKey2 == nKey) {
+	  /* Don't brake */
+	  pController->setDrive(0.0f);
+	}
+	else if(m_nPullBackKey2 == nKey) {
+	  /* Pull back */
+	  pController->setPull(0.0f);
+	}
+	else if(m_nPushForwardKey2 == nKey) {
+	  /* Push forward */
+	  pController->setPull(0.0f);            
+	}
+	else if(m_nChangeDirKey2 == nKey) {
+	  /* Change dir */
+	  pController->setChangeDir(true);
+	}
+      }
+      
+      if(m_nAutoZoom == nKey) {
+	pGameApp->setAutoZoom(false);
+	pGameApp->setAutoUnZoom(true);
+      }
+      break;
+    }      
     
     /* Have the script hooked this key? */
     if(Type == INPUT_KEY_DOWN) {

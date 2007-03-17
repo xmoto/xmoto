@@ -1,26 +1,19 @@
-******
+	<block id="Block5">
+		<position x="6.000000" y="3.400000" dynamic="true"
+   background="true"/>
+->
+--			--Game.SetBlockRotation("Block5",Game.GetTime()*0.3)
+			--Game.SetBlockPos("Block5",4,0+math.sin(Game.GetTime()*0.4)*4)
+ca lance une exception pour manu
 
 
-  void Replay::fastforward(float fSeconds) {
-    /* How many states should we move forward? */
-    float nNumStates = (fSeconds * m_fFrameRate);
-    nextState(nNumStates);
-  }
-
-  void Replay::fastrewind(float fSeconds) {
-    /* How many states should we move forward? */
-    float nNumStates = (fSeconds * m_fFrameRate);
-    nextState(-nNumStates);
-  }  
-
-*******
+-> getblockpos cassé
+-> setblockcenter
+-> setblockpos
+-> le level test -> une exception
 
 - dans un replay : apparence d'un joueur
-- la manette à plusieurs
-- vérifier toutes les fontions de script : enter/out zone, touch entity
-- vérifier les sauts périeux, en particulier la réinitialisation
-- script : vérifier toutes les fonctions
-- réparer les scripts ne doivent pas se lancer dans un replay
+- vérifier toutes les fontions de script
 - mode 2 joueurs : victoire à celui qui vit
 
 [20:53] <Christoph> can someone watch the world record replay of "MASTERKUD Padrinos magicos"? it aborts with the error "Entity 'MySprite18' doesn't exist" at position 52:47 (with xmoto-0.2.6)
@@ -39,6 +32,8 @@
 * hierarchical sort for pack list : +/- to close
 
 * BUG rotation on grass of dynamic blocks on sdlgfx
+
+* several joypad (currently, joypack is available only for player 1)
 
 mingw:
 * sdlgfx: http://www.wormux.org/wiki/compile_under_mingw.php#SDL_gfx

@@ -1832,7 +1832,7 @@ GameApp::GameApp() {
 
 	/* add the player */
 	m_Renderer.setPlayerToFollow(m_MotoGame.addPlayerBiker(pLevelSrc->PlayerStart(), DD_RIGHT, &m_theme));
-	//m_MotoGame.addPlayerBiker(pLevelSrc->PlayerStart(), DD_RIGHT, &m_theme);
+	m_MotoGame.addPlayerBiker(pLevelSrc->PlayerStart(), DD_RIGHT, &m_theme);
 	/* */
 
 
@@ -2130,7 +2130,9 @@ GameApp::GameApp() {
     }
 
     _UpdateLevelPackList();
-    _UpdateLevelPackLevelList();
+    if(v_isset) {
+      _UpdateLevelPackLevelList();
+    }
     _UpdateLevelLists();
 
 #if defined(SUPPORT_WEBACCESS)

@@ -1312,6 +1312,11 @@ void MotoGame::cleanPlayers() {
     if(m_is_paused == false) {
       m_speed_factor -= REPLAY_SPEED_INCREMENT;
     }
+    if(getLevelSrc() != NULL) {
+      if(getLevelSrc()->isScripted()) {
+	if(m_speed_factor < 0.0) m_speed_factor = 0.0;
+      }
+    }
   }
 
   void MotoGame::faster() {
@@ -1325,8 +1330,12 @@ void MotoGame::cleanPlayers() {
   }
 
   void MotoGame::fastrewind(float fSeconds) {
-    m_fTime -= fSeconds;
-    if(m_fTime < 0.0) m_fTime = 0.0;
+    if(getLevelSrc() != NULL) {
+      if(getLevelSrc()->isScripted() == false) {
+	m_fTime -= fSeconds;
+	if(m_fTime < 0.0) m_fTime = 0.0;
+      }
+    }
   }
 
   bool MotoGame::doesPlayEvents() const {
