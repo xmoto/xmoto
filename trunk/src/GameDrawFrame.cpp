@@ -30,6 +30,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Sound.h"
 #include "PhysSettings.h"
 #include "Input.h"
+#include "xmscene/Bike.h"
+#include "xmscene/BikeGhost.h"
+#include "xmscene/BikePlayer.h"
 
 #if defined(SUPPORT_WEBACCESS)
   #include <curl/curl.h>
@@ -423,25 +426,11 @@ namespace vapp {
   int GameApp::_UpdateGamePlaying(void) {
 
     if(m_State == GS_REPLAYING) {
-      if(m_replayBiker->isDead() || m_replayBiker->isFinished()) {
-
-	if(m_bBenchmark) {
-	  double fBenchmarkTime = getRealTime() - m_fStartTime;
-	  printf("\n");
-	  printf(" * %d frames rendered in %.0f seconds\n",m_nFrame,fBenchmarkTime);
-	  printf(" * Average framerate: %.1f fps\n",((double)m_nFrame) / fBenchmarkTime);
-	  quit();
-	}
-
-	if(m_replayBiker->isDead()) {
-	  return 0;
-	}
-	if(m_replayBiker->isFinished()) {
-	  m_MotoGame.setTime(m_replayBiker->finishTime());
-	  return 0;
-	}
+      if(m_stopToUpdateReplay) {
+	return 0;
       }
     }
+    
 
     /* Increase frame counter */
     m_nFrame++;
@@ -477,7 +466,25 @@ namespace vapp {
         while (m_fLastPhysTime > getTime());
       }
     }
-      
+
+    if(m_State == GS_REPLAYING) {
+      if(m_replayBiker->isDead() || m_replayBiker->isFinished()) {
+	m_stopToUpdateReplay = true;
+
+    	if(m_bBenchmark) {
+    	  double fBenchmarkTime = getRealTime() - m_fStartTime;
+    	  printf("\n");
+    	  printf(" * %d frames rendered in %.0f seconds\n",m_nFrame,fBenchmarkTime);
+    	  printf(" * Average framerate: %.1f fps\n",((double)m_nFrame) / fBenchmarkTime);
+    	  quit();
+    	}
+
+    	if(m_replayBiker->isFinished()) {
+    	  m_MotoGame.setTime(m_replayBiker->finishTime());
+	}
+      }
+    }
+
     return nPhysSteps;
   }  
 

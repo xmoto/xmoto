@@ -27,6 +27,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VFileIO.h"
 #include "Input.h"
 
+#include "xmscene/Bike.h"
+#include "xmscene/BikeGhost.h"
+#include "xmscene/BikePlayer.h"
+
 #ifndef FALSE
 #define FALSE 0
 #endif

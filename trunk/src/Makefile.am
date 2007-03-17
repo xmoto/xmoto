@@ -81,7 +81,7 @@ bin_PROGRAMS = xmoto
 xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp GameMain.cpp \
   GameMenus.cpp GUIBestTimes.cpp GUIButton.cpp GUI.cpp \
   GUIFrame.cpp GUIList.cpp GUIStatic.cpp GUITabView.cpp \
-  MotoGame.cpp MotoGameL.cpp MPhysics.cpp PlayerData.cpp \
+  MotoGame.cpp MotoGameL.cpp PlayerData.cpp \
   Renderer.cpp RendererInit.cpp Replay.cpp Sound.cpp \
   UserConfig.cpp \
   BSP.h \
@@ -139,8 +139,12 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp GameMain.cpp \
   xmscene/BikeParameters.cpp \
   xmscene/BikeAnchors.h \
   xmscene/BikeAnchors.cpp \
-  xmscene/Bike.h \
-  xmscene/Bike.cpp
+  xmscene/Bike.h        \
+  xmscene/Bike.cpp      \
+  xmscene/BikeGhost.h   \
+  xmscene/BikeGhost.cpp \
+  xmscene/BikePlayer.h  \
+  xmscene/BikePlayer.cpp
 
 if WIN32
 xmoto_SOURCES += xmoto_icone.ico
