@@ -308,7 +308,7 @@ namespace vapp {
     void _RenderInGameText(Vector2f P,const std::string &Text,Color c = 0xffffffff);
     void setScroll(bool isSmooth);
 
-    void _RenderGhost(Ghost* i_ghost, int i);
+    void _RenderGhost(Biker* i_ghost, int i);
 
     void _DbgText(Vector2f P,std::string Text,Color c);
     void _DrawRotatedMarker(Vector2f Pos,dReal *pfRot);     

@@ -62,9 +62,10 @@ namespace vapp {
 
     /* Dealloc chunks */
     for(int i=0;i<m_Chunks.size();i++) {
-      if(m_Chunks[i].pcChunkData != NULL) {
-        delete [] m_Chunks[i].pcChunkData;
+      if(m_Chunks[i]->pcChunkData != NULL) {
+        delete [] m_Chunks[i]->pcChunkData;
       }
+      delete m_Chunks[i];
     }
     m_Chunks.clear();
     
@@ -74,7 +75,6 @@ namespace vapp {
   void Replay::finishReplay(bool bFinished,float fFinishTime) {
     m_fFinishTime = fFinishTime;
     m_bFinished = bFinished;
-  
     saveReplay();
   }
   
@@ -138,38 +138,33 @@ namespace vapp {
     }
     
     /* Chunks */
-    if(m_Chunks.empty()) FS::writeInt_LE(pfh,0);
-    else {        
-      FS::writeInt_LE(pfh,m_Chunks.size());
+    FS::writeInt_LE(pfh,m_Chunks.size());
     
-      /* Write chunks */    
-      for(int i=0;i<m_Chunks.size();i++) {
-        FS::writeInt_LE(pfh,m_Chunks[i].nNumStates);
-
-        /* Compression enabled? */
-        if(m_bEnableCompression) {
-          /* Try compressing the chunk with zlib */        
-          unsigned char *pcCompressed = new unsigned char[m_nStateSize * m_Chunks[i].nNumStates * 2 + 12];
-          uLongf nDestLen = m_nStateSize * m_Chunks[i].nNumStates * 2 + 12;
-          uLongf nSrcLen = m_nStateSize * m_Chunks[i].nNumStates;
-          int nZRet = compress2((Bytef *)pcCompressed,&nDestLen,(Bytef *)m_Chunks[i].pcChunkData,nSrcLen,9);
-          if(nZRet != Z_OK) {
-            /* Failed to compress... Save uncompressed chunk then */
-            FS::writeBool(pfh,false); /* compression: false */
-            FS::writeBuf(pfh,m_Chunks[i].pcChunkData,m_nStateSize * m_Chunks[i].nNumStates);
-          }
-          else {
-            /* Compressed ok */
-            FS::writeBool(pfh,true); /* compression: true */
-            FS::writeInt_LE(pfh,nDestLen);
-            FS::writeBuf(pfh,(char *)pcCompressed,nDestLen);
-          }
-          delete [] pcCompressed;        
-        }
-        else {
-          FS::writeBool(pfh,false); /* compression: false */
-          FS::writeBuf(pfh,m_Chunks[i].pcChunkData,m_nStateSize * m_Chunks[i].nNumStates);
-        }
+    /* Write chunks */    
+    for(int i=0;i<m_Chunks.size();i++) {
+      FS::writeInt_LE(pfh,m_Chunks[i]->nNumStates);
+      
+      /* Compression enabled? */
+      if(m_bEnableCompression) {
+	/* Try compressing the chunk with zlib */        
+	unsigned char *pcCompressed = new unsigned char[m_nStateSize * m_Chunks[i]->nNumStates * 2 + 12];
+	uLongf nDestLen = m_nStateSize * m_Chunks[i]->nNumStates * 2 + 12;
+	uLongf nSrcLen = m_nStateSize * m_Chunks[i]->nNumStates;
+	int nZRet = compress2((Bytef *)pcCompressed,&nDestLen,(Bytef *)m_Chunks[i]->pcChunkData,nSrcLen,9);
+	if(nZRet != Z_OK) {
+	  /* Failed to compress... Save uncompressed chunk then */
+	  FS::writeBool(pfh,false); /* compression: false */
+	  FS::writeBuf(pfh,m_Chunks[i]->pcChunkData,m_nStateSize * m_Chunks[i]->nNumStates);
+	} else {
+	  /* Compressed ok */
+	  FS::writeBool(pfh,true); /* compression: true */
+	  FS::writeInt_LE(pfh,nDestLen);
+	  FS::writeBuf(pfh,(char *)pcCompressed,nDestLen);
+	}
+	delete [] pcCompressed;        
+      } else {
+	FS::writeBool(pfh,false); /* compression: false */
+	FS::writeBuf(pfh,m_Chunks[i]->pcChunkData,m_nStateSize * m_Chunks[i]->nNumStates);
       }
     }
     
@@ -294,21 +289,27 @@ namespace vapp {
       int nNumChunks = FS::readInt_LE(pfh);
       if(bDisplayInformation) {
 	printf("%-30s: %i\n", "Number of chunks", nNumChunks);
-      }  
+      }
+      if(nNumChunks == 0) {
+	FS::closeFile(pfh);
+	_FreeReplay();
+	Log("** Warning ** : try to open a replay with no chunk");
+	throw Exception("Replay with no chunk !");
+      }
 
       for(int i=0;i<nNumChunks;i++) {
 	if(bDisplayInformation) {
 	  printf("Chunk %02i\n", i);
 	}  
   
-        ReplayStateChunk Chunk;        
-        Chunk.nNumStates = FS::readInt_LE(pfh);
+        ReplayStateChunk* Chunk = new ReplayStateChunk();
+        Chunk->nNumStates = FS::readInt_LE(pfh);
 
 	if(bDisplayInformation) {
-	  printf("   %-27s: %i\n", "Number of states", Chunk.nNumStates);
+	  printf("   %-27s: %i\n", "Number of states", Chunk->nNumStates);
 	} 
 
-        Chunk.pcChunkData = new char [Chunk.nNumStates * m_nStateSize];
+        Chunk->pcChunkData = new char [Chunk->nNumStates * m_nStateSize];
         
         /* Compressed or not compressed? */
         if(FS::readBool(pfh)) {
@@ -327,12 +328,12 @@ namespace vapp {
           FS::readBuf(pfh,(char *)pcCompressed,nCompressedSize);
          
           /* Uncompress it */           
-          uLongf nDestLen = Chunk.nNumStates * m_nStateSize;
+          uLongf nDestLen = Chunk->nNumStates * m_nStateSize;
           uLongf nSrcLen = nCompressedSize;
-          int nZRet = uncompress((Bytef *)Chunk.pcChunkData,&nDestLen,(Bytef *)pcCompressed,nSrcLen);
-          if(nZRet != Z_OK || nDestLen != Chunk.nNumStates * m_nStateSize) {
+          int nZRet = uncompress((Bytef *)Chunk->pcChunkData,&nDestLen,(Bytef *)pcCompressed,nSrcLen);
+          if(nZRet != Z_OK || nDestLen != Chunk->nNumStates * m_nStateSize) {
             delete [] pcCompressed;
-            delete [] Chunk.pcChunkData;
+            delete [] Chunk->pcChunkData;
             FS::closeFile(pfh);
             _FreeReplay();
             Log("** Warning ** : Failed to uncompress chunk %d in replay: %s",i,FileName.c_str());
@@ -348,7 +349,7 @@ namespace vapp {
 	  } 
 
           /* Not compressed! */
-          FS::readBuf(pfh,Chunk.pcChunkData,m_nStateSize*Chunk.nNumStates);
+          FS::readBuf(pfh,Chunk->pcChunkData,m_nStateSize*Chunk->nNumStates);
         }
         
         m_Chunks.push_back(Chunk);
@@ -378,25 +379,24 @@ namespace vapp {
       
   void Replay::storeState(const SerializedBikeState& state) {
     char *addr;
-    
-    if(m_Chunks.empty()) {
-      ReplayStateChunk Chunk;
-      Chunk.pcChunkData = new char [STATES_PER_CHUNK * m_nStateSize];
-      Chunk.nNumStates = 1;
-      addr = Chunk.pcChunkData;
+
+    if(m_Chunks.size() == 0) {
+      ReplayStateChunk* Chunk = new ReplayStateChunk();
+      Chunk->pcChunkData = new char [STATES_PER_CHUNK * m_nStateSize];
+      Chunk->nNumStates = 1;
+      addr = Chunk->pcChunkData;
       m_Chunks.push_back(Chunk);
-    }
-    else {
+    } else {
       int i = m_Chunks.size() - 1;
-      if(m_Chunks[i].nNumStates < STATES_PER_CHUNK) {
-        addr = &m_Chunks[i].pcChunkData[m_Chunks[i].nNumStates * m_nStateSize];
-        m_Chunks[i].nNumStates++;
+      if(m_Chunks[i]->nNumStates < STATES_PER_CHUNK) {
+        addr = &m_Chunks[i]->pcChunkData[m_Chunks[i]->nNumStates * m_nStateSize];
+        m_Chunks[i]->nNumStates++;
       }
       else {
-        ReplayStateChunk Chunk;
-        Chunk.pcChunkData = new char [STATES_PER_CHUNK * m_nStateSize];
-        Chunk.nNumStates = 1;
-        addr = Chunk.pcChunkData;
+        ReplayStateChunk* Chunk = new ReplayStateChunk();
+        Chunk->pcChunkData = new char [STATES_PER_CHUNK * m_nStateSize];
+        Chunk->nNumStates = 1;
+        addr = Chunk->pcChunkData;
         m_Chunks.push_back(Chunk);        
       }
     }
@@ -424,13 +424,13 @@ namespace vapp {
       /* go on the following chunk */
       if(m_nCurState >= STATES_PER_CHUNK) { /* end of a chunk */
   if(m_nCurChunk < m_Chunks.size() -1) {
-    m_nCurState = m_nCurState - m_Chunks[m_nCurChunk].nNumStates -1;
+    m_nCurState = m_nCurState - m_Chunks[m_nCurChunk]->nNumStates -1;
     m_nCurChunk++;
   }
       } else {
   if(m_nCurState < 0.0) { /* start of a chunk */
     if(m_nCurChunk > 0) {
-      m_nCurState = m_nCurState + m_Chunks[m_nCurChunk-1].nNumStates -1;
+      m_nCurState = m_nCurState + m_Chunks[m_nCurChunk-1]->nNumStates -1;
       m_nCurChunk--;
     }
   }
@@ -442,8 +442,8 @@ namespace vapp {
       }
 
       /* if that's end */
-      if(m_nCurState >= m_Chunks[m_nCurChunk].nNumStates) {
-  m_nCurState = m_Chunks[m_nCurChunk].nNumStates -1;
+      if(m_nCurState >= m_Chunks[m_nCurChunk]->nNumStates) {
+  m_nCurState = m_Chunks[m_nCurChunk]->nNumStates -1;
   return false;
       }
       
@@ -452,8 +452,8 @@ namespace vapp {
       /* if that's the beginning, do nothing */
 
       /* if that's end */
-      if(m_nCurState >= m_Chunks[m_nCurChunk].nNumStates) {
-  m_nCurState = m_Chunks[m_nCurChunk].nNumStates -1;
+      if(m_nCurState >= m_Chunks[m_nCurChunk]->nNumStates) {
+  m_nCurState = m_Chunks[m_nCurChunk]->nNumStates -1;
   return false;
       }
     }
@@ -467,7 +467,7 @@ namespace vapp {
     peekState(state);
 
     m_bEndOfFile = (m_nCurChunk       == m_Chunks.size()-1 && 
-        (int)m_nCurState  == m_Chunks[m_nCurChunk].nNumStates-1);
+        (int)m_nCurState  == m_Chunks[m_nCurChunk]->nNumStates-1);
 
     if(m_bEndOfFile == false) {
       if(nextNormalState()) { /* do nothing */ }
@@ -477,7 +477,7 @@ namespace vapp {
   void Replay::peekState(SerializedBikeState& state) {
     /* Like loadState() but this one does not advance the cursor... it just takes a peek */
     memcpy((char *)&state,
-     &m_Chunks[m_nCurChunk].pcChunkData[((int)m_nCurState)*m_nStateSize],
+     &m_Chunks[m_nCurChunk]->pcChunkData[((int)m_nCurState)*m_nStateSize],
      m_nStateSize);
     SwapEndian::LittleSerializedBikeState(state);
   }

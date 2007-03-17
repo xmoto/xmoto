@@ -125,7 +125,7 @@ namespace vapp {
 
     private: 
       /* Data */ 
-      std::vector<ReplayStateChunk> m_Chunks;
+      std::vector<ReplayStateChunk*> m_Chunks;
       int m_nCurChunk;
       float m_nCurState; /* is a float so that manage slow */   
       std::string m_FileName,m_LevelID,m_PlayerName;
