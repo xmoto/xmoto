@@ -774,6 +774,15 @@ namespace vapp {
       }
     }
 
+    /* render motogame info */
+    if(getGameObject()->getInfos() != "") {
+      UIFont *v_font = getMediumFont();
+      if(v_font != NULL) {
+	UITextDraw::printRaw(v_font,0,getParent()->getDrawLib()->getDispHeight()-4,
+			     getGameObject()->getInfos(),
+			     MAKE_COLOR(255,255,255,255));
+      }
+    }
   }
 
   void GameRenderer::setScroll(bool isSmooth) {

@@ -220,6 +220,9 @@ namespace vapp {
 
       void handleEvent(MotoGameEvent *pEvent);
 
+      void setInfos(std::string i_infos);
+      std::string getInfos() const;
+
   private:         
       /* Data */
       std::queue<MotoGameEvent*> m_GameEventQueue;
@@ -233,6 +236,8 @@ namespace vapp {
       bool  m_is_paused;
 
       MotoGameHooks *m_motoGameHooks;
+
+      std::string m_infos;
 
       bool m_bDeathAnimEnabled;
       bool m_bLevelInitSuccess;
