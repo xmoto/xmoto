@@ -201,6 +201,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
                                                    play this level */
       std::string m_PlaySpecificReplay;         /* If set, we only want to
                                                    play this replay */                                                   
+      Ghost* m_replayBiker; /* link to the replay biker in REPLAYING state */
+
       std::string m_ForceProfile;               /* Force this player profile */    
       std::string m_GraphDebugInfoFile;
       InputHandler m_InputHandler;              /* The glorious input handler */

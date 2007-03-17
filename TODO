@@ -29,20 +29,15 @@
 
 *******
 
-- sauvegarde d'un replay
-- le temps final d'un replay
+- SAUVEGARDE D'UN REPLAY CASSE !!!
+  ca a l'air de chier les replays, voir paxed alpha
 - le mode ralenti dans un replay
 - la manette à plusieurs
-- son de la moto : en replay
 - vérifier toutes les fontions de script : enter/out zone, touch entity
 - vérifier les sauts périeux, en particulier la réinitialisation
-- son à checker dans un replay
 - script : vérifier toutes les fonctions
 - réparer les replays, les scripts ne doivent pas se lancer dans un replay
-- ghost for replays : a small offset : you can see it if the replay = the ghost
-- pas de saveReplay en multijoueurs
-- victoire à celui qui vit
-- virer les appels au getValue de la config dans la boucle de jeu
+- mode 2 joueurs : victoire à celui qui vit
 
 [20:53] <Christoph> can someone watch the world record replay of "MASTERKUD Padrinos magicos"? it aborts with the error "Entity 'MySprite18' doesn't exist" at position 52:47 (with xmoto-0.2.6)
 

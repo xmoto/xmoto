@@ -204,7 +204,7 @@ GameApp::GameApp() {
 
         try {  
 	  /* ghost, replay */
-	  Ghost* v_replayBiker = NULL;
+	  m_replayBiker = NULL;
 	  
           m_bShowCursor = false;
           bool bCreditsMode = (m_State == GS_CREDITSMODE);
@@ -212,8 +212,8 @@ GameApp::GameApp() {
           m_State = GS_REPLAYING;
 	  
 	  try {
-	    v_replayBiker = m_MotoGame.addSimpleGhostFromFile(m_PlaySpecificReplay, true, &m_theme);
-	    m_Renderer.setPlayerToFollow(v_replayBiker);
+	    m_replayBiker = m_MotoGame.addSimpleGhostFromFile(m_PlaySpecificReplay, true, &m_theme);
+	    m_Renderer.setPlayerToFollow(m_replayBiker);
 	  } catch(Exception &e) {
 	    setState(m_StateAfterPlaying);
             notifyMsg(e.getMsg());
@@ -225,27 +225,27 @@ GameApp::GameApp() {
 	    if(m_pCredits == NULL)
 	      m_pCredits = new Credits;
 	    
-	    m_pCredits->init(v_replayBiker->getFinishTime(),4,4,GAMETEXT_CREDITS);
+	    m_pCredits->init(m_replayBiker->getFinishTime(),4,4,GAMETEXT_CREDITS);
 	  }
 
 	  /* Fine, open the level */
 	  Level *pLevelSrc;
 	  
 	  try {
-	    pLevelSrc = &(m_levelsManager.LevelById(v_replayBiker->levelId()));
+	    pLevelSrc = &(m_levelsManager.LevelById(m_replayBiker->levelId()));
 	  } catch(Exception &e) {
 	    Log("** Warning ** : level '%s' specified by replay '%s' not found",
-		v_replayBiker->levelId().c_str(),m_PlaySpecificReplay.c_str());
+		m_replayBiker->levelId().c_str(),m_PlaySpecificReplay.c_str());
 	    
 	    char cBuf[256];
-	    sprintf(cBuf,GAMETEXT_LEVELREQUIREDBYREPLAY,v_replayBiker->levelId().c_str());
+	    sprintf(cBuf,GAMETEXT_LEVELREQUIREDBYREPLAY,m_replayBiker->levelId().c_str());
 	    setState(m_StateAfterPlaying);
 	    notifyMsg(cBuf);                        
 	    return;
 	  }
 
 	  if(pLevelSrc->isXMotoTooOld()) {
-	    Log("** Warning ** : level '%s' specified by replay '%s' requires newer X-Moto",v_replayBiker->levelId().c_str(),m_PlaySpecificReplay.c_str());
+	    Log("** Warning ** : level '%s' specified by replay '%s' requires newer X-Moto",m_replayBiker->levelId().c_str(),m_PlaySpecificReplay.c_str());
 	    
 	    char cBuf[256];
 	    sprintf(cBuf,GAMETEXT_NEWERXMOTOREQUIRED,pLevelSrc->getRequiredVersion().c_str());
@@ -291,9 +291,9 @@ GameApp::GameApp() {
 
 	  /* Show help string */
 	  if(!drawLib->isNoGraphics()) {
-	    PlayerTimeEntry *pBestTime = m_Profiles.getBestTime(v_replayBiker->levelId());
+	    PlayerTimeEntry *pBestTime = m_Profiles.getBestTime(m_replayBiker->levelId());
 	    PlayerTimeEntry *pBestPTime = m_Profiles.getBestPlayerTime(m_pPlayer->PlayerName,
-								       v_replayBiker->levelId());
+								       m_replayBiker->levelId());
 	    
 	    std::string T1 = "--:--:--",T2 = "--:--:--";
 	    
@@ -310,7 +310,7 @@ GameApp::GameApp() {
 #if defined(SUPPORT_WEBACCESS) 
 	    /* World-record stuff */
 	    if(!bCreditsMode)
-	      _UpdateWorldRecord(v_replayBiker->levelId());
+	      _UpdateWorldRecord(m_replayBiker->levelId());
 #endif
 	  }
 	  m_fStartTime = getRealTime();
@@ -382,8 +382,10 @@ GameApp::GameApp() {
         if(m_pJustPlayReplay != NULL) m_pJustPlayReplay->finishReplay(false,0.0f);
 
         /* Update stats */        
-        m_GameStats.died(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->Id(),m_MotoGame.getLevelSrc()->Name(),m_MotoGame.getTime());
-                
+	if(m_MotoGame.Players().size() == 1) {
+	  m_GameStats.died(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->Id(),m_MotoGame.getLevelSrc()->Name(),m_MotoGame.getTime());
+	}                
+
         /* Play the DIE!!! sound */
 	try {
 	  Sound::playSampleByName(m_theme.getSound("Headcrash")->FilePath(),0.3);
@@ -439,104 +441,113 @@ GameApp::GameApp() {
         m_bShowCursor = true;
 
         /* Finish replay */
-        if(m_pJustPlayReplay != NULL) m_pJustPlayReplay->finishReplay(true,m_MotoGame.getFinishTime());
+	if(m_pJustPlayReplay != NULL) {
+	  if(m_MotoGame.Players().size() == 1) {
+	    m_pJustPlayReplay->finishReplay(true,m_MotoGame.Players()[0]->finishTime());
+	  }
+	}
 
-        /* Update stats */        
-        m_GameStats.levelCompleted(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->Id(),m_MotoGame.getLevelSrc()->Name(),m_MotoGame.getFinishTime());
-        
+        /* Update stats */
+	/* update stats only in one player mode */
+	if(m_MotoGame.Players().size() == 1) {       
+	  m_GameStats.levelCompleted(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->Id(),m_MotoGame.getLevelSrc()->Name(),m_MotoGame.Players()[0]->finishTime());
+	}        
+
         /* A more lucky outcome of GS_PLAYING than GS_DEADMENU :) */
         m_pFinishMenu->showWindow(true);
         m_pBestTimes->showWindow(true);
         m_nFinishShade = 0;            
 
-        /* display message on finish and eventually save the replay */
+	if(m_MotoGame.Players().size() == 1) {
+	  /* display message on finish and eventually save the replay */
         
-        /* is it a highscore ? */
-        float v_best_local_time;
-        float v_best_personal_time;
-        float v_current_time;
-        bool v_is_a_highscore;
-        bool v_is_a_personal_highscore;
-        
-        v_best_local_time = m_Profiles.getBestTime(m_MotoGame.getLevelSrc()->Id())->fFinishTime;
-        v_best_personal_time = m_Profiles.getBestPlayerTime(m_pPlayer->PlayerName,
-                        m_MotoGame.getLevelSrc()->Id())->fFinishTime;
-        v_current_time = m_MotoGame.getFinishTime();
-
-        v_is_a_highscore = (v_current_time <= v_best_local_time);  /* = because highscore is already stored in playerdata */
-
-        v_is_a_personal_highscore = (v_current_time <= v_best_personal_time);  /* = because highscore is already stored in playerdata */
-
+	  /* is it a highscore ? */
+	  float v_best_local_time;
+	  float v_best_personal_time;
+	  float v_current_time;
+	  bool v_is_a_highscore;
+	  bool v_is_a_personal_highscore;
+	  
+	  v_best_local_time = m_Profiles.getBestTime(m_MotoGame.getLevelSrc()->Id())->fFinishTime;
+	  v_best_personal_time = m_Profiles.getBestPlayerTime(m_pPlayer->PlayerName,
+							      m_MotoGame.getLevelSrc()->Id())->fFinishTime;
+	  v_current_time = m_MotoGame.Players()[0]->finishTime();
+	  
+	  v_is_a_highscore = (v_current_time <= v_best_local_time);  /* = because highscore is already stored in playerdata */
+	  
+	  v_is_a_personal_highscore = (v_current_time <= v_best_personal_time);  /* = because highscore is already stored in playerdata */
+	  
 #if defined(SUPPORT_WEBACCESS) 
-        /* search a better webhighscore */
-        if(m_pWebHighscores != NULL /*&& v_is_a_highscore == true*/) {
-          WebHighscore* wh = m_pWebHighscores->getHighscoreFromLevel(m_MotoGame.getLevelSrc()->Id());
-          if(wh != NULL) {
-            try {
-              v_is_a_highscore = (v_current_time < wh->getFTime());
-            } catch(Exception &e) {
-              v_is_a_highscore = false; /* what to do ? more chances that it's not a highscore ;-) */
-            }
-          } else {
-            /* never highscored */
-            v_is_a_highscore = true;
-          }
-        }
-#endif
-
-#if defined(SUPPORT_WEBACCESS)
-        // disable upload button
-        for(int i=0;i<m_nNumFinishMenuButtons;i++) {
-          if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_UPLOAD_HIGHSCORE) {
-            m_pFinishMenuButtons[i]->enableWindow(false);
-          }
-        }
-#endif
-
-        if(v_is_a_highscore) { /* best highscore */
-	  try {
-	    Sound::playSampleByName(m_theme.getSound("NewHighscore")->FilePath());
-	  } catch(Exception &e) {
+	  /* search a better webhighscore */
+	  if(m_pWebHighscores != NULL /*&& v_is_a_highscore == true*/) {
+	    WebHighscore* wh = m_pWebHighscores->getHighscoreFromLevel(m_MotoGame.getLevelSrc()->Id());
+	    if(wh != NULL) {
+	      try {
+		v_is_a_highscore = (v_current_time < wh->getFTime());
+	      } catch(Exception &e) {
+		v_is_a_highscore = false; /* what to do ? more chances that it's not a highscore ;-) */
+	      }
+	    } else {
+	      /* never highscored */
+	      v_is_a_highscore = true;
+	    }
 	  }
-
-#if defined(SUPPORT_WEBACCESS)
-        // enable upload button
-        if(m_bEnableWebHighscores) {
-          if(m_pJustPlayReplay != NULL) {
-            for(int i=0;i<m_nNumFinishMenuButtons;i++) {
-              if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_UPLOAD_HIGHSCORE) {
-                m_pFinishMenuButtons[i]->enableWindow(true);
-              }
-            }
-          }
-        }
 #endif
-    
-        if(m_pJustPlayReplay != NULL && m_bAutosaveHighscoreReplays) {
-          String v_replayName = Replay::giveAutomaticName();
-          _SaveReplay(v_replayName);
-          m_Renderer.showMsgNewBestHighscore(v_replayName);
-        } else {
-          m_Renderer.showMsgNewBestHighscore();
-        } /* ok i officially give up on indention in x-moto :P */
-        } else {
-          if(v_is_a_personal_highscore) { /* personal highscore */
+	  
+#if defined(SUPPORT_WEBACCESS)
+	  // disable upload button
+	  for(int i=0;i<m_nNumFinishMenuButtons;i++) {
+	    if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_UPLOAD_HIGHSCORE) {
+	      m_pFinishMenuButtons[i]->enableWindow(false);
+	    }
+	  }
+#endif
+	  
+	  if(v_is_a_highscore) { /* best highscore */
 	    try {
 	      Sound::playSampleByName(m_theme.getSound("NewHighscore")->FilePath());
 	    } catch(Exception &e) {
 	    }
-            if(m_pJustPlayReplay != NULL && m_bAutosaveHighscoreReplays) {
-              String v_replayName = Replay::giveAutomaticName();
-              _SaveReplay(v_replayName);
-              m_Renderer.showMsgNewPersonalHighscore(v_replayName);
-            } else {
-              m_Renderer.showMsgNewPersonalHighscore();
-            }
-
-          } else { /* no highscore */
-            m_Renderer.hideMsgNewHighscore();
-          }
-        }
+	    
+#if defined(SUPPORT_WEBACCESS)
+	    // enable upload button
+	    if(m_bEnableWebHighscores) {
+	      if(m_pJustPlayReplay != NULL) {
+		for(int i=0;i<m_nNumFinishMenuButtons;i++) {
+		  if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_UPLOAD_HIGHSCORE) {
+		    m_pFinishMenuButtons[i]->enableWindow(true);
+		  }
+		}
+	      }
+	    }
+#endif
+	    
+	    if(m_pJustPlayReplay != NULL && m_bAutosaveHighscoreReplays) {
+	      String v_replayName = Replay::giveAutomaticName();
+	      _SaveReplay(v_replayName);
+	      m_Renderer.showMsgNewBestHighscore(v_replayName);
+	    } else {
+	      m_Renderer.showMsgNewBestHighscore();
+	    } /* ok i officially give up on indention in x-moto :P */
+	  } else {
+	    if(v_is_a_personal_highscore) { /* personal highscore */
+	      try {
+		Sound::playSampleByName(m_theme.getSound("NewHighscore")->FilePath());
+	      } catch(Exception &e) {
+	      }
+	      if(m_pJustPlayReplay != NULL && m_bAutosaveHighscoreReplays) {
+		String v_replayName = Replay::giveAutomaticName();
+		_SaveReplay(v_replayName);
+		m_Renderer.showMsgNewPersonalHighscore(v_replayName);
+	      } else {
+		m_Renderer.showMsgNewPersonalHighscore();
+	      }
+	      
+	    } else { /* no highscore */
+	      m_Renderer.hideMsgNewHighscore();
+	    }
+	  }
+	}
         break;
       }
     }
@@ -1357,8 +1368,10 @@ GameApp::GameApp() {
 		lockMotoGame(false);
 
     /* Update stats */        
-    m_GameStats.levelRestarted(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->Id(),m_MotoGame.getLevelSrc()->Name(),m_MotoGame.getTime());
-  
+    if(m_MotoGame.Players().size() == 1) {
+      m_GameStats.levelRestarted(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->Id(),m_MotoGame.getLevelSrc()->Name(),m_MotoGame.getTime());
+    }  
+
 		m_Renderer.setPlayerToFollow(NULL);
 		m_MotoGame.endLevel();
 

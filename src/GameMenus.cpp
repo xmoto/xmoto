@@ -1519,7 +1519,9 @@ namespace vapp {
         }
         else if(m_pPauseMenuButtons[i]->getCaption() == GAMETEXT_ABORT) {
           m_pPauseMenu->showWindow(false);
-          m_GameStats.abortedLevel(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->Id(),m_MotoGame.getLevelSrc()->Name(),m_MotoGame.getTime());
+	  if(m_MotoGame.Players().size() == 1) {
+	    m_GameStats.abortedLevel(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->Id(),m_MotoGame.getLevelSrc()->Name(),m_MotoGame.getTime());
+	  }
 
 	  m_Renderer.setPlayerToFollow(NULL);
           m_MotoGame.endLevel();
@@ -1538,7 +1540,9 @@ namespace vapp {
 	  std::string NextLevel = _DetermineNextLevel(pLS);
 	  if(NextLevel != "") {        
 	    m_pPauseMenu->showWindow(false);              
-	    m_GameStats.abortedLevel(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->Id(),m_MotoGame.getLevelSrc()->Name(),m_MotoGame.getTime());
+	    if(m_MotoGame.Players().size() == 1) {
+	      m_GameStats.abortedLevel(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->Id(),m_MotoGame.getLevelSrc()->Name(),m_MotoGame.getTime());
+	    }
 	    m_Renderer.setPlayerToFollow(NULL);
 	    m_MotoGame.endLevel();
 	    m_InputHandler.resetScriptKeyHooks();                     
