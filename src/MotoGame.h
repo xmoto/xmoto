@@ -40,12 +40,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/BikeAnchors.h"
 #include "xmscene/Bike.h"
 
-/* This is the magic depth factor :)  - tweak to obtain max. stability */
-#define DEPTH_FACTOR    2
-
 class Level;
 class BikeState;
 class Ghost;
+class PlayerBiker;
 class MotoGameOnBikerHooks;
 
 namespace vapp {
@@ -281,7 +279,6 @@ namespace vapp {
       void _GenerateLevel(void);          /* Called by playLevel() to 
                                              prepare the level */
       bool _DoCircleTouchZone(const Vector2f &Cp,float Cr,Zone *pZone);
-      bool _IntersectPointLevel(Vector2f Cp);
       Entity *_SpawnEntity(std::string ID,EntitySpeciality Type,Vector2f Pos, Entity *pSrc);
       void _KillEntity(Entity *pEnt);
       void _UpdateEntities(void);

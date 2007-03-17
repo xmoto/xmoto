@@ -27,6 +27,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Sound.h"
 #include "PhysSettings.h"
 #include "Input.h"
+#include "xmscene/Bike.h"
+#include "xmscene/BikeGhost.h"
+#include "xmscene/BikePlayer.h"
 
 #if defined(SUPPORT_WEBACCESS)
   #include <curl/curl.h>
@@ -124,6 +127,7 @@ GameApp::GameApp() {
   
   m_currentPlayingList = NULL;
   m_fReplayFrameRate = 25.0;
+  m_stopToUpdateReplay = false;
 }
     
   std::string GameApp::splitText(const std::string &str, int p_breakLineLength) {
@@ -199,6 +203,7 @@ GameApp::GameApp() {
         break;
       case GS_CREDITSMODE:
       case GS_REPLAYING: {
+	m_stopToUpdateReplay = false;
 	v_newMusicPlaying = "";
 	m_Renderer.setShowEngineCounter(false);
 
@@ -853,11 +858,14 @@ GameApp::GameApp() {
             break;          
           case SDLK_RIGHT:
             /* Right arrow key: fast forward */
-	    m_MotoGame.fastforward(1);
+	    if(m_stopToUpdateReplay == false) {
+	      m_MotoGame.fastforward(1);
+	    }
             break;
           case SDLK_LEFT:
 	    if(m_MotoGame.getLevelSrc()->isScripted() == false) {
 	      m_MotoGame.fastrewind(1);
+	      m_stopToUpdateReplay = false;
 	    }
             break;
 	case SDLK_F2:
@@ -882,6 +890,7 @@ GameApp::GameApp() {
   case SDLK_DOWN:
     /* slower */
     m_MotoGame.slower();
+    m_stopToUpdateReplay = false;
     
     m_Renderer.showReplayHelp(m_MotoGame.getSpeed(),
 			      m_MotoGame.getLevelSrc()->isScripted() == false

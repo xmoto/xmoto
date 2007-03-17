@@ -27,6 +27,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "MotoGame.h"
 #include "Renderer.h"
 #include "GameText.h"
+#include "xmscene/Bike.h"
+#include "xmscene/BikeGhost.h"
+#include "xmscene/BikePlayer.h"
 
 namespace vapp {
 

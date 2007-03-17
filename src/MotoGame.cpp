@@ -31,6 +31,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Entity.h"
 #include "GameEvents.h"
 
+#include "xmscene/Bike.h"
+#include "xmscene/BikeGhost.h"
+#include "xmscene/BikePlayer.h"
+
 #define REPLAY_SPEED_INCREMENT 0.25
 
 namespace vapp {
@@ -139,7 +143,7 @@ namespace vapp {
     m_renderer      = NULL;
     m_motoGameHooks = NULL;
 
-    m_speed_factor = 0.01;
+    m_speed_factor = 1.00f;
     m_is_paused = false;
     m_playEvents = true;
 
@@ -327,8 +331,13 @@ void MotoGame::cleanPlayers() {
     updateGameMessages();
     
     /* Increase time */
-    m_fTime += fTimeStep;
-     
+    if(m_speed_factor != 1.00f) {
+      m_fTime += fTimeStep * m_speed_factor;
+      if(m_fTime < 0.0) m_fTime = 0.0;
+    } else {
+      m_fTime += fTimeStep;
+    }     
+
     /* Update misc stuff (only when not playing a replay) */
     if(m_playEvents) {
       _UpdateZones();
@@ -477,7 +486,8 @@ void MotoGame::cleanPlayers() {
     m_PhysGravity.y = PHYS_WORLD_GRAV;
 
     m_fTime = 0.0f;
-       
+    m_speed_factor = 1.00f;
+
     m_nLastEventSeq = 0;
     
     m_Arrow.nArrowPointerMode = 0;

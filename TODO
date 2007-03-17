@@ -16,12 +16,11 @@
 *******
 
 - dans un replay : apparence d'un joueur
-- le mode ralenti dans un replay
 - la manette à plusieurs
 - vérifier toutes les fontions de script : enter/out zone, touch entity
 - vérifier les sauts périeux, en particulier la réinitialisation
 - script : vérifier toutes les fonctions
-- réparer les replays, les scripts ne doivent pas se lancer dans un replay
+- réparer les scripts ne doivent pas se lancer dans un replay
 - mode 2 joueurs : victoire à celui qui vit
 
 [20:53] <Christoph> can someone watch the world record replay of "MASTERKUD Padrinos magicos"? it aborts with the error "Entity 'MySprite18' doesn't exist" at position 52:47 (with xmoto-0.2.6)
