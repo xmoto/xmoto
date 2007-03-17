@@ -137,10 +137,21 @@ class Biker {
   virtual float getBikeEngineSpeed() = 0; /* engine speed */
   virtual float getBikeEngineRPM();
   virtual void  updateToTime(float i_time);
+  void setPlaySound(bool i_value);
+
+  void setFinished(bool i_value, float i_finishTime);
+  void setDead(bool i_value);
+  bool isFinished() const;
+  float finishTime() const;
+  bool isDead() const;
 
  protected:
+  bool m_playSound;
   BikeState m_bikeState;
   vapp::EngineSoundSimulator m_EngineSound;
+  bool m_finished;
+  float m_finishTime;
+  bool m_dead;
 };
 
 class PlayerBiker : public Biker {
@@ -297,9 +308,12 @@ class Ghost : public Biker {
   vapp::Replay* m_replay;
   std::vector<float> m_lastToTakeEntities;
   float m_diffToPlayer; /* time diff between the ghost and the player */
-  int m_nFrame;
   std::string m_info;
   bool m_isActiv;
+
+  /* because we have not the real one, but the one before and the one after */
+  SerializedBikeState m_previous_ghostBikeState;
+  SerializedBikeState m_next_ghostBikeState;
 
   void execReplayEvents(float i_time, vapp::MotoGame *i_motogame);
 };

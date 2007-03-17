@@ -334,24 +334,16 @@ void MotoGame::cleanPlayers() {
       _UpdateZones();
       _UpdateEntities();
     }
-    
-    /* Invoke PreDraw() script function - deprecated */
-    if(m_playEvents && isDead() == false) {
-      if(!scriptCallBool("PreDraw",
-			 true)) {
-			   throw Exception("level script PreDraw() returned false");
-			 }
-    }
 
     /* Invoke Tick() script function */
     /* and play script dynamic objects */
     int v_nbCents = 0;
     while(getTime() - m_lastCallToEveryHundreath > 0.01) {
-      if(m_playEvents && isDead() == false) {
+      if(m_playEvents) {
 	if(!scriptCallBool("Tick",
 			   true)) {
-			     throw Exception("level script Tick() returned false");
-			   }
+	  throw Exception("level script Tick() returned false");
+	}
       }
       v_nbCents++;
       m_lastCallToEveryHundreath += 0.01;
@@ -391,8 +383,7 @@ void MotoGame::cleanPlayers() {
 	if(Players().size() == 1) {
 	  SerializedBikeState BikeState;
 	  getSerializedBikeState(Players()[0]->getState(), getTime(), &BikeState);
-	  if(i_recordedReplay != NULL)
-	    i_recordedReplay->storeState(BikeState);              
+	  i_recordedReplay->storeState(BikeState);
 	}
       }
     }
@@ -484,14 +475,11 @@ void MotoGame::cleanPlayers() {
     m_PhysGravity.y = PHYS_WORLD_GRAV;
 
     m_fTime = 0.0f;
-    m_fFinishTime = 0.0f;
        
     m_nLastEventSeq = 0;
     
     m_Arrow.nArrowPointerMode = 0;
  
-    m_bDead = m_bFinished = false;
-
     m_lastCallToEveryHundreath = 0.0;
 
     m_renderer->initCamera();
@@ -611,6 +599,7 @@ void MotoGame::cleanPlayers() {
     }
 
     v_ghost = new Ghost(i_ghostFile, i_isActiv, i_theme);
+    v_ghost->setPlaySound(false);
     v_ghost->setInfo(i_info);
     v_ghost->initLastToTakeEntities(m_pLevelSrc);
     m_ghosts.push_back(v_ghost);
@@ -1173,9 +1162,9 @@ void MotoGame::cleanPlayers() {
   }
 
   void MotoGame::killPlayer() {
-    m_bDead = true;    
-
     for(unsigned int i=0; i<m_players.size(); i++) {
+      m_players[i]->setDead(true);
+
       if(m_bDeathAnimEnabled) {
 	m_players[i]->resetAutoDisabler();
 	m_players[i]->setBodyDetach(true);
@@ -1241,8 +1230,9 @@ void MotoGame::cleanPlayers() {
   }
 
   void MotoGame::makePlayerWin() {
-    m_bFinished = true;
-    m_fFinishTime = getTime();
+    for(unsigned int i=0; i<m_players.size(); i++) {
+      m_players[i]->setFinished(true, getTime());
+    }
   }
 
   void MotoGame::addPenalityTime(float fTime) {

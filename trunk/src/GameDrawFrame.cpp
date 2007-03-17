@@ -307,7 +307,9 @@ namespace vapp {
       UIMsgBoxButton Button = m_pQuitMsgBox->getClicked();
       if(Button == UI_MSGBOX_YES) {
         if(m_State == GS_PAUSE) {
-          m_GameStats.abortedLevel(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->Id(),m_MotoGame.getLevelSrc()->Name(),m_MotoGame.getTime()); 
+	  if(m_MotoGame.Players().size() == 1) {
+	    m_GameStats.abortedLevel(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->Id(),m_MotoGame.getLevelSrc()->Name(),m_MotoGame.getTime()); 
+	  }
         }
       
         quit();      
@@ -419,6 +421,28 @@ namespace vapp {
   }
   
   int GameApp::_UpdateGamePlaying(void) {
+
+    if(m_State == GS_REPLAYING) {
+      if(m_replayBiker->isDead() || m_replayBiker->isFinished()) {
+
+	if(m_bBenchmark) {
+	  double fBenchmarkTime = getRealTime() - m_fStartTime;
+	  printf("\n");
+	  printf(" * %d frames rendered in %.0f seconds\n",m_nFrame,fBenchmarkTime);
+	  printf(" * Average framerate: %.1f fps\n",((double)m_nFrame) / fBenchmarkTime);
+	  quit();
+	}
+
+	if(m_replayBiker->isDead()) {
+	  return 0;
+	}
+	if(m_replayBiker->isFinished()) {
+	  m_MotoGame.setTime(m_replayBiker->finishTime());
+	  return 0;
+	}
+      }
+    }
+
     /* Increase frame counter */
     m_nFrame++;
 
@@ -553,21 +577,36 @@ namespace vapp {
   }
 
   void GameApp::_PostUpdatePlaying(void) {
-    /* News? */
-    if(m_MotoGame.isDead()) {
-      /* You're dead maan! */
-      setState(GS_DEADJUST);
+    bool v_all_dead = true;
+    bool v_one_finished = false;
+    float v_finish_time = 0.0;
+
+    for(unsigned int i=0; i<m_MotoGame.Players().size(); i++) {
+      if(m_MotoGame.Players()[i]->isDead() == false) {
+	v_all_dead = false;
+      }
+      if(m_MotoGame.Players()[i]->isFinished()) {
+	v_one_finished = true;
+	v_finish_time  = m_MotoGame.Players()[i]->finishTime();
+      }
     }
-    else if(m_MotoGame.isFinished()) {
+
+    /* News? */
+    if(v_one_finished) {
       /* You're done maaaan! :D */
-      std::string TimeStamp = getTimeStamp();
-      m_Profiles.addFinishTime(m_pPlayer->PlayerName,"",
-                              m_MotoGame.getLevelSrc()->Id(),m_MotoGame.getFinishTime(),TimeStamp); 
-      _MakeBestTimesWindow(m_pBestTimes,m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->Id(),
-                          m_MotoGame.getFinishTime(),TimeStamp);
+      if(m_MotoGame.Players().size() == 1) {
+	std::string TimeStamp = getTimeStamp();
+	m_Profiles.addFinishTime(m_pPlayer->PlayerName,"",
+				 m_MotoGame.getLevelSrc()->Id(),v_finish_time,TimeStamp); 
+	_MakeBestTimesWindow(m_pBestTimes,m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->Id(),
+			     v_finish_time,TimeStamp);
+      }
 
       //_UpdateLevelsLists();     
       setState(GS_FINISHED);
+    } else if(v_all_dead) {
+      /* You're dead maan! */
+      setState(GS_DEADJUST);
     }
   }
 

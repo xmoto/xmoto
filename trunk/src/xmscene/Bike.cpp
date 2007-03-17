@@ -149,6 +149,14 @@ Biker::Biker(Theme *i_theme) {
       /* hum, no nice */
     }
   }
+  m_playSound = true;
+  m_dead      = false;
+  m_finished  = false;
+  m_finishTime = 0.0;
+}
+
+float Biker::finishTime() const {
+  return m_finishTime;
 }
 
 float Biker::getBikeEngineRPM() {
@@ -158,25 +166,47 @@ float Biker::getBikeEngineRPM() {
 void Biker::updateToTime(float i_time) {
   /* sound */
   if(vapp::Sound::isEnabled()) {
-    m_EngineSound.setRPM(getBikeEngineRPM()); 
-    m_EngineSound.update(i_time);
+    m_EngineSound.setRPM(getBikeEngineRPM());
+    if(m_playSound) {
+      m_EngineSound.update(i_time);
+    }
   }
+}
+
+void Biker::setPlaySound(bool i_value) {
+  m_playSound = i_value;
+}
+
+void Biker::setFinished(bool i_value, float i_finishTime) {
+  m_finished = i_value;
+  m_finishTime = i_finishTime;
+}
+
+void Biker::setDead(bool i_value) {
+  m_dead = i_value;
+}
+
+bool Biker::isFinished() const {
+  return m_finished;
+}
+
+bool Biker::isDead() const {
+  return m_dead;
 }
 
 Ghost::Ghost(std::string i_replayFile, bool i_isActiv, Theme *i_theme) : Biker(i_theme) {
   std::string v_levelId;
   std::string v_playerName;
   float v_framerate;
-  SerializedBikeState GhostBikeState;
 
   m_replay = new vapp::Replay();
   v_levelId = m_replay->openReplay(i_replayFile, &v_framerate, v_playerName);
 
-  m_replay->peekState(GhostBikeState);
-  BikeState::updateStateFromReplay(&GhostBikeState, &m_bikeState);
+  m_replay->peekState(m_previous_ghostBikeState);
+  m_replay->peekState(m_next_ghostBikeState);
+  BikeState::updateStateFromReplay(&m_previous_ghostBikeState, &m_bikeState);
 
   m_diffToPlayer = 0.0;
-  m_nFrame = 0;
 
   m_info = "";
   m_isActiv = i_isActiv;
@@ -272,40 +302,46 @@ void Ghost::updateDiffToPlayer(std::vector<float> &i_lastToTakeEntities) {
 void Ghost::updateToTime(float i_time, vapp::MotoGame *i_motogame) {
   Biker::updateToTime(i_time);
 
-  /* Read replay state */
-  static SerializedBikeState GhostBikeState;
-  static SerializedBikeState previousGhostBikeState;
-    
-  m_replay->peekState(previousGhostBikeState);
-
   /* back in the past */
-  if(previousGhostBikeState.fGameTime > i_time + 1.0/m_replay->getFrameRate()*2.0) { // *2.0 to let a marge if frames are dropped
-    m_replay->fastrewind(previousGhostBikeState.fGameTime - i_time);
-    m_replay->peekState(previousGhostBikeState);
+  if(m_previous_ghostBikeState.fGameTime > i_time) {
+    m_replay->fastrewind(m_previous_ghostBikeState.fGameTime - i_time);
+    m_replay->peekState(m_previous_ghostBikeState);
+    m_replay->peekState(m_next_ghostBikeState);
   }
   
   /* stop the motor at the end */
   if(m_replay->endOfFile()) {
     m_bikeState.fBikeEngineRPM = 0.0;
-  }
-
-  if(previousGhostBikeState.fGameTime < i_time && m_replay->endOfFile() == false) {
-    do {
-      m_replay->loadState(GhostBikeState);
-    } while(GhostBikeState.fGameTime < i_time && m_replay->endOfFile() == false);
-    
-    if(m_nFrame%2 || m_nFrame==1) {
-      /* NON-INTERPOLATED FRAME */
-      BikeState::updateStateFromReplay(&GhostBikeState, &m_bikeState);
+    if(m_replay->didFinish()) {
+      m_finished   = true;
+      m_finishTime = m_replay->getFinishTime();
     } else {
-      /* INTERPOLATED FRAME */
-      SerializedBikeState ibs;
-      BikeState::interpolateGameState(&previousGhostBikeState,&GhostBikeState,&ibs,0.5f);
-      BikeState::updateStateFromReplay(&ibs, &m_bikeState);
+      m_dead = true;
     }
-    m_nFrame++;
+  } else {
+    if(m_next_ghostBikeState.fGameTime < i_time && m_replay->endOfFile() == false) {
+      do {
+	m_replay->loadState(m_previous_ghostBikeState);
+	m_replay->peekState(m_next_ghostBikeState);
+      } while(m_next_ghostBikeState.fGameTime < i_time && m_replay->endOfFile() == false);
+      BikeState::updateStateFromReplay(&m_previous_ghostBikeState, &m_bikeState);
+    } else { /* interpolation */
+      if(m_next_ghostBikeState.fGameTime - m_previous_ghostBikeState.fGameTime > 0.0) {
+	/* INTERPOLATED FRAME */
+	SerializedBikeState ibs;
+	float v_interpolation_value =
+	  (i_time - m_previous_ghostBikeState.fGameTime)
+	  /(m_next_ghostBikeState.fGameTime - m_previous_ghostBikeState.fGameTime);
+	
+	BikeState::interpolateGameState(&m_previous_ghostBikeState,
+					&m_next_ghostBikeState,
+					&ibs,
+					v_interpolation_value);
+	BikeState::updateStateFromReplay(&ibs, &m_bikeState);
+      }
+    }
   }
-
+  
   if(m_isActiv) {
     execReplayEvents(i_time, i_motogame);
   }

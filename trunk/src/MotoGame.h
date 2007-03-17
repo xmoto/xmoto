@@ -159,13 +159,10 @@ namespace vapp {
 
     /* Data interface */
     bool isInitOK(void) {return m_bLevelInitSuccess;}
-    bool isFinished(void) {return m_bFinished;}
-    bool isDead(void) {return m_bDead;}
     Level *getLevelSrc(void) {return m_pLevelSrc;}
 
       float getTime(void) {return m_fTime;}
       void setTime(float f) {m_fTime=f;}
-      float getFinishTime(void) {return m_fFinishTime;}
       ArrowPointer &getArrowPointer(void) {return m_Arrow;}
       CollisionSystem *getCollisionHandler(void) {return &m_Collision;}
         
@@ -228,7 +225,6 @@ namespace vapp {
       std::queue<MotoGameEvent*> m_GameEventQueue;
       
       float m_fTime;
-      float m_fFinishTime;
       
       float m_fLastStateSerializationTime; 
 
@@ -265,8 +261,6 @@ namespace vapp {
       GameRenderer *m_renderer;
 
       std::vector<SDynamicObject*> m_SDynamicObjects;
-
-      bool m_bFinished,m_bDead;           /* Yir */
       
       int m_nLastEventSeq;
       
