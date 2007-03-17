@@ -1556,6 +1556,7 @@ namespace vapp {
         }
         else if(m_pPauseMenuButtons[i]->getCaption() == GAMETEXT_RESUME) {
           m_pPauseMenu->showWindow(false);
+	  m_MotoGame.setInfos("");
           m_State = GS_PLAYING; /* no don't use setState() for this. Old code, depends on madness */
         }
 

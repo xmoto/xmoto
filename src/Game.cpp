@@ -257,7 +257,10 @@ GameApp::GameApp() {
 	  /* Init level */    
 	  m_InputHandler.resetScriptKeyHooks();
 	  m_MotoGame.prePlayLevel(pLevelSrc, NULL, false);
- 
+	  m_MotoGame.setInfos(m_MotoGame.getLevelSrc()->Name() +
+			      " (" + std::string(GAMETEXT_BY)  +
+			      " " + m_replayBiker->playerName() + ")"); 
+
 	  /* add the ghosts */
 	  if(m_bEnableGhost) {
 	    std::string v_PlayGhostReplay;
@@ -368,6 +371,7 @@ GameApp::GameApp() {
         break;
       }
       case GS_PAUSE: {
+	m_MotoGame.setInfos(m_MotoGame.getLevelSrc()->Name());
 	v_newMusicPlaying = m_playingMusic;
 //        SDL_ShowCursor(SDL_ENABLE);
         m_bShowCursor = true;
@@ -376,6 +380,7 @@ GameApp::GameApp() {
         break;
       }
       case GS_DEADJUST: {
+	m_MotoGame.setInfos(m_MotoGame.getLevelSrc()->Name());
 	v_newMusicPlaying = "";
 
         /* Finish replay */
@@ -439,6 +444,7 @@ GameApp::GameApp() {
       }
 #endif
       case GS_FINISHED: {
+	m_MotoGame.setInfos(m_MotoGame.getLevelSrc()->Name());
 	v_newMusicPlaying = "";
 
 //        SDL_ShowCursor(SDL_ENABLE);
@@ -778,9 +784,10 @@ GameApp::GameApp() {
         switch(nKey) {
           case SDLK_ESCAPE:
             /* Back to the game, please */
-            m_pPauseMenu->showWindow(false);
-            m_State = GS_PLAYING;
-            break;
+	  m_MotoGame.setInfos("");
+	  m_pPauseMenu->showWindow(false);
+	  m_State = GS_PLAYING;
+	  break;
           default:
             m_Renderer.getGUI()->keyDown(nKey, mod,nChar);
             break;      
@@ -1812,11 +1819,14 @@ GameApp::GameApp() {
       
       try {
 	m_MotoGame.prePlayLevel(pLevelSrc, m_pJustPlayReplay, true);
+	m_MotoGame.setInfos("");
 
 	/* add the player */
 	m_Renderer.setPlayerToFollow(m_MotoGame.addPlayerBiker(pLevelSrc->PlayerStart(), DD_RIGHT, &m_theme));
 	//m_MotoGame.addPlayerBiker(pLevelSrc->PlayerStart(), DD_RIGHT, &m_theme);
 	/* */
+
+
 
 	/* add the ghosts */
 	if(m_bEnableGhost) {

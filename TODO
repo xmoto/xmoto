@@ -1,17 +1,3 @@
-            v_infos = m_MotoGame.getLevelSrc()->Name();
-
-	    if(m_State == GS_REPLAYING) {
-	      if(m_replayBikers.size() > 0) {
-		v_infos += " (" + std::string(GAMETEXT_BY) + " " + m_replayBikers[0]->playerName() + ")";
-	      }
-	    }
-
-            if(v_font != NULL) {
-              UITextDraw::printRaw(v_font,0,getDrawLib()->getDispHeight()-4,
-                v_infos,
-                MAKE_COLOR(255,255,255,255));
-            }
-
 ******
 
 

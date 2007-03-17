@@ -258,6 +258,10 @@ std::string Ghost::getDescription() const {
     "\n(" + vapp::App::formatTime(m_replay->getFinishTime()) + ")";
 }
 
+std::string Ghost::playerName() {
+  return m_replay->getPlayerName();
+}
+
 void Ghost::initLastToTakeEntities(Level* i_level) {
   std::vector<vapp::RecordedGameEvent *> *v_replayEvents;
   v_replayEvents = m_replay->getEvents();

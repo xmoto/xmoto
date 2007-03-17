@@ -1322,6 +1322,14 @@ void MotoGame::cleanPlayers() {
   bool MotoGame::doesPlayEvents() const {
     return m_playEvents;
   }
+
+  void MotoGame::setInfos(std::string i_infos) {
+    m_infos = i_infos;
+  }
+
+  std::string MotoGame::getInfos() const {
+    return m_infos;
+  }
 }
 
 MotoGameOnBikerHooks::MotoGameOnBikerHooks(vapp::MotoGame* i_motoGame, int i_playerNumber) {
