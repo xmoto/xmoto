@@ -135,6 +135,7 @@ class Biker {
   virtual BikeState* getState();
   virtual bool getRenderBikeFront() = 0; /* display the bikefront ? (for detach) */
   virtual float getBikeEngineSpeed() = 0; /* engine speed */
+  virtual std::string getDescription() const = 0;
   virtual float getBikeEngineRPM();
   virtual void  updateToTime(float i_time);
   void setPlaySound(bool i_value);
@@ -165,6 +166,8 @@ class PlayerBiker : public Biker {
   void updateToTime(float i_time, float i_timeStep, vapp::CollisionSystem *v_collisionSystem, Vector2f i_gravity);
   void initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity);
   BikeController* getControler();
+
+  std::string getDescription() const;
 
   /* added=added to m_touching */
   /* removed=removed from m_touching */

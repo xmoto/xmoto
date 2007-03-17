@@ -509,7 +509,7 @@ namespace vapp {
     }
   }
 
-  void GameRenderer::_RenderGhost(Ghost* i_ghost, int i) {
+  void GameRenderer::_RenderGhost(Biker* i_ghost, int i) {
     /* Render ghost - ugly mode? */
     if(m_bUglyMode) {
       _RenderBike(i_ghost->getState(), &(i_ghost->getState()->Parameters()), m_theme->getGhostTheme());
@@ -526,10 +526,12 @@ namespace vapp {
 	m_Overlay.present();
       }
 	  
-      if(m_nGhostInfoTrans > 0 && m_displayGhostInformation) {
-	_RenderInGameText(i_ghost->getState()->CenterP + Vector2f(i*3.0,-1.5f),
-			  i_ghost->getDescription(),
-			  MAKE_COLOR(255,255,255,m_nGhostInfoTrans));
+      if(i_ghost->getDescription() != "") {
+	if(m_nGhostInfoTrans > 0 && m_displayGhostInformation) {
+	  _RenderInGameText(i_ghost->getState()->CenterP + Vector2f(i*3.0,-1.5f),
+			    i_ghost->getDescription(),
+			    MAKE_COLOR(255,255,255,m_nGhostInfoTrans));
+	}
       }
     }
   }

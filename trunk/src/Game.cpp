@@ -379,7 +379,11 @@ GameApp::GameApp() {
 	v_newMusicPlaying = "";
 
         /* Finish replay */
-        if(m_pJustPlayReplay != NULL) m_pJustPlayReplay->finishReplay(false,0.0f);
+        if(m_pJustPlayReplay != NULL) {
+	  if(m_MotoGame.Players().size() == 1) {
+	    m_pJustPlayReplay->finishReplay(false,0.0f);
+	  }
+	}
 
         /* Update stats */        
 	if(m_MotoGame.Players().size() == 1) {

@@ -389,6 +389,10 @@ PlayerBiker::~PlayerBiker() {
   uninitPhysics();
 }
 
+std::string PlayerBiker::getDescription() const {
+  return "";
+}
+
 void PlayerBiker::updateToTime(float i_time, float i_timeStep, vapp::CollisionSystem *v_collisionSystem, Vector2f i_gravity) {
   Biker::updateToTime(i_time);
 

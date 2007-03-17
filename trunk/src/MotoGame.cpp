@@ -381,9 +381,11 @@ void MotoGame::cleanPlayers() {
         /* Get it */
 	/* only store the state if 1 player plays */
 	if(Players().size() == 1) {
-	  SerializedBikeState BikeState;
-	  getSerializedBikeState(Players()[0]->getState(), getTime(), &BikeState);
-	  i_recordedReplay->storeState(BikeState);
+	  if(Players()[0]->isDead() == false && Players()[0]->isFinished() == false) {
+	    SerializedBikeState BikeState;
+	    getSerializedBikeState(Players()[0]->getState(), getTime(), &BikeState);
+	    i_recordedReplay->storeState(BikeState);
+	  }
 	}
       }
     }
@@ -400,8 +402,8 @@ void MotoGame::cleanPlayers() {
     while(getNumPendingGameEvents() > 0) {
       MotoGameEvent *pEvent = getNextGameEvent();
       if(p_replay != NULL) {
-  /* Encode event */
-  _SerializeGameEventQueue(*p_replay, pEvent);
+	/* Encode event */
+	_SerializeGameEventQueue(*p_replay, pEvent);
       }
       
       /* What event? */
@@ -578,6 +580,7 @@ void MotoGame::cleanPlayers() {
     getLevelSrc()->spawnEntity(v_debris);
 
     /* execute events */
+    m_fLastStateSerializationTime = -100.0f;
     if(m_playEvents) {
       executeEvents(recordingReplay);
     }
