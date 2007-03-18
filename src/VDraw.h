@@ -135,8 +135,8 @@ namespace vapp {
     virtual void setColor(Color color) = 0;
 
       /**
-       * set the texure for drawing
-       * the value may be NULL to disable texure
+       * set the texture for drawing
+       * the value may be NULL to disable texture
        * every end draw will reset the texture to NULL
        **/
     virtual void setTexture(Texture * texture, BlendMode blendMode) = 0;
@@ -214,7 +214,7 @@ namespace vapp {
     virtual Img *grabScreen(void) = 0;
 
     /*
-     * set the refecence drawing size
+     * set the reference drawing size
      **/
     void setDrawDims(int nActualW, int nActualH, int w, int h) {
       m_nDrawWidth = w;
@@ -284,8 +284,8 @@ namespace vapp {
 
     virtual void setColor(Color color);
       /**
-       * set the texure for drawing
-       * the value may be NULL to disable texure
+       * set the texture for drawing
+       * the value may be NULL to disable texture
        * every end draw will reset the texture to NULL
        **/
     virtual void setTexture(Texture * texture, BlendMode blendMode);
@@ -434,8 +434,8 @@ namespace vapp {
 
     virtual void setColor(Color color);
       /**
-       * set the texure for drawing
-       * the value may be NULL to disable texure
+       * set the texture for drawing
+       * the value may be NULL to disable texture
        * every end draw will reset the texture to NULL
        **/
     virtual void setTexture(Texture * texture, BlendMode blendMode);
@@ -542,7 +542,7 @@ namespace vapp {
 
     //Vector for creating polygons
      std::vector < Vector2f * >m_drawingPoints;
-    //Vector for keeping track of texture coorinated
+    //Vector for keeping track of texture coordinates
      std::vector < Vector2f * >m_texturePoints;
 
     //map to hold converted images
