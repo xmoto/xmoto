@@ -267,6 +267,8 @@ namespace vapp {
 
     for(int i=0; i<blocks.size(); i++){
       Block* pBlock = blocks[i];
+      if(pBlock->isBackground() == true)
+	continue;
       std::vector<Line*>& blockLines = pBlock->getCollisionLines();
       for(int j=0; j<blockLines.size(); j++){
 	if(_CheckCircleAndLine(blockLines[j], x, y, r)){
@@ -377,6 +379,8 @@ namespace vapp {
 
     for(int i=0; i<blocks.size(); i++){
       Block* pBlock = blocks[i];
+      if(pBlock->isBackground() == true)
+	continue;
       std::vector<Line*>& blockLines = pBlock->getCollisionLines();
       for(int j=0; j<blockLines.size(); j++){
 
@@ -594,6 +598,8 @@ namespace vapp {
 
     for(int i=0; i<blocks.size(); i++){
       Block* pBlock = blocks[i];
+      if(pBlock->isBackground() == true)
+	continue;
       std::vector<Line*>& blockLines = pBlock->getCollisionLines();
       for(int j=0; j<blockLines.size(); j++){
 	int nOldC = nNumC;
