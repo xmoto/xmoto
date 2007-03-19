@@ -27,8 +27,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* This is the magic depth factor :)  - tweak to obtain max. stability */
 #define DEPTH_FACTOR    2
 
-PlayerBiker::PlayerBiker(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity, Theme *i_theme)
-: Biker(i_theme) {
+PlayerBiker::PlayerBiker(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity,
+			 Theme *i_theme, BikerTheme* i_bikerTheme)
+: Biker(i_theme, i_bikerTheme) {
   m_somersaultCounter.init();
 
   bFrontWheelTouching = false;
@@ -63,6 +64,10 @@ void PlayerBiker::updateToTime(float i_time, float i_timeStep, vapp::CollisionSy
   m_bSqueeking = false; /* no squeeking right now */
   updatePhysics(i_time, i_timeStep, v_collisionSystem, i_gravity);
   updateGameState();
+
+  if(isDead()) {
+    return;
+  }
 
   /* Squeeking? */
   if(isSqueeking()) {

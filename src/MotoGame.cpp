@@ -267,8 +267,10 @@ void MotoGame::cleanPlayers() {
   void MotoGame::setPlayerPosition(float x,float y,bool bFaceRight) {
     /* Going to teleport? Do it now, before we tinker to much with the state */
     for(unsigned int i=0; i<m_players.size(); i++) {
-      m_players[i]->resetAutoDisabler();
-      m_players[i]->initToPosition(Vector2f(x,y), bFaceRight?DD_RIGHT:DD_LEFT, m_PhysGravity);
+      if(m_players[i]->isDead() == false) {
+	m_players[i]->resetAutoDisabler();
+	m_players[i]->initToPosition(Vector2f(x,y), bFaceRight?DD_RIGHT:DD_LEFT, m_PhysGravity);
+      }
     }      
   }
   
@@ -596,14 +598,16 @@ void MotoGame::cleanPlayers() {
     }
   }
 
-  Ghost* MotoGame::addSimpleGhostFromFile(std::string i_ghostFile, bool i_isActiv, Theme *i_theme) {
+  Ghost* MotoGame::addSimpleGhostFromFile(std::string i_ghostFile, bool i_isActiv,
+					  Theme *i_theme, BikerTheme* i_bikerTheme) {
     Ghost* v_ghost = NULL;
-    v_ghost = new Ghost(i_ghostFile, i_isActiv, i_theme);
+    v_ghost = new Ghost(i_ghostFile, i_isActiv, i_theme, i_bikerTheme);
     m_ghosts.push_back(v_ghost);
     return v_ghost;
   }
 
-  Ghost* MotoGame::addGhostFromFile(std::string i_ghostFile, std::string i_info, bool i_isActiv, Theme *i_theme) {
+  Ghost* MotoGame::addGhostFromFile(std::string i_ghostFile, std::string i_info, bool i_isActiv,
+				    Theme *i_theme, BikerTheme* i_bikerTheme) {
     Ghost* v_ghost = NULL;
 
     /* the level must be set to add a ghost */
@@ -611,7 +615,7 @@ void MotoGame::cleanPlayers() {
       throw Exception("No level defined");
     }
 
-    v_ghost = new Ghost(i_ghostFile, i_isActiv, i_theme);
+    v_ghost = new Ghost(i_ghostFile, i_isActiv, i_theme, i_bikerTheme);
     v_ghost->setPlaySound(false);
     v_ghost->setInfo(i_info);
     v_ghost->initLastToTakeEntities(m_pLevelSrc);
@@ -831,98 +835,103 @@ void MotoGame::cleanPlayers() {
       for(unsigned int j=0; j<m_players.size(); j++) {
 	PlayerBiker* v_player = m_players[j];
      
-	/* Check it against the wheels and the head */
-	if(pZone->doesCircleTouch(v_player->getState()->FrontWheelP, v_player->getState()->Parameters().WheelRadius()) ||
-	   pZone->doesCircleTouch(v_player->getState()->RearWheelP,  v_player->getState()->Parameters().WheelRadius())) {       
-	  /* In the zone -- did he just enter it? */
-	  if(v_player->setTouching(*pZone, true) == PlayerBiker::added){
-	    createGameEvent(new MGE_PlayerEntersZone(getTime(), pZone));
-	  }
-	} else {
-	  /* Not in the zone... but was he during last update? - i.e. has 
-	     he just left it? */      
-	  if(v_player->setTouching(*pZone, false) == PlayerBiker::removed){
-	    createGameEvent(new MGE_PlayerLeavesZone(getTime(), pZone));
+	if(m_players[j]->isDead() == false) {
+
+	  /* Check it against the wheels and the head */
+	  if(pZone->doesCircleTouch(v_player->getState()->FrontWheelP, v_player->getState()->Parameters().WheelRadius()) ||
+	     pZone->doesCircleTouch(v_player->getState()->RearWheelP,  v_player->getState()->Parameters().WheelRadius())) {       
+	    /* In the zone -- did he just enter it? */
+	    if(v_player->setTouching(*pZone, true) == PlayerBiker::added){
+	      createGameEvent(new MGE_PlayerEntersZone(getTime(), pZone));
+	    }
+	  } else {
+	    /* Not in the zone... but was he during last update? - i.e. has 
+	       he just left it? */      
+	    if(v_player->setTouching(*pZone, false) == PlayerBiker::removed){
+	      createGameEvent(new MGE_PlayerLeavesZone(getTime(), pZone));
+	    }
 	  }
 	}
       }
     }
   }
 
-
   void MotoGame::_UpdateEntities(void) {
     for(unsigned int j=0; j<m_players.size(); j++) {
       PlayerBiker* v_player = m_players[j];
 
-      Vector2f HeadPos = v_player->getState()->Dir==DD_RIGHT?v_player->getState()->HeadP:v_player->getState()->Head2P;
+      if(m_players[j]->isDead() == false) {
 
-      /* Get biker bounding box */
-      AABB BBox;
-      float headSize = v_player->getState()->Parameters().HeadSize();
-      float wheelRadius = v_player->getState()->Parameters().WheelRadius();
-      /* in case the body is outside of the aabb */
-      float securityMargin = 0.5;
-      
-      BBox.addPointToAABB2f(HeadPos[0]-headSize-securityMargin,
-			    HeadPos[1]-headSize-securityMargin);
-      BBox.addPointToAABB2f(v_player->getState()->FrontWheelP[0]-wheelRadius-securityMargin,
-			    v_player->getState()->FrontWheelP[1]-wheelRadius-securityMargin);
-      BBox.addPointToAABB2f(v_player->getState()->RearWheelP[0]-wheelRadius-securityMargin,
-			    v_player->getState()->RearWheelP[1]-wheelRadius-securityMargin);
-
-      BBox.addPointToAABB2f(HeadPos[0]+headSize+securityMargin,
-			    HeadPos[1]+headSize+securityMargin);
-      BBox.addPointToAABB2f(v_player->getState()->FrontWheelP[0]+wheelRadius+securityMargin,
-			    v_player->getState()->FrontWheelP[1]+wheelRadius+securityMargin);
-      BBox.addPointToAABB2f(v_player->getState()->RearWheelP[0]+wheelRadius+securityMargin,
-			    v_player->getState()->RearWheelP[1]+wheelRadius+securityMargin);
-      
-      std::vector<Entity*> entities = m_Collision.getEntitiesNearPosition(BBox);
-      
-      /* Do player touch anything? */
-      for(int i=0;i<entities.size();i++) {
-	/* Test against the biker aabb first */
-	if(true){
-	  /* Head? */
-	  if(circleTouchCircle2f(entities[i]->DynamicPosition(),
-				 entities[i]->Size(),
-				 HeadPos,
-				 v_player->getState()->Parameters().HeadSize())) {
-	    if(v_player->setTouching(*(entities[i]), true) == PlayerBiker::added){
-	      createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
-							  entities[i]->Id(),
-							  true));
-	    }
-	    
-	    /* Wheel then ? */
-	  } else if(circleTouchCircle2f(entities[i]->DynamicPosition(),
-					entities[i]->Size(),
-					v_player->getState()->FrontWheelP,
-					v_player->getState()->Parameters().WheelRadius()) ||
-		    circleTouchCircle2f(entities[i]->DynamicPosition(),
-					entities[i]->Size(),
-					v_player->getState()->RearWheelP,
-					v_player->getState()->Parameters().WheelRadius())) {
-	    if(v_player->setTouching(*(entities[i]), true) == PlayerBiker::added){
-	      createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
-							  entities[i]->Id(),
-							  false));
-	    }
-	    
-	    /* body then ?*/
-	  } else if(touchEntityBodyExceptHead(*(v_player->getState()), *(entities[i]))) {
-	    if(v_player->setTouching(*(entities[i]), true) == PlayerBiker::added){
-	      createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
-							  entities[i]->Id(),
-							  false));
+	Vector2f HeadPos = v_player->getState()->Dir==DD_RIGHT?v_player->getState()->HeadP:v_player->getState()->Head2P;
+	
+	/* Get biker bounding box */
+	AABB BBox;
+	float headSize = v_player->getState()->Parameters().HeadSize();
+	float wheelRadius = v_player->getState()->Parameters().WheelRadius();
+	/* in case the body is outside of the aabb */
+	float securityMargin = 0.5;
+	
+	BBox.addPointToAABB2f(HeadPos[0]-headSize-securityMargin,
+			      HeadPos[1]-headSize-securityMargin);
+	BBox.addPointToAABB2f(v_player->getState()->FrontWheelP[0]-wheelRadius-securityMargin,
+			      v_player->getState()->FrontWheelP[1]-wheelRadius-securityMargin);
+	BBox.addPointToAABB2f(v_player->getState()->RearWheelP[0]-wheelRadius-securityMargin,
+			      v_player->getState()->RearWheelP[1]-wheelRadius-securityMargin);
+	
+	BBox.addPointToAABB2f(HeadPos[0]+headSize+securityMargin,
+			      HeadPos[1]+headSize+securityMargin);
+	BBox.addPointToAABB2f(v_player->getState()->FrontWheelP[0]+wheelRadius+securityMargin,
+			      v_player->getState()->FrontWheelP[1]+wheelRadius+securityMargin);
+	BBox.addPointToAABB2f(v_player->getState()->RearWheelP[0]+wheelRadius+securityMargin,
+			      v_player->getState()->RearWheelP[1]+wheelRadius+securityMargin);
+	
+	std::vector<Entity*> entities = m_Collision.getEntitiesNearPosition(BBox);
+	
+	/* Do player touch anything? */
+	for(int i=0;i<entities.size();i++) {
+	  /* Test against the biker aabb first */
+	  if(true){
+	    /* Head? */
+	    if(circleTouchCircle2f(entities[i]->DynamicPosition(),
+				   entities[i]->Size(),
+				   HeadPos,
+				   v_player->getState()->Parameters().HeadSize())) {
+	      if(v_player->setTouching(*(entities[i]), true) == PlayerBiker::added){
+		createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
+							    entities[i]->Id(),
+							    true));
+	      }
+	      
+	      /* Wheel then ? */
+	    } else if(circleTouchCircle2f(entities[i]->DynamicPosition(),
+					  entities[i]->Size(),
+					  v_player->getState()->FrontWheelP,
+					  v_player->getState()->Parameters().WheelRadius()) ||
+		      circleTouchCircle2f(entities[i]->DynamicPosition(),
+					  entities[i]->Size(),
+					  v_player->getState()->RearWheelP,
+					  v_player->getState()->Parameters().WheelRadius())) {
+	      if(v_player->setTouching(*(entities[i]), true) == PlayerBiker::added){
+		createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
+							    entities[i]->Id(),
+							    false));
+	      }
+	      
+	      /* body then ?*/
+	    } else if(touchEntityBodyExceptHead(*(v_player->getState()), *(entities[i]))) {
+	      if(v_player->setTouching(*(entities[i]), true) == PlayerBiker::added){
+		createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
+							    entities[i]->Id(),
+							    false));
+	      }
+	    } else {
+	      /* TODO::generate an event "leaves entity" if needed */
+	      v_player->setTouching(*(entities[i]), false);
 	    }
 	  } else {
 	    /* TODO::generate an event "leaves entity" if needed */
 	    v_player->setTouching(*(entities[i]), false);
 	  }
-	} else {
-	  /* TODO::generate an event "leaves entity" if needed */
-	  v_player->setTouching(*(entities[i]), false);
 	}
       }
     }
@@ -1091,7 +1100,7 @@ void MotoGame::cleanPlayers() {
   
   void MotoGame::SetBlockPos(String pBlockID, float pX, float pY) {
     Block& v_block = m_pLevelSrc->getBlockById(pBlockID);
-    v_block.setDynamicPosition(Vector2f(pX, pY));
+    v_block.setDynamicPositionAccordingToCenter(Vector2f(pX, pY));
     m_Collision.moveDynBlock(&v_block);
   }
   
@@ -1176,13 +1185,15 @@ void MotoGame::cleanPlayers() {
 
   void MotoGame::killPlayer() {
     for(unsigned int i=0; i<m_players.size(); i++) {
-      m_players[i]->setDead(true);
+      if(m_players[i]->isDead() == false) {
+	m_players[i]->setDead(true);
 
-      if(m_bDeathAnimEnabled) {
-	m_players[i]->resetAutoDisabler();
-	m_players[i]->setBodyDetach(true);
+	if(m_bDeathAnimEnabled) {
+	  m_players[i]->resetAutoDisabler();
+	  m_players[i]->setBodyDetach(true);
+	}
+	m_players[i]->getControler()->stopContols();
       }
-      m_players[i]->getControler()->stopContols();
     }
   }
 
@@ -1244,7 +1255,9 @@ void MotoGame::cleanPlayers() {
 
   void MotoGame::makePlayerWin() {
     for(unsigned int i=0; i<m_players.size(); i++) {
-      m_players[i]->setFinished(true, getTime());
+      if(m_players[i]->isDead() == false) {
+	m_players[i]->setFinished(true, getTime());
+      }
     }
   }
 
@@ -1263,9 +1276,11 @@ void MotoGame::cleanPlayers() {
       bool v_touchingMakeWin = false;
       
       for(int j=0; j<m_players.size(); j++) {
-	for(int i=0; i<m_players[j]->EntitiesTouching().size(); i++) {
-	  if(m_players[j]->EntitiesTouching()[i]->DoesMakeWin()) {
-	    v_touchingMakeWin = true;
+	if(m_players[j]->isDead() == false) {
+	  for(int i=0; i<m_players[j]->EntitiesTouching().size(); i++) {
+	    if(m_players[j]->EntitiesTouching()[i]->DoesMakeWin()) {
+	      v_touchingMakeWin = true;
+	    }
 	  }
 	}
       }
@@ -1277,8 +1292,9 @@ void MotoGame::cleanPlayers() {
   }
 
 
-  PlayerBiker* MotoGame::addPlayerBiker(Vector2f i_position, DriveDir i_direction, Theme *i_theme) {
-    PlayerBiker* v_playerBiker = new PlayerBiker(i_position, i_direction, m_PhysGravity, i_theme);
+  PlayerBiker* MotoGame::addPlayerBiker(Vector2f i_position, DriveDir i_direction,
+					Theme *i_theme, BikerTheme* i_bikerTheme) {
+    PlayerBiker* v_playerBiker = new PlayerBiker(i_position, i_direction, m_PhysGravity, i_theme, i_bikerTheme);
     v_playerBiker->setOnBikerHooks(new MotoGameOnBikerHooks(this, m_players.size()));
     m_players.push_back(v_playerBiker);
     return v_playerBiker;
@@ -1289,7 +1305,9 @@ void MotoGame::cleanPlayers() {
     m_PhysGravity.y=y;
 
     for(unsigned int i=0; i<m_players.size(); i++) {
-      m_players[i]->resetAutoDisabler();
+      if(m_players[i]->isDead() == false) {
+	m_players[i]->resetAutoDisabler();
+      }
     }
   }
 
@@ -1360,14 +1378,11 @@ MotoGameOnBikerHooks::~MotoGameOnBikerHooks() {
 }
 
 void MotoGameOnBikerHooks::onSomersaultDone(bool i_counterclock) {
-  if(m_playerNumber != 0) return;
   if(m_motoGame->doesPlayEvents() == false) return;
-
   m_motoGame->scriptCallVoidNumberArg("OnSomersault", i_counterclock ? 1:0);
 }
 
 void MotoGameOnBikerHooks::onWheelTouches(int i_wheel, bool i_touch) {
-  if(m_playerNumber != 0) return;
   if(m_motoGame->doesPlayEvents() == false) return;
 
   if(i_wheel == 1) {

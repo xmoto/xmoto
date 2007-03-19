@@ -23,7 +23,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../Replay.h"
 #include "../GameText.h"
 
-Ghost::Ghost(std::string i_replayFile, bool i_isActiv, Theme *i_theme) : Biker(i_theme) {
+Ghost::Ghost(std::string i_replayFile, bool i_isActiv,
+	     Theme *i_theme, BikerTheme* i_bikerTheme) : Biker(i_theme, i_bikerTheme) {
   std::string v_levelId;
   std::string v_playerName;
   float v_framerate;

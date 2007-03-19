@@ -134,8 +134,8 @@ namespace vapp {
     bool res = false;
     Zone* v_zone = &(m_pMotoGame->getLevelSrc()->getZoneById(luaL_checkstring(pL, 1)));
 
-    if(m_pMotoGame->Players().size() > 0) {
-      if(m_pMotoGame->Players()[0]->isTouching(*v_zone)) {
+    for(int i=0; i<m_pMotoGame->Players().size(); i++) {
+      if(m_pMotoGame->Players()[i]->isTouching(*v_zone)) {
 	res = true;
       }
     }
