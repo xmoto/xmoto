@@ -128,7 +128,7 @@ BikeState* Biker::getState() {
   return &m_bikeState;
 }
 
-Biker::Biker(Theme *i_theme) {
+Biker::Biker(Theme *i_theme, BikerTheme* i_bikerTheme) {
   /* sound engine */
   if(vapp::Sound::isEnabled()) {
     try {
@@ -153,6 +153,7 @@ Biker::Biker(Theme *i_theme) {
   m_dead      = false;
   m_finished  = false;
   m_finishTime = 0.0;
+  m_bikerTheme = i_bikerTheme;
 }
 
 float Biker::finishTime() const {
@@ -193,6 +194,11 @@ bool Biker::isFinished() const {
 bool Biker::isDead() const {
   return m_dead;
 }
+
+BikerTheme* Biker::getBikeTheme() {
+  return m_bikerTheme;
+}
+
 
   /*===========================================================================
     Game state interpolation for smoother replays 

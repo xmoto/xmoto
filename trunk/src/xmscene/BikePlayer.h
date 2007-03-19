@@ -26,7 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class PlayerBiker : public Biker {
  public:
-  PlayerBiker(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity, Theme *i_theme);
+  PlayerBiker(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity, Theme *i_theme, BikerTheme* i_bikerTheme);
   ~PlayerBiker();
 
   OnBikerHooks* getOnBikerHooks();

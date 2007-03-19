@@ -132,7 +132,7 @@ class BikeState {
 
 class Biker {
  public:
-  Biker(Theme *i_theme);
+  Biker(Theme *i_theme, BikerTheme* i_bikerTheme);
   virtual BikeState* getState();
   virtual bool getRenderBikeFront() = 0; /* display the bikefront ? (for detach) */
   virtual float getBikeEngineSpeed() = 0; /* engine speed */
@@ -146,8 +146,10 @@ class Biker {
   bool isFinished() const;
   float finishTime() const;
   bool isDead() const;
+  BikerTheme* getBikeTheme();
 
  protected:
+  BikerTheme* m_bikerTheme;
   bool m_playSound;
   BikeState m_bikeState;
   vapp::EngineSoundSimulator m_EngineSound;

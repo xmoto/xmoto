@@ -515,14 +515,14 @@ namespace vapp {
   void GameRenderer::_RenderGhost(Biker* i_ghost, int i) {
     /* Render ghost - ugly mode? */
     if(m_bUglyMode) {
-      _RenderBike(i_ghost->getState(), &(i_ghost->getState()->Parameters()), m_theme->getGhostTheme());
+      _RenderBike(i_ghost->getState(), &(i_ghost->getState()->Parameters()), i_ghost->getBikeTheme());
     } else {
       /* No not ugly, fancy! Render into overlay? */      
       if(m_bGhostMotionBlur && getParent()->getDrawLib()->useFBOs()) {
 	m_Overlay.beginRendering();
 	m_Overlay.fade(0.15);
       }
-      _RenderBike(i_ghost->getState(), &(i_ghost->getState()->Parameters()), m_theme->getGhostTheme());
+      _RenderBike(i_ghost->getState(), &(i_ghost->getState()->Parameters()), i_ghost->getBikeTheme());
 	  
       if(m_bGhostMotionBlur && getParent()->getDrawLib()->useFBOs()) {
 	m_Overlay.endRendering();
@@ -637,7 +637,7 @@ namespace vapp {
       if(v_player != m_playerToFollow) {
 	_RenderBike(v_player->getState(),
 		    &(v_player->getState()->Parameters()),
-		    m_theme->getPlayerTheme(),
+		    v_player->getBikeTheme(),
 		    v_player->getRenderBikeFront());
       } else {
 	v_found = true;
@@ -646,7 +646,7 @@ namespace vapp {
     if(v_found) {
       _RenderBike(m_playerToFollow->getState(),
 		  &(m_playerToFollow->getState()->Parameters()),
-		  m_theme->getPlayerTheme(),
+		  m_playerToFollow->getBikeTheme(),
 		  m_playerToFollow->getRenderBikeFront());
     }
 

@@ -217,7 +217,8 @@ GameApp::GameApp() {
           m_State = GS_REPLAYING;
 	  
 	  try {
-	    m_replayBiker = m_MotoGame.addSimpleGhostFromFile(m_PlaySpecificReplay, true, &m_theme);
+	    m_replayBiker = m_MotoGame.addSimpleGhostFromFile(m_PlaySpecificReplay, true,
+							      &m_theme, m_theme.getPlayerTheme());
 	    m_Renderer.setPlayerToFollow(m_replayBiker);
 	  } catch(Exception &e) {
 	    setState(m_StateAfterPlaying);
@@ -275,14 +276,17 @@ GameApp::GameApp() {
 	      try {
 		switch(m_GhostSearchStrategy) {
 		case GHOST_STRATEGY_MYBEST:
-		  m_MotoGame.addGhostFromFile(v_PlayGhostReplay, GAMETEXT_GHOST_BEST, false, &m_theme);
+		  m_MotoGame.addGhostFromFile(v_PlayGhostReplay, GAMETEXT_GHOST_BEST, false,
+					      &m_theme, m_theme.getGhostTheme());
 		  break;
 		case GHOST_STRATEGY_THEBEST:
-		  m_MotoGame.addGhostFromFile(v_PlayGhostReplay, GAMETEXT_GHOST_LOCAL, false, &m_theme);
+		  m_MotoGame.addGhostFromFile(v_PlayGhostReplay, GAMETEXT_GHOST_LOCAL, false,
+					      &m_theme, m_theme.getGhostTheme());
 		  break;
 #if defined(SUPPORT_WEBACCESS) 
 		case GHOST_STRATEGY_BESTOFROOM:
-		  m_MotoGame.addGhostFromFile(v_PlayGhostReplay, m_pWebHighscores->getRoomName(), false, &m_theme);
+		  m_MotoGame.addGhostFromFile(v_PlayGhostReplay, m_pWebHighscores->getRoomName(), false,
+					      &m_theme, m_theme.getGhostTheme());
 		  break;
 #endif
 		}
@@ -1831,8 +1835,10 @@ GameApp::GameApp() {
 	m_MotoGame.setInfos("");
 
 	/* add the player */
-	m_Renderer.setPlayerToFollow(m_MotoGame.addPlayerBiker(pLevelSrc->PlayerStart(), DD_RIGHT, &m_theme));
-	//m_MotoGame.addPlayerBiker(pLevelSrc->PlayerStart(), DD_RIGHT, &m_theme);
+	m_Renderer.setPlayerToFollow(m_MotoGame.addPlayerBiker(pLevelSrc->PlayerStart(), DD_RIGHT,
+							       &m_theme, m_theme.getPlayerTheme()));
+	//m_MotoGame.addPlayerBiker(pLevelSrc->PlayerStart(), DD_RIGHT,
+	// &m_theme, getPlayerTheme());
 	/* */
 
 
@@ -1847,14 +1853,17 @@ GameApp::GameApp() {
 	    try {
 	      switch(m_GhostSearchStrategy) {
 	      case GHOST_STRATEGY_MYBEST:
-		m_MotoGame.addGhostFromFile(v_PlayGhostReplay, GAMETEXT_GHOST_BEST, false, &m_theme);
+		m_MotoGame.addGhostFromFile(v_PlayGhostReplay, GAMETEXT_GHOST_BEST, false,
+					    &m_theme, m_theme.getGhostTheme());
 		break;
 	      case GHOST_STRATEGY_THEBEST:
-		m_MotoGame.addGhostFromFile(v_PlayGhostReplay, GAMETEXT_GHOST_LOCAL, false, &m_theme);
+		m_MotoGame.addGhostFromFile(v_PlayGhostReplay, GAMETEXT_GHOST_LOCAL, false,
+					    &m_theme, m_theme.getGhostTheme());
 		break;
 #if defined(SUPPORT_WEBACCESS) 
 	      case GHOST_STRATEGY_BESTOFROOM:
-		m_MotoGame.addGhostFromFile(v_PlayGhostReplay, m_pWebHighscores->getRoomName(), false, &m_theme);
+		m_MotoGame.addGhostFromFile(v_PlayGhostReplay, m_pWebHighscores->getRoomName(), false,
+					    &m_theme, m_theme.getGhostTheme());
 		break;
 #endif
 	      }

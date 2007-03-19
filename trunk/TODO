@@ -12,14 +12,9 @@ I am at your service.
 			--Game.SetBlockPos("Block5",4,0+math.sin(Game.GetTime()*0.4)*4)
 ca lance une exception pour manu
 
-
--> getblockpos cassé
--> setblockcenter
--> setblockpos
 -> le level test -> une exception
 
 - dans un replay : apparence d'un joueur
-- vérifier toutes les fontions de script
 - mode 2 joueurs : victoire à celui qui vit
 
 [20:53] <Christoph> can someone watch the world record replay of "MASTERKUD Padrinos magicos"? it aborts with the error "Entity 'MySprite18' doesn't exist" at position 52:47 (with xmoto-0.2.6)
