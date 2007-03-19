@@ -1,24 +1,13 @@
-
-Yesterday I uploaded a new WR in "Paxed Delta", which was accepted a few hours later. However I cannot replay that replay (sic), nor see the ghost of it.
-I get an error message pop-up that says: "Invalid entity type".
-The high score was done on suse linux 64-bit, but cannot be replayed on 32-bit either.
-I am at your service.
-
-	<block id="Block5">
-		<position x="6.000000" y="3.400000" dynamic="true"
-   background="true"/>
-->
---			--Game.SetBlockRotation("Block5",Game.GetTime()*0.3)
-			--Game.SetBlockPos("Block5",4,0+math.sin(Game.GetTime()*0.4)*4)
-ca lance une exception pour manu
-
+* Manu:
+<block id="Block5">
+<position x="6.000000" y="3.400000" dynamic="true"
+background="true"/>
+--Game.SetBlockRotation("Block5",Game.GetTime()*0.3)
+--Game.SetBlockPos("Block5",4,0+math.sin(Game.GetTime()*0.4)*4)
+ca lance une exception
 -> le level test -> une exception
 
-- dans un replay : apparence d'un joueur
 - mode 2 joueurs : victoire à celui qui vit
-
-[20:53] <Christoph> can someone watch the world record replay of "MASTERKUD Padrinos magicos"? it aborts with the error "Entity 'MySprite18' doesn't exist" at position 52:47 (with xmoto-0.2.6)
-
 
 ******************
 * PERFORMANCE : rebuildLevelsPacks is very slow particularly on windows with a lot of levels : sqlite
