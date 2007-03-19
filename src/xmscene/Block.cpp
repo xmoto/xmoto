@@ -114,8 +114,7 @@ float Block::DynamicRotation() const {
 void Block::updateCollisionLines() {
   bool manageCollisions = (m_collisionLines.size() != 0);
   /* Ignore background blocks */
-  if(isBackground()
-     || isDynamic() == false
+  if(isDynamic() == false
      || manageCollisions == false)
     return;
 
@@ -198,7 +197,7 @@ int Block::loadToPlay(vapp::CollisionSystem& io_collisionSystem) {
 				    Grip());
     }      
     /* add dynamic lines */
-    if(isBackground() == false && isLayer() == false && isDynamic()) {
+    if(isLayer() == false && isDynamic()) {
       /* Define collision lines */
       vapp::Line *v_line = new vapp::Line;
       v_line->x1 = v_line->y1 = v_line->x2 = v_line->y2 = 0.0f;
@@ -211,7 +210,7 @@ int Block::loadToPlay(vapp::CollisionSystem& io_collisionSystem) {
   }
 
   /* define dynamic block in the collision system */
-  if(isBackground() == false && isLayer() == false && isDynamic()) {
+  if(isLayer() == false && isDynamic()) {
     updateCollisionLines();
     io_collisionSystem.addDynBlock(this);
   }
