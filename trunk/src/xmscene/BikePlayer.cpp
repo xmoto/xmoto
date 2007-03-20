@@ -27,6 +27,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* This is the magic depth factor :)  - tweak to obtain max. stability */
 #define DEPTH_FACTOR    2
 
+ReplayBiker::ReplayBiker(std::string i_replayFile, Theme *i_theme, BikerTheme* i_bikerTheme)
+:Ghost(i_replayFile, true, i_theme, i_bikerTheme) {
+}
+
 PlayerBiker::PlayerBiker(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity,
 			 Theme *i_theme, BikerTheme* i_bikerTheme)
 : Biker(i_theme, i_bikerTheme) {
@@ -38,7 +42,6 @@ PlayerBiker::PlayerBiker(Vector2f i_position, DriveDir i_direction, Vector2f i_g
   bFrontWheelTouching = false;
   bRearWheelTouching  = false;
 
-  m_bWheelSpin = false;
   m_bSqueeking=false;
   m_nStillFrames = 0;
   m_clearDynamicTouched = false;
@@ -58,11 +61,13 @@ std::string PlayerBiker::getDescription() const {
   return "";
 }
 
-void PlayerBiker::updateToTime(float i_time, float i_timeStep, vapp::CollisionSystem *v_collisionSystem, Vector2f i_gravity) {
-  Biker::updateToTime(i_time);
+void PlayerBiker::updateToTime(float i_time, float i_timeStep,
+			       vapp::CollisionSystem *i_collisionSystem, Vector2f i_gravity,
+			       vapp::MotoGame *i_motogame) {
+  Biker::updateToTime(i_time, i_timeStep, i_collisionSystem, i_gravity, i_motogame);
 
   m_bSqueeking = false; /* no squeeking right now */
-  updatePhysics(i_time, i_timeStep, v_collisionSystem, i_gravity);
+  updatePhysics(i_time, i_timeStep, i_collisionSystem, i_gravity);
   updateGameState();
 
   if(isDead()) {
@@ -671,42 +676,45 @@ int PlayerBiker::intersectWheelLevel(Vector2f Cp,float Cr,dContact *pContacts, v
 }
 
 void PlayerBiker::initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity) {
-        /* Clear stuff */
-      clearStates();    
-      
-      m_fNextAttitudeCon = -1000.0f;
-      m_fAttitudeCon = 0.0f;
-      
-      m_PlayerFootAnchorBodyID = NULL;
-      m_PlayerHandAnchorBodyID = NULL;
-      m_PlayerTorsoBodyID = NULL;
-      m_PlayerUArmBodyID = NULL;
-      m_PlayerLArmBodyID = NULL;
-      m_PlayerULegBodyID = NULL;
-      m_PlayerLLegBodyID = NULL;
-      m_PlayerFootAnchorBodyID2 = NULL;
-      m_PlayerHandAnchorBodyID2 = NULL;
-      m_PlayerTorsoBodyID2 = NULL;
-      m_PlayerUArmBodyID2 = NULL;
-      m_PlayerLArmBodyID2 = NULL;
-      m_PlayerULegBodyID2 = NULL;
-      m_PlayerLLegBodyID2 = NULL;
+  /* Clear stuff */
+  clearStates(); 
+  
+  m_fNextAttitudeCon = -1000.0f;
+  m_fAttitudeCon = 0.0f;
+  
+  m_PlayerFootAnchorBodyID = NULL;
+  m_PlayerHandAnchorBodyID = NULL;
+  m_PlayerTorsoBodyID = NULL;
+  m_PlayerUArmBodyID = NULL;
+  m_PlayerLArmBodyID = NULL;
+  m_PlayerULegBodyID = NULL;
+  m_PlayerLLegBodyID = NULL;
+  m_PlayerFootAnchorBodyID2 = NULL;
+  m_PlayerHandAnchorBodyID2 = NULL;
+  m_PlayerTorsoBodyID2 = NULL;
+  m_PlayerUArmBodyID2 = NULL;
+  m_PlayerLArmBodyID2 = NULL;
+  m_PlayerULegBodyID2 = NULL;
+  m_PlayerLLegBodyID2 = NULL;
+  
+  /* Restart physics */
+  uninitPhysics();
+  initPhysics(i_gravity);
 
-      /* Restart physics */
-      uninitPhysics();
-      initPhysics(i_gravity);
+  resetAutoDisabler();
+  
+  /* Calculate bike stuff */
+  m_bikeState.reInitializeAnchors();
+  Vector2f C(i_position - m_bikeState.Anchors().GroundPoint());
+  prepareBikePhysics(C);
 
-      /* Calculate bike stuff */
-      m_bikeState.reInitializeAnchors();
-      Vector2f C(i_position - m_bikeState.Anchors().GroundPoint());
-      prepareBikePhysics(C);
-      setBodyDetach(false);
-          
-      m_bikeState.Dir = i_direction;
-
-      m_bikeState.reInitializeSpeed();
-
-      updateGameState();
+  setBodyDetach(false);
+  
+  m_bikeState.Dir = i_direction;
+  
+  m_bikeState.reInitializeSpeed();
+  
+  updateGameState();
 }
 
 void PlayerBiker::clearStates() {
@@ -778,72 +786,6 @@ void PlayerBiker::clearStates() {
 
 BikeController* PlayerBiker::getControler() {
   return &m_BikeC;
-}
-
-bool PlayerBiker::isTouching(const Entity& i_entity) const {
-  for(int i=0; i<m_entitiesTouching.size(); i++) {
-    if(m_entitiesTouching[i] == &i_entity) {
-      return true;
-    }
-  }
-  return false;
-}
-
-PlayerBiker::touch PlayerBiker::setTouching(Entity& i_entity, bool i_touching) {
-  bool v_wasTouching = isTouching(i_entity);
-  if(v_wasTouching == i_touching) {
-    return none;
-  }
-  
-  if(i_touching) {
-    m_entitiesTouching.push_back(&i_entity);
-    return added;
-  } else {
-    for(int i=0; i<m_entitiesTouching.size(); i++) {
-      if(m_entitiesTouching[i] == &i_entity) {
-	m_entitiesTouching.erase(m_entitiesTouching.begin() + i);
-	return removed;
-      }
-    }
-  }
-  return none;
-}
-
-bool PlayerBiker::isTouching(const Zone& i_zone) const {
-  for(unsigned int i=0; i<m_zonesTouching.size(); i++) {
-    if(m_zonesTouching[i]->Id() == i_zone.Id()) {
-      return true;
-    }
-  }
-  return false;
-}
-
-PlayerBiker::touch PlayerBiker::setTouching(Zone& i_zone, bool i_isTouching) {
-  bool v_wasTouching = isTouching(i_zone);
-  if(v_wasTouching == i_isTouching) {
-    return none;
-  }
-    
-  if(i_isTouching) {
-    m_zonesTouching.push_back(&i_zone);
-    return added;
-  } else {
-    for(int i=0; i<m_zonesTouching.size(); i++) {
-      if(m_zonesTouching[i] == &i_zone) {
-	m_zonesTouching.erase(m_zonesTouching.begin() + i);
-	return removed;
-      }
-    }
-  }
-  return none;
-}
-
-std::vector<Entity *>& PlayerBiker::EntitiesTouching() {
-  return m_entitiesTouching;
-}
-
-std::vector<Zone *>& PlayerBiker::ZonesTouching() {
-  return m_zonesTouching;
 }
 
 float PlayerBiker::getBikeEngineSpeed() {
@@ -1226,21 +1168,9 @@ float PlayerBiker::getBikeEngineSpeed() {
     /* Prepare rider */
     prepareRider(StartPos);
   }
-  
-bool PlayerBiker::isWheelSpinning() {
-  return m_bWheelSpin;
-}
-
-Vector2f PlayerBiker::getWheelSpinPoint() {
-  return m_WheelSpinPoint;
-}
-
-Vector2f PlayerBiker::getWheelSpinDir() {
-  return m_WheelSpinDir;
-}
 
 void PlayerBiker::setBodyDetach(bool state) {
-  m_bodyDetach = state;
+  Biker::setBodyDetach(state);
   
   if(m_bodyDetach) {
     dJointSetHingeParam(m_KneeHingeID,  dParamLoStop, 0.0);
@@ -1275,14 +1205,6 @@ bool PlayerBiker::isSqueeking() {
 
 float PlayerBiker::howMuchSqueek() {
   return m_fHowMuchSqueek;
-}
-
-void PlayerBiker::setOnBikerHooks(OnBikerHooks* i_bikerHooks) {
-  m_bikerHooks = i_bikerHooks;
-}
-
-OnBikerHooks* PlayerBiker::getOnBikerHooks() {
-  return m_bikerHooks;
 }
 
 bool PlayerBiker::getRenderBikeFront() {

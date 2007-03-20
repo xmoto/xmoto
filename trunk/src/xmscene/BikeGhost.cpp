@@ -133,8 +133,10 @@ void Ghost::updateDiffToPlayer(std::vector<float> &i_lastToTakeEntities) {
                  - m_lastToTakeEntities[i_lastToTakeEntities.size()-1];
 }
 
-void Ghost::updateToTime(float i_time, vapp::MotoGame *i_motogame) {
-  Biker::updateToTime(i_time);
+void Ghost::updateToTime(float i_time, float i_timeStep,
+			 vapp::CollisionSystem *i_collisionSystem, Vector2f i_gravity,
+			 vapp::MotoGame *i_motogame) {
+  Biker::updateToTime(i_time, i_timeStep, i_collisionSystem, i_gravity, i_motogame);
 
   /* back in the past */
   if(m_previous_ghostBikeState.fGameTime > i_time) {

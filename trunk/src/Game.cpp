@@ -37,9 +37,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 namespace vapp {
 
-  /* CRY! */
-  extern InputHandler *m_pActiveInputHandler;
-  
 GameApp::~GameApp() {
 }
 
@@ -217,8 +214,8 @@ GameApp::GameApp() {
           m_State = GS_REPLAYING;
 	  
 	  try {
-	    m_replayBiker = m_MotoGame.addSimpleGhostFromFile(m_PlaySpecificReplay, true,
-							      &m_theme, m_theme.getPlayerTheme());
+	    m_replayBiker = m_MotoGame.addReplayFromFile(m_PlaySpecificReplay,
+							 &m_theme, m_theme.getPlayerTheme());
 	    m_Renderer.setPlayerToFollow(m_replayBiker);
 	  } catch(Exception &e) {
 	    setState(m_StateAfterPlaying);
@@ -262,7 +259,7 @@ GameApp::GameApp() {
   
 	  /* Init level */    
 	  m_InputHandler.resetScriptKeyHooks();
-	  m_MotoGame.prePlayLevel(pLevelSrc, NULL, false);
+	  m_MotoGame.prePlayLevel(pLevelSrc, &m_InputHandler, NULL, false);
 	  m_MotoGame.setInfos(m_MotoGame.getLevelSrc()->Name() +
 			      " (" + std::string(GAMETEXT_BY)  +
 			      " " + m_replayBiker->playerName() + ")"); 
@@ -276,16 +273,16 @@ GameApp::GameApp() {
 	      try {
 		switch(m_GhostSearchStrategy) {
 		case GHOST_STRATEGY_MYBEST:
-		  m_MotoGame.addGhostFromFile(v_PlayGhostReplay, GAMETEXT_GHOST_BEST, false,
+		  m_MotoGame.addGhostFromFile(v_PlayGhostReplay, GAMETEXT_GHOST_BEST,
 					      &m_theme, m_theme.getGhostTheme());
 		  break;
 		case GHOST_STRATEGY_THEBEST:
-		  m_MotoGame.addGhostFromFile(v_PlayGhostReplay, GAMETEXT_GHOST_LOCAL, false,
+		  m_MotoGame.addGhostFromFile(v_PlayGhostReplay, GAMETEXT_GHOST_LOCAL,
 					      &m_theme, m_theme.getGhostTheme());
 		  break;
 #if defined(SUPPORT_WEBACCESS) 
 		case GHOST_STRATEGY_BESTOFROOM:
-		  m_MotoGame.addGhostFromFile(v_PlayGhostReplay, m_pWebHighscores->getRoomName(), false,
+		  m_MotoGame.addGhostFromFile(v_PlayGhostReplay, m_pWebHighscores->getRoomName(),
 					      &m_theme, m_theme.getGhostTheme());
 		  break;
 #endif
@@ -1784,7 +1781,6 @@ GameApp::GameApp() {
       
     /* Initialize controls */
     m_InputHandler.configure(&m_Config);
-    m_pActiveInputHandler = &m_InputHandler;
       
     /* Default playing state */
     m_fLastFrameTime = 0.0f;
@@ -1831,14 +1827,14 @@ GameApp::GameApp() {
       }
       
       try {
-	m_MotoGame.prePlayLevel(pLevelSrc, m_pJustPlayReplay, true);
+	m_MotoGame.prePlayLevel(pLevelSrc, &m_InputHandler, m_pJustPlayReplay, true);
 	m_MotoGame.setInfos("");
 
 	/* add the player */
 	m_Renderer.setPlayerToFollow(m_MotoGame.addPlayerBiker(pLevelSrc->PlayerStart(), DD_RIGHT,
 							       &m_theme, m_theme.getPlayerTheme()));
 	//m_MotoGame.addPlayerBiker(pLevelSrc->PlayerStart(), DD_RIGHT,
-	// &m_theme, getPlayerTheme());
+	//		  &m_theme, m_theme.getPlayerTheme());
 	/* */
 
 
@@ -1853,16 +1849,16 @@ GameApp::GameApp() {
 	    try {
 	      switch(m_GhostSearchStrategy) {
 	      case GHOST_STRATEGY_MYBEST:
-		m_MotoGame.addGhostFromFile(v_PlayGhostReplay, GAMETEXT_GHOST_BEST, false,
+		m_MotoGame.addGhostFromFile(v_PlayGhostReplay, GAMETEXT_GHOST_BEST,
 					    &m_theme, m_theme.getGhostTheme());
 		break;
 	      case GHOST_STRATEGY_THEBEST:
-		m_MotoGame.addGhostFromFile(v_PlayGhostReplay, GAMETEXT_GHOST_LOCAL, false,
+		m_MotoGame.addGhostFromFile(v_PlayGhostReplay, GAMETEXT_GHOST_LOCAL,
 					    &m_theme, m_theme.getGhostTheme());
 		break;
 #if defined(SUPPORT_WEBACCESS) 
 	      case GHOST_STRATEGY_BESTOFROOM:
-		m_MotoGame.addGhostFromFile(v_PlayGhostReplay, m_pWebHighscores->getRoomName(), false,
+		m_MotoGame.addGhostFromFile(v_PlayGhostReplay, m_pWebHighscores->getRoomName(),
 					    &m_theme, m_theme.getGhostTheme());
 		break;
 #endif
@@ -2236,7 +2232,7 @@ GameApp::GameApp() {
     return m_bLockMotoGame;
   }
   
-  void XMMotoGameHooks::OnTakeEntity() {
+  void XMMotoGameHooks::OnTakeEntity(int i_player) {
     /* Play yummy-yummy sound */
     if(m_GameApp != NULL) {
       try {
@@ -2259,8 +2255,8 @@ GameApp::GameApp() {
   XMMotoGameHooks::~XMMotoGameHooks() {
   }
 
-  void GameApp::TeleportationCheatTo(Vector2f i_position) {
-    m_MotoGame.setPlayerPosition(i_position.x, i_position.y, true);
+  void GameApp::TeleportationCheatTo(int i_player, Vector2f i_position) {
+    m_MotoGame.setPlayerPosition(i_player, i_position.x, i_position.y, true);
     m_Renderer.initCamera();
     m_MotoGame.addPenalityTime(900); /* 15 min of penality for that ! */
   }

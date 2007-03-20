@@ -44,7 +44,9 @@ class Level;
 class BikeState;
 class Ghost;
 class PlayerBiker;
+class ReplayBiker;
 class MotoGameOnBikerHooks;
+class LuaLibGame;
 
 namespace vapp {
 
@@ -52,6 +54,7 @@ namespace vapp {
   class Replay;
   class GameRenderer;
   class CollisionSystem;
+  class InputHandler;
 
   /*===========================================================================
   Serialized bike state
@@ -98,7 +101,7 @@ namespace vapp {
 
   class MotoGameHooks {
   public:
-    virtual void OnTakeEntity() = 0;
+    virtual void OnTakeEntity(int i_player) = 0;
   };
 
   class MotoGame {
@@ -111,6 +114,7 @@ namespace vapp {
     /* update of the structure */
     void prePlayLevel(
           Level *pLevelSrc,
+	  InputHandler *i_inputHandler,
           Replay *recordingReplay,
           bool i_playEvents);
 
@@ -120,8 +124,8 @@ namespace vapp {
     void endLevel(void);
 
     /* entities */
-    void touchEntity(Entity *pEntity, bool bHead); 
-    void deleteEntity(Entity *pEntity);
+    void touchEntity(int i_player, Entity *pEntity, bool bHead); 
+    void deleteEntity(int i_player, Entity *pEntity);
 
     /* messages */
     void gameMessage(std::string Text,
@@ -144,17 +148,11 @@ namespace vapp {
     void executeEvents(Replay *p_replay);
 
     /* player */
-    void setPlayerPosition(float x,float y,bool bFaceRight);
-    const Vector2f &getPlayerPosition(int n);
-    bool getPlayerFaceDir(int n);
+    void setPlayerPosition(int i_player, float x,float y,bool bFaceRight);
+    const Vector2f &getPlayerPosition(int i_player);
+    bool getPlayerFaceDir(int i_player);
     void setDeathAnim(bool b) {m_bDeathAnimEnabled=b;}
     
-    /* Direct Lua interaction methods */
-    bool scriptCallBool(std::string FuncName,bool bDefault=false);
-    void scriptCallVoid(std::string FuncName);
-    void scriptCallTblVoid(std::string Table,std::string FuncName);
-    void scriptCallVoidNumberArg(std::string FuncName, int n);
-
     /* Data interface */
     bool isInitOK(void) {return m_bLevelInitSuccess;}
     Level *getLevelSrc(void) {return m_pLevelSrc;}
@@ -181,11 +179,11 @@ namespace vapp {
       void CameraZoom(float pZoom);
       void CameraMove(float p_x, float p_y);
 
-      void killPlayer();
-      void playerEntersZone(Zone *pZone);
-      void playerLeavesZone(Zone *pZone);
-      void playerTouchesEntity(std::string p_entityID, bool p_bTouchedWithHead);
-      void entityDestroyed(const std::string& i_entityId);
+      void killPlayer(int i_player);
+      void playerEntersZone(int i_player, Zone *pZone);
+      void playerLeavesZone(int i_player, Zone *pZone);
+      void playerTouchesEntity(int i_player, std::string p_entityID, bool p_bTouchedWithHead);
+      void entityDestroyed(int i_player, const std::string& i_entityId);
       void addDynamicObject(SDynamicObject* p_obj);
       void removeSDynamicOfObject(std::string pObject);
       void addPenalityTime(float fTime);
@@ -193,20 +191,20 @@ namespace vapp {
       void createKillEntityEvent(std::string p_entityID);
 
       unsigned int getNbRemainingStrawberries();
-      void makePlayerWin();
+      void makePlayerWin(int i_player);
 
       void setGravity(float x,float y);
       const Vector2f &getGravity(void);
 
-      Ghost* addSimpleGhostFromFile(std::string i_ghostFile, bool i_isActiv,
-				    Theme *i_theme, BikerTheme* i_bikerTheme);
-      Ghost* addGhostFromFile(std::string i_ghostFile, std::string i_info, bool i_isActiv,
+      ReplayBiker* addReplayFromFile(std::string i_ghostFile,
+			       Theme *i_theme, BikerTheme* i_bikerTheme);
+      Ghost* addGhostFromFile(std::string i_ghostFile, std::string i_info,
 			      Theme *i_theme, BikerTheme* i_bikerTheme);
       PlayerBiker* addPlayerBiker(Vector2f i_position, DriveDir i_direction,
 				  Theme *i_theme, BikerTheme* i_bikerTheme);
 
       std::vector<Ghost *> &Ghosts();
-      std::vector<PlayerBiker*> &Players();
+      std::vector<Biker*> &Players();
 
       bool doesPlayEvents() const;
 
@@ -223,6 +221,8 @@ namespace vapp {
 
       void setInfos(std::string i_infos);
       std::string getInfos() const;
+
+      LuaLibGame* getLuaLibGame();
 
   private:         
       /* Data */
@@ -250,14 +250,15 @@ namespace vapp {
       CollisionSystem m_Collision;        /* Collision system */
             
       Level *m_pLevelSrc;              /* Source of level */            
-      lua_State *m_pL;                    /* Lua state associated with the
-                                             level */
+
+      LuaLibGame *m_luaGame;
+
       std::vector<Entity *> m_DestroyedEntities; /* destroyed entities */
       
       std::vector<Entity *> m_DelSchedule;/* Entities scheduled for deletion */
       std::vector<GameMessage *> m_GameMessages;
       
-      std::vector<PlayerBiker*> m_players;
+      std::vector<Biker*> m_players;
 
       bool m_showGhostTimeDiff;
 

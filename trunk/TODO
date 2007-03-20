@@ -1,13 +1,31 @@
-* Manu:
-<block id="Block5">
-<position x="6.000000" y="3.400000" dynamic="true"
-background="true"/>
---Game.SetBlockRotation("Block5",Game.GetTime()*0.3)
---Game.SetBlockPos("Block5",4,0+math.sin(Game.GetTime()*0.4)*4)
-ca lance une exception
--> le level test -> une exception
+-virer motogameL
 
 - mode 2 joueurs : victoire à celui qui vit
+
+* gérer les évènements, scripts :
+évènements:
+et renommer les anciens
+GAME_EVENT_PLAYER_DIES
+GAME_EVENT_PLAYER_ENTERS_ZONE
+GAME_EVENT_PLAYER_LEAVES_ZONE
+GAME_EVENT_PLAYER_TOUCHES_ENTITY
+GAME_EVENT_ENTITY_DESTROYED
+GAME_EVENT_LUA_CALL_SETPLAYERPOSITION
+
+scripts:
+Entity.Touch()
+Zone.OnEnter()
+Zone.OnLeave()
+OnSomersault(bClockWise)
+OnWheel1Touchs(status)
+OnWheel2Touchs(status)
+IsPlayerInZone(zone)
+SetPlayerPosition(x, y, bRight)
+GetPlayerPosition()
+KillPlayer()
+WinPlayer()
+
+* voir s'il faut gérer des évènements pour les ghosts
 
 ******************
 * PERFORMANCE : rebuildLevelsPacks is very slow particularly on windows with a lot of levels : sqlite

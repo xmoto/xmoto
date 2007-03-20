@@ -37,102 +37,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #define REPLAY_SPEED_INCREMENT 0.25
 
+#include "LuaLibGame.h"
+
 namespace vapp {
-
-  /*===========================================================================
-    Globals
-    ===========================================================================*/
-
-  /* Prim. game object */
-  MotoGame *m_pMotoGame;        
   
-  /* Lua library prototypes */
-  int L_Game_GetTime(lua_State *pL);
-  int L_Game_Message(lua_State *pL);
-  int L_Game_IsPlayerInZone(lua_State *pL);
-  int L_Game_MoveBlock(lua_State *pL);
-  int L_Game_GetBlockPos(lua_State *pL);
-  int L_Game_SetBlockPos(lua_State *pL);
-  int L_Game_PlaceInGameArrow(lua_State *pL);
-  int L_Game_PlaceScreenArrow(lua_State *pL);
-  int L_Game_HideArrow(lua_State *pL);
-  int L_Game_ClearMessages(lua_State *pL);
-  int L_Game_SetGravity(lua_State *pL);  
-  int L_Game_GetGravity(lua_State *pL);  
-  int L_Game_SetPlayerPosition(lua_State *pL);
-  int L_Game_GetPlayerPosition(lua_State *pL);
-  int L_Game_GetEntityPos(lua_State *pL);
-  int L_Game_SetEntityPos(lua_State *pL);
-  int L_Game_SetKeyHook(lua_State *pL);
-  int L_Game_GetKeyByAction(lua_State *pL);
-  int L_Game_Log(lua_State *pL);
-  int L_Game_SetBlockCenter(lua_State *pL);
-  int L_Game_SetBlockRotation(lua_State *pL);
-  int L_Game_SetDynamicEntityRotation(lua_State *pL);
-  int L_Game_SetDynamicEntityTranslation(lua_State *pL);
-  int L_Game_SetDynamicEntityNone(lua_State *pL);
-  int L_Game_SetDynamicBlockRotation(lua_State *pL);
-  int L_Game_SetDynamicBlockTranslation(lua_State *pL);
-  int L_Game_SetDynamicBlockNone(lua_State *pL);
-  int L_Game_CameraZoom(lua_State *pL);
-  int L_Game_CameraMove(lua_State *pL);
-  int L_Game_GetEntityRadius(lua_State *pL);
-  int L_Game_IsEntityTouched(lua_State *pL);
-  int L_Game_KillPlayer(lua_State *pL);
-  int L_Game_KillEntity(lua_State *pL);
-  int L_Game_RemainingStrawberries(lua_State *pL);
-  int L_Game_WinPlayer(lua_State *pL);
-  int L_Game_PenaltyTime(lua_State *pL);
-
-  /* "Game" Lua library */
-  static const luaL_reg g_GameFuncs[] = {
-    {"GetTime",                 L_Game_GetTime},
-    {"Message",                 L_Game_Message},
-    {"IsPlayerInZone",          L_Game_IsPlayerInZone},
-    {"MoveBlock",               L_Game_MoveBlock},
-    {"GetBlockPos",             L_Game_GetBlockPos},
-    {"SetBlockPos",             L_Game_SetBlockPos},
-    {"PlaceInGameArrow",        L_Game_PlaceInGameArrow},
-    {"PlaceScreenArrow",        L_Game_PlaceScreenArrow},
-    {"HideArrow",               L_Game_HideArrow},
-    {"ClearMessages",           L_Game_ClearMessages},
-    {"SetGravity",          L_Game_SetGravity},
-    {"GetGravity",          L_Game_GetGravity},
-    {"SetPlayerPosition",       L_Game_SetPlayerPosition},
-    {"GetPlayerPosition",       L_Game_GetPlayerPosition},
-    {"GetEntityPos",          L_Game_GetEntityPos},
-    {"SetEntityPos",          L_Game_SetEntityPos},
-    {"SetKeyHook",              L_Game_SetKeyHook},
-    {"GetKeyByAction",          L_Game_GetKeyByAction},
-    {"Log",                     L_Game_Log},
-    {"SetBlockCenter",          L_Game_SetBlockCenter},
-    {"SetBlockRotation",        L_Game_SetBlockRotation},
-    {"SetDynamicEntityRotation",    L_Game_SetDynamicEntityRotation},
-    {"SetDynamicEntityTranslation", L_Game_SetDynamicEntityTranslation},
-    {"SetDynamicEntityNone",        L_Game_SetDynamicEntityNone},
-    {"SetDynamicBlockRotation",     L_Game_SetDynamicBlockRotation},
-    {"SetDynamicBlockTranslation",  L_Game_SetDynamicBlockTranslation},
-    {"SetDynamicBlockNone",         L_Game_SetDynamicBlockNone},
-    {"CameraZoom",        L_Game_CameraZoom},
-    {"CameraMove",        L_Game_CameraMove},
-    {"GetEntityRadius",       L_Game_GetEntityRadius},
-    {"IsEntityTouched",       L_Game_IsEntityTouched},
-    {"KillPlayer",                  L_Game_KillPlayer},
-    {"KillEntity",                  L_Game_KillEntity},
-    {"RemainingStrawberries",       L_Game_RemainingStrawberries},
-    {"WinPlayer",                   L_Game_WinPlayer},
-    {"AddPenaltyTime",              L_Game_PenaltyTime},
-    {NULL, NULL}
-  };
-
-  /*===========================================================================
-    Init the lua game lib
-    ===========================================================================*/
-  LUALIB_API int luaopen_Game(lua_State *pL) {
-    luaL_openlib(pL,"Game",g_GameFuncs,0);
-    return 1;
-  }
-
   MotoGame::MotoGame() {
     m_pLevelSrc=NULL;
     m_bDeathAnimEnabled=true;
@@ -164,7 +72,9 @@ void MotoGame::cleanGhosts() {
 
 void MotoGame::cleanPlayers() {
   for(unsigned int i=0; i<m_players.size(); i++) {
-    delete m_players[i]->getOnBikerHooks();
+    if(m_players[i]->getOnBikerHooks() != NULL) {
+      delete m_players[i]->getOnBikerHooks();
+    }
     delete m_players[i];
   }
   m_players.clear();
@@ -175,116 +85,22 @@ void MotoGame::cleanPlayers() {
   }
 
   /*===========================================================================
-    Simple lua interaction
-    ===========================================================================*/
-  bool MotoGame::scriptCallBool(std::string FuncName,bool bDefault) {
-    bool bRet = bDefault;
-
-    /* Fetch global function */
-    lua_getglobal(m_pL,FuncName.c_str());
-    
-    /* Is it really a function and not just a pile of ****? */
-    if(lua_isfunction(m_pL,-1)) {
-      /* Call! */
-      if(lua_pcall(m_pL,0,1,0) != 0) {
-        throw Exception("failed to invoke (bool) " + FuncName + std::string("(): ") + std::string(lua_tostring(m_pL,-1)));
-      }
-      
-      /* Retrieve return value */
-      if(!lua_toboolean(m_pL,-1)) {      
-        bRet = false;
-      }
-      else {
-        bRet = true;
-      }
-    }
-    
-    /* Reset Lua VM */
-    lua_settop(m_pL,0);        
-        
-    return bRet;
-  }
-  
-  void MotoGame::scriptCallVoid(std::string FuncName) {
-    /* Fetch global function */
-    lua_getglobal(m_pL,FuncName.c_str());
-    
-    /* Is it really a function and not just a pile of ****? */
-    if(lua_isfunction(m_pL,-1)) {
-      /* Call! */
-      if(lua_pcall(m_pL,0,0,0) != 0) {
-        throw Exception("failed to invoke (void) " + FuncName + std::string("(): ") + std::string(lua_tostring(m_pL,-1)));
-      }      
-    }
-    
-    /* Reset Lua VM */
-    lua_settop(m_pL,0);        
-  }
-  
-  void MotoGame::scriptCallVoidNumberArg(std::string FuncName, int n) {
-    /* Fetch global function */
-    lua_getglobal(m_pL,FuncName.c_str());
-    
-    /* Is it really a function and not just a pile of ****? */
-    if(lua_isfunction(m_pL,-1)) {
-      /* Call! */
-      lua_pushnumber(m_pL, n);
-      if(lua_pcall(m_pL,1,0,0) != 0) {
-        throw Exception("failed to invoke (void) " + FuncName + std::string("(): ") + std::string(lua_tostring(m_pL,-1)));
-      }      
-    }
-    
-    /* Reset Lua VM */
-    lua_settop(m_pL,0);        
-  }
-
-  void MotoGame::scriptCallTblVoid(std::string Table,std::string FuncName) {
-    /* Fetch global table */        
-    lua_getglobal(m_pL,Table.c_str());
-    
-    //    printf("[%s.%s]\n",Table.c_str(),FuncName.c_str());
-    
-    if(lua_istable(m_pL,-1)) {
-      lua_pushstring(m_pL,FuncName.c_str());
-      lua_gettable(m_pL,-2);
-      
-      if(lua_isfunction(m_pL,-1)) {
-        /* Call! */
-        if(lua_pcall(m_pL,0,0,0) != 0) {
-          throw Exception("failed to invoke (tbl,void) " + Table + std::string(".") + 
-        FuncName + std::string("(): ") + std::string(lua_tostring(m_pL,-1)));
-        }              
-      }
-    }
-
-    /* Reset Lua VM */
-    lua_settop(m_pL,0);        
-  }
-
-  /*===========================================================================
     Teleporting
     ===========================================================================*/
-  void MotoGame::setPlayerPosition(float x,float y,bool bFaceRight) {
+  void MotoGame::setPlayerPosition(int i_player, float x,float y,bool bFaceRight) {
     /* Going to teleport? Do it now, before we tinker to much with the state */
-    for(unsigned int i=0; i<m_players.size(); i++) {
-      if(m_players[i]->isDead() == false) {
-	m_players[i]->resetAutoDisabler();
-	m_players[i]->initToPosition(Vector2f(x,y), bFaceRight?DD_RIGHT:DD_LEFT, m_PhysGravity);
-      }
-    }      
+    if(m_players[i_player]->isDead() == false) {
+      m_players[i_player]->initToPosition(Vector2f(x,y), bFaceRight?DD_RIGHT:DD_LEFT, m_PhysGravity);
+    }
   }
   
-  const Vector2f &MotoGame::getPlayerPosition(int n) {
-    if(m_players.size() > n) {
-      return m_players[n]->getState()->CenterP;
-    }
+  const Vector2f &MotoGame::getPlayerPosition(int i_player) {
+    return m_players[i_player]->getState()->CenterP;
     throw Exception("Invalid player number");
   }
   
-  bool MotoGame::getPlayerFaceDir(int n) {
-    if(m_players.size() > n) {
-      return m_players[n]->getState()->Dir == DD_RIGHT;
-    }
+  bool MotoGame::getPlayerFaceDir(int i_player) {
+    return m_players[i_player]->getState()->Dir == DD_RIGHT;
     throw Exception("Invalid player number");
   }
 
@@ -351,8 +167,7 @@ void MotoGame::cleanPlayers() {
     int v_nbCents = 0;
     while(getTime() - m_lastCallToEveryHundreath > 0.01) {
       if(m_playEvents) {
-	if(!scriptCallBool("Tick",
-			   true)) {
+	if(m_luaGame->scriptCallBool("Tick", true) == false) {
 	  throw Exception("level script Tick() returned false");
 	}
       }
@@ -362,11 +177,11 @@ void MotoGame::cleanPlayers() {
     nextStateScriptDynamicObjects(v_nbCents);
 
     for(unsigned int i=0; i<m_ghosts.size(); i++) {
-      m_ghosts[i]->updateToTime(getTime(), this);
+      m_ghosts[i]->updateToTime(getTime(), fTimeStep, &m_Collision, m_PhysGravity, this);
     }
 
     for(unsigned int i=0; i<m_players.size(); i++) {
-      m_players[i]->updateToTime(m_fTime, fTimeStep, &m_Collision, m_PhysGravity);
+      m_players[i]->updateToTime(m_fTime, fTimeStep, &m_Collision, m_PhysGravity, this);
       
       if(m_playEvents) {
 	/* New wheel-spin particles? */
@@ -460,6 +275,7 @@ void MotoGame::cleanPlayers() {
     ===========================================================================*/
   void MotoGame::prePlayLevel(
          Level *pLevelSrc,
+	 InputHandler *i_inputHandler,
          Replay *recordingReplay,
          bool i_playEvents) {
 
@@ -472,12 +288,7 @@ void MotoGame::cleanPlayers() {
     }
     
     /* Create Lua state */
-    m_pL = lua_open();
-    luaopen_base(m_pL);   
-    luaopen_math(m_pL);
-    luaopen_table(m_pL);
-    luaopen_Game(m_pL);    
-    m_pMotoGame = this;
+    m_luaGame = new LuaLibGame(this, i_inputHandler);
     
     /* Clear collision system */
     m_Collision.reset();
@@ -521,15 +332,12 @@ void MotoGame::cleanPlayers() {
         
         FS::closeFile(pfh);
 
-        /* Use the Lua aux lib to load the buffer */
-        int nRet = luaL_loadbuffer(m_pL,ScriptBuf.c_str(),ScriptBuf.length(),pLevelSrc->scriptFileName().c_str()) ||
-    lua_pcall(m_pL,0,0,0);    
-
-        /* Returned WHAT? */
-        if(nRet != 0) {
-          lua_close(m_pL);
-          throw Exception("failed to load level script");
-        }
+	try {
+	  m_luaGame->loadScript(ScriptBuf, pLevelSrc->scriptFileName());
+	} catch(Exception &e) {
+	  delete m_luaGame;
+	  throw e;
+	}
 
         bGotScript = true;
         bTryParsingEncapsulatedLevelScript = false;
@@ -538,22 +346,20 @@ void MotoGame::cleanPlayers() {
     
     if(bTryParsingEncapsulatedLevelScript && pLevelSrc->scriptSource() != "") {
       /* Use the Lua aux lib to load the buffer */
-      int nRet = luaL_loadbuffer(m_pL,pLevelSrc->scriptSource().c_str(),pLevelSrc->scriptSource().length(),
-         pLevelSrc->FileName().c_str()) || lua_pcall(m_pL,0,0,0);    
-         
-      /* Returned WHAT? */
-      if(nRet != 0) {
-  std::string error_msg = std::string(lua_tostring(m_pL,-1));
-  lua_close(m_pL);
-  /* should call error(0) */
-  throw Exception("failed to load level encapsulated script :\n" + error_msg);
-      }
+
+      try {
+	m_luaGame->loadScript(pLevelSrc->scriptSource(), pLevelSrc->scriptFileName());
+      } catch(Exception &e) {
+	std::string error_msg = m_luaGame->getErrorMsg();
+	delete m_luaGame;
+	throw Exception("failed to load level encapsulated script :\n" + error_msg);
+      }      
 
       bGotScript = true;      
     }    
     
     if(bNeedScript && !bGotScript) {
-      lua_close(m_pL);
+      delete m_luaGame;
       throw Exception("failed to get level script");
     }
     
@@ -571,8 +377,7 @@ void MotoGame::cleanPlayers() {
 
     /* Invoke the OnLoad() script function */
     if(m_playEvents) {
-      bool bOnLoadSuccess = scriptCallBool("OnLoad",
-             true);
+      bool bOnLoadSuccess = m_luaGame->scriptCallBool("OnLoad", true);
       /* if no OnLoad(), assume success */
       /* Success? */
       if(!bOnLoadSuccess) {
@@ -598,15 +403,15 @@ void MotoGame::cleanPlayers() {
     }
   }
 
-  Ghost* MotoGame::addSimpleGhostFromFile(std::string i_ghostFile, bool i_isActiv,
-					  Theme *i_theme, BikerTheme* i_bikerTheme) {
-    Ghost* v_ghost = NULL;
-    v_ghost = new Ghost(i_ghostFile, i_isActiv, i_theme, i_bikerTheme);
-    m_ghosts.push_back(v_ghost);
-    return v_ghost;
+  ReplayBiker* MotoGame::addReplayFromFile(std::string i_ghostFile,
+				     Theme *i_theme, BikerTheme* i_bikerTheme) {
+    ReplayBiker* v_biker = NULL;
+    v_biker = new ReplayBiker(i_ghostFile, i_theme, i_bikerTheme);
+    m_players.push_back(v_biker);
+    return v_biker;
   }
 
-  Ghost* MotoGame::addGhostFromFile(std::string i_ghostFile, std::string i_info, bool i_isActiv,
+  Ghost* MotoGame::addGhostFromFile(std::string i_ghostFile, std::string i_info,
 				    Theme *i_theme, BikerTheme* i_bikerTheme) {
     Ghost* v_ghost = NULL;
 
@@ -615,7 +420,7 @@ void MotoGame::cleanPlayers() {
       throw Exception("No level defined");
     }
 
-    v_ghost = new Ghost(i_ghostFile, i_isActiv, i_theme, i_bikerTheme);
+    v_ghost = new Ghost(i_ghostFile, false, i_theme, i_bikerTheme);
     v_ghost->setPlaySound(false);
     v_ghost->setInfo(i_info);
     v_ghost->initLastToTakeEntities(m_pLevelSrc);
@@ -627,7 +432,7 @@ void MotoGame::cleanPlayers() {
     return m_ghosts;
   }
 
-  std::vector<PlayerBiker *>& MotoGame::Players() {
+  std::vector<Biker *>& MotoGame::Players() {
     return m_players;
   }
 
@@ -642,9 +447,7 @@ void MotoGame::cleanPlayers() {
     /* If not already freed */
     if(m_pLevelSrc != NULL) {
       /* Clean up */
-      lua_close(m_pL);
-      m_pL = NULL;
-
+      delete m_luaGame;
       m_pLevelSrc->unloadToPlay();      
 
       /* Release reference to level source */
@@ -833,7 +636,7 @@ void MotoGame::cleanPlayers() {
       Zone *pZone = m_pLevelSrc->Zones()[i];
 
       for(unsigned int j=0; j<m_players.size(); j++) {
-	PlayerBiker* v_player = m_players[j];
+	Biker* v_player = m_players[j];
      
 	if(m_players[j]->isDead() == false) {
 
@@ -858,7 +661,7 @@ void MotoGame::cleanPlayers() {
 
   void MotoGame::_UpdateEntities(void) {
     for(unsigned int j=0; j<m_players.size(); j++) {
-      PlayerBiker* v_player = m_players[j];
+      Biker* v_player = m_players[j];
 
       if(m_players[j]->isDead() == false) {
 
@@ -940,22 +743,22 @@ void MotoGame::cleanPlayers() {
   /*===========================================================================
     Entity stuff (public)
     ===========================================================================*/
-  void MotoGame::deleteEntity(Entity *pEntity) {
+  void MotoGame::deleteEntity(int i_player, Entity *pEntity) {
     /* Already scheduled for deletion? */
     for(int i=0;i<m_DelSchedule.size();i++)
       if(m_DelSchedule[i] == pEntity) return;
     m_DelSchedule.push_back(pEntity);
   }
   
-  void MotoGame::touchEntity(Entity *pEntity,bool bHead) {
+  void MotoGame::touchEntity(int i_player, Entity *pEntity,bool bHead) {
     /* Start by invoking scripts if any */
     if(m_playEvents) {
-      scriptCallTblVoid(pEntity->Id(),"Touch");
+      m_luaGame->scriptCallTblVoid(pEntity->Id(),"Touch");
     }
 
     if(pEntity->DoesMakeWin()) {
       if(getNbRemainingStrawberries() == 0) {
-	makePlayerWin();
+	makePlayerWin(i_player);
       }
     }
 
@@ -1183,37 +986,34 @@ void MotoGame::cleanPlayers() {
     }
   }
 
-  void MotoGame::killPlayer() {
-    for(unsigned int i=0; i<m_players.size(); i++) {
-      if(m_players[i]->isDead() == false) {
-	m_players[i]->setDead(true);
+  void MotoGame::killPlayer(int i_player) {
+    if(m_players[i_player]->isDead() == false) {
+      m_players[i_player]->setDead(true);
 
-	if(m_bDeathAnimEnabled) {
-	  m_players[i]->resetAutoDisabler();
-	  m_players[i]->setBodyDetach(true);
-	}
-	m_players[i]->getControler()->stopContols();
+      if(m_bDeathAnimEnabled) {
+	m_players[i_player]->setBodyDetach(true);
       }
+      m_players[i_player]->getControler()->stopContols();
     }
   }
 
-  void MotoGame::playerEntersZone(Zone *pZone) {
+  void MotoGame::playerEntersZone(int i_player, Zone *pZone) {
     if(m_playEvents) {
-      scriptCallTblVoid(pZone->Id(), "OnEnter");
+      m_luaGame->scriptCallTblVoid(pZone->Id(), "OnEnter");
     }
   }
   
-  void MotoGame::playerLeavesZone(Zone *pZone) {
+  void MotoGame::playerLeavesZone(int i_player, Zone *pZone) {
     if(m_playEvents) {
-      scriptCallTblVoid(pZone->Id(), "OnLeave");
+      m_luaGame->scriptCallTblVoid(pZone->Id(), "OnLeave");
     }
   }
 
-  void MotoGame::playerTouchesEntity(std::string p_entityID, bool p_bTouchedWithHead) {
-    touchEntity(&(getLevelSrc()->getEntityById(p_entityID)), p_bTouchedWithHead);
+  void MotoGame::playerTouchesEntity(int i_player, std::string p_entityID, bool p_bTouchedWithHead) {
+    touchEntity(i_player, &(getLevelSrc()->getEntityById(p_entityID)), p_bTouchedWithHead);
   }
 
-  void MotoGame::entityDestroyed(const std::string& i_entityId) {
+  void MotoGame::entityDestroyed(int i_player, const std::string& i_entityId) {
     Entity *v_entity;
     v_entity = &(getLevelSrc()->getEntityById(i_entityId));
 
@@ -1227,12 +1027,12 @@ void MotoGame::cleanPlayers() {
       getLevelSrc()->spawnEntity(v_stars);
       
       if(m_motoGameHooks != NULL) {
-	m_motoGameHooks->OnTakeEntity();
+	m_motoGameHooks->OnTakeEntity(i_player);
       }
     }
     
     /* Destroy entity */
-    deleteEntity(v_entity);
+    deleteEntity(i_player, v_entity);
   }
 
   void MotoGame::addDynamicObject(SDynamicObject *p_obj) {
@@ -1253,11 +1053,9 @@ void MotoGame::cleanPlayers() {
     return m_pLevelSrc->countToTakeEntities();
   }
 
-  void MotoGame::makePlayerWin() {
-    for(unsigned int i=0; i<m_players.size(); i++) {
-      if(m_players[i]->isDead() == false) {
-	m_players[i]->setFinished(true, getTime());
-      }
+  void MotoGame::makePlayerWin(int i_player) {
+    if(m_players[i_player]->isDead() == false) {
+      m_players[i_player]->setFinished(true, getTime());
     }
   }
 
@@ -1273,20 +1071,14 @@ void MotoGame::cleanPlayers() {
 
     /* special case for the last strawberry : if we are touching the end, finish the level */
     if(getNbRemainingStrawberries() == 0) {
-      bool v_touchingMakeWin = false;
-      
       for(int j=0; j<m_players.size(); j++) {
 	if(m_players[j]->isDead() == false) {
 	  for(int i=0; i<m_players[j]->EntitiesTouching().size(); i++) {
 	    if(m_players[j]->EntitiesTouching()[i]->DoesMakeWin()) {
-	      v_touchingMakeWin = true;
+	      makePlayerWin(j);
 	    }
 	  }
 	}
-      }
-
-      if(v_touchingMakeWin) {
-	makePlayerWin();
       }
     }
   }
@@ -1367,6 +1159,10 @@ void MotoGame::cleanPlayers() {
   std::string MotoGame::getInfos() const {
     return m_infos;
   }
+
+  LuaLibGame* MotoGame::getLuaLibGame() {
+    return m_luaGame;
+  }
 }
 
 MotoGameOnBikerHooks::MotoGameOnBikerHooks(vapp::MotoGame* i_motoGame, int i_playerNumber) {
@@ -1379,7 +1175,7 @@ MotoGameOnBikerHooks::~MotoGameOnBikerHooks() {
 
 void MotoGameOnBikerHooks::onSomersaultDone(bool i_counterclock) {
   if(m_motoGame->doesPlayEvents() == false) return;
-  m_motoGame->scriptCallVoidNumberArg("OnSomersault", i_counterclock ? 1:0);
+  m_motoGame->getLuaLibGame()->scriptCallVoidNumberArg("OnSomersault", i_counterclock ? 1:0);
 }
 
 void MotoGameOnBikerHooks::onWheelTouches(int i_wheel, bool i_touch) {
@@ -1387,15 +1183,15 @@ void MotoGameOnBikerHooks::onWheelTouches(int i_wheel, bool i_touch) {
 
   if(i_wheel == 1) {
     if(i_touch) {
-      m_motoGame->scriptCallVoidNumberArg("OnWheel1Touchs", 1);
+      m_motoGame->getLuaLibGame()->scriptCallVoidNumberArg("OnWheel1Touchs", 1);
     } else {
-      m_motoGame->scriptCallVoidNumberArg("OnWheel1Touchs", 0);
+      m_motoGame->getLuaLibGame()->scriptCallVoidNumberArg("OnWheel1Touchs", 0);
     }
   } else {
     if(i_touch) {
-      m_motoGame->scriptCallVoidNumberArg("OnWheel2Touchs", 1);
+      m_motoGame->getLuaLibGame()->scriptCallVoidNumberArg("OnWheel2Touchs", 1);
     } else {
-      m_motoGame->scriptCallVoidNumberArg("OnWheel2Touchs", 0);
+      m_motoGame->getLuaLibGame()->scriptCallVoidNumberArg("OnWheel2Touchs", 0);
     }
   }
 }

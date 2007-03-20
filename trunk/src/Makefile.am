@@ -81,8 +81,9 @@ bin_PROGRAMS = xmoto
 xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp GameMain.cpp \
   GameMenus.cpp GUIBestTimes.cpp GUIButton.cpp GUI.cpp \
   GUIFrame.cpp GUIList.cpp GUIStatic.cpp GUITabView.cpp \
-  MotoGame.cpp MotoGameL.cpp PlayerData.cpp \
+  MotoGame.cpp PlayerData.cpp \
   Renderer.cpp RendererInit.cpp Replay.cpp Sound.cpp \
+  LuaLibGame.h LuaLibGame.cpp \
   UserConfig.cpp \
   BSP.h \
   Game.h \

@@ -99,7 +99,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
      XMMotoGameHooks();
      ~XMMotoGameHooks();
      void setGameApps(GameApp *i_GameApp, MotoGame *i_MotoGame);
-     void OnTakeEntity();
+     void OnTakeEntity(int i_player);
 
    private:
      GameApp  *m_GameApp;
@@ -167,7 +167,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       void setAutoZoom(bool bValue);
       void setAutoUnZoom(bool bValue);
 
-      void TeleportationCheatTo(Vector2f i_position);
+      void TeleportationCheatTo(int i_player, Vector2f i_position);
 
       bool creditsModeActive();
 
@@ -201,7 +201,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
                                                    play this level */
       std::string m_PlaySpecificReplay;         /* If set, we only want to
                                                    play this replay */                                                   
-      Ghost* m_replayBiker; /* link to the replay biker in REPLAYING state */
+      ReplayBiker* m_replayBiker; /* link to the replay biker in REPLAYING state */
       bool m_stopToUpdateReplay;
 
       std::string m_ForceProfile;               /* Force this player profile */    

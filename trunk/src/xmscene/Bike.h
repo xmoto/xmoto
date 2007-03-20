@@ -138,7 +138,9 @@ class Biker {
   virtual float getBikeEngineSpeed() = 0; /* engine speed */
   virtual std::string getDescription() const = 0;
   virtual float getBikeEngineRPM();
-  virtual void  updateToTime(float i_time);
+  virtual void  updateToTime(float i_time, float i_timeStep,
+			     vapp::CollisionSystem *i_collisionSystem, Vector2f i_gravity,
+			     vapp::MotoGame *i_motogame);
   void setPlaySound(bool i_value);
 
   void setFinished(bool i_value, float i_finishTime);
@@ -147,6 +149,29 @@ class Biker {
   float finishTime() const;
   bool isDead() const;
   BikerTheme* getBikeTheme();
+  virtual BikeController* getControler();
+  virtual bool  isWheelSpinning();
+  virtual Vector2f getWheelSpinPoint();
+  virtual Vector2f getWheelSpinDir();
+  virtual void initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity);
+  virtual void resetAutoDisabler(); /* a player can have a disabler when nothing append */
+
+  OnBikerHooks* getOnBikerHooks();
+  void setOnBikerHooks(OnBikerHooks* i_bikerHooks);
+
+  /* added=added to m_touching */
+  /* removed=removed from m_touching */
+  typedef enum {none, added, removed} touch;
+
+  std::vector<Entity *> &EntitiesTouching();
+  std::vector<Zone *> &ZonesTouching();
+
+  bool isTouching(const Entity& i_entity) const;
+  touch setTouching(Entity& i_entity, bool i_touching);     
+  bool isTouching(const Zone& i_zone) const;
+  touch setTouching(Zone& i_zone, bool i_isTouching);
+
+  virtual void setBodyDetach(bool state);
 
  protected:
   BikerTheme* m_bikerTheme;
@@ -156,6 +181,14 @@ class Biker {
   bool m_finished;
   float m_finishTime;
   bool m_dead;
+  OnBikerHooks* m_bikerHooks;
+  bool m_bodyDetach;
+  std::vector<Entity *> m_entitiesTouching;
+  std::vector<Zone *>   m_zonesTouching;
+
+  /* Wheels spinning dirt up... muzakka! :D */
+  bool m_bWheelSpin;                  /* Do it captain */
+  Vector2f m_WheelSpinPoint,m_WheelSpinDir; /* Where and how much */
 };
 
 class OnBikerHooks {

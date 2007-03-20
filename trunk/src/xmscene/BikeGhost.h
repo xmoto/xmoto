@@ -35,7 +35,9 @@ class Ghost : public Biker {
   void initLastToTakeEntities(Level* i_level);
   void updateDiffToPlayer(std::vector<float> &i_lastToTakeEntities);
   float diffToPlayer() const;
-  void updateToTime(float i_time, vapp::MotoGame *i_motogame);
+  virtual void updateToTime(float i_time, float i_timeStep,
+			    vapp::CollisionSystem *i_collisionSystem, Vector2f i_gravity,
+			    vapp::MotoGame *i_motogame);
   void setInfo(std::string i_info);
   std::string getDescription() const;
   bool getRenderBikeFront();
