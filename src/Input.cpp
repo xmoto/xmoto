@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "Input.h"
 #include "Game.h"
+#include "LuaLibGame.h"
 
 namespace vapp {
 
@@ -204,6 +205,8 @@ namespace vapp {
   ===========================================================================*/  
   void InputHandler::updateInput(BikeController *pController,
 				 int i_player) {
+    if(pController == NULL) {return;}
+
     /* joystick only for player one */
     if(i_player != 0) {return;}
 
@@ -383,6 +386,8 @@ namespace vapp {
 				 int i_player,
 				 GameRenderer *pGameRender,
 				 GameApp *pGameApp) {
+    if(pController == NULL) {return;}
+
     /* Update controller 1 */
     /* Keyboard controlled */
     switch(Type) {
@@ -452,8 +457,8 @@ namespace vapp {
 	pGameApp->setAutoZoom(true);
 	pGameApp->setAutoUnZoom(false);
       } else if(nKey == SDLK_KP0 && ((mod & KMOD_LCTRL) == KMOD_LCTRL)) {
-	pGameApp->TeleportationCheatTo(Vector2f(pGameRender->getCameraPositionX(),
-						pGameRender->getCameraPositionY()));
+	pGameApp->TeleportationCheatTo(i_player, Vector2f(pGameRender->getCameraPositionX(),
+							  pGameRender->getCameraPositionY()));
       }
 #endif
       
@@ -515,7 +520,7 @@ namespace vapp {
       for(int i=0;i<m_nNumScriptKeyHooks;i++) {
         if(m_ScriptKeyHooks[i].nKey == nKey) {
           /* Invoke script */
-          m_ScriptKeyHooks[i].pGame->scriptCallVoid(m_ScriptKeyHooks[i].FuncName);
+          m_ScriptKeyHooks[i].pGame->getLuaLibGame()->scriptCallVoid(m_ScriptKeyHooks[i].FuncName);
         }
       }
     }

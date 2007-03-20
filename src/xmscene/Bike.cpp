@@ -154,6 +154,7 @@ Biker::Biker(Theme *i_theme, BikerTheme* i_bikerTheme) {
   m_finished  = false;
   m_finishTime = 0.0;
   m_bikerTheme = i_bikerTheme;
+  m_bWheelSpin = false;
 }
 
 float Biker::finishTime() const {
@@ -164,7 +165,9 @@ float Biker::getBikeEngineRPM() {
   return m_bikeState.fBikeEngineRPM;
 }
 
-void Biker::updateToTime(float i_time) {
+void Biker::updateToTime(float i_time, float i_timeStep,
+			     vapp::CollisionSystem *v_collisionSystem, Vector2f i_gravity,
+			     vapp::MotoGame *i_motogame) {
   /* sound */
   if(vapp::Sound::isEnabled()) {
     m_EngineSound.setRPM(getBikeEngineRPM());
@@ -172,6 +175,107 @@ void Biker::updateToTime(float i_time) {
       m_EngineSound.update(i_time);
     }
   }
+}
+
+bool Biker::isTouching(const Entity& i_entity) const {
+  for(int i=0; i<m_entitiesTouching.size(); i++) {
+    if(m_entitiesTouching[i] == &i_entity) {
+      return true;
+    }
+  }
+  return false;
+}
+
+Biker::touch Biker::setTouching(Entity& i_entity, bool i_touching) {
+  bool v_wasTouching = isTouching(i_entity);
+  if(v_wasTouching == i_touching) {
+    return none;
+  }
+  
+  if(i_touching) {
+    m_entitiesTouching.push_back(&i_entity);
+    return added;
+  } else {
+    for(int i=0; i<m_entitiesTouching.size(); i++) {
+      if(m_entitiesTouching[i] == &i_entity) {
+	m_entitiesTouching.erase(m_entitiesTouching.begin() + i);
+	return removed;
+      }
+    }
+  }
+  return none;
+}
+
+bool Biker::isTouching(const Zone& i_zone) const {
+  for(unsigned int i=0; i<m_zonesTouching.size(); i++) {
+    if(m_zonesTouching[i]->Id() == i_zone.Id()) {
+      return true;
+    }
+  }
+  return false;
+}
+
+Biker::touch Biker::setTouching(Zone& i_zone, bool i_isTouching) {
+  bool v_wasTouching = isTouching(i_zone);
+  if(v_wasTouching == i_isTouching) {
+    return none;
+  }
+    
+  if(i_isTouching) {
+    m_zonesTouching.push_back(&i_zone);
+    return added;
+  } else {
+    for(int i=0; i<m_zonesTouching.size(); i++) {
+      if(m_zonesTouching[i] == &i_zone) {
+	m_zonesTouching.erase(m_zonesTouching.begin() + i);
+	return removed;
+      }
+    }
+  }
+  return none;
+}
+
+std::vector<Entity *>& Biker::EntitiesTouching() {
+  return m_entitiesTouching;
+}
+
+std::vector<Zone *>& Biker::ZonesTouching() {
+  return m_zonesTouching;
+}
+
+void Biker::setBodyDetach(bool state) {
+  resetAutoDisabler();
+  m_bodyDetach = state;
+}
+
+void Biker::setOnBikerHooks(OnBikerHooks* i_bikerHooks) {
+  m_bikerHooks = i_bikerHooks;
+}
+
+OnBikerHooks* Biker::getOnBikerHooks() {
+  return m_bikerHooks;
+}
+
+bool Biker::isWheelSpinning() {
+  return m_bWheelSpin;
+}
+
+Vector2f Biker::getWheelSpinPoint() {
+  return m_WheelSpinPoint;
+}
+
+Vector2f Biker::getWheelSpinDir() {
+  return m_WheelSpinDir;
+}
+
+void Biker::initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity) {
+}
+
+void Biker::resetAutoDisabler() {
+}
+
+BikeController* Biker::getControler() {
+  return NULL;
 }
 
 void Biker::setPlaySound(bool i_value) {

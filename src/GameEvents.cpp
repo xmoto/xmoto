@@ -160,7 +160,9 @@ namespace vapp {
   } 
   
   void MGE_PlayerDies::doAction(MotoGame *p_pMotoGame) {
-    p_pMotoGame->killPlayer();
+    for(unsigned int i=0; i<p_pMotoGame->Players().size(); i++) {
+      p_pMotoGame->killPlayer(i);
+    }
   }
 
   void MGE_PlayerDies::serialize(DBuffer &Buffer) {
@@ -197,7 +199,9 @@ namespace vapp {
   } 
   
   void MGE_PlayerEntersZone::doAction(MotoGame *p_pMotoGame) {
-    p_pMotoGame->playerEntersZone(m_zone);
+    for(unsigned int i=0; i<p_pMotoGame->Players().size(); i++) {
+      p_pMotoGame->playerEntersZone(i, m_zone);
+    }
   }
 
   void MGE_PlayerEntersZone::serialize(DBuffer &Buffer) {
@@ -233,7 +237,9 @@ namespace vapp {
   } 
   
   void MGE_PlayerLeavesZone::doAction(MotoGame *p_pMotoGame) {
-     p_pMotoGame->playerLeavesZone(m_zone);
+    for(unsigned int i=0; i<p_pMotoGame->Players().size(); i++) {
+      p_pMotoGame->playerLeavesZone(i, m_zone);
+    }
   }
 
   void MGE_PlayerLeavesZone::serialize(DBuffer &Buffer) {
@@ -271,7 +277,9 @@ namespace vapp {
   } 
   
   void MGE_PlayerTouchesEntity::doAction(MotoGame *p_pMotoGame) {
-    p_pMotoGame->playerTouchesEntity(m_entityID, m_bTouchedWithHead);
+    for(unsigned int i=0; i<p_pMotoGame->Players().size(); i++) {
+      p_pMotoGame->playerTouchesEntity(i, m_entityID, m_bTouchedWithHead);
+    }
   }
 
   void MGE_PlayerTouchesEntity::serialize(DBuffer &Buffer) {
@@ -310,7 +318,8 @@ namespace vapp {
   } 
   
   void MGE_EntityDestroyed::doAction(MotoGame *p_pMotoGame) {
-     p_pMotoGame->entityDestroyed(m_entityId);
+    // assume that player 0 destroyed the entity
+    p_pMotoGame->entityDestroyed(0, m_entityId);
   }
 
   void MGE_EntityDestroyed::serialize(DBuffer &Buffer) {
@@ -732,7 +741,9 @@ namespace vapp {
   } 
   
   void MGE_SetPlayerPosition::doAction(MotoGame *p_pMotoGame) {
-    p_pMotoGame->setPlayerPosition(m_x, m_y, m_bRight);
+    for(unsigned int i=0; i<p_pMotoGame->Players().size(); i++) {
+      p_pMotoGame->setPlayerPosition(i, m_x, m_y, m_bRight);
+    }
   }
 
   void MGE_SetPlayerPosition::serialize(DBuffer &Buffer) {

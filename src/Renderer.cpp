@@ -633,7 +633,7 @@ namespace vapp {
     /* ... followed by the bike ... */
     v_found = false;
     for(unsigned int i=0; i<getGameObject()->Players().size(); i++) {
-      PlayerBiker* v_player = getGameObject()->Players()[i];
+      Biker* v_player = getGameObject()->Players()[i];
       if(v_player != m_playerToFollow) {
 	_RenderBike(v_player->getState(),
 		    &(v_player->getState()->Parameters()),

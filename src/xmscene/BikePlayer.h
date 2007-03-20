@@ -23,41 +23,31 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __BIKEPLAYER_H__
 
 #include "Bike.h"
+#include "BikeGhost.h"
+
+class ReplayBiker : public Ghost {
+ public:
+  ReplayBiker(std::string i_replayFile, Theme *i_theme, BikerTheme* i_bikerTheme);
+  //Ghost(std::string i_replayFile, bool i_isActiv, Theme *i_theme, BikerTheme* i_bikerTheme)
+ private:
+};
 
 class PlayerBiker : public Biker {
  public:
   PlayerBiker(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity, Theme *i_theme, BikerTheme* i_bikerTheme);
   ~PlayerBiker();
 
-  OnBikerHooks* getOnBikerHooks();
-  void setOnBikerHooks(OnBikerHooks* i_bikerHooks);
-
-  void updateToTime(float i_time, float i_timeStep, vapp::CollisionSystem *v_collisionSystem, Vector2f i_gravity);
+  void updateToTime(float i_time, float i_timeStep,
+		    vapp::CollisionSystem *i_collisionSystem, Vector2f i_gravity,
+		    vapp::MotoGame *i_motogame);
   void initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity);
   BikeController* getControler();
 
   std::string getDescription() const;
-
-  /* added=added to m_touching */
-  /* removed=removed from m_touching */
-  typedef enum {none, added, removed} touch;
-
-  std::vector<Entity *> &EntitiesTouching();
-  std::vector<Zone *> &ZonesTouching();
-
-  bool isTouching(const Entity& i_entity) const;
-  touch setTouching(Entity& i_entity, bool i_touching);     
-  bool isTouching(const Zone& i_zone) const;
-  touch setTouching(Zone& i_zone, bool i_isTouching);
+  void setBodyDetach(bool state);
 
   float getBikeEngineSpeed();
-  bool  isWheelSpinning();
-  Vector2f getWheelSpinPoint();
-  Vector2f getWheelSpinDir();
-
   bool getRenderBikeFront();
-
-  void setBodyDetach(bool state);
   void resetAutoDisabler();
   bool isSqueeking();
   float howMuchSqueek();
@@ -66,8 +56,6 @@ class PlayerBiker : public Biker {
   SomersaultCounter m_somersaultCounter;
   BikeController m_BikeC;
   bool m_bFirstPhysicsUpdate;
-  bool m_bodyDetach;
-  OnBikerHooks* m_bikerHooks;
 
   float m_fAttitudeCon;
   float m_fNextAttitudeCon;
@@ -76,19 +64,12 @@ class PlayerBiker : public Biker {
   bool m_bSqueeking;
   float m_fHowMuchSqueek;
 
-  std::vector<Entity *> m_entitiesTouching;
-  std::vector<Zone *>   m_zonesTouching;
-
   /* */
   Vector2f m_PrevRearWheelP;          /* Prev. rear wheel position */
   Vector2f m_PrevFrontWheelP;         /* Prev. front wheel position */
   Vector2f m_PrevHeadP;
   Vector2f m_PrevHead2P;
   Vector2f m_PrevActiveHead;
-  
-  /* Wheels spinning dirt up... muzakka! :D */
-  bool m_bWheelSpin;                  /* Do it captain */
-  Vector2f m_WheelSpinPoint,m_WheelSpinDir; /* Where and how much */
   
   /* Data - bike bodies, joints and masses */
   dBodyID m_FrameBodyID;              /* Frame of bike */
