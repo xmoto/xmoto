@@ -260,9 +260,6 @@ GameApp::GameApp() {
 	  /* Init level */    
 	  m_InputHandler.resetScriptKeyHooks();
 	  m_MotoGame.prePlayLevel(pLevelSrc, &m_InputHandler, NULL, false);
-	  m_MotoGame.setInfos(m_MotoGame.getLevelSrc()->Name() +
-			      " (" + std::string(GAMETEXT_BY)  +
-			      " " + m_replayBiker->playerName() + ")"); 
 
 	  /* add the ghosts */
 	  if(m_bEnableGhost) {
@@ -293,6 +290,10 @@ GameApp::GameApp() {
 	    }
 	  }
 	  /* *** */
+
+	  m_MotoGame.setInfos(m_MotoGame.getLevelSrc()->Name() +
+			      " (" + std::string(GAMETEXT_BY)  +
+			      " " + m_replayBiker->playerName() + ")"); 
 
 	  m_nFrame = 0;
 	  m_Renderer.prepareForNewLevel(bCreditsMode);            
@@ -931,10 +932,12 @@ GameApp::GameApp() {
           default:
             /* Notify the controller */
 	    for(unsigned int i=0; i<m_MotoGame.Players().size(); i++) {
-	      m_InputHandler.handleInput(INPUT_KEY_DOWN,nKey,mod,
-					 m_MotoGame.Players()[i]->getControler(),
-					 i,
-					 &m_Renderer, this);
+	      if(m_MotoGame.Players()[i]->isDead() == false) {
+		m_InputHandler.handleInput(INPUT_KEY_DOWN,nKey,mod,
+					   m_MotoGame.Players()[i]->getControler(),
+					   i,
+					   &m_Renderer, this);
+	      }
 	    }
         }
         break; 
@@ -961,10 +964,12 @@ GameApp::GameApp() {
       case GS_PLAYING:
         /* Notify the controller */
 	    for(unsigned int i=0; i<m_MotoGame.Players().size(); i++) {
+	      if(m_MotoGame.Players()[i]->isDead() == false) {
 		m_InputHandler.handleInput(INPUT_KEY_UP,nKey,mod,
 					   m_MotoGame.Players()[i]->getControler(),
 					   i,
 					   &m_Renderer, this);
+	      }
 	    }
         break; 
       case GS_DEADJUST:
@@ -1030,10 +1035,12 @@ GameApp::GameApp() {
       case GS_PLAYING:
       /* Notify the controller */
       for(unsigned int i=0; i<m_MotoGame.Players().size(); i++) {
-	m_InputHandler.handleInput(INPUT_KEY_DOWN,nButton,KMOD_NONE,
-				   m_MotoGame.Players()[i]->getControler(),
-				   i,
-				   &m_Renderer, this);
+	if(m_MotoGame.Players()[i]->isDead() == false) {
+	  m_InputHandler.handleInput(INPUT_KEY_DOWN,nButton,KMOD_NONE,
+				     m_MotoGame.Players()[i]->getControler(),
+				     i,
+				     &m_Renderer, this);
+	}
       }
 
       break;
@@ -1066,10 +1073,12 @@ GameApp::GameApp() {
       case GS_PLAYING:
         /* Notify the controller */
       for(unsigned int i=0; i<m_MotoGame.Players().size(); i++) {
-        m_InputHandler.handleInput(INPUT_KEY_UP,nButton,KMOD_NONE,
-				   m_MotoGame.Players()[i]->getControler(),
-				   i,
-				   &m_Renderer, this);
+	if(m_MotoGame.Players()[i]->isDead() == false) {
+	  m_InputHandler.handleInput(INPUT_KEY_UP,nButton,KMOD_NONE,
+				     m_MotoGame.Players()[i]->getControler(),
+				     i,
+				     &m_Renderer, this);
+	}
       }
 
 
@@ -1829,15 +1838,13 @@ GameApp::GameApp() {
       try {
 	m_MotoGame.prePlayLevel(pLevelSrc, &m_InputHandler, m_pJustPlayReplay, true);
 	m_MotoGame.setInfos("");
-
+	
 	/* add the player */
 	m_Renderer.setPlayerToFollow(m_MotoGame.addPlayerBiker(pLevelSrc->PlayerStart(), DD_RIGHT,
 							       &m_theme, m_theme.getPlayerTheme()));
 	//m_MotoGame.addPlayerBiker(pLevelSrc->PlayerStart(), DD_RIGHT,
 	//		  &m_theme, m_theme.getPlayerTheme());
 	/* */
-
-
 
 	/* add the ghosts */
 	if(m_bEnableGhost) {
@@ -2232,7 +2239,7 @@ GameApp::GameApp() {
     return m_bLockMotoGame;
   }
   
-  void XMMotoGameHooks::OnTakeEntity(int i_player) {
+  void XMMotoGameHooks::OnTakeEntity() {
     /* Play yummy-yummy sound */
     if(m_GameApp != NULL) {
       try {

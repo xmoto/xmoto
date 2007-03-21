@@ -99,7 +99,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
      XMMotoGameHooks();
      ~XMMotoGameHooks();
      void setGameApps(GameApp *i_GameApp, MotoGame *i_MotoGame);
-     void OnTakeEntity(int i_player);
+     void OnTakeEntity();
 
    private:
      GameApp  *m_GameApp;

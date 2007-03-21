@@ -375,20 +375,6 @@ void MotoGame::cleanPlayers() {
       return;
     }        
 
-    /* Invoke the OnLoad() script function */
-    if(m_playEvents) {
-      bool bOnLoadSuccess = m_luaGame->scriptCallBool("OnLoad", true);
-      /* if no OnLoad(), assume success */
-      /* Success? */
-      if(!bOnLoadSuccess) {
-        /* Hmm, the script insists that we shouldn't begin playing... */
-        endLevel();      
-        
-        m_bLevelInitSuccess = false;
-	return;
-      }
-    }
-
     m_myLastStrawberries.clear();
 
     /* add the debris particlesSource */
@@ -438,7 +424,20 @@ void MotoGame::cleanPlayers() {
 
   void MotoGame::playLevel(
          Level *pLevelSrc) {
-  }
+  /* Invoke the OnLoad() script function */
+    if(m_playEvents) {
+      bool bOnLoadSuccess = m_luaGame->scriptCallBool("OnLoad", true);
+      /* if no OnLoad(), assume success */
+      /* Success? */
+      if(!bOnLoadSuccess) {
+	/* Hmm, the script insists that we shouldn't begin playing... */
+	endLevel();      
+	
+	m_bLevelInitSuccess = false;
+	return;
+      }
+    }
+   }
 
   /*===========================================================================
     Free this game object
@@ -645,13 +644,13 @@ void MotoGame::cleanPlayers() {
 	     pZone->doesCircleTouch(v_player->getState()->RearWheelP,  v_player->getState()->Parameters().WheelRadius())) {       
 	    /* In the zone -- did he just enter it? */
 	    if(v_player->setTouching(*pZone, true) == PlayerBiker::added){
-	      createGameEvent(new MGE_PlayerEntersZone(getTime(), pZone));
+	      createGameEvent(new MGE_PlayerEntersZone(getTime(), pZone, j));
 	    }
 	  } else {
 	    /* Not in the zone... but was he during last update? - i.e. has 
 	       he just left it? */      
 	    if(v_player->setTouching(*pZone, false) == PlayerBiker::removed){
-	      createGameEvent(new MGE_PlayerLeavesZone(getTime(), pZone));
+	      createGameEvent(new MGE_PlayerLeavesZone(getTime(), pZone, j));
 	    }
 	  }
 	}
@@ -702,7 +701,7 @@ void MotoGame::cleanPlayers() {
 	      if(v_player->setTouching(*(entities[i]), true) == PlayerBiker::added){
 		createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
 							    entities[i]->Id(),
-							    true));
+							    true, j));
 	      }
 	      
 	      /* Wheel then ? */
@@ -717,7 +716,7 @@ void MotoGame::cleanPlayers() {
 	      if(v_player->setTouching(*(entities[i]), true) == PlayerBiker::added){
 		createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
 							    entities[i]->Id(),
-							    false));
+							    false, j));
 	      }
 	      
 	      /* body then ?*/
@@ -725,7 +724,7 @@ void MotoGame::cleanPlayers() {
 	      if(v_player->setTouching(*(entities[i]), true) == PlayerBiker::added){
 		createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
 							    entities[i]->Id(),
-							    false));
+							    false, j));
 	      }
 	    } else {
 	      /* TODO::generate an event "leaves entity" if needed */
@@ -743,7 +742,7 @@ void MotoGame::cleanPlayers() {
   /*===========================================================================
     Entity stuff (public)
     ===========================================================================*/
-  void MotoGame::deleteEntity(int i_player, Entity *pEntity) {
+  void MotoGame::deleteEntity(Entity *pEntity) {
     /* Already scheduled for deletion? */
     for(int i=0;i<m_DelSchedule.size();i++)
       if(m_DelSchedule[i] == pEntity) return;
@@ -753,7 +752,8 @@ void MotoGame::cleanPlayers() {
   void MotoGame::touchEntity(int i_player, Entity *pEntity,bool bHead) {
     /* Start by invoking scripts if any */
     if(m_playEvents) {
-      m_luaGame->scriptCallTblVoid(pEntity->Id(),"Touch");
+      m_luaGame->scriptCallTblVoid(pEntity->Id(), "Touch");
+      m_luaGame->scriptCallTblVoid(pEntity->Id(), "TouchBy", i_player);
     }
 
     if(pEntity->DoesMakeWin()) {
@@ -763,7 +763,7 @@ void MotoGame::cleanPlayers() {
     }
 
     if(pEntity->DoesKill()) {
-      createGameEvent(new MGE_PlayerDies(getTime(), true));
+      createGameEvent(new MGE_PlayerDies(getTime(), true, i_player));
     }
 
     if(pEntity->IsToTake()) {
@@ -786,31 +786,36 @@ void MotoGame::cleanPlayers() {
   #define ETRAN(_Name) case _Name: return #_Name
   static const char *_EventName(GameEventType Type) {
     switch(Type) {
+      ETRAN(GAME_EVENT_PLAYERS_DIE);
+      ETRAN(GAME_EVENT_PLAYERS_ENTER_ZONE);
+      ETRAN(GAME_EVENT_PLAYERS_LEAVE_ZONE);
+      ETRAN(GAME_EVENT_PLAYERS_TOUCHE_ENTITY);
+      ETRAN(GAME_EVENT_ENTITY_DESTROYED);
+      ETRAN(GAME_EVENT_CLEARMESSAGES);
+      ETRAN(GAME_EVENT_PLACEINGAMEARROW);
+      ETRAN(GAME_EVENT_PLACESCREENARROW);
+      ETRAN(GAME_EVENT_HIDEARROW);
+      ETRAN(GAME_EVENT_MESSAGE);
+      ETRAN(GAME_EVENT_MOVEBLOCK);
+      ETRAN(GAME_EVENT_SETBLOCKPOS);
+      ETRAN(GAME_EVENT_SETGRAVITY);
+      ETRAN(GAME_EVENT_SETPLAYERSPOSITION);
+      ETRAN(GAME_EVENT_SETENTITYPOS);
+      ETRAN(GAME_EVENT_SETBLOCKCENTER);
+      ETRAN(GAME_EVENT_SETBLOCKROTATION);
+      ETRAN(GAME_EVENT_SETDYNAMICENTITYROTATION);
+      ETRAN(GAME_EVENT_SETDYNAMICENTITYTRANSLATION);
+      ETRAN(GAME_EVENT_SETDYNAMICENTITYNONE);
+      ETRAN(GAME_EVENT_SETDYNAMICBLOCKROTATION);
+      ETRAN(GAME_EVENT_SETDYNAMICBLOCKTRANSLATION);
+      ETRAN(GAME_EVENT_SETDYNAMICBLOCKNONE);
+      ETRAN(GAME_EVENT_CAMERAZOOM);
+      ETRAN(GAME_EVENT_CAMERAMOVE);
       ETRAN(GAME_EVENT_PLAYER_DIES);
       ETRAN(GAME_EVENT_PLAYER_ENTERS_ZONE);
       ETRAN(GAME_EVENT_PLAYER_LEAVES_ZONE);
       ETRAN(GAME_EVENT_PLAYER_TOUCHES_ENTITY);
-      ETRAN(GAME_EVENT_ENTITY_DESTROYED);
-      ETRAN(GAME_EVENT_LUA_CALL_CLEARMESSAGES);
-      ETRAN(GAME_EVENT_LUA_CALL_PLACEINGAMEARROW);
-      ETRAN(GAME_EVENT_LUA_CALL_PLACESCREENARROW);
-      ETRAN(GAME_EVENT_LUA_CALL_HIDEARROW);
-      ETRAN(GAME_EVENT_LUA_CALL_MESSAGE);
-      ETRAN(GAME_EVENT_LUA_CALL_MOVEBLOCK);
-      ETRAN(GAME_EVENT_LUA_CALL_SETBLOCKPOS);
-      ETRAN(GAME_EVENT_LUA_CALL_SETGRAVITY);
-      ETRAN(GAME_EVENT_LUA_CALL_SETPLAYERPOSITION);
-      ETRAN(GAME_EVENT_LUA_CALL_SETENTITYPOS);
-      ETRAN(GAME_EVENT_LUA_CALL_SETBLOCKCENTER);
-      ETRAN(GAME_EVENT_LUA_CALL_SETBLOCKROTATION);
-      ETRAN(GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROTATION);
-      ETRAN(GAME_EVENT_LUA_CALL_SETDYNAMICENTITYTRANSLATION);
-      ETRAN(GAME_EVENT_LUA_CALL_SETDYNAMICENTITYNONE);
-      ETRAN(GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKROTATION);
-      ETRAN(GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKTRANSLATION);
-      ETRAN(GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKNONE);
-      ETRAN(GAME_EVENT_LUA_CALL_CAMERAZOOM);
-      ETRAN(GAME_EVENT_LUA_CALL_CAMERAMOVE);      
+      ETRAN(GAME_EVENT_SETPLAYERPOSITION);
     }
     return "??";
   }
@@ -852,8 +857,10 @@ void MotoGame::cleanPlayers() {
   void MotoGame::handleEvent(MotoGameEvent *pEvent) {     
     switch(pEvent->getType()) {
       case GAME_EVENT_PLAYER_TOUCHES_ENTITY:
+      case GAME_EVENT_PLAYERS_TOUCHE_ENTITY:
       /* touching an entity creates events, so, don't call it */
-      case GAME_EVENT_LUA_CALL_SETPLAYERPOSITION:
+      case GAME_EVENT_SETPLAYERPOSITION:
+      case GAME_EVENT_SETPLAYERSPOSITION:
       /* don't set player position while it's already made by the game */
       /* however, this state is recorded : you can imagine than an effect
    or something is done when this append to alert the player he took
@@ -1000,12 +1007,14 @@ void MotoGame::cleanPlayers() {
   void MotoGame::playerEntersZone(int i_player, Zone *pZone) {
     if(m_playEvents) {
       m_luaGame->scriptCallTblVoid(pZone->Id(), "OnEnter");
+      m_luaGame->scriptCallTblVoid(pZone->Id(), "OnEnterBy", i_player);
     }
   }
   
   void MotoGame::playerLeavesZone(int i_player, Zone *pZone) {
     if(m_playEvents) {
       m_luaGame->scriptCallTblVoid(pZone->Id(), "OnLeave");
+      m_luaGame->scriptCallTblVoid(pZone->Id(), "OnLeaveBy", i_player);
     }
   }
 
@@ -1013,7 +1022,7 @@ void MotoGame::cleanPlayers() {
     touchEntity(i_player, &(getLevelSrc()->getEntityById(p_entityID)), p_bTouchedWithHead);
   }
 
-  void MotoGame::entityDestroyed(int i_player, const std::string& i_entityId) {
+  void MotoGame::entityDestroyed(const std::string& i_entityId) {
     Entity *v_entity;
     v_entity = &(getLevelSrc()->getEntityById(i_entityId));
 
@@ -1025,14 +1034,14 @@ void MotoGame::cleanPlayers() {
 	v_stars->addParticle(Vector2f(0,0), getTime() + 5.0);
       }
       getLevelSrc()->spawnEntity(v_stars);
-      
+
       if(m_motoGameHooks != NULL) {
-	m_motoGameHooks->OnTakeEntity(i_player);
+	m_motoGameHooks->OnTakeEntity();
       }
     }
     
     /* Destroy entity */
-    deleteEntity(i_player, v_entity);
+    deleteEntity(v_entity);
   }
 
   void MotoGame::addDynamicObject(SDynamicObject *p_obj) {
@@ -1176,6 +1185,8 @@ MotoGameOnBikerHooks::~MotoGameOnBikerHooks() {
 void MotoGameOnBikerHooks::onSomersaultDone(bool i_counterclock) {
   if(m_motoGame->doesPlayEvents() == false) return;
   m_motoGame->getLuaLibGame()->scriptCallVoidNumberArg("OnSomersault", i_counterclock ? 1:0);
+  m_motoGame->getLuaLibGame()->scriptCallVoidNumberArg("OnSomersaultBy",
+						       i_counterclock ? 1:0, m_playerNumber);
 }
 
 void MotoGameOnBikerHooks::onWheelTouches(int i_wheel, bool i_touch) {
@@ -1183,20 +1194,24 @@ void MotoGameOnBikerHooks::onWheelTouches(int i_wheel, bool i_touch) {
 
   if(i_wheel == 1) {
     if(i_touch) {
-      m_motoGame->getLuaLibGame()->scriptCallVoidNumberArg("OnWheel1Touchs", 1);
+      m_motoGame->getLuaLibGame()->scriptCallVoidNumberArg("OnWheel1Touchs"  , 1);
+      m_motoGame->getLuaLibGame()->scriptCallVoidNumberArg("OnWheel1TouchsBy", 1, m_playerNumber);
     } else {
-      m_motoGame->getLuaLibGame()->scriptCallVoidNumberArg("OnWheel1Touchs", 0);
+      m_motoGame->getLuaLibGame()->scriptCallVoidNumberArg("OnWheel1Touchs"  , 0);
+      m_motoGame->getLuaLibGame()->scriptCallVoidNumberArg("OnWheel1TouchsBy", 0, m_playerNumber);
     }
   } else {
     if(i_touch) {
-      m_motoGame->getLuaLibGame()->scriptCallVoidNumberArg("OnWheel2Touchs", 1);
+      m_motoGame->getLuaLibGame()->scriptCallVoidNumberArg("OnWheel2Touchs"  , 1);
+      m_motoGame->getLuaLibGame()->scriptCallVoidNumberArg("OnWheel2TouchsBy", 1, m_playerNumber);
     } else {
-      m_motoGame->getLuaLibGame()->scriptCallVoidNumberArg("OnWheel2Touchs", 0);
+      m_motoGame->getLuaLibGame()->scriptCallVoidNumberArg("OnWheel2Touchs"  , 0);
+      m_motoGame->getLuaLibGame()->scriptCallVoidNumberArg("OnWheel2TouchsBy", 0, m_playerNumber);
     }
   }
 }
 
 void MotoGameOnBikerHooks::onHeadTouches() {
-  m_motoGame->createGameEvent(new vapp::MGE_PlayerDies(m_motoGame->getTime(), false));
+  m_motoGame->createGameEvent(new vapp::MGE_PlayerDies(m_motoGame->getTime(), false, m_playerNumber));
 }
 

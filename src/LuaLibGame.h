@@ -40,7 +40,9 @@ public:
   bool scriptCallBool(const std::string& FuncName, bool bDefault=false);
   void scriptCallVoid(const std::string& FuncName);
   void scriptCallTblVoid(const std::string& Table, const std::string& FuncName);
+  void scriptCallTblVoid(const std::string& Table, const std::string& FuncName, int n);
   void scriptCallVoidNumberArg(const std::string& FuncName, int n);
+  void scriptCallVoidNumberArg(const std::string& FuncName, int n1, int n2);
 
 private:
   lua_State *m_pL;
@@ -94,6 +96,12 @@ private:
   static int L_Game_RemainingStrawberries(lua_State *pL);
   static int L_Game_WinPlayer(lua_State *pL);
   static int L_Game_PenaltyTime(lua_State *pL);
+  static int L_Game_IsAPlayerInZone(lua_State *pL);
+  static int L_Game_SetAPlayerPosition(lua_State *pL);
+  static int L_Game_GetAPlayerPosition(lua_State *pL);
+  static int L_Game_KillAPlayer(lua_State *pL);
+  static int L_Game_WinAPlayer(lua_State *pL);
+  static int L_Game_NumberOfPlayers(lua_State *pL);
 };
 
 

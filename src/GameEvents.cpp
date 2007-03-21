@@ -73,14 +73,14 @@ namespace vapp {
     Buffer >> i_tmp;
     v_eventType = (GameEventType) i_tmp;
 
-    if(MGE_PlayerDies::SgetType() == v_eventType) {
-      v_event = new MGE_PlayerDies(v_fEventTime);
-    } else if(MGE_PlayerEntersZone::SgetType() == v_eventType) {
-      v_event = new MGE_PlayerEntersZone(v_fEventTime);
-    } else if(MGE_PlayerLeavesZone::SgetType() == v_eventType) {
-      v_event = new MGE_PlayerLeavesZone(v_fEventTime);
-    } else if(MGE_PlayerTouchesEntity::SgetType() == v_eventType) {
-      v_event = new MGE_PlayerTouchesEntity(v_fEventTime);
+    if(MGE_PlayersDie::SgetType() == v_eventType) {
+      v_event = new MGE_PlayersDie(v_fEventTime);
+    } else if(MGE_PlayersEnterZone::SgetType() == v_eventType) {
+      v_event = new MGE_PlayersEnterZone(v_fEventTime);
+    } else if(MGE_PlayersLeaveZone::SgetType() == v_eventType) {
+      v_event = new MGE_PlayersLeaveZone(v_fEventTime);
+    } else if(MGE_PlayersToucheEntity::SgetType() == v_eventType) {
+      v_event = new MGE_PlayersToucheEntity(v_fEventTime);
     } else if(MGE_EntityDestroyed::SgetType() == v_eventType) {
       v_event = new MGE_EntityDestroyed(v_fEventTime);
     } else if(MGE_ClearMessages::SgetType() == v_eventType) {
@@ -99,8 +99,8 @@ namespace vapp {
       v_event = new MGE_SetBlockPos(v_fEventTime);
     } else if(MGE_SetGravity::SgetType() == v_eventType) {
       v_event = new MGE_SetGravity(v_fEventTime);
-    } else if(MGE_SetPlayerPosition::SgetType() == v_eventType) {
-      v_event = new MGE_SetPlayerPosition(v_fEventTime);
+    } else if(MGE_SetPlayersPosition::SgetType() == v_eventType) {
+      v_event = new MGE_SetPlayersPosition(v_fEventTime);
     } else if(MGE_SetEntityPos::SgetType() == v_eventType) {
       v_event = new MGE_SetEntityPos(v_fEventTime);
     } else if(MGE_SetBlockCenter::SgetType() == v_eventType) {
@@ -125,6 +125,16 @@ namespace vapp {
       v_event = new MGE_CameraZoom(v_fEventTime);
     } else if(MGE_PenalityTime::SgetType() == v_eventType) {
       v_event = new MGE_PenalityTime(v_fEventTime);
+    } else if(MGE_SetPlayerPosition::SgetType() == v_eventType) {
+      v_event = new MGE_SetPlayerPosition(v_fEventTime);
+    } else if(MGE_PlayerDies::SgetType() == v_eventType) {
+      v_event = new MGE_PlayerDies(v_fEventTime);
+    } else if(MGE_PlayerEntersZone::SgetType() == v_eventType) {
+      v_event = new MGE_PlayerEntersZone(v_fEventTime);
+    } else if(MGE_PlayerLeavesZone::SgetType() == v_eventType) {
+      v_event = new MGE_PlayerLeavesZone(v_fEventTime);
+    } else if(MGE_PlayerTouchesEntity::SgetType() == v_eventType) {
+      v_event = new MGE_PlayerTouchesEntity(v_fEventTime);
     } else {
       std::ostringstream error_type;
       error_type << (int) v_eventType;
@@ -146,23 +156,61 @@ namespace vapp {
   }
 
   //////////////////////////////
-  MGE_PlayerDies::MGE_PlayerDies(float p_fEventTime) 
+  MGE_PlayersDie::MGE_PlayersDie(float p_fEventTime) 
   : MotoGameEvent(p_fEventTime) {
     m_bKilledByWrecker = false;
   }
 
-  MGE_PlayerDies::MGE_PlayerDies(float p_fEventTime, bool p_bKilledByWrecker) 
+  MGE_PlayersDie::MGE_PlayersDie(float p_fEventTime, bool p_bKilledByWrecker) 
     : MotoGameEvent(p_fEventTime) {
       m_bKilledByWrecker = p_bKilledByWrecker;
+  }
+
+  MGE_PlayersDie::~MGE_PlayersDie() {
+  } 
+  
+  void MGE_PlayersDie::doAction(MotoGame *p_pMotoGame) {
+    for(unsigned int i=0; i<p_pMotoGame->Players().size(); i++) {
+      p_pMotoGame->killPlayer(i);
+    }
+  }
+
+  void MGE_PlayersDie::serialize(DBuffer &Buffer) {
+  }
+  
+  void MGE_PlayersDie::unserialize(DBuffer &Buffer) {
+  }
+
+  GameEventType MGE_PlayersDie::SgetType() {
+    return GAME_EVENT_PLAYERS_DIE;
+  }
+
+  GameEventType MGE_PlayersDie::getType() {
+    return SgetType();
+  }
+
+  std::string MGE_PlayersDie::toString() {
+    return "Players die";
+  }
+
+  //////////////////////////////
+  MGE_PlayerDies::MGE_PlayerDies(float p_fEventTime) 
+  : MotoGameEvent(p_fEventTime) {
+    m_bKilledByWrecker = false;
+    m_player           = 0;
+  }
+
+  MGE_PlayerDies::MGE_PlayerDies(float p_fEventTime, bool p_bKilledByWrecker, int i_player) 
+    : MotoGameEvent(p_fEventTime) {
+      m_bKilledByWrecker = p_bKilledByWrecker;
+      m_player           = i_player;
   }
 
   MGE_PlayerDies::~MGE_PlayerDies() {
   } 
   
   void MGE_PlayerDies::doAction(MotoGame *p_pMotoGame) {
-    for(unsigned int i=0; i<p_pMotoGame->Players().size(); i++) {
-      p_pMotoGame->killPlayer(i);
-    }
+    p_pMotoGame->killPlayer(m_player);
   }
 
   void MGE_PlayerDies::serialize(DBuffer &Buffer) {
@@ -180,18 +228,61 @@ namespace vapp {
   }
 
   std::string MGE_PlayerDies::toString() {
-    return "Player dies";
+    std::ostringstream v_txt_player;
+    v_txt_player << m_player;
+    return "Player " + v_txt_player.str() + " dies";
+  }
+
+  //////////////////////////////
+  MGE_PlayersEnterZone::MGE_PlayersEnterZone(float p_fEventTime) 
+    : MotoGameEvent(p_fEventTime) {
+      m_zone = NULL;
+    }
+
+  MGE_PlayersEnterZone::MGE_PlayersEnterZone(float p_fEventTime, Zone *p_zone) 
+    : MotoGameEvent(p_fEventTime) {
+      m_zone = p_zone;
+    }
+
+
+  MGE_PlayersEnterZone::~MGE_PlayersEnterZone() {
+  } 
+  
+  void MGE_PlayersEnterZone::doAction(MotoGame *p_pMotoGame) {
+    for(unsigned int i=0; i<p_pMotoGame->Players().size(); i++) {
+      p_pMotoGame->playerEntersZone(i, m_zone);
+    }
+  }
+
+  void MGE_PlayersEnterZone::serialize(DBuffer &Buffer) {
+  }
+  
+  void MGE_PlayersEnterZone::unserialize(DBuffer &Buffer) {
+  }
+
+  GameEventType MGE_PlayersEnterZone::SgetType() {
+     return GAME_EVENT_PLAYERS_ENTER_ZONE;
+  }
+
+  GameEventType MGE_PlayersEnterZone::getType() {
+    return SgetType();
+  }
+
+  std::string MGE_PlayersEnterZone::toString() {
+    return "Players enter on zone " + m_zone->Id();
   }
 
   //////////////////////////////
   MGE_PlayerEntersZone::MGE_PlayerEntersZone(float p_fEventTime) 
     : MotoGameEvent(p_fEventTime) {
-      m_zone = NULL;
+      m_zone   = NULL;
+      m_player = 0;
     }
 
-  MGE_PlayerEntersZone::MGE_PlayerEntersZone(float p_fEventTime, Zone *p_zone) 
+  MGE_PlayerEntersZone::MGE_PlayerEntersZone(float p_fEventTime, Zone *p_zone, int i_player) 
     : MotoGameEvent(p_fEventTime) {
-      m_zone = p_zone;
+      m_zone   = p_zone;
+      m_player = i_player;
     }
 
 
@@ -199,9 +290,7 @@ namespace vapp {
   } 
   
   void MGE_PlayerEntersZone::doAction(MotoGame *p_pMotoGame) {
-    for(unsigned int i=0; i<p_pMotoGame->Players().size(); i++) {
-      p_pMotoGame->playerEntersZone(i, m_zone);
-    }
+    p_pMotoGame->playerEntersZone(m_player, m_zone);
   }
 
   void MGE_PlayerEntersZone::serialize(DBuffer &Buffer) {
@@ -219,27 +308,67 @@ namespace vapp {
   }
 
   std::string MGE_PlayerEntersZone::toString() {
-    return "Player enters on zone " + m_zone->Id();
+    std::ostringstream v_txt_player;
+    v_txt_player << m_player;
+    return "Player " + v_txt_player.str() + " enter on zone " + m_zone->Id();
+  }
+
+  //////////////////////////////
+  MGE_PlayersLeaveZone::MGE_PlayersLeaveZone(float p_fEventTime) 
+  : MotoGameEvent(p_fEventTime) {
+    m_zone = NULL;
+  }
+
+  MGE_PlayersLeaveZone::MGE_PlayersLeaveZone(float p_fEventTime, Zone *p_zone) 
+    : MotoGameEvent(p_fEventTime) {
+      m_zone = p_zone;
+  }
+
+  MGE_PlayersLeaveZone::~MGE_PlayersLeaveZone() {
+  } 
+  
+  void MGE_PlayersLeaveZone::doAction(MotoGame *p_pMotoGame) {
+    for(unsigned int i=0; i<p_pMotoGame->Players().size(); i++) {
+      p_pMotoGame->playerLeavesZone(i, m_zone);
+    }
+  }
+
+  void MGE_PlayersLeaveZone::serialize(DBuffer &Buffer) {
+  }
+  
+  void MGE_PlayersLeaveZone::unserialize(DBuffer &Buffer) {
+  }
+
+  GameEventType MGE_PlayersLeaveZone::SgetType() {
+    return GAME_EVENT_PLAYERS_LEAVE_ZONE;
+  }
+
+  GameEventType MGE_PlayersLeaveZone::getType() {
+    return SgetType();
+  }
+
+  std::string MGE_PlayersLeaveZone::toString() {
+    return "Players leave the zone " + m_zone->Id();
   }
 
   //////////////////////////////
   MGE_PlayerLeavesZone::MGE_PlayerLeavesZone(float p_fEventTime) 
   : MotoGameEvent(p_fEventTime) {
-    m_zone = NULL;
+    m_zone   = NULL;
+    m_player = 0;
   }
 
-  MGE_PlayerLeavesZone::MGE_PlayerLeavesZone(float p_fEventTime, Zone *p_zone) 
+  MGE_PlayerLeavesZone::MGE_PlayerLeavesZone(float p_fEventTime, Zone *p_zone, int i_player) 
     : MotoGameEvent(p_fEventTime) {
-      m_zone = p_zone;
+      m_zone   = p_zone;
+      m_player = i_player;
   }
 
   MGE_PlayerLeavesZone::~MGE_PlayerLeavesZone() {
   } 
   
   void MGE_PlayerLeavesZone::doAction(MotoGame *p_pMotoGame) {
-    for(unsigned int i=0; i<p_pMotoGame->Players().size(); i++) {
-      p_pMotoGame->playerLeavesZone(i, m_zone);
-    }
+    p_pMotoGame->playerLeavesZone(m_player, m_zone);
   }
 
   void MGE_PlayerLeavesZone::serialize(DBuffer &Buffer) {
@@ -257,7 +386,49 @@ namespace vapp {
   }
 
   std::string MGE_PlayerLeavesZone::toString() {
-    return "Players leaves the zone " + m_zone->Id();
+    std::ostringstream v_txt_player;
+    v_txt_player << m_player;
+    return "Player " + v_txt_player.str() + " leaves the zone " + m_zone->Id();
+  }
+
+  //////////////////////////////
+  MGE_PlayersToucheEntity::MGE_PlayersToucheEntity(float p_fEventTime) 
+  : MotoGameEvent(p_fEventTime) {
+    m_entityID = "";
+    m_bTouchedWithHead = false;
+  }
+
+  MGE_PlayersToucheEntity::MGE_PlayersToucheEntity(float p_fEventTime, std::string p_entityID, bool p_bTouchedWithHead) 
+    : MotoGameEvent(p_fEventTime) {
+      m_entityID = p_entityID;
+      m_bTouchedWithHead = p_bTouchedWithHead;
+    }
+
+  MGE_PlayersToucheEntity::~MGE_PlayersToucheEntity() {
+  } 
+  
+  void MGE_PlayersToucheEntity::doAction(MotoGame *p_pMotoGame) {
+    for(unsigned int i=0; i<p_pMotoGame->Players().size(); i++) {
+      p_pMotoGame->playerTouchesEntity(i, m_entityID, m_bTouchedWithHead);
+    }
+  }
+
+  void MGE_PlayersToucheEntity::serialize(DBuffer &Buffer) {
+  }
+  
+  void MGE_PlayersToucheEntity::unserialize(DBuffer &Buffer) {
+  }
+
+  GameEventType MGE_PlayersToucheEntity::SgetType() {
+    return GAME_EVENT_PLAYERS_TOUCHE_ENTITY;
+  }
+
+  GameEventType MGE_PlayersToucheEntity::getType() {
+    return SgetType();
+  }
+
+  std::string MGE_PlayersToucheEntity::toString() {
+    return "Players touche entity " + m_entityID;
   }
 
   //////////////////////////////
@@ -265,21 +436,22 @@ namespace vapp {
   : MotoGameEvent(p_fEventTime) {
     m_entityID = "";
     m_bTouchedWithHead = false;
+    m_player = 0;
   }
 
-  MGE_PlayerTouchesEntity::MGE_PlayerTouchesEntity(float p_fEventTime, std::string p_entityID, bool p_bTouchedWithHead) 
+  MGE_PlayerTouchesEntity::MGE_PlayerTouchesEntity(float p_fEventTime, std::string p_entityID,
+						   bool p_bTouchedWithHead, int i_player) 
     : MotoGameEvent(p_fEventTime) {
       m_entityID = p_entityID;
       m_bTouchedWithHead = p_bTouchedWithHead;
+      m_player = i_player;
     }
 
   MGE_PlayerTouchesEntity::~MGE_PlayerTouchesEntity() {
   } 
   
   void MGE_PlayerTouchesEntity::doAction(MotoGame *p_pMotoGame) {
-    for(unsigned int i=0; i<p_pMotoGame->Players().size(); i++) {
-      p_pMotoGame->playerTouchesEntity(i, m_entityID, m_bTouchedWithHead);
-    }
+    p_pMotoGame->playerTouchesEntity(m_player, m_entityID, m_bTouchedWithHead);
   }
 
   void MGE_PlayerTouchesEntity::serialize(DBuffer &Buffer) {
@@ -297,7 +469,10 @@ namespace vapp {
   }
 
   std::string MGE_PlayerTouchesEntity::toString() {
-    return "Players touches entity " + m_entityID;
+    std::ostringstream v_txt_player;
+    v_txt_player << m_player;
+
+    return "Player " + v_txt_player.str() + " touches entity " + m_entityID;
   }
 
   //////////////////////////////
@@ -315,11 +490,10 @@ namespace vapp {
     }
 
   MGE_EntityDestroyed::~MGE_EntityDestroyed() {
-  } 
+  }
   
   void MGE_EntityDestroyed::doAction(MotoGame *p_pMotoGame) {
-    // assume that player 0 destroyed the entity
-    p_pMotoGame->entityDestroyed(0, m_entityId);
+    p_pMotoGame->entityDestroyed(m_entityId);
   }
 
   void MGE_EntityDestroyed::serialize(DBuffer &Buffer) {
@@ -400,7 +574,7 @@ namespace vapp {
   }
 
   GameEventType MGE_ClearMessages::SgetType() {
-    return GAME_EVENT_LUA_CALL_CLEARMESSAGES;
+    return GAME_EVENT_CLEARMESSAGES;
   }
 
   GameEventType MGE_ClearMessages::getType() {
@@ -449,7 +623,7 @@ namespace vapp {
   }
 
   GameEventType MGE_PlaceInGameArrow::SgetType() {
-    return GAME_EVENT_LUA_CALL_PLACEINGAMEARROW;
+    return GAME_EVENT_PLACEINGAMEARROW;
   }
 
   GameEventType MGE_PlaceInGameArrow::getType() {
@@ -498,7 +672,7 @@ namespace vapp {
   }
 
   GameEventType MGE_PlaceScreenarrow::SgetType() {
-    return GAME_EVENT_LUA_CALL_PLACESCREENARROW;
+    return GAME_EVENT_PLACESCREENARROW;
   }
 
   GameEventType MGE_PlaceScreenarrow::getType() {
@@ -529,7 +703,7 @@ namespace vapp {
   }
 
   GameEventType MGE_HideArrow::SgetType() {
-    return GAME_EVENT_LUA_CALL_HIDEARROW;
+    return GAME_EVENT_HIDEARROW;
   }
 
   GameEventType MGE_HideArrow::getType() {
@@ -568,7 +742,7 @@ namespace vapp {
   }
 
   GameEventType MGE_Message::SgetType() {
-    return GAME_EVENT_LUA_CALL_MESSAGE;
+    return GAME_EVENT_MESSAGE;
   }
 
   GameEventType MGE_Message::getType() {
@@ -617,7 +791,7 @@ namespace vapp {
   }
 
   GameEventType MGE_MoveBlock::SgetType() {
-    return GAME_EVENT_LUA_CALL_MOVEBLOCK;
+    return GAME_EVENT_MOVEBLOCK;
   }
 
   GameEventType MGE_MoveBlock::getType() {
@@ -666,7 +840,7 @@ namespace vapp {
   }
 
   GameEventType MGE_SetBlockPos::SgetType() {
-    return GAME_EVENT_LUA_CALL_SETBLOCKPOS;
+    return GAME_EVENT_SETBLOCKPOS;
   }
 
   GameEventType MGE_SetBlockPos::getType() {
@@ -709,7 +883,7 @@ namespace vapp {
   }
 
   GameEventType MGE_SetGravity::SgetType() {
-    return GAME_EVENT_LUA_CALL_SETGRAVITY;
+    return GAME_EVENT_SETGRAVITY;
   }
 
   GameEventType MGE_SetGravity::getType() {
@@ -721,14 +895,14 @@ namespace vapp {
   }
 
   //////////////////////////////
-  MGE_SetPlayerPosition::MGE_SetPlayerPosition(float p_fEventTime) 
+  MGE_SetPlayersPosition::MGE_SetPlayersPosition(float p_fEventTime) 
   : MotoGameEvent(p_fEventTime) {
     m_x = 0.0;
     m_y = 0.0;
     m_bRight = 0.0;
   }
 
-  MGE_SetPlayerPosition::MGE_SetPlayerPosition(float p_fEventTime,
+  MGE_SetPlayersPosition::MGE_SetPlayersPosition(float p_fEventTime,
                                                float p_x, float p_y,
                                                bool p_bRight) 
     : MotoGameEvent(p_fEventTime) {
@@ -737,13 +911,66 @@ namespace vapp {
       m_bRight = p_bRight;
     }
 
+  MGE_SetPlayersPosition::~MGE_SetPlayersPosition() {
+  } 
+  
+  void MGE_SetPlayersPosition::doAction(MotoGame *p_pMotoGame) {
+    for(unsigned int i=0; i<p_pMotoGame->Players().size(); i++) {
+      p_pMotoGame->setPlayerPosition(i, m_x, m_y, m_bRight);
+    }
+  }
+
+  void MGE_SetPlayersPosition::serialize(DBuffer &Buffer) {
+    MotoGameEvent::serialize(Buffer);
+    Buffer << m_x;
+    Buffer << m_y;
+    Buffer << m_bRight;
+  }
+  
+  void MGE_SetPlayersPosition::unserialize(DBuffer &Buffer) {
+    Buffer >> m_x;
+    Buffer >> m_y;
+    Buffer >> m_bRight;
+  }
+
+  GameEventType MGE_SetPlayersPosition::SgetType() {
+    return GAME_EVENT_SETPLAYERSPOSITION;
+  }
+
+  GameEventType MGE_SetPlayersPosition::getType() {
+    return SgetType();
+  }
+
+  std::string MGE_SetPlayersPosition::toString() {
+    return "Teleportation of the players";
+  }
+
+  //////////////////////////////
+  MGE_SetPlayerPosition::MGE_SetPlayerPosition(float p_fEventTime) 
+  : MotoGameEvent(p_fEventTime) {
+    m_x = 0.0;
+    m_y = 0.0;
+    m_bRight = 0.0;
+    m_player = 0;
+  }
+
+  MGE_SetPlayerPosition::MGE_SetPlayerPosition(float p_fEventTime,
+                                               float p_x, float p_y,
+                                               bool p_bRight,
+					       int i_player
+					       ) 
+    : MotoGameEvent(p_fEventTime) {
+      m_x = p_x;
+      m_y = p_y;
+      m_bRight = p_bRight;
+      m_player = i_player;
+    }
+
   MGE_SetPlayerPosition::~MGE_SetPlayerPosition() {
   } 
   
   void MGE_SetPlayerPosition::doAction(MotoGame *p_pMotoGame) {
-    for(unsigned int i=0; i<p_pMotoGame->Players().size(); i++) {
-      p_pMotoGame->setPlayerPosition(i, m_x, m_y, m_bRight);
-    }
+    p_pMotoGame->setPlayerPosition(m_player, m_x, m_y, m_bRight);
   }
 
   void MGE_SetPlayerPosition::serialize(DBuffer &Buffer) {
@@ -751,16 +978,18 @@ namespace vapp {
     Buffer << m_x;
     Buffer << m_y;
     Buffer << m_bRight;
+    Buffer << m_player;
   }
   
   void MGE_SetPlayerPosition::unserialize(DBuffer &Buffer) {
     Buffer >> m_x;
     Buffer >> m_y;
     Buffer >> m_bRight;
+    Buffer >> m_player;
   }
 
   GameEventType MGE_SetPlayerPosition::SgetType() {
-    return GAME_EVENT_LUA_CALL_SETPLAYERPOSITION;
+    return GAME_EVENT_SETPLAYERPOSITION;
   }
 
   GameEventType MGE_SetPlayerPosition::getType() {
@@ -768,7 +997,7 @@ namespace vapp {
   }
 
   std::string MGE_SetPlayerPosition::toString() {
-    return "Teleportation of the player";
+    return "Teleportation of the player " + m_player;
   }
 
   //////////////////////////////
@@ -809,7 +1038,7 @@ namespace vapp {
   }
 
   GameEventType MGE_SetEntityPos::SgetType() {
-    return GAME_EVENT_LUA_CALL_SETENTITYPOS;
+    return GAME_EVENT_SETENTITYPOS;
   }
 
   GameEventType MGE_SetEntityPos::getType() {
@@ -858,7 +1087,7 @@ namespace vapp {
   }
 
   GameEventType MGE_SetBlockCenter::SgetType() {
-    return GAME_EVENT_LUA_CALL_SETBLOCKCENTER;
+    return GAME_EVENT_SETBLOCKCENTER;
   }
 
   GameEventType MGE_SetBlockCenter::getType() {
@@ -903,7 +1132,7 @@ namespace vapp {
   }
 
   GameEventType MGE_SetBlockRotation::SgetType() {
-    return GAME_EVENT_LUA_CALL_SETBLOCKROTATION ;
+    return GAME_EVENT_SETBLOCKROTATION ;
   }
 
   GameEventType MGE_SetBlockRotation::getType() {
@@ -971,7 +1200,7 @@ namespace vapp {
   }
 
   GameEventType MGE_SetDynamicEntityRotation::SgetType() {
-    return GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROTATION ;
+    return GAME_EVENT_SETDYNAMICENTITYROTATION ;
   }
 
   GameEventType MGE_SetDynamicEntityRotation::getType() {
@@ -1039,7 +1268,7 @@ namespace vapp {
   }
 
   GameEventType MGE_SetDynamicEntityTranslation::SgetType() {
-    return GAME_EVENT_LUA_CALL_SETDYNAMICENTITYTRANSLATION;
+    return GAME_EVENT_SETDYNAMICENTITYTRANSLATION;
   }
 
   GameEventType MGE_SetDynamicEntityTranslation::getType() {
@@ -1078,7 +1307,7 @@ namespace vapp {
   }
 
   GameEventType MGE_SetDynamicEntityNone::SgetType() {
-    return GAME_EVENT_LUA_CALL_SETDYNAMICENTITYNONE;
+    return GAME_EVENT_SETDYNAMICENTITYNONE;
   }
 
   GameEventType MGE_SetDynamicEntityNone::getType() {
@@ -1146,7 +1375,7 @@ namespace vapp {
   }
 
   GameEventType MGE_SetDynamicBlockRotation::SgetType() {
-    return GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKROTATION;
+    return GAME_EVENT_SETDYNAMICBLOCKROTATION;
   }
 
   GameEventType MGE_SetDynamicBlockRotation::getType() {
@@ -1214,7 +1443,7 @@ namespace vapp {
   }
 
   GameEventType MGE_SetDynamicBlockTranslation::SgetType() {
-    return GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKTRANSLATION;
+    return GAME_EVENT_SETDYNAMICBLOCKTRANSLATION;
   }
 
   GameEventType MGE_SetDynamicBlockTranslation::getType() {
@@ -1253,7 +1482,7 @@ namespace vapp {
   }
 
   GameEventType MGE_SetDynamicBlockNone::SgetType() {
-    return GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKNONE;
+    return GAME_EVENT_SETDYNAMICBLOCKNONE;
   }
 
   GameEventType MGE_SetDynamicBlockNone::getType() {
@@ -1296,7 +1525,7 @@ namespace vapp {
   }
 
   GameEventType MGE_CameraMove::SgetType() {
-    return GAME_EVENT_LUA_CALL_CAMERAMOVE;
+    return GAME_EVENT_CAMERAMOVE;
   }
 
   GameEventType MGE_CameraMove::getType() {
@@ -1335,7 +1564,7 @@ namespace vapp {
   }
 
   GameEventType MGE_CameraZoom::SgetType() {
-    return GAME_EVENT_LUA_CALL_CAMERAZOOM;
+    return GAME_EVENT_CAMERAZOOM;
   }
 
   GameEventType MGE_CameraZoom::getType() {
@@ -1374,7 +1603,7 @@ namespace vapp {
   }
  
   GameEventType MGE_PenalityTime::SgetType() {
-    return GAME_EVENT_LUA_CALL_PENALITY_TIME;
+    return GAME_EVENT_PENALITY_TIME;
   }
 
   GameEventType MGE_PenalityTime::getType() {
