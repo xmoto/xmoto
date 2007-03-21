@@ -649,7 +649,6 @@ namespace vapp {
   
   void UIList::clear(void) {
     _FreeUIList();
-    m_Entries.clear();
     m_nRealSelected = 0;
     m_nVisibleSelected = 0;
     m_nScroll   = 0;
@@ -673,6 +672,7 @@ namespace vapp {
   void UIList::_FreeUIList(void) {
     for(int i=0;i<m_Entries.size();i++)
       delete m_Entries[i];
+    m_Entries.clear();
   }
 
   /*===========================================================================
