@@ -155,6 +155,7 @@ Biker::Biker(Theme *i_theme, BikerTheme* i_bikerTheme) {
   m_finishTime = 0.0;
   m_bikerTheme = i_bikerTheme;
   m_bWheelSpin = false;
+  m_bikerHooks = NULL;
 }
 
 float Biker::finishTime() const {
