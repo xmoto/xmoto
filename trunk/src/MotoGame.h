@@ -101,7 +101,7 @@ namespace vapp {
 
   class MotoGameHooks {
   public:
-    virtual void OnTakeEntity(int i_player) = 0;
+    virtual void OnTakeEntity() = 0;
   };
 
   class MotoGame {
@@ -125,7 +125,7 @@ namespace vapp {
 
     /* entities */
     void touchEntity(int i_player, Entity *pEntity, bool bHead); 
-    void deleteEntity(int i_player, Entity *pEntity);
+    void deleteEntity(Entity *pEntity);
 
     /* messages */
     void gameMessage(std::string Text,
@@ -183,7 +183,7 @@ namespace vapp {
       void playerEntersZone(int i_player, Zone *pZone);
       void playerLeavesZone(int i_player, Zone *pZone);
       void playerTouchesEntity(int i_player, std::string p_entityID, bool p_bTouchedWithHead);
-      void entityDestroyed(int i_player, const std::string& i_entityId);
+      void entityDestroyed(const std::string& i_entityId);
       void addDynamicObject(SDynamicObject* p_obj);
       void removeSDynamicOfObject(std::string pObject);
       void addPenalityTime(float fTime);

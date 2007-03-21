@@ -1,29 +1,9 @@
-- mode 2 joueurs : victoire à celui qui vit
 
-* gérer les évènements, scripts :
-évènements:
-et renommer les anciens
-GAME_EVENT_PLAYER_DIES
-GAME_EVENT_PLAYER_ENTERS_ZONE
-GAME_EVENT_PLAYER_LEAVES_ZONE
-GAME_EVENT_PLAYER_TOUCHES_ENTITY
-GAME_EVENT_ENTITY_DESTROYED
-GAME_EVENT_LUA_CALL_SETPLAYERPOSITION
 
-scripts:
-Entity.Touch()
-Zone.OnEnter()
-Zone.OnLeave()
-OnSomersault(bClockWise)
-OnWheel1Touchs(status)
-OnWheel2Touchs(status)
-IsPlayerInZone(zone)
-SetPlayerPosition(x, y, bRight)
-GetPlayerPosition()
-KillPlayer()
-WinPlayer()
+* mode 2 joueurs : un message à celui qui gagne
 
-* voir s'il faut gérer des évènements pour les ghosts
+* on ne doit pas pouvoir enregister un replay en multi
+* vérifier qu'un son est joué quand on prend une entité en normal et en replay
 
 ******************
 * PERFORMANCE : rebuildLevelsPacks is very slow particularly on windows with a lot of levels : sqlite

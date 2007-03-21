@@ -34,32 +34,37 @@ namespace vapp {
      ALWAYS ADD VALUES at the end : (otherwise, old replays will not work !)
   */
   enum GameEventType {
-    GAME_EVENT_PLAYER_DIES                          =  0,
-    GAME_EVENT_PLAYER_ENTERS_ZONE                   =  1,
-    GAME_EVENT_PLAYER_LEAVES_ZONE                   =  2,
-    GAME_EVENT_PLAYER_TOUCHES_ENTITY                =  3,
-    GAME_EVENT_ENTITY_DESTROYED                     =  4,    
-    GAME_EVENT_LUA_CALL_CLEARMESSAGES               =  5,
-    GAME_EVENT_LUA_CALL_PLACEINGAMEARROW            =  6,
-    GAME_EVENT_LUA_CALL_PLACESCREENARROW            =  7,
-    GAME_EVENT_LUA_CALL_HIDEARROW                   =  8,
-    GAME_EVENT_LUA_CALL_MESSAGE                     =  9,
-    GAME_EVENT_LUA_CALL_MOVEBLOCK                   = 10,
-    GAME_EVENT_LUA_CALL_SETBLOCKPOS                 = 11,
-    GAME_EVENT_LUA_CALL_SETGRAVITY                  = 12,
-    GAME_EVENT_LUA_CALL_SETPLAYERPOSITION           = 13,
-    GAME_EVENT_LUA_CALL_SETENTITYPOS                = 14,
-    GAME_EVENT_LUA_CALL_SETBLOCKCENTER              = 15,
-    GAME_EVENT_LUA_CALL_SETBLOCKROTATION            = 16, 
-    GAME_EVENT_LUA_CALL_SETDYNAMICENTITYROTATION    = 17,
-    GAME_EVENT_LUA_CALL_SETDYNAMICENTITYTRANSLATION = 18,
-    GAME_EVENT_LUA_CALL_SETDYNAMICENTITYNONE        = 19,
-    GAME_EVENT_LUA_CALL_CAMERAZOOM                  = 20,
-    GAME_EVENT_LUA_CALL_CAMERAMOVE                  = 21,
-    GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKROTATION     = 22,
-    GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKTRANSLATION  = 23,
-    GAME_EVENT_LUA_CALL_SETDYNAMICBLOCKNONE         = 24,
-    GAME_EVENT_LUA_CALL_PENALITY_TIME               = 25
+    GAME_EVENT_PLAYERS_DIE                 =  0, // to able able to read replay made with xmoto < 0.3.0
+    GAME_EVENT_PLAYERS_ENTER_ZONE          =  1, // to able able to read replay made with xmoto < 0.3.0
+    GAME_EVENT_PLAYERS_LEAVE_ZONE          =  2, // to able able to read replay made with xmoto < 0.3.0
+    GAME_EVENT_PLAYERS_TOUCHE_ENTITY       =  3, // to able able to read replay made with xmoto < 0.3.0
+    GAME_EVENT_ENTITY_DESTROYED            =  4,    
+    GAME_EVENT_CLEARMESSAGES               =  5,
+    GAME_EVENT_PLACEINGAMEARROW            =  6,
+    GAME_EVENT_PLACESCREENARROW            =  7,
+    GAME_EVENT_HIDEARROW                   =  8,
+    GAME_EVENT_MESSAGE                     =  9,
+    GAME_EVENT_MOVEBLOCK                   = 10,
+    GAME_EVENT_SETBLOCKPOS                 = 11,
+    GAME_EVENT_SETGRAVITY                  = 12,
+    GAME_EVENT_SETPLAYERSPOSITION          = 13, // to able able to read replay made with xmoto < 0.3.0
+    GAME_EVENT_SETENTITYPOS                = 14,
+    GAME_EVENT_SETBLOCKCENTER              = 15,
+    GAME_EVENT_SETBLOCKROTATION            = 16, 
+    GAME_EVENT_SETDYNAMICENTITYROTATION    = 17,
+    GAME_EVENT_SETDYNAMICENTITYTRANSLATION = 18,
+    GAME_EVENT_SETDYNAMICENTITYNONE        = 19,
+    GAME_EVENT_CAMERAZOOM                  = 20,
+    GAME_EVENT_CAMERAMOVE                  = 21,
+    GAME_EVENT_SETDYNAMICBLOCKROTATION     = 22,
+    GAME_EVENT_SETDYNAMICBLOCKTRANSLATION  = 23,
+    GAME_EVENT_SETDYNAMICBLOCKNONE         = 24,
+    GAME_EVENT_PENALITY_TIME               = 25,
+    GAME_EVENT_PLAYER_DIES                 = 26,
+    GAME_EVENT_PLAYER_ENTERS_ZONE          = 27,
+    GAME_EVENT_PLAYER_LEAVES_ZONE          = 28,
+    GAME_EVENT_PLAYER_TOUCHES_ENTITY       = 29,
+    GAME_EVENT_SETPLAYERPOSITION           = 30
   };
 }
 
@@ -97,11 +102,11 @@ class MotoGameEvent {
   float m_fEventTime;
 };
 
-class MGE_PlayerDies : public MotoGameEvent {
+class MGE_PlayersDie : public MotoGameEvent {
  public:
-  MGE_PlayerDies(float p_fEventTime);
-  MGE_PlayerDies(float p_fEventTime, bool p_bKilledByWrecker);
-  ~MGE_PlayerDies();
+  MGE_PlayersDie(float p_fEventTime);
+  MGE_PlayersDie(float p_fEventTime, bool p_bKilledByWrecker);
+  ~MGE_PlayersDie();
 
   void doAction(MotoGame *p_pMotoGame);
   void serialize(DBuffer &Buffer);
@@ -115,11 +120,67 @@ class MGE_PlayerDies : public MotoGameEvent {
   bool m_bKilledByWrecker;
 };
 
+class MGE_PlayerDies : public MotoGameEvent {
+ public:
+  MGE_PlayerDies(float p_fEventTime);
+  MGE_PlayerDies(float p_fEventTime, bool p_bKilledByWrecker, int i_player);
+  ~MGE_PlayerDies();
+
+  void doAction(MotoGame *p_pMotoGame);
+  void serialize(DBuffer &Buffer);
+  void unserialize(DBuffer &Buffer);
+  static GameEventType SgetType();
+  GameEventType getType();
+
+  std::string toString();
+
+ private:
+  bool m_bKilledByWrecker;
+  int  m_player;
+};
+
+class MGE_PlayersEnterZone : public MotoGameEvent {
+ public:
+  MGE_PlayersEnterZone(float p_fEventTime);
+  MGE_PlayersEnterZone(float p_fEventTime, Zone *p_zone);
+  ~MGE_PlayersEnterZone();
+
+  void doAction(MotoGame *p_pMotoGame);
+  void serialize(DBuffer &Buffer);
+  void unserialize(DBuffer &Buffer);
+  static GameEventType SgetType();
+  GameEventType getType();
+
+  std::string toString();
+
+ private:
+  Zone *m_zone;
+};
+
 class MGE_PlayerEntersZone : public MotoGameEvent {
  public:
   MGE_PlayerEntersZone(float p_fEventTime);
-  MGE_PlayerEntersZone(float p_fEventTime, Zone *p_zone);
+  MGE_PlayerEntersZone(float p_fEventTime, Zone *p_zone, int i_player);
   ~MGE_PlayerEntersZone();
+
+  void doAction(MotoGame *p_pMotoGame);
+  void serialize(DBuffer &Buffer);
+  void unserialize(DBuffer &Buffer);
+  static GameEventType SgetType();
+  GameEventType getType();
+
+  std::string toString();
+
+ private:
+  Zone *m_zone;
+  int   m_player;
+};
+
+class MGE_PlayersLeaveZone : public MotoGameEvent {
+ public:
+  MGE_PlayersLeaveZone(float p_fEventTime);
+  MGE_PlayersLeaveZone(float p_fEventTime, Zone *p_zone);
+  ~MGE_PlayersLeaveZone();
 
   void doAction(MotoGame *p_pMotoGame);
   void serialize(DBuffer &Buffer);
@@ -136,7 +197,7 @@ class MGE_PlayerEntersZone : public MotoGameEvent {
 class MGE_PlayerLeavesZone : public MotoGameEvent {
  public:
   MGE_PlayerLeavesZone(float p_fEventTime);
-  MGE_PlayerLeavesZone(float p_fEventTime, Zone *p_zone);
+  MGE_PlayerLeavesZone(float p_fEventTime, Zone *p_zone, int i_player);
   ~MGE_PlayerLeavesZone();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -149,12 +210,32 @@ class MGE_PlayerLeavesZone : public MotoGameEvent {
 
  private:
   Zone *m_zone;
+  int   m_player;
+};
+
+class MGE_PlayersToucheEntity : public MotoGameEvent {
+ public:
+  MGE_PlayersToucheEntity(float p_fEventTime);
+  MGE_PlayersToucheEntity(float p_fEventTime, std::string p_entityID, bool p_bTouchedWithHead);
+  ~MGE_PlayersToucheEntity();
+
+  void doAction(MotoGame *p_pMotoGame);
+  void serialize(DBuffer &Buffer);
+  void unserialize(DBuffer &Buffer);
+  static GameEventType SgetType();
+  GameEventType getType();
+
+  std::string toString();
+
+ private:
+    std::string m_entityID;
+    bool m_bTouchedWithHead;
 };
 
 class MGE_PlayerTouchesEntity : public MotoGameEvent {
  public:
   MGE_PlayerTouchesEntity(float p_fEventTime);
-  MGE_PlayerTouchesEntity(float p_fEventTime, std::string p_entityID, bool p_bTouchedWithHead);
+  MGE_PlayerTouchesEntity(float p_fEventTime, std::string p_entityID, bool p_bTouchedWithHead, int i_player);
   ~MGE_PlayerTouchesEntity();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -168,6 +249,7 @@ class MGE_PlayerTouchesEntity : public MotoGameEvent {
  private:
     std::string m_entityID;
     bool m_bTouchedWithHead;
+    int  m_player;
 };
 
 class MGE_EntityDestroyed : public MotoGameEvent {
@@ -338,10 +420,29 @@ class MGE_SetGravity : public MotoGameEvent {
   float m_x, m_y;
 };
 
+class MGE_SetPlayersPosition : public MotoGameEvent {
+ public:
+  MGE_SetPlayersPosition(float p_fEventTime);
+  MGE_SetPlayersPosition(float p_fEventTime, float p_x, float p_y, bool p_bRight);
+  ~MGE_SetPlayersPosition();
+
+  void doAction(MotoGame *p_pMotoGame);
+  void serialize(DBuffer &Buffer);
+  void unserialize(DBuffer &Buffer);
+  static GameEventType SgetType();
+  GameEventType getType();
+
+  std::string toString();
+
+ private:
+  float m_x, m_y;
+  bool  m_bRight;
+};
+
 class MGE_SetPlayerPosition : public MotoGameEvent {
  public:
   MGE_SetPlayerPosition(float p_fEventTime);
-  MGE_SetPlayerPosition(float p_fEventTime, float p_x, float p_y, bool p_bRight);
+  MGE_SetPlayerPosition(float p_fEventTime, float p_x, float p_y, bool p_bRight, int i_player);
   ~MGE_SetPlayerPosition();
 
   void doAction(MotoGame *p_pMotoGame);
@@ -355,6 +456,7 @@ class MGE_SetPlayerPosition : public MotoGameEvent {
  private:
   float m_x, m_y;
   bool  m_bRight;
+  int   m_player;
 };
 
 class MGE_SetEntityPos : public MotoGameEvent {

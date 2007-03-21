@@ -64,6 +64,12 @@ luaL_reg            LuaLibGame::m_gameFuncs[] = {
   {"RemainingStrawberries",       LuaLibGame::L_Game_RemainingStrawberries},
   {"WinPlayer",                   LuaLibGame::L_Game_WinPlayer},
   {"AddPenaltyTime",              LuaLibGame::L_Game_PenaltyTime},
+  {"IsAPlayerInZone",             LuaLibGame::L_Game_IsAPlayerInZone},
+  {"SetAPlayerPosition", 	  LuaLibGame::L_Game_SetAPlayerPosition},
+  {"GetAPlayerPosition", 	  LuaLibGame::L_Game_GetAPlayerPosition},
+  {"KillAPlayer", 		  LuaLibGame::L_Game_KillAPlayer},
+  {"WinAPlayer",  		  LuaLibGame::L_Game_WinAPlayer},
+  {"NumberOfPlayers",             LuaLibGame::L_Game_NumberOfPlayers},
   {NULL, NULL}
 };
 
@@ -171,6 +177,26 @@ void LuaLibGame::scriptCallVoidNumberArg(const std::string& FuncName, int n) {
   lua_settop(m_pL,0);        
 }
 
+void LuaLibGame::scriptCallVoidNumberArg(const std::string& FuncName, int n1, int n2) {
+  setWorld();
+  
+  /* Fetch global function */
+  lua_getglobal(m_pL,FuncName.c_str());
+  
+  /* Is it really a function and not just a pile of ****? */
+  if(lua_isfunction(m_pL,-1)) {
+    /* Call! */
+    lua_pushnumber(m_pL, n1);
+    lua_pushnumber(m_pL, n2);
+    if(lua_pcall(m_pL,2,0,0) != 0) {
+      throw Exception("failed to invoke (void) " + FuncName + std::string("(): ") + std::string(lua_tostring(m_pL,-1)));
+    }      
+  }
+  
+  /* Reset Lua VM */
+  lua_settop(m_pL,0);        
+}
+
 void LuaLibGame::scriptCallTblVoid(const std::string& Table, const std::string& FuncName) {
   setWorld();
   
@@ -186,6 +212,32 @@ void LuaLibGame::scriptCallTblVoid(const std::string& Table, const std::string& 
     if(lua_isfunction(m_pL,-1)) {
       /* Call! */
       if(lua_pcall(m_pL,0,0,0) != 0) {
+	throw Exception("failed to invoke (tbl,void) " + Table + std::string(".") + 
+			FuncName + std::string("(): ") + std::string(lua_tostring(m_pL,-1)));
+      }              
+    }
+  }
+  
+  /* Reset Lua VM */
+  lua_settop(m_pL,0);        
+}
+
+void LuaLibGame::scriptCallTblVoid(const std::string& Table, const std::string& FuncName, int n) {
+  setWorld();
+  
+  /* Fetch global table */        
+  lua_getglobal(m_pL,Table.c_str());
+  
+  //    printf("[%s.%s]\n",Table.c_str(),FuncName.c_str());
+  
+  if(lua_istable(m_pL,-1)) {
+    lua_pushstring(m_pL,FuncName.c_str());
+    lua_gettable(m_pL,-2);
+    
+    if(lua_isfunction(m_pL,-1)) {
+      /* Call! */
+      lua_pushnumber(m_pL, n);
+      if(lua_pcall(m_pL,1,0,0) != 0) {
 	throw Exception("failed to invoke (tbl,void) " + Table + std::string(".") + 
 			FuncName + std::string("(): ") + std::string(lua_tostring(m_pL,-1)));
       }              
@@ -342,10 +394,10 @@ int LuaLibGame::L_Game_GetGravity(lua_State *pL) {
 int LuaLibGame::L_Game_SetPlayerPosition(lua_State *pL) {
   /* event for this */
   bool bRight = X_luaL_check_number(pL,3) > 0.0f;
-  m_exec_world->createGameEvent(new vapp::MGE_SetPlayerPosition(m_exec_world->getTime(),
-							 X_luaL_check_number(pL,1),
-							 X_luaL_check_number(pL,2),
-							 bRight));
+  m_exec_world->createGameEvent(new vapp::MGE_SetPlayersPosition(m_exec_world->getTime(),
+								 X_luaL_check_number(pL,1),
+								 X_luaL_check_number(pL,2),
+								 bRight));
   return 0;
 }  
   
@@ -526,7 +578,7 @@ int LuaLibGame::L_Game_CameraMove(lua_State *pL) {
 }
 
 int LuaLibGame::L_Game_KillPlayer(lua_State *pL) {
-  m_exec_world->createGameEvent(new vapp::MGE_PlayerDies(m_exec_world->getTime(), false));
+  m_exec_world->createGameEvent(new vapp::MGE_PlayersDie(m_exec_world->getTime(), false));
   return 0;
 }
 
@@ -545,7 +597,7 @@ int LuaLibGame::L_Game_WinPlayer(lua_State *pL) {
   for(unsigned int i=0; i<m_exec_world->Players().size(); i++) {
     m_exec_world->makePlayerWin(i);
   }
-  return 1;
+  return 0;
 }
 
 int LuaLibGame::L_Game_PenaltyTime(lua_State *pL) {
@@ -553,4 +605,94 @@ int LuaLibGame::L_Game_PenaltyTime(lua_State *pL) {
   m_exec_world->createGameEvent(new vapp::MGE_PenalityTime(m_exec_world->getTime(),
 						    X_luaL_check_number(pL,1)));
   return 0;
+}
+
+int LuaLibGame::L_Game_IsAPlayerInZone(lua_State *pL) {
+  /* no event for this */
+  Zone* v_zone = &(m_exec_world->getLevelSrc()->getZoneById(luaL_checkstring(pL, 1)));
+  int v_player = X_luaL_check_number(pL, 2);
+
+  if(v_player < 0 || v_player >= m_exec_world->Players().size()) {
+    std::ostringstream v_txt_player;
+    v_txt_player << v_player;
+    throw Exception("Invalid player " + v_txt_player.str());
+  }
+
+  lua_pushboolean(pL, m_exec_world->Players()[v_player]->isTouching(*v_zone)?1:0);
+  return 1;
+}
+
+int LuaLibGame::L_Game_SetAPlayerPosition(lua_State *pL) {
+  /* event for this */
+  bool bRight  = X_luaL_check_number(pL,3) > 0.0f;
+  int v_player = X_luaL_check_number(pL,4);
+
+  if(v_player < 0 || v_player >= m_exec_world->Players().size()) {
+    std::ostringstream v_txt_player;
+    v_txt_player << v_player;
+    printf("player is %i\n", v_player);
+    //throw Exception("Invalid player " + v_txt_player.str());
+  }
+
+  m_exec_world->createGameEvent(new vapp::MGE_SetPlayerPosition(m_exec_world->getTime(),
+								X_luaL_check_number(pL,1),
+								X_luaL_check_number(pL,2),
+								bRight,
+								v_player));
+  return 0;
+}
+
+int LuaLibGame::L_Game_GetAPlayerPosition(lua_State *pL) {
+  /* no event for this */
+  float x = 0.0, y = 0.0;
+  DriveDir v_direction = DD_RIGHT;
+
+  int v_player = X_luaL_check_number(pL,1);
+
+  if(v_player < 0 || v_player >= m_exec_world->Players().size()) {
+    std::ostringstream v_txt_player;
+    v_txt_player << v_player;
+    throw Exception("Invalid player " + v_txt_player.str());
+  }
+
+  x = m_exec_world->Players()[v_player]->getState()->CenterP.x;
+  y = m_exec_world->Players()[v_player]->getState()->CenterP.y;
+  v_direction = m_exec_world->Players()[v_player]->getState()->Dir;
+
+  lua_pushnumber(pL, x);
+  lua_pushnumber(pL, y);
+  lua_pushnumber(pL, v_direction);
+
+  return 3;
+}
+
+int LuaLibGame::L_Game_KillAPlayer(lua_State *pL) {
+  int v_player = X_luaL_check_number(pL,1);
+
+  if(v_player < 0 || v_player >= m_exec_world->Players().size()) {
+    std::ostringstream v_txt_player;
+    v_txt_player << v_player;
+    throw Exception("Invalid player " + v_txt_player.str());
+  }
+
+  m_exec_world->createGameEvent(new vapp::MGE_PlayerDies(m_exec_world->getTime(), false, v_player));
+  return 0;
+}
+
+int LuaLibGame::L_Game_WinAPlayer(lua_State *pL) {
+  int v_player = X_luaL_check_number(pL,1);
+
+  if(v_player < 0 || v_player >= m_exec_world->Players().size()) {
+    std::ostringstream v_txt_player;
+    v_txt_player << v_player;
+    throw Exception("Invalid player " + v_txt_player.str());
+  }
+
+  m_exec_world->makePlayerWin(v_player);
+  return 0;
+}
+
+int LuaLibGame::L_Game_NumberOfPlayers(lua_State *pL) {
+  lua_pushnumber(pL, m_exec_world->Players().size());
+  return 1;
 }
