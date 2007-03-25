@@ -1,4 +1,6 @@
 
+* limit framerate at the end of a replay
+* load into the graphic card only the blocks which will be displayed depending on the selected graphic quality.
 * multicamera
 * keyboard for 4 players
 * script key on multiplayer : each player must have his own key
