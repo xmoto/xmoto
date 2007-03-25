@@ -1,11 +1,11 @@
 
-* limit framerate at the end of a replay
+* Bug: en cas d$B!G(Bexception (en particulier avec du script), endMotoGame n$B!G(Best pas appel.ANi et les joueurs ne sont pas virNis
 * load into the graphic card only the blocks which will be displayed depending on the selected graphic quality.
 * multicamera
 * keyboard for 4 players
 * script key on multiplayer : each player must have his own key
 
-* mode 2 joueurs : un message à celui qui gagne
+* mode 2 joueurs : un message .AN` celui qui gagne
 
 
 
