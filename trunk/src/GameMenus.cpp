@@ -913,6 +913,56 @@ namespace vapp {
     m_pPlayNewLevelsList->setEnterButton( pNewLevelsGoButton );
 #endif
 
+    // multi tab
+    UIWindow *pMultiOptionsTab = new UIWindow(m_pLevelPackTabs, 20, 40, GAMETEXT_MULTI,
+					      m_pLevelPackTabs->getPosition().nWidth-40,
+					      m_pLevelPackTabs->getPosition().nHeight);
+    pMultiOptionsTab->enableWindow(true);
+    pMultiOptionsTab->showWindow(false);
+    pMultiOptionsTab->setID("MULTI_TAB");
+
+    pSomeText = new UIStatic(pMultiOptionsTab, 10, 0,
+			     GAMETEXT_NB_PLAYERS, pMultiOptionsTab->getPosition().nWidth, 40);
+    pSomeText->setFont(m_Renderer.getMediumFont());
+    pSomeText->setHAlign(UI_ALIGN_LEFT);
+
+    for(unsigned int i=0; i<4; i++) {
+      UIButton *pNbPlayers;
+      std::ostringstream s_nbPlayers;
+      std::string str_nbPlayers;
+    
+      s_nbPlayers << (int) i+1;
+      if(i == 0) {
+    	str_nbPlayers = s_nbPlayers.str() + " " + GAMETEXT_PLAYER;
+      } else {
+    	str_nbPlayers = s_nbPlayers.str() + " " + GAMETEXT_PLAYERS;
+      }
+      pNbPlayers = new UIButton(pMultiOptionsTab, 0, 40+(i*20), str_nbPlayers, pMultiOptionsTab->getPosition().nWidth, 28);
+      pNbPlayers->setType(UI_BUTTON_TYPE_RADIO);
+      pNbPlayers->setID("MULTINB_" + s_nbPlayers.str());
+      pNbPlayers->enableWindow(true);
+      pNbPlayers->setFont(m_Renderer.getSmallFont());
+      pNbPlayers->setGroup(10200);
+      pNbPlayers->setContextHelp(CONTEXTHELP_MULTI);
+
+      // always check the 1 player mode
+      if(i == 0) {
+	pNbPlayers->setChecked(true);
+      }
+    }
+  }
+
+  int GameApp::getNumberOfPlayersToPlay() {
+    UIButton *pNbPlayers;
+    for(unsigned int i=0; i<4; i++) {
+      std::ostringstream s_nbPlayers;
+      s_nbPlayers << (int) i+1;
+      pNbPlayers = reinterpret_cast<UIButton *>(m_pLevelPackTabs->getChild("MULTI_TAB:MULTINB_" + s_nbPlayers.str()));  
+      if(pNbPlayers->getChecked()) {
+	return i+1;
+      }
+    }
+    return 1;
   }
 
   void GameApp::_InitMenus_Others(void) {
@@ -1589,7 +1639,7 @@ namespace vapp {
     for(int i=0;i<m_nNumFinishMenuButtons;i++) {
       if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_SAVEREPLAY) {
         /* Have we recorded a replay? If not then disable the "Save Replay" button */
-        if(m_pJustPlayReplay == NULL) {
+        if(m_pJustPlayReplay == NULL || m_MotoGame.Players().size() != 1) {
           m_pFinishMenuButtons[i]->enableWindow(false);
         }
         else {
@@ -2151,7 +2201,7 @@ namespace vapp {
     for(int i=0;i<m_nNumJustDeadMenuButtons;i++) {
       if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_SAVEREPLAY) {
         /* Have we recorded a replay? If not then disable the "Save Replay" button */
-        if(m_pJustPlayReplay == NULL) {
+        if(m_pJustPlayReplay == NULL || m_MotoGame.Players().size() != 1) {
           m_pJustDeadMenuButtons[i]->enableWindow(false);
         }
         else {

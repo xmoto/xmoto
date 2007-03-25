@@ -32,8 +32,8 @@ ReplayBiker::ReplayBiker(std::string i_replayFile, Theme *i_theme, BikerTheme* i
 }
 
 PlayerBiker::PlayerBiker(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity,
-			 Theme *i_theme, BikerTheme* i_bikerTheme)
-: Biker(i_theme, i_bikerTheme) {
+			 Theme *i_theme, BikerTheme* i_bikerTheme, const TColor& i_filterColor)
+: Biker(i_theme, i_bikerTheme, i_filterColor) {
   m_somersaultCounter.init();
 
   bFrontWheelTouching = false;

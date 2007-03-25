@@ -1,58 +1,10 @@
 
-* view the highscore button is broken : on exit of the replay
-
-*******TRACE1
-Program received signal SIGSEGV, Segmentation fault.
-[Switching to Thread -1227113872 (LWP 7024)]
-0xb7af2a09 in free () from /lib/tls/i686/cmov/libc.so.6
-(gdb) bt
-#0  0xb7af2a09 in free () from /lib/tls/i686/cmov/libc.so.6
-#1  0xb7ca1fc1 in operator delete () from /usr/lib/libstdc++.so.6
-#2  0x08108441 in vapp::MotoGame::cleanPlayers (this=0x2810) at MotoGame.cpp:76
-#3  0x0810b4b2 in vapp::MotoGame::endLevel (this=0xbf96a414) at MotoGame.cpp:467
-#4  0x080a7d53 in vapp::GameApp::keyDown (this=0xbf96a1b0, nKey=27, mod=KMOD_NUM, nChar=27) at Game.cpp:856
-#5  0x08051e0f in vapp::App::run (this=0xbf96a1b0, nNumArgs=1, ppcArgs=0xbf96ab74) at VApp.cpp:225
-#6  0x080a9959 in main (nNumArgs=1, ppcArgs=0xbf96ab74) at GameMain.cpp:49
-(gdb)   
-
-
-
-*******TRACE2
-Thread 0 Crashed:
-0   libstdc++.6.dylib        	0x94b5c0b0 _gnu_cxx::__exchange_and_add(int volatile*, int) + 0
-1   xmoto                    	0x0011386c void std::_Destroy<std::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > >(std::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >) + 76 (basic_string.h:226)
-2   xmoto                    	0x0007ce30 vapp::UIList::_FreeUIList() + 80 (stl_vector.h:109)
-3   xmoto                    	0x0007ceb8 vapp::UIList::clear() + 24 (GUIList.cpp:652)
-4   xmoto                    	0x00063690 vapp::GameApp::_CreateReplaysList(vapp::UIList*) + 160 (basic_string.h:251)
-5   xmoto                    	0x0003f0c0 vapp::GameApp::_UpdateReplaysList() + 80 (basic_string.h:277)
-6   xmoto                    	0x0006cff4 vapp::GameApp::viewHighscoreOf() + 548 (GameMenus.cpp:3748)
-7   xmoto                    	0x000700b8 vapp::GameApp::_HandleLevelPackViewer() + 1048 (GameMenus.cpp:1803)
-8   xmoto                    	0x000befe0 vapp::GameApp::_DrawMainGUI() + 176 (GameDrawFrame.cpp:418)
-9   xmoto                    	0x000c0c18 vapp::GameApp::drawFrame() + 1656 (GameDrawFrame.cpp:81)
-10  xmoto                    	0x000079f8 vapp::App::run(int, char**) + 1864 (VApp.cpp:272)
-11  xmoto                    	0x00049938 SDL_main + 472
-   (GameMain.cpp:49)
-
-
-
-*******TRACE3
-Thread 0 Crashed:
-0   xmoto                    	0x00113850 void std::_Destroy<std::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > >(std::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >) + 48 (basic_string.h:269)
-1   xmoto                    	0x0007ce30 vapp::UIList::_FreeUIList() + 80 (stl_vector.h:109)
-2   xmoto                    	0x0007ceb8 vapp::UIList::clear() + 24 (GUIList.cpp:652)
-3   xmoto                    	0x00063690 vapp::GameApp::_CreateReplaysList(vapp::UIList*) + 160 (basic_string.h:251)
-4   xmoto                    	0x0003f0c0 vapp::GameApp::_UpdateReplaysList() + 80 (basic_string.h:277)
-5   xmoto                    	0x0006cff4 vapp::GameApp::viewHighscoreOf() + 548 (GameMenus.cpp:3748)
-6   xmoto                    	0x000700b8 vapp::GameApp::_HandleLevelPackViewer() + 1048 (GameMenus.cpp:1803)
-7   xmoto                    	0x000befe0 vapp::GameApp::_DrawMainGUI() + 176 (GameDrawFrame.cpp:418)
-8   xmoto                    	0x000c0c18 vapp::GameApp::drawFrame() + 1656 (GameDrawFrame.cpp:81)
-9   xmoto                    	0x000079f8 vapp::App::run(int, char**) + 1864 (VApp.cpp:272)
-10  xmoto                    	0x00049938 SDL_main + 472 (GameMain.cpp:49)
-
+* multicamera
+* keyboard for 4 players
 
 * mode 2 joueurs : un message à celui qui gagne
+* script key on multiplayer : each player must have his own key
 
-* on ne doit pas pouvoir enregister un replay en multi
 
 ******************
 * PERFORMANCE : rebuildLevelsPacks is very slow particularly on windows with a lot of levels : sqlite
@@ -64,7 +16,6 @@ Thread 0 Crashed:
 
 * flag sprite to add
 * two options for music : menu and ingame
-* hierarchical sort for pack list : +/- to close
 
 * BUG rotation on grass of dynamic blocks on sdlgfx
 
@@ -84,7 +35,6 @@ Assigned to nicolas
 * BUG : xmoto -replay bugs/onMacWontWork.rpl when you press forward on
    this scripted level, the elevator at the correct position
 * FEATURE : * xmoto toto.lvl to play directly a level
-* it seems that there is a bug on speed it is played (if i play replays done on fast machine, it appear faster) http://xmoto.free.fr/replays/replay_1312.rpl
 * feature : a replay button when you finish a level (or die) which plays Latest.rpl
 
 * when are texure is rotated we need to copy the texture mutplile times so it's always visible

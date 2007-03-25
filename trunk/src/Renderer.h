@@ -290,7 +290,8 @@ namespace vapp {
     /* Subroutines */
     void _RenderSprites(bool bForeground,bool bBackground);
     void _RenderSprite(Entity *pSprite, float i_sizeMult = 1.0);
-    void _RenderBike(BikeState *pBike, BikeParameters *pBikeParms, BikerTheme *p_theme, bool i_renderBikeFront = true);
+    void _RenderBike(BikeState *pBike, BikeParameters *pBikeParms, BikerTheme *p_theme, bool i_renderBikeFront = true,
+		     const TColor&  i_filterColor = TColor(255, 255, 255, 0));
     void _RenderBlocks(void);
     void _RenderBlock(Block* block);
     void _RenderBlockEdges(Block* block);
@@ -316,7 +317,8 @@ namespace vapp {
     void guessDesiredCameraPosition(float &p_fDesiredHorizontalScrollShift,
 				    float &p_fDesiredVerticalScrollShift);
 
-    void _RenderAlphaBlendedSection(Texture *pTexture,const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3);
+    void _RenderAlphaBlendedSection(Texture *pTexture,const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3,
+				    const TColor& i_filterColor = TColor(255, 255, 255, 0));
     void _RenderAdditiveBlendedSection(Texture *pTexture,const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3);
     void _RenderAlphaBlendedSectionSP(Texture *pTexture,const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3);
     void _RenderCircle(int nSteps,Color CircleColor,const Vector2f &C,float fRadius);

@@ -638,7 +638,8 @@ namespace vapp {
 	_RenderBike(v_player->getState(),
 		    &(v_player->getState()->Parameters()),
 		    v_player->getBikeTheme(),
-		    v_player->getRenderBikeFront());
+		    v_player->getRenderBikeFront(),
+		    v_player->getColorFilter());
       } else {
 	v_found = true;
       }
@@ -647,7 +648,7 @@ namespace vapp {
       _RenderBike(m_playerToFollow->getState(),
 		  &(m_playerToFollow->getState()->Parameters()),
 		  m_playerToFollow->getBikeTheme(),
-		  m_playerToFollow->getRenderBikeFront());
+		  m_playerToFollow->getRenderBikeFront(), m_playerToFollow->getColorFilter());
     }
 
     /* ghost information */
@@ -1893,10 +1894,11 @@ namespace vapp {
   Rendering helpers
   ===========================================================================*/
   void GameRenderer::_RenderAlphaBlendedSection(Texture *pTexture,
-                                                const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3) {
+                                                const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3,
+						const TColor&  i_filterColor) {
     getParent()->getDrawLib()->setTexture(pTexture,BLEND_MODE_A);
     getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
-    getParent()->getDrawLib()->setColorRGB(255,255,255);
+    getParent()->getDrawLib()->setColorRGB(i_filterColor.Red(), i_filterColor.Green(), i_filterColor.Blue());
     getParent()->getDrawLib()->glTexCoord(0,1);
     getParent()->getDrawLib()->glVertex(p0.x,p0.y);
     getParent()->getDrawLib()->glTexCoord(1,1);
