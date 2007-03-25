@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-03-13 00:40+0100\n"
+"POT-Creation-Date: 2007-03-25 23:02+0200\n"
 "PO-Revision-Date: 2006-12-21 19:48+0100\n"
 "Last-Translator: Trullo\n"
 "Language-Team: X-Moto\n"
@@ -54,7 +54,7 @@ msgstr "Accio"
 msgid "All (on this computer)"
 msgstr "Tots (en aquest ordinador)"
 
-#: src/GameText.h:44 src/GameText.h:508
+#: src/GameText.h:44 src/GameText.h:512
 msgid "All levels"
 msgstr "Tots els nivells"
 
@@ -216,7 +216,7 @@ msgstr ""
 msgid "Credits"
 msgstr "Credits"
 
-#: src/GameText.h:137 src/GameText.h:298
+#: src/GameText.h:137 src/GameText.h:300
 msgid "Player"
 msgstr "Jugador"
 
@@ -551,7 +551,7 @@ msgstr "Impulsar la moto en sentit horari"
 msgid "Turns around and drives in the other direction"
 msgstr "Intercanvia la direccio de conduccio"
 
-#: src/GameText.h:214 src/GameText.h:294
+#: src/GameText.h:214 src/GameText.h:296
 msgid "Pause"
 msgstr "Aturat"
 
@@ -732,49 +732,58 @@ msgid "Motion blur ghost"
 msgstr "Efecte difuminat del fantasma"
 
 #: src/GameText.h:258
+msgid "Multi"
+msgstr ""
+
+#: src/GameText.h:259
 msgid "Name"
 msgstr "Nom"
 
-#: src/GameText.h:259
+#: src/GameText.h:260
+#, fuzzy
+msgid "Number of players"
+msgstr "Nom de la Repeticio"
+
+#: src/GameText.h:261
 #, c-format
 msgid "X-Moto %s or newer required to load level"
 msgstr "Es requereix l'X-Moto %s o superior per a carregar aquest nivell"
 
-#: src/GameText.h:260
+#: src/GameText.h:262
 msgid "New highscore!"
 msgstr "Nou Record!"
 
-#: src/GameText.h:261
+#: src/GameText.h:263
 msgid "New personal highscore!"
 msgstr "Nou Record personal!"
 
-#: src/GameText.h:262
+#: src/GameText.h:264
 #, c-format
 msgid "%d new or updated level available. Download now?"
 msgstr "Hi ha %d nivell nous o per actualitzar. Descarrega'ls ara?"
 
-#: src/GameText.h:263
+#: src/GameText.h:265
 msgid "New Levels"
 msgstr "Nous Nivells"
 
-#: src/GameText.h:264
+#: src/GameText.h:266
 msgid "New levels available!"
 msgstr "Nous nivells disponibles!"
 
-#: src/GameText.h:265
+#: src/GameText.h:267
 #, c-format
 msgid "%d new or updated levels available. Download now?"
 msgstr "Hi ha %d nivells nous disponibles. Descarrega'ls ara?"
 
-#: src/GameText.h:266
+#: src/GameText.h:268
 msgid "New Profile..."
 msgstr "Nou Perfil..."
 
-#: src/GameText.h:267
+#: src/GameText.h:269
 msgid "No"
 msgstr "No"
 
-#: src/GameText.h:268
+#: src/GameText.h:270
 msgid ""
 "No new or updated levels available.\n"
 "\n"
@@ -784,19 +793,19 @@ msgstr ""
 "\n"
 "Prova-ho de nou mes tard."
 
-#: src/GameText.h:269
+#: src/GameText.h:271
 msgid "No level following this one, sorry."
 msgstr "No hi ha cap nivell seguit d'aquest, ho sento."
 
-#: src/GameText.h:270
+#: src/GameText.h:272
 msgid "No statistics for this profile."
 msgstr "No hi ha estadistiques per aquest perfil."
 
-#: src/GameText.h:271
+#: src/GameText.h:273
 msgid "Not finished"
 msgstr "Sense completar"
 
-#: src/GameText.h:272
+#: src/GameText.h:274
 msgid ""
 "Important note!\n"
 "\n"
@@ -820,235 +829,240 @@ msgstr ""
 "Tambe visita http://xmoto.sourceforge.net per verificar que\n"
 "tens l'ultima versio."
 
-#: src/GameText.h:282
+#: src/GameText.h:284
 msgid "# Levels"
 msgstr "# Nivells"
 
-#: src/GameText.h:283
+#: src/GameText.h:285
 msgid "OK"
 msgstr "Dacord"
 
-#: src/GameText.h:284
+#: src/GameText.h:286
 msgid "Open"
 msgstr "Obrir"
 
-#: src/GameText.h:285
+#: src/GameText.h:287
 msgid "Options"
 msgstr "Opcions"
 
-#: src/GameText.h:286
+#: src/GameText.h:288
 msgid "Some options will not take effect before next restart!"
 msgstr "Algunes opciones no tindran efecte fins que es reinici el joc!"
 
-#: src/GameText.h:287
+#: src/GameText.h:289
 #, fuzzy
 msgid "By author"
 msgstr "Autor"
 
-#: src/GameText.h:288
+#: src/GameText.h:290
 msgid "Last"
 msgstr ""
 
-#: src/GameText.h:289 src/GameText.h:319
+#: src/GameText.h:291 src/GameText.h:322
 msgid "Room"
 msgstr "Sala"
 
-#: src/GameText.h:290
+#: src/GameText.h:292
 msgid "Special"
 msgstr ""
 
-#: src/GameText.h:291
+#: src/GameText.h:293
 msgid "Standard"
 msgstr ""
 
-#: src/GameText.h:292
+#: src/GameText.h:294
 msgid "Web votes"
 msgstr ""
 
-#: src/GameText.h:293 src/GameText.h:331
+#: src/GameText.h:295 src/GameText.h:334
 msgid "Statistics"
 msgstr "Estadistiques"
 
-#: src/GameText.h:295
+#: src/GameText.h:297
 msgid "Password"
 msgstr "Contrasenya"
 
-#: src/GameText.h:296 src/GameText.h:297
+#: src/GameText.h:298 src/GameText.h:299
 msgid "Personal"
 msgstr "Personal"
 
-#: src/GameText.h:299
+#: src/GameText.h:301
+#, fuzzy
+msgid "Players"
+msgstr "Jugador"
+
+#: src/GameText.h:302
 msgid "Player Profile"
 msgstr "Perfil del Jugador"
 
-#: src/GameText.h:300
+#: src/GameText.h:303
 msgid "Player Profiles"
 msgstr "Perfils dels Jugadors"
 
-#: src/GameText.h:301
+#: src/GameText.h:304
 msgid "Play Next Level"
 msgstr "Saltar al proxim nivell"
 
-#: src/GameText.h:302
+#: src/GameText.h:305
 msgid "Port"
 msgstr "Port"
 
-#: src/GameText.h:303
+#: src/GameText.h:306
 #, c-format
 msgid "Press key you want to '%s' or ESC to cancel..."
 msgstr "Prem una tecla per '%s' o ESC per cancelar..."
 
-#: src/GameText.h:304
+#: src/GameText.h:307
 msgid "Proxy Server"
 msgstr "Servidor Proxy"
 
-#: src/GameText.h:305
+#: src/GameText.h:308
 msgid "Configure Proxy..."
 msgstr "Configurar el proxy..."
 
-#: src/GameText.h:306
+#: src/GameText.h:309
 msgid "Quit Game"
 msgstr "Sortir"
 
-#: src/GameText.h:307
+#: src/GameText.h:310
 msgid "Do you really want to quit?"
 msgstr "Realment vols sortir del joc?"
 
-#: src/GameText.h:308
+#: src/GameText.h:311
 msgid "Randomize"
 msgstr "Aleatoris"
 
-#: src/GameText.h:309
+#: src/GameText.h:312
 msgid "Reloading levels..."
 msgstr "Recarregant els nivells..."
 
-#: src/GameText.h:310
+#: src/GameText.h:313
 msgid "Reloading replays..."
 msgstr "Recarregant les repeticions..."
 
-#: src/GameText.h:311
+#: src/GameText.h:314
 msgid "Replay"
 msgstr "Repeticio"
 
-#: src/GameText.h:312
+#: src/GameText.h:315
 msgid "Stop[esc] ||[space]  << >>[left/right keys]  < >[up/down keys]   Speed:"
 msgstr ""
 "Stop[esc] ||[espai]  << >>[esquerre/dreta]  < >[adalt/abaix]   Velocitat:"
 
-#: src/GameText.h:313
+#: src/GameText.h:316
 msgid "Stop[esc] ||[space] >>[right key] < >[up/down keys]   Speed:"
 msgstr "Stop[esc] ||[espai] >>[dreta] < >[adalt/abaix]   Velocitat:"
 
-#: src/GameText.h:315
+#: src/GameText.h:318
 #, fuzzy
 msgid "The replay can't be played!"
 msgstr "La Repeticio '%s' no es pot mostrar!"
 
-#: src/GameText.h:316
+#: src/GameText.h:319
 msgid "Replays"
 msgstr "Repeticions"
 
-#: src/GameText.h:317
+#: src/GameText.h:320
 msgid "Restart This Level"
 msgstr "Reiniciar aquest nivell"
 
-#: src/GameText.h:318
+#: src/GameText.h:321
 msgid "Resume Playing"
 msgstr "Continuar jugant"
 
-#: src/GameText.h:320
+#: src/GameText.h:323
 msgid "Run Windowed"
 msgstr "Carrega en una finestra"
 
-#: src/GameText.h:321
+#: src/GameText.h:324
 msgid "Save"
 msgstr "Desa"
 
-#: src/GameText.h:322
+#: src/GameText.h:325
 msgid "Saved as"
 msgstr "Desa com"
 
-#: src/GameText.h:323
+#: src/GameText.h:326
 msgid "Save Replay"
 msgstr "Desar la repeticio"
 
-#: src/GameText.h:324
+#: src/GameText.h:327
 msgid "Screen Resolution"
 msgstr "Resolucio de Pantalla"
 
-#: src/GameText.h:325
+#: src/GameText.h:328
 msgid "Show"
 msgstr "Mostra"
 
-#: src/GameText.h:326
+#: src/GameText.h:329
 msgid "Speedometer"
 msgstr "Velocimetre"
 
-#: src/GameText.h:327
+#: src/GameText.h:330
 msgid "Info..."
 msgstr "Info..."
 
-#: src/GameText.h:328
+#: src/GameText.h:331
 msgid "Show Mini Map"
 msgstr "Mostra Mini Mapa"
 
-#: src/GameText.h:329
+#: src/GameText.h:332
 msgid "Scripted"
 msgstr "Scripted"
 
-#: src/GameText.h:330
+#: src/GameText.h:333
 msgid "Play!"
 msgstr "Juga!"
 
-#: src/GameText.h:332
+#: src/GameText.h:335
 msgid "STATS"
 msgstr "STATS"
 
-#: src/GameText.h:333
+#: src/GameText.h:336
 msgid "Stereo"
 msgstr "Stereo"
 
-#: src/GameText.h:334
+#: src/GameText.h:337
 msgid "Theme"
 msgstr "Tema"
 
-#: src/GameText.h:335
+#: src/GameText.h:338
 msgid "Available"
 msgstr "Disponible"
 
-#: src/GameText.h:336
+#: src/GameText.h:339
 msgid "To download"
 msgstr "Per descarregar"
 
-#: src/GameText.h:337
+#: src/GameText.h:340
 msgid "To be updated"
 msgstr "Per actualitzar"
 
-#: src/GameText.h:338
+#: src/GameText.h:341
 msgid "The theme is now up to date"
 msgstr "El tema ja esta actualitzat"
 
-#: src/GameText.h:339
+#: src/GameText.h:342
 msgid "Time"
 msgstr "Temps"
 
-#: src/GameText.h:340
+#: src/GameText.h:343
 msgid "Try This Level Again"
 msgstr "Intentar-ho de nou"
 
-#: src/GameText.h:341
+#: src/GameText.h:344
 msgid "Tutorial"
 msgstr "Tutorial"
 
-#: src/GameText.h:342
+#: src/GameText.h:345
 msgid "Unknown"
 msgstr "Desconegut"
 
-#: src/GameText.h:343
+#: src/GameText.h:346
 msgid "Unpacked levels"
 msgstr "Nivells sense empaquetar"
 
-#: src/GameText.h:344
+#: src/GameText.h:347
 msgid ""
 "Can't update this theme !\n"
 "The theme is not avaible on the web\n"
@@ -1058,31 +1072,31 @@ msgstr ""
 "El tema no esta disponible en la web\n"
 "o la teva llista de temes no esta actualitzada"
 
-#: src/GameText.h:345
+#: src/GameText.h:348
 msgid "Update"
 msgstr "Actualitzar"
 
-#: src/GameText.h:346
+#: src/GameText.h:349
 msgid "Check WWW"
 msgstr "Comprova WWW"
 
-#: src/GameText.h:347
+#: src/GameText.h:350
 msgid "Update the rooms list"
 msgstr "Actualitza la llista"
 
-#: src/GameText.h:348
+#: src/GameText.h:351
 msgid "Update the theme list"
 msgstr "Actualitza la llista"
 
-#: src/GameText.h:349
+#: src/GameText.h:352
 msgid "Updating level lists..."
 msgstr "Actualitza les llistes de nivells..."
 
-#: src/GameText.h:350
+#: src/GameText.h:353
 msgid "Upload highscore"
 msgstr "Envia el Record"
 
-#: src/GameText.h:351
+#: src/GameText.h:354
 msgid ""
 "An unexcepted error occured\n"
 "The website has perhaps some troubles"
@@ -1090,78 +1104,78 @@ msgstr ""
 "Error inesperat\n"
 "La pagina web te alguns problemes"
 
-#: src/GameText.h:352
+#: src/GameText.h:355
 msgid "Oh no !"
 msgstr "Oh no!"
 
-#: src/GameText.h:353
+#: src/GameText.h:356
 msgid "Uploading the highscore..."
 msgstr "Enviant el record..."
 
-#: src/GameText.h:354
+#: src/GameText.h:357
 msgid "Use Environment Vars"
 msgstr "Utilitza les variables d'entorn"
 
-#: src/GameText.h:355
+#: src/GameText.h:358
 msgid "Use Profile"
 msgstr "Utilitzar Perfil"
 
-#: src/GameText.h:356
+#: src/GameText.h:359
 msgid "Using HTTP Proxy"
 msgstr "Utilitzant el proxy HTTP"
 
-#: src/GameText.h:357
+#: src/GameText.h:360
 msgid "Using SOCKS4 Proxy"
 msgstr "Utilitzant el proxy SOCKS4"
 
-#: src/GameText.h:358
+#: src/GameText.h:361
 msgid "Using SOCKS5 Proxy"
 msgstr "Utilitzant el proxy SOCKS5"
 
-#: src/GameText.h:359
+#: src/GameText.h:362
 msgid "Video"
 msgstr "Video"
 
-#: src/GameText.h:360
+#: src/GameText.h:363
 msgid "View"
 msgstr "Veure"
 
-#: src/GameText.h:361
+#: src/GameText.h:364
 msgid "View the highscore"
 msgstr "Veure el Record"
 
-#: src/GameText.h:362
+#: src/GameText.h:365
 #, c-format
 msgid "Do you want to update level \"%s\"?"
 msgstr "Vols actualitzar el nivell \"%s\" ?"
 
-#: src/GameText.h:363
+#: src/GameText.h:366
 msgid "Warning"
 msgstr "Atencio"
 
-#: src/GameText.h:365
+#: src/GameText.h:368
 msgid "Main"
 msgstr "Principal"
 
-#: src/GameText.h:366
+#: src/GameText.h:369
 msgid "WWW"
 msgstr "WWW"
 
-#: src/GameText.h:367
+#: src/GameText.h:370
 msgid "Rooms"
 msgstr "Sales"
 
-#: src/GameText.h:369
+#: src/GameText.h:372
 #, c-format
 msgid "%d hours"
 msgstr "%d hores"
 
-#: src/GameText.h:370
+#: src/GameText.h:373
 #, c-format
 msgid "%d minutes"
 msgstr "%d minuts"
 
-#: src/GameText.h:371
+#: src/GameText.h:374
 #, c-format
 msgid ""
 "(Stats since: %s)\n"
@@ -1174,442 +1188,442 @@ msgstr ""
 "%d perdudes, %d finalitzades i %d reiniciades.\n"
 "Temps de joc: %s"
 
-#: src/GameText.h:374
+#: src/GameText.h:377
 #, c-format
 msgid "%d plays, %d deaths, %d finishes, and %d restarts"
 msgstr "%d partides, %d perdudes, %d finalitzades i %d reiniciades"
 
-#: src/GameText.h:375
+#: src/GameText.h:378
 #, c-format
 msgid "%d seconds"
 msgstr "%d segons"
 
-#: src/GameText.h:376
+#: src/GameText.h:379
 msgid "Yes"
 msgstr "Si"
 
-#: src/GameText.h:377
+#: src/GameText.h:380
 msgid "Yes to all"
 msgstr "Si a tots"
 
-#: src/GameText.h:378
+#: src/GameText.h:381
 msgid "Zoom in"
 msgstr "Apropar Enfocament"
 
-#: src/GameText.h:379
+#: src/GameText.h:382
 msgid "Reinitialize zoom"
 msgstr "Restaurar l'Enfocament"
 
-#: src/GameText.h:380
+#: src/GameText.h:383
 msgid "Zoom out"
 msgstr "Allunyar Enfocament"
 
-#: src/GameText.h:383
+#: src/GameText.h:386
 msgid "Download the latest X-Moto world records and check for new levels"
 msgstr ""
 "Descarrega't els darrers Records Mundials de l'X-Moto i comprova si hi ha "
 "nous nivells"
 
-#: src/GameText.h:384
+#: src/GameText.h:387
 msgid "Configure how you are connected to the Internet"
 msgstr "Configura la connexio a Internet"
 
-#: src/GameText.h:385
+#: src/GameText.h:388
 msgid "Play this level again"
 msgstr "Juga de nou en aquest nivell"
 
-#: src/GameText.h:386
+#: src/GameText.h:389
 msgid "Save a replay for later viewing"
 msgstr "Desa una repeticio per a veure-la mes tard"
 
-#: src/GameText.h:387
+#: src/GameText.h:390
 msgid "Play next level"
 msgstr "Saltar al proxim nivell de la llista"
 
-#: src/GameText.h:388
+#: src/GameText.h:391
 msgid "Back to the main menu"
 msgstr "Torna al menu princial"
 
-#: src/GameText.h:389
+#: src/GameText.h:392
 msgid "Quit the game"
 msgstr "Sortir del joc"
 
-#: src/GameText.h:390
+#: src/GameText.h:393
 msgid "Back to the game"
 msgstr "Torna al joc"
 
-#: src/GameText.h:391
+#: src/GameText.h:394
 msgid "Try this level again from the beginning"
 msgstr "Intenta de nou aquest nivell des de el principi"
 
-#: src/GameText.h:392
+#: src/GameText.h:395
 msgid "Play next level instead"
 msgstr "Saltar al proxim nivell de la llista"
 
-#: src/GameText.h:393
+#: src/GameText.h:396
 msgid "Try this level again"
 msgstr "Juga de nou en aquest nivell"
 
-#: src/GameText.h:394
+#: src/GameText.h:397
 msgid "Built-in and stand-alone external levels"
 msgstr "Nivells Interns i Externs"
 
-#: src/GameText.h:395
+#: src/GameText.h:398
 msgid "Levels grouped together in level packs"
 msgstr "Nivells agrupats en Paquets"
 
-#: src/GameText.h:396
+#: src/GameText.h:399
 #, fuzzy
 msgid "Browse levels available to you"
 msgstr "Navega pels nivells disponibles"
 
-#: src/GameText.h:397
+#: src/GameText.h:400
 msgid "View list of recorded replays"
 msgstr "Veure la llista de les repeticions desades"
 
-#: src/GameText.h:398
+#: src/GameText.h:401
 msgid "Configure X-Moto preferences"
 msgstr "Configura les preferencies de l'X-Moto"
 
-#: src/GameText.h:399
+#: src/GameText.h:402
 msgid "Instructions of how to play X-Moto"
 msgstr "Instruccions de com jugar-hi"
 
-#: src/GameText.h:400
+#: src/GameText.h:403
 msgid "Change player profile"
 msgstr "Canvia el perfil del jugador"
 
-#: src/GameText.h:401
+#: src/GameText.h:404
 msgid "Play tutorial of how to play the game"
 msgstr "Mostra un Tutorial de com s'hi juga"
 
-#: src/GameText.h:402
+#: src/GameText.h:405
 msgid "Official built-in levels"
 msgstr "Nivells Interns Oficials"
 
-#: src/GameText.h:403
+#: src/GameText.h:406
 msgid "Unofficial stand-alone external levels"
 msgstr "Nivells Externs extra-oficials"
 
-#: src/GameText.h:404
+#: src/GameText.h:407
 msgid "Play the selected level"
 msgstr "Juga en el nivell seleccionat"
 
-#: src/GameText.h:405
+#: src/GameText.h:408
 msgid "View general information about the level, best times, and replays"
 msgstr "Veure Informacio general sobre el nivell, millors temps i repeticions"
 
-#: src/GameText.h:406
+#: src/GameText.h:409
 msgid "Run the selected replay"
 msgstr "Mostra la repeticio seleccionada"
 
-#: src/GameText.h:407
+#: src/GameText.h:410
 msgid "Permanently delete the selected replay"
 msgstr "Eliminar definitivament la repeticio seleccionada"
 
-#: src/GameText.h:408
+#: src/GameText.h:411
 msgid "Show replays of all players in list"
 msgstr "Mostra les repeticions de tots el jugadors de la llista"
 
-#: src/GameText.h:409
+#: src/GameText.h:412
 msgid "General X-Moto preferences"
 msgstr "Preferencies generals de l'X-Moto"
 
-#: src/GameText.h:410
+#: src/GameText.h:413
 msgid "Configure graphical options"
 msgstr "Configura les opcions grafiques"
 
-#: src/GameText.h:411
+#: src/GameText.h:414
 msgid "Configure audio options"
 msgstr "Configura les opcions d'audio"
 
-#: src/GameText.h:412
+#: src/GameText.h:415
 msgid "Configure control options"
 msgstr "Configura les opcions dels controls"
 
-#: src/GameText.h:413
+#: src/GameText.h:416
 msgid "Save options"
 msgstr "Desa les Opcions"
 
-#: src/GameText.h:414
+#: src/GameText.h:417
 msgid "Revert options to defaults"
 msgstr "Torna a les opcions inicials per defecte"
 
-#: src/GameText.h:415
+#: src/GameText.h:418
 msgid "Show a map of your surroundings when playing"
 msgstr "Mostra un mapa del terreny durant la partida"
 
-#: src/GameText.h:416
+#: src/GameText.h:419
 msgid "Automatically download best times off the net when the game starts"
 msgstr "Descarrega automaticament els millors temps de la xarxa en arrencar"
 
-#: src/GameText.h:417
+#: src/GameText.h:420
 msgid "Show the World Record for a given level when playing"
 msgstr "Mostra el Record Mundial per a un nivell durant la partida"
 
-#: src/GameText.h:418
+#: src/GameText.h:421
 msgid "Enable high-color graphics"
 msgstr "Activa els grafics high-color"
 
-#: src/GameText.h:419
+#: src/GameText.h:422
 msgid "Enable true-color graphics"
 msgstr "Activa el grafics true-color"
 
-#: src/GameText.h:420
+#: src/GameText.h:423
 msgid "Select graphics resolution"
 msgstr "Selecciona la resolucio grafica"
 
-#: src/GameText.h:421
+#: src/GameText.h:424
 msgid "Run the game in a window"
 msgstr "Arrenca el joc dins d'una finestra"
 
-#: src/GameText.h:422
+#: src/GameText.h:425
 msgid "Not so fancy menu graphics"
 msgstr "Grafics gens estrafolaris pel menu"
 
-#: src/GameText.h:423
+#: src/GameText.h:426
 msgid "A bit more fancy menu graphics"
 msgstr "Grafics una mica mes estrafolaris pel menu"
 
-#: src/GameText.h:424
+#: src/GameText.h:427
 msgid "Fanciest menu graphics"
 msgstr "Grafics mes estrafolaris pel menu"
 
-#: src/GameText.h:425
+#: src/GameText.h:428
 msgid "Disable most graphics not important to the gameplay"
 msgstr "Desactiva els grafics que no son importants per a jugar-hi"
 
-#: src/GameText.h:426
+#: src/GameText.h:429
 msgid "Disable some of the most resource-intensive graphics, like particles"
 msgstr "Desactiva alguns dels grafics mes pesats, com les particules"
 
-#: src/GameText.h:427
+#: src/GameText.h:430
 msgid "Enable all graphical effects"
 msgstr "Activa tos els efectes grafics"
 
-#: src/GameText.h:428
+#: src/GameText.h:431
 msgid "Turn on sound effects"
 msgstr "Activar els efectes de So"
 
-#: src/GameText.h:429
+#: src/GameText.h:432
 msgid "Poor sound quality"
 msgstr "Qualitat de So baixa"
 
-#: src/GameText.h:430
+#: src/GameText.h:433
 msgid "Normal sound quality"
 msgstr "Qualitat de So normal"
 
-#: src/GameText.h:431
+#: src/GameText.h:434
 msgid "Best sound quality"
 msgstr "Qualitat de So alta"
 
-#: src/GameText.h:432
+#: src/GameText.h:435
 msgid "8-bit sound samples, poor quality"
 msgstr "8-bit, qualitat baixa"
 
-#: src/GameText.h:433
+#: src/GameText.h:436
 msgid "16-bit sound samples, good quality"
 msgstr "16-bit, qualitat bona"
 
-#: src/GameText.h:434
+#: src/GameText.h:437
 msgid "Mono (single channel) audio"
 msgstr "So Mono (un canal)"
 
-#: src/GameText.h:435
+#: src/GameText.h:438
 msgid "Stereo (two channel) audio"
 msgstr "So Stereo (dos canals)"
 
-#: src/GameText.h:436
+#: src/GameText.h:439
 msgid "Turn on engine noise"
 msgstr "Activa el motor de So"
 
-#: src/GameText.h:437
+#: src/GameText.h:440
 msgid "Select action to re-configure to another key"
 msgstr "Selecciona una accio per reconfigurar una altre tecla"
 
-#: src/GameText.h:438
+#: src/GameText.h:441
 msgid "View contents of level pack"
 msgstr "Veure el contingut del Paquet"
 
-#: src/GameText.h:439
+#: src/GameText.h:442
 msgid "Select a player profile to use"
 msgstr "Selecciona el perfil de jugador a utilitzar"
 
-#: src/GameText.h:440
+#: src/GameText.h:443
 msgid "Use the selected player profile"
 msgstr "Utilitza el perfil de jugador seleccionat"
 
-#: src/GameText.h:441
+#: src/GameText.h:444
 msgid "Create new player profile"
 msgstr "Crea un nou perfil de jugador"
 
-#: src/GameText.h:442
+#: src/GameText.h:445
 msgid "Close profile editor"
 msgstr "Tanca l'editor de perfils"
 
-#: src/GameText.h:443
+#: src/GameText.h:446
 msgid "Permanently delete selected player profile, including best times"
 msgstr ""
 "Elimina definitivament el perfil del jugador seleccionat (incols els records)"
 
-#: src/GameText.h:444
+#: src/GameText.h:447
 msgid "Select a level in the level pack to play"
 msgstr "Selecciona un nivell en el paquet per a jugar-hi"
 
-#: src/GameText.h:445
+#: src/GameText.h:448
 msgid "Close level pack"
 msgstr "Tanca el Paquet"
 
-#: src/GameText.h:446
+#: src/GameText.h:449
 msgid "General information about the level"
 msgstr "Informacio general sobre el nivell"
 
-#: src/GameText.h:447
+#: src/GameText.h:450
 msgid "View best times for the level"
 msgstr "Veure els millors temps per al nivell"
 
-#: src/GameText.h:448
+#: src/GameText.h:451
 msgid "View locally stored replays of the level"
 msgstr "Veure les repeticions locals d'aquest nivell"
 
-#: src/GameText.h:449
+#: src/GameText.h:452
 msgid "Only show personal best times for this level"
 msgstr "Mostra nomes els records personals per aquest nivell"
 
-#: src/GameText.h:450
+#: src/GameText.h:453
 msgid "Show all best times for this level"
 msgstr "Mostra tots els records per aquest nivell"
 
-#: src/GameText.h:451
+#: src/GameText.h:454
 msgid "Only show personal replays for this level"
 msgstr "Nomes mostra les repeticions personals d'aquest nivell"
 
-#: src/GameText.h:452
+#: src/GameText.h:455
 msgid "Show all replays for this level"
 msgstr "Mostra totes les repeticions d'aquest nivell"
 
-#: src/GameText.h:453
+#: src/GameText.h:456
 msgid "Run selected replay"
 msgstr "Veure la repeticio seleccionada"
 
-#: src/GameText.h:454
+#: src/GameText.h:457
 msgid "Show helpful help strings such as this one"
 msgstr "Mostra missatges d'ajuda utils com aquest mateix"
 
-#: src/GameText.h:455
+#: src/GameText.h:458
 msgid ""
 "Let X-Moto look for more levels on the net, and install them automatically"
 msgstr ""
 "Permet que l'X-Moto busqui mes nivells en la xarxa, i instalar-los "
 "automaticament"
 
-#: src/GameText.h:456
+#: src/GameText.h:459
 msgid "Select this if you got a direct connection to the Internet"
 msgstr "Selecciona aquest si tens una connexio directe a Internet"
 
-#: src/GameText.h:457
+#: src/GameText.h:460
 msgid "Select this if you connects to the Internet through an HTTP proxy"
 msgstr ""
 "Selecciona aquest si tens una connexio a Internet a traves d'un proxy HTTP"
 
-#: src/GameText.h:458
+#: src/GameText.h:461
 msgid "Select this if you connects to the Internet through a SOCKS4 proxy"
 msgstr ""
 "Selecciona aquest si tens una connexio a Internet a traves d'un proxy SOCKS4"
 
-#: src/GameText.h:459
+#: src/GameText.h:462
 msgid "Select this if you connects to the Internet through a SOCKS5 proxy"
 msgstr ""
 "Selecciona aquest si tens una connexio a Internet a traves d'un proxy SOCKS5"
 
-#: src/GameText.h:460
+#: src/GameText.h:463
 msgid "Use these settings"
 msgstr "Utilitza aquestes opcions"
 
-#: src/GameText.h:461
+#: src/GameText.h:464
 msgid "Write the IP address or host name of proxy server to use"
 msgstr "Escriu l'adreça IP o el host name del servidor proxy a utilitzar"
 
-#: src/GameText.h:462
+#: src/GameText.h:465
 msgid "Write the port number used by the proxy server"
 msgstr "Escriu el numero del port utilitzat pel servidor proxy"
 
-#: src/GameText.h:463
+#: src/GameText.h:466
 msgid "New levels and levels updated from the Internet"
 msgstr "Nous nivells i nivells actualitzats des de Internet"
 
-#: src/GameText.h:465
+#: src/GameText.h:468
 msgid "Show the ghost if possible in the game"
 msgstr "Mostra un Fantasma (si existeix algun) durant el joc"
 
-#: src/GameText.h:466
+#: src/GameText.h:469
 msgid "Choose which ghost to display"
 msgstr "Escull quin Fantasma mostrar"
 
-#: src/GameText.h:467
+#: src/GameText.h:470
 msgid ""
 "Make motion blur effect for the ghost (if supported by your graphics card)"
 msgstr ""
 "Fa efecte difuminat per al fantasma (si la teva targeta grafica ho soporta)"
 
-#: src/GameText.h:468
+#: src/GameText.h:471
 msgid "When starting a level with a ghost, display who the ghost is of"
 msgstr "Quan s'inicia un nivell amb fanstama, mostra de qui es"
 
-#: src/GameText.h:469
+#: src/GameText.h:472
 msgid "Display the time difference between the ghost and you"
 msgstr "Mostra la diferencia de temps entre el fantasma i tu"
 
-#: src/GameText.h:470
+#: src/GameText.h:473
 msgid "If you make a highscore it will automatically be saved as a replay"
 msgstr "Si fas un Record automaticament es desara com a repeticio"
 
-#: src/GameText.h:471
+#: src/GameText.h:474
 msgid "View the replay of the room's highscore"
 msgstr "Mostra la repeticio del record de la sala"
 
-#: src/GameText.h:473
+#: src/GameText.h:476
 msgid "Check for new levels at startup"
 msgstr "Comprova si hi ha nous nivells al iniciar"
 
-#: src/GameText.h:474
+#: src/GameText.h:477
 msgid "Check for new highscores at startup"
 msgstr "Comprova si hi ha nous records al iniciar"
 
-#: src/GameText.h:476
+#: src/GameText.h:479
 msgid "Show various statistics about X-Moto"
 msgstr "Mostra algunes estadistiques sobre l'X-Moto"
 
-#: src/GameText.h:477
+#: src/GameText.h:480
 msgid "Update statistics (also happens each time X-Moto is started)"
 msgstr ""
 "Actualitza les estadistiques (tambe succeeix cada cop que s'inicia l'X-Moto)"
 
-#: src/GameText.h:478
+#: src/GameText.h:481
 msgid "Enables background music in the main menu"
 msgstr "Activa la musica de fons en el menu"
 
-#: src/GameText.h:480
+#: src/GameText.h:483
 msgid "Choose the X-Moto graphics theme"
 msgstr "Escull el tema grafic per a l'X-Moto"
 
-#: src/GameText.h:481
+#: src/GameText.h:484
 msgid "Check for new themes on the web"
 msgstr "Comprova si hi ha nous temes en la xarxa"
 
-#: src/GameText.h:482
+#: src/GameText.h:485
 msgid "Download or update the selected theme"
 msgstr "Descarrega o actualitza el tema seleccionat"
 
-#: src/GameText.h:483
+#: src/GameText.h:486
 msgid "Upload the replay on the website of highscores"
 msgstr "Envia la repeticio a la pagina web de records"
 
-#: src/GameText.h:484
+#: src/GameText.h:487
 msgid "Configure the main www options"
 msgstr "Configura les opcions principals del www"
 
-#: src/GameText.h:485
+#: src/GameText.h:488
 msgid ""
 "Choose where to upload/download replays, highscore lists (for more "
 "information, check the website)"
@@ -1617,147 +1631,151 @@ msgstr ""
 "Escull on enviar/descarregar les repeticions, llista de records (per a "
 "mesinformacio visita la pagina web)"
 
-#: src/GameText.h:486
+#: src/GameText.h:489
 msgid "Choose your room"
 msgstr "Escull una sala"
 
-#: src/GameText.h:487
+#: src/GameText.h:490
 msgid "Get the rooms list from the web"
 msgstr "Descarrega la llista de sales de la xarxa"
 
-#: src/GameText.h:488
+#: src/GameText.h:491
 msgid "Upload of highscore requires to log in (Except for WR)"
 msgstr ""
 "Envia ¡r un record requereix fer login (excepte per als Records Mundials)"
 
-#: src/GameText.h:489
+#: src/GameText.h:492
 msgid "Upload of highscore requires a password (Except for WR)"
 msgstr ""
 "Enviar un record requereix una contrasenya (Excepte per als Records Mundials)"
 
-#: src/GameText.h:490
+#: src/GameText.h:493
 msgid "Show the speedometer when playing"
 msgstr "Mostra el velocimetre durant la partida"
 
-#: src/GameText.h:491
+#: src/GameText.h:494
 msgid "Enable animation of bike falling apart when dead"
 msgstr "Activa l'animacio de la moto per a que es trenqui al morir"
 
-#: src/GameText.h:492
+#: src/GameText.h:495
 msgid "Automatically scroll over the level before starting playing it"
 msgstr "Enfoca tot el nivell automaticament abans de iniciar la partida"
 
-#: src/GameText.h:493
+#: src/GameText.h:496
 msgid "View the X-Moto credits"
 msgstr "Veure els Credits de l'X-Moto"
 
-#: src/GameText.h:494
+#: src/GameText.h:497
 msgid "Name of replay"
 msgstr "Nom de la Repeticio"
 
-#: src/GameText.h:495
+#: src/GameText.h:498
 msgid "Level played in replay"
 msgstr "Nivell jugat en la repeticio"
 
-#: src/GameText.h:496
+#: src/GameText.h:499
 msgid "Player who recorded the replay"
 msgstr "Jugador que va desar la repeticio"
 
-#: src/GameText.h:497
+#: src/GameText.h:500
 msgid "Click to select screen resolution"
 msgstr "Fes click per seleccionar la resolucio grafica"
 
-#: src/GameText.h:498
+#: src/GameText.h:501
 msgid "Completed levels / total number of levels in pack"
 msgstr "Nivells Completats / numero total de nivells del paquet"
 
-#: src/GameText.h:499
+#: src/GameText.h:502
 msgid "Name of level pack"
 msgstr "Nom del Paquet de nivells"
 
-#: src/GameText.h:500
+#: src/GameText.h:503
 msgid "Add the level to the favorite levels list"
 msgstr "Afegeix el nivell a la llista de favorits"
 
-#: src/GameText.h:501
+#: src/GameText.h:504
 msgid "Delete the level from the favorite levels list"
 msgstr "Eliminar el nivell de la llista de favorits"
 
-#: src/GameText.h:502
+#: src/GameText.h:505
 msgid "Puzzle the levels pack list"
 msgstr "Barreja la llista de paquets de nivells"
 
-#: src/GameText.h:503
+#: src/GameText.h:506
 msgid "Put a text to limit the level list"
 msgstr "Posa un text per limitar la llista de nivells"
 
-#: src/GameText.h:505
+#: src/GameText.h:507
+msgid "Choose the number of players"
+msgstr ""
+
+#: src/GameText.h:509
 msgid "Levels with no highscore"
 msgstr "Nivells sense record"
 
-#: src/GameText.h:506
+#: src/GameText.h:510
 msgid "Levels you have not completed"
 msgstr "Nivells que no has completat"
 
-#: src/GameText.h:507
+#: src/GameText.h:511
 msgid "You're not the highscore holder"
 msgstr "Tu no ets el titular del record"
 
-#: src/GameText.h:509
+#: src/GameText.h:513
 msgid "New levels"
 msgstr "Nous Nivells"
 
-#: src/GameText.h:510
+#: src/GameText.h:514
 msgid "Updated levels"
 msgstr "Nivells Actualitzats"
 
-#: src/GameText.h:511
-msgid "Favorite levels"
-msgstr "Nivells favorits"
-
-#: src/GameText.h:512
-#, fuzzy
-msgid "Nicest levels"
-msgstr "Nous Nivells"
-
-#: src/GameText.h:513
-#, fuzzy
-msgid "Hardest levels"
-msgstr "Nivells favorits"
-
-#: src/GameText.h:514
-#, fuzzy
-msgid "Easiest levels"
-msgstr "Nivells favorits"
-
 #: src/GameText.h:515
-#, fuzzy
-msgid "Crapiest levels"
+msgid "Favorite levels"
 msgstr "Nivells favorits"
 
 #: src/GameText.h:516
 #, fuzzy
+msgid "Nicest levels"
+msgstr "Nous Nivells"
+
+#: src/GameText.h:517
+#, fuzzy
+msgid "Hardest levels"
+msgstr "Nivells favorits"
+
+#: src/GameText.h:518
+#, fuzzy
+msgid "Easiest levels"
+msgstr "Nivells favorits"
+
+#: src/GameText.h:519
+#, fuzzy
+msgid "Crapiest levels"
+msgstr "Nivells favorits"
+
+#: src/GameText.h:520
+#, fuzzy
 msgid "Scripted levels"
 msgstr "Nivells Actualitzats"
 
-#: src/GameText.h:517
+#: src/GameText.h:521
 msgid "Musical"
 msgstr ""
 
-#: src/GameText.h:518
+#: src/GameText.h:522
 msgid "By best driver"
 msgstr ""
 
-#: src/GameText.h:519
+#: src/GameText.h:523
 #, fuzzy
 msgid "Never played levels"
 msgstr "Nivells mes jugats"
 
-#: src/GameText.h:520
+#: src/GameText.h:524
 msgid "Most played levels"
 msgstr "Nivells mes jugats"
 
-#: src/GameText.h:521
+#: src/GameText.h:525
 #, fuzzy
 msgid "Less played levels (but played)"
 msgstr "Nivells mes jugats"

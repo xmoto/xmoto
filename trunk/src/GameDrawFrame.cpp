@@ -154,7 +154,9 @@ namespace vapp {
           
 	  if ((m_State == GS_FINISHED) || (m_State == GS_DEADMENU || m_State == GS_DEADJUST) || (m_State == GS_PAUSE)) {
             setFrameDelay(10);
-          } else {
+          } else if(m_State == GS_REPLAYING && m_stopToUpdateReplay == true) {
+	    nADelay = 10;
+	  } else {
             /* become idle only if we hadn't to skip any frame, recently, and more globaly (80% of fps) */
             if((nPhysSteps <= 1) && (m_fFPS_Rate > (0.8f / PHYS_STEP_SIZE)))
               nADelay = ((m_fLastPhysTime + PHYS_STEP_SIZE) - fEndFrameTime) * 1000.0f;
@@ -166,7 +168,7 @@ namespace vapp {
 		nADelay = 10 - (int)(timeElapsed*1000.0);
 	    }
           }
-                  
+
           if(nADelay > 0) {
             if(!m_bTimeDemo) {
               setFrameDelay(nADelay);
