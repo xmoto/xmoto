@@ -516,12 +516,14 @@ namespace vapp {
     }      
     
     /* Have the script hooked this key? */
-    if(Type == INPUT_KEY_DOWN) {
-      for(int i=0;i<m_nNumScriptKeyHooks;i++) {
-        if(m_ScriptKeyHooks[i].nKey == nKey) {
-          /* Invoke script */
-          m_ScriptKeyHooks[i].pGame->getLuaLibGame()->scriptCallVoid(m_ScriptKeyHooks[i].FuncName);
-        }
+    if(i_player == 0) { // handle script key only for player 0 to not call them several times
+      if(Type == INPUT_KEY_DOWN) {
+	for(int i=0;i<m_nNumScriptKeyHooks;i++) {
+	  if(m_ScriptKeyHooks[i].nKey == nKey) {
+	    /* Invoke script */
+	    m_ScriptKeyHooks[i].pGame->getLuaLibGame()->scriptCallVoid(m_ScriptKeyHooks[i].FuncName);
+	  }
+	}
       }
     }
   }

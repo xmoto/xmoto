@@ -1094,8 +1094,9 @@ void MotoGame::cleanPlayers() {
 
 
   PlayerBiker* MotoGame::addPlayerBiker(Vector2f i_position, DriveDir i_direction,
-					Theme *i_theme, BikerTheme* i_bikerTheme) {
-    PlayerBiker* v_playerBiker = new PlayerBiker(i_position, i_direction, m_PhysGravity, i_theme, i_bikerTheme);
+					Theme *i_theme, BikerTheme* i_bikerTheme,
+					const TColor& i_filterColor) {
+    PlayerBiker* v_playerBiker = new PlayerBiker(i_position, i_direction, m_PhysGravity, i_theme, i_bikerTheme, i_filterColor);
     v_playerBiker->setOnBikerHooks(new MotoGameOnBikerHooks(this, m_players.size()));
     m_players.push_back(v_playerBiker);
     return v_playerBiker;

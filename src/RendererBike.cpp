@@ -32,7 +32,8 @@ namespace vapp {
   /*===========================================================================
   Rendering of the bike
   ===========================================================================*/
-  void GameRenderer::_RenderBike(BikeState *pBike, BikeParameters *pBikeParms, BikerTheme *p_theme, bool i_renderBikeFront) {
+  void GameRenderer::_RenderBike(BikeState *pBike, BikeParameters *pBikeParms, BikerTheme *p_theme, bool i_renderBikeFront,
+				 const TColor&  i_filterColor) {
     Sprite *pSprite;
     Texture *pTexture;
 
@@ -220,9 +221,9 @@ namespace vapp {
 	pTexture = pSprite->getTexture();
 	if(pTexture != NULL) {
 	  if(pBike->Dir == DD_RIGHT) {
-	    _RenderAlphaBlendedSection(pTexture,p3+C,p2+C,p1+C,p0+C);
+	    _RenderAlphaBlendedSection(pTexture,p3+C,p2+C,p1+C,p0+C, i_filterColor);
 	  } else {
-	    _RenderAlphaBlendedSection(pTexture,p2+C,p3+C,p0+C,p1+C);
+	    _RenderAlphaBlendedSection(pTexture,p2+C,p3+C,p0+C,p1+C, i_filterColor);
 	  }
 	}
       }
@@ -243,7 +244,7 @@ namespace vapp {
 	      if(pSprite != NULL) {
 	        pTexture = pSprite->getTexture();
 	        if(pTexture != NULL) {
-	          _RenderAlphaBlendedSection(pTexture,p1,p2,p3,p0);
+	          _RenderAlphaBlendedSection(pTexture,p1,p2,p3,p0, i_filterColor);
 	        }
 	      }        
 
@@ -259,7 +260,7 @@ namespace vapp {
 	      if(pSprite != NULL) {
 	        pTexture = pSprite->getTexture();
 	        if(pTexture != NULL) {
-	          _RenderAlphaBlendedSection(pTexture,p0,p1,p2,p3);
+	          _RenderAlphaBlendedSection(pTexture,p0,p1,p2,p3, i_filterColor);
 	        }
 	      }        
 
@@ -275,7 +276,7 @@ namespace vapp {
 	      if(pSprite != NULL) {
 	        pTexture = pSprite->getTexture();
 	        if(pTexture != NULL) {
-	          _RenderAlphaBlendedSection(pTexture,p1,p2,p3,p0);        
+	          _RenderAlphaBlendedSection(pTexture,p1,p2,p3,p0, i_filterColor);        
 	        }
 	      }
 
@@ -291,7 +292,7 @@ namespace vapp {
 	      if(pSprite != NULL) {
 	        pTexture = pSprite->getTexture();
 	        if(pTexture != NULL) {
-	          _RenderAlphaBlendedSection(pTexture,p1,p2,p3,p0);
+	          _RenderAlphaBlendedSection(pTexture,p1,p2,p3,p0, i_filterColor);
 	        }
 	      }        
 
@@ -307,7 +308,7 @@ namespace vapp {
 	      if(pSprite != NULL) {
 	        pTexture = pSprite->getTexture();
 	        if(pTexture != NULL) {
-	          _RenderAlphaBlendedSection(pTexture,p3,p2,p1,p0);
+	          _RenderAlphaBlendedSection(pTexture,p3,p2,p1,p0, i_filterColor);
 	        }
 	      }        
       }
@@ -340,7 +341,7 @@ namespace vapp {
 	      if(pSprite != NULL) {
 	        pTexture = pSprite->getTexture();
 	        if(pTexture != NULL) {
-	          _RenderAlphaBlendedSection(pTexture,p2,p1,p0,p3);        
+	          _RenderAlphaBlendedSection(pTexture,p2,p1,p0,p3, i_filterColor);        
 	        }
 	      }                
 
@@ -356,7 +357,7 @@ namespace vapp {
 	      if(pSprite != NULL) {
 	        pTexture = pSprite->getTexture();
 	        if(pTexture != NULL) {
-	          _RenderAlphaBlendedSection(pTexture,p3,p2,p1,p0);        
+	          _RenderAlphaBlendedSection(pTexture,p3,p2,p1,p0, i_filterColor);        
 	        }
 	      }
 
@@ -372,7 +373,7 @@ namespace vapp {
 	      if(pSprite != NULL) {
 	        pTexture = pSprite->getTexture();
 	        if(pTexture != NULL) {
-	          _RenderAlphaBlendedSection(pTexture,p2,p1,p0,p3);        
+	          _RenderAlphaBlendedSection(pTexture,p2,p1,p0,p3, i_filterColor);        
 	        }
 	      }
 
@@ -388,7 +389,7 @@ namespace vapp {
 	      if(pSprite != NULL) {
 	        pTexture = pSprite->getTexture();
 	        if(pTexture != NULL) {
-	          _RenderAlphaBlendedSection(pTexture,p2,p1,p0,p3);        
+	          _RenderAlphaBlendedSection(pTexture,p2,p1,p0,p3, i_filterColor);        
 	        }
 	      }        
 
@@ -404,7 +405,7 @@ namespace vapp {
 	      if(pSprite != NULL) {
 	        pTexture = pSprite->getTexture();
 	        if(pTexture != NULL) {
-	          _RenderAlphaBlendedSection(pTexture,p0,p1,p2,p3);        
+	          _RenderAlphaBlendedSection(pTexture,p0,p1,p2,p3, i_filterColor);        
 	        }
 	      }
       }

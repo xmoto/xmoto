@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "BikeController.h"
 #include "../SomersaultCounter.h"
 #include "../Sound.h"
+#include "../helpers/Color.h"
 
 class Level;
 class Entity;
@@ -132,7 +133,7 @@ class BikeState {
 
 class Biker {
  public:
-  Biker(Theme *i_theme, BikerTheme* i_bikerTheme);
+  Biker(Theme *i_theme, BikerTheme* i_bikerTheme, const TColor& i_colorFilter = TColor(255, 255, 255, 0));
   virtual BikeState* getState();
   virtual bool getRenderBikeFront() = 0; /* display the bikefront ? (for detach) */
   virtual float getBikeEngineSpeed() = 0; /* engine speed */
@@ -172,6 +173,7 @@ class Biker {
   touch setTouching(Zone& i_zone, bool i_isTouching);
 
   virtual void setBodyDetach(bool state);
+  const TColor& getColorFilter() const;
 
  protected:
   BikerTheme* m_bikerTheme;
@@ -189,6 +191,8 @@ class Biker {
   /* Wheels spinning dirt up... muzakka! :D */
   bool m_bWheelSpin;                  /* Do it captain */
   Vector2f m_WheelSpinPoint,m_WheelSpinDir; /* Where and how much */
+
+  TColor m_colorFilter;
 };
 
 class OnBikerHooks {

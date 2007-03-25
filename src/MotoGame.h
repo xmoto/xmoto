@@ -201,7 +201,8 @@ namespace vapp {
       Ghost* addGhostFromFile(std::string i_ghostFile, std::string i_info,
 			      Theme *i_theme, BikerTheme* i_bikerTheme);
       PlayerBiker* addPlayerBiker(Vector2f i_position, DriveDir i_direction,
-				  Theme *i_theme, BikerTheme* i_bikerTheme);
+				  Theme *i_theme, BikerTheme* i_bikerTheme,
+				  const TColor& i_filterColor);
 
       std::vector<Ghost *> &Ghosts();
       std::vector<Biker*> &Players();

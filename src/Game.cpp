@@ -1765,6 +1765,33 @@ GameApp::GameApp() {
   }
 #endif
 
+  TColor GameApp::getColorFromPlayerNumber(int i_player) {
+    // try to find nice colors for first player, then automatic
+    switch(i_player) {
+
+      case 0:
+      return TColor(255, 255, 255, 0);
+      break;
+
+      case 1:
+      return TColor(125, 125, 125, 0);
+      break;
+
+      case 2:
+      return TColor(200, 100, 50, 0);
+      break;
+
+      case 3:
+      return TColor(50, 255, 255, 0);
+      break;
+
+      default:
+      return TColor((i_player*5)%255, (i_player*20)%255, (i_player*50)%25, 0);
+    }
+
+    return TColor(255, 255, 255, 0);
+  }
+
   void GameApp::switchUglyMode(bool bUgly) {
     m_bUglyMode = bUgly;
     if(bUgly == false) {
@@ -1839,11 +1866,20 @@ GameApp::GameApp() {
 	m_MotoGame.prePlayLevel(pLevelSrc, &m_InputHandler, m_pJustPlayReplay, true);
 	m_MotoGame.setInfos("");
 	
-	/* add the player */
+	/* add the players */
+	int v_nbPlayer = getNumberOfPlayersToPlay();
+	Log("Preplay level for %i player(s)", v_nbPlayer);
+
+	/* add at least one player for the camera */
 	m_Renderer.setPlayerToFollow(m_MotoGame.addPlayerBiker(pLevelSrc->PlayerStart(), DD_RIGHT,
-							       &m_theme, m_theme.getPlayerTheme()));
-	//m_MotoGame.addPlayerBiker(pLevelSrc->PlayerStart(), DD_RIGHT,
-	//		  &m_theme, m_theme.getPlayerTheme());
+							       &m_theme, m_theme.getPlayerTheme(),
+							       getColorFromPlayerNumber(0)));
+
+	for(int i=1; i<v_nbPlayer; i++) {
+	  m_MotoGame.addPlayerBiker(pLevelSrc->PlayerStart(), DD_RIGHT,
+				    &m_theme, m_theme.getPlayerTheme(),
+				    getColorFromPlayerNumber(i));
+	}
 	/* */
 
 	/* add the ghosts */

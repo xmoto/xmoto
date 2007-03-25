@@ -128,7 +128,7 @@ BikeState* Biker::getState() {
   return &m_bikeState;
 }
 
-Biker::Biker(Theme *i_theme, BikerTheme* i_bikerTheme) {
+Biker::Biker(Theme *i_theme, BikerTheme* i_bikerTheme, const TColor& i_colorFilter) {
   /* sound engine */
   if(vapp::Sound::isEnabled()) {
     try {
@@ -156,6 +156,11 @@ Biker::Biker(Theme *i_theme, BikerTheme* i_bikerTheme) {
   m_bikerTheme = i_bikerTheme;
   m_bWheelSpin = false;
   m_bikerHooks = NULL;
+  m_colorFilter = i_colorFilter;
+}
+
+const TColor& Biker::getColorFilter() const {
+  return m_colorFilter;
 }
 
 float Biker::finishTime() const {

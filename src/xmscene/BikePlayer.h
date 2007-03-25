@@ -34,7 +34,7 @@ class ReplayBiker : public Ghost {
 
 class PlayerBiker : public Biker {
  public:
-  PlayerBiker(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity, Theme *i_theme, BikerTheme* i_bikerTheme);
+  PlayerBiker(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity, Theme *i_theme, BikerTheme* i_bikerTheme, const TColor& i_filterColor);
   ~PlayerBiker();
 
   void updateToTime(float i_time, float i_timeStep,
