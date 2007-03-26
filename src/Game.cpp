@@ -326,6 +326,7 @@ GameApp::GameApp() {
 	  m_fStartTime = getRealTime();
 
       } catch(Exception &e) {
+	m_MotoGame.endLevel();
 	setState(m_StateAfterPlaying);
 	notifyMsg(splitText(e.getMsg(), 50));   
       }
@@ -368,8 +369,9 @@ GameApp::GameApp() {
           m_State = GS_PLAYING;        
           m_nFrame = 0;
 	  v_newMusicPlaying = pLevelSrc->Music();
-  } catch(Exception &e) {
+	} catch(Exception &e) {
           Log("** Warning ** : level '%s' not found",m_PlaySpecificLevel.c_str());
+	  m_MotoGame.endLevel();
           char cBuf[256];
           sprintf(cBuf,GAMETEXT_LEVELNOTFOUND,m_PlaySpecificLevel.c_str());
     setState(m_StateAfterPlaying);
@@ -1881,7 +1883,7 @@ GameApp::GameApp() {
 
     /* Start playing right away */     
     m_InputHandler.resetScriptKeyHooks();
-    if(pLevelSrc != NULL) {
+
       if(m_pJustPlayReplay != NULL) delete m_pJustPlayReplay;
       m_pJustPlayReplay = NULL;
       
@@ -1944,18 +1946,12 @@ GameApp::GameApp() {
 	}
       } catch(Exception &e) {
 	Log(std::string("** Warning ** : failed to initialize level\n" + e.getMsg()).c_str());
+	m_MotoGame.endLevel();
 	setState(m_StateAfterPlaying);
 	notifyMsg(splitText(e.getMsg(), 50));
 	return;
       }
-      
-      if(!m_MotoGame.isInitOK()) {
-	Log("** Warning ** : failed to initialize level");
-	setState(m_StateAfterPlaying);
-	notifyMsg(GAMETEXT_FAILEDTOINITLEVEL);
-	return;
-      }
-    }
+
     m_State = GS_PREPLAYING;
     
     PlayerTimeEntry *pBestTime = m_Profiles.getBestTime(m_PlaySpecificLevel);
