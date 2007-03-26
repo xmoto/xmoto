@@ -235,7 +235,8 @@ namespace vapp {
           break;
         } 
         catch(Exception &e) {
-    setState(m_StateAfterPlaying);
+	  m_MotoGame.endLevel();
+	  setState(m_StateAfterPlaying);
           notifyMsg(splitText(e.getMsg(), 50));
         }
       }

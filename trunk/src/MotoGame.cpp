@@ -280,8 +280,6 @@ void MotoGame::cleanPlayers() {
          bool i_playEvents) {
 
 	   m_playEvents = i_playEvents;
-    m_bLevelInitSuccess = true;
-
     /* load the level if not */
     if(pLevelSrc->isFullyLoaded() == false) {
       pLevelSrc->loadFullyFromFile();
@@ -371,8 +369,7 @@ void MotoGame::cleanPlayers() {
       _GenerateLevel();
     } catch(Exception &e) {
       Log(std::string("** Warning ** : Level generation failed !\n" + e.getMsg()).c_str());
-      m_bLevelInitSuccess = false;
-      return;
+      throw Exception(e);
     }        
 
     m_myLastStrawberries.clear();
@@ -436,14 +433,11 @@ void MotoGame::cleanPlayers() {
       /* if no OnLoad(), assume success */
       /* Success? */
       if(!bOnLoadSuccess) {
-	/* Hmm, the script insists that we shouldn't begin playing... */
-	endLevel();      
-	
-	m_bLevelInitSuccess = false;
-	return;
+	Log("OnLoad script function failed !");
+	throw Exception("OnLoad script function failed !");
       }
     }
-   }
+  }
 
   /*===========================================================================
     Free this game object

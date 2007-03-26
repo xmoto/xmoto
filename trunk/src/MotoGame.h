@@ -154,7 +154,6 @@ namespace vapp {
     void setDeathAnim(bool b) {m_bDeathAnimEnabled=b;}
     
     /* Data interface */
-    bool isInitOK(void) {return m_bLevelInitSuccess;}
     Level *getLevelSrc(void) {return m_pLevelSrc;}
 
       float getTime(void) {return m_fTime;}
@@ -243,7 +242,6 @@ namespace vapp {
       std::string m_infos;
 
       bool m_bDeathAnimEnabled;
-      bool m_bLevelInitSuccess;
 
       Vector2f m_PhysGravity; /* gravity */
 
