@@ -1786,10 +1786,38 @@ GameApp::GameApp() {
       break;
 
       default:
-      return TColor((i_player*5)%255, (i_player*20)%255, (i_player*50)%25, 0);
+      return TColor((i_player*5)%255, (i_player*20)%255, (i_player*50)%255, 0);
     }
 
     return TColor(255, 255, 255, 0);
+  }
+
+  TColor GameApp::getUglyColorFromPlayerNumber(int i_player) {
+    // try to find nice colors for first player, then automatic
+    vapp::Color v_color;
+
+    switch(i_player) {
+      
+      case 0:
+      v_color = m_theme.getPlayerTheme()->getUglyRiderColor();
+      return TColor(GET_RED(v_color), GET_GREEN(v_color), GET_BLUE(v_color));      
+      break;
+      
+      case 1:
+      return TColor(125, 125, 125, 0);
+      break;
+      
+      case 2:
+      return TColor(255, 50, 50);
+      break;
+      
+      case 3:
+      return TColor(50, 50, 255);
+      break;
+
+      default:
+      return TColor((i_player*5)%255, (i_player*20)%255, (i_player*50)%255, 0);
+    }
   }
 
   void GameApp::switchUglyMode(bool bUgly) {
@@ -1873,12 +1901,14 @@ GameApp::GameApp() {
 	/* add at least one player for the camera */
 	m_Renderer.setPlayerToFollow(m_MotoGame.addPlayerBiker(pLevelSrc->PlayerStart(), DD_RIGHT,
 							       &m_theme, m_theme.getPlayerTheme(),
-							       getColorFromPlayerNumber(0)));
+							       getColorFromPlayerNumber(0),
+							       getUglyColorFromPlayerNumber(0)));
 
 	for(int i=1; i<v_nbPlayer; i++) {
 	  m_MotoGame.addPlayerBiker(pLevelSrc->PlayerStart(), DD_RIGHT,
 				    &m_theme, m_theme.getPlayerTheme(),
-				    getColorFromPlayerNumber(i));
+				    getColorFromPlayerNumber(i),
+				    getUglyColorFromPlayerNumber(i));
 	}
 	/* */
 

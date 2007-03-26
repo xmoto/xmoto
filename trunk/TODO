@@ -1,18 +1,34 @@
 
-* Bug: en cas d’exception (en particulier avec du script), endMotoGame n’est pas appelé et les joueurs ne sont pas virés
+For 0.3.0
+
+* un bool pour ne rechercher que les packs qu'il faut pour aller vite et assez bien
+* Bug: en cas d'exception (en particulier avec du script), endMotoGame n'est pas appel-Ai et les joueurs ne sont pas viris
 * load into the graphic card only the blocks which will be displayed depending on the selected graphic quality.
 * multicamera
 * keyboard for 4 players
 * script key on multiplayer : each player must have his own key
+* en mode replay, replay 53361 par exemple, quand on touche la fraise en meme temps que la fleur, la fraise n'eclate pas
 
-* mode 2 joueurs : un message à celui qui gagne
+* mode 2 joueurs : un message ` celui qui gagne
+* several joypad (currently, joypack is available only for player 1)
+* BUG : xmoto -replay bugs/onMacWontWork.rpl when you press forward on
+   this scripted level, the elevator at the correct position
+* feature : a replay button when you finish a level (or die) which plays Latest.rpl
+* script : disable a key (brake for example, ...)
+* when you choose keys : if a key is already attributed, it should
+   assign it and set <unset> to the other one because it's not
+   pleasant to have a message
+* associate F8 to the -nowww switch (enable/disable network)
+ - when a connection fails, disable network and display a message :
+   "Network disabled, press F8 to enable it"
 
-
+* http://bugs.debian.org/335514
+It's a bit confusing to be proposed to continue or abort playing when
+one has just finished the level. The ``abort'' one should be rather
+``quit level'' or something like that.
 
 ******************
 * PERFORMANCE : rebuildLevelsPacks is very slow particularly on windows with a lot of levels : sqlite
-
-* BUG
 
 * pack : last highscores
 * pack : last levels
@@ -21,8 +37,6 @@
 * two options for music : menu and ingame
 
 * BUG rotation on grass of dynamic blocks on sdlgfx
-
-* several joypad (currently, joypack is available only for player 1)
 
 mingw:
 * sdlgfx: http://www.wormux.org/wiki/compile_under_mingw.php#SDL_gfx
@@ -35,10 +49,7 @@ Assigned to nicolas
    playing, then it is not updated with the new level button
 * put under edge into the block part
 * PAD_5 -> to finish
-* BUG : xmoto -replay bugs/onMacWontWork.rpl when you press forward on
-   this scripted level, the elevator at the correct position
 * FEATURE : * xmoto toto.lvl to play directly a level
-* feature : a replay button when you finish a level (or die) which plays Latest.rpl
 
 * when are texure is rotated we need to copy the texture mutplile times so it's always visible
 * F5 while developping a level, if the level is scripted, it could
@@ -46,7 +57,6 @@ Assigned to nicolas
 
 ========
 
-* script : disable a key (brake for example, ...)
 * ugly uses misc.png for border : should not
 
 
@@ -73,9 +83,6 @@ Assigned to nicolas
 
 * FEATURE : windows : there's some win32 API calls that can be made to determine the application data dir
 
-* when you choose keys : if a key is already attributed, it should
-   assign it and set <unset> to the other one because it's not
-   pleasant to have a message
 * '50 most played levels'/least : virtual package
 * a keyboard key for next level
 * reload theme done, require tests, and some sprites (like mouse, main menu background) are not updated i suppose
@@ -91,15 +98,6 @@ render blocks by Z
 
 [13:25] <gaivota> aspegic500: I found a bug which is the following: when letting xmoto running without doing anything for some time the game crashes, althoug it keeps running
 [13:26] <gaivota> atm it shows a blank black screen, once before it diplayed the menu althoug the ingame was running and similar strange behaviour
-
-* associate F8 to the -nowww switch (enable/disable network)
- - when a connection fails, disable network and display a message :
-   "Network disabled, press F8 to enable it"
-
-* http://bugs.debian.org/335514
-It's a bit confusing to be proposed to continue or abort playing when
-one has just finished the level. The ``abort'' one should be rather
-``quit level'' or something like that.
 
 ===========
 * BUG : is it normal ?

@@ -33,7 +33,7 @@ namespace vapp {
   Rendering of the bike
   ===========================================================================*/
   void GameRenderer::_RenderBike(BikeState *pBike, BikeParameters *pBikeParms, BikerTheme *p_theme, bool i_renderBikeFront,
-				 const TColor&  i_filterColor) {
+				 const TColor&  i_filterColor, const TColor&  i_filterUglyColor) {
     Sprite *pSprite;
     Texture *pTexture;
 
@@ -316,7 +316,10 @@ namespace vapp {
       if(m_bUglyMode || m_bTestThemeMode) {
         /* Draw it ugly */
 	getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
-	getParent()->getDrawLib()->setColor(p_theme->getUglyRiderColor());
+	getParent()->getDrawLib()->setColor(MAKE_COLOR(i_filterUglyColor.Red(),
+						       i_filterUglyColor.Green(),
+						       i_filterUglyColor.Blue(),
+						       i_filterUglyColor.Alpha()));
         getParent()->getDrawLib()->glVertex(pBike->FootP);
         getParent()->getDrawLib()->glVertex(pBike->KneeP);
         getParent()->getDrawLib()->glVertex(pBike->LowerBodyP);
@@ -324,7 +327,10 @@ namespace vapp {
         getParent()->getDrawLib()->glVertex(pBike->ElbowP);
         getParent()->getDrawLib()->glVertex(pBike->HandP);
 	getParent()->getDrawLib()->endDraw();
-        _RenderCircle(10,p_theme->getUglyRiderColor(),pBike->HeadP,pBikeParms->fHeadSize);
+        _RenderCircle(10, MAKE_COLOR(i_filterUglyColor.Red(),
+				     i_filterUglyColor.Green(),
+				     i_filterUglyColor.Blue(),
+				     i_filterUglyColor.Alpha()),pBike->HeadP,pBikeParms->fHeadSize);
       }
     }
     else if(pBike->Dir == DD_LEFT) {
@@ -413,7 +419,10 @@ namespace vapp {
       if(m_bUglyMode || m_bTestThemeMode) {
         /* Draw it ugly */
 	getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
-	getParent()->getDrawLib()->setColor(p_theme->getUglyRiderColor());
+	getParent()->getDrawLib()->setColor(MAKE_COLOR(i_filterUglyColor.Red(),
+						       i_filterUglyColor.Green(),
+						       i_filterUglyColor.Blue(),
+						       i_filterUglyColor.Alpha()));
         getParent()->getDrawLib()->glVertex(pBike->Foot2P);
         getParent()->getDrawLib()->glVertex(pBike->Knee2P);
         getParent()->getDrawLib()->glVertex(pBike->LowerBody2P);
@@ -421,7 +430,10 @@ namespace vapp {
         getParent()->getDrawLib()->glVertex(pBike->Elbow2P);
         getParent()->getDrawLib()->glVertex(pBike->Hand2P);
         getParent()->getDrawLib()->endDraw();
-        _RenderCircle(10,p_theme->getUglyRiderColor(),pBike->Head2P,pBikeParms->fHeadSize);
+        _RenderCircle(10, MAKE_COLOR(i_filterUglyColor.Red(),
+				     i_filterUglyColor.Green(),
+				     i_filterUglyColor.Blue(),
+				     i_filterUglyColor.Alpha()), pBike->Head2P,pBikeParms->fHeadSize);
       }
     }   
   }
