@@ -406,7 +406,13 @@ void MotoGame::cleanPlayers() {
       throw Exception("No level defined");
     }
 
-    v_ghost = new Ghost(i_ghostFile, false, i_theme, i_bikerTheme);
+    v_ghost = new Ghost(i_ghostFile, false, i_theme, i_bikerTheme,
+			TColor(255,255,255,0),
+			TColor(GET_RED(i_theme->getGhostTheme()->getUglyRiderColor()),
+			       GET_GREEN(i_theme->getGhostTheme()->getUglyRiderColor()),
+			       GET_BLUE(i_theme->getGhostTheme()->getUglyRiderColor()),
+			       0)
+			       );
     v_ghost->setPlaySound(false);
     v_ghost->setInfo(i_info);
     v_ghost->initLastToTakeEntities(m_pLevelSrc);
@@ -1095,8 +1101,11 @@ void MotoGame::cleanPlayers() {
 
   PlayerBiker* MotoGame::addPlayerBiker(Vector2f i_position, DriveDir i_direction,
 					Theme *i_theme, BikerTheme* i_bikerTheme,
-					const TColor& i_filterColor) {
-    PlayerBiker* v_playerBiker = new PlayerBiker(i_position, i_direction, m_PhysGravity, i_theme, i_bikerTheme, i_filterColor);
+					const TColor& i_filterColor,
+					const TColor& i_filterUglyColor) {
+    PlayerBiker* v_playerBiker = new PlayerBiker(i_position, i_direction, m_PhysGravity,
+						 i_theme, i_bikerTheme,
+						 i_filterColor, i_filterUglyColor);
     v_playerBiker->setOnBikerHooks(new MotoGameOnBikerHooks(this, m_players.size()));
     m_players.push_back(v_playerBiker);
     return v_playerBiker;

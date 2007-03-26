@@ -28,12 +28,19 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define DEPTH_FACTOR    2
 
 ReplayBiker::ReplayBiker(std::string i_replayFile, Theme *i_theme, BikerTheme* i_bikerTheme)
-:Ghost(i_replayFile, true, i_theme, i_bikerTheme) {
+:Ghost(i_replayFile, true, i_theme, i_bikerTheme,
+       TColor(255, 255, 255, 0),
+       TColor(GET_RED(i_bikerTheme->getUglyRiderColor()),
+	      GET_GREEN(i_bikerTheme->getUglyRiderColor()),
+	      GET_BLUE(i_bikerTheme->getUglyRiderColor()),
+	      GET_ALPHA(i_bikerTheme->getUglyRiderColor()))) {
 }
 
 PlayerBiker::PlayerBiker(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity,
-			 Theme *i_theme, BikerTheme* i_bikerTheme, const TColor& i_filterColor)
-: Biker(i_theme, i_bikerTheme, i_filterColor) {
+			 Theme *i_theme, BikerTheme* i_bikerTheme,
+			 const TColor& i_filterColor,
+			 const TColor& i_filterUglyColor)
+: Biker(i_theme, i_bikerTheme, i_filterColor, i_filterUglyColor) {
   m_somersaultCounter.init();
 
   bFrontWheelTouching = false;

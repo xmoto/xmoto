@@ -515,7 +515,10 @@ namespace vapp {
   void GameRenderer::_RenderGhost(Biker* i_ghost, int i) {
     /* Render ghost - ugly mode? */
     if(m_bUglyMode) {
-      _RenderBike(i_ghost->getState(), &(i_ghost->getState()->Parameters()), i_ghost->getBikeTheme());
+      _RenderBike(i_ghost->getState(), &(i_ghost->getState()->Parameters()),
+		  i_ghost->getBikeTheme(),
+		  true,
+		  TColor(255, 255, 255, 0), i_ghost->getUglyColorFilter());
     } else {
       /* No not ugly, fancy! Render into overlay? */      
       if(m_bGhostMotionBlur && getParent()->getDrawLib()->useFBOs()) {
@@ -639,7 +642,8 @@ namespace vapp {
 		    &(v_player->getState()->Parameters()),
 		    v_player->getBikeTheme(),
 		    v_player->getRenderBikeFront(),
-		    v_player->getColorFilter());
+		    v_player->getColorFilter(),
+		    v_player->getUglyColorFilter());
       } else {
 	v_found = true;
       }
@@ -648,7 +652,9 @@ namespace vapp {
       _RenderBike(m_playerToFollow->getState(),
 		  &(m_playerToFollow->getState()->Parameters()),
 		  m_playerToFollow->getBikeTheme(),
-		  m_playerToFollow->getRenderBikeFront(), m_playerToFollow->getColorFilter());
+		  m_playerToFollow->getRenderBikeFront(),
+		  m_playerToFollow->getColorFilter(),
+		  m_playerToFollow->getUglyColorFilter());
     }
 
     /* ghost information */

@@ -290,8 +290,10 @@ namespace vapp {
     /* Subroutines */
     void _RenderSprites(bool bForeground,bool bBackground);
     void _RenderSprite(Entity *pSprite, float i_sizeMult = 1.0);
-    void _RenderBike(BikeState *pBike, BikeParameters *pBikeParms, BikerTheme *p_theme, bool i_renderBikeFront = true,
-		     const TColor&  i_filterColor = TColor(255, 255, 255, 0));
+    void _RenderBike(BikeState *pBike, BikeParameters *pBikeParms, BikerTheme *p_theme,
+		     bool i_renderBikeFront = true,
+		     const TColor&  i_filterColor = TColor(255, 255, 255, 0),
+		     const TColor&  i_filterUglyColor = TColor(255, 255, 255, 0));
     void _RenderBlocks(void);
     void _RenderBlock(Block* block);
     void _RenderBlockEdges(Block* block);

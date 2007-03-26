@@ -133,7 +133,9 @@ class BikeState {
 
 class Biker {
  public:
-  Biker(Theme *i_theme, BikerTheme* i_bikerTheme, const TColor& i_colorFilter = TColor(255, 255, 255, 0));
+  Biker(Theme *i_theme, BikerTheme* i_bikerTheme,
+	const TColor& i_colorFilter,
+	const TColor& i_uglyColorFilter);
   virtual BikeState* getState();
   virtual bool getRenderBikeFront() = 0; /* display the bikefront ? (for detach) */
   virtual float getBikeEngineSpeed() = 0; /* engine speed */
@@ -174,6 +176,7 @@ class Biker {
 
   virtual void setBodyDetach(bool state);
   const TColor& getColorFilter() const;
+  const TColor& getUglyColorFilter() const;
 
  protected:
   BikerTheme* m_bikerTheme;
@@ -193,6 +196,7 @@ class Biker {
   Vector2f m_WheelSpinPoint,m_WheelSpinDir; /* Where and how much */
 
   TColor m_colorFilter;
+  TColor m_uglyColorFilter;
 };
 
 class OnBikerHooks {
