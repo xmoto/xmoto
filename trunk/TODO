@@ -6,10 +6,11 @@ For Tod:
 * multicamera
 
 For Nicolas:
+* the following: if the player looks from rightto left, the leg is not correctly attached to the torso
 * keyboard for 4 players
 * script key on multiplayer : each player must have his own key
 * en mode replay, replay 53361 par exemple, quand on touche la fraise en meme temps que la fleur, la fraise n'eclate pas
-* mode 2 joueurs : un message -A` celui qui gagne
+* mode 2 joueurs : un message à celui qui gagne
 * several joypad (currently, joypack is available only for player 1)
 * BUG : xmoto -replay bugs/onMacWontWork.rpl when you press forward on
    this scripted level, the elevator at the correct position
@@ -24,7 +25,7 @@ For Nicolas:
 * http://bugs.debian.org/335514
 It's a bit confusing to be proposed to continue or abort playing when
 one has just finished the level. The ``abort'' one should be rather
-``quit level'' or something like that.
+quit level'' or something like that.
 
 
 ******************
