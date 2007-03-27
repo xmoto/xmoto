@@ -248,6 +248,7 @@ namespace vapp {
       /* Find all files in the textures dir and load them */     
       UITextDraw::initTextDrawing(this);
       UITexture::setApp(this);
+      m_sysMsg.setFont(UITextDraw::getFont("MFont"));
 
       _UpdateLoadingScreen((1.0f/9.0f) * 3,pLoadingScreen,GAMETEXT_LOADINGMENUGRAPHICS);
         

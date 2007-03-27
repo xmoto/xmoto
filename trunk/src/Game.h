@@ -42,6 +42,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Credits.h"
 #include "LevelsManager.h"
 #include "XMotoLoadLevelsInterface.h"
+#include "SysMessage.h"
 
 #define PRESTART_ANIMATION_TIME 2.0
 #define INPLAY_ANIMATION_TIME 1.0
@@ -396,6 +397,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       /* Credits */
       Credits *m_pCredits;         
       
+      SysMessage m_sysMsg;
+
       /* Main loop statics */
       double m_fFrameTime;
       float m_fFPS_Rate;
@@ -489,6 +492,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 				       UIStatic *i_pBestPlayerText
 				       );
       void viewHighscoreOf();
+      void enableWWW(bool bValue);
 #endif
 
       std::string _getGhostReplayPath_bestOfThePlayer(std::string p_levelId, float &p_time);
