@@ -6,6 +6,7 @@ For Tod:
 * multicamera
 
 For Nicolas:
+* il semble qu'une erreur de syntaxe en lua et segfault
 * qd on est en 0.2.6 et prereq 0.2.7 ca chie
 * the following: if the player looks from rightto left, the leg is not correctly attached to the torso
 * keyboard for 4 players
