@@ -724,6 +724,16 @@ GameApp::GameApp() {
     delete pShot;
   }
 
+  void GameApp::enableWWW(bool bValue) {
+    setNoWWW(!isNoWWW());
+    m_bEnableWebHighscores = m_Config.getBool("WebHighscores") && isNoWWW()== false;
+    if(isNoWWW()) {
+      m_sysMsg.displayText(SYS_MSG_WWW_DISABLED);
+    } else {
+      m_sysMsg.displayText(SYS_MSG_WWW_ENABLED);
+    }
+  }
+
   /*===========================================================================
   Key down event
   ===========================================================================*/
@@ -734,13 +744,28 @@ GameApp::GameApp() {
       return;        
     }
 
+    if(nKey == SDLK_F8) {
+      enableWWW(!isNoWWW());
+      return;        
+    }
+
     if(nKey == SDLK_F9) {
       switchUglyMode(!m_bUglyMode);
+      if(m_bUglyMode) {
+	m_sysMsg.displayText(SYS_MSG_UGLY_MODE_ENABLED);
+      } else {
+	m_sysMsg.displayText(SYS_MSG_UGLY_MODE_DISABLED);
+      }
       return;        
     }
 
     if(nKey == SDLK_F10) {
       switchTestThemeMode(!m_bTestThemeMode);
+      if(m_bTestThemeMode) {
+	m_sysMsg.displayText(SYS_MSG_THEME_MODE_ENABLED);
+      } else {
+	m_sysMsg.displayText(SYS_MSG_THEME_MODE_DISABLED);
+      }
       return;        
     }
 
@@ -1668,6 +1693,7 @@ GameApp::GameApp() {
         _UpdateReplaysList();
       } catch(Exception &e) {
         /* do nothing */
+	enableWWW(false);
       }
     }
   }

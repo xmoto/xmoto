@@ -211,8 +211,6 @@ namespace vapp {
           if(!m_bCreditsModeActive &&
             (m_State == GS_DEADMENU || m_State == GS_DEADJUST || m_State == GS_PAUSE || m_State == GS_FINISHED || m_State == GS_REPLAYING) &&
             m_MotoGame.getLevelSrc() != NULL) {
-            UIFont *v_font = m_Renderer.getMediumFont();
-            std::string v_infos;
 	  }
          
           /* Context menu? */
@@ -252,6 +250,9 @@ namespace vapp {
     /* Draw mouse cursor */
     if(m_bShowCursor)
       _DrawMouseCursor();
+
+    /* system message */
+    m_sysMsg.render();
   }
 
   /*===========================================================================

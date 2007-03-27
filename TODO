@@ -6,6 +6,7 @@ For Tod:
 * multicamera
 
 For Nicolas:
+* qd on est en 0.2.6 et prereq 0.2.7 ca chie
 * the following: if the player looks from rightto left, the leg is not correctly attached to the torso
 * keyboard for 4 players
 * script key on multiplayer : each player must have his own key
@@ -19,9 +20,6 @@ For Nicolas:
 * when you choose keys : if a key is already attributed, it should
    assign it and set <unset> to the other one because it's not
    pleasant to have a message
-* associate F8 to the -nowww switch (enable/disable network)
- - when a connection fails, disable network and display a message :
-   "Network disabled, press F8 to enable it"
 * http://bugs.debian.org/335514
 It's a bit confusing to be proposed to continue or abort playing when
 one has just finished the level. The ``abort'' one should be rather

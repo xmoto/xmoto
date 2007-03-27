@@ -123,6 +123,8 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp GameMain.cpp \
   GameDrawFrame.cpp \
   LevelsManager.h \
   LevelsManager.cpp \
+  SysMessage.h \
+  SysMessage.cpp \
   xmscene/BasicSceneStructs.h \
   xmscene/Level.h \
   xmscene/Level.cpp \

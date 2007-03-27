@@ -49,7 +49,7 @@ bool SDynamicObject::nextState(vapp::MotoGame* v_motoGame, int i_nbCents) {
   if(m_time + i_nbCents > m_endTime && m_endTime != 0.0) {
     v_realNbCents -= m_time + i_nbCents - m_endTime;
   }
-
+  
   performMove(v_motoGame, v_realNbCents);
 
   m_time += i_nbCents;

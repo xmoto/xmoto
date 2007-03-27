@@ -173,6 +173,10 @@ namespace vapp {
     bool isNoWWW(void) {
       return m_bNoWWW;
     }
+
+    void setNoWWW(bool bValue) {
+      m_bNoWWW = bValue;
+    }
     static std::string getVersionString();
 
     virtual bool isUglyMode() {
