@@ -6,7 +6,10 @@ For Tod:
 * multicamera
 
 For Nicolas:
-* il semble qu'une erreur de syntaxe en lua et segfault
+* il semble qu'une erreur de syntaxe en lua et segfault : ca vient du
+   fait que dans drawFrame, dans un case GS_PREPLAY, on peut changer
+   d'état (exception) et du coup on tente de dessiner un monde qui
+   n'existe plus => séparer le rendu des évènements à suivre
 * qd on est en 0.2.6 et prereq 0.2.7 ca chie
 * the following: if the player looks from rightto left, the leg is not correctly attached to the torso
 * keyboard for 4 players

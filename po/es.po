@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-03-25 23:02+0200\n"
+"POT-Creation-Date: 2007-03-28 00:34+0200\n"
 "PO-Revision-Date: 2006-12-21 19:49+0100\n"
 "Last-Translator: Trullo\n"
 "Language-Team: X-Moto\n"
@@ -1783,6 +1783,30 @@ msgstr "Niveles mas jugados"
 #, fuzzy
 msgid "Less played levels (but played)"
 msgstr "Niveles mas jugados"
+
+#: src/GameText.h:527
+msgid "Ugly mode enabled"
+msgstr ""
+
+#: src/GameText.h:528
+msgid "Ugly mode disabled"
+msgstr ""
+
+#: src/GameText.h:529
+msgid "Theme mode enabled"
+msgstr ""
+
+#: src/GameText.h:530
+msgid "Theme mode disabled"
+msgstr ""
+
+#: src/GameText.h:531
+msgid "Web connexion enabled"
+msgstr ""
+
+#: src/GameText.h:532
+msgid "Web connexion disabled"
+msgstr ""
 
 #~ msgid "Bike Breaks"
 #~ msgstr "Rompe la moto"
