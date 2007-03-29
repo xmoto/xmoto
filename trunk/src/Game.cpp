@@ -240,6 +240,8 @@ GameApp::GameApp() {
 	    Log("** Warning ** : level '%s' specified by replay '%s' not found",
 		m_replayBiker->levelId().c_str(),m_PlaySpecificReplay.c_str());
 	    
+	    m_MotoGame.endLevel();	    
+
 	    char cBuf[256];
 	    sprintf(cBuf,GAMETEXT_LEVELREQUIREDBYREPLAY,m_replayBiker->levelId().c_str());
 	    setState(m_StateAfterPlaying);
@@ -250,6 +252,8 @@ GameApp::GameApp() {
 	  if(pLevelSrc->isXMotoTooOld()) {
 	    Log("** Warning ** : level '%s' specified by replay '%s' requires newer X-Moto",m_replayBiker->levelId().c_str(),m_PlaySpecificReplay.c_str());
 	    
+	    m_MotoGame.endLevel();
+
 	    char cBuf[256];
 	    sprintf(cBuf,GAMETEXT_NEWERXMOTOREQUIRED,pLevelSrc->getRequiredVersion().c_str());
 	    setState(m_StateAfterPlaying);
