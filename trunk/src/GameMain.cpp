@@ -45,7 +45,7 @@ int main(int nNumArgs,char **ppcArgs) {
     
     Game.setAppName(std::string("X-Moto"));
     Game.setAppCommand(std::string("xmoto"));
-    Game.setCopyrightInfo(std::string("(C) Copyright 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)"));
+    Game.setCopyrightInfo(std::string("(C) Copyright 2005-2007"));
     Game.run(nNumArgs,ppcArgs);
   }
   catch (Exception &e) {

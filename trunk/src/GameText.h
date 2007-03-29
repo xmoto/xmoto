@@ -217,7 +217,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 "  F5 - " + std::string(_("Reload levels from Levels dir (if you create a new level)")) + "\n" \
 "\n" \
  + std::string(_("Find all the strawberries and touch the flower to finish\nthe level.")) + "\n" \
- + std::string(_("Read the README file or check out the website at\nhttp://xmoto.sourceforge.net for more information."))
+ + std::string(_("Read the README file or check out the website at\nhttp://xmoto.tuxfamily.org for more information."))
 
 #define GAMETEXT_HIGH                 _("High")
 #define GAMETEXT_INDEX_CREATION       _("It seems that it's the first time you load this xmoto version.\nLevels index creation. It can take some minutes.")
@@ -271,15 +271,15 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_NONEXTLEVEL          _("No level following this one, sorry.")
 #define GAMETEXT_NOSTATS              _("No statistics for this profile.")
 #define GAMETEXT_NOTFINISHED          _("Not finished")
-#define GAMETEXT_NOTIFYATINIT         _("Important note!\n"                                                \
-                                      "\n"                                                               \
-                                      "This is an in development version of X-Moto!\n"                                     \
-                                      "All kinds of feedback are highly appreciated, so the game\n"      \
-                                      "can get better.\n"                                                \
-                                      "Mail bugs, ideas, comments, feature requests, hatemail, etc\n"    \
-                                      "to neckelmann@gmail.com\n"                                        \
-                                      "\n"                                                               \
-                                      "Also visit http://xmoto.sourceforge.net to make sure you've\n"    \
+#define GAMETEXT_NOTIFYATINIT         _("Important note!\n" \
+                                      "\n" \
+                                      "This is an in development version of X-Moto!\n" \
+                                      "All kinds of feedback are highly appreciated, so the game\n" \
+                                      "can get better.\n" \
+                                      "Mail bugs, ideas, comments, feature requests, hatemail, etc\n" \
+                                      "to nicolas at adenis-lamarre dot fr\n" \
+                                      "\n" \
+                                      "Also visit http://xmoto.tuxfamily.org to make sure you've\n" \
                                       "got the latest version.")
 #define GAMETEXT_NUMLEVELS            _("# Levels")
 #define GAMETEXT_OK                   _("OK")  
