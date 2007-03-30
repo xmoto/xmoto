@@ -99,6 +99,12 @@ namespace vapp {
         
         /* Cut */
         BSPPoly *pTempPoly = new BSPPoly;
+
+	if(pPoly->Vertices.empty()) {
+	  Log("** Warning ** : _Recurse(), try to split an empty poly (no BestSplitter)");
+	  Log("** Warning ** : Line causing the trouble is (%.5f %.5f ; %.5f %.5f)",
+	      Lines[i]->P0.x, Lines[i]->P0.y, Lines[i]->P1.x, Lines[i]->P1.y);
+	}
         _SplitPoly(pPoly,NULL,pTempPoly,&Splitter);
         delete pPoly;
         pPoly = pTempPoly;
@@ -107,6 +113,13 @@ namespace vapp {
       if(pPoly->Vertices.size() > 0)
         m_Polys.push_back( pPoly );
       else {
+
+	Log("** Warning ** : Lines causing the trouble are :");
+	for(int i=0;i<Lines.size();i++) {
+	  Log("%.5f %.5f ; %.5f %.5f",
+	      Lines[i]->P0.x, Lines[i]->P0.y, Lines[i]->P1.x, Lines[i]->P1.y);
+	}
+
       /*  printf("Lines: %d   (subspace size: %d)\n",Lines.size(),pSubSpace->Vertices.size());
         for(int i=0;i<Lines.size();i++)
           printf("    (%f,%f)  ->  (%f,%f)\n",Lines[i]->P0.x,Lines[i]->P0.y,Lines[i]->P1.x,Lines[i]->P1.y);*/
@@ -125,6 +138,9 @@ namespace vapp {
       
       /* Also split the convex subspace */
       BSPPoly FrontSpace,BackSpace;
+      if(pSubSpace->Vertices.empty()) {
+	Log("** Warning ** : _Recurse(), try to split an empty poly (BestSplitter is set)");
+      }
       _SplitPoly(pSubSpace,&FrontSpace,&BackSpace,pBestSplitter);
       
       //if(FrontSpace.Vertices.empty()) {
