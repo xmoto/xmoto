@@ -36,9 +36,14 @@ namespace vapp {
     
     pLine->P0 = P0;
     pLine->P1 = P1;
-    _ComputeNormal( pLine );
-    
-    m_Lines.push_back( pLine );
+
+    try {
+      _ComputeNormal( pLine );
+      m_Lines.push_back( pLine );
+    } catch(Exception &e) {
+      /* can't compute normal because points are too near */
+      /* just forget this line */
+    }
   }
 
   /*===========================================================================
@@ -66,7 +71,7 @@ namespace vapp {
     
     /* Start the recursion */
     _Recurse(&RootPoly,m_Lines);
-    
+
     /* Return polygon list */
     return m_Polys;
   }
