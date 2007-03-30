@@ -6,6 +6,7 @@ For Tod:
 * multicamera
 
 For Nicolas:
+* un répertoire my_levels qui serait chargé à tous les coups
 * il semble qu'une erreur de syntaxe en lua et segfault : ca vient du
    fait que dans drawFrame, dans un case GS_PREPLAY, on peut changer
    d'état (exception) et du coup on tente de dessiner un monde qui
