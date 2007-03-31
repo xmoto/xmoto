@@ -786,8 +786,10 @@ void LevelsManager::loadLevelsFromLvl(const std::vector<std::string> &LvlFiles,
       bCached = v_level->loadReducedFromFile(i_enableCache);
       
       // Check for ID conflict
-      if(doesLevelExist(v_level->Id())) { /* LvlFiles order assure that levels of userDir are load before system levels (which allow level updates) */
-	throw Exception("Duplicate level ID");
+      if(i_external == false) { /* don't check for external levels because if i click on a .lvl which exist in the game, i want it works */
+	if(doesLevelExist(v_level->Id())) { /* LvlFiles order assure that levels of userDir are load before system levels (which allow level updates) */
+	  throw Exception("Duplicate level ID");
+	}
       }
 
       /* is it an external level ? */
