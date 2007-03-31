@@ -763,6 +763,11 @@ GameApp::GameApp() {
       return;        
     }
 
+    if(nKey == SDLK_RETURN && (((mod & KMOD_LALT) == KMOD_LALT) || ((mod & KMOD_RALT) == KMOD_RALT))) {
+      drawLib->toogleFullscreen();
+      return;
+    }
+
     if(nKey == SDLK_F10) {
       switchTestThemeMode(!m_bTestThemeMode);
       if(m_bTestThemeMode) {

@@ -209,5 +209,9 @@ namespace vapp {
     endDraw();
   }
 
-
+  void DrawLib::toogleFullscreen() {
+    if(SDL_WM_ToggleFullScreen(m_screen) != 0) {
+      /* hum */
+    }
+  }
 }

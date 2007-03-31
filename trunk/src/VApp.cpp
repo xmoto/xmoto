@@ -358,9 +358,10 @@ namespace vapp {
       if(SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER) < 0)
         throw Exception("(2) SDL_Init : " + std::string(SDL_GetError()));
     }
-    drawLib->init(nDispWidth,nDispHeight,nDispBPP,bWindowed,&m_theme);
     /* Set window title */
     SDL_WM_SetCaption(m_AppName.c_str(),m_AppName.c_str());
+    //SDL_WM_SetIcon (SDL_LoadBMP("/tmp/xmoto.bmp"), NULL);
+    drawLib->init(nDispWidth,nDispHeight,nDispBPP,bWindowed,&m_theme);
   }
 
   /*===========================================================================

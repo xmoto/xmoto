@@ -117,17 +117,17 @@ namespace vapp {
     if(!m_bWindowed) nFlags|=SDL_FULLSCREEN;
   
     /* At last, try to "set the video mode" */
-    if(SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,m_nDispBPP,nFlags)==NULL) {
+    if((m_screen=SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,m_nDispBPP,nFlags))==NULL) {
       vapp::Log("** Warning ** : Tried to set video mode %dx%d @ %d-bit, but SDL responded: %s\n"
           "                Now SDL will try determining a proper mode itself.",m_nDispWidth,m_nDispHeight,m_nDispBPP);
     
       /* Hmm, try letting it decide the BPP automatically */
-      if(SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,0,nFlags)==NULL) {       
+      if((m_screen=SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,0,nFlags))==NULL) {       
         /* Still no luck */
         Log("** Warning ** : Still no luck, now we'll try 800x600 in a window.");
         m_nDispWidth = 800; m_nDispHeight = 600;        
         m_bWindowed = true;
-        if(SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,0,SDL_OPENGL)==NULL) {       
+        if((m_screen=SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,0,SDL_OPENGL))==NULL) {       
           throw Exception("SDL_SetVideoMode : " + std::string(SDL_GetError()));
         }       
       }
