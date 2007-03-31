@@ -236,8 +236,9 @@ namespace vapp {
     /* more open specific */
     /* handle display lists */
     
+    void toogleFullscreen();
 
-
+    
     /* Data */
     int m_nDrawWidth, m_nDrawHeight;
     int m_nActualWidth, m_nActualHeight;
@@ -260,6 +261,9 @@ namespace vapp {
     bool m_bShadersSupported;
     bool m_bDontUseGLExtensions;
     bool m_bNoGraphics;		/* No-graphics mode */
+
+  protected:
+    SDL_Surface *m_screen;
 
   private:
     static backendtype m_backend;
@@ -524,8 +528,6 @@ namespace vapp {
 
     Vector2f m_min;
     Vector2f m_max;
-
-    SDL_Surface *m_screen;
 
     //
     Vector2f m_textureAnchorPoint;
