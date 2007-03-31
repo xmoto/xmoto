@@ -303,13 +303,13 @@ namespace vapp {
     }
      
     try {
-      m_levelsManager.loadLevelsFromIndex();
+      m_levelsManager.loadLevelsFromIndex(m_bEnableLevelCache);
     } catch(Exception &e) {
       _UpdateLoadingScreen((1.0f/9.0f) * 4,pLoadingScreen, GAMETEXT_INDEX_CREATION);
       Log(std::string("Unable to load levels from index:\n" + e.getMsg()).c_str());
       m_levelsManager.reloadLevelsFromFiles(m_bEnableLevelCache, this);
     }
-    
+
     /* -listlevels? */
     if(m_bListLevels) {
       m_levelsManager.printLevelsList();
@@ -385,7 +385,15 @@ namespace vapp {
     }
         
     /* What to do? */
-    if(m_PlaySpecificLevel != "" && !getDrawLib()->isNoGraphics()) {
+    if(m_PlaySpecificLevelFile != "") {
+      try {
+	m_levelsManager.addExternalLevel(m_PlaySpecificLevelFile);
+	m_PlaySpecificLevel = m_levelsManager.LevelByFileName(m_PlaySpecificLevelFile).Id();
+      } catch(Exception &e) {
+	m_PlaySpecificLevel = m_PlaySpecificLevelFile;
+      }
+    }
+    if((m_PlaySpecificLevel != "") && !getDrawLib()->isNoGraphics()) {
       /* ======= PLAY SPECIFIC LEVEL ======= */
       m_StateAfterPlaying = GS_MENU;
       setState(GS_PREPLAYING);
@@ -489,6 +497,10 @@ namespace vapp {
     m_PlaySpecificReplay = i_replay;
   }
 
+  void GameApp::PlaySpecificLevelFile(std::string i_levelFile) {
+    m_PlaySpecificLevelFile = i_levelFile;
+  }
+
   /*===========================================================================
   Handle a command-line passed argument
   ===========================================================================*/
@@ -508,6 +520,13 @@ namespace vapp {
 	  PlaySpecificLevel(UserArgs[i+1]);
         } else
 	throw SyntaxError("no level specified");        
+        i++;
+      }
+      else if(UserArgs[i] == "-levelFile") {
+        if(i+1<UserArgs.size()) {
+	  PlaySpecificLevelFile(UserArgs[i+1]);
+        } else
+	throw SyntaxError("no level file specified");        
         i++;
       }
       else if(UserArgs[i] == "-debug") {
@@ -567,6 +586,8 @@ namespace vapp {
        /* replays */
        if(v_extension == "rpl") {
 	   PlaySpecificReplay(UserArgs[i]);
+       } else if(v_extension == "lvl") {
+	 PlaySpecificLevelFile(UserArgs[i]);
        } else {
 	 /* unknown extension */
 	 throw SyntaxError("Invalid argument");

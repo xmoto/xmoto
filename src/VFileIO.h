@@ -179,6 +179,7 @@ namespace vapp {
 
       // return true if p_filepath is a path from user dir
       static bool isInUserDir(std::string p_filepath);
+      static bool isFileInDir(std::string p_dirpath, std::string p_filepath);
 
       /* return false if the file is in the package */
       static bool isFileReal(std::string i_filePath);

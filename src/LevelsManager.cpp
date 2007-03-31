@@ -166,6 +166,7 @@ void LevelsManager::clean() {
     delete m_levels[i];
   }
   m_levels.clear();
+  m_externalLevels.clear();
 }
 
 LevelsPack& LevelsManager::LevelsPackByName(const std::string &i_name) {
@@ -610,11 +611,33 @@ const std::vector<LevelsPack *>& LevelsManager::LevelsPacks() {
   return m_levelsPacks;
 }
 
+void LevelsManager::loadExternalLevels(bool i_enableCache) {
+  std::vector<std::string> LvlFiles = vapp::FS::findPhysFiles("Levels/MyLevels/*.lvl", true);
+
+  loadLevelsFromLvl(LvlFiles,
+		    i_enableCache,
+		    false,
+		    true
+		    ); 
+}
+
+void LevelsManager::addExternalLevel(std::string i_levelFile) {
+  std::vector<std::string> LvlFiles;
+  LvlFiles.push_back(i_levelFile);
+
+  loadLevelsFromLvl(LvlFiles,
+		    false,
+		    false,
+		    true
+		    );  
+}
+
 void LevelsManager::reloadLevelsFromFiles(bool i_enableCache, XMotoLoadLevelsInterface *i_loadLevelsInterface) {
   clean();
 
   std::vector<std::string> LvlFiles = vapp::FS::findPhysFiles("Levels/*.lvl", true);
   loadLevelsFromLvl(LvlFiles, i_enableCache, i_loadLevelsInterface);
+  loadExternalLevels(i_enableCache);
   try {
     /* then, recreate the index */
     createLevelsIndex();
@@ -638,7 +661,7 @@ std::string LevelsManager::LevelIndexFileName() {
   return vapp::FS::getUserDir() + "/" + "LCache/levels.index";
 }
 
-void LevelsManager::loadLevelsFromIndex() {
+void LevelsManager::loadLevelsFromIndex(bool i_enableCache) {
   int v_nbLevels;
 
   clean();
@@ -674,6 +697,12 @@ void LevelsManager::loadLevelsFromIndex() {
   vapp::FS::closeFile(pfh);
 
   try {
+    loadExternalLevels(i_enableCache);
+  } catch(Exception &e) {
+    vapp::Log("** Warning : Unable to load externals levels");
+  }
+
+  try {
     loadNewLevelsXml();
   } catch(Exception &e) {
     vapp::Log("** Warning : Unable to load NewLevels xml file");
@@ -684,7 +713,6 @@ void LevelsManager::loadLevelsFromIndex() {
   } catch(Exception &e) {
     vapp::Log("** Warning : Unable to load FavoriteLevels xml file");
   }
-
 }
    
 void LevelsManager::createLevelsIndex() {
@@ -699,10 +727,22 @@ void LevelsManager::createLevelsIndex() {
 
   try {
     vapp::FS::writeInt_LE(pfh, CURRENT_LEVEL_INDEX_FILE_VERSION); /* version */
-    vapp::FS::writeInt_LE(pfh, m_levels.size());
+    vapp::FS::writeInt_LE(pfh, m_levels.size() - m_externalLevels.size());
     for(int i=0; i<m_levels.size(); i++) {
-      vapp::FS::writeString(pfh, m_levels[i]->FileName());
-      m_levels[i]->exportBinaryHeader(pfh);
+
+      bool v_found = false;
+      for(int j=0; j<m_externalLevels.size(); j++) {
+	if(m_externalLevels[j] == m_levels[i]->Id()) {
+	  v_found = true;
+	  break;
+	}
+      }
+
+      /* only index levels which are not externals */
+      if(v_found == false) {
+	vapp::FS::writeString(pfh, m_levels[i]->FileName());
+	m_levels[i]->exportBinaryHeader(pfh);
+      }
     }
   } catch(Exception &e) {
     vapp::FS::closeFile(pfh);
@@ -719,15 +759,26 @@ void LevelsManager::deleteLevelsIndex() {
 void LevelsManager::loadLevelsFromLvl(const std::vector<std::string> &LvlFiles,
 				      bool i_enableCache,
 				      XMotoLoadLevelsInterface *i_loadLevelsInterface) {
-  loadLevelsFromLvl(LvlFiles, i_enableCache, false, i_loadLevelsInterface);
+  loadLevelsFromLvl(LvlFiles, i_enableCache, false, false, i_loadLevelsInterface);
 } 
 
 void LevelsManager::loadLevelsFromLvl(const std::vector<std::string> &LvlFiles,
 				      bool i_enableCache,
 				      bool i_newLevels,
-				      XMotoLoadLevelsInterface *i_loadLevelsInterface) {
+				      bool i_external,
+				      XMotoLoadLevelsInterface *i_loadLevelsInterface
+				      ) {
+
+  /* find external levels */
+  std::vector<std::string> v_externalLevelsFiles;
+
+  if(i_external == false) {
+    v_externalLevelsFiles = vapp::FS::findPhysFiles("Levels/MyLevels/*.lvl", true);
+  }
+
   for(int i=0;i<LvlFiles.size();i++) {
     bool bCached = false;
+
     Level *v_level = new Level();
     
     try {
@@ -738,15 +789,40 @@ void LevelsManager::loadLevelsFromLvl(const std::vector<std::string> &LvlFiles,
       if(doesLevelExist(v_level->Id())) { /* LvlFiles order assure that levels of userDir are load before system levels (which allow level updates) */
 	throw Exception("Duplicate level ID");
       }
-      m_levels.push_back(v_level);
 
-      if(i_loadLevelsInterface != NULL) {
-	i_loadLevelsInterface->loadLevelHook(v_level->Name(), (i*100) / LvlFiles.size());
+      /* is it an external level ? */
+      bool v_addInList = false;
+
+      if(i_external) {
+	v_addInList = true;
+      } else {
+	bool v_found = false;
+	for(unsigned int j=0; j<v_externalLevelsFiles.size(); j++) {
+	  if(v_externalLevelsFiles[j] == LvlFiles[i]) {
+	    v_found = true;
+	    break;
+	  }
+	}
+	v_addInList = v_found == false;
       }
 
-      if(i_newLevels) {
-				m_newLevels.push_back(v_level);
+      if(v_addInList == false) {
+	delete v_level;
+      } else {
+	m_levels.push_back(v_level);
+	if(i_external) {
+	  m_externalLevels.push_back(v_level->Id());
+	}
+
+	if(i_loadLevelsInterface != NULL) {
+	  i_loadLevelsInterface->loadLevelHook(v_level->Name(), (i*100) / LvlFiles.size());
+	}
+
+	if(i_newLevels) {
+	  m_newLevels.push_back(v_level);
+	}
       }
+
     } catch(Exception &e) {
       delete v_level;
     }
@@ -758,11 +834,17 @@ void LevelsManager::checkPrerequires(bool &v_enableCache) {
 
   if(v_enableCache && vapp::FS::isDir(LCachePath) == false) {
     try {
-      vapp::FS::mkArborescence(LCachePath);
+      vapp::FS::mkArborescence(LCachePath + "/file.tmp");
     } catch(Exception &e) {
       v_enableCache = false;
       vapp::Log("** Warning ** : Level cache directory can't be created, forcing caching off!");
     }
+  }
+
+  try {
+    vapp::FS::mkArborescence(vapp::FS::getUserDir() + "/Levels/MyLevels/file.tmp");
+  } catch(Exception &e) {
+    vapp::Log("** Warning ** : MyLevels directory can't be created");
   }
 }
 

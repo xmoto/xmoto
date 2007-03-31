@@ -1202,19 +1202,20 @@ namespace vapp {
     return big ? SwapEndian::BigFloat(v) : SwapEndian::LittleFloat(v);
   }
   
-  
-  bool FS::isInUserDir(std::string p_filepath) {
-    std::string v_userDir;
+  bool FS::isFileInDir(std::string p_dirpath, std::string p_filepath) {
     std::string v_fileDir;
 
-    v_userDir = getUserDir();
     v_fileDir = getFileDir(p_filepath);
 
-    if(v_userDir.length() > v_fileDir.length()) {
+    if(p_dirpath.length() > v_fileDir.length()) {
       return false;
     }
 
-    return v_fileDir.substr(0, v_userDir.length()) == v_userDir;
+    return v_fileDir.substr(0, p_dirpath.length()) == p_dirpath;
+  }
+
+  bool FS::isInUserDir(std::string p_filepath) {
+    return isFileInDir(getUserDir(), p_filepath);
   }
 
   bool FS::doesDirectoryExist(std::string p_path) {
