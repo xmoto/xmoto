@@ -156,3 +156,8 @@ xmoto_SOURCES += xmoto_icone.ico
 endif
 
 xmoto_LDADD = $(common_LDADD)
+
+icndatadir = $(datadir)/@PACKAGE@
+icndata_DATA = xmoto_icone_x.ico
+
+EXTRA_DIST = $(icndata_DATA)
