@@ -196,6 +196,8 @@ namespace vapp {
     if(m_pMenuMusic != NULL) {
       Mix_FreeMusic(m_pMenuMusic);
     }
+
+      m_bEnable = false;
   }
   
   /*==============================================================================
