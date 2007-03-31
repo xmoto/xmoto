@@ -795,6 +795,12 @@ GameApp::GameApp() {
       }
     }
     
+    if(nKey == SDLK_RETURN && (((mod & KMOD_LALT) == KMOD_LALT)
+			       || ((mod & KMOD_RALT) == KMOD_RALT))) { 	 
+      drawLib->toogleFullscreen();
+      return;
+    }
+
     /* If message box... */
     if(m_pQuitMsgBox) {
       if(nKey == SDLK_ESCAPE) {
