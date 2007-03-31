@@ -360,7 +360,15 @@ namespace vapp {
     }
     /* Set window title */
     SDL_WM_SetCaption(m_AppName.c_str(),m_AppName.c_str());
-    //SDL_WM_SetIcon (SDL_LoadBMP("/tmp/xmoto.bmp"), NULL);
+
+#ifndef WIN32
+    SDL_Surface *v_icon = SDL_LoadBMP(GAMEDATADIR "/xmoto_icone_x.ico");
+    if(v_icon != NULL) {
+      SDL_SetColorKey(v_icon, SDL_SRCCOLORKEY,
+		      SDL_MapRGB(v_icon->format, 236, 45, 211));
+      SDL_WM_SetIcon(v_icon, NULL);
+    }
+#endif
     drawLib->init(nDispWidth,nDispHeight,nDispBPP,bWindowed,&m_theme);
   }
 
