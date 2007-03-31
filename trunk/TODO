@@ -6,6 +6,8 @@ For Tod:
 * multicamera
 
 For Nicolas:
+* start game with menu music ; go in option; disable sound ; play a
+   level ; abort -> the music start because sound is still enabled
 * document AddPenaltyTime et empecher de mettre une valeur négative
 * un répertoire my_levels qui serait chargé à tous les coups
 * il semble qu'une erreur de syntaxe en lua et segfault : ca vient du

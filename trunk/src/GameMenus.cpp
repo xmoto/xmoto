@@ -3599,6 +3599,7 @@ namespace vapp {
     m_Config.setBool("EngineSoundEnable",pEnableEngineSoundButton->getChecked());
 
     m_Config.setBool("MenuMusic",pEnableMusicButton->getChecked());
+    m_bEnableMenuMusic = pEnableMusicButton->getChecked();
 
     if(Sound::isEnabled()) {
       if(pEnableAudioButton->getChecked() && pEnableMusicButton->getChecked()
