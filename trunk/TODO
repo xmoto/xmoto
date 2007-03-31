@@ -6,7 +6,7 @@ For Tod:
 * multicamera
 
 For Nicolas:
-* document AddPenaltyTime
+* document AddPenaltyTime et empecher de mettre une valeur négative
 * un répertoire my_levels qui serait chargé à tous les coups
 * il semble qu'une erreur de syntaxe en lua et segfault : ca vient du
    fait que dans drawFrame, dans un case GS_PREPLAY, on peut changer

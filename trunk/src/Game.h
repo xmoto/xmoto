@@ -159,6 +159,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       void reloadTheme();
 
       void PlaySpecificLevel(std::string i_level);
+      void PlaySpecificLevelFile(std::string i_levelFile);
       void PlaySpecificReplay(std::string i_replay);
 
       /* Data interface */
@@ -201,7 +202,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       std::string m_PlaySpecificLevel;          /* If set, we only want to 
                                                    play this level */
       std::string m_PlaySpecificReplay;         /* If set, we only want to
-                                                   play this replay */                                                   
+                                                   play this replay */
+      std::string m_PlaySpecificLevelFile;      /* If set, we only want to
+                                                   play this level */
+
       ReplayBiker* m_replayBiker; /* link to the replay biker in REPLAYING state */
       bool m_stopToUpdateReplay;
 

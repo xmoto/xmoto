@@ -83,7 +83,12 @@ class LevelsManager {
   /* to load or reload levels from files */
   void reloadLevelsFromFiles(bool i_enableCache, XMotoLoadLevelsInterface *i_loadLevelsInterface = NULL);
   /* to load the levels from the index */
-  void loadLevelsFromIndex();
+  void loadLevelsFromIndex(bool i_enableCache);
+
+  /* load external levels */
+  void loadExternalLevels(bool i_enableCache);
+  void addExternalLevel(std::string i_levelFile);
+
   /* to load new levels */
   void loadLevelsFromLvl(const std::vector<std::string> &LvlFiles,
 			 bool i_enableCache,
@@ -133,6 +138,9 @@ class LevelsManager {
   std::vector<Level *> m_levels;
   std::vector<LevelsPack *> m_levelsPacks;
 
+  /* this number must be really reduced because the algo is really slow */;
+  std::vector<std::string> m_externalLevels;
+
   std::vector<Level *> m_newLevels;
   std::vector<Level *> m_updatedLevels;
 
@@ -150,6 +158,7 @@ class LevelsManager {
   void loadLevelsFromLvl(const std::vector<std::string> &LvlFiles,
 			 bool i_enableCache,
 			 bool i_newLevels,
+			 bool i_external = false,
 			 XMotoLoadLevelsInterface *i_loadLevelsInterface = NULL);
 };
 
