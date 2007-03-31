@@ -113,6 +113,7 @@ GameApp::GameApp() {
   
   m_bEnableCheckNewLevelsAtStartup  = true;
   m_bEnableCheckHighscoresAtStartup = true;
+  m_bEnableAutoUploadReplay = true;
   
   m_MotoGame.setHooks(&m_MotoGameHooks);
   m_MotoGameHooks.setGameApps(this, &m_MotoGame);
@@ -503,76 +504,84 @@ GameApp::GameApp() {
 #if defined(SUPPORT_WEBACCESS) 
 	  /* search a better webhighscore */
 	  if(m_pWebHighscores != NULL /*&& v_is_a_highscore == true*/) {
-	    WebHighscore* wh = m_pWebHighscores->getHighscoreFromLevel(m_MotoGame.getLevelSrc()->Id());
-	    if(wh != NULL) {
-	      try {
-		v_is_a_highscore = (v_current_time < wh->getFTime());
-	      } catch(Exception &e) {
-		v_is_a_highscore = false; /* what to do ? more chances that it's not a highscore ;-) */
+	      WebHighscore* wh = m_pWebHighscores->getHighscoreFromLevel(m_MotoGame.getLevelSrc()->Id());
+	      if(wh != NULL) {
+	      	  try {
+				  v_is_a_highscore = (v_current_time < wh->getFTime());
+	      	  } catch(Exception &e) {
+				  v_is_a_highscore = false; /* what to do ? more chances that it's not a highscore ;-) */
+	      	  }
+	      } else {
+	      	  /* never highscored */
+	      	  v_is_a_highscore = true;
 	      }
-	    } else {
-	      /* never highscored */
-	      v_is_a_highscore = true;
-	    }
 	  }
 #endif
-	  
+
 #if defined(SUPPORT_WEBACCESS)
 	  // disable upload button
 	  for(int i=0;i<m_nNumFinishMenuButtons;i++) {
-	    if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_UPLOAD_HIGHSCORE) {
-	      m_pFinishMenuButtons[i]->enableWindow(false);
-	    }
+	      if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_UPLOAD_HIGHSCORE) {
+	      	  m_pFinishMenuButtons[i]->enableWindow(false);
+	      }
 	  }
 #endif
+
 	  
 	  if(v_is_a_highscore) { /* best highscore */
-	    try {
-	      Sound::playSampleByName(m_theme.getSound("NewHighscore")->FilePath());
-	    } catch(Exception &e) {
-	    }
-	    
-#if defined(SUPPORT_WEBACCESS)
-	    // enable upload button
-	    if(m_bEnableWebHighscores) {
-	      if(m_pJustPlayReplay != NULL) {
-		for(int i=0;i<m_nNumFinishMenuButtons;i++) {
-		  if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_UPLOAD_HIGHSCORE) {
-		    m_pFinishMenuButtons[i]->enableWindow(true);
-		  }
-		}
-	      }
-	    }
-#endif
-	    
-	    if(m_pJustPlayReplay != NULL && m_bAutosaveHighscoreReplays) {
-	      String v_replayName = Replay::giveAutomaticName();
-	      _SaveReplay(v_replayName);
-	      m_Renderer.showMsgNewBestHighscore(v_replayName);
-	    } else {
-	      m_Renderer.showMsgNewBestHighscore();
-	    } /* ok i officially give up on indention in x-moto :P */
-	  } else {
-	    if(v_is_a_personal_highscore) { /* personal highscore */
 	      try {
-		Sound::playSampleByName(m_theme.getSound("NewHighscore")->FilePath());
+	      	  Sound::playSampleByName(m_theme.getSound("NewHighscore")->FilePath());
 	      } catch(Exception &e) {
 	      }
-	      if(m_pJustPlayReplay != NULL && m_bAutosaveHighscoreReplays) {
-		String v_replayName = Replay::giveAutomaticName();
-		_SaveReplay(v_replayName);
-		m_Renderer.showMsgNewPersonalHighscore(v_replayName);
+
+		  if(m_pJustPlayReplay != NULL && m_bAutosaveHighscoreReplays) {
+	      	  String v_replayName = Replay::giveAutomaticName();
+	      	  _SaveReplay(v_replayName);
+	      	  m_Renderer.showMsgNewBestHighscore(v_replayName);
+	      	  if ( m_bAutosaveHighscoreReplays ) {
+	      		  _UploadHighscore(v_replayName);
+	      	  }
 	      } else {
-		m_Renderer.showMsgNewPersonalHighscore();
+	      	  m_Renderer.showMsgNewBestHighscore();
+	      } /* ok i officially give up on indention in x-moto :P */
+	  } else {
+	      if(v_is_a_personal_highscore) { /* personal highscore */
+	      	  try {
+				  Sound::playSampleByName(m_theme.getSound("NewHighscore")->FilePath());
+	      	  } catch(Exception &e) {
+	      	  }
+	      	  if(m_pJustPlayReplay != NULL && m_bAutosaveHighscoreReplays) {
+				  String v_replayName = Replay::giveAutomaticName();
+				  _SaveReplay(v_replayName);
+				  m_Renderer.showMsgNewPersonalHighscore(v_replayName);
+	      	  } else {
+				  m_Renderer.showMsgNewPersonalHighscore();
+	      	  }
+
+	      } else { /* no highscore */
+	      	  m_Renderer.hideMsgNewHighscore();
 	      }
-	      
-	    } else { /* no highscore */
-	      m_Renderer.hideMsgNewHighscore();
-	    }
 	  }
+
+
+#if defined(SUPPORT_WEBACCESS)
+	      // enable upload button
+	      if(m_bEnableWebHighscores) {
+	      	  if(m_pJustPlayReplay != NULL) {
+				  for(int i=0;i<m_nNumFinishMenuButtons;i++) {
+		  			  if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_UPLOAD_HIGHSCORE) {
+		    			  m_pFinishMenuButtons[i]->enableWindow(true);
+		  			  }
+				  }
+	      	  }
+	      }
+#endif
+
+
+
 	}
-        break;
-      }
+    break;
+      					}
     }
         
     m_fLastPhysTime = getTime() - PHYS_STEP_SIZE;
@@ -649,6 +658,7 @@ GameApp::GameApp() {
     m_bShowWebHighscoreInGame = m_Config.getBool("ShowInGameWorldRecord");
     m_bEnableCheckNewLevelsAtStartup  = m_Config.getBool("CheckNewLevelsAtStartup");
     m_bEnableCheckHighscoresAtStartup = m_Config.getBool("CheckHighscoresAtStartup");
+    m_bEnableAutoUploadReplay = m_Config.getBool("AutoUploadReplay");
 #endif
 
     /* Other settings */
@@ -761,11 +771,6 @@ GameApp::GameApp() {
 	m_sysMsg.displayText(SYS_MSG_UGLY_MODE_DISABLED);
       }
       return;        
-    }
-
-    if(nKey == SDLK_RETURN && (((mod & KMOD_LALT) == KMOD_LALT) || ((mod & KMOD_RALT) == KMOD_RALT))) {
-      drawLib->toogleFullscreen();
-      return;
     }
 
     if(nKey == SDLK_F10) {

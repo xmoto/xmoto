@@ -709,6 +709,7 @@ namespace vapp {
     m_Config.createVar( "WebThemesURL",           DEFAULT_WEBTHEMES_URL);
     m_Config.createVar( "WebThemesURLBase",       DEFAULT_WEBTHEMES_SPRITESURLBASE);
     m_Config.createVar( "WebRoomsURL",            DEFAULT_WEBROOMS_URL);
+    m_Config.createVar( "AutoUploadReplay",       "false");
 
     /* Proxy */
     m_Config.createVar( "ProxyType",              "" ); /* (blank), HTTP, SOCKS4, or SOCKS5 */
