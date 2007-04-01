@@ -186,11 +186,13 @@ void MotoGame::cleanPlayers() {
       if(m_playEvents) {
 	/* New wheel-spin particles? */
 	if(m_players[i]->isWheelSpinning()) {
-	  if(randomNum(0,1) < 0.7f) {
-	    ParticlesSource *v_debris;
-	    v_debris = (ParticlesSource*) &(getLevelSrc()->getEntityById("BikeDebris"));
-	    v_debris->setDynamicPosition(m_players[i]->getWheelSpinPoint());	
-	    v_debris->addParticle(m_players[i]->getWheelSpinDir(), getTime() + 3.0);
+	  for(unsigned int j=0; j<100; j++) {
+	    if(randomNum(0,1) < 0.7f) {
+	      ParticlesSource *v_debris;
+	      v_debris = (ParticlesSource*) &(getLevelSrc()->getEntityById("BikeDebris"));
+	      v_debris->setDynamicPosition(m_players[i]->getWheelSpinPoint());	
+	      v_debris->addParticle(m_players[i]->getWheelSpinDir(), getTime() + 3.0);
+	    }
 	  }
 	}
       }
