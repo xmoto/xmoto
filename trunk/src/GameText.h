@@ -524,11 +524,13 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define VPACKAGENAME_MOST_PLAYED                _("Most played levels")
 #define VPACKAGENAME_LESS_PLAYED                _("Less played levels (but played)")
 
-#define SYS_MSG_UGLY_MODE_ENABLED   _("Ugly mode enabled")
-#define SYS_MSG_UGLY_MODE_DISABLED  _("Ugly mode disabled")
-#define SYS_MSG_THEME_MODE_ENABLED  _("Theme mode enabled")
-#define SYS_MSG_THEME_MODE_DISABLED _("Theme mode disabled")
-#define SYS_MSG_WWW_ENABLED   	    _("Web connexion enabled")
-#define SYS_MSG_WWW_DISABLED  	    _("Web connexion disabled")
+#define SYS_MSG_UGLY_MODE_ENABLED      _("Ugly mode enabled")
+#define SYS_MSG_UGLY_MODE_DISABLED     _("Ugly mode disabled")
+#define SYS_MSG_THEME_MODE_ENABLED     _("Theme mode enabled")
+#define SYS_MSG_THEME_MODE_DISABLED    _("Theme mode disabled")
+#define SYS_MSG_WWW_ENABLED   	       _("Web connexion enabled")
+#define SYS_MSG_WWW_DISABLED  	       _("Web connexion disabled")
+#define SYS_MSG_INTERPOLATION_ENABLED  _("Replay interpolation enabled")
+#define SYS_MSG_INTERPOLATION_DISABLED _("Replay interpolation disabled")
 
 #endif

@@ -44,6 +44,7 @@ Ghost::Ghost(std::string i_replayFile, bool i_isActiv,
 
   m_info = "";
   m_isActiv = i_isActiv;
+  m_doInterpolation = true;
 }
 
 Ghost::~Ghost() {
@@ -168,18 +169,20 @@ void Ghost::updateToTime(float i_time, float i_timeStep,
       } while(m_next_ghostBikeState.fGameTime < i_time && m_replay->endOfFile() == false);
       BikeState::updateStateFromReplay(&m_previous_ghostBikeState, &m_bikeState);
     } else { /* interpolation */
-      if(m_next_ghostBikeState.fGameTime - m_previous_ghostBikeState.fGameTime > 0.0) {
-	/* INTERPOLATED FRAME */
-	SerializedBikeState ibs;
-	float v_interpolation_value =
-	  (i_time - m_previous_ghostBikeState.fGameTime)
-	  /(m_next_ghostBikeState.fGameTime - m_previous_ghostBikeState.fGameTime);
-	
-	BikeState::interpolateGameState(&m_previous_ghostBikeState,
-					&m_next_ghostBikeState,
-					&ibs,
-					v_interpolation_value);
-	BikeState::updateStateFromReplay(&ibs, &m_bikeState);
+      if(m_doInterpolation) {
+	if(m_next_ghostBikeState.fGameTime - m_previous_ghostBikeState.fGameTime > 0.0) {
+	  /* INTERPOLATED FRAME */
+	  SerializedBikeState ibs;
+	  float v_interpolation_value =
+	    (i_time - m_previous_ghostBikeState.fGameTime)
+	    /(m_next_ghostBikeState.fGameTime - m_previous_ghostBikeState.fGameTime);
+	  
+	  BikeState::interpolateGameState(&m_previous_ghostBikeState,
+					  &m_next_ghostBikeState,
+					  &ibs,
+					  v_interpolation_value);
+	  BikeState::updateStateFromReplay(&ibs, &m_bikeState);
+	}
       }
     }
   }
@@ -187,6 +190,10 @@ void Ghost::updateToTime(float i_time, float i_timeStep,
   if(m_isActiv) {
     execReplayEvents(i_time, i_motogame);
   }
+}
+
+void Ghost::setInterpolation(bool bValue) {
+  m_doInterpolation = bValue;
 }
 
 float Ghost::getFinishTime() {

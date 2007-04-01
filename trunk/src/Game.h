@@ -208,6 +208,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
       ReplayBiker* m_replayBiker; /* link to the replay biker in REPLAYING state */
       bool m_stopToUpdateReplay;
+      bool m_allowReplayInterpolation;
 
       std::string m_ForceProfile;               /* Force this player profile */    
       std::string m_GraphDebugInfoFile;
