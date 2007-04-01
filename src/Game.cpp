@@ -125,6 +125,7 @@ GameApp::GameApp() {
   m_currentPlayingList = NULL;
   m_fReplayFrameRate = 25.0;
   m_stopToUpdateReplay = false;
+  m_allowReplayInterpolation = true;
 }
     
   std::string GameApp::splitText(const std::string &str, int p_breakLineLength) {
@@ -215,7 +216,8 @@ GameApp::GameApp() {
 	  
 	  try {
 	    m_replayBiker = m_MotoGame.addReplayFromFile(m_PlaySpecificReplay,
-							 &m_theme, m_theme.getPlayerTheme());
+							 &m_theme, m_theme.getPlayerTheme(),
+							 m_allowReplayInterpolation);
 	    m_Renderer.setPlayerToFollow(m_replayBiker);
 	  } catch(Exception &e) {
 	    setState(m_StateAfterPlaying);
@@ -778,8 +780,20 @@ GameApp::GameApp() {
       return;        
     }
 
-    if(nKey == SDLK_F5) {
-      if(m_State == GS_MENU) {
+    if(m_State == GS_MENU) {
+
+      /* activate/desactivate interpolation */
+      if(nKey == SDLK_i && ( (mod & KMOD_LCTRL) || (mod & KMOD_RCTRL) )) {
+	m_allowReplayInterpolation = !m_allowReplayInterpolation;
+	if(m_allowReplayInterpolation) {
+	  m_sysMsg.displayText(SYS_MSG_INTERPOLATION_ENABLED);
+	} else {
+	  m_sysMsg.displayText(SYS_MSG_INTERPOLATION_DISABLED);
+	}
+	return;
+      }
+
+      if(nKey == SDLK_F5) {
 	_SimpleMessage(GAMETEXT_RELOADINGLEVELS, &m_InfoMsgBoxRect);
 	m_reloadingLevelsUser = true;
 	m_levelsManager.reloadLevelsFromFiles(m_bEnableLevelCache, this);
@@ -788,6 +802,7 @@ GameApp::GameApp() {
 	_SimpleMessage(GAMETEXT_RELOADINGREPLAYS, &m_InfoMsgBoxRect);
 	m_ReplayList.initFromDir();
       }
+
     }
     
     /* If message box... */

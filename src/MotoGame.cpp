@@ -387,9 +387,11 @@ void MotoGame::cleanPlayers() {
   }
 
   ReplayBiker* MotoGame::addReplayFromFile(std::string i_ghostFile,
-				     Theme *i_theme, BikerTheme* i_bikerTheme) {
+					   Theme *i_theme, BikerTheme* i_bikerTheme,
+					   bool i_interpolate) {
     ReplayBiker* v_biker = NULL;
     v_biker = new ReplayBiker(i_ghostFile, i_theme, i_bikerTheme);
+    v_biker->setInterpolation(i_interpolate);
     m_players.push_back(v_biker);
     return v_biker;
   }
