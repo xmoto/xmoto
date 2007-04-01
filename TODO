@@ -1,6 +1,13 @@
 
 For 0.3.0
 
+sqlite :
++ remettre les virtuals packs manquants
++ la feuille de stats
+
+. gérer et checker le userdir sous windows
+. compiler avec sqlite pour windows
+
 For Tod:
 * load into the graphic card only the blocks which will be displayed depending on the selected graphic quality.
 * multicamera

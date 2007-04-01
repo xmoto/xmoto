@@ -18,12 +18,14 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __XMOTOLOADLEVELSINTERFACE_H__
-#define __XMOTOLOADLEVELSINTERFACE_H__
+#ifndef __XMDATABASEUPDATEINTERFACE_H__
+#define __XMDATABASEUPDATEINTERFACE_H__
 
-class XMotoLoadLevelsInterface {
+#include <string>
+
+class XmDatabaseUpdateInterface {
   public:
-  virtual void loadLevelHook(std::string i_level, int i_percentage) = 0;
+  virtual void updatingDatabase(std::string i_message) = 0;
 };
 
 #endif

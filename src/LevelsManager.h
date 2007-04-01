@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <string>
 #include "xmscene/Level.h"
 #include "PlayerData.h"
-#include "Stats.h"
+#include "xmDatabase.h"
 #include "XMotoLoadLevelsInterface.h"
 
 class LevelsPack {
@@ -78,7 +78,7 @@ class LevelsManager {
 		    bool i_bDebugMode,
 		    std::string i_playerName,
 		    vapp::PlayerData *i_profiles,
-		    vapp::Stats *i_stats);
+		    xmDatabase *m_db);
 
   /* to load or reload levels from files */
   void reloadLevelsFromFiles(bool i_enableCache, XMotoLoadLevelsInterface *i_loadLevelsInterface = NULL);
@@ -131,7 +131,7 @@ class LevelsManager {
 			  bool i_bDebugMode,
 			  std::string i_playerName,
 			  vapp::PlayerData *i_profiles,
-			  vapp::Stats *i_stats);
+			  xmDatabase *m_db);
   void clean();
   static std::string LevelIndexFileName();
 
