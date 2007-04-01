@@ -1,4 +1,5 @@
 X-Moto 0.3.0 2007-
+ * libsqlite integration (for a better and faster data managing)
  * code cleaning
  * F8 to disable automatic web connexion (for ghost for example)
  * xmoto toto.lvl or xmoto -levelFile toto.lvl to directly start from an lvl

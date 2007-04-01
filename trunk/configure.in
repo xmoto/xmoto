@@ -12,6 +12,11 @@ AC_PROG_INSTALL
 AC_C_BIGENDIAN(AC_DEFINE([XMOTO_BIG_ENDIAN]),
   AC_DEFINE([XMOTO_LITTLE_ENDIAN]))
 
+dnl sqlite
+AC_CHECK_HEADERS([sqlite3.h],[SQLITE_LIBS=-lsqlite3],[AC_MSG_ERROR("sqlite3 required")])
+AC_CHECK_LIB(sqlite3, main,[],[AC_MSG_ERROR("Linking against sqlite3 failed.")])
+AC_SUBST(SQLITE_LIBS)
+
 dnl libz before png!
 AC_CHECK_LIB(z, uncompress, [], [AC_MSG_ERROR(zlib required)])
 

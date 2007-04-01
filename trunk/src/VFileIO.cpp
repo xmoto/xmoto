@@ -1013,7 +1013,7 @@ namespace vapp {
       /* Valid path? */
       if(isDir(cModulePath)) {
         /* Alright, use this dir */    
-        m_UserDir = cModulePath;
+        m_UserDir = GetUserProfileDirectory();
         m_DataDir = cModulePath;     
         
         m_bGotDataDir = true;
