@@ -161,7 +161,6 @@ Central place to keep many in-game text strings
 #define GAMETEXT_ENABLEAUDIO          _("Enable Audio")
 #define GAMETEXT_ENABLECHECKNEWLEVELSATSTARTUP  _("Check new levels at startup")
 #define GAMETEXT_ENABLECHECKHIGHSCORESATSTARTUP _("Check new highscores at startup")
-#define GAMETEXT_ENABLEAUTOUPLOADREPLAY _("Automatic highscores upload")
 #define GAMETEXT_ENABLECONTEXTHELP    _("Enable Context Help")
 #define GAMETEXT_ENABLEENGINESOUND    _("Enable Engine Sound")
 #define GAMETEXT_ENABLEGHOST          _("Enable Ghost")
@@ -385,7 +384,6 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 
 /* Context help strings */
 #define CONTEXTHELP_UPDATEHIGHSCORES _("Download the latest X-Moto world records and check for new levels")
-#define CONTEXTHELP_AUTO_UPLOAD_REPLAY _("After beating a highscore upload your result to server")
 #define CONTEXTHELP_PROXYCONFIG _("Configure how you are connected to the Internet")
 #define CONTEXTHELP_PLAY_THIS_LEVEL_AGAIN _("Play this level again")
 #define CONTEXTHELP_SAVE_A_REPLAY _("Save a replay for later viewing")
