@@ -255,7 +255,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       bool m_bWebLevelsToDownload;              /* true: there are new levels to download */
       bool m_bEnableCheckNewLevelsAtStartup;
       bool m_bEnableCheckHighscoresAtStartup;
-      bool m_bEnableAutoUploadReplay; 		
 
 #endif
       
