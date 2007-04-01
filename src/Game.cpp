@@ -30,6 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Bike.h"
 #include "xmscene/BikeGhost.h"
 #include "xmscene/BikePlayer.h"
+#include "xmDatabase.h";
 
 #if defined(SUPPORT_WEBACCESS)
   #include <curl/curl.h>
@@ -38,6 +39,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 namespace vapp {
 
 GameApp::~GameApp() {
+  if(m_db != NULL) {
+    delete m_db;
+  }
 }
 
 GameApp::GameApp() {
@@ -126,6 +130,8 @@ GameApp::GameApp() {
   m_fReplayFrameRate = 25.0;
   m_stopToUpdateReplay = false;
   m_allowReplayInterpolation = true;
+
+  m_db = NULL;
 }
     
   std::string GameApp::splitText(const std::string &str, int p_breakLineLength) {

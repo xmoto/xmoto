@@ -30,10 +30,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Sound.h"
 #include "PhysSettings.h"
 #include "Input.h"
+#include "xmDatabase.h";
 
 #if defined(SUPPORT_WEBACCESS)
   #include <curl/curl.h>
 #endif
+
+#define DATABASE_FILE vapp::FS::getUserDir() + "/" + "xm.db"
 
 namespace vapp {
 
@@ -113,6 +116,9 @@ namespace vapp {
 #endif
               );
     reloadTheme();
+
+    /* database */
+    m_db = new xmDatabase(DATABASE_FILE);
 
     /* Profiles */
     Log("Loading profiles...");

@@ -54,6 +54,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* logf(PRESTART_ANIMATION_CURVE + 1.0) = 1.386294361*/
 #define LOGF_PRE_ANIM_TIME_ADDED_ONE 1.386294361
 
+class xmDatabase;
+
  namespace vapp {
 
    /*===========================================================================
@@ -408,7 +410,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       double m_fFrameTime;
       float m_fFPS_Rate;
 
-			bool m_bLockMotoGame;
+      bool m_bLockMotoGame;
+      xmDatabase *m_db;
 
       /* Helpers */
 #if defined(SUPPORT_WEBACCESS) 
