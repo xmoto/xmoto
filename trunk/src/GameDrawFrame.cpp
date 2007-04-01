@@ -315,7 +315,9 @@ namespace vapp {
       if(Button == UI_MSGBOX_YES) {
         if(m_State == GS_PAUSE) {
 	  if(m_MotoGame.Players().size() == 1) {
-	    m_GameStats.abortedLevel(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->Id(),m_MotoGame.getLevelSrc()->Name(),m_MotoGame.getTime()); 
+	    m_db->stats_abortedLevel(m_pPlayer->PlayerName,
+				     m_MotoGame.getLevelSrc()->Id(),
+				     m_MotoGame.getTime()); 
 	  }
         }
       

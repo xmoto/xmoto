@@ -1287,9 +1287,9 @@ namespace vapp {
     pSomeText->setFont(m_Renderer.getMediumFont());
     
     if(m_pPlayer != NULL)
-      m_pStatsReport = m_GameStats.generateReport(m_pPlayer->PlayerName,m_pStatsWindow,30,36,m_pStatsWindow->getPosition().nWidth-45,m_pStatsWindow->getPosition().nHeight-36,m_Renderer.getSmallFont());
+      m_pStatsReport = m_db->stats_generateReport(m_pPlayer->PlayerName,m_pStatsWindow,30,36,m_pStatsWindow->getPosition().nWidth-45,m_pStatsWindow->getPosition().nHeight-36,m_Renderer.getSmallFont());
     else
-      m_pStatsReport = m_GameStats.generateReport("",m_pStatsWindow,30,36,m_pStatsWindow->getPosition().nWidth-45,m_pStatsWindow->getPosition().nHeight-36,m_Renderer.getSmallFont());
+      m_pStatsReport = m_db->stats_generateReport("",m_pStatsWindow,30,36,m_pStatsWindow->getPosition().nWidth-45,m_pStatsWindow->getPosition().nHeight-36,m_Renderer.getSmallFont());
     
   }
 
@@ -1570,7 +1570,9 @@ namespace vapp {
         else if(m_pPauseMenuButtons[i]->getCaption() == GAMETEXT_ABORT) {
           m_pPauseMenu->showWindow(false);
 	  if(m_MotoGame.Players().size() == 1) {
-	    m_GameStats.abortedLevel(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->Id(),m_MotoGame.getLevelSrc()->Name(),m_MotoGame.getTime());
+	    m_db->stats_abortedLevel(m_pPlayer->PlayerName,
+				     m_MotoGame.getLevelSrc()->Id(),
+				     m_MotoGame.getTime());
 	  }
 
 	  m_Renderer.setPlayerToFollow(NULL);
@@ -1591,7 +1593,9 @@ namespace vapp {
 	  if(NextLevel != "") {        
 	    m_pPauseMenu->showWindow(false);              
 	    if(m_MotoGame.Players().size() == 1) {
-	      m_GameStats.abortedLevel(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->Id(),m_MotoGame.getLevelSrc()->Name(),m_MotoGame.getTime());
+	      m_db->stats_abortedLevel(m_pPlayer->PlayerName,
+				       m_MotoGame.getLevelSrc()->Id(),
+				       m_MotoGame.getTime());
 	    }
 	    m_Renderer.setPlayerToFollow(NULL);
 	    m_MotoGame.endLevel();
@@ -2082,6 +2086,7 @@ namespace vapp {
 
               if(bSelNew) {
                 m_pPlayer = m_Profiles.getProfile(pEntry->Text[0]);
+		m_db->stats_xmotoStarted(m_pPlayer->PlayerName);
               }
 
               _CreateProfileList();              
@@ -2887,7 +2892,7 @@ namespace vapp {
           
           /* Update */
           delete m_pStatsReport;
-          m_pStatsReport = m_GameStats.generateReport(m_pPlayer->PlayerName,m_pStatsWindow,30,36,m_pStatsWindow->getPosition().nWidth-45,m_pStatsWindow->getPosition().nHeight-36,m_Renderer.getSmallFont());
+          m_pStatsReport = m_db->stats_generateReport(m_pPlayer->PlayerName,m_pStatsWindow,30,36,m_pStatsWindow->getPosition().nWidth-45,m_pStatsWindow->getPosition().nHeight-36,m_Renderer.getSmallFont());
         }        
       }
     }

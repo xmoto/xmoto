@@ -117,9 +117,6 @@ namespace vapp {
               );
     reloadTheme();
 
-    /* database */
-    m_db = new xmDatabase(DATABASE_FILE);
-
     /* Profiles */
     Log("Loading profiles...");
     m_Profiles.loadFile();
@@ -138,12 +135,7 @@ namespace vapp {
       /* OK, use the first then */
       m_pPlayer = m_Profiles.getProfiles()[0];
     }
-    
-    /* Update stats */
-    m_GameStats.loadXML("stats.xml");
-    if(m_pPlayer != NULL)
-      m_GameStats.xmotoStarted(m_pPlayer->PlayerName);
-   
+     
     /* Init sound system */
     if(!getDrawLib()->isNoGraphics()) {
       Log("Initializing sound system...");
@@ -168,18 +160,24 @@ namespace vapp {
 
     if(m_GraphDebugInfoFile != "") m_Renderer.loadDebugInfo(m_GraphDebugInfoFile);
 
-    Texture *pLoadingScreen = NULL;
+    m_loadingScreen = NULL;
     if(!getDrawLib()->isNoGraphics()) {    
       /* Show loading screen */
       pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "Loading");
 
       if(pSprite != NULL) {
-	pLoadingScreen = pSprite->getTexture(false, true);
+	m_loadingScreen = pSprite->getTexture(false, true);
       }
     }
 
+    /* database */
+    m_db = new xmDatabase(DATABASE_FILE, getDrawLib()->isNoGraphics() ? NULL : this);
+    /* Update stats */
+    if(m_pPlayer != NULL)
+      m_db->stats_xmotoStarted(m_pPlayer->PlayerName);
+
     /* Update replays */
-    _UpdateLoadingScreen((1.0f/9.0f) * 0,pLoadingScreen,GAMETEXT_LOADINGREPLAYS);
+    _UpdateLoadingScreen((1.0f/9.0f) * 0,m_loadingScreen,GAMETEXT_LOADINGREPLAYS);
     
     try {
       m_ReplayList.initFromCache();
@@ -233,7 +231,7 @@ namespace vapp {
     }
     
     if(!getDrawLib()->isNoGraphics()) {  
-      _UpdateLoadingScreen((1.0f/9.0f) * 0,pLoadingScreen,GAMETEXT_LOADINGSOUNDS);
+      _UpdateLoadingScreen((1.0f/9.0f) * 0,m_loadingScreen,GAMETEXT_LOADINGSOUNDS);
       
       if(Sound::isEnabled()) {
         /* Load sounds */
@@ -249,14 +247,14 @@ namespace vapp {
         Log(" %d sound%s loaded",Sound::getNumSamples(),Sound::getNumSamples()==1?"":"s");
       }
 
-      _UpdateLoadingScreen((1.0f/9.0f) * 1,pLoadingScreen,GAMETEXT_INITTEXT);
+      _UpdateLoadingScreen((1.0f/9.0f) * 1,m_loadingScreen,GAMETEXT_INITTEXT);
           
       /* Find all files in the textures dir and load them */     
       UITextDraw::initTextDrawing(this);
       UITexture::setApp(this);
       m_sysMsg.setFont(UITextDraw::getFont("MFont"));
 
-      _UpdateLoadingScreen((1.0f/9.0f) * 3,pLoadingScreen,GAMETEXT_LOADINGMENUGRAPHICS);
+      _UpdateLoadingScreen((1.0f/9.0f) * 3,m_loadingScreen,GAMETEXT_LOADINGMENUGRAPHICS);
         
       /* Load title screen textures + cursor + stuff */
       m_pTitleBL = NULL;
@@ -297,7 +295,7 @@ namespace vapp {
       }
 #endif
 
-      _UpdateLoadingScreen((1.0f/9.0f) * 4,pLoadingScreen,GAMETEXT_LOADINGLEVELS);
+      _UpdateLoadingScreen((1.0f/9.0f) * 4,m_loadingScreen,GAMETEXT_LOADINGLEVELS);
     }
     
     /* Test level cache directory */
@@ -311,7 +309,7 @@ namespace vapp {
     try {
       m_levelsManager.loadLevelsFromIndex(m_bEnableLevelCache);
     } catch(Exception &e) {
-      _UpdateLoadingScreen((1.0f/9.0f) * 4,pLoadingScreen, GAMETEXT_INDEX_CREATION);
+      _UpdateLoadingScreen((1.0f/9.0f) * 4,m_loadingScreen, GAMETEXT_INDEX_CREATION);
       Log(std::string("Unable to load levels from index:\n" + e.getMsg()).c_str());
       m_levelsManager.reloadLevelsFromFiles(m_bEnableLevelCache, this);
     }
@@ -321,7 +319,7 @@ namespace vapp {
       m_levelsManager.printLevelsList();
     }
 
-    _UpdateLoadingScreen((1.0f/9.0f) * 5,pLoadingScreen,GAMETEXT_INITRENDERER);
+    _UpdateLoadingScreen((1.0f/9.0f) * 5,m_loadingScreen,GAMETEXT_INITRENDERER);
     
     if(m_bListLevels) {
       quit();
@@ -339,7 +337,7 @@ namespace vapp {
           
   try {
     if(m_bEnableCheckHighscoresAtStartup) {
-      _UpdateLoadingScreen((1.0f/9.0f) * 6,pLoadingScreen,GAMETEXT_DLHIGHSCORES);      
+      _UpdateLoadingScreen((1.0f/9.0f) * 6,m_loadingScreen,GAMETEXT_DLHIGHSCORES);      
       _UpdateWebHighscores(bSilent);
     }
   } catch(Exception &e) {
@@ -352,7 +350,7 @@ namespace vapp {
 
   if(m_bEnableCheckNewLevelsAtStartup) {
     try {
-      _UpdateLoadingScreen((1.0f/9.0f) * 6,pLoadingScreen,GAMETEXT_DLLEVELSCHECK);      
+      _UpdateLoadingScreen((1.0f/9.0f) * 6,m_loadingScreen,GAMETEXT_DLLEVELSCHECK);      
       _UpdateWebLevels(bSilent);       
     } catch(Exception &e) {
       /* No internet connection, probably... (just use the latest times, if any) */
@@ -377,14 +375,14 @@ namespace vapp {
     if(!getDrawLib()->isNoGraphics()) {
       /* Initialize renderer */
       m_Renderer.init();
-      _UpdateLoadingScreen((1.0f/9.0f) * 7,pLoadingScreen,GAMETEXT_INITMENUS);
+      _UpdateLoadingScreen((1.0f/9.0f) * 7,m_loadingScreen,GAMETEXT_INITMENUS);
       
       /* Initialize menu system */
       _InitMenus();    
-      _UpdateLoadingScreen((1.0f/9.0f) * 8,pLoadingScreen,GAMETEXT_UPDATINGLEVELS);
+      _UpdateLoadingScreen((1.0f/9.0f) * 8,m_loadingScreen,GAMETEXT_UPDATINGLEVELS);
 
       _UpdateLevelsLists();
-      _UpdateLoadingScreen((1.0f/9.0f) * 9,pLoadingScreen,GAMETEXT_INITINPUT);      
+      _UpdateLoadingScreen((1.0f/9.0f) * 9,m_loadingScreen,GAMETEXT_INITINPUT);      
       
       /* Init input system */
       m_InputHandler.init(&m_Config);
@@ -452,7 +450,6 @@ namespace vapp {
       delete m_pCredits;
   
     m_levelsManager.saveXml();
-    m_GameStats.saveXML("stats.xml");
       
     if(!getDrawLib()->isNoGraphics()) {
       m_Renderer.unprepareForNewLevel(); /* just to be sure, shutdown can happen quite hard */

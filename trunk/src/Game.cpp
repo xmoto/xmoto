@@ -132,6 +132,7 @@ GameApp::GameApp() {
   m_allowReplayInterpolation = true;
 
   m_db = NULL;
+  m_loadingScreen = NULL;
 }
     
   std::string GameApp::splitText(const std::string &str, int p_breakLineLength) {
@@ -413,7 +414,9 @@ GameApp::GameApp() {
 
         /* Update stats */        
 	if(m_MotoGame.Players().size() == 1) {
-	  m_GameStats.died(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->Id(),m_MotoGame.getLevelSrc()->Name(),m_MotoGame.getTime());
+	  m_db->stats_died(m_pPlayer->PlayerName,
+			   m_MotoGame.getLevelSrc()->Id(),
+			   m_MotoGame.getTime());
 	}                
 
         /* Play the DIE!!! sound */
@@ -481,7 +484,9 @@ GameApp::GameApp() {
         /* Update stats */
 	/* update stats only in one player mode */
 	if(m_MotoGame.Players().size() == 1) {       
-	  m_GameStats.levelCompleted(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->Id(),m_MotoGame.getLevelSrc()->Name(),m_MotoGame.Players()[0]->finishTime());
+	  m_db->stats_levelCompleted(m_pPlayer->PlayerName,
+				     m_MotoGame.getLevelSrc()->Id(),
+				     m_MotoGame.Players()[0]->finishTime());
 	}        
 
         /* A more lucky outcome of GS_PLAYING than GS_DEADMENU :) */
@@ -1456,7 +1461,9 @@ GameApp::GameApp() {
 
     /* Update stats */        
     if(m_MotoGame.Players().size() == 1) {
-      m_GameStats.levelRestarted(m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->Id(),m_MotoGame.getLevelSrc()->Name(),m_MotoGame.getTime());
+      m_db->stats_levelRestarted(m_pPlayer->PlayerName,
+				 m_MotoGame.getLevelSrc()->Id(),
+				 m_MotoGame.getTime());
     }  
 
 		m_Renderer.setPlayerToFollow(NULL);
@@ -2252,7 +2259,7 @@ GameApp::GameApp() {
 				   m_pWebLevels,
 #endif
 				   m_bDebugMode,
-				   m_pPlayer->PlayerName, &m_Profiles, &m_GameStats);
+				   m_pPlayer->PlayerName, &m_Profiles, m_db);
     }    
 
     if(v_isset) {
@@ -2391,28 +2398,21 @@ GameApp::GameApp() {
     v_percentage << i_percentage;
     v_percentage << "%";
     
-    if(m_reloadingLevelsUser == false) {
-      Texture *pLoadingScreen;
-      Sprite* pSprite;
-      pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "Loading");
-      
-      if(pSprite == NULL) {
-	return;
-      }
-      
-      try {
-	pLoadingScreen = pSprite->getTexture(false, true);
-      } catch(Exception &e) {
-	return;
-      }
-      
-      _UpdateLoadingScreen((1.0f/9.0f) * 4,pLoadingScreen, std::string(GAMETEXT_INDEX_CREATION) + std::string("\n") + v_percentage.str() + std::string(", ") + i_level);
+    if(m_loadingScreen != NULL) {
+      _UpdateLoadingScreen((1.0f/9.0f) * 4, m_loadingScreen, std::string(GAMETEXT_INDEX_CREATION) + std::string("\n") + v_percentage.str() + std::string(", ") + i_level);
     } else {
       _SimpleMessage(GAMETEXT_RELOADINGLEVELS + std::string("\n") + v_percentage.str(), &m_InfoMsgBoxRect);
+    }
+  }
+
+  void GameApp::updatingDatabase(std::string i_message) {
+    if(m_loadingScreen != NULL) {
+      _UpdateLoadingScreen((1.0f/9.0f) * 4, m_loadingScreen, i_message);
     }
   }
 
   bool GameApp::creditsModeActive() {
     return m_bCreditsModeActive;
   }
+
 }

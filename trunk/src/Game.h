@@ -38,10 +38,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "WWW.h"
 #include "WWWAppInterface.h"
 #include "GUIXMoto.h"
-#include "Stats.h"
 #include "Credits.h"
 #include "LevelsManager.h"
 #include "XMotoLoadLevelsInterface.h"
+#include "xmDatabaseUpdateInterface.h"
 #include "SysMessage.h"
 
 #define PRESTART_ANIMATION_TIME 2.0
@@ -113,9 +113,9 @@ class xmDatabase;
    Game application
    ===========================================================================*/
    #if defined(SUPPORT_WEBACCESS)
-   class GameApp : public App, public XMotoLoadLevelsInterface, public WWWAppInterface {
+   class GameApp : public App, public XMotoLoadLevelsInterface, public XmDatabaseUpdateInterface, public WWWAppInterface {
    #else
-   class GameApp : public App, public XMotoLoadLevelsInterface {
+   class GameApp : public App, public XMotoLoadLevelsInterface, public XmDatabaseUpdateInterface, {
    #endif
      public:
      GameApp();
@@ -137,6 +137,7 @@ class xmDatabase;
       
 	/* load level */
 	void loadLevelHook(std::string i_level, int i_percentage);
+	void updatingDatabase(std::string i_message);
 
       /* Virtual methods */
       virtual void drawFrame(void);
@@ -290,7 +291,6 @@ class xmDatabase;
       float fAnimPlayFinalCameraX2;
       float fAnimPlayFinalCameraY2;
 
-      Stats m_GameStats;
       UIWindow *m_pStatsReport;
       
       /* Sound effects */
@@ -313,6 +313,8 @@ class xmDatabase;
 #endif
       bool m_bShowCursor;
       
+      Texture *m_loadingScreen;
+
       /* Main menu buttons and stuff */
       int m_nNumMainMenuButtons;
       UITabView *m_pLevelPackTabs;
@@ -556,6 +558,7 @@ class xmDatabase;
       int getNumberOfPlayersToPlay();
       TColor getColorFromPlayerNumber(int i_player);
       TColor getUglyColorFromPlayerNumber(int i_player);
+
   };
 
 }

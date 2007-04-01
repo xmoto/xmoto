@@ -136,6 +136,8 @@ Central place to keep many in-game text strings
 #define GAMETEXT_CREDITSBUTTON        _("Credits")
 #define GAMETEXT_CURPLAYER            _("Player")
 #define GAMETEXT_DATE                 _("Date")
+#define GAMETEXT_DB_UPGRADING               _("Upgrading database")
+#define GAMETEXT_DB_UPGRADING_STATS_PROFILE _("Upgrading database stats for the profile")
 #define GAMETEXT_DEATHANIM            _("Death Animation")
 #define GAMETEXT_DEFAULTS             _("Defaults")
 #define GAMETEXT_DELETEPLAYERMESSAGE  _("Do you really want to delete player?")

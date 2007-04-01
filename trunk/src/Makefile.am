@@ -127,6 +127,8 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp GameMain.cpp \
   SysMessage.cpp \
   xmDatabase.h \
   xmDatabase.cpp \
+  xmDatabase_stats.cpp \
+  xmDatabaseUpdateInterface.h \
   xmscene/BasicSceneStructs.h \
   xmscene/Level.h \
   xmscene/Level.cpp \
