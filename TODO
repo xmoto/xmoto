@@ -4,6 +4,8 @@ For 0.3.0
 sqlite :
 + remettre les virtuals packs manquants
 + la feuille de stats
++ bug of \"
++ not fast enough for 600 inserts
 
 . gérer et checker le userdir sous windows
 . compiler avec sqlite pour windows

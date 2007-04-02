@@ -26,6 +26,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifdef WIN32
   #include <io.h>
   #include <direct.h>
+  #include <windows.h>
+  #include <userenv.h>
+  #include <winbase.h>
 #else
   #include <unistd.h>
   #include <sys/types.h>
@@ -38,6 +41,27 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VFileIO.h"
 #include "helpers/SwapEndian.h"
 #include "md5sum/md5file.h"
+
+#ifdef WIN32
+std::string win32_getUserDir() {
+  HANDLE hToken;
+  TCHAR szProfilePath[1024];
+  DWORD cchPath = 1024;
+  HANDLE proc;
+
+  proc = GetCurrentProcess();
+
+  if(!OpenProcessToken(proc, TOKEN_QUERY, &hToken)) {
+    throw Exception("Can't determine user directory (OpenProcessToken)");
+  }
+
+  if (!GetUserProfileDirectory( hToken, szProfilePath, &cchPath ) ) {
+    throw Exception("Can't determine user directory (GetUserProfileDirectory)");
+  }
+
+  return szProfilePath;
+}
+#endif
 
 namespace vapp {
 
@@ -1013,7 +1037,7 @@ namespace vapp {
       /* Valid path? */
       if(isDir(cModulePath)) {
         /* Alright, use this dir */    
-        m_UserDir = GetUserProfileDirectory();
+        m_UserDir = win32_getUserDir() + std::string("/.") + AppDir;
         m_DataDir = cModulePath;     
         
         m_bGotDataDir = true;
@@ -1029,50 +1053,6 @@ namespace vapp {
       
       m_UserDir = m_UserDir + std::string("/.") + AppDir;
       
-      /* If user-dir isn't there, try making it */
-      if(!isDir(m_UserDir)) {
-        if(FS::mkDir(m_UserDir.c_str())) { /* drwx------ */
-          Log("** Warning ** : failed to create user directory '%s'!",m_UserDir.c_str());
-        }
-        if(!isDir(m_UserDir)) {
-          /* Still no dir... */
-          throw Exception("could not create user directory");
-        }
-      }
-      
-      /* If there is no Replay-dir in user-dir try making that too */
-      if(!isDir(getReplaysDir())) {
-        if(FS::mkDir(getReplaysDir().c_str())) { /* drwx------ */
-          Log("** Warning ** : failed to create user replay directory '%s'!",(m_UserDir + std::string("/Replays")).c_str());
-        }
-        if(!isDir(getReplaysDir())) {
-          /* Still no dir... */
-          throw Exception("could not create user replay directory");
-        }
-      }
-
-      /* Make sure we got a level cache dir */
-      if(!isDir(m_UserDir + std::string("/LCache"))) {
-        if(FS::mkDir((m_UserDir + std::string("/LCache")).c_str())) { /* drwx------ */
-          Log("** Warning ** : failed to create user LCache directory '%s'!",(m_UserDir + std::string("/LCache")).c_str());
-        }
-        if(!isDir(m_UserDir + std::string("/LCache"))) {
-          /* Still no dir... */
-          throw Exception("could not create user LCache directory");
-        }
-      }
-
-      /* The same goes for the /Levels dir */
-      if(!isDir(getLevelsDir())) {
-        if(FS::mkDir(getLevelsDir().c_str())) { /* drwx------ */
-          Log("** Warning ** : failed to create user levels directory '%s'!",(m_UserDir + std::string("/Levels")).c_str());
-        }
-        if(!isDir(getLevelsDir())) {
-          /* Still no dir... */
-          throw Exception("could not create user levels directory");
-        }
-      }
-      
       /* And the data dir? */
       m_DataDir = std::string(GAMEDATADIR);
       if(isDir(m_DataDir)) {
@@ -1080,6 +1060,20 @@ namespace vapp {
         m_bGotDataDir = true;
       }
     #endif    
+
+      /* If user-dir isn't there, try making it */
+      if(isDir(m_UserDir) == false) {
+	mkArborescenceDir(m_UserDir);
+      }
+      if(isDir(getReplaysDir()) == false) {
+	mkArborescenceDir(getReplaysDir());
+      }
+      if(isDir(m_UserDir + std::string("/LCache")) == false) {
+	mkArborescenceDir(m_UserDir + std::string("/LCache"));
+      } 
+      if(isDir(getLevelsDir()) == false) {
+	mkArborescenceDir(getLevelsDir());
+      } 
 
     /* Delete old log */    
     remove( (m_UserDir + std::string("/xmoto.log")).c_str() );
@@ -1247,6 +1241,10 @@ namespace vapp {
     if(FS::mkDir(v_parentDir.c_str()) != 0) {
       throw Exception("Can't create directory " + v_parentDir);
     }
+  }
+
+  void FS::mkArborescenceDir(std::string v_dirpath) {
+    mkArborescence(v_dirpath + "/file.tmp");
   }
 
   std::string FS::md5sum(std::string i_filePath) {
