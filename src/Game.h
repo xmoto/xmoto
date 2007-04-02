@@ -559,6 +559,9 @@ class xmDatabase;
       TColor getColorFromPlayerNumber(int i_player);
       TColor getUglyColorFromPlayerNumber(int i_player);
 
+      UIWindow* stats_generateReport(const std::string &PlayerName, vapp::UIWindow *pParent,
+				     int x, int y, int nWidth, int nHeight, vapp::UIFont *pFont);
+
   };
 
 }

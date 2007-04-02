@@ -20,8 +20,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "xmDatabase.h"
 #include "helpers/VExcept.h"
-#include "VApp.h"
 #include "GameText.h"
+#include "VApp.h"
 
 #define XMDB_VERSION 2
 
@@ -184,4 +184,29 @@ void xmDatabase::debugResult(char **i_result, int ncolumn, int nrow) {
   for(int i=0; i<ncolumn*(nrow+1); i++) {
     printf("result[%i] = %s\n", i, i_result[i]);
   }
+}
+
+char* xmDatabase::getResult(char **i_result, int ncolumn, int i_row, int i_column) {
+  return i_result[ncolumn*(i_row+1) + i_column];
+}
+
+char** xmDatabase::readDB(std::string i_sql, int &i_nrow) {
+  char **v_result;
+  int ncolumn;
+  char *errMsg;
+  std::string v_errMsg;
+  
+  if(sqlite3_get_table(m_db,
+		       i_sql.c_str(),
+		       &v_result, &i_nrow, &ncolumn, &errMsg)
+     != SQLITE_OK) {
+    v_errMsg = errMsg;
+    sqlite3_free(errMsg);
+    throw Exception("xmDb: " + v_errMsg);
+  }
+  return v_result;
+}
+
+void xmDatabase::read_DB_free(char **i_result) {
+  sqlite3_free_table(i_result);
 }

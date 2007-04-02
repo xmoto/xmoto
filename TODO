@@ -2,15 +2,16 @@
 For 0.3.0
 
 * yep, it works, but it was a pain in the ass to find those faulty demos in the list(i have sooo many demos). Could you do the same fliter thing and directories for replays too ?
+4. zoom in demos :)
+5. http://forum.xmoto.tuxfamily.org/viewtopic.php?t=117&highlight=
+6. "levels with recently updated WR" folder
 
 sqlite :
 + remettre les virtuals packs manquants
-+ la feuille de stats
++ la feuille de stats : les noms des levels au lieu des ids
 + bug of \"
-+ not fast enough for 600 inserts
 
-. gérer et checker le userdir sous windows
-. compiler avec sqlite pour windows
+. checker le userdir sous windows
 
 For Tod:
 * load into the graphic card only the blocks which will be displayed depending on the selected graphic quality.

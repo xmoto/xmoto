@@ -1287,9 +1287,9 @@ namespace vapp {
     pSomeText->setFont(m_Renderer.getMediumFont());
     
     if(m_pPlayer != NULL)
-      m_pStatsReport = m_db->stats_generateReport(m_pPlayer->PlayerName,m_pStatsWindow,30,36,m_pStatsWindow->getPosition().nWidth-45,m_pStatsWindow->getPosition().nHeight-36,m_Renderer.getSmallFont());
+      m_pStatsReport = stats_generateReport(m_pPlayer->PlayerName,m_pStatsWindow,30,36,m_pStatsWindow->getPosition().nWidth-45,m_pStatsWindow->getPosition().nHeight-36,m_Renderer.getSmallFont());
     else
-      m_pStatsReport = m_db->stats_generateReport("",m_pStatsWindow,30,36,m_pStatsWindow->getPosition().nWidth-45,m_pStatsWindow->getPosition().nHeight-36,m_Renderer.getSmallFont());
+      m_pStatsReport = stats_generateReport("",m_pStatsWindow,30,36,m_pStatsWindow->getPosition().nWidth-45,m_pStatsWindow->getPosition().nHeight-36,m_Renderer.getSmallFont());
     
   }
 
@@ -2892,7 +2892,7 @@ namespace vapp {
           
           /* Update */
           delete m_pStatsReport;
-          m_pStatsReport = m_db->stats_generateReport(m_pPlayer->PlayerName,m_pStatsWindow,30,36,m_pStatsWindow->getPosition().nWidth-45,m_pStatsWindow->getPosition().nHeight-36,m_Renderer.getSmallFont());
+          m_pStatsReport = stats_generateReport(m_pPlayer->PlayerName,m_pStatsWindow,30,36,m_pStatsWindow->getPosition().nWidth-45,m_pStatsWindow->getPosition().nHeight-36,m_Renderer.getSmallFont());
         }        
       }
     }

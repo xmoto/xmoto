@@ -2415,4 +2415,112 @@ GameApp::GameApp() {
     return m_bCreditsModeActive;
   }
 
+  UIWindow* GameApp::stats_generateReport(const std::string &PlayerName, vapp::UIWindow *pParent,
+					  int x, int y, int nWidth, int nHeight, vapp::UIFont *pFont) {
+    /* Create stats window */
+    UIWindow *p;
+    char **v_result;
+    int nrow;
+
+    int   v_nbStarts        = 0;
+    std::string v_since;
+    float v_totalPlayedTime = 0.0;
+    int   v_nbPlayed        = 0;
+    int   v_nbDied          = 0;
+    int   v_nbCompleted     = 0;
+    int   v_nbRestarted     = 0;
+    int   v_nbDiffLevels    = 0;
+    std::string v_id_level;
+  
+    p = new UIWindow(pParent, x, y, "", nWidth, nHeight);
+  
+    v_result = m_db->readDB("SELECT a.nbStarts, a.since, SUM(b.playedTime), "
+			    "SUM(b.nbPlayed), SUM(b.nbDied), SUM(b.nbCompleted), "
+			    "SUM(b.nbRestarted), count(b.id_level) "
+			    "FROM stats_profiles AS a INNER JOIN stats_profiles_levels AS b "
+			    "ON a.id_profile=b.id_profile "
+			    "WHERE a.id_profile=\"" + PlayerName + "\" "
+			    "GROUP BY a.id_profile;",
+			    nrow);
+
+    if(nrow == 0) {
+      m_db->read_DB_free(v_result);
+      return p;
+    }
+  
+    v_nbStarts        = atoi(m_db->getResult(v_result, 8, 0, 0));
+    v_since           =      m_db->getResult(v_result, 8, 0, 1);
+    v_totalPlayedTime = atof(m_db->getResult(v_result, 8, 0, 2));
+    v_nbPlayed        = atoi(m_db->getResult(v_result, 8, 0, 3));
+    v_nbDied          = atoi(m_db->getResult(v_result, 8, 0, 4));
+    v_nbCompleted     = atoi(m_db->getResult(v_result, 8, 0, 5));
+    v_nbRestarted     = atoi(m_db->getResult(v_result, 8, 0, 6));
+    v_nbDiffLevels    = atoi(m_db->getResult(v_result, 8, 0, 7));
+  
+    m_db->read_DB_free(v_result);
+  
+    /* Per-player info */
+    char cBuf[512];
+    char cTime[512];
+    int nHours = ((int)v_totalPlayedTime) / (60 * 60);
+    int nMinutes = (((int)v_totalPlayedTime) / (60)) - nHours*60;
+    int nSeconds = (((int)v_totalPlayedTime)) - nMinutes*60 - nHours*3600;
+    if(nHours > 0) sprintf(cTime,(std::string(GAMETEXT_XHOURS) + ", " + std::string(GAMETEXT_XMINUTES) + ", " + std::string(GAMETEXT_AND) + " " + std::string(GAMETEXT_XSECONDS)).c_str(),nHours,nMinutes,nSeconds);
+    else if(nMinutes > 0) sprintf(cTime,(std::string(GAMETEXT_XMINUTES) +  " " + std::string(GAMETEXT_AND) +  " " + std::string(GAMETEXT_XSECONDS)).c_str(),nMinutes,nSeconds);
+    else sprintf(cTime,GAMETEXT_XSECONDS,nSeconds);
+  
+    sprintf(cBuf,GAMETEXT_XMOTOGLOBALSTATS,      
+	    v_since.c_str(), v_nbStarts, v_nbPlayed, v_nbDiffLevels,
+	    v_nbDied, v_nbCompleted, v_nbRestarted, cTime);                           
+  
+    UIStatic *pText = new UIStatic(p, 0, 0, cBuf, nWidth, 80);
+    pText->setHAlign(UI_ALIGN_LEFT);
+    pText->setTextSolidColor(MAKE_COLOR(255,255,0,255));
+    pText->setFont(pFont);
+
+    /* Per-level stats */      
+    pText = new UIStatic(p,0,90, std::string(GAMETEXT_MOSTPLAYEDLEVELSFOLLOW) + ":",nWidth,20);
+    pText->setHAlign(UI_ALIGN_LEFT);
+    pText->setTextSolidColor(MAKE_COLOR(255,255,0,255));
+    pText->setFont(pFont);      
+
+    v_result = m_db->readDB("SELECT id_level, nbPlayed, nbDied, "
+			    "nbCompleted, nbRestarted, playedTime "
+			    "FROM stats_profiles_levels "
+			    "WHERE id_profile=\"" + PlayerName + "\" "
+			    "ORDER BY nbPlayed DESC LIMIT 10;",
+			    nrow);
+
+    int cy = 110;
+    for(int i=0; i<nrow; i++) {
+      if(cy + 45 > nHeight) break; /* out of window */
+
+      v_id_level        =      m_db->getResult(v_result, 6, i, 0);
+      v_totalPlayedTime = atof(m_db->getResult(v_result, 6, i, 5));
+      v_nbDied          = atoi(m_db->getResult(v_result, 6, i, 2));
+      v_nbPlayed        = atoi(m_db->getResult(v_result, 6, i, 1));
+      v_nbCompleted     = atoi(m_db->getResult(v_result, 6, i, 3));
+      v_nbRestarted     = atoi(m_db->getResult(v_result, 6, i, 4));
+    
+      sprintf(cBuf,("[%s] %s:\n   " + std::string(GAMETEXT_XMOTOLEVELSTATS)).c_str(),
+	      App::formatTime(v_totalPlayedTime).c_str(), v_id_level.c_str(),
+	      v_nbPlayed, v_nbDied, v_nbCompleted, v_nbRestarted);
+    
+      pText = new UIStatic(p,0,cy,cBuf,nWidth,45);
+      pText->setHAlign(UI_ALIGN_LEFT);        
+      pText->setTextSolidColor(MAKE_COLOR(255,255,0,255));
+      pText->setFont(pFont);
+    
+      cy += 45;
+    }  
+
+    m_db->read_DB_free(v_result);
+
+    UIButton *pUpdateButton = new UIButton(p,nWidth-115,nHeight-57,GAMETEXT_UPDATE,115,57);
+    pUpdateButton->setContextHelp(CONTEXTHELP_UPDATESTATS);
+    pUpdateButton->setFont(pFont);
+    pUpdateButton->setType(UI_BUTTON_TYPE_SMALL);
+    pUpdateButton->setID("UPDATE_BUTTON");
+    return p;
+  }
 }

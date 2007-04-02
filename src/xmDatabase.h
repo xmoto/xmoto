@@ -25,17 +25,20 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <string>
 #include "xmDatabaseUpdateInterface.h"
 
-namespace vapp {
-  class UIWindow;
-  class UIFont;
-}
-
 class xmDatabase {
 
   public:
   xmDatabase(std::string i_dbFile, XmDatabaseUpdateInterface *i_interface = NULL);
   ~xmDatabase();
 
+  /* RULE:
+     all write access must be done from class xmDatabase
+     read can be done from anywhere using readDB;
+  */
+  char **readDB(std::string i_sql, int &i_nrow);
+  void read_DB_free(char **i_result);
+  char* getResult(char **i_result, int ncolumn, int i_row, int i_column);
+  void debugResult(char **i_result, int ncolumn, int nrow);
 
   /* stats */
   void stats_levelCompleted(const std::string &PlayerName,
@@ -51,9 +54,6 @@ class xmDatabase {
 			    const std::string &LevelID,
 			    float fPlayTime);
   void stats_xmotoStarted(const std::string &PlayerName);
-  
-  vapp::UIWindow *stats_generateReport(const std::string &PlayerName, vapp::UIWindow *pParent,
-				       int x, int y, int nWidth, int nHeight, vapp::UIFont *pFont);
 
   private:
   sqlite3 *m_db;
@@ -74,8 +74,6 @@ class xmDatabase {
   void updateDB_stats(XmDatabaseUpdateInterface *i_interface = NULL); /* statistics */
   bool stats_checkKeyExists_stats_profiles(std::string i_profile);
   bool stats_checkKeyExists_stats_profiles_levels(std::string i_profile, std::string i_level);
-
-  void debugResult(char **i_result, int ncolumn, int nrow);
 };
 
 #endif
