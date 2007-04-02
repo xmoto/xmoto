@@ -129,22 +129,6 @@ void xmDatabase::updateDB_stats(XmDatabaseUpdateInterface *i_interface) {
       }
     }
   }
-
-
-  stats_levelCompleted("Nicolas",
-		       "underground",
-		       12.0);
-  stats_died("Nicolas",
-	     "underground",
-	     5.64);
-  stats_abortedLevel("Nicolas",
-		     "underground",
-		     13.2);
-  stats_levelRestarted("Nicolas",
-		       "underground",
-		       5.6);
-  stats_xmotoStarted("Nicolas");
-  stats_xmotoStarted("Nicolas2");
 }
 
 bool xmDatabase::stats_checkKeyExists_stats_profiles(std::string i_profile) {
