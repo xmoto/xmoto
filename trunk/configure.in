@@ -30,7 +30,7 @@ fi
 
 if test "$target_os" = "mingw32" # others libraries required by mingw32
 then
-  MINGW32_LIBS="-lmingw32 -lSDLmain -lSDL -lopengl32 -mwindows -lintl -lode xmoto_icone.o" # -mwindows to avoid dos window
+  MINGW32_LIBS="-lmingw32 -lSDLmain -lSDL -lopengl32 -mwindows -luserenv -lintl -lode xmoto_icone.o" # -mwindows to avoid dos window
   AC_SUBST([MINGW32_LIBS])
 fi
 AM_CONDITIONAL([WIN32], test "$target_os" = "mingw32")
