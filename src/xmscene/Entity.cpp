@@ -453,7 +453,7 @@ Entity* Entity::readFromXml(TiXmlElement *pElem) {
   float       v_width  = -1.0;
   float       v_angle  = -1.0;
   bool        v_reversed = false;
-  float       v_z      = 0.5;
+  float       v_z      = ENTITY_DEFAULT_Z;
   std::string v_spriteName;
   std::string v_typeName;
 
@@ -583,7 +583,7 @@ Entity* Entity::readFromBinary(vapp::FileHandle *i_pfh) {
   float       v_width  = -1.0;
   float       v_angle  = -1.0;
   bool        v_reversed = false;
-  float       v_z      = 0.5;
+  float       v_z      = ENTITY_DEFAULT_Z;
   std::string v_spriteName;
   std::string v_typeName;
 
