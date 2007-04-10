@@ -1,3 +1,8 @@
+Since 0.2.7
+* ugly uses misc.png for border : should not
+* PERFORMANCE : rebuildLevelsPacks is very slow particularly on windows with a lot of levels : sqlite
+* pack : last highscores
+
 Since 0.2.6
 [21:33] <jj> the smoke is not always rendered at the sides of the screen
 [21:33] <jj> so if I drive towards smoke, I don't see it at first, where I should see it
