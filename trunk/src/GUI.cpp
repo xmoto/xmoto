@@ -443,7 +443,7 @@ namespace vapp {
 
   void UIWindow::putElem(int x,int y,int nWidth,int nHeight,UIElem Elem,bool bDisabled,bool bActive) {
     Texture *vTexture = NULL;
-
+    
     struct _ElemTable {
       UIElem E; int nX,nY,nWidth,nHeight;
     };
