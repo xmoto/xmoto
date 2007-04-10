@@ -314,8 +314,9 @@ namespace vapp {
     time(&T);
     pTime = localtime(&T);
     if(pTime != NULL) {
-      sprintf(cBuf,"%02d:%02d:%02d %d-%02d-%02d",pTime->tm_hour,pTime->tm_min,pTime->tm_sec,
-              pTime->tm_year+1900,pTime->tm_mon+1,pTime->tm_mday+1);                    
+      sprintf(cBuf,"%d-%02d-%02d %02d:%02d:%02d",
+              pTime->tm_year+1900, pTime->tm_mon+1, pTime->tm_mday+1,
+	      pTime->tm_hour, pTime->tm_min, pTime->tm_sec);                    
     }    
     return cBuf;
   }

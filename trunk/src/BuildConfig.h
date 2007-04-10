@@ -83,13 +83,6 @@ Misc, don't touch
   #undef EMUL_800x600 /* editor don't want that */
 #endif
 
-#ifndef ALLOW_WEBACCESS
-#define ALLOW_WEBACCESS 1
-#endif
-#if HAVE_LIBCURL == 1 && ALLOW_WEBACCESS == 1
-  #define SUPPORT_WEBACCESS
-#endif
-
 #ifndef ALLOW_ZOOMING
 #define ALLOW_ZOOMING 0
 #endif

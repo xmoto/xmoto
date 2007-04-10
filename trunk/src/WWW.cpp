@@ -1,7 +1,6 @@
 /* file contributed by Nicolas Adenis-Lamarre */
 
 #include "BuildConfig.h"
-#if defined(SUPPORT_WEBACCESS)
 
 /* I (rasmus) made these (among others) changes to the files:  
     - File names changed to WWW.cpp and WWW.h
@@ -33,6 +32,7 @@
 #include <vector>
 #include "helpers/FileCompression.h"
 #include "md5sum/md5file.h"
+#include "xmDatabase.h"
 
 struct f_curl_download_data {
   vapp::WWWAppInterface *v_WebApp;
@@ -118,112 +118,13 @@ bool ProxySettings::useDefaultAuthentification() const {
   return m_authUser == "";
 }
 
-WebHighscore::WebHighscore(WebRoom *p_room,
-			   std::string p_levelId,
-			   std::string p_playerName,
-			   int p_day, int p_month, int p_year,
-			   std::string p_time,
-			   std::string p_rplUrl,
-         const ProxySettings *p_proxy_settings) {
-  m_playerName  = p_playerName;
-  m_time        = p_time;
-  m_levelId     = p_levelId;
-  m_rplUrl      = p_rplUrl;
-  m_rplFilename = vapp::FS::getReplaysDir()
+void WebRoom::downloadReplay(const std::string& i_url) {
+  std::string i_rplFilename = vapp::FS::getReplaysDir()
     + "/" 
-    + vapp::FS::getFileBaseName(m_rplUrl) 
+    + vapp::FS::getFileBaseName(i_url) 
     + ".rpl";
 
-  m_proxy_settings = p_proxy_settings;
-  m_room = p_room;
-  m_day   = p_day;
-  m_month = p_month;
-  m_year  = p_year;
-}
-
-int WebHighscore::getDateYear() const {
-  return m_year;
-}
-
-int WebHighscore::getDateMonth() const {
-  return m_month;
-}
-
-int WebHighscore::getDateDay() const {
-  return m_day;
-}
-
-WebHighscore::~WebHighscore() {
-}
-
-void WebHighscore::download() {
-  FSWeb::downloadFile(m_rplFilename, m_rplUrl, NULL, NULL, m_proxy_settings);
-}
-
-std::string WebHighscore::getReplayName() {
-  return vapp::FS::getFileBaseName(m_rplFilename);
-}
-
-std::string WebHighscore::getPlayerName() const {
-  return m_playerName;
-}
-
-std::string WebHighscore::getLevelId() const {
-  return m_levelId;
-}
-
-std::string WebHighscore::getTime() const {
-  char cTime[256];
-  int n1=0,n2=0,n3=0;
-  
-  sscanf(m_time.c_str(),"%d:%d:%d",&n1,&n2,&n3);
-  sprintf(cTime,"%02d:%02d:%02d",n1,n2,n3);
-  
-  return cTime;
-}
-
-float WebHighscore::getFTime() const {
-  std::string::size_type v_pos;
-  std::string v_min, v_sec, v_hun;
-  std::string v_rest;
-  float v_fmin, v_fsec, v_fhun;
-
-  v_rest = m_time;
-
-  /* search min */
-  v_pos = v_rest.find(":", 0);
-  if(v_pos == std::string::npos || v_pos == 0) {
-    throw Exception("error : invalid time in webhighscore");
-  }
-  v_min = v_rest.substr(0, v_pos);
-  if(v_pos == v_rest.length() -1) {
-    throw Exception("error : invalid time in webhighscore");
-  }
-  v_rest = v_rest.substr(v_pos+1, v_rest.length() -v_pos -1);
-
-  /* search sec */
-  v_pos = v_rest.find(":", 0);
-  if(v_pos == std::string::npos || v_pos == 0) {
-    throw Exception("error : invalid time in webhighscore");
-  }
-  v_sec = v_rest.substr(0, v_pos);
-  if(v_pos == v_rest.length() -1) {
-    throw Exception("error : invalid time in webhighscore");
-  }
-  v_rest = v_rest.substr(v_pos+1, v_rest.length() -v_pos -1);
-
-  /* search hun */
-  v_hun = v_rest;
-
-  v_fmin = atof(v_min.c_str());
-  v_fsec = atof(v_sec.c_str());
-  v_fhun = atof(v_hun.c_str());
-
-  return v_fmin * 60.0 + v_fsec + v_fhun / 100.0;
-}
-
-WebRoom* WebHighscore::getRoom() const {
-  return m_room;
+  FSWeb::downloadFile(i_rplFilename, i_url, NULL, NULL, m_proxy_settings);
 }
 
 WebRoom::WebRoom(const ProxySettings *p_proxy_settings) {
@@ -235,136 +136,18 @@ WebRoom::WebRoom(const ProxySettings *p_proxy_settings) {
   m_webhighscores_url = DEFAULT_WEBHIGHSCORES_URL;
 
   m_proxy_settings = p_proxy_settings;
-  m_roomName = "";
 }
 
 WebRoom::~WebRoom() {
-  cleanHash();
 }
 
-std::string WebRoom::getRoomName() const {
-  return m_roomName;
+std::string WebRoom::getRoomId() const {
+  return m_roomId;
 }
 
-void WebRoom::setWebsiteURL(std::string p_webhighscores_url) {
-  m_webhighscores_url = p_webhighscores_url;
-}
-
-WebHighscore* WebRoom::getHighscoreFromLevel(const std::string &p_levelId) {
-  #if defined(USE_HASH_MAP)
-    return m_webhighscores[p_levelId.c_str()];
-  #else
-    for(int i=0;i<m_webhighscores.size();i++)
-      if(m_webhighscores[i]->getLevelId() == p_levelId) return m_webhighscores[i];
-    return NULL;  
-  #endif
-}
-
-void WebRoom::cleanHash() {
-#if defined(USE_HASH_MAP)
-  HashNamespace::hash_map<const char*, WebHighscore*, HashNamespace::hash<const char*>, highscore_str, std::allocator<WebHighscore*> >::iterator it;
-
-  for (it = m_webhighscores.begin(); it != m_webhighscores.end(); it++) {
-    /* can be NULL, because search on unexisting value create an entry */
-    if(it->second != NULL) { 
-      delete it->second; /* delete highscore */
-    }
-  }
-#else
-  for(int i=0; i<m_webhighscores.size(); i++) {
-    delete m_webhighscores[i];
-  }
-#endif
-
-  /* clear hash table */
-  m_webhighscores.clear();
-}
-
-void WebRoom::fillHash() {
-  /* clean hash table */
-  cleanHash();
-
-  /* fillHashTable */
-  vapp::XMLDocument v_webHSXml;
-  TiXmlDocument *v_webHSXmlData;
-  TiXmlElement *v_webHSXmlDataElement;
-  const char *pc;
-  std::string v_levelId, v_playerName, v_time, v_rplUrl;
-  int v_day=0, v_month=0, v_year=0;
-  WebHighscore *wh;
-
-  v_webHSXml.readFromFile(m_userFilename);
-  v_webHSXmlData = v_webHSXml.getLowLevelAccess();
-
-  if(v_webHSXmlData == NULL) {
-    throw Exception("error : unable to analyze xml highscore file");
-  }
-
-  v_webHSXmlDataElement = v_webHSXmlData->FirstChildElement("xmoto_worldrecords");
-
-  if(v_webHSXmlDataElement != NULL) {
-    /* get Room name */
-    pc = v_webHSXmlDataElement->Attribute("roomname");
-    if(pc != NULL) {
-      m_roomName = pc;
-    }
-
-    for(TiXmlElement *pVarElem = v_webHSXmlDataElement->FirstChildElement("worldrecord");
-  pVarElem!=NULL;
-  pVarElem = pVarElem->NextSiblingElement("worldrecord")
-  ) {
-
-      pc = pVarElem->Attribute("level_id");
-      if(pc == NULL) { continue; }
-      v_levelId = pc;
-
-      pc = pVarElem->Attribute("player");
-      if(pc == NULL) { continue; }
-      v_playerName = pc;   
-
-      pc = pVarElem->Attribute("time");
-      if(pc == NULL) { continue; }
-      v_time = pc;   
-
-      pc = pVarElem->Attribute("replay");
-      if(pc == NULL) { continue; }
-      v_rplUrl = pc;
-
-      pc = pVarElem->Attribute("date");
-      if(pc != NULL) {
-	std::string v_date = pc;
-	int v_pos;
-
-	v_pos = v_date.find("/", 0);
-	if(v_pos != std::string::npos && v_pos != 0) {
-	  v_day = atoi(v_date.substr(0, v_pos).c_str());
-	  v_date = v_date.substr(v_pos+1, v_date.length() - v_pos -1);
-
-	  v_pos = v_date.find("/", 0);
-	  if(v_pos != std::string::npos && v_pos != 0) {
-	    v_month = atoi(v_date.substr(0, v_pos).c_str());
-	    v_date = v_date.substr(v_pos+1, v_date.length() - v_pos -1);
-	  }
-
-	  v_pos = v_date.find("/", 0);
-	  if(v_pos != std::string::npos && v_pos != 0) {
-	    v_year = atoi(v_date.substr(0, v_pos).c_str());
-	    v_date = v_date.substr(v_pos+1, v_date.length() - v_pos -1);
-	  }
-	}
-      }
-
-      wh = new WebHighscore(this, v_levelId, v_playerName,
-			    v_day, v_month, v_year,
-			    v_time, v_rplUrl, m_proxy_settings);
-      
-      #if defined(USE_HASH_MAP)
-        m_webhighscores[wh->getLevelId().c_str()] = wh;
-      #else
-        m_webhighscores.push_back(wh);
-      #endif      
-    }
-  }
+void WebRoom::setWebsiteInfos(const std::string& i_id_room, const std::string& i_webhighscores_url) {
+  m_webhighscores_url = i_webhighscores_url;
+  m_roomId = i_id_room;
 }
 
 void WebRoom::update() {
@@ -376,8 +159,8 @@ void WebRoom::update() {
          m_proxy_settings);
 }
 
-void WebRoom::upgrade() {
-  fillHash();
+void WebRoom::upgrade(xmDatabase *i_db) {
+  i_db->webhighscores_updateDB(m_userFilename, m_webhighscores_url);
 }
 
 size_t FSWeb::writeData(void *ptr, size_t size, size_t nmemb, FILE *stream) {
@@ -757,61 +540,6 @@ void FSWeb::uploadReplayAnalyseMsg(std::string p_filename,
   p_msg = pc;
 }
 
-WebLevel::WebLevel(std::string p_id, std::string p_name, std::string p_url,
-		   float p_webDifficulty, float p_webQuality) {
-  m_id   = p_id;
-  m_name = p_name;
-  m_url  = p_url;
-  m_require_update   = false;
-  m_require_download = false;
-  m_webDifficulty  = p_webDifficulty;
-  m_webQuality     = p_webQuality;
-}
-
-std::string WebLevel::getId() const {
-  return m_id;
-}
-
-std::string WebLevel::getName() const {
-  return m_name;
-}
-
-std::string WebLevel::getUrl() const {
-  return m_url;
-}
-
-float WebLevel::getDifficulty() const {
-  return m_webDifficulty;
-}
-
-float WebLevel::getQuality() const {
-  return m_webQuality;
-}
-
-bool WebLevel::requireUpdate() const {
-  return m_require_update;
-}
-
-void WebLevel::setRequireUpdate(bool p_require_update) {
-  m_require_update = p_require_update;
-}
-
-bool WebLevel::requireDownload() const {
-  return m_require_download;
-}
-
-void WebLevel::setRequireDownload(bool p_require_download) {
-  m_require_download = p_require_download;
-}
-
-void WebLevel::setCurrentPath(std::string p_current_path) {
-  m_current_path = p_current_path;
-}
-
-std::string WebLevel::getCurrentPath() const {
-  return m_current_path;
-}
-
 WebLevels::WebLevels(vapp::WWWAppInterface *p_WebLevelApp,
          const ProxySettings *p_proxy_settings) {
   m_WebLevelApp    = p_WebLevelApp;
@@ -820,11 +548,6 @@ WebLevels::WebLevels(vapp::WWWAppInterface *p_WebLevelApp,
 }
 
 WebLevels::~WebLevels() {
-  /* delete levels information */
-  std::vector<WebLevel*>::iterator it; 
-  for(it = m_webLevels.begin(); it != m_webLevels.end(); it++) {
-    delete *it;
-  }
 }
 
 std::string WebLevels::getXmlFileName() {
@@ -852,100 +575,13 @@ void WebLevels::createDestinationDirIfRequired() {
   }
 }
 
-void WebLevels::extractLevelsToDownloadFromXml() {
-  vapp::XMLDocument v_webLXml;
-  TiXmlDocument *v_webLXmlData;
-  TiXmlElement *v_webLXmlDataElement;
-  const char *pc;
-  std::string v_levelId, v_levelName, v_url, v_MD5sum_web;
-  float v_difficulty, v_quality;
-
-  v_webLXml.readFromFile(getXmlFileName());
-  v_webLXmlData = v_webLXml.getLowLevelAccess();
-
-  if(v_webLXmlData == NULL) {
-    throw Exception("error : unable to analyze xml level file");
-  }
-
-  v_webLXmlDataElement = v_webLXmlData->FirstChildElement("xmoto_levels");
-  
-  if(v_webLXmlDataElement == NULL) {
-    throw Exception("error : unable to analyze xml level file");
-  }
-
-  TiXmlElement *pVarElem = v_webLXmlDataElement->FirstChildElement("level");
-  while(pVarElem != NULL) {
-    
-    pc = pVarElem->Attribute("level_id");
-    if(pc != NULL) {
-      v_levelId = pc;
-      
-      pc = pVarElem->Attribute("name");
-      if(pc != NULL) {
-	v_levelName = pc;
-	
-	pc = pVarElem->Attribute("url");
-	if(pc != NULL) {
-	  v_url = pc;  
-	  
-	  pc = pVarElem->Attribute("sum");
-	  if(pc != NULL) {
-	    v_MD5sum_web = pc;
-
-	    /* web informations */
-	    pc = pVarElem->Attribute("web_difficulty");
-	    if(pc != NULL) {
-	      v_difficulty = atof(pc);
-	    }
-
-	    pc = pVarElem->Attribute("web_quality");
-	    if(pc != NULL) {
-	      v_quality = atof(pc);
-	    }
-
-      /* if it doesn't exist */
-      if(m_WebLevelApp->doesLevelExist(v_levelId) == false) {
-	WebLevel *v_lvl = new WebLevel(v_levelId, v_levelName, v_url, v_difficulty, v_quality);
-	v_lvl->setRequireDownload(true);
-	m_webLevels.push_back(v_lvl);
-      } else { /* or it md5sum if different */
-        if(m_WebLevelApp->levelPathForUpdate(v_levelId) != "") {
-	  if(m_WebLevelApp->levelMD5Sum(v_levelId) != v_MD5sum_web) {
-	    //printf("%s ! %s\n", m_WebLevelApp->levelMD5Sum(v_levelId).c_str(), v_MD5sum_web.c_str());
-	    WebLevel *v_lvl = new WebLevel(v_levelId, v_levelName, v_url, v_difficulty, v_quality);
-	    v_lvl->setCurrentPath(m_WebLevelApp->levelPathForUpdate(v_levelId));
-	    v_lvl->setRequireUpdate(true);
-	    m_webLevels.push_back(v_lvl);
-	  } else {
-	    /* the level is already correct */
-	    m_webLevels.push_back(new WebLevel(v_levelId, v_levelName, v_url, v_difficulty, v_quality));
-	  }
-        }
-      }
-    }
-  }
-      }
-      pVarElem = pVarElem->NextSiblingElement("level");
-    }
-  }
-}
-
 std::string WebLevels::getDestinationFile(std::string p_url) {
   return getDestinationDir() + "/" + vapp::FS::getFileBaseName(p_url) + ".lvl";
 }
 
-void WebLevels::update(bool i_enableWeb) {
-  /* delete levels information */
-  std::vector<WebLevel*>::iterator it; 
-  for(it = m_webLevels.begin(); it != m_webLevels.end(); it++) {
-    delete *it;
-  }
-  m_webLevels.clear();
-
-  if(i_enableWeb) {
-    downloadXml();
-  }
-  extractLevelsToDownloadFromXml();
+void WebLevels::update(xmDatabase *i_db) {
+  downloadXml();
+  i_db->weblevels_updateDB(getXmlFileName());
 }
 
 int FSWeb::f_curl_progress_callback_upload(void *clientp,
@@ -1007,78 +643,92 @@ int FSWeb::f_curl_progress_callback_download(void *clientp,
   return 0;
 }
 
-bool WebLevels::exists(const std::string p_id) {
-  std::vector<WebLevel*>::iterator it;
-  it = m_webLevels.begin();
-  while(it != m_webLevels.end()) {
-    if((*it)->getId() == p_id) {
-      return true;
-    }
-    it++;
-  }
-
-  return false;
+int WebLevels::nbLevelsToGet(xmDatabase *i_db) const {
+  char **v_result;
+  int nrow;
+  v_result = i_db->readDB("SELECT a.name FROM weblevels AS a "
+			  "LEFT OUTER JOIN levels AS b ON a.id_level=b.id_level "
+			  "WHERE b.id_level IS NULL OR a.checkSum <> b.checkSum;",
+			  nrow);
+  i_db->read_DB_free(v_result);
+  return nrow;
 }
 
-int WebLevels::nbLevelsToGet() const {
-  int n = 0;
-  for(unsigned int i=0; i<m_webLevels.size(); i++) {
-    if(m_webLevels[i]->requireDownload() || m_webLevels[i]->requireUpdate()) {
-      n++;
-    }
-  }
-  return n;
-}
-
-void WebLevels::upgrade() {
-  std::vector<WebLevel*>::iterator it;
+void WebLevels::upgrade(xmDatabase *i_db) {
+  char **v_result;
+  int nrow;
+  std::string v_levelId;
+  std::string v_levelName;
+  std::string v_urlFile;
+  bool        v_isAnUpdate;
+  std::string v_filePath;
   f_curl_download_data v_data;
+
+  int v_nb_levels_to_download;
+  int v_nb_levels_performed  = 0;
+  float v_percentage;
   bool to_download;
 
   createDestinationDirIfRequired();
 
-  int v_nb_levels_to_download = nbLevelsToGet();
-  int v_nb_levels_performed  = 0;
-
+  v_result = i_db->readDB("SELECT a.id_level, a.name, a.fileUrl, b.filepath "
+			  "FROM weblevels AS a "
+			  "LEFT OUTER JOIN levels AS b ON a.id_level=b.id_level "
+			  "WHERE b.id_level IS NULL OR a.checkSum <> b.checkSum;",
+			  nrow);
+  v_nb_levels_to_download = nrow;
   v_data.v_WebApp = m_WebLevelApp;
   v_data.v_nb_files_to_download = v_nb_levels_to_download;
 
-  /* download levels */
-  it = m_webLevels.begin();
-  while(it != m_webLevels.end() && m_WebLevelApp->isCancelAsSoonAsPossible() == false) {
-    if((*it)->requireUpdate() || (*it)->requireDownload()) {
-      std::string v_url = (*it)->getUrl();
-      float v_percentage = (((float)v_nb_levels_performed) * 100.0) / ((float)v_nb_levels_to_download);
-      
+  m_webLevelsNewDownloadedOK.clear();
+  m_webLevelsUpdatedDownloadedOK.clear();
+
+  try {
+    /* download levels */
+    for(unsigned int i=0; i<nrow; i++) {
+      if(m_WebLevelApp->isCancelAsSoonAsPossible()) break;
+
+      v_levelId    = i_db->getResult(v_result, 4, i, 0);
+      v_levelName  = i_db->getResult(v_result, 4, i, 1);
+      v_urlFile    = i_db->getResult(v_result, 4, i, 2);
+      v_isAnUpdate = i_db->getResult(v_result, 4, i, 3) != NULL;
+      if(v_isAnUpdate) {
+	v_filePath = i_db->getResult(v_result, 4, i, 3);
+      }
+      v_percentage = (((float)v_nb_levels_performed) * 100.0) / ((float)v_nb_levels_to_download);
+	
       m_WebLevelApp->setTaskProgress(v_percentage);
-      m_WebLevelApp->setBeingDownloadedInformation((*it)->getName(), (*it)->requireUpdate());
+      m_WebLevelApp->setBeingDownloadedInformation(v_levelName, v_isAnUpdate);
       
       /* should the level be updated */
       to_download = true;
-      if((*it)->requireUpdate()) {
+      if(v_isAnUpdate) {
 	/* does the user want to update the level ? */
-	to_download = m_WebLevelApp->shouldLevelBeUpdated((*it)->getId());
+	to_download = m_WebLevelApp->shouldLevelBeUpdated(v_levelId);
       }
       
       if(to_download) {
 	v_data.v_nb_files_performed = v_nb_levels_performed;
 	std::string v_destFile;
 	
-	if((*it)->requireUpdate()) {
-	  v_destFile = m_WebLevelApp->levelPathForUpdate((*it)->getId());
+	if(v_isAnUpdate) {
+	  if(vapp::FS::isInUserDir(v_filePath)) {
+	    v_destFile = v_filePath;
+	  } else {
+	    v_destFile = WebLevels::getDestinationFile(v_urlFile);
+	  }
 	} else {
-	  v_destFile = getDestinationFile(v_url);
+	  v_destFile = getDestinationFile(v_urlFile);
 	}
 	
 	FSWeb::downloadFileBz2(v_destFile,
-			       v_url,
+			       v_urlFile,
 			       FSWeb::f_curl_progress_callback_download,
 			       &v_data,
 			       m_proxy_settings);
 	
-	if((*it)->requireUpdate()) {
+	if(v_isAnUpdate) {
 	  m_webLevelsUpdatedDownloadedOK.push_back(v_destFile);
-	  m_webLevelsIdsUpdatedDownloadedOK.push_back((*it)->getId());
 	} else {
 	  m_webLevelsNewDownloadedOK.push_back(v_destFile);
 	}
@@ -1087,15 +737,12 @@ void WebLevels::upgrade() {
       v_nb_levels_performed++;
       m_WebLevelApp->readEvents(); 
     }
-    it++;
+  } catch(Exception &e) {
+    i_db->read_DB_free(v_result);
+    throw e;
   }
-
   m_WebLevelApp->setTaskProgress(100.0);
-}
-
-void WebLevels::getUpdateInfo(int *pnUBytes,int *pnULevels) {
-  if(pnULevels != NULL) *pnULevels = nbLevelsToGet();
-  if(pnUBytes != NULL) *pnUBytes = -1;
+  i_db->read_DB_free(v_result);
 }
 
 const std::vector<std::string> &WebLevels::getNewDownloadedLevels(void) {
@@ -1104,14 +751,6 @@ const std::vector<std::string> &WebLevels::getNewDownloadedLevels(void) {
 
 const std::vector<std::string> &WebLevels::getUpdatedDownloadedLevels(void) {
   return m_webLevelsUpdatedDownloadedOK;
-}
-
-const std::vector<std::string> &WebLevels::getUpdatedDownloadedLevelIds() {
-  return m_webLevelsIdsUpdatedDownloadedOK;
-}
-
-const std::vector<WebLevel*> &WebLevels::getLevels() {
-  return m_webLevels;
 }
 
 WebTheme::WebTheme(std::string pName, std::string pUrl, std::string pSum) {
@@ -1437,5 +1076,3 @@ void WebRooms::clean() {
   }    
   m_availableRooms.clear();
 }
-
-#endif

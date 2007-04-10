@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../VFileIO.h"
 #include "../VXml.h"
 #include "../helpers/Color.h"
+#include "../xmDatabase.h";
 
 #define CACHE_LEVEL_FORMAT_VERSION 18
 
@@ -732,33 +733,29 @@ void Level::loadXML(void) {
 
 /* Load using the best way possible. File name must already be set!
   *  Return whether or not it was loaded from the cache. */
-bool Level::loadReducedFromFile(bool cacheEnabled) {
+bool Level::loadReducedFromFile() {
   std::string cacheFileName;
 
   m_checkSum = vapp::FS::md5sum(FileName());
 
   // First try to load it from the cache
   bool cached = false;
-  if (cacheEnabled) {
-    /* Determine name in cache */
-    std::string LevelFileBaseName = vapp::FS::getFileBaseName(FileName());
-    cacheFileName = getNameInCache();
+  /* Determine name in cache */
+  std::string LevelFileBaseName = vapp::FS::getFileBaseName(FileName());
+  cacheFileName = getNameInCache();
     
-    try {
-      cached = importBinaryHeaderFromFile(cacheFileName, m_checkSum);
-    } catch (Exception &e) {
-      vapp::Log("** Warning **: Exception while loading binary level, will load "
-                "XML instead for '%s' (%s)", FileName().c_str(),
-                e.getMsg().c_str());
-    }
+  try {
+    cached = importBinaryHeaderFromFile(cacheFileName, m_checkSum);
+  } catch (Exception &e) {
+    vapp::Log("** Warning **: Exception while loading binary level, will load "
+	      "XML instead for '%s' (%s)", FileName().c_str(),
+	      e.getMsg().c_str());
   }
   
   // If we couldn't get it from the cache, then load from (slow) XML
   if (!cached) {
     loadXML();
-    if (cacheEnabled) {
-      exportBinary(cacheFileName, m_checkSum); /* Cache it now */
-    }
+    exportBinary(cacheFileName, m_checkSum); /* Cache it now */
   }
   
   unloadLevelBody(); /* remove body datas */
@@ -768,6 +765,24 @@ bool Level::loadReducedFromFile(bool cacheEnabled) {
 
 std::string Level::getNameInCache() const {
   return "LCache/" + Checksum() + vapp::FS::getFileBaseName(FileName()) + ".blv";
+}
+
+void Level::removeFromCache(xmDatabase *i_db, const std::string& i_id_level) {
+  char **v_result;
+  int nrow;
+  v_result = i_db->readDB("SELECT checkSum, filepath FROM levels WHERE id_level=\"" +
+			  xmDatabase::protectString(i_id_level) + "\";",
+			  nrow);
+  if(nrow == 1) {
+    try {
+      std::string v_checkSum = i_db->getResult(v_result, 2, 0, 0);
+      std::string v_filePath = i_db->getResult(v_result, 2, 0, 1);
+      vapp::FS::deleteFile("LCache/" + v_checkSum + vapp::FS::getFileBaseName(v_filePath) + ".blv");
+    } catch(Exception &e) {
+      /* ok, it was perhaps not in cache */
+    }
+  }
+  i_db->read_DB_free(v_result);
 }
 
 /*===========================================================================
@@ -881,6 +896,35 @@ void Level::importBinaryHeader(vapp::FileHandle *pfh) {
   m_date   	= vapp::FS::readString(pfh);
   m_music       = vapp::FS::readString(pfh);
   m_isScripted  = vapp::FS::readBool(pfh);
+}
+
+void Level::importHeader(const std::string& i_id,
+			 const std::string& i_checkSum,
+			 const std::string& i_pack,
+			 const std::string& i_packNum,
+			 const std::string& i_name,
+			 const std::string& i_description,
+			 const std::string& i_author,
+			 const std::string& i_date,
+			 const std::string& i_music,
+			 bool i_isScripted
+			 ) {
+  unloadLevelBody();
+
+  m_isBodyLoaded = false;  
+  m_playerStart  = Vector2f(0.0, 0.0);
+  m_xmotoTooOld  = false;
+
+  m_id      	= i_id;
+  m_checkSum    = i_checkSum;
+  m_pack    	= i_pack;
+  m_packNum 	= i_packNum;
+  m_name    	= i_name;
+  m_description = i_description;
+  m_author 	= i_author;
+  m_date   	= i_date;
+  m_music       = i_music;
+  m_isScripted  = i_isScripted;
 }
 
   /*===========================================================================
@@ -1269,21 +1313,6 @@ void Level::spawnEntity(Entity *v_entity) {
 
 std::vector<Entity *>& Level::EntitiesExterns() {
   return m_entitiesExterns;
-}
-
-std::string Level::PathForUpdate() const {
-	/* if the level is in the user dir, directly update it */
-	/* else, get a new one in the user dir */
-
-	if(vapp::FS::isInUserDir(FileName())) {
-		return FileName();
-	}
-
-#if defined(SUPPORT_WEBACCESS)
-	return WebLevels::getDestinationFile(FileName());
-#else
-	return "";
-#endif
 }
 
 void Level::unloadLevelBody() {

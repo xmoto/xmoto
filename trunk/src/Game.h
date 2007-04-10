@@ -32,7 +32,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Replay.h"
 #include "UserConfig.h"
 #include "GameText.h"
-#include "PlayerData.h"
 #include "Sound.h"
 #include "Input.h"
 #include "WWW.h"
@@ -75,9 +74,7 @@ class xmDatabase;
      GS_LEVEL_INFO_VIEWER,     /* In level info viewer */
      GS_LEVELPACK_VIEWER,      /* In level pack viewer */
      GS_CREDITSMODE,           /* Credits/replay */
- #if defined(SUPPORT_WEBACCESS)
      GS_EDIT_WEBCONFIG         /* Editing internet configuration */
- #endif
    };
 
    /*===========================================================================
@@ -112,16 +109,11 @@ class xmDatabase;
    /*===========================================================================
    Game application
    ===========================================================================*/
-   #if defined(SUPPORT_WEBACCESS)
    class GameApp : public App, public XMotoLoadLevelsInterface, public XmDatabaseUpdateInterface, public WWWAppInterface {
-   #else
-   class GameApp : public App, public XMotoLoadLevelsInterface, public XmDatabaseUpdateInterface, {
-   #endif
      public:
      GameApp();
      virtual ~GameApp();
            
-#if defined(SUPPORT_WEBACCESS)                 
         /* WWWAppInterface implementation */ 
         virtual void setTaskProgress(float fPercent);
 
@@ -130,11 +122,6 @@ class xmDatabase;
         
         virtual bool shouldLevelBeUpdated(const std::string &LevelID);
 
-        virtual std::string levelPathForUpdate(const std::string &p_LevelId);
-        virtual std::string levelMD5Sum(const std::string &LevelID);
-	virtual bool doesLevelExist(const std::string &p_LevelId);
-#endif
-      
 	/* load level */
 	void loadLevelHook(std::string i_level, int i_percentage);
 	void updatingDatabase(std::string i_message);
@@ -178,7 +165,6 @@ class xmDatabase;
 
     private:   
       /* Data */
-      ReplayList m_ReplayList;                  /* Replay list */
       bool m_bEnableInitZoom;                   /* true: Perform initial level scroll/zoom */
       bool m_autoZoom;                          /* true : the key is pressed so that it zooms out to see the level */
       bool m_autoUnZoom;
@@ -200,7 +186,6 @@ class xmDatabase;
       bool m_bTestThemeMode;
       bool m_bEnableEngineSound;                /* true: engine sound is enabled */
       bool m_bCompressReplays;                  /* true: compress replays with zlib */
-      bool m_bEnableLevelCache;                 /* true: cache levels for faster loading */
       bool m_bAutosaveHighscoreReplays;
       std::string m_PlaySpecificLevel;          /* If set, we only want to 
                                                    play this level */
@@ -222,7 +207,7 @@ class xmDatabase;
       XMMotoGameHooks m_MotoGameHooks;
       GameRenderer m_Renderer;                  /* Renderer */
       int m_nFrame;                             /* Frame # */
-      PlayerProfile *m_pPlayer;                 /* The player's profile */
+      std::string m_profile;
        
       double m_fLastFrameTime;                  /* When the last frama was initiated */
       double m_fLastPerfStateTime;   
@@ -244,7 +229,6 @@ class xmDatabase;
       bool m_bEnableGhostInfo;
 
       /* WWW */
-#if defined(SUPPORT_WEBACCESS)
       bool m_bShowWebHighscoreInGame;           /* true: Show world highscore inside the game */
       WebRoom *m_pWebHighscores;
       WebRooms *m_pWebRooms;
@@ -254,13 +238,14 @@ class xmDatabase;
       std::string m_DownloadingMessage;
       float m_fDownloadTaskProgressLast;
 
+      std::string m_WebHighscoresIdRoom;
+      std::string m_WebHighscoresURL;
+
       bool m_bEnableWebHighscores;              /* true: Read world highscores from website */
       bool m_bWebHighscoresUpdatedThisSession;  /* true: Updated this session */
       bool m_bWebLevelsToDownload;              /* true: there are new levels to download */
       bool m_bEnableCheckNewLevelsAtStartup;
       bool m_bEnableCheckHighscoresAtStartup;
-
-#endif
       
       bool m_bCreditsModeActive;
       
@@ -308,9 +293,7 @@ class xmDatabase;
       /* Main menu background / title */
       Texture *m_pTitleBL,*m_pTitleBR,*m_pTitleTL,*m_pTitleTR;
       Texture *m_pCursor;
-#if defined(SUPPORT_WEBACCESS)
       Texture *m_pNewLevelsAvailIcon;
-#endif
       bool m_bShowCursor;
       
       Texture *m_loadingScreen;
@@ -328,11 +311,8 @@ class xmDatabase;
       /* LEVEL lists */
       UILevelList *m_currentPlayingList;
       UILevelList *m_pAllLevelsList;
-#if defined(SUPPORT_WEBACCESS)
       UILevelList *m_pPlayNewLevelsList;
-#endif
 
-#if defined(SUPPORT_WEBACCESS)
       UIWindow *m_pLevelInfoFrame;
       UIButton *m_pLevelInfoViewReplayButton;      
       UIStatic *m_pBestPlayerText;
@@ -342,7 +322,6 @@ class xmDatabase;
       UIStatic *m_pPackBestPlayerText;
 
       String    m_pLevelToShowOnViewHighscore;
-#endif
 
       /* if true, don't ask for updating levels */
       bool m_updateAutomaticallyLevels;
@@ -374,11 +353,9 @@ class xmDatabase;
       UIMsgBox *m_pNewProfileMsgBox;    
       UIMsgBox *m_pDeleteProfileMsgBox;
       
-#if defined(SUPPORT_WEBACCESS)
       /* Internet connection configurator */
       UIFrame *m_pWebConfEditor;      
       UIMsgBox *m_pWebConfMsgBox;    
-#endif
 
       /* Level pack viewer fun */
       UIFrame *m_pLevelPackViewer;  
@@ -393,7 +370,6 @@ class xmDatabase;
       
       /* Config & profiles */
       UserConfig m_Config;
-      PlayerData m_Profiles;
 
       LevelsManager m_levelsManager;
       
@@ -416,25 +392,19 @@ class xmDatabase;
       xmDatabase *m_db;
 
       /* Helpers */
-#if defined(SUPPORT_WEBACCESS) 
       void _UpdateWorldRecord(const std::string &LevelID);
-#endif
       void _HandleMainMenu(void);  
       void _HandlePauseMenu(void);
       void _HandleJustDeadMenu(void);
       void _HandleFinishMenu(void);
-#if defined(SUPPORT_WEBACCESS) 
       void _HandleWebConfEditor(void);
-#endif
       void _HandleProfileEditor(void);
       void _HandleLevelInfoViewer(void);
       void _HandleLevelPackViewer(void);
       void _CreateLevelLists(UILevelList *pAllLevels, std::string i_packageName);
       void _CreateReplaysList(UIList *pList);
       void _CreateThemesList(UIList *pList);
-#if defined(SUPPORT_WEBACCESS) 
       void _CreateRoomsList(UIList *pList);
-#endif
       void _CreateProfileList(void);
       void _CreateDefaultConfig(void);
       void _CreateLevelPackLevelList();
@@ -463,9 +433,7 @@ class xmDatabase;
 
       void _UpdateLevelsLists();
 
-#if defined(SUPPORT_WEBACCESS) 
       void _UpdateRoomsLists(void);
-#endif
       void _GameScreenshot(void);
       void _SaveReplay(const std::string &Name);
     
@@ -475,12 +443,11 @@ class xmDatabase;
       
       int _IsKeyInUse(const std::string &Key);
       
-      std::string _DetermineNextLevel(Level *pLevelSrc);
-      bool _IsThereANextLevel(Level *pLevelSrc);
+      std::string _DetermineNextLevel(const std::string& i_id_level);
+      bool _IsThereANextLevel(const std::string& i_id_level);
       
       void _RestartLevel(bool i_reloadLevel = false);
   
-#if defined(SUPPORT_WEBACCESS)
       void _InitWebConf(void);
       void _CheckForExtraLevels(void);
       void _UpdateWebHighscores(bool bSilent);
@@ -493,9 +460,7 @@ class xmDatabase;
       void _DownloadExtraLevels(void);
       void _UploadHighscore(std::string p_replayname);
       void _ConfigureProxy(void);
-#endif
 
-#if defined(SUPPORT_WEBACCESS)
       void setLevelInfoFrameBestPlayer(String pLevelID,
 				       UIWindow *i_pLevelInfoFrame,
 				       UIButton *i_pLevelInfoViewReplayButton,
@@ -503,13 +468,10 @@ class xmDatabase;
 				       );
       void viewHighscoreOf();
       void enableWWW(bool bValue);
-#endif
 
       std::string _getGhostReplayPath_bestOfThePlayer(std::string p_levelId, float &p_time);
       std::string _getGhostReplayPath_bestOfLocal(std::string p_levelId, float &p_time);
-#if defined(SUPPORT_WEBACCESS)
       std::string _getGhostReplayPath_bestOfTheRoom(std::string p_levelId, float &p_time);
-#endif
       std::string _getGhostReplayPath(std::string p_levelId,
               GhostSearchStrategy p_strategy);
 
@@ -551,8 +513,6 @@ class xmDatabase;
       void _PostUpdateJustDead(void);
       void _PostUpdateFinished(void);
 
-      int getNumberOfFinishedLevelsOfPack(LevelsPack *i_pack);
-
       void autoZoom();
 
       int getNumberOfPlayersToPlay();
@@ -562,6 +522,8 @@ class xmDatabase;
       UIWindow* stats_generateReport(const std::string &PlayerName, vapp::UIWindow *pParent,
 				     int x, int y, int nWidth, int nHeight, vapp::UIFont *pFont);
 
+      void initReplaysFromDir();
+      void addReplay(const std::string& i_file);
   };
 
 }

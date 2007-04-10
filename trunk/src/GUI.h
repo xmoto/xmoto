@@ -633,7 +633,7 @@ namespace vapp {
       
       /* if position != -1, force the entry to this position */
       UIListEntry *addEntry(std::string Text,void *pvUser=NULL, int i_position = -1);
-      void clear(void);
+      virtual void clear();
       
       /* Data interface */
       std::vector<UIListEntry *> &getEntries();

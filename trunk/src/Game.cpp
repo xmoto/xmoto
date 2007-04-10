@@ -32,9 +32,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/BikePlayer.h"
 #include "xmDatabase.h";
 
-#if defined(SUPPORT_WEBACCESS)
-  #include <curl/curl.h>
-#endif
+#include <curl/curl.h>
 
 namespace vapp {
 
@@ -51,7 +49,6 @@ GameApp::GameApp() {
   m_bListReplays=false;
   m_bTimeDemo=false;
   m_bShowFrameRate=false;
-  m_bEnableLevelCache=true;
   m_bEnableMenuMusic=false;
   m_bEnableInitZoom=true;
   m_autoZoom = false;
@@ -63,11 +60,11 @@ GameApp::GameApp() {
   m_pQuitMsgBox=NULL;
   m_pNotifyMsgBox=NULL;
   m_pInfoMsgBox=NULL;
-#if defined(SUPPORT_WEBACCESS)
+
   m_pNewLevelsAvailIcon=NULL;
   m_pWebConfEditor=NULL;
   m_pWebConfMsgBox=NULL;
-#endif
+
   m_pNewProfileMsgBox=NULL;
   m_pDeleteProfileMsgBox=NULL;
   m_pDeleteReplayMsgBox=NULL;
@@ -105,7 +102,6 @@ GameApp::GameApp() {
   m_bEnableContextHelp = true;     
   m_bDisplayInfosReplay = false;
   
-#if defined(SUPPORT_WEBACCESS)
   m_bShowWebHighscoreInGame = false;
   m_bEnableWebHighscores = true;
   m_pWebHighscores = NULL;
@@ -120,7 +116,7 @@ GameApp::GameApp() {
   
   m_MotoGame.setHooks(&m_MotoGameHooks);
   m_MotoGameHooks.setGameApps(this, &m_MotoGame);
-#endif
+
   m_Renderer.setTheme(getTheme());
   m_MotoGame.setRenderer(&m_Renderer);
   
@@ -159,8 +155,11 @@ GameApp::GameApp() {
   Update levels lists - must be done after each completed level
   ===========================================================================*/
   void GameApp::_UpdateLevelLists(void) {
+    LevelsPack *v_levelsPack;
+
     _CreateLevelLists((UILevelList *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:ALLLEVELS_TAB:ALLLEVELS_LIST"), VPACKAGENAME_FAVORITE_LEVELS);
 
+    _CreateLevelLists(m_pPlayNewLevelsList, VPACKAGENAME_NEW_LEVELS);
   }
 
   /*===========================================================================
@@ -170,11 +169,9 @@ GameApp::GameApp() {
     _CreateReplaysList((UIList *)m_pReplaysWindow->getChild("REPLAY_LIST"));                       
   }
 
-#if defined(SUPPORT_WEBACCESS) 
   void GameApp::_UpdateRoomsLists(void) {
     _CreateRoomsList((UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_ROOMS_TAB:ROOMS_LIST"));
   }
-#endif
 
   void GameApp::_UpdateThemesLists(void) {
     _CreateThemesList((UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:THEMES_LIST"));
@@ -189,6 +186,9 @@ GameApp::GameApp() {
     m_State = s;
     m_bCreditsModeActive = false;
     std::string v_newMusicPlaying;
+    char **v_result;
+    int nrow;
+    char *v_res;
 
     /* Always clear context when changing state */
     m_Renderer.getGUI()->clearContext();
@@ -241,30 +241,20 @@ GameApp::GameApp() {
 	  }
 
 	  /* Fine, open the level */
-	  Level *pLevelSrc;
-	  
 	  try {
-	    pLevelSrc = &(m_levelsManager.LevelById(m_replayBiker->levelId()));
+	    m_MotoGame.loadLevel(m_db, m_replayBiker->levelId());
 	  } catch(Exception &e) {
-	    Log("** Warning ** : level '%s' specified by replay '%s' not found",
-		m_replayBiker->levelId().c_str(),m_PlaySpecificReplay.c_str());
-	    
-	    m_MotoGame.endLevel();	    
-
-	    char cBuf[256];
-	    sprintf(cBuf,GAMETEXT_LEVELREQUIREDBYREPLAY,m_replayBiker->levelId().c_str());
 	    setState(m_StateAfterPlaying);
-	    notifyMsg(cBuf);                        
+	    notifyMsg(e.getMsg());     
 	    return;
 	  }
 
-	  if(pLevelSrc->isXMotoTooOld()) {
-	    Log("** Warning ** : level '%s' specified by replay '%s' requires newer X-Moto",m_replayBiker->levelId().c_str(),m_PlaySpecificReplay.c_str());
-	    
-	    m_MotoGame.endLevel();
-
+	  if(m_MotoGame.getLevelSrc()->isXMotoTooOld()) {
+	    Log("** Warning ** : level '%s' specified by replay '%s' requires newer X-Moto",m_replayBiker->levelId().c_str(),m_PlaySpecificReplay.c_str());	    
 	    char cBuf[256];
-	    sprintf(cBuf,GAMETEXT_NEWERXMOTOREQUIRED,pLevelSrc->getRequiredVersion().c_str());
+	    sprintf(cBuf,GAMETEXT_NEWERXMOTOREQUIRED,
+		    m_MotoGame.getLevelSrc()->getRequiredVersion().c_str());
+	    m_MotoGame.endLevel();
 	    setState(m_StateAfterPlaying);
 	    notifyMsg(cBuf); 
 	    return;
@@ -272,13 +262,14 @@ GameApp::GameApp() {
   
 	  /* Init level */    
 	  m_InputHandler.resetScriptKeyHooks();
-	  m_MotoGame.prePlayLevel(pLevelSrc, &m_InputHandler, NULL, false);
+	  m_MotoGame.prePlayLevel(&m_InputHandler, NULL, false);
 
 	  /* add the ghosts */
 	  if(m_bEnableGhost) {
 	    std::string v_PlayGhostReplay;
 	    // add the GhostSearchStrategy ghost
-	    v_PlayGhostReplay = _getGhostReplayPath(pLevelSrc->Id(), m_GhostSearchStrategy);
+	    v_PlayGhostReplay = _getGhostReplayPath(m_MotoGame.getLevelSrc()->Id(),
+						    m_GhostSearchStrategy);
 	    if(v_PlayGhostReplay != "") {
 	      try {
 		switch(m_GhostSearchStrategy) {
@@ -290,12 +281,11 @@ GameApp::GameApp() {
 		  m_MotoGame.addGhostFromFile(v_PlayGhostReplay, GAMETEXT_GHOST_LOCAL,
 					      &m_theme, m_theme.getGhostTheme());
 		  break;
-#if defined(SUPPORT_WEBACCESS) 
 		case GHOST_STRATEGY_BESTOFROOM:
-		  m_MotoGame.addGhostFromFile(v_PlayGhostReplay, m_pWebHighscores->getRoomName(),
+		  m_MotoGame.addGhostFromFile(v_PlayGhostReplay,
+					      m_db->webrooms_getName(m_WebHighscoresIdRoom),
 					      &m_theme, m_theme.getGhostTheme());
 		  break;
-#endif
 		}
 	      } catch(Exception &e) {
 		/* can't add the ghost, anyway */
@@ -310,31 +300,44 @@ GameApp::GameApp() {
 
 	  m_nFrame = 0;
 	  m_Renderer.prepareForNewLevel(bCreditsMode);            
-	  v_newMusicPlaying = pLevelSrc->Music();
+	  v_newMusicPlaying = m_MotoGame.getLevelSrc()->Music();
 
 	  /* Show help string */
 	  if(!drawLib->isNoGraphics()) {
-	    PlayerTimeEntry *pBestTime = m_Profiles.getBestTime(m_replayBiker->levelId());
-	    PlayerTimeEntry *pBestPTime = m_Profiles.getBestPlayerTime(m_pPlayer->PlayerName,
-								       m_replayBiker->levelId());
-	    
 	    std::string T1 = "--:--:--",T2 = "--:--:--";
-	    
-	    if(pBestTime != NULL)
-	      T1 = formatTime(pBestTime->fFinishTime);
-	    if(pBestPTime != NULL)
-	      T2 = formatTime(pBestPTime->fFinishTime);
+
+	    /* get best result */
+	    v_result = m_db->readDB("SELECT MIN(finishTime) FROM profile_completedLevels WHERE "
+				    "id_level=\"" + 
+				    xmDatabase::protectString(m_MotoGame.getLevelSrc()->Id()) + "\";",
+				    nrow);
+	    v_res = m_db->getResult(v_result, 1, 0, 0);
+	    if(v_res != NULL) {
+	      T1 = formatTime(atof(v_res));
+	    }
+	    m_db->read_DB_free(v_result);
+
+	    /* get best player result */
+	    v_result = m_db->readDB("SELECT MIN(finishTime) FROM profile_completedLevels WHERE "
+				    "id_level=\"" + 
+				    xmDatabase::protectString(m_MotoGame.getLevelSrc()->Id()) + "\" " + 
+				    "AND id_profile=\"" + xmDatabase::protectString(m_profile)  + "\";",
+				    nrow);
+	    v_res = m_db->getResult(v_result, 1, 0, 0);
+	    if(v_res != NULL) {
+	      T2 = formatTime(atof(v_res));
+	    }
+	    m_db->read_DB_free(v_result);
 	    
 	    m_Renderer.setBestTime(T1 + std::string(" / ") + T2);
-	    m_Renderer.showReplayHelp(m_MotoGame.getSpeed(), pLevelSrc->isScripted() == false);
+	    m_Renderer.showReplayHelp(m_MotoGame.getSpeed(),
+				      m_MotoGame.getLevelSrc()->isScripted() == false);
 	    
 	    if(m_bBenchmark || bCreditsMode) m_Renderer.setBestTime("");
 	    
-#if defined(SUPPORT_WEBACCESS) 
 	    /* World-record stuff */
 	    if(!bCreditsMode)
-	      _UpdateWorldRecord(m_replayBiker->levelId());
-#endif
+	      _UpdateWorldRecord(m_MotoGame.getLevelSrc()->Id());
 	  }
 	  m_fStartTime = getRealTime();
 
@@ -374,14 +377,12 @@ GameApp::GameApp() {
 	v_newMusicPlaying = "";
 
 	m_bAutoZoomInitialized = false;
-	Level *pLevelSrc;
 				
 	try {
-	  pLevelSrc = &(m_levelsManager.LevelById(m_PlaySpecificLevel));
-	  m_MotoGame.playLevel(pLevelSrc);
+	  m_MotoGame.playLevel();
           m_State = GS_PLAYING;        
           m_nFrame = 0;
-	  v_newMusicPlaying = pLevelSrc->Music();
+	  v_newMusicPlaying = m_MotoGame.getLevelSrc()->Music();
 	} catch(Exception &e) {
           Log("** Warning ** : level '%s' not found",m_PlaySpecificLevel.c_str());
 	  m_MotoGame.endLevel();
@@ -414,7 +415,7 @@ GameApp::GameApp() {
 
         /* Update stats */        
 	if(m_MotoGame.Players().size() == 1) {
-	  m_db->stats_died(m_pPlayer->PlayerName,
+	  m_db->stats_died(m_profile,
 			   m_MotoGame.getLevelSrc()->Id(),
 			   m_MotoGame.getTime());
 	}                
@@ -456,7 +457,6 @@ GameApp::GameApp() {
         break;
       }
 
-#if defined(SUPPORT_WEBACCESS)
       case GS_EDIT_WEBCONFIG: {
 	v_newMusicPlaying = "menu1";
         m_bShowCursor = true;
@@ -466,7 +466,7 @@ GameApp::GameApp() {
                                                        (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
         break;
       }
-#endif
+
       case GS_FINISHED: {
 	m_MotoGame.setInfos(m_MotoGame.getLevelSrc()->Name());
 	v_newMusicPlaying = "";
@@ -481,14 +481,6 @@ GameApp::GameApp() {
 	  }
 	}
 
-        /* Update stats */
-	/* update stats only in one player mode */
-	if(m_MotoGame.Players().size() == 1) {       
-	  m_db->stats_levelCompleted(m_pPlayer->PlayerName,
-				     m_MotoGame.getLevelSrc()->Id(),
-				     m_MotoGame.Players()[0]->finishTime());
-	}        
-
         /* A more lucky outcome of GS_PLAYING than GS_DEADMENU :) */
         m_pFinishMenu->showWindow(true);
         m_pBestTimes->showWindow(true);
@@ -498,46 +490,44 @@ GameApp::GameApp() {
 	  /* display message on finish and eventually save the replay */
         
 	  /* is it a highscore ? */
-	  float v_best_local_time;
 	  float v_best_personal_time;
+	  float v_best_room_time;
 	  float v_current_time;
 	  bool v_is_a_highscore;
 	  bool v_is_a_personal_highscore;
-	  
-	  v_best_local_time = m_Profiles.getBestTime(m_MotoGame.getLevelSrc()->Id())->fFinishTime;
-	  v_best_personal_time = m_Profiles.getBestPlayerTime(m_pPlayer->PlayerName,
-							      m_MotoGame.getLevelSrc()->Id())->fFinishTime;
+  
+	  /* get best player result */
+	  v_result = m_db->readDB("SELECT MIN(finishTime) FROM profile_completedLevels WHERE "
+				  "id_level=\"" + 
+				  xmDatabase::protectString(m_MotoGame.getLevelSrc()->Id()) + "\" " + 
+				  "AND id_profile=\"" + xmDatabase::protectString(m_profile)  + "\";",
+				  nrow);
+	  v_res = m_db->getResult(v_result, 1, 0, 0);
+	  if(v_res != NULL) {
+	    v_best_personal_time = atof(v_res);
+	  } else {
+	    /* should never happend because the score is already stored */
+	    v_best_personal_time = -1.0;
+	  }
+	  m_db->read_DB_free(v_result);
+
 	  v_current_time = m_MotoGame.Players()[0]->finishTime();
 	  
-	  v_is_a_highscore = (v_current_time <= v_best_local_time);  /* = because highscore is already stored in playerdata */
+	  v_is_a_personal_highscore = (v_current_time <= v_best_personal_time
+				       || v_best_personal_time < 0.0);
 	  
-	  v_is_a_personal_highscore = (v_current_time <= v_best_personal_time);  /* = because highscore is already stored in playerdata */
-	  
-#if defined(SUPPORT_WEBACCESS) 
 	  /* search a better webhighscore */
-	  if(m_pWebHighscores != NULL /*&& v_is_a_highscore == true*/) {
-	    WebHighscore* wh = m_pWebHighscores->getHighscoreFromLevel(m_MotoGame.getLevelSrc()->Id());
-	    if(wh != NULL) {
-	      try {
-		v_is_a_highscore = (v_current_time < wh->getFTime());
-	      } catch(Exception &e) {
-		v_is_a_highscore = false; /* what to do ? more chances that it's not a highscore ;-) */
-	      }
-	    } else {
-	      /* never highscored */
-	      v_is_a_highscore = true;
-	    }
-	  }
-#endif
+	  v_best_room_time = m_db->webrooms_getHighscoreTime(m_WebHighscoresIdRoom,
+							     m_MotoGame.getLevelSrc()->Id());
+	  v_is_a_highscore = (v_current_time < v_best_room_time
+			      || v_best_room_time < 0.0);
 	  
-#if defined(SUPPORT_WEBACCESS)
 	  // disable upload button
 	  for(int i=0;i<m_nNumFinishMenuButtons;i++) {
 	    if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_UPLOAD_HIGHSCORE) {
 	      m_pFinishMenuButtons[i]->enableWindow(false);
 	    }
 	  }
-#endif
 	  
 	  if(v_is_a_highscore) { /* best highscore */
 	    try {
@@ -545,7 +535,6 @@ GameApp::GameApp() {
 	    } catch(Exception &e) {
 	    }
 	    
-#if defined(SUPPORT_WEBACCESS)
 	    // enable upload button
 	    if(m_bEnableWebHighscores) {
 	      if(m_pJustPlayReplay != NULL) {
@@ -556,7 +545,6 @@ GameApp::GameApp() {
 		}
 	      }
 	    }
-#endif
 	    
 	    if(m_pJustPlayReplay != NULL && m_bAutosaveHighscoreReplays) {
 	      String v_replayName = Replay::giveAutomaticName();
@@ -583,6 +571,30 @@ GameApp::GameApp() {
 	      m_Renderer.hideMsgNewHighscore();
 	    }
 	  }
+	}
+
+	/* update profiles */
+	float v_finish_time = 0.0;
+	std::string TimeStamp = getTimeStamp();
+	for(unsigned int i=0; i<m_MotoGame.Players().size(); i++) {
+	  if(m_MotoGame.Players()[i]->isFinished()) {
+	    v_finish_time  = m_MotoGame.Players()[i]->finishTime();
+	  }
+	}
+	if(m_MotoGame.Players().size() == 1) {
+	  m_db->profiles_addFinishTime(m_profile, m_MotoGame.getLevelSrc()->Id(),
+				       TimeStamp, v_finish_time);
+	}
+	_MakeBestTimesWindow(m_pBestTimes, m_profile, m_MotoGame.getLevelSrc()->Id(),
+			     v_finish_time,TimeStamp);
+
+        /* Update stats */
+	/* update stats only in one player mode */
+	if(m_MotoGame.Players().size() == 1) {       
+	  m_db->stats_levelCompleted(m_profile,
+				     m_MotoGame.getLevelSrc()->Id(),
+				     m_MotoGame.Players()[0]->finishTime());
+	  _UpdateLevelsLists();
 	}
         break;
       }
@@ -657,12 +669,10 @@ GameApp::GameApp() {
     m_bEnableGhostInfo = m_Config.getBool("DisplayGhostInfo");
     m_Renderer.setGhostDisplayInformation(m_bEnableGhostInfo);
 
-#if defined(SUPPORT_WEBACCESS)
     m_bEnableWebHighscores = m_Config.getBool("WebHighscores") && isNoWWW()== false;
     m_bShowWebHighscoreInGame = m_Config.getBool("ShowInGameWorldRecord");
     m_bEnableCheckNewLevelsAtStartup  = m_Config.getBool("CheckNewLevelsAtStartup");
     m_bEnableCheckHighscoresAtStartup = m_Config.getBool("CheckHighscoresAtStartup");
-#endif
 
     /* Other settings */
     m_bEnableEngineSound = m_Config.getBool("EngineSoundEnable");
@@ -671,13 +681,8 @@ GameApp::GameApp() {
     m_bEnableInitZoom = m_Config.getBool("InitZoom");
     m_bEnableDeathAnim = m_Config.getBool("DeathAnim");
 
-    /* Cache? */
-    m_bEnableLevelCache = m_Config.getBool("LevelCache");
-    
-#if defined(SUPPORT_WEBACCESS)
     /* Configure proxy */
     _ConfigureProxy();
-#endif
   }
   
   /*===========================================================================
@@ -807,11 +812,11 @@ GameApp::GameApp() {
       if(nKey == SDLK_F5) {
 	_SimpleMessage(GAMETEXT_RELOADINGLEVELS, &m_InfoMsgBoxRect);
 	m_reloadingLevelsUser = true;
-	m_levelsManager.reloadLevelsFromFiles(m_bEnableLevelCache, this);
+	m_levelsManager.reloadLevelsFromLvl(m_db, this);
 	m_pActiveLevelPack = NULL;
 	_UpdateLevelsLists();
 	_SimpleMessage(GAMETEXT_RELOADINGREPLAYS, &m_InfoMsgBoxRect);
-	m_ReplayList.initFromDir();
+	initReplaysFromDir();
       }
 
     }
@@ -839,9 +844,7 @@ GameApp::GameApp() {
     /* What state? */
     switch(m_State) {
       case GS_EDIT_PROFILES:
-#if defined(SUPPORT_WEBACCESS)
       case GS_EDIT_WEBCONFIG:
-#endif
       case GS_LEVEL_INFO_VIEWER:
       case GS_LEVELPACK_VIEWER:
       case GS_MENU: {
@@ -1012,9 +1015,7 @@ GameApp::GameApp() {
   void GameApp::keyUp(int nKey, SDLMod mod) {
     /* What state? */
     switch(m_State) {
-#if defined(SUPPORT_WEBACCESS)
       case GS_EDIT_WEBCONFIG:
-#endif
       case GS_EDIT_PROFILES:
       case GS_LEVEL_INFO_VIEWER:
       case GS_FINISHED:
@@ -1051,9 +1052,7 @@ GameApp::GameApp() {
       case GS_DEADMENU:
       case GS_FINISHED:
       case GS_EDIT_PROFILES:
-#if defined(SUPPORT_WEBACCESS)
       case GS_EDIT_WEBCONFIG:
-#endif
       case GS_LEVEL_INFO_VIEWER:
       case GS_LEVELPACK_VIEWER:
         int nX,nY;        
@@ -1075,9 +1074,7 @@ GameApp::GameApp() {
       case GS_DEADMENU:
       case GS_FINISHED:
       case GS_EDIT_PROFILES:
-#if defined(SUPPORT_WEBACCESS)
       case GS_EDIT_WEBCONFIG:
-#endif
       case GS_LEVEL_INFO_VIEWER:
       case GS_LEVELPACK_VIEWER:
         int nX,nY;        
@@ -1118,9 +1115,7 @@ GameApp::GameApp() {
       case GS_DEADMENU:
       case GS_FINISHED:
       case GS_EDIT_PROFILES:
-#if defined(SUPPORT_WEBACCESS)
       case GS_EDIT_WEBCONFIG:
-#endif
       case GS_LEVEL_INFO_VIEWER:
       case GS_LEVELPACK_VIEWER:
         int nX,nY;
@@ -1195,49 +1190,67 @@ GameApp::GameApp() {
       notifyMsg(GAMETEXT_FAILEDTOSAVEREPLAY);
     } else {
       /* Update replay list to reflect changes */
-      m_ReplayList.addReplay(FS::getFileBaseName(v_outputfile));
+      addReplay(v_outputfile);
       _UpdateReplaysList();
     }
   }
 
-  std::string GameApp::_DetermineNextLevel(Level *pLevelSrc) {
+  std::string GameApp::_DetermineNextLevel(const std::string& i_id_level) {
     if(m_currentPlayingList == NULL) {
       return "";
     }
 
     for(int i=0;i<m_currentPlayingList->getEntries().size()-1;i++) {
-      if(m_currentPlayingList->getEntries()[i]->pvUser == (void *)pLevelSrc) {
-  return ((Level *)m_currentPlayingList->getEntries()[i+1]->pvUser)->Id();
+      if((*((std::string*)m_currentPlayingList->getEntries()[i]->pvUser)) == i_id_level) {
+	return *((std::string*)m_currentPlayingList->getEntries()[i+1]->pvUser);
       }
     }
-    return ((Level *)m_currentPlayingList->getEntries()[0]->pvUser)->Id();
+    return *((std::string*)m_currentPlayingList->getEntries()[0]->pvUser);
   }
   
-  bool GameApp::_IsThereANextLevel(Level *pLevelSrc) {
-    return _DetermineNextLevel(pLevelSrc) != "";
+  bool GameApp::_IsThereANextLevel(const std::string& i_id_level) {
+    return _DetermineNextLevel(i_id_level) != "";
   }  
 
-#if defined(SUPPORT_WEBACCESS)  
   void GameApp::_UpdateWorldRecord(const std::string &LevelID) {  
-    m_Renderer.setWorldRecordTime("");
-    
-      if(m_bShowWebHighscoreInGame && m_pWebHighscores!=NULL) {
-        WebHighscore *pWebHS = m_pWebHighscores->getHighscoreFromLevel(LevelID);
-        if(pWebHS != NULL) {
-          m_Renderer.setWorldRecordTime(pWebHS->getRoom()->getRoomName() + ": " + 
-                                        pWebHS->getTime() + 
-                                        std::string(" (") + pWebHS->getPlayerName() + std::string(")"));
-        } 
-        else {
-    m_Renderer.setWorldRecordTime(m_pWebHighscores->getRoomName() + ": " + 
-          GAMETEXT_WORLDRECORDNA
-          );
-        }                
-      }
-  }
-#endif  
+    char **v_result;
+    int nrow;
+    std::string v_roomName;
+    std::string v_id_profile;
+    float       v_finishTime;
 
-#if defined(SUPPORT_WEBACCESS)  
+    m_Renderer.setWorldRecordTime("");
+
+    v_result = m_db->readDB("SELECT a.name, b.id_profile, b.finishTime "
+			    "FROM webrooms AS a LEFT OUTER JOIN webhighscores AS b "
+			    "ON (a.id_room = b.id_room "
+			    "AND b.id_level=\"" + xmDatabase::protectString(LevelID) + "\") "
+			    "WHERE a.id_room=" + m_WebHighscoresIdRoom + ";",
+			    nrow);
+    if(nrow != 1) {
+      /* should not happend */
+      m_db->read_DB_free(v_result);
+      m_Renderer.setWorldRecordTime(std::string("WR: ") + GAMETEXT_WORLDRECORDNA);
+      return;
+    }
+    v_roomName = m_db->getResult(v_result, 3, 0, 0);
+    if(m_db->getResult(v_result, 3, 0, 1) != NULL) {
+      v_id_profile = m_db->getResult(v_result, 3, 0, 1);
+      v_finishTime = atof(m_db->getResult(v_result, 3, 0, 2));
+    }
+    m_db->read_DB_free(v_result);
+    
+    if(m_bShowWebHighscoreInGame && v_id_profile != "") {
+      m_Renderer.setWorldRecordTime(v_roomName + ": " + 
+				    vapp::App::formatTime(v_finishTime) +
+				    std::string(" (") + v_id_profile + std::string(")"));
+    } else {
+      m_Renderer.setWorldRecordTime(v_roomName + ": " + 
+				    GAMETEXT_WORLDRECORDNA
+				    );
+    }
+  }
+
   void GameApp::_UpdateWebHighscores(bool bSilent) {
     if(!bSilent) {
       _SimpleMessage(GAMETEXT_DLHIGHSCORES,&m_InfoMsgBoxRect);
@@ -1246,12 +1259,11 @@ GameApp::GameApp() {
     m_bWebHighscoresUpdatedThisSession = true;
     
     /* Try downloading the highscores */
-    m_pWebHighscores->setWebsiteURL(m_Config.getString("WebHighscoresURL"));
+    m_pWebHighscores->setWebsiteInfos(m_WebHighscoresIdRoom,
+				      m_WebHighscoresURL);
     m_pWebHighscores->update();
   }
-#endif
 
-#if defined(SUPPORT_WEBACCESS)  
   void GameApp::_UpdateWebLevels(bool bSilent, bool bEnableWeb) {
     if(!bSilent) {
       _SimpleMessage(GAMETEXT_DLLEVELSCHECK,&m_InfoMsgBoxRect);
@@ -1263,15 +1275,11 @@ GameApp::GameApp() {
     }
     m_pWebLevels->setURL(m_Config.getString("WebLevelsURL"));
     Log("WWW: Checking for new or updated levels...");
-    m_pWebLevels->update(bEnableWeb);
-    
-    int nULevels=0,nUBytes=0;
-    m_pWebLevels->getUpdateInfo(&nUBytes,&nULevels);
-    m_bWebLevelsToDownload = nULevels!=0;
-  }
-#endif
 
-#if defined(SUPPORT_WEBACCESS)  
+    m_pWebLevels->update(m_db);
+    m_bWebLevelsToDownload = m_pWebLevels->nbLevelsToGet(m_db);
+  }
+
   void GameApp::_UpdateWebThemes(bool bSilent) {
     if(!bSilent) {
       _SimpleMessage(GAMETEXT_DLTHEMESLISTCHECK,&m_InfoMsgBoxRect);
@@ -1290,9 +1298,7 @@ GameApp::GameApp() {
       Log("** Warning ** : Failed to analyse web-themes file");   
     }
   }    
-#endif
 
-#if defined(SUPPORT_WEBACCESS) 
   void GameApp::_UpdateWebRooms(bool bSilent) {
     if(!bSilent) {
       _SimpleMessage(GAMETEXT_DLROOMSLISTCHECK,&m_InfoMsgBoxRect);
@@ -1309,9 +1315,7 @@ GameApp::GameApp() {
       Log("** Warning ** : Failed to analyse update webrooms list");    
     }
   }
-#endif
 
-#if defined(SUPPORT_WEBACCESS)
   void GameApp::_UpdateWebTheme(ThemeChoice* pThemeChoice, bool bNotify) {
     if(m_themeChoicer->isUpdatableThemeFromWWW(pThemeChoice) == false) {
       if(bNotify) {
@@ -1342,13 +1346,11 @@ GameApp::GameApp() {
       return;
     }
   }
-#endif
 
-#if defined(SUPPORT_WEBACCESS)  
   void GameApp::_UpgradeWebHighscores() {
     /* Upgrade high scores */
     try {
-      m_pWebHighscores->upgrade();      
+      m_pWebHighscores->upgrade(m_db);
     } catch(Exception &e) {
       /* file probably doesn't exist */
       Log("** Warning ** : Failed to analyse web-highscores file");   
@@ -1367,14 +1369,11 @@ GameApp::GameApp() {
       Log("** Warning ** : Failed to analyse webrooms file");   
     }
   }
-#endif
 
-#if defined(SUPPORT_WEBACCESS)  
   /*===========================================================================
   Extra WWW levels
   ===========================================================================*/
   void GameApp::_DownloadExtraLevels(void) {
-    #if defined(SUPPORT_WEBACCESS)
       /* Download extra levels */
       m_DownloadingInformation = "";
       m_DownloadingMessage = std::string(GAMETEXT_DLLEVELS) + "\n\n ";
@@ -1383,8 +1382,8 @@ GameApp::GameApp() {
         try {                  
           Log("WWW: Downloading levels...");
           clearCancelAsSoonAsPossible();
-          m_pWebLevels->upgrade();
-    m_bWebLevelsToDownload = false;
+          m_pWebLevels->upgrade(m_db);
+	  m_bWebLevelsToDownload = false;
         } 
         catch(Exception &e) {
           Log("** Warning ** : Unable to download extra levels [%s]",e.getMsg().c_str());
@@ -1398,20 +1397,17 @@ GameApp::GameApp() {
 
         /* Got some new levels... load them! */
         Log("Loading new and updated levels...");
-				m_pActiveLevelPack = NULL; /* the active level pack could no more exists after update */
-				m_levelsManager.updateLevelsFromLvl(m_pWebLevels->getNewDownloadedLevels(),
-																						m_pWebLevels->getUpdatedDownloadedLevels(),
-																						m_pWebLevels->getUpdatedDownloadedLevelIds(),
-																						m_bEnableLevelCache);
+	m_pActiveLevelPack = NULL; /* the active level pack could no more exists after update */
+	m_levelsManager.updateLevelsFromLvl(m_db,
+					    m_pWebLevels->getNewDownloadedLevels(),
+					    m_pWebLevels->getUpdatedDownloadedLevels()
+					    );
 
          /* Update level lists */
-				_UpdateLevelsLists();
+	_UpdateLevelsLists();
       }
-    #endif
   }
-#endif
 
-#if defined(SUPPORT_WEBACCESS)  
   void GameApp::_CheckForExtraLevels(void) {
       /* Check for extra levels */
       try {
@@ -1424,10 +1420,11 @@ GameApp::GameApp() {
         
         Log("WWW: Checking for new or updated levels...");
         clearCancelAsSoonAsPossible();
-        m_pWebLevels->update();     
-        int nULevels=0,nUBytes=0;
-        m_pWebLevels->getUpdateInfo(&nUBytes,&nULevels);
-  m_bWebLevelsToDownload = nULevels!=0;
+
+        m_pWebLevels->update(m_db);
+        int nULevels=0;
+	nULevels = m_pWebLevels->nbLevelsToGet(m_db);
+	m_bWebLevelsToDownload = nULevels!=0;
 
         Log("WWW: %d new or updated level%s found",nULevels,nULevels==1?"":"s");
 
@@ -1454,14 +1451,13 @@ GameApp::GameApp() {
         notifyMsg(GAMETEXT_FAILEDCHECKLEVELS);
       } 
   }
-#endif  
 
   void GameApp::_RestartLevel(bool i_reloadLevel) {
 		lockMotoGame(false);
 
     /* Update stats */        
     if(m_MotoGame.Players().size() == 1) {
-      m_db->stats_levelRestarted(m_pPlayer->PlayerName,
+      m_db->stats_levelRestarted(m_profile,
 				 m_MotoGame.getLevelSrc()->Id(),
 				 m_MotoGame.getTime());
     }  
@@ -1474,11 +1470,9 @@ GameApp::GameApp() {
 
     if(i_reloadLevel) {
       try {
-	Level *v_lvl = &(m_levelsManager.LevelById(m_PlaySpecificLevel));
-	v_lvl->loadXML();
-	v_lvl->rebuildCache();
+	Level::removeFromCache(m_db, m_PlaySpecificLevel);
       } catch(Exception &e) {
-	throw Exception("Unable to reload the level");
+	// hum, not nice
       }
     }
 
@@ -1488,8 +1482,6 @@ GameApp::GameApp() {
   /*===========================================================================
   WWWAppInterface implementation
   ===========================================================================*/
-#if defined(SUPPORT_WEBACCESS)
-        
   bool GameApp::shouldLevelBeUpdated(const std::string &LevelID) {
     if(m_updateAutomaticallyLevels) {
       return true;
@@ -1497,69 +1489,81 @@ GameApp::GameApp() {
 
     /* Hmm... ask user whether this level should be updated */
     bool bRet = true;
+    bool bDialogBoxOpen = true;
+    char cBuf[1024];
+    char **v_result;
+    int nrow;
+    std::string v_levelName;
+    std::string v_levelFileName;
+
+    v_result = m_db->readDB("SELECT name, filepath "
+			    "FROM levels "
+			    "WHERE id_level=\"" + xmDatabase::protectString(LevelID) + "\";",
+			    nrow);
+    if(nrow != 1) {
+      m_db->read_DB_free(v_result);
+      return true;
+    }
+
+    v_levelName     = m_db->getResult(v_result, 2, 0, 0);
+    v_levelFileName = m_db->getResult(v_result, 2, 0, 1);
+    m_db->read_DB_free(v_result);
+
+    sprintf(cBuf,(std::string(GAMETEXT_WANTTOUPDATELEVEL) + "\n(%s)").c_str(), v_levelName.c_str(),
+	    v_levelFileName.c_str());
+    UIMsgBox *pMsgBox = m_Renderer.getGUI()->msgBox(cBuf,(UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO|UI_MSGBOX_YES_FOR_ALL));
     
-    Level *pLevel;
-
-    pLevel = &(m_levelsManager.LevelById(LevelID));
-    if(pLevel != NULL) {
-      bool bDialogBoxOpen = true;
+    while(bDialogBoxOpen) {
+      SDL_PumpEvents();
       
-      char cBuf[1024];
-      sprintf(cBuf,(std::string(GAMETEXT_WANTTOUPDATELEVEL) + "\n(%s)").c_str(),pLevel->Name().c_str(),
-              pLevel->FileName().c_str());
-      UIMsgBox *pMsgBox = m_Renderer.getGUI()->msgBox(cBuf,(UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO|UI_MSGBOX_YES_FOR_ALL));
-      
-      while(bDialogBoxOpen) {
-        SDL_PumpEvents();
-        
-        SDL_Event Event;
-        while(SDL_PollEvent(&Event)) {
-          /* What event? */
-          switch(Event.type) {
-            case SDL_QUIT:  
-              /* Force quit */
-              quit();
-              setCancelAsSoonAsPossible();
-              return false;
-            case SDL_MOUSEBUTTONDOWN:
-              mouseDown(Event.button.button);
-              break;
-            case SDL_MOUSEBUTTONUP:
-              mouseUp(Event.button.button);
-              break;
-          }
-        }
-        
-        UIMsgBoxButton Button = pMsgBox->getClicked();
-        if(Button != UI_MSGBOX_NOTHING) {
-          if(Button == UI_MSGBOX_NO) {
-            bRet = false;
-          }
-          if(Button == UI_MSGBOX_YES_FOR_ALL) {
-      m_updateAutomaticallyLevels = true;
-          }
-          bDialogBoxOpen = false;
-        }
-
-        _DrawMenuBackground();
-        _DispatchMouseHover();
-        
-        m_Renderer.getGUI()->paint();
-        
-        UIRect TempRect;
-
-  if(m_pCursor != NULL) {        
-    int nMX,nMY;
-    getMousePos(&nMX,&nMY);      
-    drawLib->drawImage(Vector2f(nMX-2,nMY-2),Vector2f(nMX+30,nMY+30),m_pCursor);
-  }
-
-        drawLib->flushGraphics();
+      SDL_Event Event;
+      while(SDL_PollEvent(&Event)) {
+	/* What event? */
+	switch(Event.type) {
+	case SDL_QUIT:  
+	  /* Force quit */
+	  quit();
+	  setCancelAsSoonAsPossible();
+	  return false;
+	case SDL_MOUSEBUTTONDOWN:
+	  mouseDown(Event.button.button);
+	  break;
+	case SDL_MOUSEBUTTONUP:
+	  mouseUp(Event.button.button);
+	  break;
+	}
       }
       
-      delete pMsgBox;
-      setTaskProgress(m_fDownloadTaskProgressLast);
-    }  
+      UIMsgBoxButton Button = pMsgBox->getClicked();
+      if(Button != UI_MSGBOX_NOTHING) {
+	if(Button == UI_MSGBOX_NO) {
+	  bRet = false;
+	}
+	if(Button == UI_MSGBOX_YES_FOR_ALL) {
+	  m_updateAutomaticallyLevels = true;
+	}
+	bDialogBoxOpen = false;
+      }
+      
+      _DrawMenuBackground();
+      _DispatchMouseHover();
+      
+      m_Renderer.getGUI()->paint();
+      
+      UIRect TempRect;
+      
+      if(m_pCursor != NULL) {        
+	int nMX,nMY;
+	getMousePos(&nMX,&nMY);      
+	drawLib->drawImage(Vector2f(nMX-2,nMY-2),Vector2f(nMX+30,nMY+30),m_pCursor);
+      }
+      
+      drawLib->flushGraphics();
+    }
+    
+    delete pMsgBox;
+    setTaskProgress(m_fDownloadTaskProgressLast);
+    
     return bRet;        
   }
         
@@ -1618,21 +1622,6 @@ GameApp::GameApp() {
     }    
   }
   
-  std::string GameApp::levelPathForUpdate(const std::string &p_LevelId) {
-    return m_levelsManager.LevelById(p_LevelId).PathForUpdate();
-  }
-  
-  std::string GameApp::levelMD5Sum(const std::string &LevelID) {
-    return m_levelsManager.LevelById(LevelID).Checksum();
-  }
-    
-  bool GameApp::doesLevelExist(const std::string &p_LevelId) {
-    return m_levelsManager.doesLevelExist(p_LevelId);
-  }
-
-#endif
-
-#if defined(SUPPORT_WEBACCESS)  
   /*===========================================================================
   Configure proxy
   ===========================================================================*/
@@ -1667,105 +1656,91 @@ GameApp::GameApp() {
             m_Config.getString("ProxyAuthPwd"));      
     }
   }
-#endif
   
   std::string GameApp::_getGhostReplayPath_bestOfThePlayer(std::string p_levelId, float &p_time) {
-    std::vector<ReplayInfo *> *Replays = m_ReplayList.findReplays(m_pPlayer->PlayerName,
-                  p_levelId);
+    char **v_result;
+    int nrow;
     std::string res;
 
-    p_time = -1.0;
-    res = "";
-
-    for(int i=0; i<Replays->size(); i++) {
-      if((*Replays)[i]->fFinishTime != -1.0 &&
-   ((*Replays)[i]->fFinishTime < p_time || p_time == -1)
-   )
-  {
-    p_time = (*Replays)[i]->fFinishTime;
-    res = std::string("Replays/") + (*Replays)[i]->Name + std::string(".rpl");
-  }
+    v_result = m_db->readDB("SELECT name, finishTime FROM replays "
+			    "WHERE id_profile=\"" + xmDatabase::protectString(m_profile) + "\" "
+			    "AND   id_level=\""   + xmDatabase::protectString(p_levelId) + "\" "
+			    "AND   isFinished=1 "
+			    "ORDER BY finishTime LIMIT 1;",
+			    nrow);    
+    if(nrow == 0) {
+      m_db->read_DB_free(v_result);
+      return "";
     }
 
-    delete Replays;
+    res = std::string("Replays/") + m_db->getResult(v_result, 2, 0, 0) + std::string(".rpl");
+    p_time = atof(m_db->getResult(v_result, 2, 0, 1));
+
+    m_db->read_DB_free(v_result);
     return res;
   }
 
-#if defined(SUPPORT_WEBACCESS)
   std::string GameApp::_getGhostReplayPath_bestOfTheRoom(std::string p_levelId, float &p_time) {
-    std::vector<ReplayInfo *> *Replays = m_ReplayList.findReplays("",
-                  p_levelId);
+    char **v_result;
+    int nrow;
     std::string res;
+    std::string v_replayName;
+    std::string v_fileUrl;
 
-    p_time = -1.0;
-    res = "";
-
-    if(m_pWebHighscores != NULL) {
-      WebHighscore* v_hs;
-      v_hs = m_pWebHighscores->getHighscoreFromLevel(p_levelId);
-      if(v_hs != NULL) {
-  String v_replay_name = v_hs->getReplayName();
-  int i=0;
-
-  p_time = v_hs->getFTime();
-
-  /* search if the replay is already downloaded */
-  bool found = false;
-  while(i < Replays->size() && found == false) {
-    if((*Replays)[i]->Name == v_replay_name) {
-      found = true;
+    v_result = m_db->readDB("SELECT fileUrl, finishTime FROM webhighscores "
+			    "WHERE id_room=" + m_WebHighscoresIdRoom + " "
+			    "AND id_level=\"" + xmDatabase::protectString(p_levelId) + "\";",
+			    nrow);    
+    if(nrow == 0) {
+      m_db->read_DB_free(v_result);
+      return "";
     }
-    i++;
-  }
-  if(found) {
-    res = std::string("Replays/") + v_replay_name + std::string(".rpl");
-  } else {
-    if(m_bEnableWebHighscores) {
-      /* download the replay */
-      try {
-        _SimpleMessage(GAMETEXT_DLGHOST,&m_InfoMsgBoxRect);
-        v_hs->download();
-        res = std::string("Replays/") + v_replay_name + std::string(".rpl");
-        m_ReplayList.addReplay(v_replay_name);
-        _UpdateReplaysList();
-      } catch(Exception &e) {
-        /* do nothing */
-	enableWWW(false);
+
+    v_fileUrl = m_db->getResult(v_result, 2, 0, 0);
+    v_replayName = FS::getFileBaseName(v_fileUrl);
+    p_time = atof(m_db->getResult(v_result, 2, 0, 1));
+    m_db->read_DB_free(v_result);
+
+    /* search if the replay is already downloaded */
+    if(m_db->replays_exists(v_replayName)) {
+      res = std::string("Replays/") + v_replayName + std::string(".rpl");
+    } else {
+      if(m_bEnableWebHighscores) {
+	/* download the replay */
+	try {
+	  _SimpleMessage(GAMETEXT_DLGHOST,&m_InfoMsgBoxRect);
+	  m_pWebHighscores->downloadReplay(v_fileUrl);
+	  addReplay(v_replayName);
+	  _UpdateReplaysList();
+	  res = std::string("Replays/") + v_replayName + std::string(".rpl");
+	} catch(Exception &e) {
+	  /* do nothing */
+	  enableWWW(false);
+	}
       }
     }
-  }
-      }
-    }
-
-    delete Replays;
     return res;
   }
-#endif
 
   std::string GameApp::_getGhostReplayPath_bestOfLocal(std::string p_levelId, float &p_time) {
-    std::vector<ReplayInfo *> *Replays = m_ReplayList.findReplays("", p_levelId);
+    char **v_result;
+    int nrow;
     std::string res;
-    std::vector<PlayerProfile *> v_profiles = m_Profiles.getProfiles();
 
-    p_time = -1.0;
-    res = "";
+    v_result = m_db->readDB("SELECT a.name, a.finishTime FROM replays AS a INNER JOIN stats_profiles AS b "
+			    "ON a.id_profile = b.id_profile "
+			    "WHERE a.id_level=\""   + xmDatabase::protectString(p_levelId) + "\" "
+			    "AND   a.isFinished=1 "
+			    "ORDER BY a.finishTime LIMIT 1;",
+			    nrow);    
+    if(nrow == 0) {
+      m_db->read_DB_free(v_result);
+      return "";
+    }
 
-    for(int i=0; i<Replays->size(); i++) {
-      if((*Replays)[i]->fFinishTime != -1.0 &&
-   ((*Replays)[i]->fFinishTime < p_time ||
-    p_time == -1)
-   )
-  {
-    /* the player must be one of the profile */
-    for(int j=0; j<v_profiles.size(); j++) {
-      if(v_profiles[j]->PlayerName == (*Replays)[i]->Player) {
-        p_time = (*Replays)[i]->fFinishTime;
-        res = std::string("Replays/") + (*Replays)[i]->Name + std::string(".rpl");
-      }
-    }
-  }
-    }
-    delete Replays;
+    res = std::string("Replays/") + m_db->getResult(v_result, 2, 0, 0) + std::string(".rpl");
+    p_time = atof(m_db->getResult(v_result, 2, 0, 1));
+    m_db->read_DB_free(v_result);
     return res;
   }
 
@@ -1786,7 +1761,6 @@ GameApp::GameApp() {
       res = _getGhostReplayPath_bestOfLocal(p_levelId, v_fFinishTime);
       break;
       
-#if defined(SUPPORT_WEBACCESS)    
     case GHOST_STRATEGY_BESTOFROOM:     
       v_player_res = _getGhostReplayPath_bestOfThePlayer(p_levelId, v_player_fFinishTime);
       res = _getGhostReplayPath_bestOfTheRoom(p_levelId, v_fFinishTime);
@@ -1795,14 +1769,12 @@ GameApp::GameApp() {
   res = v_player_res;
       }
       break;
-#endif      
 
     }
 
     return res;
   }
 
-#if defined(SUPPORT_WEBACCESS) 
   void GameApp::_UploadHighscore(std::string p_replayname) {
     try {
       bool v_msg_status_ok;
@@ -1811,7 +1783,7 @@ GameApp::GameApp() {
       m_DownloadingInformation = "";
       m_DownloadingMessage = GAMETEXT_UPLOADING_HIGHSCORE;
       FSWeb::uploadReplay(FS::getUserDir() + "/Replays/" + p_replayname + ".rpl",
-        m_Config.getString("WebHighscoreUploadIdRoom"),
+        m_WebHighscoresIdRoom,
         m_Config.getString("WebHighscoreUploadLogin"),
         m_Config.getString("WebHighscoreUploadPassword"),
         m_Config.getString("WebHighscoreUploadURL"),
@@ -1828,7 +1800,6 @@ GameApp::GameApp() {
       notifyMsg(GAMETEXT_UPLOAD_HIGHSCORE_ERROR);
     }
   }
-#endif
 
   TColor GameApp::getColorFromPlayerNumber(int i_player) {
     // try to find nice colors for first player, then automatic
@@ -1905,6 +1876,10 @@ GameApp::GameApp() {
   }
 
   void GameApp::statePrestart_init() {
+    char **v_result;
+    int nrow;
+    char *v_res;
+
     //        SDL_ShowCursor(SDL_DISABLE);
     m_bShowCursor = false;
       
@@ -1916,29 +1891,29 @@ GameApp::GameApp() {
     m_fLastPerfStateTime = 0.0f;
       
     /* We need a profile */
-    if(m_pPlayer == NULL) {
+    if(m_profile == "") {
       Log("** Warning ** : no player profile selected, use -profile option");
       throw Exception("no player");
     }
       
     /* Find the level */
-    Level *pLevelSrc;
     try {
-      pLevelSrc = &(m_levelsManager.LevelById(m_PlaySpecificLevel));
+     m_MotoGame.loadLevel(m_db, m_PlaySpecificLevel);
     } catch(Exception &e) {
-      Log("** Warning ** : level '%s' not found",m_PlaySpecificLevel.c_str());
-      char cBuf[256];
-      sprintf(cBuf,GAMETEXT_LEVELNOTFOUND,m_PlaySpecificLevel.c_str());
       setState(m_StateAfterPlaying);
-      notifyMsg(cBuf);
+      notifyMsg(e.getMsg());     
       return;
     }
 
-    if(pLevelSrc->isXMotoTooOld()) {
-      Log("** Warning ** : level '%s' requires newer X-Moto",m_PlaySpecificLevel.c_str());
+    if(m_MotoGame.getLevelSrc()->isXMotoTooOld()) {
+      Log("** Warning ** : level '%s' requires newer X-Moto",
+	  m_MotoGame.getLevelSrc()->Name().c_str());
   
       char cBuf[256];
-      sprintf(cBuf,GAMETEXT_NEWERXMOTOREQUIRED,pLevelSrc->getRequiredVersion().c_str());
+      sprintf(cBuf,GAMETEXT_NEWERXMOTOREQUIRED,
+	      m_MotoGame.getLevelSrc()->getRequiredVersion().c_str());
+      m_MotoGame.endLevel();
+
       setState(m_StateAfterPlaying);
       notifyMsg(cBuf);     
       return;
@@ -1947,16 +1922,17 @@ GameApp::GameApp() {
     /* Start playing right away */     
     m_InputHandler.resetScriptKeyHooks();
 
-      if(m_pJustPlayReplay != NULL) delete m_pJustPlayReplay;
-      m_pJustPlayReplay = NULL;
+    if(m_pJustPlayReplay != NULL) delete m_pJustPlayReplay;
+    m_pJustPlayReplay = NULL;
       
-      if(m_bRecordReplays) {
-	m_pJustPlayReplay = new Replay;
-	m_pJustPlayReplay->createReplay("Latest.rpl",pLevelSrc->Id(),m_pPlayer->PlayerName, m_fReplayFrameRate,sizeof(SerializedBikeState));
-      }
+    if(m_bRecordReplays) {
+      m_pJustPlayReplay = new Replay;
+      m_pJustPlayReplay->createReplay("Latest.rpl",
+				      m_MotoGame.getLevelSrc()->Id(),m_profile, m_fReplayFrameRate,sizeof(SerializedBikeState));
+    }
       
       try {
-	m_MotoGame.prePlayLevel(pLevelSrc, &m_InputHandler, m_pJustPlayReplay, true);
+	m_MotoGame.prePlayLevel(&m_InputHandler, m_pJustPlayReplay, true);
 	m_MotoGame.setInfos("");
 	
 	/* add the players */
@@ -1964,13 +1940,14 @@ GameApp::GameApp() {
 	Log("Preplay level for %i player(s)", v_nbPlayer);
 
 	/* add at least one player for the camera */
-	m_Renderer.setPlayerToFollow(m_MotoGame.addPlayerBiker(pLevelSrc->PlayerStart(), DD_RIGHT,
+	m_Renderer.setPlayerToFollow(m_MotoGame.addPlayerBiker(m_MotoGame.getLevelSrc()->PlayerStart(),
+							       DD_RIGHT,
 							       &m_theme, m_theme.getPlayerTheme(),
 							       getColorFromPlayerNumber(0),
 							       getUglyColorFromPlayerNumber(0)));
 
 	for(int i=1; i<v_nbPlayer; i++) {
-	  m_MotoGame.addPlayerBiker(pLevelSrc->PlayerStart(), DD_RIGHT,
+	  m_MotoGame.addPlayerBiker(m_MotoGame.getLevelSrc()->PlayerStart(), DD_RIGHT,
 				    &m_theme, m_theme.getPlayerTheme(),
 				    getColorFromPlayerNumber(i),
 				    getUglyColorFromPlayerNumber(i));
@@ -1982,7 +1959,7 @@ GameApp::GameApp() {
 	  std::string v_PlayGhostReplay;
 	  
 	  // add the GhostSearchStrategy ghost
-	  v_PlayGhostReplay = _getGhostReplayPath(pLevelSrc->Id(), m_GhostSearchStrategy);
+	  v_PlayGhostReplay = _getGhostReplayPath(m_MotoGame.getLevelSrc()->Id(), m_GhostSearchStrategy);
 	  if(v_PlayGhostReplay != "") {
 	    try {
 	      switch(m_GhostSearchStrategy) {
@@ -1994,12 +1971,11 @@ GameApp::GameApp() {
 		m_MotoGame.addGhostFromFile(v_PlayGhostReplay, GAMETEXT_GHOST_LOCAL,
 					    &m_theme, m_theme.getGhostTheme());
 		break;
-#if defined(SUPPORT_WEBACCESS) 
 	      case GHOST_STRATEGY_BESTOFROOM:
-		m_MotoGame.addGhostFromFile(v_PlayGhostReplay, m_pWebHighscores->getRoomName(),
+		m_MotoGame.addGhostFromFile(v_PlayGhostReplay,
+					    m_db->webrooms_getName(m_WebHighscoresIdRoom),
 					    &m_theme, m_theme.getGhostTheme());
 		break;
-#endif
 	      }
 	    } catch(Exception &e) {
 	      /* can't add the ghost, anyway */
@@ -2016,23 +1992,38 @@ GameApp::GameApp() {
       }
 
     m_State = GS_PREPLAYING;
+
+    std::string T1 = "--:--:--", T2 = "--:--:--";
+
+    /* get best result */
+    v_result = m_db->readDB("SELECT MIN(finishTime) FROM profile_completedLevels WHERE "
+    			    "id_level=\"" + 
+    			    xmDatabase::protectString(m_MotoGame.getLevelSrc()->Id()) + "\";",
+    			    nrow);
+    v_res = m_db->getResult(v_result, 1, 0, 0);
+    if(v_res != NULL) {
+      T1 = formatTime(atof(v_res));
+    }
+    m_db->read_DB_free(v_result);
     
-    PlayerTimeEntry *pBestTime = m_Profiles.getBestTime(m_PlaySpecificLevel);
-    PlayerTimeEntry *pBestPTime = m_Profiles.getBestPlayerTime(m_pPlayer->PlayerName,m_PlaySpecificLevel);
-    
-    std::string T1 = "--:--:--",T2 = "--:--:--";
-    if(pBestTime != NULL)
-    T1 = formatTime(pBestTime->fFinishTime);
-    if(pBestPTime != NULL)
-    T2 = formatTime(pBestPTime->fFinishTime);
+    /* get best player result */
+    v_result = m_db->readDB("SELECT MIN(finishTime) FROM profile_completedLevels WHERE "
+    			    "id_level=\"" + 
+    			    xmDatabase::protectString(m_MotoGame.getLevelSrc()->Id()) + "\" " + 
+    			    "AND id_profile=\"" + xmDatabase::protectString(m_profile)  + "\";",
+    			    nrow);
+    v_res = m_db->getResult(v_result, 1, 0, 0);
+    if(v_res != NULL) {
+      T2 = formatTime(atof(v_res));
+    }
+    m_db->read_DB_free(v_result);
     
     m_Renderer.setBestTime(T1 + std::string(" / ") + T2);
     m_Renderer.hideReplayHelp();
     
     /* World-record stuff */
-#if defined(SUPPORT_WEBACCESS) 
     _UpdateWorldRecord(m_PlaySpecificLevel);
-#endif
+
     /* Prepare level */
     m_Renderer.prepareForNewLevel();
     prestartAnimation_init();
@@ -2230,61 +2221,9 @@ GameApp::GameApp() {
     m_MotoGame.updateGameMessages();
   }
 
-  int GameApp::getNumberOfFinishedLevelsOfPack(LevelsPack *i_pack) {
-    int n = 0;
-    for(int i=0; i<i_pack->Levels().size(); i++) {
-      if(m_Profiles.isLevelCompleted(m_pPlayer->PlayerName, i_pack->Levels()[i]->Id())) {
-        n++;
-      }
-    }
-    return n;
-  }
-
   void GameApp::_UpdateLevelsLists() {
-    std::string v_levelPack;
-    bool v_isset;
-
-    v_isset = (m_pActiveLevelPack != NULL);
-    if(v_isset) {
-      v_levelPack = m_pActiveLevelPack->Name();
-
-      /* remove reference to levels packs*/
-      m_pActiveLevelPack = NULL;
-    }
-    
-    if(m_pPlayer != NULL) {
-      m_levelsManager.rebuildPacks(
-#if defined(SUPPORT_WEBACCESS)
-				   m_pWebHighscores,
-				   m_pWebLevels,
-#endif
-				   m_bDebugMode,
-				   m_pPlayer->PlayerName, &m_Profiles, m_db);
-    }    
-
-    if(v_isset) {
-      m_pActiveLevelPack = &(m_levelsManager.LevelsPackByName(v_levelPack));
-    }
-
     _UpdateLevelPackList();
-    if(v_isset) {
-      _UpdateLevelPackLevelList();
-    }
     _UpdateLevelLists();
-
-#if defined(SUPPORT_WEBACCESS)
-    /* update new levels tab */
-    m_pPlayNewLevelsList->clear();
-    if(m_pPlayNewLevelsList != NULL) {
-      for(int i=0; i<m_levelsManager.NewLevels().size(); i++) {
-	m_pPlayNewLevelsList->addLevel(m_levelsManager.NewLevels()[i], m_pPlayer, &m_Profiles, m_pWebHighscores, std::string("New: "));
-      }
-
-      for(int i=0; i<m_levelsManager.UpdatedLevels().size(); i++) {
-	m_pPlayNewLevelsList->addLevel(m_levelsManager.UpdatedLevels()[i], m_pPlayer, &m_Profiles, m_pWebHighscores, std::string("Updated: "));
-      }
-    }
-#endif
   }
 
   void GameApp::reloadTheme() {
@@ -2398,7 +2337,7 @@ GameApp::GameApp() {
     v_percentage << i_percentage;
     v_percentage << "%";
     
-    if(m_loadingScreen != NULL) {
+    if(m_reloadingLevelsUser == false) {
       _UpdateLoadingScreen((1.0f/9.0f) * 4, m_loadingScreen, std::string(GAMETEXT_INDEX_CREATION) + std::string("\n") + v_percentage.str() + std::string(", ") + i_level);
     } else {
       _SimpleMessage(GAMETEXT_RELOADINGLEVELS + std::string("\n") + v_percentage.str(), &m_InfoMsgBoxRect);
@@ -2430,7 +2369,7 @@ GameApp::GameApp() {
     int   v_nbCompleted     = 0;
     int   v_nbRestarted     = 0;
     int   v_nbDiffLevels    = 0;
-    std::string v_id_level;
+    std::string v_level_name;
   
     p = new UIWindow(pParent, x, y, "", nWidth, nHeight);
   
@@ -2439,7 +2378,7 @@ GameApp::GameApp() {
 			    "SUM(b.nbRestarted), count(b.id_level) "
 			    "FROM stats_profiles AS a INNER JOIN stats_profiles_levels AS b "
 			    "ON a.id_profile=b.id_profile "
-			    "WHERE a.id_profile=\"" + PlayerName + "\" "
+			    "WHERE a.id_profile=\"" + xmDatabase::protectString(PlayerName) + "\" "
 			    "GROUP BY a.id_profile;",
 			    nrow);
 
@@ -2484,10 +2423,10 @@ GameApp::GameApp() {
     pText->setTextSolidColor(MAKE_COLOR(255,255,0,255));
     pText->setFont(pFont);      
 
-    v_result = m_db->readDB("SELECT id_level, nbPlayed, nbDied, "
-			    "nbCompleted, nbRestarted, playedTime "
-			    "FROM stats_profiles_levels "
-			    "WHERE id_profile=\"" + PlayerName + "\" "
+    v_result = m_db->readDB("SELECT a.name, b.nbPlayed, b.nbDied, "
+			    "b.nbCompleted, b.nbRestarted, b.playedTime "
+			    "FROM levels AS a INNER JOIN stats_profiles_levels AS b ON a.id_level=b.id_level "
+			    "WHERE id_profile=\"" + xmDatabase::protectString(PlayerName) + "\" "
 			    "ORDER BY nbPlayed DESC LIMIT 10;",
 			    nrow);
 
@@ -2495,7 +2434,7 @@ GameApp::GameApp() {
     for(int i=0; i<nrow; i++) {
       if(cy + 45 > nHeight) break; /* out of window */
 
-      v_id_level        =      m_db->getResult(v_result, 6, i, 0);
+      v_level_name      =      m_db->getResult(v_result, 6, i, 0);
       v_totalPlayedTime = atof(m_db->getResult(v_result, 6, i, 5));
       v_nbDied          = atoi(m_db->getResult(v_result, 6, i, 2));
       v_nbPlayed        = atoi(m_db->getResult(v_result, 6, i, 1));
@@ -2503,7 +2442,7 @@ GameApp::GameApp() {
       v_nbRestarted     = atoi(m_db->getResult(v_result, 6, i, 4));
     
       sprintf(cBuf,("[%s] %s:\n   " + std::string(GAMETEXT_XMOTOLEVELSTATS)).c_str(),
-	      App::formatTime(v_totalPlayedTime).c_str(), v_id_level.c_str(),
+	      App::formatTime(v_totalPlayedTime).c_str(), v_level_name.c_str(),
 	      v_nbPlayed, v_nbDied, v_nbCompleted, v_nbRestarted);
     
       pText = new UIStatic(p,0,cy,cBuf,nWidth,45);
@@ -2522,5 +2461,47 @@ GameApp::GameApp() {
     pUpdateButton->setType(UI_BUTTON_TYPE_SMALL);
     pUpdateButton->setID("UPDATE_BUTTON");
     return p;
+  }
+
+  void GameApp::initReplaysFromDir() {
+    ReplayInfo* rplInfos;
+    std::vector<std::string> ReplayFiles;
+    ReplayFiles = FS::findPhysFiles("Replays/*.rpl");
+
+    m_db->replays_add_begin();
+
+    for(unsigned int i=0; i<ReplayFiles.size(); i++) {
+      try {
+	if(FS::getFileBaseName(ReplayFiles[i]) == "Latest") {
+	  continue;
+	}
+	addReplay(ReplayFiles[i]);
+
+      } catch(Exception &e) {
+	// ok, forget this replay
+      }
+    }
+    m_db->replays_add_end();
+  }
+
+  void GameApp::addReplay(const std::string& i_file) {
+    ReplayInfo* rplInfos;
+    
+    rplInfos = Replay::getReplayInfos(FS::getFileBaseName(i_file));
+    if(rplInfos == NULL) {
+      throw Exception("Unable to extract data from replay file");
+    }
+
+    try {
+      m_db->replays_add(rplInfos->Level,
+			rplInfos->Name,
+			rplInfos->Player,
+			rplInfos->IsFinished,
+			rplInfos->fFinishTime);
+
+    } catch(Exception &e2) {
+      delete rplInfos;
+      throw e2;
+    }
   }
 }

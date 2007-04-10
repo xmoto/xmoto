@@ -56,12 +56,10 @@ namespace vapp {
     if(!m_bRecordReplays) m_pFinishMenuButtons[1]->enableWindow(false);
     i++;
 
-#if defined(SUPPORT_WEBACCESS)
     m_pFinishMenuButtons[i] = new UIButton(m_pFinishMenu,0,0,GAMETEXT_UPLOAD_HIGHSCORE,207,57);
     m_pFinishMenuButtons[i]->setContextHelp(CONTEXTHELP_UPLOAD_HIGHSCORE);
     m_pFinishMenuButtons[i]->enableWindow(false);
     i++;
-#endif
    
     m_pFinishMenuButtons[i] = new UIButton(m_pFinishMenu,0,0,GAMETEXT_ABORT,207,57);
     m_pFinishMenuButtons[i]->setContextHelp(CONTEXTHELP_BACK_TO_MAIN_MENU);
@@ -77,11 +75,7 @@ namespace vapp {
     pFinishText->setFont(m_Renderer.getMediumFont());
    
     for(int i=0;i<m_nNumFinishMenuButtons;i++) {
-#if defined(SUPPORT_WEBACCESS)
       m_pFinishMenuButtons[i]->setPosition(200-207/2,m_pFinishMenu->getPosition().nHeight/2 - (m_nNumFinishMenuButtons*57)/2 + i*49 + 25,207,57);
-#else
-      m_pFinishMenuButtons[i]->setPosition(200-207/2,m_pFinishMenu->getPosition().nHeight/2 - (m_nNumFinishMenuButtons*57)/2 + i*57,207,57);
-#endif
       m_pFinishMenuButtons[i]->setFont(m_Renderer.getSmallFont());
     }
 
@@ -175,7 +169,6 @@ namespace vapp {
 
     m_nNumMainMenuButtons = 5;
     
-#if defined(SUPPORT_WEBACCESS)        
     /* level info frame */
     m_pLevelInfoFrame = new UIWindow(m_pMainMenu,0,drawLib->getDispHeight()/2 - (m_nNumMainMenuButtons*57)/2 + m_nNumMainMenuButtons*57,"",220,100);
     m_pLevelInfoFrame->showWindow(false);
@@ -186,14 +179,12 @@ namespace vapp {
     m_pLevelInfoViewReplayButton = new UIButton(m_pLevelInfoFrame,22,40, GAMETEXT_VIEWTHEHIGHSCORE,176,40);
     m_pLevelInfoViewReplayButton->setFont(m_Renderer.getSmallFont());
     m_pLevelInfoViewReplayButton->setContextHelp(CONTEXTHELP_VIEWTHEHIGHSCORE);
-#endif
 
-//    UIStatic *pPlayerText = new UIStatic(m_pMainMenu,300,85,"",getDispWidth()-300-120,50);
     UIStatic *pPlayerText = new UIStatic(m_pMainMenu,300,(drawLib->getDispHeight()*85)/600,"",drawLib->getDispWidth()-300-120,50);
     pPlayerText->setFont(m_Renderer.getMediumFont());            
     pPlayerText->setHAlign(UI_ALIGN_RIGHT);
     pPlayerText->setID("PLAYERTAG");
-    if(m_pPlayer != NULL) pPlayerText->setCaption(std::string(GAMETEXT_CURPLAYER) + ": " + m_pPlayer->PlayerName);
+    if(m_profile != "") pPlayerText->setCaption(std::string(GAMETEXT_CURPLAYER) + ": " + m_profile);
     
     /* new levels ? */
     UIStatic *pNewLevelText = new UIStatic(m_pMainMenu,5,-90,"",200,200);
@@ -201,7 +192,6 @@ namespace vapp {
     pNewLevelText->setHAlign(UI_ALIGN_LEFT);
     pNewLevelText->setID("NEWLEVELAVAILBLE");
     
-//    UIButton *pChangePlayerButton = new UIButton(m_pMainMenu,getDispWidth()-115,80,GAMETEXT_CHANGE,115,57);
     UIButton *pChangePlayerButton = new UIButton(m_pMainMenu,drawLib->getDispWidth()-115,(drawLib->getDispHeight()*80)/600,GAMETEXT_CHANGE,115,57);
     pChangePlayerButton->setType(UI_BUTTON_TYPE_SMALL);
     pChangePlayerButton->setFont(m_Renderer.getSmallFont());
@@ -273,7 +263,7 @@ namespace vapp {
     pDeleteButton->setType(UI_BUTTON_TYPE_SMALL);
     pDeleteButton->setID("REPLAY_DELETE_BUTTON");
     pDeleteButton->setContextHelp(CONTEXTHELP_DELETE_REPLAY);
-#if defined(SUPPORT_WEBACCESS)
+
     /* upload button */
     UIButton *pUploadHighscoreButton = new UIButton(m_pReplaysWindow,199,m_pReplaysWindow->getPosition().nHeight-68,GAMETEXT_UPLOAD_HIGHSCORE,186,57);
     pUploadHighscoreButton->setFont(m_Renderer.getSmallFont());
@@ -281,7 +271,7 @@ namespace vapp {
     pUploadHighscoreButton->setID("REPLAY_UPLOADHIGHSCORE_BUTTON");
     pUploadHighscoreButton->enableWindow(false);
     pUploadHighscoreButton->setContextHelp(CONTEXTHELP_UPLOAD_HIGHSCORE);
-#endif
+
     /* filter */
     UIButton *pListAllButton = new UIButton(m_pReplaysWindow,m_pReplaysWindow->getPosition().nWidth-105,m_pReplaysWindow->getPosition().nHeight-68,GAMETEXT_LISTALL,115,57);
     pListAllButton->setFont(m_Renderer.getSmallFont());
@@ -385,7 +375,6 @@ namespace vapp {
     _UpdateThemesLists();
     pThemeList->setContextHelp(CONTEXTHELP_THEMES);
 
-#if defined(SUPPORT_WEBACCESS)
     UIButton *pUpdateThemesButton = new UIButton(pGeneralOptionsTab,
 						 pGeneralOptionsTab->getPosition().nWidth -200 -200,
 						 pGeneralOptionsTab->getPosition().nHeight - 95,
@@ -409,7 +398,6 @@ namespace vapp {
     pGetSelectedTheme->enableWindow(true);
     pGetSelectedTheme->setFont(m_Renderer.getSmallFont());
     pGetSelectedTheme->setContextHelp(CONTEXTHELP_GETSELECTEDTHEME);
-#endif
 
     UIWindow *pVideoOptionsTab = new UIWindow(pOptionsTabs,20,40,GAMETEXT_VIDEO,pOptionsTabs->getPosition().nWidth-40,pOptionsTabs->getPosition().nHeight);
     pVideoOptionsTab->enableWindow(true);
@@ -642,7 +630,6 @@ namespace vapp {
   pKeyCList->setPosition(5,5,pControlsOptionsTab->getPosition().nWidth-10,238);
 #endif
 
-#if defined(SUPPORT_WEBACCESS)
     UIWindow *pWWWOptionsTab = new UIWindow(pOptionsTabs,0,26,GAMETEXT_WWWTAB,pOptionsTabs->getPosition().nWidth,pOptionsTabs->getPosition().nHeight);
     pWWWOptionsTab->enableWindow(true);
     pWWWOptionsTab->showWindow(false);
@@ -763,8 +750,6 @@ namespace vapp {
     pUpdateRoomsButton->setFont(m_Renderer.getSmallFont());
     pUpdateRoomsButton->setContextHelp(CONTEXTHELP_UPDATEROOMSLIST);
 
-#endif
-
     UIWindow *pGhostOptionsTab = new UIWindow(pOptionsTabs,20,40,GAMETEXT_GHOSTTAB,pOptionsTabs->getPosition().nWidth-40,pOptionsTabs->getPosition().nHeight);
     pGhostOptionsTab->enableWindow(true);
     pGhostOptionsTab->showWindow(false);
@@ -784,9 +769,7 @@ namespace vapp {
     pGhostStrategiesList->addEntry(GAMETEXT_GHOST_STRATEGY_MYBEST, GhostSearchStrategies + 0);
     pGhostStrategiesList->addEntry(GAMETEXT_GHOST_STRATEGY_THEBEST, GhostSearchStrategies + 1);
 
-#if defined(SUPPORT_WEBACCESS)
     pGhostStrategiesList->addEntry(GAMETEXT_GHOST_STRATEGY_BESTOFROOM, GhostSearchStrategies + 2);
-#endif
 
     pGhostStrategiesList->setContextHelp(CONTEXTHELP_GHOST_STRATEGIES);
 
@@ -881,7 +864,6 @@ namespace vapp {
     m_pAllLevelsList->setEnterButton( pGoButton );
 
     /* new levels tab */
-#if defined(SUPPORT_WEBACCESS)
     UIWindow *pNewLevelsPackTab = new UIWindow(m_pLevelPackTabs,20,40,GAMETEXT_NEWLEVELS,m_pLevelPackTabs->getPosition().nWidth-40,m_pLevelPackTabs->getPosition().nHeight);
     pNewLevelsPackTab->enableWindow(true);
     pNewLevelsPackTab->showWindow(false);
@@ -911,7 +893,6 @@ namespace vapp {
     m_pPlayNewLevelsList->setFont(m_Renderer.getSmallFont());
     m_pPlayNewLevelsList->setSort(true);
     m_pPlayNewLevelsList->setEnterButton( pNewLevelsGoButton );
-#endif
 
     // multi tab
     UIWindow *pMultiOptionsTab = new UIWindow(m_pLevelPackTabs, 20, 40, GAMETEXT_MULTI,
@@ -968,7 +949,6 @@ namespace vapp {
   void GameApp::_InitMenus_Others(void) {
     UIStatic *pSomeText;
 
-#if defined(SUPPORT_WEBACCESS)
     /* Initialize internet connection configurator */
     m_pWebConfEditor = new UIFrame(m_Renderer.getGUI(),drawLib->getDispWidth()/2-206,drawLib->getDispHeight()/2-385/2,"",412,425); 
     m_pWebConfEditor->setStyle(UI_FRAMESTYLE_TRANS);           
@@ -1034,9 +1014,6 @@ namespace vapp {
     pProxyServerEdit->setID("SERVEREDIT");
     pProxyServerEdit->setContextHelp(CONTEXTHELP_PROXYSERVER);
 
-#define CONTEXTHELP_PROXYLOGIN "abc"
-#define CONTEXTHELP_PROXYPASSWORD "abc"
-
     pSomeText = new UIStatic(pSubFrame,10,55,std::string(GAMETEXT_PORT) + ":",120,25);
     pSomeText->setFont(m_Renderer.getSmallFont());    
     pSomeText->setHAlign(UI_ALIGN_RIGHT);
@@ -1060,7 +1037,6 @@ namespace vapp {
     pProxyPasswordEdit->setFont(m_Renderer.getSmallFont());
     pProxyPasswordEdit->setID("PASSWORDEDIT");
     pProxyPasswordEdit->setContextHelp(CONTEXTHELP_PROXYPASSWORD);
-#endif
 
     /* Initialize profile editor */
     m_pProfileEditor = new UIFrame(m_Renderer.getGUI(),drawLib->getDispWidth()/2-350,drawLib->getDispHeight()/2-250,"",700,500); 
@@ -1080,10 +1056,6 @@ namespace vapp {
     pProfNewButton->setFont(m_Renderer.getSmallFont());
     pProfNewButton->setID("NEWPROFILE_BUTTON");
     pProfNewButton->setContextHelp(CONTEXTHELP_CREATE_PLAYER_PROFILE);
-    UIButton *pProfCancelButton = new UIButton(m_pProfileEditor,450,164,GAMETEXT_CLOSE,207,57);
-    pProfCancelButton->setFont(m_Renderer.getSmallFont());
-    pProfCancelButton->setID("CANCEL_BUTTON");
-    pProfCancelButton->setContextHelp(CONTEXTHELP_CLOSE_PROFILE_EDITOR);
     UIButton *pProfDeleteButton = new UIButton(m_pProfileEditor,450,423,GAMETEXT_DELETEPROFILE,207,57);
     pProfDeleteButton->setFont(m_Renderer.getSmallFont());
     pProfDeleteButton->setID("DELETEPROFILE_BUTTON");
@@ -1140,7 +1112,6 @@ namespace vapp {
     pLevelPackCancel->setID("LEVELPACK_CANCEL_BUTTON");
     pLevelPackCancel->setContextHelp(CONTEXTHELP_CLOSE_LEVEL_PACK);
 
-#if defined(SUPPORT_WEBACCESS)        
     /* level info frame */
     m_pPackLevelInfoFrame = new UIWindow(m_pLevelPackViewer,419,400,"",275,100);
     m_pPackLevelInfoFrame->showWindow(false);
@@ -1152,7 +1123,6 @@ namespace vapp {
     m_pPackLevelInfoViewReplayButton = new UIButton(m_pPackLevelInfoFrame,50,40, GAMETEXT_VIEWTHEHIGHSCORE,175,40);
     m_pPackLevelInfoViewReplayButton->setFont(m_Renderer.getSmallFont());
     m_pPackLevelInfoViewReplayButton->setContextHelp(CONTEXTHELP_VIEWTHEHIGHSCORE);
-#endif
 
     /* Initialize level info viewer */
     m_pLevelInfoViewer = new UIFrame(m_Renderer.getGUI(),drawLib->getDispWidth()/2-350,drawLib->getDispHeight()/2-250,"",700,500); 
@@ -1286,11 +1256,7 @@ namespace vapp {
     pSomeText = new UIStatic(m_pStatsWindow,40,0,GAMETEXT_STATISTICS,m_pStatsWindow->getPosition().nWidth-80,36);
     pSomeText->setFont(m_Renderer.getMediumFont());
     
-    if(m_pPlayer != NULL)
-      m_pStatsReport = stats_generateReport(m_pPlayer->PlayerName,m_pStatsWindow,30,36,m_pStatsWindow->getPosition().nWidth-45,m_pStatsWindow->getPosition().nHeight-36,m_Renderer.getSmallFont());
-    else
-      m_pStatsReport = stats_generateReport("",m_pStatsWindow,30,36,m_pStatsWindow->getPosition().nWidth-45,m_pStatsWindow->getPosition().nHeight-36,m_Renderer.getSmallFont());
-    
+    m_pStatsReport = stats_generateReport(m_profile,m_pStatsWindow,30,36,m_pStatsWindow->getPosition().nWidth-45,m_pStatsWindow->getPosition().nHeight-36,m_Renderer.getSmallFont());
   }
 
   /*===========================================================================
@@ -1323,6 +1289,11 @@ namespace vapp {
   Add levels to list (level pack)
   ===========================================================================*/  
   void GameApp::_CreateLevelPackLevelList(void) {
+    char **v_result;
+    int nrow;
+    float v_playerHighscore;
+    float v_roomHighscore;
+
     if(m_pActiveLevelPack == NULL) {
       return;
     } 
@@ -1353,23 +1324,29 @@ namespace vapp {
       pList->hideRoomBestTime();
     }
 
-    if(m_pActiveLevelPack->Sorted()) {
-      pList->setSort(true, (int(*)(void*, void*))Level::compareLevel);
-    } else {
-      pList->setSort(true, (int(*)(void*, void*))Level::compareLevelRandom);
-    }
+    v_result = m_db->readDB(m_pActiveLevelPack->getLevelsWithHighscoresQuery(m_profile,
+									     m_WebHighscoresIdRoom),
+			    nrow);
+    for(unsigned int i=0; i<nrow; i++) {
+      if(m_db->getResult(v_result, 4, i, 2) == NULL) {
+	v_playerHighscore = -1.0;
+      } else {
+	v_playerHighscore = atof(m_db->getResult(v_result, 4, i, 2));
+      }
 
-    /* Add levels */
-    for(int i=0;i<m_pActiveLevelPack->Levels().size();i++) {
-       pList->addLevel(m_pActiveLevelPack->Levels()[i],
-		       m_pPlayer,
-		       &m_Profiles
-#if defined(SUPPORT_WEBACCESS)
-		       ,
-		       m_pWebHighscores
-#endif
-		       );
+      if(m_db->getResult(v_result, 4, i, 3) == NULL) {
+	v_roomHighscore = -1.0;
+      } else {
+	v_roomHighscore = atof(m_db->getResult(v_result, 4, i, 3));
+      }
+
+      pList->addLevel(m_db->getResult(v_result, 4, i, 0),
+		      m_db->getResult(v_result, 4, i, 1),
+		      v_playerHighscore,
+		      v_roomHighscore
+		      );
     }
+    m_db->read_DB_free(v_result);
 
     /* reselect the previous level */
     if(v_selected_levelName != "") {
@@ -1388,48 +1365,82 @@ namespace vapp {
   Update level info viewer best times list
   ===========================================================================*/  
   void GameApp::_UpdateLevelInfoViewerBestTimes(const std::string &LevelID) {
+    char **v_result;
+    int nrow;
+    float v_finishTime;
+    std::string v_profile;
+
     UIList *pList = (UIList *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_BESTTIMES_TAB:LEVEL_VIEWER_BESTTIMES_LIST");
     UIButton *pLV_BestTimes_Personal = (UIButton *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_BESTTIMES_TAB:LEVEL_VIEWER_BESTTIMES_PERSONAL");
     UIButton *pLV_BestTimes_All = (UIButton *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_BESTTIMES_TAB:LEVEL_VIEWER_BESTTIMES_ALL");
     UIStatic *pLV_BestTimes_WorldRecord = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_BESTTIMES_TAB:LEVEL_VIEWER_BESTTIMES_WORLDRECORD");
 
-    if(pList != NULL && pLV_BestTimes_All != NULL && pLV_BestTimes_Personal != NULL && m_pPlayer != NULL &&
+    if(pList != NULL && pLV_BestTimes_All != NULL && pLV_BestTimes_Personal != NULL && m_profile != "" &&
        pLV_BestTimes_WorldRecord != NULL) {
-      std::vector<PlayerTimeEntry *> Top10;
-      
-      /* Good. Personal times or all times? */
-      if(pLV_BestTimes_All->getChecked()) {
-        Top10 = m_Profiles.createLevelTop10(LevelID);
-      }
-      else if(pLV_BestTimes_Personal->getChecked()) {
-        Top10 = m_Profiles.createPlayerOnlyLevelTop10(m_pPlayer->PlayerName,LevelID);
-      }
-      
+
       /* Create list */
       pList->clear();
-      for(int i=0;i<Top10.size();i++) {
-        UIListEntry *pEntry = pList->addEntry(formatTime(Top10[i]->fFinishTime));
-        pEntry->Text.push_back(Top10[i]->PlayerName);
-      }            
+      if(pLV_BestTimes_All->getChecked()) {
+	v_result = m_db->readDB("SELECT finishTime, id_profile FROM profile_completedLevels "
+				"WHERE id_level=\""   + xmDatabase::protectString(LevelID)    + "\" "
+				"ORDER BY finishTime LIMIT 10;",
+				nrow);
+	for(unsigned int i=0; i<nrow; i++) {
+	  v_finishTime  = atof(m_db->getResult(v_result, 2, i, 0));
+	  v_profile     =      m_db->getResult(v_result, 2, i, 1);
+
+	  UIListEntry *pEntry = pList->addEntry(formatTime(v_finishTime));
+	  pEntry->Text.push_back(v_profile);
+	}
+	m_db->read_DB_free(v_result);
+      } else {      
+	v_result = m_db->readDB("SELECT finishTime FROM profile_completedLevels "
+				"WHERE id_profile=\"" + xmDatabase::protectString(m_profile)  + "\" "
+				"AND   id_level=\""   + xmDatabase::protectString(LevelID)    + "\" "
+				"ORDER BY finishTime LIMIT 10;",
+				nrow);
+	for(unsigned int i=0; i<nrow; i++) {
+	  v_finishTime  = atof(m_db->getResult(v_result, 1, i, 0));
+	  UIListEntry *pEntry = pList->addEntry(formatTime(v_finishTime));
+	  pEntry->Text.push_back(m_profile);
+	}
+	m_db->read_DB_free(v_result);
+      }
+
       
       /* Get record */
-      #if defined(SUPPORT_WEBACCESS)
-      if(m_bEnableWebHighscores && m_pWebHighscores!=NULL) {
-        WebHighscore *pWebHS = m_pWebHighscores->getHighscoreFromLevel(LevelID);
-        if(pWebHS != NULL) {
-          char cTime[512];
-          int n1=0,n2=0,n3=0;
-          
-          sscanf(pWebHS->getTime().c_str(),"%d:%d:%d",&n1,&n2,&n3);
-          sprintf(cTime, std::string("%s: %02d:%02d:%02d (" + std::string(GAMETEXT_BY) + " %s)").c_str(), m_pWebHighscores->getRoomName().c_str(), n1,n2,n3,pWebHS->getPlayerName().c_str());
-          pLV_BestTimes_WorldRecord->setCaption(cTime);
-        }        
-        else {
-          pLV_BestTimes_WorldRecord->setCaption(m_pWebHighscores->getRoomName() + ": " + GAMETEXT_WORLDRECORDNA);
+      if(m_bEnableWebHighscores) {
+	char **v_result;
+	int nrow;
+	std::string v_roomName;
+	std::string v_id_profile;
+	float       v_finishTime;
+
+	v_result = m_db->readDB("SELECT a.name, b.id_profile, b.finishTime "
+				"FROM webrooms AS a LEFT OUTER JOIN webhighscores AS b "
+				"ON (a.id_room = b.id_room "
+				"AND b.id_level=\"" + xmDatabase::protectString(LevelID) + "\") "
+				"WHERE a.id_room=" + m_WebHighscoresIdRoom + ";",
+				nrow);
+	if(nrow != 1) {
+	  pLV_BestTimes_WorldRecord->setCaption("");
+	  return;
+	}
+	v_roomName = m_db->getResult(v_result, 3, 0, 0);
+	if(m_db->getResult(v_result, 3, 0, 1) != NULL) {
+	  v_id_profile = m_db->getResult(v_result, 3, 0, 1);
+	  v_finishTime = atof(m_db->getResult(v_result, 3, 0, 2));
+	}
+	m_db->read_DB_free(v_result);
+
+	if(v_id_profile != "") {
+          pLV_BestTimes_WorldRecord->setCaption(v_roomName + ": " + vapp::App::formatTime(v_finishTime) +
+						" (" + GAMETEXT_BY + " " + v_id_profile + ")");
+	} else {
+	  pLV_BestTimes_WorldRecord->setCaption(v_roomName + ": " + GAMETEXT_WORLDRECORDNA);
 	}
       }
       else
-      #endif
         pLV_BestTimes_WorldRecord->setCaption("");
     }
   }
@@ -1445,32 +1456,41 @@ namespace vapp {
     UIButton *pLV_Replays_All = (UIButton *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_REPLAYS_TAB:LEVEL_VIEWER_REPLAYS_ALL");
     UIButton *pLV_Replays_Show = (UIButton *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_REPLAYS_TAB:LEVEL_VIEWER_REPLAYS_SHOW");
 
-    if(pList != NULL && pLV_BestTimes_All != NULL && pLV_BestTimes_Personal != NULL && m_pPlayer != NULL &&
+    if(pList != NULL && pLV_BestTimes_All != NULL && pLV_BestTimes_Personal != NULL && m_profile != "" &&
        pLV_Replays_Show != NULL) {
-      std::vector<ReplayInfo *> *Replays;
+      char **v_result;
+      int nrow;
 
       /* Personal or all replays? */
+      std::string v_sql;
+
       if(pLV_Replays_All->getChecked()) {
-	Replays = m_ReplayList.findReplays("",LevelID);
+	v_sql = "SELECT name, id_profile, isFinished, finishTime FROM replays "
+	  "WHERE id_level=\""   + xmDatabase::protectString(LevelID) + "\";";
       }
       else if(pLV_Replays_Personal->getChecked()) {
-	Replays = m_ReplayList.findReplays(m_pPlayer->PlayerName,LevelID);
+	v_sql = "SELECT name, id_profile, isFinished, finishTime FROM replays "
+	  "WHERE id_level=\""   + xmDatabase::protectString(LevelID) + "\" ";
+	  "AND   id_profile=\"" + xmDatabase::protectString(m_profile) + "\";";
       }
       
       /* Create list */
       pList->clear();
-      for(int i=0;i<Replays->size();i++) {
-	UIListEntry *pEntry = pList->addEntry((*Replays)[i]->Name);
-	pEntry->Text.push_back((*Replays)[i]->Player);
+
+      v_result = m_db->readDB(v_sql, nrow);
+      for(unsigned int i=0; i<nrow; i++) {
+	UIListEntry *pEntry = pList->addEntry(m_db->getResult(v_result, 4, i, 0));
+	pEntry->Text.push_back(m_db->getResult(v_result, 4, i, 1));
 	
-	if((*Replays)[i]->fFinishTime < 0)
+	if(m_db->getResult(v_result, 4, i, 2) == "0") {
 	  pEntry->Text.push_back("("+ std::string(GAMETEXT_NOTFINISHED) + ")");
-	else
-	  pEntry->Text.push_back(formatTime((*Replays)[i]->fFinishTime));
+	} else {
+	  pEntry->Text.push_back(formatTime(atof(m_db->getResult(v_result, 4, i, 3))));
+	}
       }
+      m_db->read_DB_free(v_result);
       
       /* Clean up */
-      delete Replays;
       pLV_Replays_Personal->enableWindow(true);
       pLV_Replays_All->enableWindow(true);
       pLV_Replays_Show->enableWindow(true);
@@ -1525,22 +1545,25 @@ namespace vapp {
     
     for(int i=0;i<m_levelsManager.LevelsPacks().size();i++) {
       /* don't show empty packs */
-      if(m_levelsManager.LevelsPacks()[i]->Levels().size() != 0) {
-				p_packName = m_levelsManager.LevelsPacks()[i]->Name();
+      int n_levels = m_levelsManager.LevelsPacks()[i]->getNumberOfLevels(m_db);
 
-				/* the unpackaged pack exists only in debug mode */
-				if(p_packName != "" || m_bDebugMode) {
-					if(p_packName == "") {
-						p_packName = GAMETEXT_UNPACKED_LEVELS_PACK;
-					}
-					
-					pTree->addPack(m_levelsManager.LevelsPacks()[i],
-						       m_levelsManager.LevelsPacks()[i]->Group(),
-						       getNumberOfFinishedLevelsOfPack(m_levelsManager.LevelsPacks()[i]),
-						       m_levelsManager.LevelsPacks()[i]->Levels().size());
+      if(n_levels != 0) {
+	p_packName = m_levelsManager.LevelsPacks()[i]->Name();
 
-				}
-			}
+	/* the unpackaged pack exists only in debug mode */
+	if(p_packName != "" || m_bDebugMode) {
+	  if(p_packName == "") {
+	    p_packName = GAMETEXT_UNPACKED_LEVELS_PACK;
+	  }
+	  
+	  pTree->addPack(m_levelsManager.LevelsPacks()[i],
+			 m_levelsManager.LevelsPacks()[i]->Group(),
+			 m_levelsManager.LevelsPacks()[i]->getNumberOfFinishedLevels(m_db, m_profile),
+			 n_levels
+			 );
+	  
+	}
+      }
     }
 
     /* reselect the previous pack */
@@ -1557,8 +1580,7 @@ namespace vapp {
     for(int i=0;i<m_nNumPauseMenuButtons;i++) {
       if(m_pPauseMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
         /* Uhm... is it likely that there's a next level? */
-        Level *pLS = &(m_levelsManager.LevelById(m_PlaySpecificLevel));
-	m_pPauseMenuButtons[i]->enableWindow(_IsThereANextLevel(pLS));
+	m_pPauseMenuButtons[i]->enableWindow(_IsThereANextLevel(m_PlaySpecificLevel));
       }
 
       if(m_pPauseMenuButtons[i]->isClicked()) {
@@ -1570,7 +1592,7 @@ namespace vapp {
         else if(m_pPauseMenuButtons[i]->getCaption() == GAMETEXT_ABORT) {
           m_pPauseMenu->showWindow(false);
 	  if(m_MotoGame.Players().size() == 1) {
-	    m_db->stats_abortedLevel(m_pPlayer->PlayerName,
+	    m_db->stats_abortedLevel(m_profile,
 				     m_MotoGame.getLevelSrc()->Id(),
 				     m_MotoGame.getTime());
 	  }
@@ -1588,12 +1610,11 @@ namespace vapp {
 	  _RestartLevel();
         }
         else if(m_pPauseMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
-	  Level *pLS = &(m_levelsManager.LevelById(m_PlaySpecificLevel));
-	  std::string NextLevel = _DetermineNextLevel(pLS);
+	  std::string NextLevel = _DetermineNextLevel(m_PlaySpecificLevel);
 	  if(NextLevel != "") {        
 	    m_pPauseMenu->showWindow(false);              
 	    if(m_MotoGame.Players().size() == 1) {
-	      m_db->stats_abortedLevel(m_pPlayer->PlayerName,
+	      m_db->stats_abortedLevel(m_profile,
 				       m_MotoGame.getLevelSrc()->Id(),
 				       m_MotoGame.getTime());
 	    }
@@ -1653,8 +1674,7 @@ namespace vapp {
 
       if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
         /* Uhm... is it likely that there's a next level? */
-	Level *pLS = &(m_levelsManager.LevelById(m_PlaySpecificLevel));
-	m_pFinishMenuButtons[i]->enableWindow(_IsThereANextLevel(pLS));
+	m_pFinishMenuButtons[i]->enableWindow(_IsThereANextLevel(m_PlaySpecificLevel));
       }
       
       if(m_pFinishMenuButtons[i]->isClicked()) {
@@ -1664,8 +1684,7 @@ namespace vapp {
                                                         (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
         }
         else if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
-	  Level *pLS = &(m_levelsManager.LevelById(m_PlaySpecificLevel));
-	  std::string NextLevel = _DetermineNextLevel(pLS);
+	  std::string NextLevel = _DetermineNextLevel(m_PlaySpecificLevel);
 	  if(NextLevel != "") {        
 	    m_pFinishMenu->showWindow(false);
 	    m_Renderer.hideMsgNewHighscore();
@@ -1692,11 +1711,9 @@ namespace vapp {
             }          
           }
         }
-#if defined(SUPPORT_WEBACCESS) 
         else if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_UPLOAD_HIGHSCORE) {
 	  _UploadHighscore("Latest");
         }	
-#endif
         else if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_TRYAGAIN) {
           Level *pCurLevel = m_MotoGame.getLevelSrc();
           m_PlaySpecificLevel = pCurLevel->Id();
@@ -1804,24 +1821,24 @@ namespace vapp {
     
     if(pPlayButton!=NULL && pPlayButton->isClicked()) {
       pPlayButton->setClicked(false);
-
-	Level *pLevelSrc = pList->getSelectedLevel();
-	if(pLevelSrc != NULL) {
-	  m_pLevelPackViewer->showWindow(false);
-	  m_pMainMenu->showWindow(false);      
-	  m_PlaySpecificLevel = pLevelSrc->Id();        
-	  m_StateAfterPlaying = GS_LEVELPACK_VIEWER;
-	  m_currentPlayingList = pList;
-	  setState(GS_PREPLAYING);   
-	}
+      std::string i_level = pList->getSelectedLevel();
+      if(i_level != "") {
+	m_pLevelPackViewer->showWindow(false);
+	m_pMainMenu->showWindow(false);      
+	m_PlaySpecificLevel = i_level;
+	m_StateAfterPlaying = GS_LEVELPACK_VIEWER;
+	m_currentPlayingList = pList;
+	setState(GS_PREPLAYING);   
+      }
     }
 
     if(pLevelAddToFavoriteButton!=NULL && pLevelAddToFavoriteButton->isClicked()) {
       pLevelAddToFavoriteButton->setClicked(false);
-      
-      Level *pLevelSrc = pList->getSelectedLevel();
-      if(pLevelSrc != NULL) {
-	m_levelsManager.addToFavorite(pLevelSrc);
+
+      std::string v_id_level = pList->getSelectedLevel();
+     
+      if(v_id_level != "") {
+	m_levelsManager.addToFavorite(m_db, m_profile, v_id_level);
 	_UpdateLevelPackList();
 	_UpdateLevelLists();
       }
@@ -1837,19 +1854,17 @@ namespace vapp {
     /* any list clicked ? */
     if(pList->isChanged()) {
       pList->setChanged(false);
-      Level *pLevelSrc = pList->getSelectedLevel();
-      if(pLevelSrc != NULL) {
-#if defined(SUPPORT_WEBACCESS)
-	setLevelInfoFrameBestPlayer(pLevelSrc->Id(),
+      std::string v_id_level = pList->getSelectedLevel();
+      if(v_id_level != "") {
+	setLevelInfoFrameBestPlayer(v_id_level,
 				    m_pPackLevelInfoFrame,
 				    m_pPackLevelInfoViewReplayButton,
 				    m_pPackBestPlayerText
 				    );
-#endif
+
       }
     }
 
-#if defined(SUPPORT_WEBACCESS)
     /* view highscore button clicked */
     if(m_pPackLevelInfoViewReplayButton->isClicked()) {
       m_pPackLevelInfoViewReplayButton->setClicked(false);
@@ -1859,19 +1874,42 @@ namespace vapp {
       m_StateAfterPlaying = GS_LEVELPACK_VIEWER;
       setState(GS_REPLAYING); 
     }
-#endif
 
     if(pLevelInfoButton!=NULL && pLevelInfoButton->isClicked()) {
       pLevelInfoButton->setClicked(false);
 
-      Level *pLevelSrc = pList->getSelectedLevel();
-      if(pLevelSrc != NULL) {
+      std::string v_id_level = pList->getSelectedLevel();
+      if(v_id_level != "") {
 	
+	char **v_result;
+	int nrow;
+	std::string v_levelName;
+	std::string v_levelDescription;
+	std::string v_levelAuthor;
+	std::string v_levelPack;
+	std::string v_levelDateStr;
+
+	v_result = m_db->readDB("SELECT name, author, description, packName, date_str "
+				"FROM levels WHERE id_level=\"" + 
+				xmDatabase::protectString(v_id_level) + "\";",
+				nrow);
+	if(nrow == 0) {
+	  m_db->read_DB_free(v_result);
+	  return;
+	}
+
+	v_levelName        = m_db->getResult(v_result, 5, 0, 0);
+	v_levelAuthor      = m_db->getResult(v_result, 5, 0, 1);
+	v_levelDescription = m_db->getResult(v_result, 5, 0, 2);
+	v_levelPack        = m_db->getResult(v_result, 5, 0, 3);
+	v_levelDateStr     = m_db->getResult(v_result, 5, 0, 4);
+	m_db->read_DB_free(v_result);
+
         /* === OPEN LEVEL INFO VIEWER === */      
         /* Set information */
         UIStatic *pLevelName = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TITLE");
         
-        if(pLevelName != NULL) pLevelName->setCaption(pLevelSrc->Name());
+        if(pLevelName != NULL) pLevelName->setCaption(v_levelName);
 
         UIStatic *pGeneralInfo_LevelPack = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_LEVELPACK");
         UIStatic *pGeneralInfo_LevelName = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_LEVELNAME");
@@ -1879,13 +1917,13 @@ namespace vapp {
         UIStatic *pGeneralInfo_Date = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_DATE");
         UIStatic *pGeneralInfo_Description = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_DESCRIPTION");
 
-        if(pGeneralInfo_LevelPack != NULL) pGeneralInfo_LevelPack->setCaption(std::string(GAMETEXT_LEVELPACK) + ": " + pLevelSrc->Pack());
-        if(pGeneralInfo_LevelName != NULL) pGeneralInfo_LevelName->setCaption(std::string(GAMETEXT_LEVELNAME) + ": " + pLevelSrc->Name());
-        if(pGeneralInfo_Author != NULL) pGeneralInfo_Author->setCaption(std::string(GAMETEXT_AUTHOR) + ": " + pLevelSrc->Author());
-        if(pGeneralInfo_Date != NULL) pGeneralInfo_Date->setCaption(std::string(GAMETEXT_DATE) + ": " + pLevelSrc->Date());
-        if(pGeneralInfo_Description != NULL) pGeneralInfo_Description->setCaption(std::string(GAMETEXT_DESCRIPTION) + ": " + pLevelSrc->Description());
+        if(pGeneralInfo_LevelPack != NULL) pGeneralInfo_LevelPack->setCaption(std::string(GAMETEXT_LEVELPACK) + ": " + v_levelPack);
+        if(pGeneralInfo_LevelName != NULL) pGeneralInfo_LevelName->setCaption(std::string(GAMETEXT_LEVELNAME) + ": " + v_levelName);
+        if(pGeneralInfo_Author != NULL) pGeneralInfo_Author->setCaption(std::string(GAMETEXT_AUTHOR) + ": " + v_levelAuthor);
+        if(pGeneralInfo_Date != NULL) pGeneralInfo_Date->setCaption(std::string(GAMETEXT_DATE) + ": " + v_levelDateStr);
+        if(pGeneralInfo_Description != NULL) pGeneralInfo_Description->setCaption(std::string(GAMETEXT_DESCRIPTION) + ": " + v_levelDescription);
             
-        _UpdateLevelInfoViewerBestTimes(m_LevelInfoViewerLevel = pLevelSrc->Id());
+        _UpdateLevelInfoViewerBestTimes(m_LevelInfoViewerLevel = v_id_level);
         _UpdateLevelInfoViewerReplays(m_LevelInfoViewerLevel);
         
         /* Nice. Open the level info viewer */
@@ -1899,7 +1937,6 @@ namespace vapp {
     }
   }
 
-#if defined(SUPPORT_WEBACCESS)
   /*===========================================================================
   Update internet connection editor
   ===========================================================================*/
@@ -1938,9 +1975,7 @@ namespace vapp {
     /* Make sure OK button is activated */
     pConnOK->makeActive();
   }
-#endif  
 
-#if defined(SUPPORT_WEBACCESS) 
   void GameApp::_HandleWebConfEditor(void) {
     /* Get some pointers */
     UIButton *pDirectConn = (UIButton *)m_pWebConfEditor->getChild("DIRECTCONN");
@@ -2012,6 +2047,10 @@ namespace vapp {
 	    _UpgradeWebHighscores();  
 	    _UpdateWebLevels(false);
 
+	    m_levelsManager.makePacks(m_db,
+				      m_profile,
+				      m_Config.getString("WebHighscoresIdRoom"),
+				      m_bDebugMode);
 	    _UpdateLevelsLists();
 	  } catch(Exception &e) {
 	    notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES);
@@ -2040,7 +2079,6 @@ namespace vapp {
       }
     }
   }
-#endif
 
   /*===========================================================================
   Update profile editor
@@ -2053,11 +2091,12 @@ namespace vapp {
         if(Clicked == UI_MSGBOX_OK) {
           /* Create new profile */
           std::string PlayerName = m_pNewProfileMsgBox->getTextInput();
-          if(!m_Profiles.createProfile(PlayerName)) {
-            /* TODO: error message */
-          }
-          else
-            _CreateProfileList();
+	  try {
+	    m_db->stats_createProfile(PlayerName);
+	  } catch(Exception &e) {
+	    Log("Unable to create the profile");
+	  }
+	  _CreateProfileList();
         }
         
         delete m_pNewProfileMsgBox;
@@ -2076,19 +2115,8 @@ namespace vapp {
             if(nIdx >= 0 && nIdx < pList->getEntries().size()) {
               UIListEntry *pEntry = pList->getEntries()[nIdx];
       
-              bool bSelNew = false;        
-              if(m_pPlayer != NULL && pEntry->Text[0] == m_pPlayer->PlayerName) {
-                bSelNew = true;
-              }
-              
-              m_Profiles.destroyProfile(pEntry->Text[0]);
+	      m_db->stats_destroyProfile(pEntry->Text[0]);
               pList->setRealSelected(0);
-
-              if(bSelNew) {
-                m_pPlayer = m_Profiles.getProfile(pEntry->Text[0]);
-		m_db->stats_xmotoStarted(m_pPlayer->PlayerName);
-              }
-
               _CreateProfileList();              
             }
           }
@@ -2102,7 +2130,6 @@ namespace vapp {
     UIButton *pUseButton = reinterpret_cast<UIButton *>(m_pProfileEditor->getChild("USEPROFILE_BUTTON"));
     UIButton *pDeleteButton = reinterpret_cast<UIButton *>(m_pProfileEditor->getChild("DELETEPROFILE_BUTTON"));
     UIButton *pNewButton = reinterpret_cast<UIButton *>(m_pProfileEditor->getChild("NEWPROFILE_BUTTON"));
-    UIButton *pCancelButton = reinterpret_cast<UIButton *>(m_pProfileEditor->getChild("CANCEL_BUTTON"));
     
     /* Check them */
     if(pUseButton->isClicked()) {      
@@ -2112,31 +2139,37 @@ namespace vapp {
         if(nIdx >= 0 && nIdx < pList->getEntries().size()) {
           UIListEntry *pEntry = pList->getEntries()[nIdx];
           
-          m_pPlayer = m_Profiles.getProfile(pEntry->Text[0]);
+          m_profile = pEntry->Text[0];
+	  m_db->stats_xmotoStarted(m_profile);
+
+	  delete m_pStatsReport;
+          m_pStatsReport = stats_generateReport(m_profile,m_pStatsWindow,30,36,m_pStatsWindow->getPosition().nWidth-45,m_pStatsWindow->getPosition().nHeight-36,m_Renderer.getSmallFont());
         }
       }      
       
-      if(m_pPlayer == NULL) throw Exception("failed to set profile");
+      if(m_profile == "") throw Exception("failed to set profile");
 
+      /* remake the packs with the new profile */
+      m_levelsManager.makePacks(m_db,
+				m_profile,
+				m_WebHighscoresIdRoom,
+				m_bDebugMode);
       _UpdateLevelsLists();
-                        
+      _UpdateReplaysList();      
+                  
       UIStatic *pPlayerTag = reinterpret_cast<UIStatic *>(m_pMainMenu->getChild("PLAYERTAG"));
       if(pPlayerTag) {
-        pPlayerTag->setCaption(std::string(GAMETEXT_CURPLAYER) + ": " + m_pPlayer->PlayerName);
+        pPlayerTag->setCaption(std::string(GAMETEXT_CURPLAYER) + ": " + m_profile);
       }                   
-      
-      _UpdateReplaysList();
-      
+           
       m_pProfileEditor->showWindow(false);
 
-#if defined(SUPPORT_WEBACCESS)       
       /* Should we jump to the web config now? */
       if(m_Config.getBool("WebConfAtInit")) {
         _InitWebConf();
         setState(GS_EDIT_WEBCONFIG);
       }
       else
-#endif
       {
         m_pMainMenu->enableChildren(true);
         m_pMainMenu->enableWindow(true);
@@ -2156,29 +2189,6 @@ namespace vapp {
                                                           (UIMsgBoxButton)(UI_MSGBOX_OK|UI_MSGBOX_CANCEL),
                                                           true);
         m_pNewProfileMsgBox->setTextInputFont(m_Renderer.getMediumFont());                                                          
-      }
-    }
-    else if(pCancelButton->isClicked()) {
-      if(m_pMainMenu->isHidden()) {
-        quit();
-      }
-      else {
-        m_State = GS_MENU;
-        m_pProfileEditor->showWindow(false);
-        m_pMainMenu->enableChildren(true);
-        m_pMainMenu->enableWindow(true);
-                        
-        UIStatic *pPlayerTag = reinterpret_cast<UIStatic *>(m_pMainMenu->getChild("PLAYERTAG"));
-        if(pPlayerTag) {
-          if(m_pPlayer == NULL) {
-            if(m_Profiles.getProfiles().empty()) throw Exception("no valid profile");
-            m_pPlayer = m_Profiles.getProfiles()[0];
-
-	    _UpdateLevelsLists();
-          }
-        
-          pPlayerTag->setCaption(std::string(GAMETEXT_CURPLAYER) + ": " + m_pPlayer->PlayerName);
-        }       
       }
     }
   }
@@ -2216,8 +2226,7 @@ namespace vapp {
 
       if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
         /* Uhm... is it likely that there's a next level? */
-	Level *pLS = &(m_levelsManager.LevelById(m_PlaySpecificLevel));
-	m_pJustDeadMenuButtons[i]->enableWindow(_IsThereANextLevel(pLS));
+	m_pJustDeadMenuButtons[i]->enableWindow(_IsThereANextLevel(m_PlaySpecificLevel));
       }
       
       if(m_pJustDeadMenuButtons[i]->isClicked()) {
@@ -2232,8 +2241,7 @@ namespace vapp {
 	  _RestartLevel();
         }
         else if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
-	  Level *pLS = &(m_levelsManager.LevelById(m_PlaySpecificLevel));
-	  std::string NextLevel = _DetermineNextLevel(pLS);
+	  std::string NextLevel = _DetermineNextLevel(m_PlaySpecificLevel);
 	  if(NextLevel != "") {        
 	    m_pJustDeadMenu->showWindow(false);
 	    m_Renderer.setPlayerToFollow(NULL);
@@ -2282,49 +2290,31 @@ namespace vapp {
     for(int i=0;i<m_nNumMainMenuButtons;i++) {
       if(m_pMainMenuButtons[i]->isClicked()) {
         if(m_pMainMenuButtons[i]->getCaption() == GAMETEXT_LEVELS) {
-#if defined(SUPPORT_WEBACCESS)
 	  m_pLevelInfoFrame->showWindow(false);
-#endif
           m_pOptionsWindow->showWindow(false);
           m_pHelpWindow->showWindow(false);
           m_pReplaysWindow->showWindow(false);
           m_pLevelPacksWindow->showWindow(true);                    
-          
-          /* Make sure all level packs are listed */
-          _UpdateLevelPackList();
-        }
+	}
         else if(m_pMainMenuButtons[i]->getCaption() == GAMETEXT_OPTIONS) {
           if(m_pOptionsWindow->isHidden()) _ImportOptions();        
-#if defined(SUPPORT_WEBACCESS)
 	  m_pLevelInfoFrame->showWindow(false);
-#endif
+
           m_pOptionsWindow->showWindow(true);
           m_pHelpWindow->showWindow(false);
           m_pReplaysWindow->showWindow(false);
           m_pLevelPacksWindow->showWindow(false);                    
         }
         else if(m_pMainMenuButtons[i]->getCaption() == GAMETEXT_HELP) {
-#if defined(SUPPORT_WEBACCESS)
 	  m_pLevelInfoFrame->showWindow(false);
-#endif
           m_pOptionsWindow->showWindow(false);
           m_pHelpWindow->showWindow(true);
           m_pReplaysWindow->showWindow(false);
           m_pLevelPacksWindow->showWindow(false);                    
-
-	  try {
-	    m_levelsManager.LevelById("tut1");
-	  } catch(Exception &e) {
-	    /* Tutorial not found, disable button */
-	    UIButton *pTutButton = (UIButton *)m_pHelpWindow->getChild("HELP_TUTORIAL_BUTTON");
-	    pTutButton->enableWindow(false);
-	  }
         }
         else if(m_pMainMenuButtons[i]->getCaption() == GAMETEXT_REPLAYS) {
-          if(m_pReplaysWindow->isHidden()) _UpdateReplaysList();
-#if defined(SUPPORT_WEBACCESS)
+	  if(m_pReplaysWindow->isHidden()) _UpdateReplaysList();
 	  m_pLevelInfoFrame->showWindow(false);
-#endif
           m_pOptionsWindow->showWindow(false);
           m_pHelpWindow->showWindow(false);
           m_pReplaysWindow->showWindow(true);
@@ -2338,7 +2328,6 @@ namespace vapp {
       }
     }
 
-#if defined(SUPPORT_WEBACCESS)
     /* view highscore button clicked */
     if(m_pLevelInfoViewReplayButton->isClicked()) {
       viewHighscoreOf();
@@ -2347,43 +2336,36 @@ namespace vapp {
       setState(GS_REPLAYING);
       m_pLevelInfoViewReplayButton->setClicked(false);
     }
-#endif
 
     /* level menu : */
     /* any list clicked ? */
     if(m_pAllLevelsList->isChanged()) {
-      Level *pLevelSrc = m_pAllLevelsList->getSelectedLevel();
-      if(pLevelSrc != NULL) {
-#if defined(SUPPORT_WEBACCESS)
-	setLevelInfoFrameBestPlayer(pLevelSrc->Id(),
+      std::string v_id_level = m_pAllLevelsList->getSelectedLevel();
+      if(v_id_level != "") {
+	setLevelInfoFrameBestPlayer(v_id_level,
 				    m_pLevelInfoFrame,
 				    m_pLevelInfoViewReplayButton,
 				    m_pBestPlayerText
 				    );
-#endif
       }
       m_pAllLevelsList->setChanged(false);
     }
 
-#if defined(SUPPORT_WEBACCESS)
     if(m_pPlayNewLevelsList->isChanged()) {
-      Level *pLevelSrc = m_pPlayNewLevelsList->getSelectedLevel();
-      if(pLevelSrc != NULL) {
-	setLevelInfoFrameBestPlayer(pLevelSrc->Id(),
-				    m_pLevelInfoFrame,
-				    m_pLevelInfoViewReplayButton,
-				    m_pBestPlayerText
-				    );
+      std::string v_id_level = m_pPlayNewLevelsList->getSelectedLevel();
+      if(v_id_level != "") {
+      	setLevelInfoFrameBestPlayer(v_id_level,
+      				    m_pLevelInfoFrame,
+      				    m_pLevelInfoViewReplayButton,
+      				    m_pBestPlayerText
+      				    );
       }
       m_pPlayNewLevelsList->setChanged(false);
     }
-#endif
 
     /* tab of level clicked ? */
     if(m_pLevelPackTabs->isChanged()) {
-#if defined(SUPPORT_WEBACCESS)
       m_pLevelInfoFrame->showWindow(false);      
-#endif
       m_pLevelPackTabs->setChanged(false);
     }
 
@@ -2400,7 +2382,7 @@ namespace vapp {
               UIListEntry *pEntry = pList->getEntries()[nIdx];
               if(pEntry != NULL) {
 		Replay::deleteReplay(pEntry->Text[0]);
-		m_ReplayList.delReplay(pEntry->Text[0]);
+		m_db->replays_delete(pEntry->Text[0]);
                 _UpdateReplaysList();
               }
             }
@@ -2423,7 +2405,6 @@ namespace vapp {
       return;
     }
 
-#if defined(SUPPORT_WEBACCESS)
     UIStatic *pNewLevelText = (UIStatic *)m_pMainMenu->getChild("NEWLEVELAVAILBLE");
     if(m_bWebLevelsToDownload) {
       pNewLevelText->showWindow(true);
@@ -2436,7 +2417,6 @@ namespace vapp {
     } else {
       pNewLevelText->showWindow(false);
     }
-#endif
 
     /* LEVEL PACKS */
     UIButton *pOpenButton = (UIButton *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:PACK_TAB:LEVELPACK_OPEN_BUTTON");
@@ -2455,9 +2435,7 @@ namespace vapp {
         if(pTitle != NULL) pTitle->setCaption(m_pActiveLevelPack->Name());
         
         _CreateLevelPackLevelList();
-#if defined(SUPPORT_WEBACCESS)
 	m_pPackLevelInfoFrame->showWindow(false);
-#endif
         m_pLevelPackViewer->showWindow(true);
         m_pMainMenu->enableChildren(false);
         m_pMainMenu->enableWindow(false);
@@ -2478,7 +2456,6 @@ namespace vapp {
     UIButton *pEnableEngineSoundButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_ENGINE_SOUND");
     UIButton *pEnableMusicButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_MUSIC");
   
-#if defined(SUPPORT_WEBACCESS)  
     UIButton *pINetConf = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:PROXYCONFIG");
     UIButton *pUpdHS = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:UPDATEHIGHSCORES");
     UIButton *pWebHighscores = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:ENABLEWEBHIGHSCORES");
@@ -2492,7 +2469,6 @@ namespace vapp {
     UIButton *pUpdThemeList = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:UPDATE_THEMES_LIST");
     UIButton *pUpdSelectedTheme = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:GET_SELECTED_THEME");
     UIList *pThemeList = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:THEMES_LIST");
-#endif
 
     UIButton *pEnableGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:ENABLE_GHOST");
     UIList *pGhostStrategy = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGIES_LIST");
@@ -2512,7 +2488,6 @@ namespace vapp {
       pDisplayGhostTimeDiff->enableWindow(false);
     }
 
-#if defined(SUPPORT_WEBACCESS)
       if(pWebHighscores->getChecked()) {
         pINetConf->enableWindow(true);
         pUpdHS->enableWindow(true);
@@ -2531,7 +2506,6 @@ namespace vapp {
 	pUpdSelectedTheme->enableWindow(false);
 	pRoomsTab->enableWindow(false);
       }
-#endif
     
     if(pEnableAudioButton) {
       bool t=pEnableAudioButton->getChecked();
@@ -2546,7 +2520,6 @@ namespace vapp {
       pEnableMusicButton->enableWindow(t);
     }
 
-#if defined(SUPPORT_WEBACCESS)
     if(pINetConf->isClicked()) {
       pINetConf->setClicked(false);
       
@@ -2565,6 +2538,10 @@ namespace vapp {
 	_UpgradeWebHighscores();    
 	_UpdateWebLevels(false);  
 
+	m_levelsManager.makePacks(m_db,
+				  m_profile,
+				  m_Config.getString("WebHighscoresIdRoom"),
+				  m_bDebugMode);
 	_UpdateLevelsLists();
       } catch(Exception &e) {
 	notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES);
@@ -2608,8 +2585,6 @@ namespace vapp {
 	notifyMsg(GAMETEXT_FAILEDGETSELECTEDTHEME);
       }
     } 
- 
-#endif    
 
     UIButton *pSaveOptions = (UIButton *)m_pOptionsWindow->getChild("SAVE_BUTTON");
     UIButton *pDefaultOptions = (UIButton *)m_pOptionsWindow->getChild("DEFAULTS_BUTTON");
@@ -2658,9 +2633,8 @@ namespace vapp {
       
       /* Find first tutorial level */
       try {
-	Level *pLevelSrc = &(m_levelsManager.LevelById("tut1"));
         m_pMainMenu->showWindow(false);      
-        m_PlaySpecificLevel = pLevelSrc->Id();
+        m_PlaySpecificLevel = "tut1";
         m_StateAfterPlaying = GS_MENU;
 	m_currentPlayingList = NULL;
         setState(GS_PREPLAYING);
@@ -2683,7 +2657,6 @@ namespace vapp {
     UIButton *pLevelInfoButton = (UIButton *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:ALLLEVELS_TAB:PLAY_LEVEL_INFO_BUTTON");
     UIButton *pLevelDeleteFromFavoriteButton = (UIButton *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:ALLLEVELS_TAB:ALL_LEVELS_DELETE_FROM_FAVORITE_BUTTON");
 
-#if defined(SUPPORT_WEBACCESS)
     UIButton *pNewLevelsPlayGoButton =    (UIButton *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:NEWLEVELS_TAB:NEW_LEVELS_PLAY_GO_BUTTON");
     UIButton *pNewLevelsLevelInfoButton = (UIButton *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:NEWLEVELS_TAB:NEW_LEVELS_PLAY_LEVEL_INFO_BUTTON");
     UIButton *pNewLevelsPlayDLButton =    (UIButton *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:NEWLEVELS_TAB:NEW_LEVELS_PLAY_DOWNLOAD_LEVELS_BUTTON");
@@ -2700,77 +2673,89 @@ namespace vapp {
 	_CheckForExtraLevels();
       }
     }
-#endif
 
     if(pLevelDeleteFromFavoriteButton->isClicked()) {
-      Level *pLevelSrc = NULL;
-
+      std::string v_id_level;
       pLevelDeleteFromFavoriteButton->setClicked(false);
-      pLevelSrc = m_pAllLevelsList->getSelectedLevel();
-      if(pLevelSrc != NULL) {
-	m_levelsManager.delFromFavorite(pLevelSrc);
+      v_id_level = m_pAllLevelsList->getSelectedLevel();
+      if(v_id_level != "") {
+	m_levelsManager.delFromFavorite(m_db, m_profile, v_id_level);
 	_UpdateLevelPackList();
 	_UpdateLevelLists();
       }
     }
 
     if(pPlayGoButton->isClicked()
-#if defined(SUPPORT_WEBACCESS)
        || pNewLevelsPlayGoButton->isClicked()
-#endif
        ) {
       pPlayGoButton->setClicked(false);
-#if defined(SUPPORT_WEBACCESS)
       pNewLevelsPlayGoButton->setClicked(false);
-#endif
       
-      /* Find out what to play */
-      Level *pLevelSrc = NULL;
+      // level
+      std::string v_id_level;
 
+      /* Find out what to play */
       if(m_pAllLevelsList && !m_pAllLevelsList->isBranchHidden()) {
-	pLevelSrc = m_pAllLevelsList->getSelectedLevel();
+	v_id_level = m_pAllLevelsList->getSelectedLevel();	
 	m_currentPlayingList = m_pAllLevelsList;
-#if defined(SUPPORT_WEBACCESS)
       } else if(m_pPlayNewLevelsList && !m_pPlayNewLevelsList->isBranchHidden()) {
-	pLevelSrc = m_pPlayNewLevelsList->getSelectedLevel();
+	v_id_level = m_pPlayNewLevelsList->getSelectedLevel();
 	m_currentPlayingList = m_pPlayNewLevelsList;
-#endif
       }
 
       /* Start playing it */
-      if(pLevelSrc != NULL) {
+      if(v_id_level != "") {
         m_pMainMenu->showWindow(false);      
-        m_PlaySpecificLevel = pLevelSrc->Id();
+        m_PlaySpecificLevel = v_id_level;
         m_StateAfterPlaying = GS_MENU;
         setState(GS_PREPLAYING);
       }
     }
     else if(pLevelInfoButton->isClicked()
-#if defined(SUPPORT_WEBACCESS)
 	    || pNewLevelsLevelInfoButton->isClicked()
-#endif
 	    ) {
       pLevelInfoButton->setClicked(false);
-#if defined(SUPPORT_WEBACCESS)
       pNewLevelsLevelInfoButton->setClicked(false);
-#endif
       
       /* Find out what level is selected */
-      Level *pLevelSrc = NULL;
+      std::string v_id_level;
 
       if(m_pAllLevelsList && !m_pAllLevelsList->isBranchHidden()) {
-	pLevelSrc = m_pAllLevelsList->getSelectedLevel();
-#if defined(SUPPORT_WEBACCESS)
+	v_id_level = m_pAllLevelsList->getSelectedLevel();
       } else if(m_pPlayNewLevelsList && !m_pPlayNewLevelsList->isBranchHidden()) {
-	pLevelSrc = m_pPlayNewLevelsList->getSelectedLevel();
-#endif
+	v_id_level = m_pPlayNewLevelsList->getSelectedLevel();
       }
       
-      if(pLevelSrc != NULL) {
+      if(v_id_level != "") {
+	char **v_result;
+	int nrow;
+	std::string v_levelName;
+	std::string v_levelDescription;
+	std::string v_levelAuthor;
+	std::string v_levelPack;
+	std::string v_levelDateStr;
+
+	v_result = m_db->readDB("SELECT name, author, description, packName, date_str "
+				"FROM levels WHERE id_level=\"" + 
+				xmDatabase::protectString(v_id_level) + "\";",
+				nrow);
+	if(nrow == 0) {
+	  m_db->read_DB_free(v_result);
+	  return;
+	}
+
+	v_levelName        = m_db->getResult(v_result, 5, 0, 0);
+	v_levelAuthor      = m_db->getResult(v_result, 5, 0, 1);
+	v_levelDescription = m_db->getResult(v_result, 5, 0, 2);
+	v_levelPack        = m_db->getResult(v_result, 5, 0, 3);
+	v_levelDateStr     = m_db->getResult(v_result, 5, 0, 4);
+	m_db->read_DB_free(v_result);
+
+
         /* Set information */
         UIStatic *pLevelName = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TITLE");
         
-        if(pLevelName != NULL) pLevelName->setCaption(pLevelSrc->Name());
+        if(pLevelName != NULL) pLevelName->setCaption(v_levelName);
 
         UIStatic *pGeneralInfo_LevelPack = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_LEVELPACK");
         UIStatic *pGeneralInfo_LevelName = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_LEVELNAME");
@@ -2778,20 +2763,18 @@ namespace vapp {
         UIStatic *pGeneralInfo_Date = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_DATE");
         UIStatic *pGeneralInfo_Description = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_DESCRIPTION");
 
-        if(pGeneralInfo_LevelPack != NULL) pGeneralInfo_LevelPack->setCaption(std::string(GAMETEXT_LEVELPACK) + ": " + pLevelSrc->Pack());
-        if(pGeneralInfo_LevelName != NULL) pGeneralInfo_LevelName->setCaption(std::string(GAMETEXT_LEVELNAME) + ": " + pLevelSrc->Name());
-        if(pGeneralInfo_Author != NULL) pGeneralInfo_Author->setCaption(std::string(GAMETEXT_AUTHOR) + ": " + pLevelSrc->Author());
-        if(pGeneralInfo_Date != NULL) pGeneralInfo_Date->setCaption(std::string(GAMETEXT_DATE) + ": " + pLevelSrc->Date());
-        if(pGeneralInfo_Description != NULL) pGeneralInfo_Description->setCaption(std::string(GAMETEXT_DESCRIPTION) + ": "  + pLevelSrc->Description());
+        if(pGeneralInfo_LevelPack != NULL) pGeneralInfo_LevelPack->setCaption(std::string(GAMETEXT_LEVELPACK) + ": " + v_levelPack);
+        if(pGeneralInfo_LevelName != NULL) pGeneralInfo_LevelName->setCaption(std::string(GAMETEXT_LEVELNAME) + ": " + v_levelName);
+        if(pGeneralInfo_Author != NULL) pGeneralInfo_Author->setCaption(std::string(GAMETEXT_AUTHOR) + ": " + v_levelAuthor);
+        if(pGeneralInfo_Date != NULL) pGeneralInfo_Date->setCaption(std::string(GAMETEXT_DATE) + ": " + v_levelDateStr);
+        if(pGeneralInfo_Description != NULL) pGeneralInfo_Description->setCaption(std::string(GAMETEXT_DESCRIPTION) + ": "  + v_levelDescription);
             
-        _UpdateLevelInfoViewerBestTimes(m_LevelInfoViewerLevel = pLevelSrc->Id());
+        _UpdateLevelInfoViewerBestTimes(m_LevelInfoViewerLevel = v_id_level);
         _UpdateLevelInfoViewerReplays(m_LevelInfoViewerLevel);
         
         /* Nice. Open the level info viewer */
         pLevelInfoButton->setActive(false);
-#if defined(SUPPORT_WEBACCESS)
         pNewLevelsLevelInfoButton->setActive(false);
-#endif
         m_pLevelInfoViewer->showWindow(true);
         m_pMainMenu->enableChildren(false);
         m_pMainMenu->enableWindow(false);
@@ -2802,9 +2785,7 @@ namespace vapp {
     /* REPLAYS */        
     UIButton *pReplaysShowButton = (UIButton *)m_pReplaysWindow->getChild("REPLAY_SHOW_BUTTON");
     UIButton *pReplaysDeleteButton = (UIButton *)m_pReplaysWindow->getChild("REPLAY_DELETE_BUTTON");
-#if defined(SUPPORT_WEBACCESS)
     UIButton *pUploadHighscoreButton = (UIButton *)m_pReplaysWindow->getChild("REPLAY_UPLOADHIGHSCORE_BUTTON");
-#endif
     UIButton *pReplaysListAllButton = (UIButton *)m_pReplaysWindow->getChild("REPLAY_LIST_ALL");
     UIList *pReplaysList = (UIList *)m_pReplaysWindow->getChild("REPLAY_LIST");
     
@@ -2821,30 +2802,41 @@ namespace vapp {
       _UpdateReplaysList();      
     }
     
-#if defined(SUPPORT_WEBACCESS)
     if(pReplaysList->isChanged()) {
       pReplaysList->setChanged(false);
       pUploadHighscoreButton->enableWindow(false);
 
       if(m_bEnableWebHighscores) {
-	      if(pReplaysList->getSelected() >= 0 && pReplaysList->getSelected() < pReplaysList->getEntries().size()) {
-	        UIListEntry *pListEntry = pReplaysList->getEntries()[pReplaysList->getSelected()];
-	        if(pListEntry != NULL) {
-	          ReplayInfo* rplInfos;
-	          rplInfos = Replay::getReplayInfos(pListEntry->Text[0]);
-	          if(rplInfos != NULL) {
-	            if(rplInfos->fFinishTime > 0.0 && rplInfos->Player == m_pPlayer->PlayerName) {
-		            WebHighscore* wh = m_pWebHighscores->getHighscoreFromLevel(rplInfos->Level);
-		            if(wh != NULL) {
-		              pUploadHighscoreButton->enableWindow(rplInfos->fFinishTime < wh->getFTime());
-		            } else {
-		              pUploadHighscoreButton->enableWindow(true);
-		            }
-	            }  	      
-	            delete rplInfos; 
-	          }
-	        }
+	if(pReplaysList->getSelected() >= 0 && pReplaysList->getSelected() < pReplaysList->getEntries().size()) {
+	  UIListEntry *pListEntry = pReplaysList->getEntries()[pReplaysList->getSelected()];
+	  if(pListEntry != NULL) {
+	    ReplayInfo* rplInfos;
+	    rplInfos = Replay::getReplayInfos(pListEntry->Text[0]);
+	    if(rplInfos != NULL) {
+	      if(rplInfos->fFinishTime > 0.0 && rplInfos->Player == m_profile) {
+		
+		char **v_result;
+		int nrow;
+		float v_finishTime;
+		
+		v_result = m_db->readDB("SELECT finishTime "
+					"FROM webhighscores WHERE id_level=\"" + 
+					xmDatabase::protectString(rplInfos->Level) + "\""
+					"AND id_room=" + m_WebHighscoresIdRoom + ";",
+					nrow);
+		if(nrow == 0) {
+		  pUploadHighscoreButton->enableWindow(true);
+		  m_db->read_DB_free(v_result);
+		} else {
+		  v_finishTime = atof(m_db->getResult(v_result, 1, 0, 0));
+		  m_db->read_DB_free(v_result);
+		  pUploadHighscoreButton->enableWindow(rplInfos->fFinishTime < v_finishTime);
+		}  	      
 	      }
+	      delete rplInfos; 
+	    }
+	  }
+	}
       }
     }
     
@@ -2857,7 +2849,6 @@ namespace vapp {
 	}
       }
     }
-#endif
 
     if(pReplaysShowButton->isClicked()) {
       /* Show replay */
@@ -2880,7 +2871,7 @@ namespace vapp {
         m_pDeleteReplayMsgBox = m_Renderer.getGUI()->msgBox(GAMETEXT_DELETEREPLAYMESSAGE,
                                                             (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));      
     }
-    
+   
     /* Statistics window */
     if(m_pStatsReport != NULL) {
       UIButton *pUpdateReport = (UIButton *)m_pStatsReport->getChild("UPDATE_BUTTON");
@@ -2892,10 +2883,11 @@ namespace vapp {
           
           /* Update */
           delete m_pStatsReport;
-          m_pStatsReport = stats_generateReport(m_pPlayer->PlayerName,m_pStatsWindow,30,36,m_pStatsWindow->getPosition().nWidth-45,m_pStatsWindow->getPosition().nHeight-36,m_Renderer.getSmallFont());
+          m_pStatsReport = stats_generateReport(m_profile, m_pStatsWindow,30,36,m_pStatsWindow->getPosition().nWidth-45,m_pStatsWindow->getPosition().nHeight-36,m_Renderer.getSmallFont());
         }        
       }
     }
+
   }
 
   /*===========================================================================
@@ -2993,33 +2985,36 @@ namespace vapp {
   ===========================================================================*/
   void GameApp::_CreateProfileList(void) {
     UIList *pList = reinterpret_cast<UIList *>(m_pProfileEditor->getChild("PROFILE_LIST"));
+    char **v_result;
+    int nrow;
+    std::string v_profile;
+
     if(pList != NULL) {
       /* Clear it */
       pList->clear();
       
       /* Add all player profiles to it */
-      for(int i=0;i<m_Profiles.getProfiles().size();i++) {
-        if(m_pPlayer != NULL && m_pPlayer->PlayerName == m_Profiles.getProfiles()[i]->PlayerName)
-          pList->setRealSelected(i);
-      
-        pList->addEntry(m_Profiles.getProfiles()[i]->PlayerName);
+      v_result = m_db->readDB("SELECT id_profile FROM stats_profiles ORDER BY id_profile;",
+			      nrow);
+      for(unsigned int i=0; i<nrow; i++) {
+	v_profile = m_db->getResult(v_result, 1, i, 0);
+	pList->addEntry(v_profile);
+	if(m_profile == v_profile) {
+	  pList->setRealSelected(i);
+	}
       }
+      m_db->read_DB_free(v_result);
       
       /* Update buttons */
       UIButton *pUseButton = reinterpret_cast<UIButton *>(m_pProfileEditor->getChild("USEPROFILE_BUTTON"));
       UIButton *pDeleteButton = reinterpret_cast<UIButton *>(m_pProfileEditor->getChild("DELETEPROFILE_BUTTON"));
       
-      if(m_Profiles.getProfiles().empty()) {
-        pUseButton->enableWindow(false);
-        pDeleteButton->enableWindow(false);
-      }
-      else {
+      if(nrow == 0) {
+	pUseButton->enableWindow(false);
+	pDeleteButton->enableWindow(false);
+      } else {
         pUseButton->enableWindow(true);
-        
-        if(m_Profiles.getProfiles().size() > 1) 
-          pDeleteButton->enableWindow(true);
-        else
-          pDeleteButton->enableWindow(false);
+	pDeleteButton->enableWindow(true);
       }
     }
   }
@@ -3029,6 +3024,9 @@ namespace vapp {
   ===========================================================================*/
   void GameApp::_CreateReplaysList(UIList *pList) {
     /* Should we list all players' replays? */
+    std::string v_sql;
+    char **v_result;
+    int nrow;
     UIButton *pButton = (UIButton *)m_pReplaysWindow->getChild("REPLAY_LIST_ALL");
     bool bListAll = false;
     if(pButton != NULL && pButton->getChecked()) {
@@ -3040,32 +3038,34 @@ namespace vapp {
     
     /* Enumerate replays */
     std::string PlayerSearch;
-    if(!bListAll) PlayerSearch = m_pPlayer->PlayerName;
-    
-    std::vector<ReplayInfo *> *Replays = m_ReplayList.findReplays(PlayerSearch);
-    
-    for(int i=0;i<Replays->size();i++) {
-      UIListEntry *pEntry = pList->addEntry((*Replays)[i]->Name);
-
-      Level *pLevel;
-
-      try {
-	pLevel = &(m_levelsManager.LevelById((*Replays)[i]->Level));      
-        pEntry->Text.push_back(pLevel->Name());
-      } catch(Exception &e) {
-        pEntry->Text.push_back("(" + std::string(GAMETEXT_UNKNOWNLEVEL) + ")");
-      }
-      
-      pEntry->Text.push_back((*Replays)[i]->Player);
+    if(bListAll) {
+      v_sql = "SELECT a.name, a.id_profile, b.name FROM replays AS a "
+	"INNER JOIN levels AS b ON a.id_level = b.id_level;";
+    } else {
+      v_sql = "SELECT a.name, a.id_profile, b.name FROM replays AS a "
+      "INNER JOIN levels AS b ON a.id_level = b.id_level "
+      "WHERE a.id_profile=\"" + xmDatabase::protectString(m_profile) + "\";";
     }
 
-    delete Replays;
+    v_result = m_db->readDB(v_sql, nrow);
+    for(unsigned int i=0; i<nrow; i++) {
+      UIListEntry *pEntry = pList->addEntry(m_db->getResult(v_result, 3, i, 0));
+      pEntry->Text.push_back(m_db->getResult(v_result, 3, i, 2));
+      pEntry->Text.push_back(m_db->getResult(v_result, 3, i, 1));
+    }
+    m_db->read_DB_free(v_result);
   }
   
   /*===========================================================================
   Scan through loaded levels
   ===========================================================================*/
   void GameApp::_CreateLevelLists(UILevelList *pAllLevels, std::string i_packageName) {
+    char **v_result;
+    int nrow;
+    float v_playerHighscore, v_roomHighscore;
+
+    if(m_profile == "") return;
+   
     /* get selected item */
     std::string v_selected_levelName = "";
     if(pAllLevels->getSelected() >= 0 && pAllLevels->getSelected() < pAllLevels->getEntries().size()) {
@@ -3074,21 +3074,31 @@ namespace vapp {
     }
 
     pAllLevels->clear();
-
-    if(m_pPlayer == NULL) return;
     LevelsPack *v_levelsPack = &(m_levelsManager.LevelsPackByName(i_packageName));
 
-    for(int i=0;i<v_levelsPack->Levels().size();i++) {
-      Level *pLevel = v_levelsPack->Levels()[i];     
-      pAllLevels->addLevel(pLevel,
-			   m_pPlayer,
-			   &m_Profiles
-#if defined(SUPPORT_WEBACCESS) 
-			   ,
-			   m_pWebHighscores
-#endif
-			   );
+    v_result = m_db->readDB(v_levelsPack->getLevelsWithHighscoresQuery(m_profile,
+								       m_WebHighscoresIdRoom),
+			    nrow);
+    for(unsigned int i=0; i<nrow; i++) {
+      if(m_db->getResult(v_result, 4, i, 2) == NULL) {
+	v_playerHighscore = -1.0;
+      } else {
+	v_playerHighscore = atof(m_db->getResult(v_result, 4, i, 2));
+      }
+
+      if(m_db->getResult(v_result, 4, i, 3) == NULL) {
+	v_roomHighscore = -1.0;
+      } else {
+	v_roomHighscore = atof(m_db->getResult(v_result, 4, i, 3));
+      }
+
+      pAllLevels->addLevel(m_db->getResult(v_result, 4, i, 0),
+		      m_db->getResult(v_result, 4, i, 1),
+		      v_playerHighscore,
+		      v_roomHighscore
+		      );
     }
+    m_db->read_DB_free(v_result);    
 
     /* reselect the previous level */
     if(v_selected_levelName != "") {
@@ -3149,8 +3159,6 @@ namespace vapp {
 
   }
 
-#if defined(SUPPORT_WEBACCESS) 
-
   void GameApp::_CreateRoomsList(UIList *pList) {
     UIListEntry *pEntry;
     std::string v_selected_roomName = "";
@@ -3185,31 +3193,46 @@ namespace vapp {
     }
   }
 
-#endif
-
   /*===========================================================================
   Fill a window with best times
   ===========================================================================*/
   void GameApp::_MakeBestTimesWindow(UIBestTimes *pWindow,std::string PlayerName,std::string LevelID,
                                      float fFinishTime,std::string TimeStamp) {
+    char **v_result;
+    int nrow;
     int n1=-1,n2=-1;
+    float v_finishTime;
+    std::string v_timeStamp;
+    std::string v_profile;
     
     pWindow->clear();
     
-    std::vector<PlayerTimeEntry *> Global = m_Profiles.createLevelTop10(LevelID);
-    std::vector<PlayerTimeEntry *> Personal = m_Profiles.createPlayerOnlyLevelTop10(PlayerName,LevelID);
-    
-    for(int i=0;i<(Global.size()<10?Global.size():10);i++) {      
-      pWindow->addRow1(formatTime(Global[i]->fFinishTime),Global[i]->PlayerName);
-      if(Global[i]->fFinishTime == fFinishTime && Global[i]->PlayerName == PlayerName &&
-         Global[i]->TimeStamp == TimeStamp) n1 = i;
+    v_result = m_db->readDB("SELECT finishTime, timeStamp, id_profile FROM profile_completedLevels "
+			    "WHERE id_level=\""   + xmDatabase::protectString(LevelID)    + "\" "
+			    "ORDER BY finishTime LIMIT 10;",
+			    nrow);
+    for(unsigned int i=0; i<nrow; i++) {
+      v_finishTime  = atof(m_db->getResult(v_result, 3, i, 0));
+      v_timeStamp   =      m_db->getResult(v_result, 3, i, 1);
+      v_profile     =      m_db->getResult(v_result, 3, i, 2);
+      pWindow->addRow1(formatTime(v_finishTime), v_profile);
+      if(v_profile == PlayerName &&
+	 v_timeStamp == TimeStamp) n1 = i;
     }
+    m_db->read_DB_free(v_result);
 
-    for(int i=0;i<(Personal.size()<10?Personal.size():10);i++) {      
-      pWindow->addRow2(formatTime(Personal[i]->fFinishTime),Personal[i]->PlayerName);
-      if(Personal[i]->fFinishTime == fFinishTime && Personal[i]->PlayerName == PlayerName &&
-         Personal[i]->TimeStamp == TimeStamp) n2 = i;
+    v_result = m_db->readDB("SELECT finishTime, timeStamp FROM profile_completedLevels "
+			    "WHERE id_profile=\"" + xmDatabase::protectString(PlayerName) + "\" "
+			    "AND   id_level=\""   + xmDatabase::protectString(LevelID)    + "\" "
+			    "ORDER BY finishTime LIMIT 10;",
+			    nrow);
+    for(unsigned int i=0; i<nrow; i++) {
+      v_finishTime  = atof(m_db->getResult(v_result, 2, i, 0));
+      v_timeStamp   =      m_db->getResult(v_result, 2, i, 1);
+      pWindow->addRow2(formatTime(v_finishTime), PlayerName);
+      if(v_timeStamp == TimeStamp) n2 = i;
     }
+    m_db->read_DB_free(v_result);
 
     pWindow->setup(GAMETEXT_BESTTIMES,n1,n2);
   }
@@ -3276,7 +3299,6 @@ namespace vapp {
     pKeyboardControl->setChecked(false);
     pJoystickControl->setChecked(false);
     
-#if defined(SUPPORT_WEBACCESS)
     UIButton *pWebHighscores = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:ENABLEWEBHIGHSCORES");
     UIButton *pInGameWorldRecord = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:INGAMEWORLDRECORD");
     UIButton *pCheckNewLevelsAtStartup = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:ENABLECHECKNEWLEVELSATSTARTUP");
@@ -3289,7 +3311,9 @@ namespace vapp {
     pCheckHighscoresAtStartup->setChecked(m_Config.getBool("CheckHighscoresAtStartup"));
 
     /* set room in the list */
-    std::string v_room_id = m_Config.getString("WebHighscoreUploadIdRoom");
+    m_WebHighscoresURL = m_Config.getString("WebHighscoresURL");
+    m_WebHighscoresIdRoom = m_Config.getString("WebHighscoresIdRoom");
+    std::string v_room_id = m_WebHighscoresIdRoom;
     if(v_room_id == "") {v_room_id = DEFAULT_WEBROOM_ID;}
     for(int i=0; i<pRoomsList->getEntries().size(); i++) {
       WebRoomInfos* v_wri = (WebRoomInfos*)(pRoomsList->getEntries()[i]->pvUser);
@@ -3298,7 +3322,6 @@ namespace vapp {
 	break;
       }
     }
-#endif
 
     UIButton *pEnableGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:ENABLE_GHOST");
     UIList *pGhostStrategy = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGIES_LIST");
@@ -3459,16 +3482,17 @@ namespace vapp {
       m_Config.setValue("DisplayGhostInfo",m_Config.getDefaultValue("DisplayGhostInfo"));
       m_Config.setValue("ShowGhostTimeDiff",m_Config.getDefaultValue("ShowGhostTimeDiff"));
 
-    #if defined(SUPPORT_WEBACCESS)
       m_Config.setValue("ShowInGameWorldRecord",m_Config.getDefaultValue("ShowInGameWorldRecord"));
       m_Config.setValue("AutosaveHighscoreReplays",m_Config.getDefaultValue("AutosaveHighscoreReplays"));
       m_Config.setValue("CheckNewLevelsAtStartup",m_Config.getDefaultValue("CheckNewLevelsAtStartup"));
       m_Config.setValue("CheckHighscoresAtStartup",m_Config.getDefaultValue("CheckHighscoresAtStartup"));
-    #endif
 
     m_Config.setValue("AutosaveHighscoreReplays",m_Config.getDefaultValue("AutosaveHighscoreReplays"));
 
-    m_Config.setValue("WebHighscoreUploadIdRoom", m_Config.getDefaultValue("WebHighscoreUploadIdRoom"));
+    m_WebHighscoresIdRoom = m_Config.getDefaultValue("WebHighscoresIdRoom");
+    m_Config.setValue("WebHighscoresIdRoom", m_WebHighscoresIdRoom);
+    m_WebHighscoresURL = m_Config.getDefaultValue("WebHighscoresURL");
+    m_Config.setValue("WebHighscoresURL", m_WebHighscoresURL);
     m_Config.setValue("WebHighscoreUploadLogin", m_Config.getDefaultValue("WebHighscoreUploadLogin"));
     m_Config.setValue("WebHighscoreUploadPasword", m_Config.getDefaultValue("WebHighscoreUploadPassword"));
     
@@ -3622,7 +3646,6 @@ namespace vapp {
       }
     }
       
-#if defined(SUPPORT_WEBACCESS)
     UIButton *pWebHighscores = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:ENABLEWEBHIGHSCORES");
     UIButton *pInGameWorldRecord = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:INGAMEWORLDRECORD");
     UIButton *pCheckNewLevelsAtStartup = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:ENABLECHECKNEWLEVELSATSTARTUP");
@@ -3640,15 +3663,17 @@ namespace vapp {
     if(pRoomsList->getSelected() >= 0 &&
        pRoomsList->getSelected() < pRoomsList->getEntries().size()) {
       WebRoomInfos *wri = (WebRoomInfos*)(pRoomsList->getEntries()[pRoomsList->getSelected()]->pvUser);
-      m_Config.setString("WebHighscoreUploadIdRoom", wri->getId());
+      m_Config.setString("WebHighscoresIdRoom", wri->getId());
       m_Config.setString("WebHighscoresURL", wri->getUrlHighscores());
+      m_WebHighscoresIdRoom = wri->getId();
+      m_WebHighscoresURL    = wri->getUrlHighscores();
     }
 
     m_Config.setString("WebHighscoreUploadLogin", pRoomsLogin->getCaption());
     m_Config.setString("WebHighscoreUploadPassword", pRoomsPassword->getCaption());
 
     /* set room in the list */
-    std::string v_room_id = m_Config.getString("WebHighscoreUploadIdRoom");
+    std::string v_room_id = m_WebHighscoresIdRoom;
     if(v_room_id == "") {v_room_id = DEFAULT_WEBROOM_ID;}
     for(int i=0; i<pRoomsList->getEntries().size(); i++) {
       WebRoomInfos* v_wri = (WebRoomInfos*)(pRoomsList->getEntries()[i]->pvUser);
@@ -3657,7 +3682,6 @@ namespace vapp {
 	break;
       }
     }
-#endif
 
     UIButton *pMotionBlurGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:MOTION_BLUR_GHOST");
     UIButton *pDisplayGhostInfo = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:DISPLAY_GHOST_INFO");
@@ -3667,9 +3691,7 @@ namespace vapp {
     m_Config.setBool("DisplayGhostInfo",pDisplayGhostInfo->getChecked());
     m_Config.setBool("ShowGhostTimeDiff",pDisplayGhostTimeDiff->getChecked());
 
-#if defined(SUPPORT_WEBACCESS)
     m_Config.setBool("WebHighscores",pWebHighscores->getChecked());
-#endif
 
     UIButton *pEnableGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:ENABLE_GHOST");
     UIList *pGhostStrategy = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGIES_LIST");
@@ -3730,117 +3752,94 @@ namespace vapp {
     _UpdateSettings();
   }
   
-#if defined(SUPPORT_WEBACCESS)
   void GameApp::setLevelInfoFrameBestPlayer(String pLevelID,
 					    UIWindow *i_pLevelInfoFrame,
 					    UIButton *i_pLevelInfoViewReplayButton,
 					    UIStatic *i_pBestPlayerText
 					    ) {
-    if(m_pWebHighscores != NULL) {
-      WebHighscore *pWH = m_pWebHighscores->getHighscoreFromLevel(pLevelID);
-      if(pWH != NULL) {
-	i_pLevelInfoFrame->showWindow(true);
-	i_pBestPlayerText->setCaption((std::string(GAMETEXT_BESTPLAYER) + " : " + pWH->getPlayerName()).c_str());
-	m_pLevelToShowOnViewHighscore = pLevelID;
-
-	/* search if the replay is already downloaded */
-	std::vector<ReplayInfo *> *Replays = m_ReplayList.findReplays("", pLevelID);
-	String v_replay_name = pWH->getReplayName();
-	bool found = false;
-	int i = 0;
-	while(i < Replays->size() && found == false) {
-	  if((*Replays)[i]->Name == v_replay_name) {
-	    found = true;
-	  }
-	  i++;
-	}
-	delete Replays;
-
-	if(found) {
-	  i_pLevelInfoViewReplayButton->enableWindow(true);
-	} else {
-	  i_pLevelInfoViewReplayButton->enableWindow(m_bEnableWebHighscores);
-	}
-      } else {
-	i_pLevelInfoFrame->showWindow(false);
-	m_pLevelToShowOnViewHighscore = "";
-      }
-    } else {
+    char **v_result;
+    int nrow;
+    std::string v_levelAuthor;
+    std::string v_fileUrl;
+    
+    v_result = m_db->readDB("SELECT id_profile, fileUrl "
+			    "FROM webhighscores WHERE id_level=\"" + 
+			    xmDatabase::protectString(pLevelID) + "\""
+			    "AND id_room=" + m_WebHighscoresIdRoom + ";",
+			    nrow);
+    if(nrow == 0) {
       i_pLevelInfoFrame->showWindow(false);
       m_pLevelToShowOnViewHighscore = "";
+      m_db->read_DB_free(v_result);
+      return;
+    }
+    v_levelAuthor = m_db->getResult(v_result, 2, 0, 0);
+    v_fileUrl     = m_db->getResult(v_result, 2, 0, 1);
+    m_db->read_DB_free(v_result);
+
+    i_pLevelInfoFrame->showWindow(true);
+    i_pBestPlayerText->setCaption((std::string(GAMETEXT_BESTPLAYER) + " : " +
+				   v_levelAuthor).c_str());
+    m_pLevelToShowOnViewHighscore = pLevelID;
+    
+    /* search if the replay is already downloaded */
+    if(m_db->replays_exists(FS::getFileBaseName(v_fileUrl))) {
+      i_pLevelInfoViewReplayButton->enableWindow(true);
+    } else {
+      i_pLevelInfoViewReplayButton->enableWindow(m_bEnableWebHighscores);
     }
   }
 
   void GameApp::viewHighscoreOf() {
-    if(m_pWebHighscores == NULL) return;
+    char **v_result;
+    int nrow;
+    std::string v_levelAuthor;
+    std::string v_fileUrl;
+    std::string v_replayName;
 
-    WebHighscore *pWH = m_pWebHighscores->getHighscoreFromLevel(m_pLevelToShowOnViewHighscore);
-    if(pWH == NULL) return;
-
-    std::vector<ReplayInfo *> *Replays = m_ReplayList.findReplays("", m_pLevelToShowOnViewHighscore);
-    int i=0;
-
-    /* search if the replay is already downloaded */
-    bool found = false;
-    while(i < Replays->size() && found == false) {
-      if((*Replays)[i]->Name == pWH->getReplayName()) {
-	found = true;
-      }
-      i++;
+    v_result = m_db->readDB("SELECT id_profile, fileUrl "
+			    "FROM webhighscores WHERE id_level=\"" + 
+			    xmDatabase::protectString(m_pLevelToShowOnViewHighscore) + "\""
+			    "AND id_room=" + m_WebHighscoresIdRoom + ";",
+			    nrow);
+    if(nrow == 0) {
+      m_db->read_DB_free(v_result);
+      return;
     }
-    delete Replays;
+    v_levelAuthor = m_db->getResult(v_result, 2, 0, 0);
+    v_fileUrl     = m_db->getResult(v_result, 2, 0, 1);
+    v_replayName  = FS::getFileBaseName(v_fileUrl);
+    m_db->read_DB_free(v_result);
 
-    if(found == false) {
-      if(m_bEnableWebHighscores) {
-	try {
-	  _SimpleMessage(GAMETEXT_DLHIGHSCORE,&m_InfoMsgBoxRect);
-	  pWH->download();
-	  
-	  m_ReplayList.addReplay(FS::getFileBaseName(pWH->getReplayName()));
-	  _UpdateReplaysList();
+    if(m_db->replays_exists(v_replayName)) {
+      return;
+    }
+    
+    if(m_bEnableWebHighscores == false) {
+      return;
+    }
 
-	  /* not very nice : make a new search to be sure the replay is here */
-	  /* because it could have been downloaded but unplayable : for macosx for example */
-	  std::vector<ReplayInfo *> *Replays = m_ReplayList.findReplays("", m_pLevelToShowOnViewHighscore);
-	  int i=0;
-	  /* search if the replay is already downloaded */
-	  bool found = false;
-	  while(i < Replays->size() && found == false) {
-	    if((*Replays)[i]->Name == pWH->getReplayName()) {
-	      found = true;
-	    }
-	    i++;
-	  }
-	  delete Replays;
-
-	  if(found == false) {
-	    notifyMsg(GAMETEXT_FAILEDTOLOADREPLAY);
-	    return;
-	  }
-
-	} catch(Exception &e) {
-	  notifyMsg(GAMETEXT_FAILEDDLREPLAY);
-	  return;
-	}
-      } else {
+    try {
+      _SimpleMessage(GAMETEXT_DLHIGHSCORE,&m_InfoMsgBoxRect);
+      m_pWebHighscores->downloadReplay(v_fileUrl);
+      addReplay(v_replayName);
+      _UpdateReplaysList();
+      
+      /* not very nice : make a new search to be sure the replay is here */
+      /* because it could have been downloaded but unplayable : for macosx for example */
+      if(m_db->replays_exists(v_replayName) == false) {
+	notifyMsg(GAMETEXT_FAILEDTOLOADREPLAY);
 	return;
       }
+    } catch(Exception &e) {
+      notifyMsg(GAMETEXT_FAILEDDLREPLAY);
+      return;
     }
-
-    m_PlaySpecificReplay = pWH->getReplayName();      
+    m_PlaySpecificReplay = v_replayName;
   }
-#endif
 
   void GameApp::_UpdateLevelPackLevelList() {
     UILevelList *pList = (UILevelList *)m_pLevelPackViewer->getChild("LEVELPACK_LEVEL_LIST");    
-
-    /* Update levels informations */
-    pList->updateLevelsInformations(m_pPlayer,
-				    &m_Profiles
-#if defined(SUPPORT_WEBACCESS)
-				    , m_pWebHighscores
-#endif
-				    );
   }
 
 }

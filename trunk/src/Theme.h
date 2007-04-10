@@ -463,13 +463,8 @@ class ThemeChoice {
 class ThemeChoicer {
  public:
 
-#if defined(SUPPORT_WEBACCESS)
   ThemeChoicer(vapp::WWWAppInterface *p_WebApp = NULL,
 	       const ProxySettings *p_proxy_settings = NULL);	       
-#else
-  ThemeChoicer(void);	       
-#endif
-
   ~ThemeChoicer();
 
   bool ExistThemeName(std::string p_themeName);
@@ -477,23 +472,19 @@ class ThemeChoicer {
   std::vector<ThemeChoice*> getChoices();
   ThemeChoice* getChoiceByName(std::string p_themeName);
 
-#if defined(SUPPORT_WEBACCESS)
   void updateFromWWW();
   void updateThemeFromWWW(ThemeChoice* pThemeChoice);
   bool isUpdatableThemeFromWWW(ThemeChoice* pThemeChoice);
 
   void setURL(const std::string &p_url);
   void setURLBase(const std::string &p_urlBase);
-#endif
 
  private:
   void cleanList();
   void initList();
   std::string getThemeNameFromFile(std::string p_themeFile);
   
-#if defined(SUPPORT_WEBACCESS)
   WebThemes *m_webThemes;
-#endif
 
   std::vector<ThemeChoice*> m_choices;
 };

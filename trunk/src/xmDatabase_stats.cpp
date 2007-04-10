@@ -74,7 +74,7 @@ void xmDatabase::updateDB_stats(XmDatabaseUpdateInterface *i_interface) {
 
 	    /* insert row */
 	    simpleSql("INSERT INTO stats_profiles(id_profile, nbStarts, since) "
-		      "VALUES(\"" + v_playerName + "\", "
+		      "VALUES(\"" + protectString(v_playerName) + "\", "
 		      + v_starts + ", \"" + v_since + "\");");
 	  
 	    if(i_interface != NULL) {
@@ -116,8 +116,8 @@ void xmDatabase::updateDB_stats(XmDatabaseUpdateInterface *i_interface) {
 		simpleSql(std::string("INSERT INTO stats_profiles_levels("
 				      "id_profile, id_level, nbPlayed, nbDied, nbCompleted,"
 				      "nbRestarted, playedTime) VALUES(") + 
-			  "\"" + v_playerName + "\", " +
-			  "\"" + v_levelId    + "\", " +
+			  "\"" + protectString(v_playerName) + "\", " +
+			  "\"" + protectString(v_levelId)    + "\", " +
 			  v_played     + ", " +
 			  v_died       + ", " +
 			  v_completed  + ", " +
@@ -130,17 +130,39 @@ void xmDatabase::updateDB_stats(XmDatabaseUpdateInterface *i_interface) {
 	simpleSql("COMMIT;");
       } catch(Exception &e) {
 	simpleSql("ROLLBACK;");
+	throw e;
       }
     }
   }
 }
 
-bool xmDatabase::stats_checkKeyExists_stats_profiles(std::string i_profile) {
+void xmDatabase::stats_createProfile(const std::string& i_profile) {
+  simpleSql("INSERT INTO stats_profiles(id_profile, nbStarts, since) "
+	    "VALUES(\"" + protectString(i_profile) + "\", 0, \"" + 
+	    vapp::App::getTimeStamp() + "\");");
+}
+
+void xmDatabase::stats_destroyProfile(const std::string& i_profile) {
+  try {
+    simpleSql("BEGIN TRANSACTION;");
+    simpleSql("DELETE FROM stats_profiles          WHERE id_profile=\""+ protectString(i_profile) + "\";");
+    simpleSql("DELETE FROM levels_favorite         WHERE id_profile=\""+ protectString(i_profile) + "\";");
+    simpleSql("DELETE FROM profile_completedLevels WHERE id_profile=\""+ protectString(i_profile) + "\";");
+    simpleSql("DELETE FROM stats_profiles_levels   WHERE id_profile=\""+ protectString(i_profile) + "\";");
+    simpleSql("COMMIT;");
+  } catch(Exception &e) {
+    simpleSql("ROLLBACK;");
+    throw e;
+  }
+}
+
+bool xmDatabase::stats_checkKeyExists_stats_profiles(const std::string& i_profile) {
   return checkKey("SELECT count(1) FROM stats_profiles "
 		  "WHERE id_profile=\"" + i_profile + "\";");
 }
 
-bool xmDatabase::stats_checkKeyExists_stats_profiles_levels(std::string i_profile, std::string i_level) {
+bool xmDatabase::stats_checkKeyExists_stats_profiles_levels(const std::string& i_profile,
+							    const std::string& i_level) {
   return checkKey("SELECT count(1) FROM stats_profiles_levels "
 		  "WHERE id_profile=\"" + i_profile + "\" " +
 		  "AND id_level=\""     + i_level   + "\";");
@@ -163,7 +185,7 @@ void xmDatabase::stats_levelCompleted(const std::string &PlayerName,
     simpleSql("INSERT INTO stats_profiles_levels("
 	      "id_profile, id_level,"
 	      "nbPlayed, nbDied, nbCompleted, nbRestarted, playedTime) "
-	      "VALUES (\"" + PlayerName + "\", \"" + LevelID + "\", 1, 0, 1, 0, \"" +
+	      "VALUES (\"" + protectString(PlayerName) + "\", \"" + protectString(LevelID) + "\", 1, 0, 1, 0, \"" +
 	      v_playTime.str() + "\");");
   }
 }
@@ -185,7 +207,7 @@ void xmDatabase::stats_died(const std::string &PlayerName,
     simpleSql("INSERT INTO stats_profiles_levels("
 	      "id_profile, id_level,"
 	      "nbPlayed, nbDied, nbCompleted, nbRestarted, playedTime) "
-	      "VALUES (\"" + PlayerName + "\", \"" + LevelID + "\", 1, 1, 0, 0, \"" +
+	      "VALUES (\"" + protectString(PlayerName) + "\", \"" + protectString(LevelID) + "\", 1, 1, 0, 0, \"" +
 	      v_playTime.str() + "\");");
   }
 }
@@ -206,7 +228,7 @@ void xmDatabase::stats_abortedLevel(const std::string &PlayerName,
     simpleSql("INSERT INTO stats_profiles_levels("
 	      "id_profile, id_level,"
 	      "nbPlayed, nbDied, nbCompleted, nbRestarted, playedTime) "
-	      "VALUES (\"" + PlayerName + "\", \"" + LevelID + "\", 1, 0, 0, 0, \"" +
+	      "VALUES (\"" + protectString(PlayerName) + "\", \"" + protectString(LevelID) + "\", 1, 0, 0, 0, \"" +
 	      v_playTime.str() + "\");");
   }
 }
@@ -228,29 +250,13 @@ void xmDatabase::stats_levelRestarted(const std::string &PlayerName,
     simpleSql("INSERT INTO stats_profiles_levels("
 	      "id_profile, id_level,"
 	      "nbPlayed, nbDied, nbCompleted, nbRestarted, playedTime) "
-	      "VALUES (\"" + PlayerName + "\", \"" + LevelID + "\", 1, 0, 0, 1, \"" +
+	      "VALUES (\"" + protectString(PlayerName) + "\", \"" + protectString(LevelID) + "\", 1, 0, 0, 1, \"" +
 	      v_playTime.str() + "\");");
   }
 }
 
 void xmDatabase::stats_xmotoStarted(const std::string &PlayerName) {
-  if(stats_checkKeyExists_stats_profiles(PlayerName)) {
-    simpleSql("UPDATE stats_profiles SET "
-	      "nbStarts=nbStarts+1 "
-	      "WHERE id_profile=\"" + PlayerName + "\";");
-  } else {
-    /* Note this time */
-    time_t ATime;               
-    time(&ATime);
-    struct tm *ptm = localtime(&ATime);
-    char cTemp[20];
-    std::string v_since;
-
-    sprintf(cTemp,"%04d-%02d-%02d %02d:%02d:%02d",
-	    1900+ptm->tm_year, ptm->tm_mon+1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec);  
-    v_since = cTemp;
-
-    simpleSql("INSERT INTO stats_profiles(id_profile, nbStarts, since) "
-	      "VALUES(\"" + PlayerName + "\", 0, \"" + v_since + "\");");
-  }
+  simpleSql("UPDATE stats_profiles SET "
+	    "nbStarts=nbStarts+1 "
+	    "WHERE id_profile=\"" + PlayerName + "\";");
 }

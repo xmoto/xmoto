@@ -32,9 +32,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Input.h"
 #include "xmDatabase.h";
 
-#if defined(SUPPORT_WEBACCESS)
   #include <curl/curl.h>
-#endif
 
 #define DATABASE_FILE vapp::FS::getUserDir() + "/" + "xm.db"
 
@@ -110,32 +108,20 @@ namespace vapp {
     
     /* load theme */
     m_themeChoicer = new ThemeChoicer(
-#if defined(SUPPORT_WEBACCESS)
               this,
               &m_ProxySettings
-#endif
               );
     reloadTheme();
 
-    /* Profiles */
-    Log("Loading profiles...");
-    m_Profiles.loadFile();
-    Log(" %d profile%s loaded",m_Profiles.getProfiles().size(),m_Profiles.getProfiles().size()==1?"":"s");
-
     /* Select profile */
-    m_pPlayer = NULL;
+    m_profile = "";
     if(m_ForceProfile != "") {
-      m_pPlayer = m_Profiles.getProfile(m_ForceProfile);
-      if(m_pPlayer == NULL)
-        Log("** Warning ** : unknown profile '%s'",m_ForceProfile.c_str());       
+      m_profile = m_ForceProfile;
     }
-    if(m_pPlayer == NULL)
-      m_pPlayer = m_Profiles.getProfile(m_Config.getString("DefaultProfile"));
-    if(m_pPlayer == NULL && !m_Profiles.getProfiles().empty()) {
-      /* OK, use the first then */
-      m_pPlayer = m_Profiles.getProfiles()[0];
-    }
-     
+    if(m_profile == "") {
+      m_profile = m_Config.getString("DefaultProfile");
+    }     
+
     /* Init sound system */
     if(!getDrawLib()->isNoGraphics()) {
       Log("Initializing sound system...");
@@ -171,46 +157,49 @@ namespace vapp {
     }
 
     /* database */
-    m_db = new xmDatabase(DATABASE_FILE, getDrawLib()->isNoGraphics() ? NULL : this);
+    m_db = new xmDatabase(DATABASE_FILE,
+			  m_profile == "" ? std::string("") : m_profile,
+			  getDrawLib()->isNoGraphics() ? NULL : this);
     /* Update stats */
-    if(m_pPlayer != NULL)
-      m_db->stats_xmotoStarted(m_pPlayer->PlayerName);
+    if(m_profile != "")
+      m_db->stats_xmotoStarted(m_profile);
+
+    /* load levels */
+    if(m_db->levels_isIndexUptodate() == false) {
+      m_levelsManager.reloadLevelsFromLvl(m_db, this);
+    }
+    m_levelsManager.reloadExternalLevels(m_db, this);
 
     /* Update replays */
-    _UpdateLoadingScreen((1.0f/9.0f) * 0,m_loadingScreen,GAMETEXT_LOADINGREPLAYS);
     
-    try {
-      m_ReplayList.initFromCache();
-    } catch(Exception &e) {
-      m_ReplayList.initFromDir();
-    }    
+    if(m_db->replays_isIndexUptodate() == false) {
+      initReplaysFromDir();
+    }
     
     /* List replays? */  
     if(m_bListReplays) {
-      std::vector<ReplayInfo *> *Replays = m_ReplayList.findReplays();
+      char **v_result;
+      int nrow;
+
       printf("\nReplay                    Level                     Player\n");
       printf("-----------------------------------------------------------------------\n");
-      for(int i=0;i<Replays->size();i++) {
-	std::string LevelDesc;
-	
-	if((*Replays)[i]->Level.length() == 6 &&
-	   (*Replays)[i]->Level[0] == '_' && (*Replays)[i]->Level[1] == 'i' &&
-	   (*Replays)[i]->Level[2] == 'L' && (*Replays)[i]->Level[5] == '_') {
-	  int nNum;
-	  sscanf((*Replays)[i]->Level.c_str(),"_iL%d_",&nNum);
-	  char cBuf[256];
-	  sprintf(cBuf,"#%d",nNum+1);
-	  LevelDesc = cBuf;
+
+      v_result = m_db->readDB("SELECT a.name, a.id_profile, b.name "
+			      "FROM replays AS a INNER JOIN levels AS b "
+			      "ON a.id_level = b.id_level;", nrow);
+      if(nrow == 0) {
+	printf("(none)\n");
+      } else {
+	for(unsigned int i=0; i<nrow; i++) {
+	  //m_db->getResult(v_result, 4, i, 0)
+	  printf("%-25s %-25s %-25s\n",
+		 m_db->getResult(v_result, 3, i, 0),
+		 m_db->getResult(v_result, 3, i, 2),
+		 m_db->getResult(v_result, 3, i, 1)
+		 );
 	}
-	else LevelDesc = (*Replays)[i]->Level;
-	
-	printf("%-25s %-25s %-25s\n",
-	       (*Replays)[i]->Name.c_str(),
-	       LevelDesc.c_str(),
-	       (*Replays)[i]->Player.c_str());
       }
-	if(Replays->empty()) printf("(none)\n");
-      delete Replays;
+      m_db->read_DB_free(v_result);
       quit();
       return;
     }
@@ -218,10 +207,9 @@ namespace vapp {
     if(m_bDisplayInfosReplay) {
       Replay v_replay;
       std::string v_levelId;
-      float v_frameRate;
       std::string v_player;
       
-      v_levelId = v_replay.openReplay(m_InfosReplay, &v_frameRate, v_player, true);
+      v_levelId = v_replay.openReplay(m_InfosReplay, v_player, true);
       if(v_levelId == "") {
 	throw Exception("Invalid replay");
       }
@@ -287,91 +275,83 @@ namespace vapp {
         m_pCursor = pSprite->getTexture(false, true, FM_LINEAR);
       }
 
-#if defined(SUPPORT_WEBACCESS)  
       m_pNewLevelsAvailIcon = NULL;
       pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "NewLevelsAvailable");
       if(pSprite != NULL) {
         m_pNewLevelsAvailIcon = pSprite->getTexture(false, true, FM_LINEAR);
       }
-#endif
 
-      _UpdateLoadingScreen((1.0f/9.0f) * 4,m_loadingScreen,GAMETEXT_LOADINGLEVELS);
-    }
-    
-    /* Test level cache directory */
-    LevelsManager::checkPrerequires(m_bEnableLevelCache);
-    
-    /* Should we clean the level cache? (can also be done when disabled) */
-    if(m_bCleanCache) {
-      LevelsManager::cleanCache();
-    }
-     
-    try {
-      m_levelsManager.loadLevelsFromIndex(m_bEnableLevelCache);
-    } catch(Exception &e) {
-      _UpdateLoadingScreen((1.0f/9.0f) * 4,m_loadingScreen, GAMETEXT_INDEX_CREATION);
-      Log(std::string("Unable to load levels from index:\n" + e.getMsg()).c_str());
-      m_levelsManager.reloadLevelsFromFiles(m_bEnableLevelCache, this);
-    }
-
-    /* -listlevels? */
-    if(m_bListLevels) {
-      m_levelsManager.printLevelsList();
-    }
-
-    _UpdateLoadingScreen((1.0f/9.0f) * 5,m_loadingScreen,GAMETEXT_INITRENDERER);
-    
-    if(m_bListLevels) {
-      quit();
-      return;
-    }
-    
-    #if defined(SUPPORT_WEBACCESS)    
       /* Fetch highscores from web? */
       if(m_pWebHighscores != NULL) delete m_pWebHighscores;
       m_pWebHighscores = new WebRoom(&m_ProxySettings);      
-      m_pWebHighscores->setWebsiteURL(m_Config.getString("WebHighscoresURL"));
+      m_pWebHighscores->setWebsiteInfos(m_WebHighscoresIdRoom,
+					m_WebHighscoresURL);
       
-      if(m_bEnableWebHighscores) {  
-  bool bSilent = true;
+    if(m_bEnableWebHighscores) {  
+      bool bSilent = true;
           
-  try {
-    if(m_bEnableCheckHighscoresAtStartup) {
-      _UpdateLoadingScreen((1.0f/9.0f) * 6,m_loadingScreen,GAMETEXT_DLHIGHSCORES);      
-      _UpdateWebHighscores(bSilent);
-    }
-  } catch(Exception &e) {
-    /* No internet connection, probably... (just use the latest times, if any) */
-    Log("** Warning ** : Failed to update web-highscores [%s]",e.getMsg().c_str());              
-    if(!bSilent)
-      notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES);
-  }
-
-
-  if(m_bEnableCheckNewLevelsAtStartup) {
-    try {
-      _UpdateLoadingScreen((1.0f/9.0f) * 6,m_loadingScreen,GAMETEXT_DLLEVELSCHECK);      
-      _UpdateWebLevels(bSilent);       
-    } catch(Exception &e) {
-      /* No internet connection, probably... (just use the latest times, if any) */
-      Log("** Warning ** : Failed to update web-highscores [%s]",e.getMsg().c_str());              
-      if(!bSilent)
-	notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES);
-    }
-  } else {
-    _UpdateWebLevels(bSilent, false);
-  }
-
+      try {
+	if(m_bEnableCheckHighscoresAtStartup) {
+	  _UpdateLoadingScreen((1.0f/9.0f) * 6,m_loadingScreen,GAMETEXT_DLHIGHSCORES);      
+	  _UpdateWebHighscores(bSilent);
+	  _UpgradeWebHighscores();
+	}
+      } catch(Exception &e) {
+	/* No internet connection, probably... (just use the latest times, if any) */
+	Log("** Warning ** : Failed to update web-highscores [%s]",e.getMsg().c_str());              
+	if(!bSilent)
+	  notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES);
       }
+      
 
-      _UpgradeWebHighscores();
-
+      if(m_bEnableCheckNewLevelsAtStartup) {
+	try {
+	  _UpdateLoadingScreen((1.0f/9.0f) * 6,m_loadingScreen,GAMETEXT_DLLEVELSCHECK);      
+	  _UpdateWebLevels(bSilent);       
+	} catch(Exception &e) {
+	  Log("** Warning ** : Failed to update web-levels [%s]",e.getMsg().c_str());              
+	  if(!bSilent)
+	    notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES);
+	}
+      }
+      
+    }
+    
     if(m_pWebRooms != NULL) delete m_pWebRooms;
     m_pWebRooms = new WebRooms(&m_ProxySettings);
     _UpgradeWebRooms(false);
 
-    #endif
-        
+    }
+
+    /* Test level cache directory */
+    if(!getDrawLib()->isNoGraphics()) {  
+      _UpdateLoadingScreen((1.0f/9.0f) * 4,m_loadingScreen,GAMETEXT_LOADINGLEVELS);
+    }
+    LevelsManager::checkPrerequires();
+    m_levelsManager.makePacks(m_db,
+			      m_profile,
+			      m_Config.getString("WebHighscoresIdRoom"),
+			      m_bDebugMode);     
+
+    /* Should we clean the level cache? (can also be done when disabled) */
+    if(m_bCleanCache) {
+      LevelsManager::cleanCache();
+    }
+
+    /* -listlevels? */
+    if(m_bListLevels) {
+      m_levelsManager.printLevelsList(m_db);
+    }
+
+    if(!getDrawLib()->isNoGraphics()) {  
+      _UpdateLoadingScreen((1.0f/9.0f) * 5,m_loadingScreen,GAMETEXT_INITRENDERER);
+    }    
+
+    if(m_bListLevels) {
+      quit();
+      return;
+    }
+
     if(!getDrawLib()->isNoGraphics()) {
       /* Initialize renderer */
       m_Renderer.init();
@@ -391,8 +371,8 @@ namespace vapp {
     /* What to do? */
     if(m_PlaySpecificLevelFile != "") {
       try {
-	m_levelsManager.addExternalLevel(m_PlaySpecificLevelFile);
-	m_PlaySpecificLevel = m_levelsManager.LevelByFileName(m_PlaySpecificLevelFile).Id();
+	m_levelsManager.addExternalLevel(m_db, m_PlaySpecificLevelFile);
+	m_PlaySpecificLevel = m_levelsManager.LevelByFileName(m_db, m_PlaySpecificLevelFile);
       } catch(Exception &e) {
 	m_PlaySpecificLevel = m_PlaySpecificLevelFile;
       }
@@ -401,7 +381,7 @@ namespace vapp {
       /* ======= PLAY SPECIFIC LEVEL ======= */
       m_StateAfterPlaying = GS_MENU;
       setState(GS_PREPLAYING);
-      Log("Playing as '%s'...",m_pPlayer->PlayerName.c_str());
+      Log("Playing as '%s'...", m_profile.c_str());
     }
     else if(m_PlaySpecificReplay != "") {
       /* ======= PLAY SPECIFIC REPLAY ======= */
@@ -414,16 +394,14 @@ namespace vapp {
         throw Exception("menu requires graphics");
         
       /* Do we have a player profile? */
-      if(m_pPlayer == NULL) {
+      if(m_profile == "") {
         setState(GS_EDIT_PROFILES);
       }
-#if defined(SUPPORT_WEBACCESS)
       else if(m_Config.getBool("WebConfAtInit")) {
         /* We need web-config */
         _InitWebConf();
         setState(GS_EDIT_WEBCONFIG);
       }
-#endif
       else {
         /* Enter the menu */
         setState(GS_MENU);
@@ -435,7 +413,6 @@ namespace vapp {
   Shutdown game
   ===========================================================================*/
   void GameApp::userShutdown(void) {  
-    #if defined(SUPPORT_WEBACCESS)
       if(m_pWebHighscores != NULL)
         delete m_pWebHighscores;
         
@@ -444,13 +421,10 @@ namespace vapp {
 
       if(m_pWebRooms != NULL)
       delete m_pWebRooms;  
-    #endif
   
     if(m_pCredits != NULL)
       delete m_pCredits;
   
-    m_levelsManager.saveXml();
-      
     if(!getDrawLib()->isNoGraphics()) {
       m_Renderer.unprepareForNewLevel(); /* just to be sure, shutdown can happen quite hard */
       m_Renderer.shutdown();
@@ -462,14 +436,12 @@ namespace vapp {
     if(m_pJustPlayReplay != NULL)
       delete m_pJustPlayReplay;
 
-    if(m_pPlayer != NULL) 
-      m_Config.setString("DefaultProfile",m_pPlayer->PlayerName);
+    if(m_profile != "") 
+      m_Config.setString("DefaultProfile", m_profile);
 
     Sound::uninit();
 
     m_Config.saveFile();
-
-    m_Profiles.saveFile();
 
     if(!getDrawLib()->isNoGraphics()) {
       UITextDraw::uninitTextDrawing();  
@@ -693,13 +665,11 @@ namespace vapp {
     m_Config.createVar( "StoreReplays",           "true" );
     m_Config.createVar( "ReplayFrameRate",        "25" );
     m_Config.createVar( "CompressReplays",        "true" );
-    m_Config.createVar( "LevelCache",             "true" );
     m_Config.createVar( "ContextHelp",            "true" );
     m_Config.createVar( "MenuMusic",              "true" );    
     m_Config.createVar( "InitZoom",               "true" );
     m_Config.createVar( "DeathAnim",              "true" );
 
-#if defined(SUPPORT_WEBACCESS)
     m_Config.createVar( "WebHighscores",            "false" );
     m_Config.createVar( "CheckHighscoresAtStartup", "true" );
     m_Config.createVar( "CheckNewLevelsAtStartup",  "true" );
@@ -712,6 +682,7 @@ namespace vapp {
     m_Config.createVar( "WebThemesURL",           DEFAULT_WEBTHEMES_URL);
     m_Config.createVar( "WebThemesURLBase",       DEFAULT_WEBTHEMES_SPRITESURLBASE);
     m_Config.createVar( "WebRoomsURL",            DEFAULT_WEBROOMS_URL);
+    m_Config.createVar( "WebHighscoresIdRoom",     DEFAULT_WEBROOM_ID);
 
     /* Proxy */
     m_Config.createVar( "ProxyType",              "" ); /* (blank), HTTP, SOCKS4, or SOCKS5 */
@@ -721,13 +692,10 @@ namespace vapp {
     m_Config.createVar( "ProxyAuthPwd",           "" );
 
     /* auto upload */
-    m_Config.createVar( "WebHighscoreUploadURL"      , DEFAULT_UPLOADREPLAY_URL);
-    m_Config.createVar( "WebHighscoreUploadIdRoom"   , DEFAULT_WEBROOM_ID);
+    m_Config.createVar( "WebHighscoreUploadURL", DEFAULT_UPLOADREPLAY_URL);
     m_Config.createVar( "WebHighscoreUploadLogin"    , "");
     m_Config.createVar( "WebHighscoreUploadPassword" , ""); 
 
-#endif
-    
     m_Config.createVar( "EnableGhost"        , "true");
     m_Config.createVar( "GhostSearchStrategy", "0");
     m_Config.createVar( "ShowGhostTimeDiff"  , "true");

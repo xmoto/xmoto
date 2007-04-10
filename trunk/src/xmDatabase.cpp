@@ -23,10 +23,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GameText.h"
 #include "VApp.h"
 
-#define XMDB_VERSION 2
+#define XMDB_VERSION 10
 
-xmDatabase::xmDatabase(std::string i_dbFile, XmDatabaseUpdateInterface *i_interface) {
+xmDatabase::xmDatabase(const std::string& i_dbFile,
+		       const std::string& i_profile,
+		       XmDatabaseUpdateInterface *i_interface) {
   int v_version;
+
+  m_requiredLevelsUpdateAfterInit  = false;
+  m_requiredReplaysUpdateAfterInit = false;
 
   if(sqlite3_open(i_dbFile.c_str(), &m_db) != 0) {
     throw Exception("Unable to open the database (" + i_dbFile
@@ -48,7 +53,7 @@ xmDatabase::xmDatabase(std::string i_dbFile, XmDatabaseUpdateInterface *i_interf
     if(i_interface != NULL) {
       i_interface->updatingDatabase(GAMETEXT_DB_UPGRADING);
     }
-    upgrateXmDbToVersion(v_version, i_interface); 
+    upgradeXmDbToVersion(v_version, i_profile, i_interface); 
   }
 }
  
@@ -97,14 +102,16 @@ void xmDatabase::updateXmDbVersion(int i_newVersion) {
   std::ostringstream v_newVersion;
   char *errMsg;
   std::string v_errMsg;
-  
+
   v_newVersion << i_newVersion;
-  
+
   simpleSql("UPDATE xm_parameters SET value="+ v_newVersion.str() +
 	    " WHERE param=\"xmdb_version\";");
 }
 
-void xmDatabase::upgrateXmDbToVersion(int i_fromVersion, XmDatabaseUpdateInterface *i_interface) {
+void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
+				      const std::string& i_profile,
+				      XmDatabaseUpdateInterface *i_interface) {
   char *errMsg;
   std::string v_errMsg;
 
@@ -112,39 +119,125 @@ void xmDatabase::upgrateXmDbToVersion(int i_fromVersion, XmDatabaseUpdateInterfa
   switch(i_fromVersion) {
 
   case 0:
-    if(sqlite3_exec(m_db,
-		    "CREATE TABLE xm_parameters(param PRIMARY KEY, value);"
-		    "INSERT INTO xm_parameters(param, value) VALUES(\"xmdb_version\", 1);"
-		    , NULL,
-		    NULL, &errMsg) != SQLITE_OK) {
-      v_errMsg = errMsg;
-      sqlite3_free(errMsg);
-      throw Exception("Unable to update xmDb from 0: " + v_errMsg);
+    try {
+      simpleSql("CREATE TABLE xm_parameters(param PRIMARY KEY, value);"
+		"INSERT INTO xm_parameters(param, value) VALUES(\"xmdb_version\", 1);");
+    } catch(Exception &e) {
+      throw Exception("Unable to update xmDb from 0: " + e.getMsg());
     }
 
   case 1:
-    if(sqlite3_exec(m_db,
-		    "CREATE TABLE stats_profiles(id_profile PRIMARY KEY, nbStarts, since);"
-		    "CREATE TABLE stats_profiles_levels("
-		    "id_profile, id_level, nbPlayed, nbDied, nbCompleted, nbRestarted, playedTime,"
-		    "PRIMARY KEY(id_profile, id_level));"
-		    , NULL,
-		    NULL, &errMsg) != SQLITE_OK) {
-      v_errMsg = errMsg;
-      sqlite3_free(errMsg);
-      throw Exception("Unable to update xmDb from 1: " + v_errMsg);
+    try {
+      simpleSql("CREATE TABLE stats_profiles(id_profile PRIMARY KEY, nbStarts, since);"
+		"CREATE TABLE stats_profiles_levels("
+		"id_profile, id_level, nbPlayed, nbDied, nbCompleted, nbRestarted, playedTime,"
+		"PRIMARY KEY(id_profile, id_level));");
+      updateXmDbVersion(2);
+    } catch(Exception &e) {
+      throw Exception("Unable to update xmDb from 1: " + e.getMsg());
     }
+
     try {
       updateDB_stats(i_interface);
     } catch(Exception &e) {
       vapp::Log(std::string("Oups, updateDB_stats() failed: " + e.getMsg()).c_str());
     }
-    updateXmDbVersion(2);
 
+  case 2:
+    try {
+      simpleSql("CREATE TABLE levels(id_level PRIMARY KEY,"
+		"filepath, name, checkSum, author, description, "
+		"date_str, packName, packNum, music, isScripted, isToReload);");
+      updateXmDbVersion(3);
+      m_requiredLevelsUpdateAfterInit = true;
+    } catch(Exception &e) {
+      throw Exception("Unable to update xmDb from 2: " + e.getMsg());
+    }
+
+  case 3:
+    try {
+      simpleSql("CREATE TABLE levels_new(id_level PRIMARY KEY, isAnUpdate);");
+      simpleSql("CREATE TABLE levels_favorite(id_profile, id_level, PRIMARY KEY(id_profile, id_level));");
+      try {
+	updateDB_favorite(i_profile, i_interface);
+      } catch(Exception &e) {
+	vapp::Log(std::string("Oups, updateDB_favorite() failed: " + e.getMsg()).c_str());
+      }
+      updateXmDbVersion(4);
+    } catch(Exception &e) {
+      throw Exception("Unable to update xmDb from 3: " + e.getMsg());
+    }
+
+  case 4:
+    try {
+      simpleSql("CREATE TABLE profile_completedLevels("
+		"id_profile, id_level, timeStamp, finishTime);");
+      simpleSql("CREATE INDEX profile_completedLevels_idx1 "
+		"ON profile_completedLevels(id_profile, id_level);");
+      try {
+	updateDB_profiles(i_interface);
+      } catch(Exception &e) {
+	vapp::Log(std::string("Oups, updateDB_profiles() failed: " + e.getMsg()).c_str());
+      }
+      updateXmDbVersion(5);
+    } catch(Exception &e) {
+      throw Exception("Unable to update xmDb from 4: " + e.getMsg());
+    }
+
+  case 5:
+    try {
+      simpleSql("CREATE INDEX levels_packName_idx1 ON levels(packName);");
+      updateXmDbVersion(6);
+    } catch(Exception &e) {
+      throw Exception("Unable to update xmDb from 5: " + e.getMsg());
+    }
+
+  case 6:
+    try {
+      simpleSql("CREATE table replays(id_level, name PRIMARY KEY, id_profile, isFinished, finishTime);");
+      simpleSql("CREATE INDEX replays_id_level_idx1   ON replays(id_level);");
+      simpleSql("CREATE INDEX replays_id_profile_idx1 ON replays(id_profile);");
+      m_requiredReplaysUpdateAfterInit = true;
+      updateXmDbVersion(7);
+    } catch(Exception &e) {
+      throw Exception("Unable to update xmDb from 6: " + e.getMsg());
+    }
+
+  case 7:
+    try {
+      simpleSql("CREATE table webhighscores(id_room, id_level, id_profile, finishTime, date, fileUrl, PRIMARY KEY(id_room, id_level));");
+      simpleSql("CREATE INDEX webhighscores_id_profile_idx1 ON webhighscores(id_profile);");
+      simpleSql("CREATE INDEX webhighscores_date_idx1       ON webhighscores(date);");
+      updateXmDbVersion(8);
+    } catch(Exception &e) {
+      throw Exception("Unable to update xmDb from 7: " + e.getMsg());
+    }
+
+  case 8:
+    try {
+      simpleSql("CREATE table weblevels(id_level, name, fileUrl, checkSum, difficulty, quality, creationDate, PRIMARY KEY(id_level));");
+      simpleSql("CREATE INDEX weblevels_difficulty_idx1 ON weblevels(difficulty);");
+      simpleSql("CREATE INDEX weblevels_quality_idx1 ON weblevels(quality);");
+      simpleSql("CREATE INDEX weblevels_creationDate_idx1 ON weblevels(creationDate);");
+      updateXmDbVersion(9);
+    } catch(Exception &e) {
+      throw Exception("Unable to update xmDb from 8: " + e.getMsg());
+    }
+
+  case 9:
+    try {
+      simpleSql("CREATE table webrooms(id_room PRIMARY KEY, name, highscoresUrl);");
+      simpleSql("CREATE INDEX weblevels_name_idx1 ON webrooms(name);");
+      updateXmDbVersion(10);
+    } catch(Exception &e) {
+      throw Exception("Unable to update xmDb from 9: " + e.getMsg());
+    }
+
+    // next
   }
 }
 
-bool xmDatabase::checkKey(std::string i_sql) {
+bool xmDatabase::checkKey(const std::string& i_sql) {
   char **v_result;
   int nrow, ncolumn;
   char *errMsg;
@@ -166,9 +259,12 @@ bool xmDatabase::checkKey(std::string i_sql) {
   return v_nb != 0;
 }
 
-void xmDatabase::simpleSql(std::string i_sql) {
+void xmDatabase::simpleSql(const std::string& i_sql) {
   char *errMsg;
   std::string v_errMsg;
+
+  //vapp::Log(i_sql.c_str());
+  //printf("%s\n", i_sql.c_str());
 
   if(sqlite3_exec(m_db,
 		  i_sql.c_str(),
@@ -190,12 +286,14 @@ char* xmDatabase::getResult(char **i_result, int ncolumn, int i_row, int i_colum
   return i_result[ncolumn*(i_row+1) + i_column];
 }
 
-char** xmDatabase::readDB(std::string i_sql, int &i_nrow) {
+char** xmDatabase::readDB(const std::string& i_sql, int &i_nrow) {
   char **v_result;
   int ncolumn;
   char *errMsg;
   std::string v_errMsg;
   
+  //printf("%s\n", i_sql.c_str());
+
   if(sqlite3_get_table(m_db,
 		       i_sql.c_str(),
 		       &v_result, &i_nrow, &ncolumn, &errMsg)
@@ -209,4 +307,20 @@ char** xmDatabase::readDB(std::string i_sql, int &i_nrow) {
 
 void xmDatabase::read_DB_free(char **i_result) {
   sqlite3_free_table(i_result);
+}
+
+std::string xmDatabase::protectString(const std::string& i_str) {
+  std::string v_res;
+
+  for(int i=0; i<i_str.length(); i++) {
+    switch(i_str[i]) {
+    case '"':
+      v_res.append("\"\"");
+      break;
+    default:
+      char c[2] = {i_str[i], '\0'};
+      v_res.append(c);
+    }
+  }
+  return v_res;
 }

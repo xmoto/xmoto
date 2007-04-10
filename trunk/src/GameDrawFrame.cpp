@@ -34,9 +34,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/BikeGhost.h"
 #include "xmscene/BikePlayer.h"
 
-#if defined(SUPPORT_WEBACCESS)
-  #include <curl/curl.h>
-#endif
+#include <curl/curl.h>
 
 /* Set the following #defines to simulate slow systems */
 #define SIMULATE_SLOW_RENDERING     0 /* extra ms to add to rendering */
@@ -70,9 +68,7 @@ namespace vapp {
 
       case GS_LEVEL_INFO_VIEWER:
       case GS_LEVELPACK_VIEWER:
-#if defined(SUPPORT_WEBACCESS)
       case GS_EDIT_WEBCONFIG:
-#endif
       case GS_EDIT_PROFILES:
         /* Following is done for all the above states */
         _DrawMainGUI();
@@ -285,9 +281,7 @@ namespace vapp {
     switch(m_State) {
       case GS_MENU:
       case GS_EDIT_PROFILES:
-#if defined(SUPPORT_WEBACCESS)
       case GS_EDIT_WEBCONFIG:
-#endif
       case GS_LEVEL_INFO_VIEWER:
       case GS_PAUSE:
       case GS_DEADMENU:
@@ -315,7 +309,7 @@ namespace vapp {
       if(Button == UI_MSGBOX_YES) {
         if(m_State == GS_PAUSE) {
 	  if(m_MotoGame.Players().size() == 1) {
-	    m_db->stats_abortedLevel(m_pPlayer->PlayerName,
+	    m_db->stats_abortedLevel(m_profile,
 				     m_MotoGame.getLevelSrc()->Id(),
 				     m_MotoGame.getTime()); 
 	  }
@@ -338,7 +332,6 @@ namespace vapp {
         m_pNotifyMsgBox = NULL;
       }
     }
-#if defined(SUPPORT_WEBACCESS)
     /* And the download-levels box? */
     else if(m_pInfoMsgBox != NULL) {
       UIMsgBoxButton Button = m_pInfoMsgBox->getClicked();
@@ -362,7 +355,6 @@ namespace vapp {
         m_pInfoMsgBox = NULL;
       }
     }
-#endif       
   }
   
   void GameApp::_UpdateFPSCounter(void) {
@@ -411,10 +403,8 @@ namespace vapp {
       _HandleMainMenu();
     else if(m_State == GS_EDIT_PROFILES)
       _HandleProfileEditor();
-#if defined(SUPPORT_WEBACCESS) 
     else if(m_State == GS_EDIT_WEBCONFIG)
       _HandleWebConfEditor();
-#endif
     else if(m_State == GS_LEVEL_INFO_VIEWER)
       _HandleLevelInfoViewer();
     else if(m_State == GS_LEVELPACK_VIEWER)
@@ -506,30 +496,19 @@ namespace vapp {
   void GameApp::_PostUpdatePlaying(void) {
     bool v_all_dead = true;
     bool v_one_finished = false;
-    float v_finish_time = 0.0;
-
+ 
     for(unsigned int i=0; i<m_MotoGame.Players().size(); i++) {
       if(m_MotoGame.Players()[i]->isDead() == false) {
 	v_all_dead = false;
       }
       if(m_MotoGame.Players()[i]->isFinished()) {
 	v_one_finished = true;
-	v_finish_time  = m_MotoGame.Players()[i]->finishTime();
       }
     }
 
     /* News? */
     if(v_one_finished) {
       /* You're done maaaan! :D */
-      if(m_MotoGame.Players().size() == 1) {
-	std::string TimeStamp = getTimeStamp();
-	m_Profiles.addFinishTime(m_pPlayer->PlayerName,"",
-				 m_MotoGame.getLevelSrc()->Id(),v_finish_time,TimeStamp); 
-	_MakeBestTimesWindow(m_pBestTimes,m_pPlayer->PlayerName,m_MotoGame.getLevelSrc()->Id(),
-			     v_finish_time,TimeStamp);
-      }
-
-      //_UpdateLevelsLists();     
       setState(GS_FINISHED);
     } else if(v_all_dead) {
       /* You're dead maan! */

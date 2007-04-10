@@ -60,12 +60,12 @@ namespace vapp {
     m_pReplayHelp->setFont(m_pSFont);
     m_pReplayHelp->setVAlign(UI_ALIGN_TOP);
     m_pReplayHelp->setHAlign(UI_ALIGN_RIGHT);
-#if defined(SUPPORT_WEBACCESS) 
+
     m_pWorldRecordTime = new UIStatic(m_pInGameStats,0,43,"",800,20);
     m_pWorldRecordTime->setFont(m_pSFont);
     m_pWorldRecordTime->setVAlign(UI_ALIGN_TOP);
     m_pWorldRecordTime->setHAlign(UI_ALIGN_LEFT);
-#endif
+
     m_pSpeed = new UIStatic(m_pInGameStats,0,60,"",60,20);
     m_pSpeed->setFont(m_pSFont);
     m_pSpeed->setVAlign(UI_ALIGN_TOP);

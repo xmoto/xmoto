@@ -24,38 +24,37 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <string>
 #include "xmscene/Level.h"
-#include "PlayerData.h"
 #include "xmDatabase.h"
 #include "XMotoLoadLevelsInterface.h"
 
 class LevelsPack {
   public:
-  LevelsPack(std::string i_name);
+  LevelsPack(std::string i_name, const std::string& i_sql);
   ~LevelsPack();
 
   std::string Name() const;
-  void addLevel(Level *i_level, bool i_checkUnique = false);
-  void removeLevel(Level *i_level);
-  const std::vector<Level *> &Levels();
   bool ShowTimes() const;
   bool ShowWebTimes() const;
-  bool Sorted() const;
   void setShowTimes(bool i_showTimes);
   void setShowWebTimes(bool i_showWebTimes);
-  void setSorted(bool i_sorted);
 
   std::string Group() const;
   void setGroup(std::string i_group);
+  std::string getLevelsQuery() const;
+  std::string getLevelsWithHighscoresQuery(const std::string& i_profile,
+					   const std::string& i_id_room) const;
+
+  int getNumberOfLevels(xmDatabase *i_db);
+  int getNumberOfFinishedLevels(xmDatabase *i_db, const std::string& i_profile);
 
   private:
   void setHintsFromFile();
 
   std::string m_name;
   std::string m_group;
-  std::vector<Level *> m_levels;
+  std::string m_sql_levels;
   bool m_showTimes;
   bool m_showWebTimes;
-  bool m_sorted;
 };
 
 class LevelsManager {
@@ -65,101 +64,42 @@ class LevelsManager {
   ~LevelsManager();
 
   LevelsPack& LevelsPackByName(const std::string &i_name);
-  Level& LevelById(const std::string& i_id);
-  Level& LevelByFileName(const std::string& i_fileName);
-  bool doesLevelExist(const std::string& i_id);
+  std::string LevelByFileName(xmDatabase *i_db, const std::string& i_fileName);
+  bool doesLevelExist(xmDatabase *i_db, const std::string& i_id);
 
   bool doesLevelsPackExist(const std::string &i_name) const;
-  void rebuildPacks(
-#if defined(SUPPORT_WEBACCESS)
-		    WebRoom *i_webHighscores,
-		    WebLevels *i_webLevels,
-#endif
-		    bool i_bDebugMode,
-		    std::string i_playerName,
-		    vapp::PlayerData *i_profiles,
-		    xmDatabase *m_db);
 
   /* to load or reload levels from files */
-  void reloadLevelsFromFiles(bool i_enableCache, XMotoLoadLevelsInterface *i_loadLevelsInterface = NULL);
-  /* to load the levels from the index */
-  void loadLevelsFromIndex(bool i_enableCache);
-
-  /* load external levels */
-  void loadExternalLevels(bool i_enableCache);
-  void addExternalLevel(std::string i_levelFile);
-
-  /* to load new levels */
-  void loadLevelsFromLvl(const std::vector<std::string> &LvlFiles,
-			 bool i_enableCache,
-			 XMotoLoadLevelsInterface *i_loadLevelsInterface = NULL);
+  void makePacks(xmDatabase *i_db,
+		 const std::string& i_playerName,
+		 const std::string& i_id_room,
+		 bool i_bDebugMode);
+  void addExternalLevel(xmDatabase *i_db, std::string i_levelFile);
+  void reloadExternalLevels(xmDatabase *i_db, XMotoLoadLevelsInterface *i_loadLevelsInterface = NULL);
+  void reloadLevelsFromLvl(xmDatabase *i_db,
+			   XMotoLoadLevelsInterface *i_loadLevelsInterface = NULL);
 
   /* to load news levels */
   /* to reload levels already loaded (it will put them into the updateLevels list) */
   /* create the newLevels.xml file */
-  void updateLevelsFromLvl(const std::vector<std::string> &NewLvl,
-													 const std::vector<std::string> &UpdatedLvlFileNames,
-													 const std::vector<std::string> &UpdatedLvlIds,
-													 bool i_enableCache);
+  void updateLevelsFromLvl(xmDatabase *i_db, const std::vector<std::string> &NewLvl,
+			   const std::vector<std::string> &UpdatedLvl);
 
-  const std::vector<Level *> &Levels();
   const std::vector<LevelsPack *> &LevelsPacks();
 
-  const std::vector<Level *> &NewLevels();
-  const std::vector<Level *> &UpdatedLevels();
-
-  static void checkPrerequires(bool &v_enableCache);
-  void createLevelsIndex();
-  static void deleteLevelsIndex();
+  static void checkPrerequires();
   static void cleanCache();
   
-  void printLevelsList() const;
+  void printLevelsList(xmDatabase *i_db) const;
 
-  void addToFavorite(Level *i_level);
-  void delFromFavorite(Level *i_level);
-  const std::vector<Level *> &FavoriteLevels();
-
-  /* save the files so that when you reinit, it's restored */
-  void saveXml() const;
+  void addToFavorite(xmDatabase *i_db, std::string i_profile, const std::string& i_id_level);
+  void delFromFavorite(xmDatabase *i_db, std::string i_profile, const std::string& i_id_level);
 
   private:
-  void createVirtualPacks(
-#if defined(SUPPORT_WEBACCESS)
-			  WebRoom *i_webHighscores,
-			  WebLevels *i_webLevels,
-#endif
-			  bool i_bDebugMode,
-			  std::string i_playerName,
-			  vapp::PlayerData *i_profiles,
-			  xmDatabase *m_db);
   void clean();
-  static std::string LevelIndexFileName();
+  void cleanPacks();
 
-  std::vector<Level *> m_levels;
   std::vector<LevelsPack *> m_levelsPacks;
-
-  /* this number must be really reduced because the algo is really slow */;
-  std::vector<std::string> m_externalLevels;
-
-  std::vector<Level *> m_newLevels;
-  std::vector<Level *> m_updatedLevels;
-
-  std::vector<Level *> m_favoriteLevels;
-
-  static std::string NewLevelsXmlFilePath();
-  void saveNewLevelsXml() const;
-  void loadNewLevelsXml();
-
-  static std::string FavoriteLevelsXmlFilePath();
-  void saveFavoriteLevelsXml() const;
-  void loadFavoriteLevelsXml();
-
-  /* is private to for externals to use updateLevelsFromLvl for new levels */
-  void loadLevelsFromLvl(const std::vector<std::string> &LvlFiles,
-			 bool i_enableCache,
-			 bool i_newLevels,
-			 bool i_external = false,
-			 XMotoLoadLevelsInterface *i_loadLevelsInterface = NULL);
 };
 
 #endif /* __LEVELSMANAGER__ */

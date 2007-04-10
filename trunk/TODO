@@ -1,17 +1,51 @@
+M      GameMenus.cpp
+M      Game.cpp
+* favoris -> over or under -> c'est pas le bon view the highscore + erreur readbyte si on fait ca dès le début
+* musique->1er niveau info -> 1er replay -> echap : ca mouline
+
+=========
+
+* pack des niveaux récents: v_creationDate : la date de création des niveaux
+
+[14:04] <keesj> I think it is a well knwn problem that every developer gets when spliting area's in two
+[14:05] <keesj> it's a pixel rounding problem
+[14:07] <keesj> http://www.gameprogrammer.com/5-poly.html
+[14:07] <keesj> If pixels that fall on an edge are counted as part of the polygon then pixels on an edge between two polygons will be filled in by both polygons. Filling the pixel twice is wasteful. And, in an animation it can cause a "twinkling" effect along the edge. If edge pixels are not part of the polygon then edges never get colored and you get gaps between polygons. Really ugly.
+
+(20:27:03)  Roots:   Heap allocation functions accounted for 94.0% of measured spacetime
+  
+Called from:
+  19.8% : 0x41ED846: Mix_LoadWAV_RW (in /usr/lib/libSDL_mixer-1.2.so.0.2.4)
+  14.2% : 0x804ECE3: vapp::Img::convertToRGBA32() (Image.cpp:396)
+  13.7% : 0x4062BB5: (within /usr/lib/libGL.so.1.0.8776)
+  12.5% : 0x4062BDD: (within /usr/lib/libGL.so.1.0.8776)
+  7.7% : 0x804EDB4: vapp::Img::convertToRGB24() (Image.cpp:380)
+  6.1% : 0x439F87A: std::string::_Rep::_S_create(unsigned, unsigned, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.8)
+  3.5% : 0x4070E66: (within /usr/lib/libGL.so.1.0.8776)
+  3.5% : 0x80704B6: Theme::initDefaultFont() (Theme.cpp:44)
+  2.8% : 0x816791D: LevelsManager::loadLevelsFromIndex(bool) (LevelsManager.cpp:682)
+  1.2% : 0x81857F8: Block::readFromBinary(vapp::FileHandle*) (Block.cpp:544)
+  0.6% : 0x8182ECA: ConvexBlock::addVertex(Vector2<float> const&, Vector2<float> const&) (Block.cpp:56)
+  0.6% : 0x8138C19: vapp::ElementHandler<Block>::setDims(Vector2<float>, Vector2<float>, int, int, float, float) (Collision.cpp:878)
+  and 778 other insignificant places
+  
+(20:27:03)  Roots:   c'est le son qui squatte 20% de la ram 
+(20:27:06)  Roots:   puis les images 
+(20:27:08)  Roots:   puis opengl 
+(20:27:23)  Roots:   les niveaux faisant que 2.8%...
+
 
 For 0.3.0
+
+* [13:05] <gaivota> aspegic500: another bug, that already exists for many versions now: you cant switch the musics to stereo, it always remains mono
+[13:18] <aspegic500> gaivota: ok
+[13:18] <aspegic500> but, how do you know it ?
+[13:19] <gaivota> well, I put it to stereo, restart, and the options is set back to mono
 
 * yep, it works, but it was a pain in the ass to find those faulty demos in the list(i have sooo many demos). Could you do the same fliter thing and directories for replays too ?
 4. zoom in demos :)
 5. http://forum.xmoto.tuxfamily.org/viewtopic.php?t=117&highlight=
 6. "levels with recently updated WR" folder
-
-sqlite :
-+ remettre les virtuals packs manquants
-+ la feuille de stats : les noms des levels au lieu des ids
-+ bug of \"
-
-. checker le userdir sous windows
 
 For Tod:
 * load into the graphic card only the blocks which will be displayed depending on the selected graphic quality.
@@ -21,12 +55,10 @@ For Nicolas:
 * start game with menu music ; go in option; disable sound ; play a
    level ; abort -> the music start because sound is still enabled
 * document AddPenaltyTime et empecher de mettre une valeur négative
-* un répertoire my_levels qui serait chargé à tous les coups
 * il semble qu'une erreur de syntaxe en lua et segfault : ca vient du
    fait que dans drawFrame, dans un case GS_PREPLAY, on peut changer
    d'état (exception) et du coup on tente de dessiner un monde qui
    n'existe plus => séparer le rendu des évènements à suivre
-* qd on est en 0.2.6 et prereq 0.2.7 ca chie
 * the following: if the player looks from rightto left, the leg is not correctly attached to the torso
 * keyboard for 4 players
 * script key on multiplayer : each player must have his own key

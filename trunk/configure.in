@@ -100,7 +100,7 @@ fi
 
 AC_LANG_POP()
 
-AC_CHECK_LIB(curl, curl_easy_init,[],[AC_MSG_WARN(online highscores disabled)])
+AC_CHECK_LIB(curl, curl_easy_init,[],[AC_MSG_ERROR(libcurl required)])
 
 ALL_LINGUAS="fr de es ca sk"
 AM_GNU_GETTEXT()
@@ -126,15 +126,6 @@ AC_ARG_WITH([gamedatadir],
   [GAMEDATADIR="$datadir/$PACKAGE"]
 )
 AC_SUBST([GAMEDATADIR])
-
-dnl Put ALLOW_WEBACCESS in makefiles
-AC_ARG_WITH([enable-www],
-  [AS_HELP_STRING([--with-enable-www=0|1],
-    [Enable www])],
-  [ALLOW_WEBACCESS="$withval"],
-  [ALLOW_WEBACCESS="1"]
-)
-AC_SUBST([ALLOW_WEBACCESS])
 
 dnl Put ALLOW_ZOOMING in makefiles
 AC_ARG_WITH([enable-zoom],
@@ -170,26 +161,6 @@ function displayRequirement {
   fi
 }
 
-### enable www ?
-if test -z "$with_enable_www"
-then
-  with_enable_www=1
-fi
-
-if test "$ac_cv_lib_curl_curl_easy_init" = "yes" -a "$with_enable_www" = "1"
-then
-  v_enable_www=yes
-  v_enable_www_reason="libcurl"
-else
-  v_enable_www=no
-  if test "$ac_cv_lib_curl_curl_easy_init" = "yes"
-  then
-    v_enable_www_reason="--with-enable-www=1"
-  else
-    v_enable_www_reason="libcurl"
-  fi
-fi
-
 use_gettext=no
 if test "$gt_cv_func_gnugettext1_libc" = "yes"
 then
@@ -201,8 +172,6 @@ then
 fi
 
 echo
-echo   "+-----------------+------------+-----------------------------------------------------+"
-displayRequirement "WWW stuff" "$v_enable_www" "yes" "$v_enable_www_reason"
 echo   "+-----------------+------------+-----------------------------------------------------+"
 displayRequirement "Locales" "$use_gettext" "yes" "gettext"
 echo   "+-----------------+------------+-----------------------------------------------------+"
