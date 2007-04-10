@@ -85,6 +85,12 @@ namespace vapp {
       }
         break;
       case UI_FRAMESTYLE_TRANS:
+      if(isUglyMode()) {
+	putRect(0, 0, 2, getPosition().nHeight, MAKE_COLOR(188,186,67,255));
+	putRect(0, 0, getPosition().nWidth, 2, MAKE_COLOR(188,186,67,255));
+	putRect(getPosition().nWidth-2, 0, 2, getPosition().nHeight, MAKE_COLOR(188,186,67,255));
+	putRect(0, getPosition().nHeight-2, getPosition().nWidth, 2, MAKE_COLOR(188,186,67,255));
+      } else {
         putElem(0,0,-1,-1,UI_ELEM_FRAME_TL,false);
         putElem(getPosition().nWidth-8,0,-1,-1,UI_ELEM_FRAME_TR,false);
         putElem(getPosition().nWidth-8,getPosition().nHeight-8,-1,-1,UI_ELEM_FRAME_BR,false);
@@ -94,19 +100,27 @@ namespace vapp {
         putElem(0,8,-1,getPosition().nHeight-16,UI_ELEM_FRAME_ML,false);
         putElem(getPosition().nWidth-8,8,-1,getPosition().nHeight-16,UI_ELEM_FRAME_MR,false);
         putRect(8,8,getPosition().nWidth-16,getPosition().nHeight-16,MAKE_COLOR(0,0,0,127));
-        break;
+      }
+      break;
       case UI_FRAMESTYLE_LEFTTAG: {
           int nTagWidth = 20;      
       
-          putElem(0,0,-1,-1,UI_ELEM_FRAME_TL,false);
-          putElem(getPosition().nWidth-8,0,-1,-1,UI_ELEM_FRAME_TR,false);
-          putElem(getPosition().nWidth-8,getPosition().nHeight-8,-1,-1,UI_ELEM_FRAME_BR,false);
-          putElem(0,getPosition().nHeight-8,-1,-1,UI_ELEM_FRAME_BL,false);
-          putElem(8,0,getPosition().nWidth-16,-1,UI_ELEM_FRAME_TM,false);
-          putElem(8,getPosition().nHeight-8,getPosition().nWidth-16,-1,UI_ELEM_FRAME_BM,false);
-          putElem(0,8,-1,getPosition().nHeight-16,UI_ELEM_FRAME_ML,false);
-          putElem(getPosition().nWidth-8,8,-1,getPosition().nHeight-16,UI_ELEM_FRAME_MR,false);
-          putRect(8,8,getPosition().nWidth-16,getPosition().nHeight-16,MAKE_COLOR(0,0,0,127));
+	  if(isUglyMode()) {
+	    putRect(0, 0, 2, getPosition().nHeight, MAKE_COLOR(188,186,67,255));
+	    putRect(0, 0, getPosition().nWidth, 2, MAKE_COLOR(188,186,67,255));
+	    putRect(getPosition().nWidth-2, 0, 2, getPosition().nHeight, MAKE_COLOR(188,186,67,255));
+	    putRect(0, getPosition().nHeight-2, getPosition().nWidth, 2, MAKE_COLOR(188,186,67,255));
+	  } else {
+	    putElem(0,0,-1,-1,UI_ELEM_FRAME_TL,false);
+	    putElem(getPosition().nWidth-8,0,-1,-1,UI_ELEM_FRAME_TR,false);
+	    putElem(getPosition().nWidth-8,getPosition().nHeight-8,-1,-1,UI_ELEM_FRAME_BR,false);
+	    putElem(0,getPosition().nHeight-8,-1,-1,UI_ELEM_FRAME_BL,false);
+	    putElem(8,0,getPosition().nWidth-16,-1,UI_ELEM_FRAME_TM,false);
+	    putElem(8,getPosition().nHeight-8,getPosition().nWidth-16,-1,UI_ELEM_FRAME_BM,false);
+	    putElem(0,8,-1,getPosition().nHeight-16,UI_ELEM_FRAME_ML,false);
+	    putElem(getPosition().nWidth-8,8,-1,getPosition().nHeight-16,UI_ELEM_FRAME_MR,false);
+	  }
+	  putRect(8,8,getPosition().nWidth-16,getPosition().nHeight-16,MAKE_COLOR(0,0,0,127));
 
           putRect(2,2,getPosition().nWidth-4,getPosition().nHeight-4,MAKE_COLOR(0,0,70,150));
           

@@ -287,14 +287,24 @@ namespace vapp {
     m_bItemActivated = false;
 
     /* Draw list frame */
-    putElem(0,0,-1,-1,UI_ELEM_FRAME_TL,false);
-    putElem(getPosition().nWidth-8,0,-1,-1,UI_ELEM_FRAME_TR,false);
-    putElem(getPosition().nWidth-8,getPosition().nHeight-8,-1,-1,UI_ELEM_FRAME_BR,false);
-    putElem(0,getPosition().nHeight-8,-1,-1,UI_ELEM_FRAME_BL,false);
-    putElem(8,0,getPosition().nWidth-16,-1,UI_ELEM_FRAME_TM,false);
-    putElem(8,getPosition().nHeight-8,getPosition().nWidth-16,-1,UI_ELEM_FRAME_BM,false);
-    putElem(0,8,-1,getPosition().nHeight-16,UI_ELEM_FRAME_ML,false);
-    putElem(getPosition().nWidth-8,8,-1,getPosition().nHeight-16,UI_ELEM_FRAME_MR,false);
+    if(isUglyMode()) {
+      putRect(0, 0, getPosition().nWidth, 2, MAKE_COLOR(188,186,67,255));
+      putRect(0, getPosition().nHeight-2, getPosition().nWidth, 2, MAKE_COLOR(188,186,67,255));
+      putRect(0, 0, 2, getPosition().nHeight, MAKE_COLOR(188,186,67,255));
+      putRect(getPosition().nWidth-2, 0, 2, getPosition().nHeight, MAKE_COLOR(188,186,67,255));
+
+      putRect(m_lineMargeX+LinesWidth(), LinesStartY()+LinesHeight()-20,
+	      20, 20, MAKE_COLOR(188,186,67,255));
+    } else {
+      putElem(0,0,-1,-1,UI_ELEM_FRAME_TL,false);
+      putElem(getPosition().nWidth-8,0,-1,-1,UI_ELEM_FRAME_TR,false);
+      putElem(getPosition().nWidth-8,getPosition().nHeight-8,-1,-1,UI_ELEM_FRAME_BR,false);
+      putElem(0,getPosition().nHeight-8,-1,-1,UI_ELEM_FRAME_BL,false);
+      putElem(8,0,getPosition().nWidth-16,-1,UI_ELEM_FRAME_TM,false);
+      putElem(8,getPosition().nHeight-8,getPosition().nWidth-16,-1,UI_ELEM_FRAME_BM,false);
+      putElem(0,8,-1,getPosition().nHeight-16,UI_ELEM_FRAME_ML,false);
+      putElem(getPosition().nWidth-8,8,-1,getPosition().nHeight-16,UI_ELEM_FRAME_MR,false);
+    }
     putRect(8,8,getPosition().nWidth-16,getPosition().nHeight-16,MAKE_COLOR(0,0,0,127));
         
     /* Draw column headers */
@@ -321,18 +331,22 @@ namespace vapp {
     }
 
     if(isScrollBarRequired()) {
-      if(m_bScrollUpPressed && m_bScrollUpHover) {
-	putElem(m_lineMargeX+LinesWidth(),6,20,20,UI_ELEM_SCROLLBUTTON_UP_DOWN,false);
+
+      if(isUglyMode()) {
+      } else {
+	if(m_bScrollUpPressed && m_bScrollUpHover) {
+	  putElem(m_lineMargeX+LinesWidth(),6,20,20,UI_ELEM_SCROLLBUTTON_UP_DOWN,false);
+	} else {
+	  putElem(m_lineMargeX+LinesWidth(),6,20,20,UI_ELEM_SCROLLBUTTON_UP_UP,false);
+	}      
+	
+	if(m_bScrollDownPressed && m_bScrollDownHover) {
+	  putElem(m_lineMargeX+LinesWidth(),LinesStartY()+LinesHeight()-20,20,20,UI_ELEM_SCROLLBUTTON_DOWN_DOWN,false);
+	} else {
+	putElem(m_lineMargeX+LinesWidth(),LinesStartY()+LinesHeight()-20,20,20,UI_ELEM_SCROLLBUTTON_DOWN_UP,false);    
+	}      
       }
-      else
-      putElem(m_lineMargeX+LinesWidth(),6,20,20,UI_ELEM_SCROLLBUTTON_UP_UP,false);
-      
-      if(m_bScrollDownPressed && m_bScrollDownHover) {
-	putElem(m_lineMargeX+LinesWidth(),LinesStartY()+LinesHeight()-20,20,20,UI_ELEM_SCROLLBUTTON_DOWN_DOWN,false);
-      }
-      else
-      putElem(m_lineMargeX+LinesWidth(),LinesStartY()+LinesHeight()-20,20,20,UI_ELEM_SCROLLBUTTON_DOWN_UP,false);    
-      
+
       /* scroll */
       putRect(ScrollBarScrollerStartX() + 2, ScrollBarScrollerStartY(),
 	      ScrollBarScrollerWidth() - 4, ScrollBarScrollerHeight(),

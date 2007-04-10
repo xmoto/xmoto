@@ -34,13 +34,21 @@ namespace vapp {
     /* Header height */
     int nHeaderHeight=24;
   
-    /* Render bottom part (common to all tabs) */
-    putElem(getPosition().nWidth-8,nHeaderHeight,-1,-1,UI_ELEM_FRAME_TR,false);
-    putElem(getPosition().nWidth-8,getPosition().nHeight-8,-1,-1,UI_ELEM_FRAME_BR,false);
-    putElem(0,getPosition().nHeight-8,-1,-1,UI_ELEM_FRAME_BL,false);
-    putElem(8,getPosition().nHeight-8,getPosition().nWidth-16,-1,UI_ELEM_FRAME_BM,false);
-    putElem(0,8 + nHeaderHeight,-1,getPosition().nHeight-16-nHeaderHeight,UI_ELEM_FRAME_ML,false);
-    putElem(getPosition().nWidth-8,8 + nHeaderHeight,-1,getPosition().nHeight-16-nHeaderHeight,UI_ELEM_FRAME_MR,false);
+    if(isUglyMode()) {
+      putRect(0, 0, 2, getPosition().nHeight, MAKE_COLOR(188,186,67,255));
+      putRect(0, getPosition().nHeight-2, getPosition().nWidth, 2, MAKE_COLOR(188,186,67,255));
+      putRect(getPosition().nWidth-2, nHeaderHeight,
+	      2, getPosition().nHeight-nHeaderHeight, MAKE_COLOR(188,186,67,255));
+    } else {
+      /* Render bottom part (common to all tabs) */
+      putElem(getPosition().nWidth-8,nHeaderHeight,-1,-1,UI_ELEM_FRAME_TR,false);
+      putElem(getPosition().nWidth-8,getPosition().nHeight-8,-1,-1,UI_ELEM_FRAME_BR,false);
+      putElem(0,getPosition().nHeight-8,-1,-1,UI_ELEM_FRAME_BL,false);
+      putElem(8,getPosition().nHeight-8,getPosition().nWidth-16,-1,UI_ELEM_FRAME_BM,false);
+      putElem(0,8 + nHeaderHeight,-1,getPosition().nHeight-16-nHeaderHeight,UI_ELEM_FRAME_ML,false);
+      putElem(getPosition().nWidth-8,8 + nHeaderHeight,-1,getPosition().nHeight-16-nHeaderHeight,UI_ELEM_FRAME_MR,false);
+    }
+
     putRect(8,8 + nHeaderHeight,getPosition().nWidth-16,getPosition().nHeight-16-nHeaderHeight,MAKE_COLOR(0,0,0,127));
     
     /* Render tabs */
@@ -51,16 +59,17 @@ namespace vapp {
       int x1,x2;    
       getTextExt(getChildren()[i]->getCaption(),&x1,NULL,&x2,NULL);      
       if(m_nSelected != i) {
-        putElem(nCX-8,0,-1,-1,UI_ELEM_FRAME_TL,false);        
-        putElem(nCX,0,(x2-x1),8,UI_ELEM_FRAME_TM,false);
-        putElem(nCX+(x2-x1),0,-1,-1,UI_ELEM_FRAME_TR,false);                
-        //putElem(nCX+(x2-x1)+8,nHeaderHeight,getPosition().nWidth-(nCX+(x2-x1))-16,8,UI_ELEM_FRAME_TM,false);
-        putElem(nCX-8,8,-1,nHeaderHeight-6,UI_ELEM_FRAME_ML,false);
-        putElem(nCX+(x2-x1),8,-1,nHeaderHeight-8+2,UI_ELEM_FRAME_MR,false);
-        //
-        //if(i != 0) {
-        //  putElem(8,nHeaderHeight,nCX-14,8,UI_ELEM_FRAME_TM,false);
-        //}
+	if(isUglyMode()) {
+	  putRect(nCX-8, 0, x2+16, 2, MAKE_COLOR(188,186,67,255));
+	  putRect(nCX-8, 0, 2, nHeaderHeight, MAKE_COLOR(188,186,67,255));
+	  putRect(nCX+x2+8-2, 0, 2, nHeaderHeight, MAKE_COLOR(188,186,67,255));
+	} else {
+	  putElem(nCX-8,0,-1,-1,UI_ELEM_FRAME_TL,false);        
+	  putElem(nCX,0,(x2-x1),8,UI_ELEM_FRAME_TM,false);
+	  putElem(nCX+(x2-x1),0,-1,-1,UI_ELEM_FRAME_TR,false);                
+	  putElem(nCX-8,8,-1,nHeaderHeight-6,UI_ELEM_FRAME_ML,false);
+	  putElem(nCX+(x2-x1),8,-1,nHeaderHeight-8+2,UI_ELEM_FRAME_MR,false);
+	}
         
         putRect(nCX,8,x2-x1,nHeaderHeight-8,MAKE_COLOR(0,0,0,127));
         setTextSolidColor(MAKE_COLOR(188,186,67,255));
@@ -76,15 +85,26 @@ namespace vapp {
       int x1,x2;    
       getTextExt(getChildren()[i]->getCaption(),&x1,NULL,&x2,NULL);      
       if(m_nSelected == i) {
-        putElem(nCX-8,0,-1,-1,UI_ELEM_FRAME_TL,false);        
-        putElem(nCX,0,(x2-x1),8,UI_ELEM_FRAME_TM,false);
-        putElem(nCX+(x2-x1),0,-1,-1,UI_ELEM_FRAME_TR,false);                
-        putElem(nCX+(x2-x1)+8,nHeaderHeight,getPosition().nWidth-(nCX+(x2-x1))-16,8,UI_ELEM_FRAME_TM,false);
-        putElem(nCX-8,8,-1,nHeaderHeight-8,UI_ELEM_FRAME_ML,false);
-        putElem(nCX+(x2-x1),8,-1,nHeaderHeight-8+2,UI_ELEM_FRAME_MR,false);
-        
+	if(isUglyMode()) {
+	  putRect(nCX-8, 0, x2+16, 2, MAKE_COLOR(188,186,67,255));
+	  putRect(nCX-8, 0, 2, nHeaderHeight, MAKE_COLOR(188,186,67,255));
+	  putRect(nCX+x2+8-2, 0, 2, nHeaderHeight+2, MAKE_COLOR(188,186,67,255));
+	  putRect(nCX+x2+8, nHeaderHeight, getPosition().nWidth-nCX-x2-8, 2, MAKE_COLOR(188,186,67,255));
+	} else {
+	  putElem(nCX-8,0,-1,-1,UI_ELEM_FRAME_TL,false);        
+	  putElem(nCX,0,(x2-x1),8,UI_ELEM_FRAME_TM,false);
+	  putElem(nCX+(x2-x1),0,-1,-1,UI_ELEM_FRAME_TR,false);                
+	  putElem(nCX+(x2-x1)+8,nHeaderHeight,getPosition().nWidth-(nCX+(x2-x1))-16,8,UI_ELEM_FRAME_TM,false);
+	  putElem(nCX-8,8,-1,nHeaderHeight-8,UI_ELEM_FRAME_ML,false);
+	  putElem(nCX+(x2-x1),8,-1,nHeaderHeight-8+2,UI_ELEM_FRAME_MR,false);
+	}        
+
         if(i != 0) {
-          putElem(8,nHeaderHeight,nCX-14,8,UI_ELEM_FRAME_TM,false);
+	  if(isUglyMode()) {
+	    putRect(0, nHeaderHeight, nCX-8+2, 2, MAKE_COLOR(188,186,67,255));
+	  } else {
+	    putElem(8,nHeaderHeight,nCX-14,8,UI_ELEM_FRAME_TM,false);
+	  }
           putRect(nCX-6,8+nHeaderHeight-8,6,8,MAKE_COLOR(0,0,0,127));
         }
         
@@ -96,11 +116,13 @@ namespace vapp {
       nCX += (x2-x1) + 18;
     }
     
-    if(m_nSelected == 0) {
-      putElem(0,8 + nHeaderHeight -8,-1,-1,UI_ELEM_FRAME_ML,false);      
-    }
-    else {
-      putElem(0,8 + nHeaderHeight -8,-1,-1,UI_ELEM_FRAME_TL,false);      
+    if(isUglyMode() == false) {
+      if(m_nSelected == 0) {
+	putElem(0,8 + nHeaderHeight -8,-1,-1,UI_ELEM_FRAME_ML,false);      
+      }
+      else {
+	putElem(0,8 + nHeaderHeight -8,-1,-1,UI_ELEM_FRAME_TL,false);      
+      }
     }
 
     m_bChanged = false;
