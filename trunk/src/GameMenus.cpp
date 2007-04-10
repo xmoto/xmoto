@@ -3797,6 +3797,8 @@ namespace vapp {
     std::string v_fileUrl;
     std::string v_replayName;
 
+    m_PlaySpecificReplay = "";
+
     v_result = m_db->readDB("SELECT id_profile, fileUrl "
 			    "FROM webhighscores WHERE id_level=\"" + 
 			    xmDatabase::protectString(m_pLevelToShowOnViewHighscore) + "\""
@@ -3806,12 +3808,14 @@ namespace vapp {
       m_db->read_DB_free(v_result);
       return;
     }
+
     v_levelAuthor = m_db->getResult(v_result, 2, 0, 0);
     v_fileUrl     = m_db->getResult(v_result, 2, 0, 1);
     v_replayName  = FS::getFileBaseName(v_fileUrl);
     m_db->read_DB_free(v_result);
 
     if(m_db->replays_exists(v_replayName)) {
+      m_PlaySpecificReplay = v_replayName;
       return;
     }
     
