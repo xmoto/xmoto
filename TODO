@@ -1,10 +1,4 @@
-M      GameMenus.cpp
-M      Game.cpp
-* favoris -> over or under -> c'est pas le bon view the highscore + erreur readbyte si on fait ca dès le début
 * musique->1er niveau info -> 1er replay -> echap : ca mouline
-
-=========
-
 * pack des niveaux récents: v_creationDate : la date de création des niveaux
 
 [14:04] <keesj> I think it is a well knwn problem that every developer gets when spliting area's in two

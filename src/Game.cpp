@@ -228,7 +228,7 @@ GameApp::GameApp() {
 	    m_Renderer.setPlayerToFollow(m_replayBiker);
 	  } catch(Exception &e) {
 	    setState(m_StateAfterPlaying);
-            notifyMsg(e.getMsg());
+            notifyMsg("Unable to read the replay: " + e.getMsg());
 	    return;
 	  }
 
