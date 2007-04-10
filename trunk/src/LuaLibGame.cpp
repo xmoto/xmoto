@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "LuaLibGame.h"
 #include "helpers/VExcept.h"
-#include "MotoGame.h"
+#include "xmscene/Scene.h"
 #include "GameEvents.h"
 #include "Input.h"
 

@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GameText.h"
 #include <algorithm> 
 #include <time.h>
-#include "xmDatabase.h"
+#include "db/xmDatabase.h"
 
 LevelsPack::LevelsPack(std::string i_name, const std::string& i_sql) {
   m_name         = i_name;

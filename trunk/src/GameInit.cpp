@@ -30,7 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Sound.h"
 #include "PhysSettings.h"
 #include "Input.h"
-#include "xmDatabase.h";
+#include "db/xmDatabase.h";
 
   #include <curl/curl.h>
 

@@ -81,7 +81,6 @@ bin_PROGRAMS = xmoto
 xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp GameMain.cpp \
   GameMenus.cpp GUIBestTimes.cpp GUIButton.cpp GUI.cpp \
   GUIFrame.cpp GUIList.cpp GUIStatic.cpp GUITabView.cpp \
-  MotoGame.cpp \
   Renderer.cpp RendererInit.cpp Replay.cpp Sound.cpp \
   LuaLibGame.h LuaLibGame.cpp \
   UserConfig.cpp \
@@ -91,7 +90,6 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp GameMain.cpp \
   GUI.h \
   GUIXMoto.h \
   GUIXMoto.cpp \
-  MotoGame.h \
   PhysSettings.h \
   Renderer.h \
   Replay.h \
@@ -121,15 +119,17 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp GameMain.cpp \
   LevelsManager.cpp \
   SysMessage.h \
   SysMessage.cpp \
-  xmDatabase.h \
-  xmDatabase.cpp \
-  xmDatabase_stats.cpp \
-  xmDatabase_levels.cpp \
-  xmDatabase_profiles.cpp \
-  xmDatabase_replays.cpp \
-  xmDatabase_web.cpp \
-  xmDatabaseUpdateInterface.h \
+  db/xmDatabase.h \
+  db/xmDatabase.cpp \
+  db/xmDatabase_stats.cpp \
+  db/xmDatabase_levels.cpp \
+  db/xmDatabase_profiles.cpp \
+  db/xmDatabase_replays.cpp \
+  db/xmDatabase_web.cpp \
+  db/xmDatabaseUpdateInterface.h \
   xmscene/BasicSceneStructs.h \
+  xmscene/Scene.h \
+  xmscene/Scene.cpp \
   xmscene/Level.h \
   xmscene/Level.cpp \
   xmscene/Zone.h \

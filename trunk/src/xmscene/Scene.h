@@ -24,21 +24,21 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #define MOTOGAME_DEFAULT_GAME_MESSAGE_DURATION 5.0
 
-#include "VCommon.h"
-#include "VApp.h"
-#include "helpers/VMath.h"
-#include "xmscene/Level.h"
-#include "BSP.h"
-#include "DBuffer.h"
-#include "Collision.h"
-#include "ScriptDynamicObjects.h"
-#include "SomersaultCounter.h"
-#include "GameEvents.h"
+#include "../VCommon.h"
+#include "../VApp.h"
+#include "../helpers/VMath.h"
+#include "Level.h"
+#include "../BSP.h"
+#include "../DBuffer.h"
+#include "../Collision.h"
+#include "../ScriptDynamicObjects.h"
+#include "../SomersaultCounter.h"
+#include "../GameEvents.h"
 
-#include "xmscene/BasicSceneStructs.h"
-#include "xmscene/BikeParameters.h"
-#include "xmscene/BikeAnchors.h"
-#include "xmscene/Bike.h"
+#include "BasicSceneStructs.h"
+#include "BikeParameters.h"
+#include "BikeAnchors.h"
+#include "Bike.h"
 
 class Level;
 class BikeState;

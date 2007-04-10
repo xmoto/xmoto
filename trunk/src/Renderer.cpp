@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "VXml.h"
 #include "VFileIO.h"
-#include "MotoGame.h"
+#include "xmscene/Scene.h"
 #include "Renderer.h"
 #include "GameText.h"
 #include "xmscene/Bike.h"

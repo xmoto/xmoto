@@ -78,7 +78,7 @@ struct RecordedGameEvent {
 
 }
 
-#include "MotoGame.h"
+#include "xmscene/Scene.h"
 
 namespace vapp {
 
