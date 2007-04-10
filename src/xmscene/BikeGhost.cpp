@@ -31,10 +31,9 @@ Ghost::Ghost(std::string i_replayFile, bool i_isActiv,
 						      i_uglyColorFilter) {
   std::string v_levelId;
   std::string v_playerName;
-  float v_framerate;
 
   m_replay = new vapp::Replay();
-  v_levelId = m_replay->openReplay(i_replayFile, &v_framerate, v_playerName);
+  v_levelId = m_replay->openReplay(i_replayFile, v_playerName);
 
   m_replay->peekState(m_previous_ghostBikeState);
   m_replay->peekState(m_next_ghostBikeState);

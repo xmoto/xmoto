@@ -47,6 +47,7 @@ class PlayerBiker;
 class ReplayBiker;
 class MotoGameOnBikerHooks;
 class LuaLibGame;
+class xmDatabase;
 
 namespace vapp {
 
@@ -112,16 +113,14 @@ namespace vapp {
     void setHooks(MotoGameHooks *i_motoGameHooks);
 
     /* update of the structure */
-    void prePlayLevel(
-          Level *pLevelSrc,
-	  InputHandler *i_inputHandler,
-          Replay *recordingReplay,
-          bool i_playEvents);
+    void loadLevel(xmDatabase *i_db, const std::string& i_id_level);
+    void prePlayLevel(InputHandler *i_inputHandler,
+		      Replay *recordingReplay,
+		      bool i_playEvents);
 
-    void playLevel(
-       Level *pLevelSrc);
+    void playLevel();
     void updateLevel(float fTimeStep, Replay *i_recordedReplay);
-    void endLevel(void);
+    void endLevel();
 
     /* entities */
     void touchEntity(int i_player, Entity *pEntity, bool bHead); 
@@ -226,7 +225,8 @@ namespace vapp {
 
       LuaLibGame* getLuaLibGame();
 
-  private:         
+  private:
+       
       /* Data */
       std::queue<MotoGameEvent*> m_GameEventQueue;
       

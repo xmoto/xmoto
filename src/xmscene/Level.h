@@ -36,6 +36,7 @@ class Entity;
 namespace vapp {
   class MotoGame;
 }
+class xmDatabase;
 
 /*===========================================================================
   Level source object - holds all stored information about a level
@@ -45,11 +46,21 @@ class Level {
   Level();
   ~Level();
 
-  bool loadReducedFromFile(bool i_cacheEnabled);
+  bool loadReducedFromFile();
   void loadFullyFromFile();
   bool isFullyLoaded() const;
   void exportBinaryHeader(vapp::FileHandle *pfh);
   void importBinaryHeader(vapp::FileHandle *pfh);
+  void importHeader(const std::string& i_id,
+		    const std::string& i_checkSum,
+		    const std::string& i_pack,
+		    const std::string& i_packNum,
+		    const std::string& i_name,
+		    const std::string& i_description,
+		    const std::string& i_author,
+		    const std::string& i_date,
+		    const std::string& i_music,
+		    bool i_isScripted);
   void rebuildCache();
 
   void loadXML();
@@ -121,8 +132,6 @@ class Level {
   /* the entity will be destroyed by the level */
   void spawnEntity(Entity *v_entity);
   
-  std::string PathForUpdate() const;
-
   std::string SpriteForStrawberry() const;
   std::string SpriteForWecker() const;
   std::string SpriteForFlower() const;
@@ -144,6 +153,8 @@ class Level {
   std::vector<Vector2f>& getLayerOffsets(){
     return m_layerOffsets;
   }
+
+  static void removeFromCache(xmDatabase *i_db, const std::string& i_id_level);
 
  private:
   std::string m_id;                 /* Level ID */

@@ -30,6 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Bike.h"
 #include "xmscene/BikeGhost.h"
 #include "xmscene/BikePlayer.h"
+#include <algorithm>
 
 namespace vapp {
 

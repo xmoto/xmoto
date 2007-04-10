@@ -968,29 +968,18 @@ bool ThemeChoicer::ExistThemeName(std::string p_themeName) {
   return false;
 }
 
-#if defined(SUPPORT_WEBACCESS)
   ThemeChoicer::ThemeChoicer(vapp::WWWAppInterface *p_WebApp,
            const ProxySettings *p_proxy_settings) {                    
-#else
-  ThemeChoicer::ThemeChoicer(void) {  
-#endif
-
-#if defined(SUPPORT_WEBACCESS)
   m_webThemes = new WebThemes(p_WebApp, p_proxy_settings);
-#endif
 
   initList();
 }
 
 ThemeChoicer::~ThemeChoicer() {
   cleanList();
-
-#if defined(SUPPORT_WEBACCESS)
   delete m_webThemes;
-#endif
 }
 
-#if defined(SUPPORT_WEBACCESS)
  void ThemeChoicer::setURL(const std::string &p_url) {
    m_webThemes->setURL(p_url);
  }
@@ -998,7 +987,8 @@ ThemeChoicer::~ThemeChoicer() {
  void ThemeChoicer::setURLBase(const std::string &p_urlBase) {
    m_webThemes->setURLBase(p_urlBase);
  }
-#endif
+
+
 
 std::string ThemeChoicer::getFileName(std::string p_themeName) {
   for(unsigned int i=0; i<m_choices.size(); i++) {
@@ -1044,7 +1034,6 @@ void ThemeChoicer::initList() {
     }
   }
 
-#if defined(SUPPORT_WEBACCESS)
   try {
     /* add available theme not installed */
     m_webThemes->upgrade();
@@ -1077,7 +1066,6 @@ void ThemeChoicer::initList() {
   } catch(Exception &e) {
     /* hum, sorry, you will not see avaible theme to download */
   }
-#endif
 }
 
 std::string ThemeChoicer::getThemeNameFromFile(std::string p_themeFile) {
@@ -1113,7 +1101,6 @@ std::vector<ThemeChoice*> ThemeChoicer::getChoices() {
   return m_choices;
 }
 
-#if defined(SUPPORT_WEBACCESS)
 void ThemeChoicer::updateFromWWW() {
   m_webThemes->update();
   initList();
@@ -1126,7 +1113,6 @@ bool ThemeChoicer::isUpdatableThemeFromWWW(ThemeChoice* pThemeChoice) {
 void ThemeChoicer::updateThemeFromWWW(ThemeChoice* pThemeChoice) {
   m_webThemes->upgrade(pThemeChoice);
 }
-#endif
 
 ThemeChoice::ThemeChoice(std::string p_themeName, std::string p_themeFile, bool p_hosted) {
   m_themeName     = p_themeName;

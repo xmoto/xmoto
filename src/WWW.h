@@ -25,7 +25,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __WWW_H__
 
 #include "BuildConfig.h"
-#if defined(SUPPORT_WEBACCESS)
 
 #include <string>
 #include <vector>
@@ -80,6 +79,7 @@ class ThemeChoice;
 #endif
 
 class WebRoom;
+class xmDatabase;
 
 class ProxySettings {
  public:
@@ -174,66 +174,25 @@ class FSWeb {
 				       std::string &p_msg);
 };
 
-class WebHighscore {
- public:
-  WebHighscore(WebRoom *p_room,
-	       std::string p_levelId,
-	       std::string p_playerName,
-	       int p_day, int p_month, int p_year,
-	       std::string p_date,
-	       std::string p_rplUrl,
-	       const ProxySettings *p_proxy_settings);
-  ~WebHighscore();
-  void download(); /* throws exceptions */
-  /* return the path to the replay, even if it's not downloaded */
-  std::string getReplayName();
-
-  std::string getPlayerName() const;
-  std::string getTime() const;
-  int getDateYear()  const;
-  int getDateMonth() const;
-  int getDateDay()   const;
-  float       getFTime() const; /* throws exceptions */
-  std::string getLevelId() const;
-  WebRoom* getRoom() const;
-
- private:
-  std::string m_playerName;
-  std::string m_time;
-  int m_day, m_month, m_year;
-  std::string m_levelId;
-  std::string m_rplUrl;
-  std::string m_rplFilename;
-  const ProxySettings *m_proxy_settings;
-  WebRoom *m_room;
-};
-
 class WebRoom {
  public:
   WebRoom(const ProxySettings *p_proxy_settings);
   ~WebRoom();
 
   void update(); /* throws exceptions */
-  void upgrade(); /* throws exceptions */
+  void upgrade(xmDatabase *i_db); /* throws exceptions */
 
   /* return NULL if no data found */
-  WebHighscore* getHighscoreFromLevel(const std::string &p_levelId);
-  void setWebsiteURL(std::string p_webhighscores_url);
-  std::string getRoomName() const;
+  void setWebsiteInfos(const std::string& i_id_room, const std::string& i_webhighscores_url);
+  std::string getRoomId() const;
+
+  void downloadReplay(const std::string& i_url);
 
  private:
-  #if defined(USE_HASH_MAP)
-    HashNamespace::hash_map<const char*, WebHighscore*, HashNamespace::hash<const char*>, highscore_str> m_webhighscores;
-  #else
-    std::vector<WebHighscore *> m_webhighscores;
-  #endif
   std::string m_userFilename;
   std::string m_webhighscores_url;
-  std::string m_roomName;
+  std::string m_roomId;
   const ProxySettings *m_proxy_settings;
-
-  void fillHash();
-  void cleanHash();
 };
 
 class WebRoomInfos {
@@ -276,37 +235,6 @@ class WebRooms {
   std::string getXmlFileName();
 };
 
-class WebLevel {
-public:
-  WebLevel(std::string p_id, std::string p_name, std::string p_url, float p_webDifficulty, float p_webQuality);
-  std::string getId() const;
-  std::string getName() const;
-  std::string getUrl() const;
-  float getDifficulty() const;
-  float getQuality() const;
-
-  /* true if the level should be updated from the website but exists */  
-  bool requireUpdate() const; /* false by default */
-  void setRequireUpdate(bool p_require_update);
-
-  bool requireDownload() const; /* false by default */
-  void setRequireDownload(bool p_require_download);
-
-  /* if level require update, these methods have a sense */
-  void setCurrentPath(std::string p_current_path);
-  std::string getCurrentPath() const;
-
-private:
-  std::string m_id;
-  std::string m_name;
-  std::string m_url;
-  bool m_require_update;
-  bool m_require_download;
-  std::string m_current_path;
-  float m_webDifficulty;
-  float m_webQuality;
-};
-
 class WebLevels {
  public:
   WebLevels(vapp::WWWAppInterface *p_WebLevelApp,
@@ -314,42 +242,31 @@ class WebLevels {
   ~WebLevels();
 
   /* check for new levels to download */
-  void update(bool i_enableWeb = true); /* throws exceptions */
+  void update(xmDatabase *i_db); /* throws exceptions */
 
   /* download new levels */
-  void upgrade(); /* throws exceptions */
-  
-  /* after update() you might want to know how much is going to be downloaded */
-  void getUpdateInfo(int *pnUBytes,int *pnULevels);
+  void upgrade(xmDatabase *i_db); /* throws exceptions */
   
   /* Get names of new files downloaded OK */
   const std::vector<std::string> &getNewDownloadedLevels();
   
   /* Get names of updated files downloaded OK*/
   const std::vector<std::string> &getUpdatedDownloadedLevels();
-
-  /* Get IDs of updated levels downloaded OK*/
-  const std::vector<std::string> &getUpdatedDownloadedLevelIds();
   
-  /* Get levels informations */
-  const std::vector<WebLevel*> &getLevels();
-
   /* Set URL */
   void setURL(const std::string &p_url) {m_levels_url = p_url;}
 
-  bool exists(const std::string p_id);
-
   static std::string getDestinationFile(std::string p_url);
 
-  int nbLevelsToGet() const; /* return the number of level files required to download for an upgrade */
+  /* return the number of level files required to download for an upgrade */
+  int nbLevelsToGet(xmDatabase *i_db) const;
 
  private:
   vapp::WWWAppInterface *m_WebLevelApp;
-  std::vector<WebLevel*> m_webLevels;
+
   std::vector<std::string> m_webLevelsNewDownloadedOK; /* file names of those levels 
            which where downloaded OK (so we can load them right away) and which are new */
   std::vector<std::string> m_webLevelsUpdatedDownloadedOK;
-  std::vector<std::string> m_webLevelsIdsUpdatedDownloadedOK;
 
   const ProxySettings *m_proxy_settings;
   
@@ -359,7 +276,6 @@ class WebLevels {
   void downloadXml(); /* throw exceptions */
   static std::string getDestinationDir();
   void createDestinationDirIfRequired();
-  void extractLevelsToDownloadFromXml(); /* throw exceptions */				      
 };
 
 class WebTheme {
@@ -408,8 +324,6 @@ class WebThemes {
   const ProxySettings *m_proxy_settings;
   std::vector<WebTheme*> m_availableThemes;
 };
-
-#endif
 
 #endif /* WEBSTUFFS */
 

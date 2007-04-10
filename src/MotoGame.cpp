@@ -42,7 +42,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 namespace vapp {
   
   MotoGame::MotoGame() {
-    m_pLevelSrc=NULL;
     m_bDeathAnimEnabled=true;
     m_lastCallToEveryHundreath = 0.0;
 
@@ -56,12 +55,40 @@ namespace vapp {
     m_playEvents = true;
 
     m_fLastStateSerializationTime = -100.0f; /* loong time ago :) */
+
+    m_pLevelSrc = NULL;
+
+    m_luaGame = NULL;
   }
   
   MotoGame::~MotoGame() {
     cleanPlayers();
     cleanGhosts();
-  }  
+  }
+
+  void MotoGame::loadLevel(xmDatabase *i_db, const std::string& i_id_level) {
+    char **v_result;
+    int nrow;
+    bool bCached;
+
+    m_pLevelSrc = new Level();
+    try {
+      v_result = i_db->readDB("SELECT filepath FROM levels "
+			      "WHERE id_level=\"" + xmDatabase::protectString(i_id_level) + "\";",
+			      nrow);
+      if(nrow != 1) {
+	i_db->read_DB_free(v_result);
+	throw Exception("Level " + i_id_level + " not found");
+      }
+      m_pLevelSrc->setFileName(i_db->getResult(v_result, 1, 0, 0));
+      i_db->read_DB_free(v_result);
+
+      m_pLevelSrc->loadReducedFromFile();
+    } catch(Exception &e) {
+      delete m_pLevelSrc;
+      throw e;
+    }
+  }
 
 void MotoGame::cleanGhosts() {
   for(unsigned int i=0; i<m_ghosts.size(); i++) {
@@ -273,16 +300,13 @@ void MotoGame::cleanPlayers() {
   /*===========================================================================
     Prepare the specified level for playing through this game object
     ===========================================================================*/
-  void MotoGame::prePlayLevel(
-         Level *pLevelSrc,
-	 InputHandler *i_inputHandler,
-         Replay *recordingReplay,
-         bool i_playEvents) {
-
-	   m_playEvents = i_playEvents;
+  void MotoGame::prePlayLevel(InputHandler *i_inputHandler,
+			      Replay *recordingReplay,
+			      bool i_playEvents) {
+    m_playEvents = i_playEvents;
     /* load the level if not */
-    if(pLevelSrc->isFullyLoaded() == false) {
-      pLevelSrc->loadFullyFromFile();
+    if(m_pLevelSrc->isFullyLoaded() == false) {
+      m_pLevelSrc->loadFullyFromFile();
     }
     
     /* Create Lua state */
@@ -290,7 +314,7 @@ void MotoGame::cleanPlayers() {
     
     /* Clear collision system */
     m_Collision.reset();
-    pLevelSrc->setCollisionSystem(&m_Collision);
+    m_pLevelSrc->setCollisionSystem(&m_Collision);
 
     /* Set default gravity */
     m_PhysGravity.x = 0;
@@ -313,8 +337,8 @@ void MotoGame::cleanPlayers() {
     bool bNeedScript = false;
     bool bGotScript = false;
     
-    if(pLevelSrc->scriptFileName() != "") {
-      FileHandle *pfh = FS::openIFile(std::string("./Levels/") + pLevelSrc->scriptFileName());
+    if(m_pLevelSrc->scriptFileName() != "") {
+      FileHandle *pfh = FS::openIFile(std::string("./Levels/") + m_pLevelSrc->scriptFileName());
       if(pfh == NULL) {
         /* Well, file not found -- try encapsulated script */
         bNeedScript = true;
@@ -331,9 +355,10 @@ void MotoGame::cleanPlayers() {
         FS::closeFile(pfh);
 
 	try {
-	  m_luaGame->loadScript(ScriptBuf, pLevelSrc->scriptFileName());
+	  m_luaGame->loadScript(ScriptBuf, m_pLevelSrc->scriptFileName());
 	} catch(Exception &e) {
 	  delete m_luaGame;
+	  m_luaGame = NULL;
 	  throw e;
 	}
 
@@ -342,14 +367,15 @@ void MotoGame::cleanPlayers() {
       }       
     }    
     
-    if(bTryParsingEncapsulatedLevelScript && pLevelSrc->scriptSource() != "") {
+    if(bTryParsingEncapsulatedLevelScript && m_pLevelSrc->scriptSource() != "") {
       /* Use the Lua aux lib to load the buffer */
 
       try {
-	m_luaGame->loadScript(pLevelSrc->scriptSource(), pLevelSrc->scriptFileName());
+	m_luaGame->loadScript(m_pLevelSrc->scriptSource(), m_pLevelSrc->scriptFileName());
       } catch(Exception &e) {
 	std::string error_msg = m_luaGame->getErrorMsg();
 	delete m_luaGame;
+	m_luaGame = NULL;
 	throw Exception("failed to load level encapsulated script :\n" + error_msg);
       }      
 
@@ -358,11 +384,9 @@ void MotoGame::cleanPlayers() {
     
     if(bNeedScript && !bGotScript) {
       delete m_luaGame;
+      m_luaGame = NULL;
       throw Exception("failed to get level script");
     }
-    
-    /* Set level source reference -- this tells the world that the level is ready */
-    m_pLevelSrc = pLevelSrc;
 
     /* Generate extended level data to be used by the game */
     try {
@@ -427,8 +451,7 @@ void MotoGame::cleanPlayers() {
     return m_players;
   }
 
-  void MotoGame::playLevel(
-         Level *pLevelSrc) {
+  void MotoGame::playLevel() {
   /* Invoke the OnLoad() script function */
     if(m_playEvents) {
       bool bOnLoadSuccess = m_luaGame->scriptCallBool("OnLoad", true);
@@ -448,8 +471,12 @@ void MotoGame::cleanPlayers() {
     /* If not already freed */
     if(m_pLevelSrc != NULL) {
       /* Clean up */
-      delete m_luaGame;
+      if(m_luaGame != NULL) {
+	delete m_luaGame;
+	m_luaGame = NULL;
+      }
       m_pLevelSrc->unloadToPlay();      
+      delete m_pLevelSrc;
 
       /* Release reference to level source */
       m_pLevelSrc = NULL;      

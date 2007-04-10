@@ -24,31 +24,28 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VFileIO.h"
 #include "VApp.h"
 
-  UILevelList::UILevelList(UIWindow *pParent,
-         int x,int y,
-         std::string Caption,
-         int nWidth,int nHeight)
-    :UIList(pParent, x, y, Caption, nWidth, nHeight) {
-      addColumn(GAMETEXT_LEVEL, getPosition().nWidth - 175);
-      addColumn(std::string(GAMETEXT_TIME) + ":",80);  
-#if defined(SUPPORT_WEBACCESS)    
-      addColumn("WR:",80);  
-#endif
-    }
+UILevelList::UILevelList(UIWindow *pParent,
+			 int x,int y,
+			 std::string Caption,
+			 int nWidth,int nHeight)
+  :UIList(pParent, x, y, Caption, nWidth, nHeight) {
+    addColumn(GAMETEXT_LEVEL, getPosition().nWidth - 175);
+    addColumn(std::string(GAMETEXT_TIME) + ":",80);  
+    addColumn("WR:",80);  
+}
 
 UILevelList::~UILevelList() {
 }
  
-Level* UILevelList::getSelectedLevel() {
-  Level *pLevelSrc = NULL;
+std::string UILevelList::getSelectedLevel() {
   if(!isBranchHidden() && getSelected()>=0) {
     if(!getEntries().empty()) {
       vapp::UIListEntry *pEntry = getEntries()[getSelected()];
-      pLevelSrc = reinterpret_cast<Level *>(pEntry->pvUser);        
+      return *(reinterpret_cast<std::string *>(pEntry->pvUser));
     }
   }
 
-  return pLevelSrc;
+  return "";
 }
 
 void UILevelList::hideBestTime() {
@@ -59,84 +56,41 @@ void UILevelList::hideRoomBestTime() {
   setHideColumn(2);
 }
 
-void UILevelList::addLevel(Level *pLevel,
-         vapp::PlayerProfile *p_player,
-         vapp::PlayerData *p_profile,
-#if defined(SUPPORT_WEBACCESS) 
-         WebRoom *p_pWebHighscores,
-#endif
-         std::string p_prefix) {
-  std::string Name,File;
-      
-  if(pLevel->Name() != "") Name = pLevel->Name();
-  else Name = "???";
+void UILevelList::clear() {
+  for(int i=0; i<getEntries().size(); i++) {
+    delete getEntries()[i]->pvUser;
+  }
+  UIList::clear();
+}
 
-  if(pLevel->FileName() != "") File = vapp::FS::getFileBaseName(pLevel->FileName());
-  else File = "???";
+void UILevelList::addLevel(std::string i_id_level,
+			   std::string i_name,
+			   float i_playerHighscore,
+			   float i_roomHighscore,
+			   std::string i_prefix) {
+  std::string v_name;
+
+  if(i_name != "") v_name = i_name;
+  else v_name = "???";
 
   vapp::UIListEntry *pEntry = NULL;
-  vapp::PlayerTimeEntry *pTimeEntry = NULL;
-      
-  pEntry = addEntry(p_prefix + Name,reinterpret_cast<void *>(pLevel));
+  pEntry = addEntry(i_prefix + v_name, reinterpret_cast<void *>(new String(i_id_level)));
   
   /* Add times to list entry */
   if(pEntry != NULL) {
-    pTimeEntry = p_profile->getBestPlayerTime(p_player->PlayerName, pLevel->Id());
-      
-    if(pTimeEntry != NULL)
-      pEntry->Text.push_back(vapp::App::formatTime(pTimeEntry->fFinishTime));
-    else
+    if(i_playerHighscore < 0.0) {
       pEntry->Text.push_back("--:--:--");
-
-#if defined(SUPPORT_WEBACCESS)
-    if(p_pWebHighscores != NULL) {    
-      WebHighscore *pWH = p_pWebHighscores->getHighscoreFromLevel(pLevel->Id());
-      if(pWH != NULL)
-  pEntry->Text.push_back(pWH->getTime());
-      else
-  pEntry->Text.push_back(GAMETEXT_WORLDRECORDNA);
+    } else {
+      pEntry->Text.push_back(vapp::App::formatTime(i_playerHighscore));
     }
-    else
+
+    if(i_roomHighscore < 0.0) {
       pEntry->Text.push_back(GAMETEXT_WORLDRECORDNA);
-#endif          
+    } else {
+      pEntry->Text.push_back(vapp::App::formatTime(i_roomHighscore));
+    }
   }
 }  
-
-void UILevelList::updateLevelsInformations(vapp::PlayerProfile *p_player,
-					   vapp::PlayerData *p_profile
-#if defined(SUPPORT_WEBACCESS) 
-					   , WebRoom *p_pWebHighscores
-#endif
-					   ) {
-  Level *pLevel;
-  vapp::UIListEntry *pEntry;
-  vapp::PlayerTimeEntry *pTimeEntry = NULL;
-  
-  for(int i=0; i<getEntries().size(); i++) {
-    pEntry = getEntries()[i];
-    pLevel = static_cast<Level*>(pEntry->pvUser);
-
-    /* Add times to list entry */
-    pTimeEntry = p_profile->getBestPlayerTime(p_player->PlayerName, pLevel->Id());
-    
-    if(pTimeEntry != NULL)
-      pEntry->Text[1] = vapp::App::formatTime(pTimeEntry->fFinishTime);
-    else
-      pEntry->Text[1] = "--:--:--";
-    
-#if defined(SUPPORT_WEBACCESS)
-    if(p_pWebHighscores != NULL) {    
-      WebHighscore *pWH = p_pWebHighscores->getHighscoreFromLevel(pLevel->Id());
-      if(pWH != NULL)
-	pEntry->Text[2] = pWH->getTime();
-      else
-	pEntry->Text[2] = GAMETEXT_WORLDRECORDNA;
-    }
-    else
-     pEntry->Text[2] = GAMETEXT_WORLDRECORDNA;
-#endif     
-  }
-}
 
 UIPackTree::UIPackTree(UIWindow *pParent,
 		       int x, int y,

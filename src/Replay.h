@@ -41,10 +41,8 @@ namespace vapp {
     std::string Name;
     std::string Player;
     std::string Level;
-    float fFrameRate;
+    bool  IsFinished;
     float fFinishTime;
-    
-    int nTimeStamp;   /* replay file time stamp */
   };
   
   /* Replays states (frames) are grouped together in chunks for easy
@@ -54,31 +52,6 @@ namespace vapp {
     int nNumStates;
   };
 
-  /*===========================================================================
-  ReplayList class
-  ===========================================================================*/  
-  class ReplayList {
-    public:
-      ~ReplayList() {clear();} /* destructor */
-    
-      /* Methods */
-      void initFromCache();
-      void initFromDir();
-      void addReplay(const std::string &Replay, bool i_saveCache = true);
-      void delReplay(const std::string &Replay, bool i_saveCache = true);
-      void clear(bool i_saveCache = true);
-
-      /* you must free the list after this call */
-      std::vector<ReplayInfo *>* findReplays(const std::string &PlayerName = "",
-               const std::string &LevelID = "");
-
-    private:
-      /* Data */
-      std::vector<ReplayInfo *> m_Replays;
-      void saveCache();
-      static std::string ReplayIndexFileName();
-  };
-   
   /*===========================================================================
   Replay class
   ===========================================================================*/  
@@ -95,7 +68,7 @@ namespace vapp {
       
       void createReplay(const std::string &FileName,const std::string &LevelID,const std::string &Player,float fFrameRate,int nStateSize);
       void saveReplay(void);
-      std::string openReplay(const std::string &FileName,float *pfFrameRate,std::string &Player, bool bDisplayInformation = false);
+      std::string openReplay(const std::string &FileName, std::string &Player, bool bDisplayInformation = false);
       static void deleteReplay(std::string ReplayName);
       void reinitialize();
       std::string getLevelId();

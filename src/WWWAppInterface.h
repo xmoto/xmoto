@@ -24,7 +24,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "BuildConfig.h"
 
-#if defined(SUPPORT_WEBACCESS)
 #include <string>
 
 namespace vapp {
@@ -41,19 +40,7 @@ namespace vapp {
     virtual void setBeingDownloadedInformation(const std::string &p_information,bool p_isNew=true) = 0;
 
     virtual void readEvents() = 0;
-    
-    /* Level tools */
-    virtual bool doesLevelExist(const std::string &p_LevelId) = 0;
-  
-    /* return the level file or "" if you won't the level be updated (if required) */
-    virtual std::string levelPathForUpdate(const std::string &p_LevelId) = 0;
 
-    /* return the CRC32 sum or "" if can't determine it */
-    // virtual std::string levelCRC32Sum(const std::string &p_LevelId) = 0;
-    
-    /* return the MD5 sum or "" not available */
-    virtual std::string levelMD5Sum(const std::string &LevelID) = 0;
-    
     /* Ask the user whether he want a level to be updated */
     virtual bool shouldLevelBeUpdated(const std::string &LevelID) = 0;
 
@@ -68,8 +55,6 @@ namespace vapp {
   };
 
 }
-
-#endif
 
 #endif
 

@@ -24,38 +24,30 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "GUI.h"
 #include "xmscene/Level.h"
-#include "PlayerData.h"
 #include "WWW.h"
 #include "LevelsManager.h"
   
-  class UILevelList : public vapp::UIList {
-    public:
-    UILevelList(UIWindow *pParent,
-		int x = 0,int y = 0,
-		std::string Caption="",
-		int nWidth = 0,int nHeight = 0);
-    ~UILevelList();
-    
-    Level* getSelectedLevel();
-    void addLevel(Level *pLevel,
-		  vapp::PlayerProfile *p_player,
-		  vapp::PlayerData *p_profile,
-#if defined(SUPPORT_WEBACCESS) 
-		  WebRoom *p_pWebHighscores,
-#endif
-		  std::string p_prefix = "");
+class UILevelList : public vapp::UIList {
+  public:
+  UILevelList(UIWindow *pParent,
+	      int x = 0,int y = 0,
+	      std::string Caption="",
+	      int nWidth = 0,int nHeight = 0);
+  ~UILevelList();
+  
+  std::string getSelectedLevel();
+  void addLevel(std::string i_id_level,
+		std::string i_name,
+		float i_playerHighscore, // negativ if no one
+		float i_roomHighscore,   // negativ if no one
+		std::string i_prefix = "");
+  virtual void clear();
 
-    void hideBestTime();
-    void hideRoomBestTime();
-    void updateLevelsInformations(vapp::PlayerProfile *p_player,
-				  vapp::PlayerData *p_profile
-#if defined(SUPPORT_WEBACCESS) 
-				  , WebRoom *p_pWebHighscores
-#endif
-				  );
-
-    private:
-  };
+  void hideBestTime();
+  void hideRoomBestTime();
+  
+  private:
+};
 
 class UIPackTree : public vapp::UIList {
  public:

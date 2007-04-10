@@ -172,7 +172,7 @@ namespace vapp {
     FS::closeFile(pfh);
   }
   
-  std::string Replay::openReplay(const std::string &FileName,float *pfFrameRate,std::string &Player, bool bDisplayInformation) {
+  std::string Replay::openReplay(const std::string &FileName, std::string &Player, bool bDisplayInformation) {
     /* Try opening as if it is a full path */
     FileHandle *pfh = FS::openIFile(FileName, true);
     if(pfh == NULL) {
@@ -221,7 +221,6 @@ namespace vapp {
 
       /* Read replay frame rate */
       m_fFrameRate = FS::readFloat_LE(pfh);
-      if(pfFrameRate != NULL) *pfFrameRate = m_fFrameRate;            
 
       /* Read state size */
       m_nStateSize = FS::readInt_LE(pfh);
@@ -541,14 +540,12 @@ namespace vapp {
       float fFinishTime   = FS::readFloat_LE(pfh);
                 
       ReplayInfo *pRpl     = new ReplayInfo;
-      int nTimeStamp       = FS::getFileTimeStamp("Replays/" + p_ReplayName + ".rpl");
 
       /* Set members */
       pRpl->Level = LevelID;
       pRpl->Name = p_ReplayName;
       pRpl->Player = Player;
-      pRpl->nTimeStamp = nTimeStamp;
-      pRpl->fFrameRate = fFrameRate;
+      pRpl->IsFinished = bFinished;
 
       if(bFinished) {
 	pRpl->fFinishTime = fFinishTime;
