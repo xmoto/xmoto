@@ -73,9 +73,6 @@ quit level'' or something like that.
 * meme si on ne télécharge pas tous les niveaux, mettre à jour le thème
 
 ******************
-* PERFORMANCE : rebuildLevelsPacks is very slow particularly on windows with a lot of levels : sqlite
-
-* pack : last highscores
 * pack : last levels
 
 * flag sprite to add
