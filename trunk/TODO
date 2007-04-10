@@ -100,11 +100,6 @@ Assigned to nicolas
 * F5 while developping a level, if the level is scripted, it could
    crash it and required a full F5 at the menu stage
 
-========
-
-* ugly uses misc.png for border : should not
-
-
 ====Competitions
 * dayly/weekly/monthly competition based on a few tracs , different entry levels easy medium hard
 * reset the scores once in a while
