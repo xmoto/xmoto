@@ -3,7 +3,7 @@
 
 #include <iterator>
 #include "VCommon.h"	// For XMOTO_LITTLE_ENDIAN
-#include "MotoGame.h"	// For SerializedBikeState
+#include "xmscene/Scene.h"	// For SerializedBikeState
 
 class SwapEndian {
  public:

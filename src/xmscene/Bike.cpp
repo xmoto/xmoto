@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "Bike.h"
 #include "../Replay.h"
-#include "../MotoGame.h"
+#include "Scene.h"
 #include "../GameEvents.h"
 #include "../GameText.h"
 #include "../PhysSettings.h"

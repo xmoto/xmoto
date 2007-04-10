@@ -26,7 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VApp.h"
 #include "xmscene/Level.h"
 #include "xmscene/Bike.h"
-#include "MotoGame.h"
+#include "xmscene/Scene.h"
 #include "VTexture.h"
 #include "Renderer.h"
 #include "Replay.h"
@@ -40,7 +40,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Credits.h"
 #include "LevelsManager.h"
 #include "XMotoLoadLevelsInterface.h"
-#include "xmDatabaseUpdateInterface.h"
+#include "db/xmDatabaseUpdateInterface.h"
 #include "SysMessage.h"
 
 #define PRESTART_ANIMATION_TIME 2.0

@@ -32,7 +32,7 @@
 #include <vector>
 #include "helpers/FileCompression.h"
 #include "md5sum/md5file.h"
-#include "xmDatabase.h"
+#include "db/xmDatabase.h"
 
 struct f_curl_download_data {
   vapp::WWWAppInterface *v_WebApp;

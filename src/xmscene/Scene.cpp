@@ -22,18 +22,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* 
  *  Game object. Handles all of the gamestate management und so weiter.
  */
-#include "Game.h"
-#include "MotoGame.h"
-#include "VFileIO.h"
-#include "BSP.h"
-#include "Sound.h"
-#include "PhysSettings.h"
-#include "xmscene/Entity.h"
-#include "GameEvents.h"
-
-#include "xmscene/Bike.h"
-#include "xmscene/BikeGhost.h"
-#include "xmscene/BikePlayer.h"
+#include "../Game.h"
+#include "Scene.h"
+#include "../VFileIO.h"
+#include "../BSP.h"
+#include "../Sound.h"
+#include "../PhysSettings.h"
+#include "../GameEvents.h"
+#include "Entity.h"
+#include "Bike.h"
+#include "BikeGhost.h"
+#include "BikePlayer.h"
 
 #define REPLAY_SPEED_INCREMENT 0.25
 

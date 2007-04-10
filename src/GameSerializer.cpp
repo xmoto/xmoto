@@ -23,7 +23,7 @@
  *  Game state serialization and magic
  */
 #include "PhysSettings.h"
-#include "MotoGame.h"
+#include "xmscene/Scene.h"
 
 namespace vapp {
 

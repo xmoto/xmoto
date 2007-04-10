@@ -20,7 +20,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "ScriptDynamicObjects.h"
-#include "MotoGame.h"
+#include "xmscene/Scene.h"
 #include "math.h"
 
 SDynamicObject::SDynamicObject(int p_startTime, int p_endTime, float pPeriod) {
