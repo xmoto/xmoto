@@ -925,7 +925,7 @@ GameApp::GameApp() {
             m_MotoGame.endLevel();
             m_InputHandler.resetScriptKeyHooks();                      
             m_Renderer.unprepareForNewLevel();
-      setState(m_StateAfterPlaying);
+	    setState(m_StateAfterPlaying);
             break;          
           case SDLK_RIGHT:
             /* Right arrow key: fast forward */
