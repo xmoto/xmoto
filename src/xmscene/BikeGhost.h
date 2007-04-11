@@ -46,15 +46,12 @@ class Ghost : public Biker {
   bool getRenderBikeFront();
   float getBikeEngineSpeed();
 
-  void setInterpolation(bool bValue);
-
  private:
   vapp::Replay* m_replay;
   std::vector<float> m_lastToTakeEntities;
   float m_diffToPlayer; /* time diff between the ghost and the player */
   std::string m_info;
   bool m_isActiv;
-  bool m_doInterpolation;
 
   /* because we have not the real one, but the one before and the one after */
   SerializedBikeState m_previous_ghostBikeState;
