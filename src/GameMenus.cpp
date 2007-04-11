@@ -3406,12 +3406,10 @@ namespace vapp {
       default: pSample16Button->setChecked(true); break; /* TODO: warning */
     }
     
-    if(m_Config.getString("AudioChannels") == "stereo")
+    if(m_Config.getString("AudioChannels") == "Stereo")
       pStereoButton->setChecked(true);
-    else if(m_Config.getString("AudioChannels") == "mono")
-      pMonoButton->setChecked(true);
     else
-      pMonoButton->setChecked(true); /* TODO: warning */
+      pMonoButton->setChecked(true);
       
     pEnableEngineSoundButton->setChecked(m_Config.getBool("EngineSoundEnable"));      
     pEnableMusicButton->setChecked(m_Config.getBool("MenuMusic"));      
