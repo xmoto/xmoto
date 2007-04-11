@@ -593,13 +593,12 @@ msgstr ""
 "um das Level zu beenden."
 
 #: src/GameText.h:223
-#, fuzzy
 msgid ""
 "Read the README file or check out the website at\n"
 "http://xmoto.tuxfamily.org for more information."
 msgstr ""
 "Lies die README Datei oder besuche die Website auf\n"
-"http://xmoto.sourceforge.net fuer weitere Informationen"
+"http://xmoto.tuxfamily.org fuer weitere Informationen."
 
 #: src/GameText.h:225
 msgid "High"
@@ -643,7 +642,7 @@ msgstr "Joystick"
 
 #: src/GameText.h:234
 msgid "Oops!"
-msgstr "Ups!"
+msgstr "Hoppla!"
 
 #: src/GameText.h:235
 msgid "Press ENTER to try again"
@@ -753,16 +752,15 @@ msgstr "Geist mit Bewegungsunschaerfe"
 
 #: src/GameText.h:261
 msgid "Multi"
-msgstr ""
+msgstr "Mehrspieler"
 
 #: src/GameText.h:262
 msgid "Name"
 msgstr "Name"
 
 #: src/GameText.h:263
-#, fuzzy
 msgid "Number of players"
-msgstr "Name des Replays"
+msgstr "Anzahl der Spieler"
 
 #: src/GameText.h:264
 #, c-format
@@ -826,7 +824,6 @@ msgid "Not finished"
 msgstr "Nicht beendet"
 
 #: src/GameText.h:277
-#, fuzzy
 msgid ""
 "Important note!\n"
 "\n"
@@ -843,12 +840,12 @@ msgstr ""
 "\n"
 "Diese Version von X-Moto ist noch in der Entwicklung.\n"
 "Jede Art von Rueckmeldung wird gerne gesehen, so dass\n"
-"das Spiel verbessert werden kann.\n"
-"Schicke bitte Fehler, Ideen, Kommentare, Funktionen, Beleidigungen, usw.\n"
-"an neckelmann@gmail.com\n"
+"das Spiel fortwaehrend verbessert werden kann.\n"
+"Bitte schicke Fehler, Ideen, Kommentare, Funktionen, Beleidigungen, usw.\n"
+"an nicolas at adenis-lamarre dot fr.\n"
 "\n"
-"Besuche auch http://xmoto.tuxfamily.org, um sicherzustellen,\n"
-"dass du die neueste Version hast."
+"Besuche auch http://xmoto.tuxfamily.org, um zu sehen,\n"
+"ob du die neueste Version von X-Moto hast."
 
 #: src/GameText.h:287
 msgid "# Levels"
@@ -904,7 +901,6 @@ msgid "Personal"
 msgstr "Persoenlich"
 
 #: src/GameText.h:303
-#, fuzzy
 msgid "Players"
 msgstr "Spieler"
 
@@ -974,9 +970,8 @@ msgstr ""
 "Geschwindigkeit:"
 
 #: src/GameText.h:320
-#, fuzzy
 msgid "The replay can't be played!"
-msgstr "Replay '%s' kann nicht abgespielt werden!"
+msgstr "Das Replay kann nicht abgespielt werden!"
 
 #: src/GameText.h:321
 msgid "Replays"
@@ -1044,7 +1039,7 @@ msgstr "Stereo"
 
 #: src/GameText.h:339
 msgid "Theme"
-msgstr "Theme"
+msgstr "Thema"
 
 #: src/GameText.h:340
 msgid "Available"
@@ -1293,7 +1288,6 @@ msgid "Levels grouped together in level packs"
 msgstr "Levels in Pakete gruppiert"
 
 #: src/GameText.h:401
-#, fuzzy
 msgid "Browse levels available to you"
 msgstr "Verfuegbare Levels durchsuchen"
 
@@ -1331,8 +1325,7 @@ msgstr "Ausgewaehltes Level spielen"
 
 #: src/GameText.h:410
 msgid "View general information about the level, best times, and replays"
-msgstr ""
-"Allgemeine Informationen ueber das Level, Bestzeiten und Replays anzeigen"
+msgstr "Allgemeine Informationen ueber Level, Bestzeiten und Replays anzeigen"
 
 #: src/GameText.h:411
 msgid "Run the selected replay"
@@ -1729,7 +1722,7 @@ msgstr "Liste durch Eingabe von Namensbestandteilen einschraenken"
 
 #: src/GameText.h:508
 msgid "Choose the number of players"
-msgstr ""
+msgstr "Wähle die Spieler-Anzahl"
 
 #: src/GameText.h:509
 msgid "Your login in the room"
@@ -1812,44 +1805,44 @@ msgstr "Bestzeit hochladen"
 
 #: src/GameText.h:531
 msgid "Ugly mode enabled"
-msgstr ""
+msgstr "Strich-modus aktiviert"
 
 #: src/GameText.h:532
 msgid "Ugly mode disabled"
-msgstr ""
+msgstr "Strich-Modus deaktiviert"
 
 #: src/GameText.h:533
 msgid "Theme mode enabled"
-msgstr ""
+msgstr "Themen-Modus aktiviert"
 
 #: src/GameText.h:534
 msgid "Theme mode disabled"
-msgstr ""
+msgstr "Themen-Modus deaktiviert"
 
 #: src/GameText.h:535
 msgid "Web connexion enabled"
-msgstr ""
+msgstr "Internet-Verbindung aktiviert"
 
 #: src/GameText.h:536
 msgid "Web connexion disabled"
-msgstr ""
+msgstr "Internet-Verbindung deaktiviert"
 
 #: src/GameText.h:537
 msgid "Replay interpolation enabled"
-msgstr ""
+msgstr "Replay-Interpolation aktiviert"
 
 #: src/GameText.h:538
 msgid "Replay interpolation disabled"
-msgstr ""
+msgstr "Replay-Interpolation deaktiviert"
 
 #~ msgid "Last"
 #~ msgstr "Letzte"
 
-#~ msgid "New levels"
-#~ msgstr "Neue Level"
-
 #~ msgid "Close profile editor"
 #~ msgstr "Profileditor schliessen"
+
+#~ msgid "New levels"
+#~ msgstr "Neue Level"
 
 #~ msgid "Bike Breaks"
 #~ msgstr "Rad zerbricht"
