@@ -223,8 +223,7 @@ GameApp::GameApp() {
 	  
 	  try {
 	    m_replayBiker = m_MotoGame.addReplayFromFile(m_PlaySpecificReplay,
-							 &m_theme, m_theme.getPlayerTheme(),
-							 m_allowReplayInterpolation);
+							 &m_theme, m_theme.getPlayerTheme());
 	    m_Renderer.setPlayerToFollow(m_replayBiker);
 	  } catch(Exception &e) {
 	    setState(m_StateAfterPlaying);
@@ -796,18 +795,23 @@ GameApp::GameApp() {
       return;        
     }
 
-    if(m_State == GS_MENU) {
-
-      /* activate/desactivate interpolation */
-      if(nKey == SDLK_i && ( (mod & KMOD_LCTRL) || (mod & KMOD_RCTRL) )) {
-	m_allowReplayInterpolation = !m_allowReplayInterpolation;
-	if(m_allowReplayInterpolation) {
-	  m_sysMsg.displayText(SYS_MSG_INTERPOLATION_ENABLED);
-	} else {
-	  m_sysMsg.displayText(SYS_MSG_INTERPOLATION_DISABLED);
-	}
-	return;
+    /* activate/desactivate interpolation */
+    if(nKey == SDLK_i && ( (mod & KMOD_LCTRL) || (mod & KMOD_RCTRL) )) {
+      m_allowReplayInterpolation = !m_allowReplayInterpolation;
+      if(m_allowReplayInterpolation) {
+	m_sysMsg.displayText(SYS_MSG_INTERPOLATION_ENABLED);
+      } else {
+	m_sysMsg.displayText(SYS_MSG_INTERPOLATION_DISABLED);
       }
+
+      for(unsigned int i=0; i<m_MotoGame.Players().size(); i++) {
+	m_MotoGame.Players()[i]->setInterpolation(m_allowReplayInterpolation);
+      }
+
+      return;
+    }
+
+    if(m_State == GS_MENU) {
 
       if(nKey == SDLK_F5) {
 	_SimpleMessage(GAMETEXT_RELOADINGLEVELS, &m_InfoMsgBoxRect);

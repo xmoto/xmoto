@@ -178,6 +178,8 @@ class Biker {
   const TColor& getColorFilter() const;
   const TColor& getUglyColorFilter() const;
 
+  void setInterpolation(bool bValue);
+
  protected:
   BikerTheme* m_bikerTheme;
   bool m_playSound;
@@ -197,6 +199,7 @@ class Biker {
 
   TColor m_colorFilter;
   TColor m_uglyColorFilter;
+  bool m_doInterpolation;
 };
 
 class OnBikerHooks {

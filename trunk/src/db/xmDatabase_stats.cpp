@@ -45,8 +45,9 @@ void xmDatabase::updateDB_stats(XmDatabaseUpdateInterface *i_interface) {
 	/* Get players */
 	for(TiXmlElement *pPlayerElem = pStatsElem->FirstChildElement("player");
 	    pPlayerElem!=NULL;pPlayerElem=pPlayerElem->NextSiblingElement("player")) {
-	  
+
 	  tag = pPlayerElem->Attribute("name");
+
 	  if(tag != NULL) {
 	    v_playerName = tag;
 
@@ -54,10 +55,14 @@ void xmDatabase::updateDB_stats(XmDatabaseUpdateInterface *i_interface) {
 	    if(tag == NULL) {
 	      v_since = "2000-01-01 00:00:00";
 	    } else {
-	      std::string v_tmp = tag;
-	      v_since = v_tmp.substr(6, 10) + " " + v_tmp.substr(0, 5) + ":00";
+	      if(std::string(tag) == "") {
+		v_since = "2000-01-01 00:00:00";
+	      } else {
+		std::string v_tmp = tag;
+		v_since = v_tmp.substr(6, 10) + " " + v_tmp.substr(0, 5) + ":00";
+	      }
 	    }
-	    
+
 	    v_starts = "";
 	    for(TiXmlElement *pStatElem = pPlayerElem->FirstChildElement("stat");
 		pStatElem!=NULL;pStatElem=pStatElem->NextSiblingElement("stat")) {
@@ -127,6 +132,7 @@ void xmDatabase::updateDB_stats(XmDatabaseUpdateInterface *i_interface) {
 	    }
 	  }
 	}
+
 	simpleSql("COMMIT;");
       } catch(Exception &e) {
 	simpleSql("ROLLBACK;");

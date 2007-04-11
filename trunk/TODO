@@ -1,3 +1,4 @@
+* hints for packs disabled
 * musique->1er niveau info -> 1er replay -> echap : ca mouline
 * pack des niveaux récents: v_creationDate : la date de création des niveaux
 
@@ -39,7 +40,6 @@ For 0.3.0
 * yep, it works, but it was a pain in the ass to find those faulty demos in the list(i have sooo many demos). Could you do the same fliter thing and directories for replays too ?
 4. zoom in demos :)
 5. http://forum.xmoto.tuxfamily.org/viewtopic.php?t=117&highlight=
-6. "levels with recently updated WR" folder
 
 For Tod:
 * load into the graphic card only the blocks which will be displayed depending on the selected graphic quality.

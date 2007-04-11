@@ -43,7 +43,6 @@ Ghost::Ghost(std::string i_replayFile, bool i_isActiv,
 
   m_info = "";
   m_isActiv = i_isActiv;
-  m_doInterpolation = true;
 }
 
 Ghost::~Ghost() {
@@ -189,10 +188,6 @@ void Ghost::updateToTime(float i_time, float i_timeStep,
   if(m_isActiv) {
     execReplayEvents(i_time, i_motogame);
   }
-}
-
-void Ghost::setInterpolation(bool bValue) {
-  m_doInterpolation = bValue;
 }
 
 float Ghost::getFinishTime() {

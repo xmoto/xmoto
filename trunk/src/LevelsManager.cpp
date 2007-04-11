@@ -30,7 +30,7 @@ LevelsPack::LevelsPack(std::string i_name, const std::string& i_sql) {
   m_name         = i_name;
   m_showTimes    = true;
   m_showWebTimes = true;
-  setHintsFromFile();
+  //setHintsFromFile();
   m_sql_levels = i_sql;
 }
 

@@ -108,6 +108,10 @@ namespace vapp {
 
   template <typename _Iter>
   void DBuffer::readBuf(_Iter pcBuf,int nBufSize) {
+    if(numRemainingBytes() < nBufSize) {
+      throw Exception("Unable to read the data");
+    }
+
     if(isInput() && nBufSize > 0) {
       /* Remaining in input buffer? */
       if(m_nSize - m_nReadPtr < nBufSize) {

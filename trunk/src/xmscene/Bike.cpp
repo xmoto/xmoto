@@ -161,6 +161,7 @@ Biker::Biker(Theme *i_theme, BikerTheme* i_bikerTheme,
   m_bikerHooks = NULL;
   m_colorFilter = i_colorFilter;
   m_uglyColorFilter = i_uglyColorFilter;
+  m_doInterpolation = true;
 }
 
 const TColor& Biker::getColorFilter() const {
@@ -311,6 +312,10 @@ bool Biker::isFinished() const {
 
 bool Biker::isDead() const {
   return m_dead;
+}
+
+void Biker::setInterpolation(bool bValue) {
+  m_doInterpolation = bValue;
 }
 
 BikerTheme* Biker::getBikeTheme() {
