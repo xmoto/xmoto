@@ -83,11 +83,9 @@ Assigned to nicolas
    playing, then it is not updated with the new level button
 * put under edge into the block part
 * PAD_5 -> to finish
-* FEATURE : * xmoto toto.lvl to play directly a level
 
 * when are texure is rotated we need to copy the texture mutplile times so it's always visible
-* F5 while developping a level, if the level is scripted, it could
-   crash it and required a full F5 at the menu stage
+* F5 while developping a level, if the level is scripted, it could crash it and required a full F5 at the menu stage
 
 ====Competitions
 * dayly/weekly/monthly competition based on a few tracs , different entry levels easy medium hard
@@ -197,11 +195,9 @@ render blocks by Z
 * check for a new version at startup
 * add 2 rooms configurations so that i can display, world highscore
    and highscore of my room (priority=low)
-* add import of players.bin (so that people playing at different
-   location can merge their highscores) (priority=very low)
+* add import of players.bin (so that people playing at different location can merge their highscores) (priority=very low)
 * separate personnal highscores from others (two tabs instead of a
-   button, it's easiest) (it neckelmann agree)
-* pb for left hand written people for the editor
+   button, it's easiest)
 * two possibilities to show room : one to see the world highscore, one
    to see you room (optionnal)
 * display wind
