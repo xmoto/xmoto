@@ -45,6 +45,7 @@ GameApp::~GameApp() {
 GameApp::GameApp() {
   m_pCredits = NULL;
   m_bDebugMode=false;
+  m_sqlTrace=false;
   m_bListLevels=false;
   m_bListReplays=false;
   m_bTimeDemo=false;
