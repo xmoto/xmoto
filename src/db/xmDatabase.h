@@ -45,6 +45,7 @@ class xmDatabase {
   char* getResult(char **i_result, int ncolumn, int i_row, int i_column);
   void debugResult(char **i_result, int ncolumn, int nrow);
   static std::string protectString(const std::string& i_str);
+  static void setTrace(bool i_value);
 
   /* stats */
   void stats_createProfile(const std::string& i_profile);
@@ -119,6 +120,7 @@ class xmDatabase {
   sqlite3 *m_db;
   bool m_requiredLevelsUpdateAfterInit;
   bool m_requiredReplaysUpdateAfterInit;
+  static bool Trace;
 
   /* function used to synchronise with the last xmoto version */
   int  getXmDbVersion();

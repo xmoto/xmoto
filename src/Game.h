@@ -178,6 +178,7 @@ class xmDatabase;
       bool m_bListReplays;                      /* true: list replays */
       bool m_bTimeDemo;                         /* true: (valid for replaying) - performance benchmark */
       bool m_bDebugMode;                        /* true: show debug info */
+      bool m_sqlTrace;                          /* true: show sql traces */
       bool m_bUglyMode;                         /* true: fast 'n ugly graphics */
       bool m_bCleanCache;                       /* true: clean the level cache at startup */
       bool m_bDisplayInfosReplay;               /* true: just display infos of a replay */

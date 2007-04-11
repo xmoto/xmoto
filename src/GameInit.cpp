@@ -160,6 +160,10 @@ namespace vapp {
     m_db = new xmDatabase(DATABASE_FILE,
 			  m_profile == "" ? std::string("") : m_profile,
 			  getDrawLib()->isNoGraphics() ? NULL : this);
+    if(m_sqlTrace) {
+      m_db->setTrace(m_sqlTrace);
+    }
+
     /* Update stats */
     if(m_profile != "")
       m_db->stats_xmotoStarted(m_profile);
@@ -506,6 +510,9 @@ namespace vapp {
       }
       else if(UserArgs[i] == "-debug") {
         m_bDebugMode = true;
+      }
+      else if(UserArgs[i] == "-sqlTrace") {
+	m_sqlTrace = true;
       }
       else if(UserArgs[i] == "-profile") {
         if(i+1<UserArgs.size())

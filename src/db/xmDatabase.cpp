@@ -25,6 +25,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #define XMDB_VERSION 10
 
+bool xmDatabase::Trace = false;
+
 xmDatabase::xmDatabase(const std::string& i_dbFile,
 		       const std::string& i_profile,
 		       XmDatabaseUpdateInterface *i_interface) {
@@ -61,8 +63,14 @@ xmDatabase::~xmDatabase() {
   sqlite3_close(m_db);
 }
 
+void xmDatabase::setTrace(bool i_value) {
+  xmDatabase::Trace = i_value;
+}
+
 void xmDatabase::sqlTrace(void* arg1, const char* sql) {
-  //printf("%s\n", sql);
+  if(Trace) {
+    printf("%s\n", sql);
+  }
 }
 
 int xmDatabase::getXmDbVersion() {
