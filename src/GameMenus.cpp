@@ -251,6 +251,18 @@ namespace vapp {
     m_pReplaysWindow->showWindow(false);
     pSomeText = new UIStatic(m_pReplaysWindow,0,0,GAMETEXT_REPLAYS,m_pHelpWindow->getPosition().nWidth,36);
     pSomeText->setFont(m_Renderer.getMediumFont());
+
+    pSomeText = new UIStatic(m_pReplaysWindow, 10, 35, std::string(GAMETEXT_FILTER) + ":", 90, 25);
+    pSomeText->setFont(m_Renderer.getSmallFont());
+    pSomeText->setHAlign(UI_ALIGN_RIGHT);
+    UIEdit *pLevelFilterEdit = new UIEdit(m_pReplaysWindow,
+					  110,
+					  35,
+					  "",200,25);
+    pLevelFilterEdit->setFont(m_Renderer.getSmallFont());
+    pLevelFilterEdit->setID("REPLAYS_FILTER");
+    pLevelFilterEdit->setContextHelp(CONTEXTHELP_REPLAYS_FILTER);
+
     /* show button */
     UIButton *pShowButton = new UIButton(m_pReplaysWindow,5,m_pReplaysWindow->getPosition().nHeight-68,GAMETEXT_SHOW,105,57);
     pShowButton->setFont(m_Renderer.getSmallFont());
@@ -280,7 +292,7 @@ namespace vapp {
     pListAllButton->setID("REPLAY_LIST_ALL");
     pListAllButton->setContextHelp(CONTEXTHELP_ALL_REPLAYS);
     /* */
-    UIList *pReplayList = new UIList(m_pReplaysWindow,20,40,"",m_pReplaysWindow->getPosition().nWidth-40,m_pReplaysWindow->getPosition().nHeight-115);      
+    UIList *pReplayList = new UIList(m_pReplaysWindow,20,65,"",m_pReplaysWindow->getPosition().nWidth-40,m_pReplaysWindow->getPosition().nHeight-115-25);
     pReplayList->setID("REPLAY_LIST");
     pReplayList->showWindow(true);
     pReplayList->setFont(m_Renderer.getSmallFont());
@@ -2325,6 +2337,17 @@ namespace vapp {
             m_pQuitMsgBox = m_Renderer.getGUI()->msgBox(GAMETEXT_QUITMESSAGE,
                                                         (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
         }
+      }
+    }
+    
+    UIEdit *pReplayFilterEdit = reinterpret_cast<UIEdit *>(m_pReplaysWindow->getChild("REPLAYS_FILTER"));
+    UIList *pReplayList = reinterpret_cast<UIList *>(m_pReplaysWindow->getChild("REPLAY_LIST"));
+    
+    /* check filter */
+    if(pReplayFilterEdit != NULL) {
+      if(pReplayFilterEdit->hasChanged()) {
+	pReplayFilterEdit->setHasChanged(false);
+	pReplayList->setFilter(pReplayFilterEdit->getCaption());
       }
     }
 

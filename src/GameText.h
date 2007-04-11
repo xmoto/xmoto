@@ -508,6 +508,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_MULTI _("Choose the number of players")
 #define CONTEXTHELP_PROXYLOGIN    _("Your login in the room")
 #define CONTEXTHELP_PROXYPASSWORD _("Your password associated with your login")
+#define CONTEXTHELP_REPLAYS_FILTER _("Filter on replay list")
 
 #define VPACKAGENAME_LEVELS_WITH_NO_HIGHSCORE   _("Levels with no highscore")
 #define VPACKAGENAME_INCOMPLETED_LEVELS         _("Levels you have not completed")
