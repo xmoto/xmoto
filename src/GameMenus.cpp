@@ -1794,6 +1794,7 @@ namespace vapp {
           m_pMainMenu->enableWindow(true);
           m_pMainMenu->showWindow(false);
           m_PlaySpecificReplay = pListEntry->Text[0];
+	  m_StateAfterPlaying = GS_MENU;
           setState(GS_REPLAYING);
         }
       }

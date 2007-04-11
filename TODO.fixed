@@ -2,6 +2,7 @@ Since 0.2.7
 * ugly uses misc.png for border : should not
 * PERFORMANCE : rebuildLevelsPacks is very slow particularly on windows with a lot of levels : sqlite
 * pack : last highscores
+* musique->1er niveau info -> 1er replay -> echap : ca mouline
 
 Since 0.2.6
 [21:33] <jj> the smoke is not always rendered at the sides of the screen
