@@ -124,10 +124,8 @@ namespace vapp {
 
     /* Init sound system */
     if(!getDrawLib()->isNoGraphics()) {
-      Log("Initializing sound system...");
       Sound::init(&m_Config);
       if(!Sound::isEnabled()) {
-        Log(" (sound is disabled)\n");
       }    
     }
               

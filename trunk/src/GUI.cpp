@@ -966,8 +966,6 @@ FRAME_BR (187,198) (8x8)
           }
         }
       }
-      
-      Log(" %d font%s loaded",m_Fonts.size(),m_Fonts.size()==1?"":"s");
     }
     m_nRefCount++;
   }

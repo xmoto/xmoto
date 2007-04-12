@@ -204,8 +204,6 @@ namespace vapp {
     
     setScroll(false);
 
-    Log("Number of static  geoms: %d", m_StaticGeoms.size());
-    Log("Number of dynamic geoms: %d", m_DynamicGeoms.size());
     Log("GL: %d kB vertex buffers",    nVertexBytes/1024);
   }
 
