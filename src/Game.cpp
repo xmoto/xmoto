@@ -1466,9 +1466,11 @@ GameApp::GameApp() {
 
     /* Update stats */        
     if(m_MotoGame.Players().size() == 1) {
-      m_db->stats_levelRestarted(m_profile,
-				 m_MotoGame.getLevelSrc()->Id(),
-				 m_MotoGame.getTime());
+      if(m_MotoGame.Players()[0]->isDead() == false) {
+	m_db->stats_levelRestarted(m_profile,
+				   m_MotoGame.getLevelSrc()->Id(),
+				   m_MotoGame.getTime());
+      }
     }  
 
 		m_Renderer.setPlayerToFollow(NULL);
