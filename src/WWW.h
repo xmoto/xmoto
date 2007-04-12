@@ -195,23 +195,6 @@ class WebRoom {
   const ProxySettings *m_proxy_settings;
 };
 
-class WebRoomInfos {
- public:
-  WebRoomInfos(std::string p_id,
-	       std::string p_name,
-	       std::string p_urlHighscores);
-  ~WebRoomInfos();
-
-  std::string getId();
-  std::string getName();
-  std::string getUrlHighscores();
-
- private:
-  std::string m_id;
-  std::string m_name;
-  std::string m_urlHighscore;
-};
-
 class WebRooms {
  public:
   WebRooms(const ProxySettings *p_proxy_settings);
@@ -221,17 +204,14 @@ class WebRooms {
   void update(); /* throws exceptions */
 
   /* fill the list of avaible rooms ; does not required an internet connexion */
-  void upgrade();
+  void upgrade(xmDatabase *i_db);
 
   void setURL(const std::string &p_url) {m_rooms_url = p_url;}
-  const std::vector<WebRoomInfos*> &getAvailableRooms();
 
  private:
   const ProxySettings *m_proxy_settings;
-  std::vector<WebRoomInfos*> m_availableRooms;
   std::string m_rooms_url;
 
-  void clean();
   std::string getXmlFileName();
 };
 

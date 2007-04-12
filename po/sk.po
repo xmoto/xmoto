@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-04-10 22:31+0200\n"
+"POT-Creation-Date: 2007-04-11 22:27+0200\n"
 "PO-Revision-Date: 2007-02-27 23:26+0100\n"
 "Last-Translator: Jozef Riha <jose1711@gmail.com\n"
 "Language-Team:  <sk@li.org>\n"
@@ -61,7 +61,7 @@ msgstr "Akcia"
 msgid "All (on this computer)"
 msgstr "Vsetky (na tomto pocitaci)"
 
-#: src/GameText.h:44 src/GameText.h:515
+#: src/GameText.h:44 src/GameText.h:516
 msgid "All levels"
 msgstr "Vsetky levely"
 
@@ -1724,106 +1724,111 @@ msgstr ""
 msgid "Your password associated with your login"
 msgstr ""
 
-#: src/GameText.h:512
+#: src/GameText.h:511
+#, fuzzy
+msgid "Filter on replay list"
+msgstr "Chyba pri nahravani zaznamu!"
+
+#: src/GameText.h:513
 msgid "Levels with no highscore"
 msgstr "Levely bez rekordu"
 
-#: src/GameText.h:513
+#: src/GameText.h:514
 msgid "Levels you have not completed"
 msgstr "Levely, ktore ste nedokoncili"
 
-#: src/GameText.h:514
+#: src/GameText.h:515
 msgid "You're not the highscore holder"
 msgstr "Nedrzite rekord pre tento level"
 
-#: src/GameText.h:516
+#: src/GameText.h:517
 #, fuzzy
 msgid "New and updated levels"
 msgstr "Aktualizovane levely"
 
-#: src/GameText.h:517
+#: src/GameText.h:518
 msgid "Favorite levels"
 msgstr "Oblubene levely"
 
-#: src/GameText.h:518
+#: src/GameText.h:519
 msgid "Nicest levels"
 msgstr "Najkrajsie levely"
 
-#: src/GameText.h:519
+#: src/GameText.h:520
 msgid "Hardest levels"
 msgstr "Najtazsie levely"
 
-#: src/GameText.h:520
+#: src/GameText.h:521
 msgid "Easiest levels"
 msgstr "Najlahsie levely"
 
-#: src/GameText.h:521
+#: src/GameText.h:522
 msgid "Crapiest levels"
 msgstr "Najhorsie levely"
 
-#: src/GameText.h:522
+#: src/GameText.h:523
 msgid "Scripted levels"
 msgstr "Skriptovane levely"
 
-#: src/GameText.h:523
+#: src/GameText.h:524
 msgid "Musical"
 msgstr "Hudobny"
 
-#: src/GameText.h:524
+#: src/GameText.h:525
 msgid "By best driver"
 msgstr "Podla najlepsieho jazdca"
 
-#: src/GameText.h:525
+#: src/GameText.h:526
 msgid "Never played levels"
 msgstr "Nikdy nehrane levely"
 
-#: src/GameText.h:526
+#: src/GameText.h:527
 msgid "Most played levels"
 msgstr "Najcastejsie hrane levely"
 
-#: src/GameText.h:527
+#: src/GameText.h:528
 msgid "Less played levels (but played)"
 msgstr "Menej hrane levely"
 
-#: src/GameText.h:528
+#: src/GameText.h:529
 #, fuzzy
 msgid "Last highscores"
 msgstr "Aktualizovat rekordy"
 
-#: src/GameText.h:529
+#: src/GameText.h:530
 #, fuzzy
 msgid "Oldest highscores"
 msgstr "Aktualizovat rekordy"
 
-#: src/GameText.h:531
+#: src/GameText.h:532
 msgid "Ugly mode enabled"
 msgstr ""
 
-#: src/GameText.h:532
+#: src/GameText.h:533
 msgid "Ugly mode disabled"
 msgstr ""
 
-#: src/GameText.h:533
+#: src/GameText.h:534
 msgid "Theme mode enabled"
 msgstr ""
 
-#: src/GameText.h:534
+#: src/GameText.h:535
 msgid "Theme mode disabled"
 msgstr ""
 
-#: src/GameText.h:535
+#: src/GameText.h:536
 msgid "Web connexion enabled"
 msgstr ""
 
-#: src/GameText.h:536
+#: src/GameText.h:537
 msgid "Web connexion disabled"
 msgstr ""
 
-#: src/GameText.h:537
+#: src/GameText.h:538
 msgid "Replay interpolation enabled"
 msgstr ""
 
-#: src/GameText.h:538
+#: src/GameText.h:539
 msgid "Replay interpolation disabled"
 msgstr ""
 

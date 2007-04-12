@@ -681,6 +681,10 @@ GameApp::GameApp() {
     m_bEnableInitZoom = m_Config.getBool("InitZoom");
     m_bEnableDeathAnim = m_Config.getBool("DeathAnim");
 
+    /* www */
+    m_WebHighscoresURL    = m_Config.getString("WebHighscoresURL");
+    m_WebHighscoresIdRoom = m_Config.getString("WebHighscoresIdRoom");
+
     /* Configure proxy */
     _ConfigureProxy();
   }
@@ -1365,9 +1369,9 @@ GameApp::GameApp() {
   void GameApp::_UpgradeWebRooms(bool bUpdateMenus) {
     /* Upgrade high scores */
     try {
-      m_pWebRooms->upgrade();   
+      m_pWebRooms->upgrade(m_db);
       if(bUpdateMenus) {
-  _UpdateRoomsLists();
+	_UpdateRoomsLists();
       }
     } catch(Exception &e) {
       /* file probably doesn't exist */

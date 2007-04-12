@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-04-10 22:31+0200\n"
+"POT-Creation-Date: 2007-04-11 22:27+0200\n"
 "PO-Revision-Date: 2006-12-21 19:49+0100\n"
 "Last-Translator: Trullo\n"
 "Language-Team: X-Moto\n"
@@ -54,7 +54,7 @@ msgstr "Accion"
 msgid "All (on this computer)"
 msgstr "Todos (en este ordenador)"
 
-#: src/GameText.h:44 src/GameText.h:515
+#: src/GameText.h:44 src/GameText.h:516
 msgid "All levels"
 msgstr "Todos los Niveles"
 
@@ -1727,113 +1727,118 @@ msgstr ""
 msgid "Your password associated with your login"
 msgstr ""
 
-#: src/GameText.h:512
+#: src/GameText.h:511
+#, fuzzy
+msgid "Filter on replay list"
+msgstr "Error al cargar la repeticion!"
+
+#: src/GameText.h:513
 msgid "Levels with no highscore"
 msgstr "Niveles sin record"
 
-#: src/GameText.h:513
+#: src/GameText.h:514
 msgid "Levels you have not completed"
 msgstr "Niveles que no has completado"
 
-#: src/GameText.h:514
+#: src/GameText.h:515
 msgid "You're not the highscore holder"
 msgstr "Tu no eres el titular del record"
 
-#: src/GameText.h:516
+#: src/GameText.h:517
 #, fuzzy
 msgid "New and updated levels"
 msgstr "Niveles Actualizados"
 
-#: src/GameText.h:517
+#: src/GameText.h:518
 msgid "Favorite levels"
 msgstr "Niveles Favoritos"
 
-#: src/GameText.h:518
+#: src/GameText.h:519
 #, fuzzy
 msgid "Nicest levels"
 msgstr "Nuevos Niveles"
 
-#: src/GameText.h:519
+#: src/GameText.h:520
 #, fuzzy
 msgid "Hardest levels"
 msgstr "Niveles Favoritos"
 
-#: src/GameText.h:520
+#: src/GameText.h:521
 #, fuzzy
 msgid "Easiest levels"
 msgstr "Niveles Favoritos"
 
-#: src/GameText.h:521
+#: src/GameText.h:522
 #, fuzzy
 msgid "Crapiest levels"
 msgstr "Niveles Favoritos"
 
-#: src/GameText.h:522
+#: src/GameText.h:523
 #, fuzzy
 msgid "Scripted levels"
 msgstr "Niveles Actualizados"
 
-#: src/GameText.h:523
+#: src/GameText.h:524
 msgid "Musical"
 msgstr ""
 
-#: src/GameText.h:524
+#: src/GameText.h:525
 msgid "By best driver"
 msgstr ""
 
-#: src/GameText.h:525
+#: src/GameText.h:526
 #, fuzzy
 msgid "Never played levels"
 msgstr "Niveles mas jugados"
 
-#: src/GameText.h:526
-msgid "Most played levels"
-msgstr "Niveles mas jugados"
-
 #: src/GameText.h:527
-#, fuzzy
-msgid "Less played levels (but played)"
+msgid "Most played levels"
 msgstr "Niveles mas jugados"
 
 #: src/GameText.h:528
 #, fuzzy
+msgid "Less played levels (but played)"
+msgstr "Niveles mas jugados"
+
+#: src/GameText.h:529
+#, fuzzy
 msgid "Last highscores"
 msgstr "Envia el Record"
 
-#: src/GameText.h:529
+#: src/GameText.h:530
 #, fuzzy
 msgid "Oldest highscores"
 msgstr "Envia el Record"
 
-#: src/GameText.h:531
+#: src/GameText.h:532
 msgid "Ugly mode enabled"
 msgstr ""
 
-#: src/GameText.h:532
+#: src/GameText.h:533
 msgid "Ugly mode disabled"
 msgstr ""
 
-#: src/GameText.h:533
+#: src/GameText.h:534
 msgid "Theme mode enabled"
 msgstr ""
 
-#: src/GameText.h:534
+#: src/GameText.h:535
 msgid "Theme mode disabled"
 msgstr ""
 
-#: src/GameText.h:535
+#: src/GameText.h:536
 msgid "Web connexion enabled"
 msgstr ""
 
-#: src/GameText.h:536
+#: src/GameText.h:537
 msgid "Web connexion disabled"
 msgstr ""
 
-#: src/GameText.h:537
+#: src/GameText.h:538
 msgid "Replay interpolation enabled"
 msgstr ""
 
-#: src/GameText.h:538
+#: src/GameText.h:539
 msgid "Replay interpolation disabled"
 msgstr ""
 

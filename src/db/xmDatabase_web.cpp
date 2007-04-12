@@ -262,4 +262,51 @@ void xmDatabase::weblevels_updateDB(const std::string& i_weblevelsFile) {
 }
 
 void xmDatabase::webrooms_updateDB(const std::string& i_webroomsFile) {
+  vapp::XMLDocument v_webRXml;
+  TiXmlDocument *v_webRXmlData;
+  TiXmlElement *v_webRXmlDataElement;
+  const char *pc;
+  std::string v_RoomName, v_RoomHighscoreUrl, v_RoomId;
+
+  try {
+    simpleSql("BEGIN TRANSACTION;");
+    simpleSql("DELETE FROM webrooms;");
+
+    v_webRXml.readFromFile(i_webroomsFile);
+    v_webRXmlData = v_webRXml.getLowLevelAccess();
+
+    if(v_webRXmlData == NULL) {
+      throw Exception("error : unable to analyze xml rooms list file");
+    }
+
+    v_webRXmlDataElement = v_webRXmlData->FirstChildElement("xmoto_rooms");
+    
+    if(v_webRXmlDataElement == NULL) {
+      throw Exception("error : unable to analyze xml rooms list file");
+    }
+    
+    TiXmlElement *pVarElem = v_webRXmlDataElement->FirstChildElement("room");
+    while(pVarElem != NULL) {
+      
+      pc = pVarElem->Attribute("name");
+      if(pc == NULL) continue;
+      v_RoomName = pc;
+  
+      pc = pVarElem->Attribute("highscores_url");
+      if(pc == NULL) continue;
+      v_RoomHighscoreUrl = pc;   
+    
+      pc = pVarElem->Attribute("id");
+      if(pc == NULL) continue;
+      v_RoomId = pc;
+
+      webrooms_addRoom(v_RoomId, v_RoomName, v_RoomHighscoreUrl);
+
+      pVarElem = pVarElem->NextSiblingElement("room");
+    }
+    simpleSql("COMMIT;");
+  } catch(Exception &e) {
+    simpleSql("ROLLBACK;");
+    throw e;
+  }
 }

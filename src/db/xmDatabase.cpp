@@ -236,6 +236,10 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
     try {
       simpleSql("CREATE table webrooms(id_room PRIMARY KEY, name, highscoresUrl);");
       simpleSql("CREATE INDEX weblevels_name_idx1 ON webrooms(name);");
+      simpleSql("INSERT INTO webrooms(id_room, name, highscoresUrl) VALUES ("
+		DEFAULT_WEBROOM_ID ", \"" +
+		protectString(DEFAULT_WEBROOM_NAME) + "\", \"" +
+		protectString(DEFAULT_WEBROOMS_URL) + "\");");
       updateXmDbVersion(10);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 9: " + e.getMsg());
