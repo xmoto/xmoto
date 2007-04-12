@@ -3186,7 +3186,9 @@ namespace vapp {
   void GameApp::_CreateRoomsList(UIList *pList) {
     UIListEntry *pEntry;
     std::string v_selected_roomName = "";
-    std::vector<WebRoomInfos*> v_webroomsInfos;
+    char **v_result;
+    int nrow;
+    std::string v_roomName, v_roomId;
 
     /* get selected item */
     if(pList->getSelected() >= 0 && pList->getSelected() < pList->getEntries().size()) {
@@ -3195,14 +3197,22 @@ namespace vapp {
     }
 
     /* recreate the list */
+    for(unsigned int i=0; i<pList->getEntries().size(); i++) {
+      delete pList->getEntries()[i]->pvUser;
+    }
     pList->clear();
 
-    v_webroomsInfos = m_pWebRooms->getAvailableRooms();
-    for(int i=0; i<v_webroomsInfos.size(); i++) {
-      pEntry = pList->addEntry(v_webroomsInfos[i]->getName(),
-			       reinterpret_cast<void *>(v_webroomsInfos[i])
-			       );
+    v_result = m_db->readDB("SELECT id_room, name FROM webrooms ORDER BY id_room ASC;",
+			    nrow);
+
+    for(unsigned int i=0; i<nrow; i++) {
+      v_roomId   = m_db->getResult(v_result, 2, i, 0);
+      v_roomName = m_db->getResult(v_result, 2, i, 1);
+      pEntry = pList->addEntry(v_roomName,
+			       reinterpret_cast<void *>(new std::string(v_roomId))
+			       );    
     }
+    m_db->read_DB_free(v_result);
 
     /* reselect the previous room */
     if(v_selected_roomName != "") {
@@ -3340,8 +3350,7 @@ namespace vapp {
     std::string v_room_id = m_WebHighscoresIdRoom;
     if(v_room_id == "") {v_room_id = DEFAULT_WEBROOM_ID;}
     for(int i=0; i<pRoomsList->getEntries().size(); i++) {
-      WebRoomInfos* v_wri = (WebRoomInfos*)(pRoomsList->getEntries()[i]->pvUser);
-      if(v_wri->getId() == v_room_id) {
+      if((*(std::string*)pRoomsList->getEntries()[i]->pvUser) == v_room_id) {
 	pRoomsList->setRealSelected(i);
 	break;
       }
@@ -3684,26 +3693,26 @@ namespace vapp {
 
     if(pRoomsList->getSelected() >= 0 &&
        pRoomsList->getSelected() < pRoomsList->getEntries().size()) {
-      WebRoomInfos *wri = (WebRoomInfos*)(pRoomsList->getEntries()[pRoomsList->getSelected()]->pvUser);
-      m_Config.setString("WebHighscoresIdRoom", wri->getId());
-      m_Config.setString("WebHighscoresURL", wri->getUrlHighscores());
-      m_WebHighscoresIdRoom = wri->getId();
-      m_WebHighscoresURL    = wri->getUrlHighscores();
+      char **v_result;
+      int nrow;
+
+      m_WebHighscoresIdRoom = *((std::string*)pRoomsList->getEntries()[pRoomsList->getSelected()]->pvUser);
+      m_Config.setString("WebHighscoresIdRoom", m_WebHighscoresIdRoom);
+
+      v_result = m_db->readDB("SELECT highscoresUrl FROM webrooms WHERE id_room=" + m_WebHighscoresIdRoom + ";",
+			      nrow);
+      if(nrow == 1) {
+	m_WebHighscoresURL = m_db->getResult(v_result, 1, 0, 0);
+      } else {
+	m_WebHighscoresURL = "";
+      }
+      m_db->read_DB_free(v_result);
+
+      m_Config.setString("WebHighscoresURL", m_WebHighscoresURL);
     }
 
     m_Config.setString("WebHighscoreUploadLogin", pRoomsLogin->getCaption());
     m_Config.setString("WebHighscoreUploadPassword", pRoomsPassword->getCaption());
-
-    /* set room in the list */
-    std::string v_room_id = m_WebHighscoresIdRoom;
-    if(v_room_id == "") {v_room_id = DEFAULT_WEBROOM_ID;}
-    for(int i=0; i<pRoomsList->getEntries().size(); i++) {
-      WebRoomInfos* v_wri = (WebRoomInfos*)(pRoomsList->getEntries()[i]->pvUser);
-      if(v_wri->getId() == v_room_id) {
-	pRoomsList->setRealSelected(i);
-	break;
-      }
-    }
 
     UIButton *pMotionBlurGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:MOTION_BLUR_GHOST");
     UIButton *pDisplayGhostInfo = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:DISPLAY_GHOST_INFO");

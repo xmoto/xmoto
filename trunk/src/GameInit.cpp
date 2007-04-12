@@ -293,7 +293,6 @@ namespace vapp {
       
     if(m_bEnableWebHighscores) {  
       bool bSilent = true;
-          
       try {
 	if(m_bEnableCheckHighscoresAtStartup) {
 	  _UpdateLoadingScreen((1.0f/9.0f) * 6,m_loadingScreen,GAMETEXT_DLHIGHSCORES);      
@@ -321,9 +320,8 @@ namespace vapp {
       
     }
     
-    if(m_pWebRooms != NULL) delete m_pWebRooms;
-    m_pWebRooms = new WebRooms(&m_ProxySettings);
-    _UpgradeWebRooms(false);
+      if(m_pWebRooms != NULL) delete m_pWebRooms;
+      m_pWebRooms = new WebRooms(&m_ProxySettings);
 
     }
 
@@ -410,7 +408,9 @@ namespace vapp {
         /* Enter the menu */
         setState(GS_MENU);
       }
-    }            
+    }
+
+    Log("UserInit ended at %.3f", App::getTime());
   }
     
   /*===========================================================================

@@ -567,11 +567,24 @@ namespace vapp {
   }
 
   std::string App::getVersionString(void) {
-    char cBuf[256];
-    
-    sprintf(cBuf, "%d.%d.%d %s", BUILD_MAJORVERSION,
-	    BUILD_VERSION, BUILD_MINORVERSION, BUILD_EXTRAINFO);
-    return cBuf;
+    std::ostringstream v_version;
+    std::string v_svn = SVN_REV;
+
+    v_version << BUILD_MAJORVERSION;
+    v_version << ".";
+    v_version << BUILD_VERSION;
+    v_version << ".";
+    v_version << BUILD_MINORVERSION;
+    v_version << " ";
+    v_version << BUILD_EXTRAINFO;
+
+    if(v_svn == "") {
+      v_version << "(svn $Revision$ )";
+    } else {
+      v_version << " (svn " + v_svn + ")";
+    }
+
+    return v_version.str();
   }
 
 }

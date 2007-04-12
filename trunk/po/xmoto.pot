@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-04-10 22:31+0200\n"
+"POT-Creation-Date: 2007-04-11 22:27+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -60,7 +60,7 @@ msgstr ""
 msgid "All (on this computer)"
 msgstr ""
 
-#: src/GameText.h:44 src/GameText.h:515
+#: src/GameText.h:44 src/GameText.h:516
 msgid "All levels"
 msgstr ""
 
@@ -1636,102 +1636,106 @@ msgstr ""
 msgid "Your password associated with your login"
 msgstr ""
 
-#: src/GameText.h:512
-msgid "Levels with no highscore"
+#: src/GameText.h:511
+msgid "Filter on replay list"
 msgstr ""
 
 #: src/GameText.h:513
-msgid "Levels you have not completed"
+msgid "Levels with no highscore"
 msgstr ""
 
 #: src/GameText.h:514
+msgid "Levels you have not completed"
+msgstr ""
+
+#: src/GameText.h:515
 msgid "You're not the highscore holder"
 msgstr ""
 
-#: src/GameText.h:516
+#: src/GameText.h:517
 msgid "New and updated levels"
 msgstr ""
 
-#: src/GameText.h:517
+#: src/GameText.h:518
 msgid "Favorite levels"
 msgstr ""
 
-#: src/GameText.h:518
+#: src/GameText.h:519
 msgid "Nicest levels"
 msgstr ""
 
-#: src/GameText.h:519
+#: src/GameText.h:520
 msgid "Hardest levels"
 msgstr ""
 
-#: src/GameText.h:520
+#: src/GameText.h:521
 msgid "Easiest levels"
 msgstr ""
 
-#: src/GameText.h:521
+#: src/GameText.h:522
 msgid "Crapiest levels"
 msgstr ""
 
-#: src/GameText.h:522
+#: src/GameText.h:523
 msgid "Scripted levels"
 msgstr ""
 
-#: src/GameText.h:523
+#: src/GameText.h:524
 msgid "Musical"
 msgstr ""
 
-#: src/GameText.h:524
+#: src/GameText.h:525
 msgid "By best driver"
 msgstr ""
 
-#: src/GameText.h:525
+#: src/GameText.h:526
 msgid "Never played levels"
 msgstr ""
 
-#: src/GameText.h:526
+#: src/GameText.h:527
 msgid "Most played levels"
 msgstr ""
 
-#: src/GameText.h:527
+#: src/GameText.h:528
 msgid "Less played levels (but played)"
 msgstr ""
 
-#: src/GameText.h:528
+#: src/GameText.h:529
 msgid "Last highscores"
 msgstr ""
 
-#: src/GameText.h:529
+#: src/GameText.h:530
 msgid "Oldest highscores"
 msgstr ""
 
-#: src/GameText.h:531
+#: src/GameText.h:532
 msgid "Ugly mode enabled"
 msgstr ""
 
-#: src/GameText.h:532
+#: src/GameText.h:533
 msgid "Ugly mode disabled"
 msgstr ""
 
-#: src/GameText.h:533
+#: src/GameText.h:534
 msgid "Theme mode enabled"
 msgstr ""
 
-#: src/GameText.h:534
+#: src/GameText.h:535
 msgid "Theme mode disabled"
 msgstr ""
 
-#: src/GameText.h:535
+#: src/GameText.h:536
 msgid "Web connexion enabled"
 msgstr ""
 
-#: src/GameText.h:536
+#: src/GameText.h:537
 msgid "Web connexion disabled"
 msgstr ""
 
-#: src/GameText.h:537
+#: src/GameText.h:538
 msgid "Replay interpolation enabled"
 msgstr ""
 
-#: src/GameText.h:538
+#: src/GameText.h:539
 msgid "Replay interpolation disabled"
 msgstr ""
