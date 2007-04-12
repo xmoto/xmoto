@@ -33,6 +33,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VFileIO.h"
 #include "Packager.h"
 #include "helpers/SwapEndian.h"
+#include "svn_version.h"
 
 #ifdef USE_GETTEXT
 #include "Locales.h"
@@ -568,7 +569,7 @@ namespace vapp {
 
   std::string App::getVersionString(void) {
     std::ostringstream v_version;
-    std::string v_svn = SVN_REV;
+    std::string v_svn = svn_version();
 
     v_version << BUILD_MAJORVERSION;
     v_version << ".";

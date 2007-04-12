@@ -61,6 +61,7 @@ common_SOURCES = BuiltInFont.cpp Image.cpp \
   Locales.cpp \
   Packager.cpp \
   Packager.h \
+  svn_version.h \
   svn_version.cpp
 
 bz2_SOURCES = bzip2/blocksort.c     \
