@@ -291,7 +291,7 @@ namespace vapp {
       m_pWebHighscores->setWebsiteInfos(m_WebHighscoresIdRoom,
 					m_WebHighscoresURL);
       
-    if(m_bEnableWebHighscores) {  
+    if(m_bEnableWebHighscores && m_PlaySpecificLevelFile == "" && m_PlaySpecificReplay == "") {  
       bool bSilent = true;
       try {
 	if(m_bEnableCheckHighscoresAtStartup) {
@@ -306,7 +306,6 @@ namespace vapp {
 	  notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES);
       }
       
-
       if(m_bEnableCheckNewLevelsAtStartup) {
 	try {
 	  _UpdateLoadingScreen((1.0f/9.0f) * 6,m_loadingScreen,GAMETEXT_DLLEVELSCHECK);      
@@ -319,10 +318,10 @@ namespace vapp {
       }
       
     }
-    
+
       if(m_pWebRooms != NULL) delete m_pWebRooms;
       m_pWebRooms = new WebRooms(&m_ProxySettings);
-
+      
     }
 
     /* Test level cache directory */
