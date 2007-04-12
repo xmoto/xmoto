@@ -112,7 +112,10 @@ std::string xmDatabase::webhighscores_updateDB(const std::string& i_webhighscore
       v_fTime =
 	atof(v_time.substr(0, pos_1).c_str()) * 60.0        +
 	atof(v_time.substr(pos_1+1, pos_2-pos_1-1).c_str()) +
-	atof(v_time.substr(pos_2+1, v_time.length()-pos_2-1).c_str()) / 100.0;
+	atof(v_time.substr(pos_2+1, v_time.length()-pos_2-1).c_str()) / 100.0 +
+	0.001;
+      // +0.001 add an infinite value because website value are 2 numbers after .
+      // and 71.17 for example becomes 71.169999
 
       /* replay */
       pc = pVarElem->Attribute("replay");
