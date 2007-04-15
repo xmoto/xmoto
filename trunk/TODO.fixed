@@ -1,4 +1,5 @@
 Since 0.2.7
+* pack des niveaux récents: v_creationDate : la date de création des niveaux
 * ugly uses misc.png for border : should not
 * PERFORMANCE : rebuildLevelsPacks is very slow particularly on windows with a lot of levels : sqlite
 * pack : last highscores

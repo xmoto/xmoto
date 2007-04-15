@@ -242,7 +242,9 @@ void xmDatabase::weblevels_updateDB(const std::string& i_weblevelsFile) {
 	if(v_quality[i] == ',') v_quality[i] = '.';
       }
 
-      v_creationDate = "0000-00-00 00:00:00";
+      pc = pVarElem->Attribute("creation_date");
+      if(pc == NULL) continue;
+      v_creationDate = pc;
 
       // add the level
       simpleSql("INSERT INTO weblevels(id_level, name, fileUrl, "
