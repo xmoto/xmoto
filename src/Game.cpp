@@ -2383,7 +2383,12 @@ GameApp::GameApp() {
     std::string v_level_name;
   
     p = new UIWindow(pParent, x, y, "", nWidth, nHeight);
-  
+    UIButton *pUpdateButton = new UIButton(p,nWidth-115,nHeight-57,GAMETEXT_UPDATE,115,57);
+    pUpdateButton->setContextHelp(CONTEXTHELP_UPDATESTATS);
+    pUpdateButton->setFont(pFont);
+    pUpdateButton->setType(UI_BUTTON_TYPE_SMALL);
+    pUpdateButton->setID("UPDATE_BUTTON");  
+
     v_result = m_db->readDB("SELECT a.nbStarts, a.since, SUM(b.playedTime), "
 			    "SUM(b.nbPlayed), SUM(b.nbDied), SUM(b.nbCompleted), "
 			    "SUM(b.nbRestarted), count(b.id_level) "
@@ -2465,12 +2470,6 @@ GameApp::GameApp() {
     }  
 
     m_db->read_DB_free(v_result);
-
-    UIButton *pUpdateButton = new UIButton(p,nWidth-115,nHeight-57,GAMETEXT_UPDATE,115,57);
-    pUpdateButton->setContextHelp(CONTEXTHELP_UPDATESTATS);
-    pUpdateButton->setFont(pFont);
-    pUpdateButton->setType(UI_BUTTON_TYPE_SMALL);
-    pUpdateButton->setID("UPDATE_BUTTON");
     return p;
   }
 
