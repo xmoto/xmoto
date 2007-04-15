@@ -275,6 +275,15 @@ void LevelsManager::makePacks(xmDatabase *i_db,
   m_levelsPacks.push_back(v_pack);
   v_pack->setGroup(GAMETEXT_PACK_ROOM);
 
+  /* last kevels */
+  v_pack = new LevelsPack(std::string(VPACKAGENAME_LAST_LEVELS),
+			  "SELECT a.id_level AS id_level, a.name AS name "
+			  "FROM levels AS a INNER JOIN "
+			  "weblevels AS b ON a.id_level = b.id_level "
+			  "ORDER by b.creationDate DESC LIMIT 50");
+  m_levelsPacks.push_back(v_pack);
+  v_pack->setGroup(GAMETEXT_PACK_ROOM);
+
   /* oldest highscores */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_OLDEST_HIGHSCORES),
 			  "SELECT a.id_level AS id_level, a.name AS name "

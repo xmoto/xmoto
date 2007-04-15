@@ -527,6 +527,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define VPACKAGENAME_MOST_PLAYED                _("Most played levels")
 #define VPACKAGENAME_LESS_PLAYED                _("Less played levels (but played)")
 #define VPACKAGENAME_LAST_HIGHSCORES            _("Last highscores")
+#define VPACKAGENAME_LAST_LEVELS                _("Last levels")
 #define VPACKAGENAME_OLDEST_HIGHSCORES          _("Oldest highscores")
 
 #define SYS_MSG_UGLY_MODE_ENABLED      _("Ugly mode enabled")
