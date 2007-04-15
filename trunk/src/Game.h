@@ -157,7 +157,9 @@ class xmDatabase;
       bool isTestThemeMode(void) {return m_bTestThemeMode;}
     
       void setAutoZoom(bool bValue);
-      void setAutoUnZoom(bool bValue);
+      bool AutoZoom();
+      void setAutoZoomStep(int n);
+      int AutoZoomStep();
 
       void TeleportationCheatTo(int i_player, Vector2f i_position);
 
@@ -167,7 +169,7 @@ class xmDatabase;
       /* Data */
       bool m_bEnableInitZoom;                   /* true: Perform initial level scroll/zoom */
       bool m_autoZoom;                          /* true : the key is pressed so that it zooms out to see the level */
-      bool m_autoUnZoom;
+      int m_autoZoomStep;
       bool m_bAutoZoomInitialized;
       bool m_bEnableDeathAnim;                  /* true: Bike falls apart at when dead */
       bool m_bEnableMenuMusic;                  /* true: Play menu music */      

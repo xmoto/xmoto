@@ -53,7 +53,7 @@ GameApp::GameApp() {
   m_bEnableMenuMusic=false;
   m_bEnableInitZoom=true;
   m_autoZoom = false;
-  m_autoUnZoom = false;
+  m_autoZoomStep = 0;
   m_bAutoZoomInitialized = false;
   m_bLockMotoGame = false;
   m_bCleanCache=false;
@@ -2151,28 +2151,44 @@ GameApp::GameApp() {
     fAnimPlayFinalCameraX2 = m_fPreCameraFinalX;
     fAnimPlayFinalCameraY2 = m_fPreCameraFinalY;
     m_fPrePlayStartTime = getRealTime();
+    
+    m_autoZoomStep = 1;
   }
 
   bool GameApp::zoomAnimation2_step() {
-    if(getRealTime() > m_fPrePlayStartTime + INPLAY_ANIMATION_TIME) {
-      float zx, zy;
-      zx = (fAnimPlayFinalCameraX1 - fAnimPlayFinalCameraX2) * (sin((getRealTime() - m_fPrePlayStartTime - INPLAY_ANIMATION_TIME) * 2 * 3.1415927 / INPLAY_ANIMATION_SPEED - 3.1415927/2) + 1) / 2;
-      zy = (fAnimPlayFinalCameraY1 - fAnimPlayFinalCameraY2) * (sin((getRealTime() - m_fPrePlayStartTime - INPLAY_ANIMATION_TIME) * 2 * 3.1415927 / INPLAY_ANIMATION_SPEED - 3.1415927/2) + 1) / 2;
-      m_Renderer.setCameraPosition(fAnimPlayFinalCameraX1 - zx,fAnimPlayFinalCameraY1 - zy);
+    switch(m_autoZoomStep) {
+      
+      case 1:
+      if(getRealTime() > m_fPrePlayStartTime + INPLAY_ANIMATION_TIME) {
+	float zx, zy;
+	zx = (fAnimPlayFinalCameraX1 - fAnimPlayFinalCameraX2) * (sin((getRealTime() - m_fPrePlayStartTime - INPLAY_ANIMATION_TIME) * 2 * 3.1415927 / INPLAY_ANIMATION_SPEED - 3.1415927/2) + 1) / 2;
+	zy = (fAnimPlayFinalCameraY1 - fAnimPlayFinalCameraY2) * (sin((getRealTime() - m_fPrePlayStartTime - INPLAY_ANIMATION_TIME) * 2 * 3.1415927 / INPLAY_ANIMATION_SPEED - 3.1415927/2) + 1) / 2;
+	m_Renderer.setCameraPosition(fAnimPlayFinalCameraX1 - zx,fAnimPlayFinalCameraY1 - zy);
+	return true;
+      }
+      if(getRealTime() > m_fPrePlayStartTime){
+	float zx, zy, zz, coeff;
+	coeff = (getRealTime() - m_fPrePlayStartTime) / (INPLAY_ANIMATION_TIME);
+	zx = coeff * (fAnimPlayStartCameraX - fAnimPlayFinalCameraX1);
+	zy = coeff * (fAnimPlayStartCameraY - fAnimPlayFinalCameraY1);
+	zz = coeff * (fAnimPlayStartZoom - fAnimPlayFinalZoom);
+	
+	m_Renderer.setZoom(fAnimPlayStartZoom - zz);
+	m_Renderer.setCameraPosition(fAnimPlayStartCameraX - zx,fAnimPlayStartCameraY - zy);
+      }
+      
       return true;
+      break;
+
+      case 2:
+      zoomAnimation2_init_unzoom();
+      m_autoZoomStep = 3;
+      break;
+
+      case 3:
+      return zoomAnimation2_unstep();
+      break;
     }
-    if(getRealTime() > m_fPrePlayStartTime){
-      float zx, zy, zz, coeff;
-      coeff = (getRealTime() - m_fPrePlayStartTime) / (INPLAY_ANIMATION_TIME);
-      zx = coeff * (fAnimPlayStartCameraX - fAnimPlayFinalCameraX1);
-      zy = coeff * (fAnimPlayStartCameraY - fAnimPlayFinalCameraY1);
-      zz = coeff * (fAnimPlayStartZoom - fAnimPlayFinalZoom);
-			
-      m_Renderer.setZoom(fAnimPlayStartZoom - zz);
-      m_Renderer.setCameraPosition(fAnimPlayStartCameraX - zx,fAnimPlayStartCameraY - zy);
-    }
-		
-    return true;
   }
 
   void GameApp::zoomAnimation2_init_unzoom(){
@@ -2250,10 +2266,18 @@ GameApp::GameApp() {
     m_autoZoom = bValue;
   }
   
-  void GameApp::setAutoUnZoom(bool bValue) {
-    m_autoUnZoom = bValue;
+  bool GameApp::AutoZoom() {
+    return m_autoZoom;
   }
-  
+
+  void GameApp::setAutoZoomStep(int n) {
+    m_autoZoomStep = n;
+  }
+
+  int GameApp::AutoZoomStep() {
+    return m_autoZoomStep;
+  }
+
   void GameApp::autoZoom() {
     if(m_autoZoom) {
       if(m_bAutoZoomInitialized == false) {
@@ -2262,45 +2286,9 @@ GameApp::GameApp() {
 	m_bAutoZoomInitialized = true;
       } else {
 	if(zoomAnimation2_step() == false) {
-	  m_autoZoom = false;
-	}
-
-	if(m_MotoGame.getNbRemainingStrawberries() > 0) {
-	  if(m_Renderer.SizeMultOfEntitiesToTake() <= 5.0) {
-	    m_Renderer.setSizeMultOfEntitiesToTake(m_Renderer.SizeMultOfEntitiesToTake() + 0.05);
-	  }
-	} else {
-	  if(m_Renderer.SizeMultOfEntitiesWhichMakeWin() <= 5.0) {
-	    m_Renderer.setSizeMultOfEntitiesWhichMakeWin(m_Renderer.SizeMultOfEntitiesWhichMakeWin() + 0.05);
-	  }
-	}
-      }
-    } else if (m_autoUnZoom) {
-      if(m_bAutoZoomInitialized == true) {
-	zoomAnimation2_init_unzoom();
-	m_bAutoZoomInitialized = false;
-      } else {
-	if(zoomAnimation2_unstep() == false) { 
-	  m_bAutoZoomInitialized = false;
-	  m_autoUnZoom = false;
 	  lockMotoGame(false);
-
-	  if(m_MotoGame.getNbRemainingStrawberries() > 0) {
-	    m_Renderer.setSizeMultOfEntitiesToTake(1.0);
-	  } else {
-	    m_Renderer.setSizeMultOfEntitiesWhichMakeWin(1.0);
-	  }
-
-	} else {
-	  if(m_MotoGame.getNbRemainingStrawberries() > 0) {
-	    if(m_Renderer.SizeMultOfEntitiesToTake() > 1.0) {
-	      m_Renderer.setSizeMultOfEntitiesToTake(m_Renderer.SizeMultOfEntitiesToTake() - 0.05);
-	    }
-	  } else {
-	    if(m_Renderer.SizeMultOfEntitiesWhichMakeWin() > 1.0) {
-	      m_Renderer.setSizeMultOfEntitiesWhichMakeWin(m_Renderer.SizeMultOfEntitiesWhichMakeWin() - 0.05);
-	    }
-	  }
+	  m_bAutoZoomInitialized = false;
+	  m_autoZoom = false;
 	}
       }
     }
