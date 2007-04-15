@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-04-11 22:27+0200\n"
+"POT-Creation-Date: 2007-04-16 00:02+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1705,37 +1705,41 @@ msgid "Last highscores"
 msgstr ""
 
 #: src/GameText.h:530
+msgid "Last levels"
+msgstr ""
+
+#: src/GameText.h:531
 msgid "Oldest highscores"
 msgstr ""
 
-#: src/GameText.h:532
+#: src/GameText.h:533
 msgid "Ugly mode enabled"
 msgstr ""
 
-#: src/GameText.h:533
+#: src/GameText.h:534
 msgid "Ugly mode disabled"
 msgstr ""
 
-#: src/GameText.h:534
+#: src/GameText.h:535
 msgid "Theme mode enabled"
 msgstr ""
 
-#: src/GameText.h:535
+#: src/GameText.h:536
 msgid "Theme mode disabled"
 msgstr ""
 
-#: src/GameText.h:536
+#: src/GameText.h:537
 msgid "Web connexion enabled"
 msgstr ""
 
-#: src/GameText.h:537
+#: src/GameText.h:538
 msgid "Web connexion disabled"
 msgstr ""
 
-#: src/GameText.h:538
+#: src/GameText.h:539
 msgid "Replay interpolation enabled"
 msgstr ""
 
-#: src/GameText.h:539
+#: src/GameText.h:540
 msgid "Replay interpolation disabled"
 msgstr ""

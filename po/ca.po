@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-04-11 22:27+0200\n"
+"POT-Creation-Date: 2007-04-16 00:02+0200\n"
 "PO-Revision-Date: 2006-12-21 19:48+0100\n"
 "Last-Translator: Trullo\n"
 "Language-Team: X-Moto\n"
@@ -1803,38 +1803,43 @@ msgstr "Envia el Record"
 
 #: src/GameText.h:530
 #, fuzzy
+msgid "Last levels"
+msgstr "Nivells favorits"
+
+#: src/GameText.h:531
+#, fuzzy
 msgid "Oldest highscores"
 msgstr "Envia el Record"
 
-#: src/GameText.h:532
+#: src/GameText.h:533
 msgid "Ugly mode enabled"
 msgstr ""
 
-#: src/GameText.h:533
+#: src/GameText.h:534
 msgid "Ugly mode disabled"
 msgstr ""
 
-#: src/GameText.h:534
+#: src/GameText.h:535
 msgid "Theme mode enabled"
 msgstr ""
 
-#: src/GameText.h:535
+#: src/GameText.h:536
 msgid "Theme mode disabled"
 msgstr ""
 
-#: src/GameText.h:536
+#: src/GameText.h:537
 msgid "Web connexion enabled"
 msgstr ""
 
-#: src/GameText.h:537
+#: src/GameText.h:538
 msgid "Web connexion disabled"
 msgstr ""
 
-#: src/GameText.h:538
+#: src/GameText.h:539
 msgid "Replay interpolation enabled"
 msgstr ""
 
-#: src/GameText.h:539
+#: src/GameText.h:540
 msgid "Replay interpolation disabled"
 msgstr ""
 
