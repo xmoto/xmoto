@@ -454,8 +454,10 @@ namespace vapp {
 	pGameRender->moveCamera(0.0, -1.0);
       }
       else if(m_nAutoZoom == nKey) {
-	pGameApp->setAutoZoom(true);
-	pGameApp->setAutoUnZoom(false);
+	if(pGameApp->AutoZoom() == false) {
+	  pGameApp->setAutoZoom(true);
+	} else {
+	}
       } else if(nKey == SDLK_KP0 && ((mod & KMOD_LCTRL) == KMOD_LCTRL)) {
 	pGameApp->TeleportationCheatTo(i_player, Vector2f(pGameRender->getCameraPositionX(),
 							  pGameRender->getCameraPositionY()));
@@ -509,8 +511,9 @@ namespace vapp {
       }
       
       if(m_nAutoZoom == nKey) {
-	pGameApp->setAutoZoom(false);
-	pGameApp->setAutoUnZoom(true);
+	if(pGameApp->AutoZoom() && pGameApp->AutoZoomStep() == 1) {
+	  pGameApp->setAutoZoomStep(2);
+	}
       }
       break;
     }      
