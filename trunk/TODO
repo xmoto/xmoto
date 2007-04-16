@@ -1,7 +1,6 @@
 
 * check highscores at startup, ca bug
 * ajouter la tete dans les zones
-* order des packs qui marche bien (observer les requetes pour faire mieux)
 
 [14:04] <keesj> I think it is a well knwn problem that every developer gets when spliting area's in two
 [14:05] <keesj> it's a pixel rounding problem
