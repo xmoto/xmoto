@@ -32,6 +32,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class ProxySettings;
 class WebThemes;
+class xmDatabase;
 
 #define THEMES_DIRECTORY "Themes"
 #define THEME_SPRITE_FILE_DIR "Textures"
@@ -441,25 +442,6 @@ class BikerTheme {
   std::string m_UpperLeg;
 };
 
-class ThemeChoice {
- public:
-  ThemeChoice(std::string p_themeName, std::string p_themeFile, bool p_hosted);
-  ~ThemeChoice();
-  std::string ThemeName();
-  std::string ThemeFile();
-
-  void setRequireUpdate(bool b);
-  bool getRequireUpdate();
-  void setHosted(bool b);
-  bool getHosted();
-
- private:
-  std::string m_themeName;
-  std::string m_themeFile;
-  bool m_hosted;
-  bool m_requireUpdate;
-};
-
 class ThemeChoicer {
  public:
 
@@ -467,26 +449,16 @@ class ThemeChoicer {
 	       const ProxySettings *p_proxy_settings = NULL);	       
   ~ThemeChoicer();
 
-  bool ExistThemeName(std::string p_themeName);
-  std::string getFileName(std::string p_themeName);
-  std::vector<ThemeChoice*> getChoices();
-  ThemeChoice* getChoiceByName(std::string p_themeName);
-
-  void updateFromWWW();
-  void updateThemeFromWWW(ThemeChoice* pThemeChoice);
-  bool isUpdatableThemeFromWWW(ThemeChoice* pThemeChoice);
+  void updateFromWWW(xmDatabase *i_db);
+  void updateThemeFromWWW(xmDatabase *i_db, const std::string& i_id_theme);
 
   void setURL(const std::string &p_url);
   void setURLBase(const std::string &p_urlBase);
+  void initThemesFromDir(xmDatabase *i_db);
 
  private:
-  void cleanList();
-  void initList();
-  std::string getThemeNameFromFile(std::string p_themeFile);
-  
   WebThemes *m_webThemes;
-
-  std::vector<ThemeChoice*> m_choices;
+  std::string getThemeNameFromFile(std::string p_themeFile);
 };
 
 #endif /* __THEME_H__ */

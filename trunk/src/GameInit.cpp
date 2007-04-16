@@ -106,13 +106,6 @@ namespace vapp {
     /* Init some config */
     _UpdateSettings();
     
-    /* load theme */
-    m_themeChoicer = new ThemeChoicer(
-              this,
-              &m_ProxySettings
-              );
-    reloadTheme();
-
     /* Select profile */
     m_profile = "";
     if(m_ForceProfile != "") {
@@ -144,6 +137,25 @@ namespace vapp {
 
     if(m_GraphDebugInfoFile != "") m_Renderer.loadDebugInfo(m_GraphDebugInfoFile);
 
+    /* database */
+    m_db = new xmDatabase(DATABASE_FILE,
+			  m_profile == "" ? std::string("") : m_profile,
+			  getDrawLib()->isNoGraphics() ? NULL : this);
+    if(m_sqlTrace) {
+      m_db->setTrace(m_sqlTrace);
+    }
+
+    /* load theme */
+    m_themeChoicer = new ThemeChoicer(
+              this,
+              &m_ProxySettings
+              );
+    m_themeChoicer->setURLBase(m_Config.getString("WebThemesURLBase"));
+    if(m_db->themes_isIndexUptodate() == false) {
+      m_themeChoicer->initThemesFromDir(m_db);
+    }
+    reloadTheme();
+
     m_loadingScreen = NULL;
     if(!getDrawLib()->isNoGraphics()) {    
       /* Show loading screen */
@@ -152,14 +164,6 @@ namespace vapp {
       if(pSprite != NULL) {
 	m_loadingScreen = pSprite->getTexture(false, true);
       }
-    }
-
-    /* database */
-    m_db = new xmDatabase(DATABASE_FILE,
-			  m_profile == "" ? std::string("") : m_profile,
-			  getDrawLib()->isNoGraphics() ? NULL : this);
-    if(m_sqlTrace) {
-      m_db->setTrace(m_sqlTrace);
     }
 
     /* Update stats */

@@ -315,3 +315,62 @@ void xmDatabase::webrooms_updateDB(const std::string& i_webroomsFile) {
     throw e;
   }
 }
+
+void xmDatabase::webthemes_updateDB(const std::string& i_webThemesFile) {
+  vapp::XMLDocument v_webTXml;
+  TiXmlDocument *v_webTXmlData;
+  TiXmlElement *v_webTXmlDataElement;
+  const char *pc;
+  std::string v_themeName, v_url, v_MD5sum_web;
+
+  try {
+    simpleSql("BEGIN TRANSACTION;");
+    simpleSql("DELETE FROM webthemes;");
+    
+    v_webTXml.readFromFile(i_webThemesFile);
+    v_webTXmlData = v_webTXml.getLowLevelAccess();
+    
+    if(v_webTXmlData == NULL) {
+      throw Exception("error : unable to analyze xml theme file");
+    }
+    
+    v_webTXmlDataElement = v_webTXmlData->FirstChildElement("xmoto_themes");
+    
+    if(v_webTXmlDataElement == NULL) {
+      throw Exception("error : unable to analyze xml theme file");
+    }
+    
+    TiXmlElement *pVarElem = v_webTXmlDataElement->FirstChildElement("theme");
+    while(pVarElem != NULL) {
+      
+      pc = pVarElem->Attribute("name");
+      if(pc == NULL) continue;
+      v_themeName = pc;
+      
+      pc = pVarElem->Attribute("url");
+      if(pc == NULL) continue;
+      v_url = pc;  
+      
+      pc = pVarElem->Attribute("sum");
+      if(pc == NULL) continue;
+      v_MD5sum_web = pc;
+      
+      webthemes_addTheme(v_themeName, v_url, v_MD5sum_web);
+      
+      pVarElem = pVarElem->NextSiblingElement("theme");
+    }
+    simpleSql("COMMIT;");
+  } catch(Exception &e) {
+    simpleSql("ROLLBACK;");
+    throw e;
+  }
+}
+
+void xmDatabase::webthemes_addTheme(const std::string& i_id_theme, const std::string& i_url,
+				    const std::string& i_checkSum) {
+  simpleSql("INSERT INTO webthemes("
+	    "id_theme,  fileUrl, checkSum) "
+	    "VALUES(\"" + protectString(i_id_theme) + "\", " +
+	    "\""        + protectString(i_url)      + "\", " +
+	    "\""        + protectString(i_checkSum) + "\");");
+}

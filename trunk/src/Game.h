@@ -456,7 +456,7 @@ class xmDatabase;
       void _UpdateWebHighscores(bool bSilent);
       void _UpdateWebLevels(bool bSilent, bool bEnableWeb = true);
       void _UpdateWebThemes(bool bSilent);
-      void _UpdateWebTheme(ThemeChoice* pThemeChoice, bool bNotify);
+      void _UpdateWebTheme(const std::string& i_id_theme, bool bNotify);
       void _UpgradeWebHighscores();
       void _UpdateWebRooms(bool bSilent);
       void _UpgradeWebRooms(bool bUpdateMenus);

@@ -344,11 +344,7 @@ namespace vapp {
         
         /* current theme should be updated when there are new levels */
         _UpdateWebThemes(true);
-        ThemeChoice* v_ThemeChoice;
-        v_ThemeChoice = m_themeChoicer->getChoiceByName(m_Config.getString("Theme"));
-        if(v_ThemeChoice != NULL) {
-          _UpdateWebTheme(v_ThemeChoice, false);      
-        }
+	_UpdateWebTheme(m_Config.getString("Theme"), false);      
       }
       else if(Button == UI_MSGBOX_NO) {
         delete m_pInfoMsgBox;
