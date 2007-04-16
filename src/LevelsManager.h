@@ -29,7 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class LevelsPack {
   public:
-  LevelsPack(std::string i_name, const std::string& i_sql);
+  LevelsPack(std::string i_name, const std::string& i_sql, bool i_ascSort = true);
   ~LevelsPack();
 
   std::string Name() const;
@@ -53,6 +53,7 @@ class LevelsPack {
   std::string m_name;
   std::string m_group;
   std::string m_sql_levels;
+  bool m_ascSort;
   bool m_showTimes;
   bool m_showWebTimes;
 };
