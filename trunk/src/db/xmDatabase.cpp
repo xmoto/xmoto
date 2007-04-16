@@ -322,7 +322,7 @@ char** xmDatabase::readDB(const std::string& i_sql, int &i_nrow) {
   char *errMsg;
   std::string v_errMsg;
   
-  //printf("%s\n", i_sql.c_str());
+  printf("%s\n", i_sql.c_str());
 
   if(sqlite3_get_table(m_db,
 		       i_sql.c_str(),
