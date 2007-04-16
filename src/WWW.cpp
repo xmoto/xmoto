@@ -753,27 +753,6 @@ const std::vector<std::string> &WebLevels::getUpdatedDownloadedLevels(void) {
   return m_webLevelsUpdatedDownloadedOK;
 }
 
-WebTheme::WebTheme(std::string pName, std::string pUrl, std::string pSum) {
-  m_name = pName;
-  m_url  = pUrl;
-  m_sum  = pSum;
-}
-
-WebTheme::~WebTheme() {
-}
-
-std::string WebTheme::getName() const {
-  return m_name;
-}
-
-std::string WebTheme::getUrl() const {
-  return m_url;
-}
-
-std::string WebTheme::getSum() const {
-  return m_sum;
-}
-
 WebThemes::WebThemes(vapp::WWWAppInterface *p_WebApp,
          const ProxySettings *p_proxy_settings) {
   m_proxy_settings = p_proxy_settings;
@@ -783,138 +762,77 @@ WebThemes::WebThemes(vapp::WWWAppInterface *p_WebApp,
 }
 
 WebThemes::~WebThemes() {
-  clean();
 }
 
-void WebThemes::update() {
+void WebThemes::update(xmDatabase *i_db) {
   FSWeb::downloadFileBz2UsingMd5(getXmlFileName(),
          m_themes_url,
          NULL,
          NULL,
          m_proxy_settings);
-}
-
-void WebThemes::upgrade() {
-  clean();
-  extractThemesAvailableFromXml();
+  i_db->webthemes_updateDB(getXmlFileName());
 }
 
 std::string WebThemes::getXmlFileName() {
   return vapp::FS::getUserDir() + "/" + DEFAULT_WEBTHEMES_FILENAME;
 }
 
-void WebThemes::extractThemesAvailableFromXml() {
-  vapp::XMLDocument v_webTXml;
-  TiXmlDocument *v_webTXmlData;
-  TiXmlElement *v_webTXmlDataElement;
-  const char *pc;
-  std::string v_themeName, v_url, v_MD5sum_web;
-  
-  v_webTXml.readFromFile(getXmlFileName());
-  v_webTXmlData = v_webTXml.getLowLevelAccess();
-
-  if(v_webTXmlData == NULL) {
-    throw Exception("error : unable to analyze xml theme file");
-  }
-
-  v_webTXmlDataElement = v_webTXmlData->FirstChildElement("xmoto_themes");
-  
-  if(v_webTXmlDataElement == NULL) {
-    throw Exception("error : unable to analyze xml theme file");
-  }
-
-  TiXmlElement *pVarElem = v_webTXmlDataElement->FirstChildElement("theme");
-  while(pVarElem != NULL) {
-    
-    pc = pVarElem->Attribute("name");
-    if(pc != NULL) {
-      v_themeName = pc;
-  
-      pc = pVarElem->Attribute("url");
-      if(pc != NULL) {
-  v_url = pc;  
-    
-  pc = pVarElem->Attribute("sum");
-  if(pc != NULL) {
-    v_MD5sum_web = pc;
-
-    m_availableThemes.push_back(new WebTheme(v_themeName, v_url, v_MD5sum_web));
-      
-  }
-      }
-      pVarElem = pVarElem->NextSiblingElement("theme");
-    }
-  }
-}
-
-void WebThemes::clean() {
-  for(unsigned int i=0;i<m_availableThemes.size();i++) {
-    delete m_availableThemes[i];
-  }    
-
-  m_availableThemes.clear();
-}
-
-const std::vector<WebTheme*> &WebThemes::getAvailableThemes() {
-  return m_availableThemes;
-}
-
-bool WebThemes::isUpgradable(ThemeChoice *p_themeChoice) {
-  for(unsigned int i=0; i<m_availableThemes.size(); i++) {
-    if(m_availableThemes[i]->getName() == p_themeChoice->ThemeName()) {
-      return true;
-    }
-  }
-  return false;
-}
-
-void WebThemes::upgrade(ThemeChoice *p_themeChoice) {
+void WebThemes::upgrade(xmDatabase *i_db, const std::string& i_id_theme) {
   std::string v_destinationFile;
   std::string v_sourceFile;
-  WebTheme *v_associated_webtheme;
   f_curl_download_data v_data;
-  
-  /* no update required */
-  if(p_themeChoice->getHosted() && p_themeChoice->getRequireUpdate() == false) {
-    // do nothing : it give a possibility to download file removed by mistake
-  }
+  char **v_result;
+  int nrow;
+  std::string v_fileUrl;
+  std::string v_filePath;
+  std::string v_themeFile;
+  bool v_onDisk = false;
 
-  /* find the associated webtheme */
-  v_associated_webtheme = NULL;
-  for(unsigned int i=0; i<m_availableThemes.size(); i++) {
-    if(m_availableThemes[i]->getName() == p_themeChoice->ThemeName()) {
-      v_associated_webtheme = m_availableThemes[i];
-    }
-  }
-
-  if(v_associated_webtheme == NULL) {
+  /* download even if the the theme is uptodate
+     it give a possibility to download file removed by mistake
+  */
+  v_result = i_db->readDB("SELECT a.fileUrl, b.filepath "
+			  "FROM webthemes AS a LEFT OUTER JOIN themes AS b "
+			  "ON a.id_theme = b.id_theme "
+			  "WHERE a.id_theme=\"" + xmDatabase::protectString(i_id_theme) + "\";",
+			  nrow);
+  if(nrow != 1) {
+    i_db->read_DB_free(v_result);
     throw Exception("error : unable to find this theme on the web");
   }
+
+  v_fileUrl = i_db->getResult(v_result, 2, 0, 0);
+  if(i_db->getResult(v_result, 2, 0, 1) != NULL) {
+    v_filePath = i_db->getResult(v_result, 2, 0, 1);
+    v_onDisk = true;
+  }  
+  i_db->read_DB_free(v_result);
+
   // theme avaible on the web get it
 
   /* the destination file must be in the user dir */
-  if(vapp::FS::isInUserDir(p_themeChoice->ThemeFile())) {
-    v_destinationFile = p_themeChoice->ThemeFile();
+  if(v_filePath != "") {
+    if(vapp::FS::isInUserDir(v_filePath)) {
+      v_destinationFile = v_filePath;
+    }
   }
 
   if(v_destinationFile == "") {
     /* determine destination file */
     v_destinationFile = 
       vapp::FS::getUserDir() + "/" + THEMES_DIRECTORY + "/" + 
-      vapp::FS::getFileBaseName(v_associated_webtheme->getUrl()) + ".xml";
-  }    
+      vapp::FS::getFileBaseName(v_fileUrl) + ".xml";
+  } 
   
+  v_themeFile = v_destinationFile;
+
   /* download the theme file */
   vapp::FS::mkArborescence(v_destinationFile);
   FSWeb::downloadFileBz2(v_destinationFile,
-       v_associated_webtheme->getUrl(),
-       NULL,
-       NULL,
-       m_proxy_settings);
-
-  if(v_destinationFile == "") {
-    throw Exception("error : unable to determine theme destination file");
-  }
+			 v_fileUrl,
+			 NULL,
+			 NULL,
+			 m_proxy_settings);
 
   /* download all the files required */
   Theme *v_theme = new Theme();
@@ -929,9 +847,8 @@ void WebThemes::upgrade(ThemeChoice *p_themeChoice) {
     }
   }
   if(v_nb_files_to_download != 0) {
-
     int v_nb_files_performed  = 0;
-    
+
     v_data.v_WebApp = m_WebApp;
     v_data.v_nb_files_to_download = v_nb_files_to_download;
 
@@ -940,35 +857,38 @@ void WebThemes::upgrade(ThemeChoice *p_themeChoice) {
       // download v_required_files[i]     
       v_destinationFile = vapp::FS::getUserDir() + std::string("/") + (*v_required_files)[i];
       v_sourceFile = m_themes_urlBase + 
-  std::string("/") + (*v_required_files)[i];
-      
+	std::string("/") + (*v_required_files)[i];
+
       if(vapp::FS::fileExists((*v_required_files)[i]) == false) {
-  v_data.v_nb_files_performed = v_nb_files_performed;
+	v_data.v_nb_files_performed = v_nb_files_performed;
   
-  float v_percentage = (((float)v_nb_files_performed) * 100.0) / ((float)v_nb_files_to_download);
-  m_WebApp->setTaskProgress(v_percentage);
-  m_WebApp->setBeingDownloadedInformation((*v_required_files)[i], true);
+	float v_percentage = (((float)v_nb_files_performed) * 100.0) / ((float)v_nb_files_to_download);
+	m_WebApp->setTaskProgress(v_percentage);
+	m_WebApp->setBeingDownloadedInformation((*v_required_files)[i], true);
 
-  vapp::FS::mkArborescence(v_destinationFile);
+	vapp::FS::mkArborescence(v_destinationFile);
 
-  FSWeb::downloadFile(v_destinationFile,
-          v_sourceFile,
-          FSWeb::f_curl_progress_callback_download,
-          &v_data,
-          m_proxy_settings);
+	FSWeb::downloadFile(v_destinationFile,
+			    v_sourceFile,
+			    FSWeb::f_curl_progress_callback_download,
+			    &v_data,
+			    m_proxy_settings);
   
-  v_nb_files_performed++;
+	v_nb_files_performed++;
       }
       m_WebApp->readEvents();
       i++;
     }
     m_WebApp->setTaskProgress(100.0);
   }
-
+  
   delete v_theme;
 
-  p_themeChoice->setRequireUpdate(false);
-  p_themeChoice->setHosted(true);
+  if(v_onDisk) {
+    i_db->themes_update(i_id_theme, v_themeFile);
+  } else {
+    i_db->themes_add(i_id_theme, v_themeFile);
+  }
 }
 
 WebRooms::WebRooms(const ProxySettings *p_proxy_settings) {

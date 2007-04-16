@@ -103,6 +103,18 @@ class xmDatabase {
   void replays_delete(const std::string& i_replay);
   bool replays_exists(const std::string& i_name);
 
+  /* themes */
+  bool themes_isIndexUptodate() const;
+  void themes_add_begin();
+  void themes_add(const std::string& i_id_theme,
+		  const std::string& i_filepath);
+  void themes_update(const std::string& i_id_theme,
+		     const std::string& i_filepath);
+  void themes_add_end();
+  void themes_delete(const std::string& i_theme);
+  bool themes_exists(const std::string& i_id_theme);
+  std::string themes_getFileName(const std::string& i_id_theme);
+
   /* profiles */
   void profiles_addFinishTime(const std::string& i_profile, const std::string& i_id_level,
 			      const std::string& i_timeStamp, float i_finishTime);
@@ -112,6 +124,7 @@ class xmDatabase {
 				     const std::string& i_websource);
   void weblevels_updateDB(const std::string& i_weblevelsFile);
   void webrooms_updateDB(const std::string& i_webroomsFile);
+  void webthemes_updateDB(const std::string& i_webThemesFile);
   std::string webrooms_getName(const std::string& i_id_room);
   float webrooms_getHighscoreTime(const std::string& i_id_room,
 				  const std::string& i_id_level); /* or a negativ value if not */
@@ -120,6 +133,7 @@ class xmDatabase {
   sqlite3 *m_db;
   bool m_requiredLevelsUpdateAfterInit;
   bool m_requiredReplaysUpdateAfterInit;
+  bool m_requiredThemesUpdateAfterInit;
   static bool Trace;
 
   /* function used to synchronise with the last xmoto version */
@@ -149,6 +163,8 @@ class xmDatabase {
   bool webrooms_checkKeyExists_id_room(const std::string& i_id_room);
   void webrooms_addRoom(const std::string& i_id_room, const std::string& i_name,
 			const std::string& i_highscoreUrl);
+  void webthemes_addTheme(const std::string& i_id_theme, const std::string& i_url,
+			  const std::string& i_checkSum);
 };
 
 #endif

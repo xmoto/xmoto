@@ -2594,15 +2594,10 @@ namespace vapp {
     if(pUpdSelectedTheme->isClicked()) {
       pUpdSelectedTheme->setClicked(false);
       try {
-	ThemeChoice* v_themeChoice = NULL;
-
 	if(!pThemeList->isBranchHidden() && pThemeList->getSelected()>=0) {
 	  if(!pThemeList->getEntries().empty()) {
 	    UIListEntry *pEntry = pThemeList->getEntries()[pThemeList->getSelected()];
-	    v_themeChoice = reinterpret_cast<ThemeChoice*>(pEntry->pvUser);
-	    if(v_themeChoice != NULL) {
-	      _UpdateWebTheme(v_themeChoice, true);
-	    }
+	    _UpdateWebTheme(pEntry->Text[0], true);
 	  }
 	}
       } catch(Exception &e) {
@@ -3138,6 +3133,12 @@ namespace vapp {
   }
 
   void GameApp::_CreateThemesList(UIList *pList) {
+    char **v_result;
+    int nrow;
+    UIListEntry *pEntry;
+    std::string v_id_theme;
+    std::string v_ck1, v_ck2;
+
     /* get selected item */
     std::string v_selected_themeName = "";
     if(pList->getSelected() >= 0 && pList->getSelected() < pList->getEntries().size()) {
@@ -3147,27 +3148,38 @@ namespace vapp {
 
     /* recreate the list */
     pList->clear();
-    std::vector<ThemeChoice*> v_themeChoices;
-    UIListEntry *pEntry;
-    v_themeChoices = m_themeChoicer->getChoices();
-    for(int i=0; i<v_themeChoices.size(); i++) {
-      if(v_themeChoices[i]->getHosted()) {
 
-        if(v_themeChoices[i]->getRequireUpdate()) {
-          pEntry = pList->addEntry(v_themeChoices[i]->ThemeName().c_str(),
-                                   reinterpret_cast<void *>(v_themeChoices[i]));
-          pEntry->Text.push_back(GAMETEXT_THEMEREQUIREUPDATE);
-        } else {
-          pEntry = pList->addEntry(v_themeChoices[i]->ThemeName().c_str(),
-                                   reinterpret_cast<void *>(v_themeChoices[i]));
-          pEntry->Text.push_back(GAMETEXT_THEMEHOSTED);
-        }
+    v_result = m_db->readDB("SELECT a.id_theme, a.checkSum, b.checkSum "
+			    "FROM themes AS a LEFT OUTER JOIN webthemes AS b "
+			    "ON a.id_theme=b.id_theme ORDER BY a.id_theme;",
+			    nrow);
+    for(unsigned int i=0; i<nrow; i++) {
+      v_id_theme = m_db->getResult(v_result, 3, i, 0);
+      v_ck1      = m_db->getResult(v_result, 3, i, 1);
+      if(m_db->getResult(v_result, 3, i, 2) != NULL) {
+	v_ck2      = m_db->getResult(v_result, 3, i, 2);
+      }
+
+      pEntry = pList->addEntry(v_id_theme.c_str(),
+      			       NULL);
+      if(v_ck1 == v_ck2 || v_ck2 == "") {
+	pEntry->Text.push_back(GAMETEXT_THEMEHOSTED);
       } else {
-        pEntry = pList->addEntry(v_themeChoices[i]->ThemeName().c_str(),
-                                 reinterpret_cast<void *>(v_themeChoices[i])); 
-        pEntry->Text.push_back(GAMETEXT_THEMENOTHOSTED);
+      	pEntry->Text.push_back(GAMETEXT_THEMEREQUIREUPDATE);
       }
     }
+    m_db->read_DB_free(v_result);
+
+    v_result = m_db->readDB("SELECT a.id_theme FROM webthemes AS a LEFT OUTER JOIN themes AS b "
+    			    "ON a.id_theme=b.id_theme WHERE b.id_theme IS NULL;",
+    			    nrow);
+    for(unsigned int i=0; i<nrow; i++) {
+      v_id_theme = m_db->getResult(v_result, 1, i, 0);
+      pEntry = pList->addEntry(v_id_theme.c_str(),
+    			       NULL);
+      pEntry->Text.push_back(GAMETEXT_THEMENOTHOSTED);
+    }
+    m_db->read_DB_free(v_result);
 
     /* reselect the previous theme */
     if(v_selected_themeName != "") {

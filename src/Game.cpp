@@ -624,7 +624,7 @@ GameApp::GameApp() {
   std::string GameApp::getConfigThemeName(ThemeChoicer *p_themeChoicer) {
     std::string v_currentThemeName = m_Config.getString("Theme");
 
-    if(p_themeChoicer->ExistThemeName(v_currentThemeName)) {
+    if(m_db->themes_exists(v_currentThemeName)) {
       return v_currentThemeName;
     }
     /* theme of the config file doesn't exist */
@@ -826,6 +826,9 @@ GameApp::GameApp() {
 	_UpdateLevelsLists();
 	_SimpleMessage(GAMETEXT_RELOADINGREPLAYS, &m_InfoMsgBoxRect);
 	initReplaysFromDir();
+	_UpdateReplaysList();
+	m_themeChoicer->initThemesFromDir(m_db);
+	_UpdateThemesLists();
       }
 
     }
@@ -1300,7 +1303,7 @@ GameApp::GameApp() {
 
     try {
       m_DownloadingInformation = "";
-      m_themeChoicer->updateFromWWW();
+      m_themeChoicer->updateFromWWW(m_db);
       _UpdateThemesLists();
     } catch(Exception &e) {
       /* file probably doesn't exist */
@@ -1325,32 +1328,55 @@ GameApp::GameApp() {
     }
   }
 
-  void GameApp::_UpdateWebTheme(ThemeChoice* pThemeChoice, bool bNotify) {
-    if(m_themeChoicer->isUpdatableThemeFromWWW(pThemeChoice) == false) {
+  void GameApp::_UpdateWebTheme(const std::string& i_id_theme, bool bNotify) {
+    char **v_result;
+    int nrow;
+    std::string v_id_theme;
+    std::string v_ck1, v_ck2;
+    bool v_onDisk = false;
+    bool v_onWeb  = true;
+
+    v_result = m_db->readDB("SELECT a.id_theme, a.checkSum, b.checkSum "
+    			    "FROM themes AS a LEFT OUTER JOIN webthemes AS b "
+    			    "ON a.id_theme=b.id_theme "
+			    "WHERE a.id_theme=\"" + xmDatabase::protectString(i_id_theme) + "\";",
+    			    nrow);
+    if(nrow == 1) {
+      v_onDisk   = true;
+      v_id_theme = m_db->getResult(v_result, 3, 0, 0);
+      v_ck1      = m_db->getResult(v_result, 3, 0, 1);
+      if(m_db->getResult(v_result, 3, 0, 2) == NULL) {
+	v_onWeb = false;
+      } else {
+	v_ck2      = m_db->getResult(v_result, 3, 0, 2);
+      }
+    }
+    m_db->read_DB_free(v_result);
+
+    if(v_onWeb == false) { /* available on the disk, not on the web */
       if(bNotify) {
-  notifyMsg(GAMETEXT_UNUPDATABLETHEMEONWEB);
+	notifyMsg(GAMETEXT_UNUPDATABLETHEMEONWEB);
       }
       return;
     }
 
+
     m_DownloadingInformation = "";
     m_DownloadingMessage = std::string(GAMETEXT_DLTHEME) + "\n\n ";
-    m_themeChoicer->setURLBase(m_Config.getString("WebThemesURLBase"));
-
     try {
       Log("WWW: Downloading a theme...");
       clearCancelAsSoonAsPossible();
-      m_themeChoicer->updateThemeFromWWW(pThemeChoice);
+      m_themeChoicer->updateThemeFromWWW(m_db, i_id_theme);
       _UpdateThemesLists();
       reloadTheme(); /* reload the theme */
       if(bNotify) {
-  notifyMsg(GAMETEXT_THEMEUPTODATE);
+	notifyMsg(GAMETEXT_THEMEUPTODATE);
       }
     } catch(Exception &e) {
       /* file probably doesn't exist */
-      Log("** Warning ** : Failed to update theme ", pThemeChoice->ThemeName().c_str());    
+      Log("** Warning ** : Failed to update theme ", i_id_theme.c_str());
       if(bNotify) {
-  notifyMsg(GAMETEXT_FAILEDGETSELECTEDTHEME);
+	notifyMsg(GAMETEXT_FAILEDGETSELECTEDTHEME);
       }
       return;
     }
@@ -2255,10 +2281,10 @@ GameApp::GameApp() {
 
   void GameApp::reloadTheme() {
     try {
-      m_theme.load(m_themeChoicer->getFileName(getConfigThemeName(m_themeChoicer)));
+      m_theme.load(m_db->themes_getFileName(getConfigThemeName(m_themeChoicer)));
     } catch(Exception &e) {
       /* unable to load the theme, load the default one */
-      m_theme.load(m_themeChoicer->getFileName(THEME_DEFAULT_THEMENAME));
+      m_theme.load(m_db->themes_getFileName(THEME_DEFAULT_THEMENAME));
     }
   }
 

@@ -23,7 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GameText.h"
 #include "VApp.h"
 
-#define XMDB_VERSION 10
+#define XMDB_VERSION 12
 
 bool xmDatabase::Trace = false;
 
@@ -34,6 +34,7 @@ xmDatabase::xmDatabase(const std::string& i_dbFile,
 
   m_requiredLevelsUpdateAfterInit  = false;
   m_requiredReplaysUpdateAfterInit = false;
+  m_requiredThemesUpdateAfterInit = false;
 
   if(sqlite3_open(i_dbFile.c_str(), &m_db) != 0) {
     throw Exception("Unable to open the database (" + i_dbFile
@@ -243,6 +244,23 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
       updateXmDbVersion(10);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 9: " + e.getMsg());
+    }
+
+  case 10:
+    try {
+      simpleSql("CREATE table themes(id_theme PRIMARY KEY, filepath, checkSum);");
+      m_requiredThemesUpdateAfterInit = true;
+      updateXmDbVersion(11);
+    } catch(Exception &e) {
+      throw Exception("Unable to update xmDb from 10: " + e.getMsg());
+    }
+
+  case 11:
+    try {
+      simpleSql("CREATE table webthemes(id_theme PRIMARY KEY, fileUrl, checkSum);");
+      updateXmDbVersion(12);
+    } catch(Exception &e) {
+      throw Exception("Unable to update xmDb from 11: " + e.getMsg());
     }
 
     // next

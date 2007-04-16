@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VApp.h"
 #include "BuiltInFont.h"
 #include "md5sum/md5file.h"
+#include "db/xmDatabase.h"
 
 class vapp::App;
 
@@ -959,24 +960,12 @@ vapp::Color BikerTheme::getUglyWheelColor() {
   return m_UglyWheelColor;
 }
 
-bool ThemeChoicer::ExistThemeName(std::string p_themeName) {
-  for(unsigned int i=0; i<m_choices.size(); i++) {
-    if(m_choices[i]->ThemeName() == p_themeName) {
-      return true;
-    }
-  }
-  return false;
-}
-
-  ThemeChoicer::ThemeChoicer(vapp::WWWAppInterface *p_WebApp,
-           const ProxySettings *p_proxy_settings) {                    
+ThemeChoicer::ThemeChoicer(vapp::WWWAppInterface *p_WebApp,
+			   const ProxySettings *p_proxy_settings) {                    
   m_webThemes = new WebThemes(p_WebApp, p_proxy_settings);
-
-  initList();
 }
 
 ThemeChoicer::~ThemeChoicer() {
-  cleanList();
   delete m_webThemes;
 }
 
@@ -988,84 +977,25 @@ ThemeChoicer::~ThemeChoicer() {
    m_webThemes->setURLBase(p_urlBase);
  }
 
-
-
-std::string ThemeChoicer::getFileName(std::string p_themeName) {
-  for(unsigned int i=0; i<m_choices.size(); i++) {
-    if(m_choices[i]->ThemeName() == p_themeName) {
-      return m_choices[i]->ThemeFile();
-    }
-  }
-  return "";
-}
-
-ThemeChoice* ThemeChoicer::getChoiceByName(std::string p_themeName) {
-  for(unsigned int i=0; i<m_choices.size(); i++) {
-    if(m_choices[i]->ThemeName() == p_themeName) {
-      return m_choices[i];
-    }
-  }
-  return NULL;
-}
-
-void ThemeChoicer::cleanList() {
-  for(unsigned int i=0; i<m_choices.size(); i++) {
-    delete m_choices[i];
-  }
-  m_choices.clear();
-}
-
-void ThemeChoicer::initList() {
-  cleanList();
-
-  std::vector<std::string> v_themesFiles = vapp::FS::findPhysFiles(std::string(THEMES_DIRECTORY) + std::string("/*.xml"), true);
+void ThemeChoicer::initThemesFromDir(xmDatabase *i_db) {
+  std::vector<std::string> v_themesFiles = vapp::FS::findPhysFiles(std::string(THEMES_DIRECTORY)
+								   + std::string("/*.xml"), true);
   std::string v_name;
 
+  i_db->themes_add_begin();
   for(unsigned int i=0; i<v_themesFiles.size(); i++) {
     try {
-			v_name = getThemeNameFromFile(v_themesFiles[i]);
-			if(ExistThemeName(v_name) == false) {
-				m_choices.push_back(new ThemeChoice(v_name, v_themesFiles[i], true));
-			} else {
-				vapp::Log(std::string("Theme " + v_name + " is present several times").c_str());
-			}
+      v_name = getThemeNameFromFile(v_themesFiles[i]);
+      if(i_db->themes_exists(v_name) == false) {
+	i_db->themes_add(v_name, v_themesFiles[i]);
+      } else {
+	vapp::Log(std::string("Theme " + v_name + " is present several times").c_str());
+      }
     } catch(Exception &e) {
       /* anyway, give up this theme */
     }
   }
-
-  try {
-    /* add available theme not installed */
-    m_webThemes->upgrade();
-    std::vector<WebTheme*> v_availableThemes = m_webThemes->getAvailableThemes();
-        
-    for(unsigned int i=0; i<v_availableThemes.size(); i++) {
-      if(ExistThemeName(v_availableThemes[i]->getName()) == false) {
-  /* this theme is avaible */
-  m_choices.push_back(new ThemeChoice(v_availableThemes[i]->getName(), "", false));
-      } else {
-  /* the theme already exists ; check sum */
-  for(unsigned int j=0; j<m_choices.size(); j++) {
-
-    if(m_choices[j]->ThemeName() == v_availableThemes[i]->getName()) {
-      std::string v_localMd5;
-      try {
-        v_localMd5 = md5file(m_choices[j]->ThemeFile());
-      } catch(Exception &e) {
-        v_localMd5 = "";
-      }
-      
-      if(v_localMd5 != v_availableThemes[i]->getSum()) {
-        /* this theme can be updated */
-        m_choices[j]->setRequireUpdate(true);
-      }
-    }
-  }
-      }
-    }
-  } catch(Exception &e) {
-    /* hum, sorry, you will not see avaible theme to download */
-  }
+  i_db->themes_add_end();
 }
 
 std::string ThemeChoicer::getThemeNameFromFile(std::string p_themeFile) {
@@ -1097,55 +1027,12 @@ std::string ThemeChoicer::getThemeNameFromFile(std::string p_themeFile) {
   return m_name;
 }
 
-std::vector<ThemeChoice*> ThemeChoicer::getChoices() {
-  return m_choices;
+void ThemeChoicer::updateFromWWW(xmDatabase *i_db) {
+  m_webThemes->update(i_db);
 }
 
-void ThemeChoicer::updateFromWWW() {
-  m_webThemes->update();
-  initList();
-}
-
-bool ThemeChoicer::isUpdatableThemeFromWWW(ThemeChoice* pThemeChoice) {
-  return m_webThemes->isUpgradable(pThemeChoice);
-}
-
-void ThemeChoicer::updateThemeFromWWW(ThemeChoice* pThemeChoice) {
-  m_webThemes->upgrade(pThemeChoice);
-}
-
-ThemeChoice::ThemeChoice(std::string p_themeName, std::string p_themeFile, bool p_hosted) {
-  m_themeName     = p_themeName;
-  m_themeFile     = p_themeFile;
-  m_hosted        = p_hosted;
-  m_requireUpdate = false;
-}
-
-ThemeChoice::~ThemeChoice() {
-}
-
-std::string ThemeChoice::ThemeName() {
-  return m_themeName;
-}
-
-std::string ThemeChoice::ThemeFile() {
-  return m_themeFile;
-}
-
-bool ThemeChoice::getHosted() {
-  return m_hosted;
-}
-
-void ThemeChoice::setRequireUpdate(bool b) {
-  m_requireUpdate = b;
-}
- 
-bool ThemeChoice::getRequireUpdate() {
-  return m_requireUpdate;
-}
-
- void ThemeChoice::setHosted(bool b) {
-   m_hosted = b;
+void ThemeChoicer::updateThemeFromWWW(xmDatabase *i_db, const std::string& i_id_file) {
+  m_webThemes->upgrade(i_db, i_id_file);
 }
 
 SpriteBlendMode Theme::strToBlendMode(const std::string &s) {

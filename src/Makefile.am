@@ -130,6 +130,7 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp GameMain.cpp \
   db/xmDatabase_profiles.cpp \
   db/xmDatabase_replays.cpp \
   db/xmDatabase_web.cpp \
+  db/xmDatabase_themes.cpp \
   db/xmDatabaseUpdateInterface.h \
   xmscene/BasicSceneStructs.h \
   xmscene/Scene.h \

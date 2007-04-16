@@ -258,20 +258,6 @@ class WebLevels {
   void createDestinationDirIfRequired();
 };
 
-class WebTheme {
- public:
-  WebTheme(std::string pName, std::string pUrl, std::string pSum);
-  ~WebTheme();
-  std::string getName() const;
-  std::string getUrl() const;
-  std::string getSum() const;
-
- private:
-  std::string m_name;
-  std::string m_url;
-  std::string m_sum;
-};
-
 class WebThemes {
  public:
   WebThemes(vapp::WWWAppInterface *p_WebApp,
@@ -279,30 +265,21 @@ class WebThemes {
   ~WebThemes();
 
   /* check for new themes to download */
-  void update(); /* throws exceptions */
-
-  /* fill the list of avaible theme ; does not required an internet connexion */
-  void upgrade();
+  void update(xmDatabase *i_db); /* throws exceptions */
 
   /* download a theme or just update it */
-  void upgrade(ThemeChoice *p_themeChoice);
-  bool isUpgradable(ThemeChoice *p_themeChoice);
-
-  const std::vector<WebTheme*> &getAvailableThemes();
+  void upgrade(xmDatabase *i_db, const std::string& i_id_theme);
 
   void setURL(const std::string &p_url) {m_themes_url = p_url;}
   void setURLBase(const std::string &p_urlBase) {m_themes_urlBase = p_urlBase;}
 
  private:
   std::string getXmlFileName();
-  void extractThemesAvailableFromXml();
-  void clean();
 
   vapp::WWWAppInterface *m_WebApp;
   std::string m_themes_url;
   std::string m_themes_urlBase;
   const ProxySettings *m_proxy_settings;
-  std::vector<WebTheme*> m_availableThemes;
 };
 
 #endif /* WEBSTUFFS */
