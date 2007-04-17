@@ -131,6 +131,14 @@ std::string LevelsPack::Name() const {
   return m_name;
 }
 
+void LevelsPack::setDescription(const std::string& i_description) {
+  m_description = i_description;
+}
+
+std::string LevelsPack::Description() const {
+  return m_description;
+}
+
 std::string LevelsPack::Group() const {
   return m_group;
 }
@@ -204,69 +212,77 @@ void LevelsManager::makePacks(xmDatabase *i_db,
 
   /* all levels */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_ALL_LEVELS),
-			  "SELECT id_level, name, name AS sort_field FROM levels");
-  m_levelsPacks.push_back(v_pack);
+			  "SELECT id_level, name, UPPER(name) AS sort_field FROM levels");
   v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
+  v_pack->setDescription(VPACKAGENAME_DESC_ALL_LEVELS);
+  m_levelsPacks.push_back(v_pack);
   
   /* favorite levels */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_FAVORITE_LEVELS),
-			  "SELECT a.id_level AS id_level, a.name AS name, a.name AS sort_field "
+			  "SELECT a.id_level AS id_level, a.name AS name, UPPER(a.name) AS sort_field "
 			  "FROM levels AS a INNER JOIN levels_favorite AS b "
 			  "ON a.id_level=b.id_level "
 			  "WHERE b.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\"");
-  m_levelsPacks.push_back(v_pack);
   v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
+  v_pack->setDescription(VPACKAGENAME_DESC_FAVORITE_LEVELS);
+  m_levelsPacks.push_back(v_pack);
 
   /* scripted levels */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_SCRIPTED),
-			  "SELECT id_level, name, name AS sort_field FROM levels WHERE isScripted=1");
-  m_levelsPacks.push_back(v_pack);
+			  "SELECT id_level, name, UPPER(name) AS sort_field FROM levels WHERE isScripted=1");
   v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
+  v_pack->setDescription(VPACKAGENAME_DESC_SCRIPTED);
+  m_levelsPacks.push_back(v_pack);
 
   /* musical */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_MUSICAL),
-			  "SELECT id_level, name, name AS sort_field "
+			  "SELECT id_level, name, UPPER(name) AS sort_field "
 			  "FROM levels WHERE music<>\"\"");
-  m_levelsPacks.push_back(v_pack);
   v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
+  v_pack->setDescription(VPACKAGENAME_DESC_MUSICAL);
+  m_levelsPacks.push_back(v_pack);
 
   /* levels i've not finished */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_INCOMPLETED_LEVELS),
-			  "SELECT a.id_level AS id_level, a.name AS name, a.name AS sort_field "
+			  "SELECT a.id_level AS id_level, a.name AS name, UPPER(a.name) AS sort_field "
 			  "FROM levels AS a LEFT OUTER JOIN stats_profiles_levels AS b "
 			  "ON (a.id_level=b.id_level AND "
 			  "b.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
 			  "WHERE b.nbCompleted = 0 OR b.id_profile IS NULL");
-  m_levelsPacks.push_back(v_pack);
   v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
+  v_pack->setDescription(VPACKAGENAME_DESC_INCOMPLETED_LEVELS);
+  m_levelsPacks.push_back(v_pack);
 
   /* new and updated levels */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_NEW_LEVELS),
-			  "SELECT b.id_level AS id_level, b.name AS name, b.name AS sort_field "
+			  "SELECT b.id_level AS id_level, b.name AS name, UPPER(b.name) AS sort_field "
 			  "FROM levels_new AS a INNER JOIN levels AS b ON a.id_level=b.id_level");
-  m_levelsPacks.push_back(v_pack);
   v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
+  v_pack->setDescription(VPACKAGENAME_DESC_NEW_LEVELS);
+  m_levelsPacks.push_back(v_pack);
 
   /* rooms */
   /* levels with no highscore */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_LEVELS_WITH_NO_HIGHSCORE),
-			  "SELECT a.id_level AS id_level, a.name AS name, a.name AS sort_field "
+			  "SELECT a.id_level AS id_level, a.name AS name, UPPER(a.name) AS sort_field "
 			  "FROM levels AS a LEFT OUTER JOIN "
 			  "webhighscores AS b ON (a.id_level = b.id_level "
 			  "AND b.id_room=" + i_id_room + ") "
 			  "WHERE b.id_level IS NULL");
-  m_levelsPacks.push_back(v_pack);
   v_pack->setGroup(GAMETEXT_PACK_ROOM);
+  v_pack->setDescription(VPACKAGENAME_DESC_LEVELS_WITH_NO_HIGHSCORE);
+  m_levelsPacks.push_back(v_pack);
 
   /* levels i've not the highscore */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_YOU_HAVE_NOT_THE_HIGHSCORE),
-			  "SELECT a.id_level AS id_level, a.name AS name, a.name AS sort_field "
+			  "SELECT a.id_level AS id_level, a.name AS name, UPPER(a.name) AS sort_field "
 			  "FROM levels AS a INNER JOIN "
 			  "webhighscores AS b ON a.id_level = b.id_level "
 			  "WHERE b.id_room=" + i_id_room + " "
 			  "AND b.id_profile<>\"" + xmDatabase::protectString(i_playerName) + "\" ");
-  m_levelsPacks.push_back(v_pack);
   v_pack->setGroup(GAMETEXT_PACK_ROOM);
+  v_pack->setDescription(VPACKAGENAME_DESC_YOU_HAVE_NOT_THE_HIGHSCORE);
+  m_levelsPacks.push_back(v_pack);
 
   /* last highscores */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_LAST_HIGHSCORES),
@@ -275,6 +291,7 @@ void LevelsManager::makePacks(xmDatabase *i_db,
 			  "webhighscores AS b ON a.id_level = b.id_level "
 			  "WHERE b.id_room=" + i_id_room + " "
 			  "ORDER by b.date DESC LIMIT 50", false);
+  v_pack->setDescription(VPACKAGENAME_DESC_LAST_HIGHSCORES);
   m_levelsPacks.push_back(v_pack);
   v_pack->setGroup(GAMETEXT_PACK_ROOM);
 
@@ -284,8 +301,9 @@ void LevelsManager::makePacks(xmDatabase *i_db,
 			  "FROM levels AS a INNER JOIN "
 			  "weblevels AS b ON a.id_level = b.id_level "
 			  "ORDER by b.creationDate DESC LIMIT 50", false);
-  m_levelsPacks.push_back(v_pack);
   v_pack->setGroup(GAMETEXT_PACK_ROOM);
+  v_pack->setDescription(VPACKAGENAME_DESC_LAST_LEVELS);
+  m_levelsPacks.push_back(v_pack);
 
   /* oldest highscores */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_OLDEST_HIGHSCORES),
@@ -294,19 +312,120 @@ void LevelsManager::makePacks(xmDatabase *i_db,
 			  "webhighscores AS b ON a.id_level = b.id_level "
 			  "WHERE b.id_room=" + i_id_room + " "
 			  "ORDER by b.date ASC LIMIT 50");
-  m_levelsPacks.push_back(v_pack);
   v_pack->setGroup(GAMETEXT_PACK_ROOM);
+  v_pack->setDescription(VPACKAGENAME_DESC_OLDEST_HIGHSCORES);
+  m_levelsPacks.push_back(v_pack);
+
+  /* medals */
+  v_pack = new LevelsPack(std::string(VPACKAGENAME_MEDAL_GOLD),
+			  "SELECT id_level, name, sort_field FROM ("
+			  "SELECT a.id_level AS id_level, MAX(b.name) AS name, "
+			  "UPPER(MAX(b.name)) AS sort_field, "
+			  "MIN(c.finishTime) AS webFinishTime, MIN(a.finishTime) AS userFinishTime "
+			  "FROM profile_completedLevels AS a INNER JOIN levels AS b "
+			  "ON (a.id_level = b.id_level "
+			  "AND a.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
+			  "LEFT OUTER JOIN webhighscores AS c "
+			  "ON (c.id_level = a.id_level AND c.id_room=" + i_id_room + ") "
+			  "GROUP BY a.id_level " /* get the best highscores */
+			  ") "
+			  "WHERE (webFinishTime IS NULL OR webFinishTime >= userFinishTime*0.95) "
+			  "UNION " /* add the webhighscores where the player's name is the same */
+			  "SELECT b.id_level AS id_level, b.name AS name, UPPER(b.name) AS sort_field "
+			  "FROM webhighscores AS a INNER JOIN levels AS b "
+			  "ON a.id_level = b.id_level "
+			  "WHERE a.id_profile = \"" + xmDatabase::protectString(i_playerName) + "\""
+			  );
+  v_pack->setGroup(GAMETEXT_PACK_MEDALS);
+  v_pack->setDescription(VPACKAGENAME_DESC_MEDAL_GOLD);
+  m_levelsPacks.push_back(v_pack);
+
+  v_pack = new LevelsPack(std::string(VPACKAGENAME_MEDAL_SILVER),
+			  "SELECT id_level, name, sort_field FROM ("
+			  "SELECT a.id_level AS id_level, MAX(b.name) AS name, "
+			  "UPPER(MAX(b.name)) AS sort_field, "
+			  "MIN(c.finishTime) AS webFinishTime, MIN(a.finishTime) AS userFinishTime "
+			  "FROM profile_completedLevels AS a INNER JOIN levels AS b "
+			  "ON (a.id_level = b.id_level "
+			  "AND a.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
+			  "LEFT OUTER JOIN webhighscores AS c "
+			  "ON (c.id_level = a.id_level AND c.id_room=" + i_id_room + ") "
+			  "GROUP BY a.id_level " /* get the best highscores */
+			  ") "
+			  "WHERE (webFinishTime IS NOT NULL "
+			  "AND webFinishTime >= userFinishTime*0.90 "
+			  "AND webFinishTime < userFinishTime*0.95) "
+			  "EXCEPT " /* remove the webhighscores where the player's name is the same */
+			  "SELECT b.id_level AS id_level, b.name AS name, UPPER(b.name) AS sort_field "
+			  "FROM webhighscores AS a INNER JOIN levels AS b "
+			  "ON a.id_level = b.id_level "
+			  "WHERE a.id_profile = \"" + xmDatabase::protectString(i_playerName) + "\""
+			  );
+  v_pack->setGroup(GAMETEXT_PACK_MEDALS);
+  v_pack->setDescription(VPACKAGENAME_DESC_MEDAL_SILVER);
+  m_levelsPacks.push_back(v_pack);
+
+  v_pack = new LevelsPack(std::string(VPACKAGENAME_MEDAL_BRONZE),
+			  "SELECT id_level, name, sort_field FROM ("
+			  "SELECT a.id_level AS id_level, MAX(b.name) AS name, "
+			  "UPPER(MAX(b.name)) AS sort_field, "
+			  "MIN(c.finishTime) AS webFinishTime, MIN(a.finishTime) AS userFinishTime "
+			  "FROM profile_completedLevels AS a INNER JOIN levels AS b "
+			  "ON (a.id_level = b.id_level "
+			  "AND a.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
+			  "LEFT OUTER JOIN webhighscores AS c "
+			  "ON (c.id_level = a.id_level AND c.id_room=" + i_id_room + ") "
+			  "GROUP BY a.id_level " /* get the best highscores */
+			  ") "
+			  "WHERE (webFinishTime IS NOT NULL "
+			  "AND webFinishTime >= userFinishTime*0.80 "
+			  "AND webFinishTime < userFinishTime*0.90) "
+			  "EXCEPT " /* remove the webhighscores where the player's name is the same */
+			  "SELECT b.id_level AS id_level, b.name AS name, UPPER(b.name) AS sort_field "
+			  "FROM webhighscores AS a INNER JOIN levels AS b "
+			  "ON a.id_level = b.id_level "
+			  "WHERE a.id_profile = \"" + xmDatabase::protectString(i_playerName) + "\""
+			  );
+  v_pack->setGroup(GAMETEXT_PACK_MEDALS);
+  v_pack->setDescription(VPACKAGENAME_DESC_MEDAL_BRONZE);
+  m_levelsPacks.push_back(v_pack);
+
+  v_pack = new LevelsPack(std::string(VPACKAGENAME_MEDAL_NONE),
+			  "SELECT id_level, name, sort_field FROM ("
+			  "SELECT a.id_level AS id_level, MAX(a.name) AS name, "
+			  "UPPER(MAX(a.name)) AS sort_field, "
+			  "MIN(c.finishTime) AS webFinishTime, MIN(b.finishTime) AS userFinishTime "
+			  "FROM levels AS a LEFT OUTER JOIN profile_completedLevels AS b "
+			  "ON (a.id_level = b.id_level "
+			  "AND b.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
+			  "LEFT OUTER JOIN webhighscores AS c "
+			  "ON (c.id_level = a.id_level AND c.id_room=" + i_id_room + ") "
+			  "GROUP BY a.id_level "
+			  ") "
+			  "WHERE (webFinishTime IS NOT NULL "
+			  "AND webFinishTime < userFinishTime*0.80) "
+			  "OR userFinishTime IS NULL "
+			  "EXCEPT " /* remove the webhighscores where the player's name is the same */
+			  "SELECT b.id_level AS id_level, b.name AS name, UPPER(b.name) AS sort_field "
+			  "FROM webhighscores AS a INNER JOIN levels AS b "
+			  "ON a.id_level = b.id_level "
+			  "WHERE a.id_profile = \"" + xmDatabase::protectString(i_playerName) + "\""
+			  );
+  v_pack->setGroup(GAMETEXT_PACK_MEDALS);
+  v_pack->setDescription(VPACKAGENAME_DESC_MEDAL_NONE);
+  m_levelsPacks.push_back(v_pack);
 
   /* stats */
   /* never played levels */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_NEVER_PLAYED),
-			  "SELECT a.id_level AS id_level, a.name AS name, a.name AS sort_field "
+			  "SELECT a.id_level AS id_level, a.name AS name, UPPER(a.name) AS sort_field "
 			  "FROM levels AS a LEFT OUTER JOIN stats_profiles_levels AS b "
 			  "ON (a.id_level=b.id_level AND "
 			  "b.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
 			  "WHERE b.id_profile IS NULL");
-  m_levelsPacks.push_back(v_pack);
   v_pack->setGroup(GAMETEXT_PACK_STATS);
+  v_pack->setDescription(VPACKAGENAME_DESC_NEVER_PLAYED);
+  m_levelsPacks.push_back(v_pack);
   
   /* most played levels */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_MOST_PLAYED),
@@ -316,6 +435,7 @@ void LevelsManager::makePacks(xmDatabase *i_db,
 			  "b.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
 			  "ORDER BY b.nbPlayed DESC LIMIT 50", false);
   v_pack->setGroup(GAMETEXT_PACK_STATS);
+  v_pack->setDescription(VPACKAGENAME_DESC_MOST_PLAYED);
   m_levelsPacks.push_back(v_pack);
 
   /* less played levels */
@@ -327,6 +447,7 @@ void LevelsManager::makePacks(xmDatabase *i_db,
 			  "WHERE b.nbPlayed > 0 "
 			  "ORDER BY b.nbPlayed ASC LIMIT 50");
   v_pack->setGroup(GAMETEXT_PACK_STATS);
+  v_pack->setDescription(VPACKAGENAME_DESC_LESS_PLAYED);
   m_levelsPacks.push_back(v_pack);
 
   /* nicest levels */
@@ -334,8 +455,9 @@ void LevelsManager::makePacks(xmDatabase *i_db,
 			  "SELECT a.id_level AS id_level, a.name AS name, b.quality AS sort_field "
 			  "FROM levels AS a INNER JOIN weblevels AS b ON a.id_level=b.id_level "
 			  "WHERE b.quality >= 4.5 ORDER BY b.quality DESC LIMIT 50", false);
-  m_levelsPacks.push_back(v_pack);
   v_pack->setGroup(GAMETEXT_PACK_WEBVOTES);
+  v_pack->setDescription(VPACKAGENAME_DESC_NICEST_LEVELS);
+  m_levelsPacks.push_back(v_pack);
 
   /* crapiest levels */
   if(i_bDebugMode) {
@@ -343,8 +465,9 @@ void LevelsManager::makePacks(xmDatabase *i_db,
 			    "SELECT a.id_level AS id_level, a.name AS name, b.quality AS sort_field "
 			    "FROM levels AS a INNER JOIN weblevels AS b ON a.id_level=b.id_level "
 			    "WHERE b.quality <= 1.5 ORDER BY b.quality ASC LIMIT 50");
-    m_levelsPacks.push_back(v_pack);
     v_pack->setGroup(GAMETEXT_PACK_WEBVOTES);
+    v_pack->setDescription(VPACKAGENAME_DESC_CRAPIEST_LEVELS);
+    m_levelsPacks.push_back(v_pack);
   }
 
   /* easiest levels */
@@ -352,28 +475,32 @@ void LevelsManager::makePacks(xmDatabase *i_db,
 			  "SELECT a.id_level AS id_level, a.name AS name, b.difficulty AS sort_field "
 			  "FROM levels AS a INNER JOIN weblevels AS b ON a.id_level=b.id_level "
 			  "WHERE b.difficulty <= 1.5 ORDER BY b.difficulty ASC LIMIT 50");
-  m_levelsPacks.push_back(v_pack);
   v_pack->setGroup(GAMETEXT_PACK_WEBVOTES);
+  v_pack->setDescription(VPACKAGENAME_DESC_EASIEST_LEVELS);
+  m_levelsPacks.push_back(v_pack);
 
   /* hardest levels */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_HARDEST_LEVELS),
 			  "SELECT a.id_level AS id_level, a.name AS name, b.difficulty AS sort_field "
 			  "FROM levels AS a INNER JOIN weblevels AS b ON a.id_level=b.id_level "
 			  "WHERE b.difficulty >= 4.5 ORDER BY b.difficulty DESC LIMIT 50", false);
-  m_levelsPacks.push_back(v_pack);
   v_pack->setGroup(GAMETEXT_PACK_WEBVOTES);
+  v_pack->setDescription(VPACKAGENAME_DESC_HARDEST_LEVELS);
+  m_levelsPacks.push_back(v_pack);
 
   /* standard packs */
-  v_result = i_db->readDB("SELECT DISTINCT packName FROM levels;",
+  v_result = i_db->readDB("SELECT DISTINCT packName FROM levels ORDER BY UPPER(packName);",
 			  nrow);
   for(unsigned int i=0; i<nrow; i++) {
     v_pack = new LevelsPack(i_db->getResult(v_result, 1, i, 0),
-			    "SELECT id_level, name, packNum || name AS sort_field "
+			    "SELECT id_level, name, packNum || UPPER(name) AS sort_field "
 			    "FROM levels WHERE packName=\"" +
 			    xmDatabase::protectString(i_db->getResult(v_result, 1, i, 0)) +
 			    "\"");
-    m_levelsPacks.push_back(v_pack);
     v_pack->setGroup(GAMETEXT_PACK_STANDARD);
+    v_pack->setDescription(std::string(VPACKAGENAME_DESC_STANDARD) +
+			   " \"" + std::string(i_db->getResult(v_result, 1, i, 0)) + "\"");
+    m_levelsPacks.push_back(v_pack);
   }
   i_db->read_DB_free(v_result);
 
@@ -391,13 +518,14 @@ void LevelsManager::makePacks(xmDatabase *i_db,
 
     std::string v_id_profile = i_db->getResult(v_result, 1, i, 0);
     v_pack = new LevelsPack(v_n.str() + v_id_profile,
-			    "SELECT a.id_level AS id_level, a.name AS name, a.name AS sort_field "
+			    "SELECT a.id_level AS id_level, a.name AS name, UPPER(a.name) AS sort_field "
 			    "FROM levels AS a INNER JOIN "
 			    "webhighscores AS b ON a.id_level = b.id_level "
 			    "WHERE b.id_room=" + i_id_room + " "
 			    "AND b.id_profile=\"" + xmDatabase::protectString(v_id_profile) + "\"");
+    v_pack->setGroup(GAMETEXT_PACK_BEST_DRIVERS);
+    v_pack->setDescription(std::string(VPACKAGENAME_DESC_BEST_DRIVERS) + " " + v_id_profile);
     m_levelsPacks.push_back(v_pack);
-    v_pack->setGroup(VPACKAGENAME_BEST_DRIVER);
   }
   i_db->read_DB_free(v_result);  
  

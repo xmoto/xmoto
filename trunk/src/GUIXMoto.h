@@ -65,6 +65,8 @@ class UIPackTree : public vapp::UIList {
 
   void setSelectedPackByName(std::string i_levelsPackName);
 
+  virtual std::string subContextHelp(int x,int y);
+
  private:
 };
 

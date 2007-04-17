@@ -3807,7 +3807,7 @@ namespace vapp {
     
     v_result = m_db->readDB("SELECT id_profile, fileUrl "
 			    "FROM webhighscores WHERE id_level=\"" + 
-			    xmDatabase::protectString(pLevelID) + "\""
+			    xmDatabase::protectString(pLevelID) + "\" "
 			    "AND id_room=" + m_WebHighscoresIdRoom + ";",
 			    nrow);
     if(nrow == 0) {
@@ -3844,7 +3844,7 @@ namespace vapp {
 
     v_result = m_db->readDB("SELECT id_profile, fileUrl "
 			    "FROM webhighscores WHERE id_level=\"" + 
-			    xmDatabase::protectString(m_pLevelToShowOnViewHighscore) + "\""
+			    xmDatabase::protectString(m_pLevelToShowOnViewHighscore) + "\" "
 			    "AND id_room=" + m_WebHighscoresIdRoom + ";",
 			    nrow);
     if(nrow == 0) {

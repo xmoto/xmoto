@@ -639,6 +639,8 @@ namespace vapp {
       std::vector<UIListEntry *> &getEntries();
       std::vector<std::string> &getColumns();
       virtual int getSelected();
+      int getRowAtPosition(int x, int y);    /* return -1 if none is found */
+      int getColumnAtPosition(int x, int y); /* return -1 if none is found */
       void setRealSelected(int n);
       void setVisibleSelected(int n);
       void addColumn(std::string Title,int nWidth,const std::string &Help = "");

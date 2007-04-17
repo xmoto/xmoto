@@ -384,10 +384,10 @@ GameApp::GameApp() {
           m_nFrame = 0;
 	  v_newMusicPlaying = m_MotoGame.getLevelSrc()->Music();
 	} catch(Exception &e) {
-          Log("** Warning ** : level '%s' not found",m_PlaySpecificLevel.c_str());
+          Log("** Warning ** : level '%s' cannot be loaded",m_PlaySpecificLevel.c_str());
 	  m_MotoGame.endLevel();
           char cBuf[256];
-          sprintf(cBuf,GAMETEXT_LEVELNOTFOUND,m_PlaySpecificLevel.c_str());
+          sprintf(cBuf,GAMETEXT_LEVELCANNOTBELOADED,m_PlaySpecificLevel.c_str());
     setState(m_StateAfterPlaying);
           notifyMsg(cBuf);
         }
@@ -1937,8 +1937,11 @@ GameApp::GameApp() {
     try {
      m_MotoGame.loadLevel(m_db, m_PlaySpecificLevel);
     } catch(Exception &e) {
+      Log("** Warning ** : level '%s' cannot be loaded",m_PlaySpecificLevel.c_str());
+      char cBuf[256];
+      sprintf(cBuf,GAMETEXT_LEVELCANNOTBELOADED,m_PlaySpecificLevel.c_str());
       setState(m_StateAfterPlaying);
-      notifyMsg(e.getMsg());     
+      notifyMsg(cBuf);
       return;
     }
 

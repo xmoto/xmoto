@@ -124,22 +124,10 @@ void UIPackTree::addPack(LevelsPack* i_levelsPack,
   /* the categorie exists, add the entry */
   if(found != -1) {
     /* sort */
-    /* Make lowercase before comparing */
-    std::string LCo = i_levelsPack->Name();
-    for(int i=0; i<LCo.length(); i++)  
-      LCo[i] = tolower(LCo[i]);
-
     int position;
     for(position = found+1; position<getEntries().size(); position++) {
       /* next categorie => break */
       if(getEntries()[position]->pvUser == NULL) {
-	break;
-      }
-      /* must be done after the next entry ? */
-      std::string LC = getEntries()[position]->Text[0];
-      for(int i=0;i<LC.length();i++)  
-	LC[i] = tolower(LC[i]);
-      if(LCo < LC) {
 	break;
       }
     }
@@ -186,3 +174,24 @@ void UIPackTree::setSelectedPackByName(std::string i_levelsPackName) {
   setRealSelected(nPack);
 }
 
+std::string UIPackTree::subContextHelp(int x,int y) {
+  int n;
+  LevelsPack *v_levelPack;
+
+  if(getColumnAtPosition(x, y) != 0) {
+    return vapp::UIList::subContextHelp(x, y);
+  }
+
+  n = getRowAtPosition(x, y);
+  if(n == -1) {
+    return "";
+  }
+
+  vapp::UIListEntry *pEntry = getEntries()[n];
+  if(pEntry->pvUser == NULL) {
+    return "";
+  }
+
+  v_levelPack = (LevelsPack*) pEntry->pvUser;
+  return v_levelPack->Description();
+}
