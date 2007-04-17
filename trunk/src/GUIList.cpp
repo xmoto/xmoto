@@ -177,6 +177,8 @@ namespace vapp {
   }
 
   int UIList::getRowAtPosition(int x, int y) {
+    int n;
+
     if(y <= LinesStartY()) {
       return -1;
     }
@@ -185,7 +187,12 @@ namespace vapp {
       return -1;
     }
 
-    return (y - LinesStartY() - m_nScroll) / m_rowHeight;
+    n = (y - LinesStartY() - m_nScroll) / m_rowHeight;
+    if(n < 0 || n >= m_Entries.size()) {
+      return -1;
+    }
+
+    return n;
   }
 
   int UIList::getColumnAtPosition(int x, int y) {
