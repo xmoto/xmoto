@@ -176,6 +176,45 @@ namespace vapp {
     return m_nRealSelected;
   }
 
+  int UIList::getRowAtPosition(int x, int y) {
+    if(y <= LinesStartY()) {
+      return -1;
+    }
+
+    if(isScrollBarRequired() && x >= ScrollBarScrollerStartX()) {
+      return -1;
+    }
+
+    return (y - LinesStartY() - m_nScroll) / m_rowHeight;
+  }
+
+  int UIList::getColumnAtPosition(int x, int y) {
+    if(isScrollBarRequired() && x >= ScrollBarScrollerStartX()) {
+      return -1;
+    }
+
+    int nHX = LineMargeX();
+  
+    for(int i=0;i<m_Columns.size();i++) {
+      if(!(m_nColumnHideFlags & (1<<i))) {
+	int nW = m_ColumnWidths[i];
+      
+	for(int j=i+1;j<m_Columns.size();j++) {
+	  if(m_nColumnHideFlags & (1<<j))
+	    nW += m_ColumnWidths[i]; 
+	}           
+      
+	/* Mouse in this one? */
+	if(x >= nHX && x <= nHX + nW)
+	  return i;
+	
+	nHX += nW;
+      }
+    }
+
+    return -1;
+  }
+
   void UIList::addColumn(std::string Title, int nWidth, const std::string &Help) {
     m_Columns.push_back(Title);
     m_ColumnWidths.push_back(nWidth);
@@ -253,25 +292,10 @@ namespace vapp {
   Context help at cursor position?
   ===========================================================================*/
   std::string UIList::subContextHelp(int x,int y) {
-    int nHX = 6;
-  
-    for(int i=0;i<m_Columns.size();i++) {
-      if(!(m_nColumnHideFlags & (1<<i))) {
-        int nW = m_ColumnWidths[i];
-      
-        for(int j=i+1;j<m_Columns.size();j++) {
-          if(m_nColumnHideFlags & (1<<j))
-            nW += m_ColumnWidths[i]; 
-        }           
-        
-        /* Mouse in this one? */
-        if(x >= nHX && x <= nHX + nW)
-          return m_ColumnHelpStrings[i];
-        
-        nHX += nW;
-      }
+    int n = getColumnAtPosition(x, y);
+    if(n != -1) {
+      return m_ColumnHelpStrings[n];
     }
-    
     return "";
   }
 

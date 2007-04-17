@@ -37,13 +37,14 @@ class LevelsPack {
   bool ShowWebTimes() const;
   void setShowTimes(bool i_showTimes);
   void setShowWebTimes(bool i_showWebTimes);
+  void setDescription(const std::string& i_description);
+  std::string Description() const;
 
   std::string Group() const;
   void setGroup(std::string i_group);
   std::string getLevelsQuery() const;
   std::string getLevelsWithHighscoresQuery(const std::string& i_profile,
 					   const std::string& i_id_room) const;
-
   int getNumberOfLevels(xmDatabase *i_db);
   int getNumberOfFinishedLevels(xmDatabase *i_db, const std::string& i_profile);
 
@@ -56,6 +57,7 @@ class LevelsPack {
   bool m_ascSort;
   bool m_showTimes;
   bool m_showWebTimes;
+  std::string m_description;
 };
 
 class LevelsManager {
