@@ -67,8 +67,6 @@ quit level'' or something like that.
 * meme si on ne télécharge pas tous les niveaux, mettre à jour le thème
 
 ******************
-* pack : last levels
-
 * flag sprite to add
 * two options for music : menu and ingame
 
@@ -108,9 +106,6 @@ Assigned to nicolas
 * keesj:test the SDL_gfx version on windows/mac
 * keesj:faster startup , smart caching etc system must run under 64 MB :)
 * keesj:define code conventions,testing procedures,release-roadbook
-
-
-* FEATURE : windows : there's some win32 API calls that can be made to determine the application data dir
 
 * '50 most played levels'/least : virtual package
 * a keyboard key for next level

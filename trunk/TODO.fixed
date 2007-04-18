@@ -7,6 +7,8 @@ Since 0.2.7
 * [13:05] <gaivota> aspegic500: another bug, that already exists for many versions now: you cant switch the musics to stereo, it always remains mono
 * FEATURE : * xmoto toto.lvl to play directly a level
 * order des packs qui marche bien (observer les requetes pour faire mieux)
+* FEATURE : windows : there's some win32 API calls that can be made to determine the application data dir
+* pack : last levels
 
 Since 0.2.6
 [21:33] <jj> the smoke is not always rendered at the sides of the screen
