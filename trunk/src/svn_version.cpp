@@ -5,7 +5,7 @@ std::string svn_version() {
   v_rev = SVN_REV;
 
   if(v_rev == "") {
-    v_rev = "$Revision$";
+    v_rev = "$Revision: 1360 $";
   }
   return v_rev;
 }
