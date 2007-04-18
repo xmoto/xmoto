@@ -580,11 +580,7 @@ namespace vapp {
     v_version << BUILD_EXTRAINFO;
 
     if(std::string(BUILD_EXTRAINFO) != "") {
-      if(v_svn == "") {
-	v_version << " (svn $Revision$ )";
-      } else {
-	v_version << " (svn " + v_svn + ")";
-      }
+      v_version << " (svn " + v_svn + ")";
     }
 
     return v_version.str();
