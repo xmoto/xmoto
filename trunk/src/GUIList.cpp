@@ -93,7 +93,7 @@ namespace vapp {
       return ScrollBarBarHeight();
     }
 
-    return v_visible / ((float)m_Entries.size() - m_filteredItems) * ((float) ScrollBarBarHeight());
+    return v_visible / ((float)m_Entries.size() - m_filteredItems) * ((float) ScrollBarBarHeight()) +1;
   }
 
   int UIList::ScrollBarScrollerStartX() {
