@@ -26,7 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 UILevelList::UILevelList(UIWindow *pParent,
 			 int x,int y,
-			 std::string Caption,
+			 const std::string& Caption,
 			 int nWidth,int nHeight)
   :UIList(pParent, x, y, Caption, nWidth, nHeight) {
     addColumn(GAMETEXT_LEVEL, getPosition().nWidth - 175);
@@ -63,11 +63,11 @@ void UILevelList::clear() {
   UIList::clear();
 }
 
-void UILevelList::addLevel(std::string i_id_level,
-			   std::string i_name,
+void UILevelList::addLevel(const std::string& i_id_level,
+			   const std::string& i_name,
 			   float i_playerHighscore,
 			   float i_roomHighscore,
-			   std::string i_prefix) {
+			   const std::string& i_prefix) {
   std::string v_name;
 
   if(i_name != "") v_name = i_name;
@@ -92,9 +92,17 @@ void UILevelList::addLevel(std::string i_id_level,
   }
 }  
 
+void UILevelList::updateLevel(const std::string& i_id_level, float i_playerHighscore) {
+  for(unsigned int i=0; i<getEntries().size(); i++) {
+    if(*(reinterpret_cast<std::string *>(getEntries()[i]->pvUser)) == i_id_level) {
+      getEntries()[i]->Text[1] = vapp::App::formatTime(i_playerHighscore);
+    }
+  }
+}
+
 UIPackTree::UIPackTree(UIWindow *pParent,
 		       int x, int y,
-		       std::string Caption,
+		       const std::string& Caption,
 		       int nWidth, int nHeight)
   : vapp::UIList(pParent, x, y, Caption, nWidth, nHeight) {
   addColumn(GAMETEXT_LEVELPACK, getPosition().nWidth-150, CONTEXTHELP_LEVELPACK);
@@ -105,7 +113,7 @@ UIPackTree::~UIPackTree() {
 }
 
 void UIPackTree::addPack(LevelsPack* i_levelsPack,
-			 std::string i_categorie,
+			 const std::string& i_categorie,
 			 int i_nbFinishedLevels,
 			 int i_nbLevels) {
   vapp::UIListEntry *c, *p;
@@ -161,7 +169,7 @@ LevelsPack* UIPackTree::getSelectedPack() {
   return NULL;
 }
 
-void UIPackTree::setSelectedPackByName(std::string i_levelsPackName) {
+void UIPackTree::setSelectedPackByName(const std::string& i_levelsPackName) {
   int nPack = 0;
   for(int i=0; i<getEntries().size(); i++) {
     if(getEntries()[i]->pvUser != NULL) {

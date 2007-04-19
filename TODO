@@ -1,5 +1,4 @@
 
-* mettre à jour la liste du pack ouvert (ca le fait pas : mettre à jour que la ligne du niveau fini qd on finit un niveau)
 * mode ugly over normal
 * pas charger les textures en mode ugly (pas celle du background, ...)
 * check highscores at startup, ca bug

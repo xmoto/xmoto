@@ -31,17 +31,18 @@ class UILevelList : public vapp::UIList {
   public:
   UILevelList(UIWindow *pParent,
 	      int x = 0,int y = 0,
-	      std::string Caption="",
+	      const std::string& Caption="",
 	      int nWidth = 0,int nHeight = 0);
   ~UILevelList();
   
   std::string getSelectedLevel();
-  void addLevel(std::string i_id_level,
-		std::string i_name,
+  void addLevel(const std::string& i_id_level,
+		const std::string& i_name,
 		float i_playerHighscore, // negativ if no one
 		float i_roomHighscore,   // negativ if no one
-		std::string i_prefix = "");
+		const std::string& i_prefix = "");
   virtual void clear();
+  void updateLevel(const std::string& i_id_level, float i_playerHighscore);
 
   void hideBestTime();
   void hideRoomBestTime();
@@ -53,17 +54,17 @@ class UIPackTree : public vapp::UIList {
  public:
   UIPackTree(UIWindow *pParent,
 	     int x = 0,int y = 0,
-	     std::string Caption="",
+	     const std::string& Caption="",
 	     int nWidth = 0,int nHeight = 0);
   ~UIPackTree();
 
   void addPack(LevelsPack* i_levelsPack,
-	       std::string i_categorie,
+	       const std::string& i_categorie,
 	       int i_nbFinishedLevels,
 	       int i_nbLevels);
   LevelsPack* getSelectedPack();
 
-  void setSelectedPackByName(std::string i_levelsPackName);
+  void setSelectedPackByName(const std::string& i_levelsPackName);
 
   virtual std::string subContextHelp(int x,int y);
 

@@ -595,6 +595,8 @@ GameApp::GameApp() {
 				     m_MotoGame.getLevelSrc()->Id(),
 				     m_MotoGame.Players()[0]->finishTime());
 	  _UpdateLevelsLists();
+	  _UpdateCurrentPackList(m_MotoGame.getLevelSrc()->Id(),
+				 m_MotoGame.Players()[0]->finishTime());
 	}
         break;
       }
@@ -2530,5 +2532,13 @@ GameApp::GameApp() {
       delete rplInfos;
       throw e2;
     }
+  }
+
+  void GameApp::_UpdateCurrentPackList(const std::string& i_id_level, float i_playerHighscore) {
+    if(m_pActiveLevelPack == NULL) return;
+    UILevelList *pList = (UILevelList *)m_pLevelPackViewer->getChild("LEVELPACK_LEVEL_LIST"); 
+    if(pList == NULL) return;
+
+    pList->updateLevel(i_id_level, i_playerHighscore);
   }
 }
