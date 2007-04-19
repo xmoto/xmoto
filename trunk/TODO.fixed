@@ -9,6 +9,7 @@ Since 0.2.7
 * order des packs qui marche bien (observer les requetes pour faire mieux)
 * FEATURE : windows : there's some win32 API calls that can be made to determine the application data dir
 * pack : last levels
+* mettre à jour la liste du pack ouvert (ca le fait pas : mettre à jour que la ligne du niveau fini qd on finit un niveau)
 
 Since 0.2.6
 [21:33] <jj> the smoke is not always rendered at the sides of the screen

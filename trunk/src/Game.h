@@ -435,6 +435,7 @@ class xmDatabase;
       void _UpdateThemesLists(void);
 
       void _UpdateLevelsLists();
+      void _UpdateCurrentPackList(const std::string& i_id_level, float i_playerHighscore);
 
       void _UpdateRoomsLists(void);
       void _GameScreenshot(void);
