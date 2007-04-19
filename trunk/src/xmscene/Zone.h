@@ -56,6 +56,11 @@ class ZonePrimBox : public ZonePrim {
   static ZonePrim* readFromXml(TiXmlElement *pElem);
   static ZonePrim* readFromBinary(vapp::FileHandle *i_pfh);
 
+  float Left()   const;
+  float Right()  const;
+  float Top()    const;
+  float Bottom() const;
+
  private:
   float m_left, m_right, m_top, m_bottom;
 };

@@ -618,6 +618,13 @@ namespace vapp {
     /* ... then render "middleground" sprites ... */
     _RenderSprites(false,false);
 
+    /* zones */
+    if(m_bUglyOverMode) {
+      for(unsigned int i=0; i<getGameObject()->getLevelSrc()->Zones().size(); i++) {
+	_RenderZone(getGameObject()->getLevelSrc()->Zones()[i]);
+      }
+    }
+
     /* ghosts */
     bool v_found = false;
     int v_found_i = 0;
@@ -1509,6 +1516,21 @@ namespace vapp {
     }
   }
 
+  void GameRenderer::_RenderZone(Zone *i_zone) {
+    ZonePrim *v_prim;
+    ZonePrimBox *v_primbox;
+
+    for(unsigned int i=0; i<i_zone->Prims().size(); i++) {
+      v_prim = i_zone->Prims()[i];
+      if(v_prim->Type() == LZPT_BOX) {
+	v_primbox = static_cast<ZonePrimBox*>(v_prim);
+	_RenderRectangle(Vector2f(v_primbox->Left(),  v_primbox->Top()),
+			 Vector2f(v_primbox->Right(), v_primbox->Bottom()),
+			 MAKE_COLOR(255, 0, 0, 255));
+      }
+    }
+  }
+
   /*===========================================================================
   Sky.
   ===========================================================================*/
@@ -1954,6 +1976,17 @@ namespace vapp {
     getParent()->getDrawLib()->endDraw();
   }
   
+  void GameRenderer::_RenderRectangle(const Vector2f& i_p1, const Vector2f& i_p2, const Color& i_color) {
+    getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
+    getParent()->getDrawLib()->setColor(i_color);
+    getParent()->getDrawLib()->glVertex(i_p1);
+    getParent()->getDrawLib()->glVertex(Vector2f(i_p2.x, i_p1.y));
+    getParent()->getDrawLib()->glVertex(i_p2);
+    getParent()->getDrawLib()->glVertex(Vector2f(i_p1.x, i_p2.y));
+    getParent()->getDrawLib()->glVertex(i_p1);
+    getParent()->getDrawLib()->endDraw();
+  }
+
   void GameRenderer::_RenderCircle(int nSteps,Color CircleColor,const Vector2f &C,float fRadius) {
     getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_LOOP);
     getParent()->getDrawLib()->setColor(CircleColor);
