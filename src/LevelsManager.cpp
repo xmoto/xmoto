@@ -827,7 +827,8 @@ void LevelsManager::addToFavorite(xmDatabase *i_db, std::string i_profile,
   /* check if the level is already into the favorite list */
   v_result = i_db->readDB("SELECT COUNT(id_level) "
 			  "FROM levels_favorite "
-			  "WHERE id_level=\"" + i_db->protectString(i_id_level) + "\";",
+			  "WHERE id_level=\""   + i_db->protectString(i_id_level) + "\" "
+			  "AND   id_profile=\"" + i_db->protectString(i_profile) + "\";",
 			  nrow);
   v_n = atoi(i_db->getResult(v_result, 1, 0, 0));
   i_db->read_DB_free(v_result);
