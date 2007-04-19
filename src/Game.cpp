@@ -81,6 +81,7 @@ GameApp::GameApp() {
   m_b50FpsMode = false;
   m_bUglyMode = false;
   m_bTestThemeMode = false;
+  m_bUglyOverMode  = false;
   m_pJustPlayReplay = NULL;
   m_updateAutomaticallyLevels = false;
   m_reloadingLevelsUser = false;
@@ -798,6 +799,16 @@ GameApp::GameApp() {
 	m_sysMsg.displayText(SYS_MSG_THEME_MODE_ENABLED);
       } else {
 	m_sysMsg.displayText(SYS_MSG_THEME_MODE_DISABLED);
+      }
+      return;        
+    }
+
+    if(nKey == SDLK_F11) {
+      switchUglyOverMode(!m_bUglyOverMode);
+      if(m_bUglyOverMode) {
+	m_sysMsg.displayText(SYS_MSG_UGLY_OVER_MODE_ENABLED);
+      } else {
+	m_sysMsg.displayText(SYS_MSG_UGLY_OVER_MODE_DISABLED);
       }
       return;        
     }
@@ -1908,6 +1919,11 @@ GameApp::GameApp() {
   void GameApp::switchTestThemeMode(bool mode) {
     m_bTestThemeMode = mode;
     m_Renderer.setTestThemeMode(m_bTestThemeMode);
+  }
+
+  void GameApp::switchUglyOverMode(bool mode) {
+    m_bUglyOverMode = mode;
+    m_Renderer.setUglyOverMode(m_bUglyOverMode);
   }
 
   void GameApp::setPrePlayAnim(bool pEnabled) {

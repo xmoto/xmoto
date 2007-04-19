@@ -149,6 +149,8 @@ namespace vapp {
       m_playerToFollow = NULL;
       m_showMinimap = true;
       m_showEngineCounter = true;
+      m_bTestThemeMode = false;
+      m_bUglyOverMode  = false;
     }
     ~GameRenderer() {_Free();}
     
@@ -172,6 +174,7 @@ namespace vapp {
     void setDebug(bool bDebug) {m_bDebug = bDebug;}
     void setUglyMode(bool bUglyMode) {m_bUglyMode = bUglyMode;}
     void setTestThemeMode(bool bTestThemeMode) {m_bTestThemeMode = bTestThemeMode;}
+    void setUglyOverMode(bool bUglyOverMode) {m_bUglyOverMode = bUglyOverMode;}
     bool isDebug(void) {return m_bDebug;}
     UIRoot *getGUI(void) {return &m_GUI;}
     UIFont *getSmallFont(void) {return m_pSFont;}
@@ -236,6 +239,7 @@ namespace vapp {
     bool m_bDebug;
     bool m_bUglyMode;
     bool m_bTestThemeMode;
+    bool m_bUglyOverMode;
     bool m_bCreditsMode;
 
     UIRoot m_GUI;                 /* GUI root */

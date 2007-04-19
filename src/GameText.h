@@ -565,13 +565,15 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define VPACKAGENAME_DESC_BEST_DRIVERS           _("Highscores by")
 #define VPACKAGENAME_DESC_MY_LEVELS              _("External levels (the one you put into the 'My levels' directory)")
 
-#define SYS_MSG_UGLY_MODE_ENABLED      _("Ugly mode enabled")
-#define SYS_MSG_UGLY_MODE_DISABLED     _("Ugly mode disabled")
-#define SYS_MSG_THEME_MODE_ENABLED     _("Theme mode enabled")
-#define SYS_MSG_THEME_MODE_DISABLED    _("Theme mode disabled")
-#define SYS_MSG_WWW_ENABLED   	       _("Web connexion enabled")
-#define SYS_MSG_WWW_DISABLED  	       _("Web connexion disabled")
-#define SYS_MSG_INTERPOLATION_ENABLED  _("Replay interpolation enabled")
-#define SYS_MSG_INTERPOLATION_DISABLED _("Replay interpolation disabled")
+#define SYS_MSG_UGLY_MODE_ENABLED      	_("Ugly mode enabled")
+#define SYS_MSG_UGLY_MODE_DISABLED     	_("Ugly mode disabled")
+#define SYS_MSG_THEME_MODE_ENABLED     	_("Theme mode enabled")
+#define SYS_MSG_THEME_MODE_DISABLED    	_("Theme mode disabled")
+#define SYS_MSG_UGLY_OVER_MODE_ENABLED  _("UglyOver mode enabled")
+#define SYS_MSG_UGLY_OVER_MODE_DISABLED _("UglyOver mode disabled")
+#define SYS_MSG_WWW_ENABLED   	       	_("Web connexion enabled")
+#define SYS_MSG_WWW_DISABLED  	       	_("Web connexion disabled")
+#define SYS_MSG_INTERPOLATION_ENABLED  	_("Replay interpolation enabled")
+#define SYS_MSG_INTERPOLATION_DISABLED 	_("Replay interpolation disabled")
 
 #endif
