@@ -1878,15 +1878,15 @@ msgstr "Niveaux X-Moto ayant un record ancien dans le salon"
 
 #: src/GameText.h:557
 msgid "You highscore finish time is or is almost the room highscore (95%)"
-msgstr "Votre est ou est presque celui du salon (95%)"
+msgstr "Votre record est presque celui du salon (95%)"
 
 #: src/GameText.h:558
 msgid "You highscore finish time is or is almost the room highscore (90%-95%)"
-msgstr "Votre est ou est presque celui du salon (90%-95%)"
+msgstr "Votre record est presque celui du salon (90%-95%)"
 
 #: src/GameText.h:559
 msgid "You highscore finish time is or is almost the room highscore (80%-90%)"
-msgstr "Votre est ou est presque celui du salon (80%-90%)"
+msgstr "Votre record est presque celui du salon (80%-90%)"
 
 #: src/GameText.h:560
 msgid "The room highscore is really better than your own highscore"
