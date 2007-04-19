@@ -49,7 +49,7 @@ namespace vapp {
     /* This function is called by the framework as fast as possible */
     bool bIsPaused = false;
     bool bDrawFPS = false;
-    
+
     /* Prepare frame rendering / game update */
     _PrepareFrame();    
 
