@@ -37,7 +37,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_32BPP                _("32 bits per pixel")
 #define GAMETEXT_44KHZ                _("44 kHz")
 #define GAMETEXT_8BIT                 _("8-bit")
-#define GAMETEXT_ABORT                _("Abort Playing")
+#define GAMETEXT_ABORT                _("Quit level")
 #define GAMETEXT_ADDTOFAVORITE       _("Add to favorite")
 #define GAMETEXT_ACTION               _("Action")
 #define GAMETEXT_ALL                  _("All (on this computer)")
