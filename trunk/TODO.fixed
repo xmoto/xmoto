@@ -10,6 +10,10 @@ Since 0.2.7
 * FEATURE : windows : there's some win32 API calls that can be made to determine the application data dir
 * pack : last levels
 * mettre à jour la liste du pack ouvert (ca le fait pas : mettre à jour que la ligne du niveau fini qd on finit un niveau)
+* http://bugs.debian.org/335514
+It's a bit confusing to be proposed to continue or abort playing when
+one has just finished the level. The ``abort'' one should be rather
+quit level'' or something like that.
 
 Since 0.2.6
 [21:33] <jj> the smoke is not always rendered at the sides of the screen

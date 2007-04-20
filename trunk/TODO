@@ -1,9 +1,21 @@
+For 0.3.0
 
-* mode ugly over normal
-* pas charger les textures en mode ugly (pas celle du background, ...)
+For nicolas
 * check highscores at startup, ca bug
+* keyboard for 4 players
+* script key on multiplayer : each player must have his own key
+* mode 2 joueurs : un message à celui qui gagne
+* several joypad (currently, joypack is available only for player 1)
+* when you choose keys : if a key is already attributed, it should assign it and set <unset> to the other one because it's not pleasant to have a message
+* meme si on ne télécharge pas tous les niveaux, mettre à jour le thème
+
+For Tod:
+* load into the graphic card only the blocks which will be displayed depending on the selected graphic quality.
+* multicamera
+* pas charger les textures en mode ugly (pas celle du background, ...)
 * ajouter la tete dans les zones
 
+===============
 [14:04] <keesj> I think it is a well knwn problem that every developer gets when spliting area's in two
 [14:05] <keesj> it's a pixel rounding problem
 [14:07] <keesj> http://www.gameprogrammer.com/5-poly.html
@@ -31,17 +43,8 @@ Called from:
 (20:27:08)  Roots:   puis opengl 
 (20:27:23)  Roots:   les niveaux faisant que 2.8%...
 
+* zoom in demos :)
 
-
-For 0.3.0
-
-4. zoom in demos :)
-
-For Tod:
-* load into the graphic card only the blocks which will be displayed depending on the selected graphic quality.
-* multicamera
-
-For Nicolas:
 * start game with menu music ; go in option; disable sound ; play a
    level ; abort -> the music start because sound is still enabled
 * document AddPenaltyTime et empecher de mettre une valeur négative
@@ -50,23 +53,11 @@ For Nicolas:
    d'état (exception) et du coup on tente de dessiner un monde qui
    n'existe plus => séparer le rendu des évènements à suivre
 * the following: if the player looks from rightto left, the leg is not correctly attached to the torso
-* keyboard for 4 players
-* script key on multiplayer : each player must have his own key
 * en mode replay, replay 53361 par exemple, quand on touche la fraise en meme temps que la fleur, la fraise n'eclate pas
-* mode 2 joueurs : un message à celui qui gagne
-* several joypad (currently, joypack is available only for player 1)
 * BUG : xmoto -replay bugs/onMacWontWork.rpl when you press forward on
    this scripted level, the elevator at the correct position
 * feature : a replay button when you finish a level (or die) which plays Latest.rpl
 * script : disable a key (brake for example, ...)
-* when you choose keys : if a key is already attributed, it should
-   assign it and set <unset> to the other one because it's not
-   pleasant to have a message
-* http://bugs.debian.org/335514
-It's a bit confusing to be proposed to continue or abort playing when
-one has just finished the level. The ``abort'' one should be rather
-quit level'' or something like that.
-* meme si on ne télécharge pas tous les niveaux, mettre à jour le thème
 
 ******************
 * flag sprite to add
