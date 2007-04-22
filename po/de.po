@@ -45,9 +45,8 @@ msgid "8-bit"
 msgstr "8-bit"
 
 #: src/GameText.h:40
-#, fuzzy
 msgid "Quit level"
-msgstr "Schoenste Levels"
+msgstr "Zum Hauptmenue"
 
 #: src/GameText.h:41
 msgid "Add to favorite"
@@ -112,9 +111,8 @@ msgid "Brake"
 msgstr "Bremse"
 
 #: src/GameText.h:58
-#, fuzzy
 msgid "Brake 2"
-msgstr "Bremse"
+msgstr "Bremse (Spieler 2)"
 
 #: src/GameText.h:59
 msgid "Built-In Levels"
@@ -153,9 +151,8 @@ msgid "Change direction"
 msgstr "Richtung wechseln"
 
 #: src/GameText.h:68
-#, fuzzy
 msgid "Change direction 2"
-msgstr "Richtung wechseln"
+msgstr "Richtung wechseln (Spieler 2)"
 
 #: src/GameText.h:69
 msgid "Change Key..."
@@ -182,7 +179,6 @@ msgid "Controls"
 msgstr "Steuerung"
 
 #: src/GameText.h:75
-#, fuzzy
 msgid ""
 "Lead Programming:Rasmus Neckelmann;:Nicolas Adenis-Lamarre;:Emmanuel Gorse;:"
 "Kees Jongenburger;:;Additional Programming:Eric Piel;:Christoph Sommer;:"
@@ -202,21 +198,22 @@ msgid ""
 "girl);:Everyone who have made levels;:People who have provided bug reports;:"
 "Anyone who has helped in any way;"
 msgstr ""
-"Leitende Programmierung:Rasmus Neckelmann;:Nicolas Adenis-Lamarre;:;Weitere "
-"Programmierung:Eric Piel;:Emmanuel Gorse;:Christoph Sommer;:Frederic Huard;:;"
-"Grafik:Rasmus Neckelmann;:;Audio:Jens Erler;:Brandon Ross;:;Eingebaute "
-"Levels:Rasmus Neckelmann;:Pasi Kallinen;:Germain Gagnerot;:Clive Crous;:"
-"Torben Green;:Thomas Kjaerulff;:;MacOS X Support:Dave Vasilevsky;:Maxime "
-"Biais;:;Websiteprogrammierung:Nicolas Adenis-Lamarre;:Nx;:;"
-"Websiteadministration:Nicolas Adenis-Lamarre;:Valentin;:Nx;:Alrj;:;"
-"Websiteuebersetzung:Felix Schl;:Nicolas Adenis-Lamarre;:Trullo;:Afaland;:Jj;:"
-"Vertigo;:Pol Vinogradov;:;Forum:Valentin;:;Haupttester:Jose Alberto Coelho;:"
-"Frederic Huard;:;Danke an:SnowBear (KDE/Gnome-Integration);:Jonathan Sieber "
-"(Deutsche Uebersetzung);:Samuel Mimram(Debianpakete);:Dark (Gentoopakete);:"
-"Olivier Blin (Mandrivapakete);:Balazs Rozsa (across/elma);:Yves Berquin "
-"(tinyxml);:L. Peter Deutsch (MD5-code);:Petter Reinholdtsen;:Jes Vestervang "
-"(Webspace);:Kenneth;:Jeder der Levels gemacht hat;:Alle Leute die Fehler "
-"berichtet haben;:Jeder der in irgendeiner Weise geholfen hat;"
+"Leitende Programmierung:Rasmus Neckelmann;:Nicolas Adenis-Lamarre;:Emmanuel "
+"Gorse;:Kees Jongenburger;:;Weitere Programmierung:Eric Piel;:Christoph "
+"Sommer;:Frederic Huard;:Brice Goglin;:;Grafik:Rasmus Neckelmann;:Jens "
+"Erler;:;Audio:Jens Erler;:Brandon Ross;:;Eingebaute Levels:Rasmus "
+"Neckelmann;:Pasi Kallinen;:Germain Gagnerot;:Clive Crous;:Torben Green;:"
+"Thomas Kjaerulff;:;MacOS X Support:Dave Vasilevsky;:Maxime Biais;:;Website-"
+"Programmierung:Nicolas Adenis-Lamarre;:Nx;:;Website-Administration:Nicolas "
+"Adenis-Lamarre;:Valentin;:Nx;:Alrj;:;Website-Uebersetzung:Felix Schlitter;:"
+"Nicolas Adenis-Lamarre;:Trullo;:Afaland;:Jj;:Vertigo;:Pol Vinogradov;:;Forum:"
+"Valentin;:;Haupttester:Jose Alberto Coelho;:Frederic Huard;:;Danke an:"
+"SnowBear (KDE/Gnome-Integration);:Jonathan Sieber (Deutsche Uebersetzung);:"
+"Samuel Mimram(Debian-Pakete);:Dark (Gentoo-Pakete);:Olivier Blin (Mandriva-"
+"Pakete);:Balazs Rozsa (across/elma);:Yves Berquin (tinyxml);:L. Peter "
+"Deutsch (MD5-code);:Petter Reinholdtsen;:Jes Vestervang (Webspace);:"
+"Kenneth;:;Jeden, der Levels beigetragen hat,;:an alle, die Fehler berichtet "
+"haben,;:jeden, der in irgendeiner Weise geholfen hat!;"
 
 #: src/GameText.h:136
 msgid "Credits"
@@ -232,15 +229,15 @@ msgstr "Datum"
 
 #: src/GameText.h:139
 msgid "Upgrading database"
-msgstr ""
+msgstr "Datenbank wird aktualisiert"
 
 #: src/GameText.h:140
 msgid "Upgrading database stats for the profile"
-msgstr ""
+msgstr "Datenbank wird aktualisiert"
 
 #: src/GameText.h:141
 msgid "Upgrading database profile"
-msgstr ""
+msgstr "Datenbank wird aktualisiert"
 
 #: src/GameText.h:142
 msgid "Death Animation"
@@ -331,9 +328,8 @@ msgid "Drive"
 msgstr "Beschleunigen"
 
 #: src/GameText.h:163
-#, fuzzy
 msgid "Drive 2"
-msgstr "Beschleunigen"
+msgstr "Beschleunigen (Spieler 2)"
 
 #: src/GameText.h:164
 msgid "Enable Audio"
@@ -480,18 +476,16 @@ msgid "Flip left"
 msgstr "Links drehen"
 
 #: src/GameText.h:192
-#, fuzzy
 msgid "Flip left 2"
-msgstr "Links drehen"
+msgstr "Links drehen (Spieler 2)"
 
 #: src/GameText.h:193
 msgid "Flip right"
 msgstr "Rechts drehen"
 
 #: src/GameText.h:194
-#, fuzzy
 msgid "Flip right 2"
-msgstr "Rechts drehen"
+msgstr "Rechts drehen (Spieler 2)"
 
 #: src/GameText.h:195
 msgid "Game Graphics"
@@ -511,11 +505,11 @@ msgstr "Dieses Theme holen"
 
 #: src/GameText.h:199
 msgid "Local best"
-msgstr ""
+msgstr "Lokale beste"
 
 #: src/GameText.h:200
 msgid "Your best"
-msgstr ""
+msgstr "Deine beste"
 
 #: src/GameText.h:201
 msgid "Type"
@@ -651,7 +645,7 @@ msgstr "ENTER druecken fuer neuen Versuch"
 
 #: src/GameText.h:236
 msgid "Press ESC to display the menu"
-msgstr "ESC druecken um Menue anzuzeigen"
+msgstr "ESC druecken, um das Menue anzuzeigen"
 
 #: src/GameText.h:237
 msgid "Key"
@@ -674,9 +668,9 @@ msgid "Level Name"
 msgstr "Level-Name"
 
 #: src/GameText.h:242
-#, fuzzy, c-format
+#, c-format
 msgid "Level '%s' cannot be loaded"
-msgstr "Level %s nicht gefunden!"
+msgstr "Level '%s' nicht gefunden!"
 
 #: src/GameText.h:243
 msgid "Level Pack"
@@ -689,7 +683,7 @@ msgstr "Level-Pakete"
 #: src/GameText.h:245
 #, c-format
 msgid "Level '%s' required by replay!"
-msgstr "Level %s wird von dem Replay benoetigt"
+msgstr "Level '%s' wird von dem Replay benoetigt"
 
 #: src/GameText.h:246
 msgid "Levels"
@@ -1731,20 +1725,19 @@ msgstr "Liste durch Eingabe von Namensbestandteilen einschraenken"
 
 #: src/GameText.h:510
 msgid "Choose the number of players"
-msgstr "Wähle die Spieler-Anzahl"
+msgstr "Waehle die Spieler-Anzahl"
 
 #: src/GameText.h:511
 msgid "Your login in the room"
-msgstr ""
+msgstr "Dein Login fuer den Raum"
 
 #: src/GameText.h:512
 msgid "Your password associated with your login"
-msgstr ""
+msgstr "Das Passwort fuer dein Login"
 
 #: src/GameText.h:513
-#, fuzzy
 msgid "Filter on replay list"
-msgstr "Initialisieren des Replays fehlgeschlagen!"
+msgstr "Filter fuer Replays"
 
 #: src/GameText.h:515
 msgid "Levels with no highscore"
@@ -1759,9 +1752,8 @@ msgid "You're not the highscore holder"
 msgstr "Du bist nicht der Rekordhalter"
 
 #: src/GameText.h:519
-#, fuzzy
 msgid "New and updated levels"
-msgstr "Aktualisierte Level"
+msgstr "Neue und aktualisierte Levels"
 
 #: src/GameText.h:520
 msgid "Favorite levels"
@@ -1804,152 +1796,140 @@ msgid "Less played levels (but played)"
 msgstr "Am wenigsten gespielte Levels"
 
 #: src/GameText.h:531
-#, fuzzy
 msgid "Last highscores"
-msgstr "Bestzeit hochladen"
+msgstr "Letzte Bestzeiten"
 
 #: src/GameText.h:532
-#, fuzzy
 msgid "Last levels"
-msgstr "Schwerste Levels"
+msgstr "Letzte Levels"
 
 #: src/GameText.h:533
-#, fuzzy
 msgid "Oldest highscores"
-msgstr "Bestzeit hochladen"
+msgstr "Aelteste Bestzeiten"
 
 #: src/GameText.h:534
 msgid "Platinium"
-msgstr ""
+msgstr "Platin"
 
 #: src/GameText.h:535
 msgid "Gold"
-msgstr ""
+msgstr "Gold"
 
 #: src/GameText.h:536
-#, fuzzy
 msgid "Silver"
-msgstr "Filter"
+msgstr "Silber"
 
 #: src/GameText.h:537
 msgid "Bronze"
-msgstr ""
+msgstr "Bronze"
 
 #: src/GameText.h:538
 msgid "No medal"
-msgstr ""
+msgstr "Keine Medaille"
 
 #: src/GameText.h:539
-#, fuzzy
 msgid "My levels"
-msgstr "Alle Level"
+msgstr "Meine Level"
 
 #: src/GameText.h:541
-#, fuzzy
 msgid "Levels with no highscore in you room"
-msgstr "Levels ohne Rekord"
+msgstr "Levels ohne Bestzeiten im Raum"
 
 #: src/GameText.h:543
 msgid "Somebody in the room made a better highscore than yours"
-msgstr ""
+msgstr "Jemand in dem Raum hat bereits eine bessere Bestzeit erzielt"
 
 #: src/GameText.h:544
-#, fuzzy
 msgid "All X-Moto levels"
 msgstr "Alle Level"
 
 #: src/GameText.h:545
-#, fuzzy
 msgid "New and updated levels since your last check"
-msgstr "Aktualisierte Level"
+msgstr "Neue und aktualisierte Levels"
 
 #: src/GameText.h:546
-#, fuzzy
 msgid "Your favorite levels"
 msgstr "Favoriten"
 
 #: src/GameText.h:547
 msgid "Nicest X-Moto levels according to the web votes"
-msgstr ""
+msgstr "Schoenste Levels (nach Web-Abstimmung)"
 
 #: src/GameText.h:548
 msgid "Hardest X-Moto levels according to the web votes"
-msgstr ""
+msgstr "Schwerste Levels (nach Web-Abstimmung)"
 
 #: src/GameText.h:549
 msgid "Easiest X-Moto levels according to the web votes"
-msgstr ""
+msgstr "Einfachste Levels (Nach Web-Abstimmung)"
 
 #: src/GameText.h:550
 msgid "Crapiest X-Moto levels according to the web votes"
-msgstr ""
+msgstr "Schrottigste Levels (nach Web-Abstimmung)"
 
 #: src/GameText.h:551
 msgid "X-Moto levels which are dynamic"
-msgstr ""
+msgstr "Levels mit Bewegungselementen"
 
 #: src/GameText.h:552
 msgid "X-Moto levels with a background music"
-msgstr ""
+msgstr "Level mit Begleitmusik"
 
 #: src/GameText.h:553
 msgid "X-Moto levels you never played"
-msgstr ""
+msgstr "Nie gespielte Levels"
 
 #: src/GameText.h:554
 msgid "X-Moto levels you have played the most"
-msgstr ""
+msgstr "Meistgespielte Levels"
 
 #: src/GameText.h:555
 msgid "X-Moto levels you have played only a few times"
-msgstr ""
+msgstr "Selten gespielte Levels"
 
 #: src/GameText.h:556
 msgid "X-Moto levels having a recent highscore in you room"
-msgstr ""
+msgstr "Levels mit aktueller Bestzeit im Raum"
 
 #: src/GameText.h:557
 msgid "Last created X-Moto levels"
-msgstr ""
+msgstr "Zuletzt erstellte Levels"
 
 #: src/GameText.h:558
 msgid "X-Moto levels having an old highscore in you room"
-msgstr ""
+msgstr "Levels mit alter Bestzeit im Raum"
 
 #: src/GameText.h:559
-#, fuzzy
 msgid "You have the room highscore"
-msgstr "Bestzeit anzeigen"
+msgstr "Du bist Rekord-Halter im Raum"
 
 #: src/GameText.h:560
 msgid "You highscore finish time is almost the room highscore (95%)"
-msgstr ""
+msgstr "Deine Bestzeit ist beinahe der Rekord des Raums (95%)"
 
 #: src/GameText.h:561
 msgid "You highscore finish time is almost the room highscore (90%-95%)"
-msgstr ""
+msgstr "Deine Bestzeit ist beinahe der Rekord des Raums (90%-95%)"
 
 #: src/GameText.h:562
 msgid "You highscore finish time is almost the room highscore (80%-90%)"
-msgstr ""
+msgstr "Deine Bestzeit ist beinahe der Rekord des Raums (80%-90%)"
 
 #: src/GameText.h:563
 msgid "The room highscore is really better than your own highscore"
-msgstr ""
+msgstr "Der Rekord des Raumes liegt weit ueber deiner Bestzeit"
 
 #: src/GameText.h:564
-#, fuzzy
 msgid "Level pack"
 msgstr "Level-Paket"
 
 #: src/GameText.h:565
-#, fuzzy
 msgid "Highscores by"
-msgstr "Bestzeit hochladen"
+msgstr "Bestzeit von"
 
 #: src/GameText.h:566
 msgid "External levels (the one you put into the 'My levels' directory)"
-msgstr ""
+msgstr "Externe Levels (eigenstaendig im 'My Levels' Ordner platziert)"
 
 #: src/GameText.h:568
 msgid "Ugly mode enabled"
@@ -1968,12 +1948,10 @@ msgid "Theme mode disabled"
 msgstr "Themen-Modus deaktiviert"
 
 #: src/GameText.h:572
-#, fuzzy
 msgid "UglyOver mode enabled"
 msgstr "Strich-modus aktiviert"
 
 #: src/GameText.h:573
-#, fuzzy
 msgid "UglyOver mode disabled"
 msgstr "Strich-Modus deaktiviert"
 
