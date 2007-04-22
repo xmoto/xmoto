@@ -354,18 +354,18 @@ namespace vapp {
         /* Draw rider upper leg */
         Sv = pBike->LowerBody2P - pBike->Knee2P;
         Sv.normalize();         
-        p0 = pBike->LowerBody2P + Vector2f(-Sv.y,Sv.x)*0.20f + Sv*0.14f;
-        p1 = pBike->Knee2P + Vector2f(-Sv.y,Sv.x)*0.15f + Sv*0.0f;
-        p2 = pBike->Knee2P - Vector2f(-Sv.y,Sv.x)*0.15f + Sv*0.0f;
-        p3 = pBike->LowerBody2P - Vector2f(-Sv.y,Sv.x)*0.1f + Sv*0.14f;
+        p0 = pBike->LowerBody2P - Vector2f(-Sv.y,Sv.x)*0.20f + Sv*0.14f;
+        p1 = pBike->Knee2P - Vector2f(-Sv.y,Sv.x)*0.15f + Sv*0.0f;
+        p2 = pBike->Knee2P + Vector2f(-Sv.y,Sv.x)*0.15f + Sv*0.0f;
+        p3 = pBike->LowerBody2P + Vector2f(-Sv.y,Sv.x)*0.1f + Sv*0.14f;
 
-	      pSprite = p_theme->getUpperLeg();
-	      if(pSprite != NULL) {
-	        pTexture = pSprite->getTexture();
-	        if(pTexture != NULL) {
-	          _RenderAlphaBlendedSection(pTexture,p3,p2,p1,p0, i_filterColor);        
-	        }
-	      }
+	pSprite = p_theme->getUpperLeg();
+	if(pSprite != NULL) {
+	  pTexture = pSprite->getTexture();
+	  if(pTexture != NULL) {
+	    _RenderAlphaBlendedSection(pTexture,p0,p1,p2,p3, i_filterColor);        
+	  }
+	}
 
         /* Draw rider lower leg */
         Sv = pBike->Knee2P - pBike->Foot2P;

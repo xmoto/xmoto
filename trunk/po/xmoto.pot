@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-04-19 22:51+0200\n"
+"POT-Creation-Date: 2007-04-22 20:19+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -45,7 +45,7 @@ msgid "8-bit"
 msgstr ""
 
 #: src/GameText.h:40
-msgid "Abort Playing"
+msgid "Quit level"
 msgstr ""
 
 #: src/GameText.h:41

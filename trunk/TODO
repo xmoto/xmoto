@@ -59,7 +59,6 @@ Called from:
    fait que dans drawFrame, dans un case GS_PREPLAY, on peut changer
    d'état (exception) et du coup on tente de dessiner un monde qui
    n'existe plus => séparer le rendu des évènements à suivre
-* the following: if the player looks from rightto left, the leg is not correctly attached to the torso
 * en mode replay, replay 53361 par exemple, quand on touche la fraise en meme temps que la fleur, la fraise n'eclate pas
 * BUG : xmoto -replay bugs/onMacWontWork.rpl when you press forward on
    this scripted level, the elevator at the correct position
@@ -106,8 +105,6 @@ Assigned to nicolas
 * keesj:test the SDL_gfx version on windows/mac
 * keesj:faster startup , smart caching etc system must run under 64 MB :)
 * keesj:define code conventions,testing procedures,release-roadbook
-
-* '50 most played levels'/least : virtual package
 * a keyboard key for next level
 * reload theme done, require tests, and some sprites (like mouse, main menu background) are not updated i suppose
 * Sometimes when the edges of the levels are reached (for instance when being at a corner of a level), the
