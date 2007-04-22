@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-04-19 22:51+0200\n"
+"POT-Creation-Date: 2007-04-22 20:19+0200\n"
 "PO-Revision-Date: 2006-09-04 19:52+0100\n"
 "Last-Translator: Nicolas Adenis-Lamarre\n"
 "Language-Team: X-Moto\n"
@@ -39,8 +39,9 @@ msgid "8-bit"
 msgstr "8-bit"
 
 #: src/GameText.h:40
-msgid "Abort Playing"
-msgstr "Arreter la partie"
+#, fuzzy
+msgid "Quit level"
+msgstr "Niveaux les plus beaux"
 
 #: src/GameText.h:41
 msgid "Add to favorite"
@@ -1962,3 +1963,6 @@ msgstr "Interpolation activee"
 #: src/GameText.h:577
 msgid "Replay interpolation disabled"
 msgstr "Interpolation desactivee"
+
+#~ msgid "Abort Playing"
+#~ msgstr "Arreter la partie"

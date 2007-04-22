@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-04-19 22:51+0200\n"
+"POT-Creation-Date: 2007-04-22 20:19+0200\n"
 "PO-Revision-Date: 2007-02-27 23:26+0100\n"
 "Last-Translator: Jozef Riha <jose1711@gmail.com\n"
 "Language-Team:  <sk@li.org>\n"
@@ -46,8 +46,9 @@ msgid "8-bit"
 msgstr "8-bit"
 
 #: src/GameText.h:40
-msgid "Abort Playing"
-msgstr "Zrusit hru"
+#, fuzzy
+msgid "Quit level"
+msgstr "Najkrajsie levely"
 
 #: src/GameText.h:41
 msgid "Add to favorite"
@@ -1981,6 +1982,9 @@ msgstr ""
 #: src/GameText.h:577
 msgid "Replay interpolation disabled"
 msgstr ""
+
+#~ msgid "Abort Playing"
+#~ msgstr "Zrusit hru"
 
 #~ msgid "Last"
 #~ msgstr "Posledny"
