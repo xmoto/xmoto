@@ -238,7 +238,7 @@ GameApp::GameApp() {
 	    if(m_pCredits == NULL)
 	      m_pCredits = new Credits;
 	    
-	    m_pCredits->init(m_replayBiker->getFinishTime(),4,4,GAMETEXT_CREDITS);
+	    m_pCredits->init(m_replayBiker->getFinishTime(),4,4,std::string(GAMETEXT_CREDITS).c_str());
 	  }
 
 	  /* Fine, open the level */
