@@ -140,6 +140,7 @@ namespace vapp {
     /* database */
     m_db = new xmDatabase(DATABASE_FILE,
 			  m_profile == "" ? std::string("") : m_profile,
+			  FS::getDataDir(), FS::getUserDir(), 
 			  getDrawLib()->isNoGraphics() ? NULL : this);
     if(m_sqlTrace) {
       m_db->setTrace(m_sqlTrace);
@@ -154,7 +155,15 @@ namespace vapp {
     if(m_db->themes_isIndexUptodate() == false) {
       m_themeChoicer->initThemesFromDir(m_db);
     }
-    reloadTheme();
+    try {
+      reloadTheme();
+    } catch(Exception &e) {
+      /* if the theme cannot be loaded, try to reload from files */
+      /* perhaps that the xm.db comes from an other computer */
+      Log("** warning ** : Theme cannot be reload, try to update themes into the database");
+      m_themeChoicer->initThemesFromDir(m_db);
+      reloadTheme();
+    }
 
     m_loadingScreen = NULL;
     if(!getDrawLib()->isNoGraphics()) {    
