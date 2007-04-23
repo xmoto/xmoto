@@ -72,67 +72,74 @@ Central place to keep many in-game text strings
 #define GAMETEXT_CLOSE                _("Close")
 #define GAMETEXT_CONFIGUREJOYSTICK    _("Configure Joystick...")
 #define GAMETEXT_CONTROLS             _("Controls")
-#define GAMETEXT_CREDITS              _("Lead Programming:Rasmus Neckelmann;" \
-                                        ":Nicolas Adenis-Lamarre;" \
-                                        ":Emmanuel Gorse;" \
-                                        ":Kees Jongenburger;" \
-                                        ":;" \
-                                        "Additional Programming:Eric Piel;" \
-                                        ":Christoph Sommer;" \
-                                        ":Frederic Huard;" \
-                                        ":Brice Goglin;" \
-                                        ":;" \
-                                        "Graphics:Rasmus Neckelmann;" \
-                                        ":Jens Erler;" \
-                                        ":;" \
-                                        "Audio:Jens Erler;" \
-                                        ":Brandon Ross;" \
-                                        ":;" \
-                                        "Built-in Levels:Rasmus Neckelmann;" \
-                                        ":Pasi Kallinen;" \
-                                        ":Germain Gagnerot;" \
-                                        ":Clive Crous;" \
-                                        ":Torben Green;" \
-                                        ":Thomas Kjaerulff;" \
-                                        ":;" \
-                                        "MacOS X Support:Dave Vasilevsky;" \
-                                        ":Maxime Biais;" \
-                                        ":;" \
-                                        "Website Programming:Nicolas Adenis-Lamarre;" \
-                                        ":Nx;" \
-                                        ":;" \
-                                        "Website Administration:Nicolas Adenis-Lamarre;" \
-                                        ":Valentin;" \
-                                        ":Nx;" \
-                                        ":Alrj;" \
-                                        ":;" \
-                                        "Website Localization:Felix Schl;" \
-                                        ":Nicolas Adenis-Lamarre;" \
-                                        ":Trullo;" \
-                                        ":Afaland;" \
-                                        ":Jj;" \
-                                        ":Vertigo;" \
-                                        ":Pol Vinogradov;" \
-                                        ":;" \
-                                        "Forum:Valentin;" \
-                                        ":;" \
-                                        "Main testers:Jose Alberto Coelho;" \
-                                        ":Frederic Huard;" \
-                                        ":;" \
-                                        "Thanks to:SnowBear (for KDE/gnome integration);" \
-                                        ":Jonathan Sieber (for german translation);"\
-                                        ":Samuel Mimram (for Debian packaging);" \
-                                        ":Dark (for Gentoo packaging);" \
-                                        ":Olivier Blin (for Mandriva packaging);" \
-                                        ":Balazs Rozsa (for across/elma);" \
-                                        ":Yves Berquin (for making tinyxml);" \
-                                        ":L. Peter Deutsch (for the MD5 code);" \
-                                        ":Petter Reinholdtsen;" \
-                                        ":Jes Vestervang (for providing web space);" \
-                                        ":Kenneth (for being such a little girl);"\
-                                        ":Everyone who have made levels;" \
-                                        ":People who have provided bug reports;" \
-                                        ":Anyone who has helped in any way;")                                        
+
+#define GAMETEXT_CREDITS                                                                     \
+  std::string(_("Lead Programming")) +                                                       \
+    ":Rasmus Neckelmann;"                                                                    \
+    ":Nicolas Adenis-Lamarre;"                                                               \
+    ":Emmanuel Gorse;"                                                                       \
+    ":Kees Jongenburger;"                                                                    \
+    ":;"                                                                                     \
+    + std::string(_("Additional Programming")) +                                             \
+    ":Eric Piel;"                                                                            \
+    ":Christoph Sommer;"                                                                     \
+    ":Frederic Huard;"                                                                       \
+    ":Brice Goglin;"                                                                         \
+    ":;"                                                                                     \
+    + std::string(_("Graphics")) +                                                           \
+    ":Rasmus Neckelmann;"                                                                    \
+    ":Jens Erler;"                                                                           \
+    ":;"                                                                                     \
+    + std::string(_("Audio")) +                                                              \
+    ":Jens Erler;"                                                                           \
+    ":Brandon Ross;"                                                                         \
+    ":;"                                                                                     \
+    + std::string(_("MacOS X Support")) +                                                    \
+    ":Dave Vasilevsky;"                                                                      \
+    ":Maxime Biais;"                                                                         \
+    ":;"                                                                                     \
+    + std::string(_("Website Programming")) +                                                \
+    ":Nicolas Adenis-Lamarre;"                                                               \
+    ":Nx;"                                                                                   \
+    ":;"                                                                                     \
+    + std::string(_("Website Administration")) +                                             \
+    ":Nicolas Adenis-Lamarre;"                                                               \
+    ":Valentin;"                                                                             \
+    ":Nx;"                    	                                                             \
+    ":Alrj;"                  	                                                             \
+    ":;"                      	                                                             \
+    + std::string(_("Website Localization")) +                                               \
+    ":Felix Schl;"                                                                           \
+    ":Nicolas Adenis-Lamarre;"                                                               \
+    ":Trullo;"                                                                               \
+    ":Afaland;"                                                                              \
+    ":Jj;"                                                                                   \
+    ":Vertigo;"                                                                              \
+    ":Pol Vinogradov;"                                                                       \
+    ":;"                                                                                     \
+    + std::string(_("Forum")) +                                                              \
+    ":Valentin;"                                                                             \
+    ":;"                                                                                     \
+    + std::string(_("Main testers")) +                                                       \
+    ":Jose Alberto Coelho;"                                                                  \
+    ":Frederic Huard;"                                                                       \
+    ":;"                                                                                     \
+    + std::string(_("Thanks to")) +                                                          \
+    ":SnowBear ("           + std::string(_("for KDE/gnome integration")) 	     + ");"  \
+    ":Jonathan Sieber ("    + std::string(_("for german translation"))    	     + ");"  \
+    ":Samuel Mimram ("      + std::string(_("for Debian packaging"))      	     + ");"  \
+    ":Dark ("               + std::string(_("for Gentoo packaging"))      	     + ");"  \
+    ":Olivier Blin (" 	    + std::string(_("for Mandriva packaging"))    	     + ");"  \
+    ":Balazs Rozsa (" 	    + std::string(_("for across/elma"))           	     + ");"  \
+    ":Yves Berquin (" 	    + std::string(_("for making tinyxml"))        	     + ");"  \
+    ":L. Peter Deutsch ("   + std::string(_("for the MD5 code"))          	     + ");"  \
+    ":Petter Reinholdtsen;"                                                                  \
+    ":Jes Vestervang ("     + std::string(_("for providing web space"))              + ");"  \
+    ":Kenneth ("            + std::string(_("for being such a little girl"))         + ");"  \
+    ":" 		    + std::string(_("Everyone who have made levels"))        + ";"   \
+    ":" 		    + std::string(_("People who have provided bug reports")) + ";"   \
+    ":" 		    + std::string(_("Anyone who has helped in any way"))     + ";"
+
 #define GAMETEXT_CREDITSBUTTON        _("Credits")
 #define GAMETEXT_CURPLAYER            _("Player")
 #define GAMETEXT_DATE                 _("Date")

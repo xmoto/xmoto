@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -28,6 +27,52 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Renderer.h"
 
 namespace vapp {
+
+  void GameRenderer::renderBodyPart(const Vector2f& i_from, const Vector2f& i_to,
+				    float i_c11, float i_c12,
+				    float i_c21, float i_c22,
+				    float i_c31, float i_c32,
+				    float i_c41, float i_c42,
+				    Sprite *i_sprite,
+				    const TColor& i_filterColor,
+				    DriveDir i_direction,
+				    int i_90_rotation
+				    ) {
+    Texture *pTexture;
+    Vector2f Sv;
+    Vector2f p0, p1, p2, p3;
+
+    if(i_sprite == NULL) return;
+    pTexture = i_sprite->getTexture();
+    if(pTexture == NULL) return;
+
+    Sv = i_from - i_to;
+    Sv.normalize();
+
+    if(i_direction == DD_RIGHT) {
+      p0 = i_from + Vector2f(-Sv.y, Sv.x) * i_c11 + Sv * i_c12;
+      p1 = i_to   + Vector2f(-Sv.y, Sv.x) * i_c21 + Sv * i_c22;
+      p2 = i_to   - Vector2f(-Sv.y, Sv.x) * i_c31 + Sv * i_c32;
+      p3 = i_from - Vector2f(-Sv.y, Sv.x) * i_c41 + Sv * i_c42;
+    } else {
+      p0 = i_from - Vector2f(-Sv.y, Sv.x) * i_c11 + Sv * i_c12;
+      p1 = i_to   - Vector2f(-Sv.y, Sv.x) * i_c21 + Sv * i_c22;
+      p2 = i_to   + Vector2f(-Sv.y, Sv.x) * i_c31 + Sv * i_c32;
+      p3 = i_from + Vector2f(-Sv.y, Sv.x) * i_c41 + Sv * i_c42;
+    }
+
+    switch(i_90_rotation) {
+      case 0:
+      _RenderAlphaBlendedSection(pTexture, p1, p2, p3, p0, i_filterColor);
+      break;
+      case 1:
+      _RenderAlphaBlendedSection(pTexture, p0, p1, p2, p3, i_filterColor);
+      break;
+      case 2:
+      _RenderAlphaBlendedSection(pTexture, p3, p2, p1, p0, i_filterColor);
+      break;
+    }
+  }
 
   /*===========================================================================
   Rendering of the bike
@@ -229,90 +274,71 @@ namespace vapp {
       }
     }
 
-    /* Draw rider */        
+      /* Draw rider */
+    if(m_bUglyMode == false) { 
+      /* torso */
+      renderBodyPart(pBike->Dir == DD_RIGHT ? pBike->ShoulderP  : pBike->Shoulder2P,
+		     pBike->Dir == DD_RIGHT ? pBike->LowerBodyP : pBike->LowerBody2P,
+		     0.24, 0.46,
+		     0.24, -0.1,
+		     0.24, -0.1,
+		     0.24, 0.46,
+		     p_theme->getTorso(),
+		     i_filterColor,
+		     pBike->Dir
+		     );
+
+      /* upper leg */
+      renderBodyPart(pBike->Dir == DD_RIGHT ? pBike->LowerBodyP : pBike->LowerBody2P,
+		     pBike->Dir == DD_RIGHT ? pBike->KneeP      : pBike->Knee2P,
+		     0.20, 0.14,
+		     0.15, 0.00,
+		     0.15, 0.00,
+		     0.10, 0.14,
+		     p_theme->getUpperLeg(),
+		     i_filterColor,
+		     pBike->Dir, 1
+		     );
+
+      /* lower leg */
+      renderBodyPart(pBike->Dir == DD_RIGHT ? pBike->KneeP : pBike->Knee2P,
+		     pBike->Dir == DD_RIGHT ? pBike->FootP : pBike->Foot2P,
+		     0.23, 0.01,
+		     0.20, 0.00,
+		     0.20, 0.00,
+		     0.23, 0.10,
+		     p_theme->getLowerLeg(),
+		     i_filterColor,
+		     pBike->Dir
+		     );
+
+      /* upper arm */
+      renderBodyPart(pBike->Dir == DD_RIGHT ? pBike->ShoulderP : pBike->Shoulder2P,
+		     pBike->Dir == DD_RIGHT ? pBike->ElbowP    : pBike->Elbow2P,
+		     0.12, 0.09,
+		     0.12, -0.05,
+		     0.10, -0.05,
+		     0.10, 0.09,
+		     p_theme->getUpperArm(),
+		     i_filterColor,
+		     pBike->Dir
+		     );
+
+      /* lower arm */
+      renderBodyPart(pBike->Dir == DD_RIGHT ? pBike->ElbowP : pBike->Elbow2P,
+		     pBike->Dir == DD_RIGHT ? pBike->HandP  : pBike->Hand2P,
+		     0.12, 0.09,
+		     0.12, -0.05,
+		     0.10, -0.05,
+		     0.10, 0.09,
+		     p_theme->getLowerArm(),
+		     i_filterColor,
+		     pBike->Dir, 2
+		     );
+
+    }
+
     if(pBike->Dir == DD_RIGHT) {
-      if(m_bUglyMode == false) {    
-        /* Draw rider torso */
-        Sv = pBike->ShoulderP - pBike->LowerBodyP;
-        Sv.normalize();         
-        p0 = pBike->ShoulderP + Vector2f(-Sv.y,Sv.x)*0.24f + Sv*0.46f;
-        p1 = pBike->LowerBodyP + Vector2f(-Sv.y,Sv.x)*0.24f - Sv*0.1f;
-        p2 = pBike->LowerBodyP - Vector2f(-Sv.y,Sv.x)*0.24f - Sv*0.1f;
-        p3 = pBike->ShoulderP - Vector2f(-Sv.y,Sv.x)*0.24f + Sv*0.46f;
-
-	      pSprite = p_theme->getTorso();
-	      if(pSprite != NULL) {
-	        pTexture = pSprite->getTexture();
-	        if(pTexture != NULL) {
-	          _RenderAlphaBlendedSection(pTexture,p1,p2,p3,p0, i_filterColor);
-	        }
-	      }        
-
-        /* Draw rider upper leg */
-        Sv = pBike->LowerBodyP - pBike->KneeP;
-        Sv.normalize();         
-        p0 = pBike->LowerBodyP + Vector2f(-Sv.y,Sv.x)*0.20f + Sv*0.14f;
-        p1 = pBike->KneeP + Vector2f(-Sv.y,Sv.x)*0.15f + Sv*0.0f;
-        p2 = pBike->KneeP - Vector2f(-Sv.y,Sv.x)*0.15f + Sv*0.0f;
-        p3 = pBike->LowerBodyP - Vector2f(-Sv.y,Sv.x)*0.1f + Sv*0.14f;
-
-	      pSprite = p_theme->getUpperLeg();
-	      if(pSprite != NULL) {
-	        pTexture = pSprite->getTexture();
-	        if(pTexture != NULL) {
-	          _RenderAlphaBlendedSection(pTexture,p0,p1,p2,p3, i_filterColor);
-	        }
-	      }        
-
-        /* Draw rider lower leg */
-        Sv = pBike->KneeP - pBike->FootP;
-        Sv.normalize();         
-        p0 = pBike->KneeP + Vector2f(-Sv.y,Sv.x)*0.23f + Sv*0.01f;
-        p1 = pBike->FootP + Vector2f(-Sv.y,Sv.x)*0.2f;
-        p2 = pBike->FootP - Vector2f(-Sv.y,Sv.x)*0.2f;
-        p3 = pBike->KneeP - Vector2f(-Sv.y,Sv.x)*0.23f + Sv*0.1f;
-
-	      pSprite = p_theme->getLowerLeg();
-	      if(pSprite != NULL) {
-	        pTexture = pSprite->getTexture();
-	        if(pTexture != NULL) {
-	          _RenderAlphaBlendedSection(pTexture,p1,p2,p3,p0, i_filterColor);        
-	        }
-	      }
-
-        /* Draw rider upper arm */
-        Sv = pBike->ShoulderP - pBike->ElbowP;
-        Sv.normalize();         
-        p0 = pBike->ShoulderP + Vector2f(-Sv.y,Sv.x)*0.12f;
-        p1 = pBike->ElbowP + Vector2f(-Sv.y,Sv.x)*0.12f - Sv*0.05f;
-        p2 = pBike->ElbowP - Vector2f(-Sv.y,Sv.x)*0.10f - Sv*0.05f;
-        p3 = pBike->ShoulderP - Vector2f(-Sv.y,Sv.x)*0.10f;
-
-	      pSprite = p_theme->getUpperArm();
-	      if(pSprite != NULL) {
-	        pTexture = pSprite->getTexture();
-	        if(pTexture != NULL) {
-	          _RenderAlphaBlendedSection(pTexture,p1,p2,p3,p0, i_filterColor);
-	        }
-	      }        
-
-        /* Draw rider lower arm */
-        Sv = pBike->ElbowP - pBike->HandP;
-        Sv.normalize();         
-        p0 = pBike->ElbowP + Vector2f(-Sv.y,Sv.x)*0.12f + Sv*0.09f;
-        p1 = pBike->HandP + Vector2f(-Sv.y,Sv.x)*0.12f - Sv*0.05f;
-        p2 = pBike->HandP - Vector2f(-Sv.y,Sv.x)*0.10f - Sv*0.05f;
-        p3 = pBike->ElbowP - Vector2f(-Sv.y,Sv.x)*0.10f + Sv*0.09f;
-        
-	      pSprite = p_theme->getLowerArm();
-	      if(pSprite != NULL) {
-	        pTexture = pSprite->getTexture();
-	        if(pTexture != NULL) {
-	          _RenderAlphaBlendedSection(pTexture,p3,p2,p1,p0, i_filterColor);
-	        }
-	      }        
-      }
-
       if(m_bUglyMode || m_bTestThemeMode) {
         /* Draw it ugly */
 	getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
@@ -334,88 +360,6 @@ namespace vapp {
       }
     }
     else if(pBike->Dir == DD_LEFT) {
-      if(m_bUglyMode == false) {    
-        /* Draw rider torso */
-        Sv = pBike->Shoulder2P - pBike->LowerBody2P;
-        Sv.normalize();         
-        p0 = pBike->Shoulder2P + Vector2f(-Sv.y,Sv.x)*0.24f + Sv*0.46f;
-        p1 = pBike->LowerBody2P + Vector2f(-Sv.y,Sv.x)*0.24f - Sv*0.1f;
-        p2 = pBike->LowerBody2P - Vector2f(-Sv.y,Sv.x)*0.24f - Sv*0.1f;
-        p3 = pBike->Shoulder2P - Vector2f(-Sv.y,Sv.x)*0.24f + Sv*0.46f;
-
-	      pSprite = p_theme->getTorso();
-	      if(pSprite != NULL) {
-	        pTexture = pSprite->getTexture();
-	        if(pTexture != NULL) {
-	          _RenderAlphaBlendedSection(pTexture,p2,p1,p0,p3, i_filterColor);        
-	        }
-	      }                
-
-        /* Draw rider upper leg */
-        Sv = pBike->LowerBody2P - pBike->Knee2P;
-        Sv.normalize();         
-        p0 = pBike->LowerBody2P - Vector2f(-Sv.y,Sv.x)*0.20f + Sv*0.14f;
-        p1 = pBike->Knee2P - Vector2f(-Sv.y,Sv.x)*0.15f + Sv*0.0f;
-        p2 = pBike->Knee2P + Vector2f(-Sv.y,Sv.x)*0.15f + Sv*0.0f;
-        p3 = pBike->LowerBody2P + Vector2f(-Sv.y,Sv.x)*0.1f + Sv*0.14f;
-
-	pSprite = p_theme->getUpperLeg();
-	if(pSprite != NULL) {
-	  pTexture = pSprite->getTexture();
-	  if(pTexture != NULL) {
-	    _RenderAlphaBlendedSection(pTexture,p0,p1,p2,p3, i_filterColor);        
-	  }
-	}
-
-        /* Draw rider lower leg */
-        Sv = pBike->Knee2P - pBike->Foot2P;
-        Sv.normalize();         
-        p0 = pBike->Knee2P + Vector2f(-Sv.y,Sv.x)*0.23f + Sv*0.01f;
-        p1 = pBike->Foot2P + Vector2f(-Sv.y,Sv.x)*0.2f;
-        p2 = pBike->Foot2P - Vector2f(-Sv.y,Sv.x)*0.2f;
-        p3 = pBike->Knee2P - Vector2f(-Sv.y,Sv.x)*0.23f + Sv*0.1f;
-
-	      pSprite = p_theme->getLowerLeg();
-	      if(pSprite != NULL) {
-	        pTexture = pSprite->getTexture();
-	        if(pTexture != NULL) {
-	          _RenderAlphaBlendedSection(pTexture,p2,p1,p0,p3, i_filterColor);        
-	        }
-	      }
-
-        /* Draw rider upper arm */
-        Sv = pBike->Shoulder2P - pBike->Elbow2P;
-        Sv.normalize();         
-        p0 = pBike->Shoulder2P + Vector2f(-Sv.y,Sv.x)*0.12f;
-        p1 = pBike->Elbow2P + Vector2f(-Sv.y,Sv.x)*0.12f - Sv*0.05f;
-        p2 = pBike->Elbow2P - Vector2f(-Sv.y,Sv.x)*0.10f - Sv*0.05f;
-        p3 = pBike->Shoulder2P - Vector2f(-Sv.y,Sv.x)*0.10f;
-
-	      pSprite = p_theme->getUpperArm();
-	      if(pSprite != NULL) {
-	        pTexture = pSprite->getTexture();
-	        if(pTexture != NULL) {
-	          _RenderAlphaBlendedSection(pTexture,p2,p1,p0,p3, i_filterColor);        
-	        }
-	      }        
-
-        /* Draw rider lower arm */
-        Sv = pBike->Elbow2P - pBike->Hand2P;
-        Sv.normalize();         
-        p0 = pBike->Elbow2P + Vector2f(-Sv.y,Sv.x)*0.12f + Sv*0.09f;
-        p1 = pBike->Hand2P + Vector2f(-Sv.y,Sv.x)*0.12f - Sv*0.05f;
-        p2 = pBike->Hand2P - Vector2f(-Sv.y,Sv.x)*0.10f - Sv*0.05f;
-        p3 = pBike->Elbow2P - Vector2f(-Sv.y,Sv.x)*0.10f + Sv*0.09f;
-
-	      pSprite = p_theme->getLowerArm();
-	      if(pSprite != NULL) {
-	        pTexture = pSprite->getTexture();
-	        if(pTexture != NULL) {
-	          _RenderAlphaBlendedSection(pTexture,p0,p1,p2,p3, i_filterColor);        
-	        }
-	      }
-      }
-
       if(m_bUglyMode || m_bTestThemeMode) {
         /* Draw it ugly */
 	getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);

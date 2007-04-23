@@ -296,6 +296,16 @@ namespace vapp {
 		     bool i_renderBikeFront = true,
 		     const TColor&  i_filterColor = TColor(255, 255, 255, 0),
 		     const TColor&  i_filterUglyColor = TColor(255, 255, 255, 0));
+    void renderBodyPart(const Vector2f& i_from, const Vector2f& i_to,
+			float i_c11, float i_c12,
+			float i_c21, float i_c22,
+			float i_c31, float i_c32,
+			float i_c41, float i_c42,
+			Sprite *i_sprite,
+			const TColor& i_filterColor,
+			DriveDir i_direction,
+			int i_90_rotation = 0
+			);
     void _RenderBlocks(void);
     void _RenderBlock(Block* block);
     void _RenderBlockEdges(Block* block);
