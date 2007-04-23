@@ -29,12 +29,14 @@ bool xmDatabase::Trace = false;
 
 xmDatabase::xmDatabase(const std::string& i_dbFile,
 		       const std::string& i_profile,
+		       const std::string& i_gameDir,
+		       const std::string& i_userDir,
 		       XmDatabaseUpdateInterface *i_interface) {
   int v_version;
 
   m_requiredLevelsUpdateAfterInit  = false;
   m_requiredReplaysUpdateAfterInit = false;
-  m_requiredThemesUpdateAfterInit = false;
+  m_requiredThemesUpdateAfterInit  = false;
 
   if(sqlite3_open(i_dbFile.c_str(), &m_db) != 0) {
     throw Exception("Unable to open the database (" + i_dbFile
@@ -58,6 +60,15 @@ xmDatabase::xmDatabase(const std::string& i_dbFile,
     }
     upgradeXmDbToVersion(v_version, i_profile, i_interface); 
   }
+
+  /* check if gameDir and userDir are the same - otherwise, the computer probably changed */
+  if(i_gameDir != getXmDbGameDir() || i_userDir != getXmDbUserDir()) {
+    m_requiredLevelsUpdateAfterInit  = true;
+    m_requiredReplaysUpdateAfterInit = true;
+    m_requiredThemesUpdateAfterInit  = true;
+    setXmDbGameDir(i_gameDir);
+    setXmDbUserDir(i_userDir);
+  }
 }
  
 xmDatabase::~xmDatabase() {
@@ -71,6 +82,72 @@ void xmDatabase::setTrace(bool i_value) {
 void xmDatabase::sqlTrace(void* arg1, const char* sql) {
   if(Trace) {
     printf("%s\n", sql);
+  }
+}
+
+std::string xmDatabase::getXmDbGameDir() {
+  char **v_result;
+  int nrow;
+  std::string v_dir;
+
+  v_result = readDB("SELECT value FROM xm_parameters WHERE param=\"gameDir\";", nrow);
+  if(nrow != 1) {
+    read_DB_free(v_result);
+    return "";
+  }
+
+  v_dir = getResult(v_result, 1, 0, 0);
+  read_DB_free(v_result);
+
+  return v_dir;
+}
+
+std::string xmDatabase::getXmDbUserDir() {
+  char **v_result;
+  int nrow;
+  std::string v_dir;
+
+  v_result = readDB("SELECT value FROM xm_parameters WHERE param=\"userDir\";", nrow);
+  if(nrow != 1) {
+    read_DB_free(v_result);
+    return "";
+  }
+
+  v_dir = getResult(v_result, 1, 0, 0);
+  read_DB_free(v_result);
+
+  return v_dir;
+}
+
+void xmDatabase::setXmDbGameDir(const std::string& i_gameDir) {
+  char **v_result;
+  int nrow;
+
+  v_result = readDB("SELECT value FROM xm_parameters WHERE param=\"gameDir\";", nrow);
+  read_DB_free(v_result);
+
+  if(nrow == 0) {
+    simpleSql("INSERT INTO xm_parameters(param, value) VALUES(\"gameDir\", \""
+	      + protectString(i_gameDir) + "\");");
+  } else {
+    simpleSql("UPDATE xm_parameters SET value=\""
+	      + protectString(i_gameDir) + "\" WHERE param=\"gameDir\"");
+  }
+}
+
+void xmDatabase::setXmDbUserDir(const std::string& i_userDir) {
+  char **v_result;
+  int nrow;
+
+  v_result = readDB("SELECT value FROM xm_parameters WHERE param=\"userDir\";", nrow);
+  read_DB_free(v_result);
+
+  if(nrow == 0) {
+    simpleSql("INSERT INTO xm_parameters(param, value) VALUES(\"userDir\", \""
+	      + protectString(i_userDir) + "\");");
+  } else {
+    simpleSql("UPDATE xm_parameters SET value=\""
+	      + protectString(i_userDir) + "\" WHERE param=\"userDir\"");
   }
 }
 
