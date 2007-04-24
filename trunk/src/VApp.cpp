@@ -330,9 +330,21 @@ namespace vapp {
   }
   
   std::string App::formatTime(float fSecs) {
-    int nHSecs = (int) (fSecs * 100.0);
     char cBuf[256];
-    sprintf(cBuf,"%02d:%02d:%02d",nHSecs/6000,(nHSecs%6000)/100,(nHSecs%6000)%100);
+    int nM, nS, nH;
+    float nHres;
+
+    nM = (int)(fSecs/60.0);
+    nS = (int)(fSecs - ((float)nM)*60.0);
+    nHres = (fSecs - ((float)nM)*60.0 - ((float)nS));
+    nH = (int)(nHres * 100.0);
+
+    /* hum, case, in which 0.9800 * 100.0 => 0.9799999*/
+    if(((int)(nHres * 100.0)) < ((int)((nHres * 100.0) + 0.001))) {
+      nH = ((int)((nHres * 100.0) + 0.001));
+    }
+
+    sprintf(cBuf,"%02d:%02d:%02d", nM, nS, nH);
     return cBuf;
   }
   

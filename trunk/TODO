@@ -8,8 +8,6 @@ For 0.3.0
 For nicolas
 *[22:52] <gaivota> the credits are too much on the left side
  [22:53] <gaivota> needs centering, because the text is clipped from the screen
-* mettre à jour si xmoto.bin a changé
-* check highscores at startup, ca bug
 * keyboard for 4 players
 * script key on multiplayer : each player must have his own key
 * mode 2 joueurs : un message à celui qui gagne

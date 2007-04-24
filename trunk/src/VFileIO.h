@@ -188,6 +188,7 @@ namespace vapp {
 
       /* return user_dir + i_relative_path if exists or data_dir + i_relative_path */
       static std::string FullPath(const std::string& i_relative_path);
+      static std::string binCheckSum();
 
     private:
       /* Helper functions */
@@ -201,6 +202,7 @@ namespace vapp {
       static std::string m_BinDataFile;      
       static int m_nNumPackFiles;
       static PackFile m_PackFiles[MAX_PACK_FILES];
+      static std::string m_binCheckSum;
   };
 
 }

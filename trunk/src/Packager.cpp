@@ -87,7 +87,14 @@ namespace vapp {
       int md5sumLen;
 
       fread(cBuf,4,1,fp);
-      if(!strncmp(cBuf,"XBI2",4)) {
+      if(!strncmp(cBuf,"XBI3",4)) {
+
+	/* get bin sum */
+	md5sumLen = fgetc(fp);
+	fread(md5sum,md5sumLen,1,fp);
+	md5sum[md5sumLen] = '\0';	
+	/* this is not usefull for unpack */
+
         int nNameLen;
         while((nNameLen=fgetc(fp)) >= 0) {  
           /* Extract name of file to extract */
@@ -212,7 +219,15 @@ namespace vapp {
     
     /* Do it */
     fp = fopen("xmoto.bin","wb");
-    fwrite("XBI2",4,1,fp);
+    fwrite("XBI3",4,1,fp);
+    
+    /* control sum */
+    unsigned char c;
+    std::string sum = md5file("package.lst");
+    c = sum.length();
+    fputc(c, fp);
+    fwrite(sum.c_str(), c, 1, fp);
+
     for(int i=0;i<FileList.size();i++) {
       /* Open and load entire file into memory (yikes!! (but all files a pretty small :P)) */
       FILE *in = fopen(FileList[i].c_str(),"rb");

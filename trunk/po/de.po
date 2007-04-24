@@ -180,80 +180,79 @@ msgstr "Steuerung"
 
 #: src/GameText.h:77
 msgid "Lead Programming"
-msgstr ""
+msgstr "Leitende Programmierung"
 
 #: src/GameText.h:83
 msgid "Additional Programming"
-msgstr ""
+msgstr "Weitere Programmierung"
 
 #: src/GameText.h:89
-#, fuzzy
 msgid "Graphics"
-msgstr "Spielgrafik"
+msgstr "Grafik"
 
 #: src/GameText.h:97
 msgid "MacOS X Support"
-msgstr ""
+msgstr "MacOS X-Unterstuetzung"
 
 #: src/GameText.h:101
 msgid "Website Programming"
-msgstr ""
+msgstr "Website-Programmierung"
 
 #: src/GameText.h:105
 msgid "Website Administration"
-msgstr ""
+msgstr "Website-Administration"
 
 #: src/GameText.h:111
 msgid "Website Localization"
-msgstr ""
+msgstr "Website-Uebersetzungen"
 
 #: src/GameText.h:120
 msgid "Forum"
-msgstr ""
+msgstr "Forum"
 
 #: src/GameText.h:123
 msgid "Main testers"
-msgstr ""
+msgstr "Haupttester"
 
 #: src/GameText.h:127
 msgid "Thanks to"
-msgstr ""
+msgstr "Danke an"
 
 #: src/GameText.h:128
 msgid "for KDE/gnome integration"
-msgstr ""
+msgstr "KDE/Gnome Integration"
 
 #: src/GameText.h:129
 msgid "for german translation"
-msgstr ""
+msgstr "deutsche Uebersetzung"
 
 #: src/GameText.h:130
 msgid "for Debian packaging"
-msgstr ""
+msgstr "Debian-Pakete"
 
 #: src/GameText.h:131
 msgid "for Gentoo packaging"
-msgstr ""
+msgstr "Gentoo-Pakete"
 
 #: src/GameText.h:132
 msgid "for Mandriva packaging"
-msgstr ""
+msgstr "Mandriva-Pakete"
 
 #: src/GameText.h:133
 msgid "for across/elma"
-msgstr ""
+msgstr "Across/Elma"
 
 #: src/GameText.h:134
 msgid "for making tinyxml"
-msgstr ""
+msgstr "Tinyxml"
 
 #: src/GameText.h:135
 msgid "for the MD5 code"
-msgstr ""
+msgstr "MD5-Code"
 
 #: src/GameText.h:137
 msgid "for providing web space"
-msgstr ""
+msgstr "Bereitstellung von Web-Space"
 
 #: src/GameText.h:138
 msgid "for being such a little girl"
@@ -261,19 +260,19 @@ msgstr ""
 
 #: src/GameText.h:139
 msgid "Everyone who have made levels"
-msgstr ""
+msgstr "Jeden, der Levels beigesteuert hat,"
 
 #: src/GameText.h:140
 msgid "People who have provided bug reports"
-msgstr ""
+msgstr "Jeden, der Bug-Reports gesendet hat,"
 
 #: src/GameText.h:141
 msgid "Anyone who has helped in any way"
-msgstr ""
+msgstr "und Jeden, der in irgendeiner Weise geholfen hat!"
 
 #: src/GameText.h:143
 msgid "Credits"
-msgstr "Credits"
+msgstr "Abspann"
 
 #: src/GameText.h:144 src/GameText.h:311
 msgid "Player"
