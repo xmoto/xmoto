@@ -39,9 +39,8 @@ msgid "8-bit"
 msgstr "8-bit"
 
 #: src/GameText.h:40
-#, fuzzy
 msgid "Quit level"
-msgstr "Niveaux les plus beaux"
+msgstr "Quitter le niveau"
 
 #: src/GameText.h:41
 msgid "Add to favorite"
@@ -175,96 +174,95 @@ msgstr "Controles"
 
 #: src/GameText.h:77
 msgid "Lead Programming"
-msgstr ""
+msgstr "Programmeurs principaux"
 
 #: src/GameText.h:83
 msgid "Additional Programming"
-msgstr ""
+msgstr "Programmeurs additionnels"
 
 #: src/GameText.h:89
-#, fuzzy
 msgid "Graphics"
-msgstr "Pour le jeu"
+msgstr "Graphismes"
 
 #: src/GameText.h:97
 msgid "MacOS X Support"
-msgstr ""
+msgstr "Support Mac OS X"
 
 #: src/GameText.h:101
 msgid "Website Programming"
-msgstr ""
+msgstr "Programmation du site web"
 
 #: src/GameText.h:105
 msgid "Website Administration"
-msgstr ""
+msgstr "Administration du site web"
 
 #: src/GameText.h:111
 msgid "Website Localization"
-msgstr ""
+msgstr "Traduction du site web"
 
 #: src/GameText.h:120
 msgid "Forum"
-msgstr ""
+msgstr "Forum"
 
 #: src/GameText.h:123
 msgid "Main testers"
-msgstr ""
+msgstr "Testeurs principaux"
 
 #: src/GameText.h:127
 msgid "Thanks to"
-msgstr ""
+msgstr "Merci a"
 
 #: src/GameText.h:128
 msgid "for KDE/gnome integration"
-msgstr ""
+msgstr "pour l'integration KDE/Gnome"
 
 #: src/GameText.h:129
 msgid "for german translation"
-msgstr ""
+msgstr "pour la traduction allemande"
 
 #: src/GameText.h:130
 msgid "for Debian packaging"
-msgstr ""
+msgstr "pour le packaging Debian"
 
 #: src/GameText.h:131
 msgid "for Gentoo packaging"
-msgstr ""
+msgstr "pour le packaging Gentoo"
 
 #: src/GameText.h:132
 msgid "for Mandriva packaging"
-msgstr ""
+msgstr "pour le packaging Mandriva"
 
 #: src/GameText.h:133
 msgid "for across/elma"
-msgstr ""
+msgstr "pour across/elma"
 
 #: src/GameText.h:134
 msgid "for making tinyxml"
-msgstr ""
+msgstr "pour tinyxml"
 
 #: src/GameText.h:135
 msgid "for the MD5 code"
-msgstr ""
+msgstr "pour le code MD5"
 
 #: src/GameText.h:137
 msgid "for providing web space"
-msgstr ""
+msgstr "pour l'espace web"
 
 #: src/GameText.h:138
 msgid "for being such a little girl"
-msgstr ""
+msgstr "pour etre cette merveilleuse copine"
 
 #: src/GameText.h:139
 msgid "Everyone who have made levels"
-msgstr ""
+msgstr "A tout ceux qui ont fait des niveaux"
 
 #: src/GameText.h:140
 msgid "People who have provided bug reports"
-msgstr ""
+msgstr "A tout ceux qui ont rapporte des bugs"
 
 #: src/GameText.h:141
 msgid "Anyone who has helped in any way"
-msgstr ""
+msgstr "A tout ceux qui ont aide d'une autre maniere"
 
 #: src/GameText.h:143
 msgid "Credits"
@@ -1851,7 +1849,7 @@ msgstr "Record les plus vieux"
 
 #: src/GameText.h:541
 msgid "Platinium"
-msgstr ""
+msgstr "Platinium"
 
 #: src/GameText.h:542
 msgid "Gold"
@@ -1870,9 +1868,8 @@ msgid "No medal"
 msgstr "Pas de medaille"
 
 #: src/GameText.h:546
-#, fuzzy
 msgid "My levels"
-msgstr "Tous les niveaux"
+msgstr "Mes niveaux"
 
 #: src/GameText.h:548
 msgid "Levels with no highscore in you room"
@@ -1943,22 +1940,18 @@ msgid "X-Moto levels having an old highscore in you room"
 msgstr "Niveaux X-Moto ayant un record ancien dans le salon"
 
 #: src/GameText.h:566
-#, fuzzy
 msgid "You have the room highscore"
-msgstr "Voir le record"
+msgstr "You avez les records dans le salon"
 
 #: src/GameText.h:567
-#, fuzzy
 msgid "You highscore finish time is almost the room highscore (95%)"
 msgstr "Votre record est presque celui du salon (95%)"
 
 #: src/GameText.h:568
-#, fuzzy
 msgid "You highscore finish time is almost the room highscore (90%-95%)"
 msgstr "Votre record est presque celui du salon (90%-95%)"
 
 #: src/GameText.h:569
-#, fuzzy
 msgid "You highscore finish time is almost the room highscore (80%-90%)"
 msgstr "Votre record est presque celui du salon (80%-90%)"
 
@@ -1976,7 +1969,7 @@ msgstr "Records de"
 
 #: src/GameText.h:573
 msgid "External levels (the one you put into the 'My levels' directory)"
-msgstr ""
+msgstr "Niveaux externes (ceux du repertoire 'My levels')"
 
 #: src/GameText.h:575
 msgid "Ugly mode enabled"
@@ -1995,14 +1988,12 @@ msgid "Theme mode disabled"
 msgstr "Mode theme desactive"
 
 #: src/GameText.h:579
-#, fuzzy
 msgid "UglyOver mode enabled"
-msgstr "Mode ugly active"
+msgstr "Mode uglyOver active"
 
 #: src/GameText.h:580
-#, fuzzy
 msgid "UglyOver mode disabled"
-msgstr "Mode ugly desactive"
+msgstr "Mode uglyOver desactive"
 
 #: src/GameText.h:581
 msgid "Web connexion enabled"
@@ -2019,44 +2010,3 @@ msgstr "Interpolation activee"
 #: src/GameText.h:584
 msgid "Replay interpolation disabled"
 msgstr "Interpolation desactivee"
-
-#, fuzzy
-#~ msgid ""
-#~ "Lead Programming:Rasmus Neckelmann;:Nicolas Adenis-Lamarre;:Emmanuel "
-#~ "Gorse;:Kees Jongenburger;:;Additional Programming:Eric Piel;:Christoph "
-#~ "Sommer;:Frederic Huard;:Brice Goglin;:;Graphics:Rasmus Neckelmann;:Jens "
-#~ "Erler;:;Audio:Jens Erler;:Brandon Ross;:;Built-in Levels:Rasmus "
-#~ "Neckelmann;:Pasi Kallinen;:Germain Gagnerot;:Clive Crous;:Torben Green;:"
-#~ "Thomas Kjaerulff;:;MacOS X Support:Dave Vasilevsky;:Maxime Biais;:;"
-#~ "Website Programming:Nicolas Adenis-Lamarre;:Nx;:;Website Administration:"
-#~ "Nicolas Adenis-Lamarre;:Valentin;:Nx;:Alrj;:;Website Localization:Felix "
-#~ "Schl;:Nicolas Adenis-Lamarre;:Trullo;:Afaland;:Jj;:Vertigo;:Pol "
-#~ "Vinogradov;:;Forum:Valentin;:;Main testers:Jose Alberto Coelho;:Frederic "
-#~ "Huard;:;Thanks to:SnowBear (for KDE/gnome integration);:Jonathan Sieber "
-#~ "(for german translation);:Samuel Mimram (for Debian packaging);:Dark (for "
-#~ "Gentoo packaging);:Olivier Blin (for Mandriva packaging);:Balazs Rozsa "
-#~ "(for across/elma);:Yves Berquin (for making tinyxml);:L. Peter Deutsch "
-#~ "(for the MD5 code);:Petter Reinholdtsen;:Jes Vestervang (for providing "
-#~ "web space);:Kenneth (for being such a little girl);:Everyone who have "
-#~ "made levels;:People who have provided bug reports;:Anyone who has helped "
-#~ "in any way;"
-#~ msgstr ""
-#~ "Developpeurs principaux:Rasmus Neckelmann;:Nicolas Adenis-Lamarre;:"
-#~ "Emmanuel Gorse;:Kees Jongenburger;:;Autres Developpeurs:Eric Piel;:"
-#~ "Christoph Sommer;:Frederic Huard;:;Graphismes:Rasmus Neckelmann;:;Son:"
-#~ "Jens Erler;:Brandon Ross;:;Niveaux internes:Rasmus Neckelmann;:Pasi "
-#~ "Kallinen;:Germain Gagnerot;:Clive Crous;:Torben Green;:Thomas Kjaerulff;:;"
-#~ "Support MacOS X:Dave Vasilevsky;:Maxime Biais;:;Developpeurs web:Nicolas "
-#~ "Adenis-Lamarre;:Nx;:;Administrateurs web:Nicolas Adenis-Lamarre;:"
-#~ "Valentin;:Nx;:Alrj;:;Traducteurs web:Felix Schl;:Nicolas Adenis-Lamarre;:"
-#~ "Trullo;:Afaland;:Jj;:Vertigo;:Pol Vinogradov;:;Forum:Valentin;:;Testeurs "
-#~ "principaux:Jose Alberto Coelho;:Frederic Huard;:;Merci a:SnowBear "
-#~ "(integration KDE/gnome);:Jonathan Sieber (traduction allemande);:Samuel "
-#~ "Mimram (Packaging Debian);:Dark (packaging Gentoo);:Olivier Blin "
-#~ "(packaging Mandriva);:Balazs Rozsa (across/elma);:Yves Berquin (tinyxml);:"
-#~ "L. Peter Deutsch (MD5 code);:Petter Reinholdtsen;:Jes Vestervang (espace "
-#~ "internet);:Kenneth;:A tous ceux qui ont fait des niveaux;:A tous ceux qui "
-#~ "ont rapportes des bugs;:Aux autres qui ont contribues;"
-
-#~ msgid "Abort Playing"
-#~ msgstr "Arreter la partie"
