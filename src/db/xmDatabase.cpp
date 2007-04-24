@@ -31,6 +31,7 @@ xmDatabase::xmDatabase(const std::string& i_dbFile,
 		       const std::string& i_profile,
 		       const std::string& i_gameDir,
 		       const std::string& i_userDir,
+		       const std::string& i_binPackCheckSum,
 		       XmDatabaseUpdateInterface *i_interface) {
   int v_version;
 
@@ -62,12 +63,14 @@ xmDatabase::xmDatabase(const std::string& i_dbFile,
   }
 
   /* check if gameDir and userDir are the same - otherwise, the computer probably changed */
-  if(i_gameDir != getXmDbGameDir() || i_userDir != getXmDbUserDir()) {
+  if(i_gameDir != getXmDbGameDir() || i_userDir != getXmDbUserDir()
+     || i_binPackCheckSum != getXmDbBinPackCheckSum()) {
     m_requiredLevelsUpdateAfterInit  = true;
     m_requiredReplaysUpdateAfterInit = true;
     m_requiredThemesUpdateAfterInit  = true;
     setXmDbGameDir(i_gameDir);
     setXmDbUserDir(i_userDir);
+    setXmDbBinPackCheckSum(i_binPackCheckSum);
   }
 }
  
@@ -148,6 +151,39 @@ void xmDatabase::setXmDbUserDir(const std::string& i_userDir) {
   } else {
     simpleSql("UPDATE xm_parameters SET value=\""
 	      + protectString(i_userDir) + "\" WHERE param=\"userDir\"");
+  }
+}
+
+std::string xmDatabase::getXmDbBinPackCheckSum() {
+  char **v_result;
+  int nrow;
+  std::string v_dir;
+
+  v_result = readDB("SELECT value FROM xm_parameters WHERE param=\"binPackCkSum\";", nrow);
+  if(nrow != 1) {
+    read_DB_free(v_result);
+    return "";
+  }
+
+  v_dir = getResult(v_result, 1, 0, 0);
+  read_DB_free(v_result);
+
+  return v_dir;
+}
+
+void xmDatabase::setXmDbBinPackCheckSum(const std::string& i_binPackChecksum) {
+  char **v_result;
+  int nrow;
+
+  v_result = readDB("SELECT value FROM xm_parameters WHERE param=\"binPackCkSum\";", nrow);
+  read_DB_free(v_result);
+
+  if(nrow == 0) {
+    simpleSql("INSERT INTO xm_parameters(param, value) VALUES(\"binPackCkSum\", \""
+	      + protectString(i_binPackChecksum) + "\");");
+  } else {
+    simpleSql("UPDATE xm_parameters SET value=\""
+	      + protectString(i_binPackChecksum) + "\" WHERE param=\"binPackCkSum\"");
   }
 }
 
