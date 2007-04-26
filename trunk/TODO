@@ -2,6 +2,8 @@
 * ajouter le SDL_ttf.h pour windows
 * faire des polices avec contour ?
 
+[20:26] <Christoph> btw, I noticed a few days ago: in the level "MASTERKUD Padrinos magicos" there is something broken. the strawberry at the right end of the ground crashes the level with "Entity 'MySprite18' doesn't exist" (in the replay, too)
+
 
 (12:12:08)  Roots:     http://blender-archi.tuxfamily.org/Textures  
 (12:12:11)  Roots:     http://lemog.free.fr/lemog_v5/thumbnails.php?album=topn&cat=0  
