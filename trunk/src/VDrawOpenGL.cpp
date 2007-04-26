@@ -26,6 +26,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VApp.h"
 #include "BuiltInFont.h"
 
+#define DRAW_FONT_FILE "Textures/Fonts/DejaVuSans.ttf"
+
 #ifdef ENABLE_OPENGL
 namespace vapp {
 
@@ -34,6 +36,8 @@ namespace vapp {
  }
 
  DrawLibOpenGL::DrawLibOpenGL() : DrawLib(){
+   m_fontSmall  = getFontManager(FS::FullPath(DRAW_FONT_FILE), 14);
+   m_fontMedium = getFontManager(FS::FullPath(DRAW_FONT_FILE), 22);
  };
  
   /*===========================================================================
@@ -604,5 +608,188 @@ namespace vapp {
            /* Swap buffers */
           SDL_GL_SwapBuffers();
       }
+
+  FontManager* DrawLibOpenGL::getFontManager(const std::string &i_fontFile, int i_fontSize) {
+    return new GLFontManager(this, i_fontFile, i_fontSize);
+  }
+
+
+GLFontGlyph::GLFontGlyph(const std::string& i_value, TTF_Font* i_ttf) {
+  SDL_Surface* v_surf;
+  SDL_Surface* v_image;
+  SDL_Rect v_area;
+  SDL_Color v_color = {0xFF, 0xFF, 0xFF, 0x00};
+
+  m_value = i_value;
+  m_drawX = 0;
+  m_drawY = 0;
+
+  v_surf = TTF_RenderUTF8_Blended(i_ttf, i_value.c_str(), v_color);
+  if (v_surf == NULL) {
+    throw Exception("GLFontGlyph: " + std::string(TTF_GetError()));
+  }
+
+  TTF_SizeUTF8(i_ttf, i_value.c_str(), &m_realWidth, &m_realHeight);
+  m_drawWidth  = powerOf2(m_realWidth);
+  m_drawHeight = powerOf2(m_realHeight);
+
+  v_image = SDL_CreateRGBSurface(SDL_SWSURFACE,
+				 m_drawWidth, m_drawHeight,
+				 32,
+#if SDL_BYTEORDER == SDL_LIL_ENDIAN /* OpenGL RGBA masks */
+				 0x000000FF, 
+				 0x0000FF00, 
+				 0x00FF0000, 
+				 0xFF000000
+#else
+				 0xFF000000,
+				 0x00FF0000, 
+				 0x0000FF00, 
+				 0x000000FF
+#endif
+				 );
+  if(v_image == NULL) {
+    SDL_FreeSurface(v_surf);
+    throw Exception("SDL_CreateRGBSurface failed");
+  }
+
+  SDL_SetAlpha(v_surf, 0, 0);
+
+  /* Copy the surface into the GL texture image */
+  v_area.x = 0;
+  v_area.y = 0;
+  v_area.w = m_drawWidth;
+  v_area.h = m_drawHeight;
+  SDL_BlitSurface(v_surf, &v_area, v_image, &v_area);
+  SDL_FreeSurface(v_surf);
+
+  /* Create the OpenGL texture */
+  glGenTextures(1, &m_GLID);
+  glBindTexture(GL_TEXTURE_2D, m_GLID);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexImage2D(GL_TEXTURE_2D,
+	       0,
+	       GL_RGBA,
+	       m_drawWidth, m_drawHeight,
+	       0,
+	       GL_RGBA,
+	       GL_UNSIGNED_BYTE,
+	       v_image->pixels);
+  SDL_FreeSurface(v_image);
+}
+
+GLFontGlyph::~GLFontGlyph() {
+ glDeleteTextures(1, &m_GLID);
+}
+
+std::string GLFontGlyph::Value() const {
+  return m_value;
+}
+
+GLuint GLFontGlyph::GLID() const {
+  return m_GLID;
+}
+
+int GLFontGlyph::drawX() const {
+  return m_drawX;
+}
+
+int GLFontGlyph::drawY() const {
+  return m_drawY;
+}
+
+int GLFontGlyph::drawWidth() const {
+  return m_drawWidth;
+}
+
+int GLFontGlyph::drawHeight() const {
+  return m_drawHeight;
+}
+
+int GLFontGlyph::realWidth() const {
+  return m_realWidth;
+}
+
+int GLFontGlyph::realHeight() const {
+  return m_realHeight;
+}
+
+FontManager::FontManager(DrawLib* i_drawLib, const std::string &i_fontFile, int i_fontSize) {
+  m_drawLib = i_drawLib;
+  m_ttf = TTF_OpenFont(i_fontFile.c_str(), i_fontSize);
+  if (m_ttf == NULL) {
+    throw Exception("FontManager: " + std::string(TTF_GetError()));
+  }
+  TTF_SetFontStyle(m_ttf, TTF_STYLE_NORMAL);
+}
+
+FontManager::~FontManager() {
+  TTF_CloseFont(m_ttf);
+}
+
+GLFontManager::GLFontManager(DrawLib* i_drawLib, const std::string &i_fontFile, int i_fontSize)
+  : FontManager(i_drawLib, i_fontFile, i_fontSize) {
+
+}
+
+GLFontManager::~GLFontManager() {
+  for(unsigned int i=0; i<m_glyphs.size(); i++) {
+    delete m_glyphs[i];
+  }
+}
+
+int GLFontGlyph::powerOf2(int i_value) {
+  int v_value = 1;
+
+  while (v_value < i_value) {
+    v_value <<= 1;
+  }
+  return v_value;
+}
+
+FontGlyph* GLFontManager::getGlyph(const std::string& i_string) {
+  GLFontGlyph *v_glyph;
+
+  for(unsigned int i=0; i<m_glyphs.size(); i++) {
+    if(i_string == m_glyphs[i]->Value()) {
+      return m_glyphs[i];
+    }
+  }
+
+  v_glyph = new GLFontGlyph(i_string, m_ttf);
+  m_glyphs.push_back(v_glyph);
+  return v_glyph;
+}
+
+void GLFontManager::printString(FontGlyph* i_glyph, int i_x, int i_y, Color i_color) {
+  GLFontGlyph* v_glyph = (GLFontGlyph*) i_glyph;
+
+  try {
+    /* draw the glyph */
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBindTexture(GL_TEXTURE_2D, v_glyph->GLID());
+    glBegin(GL_TRIANGLE_STRIP);
+    glColor4ub(GET_RED(i_color),GET_GREEN(i_color),GET_BLUE(i_color),GET_ALPHA(i_color));
+    glTexCoord2f(0.0, 1.0);
+    glVertex2i(i_x, i_y);
+    glTexCoord2f(1.0, 1.0);
+    glVertex2i(i_x + v_glyph->drawWidth(), i_y);
+    glTexCoord2f(0.0, 0.0);
+    glVertex2i(i_x, i_y + v_glyph->drawHeight());
+    glTexCoord2f(1.0, 0.0);
+    glVertex2i(i_x + v_glyph->drawWidth(), i_y + v_glyph->drawHeight());
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+    /* */
+
+  } catch(Exception &e) {
+    /* ok, forget this one */
+  }
+
+}
+
 }
 #endif

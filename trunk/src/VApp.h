@@ -260,8 +260,7 @@ namespace vapp {
 
   private:
     /* Private helper functions */
-    void _Init(int nDispWidth, int nDispHeight, int nDispBPP,
-	       bool bWindowed);
+    void _InitWin(bool bInitGraphics);
     void _Uninit(void);
     void _ParseArgs(int nNumArgs, char **ppcArgs);
 

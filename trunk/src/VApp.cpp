@@ -168,6 +168,18 @@ namespace vapp {
 
     /* Do user pre-init */
     userPreInit();
+    _InitWin(m_useGraphics);
+
+    int configured_width,configured_height,configured_BPP;
+    bool configured_windowed;
+    /* user configuration */
+    selectDisplayMode(&configured_width, &configured_height, &configured_BPP, &configured_windowed);
+        
+    /* overwrite by cmdline configuration */
+    if(isCmdDispWidth())    configured_width     = m_CmdDispWidth;
+    if(isCmdDispHeight())   configured_height    = m_CmdDispHeight;
+    if(isCmdDispBPP())      configured_BPP       = m_CmdDispBpp;
+    if(isCmdDispWindowed()) configured_windowed  = m_CmdWindowed;
 
     /* init drawLib */
     if(m_CmdDrawLibName == "") {
@@ -183,19 +195,8 @@ namespace vapp {
     drawLib->setNoGraphics(m_useGraphics == false);
     drawLib->setDontUseGLExtensions(m_useGraphics == false);
 
-    int configured_width,configured_height,configured_BPP;
-    bool configured_windowed;
-    /* user configuration */
-    selectDisplayMode(&configured_width, &configured_height, &configured_BPP, &configured_windowed);
-        
-    /* overwrite by cmdline configuration */
-    if(isCmdDispWidth())    configured_width     = m_CmdDispWidth;
-    if(isCmdDispHeight())   configured_height    = m_CmdDispHeight;
-    if(isCmdDispBPP())      configured_BPP       = m_CmdDispBpp;
-    if(isCmdDispWindowed()) configured_windowed  = m_CmdWindowed;
-
     /* Init! */
-    _Init(configured_width,configured_height,configured_BPP , configured_windowed);
+    drawLib->init(configured_width, configured_height, configured_BPP, configured_windowed, &m_theme);
     if(!drawLib->isNoGraphics()) {        
       drawLib->setDrawDims(configured_width,configured_height,configured_width,configured_height);
     }
@@ -359,16 +360,16 @@ namespace vapp {
   /*===========================================================================
   Init 
   ===========================================================================*/
-  void App::_Init(int nDispWidth,int nDispHeight,int nDispBPP,bool bWindowed) {
-	       /* Init SDL */
-    if(drawLib->isNoGraphics()) {
+  void App::_InitWin(bool bInitGraphics) {
+
+    /* Init SDL */
+    if(bInitGraphics == false) {
       if(SDL_Init(SDL_INIT_TIMER) < 0)
         throw Exception("(1) SDL_Init : " + std::string(SDL_GetError()));
       
       /* No graphics mojo here, thank you */
       return;
-    }
-    else {
+    } else {
       if(SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER) < 0)
         throw Exception("(2) SDL_Init : " + std::string(SDL_GetError()));
     }
@@ -383,7 +384,11 @@ namespace vapp {
       SDL_WM_SetIcon(v_icon, NULL);
     }
 #endif
-    drawLib->init(nDispWidth,nDispHeight,nDispBPP,bWindowed,&m_theme);
+
+    if(TTF_Init() < 0) {
+      throw Exception("Initializing TTF failed: " + std::string(TTF_GetError()));
+    }
+    atexit(TTF_Quit);
   }
 
   /*===========================================================================

@@ -29,7 +29,71 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Theme.h"
 #include "Image.h"
 #include "PolyDraw.h"
+#include <SDL/SDL_ttf.h>
+
 namespace vapp {
+
+class DrawLib;
+
+class FontGlyph {
+  public:
+  virtual int realWidth() const = 0;
+  virtual int realHeight() const = 0;
+
+  private:
+};
+
+class FontManager {
+ public:
+  FontManager(DrawLib* i_drawLib, const std::string &i_fontFile, int i_fontSize);
+  virtual ~FontManager();
+
+  virtual FontGlyph* getGlyph(const std::string& i_string) = 0;
+  virtual void printString(FontGlyph* i_glyph, int i_x, int i_y, Color i_color) = 0;
+
+ protected:
+  TTF_Font* m_ttf;
+  DrawLib* m_drawLib;
+};
+
+#ifdef ENABLE_OPENGL
+class GLFontGlyph : public FontGlyph {
+ public:
+  GLFontGlyph(const std::string& i_value, TTF_Font* i_ttf);
+  ~GLFontGlyph();
+
+  std::string Value() const;
+  GLuint GLID()       const;
+  int drawX()         const;
+  int drawY()         const;
+  int drawWidth()     const;
+  int drawHeight()    const;
+  int realWidth()     const;
+  int realHeight()    const;
+
+ private:
+  std::string m_value;
+  GLuint m_GLID;
+  int m_drawX, m_drawY;
+  int m_drawWidth, m_drawHeight;
+  int m_realWidth, m_realHeight;
+
+  static int powerOf2(int i_value);
+};
+
+class GLFontManager : public FontManager {
+ public:
+  GLFontManager(DrawLib* i_drawLib, const std::string &i_fontFile, int i_fontSize);
+  ~GLFontManager();
+
+  FontGlyph* getGlyph(const std::string& i_string);
+  void printString(FontGlyph* i_glyph, int i_x, int i_y, Color i_color);
+
+ private:
+  std::vector<GLFontGlyph*> m_glyphs;
+};
+
+#endif
 
   /**
    * VApp draw modes to be used as argument in startDraw
@@ -237,7 +301,10 @@ namespace vapp {
     /* handle display lists */
     
     void toogleFullscreen();
-
+    
+    FontManager* getFontSmall();
+    FontManager* getFontMedium();
+    virtual FontManager* getFontManager(const std::string &i_fontFile, int i_fontSize);
     
     /* Data */
     int m_nDrawWidth, m_nDrawHeight;
@@ -248,6 +315,8 @@ namespace vapp {
     virtual void _InitTextRendering(Theme * p_theme) = 0;
     virtual void _UninitTextRendering(Theme * p_theme) = 0;
 
+    FontManager* m_fontSmall;
+    FontManager* m_fontMedium;
 
     bool m_bWindowed;		/* Windowed or not */
 
@@ -338,6 +407,8 @@ namespace vapp {
 			  false);
     virtual int getTextWidth(std::string Text);
     virtual int getTextHeight(std::string Text);
+
+    virtual FontManager* getFontManager(const std::string &i_fontFile, int i_fontSize);
 
     virtual Img *grabScreen(void);
     virtual bool isExtensionSupported(std::string Ext);
