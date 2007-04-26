@@ -4,6 +4,9 @@ pkgdata_DATA = xmoto.bin
 pkgMusicsdir = $(pkgdatadir)/Textures/Musics
 pkgMusics_DATA = Textures/Musics/menu.ogg Textures/Musics/ridealong.ogg Textures/Musics/batcave.ogg
 
+pkgFontsdir = $(pkgdatadir)/Textures/Fonts
+pkgFonts_DATA = Textures/Fonts/DejaVuSans.ttf
+
 xmoto.bin: package.lst
 if CROSS_COMPILING
 	echo "Cross-compiling, cannot build xmoto.bin"
@@ -15,7 +18,7 @@ endif
 package.lst:
 	
 
-EXTRA_DIST = $(pkgdata_DATA) $(pkgMusics_DATA)
+EXTRA_DIST = $(pkgdata_DATA) $(pkgMusics_DATA) $(pkgFonts_DATA)
 
 
 

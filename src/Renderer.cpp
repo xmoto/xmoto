@@ -958,7 +958,7 @@ namespace vapp {
       MiscSprite* pType;
       pType = (MiscSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_MISC, "Arrow");
       if(pType != NULL) {
-  _RenderAlphaBlendedSectionSP(pType->getTexture(),p1+C,p2+C,p3+C,p4+C);      
+	_RenderAlphaBlendedSectionSP(pType->getTexture(),p1+C,p2+C,p3+C,p4+C);      
       }
     }
         
@@ -966,13 +966,12 @@ namespace vapp {
     if(pGame != NULL) {
       for(int i=0;i<pGame->getGameMessage().size();i++) {
         GameMessage *pMsg = pGame->getGameMessage()[i];
-        int x1,y1,x2,y2;
-
-  UIFont *v_font = getMediumFont();
-  if(v_font != NULL) {
-    UITextDraw::getTextExt(v_font,pMsg->Text,&x1,&y1,&x2,&y2);
-    UITextDraw::printRaw(v_font,getParent()->getDrawLib()->getDispWidth()/2 - (x2-x1)/2,pMsg->Pos[1]*getParent()->getDrawLib()->getDispHeight(),pMsg->Text,MAKE_COLOR(255,255,255,pMsg->nAlpha));
-  }
+	FontManager* v_fm = getParent()->getDrawLib()->getFontMedium();
+	FontGlyph* v_fg = v_fm->getGlyph(pMsg->Text);
+	v_fm->printString(v_fg,
+			  getParent()->getDrawLib()->getDispWidth()/2 - v_fg->realWidth()/2,
+			  pMsg->Pos[1]*getParent()->getDrawLib()->getDispHeight(),
+			  MAKE_COLOR(255,255,255,pMsg->nAlpha));
       }
     }
   }

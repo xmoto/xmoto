@@ -71,10 +71,38 @@ namespace vapp {
   m_pDefaultFontTex = NULL;
   m_texture = NULL;
   m_blendMode = BLEND_MODE_NONE;
+
+  m_fontSmall  = NULL;
+  m_fontMedium = NULL;
  };
 
  DrawLib::~DrawLib() {
+   if(m_fontSmall != NULL) {
+     delete m_fontSmall;
+   }
+
+   if(m_fontMedium != NULL) {
+     delete m_fontMedium;
+   }
  }
+
+  FontManager* DrawLib::getFontManager(const std::string &i_fontFile, int i_fontSize) {
+    throw Exception("Your DrawLib doesn't manage FontManager");
+  }
+
+  FontManager* DrawLib::getFontSmall() {
+    if(m_fontSmall == NULL) {
+      throw Exception("Invalid font");
+    }
+    return m_fontSmall;
+  }
+
+  FontManager* DrawLib::getFontMedium() {
+    if(m_fontMedium == NULL) {
+      throw Exception("Invalid font");
+    }
+    return m_fontMedium;
+  }
 
    /*===========================================================================
   Primitive: box
@@ -214,4 +242,5 @@ namespace vapp {
       /* hum */
     }
   }
+
 }
