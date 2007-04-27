@@ -132,7 +132,7 @@ Central place to keep many in-game text strings
                                         ":Kenneth (for being such a little girl);"\
                                         ":Everyone who have made levels;" \
                                         ":People who have provided bug reports;" \
-                                        ":Anyone who has helped in any way;")                                        
+                                        ":Anyone who has helped in any way;")
 #define GAMETEXT_CREDITSBUTTON        _("Credits")
 #define GAMETEXT_CURPLAYER            _("Player")
 #define GAMETEXT_DATE                 _("Date")
@@ -173,7 +173,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_ENTERPLAYERNAME      _("Enter player name")
 #define GAMETEXT_ENTERREPLAYNAME      _("Enter name of replay")
 #define GAMETEXT_ERRORSINLEVEL        _("There are errors in the level, don't expect it to be playable!")
-#define GAMETEXT_EXTERNALLEVELS       _("External Levels")  
+#define GAMETEXT_EXTERNALLEVELS       _("External Levels")
 #define GAMETEXT_FAILEDCHECKLEVELS    _("Failed to check for levels.\nCheck your Internet connection!")
 #define GAMETEXT_FAILEDDLHIGHSCORES   _("Failed to download high-scores.\nCheck your Internet connection!")
 #define GAMETEXT_FAILEDDLLEVELS       _("Failed to download levels.\nCheck your Internet connection!")
@@ -285,7 +285,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
                                       "Also visit http://xmoto.tuxfamily.org to make sure you've\n" \
                                       "got the latest version.")
 #define GAMETEXT_NUMLEVELS            _("# Levels")
-#define GAMETEXT_OK                   _("OK")  
+#define GAMETEXT_OK                   _("OK")
 #define GAMETEXT_OPEN                 _("Open")
 #define GAMETEXT_OPTIONS              _("Options")
 #define GAMETEXT_OPTIONSREQURERESTART _("Some options will not take effect before next restart!")
@@ -354,7 +354,8 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_UPDATEROOMSSLIST     _("Update the rooms list")
 #define GAMETEXT_UPDATETHEMESLIST     _("Update the theme list")
 #define GAMETEXT_UPDATINGLEVELS       _("Updating level lists...")
-#define GAMETEXT_UPLOAD_HIGHSCORE     _("Upload highscore")
+#define GAMETEXT_UPLOAD_HIGHSCORE     _("Upload")
+#define GAMETEXT_UPLOAD_HIGHSCORE_ALL _("Upload All")
 #define GAMETEXT_UPLOAD_HIGHSCORE_ERROR _("An unexcepted error occured\nThe website has perhaps some troubles")
 #define GAMETEXT_UPLOAD_HIGHSCORE_WEB_WARNING_BEFORE _("Oh no !")
 #define GAMETEXT_UPLOADING_HIGHSCORE  _("Uploading the highscore...")
@@ -373,7 +374,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_WWWTAB               _("WWW")
 #define GAMETEXT_WWWROOMSTAB          _("Rooms")
 
-#define GAMETEXT_XHOURS               _("%d hours") 
+#define GAMETEXT_XHOURS               _("%d hours")
 #define GAMETEXT_XMINUTES             _("%d minutes")
 #define GAMETEXT_XMOTOGLOBALSTATS     _("(Stats since: %s)\n"                                         \
                                       "X-Moto started %d times; %d plays (%d different levels),\n"  \
@@ -487,6 +488,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_UPDATETHEMESLIST _("Check for new themes on the web")
 #define CONTEXTHELP_GETSELECTEDTHEME _("Download or update the selected theme")
 #define CONTEXTHELP_UPLOAD_HIGHSCORE _("Upload the replay on the website of highscores")
+#define CONTEXTHELP_UPLOAD_HIGHSCORE_ALL _("Upload all replays on the website of highscores (experimental)")
 #define CONTEXTHELP_WWW_MAIN_TAB _("Configure the main www options")
 #define CONTEXTHELP_WWW_ROOMS_TAB _("Choose where to upload/download replays, highscore lists (for more information, check the website)")
 #define CONTEXTHELP_WWW_ROOMS_LIST _("Choose your room")
