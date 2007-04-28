@@ -181,7 +181,11 @@ namespace vapp {
               nFrameCnt = 0;
               m_fLastPerfStateTime = m_fFrameTime;
             }
-            getDrawLib()->drawText(Vector2f(0,100),cBuf,MAKE_COLOR(0,0,0,255),-1);        
+	    FontManager* v_fm = getDrawLib()->getFontSmall();
+	    FontGlyph* v_fg = v_fm->getGlyph(cBuf);
+	    v_fm->printString(v_fg,
+			      0, 100,
+			      MAKE_COLOR(0,0,0,255));
             nFrameCnt++;
           }
 
@@ -239,8 +243,13 @@ namespace vapp {
     /* Draw a little FPS counter */
     if(bDrawFPS) {
       char cTemp[256];        
-      sprintf(cTemp,"%f",m_fFPS_Rate);
-      getDrawLib()->drawText(Vector2f(130,0),cTemp);
+      sprintf(cTemp,"%.1f",m_fFPS_Rate);
+
+      FontManager* v_fm = getDrawLib()->getFontSmall();
+      FontGlyph* v_fg = v_fm->getGlyph(cTemp);
+      v_fm->printString(v_fg,
+			130, 0,
+			MAKE_COLOR(255,255,255,255));
     }    
        
     /* Draw mouse cursor */

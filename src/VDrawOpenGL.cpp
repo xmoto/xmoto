@@ -823,9 +823,9 @@ void GLFontManager::printStringGrad(FontGlyph* i_glyph, int i_x, int i_y,
     glTexCoord2f(1.0, 0.0);
     glVertex2i(i_x + v_glyph->drawWidth(), v_y + v_glyph->drawHeight());
     glEnd();
+    glDisable(GL_BLEND);
     glDisable(GL_TEXTURE_2D);
     /* */
-
   } catch(Exception &e) {
     /* ok, forget this one */
   }
