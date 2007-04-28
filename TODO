@@ -12,7 +12,6 @@
 
 * gérer les accents et tous les caractères au clavier (et vérifier que
    ca passe en bd) : see keyboard-0.1.10.patch
-* virer la builtin font && theme::getDefaultFont();
 * draw bug at top of the textures
 * traduire les scripts integrés (le tuto)
 

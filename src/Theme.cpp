@@ -23,7 +23,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/VExcept.h"
 #include "VXml.h"
 #include "VApp.h"
-#include "BuiltInFont.h"
 #include "md5sum/md5file.h"
 #include "db/xmDatabase.h"
 
@@ -37,57 +36,7 @@ std::vector<Sound*> Theme::getSoundsList() {
   return m_sounds;
 }
 
-void Theme::initDefaultFont() {
-    CBuiltInFont Fnt;
-
-    /* Create texture */
-    int nImgWidth = 256, nImgHeight = 256;
-    vapp::Color *pImgData = new vapp::Color[nImgWidth * nImgHeight];
-    memset(pImgData,0,nImgWidth * nImgHeight * sizeof(vapp::Color));
-  
-    /* Fill texture with glyphs */
-    int cx=0,cy=0,w=Fnt.getCharWidth(),h=Fnt.getCharHeight();
-    for(int i=0;i<256;i++) {
-      unsigned char *pc = Fnt.fetchChar(i);
-      for(int y=0;y<h;y++) {
-        for(int x=0;x<w;x++) {
-          unsigned char *pcT = (unsigned char *)&pImgData[(cx+x) + (cy+y)*nImgWidth];
-          pcT[0] = 255;
-          pcT[1] = 255;
-          pcT[2] = 255;
-          pcT[3] = pc[x+y*w];
-        }
-      }
-      
-      cx += w;
-      if(cx+w > nImgWidth) {
-        cx = 0;
-        cy += h;
-        if(cy+h > nImgHeight) {
-          delete [] pImgData;
-          throw vapp::TextureError("default font does not fit in texture");
-        }
-      }        
-    }
-    
-    /* Load it */
-    m_pDefaultFontTexture = m_texMan.createTexture("default-font",(unsigned char *)pImgData,
-               256,256,true);
-      
-    //keesj:todo:idem here we can not delete the image data pointer
-    //delete [] pImgData;
-}
-
-vapp::Texture* Theme::getDefaultFont() {
-  if(m_pDefaultFontTexture == NULL) {
-    initDefaultFont();
-  }
-  return m_pDefaultFontTexture;
-}
-
 Theme::Theme() {
-  m_pDefaultFontTexture = NULL;
-
   m_player = new BikerTheme(this,
           THEME_PLAYER_BODY,
           THEME_PLAYER_FRONT,

@@ -1674,16 +1674,6 @@ namespace vapp {
   }
 
   /*===========================================================================
-  Helpers
-  ===========================================================================*/
-  void GameRenderer::_DbgText(Vector2f P,std::string Text,Color c) {
-    Vector2f Sp = Vector2f(getParent()->getDrawLib()->getDispWidth()/2 + (float)(P.x - getCameraPositionX())*m_fZoom,
-                           getParent()->getDrawLib()->getDispHeight()/2 - (float)(P.y - getCameraPositionY())*m_fZoom) -
-                  Vector2f(getParent()->getDrawLib()->getTextWidth(Text)/2.0f,getParent()->getDrawLib()->getTextHeight(Text)/2.0f);
-    getParent()->getDrawLib()->drawText(Sp,Text,0,c,true);
-  }   
-
-  /*===========================================================================
   Free stuff
   ===========================================================================*/
   void GameRenderer::_Free(void) {      

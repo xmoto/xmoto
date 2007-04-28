@@ -352,7 +352,6 @@ class Theme {
 			     bool bClamp=false,
 			     vapp::FilterMode eFilterMode = vapp::FM_LINEAR);
 
-  vapp::Texture* getDefaultFont();
   std::vector<Sprite*> getSpritesList();
   std::vector<Sound*> getSoundsList();
   std::vector<std::string>* getRequiredFiles();
@@ -361,16 +360,12 @@ class Theme {
   BikerTheme* getGhostTheme();
 
   private:
-  void initDefaultFont();
-
   vapp::TextureManager m_texMan;
   std::string m_name;
   std::vector<Sprite*> m_sprites;
   std::vector<Music*> m_musics;
   std::vector<Sound*> m_sounds;
   std::vector<std::string> m_requiredFiles;
-
-  vapp::Texture *m_pDefaultFontTexture;
 
   BikerTheme *m_player;
   BikerTheme *m_ghost;

@@ -37,7 +37,7 @@ helpers_SOURCES = helpers/VMath.h             \
 		  helpers/utf8.cpp \
                   iqsort.h
 
-common_SOURCES = BuiltInFont.cpp Image.cpp \
+common_SOURCES = Image.cpp \
   VApp.cpp VBezier.cpp VDraw.cpp VDrawOpenGL.cpp PolyDraw.h PolyDraw.cpp VDrawSDLgfx.cpp \
   VFileIO.cpp VTexture.cpp \
   VXml.cpp \
@@ -48,7 +48,6 @@ common_SOURCES = BuiltInFont.cpp Image.cpp \
   VApp.h VBezier.h VCommon.h VDraw.h \
   VFileIO.h VTexture.h VXml.h \
   BuildConfig.h \
-  BuiltInFont.h \
   DBuffer.cpp \
   DBuffer.h \
   CRCHash.cpp \

@@ -23,7 +23,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __VDRAW_H__
 
 #include "VCommon.h"
-
 #include "helpers/VMath.h"
 #include "VTexture.h"
 #include "Theme.h"
@@ -287,14 +286,6 @@ class GLFontManager : public FontManager {
     virtual void drawImage(const Vector2f & a, const Vector2f & b,
 			   Texture * pTexture, Color Tint = -1);
 
-
-    /* Methods - text */
-    virtual void drawText(const Vector2f & Pos, std::string Text,
-			  Color Back = 0, Color Front = -1, bool bEdge =
-			  false) = 0;
-    virtual int getTextWidth(std::string Text) = 0;
-    virtual int getTextHeight(std::string Text) = 0;
-
     void setDontUseGLExtensions(bool dont_use) {
       m_bDontUseGLExtensions = dont_use;
     };
@@ -336,9 +327,6 @@ class GLFontManager : public FontManager {
     int m_nDispWidth, m_nDispHeight, m_nDispBPP;	/* Screen stuff */
     int m_nLScissorX, m_nLScissorY, m_nLScissorW, m_nLScissorH;
 
-    virtual void _InitTextRendering(Theme * p_theme) = 0;
-    virtual void _UninitTextRendering(Theme * p_theme) = 0;
-
     FontManager* m_fontSmall;
     FontManager* m_fontMedium;
     FontManager* m_fontBig;
@@ -346,7 +334,6 @@ class GLFontManager : public FontManager {
     bool m_bWindowed;		/* Windowed or not */
 
     virtual bool isExtensionSupported(std::string Ext) = 0;
-    Texture *m_pDefaultFontTex;
     Texture *m_texture;
     BlendMode m_blendMode;
 
@@ -423,15 +410,6 @@ class GLFontManager : public FontManager {
        * Flush the graphics. In memory graphics will now be displayed
        **/
     virtual void flushGraphics();
-
-    /* Methods - text */
-    virtual void _InitTextRendering(Theme * p_theme);
-    virtual void _UninitTextRendering(Theme * p_theme);
-    virtual void drawText(const Vector2f & Pos, std::string Text,
-			  Color Back = 0, Color Front = -1, bool bEdge =
-			  false);
-    virtual int getTextWidth(std::string Text);
-    virtual int getTextHeight(std::string Text);
 
     virtual FontManager* getFontManager(const std::string &i_fontFile, int i_fontSize);
 
@@ -579,15 +557,6 @@ class GLFontManager : public FontManager {
        * Flush the graphics. In memory graphics will now be displayed
        **/
     virtual void flushGraphics();
-
-    /* Methods - text */
-    virtual void _InitTextRendering(Theme * p_theme);
-    virtual void _UninitTextRendering(Theme * p_theme);
-    virtual void drawText(const Vector2f & Pos, std::string Text,
-			  Color Back = 0, Color Front = -1, bool bEdge =
-			  false);
-    virtual int getTextWidth(std::string Text);
-    virtual int getTextHeight(std::string Text);
 
     virtual Img *grabScreen(void);
     virtual bool isExtensionSupported(std::string Ext);

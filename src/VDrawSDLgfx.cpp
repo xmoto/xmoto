@@ -24,7 +24,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "VDraw.h"
 #include "VApp.h"
-#include "BuiltInFont.h"
 
 #ifdef ENABLE_SDLGFX
 #include "SDL_gfxPrimitives.h"
@@ -226,10 +225,6 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
     polyDraw = new PolyDraw(m_screen);
 
     //setBackgroundColor(0,0,40,255);
-
-    /* Init the Text drawing library */
-    _InitTextRendering(ptheme);
-
   }
 
   void DrawLibSDLgfx::unInit() {
@@ -453,141 +448,6 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
   }
 
   void DrawLibSDLgfx::setBlendMode(BlendMode blendMode) {
-  }
-
-
-
-  /*===========================================================================
-  Text dim probing
-  ===========================================================================*/
-  int DrawLibSDLgfx::getTextHeight(std::string Text) {
-    int cx = 0, cy = 0, c;
-    int h = 0;
-
-    for (unsigned int i = 0; i < Text.size(); i++) {
-      c = Text[i];
-      if (c == ' ') {
-	cx += 8;
-      } else if (c == '\r') {
-	cx = 0;
-      } else if (c == '\n') {
-	cx = 0;
-	cy += 12;
-      } else {
-	cx += 8;
-      }
-      if (cy > h)
-	h = cx;
-    }
-    return h + 12;
-  }
-
-  int DrawLibSDLgfx::getTextWidth(std::string Text) {
-    int cx = 0, cy = 0, c;
-    int w = 0;
-
-    for (unsigned int i = 0; i < Text.size(); i++) {
-      c = Text[i];
-      if (c == ' ') {
-	cx += 8;
-      } else if (c == '\r') {
-	cx = 0;
-      } else if (c == '\n') {
-	cx = 0;
-	cy += 12;
-      } else {
-	cx += 8;
-      }
-      if (cx > w)
-	w = cx;
-    }
-    return w;
-  }
-
-  /*===========================================================================
-  Text drawing
-  ===========================================================================*/
-  void DrawLibSDLgfx::drawText(const Vector2f & Pos, std::string Text,
-			       Color Back, Color Front, bool bEdge) {
-    if (bEdge) {
-      /* SLOOOOW */
-      drawText(Pos + Vector2f(1, 1), Text, 0, MAKE_COLOR(0, 0, 0, 255),
-	       false);
-      drawText(Pos + Vector2f(-1, 1), Text, 0, MAKE_COLOR(0, 0, 0, 255),
-	       false);
-      drawText(Pos + Vector2f(1, -1), Text, 0, MAKE_COLOR(0, 0, 0, 255),
-	       false);
-      drawText(Pos + Vector2f(-1, -1), Text, 0, MAKE_COLOR(0, 0, 0, 255),
-	       false);
-    }
-
-    int cx = (int)Pos.x, cy = (int)Pos.y, c;
-
-
-    int nCharsPerLine = 256 / 8;
-
-    for (unsigned int i = 0; i < Text.size(); i++) {
-      c = Text[i];
-      if (c == ' ') {
-
-	startDraw(DRAW_MODE_POLYGON);
-	setColor(Back);
-	glVertexSP(cx, cy);
-	glVertexSP(cx + 8, cy);
-	glVertexSP(cx + 8, cy + 12);
-	glVertexSP(cx, cy + 12);
-	endDraw();
-	cx += 8;
-      } else if (c == '\r') {
-	cx = (int)Pos.x;
-      } else if (c == '\n') {
-	cx = (int)Pos.x;
-	cy += 12;
-      } else {
-	int y1 = (c / nCharsPerLine) * 12;
-	int x1 = (c % nCharsPerLine) * 8;
-	int y2 = y1 + 12;
-	int x2 = x1 + 8;
-
-	startDraw(DRAW_MODE_POLYGON);
-	setColor(Back);
-	glVertexSP(cx, cy);
-	glVertexSP(cx + 8, cy);
-	glVertexSP(cx + 8, cy + 12);
-	glVertexSP(cx, cy + 12);
-	endDraw();
-	if (m_pDefaultFontTex == NULL) {
-	  printf("Can't draw with empy texture!\n");
-	}
-	setTexture(m_pDefaultFontTex, BLEND_MODE_A);
-	startDraw(DRAW_MODE_POLYGON);
-	setColor(Front);
-	glTexCoord((float)x1 / 256.0f, (float)y1 / 256.0f);
-
-	glVertexSP(cx, cy);
-	glTexCoord((float)x2 / 256.0f, (float)y1 / 256.0f);
-	glVertexSP(cx + 8, cy);
-	glTexCoord((float)x2 / 256.0f, (float)y2 / 256.0f);
-	glVertexSP(cx + 8, cy + 12);
-	glTexCoord((float)x1 / 256.0f, (float)y2 / 256.0f);
-	glVertexSP(cx, cy + 12);
-	endDraw();
-	cx += 8;
-      }
-    }
-  }
-
-  /*===========================================================================
-  Init of text rendering
-  ===========================================================================*/
-  void DrawLibSDLgfx::_InitTextRendering(Theme * p_theme) {
-    m_pDefaultFontTex = p_theme->getDefaultFont();
-  }
-
-  /*===========================================================================
-  Uninit of text rendering
-  ===========================================================================*/
-  void DrawLibSDLgfx::_UninitTextRendering(Theme * p_theme) {
   }
 
   void DrawLibSDLgfx::clearGraphics() {

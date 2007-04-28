@@ -23,7 +23,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *  Simple 2D drawing library, built closely on top of OpenGL.
  */
 #include "VDraw.h"
-#include "BuiltInFont.h"
 
 namespace vapp {
 
@@ -68,7 +67,6 @@ namespace vapp {
   m_bVBOSupported = false;
   m_nLScissorX = m_nLScissorY = m_nLScissorW = m_nLScissorH = 0;
   m_bFBOSupported = false;
-  m_pDefaultFontTex = NULL;
   m_texture = NULL;
   m_blendMode = BLEND_MODE_NONE;
 
