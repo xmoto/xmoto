@@ -322,7 +322,6 @@ namespace vapp {
 
     void _RenderGhost(Biker* i_ghost, int i);
 
-    void _DbgText(Vector2f P,std::string Text,Color c);
     void _DrawRotatedMarker(Vector2f Pos,dReal *pfRot);     
     void _RenderDebugInfo(void);      
     void guessDesiredCameraPosition(float &p_fDesiredHorizontalScrollShift,
