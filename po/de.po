@@ -1,6 +1,6 @@
 # translation of de.po to Deutsch
 # Jonathan Sieber <jonathan_sieber@yahoo.de>, 2006.
-# corrections: Jens Erler <mothbox@gmx.net>, 2007
+# Jens Erler <mothbox@gmx.net>, 2007.
 # 
 # 
 msgid ""
@@ -46,7 +46,7 @@ msgstr "8-bit"
 
 #: src/GameText.h:40
 msgid "Quit level"
-msgstr "Zum Hauptmenue"
+msgstr "Zum Hauptmenü"
 
 #: src/GameText.h:41
 msgid "Add to favorite"
@@ -156,7 +156,7 @@ msgstr "Richtung wechseln (Spieler 2)"
 
 #: src/GameText.h:69
 msgid "Change Key..."
-msgstr "Taste aendern..."
+msgstr "Taste ändern..."
 
 #: src/GameText.h:70
 msgid "Checking for new or updated levels..."
@@ -164,11 +164,11 @@ msgstr "Suche nach neuen oder aktualisierten Levels"
 
 #: src/GameText.h:71
 msgid "Choose Level"
-msgstr "Level waehlen"
+msgstr "Level wählen"
 
 #: src/GameText.h:72
 msgid "Close"
-msgstr "Schliessen"
+msgstr "Schließen"
 
 #: src/GameText.h:73
 msgid "Configure Joystick..."
@@ -304,15 +304,15 @@ msgstr "Standarts"
 
 #: src/GameText.h:151
 msgid "Do you really want to delete player?"
-msgstr "Spieler wirklich loeschen?"
+msgstr "Spieler wirklich löschen?"
 
 #: src/GameText.h:152
 msgid "Do you really want to delete replay?"
-msgstr "Replay wirklich loeschen?"
+msgstr "Replay wirklich löschen?"
 
 #: src/GameText.h:153 src/GameText.h:155
 msgid "Delete"
-msgstr "Loeschen"
+msgstr "Löschen"
 
 #: src/GameText.h:154
 msgid "Delete from favorite"
@@ -328,7 +328,7 @@ msgstr "Geist-Zeit-Differenz anzeigen"
 
 #: src/GameText.h:158
 msgid "Display Ghost Information"
-msgstr "Informationen ueber Geist anzeigen"
+msgstr "Informationen über Geist anzeigen"
 
 #: src/GameText.h:159
 msgid "Direct Connection"
@@ -351,8 +351,8 @@ msgid ""
 "Downloading extra levels...\n"
 "Press ESC to abort."
 msgstr ""
-"Lade zusaetzliche Levels herunter\n"
-"Zum Abbrechen 'ESC' druecken."
+"Lade zusätzliche Levels herunter\n"
+"Zum Abbrechen 'ESC' drücken."
 
 #: src/GameText.h:164
 msgid "Checking for new levels..."
@@ -360,7 +360,7 @@ msgstr "Suche nach neuen Levels..."
 
 #: src/GameText.h:165
 msgid "Checking for existing rooms..."
-msgstr "Suche nach bestehenden Raeumen..."
+msgstr "Suche nach bestehenden Räumen..."
 
 #: src/GameText.h:166
 msgid ""
@@ -404,7 +404,7 @@ msgstr "Kontexthilfe aktivieren"
 
 #: src/GameText.h:175
 msgid "Enable Engine Sound"
-msgstr "Motorgeraeusch aktivieren"
+msgstr "Motorgeräusch aktivieren"
 
 #: src/GameText.h:176
 msgid "Enable Ghost"
@@ -432,7 +432,7 @@ msgstr "Namen des Replays eingeben"
 
 #: src/GameText.h:182
 msgid "There are errors in the level, don't expect it to be playable!"
-msgstr "Es befinden sich Fehler in dem Level. Es ist eventuell unspielbar!"
+msgstr "Es befinden sich Fehler in dem Level. Es ist eventüll unspielbar!"
 
 #: src/GameText.h:183
 msgid "External Levels"
@@ -444,7 +444,7 @@ msgid ""
 "Check your Internet connection!"
 msgstr ""
 "Suche nach Levels fehlgeschlagen.\n"
-"Bitte Internetverbindung ueberpruefen!"
+"Bitte Internetverbindung überprüfen!"
 
 #: src/GameText.h:185
 msgid ""
@@ -452,7 +452,7 @@ msgid ""
 "Check your Internet connection!"
 msgstr ""
 "Herunterladen der Highscores fehlgeschlagen.\n"
-"Bitte Internetverbindung ueberpruefen!"
+"Bitte Internetverbindung überprüfen!"
 
 #: src/GameText.h:186
 msgid ""
@@ -460,7 +460,7 @@ msgid ""
 "Check your Internet connection!"
 msgstr ""
 "Herunterladen der Levels fehlgeschlagen.\n"
-"Bitte Internetverbindung ueberpruefen!"
+"Bitte Internetverbindung überprüfen!"
 
 #: src/GameText.h:187
 msgid ""
@@ -468,7 +468,7 @@ msgid ""
 "Check your Internet connection!"
 msgstr ""
 "Herunterladen des Replays fehlgeschlagen.\n"
-"Bitte Internetverbindung ueberpruefen!"
+"Bitte Internetverbindung überprüfen!"
 
 #: src/GameText.h:188
 msgid ""
@@ -476,15 +476,15 @@ msgid ""
 "Check your Internet connection!"
 msgstr ""
 "Herunterladen der Raumliste fehlgeschlagen.\n"
-"Bitte Internetverbindung ueberpruefen!"
+"Bitte Internetverbindung überprüfen!"
 
 #: src/GameText.h:189
 msgid ""
 "Failed to get the selected theme\n"
 "Check your Internet connection!"
 msgstr ""
-"Konnte das gewaehlte Theme nicht holen.\n"
-"Bitte Internetverbindung ueberpruefen!"
+"Konnte das gewählte Theme nicht holen.\n"
+"Bitte Internetverbindung überprüfen!"
 
 #: src/GameText.h:190
 msgid "Failed to initialize level!"
@@ -508,7 +508,7 @@ msgid ""
 "Check your Internet connection!"
 msgstr ""
 "Aktualisieren der Themenliste fehlgeschlagen.\n"
-"Bitte Internetverbindung ueberpruefen!"
+"Bitte Internetverbindung überprüfen!"
 
 #: src/GameText.h:194
 msgid "File"
@@ -632,14 +632,14 @@ msgstr "Bildschirmfoto aufnehmen"
 
 #: src/GameText.h:227
 msgid "Reload levels from Levels dir (if you create a new level)"
-msgstr "Level-Liste neu einlesen (beim Hinzufuegen eigener Level)"
+msgstr "Level-Liste neu einlesen (beim Hinzufügen eigener Level)"
 
 #: src/GameText.h:229
 msgid ""
 "Find all the strawberries and touch the flower to finish\n"
 "the level."
 msgstr ""
-"Sammle alle Erdbeeren und beruehre die Blume,\n"
+"Sammle alle Erdbeeren und berühre die Blume,\n"
 "um das Level zu beenden."
 
 #: src/GameText.h:230
@@ -648,7 +648,7 @@ msgid ""
 "http://xmoto.tuxfamily.org for more information."
 msgstr ""
 "Lies die README Datei oder besuche die Website auf\n"
-"http://xmoto.tuxfamily.org fuer weitere Informationen."
+"http://xmoto.tuxfamily.org für weitere Informationen."
 
 #: src/GameText.h:232
 msgid "High"
@@ -672,7 +672,7 @@ msgstr "Initialisiere Eingabesystem..."
 
 #: src/GameText.h:236
 msgid "Initializing menus..."
-msgstr "Initialisiere Menues..."
+msgstr "Initialisiere Menüs..."
 
 #: src/GameText.h:237
 msgid "Initializing renderer..."
@@ -684,7 +684,7 @@ msgstr "Initialisiere Textrenderer..."
 
 #: src/GameText.h:239
 msgid "View Level Initially"
-msgstr "Leveluebersicht"
+msgstr "Levelübersicht"
 
 #: src/GameText.h:240
 msgid "Joystick"
@@ -696,11 +696,11 @@ msgstr "Hoppla!"
 
 #: src/GameText.h:242
 msgid "Press ENTER to try again"
-msgstr "ENTER druecken fuer neuen Versuch"
+msgstr "Drücke ENTER für neuen Versuch"
 
 #: src/GameText.h:243
 msgid "Press ESC to display the menu"
-msgstr "ESC druecken, um das Menue anzuzeigen"
+msgstr "Drücke ESC, um das Menü anzuzeigen"
 
 #: src/GameText.h:244
 msgid "Key"
@@ -738,7 +738,7 @@ msgstr "Level-Pakete"
 #: src/GameText.h:252
 #, c-format
 msgid "Level '%s' required by replay!"
-msgstr "Level '%s' wird von dem Replay benoetigt"
+msgstr "Level '%s' wird von dem Replay benötigt"
 
 #: src/GameText.h:253
 msgid "Levels"
@@ -754,7 +754,7 @@ msgstr "Lade Levels..."
 
 #: src/GameText.h:256
 msgid "Loading menu graphics..."
-msgstr "Lade Menuegrafiken..."
+msgstr "Lade Menügrafiken..."
 
 #: src/GameText.h:257
 msgid "Loading replays..."
@@ -782,11 +782,11 @@ msgstr "Mittel"
 
 #: src/GameText.h:263
 msgid "Menu Graphics"
-msgstr "Menuegrafik"
+msgstr "Menügrafik"
 
 #: src/GameText.h:264
 msgid "Level references unknown textures, it could be unplayable!"
-msgstr "Das Level verlangt unbekannte Texturen, es koennte unspielbar sein!"
+msgstr "Das Level verlangt unbekannte Texturen, es könnte unspielbar sein!"
 
 #: src/GameText.h:265
 msgid "Mono"
@@ -798,7 +798,7 @@ msgstr "Folgende sind deine meistgespielten Levels"
 
 #: src/GameText.h:267
 msgid "Motion blur ghost"
-msgstr "Geist mit Bewegungsunschaerfe"
+msgstr "Geist mit Bewegungsunschärfe"
 
 #: src/GameText.h:268
 msgid "Multi"
@@ -815,7 +815,7 @@ msgstr "Anzahl der Spieler"
 #: src/GameText.h:271
 #, c-format
 msgid "X-Moto %s or newer required to load level"
-msgstr "X-Moto %s oder neuer wird benoetigt, um das Level zu laden"
+msgstr "X-Moto %s oder neuer wird benötigt, um das Level zu laden"
 
 #: src/GameText.h:272
 msgid "New highscore!"
@@ -823,12 +823,12 @@ msgstr "Neuer Rekord!"
 
 #: src/GameText.h:273
 msgid "New personal highscore!"
-msgstr "Neuer persoenlicher Rekord!"
+msgstr "Neuer persönlicher Rekord!"
 
 #: src/GameText.h:274
 #, c-format
 msgid "%d new or updated level available. Download now?"
-msgstr "%d neue oder aktualisierte Levels verfuegbar. Jetzt herunterladen?"
+msgstr "%d neue oder aktualisierte Levels verfügbar. Jetzt herunterladen?"
 
 #: src/GameText.h:275
 msgid "New Levels"
@@ -836,12 +836,12 @@ msgstr "Neue Levels"
 
 #: src/GameText.h:276
 msgid "New levels available!"
-msgstr "Neue Levels verfuegbar!"
+msgstr "Neue Levels verfügbar!"
 
 #: src/GameText.h:277
 #, c-format
 msgid "%d new or updated levels available. Download now?"
-msgstr "%d neue oder aktualisierte Levels vefuegbar. Jetzt herunterladen?"
+msgstr "%d neue oder aktualisierte Levels vefügbar. Jetzt herunterladen?"
 
 #: src/GameText.h:278
 msgid "New Profile..."
@@ -857,7 +857,7 @@ msgid ""
 "\n"
 "Try again another time."
 msgstr ""
-"Keine neuen oder aktualisierten Levels verfuegbar.\n"
+"Keine neuen oder aktualisierten Levels verfügbar.\n"
 "\n"
 "Versuch es ein anderes Mal."
 
@@ -867,7 +867,7 @@ msgstr "Tut mir leid, keine weiteren Levels mehr."
 
 #: src/GameText.h:282
 msgid "No statistics for this profile."
-msgstr "Kein Statistik fuer dieses Profil."
+msgstr "Kein Statistik für dieses Profil."
 
 #: src/GameText.h:283
 msgid "Not finished"
@@ -889,8 +889,8 @@ msgstr ""
 "Wichtiger Hinweis!\n"
 "\n"
 "Diese Version von X-Moto ist noch in der Entwicklung.\n"
-"Jede Art von Rueckmeldung wird gerne gesehen, so dass\n"
-"das Spiel fortwaehrend verbessert werden kann.\n"
+"Jede Art von Rückmeldung wird gerne gesehen, so dass\n"
+"das Spiel fortwährend verbessert werden kann.\n"
 "Bitte schicke Fehler, Ideen, Kommentare, Funktionen, Beleidigungen, usw.\n"
 "an nicolas at adenis-lamarre dot fr.\n"
 "\n"
@@ -907,7 +907,7 @@ msgstr "OK"
 
 #: src/GameText.h:296
 msgid "Open"
-msgstr "Oeffnen"
+msgstr "Öffnen"
 
 #: src/GameText.h:297
 msgid "Options"
@@ -916,7 +916,7 @@ msgstr "Optionen"
 #: src/GameText.h:298
 msgid "Some options will not take effect before next restart!"
 msgstr ""
-"Einige der Einstellungen zeigen keine Wirkung bis zum naechsten Neustart!"
+"Einige der Einstellungen zeigen keine Wirkung bis zum nächsten Neustart!"
 
 #: src/GameText.h:299
 msgid "By author"
@@ -956,7 +956,7 @@ msgstr "Passwort"
 
 #: src/GameText.h:309 src/GameText.h:310
 msgid "Personal"
-msgstr "Persoenlich"
+msgstr "Persönlich"
 
 #: src/GameText.h:312
 msgid "Players"
@@ -972,7 +972,7 @@ msgstr "Spielerprofile"
 
 #: src/GameText.h:315
 msgid "Play Next Level"
-msgstr "Naechstes Level"
+msgstr "Nächstes Level"
 
 #: src/GameText.h:316
 msgid "Port"
@@ -981,7 +981,7 @@ msgstr "Port"
 #: src/GameText.h:317
 #, c-format
 msgid "Press key you want to '%s' or ESC to cancel..."
-msgstr "Taste zum '%s' druecken oder ESC um abzubrechen..."
+msgstr "Taste zum '%s' drücken oder ESC um abzubrechen..."
 
 #: src/GameText.h:318
 msgid "Proxy Server"
@@ -1045,7 +1045,7 @@ msgstr "Spiel fortsetzen"
 
 #: src/GameText.h:334
 msgid "Run Windowed"
-msgstr "Als Fenster ausfuehren"
+msgstr "Als Fenster ausführen"
 
 #: src/GameText.h:335
 msgid "Save"
@@ -1061,7 +1061,7 @@ msgstr "Replay speichern"
 
 #: src/GameText.h:338
 msgid "Screen Resolution"
-msgstr "Bildschirmaufloesung"
+msgstr "Bildschirmauflösung"
 
 #: src/GameText.h:339
 msgid "Show"
@@ -1101,7 +1101,7 @@ msgstr "Thema"
 
 #: src/GameText.h:349
 msgid "Available"
-msgstr "Verfuegbar"
+msgstr "Verfügbar"
 
 #: src/GameText.h:350
 msgid "To download"
@@ -1125,7 +1125,7 @@ msgstr "Level wiederholen"
 
 #: src/GameText.h:355
 msgid "Tutorial"
-msgstr "Einfuehrung"
+msgstr "Einführung"
 
 #: src/GameText.h:356
 msgid "Unknown"
@@ -1142,7 +1142,7 @@ msgid ""
 "or your theme list is not up to date"
 msgstr ""
 "Kann das Thema nicht aktualisieren!\n"
-"Das Thema ist nicht im Internet verfuegbar,\n"
+"Das Thema ist nicht im Internet verfügbar,\n"
 "oder die Themen-Liste ist nicht aktuell"
 
 #: src/GameText.h:359
@@ -1151,7 +1151,7 @@ msgstr "Aktualisieren"
 
 #: src/GameText.h:360
 msgid "Check WWW"
-msgstr "WWW Ueberpruefen"
+msgstr "WWW überprüfen"
 
 #: src/GameText.h:361
 msgid "Update the rooms list"
@@ -1221,7 +1221,7 @@ msgstr "Bestzeit anzeigen"
 #, c-format
 msgid "Do you want to update level \"%s\"?"
 msgstr ""
-"Moechtest du das Level \"%s\"\n"
+"Möchtest du das Level \"%s\"\n"
 "aktualiseren?"
 
 #: src/GameText.h:377
@@ -1238,7 +1238,7 @@ msgstr "WWW"
 
 #: src/GameText.h:381
 msgid "Rooms"
-msgstr "Raeume"
+msgstr "Räume"
 
 #: src/GameText.h:383
 #, c-format
@@ -1287,7 +1287,7 @@ msgstr "Hineinzoomen"
 
 #: src/GameText.h:393
 msgid "Reinitialize zoom"
-msgstr "Zoom zuruecksetzen"
+msgstr "Zoom zurücksetzen"
 
 #: src/GameText.h:394
 msgid "Zoom out"
@@ -1295,7 +1295,7 @@ msgstr "Herauszoomen"
 
 #: src/GameText.h:397
 msgid "Download the latest X-Moto world records and check for new levels"
-msgstr "Neuste Weltrekorde herunterladen und auf neue Levels pruefen"
+msgstr "Neuste Weltrekorde herunterladen und auf neue Levels prüfen"
 
 #: src/GameText.h:398
 msgid "Configure how you are connected to the Internet"
@@ -1307,15 +1307,15 @@ msgstr "Level wiederholen"
 
 #: src/GameText.h:400
 msgid "Save a replay for later viewing"
-msgstr "Replay fuer spaetere Betrachtung speichern"
+msgstr "Replay für spätere Betrachtung speichern"
 
 #: src/GameText.h:401
 msgid "Play next level"
-msgstr "Naechstes Level spielen"
+msgstr "Nächstes Level spielen"
 
 #: src/GameText.h:402
 msgid "Back to the main menu"
-msgstr "Zurueck ins Hauptmenue"
+msgstr "Zurück ins Hauptmenü"
 
 #: src/GameText.h:403
 msgid "Quit the game"
@@ -1331,7 +1331,7 @@ msgstr "Das Level von Anfang an wiederholen"
 
 #: src/GameText.h:406
 msgid "Play next level instead"
-msgstr "Stattdessen naechstes Level spielen"
+msgstr "Stattdessen nächstes Level spielen"
 
 #: src/GameText.h:407
 msgid "Try this level again"
@@ -1347,7 +1347,7 @@ msgstr "Levels in Pakete gruppiert"
 
 #: src/GameText.h:410
 msgid "Browse levels available to you"
-msgstr "Verfuegbare Levels durchsuchen"
+msgstr "Verfügbare Levels durchsuchen"
 
 #: src/GameText.h:411
 msgid "View list of recorded replays"
@@ -1367,7 +1367,7 @@ msgstr "Spielerprofil wechseln"
 
 #: src/GameText.h:415
 msgid "Play tutorial of how to play the game"
-msgstr "Spieleinfuehrung spielen"
+msgstr "Spieleinführung spielen"
 
 #: src/GameText.h:416
 msgid "Official built-in levels"
@@ -1379,19 +1379,19 @@ msgstr "Inoffizielle eingebaute Levels"
 
 #: src/GameText.h:418
 msgid "Play the selected level"
-msgstr "Ausgewaehltes Level spielen"
+msgstr "Ausgewähltes Level spielen"
 
 #: src/GameText.h:419
 msgid "View general information about the level, best times, and replays"
-msgstr "Allgemeine Informationen ueber Level, Bestzeiten und Replays anzeigen"
+msgstr "Allgemeine Informationen über Level, Bestzeiten und Replays anzeigen"
 
 #: src/GameText.h:420
 msgid "Run the selected replay"
-msgstr "Ausgewaehltes Replay abspielen"
+msgstr "Ausgewähltes Replay abspielen"
 
 #: src/GameText.h:421
 msgid "Permanently delete the selected replay"
-msgstr "Ausgewaehltes Replay dauerhaft loeschen"
+msgstr "Ausgewähltes Replay dauerhaft löschen"
 
 #: src/GameText.h:422
 msgid "Show replays of all players in list"
@@ -1419,7 +1419,7 @@ msgstr "Einstellungen speichern"
 
 #: src/GameText.h:428
 msgid "Revert options to defaults"
-msgstr "Einstellungen auf Standard zuruecksetzen"
+msgstr "Einstellungen auf Standard zurücksetzen"
 
 #: src/GameText.h:429
 msgid "Show a map of your surroundings when playing"
@@ -1444,23 +1444,23 @@ msgstr "True-Color-Grafik aktivieren"
 
 #: src/GameText.h:434
 msgid "Select graphics resolution"
-msgstr "Grafikaufloesung auswaehlen"
+msgstr "Grafikauflösung auswählen"
 
 #: src/GameText.h:435
 msgid "Run the game in a window"
-msgstr "Spiel im Fenster ausfuehren"
+msgstr "Spiel im Fenster ausführen"
 
 #: src/GameText.h:436
 msgid "Not so fancy menu graphics"
-msgstr "Einfachste Menuegrafiken"
+msgstr "Einfachste Menügrafiken"
 
 #: src/GameText.h:437
 msgid "A bit more fancy menu graphics"
-msgstr "Etwas huebschere Menuegrafiken"
+msgstr "Etwas hübschere Menügrafiken"
 
 #: src/GameText.h:438
 msgid "Fanciest menu graphics"
-msgstr "Schoenste Menuegrafiken"
+msgstr "Schönste Menügrafiken"
 
 #: src/GameText.h:439
 msgid "Disable most graphics not important to the gameplay"
@@ -1481,23 +1481,23 @@ msgstr "Soundeffekte aktivieren"
 
 #: src/GameText.h:443
 msgid "Poor sound quality"
-msgstr "Schlechte Soundqualitaet"
+msgstr "Schlechte Soundqualität"
 
 #: src/GameText.h:444
 msgid "Normal sound quality"
-msgstr "Normale Soundqualitaet"
+msgstr "Normale Soundqualität"
 
 #: src/GameText.h:445
 msgid "Best sound quality"
-msgstr "Beste Soundqualitaet"
+msgstr "Beste Soundqualität"
 
 #: src/GameText.h:446
 msgid "8-bit sound samples, poor quality"
-msgstr "8-bit Sounds, schlechte Qualitaet"
+msgstr "8-bit Sounds, schlechte Qualität"
 
 #: src/GameText.h:447
 msgid "16-bit sound samples, good quality"
-msgstr "16-bit Sounds, gute Qualitaet"
+msgstr "16-bit Sounds, gute Qualität"
 
 #: src/GameText.h:448
 msgid "Mono (single channel) audio"
@@ -1509,11 +1509,11 @@ msgstr "Stereo (Zwei-Kanal) Ton"
 
 #: src/GameText.h:450
 msgid "Turn on engine noise"
-msgstr "Motorgeraeusche aktivieren"
+msgstr "Motorgeräusche aktivieren"
 
 #: src/GameText.h:451
 msgid "Select action to re-configure to another key"
-msgstr "Aktion, die auf eine andere Taste gelegt werden soll, auswaehlen"
+msgstr "Aktion, die auf eine andere Taste gelegt werden soll, auswählen"
 
 #: src/GameText.h:452
 msgid "View contents of level pack"
@@ -1521,11 +1521,11 @@ msgstr "Inhalt des Level-Pakets anzeigen"
 
 #: src/GameText.h:453
 msgid "Select a player profile to use"
-msgstr "Zu verwendendes Spielerprofil auswaehlen"
+msgstr "Zu verwendendes Spielerprofil auswählen"
 
 #: src/GameText.h:454
 msgid "Use the selected player profile"
-msgstr "Ausgewaehltes Spielerprofil verwenden"
+msgstr "Ausgewähltes Spielerprofil verwenden"
 
 #: src/GameText.h:455
 msgid "Create new player profile"
@@ -1533,23 +1533,23 @@ msgstr "Neues Spielerprofil erstellen"
 
 #: src/GameText.h:456
 msgid "Permanently delete selected player profile, including best times"
-msgstr "Spielerprofil dauerhaft loeschen, einschliesslich der Bestzeiten"
+msgstr "Spielerprofil dauerhaft löschen, einschliesslich der Bestzeiten"
 
 #: src/GameText.h:457
 msgid "Select a level in the level pack to play"
-msgstr "Level im Level-Paket zum Spielen auswaehlen"
+msgstr "Level im Level-Paket zum Spielen auswählen"
 
 #: src/GameText.h:458
 msgid "Close level pack"
-msgstr "Level-Paket schliessen"
+msgstr "Level-Paket schließen"
 
 #: src/GameText.h:459
 msgid "General information about the level"
-msgstr "Allgmeine Informationen ueber das Level"
+msgstr "Allgmeine Informationen über das Level"
 
 #: src/GameText.h:460
 msgid "View best times for the level"
-msgstr "Bestzeiten fuer das Level anzeigen"
+msgstr "Bestzeiten für das Level anzeigen"
 
 #: src/GameText.h:461
 msgid "View locally stored replays of the level"
@@ -1557,27 +1557,27 @@ msgstr "Lokal gespeicherte Replays des Levels anzeigen"
 
 #: src/GameText.h:462
 msgid "Only show personal best times for this level"
-msgstr "Nur persoenliche Bestzeiten fuer dieses Level anzeigen"
+msgstr "Nur persönliche Bestzeiten für dieses Level anzeigen"
 
 #: src/GameText.h:463
 msgid "Show all best times for this level"
-msgstr "Alle Bestzeiten fuer dieses Level anzeigen"
+msgstr "Alle Bestzeiten für dieses Level anzeigen"
 
 #: src/GameText.h:464
 msgid "Only show personal replays for this level"
-msgstr "Nur persoenliche Replays fuer dieses Level anzeigen"
+msgstr "Nur persönliche Replays für dieses Level anzeigen"
 
 #: src/GameText.h:465
 msgid "Show all replays for this level"
-msgstr "Alle Replays fuer dieses Level anzeigen"
+msgstr "Alle Replays für dieses Level anzeigen"
 
 #: src/GameText.h:466
 msgid "Run selected replay"
-msgstr "Gewaehltes Replay abspielen"
+msgstr "Gewähltes Replay abspielen"
 
 #: src/GameText.h:467
 msgid "Show helpful help strings such as this one"
-msgstr "Nuetzliche Hilfetexte wie diesen anzeigen"
+msgstr "Nützliche Hilfetexte wie diesen anzeigen"
 
 #: src/GameText.h:468
 msgid ""
@@ -1588,25 +1588,25 @@ msgstr ""
 
 #: src/GameText.h:469
 msgid "Select this if you got a direct connection to the Internet"
-msgstr "Dieses auswaehlen, wenn eine direkte Verbindung zum Internet besteht"
+msgstr "Dieses auswählen, wenn eine direkte Verbindung zum Internet besteht"
 
 #: src/GameText.h:470
 msgid "Select this if you connects to the Internet through an HTTP proxy"
 msgstr ""
-"Dieses auswaehlen, wenn die Internetverbingung durch einen HTTP-Proxy "
-"durchgefuehrt wird"
+"Dieses auswählen, wenn die Internetverbingung durch einen HTTP-Proxy "
+"durchgeführt wird"
 
 #: src/GameText.h:471
 msgid "Select this if you connects to the Internet through a SOCKS4 proxy"
 msgstr ""
-"Dieses auswaehlen, wenn die Internetverbingung durch einen SOCKS4-Proxy "
-"durchgefuehrt wird"
+"Dieses auswählen, wenn die Internetverbingung durch einen SOCKS4-Proxy "
+"durchgeführt wird"
 
 #: src/GameText.h:472
 msgid "Select this if you connects to the Internet through a SOCKS5 proxy"
 msgstr ""
-"Dieses auswaehlen, wenn die Internetverbingung durch einen SOCKS5-Proxy "
-"durchgefuehrt wird"
+"Dieses auswählen, wenn die Internetverbingung durch einen SOCKS5-Proxy "
+"durchgeführt wird"
 
 #: src/GameText.h:473
 msgid "Use these settings"
@@ -1618,7 +1618,7 @@ msgstr "IP-Adresse oder Hostnamen des Proxyserver eingeben"
 
 #: src/GameText.h:475
 msgid "Write the port number used by the proxy server"
-msgstr "Portnummer fuer den Proxy-Server eingeben"
+msgstr "Portnummer für den Proxy-Server eingeben"
 
 #: src/GameText.h:476
 msgid "New levels and levels updated from the Internet"
@@ -1626,18 +1626,17 @@ msgstr "Neue und aktualisierte Levels aus dem Internet"
 
 #: src/GameText.h:478
 msgid "Show the ghost if possible in the game"
-msgstr "Wenn moeglich, Geist im Spiel anzeigen"
+msgstr "Wenn möglich, Geist im Spiel anzeigen"
 
 #: src/GameText.h:479
 msgid "Choose which ghost to display"
-msgstr "Anzuzeigenden Geist auswaehlen"
+msgstr "Anzuzeigenden Geist auswählen"
 
 #: src/GameText.h:480
 msgid ""
 "Make motion blur effect for the ghost (if supported by your graphics card)"
 msgstr ""
-"Geist mit Bewegungsunschaerfe zeichen (falls die Grafikkarte dies "
-"unterstuetzt)"
+"Geist mit Bewegungsunschärfe zeichen (falls die Grafikkarte dies unterstützt)"
 
 #: src/GameText.h:481
 msgid "When starting a level with a ghost, display who the ghost is of"
@@ -1667,7 +1666,7 @@ msgstr "Beim Start neue Bestzeiten laden"
 
 #: src/GameText.h:489
 msgid "Show various statistics about X-Moto"
-msgstr "Verschiedene Statistiken ueber X-Moto anzeigen"
+msgstr "Verschiedene Statistiken über X-Moto anzeigen"
 
 #: src/GameText.h:490
 msgid "Update statistics (also happens each time X-Moto is started)"
@@ -1675,11 +1674,11 @@ msgstr "Statistik aktualisieren (passiert auch wenn X-Moto gestartet wird)"
 
 #: src/GameText.h:491
 msgid "Enables background music in the main menu"
-msgstr "Hintergrundmusik im Hauptmenue aktivieren"
+msgstr "Hintergrundmusik im Hauptmenü aktivieren"
 
 #: src/GameText.h:493
 msgid "Choose the X-Moto graphics theme"
-msgstr "Grafik-Thema fuer X-Moto anzeigen"
+msgstr "Grafik-Thema für X-Moto anzeigen"
 
 #: src/GameText.h:494
 msgid "Check for new themes on the web"
@@ -1687,7 +1686,7 @@ msgstr "Im Internet nach neuen Themes suchen"
 
 #: src/GameText.h:495
 msgid "Download or update the selected theme"
-msgstr "Ausgewaehltes Theme herunterladen oder aktualisieren"
+msgstr "Ausgewähltes Theme herunterladen oder aktualisieren"
 
 #: src/GameText.h:496
 msgid "Upload the replay on the website of highscores"
@@ -1702,12 +1701,12 @@ msgid ""
 "Choose where to upload/download replays, highscore lists (for more "
 "information, check the website)"
 msgstr ""
-"Auswaehlen, wo Replays, Highscore-Listen geladen/aktualisiert werden (Fuer "
+"Auswählen, wo Replays, Highscore-Listen geladen/aktualisiert werden (Für "
 "mehr Informationen, besuche die Website)"
 
 #: src/GameText.h:499
 msgid "Choose your room"
-msgstr "Raum auswaehlen"
+msgstr "Raum auswählen"
 
 #: src/GameText.h:500
 msgid "Get the rooms list from the web"
@@ -1715,12 +1714,11 @@ msgstr "Raumliste aus dem Internet holen"
 
 #: src/GameText.h:501
 msgid "Upload of highscore requires to log in (Except for WR)"
-msgstr "Hochladen von Bestzeiten verlangt Login (Ausser fuer Weltrekorde)"
+msgstr "Hochladen von Bestzeiten verlangt Login (Außer für Weltrekorde)"
 
 #: src/GameText.h:502
 msgid "Upload of highscore requires a password (Except for WR)"
-msgstr ""
-"Hochladen von Bestzeiten verlangt ein Passwort (Ausser fuer Weltrekorde)"
+msgstr "Hochladen von Bestzeiten verlangt ein Passwort (Außer für Weltrekorde)"
 
 #: src/GameText.h:503
 msgid "Show the speedometer when playing"
@@ -1732,7 +1730,7 @@ msgstr "Crash-Animation aktivieren"
 
 #: src/GameText.h:505
 msgid "Automatically scroll over the level before starting playing it"
-msgstr "Level vor dem Spielen in der Uebersicht anzeigen"
+msgstr "Level vor dem Spielen in der Übersicht anzeigen"
 
 #: src/GameText.h:506
 msgid "View the X-Moto credits"
@@ -1752,7 +1750,7 @@ msgstr "Spieler, der das Replay aufgenommen hat"
 
 #: src/GameText.h:510
 msgid "Click to select screen resolution"
-msgstr "Grafikaufloesung waehlen"
+msgstr "Grafikauflösung wählen"
 
 #: src/GameText.h:511
 msgid "Completed levels / total number of levels in pack"
@@ -1764,7 +1762,7 @@ msgstr "Name des Level-Pakets"
 
 #: src/GameText.h:513
 msgid "Add the level to the favorite levels list"
-msgstr "Level der Favoritenliste hinzufuegen"
+msgstr "Level der Favoritenliste hinzufügen"
 
 #: src/GameText.h:514
 msgid "Delete the level from the favorite levels list"
@@ -1772,27 +1770,27 @@ msgstr "Level aus der Favoritenliste entfernen"
 
 #: src/GameText.h:515
 msgid "Puzzle the levels pack list"
-msgstr "Paket-Liste zerwuerfeln"
+msgstr "Paket-Liste zerwürfeln"
 
 #: src/GameText.h:516
 msgid "Put a text to limit the level list"
-msgstr "Liste durch Eingabe von Namensbestandteilen einschraenken"
+msgstr "Liste durch Eingabe von Namensbestandteilen einschränken"
 
 #: src/GameText.h:517
 msgid "Choose the number of players"
-msgstr "Waehle die Spieler-Anzahl"
+msgstr "Wähle die Spieler-Anzahl"
 
 #: src/GameText.h:518
 msgid "Your login in the room"
-msgstr "Dein Login fuer den Raum"
+msgstr "Dein Login für den Raum"
 
 #: src/GameText.h:519
 msgid "Your password associated with your login"
-msgstr "Das Passwort fuer dein Login"
+msgstr "Das Passwort für dein Login"
 
 #: src/GameText.h:520
 msgid "Filter on replay list"
-msgstr "Filter fuer Replays"
+msgstr "Filter für Replays"
 
 #: src/GameText.h:522
 msgid "Levels with no highscore"
@@ -1816,7 +1814,7 @@ msgstr "Favoriten"
 
 #: src/GameText.h:528
 msgid "Nicest levels"
-msgstr "Schoenste Levels"
+msgstr "Schönste Levels"
 
 #: src/GameText.h:529
 msgid "Hardest levels"
@@ -1828,7 +1826,7 @@ msgstr "Einfachste Levels"
 
 #: src/GameText.h:531
 msgid "Crapiest levels"
-msgstr "Unschoenste Levels"
+msgstr "Unschönste Levels"
 
 #: src/GameText.h:532
 msgid "Scripted levels"
@@ -1860,7 +1858,7 @@ msgstr "Letzte Levels"
 
 #: src/GameText.h:540
 msgid "Oldest highscores"
-msgstr "Aelteste Bestzeiten"
+msgstr "Älteste Bestzeiten"
 
 #: src/GameText.h:541
 msgid "Platinium"
@@ -1908,7 +1906,7 @@ msgstr "Favoriten"
 
 #: src/GameText.h:554
 msgid "Nicest X-Moto levels according to the web votes"
-msgstr "Schoenste Levels (nach Web-Abstimmung)"
+msgstr "Schönste Levels (nach Web-Abstimmung)"
 
 #: src/GameText.h:555
 msgid "Hardest X-Moto levels according to the web votes"
@@ -1972,7 +1970,7 @@ msgstr "Deine Bestzeit ist beinahe der Rekord des Raums (80%-90%)"
 
 #: src/GameText.h:570
 msgid "The room highscore is really better than your own highscore"
-msgstr "Der Rekord des Raumes liegt weit ueber deiner Bestzeit"
+msgstr "Der Rekord des Raumes liegt weit über deiner Bestzeit"
 
 #: src/GameText.h:571
 msgid "Level pack"
@@ -1984,7 +1982,7 @@ msgstr "Bestzeit von"
 
 #: src/GameText.h:573
 msgid "External levels (the one you put into the 'My levels' directory)"
-msgstr "Externe Levels (eigenstaendig im 'My Levels' Ordner platziert)"
+msgstr "Externe Levels (eigenständig im 'My Levels' Ordner platziert)"
 
 #: src/GameText.h:575
 msgid "Ugly mode enabled"
@@ -2054,10 +2052,10 @@ msgstr "Replay-Interpolation deaktiviert"
 #~ "Torben Green;:Thomas Kjaerulff;:;MacOS X Support:Dave Vasilevsky;:Maxime "
 #~ "Biais;:;Website-Programmierung:Nicolas Adenis-Lamarre;:Nx;:;Website-"
 #~ "Administration:Nicolas Adenis-Lamarre;:Valentin;:Nx;:Alrj;:;Website-"
-#~ "Uebersetzung:Felix Schlitter;:Nicolas Adenis-Lamarre;:Trullo;:Afaland;:"
-#~ "Jj;:Vertigo;:Pol Vinogradov;:;Forum:Valentin;:;Haupttester:Jose Alberto "
+#~ "Übersetzung:Felix Schlitter;:Nicolas Adenis-Lamarre;:Trullo;:Afaland;:Jj;:"
+#~ "Vertigo;:Pol Vinogradov;:;Forum:Valentin;:;Haupttester:Jose Alberto "
 #~ "Coelho;:Frederic Huard;:;Danke an:SnowBear (KDE/Gnome-Integration);:"
-#~ "Jonathan Sieber (Deutsche Uebersetzung);:Samuel Mimram(Debian-Pakete);:"
+#~ "Jonathan Sieber (Deutsche Übersetzung);:Samuel Mimram(Debian-Pakete);:"
 #~ "Dark (Gentoo-Pakete);:Olivier Blin (Mandriva-Pakete);:Balazs Rozsa "
 #~ "(across/elma);:Yves Berquin (tinyxml);:L. Peter Deutsch (MD5-code);:"
 #~ "Petter Reinholdtsen;:Jes Vestervang (Webspace);:Kenneth;:;Jeden, der "
@@ -2087,7 +2085,7 @@ msgstr "Replay-Interpolation deaktiviert"
 #~ "Press ESC to abort."
 #~ msgstr ""
 #~ "Lade Thema herunter\n"
-#~ "Zum Abbrechen 'ESC' druecken"
+#~ "Zum Abbrechen 'ESC' drücken"
 
 #~ msgid "Show engine counter"
 #~ msgstr "Tacho anzeigen"
