@@ -81,6 +81,7 @@ GameApp::GameApp() {
   m_b50FpsMode = false;
   m_bUglyMode = false;
   m_bTestThemeMode = false;
+  m_bUglyOverMode  = false;
   m_pJustPlayReplay = NULL;
   m_updateAutomaticallyLevels = false;
   m_reloadingLevelsUser = false;
@@ -237,7 +238,7 @@ GameApp::GameApp() {
 	    if(m_pCredits == NULL)
 	      m_pCredits = new Credits;
 	    
-	    m_pCredits->init(m_replayBiker->getFinishTime(),4,4,GAMETEXT_CREDITS);
+	    m_pCredits->init(m_replayBiker->getFinishTime(),4,4,std::string(GAMETEXT_CREDITS).c_str());
 	  }
 
 	  /* Fine, open the level */
@@ -595,6 +596,8 @@ GameApp::GameApp() {
 				     m_MotoGame.getLevelSrc()->Id(),
 				     m_MotoGame.Players()[0]->finishTime());
 	  _UpdateLevelsLists();
+	  _UpdateCurrentPackList(m_MotoGame.getLevelSrc()->Id(),
+				 m_MotoGame.Players()[0]->finishTime());
 	}
         break;
       }
@@ -796,6 +799,16 @@ GameApp::GameApp() {
 	m_sysMsg.displayText(SYS_MSG_THEME_MODE_ENABLED);
       } else {
 	m_sysMsg.displayText(SYS_MSG_THEME_MODE_DISABLED);
+      }
+      return;        
+    }
+
+    if(nKey == SDLK_F11) {
+      switchUglyOverMode(!m_bUglyOverMode);
+      if(m_bUglyOverMode) {
+	m_sysMsg.displayText(SYS_MSG_UGLY_OVER_MODE_ENABLED);
+      } else {
+	m_sysMsg.displayText(SYS_MSG_UGLY_OVER_MODE_DISABLED);
       }
       return;        
     }
@@ -1908,6 +1921,11 @@ GameApp::GameApp() {
     m_Renderer.setTestThemeMode(m_bTestThemeMode);
   }
 
+  void GameApp::switchUglyOverMode(bool mode) {
+    m_bUglyOverMode = mode;
+    m_Renderer.setUglyOverMode(m_bUglyOverMode);
+  }
+
   void GameApp::setPrePlayAnim(bool pEnabled) {
     m_bPrePlayAnim = pEnabled;
   }
@@ -2530,5 +2548,13 @@ GameApp::GameApp() {
       delete rplInfos;
       throw e2;
     }
+  }
+
+  void GameApp::_UpdateCurrentPackList(const std::string& i_id_level, float i_playerHighscore) {
+    if(m_pActiveLevelPack == NULL) return;
+    UILevelList *pList = (UILevelList *)m_pLevelPackViewer->getChild("LEVELPACK_LEVEL_LIST"); 
+    if(pList == NULL) return;
+
+    pList->updateLevel(i_id_level, i_playerHighscore);
   }
 }

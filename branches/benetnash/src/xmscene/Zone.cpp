@@ -56,6 +56,21 @@ bool ZonePrimBox::doesCircleTouch(const Vector2f& i_cp, float i_cr) {
   return false;
 }
 
+float ZonePrimBox::Left() const {
+  return m_left;
+}
+
+float ZonePrimBox::Right() const {
+  return m_right;
+}
+
+float ZonePrimBox::Top() const {
+  return m_top;
+}
+
+float ZonePrimBox::Bottom() const {
+  return m_bottom;
+}
 
 Zone::Zone(const std::string& i_id) {
   m_id = i_id;

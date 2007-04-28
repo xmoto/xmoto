@@ -155,7 +155,8 @@ class xmDatabase;
       /* Data interface */
       bool isUglyMode() {return m_bUglyMode;}
       bool isTestThemeMode(void) {return m_bTestThemeMode;}
-    
+      bool isUglyOverMode() {return m_bUglyOverMode;}
+
       void setAutoZoom(bool bValue);
       bool AutoZoom();
       void setAutoZoomStep(int n);
@@ -187,6 +188,7 @@ class xmDatabase;
       std::string m_InfosReplay;                /* name of the replay to display information */
 
       bool m_bTestThemeMode;
+      bool m_bUglyOverMode;
       bool m_bEnableEngineSound;                /* true: engine sound is enabled */
       bool m_bCompressReplays;                  /* true: compress replays with zlib */
       bool m_bAutosaveHighscoreReplays;
@@ -435,6 +437,7 @@ class xmDatabase;
       void _UpdateThemesLists(void);
 
       void _UpdateLevelsLists();
+      void _UpdateCurrentPackList(const std::string& i_id_level, float i_playerHighscore);
 
       void _UpdateRoomsLists(void);
       void _GameScreenshot(void);
@@ -480,6 +483,7 @@ class xmDatabase;
 
       void switchUglyMode(bool bUgly);
       void switchTestThemeMode(bool mode);
+      void switchUglyOverMode(bool mode);
 
       void statePrestart_init();
       void statePrestart_step();

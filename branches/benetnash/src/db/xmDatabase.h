@@ -33,6 +33,9 @@ class xmDatabase {
   public:
   xmDatabase(const std::string& i_dbFile,
 	     const std::string& i_profile,
+	     const std::string& i_gameDir,
+	     const std::string& i_userDir,
+	     const std::string& i_binPackCheckSum,
 	     XmDatabaseUpdateInterface *i_interface = NULL);
   ~xmDatabase();
 
@@ -142,6 +145,12 @@ class xmDatabase {
 			    const std::string& i_profile,
 			    XmDatabaseUpdateInterface *i_interface = NULL);
   void updateXmDbVersion(int i_newVersion);
+  std::string getXmDbGameDir();
+  std::string getXmDbUserDir();
+  std::string getXmDbBinPackCheckSum();
+  void setXmDbGameDir(const std::string& i_gameDir);
+  void setXmDbUserDir(const std::string& i_userDir);
+  void setXmDbBinPackCheckSum(const std::string& i_binPackChecksum);
 
   /* trace */
   static void sqlTrace(void*, const char* sql);

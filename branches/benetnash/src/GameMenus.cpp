@@ -277,7 +277,7 @@ namespace vapp {
     pDeleteButton->setContextHelp(CONTEXTHELP_DELETE_REPLAY);
 
     /* upload button */
-    UIButton *pUploadHighscoreButton = new UIButton(m_pReplaysWindow,205,m_pReplaysWindow->getPosition().nHeight-68,GAMETEXT_UPLOAD_HIGHSCORE,105,57);
+    UIButton *pUploadHighscoreButton = new UIButton(m_pReplaysWindow,205,m_pReplaysWindow->getPosition().nHeight-68,GAMETEXT_UPLOAD,105,57);
     pUploadHighscoreButton->setFont(m_Renderer.getSmallFont());
     pUploadHighscoreButton->setType(UI_BUTTON_TYPE_SMALL);
     pUploadHighscoreButton->setID("REPLAY_UPLOADHIGHSCORE_BUTTON");
@@ -285,7 +285,7 @@ namespace vapp {
     pUploadHighscoreButton->setContextHelp(CONTEXTHELP_UPLOAD_HIGHSCORE);
 
     /* upload all button */
-    UIButton *pUploadAllHighscoresButton = new UIButton(m_pReplaysWindow,300,m_pReplaysWindow->getPosition().nHeight-68,GAMETEXT_UPLOAD_HIGHSCORE_ALL,150,57);
+    UIButton *pUploadAllHighscoresButton = new UIButton(m_pReplaysWindow,300,m_pReplaysWindow->getPosition().nHeight-68,GAMETEXT_UPLOAD_ALL,150,57);
     pUploadAllHighscoresButton->setFont(m_Renderer.getSmallFont());
     pUploadAllHighscoresButton->setType(UI_BUTTON_TYPE_SMALL);
     pUploadAllHighscoresButton->setID("REPLAY_UPLOADHIGHSCOREALL_BUTTON");

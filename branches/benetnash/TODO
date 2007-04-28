@@ -1,7 +1,34 @@
 
-* check highscores at startup, ca bug
+* ajouter le SDL_ttf.h pour windows
+* faire des polices avec contour ?
+
+[20:26] <Christoph> btw, I noticed a few days ago: in the level "MASTERKUD Padrinos magicos" there is something broken. the strawberry at the right end of the ground crashes the level with "Entity 'MySprite18' doesn't exist" (in the replay, too)
+
+
+(12:12:08)  Roots:     http://blender-archi.tuxfamily.org/Textures  
+(12:12:11)  Roots:     http://lemog.free.fr/lemog_v5/thumbnails.php?album=topn&cat=0  
+(12:12:18)  Roots:   ya gave de textues sur ces sites
+
+
+For 0.3.0
+
+For nicolas
+*[22:52] <gaivota> the credits are too much on the left side
+ [22:53] <gaivota> needs centering, because the text is clipped from the screen
+* keyboard for 4 players
+* script key on multiplayer : each player must have his own key
+* mode 2 joueurs : un message à celui qui gagne
+* several joypad (currently, joypack is available only for player 1)
+* when you choose keys : if a key is already attributed, it should assign it and set <unset> to the other one because it's not pleasant to have a message
+* meme si on ne télécharge pas tous les niveaux, mettre à jour le thème
+
+For Tod:
+* load into the graphic card only the blocks which will be displayed depending on the selected graphic quality.
+* multicamera
+* pas charger les textures en mode ugly (pas celle du background, ...)
 * ajouter la tete dans les zones
 
+===============
 [14:04] <keesj> I think it is a well knwn problem that every developer gets when spliting area's in two
 [14:05] <keesj> it's a pixel rounding problem
 [14:07] <keesj> http://www.gameprogrammer.com/5-poly.html
@@ -29,17 +56,8 @@ Called from:
 (20:27:08)  Roots:   puis opengl 
 (20:27:23)  Roots:   les niveaux faisant que 2.8%...
 
+* zoom in demos :)
 
-
-For 0.3.0
-
-4. zoom in demos :)
-
-For Tod:
-* load into the graphic card only the blocks which will be displayed depending on the selected graphic quality.
-* multicamera
-
-For Nicolas:
 * start game with menu music ; go in option; disable sound ; play a
    level ; abort -> the music start because sound is still enabled
 * document AddPenaltyTime et empecher de mettre une valeur négative
@@ -47,28 +65,13 @@ For Nicolas:
    fait que dans drawFrame, dans un case GS_PREPLAY, on peut changer
    d'état (exception) et du coup on tente de dessiner un monde qui
    n'existe plus => séparer le rendu des évènements à suivre
-* the following: if the player looks from rightto left, the leg is not correctly attached to the torso
-* keyboard for 4 players
-* script key on multiplayer : each player must have his own key
 * en mode replay, replay 53361 par exemple, quand on touche la fraise en meme temps que la fleur, la fraise n'eclate pas
-* mode 2 joueurs : un message à celui qui gagne
-* several joypad (currently, joypack is available only for player 1)
 * BUG : xmoto -replay bugs/onMacWontWork.rpl when you press forward on
    this scripted level, the elevator at the correct position
 * feature : a replay button when you finish a level (or die) which plays Latest.rpl
 * script : disable a key (brake for example, ...)
-* when you choose keys : if a key is already attributed, it should
-   assign it and set <unset> to the other one because it's not
-   pleasant to have a message
-* http://bugs.debian.org/335514
-It's a bit confusing to be proposed to continue or abort playing when
-one has just finished the level. The ``abort'' one should be rather
-quit level'' or something like that.
-* meme si on ne télécharge pas tous les niveaux, mettre à jour le thème
 
 ******************
-* pack : last levels
-
 * flag sprite to add
 * two options for music : menu and ingame
 
@@ -108,11 +111,6 @@ Assigned to nicolas
 * keesj:test the SDL_gfx version on windows/mac
 * keesj:faster startup , smart caching etc system must run under 64 MB :)
 * keesj:define code conventions,testing procedures,release-roadbook
-
-
-* FEATURE : windows : there's some win32 API calls that can be made to determine the application data dir
-
-* '50 most played levels'/least : virtual package
 * a keyboard key for next level
 * reload theme done, require tests, and some sprites (like mouse, main menu background) are not updated i suppose
 * Sometimes when the edges of the levels are reached (for instance when being at a corner of a level), the

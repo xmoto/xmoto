@@ -37,7 +37,7 @@ Central place to keep many in-game text strings
 #define GAMETEXT_32BPP                _("32 bits per pixel")
 #define GAMETEXT_44KHZ                _("44 kHz")
 #define GAMETEXT_8BIT                 _("8-bit")
-#define GAMETEXT_ABORT                _("Abort Playing")
+#define GAMETEXT_ABORT                _("Quit level")
 #define GAMETEXT_ADDTOFAVORITE       _("Add to favorite")
 #define GAMETEXT_ACTION               _("Action")
 #define GAMETEXT_ALL                  _("All (on this computer)")
@@ -72,67 +72,72 @@ Central place to keep many in-game text strings
 #define GAMETEXT_CLOSE                _("Close")
 #define GAMETEXT_CONFIGUREJOYSTICK    _("Configure Joystick...")
 #define GAMETEXT_CONTROLS             _("Controls")
-#define GAMETEXT_CREDITS              _("Lead Programming:Rasmus Neckelmann;" \
-                                        ":Nicolas Adenis-Lamarre;" \
-                                        ":Emmanuel Gorse;" \
-                                        ":Kees Jongenburger;" \
-                                        ":;" \
-                                        "Additional Programming:Eric Piel;" \
-                                        ":Christoph Sommer;" \
-                                        ":Frederic Huard;" \
-                                        ":Brice Goglin;" \
-                                        ":;" \
-                                        "Graphics:Rasmus Neckelmann;" \
-                                        ":Jens Erler;" \
-                                        ":;" \
-                                        "Audio:Jens Erler;" \
-                                        ":Brandon Ross;" \
-                                        ":;" \
-                                        "Built-in Levels:Rasmus Neckelmann;" \
-                                        ":Pasi Kallinen;" \
-                                        ":Germain Gagnerot;" \
-                                        ":Clive Crous;" \
-                                        ":Torben Green;" \
-                                        ":Thomas Kjaerulff;" \
-                                        ":;" \
-                                        "MacOS X Support:Dave Vasilevsky;" \
-                                        ":Maxime Biais;" \
-                                        ":;" \
-                                        "Website Programming:Nicolas Adenis-Lamarre;" \
-                                        ":Nx;" \
-                                        ":;" \
-                                        "Website Administration:Nicolas Adenis-Lamarre;" \
-                                        ":Valentin;" \
-                                        ":Nx;" \
-                                        ":Alrj;" \
-                                        ":;" \
-                                        "Website Localization:Felix Schl;" \
-                                        ":Nicolas Adenis-Lamarre;" \
-                                        ":Trullo;" \
-                                        ":Afaland;" \
-                                        ":Jj;" \
-                                        ":Vertigo;" \
-                                        ":Pol Vinogradov;" \
-                                        ":;" \
-                                        "Forum:Valentin;" \
-                                        ":;" \
-                                        "Main testers:Jose Alberto Coelho;" \
-                                        ":Frederic Huard;" \
-                                        ":;" \
-                                        "Thanks to:SnowBear (for KDE/gnome integration);" \
-                                        ":Jonathan Sieber (for german translation);"\
-                                        ":Samuel Mimram (for Debian packaging);" \
-                                        ":Dark (for Gentoo packaging);" \
-                                        ":Olivier Blin (for Mandriva packaging);" \
-                                        ":Balazs Rozsa (for across/elma);" \
-                                        ":Yves Berquin (for making tinyxml);" \
-                                        ":L. Peter Deutsch (for the MD5 code);" \
-                                        ":Petter Reinholdtsen;" \
-                                        ":Jes Vestervang (for providing web space);" \
-                                        ":Kenneth (for being such a little girl);"\
-                                        ":Everyone who have made levels;" \
-                                        ":People who have provided bug reports;" \
-                                        ":Anyone who has helped in any way;")
+#define GAMETEXT_CREDITS                                                                     \
+  std::string(_("Lead Programming")) +                                                       \
+    ":Rasmus Neckelmann;"                                                                    \
+    ":Nicolas Adenis-Lamarre;"                                                               \
+    ":Emmanuel Gorse;"                                                                       \
+    ":Kees Jongenburger;"                                                                    \
+    ":;"                                                                                     \
+    + std::string(_("Additional Programming")) +                                             \
+    ":Eric Piel;"                                                                            \
+    ":Christoph Sommer;"                                                                     \
+    ":Frederic Huard;"                                                                       \
+    ":Brice Goglin;"                                                                         \
+    ":;"                                                                                     \
+    + std::string(_("Graphics")) +                                                           \
+    ":Rasmus Neckelmann;"                                                                    \
+    ":Jens Erler;"                                                                           \
+    ":;"                                                                                     \
+    + std::string(_("Audio")) +                                                              \
+    ":Jens Erler;"                                                                           \
+    ":Brandon Ross;"                                                                         \
+    ":;"                                                                                     \
+    + std::string(_("MacOS X Support")) +                                                    \
+    ":Dave Vasilevsky;"                                                                      \
+    ":Maxime Biais;"                                                                         \
+    ":;"                                                                                     \
+    + std::string(_("Website Programming")) +                                                \
+    ":Nicolas Adenis-Lamarre;"                                                               \
+    ":Nx;"                                                                                   \
+    ":;"                                                                                     \
+    + std::string(_("Website Administration")) +                                             \
+    ":Nicolas Adenis-Lamarre;"                                                               \
+    ":Valentin;"                                                                             \
+    ":Nx;"                    	                                                             \
+    ":Alrj;"                  	                                                             \
+    ":;"                      	                                                             \
+    + std::string(_("Website Localization")) +                                               \
+    ":Felix Schl;"                                                                           \
+    ":Nicolas Adenis-Lamarre;"                                                               \
+    ":Trullo;"                                                                               \
+    ":Afaland;"                                                                              \
+    ":Jj;"                                                                                   \
+    ":Vertigo;"                                                                              \
+    ":Pol Vinogradov;"                                                                       \
+    ":;"                                                                                     \
+    + std::string(_("Forum")) +                                                              \
+    ":Valentin;"                                                                             \
+    ":;"                                                                                     \
+    + std::string(_("Main testers")) +                                                       \
+    ":Jose Alberto Coelho;"                                                                  \
+    ":Frederic Huard;"                                                                       \
+    ":;"                                                                                     \
+    + std::string(_("Thanks to")) +                                                          \
+    ":SnowBear ("           + std::string(_("for KDE/gnome integration")) 	     + ");"  \
+    ":Jonathan Sieber ("    + std::string(_("for german translation"))    	     + ");"  \
+    ":Samuel Mimram ("      + std::string(_("for Debian packaging"))      	     + ");"  \
+    ":Dark ("               + std::string(_("for Gentoo packaging"))      	     + ");"  \
+    ":Olivier Blin (" 	    + std::string(_("for Mandriva packaging"))    	     + ");"  \
+    ":Balazs Rozsa (" 	    + std::string(_("for across/elma"))           	     + ");"  \
+    ":Yves Berquin (" 	    + std::string(_("for making tinyxml"))        	     + ");"  \
+    ":L. Peter Deutsch ("   + std::string(_("for the MD5 code"))          	     + ");"  \
+    ":Petter Reinholdtsen;"                                                                  \
+    ":Jes Vestervang ("     + std::string(_("for providing web space"))              + ");"  \
+    ":Kenneth ("            + std::string(_("for being such a little girl"))         + ");"  \
+    ":" 		    + std::string(_("Everyone who have made levels"))        + ";"   \
+    ":" 		    + std::string(_("People who have provided bug reports")) + ";"   \
+    ":" 		    + std::string(_("Anyone who has helped in any way"))     + ";"
 #define GAMETEXT_CREDITSBUTTON        _("Credits")
 #define GAMETEXT_CURPLAYER            _("Player")
 #define GAMETEXT_DATE                 _("Date")
@@ -354,8 +359,9 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_UPDATEROOMSSLIST     _("Update the rooms list")
 #define GAMETEXT_UPDATETHEMESLIST     _("Update the theme list")
 #define GAMETEXT_UPDATINGLEVELS       _("Updating level lists...")
-#define GAMETEXT_UPLOAD_HIGHSCORE     _("Upload")
-#define GAMETEXT_UPLOAD_HIGHSCORE_ALL _("Upload All")
+#define GAMETEXT_UPLOAD_HIGHSCORE     _("Upload Highscore")
+#define GAMETEXT_UPLOAD               _("Upload")
+#define GAMETEXT_UPLOAD_ALL           _("Upload All")
 #define GAMETEXT_UPLOAD_HIGHSCORE_ERROR _("An unexcepted error occured\nThe website has perhaps some troubles")
 #define GAMETEXT_UPLOAD_HIGHSCORE_WEB_WARNING_BEFORE _("Oh no !")
 #define GAMETEXT_UPLOADING_HIGHSCORE  _("Uploading the highscore...")
@@ -533,10 +539,12 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define VPACKAGENAME_LAST_HIGHSCORES            _("Last highscores")
 #define VPACKAGENAME_LAST_LEVELS                _("Last levels")
 #define VPACKAGENAME_OLDEST_HIGHSCORES          _("Oldest highscores")
+#define VPACKAGENAME_MEDAL_PLATINIUM            _("Platinium")
 #define VPACKAGENAME_MEDAL_GOLD                 _("Gold")
 #define VPACKAGENAME_MEDAL_SILVER               _("Silver")
 #define VPACKAGENAME_MEDAL_BRONZE               _("Bronze")
 #define VPACKAGENAME_MEDAL_NONE                 _("No medal")
+#define VPACKAGENAME_MY_LEVELS                  _("My levels")
 
 #define VPACKAGENAME_DESC_LEVELS_WITH_NO_HIGHSCORE   _("Levels with no highscore in you room")
 #define VPACKAGENAME_DESC_INCOMPLETED_LEVELS         _("Levels you have not completed")
@@ -556,20 +564,24 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define VPACKAGENAME_DESC_LAST_HIGHSCORES        _("X-Moto levels having a recent highscore in you room")
 #define VPACKAGENAME_DESC_LAST_LEVELS                _("Last created X-Moto levels")
 #define VPACKAGENAME_DESC_OLDEST_HIGHSCORES      _("X-Moto levels having an old highscore in you room")
-#define VPACKAGENAME_DESC_MEDAL_GOLD             _("You highscore finish time is or is almost the room highscore (95%)")
-#define VPACKAGENAME_DESC_MEDAL_SILVER           _("You highscore finish time is or is almost the room highscore (90%-95%)")
-#define VPACKAGENAME_DESC_MEDAL_BRONZE           _("You highscore finish time is or is almost the room highscore (80%-90%)")
+#define VPACKAGENAME_DESC_MEDAL_PLATINIUM        _("You have the room highscore")
+#define VPACKAGENAME_DESC_MEDAL_GOLD             _("You highscore finish time is almost the room highscore (95%)")
+#define VPACKAGENAME_DESC_MEDAL_SILVER           _("You highscore finish time is almost the room highscore (90%-95%)")
+#define VPACKAGENAME_DESC_MEDAL_BRONZE           _("You highscore finish time is almost the room highscore (80%-90%)")
 #define VPACKAGENAME_DESC_MEDAL_NONE             _("The room highscore is really better than your own highscore")
 #define VPACKAGENAME_DESC_STANDARD               _("Level pack")
 #define VPACKAGENAME_DESC_BEST_DRIVERS           _("Highscores by")
+#define VPACKAGENAME_DESC_MY_LEVELS              _("External levels (the one you put into the 'My levels' directory)")
 
-#define SYS_MSG_UGLY_MODE_ENABLED      _("Ugly mode enabled")
-#define SYS_MSG_UGLY_MODE_DISABLED     _("Ugly mode disabled")
-#define SYS_MSG_THEME_MODE_ENABLED     _("Theme mode enabled")
-#define SYS_MSG_THEME_MODE_DISABLED    _("Theme mode disabled")
-#define SYS_MSG_WWW_ENABLED   	       _("Web connexion enabled")
-#define SYS_MSG_WWW_DISABLED  	       _("Web connexion disabled")
-#define SYS_MSG_INTERPOLATION_ENABLED  _("Replay interpolation enabled")
-#define SYS_MSG_INTERPOLATION_DISABLED _("Replay interpolation disabled")
+#define SYS_MSG_UGLY_MODE_ENABLED      	_("Ugly mode enabled")
+#define SYS_MSG_UGLY_MODE_DISABLED     	_("Ugly mode disabled")
+#define SYS_MSG_THEME_MODE_ENABLED     	_("Theme mode enabled")
+#define SYS_MSG_THEME_MODE_DISABLED    	_("Theme mode disabled")
+#define SYS_MSG_UGLY_OVER_MODE_ENABLED  _("UglyOver mode enabled")
+#define SYS_MSG_UGLY_OVER_MODE_DISABLED _("UglyOver mode disabled")
+#define SYS_MSG_WWW_ENABLED   	       	_("Web connexion enabled")
+#define SYS_MSG_WWW_DISABLED  	       	_("Web connexion disabled")
+#define SYS_MSG_INTERPOLATION_ENABLED  	_("Replay interpolation enabled")
+#define SYS_MSG_INTERPOLATION_DISABLED 	_("Replay interpolation disabled")
 
 #endif

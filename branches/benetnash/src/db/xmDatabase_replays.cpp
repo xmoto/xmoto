@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "xmDatabase.h"
 #include <sstream>
+#include <math.h>
 
 bool xmDatabase::replays_isIndexUptodate() const {
   return m_requiredReplaysUpdateAfterInit == false;
@@ -36,7 +37,9 @@ void xmDatabase::replays_add(const std::string& i_id_level,
 			     bool               i_isFinished,
 			     float              i_finishTime) {
   std::ostringstream v_finishTime;
-  v_finishTime << i_finishTime;
+
+  /* to be sure it's rounded, but over */
+  v_finishTime << std::fixed << (floor(i_finishTime * 1000.0))/1000.0;
 
   simpleSql("INSERT INTO replays(id_level, name, id_profile, isFinished, finishTime) " 
 	    "VALUES (\"" +

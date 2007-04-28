@@ -216,6 +216,13 @@ void LevelsManager::makePacks(xmDatabase *i_db,
   v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
   v_pack->setDescription(VPACKAGENAME_DESC_ALL_LEVELS);
   m_levelsPacks.push_back(v_pack);
+
+  /* my levels */
+  v_pack = new LevelsPack(std::string(VPACKAGENAME_MY_LEVELS),
+			  "SELECT id_level, name, UPPER(name) AS sort_field FROM levels WHERE isToReload=1");
+  v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
+  v_pack->setDescription(VPACKAGENAME_DESC_MY_LEVELS);
+  m_levelsPacks.push_back(v_pack);
   
   /* favorite levels */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_FAVORITE_LEVELS),
@@ -317,6 +324,16 @@ void LevelsManager::makePacks(xmDatabase *i_db,
   m_levelsPacks.push_back(v_pack);
 
   /* medals */
+  v_pack = new LevelsPack(std::string(VPACKAGENAME_MEDAL_PLATINIUM),
+			  "SELECT b.id_level AS id_level, b.name AS name, UPPER(b.name) AS sort_field "
+			  "FROM webhighscores AS a INNER JOIN levels AS b "
+			  "ON a.id_level = b.id_level "
+			  "WHERE a.id_profile = \"" + xmDatabase::protectString(i_playerName) + "\""
+			  );
+  v_pack->setGroup(GAMETEXT_PACK_MEDALS);
+  v_pack->setDescription(VPACKAGENAME_DESC_MEDAL_PLATINIUM);
+  m_levelsPacks.push_back(v_pack);
+
   v_pack = new LevelsPack(std::string(VPACKAGENAME_MEDAL_GOLD),
 			  "SELECT id_level, name, sort_field FROM ("
 			  "SELECT a.id_level AS id_level, MAX(b.name) AS name, "
@@ -330,7 +347,7 @@ void LevelsManager::makePacks(xmDatabase *i_db,
 			  "GROUP BY a.id_level " /* get the best highscores */
 			  ") "
 			  "WHERE (webFinishTime IS NULL OR webFinishTime >= userFinishTime*0.95) "
-			  "UNION " /* add the webhighscores where the player's name is the same */
+			  "EXCEPT " /* remove the webhighscores where the player's name is the same */
 			  "SELECT b.id_level AS id_level, b.name AS name, UPPER(b.name) AS sort_field "
 			  "FROM webhighscores AS a INNER JOIN levels AS b "
 			  "ON a.id_level = b.id_level "
@@ -810,7 +827,8 @@ void LevelsManager::addToFavorite(xmDatabase *i_db, std::string i_profile,
   /* check if the level is already into the favorite list */
   v_result = i_db->readDB("SELECT COUNT(id_level) "
 			  "FROM levels_favorite "
-			  "WHERE id_level=\"" + i_db->protectString(i_id_level) + "\";",
+			  "WHERE id_level=\""   + i_db->protectString(i_id_level) + "\" "
+			  "AND   id_profile=\"" + i_db->protectString(i_profile) + "\";",
 			  nrow);
   v_n = atoi(i_db->getResult(v_result, 1, 0, 0));
   i_db->read_DB_free(v_result);
@@ -831,7 +849,8 @@ void LevelsManager::delFromFavorite(xmDatabase *i_db, std::string i_profile,
   /* check if the level is into the favorite list */
   v_result = i_db->readDB("SELECT COUNT(id_level) "
 			  "FROM levels_favorite "
-			  "WHERE id_level=\"" + i_db->protectString(i_id_level) + "\";",
+			  "WHERE id_level=\""   + i_db->protectString(i_id_level) + "\""
+			  "AND   id_profile=\"" + i_db->protectString(i_profile)  + "\";",
 			  nrow);  
   v_n = atoi(i_db->getResult(v_result, 1, 0, 0));
   i_db->read_DB_free(v_result);

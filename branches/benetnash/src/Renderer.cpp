@@ -529,12 +529,7 @@ namespace vapp {
 
   void GameRenderer::_RenderGhost(Biker* i_ghost, int i) {
     /* Render ghost - ugly mode? */
-    if(m_bUglyMode) {
-      _RenderBike(i_ghost->getState(), &(i_ghost->getState()->Parameters()),
-		  i_ghost->getBikeTheme(),
-		  true,
-		  TColor(255, 255, 255, 0), i_ghost->getUglyColorFilter());
-    } else {
+    if(m_bUglyMode == false) {
       /* No not ugly, fancy! Render into overlay? */
       if(m_bGhostMotionBlur && getParent()->getDrawLib()->useFBOs()) {
 	m_Overlay.beginRendering();
@@ -554,6 +549,13 @@ namespace vapp {
 			    MAKE_COLOR(255,255,255,m_nGhostInfoTrans));
 	}
       }
+    }
+
+    if(m_bUglyMode) {
+      _RenderBike(i_ghost->getState(), &(i_ghost->getState()->Parameters()),
+		  i_ghost->getBikeTheme(),
+		  true,
+		  TColor(255, 255, 255, 0), i_ghost->getUglyColorFilter());
     }
   }
 
@@ -588,13 +590,15 @@ namespace vapp {
     m_screenBBox.addPointToAABB2f(v2);
 
     /* SKY! */
-    if(!m_bUglyMode)
-    _RenderSky(getGameObject()->getLevelSrc()->Sky().Zoom(),
-	       getGameObject()->getLevelSrc()->Sky().Offset(),
-	       getGameObject()->getLevelSrc()->Sky().TextureColor(),
-	       getGameObject()->getLevelSrc()->Sky().DriftZoom(),
-	       getGameObject()->getLevelSrc()->Sky().DriftTextureColor(),
-	       getGameObject()->getLevelSrc()->Sky().Drifted());
+    if(m_bUglyMode == false) {
+      _RenderSky(getGameObject()->getLevelSrc()->Sky().Zoom(),
+		 getGameObject()->getLevelSrc()->Sky().Offset(),
+		 getGameObject()->getLevelSrc()->Sky().TextureColor(),
+		 getGameObject()->getLevelSrc()->Sky().DriftZoom(),
+		 getGameObject()->getLevelSrc()->Sky().DriftTextureColor(),
+		 getGameObject()->getLevelSrc()->Sky().Drifted());
+    }
+
 
 #ifdef ENABLE_OPENGL
     glMatrixMode(GL_PROJECTION);
@@ -607,7 +611,7 @@ namespace vapp {
     //glRotatef(getGameObject()->getTime()*100,0,0,1); /* Uncomment this line if you want to vomit :) */
     getParent()->getDrawLib()->setTranslate(-getCameraPositionX(), -getCameraPositionY());
 
-    if(m_Quality != GQ_LOW && !m_bUglyMode) {
+    if(m_Quality != GQ_LOW && m_bUglyMode == false) {
       /* background level blocks */
       _RenderLayers(false);
 
@@ -619,7 +623,7 @@ namespace vapp {
     }
     _RenderSprites(false,true);
 
-    if(m_Quality == GQ_HIGH && !m_bUglyMode) {
+    if(m_Quality == GQ_HIGH && m_bUglyMode == false) {
       /* Render particles (back!) */
       _RenderParticles(false);
     }
@@ -630,6 +634,13 @@ namespace vapp {
 
     /* ... then render "middleground" sprites ... */
     _RenderSprites(false,false);
+
+    /* zones */
+    if(m_bUglyOverMode) {
+      for(unsigned int i=0; i<getGameObject()->getLevelSrc()->Zones().size(); i++) {
+	_RenderZone(getGameObject()->getLevelSrc()->Zones()[i]);
+      }
+    }
 
     /* ghosts */
     bool v_found = false;
@@ -682,7 +693,7 @@ namespace vapp {
       }
     }
 
-    if(m_Quality == GQ_HIGH && !m_bUglyMode) {
+    if(m_Quality == GQ_HIGH && m_bUglyMode == false) {
       /* Render particles (front!) */
       _RenderParticles();
     }
@@ -691,7 +702,7 @@ namespace vapp {
     _RenderSprites(true,false);
 
     /* and finally finally, front layers */
-    if(m_Quality != GQ_LOW && !m_bUglyMode) {
+    if(m_Quality != GQ_LOW && m_bUglyMode == false) {
       _RenderLayers(true);
     }
 
@@ -972,13 +983,12 @@ namespace vapp {
     if(pGame != NULL) {
       for(int i=0;i<pGame->getGameMessage().size();i++) {
         GameMessage *pMsg = pGame->getGameMessage()[i];
-        int x1,y1,x2,y2;
-
-  UIFont *v_font = getMediumFont();
-  if(v_font != NULL) {
-    UITextDraw::getTextExt(v_font,pMsg->Text,&x1,&y1,&x2,&y2);
-    UITextDraw::printRaw(v_font,getParent()->getDrawLib()->getDispWidth()/2 - (x2-x1)/2,pMsg->Pos[1]*getParent()->getDrawLib()->getDispHeight(),pMsg->Text,MAKE_COLOR(255,255,255,pMsg->nAlpha));
-  }
+	FontManager* v_fm = getParent()->getDrawLib()->getFontMedium();
+	FontGlyph* v_fg = v_fm->getGlyph(pMsg->Text);
+	v_fm->printString(v_fg,
+			  getParent()->getDrawLib()->getDispWidth()/2 - v_fg->realWidth()/2,
+			  pMsg->Pos[1]*getParent()->getDrawLib()->getDispHeight(),
+			  MAKE_COLOR(255,255,255,pMsg->nAlpha));
       }
     }
   }
@@ -1235,40 +1245,7 @@ namespace vapp {
     /* sort blocks on their texture */
     std::sort(Blocks.begin(), Blocks.end(), AscendingTextureSort());
 
-    if(m_bUglyMode) {
-
-      for(int i=0; i<Blocks.size(); i++) {
-	/* Are we rendering background blocks or what? */
-	if(Blocks[i]->isBackground() != bBackground)
-	  continue;
-
-	/* Build rotation matrix for block */
-	float fR[4];
-	float rotation = Blocks[i]->DynamicRotation();
-	fR[0] =  cos(rotation);
-	fR[2] =  sin(rotation);
-	fR[1] = -fR[2];
-	fR[3] =  fR[0];
-
-	Vector2f dynRotCenter = Blocks[i]->DynamicRotationCenter();
-	Vector2f dynPos       = Blocks[i]->DynamicPosition();
-
-	getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_LOOP);
-	getParent()->getDrawLib()->setColorRGB(255,255,255);
-
-        for(int j=0;j<Blocks[i]->Vertices().size();j++) {
-	  Vector2f vertex = Blocks[i]->Vertices()[j]->Position();
-	  /* transform vertex */
-	  Vector2f transVertex = Vector2f((vertex.x-dynRotCenter.x)*fR[0] + (vertex.y-dynRotCenter.y)*fR[1],
-					  (vertex.x-dynRotCenter.x)*fR[2] + (vertex.y-dynRotCenter.y)*fR[3]);
-	  transVertex += dynPos + dynRotCenter;
-
-          getParent()->getDrawLib()->glVertex(transVertex.x, transVertex.y);
-        }
-	getParent()->getDrawLib()->endDraw();
-      }
-    }
-    else {
+    if(m_bUglyMode == false) {
       for(int i=0; i<Blocks.size(); i++) {
 	/* Are we rendering background blocks or what? */
 	if(Blocks[i]->isBackground() != bBackground)
@@ -1371,6 +1348,40 @@ namespace vapp {
       }
 
     }
+
+    if(m_bUglyMode || m_bUglyOverMode) {
+      for(int i=0; i<Blocks.size(); i++) {
+	/* Are we rendering background blocks or what? */
+	if(Blocks[i]->isBackground() != bBackground)
+	  continue;
+
+	/* Build rotation matrix for block */
+	float fR[4];
+	float rotation = Blocks[i]->DynamicRotation();
+	fR[0] =  cos(rotation);
+	fR[2] =  sin(rotation);
+	fR[1] = -fR[2];
+	fR[3] =  fR[0];
+
+	Vector2f dynRotCenter = Blocks[i]->DynamicRotationCenter();
+	Vector2f dynPos       = Blocks[i]->DynamicPosition();
+
+	getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_LOOP);
+	getParent()->getDrawLib()->setColorRGB(255,255,255);
+
+        for(int j=0;j<Blocks[i]->Vertices().size();j++) {
+	  Vector2f vertex = Blocks[i]->Vertices()[j]->Position();
+	  /* transform vertex */
+	  Vector2f transVertex = Vector2f((vertex.x-dynRotCenter.x)*fR[0] + (vertex.y-dynRotCenter.y)*fR[1],
+					  (vertex.x-dynRotCenter.x)*fR[2] + (vertex.y-dynRotCenter.y)*fR[3]);
+	  transVertex += dynPos + dynRotCenter;
+
+          getParent()->getDrawLib()->glVertex(transVertex.x, transVertex.y);
+        }
+	getParent()->getDrawLib()->endDraw();
+      }
+    }
+
   }
 
   void GameRenderer::_RenderBlock(Block* block)
@@ -1485,20 +1496,7 @@ namespace vapp {
       std::sort(Blocks.begin(), Blocks.end(), AscendingTextureSort());
 
       /* Ugly mode? */
-      if(m_bUglyMode) {
-	for(int i=0;i<Blocks.size();i++) {
-	  if(Blocks[i]->isBackground() == false) {
-	    getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_LOOP);
-	    getParent()->getDrawLib()->setColorRGB(255,255,255);
-	    for(int j=0;j<Blocks[i]->Vertices().size();j++) {
-	      getParent()->getDrawLib()->glVertex(Blocks[i]->Vertices()[j]->Position().x + Blocks[i]->DynamicPosition().x,
-						  Blocks[i]->Vertices()[j]->Position().y + Blocks[i]->DynamicPosition().y);
-	    }
-	    getParent()->getDrawLib()->endDraw();
-	  }
-	}
-      }
-      else {
+      if(m_bUglyMode == false) {
 	/* Render all non-background blocks */
 	/* Static geoms... */
 	for(int i=0;i<Blocks.size();i++) {
@@ -1515,6 +1513,36 @@ namespace vapp {
 	    }
 	  }
 	}
+      }
+
+      if(m_bUglyMode || m_bUglyOverMode) {
+	for(int i=0;i<Blocks.size();i++) {
+	  if(Blocks[i]->isBackground() == false) {
+	    getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_LOOP);
+	    getParent()->getDrawLib()->setColorRGB(255,255,255);
+	    for(int j=0;j<Blocks[i]->Vertices().size();j++) {
+	      getParent()->getDrawLib()->glVertex(Blocks[i]->Vertices()[j]->Position().x + Blocks[i]->DynamicPosition().x,
+						  Blocks[i]->Vertices()[j]->Position().y + Blocks[i]->DynamicPosition().y);
+	    }
+	    getParent()->getDrawLib()->endDraw();
+	  }
+	}
+      }
+
+    }
+  }
+
+  void GameRenderer::_RenderZone(Zone *i_zone) {
+    ZonePrim *v_prim;
+    ZonePrimBox *v_primbox;
+
+    for(unsigned int i=0; i<i_zone->Prims().size(); i++) {
+      v_prim = i_zone->Prims()[i];
+      if(v_prim->Type() == LZPT_BOX) {
+	v_primbox = static_cast<ZonePrimBox*>(v_prim);
+	_RenderRectangle(Vector2f(v_primbox->Left(),  v_primbox->Top()),
+			 Vector2f(v_primbox->Right(), v_primbox->Bottom()),
+			 MAKE_COLOR(255, 0, 0, 255));
       }
     }
   }
@@ -1961,6 +1989,17 @@ namespace vapp {
     getParent()->getDrawLib()->glVertexSP(p2.x,p2.y);
     getParent()->getDrawLib()->glTexCoord(0,0);
     getParent()->getDrawLib()->glVertexSP(p3.x,p3.y);
+    getParent()->getDrawLib()->endDraw();
+  }
+
+  void GameRenderer::_RenderRectangle(const Vector2f& i_p1, const Vector2f& i_p2, const Color& i_color) {
+    getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
+    getParent()->getDrawLib()->setColor(i_color);
+    getParent()->getDrawLib()->glVertex(i_p1);
+    getParent()->getDrawLib()->glVertex(Vector2f(i_p2.x, i_p1.y));
+    getParent()->getDrawLib()->glVertex(i_p2);
+    getParent()->getDrawLib()->glVertex(Vector2f(i_p1.x, i_p2.y));
+    getParent()->getDrawLib()->glVertex(i_p1);
     getParent()->getDrawLib()->endDraw();
   }
 

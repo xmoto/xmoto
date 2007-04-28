@@ -60,6 +60,7 @@ function makeNSI {
   echo "        File libintl3.dll"
   echo "        File libiconv2.dll"
   echo "        File sqlite3.dll"
+  echo "        File SDL_ttf.dll"
   echo "	File COPYING.txt"
   echo "	File ChangeLog.txt"
   echo
@@ -135,6 +136,10 @@ function fill_tmp_directory {
     # musics
     mkdir -p Textures/Musics         || return 1
     cp ../bin/Textures/Musics/*.ogg Textures/Musics || return 1
+
+    # fonts
+    mkdir -p Textures/Fonts          || return 1
+    cp ../bin/Textures/Fonts/*.ttf Textures/Fonts || return 1
 
     # langs
     mkdir locale     || return 1

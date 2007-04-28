@@ -38,6 +38,10 @@ AM_CONDITIONAL([WIN32], test "$target_os" = "mingw32")
 AM_PATH_SDL(1.0.0, [], [AC_MSG_ERROR(SDL required)])
 AC_SDL_CHECK_LIB(SDL_mixer, Mix_OpenAudio, [], [AC_MSG_ERROR(SDL_mixer required)])
 
+dnl sdl_ttf
+AC_CHECK_HEADERS([SDL/SDL_ttf.h],[],[AC_MSG_ERROR(SDL_ttf headers required)])
+AC_SDL_CHECK_LIB(SDL_ttf, TTF_OpenFont, [], [AC_MSG_ERROR(SDL_ttf lib required)])
+
 dnl Put OpenGL
 AC_ARG_WITH([renderer-openGl],
   [AS_HELP_STRING([--with-renderer-openGl=0|1],

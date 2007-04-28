@@ -1043,7 +1043,8 @@ namespace vapp {
   std::string FS::m_BinDataFile = "";
   int FS::m_nNumPackFiles = 0;
   PackFile FS::m_PackFiles[MAX_PACK_FILES];
-    
+  std::string FS::m_binCheckSum = "";
+
   void FS::init(std::string AppDir) {    
     m_bGotDataDir = false;
     m_UserDir = "";
@@ -1124,9 +1125,16 @@ namespace vapp {
 		char cBuf[256];
 		char md5sum[256];
 		fread(cBuf,4,1,fp);
-		if(!strncmp(cBuf,"XBI2",4)) {
+		if(!strncmp(cBuf,"XBI3",4)) {
 			int nNameLen;
 			int md5sumLen;
+
+			/* get bin checksum of the package.list */
+			md5sumLen = fgetc(fp);
+			fread(md5sum,md5sumLen,1,fp);
+			md5sum[md5sumLen] = '\0';			
+			m_binCheckSum = md5sum;
+
 			while((nNameLen=fgetc(fp)) >= 0) {
 				//          printf("%d  \n",nNameLen);
 				/* Read file name */
@@ -1176,6 +1184,10 @@ namespace vapp {
     #else
       return mkdir(pcPath,S_IRUSR|S_IWUSR|S_IRWXU);
     #endif
+  }
+
+  std::string FS::binCheckSum() {
+    return FS::m_binCheckSum;
   }
 
   /*===========================================================================

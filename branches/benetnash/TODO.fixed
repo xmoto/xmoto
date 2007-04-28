@@ -7,6 +7,16 @@ Since 0.2.7
 * [13:05] <gaivota> aspegic500: another bug, that already exists for many versions now: you cant switch the musics to stereo, it always remains mono
 * FEATURE : * xmoto toto.lvl to play directly a level
 * order des packs qui marche bien (observer les requetes pour faire mieux)
+* FEATURE : windows : there's some win32 API calls that can be made to determine the application data dir
+* pack : last levels
+* mettre à jour la liste du pack ouvert (ca le fait pas : mettre à jour que la ligne du niveau fini qd on finit un niveau)
+* http://bugs.debian.org/335514
+It's a bit confusing to be proposed to continue or abort playing when
+one has just finished the level. The ``abort'' one should be rather
+quit level'' or something like that.
+* '50 most played levels'/least : virtual package
+* the following: if the player looks from rightto left, the leg is not correctly attached to the torso
+* recharger les themes si aucun trouvé pour pas que ca loose
 
 Since 0.2.6
 [21:33] <jj> the smoke is not always rendered at the sides of the screen

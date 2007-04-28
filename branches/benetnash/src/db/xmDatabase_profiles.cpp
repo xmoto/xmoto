@@ -103,7 +103,8 @@ void xmDatabase::updateDB_profiles(XmDatabaseUpdateInterface *i_interface) {
 void xmDatabase::profiles_addFinishTime(const std::string& i_profile, const std::string& i_id_level,
 					const std::string& i_timeStamp, float i_finishTime) {
   std::ostringstream v_fTime_str;
-  v_fTime_str << i_finishTime;
+  /* to be sure it's rounded, but over */
+  v_fTime_str << std::fixed << (floor(i_finishTime * 1000.0))/1000.0;
   std::string v_timeToKeep;
   char **v_result;
   int nrow;

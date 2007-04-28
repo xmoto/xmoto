@@ -252,6 +252,8 @@ void LuaLibGame::loadScript(const std::string& i_scriptCode, const std::string& 
   /* Use the Lua aux lib to load the buffer */
   int nRet;
 
+  setWorld();
+
   nRet = luaL_loadbuffer(m_pL, i_scriptCode.c_str(), i_scriptCode.length(),
 			 i_scriptFilename.c_str()) || lua_pcall(m_pL, 0, 0, 0);    
 
