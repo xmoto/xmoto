@@ -104,6 +104,13 @@ namespace vapp {
     return m_fontMedium;
   }
 
+  FontManager* DrawLib::getFontBig() {
+    if(m_fontBig == NULL) {
+      throw Exception("Invalid font");
+    }
+    return m_fontBig;
+  }
+
    /*===========================================================================
   Primitive: box
   ===========================================================================*/

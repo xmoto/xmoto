@@ -69,6 +69,39 @@ namespace vapp {
     LogRaw(cBuf);    
   }
 
+  App::App() {
+    m_bQuit = false;
+    m_fAppTime = 0.0f;
+    m_AppName = "";
+    m_CopyrightInfo = "";
+    m_AppCommand = "";
+    m_UserNotify = "";
+    m_fFramesPerSecond = 25.0f;
+    m_fNextFrame = 0.0f;
+    m_bNoWWW = false;
+    m_nFrameDelay = 0;
+    drawLib = NULL;
+    
+    m_useGraphics = true;
+    m_useGlExtension = true;
+    
+    m_CmdDispWidth = -1;
+    m_CmdDispHeight = -1;
+    m_CmdDispBpp = -1;
+    m_CmdWindowed = false;
+    m_bCmdDispWidth = false;
+    m_bCmdDispHeight = false;
+    m_bCmdDispBPP = false;
+    m_bCmdWindowed = false;
+
+  }
+
+  App::~App() {
+    if(drawLib != NULL) {
+      delete drawLib;
+    }
+  }
+
   /*===========================================================================
   Sub app entry point and stuff
   ===========================================================================*/
@@ -343,6 +376,7 @@ namespace vapp {
     /* hum, case, in which 0.9800 * 100.0 => 0.9799999*/
     if(((int)(nHres * 100.0)) < ((int)((nHres * 100.0) + 0.001))) {
       nH = ((int)((nHres * 100.0) + 0.001));
+      nH %= 100;
     }
 
     sprintf(cBuf,"%02d:%02d:%02d", nM, nS, nH);

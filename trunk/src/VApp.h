@@ -94,33 +94,8 @@ namespace vapp {
   ===========================================================================*/
   class App {
   public:
-    App() {
-      m_bQuit = false;
-      m_fAppTime = 0.0f;
-      m_AppName = "";
-      m_CopyrightInfo = "";
-      m_AppCommand = "";
-      m_UserNotify = "";
-      m_fFramesPerSecond = 25.0f;
-      m_fNextFrame = 0.0f;
-      m_bNoWWW = false;
-      m_nFrameDelay = 0;
-      drawLib = NULL;
-
-      m_useGraphics = true;
-      m_useGlExtension = true;
-
-      m_CmdDispWidth = -1;
-      m_CmdDispHeight = -1;
-      m_CmdDispBpp = -1;
-      m_CmdWindowed = false;
-      m_bCmdDispWidth = false;
-      m_bCmdDispHeight = false;
-      m_bCmdDispBPP = false;
-      m_bCmdWindowed = false;
-
-    } virtual ~ App() {
-    }
+    App();
+    virtual ~App();
 
     /* Methods */
     void run(int nNumArgs, char **ppcArgs);

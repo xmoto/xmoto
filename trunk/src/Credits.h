@@ -34,8 +34,7 @@ namespace vapp {
     public:
       /* Types */
       struct Entry {
-        std::string Left,Right;
-        int nLeftWidth,nRightWidth;
+        std::string Left, Right;
       };
     
       /* Construction/destruction */
@@ -43,22 +42,18 @@ namespace vapp {
       ~Credits();
       
       /* Methods */
-      void init(float fBackgroundReplayLength,float fFadeInLength,float fFadeOutLength,const char *pcCredits);
+      void init(App* v_pApp, float fBackgroundReplayLength,float fFadeInLength,float fFadeOutLength,const char *pcCredits);
       void render(float fTime);
       bool isFinished(void);
       
     private:
       /* Data */
       std::vector<Entry *> m_Entries;
-      int m_nWidestLeft,m_nWidestRight;
       float m_fTime,m_fReplayLength,m_fFadeIn,m_fFadeOut;
       bool m_bBlackBackground;
-      UIFont *m_pFont;
+      FontManager* m_font;
       App *m_pApp;
       bool m_bFinished;
-      
-      /* Helpers */
-      int _GetStringWidth(const std::string &s);
   };
   
 }

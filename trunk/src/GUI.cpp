@@ -25,8 +25,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VXml.h"
 #include "GUI.h"
 #include "GameText.h"
+#include "VDraw.h"
 
 namespace vapp {
+
+  DrawLib* UIWindow::m_drawLib = NULL;
+
+  void UIWindow::setDrawLib(DrawLib* i_drawLib) {
+    m_drawLib = i_drawLib;
+  }
 
   /*===========================================================================
   Calculate full opacity
@@ -146,19 +153,6 @@ namespace vapp {
     return NULL;
   }
 
-  void UIWindow::getTextExt(std::string Text,int *pnMinX,int *pnMinY,int *pnMaxX,int *pnMaxY) {
-    if(m_pCurFont != NULL) {
-      UITextDraw::getTextExt(m_pCurFont,Text,pnMinX,pnMinY,pnMaxX,pnMaxY);
-    }    
-  }
-  
-  void UIWindow::getTextSize(std::string Text,int *pnX,int *pnY) {
-    int x1=0,y1=0,x2=0,y2=0;
-    getTextExt(Text,&x1,&y1,&x2,&y2);
-    if(pnX) *pnX = x2 - x1;
-    if(pnY) *pnY = y2 - y1;
-  }
-
   int UIWindow::getAbsPosX(void) {
     int i=0;
     for(UIWindow *p=this;p!=NULL;p=p->getParent()) {
@@ -253,8 +247,8 @@ namespace vapp {
     UIFrame::paint();
     
     /* Should we do some text? */
-    if(m_bTextInput && m_pTextInputFont!=NULL) {      
-      setFont(m_pTextInputFont);
+    if(m_bTextInput && m_textInputFont!=NULL) {      
+      setFont(m_textInputFont);
       putText(16,120,m_TextInput + std::string("|"));
     }
   }
@@ -305,11 +299,11 @@ namespace vapp {
     if(Buttons & UI_MSGBOX_YES_FOR_ALL) nNumButtons++;
 
     /* Determine size of contents */
-    int x1,y1,x2,y2;    
-    getTextExt(Text,&x1,&y1,&x2,&y2);
+    FontGlyph* v_fg = m_curFont->getGlyph(Text);
+
     int nButtonSize = 57;
-    int w = ((x2 - x1) > nNumButtons*115 ? (x2 - x1) : nNumButtons*115) + 16 + 100;
-    int h = y2 - y1 + nButtonSize + 24 + 100;
+    int w = (v_fg->realWidth() > nNumButtons*115 ? (v_fg->realWidth()) : nNumButtons*115) + 16 + 100;
+    int h = v_fg->realHeight() + nButtonSize + 24 + 100;
     
     if(bTextInput) h+=40;    
     
@@ -388,31 +382,44 @@ namespace vapp {
   /*===========================================================================
   Base painting
   ===========================================================================*/
-  void UIWindow::putText(int x,int y,std::string Text,bool bRotated) {
-    /* Draw text at location */
-    if(m_pCurFont != NULL) {
-      Color c0 = MAKE_COLOR(GET_RED(getTextStyle().c0),
-                            GET_GREEN(getTextStyle().c0),
-                            GET_BLUE(getTextStyle().c0),
-                            (int)(GET_ALPHA(getTextStyle().c0)*getOpacity()/100));
-      Color c1 = MAKE_COLOR(GET_RED(getTextStyle().c1),
-                            GET_GREEN(getTextStyle().c1),
-                            GET_BLUE(getTextStyle().c1),
-                            (int)(GET_ALPHA(getTextStyle().c1)*getOpacity()/100));
-      Color c2 = MAKE_COLOR(GET_RED(getTextStyle().c2),
-                            GET_GREEN(getTextStyle().c2),
-                            GET_BLUE(getTextStyle().c2),
-                            (int)(GET_ALPHA(getTextStyle().c2)*getOpacity()/100));
-      Color c3 = MAKE_COLOR(GET_RED(getTextStyle().c3),
-                            GET_GREEN(getTextStyle().c3),
-                            GET_BLUE(getTextStyle().c3),
-                            (int)(GET_ALPHA(getTextStyle().c3)*getOpacity()/100));
+  void UIWindow::putTextS(int x,int y, std::string Text,
+			  int& o_width, int &o_height,
+			  float i_xper, float i_yper) {
+    if(m_curFont == NULL) return;
 
-      UIFont *v_font = getFont();
-      if(v_font != NULL) {
-	UITextDraw::printRawGrad(v_font,getAbsPosX()+x,getAbsPosY()+y, Text,c0,c1,c2,c3,bRotated);
-      }
-    }
+    /* Draw text at location */
+    Color c0 = MAKE_COLOR(GET_RED(getTextStyle().c0),
+			  GET_GREEN(getTextStyle().c0),
+			  GET_BLUE(getTextStyle().c0),
+			  (int)(GET_ALPHA(getTextStyle().c0)*getOpacity()/100));
+    Color c1 = MAKE_COLOR(GET_RED(getTextStyle().c1),
+			  GET_GREEN(getTextStyle().c1),
+			  GET_BLUE(getTextStyle().c1),
+			  (int)(GET_ALPHA(getTextStyle().c1)*getOpacity()/100));
+    Color c2 = MAKE_COLOR(GET_RED(getTextStyle().c2),
+			  GET_GREEN(getTextStyle().c2),
+			  GET_BLUE(getTextStyle().c2),
+			  (int)(GET_ALPHA(getTextStyle().c2)*getOpacity()/100));
+    Color c3 = MAKE_COLOR(GET_RED(getTextStyle().c3),
+			  GET_GREEN(getTextStyle().c3),
+			  GET_BLUE(getTextStyle().c3),
+			  (int)(GET_ALPHA(getTextStyle().c3)*getOpacity()/100));
+    
+    vapp::FontManager* v_fm = m_curFont;
+    vapp::FontGlyph* v_fg = v_fm->getGlyph(Text);
+    v_fm->printStringGrad(v_fg,
+		      getAbsPosX()+x + ((int)((float)v_fg->realWidth()) * i_xper),
+		      getAbsPosY()+y + ((int)((float)v_fg->realHeight()) * i_yper),
+		      c0, c1, c2, c3);
+    o_width  = v_fg->realWidth();
+    o_height = v_fg->realHeight();
+}
+
+  void UIWindow::putText(int x,int y,std::string Text, float i_xper, float i_yper) {
+    int v_width, v_height;
+    putTextS(x, y, Text,
+	     v_width, v_height,
+	     i_xper, i_yper);
   }
    
   void UIWindow::putImage(int x,int y,int nWidth,int nHeight,Texture *pImage) {
@@ -687,15 +694,11 @@ FRAME_BR (187,198) (8x8)
         
       if(!m_CurrentContextHelp.empty()) {
         /* Print help string */
-        int nX1,nY1,nX2,nY2;
-        getTextExt(m_CurrentContextHelp,&nX1,&nY1,&nX2,&nY2);
-        
-	UIFont *v_font = getFont();
-
-	if(v_font != NULL) {
-	  UITextDraw::printRaw(v_font,getApp()->getDrawLib()->getDispWidth()-(nX2-nY1),getApp()->getDrawLib()->getDispHeight()-5,
-			       m_CurrentContextHelp,MAKE_COLOR(255,255,0,255));
-	}
+	setFont(getApp()->getDrawLib()->getFontSmall());
+	setTextSolidColor(MAKE_COLOR(255,255,0,255));
+	putText(getApp()->getDrawLib()->getDispWidth()  -5,
+		getApp()->getDrawLib()->getDispHeight() -1,
+		m_CurrentContextHelp, -1.0, -1.0);
       }
     }
   }
@@ -864,312 +867,6 @@ FRAME_BR (187,198) (8x8)
     if(SDL_GetMouseState(NULL,NULL)&SDL_BUTTON(2)) return true;
     return false;
   }
-  
-  /*===========================================================================
-  Text drawing
-  ===========================================================================*/
-  void UITextDraw::initTextDrawing(App *pApp) {
-    if(m_nRefCount == 0) {
-      m_pApp = pApp;
-    
-      /* Load font definitions from XML source */
-      XMLDocument FontDoc;      
-      FontDoc.readFromFile("fonts.dat");
-      TiXmlDocument *pFontData = FontDoc.getLowLevelAccess();      
-      if(pFontData == NULL)
-        Log("** Warning ** : failed to load fonts from 'fonts.dat'");
-      else {        
-        TiXmlElement *pFontDataElem = pFontData->FirstChildElement("fontdata");
-        if(pFontDataElem == NULL)
-          Log("** Warning ** : no fonts found in 'fonts.dat'");
-        else {
-          for(TiXmlElement *pFontMap=pFontDataElem->FirstChildElement("fontmap");
-              pFontMap!=NULL;pFontMap=pFontMap->NextSiblingElement("fontmap")) {
-            /* Nice, got a font-map. Get name and image file name */
-            const char *pc;
-            pc = pFontMap->Attribute("name");
-            if(pc==NULL)
-              Log("** Warning ** : ignoring unnamed font");
-            else {
-              std::string Name = pc;
-              std::string Image;
-              
-              pc = pFontMap->Attribute("image");
-              if(pc==NULL) {
-                /* Guess a image file name */
-                Image = Name + ".png";
-              }
-              else
-                Image = pc;
-                
-              /* Try loading texture */
-              Texture *pTexture = NULL;
-	      Sprite *pSprite   = getApp()->getTheme()->getSprite(SPRITE_TYPE_FONT, Name);
-	      if(pSprite != NULL) {
-	      	pTexture = pSprite->getTexture(false, true, FM_NEAREST);
-	      }
-
-
-              if(pTexture == NULL)
-                Log("** Warning ** : font texture '%s' missing",Image.c_str());
-              else {                  
-                /* Got an empty font */
-                UIFont *pFont = new UIFont;
-                pFont->Name = Name;
-                pFont->pTexture = pTexture;
-                m_Fonts.push_back(pFont);
-                
-                int nTW,nTH;
-                
-                nTW = pTexture->nWidth;
-                nTH = pTexture->nHeight;
-                
-                /* Fill it */
-                for(TiXmlElement *pCharElem=pFontMap->FirstChildElement("char");
-                    pCharElem!=NULL;pCharElem=pCharElem->NextSiblingElement("char")) {
-                  /* Get info */
-                  const char *pcI = pCharElem->Attribute("i");
-                  const char *pcX = pCharElem->Attribute("x");
-                  const char *pcY = pCharElem->Attribute("y");
-                  const char *pcW = pCharElem->Attribute("w");
-                  const char *pcH = pCharElem->Attribute("h");
-                  const char *pcINCX = pCharElem->Attribute("incx");
-                  const char *pcINCY = pCharElem->Attribute("incy");
-                  const char *pcOX = pCharElem->Attribute("ox");
-                  const char *pcOY = pCharElem->Attribute("oy");
-                  
-                  //printf("%s %s %s %s %s %s %s %s %s\n",
-                  //   pcI,pcX,pcY,pcW,pcH,pcINCX,pcINCY,pcOX,pcOY);
-                  
-                  if(pcI && pcX && pcY && pcW && pcH && pcINCX && pcINCY && pcOX && pcOY) {
-                    int nChar = atoi(pcI);
-                    if(nChar >= 0 && nChar < 256) {
-                      pFont->Chars[nChar].bAvail = true;
-                      pFont->Chars[nChar].nWidth = atoi(pcW);
-                      pFont->Chars[nChar].nHeight = atoi(pcH);
-                      pFont->Chars[nChar].nIncX = atoi(pcINCX);
-                      pFont->Chars[nChar].nIncY = atoi(pcINCY);
-                      pFont->Chars[nChar].nOffsetX = atoi(pcOX);
-                      pFont->Chars[nChar].nOffsetY = atoi(pcOY);
-
-                      pFont->Chars[nChar].fX1 = (float)atoi(pcX)/(float)nTW;                      
-                      pFont->Chars[nChar].fY1 = (float)atoi(pcY)/(float)nTH;                      
-                      pFont->Chars[nChar].fX2 = (float)(atoi(pcX)+atoi(pcW))/(float)nTW;                      
-                      pFont->Chars[nChar].fY2 = (float)(atoi(pcY)+atoi(pcH))/(float)nTH;                      
-                    }
-                  }
-                  else
-                    Log("** Warning ** : character in font '%s' is not fully defined",Name.c_str());
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    m_nRefCount++;
-  }
-  
-  void UITextDraw::uninitTextDrawing(void) {
-    m_nRefCount--;    
-    if(m_nRefCount == 0) {        
-      for(int i=0;i<m_Fonts.size();i++)
-        delete m_Fonts[i];
-    }
-  }
-  
-  UIFont *UITextDraw::getFont(std::string Name) {
-    for(int i=0;i<m_Fonts.size();i++)
-      if(m_Fonts[i]->Name == Name) return m_Fonts[i];
-    return NULL;
-  }
-  
-  void UITextDraw::printRaw(UIFont *pFont,int x,int y,std::string Text,Color c) {  
-    /* Draw text string */
-    int cx=x,cy=y;
-    
-    for(int i=0;i<Text.size();i++) {
-      int nChar = Text[i];
-      if(nChar == '\n') {
-        cy += (pFont->Chars['|'].nHeight*3)/2;
-        cx = x;
-      }
-      else if(pFont->Chars[nChar].bAvail) {
-        getApp()->getDrawLib()->setTexture(pFont->pTexture,BLEND_MODE_A);
-        getApp()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
-	getApp()->getDrawLib()->setColor(c);
-        getApp()->getDrawLib()->glTexCoord(pFont->Chars[nChar].fX1,pFont->Chars[nChar].fY1);
-        getApp()->getDrawLib()->glVertexSP((cx+pFont->Chars[nChar].nOffsetX),(cy-pFont->Chars[nChar].nOffsetY));
-        getApp()->getDrawLib()->glTexCoord(pFont->Chars[nChar].fX2,pFont->Chars[nChar].fY1);        
-        getApp()->getDrawLib()->glVertexSP(cx+pFont->Chars[nChar].nWidth+pFont->Chars[nChar].nOffsetX,cy-pFont->Chars[nChar].nOffsetY);
-        getApp()->getDrawLib()->glTexCoord(pFont->Chars[nChar].fX2,pFont->Chars[nChar].fY2);
-        getApp()->getDrawLib()->glVertexSP(cx+pFont->Chars[nChar].nWidth+pFont->Chars[nChar].nOffsetX,cy+pFont->Chars[nChar].nHeight-pFont->Chars[nChar].nOffsetY);
-        getApp()->getDrawLib()->glTexCoord(pFont->Chars[nChar].fX1,pFont->Chars[nChar].fY2);
-        getApp()->getDrawLib()->glVertexSP(cx+pFont->Chars[nChar].nOffsetX,cy+pFont->Chars[nChar].nHeight-pFont->Chars[nChar].nOffsetY);
-        getApp()->getDrawLib()->endDraw();
-        cx += pFont->Chars[nChar].nIncX;
-      }
-      else
-        cx += pFont->Chars['-'].nIncX;
-    }
-    
-  }
-
-  void UITextDraw::printRawGrad(UIFont *pFont,int x,int y,std::string Text,Color c1,Color c2,Color c3,Color c4,bool bRotated) {  
-    /* Draw text string */
-    int cx=x,cy=y;
-    
-
-    for(int i=0;i<Text.size();i++) {
-      int nChar = Text[i];
-      if(nChar == '\n') {
-        if(bRotated) {
-          cy += (pFont->Chars['|'].nHeight*3)/2;
-          cx = x;
-        }
-        else {
-          cy += (pFont->Chars['|'].nHeight*3)/2;
-          cx = x;
-        }
-      }
-      else if(pFont->Chars[nChar].bAvail) {
-        if(bRotated) {
-          //glBegin(GL_POLYGON);
-          //glColor4ub(GET_RED(c1),GET_GREEN(c1),GET_BLUE(c1),GET_ALPHA(c1));
-          //glTexCoord2f(pFont->Chars[nChar].fX1,pFont->Chars[nChar].fY1);
-          //getApp()->glVertexSP((cx-pFont->Chars[nChar].nOffsetY),(cy-pFont->Chars[nChar].nOffsetX));
-          //glColor4ub(GET_RED(c2),GET_GREEN(c2),GET_BLUE(c2),GET_ALPHA(c2));
-          //glTexCoord2f(pFont->Chars[nChar].fX2,pFont->Chars[nChar].fY1);        
-          //getApp()->glVertexSP(cx-pFont->Chars[nChar].nOffsetY,cy-pFont->Chars[nChar].nOffsetX-pFont->Chars[nChar].nWidth);
-          //glColor4ub(GET_RED(c3),GET_GREEN(c3),GET_BLUE(c3),GET_ALPHA(c3));
-          //glTexCoord2f(pFont->Chars[nChar].fX2,pFont->Chars[nChar].fY2);
-          //getApp()->glVertexSP(cx+pFont->Chars[nChar].nHeight-pFont->Chars[nChar].nOffsetY,cy-pFont->Chars[nChar].nOffsetX-pFont->Chars[nChar].nWidth);
-          //glColor4ub(GET_RED(c4),GET_GREEN(c4),GET_BLUE(c4),GET_ALPHA(c4));
-          //glTexCoord2f(pFont->Chars[nChar].fX1,pFont->Chars[nChar].fY2);
-          //getApp()->glVertexSP(cx+pFont->Chars[nChar].nHeight-pFont->Chars[nChar].nOffsetY,(cy-pFont->Chars[nChar].nOffsetX));
-          //glEnd();
-
-	  getApp()->getDrawLib()->setTexture(pFont->pTexture,BLEND_MODE_A);
-	  getApp()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
-	  getApp()->getDrawLib()->setColor(c1);
-          getApp()->getDrawLib()->glTexCoord(pFont->Chars[nChar].fX1,pFont->Chars[nChar].fY1);
-          getApp()->getDrawLib()->glVertexSP((cx+pFont->Chars[nChar].nOffsetX),(cy-pFont->Chars[nChar].nOffsetY));
-	  getApp()->getDrawLib()->setColor(c2);
-          getApp()->getDrawLib()->glTexCoord(pFont->Chars[nChar].fX2,pFont->Chars[nChar].fY1);        
-          getApp()->getDrawLib()->glVertexSP(cx+pFont->Chars[nChar].nWidth+pFont->Chars[nChar].nOffsetX,cy-pFont->Chars[nChar].nOffsetY);
-	  getApp()->getDrawLib()->setColor(c3);
-          getApp()->getDrawLib()->glTexCoord(pFont->Chars[nChar].fX2,pFont->Chars[nChar].fY2);
-          getApp()->getDrawLib()->glVertexSP(cx+pFont->Chars[nChar].nWidth+pFont->Chars[nChar].nOffsetX,cy+pFont->Chars[nChar].nHeight-pFont->Chars[nChar].nOffsetY);
-	  getApp()->getDrawLib()->setColor(c4);
-          getApp()->getDrawLib()->glTexCoord(pFont->Chars[nChar].fX1,pFont->Chars[nChar].fY2);
-          getApp()->getDrawLib()->glVertexSP(cx+pFont->Chars[nChar].nOffsetX,cy+pFont->Chars[nChar].nHeight-pFont->Chars[nChar].nOffsetY);
-	  getApp()->getDrawLib()->endDraw();
-
-          //glBegin(GL_POLYGON);
-          //glColor4ub(GET_RED(c1),GET_GREEN(c1),GET_BLUE(c1),GET_ALPHA(c1));
-          //glTexCoord2f(pFont->Chars[nChar].fX1,pFont->Chars[nChar].fY1);
-          //getApp()->glVertexSP((cx-pFont->Chars[nChar].nOffsetY),(cy-pFont->Chars[nChar].nOffsetX));
-          //glColor4ub(GET_RED(c2),GET_GREEN(c2),GET_BLUE(c2),GET_ALPHA(c2));
-          //glTexCoord2f(pFont->Chars[nChar].fX2,pFont->Chars[nChar].fY1);        
-          //getApp()->glVertexSP(cx-pFont->Chars[nChar].nOffsetY,cy-pFont->Chars[nChar].nOffsetX-pFont->Chars[nChar].nWidth);
-          //glColor4ub(GET_RED(c3),GET_GREEN(c3),GET_BLUE(c3),GET_ALPHA(c3));
-          //glTexCoord2f(pFont->Chars[nChar].fX2,pFont->Chars[nChar].fY2);
-          //getApp()->glVertexSP(cx+pFont->Chars[nChar].nHeight-pFont->Chars[nChar].nOffsetY,cy-pFont->Chars[nChar].nOffsetX-pFont->Chars[nChar].nWidth);
-          //glColor4ub(GET_RED(c4),GET_GREEN(c4),GET_BLUE(c4),GET_ALPHA(c4));
-          //glTexCoord2f(pFont->Chars[nChar].fX1,pFont->Chars[nChar].fY2);
-          //getApp()->glVertexSP(cx+pFont->Chars[nChar].nHeight-pFont->Chars[nChar].nOffsetY,(cy-pFont->Chars[nChar].nOffsetX));
-          //glEnd();
-          
-          //glDisable(GL_TEXTURE_2D);
-          //glBegin(GL_LINE_LOOP);
-          //glColor4f(1,0,0,1);          
-          //getApp()->glVertexSP((cx+pFont->Chars[nChar].nOffsetX),(cy-pFont->Chars[nChar].nOffsetY));
-          //glColor4f(0,1,0,1);          
-          //getApp()->glVertexSP(cx+pFont->Chars[nChar].nOffsetX,cy-pFont->Chars[nChar].nOffsetY-pFont->Chars[nChar].nWidth);
-          //glColor4f(0,0,1,1);          
-          //getApp()->glVertexSP(cx+pFont->Chars[nChar].nHeight+pFont->Chars[nChar].nOffsetX,cy-pFont->Chars[nChar].nOffsetY-pFont->Chars[nChar].nWidth);
-          //glColor4f(0,0,0,1);          
-          //getApp()->glVertexSP(cx+pFont->Chars[nChar].nHeight+pFont->Chars[nChar].nOffsetX,(cy-pFont->Chars[nChar].nOffsetY));
-          //glEnd();
-          //glEnable(GL_TEXTURE_2D);
-          //
-          cy += (pFont->Chars[nChar].nHeight*5)/4;
-        }
-        else {
-	  getApp()->getDrawLib()->setTexture(pFont->pTexture,BLEND_MODE_A);
-	  getApp()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
-	  getApp()->getDrawLib()->setColor(c1);
-          getApp()->getDrawLib()->glTexCoord(pFont->Chars[nChar].fX1,pFont->Chars[nChar].fY1);
-          getApp()->getDrawLib()->glVertexSP((cx+pFont->Chars[nChar].nOffsetX),(cy-pFont->Chars[nChar].nOffsetY));
-	  getApp()->getDrawLib()->setColor(c2);
-          getApp()->getDrawLib()->glTexCoord(pFont->Chars[nChar].fX2,pFont->Chars[nChar].fY1);        
-          getApp()->getDrawLib()->glVertexSP(cx+pFont->Chars[nChar].nWidth+pFont->Chars[nChar].nOffsetX,cy-pFont->Chars[nChar].nOffsetY);
-	  getApp()->getDrawLib()->setColor(c3);
-          getApp()->getDrawLib()->glTexCoord(pFont->Chars[nChar].fX2,pFont->Chars[nChar].fY2);
-          getApp()->getDrawLib()->glVertexSP(cx+pFont->Chars[nChar].nWidth+pFont->Chars[nChar].nOffsetX,cy+pFont->Chars[nChar].nHeight-pFont->Chars[nChar].nOffsetY);
-	  getApp()->getDrawLib()->setColor(c4);
-          getApp()->getDrawLib()->glTexCoord(pFont->Chars[nChar].fX1,pFont->Chars[nChar].fY2);
-          getApp()->getDrawLib()->glVertexSP(cx+pFont->Chars[nChar].nOffsetX,cy+pFont->Chars[nChar].nHeight-pFont->Chars[nChar].nOffsetY);
-          getApp()->getDrawLib()->endDraw();
-          
-          cx += pFont->Chars[nChar].nIncX;
-        }
-      }
-      else
-        cx += pFont->Chars['-'].nIncX;
-    }
-  }
-    
-  void UITextDraw::getTextExt(UIFont *pFont,std::string Text,int *pnMinX,int *pnMinY,int *pnMaxX,int *pnMaxY) {
-    int cx=0,cy=0;
-    
-    if(pnMinX) *pnMinX = 10000;
-    if(pnMinY) *pnMinY = 10000;
-    if(pnMaxX) *pnMaxX = -10000;
-    if(pnMaxY) *pnMaxY = -10000;
-    
-    for(int i=0;i<Text.size();i++) {
-      int nChar = Text[i];
-      if(nChar == '\n') {
-        cy += (pFont->Chars['|'].nHeight*3)/2;
-        cx = 0;
-      }
-      else if(nChar == ' ') {
-        cx += pFont->Chars['-'].nIncX;
-        if(pnMaxX) *pnMaxX += pFont->Chars['-'].nIncX;
-      }
-      else if(pFont->Chars[nChar].bAvail) {
-        int x1 = cx + pFont->Chars[nChar].nOffsetX;
-        int y1 = cy - pFont->Chars[nChar].nOffsetY;
-        int x2 = cx + pFont->Chars[nChar].nIncX;
-        int y2 = y1 + pFont->Chars[nChar].nHeight;
-
-        if(pnMinX && x1<*pnMinX) *pnMinX = x1;
-        if(pnMinY && y1<*pnMinY) *pnMinY = y1;
-        if(pnMaxX && x2>*pnMaxX) *pnMaxX = x2;
-        if(pnMaxY && y2>*pnMaxY) *pnMaxY = y2;
-        
-        cx += pFont->Chars[nChar].nIncX;
-      }
-      else {
-        cx += pFont->Chars['-'].nIncX;
-        if(pnMaxX) *pnMaxX += pFont->Chars['-'].nIncX;
-      }
-    }  
-  }
-  
-  int UITextDraw::getRefCount(void) {
-    return m_nRefCount;
-  }
-  
-  App *UITextDraw::getApp(void) {
-    return m_pApp;
-  }
-    
-  /* Static class data */
-  std::vector<UIFont *> UITextDraw::m_Fonts;    
-  int UITextDraw::m_nRefCount = 0;
-  App *UITextDraw::m_pApp = NULL;
 
   /*===========================================================================
   Texture mangling

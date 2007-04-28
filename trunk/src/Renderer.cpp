@@ -550,7 +550,7 @@ namespace vapp {
     /* Update time */
     m_pInGameStats->showWindow(!m_bCreditsMode);
     m_pPlayTime->setCaption(m_bCreditsMode?"":getParent()->formatTime(getGameObject()->getTime()));
-    
+
     m_fZoom = 60.0f;    
     setScroll(true);
  
@@ -795,12 +795,12 @@ namespace vapp {
 
     /* render motogame info */
     if(getGameObject()->getInfos() != "") {
-      UIFont *v_font = getMediumFont();
-      if(v_font != NULL) {
-	UITextDraw::printRaw(v_font,0,getParent()->getDrawLib()->getDispHeight()-4,
-			     getGameObject()->getInfos(),
-			     MAKE_COLOR(255,255,255,255));
-      }
+      FontManager* v_fm = getParent()->getDrawLib()->getFontMedium();
+      FontGlyph* v_fg = v_fm->getGlyph(getGameObject()->getInfos());
+      v_fm->printString(v_fg,
+			5,
+			getParent()->getDrawLib()->getDispHeight() - v_fg->realHeight() - 2,
+			MAKE_COLOR(255,255,255,255));
     }
   }
 
@@ -875,10 +875,10 @@ namespace vapp {
     Sprite* pType = NULL;
     MotoGame *pGame = getGameObject();
 
-    float x1 = 115;
-    float y1 = -2;
-    float x2 = 90;
-    float y2 = 23;
+    float x1 = 125;
+    float y1 = 2;
+    float x2 = 100;
+    float y2 = 27;
 
     int nStrawberriesLeft = pGame->getLevelSrc()->countToTakeEntities();
     int nQuantity = 0;
@@ -909,20 +909,13 @@ namespace vapp {
       char cBuf[256];    
       sprintf(cBuf,"%d",nQuantity);
 
-      UIFont *v_font = getSmallFont();
-      if(v_font != NULL) {
-  UITextDraw::getTextExt(v_font,cBuf,&tx1,&ty1,&tx2,&ty2);
-      }      
-
-      /* Now for some evil special-case adjustments */
-      int nAdjust = 0;
-      if(nQuantity == 1) nAdjust = -3;
-      if(nQuantity > 9) nAdjust = -2;
-      
       /* Draw text */
-      if(v_font != NULL) {
-  UITextDraw::printRaw(v_font,nAdjust + (x1+x2)/2 - (tx2-tx1)/2,y2-(ty2-ty1)+3,cBuf,MAKE_COLOR(255,255,0,255));
-      }
+      FontManager* v_fm = getParent()->getDrawLib()->getFontSmall();
+      FontGlyph* v_fg = v_fm->getGlyph(cBuf);
+      v_fm->printString(v_fg,
+			(x1+x2)/2 - v_fg->realWidth()/2,
+			(y1+y2)/2 - v_fg->realHeight()/2,
+			MAKE_COLOR(255,255,0,255));
     }
   }
   
@@ -1871,18 +1864,9 @@ namespace vapp {
       glLoadIdentity();
 #endif
       
-      int nMinX,nMinY,nMaxX,nMaxY;
-      if(m_pSFont != NULL) {
-  UITextDraw::getTextExt(m_pSFont,Text,&nMinX,&nMinY,&nMaxX,&nMaxY);
-
-  int nx = vx - (nMaxX - nMinX)/2;
-  int ny = vy;
-  UITextDraw::printRaw(m_pSFont,nx-1,ny-1,Text,MAKE_COLOR(0,0,0,GET_ALPHA(c)));
-  UITextDraw::printRaw(m_pSFont,nx+1,ny-1,Text,MAKE_COLOR(0,0,0,GET_ALPHA(c)));
-  UITextDraw::printRaw(m_pSFont,nx+1,ny+1,Text,MAKE_COLOR(0,0,0,GET_ALPHA(c)));
-  UITextDraw::printRaw(m_pSFont,nx-1,ny+1,Text,MAKE_COLOR(0,0,0,GET_ALPHA(c)));
-  UITextDraw::printRaw(m_pSFont,nx,ny,Text,c);
-      } 
+      FontManager* v_fm = getParent()->getDrawLib()->getFontSmall();
+      FontGlyph* v_fg = v_fm->getGlyph(Text);
+      v_fm->printString(v_fg, vx, vy, c);
 
 #ifdef ENABLE_OPENGL
       glPopMatrix();

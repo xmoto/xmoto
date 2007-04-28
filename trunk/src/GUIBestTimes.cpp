@@ -46,16 +46,16 @@ namespace vapp {
     UIFrame::paint();
     
     /* Stuff */
-    putText(20,40,m_Header);
+    FontManager* pOldFont = getFont();
+    setFont(m_hFont);
+    putText(20,20,m_Header);
 
-    UIFont *pOldFont = getFont();
-    setFont(m_pHFont);
-    
+    setFont(m_drawLib->getFontSmall());    
     putText(40,64,std::string(GAMETEXT_ALLRECORDS) + ": ");
     for(int i=0;i<m_Col1.size();i++) {
       if(i == m_nHighlight1) {
         setTextSolidColor(MAKE_COLOR(255,255,0,255));
-      }    
+      }
       putText(30,90+i*16,m_Col1[i]);
       putText(110,90+i*16,m_Col2[i]);
       setTextSolidColor(MAKE_COLOR(255,255,255,255));
@@ -65,7 +65,7 @@ namespace vapp {
     for(int i=0;i<m_Col3.size();i++) {
       if(i == m_nHighlight2) {
         setTextSolidColor(MAKE_COLOR(255,255,0,255));
-      }    
+      }
       putText(30,126+i*16 + 16*m_Col1.size(),m_Col3[i]);
       putText(110,126+i*16 + 16*m_Col1.size(),m_Col4[i]);
       setTextSolidColor(MAKE_COLOR(255,255,255,255));

@@ -1,4 +1,3 @@
-fonts.dat
 credits.rpl
 Themes/original.xml
 
@@ -403,9 +402,6 @@ Textures/Effects/Fire1.png
 Textures/Effects/Smoke1.png
 Textures/Effects/Smoke2.png
 Textures/Effects/Debris1.png
-
-Textures/Fonts/MFont.png
-Textures/Fonts/SFont.png
 
 Textures/Misc/Arrow.png
 Textures/Misc/enginecounter.png

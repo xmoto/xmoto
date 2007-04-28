@@ -1,9 +1,12 @@
 X-Moto 0.3.0 2007-
  * libsqlite integration (for a better and faster data managing)
  * libcurl is now mandatory
+ * sdl_ttf integration (DejaVuSans.ttf is used)
+ * utf-8 integration
  * windows user dir is now %APPDIR%/.xmoto
  * code cleaning
  * favorite levels are saved by profile
+ * new virtual packs
  * smoother interpolation for replays (ctrl+i to enable/disable it)
  * F8 to disable automatic web connexion (for ghost for example)
  * xmoto toto.lvl or xmoto -levelFile toto.lvl to directly start from an lvl

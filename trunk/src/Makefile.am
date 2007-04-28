@@ -33,6 +33,8 @@ helpers_SOURCES = helpers/VMath.h             \
                   helpers/Color.h             \
                   helpers/Color.cpp           \
                   helpers/HighPrecisionTimer.h \
+		  helpers/utf8.h   \
+		  helpers/utf8.cpp \
                   iqsort.h
 
 common_SOURCES = BuiltInFont.cpp Image.cpp \
