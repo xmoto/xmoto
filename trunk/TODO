@@ -10,11 +10,11 @@
 [22:39] <gaivota>     pBike->Dir, 2
 [22:39] <gaivota>     );
 
-* gérer les accents et tous les caractères au clavier (et vérifier que
-   ca passe en bd)
+* gérer les accents et tous les caractères au clavier (et vérifier que ca passe en bd)
 * virer la builtin font
 * draw bug at top of the textures
 * faire des polices avec contour ?
+* traduire les scripts integrés (le tuto)
 
 [20:26] <Christoph> btw, I noticed a few days ago: in the level "MASTERKUD Padrinos magicos" there is something broken. the strawberry at the right end of the ground crashes the level with "Entity 'MySprite18' doesn't exist" (in the replay, too)
 
