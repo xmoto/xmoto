@@ -38,36 +38,32 @@ namespace vapp {
     /* Init GUI */
     getGUI()->setApp(getParent());
     getGUI()->setPosition(0,0,getParent()->getDrawLib()->getDispWidth(),getParent()->getDrawLib()->getDispHeight());
-    
-    m_pMFont = UITextDraw::getFont("MFont");
-    m_pSFont = UITextDraw::getFont("SFont");    
-    
-    getGUI()->setFont(m_pSFont); /* default font */
+    getGUI()->setFont(getParent()->getDrawLib()->getFontSmall());    
 
     m_pInGameStats = new UIWindow(getGUI(),0,0,"",800,100);
     m_pInGameStats->showWindow(false);
     
-    m_pPlayTime = new UIStatic(m_pInGameStats,0,0,"00:00:00",200,20);
-    m_pPlayTime->setFont(m_pMFont);
+    m_pPlayTime = new UIStatic(m_pInGameStats,0,0,"00:00:00",200,25);
+    m_pPlayTime->setFont(getParent()->getDrawLib()->getFontMedium());
     m_pPlayTime->setVAlign(UI_ALIGN_TOP);
     m_pPlayTime->setHAlign(UI_ALIGN_LEFT);
-    m_pBestTime   = new UIStatic(m_pInGameStats,0,23,"--:--:-- / --:--:--",800,20);
-    m_pBestTime->setFont(m_pSFont);
+    m_pBestTime   = new UIStatic(m_pInGameStats,0,28,"--:--:-- / --:--:--",800,20);
+    m_pBestTime->setFont(getParent()->getDrawLib()->getFontSmall());
     m_pBestTime->setVAlign(UI_ALIGN_TOP);
     m_pBestTime->setHAlign(UI_ALIGN_LEFT);
     m_pBestTime->setContextHelp("Personal best time / best time on this computer");
-    m_pReplayHelp = new UIStatic(m_pInGameStats, 200, 0, "", 590, 20);
-    m_pReplayHelp->setFont(m_pSFont);
+    m_pReplayHelp = new UIStatic(m_pInGameStats, 150, 0, "", 640, 20);
+    m_pReplayHelp->setFont(getParent()->getDrawLib()->getFontSmall());
     m_pReplayHelp->setVAlign(UI_ALIGN_TOP);
     m_pReplayHelp->setHAlign(UI_ALIGN_RIGHT);
 
-    m_pWorldRecordTime = new UIStatic(m_pInGameStats,0,43,"",800,20);
-    m_pWorldRecordTime->setFont(m_pSFont);
+    m_pWorldRecordTime = new UIStatic(m_pInGameStats,0,48,"",800,20);
+    m_pWorldRecordTime->setFont(getParent()->getDrawLib()->getFontSmall());
     m_pWorldRecordTime->setVAlign(UI_ALIGN_TOP);
     m_pWorldRecordTime->setHAlign(UI_ALIGN_LEFT);
 
     m_pSpeed = new UIStatic(m_pInGameStats,0,60,"",60,20);
-    m_pSpeed->setFont(m_pSFont);
+    m_pSpeed->setFont(getParent()->getDrawLib()->getFontSmall());
     m_pSpeed->setVAlign(UI_ALIGN_TOP);
     m_pSpeed->setHAlign(UI_ALIGN_RIGHT);
 
@@ -79,7 +75,7 @@ namespace vapp {
 					       0, 5,
 					       GAMETEXT_NEWHIGHSCOREPERSONAL,
 					       200, 20);
-    m_pNewHighscorePersonal_str->setFont(m_pSFont);
+    m_pNewHighscorePersonal_str->setFont(getParent()->getDrawLib()->getFontSmall());
     m_pNewHighscorePersonal_str->setHAlign(UI_ALIGN_CENTER);
     m_pNewHighscorePersonal_str->showWindow(false);
 
@@ -87,7 +83,7 @@ namespace vapp {
 					   0, 0,
 					   GAMETEXT_NEWHIGHSCORE,
 					   200, 30);
-    m_pNewHighscoreBest_str->setFont(m_pMFont);
+    m_pNewHighscoreBest_str->setFont(getParent()->getDrawLib()->getFontMedium());
     m_pNewHighscoreBest_str->setHAlign(UI_ALIGN_CENTER);
     m_pNewHighscoreBest_str->showWindow(false);
 
@@ -95,7 +91,7 @@ namespace vapp {
 					   0, 25,
 					   "",
 					   200, 20);
-    m_pNewHighscoreSave_str->setFont(m_pSFont);
+    m_pNewHighscoreSave_str->setFont(getParent()->getDrawLib()->getFontSmall());
     m_pNewHighscoreSave_str->setHAlign(UI_ALIGN_CENTER);
     m_pNewHighscoreSave_str->showWindow(false);
 

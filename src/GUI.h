@@ -89,36 +89,6 @@ namespace vapp {
   };
 
 	/*===========================================================================
-	Font character
-  ===========================================================================*/
-  struct UIFontChar {
-    UIFontChar() {
-      bAvail = false;
-      nIncX = nIncY = nWidth = nHeight = nOffsetX = nOffsetY = 0;
-      fX1 = fY1 = fX2 = fY2 = 0.0f;
-    }
-  
-    bool bAvail;
-    int nIncX,nIncY;
-    int nWidth,nHeight;
-    int nOffsetX,nOffsetY;
-    float fX1,fY1,fX2,fY2;
-  };
-
-	/*===========================================================================
-	Font
-  ===========================================================================*/
-  struct UIFont {
-    UIFont() {
-      pTexture = NULL;
-    }
-  
-    std::string Name;
-    UIFontChar Chars[256];
-    Texture *pTexture;
-  };
-
-	/*===========================================================================
 	Text style
   ===========================================================================*/
   struct UITextStyle {
@@ -150,26 +120,6 @@ namespace vapp {
   };
 
 	/*===========================================================================
-	UI text drawing static class
-  ===========================================================================*/
-  class UITextDraw {
-    public:
-      static void initTextDrawing(App *pApp);
-      static void uninitTextDrawing(void);
-      static UIFont *getFont(std::string Name);
-      static void printRaw(UIFont *pFont,int x,int y,std::string Text,Color c);
-      static void printRawGrad(UIFont *pFont,int x,int y,std::string Text,Color c1,Color c2,Color c3,Color c4,bool bRotated=false);
-      static int getRefCount(void);
-      static App *getApp(void);
-      static void getTextExt(UIFont *pFont,std::string Text,int *pnMinX,int *pnMinY,int *pnMaxX,int *pnMaxY);
-    
-    private:
-      static std::vector<UIFont *> m_Fonts;
-      static App *m_pApp;
-      static int m_nRefCount;
-  };
-
-	/*===========================================================================
 	UI window
   ===========================================================================*/
   enum UIMsgBoxButton {
@@ -185,7 +135,6 @@ namespace vapp {
     protected:
       void _InitWindow(void) {
         m_pParent=NULL;m_pApp=NULL;
-        m_pCurFont=NULL;
         m_Pos.nX=m_Pos.nY=m_Pos.nWidth=m_Pos.nHeight=0;        
         m_bHide = false;
         m_bDisable = false;
@@ -197,13 +146,15 @@ namespace vapp {
       }
       
     public:
-      UIWindow() {}
+      UIWindow() {m_curFont = NULL;}
       UIWindow(UIWindow *pParent,int x=0,int y=0,std::string Caption="",int nWidth=0,int nHeight=0) {
         initW(pParent,x,y,Caption,nWidth,nHeight);
       }
       virtual ~UIWindow(void) {
         freeW();
       }
+
+      static void setDrawLib(DrawLib* i_drawLib);
     
       /* Methods */
       virtual void paint(void) {}
@@ -221,17 +172,17 @@ namespace vapp {
       virtual bool offerMouseEvent(void) {return true;}
       virtual std::string subContextHelp(int x,int y) {return "";}
 
-      /* Painting */            
-      void putText(int x,int y,std::string Text,bool bRotated=false);      
+      /* Painting */
+      void putText(int x,int y, std::string Text,
+		   float i_xper = 0.0, float i_yper = 0.0);
+      void putTextS(int x,int y, std::string Text,
+		    int& o_width, int &o_height,
+		    float i_xper = 0.0, float i_yper = 0.0);
       void putImage(int x,int y,int nWidth,int nHeight,Texture *pImage);
       void putElem(int x,int y,int nWidth,int nHeight,UIElem Elem,bool bDisabled,bool bActive=false);
       void putRect(int x,int y,int nWidth,int nHeight,Color c);
       void setScissor(int x,int y,int nWidth,int nHeight);
       void getScissor(int *px,int *py,int *pnWidth,int *pnHeight);
-      
-      /* Utils */
-      void getTextExt(std::string Text,int *pnMinX,int *pnMinY,int *pnMaxX,int *pnMaxY);
-      void getTextSize(std::string Text,int *pnX,int *pnY);
       
       bool isMouseLDown(void);
       bool isMouseRDown(void);
@@ -251,8 +202,8 @@ namespace vapp {
       /* Data interface */
       UIWindow *getPrimaryChild(void) {return m_pPrimaryChild;}
       void setPrimaryChild(UIWindow *p) {m_pPrimaryChild = p;}
-      UIFont *getFont(void) {return m_pCurFont;}
-      void setFont(UIFont *pFont) {m_pCurFont=pFont;}
+      FontManager *getFont() {return m_curFont;}
+      void setFont(FontManager *pFont) {m_curFont = pFont;}
       UIWindow *getParent(void) {return m_pParent;}
       App *getApp(void) {return m_pApp;}
       void setApp(App *pApp) {m_pApp=pApp;}
@@ -291,6 +242,8 @@ namespace vapp {
       bool haveChildW(UIWindow *pWindow);
       void initW(UIWindow *pParent,int x,int y,std::string Caption,int nWidth,int nHeight);
       void freeW(void);
+      
+      static DrawLib* m_drawLib;
     
     private:
       /* Data */
@@ -304,7 +257,7 @@ namespace vapp {
       App *m_pApp;                              /* Application */      
       UIRect m_Pos;                             /* Position */
       std::string m_Caption;                    /* Caption */
-      UIFont *m_pCurFont;                       /* Current font */
+      FontManager* m_curFont;
       UITextStyle m_TextStyle;                  /* Current text style */
       float m_fOpacity;                         /* Opacity (0-100) */
       Texture *m_pUIElemTexture;                /* UI element texture */
@@ -409,7 +362,7 @@ namespace vapp {
       void setup(std::string Header,int n1,int n2) {m_Header=Header; m_nHighlight1=n1; m_nHighlight2=n2;}
       void addRow1(std::string Col1,std::string Col2) {m_Col1.push_back(Col1); m_Col2.push_back(Col2);}
       void addRow2(std::string Col1,std::string Col2) {m_Col3.push_back(Col1); m_Col4.push_back(Col2);}
-      void setHFont(UIFont *pFont) {m_pHFont=pFont;}
+      void setHFont(FontManager* pFont) {m_hFont=pFont;}
       void clear(void);
       
     private:
@@ -420,7 +373,7 @@ namespace vapp {
       std::vector<std::string> m_Col3;
       std::vector<std::string> m_Col4;
       int m_nHighlight1,m_nHighlight2;
-      UIFont *m_pHFont;
+      FontManager* m_hFont;
   };
 
 	/*===========================================================================
@@ -433,7 +386,7 @@ namespace vapp {
         initW(pParent,x,y,Caption,nWidth,nHeight);
 
         setStyle(UI_FRAMESTYLE_TRANS);
-        m_pTextInputFont = NULL;
+        m_textInputFont = NULL;
         m_bTextInput = false;
         m_nNumButtons = 0;
       }      
@@ -450,7 +403,7 @@ namespace vapp {
       void enableTextInput(void) {m_bTextInput=true;}
       std::string getTextInput(void) {return m_TextInput;}
       void setTextInput(std::string s) {m_TextInput=s;}
-      void setTextInputFont(UIFont *pFont) {m_pTextInputFont = pFont;}
+      void setTextInputFont(FontManager* pFont) {m_textInputFont = pFont;}
       
       /* Data interface */
       void addButton(UIButton *p) {m_pButtons[m_nNumButtons++] = p;}
@@ -465,7 +418,7 @@ namespace vapp {
       
       bool m_bTextInput;
       std::string m_TextInput;
-      UIFont *m_pTextInputFont;
+      FontManager* m_textInputFont;
       
       /* Helpers */
       void _ReEnableSiblings(void);

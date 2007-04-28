@@ -31,6 +31,25 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "PolyDraw.h"
 #include <SDL/SDL_ttf.h>
 
+#ifdef __GNUC__
+#if (__GNUC__ >= 3)
+#include <ext/hash_map>
+  namespace HashNamespace=__gnu_cxx;
+#else
+#include <hash_map>
+#define HashNamespace std
+#endif
+#else // #ifdef __GNUC__
+#include <hash_map>
+namespace HashNamespace=std;
+#endif
+struct hashcmp_str {
+  bool operator()(std::string s1, std::string s2) {
+    return s1 == s2;
+  }
+};
+
+
 namespace vapp {
 
 class DrawLib;
@@ -50,6 +69,8 @@ class FontManager {
 
   virtual FontGlyph* getGlyph(const std::string& i_string) = 0;
   virtual void printString(FontGlyph* i_glyph, int i_x, int i_y, Color i_color) = 0;
+  virtual void printStringGrad(FontGlyph* i_glyph, int i_x, int i_y,
+			       Color c1,Color c2,Color c3,Color c4) = 0;
 
  protected:
   TTF_Font* m_ttf;
@@ -60,7 +81,7 @@ class FontManager {
 class GLFontGlyph : public FontGlyph {
  public:
   GLFontGlyph(const std::string& i_value, TTF_Font* i_ttf);
-  ~GLFontGlyph();
+  virtual ~GLFontGlyph();
 
   std::string Value() const;
   GLuint GLID()       const;
@@ -84,13 +105,15 @@ class GLFontGlyph : public FontGlyph {
 class GLFontManager : public FontManager {
  public:
   GLFontManager(DrawLib* i_drawLib, const std::string &i_fontFile, int i_fontSize);
-  ~GLFontManager();
+  virtual ~GLFontManager();
 
   FontGlyph* getGlyph(const std::string& i_string);
   void printString(FontGlyph* i_glyph, int i_x, int i_y, Color i_color);
+  void printStringGrad(FontGlyph* i_glyph, int i_x, int i_y,
+		       Color c1, Color c2, Color c3, Color c4);
 
  private:
-  std::vector<GLFontGlyph*> m_glyphs;
+  HashNamespace::hash_map<const char*, GLFontGlyph*, HashNamespace::hash<const char*>, hashcmp_str> m_glyphs;
 };
 
 #endif
@@ -124,7 +147,7 @@ class GLFontManager : public FontManager {
   class DrawLib {
   public:
     DrawLib();
-    virtual ~ DrawLib();
+    virtual ~DrawLib();
 
     /* initialize a drawLib from a name */
     static DrawLib* DrawLibFromName(std::string i_drawLibName);
@@ -304,6 +327,7 @@ class GLFontManager : public FontManager {
     
     FontManager* getFontSmall();
     FontManager* getFontMedium();
+    FontManager* getFontBig();
     virtual FontManager* getFontManager(const std::string &i_fontFile, int i_fontSize);
     
     /* Data */
@@ -317,6 +341,7 @@ class GLFontManager : public FontManager {
 
     FontManager* m_fontSmall;
     FontManager* m_fontMedium;
+    FontManager* m_fontBig;
 
     bool m_bWindowed;		/* Windowed or not */
 
@@ -341,7 +366,7 @@ class GLFontManager : public FontManager {
   class DrawLibOpenGL:public DrawLib {
   public:
     DrawLibOpenGL();
-    ~DrawLibOpenGL();
+    virtual ~DrawLibOpenGL();
 
     virtual void init(int nDispWidth, int nDispHeight, int nDispBPP,
 		      bool bWindowed, Theme * ptheme);
@@ -493,7 +518,7 @@ class GLFontManager : public FontManager {
   class DrawLibSDLgfx:public DrawLib {
   public:
     DrawLibSDLgfx();
-    ~DrawLibSDLgfx();
+    virtual ~DrawLibSDLgfx();
 
     virtual void init(int nDispWidth, int nDispHeight, int nDispBPP,
 		      bool bWindowed, Theme * ptheme);

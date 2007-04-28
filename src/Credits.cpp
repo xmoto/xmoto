@@ -32,7 +32,6 @@ namespace vapp {
   Credits::Credits() {
     m_bFinished = true;
     m_pApp = NULL;
-    m_pFont = NULL;
   }
   
   Credits::~Credits() {
@@ -46,7 +45,7 @@ namespace vapp {
     return m_bFinished;
   }
   
-  void Credits::init(float fBackgroundReplayLength,float fFadeInLength,float fFadeOutLength,const char *pcCredits) {
+  void Credits::init(App* v_pApp, float fBackgroundReplayLength,float fFadeInLength,float fFadeOutLength,const char *pcCredits) {
     if(fBackgroundReplayLength <= 0) {
       /* No replay or empty replay, just use black background */
       m_bBlackBackground = true;
@@ -65,57 +64,49 @@ namespace vapp {
     }
 
     m_bFinished = false;
+    m_pApp = v_pApp;
+
+    /* Parse credits string */
+    int nL = strlen(pcCredits);
+    char cBuf[256];
+    int nBufLen = 0;
+    std::string Left,Right;
     
-    m_pApp = UITextDraw::getApp();
-    
-    /* Get font */
-    m_pFont = UITextDraw::getFont("MFont");
-    if(m_pFont == NULL) {
-      m_bFinished = true;
-    }
-    else {    
-      /* Parse credits string */
-      int nL = strlen(pcCredits);
-      char cBuf[256];
-      int nBufLen = 0;
-      std::string Left,Right;
-      
-      m_nWidestLeft = 0;
-      m_nWidestRight = 0;
-      
-      for(int i=0;i<nL;i++) {
-        if(pcCredits[i] == ':') {
-          /* Got left part of entry */
-          cBuf[nBufLen] = '\0';
-          nBufLen = 0;
-          Left = cBuf;
-        }
-        else if(pcCredits[i] == ';') {
-          /* Got right part of entry */
-          cBuf[nBufLen] = '\0';
-          nBufLen = 0;
-          Right = cBuf;
-          
-          /* Register entry */
-          Entry *p = new Entry;
-          p->Left = Left;
-          p->Right = Right;
-          m_Entries.push_back(p);
-          
-          /* Keep track of longest left and right strings */
-          p->nLeftWidth = _GetStringWidth(Left);
-          p->nRightWidth = _GetStringWidth(Right);
-          
-          m_nWidestLeft = p->nLeftWidth > m_nWidestLeft ? p->nLeftWidth : m_nWidestLeft;
-          m_nWidestRight = p->nRightWidth > m_nWidestRight ? p->nRightWidth : m_nWidestRight;          
-        }
-        else {
-          /* Add character to buffer */
-          if(nBufLen < sizeof(cBuf) - 1) {
-            cBuf[nBufLen] = pcCredits[i];
-            nBufLen++;
-          }
-        }
+    for(int i=0;i<nL;i++) {
+      if(pcCredits[i] == ':') {
+	/* Got left part of entry */
+	cBuf[nBufLen] = '\0';
+	nBufLen = 0;
+	Left = cBuf;
+      }
+      else if(pcCredits[i] == ';') {
+	/* Got right part of entry */
+	cBuf[nBufLen] = '\0';
+	nBufLen = 0;
+	Right = cBuf;
+	
+	/* Register entry */
+	Entry *p;
+
+	if(Left != "") {
+	  p = new Entry;
+	  p->Left = Left;
+	  p->Right = "";
+	  m_Entries.push_back(p);
+	}
+	if(Right != "") {
+	  p = new Entry;
+	  p->Left = "";
+	  p->Right = Right;
+	  m_Entries.push_back(p);
+	}
+      }
+      else {
+	/* Add character to buffer */
+	if(nBufLen < sizeof(cBuf) - 1) {
+	  cBuf[nBufLen] = pcCredits[i];
+	  nBufLen++;
+	}
       }
     }
     
@@ -126,7 +117,7 @@ namespace vapp {
   void Credits::render(float fTime) {
     m_fTime = fTime;
   
-    if(!m_bFinished && m_pApp!=NULL && m_pFont!=NULL) {
+    if(!m_bFinished && m_pApp!=NULL) {
       /* Calculate fade... */
       float fFade = 0;        
         
@@ -157,13 +148,20 @@ namespace vapp {
       
       for(int i=0;i<m_Entries.size();i++) {
         if(nY < 0) continue;
-        
-        int nX = m_pApp->getDrawLib()->getDispWidth() - m_Entries[i]->nLeftWidth - 40 - m_nWidestRight;
         Color Yellow = MAKE_COLOR(255,255,64,32);
         Color White = MAKE_COLOR(255,255,255,255);
-        UITextDraw::printRawGrad(m_pFont,nX,nY+nScroll,m_Entries[i]->Left,White,White,Yellow,Yellow);
-        UITextDraw::printRawGrad(m_pFont,nX + m_Entries[i]->nLeftWidth + 40,nY+nScroll,m_Entries[i]->Right,White,White,Yellow,Yellow);
-        
+
+	FontManager* v_fm = m_pApp->getDrawLib()->getFontMedium();
+	FontGlyph* v_fg;
+
+	v_fg = v_fm->getGlyph(m_Entries[i]->Left);
+	v_fm->printStringGrad(v_fg,
+			      20, nY+nScroll,
+			      White,White,Yellow,Yellow);
+	v_fg = v_fm->getGlyph(m_Entries[i]->Right);
+	v_fm->printStringGrad(v_fg,
+			      200, nY+nScroll,
+			      White,White,Yellow,Yellow);
         nY += 30;
       }
       
@@ -198,24 +196,20 @@ namespace vapp {
         if(nC2 > 255) nC2 = 255;
         const char *pc = "X-Moto";
         
-        int nTWidth = _GetStringWidth(pc);
-        
         if(!m_pApp->isUglyMode()) {
           m_pApp->getDrawLib()->drawBox(Vector2f(0,0),Vector2f(m_pApp->getDrawLib()->getDispWidth(),m_pApp->getDrawLib()->getDispHeight()),0,MAKE_COLOR(0,0,0,nC2),0);      
         }
         
-        Color Yellow = MAKE_COLOR(255,255,0,nC2);
+        Color Yellow = MAKE_COLOR(220,220,0,nC2);
         Color White = MAKE_COLOR(255,255,255,nC2);
-        UITextDraw::printRawGrad(m_pFont,m_pApp->getDrawLib()->getDispWidth()/2 - nTWidth/2,m_pApp->getDrawLib()->getDispHeight()/2,
-                                 pc,White,White,Yellow,Yellow);        
+
+	FontManager* v_fm = m_pApp->getDrawLib()->getFontBig();
+	FontGlyph* v_fg = v_fm->getGlyph(pc);
+	v_fm->printStringGrad(v_fg,
+			      m_pApp->getDrawLib()->getDispWidth()/2 - v_fg->realWidth()/2,
+			      m_pApp->getDrawLib()->getDispHeight()/2 - v_fg->realHeight()/2,
+			      White,White,Yellow,Yellow);
       }
     }
   }
-
-  int Credits::_GetStringWidth(const std::string &s) {
-    int nMinX,nMinY,nMaxX,nMaxY;
-    UITextDraw::getTextExt(m_pFont,s,&nMinX,&nMinY,&nMaxX,&nMaxY);
-    return nMaxX - nMinX;    
-  }
-
 }

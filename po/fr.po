@@ -64,13 +64,13 @@ msgid ""
 "to the Internet to look for more levels\n"
 "and best times of other players?"
 msgstr ""
-"Autorisez-vous X-Moto a se connecter\n"
-"a Internet pour rechercher de nouveaux niveaux\n"
+"Autorisez-vous X-Moto à se connecter\n"
+"à Internet pour rechercher de nouveaux niveaux\n"
 "et les records des autres joueurs ?"
 
 #: src/GameText.h:49
 msgid "Already used!"
-msgstr "Deja utilise !"
+msgstr "Déjà utilisé !"
 
 #: src/GameText.h:50
 msgid "and"
@@ -118,11 +118,11 @@ msgstr "par"
 
 #: src/GameText.h:61
 msgid "Move Camera to left"
-msgstr "Camera a gauche"
+msgstr "Camera à gauche"
 
 #: src/GameText.h:62
 msgid "Move Camera to right"
-msgstr "Camera a droite"
+msgstr "Camera à droite"
 
 #: src/GameText.h:63
 msgid "Move Camera down"
@@ -170,7 +170,7 @@ msgstr "Configurer le joystick..."
 
 #: src/GameText.h:74
 msgid "Controls"
-msgstr "Controles"
+msgstr "Contrôles"
 
 #: src/GameText.h:77
 msgid "Lead Programming"
@@ -210,11 +210,11 @@ msgstr "Testeurs principaux"
 
 #: src/GameText.h:127
 msgid "Thanks to"
-msgstr "Merci a"
+msgstr "Merci à"
 
 #: src/GameText.h:128
 msgid "for KDE/gnome integration"
-msgstr "pour l'integration KDE/Gnome"
+msgstr "pour l'intégration KDE/Gnome"
 
 #: src/GameText.h:129
 msgid "for german translation"
@@ -250,7 +250,7 @@ msgstr "pour l'espace web"
 
 #: src/GameText.h:138
 msgid "for being such a little girl"
-msgstr "pour etre cette merveilleuse copine"
+msgstr "pour être cette merveilleuse copine"
 
 #: src/GameText.h:139
 msgid "Everyone who have made levels"
@@ -258,11 +258,11 @@ msgstr "A tout ceux qui ont fait des niveaux"
 
 #: src/GameText.h:140
 msgid "People who have provided bug reports"
-msgstr "A tout ceux qui ont rapporte des bugs"
+msgstr "A tout ceux qui ont rapporté des bugs"
 
 #: src/GameText.h:141
 msgid "Anyone who has helped in any way"
-msgstr "A tout ceux qui ont aide d'une autre maniere"
+msgstr "A tout ceux qui ont aidé d'une autre manière"
 
 #: src/GameText.h:143
 msgid "Credits"
@@ -278,19 +278,19 @@ msgstr "Date"
 
 #: src/GameText.h:146
 msgid "Upgrading database"
-msgstr "Mise a jour de la base de donnee"
+msgstr "Mise à jour de la base de donnée"
 
 #: src/GameText.h:147
 msgid "Upgrading database stats for the profile"
-msgstr "Mise a jour de la base de donnee ; stats pour le profile"
+msgstr "Mise à jour de la base de donnée ; stats pour le profile"
 
 #: src/GameText.h:148
 msgid "Upgrading database profile"
-msgstr "Mise a jour de la base de donnee ; profil"
+msgstr "Mise à jour de la base de donnée ; profil"
 
 #: src/GameText.h:149
 msgid "Death Animation"
-msgstr "Mort animee"
+msgstr "Mort animée"
 
 #: src/GameText.h:150
 msgid "Defaults"
@@ -318,11 +318,11 @@ msgstr "Description"
 
 #: src/GameText.h:157
 msgid "Display Ghost time difference"
-msgstr "Afficher le retard sur le fantome"
+msgstr "Afficher le retard sur le fantôme"
 
 #: src/GameText.h:158
 msgid "Display Ghost Information"
-msgstr "Afficher les informations sur le fantome"
+msgstr "Afficher les informations sur le fantôme"
 
 #: src/GameText.h:159
 msgid "Direct Connection"
@@ -330,15 +330,15 @@ msgstr "Connexion directe"
 
 #: src/GameText.h:160
 msgid "Downloading the ghost..."
-msgstr "Telechargement du fantome..."
+msgstr "Téléchargement du fantôme..."
 
 #: src/GameText.h:161
 msgid "Downloading the highscore..."
-msgstr "Telechargement du record..."
+msgstr "Téléchargement du record..."
 
 #: src/GameText.h:162
 msgid "Downloading high-scores..."
-msgstr "Telechargement des records..."
+msgstr "Téléchargement des records..."
 
 #: src/GameText.h:163
 msgid ""
@@ -346,7 +346,7 @@ msgid ""
 "Press ESC to abort."
 msgstr ""
 "Telechargement de nouveaux niveaux...\n"
-"Appuyez sur ESC pour arreter."
+"Appuyez sur ESC pour arrêter."
 
 #: src/GameText.h:164
 msgid "Checking for new levels..."
@@ -361,12 +361,12 @@ msgid ""
 "Downloading theme data required by new levels...\n"
 "Press ESC to abort."
 msgstr ""
-"Telechargement des nouveaux fichiers du theme...\n"
-"Appuyez sur ESC pour arreter."
+"Téléchargement des nouveaux fichiers du thème...\n"
+"Appuyez sur ESC pour arrêter."
 
 #: src/GameText.h:167
 msgid "Checking for new themes..."
-msgstr "Recherche de nouveaux themes..."
+msgstr "Recherche de nouveaux thèmes..."
 
 #: src/GameText.h:168
 msgid "Get More Levels!"
@@ -386,11 +386,11 @@ msgstr "Activer le son"
 
 #: src/GameText.h:172
 msgid "Check new levels at startup"
-msgstr "Verifier les nouveaux niveaux au demarrage"
+msgstr "Vérifier les nouveaux niveaux au démarrage"
 
 #: src/GameText.h:173
 msgid "Check new highscores at startup"
-msgstr "Verifier les records au demarrage"
+msgstr "Vérifier les records au démarrage"
 
 #: src/GameText.h:174
 msgid "Enable Context Help"
@@ -402,11 +402,11 @@ msgstr "Activer le son"
 
 #: src/GameText.h:176
 msgid "Enable Ghost"
-msgstr "Activer le fantome"
+msgstr "Activer le fantôme"
 
 #: src/GameText.h:177
 msgid "Show World Record in-game"
-msgstr "Affiche le record de la room dans le jeu"
+msgstr "Affiche le record du salon dans le jeu"
 
 #: src/GameText.h:178
 msgid "Enable Music"
@@ -414,7 +414,7 @@ msgstr "Activer la musique"
 
 #: src/GameText.h:179
 msgid "Enable WWW Access"
-msgstr "Activer l'acces web"
+msgstr "Activer l'accès web"
 
 #: src/GameText.h:180
 msgid "Enter player name"
@@ -440,51 +440,51 @@ msgid ""
 "Check your Internet connection!"
 msgstr ""
 "Impossible de rechercher des niveaux.\n"
-"Verifiez votre connexion internet !"
+"Vérifiez votre connexion internet !"
 
 #: src/GameText.h:185
 msgid ""
 "Failed to download high-scores.\n"
 "Check your Internet connection!"
 msgstr ""
-"Impossible de telecharger les records.\n"
-"Verifiez votre connexion internet !"
+"Impossible de télécharger les records.\n"
+"Vérifiez votre connexion internet !"
 
 #: src/GameText.h:186
 msgid ""
 "Failed to download levels.\n"
 "Check your Internet connection!"
 msgstr ""
-"Impossible de telecharger les niveaux.\n"
-"Verifiez votre connexion internet !"
+"Impossible de télécharger les niveaux.\n"
+"Vérifiez votre connexion internet !"
 
 #: src/GameText.h:187
 msgid ""
 "Failed to download the replay.\n"
 "Check your Internet connection!"
 msgstr ""
-"Impossible de telecharger le replay.\n"
-"Verifiez votre connexion internet !"
+"Impossible de télécharger le replay.\n"
+"Vérifiez votre connexion internet !"
 
 #: src/GameText.h:188
 msgid ""
 "Failed to download the rooms list.\n"
 "Check your Internet connection!"
 msgstr ""
-"Impossible de telecharger la liste des salons.\n"
-"Verifiez votre connexion internet !"
+"Impossible de télécharger la liste des salons.\n"
+"Vérifiez votre connexion internet !"
 
 #: src/GameText.h:189
 msgid ""
 "Failed to get the selected theme\n"
 "Check your Internet connection!"
 msgstr ""
-"Impossible de telecharger le theme selectionne\n"
-"Verifiez votre connexion internet !"
+"Impossible de télécharger le thème selectionné\n"
+"Vérifiez votre connexion internet !"
 
 #: src/GameText.h:190
 msgid "Failed to initialize level!"
-msgstr "Echec a l'initialisation du niveau !"
+msgstr "Echec à l'initialisation du niveau !"
 
 #: src/GameText.h:191
 msgid "Failed to load replay!"
@@ -1817,7 +1817,7 @@ msgstr "Niveaux les plus moches"
 
 #: src/GameText.h:532
 msgid "Scripted levels"
-msgstr "Niveaux scriptes"
+msgstr "Niveaux scriptés"
 
 #: src/GameText.h:533
 msgid "Musical"
@@ -1941,7 +1941,7 @@ msgstr "Niveaux X-Moto ayant un record ancien dans le salon"
 
 #: src/GameText.h:566
 msgid "You have the room highscore"
-msgstr "You avez les records dans le salon"
+msgstr "Vous avez les records dans le salon"
 
 #: src/GameText.h:567
 msgid "You highscore finish time is almost the room highscore (95%)"

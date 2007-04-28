@@ -44,26 +44,31 @@ namespace vapp {
     }  
 
     /* Determine text size */
-    int x1,y1,x2,y2,x=0,y=0;  
+    int x=0, y=0;
+    float perX=0.0, perY=0.0;
     
-    getTextExt(getCaption(),&x1,&y1,&x2,&y2);
-          
     /* Find out where to draw the text */
-    if(getHAlign() == UI_ALIGN_LEFT)
-      x = -x1;
-    else if(getHAlign() == UI_ALIGN_RIGHT)
-      x = getPosition().nWidth - x2;
-    else if(getHAlign() == UI_ALIGN_CENTER)
-      x = getPosition().nWidth/2 - (x2-x1)/2 - x1;
+    if(getHAlign() == UI_ALIGN_LEFT) {
+      x = 0;
+    } else if(getHAlign() == UI_ALIGN_RIGHT) {
+      x = getPosition().nWidth;
+      perX=-1.0;
+    } else if(getHAlign() == UI_ALIGN_CENTER) {
+      x = getPosition().nWidth/2;
+      perX = -0.5;
+    }
 
-    if(getVAlign() == UI_ALIGN_TOP)
-      y = -y1;
-    else if(getVAlign() == UI_ALIGN_BOTTOM)
-      y = getPosition().nHeight - y2;
-    else if(getVAlign() == UI_ALIGN_CENTER)
-      y = getPosition().nHeight/2 - (y2-y1)/2 - y1;
-    
-    putText(x,y, getCaption());
+    if(getVAlign() == UI_ALIGN_TOP) {
+      y = 0;
+    } else if(getVAlign() == UI_ALIGN_BOTTOM) {
+      y = getPosition().nHeight;
+      perY=-1.0;
+    } else if(getVAlign() == UI_ALIGN_CENTER) {
+      y = getPosition().nHeight/2;
+      perY = -0.5;
+    }    
+
+    putText(x,y, getCaption(), perX, perY);
   }
 
 }

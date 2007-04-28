@@ -54,27 +54,23 @@ namespace vapp {
 
     int nMinX,nMinY,nMaxX,nMaxY;
     if(!s.empty()) {
-      getTextExt(s,&nMinX,&nMinY,&nMaxX,&nMaxY);
-      nCursorOffset = nMaxX-nMinX;
+      FontManager* fm = getFont();
+      FontGlyph* fg = fm->getGlyph(s);
+      nCursorOffset = fg->realWidth();
     }
     
     if(m_nCursorPos == v_textToDisplay.length()) {
       nCursorWidth = 6;
-    }
-    else {
+    } else {
       s = v_textToDisplay.substr(m_nCursorPos,1);
-      if(s==" ") {
-        nCursorWidth = 6;
-      }
-      else {
-        getTextExt(s,&nMinX,&nMinY,&nMaxX,&nMaxY);
-        nCursorWidth = nMaxX-nMinX;            
-      }
+      FontManager* fm = getFont();
+      FontGlyph* fg = fm->getGlyph(s);
+      nCursorWidth = fg->realWidth();
     }
     
     /* Draw */
     if(bDisabled)
-      putText(4,17,v_textToDisplay);
+      putText(4, getPosition().nHeight/2, v_textToDisplay, 0.0, -0.5);
           
     putElem(0,0,-1,-1,UI_ELEM_FRAME_TL,false);
     putElem(getPosition().nWidth-8,0,-1,-1,UI_ELEM_FRAME_TR,false);
@@ -91,10 +87,10 @@ namespace vapp {
     if(!bDisabled) {
       if(bActive) {
         if(sin(getApp()->getRealTime()*13.0f) > 0.0f)
-          putRect(4+nCursorOffset+2,3,nCursorWidth+1,18,MAKE_COLOR(255,0,0,255));
+          putRect(4+nCursorOffset,3,nCursorWidth+1,18,MAKE_COLOR(255,0,0,255));
       }      
     
-      putText(4,17,v_textToDisplay);
+      putText(4, getPosition().nHeight/2, v_textToDisplay, 0.0, -0.5);
     }
   }
 

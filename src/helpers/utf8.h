@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -19,41 +18,17 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#include "Locales.h"
-#include <iostream>
-#include "BuildConfig.h"
+#ifndef __UTF8_H__
+#define __UTF8_H__
 
-#define PACKAGE_LANG "xmoto"
+#include <vector>
+#include <string>
 
-std::string Locales::init(std::string i_locale) {
-#ifdef USE_GETTEXT
-  char *locale;
-  char* btd;
-  char* cs;
-
-#ifdef WIN32
-  /* gettext at 0.13 - not enought for LC_MESSAGE */
-  /* LC_CTYPE seems to work */
-  locale = setlocale(LC_CTYPE, i_locale.c_str());
-#else
-  locale = setlocale(LC_MESSAGES, i_locale.c_str());
-#endif
-
-  if(locale == NULL) {
-    return "";
-  }
-
-
-  textdomain(PACKAGE_LANG);
-  if((btd=bindtextdomain(PACKAGE_LANG, LOCALESDIR)) == NULL) {
-    return "";
-  }
-
-  cs = bind_textdomain_codeset(PACKAGE_LANG, "UTF-8");
-
-  return locale;
+class utf8 {
+  public:
+  static int byte_size_from_utf8_first(unsigned char ch);
+  static std::vector<std::string> split_utf8_string(const std::string &src);
+  static std::string txt2vertical(const std::string& i_str);
+};
 
 #endif
-  return "";
-}
-

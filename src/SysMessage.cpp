@@ -20,21 +20,22 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "SysMessage.h"
-#include "GUI.h"
+#include "VDraw.h"
+#include "VApp.h"
 
 #define SYSMSG_DISPLAY_TIME 1.0
 #define SYSMSG_DISPLAY_DECREASE_TIME 0.75
 
 SysMessage::SysMessage() {
   m_startDisplay = vapp::App::getTime() - SYSMSG_DISPLAY_TIME;
-  m_font = NULL;
+  m_drawLib = NULL;
 }
 
 SysMessage::~SysMessage() {
 }
 
-void SysMessage::setFont(vapp::UIFont *i_font) {
-  m_font = i_font;
+void SysMessage::setDrawLib(vapp::DrawLib* i_drawLib) {
+  m_drawLib = i_drawLib;
 }
 
 void SysMessage::displayText(std::string i_msg) {
@@ -43,23 +44,26 @@ void SysMessage::displayText(std::string i_msg) {
 }
 
 void SysMessage::render() {
-  if(m_font != NULL) {
-    float v_time = vapp::App::getTime();
+  if(m_drawLib == NULL) return;
 
-    if(m_startDisplay + SYSMSG_DISPLAY_TIME > v_time) {
-      int v_shadow;
+  float v_time = vapp::App::getTime();
 
-      if(m_startDisplay + SYSMSG_DISPLAY_DECREASE_TIME > v_time) {
-	v_shadow = 255;
-      } else {
-	v_shadow = 255 - static_cast<int>(((v_time - m_startDisplay - SYSMSG_DISPLAY_DECREASE_TIME)
-					   * 255.0)
-					  / (SYSMSG_DISPLAY_TIME-SYSMSG_DISPLAY_DECREASE_TIME));
-      }
+  if(m_startDisplay + SYSMSG_DISPLAY_TIME > v_time) {
+    int v_shadow;
 
-      vapp::UITextDraw::printRaw(m_font, 5, 25,
-				 m_txt,
-				 MAKE_COLOR(255,255,255,v_shadow));
+    if(m_startDisplay + SYSMSG_DISPLAY_DECREASE_TIME > v_time) {
+      v_shadow = 255;
+    } else {
+      v_shadow = 255 - static_cast<int>(((v_time - m_startDisplay - SYSMSG_DISPLAY_DECREASE_TIME)
+					 * 255.0)
+					/ (SYSMSG_DISPLAY_TIME-SYSMSG_DISPLAY_DECREASE_TIME));
     }
+
+    vapp::FontManager* v_fm = m_drawLib->getFontMedium();
+    vapp::FontGlyph* v_fg = v_fm->getGlyph(m_txt);
+    v_fm->printString(v_fg,
+		      5,
+		      5,
+		      MAKE_COLOR(255, 255, 255, v_shadow));
   }
 }

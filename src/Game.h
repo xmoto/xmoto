@@ -527,7 +527,7 @@ class xmDatabase;
       TColor getUglyColorFromPlayerNumber(int i_player);
 
       UIWindow* stats_generateReport(const std::string &PlayerName, vapp::UIWindow *pParent,
-				     int x, int y, int nWidth, int nHeight, vapp::UIFont *pFont);
+				     int x, int y, int nWidth, int nHeight, FontManager* pFont);
 
       void initReplaysFromDir();
       void addReplay(const std::string& i_file);
