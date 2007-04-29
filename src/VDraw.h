@@ -70,6 +70,7 @@ class FontManager {
   virtual void printString(FontGlyph* i_glyph, int i_x, int i_y, Color i_color) = 0;
   virtual void printStringGrad(FontGlyph* i_glyph, int i_x, int i_y,
 			       Color c1,Color c2,Color c3,Color c4) = 0;
+  virtual int nbGlyphsInMemory();
 
  protected:
   TTF_Font* m_ttf;
@@ -110,8 +111,10 @@ class GLFontManager : public FontManager {
   void printString(FontGlyph* i_glyph, int i_x, int i_y, Color i_color);
   void printStringGrad(FontGlyph* i_glyph, int i_x, int i_y,
 		       Color c1, Color c2, Color c3, Color c4);
+  virtual int nbGlyphsInMemory();
 
  private:
+  std::vector<GLFontGlyph*> m_glyphsList;
   HashNamespace::hash_map<const char*, GLFontGlyph*, HashNamespace::hash<const char*>, hashcmp_str> m_glyphs;
 };
 

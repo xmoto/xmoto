@@ -51,7 +51,7 @@ namespace vapp {
 
     /* Render tabs */
     int nCX = 8;
-    int nCY = 4;
+    int nCY = 6;
     int v_width, v_height;
 
     setTextSolidColor(MAKE_COLOR(188,186,67,255));

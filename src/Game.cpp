@@ -464,6 +464,7 @@ GameApp::GameApp() {
         m_bShowCursor = true;
         if(m_pWebConfMsgBox != NULL) delete m_pWebConfMsgBox;
         m_pWebConfEditor->showWindow(false);
+	m_Renderer.getGUI()->setFont(drawLib->getFontSmall());
         m_pWebConfMsgBox = m_Renderer.getGUI()->msgBox(GAMETEXT_ALLOWINTERNETCONN,
                                                        (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
         break;
@@ -1488,6 +1489,7 @@ GameApp::GameApp() {
             
             sprintf(cBuf,nULevels==1?GAMETEXT_NEWLEVELAVAIL:
                                      GAMETEXT_NEWLEVELSAVAIL,nULevels);
+	    m_Renderer.getGUI()->setFont(drawLib->getFontSmall());
             m_pInfoMsgBox = m_Renderer.getGUI()->msgBox(cBuf,(UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
           }
         }
@@ -1563,8 +1565,9 @@ GameApp::GameApp() {
 
     sprintf(cBuf,(std::string(GAMETEXT_WANTTOUPDATELEVEL) + "\n(%s)").c_str(), v_levelName.c_str(),
 	    v_levelFileName.c_str());
+    m_Renderer.getGUI()->setFont(drawLib->getFontSmall());
     UIMsgBox *pMsgBox = m_Renderer.getGUI()->msgBox(cBuf,(UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO|UI_MSGBOX_YES_FOR_ALL));
-    
+
     while(bDialogBoxOpen) {
       SDL_PumpEvents();
       
@@ -2387,7 +2390,7 @@ GameApp::GameApp() {
     v_percentage << "%";
     
     if(m_reloadingLevelsUser == false) {
-      _UpdateLoadingScreen((1.0f/9.0f) * 4, m_loadingScreen, std::string(GAMETEXT_INDEX_CREATION) + std::string("\n") + v_percentage.str() + std::string(", ") + i_level);
+      _UpdateLoadingScreen((1.0f/9.0f) * 4, m_loadingScreen, std::string(GAMETEXT_LOAD_LEVEL_HOOK) + std::string("\n") + v_percentage.str() + std::string(", ") + i_level);
     } else {
       _SimpleMessage(GAMETEXT_RELOADINGLEVELS + std::string("\n") + v_percentage.str(), &m_InfoMsgBoxRect);
     }

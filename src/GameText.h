@@ -230,7 +230,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
  + std::string(_("Read the README file or check out the website at\nhttp://xmoto.tuxfamily.org for more information."))
 
 #define GAMETEXT_HIGH                 _("High")
-#define GAMETEXT_INDEX_CREATION       _("It seems that it's the first time you load this xmoto version.\nLevels index creation. It can take some minutes.")
+#define GAMETEXT_LOAD_LEVEL_HOOK      _("Levels are being added into the database. Please wait.")
 #define GAMETEXT_INETCONF             _("Internet Configuration")
 #define GAMETEXT_INITINPUT            _("Initializing input system...")
 #define GAMETEXT_INITMENUS            _("Initializing menus...")
