@@ -252,6 +252,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_LEVELREQUIREDBYREPLAY _("Level '%s' required by replay!")
 #define GAMETEXT_LEVELS               _("Levels")
 #define GAMETEXT_LISTALL              _("List All")
+#define GAMETEXT_LOADING              _("Loading...")
 #define GAMETEXT_LOADINGLEVELS        _("Loading levels...")
 #define GAMETEXT_LOADINGMENUGRAPHICS  _("Loading menu graphics...")
 #define GAMETEXT_LOADINGREPLAYS       _("Loading replays...")

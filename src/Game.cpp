@@ -130,7 +130,6 @@ GameApp::GameApp() {
   m_allowReplayInterpolation = true;
 
   m_db = NULL;
-  m_loadingScreen = NULL;
 }
     
   std::string GameApp::splitText(const std::string &str, int p_breakLineLength) {
@@ -2392,16 +2391,14 @@ GameApp::GameApp() {
     v_percentage << "%";
     
     if(m_reloadingLevelsUser == false) {
-      _UpdateLoadingScreen((1.0f/9.0f) * 4, m_loadingScreen, std::string(GAMETEXT_LOAD_LEVEL_HOOK) + std::string("\n") + v_percentage.str() + std::string(", ") + i_level);
+      _UpdateLoadingScreen(0, std::string(GAMETEXT_LOAD_LEVEL_HOOK) + std::string("\n") + v_percentage.str() + std::string(", ") + i_level);
     } else {
       _SimpleMessage(GAMETEXT_RELOADINGLEVELS + std::string("\n") + v_percentage.str(), &m_InfoMsgBoxRect);
     }
   }
 
   void GameApp::updatingDatabase(std::string i_message) {
-    if(m_loadingScreen != NULL) {
-      _UpdateLoadingScreen((1.0f/9.0f) * 4, m_loadingScreen, i_message);
-    }
+    _UpdateLoadingScreen(0, i_message);
   }
 
   bool GameApp::creditsModeActive() {
