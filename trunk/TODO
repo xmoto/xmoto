@@ -1,3 +1,6 @@
+
+* a force d'ouvrir et de fermer des niveaux, ca bouffe de la mémoire
+
 * Theme.cpp : remplacer les anciennes fonts par les nouvelles
 * gérer les accents et tous les caractères au clavier (et vérifier que
    ca passe en bd) : see keyboard-0.1.10.patch
