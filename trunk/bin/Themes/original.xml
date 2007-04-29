@@ -168,9 +168,6 @@
 <sprite type="EdgeEffect" name="GrassAlt2"  file="EdgeGrassAlt1.png"   scale="0.5" depth="0.9" />
 <sprite type="EdgeEffect" name="EdgeCSite1" file="EdgeCSite1_209.png"  scale="0.9" depth="0.35" />
 
-<sprite type="Font" name="MFont" file="MFont.png" />
-<sprite type="Font" name="SFont" file="SFont.png" />
-
 <sprite type="Misc" name="Arrow" file="Arrow.png" />
 <sprite type="Misc" name="EngineCounter" file="enginecounter.png" />
 
@@ -297,7 +294,6 @@
 <frame />
 </sprite>
 
-<sprite type="UI" name="Loading" 	    file="Loading.png" />
 <sprite type="UI" name="TitleBL" 	    file="TitleBL.jpg" />
 <sprite type="UI" name="TitleBR" 	    file="TitleBR.jpg" />
 <sprite type="UI" name="TitleTL" 	    file="TitleTL.jpg" />

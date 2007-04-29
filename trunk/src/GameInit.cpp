@@ -64,28 +64,42 @@ namespace vapp {
   /*===========================================================================
   Update loading screen
   ===========================================================================*/
-  void GameApp::_UpdateLoadingScreen(float fDone,Texture *pLoadingScreen,const std::string &NextTask) {
-    if(pLoadingScreen != NULL) {
-      getDrawLib()->clearGraphics();
-      getDrawLib()->resetGraphics();
-      getDrawLib()->drawImage(Vector2f(getDrawLib()->getDispWidth()/2 - 256,getDrawLib()->getDispHeight()/2 - 40),
-                Vector2f(getDrawLib()->getDispWidth()/2 + 256,getDrawLib()->getDispHeight()/2 + 40),
-                pLoadingScreen,MAKE_COLOR(255,255,255,255));
-      getDrawLib()->drawBox(Vector2f(getDrawLib()->getDispWidth()/2 + 256 - (512.0f*(1-fDone)),getDrawLib()->getDispHeight()/2 - 40),              
-              Vector2f(getDrawLib()->getDispWidth()/2 + 256,getDrawLib()->getDispHeight()/2 - 25),              
-              0,MAKE_COLOR(0,0,0,128));
-      getDrawLib()->drawBox(Vector2f(getDrawLib()->getDispWidth()/2 + 256 - (512.0f*(1-fDone)),getDrawLib()->getDispHeight()/2 + 25),              
-              Vector2f(getDrawLib()->getDispWidth()/2 + 256,getDrawLib()->getDispHeight()/2 + 40),              
-              0,MAKE_COLOR(0,0,0,128));
-             
-      FontManager* v_fm = getDrawLib()->getFontSmall();
-      FontGlyph* v_fg = v_fm->getGlyph(NextTask);
-      v_fm->printString(v_fg,
-			getDrawLib()->getDispWidth()/2 - 256,
-			getDrawLib()->getDispHeight()/2 + 40+1,
-			MAKE_COLOR(255,255,255,255));      
-      getDrawLib()->flushGraphics();
-    }
+  void GameApp::_UpdateLoadingScreen(float fDone, const std::string &NextTask) {
+    FontManager* v_fm;
+    FontGlyph* v_fg;
+    int v_border = 3;
+    int v_fh;
+
+    getDrawLib()->clearGraphics();
+    getDrawLib()->resetGraphics();
+
+    v_fm = getDrawLib()->getFontBig();
+    v_fg = v_fm->getGlyph(GAMETEXT_LOADING);
+    v_fh = v_fg->realHeight();
+    v_fm->printString(v_fg,
+		      getDrawLib()->getDispWidth()/2 - 256,
+		      getDrawLib()->getDispHeight()/2 - 30,
+		      MAKE_COLOR(255,255,255, 255));
+
+    getDrawLib()->drawBox(Vector2f(getDrawLib()->getDispWidth()/2 - 256,
+				   getDrawLib()->getDispHeight()/2 - 30),              
+			  Vector2f(getDrawLib()->getDispWidth()/2 - 256 + (512.0f*fDone),
+				   getDrawLib()->getDispHeight()/2 - 30 + v_border),
+			  0,MAKE_COLOR(255,255,255,255));
+
+    getDrawLib()->drawBox(Vector2f(getDrawLib()->getDispWidth()/2 - 256,
+				   getDrawLib()->getDispHeight()/2 -30 + v_fh),              
+			  Vector2f(getDrawLib()->getDispWidth()/2 - 256 + (512.0f*fDone),
+				   getDrawLib()->getDispHeight()/2 - 30 + v_fh + v_border),
+			  0,MAKE_COLOR(255,255,255,255));
+    
+    v_fm = getDrawLib()->getFontSmall();
+    v_fg = v_fm->getGlyph(NextTask);
+    v_fm->printString(v_fg,
+		      getDrawLib()->getDispWidth()/2 - 256,
+		      getDrawLib()->getDispHeight()/2 -30 + v_fh + 2,
+		      MAKE_COLOR(255,255,255,255));      
+    getDrawLib()->flushGraphics();
   }
   
   /*===========================================================================
@@ -169,16 +183,6 @@ namespace vapp {
       reloadTheme();
     }
 
-    m_loadingScreen = NULL;
-    if(!getDrawLib()->isNoGraphics()) {    
-      /* Show loading screen */
-      pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "Loading");
-
-      if(pSprite != NULL) {
-	m_loadingScreen = pSprite->getTexture(false, true);
-      }
-    }
-
     /* Update stats */
     if(m_profile != "")
       m_db->stats_xmotoStarted(m_profile);
@@ -238,7 +242,7 @@ namespace vapp {
     }
     
     if(!getDrawLib()->isNoGraphics()) {  
-      _UpdateLoadingScreen((1.0f/9.0f) * 0,m_loadingScreen,GAMETEXT_LOADINGSOUNDS);
+      _UpdateLoadingScreen((1.0f/9.0f) * 0,GAMETEXT_LOADINGSOUNDS);
       
       if(Sound::isEnabled()) {
         /* Load sounds */
@@ -254,14 +258,14 @@ namespace vapp {
         Log(" %d sound%s loaded",Sound::getNumSamples(),Sound::getNumSamples()==1?"":"s");
       }
 
-      _UpdateLoadingScreen((1.0f/9.0f) * 1,m_loadingScreen,GAMETEXT_INITTEXT);
+      _UpdateLoadingScreen((1.0f/9.0f) * 1,GAMETEXT_INITTEXT);
           
       /* Find all files in the textures dir and load them */     
       UITexture::setApp(this);
       UIWindow::setDrawLib(getDrawLib());
       m_sysMsg.setDrawLib(getDrawLib());
 
-      _UpdateLoadingScreen((1.0f/9.0f) * 3,m_loadingScreen,GAMETEXT_LOADINGMENUGRAPHICS);
+      _UpdateLoadingScreen((1.0f/9.0f) * 2,GAMETEXT_LOADINGMENUGRAPHICS);
         
       /* Load title screen textures + cursor + stuff */
       m_pTitleBL = NULL;
@@ -310,7 +314,7 @@ namespace vapp {
       bool bSilent = true;
       try {
 	if(m_bEnableCheckHighscoresAtStartup) {
-	  _UpdateLoadingScreen((1.0f/9.0f) * 6,m_loadingScreen,GAMETEXT_DLHIGHSCORES);      
+	  _UpdateLoadingScreen((1.0f/9.0f) * 3,GAMETEXT_DLHIGHSCORES);      
 	  _UpdateWebHighscores(bSilent);
 	  _UpgradeWebHighscores();
 	}
@@ -323,7 +327,7 @@ namespace vapp {
       
       if(m_bEnableCheckNewLevelsAtStartup) {
 	try {
-	  _UpdateLoadingScreen((1.0f/9.0f) * 6,m_loadingScreen,GAMETEXT_DLLEVELSCHECK);      
+	  _UpdateLoadingScreen((1.0f/9.0f) * 4,GAMETEXT_DLLEVELSCHECK);      
 	  _UpdateWebLevels(bSilent);       
 	} catch(Exception &e) {
 	  Log("** Warning ** : Failed to update web-levels [%s]",e.getMsg().c_str());              
@@ -341,7 +345,7 @@ namespace vapp {
 
     /* Test level cache directory */
     if(!getDrawLib()->isNoGraphics()) {  
-      _UpdateLoadingScreen((1.0f/9.0f) * 4,m_loadingScreen,GAMETEXT_LOADINGLEVELS);
+      _UpdateLoadingScreen((1.0f/9.0f) * 5,GAMETEXT_LOADINGLEVELS);
     }
     LevelsManager::checkPrerequires();
     m_levelsManager.makePacks(m_db,
@@ -360,7 +364,7 @@ namespace vapp {
     }
 
     if(!getDrawLib()->isNoGraphics()) {  
-      _UpdateLoadingScreen((1.0f/9.0f) * 5,m_loadingScreen,GAMETEXT_INITRENDERER);
+      _UpdateLoadingScreen((1.0f/9.0f) * 6,GAMETEXT_INITRENDERER);
     }    
 
     if(m_bListLevels) {
@@ -371,14 +375,14 @@ namespace vapp {
     if(!getDrawLib()->isNoGraphics()) {
       /* Initialize renderer */
       m_Renderer.init();
-      _UpdateLoadingScreen((1.0f/9.0f) * 7,m_loadingScreen,GAMETEXT_INITMENUS);
+      _UpdateLoadingScreen((1.0f/9.0f) * 7,GAMETEXT_INITMENUS);
       
       /* Initialize menu system */
       _InitMenus();    
-      _UpdateLoadingScreen((1.0f/9.0f) * 8,m_loadingScreen,GAMETEXT_UPDATINGLEVELS);
+      _UpdateLoadingScreen((1.0f/9.0f) * 8,GAMETEXT_UPDATINGLEVELS);
 
       _UpdateLevelsLists();
-      _UpdateLoadingScreen((1.0f/9.0f) * 9,m_loadingScreen,GAMETEXT_INITINPUT);      
+      _UpdateLoadingScreen((1.0f/9.0f) * 9,GAMETEXT_INITINPUT);      
       
       /* Init input system */
       m_InputHandler.init(&m_Config);

@@ -301,8 +301,6 @@ class xmDatabase;
       Texture *m_pNewLevelsAvailIcon;
       bool m_bShowCursor;
       
-      Texture *m_loadingScreen;
-
       /* Main menu buttons and stuff */
       int m_nNumMainMenuButtons;
       UITabView *m_pLevelPackTabs;
@@ -443,7 +441,7 @@ class xmDatabase;
       void _GameScreenshot(void);
       void _SaveReplay(const std::string &Name);
     
-      void _UpdateLoadingScreen(float fDone,Texture *pScreen,const std::string &NextTask);      
+      void _UpdateLoadingScreen(float fDone, const std::string &NextTask);
       
       void _SimpleMessage(const std::string &Msg,UIRect *pRect=NULL,bool bNoSwap=false);
       
