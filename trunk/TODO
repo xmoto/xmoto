@@ -1,16 +1,3 @@
-
-* hum xmoto takes ram a lot !!!
-   it comes from this : VDrawOpenGL.cpp line 540 ; if you comment
-   this, you do not grow the ram
-  glTexImage2D(GL_TEXTURE_2D,
-	       0,
-	       GL_RGBA,
-	       m_drawWidth, m_drawHeight,
-	       0,
-	       GL_RGBA,
-	       GL_UNSIGNED_BYTE,
-	       v_image->pixels);
-
 * Theme.cpp : remplacer les anciennes fonts par les nouvelles
 * gérer les accents et tous les caractères au clavier (et vérifier que
    ca passe en bd) : see keyboard-0.1.10.patch

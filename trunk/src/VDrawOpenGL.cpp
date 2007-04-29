@@ -27,7 +27,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/utf8.h"
 
 #define DRAW_FONT_FILE "Textures/Fonts/DejaVuSans.ttf"
-#define UTF8_LINE_SPACE 2
+#define UTF8_INTERLINE_SPACE 2
+#define UTF8_INTERCHAR_SPACE 0
 
 #ifdef ENABLE_OPENGL
 namespace vapp {
@@ -450,48 +451,23 @@ namespace vapp {
     return new GLFontManager(this, i_fontFile, i_fontSize);
   }
 
-GLFontGlyph::GLFontGlyph(const std::string& i_value, TTF_Font* i_ttf) {
-  std::vector<SDL_Surface*> v_surfs;
-  std::vector<int> v_realHeights;
+GLFontGlyphLetter::GLFontGlyphLetter(const std::string& i_value, TTF_Font* i_ttf)
+ : GLFontGlyph(i_value) {
   SDL_Surface* v_surf;
   SDL_Surface* v_image;
-  SDL_Rect v_areaSrc, v_areaDest;
+  SDL_Rect v_area;
   SDL_Color v_color = {0xFF, 0xFF, 0xFF, 0x00};
 
-  m_value = i_value;
-  m_drawX = 0;
-  m_drawY = 0;
-
-  /* split in lines */
-  std::vector<std::string> v_lines = utf8::split_utf8_string(i_value);
-  for(unsigned int i=0; i<v_lines.size(); i++) {
-    if(v_lines[i] == "") v_lines[i] = " "; /* because sdl_ttf won't render empty strings */
+  v_surf = TTF_RenderUTF8_Blended(i_ttf, i_value.c_str(), v_color);
+  if (v_surf == NULL) {
+    throw Exception("GLFontGlyphLetter: " + std::string(TTF_GetError()));
   }
 
-  for(unsigned int i=0; i<v_lines.size(); i++) {
-    v_surf = TTF_RenderUTF8_Blended(i_ttf, v_lines[i].c_str(), v_color);
-    if (v_surf == NULL) {
-      for(unsigned int j=0; j<v_surfs.size(); i++) {
-	SDL_FreeSurface(v_surfs[j]);
-      }
-      throw Exception("GLFontGlyph: " + std::string(TTF_GetError()));
-    }
-    v_surfs.push_back(v_surf);
-  }
-
-  int v_realWidth, v_realHeight;
-
-  TTF_SizeUTF8(i_ttf, v_lines[0].c_str(), &m_realWidth, &m_realHeight);
-  v_realHeights.push_back(m_realHeight);
-  for(unsigned i=1; i<v_lines.size(); i++) {
-    TTF_SizeUTF8(i_ttf, v_lines[i].c_str(), &v_realWidth, &v_realHeight);
-    if(v_realWidth > m_realWidth) m_realWidth = v_realWidth;
-    m_realHeight += UTF8_LINE_SPACE + v_realHeight;
-    v_realHeights.push_back(v_realHeight);
-  }
+  TTF_SizeUTF8(i_ttf, i_value.c_str(), &m_realWidth, &m_realHeight);
 
   m_drawWidth  = powerOf2(m_realWidth);
   m_drawHeight = powerOf2(m_realHeight);
+  m_firstLineDrawHeight = m_drawHeight;
 
   v_image = SDL_CreateRGBSurface(SDL_SWSURFACE,
 				 m_drawWidth, m_drawHeight,
@@ -509,28 +485,18 @@ GLFontGlyph::GLFontGlyph(const std::string& i_value, TTF_Font* i_ttf) {
 #endif
 				 );
   if(v_image == NULL) {
-    for(unsigned int i=0; i<v_surfs.size(); i++) {
-      SDL_FreeSurface(v_surfs[i]);
-    }
+    SDL_FreeSurface(v_surf);
     throw Exception("SDL_CreateRGBSurface failed");
   }
 
-  int v_drawY = 0;
-  for(unsigned int i=0; i<v_surfs.size(); i++) {
-    /* Copy the surface into the GL texture image */
-    SDL_SetAlpha(v_surfs[i], 0, 0);
-    v_areaSrc.x = 0;
-    v_areaSrc.y = 0;
-    v_areaSrc.w = m_drawWidth;
-    v_areaSrc.h = m_drawHeight;
-    v_areaDest.x = 0;
-    v_areaDest.y = v_drawY;
-    v_areaDest.w = m_drawWidth;
-    v_areaDest.h = m_drawHeight;
-    SDL_BlitSurface(v_surfs[i], &v_areaSrc, v_image, &v_areaDest);
-    SDL_FreeSurface(v_surfs[i]);
-    v_drawY += v_realHeights[i] + UTF8_LINE_SPACE;
-  }
+  /* Copy the surface into the GL texture image */
+  SDL_SetAlpha(v_surf, 0, 0);
+  v_area.x = 0;
+  v_area.y = 0;
+  v_area.w = m_drawWidth;
+  v_area.h = m_drawHeight;
+  SDL_BlitSurface(v_surf, &v_area, v_image, &v_area);
+  SDL_FreeSurface(v_surf);
 
   /* Create the OpenGL texture */
   glGenTextures(1, &m_GLID);
@@ -547,25 +513,72 @@ GLFontGlyph::GLFontGlyph(const std::string& i_value, TTF_Font* i_ttf) {
 	       v_image->pixels);
   SDL_FreeSurface(v_image);
 }
- 
-GLFontGlyph::~GLFontGlyph() {
+  
+GLFontGlyphLetter::~GLFontGlyphLetter() {
   glDeleteTextures(1, &m_GLID);
+}
+
+GLuint GLFontGlyphLetter::GLID() const {
+  return m_GLID;
+}
+
+GLFontGlyph::GLFontGlyph(const std::string& i_value) {
+  m_value = i_value;
+  m_drawWidth = m_drawHeight = 0;
+  m_realWidth = m_realHeight = 0;
+  m_firstLineDrawHeight = 0;
+}
+
+GLFontGlyph::GLFontGlyph(const std::string& i_value,
+			 HashNamespace::hash_map<const char*, GLFontGlyphLetter*, HashNamespace::hash<const char*>, hashcmp_str>& i_glyphsLetters) {
+  GLFontGlyph* v_glyph;
+  std::string v_char;
+
+  m_value = i_value;
+  m_realWidth = m_realHeight = 0;
+
+  if(i_value == "") return; /* do nothing for empty strings */
+
+  int n=0;
+  int v_maxHeight = 0;
+  int v_curWidth = 0;
+  bool v_firstLineInitialized = false;
+  while(n < i_value.size()) {
+    v_char = utf8::getNextChar(i_value, n);
+    if(v_char == "\n") {
+      if(v_firstLineInitialized == false) {	
+	m_firstLineDrawHeight = v_maxHeight;
+	v_firstLineInitialized = true;
+      }
+      m_realHeight += UTF8_INTERLINE_SPACE + v_maxHeight;
+      v_maxHeight = 0;
+      v_curWidth  = 0;
+    } else {
+      v_glyph = i_glyphsLetters[v_char.c_str()];
+      if(v_glyph != NULL) {
+	if(v_glyph->realHeight() > v_maxHeight) v_maxHeight = v_glyph->realHeight();
+	if(v_curWidth != 0) v_curWidth += UTF8_INTERCHAR_SPACE;
+	v_curWidth += v_glyph->realWidth();
+	if(v_curWidth > m_realWidth) m_realWidth = v_curWidth;
+      }
+    }
+  }
+  /* last line */
+  if(v_char != "\n") m_realHeight += v_maxHeight;
+  if(v_firstLineInitialized == false) {	
+    m_firstLineDrawHeight = v_maxHeight;
+  }
+
+  m_drawWidth  = powerOf2(m_realWidth);
+  m_drawHeight = powerOf2(m_realHeight);
+  m_firstLineDrawHeight = powerOf2(m_firstLineDrawHeight);
+}
+
+GLFontGlyph::~GLFontGlyph() {
 }
 
 std::string GLFontGlyph::Value() const {
   return m_value;
-}
-
-GLuint GLFontGlyph::GLID() const {
-  return m_GLID;
-}
-
-int GLFontGlyph::drawX() const {
-  return m_drawX;
-}
-
-int GLFontGlyph::drawY() const {
-  return m_drawY;
 }
 
 int GLFontGlyph::drawWidth() const {
@@ -582,6 +595,10 @@ int GLFontGlyph::realWidth() const {
 
 int GLFontGlyph::realHeight() const {
   return m_realHeight;
+}
+
+int GLFontGlyph::firstLineDrawHeight() const {
+  return m_firstLineDrawHeight;
 }
 
 FontManager::FontManager(DrawLib* i_drawLib, const std::string &i_fontFile, int i_fontSize) {
@@ -602,12 +619,16 @@ GLFontManager::GLFontManager(DrawLib* i_drawLib, const std::string &i_fontFile, 
 }
 
 int GLFontManager::nbGlyphsInMemory() {
-  return m_glyphsList.size();
+  return m_glyphsLettersList.size();
 }
 
 GLFontManager::~GLFontManager() {
   for(unsigned int i=0; i<m_glyphsList.size(); i++) {
     delete m_glyphsList[i];
+  }
+
+  for(unsigned int i=0; i<m_glyphsLettersList.size(); i++) {
+    delete m_glyphsLettersList[i];
   }
 
   /* i added the m_glyphsList because the iterator on the hashmap
@@ -631,47 +652,90 @@ int GLFontGlyph::powerOf2(int i_value) {
 
 FontGlyph* GLFontManager::getGlyph(const std::string& i_string) {
   GLFontGlyph *v_glyph;
+  GLFontGlyphLetter *v_glyphLetter;
 
   v_glyph = m_glyphs[i_string.c_str()];
   if(v_glyph != NULL) return v_glyph;
 
-  v_glyph = new GLFontGlyph(i_string, m_ttf);
+  /* make sure that chars exists into the hashmap before continuing */
+  int n = 0;
+  std::string v_char;
+  while(n < i_string.size()) {
+    v_char = utf8::getNextChar(i_string, n);
+    if(v_char != "\n") {
+      if(m_glyphsLetters[v_char.c_str()] == NULL) {
+	v_glyphLetter = new GLFontGlyphLetter(v_char, m_ttf);
+	m_glyphsLetters[v_char.c_str()] = v_glyphLetter;
+	m_glyphsLettersList.push_back(v_glyphLetter);
+      }
+    }
+  }
+  /* */
+
+  v_glyph = new GLFontGlyph(i_string, m_glyphsLetters);
   
   m_glyphs[i_string.c_str()] = v_glyph;
   m_glyphsList.push_back(v_glyph);
+
   return v_glyph;
 }
 
 void GLFontManager::printStringGrad(FontGlyph* i_glyph, int i_x, int i_y,
       Color c1, Color c2, Color c3, Color c4) {
-  GLFontGlyph* v_glyph = (GLFontGlyph*) i_glyph;
-  int v_y;
 
-  v_y = -i_y + m_drawLib->getDispHeight() - v_glyph->drawHeight();
+  GLFontGlyph* v_glyph = (GLFontGlyph*) i_glyph;
+  GLFontGlyphLetter* v_glyphLetter;
+  int v_x, v_y;
+  int n = 0;
+  std::string v_char;
+  int v_lineHeight;
+
+  if(v_glyph->Value() == "") return;
+
+  v_y = -i_y + m_drawLib->getDispHeight() - v_glyph->firstLineDrawHeight();/* la taille de la 1ere ligne */
+  v_x = i_x;
+  v_lineHeight = 0;
 
   try {
     /* draw the glyph */
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glBindTexture(GL_TEXTURE_2D, v_glyph->GLID());
-    glBegin(GL_TRIANGLE_STRIP);
-    glColor4ub(GET_RED(c1),GET_GREEN(c1),GET_BLUE(c1),GET_ALPHA(c1));
-    glTexCoord2f(0.0, 1.0);
-    glVertex2i(i_x, v_y);
-    glColor4ub(GET_RED(c2),GET_GREEN(c2),GET_BLUE(c2),GET_ALPHA(c2));
-    glTexCoord2f(1.0, 1.0);
-    glVertex2i(i_x + v_glyph->drawWidth(), v_y);
-    glColor4ub(GET_RED(c3),GET_GREEN(c3),GET_BLUE(c3),GET_ALPHA(c3));
-    glTexCoord2f(0.0, 0.0);
-    glVertex2i(i_x, v_y + v_glyph->drawHeight());
-    glColor4ub(GET_RED(c4),GET_GREEN(c4),GET_BLUE(c4),GET_ALPHA(c4));
-    glTexCoord2f(1.0, 0.0);
-    glVertex2i(i_x + v_glyph->drawWidth(), v_y + v_glyph->drawHeight());
-    glEnd();
+
+    while(n < v_glyph->Value().size()) {
+      v_char = utf8::getNextChar(v_glyph->Value(), n);
+      if(v_char == "\n") {
+	v_x  = i_x;
+	v_y -= v_lineHeight + UTF8_INTERLINE_SPACE;
+	v_lineHeight = 0;
+      } else {
+	v_glyphLetter = m_glyphsLetters[v_char.c_str()];
+	if(v_glyphLetter != NULL) {
+	  if(v_glyphLetter->realHeight() > v_lineHeight) v_lineHeight = v_glyphLetter->realHeight();
+
+	  glBindTexture(GL_TEXTURE_2D, v_glyphLetter->GLID());
+	  glBegin(GL_TRIANGLE_STRIP);
+	  glColor4ub(GET_RED(c1),GET_GREEN(c1),GET_BLUE(c1),GET_ALPHA(c1));
+	  glTexCoord2f(0.0, 1.0);
+	  glVertex2i(v_x, v_y);
+	  glColor4ub(GET_RED(c2),GET_GREEN(c2),GET_BLUE(c2),GET_ALPHA(c2));
+	  glTexCoord2f(1.0, 1.0);
+	  glVertex2i(v_x + v_glyphLetter->drawWidth(), v_y);
+	  glColor4ub(GET_RED(c3),GET_GREEN(c3),GET_BLUE(c3),GET_ALPHA(c3));
+	  glTexCoord2f(0.0, 0.0);
+	  glVertex2i(v_x, v_y + v_glyphLetter->drawHeight());
+	  glColor4ub(GET_RED(c4),GET_GREEN(c4),GET_BLUE(c4),GET_ALPHA(c4));
+	  glTexCoord2f(1.0, 0.0);
+	  glVertex2i(v_x + v_glyphLetter->drawWidth(), v_y + v_glyphLetter->drawHeight());
+	  v_x += v_glyphLetter->realWidth() + UTF8_INTERCHAR_SPACE;
+	  glEnd();
+	}
+      }
+    }
     glDisable(GL_BLEND);
     glDisable(GL_TEXTURE_2D);
     /* */
+
   } catch(Exception &e) {
     /* ok, forget this one */
   }

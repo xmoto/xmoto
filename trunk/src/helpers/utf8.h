@@ -29,6 +29,7 @@ class utf8 {
   static int byte_size_from_utf8_first(unsigned char ch);
   static std::vector<std::string> split_utf8_string(const std::string &src);
   static std::string txt2vertical(const std::string& i_str);
+  static std::string getNextChar(const std::string &src, int& io_pos);
 };
 
 #endif

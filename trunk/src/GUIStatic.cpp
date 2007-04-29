@@ -44,31 +44,31 @@ namespace vapp {
     }  
 
     /* Determine text size */
-    int x=0, y=0;
+    int v_x=0, v_y=0;
     float perX=0.0, perY=0.0;
     
     /* Find out where to draw the text */
     if(getHAlign() == UI_ALIGN_LEFT) {
-      x = 0;
+      v_x = 0;
     } else if(getHAlign() == UI_ALIGN_RIGHT) {
-      x = getPosition().nWidth;
+      v_x = getPosition().nWidth;
       perX=-1.0;
     } else if(getHAlign() == UI_ALIGN_CENTER) {
-      x = getPosition().nWidth/2;
+      v_x = getPosition().nWidth/2;
       perX = -0.5;
     }
 
     if(getVAlign() == UI_ALIGN_TOP) {
-      y = 0;
+      v_y = 0;
     } else if(getVAlign() == UI_ALIGN_BOTTOM) {
-      y = getPosition().nHeight;
+      v_y = getPosition().nHeight;
       perY=-1.0;
     } else if(getVAlign() == UI_ALIGN_CENTER) {
-      y = getPosition().nHeight/2;
+      v_y = getPosition().nHeight/2;
       perY = -0.5;
     }    
 
-    putText(x,y, getCaption(), perX, perY);
+    putText(v_x, v_y, getCaption(), perX, perY);
   }
 
 }
