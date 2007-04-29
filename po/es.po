@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-04-23 21:45+0200\n"
+"POT-Creation-Date: 2007-04-29 10:31+0200\n"
 "PO-Revision-Date: 2006-12-21 19:49+0100\n"
 "Last-Translator: Trullo\n"
 "Language-Team: X-Moto\n"
@@ -657,9 +657,7 @@ msgid "High"
 msgstr "Alto"
 
 #: src/GameText.h:233
-msgid ""
-"It seems that it's the first time you load this xmoto version.\n"
-"Levels index creation. It can take some minutes."
+msgid "Levels are being added into the database. Please wait."
 msgstr ""
 
 #: src/GameText.h:234

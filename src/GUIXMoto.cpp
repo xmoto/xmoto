@@ -35,6 +35,7 @@ UILevelList::UILevelList(UIWindow *pParent,
 }
 
 UILevelList::~UILevelList() {
+  clear();
 }
  
 std::string UILevelList::getSelectedLevel() {

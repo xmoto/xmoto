@@ -1,4 +1,6 @@
 
+* hum, more you getGlyphs, more xmoto takes ram
+
 [22:39] <gaivota> renderBodyPart(pBike->Dir == DD_RIGHT ? pBike->ElbowP : pBike->Elbow2P,
 [22:39] <gaivota>     pBike->Dir == DD_RIGHT ? pBike->HandP  : pBike->Hand2P,
 [22:39] <gaivota>     0.12, 0.09,
