@@ -177,8 +177,6 @@ namespace vapp {
     void setUglyOverMode(bool bUglyOverMode) {m_bUglyOverMode = bUglyOverMode;}
     bool isDebug(void) {return m_bDebug;}
     UIRoot *getGUI(void) {return &m_GUI;}
-    UIFont *getSmallFont(void) {return m_pSFont;}
-    UIFont *getMediumFont(void) {return m_pMFont;}
     void setBestTime(std::string s) {m_pBestTime->setCaption(s);}
     void showReplayHelp(float p_speed, bool bAllowRewind);
     void hideReplayHelp();
@@ -267,8 +265,6 @@ namespace vapp {
 
     float m_fSpeedMultiply;
       
-    UIFont *m_pMFont,*m_pSFont;
-
     float m_fNextGhostInfoUpdate;
     int m_nGhostInfoTrans;
     bool m_displayGhostInformation;

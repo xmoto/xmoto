@@ -159,25 +159,24 @@ namespace vapp {
 	}
     }
   
-    int x1,y1,x2,y2,x=0,y=0;
-    getTextExt(getCaption(),&x1,&y1,&x2,&y2);
-    
     if(bDisabled)
       setTextSolidColor(MAKE_COLOR(170,170,170,128));
     else
       setTextSolidColor(MAKE_COLOR(255,255,255,255));
 
+    int x, y;
+
     switch(m_Type) {
       case UI_BUTTON_TYPE_CHECK:
       case UI_BUTTON_TYPE_RADIO:
-        x = 34 - x1;
-        y = getPosition().nHeight/2 - (y2-y1)/2 - y1;    
-        putText(x,y,getCaption());
+        x = 34;
+        y = getPosition().nHeight/2;
+        putText(x,y,getCaption(), 0.0, -0.5);
         break;
       default:
-        x = getPosition().nWidth/2 - (x2-x1)/2 - x1;
-        y = getPosition().nHeight/2 - (y2-y1)/2 - y1;    
-        putText(x+xm,y+ym,getCaption());
+        x = getPosition().nWidth/2;
+	y = getPosition().nHeight/2;
+	putText(x,y,getCaption(), -0.5, -0.45);
         break;
     }
     

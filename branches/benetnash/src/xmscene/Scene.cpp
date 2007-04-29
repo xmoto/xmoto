@@ -157,6 +157,7 @@ void MotoGame::cleanPlayers() {
     pMsg->nAlpha = 255;
     pMsg->Text = Text;
     pMsg->bOnce = bOnce;
+    updateGameMessages();
   }
 
   void MotoGame::clearGameMessages(void) {

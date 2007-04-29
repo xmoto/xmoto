@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <string>
 
 namespace vapp {
-  struct UIFont;
+  class DrawLib;
 }
 
 class SysMessage {
@@ -34,14 +34,14 @@ class SysMessage {
   SysMessage();
   ~SysMessage();
 
-  void setFont(vapp::UIFont *i_font);
+  void setDrawLib(vapp::DrawLib* i_drawLib);
   void displayText(std::string i_msg);
   void render();
 
   private:
-  vapp::UIFont *m_font;
   std::string m_txt;
   float m_startDisplay;
+  vapp::DrawLib* m_drawLib;
 };
 
 #endif

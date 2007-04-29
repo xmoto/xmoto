@@ -253,9 +253,9 @@ namespace vapp {
       _UpdateLoadingScreen((1.0f/9.0f) * 1,m_loadingScreen,GAMETEXT_INITTEXT);
           
       /* Find all files in the textures dir and load them */     
-      UITextDraw::initTextDrawing(this);
       UITexture::setApp(this);
-      m_sysMsg.setFont(UITextDraw::getFont("MFont"));
+      UIWindow::setDrawLib(getDrawLib());
+      m_sysMsg.setDrawLib(getDrawLib());
 
       _UpdateLoadingScreen((1.0f/9.0f) * 3,m_loadingScreen,GAMETEXT_LOADINGMENUGRAPHICS);
         
@@ -456,10 +456,6 @@ namespace vapp {
     Sound::uninit();
 
     m_Config.saveFile();
-
-    if(!getDrawLib()->isNoGraphics()) {
-      UITextDraw::uninitTextDrawing();  
-    }
   }  
   
   void GameApp::PlaySpecificLevel(std::string i_level) {

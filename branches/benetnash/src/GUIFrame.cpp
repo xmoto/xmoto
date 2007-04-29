@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "VXml.h"
 #include "GUI.h"
+#include "helpers/utf8.h"
 
 namespace vapp {
 
@@ -129,7 +130,7 @@ namespace vapp {
           else
             setTextSolidColor(MAKE_COLOR(188,186,67,255));
 
-          putText(4,14,getCaption(),true);
+          putText(4,14, utf8::txt2vertical(getCaption()));
         }
         break;
     }

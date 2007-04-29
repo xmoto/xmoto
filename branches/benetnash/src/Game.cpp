@@ -238,7 +238,8 @@ GameApp::GameApp() {
 	    if(m_pCredits == NULL)
 	      m_pCredits = new Credits;
 	    
-	    m_pCredits->init(m_replayBiker->getFinishTime(),4,4,std::string(GAMETEXT_CREDITS).c_str());
+	    m_pCredits->init(this, m_replayBiker->getFinishTime(),4,4,
+			     std::string(GAMETEXT_CREDITS).c_str());
 	  }
 
 	  /* Fine, open the level */
@@ -1175,6 +1176,7 @@ GameApp::GameApp() {
   ===========================================================================*/
   void GameApp::notifyMsg(std::string Msg) {
     if(m_pNotifyMsgBox != NULL) delete m_pNotifyMsgBox;
+    m_Renderer.getGUI()->setFont(drawLib->getFontSmall());
     m_pNotifyMsgBox = m_Renderer.getGUI()->msgBox(Msg,(UIMsgBoxButton)(UI_MSGBOX_OK));
   }
   
@@ -1621,7 +1623,7 @@ GameApp::GameApp() {
     int nBarHeight = 15;
     m_fDownloadTaskProgressLast = fPercent;
     readEvents();
-    
+
     _DrawMenuBackground();
     _SimpleMessage(m_DownloadingMessage,&m_InfoMsgBoxRect,true);
     
@@ -1639,11 +1641,12 @@ GameApp::GameApp() {
                      m_InfoMsgBoxRect.nY+m_InfoMsgBoxRect.nHeight-nBarHeight),
             0,MAKE_COLOR(255,0,0,255),0);
 
-    UIFont *v_font = m_Renderer.getSmallFont();
-    if(v_font != NULL) {
-      UITextDraw::printRaw(v_font,m_InfoMsgBoxRect.nX+13,m_InfoMsgBoxRect.nY+
-         m_InfoMsgBoxRect.nHeight-nBarHeight-4,m_DownloadingInformation,MAKE_COLOR(255,255,255,128));
-    }
+    FontManager* v_fm = drawLib->getFontSmall();
+    FontGlyph* v_fg = v_fm->getGlyph(m_DownloadingInformation);
+    v_fm->printString(v_fg,
+		      m_InfoMsgBoxRect.nX+10,
+		      m_InfoMsgBoxRect.nY+m_InfoMsgBoxRect.nHeight-nBarHeight*2,
+		      MAKE_COLOR(255,255,255,128));
     drawLib->flushGraphics();
   }
   
@@ -2401,7 +2404,7 @@ GameApp::GameApp() {
   }
 
   UIWindow* GameApp::stats_generateReport(const std::string &PlayerName, vapp::UIWindow *pParent,
-					  int x, int y, int nWidth, int nHeight, vapp::UIFont *pFont) {
+					  int x, int y, int nWidth, int nHeight, FontManager* pFont) {
     /* Create stats window */
     UIWindow *p;
     char **v_result;

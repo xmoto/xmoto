@@ -1,6 +1,20 @@
 
-* ajouter le SDL_ttf.h pour windows
+[22:39] <gaivota> renderBodyPart(pBike->Dir == DD_RIGHT ? pBike->ElbowP : pBike->Elbow2P,
+[22:39] <gaivota>     pBike->Dir == DD_RIGHT ? pBike->HandP  : pBike->Hand2P,
+[22:39] <gaivota>     0.12, 0.09,
+[22:39] <gaivota>     0.12, -0.05,
+[22:39] <gaivota>     0.10, -0.05,
+[22:39] <gaivota>     0.10, 0.09,
+[22:39] <gaivota>     p_theme->getLowerArm(),
+[22:39] <gaivota>     i_filterColor,
+[22:39] <gaivota>     pBike->Dir, 2
+[22:39] <gaivota>     );
+
+* gérer les accents et tous les caractères au clavier (et vérifier que ca passe en bd)
+* virer la builtin font
+* draw bug at top of the textures
 * faire des polices avec contour ?
+* traduire les scripts integrés (le tuto)
 
 [20:26] <Christoph> btw, I noticed a few days ago: in the level "MASTERKUD Padrinos magicos" there is something broken. the strawberry at the right end of the ground crashes the level with "Entity 'MySprite18' doesn't exist" (in the replay, too)
 

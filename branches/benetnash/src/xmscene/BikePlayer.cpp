@@ -815,10 +815,10 @@ float PlayerBiker::getBikeEngineSpeed() {
 	Vector2f curpos = (m_bikeState.RearWheelP + m_bikeState.FrontWheelP) / 2;
 	Vector2f lastpos = (m_PrevRearWheelP + m_PrevFrontWheelP) / 2;
 	Vector2f delta = curpos - lastpos;
-	float speed = 6 * sqrt(delta.x * delta.x + delta.y * delta.y) / PHYS_STEP_SIZE;
+	float speed = 10 * sqrt(delta.x * delta.x + delta.y * delta.y) / PHYS_STEP_SIZE;
 
 	/* protection against invalid values */
-	if (speed > 200)
+	if (speed > 400)
 		return 0;
 
 	return speed;

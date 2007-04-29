@@ -343,7 +343,7 @@ namespace vapp {
     setTextSolidColor(MAKE_COLOR(188,186,67,255));
     for(int i=0;i<m_Columns.size();i++) {
       if(!(m_nColumnHideFlags & (1<<i))) {
-        putText(nHX,nHY + (m_headerHeight*2)/3,m_Columns[i]);
+        putText(nHX,nHY,m_Columns[i]);
         nHX += m_ColumnWidths[i]; 
         
         /* Next columns disabled? If so, make more room to this one */
@@ -399,7 +399,7 @@ namespace vapp {
 	    setTextSolidColor(MAKE_COLOR(128,128,128,255));
 	}
 
-	int y = m_nScroll + m_numEntryDisplayed*m_rowHeight + (m_rowHeight*2)/3;
+	int y = m_nScroll + m_numEntryDisplayed*m_rowHeight;
 				
 	if(m_nRealSelected == i) {
 	  if(m_Entries[i]->bUseOwnProperties) {
