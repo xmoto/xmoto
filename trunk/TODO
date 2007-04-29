@@ -1,16 +1,5 @@
 
-* hum, more you getGlyphs, more xmoto takes ram
-
-[22:39] <gaivota> renderBodyPart(pBike->Dir == DD_RIGHT ? pBike->ElbowP : pBike->Elbow2P,
-[22:39] <gaivota>     pBike->Dir == DD_RIGHT ? pBike->HandP  : pBike->Hand2P,
-[22:39] <gaivota>     0.12, 0.09,
-[22:39] <gaivota>     0.12, -0.05,
-[22:39] <gaivota>     0.10, -0.05,
-[22:39] <gaivota>     0.10, 0.09,
-[22:39] <gaivota>     p_theme->getLowerArm(),
-[22:39] <gaivota>     i_filterColor,
-[22:39] <gaivota>     pBike->Dir, 2
-[22:39] <gaivota>     );
+* hum xmoto takes ram a lot !!!
 
 * Theme.cpp : remplacer les anciennes fonts par les nouvelles
 * gérer les accents et tous les caractères au clavier (et vérifier que
@@ -52,28 +41,6 @@ For Tod:
 [14:05] <keesj> it's a pixel rounding problem
 [14:07] <keesj> http://www.gameprogrammer.com/5-poly.html
 [14:07] <keesj> If pixels that fall on an edge are counted as part of the polygon then pixels on an edge between two polygons will be filled in by both polygons. Filling the pixel twice is wasteful. And, in an animation it can cause a "twinkling" effect along the edge. If edge pixels are not part of the polygon then edges never get colored and you get gaps between polygons. Really ugly.
-
-(20:27:03)  Roots:   Heap allocation functions accounted for 94.0% of measured spacetime
-  
-Called from:
-  19.8% : 0x41ED846: Mix_LoadWAV_RW (in /usr/lib/libSDL_mixer-1.2.so.0.2.4)
-  14.2% : 0x804ECE3: vapp::Img::convertToRGBA32() (Image.cpp:396)
-  13.7% : 0x4062BB5: (within /usr/lib/libGL.so.1.0.8776)
-  12.5% : 0x4062BDD: (within /usr/lib/libGL.so.1.0.8776)
-  7.7% : 0x804EDB4: vapp::Img::convertToRGB24() (Image.cpp:380)
-  6.1% : 0x439F87A: std::string::_Rep::_S_create(unsigned, unsigned, std::allocator<char> const&) (in /usr/lib/libstdc++.so.6.0.8)
-  3.5% : 0x4070E66: (within /usr/lib/libGL.so.1.0.8776)
-  3.5% : 0x80704B6: Theme::initDefaultFont() (Theme.cpp:44)
-  2.8% : 0x816791D: LevelsManager::loadLevelsFromIndex(bool) (LevelsManager.cpp:682)
-  1.2% : 0x81857F8: Block::readFromBinary(vapp::FileHandle*) (Block.cpp:544)
-  0.6% : 0x8182ECA: ConvexBlock::addVertex(Vector2<float> const&, Vector2<float> const&) (Block.cpp:56)
-  0.6% : 0x8138C19: vapp::ElementHandler<Block>::setDims(Vector2<float>, Vector2<float>, int, int, float, float) (Collision.cpp:878)
-  and 778 other insignificant places
-  
-(20:27:03)  Roots:   c'est le son qui squatte 20% de la ram 
-(20:27:06)  Roots:   puis les images 
-(20:27:08)  Roots:   puis opengl 
-(20:27:23)  Roots:   les niveaux faisant que 2.8%...
 
 * zoom in demos :)
 

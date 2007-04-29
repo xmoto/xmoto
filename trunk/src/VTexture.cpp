@@ -46,6 +46,7 @@ namespace vapp {
     pTexture->nHeight = nHeight;
     pTexture->Tag = "";
     pTexture->isAlpha = bAlpha;
+    pTexture->pcData = pcData;
 #ifdef ENABLE_OPENGL
     pTexture->nID = 0;
 #endif
@@ -142,6 +143,11 @@ namespace vapp {
 #ifdef ENABLE_OPENGL
           glDeleteTextures(1,(GLuint *)&pTexture->nID);
 #endif
+      
+	  //keesj:todo when using SDL surface we cannot delete the image data
+	  //this is a problem.
+	  //delete [] pc; => it's why i keep pTexture->pcData
+	  delete [] pTexture->pcData;
           m_nTexSpaceUsage -= pTexture->nSize;
           delete pTexture;
           m_Textures.erase(m_Textures.begin() + i);
@@ -205,10 +211,6 @@ namespace vapp {
       }
       
       pTexture = createTexture(TexName,pc,TextureImage.getWidth(),TextureImage.getHeight(),bAlpha,bClamp, eFilterMode);
-      
-      //keesj:todo when using SDL surface we cannot delete the image data
-      //this is a problem.
-      //delete [] pc;
     }
     else {
       Log("** Warning ** : TextureManager::loadTexture() : texture '%s' not found or invalid",Path.c_str());
