@@ -1050,9 +1050,6 @@ namespace vapp {
 
     if(m_bUglyMode == false) {
       switch(pSprite->Speciality()) {
-      case ET_NONE:
-        v_sprite_type = pSprite->SpriteName();
-        break;
       case ET_KILL:
 	v_sprite_type = getGameObject()->getLevelSrc()->SpriteForWecker();
         break;
@@ -1062,6 +1059,8 @@ namespace vapp {
       case ET_ISTOTAKE:
 	v_sprite_type = getGameObject()->getLevelSrc()->SpriteForStrawberry();
         break;
+      default:
+	v_sprite_type = pSprite->SpriteName();
       }
 
       /* search the sprite as an animation */

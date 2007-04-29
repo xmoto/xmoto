@@ -72,6 +72,7 @@ namespace vapp {
     std::string Tag;        /* Optional tag */
     int nSize;              /* Size in bytes */
     bool isAlpha;           /* Whether the texture contains an alpha channel */
+    unsigned char *pcData;
   };
 
   /*===========================================================================

@@ -1718,6 +1718,8 @@ GameApp::GameApp() {
     int nrow;
     std::string res;
 
+    p_time = -1.0;
+
     v_result = m_db->readDB("SELECT name, finishTime FROM replays "
 			    "WHERE id_profile=\"" + xmDatabase::protectString(m_profile) + "\" "
 			    "AND   id_level=\""   + xmDatabase::protectString(p_levelId) + "\" "
