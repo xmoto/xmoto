@@ -52,6 +52,7 @@ struct hashcmp_str {
 namespace vapp {
 
 class DrawLib;
+class GLFontGlyphLetter;
 
 class FontGlyph {
   public:
@@ -80,26 +81,38 @@ class FontManager {
 #ifdef ENABLE_OPENGL
 class GLFontGlyph : public FontGlyph {
  public:
-  GLFontGlyph(const std::string& i_value, TTF_Font* i_ttf);
+  /* for simple glyph */
+  GLFontGlyph(const std::string& i_value);
+
+  /* a glyph from other glyphs */
+  GLFontGlyph(const std::string& i_value,
+	      HashNamespace::hash_map<const char*, GLFontGlyphLetter*, HashNamespace::hash<const char*>, hashcmp_str>& i_glyphsLetters);
   virtual ~GLFontGlyph();
 
   std::string Value() const;
-  GLuint GLID()       const;
-  int drawX()         const;
-  int drawY()         const;
   int drawWidth()     const;
   int drawHeight()    const;
   int realWidth()     const;
   int realHeight()    const;
+  int firstLineDrawHeight() const;
 
- private:
+ protected:
   std::string m_value;
-  GLuint m_GLID;
-  int m_drawX, m_drawY;
   int m_drawWidth, m_drawHeight;
   int m_realWidth, m_realHeight;
+  int m_firstLineDrawHeight;
 
   static int powerOf2(int i_value);
+};
+
+class GLFontGlyphLetter : public GLFontGlyph {
+ public:
+  GLFontGlyphLetter(const std::string& i_value, TTF_Font* i_ttf);
+  virtual ~GLFontGlyphLetter();
+  GLuint GLID() const;  
+
+ private:
+  GLuint m_GLID;  
 };
 
 class GLFontManager : public FontManager {
@@ -116,6 +129,9 @@ class GLFontManager : public FontManager {
  private:
   std::vector<GLFontGlyph*> m_glyphsList;
   HashNamespace::hash_map<const char*, GLFontGlyph*, HashNamespace::hash<const char*>, hashcmp_str> m_glyphs;
+
+  std::vector<GLFontGlyphLetter*> m_glyphsLettersList;
+  HashNamespace::hash_map<const char*, GLFontGlyphLetter*, HashNamespace::hash<const char*>, hashcmp_str> m_glyphsLetters;
 };
 
 #endif
