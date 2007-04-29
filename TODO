@@ -1,5 +1,7 @@
 
-* a force d'ouvrir et de fermer des niveaux, ca bouffe de la mémoire
+* a force d'ouvrir et de fermer des niveaux, ca bouffe de la mémoire :
+   réfléchir à cause du nombre de sprites augmentant à les virer de
+   temps en temps
 
 * Theme.cpp : remplacer les anciennes fonts par les nouvelles
 * gérer les accents et tous les caractères au clavier (et vérifier que
