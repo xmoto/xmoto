@@ -30,6 +30,7 @@ namespace vapp {
 
   UIFrame::UIFrame() {
     m_bMinimizable = false;
+    m_bHover = false;
   }
 
   UIFrame::UIFrame(UIWindow *pParent,
@@ -39,6 +40,7 @@ namespace vapp {
     initW(pParent,x,y,Caption,nWidth,nHeight);
     
     m_bMinimizable = false;
+    m_bHover = false;
     m_fMinMaxTime = 0.0f;
     
     m_Style=UI_FRAMESTYLE_TRANS;

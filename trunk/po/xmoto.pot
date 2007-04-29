@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-04-23 21:45+0200\n"
+"POT-Creation-Date: 2007-04-29 10:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -628,9 +628,7 @@ msgid "High"
 msgstr ""
 
 #: src/GameText.h:233
-msgid ""
-"It seems that it's the first time you load this xmoto version.\n"
-"Levels index creation. It can take some minutes."
+msgid "Levels are being added into the database. Please wait."
 msgstr ""
 
 #: src/GameText.h:234

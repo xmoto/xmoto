@@ -138,6 +138,7 @@ namespace vapp {
     if(pTexture != NULL) {
       for(unsigned int i=0;i<m_Textures.size();i++) {
         if(m_Textures[i] == pTexture) {
+	  SDL_FreeSurface(pTexture->surface);
 #ifdef ENABLE_OPENGL
           glDeleteTextures(1,(GLuint *)&pTexture->nID);
 #endif
