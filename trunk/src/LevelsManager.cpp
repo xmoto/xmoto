@@ -564,6 +564,10 @@ void LevelsManager::reloadExternalLevels(xmDatabase *i_db,
     Level *v_level = new Level();
 
     try {
+      if(i_loadLevelsInterface != NULL) {
+	i_loadLevelsInterface->loadLevelHook(LvlFiles[i], (i*100) / LvlFiles.size());
+      }
+
       v_level->setFileName(LvlFiles[i]);
       bCached = v_level->loadReducedFromFile();
       
@@ -583,10 +587,6 @@ void LevelsManager::reloadExternalLevels(xmDatabase *i_db,
 		       v_level->Music(),
 		       v_level->isScripted(),
 		       true);
-      if(i_loadLevelsInterface != NULL) {
-	i_loadLevelsInterface->loadLevelHook(v_level->Name(), (i*100) / LvlFiles.size());
-      }
-
     } catch(Exception &e) {
     }
     delete v_level;

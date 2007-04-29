@@ -82,7 +82,7 @@ namespace vapp {
       FontGlyph* v_fg = v_fm->getGlyph(NextTask);
       v_fm->printString(v_fg,
 			getDrawLib()->getDispWidth()/2 - 256,
-			getDrawLib()->getDispHeight()/2 + 40 + 3,
+			getDrawLib()->getDispHeight()/2 + 40+1,
 			MAKE_COLOR(255,255,255,255));      
       getDrawLib()->flushGraphics();
     }

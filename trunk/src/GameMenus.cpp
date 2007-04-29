@@ -1597,9 +1597,11 @@ namespace vapp {
 
       if(m_pPauseMenuButtons[i]->isClicked()) {
         if(m_pPauseMenuButtons[i]->getCaption() == GAMETEXT_QUIT) {
-          if(m_pQuitMsgBox == NULL)
+          if(m_pQuitMsgBox == NULL) {
+	    m_Renderer.getGUI()->setFont(drawLib->getFontSmall());
             m_pQuitMsgBox = m_Renderer.getGUI()->msgBox(GAMETEXT_QUITMESSAGE,
                                                         (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
+	  }
         }
         else if(m_pPauseMenuButtons[i]->getCaption() == GAMETEXT_ABORT) {
           m_pPauseMenu->showWindow(false);
@@ -1691,9 +1693,11 @@ namespace vapp {
       
       if(m_pFinishMenuButtons[i]->isClicked()) {
         if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_QUIT) {
-          if(m_pQuitMsgBox == NULL)
+          if(m_pQuitMsgBox == NULL) {
+	    m_Renderer.getGUI()->setFont(drawLib->getFontSmall());
             m_pQuitMsgBox = m_Renderer.getGUI()->msgBox(GAMETEXT_QUITMESSAGE,
                                                         (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
+	  }
         }
         else if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
 	  std::string NextLevel = _DetermineNextLevel(m_PlaySpecificLevel);
@@ -1715,6 +1719,7 @@ namespace vapp {
         else if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_SAVEREPLAY) {
           if(m_pJustPlayReplay != NULL) {
             if(m_pSaveReplayMsgBox == NULL) {
+	      m_Renderer.getGUI()->setFont(drawLib->getFontSmall());
               m_pSaveReplayMsgBox = m_Renderer.getGUI()->msgBox(std::string(GAMETEXT_ENTERREPLAYNAME) + ":",
                                                                 (UIMsgBoxButton)(UI_MSGBOX_OK|UI_MSGBOX_CANCEL),
                                                                 true);
@@ -2192,12 +2197,15 @@ namespace vapp {
 
     }    
     else if(pDeleteButton->isClicked()) {
-      if(m_pDeleteProfileMsgBox == NULL)
+      if(m_pDeleteProfileMsgBox == NULL) {
+	m_Renderer.getGUI()->setFont(drawLib->getFontSmall());
         m_pDeleteProfileMsgBox = m_Renderer.getGUI()->msgBox(GAMETEXT_DELETEPLAYERMESSAGE,
                                                           (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
+      }
     }
     else if(pNewButton->isClicked()) {
       if(m_pNewProfileMsgBox == NULL) {
+	m_Renderer.getGUI()->setFont(drawLib->getFontSmall());
         m_pNewProfileMsgBox = m_Renderer.getGUI()->msgBox(std::string(GAMETEXT_ENTERPLAYERNAME) + ":",
                                                           (UIMsgBoxButton)(UI_MSGBOX_OK|UI_MSGBOX_CANCEL),
                                                           true);
@@ -2244,9 +2252,11 @@ namespace vapp {
       
       if(m_pJustDeadMenuButtons[i]->isClicked()) {
         if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_QUIT) {
-          if(m_pQuitMsgBox == NULL)
+          if(m_pQuitMsgBox == NULL) {
+	    m_Renderer.getGUI()->setFont(drawLib->getFontSmall());
             m_pQuitMsgBox = m_Renderer.getGUI()->msgBox(GAMETEXT_QUITMESSAGE,
                                                         (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
+	  }
         }
         else if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_TRYAGAIN) {
 
@@ -2271,6 +2281,7 @@ namespace vapp {
         else if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_SAVEREPLAY) {
           if(m_pJustPlayReplay != NULL) {
             if(m_pSaveReplayMsgBox == NULL) {
+	      m_Renderer.getGUI()->setFont(drawLib->getFontSmall());
               m_pSaveReplayMsgBox = m_Renderer.getGUI()->msgBox(std::string(GAMETEXT_ENTERREPLAYNAME) + ":",
                                                                 (UIMsgBoxButton)(UI_MSGBOX_OK|UI_MSGBOX_CANCEL),
                                                                 true);
@@ -2334,9 +2345,11 @@ namespace vapp {
           m_pLevelPacksWindow->showWindow(false);                    
         }
         else if(m_pMainMenuButtons[i]->getCaption() == GAMETEXT_QUIT) {
-          if(m_pQuitMsgBox == NULL)
+          if(m_pQuitMsgBox == NULL) {
+	    m_Renderer.getGUI()->setFont(drawLib->getFontSmall());
             m_pQuitMsgBox = m_Renderer.getGUI()->msgBox(GAMETEXT_QUITMESSAGE,
                                                         (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
+	  }
         }
       }
     }
@@ -2886,9 +2899,11 @@ namespace vapp {
     
     if(pReplaysDeleteButton->isClicked()) {
       /* Delete replay - but ask the user first */
-      if(m_pDeleteReplayMsgBox == NULL)
+      if(m_pDeleteReplayMsgBox == NULL) {
+	m_Renderer.getGUI()->setFont(drawLib->getFontSmall());
         m_pDeleteReplayMsgBox = m_Renderer.getGUI()->msgBox(GAMETEXT_DELETEREPLAYMESSAGE,
-                                                            (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));      
+                                                            (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
+      }
     }
    
     /* Statistics window */

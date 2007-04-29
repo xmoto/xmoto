@@ -10,6 +10,7 @@
 [22:39] <gaivota>     pBike->Dir, 2
 [22:39] <gaivota>     );
 
+* Theme.cpp : remplacer les anciennes fonts par les nouvelles
 * gérer les accents et tous les caractères au clavier (et vérifier que
    ca passe en bd) : see keyboard-0.1.10.patch
 * draw bug at top of the textures

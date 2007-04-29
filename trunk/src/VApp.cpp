@@ -98,6 +98,11 @@ namespace vapp {
 
   App::~App() {
     if(drawLib != NULL) {
+      Log("Nb glyphs created: %i",
+	  drawLib->getFontSmall()->nbGlyphsInMemory()  +
+	  drawLib->getFontMedium()->nbGlyphsInMemory() +
+	  drawLib->getFontBig()->nbGlyphsInMemory()
+	  );
       delete drawLib;
     }
   }

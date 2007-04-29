@@ -75,14 +75,11 @@ namespace vapp {
  };
 
  DrawLib::~DrawLib() {
-   if(m_fontSmall != NULL) {
-     delete m_fontSmall;
-   }
-
-   if(m_fontMedium != NULL) {
-     delete m_fontMedium;
-   }
  }
+
+  int FontManager::nbGlyphsInMemory() {
+    return 0;
+  }
 
   FontManager* DrawLib::getFontManager(const std::string &i_fontFile, int i_fontSize) {
     throw Exception("Your DrawLib doesn't manage FontManager");

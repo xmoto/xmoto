@@ -27,13 +27,24 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/utf8.h"
 
 #define DRAW_FONT_FILE "Textures/Fonts/DejaVuSans.ttf"
-#define UTF8_LINE_SPACE 4
+#define UTF8_LINE_SPACE 2
 
 #ifdef ENABLE_OPENGL
 namespace vapp {
 
 
  DrawLibOpenGL::~DrawLibOpenGL(){
+   if(m_fontSmall != NULL) {
+     delete m_fontSmall;
+   }
+
+   if(m_fontMedium != NULL) {
+     delete m_fontMedium;
+   }
+
+   if(m_fontBig != NULL) {
+     delete m_fontBig;
+   }
  }
 
  DrawLibOpenGL::DrawLibOpenGL() : DrawLib(){
@@ -536,7 +547,7 @@ GLFontGlyph::GLFontGlyph(const std::string& i_value, TTF_Font* i_ttf) {
 	       v_image->pixels);
   SDL_FreeSurface(v_image);
 }
-
+ 
 GLFontGlyph::~GLFontGlyph() {
   glDeleteTextures(1, &m_GLID);
 }
@@ -588,14 +599,25 @@ FontManager::~FontManager() {
 
 GLFontManager::GLFontManager(DrawLib* i_drawLib, const std::string &i_fontFile, int i_fontSize)
   : FontManager(i_drawLib, i_fontFile, i_fontSize) {
+}
 
+int GLFontManager::nbGlyphsInMemory() {
+  return m_glyphsList.size();
 }
 
 GLFontManager::~GLFontManager() {
-  HashNamespace::hash_map<const char*, GLFontGlyph*, HashNamespace::hash<const char*>, hashcmp_str, std::allocator<GLFontGlyph*> >::iterator it;
-  for (it = m_glyphs.begin(); it != m_glyphs.end(); it++) {
-    delete it->second;
+  for(unsigned int i=0; i<m_glyphsList.size(); i++) {
+    delete m_glyphsList[i];
   }
+
+  /* i added the m_glyphsList because the iterator on the hashmap
+     often produces segfault on delete it->second */
+  //printf("BEGIN ~GLFontManager()\n");
+  //HashNamespace::hash_map<const char*, GLFontGlyph*, HashNamespace::hash<const char*>, hashcmp_str, std::allocator<GLFontGlyph*> >::iterator it;
+  //for (it = m_glyphs.begin(); it != m_glyphs.end(); it++) {
+  //  delete it->second;
+  //}
+  //printf("END ~GLFontManager()\n");
 }
 
 int GLFontGlyph::powerOf2(int i_value) {
@@ -616,6 +638,7 @@ FontGlyph* GLFontManager::getGlyph(const std::string& i_string) {
   v_glyph = new GLFontGlyph(i_string, m_ttf);
   
   m_glyphs[i_string.c_str()] = v_glyph;
+  m_glyphsList.push_back(v_glyph);
   return v_glyph;
 }
 
