@@ -148,7 +148,7 @@ void UIPackTree::addPack(LevelsPack* i_levelsPack,
     c->ownSelectedColor   = MAKE_COLOR(4,0,87,255);
     c->ownUnSelectedColor = MAKE_COLOR(4,0,87,255);
     c->ownXOffset         = 30;
-    c->ownYOffset         = 2;
+    c->ownYOffset         = 0;
     p = addEntry(i_levelsPack->Name(), i_levelsPack);
   }
 
