@@ -59,6 +59,8 @@ class PlayerBiker : public Biker {
 
   float m_fAttitudeCon;
   float m_fNextAttitudeCon;
+  float m_fLastAttitudeDir;
+
   int m_nStillFrames;
   double m_fLastSqueekTime;
   bool m_bSqueeking;
@@ -70,15 +72,15 @@ class PlayerBiker : public Biker {
   Vector2f m_PrevHeadP;
   Vector2f m_PrevHead2P;
   Vector2f m_PrevActiveHead;
-  
+
   /* Data - bike bodies, joints and masses */
   dBodyID m_FrameBodyID;              /* Frame of bike */
-  dMass m_FrameMass;              
+  dMass m_FrameMass;
   dBodyID m_RearWheelBodyID;          /* Rear wheel of bike */
   dMass m_RearWheelMass;
   dBodyID m_FrontWheelBodyID;         /* Front wheel of bike */
-  dMass m_FrontWheelMass;    
-        
+  dMass m_FrontWheelMass;
+
   dBodyID m_PlayerTorsoBodyID;
   dMass m_PlayerTorsoMass;
   dBodyID m_PlayerLArmBodyID;
@@ -93,14 +95,14 @@ class PlayerBiker : public Biker {
   dMass m_PlayerHandAnchorMass;
   dBodyID m_PlayerFootAnchorBodyID;
   dMass m_PlayerFootAnchorMass;
-  
+
   dJointID m_FootHingeID;
   dJointID m_KneeHingeID;
   dJointID m_LowerBodyHingeID;
   dJointID m_ShoulderHingeID;
   dJointID m_ElbowHingeID;
   dJointID m_HandHingeID;
-  
+
   dBodyID m_PlayerTorsoBodyID2;
   dBodyID m_PlayerLArmBodyID2;
   dBodyID m_PlayerUArmBodyID2;
@@ -108,20 +110,20 @@ class PlayerBiker : public Biker {
   dBodyID m_PlayerULegBodyID2;
   dBodyID m_PlayerHandAnchorBodyID2;
   dBodyID m_PlayerFootAnchorBodyID2;
-  
+
   dJointID m_FootHingeID2;
   dJointID m_KneeHingeID2;
   dJointID m_LowerBodyHingeID2;
   dJointID m_ShoulderHingeID2;
   dJointID m_ElbowHingeID2;
   dJointID m_HandHingeID2;
-            
-  dJointGroupID m_ContactGroup;       /* Contact joint group */     
-  
+
+  dJointGroupID m_ContactGroup;       /* Contact joint group */
+
   bool bFrontWheelTouching;
   bool bRearWheelTouching;
   dWorldID m_WorldID;                 /* World ID */
-      
+
   bool m_clearDynamicTouched;
 
   /* ***** */
