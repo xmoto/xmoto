@@ -323,7 +323,6 @@ namespace vapp {
 			getParent()->getDrawLib()->endDraw();
 		}
 	}
-	//glDisable(GL_DITHER);
   }
     
   /*===========================================================================

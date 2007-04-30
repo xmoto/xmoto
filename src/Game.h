@@ -463,6 +463,7 @@ class xmDatabase;
       void _UpgradeWebRooms(bool bUpdateMenus);
       void _DownloadExtraLevels(void);
       void _UploadHighscore(std::string p_replayname);
+      void _UploadAllHighscores();
       void _ConfigureProxy(void);
 
       void setLevelInfoFrameBestPlayer(String pLevelID,

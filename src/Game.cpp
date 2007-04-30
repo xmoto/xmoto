@@ -1885,6 +1885,32 @@ GameApp::GameApp() {
     return TColor(255, 255, 255, 0);
   }
 
+  void GameApp::_UploadAllHighscores() {
+    _UpdateWebHighscores(false);
+    char **v_result;
+    int nrow;
+
+//SELECT r.name
+//FROM replays r LEFT OUTER JOIN webhighscores h ON r.id_level = h.id_level
+//WHERE r.id_profile="Nicolas"
+//AND r.isFinished
+//AND ( (h.id_room IS NULL) OR (h.id_room="4" AND
+//                              h.finishTime > r.finishTime AND
+//                              (r.finishTime - h.finishTime) < -0.01))
+
+    std::string query = "SELECT r.name FROM replays r "
+    " LEFT OUTER JOIN webhighscores h ON r.id_level = h.id_level "
+    "INNER JOIN weblevels l ON r.id_level = l.id_level "
+    "WHERE r.id_profile='" + xmDatabase::protectString(m_profile) + "' "
+    "AND ((h.id_room=" + m_WebHighscoresIdRoom + " AND h.finishTime > r.finishTime) "
+    "OR h.id_room IS NULL) AND r.isFinished AND ((r.finishTime - h.finishTime) < -0.01)";
+    v_result = m_db->readDB(query, nrow);									
+    for (int i = 0; i < nrow; i++) {
+      _UploadHighscore(m_db->getResult(v_result, 1, i, 0));
+    }
+    m_db->read_DB_free(v_result);
+  }
+
   TColor GameApp::getUglyColorFromPlayerNumber(int i_player) {
     // try to find nice colors for first player, then automatic
     vapp::Color v_color;
