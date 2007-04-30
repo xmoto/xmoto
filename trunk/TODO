@@ -1,4 +1,6 @@
 
+* tester envoyer tous les replays dans le salon
+
 * a force d'ouvrir et de fermer des niveaux, ca bouffe de la mémoire :
    réfléchir à cause du nombre de sprites augmentant à les virer de
    temps en temps

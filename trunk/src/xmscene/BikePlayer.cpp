@@ -218,6 +218,8 @@ void PlayerBiker::updatePhysics(float i_time, float fTimeStep, vapp::CollisionSy
   }
 
   /* Apply attitude control (SIMPLISTIC!) */
+  // when you want to rotate in opposite direction  (m_BikeC.Pull() * m_fLastAttitudeDir < 0) it's true
+  //  benetnash: I don't think It will affect highscores in any way
   if((m_BikeC.Pull() != 0.0f) && (i_time > m_fNextAttitudeCon /*XXX*/ || (m_BikeC.Pull() * m_fLastAttitudeDir < 0) /*XXX*/ )) {
     m_fAttitudeCon = m_BikeC.Pull() * PHYS_RIDER_ATTITUDE_TORQUE;
     m_fLastAttitudeDir = m_fAttitudeCon;
