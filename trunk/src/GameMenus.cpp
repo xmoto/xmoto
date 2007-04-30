@@ -751,10 +751,10 @@ namespace vapp {
     pRoomPasswordEdit->setContextHelp(CONTEXTHELP_ROOM_PASSWORD);
 
     UIButton *pUpdateRoomsButton = new UIButton(pWWWRoomsOptionsTab,
-						pWWWRoomsOptionsTab->getPosition().nWidth/2 - 104,
+						pWWWRoomsOptionsTab->getPosition().nWidth/2 + 5,
 						pWWWRoomsOptionsTab->getPosition().nHeight - 100,
 						 GAMETEXT_UPDATEROOMSSLIST,
-						 207,
+						 215,
 						 57);
     pUpdateRoomsButton->setType(UI_BUTTON_TYPE_LARGE);
     pUpdateRoomsButton->setID("UPDATE_ROOMS_LIST");
@@ -762,6 +762,17 @@ namespace vapp {
     pUpdateRoomsButton->setFont(drawLib->getFontSmall());
     pUpdateRoomsButton->setContextHelp(CONTEXTHELP_UPDATEROOMSLIST);
 
+	/* upload all button */
+	UIButton *pUploadAllHighscoresButton = new UIButton(pWWWRoomsOptionsTab,
+			pWWWRoomsOptionsTab->getPosition().nWidth/2 - 212,
+			pWWWRoomsOptionsTab->getPosition().nHeight - 100,
+					GAMETEXT_UPLOAD_ALL_HIGHSCORES,215,57);
+	pUploadAllHighscoresButton->setFont(drawLib->getFontSmall());
+	pUploadAllHighscoresButton->setType(UI_BUTTON_TYPE_LARGE);
+	pUploadAllHighscoresButton->setID("REPLAY_UPLOADHIGHSCOREALL_BUTTON");
+	pUploadAllHighscoresButton->enableWindow(true);
+	pUploadAllHighscoresButton->setContextHelp(CONTEXTHELP_UPLOAD_HIGHSCORE_ALL);	
+	
     UIWindow *pGhostOptionsTab = new UIWindow(pOptionsTabs,20,40,GAMETEXT_GHOSTTAB,pOptionsTabs->getPosition().nWidth-40,pOptionsTabs->getPosition().nHeight);
     pGhostOptionsTab->enableWindow(true);
     pGhostOptionsTab->showWindow(false);
@@ -2492,7 +2503,7 @@ namespace vapp {
     UIButton *pStereoButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:STEREO");
     UIButton *pEnableEngineSoundButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_ENGINE_SOUND");
     UIButton *pEnableMusicButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_MUSIC");
-  
+	  
     UIButton *pINetConf = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:PROXYCONFIG");
     UIButton *pUpdHS = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:UPDATEHIGHSCORES");
     UIButton *pWebHighscores = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:ENABLEWEBHIGHSCORES");
@@ -2502,7 +2513,8 @@ namespace vapp {
     UIButton *pCheckHighscoresAtStartup = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_MAIN_TAB:ENABLECHECKHIGHSCORESATSTARTUP");
     UIWindow *pRoomsTab = (UIWindow *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_ROOMS_TAB");
     UIButton *pUpdRoomsList = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_ROOMS_TAB:UPDATE_ROOMS_LIST");
-
+	UIButton *pUploadAllHighscoresButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_ROOMS_TAB:REPLAY_UPLOADHIGHSCOREALL_BUTTON");
+			
     UIButton *pUpdThemeList = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:UPDATE_THEMES_LIST");
     UIButton *pUpdSelectedTheme = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:GET_SELECTED_THEME");
     UIList *pThemeList = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:THEMES_LIST");
@@ -2513,6 +2525,24 @@ namespace vapp {
     UIButton *pDisplayGhostInfo = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:DISPLAY_GHOST_INFO");
     UIButton *pDisplayGhostTimeDiff = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:DISPLAY_GHOST_TIMEDIFF");
 
+	/* unfortunately because of differences betw->setClicked(false);een finishTime in webhighscores and replays table (one is rounded to 0.01s and other to 0.001s) and lack of math functions in sqlite we cannot make it with just one smart query :( */
+	if(pUploadAllHighscoresButton->isClicked()) {
+		pUploadAllHighscoresButton->setClicked(false);
+		_UpdateWebHighscores(false);
+		char **v_result;
+		int nrow;
+		std::string query = "SELECT r.name FROM replays r "
+				" LEFT OUTER JOIN webhighscores h ON r.id_level = h.id_level JOIN weblevels l ON r.id_level = l.id_level "
+				" WHERE r.id_profile='" + xmDatabase::protectString(m_profile) + "' "
+				" AND ((h.id_room=" + m_WebHighscoresIdRoom + " AND h.finishTime > r.finishTime) "
+				" OR h.id_room IS NULL) AND r.isFinished AND ((r.finishTime - h.finishTime) < -0.01)";
+		v_result = m_db->readDB(query, nrow);									
+		for (int i = 0; i < nrow; i++) {
+			_UploadHighscore(m_db->getResult(v_result, 1, i, 0));
+		}
+		m_db->read_DB_free(v_result);
+	}		
+	
     if(pEnableGhost->getChecked()) {
       pGhostStrategy->enableWindow(true);
       pMotionBlurGhost->enableWindow(true);

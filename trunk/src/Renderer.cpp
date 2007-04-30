@@ -245,32 +245,40 @@ namespace vapp {
 #define ENGINECOUNTER_CENTERY      206.0
 #define ENGINECOUNTER_RADIUS       150.0
 #define ENGINECOUNTER_PICTURE_SIZE 256.0
-#define ENGINECOUNTER_CORRECT_X    0.0
-#define ENGINECOUNTER_CORRECT_Y    -30.0
-#define ENGINECOUNTER_MAX_DIFF     1.0
+#define ENGINECOUNTER_STARTANGLE   (-3.14159/17)
+#define ENGINECOUNTER_MAX_DIFF     1
+#define ENGINECOUNTER_MAX_SPEED	   120
+#define ENGINECOUNTER_NEEDLE_WIDTH_FACTOR (1.0/24)
+#define ENGINECOUNTER_NEEDLE_BOTTOM_FACTOR (1.0/30)
 
     float pSpeed_eff;
 
-    /* don't make line too nasty */
-    if(m_previousEngineSpeed < 0.0) {
-      pSpeed_eff = pSpeed;
-    } else {
-      if( labs(pSpeed - m_previousEngineSpeed) > ENGINECOUNTER_MAX_DIFF) {
-  if(pSpeed - m_previousEngineSpeed > 0) {
-    pSpeed_eff = m_previousEngineSpeed + ENGINECOUNTER_MAX_DIFF;
-  } else {
-    pSpeed_eff = m_previousEngineSpeed - ENGINECOUNTER_MAX_DIFF;
-  }
-      } else {
-  pSpeed_eff = pSpeed;
-      }
-    }
-    m_previousEngineSpeed = pSpeed_eff;
+	if (pSpeed > ENGINECOUNTER_MAX_SPEED)
+		pSpeed = ENGINECOUNTER_MAX_SPEED;
+	
+	/* don't make line too nasty */
+	if(m_previousEngineSpeed < 0.0) {
+		pSpeed_eff = pSpeed;
+		m_previousEngineSpeed = pSpeed_eff;
+	} else {
+		if( labs(pSpeed - m_previousEngineSpeed) > ENGINECOUNTER_MAX_DIFF) {
+			if(pSpeed - m_previousEngineSpeed > 0) {
+				pSpeed_eff = m_previousEngineSpeed + ENGINECOUNTER_MAX_DIFF;
+			} else {
+				pSpeed_eff = m_previousEngineSpeed - ENGINECOUNTER_MAX_DIFF;
+			}
+			m_previousEngineSpeed = pSpeed_eff;
+		} else {
+			/* speed change is to small - ignore it to smooth counter moves*/
+			pSpeed_eff = m_previousEngineSpeed;
+		}
+	}
+	
 
     Sprite *pSprite;
     Texture *pTexture;
     Vector2f p0, p1, p2, p3;
-    Vector2f pcenter, pdest;
+    Vector2f pcenter, pdest, pcenterl, pcenterr, pbottom;
     float coefw = 1.0 / ENGINECOUNTER_PICTURE_SIZE * nWidth;
     float coefh = 1.0 / ENGINECOUNTER_PICTURE_SIZE * nHeight;
 
@@ -280,29 +288,42 @@ namespace vapp {
     p3 = Vector2f(x,        getParent()->getDrawLib()->getDispHeight()-y);
 
     pcenter = p3 + Vector2f(ENGINECOUNTER_CENTERX   * coefw,
-          - ENGINECOUNTER_CENTERY * coefh); 
-    pdest    = pcenter
-    + Vector2f(ENGINECOUNTER_CORRECT_X * coefw,
-         ENGINECOUNTER_CORRECT_Y * coefh)
-    + Vector2f(-cosf(pSpeed_eff / 360.0 * (2.0 * 3.14159))
-         * (ENGINECOUNTER_RADIUS) * coefw,
-         sinf(pSpeed_eff / 360.0  * (2.0 * 3.14159))
-         * (ENGINECOUNTER_RADIUS) * coefh
-         );
+          - ENGINECOUNTER_CENTERY * coefh);
 
+	pcenterl = pcenter + Vector2f(-cosf(pSpeed_eff / 360.0 * (2.0 * 3.14159) + (3.14159/2) + ENGINECOUNTER_STARTANGLE)
+			* (ENGINECOUNTER_RADIUS) * coefw * ENGINECOUNTER_NEEDLE_WIDTH_FACTOR,
+			   sinf(pSpeed_eff / 360.0  * (2.0 * 3.14159) + (3.14159/2))
+					   * (ENGINECOUNTER_RADIUS) * coefh * ENGINECOUNTER_NEEDLE_WIDTH_FACTOR);
 
-    pSprite = (MiscSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_MISC, "EngineCounter");
-    if(pSprite != NULL) {
-      pTexture = pSprite->getTexture();
-      if(pTexture != NULL) {
-      _RenderAlphaBlendedSection(pTexture, p0, p1, p2, p3);
-  getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_STRIP);
-  getParent()->getDrawLib()->setColorRGB(255,50,50);
-  getParent()->getDrawLib()->glVertex(pcenter);
-  getParent()->getDrawLib()->glVertex(pdest);
-  getParent()->getDrawLib()->endDraw();
-      }
-    }
+	pcenterr = pcenter - Vector2f(-cosf(pSpeed_eff / 360.0 * (2.0 * 3.14159) + (3.14159/2) + ENGINECOUNTER_STARTANGLE)
+			* (ENGINECOUNTER_RADIUS) * coefw * ENGINECOUNTER_NEEDLE_WIDTH_FACTOR,
+			   sinf(pSpeed_eff / 360.0  * (2.0 * 3.14159) + (3.14159/2) + ENGINECOUNTER_STARTANGLE)
+					   * (ENGINECOUNTER_RADIUS) * coefh * ENGINECOUNTER_NEEDLE_WIDTH_FACTOR);
+
+	pdest    = pcenter + Vector2f(-cosf(pSpeed_eff / 360.0 * (2.0 * 3.14159) + ENGINECOUNTER_STARTANGLE )
+			* (ENGINECOUNTER_RADIUS) * coefw, sinf(pSpeed_eff / 360.0  * (2.0 * 3.14159) + ENGINECOUNTER_STARTANGLE) * (ENGINECOUNTER_RADIUS) * coefh);
+
+	pbottom   = pcenter - Vector2f(-cosf(pSpeed_eff / 360.0 * (2.0 * 3.14159) + ENGINECOUNTER_STARTANGLE )
+			* (ENGINECOUNTER_RADIUS) * coefw * ENGINECOUNTER_NEEDLE_BOTTOM_FACTOR,
+			   sinf(pSpeed_eff / 360.0  * (2.0 * 3.14159)
+					   + ENGINECOUNTER_STARTANGLE) * (ENGINECOUNTER_RADIUS) * coefh * ENGINECOUNTER_NEEDLE_BOTTOM_FACTOR);
+
+	pSprite = (MiscSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_MISC, "EngineCounter");
+	if(pSprite != NULL) {
+		pTexture = pSprite->getTexture();
+		if(pTexture != NULL) {
+			_RenderAlphaBlendedSection(pTexture, p0, p1, p2, p3);
+
+			getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+			getParent()->getDrawLib()->setColorRGB(255,50,50);
+			getParent()->getDrawLib()->glVertex(pdest);
+			getParent()->getDrawLib()->glVertex(pcenterl);
+			getParent()->getDrawLib()->glVertex(pbottom);
+			getParent()->getDrawLib()->glVertex(pcenterr);
+			getParent()->getDrawLib()->endDraw();
+		}
+	}
+	//glDisable(GL_DITHER);
   }
     
   /*===========================================================================
