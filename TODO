@@ -2,6 +2,11 @@
 * dans le niveau metallica on voit bien que ca chie certaines textures
 * tester envoyer tous les replays dans le salon
 * draw bug at top of the textures (bored at work #13)
+=> renderer.cpp
+	    p[i].x = (int)(cos(pSprite->DrawAngle() + beta) * v_ray);
+	    p[i].y = (int)(sin(pSprite->DrawAngle() + beta) * v_ray);
+semble faire chier, pe calculer la rotation avec opengl ?
+ca vient de la carte graphique ?
 
 * a force d'ouvrir et de fermer des niveaux, ca bouffe de la mémoire :
    réfléchir à cause du nombre de sprites augmentant à les virer de
