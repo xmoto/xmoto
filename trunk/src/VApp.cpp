@@ -219,24 +219,26 @@ namespace vapp {
     if(isCmdDispBPP())      configured_BPP       = m_CmdDispBpp;
     if(isCmdDispWindowed()) configured_windowed  = m_CmdWindowed;
 
-    /* init drawLib */
-    if(m_CmdDrawLibName == "") {
-      drawLib = DrawLib::DrawLibFromName(selectDrawLibMode());
-    } else {
-      drawLib = DrawLib::DrawLibFromName(m_CmdDrawLibName);
-    }
+    if(m_useGraphics) {
+      /* init drawLib */
+      if(m_CmdDrawLibName == "") {
+	drawLib = DrawLib::DrawLibFromName(selectDrawLibMode());
+      } else {
+	drawLib = DrawLib::DrawLibFromName(m_CmdDrawLibName);
+      }
 
-    if(drawLib == NULL) {
-      throw Exception("Drawlib not initialized");
-    }
+      if(drawLib == NULL) {
+	throw Exception("Drawlib not initialized");
+      }
 
-    drawLib->setNoGraphics(m_useGraphics == false);
-    drawLib->setDontUseGLExtensions(m_useGraphics == false);
+      drawLib->setNoGraphics(m_useGraphics == false);
+      drawLib->setDontUseGLExtensions(m_useGraphics == false);
 
-    /* Init! */
-    drawLib->init(configured_width, configured_height, configured_BPP, configured_windowed, &m_theme);
-    if(!drawLib->isNoGraphics()) {        
-      drawLib->setDrawDims(configured_width,configured_height,configured_width,configured_height);
+      /* Init! */
+      drawLib->init(configured_width, configured_height, configured_BPP, configured_windowed, &m_theme);
+      if(!drawLib->isNoGraphics()) {        
+	drawLib->setDrawDims(configured_width,configured_height,configured_width,configured_height);
+      }
     }
     
     /* Now perform user init */
@@ -437,7 +439,7 @@ namespace vapp {
     /* Tell user app to turn off */
     userShutdown();
 
-    if(!drawLib->isNoGraphics()) {
+    if(m_useGraphics) {
       /* Uninit drawing library */
       drawLib->unInit();
     }

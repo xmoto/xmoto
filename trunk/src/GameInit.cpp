@@ -134,12 +134,12 @@ namespace vapp {
     }     
 
     /* Init sound system */
-    if(!getDrawLib()->isNoGraphics()) {
+    if(m_useGraphics) {
       Sound::init(&m_Config);
       if(!Sound::isEnabled()) {
       }    
     }
-              
+      
     /* Init renderer */
     m_Renderer.setParent( (App *)this );
     m_Renderer.setGameObject( &m_MotoGame );        
@@ -159,7 +159,7 @@ namespace vapp {
     m_db = new xmDatabase(DATABASE_FILE,
 			  m_profile == "" ? std::string("") : m_profile,
 			  FS::getDataDir(), FS::getUserDir(), FS::binCheckSum(),
-			  getDrawLib()->isNoGraphics() ? NULL : this);
+			  m_useGraphics ? this : NULL);
     if(m_sqlTrace) {
       m_db->setTrace(m_sqlTrace);
     }
@@ -189,16 +189,16 @@ namespace vapp {
 
     /* load levels */
     if(m_db->levels_isIndexUptodate() == false) {
-      m_levelsManager.reloadLevelsFromLvl(m_db, this);
+      m_levelsManager.reloadLevelsFromLvl(m_db, m_useGraphics ? this : NULL);
     }
-    m_levelsManager.reloadExternalLevels(m_db, this);
+    m_levelsManager.reloadExternalLevels(m_db, m_useGraphics ? this : NULL);
 
     /* Update replays */
     
     if(m_db->replays_isIndexUptodate() == false) {
       initReplaysFromDir();
     }
-    
+
     /* List replays? */  
     if(m_bListReplays) {
       char **v_result;
@@ -241,7 +241,7 @@ namespace vapp {
       return;	
     }
     
-    if(!getDrawLib()->isNoGraphics()) {  
+    if(m_useGraphics) {  
       _UpdateLoadingScreen((1.0f/9.0f) * 0,GAMETEXT_LOADINGSOUNDS);
       
       if(Sound::isEnabled()) {
@@ -344,7 +344,7 @@ namespace vapp {
     }
 
     /* Test level cache directory */
-    if(!getDrawLib()->isNoGraphics()) {  
+    if(m_useGraphics) {  
       _UpdateLoadingScreen((1.0f/9.0f) * 5,GAMETEXT_LOADINGLEVELS);
     }
     LevelsManager::checkPrerequires();
@@ -363,7 +363,7 @@ namespace vapp {
       m_levelsManager.printLevelsList(m_db);
     }
 
-    if(!getDrawLib()->isNoGraphics()) {  
+    if(m_useGraphics) {  
       _UpdateLoadingScreen((1.0f/9.0f) * 6,GAMETEXT_INITRENDERER);
     }    
 
@@ -372,7 +372,7 @@ namespace vapp {
       return;
     }
 
-    if(!getDrawLib()->isNoGraphics()) {
+    if(m_useGraphics) {
       /* Initialize renderer */
       m_Renderer.init();
       _UpdateLoadingScreen((1.0f/9.0f) * 7,GAMETEXT_INITMENUS);
@@ -397,7 +397,7 @@ namespace vapp {
 	m_PlaySpecificLevel = m_PlaySpecificLevelFile;
       }
     }
-    if((m_PlaySpecificLevel != "") && !getDrawLib()->isNoGraphics()) {
+    if((m_PlaySpecificLevel != "") && m_useGraphics) {
       /* ======= PLAY SPECIFIC LEVEL ======= */
       m_StateAfterPlaying = GS_MENU;
       setState(GS_PREPLAYING);
@@ -410,7 +410,7 @@ namespace vapp {
     }
     else {
       /* Graphics? */
-      if(getDrawLib()->isNoGraphics())
+      if(m_useGraphics == false)
         throw Exception("menu requires graphics");
         
       /* Do we have a player profile? */
@@ -447,7 +447,7 @@ namespace vapp {
     if(m_pCredits != NULL)
       delete m_pCredits;
   
-    if(!getDrawLib()->isNoGraphics()) {
+    if(m_useGraphics) {
       m_Renderer.unprepareForNewLevel(); /* just to be sure, shutdown can happen quite hard */
       m_Renderer.shutdown();
       m_InputHandler.uninit();
