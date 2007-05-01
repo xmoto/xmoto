@@ -45,6 +45,7 @@ xmDatabase::xmDatabase(const std::string& i_dbFile,
   }
 
   sqlite3_trace(m_db, sqlTrace, NULL);
+  createUserFunctions();
 
   v_version = getXmDbVersion();
   vapp::Log("XmDb version is %i", v_version);
@@ -466,4 +467,28 @@ std::string xmDatabase::protectString(const std::string& i_str) {
     }
   }
   return v_res;
+}
+
+void xmDatabase::createUserFunctions() {
+  if(sqlite3_create_function(m_db,
+			     "xm_floor",
+			     1,
+			     SQLITE_ANY,
+			     NULL,
+			     user_xm_floor,
+			     NULL,
+			     NULL) != SQLITE_OK) {
+    throw Exception("xmDatabase::createUserFunctions() failed !");
+  }
+}
+
+void xmDatabase::user_xm_floor(sqlite3_context* i_context, int i_nArgs, sqlite3_value** i_values) {
+  double v_value;
+
+  if(i_nArgs != 1) {
+    throw Exception("user_xm_floor failed !");
+  }
+
+  v_value = sqlite3_value_double(i_values[0]);
+  sqlite3_result_double(i_context, (double)((int)(v_value)));
 }

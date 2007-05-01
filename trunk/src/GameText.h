@@ -496,7 +496,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_UPDATETHEMESLIST _("Check for new themes on the web")
 #define CONTEXTHELP_GETSELECTEDTHEME _("Download or update the selected theme")
 #define CONTEXTHELP_UPLOAD_HIGHSCORE _("Upload the replay on the website of highscores")
-#define CONTEXTHELP_UPLOAD_HIGHSCORE_ALL _("Upload all replays on the website of highscores")
+#define CONTEXTHELP_UPLOAD_HIGHSCORE_ALL _("Upload your best replays to your room (useful when it is just created)")
 #define CONTEXTHELP_WWW_MAIN_TAB _("Configure the main www options")
 #define CONTEXTHELP_WWW_ROOMS_TAB _("Choose where to upload/download replays, highscore lists (for more information, check the website)")
 #define CONTEXTHELP_WWW_ROOMS_LIST _("Choose your room")
