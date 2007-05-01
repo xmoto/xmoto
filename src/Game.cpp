@@ -1832,10 +1832,11 @@ GameApp::GameApp() {
     return res;
   }
 
-  void GameApp::_UploadHighscore(std::string p_replayname) {
+  void GameApp::_UploadHighscore(std::string p_replayname, bool b_notify) {
+    std::string v_msg;
+
     try {
       bool v_msg_status_ok;
-      std::string v_msg;
       clearCancelAsSoonAsPossible();
       m_DownloadingInformation = "";
       m_DownloadingMessage = GAMETEXT_UPLOADING_HIGHSCORE;
@@ -1849,12 +1850,20 @@ GameApp::GameApp() {
         v_msg_status_ok,
         v_msg);
       if(v_msg_status_ok) {
-  notifyMsg(v_msg);
+	if(b_notify) {
+	  notifyMsg(v_msg);
+	}
       } else {
-  notifyMsg(std::string(GAMETEXT_UPLOAD_HIGHSCORE_WEB_WARNING_BEFORE) + "\n" + v_msg);
+	if(b_notify) {
+	  notifyMsg(std::string(GAMETEXT_UPLOAD_HIGHSCORE_WEB_WARNING_BEFORE) + "\n" + v_msg);
+	}
       }
     } catch(Exception &e) {
-      notifyMsg(GAMETEXT_UPLOAD_HIGHSCORE_ERROR);
+      if(b_notify) {
+	notifyMsg(GAMETEXT_UPLOAD_HIGHSCORE_ERROR + std::string("\n") + v_msg);
+      } else {
+	throw Exception(GAMETEXT_UPLOAD_HIGHSCORE_ERROR + std::string("\n") + v_msg);
+      }
     }
   }
 
@@ -1886,27 +1895,40 @@ GameApp::GameApp() {
   }
 
   void GameApp::_UploadAllHighscores() {
+    /* 1 is the main room ; don't allow full upload on it */
+    if(m_WebHighscoresIdRoom == "1") return;
+
     _UpdateWebHighscores(false);
     char **v_result;
     int nrow;
+    std::string v_previousIdLevel, v_currentIdLevel;
 
-//SELECT r.name
-//FROM replays r LEFT OUTER JOIN webhighscores h ON r.id_level = h.id_level
-//WHERE r.id_profile="Nicolas"
-//AND r.isFinished
-//AND ( (h.id_room IS NULL) OR (h.id_room="4" AND
-//                              h.finishTime > r.finishTime AND
-//                              (r.finishTime - h.finishTime) < -0.01))
-
-    std::string query = "SELECT r.name FROM replays r "
-    " LEFT OUTER JOIN webhighscores h ON r.id_level = h.id_level "
+    std::string query = "SELECT r.id_level, r.name FROM replays r "
+    "LEFT OUTER JOIN webhighscores h "
+    "ON (r.id_level = h.id_level AND h.id_room=" + m_WebHighscoresIdRoom + ") "
     "INNER JOIN weblevels l ON r.id_level = l.id_level "
-    "WHERE r.id_profile='" + xmDatabase::protectString(m_profile) + "' "
-    "AND ((h.id_room=" + m_WebHighscoresIdRoom + " AND h.finishTime > r.finishTime) "
-    "OR h.id_room IS NULL) AND r.isFinished AND ((r.finishTime - h.finishTime) < -0.01)";
-    v_result = m_db->readDB(query, nrow);									
-    for (int i = 0; i < nrow; i++) {
-      _UploadHighscore(m_db->getResult(v_result, 1, i, 0));
+    "WHERE r.id_profile=\"" + xmDatabase::protectString(m_profile) + "\" "
+    "AND r.isFinished "
+    "AND ( (h.id_room IS NULL) OR (h.finishTime*100.0) > xm_floor(r.finishTime*100.0)) "
+    "ORDER BY r.id_level, r.finishTime;";
+    v_result = m_db->readDB(query, nrow);
+
+    try {
+      for (int i = 0; i<nrow; i++) {
+	std::ostringstream v_percentage;
+	v_percentage << (i*100.0/nrow);
+
+	v_currentIdLevel = m_db->getResult(v_result, 2, i, 0);
+
+	/* send only the best of the replay by level */
+	if(v_previousIdLevel != v_currentIdLevel) {
+	  v_previousIdLevel = v_currentIdLevel;
+	  _SimpleMessage(GAMETEXT_UPLOADING_HIGHSCORE + std::string("\n") + v_percentage.str() + "%");
+	  _UploadHighscore(m_db->getResult(v_result, 2, i, 1), false);
+	}
+      }
+    } catch(Exception &e) {
+      notifyMsg(e.getMsg());
     }
     m_db->read_DB_free(v_result);
   }

@@ -462,7 +462,7 @@ class xmDatabase;
       void _UpdateWebRooms(bool bSilent);
       void _UpgradeWebRooms(bool bUpdateMenus);
       void _DownloadExtraLevels(void);
-      void _UploadHighscore(std::string p_replayname);
+      void _UploadHighscore(std::string p_replayname, bool b_notify = true);
       void _UploadAllHighscores();
       void _ConfigureProxy(void);
 
