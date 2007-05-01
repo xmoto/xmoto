@@ -1,5 +1,7 @@
 
+* dans le niveau metallica on voit bien que ca chie certaines textures
 * tester envoyer tous les replays dans le salon
+* draw bug at top of the textures (bored at work #13)
 
 * a force d'ouvrir et de fermer des niveaux, ca bouffe de la mémoire :
    réfléchir à cause du nombre de sprites augmentant à les virer de
@@ -8,7 +10,6 @@
 * Theme.cpp : remplacer les anciennes fonts par les nouvelles
 * gérer les accents et tous les caractères au clavier (et vérifier que
    ca passe en bd) : see keyboard-0.1.10.patch
-* draw bug at top of the textures
 * traduire les scripts integrés (le tuto)
 
 *It would be nice if you could use a separate image file for the front
