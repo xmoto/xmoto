@@ -595,8 +595,8 @@ void PlayerBiker::updatePhysics(float i_time, float fTimeStep, vapp::CollisionSy
     m_PrevActiveHead = m_bikeState.Head2P;
   }
 
-  //m_PrevFrontWheelP = m_bikeState.FrontWheelP;
-  //m_PrevRearWheelP = m_bikeState.RearWheelP;
+  m_PrevFrontWheelP = m_bikeState.FrontWheelP;
+  m_PrevRearWheelP = m_bikeState.RearWheelP;
   m_PrevHeadP = m_bikeState.HeadP;
   m_PrevHead2P = m_bikeState.Head2P;
 
@@ -800,17 +800,18 @@ BikeController* PlayerBiker::getControler() {
 }
 
 float PlayerBiker::getBikeEngineSpeed() {
-  float fWheelAngVel;
-  float speed;
 
-  if(m_bikeState.Dir == DD_RIGHT) {
-    fWheelAngVel = dBodyGetAngularVel(m_RearWheelBodyID)[2];
-  } else {
-    fWheelAngVel = dBodyGetAngularVel(m_FrontWheelBodyID)[2];
-    }
+  Vector2f curpos = (m_bikeState.RearWheelP + m_bikeState.FrontWheelP) / 2;
+  Vector2f lastpos = (m_PrevRearWheelP + m_PrevFrontWheelP) / 2;
+  Vector2f delta = curpos - lastpos;
+  float speed = 10 * sqrt(delta.x * delta.x + delta.y * delta.y) / PHYS_STEP_SIZE;
 
-  speed = (fWheelAngVel * PHYS_WHEEL_RADIUS * 3.6);
-  return speed >= 0.0 ? speed : -speed;
+  /* protection against invalid values */
+  if (speed > 400)
+	  return 0;
+
+  return speed;  
+  
 }
 
   void PlayerBiker::updateGameState() {
