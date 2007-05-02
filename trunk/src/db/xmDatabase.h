@@ -141,7 +141,8 @@ class xmDatabase {
 
   /* add user function for db */
   void createUserFunctions();
-  static void user_xm_floor(sqlite3_context* i_context, int i_nArgs, sqlite3_value** i_values);
+  static void user_xm_floord(sqlite3_context* i_context, int i_nArgs, sqlite3_value** i_values);
+  static void user_xm_lvlUpdatedToTxt(sqlite3_context* i_context, int i_nArgs, sqlite3_value** i_values);
 
   /* function used to synchronise with the last xmoto version */
   int  getXmDbVersion();

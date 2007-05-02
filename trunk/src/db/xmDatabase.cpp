@@ -470,25 +470,35 @@ std::string xmDatabase::protectString(const std::string& i_str) {
 }
 
 void xmDatabase::createUserFunctions() {
-  if(sqlite3_create_function(m_db,
-			     "xm_floor",
-			     1,
-			     SQLITE_ANY,
-			     NULL,
-			     user_xm_floor,
-			     NULL,
-			     NULL) != SQLITE_OK) {
+  if(sqlite3_create_function(m_db, "xm_floord", 1, SQLITE_ANY, NULL,
+			     user_xm_floord, NULL, NULL) != SQLITE_OK) {
+    throw Exception("xmDatabase::createUserFunctions() failed !");
+  }
+
+  if(sqlite3_create_function(m_db, "xm_lvlUpdatedToTxt", 1, SQLITE_ANY, NULL,
+			     user_xm_lvlUpdatedToTxt, NULL, NULL) != SQLITE_OK) {
     throw Exception("xmDatabase::createUserFunctions() failed !");
   }
 }
 
-void xmDatabase::user_xm_floor(sqlite3_context* i_context, int i_nArgs, sqlite3_value** i_values) {
+void xmDatabase::user_xm_floord(sqlite3_context* i_context, int i_nArgs, sqlite3_value** i_values) {
   double v_value;
 
   if(i_nArgs != 1) {
-    throw Exception("user_xm_floor failed !");
+    throw Exception("user_xm_floord failed !");
   }
 
   v_value = sqlite3_value_double(i_values[0]);
-  sqlite3_result_double(i_context, (double)((int)(v_value + 0.0000001)));
+  sqlite3_result_double(i_context, (double)((int)(v_value)));
+}
+
+void xmDatabase::user_xm_lvlUpdatedToTxt(sqlite3_context* i_context, int i_nArgs, sqlite3_value** i_values) {
+  int v_value;
+
+  if(i_nArgs != 1) {
+    throw Exception("user_xm_lvlUpdatedToTxt failed !");
+  }
+
+  v_value = sqlite3_value_int(i_values[0]);
+  sqlite3_result_text(i_context, v_value == 0 ? GAMETEXT_NEW : GAMETEXT_UPDATED, -1, SQLITE_TRANSIENT);
 }
