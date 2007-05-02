@@ -144,6 +144,7 @@ namespace vapp {
       m_displayGhostInformation = false;
       m_theme = NULL;
       m_previousEngineSpeed = -1.0;
+	  m_previousEngineLinVel = -1.0;
       m_sizeMultOfEntitiesToTake = 1.0;
       m_sizeMultOfEntitiesWhichMakeWin = 1.0;
       m_playerToFollow = NULL;
@@ -161,7 +162,7 @@ namespace vapp {
     void setTheme(Theme *p_theme);
     void render(bool bIsPaused = false);
     void renderMiniMap(int x,int y,int nWidth,int nHeight);
-    void renderEngineCounter(int x,int y,int nWidth,int nHeight, float pSpeed);
+    void renderEngineCounter(int x,int y,int nWidth,int nHeight, float pSpeed, float pLinVel = -1);
     void prepareForNewLevel(bool bCreditsMode=false);
     void unprepareForNewLevel(void);
     void loadDebugInfo(std::string File);
@@ -270,7 +271,8 @@ namespace vapp {
     bool m_displayGhostInformation;
 
     float m_previousEngineSpeed;
-
+	float m_previousEngineLinVel;
+	
     bool m_showMinimap;
     bool m_showEngineCounter;
 
@@ -286,6 +288,10 @@ namespace vapp {
     float m_sizeMultOfEntitiesWhichMakeWin;
 
     /* Subroutines */
+	
+	void renderEngineCounterNeedle(int nWidth, int nHeight, Vector2f center, float value);
+	
+	
     void _RenderSprites(bool bForeground,bool bBackground);
     void _RenderSprite(Entity *pSprite, float i_sizeMult = 1.0);
     void _RenderBike(BikeState *pBike, BikeParameters *pBikeParms, BikerTheme *p_theme,

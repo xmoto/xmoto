@@ -47,6 +47,7 @@ class PlayerBiker : public Biker {
   void setBodyDetach(bool state);
 
   float getBikeEngineSpeed();
+  float getBikeLinearVel();
   bool getRenderBikeFront();
   void resetAutoDisabler();
   bool isSqueeking();

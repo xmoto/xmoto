@@ -237,8 +237,8 @@ namespace vapp {
     _deleteGeoms(m_StaticGeoms);
     _deleteGeoms(m_DynamicGeoms);
   }
-
-  void GameRenderer::renderEngineCounter(int x,int y,int nWidth,int nHeight, float pSpeed) {
+  
+  void GameRenderer::renderEngineCounter(int x, int y, int nWidth,int nHeight, float pSpeed, float pLinVel) {
 
 // coords of then center ; make it dynamic would be nice
 #define ENGINECOUNTER_CENTERX      192.0
@@ -252,9 +252,13 @@ namespace vapp {
 #define ENGINECOUNTER_NEEDLE_BOTTOM_FACTOR (1.0/30)
 
     float pSpeed_eff;
+	float pLinVel_eff;
 
 	if (pSpeed > ENGINECOUNTER_MAX_SPEED)
 		pSpeed = ENGINECOUNTER_MAX_SPEED;
+	
+	if (pLinVel > ENGINECOUNTER_MAX_SPEED)
+		pLinVel = ENGINECOUNTER_MAX_SPEED;	
 	
 	/* don't make line too nasty */
 	if(m_previousEngineSpeed < 0.0) {
@@ -274,6 +278,22 @@ namespace vapp {
 		}
 	}
 	
+	if (m_previousEngineLinVel < 0.0) {
+		pLinVel_eff = pLinVel;
+		m_previousEngineLinVel = pLinVel_eff;
+	} else {
+		if( labs(pLinVel - m_previousEngineLinVel) > ENGINECOUNTER_MAX_DIFF) {
+			if(pLinVel - m_previousEngineLinVel > 0) {
+				pLinVel_eff = m_previousEngineLinVel + ENGINECOUNTER_MAX_DIFF;
+			} else {
+				pLinVel_eff = m_previousEngineLinVel - ENGINECOUNTER_MAX_DIFF;
+			}
+			m_previousEngineLinVel = pLinVel_eff;
+		} else {
+			/* speed change is to small - ignore it to smooth counter moves*/
+			pLinVel_eff = m_previousEngineLinVel;
+		}
+	}
 
     Sprite *pSprite;
     Texture *pTexture;
@@ -287,44 +307,54 @@ namespace vapp {
     p2 = Vector2f(x+nWidth, getParent()->getDrawLib()->getDispHeight()-y);
     p3 = Vector2f(x,        getParent()->getDrawLib()->getDispHeight()-y);
 
-    pcenter = p3 + Vector2f(ENGINECOUNTER_CENTERX   * coefw,
-          - ENGINECOUNTER_CENTERY * coefh);
-
-	pcenterl = pcenter + Vector2f(-cosf(pSpeed_eff / 360.0 * (2.0 * 3.14159) + (3.14159/2) + ENGINECOUNTER_STARTANGLE)
-			* (ENGINECOUNTER_RADIUS) * coefw * ENGINECOUNTER_NEEDLE_WIDTH_FACTOR,
-			   sinf(pSpeed_eff / 360.0  * (2.0 * 3.14159) + (3.14159/2))
-					   * (ENGINECOUNTER_RADIUS) * coefh * ENGINECOUNTER_NEEDLE_WIDTH_FACTOR);
-
-	pcenterr = pcenter - Vector2f(-cosf(pSpeed_eff / 360.0 * (2.0 * 3.14159) + (3.14159/2) + ENGINECOUNTER_STARTANGLE)
-			* (ENGINECOUNTER_RADIUS) * coefw * ENGINECOUNTER_NEEDLE_WIDTH_FACTOR,
-			   sinf(pSpeed_eff / 360.0  * (2.0 * 3.14159) + (3.14159/2) + ENGINECOUNTER_STARTANGLE)
-					   * (ENGINECOUNTER_RADIUS) * coefh * ENGINECOUNTER_NEEDLE_WIDTH_FACTOR);
-
-	pdest    = pcenter + Vector2f(-cosf(pSpeed_eff / 360.0 * (2.0 * 3.14159) + ENGINECOUNTER_STARTANGLE )
-			* (ENGINECOUNTER_RADIUS) * coefw, sinf(pSpeed_eff / 360.0  * (2.0 * 3.14159) + ENGINECOUNTER_STARTANGLE) * (ENGINECOUNTER_RADIUS) * coefh);
-
-	pbottom   = pcenter - Vector2f(-cosf(pSpeed_eff / 360.0 * (2.0 * 3.14159) + ENGINECOUNTER_STARTANGLE )
-			* (ENGINECOUNTER_RADIUS) * coefw * ENGINECOUNTER_NEEDLE_BOTTOM_FACTOR,
-			   sinf(pSpeed_eff / 360.0  * (2.0 * 3.14159)
-					   + ENGINECOUNTER_STARTANGLE) * (ENGINECOUNTER_RADIUS) * coefh * ENGINECOUNTER_NEEDLE_BOTTOM_FACTOR);
-
 	pSprite = (MiscSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_MISC, "EngineCounter");
 	if(pSprite != NULL) {
 		pTexture = pSprite->getTexture();
 		if(pTexture != NULL) {
 			_RenderAlphaBlendedSection(pTexture, p0, p1, p2, p3);
 
-			getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
 			getParent()->getDrawLib()->setColorRGB(255,50,50);
-			getParent()->getDrawLib()->glVertex(pdest);
-			getParent()->getDrawLib()->glVertex(pcenterl);
-			getParent()->getDrawLib()->glVertex(pbottom);
-			getParent()->getDrawLib()->glVertex(pcenterr);
-			getParent()->getDrawLib()->endDraw();
+			renderEngineCounterNeedle(nWidth, nHeight, p3, pSpeed_eff);
+			getParent()->getDrawLib()->setColorRGB(50,50,255);
+			if (pLinVel_eff > -1) {
+				renderEngineCounterNeedle(nWidth, nHeight, p3, pLinVel_eff);
+			}
 		}
 	}
   }
     
+  void GameRenderer::renderEngineCounterNeedle(int nWidth, int nHeight, Vector2f center, float value) {
+	  float coefw = 1.0 / ENGINECOUNTER_PICTURE_SIZE * nWidth;
+	  float coefh = 1.0 / ENGINECOUNTER_PICTURE_SIZE * nHeight;  
+	  Vector2f pcenter = center + Vector2f(ENGINECOUNTER_CENTERX   * coefw,
+							  - ENGINECOUNTER_CENTERY * coefh);
+
+	  Vector2f pcenterl = pcenter + Vector2f(-cosf(value / 360.0 * (2.0 * 3.14159) + (3.14159/2) + ENGINECOUNTER_STARTANGLE)
+			  * (ENGINECOUNTER_RADIUS) * coefw * ENGINECOUNTER_NEEDLE_WIDTH_FACTOR,
+				 sinf(value / 360.0  * (2.0 * 3.14159) + (3.14159/2))
+						 * (ENGINECOUNTER_RADIUS) * coefh * ENGINECOUNTER_NEEDLE_WIDTH_FACTOR);
+
+	  Vector2f pcenterr = pcenter - Vector2f(-cosf(value / 360.0 * (2.0 * 3.14159) + (3.14159/2) + ENGINECOUNTER_STARTANGLE)
+			  * (ENGINECOUNTER_RADIUS) * coefw * ENGINECOUNTER_NEEDLE_WIDTH_FACTOR,
+				 sinf(value / 360.0  * (2.0 * 3.14159) + (3.14159/2) + ENGINECOUNTER_STARTANGLE)
+						 * (ENGINECOUNTER_RADIUS) * coefh * ENGINECOUNTER_NEEDLE_WIDTH_FACTOR);
+
+	  Vector2f pdest    = pcenter + Vector2f(-cosf(value / 360.0 * (2.0 * 3.14159) + ENGINECOUNTER_STARTANGLE )
+			  * (ENGINECOUNTER_RADIUS) * coefw, sinf(value / 360.0  * (2.0 * 3.14159) + ENGINECOUNTER_STARTANGLE) * (ENGINECOUNTER_RADIUS) * coefh);
+
+	  Vector2f pbottom   = pcenter - Vector2f(-cosf(value / 360.0 * (2.0 * 3.14159) + ENGINECOUNTER_STARTANGLE )
+			  * (ENGINECOUNTER_RADIUS) * coefw * ENGINECOUNTER_NEEDLE_BOTTOM_FACTOR,
+				 sinf(value / 360.0  * (2.0 * 3.14159)
+						 + ENGINECOUNTER_STARTANGLE) * (ENGINECOUNTER_RADIUS) * coefh * ENGINECOUNTER_NEEDLE_BOTTOM_FACTOR);
+	  
+	  getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+	  getParent()->getDrawLib()->glVertex(pdest);
+	  getParent()->getDrawLib()->glVertex(pcenterl);
+	  getParent()->getDrawLib()->glVertex(pbottom);
+	  getParent()->getDrawLib()->glVertex(pcenterr);
+	  getParent()->getDrawLib()->endDraw();
+  }
+  
   /*===========================================================================
   Minimap rendering
   ===========================================================================*/
@@ -809,7 +839,8 @@ namespace vapp {
       if(showEngineCounter() && m_bUglyMode == false) {
     	renderEngineCounter(getParent()->getDrawLib()->getDispWidth()-128,
 			    getParent()->getDrawLib()->getDispHeight()-128,128,128,
-    			    m_playerToFollow->getBikeEngineSpeed());
+    			    m_playerToFollow->getBikeEngineSpeed(),
+					m_playerToFollow->getBikeLinearVel());
       }
     }
 

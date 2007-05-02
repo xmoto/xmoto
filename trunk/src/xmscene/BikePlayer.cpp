@@ -800,6 +800,20 @@ BikeController* PlayerBiker::getControler() {
 }
 
 float PlayerBiker::getBikeEngineSpeed() {
+	float fWheelAngVel;
+	float speed;
+
+	if(m_bikeState.Dir == DD_RIGHT) {
+		fWheelAngVel = dBodyGetAngularVel(m_RearWheelBodyID)[2];
+	} else {
+		fWheelAngVel = dBodyGetAngularVel(m_FrontWheelBodyID)[2];
+	}
+
+	speed = (fWheelAngVel * PHYS_WHEEL_RADIUS * 3.6);
+	return speed >= 0.0 ? speed : -speed;
+}
+
+float PlayerBiker::getBikeLinearVel() {
 
   Vector2f curpos = (m_bikeState.RearWheelP + m_bikeState.FrontWheelP) / 2;
   Vector2f lastpos = (m_PrevRearWheelP + m_PrevFrontWheelP) / 2;
