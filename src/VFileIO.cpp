@@ -1120,7 +1120,7 @@ namespace vapp {
 			throw Exception("Package xmoto.bin not found !");
 		}
 
-		Log("Initializing binary data package...\n");
+		Log("Initializing binary data package...");
       
 		char cBuf[256];
 		char md5sum[256];

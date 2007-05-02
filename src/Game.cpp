@@ -1910,7 +1910,7 @@ GameApp::GameApp() {
     "INNER JOIN weblevels l ON r.id_level = l.id_level "
     "WHERE r.id_profile=\"" + xmDatabase::protectString(m_profile) + "\" "
     "AND r.isFinished "
-			"AND ( (h.id_room IS NULL) OR xm_floor(h.finishTime*100.0) > xm_floor(r.finishTime*100.0)) "
+    "AND ( (h.id_room IS NULL) OR xm_floord(h.finishTime*100.0) > xm_floord(r.finishTime*100.0)) "
     "ORDER BY r.id_level, r.finishTime;";
     v_result = m_db->readDB(query, nrow);
 
