@@ -262,7 +262,9 @@ void LevelsManager::makePacks(xmDatabase *i_db,
 
   /* new and updated levels */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_NEW_LEVELS),
-			  "SELECT b.id_level AS id_level, b.name AS name, UPPER(b.name) AS sort_field "
+			  "SELECT b.id_level AS id_level, "
+			  "xm_lvlUpdatedToTxt(a.isAnUpdate) || \": \" || b.name AS name, "
+			  "UPPER(b.name) AS sort_field "
 			  "FROM levels_new AS a INNER JOIN levels AS b ON a.id_level=b.id_level");
   v_pack->setGroup(GAMETEXT_PACK_SPECIAL);
   v_pack->setDescription(VPACKAGENAME_DESC_NEW_LEVELS);
