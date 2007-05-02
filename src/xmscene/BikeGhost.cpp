@@ -202,6 +202,10 @@ bool Ghost::getRenderBikeFront() {
   return true;
 }
 
+float Ghost::getBikeLinearVel() {
+	return 0.0; /* unable to know it */
+}
+
 float Ghost::getBikeEngineSpeed() {
   return 0.0; /* unable to know it */
 }

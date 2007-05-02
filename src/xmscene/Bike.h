@@ -139,6 +139,7 @@ class Biker {
   virtual BikeState* getState();
   virtual bool getRenderBikeFront() = 0; /* display the bikefront ? (for detach) */
   virtual float getBikeEngineSpeed() = 0; /* engine speed */
+  virtual float getBikeLinearVel() = 0; /* bike linear velocity */
   virtual std::string getDescription() const = 0;
   virtual float getBikeEngineRPM();
   virtual void  updateToTime(float i_time, float i_timeStep,

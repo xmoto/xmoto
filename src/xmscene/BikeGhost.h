@@ -45,7 +45,7 @@ class Ghost : public Biker {
   std::string getDescription() const;
   bool getRenderBikeFront();
   float getBikeEngineSpeed();
-
+  float getBikeLinearVel();
  private:
   vapp::Replay* m_replay;
   std::vector<float> m_lastToTakeEntities;
