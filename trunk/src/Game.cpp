@@ -33,6 +33,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "db/xmDatabase.h";
 
 #include <curl/curl.h>
+#include <iomanip.h>
 
 namespace vapp {
 
@@ -1903,23 +1904,24 @@ GameApp::GameApp() {
     int nrow;
     std::string v_previousIdLevel, v_currentIdLevel;
 
-    std::string query = "SELECT r.id_level, r.name FROM replays r "
+	std::string query = "SELECT r.id_level, r.name FROM replays r "
     "LEFT OUTER JOIN webhighscores h "
     "ON (r.id_level = h.id_level AND h.id_room=" + m_WebHighscoresIdRoom + ") "
     "INNER JOIN weblevels l ON r.id_level = l.id_level "
     "WHERE r.id_profile=\"" + xmDatabase::protectString(m_profile) + "\" "
     "AND r.isFinished "
-    "AND ( (h.id_room IS NULL) OR (h.finishTime*100.0) > xm_floor(r.finishTime*100.0)) "
+			"AND ( (h.id_room IS NULL) OR xm_floor(h.finishTime*100.0) > xm_floor(r.finishTime*100.0)) "
     "ORDER BY r.id_level, r.finishTime;";
     v_result = m_db->readDB(query, nrow);
 
     try {
       for (int i = 0; i<nrow; i++) {
 	std::ostringstream v_percentage;
+	v_percentage << std::setprecision (1);
 	v_percentage << (i*100.0/nrow);
 
 	v_currentIdLevel = m_db->getResult(v_result, 2, i, 0);
-
+	
 	/* send only the best of the replay by level */
 	if(v_previousIdLevel != v_currentIdLevel) {
 	  v_previousIdLevel = v_currentIdLevel;
