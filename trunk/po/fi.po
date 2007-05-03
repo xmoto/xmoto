@@ -199,11 +199,11 @@ msgstr "Internetsivujen Ohjemointi"
 
 #: src/GameText.h:105
 msgid "Website Administration"
-msgstr "Internetsivujen hallinto"
+msgstr "Internetsivujen Hallinto"
 
 #: src/GameText.h:111
 msgid "Website Localization"
-msgstr "Internetsivujen Paikallistaminen"
+msgstr "Internetsivujen Kielikäännökset"
 
 #: src/GameText.h:120
 msgid "Forum"
@@ -523,19 +523,19 @@ msgstr "Aika"
 
 #: src/GameText.h:198
 msgid "Flip left"
-msgstr "Heitto vasen"
+msgstr "Nosto vasen"
 
 #: src/GameText.h:199
 msgid "Flip left 2"
-msgstr "Heitto vasen 2"
+msgstr "Nosto vasen 2"
 
 #: src/GameText.h:200
 msgid "Flip right"
-msgstr "Heitto oikea"
+msgstr "Nosto oikea"
 
 #: src/GameText.h:201
 msgid "Flip right 2"
-msgstr "Heitto oikea 2"
+msgstr "Nosto oikea 2"
 
 #: src/GameText.h:202
 msgid "Game Graphics"
@@ -603,11 +603,11 @@ msgstr "Jarrut"
 
 #: src/GameText.h:221
 msgid "Rotates it counter-clockwise"
-msgstr "Pyörittää vastapäivään"
+msgstr "Nosta vasenta rengasta"
 
 #: src/GameText.h:222
 msgid "Rotates it clockwise"
-msgstr "Pyörittää myötäpäivään"
+msgstr "Nosta oikeaa rengasta"
 
 #: src/GameText.h:223
 msgid "Turns around and drives in the other direction"
@@ -694,7 +694,7 @@ msgstr "Paina ESC näyttääksesi valikon"
 
 #: src/GameText.h:244
 msgid "Key"
-msgstr "Avain"
+msgstr "Näppäin"
 
 #: src/GameText.h:245
 msgid "Keyboard"
@@ -1167,7 +1167,7 @@ msgstr "Päivitetään leveli-listaa..."
 
 #: src/GameText.h:367
 msgid "Upload highscore"
-msgstr "Päivitä huipputulokset"
+msgstr "Lähetä huipputulos"
 
 #: src/GameText.h:368
 #, fuzzy
