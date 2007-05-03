@@ -40,6 +40,7 @@ class SDynamicObject {
  protected:
   bool isTimeToMove();
   virtual void performMove(vapp::MotoGame* v_motoGame, int i_nbCents) = 0;  
+  float Period() const;
 
  private:
   int m_time;
@@ -52,7 +53,7 @@ class SDynamicRotation {
  public:
   SDynamicRotation(float pInitAngle, float pRadius, float pPeriod);
   virtual ~SDynamicRotation();
-  void performXY(float *vx, float *vy);
+  virtual void performXY(float *vx, float *vy);
 
  private:
   float m_Speed;
@@ -67,11 +68,23 @@ class SDynamicRotation {
   float m_previousVy;
 };
 
+class SDynamicSelfRotation {
+ public:
+  SDynamicSelfRotation(float i_period);
+  virtual ~SDynamicSelfRotation();
+  virtual void performXY(float *vAngle);
+
+ private:
+  int m_incr;
+  float m_totalAngle;
+  float m_period;
+};
+
 class SDynamicTranslation {
  public:
   SDynamicTranslation(float pX, float pY, float pPeriod);
   virtual ~SDynamicTranslation();
-  void performXY(float *vx, float *vy);
+  virtual void performXY(float *vx, float *vy);
 
  private:
   float m_Speed;
@@ -130,7 +143,7 @@ class SDynamicBlockMove : public SDynamicObject {
   std::string getObjectId();
 
  protected:
-  virtual void performXY(float *vx, float *vy) = 0;
+  virtual void performXY(float *vx, float *vy, float *vAngle) = 0;
 
  private:
   std::string m_block;
@@ -141,7 +154,17 @@ class SDynamicBlockRotation : public SDynamicBlockMove, public SDynamicRotation 
   SDynamicBlockRotation(std::string pBlock, float pInitAngle, float pRadius, float pPeriod, int p_startTime, int p_endTime);
   virtual ~SDynamicBlockRotation();
 
-  void performXY(float *vx, float *vy);
+  void performXY(float *vx, float *vy, float *vAngle);
+
+ private:
+};
+
+class SDynamicBlockSelfRotation : public SDynamicBlockMove, public SDynamicSelfRotation {
+ public:
+  SDynamicBlockSelfRotation(std::string pBlock, float pPeriod, int p_startTime, int p_endTime);
+  virtual ~SDynamicBlockSelfRotation();
+
+  void performXY(float *vx, float *vy, float *vAngle);
 
  private:
 };
@@ -151,7 +174,7 @@ class SDynamicBlockTranslation : public SDynamicBlockMove, public SDynamicTransl
   SDynamicBlockTranslation(std::string pBlock, float pX, float pY, float pPeriod, int p_startTime, int p_endTime);
   virtual ~SDynamicBlockTranslation();
 
-  void performXY(float *vx, float *vy);
+  void performXY(float *vx, float *vy, float *vAngle);
 
  private:
 };

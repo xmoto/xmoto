@@ -135,6 +135,8 @@ namespace vapp {
       v_event = new MGE_PlayerLeavesZone(v_fEventTime);
     } else if(MGE_PlayerTouchesEntity::SgetType() == v_eventType) {
       v_event = new MGE_PlayerTouchesEntity(v_fEventTime);
+    } else if(MGE_SetDynamicBlockSelfRotation::SgetType() == v_eventType) {
+      v_event = new MGE_SetDynamicBlockSelfRotation(v_fEventTime);
     } else {
       std::ostringstream error_type;
       error_type << (int) v_eventType;
@@ -1613,4 +1615,63 @@ namespace vapp {
   std::string MGE_PenalityTime::toString() {
     return "Time penality";
   }
+
+  //////////////////////////////
+
+  MGE_SetDynamicBlockSelfRotation::MGE_SetDynamicBlockSelfRotation(float p_fEventTime)
+  : MotoGameEvent(p_fEventTime) {
+    m_blockID   = "";
+    m_fPeriod    = 0.0;
+    m_startTime  = 0;
+    m_endTime    = 0;
+  }
+  
+  MGE_SetDynamicBlockSelfRotation::MGE_SetDynamicBlockSelfRotation(float p_fEventTime,
+								   std::string p_blockID,
+								   float p_fPeriod,
+								   int   p_startTime,
+								 int   p_endTime)
+  : MotoGameEvent(p_fEventTime){
+    m_blockID   = p_blockID;
+    m_fPeriod   = p_fPeriod;
+    m_startTime = p_startTime;
+    m_endTime   = p_endTime;
+  }
+  
+  MGE_SetDynamicBlockSelfRotation::~MGE_SetDynamicBlockSelfRotation() {
+  }
+  
+  void MGE_SetDynamicBlockSelfRotation::doAction(MotoGame *p_pMotoGame) {
+    p_pMotoGame->addDynamicObject(new SDynamicBlockSelfRotation(m_blockID,
+								m_fPeriod,
+								m_startTime, m_endTime));  
+  }
+  
+  void MGE_SetDynamicBlockSelfRotation::serialize(DBuffer &Buffer) {
+    MotoGameEvent::serialize(Buffer);
+    Buffer << m_blockID;
+    Buffer << m_fPeriod;
+    Buffer << m_startTime;
+    Buffer << m_endTime;
+  }
+  
+  void MGE_SetDynamicBlockSelfRotation::unserialize(DBuffer &Buffer) {
+    Buffer >> m_blockID;
+    Buffer >> m_fPeriod;
+    Buffer >> m_startTime;
+    Buffer >> m_endTime;
+  }
+  
+  GameEventType MGE_SetDynamicBlockSelfRotation::SgetType() {
+    return GAME_EVENT_SETDYNAMICBLOCKSELFROTATION;
+  }
+  
+  GameEventType MGE_SetDynamicBlockSelfRotation::getType() {
+    return SgetType();
+  }
+  
+  std::string MGE_SetDynamicBlockSelfRotation::toString() {
+    return "Dynamic self rotation is set for block " + m_blockID;
+  }
+
 }

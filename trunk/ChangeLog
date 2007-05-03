@@ -3,6 +3,7 @@ X-Moto 0.3.0 2007-
  * libcurl is now mandatory
  * sdl_ttf integration (DejaVuSans.ttf is used)
  * utf-8 integration
+ * full translation (all characters) for : en sk fr no de fi ca es
  * windows user dir is now %APPDIR%/.xmoto
  * code cleaning
  * favorite levels are saved by profile
@@ -12,6 +13,7 @@ X-Moto 0.3.0 2007-
  * xmoto toto.lvl or xmoto -levelFile toto.lvl to directly start from an lvl
  * ~/.xmoto/Levels/MyLevels for levels developpers : this directory is reloaded at each startup
  * alt+enter to switch fullscreen/not fullscreen (doesn't work on windows)
+ * new SetDynamicBlockSelfRotation script function
  * some minor bugs fixed
 
 X-Moto 0.2.7 2007-03-14
