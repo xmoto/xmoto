@@ -107,7 +107,7 @@ class SDynamicEntityMove : public SDynamicObject {
   std::string getObjectId();
 
  protected:
-  virtual void performXY(float *vx, float *vy) = 0;
+  virtual void performXY(float *vx, float *vy, float *vAngle) = 0;
 
  private:
   std::string m_entity;
@@ -118,7 +118,7 @@ class SDynamicEntityRotation : public SDynamicEntityMove, public SDynamicRotatio
   SDynamicEntityRotation(std::string pEntity, float pInitAngle, float pRadius, float pPeriod, int p_startTime, int p_endTime);
   virtual ~SDynamicEntityRotation();
 
-  void performXY(float *vx, float *vy);
+  void performXY(float *vx, float *vy, float *vAngle);
 
  private:
 };
@@ -128,7 +128,17 @@ class SDynamicEntityTranslation : public SDynamicEntityMove, public SDynamicTran
   SDynamicEntityTranslation(std::string pEntity, float pX, float pY, float pPeriod, int p_startTime, int p_endTime);
   virtual ~SDynamicEntityTranslation();
 
-  void performXY(float *vx, float *vy);
+  void performXY(float *vx, float *vy, float *vAngle);
+
+ private:
+};
+
+class SDynamicEntitySelfRotation : public SDynamicEntityMove, public SDynamicSelfRotation {
+ public:
+  SDynamicEntitySelfRotation(std::string pEntity, float pPeriod, int p_startTime, int p_endTime);
+  virtual ~SDynamicEntitySelfRotation();
+
+  void performXY(float *vx, float *vy, float *vAngle);
 
  private:
 };

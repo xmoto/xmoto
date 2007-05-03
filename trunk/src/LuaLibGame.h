@@ -82,6 +82,7 @@ private:
   static int L_Game_SetBlockCenter(lua_State *pL);
   static int L_Game_SetBlockRotation(lua_State *pL);
   static int L_Game_SetDynamicEntityRotation(lua_State *pL);
+  static int L_Game_SetDynamicEntitySelfRotation(lua_State *pL);
   static int L_Game_SetDynamicEntityTranslation(lua_State *pL);
   static int L_Game_SetDynamicEntityNone(lua_State *pL);
   static int L_Game_SetDynamicBlockRotation(lua_State *pL);

@@ -137,6 +137,8 @@ namespace vapp {
       v_event = new MGE_PlayerTouchesEntity(v_fEventTime);
     } else if(MGE_SetDynamicBlockSelfRotation::SgetType() == v_eventType) {
       v_event = new MGE_SetDynamicBlockSelfRotation(v_fEventTime);
+    } else if(MGE_SetDynamicEntitySelfRotation::SgetType() == v_eventType) {
+      v_event = new MGE_SetDynamicEntitySelfRotation(v_fEventTime);
     } else {
       std::ostringstream error_type;
       error_type << (int) v_eventType;
@@ -1674,4 +1676,61 @@ namespace vapp {
     return "Dynamic self rotation is set for block " + m_blockID;
   }
 
+  //////////////////////////////
+
+  MGE_SetDynamicEntitySelfRotation::MGE_SetDynamicEntitySelfRotation(float p_fEventTime)
+  : MotoGameEvent(p_fEventTime) {
+    m_entityID   = "";
+    m_fPeriod    = 0.0;
+    m_startTime  = 0;
+    m_endTime    = 0;
+  }
+  
+  MGE_SetDynamicEntitySelfRotation::MGE_SetDynamicEntitySelfRotation(float p_fEventTime,
+								     std::string p_entityID,
+								     float p_fPeriod,
+								     int   p_startTime,
+								     int   p_endTime)
+  : MotoGameEvent(p_fEventTime){
+    m_entityID   = p_entityID;
+    m_fPeriod   = p_fPeriod;
+    m_startTime = p_startTime;
+    m_endTime   = p_endTime;
+  }
+  
+  MGE_SetDynamicEntitySelfRotation::~MGE_SetDynamicEntitySelfRotation() {
+  }
+  
+  void MGE_SetDynamicEntitySelfRotation::doAction(MotoGame *p_pMotoGame) {
+    p_pMotoGame->addDynamicObject(new SDynamicEntitySelfRotation(m_entityID,
+								 m_fPeriod,
+								 m_startTime, m_endTime));  
+  }
+  
+  void MGE_SetDynamicEntitySelfRotation::serialize(DBuffer &Buffer) {
+    MotoGameEvent::serialize(Buffer);
+    Buffer << m_entityID;
+    Buffer << m_fPeriod;
+    Buffer << m_startTime;
+    Buffer << m_endTime;
+  }
+  
+  void MGE_SetDynamicEntitySelfRotation::unserialize(DBuffer &Buffer) {
+    Buffer >> m_entityID;
+    Buffer >> m_fPeriod;
+    Buffer >> m_startTime;
+    Buffer >> m_endTime;
+  }
+  
+  GameEventType MGE_SetDynamicEntitySelfRotation::SgetType() {
+    return GAME_EVENT_SETDYNAMICENTITYSELFROTATION;
+  }
+  
+  GameEventType MGE_SetDynamicEntitySelfRotation::getType() {
+    return SgetType();
+  }
+  
+  std::string MGE_SetDynamicEntitySelfRotation::toString() {
+    return "Dynamic self rotation is set for entity " + m_entityID;
+  }
 }

@@ -1183,7 +1183,6 @@ namespace vapp {
 	  float v_ray;
 	  
 	  for(int i=0; i<4; i++) {
-
 	    v_ray = sqrt((p[i].x*p[i].x) + (p[i].y*p[i].y));
 	    beta = 0.0;
 
@@ -1197,8 +1196,8 @@ namespace vapp {
 	      beta = acos(-p[i].y / v_ray) - M_PI / 2.0;
 	    }
 	    
-	    p[i].x = (int)(cos(pSprite->DrawAngle() + beta) * v_ray);
-	    p[i].y = (int)(sin(pSprite->DrawAngle() + beta) * v_ray);
+	    p[i].x = (cos(pSprite->DrawAngle() + beta) * v_ray);
+	    p[i].y = (sin(pSprite->DrawAngle() + beta) * v_ray);
 	  }
 	  //pSprite->setDrawAngle(pSprite->DrawAngle() + 0.01);
 	}

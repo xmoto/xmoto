@@ -172,6 +172,7 @@ namespace vapp {
       void SetBlockPos(String pBlockID, float pX, float pY);
       void SetBlockCenter(String pBlockID, float pX, float pY);
       void SetBlockRotation(String pBlockID, float pAngle);
+      void SetEntityDrawAngle(String pEntityID, float pAngle);
 
       void setRenderer(GameRenderer *p_renderer);
       void CameraZoom(float pZoom);
