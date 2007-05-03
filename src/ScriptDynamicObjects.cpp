@@ -159,7 +159,8 @@ void SDynamicSelfRotation::performXY(float *vAngle) {
   m_totalAngle += *vAngle;
 
   /* to limit sum error */
-  if(m_incr >= ((int)m_period)) {
+  if( (m_period > 0.0 && m_incr >= ((int)m_period)) ||
+      (m_period < 0.0 && m_incr >= ((int)-m_period)) ) {
     float v_realSum = (((float) m_incr) * (2 * M_PI)) / m_period;
     *vAngle += v_realSum - m_totalAngle;
     m_incr = 0;
@@ -181,18 +182,26 @@ void SDynamicEntityMove::performMove(vapp::MotoGame* v_motoGame, int i_nbCents) 
   if(! p->isAlive()){
     return;
   }
-  float vx, vy;
-  float addvx = 0.0, addvy = 0.0;
+  float vx, vy, vAngle;
+  float addvx = 0.0, addvy = 0.0, addvAngle = 0.0;
 
   if(i_nbCents > 0) {
     for(int i=0; i<i_nbCents; i++) {
-      performXY(&vx, &vy);
+      performXY(&vx, &vy, &vAngle);
       addvx += vx;
       addvy += vy;
+      addvAngle = vAngle;
     }
-    v_motoGame->SetEntityPos(p,
-			     addvx + p->DynamicPosition().x,
-			     addvy + p->DynamicPosition().y);
+
+    if(addvx != 0.0 || addvy != 0) { /* a simple fast test because it's probably the main case */
+      v_motoGame->SetEntityPos(p,
+			       addvx + p->DynamicPosition().x,
+			       addvy + p->DynamicPosition().y);
+    }
+
+    if(vAngle != 0.0) { /* a simple fast test because it's probably the main case */
+      v_motoGame->SetEntityDrawAngle(p->Id(), addvAngle + p->DrawAngle());
+    }
   }
 }
 
@@ -212,11 +221,13 @@ SDynamicEntityTranslation::SDynamicEntityTranslation(std::string pEntity, float 
 SDynamicEntityTranslation::~SDynamicEntityTranslation() {
 }
 
-void SDynamicEntityRotation::performXY(float *vx, float *vy) {
+void SDynamicEntityRotation::performXY(float *vx, float *vy, float *vAngle) {
+  *vAngle = 0.0;
   SDynamicRotation::performXY(vx, vy);
 }
 
-void SDynamicEntityTranslation::performXY(float *vx, float *vy) {
+void SDynamicEntityTranslation::performXY(float *vx, float *vy, float *vAngle) {
+  *vAngle = 0.0;
   SDynamicTranslation::performXY(vx, vy);
 }
 
@@ -293,3 +304,15 @@ void SDynamicBlockSelfRotation::performXY(float *vx, float *vy, float *vAngle) {
   SDynamicSelfRotation::performXY(vAngle);
 }
 
+SDynamicEntitySelfRotation::SDynamicEntitySelfRotation(std::string pEntity, float pPeriod, int p_startTime, int p_endTime)
+  : SDynamicEntityMove(pEntity, p_startTime, p_endTime, pPeriod), SDynamicSelfRotation(pPeriod){
+  
+}
+
+SDynamicEntitySelfRotation::~SDynamicEntitySelfRotation() {
+}
+
+void SDynamicEntitySelfRotation::performXY(float *vx, float *vy, float *vAngle) {
+  *vx = *vy = 0.0;
+  SDynamicSelfRotation::performXY(vAngle);
+}

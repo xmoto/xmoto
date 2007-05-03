@@ -66,6 +66,7 @@ namespace vapp {
     GAME_EVENT_PLAYER_TOUCHES_ENTITY       = 29,
     GAME_EVENT_SETPLAYERPOSITION           = 30,
     GAME_EVENT_SETDYNAMICBLOCKSELFROTATION = 31,
+    GAME_EVENT_SETDYNAMICENTITYSELFROTATION = 32,
   };
 }
 
@@ -567,6 +568,32 @@ class MGE_SetDynamicEntityRotation : public MotoGameEvent {
   std::string m_entityID;
   float m_fInitAngle;
   float m_fRadius;
+  float m_fPeriod;
+  int   m_startTime;
+  int   m_endTime;
+};
+
+class MGE_SetDynamicEntitySelfRotation : public MotoGameEvent {
+ public:
+  MGE_SetDynamicEntitySelfRotation(float p_fEventTime);
+  MGE_SetDynamicEntitySelfRotation(float p_fEventTime,
+				  std::string p_entityID,
+				  float p_fPeriod,
+				  int   p_startTime,
+				  int   p_endTime);
+  ~MGE_SetDynamicEntitySelfRotation();
+
+  void doAction(MotoGame *p_pMotoGame);
+  void serialize(DBuffer &Buffer);
+  void unserialize(DBuffer &Buffer);
+  static GameEventType SgetType();
+  GameEventType getType();
+
+  std::string toString();
+
+ private:
+  std::string m_entityID;
+  float m_angle;
   float m_fPeriod;
   int   m_startTime;
   int   m_endTime;

@@ -947,6 +947,12 @@ void MotoGame::cleanPlayers() {
     m_Collision.moveDynBlock(&v_block);
   }     
   
+  void MotoGame::SetEntityDrawAngle(String pEntityID, float pAngle) {
+    Entity *v_entity;
+    v_entity = &(getLevelSrc()->getEntityById(pEntityID));
+    v_entity->setDrawAngle(pAngle);
+  }
+
   void MotoGame::DisplayDiffFromGhost() {
     if(m_ghosts.size() > 0) {
       float v_diffToGhost;
