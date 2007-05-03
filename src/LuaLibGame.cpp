@@ -53,6 +53,7 @@ luaL_reg            LuaLibGame::m_gameFuncs[] = {
   {"SetDynamicEntityTranslation", LuaLibGame::L_Game_SetDynamicEntityTranslation},
   {"SetDynamicEntityNone",        LuaLibGame::L_Game_SetDynamicEntityNone},
   {"SetDynamicBlockRotation",     LuaLibGame::L_Game_SetDynamicBlockRotation},
+  {"SetDynamicBlockSelfRotation", LuaLibGame::L_Game_SetDynamicBlockSelfRotation},
   {"SetDynamicBlockTranslation",  LuaLibGame::L_Game_SetDynamicBlockTranslation},
   {"SetDynamicBlockNone",         LuaLibGame::L_Game_SetDynamicBlockNone},
   {"CameraZoom",        	  LuaLibGame::L_Game_CameraZoom},
@@ -542,6 +543,16 @@ int LuaLibGame::L_Game_SetDynamicBlockRotation(lua_State *pL) {
 							       X_luaL_check_number(pL,4),
 							       X_luaL_check_number(pL,5),
 							       X_luaL_check_number(pL,6))); 
+  return 0;
+}
+
+int LuaLibGame::L_Game_SetDynamicBlockSelfRotation(lua_State *pL) {
+  /* event for this */
+  m_exec_world->createGameEvent(new vapp::MGE_SetDynamicBlockSelfRotation(m_exec_world->getTime(),
+									  luaL_checkstring(pL,1),
+									  X_luaL_check_number(pL,2),
+									  X_luaL_check_number(pL,3),
+									  X_luaL_check_number(pL,4))); 
   return 0;
 }
 

@@ -64,6 +64,10 @@ bool SDynamicObject::isTimeToMove() {
   return m_time >= m_startTime && (m_time <= m_endTime || m_endTime == 0.0);
 }
 
+float SDynamicObject::Period() const {
+  return m_period;
+}
+
 void SDynamicTranslation::performXY(float *vx, float *vy) {
   *vx = m_sensUp ? m_moveX : -m_moveX;
   *vy = m_sensUp ? m_moveY : -m_moveY;
@@ -140,6 +144,29 @@ void SDynamicRotation::performXY(float *vx, float *vy) {
   m_Angle += m_Speed;
 }
 
+SDynamicSelfRotation::SDynamicSelfRotation(float i_period) {
+  m_period = i_period;
+  m_totalAngle = 0.0;
+  m_incr = 0;
+}
+
+SDynamicSelfRotation::~SDynamicSelfRotation() {
+}
+
+void SDynamicSelfRotation::performXY(float *vAngle) {
+  *vAngle = (2 * M_PI) / m_period;
+  m_incr++;
+  m_totalAngle += *vAngle;
+
+  /* to limit sum error */
+  if(m_incr >= ((int)m_period)) {
+    float v_realSum = (((float) m_incr) * (2 * M_PI)) / m_period;
+    *vAngle += v_realSum - m_totalAngle;
+    m_incr = 0;
+    m_totalAngle = 0.0;
+  }
+}
+
 /* entity */
 
 SDynamicEntityMove::SDynamicEntityMove(std::string pEntity, int p_startTime, int p_endTime, float pPeriod) : SDynamicObject(p_startTime, p_endTime, pPeriod){
@@ -204,18 +231,26 @@ SDynamicBlockMove::~SDynamicBlockMove() {
 
 void SDynamicBlockMove::performMove(vapp::MotoGame* v_motoGame, int i_nbCents) {
   Block *p = &(v_motoGame->getLevelSrc()->getBlockById(m_block));
-  float vx, vy;
-  float addvx = 0.0, addvy = 0.0;
+  float vx, vy, vAngle;
+  float addvx = 0.0, addvy = 0.0, addvAngle = 0.0;
 
   if(i_nbCents > 0) {
     for(int i=0; i<i_nbCents; i++) {
-      performXY(&vx, &vy);
+      performXY(&vx, &vy, &vAngle);
       addvx += vx;
       addvy += vy;
+      addvAngle = vAngle;
     }
-    v_motoGame->SetBlockPos(p->Id(),
-			    addvx + p->DynamicPosition().x,
-			    addvy + p->DynamicPosition().y);
+
+    if(addvx != 0.0 || addvy != 0) { /* a simple fast test because it's probably the main case */
+      v_motoGame->MoveBlock(p->Id(),
+			    addvx,
+			    addvy);
+    }
+
+    if(vAngle != 0.0) { /* a simple fast test because it's probably the main case */
+      v_motoGame->SetBlockRotation(p->Id(), addvAngle + p->DynamicRotation());
+    }
   }
 }
 
@@ -235,10 +270,26 @@ SDynamicBlockTranslation::SDynamicBlockTranslation(std::string pBlock, float pX,
 SDynamicBlockTranslation::~SDynamicBlockTranslation() {
 }
 
-void SDynamicBlockRotation::performXY(float *vx, float *vy) {
+void SDynamicBlockRotation::performXY(float *vx, float *vy, float *vAngle) {
+  *vAngle = 0.0;
   SDynamicRotation::performXY(vx, vy);
 }
 
-void SDynamicBlockTranslation::performXY(float *vx, float *vy) {
+void SDynamicBlockTranslation::performXY(float *vx, float *vy, float *vAngle) {
+  *vAngle = 0.0;
   SDynamicTranslation::performXY(vx, vy);
 }
+
+SDynamicBlockSelfRotation::SDynamicBlockSelfRotation(std::string pBlock, float pPeriod, int p_startTime, int p_endTime)
+  : SDynamicBlockMove(pBlock, p_startTime, p_endTime, pPeriod), SDynamicSelfRotation(pPeriod){
+  
+}
+
+SDynamicBlockSelfRotation::~SDynamicBlockSelfRotation() {
+}
+
+void SDynamicBlockSelfRotation::performXY(float *vx, float *vy, float *vAngle) {
+  *vx = *vy = 0.0;
+  SDynamicSelfRotation::performXY(vAngle);
+}
+
