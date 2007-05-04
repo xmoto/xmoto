@@ -188,7 +188,6 @@ render blocks by Z
    to see you room (optionnal)
 * display wind
 * a fonction CameraRotate and CameraRotateAdaptToG (script)
-* A SetDynamicBlockRotation function that rotates the vertices about a center point instead of making the block go in circles.
 * a block0.Touch() function
 * network game
 * freestyle mode
