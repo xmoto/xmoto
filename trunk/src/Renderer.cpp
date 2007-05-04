@@ -107,6 +107,8 @@ namespace vapp {
       Blocks[i]->setGeom(geomIndex);
 
       for(int j=0; j<ConvexBlocks.size(); j++) {
+	Vector2f v_center = Vector2f(0.0, 0.0);
+
         GeomPoly *pPoly = new GeomPoly;
         pSuitableGeom->Polys.push_back(pPoly);
         
@@ -119,7 +121,23 @@ namespace vapp {
           pPoly->pVertices[k].y = Center.y + ConvexBlocks[j]->Vertices()[k]->Position().y;
           pPoly->pTexCoords[k].x = ConvexBlocks[j]->Vertices()[k]->TexturePosition().x;
           pPoly->pTexCoords[k].y = ConvexBlocks[j]->Vertices()[k]->TexturePosition().y;
-        }          
+
+	  v_center += Vector2f(pPoly->pVertices[k].x, pPoly->pVertices[k].y);
+        }
+	v_center /= pPoly->nNumVertices;
+
+	/* fix the gap problem with polygons */
+	float a = 0.003; /* seems to be a good value, put negativ value to make it worst */
+	for(int k=0; k<pPoly->nNumVertices; k++) {
+	  Vector2f V = Vector2f(pPoly->pVertices[k].x - v_center.x,
+				pPoly->pVertices[k].y - v_center.y);
+	  if(V.length() != 0.0) {
+	    V.normalize();
+	    V *= a;
+	    pPoly->pVertices[k].x += V.x;
+	    pPoly->pVertices[k].y += V.y;
+	  }
+	}
         
         nVertexBytes += pPoly->nNumVertices * ( 4 * sizeof(float) );
 #ifdef ENABLE_OPENGL        
@@ -1447,7 +1465,7 @@ namespace vapp {
 #endif
     } else if(getParent()->getDrawLib()->getBackend() == DrawLib::backend_SdlGFX){
 
-      for(int j=0;j<m_StaticGeoms[geom]->Polys.size();j++) {          
+      for(int j=0;j<m_StaticGeoms[geom]->Polys.size();j++) {
 	getParent()->getDrawLib()->setTexture(m_StaticGeoms[geom]->pTexture,BLEND_MODE_NONE);
 	getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
 	getParent()->getDrawLib()->setColorRGB(255,255,255);
