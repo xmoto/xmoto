@@ -271,13 +271,13 @@ namespace vapp {
       glBindTexture(GL_TEXTURE_2D,m_DynamicTextureID);
       m_pApp->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
       m_pApp->getDrawLib()->setColorRGB(255,255,255);
-      glTexCoord2f(0,0);
+      glTexCoord2f(0.01,0.01);
       glVertex2f(0,0);
-      glTexCoord2f(1,0);
+      glTexCoord2f(0.99,0.01);
       glVertex2f(m_pApp->getDrawLib()->getDispWidth(),0);
-      glTexCoord2f(1,1);
+      glTexCoord2f(0.99,0.99);
       glVertex2f(m_pApp->getDrawLib()->getDispWidth(),m_pApp->getDrawLib()->getDispHeight());
-      glTexCoord2f(0,1);
+      glTexCoord2f(0.01,0.99);
       glVertex2f(0,m_pApp->getDrawLib()->getDispHeight());
       m_pApp->getDrawLib()->endDraw();
       glDisable(GL_TEXTURE_2D);

@@ -21,7 +21,9 @@ quit level'' or something like that.
 [14:05] <keesj> it's a pixel rounding problem
 [14:07] <keesj> http://www.gameprogrammer.com/5-poly.html
 [14:07] <keesj> If pixels that fall on an edge are counted as part of the polygon then pixels on an edge between two polygons will be filled in by both polygons. Filling the pixel twice is wasteful. And, in an animation it can cause a "twinkling" effect along the edge. If edge pixels are not part of the polygon then edges never get colored and you get gaps between polygons. Really ugly.
-
+* draw bug at top of the textures (bored at work #13)
+*[22:52] <gaivota> the credits are too much on the left side
+ [22:53] <gaivota> needs centering, because the text is clipped from the screen
 
 Since 0.2.6
 [21:33] <jj> the smoke is not always rendered at the sides of the screen
