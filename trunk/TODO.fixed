@@ -24,6 +24,7 @@ quit level'' or something like that.
 * draw bug at top of the textures (bored at work #13)
 *[22:52] <gaivota> the credits are too much on the left side
  [22:53] <gaivota> needs centering, because the text is clipped from the screen
+* A SetDynamicBlockRotation function that rotates the vertices about a center point instead of making the block go in circles.
 
 Since 0.2.6
 [21:33] <jj> the smoke is not always rendered at the sides of the screen
