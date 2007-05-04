@@ -8,14 +8,6 @@
 * a quick play button to play any level just at xmoto start
 
 * dans le niveau metallica on voit bien que ca chie certaines textures
-* tester envoyer tous les replays dans le salon
-* draw bug at top of the textures (bored at work #13)
-=> renderer.cpp
-	    p[i].x = (int)(cos(pSprite->DrawAngle() + beta) * v_ray);
-	    p[i].y = (int)(sin(pSprite->DrawAngle() + beta) * v_ray);
-semble faire chier, pe calculer la rotation avec opengl ?
-ca vient de la carte graphique ?
-
 * a force d'ouvrir et de fermer des niveaux, ca bouffe de la mémoire :
    réfléchir à cause du nombre de sprites augmentant à les virer de
    temps en temps
@@ -35,12 +27,7 @@ ca vient de la carte graphique ?
 (12:12:11)  Roots:     http://lemog.free.fr/lemog_v5/thumbnails.php?album=topn&cat=0  
 (12:12:18)  Roots:   ya gave de textues sur ces sites
 
-
-For 0.3.0
-
 For nicolas
-*[22:52] <gaivota> the credits are too much on the left side
- [22:53] <gaivota> needs centering, because the text is clipped from the screen
 * keyboard for 4 players
 * script key on multiplayer : each player must have his own key
 * mode 2 joueurs : un message à celui qui gagne
@@ -80,10 +67,11 @@ mingw:
 * gettext: http://www.wormux.org/wiki/compile_under_mingw.php
 
 Assigned to nicolas
-* BUG : i ghost is enable, then you disable it, then you play a level
+* BUG : if ghost is enable, then you disable it, then you play a level
    having a ghost -> cannot found entity
 * BUG : hum, about checksum, when you modify a level with f5 while
-   playing, then it is not updated with the new level button
+   playing, then it is not updated with the new level button (if you
+   press enter, the level must be dwd)
 * put under edge into the block part
 * PAD_5 -> to finish
 

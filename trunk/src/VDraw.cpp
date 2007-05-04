@@ -228,13 +228,13 @@ namespace vapp {
     setTexture(pTexture,BLEND_MODE_A);
     startDraw(DRAW_MODE_POLYGON);
     setColor(Tint);
-    glTexCoord(0.0, 0.0);
+    glTexCoord(0.01, 0.01);
     glVertexSP(a.x, a.y);
-    glTexCoord(1.0, 0.0);
+    glTexCoord(0.99, 0.01);
     glVertexSP(b.x, a.y);
-    glTexCoord(1.0, 1.0);
+    glTexCoord(0.99, 0.99);
     glVertexSP(b.x, b.y);
-    glTexCoord(0.0, 1.0);
+    glTexCoord(0.01, 0.99);
     glVertexSP(a.x, b.y);
     endDraw();
   }

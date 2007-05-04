@@ -1972,29 +1972,35 @@ namespace vapp {
     getParent()->getDrawLib()->setTexture(pTexture,BLEND_MODE_A);
     getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
     getParent()->getDrawLib()->setColorRGB(i_filterColor.Red(), i_filterColor.Green(), i_filterColor.Blue());
-    getParent()->getDrawLib()->glTexCoord(0,1);
+
+    /* because rotation can make approximation error and 1 pixel of one side of the
+     picture could be map on the other side, */
+    getParent()->getDrawLib()->glTexCoord(0.01,0.99);
     getParent()->getDrawLib()->glVertex(p0.x,p0.y);
-    getParent()->getDrawLib()->glTexCoord(1,1);
+    getParent()->getDrawLib()->glTexCoord(0.99,0.99);
     getParent()->getDrawLib()->glVertex(p1.x,p1.y);
-    getParent()->getDrawLib()->glTexCoord(1,0);
+    getParent()->getDrawLib()->glTexCoord(0.99,0.01);
     getParent()->getDrawLib()->glVertex(p2.x,p2.y);
-    getParent()->getDrawLib()->glTexCoord(0,0);
+    getParent()->getDrawLib()->glTexCoord(0.01,0.01);
     getParent()->getDrawLib()->glVertex(p3.x,p3.y);
     getParent()->getDrawLib()->endDraw();
   }
   
   void GameRenderer::_RenderAdditiveBlendedSection(Texture *pTexture,
                                                    const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3) {
+
+    /* because rotation can make approximation error and 1 pixel of one side of the
+     picture could be map on the other side, */
     getParent()->getDrawLib()->setTexture(pTexture,BLEND_MODE_B);
     getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
     getParent()->getDrawLib()->setColorRGB(255,255,255);
-    getParent()->getDrawLib()->glTexCoord(0,1);
+    getParent()->getDrawLib()->glTexCoord(0.01, 0.99);
     getParent()->getDrawLib()->glVertex(p0.x,p0.y);
-    getParent()->getDrawLib()->glTexCoord(1,1);
+    getParent()->getDrawLib()->glTexCoord(0.99, 0.99);
     getParent()->getDrawLib()->glVertex(p1.x,p1.y);
-    getParent()->getDrawLib()->glTexCoord(1,0);
+    getParent()->getDrawLib()->glTexCoord(0.99, 0.01);
     getParent()->getDrawLib()->glVertex(p2.x,p2.y);
-    getParent()->getDrawLib()->glTexCoord(0,0);
+    getParent()->getDrawLib()->glTexCoord(0.01, 0.01);
     getParent()->getDrawLib()->glVertex(p3.x,p3.y);
     getParent()->getDrawLib()->endDraw();
   }
@@ -2002,16 +2008,19 @@ namespace vapp {
   /* Screen-space version of the above */
   void GameRenderer::_RenderAlphaBlendedSectionSP(Texture *pTexture,
                                                   const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3) {
+
+    /* because rotation can make approximation error and 1 pixel of one side of the
+     picture could be map on the other side, */
     getParent()->getDrawLib()->setTexture(pTexture,BLEND_MODE_A);
     getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
     getParent()->getDrawLib()->setColorRGB(255,255,255);
-    getParent()->getDrawLib()->glTexCoord(0,1);
+    getParent()->getDrawLib()->glTexCoord(0.01, 0.99);
     getParent()->getDrawLib()->glVertexSP(p0.x,p0.y);
-    getParent()->getDrawLib()->glTexCoord(1,1);
+    getParent()->getDrawLib()->glTexCoord(0.99, 0.99);
     getParent()->getDrawLib()->glVertexSP(p1.x,p1.y);
-    getParent()->getDrawLib()->glTexCoord(1,0);
+    getParent()->getDrawLib()->glTexCoord(0.99, 0.01);
     getParent()->getDrawLib()->glVertexSP(p2.x,p2.y);
-    getParent()->getDrawLib()->glTexCoord(0,0);
+    getParent()->getDrawLib()->glTexCoord(0.01, 0.01);
     getParent()->getDrawLib()->glVertexSP(p3.x,p3.y);
     getParent()->getDrawLib()->endDraw();
   }

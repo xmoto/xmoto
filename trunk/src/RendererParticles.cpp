@@ -51,13 +51,13 @@ namespace vapp {
     getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
     //convert the TColor to a Color 
     getParent()->getDrawLib()->setColor(MAKE_COLOR(c.Red(), c.Green(), c.Blue(), c.Alpha()));
-    getParent()->getDrawLib()->glTexCoord(0,0);
+    getParent()->getDrawLib()->glTexCoord(0.01, 0.01);
     getParent()->getDrawLib()->glVertex(p1);
-    getParent()->getDrawLib()->glTexCoord(1,0);
+    getParent()->getDrawLib()->glTexCoord(0.99, 0.01);
     getParent()->getDrawLib()->glVertex(p2);
-    getParent()->getDrawLib()->glTexCoord(1,1);
+    getParent()->getDrawLib()->glTexCoord(0.99, 0.99);
     getParent()->getDrawLib()->glVertex(p3);
-    getParent()->getDrawLib()->glTexCoord(0,1);
+    getParent()->getDrawLib()->glTexCoord(0.01, 0.99);
     getParent()->getDrawLib()->glVertex(p4);
     getParent()->getDrawLib()->endDraw();
   }
