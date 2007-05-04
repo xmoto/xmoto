@@ -1,4 +1,12 @@
 
+* [21:35] <gaivota> aspegic500: I have a request: It would be nice, that if you zoom in, the camera remains attached to the player, and not to a virtual point
+=> dans Renderer.cpp
+    float normal_hoffset = 4.0;
+    float normal_voffset = 2.0; 
+-> cet offset devrait plutot etre celui entre la bordure gauche/droite
+   et le joueur
+* a quick play button to play any level just at xmoto start
+
 * dans le niveau metallica on voit bien que ca chie certaines textures
 * tester envoyer tous les replays dans le salon
 * draw bug at top of the textures (bored at work #13)
