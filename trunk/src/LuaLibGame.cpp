@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Scene.h"
 #include "GameEvents.h"
 #include "Input.h"
+#include "Locales.h"
 
 vapp::MotoGame*     LuaLibGame::m_exec_world              = NULL;
 vapp::InputHandler* LuaLibGame::m_exec_activeInputHandler = NULL;
@@ -327,7 +328,7 @@ int LuaLibGame::L_Game_Message(lua_State *pL) {
   /* Convert all arguments to strings */
   std::string Out;
   for(int i=0;i<lua_gettop(pL);i++) 
-    Out.append(luaL_checkstring(pL, i+1));
+    Out.append(_(luaL_checkstring(pL, i+1)));
   
   m_exec_world->createGameEvent(new vapp::MGE_Message(m_exec_world->getTime(), Out));
   return 0;
