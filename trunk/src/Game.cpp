@@ -264,6 +264,7 @@ GameApp::GameApp() {
   
 	  /* Init level */    
 	  m_InputHandler.reset();
+	  m_InputHandler.setMirrored(m_Renderer.isMirrored());
 	  m_MotoGame.prePlayLevel(&m_InputHandler, NULL, false);
 
 	  /* add the ghosts */
@@ -2049,6 +2050,7 @@ GameApp::GameApp() {
       
       try {
 	m_InputHandler.reset();
+	m_InputHandler.setMirrored(m_Renderer.isMirrored());
 	m_MotoGame.prePlayLevel(&m_InputHandler, m_pJustPlayReplay, true);
 	m_MotoGame.setInfos("");
 	

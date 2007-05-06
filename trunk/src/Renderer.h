@@ -227,6 +227,8 @@ namespace vapp {
 
     float rotationAngle();
     void setRotationAngle(float i_value);
+    void setDesiredRotationAngle(float i_value);
+    void adaptRotationAngleToGravity();
 
   private:
     /* Data */
@@ -236,6 +238,7 @@ namespace vapp {
 
     bool m_mirrored;
     float m_rotationAngle;
+    float m_desiredRotationAngle;
     Biker* m_playerToFollow;
 
     std::vector<GraphDebugInfo *> m_DebugInfo;
@@ -343,6 +346,8 @@ namespace vapp {
     void _RenderDebugInfo(void);      
     void guessDesiredCameraPosition(float &p_fDesiredHorizontalScrollShift,
 				    float &p_fDesiredVerticalScrollShift);
+
+    float guessDesiredAngleRotation();
 
     void _RenderAlphaBlendedSection(Texture *pTexture,const Vector2f &p0,const Vector2f &p1,const Vector2f &p2,const Vector2f &p3,
 				    const TColor& i_filterColor = TColor(255, 255, 255, 0));

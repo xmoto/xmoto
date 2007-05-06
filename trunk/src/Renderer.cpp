@@ -56,8 +56,8 @@ namespace vapp {
 
     m_fNextGhostInfoUpdate = 0.0f;
     m_nGhostInfoTrans      = 255;
-    m_mirrored = false;
     m_rotationAngle = 0.0;        
+    m_desiredRotationAngle = 0.0;
 
     /* Optimize scene */
     std::vector<Block *> Blocks = getGameObject()->getLevelSrc()->Blocks();
@@ -544,6 +544,60 @@ namespace vapp {
     return -m_Scroll.y + m_cameraOffsetY;
   }
 
+  void GameRenderer::setDesiredRotationAngle(float i_value) {
+    m_desiredRotationAngle = i_value;
+  }
+
+  void GameRenderer::adaptRotationAngleToGravity() {
+    if(getGameObject()->getGravity().x == 0.0) {
+      if(getGameObject()->getGravity().y > 0) {
+	m_desiredRotationAngle = 180.0;
+      } else {
+	m_desiredRotationAngle = 0.0;
+      }
+    } else {
+      m_desiredRotationAngle = tan(getGameObject()->getGravity().y/getGameObject()->getGravity().x);
+      m_desiredRotationAngle = ((m_desiredRotationAngle * 180.0) / M_PI) + 90.0;
+      m_desiredRotationAngle = (float)((int)((m_desiredRotationAngle) + 360.0) % 360);
+    }
+  }
+
+
+#define ROTATIONANGLE_SPEED 1.0
+  float GameRenderer::guessDesiredAngleRotation() {
+    //printf("%f => %f\n", m_desiredRotationAngle, m_rotationAngle);
+
+    if(fabs(m_desiredRotationAngle - m_rotationAngle) <= ROTATIONANGLE_SPEED * 3.0) {
+      m_rotationAngle = m_desiredRotationAngle;
+      return m_rotationAngle;
+    }
+
+    if(m_desiredRotationAngle < 0.0) {
+      m_desiredRotationAngle = ((int)m_desiredRotationAngle)%360;
+      m_desiredRotationAngle += 360;
+    } else {
+      if(m_desiredRotationAngle >= 360.0) {
+	m_desiredRotationAngle = ((int)m_desiredRotationAngle)%360;
+      }
+    }
+
+    float v_diff;
+    if(m_rotationAngle > m_desiredRotationAngle) {
+      v_diff = m_rotationAngle - m_desiredRotationAngle;
+    } else {
+      v_diff = m_rotationAngle - m_desiredRotationAngle + 360.0;
+    }
+
+    /* rotate in the fastest way */
+    if(v_diff <= 180) {
+      m_rotationAngle = (float)((((int)(m_rotationAngle - ROTATIONANGLE_SPEED)) + 360) % 360);
+    } else {
+      m_rotationAngle = (float)((((int)(m_rotationAngle + ROTATIONANGLE_SPEED)) + 360) % 360);
+    }
+
+    return m_rotationAngle;
+  }
+
   void GameRenderer::guessDesiredCameraPosition(float &p_fDesiredHorizontalScrollShift,
             float &p_fDesiredVerticalScrollShift) {
 
@@ -664,6 +718,7 @@ namespace vapp {
     if(m_mirrored) {
       getParent()->getDrawLib()->setMirrorY();
     }
+    m_rotationAngle = guessDesiredAngleRotation();
     getParent()->getDrawLib()->setRotateZ(m_rotationAngle);
     getParent()->getDrawLib()->setTranslate(-getCameraPositionX(), -getCameraPositionY());
 

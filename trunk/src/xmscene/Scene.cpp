@@ -1141,6 +1141,8 @@ void MotoGame::cleanPlayers() {
 	m_players[i]->resetAutoDisabler();
       }
     }
+
+    //m_renderer->adaptRotationAngleToGravity();
   }
 
   const Vector2f & MotoGame::getGravity() {
