@@ -1,6 +1,5 @@
 
-* pour le joystick:
-le mode mirror ne marche pas
+* pour le joystick: le mode mirror ne marche pas
 
 * [21:35] <gaivota> aspegic500: I have a request: It would be nice, that if you zoom in, the camera remains attached to the player, and not to a virtual point
 => dans Renderer.cpp
@@ -102,9 +101,6 @@ Assigned to nicolas
 * keesj:define code conventions,testing procedures,release-roadbook
 * a keyboard key for next level
 * reload theme done, require tests, and some sprites (like mouse, main menu background) are not updated i suppose
-* Sometimes when the edges of the levels are reached (for instance when being at a corner of a level), the
-  framerate drops A LOT (game gets unplayable). Can't figure out why.
-  ** Update: it actually appears that the game gets slower and slower while running.
 * Optimize minimap rendering. On some levels (very smooth ones for instance) it takes much longer to
   render the minimap than the actual level.
 * Sometimes memory are leaked from the event queue in m_MotoGame
