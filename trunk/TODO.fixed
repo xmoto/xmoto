@@ -29,6 +29,9 @@ quit level'' or something like that.
 * traduire les scripts integrés (le tuto)
 * Add a command line option like the one to test themes. This option could be ''testscript'' and would show zones during game (with an extra, the name of the zone).
 * SDL_ttf or something like that for rendering text
+* Sometimes when the edges of the levels are reached (for instance when being at a corner of a level), the
+  framerate drops A LOT (game gets unplayable). Can't figure out why.
+  ** Update: it actually appears that the game gets slower and slower while running.
 
 Since 0.2.6
 [21:33] <jj> the smoke is not always rendered at the sides of the screen
