@@ -1,0 +1,2328 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: X-Moto\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-05-04 23:56+0200\n"
+"PO-Revision-Date: 2007-05-04 23:56+0200\n"
+"Last-Translator: Mikhail Brinchuk aka Thecentury <thecentury@gmail.com>\n"
+"Language-Team: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/GameText.h:33
+msgid "11 kHz"
+msgstr "11 ЪУі"
+
+#: src/GameText.h:34
+msgid "16-bit"
+msgstr "16 сшђ"
+
+#: src/GameText.h:35
+msgid "16 bits per pixel"
+msgstr "16 сшђ эр яшъёхыќ"
+
+#: src/GameText.h:36
+msgid "22 kHz"
+msgstr "22 ЪУі"
+
+#: src/GameText.h:37
+msgid "32 bits per pixel"
+msgstr "32 сшђр эр яшъёхыќ"
+
+#: src/GameText.h:38
+msgid "44 kHz"
+msgstr "44 ЪУі"
+
+#: src/GameText.h:39
+msgid "8-bit"
+msgstr "8 сшђ"
+
+#: src/GameText.h:40
+msgid "Quit level"
+msgstr "Чртх№јшђќ ѓ№ютхэќ"
+
+#: src/GameText.h:41
+msgid "Add to favorite"
+msgstr "Фюсртшђќ т шчс№рээюх"
+
+#: src/GameText.h:42
+msgid "Action"
+msgstr "Фхщёђтшх"
+
+#: src/GameText.h:43 src/GameText.h:48
+msgid "All (on this computer)"
+msgstr "Тёх (эр §ђюь ъюьяќўђх№х)"
+
+#: src/GameText.h:44 src/GameText.h:530
+msgid "All levels"
+msgstr "Тёх ѓ№ютэш"
+
+#: src/GameText.h:45
+msgid ""
+"Do you want to allow X-Moto connecting\n"
+"to the Internet to look for more levels\n"
+"and best times of other players?"
+msgstr ""
+"Тћ ѕюђшђх №рч№хјшђќ X-Moto яюфёюхфшэџђќёџ\n"
+"ъ шэђх№эхђѓ фыџ яюшёър фюяюыэшђхыќэћѕ ѓ№ютэхщ\n"
+"ш ыѓїјхую т№хьхэш ф№ѓушѕ шу№юъют?"
+
+#: src/GameText.h:49
+msgid "Already used!"
+msgstr "гцх шёяюыќчѓхђёџ!"
+
+#: src/GameText.h:50
+msgid "and"
+msgstr "ш"
+
+#: src/GameText.h:51 src/GameText.h:93
+msgid "Audio"
+msgstr "Чтѓъ"
+
+#: src/GameText.h:52
+msgid "Author"
+msgstr "Ртђю№"
+
+#: src/GameText.h:53
+msgid "Automatic saving of replays"
+msgstr "Ртђюьрђшїхёъюх ёюѕ№рэхэшх чряшёхщ я№юѕюцфхэшџ"
+
+#: src/GameText.h:54
+msgid "Auto zoom"
+msgstr "Ртђю я№шсышцхэшх"
+
+#: src/GameText.h:55
+msgid "Best Times"
+msgstr "Ыѓїјхх т№хьџ"
+
+#: src/GameText.h:56
+msgid "Best player"
+msgstr "Ыѓїјшщ шу№юъ"
+
+#: src/GameText.h:57
+msgid "Brake"
+msgstr "вю№ьюч"
+
+#: src/GameText.h:58
+msgid "Brake 2"
+msgstr "вю№ьюч 2"
+
+#: src/GameText.h:59
+msgid "Built-In Levels"
+msgstr "Тёђ№юхээћх ѓ№ютэш"
+
+#: src/GameText.h:60
+msgid "by"
+msgstr ""
+
+#: src/GameText.h:61
+msgid "Move Camera to left"
+msgstr "Ях№хьхёђшђќ ърьх№ѓ эрыхтю"
+
+#: src/GameText.h:62
+msgid "Move Camera to right"
+msgstr "Ях№хьхёђшђќ ърьх№ѓ эря№ртю"
+
+#: src/GameText.h:63
+msgid "Move Camera down"
+msgstr "Ях№хьхёђшђќ ърьх№ѓ тэшч"
+
+#: src/GameText.h:64
+msgid "Move Camera up"
+msgstr "Ях№хьхёђшђќ ърьх№ѓ ттх№ѕ"
+
+#: src/GameText.h:65
+msgid "Cancel"
+msgstr "Юђьхэр"
+
+#: src/GameText.h:66
+msgid "Change..."
+msgstr "Шчьхэшђќ..."
+
+#: src/GameText.h:67
+msgid "Change direction"
+msgstr "Шчьхэшђќ эря№ртыхэшх"
+
+#: src/GameText.h:68
+msgid "Change direction 2"
+msgstr "Шчьхэшђќ эря№ртыхэшх 2"
+
+#: src/GameText.h:69
+msgid "Change Key..."
+msgstr "Шчьхэшђќ ъыртшјѓ..."
+
+#: src/GameText.h:70
+msgid "Checking for new or updated levels..."
+msgstr "Яюшёъ эютћѕ шыш юсэютыхээћѕ ѓ№ютэхщ"
+
+#: src/GameText.h:71
+msgid "Choose Level"
+msgstr "Тћсх№шђх ѓ№ютхэќ"
+
+#: src/GameText.h:72
+msgid "Close"
+msgstr "Чръ№ћђќ"
+
+#: src/GameText.h:73
+msgid "Configure Joystick..."
+msgstr "Эрёђ№юшђќ фцющёђшъ..."
+
+#: src/GameText.h:74
+msgid "Controls"
+msgstr "гя№ртыхэшх"
+
+#: src/GameText.h:77
+msgid "Lead Programming"
+msgstr "Юёэютэюх я№юу№рььш№ютрэшх"
+
+#: src/GameText.h:83
+msgid "Additional Programming"
+msgstr "Фюяюыэшђхыќэюх я№юу№рььш№ютрэшх"
+
+#: src/GameText.h:89
+msgid "Graphics"
+msgstr "У№рєшър"
+
+#: src/GameText.h:97
+msgid "MacOS X Support"
+msgstr "Яюффх№цър MacOS X"
+
+#: src/GameText.h:101
+msgid "Website Programming"
+msgstr "Я№юу№рььш№ютрэшх ёрщђр"
+
+#: src/GameText.h:105
+msgid "Website Administration"
+msgstr "Рфьшэшёђ№ш№ютрэшх ёрщђр"
+
+#: src/GameText.h:111
+msgid "Website Localization"
+msgstr "Ях№хтюф ёрщђр"
+
+#: src/GameText.h:120
+msgid "Forum"
+msgstr "дю№ѓь"
+
+#: src/GameText.h:123
+msgid "Main testers"
+msgstr "Тхфѓљшх ђхёђх№ћ"
+
+#: src/GameText.h:127
+msgid "Thanks to"
+msgstr "Сыруюфр№эюёђш"
+
+#: src/GameText.h:128
+msgid "for KDE/gnome integration"
+msgstr "чр шэђху№рішў ё KDE/gnome"
+
+#: src/GameText.h:129
+msgid "for german translation"
+msgstr "чр ях№хтюф эр эхьхіъшщ џчћъ"
+
+#: src/GameText.h:130
+msgid "for Debian packaging"
+msgstr "чр яръхђ Debian"
+
+#: src/GameText.h:131
+msgid "for Gentoo packaging"
+msgstr "чр яръхђ Gentoo"
+
+#: src/GameText.h:132
+msgid "for Mandriva packaging"
+msgstr "чр яръхђ Mandriva"
+
+#: src/GameText.h:133
+msgid "for across/elma"
+msgstr "чр across/elma"
+
+#: src/GameText.h:134
+msgid "for making tinyxml"
+msgstr "чр ёючфрэшх tinyxml"
+
+#: src/GameText.h:135
+msgid "for the MD5 code"
+msgstr "чр MD5 ъюф"
+
+#: src/GameText.h:137
+msgid "for providing web space"
+msgstr "чр я№хфюёђртыхэшх я№юёђ№рэёђтр т web"
+
+#: src/GameText.h:138
+msgid "for being such a little girl"
+msgstr "чр ђю, їђю юэр ђрърџ ьрыхэќърџ фхтюїър"
+
+#: src/GameText.h:139
+msgid "Everyone who have made levels"
+msgstr "Тёхь, ъђю ёючфртры ѓ№ютэш"
+
+#: src/GameText.h:140
+msgid "People who have provided bug reports"
+msgstr "Ыўфџь, ъюђю№ћх юђя№ртыџыш юђїхђћ юс юјшсърѕ"
+
+#: src/GameText.h:141
+msgid "Anyone who has helped in any way"
+msgstr "Тёхь, ъђю ѕюђќ ъръ-эшсѓфќ яюьюу"
+
+#: src/GameText.h:143
+msgid "Credits"
+msgstr "вшђ№ћ"
+
+#: src/GameText.h:144 src/GameText.h:313
+msgid "Player"
+msgstr "Шу№юъ"
+
+#: src/GameText.h:145
+msgid "Date"
+msgstr "Фрђр"
+
+#: src/GameText.h:146
+msgid "Upgrading database"
+msgstr "Юсэютыхэшх срчћ фрээћѕ"
+
+#: src/GameText.h:147
+msgid "Upgrading database stats for the profile"
+msgstr "Юсэютыхэшх срчћ фрээћѕ ёђрђшёђшъш я№юєшыџ"
+
+#: src/GameText.h:148
+msgid "Upgrading database profile"
+msgstr "Юсэютыхэшх срчћ фрээћѕ я№юєшыџ"
+
+#: src/GameText.h:149
+msgid "Death Animation"
+msgstr "Рэшьрішџ ёьх№ђш"
+
+#: src/GameText.h:150
+msgid "Defaults"
+msgstr "Яю ѓьюыїрэшў"
+
+#: src/GameText.h:151
+msgid "Do you really want to delete player?"
+msgstr "Тћ фхщёђтшђхыќэю ѕюђшђх ѓфрышђќ шу№юър?"
+
+#: src/GameText.h:152
+msgid "Do you really want to delete replay?"
+msgstr "Тћ фхщёђтшђхыќэю ѕюђшђх ѓфрышђќ чряшёќ шу№ћ?"
+
+#: src/GameText.h:153 src/GameText.h:155
+msgid "Delete"
+msgstr "гфрышђќ"
+
+#: src/GameText.h:154
+msgid "Delete from favorite"
+msgstr "гфрышђќ шч шчс№рээюую"
+
+#: src/GameText.h:156
+msgid "Description"
+msgstr "Юяшёрэшх"
+
+#: src/GameText.h:157
+msgid "Display Ghost time difference"
+msgstr "Яюърчћтрђќ №рчэшіѓ т№хьхэш Я№шч№рър"
+
+#: src/GameText.h:158
+msgid "Display Ghost Information"
+msgstr "Яюърчћтрђќ шэєю№ьрішў Я№шч№рър"
+
+#: src/GameText.h:159
+msgid "Direct Connection"
+msgstr "Я№џьюх ёюхфшэхэшх"
+
+#: src/GameText.h:160
+msgid "Downloading the ghost..."
+msgstr "Чру№ѓчър Я№шч№рър"
+
+#: src/GameText.h:161
+msgid "Downloading the highscore..."
+msgstr "Чру№ѓчър №хъю№фр"
+
+#: src/GameText.h:162
+msgid "Downloading high-scores..."
+msgstr "Чру№ѓчър №хъю№фют"
+
+#: src/GameText.h:163
+msgid ""
+"Downloading extra levels...\n"
+"Press ESC to abort."
+msgstr ""
+"еру№ѓцрўђёџ фюяюыэшђхыќэћх ѓ№ютэш...\n"
+"Эрцьшђх ESC, їђюсћ юђьхэшђќ чру№ѓчъѓ."
+
+#: src/GameText.h:164
+msgid "Checking for new levels..."
+msgstr "Яюшёъ эютћѕ ѓ№ютэхщ"
+
+#: src/GameText.h:165
+msgid "Checking for existing rooms..."
+msgstr "Яюшёъ ёѓљхёђтѓўљшѕ ъюьэрђ"
+
+#: src/GameText.h:166
+msgid ""
+"Downloading theme data required by new levels...\n"
+"Press ESC to abort."
+msgstr ""
+"Чру№ѓчър ђхьћ, эхюсѕюфшьющ фыџ эютћѕ ѓ№ютэхщ...\n"
+"Эрцьшђх ECS, їђюсћ юђьхэшђќ чру№ѓчъѓ."
+
+#: src/GameText.h:167
+msgid "Checking for new themes..."
+msgstr "Яюшёъ эютћѕ ђхь"
+
+#: src/GameText.h:168
+#, fuzzy
+msgid "Get More Levels!"
+msgstr "Чру№ѓчшђќ сюыќјх ѓ№ютэхщ!"
+
+#: src/GameText.h:169
+msgid "Drive"
+msgstr "Урч"
+
+#: src/GameText.h:170
+msgid "Drive 2"
+msgstr "Урч 2"
+
+#: src/GameText.h:171
+msgid "Enable Audio"
+msgstr "Я№юшу№ћтрђќ чтѓъ"
+
+#: src/GameText.h:172
+msgid "Check new levels at startup"
+msgstr "Шёърђќ эютћх ѓ№ютэш я№ш чряѓёъх"
+
+#: src/GameText.h:173
+msgid "Check new highscores at startup"
+msgstr "Шёърђќ эютћх №хъю№фћ я№ш чряѓёъх"
+
+#: src/GameText.h:174
+msgid "Enable Context Help"
+msgstr "Тъыўїшђќ ъюэђхъёђэѓў ёя№ртъѓ"
+
+#: src/GameText.h:175
+msgid "Enable Engine Sound"
+msgstr "Я№юшу№ћтрђќ чтѓъ фтшурђхыџ"
+
+#: src/GameText.h:176
+msgid "Enable Ghost"
+msgstr "Яюърчћтрђќ Я№шч№рър"
+
+#: src/GameText.h:177
+msgid "Show World Record in-game"
+msgstr "Яюърчћтрђќ т шу№х ьш№ютющ №хъю№ф"
+
+#: src/GameText.h:178
+msgid "Enable Music"
+msgstr "Я№юшу№ћтрђќ ьѓчћъѓ"
+
+#: src/GameText.h:179
+msgid "Enable WWW Access"
+msgstr "Яючтюыџђќ фюёђѓя т шэђх№эхђ"
+
+#: src/GameText.h:180
+msgid "Enter player name"
+msgstr "Ттхфшђх шьџ шу№юър"
+
+#: src/GameText.h:181
+msgid "Enter name of replay"
+msgstr "Ттхфшђх эрчтрэшх чряшёш шу№ћ"
+
+#: src/GameText.h:182
+msgid "There are errors in the level, don't expect it to be playable!"
+msgstr "Т ѓ№ютэх хёђќ юјшсъш, эх эрфхщђхёќ, їђю эр эхь ьюцэю сфхђ яюхчфшђќ!"
+
+#: src/GameText.h:183
+msgid "External Levels"
+msgstr "Тэхјэшх ѓ№ютэш"
+
+#: src/GameText.h:184
+msgid ""
+"Failed to check for levels.\n"
+"Check your Internet connection!"
+msgstr ""
+"Эх ѓфрыюёќ эрщђш эютћх ѓ№ютэш.\n"
+"Я№ютх№ќђх трјх ёюхфшэхэшх ё шэђх№эхђюь!"
+
+#: src/GameText.h:185
+msgid ""
+"Failed to download high-scores.\n"
+"Check your Internet connection!"
+msgstr ""
+"Эх ѓфрыюёќ чру№ѓчшђќ №хъю№фћ.\n"
+"Я№ютх№ќђх трјх ёюхфшэхэшх ё шэђх№эхђюь!"
+
+#: src/GameText.h:186
+msgid ""
+"Failed to download levels.\n"
+"Check your Internet connection!"
+msgstr ""
+"Эх ѓфрыюёќ чру№ѓчшђќ эютћх ѓ№ютэш.\n"
+"Я№ютх№ќђх трјх ёюхфшэхэшх ё шэђх№эхђюь!"
+
+#: src/GameText.h:187
+msgid ""
+"Failed to download the replay.\n"
+"Check your Internet connection!"
+msgstr ""
+"Эх ѓфрыюёќ чру№ѓчшђќ чряшёќ шу№ћ.\n"
+"Я№ютх№ќђх трјх ёюхфшэхэшх ё шэђх№эхђюь!"
+
+#: src/GameText.h:188
+msgid ""
+"Failed to download the rooms list.\n"
+"Check your Internet connection!"
+msgstr ""
+"Эх ѓфрыюёќ чру№ѓчшђќ ёяшёюъ ъюьэрђ.\n"
+"Я№ютх№ќђх трјх ёюхфшэхэшх ё шэђх№эхђюь!"
+
+#: src/GameText.h:189
+msgid ""
+"Failed to get the selected theme\n"
+"Check your Internet connection!"
+msgstr ""
+"Эх ѓфрыюёќ чру№ѓчшђќ тћс№рээѓў ђхьѓ\n"
+"Я№ютх№ќђх трјх ёюхфшэхэшх ё шэђх№эхђюь!"
+
+#: src/GameText.h:190
+msgid "Failed to initialize level!"
+msgstr "Юјшсър я№ш шэшішрышчрішш ѓ№ютэџ!"
+
+#: src/GameText.h:191
+msgid "Failed to load replay!"
+msgstr "Эх ѓфрыюёќ чру№ѓчшђќ чряшёќ шу№ћ!"
+
+#: src/GameText.h:192
+msgid ""
+"Failed to save replay!\n"
+"Maybe you should try with another name?"
+msgstr ""
+"Эх ѓфрыюёќ ёюѕ№рэшђќ чряшёќ шу№ћ!\n"
+"Эх яюя№юсѓхђх шчьхэшђќ эрчтрэшх?"
+
+#: src/GameText.h:193
+msgid ""
+"Failed to update the theme list\n"
+"Check your Internet connection!"
+msgstr ""
+"Эх ѓфрыюёќ юсэютшђќ ёяшёюъ ђхь\n"
+"Я№ютх№ќђх трјх ёюхфшэхэшх ё шэђх№эхђюь!"
+
+#: src/GameText.h:194
+msgid "File"
+msgstr "дрщы"
+
+#: src/GameText.h:195
+msgid "Filter"
+msgstr "дшыќђ№"
+
+#: src/GameText.h:196
+msgid "Finished!"
+msgstr "дшэшј!"
+
+#: src/GameText.h:197
+msgid "Finish Time"
+msgstr "дшэшјэюх т№хьџ"
+
+#: src/GameText.h:198
+msgid "Flip left"
+msgstr "Эръыюэшђќёџ эрыхтю"
+
+#: src/GameText.h:199
+msgid "Flip left 2"
+msgstr "Эръыюэшђќёџ эрыхтю 2"
+
+#: src/GameText.h:200
+msgid "Flip right"
+msgstr "Эръыюэшђќёџ эря№ртю"
+
+#: src/GameText.h:201
+msgid "Flip right 2"
+msgstr "Эръыюэшђќёџ эря№ртю 2"
+
+#: src/GameText.h:202
+msgid "Game Graphics"
+msgstr "Шу№ютрџ у№рєшър"
+
+#: src/GameText.h:203
+msgid "General"
+msgstr "Юсљшх"
+
+#: src/GameText.h:204
+msgid "General Info"
+msgstr "Юсљрџ шэєю№ьрішџ"
+
+#: src/GameText.h:205
+msgid "Get this theme"
+msgstr "Чру№ѓчшђќ §ђѓ ђхьѓ"
+
+#: src/GameText.h:206
+msgid "Local best"
+msgstr "Ыѓїјхх т№хьџ эр §ђюь ъюьяќўђх№х"
+
+#: src/GameText.h:207
+msgid "Your best"
+msgstr "Трјх ыѓїјхх т№хьџ"
+
+#: src/GameText.h:208
+msgid "Type"
+msgstr "вшя"
+
+#: src/GameText.h:209
+msgid "The highscore of the room"
+msgstr "Ыѓїјхх т№хьџ ъюьэрђћ"
+
+#: src/GameText.h:210
+msgid "The best of my replays (on this computer)"
+msgstr "Ыѓїјрџ шч ьюшѕ чряшёхщ шу№ (эр §ђюь ъюьяќўђх№х)"
+
+#: src/GameText.h:211
+msgid "The best of the replays (on this computer)"
+msgstr "Ыѓїјрџ шч чряшёхщ шу№ (эр §ђюь ъюьяќўђх№х)"
+
+#: src/GameText.h:212
+msgid "Ghost of"
+msgstr "Я№шч№ръ"
+
+#: src/GameText.h:213
+msgid "Ghost"
+msgstr "Я№шч№ръ"
+
+#: src/GameText.h:214
+msgid "Help"
+msgstr "бя№ртър"
+
+#: src/GameText.h:218
+msgid "You control your bike using the keyboard"
+msgstr "Тћ ѓя№ртыџхђх ьюђюішъыюь ё яюьюљќў ъыртшрђѓ№ћ"
+
+#: src/GameText.h:219
+msgid "Accelerates"
+msgstr "гёъю№џхђёџ"
+
+#: src/GameText.h:220
+msgid "Brakes"
+msgstr "вю№ьючшђ"
+
+#: src/GameText.h:221
+msgid "Rotates it counter-clockwise"
+msgstr "Эръыюэџхђёџ я№юђшт їрёютющ ёђ№хыъш"
+
+#: src/GameText.h:222
+msgid "Rotates it clockwise"
+msgstr "Эръыюэџхђёџ яю їрёютющ ёђ№хыъх"
+
+#: src/GameText.h:223
+msgid "Turns around and drives in the other direction"
+msgstr "арчтю№рїштрхђёџ ш хфхђ т я№юђштюяюыюцэюь эря№ртыхэшш"
+
+#: src/GameText.h:224 src/GameText.h:309
+msgid "Pause"
+msgstr "Ярѓчр"
+
+#: src/GameText.h:225
+msgid "Restart the level"
+msgstr "Ях№хчряѓёђшђќ ѓ№ютхэќ"
+
+#: src/GameText.h:226
+msgid "Take a screenshot"
+msgstr "бэџђќ ёэшьюъ §ъ№рэр"
+
+#: src/GameText.h:227
+msgid "Reload levels from Levels dir (if you create a new level)"
+msgstr "Ях№хчру№ѓчшђќ ѓ№ютэш шч фш№хъђю№шш ѓ№ютэхщ (хёыш тћ ёючфрыш эютћщ ѓ№ютхэќ)"
+
+#: src/GameText.h:229
+msgid ""
+"Find all the strawberries and touch the flower to finish\n"
+"the level."
+msgstr ""
+"Эрщфшђх тёх чхьыџэшїъш ш фюђ№юэќђхёќ фю ітхђър, їђюсћ чртх№јшђќ\n"
+"ѓ№ютхэќ"
+
+#: src/GameText.h:230
+msgid ""
+"Read the README file or check out the website at\n"
+"http://xmoto.tuxfamily.org for more information."
+msgstr ""
+"Я№юїшђрщђх єрщы README шыш яюёхђшђх эрј ёрщђ яю рф№хёѓ\n"
+"http://xmoto.tuxfamily.org фыџ фюяюыэшђхыќэющ шэєю№ьрішш."
+
+#: src/GameText.h:232
+#, fuzzy
+msgid "High"
+msgstr "Тћёюъюх"
+
+#: src/GameText.h:233
+msgid "Levels are being added into the database. Please wait."
+msgstr "г№ютэш фюсртыџўђёџ т эрјѓ срчѓ фрээћѕ. Яюцрыѓщёђр, яюфюцфшђх."
+
+#: src/GameText.h:234
+msgid "Internet Configuration"
+msgstr "Эрёђ№ющър шэђх№эхђ-ёюхфшэхэшџ"
+
+#: src/GameText.h:235
+msgid "Initializing input system..."
+msgstr "Шэшішрышчрішџ ёшёђхьћ ттюфр..."
+
+#: src/GameText.h:236
+msgid "Initializing menus..."
+msgstr "Шэшішрышчрішџ ьхэў..."
+
+#: src/GameText.h:237
+msgid "Initializing renderer..."
+msgstr "Шэшішрышчрішџ у№рєшїхёъюую фтшцър..."
+
+#: src/GameText.h:238
+msgid "Initializing text renderer..."
+msgstr "Шэшішрышчрішџ ђхъёђютюую фтшцър..."
+
+#: src/GameText.h:239
+msgid "View Level Initially"
+msgstr "бэрїрыр юсюч№хђќ ѓ№ютхэќ"
+
+#: src/GameText.h:240
+msgid "Joystick"
+msgstr "Фцющёђшъ"
+
+#: src/GameText.h:241
+msgid "Oops!"
+msgstr "Ющ!"
+
+#: src/GameText.h:242
+msgid "Press ENTER to try again"
+msgstr "Эрцьшђх ENTER їђюсћ яюя№юсћтрђќ ёэютр"
+
+#: src/GameText.h:243
+msgid "Press ESC to display the menu"
+msgstr "Эрцьшђх ESC їђюсћ юђюс№рчшђќ ьхэў"
+
+#: src/GameText.h:244
+msgid "Key"
+msgstr "Ъыртшјр"
+
+#: src/GameText.h:245
+msgid "Keyboard"
+msgstr "Ъыртшрђѓ№р"
+
+#: src/GameText.h:246
+msgid "Level"
+msgstr "г№ютхэќ"
+
+#: src/GameText.h:247
+msgid "Level Info..."
+msgstr "Шэєю№ьрішџ юс ѓ№ютэх..."
+
+#: src/GameText.h:248
+msgid "Level Name"
+msgstr "Эрчтрэшх ѓ№ютэџ"
+
+#: src/GameText.h:249
+#, c-format
+msgid "Level '%s' cannot be loaded"
+msgstr "г№ютхэќ '%s' эх ьюцхђ сћђќ чру№ѓцхэ"
+
+#: src/GameText.h:250
+msgid "Level Pack"
+msgstr "Эрсю№ ѓ№ютэхщ"
+
+#: src/GameText.h:251
+msgid "Level Packs"
+msgstr "Эрсю№ћ ѓ№ютэхщ"
+
+#: src/GameText.h:252
+#, c-format
+msgid "Level '%s' required by replay!"
+msgstr "Фыџ чряшёш шу№ћ ђ№хсѓхђёџ ѓ№ютхэќ '%s'!"
+
+#: src/GameText.h:253
+msgid "Levels"
+msgstr "г№ютэш"
+
+#: src/GameText.h:254
+msgid "List All"
+msgstr "Юђюс№рчшђќ тёх"
+
+#: src/GameText.h:255
+msgid "Loading..."
+msgstr "Чру№ѓчър..."
+
+#: src/GameText.h:256
+msgid "Loading levels..."
+msgstr "Чру№ѓчър ѓ№ютэхщ..."
+
+#: src/GameText.h:257
+msgid "Loading menu graphics..."
+msgstr "Чру№ѓчър у№рєшъш ьхэў..."
+
+#: src/GameText.h:258
+msgid "Loading replays..."
+msgstr "Чру№ѓчър чряшёхщ шу№..."
+
+#: src/GameText.h:259
+msgid "Loading sounds..."
+msgstr "Чру№ѓчър чтѓъют..."
+
+#: src/GameText.h:260
+msgid "Loading textures..."
+msgstr "Чру№ѓчр ђхъёђѓ№..."
+
+#: src/GameText.h:261
+msgid "Login"
+msgstr "Ыюушэ"
+
+#: src/GameText.h:262
+msgid "Low"
+msgstr "Эшчъюх"
+
+#: src/GameText.h:263
+msgid "Medium"
+msgstr "б№хфэхх"
+
+#: src/GameText.h:264
+msgid "Menu Graphics"
+msgstr "У№рєшър ьхэў"
+
+#: src/GameText.h:265
+msgid "Level references unknown textures, it could be unplayable!"
+msgstr "г№ютхэќ ёёћырхђёџ эр эхшчтхёђэѓў ђхъёђѓ№ѓ, тючьюцэю, юэ сѓфхђ эхшу№рсхыќэћь!"
+
+#: src/GameText.h:266
+msgid "Mono"
+msgstr "Ьюэю"
+
+#: src/GameText.h:267
+msgid "Following are your most played levels"
+msgstr "Эршсюыхх їрёђю шу№рхьћх ѓ№ютэш"
+
+#: src/GameText.h:268
+msgid "Motion blur ghost"
+msgstr "арчьћтрђќ Я№шч№рър"
+
+#: src/GameText.h:269
+msgid "Multi"
+msgstr "Ьѓыќђш"
+
+#: src/GameText.h:270
+msgid "Name"
+msgstr "Шьџ"
+
+#: src/GameText.h:271
+msgid "Number of players"
+msgstr "зшёыю шу№юъют"
+
+#: src/GameText.h:272
+msgid "New"
+msgstr "Эютћщ"
+
+#: src/GameText.h:273
+#, c-format
+msgid "X-Moto %s or newer required to load level"
+msgstr "X-Moto %s шыш эютхх ђ№хсѓхђёџ, їђюсћ чру№ѓчшђќ ѓ№ютхэќ"
+
+#: src/GameText.h:274
+msgid "New highscore!"
+msgstr "Эютћщ №хъю№ф!"
+
+#: src/GameText.h:275
+msgid "New personal highscore!"
+msgstr "Эютћщ ышїэћщ №хъю№ф!"
+
+#: src/GameText.h:276
+#, c-format
+msgid "%d new or updated level available. Download now?"
+msgstr "Фюёђѓяэю %d эютћѕ шыш юсэютыхээћѕ ѓ№ютэхщ. Чру№ѓчшђќ шѕ ёхщїрё?"
+
+#: src/GameText.h:277
+msgid "New Levels"
+msgstr "Эютћх ѓ№ютэш"
+
+#: src/GameText.h:278
+msgid "New levels available!"
+msgstr "Фюёђѓяэћ эютћх ѓ№ютэш!"
+
+#: src/GameText.h:279
+#, c-format
+msgid "%d new or updated levels available. Download now?"
+msgstr "Фюёђѓяэю %d эютћѕ шыш юсэютыхээћѕ ѓ№ютэхщ. Чру№ѓчшђќ шѕ ёхщїрё?"
+
+#: src/GameText.h:280
+msgid "New Profile..."
+msgstr "Эютћщ я№юєшыќ..."
+
+#: src/GameText.h:281
+msgid "No"
+msgstr "Эхђ"
+
+#: src/GameText.h:282
+msgid ""
+"No new or updated levels available.\n"
+"\n"
+"Try again another time."
+msgstr ""
+"Эхђ эютћѕ шыш юсэютыхээћѕ ѓ№ютэхщ.\n"
+"\n"
+"Яюя№юсѓщђх т ф№ѓующ №рч."
+
+#: src/GameText.h:283
+msgid "No level following this one, sorry."
+msgstr "Я№юёђшђх, эю ёыхфѓўљхую ѓ№ютэџ эхђ."
+
+#: src/GameText.h:284
+msgid "No statistics for this profile."
+msgstr "Фыџ §ђюую я№юєшыџ эхђ ёђрђшёђшъш"
+
+#: src/GameText.h:285
+msgid "Not finished"
+msgstr "Эх чртх№јхэ"
+
+#: src/GameText.h:286
+msgid ""
+"Important note!\n"
+"\n"
+"This is an in development version of X-Moto!\n"
+"All kinds of feedback are highly appreciated, so the game\n"
+"can get better.\n"
+"Mail bugs, ideas, comments, feature requests, hatemail, etc\n"
+"to nicolas at adenis-lamarre dot fr\n"
+"\n"
+"Also visit http://xmoto.tuxfamily.org to make sure you've\n"
+"got the latest version."
+msgstr ""
+"Трцэюх чрьхїрэшх!\n"
+"\n"
+"нђю схђр-тх№ёшџ X-Moto!\n"
+"Юс№рђэрџ ётџчќ тёџъюую №юфр ъ№рщэх трцэю, яюёъюыќъѓ шу№р\n"
+"ьюцхђ ёђрђќ ыѓїјх.\n"
+"Юђя№ртыџщђх ёююсљхэшџ юс юјшсърѕ, шфхш, ъюььхэђр№шш, чря№юёћ эютющ єѓэъішюэрыќэюёђш, яшёќьр ё ѓу№ючрьш ш ђюьѓ яюфюсэюх\n"
+"яю рф№хёѓ nicolas at adenis-lamarre dot fr\n"
+"\n"
+"връцх яюёхђшђх http://xmoto.tuxfamily.org їђюсћ ѓфюёђютх№шђќёџ, їђю ѓ трё\n"
+"яюёыхфэџџ тх№ёшџ."
+
+#: src/GameText.h:296
+msgid "# Levels"
+msgstr "# г№ютэш"
+
+#: src/GameText.h:297
+msgid "OK"
+msgstr "OK"
+
+#: src/GameText.h:298
+msgid "Open"
+msgstr "Юђъ№ћђќ"
+
+#: src/GameText.h:299
+msgid "Options"
+msgstr "Эрёђ№ющъш"
+
+#: src/GameText.h:300
+msgid "Some options will not take effect before next restart!"
+msgstr "Эхъюђю№ћх шчьхэхэшџ эх тёђѓяџђ т ёшыѓ, яюър шу№р эх сѓфхђ чряѓљхэр чрэютю!"
+
+#: src/GameText.h:301
+msgid "By author"
+msgstr "Ртђю№юь"
+
+#: src/GameText.h:302
+msgid "Medals"
+msgstr "Ьхфрыш"
+
+#: src/GameText.h:303 src/GameText.h:335
+msgid "Room"
+msgstr "Ъюьэрђр"
+
+#: src/GameText.h:304
+msgid "Special"
+msgstr "бяхішрыќэћщ"
+
+#: src/GameText.h:305
+msgid "Standard"
+msgstr "бђрэфр№ђэћщ"
+
+#: src/GameText.h:306
+msgid "Web votes"
+msgstr "Web уюыюёютрэшџ"
+
+#: src/GameText.h:307 src/GameText.h:347
+msgid "Statistics"
+msgstr "бђрђшёђшър"
+
+#: src/GameText.h:308 src/GameText.h:539
+msgid "By best driver"
+msgstr "Ыѓїјшь тюфшђхыхь"
+
+#: src/GameText.h:310
+msgid "Password"
+msgstr "Яр№юыќ"
+
+#: src/GameText.h:311 src/GameText.h:312
+msgid "Personal"
+msgstr "Ышїэћщ"
+
+#: src/GameText.h:314
+msgid "Players"
+msgstr "Шу№юъш"
+
+#: src/GameText.h:315
+msgid "Player Profile"
+msgstr "Я№юєшыќ шу№юър"
+
+#: src/GameText.h:316
+msgid "Player Profiles"
+msgstr "Я№юєшыш шу№юъют"
+
+#: src/GameText.h:317
+msgid "Play Next Level"
+msgstr "быхфѓўљшщ ѓ№ютхэќ"
+
+#: src/GameText.h:318
+msgid "Port"
+msgstr "Яю№ђ"
+
+#: src/GameText.h:319
+#, c-format
+msgid "Press key you want to '%s' or ESC to cancel..."
+msgstr "Эрцьшђх ъэютъѓ фыџ '%s' шыш ESC фыџ юђьхэћ..."
+
+#: src/GameText.h:320
+msgid "Proxy Server"
+msgstr "Я№юъёш ёх№тх№"
+
+#: src/GameText.h:321
+msgid "Configure Proxy..."
+msgstr "Эрёђ№юшђќ я№юъёш..."
+
+#: src/GameText.h:322
+msgid "Quit Game"
+msgstr "Тћѕюф"
+
+#: src/GameText.h:323
+msgid "Do you really want to quit?"
+msgstr "Тћ фхщёђтшђхыќэю ѕюђшђх тћщђш?"
+
+#: src/GameText.h:324
+msgid "Randomize"
+msgstr "Ях№хьхјрђќ"
+
+#: src/GameText.h:325
+msgid "Reloading levels..."
+msgstr "Чру№ѓчшђќ ѓ№ютэш чрэютю..."
+
+#: src/GameText.h:326
+msgid "Reloading replays..."
+msgstr "Чру№ѓчшђќ чряшёш шу№ чрэютю..."
+
+#: src/GameText.h:327
+msgid "Replay"
+msgstr "Чряшёќ шу№ћ"
+
+#: src/GameText.h:328
+msgid "Stop[esc] ||[space]  << >>[left/right keys]  < >[up/down keys]   Speed:"
+msgstr "бђюя[esc] ||[я№юсхы]  << >>[эрыхтю/эря№ртю]  < >[ттх№ѕ/тэшч]   бъю№юёђќ:"
+
+#: src/GameText.h:329
+msgid "Stop[esc] ||[space] >>[right key] < >[up/down keys]   Speed:"
+msgstr "бђюя[esc] ||[я№юсхы] >>[эря№ртю] < >[ттх№ѕ/тэшч]   бъю№юёђќ:"
+
+#: src/GameText.h:331
+msgid "The replay can't be played!"
+msgstr "Эхыќчџ шу№рђќ т чряшёќ шу№ћ"
+
+#: src/GameText.h:332
+msgid "Replays"
+msgstr "Чряшёш шу№"
+
+#: src/GameText.h:333
+msgid "Restart This Level"
+msgstr "Ях№хчряѓёђшђќ §ђюђ ѓ№ютхэќ"
+
+#: src/GameText.h:334
+msgid "Resume Playing"
+msgstr "Я№юфюыцшђќ шу№ѓ"
+
+#: src/GameText.h:336
+msgid "Run Windowed"
+msgstr "Чряѓёърђќ т юъэх"
+
+#: src/GameText.h:337
+msgid "Save"
+msgstr "бюѕ№рэшђќ"
+
+#: src/GameText.h:338
+msgid "Saved as"
+msgstr "бюѕ№рэшђќ ъръ"
+
+#: src/GameText.h:339
+msgid "Save Replay"
+msgstr "бюѕ№рэшђќ яютђю№ шу№ћ"
+
+#: src/GameText.h:340
+msgid "Screen Resolution"
+msgstr "арч№хјхэшх §ъ№рэр"
+
+#: src/GameText.h:341
+msgid "Show"
+msgstr "Яюърчћтрђќ"
+
+#: src/GameText.h:342
+msgid "Speedometer"
+msgstr "бяшфюьхђ№"
+
+#: src/GameText.h:343
+msgid "Info..."
+msgstr "Шэєю№ьрішџ..."
+
+#: src/GameText.h:344
+msgid "Show Mini Map"
+msgstr "Яюърчћтрђќ ьшэш-ър№ђѓ"
+
+#: src/GameText.h:345
+msgid "Scripted"
+msgstr "Чрёъ№шяђютрээћх"
+
+#: src/GameText.h:346
+msgid "Play!"
+msgstr "Шу№рђќ!"
+
+#: src/GameText.h:348
+msgid "STATS"
+msgstr "бђрђшёђшър"
+
+#: src/GameText.h:349
+msgid "Stereo"
+msgstr "бђх№хю"
+
+#: src/GameText.h:350
+msgid "Theme"
+msgstr "вхьр"
+
+#: src/GameText.h:351
+msgid "Available"
+msgstr "Фюёђѓяэю"
+
+#: src/GameText.h:352
+msgid "To download"
+msgstr "бърїрђќ"
+
+#: src/GameText.h:353
+msgid "To be updated"
+msgstr "Юсэютшђќ"
+
+#: src/GameText.h:354
+msgid "The theme is now up to date"
+msgstr "вхьр эх эѓцфрхђёџ т юсэютыхэшш"
+
+#: src/GameText.h:355
+msgid "Time"
+msgstr "Т№хьџ"
+
+#: src/GameText.h:356
+msgid "Try This Level Again"
+msgstr "Ях№хшу№рђќ ѓ№ютхэќ чрэютю"
+
+#: src/GameText.h:357
+msgid "Tutorial"
+msgstr "Юсѓїхэшх"
+
+#: src/GameText.h:358
+msgid "Unknown"
+msgstr "Эхшчтхёђэћщ"
+
+#: src/GameText.h:359
+msgid "Unpacked levels"
+msgstr "Эхчряръютрээћх ѓ№ютэш"
+
+#: src/GameText.h:360
+msgid ""
+"Can't update this theme !\n"
+"The theme is not avaible on the web\n"
+"or your theme list is not up to date"
+msgstr ""
+"Эхыќчџ юсэютшђќ §ђѓ ђхьѓ!\n"
+"нђр ђхьр эх фюёђѓяэр т шэђх№эхђх\n"
+"шыш трј ёяшёюъ ђхь эх юсэютыхэ"
+
+#: src/GameText.h:361
+msgid "Update"
+msgstr "Юсэютшђќ"
+
+#: src/GameText.h:362
+msgid "Updated"
+msgstr "Юсэютыхэю"
+
+#: src/GameText.h:363
+msgid "Check WWW"
+msgstr "Я№ютх№шђќ WWW"
+
+#: src/GameText.h:364
+msgid "Update the rooms list"
+msgstr "Юсэютшђќ ёяшёюъ ъюьэрђ"
+
+#: src/GameText.h:365
+msgid "Update the theme list"
+msgstr "Юсэютшђќ ёяшёюъ ђхь"
+
+#: src/GameText.h:366
+msgid "Updating level lists..."
+msgstr "Юсэютыхэшх ёяшёър ѓ№ютэхщ..."
+
+#: src/GameText.h:367
+msgid "Upload highscore"
+msgstr "Чру№ѓчшђќ №хъю№ф эр ёх№тх№"
+
+#: src/GameText.h:368
+msgid "Upload all highscores"
+msgstr "Чр№уѓчшђќ тёх №хъю№фћ эр ёх№тх№"
+
+#: src/GameText.h:369
+msgid ""
+"An unexcepted error occured\n"
+"The website has perhaps some troubles"
+msgstr ""
+"Я№юшчюјыр эхюцшфрээрџ юјшсър\n"
+"брщђ, тючьюцэю, №рсюђрхђ эхя№ртшыќэю"
+
+#: src/GameText.h:370
+msgid "Oh no !"
+msgstr "Ю, эхђ!"
+
+#: src/GameText.h:371
+msgid "Uploading the highscore..."
+msgstr "Чру№ѓчър №хъю№фр эр ёх№тх№..."
+
+#: src/GameText.h:372
+msgid "Use Environment Vars"
+msgstr "Шёяюыќчютрђќ ях№хьхээћх юъ№ѓцхэшџ"
+
+#: src/GameText.h:373
+msgid "Use Profile"
+msgstr "Шёяюыќчютрђќ я№юєшыќ"
+
+#: src/GameText.h:374
+msgid "Using HTTP Proxy"
+msgstr "Шёяюыќчѓџ HTTP я№юъёш"
+
+#: src/GameText.h:375
+msgid "Using SOCKS4 Proxy"
+msgstr "Шёяюыќчѓџ SOCKS4 я№юъёш"
+
+#: src/GameText.h:376
+msgid "Using SOCKS5 Proxy"
+msgstr "Шёяюыќчѓџ SOCKS5 я№юъёш"
+
+#: src/GameText.h:377
+msgid "Video"
+msgstr "Тшфхю"
+
+#: src/GameText.h:378
+msgid "View"
+msgstr "Яюърчрђќ"
+
+#: src/GameText.h:379
+msgid "View the highscore"
+msgstr "Яюърчрђќ №хъю№ф"
+
+#: src/GameText.h:380
+#, c-format
+msgid "Do you want to update level \"%s\"?"
+msgstr "Тћ ѕюђшђх юсэютшђќ ѓ№ютхэќ \"%s\"?"
+
+#: src/GameText.h:381
+msgid "Warning"
+msgstr "Я№хфюёђх№хцхэшх"
+
+#: src/GameText.h:383
+msgid "Main"
+msgstr "Уыртэћщ"
+
+#: src/GameText.h:384
+msgid "WWW"
+msgstr "WWW"
+
+#: src/GameText.h:385
+msgid "Rooms"
+msgstr "Ъюьэрђћ"
+
+#: src/GameText.h:387
+#, c-format
+msgid "%d hours"
+msgstr "%d їрёют"
+
+#: src/GameText.h:388
+#, c-format
+msgid "%d minutes"
+msgstr "%d ьшэѓђ"
+
+#: src/GameText.h:389
+#, c-format
+msgid ""
+"(Stats since: %s)\n"
+"X-Moto started %d times; %d plays (%d different levels),\n"
+"%d deaths, %d finishes, and %d restarts.\n"
+"Time played: %s"
+msgstr ""
+"(бђрђшёђшър ё: %s)\n"
+"X-Moto сћы чряѓљхэ %d №рч; %d шу№ (%d №рчышїэћѕ ѓ№ютхэхщ),\n"
+"%d ёьх№ђхщ, %d єшэшјхщ, ш %d ях№хчряѓёъют.\n"
+"Т№хьхэш ёћу№рэю: %s"
+
+#: src/GameText.h:392
+#, c-format
+msgid "%d plays, %d deaths, %d finishes, and %d restarts"
+msgstr "%d шу№, %d ёьх№ђхщ, %d єшэшјхщ, ш %d ях№хчряѓёъют"
+
+#: src/GameText.h:393
+#, c-format
+msgid "%d seconds"
+msgstr "%d ёхъѓэф"
+
+#: src/GameText.h:394
+msgid "Yes"
+msgstr "Фр"
+
+#: src/GameText.h:395
+msgid "Yes to all"
+msgstr "Фр фыџ тёхѕ"
+
+#: src/GameText.h:396
+msgid "Zoom in"
+msgstr "Я№шсышчшђќёџ"
+
+#: src/GameText.h:397
+msgid "Reinitialize zoom"
+msgstr "Шэшішрышчш№ютрђќ я№шсышцхэшх чрэютю"
+
+#: src/GameText.h:398
+msgid "Zoom out"
+msgstr "Юђфрышђќёџ"
+
+#: src/GameText.h:401
+msgid "Download the latest X-Moto world records and check for new levels"
+msgstr "бърїрђќ яюёыхфэшх ьш№ютћх №хъю№фћ X-Moto ш я№ютх№шђќ эрышїшх эютћѕ ѓ№ютэхщ"
+
+#: src/GameText.h:402
+msgid "Configure how you are connected to the Internet"
+msgstr "Эрёђющђх, ъръ тћ яюфъыўїхэћ ъ шэђх№эхђѓ"
+
+#: src/GameText.h:403
+msgid "Play this level again"
+msgstr "Я№юхѕрђќ §ђюђ ѓ№ютхэќ чрэютю"
+
+#: src/GameText.h:404
+msgid "Save a replay for later viewing"
+msgstr "бюѕ№рэшђќ чряшёќ шу№ћ фыџ фрыќэхщјхую я№юёьюђ№р"
+
+#: src/GameText.h:405
+msgid "Play next level"
+msgstr "Чряѓёђшђќ ёыхфѓўљшщ ѓ№ютхэќ"
+
+#: src/GameText.h:406
+msgid "Back to the main menu"
+msgstr "Тх№эѓђќёџ т уыртэюх ьхэў"
+
+#: src/GameText.h:407
+msgid "Quit the game"
+msgstr "Тћщђш шч шу№ћ"
+
+#: src/GameText.h:408
+msgid "Back to the game"
+msgstr "Эрчрф т шу№ѓ"
+
+#: src/GameText.h:409
+msgid "Try this level again from the beginning"
+msgstr "Ях№хшу№рђќ §ђюђ ѓ№ютхэќ ё эрїрыр"
+
+#: src/GameText.h:410
+msgid "Play next level instead"
+msgstr "Тьхёђю §ђюую, чряѓёђшђќ ёыхфѓўљшщ ѓ№ютхэќ"
+
+#: src/GameText.h:411
+msgid "Try this level again"
+msgstr "Яюя№юсютрђќ §ђюђ ѓ№ютхэќ ёэютр"
+
+#: src/GameText.h:412
+msgid "Built-in and stand-alone external levels"
+msgstr "Тёђ№юхээћх ш юђфхыќэћх тэхјэшх ѓ№ютэш"
+
+#: src/GameText.h:413
+msgid "Levels grouped together in level packs"
+msgstr "г№ютэш, ёу№ѓяяш№ютрээћх яю эрсю№рь ѓ№ютэхщ"
+
+#: src/GameText.h:414
+msgid "Browse levels available to you"
+msgstr "Я№юёьюђ№хђќ фюёђѓяэћх ѓ№ютэш"
+
+#: src/GameText.h:415
+msgid "View list of recorded replays"
+msgstr "Я№юёьюђ№хђќ ёяшёюъ чряшёрээћѕ яютђю№ют шу№"
+
+#: src/GameText.h:416
+msgid "Configure X-Moto preferences"
+msgstr "Эрёђ№юшђќ я№хфяюїђхэшџ X-Moto"
+
+#: src/GameText.h:417
+msgid "Instructions of how to play X-Moto"
+msgstr "Шэёђ№ѓъішш яю шу№х т X-Moto"
+
+#: src/GameText.h:418
+msgid "Change player profile"
+msgstr "бьхэшђќ я№юєшыќ яюыќчютрђхыџ"
+
+#: src/GameText.h:419
+msgid "Play tutorial of how to play the game"
+msgstr "Чряѓёђшђќ юсѓїрўљѓў шу№ѓ"
+
+#: src/GameText.h:420
+msgid "Official built-in levels"
+msgstr "Юєшішрыќэћх тёђ№юхээћх ѓ№ютэш"
+
+#: src/GameText.h:421
+msgid "Unofficial stand-alone external levels"
+msgstr "Эхюєшішрыќэћх юђфхыќэћх тэхјэшх ѓ№ютэш"
+
+#: src/GameText.h:422
+msgid "Play the selected level"
+msgstr "Чряѓёђшђќ тћс№рээћщ ѓ№ютхэќ"
+
+#: src/GameText.h:423
+msgid "View general information about the level, best times, and replays"
+msgstr "Я№юёьюђ№хђќ юсљѓў шэєю№ьрішў юс ѓ№ютэх, ыѓїјшх т№хьхэр ш чряшёш шу№"
+
+#: src/GameText.h:424
+msgid "Run the selected replay"
+msgstr "Чряѓёђшђќ тћс№рээѓў чряшёќ шу№ћ"
+
+#: src/GameText.h:425
+msgid "Permanently delete the selected replay"
+msgstr "гфрышђќ тћс№рээѓў чряшёќ шу№р эртёхуфр"
+
+#: src/GameText.h:426
+msgid "Show replays of all players in list"
+msgstr "Яюърчрђќ чряшёш шу№ тёхѕ шу№юъют т ёяшёъх"
+
+#: src/GameText.h:427
+msgid "General X-Moto preferences"
+msgstr "Юсљшх я№хфяюїђхэшџ X-Moto"
+
+#: src/GameText.h:428
+msgid "Configure graphical options"
+msgstr "Эрёђ№юшђќ у№рєшъѓ"
+
+#: src/GameText.h:429
+msgid "Configure audio options"
+msgstr "Эрёђ№юшђќ чтѓъ"
+
+#: src/GameText.h:430
+msgid "Configure control options"
+msgstr "Эрёђ№юшђќ ѓя№ртыхэшх"
+
+#: src/GameText.h:431
+msgid "Save options"
+msgstr "бюѕ№рэшђќ эрёђ№ющъш"
+
+#: src/GameText.h:432
+msgid "Revert options to defaults"
+msgstr "Тх№эѓђќ эрёђ№ющъш яю ѓьюыїрэшў"
+
+#: src/GameText.h:433
+msgid "Show a map of your surroundings when playing"
+msgstr "Яюърчћтрђќ тю т№хьџ шу№ћ ър№ђѓ"
+
+#: src/GameText.h:434
+msgid "Automatically download best times off the net when the game starts"
+msgstr "Ртђюьрђшїхёъш ёърїштрђќ ыѓїјшх т№хьхэр шч шэђх№эхђр я№ш чряѓёъх шу№ћ"
+
+#: src/GameText.h:435
+msgid "Show the World Record for a given level when playing"
+msgstr "Яюърчћтрђќ ьш№ютющ №хъю№ф ѓ№ютэџ тю т№хьџ шу№ћ"
+
+#: src/GameText.h:436
+msgid "Enable high-color graphics"
+msgstr "Тъыўїшђќ у№рєшъѓ high-color"
+
+#: src/GameText.h:437
+msgid "Enable true-color graphics"
+msgstr "Тъыўїшђќ у№рєшъѓ true-color"
+
+#: src/GameText.h:438
+msgid "Select graphics resolution"
+msgstr "Тћс№рђќ у№рєшїхёъюх №рч№хјхэшх"
+
+#: src/GameText.h:439
+msgid "Run the game in a window"
+msgstr "Чряѓёърђќ шу№ѓ т юъэх"
+
+#: src/GameText.h:440
+msgid "Not so fancy menu graphics"
+msgstr "Эх ёђюыќ ъ№рёштрџ у№рєшър ьхэў"
+
+#: src/GameText.h:441
+msgid "A bit more fancy menu graphics"
+msgstr "Эхьэюую сюыхх ъ№рёштрџ у№рєшър ьхэў"
+
+#: src/GameText.h:442
+msgid "Fanciest menu graphics"
+msgstr "Эршсюыхх ъ№рёштрџ у№рєшър ьхэў"
+
+#: src/GameText.h:443
+msgid "Disable most graphics not important to the gameplay"
+msgstr "Юђъыўїшђќ сюыќјѓў їрёђќ у№рєшъш, эхтрцэющ фыџ шу№ютюую я№юіхёёр"
+
+#: src/GameText.h:444
+msgid "Disable some of the most resource-intensive graphics, like particles"
+msgstr "Юђъыўїшђќ эхъюђю№ћх шч эршсюыхх №хёѓ№ёюхьъшѕ у№рєшїхёъшѕ §єєхъђют, эря№шьх№, їрёђшіћ"
+
+#: src/GameText.h:445
+msgid "Enable all graphical effects"
+msgstr "Тъыўїшђќ тёх у№рєшїхёъшх §єєхъђћ"
+
+#: src/GameText.h:446
+msgid "Turn on sound effects"
+msgstr "Тъыўїшђќ рѓфшю §єєхъђћ"
+
+#: src/GameText.h:447
+msgid "Poor sound quality"
+msgstr "Яыюѕюх ърїхёђтю чтѓър"
+
+#: src/GameText.h:448
+msgid "Normal sound quality"
+msgstr "Эю№ьрыќэюх ърїхёђтю чтѓър"
+
+#: src/GameText.h:449
+msgid "Best sound quality"
+msgstr "Эршыѓїјхх ърїхёђтю чтѓър"
+
+#: src/GameText.h:450
+msgid "8-bit sound samples, poor quality"
+msgstr "8-сшђэћщ чтѓъ, яыюѕюх ърїхёђтю"
+
+#: src/GameText.h:451
+msgid "16-bit sound samples, good quality"
+msgstr "16-сшђэћщ чтѓъ, ѕю№юјхх ърїхёђтю"
+
+#: src/GameText.h:452
+msgid "Mono (single channel) audio"
+msgstr "Ьюэюєюэшїхёъшщ (юфэюърэрыќэћщ) чтѓъ"
+
+#: src/GameText.h:453
+msgid "Stereo (two channel) audio"
+msgstr "бђх№хюєюэшїхёъшщ (фтѓѕърэрыќэћщ) чтѓъ"
+
+#: src/GameText.h:454
+msgid "Turn on engine noise"
+msgstr "Тъыўїшђќ јѓь ьюђю№р"
+
+#: src/GameText.h:455
+msgid "Select action to re-configure to another key"
+msgstr "Тћсх№шђх фхщёђтшх фыџ ях№хэрчэрїхэшџ эр ф№ѓуѓў ъыртшјѓ"
+
+#: src/GameText.h:456
+msgid "View contents of level pack"
+msgstr "Яюърчрђќ ёюфх№цшьюх эрсю№р ѓ№ютэхщ"
+
+#: src/GameText.h:457
+msgid "Select a player profile to use"
+msgstr "Тћс№рђќ я№юєшыќ шу№юър"
+
+#: src/GameText.h:458
+msgid "Use the selected player profile"
+msgstr "Шёяюыќчютрђќ тћс№рээћщ я№юєшыќ шу№юър"
+
+#: src/GameText.h:459
+msgid "Create new player profile"
+msgstr "бючфрђќ эютћщ я№юєшыќ шу№юър"
+
+#: src/GameText.h:460
+msgid "Permanently delete selected player profile, including best times"
+msgstr "гфрышђќ тћс№рээћщ я№юєшыќ шу№юър, тъыўїрџ ыѓїјшх т№хьхэр, эртёхуфр"
+
+#: src/GameText.h:461
+msgid "Select a level in the level pack to play"
+msgstr "Тћсх№шђх ѓ№ютхэќ т эрсю№х ѓ№ютэхщ фыџ я№юѕюцфхэшџ"
+
+#: src/GameText.h:462
+msgid "Close level pack"
+msgstr "Чръ№ћђќ эрсю№ ѓ№ютэхщ"
+
+#: src/GameText.h:463
+msgid "General information about the level"
+msgstr "Юсљрџ шэєю№ьрішџ юс ѓ№ютэх"
+
+#: src/GameText.h:464
+msgid "View best times for the level"
+msgstr "Яюърчрђќ ыѓїјшх т№хьхэр фыџ ѓ№ютэџ"
+
+#: src/GameText.h:465
+msgid "View locally stored replays of the level"
+msgstr "Яюърчрђќ ѕ№рэшьћх эр §ђюь ъюьяќўђх№х чряшёш я№юѕюцфхэшџ ѓ№ютэџ"
+
+#: src/GameText.h:466
+msgid "Only show personal best times for this level"
+msgstr "Яюърчћтрђќ ђюыќъю ышїэћх ыѓїјшх т№хьхэр фыџ §ђюую ѓ№ютэџ"
+
+#: src/GameText.h:467
+msgid "Show all best times for this level"
+msgstr "Яюърчћтрђќ тёх ыѓїјшх т№хьхэр фыџ §ђюую ѓ№ютэџ"
+
+#: src/GameText.h:468
+msgid "Only show personal replays for this level"
+msgstr "Яюърчћтрђќ ђюыќъю ѕ№рэшьћх эр §ђюь ъюьяќўђх№х чряшёш я№юѕюцфхэшџ §ђюую ѓ№ютэџ"
+
+#: src/GameText.h:469
+msgid "Show all replays for this level"
+msgstr "Яюърчрђќ тёх чряшёш я№юѕюцфхэшџ §ђюую ѓ№ютэџ"
+
+#: src/GameText.h:470
+msgid "Run selected replay"
+msgstr "Чряѓёђшђќ тћс№рээѓў чряшёќ шу№ћ"
+
+#: src/GameText.h:471
+msgid "Show helpful help strings such as this one"
+msgstr "Яюърчћтрђќ яюыхчэћх ёђ№юъш ёя№ртъш, ђръшх ъръ §ђр"
+
+#: src/GameText.h:472
+msgid ""
+"Let X-Moto look for more levels on the net, and install them automatically"
+msgstr ""
+"Яючтюышђќ X-Moto шёърђќ фюяюыэшђхыќэћх ѓ№ютэш т ёхђш ш ѓёђрэртыштрђќ шѕ ртђюьрђшїхёъш"
+
+#: src/GameText.h:473
+msgid "Select this if you got a direct connection to the Internet"
+msgstr "Тћсх№шђх §ђюђ яѓэъђ, хёыш ѓ трё я№џьюх ёюхфшэхэшх ё шэђх№эхђюь"
+
+#: src/GameText.h:474
+msgid "Select this if you connects to the Internet through an HTTP proxy"
+msgstr "Тћсх№шђх §ђюђ яѓэъђ, хёыш ѓ трё ёюхфшэхэшх ё шэђх№эхђюь їх№хч HTTP я№юъёш"
+
+#: src/GameText.h:475
+msgid "Select this if you connects to the Internet through a SOCKS4 proxy"
+msgstr "Тћсх№шђх §ђюђ яѓэъђ, хёыш ѓ трё ёюхфшэхэшх ё шэђх№эхђюь їх№хч SOCKS4 я№юъёш"
+
+#: src/GameText.h:476
+msgid "Select this if you connects to the Internet through a SOCKS5 proxy"
+msgstr "Тћсх№шђх §ђюђ яѓэъђ, хёыш ѓ трё ёюхфшэхэшх ё шэђх№эхђюь їх№хч SOCKS5 я№юъёш"
+
+#: src/GameText.h:477
+msgid "Use these settings"
+msgstr "Шёяюыќчютрђќ §ђш эрёђ№ющъш"
+
+#: src/GameText.h:478
+msgid "Write the IP address or host name of proxy server to use"
+msgstr "Ттхфшђх IP рф№хё шыш шьџ я№юъёш ёх№тх№р"
+
+#: src/GameText.h:479
+msgid "Write the port number used by the proxy server"
+msgstr "Ттхфшђх эюьх№ яю№ђр, шёяюыќчѓхьюую я№юъёш ёх№тх№юь"
+
+#: src/GameText.h:480
+msgid "New levels and levels updated from the Internet"
+msgstr "Эютћх ѓ№ютэш ш ѓ№ютэш, чру№ѓцхээћх шч шэђх№эхђр"
+
+#: src/GameText.h:482
+msgid "Show the ghost if possible in the game"
+msgstr "Яюърчћтрђќ Я№шч№рър т шу№х, хёыш §ђю тючьюцэю"
+
+#: src/GameText.h:483
+msgid "Choose which ghost to display"
+msgstr "Тћсх№шђх, ъръюую Я№шч№рър юђюс№рцрђќ"
+
+#: src/GameText.h:484
+msgid ""
+"Make motion blur effect for the ghost (if supported by your graphics card)"
+msgstr ""
+"арчьћтрђќ ях№хьхљэхэшх Я№шч№рър (хёыш яюффх№цштрхђёџ трјхщ у№рєшїхёъющ ър№ђющ)"
+
+#: src/GameText.h:485
+msgid "When starting a level with a ghost, display who the ghost is of"
+msgstr "Эрїшэрџ ѓ№ютхэќ ё Я№шч№ръюь, яюърчћтрђќ, їхщ §ђю Я№шч№ръ"
+
+#: src/GameText.h:486
+msgid "Display the time difference between the ghost and you"
+msgstr "Яюърчћтрђќ №рчэшіѓ т№хьхэш ьхцфѓ Я№шч№ръюь ш трьш"
+
+#: src/GameText.h:487
+msgid "If you make a highscore it will automatically be saved as a replay"
+msgstr "Хёыш тћ ѓёђрэютшђќ №хъю№ф, юэ сѓфхђ ртђюьрђшїхёъш ёюѕ№рэхэ ъръ чряшёќ шу№ћ"
+
+#: src/GameText.h:488
+msgid "View the replay of the room's highscore"
+msgstr "Яюърчрђќ чряшёќ ыѓїјхую т№хьхэш ъюьэрђћ"
+
+#: src/GameText.h:490
+msgid "Check for new levels at startup"
+msgstr "Я№ютх№џђќ эрышїшх эютћѕ ѓ№ютэхщ я№ш чряѓёъх"
+
+#: src/GameText.h:491
+msgid "Check for new highscores at startup"
+msgstr "Я№ютх№џђќ эрышїшх эютћѕ №хъю№фют я№ш чряѓёъх"
+
+#: src/GameText.h:493
+msgid "Show various statistics about X-Moto"
+msgstr "Яюърчрђќ №рчышїэѓў ёђрђшёђшъѓ ю X-Moto"
+
+#: src/GameText.h:494
+msgid "Update statistics (also happens each time X-Moto is started)"
+msgstr "Юсэютшђќ ёђрђшёђшъѓ (ђръцх я№юшѕюфшђќ я№ш ърцфюь чряѓёъх X-Moto)"
+
+#: src/GameText.h:495
+msgid "Enables background music in the main menu"
+msgstr "Тъыўїшђќ єюэютѓў ьѓчћъѓ т уыртэюь ьхэў"
+
+#: src/GameText.h:497
+msgid "Choose the X-Moto graphics theme"
+msgstr "Тћс№рђќ у№рєшїхёъѓў ђхьѓ X-Moto"
+
+#: src/GameText.h:498
+msgid "Check for new themes on the web"
+msgstr "Яютх№шђќ эрышїшх эютћѕ ђхь т шэђх№эхђх"
+
+#: src/GameText.h:499
+msgid "Download or update the selected theme"
+msgstr "бърїрђќ шыш юсэютшђќ тћс№рээѓў ђхьѓ"
+
+#: src/GameText.h:500
+msgid "Upload the replay on the website of highscores"
+msgstr "Чру№ѓчшђќ чряшёќ шу№ћ эр ёрщђ №хъю№фют"
+
+#: src/GameText.h:501
+msgid "Upload your best replays to your room (useful when it is just created)"
+msgstr "Чру№ѓчшђќ трјш ыѓїјшх чряшёш шу№ т трјѓ ъюьэрђѓ (яюыхчэю, ъюуфр юэр ђюыќъю їђю ёючфрэр)"
+
+#: src/GameText.h:502
+msgid "Configure the main www options"
+msgstr "Эрёђ№юшђќ юёэютэћх юяішш яюфъыўїхэшџ ъ шэђх№эхђѓ"
+
+#: src/GameText.h:503
+msgid ""
+"Choose where to upload/download replays, highscore lists (for more "
+"information, check the website)"
+msgstr ""
+"Тћс№рђќ ъѓфр ш юђъѓфр чру№ѓцрђќ чряшёш шу№, ёяшёъш №хъю№фют (фыџ фюяюыэшђхыќэющ "
+"шэєю№ьрішш, я№ютх№ќђх ёрщђ)"
+
+#: src/GameText.h:504
+msgid "Choose your room"
+msgstr "Тћсх№шђх трјѓ ъюьэрђѓ"
+
+#: src/GameText.h:505
+msgid "Get the rooms list from the web"
+msgstr "Чру№ѓчшђќ шч шэђх№эхђр ёяшёюъ ъюьэрђ"
+
+#: src/GameText.h:506
+msgid "Upload of highscore requires to log in (Except for WR)"
+msgstr "Чру№ѓчър №хъю№фют эр ёх№тх№ ђ№хсѓхђ тѕюфр яюф ётюшь ыюушэюь (ъ№юьх ьш№ютћѕ №хъю№фют)"
+
+#: src/GameText.h:507
+msgid "Upload of highscore requires a password (Except for WR)"
+msgstr "Чру№ѓчър №хъю№фют эр ёх№тх№ ђ№хсѓхђ ѓърчрэшџ яр№юыџ (ъ№юьх ьш№ютћѕ №хъю№фют)"
+
+#: src/GameText.h:508
+msgid "Show the speedometer when playing"
+msgstr "Яюърчћтрђќ ёяшфюьхђ№ тю т№хьџ шу№ћ"
+
+#: src/GameText.h:509
+msgid "Enable animation of bike falling apart when dead"
+msgstr "Тъыўїшђќ рэшьрішў №рчтрыштрўљхуюёџ ьюђюішъыр тю т№хьџ ёьх№ђш"
+
+#: src/GameText.h:510
+msgid "Automatically scroll over the level before starting playing it"
+msgstr "Ртђюьрђшїхёъш юсюч№хђќ ѓ№ютхэќ ях№хф эрїрыюь шу№ћ"
+
+#: src/GameText.h:511
+msgid "View the X-Moto credits"
+msgstr "Яюърчрђќ ђшђ№ћ X-Moto"
+
+#: src/GameText.h:512
+msgid "Name of replay"
+msgstr "Шьџ чряшёш шу№ћ"
+
+#: src/GameText.h:513
+msgid "Level played in replay"
+msgstr "г№ютхэќ, эр ъюђю№юь ёючфрэр чряшёќ шу№ћ"
+
+#: src/GameText.h:514
+msgid "Player who recorded the replay"
+msgstr "Шу№юъ, ёючфртјшщ чряшёќ шу№ћ"
+
+#: src/GameText.h:515
+msgid "Click to select screen resolution"
+msgstr "Эрцьшђх фыџ ёьхэћ №рч№хјхэшџ §ъ№рэр"
+
+#: src/GameText.h:516
+msgid "Completed levels / total number of levels in pack"
+msgstr "Чртх№јхээћх ѓ№ютэш / юсљхх їшёыю ѓ№ютэхщ т эрсю№х"
+
+#: src/GameText.h:517
+msgid "Name of level pack"
+msgstr "Шьџ эрсю№р ѓ№ютэхщ"
+
+#: src/GameText.h:518
+msgid "Add the level to the favorite levels list"
+msgstr "Фюсртшђќ ѓ№ютхэќ ъ ёяшёъѓ шчс№рээћѕ"
+
+#: src/GameText.h:519
+msgid "Delete the level from the favorite levels list"
+msgstr "гфрышђќ ѓ№ютхэќ шч ёяшёър шчс№рээћѕ"
+
+#: src/GameText.h:520
+msgid "Puzzle the levels pack list"
+msgstr "Чръюфш№ютрђќ ёяшёюъ эрсю№ют ѓ№ютэхщ"
+
+#: src/GameText.h:521
+msgid "Put a text to limit the level list"
+msgstr "Яюьхёђшђх ђхъёђ, їђюсћ юу№рэшїшђќ ёяшёюъ ѓ№ютэхщ"
+
+#: src/GameText.h:522
+msgid "Choose the number of players"
+msgstr "Тћсх№шђх їшёыю шу№юъют"
+
+#: src/GameText.h:523
+msgid "Your login in the room"
+msgstr "Трј ыюушэ т ъюьэрђѓ"
+
+#: src/GameText.h:524
+msgid "Your password associated with your login"
+msgstr "Яр№юыќ, ётџчрээћщ ё трјшь ыюушэюь"
+
+#: src/GameText.h:525
+msgid "Filter on replay list"
+msgstr "Юђєшыќђ№ютрђќ ёяшёюъ чряшёхщ шу№"
+
+#: src/GameText.h:527
+msgid "Levels with no highscore"
+msgstr "г№ютэш схч №хъю№фр"
+
+#: src/GameText.h:528 src/GameText.h:554
+msgid "Levels you have not completed"
+msgstr "Эхчртх№јхээћх ѓ№ютэш"
+
+#: src/GameText.h:529
+msgid "You're not the highscore holder"
+msgstr "Эх тћ ѓёђрэютшыш №хъю№ф"
+
+#: src/GameText.h:531
+msgid "New and updated levels"
+msgstr "Эютћх ш юсэютыхээћх ѓ№ютэш"
+
+#: src/GameText.h:532
+msgid "Favorite levels"
+msgstr "Шчс№рээћх ѓ№ютэш"
+
+#: src/GameText.h:533
+msgid "Nicest levels"
+msgstr "брьћх ыѓїјшх ѓ№ютэш"
+
+#: src/GameText.h:534
+msgid "Hardest levels"
+msgstr "брьћх ёыюцэћх ѓ№ютэш"
+
+#: src/GameText.h:535
+msgid "Easiest levels"
+msgstr "брьћх ыхуъшх ѓ№ютэш"
+
+#: src/GameText.h:536
+msgid "Crapiest levels"
+msgstr "брьћх ь№рїэћх ѓ№ютэш"
+
+#: src/GameText.h:537
+msgid "Scripted levels"
+msgstr "Чрёъ№шяђютрээћх ѓ№ютэш"
+
+#: src/GameText.h:538
+msgid "Musical"
+msgstr "Ьѓчћърыќэћх"
+
+#: src/GameText.h:540
+msgid "Never played levels"
+msgstr "Эшъюуфр эх шу№рээћх ѓ№ютэш"
+
+#: src/GameText.h:541
+msgid "Most played levels"
+msgstr "Эршсюыхх їрёђю шу№рээћх ѓ№ютэш"
+
+#: src/GameText.h:542
+msgid "Less played levels (but played)"
+msgstr "Эршьхэхх їрёђю шу№рээћх (эю шу№рээћх) ѓ№ютэш"
+
+#: src/GameText.h:543
+msgid "Last highscores"
+msgstr "Яюёыхфэшх №хъю№фћ"
+
+#: src/GameText.h:544
+msgid "Last levels"
+msgstr "Яюёыхфэшх ѓ№ютэш"
+
+#: src/GameText.h:545
+msgid "Oldest highscores"
+msgstr "брьћх ёђр№ћх №хъю№фћ"
+
+#: src/GameText.h:546
+msgid "Platinium"
+msgstr "Яырђшэр"
+
+#: src/GameText.h:547
+msgid "Gold"
+msgstr "Чюыюђю"
+
+#: src/GameText.h:548
+msgid "Silver"
+msgstr "бх№хс№ю"
+
+#: src/GameText.h:549
+msgid "Bronze"
+msgstr "С№юэчр"
+
+#: src/GameText.h:550
+msgid "No medal"
+msgstr "Схч ьхфрыш"
+
+#: src/GameText.h:551
+msgid "My levels"
+msgstr "Ьюш ѓ№ютэш"
+
+#: src/GameText.h:553
+msgid "Levels with no highscore in you room"
+msgstr "г№ютэш схч №хъю№фют, ѓёђрэютыхээћѕ т трјхщ ъюьэрђх"
+
+#: src/GameText.h:555
+msgid "Somebody in the room made a better highscore than yours"
+msgstr "Ъђю-ђю т ъюьэрђх ѓёђрэютшы ыѓїјшщ №хъю№ф, їхь трј"
+
+#: src/GameText.h:556
+msgid "All X-Moto levels"
+msgstr "Тёх ѓ№ютэш X-Moto"
+
+#: src/GameText.h:557
+msgid "New and updated levels since your last check"
+msgstr "Эютћх ш юсэютыхээћх ѓ№ютэш ёю т№хьхэш яюёыхфэхщ я№ютх№ъш"
+
+#: src/GameText.h:558
+msgid "Your favorite levels"
+msgstr "Трјш шчс№рээћх ѓ№ютэш"
+
+#: src/GameText.h:559
+msgid "Nicest X-Moto levels according to the web votes"
+msgstr "брьћх ъ№рёштћх ѓ№ютэш X-Moto ёюуырёэю тхс-уюыюёютрэшў"
+
+#: src/GameText.h:560
+msgid "Hardest X-Moto levels according to the web votes"
+msgstr "брьћх ђ№ѓфэћх ѓ№ютэш X-Moto ёюуырёэю тхс-уюыюёютрэшў"
+
+#: src/GameText.h:561
+msgid "Easiest X-Moto levels according to the web votes"
+msgstr "брьћх ыхуъшх ѓ№ютэш X-Moto ёюуырёэю тхс-уюыюёютрэшў"
+
+#: src/GameText.h:562
+msgid "Crapiest X-Moto levels according to the web votes"
+msgstr "брьћх ь№рїэћх ѓ№ютэш X-Moto ёюуырёэю тхс-уюыюёютрэшў"
+
+#: src/GameText.h:563
+msgid "X-Moto levels which are dynamic"
+msgstr "Фшэрьшїэћх ѓ№ютэш X-Moto"
+
+#: src/GameText.h:564
+msgid "X-Moto levels with a background music"
+msgstr "г№ютэш X-Moto ё єюэютющ ьѓчћъющ"
+
+#: src/GameText.h:565
+msgid "X-Moto levels you never played"
+msgstr "г№ютэш X-Moto, эр ъюђю№ћѕ тћ эшъюуфр эх хчфшыш"
+
+#: src/GameText.h:566
+msgid "X-Moto levels you have played the most"
+msgstr "г№ютэш X-Moto, т ъюђю№ћх тћ шу№рыш сюыќјх тёхую"
+
+#: src/GameText.h:567
+msgid "X-Moto levels you have played only a few times"
+msgstr "г№ютэш X-Moto, т ъюђю№ћх тћ шу№рыш тёхую эхёъюыќъю №рч"
+
+#: src/GameText.h:568
+msgid "X-Moto levels having a recent highscore in you room"
+msgstr "г№ютэш X-Moto, т ъюђю№ћѕ т трјхщ ъюьэрђх сћы эхфртэю ѓёђрэютыхэ №хъю№ф"
+
+#: src/GameText.h:569
+msgid "Last created X-Moto levels"
+msgstr "Эхфртэю ёючфрээћх ѓ№ютэш X-Moto"
+
+#: src/GameText.h:570
+msgid "X-Moto levels having an old highscore in you room"
+msgstr "г№ютэш X-Moto, т ъюђю№ћѕ т трјхщ ъюьэрђх сћы ѓёђрэютыхэ №хъю№ф №рэќјх тёхую"
+
+#: src/GameText.h:571
+msgid "You have the room highscore"
+msgstr "Тћ ѓёђрэютшыш №хъю№ф ъюьэрђћ"
+
+#: src/GameText.h:572
+msgid "You highscore finish time is almost the room highscore (95%)"
+msgstr "Трјх №хъю№фэюх єшэшјэюх т№хьџ яюїђш џтыџхђёџ №хъю№фюь ъюьэрђћ (95%)"
+
+#: src/GameText.h:573
+msgid "You highscore finish time is almost the room highscore (90%-95%)"
+msgstr "Трјх №хъю№фэюх єшэшјэюх т№хьџ яюїђш џтыџхђёџ №хъю№фюь ъюьэрђћ (90%-95%)"
+
+#: src/GameText.h:574
+msgid "You highscore finish time is almost the room highscore (80%-90%)"
+msgstr "Трјх №хъю№фэюх єшэшјэюх т№хьџ яюїђш џтыџхђёџ №хъю№фюь ъюьэрђћ (80%-90%)"
+
+#: src/GameText.h:575
+msgid "The room highscore is really better than your own highscore"
+msgstr "ахъю№ф ъюьэрђћ ую№рчфю ыѓїјх, їхь трј"
+
+#: src/GameText.h:576
+msgid "Level pack"
+msgstr "Эрсю№ ѓ№ютэхщ"
+
+#: src/GameText.h:577
+msgid "Highscores by"
+msgstr "ахъю№ф ѓёђрэютыхэ"
+
+#: src/GameText.h:578
+msgid "External levels (the one you put into the 'My levels' directory)"
+msgstr "Тэхјэшх ѓ№ютэш (ђх, їђю чряшёрэћ т яряъѓ 'My levels')"
+
+#: src/GameText.h:580
+msgid "Ugly mode enabled"
+msgstr "г№юфыштћщ №хцшь тъыўїхэ"
+
+#: src/GameText.h:581
+msgid "Ugly mode disabled"
+msgstr "г№юфыштћщ №хцшь тћъыўїхэ"
+
+#: src/GameText.h:582
+msgid "Theme mode enabled"
+msgstr "ахцшь ђхьћ тъыўїхэ"
+
+#: src/GameText.h:583
+msgid "Theme mode disabled"
+msgstr "ахцшь ђхьћ тћъыўїхэ"
+
+#: src/GameText.h:584
+msgid "UglyOver mode enabled"
+msgstr "зх№хёїѓ№ ѓ№юфыштћщ №хцшь тъыўїхэ"
+
+#: src/GameText.h:585
+msgid "UglyOver mode disabled"
+msgstr "зх№хёїѓ№ ѓ№юфыштћщ №хцшь тћъыўїхэ"
+
+#: src/GameText.h:586
+msgid "Web connexion enabled"
+msgstr "бюхфшэхэшх ъ шэђх№эхђѓ тъыўїхэю"
+
+#: src/GameText.h:587
+msgid "Web connexion disabled"
+msgstr "бюхфшэхэшх ъ шэђх№эхђѓ тћъыўїхэю"
+
+#: src/GameText.h:588
+msgid "Replay interpolation enabled"
+msgstr "Шэђх№яюыџішџ чряшёш шу№ћ тъыўїхэр"
+
+#: src/GameText.h:589
+msgid "Replay interpolation disabled"
+msgstr "Шэђх№яюыџішџ чряшёш шу№ћ тћъыўїхэр"
+
+#: src/LevelsText.h:21
+msgid "First let's take a look at the user interface..."
+msgstr "бэрїрыр фртрщђх с№юёшь тчуыџф эр шэђх№єхщё яюыќчютрђхыџ..."
+
+#: src/LevelsText.h:22
+msgid "In the upper left corner, you've got your timers"
+msgstr "Т тх№ѕэхь ыхтюь ѓуыѓ эрѕюфџђёџ ђрщьх№ћ"
+
+#: src/LevelsText.h:23
+msgid "The big one is your current time"
+msgstr "Сюыќјшщ - §ђю трјх ђхъѓљхх т№хьџ"
+
+#: src/LevelsText.h:24
+msgid "The small one to the right is your own best time"
+msgstr "Ьхјќјшщ ёя№ртр - трјх ышїэюх ыѓїјхх т№хьџ"
+
+#: src/LevelsText.h:25
+msgid "for the current level..."
+msgstr "фыџ фрээюую ѓ№ютэџ..."
+
+#: src/LevelsText.h:26
+msgid "... and the one to the left is the best of all"
+msgstr "... р ьхэќјшщ ёыхтр - §ђю ыѓїјхх т№хьџ шч тёхѕ"
+
+#: src/LevelsText.h:27
+msgid "on this computer."
+msgstr "эр §ђюь ъюьяќўђх№х."
+
+#: src/LevelsText.h:28
+msgid "Down here there's the minimap, which shows the level"
+msgstr "бэшчѓ эрѕюфшђёџ ьшэшър№ђр, ъюђю№рџ яюърчћтрхђ ѓ№ютхэќ"
+
+#: src/LevelsText.h:29
+msgid "around you, so you know where you're heading."
+msgstr "тюъ№ѓу трё, ђръ їђюсћ тћ чэрыш, ъѓфр эря№ртыџхђхёќ."
+
+#: src/LevelsText.h:30
+msgid "Now let's look at your controls."
+msgstr "вхях№ќ тчуыџэхь эр ѓя№ртыхэшх."
+
+#: src/LevelsText.h:31
+msgid "(You seem to be using a joystick, can't help with that :P)"
+msgstr "(Ърцхђёџ, тћ шёяюыќчѓхђх фцющёђшъ, эшїхь эх ьюцхь яюьюїќ :P)"
+
+#: src/LevelsText.h:32
+msgid ": Drive forward"
+msgstr ": Хѕрђќ тях№хф"
+
+#: src/LevelsText.h:33
+msgid ": Brake"
+msgstr ": вю№ьючшђќ"
+
+#: src/LevelsText.h:34
+msgid ": Change direction"
+msgstr ": Шчьхэџђќ эря№ртыхэшх"
+
+#: src/LevelsText.h:35
+msgid ": Rotate anti-clockwise"
+msgstr ": Эръыюэџђќёџ я№юђшт їрёютющ ёђ№хыъш"
+
+#: src/LevelsText.h:36
+msgid ": Rotate clockwise"
+msgstr ": Эръыюэџђќёџ яю їрёютющ ёђ№хыъх"
+
+#: src/LevelsText.h:37
+msgid "Okay. The red dot on your minimap is a strawberry."
+msgstr "ею№юјю. Ъ№рёэрџ ђюїър эр ьшэшър№ђх - §ђю чхьыџэшїър."
+
+#: src/LevelsText.h:38
+msgid "The primary objective of the game is for you"
+msgstr "Ях№тшїэрџ іхыќ шу№ћ фыџ трё"
+
+#: src/LevelsText.h:39
+msgid "to collect all of them, and then find the flower."
+msgstr "§ђю ёюс№рђќ шѕ тёх, р чрђхь эрщђш ітхђюъ."
+
+#: src/LevelsText.h:40
+msgid "The icon to the right of your time,"
+msgstr "Шъюэър ёя№ртр юђ трјхую т№хьхэш"
+
+#: src/LevelsText.h:41
+msgid "indicates how many strawberries still left."
+msgstr "яюърчћтрхђ ёъюыќъю чхьыџэшїхъ хљх юёђрыюёќ."
+
+#: src/LevelsText.h:42
+msgid "Drive in its direction..."
+msgstr "Хчцрщђх т хую эря№ртыхэшш..."
+
+#: src/LevelsText.h:43
+msgid "When done, head for the flower."
+msgstr "Ъюуфр чръюэїшђх, эря№ртыџщђхёќ ъ ітхђъѓ."
+
+#: src/LevelsText.h:44
+msgid "It's the purple dot on your minimap."
+msgstr "нђю яѓ№яѓ№эрџ ђюїър эр ьшэшър№ђх."
+
+#: src/LevelsText.h:45
+msgid "Welcome to X-Moto!"
+msgstr "Фюс№ю яюцрыютрђќ т X-Moto!"
+
+#: src/LevelsText.h:46
+msgid "This level is a short tutorial of"
+msgstr "нђюђ ѓ№ютхэќ ъю№юђъю ѓїшђ"
+
+#: src/LevelsText.h:47
+msgid "how you play the game."
+msgstr "ъръ шу№рђќ т §ђѓ шу№ѓ."
+
+#: src/LevelsText.h:48
+msgid "Please stay put and follow the instructions! :)"
+msgstr "Яюцрыѓщёђр, юёђрэютшђхёќ ш ёыхфѓщђх шэёђ№ѓъішџь!"
+
+#: src/LevelsText.h:49
+msgid "Pick up the strawberry by touching it"
+msgstr "Яюфсх№шђх чхьыџэшїъѓ, фюђ№юэѓтјшёќ фю эхх"
+
+#: src/LevelsText.h:50
+msgid "Touch it to finish the level. Good luck with the rest :)"
+msgstr "Фюђ№юэќђхёќ фю эхую їђюсћ чръюэїшђќ ѓ№ютхэќ. гфрїш ё юёђрыќэћьш ѓ№ютэџьш :)"
+
+#: src/LevelsText.h:51
+msgid "The first jump you're going to perform is very easy."
+msgstr "Ях№тћщ я№ћцюъ, ъюђю№ћщ тћ ёюсш№рхђхёќ шёяюыэшђќ, юїхэќ я№юёђ"
+
+#: src/LevelsText.h:52
+msgid "Drive to the left, accelerate, and when you are in"
+msgstr "Хчцрщђх эрыхтю, ѓёъю№ќђхёќ, ш ъюуфр тћ сѓфхђх т"
+
+#: src/LevelsText.h:53
+msgid "the air, try to adjust your attitude with the left"
+msgstr "тючфѓѕх, яюя№юсѓщђх эрёђ№юшђќ трјх яюыюцхэшх ыхтющ"
+
+#: src/LevelsText.h:54
+msgid "and right arrow keys, so you'll land on your wheels."
+msgstr "ш я№ртющ ёђ№хыърьш, ђръ, їђюсћ я№хчхьышђќёџ эр ъюыхёр."
+
+#: src/LevelsText.h:55
+msgid "The next jump is a bit trickier. You'll need all the"
+msgstr "быхфѓўљшщ я№ћцюъ сюыхх ѕшђ№ћщ. Трь яюэрфюсшђёџ тёџ"
+
+#: src/LevelsText.h:56
+msgid "speed you can get to reach the other side..."
+msgstr "ёъю№юёђќ, ъюђю№ѓў тћ ёьюцхђх №рчтшђќ, їђюсћ фюёђшїќ я№юђштюяюыюцэющ ёђю№юэћ..."
+
+#: src/LevelsText.h:57
+msgid "Now for the most difficult jump in this tutorial!"
+msgstr "вхях№ќ я№шёђѓяшь ъ ёрьюьѓ ёыюцэюьѓ я№ћцъѓ т §ђюь я№ръђшїхёъюь чрэџђшш!"
+
+#: src/LevelsText.h:58
+msgid "This time, speed alone won't do the job..."
+msgstr "Эр §ђюђ №рч, ёъю№юёђќ ёрьр яю ёхсх эх ёфхырхђ тёх..."
+
+#: src/LevelsText.h:59
+msgid "Here's the plan:"
+msgstr "Яырэ ђръют:"
+
+#: src/LevelsText.h:60
+msgid "Again, you'll have to obtain maximum speed, but when"
+msgstr "Ъръ ш №рэќјх, тћ фюыцэћ сѓфхђх эрс№рђќ ьръёшьрыќэѓў ёъю№юёђќ, эю ъюуфр"
+
+#: src/LevelsText.h:61
+msgid "you reach the edge of the jump, pull the bike's front"
+msgstr "тћ фюёђшуэхђх ъ№рџ ђ№рьяышэр, яюфэшьшђх ях№хфэхх"
+
+#: src/LevelsText.h:62
+msgid "wheel up."
+msgstr "ъюыхёю ттх№ѕ."
+
+#: src/LevelsText.h:63 src/LevelsText.h:90
+msgid "That will cause the rear suspension to increase the"
+msgstr "нђю яюьюцхђ чрфэхьѓ ъюыхёѓ (тхфѓљхьѓ) ѓтхышїшђќ"
+
+#: src/LevelsText.h:64 src/LevelsText.h:91
+msgid "length of the jump."
+msgstr "фышэѓ я№ћцър."
+
+#: src/LevelsText.h:65 src/LevelsText.h:82 src/LevelsText.h:92
+msgid "Try it..."
+msgstr "Яюя№юсѓщђх ёфхырђќ ђръ..."
+
+#: src/LevelsText.h:66
+msgid "This tutorial will teach you the basics of jumping."
+msgstr "нђю я№ръђшїхёъюх чрэџђшх эрѓїшђќ трь юёэютрь я№ћцъют."
+
+#: src/LevelsText.h:67
+msgid "Remember you can turn around your bike"
+msgstr "Яюьэшђх, їђю тћ ьюцхђх ях№хтю№рїштрђќ ьюђюішъы,"
+
+#: src/LevelsText.h:68
+msgid "by pressing "
+msgstr "эрцшьрџ "
+
+#: src/LevelsText.h:69
+msgid "That was pretty easy, right?"
+msgstr "нђю фютюыќэю ыхуъю, я№ртфр?"
+
+#: src/LevelsText.h:70
+msgid "Accelerate NOW! Obtain maximum speed, and try to"
+msgstr "гёъю№џщђхёќ бХЩзРб! арчуюэшђхёќ фю ьръёшьрыќэющ ёъю№юёђќ, ш яюяћђрщђхёќ"
+
+#: src/LevelsText.h:71
+msgid "keep the front wheel at the ground..."
+msgstr "ѓфх№црђќ ях№хфэхх ъюыхёю эр чхьых..."
+
+#: src/LevelsText.h:72
+msgid "Nice jump there! :)"
+msgstr "ею№юјшщ я№ћцюъ! :)"
+
+#: src/LevelsText.h:73
+msgid "Congrats, you're now a master jumper!"
+msgstr "Яючф№ртыхэшџ, тћ ьрёђх№ яю я№ћцърь!"
+
+#: src/LevelsText.h:74
+msgid "The basic idea is that when driving on the rear wheel,"
+msgstr "Юёэютэрџ шфхџ т ђюь, їђю ъюуфр тћ хфхђх эр чрфэхь ъюыхёх,"
+
+#: src/LevelsText.h:75
+msgid "your head is lowered quite a lot..."
+msgstr "трјр уюыютр яюїђш яюыэюёђќў юяѓљхэр..."
+
+#: src/LevelsText.h:76
+msgid "The difficult part is to keep the balance."
+msgstr "быюцэюёђќ ёюёђюшђ т ёюѕ№рэхэшш №ртэютхёшх."
+
+#: src/LevelsText.h:77
+msgid "When the distance you have to drive is quite short,"
+msgstr "Ъюуфр трь юёђрыюёќ я№юхѕрђќ ёютёхь ьрыю,"
+
+#: src/LevelsText.h:78
+msgid "you don't need to keep the balance."
+msgstr "трь эх эѓцэю ёюѕ№рэџђќ №ртэютхёшх."
+
+#: src/LevelsText.h:79
+msgid "Accelerate (slowly) to the right with the front wheel raising."
+msgstr "гёъю№џщђхёќ (ьхфыхээю) эря№ртю, ъюуфр ях№хфэхх ъюыхёю яюфэшьрхђёџ."
+
+#: src/LevelsText.h:80
+msgid "Just before your head hit the block, make a quick left/right"
+msgstr "Я№џью ях№хф ђхь, ъръ трјр уюыютр ѓфр№шђ т сыюъ, тћяюыэшђх сћёђ№ѓў"
+
+#: src/LevelsText.h:81
+msgid "combination, and you should be on the other side."
+msgstr "ъюьсшэрішў эрыхтю-эря№ртю, ш тћ фюыцэћ юърчрђќёџ эр ф№ѓующ ёђю№юэх."
+
+#: src/LevelsText.h:83
+msgid "Now you'll try a bit more difficult one..."
+msgstr "вхях№ќ яюя№юсѓщђх эхьэюую сюыхх ёыюцэћщ сыюъ..."
+
+#: src/LevelsText.h:84
+msgid "This time keep your hands off the left and right arrow keys,"
+msgstr "Эр §ђюђ №рч ѓсх№шђх ярыќіћ ё ъэюяюъ эрыхтю ш эря№ртю,"
+
+#: src/LevelsText.h:85
+msgid "they're not delicate enough to help you keep balance."
+msgstr "юэш эхфюёђрђюїэю фхышърђэћ їђюсћ яюьюїќ трь ёюѕ№рэшђќ №ртэютхёшх."
+
+#: src/LevelsText.h:86
+msgid "Instead regulate your angle by accelerating and braking."
+msgstr "Тьхёђю §ђюую, №хуѓыш№ѓщђх ѓуюы ѓёъю№хэшџьш ш ђю№ьюцхэшџьш."
+
+#: src/LevelsText.h:87
+msgid "Try to drive a bit back and forth on your rear wheel,"
+msgstr "Яюя№юсѓщђх я№юхѕрђќ эхьэюую эрчрф ш тях№хы эр чрфэхь ъюыхёх,"
+
+#: src/LevelsText.h:88
+msgid "keeping the bike as steady as possible..."
+msgstr "ѓфх№цштрџ ьюђюішъы ъръ ьюцэю сюыхх ѓёђ№ющїштћь..."
+
+#: src/LevelsText.h:89
+msgid "Try getting under the next obstacle when you feel you're ready."
+msgstr "Яюя№юсѓщђх я№юс№рђќёџ яюф ёыхфѓўљшь я№хяџђёђтшхь, ъюуфр яюїѓтёђтѓхђх, їђю уюђютћ."
+
+#: src/LevelsText.h:93
+msgid "This tutorial will teach you to rear-wheel through"
+msgstr "нђю я№ръђшїхёъюх чрэџђшх эрѓїшђќ трё я№юхчцрђќ эр чрфэхь ъюыхёх їх№хч"
+
+#: src/LevelsText.h:94
+msgid "areas where the ceiling is low."
+msgstr "юсырёђш ё эшчъшь яюђюыъюь."
+
+#: src/LevelsText.h:95
+msgid "Beware that this can be pretty difficult :)"
+msgstr "Я№шуюђютќђхёќ - §ђю ьюцхђ сћђќ тхёќьр эхя№юёђю :)"
+
+#: src/LevelsText.h:96
+msgid "Not that difficult, right?"
+msgstr "Эх ёышјъюь ёыюцэю, фр?"
+
+#: src/LevelsText.h:97
+msgid "Nice! Now try the next one, it's a bit more difficult..."
+msgstr "Юђышїэю! вхях№ќ яюя№юсѓщђх ёыхфѓўљшщ, юэ эхьэюую ёыюцэхх..."
+
+#: src/LevelsText.h:98
+msgid "Good job! The next one is even more difficult..."
+msgstr "ею№юјрџ №рсюђр! быхцѓўљшщ хљх ёыюцэхх..."
+
+#: src/LevelsText.h:99
+msgid "Now for the final one... It's not that long, but instead"
+msgstr "вхях№ќ яюёыхфэшщ... Юэ эх ђръющ фышээћщ, эю тьхёђю §ђюую"
+
+#: src/LevelsText.h:100
+msgid "there's even less room for your precious head. Good luck! :)"
+msgstr "чфхёќ хљх ьхэќјх ьхёђр фыџ трјхщ ф№руюіхээющ уюыютћ. гфрїш! :)"
