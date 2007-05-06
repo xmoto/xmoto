@@ -27,6 +27,8 @@ quit level'' or something like that.
 * A SetDynamicBlockRotation function that rotates the vertices about a center point instead of making the block go in circles.
 * a fonction CameraRotate and CameraRotateAdaptToG (script)
 * traduire les scripts integrés (le tuto)
+* Add a command line option like the one to test themes. This option could be ''testscript'' and would show zones during game (with an extra, the name of the zone).
+* SDL_ttf or something like that for rendering text
 
 Since 0.2.6
 [21:33] <jj> the smoke is not always rendered at the sides of the screen
