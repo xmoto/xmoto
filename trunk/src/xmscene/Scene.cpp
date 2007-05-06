@@ -801,46 +801,6 @@ void MotoGame::cleanPlayers() {
     }
   }
 
-  /*===========================================================================
-    Game event queue management
-    ===========================================================================*/
-  #define ETRAN(_Name) case _Name: return #_Name
-  static const char *_EventName(GameEventType Type) {
-    switch(Type) {
-      ETRAN(GAME_EVENT_PLAYERS_DIE);
-      ETRAN(GAME_EVENT_PLAYERS_ENTER_ZONE);
-      ETRAN(GAME_EVENT_PLAYERS_LEAVE_ZONE);
-      ETRAN(GAME_EVENT_PLAYERS_TOUCHE_ENTITY);
-      ETRAN(GAME_EVENT_ENTITY_DESTROYED);
-      ETRAN(GAME_EVENT_CLEARMESSAGES);
-      ETRAN(GAME_EVENT_PLACEINGAMEARROW);
-      ETRAN(GAME_EVENT_PLACESCREENARROW);
-      ETRAN(GAME_EVENT_HIDEARROW);
-      ETRAN(GAME_EVENT_MESSAGE);
-      ETRAN(GAME_EVENT_MOVEBLOCK);
-      ETRAN(GAME_EVENT_SETBLOCKPOS);
-      ETRAN(GAME_EVENT_SETGRAVITY);
-      ETRAN(GAME_EVENT_SETPLAYERSPOSITION);
-      ETRAN(GAME_EVENT_SETENTITYPOS);
-      ETRAN(GAME_EVENT_SETBLOCKCENTER);
-      ETRAN(GAME_EVENT_SETBLOCKROTATION);
-      ETRAN(GAME_EVENT_SETDYNAMICENTITYROTATION);
-      ETRAN(GAME_EVENT_SETDYNAMICENTITYTRANSLATION);
-      ETRAN(GAME_EVENT_SETDYNAMICENTITYNONE);
-      ETRAN(GAME_EVENT_SETDYNAMICBLOCKROTATION);
-      ETRAN(GAME_EVENT_SETDYNAMICBLOCKTRANSLATION);
-      ETRAN(GAME_EVENT_SETDYNAMICBLOCKNONE);
-      ETRAN(GAME_EVENT_CAMERAZOOM);
-      ETRAN(GAME_EVENT_CAMERAMOVE);
-      ETRAN(GAME_EVENT_PLAYER_DIES);
-      ETRAN(GAME_EVENT_PLAYER_ENTERS_ZONE);
-      ETRAN(GAME_EVENT_PLAYER_LEAVES_ZONE);
-      ETRAN(GAME_EVENT_PLAYER_TOUCHES_ENTITY);
-      ETRAN(GAME_EVENT_SETPLAYERPOSITION);
-    }
-    return "??";
-  }
-    
   void MotoGame::createGameEvent(MotoGameEvent *p_event) {
     m_GameEventQueue.push(p_event);
   }
@@ -1018,6 +978,14 @@ void MotoGame::cleanPlayers() {
     if(m_renderer != NULL) {
       m_renderer->moveCamera(p_x, p_y);
     }
+  }
+
+  void MotoGame::CameraRotate(float i_angle) {
+    m_renderer->setDesiredRotationAngle(i_angle);
+  }
+   
+  void MotoGame::CameraAdaptToGravity() {
+    m_renderer->adaptRotationAngleToGravity();
   }
 
   void MotoGame::killPlayer(int i_player) {

@@ -194,51 +194,48 @@ msgid "MacOS X Support"
 msgstr "Поддержка MacOS X"
 
 #: src/GameText.h:101
-#, fuzzy
 msgid "Localization"
-msgstr "Перевод сайта"
+msgstr "Перевод"
 
 #: src/GameText.h:102
 msgid "Slovak"
-msgstr ""
+msgstr "Словацкий"
 
 #: src/GameText.h:103
 msgid "French"
-msgstr ""
+msgstr "Французский"
 
 #: src/GameText.h:104
 msgid "Norwegian"
-msgstr ""
+msgstr "Норвежский"
 
 #: src/GameText.h:105
-#, fuzzy
 msgid "German"
-msgstr "Общие"
+msgstr "Немецкий"
 
 #: src/GameText.h:106
-#, fuzzy
 msgid "Finnish"
-msgstr "Финиш!"
+msgstr "Финский"
 
 #: src/GameText.h:107
 msgid "Catalan"
-msgstr ""
+msgstr "Каталонский"
 
 #: src/GameText.h:108
 msgid "Spanish"
-msgstr ""
+msgstr "Испанский"
 
 #: src/GameText.h:109
 msgid "Polish"
-msgstr ""
+msgstr "Польский"
 
 #: src/GameText.h:110
 msgid "Mikhail Brinchuk"
-msgstr ""
+msgstr "Михаил Бринчук"
 
 #: src/GameText.h:110
 msgid "Russian"
-msgstr ""
+msgstr "Русский"
 
 #: src/GameText.h:112
 msgid "Main testers"
@@ -290,7 +287,7 @@ msgstr "Всем, кто хоть как-нибудь помог"
 
 #: src/GameText.h:129
 msgid "Credits"
-msgstr "Титры"
+msgstr "Создатели"
 
 #: src/GameText.h:130 src/GameText.h:299
 msgid "Player"
@@ -394,7 +391,7 @@ msgstr "Поиск новых тем"
 
 #: src/GameText.h:154
 msgid "Get More Levels!"
-msgstr "Загрузить больше уровней!"
+msgstr "Загрузить еще!"
 
 #: src/GameText.h:155
 msgid "Drive"
@@ -707,7 +704,7 @@ msgstr "Джойстик"
 
 #: src/GameText.h:227
 msgid "Oops!"
-msgstr "Ой!"
+msgstr "Неудача!"
 
 #: src/GameText.h:228
 msgid "Press ENTER to try again"
@@ -731,7 +728,7 @@ msgstr "Уровень"
 
 #: src/GameText.h:233
 msgid "Level Info..."
-msgstr "Информация об уровне..."
+msgstr "Инфо об уровне..."
 
 #: src/GameText.h:234
 msgid "Level Name"
@@ -924,7 +921,7 @@ msgstr ""
 
 #: src/GameText.h:282
 msgid "# Levels"
-msgstr "# Уровни"
+msgstr "Уровни"
 
 #: src/GameText.h:283
 msgid "OK"
@@ -957,11 +954,11 @@ msgstr "Комната"
 
 #: src/GameText.h:290
 msgid "Special"
-msgstr "Специальный"
+msgstr "Специальные"
 
 #: src/GameText.h:291
 msgid "Standard"
-msgstr "Стандартный"
+msgstr "Стандартные"
 
 #: src/GameText.h:292
 msgid "Web votes"
@@ -1059,7 +1056,7 @@ msgstr "Записи игр"
 
 #: src/GameText.h:319
 msgid "Restart This Level"
-msgstr "Перезапустить этот уровень"
+msgstr "Перезапустить уровень"
 
 #: src/GameText.h:320
 msgid "Resume Playing"
@@ -1095,7 +1092,7 @@ msgstr "Спидометр"
 
 #: src/GameText.h:329
 msgid "Info..."
-msgstr "Информация..."
+msgstr "Инфо..."
 
 #: src/GameText.h:330
 msgid "Show Mini Map"
@@ -1806,7 +1803,7 @@ msgstr "Удалить уровень из списка избранных"
 
 #: src/GameText.h:506
 msgid "Puzzle the levels pack list"
-msgstr "Закодировать список наборов уровней"
+msgstr "Перемешать список уровней"
 
 #: src/GameText.h:507
 msgid "Put a text to limit the level list"
@@ -1926,7 +1923,7 @@ msgstr "Уровни без рекордов, установленных в ва
 
 #: src/GameText.h:541
 msgid "Somebody in the room made a better highscore than yours"
-msgstr "Кто-то в комнате установил лучший рекорд, чем ваш"
+msgstr "Кто-то в комнате показал лучшее время, чем вы"
 
 #: src/GameText.h:542
 msgid "All X-Moto levels"

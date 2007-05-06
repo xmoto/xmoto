@@ -102,7 +102,7 @@ Central place to keep many in-game text strings
     ":Jozef Riha (" + std::string(_("Slovak")) + ");"                                        \
     ":Nicolas Adenis-Lamarre (" + std::string(_("French")) + ");"                            \
     ":Wilhelm Francke (" + std::string(_("Norwegian")) + ");"                                \
-    ":Jonathan Sieber (" + std::string(_("German")) + ");"                                   \
+    ":Jonathan Sieber and Jens Erler (" + std::string(_("German")) + ");"                    \
     ":Maximum (" + std::string(_("Finnish")) + ");"                                          \
     ":Trullo (" + std::string(_("Catalan")) + ");"                                           \
     ":Trullo (" + std::string(_("Spanish")) + ");"                                           \
@@ -112,6 +112,7 @@ Central place to keep many in-game text strings
     + std::string(_("Main testers")) +                                                       \
     ":Jose Alberto Coelho;"                                                                  \
     ":Frederic Huard;"                                                                       \
+    ":Jens Erler;"                                                                           \
     ":;"                                                                                     \
     + std::string(_("Thanks to")) +                                                          \
     ":SnowBear ("           + std::string(_("for KDE/gnome integration")) 	     + ");"  \

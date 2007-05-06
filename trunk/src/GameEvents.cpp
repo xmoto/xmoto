@@ -139,6 +139,10 @@ namespace vapp {
       v_event = new MGE_SetDynamicBlockSelfRotation(v_fEventTime);
     } else if(MGE_SetDynamicEntitySelfRotation::SgetType() == v_eventType) {
       v_event = new MGE_SetDynamicEntitySelfRotation(v_fEventTime);
+    } else if(MGE_CameraRotate::SgetType() == v_eventType) {
+      v_event = new MGE_CameraRotate(v_fEventTime);
+    } else if(MGE_CameraAdaptToGravity::SgetType() == v_eventType) {
+      v_event = new MGE_CameraAdaptToGravity(v_fEventTime);
     } else {
       std::ostringstream error_type;
       error_type << (int) v_eventType;
@@ -1733,4 +1737,75 @@ namespace vapp {
   std::string MGE_SetDynamicEntitySelfRotation::toString() {
     return "Dynamic self rotation is set for entity " + m_entityID;
   }
+
+  //////////////////////////////
+  MGE_CameraRotate::MGE_CameraRotate(float p_fEventTime) 
+  : MotoGameEvent(p_fEventTime) {
+    m_angle = 0.0;
+  }
+
+  MGE_CameraRotate::MGE_CameraRotate(float p_fEventTime, float p_angle)
+  : MotoGameEvent(p_fEventTime) {
+    m_angle = p_angle;
+  }
+
+  MGE_CameraRotate::~MGE_CameraRotate() {
+  } 
+  
+  void MGE_CameraRotate::doAction(MotoGame *p_pMotoGame) {
+    p_pMotoGame->CameraRotate(m_angle);
+  }
+
+  void MGE_CameraRotate::serialize(DBuffer &Buffer) {
+    MotoGameEvent::serialize(Buffer);
+    Buffer << m_angle;
+  }
+  
+  void MGE_CameraRotate::unserialize(DBuffer &Buffer) {
+    Buffer >> m_angle;
+  }
+
+  GameEventType MGE_CameraRotate::SgetType() {
+    return GAME_EVENT_CAMERAROTATE;
+  }
+
+  GameEventType MGE_CameraRotate::getType() {
+    return SgetType();
+  }
+
+  std::string MGE_CameraRotate::toString() {
+    return "Camera rotates";
+  }
+
+  //////////////////////////////
+  MGE_CameraAdaptToGravity::MGE_CameraAdaptToGravity(float p_fEventTime) 
+  : MotoGameEvent(p_fEventTime) {
+  }
+
+  MGE_CameraAdaptToGravity::~MGE_CameraAdaptToGravity() {
+  } 
+  
+  void MGE_CameraAdaptToGravity::doAction(MotoGame *p_pMotoGame) {
+    p_pMotoGame->CameraAdaptToGravity();
+  }
+
+  void MGE_CameraAdaptToGravity::serialize(DBuffer &Buffer) {
+    MotoGameEvent::serialize(Buffer);
+  }
+  
+  void MGE_CameraAdaptToGravity::unserialize(DBuffer &Buffer) {
+  }
+
+  GameEventType MGE_CameraAdaptToGravity::SgetType() {
+    return GAME_EVENT_CAMERAADAPTTOGRAVITY;
+  }
+
+  GameEventType MGE_CameraAdaptToGravity::getType() {
+    return SgetType();
+  }
+
+  std::string MGE_CameraAdaptToGravity::toString() {
+    return "Camera is adapted to the gravity";
+  }
+
 }

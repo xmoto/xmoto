@@ -34,39 +34,41 @@ namespace vapp {
      ALWAYS ADD VALUES at the end : (otherwise, old replays will not work !)
   */
   enum GameEventType {
-    GAME_EVENT_PLAYERS_DIE                 =  0, // to able able to read replay made with xmoto < 0.3.0
-    GAME_EVENT_PLAYERS_ENTER_ZONE          =  1, // to able able to read replay made with xmoto < 0.3.0
-    GAME_EVENT_PLAYERS_LEAVE_ZONE          =  2, // to able able to read replay made with xmoto < 0.3.0
-    GAME_EVENT_PLAYERS_TOUCHE_ENTITY       =  3, // to able able to read replay made with xmoto < 0.3.0
-    GAME_EVENT_ENTITY_DESTROYED            =  4,    
-    GAME_EVENT_CLEARMESSAGES               =  5,
-    GAME_EVENT_PLACEINGAMEARROW            =  6,
-    GAME_EVENT_PLACESCREENARROW            =  7,
-    GAME_EVENT_HIDEARROW                   =  8,
-    GAME_EVENT_MESSAGE                     =  9,
-    GAME_EVENT_MOVEBLOCK                   = 10,
-    GAME_EVENT_SETBLOCKPOS                 = 11,
-    GAME_EVENT_SETGRAVITY                  = 12,
-    GAME_EVENT_SETPLAYERSPOSITION          = 13, // to able able to read replay made with xmoto < 0.3.0
-    GAME_EVENT_SETENTITYPOS                = 14,
-    GAME_EVENT_SETBLOCKCENTER              = 15,
-    GAME_EVENT_SETBLOCKROTATION            = 16, 
-    GAME_EVENT_SETDYNAMICENTITYROTATION    = 17,
-    GAME_EVENT_SETDYNAMICENTITYTRANSLATION = 18,
-    GAME_EVENT_SETDYNAMICENTITYNONE        = 19,
-    GAME_EVENT_CAMERAZOOM                  = 20,
-    GAME_EVENT_CAMERAMOVE                  = 21,
-    GAME_EVENT_SETDYNAMICBLOCKROTATION     = 22,
-    GAME_EVENT_SETDYNAMICBLOCKTRANSLATION  = 23,
-    GAME_EVENT_SETDYNAMICBLOCKNONE         = 24,
-    GAME_EVENT_PENALITY_TIME               = 25,
-    GAME_EVENT_PLAYER_DIES                 = 26,
-    GAME_EVENT_PLAYER_ENTERS_ZONE          = 27,
-    GAME_EVENT_PLAYER_LEAVES_ZONE          = 28,
-    GAME_EVENT_PLAYER_TOUCHES_ENTITY       = 29,
-    GAME_EVENT_SETPLAYERPOSITION           = 30,
-    GAME_EVENT_SETDYNAMICBLOCKSELFROTATION = 31,
+    GAME_EVENT_PLAYERS_DIE                  =  0, // to able able to read replay made with xmoto < 0.3.0
+    GAME_EVENT_PLAYERS_ENTER_ZONE           =  1, // to able able to read replay made with xmoto < 0.3.0
+    GAME_EVENT_PLAYERS_LEAVE_ZONE           =  2, // to able able to read replay made with xmoto < 0.3.0
+    GAME_EVENT_PLAYERS_TOUCHE_ENTITY        =  3, // to able able to read replay made with xmoto < 0.3.0
+    GAME_EVENT_ENTITY_DESTROYED             =  4,    
+    GAME_EVENT_CLEARMESSAGES                =  5,
+    GAME_EVENT_PLACEINGAMEARROW             =  6,
+    GAME_EVENT_PLACESCREENARROW             =  7,
+    GAME_EVENT_HIDEARROW                    =  8,
+    GAME_EVENT_MESSAGE                      =  9,
+    GAME_EVENT_MOVEBLOCK                    = 10,
+    GAME_EVENT_SETBLOCKPOS                  = 11,
+    GAME_EVENT_SETGRAVITY                   = 12,
+    GAME_EVENT_SETPLAYERSPOSITION           = 13, // to able able to read replay made with xmoto < 0.3.0
+    GAME_EVENT_SETENTITYPOS                 = 14,
+    GAME_EVENT_SETBLOCKCENTER               = 15,
+    GAME_EVENT_SETBLOCKROTATION             = 16, 
+    GAME_EVENT_SETDYNAMICENTITYROTATION     = 17,
+    GAME_EVENT_SETDYNAMICENTITYTRANSLATION  = 18,
+    GAME_EVENT_SETDYNAMICENTITYNONE         = 19,
+    GAME_EVENT_CAMERAZOOM                   = 20,
+    GAME_EVENT_CAMERAMOVE                   = 21,
+    GAME_EVENT_SETDYNAMICBLOCKROTATION      = 22,
+    GAME_EVENT_SETDYNAMICBLOCKTRANSLATION   = 23,
+    GAME_EVENT_SETDYNAMICBLOCKNONE          = 24,
+    GAME_EVENT_PENALITY_TIME                = 25,
+    GAME_EVENT_PLAYER_DIES                  = 26,
+    GAME_EVENT_PLAYER_ENTERS_ZONE           = 27,
+    GAME_EVENT_PLAYER_LEAVES_ZONE           = 28,
+    GAME_EVENT_PLAYER_TOUCHES_ENTITY        = 29,
+    GAME_EVENT_SETPLAYERPOSITION            = 30,
+    GAME_EVENT_SETDYNAMICBLOCKSELFROTATION  = 31,
     GAME_EVENT_SETDYNAMICENTITYSELFROTATION = 32,
+    GAME_EVENT_CAMERAROTATE                 = 33,
+    GAME_EVENT_CAMERAADAPTTOGRAVITY         = 34
   };
 }
 
@@ -772,6 +774,40 @@ class MGE_PenalityTime : public MotoGameEvent {
 
  private:
   float m_penalityTime;
+};
+
+class MGE_CameraRotate : public MotoGameEvent {
+ public:
+  MGE_CameraRotate(float p_fEventTime);
+  MGE_CameraRotate(float p_fEventTime, float p_angle);
+  ~MGE_CameraRotate();
+
+  void doAction(MotoGame *p_pMotoGame);
+  void serialize(DBuffer &Buffer);
+  void unserialize(DBuffer &Buffer);
+  static GameEventType SgetType();
+  GameEventType getType();
+
+  std::string toString();
+
+ private:
+  float m_angle;
+};
+
+class MGE_CameraAdaptToGravity : public MotoGameEvent {
+ public:
+  MGE_CameraAdaptToGravity(float p_fEventTime);
+  ~MGE_CameraAdaptToGravity();
+
+  void doAction(MotoGame *p_pMotoGame);
+  void serialize(DBuffer &Buffer);
+  void unserialize(DBuffer &Buffer);
+  static GameEventType SgetType();
+  GameEventType getType();
+
+  std::string toString();
+
+ private:
 };
 
 }

@@ -104,6 +104,8 @@ private:
   static int L_Game_KillAPlayer(lua_State *pL);
   static int L_Game_WinAPlayer(lua_State *pL);
   static int L_Game_NumberOfPlayers(lua_State *pL);
+  static int L_Game_CameraRotate(lua_State *pL);
+  static int L_Game_CameraAdaptToGravity(lua_State *pL);
 };
 
 

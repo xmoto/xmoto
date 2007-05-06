@@ -545,7 +545,7 @@ namespace vapp {
   }
 
   void GameRenderer::setDesiredRotationAngle(float i_value) {
-    m_desiredRotationAngle = i_value;
+    m_desiredRotationAngle = (i_value * 180.0) / M_PI;
   }
 
   void GameRenderer::adaptRotationAngleToGravity() {
@@ -2203,10 +2203,10 @@ namespace vapp {
   }
 
   float GameRenderer::rotationAngle() {
-    return m_rotationAngle;
+    return (m_rotationAngle * M_PI) / 180.0;
   }
 
   void GameRenderer::setRotationAngle(float i_value) {
-    m_rotationAngle = i_value;
+    m_rotationAngle = (i_value * 180.0) / M_PI;
   }
 }
