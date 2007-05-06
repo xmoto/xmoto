@@ -35,15 +35,16 @@ int utf8::byte_size_from_utf8_first(unsigned char ch) {
   count = 5;
   else if ((ch & 0xFE) == 0xFC)
   count = 6;
-  else
-  throw Exception("Invalid utf-8 char"); /* stop on invalid characters */
+  else {
+    throw Exception("Invalid utf-8 char"); /* stop on invalid characters */
+  }
   return count;
 }
 
 std::vector<std::string> utf8::split_utf8_string(const std::string &src) {
   std::vector<std::string> ret;
   std::string v_line;
-  
+
   for(size_t i = 0; i < src.size(); /* nop */) {
     const int size = byte_size_from_utf8_first(src[i]);
     if(i + size > src.size())
