@@ -177,6 +177,8 @@ namespace vapp {
       void setRenderer(GameRenderer *p_renderer);
       void CameraZoom(float pZoom);
       void CameraMove(float p_x, float p_y);
+      void CameraRotate(float i_angle);
+      void CameraAdaptToGravity();
 
       void killPlayer(int i_player);
       void playerEntersZone(int i_player, Zone *pZone);

@@ -73,6 +73,8 @@ luaL_reg            LuaLibGame::m_gameFuncs[] = {
   {"KillAPlayer", 		  LuaLibGame::L_Game_KillAPlayer},
   {"WinAPlayer",  		  LuaLibGame::L_Game_WinAPlayer},
   {"NumberOfPlayers",             LuaLibGame::L_Game_NumberOfPlayers},
+  {"CameraRotate",                LuaLibGame::L_Game_CameraRotate},
+  {"CameraAdaptToGravity",        LuaLibGame::L_Game_CameraAdaptToGravity},
   {NULL, NULL}
 };
 
@@ -720,4 +722,16 @@ int LuaLibGame::L_Game_WinAPlayer(lua_State *pL) {
 int LuaLibGame::L_Game_NumberOfPlayers(lua_State *pL) {
   lua_pushnumber(pL, m_exec_world->Players().size());
   return 1;
+}
+
+
+int LuaLibGame::L_Game_CameraRotate(lua_State *pL) {
+  m_exec_world->createGameEvent(new vapp::MGE_CameraRotate(m_exec_world->getTime(),
+							   X_luaL_check_number(pL,1)));
+  return 0;
+}
+
+int LuaLibGame::L_Game_CameraAdaptToGravity(lua_State *pL) {
+  m_exec_world->createGameEvent(new vapp::MGE_CameraAdaptToGravity(m_exec_world->getTime()));
+  return 0;
 }

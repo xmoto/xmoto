@@ -1,8 +1,10 @@
 
+documenter
+"CameraRotate"
+"CameraAdaptToGravity"
+
 * pour le joystick:
 le mode mirror ne marche pas
-
-* ajouter les traducteurs dans les remerciements
 
 * [21:35] <gaivota> aspegic500: I have a request: It would be nice, that if you zoom in, the camera remains attached to the player, and not to a virtual point
 => dans Renderer.cpp
@@ -13,6 +15,7 @@ le mode mirror ne marche pas
 * a quick play button to play any level just at xmoto start
 
 * dans le niveau metallica on voit bien que ca chie certaines textures
+   : ca vient du bsp à cause des 4 points rajoutés (boite englobante)
 * a force d'ouvrir et de fermer des niveaux, ca bouffe de la mémoire :
    réfléchir à cause du nombre de sprites augmentant à les virer de
    temps en temps
@@ -20,7 +23,6 @@ le mode mirror ne marche pas
 * Theme.cpp : remplacer les anciennes fonts par les nouvelles
 * gérer les accents et tous les caractères au clavier (et vérifier que
    ca passe en bd) : see keyboard-0.1.10.patch
-* traduire les scripts integrés (le tuto)
 
 *It would be nice if you could use a separate image file for the front
    and the rear wheels of your bike.
@@ -192,7 +194,6 @@ render blocks by Z
 * two possibilities to show room : one to see the world highscore, one
    to see you room (optionnal)
 * display wind
-* a fonction CameraRotate and CameraRotateAdaptToG (script)
 * a block0.Touch() function
 * network game
 * freestyle mode
