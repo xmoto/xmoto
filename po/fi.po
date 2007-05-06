@@ -809,7 +809,7 @@ msgstr "Pelaajien lukumäärä"
 
 #: src/GameText.h:272
 msgid "New"
-msgstr ""
+msgstr "Uusi"
 
 #: src/GameText.h:273
 #, c-format
@@ -1478,7 +1478,7 @@ msgstr "Ota kaikki graafiset efektit käyttöön"
 
 #: src/GameText.h:446
 msgid "Turn on sound effects"
-msgstr ""
+msgstr "Ääniefektit päälle"
 
 #: src/GameText.h:447
 msgid "Poor sound quality"
@@ -1588,7 +1588,7 @@ msgstr ""
 
 #: src/GameText.h:473
 msgid "Select this if you got a direct connection to the Internet"
-msgstr ""
+msgstr "Valitse tämä, jos sinulla on suora yhteys Internettiin"
 
 #: src/GameText.h:474
 msgid "Select this if you connects to the Internet through an HTTP proxy"
@@ -1687,7 +1687,7 @@ msgstr "Lähetä toistovideo huipputuloksien Internetsivulle"
 
 #: src/GameText.h:501
 msgid "Upload your best replays to your room (useful when it is just created)"
-msgstr ""
+msgstr "Lähetä parhaat aikasi huoneeseesu (hyödyllistä kun se on juuri luotu)"
 
 #: src/GameText.h:502
 msgid "Configure the main www options"
@@ -2023,27 +2023,27 @@ msgstr "Toistovideon interpolaatio pois päältä"
 
 #: src/LevelsText.h:21
 msgid "First let's take a look at the user interface..."
-msgstr ""
+msgstr "Katsotaanpa ensin ulkoasua"
 
 #: src/LevelsText.h:22
 msgid "In the upper left corner, you've got your timers"
-msgstr ""
+msgstr "Vasemmassa yläkulmassa sinulla on ajastimet"
 
 #: src/LevelsText.h:23
 msgid "The big one is your current time"
-msgstr ""
+msgstr "Tuo suuri on sinun nykyinen aikasi"
 
 #: src/LevelsText.h:24
 msgid "The small one to the right is your own best time"
-msgstr ""
+msgstr "Pienempi oikealla on oma paras aikasi"
 
 #: src/LevelsText.h:25
 msgid "for the current level..."
-msgstr ""
+msgstr "nykyiselle levelille..."
 
 #: src/LevelsText.h:26
 msgid "... and the one to the left is the best of all"
-msgstr ""
+msgstr "...ja tuo tuolla vasemmalla on kaikkein paras"
 
 #: src/LevelsText.h:27
 #, fuzzy
@@ -2052,23 +2052,23 @@ msgstr "Kaikki (tällä tietokoneella)"
 
 #: src/LevelsText.h:28
 msgid "Down here there's the minimap, which shows the level"
-msgstr ""
+msgstr "Tuolla alhaalla minikartta, mikä näyttää levelin"
 
 #: src/LevelsText.h:29
 msgid "around you, so you know where you're heading."
-msgstr ""
+msgstr "ympärilläsi, jotta tiedät minne olet menossa."
 
 #: src/LevelsText.h:30
 msgid "Now let's look at your controls."
-msgstr ""
+msgstr "Katsotaanpa nyt ohjaimia"
 
 #: src/LevelsText.h:31
 msgid "(You seem to be using a joystick, can't help with that :P)"
-msgstr ""
+msgstr "(Näytät käyttävän ohjausssauvaa, en voi auttaa siinä :P)"
 
 #: src/LevelsText.h:32
 msgid ": Drive forward"
-msgstr ""
+msgstr ": Aja eteenpäin"
 
 #: src/LevelsText.h:33
 #, fuzzy
@@ -2092,15 +2092,15 @@ msgstr "Nosta oikeaa rengasta"
 
 #: src/LevelsText.h:37
 msgid "Okay. The red dot on your minimap is a strawberry."
-msgstr ""
+msgstr "Okei. Punainen piste minikartalla on mansikka."
 
 #: src/LevelsText.h:38
 msgid "The primary objective of the game is for you"
-msgstr ""
+msgstr "Pelin päämäärä on"
 
 #: src/LevelsText.h:39
 msgid "to collect all of them, and then find the flower."
-msgstr ""
+msgstr "kerätä kaikki mansikat ja löytää kukka."
 
 #: src/LevelsText.h:40
 #, fuzzy
@@ -2109,225 +2109,225 @@ msgstr "Huoneen huipputulos"
 
 #: src/LevelsText.h:41
 msgid "indicates how many strawberries still left."
-msgstr ""
+msgstr "näyttää, kuinka paljon mansikoita on vielä jäljellä."
 
 #: src/LevelsText.h:42
 msgid "Drive in its direction..."
-msgstr ""
+msgstr "Aja sen suuntaan..."
 
 #: src/LevelsText.h:43
 msgid "When done, head for the flower."
-msgstr ""
+msgstr "Kun tehty, aja kukkaa päin."
 
 #: src/LevelsText.h:44
 msgid "It's the purple dot on your minimap."
-msgstr ""
+msgstr "Se on violetti piste minikartallasi."
 
 #: src/LevelsText.h:45
 msgid "Welcome to X-Moto!"
-msgstr ""
+msgstr "Tervetuloa X-Motoon!"
 
 #: src/LevelsText.h:46
 msgid "This level is a short tutorial of"
-msgstr ""
+msgstr "Tämä on lyhyt tutoriaali"
 
 #: src/LevelsText.h:47
 #, fuzzy
 msgid "how you play the game."
-msgstr "Pelaa 'kuinka pelata peliä'- tutoriaalia"
+msgstr "kuinka pelata peliä."
 
 #: src/LevelsText.h:48
 msgid "Please stay put and follow the instructions! :)"
-msgstr ""
+msgstr "Pysy siinä ja seuraa ohjeita! :)"
 
 #: src/LevelsText.h:49
 msgid "Pick up the strawberry by touching it"
-msgstr ""
+msgstr "Ota mansikka koskettamalla sitä"
 
 #: src/LevelsText.h:50
 msgid "Touch it to finish the level. Good luck with the rest :)"
-msgstr ""
+msgstr "Kosketa sitä suorittaaksesi levelin. Onnea lopulle :)"
 
 #: src/LevelsText.h:51
 msgid "The first jump you're going to perform is very easy."
-msgstr ""
+msgstr "Ensimmäinen hyppy on hyvin helppo."
 
 #: src/LevelsText.h:52
 msgid "Drive to the left, accelerate, and when you are in"
-msgstr ""
+msgstr "Aja vasemmalle, paina kaasua ja kun olet"
 
 #: src/LevelsText.h:53
 msgid "the air, try to adjust your attitude with the left"
-msgstr ""
+msgstr "ilmassa, yritä muutta asentoasi vasemmalla"
 
 #: src/LevelsText.h:54
 msgid "and right arrow keys, so you'll land on your wheels."
-msgstr ""
+msgstr "ja oikealla nuolinäppäimellä, jotta laskeudut pyörillesi."
 
 #: src/LevelsText.h:55
 msgid "The next jump is a bit trickier. You'll need all the"
-msgstr ""
+msgstr "Seuraava hyppy on astetta vaikeampi. Tarvitset kaiken"
 
 #: src/LevelsText.h:56
 msgid "speed you can get to reach the other side..."
-msgstr ""
+msgstr "vauhdin jota saat päästäksesi toiselle puolelle..."
 
 #: src/LevelsText.h:57
 msgid "Now for the most difficult jump in this tutorial!"
-msgstr ""
+msgstr "Nyt tulee tämän tutoriaalin vaikein hyppy!"
 
 #: src/LevelsText.h:58
 msgid "This time, speed alone won't do the job..."
-msgstr ""
+msgstr "Tällä kertaa pelkkä vauhti ei riitä..."
 
 #: src/LevelsText.h:59
 msgid "Here's the plan:"
-msgstr ""
+msgstr "Tehdään näin:"
 
 #: src/LevelsText.h:60
 msgid "Again, you'll have to obtain maximum speed, but when"
-msgstr ""
+msgstr "Joudut taas saavuttamaan huippunopeuden, mutta kun"
 
 #: src/LevelsText.h:61
 msgid "you reach the edge of the jump, pull the bike's front"
-msgstr ""
+msgstr "tulet hypyn reunalle, vedä pyörän"
 
 #: src/LevelsText.h:62
 msgid "wheel up."
-msgstr ""
+msgstr "etupyörää ylös."
 
 #: src/LevelsText.h:63 src/LevelsText.h:90
 msgid "That will cause the rear suspension to increase the"
-msgstr ""
+msgstr "Se aiheuttaa perä jousitksen, joka pidentää"
 
 #: src/LevelsText.h:64 src/LevelsText.h:91
 msgid "length of the jump."
-msgstr ""
+msgstr "hypyn pituutta."
 
 #: src/LevelsText.h:65 src/LevelsText.h:82 src/LevelsText.h:92
 msgid "Try it..."
-msgstr ""
+msgstr "Kokeile sitä..."
 
 #: src/LevelsText.h:66
 msgid "This tutorial will teach you the basics of jumping."
-msgstr ""
+msgstr "Tämä tutoriaali opettaa sinulle hypyn perusteet."
 
 #: src/LevelsText.h:67
 msgid "Remember you can turn around your bike"
-msgstr ""
+msgstr "Muista että voit kääntää pyörän ympäri"
 
 #: src/LevelsText.h:68
 msgid "by pressing "
-msgstr ""
+msgstr "painamalla "
 
 #: src/LevelsText.h:69
 msgid "That was pretty easy, right?"
-msgstr ""
+msgstr "Se oli aika helppoa, eikö?"
 
 #: src/LevelsText.h:70
 msgid "Accelerate NOW! Obtain maximum speed, and try to"
-msgstr ""
+msgstr "Paina kaasua NYT! Saavuta huippunopeus ja yritä"
 
 #: src/LevelsText.h:71
 msgid "keep the front wheel at the ground..."
-msgstr ""
+msgstr "pitää etupyörä maassa..."
 
 #: src/LevelsText.h:72
 msgid "Nice jump there! :)"
-msgstr ""
+msgstr "Hieno hyppy :)"
 
 #: src/LevelsText.h:73
 msgid "Congrats, you're now a master jumper!"
-msgstr ""
+msgstr "Onnittelut, olet nyt Master hyppijä!"
 
 #: src/LevelsText.h:74
 msgid "The basic idea is that when driving on the rear wheel,"
-msgstr ""
+msgstr "Perusideana on se, että ajaessa takarenkaalla"
 
 #: src/LevelsText.h:75
 msgid "your head is lowered quite a lot..."
-msgstr ""
+msgstr "pääsi on aika paljon alempana..."
 
 #: src/LevelsText.h:76
 msgid "The difficult part is to keep the balance."
-msgstr ""
+msgstr "Hankala osa on pitää tasapaino yllä."
 
 #: src/LevelsText.h:77
 msgid "When the distance you have to drive is quite short,"
-msgstr ""
+msgstr "Kun matka, jonka joudut ajamaan on aika lyhyt,"
 
 #: src/LevelsText.h:78
 msgid "you don't need to keep the balance."
-msgstr ""
+msgstr "sinun ei tarvitse pitää tasapainoa."
 
 #: src/LevelsText.h:79
 msgid "Accelerate (slowly) to the right with the front wheel raising."
-msgstr ""
+msgstr "Kaasuta (hitaasti) oikealle etupyörä nousussa."
 
 #: src/LevelsText.h:80
 msgid "Just before your head hit the block, make a quick left/right"
-msgstr ""
+msgstr "Juuri ennen kuin pääsi osuu reunaan, tee nopea vasen/oikea"
 
 #: src/LevelsText.h:81
 msgid "combination, and you should be on the other side."
-msgstr ""
+msgstr "kombinaatio ja sinun tulisi olla toisella puolella."
 
 #: src/LevelsText.h:83
 msgid "Now you'll try a bit more difficult one..."
-msgstr ""
+msgstr "Nyt yrtät vähän hankalempaa..."
 
 #: src/LevelsText.h:84
 msgid "This time keep your hands off the left and right arrow keys,"
-msgstr ""
+msgstr "Pidä tällä kertaa kädet poissa vasemmalta ja oikealta näppäimeltä,"
 
 #: src/LevelsText.h:85
 msgid "they're not delicate enough to help you keep balance."
-msgstr ""
+msgstr "ne eivät ole riittävän herkkiä pitääkseen tasapainon."
 
 #: src/LevelsText.h:86
 msgid "Instead regulate your angle by accelerating and braking."
-msgstr ""
+msgstr "Säätele sen sijasta kulmaasi kaasuttamalla ja jarrutelemalla."
 
 #: src/LevelsText.h:87
 msgid "Try to drive a bit back and forth on your rear wheel,"
-msgstr ""
+msgstr "Yritä ajaa vähän edestakaisin takarenkaallasi,"
 
 #: src/LevelsText.h:88
 msgid "keeping the bike as steady as possible..."
-msgstr ""
+msgstr "pitäen pyörän tasaisena, kuin mahdollista..."
 
 #: src/LevelsText.h:89
 msgid "Try getting under the next obstacle when you feel you're ready."
-msgstr ""
+msgstr "Yritä päästä seuraavan esteen alee, kun tuntuu että olet valmis."
 
 #: src/LevelsText.h:93
 msgid "This tutorial will teach you to rear-wheel through"
-msgstr ""
+msgstr "Tämä tutoriaali opetaa sinulle takarenkaan"
 
 #: src/LevelsText.h:94
 msgid "areas where the ceiling is low."
-msgstr ""
+msgstr "alueiden läpi, missä katto on matalalla."
 
 #: src/LevelsText.h:95
 msgid "Beware that this can be pretty difficult :)"
-msgstr ""
+msgstr "Varo, sillä tämä voi olla hyvin vaikeaa :)"
 
 #: src/LevelsText.h:96
 msgid "Not that difficult, right?"
-msgstr ""
+msgstr "Ei niin vaikeaa, vai?"
 
 #: src/LevelsText.h:97
 msgid "Nice! Now try the next one, it's a bit more difficult..."
-msgstr ""
+msgstr "Hyvä! Nyt yritä seuraavaa, se on vähän vaikeampi..."
 
 #: src/LevelsText.h:98
 msgid "Good job! The next one is even more difficult..."
-msgstr ""
+msgstr "Hyvää työtä! Seuraava on vielä vaikeampi..."
 
 #: src/LevelsText.h:99
 msgid "Now for the final one... It's not that long, but instead"
-msgstr ""
+msgstr "Nyt tulee viimeinen...se ei ole niinkään pitkä, mutta"
 
 #: src/LevelsText.h:100
 msgid "there's even less room for your precious head. Good luck! :)"
-msgstr ""
+msgstr "siellä on vielä vähemmän tilaa kalliille päällesi. Onnea! :)"
