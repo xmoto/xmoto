@@ -1145,9 +1145,8 @@ msgid "Update"
 msgstr "Päivittää"
 
 #: src/GameText.h:362
-#, fuzzy
 msgid "Updated"
-msgstr "Päivittää"
+msgstr "Päivitetty"
 
 #: src/GameText.h:363
 msgid "Check WWW"
@@ -1170,7 +1169,6 @@ msgid "Upload highscore"
 msgstr "Lähetä huipputulos"
 
 #: src/GameText.h:368
-#, fuzzy
 msgid "Upload all highscores"
 msgstr "Päivitä huipputulokset"
 
@@ -1254,7 +1252,7 @@ msgid "%d minutes"
 msgstr "%d minuuttia"
 
 #: src/GameText.h:389
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "(Stats since: %s)\n"
 "X-Moto started %d times; %d plays (%d different levels),\n"
@@ -1264,7 +1262,7 @@ msgstr ""
 "(Statistiikat lähtien %s)\n"
 "X-Moto käynnistyi %d kertaa; %d peliä (%d eri leveliä),\n"
 "%d kuolemaa, %d suoritusta ja %d uudelleen yritystä.\n"
-"??? %s"
+"Aikaa pelattu %s"
 
 #: src/GameText.h:392
 #, c-format
@@ -2046,9 +2044,8 @@ msgid "... and the one to the left is the best of all"
 msgstr "...ja tuo tuolla vasemmalla on kaikkein paras"
 
 #: src/LevelsText.h:27
-#, fuzzy
 msgid "on this computer."
-msgstr "Kaikki (tällä tietokoneella)"
+msgstr "tällä tietokoneella."
 
 #: src/LevelsText.h:28
 msgid "Down here there's the minimap, which shows the level"
@@ -2071,24 +2068,20 @@ msgid ": Drive forward"
 msgstr ": Aja eteenpäin"
 
 #: src/LevelsText.h:33
-#, fuzzy
 msgid ": Brake"
-msgstr "Jarru"
+msgstr ": Jarru"
 
 #: src/LevelsText.h:34
-#, fuzzy
 msgid ": Change direction"
-msgstr "Vaihda suuntaa"
+msgstr ": Vaihda suuntaa"
 
 #: src/LevelsText.h:35
-#, fuzzy
 msgid ": Rotate anti-clockwise"
-msgstr "Nosta oikeaa rengasta"
+msgstr ": Nosta oikeaa rengasta"
 
 #: src/LevelsText.h:36
-#, fuzzy
 msgid ": Rotate clockwise"
-msgstr "Nosta oikeaa rengasta"
+msgstr ": Nosta oikeaa rengasta"
 
 #: src/LevelsText.h:37
 msgid "Okay. The red dot on your minimap is a strawberry."
@@ -2103,9 +2096,8 @@ msgid "to collect all of them, and then find the flower."
 msgstr "kerätä kaikki mansikat ja löytää kukka."
 
 #: src/LevelsText.h:40
-#, fuzzy
 msgid "The icon to the right of your time,"
-msgstr "Huoneen huipputulos"
+msgstr "Kuva oikealla ajastasi"
 
 #: src/LevelsText.h:41
 msgid "indicates how many strawberries still left."
@@ -2132,7 +2124,6 @@ msgid "This level is a short tutorial of"
 msgstr "Tämä on lyhyt tutoriaali"
 
 #: src/LevelsText.h:47
-#, fuzzy
 msgid "how you play the game."
 msgstr "kuinka pelata peliä."
 
