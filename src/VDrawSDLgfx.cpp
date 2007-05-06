@@ -145,6 +145,12 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
     m_translate.y = y;
   }
 
+  void DrawLibSDLgfx::setMirrorY() {
+  }
+
+  void DrawLibSDLgfx::setRotateZ(float i_angle) {
+  }
+
   void DrawLibSDLgfx::setLineWidth(float width) {
   }
 

@@ -261,6 +261,8 @@ class GLFontManager : public FontManager {
     virtual void setClipRect(SDL_Rect * i_clip_rect) = 0;
     virtual void setScale(float x, float y) = 0;
     virtual void setTranslate(float x, float y) = 0;
+    virtual void setMirrorY() = 0;
+    virtual void setRotateZ(float i_angle) = 0;
     virtual void setLineWidth(float width) = 0;
 
       /**
@@ -402,6 +404,8 @@ class GLFontManager : public FontManager {
     virtual void setClipRect(SDL_Rect * i_clip_rect);
     virtual void setScale(float x, float y);
     virtual void setTranslate(float x, float y);
+    virtual void setMirrorY();
+    virtual void setRotateZ(float i_angle);
     virtual void setLineWidth(float width);
 
       /**
@@ -545,6 +549,8 @@ class GLFontManager : public FontManager {
     virtual void setClipRect(SDL_Rect * i_clip_rect);
     virtual void setScale(float x, float y);
     virtual void setTranslate(float x, float y);
+    virtual void setMirrorY();
+    virtual void setRotateZ(float i_angle);
     virtual void setLineWidth(float width);
 
       /**

@@ -102,6 +102,17 @@ namespace vapp {
   void DrawLibOpenGL::setTranslate(float x,float y){
     glTranslatef(x,y, 0);
   }
+
+  void DrawLibOpenGL::setMirrorY() {
+    glRotatef(180, 0, 1, 0);
+  }
+
+  void DrawLibOpenGL::setRotateZ(float i_angle) {
+    if(i_angle != 0.0) { /* not nice to compare a float, but the main case */
+      glRotatef(i_angle, 0, 0, 1);
+    }
+  }
+
   void DrawLibOpenGL::setLineWidth(float width){
     glLineWidth(width);
   }
