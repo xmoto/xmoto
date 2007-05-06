@@ -98,27 +98,16 @@ Central place to keep many in-game text strings
     ":Dave Vasilevsky;"                                                                      \
     ":Maxime Biais;"                                                                         \
     ":;"                                                                                     \
-    + std::string(_("Website Programming")) +                                                \
-    ":Nicolas Adenis-Lamarre;"                                                               \
-    ":Nx;"                                                                                   \
-    ":;"                                                                                     \
-    + std::string(_("Website Administration")) +                                             \
-    ":Nicolas Adenis-Lamarre;"                                                               \
-    ":Valentin;"                                                                             \
-    ":Nx;"                    	                                                             \
-    ":Alrj;"                  	                                                             \
-    ":;"                      	                                                             \
-    + std::string(_("Website Localization")) +                                               \
-    ":Felix Schl;"                                                                           \
-    ":Nicolas Adenis-Lamarre;"                                                               \
-    ":Trullo;"                                                                               \
-    ":Afaland;"                                                                              \
-    ":Jj;"                                                                                   \
-    ":Vertigo;"                                                                              \
-    ":Pol Vinogradov;"                                                                       \
-    ":;"                                                                                     \
-    + std::string(_("Forum")) +                                                              \
-    ":Valentin;"                                                                             \
+    + std::string(_("Localization")) +                                                       \
+    ":Jozef Riha (" + std::string(_("Slovak")) + ");"                                        \
+    ":Nicolas Adenis-Lamarre (" + std::string(_("French")) + ");"                            \
+    ":Wilhelm Francke (" + std::string(_("Norwegian")) + ");"                                \
+    ":Jonathan Sieber (" + std::string(_("German")) + ");"                                   \
+    ":Maximum (" + std::string(_("Finnish")) + ");"                                          \
+    ":Trullo (" + std::string(_("Catalan")) + ");"                                           \
+    ":Trullo (" + std::string(_("Spanish")) + ");"                                           \
+    ":Mateusz Kosibowicz (" + std::string(_("Polish")) + ");"                                \
+    ":" + std::string(_("Mikhail Brinchuk")) + " (" + std::string(_("Russian")) + ");"       \
     ":;"                                                                                     \
     + std::string(_("Main testers")) +                                                       \
     ":Jose Alberto Coelho;"                                                                  \
@@ -126,7 +115,6 @@ Central place to keep many in-game text strings
     ":;"                                                                                     \
     + std::string(_("Thanks to")) +                                                          \
     ":SnowBear ("           + std::string(_("for KDE/gnome integration")) 	     + ");"  \
-    ":Jonathan Sieber ("    + std::string(_("for german translation"))    	     + ");"  \
     ":Samuel Mimram ("      + std::string(_("for Debian packaging"))      	     + ");"  \
     ":Dark ("               + std::string(_("for Gentoo packaging"))      	     + ");"  \
     ":Olivier Blin (" 	    + std::string(_("for Mandriva packaging"))    	     + ");"  \
@@ -134,8 +122,6 @@ Central place to keep many in-game text strings
     ":Yves Berquin (" 	    + std::string(_("for making tinyxml"))        	     + ");"  \
     ":L. Peter Deutsch ("   + std::string(_("for the MD5 code"))          	     + ");"  \
     ":Petter Reinholdtsen;"                                                                  \
-    ":Jes Vestervang ("     + std::string(_("for providing web space"))              + ");"  \
-    ":Kenneth ("            + std::string(_("for being such a little girl"))         + ");"  \
     ":" 		    + std::string(_("Everyone who have made levels"))        + ";"   \
     ":" 		    + std::string(_("People who have provided bug reports")) + ";"   \
     ":" 		    + std::string(_("Anyone who has helped in any way"))     + ";"
