@@ -263,7 +263,7 @@ GameApp::GameApp() {
 	  }
   
 	  /* Init level */    
-	  m_InputHandler.resetScriptKeyHooks();
+	  m_InputHandler.reset();
 	  m_MotoGame.prePlayLevel(&m_InputHandler, NULL, false);
 
 	  /* add the ghosts */
@@ -831,6 +831,11 @@ GameApp::GameApp() {
       return;
     }
 
+    if(nKey == SDLK_m && ( (mod & KMOD_LCTRL) || (mod & KMOD_RCTRL) )) {     
+      m_Renderer.setMirrored(m_Renderer.isMirrored() == false);
+      m_InputHandler.setMirrored(m_Renderer.isMirrored());
+    }
+
     if(m_State == GS_MENU) {
 
       if(nKey == SDLK_F5) {
@@ -918,7 +923,6 @@ GameApp::GameApp() {
               m_pJustDeadMenu->showWindow(false);
 	      m_Renderer.setPlayerToFollow(NULL);
               m_MotoGame.endLevel();
-              m_InputHandler.resetScriptKeyHooks();                         
               m_Renderer.unprepareForNewLevel();
               //setState(GS_MENU);
               setState(m_StateAfterPlaying);
@@ -946,7 +950,6 @@ GameApp::GameApp() {
             /* Escape quits the replay */
 	    m_Renderer.setPlayerToFollow(NULL);
             m_MotoGame.endLevel();
-            m_InputHandler.resetScriptKeyHooks();                      
             m_Renderer.unprepareForNewLevel();
 	    setState(m_StateAfterPlaying);
             break;          
@@ -1519,7 +1522,6 @@ GameApp::GameApp() {
 		m_Renderer.setPlayerToFollow(NULL);
 		m_MotoGame.endLevel();
 
-    m_InputHandler.resetScriptKeyHooks();           
     m_Renderer.unprepareForNewLevel();
 
     if(i_reloadLevel) {
@@ -2035,7 +2037,6 @@ GameApp::GameApp() {
     }
 
     /* Start playing right away */     
-    m_InputHandler.resetScriptKeyHooks();
 
     if(m_pJustPlayReplay != NULL) delete m_pJustPlayReplay;
     m_pJustPlayReplay = NULL;
@@ -2047,6 +2048,7 @@ GameApp::GameApp() {
     }
       
       try {
+	m_InputHandler.reset();
 	m_MotoGame.prePlayLevel(&m_InputHandler, m_pJustPlayReplay, true);
 	m_MotoGame.setInfos("");
 	

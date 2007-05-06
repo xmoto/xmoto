@@ -28,6 +28,19 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 namespace vapp {
 
+  InputHandler::InputHandler() {
+    reset();
+  }
+
+  void InputHandler::reset() {
+    m_mirrored = false;
+    resetScriptKeyHooks();
+  }
+
+  void InputHandler::setMirrored(bool i_value) {
+    m_mirrored = i_value;
+  }
+
   /*===========================================================================
   Globals
   ===========================================================================*/  
@@ -237,6 +250,7 @@ namespace vapp {
       pController->setDrive(-joyRawToFloat(nRawPrim, m_nJoyAxisPrimMin1, m_nJoyAxisPrimLL1, m_nJoyAxisPrimUL1, m_nJoyAxisPrimMax1));
       int nRawSec = SDL_JoystickGetAxis(m_pActiveJoystick1,m_nJoyAxisSec1);
       pController->setPull(-joyRawToFloat(nRawSec, m_nJoyAxisSecMin1, m_nJoyAxisSecLL1, m_nJoyAxisSecUL1, m_nJoyAxisSecMax1));
+
     }
   }
   
@@ -401,11 +415,13 @@ namespace vapp {
 	  /* Brake */
 	  pController->setDrive(-1.0f);
 	}
-	else if(m_nPullBackKey1 == nKey) {
+	else if((m_nPullBackKey1    == nKey && m_mirrored == false) ||
+		(m_nPushForwardKey1 == nKey && m_mirrored)) {
 	  /* Pull back */
-            pController->setPull(1.0f);
+	  pController->setPull(1.0f);
 	}
-	else if(m_nPushForwardKey1 == nKey) {
+	else if((m_nPushForwardKey1 == nKey && m_mirrored == false) ||
+		(m_nPullBackKey1    == nKey && m_mirrored)) {
 	  /* Push forward */
 	  pController->setPull(-1.0f);            
 	}
@@ -418,11 +434,13 @@ namespace vapp {
 	  /* Brake */
 	  pController->setDrive(-1.0f);
 	}
-          else if(m_nPullBackKey2 == nKey) {
-            /* Pull back */
-            pController->setPull(1.0f);
+          else if((m_nPullBackKey2    == nKey && m_mirrored == false) ||
+		  (m_nPushForwardKey2 == nKey && m_mirrored)) {
+		    /* Pull back */
+		    pController->setPull(1.0f);
           }
-	else if(m_nPushForwardKey2 == nKey) {
+	else if((m_nPushForwardKey2 == nKey && m_mirrored == false) ||
+		(m_nPullBackKey2    == nKey && m_mirrored)) {
 	  /* Push forward */
 	  pController->setPull(-1.0f);            
 	} 
@@ -475,11 +493,13 @@ namespace vapp {
 	  /* Don't brake */
 	  pController->setDrive(0.0f);
 	}
-	else if(m_nPullBackKey1 == nKey) {
+	else if((m_nPullBackKey1    == nKey && m_mirrored == false) ||
+		(m_nPushForwardKey1 == nKey && m_mirrored)) {
 	  /* Pull back */
 	  pController->setPull(0.0f);
 	}
-	else if(m_nPushForwardKey1 == nKey) {
+	else if((m_nPushForwardKey1 == nKey && m_mirrored == false) ||
+		(m_nPullBackKey1    == nKey && m_mirrored)) {
 	  /* Push forward */
 	  pController->setPull(0.0f);            
 	}
@@ -496,11 +516,13 @@ namespace vapp {
 	  /* Don't brake */
 	  pController->setDrive(0.0f);
 	}
-	else if(m_nPullBackKey2 == nKey) {
+	else if((m_nPullBackKey2    == nKey && m_mirrored == false) ||
+		(m_nPushForwardKey2 == nKey && m_mirrored)) {
 	  /* Pull back */
 	  pController->setPull(0.0f);
 	}
-	else if(m_nPushForwardKey2 == nKey) {
+	else if((m_nPushForwardKey2 == nKey && m_mirrored == false) ||
+		(m_nPullBackKey2    == nKey && m_mirrored)) {
 	  /* Push forward */
 	  pController->setPull(0.0f);            
 	}

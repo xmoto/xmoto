@@ -152,6 +152,9 @@ namespace vapp {
       m_showEngineCounter = true;
       m_bTestThemeMode = false;
       m_bUglyOverMode  = false;
+
+      m_mirrored = false;
+      m_rotationAngle = 0.0;
     }
     ~GameRenderer() {_Free();}
     
@@ -219,12 +222,20 @@ namespace vapp {
 
     void switchFollow();
 
+    bool isMirrored();
+    void setMirrored(bool i_value);
+
+    float rotationAngle();
+    void setRotationAngle(float i_value);
+
   private:
     /* Data */
     float m_fScale;
     float m_cameraOffsetX;
     float m_cameraOffsetY;
 
+    bool m_mirrored;
+    float m_rotationAngle;
     Biker* m_playerToFollow;
 
     std::vector<GraphDebugInfo *> m_DebugInfo;

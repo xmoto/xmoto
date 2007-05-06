@@ -106,6 +106,10 @@ namespace vapp {
     public:
       
       /* Methods */
+    InputHandler();
+    void reset();
+    void setMirrored(bool i_value);
+
       void configure(UserConfig *pConfig);
       void handleInput(InputEventType Type,int nKey,SDLMod mod,
 		       BikeController *pController,
@@ -169,6 +173,8 @@ namespace vapp {
       int m_nJoyAxisSecLL1;
       int m_nJoyButtonChangeDir1;
      
+      bool m_mirrored;
+
       std::vector<bool> m_JoyButtonsPrev;
       
       /* Static data */

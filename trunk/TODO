@@ -1,4 +1,7 @@
 
+* pour le joystick:
+le mode mirror ne marche pas
+
 * [21:35] <gaivota> aspegic500: I have a request: It would be nice, that if you zoom in, the camera remains attached to the player, and not to a virtual point
 => dans Renderer.cpp
     float normal_hoffset = 4.0;

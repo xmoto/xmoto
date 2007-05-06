@@ -56,7 +56,9 @@ namespace vapp {
 
     m_fNextGhostInfoUpdate = 0.0f;
     m_nGhostInfoTrans      = 255;
-        
+    m_mirrored = false;
+    m_rotationAngle = 0.0;        
+
     /* Optimize scene */
     std::vector<Block *> Blocks = getGameObject()->getLevelSrc()->Blocks();
     int nVertexBytes = 0;
@@ -659,7 +661,10 @@ namespace vapp {
 
     /* Perform scaling/translation */    
     getParent()->getDrawLib()->setScale(xScale, yScale);
-    //glRotatef(getGameObject()->getTime()*100,0,0,1); /* Uncomment this line if you want to vomit :) */
+    if(m_mirrored) {
+      getParent()->getDrawLib()->setMirrorY();
+    }
+    getParent()->getDrawLib()->setRotateZ(m_rotationAngle);
     getParent()->getDrawLib()->setTranslate(-getCameraPositionX(), -getCameraPositionY());
 
     if(m_Quality != GQ_LOW && m_bUglyMode == false) {
@@ -2132,5 +2137,21 @@ namespace vapp {
 	return;
       }
     }
+  }
+
+  bool GameRenderer::isMirrored() {
+    return m_mirrored;
+  }
+
+  void GameRenderer::setMirrored(bool i_value) {
+    m_mirrored = i_value;
+  }
+
+  float GameRenderer::rotationAngle() {
+    return m_rotationAngle;
+  }
+
+  void GameRenderer::setRotationAngle(float i_value) {
+    m_rotationAngle = i_value;
   }
 }
