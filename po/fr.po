@@ -1707,7 +1707,8 @@ msgstr "Uploader le replay sur le site web des records"
 
 #: src/GameText.h:488
 msgid "Upload your best replays to your room (useful when it is just created)"
-msgstr "Uploader vos meilleurs replays sur le salon (pratique lors de sa création)"
+msgstr ""
+"Uploader vos meilleurs replays sur le salon (pratique lors de sa création)"
 
 #: src/GameText.h:489
 msgid "Configure the main www options"
@@ -2279,7 +2280,8 @@ msgstr "Accélérez (doucement) vers la droite avec la roue avant qui se lève."
 
 #: src/LevelsText.h:80
 msgid "Just before your head hit the block, make a quick left/right"
-msgstr "Juste avant que votre tête heurte le bloc, pressez rapidement gauche/droite,"
+msgstr ""
+"Juste avant que votre tête heurte le bloc, pressez rapidement gauche/droite,"
 
 #: src/LevelsText.h:81
 msgid "combination, and you should be on the other side."
