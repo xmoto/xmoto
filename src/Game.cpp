@@ -2445,7 +2445,7 @@ GameApp::GameApp() {
     v_percentage << "%";
     
     if(m_reloadingLevelsUser == false) {
-      _UpdateLoadingScreen(0, std::string(GAMETEXT_LOAD_LEVEL_HOOK) + std::string("\n") + v_percentage.str() + std::string(", ") + i_level);
+      _UpdateLoadingScreen(0, std::string(GAMETEXT_LOAD_LEVEL_HOOK) + std::string("\n") + v_percentage.str() + std::string(" ") + i_level);
     } else {
       _SimpleMessage(GAMETEXT_RELOADINGLEVELS + std::string("\n") + v_percentage.str(), &m_InfoMsgBoxRect);
     }
