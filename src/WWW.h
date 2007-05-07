@@ -41,7 +41,7 @@ class ThemeChoice;
 #define DEFAULT_WEBHIGHSCORES_URL         "http://xmoto.tuxfamily.org/highscores.xml"
 #define DEFAULT_WEBHIGHSCORES_FILENAME    "webhighscores.xml"
 #define DEFAULT_TRANSFERT_TIMEOUT         240
-#define DEFAULT_TRANSFERT_CONNECT_TIMEOUT 7
+#define DEFAULT_TRANSFERT_CONNECT_TIMEOUT 15
 #define DEFAULT_WEBLEVELS_URL             "http://xmoto.tuxfamily.org/levels.xml"
 #define DEFAULT_WEBLEVELS_FILENAME        "weblevels.xml"
 #define DEFAULT_WEBLEVELS_DIR             "downloaded"
