@@ -1,4 +1,7 @@
 
+
+* [13:49] <gaivota> aspegic500: another bug: although I disabled engine sound in options, it remains in the game
+
 * pour le joystick: le mode mirror ne marche pas
 
 * [21:35] <gaivota> aspegic500: I have a request: It would be nice, that if you zoom in, the camera remains attached to the player, and not to a virtual point
@@ -23,7 +26,6 @@
    and the rear wheels of your bike.
 
 [20:26] <Christoph> btw, I noticed a few days ago: in the level "MASTERKUD Padrinos magicos" there is something broken. the strawberry at the right end of the ground crashes the level with "Entity 'MySprite18' doesn't exist" (in the replay, too)
-
 
 (12:12:08)  Roots:     http://blender-archi.tuxfamily.org/Textures  
 (12:12:11)  Roots:     http://lemog.free.fr/lemog_v5/thumbnails.php?album=topn&cat=0  

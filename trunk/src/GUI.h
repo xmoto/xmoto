@@ -536,9 +536,8 @@ namespace vapp {
         m_bChecked=b;
       }
       bool getChecked(void) {return m_bChecked;}
-      
-    private:
-      /* Data */
+
+    protected:
       UIButtonState m_State;
       UIButtonType m_Type;            
       bool m_bHover,m_bClicked,m_bChecked;
@@ -546,6 +545,23 @@ namespace vapp {
       /* Helper methods */
       void _UncheckGroup(int nGroup);
   };
+
+class UIButtonDrawn : public UIButton {
+ public:
+  UIButtonDrawn(UIWindow *pParent,
+		const std::string& i_spriteUnpressed,
+		const std::string& i_spritePressed,
+		int x=0, int y=0,
+		std::string Caption="",
+		int nWidth=0, int nHeight=0);
+  ~UIButtonDrawn();
+
+  virtual void paint();
+
+ private:
+  Texture* m_texturePressed;
+  Texture* m_textureUnpressed;
+};
 
 	/*===========================================================================
 	UI list

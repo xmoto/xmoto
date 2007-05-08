@@ -306,6 +306,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_PRESSANYKEYTO        _("Press key you want to '%s' or ESC to cancel...")
 #define GAMETEXT_PROXYSERVER          _("Proxy Server")
 #define GAMETEXT_PROXYCONFIG          _("Configure Proxy...")
+#define GAMETEXT_QUICKSTART           _("Quick start")
 #define GAMETEXT_QUIT                 _("Quit Game")
 #define GAMETEXT_QUITMESSAGE          _("Do you really want to quit?")
 #define GAMETEXT_RANDOMIZE            _("Randomize")
@@ -510,6 +511,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_PROXYLOGIN    _("Your login in the room")
 #define CONTEXTHELP_PROXYPASSWORD _("Your password associated with your login")
 #define CONTEXTHELP_REPLAYS_FILTER _("Filter on replay list")
+#define CONTEXTHELP_QUICKSTART _("Press to play immediatly to X-Moto")
 
 #define VPACKAGENAME_LEVELS_WITH_NO_HIGHSCORE   _("Levels with no highscore")
 #define VPACKAGENAME_INCOMPLETED_LEVELS         _("Levels you have not completed")
