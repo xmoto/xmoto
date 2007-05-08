@@ -29,21 +29,25 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   ===========================================================================*/
 class Exception {
   public:
-  Exception() {}
-  Exception(const std::string &iMsg)
-  : m_Msg(iMsg) {
+  Exception(const std::string &iMsg){
+   setMsg(iMsg);
   }
-  Exception(const char *pc)
-  : m_Msg(std::string(pc)) {     
+
+  Exception(const char *pc){
+    setMsg(std::string(pc));
   }
-  std::string &getMsg(void) {return m_Msg;}
+
+  std::string &getMsg() {return m_Msg;}
+
+  protected:
+  void setMsg(std::string message){ m_Msg = message;};
   private: 
   std::string m_Msg;
 };
   
+ 
 class SyntaxError : public Exception {
  public:
-  SyntaxError() {}
   SyntaxError(const std::string &iMsg)
     : Exception(iMsg) {}
   SyntaxError(const char *pc)

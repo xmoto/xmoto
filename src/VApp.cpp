@@ -182,12 +182,14 @@ namespace vapp {
 
     try {
       /* Parse command-line arguments */
-      _ParseArgs(nNumArgs,ppcArgs);        
+      _ParseArgs(nNumArgs,ppcArgs);
     } 
     catch (SyntaxError &e) {
-      if(e.getMsg().length() > 0)
-        printf("syntax error : %s\n",e.getMsg().c_str());
+      printf("syntax error : %s\n",e.getMsg().c_str());
       return; /* abort */
+    }
+    if (m_bQuit){
+      return;
     }
 
     /* Init file system stuff */
@@ -612,7 +614,9 @@ namespace vapp {
         helpUserArgs();
         printf("\n");
         
-        throw SyntaxError();
+	/* mark that we want to quit the application */
+	m_bQuit = true;
+        return;
       }
       else {
         /* Add it to argument vector */

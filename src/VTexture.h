@@ -38,7 +38,6 @@ namespace vapp {
   ===========================================================================*/    
   class TextureError : public Exception {
     public:
-      TextureError() {}
       TextureError(std::string &iMsg)
         : Exception(iMsg) {}
       TextureError(const char *pc)
