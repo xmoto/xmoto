@@ -146,6 +146,7 @@ namespace vapp {
 
   void GameApp::_InitMenus_MainMenu(void) {
     /* Initialize main menu */      
+
     m_pMainMenu = new UIWindow(m_Renderer.getGUI(),0,0,"",
                                 m_Renderer.getGUI()->getPosition().nWidth,
                                 m_Renderer.getGUI()->getPosition().nHeight);
@@ -169,6 +170,16 @@ namespace vapp {
 
     m_nNumMainMenuButtons = 5;
     
+    /* quick start button */
+    m_pQuickStart = new UIButtonDrawn(m_pMainMenu, "RoundButtonUnpressed", "RoundButtonPressed",
+    				      drawLib->getDispWidth()  -120 -30,
+				      drawLib->getDispHeight() -120 -30,
+				      GAMETEXT_QUICKSTART, 120, 120);
+    m_pQuickStart->setFont(drawLib->getFontSmall());
+    m_pQuickStart->setID("QUICKSTART");
+    m_pQuickStart->setContextHelp(CONTEXTHELP_QUICKSTART);
+    /* *** */
+
     /* level info frame */
     m_pLevelInfoFrame = new UIWindow(m_pMainMenu,0,drawLib->getDispHeight()/2 - (m_nNumMainMenuButtons*57)/2 + m_nNumMainMenuButtons*57,"",220,100);
     m_pLevelInfoFrame->showWindow(false);
@@ -1857,7 +1868,7 @@ namespace vapp {
 	m_PlaySpecificLevel = i_level;
 	m_StateAfterPlaying = GS_LEVELPACK_VIEWER;
 	m_currentPlayingList = pList;
-	setState(GS_PREPLAYING);   
+	setState(GS_PREPLAYING);
       }
     }
 
@@ -2329,7 +2340,8 @@ namespace vapp {
           m_pOptionsWindow->showWindow(false);
           m_pHelpWindow->showWindow(false);
           m_pReplaysWindow->showWindow(false);
-          m_pLevelPacksWindow->showWindow(true);                    
+          m_pLevelPacksWindow->showWindow(true);
+	  m_pQuickStart->showWindow(false);
 	}
         else if(m_pMainMenuButtons[i]->getCaption() == GAMETEXT_OPTIONS) {
           if(m_pOptionsWindow->isHidden()) _ImportOptions();        
@@ -2339,6 +2351,7 @@ namespace vapp {
           m_pHelpWindow->showWindow(false);
           m_pReplaysWindow->showWindow(false);
           m_pLevelPacksWindow->showWindow(false);                    
+	  m_pQuickStart->showWindow(false);
         }
         else if(m_pMainMenuButtons[i]->getCaption() == GAMETEXT_HELP) {
 	  m_pLevelInfoFrame->showWindow(false);
@@ -2346,6 +2359,7 @@ namespace vapp {
           m_pHelpWindow->showWindow(true);
           m_pReplaysWindow->showWindow(false);
           m_pLevelPacksWindow->showWindow(false);                    
+	  m_pQuickStart->showWindow(false);
         }
         else if(m_pMainMenuButtons[i]->getCaption() == GAMETEXT_REPLAYS) {
 	  if(m_pReplaysWindow->isHidden()) _UpdateReplaysList();
@@ -2354,6 +2368,7 @@ namespace vapp {
           m_pHelpWindow->showWindow(false);
           m_pReplaysWindow->showWindow(true);
           m_pLevelPacksWindow->showWindow(false);                    
+	  m_pQuickStart->showWindow(false);
         }
         else if(m_pMainMenuButtons[i]->getCaption() == GAMETEXT_QUIT) {
           if(m_pQuitMsgBox == NULL) {
@@ -2365,9 +2380,18 @@ namespace vapp {
       }
     }
     
+    if(m_pQuickStart->isClicked()) {
+      m_pQuickStart->setClicked(false);
+
+      m_pMainMenu->showWindow(false);      
+      m_PlaySpecificLevel = "tut1";
+      m_StateAfterPlaying = GS_MENU;
+      setState(GS_PREPLAYING);     
+    }
+
     UIEdit *pReplayFilterEdit = reinterpret_cast<UIEdit *>(m_pReplaysWindow->getChild("REPLAYS_FILTER"));
     UIList *pReplayList = reinterpret_cast<UIList *>(m_pReplaysWindow->getChild("REPLAY_LIST"));
-    
+
     /* check filter */
     if(pReplayFilterEdit != NULL) {
       if(pReplayFilterEdit->hasChanged()) {

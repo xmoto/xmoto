@@ -84,7 +84,7 @@ common_LDADD = $(MINGW32_LIBS) $(GL_LIBS) $(SDL_LIBS)
 bin_PROGRAMS = xmoto
 
 xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp GameMain.cpp \
-  GameMenus.cpp GUIBestTimes.cpp GUIButton.cpp GUI.cpp \
+  GameMenus.cpp GUIBestTimes.cpp GUIButton.cpp GUIButtonDrawn.cpp GUI.cpp \
   GUIFrame.cpp GUIList.cpp GUIStatic.cpp GUITabView.cpp \
   Renderer.cpp RendererInit.cpp Replay.cpp Sound.cpp \
   LuaLibGame.h LuaLibGame.cpp \

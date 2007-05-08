@@ -294,20 +294,22 @@
 <frame />
 </sprite>
 
-<sprite type="UI" name="TitleBL" 	    file="TitleBL.jpg" />
-<sprite type="UI" name="TitleBR" 	    file="TitleBR.jpg" />
-<sprite type="UI" name="TitleTL" 	    file="TitleTL.jpg" />
-<sprite type="UI" name="TitleTR" 	    file="TitleTR.jpg" />
-<sprite type="UI" name="Cursor"             file="Cursor.png" />
-<sprite type="UI" name="NewLevelsAvailable" file="NewLevelsAvail.png" />
-<sprite type="UI" name="Misc"               file="Misc.png" />
-<sprite type="UI" name="MiscDisabled"       file="MiscDisabled.png" />
-<sprite type="UI" name="MiscActive"         file="MiscActive.png" />
-<sprite type="UI" name="DarkBlob"           file="DarkBlob.png" />
-<sprite type="UI" name="MenuBL" 	    file="MenuBL.png" />
-<sprite type="UI" name="MenuBR" 	    file="MenuBR.png" />
-<sprite type="UI" name="MenuTL" 	    file="MenuTL.png" />
-<sprite type="UI" name="MenuTR" 	    file="MenuTR.png" />
+<sprite type="UI" name="TitleBL" 	      file="TitleBL.jpg" />
+<sprite type="UI" name="TitleBR" 	      file="TitleBR.jpg" />
+<sprite type="UI" name="TitleTL" 	      file="TitleTL.jpg" />
+<sprite type="UI" name="TitleTR" 	      file="TitleTR.jpg" />
+<sprite type="UI" name="Cursor"               file="Cursor.png" />
+<sprite type="UI" name="NewLevelsAvailable"   file="NewLevelsAvail.png" />
+<sprite type="UI" name="Misc"                 file="Misc.png" />
+<sprite type="UI" name="MiscDisabled"         file="MiscDisabled.png" />
+<sprite type="UI" name="MiscActive"           file="MiscActive.png" />
+<sprite type="UI" name="DarkBlob"             file="DarkBlob.png" />
+<sprite type="UI" name="MenuBL" 	      file="MenuBL.png" />
+<sprite type="UI" name="MenuBR" 	      file="MenuBR.png" />
+<sprite type="UI" name="MenuTL" 	      file="MenuTL.png" />
+<sprite type="UI" name="MenuTR" 	      file="MenuTR.png" />
+<sprite type="UI" name="RoundButtonPressed"   file="roundButtonPressed.png" />
+<sprite type="UI" name="RoundButtonUnpressed" file="roundButtonUnpressed.png" />
 
 <music name="menu1" file="menu.ogg" />
 <music name="rideALong" file="ridealong.ogg" />
