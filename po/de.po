@@ -192,54 +192,51 @@ msgstr "Grafik"
 
 #: src/GameText.h:97
 msgid "MacOS X Support"
-msgstr "MacOS X-Unterstuetzung"
+msgstr "MacOS X-Unterstützung"
 
 #: src/GameText.h:101
-#, fuzzy
 msgid "Localization"
-msgstr "Website-Uebersetzungen"
+msgstr "Übersetzungen"
 
 #: src/GameText.h:102
 msgid "Slovak"
-msgstr ""
+msgstr "Slowakisch"
 
 #: src/GameText.h:103
 msgid "French"
-msgstr ""
+msgstr "Französisch"
 
 #: src/GameText.h:104
 msgid "Norwegian"
-msgstr ""
+msgstr "Norwegisch"
 
 #: src/GameText.h:105
-#, fuzzy
 msgid "German"
-msgstr "Allgemein"
+msgstr "Deutsch"
 
 #: src/GameText.h:106
-#, fuzzy
 msgid "Finnish"
-msgstr "Geschafft!"
+msgstr "Finnisch"
 
 #: src/GameText.h:107
 msgid "Catalan"
-msgstr ""
+msgstr "Catalanisch"
 
 #: src/GameText.h:108
 msgid "Spanish"
-msgstr ""
+msgstr "Spanisch"
 
 #: src/GameText.h:109
 msgid "Polish"
-msgstr ""
+msgstr "Polnisch"
 
 #: src/GameText.h:110
 msgid "Mikhail Brinchuk"
-msgstr ""
+msgstr "Mikhail Brinchuk"
 
 #: src/GameText.h:110
 msgid "Russian"
-msgstr ""
+msgstr "Russisch"
 
 #: src/GameText.h:112
 msgid "Main testers"
@@ -323,11 +320,11 @@ msgstr "Standarts"
 
 #: src/GameText.h:138
 msgid "Do you really want to delete player?"
-msgstr "Spieler wirklich löschen?"
+msgstr "Den Spieler wirklich löschen?"
 
 #: src/GameText.h:139
 msgid "Do you really want to delete replay?"
-msgstr "Replay wirklich löschen?"
+msgstr "Das Replay wirklich löschen?"
 
 #: src/GameText.h:140 src/GameText.h:142
 msgid "Delete"
@@ -386,7 +383,7 @@ msgid ""
 "Downloading theme data required by new levels...\n"
 "Press ESC to abort."
 msgstr ""
-"Lade zusatzliche Themes herunter\n"
+"Lade zusätzliche Themes herunter\n"
 "Zum Abbrechen 'ESC' druecken."
 
 #: src/GameText.h:154
@@ -447,11 +444,11 @@ msgstr "Spielernamen eingeben"
 
 #: src/GameText.h:168
 msgid "Enter name of replay"
-msgstr "Namen des Replays eingeben"
+msgstr "Namen für das Replays eingeben"
 
 #: src/GameText.h:169
 msgid "There are errors in the level, don't expect it to be playable!"
-msgstr "Es befinden sich Fehler in dem Level. Es ist eventüll unspielbar!"
+msgstr "Es befinden sich Fehler in dem Level. Es ist eventuell unspielbar!"
 
 #: src/GameText.h:170
 msgid "External Levels"
@@ -563,7 +560,7 @@ msgstr "Rechts drehen (Spieler 2)"
 
 #: src/GameText.h:189
 msgid "Game Graphics"
-msgstr "Spielgrafik"
+msgstr "Spielgrafiken"
 
 #: src/GameText.h:190
 msgid "General"
@@ -587,7 +584,7 @@ msgstr "Deine beste"
 
 #: src/GameText.h:195
 msgid "Type"
-msgstr "Type"
+msgstr "Typ"
 
 #: src/GameText.h:196
 msgid "The highscore of the room"
@@ -615,7 +612,7 @@ msgstr "Hilfe"
 
 #: src/GameText.h:205
 msgid "You control your bike using the keyboard"
-msgstr "Du steuerst dein Motorrad mit deiner Tastatur"
+msgstr "Du steuerst dein Motorrad mit der Tastatur"
 
 #: src/GameText.h:206
 msgid "Accelerates"
@@ -675,7 +672,7 @@ msgstr "Hoch"
 
 #: src/GameText.h:220
 msgid "Levels are being added into the database. Please wait."
-msgstr ""
+msgstr "Die Levels werden der Datenbank hinzugefügt. Bitte warten."
 
 #: src/GameText.h:221
 msgid "Internet Configuration"
@@ -695,11 +692,11 @@ msgstr "Initialisiere Renderer..."
 
 #: src/GameText.h:225
 msgid "Initializing text renderer..."
-msgstr "Initialisiere Textrenderer..."
+msgstr "Initialisiere Text-Renderer..."
 
 #: src/GameText.h:226
 msgid "View Level Initially"
-msgstr "Levelübersicht"
+msgstr "Levelübersicht zu Beginn"
 
 #: src/GameText.h:227
 msgid "Joystick"
@@ -761,10 +758,9 @@ msgstr "Levels"
 
 #: src/GameText.h:241
 msgid "List All"
-msgstr "Alle"
+msgstr "Alle auflisten"
 
 #: src/GameText.h:242
-#, fuzzy
 msgid "Loading..."
 msgstr "Lade..."
 
@@ -790,7 +786,7 @@ msgstr "Lade Texturen..."
 
 #: src/GameText.h:248
 msgid "Login"
-msgstr "Login"
+msgstr "Log-In"
 
 #: src/GameText.h:249
 msgid "Low"
@@ -834,7 +830,7 @@ msgstr "Anzahl der Spieler"
 
 #: src/GameText.h:259
 msgid "New"
-msgstr ""
+msgstr "Neu"
 
 #: src/GameText.h:260
 #, c-format
@@ -891,7 +887,7 @@ msgstr "Tut mir leid, keine weiteren Levels mehr."
 
 #: src/GameText.h:271
 msgid "No statistics for this profile."
-msgstr "Kein Statistik für dieses Profil."
+msgstr "Keine Statistik für dieses Profil."
 
 #: src/GameText.h:272
 msgid "Not finished"
@@ -948,7 +944,7 @@ msgstr "Autor"
 
 #: src/GameText.h:289
 msgid "Medals"
-msgstr ""
+msgstr "Medaillen"
 
 #: src/GameText.h:290 src/GameText.h:323
 msgid "Room"
@@ -1018,6 +1014,8 @@ msgstr "Proxy konfigurieren"
 #: src/GameText.h:309
 msgid "Quick start"
 msgstr ""
+"Schnelles\n"
+" Spiel"
 
 #: src/GameText.h:310
 msgid "Quit Game"
@@ -1046,13 +1044,13 @@ msgstr "Replay"
 #: src/GameText.h:316
 msgid "Stop[esc] ||[space]  << >>[left/right keys]  < >[up/down keys]   Speed:"
 msgstr ""
-"Stop[esc] ||[Leerzeichen]  << >>[rechts/links Tasten]  < >[oben/unten "
+"Stop[esc] ||[Leertaste]  << >>[Rechts/Links-Tasten]  < >[Hoch/Runter-"
 "Tasten]   Geschwindigkeit:"
 
 #: src/GameText.h:317
 msgid "Stop[esc] ||[space] >>[right key] < >[up/down keys]   Speed:"
 msgstr ""
-"Stop[esc] ||[Leerzeichen] >>[links Taste] < >[oben/unten Tasten]   "
+"Stop[esc] ||[Leertaste] >>[Rechts-Taste] < >[Hoch/Runter-Tasten]   "
 "Geschwindigkeit:"
 
 #: src/GameText.h:319
@@ -1073,7 +1071,7 @@ msgstr "Spiel fortsetzen"
 
 #: src/GameText.h:324
 msgid "Run Windowed"
-msgstr "Als Fenster ausführen"
+msgstr "Im Fenster ausführen"
 
 #: src/GameText.h:325
 msgid "Save"
@@ -1125,7 +1123,7 @@ msgstr "Stereo"
 
 #: src/GameText.h:338
 msgid "Theme"
-msgstr "Thema"
+msgstr "Theme"
 
 #: src/GameText.h:339
 msgid "Available"
@@ -1141,7 +1139,7 @@ msgstr "Aktualisierbar"
 
 #: src/GameText.h:342
 msgid "The theme is now up to date"
-msgstr "Das Thema ist jetzt aktuell"
+msgstr "Das Theme ist jetzt aktuell"
 
 #: src/GameText.h:343
 msgid "Time"
@@ -1171,16 +1169,15 @@ msgid ""
 msgstr ""
 "Kann das Thema nicht aktualisieren!\n"
 "Das Thema ist nicht im Internet verfügbar,\n"
-"oder die Themen-Liste ist nicht aktuell"
+"oder die Themen-Liste ist nicht aktuell."
 
 #: src/GameText.h:349
 msgid "Update"
 msgstr "Aktualisieren"
 
 #: src/GameText.h:350
-#, fuzzy
 msgid "Updated"
-msgstr "Aktualisieren"
+msgstr "Aktualisiert"
 
 #: src/GameText.h:351
 msgid "Check WWW"
@@ -1203,9 +1200,8 @@ msgid "Upload highscore"
 msgstr "Bestzeit hochladen"
 
 #: src/GameText.h:356
-#, fuzzy
 msgid "Upload all highscores"
-msgstr "Bestzeit hochladen"
+msgstr "Bestzeiten hochladen"
 
 #: src/GameText.h:357
 msgid ""
@@ -1298,7 +1294,7 @@ msgid ""
 msgstr ""
 "(Statistiken seit: %s)\n"
 "X-Moto wurde %d mal gestartet; %d Spiele (%d unterschiedliche Level),\n"
-"%d Tode, %d mal abgeschlossen, and %d Neustarts.\n"
+"%d Tode, %d mal abgeschlossen, und %d Neustarts.\n"
 "Gespielte Zeit: %s"
 
 #: src/GameText.h:380
@@ -1381,7 +1377,7 @@ msgstr "Eingebaute und Externe Levels"
 
 #: src/GameText.h:401
 msgid "Levels grouped together in level packs"
-msgstr "Levels in Pakete gruppiert"
+msgstr "In Paketen gruppierte Levels"
 
 #: src/GameText.h:402
 msgid "Browse levels available to you"
@@ -1409,11 +1405,11 @@ msgstr "Spieleinführung spielen"
 
 #: src/GameText.h:408
 msgid "Official built-in levels"
-msgstr "Offizielle eingebaute Levels"
+msgstr "Offiziell eingebaute Levels"
 
 #: src/GameText.h:409
 msgid "Unofficial stand-alone external levels"
-msgstr "Inoffizielle eingebaute Levels"
+msgstr "Inoffizielle, externe Levels"
 
 #: src/GameText.h:410
 msgid "Play the selected level"
@@ -1507,7 +1503,8 @@ msgstr "Nicht spielentscheidende Grafik deaktivieren"
 #: src/GameText.h:432
 msgid "Disable some of the most resource-intensive graphics, like particles"
 msgstr ""
-"Einige der ressourcenintensivsten Grafiken aktivieren, wie Partikeleffekte"
+"Einige der ressourcenintensivsten Grafiken deaktivieren (z.B. "
+"Partikeleffekte)"
 
 #: src/GameText.h:433
 msgid "Enable all graphical effects"
@@ -1519,7 +1516,7 @@ msgstr "Soundeffekte aktivieren"
 
 #: src/GameText.h:435
 msgid "Poor sound quality"
-msgstr "Schlechte Soundqualität"
+msgstr "Niedrige Soundqualität"
 
 #: src/GameText.h:436
 msgid "Normal sound quality"
@@ -1527,15 +1524,15 @@ msgstr "Normale Soundqualität"
 
 #: src/GameText.h:437
 msgid "Best sound quality"
-msgstr "Beste Soundqualität"
+msgstr "Höchste Soundqualität"
 
 #: src/GameText.h:438
 msgid "8-bit sound samples, poor quality"
-msgstr "8-bit Sounds, schlechte Qualität"
+msgstr "8-bit Sounds, niedrige Qualität"
 
 #: src/GameText.h:439
 msgid "16-bit sound samples, good quality"
-msgstr "16-bit Sounds, gute Qualität"
+msgstr "16-bit Sounds, hohe Qualität"
 
 #: src/GameText.h:440
 msgid "Mono (single channel) audio"
@@ -1571,7 +1568,7 @@ msgstr "Neues Spielerprofil erstellen"
 
 #: src/GameText.h:448
 msgid "Permanently delete selected player profile, including best times"
-msgstr "Spielerprofil dauerhaft löschen, einschliesslich der Bestzeiten"
+msgstr "Spielerprofil dauerhaft löschen, einschließlich der Bestzeiten"
 
 #: src/GameText.h:449
 msgid "Select a level in the level pack to play"
@@ -1583,7 +1580,7 @@ msgstr "Level-Paket schließen"
 
 #: src/GameText.h:451
 msgid "General information about the level"
-msgstr "Allgmeine Informationen über das Level"
+msgstr "Allgemeine Informationen über das Level"
 
 #: src/GameText.h:452
 msgid "View best times for the level"
@@ -1626,24 +1623,24 @@ msgstr ""
 
 #: src/GameText.h:461
 msgid "Select this if you got a direct connection to the Internet"
-msgstr "Dieses auswählen, wenn eine direkte Verbindung zum Internet besteht"
+msgstr "Dies auswählen, wenn eine direkte Verbindung zum Internet besteht"
 
 #: src/GameText.h:462
 msgid "Select this if you connects to the Internet through an HTTP proxy"
 msgstr ""
-"Dieses auswählen, wenn die Internetverbingung durch einen HTTP-Proxy "
+"Dies auswählen, wenn die Internetverbindung durch einen HTTP-Proxy "
 "durchgeführt wird"
 
 #: src/GameText.h:463
 msgid "Select this if you connects to the Internet through a SOCKS4 proxy"
 msgstr ""
-"Dieses auswählen, wenn die Internetverbingung durch einen SOCKS4-Proxy "
+"Dies auswählen, wenn die Internetverbindung durch einen SOCKS4-Proxy "
 "durchgeführt wird"
 
 #: src/GameText.h:464
 msgid "Select this if you connects to the Internet through a SOCKS5 proxy"
 msgstr ""
-"Dieses auswählen, wenn die Internetverbingung durch einen SOCKS5-Proxy "
+"Dieses auswählen, wenn die Internetverbindung durch einen SOCKS5-Proxy "
 "durchgeführt wird"
 
 #: src/GameText.h:465
@@ -1652,7 +1649,7 @@ msgstr "Diese Einstellungen verwenden"
 
 #: src/GameText.h:466
 msgid "Write the IP address or host name of proxy server to use"
-msgstr "IP-Adresse oder Hostnamen des Proxyserver eingeben"
+msgstr "IP-Adresse oder Hostnamen des Proxy-Servers eingeben"
 
 #: src/GameText.h:467
 msgid "Write the port number used by the proxy server"
@@ -1664,7 +1661,7 @@ msgstr "Neue und aktualisierte Levels aus dem Internet"
 
 #: src/GameText.h:470
 msgid "Show the ghost if possible in the game"
-msgstr "Wenn möglich, Geist im Spiel anzeigen"
+msgstr "Geist im Spiel anzeigen, wenn möglich"
 
 #: src/GameText.h:471
 msgid "Choose which ghost to display"
@@ -1674,7 +1671,8 @@ msgstr "Anzuzeigenden Geist auswählen"
 msgid ""
 "Make motion blur effect for the ghost (if supported by your graphics card)"
 msgstr ""
-"Geist mit Bewegungsunschärfe zeichen (falls die Grafikkarte dies unterstützt)"
+"Geist mit Bewegungsunschärfe zeichnen (falls die Grafikkarte dies "
+"unterstützt)"
 
 #: src/GameText.h:473
 msgid "When starting a level with a ghost, display who the ghost is of"
@@ -1708,7 +1706,8 @@ msgstr "Verschiedene Statistiken über X-Moto anzeigen"
 
 #: src/GameText.h:482
 msgid "Update statistics (also happens each time X-Moto is started)"
-msgstr "Statistik aktualisieren (passiert auch wenn X-Moto gestartet wird)"
+msgstr ""
+"Statistik aktualisieren (wird ebenso bei jedem Start von X-Moto durchgeführt)"
 
 #: src/GameText.h:483
 msgid "Enables background music in the main menu"
@@ -1733,6 +1732,8 @@ msgstr "Replay auf Highscore-Seite hochladen"
 #: src/GameText.h:489
 msgid "Upload your best replays to your room (useful when it is just created)"
 msgstr ""
+"Lade deine Bestzeiten in deinen Raum hoch (sinnvoll, insofern dieser neu "
+"erstellt wurde)"
 
 #: src/GameText.h:490
 msgid "Configure the main www options"
@@ -1743,7 +1744,7 @@ msgid ""
 "Choose where to upload/download replays, highscore lists (for more "
 "information, check the website)"
 msgstr ""
-"Auswählen, wo Replays, Highscore-Listen geladen/aktualisiert werden (Für "
+"Auswählen, wo Replays und Highscore-Listen geladen/aktualisiert werden (Für "
 "mehr Informationen, besuche die Website)"
 
 #: src/GameText.h:492
@@ -1756,7 +1757,7 @@ msgstr "Raumliste aus dem Internet holen"
 
 #: src/GameText.h:494
 msgid "Upload of highscore requires to log in (Except for WR)"
-msgstr "Hochladen von Bestzeiten verlangt Login (Außer für Weltrekorde)"
+msgstr "Hochladen von Bestzeiten verlangt Log-In (Außer für Weltrekorde)"
 
 #: src/GameText.h:495
 msgid "Upload of highscore requires a password (Except for WR)"
@@ -1824,11 +1825,11 @@ msgstr "Wähle die Spieler-Anzahl"
 
 #: src/GameText.h:511
 msgid "Your login in the room"
-msgstr "Dein Login für den Raum"
+msgstr "Dein Log-In für den Raum"
 
 #: src/GameText.h:512
 msgid "Your password associated with your login"
-msgstr "Das Passwort für dein Login"
+msgstr "Das Passwort für dein Log-In"
 
 #: src/GameText.h:513
 msgid "Filter on replay list"
@@ -1836,7 +1837,7 @@ msgstr "Filter für Replays"
 
 #: src/GameText.h:514
 msgid "Press to play immediatly to X-Moto"
-msgstr ""
+msgstr "Spontanes Spiel mit zufälligen Levels"
 
 #: src/GameText.h:516
 msgid "Levels with no highscore"
@@ -2032,7 +2033,7 @@ msgstr "Externe Levels (eigenständig im 'My Levels' Ordner platziert)"
 
 #: src/GameText.h:569
 msgid "Ugly mode enabled"
-msgstr "Strich-modus aktiviert"
+msgstr "Strich-Modus aktiviert"
 
 #: src/GameText.h:570
 msgid "Ugly mode disabled"
@@ -2072,399 +2073,304 @@ msgstr "Replay-Interpolation deaktiviert"
 
 #: src/LevelsText.h:21
 msgid "First let's take a look at the user interface..."
-msgstr ""
+msgstr "Zuerst ein Blick auf die Benutzeroberfläche..."
 
 #: src/LevelsText.h:22
 msgid "In the upper left corner, you've got your timers"
-msgstr ""
+msgstr "In der linken, oberen Ecke befinden sich die Zeitanzeigen"
 
 #: src/LevelsText.h:23
 msgid "The big one is your current time"
-msgstr ""
+msgstr "Die größte ist die laufende Zeit"
 
 #: src/LevelsText.h:24
 msgid "The small one to the right is your own best time"
-msgstr ""
+msgstr "Die kleine rechts ist deine eigene Bestzeit"
 
 #: src/LevelsText.h:25
 msgid "for the current level..."
-msgstr ""
+msgstr "für das Level..."
 
 #: src/LevelsText.h:26
 msgid "... and the one to the left is the best of all"
-msgstr ""
+msgstr "... und die links die Bestzeit aus allen Spieler-Profilen"
 
 #: src/LevelsText.h:27
-#, fuzzy
 msgid "on this computer."
-msgstr "Alle (auf diesem Computer)"
+msgstr "auf diesem Computer"
 
 #: src/LevelsText.h:28
 msgid "Down here there's the minimap, which shows the level"
-msgstr ""
+msgstr "Hier unten ist die Mini-Karte, welche einen größeren"
 
 #: src/LevelsText.h:29
 msgid "around you, so you know where you're heading."
-msgstr ""
+msgstr "Ausschnitt des Levels anzeigt."
 
 #: src/LevelsText.h:30
 msgid "Now let's look at your controls."
-msgstr ""
+msgstr "Und nun, zur Steuerung."
 
 #: src/LevelsText.h:31
 msgid "(You seem to be using a joystick, can't help with that :P)"
-msgstr ""
+msgstr "(Du scheinst einen Joystick zu benutzen, dann ist wohl alles klar.)"
 
 #: src/LevelsText.h:32
 msgid ": Drive forward"
-msgstr ""
+msgstr ": Vorwärts"
 
 #: src/LevelsText.h:33
-#, fuzzy
 msgid ": Brake"
-msgstr "Bremse"
+msgstr ": Bremsen"
 
 #: src/LevelsText.h:34
-#, fuzzy
 msgid ": Change direction"
-msgstr "Richtung wechseln"
+msgstr ": Richtung wechseln"
 
 #: src/LevelsText.h:35
-#, fuzzy
 msgid ": Rotate anti-clockwise"
-msgstr "Im Uhrzeigersinn drehen"
+msgstr ": gegen den Uhrzeigersinn drehen"
 
 #: src/LevelsText.h:36
-#, fuzzy
 msgid ": Rotate clockwise"
-msgstr "Im Uhrzeigersinn drehen"
+msgstr ": im Uhrzeigersinn drehen"
 
 #: src/LevelsText.h:37
 msgid "Okay. The red dot on your minimap is a strawberry."
-msgstr ""
+msgstr "Soweit, so gut. Der rote Punkt auf der Mini-Karte ist eine Erdbeere."
 
 #: src/LevelsText.h:38
 msgid "The primary objective of the game is for you"
-msgstr ""
+msgstr "Diese müssen alle aufgesammelt werden, bevor"
 
 #: src/LevelsText.h:39
 msgid "to collect all of them, and then find the flower."
-msgstr ""
+msgstr "das Level abgeschlossen werden kann."
 
 #: src/LevelsText.h:40
-#, fuzzy
 msgid "The icon to the right of your time,"
-msgstr "Die Rekorde des Raumes"
+msgstr "Das Symbol rechts vom Zeitzähler"
 
 #: src/LevelsText.h:41
 msgid "indicates how many strawberries still left."
-msgstr ""
+msgstr "zeigt die Anzahl verbleibender Erdeeren."
 
 #: src/LevelsText.h:42
 msgid "Drive in its direction..."
-msgstr ""
+msgstr "Fahre in deren Richtung..."
 
 #: src/LevelsText.h:43
 msgid "When done, head for the flower."
-msgstr ""
+msgstr "Wenn das geschafft ist, auf zur Blume."
 
 #: src/LevelsText.h:44
 msgid "It's the purple dot on your minimap."
-msgstr ""
+msgstr "Dies ist der violette Punkt auf der Mini-Karte."
 
 #: src/LevelsText.h:45
 msgid "Welcome to X-Moto!"
-msgstr ""
+msgstr "Wilkommen bei X-Moto!"
 
 #: src/LevelsText.h:46
 msgid "This level is a short tutorial of"
-msgstr ""
+msgstr "Dieses Level ist eine kleine Einführung,"
 
 #: src/LevelsText.h:47
-#, fuzzy
 msgid "how you play the game."
-msgstr "Spieleinführung spielen"
+msgstr "um sich mit dem Spiel vertraut zu machen."
 
 #: src/LevelsText.h:48
 msgid "Please stay put and follow the instructions! :)"
-msgstr ""
+msgstr "Bitte bleib an Ort und Stelle und folge den Anweisungen!"
 
 #: src/LevelsText.h:49
 msgid "Pick up the strawberry by touching it"
-msgstr ""
+msgstr "Nimm die Erdbeere auf, indem du sie berührst."
 
 #: src/LevelsText.h:50
 msgid "Touch it to finish the level. Good luck with the rest :)"
-msgstr ""
+msgstr "Berühre sie, um das Level zu beenden. Viel Glück mit dem Rest!"
 
 #: src/LevelsText.h:51
 msgid "The first jump you're going to perform is very easy."
-msgstr ""
+msgstr "Der erste Sprung ist noch sehr einfach."
 
 #: src/LevelsText.h:52
 msgid "Drive to the left, accelerate, and when you are in"
-msgstr ""
+msgstr "Fahre nach links, beschleunige, und sobald du"
 
 #: src/LevelsText.h:53
 msgid "the air, try to adjust your attitude with the left"
-msgstr ""
+msgstr "in der Luft bist, versuch dein Bike mit den Pfeiltasten"
 
 #: src/LevelsText.h:54
 msgid "and right arrow keys, so you'll land on your wheels."
-msgstr ""
+msgstr "auszutarieren, so dass du auf den Rädern aufkommst."
 
 #: src/LevelsText.h:55
 msgid "The next jump is a bit trickier. You'll need all the"
-msgstr ""
+msgstr "Der nächste Sprung ist etwas kniffliger. Du brauchst"
 
 #: src/LevelsText.h:56
 msgid "speed you can get to reach the other side..."
-msgstr ""
+msgstr "maximale Geschwindigkeit, um die andere Seite zu erreichen."
 
 #: src/LevelsText.h:57
 msgid "Now for the most difficult jump in this tutorial!"
-msgstr ""
+msgstr "Nun auf zum schwierigsten Sprung in dieser Einführung!"
 
 #: src/LevelsText.h:58
 msgid "This time, speed alone won't do the job..."
-msgstr ""
+msgstr "Diesmal wird Geschwindigkeit allein nicht zum Ziel führen..."
 
 #: src/LevelsText.h:59
 msgid "Here's the plan:"
-msgstr ""
+msgstr "Und so gehts:"
 
 #: src/LevelsText.h:60
 msgid "Again, you'll have to obtain maximum speed, but when"
-msgstr ""
+msgstr "Zunächst muss wieder Höchstgeschwindigkeit erreicht werden,"
 
 #: src/LevelsText.h:61
 msgid "you reach the edge of the jump, pull the bike's front"
-msgstr ""
+msgstr "sobald du aber den rettenden Vorsprung erreichst, "
 
 #: src/LevelsText.h:62
 msgid "wheel up."
-msgstr ""
+msgstr "zieh die Nase des Bikes hoch!"
 
 #: src/LevelsText.h:63 src/LevelsText.h:90
 msgid "That will cause the rear suspension to increase the"
-msgstr ""
+msgstr "Dadurch wird die Federung des Hinterrads helfen,"
 
 #: src/LevelsText.h:64 src/LevelsText.h:91
 msgid "length of the jump."
-msgstr ""
+msgstr "die Kante zu erklimmen."
 
 #: src/LevelsText.h:65 src/LevelsText.h:82 src/LevelsText.h:92
 msgid "Try it..."
-msgstr ""
+msgstr "Versuchs!"
 
 #: src/LevelsText.h:66
 msgid "This tutorial will teach you the basics of jumping."
-msgstr ""
+msgstr "Diese Einführung lehrt die Grundlagen für Sprünge."
 
 #: src/LevelsText.h:67
 msgid "Remember you can turn around your bike"
-msgstr ""
+msgstr "Denk dran, wenn du das Bike herumdrehen willst,"
 
 #: src/LevelsText.h:68
 msgid "by pressing "
-msgstr ""
+msgstr "drück die Taste "
 
 #: src/LevelsText.h:69
 msgid "That was pretty easy, right?"
-msgstr ""
+msgstr "Das war einfach, nicht wahr?"
 
 #: src/LevelsText.h:70
 msgid "Accelerate NOW! Obtain maximum speed, and try to"
-msgstr ""
+msgstr "Beschleunige JETZT! Volles Rohr und versuch,"
 
 #: src/LevelsText.h:71
 msgid "keep the front wheel at the ground..."
-msgstr ""
+msgstr "das Vorderrad am Boden zu halten..."
 
 #: src/LevelsText.h:72
 msgid "Nice jump there! :)"
-msgstr ""
+msgstr "Netter Sprung!"
 
 #: src/LevelsText.h:73
 msgid "Congrats, you're now a master jumper!"
-msgstr ""
+msgstr "Gratulation, du bist jetzt ein Meisterspringer!"
 
 #: src/LevelsText.h:74
 msgid "The basic idea is that when driving on the rear wheel,"
-msgstr ""
+msgstr "Durch fahren auf dem Hinterrad wird der Kopf abgesenkt,"
 
 #: src/LevelsText.h:75
 msgid "your head is lowered quite a lot..."
-msgstr ""
+msgstr "was die Durchfahrt niedriger Passagen ermöglicht."
 
 #: src/LevelsText.h:76
 msgid "The difficult part is to keep the balance."
-msgstr ""
+msgstr "Das schwierige daran ist das Balance-halten."
 
 #: src/LevelsText.h:77
 msgid "When the distance you have to drive is quite short,"
-msgstr ""
+msgstr "Bei nur kurzen Passagen"
 
 #: src/LevelsText.h:78
 msgid "you don't need to keep the balance."
-msgstr ""
+msgstr "muss die Balance nicht lange gehalten werden."
 
 #: src/LevelsText.h:79
 msgid "Accelerate (slowly) to the right with the front wheel raising."
-msgstr ""
+msgstr "Beschleunige langsam, und zieh dabei das Vorderrad hoch."
 
 #: src/LevelsText.h:80
 msgid "Just before your head hit the block, make a quick left/right"
-msgstr ""
+msgstr "Kurz bevor Kopf auf Kante trifft, mach eine schnelle Links/Rechts-"
 
 #: src/LevelsText.h:81
 msgid "combination, and you should be on the other side."
-msgstr ""
+msgstr "Kombination mit den Pfeiltasten, und es sollte geschafft sein."
 
 #: src/LevelsText.h:83
 msgid "Now you'll try a bit more difficult one..."
-msgstr ""
+msgstr "Jetzt wirds etwas schwieriger..."
 
 #: src/LevelsText.h:84
 msgid "This time keep your hands off the left and right arrow keys,"
-msgstr ""
+msgstr "Lass diesmal die Finger von den Links/Rechts-Pfeiltasten,"
 
 #: src/LevelsText.h:85
 msgid "they're not delicate enough to help you keep balance."
-msgstr ""
+msgstr "denn sie reagieren nicht sensibel genug, um die Balance zu halten."
 
 #: src/LevelsText.h:86
 msgid "Instead regulate your angle by accelerating and braking."
-msgstr ""
+msgstr "Stattdessen, reguliere den Winkel per Gas und Bremse."
 
 #: src/LevelsText.h:87
 msgid "Try to drive a bit back and forth on your rear wheel,"
-msgstr ""
+msgstr "Versuch, auf dem Hinterrad etwas hin und her zu wippen,"
 
 #: src/LevelsText.h:88
 msgid "keeping the bike as steady as possible..."
-msgstr ""
+msgstr "und dabei das Bike so sicher wie möglich zu kontrollieren."
 
 #: src/LevelsText.h:89
 msgid "Try getting under the next obstacle when you feel you're ready."
-msgstr ""
+msgstr "Auf zur nächsten Passage, wenn du bereit bist!"
 
 #: src/LevelsText.h:93
 msgid "This tutorial will teach you to rear-wheel through"
-msgstr ""
+msgstr "Diese Einführung lehrt das Fahren auf dem Hinterrad,"
 
 #: src/LevelsText.h:94
 msgid "areas where the ceiling is low."
-msgstr ""
+msgstr "was bei Passagen mit niedriger Decke erforderlich ist."
 
 #: src/LevelsText.h:95
 msgid "Beware that this can be pretty difficult :)"
-msgstr ""
+msgstr "Aber Achtung, das ist wirklich nicht einfach!"
 
 #: src/LevelsText.h:96
 msgid "Not that difficult, right?"
-msgstr ""
+msgstr "Not soo schwierig, nicht wahr?"
 
 #: src/LevelsText.h:97
 msgid "Nice! Now try the next one, it's a bit more difficult..."
-msgstr ""
+msgstr "Schön! Auf zur nächsten, du schaffst es..."
 
 #: src/LevelsText.h:98
 msgid "Good job! The next one is even more difficult..."
-msgstr ""
+msgstr "Sehr gut! Jetzt wirds richtig knifflig..."
 
 #: src/LevelsText.h:99
 msgid "Now for the final one... It's not that long, but instead"
-msgstr ""
+msgstr "Dies ist die letzte Hürde! Nicht so lang, dafür aber"
 
 #: src/LevelsText.h:100
 msgid "there's even less room for your precious head. Good luck! :)"
-msgstr ""
-
-#~ msgid "Website Programming"
-#~ msgstr "Website-Programmierung"
-
-#~ msgid "Website Administration"
-#~ msgstr "Website-Administration"
-
-#~ msgid "Forum"
-#~ msgstr "Forum"
-
-#~ msgid "for german translation"
-#~ msgstr "deutsche Uebersetzung"
-
-#~ msgid "for providing web space"
-#~ msgstr "Bereitstellung von Web-Space"
-
-#~ msgid ""
-#~ "It seems that it's the first time you load this xmoto version.\n"
-#~ "Levels index creation. It can take some minutes."
-#~ msgstr ""
-#~ "Anscheinend wird diese Version von X-Moto zum ersten Mal gestartet.\n"
-#~ "Level-Index wird nun erstellt; dies kann wenige Minuten dauern."
-
-#~ msgid ""
-#~ "Lead Programming:Rasmus Neckelmann;:Nicolas Adenis-Lamarre;:Emmanuel "
-#~ "Gorse;:Kees Jongenburger;:;Additional Programming:Eric Piel;:Christoph "
-#~ "Sommer;:Frederic Huard;:Brice Goglin;:;Graphics:Rasmus Neckelmann;:Jens "
-#~ "Erler;:;Audio:Jens Erler;:Brandon Ross;:;Built-in Levels:Rasmus "
-#~ "Neckelmann;:Pasi Kallinen;:Germain Gagnerot;:Clive Crous;:Torben Green;:"
-#~ "Thomas Kjaerulff;:;MacOS X Support:Dave Vasilevsky;:Maxime Biais;:;"
-#~ "Website Programming:Nicolas Adenis-Lamarre;:Nx;:;Website Administration:"
-#~ "Nicolas Adenis-Lamarre;:Valentin;:Nx;:Alrj;:;Website Localization:Felix "
-#~ "Schl;:Nicolas Adenis-Lamarre;:Trullo;:Afaland;:Jj;:Vertigo;:Pol "
-#~ "Vinogradov;:;Forum:Valentin;:;Main testers:Jose Alberto Coelho;:Frederic "
-#~ "Huard;:;Thanks to:SnowBear (for KDE/gnome integration);:Jonathan Sieber "
-#~ "(for german translation);:Samuel Mimram (for Debian packaging);:Dark (for "
-#~ "Gentoo packaging);:Olivier Blin (for Mandriva packaging);:Balazs Rozsa "
-#~ "(for across/elma);:Yves Berquin (for making tinyxml);:L. Peter Deutsch "
-#~ "(for the MD5 code);:Petter Reinholdtsen;:Jes Vestervang (for providing "
-#~ "web space);:Kenneth (for being such a little girl);:Everyone who have "
-#~ "made levels;:People who have provided bug reports;:Anyone who has helped "
-#~ "in any way;"
-#~ msgstr ""
-#~ "Leitende Programmierung:Rasmus Neckelmann;:Nicolas Adenis-Lamarre;:"
-#~ "Emmanuel Gorse;:Kees Jongenburger;:;Weitere Programmierung:Eric Piel;:"
-#~ "Christoph Sommer;:Frederic Huard;:Brice Goglin;:;Grafik:Rasmus "
-#~ "Neckelmann;:Jens Erler;:;Audio:Jens Erler;:Brandon Ross;:;Eingebaute "
-#~ "Levels:Rasmus Neckelmann;:Pasi Kallinen;:Germain Gagnerot;:Clive Crous;:"
-#~ "Torben Green;:Thomas Kjaerulff;:;MacOS X Support:Dave Vasilevsky;:Maxime "
-#~ "Biais;:;Website-Programmierung:Nicolas Adenis-Lamarre;:Nx;:;Website-"
-#~ "Administration:Nicolas Adenis-Lamarre;:Valentin;:Nx;:Alrj;:;Website-"
-#~ "Übersetzung:Felix Schlitter;:Nicolas Adenis-Lamarre;:Trullo;:Afaland;:Jj;:"
-#~ "Vertigo;:Pol Vinogradov;:;Forum:Valentin;:;Haupttester:Jose Alberto "
-#~ "Coelho;:Frederic Huard;:;Danke an:SnowBear (KDE/Gnome-Integration);:"
-#~ "Jonathan Sieber (Deutsche Übersetzung);:Samuel Mimram(Debian-Pakete);:"
-#~ "Dark (Gentoo-Pakete);:Olivier Blin (Mandriva-Pakete);:Balazs Rozsa "
-#~ "(across/elma);:Yves Berquin (tinyxml);:L. Peter Deutsch (MD5-code);:"
-#~ "Petter Reinholdtsen;:Jes Vestervang (Webspace);:Kenneth;:;Jeden, der "
-#~ "Levels beigetragen hat,;:an alle, die Fehler berichtet haben,;:jeden, der "
-#~ "in irgendeiner Weise geholfen hat!;"
-
-#~ msgid "Abort Playing"
-#~ msgstr "Spiel abbrechen"
-
-#~ msgid "Last"
-#~ msgstr "Letzte"
-
-#~ msgid "Close profile editor"
-#~ msgstr "Profileditor schliessen"
-
-#~ msgid "New levels"
-#~ msgstr "Neue Level"
-
-#~ msgid "Bike Breaks"
-#~ msgstr "Rad zerbricht"
-
-#~ msgid "View Replays"
-#~ msgstr "Replays anzeigen"
-
-#~ msgid ""
-#~ "Getting the theme\n"
-#~ "Press ESC to abort."
-#~ msgstr ""
-#~ "Lade Thema herunter\n"
-#~ "Zum Abbrechen 'ESC' drücken"
-
-#~ msgid "Show engine counter"
-#~ msgstr "Tacho anzeigen"
+msgstr "ist die Decke noch niedriger. Viel Glück!"

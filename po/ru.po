@@ -803,7 +803,7 @@ msgstr "Графика меню"
 #: src/GameText.h:252
 msgid "Level references unknown textures, it could be unplayable!"
 msgstr ""
-"Уровень ссылается на неизвестную текстуру, возможно, он будет неиграбельным!"
+"Уровень ссылается на неизвестную текстуру, возможно, его нельзя будет пройти!"
 
 #: src/GameText.h:253
 msgid "Mono"
@@ -1015,7 +1015,7 @@ msgstr "Настроить прокси..."
 
 #: src/GameText.h:309
 msgid "Quick start"
-msgstr ""
+msgstr "Быстрый старт"
 
 #: src/GameText.h:310
 msgid "Quit Game"
@@ -1288,14 +1288,14 @@ msgid ""
 "Time played: %s"
 msgstr ""
 "(Статистика с: %s)\n"
-"X-Moto был запущен %d раз; %d игр (%d различных уровеней),\n"
-"%d смертей, %d финишей, и %d перезапусков.\n"
+"X-Moto был запущен %d раз; %d игр (%d различных уровней),\n"
+"Смертей: %d, финишей: %d, перезапусков: %d.\n"
 "Времени сыграно: %s"
 
 #: src/GameText.h:380
 #, c-format
 msgid "%d plays, %d deaths, %d finishes, and %d restarts"
-msgstr "%d игр, %d смертей, %d финишей, и %d перезапусков"
+msgstr "Игр: %d, смертей: %d, финишей: %d, перезапусков: %d"
 
 #: src/GameText.h:381
 #, c-format
@@ -1365,7 +1365,7 @@ msgstr "Запустить следующий уровень вместо тек
 
 #: src/GameText.h:399
 msgid "Try this level again"
-msgstr "Попробовать этот уровень снова"
+msgstr "Попробовать пройти этот уровень снова"
 
 #: src/GameText.h:400
 msgid "Built-in and stand-alone external levels"
@@ -1811,7 +1811,7 @@ msgstr "Перемешать список уровней"
 
 #: src/GameText.h:509
 msgid "Put a text to limit the level list"
-msgstr "Поместите текст, чтобы ограничить список уровней"
+msgstr "Введите текст, чтобы ограничить список уровней"
 
 #: src/GameText.h:510
 msgid "Choose the number of players"
@@ -1831,7 +1831,7 @@ msgstr "Отфильтровать список записей игр"
 
 #: src/GameText.h:514
 msgid "Press to play immediatly to X-Moto"
-msgstr ""
+msgstr "Нажмите, чтобы немедленно играть в X-Moto"
 
 #: src/GameText.h:516
 msgid "Levels with no highscore"
@@ -1843,7 +1843,7 @@ msgstr "Незавершенные уровни"
 
 #: src/GameText.h:518
 msgid "You're not the highscore holder"
-msgstr "Не вы установили рекорд"
+msgstr "Рекорд установили не вы"
 
 #: src/GameText.h:520
 msgid "New and updated levels"
