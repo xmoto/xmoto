@@ -130,6 +130,8 @@ GameApp::GameApp() {
   m_stopToUpdateReplay = false;
   m_allowReplayInterpolation = true;
 
+  m_quickStartList = NULL;
+
   m_db = NULL;
 }
     
