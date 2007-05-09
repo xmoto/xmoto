@@ -23,7 +23,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __VEXCEPT_H__
 
 #include <string>
-#include <stdio.h>
 
 /*===========================================================================
   Exceptions
@@ -43,7 +42,7 @@ class Exception {
   protected:
   void setMsg(std::string message){ 
       m_Msg = message;
-      printf("Exception :  %s \n",message.c_str());
+      // printf("Exception :  %s \n",message.c_str());
   };
   private: 
   std::string m_Msg;
