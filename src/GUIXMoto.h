@@ -35,6 +35,7 @@ class UILevelList : public vapp::UIList {
 	      int nWidth = 0,int nHeight = 0);
   ~UILevelList();
   
+  std::string getLevel(int n);
   std::string getSelectedLevel();
   void addLevel(const std::string& i_id_level,
 		const std::string& i_name,

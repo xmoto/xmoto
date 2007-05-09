@@ -37,13 +37,18 @@ UILevelList::UILevelList(UIWindow *pParent,
 UILevelList::~UILevelList() {
   clear();
 }
- 
+
+std::string UILevelList::getLevel(int n) {
+  if(getEntries().empty() == false) {
+    vapp::UIListEntry *pEntry = getEntries()[n];
+    return *(reinterpret_cast<std::string *>(pEntry->pvUser));
+  }
+  return "";
+}
+
 std::string UILevelList::getSelectedLevel() {
   if(!isBranchHidden() && getSelected()>=0) {
-    if(!getEntries().empty()) {
-      vapp::UIListEntry *pEntry = getEntries()[getSelected()];
-      return *(reinterpret_cast<std::string *>(pEntry->pvUser));
-    }
+    return getLevel(getSelected());
   }
 
   return "";

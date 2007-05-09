@@ -2383,8 +2383,21 @@ namespace vapp {
     if(m_pQuickStart->isClicked()) {
       m_pQuickStart->setClicked(false);
 
-      m_pMainMenu->showWindow(false);      
-      m_PlaySpecificLevel = "tut1";
+      try {
+	if(m_quickStartList == NULL) {
+	  m_quickStartList = buildQuickStartList();
+	} else {
+	  m_quickStartList->randomize();
+	}
+	if(m_quickStartList->getEntries().size() == 0) {
+	  throw Exception("Empty quick start list");
+	}
+	m_currentPlayingList = m_quickStartList;
+	m_PlaySpecificLevel  = m_quickStartList->getLevel(0);
+      } catch(Exception &e) {
+	m_PlaySpecificLevel = "tut1";
+      }
+      m_pMainMenu->showWindow(false);
       m_StateAfterPlaying = GS_MENU;
       setState(GS_PREPLAYING);     
     }
@@ -3135,25 +3148,23 @@ namespace vapp {
   /*===========================================================================
   Scan through loaded levels
   ===========================================================================*/
-  void GameApp::_CreateLevelLists(UILevelList *pAllLevels, std::string i_packageName) {
+  void GameApp::_CreateLevelListsSql(UILevelList *pAllLevels, const std::string& i_sql) {
     char **v_result;
     int nrow;
     float v_playerHighscore, v_roomHighscore;
-
+    
     if(m_profile == "") return;
-   
+    
     /* get selected item */
     std::string v_selected_levelName = "";
     if(pAllLevels->getSelected() >= 0 && pAllLevels->getSelected() < pAllLevels->getEntries().size()) {
       UIListEntry *pEntry = pAllLevels->getEntries()[pAllLevels->getSelected()];
       v_selected_levelName = pEntry->Text[0];
     }
-
+    
     pAllLevels->clear();
-    LevelsPack *v_levelsPack = &(m_levelsManager.LevelsPackByName(i_packageName));
 
-    v_result = m_db->readDB(v_levelsPack->getLevelsWithHighscoresQuery(m_profile,
-								       m_WebHighscoresIdRoom),
+    v_result = m_db->readDB(i_sql,
 			    nrow);
     for(unsigned int i=0; i<nrow; i++) {
       if(m_db->getResult(v_result, 4, i, 2) == NULL) {
@@ -3161,21 +3172,21 @@ namespace vapp {
       } else {
 	v_playerHighscore = atof(m_db->getResult(v_result, 4, i, 2));
       }
-
+      
       if(m_db->getResult(v_result, 4, i, 3) == NULL) {
 	v_roomHighscore = -1.0;
       } else {
 	v_roomHighscore = atof(m_db->getResult(v_result, 4, i, 3));
       }
-
+      
       pAllLevels->addLevel(m_db->getResult(v_result, 4, i, 0),
-		      m_db->getResult(v_result, 4, i, 1),
-		      v_playerHighscore,
-		      v_roomHighscore
-		      );
+			   m_db->getResult(v_result, 4, i, 1),
+			   v_playerHighscore,
+			   v_roomHighscore
+			   );
     }
     m_db->read_DB_free(v_result);    
-
+    
     /* reselect the previous level */
     if(v_selected_levelName != "") {
       int nLevel = 0;
@@ -3186,7 +3197,13 @@ namespace vapp {
         }
       }
       pAllLevels->setRealSelected(nLevel);
-    }
+    }  
+  }
+
+  void GameApp::_CreateLevelLists(UILevelList *pAllLevels, std::string i_packageName) {
+    LevelsPack *v_levelsPack = &(m_levelsManager.LevelsPackByName(i_packageName));
+    _CreateLevelListsSql(pAllLevels, v_levelsPack->getLevelsWithHighscoresQuery(m_profile,
+										m_WebHighscoresIdRoom));
   }
 
   void GameApp::_CreateThemesList(UIList *pList) {
@@ -3946,5 +3963,16 @@ namespace vapp {
     UILevelList *pList = (UILevelList *)m_pLevelPackViewer->getChild("LEVELPACK_LEVEL_LIST");    
   }
 
-}
+  UILevelList* GameApp::buildQuickStartList() {
+    UILevelList* v_list;
 
+    v_list = new UILevelList(m_pMainMenu, 0, 0, "", 0, 0);     
+    v_list->setID("QUICKSTART_LIST");
+    v_list->showWindow(false);
+    _CreateLevelLists(v_list, VPACKAGENAME_ALL_LEVELS);
+    v_list->randomize();
+    //_CreateLevelListsSql(UILevelList *pAllLevels, const std::string& i_sql)
+
+    return v_list;
+  }
+}

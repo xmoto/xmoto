@@ -317,6 +317,7 @@ class xmDatabase;
       UILevelList *m_currentPlayingList;
       UILevelList *m_pAllLevelsList;
       UILevelList *m_pPlayNewLevelsList;
+      UILevelList *m_quickStartList;
 
       UIWindow *m_pLevelInfoFrame;
       UIButton *m_pLevelInfoViewReplayButton;      
@@ -406,6 +407,7 @@ class xmDatabase;
       void _HandleProfileEditor(void);
       void _HandleLevelInfoViewer(void);
       void _HandleLevelPackViewer(void);
+      void _CreateLevelListsSql(UILevelList *pAllLevels, const std::string& i_sql);
       void _CreateLevelLists(UILevelList *pAllLevels, std::string i_packageName);
       void _CreateReplaysList(UIList *pList);
       void _CreateThemesList(UIList *pList);
@@ -475,6 +477,8 @@ class xmDatabase;
 				       );
       void viewHighscoreOf();
       void enableWWW(bool bValue);
+
+      UILevelList* buildQuickStartList();
 
       std::string _getGhostReplayPath_bestOfThePlayer(std::string p_levelId, float &p_time);
       std::string _getGhostReplayPath_bestOfLocal(std::string p_levelId, float &p_time);
