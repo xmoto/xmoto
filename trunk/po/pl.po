@@ -1,15 +1,15 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Free Software Foundation, Inc.
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Mateusz Kosibowicz <mateusz.kosibowcz@gmail.com>, 2007.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-05-08 18:43+0200\n"
-"PO-Revision-Date: 2007-05-08 19:02+0100\n"
-"Last-Translator: Jan Polak <benetnash@mail.icpnet.pl>\n"
+"PO-Revision-Date: 2007-05-08 21:40+0100\n"
+"Last-Translator: Mateusz Kosibowicz <mateusz.kosibowicz@gmail.com>\n"
 "Language-Team: Polish\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -187,16 +187,15 @@ msgstr "Dodatkowe programowanie"
 
 #: src/GameText.h:89
 msgid "Graphics"
-msgstr "Grafika gry"
+msgstr "Detale gry"
 
 #: src/GameText.h:97
 msgid "MacOS X Support"
 msgstr "Obsługa MacOS X"
 
 #: src/GameText.h:101
-#, fuzzy
 msgid "Localization"
-msgstr "Lokalizacja serwisu www"
+msgstr "Lokalizacja"
 
 #: src/GameText.h:102
 msgid "Slovak"
@@ -211,12 +210,10 @@ msgid "Norwegian"
 msgstr "Norweski"
 
 #: src/GameText.h:105
-#, fuzzy
 msgid "German"
-msgstr "Ogólne"
+msgstr "Niemiecki"
 
 #: src/GameText.h:106
-#, fuzzy
 msgid "Finnish"
 msgstr "Ukończono!"
 
@@ -278,15 +275,15 @@ msgstr "za kod MD5"
 
 #: src/GameText.h:126
 msgid "Everyone who have made levels"
-msgstr "Każdy kto stworzył poziomy"
+msgstr "Twórców poziomów"
 
 #: src/GameText.h:127
 msgid "People who have provided bug reports"
-msgstr "Osoby które powiadamiały o błędach"
+msgstr "Osób, które powiadamiały o błędach"
 
 #: src/GameText.h:128
 msgid "Anyone who has helped in any way"
-msgstr "Każdy kto pomógł nam w jakikolwiek sposób"
+msgstr "Każdego, kto pomógł nam w jakikolwiek sposób"
 
 #: src/GameText.h:130
 msgid "Credits"
@@ -342,11 +339,11 @@ msgstr "Opis"
 
 #: src/GameText.h:144
 msgid "Display Ghost time difference"
-msgstr "Wyświetlaj różnicę w czasie"
+msgstr "Wyświetlaj różnicę czasów"
 
 #: src/GameText.h:145
 msgid "Display Ghost Information"
-msgstr "Wyświetlaj informacje o "
+msgstr "Wyświetlaj informacje"
 
 #: src/GameText.h:146
 msgid "Direct Connection"
@@ -370,7 +367,7 @@ msgid ""
 "Press ESC to abort."
 msgstr ""
 "Pobieranie dodatkowych poziomów...\n"
-"Naciśnij ESC by anulować."
+"Naciśnij ESC, by anulować."
 
 #: src/GameText.h:151
 msgid "Checking for new levels..."
@@ -378,7 +375,7 @@ msgstr "Sprawdzanie nowych poziomów..."
 
 #: src/GameText.h:152
 msgid "Checking for existing rooms..."
-msgstr "Sprawdzenie istniejących pokoi..."
+msgstr "Sprawdzenie istniejących pokoi.."
 
 #: src/GameText.h:153
 msgid ""
@@ -493,7 +490,7 @@ msgid ""
 "Failed to download the rooms list.\n"
 "Check your Internet connection!"
 msgstr ""
-"Nie udało się pobrać listy pokojów.\n"
+"Nie udało się pobrać listy pokoi.\n"
 "Sprawdź swoje połączenie z internetem!"
 
 #: src/GameText.h:176
@@ -562,7 +559,7 @@ msgstr "Odwróć w prawo 2"
 
 #: src/GameText.h:189
 msgid "Game Graphics"
-msgstr "Detale gry"
+msgstr "Grafika"
 
 #: src/GameText.h:190
 msgid "General"
@@ -656,7 +653,7 @@ msgstr "Przeładuj poziomy z katalogu Levels (jeśli stworzyłeś nowy poziom)"
 msgid ""
 "Find all the strawberries and touch the flower to finish\n"
 "the level."
-msgstr "Odszukaj wszystkie truskawki i dotknij kwiatka kończąć"
+msgstr "Odszukaj wszystkie truskawki i dotknij kwiatka kończąc"
 
 #: src/GameText.h:217
 msgid ""
@@ -668,7 +665,7 @@ msgstr ""
 
 #: src/GameText.h:219
 msgid "High"
-msgstr "Najlepsza"
+msgstr "Wysokie"
 
 #: src/GameText.h:220
 msgid "Levels are being added into the database. Please wait."
@@ -758,7 +755,7 @@ msgstr "Poziomy"
 
 #: src/GameText.h:241
 msgid "List All"
-msgstr "Lista wszystkich"
+msgstr "Wszystkie"
 
 #: src/GameText.h:242
 msgid "Loading..."
@@ -790,15 +787,15 @@ msgstr "Login"
 
 #: src/GameText.h:249
 msgid "Low"
-msgstr "Niska"
+msgstr "Niskie"
 
 #: src/GameText.h:250
 msgid "Medium"
-msgstr "Średnia"
+msgstr "Średnie"
 
 #: src/GameText.h:251
 msgid "Menu Graphics"
-msgstr "Grafika menu"
+msgstr "Detale menu"
 
 #: src/GameText.h:252
 msgid "Level references unknown textures, it could be unplayable!"
@@ -814,7 +811,7 @@ msgstr "Poziomy, w które najczęściej grasz"
 
 #: src/GameText.h:255
 msgid "Motion blur ghost"
-msgstr "Rozmycie w ruchu"
+msgstr "Rozmycie w ruchu ducha"
 
 #: src/GameText.h:256
 msgid "Multi"
@@ -930,7 +927,7 @@ msgstr "Otwórz"
 
 #: src/GameText.h:286
 msgid "Options"
-msgstr "Ustawienia"
+msgstr "Opcje"
 
 #: src/GameText.h:287
 msgid "Some options will not take effect before next restart!"
@@ -958,7 +955,7 @@ msgstr "Standard"
 
 #: src/GameText.h:293
 msgid "Web votes"
-msgstr "Głosy w internecie"
+msgstr "Głosy na www"
 
 #: src/GameText.h:294 src/GameText.h:335
 msgid "Statistics"
@@ -1011,11 +1008,11 @@ msgstr "Ustaw proxy..."
 
 #: src/GameText.h:309
 msgid "Quick start"
-msgstr ""
+msgstr "Szybki start"
 
 #: src/GameText.h:310
 msgid "Quit Game"
-msgstr "Wyjdź z gry"
+msgstr "Wyjście"
 
 #: src/GameText.h:311
 msgid "Do you really want to quit?"
@@ -1177,7 +1174,7 @@ msgstr "Sprawdź WWW"
 
 #: src/GameText.h:352
 msgid "Update the rooms list"
-msgstr "Uaktualnij listę pokojów"
+msgstr "Uaktualnij listę pokoi"
 
 #: src/GameText.h:353
 msgid "Update the theme list"
@@ -1383,7 +1380,7 @@ msgstr "Ustaw X-Moto"
 
 #: src/GameText.h:405
 msgid "Instructions of how to play X-Moto"
-msgstr "Instrukcja, jak grać w X-Moto"
+msgstr "Jak grać w X-Moto"
 
 #: src/GameText.h:406
 msgid "Change player profile"
@@ -1727,7 +1724,7 @@ msgstr "Wybierz swój pokój"
 
 #: src/GameText.h:493
 msgid "Get the rooms list from the web"
-msgstr "Pobierz listę dostępnych pokojów"
+msgstr "Pobierz listę dostępnych pokoi"
 
 #: src/GameText.h:494
 msgid "Upload of highscore requires to log in (Except for WR)"
@@ -1811,7 +1808,7 @@ msgstr "Filtr dla listy powtórek"
 
 #: src/GameText.h:514
 msgid "Press to play immediatly to X-Moto"
-msgstr ""
+msgstr "Naciśnij, by natychmiast rozpocząć grę"
 
 #: src/GameText.h:516
 msgid "Levels with no highscore"
@@ -1947,7 +1944,7 @@ msgstr "Poziome, które są dynamiczne"
 
 #: src/GameText.h:553
 msgid "X-Moto levels with a background music"
-msgstr ""
+msgstr "Poziomy z muzyką"
 
 #: src/GameText.h:554
 msgid "X-Moto levels you never played"
@@ -1975,7 +1972,7 @@ msgstr "Poziomy, które mają najstarsze rekordy"
 
 #: src/GameText.h:560
 msgid "You have the room highscore"
-msgstr "Uzyskałes rekord pokoju"
+msgstr "Uzyskałeś rekord pokoju"
 
 #: src/GameText.h:561
 msgid "You highscore finish time is almost the room highscore (95%)"
@@ -2031,7 +2028,7 @@ msgstr "UglyOver nieaktywne"
 
 #: src/GameText.h:575
 msgid "Web connexion enabled"
-msgstr "Połącznie z internetem aktywne"
+msgstr "Połączenie z internetem aktywne"
 
 #: src/GameText.h:576
 msgid "Web connexion disabled"
@@ -2042,7 +2039,6 @@ msgid "Replay interpolation enabled"
 msgstr "Interpolacja na powtórkach aktywna"
 
 #: src/GameText.h:578
-#, fuzzy
 msgid "Replay interpolation disabled"
 msgstr "Interpolacja na powtórkach nieaktywna"
 
@@ -2164,7 +2160,7 @@ msgstr "Zbierz truskawki poprzez ich dotknięcie;)"
 
 #: src/LevelsText.h:50
 msgid "Touch it to finish the level. Good luck with the rest :)"
-msgstr "Dotknij, by ukończyć poziom. Powodzenia z resztą :)"
+msgstr "Dotknij, by ukończyć poziom. Powodzenia dalej :)"
 
 #: src/LevelsText.h:51
 msgid "The first jump you're going to perform is very easy."
@@ -2288,7 +2284,7 @@ msgstr "Zanim uderzysz głową szybko użyj klawiszy prawo/lewo"
 
 #: src/LevelsText.h:81
 msgid "combination, and you should be on the other side."
-msgstr "i powinienieś być po drugiej stronie"
+msgstr "i powinieneś być po drugiej stronie"
 
 #: src/LevelsText.h:83
 msgid "Now you'll try a bit more difficult one..."
