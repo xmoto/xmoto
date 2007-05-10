@@ -1,0 +1,159 @@
+/*=============================================================================
+XMOTO
+Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
+
+This file is part of XMOTO.
+
+XMOTO is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+XMOTO is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with XMOTO; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+=============================================================================*/
+
+/* 
+ *  GUI: tab view control
+ */
+#include "VXml.h"
+#include "GUI.h"
+
+namespace vapp {
+
+  /*===========================================================================
+  Painting
+  ===========================================================================*/
+  void UITabView::paint(void) {    
+    /* Header height */
+    int nHeaderHeight=24;
+  
+    if(isUglyMode()) {
+      putRect(0, 0, 2, getPosition().nHeight, MAKE_COLOR(188,186,67,255));
+      putRect(0, getPosition().nHeight-2, getPosition().nWidth, 2, MAKE_COLOR(188,186,67,255));
+      putRect(getPosition().nWidth-2, nHeaderHeight,
+	      2, getPosition().nHeight-nHeaderHeight, MAKE_COLOR(188,186,67,255));
+    } else {
+      /* Render bottom part (common to all tabs) */
+      putElem(getPosition().nWidth-8,nHeaderHeight,-1,-1,UI_ELEM_FRAME_TR,false);
+      putElem(getPosition().nWidth-8,getPosition().nHeight-8,-1,-1,UI_ELEM_FRAME_BR,false);
+      putElem(0,getPosition().nHeight-8,-1,-1,UI_ELEM_FRAME_BL,false);
+      putElem(8,getPosition().nHeight-8,getPosition().nWidth-16,-1,UI_ELEM_FRAME_BM,false);
+      putElem(0, nHeaderHeight,-1,getPosition().nHeight-nHeaderHeight-2,UI_ELEM_FRAME_ML,false);
+      putElem(getPosition().nWidth-8,8 + nHeaderHeight,-1,getPosition().nHeight-16-nHeaderHeight,UI_ELEM_FRAME_MR,false);
+    }
+
+    /* Render tabs */
+    int nCX = 8;
+    int nCY = 6;
+    int v_width, v_height;
+
+    setTextSolidColor(MAKE_COLOR(188,186,67,255));
+    for(int i=0;i<getChildren().size();i++) {
+
+      putTextS(nCX, nCY, getChildren()[i]->getCaption(), v_width, v_height);
+      if(isUglyMode()) {
+	putRect(nCX-8, 0, v_width+16, 2, MAKE_COLOR(188,186,67,255));
+	putRect(nCX-8, 0, 2, nHeaderHeight, MAKE_COLOR(188,186,67,255));
+	putRect(nCX+v_width+8-2, 0, 2, nHeaderHeight, MAKE_COLOR(188,186,67,255));
+      } else {
+	putElem(nCX-8,0,-1,-1,UI_ELEM_FRAME_TL,false);        
+	putElem(nCX,0,v_width,8,UI_ELEM_FRAME_TM,false);
+	putElem(nCX+v_width,0,-1,-1,UI_ELEM_FRAME_TR,false);                
+	putElem(nCX-8,8,-1,nHeaderHeight-8,UI_ELEM_FRAME_ML,false);
+	putElem(nCX+v_width,8,-1,nHeaderHeight-8,UI_ELEM_FRAME_MR,false);
+      }
+
+      if(i == m_nSelected) {
+	putElem(2, nHeaderHeight, nCX-8, 8, UI_ELEM_FRAME_TM, false);
+	putElem(nCX+v_width+6, nHeaderHeight, getPosition().nWidth-nCX-v_width-6-2, 8,
+		UI_ELEM_FRAME_TM, false);
+      }
+
+      nCX += v_width + 18;
+    }
+    m_bChanged = false;
+  }
+
+  /*===========================================================================
+  Mouse event handling
+  ===========================================================================*/
+  void UITabView::mouseLDown(int x,int y) {
+    /* Nice. Find out what tab was clicked (if any) */
+    /* Header height */
+    int nHeaderHeight=24;
+    int nCX = 8;
+
+    for(int i=0;i<getChildren().size();i++) {
+      vapp::FontManager* v_fm = m_drawLib->getFontSmall();
+      vapp::FontGlyph* v_fg = v_fm->getGlyph(getChildren()[i]->getCaption());
+      int v_width = v_fg->realWidth();
+
+      if(x >= nCX-8 && y >= -4 && x < nCX+8+v_width && y < nHeaderHeight) {
+        m_nSelected = i;
+	m_bChanged = true;        
+
+        /* Hide everything except this */
+        for(int j=0;j<getChildren().size();j++) { 
+          if(j == i) {
+            getChildren()[j]->showWindow(true);
+          }
+          else {
+            getChildren()[j]->showWindow(false);
+          }          
+        }
+        
+        break;
+      }
+      nCX += v_width + 18;
+    }
+  }
+  
+  void UITabView::setTabContextHelp(int nTab,const std::string &s) {
+    if(nTab >= m_TabContextHelp.size()) {
+      m_TabContextHelp.resize(nTab+1);
+      m_TabContextHelp[nTab] = s;
+    }
+  }
+  
+  std::string UITabView::subContextHelp(int x,int y) {
+    /* Oh... cursor inside a tab-button? */
+    int nHeaderHeight=24;
+    int nCX = 8;
+
+    for(int i=0;i<getChildren().size();i++) {
+      vapp::FontManager* v_fm = m_drawLib->getFontSmall();
+      vapp::FontGlyph* v_fg = v_fm->getGlyph(getChildren()[i]->getCaption());
+      int v_width = v_fg->realWidth();
+
+      if(x >= nCX-8 && y >= -4 && x < nCX+16+v_width && y < nHeaderHeight) {
+        /* This one! */
+        if(i<m_TabContextHelp.size())
+          return m_TabContextHelp[i];
+        return "";
+      }
+      nCX += v_width + 18;
+    }
+    
+    return "";
+  }
+  
+  void UITabView::mouseLUp(int x,int y) {
+  }
+  
+  void UITabView::mouseRDown(int x,int y) {
+  }
+  
+  void UITabView::mouseRUp(int x,int y) {
+  }
+
+  void UITabView::mouseHover(int x,int y) {
+  }
+
+}
