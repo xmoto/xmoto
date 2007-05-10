@@ -130,7 +130,12 @@ namespace vapp {
 
           /* Render */
           if(!getDrawLib()->isNoGraphics()) {
-            m_Renderer.render(bIsPaused);
+						int numberCam = m_MotoGame.getNumberCameras();
+						for(int i=0; i<numberCam; i++){
+							m_MotoGame.setCurrentCamera(i);
+							m_Renderer.render(bIsPaused);
+						}
+						getDrawLib()->getMenuCamera()->setCamera2d();
           }
 #if SIMULATE_SLOW_RENDERING
           SDL_Delay(SIMULATE_SLOW_RENDERING);
@@ -458,8 +463,11 @@ namespace vapp {
 
       /* don't do this infinitely, maximum miss 10 frames, then give up */
     } while ((m_fLastPhysTime + PHYS_STEP_SIZE <= getTime()) && (nPhysSteps < 10));
-  
-    m_Renderer.setSpeedMultiplier(nPhysSteps);
+
+		for(int i=0; i<m_MotoGame.getNumberCameras(); i++){
+			m_MotoGame.setCurrentCamera(i);
+			m_MotoGame.getCamera()->setSpeedMultiplier(nPhysSteps);
+		}
   
     if(m_bTimeDemo == false) {
       /* Never pass this point while being ahead of time, busy wait until it's time */
@@ -493,7 +501,10 @@ namespace vapp {
     int nPhysSteps = 1;
     m_nFrame++;
     static float fGTime = 0, fRTime = 0;
-    m_Renderer.setSpeedMultiplier(nPhysSteps);    
+		for(int i=0; i<m_MotoGame.getNumberCameras(); i++){
+			m_MotoGame.setCurrentCamera(i);
+			m_MotoGame.getCamera()->setSpeedMultiplier(nPhysSteps);
+		}
 
     return nPhysSteps;
   }

@@ -166,6 +166,8 @@ class xmDatabase;
 
       bool creditsModeActive();
 
+		 void initCameras(int nbPlayer);
+
     private:   
       /* Data */
       bool m_bEnableInitZoom;                   /* true: Perform initial level scroll/zoom */

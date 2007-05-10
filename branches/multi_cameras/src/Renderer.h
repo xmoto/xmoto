@@ -28,10 +28,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GUI.h"
 #include "Replay.h"
 
-#define ZOOM_DEFAULT 0.195f
-#define CAMERA_OFFSETX_DEFAULT 0.0
-#define CAMERA_OFFSETY_DEFAULT 0.0
-
 namespace vapp {
  
   /*===========================================================================
@@ -136,10 +132,12 @@ namespace vapp {
     GameRenderer() {
       m_bDebug=false;
       m_Quality=GQ_HIGH;
+#if 0      
       m_fSpeedMultiply=1.0f;
       m_fScale = ZOOM_DEFAULT;
       m_cameraOffsetX = CAMERA_OFFSETX_DEFAULT;
       m_cameraOffsetY = CAMERA_OFFSETY_DEFAULT;
+#endif
       m_bGhostMotionBlur = true;
       m_displayGhostInformation = false;
       m_theme = NULL;
@@ -147,7 +145,6 @@ namespace vapp {
 	  m_previousEngineLinVel = -1.0;
       m_sizeMultOfEntitiesToTake = 1.0;
       m_sizeMultOfEntitiesWhichMakeWin = 1.0;
-      m_playerToFollow = NULL;
       m_showMinimap = true;
       m_showEngineCounter = true;
       m_bTestThemeMode = false;
@@ -189,6 +186,7 @@ namespace vapp {
     void setSpeed(const std::string &s) {m_pSpeed->setCaption(s);}
     std::string getBestTime(void) {return m_pBestTime->getCaption();}
     void setQuality(GraphQuality Quality) {m_Quality = Quality;}      
+#if 0
     void setSpeedMultiplier(float f) {m_fSpeedMultiply = f;}
     void zoom(float p_f);
     void setZoom(float p_f);
@@ -200,6 +198,7 @@ namespace vapp {
     float getCameraPositionY();
     void initCamera();
     void initCameraPosition();
+#endif
     void setGhostMotionBlur(bool b) {m_bGhostMotionBlur = b;}
     void setGhostDisplayInformation(bool i_display);
 
@@ -213,7 +212,9 @@ namespace vapp {
     void setSizeMultOfEntitiesToTake(float i_sizeMult);
     void setSizeMultOfEntitiesWhichMakeWin(float i_sizeMult);
 
+#if 0    
     void setPlayerToFollow(Biker* i_playerToFollow);
+#endif
 
     bool showMinimap() const;
     bool showEngineCounter() const;
@@ -232,14 +233,15 @@ namespace vapp {
 
   private:
     /* Data */
+#if 0
     float m_fScale;
     float m_cameraOffsetX;
     float m_cameraOffsetY;
+#endif
 
     bool m_mirrored;
     float m_rotationAngle;
     float m_desiredRotationAngle;
-    Biker* m_playerToFollow;
 
     std::vector<GraphDebugInfo *> m_DebugInfo;
       
@@ -259,12 +261,14 @@ namespace vapp {
       
     Theme *m_theme;
 
-    Vector2f m_Scroll;
     float m_fZoom;
+#if 0
+    Vector2f m_Scroll;
     float m_fCurrentHorizontalScrollShift;
     float m_fCurrentVerticalScrollShift;
     DriveDir m_previous_driver_dir; /* to move camera faster if the dir changed */
     bool  m_recenter_camera_fast;
+#endif    
 
     UIWindow *m_pInGameStats;
     UIStatic *m_pPlayTime;   
@@ -278,7 +282,9 @@ namespace vapp {
     UIStatic *m_pNewHighscorePersonal_str;
     UIStatic *m_pNewHighscoreSave_str;
 
+#if 0
     float m_fSpeedMultiply;
+#endif
       
     float m_fNextGhostInfoUpdate;
     int m_nGhostInfoTrans;
@@ -338,14 +344,18 @@ namespace vapp {
     void _RenderParticle(ParticlesSource *i_source);
     void _RenderInGameText(Vector2f P,const std::string &Text,Color c = 0xffffffff);
     void _RenderZone(Zone *i_zone);
+#if 0
     void setScroll(bool isSmooth);
+#endif
 
     void _RenderGhost(Biker* i_ghost, int i);
 
     void _DrawRotatedMarker(Vector2f Pos,dReal *pfRot);     
-    void _RenderDebugInfo(void);      
+    void _RenderDebugInfo(void);
+#if 0    
     void guessDesiredCameraPosition(float &p_fDesiredHorizontalScrollShift,
 				    float &p_fDesiredVerticalScrollShift);
+#endif
 
     float guessDesiredAngleRotation();
 

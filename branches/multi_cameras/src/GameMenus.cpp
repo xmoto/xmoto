@@ -1633,7 +1633,7 @@ namespace vapp {
 				     m_MotoGame.getTime());
 	  }
 
-	  m_Renderer.setPlayerToFollow(NULL);
+	  m_MotoGame.getCamera()->setPlayerToFollow(NULL);
           m_MotoGame.endLevel();
           m_InputHandler.resetScriptKeyHooks();                     
           m_Renderer.unprepareForNewLevel();
@@ -1654,7 +1654,7 @@ namespace vapp {
 				       m_MotoGame.getLevelSrc()->Id(),
 				       m_MotoGame.getTime());
 	    }
-	    m_Renderer.setPlayerToFollow(NULL);
+	    m_MotoGame.getCamera()->setPlayerToFollow(NULL);
 	    m_MotoGame.endLevel();
 	    m_InputHandler.resetScriptKeyHooks();                     
 	    m_Renderer.unprepareForNewLevel();                    
@@ -1727,7 +1727,7 @@ namespace vapp {
 	    m_pFinishMenu->showWindow(false);
 	    m_Renderer.hideMsgNewHighscore();
 	    m_pBestTimes->showWindow(false);
-	    m_Renderer.setPlayerToFollow(NULL);
+	    m_MotoGame.getCamera()->setPlayerToFollow(NULL);
 	    m_MotoGame.endLevel();
 	    m_InputHandler.resetScriptKeyHooks();                     
 	    m_Renderer.unprepareForNewLevel();                    
@@ -1766,7 +1766,7 @@ namespace vapp {
           m_pFinishMenu->showWindow(false);
 	  m_Renderer.hideMsgNewHighscore();
           m_pBestTimes->showWindow(false);
-	  m_Renderer.setPlayerToFollow(NULL);
+	  m_MotoGame.getCamera()->setPlayerToFollow(NULL);
           m_MotoGame.endLevel();
           m_InputHandler.resetScriptKeyHooks();                     
           m_Renderer.unprepareForNewLevel();
@@ -2289,7 +2289,7 @@ namespace vapp {
 	  std::string NextLevel = _DetermineNextLevel(m_PlaySpecificLevel);
 	  if(NextLevel != "") {        
 	    m_pJustDeadMenu->showWindow(false);
-	    m_Renderer.setPlayerToFollow(NULL);
+	    m_MotoGame.getCamera()->setPlayerToFollow(NULL);
 	    m_MotoGame.endLevel();
 	    m_InputHandler.resetScriptKeyHooks();                     
 	    m_Renderer.unprepareForNewLevel();                    
@@ -2314,7 +2314,7 @@ namespace vapp {
         }
         else if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_ABORT) {
           m_pJustDeadMenu->showWindow(false);
-	  m_Renderer.setPlayerToFollow(NULL);
+	  m_MotoGame.getCamera()->setPlayerToFollow(NULL);
           m_MotoGame.endLevel();
           m_InputHandler.resetScriptKeyHooks();                     
           m_Renderer.unprepareForNewLevel();

@@ -45,10 +45,10 @@ namespace vapp {
   Called to prepare renderer for new level
   ===========================================================================*/
   void GameRenderer::prepareForNewLevel(bool bCreditsMode) {
-    m_fCurrentHorizontalScrollShift = 0.0f;
-    m_fCurrentVerticalScrollShift = 0.0f;
-    m_previous_driver_dir  = DD_LEFT;    
-    m_recenter_camera_fast = true;
+		for(int i=0; i<getGameObject()->getNumberCameras(); i++){
+			getGameObject()->setCurrentCamera(i);
+			getGameObject()->getCamera()->prepareForNewLevel();
+		}
     
     m_bCreditsMode = bCreditsMode;
 
@@ -219,10 +219,8 @@ namespace vapp {
 #endif
 #endif
 
-      
     }
     
-    setScroll(false);
 
     Log("GL: %d kB vertex buffers",    nVertexBytes/1024);
   }
@@ -381,8 +379,8 @@ namespace vapp {
   #define MINIMAPZOOM 5.0f
   #define MINIMAPALPHA 128
   #define MINIVERTEX(Px,Py) \
-    getParent()->getDrawLib()->glVertexSP(x + nWidth/2 + (float)(Px - getCameraPositionX())*MINIMAPZOOM, \
-                          y + nHeight/2 - (float)(Py - getCameraPositionY())*MINIMAPZOOM);    
+    getParent()->getDrawLib()->glVertexSP(x + nWidth/2 + (float)(Px - getGameObject()->getCamera()->getCameraPositionX())*MINIMAPZOOM, \
+                          y + nHeight/2 - (float)(Py - getGameObject()->getCamera()->getCameraPositionY())*MINIMAPZOOM);    
 
   void GameRenderer::renderMiniMap(int x,int y,int nWidth,int nHeight) {
     getParent()->getDrawLib()->drawBox(Vector2f(x,y),Vector2f(x+nWidth,y+nHeight),1,
@@ -398,8 +396,8 @@ namespace vapp {
       input:  position on the screen (in the minimap area)
       output: position in the level
     */
-#define MAP_TO_LEVEL_X(mapX) ((mapX) - x - nWidth/2)/MINIMAPZOOM  + getCameraPositionX()
-#define MAP_TO_LEVEL_Y(mapY) ((mapY) - y - nHeight/2)/MINIMAPZOOM + getCameraPositionY()
+#define MAP_TO_LEVEL_X(mapX) ((mapX) - x - nWidth/2)/MINIMAPZOOM  + getGameObject()->getCamera()->getCameraPositionX()
+#define MAP_TO_LEVEL_Y(mapY) ((mapY) - y - nHeight/2)/MINIMAPZOOM + getGameObject()->getCamera()->getCameraPositionY()
     AABB mapBBox;
     mapBBox.addPointToAABB2f(MAP_TO_LEVEL_X(x), MAP_TO_LEVEL_Y(y));
     mapBBox.addPointToAABB2f(MAP_TO_LEVEL_X(x+nWidth), MAP_TO_LEVEL_Y(y+nHeight));
@@ -466,8 +464,8 @@ namespace vapp {
       input: position in the level
       output: position on the screen (draw in the minimap area)
     */
-#define LEVEL_TO_SCREEN_X(elemPosX) (x + nWidth/2  + (float)((elemPosX) - getCameraPositionX()) * MINIMAPZOOM)
-#define LEVEL_TO_SCREEN_Y(elemPosY) (y + nHeight/2 - (float)((elemPosY) - getCameraPositionY()) * MINIMAPZOOM)
+#define LEVEL_TO_SCREEN_X(elemPosX) (x + nWidth/2  + (float)((elemPosX) - getGameObject()->getCamera()->getCameraPositionX()) * MINIMAPZOOM)
+#define LEVEL_TO_SCREEN_Y(elemPosY) (y + nHeight/2 - (float)((elemPosY) - getGameObject()->getCamera()->getCameraPositionY()) * MINIMAPZOOM)
 
     for(unsigned int i=0; i<getGameObject()->Players().size(); i++) {
       Vector2f bikePos(LEVEL_TO_SCREEN_X(getGameObject()->Players()[i]->getState()->CenterP.x),
@@ -505,45 +503,6 @@ namespace vapp {
     getParent()->scissorGraphics(0,0,getParent()->getDrawLib()->getDispWidth(),getParent()->getDrawLib()->getDispHeight());
   }
   
-  void GameRenderer::zoom(float p_f) {
-    m_fScale += p_f;
-    if(m_fScale < 0) {
-      m_fScale = 0;
-    }
-  }
-
-  void GameRenderer::initZoom() {
-    m_fScale = ZOOM_DEFAULT;
-  }
-
-  void GameRenderer::setCameraPosition(float px, float py) {
-    m_cameraOffsetX = m_Scroll.x + px;
-    m_cameraOffsetY = m_Scroll.y + py;
-  }
-
-  void GameRenderer::moveCamera(float px, float py) {
-    m_cameraOffsetX += px;
-    m_cameraOffsetY += py;
-  }
-
-  void GameRenderer::initCameraPosition() {
-    m_cameraOffsetX = CAMERA_OFFSETX_DEFAULT;
-    m_cameraOffsetY = CAMERA_OFFSETY_DEFAULT;
-  }
-
-  void GameRenderer::initCamera() {
-    initCameraPosition();
-    initZoom();
-  }
-
-  float GameRenderer::getCameraPositionX() {
-    return -m_Scroll.x + m_cameraOffsetX;
-  }
-  
-  float GameRenderer::getCameraPositionY() {
-    return -m_Scroll.y + m_cameraOffsetY;
-  }
-
   void GameRenderer::setDesiredRotationAngle(float i_value) {
     m_desiredRotationAngle = (i_value * 180.0) / M_PI;
   }
@@ -598,42 +557,6 @@ namespace vapp {
     return m_rotationAngle;
   }
 
-  void GameRenderer::guessDesiredCameraPosition(float &p_fDesiredHorizontalScrollShift,
-            float &p_fDesiredVerticalScrollShift) {
-
-    float normal_hoffset = 4.0;
-    float normal_voffset = 2.0;             
-    p_fDesiredHorizontalScrollShift = 0.0;
-    p_fDesiredVerticalScrollShift   = 0.0;
-
-    if(m_playerToFollow == NULL) {
-      return;
-    }
-
-    p_fDesiredHorizontalScrollShift = getGameObject()->getGravity().y * normal_hoffset / 9.81;
-    if(m_playerToFollow->getState()->Dir == DD_LEFT) {
-      p_fDesiredHorizontalScrollShift *= -1;
-    }
-
-    p_fDesiredVerticalScrollShift = getGameObject()->getGravity().x * normal_voffset / 9.81;
-    if(m_playerToFollow->getState()->Dir == DD_RIGHT) {
-      p_fDesiredVerticalScrollShift *= -1;
-    }
-
-    /* allow maximum and maximum */
-    if(p_fDesiredHorizontalScrollShift > normal_hoffset) {
-      p_fDesiredHorizontalScrollShift = normal_hoffset;
-    }
-    if(p_fDesiredHorizontalScrollShift < -normal_hoffset) {
-      p_fDesiredHorizontalScrollShift = -normal_hoffset;
-    }
-    if(p_fDesiredVerticalScrollShift > normal_voffset) {
-      p_fDesiredVerticalScrollShift = normal_voffset;
-    }
-    if(p_fDesiredVerticalScrollShift < -normal_voffset) {
-      p_fDesiredVerticalScrollShift = -normal_voffset;
-    }
-  }
 
   void GameRenderer::_RenderGhost(Biker* i_ghost, int i) {
     /* Render ghost - ugly mode? */
@@ -676,23 +599,20 @@ namespace vapp {
     m_pPlayTime->setCaption(m_bCreditsMode?"":getParent()->formatTime(getGameObject()->getTime()));
 
     m_fZoom = 60.0f;    
-    setScroll(true);
- 
-#ifdef ENABLE_OPENGL
-    glLoadIdentity();
-#endif
+    getGameObject()->getCamera()->setScroll(true, getGameObject()->getGravity());
+		getGameObject()->getCamera()->setCamera2d();
 
     /* calculate screen AABB to show only visible entities and dyn blocks */
     m_screenBBox.reset();
 
-    float xScale = m_fScale * ((float)getParent()->getDrawLib()->getDispHeight()) / getParent()->getDrawLib()->getDispWidth();
-    float yScale = m_fScale;
+    float xScale = getGameObject()->getCamera()->getCurrentZoom() * ((float)getGameObject()->getCamera()->getDispHeight()) / getGameObject()->getCamera()->getDispWidth();
+    float yScale = getGameObject()->getCamera()->getCurrentZoom();
     // depends on zoom
     float xCamOffset=1.0/xScale;
     float yCamOffset=1.0/yScale;
 
-    Vector2f v1(getCameraPositionX()-xCamOffset, getCameraPositionY()-yCamOffset);
-    Vector2f v2(getCameraPositionX()+xCamOffset, getCameraPositionY()+yCamOffset);
+    Vector2f v1(getGameObject()->getCamera()->getCameraPositionX()-xCamOffset, getGameObject()->getCamera()->getCameraPositionY()-yCamOffset);
+    Vector2f v2(getGameObject()->getCamera()->getCameraPositionX()+xCamOffset, getGameObject()->getCamera()->getCameraPositionY()+yCamOffset);
 
     m_screenBBox.addPointToAABB2f(v1);
     m_screenBBox.addPointToAABB2f(v2);
@@ -700,18 +620,14 @@ namespace vapp {
     /* SKY! */
     if(m_bUglyMode == false) {
       _RenderSky(getGameObject()->getLevelSrc()->Sky().Zoom(),
-		 getGameObject()->getLevelSrc()->Sky().Offset(),
-		 getGameObject()->getLevelSrc()->Sky().TextureColor(),
-		 getGameObject()->getLevelSrc()->Sky().DriftZoom(),
-		 getGameObject()->getLevelSrc()->Sky().DriftTextureColor(),
-		 getGameObject()->getLevelSrc()->Sky().Drifted());
+								 getGameObject()->getLevelSrc()->Sky().Offset(),
+								 getGameObject()->getLevelSrc()->Sky().TextureColor(),
+								 getGameObject()->getLevelSrc()->Sky().DriftZoom(),
+								 getGameObject()->getLevelSrc()->Sky().DriftTextureColor(),
+								 getGameObject()->getLevelSrc()->Sky().Drifted());
     }    
 
-#ifdef ENABLE_OPENGL
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glMatrixMode(GL_MODELVIEW);
-#endif
+		getGameObject()->getCamera()->setCamera3d();
 
     /* Perform scaling/translation */    
     getParent()->getDrawLib()->setScale(xScale, yScale);
@@ -720,7 +636,7 @@ namespace vapp {
     }
     m_rotationAngle = guessDesiredAngleRotation();
     getParent()->getDrawLib()->setRotateZ(m_rotationAngle);
-    getParent()->getDrawLib()->setTranslate(-getCameraPositionX(), -getCameraPositionY());
+    getParent()->getDrawLib()->setTranslate(-getGameObject()->getCamera()->getCameraPositionX(), -getGameObject()->getCamera()->getCameraPositionY());
 
     if(m_Quality != GQ_LOW && m_bUglyMode == false) {
       /* background level blocks */
@@ -758,7 +674,7 @@ namespace vapp {
     int v_found_i = 0;
     for(unsigned int i=0; i<getGameObject()->Ghosts().size(); i++) {
       Ghost* v_ghost = getGameObject()->Ghosts()[i];
-      if(v_ghost != m_playerToFollow) {
+      if(v_ghost != getGameObject()->getCamera()->getPlayerToFollow()) {
 	_RenderGhost(v_ghost, i);
       } else {
 	v_found = true;
@@ -774,7 +690,7 @@ namespace vapp {
     v_found = false;
     for(unsigned int i=0; i<getGameObject()->Players().size(); i++) {
       Biker* v_player = getGameObject()->Players()[i];
-      if(v_player != m_playerToFollow) {
+      if(v_player != getGameObject()->getCamera()->getPlayerToFollow()) {
 	_RenderBike(v_player->getState(),
 		    &(v_player->getState()->Parameters()),
 		    v_player->getBikeTheme(),
@@ -786,12 +702,12 @@ namespace vapp {
       }
     }
     if(v_found) {
-      _RenderBike(m_playerToFollow->getState(),
-		  &(m_playerToFollow->getState()->Parameters()),
-		  m_playerToFollow->getBikeTheme(),
-		  m_playerToFollow->getRenderBikeFront(),
-		  m_playerToFollow->getColorFilter(),
-		  m_playerToFollow->getUglyColorFilter());
+      _RenderBike(getGameObject()->getCamera()->getPlayerToFollow()->getState(),
+		  &(getGameObject()->getCamera()->getPlayerToFollow()->getState()->Parameters()),
+		  getGameObject()->getCamera()->getPlayerToFollow()->getBikeTheme(),
+		  getGameObject()->getCamera()->getPlayerToFollow()->getRenderBikeFront(),
+		  getGameObject()->getCamera()->getPlayerToFollow()->getColorFilter(),
+		  getGameObject()->getCamera()->getPlayerToFollow()->getUglyColorFilter());
     }
 
     /* ghost information */
@@ -887,14 +803,26 @@ namespace vapp {
       _RenderDebugInfo();
     }
 
-#ifdef ENABLE_OPENGL
-    glLoadIdentity();
-    
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(0,getParent()->getDrawLib()->getDispWidth(),0,getParent()->getDrawLib()->getDispHeight(),-1,1);
-    glMatrixMode(GL_MODELVIEW);
-#endif
+		getGameObject()->getCamera()->setCamera2d();
+
+    /* minimap + counter */
+    if(getGameObject()->getCamera()->getPlayerToFollow() != NULL) {
+      if(showMinimap() && m_bCreditsMode == false) {
+				if(getGameObject()->getCamera()->getPlayerToFollow()->getState()->Dir == DD_LEFT && showEngineCounter() == false) {
+					renderMiniMap(getParent()->getDrawLib()->getDispWidth()-150,
+												getParent()->getDrawLib()->getDispHeight()-100,150,100);
+				} else {
+					renderMiniMap(0,getParent()->getDrawLib()->getDispHeight()-100,150,100);
+				}
+      }
+      if(showEngineCounter() && m_bUglyMode == false) {
+				renderEngineCounter(getParent()->getDrawLib()->getDispWidth()-128,
+														getParent()->getDrawLib()->getDispHeight()-128,128,128,
+														getGameObject()->getCamera()->getPlayerToFollow()->getBikeEngineSpeed());
+      }
+    }
+		
+		getParent()->getDrawLib()->getMenuCamera()->setCamera2d();
 
     if(!m_bCreditsMode) {
       /* And then the game messages */
@@ -904,97 +832,12 @@ namespace vapp {
       _RenderGameStatus();
     }
 
-    /* minimap + counter */
-    if(m_playerToFollow != NULL) {
-      if(showMinimap() && m_bCreditsMode == false) {
-    	if(m_playerToFollow->getState()->Dir == DD_LEFT && showEngineCounter() == false) {
-	  renderMiniMap(getParent()->getDrawLib()->getDispWidth()-150,
-			getParent()->getDrawLib()->getDispHeight()-100,150,100);
-	} else {
-	  renderMiniMap(0,getParent()->getDrawLib()->getDispHeight()-100,150,100);
-	}
-      }
-      if(showEngineCounter() && m_bUglyMode == false) {
-    	renderEngineCounter(getParent()->getDrawLib()->getDispWidth()-128,
-			    getParent()->getDrawLib()->getDispHeight()-128,128,128,
-    			    m_playerToFollow->getBikeEngineSpeed(),
-					m_playerToFollow->getBikeLinearVel());
-      }
-    }
-
-    /* render motogame info */
-    if(getGameObject()->getInfos() != "") {
       FontManager* v_fm = getParent()->getDrawLib()->getFontMedium();
       FontGlyph* v_fg = v_fm->getGlyph(getGameObject()->getInfos());
       v_fm->printString(v_fg,
 			5,
 			getParent()->getDrawLib()->getDispHeight() - v_fg->realHeight() - 2,
 			MAKE_COLOR(255,255,255,255));
-    }
-  }
-
-  void GameRenderer::setScroll(bool isSmooth) {
-    float v_move_camera_max;
-    float v_fDesiredHorizontalScrollShift = 0.0;
-    float v_fDesiredVerticalScrollShift   = 0.0;
-
-    if(m_playerToFollow == NULL) {
-      return;
-    }
-
-    /* determine if the camera must move fastly */
-    /* it must go faster if the player change of sense */
-    if(m_previous_driver_dir != m_playerToFollow->getState()->Dir) {
-      m_recenter_camera_fast = true;
-    }
-    m_previous_driver_dir = m_playerToFollow->getState()->Dir;
-
-    if(m_recenter_camera_fast) {
-      v_move_camera_max = 0.1;
-    } else {
-      v_move_camera_max = 0.01;
-    }
-
-    /* Determine scroll */
-    m_Scroll = -m_playerToFollow->getState()->CenterP;
-
-    /* Driving direction? */
-    guessDesiredCameraPosition(v_fDesiredHorizontalScrollShift, v_fDesiredVerticalScrollShift);
-    
-    if(fabs(v_fDesiredHorizontalScrollShift - m_fCurrentHorizontalScrollShift)
-       < v_move_camera_max) {
-      /* remove fast move once the camera is set correctly */
-      m_recenter_camera_fast = false;
-    }
-    
-    if(v_fDesiredHorizontalScrollShift != m_fCurrentHorizontalScrollShift) {
-      float d = v_fDesiredHorizontalScrollShift - m_fCurrentHorizontalScrollShift;
-      if(fabs(d)<v_move_camera_max || isSmooth == false) {
-        m_fCurrentHorizontalScrollShift = v_fDesiredHorizontalScrollShift;
-      }
-      else if(d < 0.0f) {
-        m_fCurrentHorizontalScrollShift -= v_move_camera_max * m_fSpeedMultiply;
-      }
-      else if(d > 0.0f) {
-        m_fCurrentHorizontalScrollShift += v_move_camera_max * m_fSpeedMultiply;
-      }
-    }
-    
-    if(v_fDesiredVerticalScrollShift != m_fCurrentVerticalScrollShift) {
-      float d = v_fDesiredVerticalScrollShift - m_fCurrentVerticalScrollShift;
-      if(fabs(d)<0.01f || isSmooth == false) {
-        m_fCurrentVerticalScrollShift = v_fDesiredVerticalScrollShift;
-      }
-      else if(d < 0.0f) {
-        m_fCurrentVerticalScrollShift -= 0.01f * m_fSpeedMultiply;
-      }
-      else if(d > 0.0f) {
-        m_fCurrentVerticalScrollShift += 0.01f * m_fSpeedMultiply;
-      }
-    }
-    
-    m_Scroll += Vector2f(m_fCurrentHorizontalScrollShift,
-                         m_fCurrentVerticalScrollShift);
   }
 
   /*===========================================================================
@@ -1059,8 +902,8 @@ namespace vapp {
     if(pArrow->nArrowPointerMode != 0) {
       Vector2f C;
       if(pArrow->nArrowPointerMode == 1) {          
-        C=Vector2f(getParent()->getDrawLib()->getDispWidth()/2 + (float)(pArrow->ArrowPointerPos.x - getCameraPositionX())*m_fZoom,
-                  getParent()->getDrawLib()->getDispHeight()/2 - (float)(pArrow->ArrowPointerPos.y - getCameraPositionY())*m_fZoom);      
+        C=Vector2f(getParent()->getDrawLib()->getDispWidth()/2 + (float)(pArrow->ArrowPointerPos.x - getGameObject()->getCamera()->getCameraPositionX())*m_fZoom,
+                  getParent()->getDrawLib()->getDispHeight()/2 - (float)(pArrow->ArrowPointerPos.y - getGameObject()->getCamera()->getCameraPositionY())*m_fZoom);      
       }
       else if(pArrow->nArrowPointerMode == 2) {          
         C.x=(getParent()->getDrawLib()->getDispWidth() * pArrow->ArrowPointerPos.x) / 800.0f;
@@ -1376,7 +1219,6 @@ namespace vapp {
 	  glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
 	  /* we're working with modelview matrix*/
-	  glMatrixMode(GL_MODELVIEW);
 	  glPushMatrix();
 
 	  glTranslatef(dynPos.x, dynPos.y, 0);
@@ -1654,7 +1496,7 @@ namespace vapp {
   Sky.
   ===========================================================================*/
   void GameRenderer::_RenderSky(float i_zoom, float i_offset, const TColor& i_color,
-				float i_driftZoom, const TColor& i_driftColor, bool i_drifted) {
+																float i_driftZoom, const TColor& i_driftColor, bool i_drifted) {
   MotoGame *pGame = getGameObject();
   TextureSprite* pType;
   float fDrift = 0.0;
@@ -1666,7 +1508,7 @@ namespace vapp {
   }
   
   pType = (TextureSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_TEXTURE,
-							      pGame->getLevelSrc()->Sky().Texture());
+																															pGame->getLevelSrc()->Sky().Texture());
   
   if(pType != NULL) {
     if(i_drifted) {
@@ -1681,13 +1523,13 @@ namespace vapp {
       fDrift = getParent()->getRealTime() / 25.0f;
     }
     
-    getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*i_offset+ fDrift,-getCameraPositionY()*i_offset);
+    getParent()->getDrawLib()->glTexCoord(getGameObject()->getCamera()->getCameraPositionX()*i_offset+ fDrift,-getGameObject()->getCamera()->getCameraPositionY()*i_offset);
     getParent()->getDrawLib()->glVertexSP(0,0);
-    getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*i_offset+uZoom+ fDrift,-getCameraPositionY()*i_offset);
+    getParent()->getDrawLib()->glTexCoord(getGameObject()->getCamera()->getCameraPositionX()*i_offset+uZoom+ fDrift,-getGameObject()->getCamera()->getCameraPositionY()*i_offset);
     getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),0);
-    getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*i_offset+uZoom+ fDrift,-getCameraPositionY()*i_offset+uZoom);
+    getParent()->getDrawLib()->glTexCoord(getGameObject()->getCamera()->getCameraPositionX()*i_offset+uZoom+ fDrift,-getGameObject()->getCamera()->getCameraPositionY()*i_offset+uZoom);
     getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),getParent()->getDrawLib()->getDispHeight());
-    getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*i_offset+ fDrift,-getCameraPositionY()*i_offset+uZoom);
+    getParent()->getDrawLib()->glTexCoord(getGameObject()->getCamera()->getCameraPositionX()*i_offset+ fDrift,-getGameObject()->getCamera()->getCameraPositionY()*i_offset+uZoom);
     getParent()->getDrawLib()->glVertexSP(0,getParent()->getDrawLib()->getDispHeight());
     getParent()->getDrawLib()->endDraw();
     
@@ -1696,13 +1538,13 @@ namespace vapp {
       getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
       getParent()->getDrawLib()->setColorRGBA(i_driftColor.Red(), i_driftColor.Green(), i_driftColor.Blue(), i_driftColor.Alpha());
       fDrift = getParent()->getRealTime() / 15.0f;
-      getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*i_offset + fDrift,-getCameraPositionY()*i_offset);
+      getParent()->getDrawLib()->glTexCoord(getGameObject()->getCamera()->getCameraPositionX()*i_offset + fDrift,-getGameObject()->getCamera()->getCameraPositionY()*i_offset);
       getParent()->getDrawLib()->glVertexSP(0,0);
-      getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*i_offset+uDriftZoom + fDrift,-getCameraPositionY()*i_offset);
+      getParent()->getDrawLib()->glTexCoord(getGameObject()->getCamera()->getCameraPositionX()*i_offset+uDriftZoom + fDrift,-getGameObject()->getCamera()->getCameraPositionY()*i_offset);
       getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),0);
-      getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*i_offset+uDriftZoom + fDrift,-getCameraPositionY()*i_offset+uDriftZoom);
+      getParent()->getDrawLib()->glTexCoord(getGameObject()->getCamera()->getCameraPositionX()*i_offset+uDriftZoom + fDrift,-getGameObject()->getCamera()->getCameraPositionY()*i_offset+uDriftZoom);
       getParent()->getDrawLib()->glVertexSP(getParent()->getDrawLib()->getDispWidth(),getParent()->getDrawLib()->getDispHeight());
-      getParent()->getDrawLib()->glTexCoord(getCameraPositionX()*i_offset + fDrift,-getCameraPositionY()*i_offset+uDriftZoom);
+      getParent()->getDrawLib()->glTexCoord(getGameObject()->getCamera()->getCameraPositionX()*i_offset + fDrift,-getGameObject()->getCamera()->getCameraPositionY()*i_offset+uDriftZoom);
       getParent()->getDrawLib()->glVertexSP(0,getParent()->getDrawLib()->getDispHeight());
       getParent()->getDrawLib()->endDraw();
     }
@@ -1770,7 +1612,6 @@ namespace vapp {
     std::sort(Blocks.begin(), Blocks.end(), AscendingTextureSort());
 
 #ifdef ENABLE_OPENGL
-    glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
     glTranslatef(translateVector.x, translateVector.y, 0);
 
@@ -2110,14 +1951,6 @@ namespace vapp {
     m_theme = p_theme;
   }
 
-  float GameRenderer::getCurrentZoom() {
-    return m_fScale;
-  }
-
-  void GameRenderer::setZoom(float p_f) {
-    m_fScale = p_f;
-  }
-
   float GameRenderer::SizeMultOfEntitiesToTake() const {
     return m_sizeMultOfEntitiesToTake;
   }
@@ -2138,10 +1971,6 @@ namespace vapp {
     m_displayGhostInformation = i_display;
   }
 
-  void GameRenderer::setPlayerToFollow(Biker* i_playerToFollow) {
-    m_playerToFollow = i_playerToFollow;
-  }
-
   bool GameRenderer::showMinimap() const {
     return m_showMinimap;
   }
@@ -2159,18 +1988,18 @@ namespace vapp {
   }
 
   void GameRenderer::switchFollow() {
-    if(m_playerToFollow == NULL) return;
+    if(getGameObject()->getCamera()->getPlayerToFollow() == NULL) return;
 
     /* search into the player */
     for(unsigned i=0; i<getGameObject()->Players().size(); i++) {
-      if(getGameObject()->Players()[i] == m_playerToFollow) {
+      if(getGameObject()->Players()[i] == getGameObject()->getCamera()->getPlayerToFollow()) {
 	if(i<getGameObject()->Players().size()-1) {
-	  m_playerToFollow = getGameObject()->Players()[i+1];
+	  getGameObject()->getCamera()->setPlayerToFollow(getGameObject()->Players()[i+1]);
 	} else {
 	  if(getGameObject()->Ghosts().size() > 0) {
-	    m_playerToFollow = getGameObject()->Ghosts()[0];
+	    getGameObject()->getCamera()->setPlayerToFollow(getGameObject()->Ghosts()[0]);
 	  } else {
-	    m_playerToFollow = getGameObject()->Players()[0];
+	    getGameObject()->getCamera()->setPlayerToFollow(getGameObject()->Players()[0]);
 	  }
 	}
 	return;
@@ -2179,14 +2008,14 @@ namespace vapp {
 
     /* search into the ghost */
     for(unsigned i=0; i<getGameObject()->Ghosts().size(); i++) {
-      if(getGameObject()->Ghosts()[i] == m_playerToFollow) {
+      if(getGameObject()->Ghosts()[i] == getGameObject()->getCamera()->getPlayerToFollow()) {
 	if(i<getGameObject()->Ghosts().size()-1) {
-	  m_playerToFollow = getGameObject()->Ghosts()[i+1];
+	  getGameObject()->getCamera()->setPlayerToFollow(getGameObject()->Ghosts()[i+1]);
 	} else {
 	  if(getGameObject()->Players().size() > 0) {
-	    m_playerToFollow = getGameObject()->Players()[0];
+	    getGameObject()->getCamera()->setPlayerToFollow(getGameObject()->Players()[0]);
 	  } else {
-	    m_playerToFollow = getGameObject()->Ghosts()[0];
+	    getGameObject()->getCamera()->setPlayerToFollow(getGameObject()->Ghosts()[0]);
 	  }
 	}
 	return;

@@ -329,9 +329,6 @@ void MotoGame::cleanPlayers() {
  
     m_lastCallToEveryHundreath = 0.0;
 
-    m_renderer->initCamera();
-    m_renderer->initZoom();
-
     /* Load and parse level script */
     bool bTryParsingEncapsulatedLevelScript = true;
     bool bNeedScript = false;
@@ -493,6 +490,8 @@ void MotoGame::cleanPlayers() {
 
     cleanPlayers();
     cleanGhosts();
+
+		removeCameras();
   }
 
   /*===========================================================================
@@ -969,15 +968,11 @@ void MotoGame::cleanPlayers() {
   }
 
   void MotoGame::CameraZoom(float pZoom) {
-    if(m_renderer != NULL) {
-      m_renderer->zoom(pZoom);
-    }
+    getCamera()->zoom(pZoom);
   }
    
   void MotoGame::CameraMove(float p_x, float p_y) {
-    if(m_renderer != NULL) {
-      m_renderer->moveCamera(p_x, p_y);
-    }
+    getCamera()->moveCamera(p_x, p_y);
   }
 
   void MotoGame::CameraRotate(float i_angle) {
@@ -1173,6 +1168,31 @@ void MotoGame::cleanPlayers() {
   LuaLibGame* MotoGame::getLuaLibGame() {
     return m_luaGame;
   }
+
+	Camera* MotoGame::getCamera(){
+		return m_cameras[m_currentCamera];
+	}
+	int MotoGame::getNumberCameras(){
+		return m_cameras.size();
+	}
+	void MotoGame::setCurrentCamera(int currentCamera){
+		m_currentCamera = currentCamera;
+		vapp::Log("MotoGame::setCurrentCamera currentCam: %d", m_currentCamera);
+	}
+	void MotoGame::addCamera(Vector2d upperleft, Vector2d downright){
+		m_cameras.push_back(new Camera(upperleft, downright));
+	}
+	void MotoGame::resetFollow(){
+		for(int i=0; i<m_cameras.size(); i++){
+			m_cameras[i]->setPlayerToFollow(NULL);
+		}
+	}
+	void MotoGame::removeCameras(){
+		for(int i=0; i<m_cameras.size(); i++){
+			delete m_cameras[i];
+		}
+		m_cameras.clear();
+	}
 }
 
 MotoGameOnBikerHooks::MotoGameOnBikerHooks(vapp::MotoGame* i_motoGame, int i_playerNumber) {

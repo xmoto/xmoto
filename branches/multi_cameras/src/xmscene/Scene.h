@@ -39,6 +39,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "BikeParameters.h"
 #include "BikeAnchors.h"
 #include "Bike.h"
+#include "Camera.h"
 
 class Level;
 class BikeState;
@@ -48,6 +49,7 @@ class ReplayBiker;
 class MotoGameOnBikerHooks;
 class LuaLibGame;
 class xmDatabase;
+class Camera;
 
 namespace vapp {
 
@@ -227,6 +229,13 @@ namespace vapp {
 
       LuaLibGame* getLuaLibGame();
 
+		Camera* getCamera();
+		int getNumberCameras();
+		void setCurrentCamera(int currentCamera);
+		void addCamera(Vector2d upperleft, Vector2d downright);
+		void resetFollow();
+		void removeCameras();
+
   private:
        
       /* Data */
@@ -278,6 +287,9 @@ namespace vapp {
       float m_lastCallToEveryHundreath;
             
       bool m_playEvents;
+
+		std::vector<Camera*> m_cameras;
+		int m_currentCamera;
 
       void cleanGhosts();
       void cleanPlayers();

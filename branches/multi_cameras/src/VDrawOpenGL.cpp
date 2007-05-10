@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VDraw.h"
 #include "VApp.h"
 #include "helpers/utf8.h"
+#include "xmscene/Camera.h"
 
 #define DRAW_FONT_FILE "Textures/Fonts/DejaVuSans.ttf"
 #define UTF8_INTERLINE_SPACE 2
@@ -58,8 +59,7 @@ namespace vapp {
   Transform an OpenGL vertex to pure 2D 
   ===========================================================================*/
   void DrawLibOpenGL::glVertexSP(float x,float y) {
-	  glVertex2f(m_nActualWidth/2 - m_nDrawWidth/2 + x,
-	             m_nActualHeight - (m_nActualHeight/2 - m_nDrawHeight/2 + y));
+	  glVertex2f(x, m_nActualHeight - y);
   }
 
   void DrawLibOpenGL::glVertex(float x,float y) {
@@ -175,19 +175,12 @@ namespace vapp {
     if(nDepthBits == 0)
       throw Exception("no depth buffer");  
   
-
-
-    /* Force OpenGL to talk 2D */
-    glViewport(0,0,m_nDispWidth,m_nDispHeight);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(0,m_nDispWidth,0,m_nDispHeight,-1,1);
+		m_menuCamera = new Camera(Vector2d(0,0),
+															Vector2d(m_nDispWidth,m_nDispHeight));
+		m_menuCamera->setCamera2d();
     
     glClearDepth(1);
     glDepthFunc(GL_LEQUAL);
-    
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();   
     
     /* Enable unicode translation and key repeats */
     SDL_EnableUNICODE(1);         
