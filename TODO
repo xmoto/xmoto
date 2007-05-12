@@ -1,4 +1,7 @@
 
+* <music name="None" /> => put levels into musical levels
+* mode mirror : the minimap is not mirrored
+
 
 * [13:49] <gaivota> aspegic500: another bug: although I disabled engine sound in options, it remains in the game
 
