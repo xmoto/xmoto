@@ -1,4 +1,7 @@
 
+* une fonction pour mettre à jour une ligne seule de la liste des
+   packs => pour favorite et last played levels
+
 * <music name="None" /> => put levels into musical levels
 * mode mirror : the minimap is not mirrored
 
