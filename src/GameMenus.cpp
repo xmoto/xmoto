@@ -1578,25 +1578,20 @@ namespace vapp {
     std::string p_packName;
     
     for(int i=0;i<m_levelsManager.LevelsPacks().size();i++) {
-      /* don't show empty packs */
-      int n_levels = m_levelsManager.LevelsPacks()[i]->getNumberOfLevels(m_db);
+      p_packName = m_levelsManager.LevelsPacks()[i]->Name();
 
-      if(n_levels != 0) {
-	p_packName = m_levelsManager.LevelsPacks()[i]->Name();
-
-	/* the unpackaged pack exists only in debug mode */
-	if(p_packName != "" || m_bDebugMode) {
-	  if(p_packName == "") {
-	    p_packName = GAMETEXT_UNPACKED_LEVELS_PACK;
-	  }
-	  
-	  pTree->addPack(m_levelsManager.LevelsPacks()[i],
-			 m_levelsManager.LevelsPacks()[i]->Group(),
-			 m_levelsManager.LevelsPacks()[i]->getNumberOfFinishedLevels(m_db, m_profile),
-			 n_levels
-			 );
-	  
+      /* the unpackaged pack exists only in debug mode */
+      if(p_packName != "" || m_bDebugMode) {
+	if(p_packName == "") {
+	  p_packName = GAMETEXT_UNPACKED_LEVELS_PACK;
 	}
+	
+	pTree->addPack(m_levelsManager.LevelsPacks()[i],
+		       m_levelsManager.LevelsPacks()[i]->Group(),
+		       m_levelsManager.LevelsPacks()[i]->getNumberOfFinishedLevels(m_db, m_profile),
+		       m_levelsManager.LevelsPacks()[i]->getNumberOfLevels(m_db)
+		       );
+	
       }
     }
 
@@ -1879,7 +1874,7 @@ namespace vapp {
      
       if(v_id_level != "") {
 	m_levelsManager.addToFavorite(m_db, m_profile, v_id_level);
-	_UpdateLevelPackList();
+	_UpdateLevelPackLevelList(VPACKAGENAME_FAVORITE_LEVELS);
 	_UpdateLevelLists();
       }
     }
@@ -2767,7 +2762,7 @@ namespace vapp {
       v_id_level = m_pAllLevelsList->getSelectedLevel();
       if(v_id_level != "") {
 	m_levelsManager.delFromFavorite(m_db, m_profile, v_id_level);
-	_UpdateLevelPackList();
+	_UpdateLevelPackLevelList(VPACKAGENAME_FAVORITE_LEVELS);
 	_UpdateLevelLists();
       }
     }
@@ -3959,8 +3954,14 @@ namespace vapp {
     m_PlaySpecificReplay = v_replayName;
   }
 
-  void GameApp::_UpdateLevelPackLevelList() {
-    UILevelList *pList = (UILevelList *)m_pLevelPackViewer->getChild("LEVELPACK_LEVEL_LIST");    
+  void GameApp::_UpdateLevelPackLevelList(const std::string& v_levelPack) {
+    UIPackTree *pTree = (UIPackTree *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:PACK_TAB:LEVELPACK_TREE");
+    LevelsPack *v_pack = &(m_levelsManager.LevelsPackByName(v_levelPack));
+
+    pTree->updatePack(v_pack,
+		      v_pack->getNumberOfFinishedLevels(m_db, m_profile),
+		      v_pack->getNumberOfLevels(m_db)
+		      );
   }
 
   UILevelList* GameApp::buildQuickStartList() {

@@ -165,6 +165,22 @@ void UIPackTree::addPack(LevelsPack* i_levelsPack,
   p->Text.push_back(v_level_nb.str());
 }
 
+void UIPackTree::updatePack(LevelsPack* i_levelsPack,
+			    int i_nbFinishedLevels,
+			    int i_nbLevels) {
+  for(unsigned int i=0; i<getEntries().size(); i++) {
+    if(getEntries()[i]->pvUser != NULL) {
+      if(i_levelsPack == getEntries()[i]->pvUser) {
+	  std::ostringstream v_level_nb;
+	  v_level_nb << i_nbFinishedLevels;
+	  v_level_nb << "/";
+	  v_level_nb << i_nbLevels;
+	  getEntries()[i]->Text[1] = v_level_nb.str();
+      }
+    }
+  }
+}
+
 LevelsPack* UIPackTree::getSelectedPack() {
   if(getSelected() >= 0 && getSelected() < getEntries().size()) {
     vapp::UIListEntry *pEntry = getEntries()[getSelected()];

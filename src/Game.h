@@ -415,7 +415,7 @@ class xmDatabase;
       void _CreateProfileList(void);
       void _CreateDefaultConfig(void);
       void _CreateLevelPackLevelList();
-      void _UpdateLevelPackLevelList();
+      void _UpdateLevelPackLevelList(const std::string& v_levelPack);
       void _UpdateActionKeyList(void);
       void _UpdateLevelPackList(void);
       void _UpdateLevelInfoViewerBestTimes(const std::string &LevelID);     

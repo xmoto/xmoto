@@ -388,7 +388,7 @@ namespace vapp {
       
     int m_numEntryDisplayed = 0;
     for(int i=0;i<m_Entries.size();i++) {
-      if(m_Entries[i]->bShown) {
+      if(m_Entries[i]->bFiltered == false) {
 
 	if(m_Entries[i]->bUseOwnProperties) {
 	  setTextSolidColor(m_Entries[i]->ownTextColor);
@@ -648,7 +648,7 @@ namespace vapp {
     UIListEntry *p = new UIListEntry;        
     p->Text.push_back(Text);
     p->pvUser = pvUser;
-    p->bShown = true;
+    p->bFiltered = false;
     p->bUseOwnProperties = false;
 
     if(i_position >=0 && i_position<m_Entries.size()) {
@@ -800,7 +800,7 @@ namespace vapp {
         
         /* Look at character number 'nPos' in all entries */
         for(int i=0;i<m_Entries.size();i++) {
-					if(m_Entries[i]->bShown) {
+					if(m_Entries[i]->bFiltered == false) {
 						int nEntryIdx = i + m_nRealSelected + 1; /* always start looking at the next */
 						nEntryIdx %= m_Entries.size();
         
@@ -836,7 +836,7 @@ namespace vapp {
 			m_nRealSelected = n;
 			m_nVisibleSelected = 0;
 			for(int i=0; i<m_nRealSelected; i++) {
-				if(m_Entries[i]->bShown) {
+				if(m_Entries[i]->bFiltered == false) {
 					m_nVisibleSelected++;
 				}
 			}
@@ -857,7 +857,7 @@ namespace vapp {
 		
 			int v=0;
 			for(int i=0; i<m_Entries.size(); i++) {
-				if(m_Entries[i]->bShown) {
+				if(m_Entries[i]->bFiltered == false) {
 					if(v == n) {
 						m_nRealSelected = i;
 					}
@@ -927,7 +927,7 @@ namespace vapp {
 			}		
 
 			int n = v_entry_lower.find(v_filter_lower, 0);
-			m_Entries[i]->bShown = n != std::string::npos;
+			m_Entries[i]->bFiltered = n == std::string::npos;
 			if(n == std::string::npos) {
 				m_filteredItems++;
 			}
