@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-05-08 18:43+0200\n"
+"POT-Creation-Date: 2007-05-13 16:14+0200\n"
 "PO-Revision-Date: 2007-05-12 11:27+0100\n"
 "Last-Translator: Mateusz Kosibowicz <mateusz.kosibowicz@gmail.com>\n"
 "Language-Team: Polish\n"
@@ -1814,7 +1814,7 @@ msgstr "Naciśnij, by natychmiast rozpocząć grę"
 msgid "Levels with no highscore"
 msgstr "Poziomy bez rekordu"
 
-#: src/GameText.h:517 src/GameText.h:543
+#: src/GameText.h:517 src/GameText.h:544
 msgid "Levels you have not completed"
 msgstr "Poziomy nieukończone"
 
@@ -1855,190 +1855,200 @@ msgid "Musical"
 msgstr "Musical"
 
 #: src/GameText.h:529
+#, fuzzy
+msgid "Last played levels"
+msgstr "Najczęściej wybierane"
+
+#: src/GameText.h:530
 msgid "Never played levels"
 msgstr "Nigdy nie wybierane"
 
-#: src/GameText.h:530
+#: src/GameText.h:531
 msgid "Most played levels"
 msgstr "Najczęściej wybierane"
 
-#: src/GameText.h:531
+#: src/GameText.h:532
 msgid "Less played levels (but played)"
 msgstr "Najrzadziej wybierane"
 
-#: src/GameText.h:532
+#: src/GameText.h:533
 msgid "Last highscores"
 msgstr "Najnowsze rekordy"
 
-#: src/GameText.h:533
+#: src/GameText.h:534
 msgid "Last levels"
 msgstr "Najnowsze poziomy"
 
-#: src/GameText.h:534
+#: src/GameText.h:535
 msgid "Oldest highscores"
 msgstr "Najstarsze rekordy"
 
-#: src/GameText.h:535
+#: src/GameText.h:536
 msgid "Platinium"
 msgstr "Platyna"
 
-#: src/GameText.h:536
+#: src/GameText.h:537
 msgid "Gold"
 msgstr "Złoto"
 
-#: src/GameText.h:537
+#: src/GameText.h:538
 msgid "Silver"
 msgstr "Srebro"
 
-#: src/GameText.h:538
+#: src/GameText.h:539
 msgid "Bronze"
 msgstr "Brąz"
 
-#: src/GameText.h:539
+#: src/GameText.h:540
 msgid "No medal"
 msgstr "Brak medalu"
 
-#: src/GameText.h:540
+#: src/GameText.h:541
 msgid "My levels"
 msgstr "Moje poziomy"
 
-#: src/GameText.h:542
+#: src/GameText.h:543
 msgid "Levels with no highscore in you room"
 msgstr "Poziomy bez rekordu w pokoju"
 
-#: src/GameText.h:544
+#: src/GameText.h:545
 msgid "Somebody in the room made a better highscore than yours"
 msgstr "Ktoś w pokoju uzyskał lepszy czas niż Ty"
 
-#: src/GameText.h:545
+#: src/GameText.h:546
 msgid "All X-Moto levels"
 msgstr "Wszystkie poziomy"
 
-#: src/GameText.h:546
+#: src/GameText.h:547
 msgid "New and updated levels since your last check"
 msgstr "Nowe i uaktualnione poziomy od ostatniego sprawdzania"
 
-#: src/GameText.h:547
+#: src/GameText.h:548
 msgid "Your favorite levels"
 msgstr "Twoje ulubione poziomy"
 
-#: src/GameText.h:548
+#: src/GameText.h:549
 msgid "Nicest X-Moto levels according to the web votes"
 msgstr "Najlepsze poziomy wg. głosów w serwisie www"
 
-#: src/GameText.h:549
+#: src/GameText.h:550
 msgid "Hardest X-Moto levels according to the web votes"
 msgstr "Najtrudniejsze poziomy wg. głosów w serwisie www"
 
-#: src/GameText.h:550
+#: src/GameText.h:551
 msgid "Easiest X-Moto levels according to the web votes"
 msgstr "Najłatwiejsze poziomy wg. głosów w serwisie www"
 
-#: src/GameText.h:551
+#: src/GameText.h:552
 msgid "Crapiest X-Moto levels according to the web votes"
 msgstr "Najgorsze poziomy wg. głosów w serwisie www"
 
-#: src/GameText.h:552
+#: src/GameText.h:553
 msgid "X-Moto levels which are dynamic"
 msgstr "Poziome, które są dynamiczne"
 
-#: src/GameText.h:553
+#: src/GameText.h:554
 msgid "X-Moto levels with a background music"
 msgstr "Poziomy z muzyką"
 
-#: src/GameText.h:554
+#: src/GameText.h:555
+#, fuzzy
+msgid "Last levels you have played"
+msgstr "Poziomy, w które nigdy nie grałeś"
+
+#: src/GameText.h:556
 msgid "X-Moto levels you never played"
 msgstr "Poziomy, w które nigdy nie grałeś"
 
-#: src/GameText.h:555
+#: src/GameText.h:557
 msgid "X-Moto levels you have played the most"
 msgstr "Poziomy, w które grasz najczęściej"
 
-#: src/GameText.h:556
+#: src/GameText.h:558
 msgid "X-Moto levels you have played only a few times"
 msgstr "Poziomy włączane tylko kilka razy"
 
-#: src/GameText.h:557
+#: src/GameText.h:559
 msgid "X-Moto levels having a recent highscore in you room"
 msgstr "Poziomy mające najnowsze rekordy w pokoju"
 
-#: src/GameText.h:558
+#: src/GameText.h:560
 msgid "Last created X-Moto levels"
 msgstr "Najnowsze poziomy"
 
-#: src/GameText.h:559
+#: src/GameText.h:561
 msgid "X-Moto levels having an old highscore in you room"
 msgstr "Poziomy, które mają najstarsze rekordy"
 
-#: src/GameText.h:560
+#: src/GameText.h:562
 msgid "You have the room highscore"
 msgstr "Uzyskałeś rekord pokoju"
 
-#: src/GameText.h:561
+#: src/GameText.h:563
 msgid "You highscore finish time is almost the room highscore (95%)"
 msgstr "Twój rekord jest blisko rekordu danego pokoju (95%)"
 
-#: src/GameText.h:562
+#: src/GameText.h:564
 msgid "You highscore finish time is almost the room highscore (90%-95%)"
 msgstr "Twój rekord jest blisko rekordu danego pokoju (90%-95%)"
 
-#: src/GameText.h:563
+#: src/GameText.h:565
 msgid "You highscore finish time is almost the room highscore (80%-90%)"
 msgstr "Twój rekord jest blisko rekordu danego pokoju (80%-90%)"
 
-#: src/GameText.h:564
+#: src/GameText.h:566
 msgid "The room highscore is really better than your own highscore"
 msgstr "Rekord danego pokoju jest znacznie lepszy od Twojego"
 
-#: src/GameText.h:565
+#: src/GameText.h:567
 msgid "Level pack"
 msgstr "Pakiet poziomów"
 
-#: src/GameText.h:566
+#: src/GameText.h:568
 msgid "Highscores by"
 msgstr "Rekordy wg."
 
-#: src/GameText.h:567
+#: src/GameText.h:569
 msgid "External levels (the one you put into the 'My levels' directory)"
 msgstr "Zewnętrzne poziomy (z katalogu 'My levels')"
 
-#: src/GameText.h:569
+#: src/GameText.h:571
 msgid "Ugly mode enabled"
 msgstr "Tryb Ugly aktywny"
 
-#: src/GameText.h:570
+#: src/GameText.h:572
 msgid "Ugly mode disabled"
 msgstr "Tryb Ugly nieaktywny"
 
-#: src/GameText.h:571
+#: src/GameText.h:573
 msgid "Theme mode enabled"
 msgstr "Motyw aktywny"
 
-#: src/GameText.h:572
+#: src/GameText.h:574
 msgid "Theme mode disabled"
 msgstr "Motyw nieaktywny"
 
-#: src/GameText.h:573
+#: src/GameText.h:575
 msgid "UglyOver mode enabled"
 msgstr "UglyOver aktywne"
 
-#: src/GameText.h:574
+#: src/GameText.h:576
 msgid "UglyOver mode disabled"
 msgstr "UglyOver nieaktywne"
 
-#: src/GameText.h:575
+#: src/GameText.h:577
 msgid "Web connexion enabled"
 msgstr "Połączenie z internetem aktywne"
 
-#: src/GameText.h:576
+#: src/GameText.h:578
 msgid "Web connexion disabled"
 msgstr "Połączenie z internetem nieaktywne"
 
-#: src/GameText.h:577
+#: src/GameText.h:579
 msgid "Replay interpolation enabled"
 msgstr "Interpolacja na powtórkach aktywna"
 
-#: src/GameText.h:578
+#: src/GameText.h:580
 msgid "Replay interpolation disabled"
 msgstr "Interpolacja na powtórkach nieaktywna"
 
