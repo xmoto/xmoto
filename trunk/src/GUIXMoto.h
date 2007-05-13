@@ -65,6 +65,10 @@ class UIPackTree : public vapp::UIList {
 	       int i_nbLevels);
   LevelsPack* getSelectedPack();
 
+  void updatePack(LevelsPack* i_levelsPack,
+		  int i_nbFinishedLevels,
+		  int i_nbLevels);
+
   void setSelectedPackByName(const std::string& i_levelsPackName);
 
   virtual std::string subContextHelp(int x,int y);

@@ -569,7 +569,7 @@ class UIButtonDrawn : public UIButton {
   struct UIListEntry {
     std::vector<std::string> Text;
     void *pvUser;
-    bool bShown;
+    bool bFiltered;
 
     bool bUseOwnProperties;
     Color ownTextColor;
