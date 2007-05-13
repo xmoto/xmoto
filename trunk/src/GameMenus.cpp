@@ -443,7 +443,9 @@ namespace vapp {
     p32BitsPerPixel->setGroup(20023);
     p32BitsPerPixel->setContextHelp(CONTEXTHELP_TRUECOLOR);
     
-    UIList *pDispResList = new UIList(pVideoOptionsTab,5,43,"",pVideoOptionsTab->getPosition().nWidth-10,128);
+    UIList *pDispResList = new UIList(pVideoOptionsTab,5,43,"",
+				      pVideoOptionsTab->getPosition().nWidth       - 10,
+				      pVideoOptionsTab->getPosition().nHeight - 43 - 10 - 140);
     pDispResList->setID("RES_LIST");
     pDispResList->setFont(drawLib->getFontSmall());
     pDispResList->addColumn(GAMETEXT_SCREENRES,pDispResList->getPosition().nWidth,CONTEXTHELP_SCREENRES);
@@ -458,19 +460,24 @@ namespace vapp {
 
     pDispResList->setContextHelp(CONTEXTHELP_RESOLUTION);
 
-    UIButton *pRunWindowed = new UIButton(pVideoOptionsTab,5,180,GAMETEXT_RUNWINDOWED,(pVideoOptionsTab->getPosition().nWidth-40)/1,28);
+    UIButton *pRunWindowed = new UIButton(pVideoOptionsTab,5, pVideoOptionsTab->getPosition().nHeight - 43 - 10 - 90,
+					  GAMETEXT_RUNWINDOWED,
+					  (pVideoOptionsTab->getPosition().nWidth-40)/1,
+					  28);
     pRunWindowed->setType(UI_BUTTON_TYPE_CHECK);
     pRunWindowed->setID("RUN_WINDOWED");
     pRunWindowed->enableWindow(true);
     pRunWindowed->setFont(drawLib->getFontSmall());
     pRunWindowed->setContextHelp(CONTEXTHELP_RUN_IN_WINDOW);
     
-    pSomeText = new UIStatic(pVideoOptionsTab,5,208,std::string(GAMETEXT_MENUGFX) +":",120,28);
+    pSomeText = new UIStatic(pVideoOptionsTab,5,pVideoOptionsTab->getPosition().nHeight - 43 - 10 - 60,
+			     std::string(GAMETEXT_MENUGFX) +":",120,28);
     pSomeText->setFont(drawLib->getFontSmall());    
     pSomeText->enableWindow(true);
     pSomeText->showWindow(true);
 
-    UIButton *pMenuLow = new UIButton(pVideoOptionsTab,120,208,GAMETEXT_LOW,(pVideoOptionsTab->getPosition().nWidth-120)/3,28);
+    UIButton *pMenuLow = new UIButton(pVideoOptionsTab,120,pVideoOptionsTab->getPosition().nHeight - 43 - 10 - 60,
+				      GAMETEXT_LOW,(pVideoOptionsTab->getPosition().nWidth-120)/3,28);
     pMenuLow->setType(UI_BUTTON_TYPE_RADIO);
     pMenuLow->setID("MENULOW");
     pMenuLow->enableWindow(true);
@@ -478,7 +485,9 @@ namespace vapp {
     pMenuLow->setGroup(20024);
     pMenuLow->setContextHelp(CONTEXTHELP_LOW_MENU);
 
-    UIButton *pMenuMed = new UIButton(pVideoOptionsTab,120+((pVideoOptionsTab->getPosition().nWidth-120)/3)*1,208,GAMETEXT_MEDIUM,(pVideoOptionsTab->getPosition().nWidth-120)/3,28);
+    UIButton *pMenuMed = new UIButton(pVideoOptionsTab,120+((pVideoOptionsTab->getPosition().nWidth-120)/3)*1,
+				      pVideoOptionsTab->getPosition().nHeight - 43 - 10 - 60,
+				      GAMETEXT_MEDIUM,(pVideoOptionsTab->getPosition().nWidth-120)/3,28);
     pMenuMed->setType(UI_BUTTON_TYPE_RADIO);
     pMenuMed->setID("MENUMEDIUM");
     pMenuMed->enableWindow(true);
@@ -486,7 +495,9 @@ namespace vapp {
     pMenuMed->setGroup(20024);
     pMenuMed->setContextHelp(CONTEXTHELP_MEDIUM_MENU);
 
-    UIButton *pMenuHigh = new UIButton(pVideoOptionsTab,120+((pVideoOptionsTab->getPosition().nWidth-120)/3)*2,208,GAMETEXT_HIGH,(pVideoOptionsTab->getPosition().nWidth-120)/3,28);
+    UIButton *pMenuHigh = new UIButton(pVideoOptionsTab,120+((pVideoOptionsTab->getPosition().nWidth-120)/3)*2,
+				       pVideoOptionsTab->getPosition().nHeight - 43 - 10 - 60,
+				       GAMETEXT_HIGH,(pVideoOptionsTab->getPosition().nWidth-120)/3,28);
     pMenuHigh->setType(UI_BUTTON_TYPE_RADIO);
     pMenuHigh->setID("MENUHIGH");
     pMenuHigh->enableWindow(true);
@@ -494,12 +505,16 @@ namespace vapp {
     pMenuHigh->setGroup(20024);
     pMenuHigh->setContextHelp(CONTEXTHELP_HIGH_MENU);
 
-    pSomeText = new UIStatic(pVideoOptionsTab,5,236,std::string(GAMETEXT_GAMEGFX) + ":",120,28);
+    pSomeText = new UIStatic(pVideoOptionsTab,5,
+			     pVideoOptionsTab->getPosition().nHeight - 43 - 10 - 30,
+			     std::string(GAMETEXT_GAMEGFX) + ":",120,28);
     pSomeText->setFont(drawLib->getFontSmall());    
     pSomeText->enableWindow(true);
     pSomeText->showWindow(true);
 
-    UIButton *pGameLow = new UIButton(pVideoOptionsTab,120,236,GAMETEXT_LOW,(pVideoOptionsTab->getPosition().nWidth-120)/3,28);
+    UIButton *pGameLow = new UIButton(pVideoOptionsTab,120,
+				      pVideoOptionsTab->getPosition().nHeight - 43 - 10 - 30,
+				      GAMETEXT_LOW,(pVideoOptionsTab->getPosition().nWidth-120)/3,28);
     pGameLow->setType(UI_BUTTON_TYPE_RADIO);
     pGameLow->setID("GAMELOW");
     pGameLow->enableWindow(true);
@@ -507,7 +522,9 @@ namespace vapp {
     pGameLow->setGroup(20025);
     pGameLow->setContextHelp(CONTEXTHELP_LOW_GAME);
 
-    UIButton *pGameMed = new UIButton(pVideoOptionsTab,120+((pVideoOptionsTab->getPosition().nWidth-120)/3)*1,236,GAMETEXT_MEDIUM,(pVideoOptionsTab->getPosition().nWidth-120)/3,28);
+    UIButton *pGameMed = new UIButton(pVideoOptionsTab,120+((pVideoOptionsTab->getPosition().nWidth-120)/3)*1,
+				      pVideoOptionsTab->getPosition().nHeight - 43 - 10 - 30,
+				      GAMETEXT_MEDIUM,(pVideoOptionsTab->getPosition().nWidth-120)/3,28);
     pGameMed->setType(UI_BUTTON_TYPE_RADIO);
     pGameMed->setID("GAMEMEDIUM");
     pGameMed->enableWindow(true);
@@ -515,7 +532,9 @@ namespace vapp {
     pGameMed->setGroup(20025);
     pGameMed->setContextHelp(CONTEXTHELP_MEDIUM_GAME);
 
-    UIButton *pGameHigh = new UIButton(pVideoOptionsTab,120+((pVideoOptionsTab->getPosition().nWidth-120)/3)*2,236,GAMETEXT_HIGH,(pVideoOptionsTab->getPosition().nWidth-120)/3,28);
+    UIButton *pGameHigh = new UIButton(pVideoOptionsTab,120+((pVideoOptionsTab->getPosition().nWidth-120)/3)*2,
+				       pVideoOptionsTab->getPosition().nHeight - 43 - 10 - 30,
+				       GAMETEXT_HIGH,(pVideoOptionsTab->getPosition().nWidth-120)/3,28);
     pGameHigh->setType(UI_BUTTON_TYPE_RADIO);
     pGameHigh->setID("GAMEHIGH");
     pGameHigh->enableWindow(true);
@@ -523,12 +542,7 @@ namespace vapp {
     pGameHigh->setGroup(20025);
     pGameHigh->setContextHelp(CONTEXTHELP_HIGH_GAME);
 
-    //UIButton *pMenuGraphics = new UIButton(pVideoOptionsTab,5,180,"Run Windowed",(pVideoOptionsTab->getPosition().nWidth-40)/1,28);
-    //pRunWindowed->setType(UI_BUTTON_TYPE_CHECK);
-    //pRunWindowed->setID("RUN_WINDOWED");
-    //pRunWindowed->enableWindow(true);
-    //pRunWindowed->setFont(drawLib->getFontSmall());
-
+    /* AUDIO TAB */
     
     UIWindow *pAudioOptionsTab = new UIWindow(pOptionsTabs,20,40,GAMETEXT_AUDIO,pOptionsTabs->getPosition().nWidth-40,pOptionsTabs->getPosition().nHeight);                  
     pAudioOptionsTab->enableWindow(true);
@@ -632,7 +646,7 @@ namespace vapp {
     pJoystickControls->setFont(drawLib->getFontSmall());
     pJoystickControls->setGroup(200243);    
 
-    UIList *pKeyCList = new UIList(pControlsOptionsTab,5,43,"",pControlsOptionsTab->getPosition().nWidth-10,118);
+    UIList *pKeyCList = new UIList(pControlsOptionsTab,5,43,"",pControlsOptionsTab->getPosition().nWidth-10, 118);
     pKeyCList->setID("KEY_ACTION_LIST");
     pKeyCList->setFont(drawLib->getFontSmall());
     pKeyCList->addColumn(GAMETEXT_ACTION,pKeyCList->getPosition().nWidth/2);
@@ -650,7 +664,9 @@ namespace vapp {
   pJoystickControls->showWindow(false);
   pConfigureJoystick->showWindow(false);
   
-  pKeyCList->setPosition(5,5,pControlsOptionsTab->getPosition().nWidth-10,238);
+  pKeyCList->setPosition(5,5,
+			 pControlsOptionsTab->getPosition().nWidth  -10,
+			 pControlsOptionsTab->getPosition().nHeight -43 -10 -10);
 #endif
 
     UIWindow *pWWWOptionsTab = new UIWindow(pOptionsTabs,0,26,GAMETEXT_WWWTAB,pOptionsTabs->getPosition().nWidth,pOptionsTabs->getPosition().nHeight);
