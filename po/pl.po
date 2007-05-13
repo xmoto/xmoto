@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-05-08 18:43+0200\n"
-"PO-Revision-Date: 2007-05-08 21:40+0100\n"
+"PO-Revision-Date: 2007-05-12 11:27+0100\n"
 "Last-Translator: Mateusz Kosibowicz <mateusz.kosibowicz@gmail.com>\n"
 "Language-Team: Polish\n"
 "MIME-Version: 1.0\n"
@@ -187,7 +187,7 @@ msgstr "Dodatkowe programowanie"
 
 #: src/GameText.h:89
 msgid "Graphics"
-msgstr "Detale gry"
+msgstr "Grafika"
 
 #: src/GameText.h:97
 msgid "MacOS X Support"
@@ -215,7 +215,7 @@ msgstr "Niemiecki"
 
 #: src/GameText.h:106
 msgid "Finnish"
-msgstr "Ukończono!"
+msgstr "Fiński"
 
 #: src/GameText.h:107
 msgid "Catalan"
