@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-05-08 18:43+0200\n"
+"POT-Creation-Date: 2007-05-13 16:14+0200\n"
 "PO-Revision-Date: 2006-05-02 18:09+0200\n"
 "Last-Translator: Maximum\n"
 "Language-Team: Finnish\n"
@@ -1818,7 +1818,7 @@ msgstr ""
 msgid "Levels with no highscore"
 msgstr "Levelit ilman huipputulosta"
 
-#: src/GameText.h:517 src/GameText.h:543
+#: src/GameText.h:517 src/GameText.h:544
 msgid "Levels you have not completed"
 msgstr "Levelit, joita et ole suorittanut"
 
@@ -1859,190 +1859,200 @@ msgid "Musical"
 msgstr "Musiikilliset"
 
 #: src/GameText.h:529
+#, fuzzy
+msgid "Last played levels"
+msgstr "Eniten pelatut levelit"
+
+#: src/GameText.h:530
 msgid "Never played levels"
 msgstr "Pelaamattomat levelit"
 
-#: src/GameText.h:530
+#: src/GameText.h:531
 msgid "Most played levels"
 msgstr "Eniten pelatut levelit"
 
-#: src/GameText.h:531
+#: src/GameText.h:532
 msgid "Less played levels (but played)"
 msgstr "Vähiten pelatut levelit (mutta pelatut)"
 
-#: src/GameText.h:532
+#: src/GameText.h:533
 msgid "Last highscores"
 msgstr "Viimeisin huipputulos"
 
-#: src/GameText.h:533
+#: src/GameText.h:534
 msgid "Last levels"
 msgstr "Viimeisimmät levelit"
 
-#: src/GameText.h:534
+#: src/GameText.h:535
 msgid "Oldest highscores"
 msgstr "Vanhin huipputulos"
 
-#: src/GameText.h:535
+#: src/GameText.h:536
 msgid "Platinium"
 msgstr "Platinum"
 
-#: src/GameText.h:536
+#: src/GameText.h:537
 msgid "Gold"
 msgstr "Kulta"
 
-#: src/GameText.h:537
+#: src/GameText.h:538
 msgid "Silver"
 msgstr "Hopea"
 
-#: src/GameText.h:538
+#: src/GameText.h:539
 msgid "Bronze"
 msgstr "Pronssi"
 
-#: src/GameText.h:539
+#: src/GameText.h:540
 msgid "No medal"
 msgstr "Ei mitallia"
 
-#: src/GameText.h:540
+#: src/GameText.h:541
 msgid "My levels"
 msgstr "Omat levelini"
 
-#: src/GameText.h:542
+#: src/GameText.h:543
 msgid "Levels with no highscore in you room"
 msgstr "Levelit ilman huipputulosta huoneessasi"
 
-#: src/GameText.h:544
+#: src/GameText.h:545
 msgid "Somebody in the room made a better highscore than yours"
 msgstr "Joku huoneessa teki paremman huipputuloksen kuin sinä"
 
-#: src/GameText.h:545
+#: src/GameText.h:546
 msgid "All X-Moto levels"
 msgstr "Kaikki X-Moto levelit"
 
-#: src/GameText.h:546
+#: src/GameText.h:547
 msgid "New and updated levels since your last check"
 msgstr "Uudet ja päivitetyt levelit viime hakusi jälkeen"
 
-#: src/GameText.h:547
+#: src/GameText.h:548
 msgid "Your favorite levels"
 msgstr "Suosikkilevelisi"
 
-#: src/GameText.h:548
+#: src/GameText.h:549
 msgid "Nicest X-Moto levels according to the web votes"
 msgstr "Hienoimmat X-Moto levelit web äänien mukaan"
 
-#: src/GameText.h:549
+#: src/GameText.h:550
 msgid "Hardest X-Moto levels according to the web votes"
 msgstr "Vaikeimmat X-Moto levelit web äänien mukaan"
 
-#: src/GameText.h:550
+#: src/GameText.h:551
 msgid "Easiest X-Moto levels according to the web votes"
 msgstr "Helpoimmat X-Moto levelit web äänien mukaan"
 
-#: src/GameText.h:551
+#: src/GameText.h:552
 msgid "Crapiest X-Moto levels according to the web votes"
 msgstr "Huonoimmat X-Moto levelit web äänien mukaan"
 
-#: src/GameText.h:552
+#: src/GameText.h:553
 msgid "X-Moto levels which are dynamic"
 msgstr "Voimakkaat/dynaamiset X-Moto levelit"
 
-#: src/GameText.h:553
+#: src/GameText.h:554
 msgid "X-Moto levels with a background music"
 msgstr "X-Moto levelit taustamusiikilla"
 
-#: src/GameText.h:554
+#: src/GameText.h:555
+#, fuzzy
+msgid "Last levels you have played"
+msgstr "X-Moto levelit, joita et ole koskaan pelannut"
+
+#: src/GameText.h:556
 msgid "X-Moto levels you never played"
 msgstr "X-Moto levelit, joita et ole koskaan pelannut"
 
-#: src/GameText.h:555
+#: src/GameText.h:557
 msgid "X-Moto levels you have played the most"
 msgstr "X-Moto lebelit, joita olet pelannut eniten"
 
-#: src/GameText.h:556
+#: src/GameText.h:558
 msgid "X-Moto levels you have played only a few times"
 msgstr "X-Moto levelit, joita olet pelannut vain pari kertaa"
 
-#: src/GameText.h:557
+#: src/GameText.h:559
 msgid "X-Moto levels having a recent highscore in you room"
 msgstr "X-Moto levelit, joilla on viimeaikainen huipputulos huoneessasi"
 
-#: src/GameText.h:558
+#: src/GameText.h:560
 msgid "Last created X-Moto levels"
 msgstr "Tuoreimmat X-Moto levelit"
 
-#: src/GameText.h:559
+#: src/GameText.h:561
 msgid "X-Moto levels having an old highscore in you room"
 msgstr "X-Moto levelit, joilla on vanha huipputulos huoneessasi"
 
-#: src/GameText.h:560
+#: src/GameText.h:562
 msgid "You have the room highscore"
 msgstr "Sinulla on huoneen huipputulos"
 
-#: src/GameText.h:561
+#: src/GameText.h:563
 msgid "You highscore finish time is almost the room highscore (95%)"
 msgstr "Huipputuloksesi on melkein huoneen huipputulos (95%)"
 
-#: src/GameText.h:562
+#: src/GameText.h:564
 msgid "You highscore finish time is almost the room highscore (90%-95%)"
 msgstr "Huipputuloksesi on melkein huoneen huipputulos (90%-95%)"
 
-#: src/GameText.h:563
+#: src/GameText.h:565
 msgid "You highscore finish time is almost the room highscore (80%-90%)"
 msgstr "Huipputuloksesi on melkein huoneen huipputulos (80%-90%)"
 
-#: src/GameText.h:564
+#: src/GameText.h:566
 msgid "The room highscore is really better than your own highscore"
 msgstr "Huoneen huipputulos on paljon parempi kuin omasi"
 
-#: src/GameText.h:565
+#: src/GameText.h:567
 msgid "Level pack"
 msgstr "Levelipakkaus"
 
-#: src/GameText.h:566
+#: src/GameText.h:568
 msgid "Highscores by"
 msgstr "Hupputulokset pelaajalta"
 
-#: src/GameText.h:567
+#: src/GameText.h:569
 msgid "External levels (the one you put into the 'My levels' directory)"
 msgstr "Ulkoiset levelit (ne, jotka pistät 'Omat levelini' kansioon)"
 
-#: src/GameText.h:569
+#: src/GameText.h:571
 msgid "Ugly mode enabled"
 msgstr "Ruma- tila päällä"
 
-#: src/GameText.h:570
+#: src/GameText.h:572
 msgid "Ugly mode disabled"
 msgstr "Ruma- tila pois päältä"
 
-#: src/GameText.h:571
+#: src/GameText.h:573
 msgid "Theme mode enabled"
 msgstr "Teema- tila päällä"
 
-#: src/GameText.h:572
+#: src/GameText.h:574
 msgid "Theme mode disabled"
 msgstr "Teema- tila pois päältä"
 
-#: src/GameText.h:573
+#: src/GameText.h:575
 msgid "UglyOver mode enabled"
 msgstr "RumaYli- tila päällä"
 
-#: src/GameText.h:574
+#: src/GameText.h:576
 msgid "UglyOver mode disabled"
 msgstr "RumaYli- tila pois päältä"
 
-#: src/GameText.h:575
+#: src/GameText.h:577
 msgid "Web connexion enabled"
 msgstr "Internet yhteys päällä"
 
-#: src/GameText.h:576
+#: src/GameText.h:578
 msgid "Web connexion disabled"
 msgstr "Internet yhteys pois päältä"
 
-#: src/GameText.h:577
+#: src/GameText.h:579
 msgid "Replay interpolation enabled"
 msgstr "Toistovideon interpolaatio päällä"
 
-#: src/GameText.h:578
+#: src/GameText.h:580
 msgid "Replay interpolation disabled"
 msgstr "Toistovideon interpolaatio pois päältä"
 

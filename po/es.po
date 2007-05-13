@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-05-08 18:43+0200\n"
+"POT-Creation-Date: 2007-05-13 16:14+0200\n"
 "PO-Revision-Date: 2007-05-03 02:11+0200\n"
 "Last-Translator: Trullo\n"
 "Language-Team:  <XMoto>\n"
@@ -1830,7 +1830,7 @@ msgstr ""
 msgid "Levels with no highscore"
 msgstr "Niveles sin récord"
 
-#: src/GameText.h:517 src/GameText.h:543
+#: src/GameText.h:517 src/GameText.h:544
 msgid "Levels you have not completed"
 msgstr "Niveles que no has completado"
 
@@ -1871,192 +1871,202 @@ msgid "Musical"
 msgstr "Niveles con Musica"
 
 #: src/GameText.h:529
+#, fuzzy
+msgid "Last played levels"
+msgstr "Niveles mas jugados"
+
+#: src/GameText.h:530
 msgid "Never played levels"
 msgstr "Niveles nunca jugados"
 
-#: src/GameText.h:530
+#: src/GameText.h:531
 msgid "Most played levels"
 msgstr "Niveles mas jugados"
 
-#: src/GameText.h:531
+#: src/GameText.h:532
 msgid "Less played levels (but played)"
 msgstr "Niveles menos jugados (pero al menos una vez)"
 
-#: src/GameText.h:532
+#: src/GameText.h:533
 msgid "Last highscores"
 msgstr "Últimos récords"
 
-#: src/GameText.h:533
+#: src/GameText.h:534
 msgid "Last levels"
 msgstr "Últimos niveles"
 
-#: src/GameText.h:534
+#: src/GameText.h:535
 msgid "Oldest highscores"
 msgstr "Récords antiguos"
 
-#: src/GameText.h:535
+#: src/GameText.h:536
 msgid "Platinium"
 msgstr "Platino"
 
-#: src/GameText.h:536
+#: src/GameText.h:537
 msgid "Gold"
 msgstr "Oro"
 
-#: src/GameText.h:537
+#: src/GameText.h:538
 msgid "Silver"
 msgstr "Plata"
 
-#: src/GameText.h:538
+#: src/GameText.h:539
 msgid "Bronze"
 msgstr "Bronce"
 
-#: src/GameText.h:539
+#: src/GameText.h:540
 msgid "No medal"
 msgstr "Sin medalla"
 
-#: src/GameText.h:540
+#: src/GameText.h:541
 msgid "My levels"
 msgstr "Mis niveles"
 
-#: src/GameText.h:542
+#: src/GameText.h:543
 msgid "Levels with no highscore in you room"
 msgstr "Niveles sin récord en tu sala"
 
-#: src/GameText.h:544
+#: src/GameText.h:545
 msgid "Somebody in the room made a better highscore than yours"
 msgstr "Alguien en la sala ha echo un récord mejor que el tuyo"
 
-#: src/GameText.h:545
+#: src/GameText.h:546
 msgid "All X-Moto levels"
 msgstr "Todos los Niveles"
 
-#: src/GameText.h:546
+#: src/GameText.h:547
 msgid "New and updated levels since your last check"
 msgstr "Niveles nuevos i actualizados desde tu ultima comprobación"
 
-#: src/GameText.h:547
+#: src/GameText.h:548
 msgid "Your favorite levels"
 msgstr "Niveles Favoritos"
 
-#: src/GameText.h:548
+#: src/GameText.h:549
 msgid "Nicest X-Moto levels according to the web votes"
 msgstr "Niveles bonitos según los votos de la web"
 
-#: src/GameText.h:549
+#: src/GameText.h:550
 msgid "Hardest X-Moto levels according to the web votes"
 msgstr "Niveles difíciles según los votos de la web"
 
-#: src/GameText.h:550
+#: src/GameText.h:551
 msgid "Easiest X-Moto levels according to the web votes"
 msgstr "Niveles sencillos según los votos de la web"
 
-#: src/GameText.h:551
+#: src/GameText.h:552
 msgid "Crapiest X-Moto levels according to the web votes"
 msgstr "Niveles crapiest según los votos de la web"
 
-#: src/GameText.h:552
+#: src/GameText.h:553
 msgid "X-Moto levels which are dynamic"
 msgstr "Niveles del X-Moto que son dinámicos"
 
-#: src/GameText.h:553
+#: src/GameText.h:554
 msgid "X-Moto levels with a background music"
 msgstr "Niveles del X-Moto con musica de fondo"
 
-#: src/GameText.h:554
+#: src/GameText.h:555
+#, fuzzy
+msgid "Last levels you have played"
+msgstr "Niveles del X-Moto que nunca has jugado"
+
+#: src/GameText.h:556
 msgid "X-Moto levels you never played"
 msgstr "Niveles del X-Moto que nunca has jugado"
 
-#: src/GameText.h:555
+#: src/GameText.h:557
 msgid "X-Moto levels you have played the most"
 msgstr "Niveles del X-Moto que mas has jugado"
 
-#: src/GameText.h:556
+#: src/GameText.h:558
 msgid "X-Moto levels you have played only a few times"
 msgstr "Niveles del X-Moto que has jugado solamente unas cuantas veces"
 
-#: src/GameText.h:557
+#: src/GameText.h:559
 msgid "X-Moto levels having a recent highscore in you room"
 msgstr "Niveles del X-Moto con un récord reciente en la sala"
 
-#: src/GameText.h:558
+#: src/GameText.h:560
 msgid "Last created X-Moto levels"
 msgstr "Niveles del X-Moto creados recientemente"
 
-#: src/GameText.h:559
+#: src/GameText.h:561
 msgid "X-Moto levels having an old highscore in you room"
 msgstr "Niveles del X-Moto con un récord antiguo en la sala"
 
-#: src/GameText.h:560
+#: src/GameText.h:562
 msgid "You have the room highscore"
 msgstr "Tienes el récord de la sala"
 
-#: src/GameText.h:561
+#: src/GameText.h:563
 msgid "You highscore finish time is almost the room highscore (95%)"
 msgstr "El tiempo final de tu  récord es casi el mismo que el de la sala (95%)"
 
-#: src/GameText.h:562
+#: src/GameText.h:564
 msgid "You highscore finish time is almost the room highscore (90%-95%)"
 msgstr ""
 "El tiempo final de tu  récord es casi el mismo que el de la sala (90%-95%)"
 
-#: src/GameText.h:563
+#: src/GameText.h:565
 msgid "You highscore finish time is almost the room highscore (80%-90%)"
 msgstr ""
 "El tiempo final de tu  récord es casi el mismo que el de la sala (80%-90%)"
 
-#: src/GameText.h:564
+#: src/GameText.h:566
 msgid "The room highscore is really better than your own highscore"
 msgstr "El récord de la sala es realmente mucho mejor que el tuyo"
 
-#: src/GameText.h:565
+#: src/GameText.h:567
 msgid "Level pack"
 msgstr "Niveles Empaquetados"
 
-#: src/GameText.h:566
+#: src/GameText.h:568
 msgid "Highscores by"
 msgstr "Récords por"
 
-#: src/GameText.h:567
+#: src/GameText.h:569
 msgid "External levels (the one you put into the 'My levels' directory)"
 msgstr "Niveles Externos (los que tienes en el directorio 'My levels')"
 
-#: src/GameText.h:569
+#: src/GameText.h:571
 msgid "Ugly mode enabled"
 msgstr "Modo feo activado"
 
-#: src/GameText.h:570
+#: src/GameText.h:572
 msgid "Ugly mode disabled"
 msgstr "Modo feo desactivado"
 
-#: src/GameText.h:571
+#: src/GameText.h:573
 msgid "Theme mode enabled"
 msgstr "Tema activado"
 
-#: src/GameText.h:572
+#: src/GameText.h:574
 msgid "Theme mode disabled"
 msgstr "Tema desactivado"
 
-#: src/GameText.h:573
+#: src/GameText.h:575
 msgid "UglyOver mode enabled"
 msgstr "Modo feo 2 activado"
 
-#: src/GameText.h:574
+#: src/GameText.h:576
 msgid "UglyOver mode disabled"
 msgstr "Modo feo 2 desactivado"
 
-#: src/GameText.h:575
+#: src/GameText.h:577
 msgid "Web connexion enabled"
 msgstr "Conexión Web activada"
 
-#: src/GameText.h:576
+#: src/GameText.h:578
 msgid "Web connexion disabled"
 msgstr "Conexión web desactivada"
 
-#: src/GameText.h:577
+#: src/GameText.h:579
 msgid "Replay interpolation enabled"
 msgstr "Repetición interpolada activada"
 
-#: src/GameText.h:578
+#: src/GameText.h:580
 msgid "Replay interpolation disabled"
 msgstr "Repetición interpolada desactivada"
 

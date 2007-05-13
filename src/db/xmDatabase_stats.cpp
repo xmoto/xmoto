@@ -184,15 +184,16 @@ void xmDatabase::stats_levelCompleted(const std::string &PlayerName,
     simpleSql("UPDATE stats_profiles_levels SET "
 	      "nbCompleted=nbCompleted+1,"
 	      "nbPlayed=nbPlayed+1,"
-	      "playedTime=playedTime+" + v_playTime.str() + " "   +
+	      "playedTime=playedTime+" + v_playTime.str() + ","   +
+	      "last_play_date=CURRENT_TIMESTAMP "         +
 	      "WHERE id_profile=\""    + PlayerName       + "\" " +
 	      "AND id_level=\""        + LevelID          + "\";");
   } else {
     simpleSql("INSERT INTO stats_profiles_levels("
 	      "id_profile, id_level,"
-	      "nbPlayed, nbDied, nbCompleted, nbRestarted, playedTime) "
+	      "nbPlayed, nbDied, nbCompleted, nbRestarted, playedTime, last_play_date) "
 	      "VALUES (\"" + protectString(PlayerName) + "\", \"" + protectString(LevelID) + "\", 1, 0, 1, 0, \"" +
-	      v_playTime.str() + "\");");
+	      v_playTime.str() + "\", CURRENT_TIMESTAMP);");
   }
 }
 
@@ -206,15 +207,16 @@ void xmDatabase::stats_died(const std::string &PlayerName,
     simpleSql("UPDATE stats_profiles_levels SET "
 	      "nbDied=nbDied+1,"
 	      "nbPlayed=nbPlayed+1,"
-	      "playedTime=playedTime+" + v_playTime.str() + " "   +
+	      "playedTime=playedTime+" + v_playTime.str() + ","   +
+	      "last_play_date=CURRENT_TIMESTAMP "
 	      "WHERE id_profile=\""    + PlayerName       + "\" " +
 	      "AND id_level=\""        + LevelID          + "\";");
   } else {
     simpleSql("INSERT INTO stats_profiles_levels("
 	      "id_profile, id_level,"
-	      "nbPlayed, nbDied, nbCompleted, nbRestarted, playedTime) "
+	      "nbPlayed, nbDied, nbCompleted, nbRestarted, playedTime, last_play_date) "
 	      "VALUES (\"" + protectString(PlayerName) + "\", \"" + protectString(LevelID) + "\", 1, 1, 0, 0, \"" +
-	      v_playTime.str() + "\");");
+	      v_playTime.str() + "\", CURRENT_TIMESTAMP);");
   }
 }
 
@@ -227,15 +229,16 @@ void xmDatabase::stats_abortedLevel(const std::string &PlayerName,
   if(stats_checkKeyExists_stats_profiles_levels(PlayerName, LevelID)) {
     simpleSql("UPDATE stats_profiles_levels SET "
 	      "nbPlayed=nbPlayed+1,"
-	      "playedTime=playedTime+" + v_playTime.str() + " "   +
+	      "playedTime=playedTime+" + v_playTime.str() + ","   +
+	      "last_play_date=CURRENT_TIMESTAMP "
 	      "WHERE id_profile=\""    + PlayerName       + "\" " +
 	      "AND id_level=\""        + LevelID          + "\";");
   } else {
     simpleSql("INSERT INTO stats_profiles_levels("
 	      "id_profile, id_level,"
-	      "nbPlayed, nbDied, nbCompleted, nbRestarted, playedTime) "
+	      "nbPlayed, nbDied, nbCompleted, nbRestarted, playedTime, last_play_date) "
 	      "VALUES (\"" + protectString(PlayerName) + "\", \"" + protectString(LevelID) + "\", 1, 0, 0, 0, \"" +
-	      v_playTime.str() + "\");");
+	      v_playTime.str() + "\", CURRENT_TIMESTAMP);");
   }
 }
 
@@ -249,15 +252,16 @@ void xmDatabase::stats_levelRestarted(const std::string &PlayerName,
     simpleSql("UPDATE stats_profiles_levels SET "
 	      "nbRestarted=nbRestarted+1,"
 	      "nbPlayed=nbPlayed+1,"
-	      "playedTime=playedTime+" + v_playTime.str() + " "   +
+	      "playedTime=playedTime+" + v_playTime.str() + ","   +
+	      "last_play_date=CURRENT_TIMESTAMP "
 	      "WHERE id_profile=\""    + PlayerName       + "\" " +
 	      "AND id_level=\""        + LevelID          + "\";");
   } else {
     simpleSql("INSERT INTO stats_profiles_levels("
 	      "id_profile, id_level,"
-	      "nbPlayed, nbDied, nbCompleted, nbRestarted, playedTime) "
+	      "nbPlayed, nbDied, nbCompleted, nbRestarted, playedTime, last_play_date) "
 	      "VALUES (\"" + protectString(PlayerName) + "\", \"" + protectString(LevelID) + "\", 1, 0, 0, 1, \"" +
-	      v_playTime.str() + "\");");
+	      v_playTime.str() + "\", CURRENT_TIMESTAMP);");
   }
 }
 

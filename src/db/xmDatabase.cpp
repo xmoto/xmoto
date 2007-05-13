@@ -23,7 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GameText.h"
 #include "VApp.h"
 
-#define XMDB_VERSION 12
+#define XMDB_VERSION 13
 
 bool xmDatabase::Trace = false;
 
@@ -375,6 +375,15 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
       updateXmDbVersion(12);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 11: " + e.getMsg());
+    }
+
+  case 12:
+    try {
+      simpleSql("ALTER TABLE stats_profiles_levels ADD COLUMN last_play_date DEFAULT NULL;");
+      simpleSql("CREATE INDEX stats_profiles_levels_last_play_date_idx1 ON stats_profiles_levels(last_play_date);");
+      updateXmDbVersion(13);
+    } catch(Exception &e) {
+      throw Exception("Unable to update xmDb from 12: " + e.getMsg());
     }
 
     // next

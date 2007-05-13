@@ -435,6 +435,19 @@ void LevelsManager::makePacks(xmDatabase *i_db,
   m_levelsPacks.push_back(v_pack);
 
   /* stats */
+  /* last played levels */
+  v_pack = new LevelsPack(std::string(VPACKAGENAME_LAST_PLAYED),
+			  "SELECT a.id_level AS id_level, a.name AS name, b.last_play_date AS sort_field "
+			  "FROM levels AS a INNER JOIN stats_profiles_levels AS b "
+			  "ON (a.id_level=b.id_level AND "
+			  "b.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
+			  "WHERE b.last_play_date IS NOT NULL "
+			  "ORDER BY b.last_play_date "
+			  "LIMIT 50", false);
+  v_pack->setGroup(GAMETEXT_PACK_STATS);
+  v_pack->setDescription(VPACKAGENAME_DESC_LAST_PLAYED);
+  m_levelsPacks.push_back(v_pack);
+
   /* never played levels */
   v_pack = new LevelsPack(std::string(VPACKAGENAME_NEVER_PLAYED),
 			  "SELECT a.id_level AS id_level, a.name AS name, UPPER(a.name) AS sort_field "
