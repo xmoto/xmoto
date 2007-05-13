@@ -1568,14 +1568,30 @@ namespace vapp {
 	  getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
 	  getParent()->getDrawLib()->setColorRGB(255,255,255);
 
-	  getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vAPos.x)*fXScale,0.01);
-	  getParent()->getDrawLib()->glVertex(vAPos + Vector2f(block->DynamicPosition().x,block->DynamicPosition().y));
-	  getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vBPos.x)*fXScale,0.01);
-	  getParent()->getDrawLib()->glVertex(vBPos + Vector2f(block->DynamicPosition().x,block->DynamicPosition().y));
-	  getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vBPos.x)*fXScale,0.99);
-	  getParent()->getDrawLib()->glVertex(vBPos + Vector2f(block->DynamicPosition().x,block->DynamicPosition().y) + Vector2f(0,-fDepth));
-	  getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vAPos.x)*fXScale,0.99);
-	  getParent()->getDrawLib()->glVertex(vAPos + Vector2f(block->DynamicPosition().x,block->DynamicPosition().y) + Vector2f(0,-fDepth));
+	  float v_border; // add a small border because polygons are a bit larger to avoid gap polygon pb.
+	  if(fDepth > 0) {
+	    v_border = 0.01;
+	  } else {
+	    v_border = -0.01;
+	  }
+	  
+
+	  getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vAPos.x)*fXScale,
+						0.01);
+	  getParent()->getDrawLib()->glVertex(vAPos + Vector2f(block->DynamicPosition().x,
+							       block->DynamicPosition().y + v_border));
+	  getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vBPos.x)*fXScale,
+						0.01);
+	  getParent()->getDrawLib()->glVertex(vBPos + Vector2f(block->DynamicPosition().x,
+							       block->DynamicPosition().y + v_border));
+	  getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vBPos.x)*fXScale,
+						0.99);
+	  getParent()->getDrawLib()->glVertex(vBPos + Vector2f(block->DynamicPosition().x,
+							       block->DynamicPosition().y) + Vector2f(0,-fDepth));
+	  getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vAPos.x)*fXScale,
+						0.99);
+	  getParent()->getDrawLib()->glVertex(vAPos + Vector2f(block->DynamicPosition().x,
+							       block->DynamicPosition().y) + Vector2f(0,-fDepth));
 
 	  getParent()->getDrawLib()->endDraw();
 	}
