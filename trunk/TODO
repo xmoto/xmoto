@@ -1,7 +1,4 @@
 
-* une fonction pour mettre à jour une ligne seule de la liste des
-   packs => pour favorite et last played levels
-
 * <music name="None" /> => put levels into musical levels
 * mode mirror : the minimap is not mirrored
 
@@ -16,7 +13,6 @@
     float normal_voffset = 2.0; 
 -> cet offset devrait plutot etre celui entre la bordure gauche/droite
    et le joueur
-* a quick play button to play any level just at xmoto start
 
 * dans le niveau metallica on voit bien que ca chie certaines textures
    : ca vient du bsp à cause des 4 points rajoutés (boite englobante)

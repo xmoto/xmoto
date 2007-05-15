@@ -295,6 +295,7 @@ typedef Vector3<float> Vector3f;
 typedef Vector3<double> Vector3d;
 typedef Vector2<float> Vector2f;
 typedef Vector2<double> Vector2d; 
+typedef Vector2<int> Vector2i;
 
 /*===========================================================================
   Extra functions -- all related to the Vector2f type... I nice thing to do 

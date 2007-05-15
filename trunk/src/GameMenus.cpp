@@ -171,13 +171,14 @@ namespace vapp {
     m_nNumMainMenuButtons = 5;
     
     /* quick start button */
-    m_pQuickStart = new UIButtonDrawn(m_pMainMenu, "RoundButtonUnpressed", "RoundButtonPressed",
-    				      drawLib->getDispWidth()  -120 -30,
-				      drawLib->getDispHeight() -120 -30,
-				      GAMETEXT_QUICKSTART, 120, 120);
+    m_pQuickStart = new UIQuickStartButton(m_pMainMenu,
+					   drawLib->getDispWidth()  -180 -60,
+					   drawLib->getDispHeight() -180 -30,
+					   GAMETEXT_QUICKSTART, 180, 180,
+					   m_Config.getInteger("QSQuality"),
+					   m_Config.getInteger("QSDifficulty"));
     m_pQuickStart->setFont(drawLib->getFontSmall());
     m_pQuickStart->setID("QUICKSTART");
-    m_pQuickStart->setContextHelp(CONTEXTHELP_QUICKSTART);
     /* *** */
 
     /* level info frame */
@@ -2395,11 +2396,11 @@ namespace vapp {
       m_pQuickStart->setClicked(false);
 
       try {
-	if(m_quickStartList == NULL) {
-	  m_quickStartList = buildQuickStartList();
-	} else {
-	  m_quickStartList->randomize();
+	if(m_quickStartList != NULL) {
+	  delete m_quickStartList;
 	}
+	m_quickStartList = buildQuickStartList();
+
 	if(m_quickStartList->getEntries().size() == 0) {
 	  throw Exception("Empty quick start list");
 	}
@@ -3986,10 +3987,12 @@ namespace vapp {
     v_list = new UILevelList(m_pMainMenu, 0, 0, "", 0, 0);     
     v_list->setID("QUICKSTART_LIST");
     v_list->showWindow(false);
-    _CreateLevelLists(v_list, VPACKAGENAME_ALL_LEVELS);
-    v_list->randomize();
-    //_CreateLevelListsSql(UILevelList *pAllLevels, const std::string& i_sql)
 
+    _CreateLevelListsSql(v_list,
+			 LevelsManager::getQuickStartPackQuery(m_db,
+							       m_pQuickStart->getQuality(),
+							       m_pQuickStart->getDifficulty(),
+							       m_profile, m_WebHighscoresIdRoom));
     return v_list;
   }
 }

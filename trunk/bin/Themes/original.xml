@@ -310,6 +310,10 @@
 <sprite type="UI" name="MenuTR" 	      file="MenuTR.png" />
 <sprite type="UI" name="RoundButtonPressed"   file="roundButtonPressed.png" />
 <sprite type="UI" name="RoundButtonUnpressed" file="roundButtonUnpressed.png" />
+<sprite type="UI" name="RoundButtonHover"     file="roundButtonHover.png" />
+<sprite type="UI" name="qsChoiceDifficulty"   file="qsChoiceDifficulty.png" />
+<sprite type="UI" name="qsChoiceQuality"      file="qsChoiceQuality.png" />
+<sprite type="UI" name="qsChoiceUnchecked"    file="qsChoiceUnchecked.png" />
 
 <music name="menu1" file="menu.ogg" />
 <music name="rideALong" file="ridealong.ogg" />

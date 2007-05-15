@@ -98,6 +98,10 @@ class LevelsManager {
   void addToFavorite(xmDatabase *i_db, std::string i_profile, const std::string& i_id_level);
   void delFromFavorite(xmDatabase *i_db, std::string i_profile, const std::string& i_id_level);
 
+  static std::string getQuickStartPackQuery(xmDatabase *i_db,
+					    unsigned int i_quality, unsigned int i_difficulty,
+					    const std::string& i_profile, const std::string& i_id_room);
+
   private:
   void clean();
   void cleanPacks();

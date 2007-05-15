@@ -32,6 +32,7 @@ quit level'' or something like that.
 * Sometimes when the edges of the levels are reached (for instance when being at a corner of a level), the
   framerate drops A LOT (game gets unplayable). Can't figure out why.
   ** Update: it actually appears that the game gets slower and slower while running.
+* a quick play button to play any level just at xmoto start
 
 Since 0.2.6
 [21:33] <jj> the smoke is not always rendered at the sides of the screen

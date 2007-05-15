@@ -512,6 +512,8 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_PROXYPASSWORD _("Your password associated with your login")
 #define CONTEXTHELP_REPLAYS_FILTER _("Filter on replay list")
 #define CONTEXTHELP_QUICKSTART _("Press to play immediatly to X-Moto")
+#define CONTEXTHELP_QUICKSTART_QUALITY    _("Increase or dicrease the quality of the levels selected")
+#define CONTEXTHELP_QUICKSTART_DIFFICULTY _("Increase or dicrease the difficulty of the levels selected")
 
 #define VPACKAGENAME_LEVELS_WITH_NO_HIGHSCORE   _("Levels with no highscore")
 #define VPACKAGENAME_INCOMPLETED_LEVELS         _("Levels you have not completed")

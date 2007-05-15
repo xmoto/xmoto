@@ -481,3 +481,7 @@ Textures/UI/Cursor.png
 Textures/UI/NewLevelsAvail.png
 Textures/UI/roundButtonPressed.png
 Textures/UI/roundButtonUnpressed.png
+Textures/UI/roundButtonHover.png
+Textures/UI/qsChoiceUnchecked.png
+Textures/UI/qsChoiceDifficulty.png
+Textures/UI/qsChoiceQuality.png

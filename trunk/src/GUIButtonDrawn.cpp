@@ -25,13 +25,15 @@ namespace vapp {
 UIButtonDrawn::UIButtonDrawn(UIWindow *pParent,
 			     const std::string& i_spriteUnpressed,
 			     const std::string& i_spritePressed,
+			     const std::string& i_spriteHover,
 			     int x, int y,
 			     std::string Caption,
 			     int nWidth, int nHeight)
   : UIButton(pParent, x, y, Caption, nWidth, nHeight) {
     Sprite *v_sprite;
 
-    m_textureUnpressed = m_texturePressed = NULL;
+    m_border = 0;
+    m_textureUnpressed = m_texturePressed = m_textureHover = NULL;
 
     v_sprite = getApp()->getTheme()->getSprite(SPRITE_TYPE_UI, i_spritePressed);
     if(v_sprite != NULL) {
@@ -42,9 +44,18 @@ UIButtonDrawn::UIButtonDrawn(UIWindow *pParent,
     if(v_sprite != NULL) {
       m_textureUnpressed = v_sprite->getTexture();
     }
+
+    v_sprite = getApp()->getTheme()->getSprite(SPRITE_TYPE_UI, i_spriteHover);
+    if(v_sprite != NULL) {
+      m_textureHover = v_sprite->getTexture();
+    }
   }
 
-  UIButtonDrawn::~UIButtonDrawn() {
+UIButtonDrawn::~UIButtonDrawn() {
+}
+
+void UIButtonDrawn::setBorder(int i_border) {
+  m_border = i_border;
 }
 
 void UIButtonDrawn::paint() {
@@ -56,17 +67,24 @@ void UIButtonDrawn::paint() {
   float fY1 = 0.0;
   float fX2 = 1.0;
   float fY2 = 1.0;
-  int cx = getAbsPosX();
-  int cy = getAbsPosY();
-  int w = getPosition().nWidth;
-  int h = getPosition().nHeight;
+  int cx = getAbsPosX() + m_border;
+  int cy = getAbsPosY() + m_border;
+  int w = getPosition().nWidth  - m_border * 2;
+  int h = getPosition().nHeight - m_border * 2;
 
   if(isUglyMode()) {
   } else {
     if(m_textureUnpressed != NULL && m_texturePressed != NULL) {
       switch(m_State) {
 	case UI_BUTTON_STATE_PRESSED:
-	getApp()->getDrawLib()->setTexture(m_texturePressed, BLEND_MODE_A);
+	if(m_bHover) {
+	  getApp()->getDrawLib()->setTexture(m_textureHover, BLEND_MODE_A);
+	} else {
+	  getApp()->getDrawLib()->setTexture(m_texturePressed, BLEND_MODE_A);
+	}
+        if(!isMouseLDown()) {
+	  m_State = UI_BUTTON_STATE_UNPRESSED;
+	}
 	break;
 	default:
 	getApp()->getDrawLib()->setTexture(m_textureUnpressed, BLEND_MODE_A);

@@ -24,6 +24,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VFileIO.h"
 #include "VApp.h"
 
+#define UIQUICKSTART_BORDER 25
+
 UILevelList::UILevelList(UIWindow *pParent,
 			 int x,int y,
 			 const std::string& Caption,
@@ -224,4 +226,175 @@ std::string UIPackTree::subContextHelp(int x,int y) {
 
   v_levelPack = (LevelsPack*) pEntry->pvUser;
   return v_levelPack->Description();
+}
+
+UIQuickStartButton::UIQuickStartButton(UIWindow *pParent,
+				       int x, int y,
+				       std::string Caption,
+				       int nWidth, int nHeight,
+				       int i_quality, int i_difficulty)
+  : UIButtonDrawn(pParent, "RoundButtonUnpressed", "RoundButtonPressed", "RoundButtonHover",
+		  x, y, Caption, nWidth, nHeight) {
+  Sprite *v_sprite;
+  m_quality = m_quality = 0;
+  m_uncheckedTex = m_qualityTex = m_difficultyTex = NULL;
+
+  v_sprite = getApp()->getTheme()->getSprite(SPRITE_TYPE_UI, "qsChoiceUnchecked");
+  if(v_sprite != NULL) {
+    m_uncheckedTex = v_sprite->getTexture();
+  }
+
+  v_sprite = getApp()->getTheme()->getSprite(SPRITE_TYPE_UI, "qsChoiceQuality");
+  if(v_sprite != NULL) {
+    m_qualityTex = v_sprite->getTexture();
+  }
+
+  v_sprite = getApp()->getTheme()->getSprite(SPRITE_TYPE_UI, "qsChoiceDifficulty");
+  if(v_sprite != NULL) {
+    m_difficultyTex = v_sprite->getTexture();
+  }
+
+  setBorder(UIQUICKSTART_BORDER);
+  m_quality    = i_quality;
+  m_difficulty = i_difficulty;
+}
+
+UIQuickStartButton::~UIQuickStartButton() {
+}
+
+void UIQuickStartButton::paint() {
+  float v_angle;
+  Vector2i v_point;
+
+  Vector2i v_center = Vector2i(getAbsPosX() + getPosition().nWidth/2,
+			       getAbsPosY() + getPosition().nHeight/2);
+
+  unsigned int v_ray = getPosition().nWidth/2 - UIQUICKSTART_BORDER;
+
+  if(isUglyMode()) {
+    m_drawLib->drawCircle(Vector2f((float)v_center.x, (float) v_center.y), (float) v_ray);
+  }
+  UIButtonDrawn::paint();
+
+  /* draw the quality stars */
+  for(unsigned int i=0; i<5; i++) {
+    v_point = getQualityPoint(v_center, v_ray, i);
+
+
+    if(i < m_quality) {
+      if(isUglyMode()) {
+	m_drawLib->drawCircle(Vector2f((float)v_point.x, (float) v_point.y), UIQUICKSTART_BORDER/2, 1.0, -1, -1);
+      } else {
+	m_drawLib->drawImage(Vector2f(v_point.x, v_point.y) - Vector2f(UIQUICKSTART_BORDER/2, UIQUICKSTART_BORDER/2),
+			     Vector2f(v_point.x, v_point.y) + Vector2f(UIQUICKSTART_BORDER/2, UIQUICKSTART_BORDER/2),
+			     m_qualityTex, -1);
+      }
+    } else {
+      if(isUglyMode()) {
+	m_drawLib->drawCircle(Vector2f((float)v_point.x, (float) v_point.y), UIQUICKSTART_BORDER/2);
+      } else {
+	m_drawLib->drawImage(Vector2f(v_point.x, v_point.y) - Vector2f(UIQUICKSTART_BORDER/2, UIQUICKSTART_BORDER/2),
+			     Vector2f(v_point.x, v_point.y) + Vector2f(UIQUICKSTART_BORDER/2, UIQUICKSTART_BORDER/2),
+			     m_uncheckedTex, -1);
+      }
+    }
+  }
+
+  /* draw the difficulty stars */
+  for(unsigned int i=0; i<5; i++) {
+    v_point = getDifficultyPoint(v_center, v_ray, i);
+
+    if(i < m_difficulty) {
+      if(isUglyMode()) {
+	m_drawLib->drawCircle(Vector2f((float)v_point.x, (float) v_point.y), UIQUICKSTART_BORDER/2, 1.0, -1, -1);
+      } else {
+	m_drawLib->drawImage(Vector2f(v_point.x, v_point.y) - Vector2f(UIQUICKSTART_BORDER/2, UIQUICKSTART_BORDER/2),
+			     Vector2f(v_point.x, v_point.y) + Vector2f(UIQUICKSTART_BORDER/2, UIQUICKSTART_BORDER/2),
+			     m_difficultyTex, -1);
+      }
+    } else {
+      if(isUglyMode()) {
+	m_drawLib->drawCircle(Vector2f((float)v_point.x, (float) v_point.y), UIQUICKSTART_BORDER/2);
+      } else {
+	m_drawLib->drawImage(Vector2f(v_point.x, v_point.y) - Vector2f(UIQUICKSTART_BORDER/2, UIQUICKSTART_BORDER/2),
+			     Vector2f(v_point.x, v_point.y) + Vector2f(UIQUICKSTART_BORDER/2, UIQUICKSTART_BORDER/2),
+			     m_uncheckedTex, -1);
+      }
+    }
+  }
+}
+
+void UIQuickStartButton::mouseLDown(int x, int y) {
+  // check as a circle, i don't know how to do for an elipse
+
+  if(isXYInCircle(x, y, Vector2i(getPosition().nWidth/2, getPosition().nHeight/2),
+		  getPosition().nWidth/2 -UIQUICKSTART_BORDER)) {
+    UIButtonDrawn::mouseLDown(x, y);
+  } else {
+    Vector2i v_center = Vector2i(getPosition().nWidth/2,
+				 getPosition().nHeight/2);
+    unsigned int v_ray = getPosition().nWidth/2 - UIQUICKSTART_BORDER;
+
+    /* check quality the stars */
+    for(unsigned int i=0; i<5; i++) {
+      if(isXYInCircle(x, y, getQualityPoint(v_center, v_ray, i), UIQUICKSTART_BORDER/2)) {
+	m_quality = i+1;
+      }
+    }
+
+    /* check difficulty the stars */
+    for(unsigned int i=0; i<5; i++) {
+      if(isXYInCircle(x, y, getDifficultyPoint(v_center, v_ray, i), UIQUICKSTART_BORDER/2)) {
+	m_difficulty = i+1;
+      }
+    }
+  }
+}
+
+int UIQuickStartButton::getQuality() const {
+  return m_quality;
+}
+ 
+int UIQuickStartButton::getDifficulty() const {
+  return m_difficulty;
+}
+
+Vector2i UIQuickStartButton::getQualityPoint(const Vector2i& i_center, unsigned int i_ray, unsigned int i_value) {
+  float v_angle;
+  Vector2i v_point;
+
+  v_angle = (i_value * (M_PI/8.0)) - M_PI/2.0 + M_PI/10.0;
+  v_point = Vector2i(cos(v_angle) * (i_ray + UIQUICKSTART_BORDER/2), sin(v_angle) * (i_ray + UIQUICKSTART_BORDER/2));
+  return i_center - v_point;
+}
+
+Vector2i UIQuickStartButton::getDifficultyPoint(const Vector2i& i_center, unsigned int i_ray, unsigned int i_value) {
+  float v_angle;
+  Vector2i v_point;
+
+  v_angle = (i_value * (-M_PI/8.0)) - M_PI/2.0 - M_PI/10.0;
+  v_point = Vector2i(cos(v_angle) * (i_ray + UIQUICKSTART_BORDER/2), sin(v_angle) * (i_ray + UIQUICKSTART_BORDER/2));
+  return i_center - v_point;
+}
+
+bool UIQuickStartButton::isXYInCircle(int x, int y, Vector2i i_center, unsigned int v_ray) {
+  float v_length;
+  v_length =
+    sqrt(((float)(x - i_center.x)) * ((float)(x - i_center.x)) +
+	 ((float)(y - i_center.y)) * ((float)(y - i_center.y)));
+  return v_length <= ((float)v_ray);
+}
+
+std::string UIQuickStartButton::subContextHelp(int x, int y) {
+  // check as a circle, i don't know how to do for an elipse
+  if(isXYInCircle(x, y, Vector2i(getPosition().nWidth/2, getPosition().nHeight/2),
+		  getPosition().nWidth/2 -UIQUICKSTART_BORDER)) {
+    return CONTEXTHELP_QUICKSTART;
+  } else {
+    if(x < getPosition().nWidth/2) {
+      return CONTEXTHELP_QUICKSTART_QUALITY;
+    } else {
+      return CONTEXTHELP_QUICKSTART_DIFFICULTY;
+    }
+  }
 }
