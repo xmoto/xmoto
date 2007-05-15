@@ -3,17 +3,19 @@ X-Moto 0.3.0 2007-
  * libcurl is now mandatory
  * sdl_ttf integration (DejaVuSans.ttf is used)
  * utf-8 integration
- * full translation (all characters) for : en sk fr no de fi ca es
+ * full translation (all characters) for : en sk fr no de fi ca es pl ru
  * windows user dir is now %APPDIR%/.xmoto
  * code cleaning
  * favorite levels are saved by profile
- * new virtual packs
+ * new virtual packs (last played levels, medals, ...)
+ * a quick play button to directly play at xmoto start
  * smoother interpolation for replays (ctrl+i to enable/disable it)
  * F8 to disable automatic web connexion (for ghost for example)
  * xmoto toto.lvl or xmoto -levelFile toto.lvl to directly start from an lvl
  * ~/.xmoto/Levels/MyLevels for levels developpers : this directory is reloaded at each startup
  * alt+enter to switch fullscreen/not fullscreen (doesn't work on windows)
- * new SetDynamicBlockSelfRotation script function
+ * new script functions (SetDynamicBlockSelfRotation, ...)
+ * some graphic bugs fixed
  * some minor bugs fixed
 
 X-Moto 0.2.7 2007-03-14

@@ -283,7 +283,7 @@ class xmDatabase;
 
       UIWindow *m_pStatsReport;
       
-      UIButtonDrawn *m_pQuickStart;
+      UIQuickStartButton *m_pQuickStart;
 
       /* Sound effects */
       SoundSample *m_pEndOfLevelSFX;

@@ -551,16 +551,20 @@ class UIButtonDrawn : public UIButton {
   UIButtonDrawn(UIWindow *pParent,
 		const std::string& i_spriteUnpressed,
 		const std::string& i_spritePressed,
+		const std::string& i_spriteHover,
 		int x=0, int y=0,
 		std::string Caption="",
 		int nWidth=0, int nHeight=0);
   ~UIButtonDrawn();
 
   virtual void paint();
+  void setBorder(int i_border);
 
  private:
+  int m_border;
   Texture* m_texturePressed;
   Texture* m_textureUnpressed;
+  Texture* m_textureHover;
 };
 
 	/*===========================================================================

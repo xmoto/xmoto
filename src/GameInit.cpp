@@ -435,33 +435,36 @@ namespace vapp {
   Shutdown game
   ===========================================================================*/
   void GameApp::userShutdown(void) {  
-      if(m_pWebHighscores != NULL)
-        delete m_pWebHighscores;
+    if(m_pWebHighscores != NULL)
+    delete m_pWebHighscores;
         
-      if(m_pWebLevels != NULL)
-        delete m_pWebLevels;
-
-      if(m_pWebRooms != NULL)
-      delete m_pWebRooms;  
-  
+    if(m_pWebLevels != NULL)
+    delete m_pWebLevels;
+    
+    if(m_pWebRooms != NULL)
+    delete m_pWebRooms;  
+    
     if(m_pCredits != NULL)
-      delete m_pCredits;
-  
+    delete m_pCredits;
+    
     if(m_useGraphics) {
       m_Renderer.unprepareForNewLevel(); /* just to be sure, shutdown can happen quite hard */
       m_Renderer.shutdown();
       m_InputHandler.uninit();
     }
-
+    
     delete m_themeChoicer;
     
     if(m_pJustPlayReplay != NULL)
-      delete m_pJustPlayReplay;
-
+    delete m_pJustPlayReplay;
+    
     if(m_profile != "") 
-      m_Config.setString("DefaultProfile", m_profile);
-
+    m_Config.setString("DefaultProfile", m_profile);
+    
     Sound::uninit();
+    
+    m_Config.setInteger("QSQuality",    m_pQuickStart->getQuality());
+    m_Config.setInteger("QSDifficulty", m_pQuickStart->getDifficulty());
 
     m_Config.saveFile();
   }  
@@ -722,6 +725,10 @@ namespace vapp {
     m_Config.createVar( "ShowGhostTimeDiff"  , "true");
     m_Config.createVar( "DisplayGhostInfo"   , "false");
     m_Config.createVar( "GhostMotionBlur"    , "true" );
+
+    /* quick start button */
+    m_Config.createVar("QSQuality",    "1");
+    m_Config.createVar("QSDifficulty", "1");
   }
   
 }
