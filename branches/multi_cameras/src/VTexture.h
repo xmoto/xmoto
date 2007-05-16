@@ -82,9 +82,9 @@ namespace vapp {
       TextureManager() {m_nTexSpaceUsage=0;}
     
       /* Methods */
-      Texture *createTexture(std::string Name,unsigned char *pcData,int nWidth,int nHeight,bool bAlpha=false,bool bClamp=false, FilterMode eFilterMode = FM_LINEAR);
+      Texture *createTexture(std::string Name,unsigned char *pcData,int nWidth,int nHeight,bool bAlpha=false,bool bClamp=false, FilterMode eFilterMode = FM_MIPMAP);
       void destroyTexture(Texture *pTexture);
-      Texture *loadTexture(std::string Path,bool bSmall=false,bool bClamp=false, FilterMode eFilterMode = FM_LINEAR);
+      Texture *loadTexture(std::string Path,bool bSmall=false,bool bClamp=false, FilterMode eFilterMode = FM_MIPMAP);
       Texture *getTexture(std::string Name);
       std::vector<Texture *> fetchTaggedTextures(std::string Tag);
       void unloadTextures(void);

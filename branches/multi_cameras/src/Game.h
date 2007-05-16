@@ -166,7 +166,7 @@ class xmDatabase;
 
       bool creditsModeActive();
 
-		 void initCameras(int nbPlayer);
+      void initCameras(int nbPlayer);
 
     private:   
       /* Data */

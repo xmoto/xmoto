@@ -31,41 +31,38 @@
 
 class RenderSurface {
 public:
-	void update(Vector2d upperleft, Vector2d downright){
-		m_upperleft = upperleft;
-		m_downright = downright;
-		m_size      = downright - upperleft;
-		vapp::Log("update::upperleft:: x: %d y: %d", m_upperleft.x, m_upperleft.y);
-		vapp::Log("update::downright:: x: %d y: %d", m_downright.x, m_downright.y);
-		vapp::Log("update::size:: x: %d y: %d", m_size.x, m_size.y);
-	}
-	Vector2d& size(){
-		return m_size;
-	}
-	Vector2d& upperleft(){
-		return m_upperleft;
-	}
-	Vector2d& downright(){
-		return m_downright;
-	}
+  void update(Vector2d upperleft, Vector2d downright){
+    m_upperleft = upperleft;
+    m_downright = downright;
+    m_size      = downright - upperleft;
+  }
+  Vector2d& size(){
+    return m_size;
+  }
+  Vector2d& upperleft(){
+    return m_upperleft;
+  }
+  Vector2d& downright(){
+    return m_downright;
+  }
 
 private:
-	Vector2d m_upperleft;
-	Vector2d m_downright;
-	Vector2d m_size;
+  Vector2d m_upperleft;
+  Vector2d m_downright;
+  Vector2d m_size;
 };
 
 class Camera {
 public:
   Camera(Vector2d upperleft, Vector2d downright){
-		m_fSpeedMultiply = 1.0f;
+    m_fSpeedMultiply = 1.0f;
     m_fScale         = ZOOM_DEFAULT;
     m_cameraOffsetX  = CAMERA_OFFSETX_DEFAULT;
     m_cameraOffsetY  = CAMERA_OFFSETY_DEFAULT;
     m_playerToFollow = NULL;
-		vapp::Log("Camera::upperleft.x: %d, upperleft.y: %d, downright.x: %d, downright.y: %d",
-							upperleft.x, upperleft.y, downright.x, downright.y);
-		setRenderSurface(upperleft, downright);
+    setRenderSurface(upperleft, downright);
+    m_mirrored = false;
+    m_rotationAngle = 0.0;
   }
   void zoom(float p_f);
   void setZoom(float p_f);
@@ -80,40 +77,54 @@ public:
 
   void prepareForNewLevel();
 
-	void setSpeedMultiplier(float f) {m_fSpeedMultiply = f;}
+  void setSpeedMultiplier(float f) {m_fSpeedMultiply = f;}
   void setScroll(bool isSmooth, const Vector2f& gravity);
   void guessDesiredCameraPosition(float &p_fDesiredHorizontalScrollShift,
-																	float &p_fDesiredVerticalScrollShift,
-																	const Vector2f& gravity);
+				  float &p_fDesiredVerticalScrollShift,
+				  const Vector2f& gravity);
+  float guessDesiredAngleRotation();
   void setPlayerToFollow(Biker* i_playerToFollow);
   Biker* getPlayerToFollow();
 
-	void setCamera2d();
-	void setCamera3d();
-	void render();
-	void setRenderSurface(Vector2d upperleft, Vector2d downright);
+  void setCamera2d();
+  void setCamera3d();
+  void render();
+  void setRenderSurface(Vector2d upperleft, Vector2d downright);
 
-	int getDispWidth(){
-		return m_renderSurf.size().x;
-	}
-	int getDispHeight(){
-		return m_renderSurf.size().y;
-	}
+  int getDispWidth(){
+    return m_renderSurf.size().x;
+  }
+  int getDispHeight(){
+    return m_renderSurf.size().y;
+  }
+  Vector2d getDispBottomLeft();
+
+  bool isMirrored();
+  void setMirrored(bool i_value);
+
+  float rotationAngle();
+  void setRotationAngle(float i_value);
+  void setDesiredRotationAngle(float i_value);
+  void adaptRotationAngleToGravity(Vector2f& gravity);
 
 private:
+  bool m_mirrored;
+  float m_rotationAngle;
+  float m_desiredRotationAngle;
+
   float m_fScale;
   float m_cameraOffsetX;
   float m_cameraOffsetY;
   Biker* m_playerToFollow;
 
-	float m_fSpeedMultiply;
+  float m_fSpeedMultiply;
   Vector2f m_Scroll;
   float m_fCurrentHorizontalScrollShift;
   float m_fCurrentVerticalScrollShift;
   DriveDir m_previous_driver_dir; /* to move camera faster if the dir changed */
   bool  m_recenter_camera_fast;
 
-	RenderSurface m_renderSurf;
+  RenderSurface m_renderSurf;
 };
 
 #endif

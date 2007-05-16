@@ -1,4 +1,7 @@
 
+* réparer le mode mirroir et les touches pour modifier la vue
+* virer le typedef Vector3<int> Vector3d; de manu
+
 * [10:16] <gaivota> how about a little detail: this pixel gap problem, that recently had been fixed, can also be seen in the minimap
 [10:16] <gaivota> dunno if necessary to fix it in there, just realized
 

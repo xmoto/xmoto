@@ -491,7 +491,8 @@ void MotoGame::cleanPlayers() {
     cleanPlayers();
     cleanGhosts();
 
-		removeCameras();
+    removeCameras();
+    m_renderer->removePlayTimes();
   }
 
   /*===========================================================================
@@ -661,7 +662,8 @@ void MotoGame::cleanPlayers() {
 
 	  /* Check it against the wheels and the head */
 	  if(pZone->doesCircleTouch(v_player->getState()->FrontWheelP, v_player->getState()->Parameters().WheelRadius()) ||
-	     pZone->doesCircleTouch(v_player->getState()->RearWheelP,  v_player->getState()->Parameters().WheelRadius())) {       
+	     pZone->doesCircleTouch(v_player->getState()->RearWheelP,  v_player->getState()->Parameters().WheelRadius()) ||
+	     pZone->doesCircleTouch(v_player->getState()->HeadP, v_player->getState()->Parameters().HeadSize())) {       
 	    /* In the zone -- did he just enter it? */
 	    if(v_player->setTouching(*pZone, true) == PlayerBiker::added){
 	      createGameEvent(new MGE_PlayerEntersZone(getTime(), pZone, j));
@@ -976,11 +978,11 @@ void MotoGame::cleanPlayers() {
   }
 
   void MotoGame::CameraRotate(float i_angle) {
-    m_renderer->setDesiredRotationAngle(i_angle);
+    getCamera()->setDesiredRotationAngle(i_angle);
   }
    
   void MotoGame::CameraAdaptToGravity() {
-    m_renderer->adaptRotationAngleToGravity();
+    getCamera()->adaptRotationAngleToGravity(m_PhysGravity);
   }
 
   void MotoGame::killPlayer(int i_player) {
@@ -1169,30 +1171,34 @@ void MotoGame::cleanPlayers() {
     return m_luaGame;
   }
 
-	Camera* MotoGame::getCamera(){
-		return m_cameras[m_currentCamera];
-	}
-	int MotoGame::getNumberCameras(){
-		return m_cameras.size();
-	}
-	void MotoGame::setCurrentCamera(int currentCamera){
-		m_currentCamera = currentCamera;
-		vapp::Log("MotoGame::setCurrentCamera currentCam: %d", m_currentCamera);
-	}
-	void MotoGame::addCamera(Vector2d upperleft, Vector2d downright){
-		m_cameras.push_back(new Camera(upperleft, downright));
-	}
-	void MotoGame::resetFollow(){
-		for(int i=0; i<m_cameras.size(); i++){
-			m_cameras[i]->setPlayerToFollow(NULL);
-		}
-	}
-	void MotoGame::removeCameras(){
-		for(int i=0; i<m_cameras.size(); i++){
-			delete m_cameras[i];
-		}
-		m_cameras.clear();
-	}
+  Camera* MotoGame::getCamera(){
+    return m_cameras[m_currentCamera];
+  }
+  int MotoGame::getNumberCameras(){
+    // the last camera is the autozoom one
+    return m_cameras.size()==1?1:m_cameras.size()-1;
+  }
+  void MotoGame::setCurrentCamera(int currentCamera){
+    m_currentCamera = currentCamera;
+    vapp::Log("MotoGame::setCurrentCamera currentCam: %d", m_currentCamera);
+  }
+  int MotoGame::getCurrentCamera(){
+    return m_currentCamera;
+  }
+  void MotoGame::addCamera(Vector2d upperleft, Vector2d downright){
+    m_cameras.push_back(new Camera(upperleft, downright));
+  }
+  void MotoGame::resetFollow(){
+    for(int i=0; i<m_cameras.size(); i++){
+      m_cameras[i]->setPlayerToFollow(NULL);
+    }
+  }
+  void MotoGame::removeCameras(){
+    for(int i=0; i<m_cameras.size(); i++){
+      delete m_cameras[i];
+    }
+    m_cameras.clear();
+  }
 }
 
 MotoGameOnBikerHooks::MotoGameOnBikerHooks(vapp::MotoGame* i_motoGame, int i_playerNumber) {

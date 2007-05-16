@@ -25,7 +25,8 @@ void Camera::prepareForNewLevel() {
   m_fCurrentVerticalScrollShift = 0.0f;
   m_previous_driver_dir  = DD_LEFT;    
   m_recenter_camera_fast = true;
-	vapp::Log("Camera::prepareForNewLevel");
+  m_rotationAngle = 0.0;
+  m_desiredRotationAngle = 0.0;
   setScroll(false, Vector2f(0, -9.81));
 }
 
@@ -69,8 +70,8 @@ float Camera::getCameraPositionY() {
 }
 
 void Camera::guessDesiredCameraPosition(float &p_fDesiredHorizontalScrollShift,
-																				float &p_fDesiredVerticalScrollShift,
-																				const Vector2f& gravity) {
+					float &p_fDesiredVerticalScrollShift,
+					const Vector2f& gravity) {
 
   float normal_hoffset = 4.0;
   float normal_voffset = 2.0;             
@@ -111,13 +112,8 @@ void Camera::setScroll(bool isSmooth, const Vector2f& gravity) {
   float v_fDesiredHorizontalScrollShift = 0.0;
   float v_fDesiredVerticalScrollShift   = 0.0;
 
-	vapp::Log("Camera::setScroll curScrollShift H:%f V:%f",
-						m_fCurrentHorizontalScrollShift,
-						m_fCurrentVerticalScrollShift);
-
   if(m_playerToFollow == NULL) {
-		vapp::Log("Camera::setScroll Player to follow is NULL");
-		return;
+    return;
   }
 
   /* determine if the camera must move fastly */
@@ -136,15 +132,10 @@ void Camera::setScroll(bool isSmooth, const Vector2f& gravity) {
   /* Determine scroll */
   m_Scroll = -m_playerToFollow->getState()->CenterP;
 
-	vapp::Log("Camera::setScroll playerCenterP: %f,%f -- m_Scroll: %f,%f",
-						-m_playerToFollow->getState()->CenterP.x,
-						-m_playerToFollow->getState()->CenterP.y,
-						m_Scroll.x, m_Scroll.y);
-
   /* Driving direction? */
   guessDesiredCameraPosition(v_fDesiredHorizontalScrollShift,
-														 v_fDesiredVerticalScrollShift,
-														 gravity);
+			     v_fDesiredVerticalScrollShift,
+			     gravity);
     
   if(fabs(v_fDesiredHorizontalScrollShift - m_fCurrentHorizontalScrollShift)
      < v_move_camera_max) {
@@ -179,11 +170,7 @@ void Camera::setScroll(bool isSmooth, const Vector2f& gravity) {
   }
     
   m_Scroll += Vector2f(m_fCurrentHorizontalScrollShift,
-											 m_fCurrentVerticalScrollShift);
-
-	vapp::Log("Camera::setScroll scale: %f camoffX: %f camoffY: %f speedmul: %f scro.x: %f scro.y: %f curHscro: %f curVscro: %f recfast: %d",
-						m_fScale, m_cameraOffsetX, m_cameraOffsetY, m_fSpeedMultiply, m_Scroll.x, m_Scroll.y, m_fCurrentHorizontalScrollShift,
-						m_fCurrentVerticalScrollShift, m_recenter_camera_fast);
+		       m_fCurrentVerticalScrollShift);
 }
 
 float Camera::getCurrentZoom() {
@@ -204,36 +191,101 @@ Biker* Camera::getPlayerToFollow() {
 
 void Camera::setCamera2d() {
 #ifdef ENABLE_OPENGL
-	glViewport(m_renderSurf.upperleft().x, m_renderSurf.upperleft().y,
-						 m_renderSurf.size().x,      m_renderSurf.size().y);						 
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(0, m_renderSurf.size().x,
-					0, m_renderSurf.size().y,
-					-1, 1);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+  glViewport(m_renderSurf.upperleft().x, m_renderSurf.upperleft().y,
+	     m_renderSurf.size().x,      m_renderSurf.size().y);						 
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  glOrtho(0, m_renderSurf.size().x,
+	  0, m_renderSurf.size().y,
+	  -1, 1);
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
 #endif
-	vapp::Log("Camera::setCamera2d scale: %f camoffX: %f camoffY: %f speedmul: %f scro.x: %f scro.y: %f curHscro: %f curVscro: %f recfast: %d",
-						m_fScale, m_cameraOffsetX, m_cameraOffsetY, m_fSpeedMultiply, m_Scroll.x, m_Scroll.y, m_fCurrentHorizontalScrollShift,
-						m_fCurrentVerticalScrollShift, m_recenter_camera_fast);
 }
 
 void Camera::setCamera3d(){
 #ifdef ENABLE_OPENGL
-	glViewport(m_renderSurf.upperleft().x, m_renderSurf.upperleft().y,
-						 m_renderSurf.size().x,      m_renderSurf.size().y);						 
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glMatrixMode(GL_MODELVIEW);
+  glViewport(m_renderSurf.upperleft().x, m_renderSurf.upperleft().y,
+	     m_renderSurf.size().x,      m_renderSurf.size().y);						 
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  glMatrixMode(GL_MODELVIEW);
 #endif
-	vapp::Log("Camera::setCamera3d scale: %f camoffX: %f camoffY: %f speedmul: %f scro.x: %f scro.y: %f curHscro: %f curVscro: %f recfast: %d",
-						m_fScale, m_cameraOffsetX, m_cameraOffsetY, m_fSpeedMultiply, m_Scroll.x, m_Scroll.y, m_fCurrentHorizontalScrollShift,
-						m_fCurrentVerticalScrollShift, m_recenter_camera_fast);
 }
 
 void Camera::setRenderSurface(Vector2d upperleft, Vector2d downright){
-	vapp::Log("setRenderSurface::upperleft.x: %d, upperleft.y: %d, downright.x: %d, downright.y: %d",
-						upperleft.x, upperleft.y, downright.x, downright.y);
-	m_renderSurf.update(upperleft, downright);
+  m_renderSurf.update(upperleft, downright);
+}
+
+bool Camera::isMirrored() {
+  return m_mirrored;
+}
+
+void Camera::setMirrored(bool i_value) {
+  m_mirrored = i_value;
+}
+
+float Camera::rotationAngle() {
+  return (m_rotationAngle * M_PI) / 180.0;
+}
+
+void Camera::setRotationAngle(float i_value) {
+  m_rotationAngle = (i_value * 180.0) / M_PI;
+}
+
+void Camera::setDesiredRotationAngle(float i_value) {
+  m_desiredRotationAngle = (i_value * 180.0) / M_PI;
+}
+
+void Camera::adaptRotationAngleToGravity(Vector2f& gravity) {
+  if(gravity.x == 0.0) {
+    if(gravity.y > 0) {
+      m_desiredRotationAngle = 180.0;
+    } else {
+      m_desiredRotationAngle = 0.0;
+    }
+  } else {
+    m_desiredRotationAngle = tan(gravity.y/gravity.x);
+    m_desiredRotationAngle = ((m_desiredRotationAngle * 180.0) / M_PI) + 90.0;
+    m_desiredRotationAngle = (float)((int)((m_desiredRotationAngle) + 360.0) % 360);
+  }
+}
+
+
+#define ROTATIONANGLE_SPEED 1.0
+float Camera::guessDesiredAngleRotation() {
+
+  if(fabs(m_desiredRotationAngle - m_rotationAngle) <= ROTATIONANGLE_SPEED * 3.0) {
+    m_rotationAngle = m_desiredRotationAngle;
+    return m_rotationAngle;
+  }
+
+  if(m_desiredRotationAngle < 0.0) {
+    m_desiredRotationAngle = ((int)m_desiredRotationAngle)%360;
+    m_desiredRotationAngle += 360;
+  } else {
+    if(m_desiredRotationAngle >= 360.0) {
+      m_desiredRotationAngle = ((int)m_desiredRotationAngle)%360;
+    }
+  }
+
+  float v_diff;
+  if(m_rotationAngle > m_desiredRotationAngle) {
+    v_diff = m_rotationAngle - m_desiredRotationAngle;
+  } else {
+    v_diff = m_rotationAngle - m_desiredRotationAngle + 360.0;
+  }
+
+  /* rotate in the fastest way */
+  if(v_diff <= 180) {
+    m_rotationAngle = (float)((((int)(m_rotationAngle - ROTATIONANGLE_SPEED)) + 360) % 360);
+  } else {
+    m_rotationAngle = (float)((((int)(m_rotationAngle + ROTATIONANGLE_SPEED)) + 360) % 360);
+  }
+
+  return m_rotationAngle;
+}
+
+Vector2d Camera::getDispBottomLeft() {
+  return Vector2d(m_renderSurf.upperleft().x, m_renderSurf.downright().y);
 }

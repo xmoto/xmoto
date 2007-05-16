@@ -57,29 +57,12 @@ namespace vapp {
     glEnable(GL_TEXTURE_2D);
     glGenTextures(1,&N);    
     glBindTexture(GL_TEXTURE_2D,N);
-    
-    if(bAlpha) {
-      /* Got alpha channel */
-      glTexImage2D(GL_TEXTURE_2D,0,4,nWidth,nHeight,0,GL_RGBA,GL_UNSIGNED_BYTE,pcData);
-      pTexture->nSize = nWidth * nHeight * 4;
-    }
-    else {
-      /* Plain RGB */
-      glTexImage2D(GL_TEXTURE_2D,0,3,nWidth,nHeight,0,GL_RGB,GL_UNSIGNED_BYTE,pcData);
-      pTexture->nSize = nWidth * nHeight * 3;
-    }
-    
+
     switch(eFilterMode) {
       /* require openGL 1.4 */
       case FM_MIPMAP:
-#if defined(GL_GENERATE_MIPMAP)      
-      glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-      glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR_MIPMAP_NEAREST);
-      glTexParameteri(GL_TEXTURE_2D,GL_GENERATE_MIPMAP, GL_TRUE);
-#else
-      glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-      glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);    
-#endif      
+      glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_LINEAR);
+      glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
       break;
       
       case FM_LINEAR:
@@ -102,6 +85,26 @@ namespace vapp {
       glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
       glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
     }
+
+    if(bAlpha) {
+      /* Got alpha channel */
+      if(eFilterMode == FM_MIPMAP){
+	gluBuild2DMipmaps(GL_TEXTURE_2D,4,nWidth,nHeight,GL_RGBA,GL_UNSIGNED_BYTE,pcData);
+      }else{
+	glTexImage2D(GL_TEXTURE_2D,0,4,nWidth,nHeight,0,GL_RGBA,GL_UNSIGNED_BYTE,pcData);
+      }
+      pTexture->nSize = nWidth * nHeight * 4;
+    }
+    else {
+      /* Plain RGB */
+      if(eFilterMode == FM_MIPMAP){
+	gluBuild2DMipmaps(GL_TEXTURE_2D,3,nWidth,nHeight,GL_RGB,GL_UNSIGNED_BYTE,pcData);
+      }else{
+	glTexImage2D(GL_TEXTURE_2D,0,3,nWidth,nHeight,0,GL_RGB,GL_UNSIGNED_BYTE,pcData);
+      }
+      pTexture->nSize = nWidth * nHeight * 3;
+    }
+
     glDisable(GL_TEXTURE_2D);
     
     pTexture->nID = N;
@@ -119,12 +122,16 @@ namespace vapp {
             Uint32 bmask = 0x00ff0000;
             Uint32 amask = 0xff000000;
         #endif
+#if 0    
       if(bAlpha){
         pTexture->surface  = SDL_CreateRGBSurfaceFrom(pcData,nWidth,nHeight,32 /*bitsPerPixel */, nWidth * 4 /*pitch*/,rmask,gmask,bmask,amask);
       } else {
         pTexture->surface  = SDL_CreateRGBSurfaceFrom(pcData,nWidth,nHeight,24 /*bitsPerPixel */, nWidth * 3 /*pitch*/,rmask,gmask,bmask,0);
 
       }
+#else
+    pTexture->surface = NULL;
+#endif
   
     /* Do it captain */
     m_Textures.push_back( pTexture );

@@ -269,7 +269,7 @@ GameApp::GameApp() {
   
 	  /* Init level */    
 	  m_InputHandler.reset();
-	  m_InputHandler.setMirrored(m_Renderer.isMirrored());
+	  //m_InputHandler.setMirrored(m_MotoGame.getCamera()->isMirrored());
 	  m_MotoGame.prePlayLevel(&m_InputHandler, NULL, false);
 
 				/* add the ghosts */
@@ -838,8 +838,8 @@ GameApp::GameApp() {
     }
 
     if(nKey == SDLK_m && ( (mod & KMOD_LCTRL) || (mod & KMOD_RCTRL) )) {     
-      m_Renderer.setMirrored(m_Renderer.isMirrored() == false);
-      m_InputHandler.setMirrored(m_Renderer.isMirrored());
+      m_MotoGame.getCamera()->setMirrored(m_MotoGame.getCamera()->isMirrored() == false);
+      m_InputHandler.setMirrored(m_MotoGame.getCamera()->isMirrored());
     }
 
     if(m_State == GS_MENU) {
@@ -2055,7 +2055,7 @@ GameApp::GameApp() {
       
       try {
 	m_InputHandler.reset();
-	m_InputHandler.setMirrored(m_Renderer.isMirrored());
+	//m_InputHandler.setMirrored(m_MotoGame.getCamera()->isMirrored());
 	m_MotoGame.prePlayLevel(&m_InputHandler, m_pJustPlayReplay, true);
 	m_MotoGame.setInfos("");
 	
@@ -2064,6 +2064,7 @@ GameApp::GameApp() {
 	Log("Preplay level for %i player(s)", v_nbPlayer);
 
 	initCameras(v_nbPlayer);
+	m_Renderer.addPlayTimes(m_MotoGame.getNumberCameras());
 
 	for(int i=0; i<v_nbPlayer; i++) {
 		m_MotoGame.setCurrentCamera(i);
@@ -2073,7 +2074,10 @@ GameApp::GameApp() {
 																																				getColorFromPlayerNumber(i),
 																																				getUglyColorFromPlayerNumber(i)));
 	}
-	/* */
+	if(m_MotoGame.getNumberCameras() > 1){
+	  m_MotoGame.setCurrentCamera(m_MotoGame.getNumberCameras());
+	  m_MotoGame.getCamera()->setPlayerToFollow(m_MotoGame.Players()[0]);
+	}
 
 	/* add the ghosts */
 	if(m_bEnableGhost) {
@@ -2149,42 +2153,53 @@ GameApp::GameApp() {
     m_Renderer.prepareForNewLevel();
     prestartAnimation_init();
   }
- 
-	void GameApp::initCameras(int nbPlayer) {
-		int width  = drawLib->getDispWidth();
-		int height = drawLib->getDispHeight();
-		vapp::Log("width: %d, height: %d", width, height);
 
-		switch(nbPlayer){
-		default:
-		case 1:
-			m_MotoGame.addCamera(Vector2d(0,0),
-													 Vector2d(width, height));
-			break;
-		case 2:
-			m_MotoGame.addCamera(Vector2d(0,height/2),
-													 Vector2d(width, height));
-			m_MotoGame.addCamera(Vector2d(0,0),
-													 Vector2d(width, height/2));
-			break;
-		case 3:
-		case 4:
-			m_MotoGame.addCamera(Vector2d(0,height/2),
-													 Vector2d(width/2, height));
-			m_MotoGame.addCamera(Vector2d(width/2,height/2),
-													 Vector2d(width, height));
-			m_MotoGame.addCamera(Vector2d(0,0),
-													 Vector2d(width/2, height/2));
-			m_MotoGame.addCamera(Vector2d(width/2,0),
-													 Vector2d(width, height/2));
-			break;
-		}
-		for(int i=0; i<nbPlayer; i++){
-			m_MotoGame.setCurrentCamera(i);
-			m_MotoGame.getCamera()->initCamera();
-		}
-		m_MotoGame.setCurrentCamera(nbPlayer-1);
-	}
+  void GameApp::initCameras(int nbPlayer) {
+    int width  = drawLib->getDispWidth();
+    int height = drawLib->getDispHeight();
+
+    switch(nbPlayer){
+    default:
+    case 1:
+      m_MotoGame.addCamera(Vector2d(0,0),
+			   Vector2d(width, height));
+      break;
+    case 2:
+      m_MotoGame.addCamera(Vector2d(0,height/2),
+			   Vector2d(width, height));
+      m_MotoGame.addCamera(Vector2d(0,0),
+			   Vector2d(width, height/2));
+      break;
+    case 3:
+    case 4:
+      m_MotoGame.addCamera(Vector2d(0,height/2),
+			   Vector2d(width/2, height));
+      m_MotoGame.addCamera(Vector2d(width/2,height/2),
+			   Vector2d(width, height));
+      m_MotoGame.addCamera(Vector2d(0,0),
+			   Vector2d(width/2, height/2));
+      m_MotoGame.addCamera(Vector2d(width/2,0),
+			   Vector2d(width, height/2));
+      break;
+    }
+    // the autozoom camera
+    if(nbPlayer > 1){
+      m_MotoGame.addCamera(Vector2d(0,0),
+			   Vector2d(width, height));
+      m_MotoGame.setCurrentCamera(m_MotoGame.getNumberCameras());
+      m_MotoGame.getCamera()->initCamera();
+    }
+    for(int i=0; i<m_MotoGame.getNumberCameras(); i++){
+      m_MotoGame.setCurrentCamera(i);
+      m_MotoGame.getCamera()->initCamera();
+    }
+    if(nbPlayer > 1){
+      // current cam is autozoom one
+      m_MotoGame.setCurrentCamera(m_MotoGame.getNumberCameras());
+    }else{
+      m_MotoGame.setCurrentCamera(0);
+    }
+  }
 
   void GameApp::statePrestart_step() {
     prestartAnimation_step();
@@ -2375,6 +2390,7 @@ GameApp::GameApp() {
       m_MotoGame.gameMessage(m_MotoGame.getLevelSrc()->Name(), false, PRESTART_ANIMATION_LEVEL_MSG_DURATION);
       zoomAnimation1_init();
     } else {
+      m_bPrePlayAnim = false;
       setState(GS_PLAYING);
     }
   }

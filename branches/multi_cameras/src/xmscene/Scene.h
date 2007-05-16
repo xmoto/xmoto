@@ -229,12 +229,13 @@ namespace vapp {
 
       LuaLibGame* getLuaLibGame();
 
-		Camera* getCamera();
-		int getNumberCameras();
-		void setCurrentCamera(int currentCamera);
-		void addCamera(Vector2d upperleft, Vector2d downright);
-		void resetFollow();
-		void removeCameras();
+      Camera* getCamera();
+      int getNumberCameras();
+      void setCurrentCamera(int currentCamera);
+      int getCurrentCamera();
+      void addCamera(Vector2d upperleft, Vector2d downright);
+      void resetFollow();
+      void removeCameras();
 
   private:
        
