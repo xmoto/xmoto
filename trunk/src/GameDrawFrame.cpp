@@ -96,9 +96,13 @@ namespace vapp {
         
           /* When did the frame start? */
           double fStartFrameTime = getTime();                    
+	  int numberCam = m_MotoGame.getNumberCameras();
 
           if(m_State == GS_PREPLAYING) {
             /* If "preplaying" / "initial-zoom" is enabled, this is where it's done */
+	    if(numberCam > 1){
+	      m_MotoGame.setCurrentCamera(numberCam);
+	    }
             statePrestart_step();
 
 	    if(!m_bTimeDemo) {
@@ -125,12 +129,23 @@ namespace vapp {
           }
   
 	  if(m_State == GS_PLAYING) {
+	    if(numberCam > 1){
+	      m_MotoGame.setCurrentCamera(numberCam);
+	    }
 	    autoZoom();
 	  }
 
           /* Render */
           if(!getDrawLib()->isNoGraphics()) {
-            m_Renderer.render(bIsPaused);
+	    if((m_autoZoom || (m_bPrePlayAnim && m_bUglyMode == false)) && numberCam > 1){
+	      m_Renderer.render(bIsPaused);
+	    }else{
+	      for(int i=0; i<numberCam; i++){
+		m_MotoGame.setCurrentCamera(i);
+		m_Renderer.render(bIsPaused);
+	      }
+	    }
+	    getDrawLib()->getMenuCamera()->setCamera2d();
           }
 #if SIMULATE_SLOW_RENDERING
           SDL_Delay(SIMULATE_SLOW_RENDERING);
@@ -220,7 +235,10 @@ namespace vapp {
             m_Renderer.getGUI()->enableContextMenuDrawing(true);
           
           /* Draw GUI */
-          m_Renderer.getGUI()->paint();        
+	  // only if it's not the autozoom camera
+	  if(m_MotoGame.getCurrentCamera() != m_MotoGame.getNumberCameras()){
+	    m_Renderer.getGUI()->paint();        
+	  }
         
           /* Credits? */
           if(m_State == GS_REPLAYING && m_bCreditsModeActive && m_pCredits!=NULL) {
@@ -458,8 +476,11 @@ namespace vapp {
 
       /* don't do this infinitely, maximum miss 10 frames, then give up */
     } while ((m_fLastPhysTime + PHYS_STEP_SIZE <= getTime()) && (nPhysSteps < 10));
-  
-    m_Renderer.setSpeedMultiplier(nPhysSteps);
+
+		for(int i=0; i<m_MotoGame.getNumberCameras(); i++){
+			m_MotoGame.setCurrentCamera(i);
+			m_MotoGame.getCamera()->setSpeedMultiplier(nPhysSteps);
+		}
   
     if(m_bTimeDemo == false) {
       /* Never pass this point while being ahead of time, busy wait until it's time */
@@ -493,7 +514,10 @@ namespace vapp {
     int nPhysSteps = 1;
     m_nFrame++;
     static float fGTime = 0, fRTime = 0;
-    m_Renderer.setSpeedMultiplier(nPhysSteps);    
+		for(int i=0; i<m_MotoGame.getNumberCameras(); i++){
+			m_MotoGame.setCurrentCamera(i);
+			m_MotoGame.getCamera()->setSpeedMultiplier(nPhysSteps);
+		}
 
     return nPhysSteps;
   }

@@ -5,6 +5,7 @@ X-Moto 0.3.0 2007-
  * utf-8 integration
  * full translation (all characters) for : en sk fr no de fi ca es pl ru
  * windows user dir is now %APPDIR%/.xmoto
+ * mode multi players on the same computer (mono world)
  * code cleaning
  * favorite levels are saved by profile
  * new virtual packs (last played levels, medals, ...)

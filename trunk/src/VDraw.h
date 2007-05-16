@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Theme.h"
 #include "Image.h"
 #include "PolyDraw.h"
+
 #include <SDL/SDL_ttf.h>
 
 #ifdef __GNUC__
@@ -48,6 +49,7 @@ struct hashcmp_str {
   }
 };
 
+class Camera;
 
 namespace vapp {
 
@@ -336,7 +338,6 @@ class GLFontManager : public FontManager {
     /* handle display lists */
     
     void toogleFullscreen();
-    
     FontManager* getFontSmall();
     FontManager* getFontMedium();
     FontManager* getFontBig();
@@ -364,8 +365,12 @@ class GLFontManager : public FontManager {
     bool m_bDontUseGLExtensions;
     bool m_bNoGraphics;		/* No-graphics mode */
 
+		Camera* getMenuCamera(){
+			return m_menuCamera;
+		}
   protected:
     SDL_Surface *m_screen;
+		Camera* m_menuCamera;
 
   private:
     static backendtype m_backend;
@@ -377,7 +382,7 @@ class GLFontManager : public FontManager {
     virtual ~DrawLibOpenGL();
 
     virtual void init(int nDispWidth, int nDispHeight, int nDispBPP,
-		      bool bWindowed, Theme * ptheme);
+											bool bWindowed, Theme * ptheme);
     virtual void unInit();
     /* Methods - low-level */
     //add a vertex given screen coordinates

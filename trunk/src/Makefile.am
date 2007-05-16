@@ -157,7 +157,9 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp GameMain.cpp \
   xmscene/BikeGhost.h   \
   xmscene/BikeGhost.cpp \
   xmscene/BikePlayer.h  \
-  xmscene/BikePlayer.cpp
+  xmscene/BikePlayer.cpp \
+  xmscene/Camera.h \
+  xmscene/Camera.cpp
 
 if WIN32
 xmoto_SOURCES += xmoto_icone.ico
