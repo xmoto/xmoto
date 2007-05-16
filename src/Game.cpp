@@ -198,249 +198,252 @@ GameApp::GameApp() {
     m_Renderer.getGUI()->clearContext();
     
     switch(s) {
-      case GS_LEVELPACK_VIEWER: {
-	v_newMusicPlaying = "menu1";
-          m_pLevelPackViewer->showWindow(true);
-          m_pMainMenu->showWindow(true);
+		case GS_LEVELPACK_VIEWER: {
+			v_newMusicPlaying = "menu1";
+			m_pLevelPackViewer->showWindow(true);
+			m_pMainMenu->showWindow(true);
           
-          UIList *pList = (UIList *)m_pLevelPackViewer->getChild("LEVELPACK_LEVEL_LIST");
-          if(pList != NULL) {
-            pList->makeActive();
-          }
-          setPrePlayAnim(true);
-        }
-        break;
-      case GS_CREDITSMODE:
-      case GS_REPLAYING: {
-	m_stopToUpdateReplay = false;
-	v_newMusicPlaying = "";
-	m_Renderer.setShowEngineCounter(false);
+			UIList *pList = (UIList *)m_pLevelPackViewer->getChild("LEVELPACK_LEVEL_LIST");
+			if(pList != NULL) {
+				pList->makeActive();
+			}
+			setPrePlayAnim(true);
+		}
+			break;
+		case GS_CREDITSMODE:
+		case GS_REPLAYING: {
+			m_stopToUpdateReplay = false;
+			v_newMusicPlaying = "";
+			m_Renderer.setShowEngineCounter(false);
 
-        try {  
-	  /* ghost, replay */
-	  m_replayBiker = NULL;
+			try {  
+				/* ghost, replay */
+				m_replayBiker = NULL;
 	  
-          m_bShowCursor = false;
-          bool bCreditsMode = (m_State == GS_CREDITSMODE);
-          m_bCreditsModeActive = bCreditsMode;
-          m_State = GS_REPLAYING;
+				m_bShowCursor = false;
+				bool bCreditsMode = (m_State == GS_CREDITSMODE);
+				m_bCreditsModeActive = bCreditsMode;
+				m_State = GS_REPLAYING;
 	  
-	  try {
-	    m_replayBiker = m_MotoGame.addReplayFromFile(m_PlaySpecificReplay,
-							 &m_theme, m_theme.getPlayerTheme());
-	    m_Renderer.setPlayerToFollow(m_replayBiker);
-	  } catch(Exception &e) {
-	    setState(m_StateAfterPlaying);
-            notifyMsg("Unable to read the replay: " + e.getMsg());
-	    return;
-	  }
+				int nbPlayer = 1;
+				initCameras(nbPlayer);
 
-	  /* Credits mode? */
-	  if(bCreditsMode) {
-	    if(m_pCredits == NULL)
-	      m_pCredits = new Credits;
+				try {
+					m_replayBiker = m_MotoGame.addReplayFromFile(m_PlaySpecificReplay,
+																											 &m_theme, m_theme.getPlayerTheme());
+					m_MotoGame.getCamera()->setPlayerToFollow(m_replayBiker);
+				} catch(Exception &e) {
+					setState(m_StateAfterPlaying);
+					notifyMsg("Unable to read the replay: " + e.getMsg());
+					return;
+				}
+
+				/* Credits mode? */
+				if(bCreditsMode) {
+					if(m_pCredits == NULL)
+						m_pCredits = new Credits;
 	    
 	    m_pCredits->init(this, m_replayBiker->getFinishTime(),4,4,
 			     std::string(GAMETEXT_CREDITS).c_str());
 	  }
 
-	  /* Fine, open the level */
-	  try {
-	    m_MotoGame.loadLevel(m_db, m_replayBiker->levelId());
-	  } catch(Exception &e) {
-	    setState(m_StateAfterPlaying);
-	    notifyMsg(e.getMsg());     
-	    return;
-	  }
+				/* Fine, open the level */
+				try {
+					m_MotoGame.loadLevel(m_db, m_replayBiker->levelId());
+				} catch(Exception &e) {
+					setState(m_StateAfterPlaying);
+					notifyMsg(e.getMsg());     
+					return;
+				}
 
-	  if(m_MotoGame.getLevelSrc()->isXMotoTooOld()) {
-	    Log("** Warning ** : level '%s' specified by replay '%s' requires newer X-Moto",m_replayBiker->levelId().c_str(),m_PlaySpecificReplay.c_str());	    
-	    char cBuf[256];
-	    sprintf(cBuf,GAMETEXT_NEWERXMOTOREQUIRED,
-		    m_MotoGame.getLevelSrc()->getRequiredVersion().c_str());
-	    m_MotoGame.endLevel();
-	    setState(m_StateAfterPlaying);
-	    notifyMsg(cBuf); 
-	    return;
-	  }
+				if(m_MotoGame.getLevelSrc()->isXMotoTooOld()) {
+					Log("** Warning ** : level '%s' specified by replay '%s' requires newer X-Moto",m_replayBiker->levelId().c_str(),m_PlaySpecificReplay.c_str());	    
+					char cBuf[256];
+					sprintf(cBuf,GAMETEXT_NEWERXMOTOREQUIRED,
+									m_MotoGame.getLevelSrc()->getRequiredVersion().c_str());
+					m_MotoGame.endLevel();
+					setState(m_StateAfterPlaying);
+					notifyMsg(cBuf); 
+					return;
+				}
   
 	  /* Init level */    
 	  m_InputHandler.reset();
-	  m_InputHandler.setMirrored(m_Renderer.isMirrored());
+	  //m_InputHandler.setMirrored(m_MotoGame.getCamera()->isMirrored());
 	  m_MotoGame.prePlayLevel(&m_InputHandler, NULL, false);
 
-	  /* add the ghosts */
-	  if(m_bEnableGhost) {
-	    std::string v_PlayGhostReplay;
-	    // add the GhostSearchStrategy ghost
-	    v_PlayGhostReplay = _getGhostReplayPath(m_MotoGame.getLevelSrc()->Id(),
-						    m_GhostSearchStrategy);
-	    if(v_PlayGhostReplay != "") {
-	      try {
-		switch(m_GhostSearchStrategy) {
-		case GHOST_STRATEGY_MYBEST:
-		  m_MotoGame.addGhostFromFile(v_PlayGhostReplay, GAMETEXT_GHOST_BEST,
-					      &m_theme, m_theme.getGhostTheme());
-		  break;
-		case GHOST_STRATEGY_THEBEST:
-		  m_MotoGame.addGhostFromFile(v_PlayGhostReplay, GAMETEXT_GHOST_LOCAL,
-					      &m_theme, m_theme.getGhostTheme());
-		  break;
-		case GHOST_STRATEGY_BESTOFROOM:
-		  m_MotoGame.addGhostFromFile(v_PlayGhostReplay,
-					      m_db->webrooms_getName(m_WebHighscoresIdRoom),
-					      &m_theme, m_theme.getGhostTheme());
-		  break;
-		}
-	      } catch(Exception &e) {
-		/* can't add the ghost, anyway */
-	      }
-	    }
-	  }
-	  /* *** */
+				/* add the ghosts */
+				if(m_bEnableGhost) {
+					std::string v_PlayGhostReplay;
+					// add the GhostSearchStrategy ghost
+					v_PlayGhostReplay = _getGhostReplayPath(m_MotoGame.getLevelSrc()->Id(),
+																									m_GhostSearchStrategy);
+					if(v_PlayGhostReplay != "") {
+						try {
+							switch(m_GhostSearchStrategy) {
+							case GHOST_STRATEGY_MYBEST:
+								m_MotoGame.addGhostFromFile(v_PlayGhostReplay, GAMETEXT_GHOST_BEST,
+																						&m_theme, m_theme.getGhostTheme());
+								break;
+							case GHOST_STRATEGY_THEBEST:
+								m_MotoGame.addGhostFromFile(v_PlayGhostReplay, GAMETEXT_GHOST_LOCAL,
+																						&m_theme, m_theme.getGhostTheme());
+								break;
+							case GHOST_STRATEGY_BESTOFROOM:
+								m_MotoGame.addGhostFromFile(v_PlayGhostReplay,
+																						m_db->webrooms_getName(m_WebHighscoresIdRoom),
+																						&m_theme, m_theme.getGhostTheme());
+								break;
+							}
+						} catch(Exception &e) {
+							/* can't add the ghost, anyway */
+						}
+					}
+				}
+				/* *** */
 
-	  m_MotoGame.setInfos(m_MotoGame.getLevelSrc()->Name() +
-			      " (" + std::string(GAMETEXT_BY)  +
-			      " " + m_replayBiker->playerName() + ")"); 
+				m_MotoGame.setInfos(m_MotoGame.getLevelSrc()->Name() +
+														" (" + std::string(GAMETEXT_BY)  +
+														" " + m_replayBiker->playerName() + ")"); 
 
-	  m_nFrame = 0;
-	  m_Renderer.prepareForNewLevel(bCreditsMode);            
-	  v_newMusicPlaying = m_MotoGame.getLevelSrc()->Music();
+				m_nFrame = 0;
+				m_Renderer.prepareForNewLevel(bCreditsMode);            
+				v_newMusicPlaying = m_MotoGame.getLevelSrc()->Music();
 
-	  /* Show help string */
-	  if(!drawLib->isNoGraphics()) {
-	    std::string T1 = "--:--:--",T2 = "--:--:--";
+				/* Show help string */
+				if(!drawLib->isNoGraphics()) {
+					std::string T1 = "--:--:--",T2 = "--:--:--";
 
-	    /* get best result */
-	    v_result = m_db->readDB("SELECT MIN(finishTime) FROM profile_completedLevels WHERE "
-				    "id_level=\"" + 
-				    xmDatabase::protectString(m_MotoGame.getLevelSrc()->Id()) + "\";",
-				    nrow);
-	    v_res = m_db->getResult(v_result, 1, 0, 0);
-	    if(v_res != NULL) {
-	      T1 = formatTime(atof(v_res));
-	    }
-	    m_db->read_DB_free(v_result);
+					/* get best result */
+					v_result = m_db->readDB("SELECT MIN(finishTime) FROM profile_completedLevels WHERE "
+																	"id_level=\"" + 
+																	xmDatabase::protectString(m_MotoGame.getLevelSrc()->Id()) + "\";",
+																	nrow);
+					v_res = m_db->getResult(v_result, 1, 0, 0);
+					if(v_res != NULL) {
+						T1 = formatTime(atof(v_res));
+					}
+					m_db->read_DB_free(v_result);
 
-	    /* get best player result */
-	    v_result = m_db->readDB("SELECT MIN(finishTime) FROM profile_completedLevels WHERE "
-				    "id_level=\"" + 
-				    xmDatabase::protectString(m_MotoGame.getLevelSrc()->Id()) + "\" " + 
-				    "AND id_profile=\"" + xmDatabase::protectString(m_profile)  + "\";",
-				    nrow);
-	    v_res = m_db->getResult(v_result, 1, 0, 0);
-	    if(v_res != NULL) {
-	      T2 = formatTime(atof(v_res));
-	    }
-	    m_db->read_DB_free(v_result);
+					/* get best player result */
+					v_result = m_db->readDB("SELECT MIN(finishTime) FROM profile_completedLevels WHERE "
+																	"id_level=\"" + 
+																	xmDatabase::protectString(m_MotoGame.getLevelSrc()->Id()) + "\" " + 
+																	"AND id_profile=\"" + xmDatabase::protectString(m_profile)  + "\";",
+																	nrow);
+					v_res = m_db->getResult(v_result, 1, 0, 0);
+					if(v_res != NULL) {
+						T2 = formatTime(atof(v_res));
+					}
+					m_db->read_DB_free(v_result);
 	    
-	    m_Renderer.setBestTime(T1 + std::string(" / ") + T2);
-	    m_Renderer.showReplayHelp(m_MotoGame.getSpeed(),
-				      m_MotoGame.getLevelSrc()->isScripted() == false);
+					m_Renderer.setBestTime(T1 + std::string(" / ") + T2);
+					m_Renderer.showReplayHelp(m_MotoGame.getSpeed(),
+																		m_MotoGame.getLevelSrc()->isScripted() == false);
 	    
-	    if(m_bBenchmark || bCreditsMode) m_Renderer.setBestTime("");
+					if(m_bBenchmark || bCreditsMode) m_Renderer.setBestTime("");
 	    
-	    /* World-record stuff */
-	    if(!bCreditsMode)
-	      _UpdateWorldRecord(m_MotoGame.getLevelSrc()->Id());
-	  }
-	  m_fStartTime = getRealTime();
+					/* World-record stuff */
+					if(!bCreditsMode)
+						_UpdateWorldRecord(m_MotoGame.getLevelSrc()->Id());
+				}
+				m_fStartTime = getRealTime();
 
       } catch(Exception &e) {
-	m_MotoGame.endLevel();
-	setState(m_StateAfterPlaying);
-	notifyMsg(splitText(e.getMsg(), 50));   
+				m_MotoGame.endLevel();
+				setState(m_StateAfterPlaying);
+				notifyMsg(splitText(e.getMsg(), 50));   
       }
-        break;
+			break;
     }  
     case GS_MENU: {
-	v_newMusicPlaying = "menu1";
+			v_newMusicPlaying = "menu1";
 
-        //SDL_ShowCursor(SDL_ENABLE);
-        m_bShowCursor = true;                
+			//SDL_ShowCursor(SDL_ENABLE);
+			m_bShowCursor = true;                
         
-        /* The main menu, the one which is entered initially when the game 
-           begins. */
-        m_pMainMenu->showWindow(true);
+			/* The main menu, the one which is entered initially when the game 
+				 begins. */
+			m_pMainMenu->showWindow(true);
 
-        // enable the preplay animation
-        setPrePlayAnim(true);
-        break;
-      }
-      case GS_PREPLAYING: {
-	/* because statePrestart_init() can call setState */
-	if(m_bEnableMenuMusic && Sound::isEnabled()) {
-	  Sound::stopMusic();
-	  m_playingMusic = "";
-	}
-        statePrestart_init();
-	return;
-        break;
-      }
-      case GS_PLAYING: {
-	m_Renderer.setShowEngineCounter(m_Config.getBool("ShowEngineCounter"));
-	v_newMusicPlaying = "";
+			// enable the preplay animation
+			setPrePlayAnim(true);
+			break;
+		}
+		case GS_PREPLAYING: {
+			/* because statePrestart_init() can call setState */
+			if(m_bEnableMenuMusic && Sound::isEnabled()) {
+				Sound::stopMusic();
+				m_playingMusic = "";
+			}
+			statePrestart_init();
+			return;
+			break;
+		}
+		case GS_PLAYING: {
+			m_Renderer.setShowEngineCounter(m_Config.getBool("ShowEngineCounter"));
+			v_newMusicPlaying = "";
 
-	m_bAutoZoomInitialized = false;
+			m_bAutoZoomInitialized = false;
 				
-	try {
-	  m_MotoGame.playLevel();
-          m_State = GS_PLAYING;        
-          m_nFrame = 0;
-	  v_newMusicPlaying = m_MotoGame.getLevelSrc()->Music();
-	} catch(Exception &e) {
-          Log("** Warning ** : level '%s' cannot be loaded",m_PlaySpecificLevel.c_str());
-	  m_MotoGame.endLevel();
-          char cBuf[256];
-          sprintf(cBuf,GAMETEXT_LEVELCANNOTBELOADED,m_PlaySpecificLevel.c_str());
-    setState(m_StateAfterPlaying);
-          notifyMsg(cBuf);
-        }
-        break;
-      }
-      case GS_PAUSE: {
-	m_MotoGame.setInfos(m_MotoGame.getLevelSrc()->Name());
-	v_newMusicPlaying = m_playingMusic;
-//        SDL_ShowCursor(SDL_ENABLE);
-        m_bShowCursor = true;
+			try {
+				m_MotoGame.playLevel();
+				m_State = GS_PLAYING;        
+				m_nFrame = 0;
+				v_newMusicPlaying = m_MotoGame.getLevelSrc()->Music();
+			} catch(Exception &e) {
+				Log("** Warning ** : level '%s' cannot be loaded",m_PlaySpecificLevel.c_str());
+				m_MotoGame.endLevel();
+				char cBuf[256];
+				sprintf(cBuf,GAMETEXT_LEVELCANNOTBELOADED,m_PlaySpecificLevel.c_str());
+				setState(m_StateAfterPlaying);
+				notifyMsg(cBuf);
+			}
+			break;
+		}
+		case GS_PAUSE: {
+			m_MotoGame.setInfos(m_MotoGame.getLevelSrc()->Name());
+			v_newMusicPlaying = m_playingMusic;
+			//        SDL_ShowCursor(SDL_ENABLE);
+			m_bShowCursor = true;
 
-        /* Paused from GS_PLAYING */
-        break;
-      }
-      case GS_DEADJUST: {
-	m_MotoGame.setInfos(m_MotoGame.getLevelSrc()->Name());
-	v_newMusicPlaying = "";
+			/* Paused from GS_PLAYING */
+			break;
+		}
+		case GS_DEADJUST: {
+			m_MotoGame.setInfos(m_MotoGame.getLevelSrc()->Name());
+			v_newMusicPlaying = "";
 
-        /* Finish replay */
-        if(m_pJustPlayReplay != NULL) {
-	  if(m_MotoGame.Players().size() == 1) {
-	    m_pJustPlayReplay->finishReplay(false,0.0f);
-	  }
-	}
+			/* Finish replay */
+			if(m_pJustPlayReplay != NULL) {
+				if(m_MotoGame.Players().size() == 1) {
+					m_pJustPlayReplay->finishReplay(false,0.0f);
+				}
+			}
 
-        /* Update stats */        
-	if(m_MotoGame.Players().size() == 1) {
-	  m_db->stats_died(m_profile,
-			   m_MotoGame.getLevelSrc()->Id(),
-			   m_MotoGame.getTime());
-	}                
+			/* Update stats */        
+			if(m_MotoGame.Players().size() == 1) {
+				m_db->stats_died(m_profile,
+												 m_MotoGame.getLevelSrc()->Id(),
+												 m_MotoGame.getTime());
+			}                
 
-        /* Play the DIE!!! sound */
-	try {
-	  Sound::playSampleByName(m_theme.getSound("Headcrash")->FilePath(),0.3);
-	} catch(Exception &e) {
-	}
+			/* Play the DIE!!! sound */
+			try {
+				Sound::playSampleByName(m_theme.getSound("Headcrash")->FilePath(),0.3);
+			} catch(Exception &e) {
+			}
 
-  m_nJustDeadShade = 0;
+			m_nJustDeadShade = 0;
 
-  if(m_bEnableDeathAnim) {
-    m_MotoGame.gameMessage(GAMETEXT_JUSTDEAD_RESTART,     false, 15);
-    m_MotoGame.gameMessage(GAMETEXT_JUSTDEAD_DISPLAYMENU, false, 15);
-  } else {
-    setState(GS_DEADMENU);
-  }
-        break;
-      }
+			if(m_bEnableDeathAnim) {
+				m_MotoGame.gameMessage(GAMETEXT_JUSTDEAD_RESTART,     false, 15);
+				m_MotoGame.gameMessage(GAMETEXT_JUSTDEAD_DISPLAYMENU, false, 15);
+			} else {
+				setState(GS_DEADMENU);
+			}
+			break;
+		}
     case GS_DEADMENU: {
       v_newMusicPlaying = "";
 
@@ -451,16 +454,16 @@ GameApp::GameApp() {
       m_fCoolDownEnd = getRealTime() + 0.3f;
       break;
     }
-      case GS_EDIT_PROFILES: {
-	v_newMusicPlaying = "menu1";
-//        SDL_ShowCursor(SDL_ENABLE);
-        m_bShowCursor = true;
+		case GS_EDIT_PROFILES: {
+			v_newMusicPlaying = "menu1";
+			//        SDL_ShowCursor(SDL_ENABLE);
+			m_bShowCursor = true;
 
-        /* The profile editor can work on top of the main menu, or as init
-           state when there is no player profiles available */
-        m_pProfileEditor->showWindow(true);
-        break;
-      }
+			/* The profile editor can work on top of the main menu, or as init
+				 state when there is no player profiles available */
+			m_pProfileEditor->showWindow(true);
+			break;
+		}
 
       case GS_EDIT_WEBCONFIG: {
 	v_newMusicPlaying = "menu1";
@@ -473,139 +476,139 @@ GameApp::GameApp() {
         break;
       }
 
-      case GS_FINISHED: {
-	m_MotoGame.setInfos(m_MotoGame.getLevelSrc()->Name());
-	v_newMusicPlaying = "";
+		case GS_FINISHED: {
+			m_MotoGame.setInfos(m_MotoGame.getLevelSrc()->Name());
+			v_newMusicPlaying = "";
 
-//        SDL_ShowCursor(SDL_ENABLE);
-        m_bShowCursor = true;
+			//        SDL_ShowCursor(SDL_ENABLE);
+			m_bShowCursor = true;
 
-        /* Finish replay */
-	if(m_pJustPlayReplay != NULL) {
-	  if(m_MotoGame.Players().size() == 1) {
-	    m_pJustPlayReplay->finishReplay(true,m_MotoGame.Players()[0]->finishTime());
-	  }
-	}
+			/* Finish replay */
+			if(m_pJustPlayReplay != NULL) {
+				if(m_MotoGame.Players().size() == 1) {
+					m_pJustPlayReplay->finishReplay(true,m_MotoGame.Players()[0]->finishTime());
+				}
+			}
 
-        /* A more lucky outcome of GS_PLAYING than GS_DEADMENU :) */
-        m_pFinishMenu->showWindow(true);
-        m_pBestTimes->showWindow(true);
-        m_nFinishShade = 0;            
+			/* A more lucky outcome of GS_PLAYING than GS_DEADMENU :) */
+			m_pFinishMenu->showWindow(true);
+			m_pBestTimes->showWindow(true);
+			m_nFinishShade = 0;            
 
-	if(m_MotoGame.Players().size() == 1) {
-	  /* display message on finish and eventually save the replay */
+			if(m_MotoGame.Players().size() == 1) {
+				/* display message on finish and eventually save the replay */
         
-	  /* is it a highscore ? */
-	  float v_best_personal_time;
-	  float v_best_room_time;
-	  float v_current_time;
-	  bool v_is_a_highscore;
-	  bool v_is_a_personal_highscore;
+				/* is it a highscore ? */
+				float v_best_personal_time;
+				float v_best_room_time;
+				float v_current_time;
+				bool v_is_a_highscore;
+				bool v_is_a_personal_highscore;
   
-	  /* get best player result */
-	  v_result = m_db->readDB("SELECT MIN(finishTime) FROM profile_completedLevels WHERE "
-				  "id_level=\"" + 
-				  xmDatabase::protectString(m_MotoGame.getLevelSrc()->Id()) + "\" " + 
-				  "AND id_profile=\"" + xmDatabase::protectString(m_profile)  + "\";",
-				  nrow);
-	  v_res = m_db->getResult(v_result, 1, 0, 0);
-	  if(v_res != NULL) {
-	    v_best_personal_time = atof(v_res);
-	  } else {
-	    /* should never happend because the score is already stored */
-	    v_best_personal_time = -1.0;
-	  }
-	  m_db->read_DB_free(v_result);
+				/* get best player result */
+				v_result = m_db->readDB("SELECT MIN(finishTime) FROM profile_completedLevels WHERE "
+																"id_level=\"" + 
+																xmDatabase::protectString(m_MotoGame.getLevelSrc()->Id()) + "\" " + 
+																"AND id_profile=\"" + xmDatabase::protectString(m_profile)  + "\";",
+																nrow);
+				v_res = m_db->getResult(v_result, 1, 0, 0);
+				if(v_res != NULL) {
+					v_best_personal_time = atof(v_res);
+				} else {
+					/* should never happend because the score is already stored */
+					v_best_personal_time = -1.0;
+				}
+				m_db->read_DB_free(v_result);
 
-	  v_current_time = m_MotoGame.Players()[0]->finishTime();
+				v_current_time = m_MotoGame.Players()[0]->finishTime();
 	  
-	  v_is_a_personal_highscore = (v_current_time <= v_best_personal_time
-				       || v_best_personal_time < 0.0);
+				v_is_a_personal_highscore = (v_current_time <= v_best_personal_time
+																		 || v_best_personal_time < 0.0);
 	  
-	  /* search a better webhighscore */
-	  v_best_room_time = m_db->webrooms_getHighscoreTime(m_WebHighscoresIdRoom,
-							     m_MotoGame.getLevelSrc()->Id());
-	  v_is_a_highscore = (v_current_time < v_best_room_time
-			      || v_best_room_time < 0.0);
+				/* search a better webhighscore */
+				v_best_room_time = m_db->webrooms_getHighscoreTime(m_WebHighscoresIdRoom,
+																													 m_MotoGame.getLevelSrc()->Id());
+				v_is_a_highscore = (v_current_time < v_best_room_time
+														|| v_best_room_time < 0.0);
 	  
-	  // disable upload button
-	  for(int i=0;i<m_nNumFinishMenuButtons;i++) {
-	    if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_UPLOAD_HIGHSCORE) {
-	      m_pFinishMenuButtons[i]->enableWindow(false);
-	    }
-	  }
+				// disable upload button
+				for(int i=0;i<m_nNumFinishMenuButtons;i++) {
+					if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_UPLOAD_HIGHSCORE) {
+						m_pFinishMenuButtons[i]->enableWindow(false);
+					}
+				}
 	  
-	  if(v_is_a_highscore) { /* best highscore */
-	    try {
-	      Sound::playSampleByName(m_theme.getSound("NewHighscore")->FilePath());
-	    } catch(Exception &e) {
-	    }
+				if(v_is_a_highscore) { /* best highscore */
+					try {
+						Sound::playSampleByName(m_theme.getSound("NewHighscore")->FilePath());
+					} catch(Exception &e) {
+					}
 	    
-	    // enable upload button
-	    if(m_bEnableWebHighscores) {
-	      if(m_pJustPlayReplay != NULL) {
-		for(int i=0;i<m_nNumFinishMenuButtons;i++) {
-		  if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_UPLOAD_HIGHSCORE) {
-		    m_pFinishMenuButtons[i]->enableWindow(true);
-		  }
-		}
-	      }
-	    }
+					// enable upload button
+					if(m_bEnableWebHighscores) {
+						if(m_pJustPlayReplay != NULL) {
+							for(int i=0;i<m_nNumFinishMenuButtons;i++) {
+								if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_UPLOAD_HIGHSCORE) {
+									m_pFinishMenuButtons[i]->enableWindow(true);
+								}
+							}
+						}
+					}
 	    
-	    if(m_pJustPlayReplay != NULL && m_bAutosaveHighscoreReplays) {
-	      String v_replayName = Replay::giveAutomaticName();
-	      _SaveReplay(v_replayName);
-	      m_Renderer.showMsgNewBestHighscore(v_replayName);
-	    } else {
-	      m_Renderer.showMsgNewBestHighscore();
-	    } /* ok i officially give up on indention in x-moto :P */
-	  } else {
-	    if(v_is_a_personal_highscore) { /* personal highscore */
-	      try {
-		Sound::playSampleByName(m_theme.getSound("NewHighscore")->FilePath());
-	      } catch(Exception &e) {
-	      }
-	      if(m_pJustPlayReplay != NULL && m_bAutosaveHighscoreReplays) {
-		String v_replayName = Replay::giveAutomaticName();
-		_SaveReplay(v_replayName);
-		m_Renderer.showMsgNewPersonalHighscore(v_replayName);
-	      } else {
-		m_Renderer.showMsgNewPersonalHighscore();
-	      }
+					if(m_pJustPlayReplay != NULL && m_bAutosaveHighscoreReplays) {
+						String v_replayName = Replay::giveAutomaticName();
+						_SaveReplay(v_replayName);
+						m_Renderer.showMsgNewBestHighscore(v_replayName);
+					} else {
+						m_Renderer.showMsgNewBestHighscore();
+					} /* ok i officially give up on indention in x-moto :P */
+				} else {
+					if(v_is_a_personal_highscore) { /* personal highscore */
+						try {
+							Sound::playSampleByName(m_theme.getSound("NewHighscore")->FilePath());
+						} catch(Exception &e) {
+						}
+						if(m_pJustPlayReplay != NULL && m_bAutosaveHighscoreReplays) {
+							String v_replayName = Replay::giveAutomaticName();
+							_SaveReplay(v_replayName);
+							m_Renderer.showMsgNewPersonalHighscore(v_replayName);
+						} else {
+							m_Renderer.showMsgNewPersonalHighscore();
+						}
 	      
-	    } else { /* no highscore */
-	      m_Renderer.hideMsgNewHighscore();
-	    }
-	  }
-	}
+					} else { /* no highscore */
+						m_Renderer.hideMsgNewHighscore();
+					}
+				}
+			}
 
-	/* update profiles */
-	float v_finish_time = 0.0;
-	std::string TimeStamp = getTimeStamp();
-	for(unsigned int i=0; i<m_MotoGame.Players().size(); i++) {
-	  if(m_MotoGame.Players()[i]->isFinished()) {
-	    v_finish_time  = m_MotoGame.Players()[i]->finishTime();
-	  }
-	}
-	if(m_MotoGame.Players().size() == 1) {
-	  m_db->profiles_addFinishTime(m_profile, m_MotoGame.getLevelSrc()->Id(),
-				       TimeStamp, v_finish_time);
-	}
-	_MakeBestTimesWindow(m_pBestTimes, m_profile, m_MotoGame.getLevelSrc()->Id(),
-			     v_finish_time,TimeStamp);
+			/* update profiles */
+			float v_finish_time = 0.0;
+			std::string TimeStamp = getTimeStamp();
+			for(unsigned int i=0; i<m_MotoGame.Players().size(); i++) {
+				if(m_MotoGame.Players()[i]->isFinished()) {
+					v_finish_time  = m_MotoGame.Players()[i]->finishTime();
+				}
+			}
+			if(m_MotoGame.Players().size() == 1) {
+				m_db->profiles_addFinishTime(m_profile, m_MotoGame.getLevelSrc()->Id(),
+																		 TimeStamp, v_finish_time);
+			}
+			_MakeBestTimesWindow(m_pBestTimes, m_profile, m_MotoGame.getLevelSrc()->Id(),
+													 v_finish_time,TimeStamp);
 
-        /* Update stats */
-	/* update stats only in one player mode */
-	if(m_MotoGame.Players().size() == 1) {       
-	  m_db->stats_levelCompleted(m_profile,
-				     m_MotoGame.getLevelSrc()->Id(),
-				     m_MotoGame.Players()[0]->finishTime());
-	  _UpdateLevelsLists();
-	  _UpdateCurrentPackList(m_MotoGame.getLevelSrc()->Id(),
-				 m_MotoGame.Players()[0]->finishTime());
-	}
-        break;
-      }
+			/* Update stats */
+			/* update stats only in one player mode */
+			if(m_MotoGame.Players().size() == 1) {       
+				m_db->stats_levelCompleted(m_profile,
+																	 m_MotoGame.getLevelSrc()->Id(),
+																	 m_MotoGame.Players()[0]->finishTime());
+				_UpdateLevelsLists();
+				_UpdateCurrentPackList(m_MotoGame.getLevelSrc()->Id(),
+															 m_MotoGame.Players()[0]->finishTime());
+			}
+			break;
+		}
     }
         
     m_fLastPhysTime = getTime() - PHYS_STEP_SIZE;
@@ -613,18 +616,18 @@ GameApp::GameApp() {
     /* manage music */
     if(m_bEnableMenuMusic && Sound::isEnabled()) {
       if(v_newMusicPlaying != m_playingMusic) {
-	try {
-	  if(v_newMusicPlaying == "") {
-	    m_playingMusic = v_newMusicPlaying;
-	    Sound::stopMusic();
-	  } else {
-	    m_playingMusic = v_newMusicPlaying;
-	    Sound::playMusic(m_theme.getMusic(v_newMusicPlaying)->FilePath());
-	  }
-	} catch(Exception &e) {
-	  Log("** Warning ** : PlayMusic(%s) failed", v_newMusicPlaying.c_str());
-	  Sound::stopMusic();
-	}
+				try {
+					if(v_newMusicPlaying == "") {
+						m_playingMusic = v_newMusicPlaying;
+						Sound::stopMusic();
+					} else {
+						m_playingMusic = v_newMusicPlaying;
+						Sound::playMusic(m_theme.getMusic(v_newMusicPlaying)->FilePath());
+					}
+				} catch(Exception &e) {
+					Log("** Warning ** : PlayMusic(%s) failed", v_newMusicPlaying.c_str());
+					Sound::stopMusic();
+				}
       }
     }
   }
@@ -835,8 +838,8 @@ GameApp::GameApp() {
     }
 
     if(nKey == SDLK_m && ( (mod & KMOD_LCTRL) || (mod & KMOD_RCTRL) )) {     
-      m_Renderer.setMirrored(m_Renderer.isMirrored() == false);
-      m_InputHandler.setMirrored(m_Renderer.isMirrored());
+      m_MotoGame.getCamera()->setMirrored(m_MotoGame.getCamera()->isMirrored() == false);
+      m_InputHandler.setMirrored(m_MotoGame.getCamera()->isMirrored());
     }
 
     if(m_State == GS_MENU) {
@@ -924,7 +927,7 @@ GameApp::GameApp() {
         m_Renderer.hideMsgNewHighscore();
               m_pBestTimes->showWindow(false);
               m_pJustDeadMenu->showWindow(false);
-	      m_Renderer.setPlayerToFollow(NULL);
+							m_MotoGame.resetFollow();
               m_MotoGame.endLevel();
               m_Renderer.unprepareForNewLevel();
               //setState(GS_MENU);
@@ -951,7 +954,7 @@ GameApp::GameApp() {
         switch(nKey) {
           case SDLK_ESCAPE:
             /* Escape quits the replay */
-	    m_Renderer.setPlayerToFollow(NULL);
+						m_MotoGame.resetFollow();
             m_MotoGame.endLevel();
             m_Renderer.unprepareForNewLevel();
 	    setState(m_StateAfterPlaying);
@@ -1516,22 +1519,22 @@ GameApp::GameApp() {
     /* Update stats */        
     if(m_MotoGame.Players().size() == 1) {
       if(m_MotoGame.Players()[0]->isDead() == false) {
-	m_db->stats_levelRestarted(m_profile,
-				   m_MotoGame.getLevelSrc()->Id(),
-				   m_MotoGame.getTime());
+				m_db->stats_levelRestarted(m_profile,
+																	 m_MotoGame.getLevelSrc()->Id(),
+																	 m_MotoGame.getTime());
       }
     }  
 
-		m_Renderer.setPlayerToFollow(NULL);
+		m_MotoGame.resetFollow();
 		m_MotoGame.endLevel();
 
     m_Renderer.unprepareForNewLevel();
 
     if(i_reloadLevel) {
       try {
-	Level::removeFromCache(m_db, m_PlaySpecificLevel);
+				Level::removeFromCache(m_db, m_PlaySpecificLevel);
       } catch(Exception &e) {
-	// hum, not nice
+				// hum, not nice
       }
     }
 
@@ -2052,7 +2055,7 @@ GameApp::GameApp() {
       
       try {
 	m_InputHandler.reset();
-	m_InputHandler.setMirrored(m_Renderer.isMirrored());
+	//m_InputHandler.setMirrored(m_MotoGame.getCamera()->isMirrored());
 	m_MotoGame.prePlayLevel(&m_InputHandler, m_pJustPlayReplay, true);
 	m_MotoGame.setInfos("");
 	
@@ -2060,20 +2063,21 @@ GameApp::GameApp() {
 	int v_nbPlayer = getNumberOfPlayersToPlay();
 	Log("Preplay level for %i player(s)", v_nbPlayer);
 
-	/* add at least one player for the camera */
-	m_Renderer.setPlayerToFollow(m_MotoGame.addPlayerBiker(m_MotoGame.getLevelSrc()->PlayerStart(),
-							       DD_RIGHT,
-							       &m_theme, m_theme.getPlayerTheme(),
-							       getColorFromPlayerNumber(0),
-							       getUglyColorFromPlayerNumber(0)));
+	initCameras(v_nbPlayer);
+	m_Renderer.addPlayTimes(m_MotoGame.getNumberCameras());
 
-	for(int i=1; i<v_nbPlayer; i++) {
-	  m_MotoGame.addPlayerBiker(m_MotoGame.getLevelSrc()->PlayerStart(), DD_RIGHT,
-				    &m_theme, m_theme.getPlayerTheme(),
-				    getColorFromPlayerNumber(i),
-				    getUglyColorFromPlayerNumber(i));
+	for(int i=0; i<v_nbPlayer; i++) {
+		m_MotoGame.setCurrentCamera(i);
+		m_MotoGame.getCamera()->setPlayerToFollow(m_MotoGame.addPlayerBiker(m_MotoGame.getLevelSrc()->PlayerStart(),
+																																				DD_RIGHT,
+																																				&m_theme, m_theme.getPlayerTheme(),
+																																				getColorFromPlayerNumber(i),
+																																				getUglyColorFromPlayerNumber(i)));
 	}
-	/* */
+	if(m_MotoGame.getNumberCameras() > 1){
+	  m_MotoGame.setCurrentCamera(m_MotoGame.getNumberCameras());
+	  m_MotoGame.getCamera()->setPlayerToFollow(m_MotoGame.Players()[0]);
+	}
 
 	/* add the ghosts */
 	if(m_bEnableGhost) {
@@ -2149,16 +2153,63 @@ GameApp::GameApp() {
     m_Renderer.prepareForNewLevel();
     prestartAnimation_init();
   }
-  
+
+  void GameApp::initCameras(int nbPlayer) {
+    int width  = drawLib->getDispWidth();
+    int height = drawLib->getDispHeight();
+
+    switch(nbPlayer){
+    default:
+    case 1:
+      m_MotoGame.addCamera(Vector2d(0,0),
+			   Vector2d(width, height));
+      break;
+    case 2:
+      m_MotoGame.addCamera(Vector2d(0,height/2),
+			   Vector2d(width, height));
+      m_MotoGame.addCamera(Vector2d(0,0),
+			   Vector2d(width, height/2));
+      break;
+    case 3:
+    case 4:
+      m_MotoGame.addCamera(Vector2d(0,height/2),
+			   Vector2d(width/2, height));
+      m_MotoGame.addCamera(Vector2d(width/2,height/2),
+			   Vector2d(width, height));
+      m_MotoGame.addCamera(Vector2d(0,0),
+			   Vector2d(width/2, height/2));
+      m_MotoGame.addCamera(Vector2d(width/2,0),
+			   Vector2d(width, height/2));
+      break;
+    }
+    // the autozoom camera
+    if(nbPlayer > 1){
+      m_MotoGame.addCamera(Vector2d(0,0),
+			   Vector2d(width, height));
+      m_MotoGame.setCurrentCamera(m_MotoGame.getNumberCameras());
+      m_MotoGame.getCamera()->initCamera();
+    }
+    for(int i=0; i<m_MotoGame.getNumberCameras(); i++){
+      m_MotoGame.setCurrentCamera(i);
+      m_MotoGame.getCamera()->initCamera();
+    }
+    if(nbPlayer > 1){
+      // current cam is autozoom one
+      m_MotoGame.setCurrentCamera(m_MotoGame.getNumberCameras());
+    }else{
+      m_MotoGame.setCurrentCamera(0);
+    }
+  }
+
   void GameApp::statePrestart_step() {
     prestartAnimation_step();
   }
   
   void GameApp::zoomAnimation1_init() {
     m_fPrePlayStartTime = getRealTime();
-    m_fPrePlayStartInitZoom = m_Renderer.getCurrentZoom();  // because the man can change ugly mode while the animation
-    m_fPrePlayStartCameraX = m_Renderer.getCameraPositionX();
-    m_fPrePlayStartCameraY = m_Renderer.getCameraPositionY();
+    m_fPrePlayStartInitZoom = m_MotoGame.getCamera()->getCurrentZoom();  // because the man can change ugly mode while the animation
+    m_fPrePlayStartCameraX  = m_MotoGame.getCamera()->getCameraPositionX();
+    m_fPrePlayStartCameraY  = m_MotoGame.getCamera()->getCameraPositionY();
 
     m_zoomX = (2.0 * ((float)drawLib->getDispWidth() / (float)drawLib->getDispHeight())) / (m_MotoGame.getLevelSrc()->RightLimit() - m_MotoGame.getLevelSrc()->LeftLimit() + 2*PRESTART_ANIMATION_MARGIN_SIZE);
     m_zoomY = 2.0 /(m_MotoGame.getLevelSrc()->TopLimit() - m_MotoGame.getLevelSrc()->BottomLimit()+2*PRESTART_ANIMATION_MARGIN_SIZE);
@@ -2216,7 +2267,7 @@ GameApp::GameApp() {
 
       zz = logf(PRESTART_ANIMATION_CURVE * ((PRESTART_ANIMATION_TIME + static_time - getRealTime() + m_fPrePlayStartTime) / (PRESTART_ANIMATION_TIME)) + 1.0) / LOGF_PRE_ANIM_TIME_ADDED_ONE * (m_fPrePlayStartInitZoom - m_zoomU);
 			
-      m_Renderer.setZoom(m_fPrePlayStartInitZoom - zz);
+      m_MotoGame.getCamera()->setZoom(m_fPrePlayStartInitZoom - zz);
 			
       zx = (PRESTART_ANIMATION_TIME + static_time - getRealTime() + m_fPrePlayStartTime)
       / (PRESTART_ANIMATION_TIME) 
@@ -2225,11 +2276,11 @@ GameApp::GameApp() {
       / (PRESTART_ANIMATION_TIME) 
       * (m_fPrePlayStartCameraY - m_fPrePlayCameraLastY);
 		
-      m_Renderer.setCameraPosition(m_fPrePlayStartCameraX-zx, m_fPrePlayStartCameraY-zy);
+      m_MotoGame.getCamera()->setCameraPosition(m_fPrePlayStartCameraX-zx, m_fPrePlayStartCameraY-zy);
     } else {
       float zx,zy;
         
-      m_Renderer.setZoom(m_zoomU);
+      m_MotoGame.getCamera()->setZoom(m_zoomU);
         
       zx  = (static_time - getRealTime() + m_fPrePlayStartTime) / (static_time) 
       * (m_fPreCameraStartX - m_fPreCameraFinalX); 
@@ -2237,7 +2288,7 @@ GameApp::GameApp() {
       zy = (static_time - getRealTime() + m_fPrePlayStartTime) / (static_time) 
       * (m_fPreCameraStartY - m_fPreCameraFinalY);
 				
-      m_Renderer.setCameraPosition( m_fPreCameraStartX  - zx, m_fPreCameraStartY - zy);
+      m_MotoGame.getCamera()->setCameraPosition( m_fPreCameraStartX  - zx, m_fPreCameraStartY - zy);
 				
       m_fPrePlayCameraLastX= m_fPreCameraStartX - zx;
       m_fPrePlayCameraLastY= m_fPreCameraStartY - zy;
@@ -2246,15 +2297,15 @@ GameApp::GameApp() {
   }
 
   void GameApp::zoomAnimation1_abort() {
-    m_Renderer.setZoom(m_fPrePlayStartInitZoom); // because the man can change ugly mode while the animation
-    m_Renderer.setCameraPosition(m_fPrePlayStartCameraX, m_fPrePlayStartCameraY);
+    m_MotoGame.getCamera()->setZoom(m_fPrePlayStartInitZoom); // because the man can change ugly mode while the animation
+    m_MotoGame.getCamera()->setCameraPosition(m_fPrePlayStartCameraX, m_fPrePlayStartCameraY);
   }
 
   void GameApp::zoomAnimation2_init() {
     zoomAnimation1_init();
-    fAnimPlayStartZoom = m_Renderer.getCurrentZoom(); 
-    fAnimPlayStartCameraX = m_Renderer.getCameraPositionX();
-    fAnimPlayStartCameraY = m_Renderer.getCameraPositionY();
+    fAnimPlayStartZoom = m_MotoGame.getCamera()->getCurrentZoom(); 
+    fAnimPlayStartCameraX = m_MotoGame.getCamera()->getCameraPositionX();
+    fAnimPlayStartCameraY = m_MotoGame.getCamera()->getCameraPositionY();
     fAnimPlayFinalZoom = m_zoomU;
     fAnimPlayFinalCameraX1 = m_fPreCameraStartX;
     fAnimPlayFinalCameraY1 = m_fPreCameraStartY;
@@ -2273,7 +2324,7 @@ GameApp::GameApp() {
 	float zx, zy;
 	zx = (fAnimPlayFinalCameraX1 - fAnimPlayFinalCameraX2) * (sin((getRealTime() - m_fPrePlayStartTime - INPLAY_ANIMATION_TIME) * 2 * 3.1415927 / INPLAY_ANIMATION_SPEED - 3.1415927/2) + 1) / 2;
 	zy = (fAnimPlayFinalCameraY1 - fAnimPlayFinalCameraY2) * (sin((getRealTime() - m_fPrePlayStartTime - INPLAY_ANIMATION_TIME) * 2 * 3.1415927 / INPLAY_ANIMATION_SPEED - 3.1415927/2) + 1) / 2;
-	m_Renderer.setCameraPosition(fAnimPlayFinalCameraX1 - zx,fAnimPlayFinalCameraY1 - zy);
+	m_MotoGame.getCamera()->setCameraPosition(fAnimPlayFinalCameraX1 - zx,fAnimPlayFinalCameraY1 - zy);
 	return true;
       }
       if(getRealTime() > m_fPrePlayStartTime){
@@ -2283,8 +2334,8 @@ GameApp::GameApp() {
 	zy = coeff * (fAnimPlayStartCameraY - fAnimPlayFinalCameraY1);
 	zz = coeff * (fAnimPlayStartZoom - fAnimPlayFinalZoom);
 	
-	m_Renderer.setZoom(fAnimPlayStartZoom - zz);
-	m_Renderer.setCameraPosition(fAnimPlayStartCameraX - zx,fAnimPlayStartCameraY - zy);
+	m_MotoGame.getCamera()->setZoom(fAnimPlayStartZoom - zz);
+	m_MotoGame.getCamera()->setCameraPosition(fAnimPlayStartCameraX - zx,fAnimPlayStartCameraY - zy);
       }
       
       return true;
@@ -2304,11 +2355,11 @@ GameApp::GameApp() {
   void GameApp::zoomAnimation2_init_unzoom(){
     m_fPrePlayStartTime = getRealTime();
     fAnimPlayFinalZoom = fAnimPlayStartZoom;
-    fAnimPlayStartZoom = m_Renderer.getCurrentZoom();
+    fAnimPlayStartZoom = m_MotoGame.getCamera()->getCurrentZoom();
     fAnimPlayFinalCameraX1 = fAnimPlayStartCameraX;
     fAnimPlayFinalCameraY1 = fAnimPlayStartCameraY;
-    fAnimPlayStartCameraX = m_Renderer.getCameraPositionX();
-    fAnimPlayStartCameraY = m_Renderer.getCameraPositionY();
+    fAnimPlayStartCameraX = m_MotoGame.getCamera()->getCameraPositionX();
+    fAnimPlayStartCameraY = m_MotoGame.getCamera()->getCameraPositionY();
   }
 
   bool GameApp::zoomAnimation2_unstep() {
@@ -2322,16 +2373,16 @@ GameApp::GameApp() {
       zy = coeff * (fAnimPlayStartCameraY - fAnimPlayFinalCameraY1);
       zz = coeff * (fAnimPlayStartZoom - fAnimPlayFinalZoom);
 			
-      m_Renderer.setZoom(fAnimPlayStartZoom - zz);
-      m_Renderer.setCameraPosition(fAnimPlayStartCameraX - zx,fAnimPlayStartCameraY - zy);
+      m_MotoGame.getCamera()->setZoom(fAnimPlayStartZoom - zz);
+      m_MotoGame.getCamera()->setCameraPosition(fAnimPlayStartCameraX - zx,fAnimPlayStartCameraY - zy);
       return true;
     }
     return false;
   }
 
   void GameApp::zoomAnimation2_abort() {
-    m_Renderer.setZoom(fAnimPlayFinalZoom);
-    m_Renderer.setCameraPosition(fAnimPlayFinalCameraX1,fAnimPlayFinalCameraY1);
+    m_MotoGame.getCamera()->setZoom(fAnimPlayFinalZoom);
+    m_MotoGame.getCamera()->setCameraPosition(fAnimPlayFinalCameraX1,fAnimPlayFinalCameraY1);
   }
 
   void GameApp::prestartAnimation_init() {
@@ -2339,6 +2390,7 @@ GameApp::GameApp() {
       m_MotoGame.gameMessage(m_MotoGame.getLevelSrc()->Name(), false, PRESTART_ANIMATION_LEVEL_MSG_DURATION);
       zoomAnimation1_init();
     } else {
+      m_bPrePlayAnim = false;
       setState(GS_PLAYING);
     }
   }
@@ -2437,7 +2489,7 @@ GameApp::GameApp() {
 
   void GameApp::TeleportationCheatTo(int i_player, Vector2f i_position) {
     m_MotoGame.setPlayerPosition(i_player, i_position.x, i_position.y, true);
-    m_Renderer.initCamera();
+    m_MotoGame.getCamera()->initCamera();
     m_MotoGame.addPenalityTime(900); /* 15 min of penality for that ! */
   }
 

@@ -26,11 +26,12 @@ AC_CHECK_LIB(png, png_read_image, [], [AC_MSG_ERROR(libpng required)])
 if test "$target_os" != "mingw32" # on windows, include libbz2
 then
   AC_CHECK_LIB(bz2, BZ2_bzReadOpen, [], [AC_MSG_ERROR(libbz2 required)])
+	AC_CHECK_LIB(GLU, gluBuild2DMipmaps, [], [AC_MSG_ERROR(glu required)])
 fi
 
 if test "$target_os" = "mingw32" # others libraries required by mingw32
 then
-  MINGW32_LIBS="-lmingw32 -lSDLmain -lSDL -lopengl32 -mwindows -luserenv -lintl -lode xmoto_icone.o" # -mwindows to avoid dos window
+  MINGW32_LIBS="-lmingw32 -lSDLmain -lSDL -lopengl32 -lglu32 -mwindows -luserenv -lintl -lode xmoto_icone.o" # -mwindows to avoid dos window
   AC_SUBST([MINGW32_LIBS])
 fi
 AM_CONDITIONAL([WIN32], test "$target_os" = "mingw32")

@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -449,27 +448,27 @@ namespace vapp {
 #if defined(ENABLE_ZOOMING)          
       if(m_nZoomIn == nKey) {
 	/* Zoom in */
-	pGameRender->zoom(0.002);
+	//pGameRender->zoom(0.002);
       } 
       else if(m_nZoomOut == nKey) {
 	/* Zoom out */
-	pGameRender->zoom(-0.002);
+	//pGameRender->zoom(-0.002);
       }
       else if(m_nZoomInit == nKey) {
 	/* Zoom init */
-	pGameRender->initCamera();
+	//pGameRender->initCamera();
       }
       else if(m_nCameraMoveXUp == nKey) {
-	pGameRender->moveCamera(1.0, 0.0);
+	//pGameRender->moveCamera(1.0, 0.0);
       }
       else if(m_nCameraMoveXDown == nKey) {
-	pGameRender->moveCamera(-1.0, 0.0);
+	//pGameRender->moveCamera(-1.0, 0.0);
       }
       else if(m_nCameraMoveYUp == nKey) {
-	  pGameRender->moveCamera(0.0, 1.0);
+	//pGameRender->moveCamera(0.0, 1.0);
       }
       else if(m_nCameraMoveYDown == nKey) {
-	pGameRender->moveCamera(0.0, -1.0);
+	//pGameRender->moveCamera(0.0, -1.0);
       }
       else if(m_nAutoZoom == nKey) {
 	if(pGameApp->AutoZoom() == false) {
@@ -477,8 +476,8 @@ namespace vapp {
 	} else {
 	}
       } else if(nKey == SDLK_KP0 && ((mod & KMOD_LCTRL) == KMOD_LCTRL)) {
-	pGameApp->TeleportationCheatTo(i_player, Vector2f(pGameRender->getCameraPositionX(),
-							  pGameRender->getCameraPositionY()));
+	//pGameApp->TeleportationCheatTo(i_player, Vector2f(pGameRender->getCameraPositionX(),
+	//							  pGameRender->getCameraPositionY()));
       }
 #endif
       

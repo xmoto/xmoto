@@ -223,7 +223,7 @@ Sprite* Theme::getSprite(enum SpriteType pSpriteType, std::string pName) {
   for(unsigned int i=0; i<m_sprites.size(); i++) {
     if(m_sprites[i]->getType() == pSpriteType) {
       if(m_sprites[i]->getName() == pName) {
-  return m_sprites[i];
+	return m_sprites[i];
       }
     }
   }

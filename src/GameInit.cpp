@@ -271,25 +271,25 @@ namespace vapp {
       m_pTitleBL = NULL;
       pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "TitleBL");
       if(pSprite != NULL) {
-        m_pTitleBL = pSprite->getTexture(false, true);
+        m_pTitleBL = pSprite->getTexture(false, true, FM_LINEAR);
       }
 
       m_pTitleBR = NULL;
       pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "TitleBR");
       if(pSprite != NULL) {
-        m_pTitleBR = pSprite->getTexture(false, true);
+        m_pTitleBR = pSprite->getTexture(false, true, FM_LINEAR);
       }
 
       m_pTitleTL = NULL;
       pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "TitleTL");
       if(pSprite != NULL) {
-        m_pTitleTL = pSprite->getTexture(false, true);
+        m_pTitleTL = pSprite->getTexture(false, true, FM_LINEAR);
       }
 
       m_pTitleTR = NULL;
       pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "TitleTR");
       if(pSprite != NULL) {
-        m_pTitleTR = pSprite->getTexture(false, true);
+        m_pTitleTR = pSprite->getTexture(false, true, FM_LINEAR);
       }
 
       m_pCursor = NULL;

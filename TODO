@@ -1,7 +1,15 @@
 
+* le mipmap fait le joueur flou, y'a pas moyen de pas le mettre sur le
+   joueur ?
+* en mode 2 joueurs le text "fantome de ..." est déformé
 * <music name="None" /> => put levels into musical levels
 * mode mirror : the minimap is not mirrored
+* réparer le mode mirroir et les touches pour modifier la vue
+* virer le typedef Vector3<int> Vector3d; de manu
 
+
+* [10:16] <gaivota> how about a little detail: this pixel gap problem, that recently had been fixed, can also be seen in the minimap
+[10:16] <gaivota> dunno if necessary to fix it in there, just realized
 
 * [13:49] <gaivota> aspegic500: another bug: although I disabled engine sound in options, it remains in the game
 
