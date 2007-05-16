@@ -272,7 +272,8 @@ void UIQuickStartButton::paint() {
   unsigned int v_ray = getPosition().nWidth/2 - UIQUICKSTART_BORDER;
 
   if(isUglyMode()) {
-    m_drawLib->drawCircle(Vector2f((float)v_center.x, (float) v_center.y), (float) v_ray);
+    m_drawLib->drawCircle(Vector2f((float)v_center.x, (float) v_center.y), (float) v_ray,
+			  1.0, MAKE_COLOR(160,40,40,255), MAKE_COLOR(160,40,40,255));
   }
   UIButtonDrawn::paint();
 
@@ -283,7 +284,8 @@ void UIQuickStartButton::paint() {
 
     if(i < m_quality) {
       if(isUglyMode()) {
-	m_drawLib->drawCircle(Vector2f((float)v_point.x, (float) v_point.y), UIQUICKSTART_BORDER/2, 1.0, -1, -1);
+	m_drawLib->drawCircle(Vector2f((float)v_point.x, (float) v_point.y), UIQUICKSTART_BORDER/2, 1.0,
+			      MAKE_COLOR(0, 255, 0, 255), MAKE_COLOR(0, 255, 0, 255));
       } else {
 	m_drawLib->drawImage(Vector2f(v_point.x, v_point.y) - Vector2f(UIQUICKSTART_BORDER/2, UIQUICKSTART_BORDER/2),
 			     Vector2f(v_point.x, v_point.y) + Vector2f(UIQUICKSTART_BORDER/2, UIQUICKSTART_BORDER/2),
@@ -291,7 +293,8 @@ void UIQuickStartButton::paint() {
       }
     } else {
       if(isUglyMode()) {
-	m_drawLib->drawCircle(Vector2f((float)v_point.x, (float) v_point.y), UIQUICKSTART_BORDER/2);
+	m_drawLib->drawCircle(Vector2f((float)v_point.x, (float) v_point.y), UIQUICKSTART_BORDER/2,
+			      1.0, 0, MAKE_COLOR(0, 255, 0, 255));
       } else {
 	m_drawLib->drawImage(Vector2f(v_point.x, v_point.y) - Vector2f(UIQUICKSTART_BORDER/2, UIQUICKSTART_BORDER/2),
 			     Vector2f(v_point.x, v_point.y) + Vector2f(UIQUICKSTART_BORDER/2, UIQUICKSTART_BORDER/2),
@@ -306,7 +309,8 @@ void UIQuickStartButton::paint() {
 
     if(i < m_difficulty) {
       if(isUglyMode()) {
-	m_drawLib->drawCircle(Vector2f((float)v_point.x, (float) v_point.y), UIQUICKSTART_BORDER/2, 1.0, -1, -1);
+	m_drawLib->drawCircle(Vector2f((float)v_point.x, (float) v_point.y), UIQUICKSTART_BORDER/2, 1.0,
+			      MAKE_COLOR(255, 0, 0, 255), MAKE_COLOR(255, 0, 0, 255));
       } else {
 	m_drawLib->drawImage(Vector2f(v_point.x, v_point.y) - Vector2f(UIQUICKSTART_BORDER/2, UIQUICKSTART_BORDER/2),
 			     Vector2f(v_point.x, v_point.y) + Vector2f(UIQUICKSTART_BORDER/2, UIQUICKSTART_BORDER/2),
@@ -314,7 +318,8 @@ void UIQuickStartButton::paint() {
       }
     } else {
       if(isUglyMode()) {
-	m_drawLib->drawCircle(Vector2f((float)v_point.x, (float) v_point.y), UIQUICKSTART_BORDER/2);
+	m_drawLib->drawCircle(Vector2f((float)v_point.x, (float) v_point.y), UIQUICKSTART_BORDER/2,
+			      1.0, 0, MAKE_COLOR(255, 0, 0, 255));
       } else {
 	m_drawLib->drawImage(Vector2f(v_point.x, v_point.y) - Vector2f(UIQUICKSTART_BORDER/2, UIQUICKSTART_BORDER/2),
 			     Vector2f(v_point.x, v_point.y) + Vector2f(UIQUICKSTART_BORDER/2, UIQUICKSTART_BORDER/2),
