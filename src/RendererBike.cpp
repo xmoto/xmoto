@@ -43,7 +43,7 @@ namespace vapp {
     Vector2f p0, p1, p2, p3;
 
     if(i_sprite == NULL) return;
-    pTexture = i_sprite->getTexture();
+    pTexture = i_sprite->getTexture(false, false, FM_LINEAR); // FM_LINEAR
     if(pTexture == NULL) return;
 
     Sv = i_from - i_to;
@@ -118,7 +118,7 @@ namespace vapp {
     if(m_bUglyMode == false) {
       pSprite = p_theme->getWheel();
       if(pSprite != NULL) {
-	pTexture = pSprite->getTexture();
+	pTexture = pSprite->getTexture(false, false, FM_LINEAR);
 	if(pTexture != NULL) {
 	  _RenderAlphaBlendedSection(pTexture,p0+C,p1+C,p2+C,p3+C);
 	}
@@ -169,9 +169,9 @@ namespace vapp {
     if(m_bUglyMode == false) {
       pSprite = p_theme->getWheel();
       if(pSprite != NULL) {
-	pTexture = pSprite->getTexture();
+	pTexture = pSprite->getTexture(false, false, FM_LINEAR);
 	if(pTexture != NULL) {
-	  _RenderAlphaBlendedSection(p_theme->getWheel()->getTexture(),p0+C,p1+C,p2+C,p3+C);
+	  _RenderAlphaBlendedSection(pTexture,p0+C,p1+C,p2+C,p3+C);
 	}
       }
     }
@@ -211,7 +211,7 @@ namespace vapp {
 
       pSprite = p_theme->getRear();
       if(pSprite != NULL) {
-	pTexture = pSprite->getTexture();
+	pTexture = pSprite->getTexture(false, false, FM_LINEAR);
 	if(pTexture != NULL) {
 	  _RenderAlphaBlendedSection(pTexture,p0,p1,p2,p3);
 	}
@@ -238,7 +238,7 @@ namespace vapp {
       if(i_renderBikeFront) {
 	pSprite = p_theme->getFront();
 	if(pSprite != NULL) {
-	  pTexture = pSprite->getTexture();
+	  pTexture = pSprite->getTexture(false, false, FM_LINEAR);
 	  if(pTexture != NULL) {
 	    _RenderAlphaBlendedSection(pTexture,p3,p0,p1,p2);
 	  }
@@ -263,7 +263,7 @@ namespace vapp {
 
       pSprite = p_theme->getBody();
       if(pSprite != NULL) {
-	pTexture = pSprite->getTexture();
+	pTexture = pSprite->getTexture(false, false, FM_LINEAR);
 	if(pTexture != NULL) {
 	  if(pBike->Dir == DD_RIGHT) {
 	    _RenderAlphaBlendedSection(pTexture,p3+C,p2+C,p1+C,p0+C, i_filterColor);
