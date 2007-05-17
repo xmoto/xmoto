@@ -29,7 +29,7 @@ then
 fi
 
 # on windows, don't check ; on mac, it's included into the framework
-if test "$target_os" != "mingw32" -a $with_apple_opengl_framework != "yes"
+if test "$target_os" != "mingw32" -a "$with_apple_opengl_framework" != "yes"
 then
   AC_CHECK_LIB(GLU, gluBuild2DMipmaps, [], [AC_MSG_ERROR(glu required)])
 fi
