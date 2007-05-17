@@ -1185,7 +1185,7 @@ void MotoGame::cleanPlayers() {
   int MotoGame::getCurrentCamera(){
     return m_currentCamera;
   }
-  void MotoGame::addCamera(Vector2d upperleft, Vector2d downright){
+  void MotoGame::addCamera(Vector2i upperleft, Vector2i downright){
     m_cameras.push_back(new Camera(upperleft, downright));
   }
   void MotoGame::resetFollow(){

@@ -405,7 +405,7 @@ namespace vapp {
 				       MAKE_COLOR(0,0,0,MINIMAPALPHA),
 				       MAKE_COLOR(255,255,255,MINIMAPALPHA));
     // the scissor zone is in the screen coordinates
-    Vector2d bottomLeft = getGameObject()->getCamera()->getDispBottomLeft();
+    Vector2i bottomLeft = getGameObject()->getCamera()->getDispBottomLeft();
 
     int y_translate = bottomLeft.y/2;
     if(bottomLeft.y != getParent()->getDrawLib()->getDispHeight()
@@ -851,7 +851,7 @@ namespace vapp {
 
     int nStrawberriesLeft = pGame->getLevelSrc()->countToTakeEntities();
     int nQuantity = 0;
-    Vector2d bottomLeft(0,0);
+    Vector2i bottomLeft(0,0);
     if(getGameObject()->getNumberCameras() > 1){
       bottomLeft = getGameObject()->getCamera()->getDispBottomLeft();
     }
