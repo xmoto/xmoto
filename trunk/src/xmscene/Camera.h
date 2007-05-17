@@ -31,30 +31,30 @@
 
 class RenderSurface {
 public:
-  void update(Vector2d upperleft, Vector2d downright){
+  void update(Vector2i upperleft, Vector2i downright){
     m_upperleft = upperleft;
     m_downright = downright;
     m_size      = downright - upperleft;
   }
-  Vector2d& size(){
+  Vector2i& size(){
     return m_size;
   }
-  Vector2d& upperleft(){
+  Vector2i& upperleft(){
     return m_upperleft;
   }
-  Vector2d& downright(){
+  Vector2i& downright(){
     return m_downright;
   }
 
 private:
-  Vector2d m_upperleft;
-  Vector2d m_downright;
-  Vector2d m_size;
+  Vector2i m_upperleft;
+  Vector2i m_downright;
+  Vector2i m_size;
 };
 
 class Camera {
 public:
-  Camera(Vector2d upperleft, Vector2d downright){
+  Camera(Vector2i upperleft, Vector2i downright){
     m_fSpeedMultiply = 1.0f;
     m_fScale         = ZOOM_DEFAULT;
     m_cameraOffsetX  = CAMERA_OFFSETX_DEFAULT;
@@ -89,7 +89,7 @@ public:
   void setCamera2d();
   void setCamera3d();
   void render();
-  void setRenderSurface(Vector2d upperleft, Vector2d downright);
+  void setRenderSurface(Vector2i upperleft, Vector2i downright);
 
   int getDispWidth(){
     return m_renderSurf.size().x;
@@ -97,7 +97,7 @@ public:
   int getDispHeight(){
     return m_renderSurf.size().y;
   }
-  Vector2d getDispBottomLeft();
+  Vector2i getDispBottomLeft();
 
   bool isMirrored();
   void setMirrored(bool i_value);

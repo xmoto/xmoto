@@ -213,7 +213,7 @@ void Camera::setCamera3d(){
 #endif
 }
 
-void Camera::setRenderSurface(Vector2d upperleft, Vector2d downright){
+void Camera::setRenderSurface(Vector2i upperleft, Vector2i downright){
   m_renderSurf.update(upperleft, downright);
 }
 
@@ -286,6 +286,6 @@ float Camera::guessDesiredAngleRotation() {
   return m_rotationAngle;
 }
 
-Vector2d Camera::getDispBottomLeft() {
-  return Vector2d(m_renderSurf.upperleft().x, m_renderSurf.downright().y);
+Vector2i Camera::getDispBottomLeft() {
+  return Vector2i(m_renderSurf.upperleft().x, m_renderSurf.downright().y);
 }

@@ -233,7 +233,7 @@ namespace vapp {
       int getNumberCameras();
       void setCurrentCamera(int currentCamera);
       int getCurrentCamera();
-      void addCamera(Vector2d upperleft, Vector2d downright);
+      void addCamera(Vector2i upperleft, Vector2i downright);
       void resetFollow();
       void removeCameras();
 

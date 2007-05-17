@@ -2161,31 +2161,31 @@ GameApp::GameApp() {
     switch(nbPlayer){
     default:
     case 1:
-      m_MotoGame.addCamera(Vector2d(0,0),
-			   Vector2d(width, height));
+      m_MotoGame.addCamera(Vector2i(0,0),
+			   Vector2i(width, height));
       break;
     case 2:
-      m_MotoGame.addCamera(Vector2d(0,height/2),
-			   Vector2d(width, height));
-      m_MotoGame.addCamera(Vector2d(0,0),
-			   Vector2d(width, height/2));
+      m_MotoGame.addCamera(Vector2i(0,height/2),
+			   Vector2i(width, height));
+      m_MotoGame.addCamera(Vector2i(0,0),
+			   Vector2i(width, height/2));
       break;
     case 3:
     case 4:
-      m_MotoGame.addCamera(Vector2d(0,height/2),
-			   Vector2d(width/2, height));
-      m_MotoGame.addCamera(Vector2d(width/2,height/2),
-			   Vector2d(width, height));
-      m_MotoGame.addCamera(Vector2d(0,0),
-			   Vector2d(width/2, height/2));
-      m_MotoGame.addCamera(Vector2d(width/2,0),
-			   Vector2d(width, height/2));
+      m_MotoGame.addCamera(Vector2i(0,height/2),
+			   Vector2i(width/2, height));
+      m_MotoGame.addCamera(Vector2i(width/2,height/2),
+			   Vector2i(width, height));
+      m_MotoGame.addCamera(Vector2i(0,0),
+			   Vector2i(width/2, height/2));
+      m_MotoGame.addCamera(Vector2i(width/2,0),
+			   Vector2i(width, height/2));
       break;
     }
     // the autozoom camera
     if(nbPlayer > 1){
-      m_MotoGame.addCamera(Vector2d(0,0),
-			   Vector2d(width, height));
+      m_MotoGame.addCamera(Vector2i(0,0),
+			   Vector2i(width, height));
       m_MotoGame.setCurrentCamera(m_MotoGame.getNumberCameras());
       m_MotoGame.getCamera()->initCamera();
     }

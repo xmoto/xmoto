@@ -292,9 +292,9 @@ class Vector3 {
   
 /* Type shortcuts */
 typedef Vector3<float> Vector3f;
-typedef Vector3<int> Vector3d;
+typedef Vector3<double> Vector3d;
 typedef Vector2<float> Vector2f;
-typedef Vector2<int> Vector2d; 
+typedef Vector2<double> Vector2d; 
 typedef Vector2<int> Vector2i;
 
 /*===========================================================================

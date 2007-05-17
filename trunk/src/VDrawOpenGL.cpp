@@ -175,8 +175,8 @@ namespace vapp {
     if(nDepthBits == 0)
       throw Exception("no depth buffer");  
   
-		m_menuCamera = new Camera(Vector2d(0,0),
-															Vector2d(m_nDispWidth,m_nDispHeight));
+		m_menuCamera = new Camera(Vector2i(0,0),
+															Vector2i(m_nDispWidth,m_nDispHeight));
 		m_menuCamera->setCamera2d();
     
     glClearDepth(1);
