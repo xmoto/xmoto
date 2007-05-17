@@ -10,7 +10,7 @@ AC_PROG_CPP
 AC_PROG_INSTALL
 
 AC_C_BIGENDIAN(AC_DEFINE([XMOTO_BIG_ENDIAN]),
-  AC_DEFINE([XMOTO_LITTLE_ENDIAN]))
+AC_DEFINE([XMOTO_LITTLE_ENDIAN]))
 
 dnl sqlite
 AC_CHECK_HEADERS([sqlite3.h],[SQLITE_LIBS=-lsqlite3],[AC_MSG_ERROR("sqlite3 required")])
@@ -23,10 +23,15 @@ AC_CHECK_LIB(z, uncompress, [], [AC_MSG_ERROR(zlib required)])
 AC_CHECK_LIB(jpeg, jpeg_CreateCompress, [], [AC_MSG_ERROR(libjpeg required)])
 AC_CHECK_LIB(png, png_read_image, [], [AC_MSG_ERROR(libpng required)])
 
-if test "$target_os" != "mingw32" # on windows, include libbz2
+if test "$target_os" != "mingw32" # on windows, don't include libbz2
 then
   AC_CHECK_LIB(bz2, BZ2_bzReadOpen, [], [AC_MSG_ERROR(libbz2 required)])
-	AC_CHECK_LIB(GLU, gluBuild2DMipmaps, [], [AC_MSG_ERROR(glu required)])
+fi
+
+# on windows, don't check ; on mac, it's included into the framework
+if test "$target_os" != "mingw32" -a $with_apple_opengl_framework != "yes"
+then
+  AC_CHECK_LIB(GLU, gluBuild2DMipmaps, [], [AC_MSG_ERROR(glu required)])
 fi
 
 if test "$target_os" = "mingw32" # others libraries required by mingw32
