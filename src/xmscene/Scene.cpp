@@ -1180,7 +1180,6 @@ void MotoGame::cleanPlayers() {
   }
   void MotoGame::setCurrentCamera(int currentCamera){
     m_currentCamera = currentCamera;
-    vapp::Log("MotoGame::setCurrentCamera currentCam: %d", m_currentCamera);
   }
   int MotoGame::getCurrentCamera(){
     return m_currentCamera;
