@@ -896,9 +896,6 @@ namespace vapp {
       FontManager* v_fm = getParent()->getDrawLib()->getFontSmall();
       FontGlyph* v_fg = v_fm->getGlyph(cBuf);
 
-      vapp::Log("GameRenderer::_RenderGameStatus x:%f",
-		float((x1+x2)/2 - v_fg->realWidth()/2 + bottomLeft.x));
-
       v_fm->printString(v_fg,
 			(x1_cam+x2_cam)/2 - v_fg->realWidth()/2,
 			(y1_cam+y2_cam)/2 - v_fg->realHeight()/2,
