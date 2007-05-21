@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-05-16 19:42+0200\n"
-"PO-Revision-Date: 2007-05-12 11:27+0100\n"
+"PO-Revision-Date: 2007-05-21 20:20+0100\n"
 "Last-Translator: Mateusz Kosibowicz <mateusz.kosibowicz@gmail.com>\n"
 "Language-Team: Polish\n"
 "MIME-Version: 1.0\n"
@@ -1812,11 +1812,11 @@ msgstr "Naciśnij, by natychmiast rozpocząć grę"
 
 #: src/GameText.h:515
 msgid "Increase or dicrease the minimum quality of the levels selected"
-msgstr ""
+msgstr "Zwiększ lub zmniejsz minimalną jakość poziomów"
 
 #: src/GameText.h:516
 msgid "Increase or dicrease the difficulty of the levels selected"
-msgstr ""
+msgstr "Zwiększ lub zmniejsz trudność poziomów"
 
 #: src/GameText.h:518
 msgid "Levels with no highscore"
@@ -1863,9 +1863,8 @@ msgid "Musical"
 msgstr "Musical"
 
 #: src/GameText.h:531
-#, fuzzy
 msgid "Last played levels"
-msgstr "Najczęściej wybierane"
+msgstr "Ostatnio wybierane poziomy"
 
 #: src/GameText.h:532
 msgid "Never played levels"
@@ -1960,9 +1959,8 @@ msgid "X-Moto levels with a background music"
 msgstr "Poziomy z muzyką"
 
 #: src/GameText.h:557
-#, fuzzy
 msgid "Last levels you have played"
-msgstr "Poziomy, w które nigdy nie grałeś"
+msgstr "Poziomy, w które grałeś ostatnio"
 
 #: src/GameText.h:558
 msgid "X-Moto levels you never played"
