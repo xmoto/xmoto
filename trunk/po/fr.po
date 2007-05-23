@@ -1820,11 +1820,11 @@ msgstr "Jouer immédiatement à X-Moto"
 
 #: src/GameText.h:515
 msgid "Increase or dicrease the minimum quality of the levels selected"
-msgstr ""
+msgstr "Changer la qualité minimum des niveaux sélectionnés"
 
 #: src/GameText.h:516
 msgid "Increase or dicrease the difficulty of the levels selected"
-msgstr ""
+msgstr "Changer la difficulté des niveaux sélectionnés"
 
 #: src/GameText.h:518
 msgid "Levels with no highscore"
@@ -1871,9 +1871,8 @@ msgid "Musical"
 msgstr "En musique"
 
 #: src/GameText.h:531
-#, fuzzy
 msgid "Last played levels"
-msgstr "Niveaux joués le plus"
+msgstr "Derniers niveaux joués"
 
 #: src/GameText.h:532
 msgid "Never played levels"
@@ -1968,9 +1967,8 @@ msgid "X-Moto levels with a background music"
 msgstr "Niveaux X-Moto avec de la musique en fond"
 
 #: src/GameText.h:557
-#, fuzzy
 msgid "Last levels you have played"
-msgstr "Niveaux X-Moto auxquels vous n'avez jamais joué"
+msgstr "Derniers niveaux auxquels vous avez joué"
 
 #: src/GameText.h:558
 msgid "X-Moto levels you never played"
