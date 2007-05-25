@@ -15,7 +15,7 @@ X-Moto 0.3.0 2007-
  * xmoto toto.lvl or xmoto -levelFile toto.lvl to directly start from an lvl
  * ~/.xmoto/Levels/MyLevels for levels developpers : this directory is reloaded at each startup
  * alt+enter to switch fullscreen/not fullscreen (doesn't work on windows)
- * new script functions (SetDynamicBlockSelfRotation, ...)
+ * new script functions (SetDynamicBlockSelfRotation, addForceToPlayer, ...)
  * some graphic bugs fixed
  * some minor bugs fixed
 

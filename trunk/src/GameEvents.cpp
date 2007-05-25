@@ -1808,4 +1808,52 @@ namespace vapp {
     return "Camera is adapted to the gravity";
   }
 
+  //////////////////////////////
+  MGE_AddForceToPlayer::MGE_AddForceToPlayer(float p_fEventTime) 
+  : MotoGameEvent(p_fEventTime) {
+    m_force = Vector2f(0.0, 0.0);
+    m_player = 0;
+  }
+
+  MGE_AddForceToPlayer::MGE_AddForceToPlayer(float p_fEventTime,
+					     const Vector2f& i_force,
+					     int i_player
+					     ) 
+    : MotoGameEvent(p_fEventTime) {
+      m_force = i_force;
+      m_player = i_player;
+    }
+
+  MGE_AddForceToPlayer::~MGE_AddForceToPlayer() {
+  } 
+  
+  void MGE_AddForceToPlayer::doAction(MotoGame *p_pMotoGame) {
+    p_pMotoGame->addForceToPlayer(m_player, m_force);
+  }
+
+  void MGE_AddForceToPlayer::serialize(DBuffer &Buffer) {
+    MotoGameEvent::serialize(Buffer);
+    Buffer << m_force.x;
+    Buffer << m_force.y;
+    Buffer << m_player;
+  }
+  
+  void MGE_AddForceToPlayer::unserialize(DBuffer &Buffer) {
+    Buffer >> m_force.x;
+    Buffer >> m_force.y;
+    Buffer >> m_player;
+  }
+
+  GameEventType MGE_AddForceToPlayer::SgetType() {
+    return GAME_EVENT_ADDFORCETOPLAYER;
+  }
+
+  GameEventType MGE_AddForceToPlayer::getType() {
+    return SgetType();
+  }
+
+  std::string MGE_AddForceToPlayer::toString() {
+    return "Add force to the player " + m_player;
+  }
+
 }

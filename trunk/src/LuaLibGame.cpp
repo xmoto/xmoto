@@ -42,6 +42,7 @@ luaL_reg            LuaLibGame::m_gameFuncs[] = {
   {"SetGravity",                  LuaLibGame::L_Game_SetGravity},
   {"GetGravity",                  LuaLibGame::L_Game_GetGravity},
   {"SetPlayerPosition",           LuaLibGame::L_Game_SetPlayerPosition},
+  {"AddForceToPlayer",            LuaLibGame::L_Game_AddForceToPlayer},
   {"GetPlayerPosition",           LuaLibGame::L_Game_GetPlayerPosition},
   {"GetEntityPos",                LuaLibGame::L_Game_GetEntityPos},
   {"SetEntityPos",                LuaLibGame::L_Game_SetEntityPos},
@@ -735,3 +736,13 @@ int LuaLibGame::L_Game_CameraAdaptToGravity(lua_State *pL) {
   m_exec_world->createGameEvent(new vapp::MGE_CameraAdaptToGravity(m_exec_world->getTime()));
   return 0;
 }
+
+int LuaLibGame::L_Game_AddForceToPlayer(lua_State *pL) {
+  /* event for this */
+  m_exec_world->createGameEvent(new vapp::MGE_AddForceToPlayer(m_exec_world->getTime(),
+							       Vector2f(X_luaL_check_number(pL,1),
+									X_luaL_check_number(pL,2)),
+							       X_luaL_check_number(pL,3)
+							       ));
+  return 0;
+}  

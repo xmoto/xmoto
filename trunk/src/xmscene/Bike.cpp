@@ -434,3 +434,7 @@ BikerTheme* Biker::getBikeTheme() {
     pBikeS->RRearWheelP.x = pBikeS->Anchors().Rp.x*pBikeS->fFrameRot[0] + pBikeS->Anchors().Rp.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
     pBikeS->RRearWheelP.y = pBikeS->Anchors().Rp.x*pBikeS->fFrameRot[2] + pBikeS->Anchors().Rp.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;     
   }
+
+void Biker::addBodyForce(const Vector2f& i_force) {
+  
+}

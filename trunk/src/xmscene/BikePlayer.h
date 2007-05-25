@@ -46,6 +46,8 @@ class PlayerBiker : public Biker {
   std::string getDescription() const;
   void setBodyDetach(bool state);
 
+  virtual void addBodyForce(const Vector2f& i_force);
+
   float getBikeEngineSpeed();
   float getBikeLinearVel();
   bool getRenderBikeFront();
@@ -126,6 +128,8 @@ class PlayerBiker : public Biker {
   dWorldID m_WorldID;                 /* World ID */
 
   bool m_clearDynamicTouched;
+
+  Vector2f m_forceToAdd;
 
   /* ***** */
 

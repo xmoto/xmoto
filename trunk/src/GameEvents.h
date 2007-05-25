@@ -68,7 +68,8 @@ namespace vapp {
     GAME_EVENT_SETDYNAMICBLOCKSELFROTATION  = 31,
     GAME_EVENT_SETDYNAMICENTITYSELFROTATION = 32,
     GAME_EVENT_CAMERAROTATE                 = 33,
-    GAME_EVENT_CAMERAADAPTTOGRAVITY         = 34
+    GAME_EVENT_CAMERAADAPTTOGRAVITY         = 34,
+    GAME_EVENT_ADDFORCETOPLAYER             = 35
   };
 }
 
@@ -461,6 +462,25 @@ class MGE_SetPlayerPosition : public MotoGameEvent {
   float m_x, m_y;
   bool  m_bRight;
   int   m_player;
+};
+
+class MGE_AddForceToPlayer : public MotoGameEvent {
+ public:
+  MGE_AddForceToPlayer(float p_fEventTime);
+  MGE_AddForceToPlayer(float p_fEventTime, const Vector2f& i_force, int i_player);
+  ~MGE_AddForceToPlayer();
+
+  void doAction(MotoGame *p_pMotoGame);
+  void serialize(DBuffer &Buffer);
+  void unserialize(DBuffer &Buffer);
+  static GameEventType SgetType();
+  GameEventType getType();
+
+  std::string toString();
+
+ private:
+  Vector2f m_force;
+  int      m_player;
 };
 
 class MGE_SetEntityPos : public MotoGameEvent {
