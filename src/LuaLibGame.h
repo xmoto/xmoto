@@ -74,6 +74,7 @@ private:
   static int L_Game_GetGravity(lua_State *pL);  
   static int L_Game_SetPlayerPosition(lua_State *pL);
   static int L_Game_GetPlayerPosition(lua_State *pL);
+  static int L_Game_AddForceToPlayer(lua_State *pL);
   static int L_Game_GetEntityPos(lua_State *pL);
   static int L_Game_SetEntityPos(lua_State *pL);
   static int L_Game_SetKeyHook(lua_State *pL);

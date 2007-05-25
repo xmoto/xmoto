@@ -55,6 +55,8 @@ PlayerBiker::PlayerBiker(Vector2f i_position, DriveDir i_direction, Vector2f i_g
   m_clearDynamicTouched = false;
   m_fLastSqueekTime = 0.0f;
 
+  m_forceToAdd = Vector2f(0.0, 0.0);
+
   clearStates();
   initPhysics(i_gravity);
   initToPosition(i_position, i_direction, i_gravity);
@@ -176,6 +178,14 @@ void PlayerBiker::updatePhysics(float i_time, float fTimeStep, vapp::CollisionSy
   //printf("%d",bSleep);
 
   if(!bSleep) {
+
+    /* add external force */
+    if(m_forceToAdd != Vector2f(0.0, 0.0)) {
+      dBodyEnable(m_FrameBodyID);
+      dBodyAddForce(m_FrameBodyID, m_forceToAdd.x, m_forceToAdd.y, 0.0);
+      m_forceToAdd = Vector2f(0.0, 0.0);
+    }
+
     /* Update front suspension */
     Vector2f Fq = m_bikeState.RFrontWheelP - m_bikeState.FrontWheelP;
     Vector2f Fqv = Fq - m_bikeState.PrevFq;
@@ -793,6 +803,8 @@ void PlayerBiker::clearStates() {
 
   /* BIKE_C */
   memset(&m_BikeC,0,sizeof(m_BikeC));
+
+  m_forceToAdd = Vector2f(0.0, 0.0);
 }
 
 BikeController* PlayerBiker::getControler() {
@@ -1219,6 +1231,10 @@ void PlayerBiker::setBodyDetach(bool state) {
     dJointSetHingeParam(m_ElbowHingeID2, dParamLoStop, 1.0   * -1.0);
     dJointSetHingeParam(m_ElbowHingeID2, dParamHiStop, -1.5  * -1.0);
   }
+}
+
+void PlayerBiker::addBodyForce(const Vector2f& i_force) {
+  m_forceToAdd += i_force;
 }
 
 void PlayerBiker::resetAutoDisabler() {
