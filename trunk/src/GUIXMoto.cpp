@@ -232,11 +232,13 @@ UIQuickStartButton::UIQuickStartButton(UIWindow *pParent,
 				       int x, int y,
 				       std::string Caption,
 				       int nWidth, int nHeight,
-				       int i_quality, int i_difficulty)
+				       int i_qualityMIN, int i_difficultyMIN,
+				       int i_qualityMAX, int i_difficultyMAX)
   : UIButtonDrawn(pParent, "RoundButtonUnpressed", "RoundButtonPressed", "RoundButtonHover",
 		  x, y, Caption, nWidth, nHeight) {
   Sprite *v_sprite;
-  m_quality = m_quality = 0;
+  m_qualityMIN = m_qualityMIN = 0;
+  m_qualityMAX = m_qualityMAX = 0;
   m_uncheckedTex = m_qualityTex = m_difficultyTex = NULL;
 
   v_sprite = getApp()->getTheme()->getSprite(SPRITE_TYPE_UI, "qsChoiceUnchecked");
@@ -255,8 +257,10 @@ UIQuickStartButton::UIQuickStartButton(UIWindow *pParent,
   }
 
   setBorder(UIQUICKSTART_BORDER);
-  m_quality    = i_quality;
-  m_difficulty = i_difficulty;
+  m_qualityMIN    = i_qualityMIN;
+  m_difficultyMIN = i_difficultyMIN;
+  m_qualityMAX    = i_qualityMAX;
+  m_difficultyMAX = i_difficultyMAX;
 }
 
 UIQuickStartButton::~UIQuickStartButton() {
@@ -282,7 +286,7 @@ void UIQuickStartButton::paint() {
     v_point = getQualityPoint(v_center, v_ray, i);
 
 
-    if(i < m_quality) {
+    if(i >= m_qualityMIN-1 && i < m_qualityMAX) {
       if(isUglyMode()) {
 	m_drawLib->drawCircle(Vector2f((float)v_point.x, (float) v_point.y), UIQUICKSTART_BORDER/2, 1.0,
 			      MAKE_COLOR(0, 255, 0, 255), MAKE_COLOR(0, 255, 0, 255));
@@ -307,7 +311,7 @@ void UIQuickStartButton::paint() {
   for(unsigned int i=0; i<5; i++) {
     v_point = getDifficultyPoint(v_center, v_ray, i);
 
-    if(i < m_difficulty) {
+    if(i >= m_difficultyMIN-1 && i < m_difficultyMAX) {
       if(isUglyMode()) {
 	m_drawLib->drawCircle(Vector2f((float)v_point.x, (float) v_point.y), UIQUICKSTART_BORDER/2, 1.0,
 			      MAKE_COLOR(255, 0, 0, 255), MAKE_COLOR(255, 0, 0, 255));
@@ -343,25 +347,49 @@ void UIQuickStartButton::mouseLDown(int x, int y) {
     /* check quality the stars */
     for(unsigned int i=0; i<5; i++) {
       if(isXYInCircle(x, y, getQualityPoint(v_center, v_ray, i), UIQUICKSTART_BORDER/2)) {
-	m_quality = i+1;
+	if(i+1 < m_qualityMIN) {
+	  m_qualityMIN = i+1;
+	} else {
+	  if(i+1 > m_qualityMAX) {
+	    m_qualityMAX = i+1;
+	  } else {
+	    m_qualityMIN = m_qualityMAX = i+1;
+	  }
+	}
       }
     }
 
     /* check difficulty the stars */
     for(unsigned int i=0; i<5; i++) {
       if(isXYInCircle(x, y, getDifficultyPoint(v_center, v_ray, i), UIQUICKSTART_BORDER/2)) {
-	m_difficulty = i+1;
+	if(i+1 < m_difficultyMIN) {
+	  m_difficultyMIN = i+1;
+	} else {
+	  if(i+1 > m_difficultyMAX) {
+	    m_difficultyMAX = i+1;
+	  } else {
+	    m_difficultyMIN = m_difficultyMAX = i+1;
+	  }
+	}
       }
     }
   }
 }
 
-int UIQuickStartButton::getQuality() const {
-  return m_quality;
+int UIQuickStartButton::getQualityMIN() const {
+  return m_qualityMIN;
+}
+
+int UIQuickStartButton::getQualityMAX() const {
+  return m_qualityMAX;
 }
  
-int UIQuickStartButton::getDifficulty() const {
-  return m_difficulty;
+int UIQuickStartButton::getDifficultyMIN() const {
+  return m_difficultyMIN;
+}
+
+int UIQuickStartButton::getDifficultyMAX() const {
+  return m_difficultyMAX;
 }
 
 Vector2i UIQuickStartButton::getQualityPoint(const Vector2i& i_center, unsigned int i_ray, unsigned int i_value) {

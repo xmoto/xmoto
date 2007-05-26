@@ -175,8 +175,11 @@ namespace vapp {
 					   drawLib->getDispWidth()  -180 -60,
 					   drawLib->getDispHeight() -180 -30,
 					   GAMETEXT_QUICKSTART, 180, 180,
-					   m_Config.getInteger("QSQuality"),
-					   m_Config.getInteger("QSDifficulty"));
+					   m_Config.getInteger("QSQualityMIN"),
+					   m_Config.getInteger("QSDifficultyMIN"),
+					   m_Config.getInteger("QSQualityMAX"),
+					   m_Config.getInteger("QSDifficultyMAX")
+					   );
     m_pQuickStart->setFont(drawLib->getFontSmall());
     m_pQuickStart->setID("QUICKSTART");
     /* *** */
@@ -3990,8 +3993,10 @@ namespace vapp {
 
     _CreateLevelListsSql(v_list,
 			 LevelsManager::getQuickStartPackQuery(m_db,
-							       m_pQuickStart->getQuality(),
-							       m_pQuickStart->getDifficulty(),
+							       m_pQuickStart->getQualityMIN(),
+							       m_pQuickStart->getDifficultyMIN(),
+							       m_pQuickStart->getQualityMAX(),
+							       m_pQuickStart->getDifficultyMAX(),
 							       m_profile, m_WebHighscoresIdRoom));
     return v_list;
   }

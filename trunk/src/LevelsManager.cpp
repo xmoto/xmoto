@@ -878,7 +878,8 @@ void LevelsManager::delFromFavorite(xmDatabase *i_db, std::string i_profile,
 }
 
 std::string LevelsManager::getQuickStartPackQuery(xmDatabase *i_db,
-						  unsigned int i_quality, unsigned int i_difficulty,
+						  unsigned int i_qualityMIN, unsigned int i_difficultyMIN,
+						  unsigned int i_qualityMAX, unsigned int i_difficultyMAX,
 						  const std::string& i_profile, const std::string& i_id_room) {
   /* SELECT id_level, name, profile_best_finishTime, web_highscore */
   char **v_result;
@@ -916,17 +917,22 @@ std::string LevelsManager::getQuickStartPackQuery(xmDatabase *i_db,
   /* run the query to check wether there are at least 5 levels, else, all levels randomly */
   /* web quality and difficulty are >=1 and <=5 */
   bool v_haveEnoughLevels;
-  std::ostringstream v_qualityStr;
-  std::ostringstream v_difficultyStr;
-  v_qualityStr    << i_quality;
-  v_difficultyStr << i_difficulty;
+  std::ostringstream v_qualityMINStr;
+  std::ostringstream v_difficultyMINStr;
+  std::ostringstream v_qualityMAXStr;
+  std::ostringstream v_difficultyMAXStr;
+  v_qualityMINStr    << i_qualityMIN;
+  v_difficultyMINStr << i_difficultyMIN;
+  v_qualityMAXStr    << i_qualityMAX;
+  v_difficultyMAXStr << i_difficultyMAX;
 
   v_result = i_db->readDB("SELECT count(1) "
 			  "FROM levels AS a "
 			  "INNER JOIN weblevels AS b ON a.id_level = b.id_level "
-			  "WHERE b.quality    >= " + v_qualityStr.str()    + " "
-			  "AND   b.difficulty <= " + v_difficultyStr.str() + "+1 "
-			  "AND   b.difficulty >= " + v_difficultyStr.str() + "-1 "
+			  "WHERE b.quality    <= " + v_qualityMAXStr.str()    + " "
+			  "AND   b.quality    >= " + v_qualityMINStr.str()    + " "
+			  "AND   b.difficulty <= " + v_difficultyMAXStr.str() + " "
+			  "AND   b.difficulty >= " + v_difficultyMINStr.str() + " "
 			  "ORDER BY RANDOM();",
 			  nrow);
   v_res = i_db->getResult(v_result, 1, 0, 0);
@@ -941,9 +947,10 @@ std::string LevelsManager::getQuickStartPackQuery(xmDatabase *i_db,
       "LEFT OUTER JOIN webhighscores AS c ON (a.id_level = c.id_level AND c.id_room=" + i_id_room + ") "
       "LEFT OUTER JOIN profile_completedLevels AS d "
       "ON (a.id_level=d.id_level AND d.id_profile=\"" + xmDatabase::protectString(i_profile) + "\") "
-      "WHERE b.quality    >= " + v_qualityStr.str()    + " "
-      "AND   b.difficulty <= " + v_difficultyStr.str() + "+1 "
-      "AND   b.difficulty >= " + v_difficultyStr.str() + "-1 "
+      "WHERE b.quality    <= " + v_qualityMAXStr.str()    + " "
+      "AND   b.quality    >= " + v_qualityMINStr.str()    + " "
+      "AND   b.difficulty <= " + v_difficultyMAXStr.str() + " "
+      "AND   b.difficulty >= " + v_difficultyMINStr.str() + " "
       "GROUP BY a.id_level ORDER BY RANDOM();";
   } else {
     /* all levels randomly */

@@ -82,18 +82,22 @@ class UIQuickStartButton : public vapp::UIButtonDrawn {
 		     int x=0, int y=0,
 		     std::string Caption="",
 		     int nWidth=0, int nHeight=0,
-		     int i_quality=0, int i_difficulty=0);
+		     int i_qualityMIN=0, int i_difficultyMIN=0,
+		     int i_qualityMAX=0, int i_difficultyMAX=0);
   ~UIQuickStartButton();
   
   virtual void paint();
   virtual void mouseLDown(int x,int y);
-  int getQuality() const;
-  int getDifficulty() const;
+  int getQualityMIN() const;
+  int getDifficultyMIN() const;
+  int getQualityMAX() const;
+  int getDifficultyMAX() const;
   virtual std::string subContextHelp(int x, int y);
 
  private:
   vapp::Texture *m_uncheckedTex, *m_qualityTex, *m_difficultyTex;
-  int m_quality, m_difficulty;
+  int m_qualityMIN, m_difficultyMIN;
+  int m_qualityMAX, m_difficultyMAX;
 
   Vector2i getQualityPoint(const Vector2i& i_center, unsigned int i_ray, unsigned int i_value);
   Vector2i getDifficultyPoint(const Vector2i& i_center, unsigned int i_ray, unsigned int i_value);
