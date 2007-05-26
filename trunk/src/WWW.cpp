@@ -20,6 +20,7 @@
 #include "helpers/VExcept.h"
 #include "VXml.h"
 #include <curl/curl.h>
+#include "GameText.h"
 
 #ifdef WIN32
   #include <io.h>
@@ -372,6 +373,8 @@ void FSWeb::uploadReplay(std::string p_replayFilename,
   std::string v_proxy_auth_str;
   std::string v_www_agent = WWW_AGENT;
   f_curl_upload_data v_data;
+  struct curl_slist *v_headers;
+  std::string v_accept_language;
 
   FILE *v_destinationFile;
   std::string v_local_file;
@@ -421,6 +424,12 @@ void FSWeb::uploadReplay(std::string p_replayFilename,
   curl_easy_setopt(v_curl, CURLOPT_USERAGENT,  v_www_agent.c_str());
   curl_easy_setopt(v_curl, CURLOPT_FAILONERROR, 1);
   curl_easy_setopt(v_curl, CURLOPT_FOLLOWLOCATION, 1);
+  curl_easy_setopt(v_curl, CURLOPT_ENCODING, "gzip,deflate");
+
+  v_headers = NULL;
+  v_accept_language = "Accept-Language: " + std::string(WEB_LANGUAGE);
+  v_headers = curl_slist_append(v_headers, v_accept_language.c_str()); 
+  curl_easy_setopt(v_curl, CURLOPT_HTTPHEADER, v_headers);
 
   /* set proxy settings */
   if(p_proxy_settings != NULL) {
@@ -465,6 +474,10 @@ void FSWeb::uploadReplay(std::string p_replayFilename,
   v_res = curl_easy_perform(v_curl);
 
   fclose(v_destinationFile);
+
+  /* free the headers */
+  curl_slist_free_all(v_headers);
+
 
   /* CURLE_ABORTED_BY_CALLBACK is not considered as an error */
   if(v_res != CURLE_ABORTED_BY_CALLBACK) {
