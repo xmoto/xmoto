@@ -30,6 +30,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 Central place to keep many in-game text strings
 =============================================================================*/
 
+// set the web lang to use
+#define WEB_LANGUAGE _("en_EN")
+
 #define GAMETEXT_11KHZ                _("11 kHz")
 #define GAMETEXT_16BIT                _("16-bit")
 #define GAMETEXT_16BPP                _("16 bits per pixel")
