@@ -463,8 +463,10 @@ namespace vapp {
     
     Sound::uninit();
     
-    m_Config.setInteger("QSQuality",    m_pQuickStart->getQuality());
-    m_Config.setInteger("QSDifficulty", m_pQuickStart->getDifficulty());
+    m_Config.setInteger("QSQualityMIN",    m_pQuickStart->getQualityMIN());
+    m_Config.setInteger("QSDifficultyMIN", m_pQuickStart->getDifficultyMIN());
+    m_Config.setInteger("QSQualityMAX",    m_pQuickStart->getQualityMAX());
+    m_Config.setInteger("QSDifficultyMAX", m_pQuickStart->getDifficultyMAX());
 
     m_Config.saveFile();
   }  
@@ -727,8 +729,10 @@ namespace vapp {
     m_Config.createVar( "GhostMotionBlur"    , "true" );
 
     /* quick start button */
-    m_Config.createVar("QSQuality",    "1");
-    m_Config.createVar("QSDifficulty", "1");
+    m_Config.createVar("QSQualityMIN",    "1");
+    m_Config.createVar("QSDifficultyMIN", "1");
+    m_Config.createVar("QSQualityMAX",    "5");
+    m_Config.createVar("QSDifficultyMAX", "5");
   }
   
 }
