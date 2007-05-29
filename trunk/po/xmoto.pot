@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-05-26 09:35+0200\n"
+"POT-Creation-Date: 2007-05-27 19:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1766,7 +1766,7 @@ msgid "Press to play immediatly to X-Moto"
 msgstr ""
 
 #: src/GameText.h:518
-msgid "Increase or dicrease the minimum quality of the levels selected"
+msgid "Increase or dicrease the quality of the levels selected"
 msgstr ""
 
 #: src/GameText.h:519
