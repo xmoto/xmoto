@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-MOTO 3.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-05-26 09:35+0200\n"
+"POT-Creation-Date: 2007-05-27 19:20+0200\n"
 "PO-Revision-Date: 2007-05-12 17:38+0100\n"
 "Last-Translator: Wilhelm Francke <wilhel1812@gmail.com>\n"
 "Language-Team: English <en@li.org>\n"
@@ -1829,7 +1829,7 @@ msgid "Press to play immediatly to X-Moto"
 msgstr "Trykk for å spille umiddelbart til X-Moto"
 
 #: src/GameText.h:518
-msgid "Increase or dicrease the minimum quality of the levels selected"
+msgid "Increase or dicrease the quality of the levels selected"
 msgstr ""
 
 #: src/GameText.h:519
