@@ -92,6 +92,7 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp GameMain.cpp \
   BSP.h \
   Game.h \
   GameText.h \
+  LevelsText.h \
   GUI.h \
   GUIXMoto.h \
   GUIXMoto.cpp \
