@@ -18,7 +18,7 @@ msgstr ""
 
 #: src/GameText.h:34
 msgid "en_EN"
-msgstr ""
+msgstr "de_DE"
 
 #: src/GameText.h:36
 msgid "11 kHz"
@@ -1131,7 +1131,7 @@ msgstr "Theme"
 
 #: src/GameText.h:342
 msgid "Available"
-msgstr "Verfügbar"
+msgstr "Aktuell"
 
 #: src/GameText.h:343
 msgid "To download"
@@ -1993,9 +1993,8 @@ msgid "X-Moto levels with a background music"
 msgstr "Level mit Begleitmusik"
 
 #: src/GameText.h:560
-#, fuzzy
 msgid "Last levels you have played"
-msgstr "Nie gespielte Levels"
+msgstr "Zuletzt gespielte Levels"
 
 #: src/GameText.h:561
 msgid "X-Moto levels you never played"
