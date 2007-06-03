@@ -110,6 +110,8 @@ Central place to keep many in-game text strings
     ":Trullo (" + std::string(_("Catalan")) + ");"                                           \
     ":Trullo (" + std::string(_("Spanish")) + ");"                                           \
     ":Mateusz Kosibowicz (" + std::string(_("Polish")) + ");"                                \
+    ":Lucas Manzari (" + std::string(_("Italian")) + ");"                                    \
+    ":Lukas Klingsbo (" + std::string(_("Swedenian")) + ");"                                 \
     ":" + std::string(_("Mikhail Brinchuk")) + " (" + std::string(_("Russian")) + ");"       \
     ":;"                                                                                     \
     + std::string(_("Main testers")) +                                                       \
