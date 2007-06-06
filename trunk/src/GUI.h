@@ -738,6 +738,9 @@ class UIButtonDrawn : public UIButton {
       bool isChanged(void) {return m_bChanged;}
       void setChanged(bool b) {m_bChanged=b;}
 
+      void selectChildren(unsigned int i);
+      void selectChildrenById(const std::string& i_id);
+
     private:
       /* Data */
       bool m_bChanged;

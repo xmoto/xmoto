@@ -298,12 +298,6 @@ namespace vapp {
         m_pCursor = pSprite->getTexture(false, true, FM_LINEAR);
       }
 
-      m_pNewLevelsAvailIcon = NULL;
-      pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "NewLevelsAvailable");
-      if(pSprite != NULL) {
-        m_pNewLevelsAvailIcon = pSprite->getTexture(false, true, FM_LINEAR);
-      }
-
       /* Fetch highscores from web? */
       if(m_pWebHighscores != NULL) delete m_pWebHighscores;
       m_pWebHighscores = new WebRoom(&m_ProxySettings);      

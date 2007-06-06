@@ -1,9 +1,10 @@
 X-Moto 0.3.0 2007-
+-----------------------
  * libsqlite integration (for a better and faster data managing)
  * libcurl is now mandatory
  * sdl_ttf integration (DejaVuSans.ttf is used)
  * utf-8 integration
- * full translation (all characters) for : en sk fr no de fi ca es pl ru
+ * full translation for : en sk fr no de fi ca es pl ru it sv
  * windows user dir is now %APPDIR%/.xmoto
  * mode multi players on the same computer (mono world)
  * code cleaning
@@ -16,6 +17,7 @@ X-Moto 0.3.0 2007-
  * ~/.xmoto/Levels/MyLevels for levels developpers : this directory is reloaded at each startup
  * alt+enter to switch fullscreen/not fullscreen (doesn't work on windows)
  * new script functions (SetDynamicBlockSelfRotation, addForceToPlayer, ...)
+ * "New available levels" can now be clicked
  * some graphic bugs fixed
  * some minor bugs fixed
 
