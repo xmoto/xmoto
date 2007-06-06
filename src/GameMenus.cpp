@@ -202,10 +202,14 @@ namespace vapp {
     if(m_profile != "") pPlayerText->setCaption(std::string(GAMETEXT_CURPLAYER) + ": " + m_profile);
     
     /* new levels ? */
-    UIStatic *pNewLevelText = new UIStatic(m_pMainMenu,5,-90,"",200,200);
-    pNewLevelText->setFont(drawLib->getFontSmall());            
-    pNewLevelText->setHAlign(UI_ALIGN_LEFT);
-    pNewLevelText->setID("NEWLEVELAVAILBLE");
+    m_pNewLevelsAvailable = new UIButtonDrawn(m_pMainMenu,
+					      "NewLevelsAvailablePlain",
+					      "NewLevelsAvailablePlain",
+					      "NewLevelsAvailablePlain",
+					      5, -65,
+					      GAMETEXT_NEWLEVELS_AVAIBLE, 200, 200);
+    m_pNewLevelsAvailable->setFont(drawLib->getFontSmall());      
+    m_pNewLevelsAvailable->setID("NEWLEVELAVAILBLE");
     
     UIButton *pChangePlayerButton = new UIButton(m_pMainMenu,drawLib->getDispWidth()-115,(drawLib->getDispHeight()*80)/600,GAMETEXT_CHANGE,115,57);
     pChangePlayerButton->setType(UI_BUTTON_TYPE_SMALL);
@@ -2437,6 +2441,20 @@ namespace vapp {
       m_pLevelInfoViewReplayButton->setClicked(false);
     }
 
+    if(m_pNewLevelsAvailable->isClicked()) {
+      m_pNewLevelsAvailable->setClicked(false);
+      m_pLevelInfoFrame->showWindow(false);
+      m_pOptionsWindow->showWindow(false);
+      m_pHelpWindow->showWindow(false);
+      m_pReplaysWindow->showWindow(false);
+      m_pLevelPacksWindow->showWindow(true);
+      m_pQuickStart->showWindow(false);
+
+      m_pLevelPackTabs->selectChildrenById("NEWLEVELS_TAB");
+
+      _CheckForExtraLevels();
+    }
+
     /* level menu : */
     /* any list clicked ? */
     if(m_pAllLevelsList->isChanged()) {
@@ -2505,17 +2523,8 @@ namespace vapp {
       return;
     }
 
-    UIStatic *pNewLevelText = (UIStatic *)m_pMainMenu->getChild("NEWLEVELAVAILBLE");
-    if(m_bWebLevelsToDownload) {
-      pNewLevelText->showWindow(true);
-      if(m_pNewLevelsAvailIcon == NULL)
-        pNewLevelText->setCaption(GAMETEXT_NEWLEVELS_AVAIBLE);
-      else {
-        /* Nice we've got a fancy image to display instead... do that! */
-        pNewLevelText->setBackground(m_pNewLevelsAvailIcon);
-      }      
-    } else {
-      pNewLevelText->showWindow(false);
+    if(m_pNewLevelsAvailable != NULL) {
+      m_pNewLevelsAvailable->showWindow(m_bWebLevelsToDownload);
     }
 
     /* LEVEL PACKS */

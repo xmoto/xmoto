@@ -299,7 +299,7 @@
 <sprite type="UI" name="TitleTL" 	      file="TitleTL.jpg" />
 <sprite type="UI" name="TitleTR" 	      file="TitleTR.jpg" />
 <sprite type="UI" name="Cursor"               file="Cursor.png" />
-<sprite type="UI" name="NewLevelsAvailable"   file="NewLevelsAvail.png" />
+<sprite type="UI" name="NewLevelsAvailablePlain" file="NewLevelsAvailablePlain.png" />
 <sprite type="UI" name="Misc"                 file="Misc.png" />
 <sprite type="UI" name="MiscDisabled"         file="MiscDisabled.png" />
 <sprite type="UI" name="MiscActive"           file="MiscActive.png" />

@@ -63,7 +63,6 @@ GameApp::GameApp() {
   m_pNotifyMsgBox=NULL;
   m_pInfoMsgBox=NULL;
 
-  m_pNewLevelsAvailIcon=NULL;
   m_pWebConfEditor=NULL;
   m_pWebConfMsgBox=NULL;
 

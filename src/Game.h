@@ -302,8 +302,10 @@ class xmDatabase;
       /* Main menu background / title */
       Texture *m_pTitleBL,*m_pTitleBR,*m_pTitleTL,*m_pTitleTR;
       Texture *m_pCursor;
-      Texture *m_pNewLevelsAvailIcon;
       bool m_bShowCursor;
+
+      /* */
+      UIButtonDrawn* m_pNewLevelsAvailable;
       
       /* Main menu buttons and stuff */
       int m_nNumMainMenuButtons;

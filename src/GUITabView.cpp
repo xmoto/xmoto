@@ -81,6 +81,38 @@ namespace vapp {
     m_bChanged = false;
   }
 
+  void UITabView::selectChildren(unsigned int i) {
+    /* Hide everything except this */
+    for(int j=0;j<getChildren().size();j++) { 
+      if(j == i) {
+	getChildren()[j]->showWindow(true);
+	if(m_nSelected != j) {
+	  m_bChanged = true;
+	}
+        m_nSelected = j;
+      }
+      else {
+	getChildren()[j]->showWindow(false);
+      }          
+    }
+  }
+
+  void UITabView::selectChildrenById(const std::string& i_id) {
+    /* Hide everything except this */
+    for(int j=0;j<getChildren().size();j++) { 
+      if(getChildren()[j]->getID() == i_id) {
+	getChildren()[j]->showWindow(true);
+	if(m_nSelected != j) {
+	  m_bChanged = true;
+	}
+        m_nSelected = j;
+      }
+      else {
+	getChildren()[j]->showWindow(false);
+      }          
+    }
+  }
+
   /*===========================================================================
   Mouse event handling
   ===========================================================================*/
@@ -96,19 +128,7 @@ namespace vapp {
       int v_width = v_fg->realWidth();
 
       if(x >= nCX-8 && y >= -4 && x < nCX+8+v_width && y < nHeaderHeight) {
-        m_nSelected = i;
-	m_bChanged = true;        
-
-        /* Hide everything except this */
-        for(int j=0;j<getChildren().size();j++) { 
-          if(j == i) {
-            getChildren()[j]->showWindow(true);
-          }
-          else {
-            getChildren()[j]->showWindow(false);
-          }          
-        }
-        
+	selectChildren(i);
         break;
       }
       nCX += v_width + 18;
