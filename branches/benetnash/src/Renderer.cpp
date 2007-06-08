@@ -964,39 +964,7 @@ namespace vapp {
     }
   }
   
-#if 0 /* not in use anymore */
-  /*===========================================================================
-  Sprite rendering main
-  ===========================================================================*/
-  void GameRenderer::_RenderSprites(bool bForeground,bool bBackground) {
-    MotoGame *pGame = getGameObject();
-    Entity *pEnt;
-
-    AABB screenBigger;
-    Vector2f screenMin = m_screenBBox.getBMin();
-    Vector2f screenMax = m_screenBBox.getBMax();
-    /* to avoid sprites being clipped out of the screen,
-       we draw also the nearest one */
-#define ENTITY_OFFSET 5.0f
-    screenBigger.addPointToAABB2f(screenMin.x-ENTITY_OFFSET,
-				  screenMin.y-ENTITY_OFFSET);
-    screenBigger.addPointToAABB2f(screenMax.x+ENTITY_OFFSET,
-				  screenMax.y+ENTITY_OFFSET);
-
-    /* DONE::display only visible entities */
-    std::vector<Entity*> Entities = getGameObject()->getCollisionHandler()->getEntitiesNearPosition(screenBigger);
-
-    int nbNearEntities = Entities.size();
-    int nbTotalEntities = getGameObject()->getLevelSrc()->Entities().size();
-
-    //printf("draw %d entities on %d\n", nbNearEntities, nbTotalEntities);
-
-    for(int i=0;i<Entities.size();i++) {
-      pEnt = Entities[i];
-    }
-  }
-#endif 
-  
+ 
   /*===========================================================================
   Render a sprite
   ===========================================================================*/
@@ -1169,26 +1137,6 @@ namespace vapp {
     }
   }
      
-#if 0 /* not in use anymore */
-  /*===========================================================================
-  Blocks (dynamic)
-  ===========================================================================*/
-  /* benetnash: I don't like this code very very much - it's very messy 
-  */
-  void GameRenderer::_RenderDynamicBlocks(bool bBackground) {
-    MotoGame *pGame = getGameObject();
-
-    /* FIX::display only visible dyn blocks */
-    std::vector<Block *> Blocks = getGameObject()->getCollisionHandler()->getDynBlocksNearPosition(m_screenBBox);
-
-    /* sort blocks on their texture */
-    std::sort(Blocks.begin(), Blocks.end(), AscendingTextureSort());
-      for(int i=0; i<Blocks.size(); i++) {
-			Blocks[i]->render(this);
-      }
-  }
-
-#endif
   void GameRenderer::_RenderBlock(Block* block)
   {
     int geom = block->getGeom();
@@ -1199,7 +1147,8 @@ namespace vapp {
 #ifdef ENABLE_OPENGL
       glEnableClientState(GL_VERTEX_ARRAY);
       glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
+	  glEnable(GL_BLEND);
+	  
 	  /* enable z-buffer */
 // 	  glEnable(GL_DEPTH_TEST);
 	  
@@ -1214,6 +1163,7 @@ namespace vapp {
 	  ((DrawLibOpenGL*)getParent()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nTexCoordBufferID);
 	  glTexCoordPointer(3,GL_FLOAT,0,(char *)NULL);
 
+	  
  	  glDrawArrays(GL_POLYGON,0,pPoly->nNumVertices);
 // 	  glHint(GL_LINE_SMOOTH_HINT, GL_NICEST)
 // 	  glEnable(GL_LINE_SMOOTH);
@@ -1229,8 +1179,9 @@ namespace vapp {
 	  glTexCoordPointer(2, GL_FLOAT, 0, pPoly->pTexCoords);
 	  glDrawArrays(GL_POLYGON, 0, pPoly->nNumVertices);
 	}
+	
       }
-
+	  glDisable(GL_BLEND);
 // 	  glDisable(GL_DEPTH_TEST);
 	  
       glDisableClientState(GL_VERTEX_ARRAY);
@@ -1327,29 +1278,6 @@ namespace vapp {
     }
   }
 
-#if 0 /* not in use anymore */
-  /*===========================================================================
-  Blocks (static)
-  ===========================================================================*/
-  void GameRenderer::_RenderBlocks(void) {
-	  MotoGame *pGame = getGameObject();
-
-	  for(int layer=-1; layer<=0; layer++){
-		  std::vector<Block *> Blocks;
-
-		  /* Render all non-background blocks */
-		  Blocks = getGameObject()->getCollisionHandler()->getStaticBlocksNearPosition(m_screenBBox, layer);
-
-		  /* sort blocks on their texture */
-		  std::sort(Blocks.begin(), Blocks.end(), AscendingTextureSort());
-
-		  for(int i=0;i<Blocks.size();i++) 
-			  if(Blocks[i]->isBackground() == false) 
-				  Blocks[i]->render(this);
-	  }
-  }
-#endif
-
   void GameRenderer::_RenderZone(Zone *i_zone) {
     ZonePrim *v_prim;
     ZonePrimBox *v_primbox;
@@ -1428,27 +1356,6 @@ namespace vapp {
  }
 
 #if 0 /* not in use anymore */
-  /*===========================================================================
-  And background rendering
-  ===========================================================================*/
-  void GameRenderer::_RenderBackground(void) { 
-    MotoGame *pGame = getGameObject();
-
-    /* Render STATIC background blocks */
-    std::vector<Block *> Blocks = getGameObject()->getCollisionHandler()->getStaticBlocksNearPosition(m_screenBBox);
-
-    /* sort blocks on their texture */
-    std::sort(Blocks.begin(), Blocks.end(), AscendingTextureSort());
-
-    for(int i=0;i<Blocks.size();i++) {
-      if(Blocks[i]->isBackground() == true) {
-		Blocks[i]->render(this);
-      }
-    }
-  }
-#endif 
- 
-#if 0 /* not in use anymore */
   void GameRenderer::_RenderLayer(int layer) {
     if(getParent()->getDrawLib()->getBackend() != DrawLib::backend_OpenGl) {
       return;
@@ -1501,18 +1408,6 @@ namespace vapp {
 		RenderLevelBlock(Blocks[i]);
 		glPopMatrix();
 	}
-  }
-#endif
-
-#if 0 /* not in use anymore */
-  void GameRenderer::_RenderLayers(bool renderFront) { 
-    /* Render background level blocks */
-    int nbLayer = getGameObject()->getLevelSrc()->getNumberLayer();
-    for(int layer=0; layer<nbLayer; layer++){
-      if(getGameObject()->getLevelSrc()->isLayerFront(layer) == renderFront){
-	_RenderLayer(layer);
-      }
-    }
   }
 #endif
 

@@ -949,12 +949,13 @@ void Entity::draw() {
 
 void Entity::setDepthAuto()
 {
-	if (Z() < 0)
+	if (Z() < ENTITY_DEFAULT_Z) {
 		this->setDepth(OBJECT_DEPTH_BACK_SPRITES - Z());
-	else if (Z() == 0)
+	} else if (Z() == ENTITY_DEFAULT_Z) {
 		this->setDepth(OBJECT_DEPTH_MIDDLE_SPRITES);
-	else 
+	} else {
 		this->setDepth(OBJECT_DEPTH_FRONT_SPRITES);
+	}
 }
 		
 void Entity::render(vapp::GameRenderer* r)
