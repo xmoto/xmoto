@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-06-03 21:33+0200\n"
+"POT-Creation-Date: 2007-06-10 16:00+0200\n"
 "PO-Revision-Date: 2007-05-28 21:55+0200\n"
 "Last-Translator: \n"
 "Language-Team:  <en@li.org>\n"
@@ -1849,10 +1849,12 @@ msgid "Press to play immediatly to X-Moto"
 msgstr "Premi per giocare subito a X-Moto"
 
 #: src/GameText.h:520
+#, fuzzy
 msgid "Increase or dicrease the quality of the levels selected"
 msgstr "Aumenta o diminuisci la qualità dei livelli selezionati"
 
 #: src/GameText.h:521
+#, fuzzy
 msgid "Increase or dicrease the difficulty of the levels selected"
 msgstr "Aumenta o diminuisci la difficoltà dei livelli selezionati"
 

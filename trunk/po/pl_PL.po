@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-06-03 21:33+0200\n"
+"POT-Creation-Date: 2007-06-10 16:00+0200\n"
 "PO-Revision-Date: 2007-05-21 20:20+0100\n"
 "Last-Translator: Mateusz Kosibowicz <mateusz.kosibowicz@gmail.com>\n"
 "Language-Team: Polish\n"
@@ -1829,6 +1829,7 @@ msgid "Increase or dicrease the quality of the levels selected"
 msgstr "Zwiększ lub zmniejsz minimalną jakość poziomów"
 
 #: src/GameText.h:521
+#, fuzzy
 msgid "Increase or dicrease the difficulty of the levels selected"
 msgstr "Zwiększ lub zmniejsz trudność poziomów"
 
