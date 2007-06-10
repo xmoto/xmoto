@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-06-03 21:33+0200\n"
+"POT-Creation-Date: 2007-06-10 16:00+0200\n"
 "PO-Revision-Date: 2007-05-04 23:56+0200\n"
 "Last-Translator: Mikhail Brinchuk aka Thecentury <thecentury@gmail.com>\n"
 "Language-Team: ru\n"
@@ -1852,6 +1852,7 @@ msgid "Increase or dicrease the quality of the levels selected"
 msgstr "Увеличить или уменьшить минимальное качество выбранных уровней"
 
 #: src/GameText.h:521
+#, fuzzy
 msgid "Increase or dicrease the difficulty of the levels selected"
 msgstr "Увеличить или уменьшить сложность выбранных уровней"
 

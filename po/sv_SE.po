@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: se\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-06-03 21:33+0200\n"
+"POT-Creation-Date: 2007-06-10 16:00+0200\n"
 "PO-Revision-Date: 2007-06-01 23:55+0200\n"
 "Last-Translator: Lukas <lukas.klingsbo@piratpartiet.se>\n"
 "Language-Team: Swedish\n"
@@ -1830,10 +1830,12 @@ msgid "Press to play immediatly to X-Moto"
 msgstr "Tryck för att spela direkt till X-Moto"
 
 #: src/GameText.h:520
+#, fuzzy
 msgid "Increase or dicrease the quality of the levels selected"
 msgstr "Höj eller sänk kvalitén av den valda banan"
 
 #: src/GameText.h:521
+#, fuzzy
 msgid "Increase or dicrease the difficulty of the levels selected"
 msgstr "Höj eller sänk svårigheten av den valda banan"
 
