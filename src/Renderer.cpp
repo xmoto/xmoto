@@ -1344,7 +1344,7 @@ namespace vapp {
   void GameRenderer::_RenderBlock(Block* block)
   {
     int geom = block->getGeom();
-    getParent()->getDrawLib()->setTexture(m_StaticGeoms[geom]->pTexture, BLEND_MODE_NONE);
+    getParent()->getDrawLib()->setTexture(m_StaticGeoms[geom]->pTexture, BLEND_MODE_A);
     getParent()->getDrawLib()->setColorRGB(255, 255, 255);
 
     if(getParent()->getDrawLib()->getBackend() == DrawLib::backend_OpenGl) {
