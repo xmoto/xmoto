@@ -270,6 +270,7 @@ class EdgeEffectSprite : public SimpleFrameSprite {
  public:
   EdgeEffectSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename, float fScale, float fDepth);
   virtual ~EdgeEffectSprite();
+  vapp::Texture* getTexture(bool bSmall=false, bool bClamp=false, vapp::FilterMode eFilterMode = vapp::FM_LINEAR);
 
   float getScale() const;
   float getDepth() const;

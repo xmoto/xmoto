@@ -770,6 +770,10 @@ float EdgeEffectSprite::getDepth() const {
   return m_fDepth;
 }
 
+vapp::Texture* EdgeEffectSprite::getTexture(bool bSmall, bool bClamp, vapp::FilterMode eFilterMode) {
+  Sprite::getTexture(bSmall, bClamp, eFilterMode);
+}
+
 FontSprite::FontSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {
   m_type = SPRITE_TYPE_FONT;
 }
