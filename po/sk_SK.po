@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: sk\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-06-10 21:51+0200\n"
-"PO-Revision-Date: 2007-05-05 14:09+0200\n"
+"PO-Revision-Date: 2007-06-11 00:28+0200\n"
 "Last-Translator: Jozef Riha <jose1711@gmail.com\n"
 "Language-Team:  <sk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -19,7 +19,7 @@ msgstr ""
 
 #: src/GameText.h:34
 msgid "en_EN"
-msgstr ""
+msgstr "sk_SK"
 
 #: src/GameText.h:36
 msgid "11 kHz"
@@ -200,63 +200,60 @@ msgid "MacOS X Support"
 msgstr "Podpora pre MacOS X"
 
 #: src/GameText.h:104
-#, fuzzy
 msgid "Localization"
-msgstr "Lokalizácia Website"
+msgstr "Lokalizácia"
 
 #: src/GameText.h:105
 msgid "Slovak"
-msgstr ""
+msgstr "Slovenčina"
 
 #: src/GameText.h:106
 msgid "French"
-msgstr ""
+msgstr "Francúzština"
 
 #: src/GameText.h:107
 msgid "Norwegian"
-msgstr ""
+msgstr "Nórština"
 
 #: src/GameText.h:108
-#, fuzzy
 msgid "German"
-msgstr "Všeobecné"
+msgstr "Nemčina"
 
 #: src/GameText.h:109
-#, fuzzy
 msgid "Finnish"
-msgstr "Dokončené!"
+msgstr "Fínština"
 
 #: src/GameText.h:110
 msgid "Catalan"
-msgstr ""
+msgstr "Katalánština"
 
 #: src/GameText.h:111
 msgid "Spanish"
-msgstr ""
+msgstr "Španielčina"
 
 #: src/GameText.h:112
 msgid "Polish"
-msgstr ""
+msgstr "Poľština"
 
 #: src/GameText.h:113
 msgid "Italian"
-msgstr ""
+msgstr "Taliančina"
 
 #: src/GameText.h:114
 msgid "Swedenian"
-msgstr ""
+msgstr "Švédština"
 
 #: src/GameText.h:115
 msgid "Czech"
-msgstr ""
+msgstr "Čeština"
 
 #: src/GameText.h:116
 msgid "Mikhail Brinchuk"
-msgstr ""
+msgstr "Mikhail Brinchuk"
 
 #: src/GameText.h:116
 msgid "Russian"
-msgstr ""
+msgstr "Ruština"
 
 #: src/GameText.h:118
 msgid "Main testers"
@@ -1033,7 +1030,7 @@ msgstr "Nastaviť proxy..."
 
 #: src/GameText.h:315
 msgid "Quick start"
-msgstr ""
+msgstr "Rýchly štart"
 
 #: src/GameText.h:316
 msgid "Quit Game"
@@ -1840,15 +1837,15 @@ msgstr "Filter pre zoznam záznamov"
 
 #: src/GameText.h:520
 msgid "Press to play immediatly to X-Moto"
-msgstr ""
+msgstr "Stlačte pre okamžitú hru"
 
 #: src/GameText.h:521
 msgid "Increase or dicrease the quality of the levels selected"
-msgstr ""
+msgstr "Zvýšiť alebo znížiť kvalitu vybraných levelov"
 
 #: src/GameText.h:522
 msgid "Increase or dicrease the difficulty of the levels selected"
-msgstr ""
+msgstr "Zvýšiť alebo znížiť náročnosť vybraných levelov"
 
 #: src/GameText.h:524
 msgid "Levels with no highscore"
@@ -1895,9 +1892,8 @@ msgid "Musical"
 msgstr "Hudobný"
 
 #: src/GameText.h:537
-#, fuzzy
 msgid "Last played levels"
-msgstr "Najčastejšie hrané levely"
+msgstr "Naposledy hrané levely"
 
 #: src/GameText.h:538
 msgid "Never played levels"
@@ -1992,9 +1988,8 @@ msgid "X-Moto levels with a background music"
 msgstr "X-Moto levely s hudbou na pozadí"
 
 #: src/GameText.h:563
-#, fuzzy
 msgid "Last levels you have played"
-msgstr "X-Moto levely, ktoré ste nikdy nehrali"
+msgstr "Posledné levely, ktoré ste hrali"
 
 #: src/GameText.h:564
 msgid "X-Moto levels you never played"
