@@ -230,6 +230,8 @@ namespace vapp {
 
       LuaLibGame* getLuaLibGame();
 
+      std::vector<Camera*>& Cameras();
+
       Camera* getCamera();
       int getNumberCameras();
       void setCurrentCamera(int currentCamera);

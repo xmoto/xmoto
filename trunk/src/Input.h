@@ -112,13 +112,11 @@ namespace vapp {
 
       void configure(UserConfig *pConfig);
       void handleInput(InputEventType Type,int nKey,SDLMod mod,
-		       BikeController *pController,
-		       int i_player,
-		       GameRenderer *pGameRender,
+		       std::vector<Biker*>& i_bikers,
+		       std::vector<Camera*>& i_cameras,
 		       GameApp *pGameApp);      
       std::string waitForKey(void);
-      void updateInput(BikeController *pController,
-		       int i_player);
+      void updateInput(std::vector<Biker*>& i_bikers);
       void init(UserConfig *pConfig);
       void uninit(void);
       
@@ -133,27 +131,21 @@ namespace vapp {
       int m_nNumScriptKeyHooks;
       InputScriptKeyHook m_ScriptKeyHooks[MAX_SCRIPT_KEY_HOOKS];
       
-      ControllerModeID m_ControllerModeID1;
-      ControllerModeID m_ControllerModeID2;
+      ControllerModeID m_ControllerModeID[4];
       InputAction m_ActiveAction;
 
       std::vector<SDL_Joystick *> m_Joysticks;
       
       /* For ControllerMode1 = CONTROLLER_MODE_KEYBOARD */
-      int m_nDriveKey1;
-      int m_nBrakeKey1;
-      int m_nPullBackKey1;
-      int m_nPushForwardKey1;
-      int m_nChangeDirKey1;
-      int m_nDriveKey2;
-      int m_nBrakeKey2;
-      int m_nPullBackKey2;
-      int m_nPushForwardKey2;
-      int m_nChangeDirKey2;
+      int m_nDriveKey[4];
+      int m_nBrakeKey[4];
+      int m_nPullBackKey[4];
+      int m_nPushForwardKey[4];
+      int m_nChangeDirKey[4];
       int m_nZoomIn;
       int m_nZoomOut;
       int m_nZoomInit;
-			int m_nAutoZoom;
+      int m_nAutoZoom;
       int m_nCameraMoveXUp;
       int m_nCameraMoveXDown;
       int m_nCameraMoveYUp;

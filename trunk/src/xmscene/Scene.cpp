@@ -1202,6 +1202,10 @@ void MotoGame::cleanPlayers() {
     }
     m_cameras.clear();
   }
+
+  std::vector<Camera*>& MotoGame::Cameras() {
+    return m_cameras;
+  }
 }
 
 MotoGameOnBikerHooks::MotoGameOnBikerHooks(vapp::MotoGame* i_motoGame, int i_playerNumber) {
