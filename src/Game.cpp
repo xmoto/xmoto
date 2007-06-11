@@ -836,9 +836,11 @@ GameApp::GameApp() {
       return;
     }
 
-    if(nKey == SDLK_m && ( (mod & KMOD_LCTRL) || (mod & KMOD_RCTRL) )) {     
-      m_MotoGame.getCamera()->setMirrored(m_MotoGame.getCamera()->isMirrored() == false);
-      m_InputHandler.setMirrored(m_MotoGame.getCamera()->isMirrored());
+    if(nKey == SDLK_m && ( (mod & KMOD_LCTRL) || (mod & KMOD_RCTRL) )) {
+      for(unsigned int i=0; i<m_MotoGame.Cameras().size(); i++) {
+	m_MotoGame.Cameras()[i]->setMirrored(m_MotoGame.Cameras()[i]->isMirrored() == false);
+      }
+      m_InputHandler.setMirrored(m_MotoGame.Cameras()[0]->isMirrored());
     }
 
     if(m_State == GS_MENU) {
@@ -1031,16 +1033,12 @@ GameApp::GameApp() {
     break;
           default:
             /* Notify the controller */
-	    for(unsigned int i=0; i<m_MotoGame.Players().size(); i++) {
-	      if(m_MotoGame.Players()[i]->isDead() == false) {
-		m_InputHandler.handleInput(INPUT_KEY_DOWN,nKey,mod,
-					   m_MotoGame.Players()[i]->getControler(),
-					   i,
-					   &m_Renderer, this);
-	      }
-	    }
+	    m_InputHandler.handleInput(INPUT_KEY_DOWN,nKey,mod,
+				       m_MotoGame.Players(),
+				       m_MotoGame.Cameras(),
+				       this);
         }
-        break; 
+      break; 
     }
   }
 
@@ -1061,15 +1059,11 @@ GameApp::GameApp() {
         break;
       case GS_PLAYING:
         /* Notify the controller */
-	    for(unsigned int i=0; i<m_MotoGame.Players().size(); i++) {
-	      if(m_MotoGame.Players()[i]->isDead() == false) {
-		m_InputHandler.handleInput(INPUT_KEY_UP,nKey,mod,
-					   m_MotoGame.Players()[i]->getControler(),
-					   i,
-					   &m_Renderer, this);
-	      }
-	    }
-        break; 
+      m_InputHandler.handleInput(INPUT_KEY_UP,nKey,mod,
+				 m_MotoGame.Players(),
+				 m_MotoGame.Cameras(),
+				 this);
+      break; 
       case GS_DEADJUST:
       {
   break;
@@ -1128,14 +1122,10 @@ GameApp::GameApp() {
 
       case GS_PLAYING:
       /* Notify the controller */
-      for(unsigned int i=0; i<m_MotoGame.Players().size(); i++) {
-	if(m_MotoGame.Players()[i]->isDead() == false) {
-	  m_InputHandler.handleInput(INPUT_KEY_DOWN,nButton,KMOD_NONE,
-				     m_MotoGame.Players()[i]->getControler(),
-				     i,
-				     &m_Renderer, this);
-	}
-      }
+      m_InputHandler.handleInput(INPUT_KEY_DOWN,nButton,KMOD_NONE,
+				 m_MotoGame.Players(),
+				 m_MotoGame.Cameras(),
+				 this);
 
       break;
       case GS_DEADJUST:
@@ -1164,16 +1154,10 @@ GameApp::GameApp() {
 
       case GS_PLAYING:
         /* Notify the controller */
-      for(unsigned int i=0; i<m_MotoGame.Players().size(); i++) {
-	if(m_MotoGame.Players()[i]->isDead() == false) {
-	  m_InputHandler.handleInput(INPUT_KEY_UP,nButton,KMOD_NONE,
-				     m_MotoGame.Players()[i]->getControler(),
-				     i,
-				     &m_Renderer, this);
-	}
-      }
-
-
+      m_InputHandler.handleInput(INPUT_KEY_UP,nButton,KMOD_NONE,
+				 m_MotoGame.Players(),
+				 m_MotoGame.Cameras(),
+				 this);
         break;
       case GS_DEADJUST:
       break;

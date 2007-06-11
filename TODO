@@ -1,6 +1,5 @@
 Assigned to nicolas:
  * BUG : xmoto -replay bugs/onMacWontWork.rpl when you press forward on this scripted level, the elevator is not at the correct position.
- * keyboard for 4 players
  * script key on multiplayer : each player must have his own key
  * 2 player mode : message for the winner
  * several joypad (currently, joypack is available only for player 1)

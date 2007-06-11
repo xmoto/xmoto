@@ -299,9 +299,7 @@ namespace vapp {
     if(!getDrawLib()->isNoGraphics()) {        
       Sound::update();
 
-      for(unsigned int i=0; i<m_MotoGame.Players().size(); i++) {
-	m_InputHandler.updateInput(m_MotoGame.Players()[i]->getControler(), i);
-      }
+      m_InputHandler.updateInput(m_MotoGame.Players());
     }    
     
     /* Whether or not we should have a mouse cursor? */

@@ -1571,12 +1571,24 @@ namespace vapp {
     p = pList->addEntry(GAMETEXT_FLIPRIGHT); p->Text.push_back(m_Config.getString("KeyFlipRight1"));
     p = pList->addEntry(GAMETEXT_CHANGEDIR); p->Text.push_back(m_Config.getString("KeyChangeDir1"));
 
-    p = pList->addEntry(GAMETEXT_DRIVE2); p->Text.push_back(m_Config.getString("KeyDrive2"));
-    p = pList->addEntry(GAMETEXT_BRAKE2); p->Text.push_back(m_Config.getString("KeyBrake2"));
-    p = pList->addEntry(GAMETEXT_FLIPLEFT2); p->Text.push_back(m_Config.getString("KeyFlipLeft2"));
-    p = pList->addEntry(GAMETEXT_FLIPRIGHT2); p->Text.push_back(m_Config.getString("KeyFlipRight2"));
-    p = pList->addEntry(GAMETEXT_CHANGEDIR2); p->Text.push_back(m_Config.getString("KeyChangeDir2"));
-    
+    p = pList->addEntry(GAMETEXT_DRIVE + std::string(" 2")); p->Text.push_back(m_Config.getString("KeyDrive2"));
+    p = pList->addEntry(GAMETEXT_BRAKE + std::string(" 2")); p->Text.push_back(m_Config.getString("KeyBrake2"));
+    p = pList->addEntry(GAMETEXT_FLIPLEFT + std::string(" 2")); p->Text.push_back(m_Config.getString("KeyFlipLeft2"));
+    p = pList->addEntry(GAMETEXT_FLIPRIGHT + std::string(" 2")); p->Text.push_back(m_Config.getString("KeyFlipRight2"));
+    p = pList->addEntry(GAMETEXT_CHANGEDIR + std::string(" 2")); p->Text.push_back(m_Config.getString("KeyChangeDir2"));
+   
+    p = pList->addEntry(GAMETEXT_DRIVE + std::string(" 3")); p->Text.push_back(m_Config.getString("KeyDrive3"));
+    p = pList->addEntry(GAMETEXT_BRAKE + std::string(" 3")); p->Text.push_back(m_Config.getString("KeyBrake3"));
+    p = pList->addEntry(GAMETEXT_FLIPLEFT + std::string(" 3")); p->Text.push_back(m_Config.getString("KeyFlipLeft3"));
+    p = pList->addEntry(GAMETEXT_FLIPRIGHT + std::string(" 3")); p->Text.push_back(m_Config.getString("KeyFlipRight3"));
+    p = pList->addEntry(GAMETEXT_CHANGEDIR + std::string(" 3")); p->Text.push_back(m_Config.getString("KeyChangeDir3"));
+
+    p = pList->addEntry(GAMETEXT_DRIVE + std::string(" 4")); p->Text.push_back(m_Config.getString("KeyDrive4"));
+    p = pList->addEntry(GAMETEXT_BRAKE + std::string(" 4")); p->Text.push_back(m_Config.getString("KeyBrake4"));
+    p = pList->addEntry(GAMETEXT_FLIPLEFT + std::string(" 4")); p->Text.push_back(m_Config.getString("KeyFlipLeft4"));
+    p = pList->addEntry(GAMETEXT_FLIPRIGHT + std::string(" 4")); p->Text.push_back(m_Config.getString("KeyFlipRight4"));
+    p = pList->addEntry(GAMETEXT_CHANGEDIR + std::string(" 4")); p->Text.push_back(m_Config.getString("KeyChangeDir4"));
+ 
     #if defined(ENABLE_ZOOMING)    
     p = pList->addEntry(GAMETEXT_ZOOMIN); p->Text.push_back(m_Config.getString("KeyZoomIn"));
     p = pList->addEntry(GAMETEXT_ZOOMOUT); p->Text.push_back(m_Config.getString("KeyZoomOut"));
@@ -3607,7 +3619,19 @@ namespace vapp {
     m_Config.setValue("KeyFlipLeft2",m_Config.getDefaultValue("KeyFlipLeft2"));
     m_Config.setValue("KeyFlipRight2",m_Config.getDefaultValue("KeyFlipRight2"));
     m_Config.setValue("KeyChangeDir2",m_Config.getDefaultValue("KeyChangeDir2"));
-    
+    m_Config.setValue("ControllerMode3",m_Config.getDefaultValue("ControllerMode3"));
+    m_Config.setValue("KeyDrive3",m_Config.getDefaultValue("KeyDrive3"));
+    m_Config.setValue("KeyBrake3",m_Config.getDefaultValue("KeyBrake3"));
+    m_Config.setValue("KeyFlipLeft3",m_Config.getDefaultValue("KeyFlipLeft3"));
+    m_Config.setValue("KeyFlipRight3",m_Config.getDefaultValue("KeyFlipRight3"));
+    m_Config.setValue("KeyChangeDir3",m_Config.getDefaultValue("KeyChangeDir3"));
+    m_Config.setValue("ControllerMode4",m_Config.getDefaultValue("ControllerMode4"));
+    m_Config.setValue("KeyDrive4",m_Config.getDefaultValue("KeyDrive4"));
+    m_Config.setValue("KeyBrake4",m_Config.getDefaultValue("KeyBrake4"));
+    m_Config.setValue("KeyFlipLeft4",m_Config.getDefaultValue("KeyFlipLeft4"));
+    m_Config.setValue("KeyFlipRight4",m_Config.getDefaultValue("KeyFlipRight4"));
+    m_Config.setValue("KeyChangeDir4",m_Config.getDefaultValue("KeyChangeDir4"));
+
     #if defined(ENABLE_ZOOMING)
     m_Config.setValue("KeyZoomIn",m_Config.getDefaultValue("KeyZoomIn"));
     m_Config.setValue("KeyZoomOut",m_Config.getDefaultValue("KeyZoomOut"));
@@ -3726,6 +3750,7 @@ namespace vapp {
     else if(pJoystickControl->getChecked()) m_Config.setString("ControllerMode1","Joystick1");
 
     for(int i=0;i<pActionList->getEntries().size();i++) {
+
       if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_DRIVE)
 	m_Config.setString("KeyDrive1",pActionList->getEntries()[i]->Text[1]);
       else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_BRAKE)
@@ -3736,16 +3761,39 @@ namespace vapp {
 	m_Config.setString("KeyFlipRight1",pActionList->getEntries()[i]->Text[1]);
       else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CHANGEDIR)
 	m_Config.setString("KeyChangeDir1",pActionList->getEntries()[i]->Text[1]);
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_DRIVE2)
+
+      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_DRIVE + std::string(" 2"))
 	m_Config.setString("KeyDrive2",pActionList->getEntries()[i]->Text[1]);
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_BRAKE2)
+      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_BRAKE + std::string(" 2"))
 	m_Config.setString("KeyBrake2",pActionList->getEntries()[i]->Text[1]);
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPLEFT2)
+      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPLEFT + std::string(" 2"))
 	m_Config.setString("KeyFlipLeft2",pActionList->getEntries()[i]->Text[1]);
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPRIGHT2)
+      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPRIGHT + std::string(" 2"))
 	m_Config.setString("KeyFlipRight2",pActionList->getEntries()[i]->Text[1]);
-      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CHANGEDIR2)
+      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CHANGEDIR + std::string(" 2"))
 	m_Config.setString("KeyChangeDir2",pActionList->getEntries()[i]->Text[1]);
+
+      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_DRIVE + std::string(" 3"))
+	m_Config.setString("KeyDrive3",pActionList->getEntries()[i]->Text[1]);
+      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_BRAKE + std::string(" 3"))
+	m_Config.setString("KeyBrake3",pActionList->getEntries()[i]->Text[1]);
+      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPLEFT + std::string(" 3"))
+	m_Config.setString("KeyFlipLeft3",pActionList->getEntries()[i]->Text[1]);
+      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPRIGHT + std::string(" 3"))
+	m_Config.setString("KeyFlipRight3",pActionList->getEntries()[i]->Text[1]);
+      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CHANGEDIR + std::string(" 3"))
+	m_Config.setString("KeyChangeDir3",pActionList->getEntries()[i]->Text[1]);
+
+      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_DRIVE + std::string(" 4"))
+	m_Config.setString("KeyDrive4",pActionList->getEntries()[i]->Text[1]);
+      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_BRAKE + std::string(" 4"))
+	m_Config.setString("KeyBrake4",pActionList->getEntries()[i]->Text[1]);
+      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPLEFT + std::string(" 4"))
+	m_Config.setString("KeyFlipLeft4",pActionList->getEntries()[i]->Text[1]);
+      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_FLIPRIGHT + std::string(" 4"))
+	m_Config.setString("KeyFlipRight4",pActionList->getEntries()[i]->Text[1]);
+      else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_CHANGEDIR + std::string(" 4"))
+	m_Config.setString("KeyChangeDir4",pActionList->getEntries()[i]->Text[1]);
 #if defined(ENABLE_ZOOMING)
       else if(pActionList->getEntries()[i]->Text[0] == GAMETEXT_ZOOMIN)
 	m_Config.setString("KeyZoomIn",pActionList->getEntries()[i]->Text[1]);

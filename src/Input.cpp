@@ -215,18 +215,13 @@ namespace vapp {
   /*===========================================================================
   Input device update
   ===========================================================================*/  
-  void InputHandler::updateInput(BikeController *pController,
-				 int i_player) {
-    if(pController == NULL) {return;}
-
-    /* joystick only for player one */
-    if(i_player != 0) {return;}
-
+  void InputHandler::updateInput(std::vector<Biker*>& i_bikers) {
     /* Joystick? */
-     if(m_ControllerModeID1 == CONTROLLER_MODE_JOYSTICK1 && m_pActiveJoystick1 != NULL) {
+    /* joystick only for player 1 */
+     if(m_ControllerModeID[0] == CONTROLLER_MODE_JOYSTICK1 && m_pActiveJoystick1 != NULL) {
       SDL_JoystickUpdate();     
 
-      pController->stopContols();
+      i_bikers[0]->getControler()->stopContols();
       
       /* Update buttons */
       for(int i=0;i<SDL_JoystickNumButtons(m_pActiveJoystick1);i++) {
@@ -234,7 +229,7 @@ namespace vapp {
           if(!m_JoyButtonsPrev[i]) {
             /* Click! */
             if(m_nJoyButtonChangeDir1 == i) {
-              pController->setChangeDir(true);
+              i_bikers[0]->getControler()->setChangeDir(true);
             }
           }
 
@@ -246,10 +241,9 @@ namespace vapp {
       
       /** Update axis */           
       int nRawPrim = SDL_JoystickGetAxis(m_pActiveJoystick1,m_nJoyAxisPrim1);
-      pController->setDrive(-joyRawToFloat(nRawPrim, m_nJoyAxisPrimMin1, m_nJoyAxisPrimLL1, m_nJoyAxisPrimUL1, m_nJoyAxisPrimMax1));
+      i_bikers[0]->getControler()->setDrive(-joyRawToFloat(nRawPrim, m_nJoyAxisPrimMin1, m_nJoyAxisPrimLL1, m_nJoyAxisPrimUL1, m_nJoyAxisPrimMax1));
       int nRawSec = SDL_JoystickGetAxis(m_pActiveJoystick1,m_nJoyAxisSec1);
-      pController->setPull(-joyRawToFloat(nRawSec, m_nJoyAxisSecMin1, m_nJoyAxisSecLL1, m_nJoyAxisSecUL1, m_nJoyAxisSecMax1));
-
+      i_bikers[0]->getControler()->setPull(-joyRawToFloat(nRawSec, m_nJoyAxisSecMin1, m_nJoyAxisSecLL1, m_nJoyAxisSecUL1, m_nJoyAxisSecMax1));
     }
   }
   
@@ -304,15 +298,15 @@ namespace vapp {
     /* Get settings for mode */
     if(ControllerMode1 == "Keyboard") {
       /* We're using the keyboard */
-      m_ControllerModeID1 = CONTROLLER_MODE_KEYBOARD;
-      m_nDriveKey1 = _StringToKey(pConfig->getString("KeyDrive1"));
-      m_nBrakeKey1 = _StringToKey(pConfig->getString("KeyBrake1"));
-      m_nPullBackKey1 = _StringToKey(pConfig->getString("KeyFlipLeft1"));
-      m_nPushForwardKey1 = _StringToKey(pConfig->getString("KeyFlipRight1"));
-      m_nChangeDirKey1 = _StringToKey(pConfig->getString("KeyChangeDir1"));
+      m_ControllerModeID[0] = CONTROLLER_MODE_KEYBOARD;
+      m_nDriveKey[0] = _StringToKey(pConfig->getString("KeyDrive1"));
+      m_nBrakeKey[0] = _StringToKey(pConfig->getString("KeyBrake1"));
+      m_nPullBackKey[0] = _StringToKey(pConfig->getString("KeyFlipLeft1"));
+      m_nPushForwardKey[0] = _StringToKey(pConfig->getString("KeyFlipRight1"));
+      m_nChangeDirKey[0] = _StringToKey(pConfig->getString("KeyChangeDir1"));
     } else {
       /* We're using joystick 1 */
-      m_ControllerModeID1 = CONTROLLER_MODE_JOYSTICK1;      
+      m_ControllerModeID[0] = CONTROLLER_MODE_JOYSTICK1;      
       
       int nIdx = pConfig->getInteger("JoyIdx1");
 
@@ -343,11 +337,27 @@ namespace vapp {
       }
     }
 
-    m_nDriveKey2 = _StringToKey(pConfig->getString("KeyDrive2"));
-    m_nBrakeKey2 = _StringToKey(pConfig->getString("KeyBrake2"));
-    m_nPullBackKey2 = _StringToKey(pConfig->getString("KeyFlipLeft2"));
-    m_nPushForwardKey2 = _StringToKey(pConfig->getString("KeyFlipRight2"));
-    m_nChangeDirKey2 = _StringToKey(pConfig->getString("KeyChangeDir2"));
+    m_ControllerModeID[1] = CONTROLLER_MODE_KEYBOARD;
+    m_ControllerModeID[2] = CONTROLLER_MODE_KEYBOARD;
+    m_ControllerModeID[3] = CONTROLLER_MODE_KEYBOARD;
+
+    m_nDriveKey[1]    	 = _StringToKey(pConfig->getString("KeyDrive2"));
+    m_nBrakeKey[1]    	 = _StringToKey(pConfig->getString("KeyBrake2"));
+    m_nPullBackKey[1] 	 = _StringToKey(pConfig->getString("KeyFlipLeft2"));
+    m_nPushForwardKey[1] = _StringToKey(pConfig->getString("KeyFlipRight2"));
+    m_nChangeDirKey[1]   = _StringToKey(pConfig->getString("KeyChangeDir2"));
+
+    m_nDriveKey[2]    	 = _StringToKey(pConfig->getString("KeyDrive3"));
+    m_nBrakeKey[2]    	 = _StringToKey(pConfig->getString("KeyBrake3"));
+    m_nPullBackKey[2] 	 = _StringToKey(pConfig->getString("KeyFlipLeft3"));
+    m_nPushForwardKey[2] = _StringToKey(pConfig->getString("KeyFlipRight3"));
+    m_nChangeDirKey[2]   = _StringToKey(pConfig->getString("KeyChangeDir3"));
+
+    m_nDriveKey[3]    	 = _StringToKey(pConfig->getString("KeyDrive4"));
+    m_nBrakeKey[3]    	 = _StringToKey(pConfig->getString("KeyBrake4"));
+    m_nPullBackKey[3] 	 = _StringToKey(pConfig->getString("KeyFlipLeft4"));
+    m_nPushForwardKey[3] = _StringToKey(pConfig->getString("KeyFlipRight4"));
+    m_nChangeDirKey[3]   = _StringToKey(pConfig->getString("KeyChangeDir4"));
     
 #if defined(ENABLE_ZOOMING)          
     m_nZoomIn   = _StringToKey(pConfig->getString("KeyZoomIn"));
@@ -361,10 +371,15 @@ namespace vapp {
 #endif
     
     /* All good? */
-    if(m_nDriveKey1<0 || m_nBrakeKey1<0 || m_nPullBackKey1<0 ||
-       m_nPushForwardKey1<0 || m_nChangeDirKey1<0 ||
-       m_nDriveKey2<0 || m_nBrakeKey2<0 || m_nPullBackKey2<0 ||
-       m_nPushForwardKey2<0 || m_nChangeDirKey2<0 
+    bool isUserKeyOk = true;
+    for(unsigned int i=0; i<4; i++) {
+      if(m_nDriveKey[i]<0 || m_nBrakeKey[i]<0 || m_nPullBackKey[i]<0 ||
+	 m_nPushForwardKey[i]<0 || m_nChangeDirKey[i]<0) {
+	isUserKeyOk = false;
+      }
+    }
+
+    if(isUserKeyOk == false
 #if defined(ENABLE_ZOOMING)
        || m_nZoomIn<0 || m_nZoomOut <0 || m_nZoomInit <0
        || m_nCameraMoveXUp<0 || m_nCameraMoveXDown<0 
@@ -392,83 +407,74 @@ namespace vapp {
   /*===========================================================================
   Handle an input event
   ===========================================================================*/  
-  void InputHandler::handleInput(InputEventType Type,
-				 int nKey,
-				 SDLMod mod,
-				 BikeController *pController,
-				 int i_player,
-				 GameRenderer *pGameRender,
+  void InputHandler::handleInput(InputEventType Type,int nKey,SDLMod mod,
+				 std::vector<Biker*>& i_bikers,
+				 std::vector<Camera*>& i_cameras,
 				 GameApp *pGameApp) {
-    if(pController == NULL) {return;}
-
+//#m_MotoGame.Players()[i]->isDead() == false) {
+//
     /* Update controller 1 */
     /* Keyboard controlled */
-    switch(Type) {
-      case INPUT_KEY_DOWN: 
-      if(i_player == 0 && m_ControllerModeID1 == CONTROLLER_MODE_KEYBOARD) {
-	if(m_nDriveKey1 == nKey) {
-	  /* Start driving */
-	  pController->setDrive(1.0f);
-	}
-	else if(m_nBrakeKey1 == nKey) {
+ switch(Type) {
+   case INPUT_KEY_DOWN:
+   for(unsigned int i=0; i<i_bikers.size(); i++) {
+     if(m_ControllerModeID[i] == CONTROLLER_MODE_KEYBOARD) {
+       if(m_nDriveKey[i] == nKey) {
+	 /* Start driving */
+	 i_bikers[i]->getControler()->setDrive(1.0f);
+       } else if(m_nBrakeKey[i] == nKey) {
 	  /* Brake */
-	  pController->setDrive(-1.0f);
-	}
-	else if((m_nPullBackKey1    == nKey && m_mirrored == false) ||
-		(m_nPushForwardKey1 == nKey && m_mirrored)) {
-	  /* Pull back */
-	  pController->setPull(1.0f);
-	}
-	else if((m_nPushForwardKey1 == nKey && m_mirrored == false) ||
-		(m_nPullBackKey1    == nKey && m_mirrored)) {
-	  /* Push forward */
-	  pController->setPull(-1.0f);            
-	}
-      } else if(i_player == 1) {
-	if(m_nDriveKey2 == nKey) {
-	  /* Start driving */
-	  pController->setDrive(1.0f);
-	}
-	else if(m_nBrakeKey2 == nKey) {
-	  /* Brake */
-	  pController->setDrive(-1.0f);
-	}
-          else if((m_nPullBackKey2    == nKey && m_mirrored == false) ||
-		  (m_nPushForwardKey2 == nKey && m_mirrored)) {
-		    /* Pull back */
-		    pController->setPull(1.0f);
-          }
-	else if((m_nPushForwardKey2 == nKey && m_mirrored == false) ||
-		(m_nPullBackKey2    == nKey && m_mirrored)) {
-	  /* Push forward */
-	  pController->setPull(-1.0f);            
-	} 
-      }
+	  i_bikers[i]->getControler()->setDrive(-1.0f);
+       } else if((m_nPullBackKey[i]    == nKey && m_mirrored == false) ||
+		 (m_nPushForwardKey[i] == nKey && m_mirrored)) {
+		   /* Pull back */
+		   i_bikers[i]->getControler()->setPull(1.0f);
+       } else if((m_nPushForwardKey[i] == nKey && m_mirrored == false) ||
+		 (m_nPullBackKey[i]    == nKey && m_mirrored)) {
+		   /* Push forward */
+		   i_bikers[i]->getControler()->setPull(-1.0f);            
+       }
+     }
+   }
 
 #if defined(ENABLE_ZOOMING)          
       if(m_nZoomIn == nKey) {
 	/* Zoom in */
-	//pGameRender->zoom(0.002);
+	for(unsigned int i=0; i<i_cameras.size(); i++) {
+	  i_cameras[i]->zoom(0.002);
+	}
       } 
       else if(m_nZoomOut == nKey) {
 	/* Zoom out */
-	//pGameRender->zoom(-0.002);
+	for(unsigned int i=0; i<i_cameras.size(); i++) {
+	  i_cameras[i]->zoom(-0.002);
+	}
       }
       else if(m_nZoomInit == nKey) {
 	/* Zoom init */
-	//pGameRender->initCamera();
+	for(unsigned int i=0; i<i_cameras.size(); i++) {
+	  i_cameras[i]->initCamera();
+	}
       }
       else if(m_nCameraMoveXUp == nKey) {
-	//pGameRender->moveCamera(1.0, 0.0);
+	for(unsigned int i=0; i<i_cameras.size(); i++) {
+	  i_cameras[i]->moveCamera(1.0, 0.0);
+	}
       }
       else if(m_nCameraMoveXDown == nKey) {
-	//pGameRender->moveCamera(-1.0, 0.0);
+	for(unsigned int i=0; i<i_cameras.size(); i++) {
+	  i_cameras[i]->moveCamera(-1.0, 0.0);
+	}
       }
       else if(m_nCameraMoveYUp == nKey) {
-	//pGameRender->moveCamera(0.0, 1.0);
+	for(unsigned int i=0; i<i_cameras.size(); i++) {
+	  i_cameras[i]->moveCamera(0.0, 1.0);
+	}
       }
       else if(m_nCameraMoveYDown == nKey) {
-	//pGameRender->moveCamera(0.0, -1.0);
+	for(unsigned int i=0; i<i_cameras.size(); i++) {
+	  i_cameras[i]->moveCamera(0.0, -1.0);
+	}
       }
       else if(m_nAutoZoom == nKey) {
 	if(pGameApp->AutoZoom() == false) {
@@ -476,68 +482,51 @@ namespace vapp {
 	} else {
 	}
       } else if(nKey == SDLK_KP0 && ((mod & KMOD_LCTRL) == KMOD_LCTRL)) {
-	//pGameApp->TeleportationCheatTo(i_player, Vector2f(pGameRender->getCameraPositionX(),
-	//							  pGameRender->getCameraPositionY()));
+	for(unsigned int i=0; i<i_bikers.size(); i++) {
+	  if(i_cameras.size() > 0) {
+	    pGameApp->TeleportationCheatTo(i, Vector2f(i_cameras[0]->getCameraPositionX(),
+						       i_cameras[0]->getCameraPositionY()));
+	  }
+	}
       }
 #endif
       
       break;
       case INPUT_KEY_UP:
-      if(i_player == 0 && m_ControllerModeID1 == CONTROLLER_MODE_KEYBOARD) {
-	if(m_nDriveKey1 == nKey) {
+   for(unsigned int i=0; i<i_bikers.size(); i++) {
+     if(m_ControllerModeID[i] == CONTROLLER_MODE_KEYBOARD) {
+	if(m_nDriveKey[i] == nKey) {
 	  /* Stop driving */
-	  pController->setDrive(0.0f);
+	  i_bikers[i]->getControler()->setDrive(0.0f);
 	}
-	else if(m_nBrakeKey1 == nKey) {
+	else if(m_nBrakeKey[i] == nKey) {
 	  /* Don't brake */
-	  pController->setDrive(0.0f);
+	  i_bikers[i]->getControler()->setDrive(0.0f);
 	}
-	else if((m_nPullBackKey1    == nKey && m_mirrored == false) ||
-		(m_nPushForwardKey1 == nKey && m_mirrored)) {
+	else if((m_nPullBackKey[i]    == nKey && m_mirrored == false) ||
+		(m_nPushForwardKey[i] == nKey && m_mirrored)) {
 	  /* Pull back */
-	  pController->setPull(0.0f);
+	  i_bikers[i]->getControler()->setPull(0.0f);
 	}
-	else if((m_nPushForwardKey1 == nKey && m_mirrored == false) ||
-		(m_nPullBackKey1    == nKey && m_mirrored)) {
+	else if((m_nPushForwardKey[i] == nKey && m_mirrored == false) ||
+		(m_nPullBackKey[i]    == nKey && m_mirrored)) {
 	  /* Push forward */
-	  pController->setPull(0.0f);            
+	  i_bikers[i]->getControler()->setPull(0.0f);            
 	}
-	else if(m_nChangeDirKey1 == nKey) {
+	else if(m_nChangeDirKey[i] == nKey) {
 	  /* Change dir */
-	  pController->setChangeDir(true);
+	  i_bikers[i]->getControler()->setChangeDir(true);
 	}
-      } else if(i_player == 1) {
-	if(m_nDriveKey2 == nKey) {
-	  /* Stop driving */
-	  pController->setDrive(0.0f);
-	}
-	else if(m_nBrakeKey2 == nKey) {
-	  /* Don't brake */
-	  pController->setDrive(0.0f);
-	}
-	else if((m_nPullBackKey2    == nKey && m_mirrored == false) ||
-		(m_nPushForwardKey2 == nKey && m_mirrored)) {
-	  /* Pull back */
-	  pController->setPull(0.0f);
-	}
-	else if((m_nPushForwardKey2 == nKey && m_mirrored == false) ||
-		(m_nPullBackKey2    == nKey && m_mirrored)) {
-	  /* Push forward */
-	  pController->setPull(0.0f);            
-	}
-	else if(m_nChangeDirKey2 == nKey) {
-	  /* Change dir */
-	  pController->setChangeDir(true);
-	}
+     }
+   }
+
+   if(m_nAutoZoom == nKey) {
+     if(pGameApp->AutoZoom() && pGameApp->AutoZoomStep() == 1) {
+       pGameApp->setAutoZoomStep(2);
+     }
       }
-      
-      if(m_nAutoZoom == nKey) {
-	if(pGameApp->AutoZoom() && pGameApp->AutoZoomStep() == 1) {
-	  pGameApp->setAutoZoomStep(2);
-	}
-      }
-      break;
-    }      
+   break;
+ }
     
     /* Have the script hooked this key? */
     if(Type == INPUT_KEY_DOWN) {
@@ -554,19 +543,34 @@ namespace vapp {
   Set totally default configuration - useful for when something goes wrong
   ===========================================================================*/  
   void InputHandler::_SetDefaultConfig(void) {
-    m_ControllerModeID1 = CONTROLLER_MODE_KEYBOARD;
+    m_ControllerModeID[0] = CONTROLLER_MODE_KEYBOARD;
+    m_ControllerModeID[1] = CONTROLLER_MODE_KEYBOARD;
+    m_ControllerModeID[2] = CONTROLLER_MODE_KEYBOARD;
+    m_ControllerModeID[3] = CONTROLLER_MODE_KEYBOARD;
     
-    m_nDriveKey1       = SDLK_UP;
-    m_nBrakeKey1       = SDLK_DOWN;
-    m_nPullBackKey1    = SDLK_LEFT;
-    m_nPushForwardKey1 = SDLK_RIGHT;
-    m_nChangeDirKey1   = SDLK_SPACE;
+    m_nDriveKey[0]       = SDLK_UP;
+    m_nBrakeKey[0]       = SDLK_DOWN;
+    m_nPullBackKey[0]    = SDLK_LEFT;
+    m_nPushForwardKey[0] = SDLK_RIGHT;
+    m_nChangeDirKey[0]   = SDLK_SPACE;
 
-    m_nDriveKey2       = SDLK_a;
-    m_nBrakeKey2       = SDLK_q;
-    m_nPullBackKey2    = SDLK_z;
-    m_nPushForwardKey2 = SDLK_e;
-    m_nChangeDirKey2   = SDLK_w;
+    m_nDriveKey[1]       = SDLK_a;
+    m_nBrakeKey[1]       = SDLK_q;
+    m_nPullBackKey[1]    = SDLK_z;
+    m_nPushForwardKey[1] = SDLK_e;
+    m_nChangeDirKey[1]   = SDLK_w;
+
+    m_nDriveKey[2]       = SDLK_r;
+    m_nBrakeKey[2]       = SDLK_f;
+    m_nPullBackKey[2]    = SDLK_t;
+    m_nPushForwardKey[2] = SDLK_y;
+    m_nChangeDirKey[2]   = SDLK_v;
+
+    m_nDriveKey[3]       = SDLK_y;
+    m_nBrakeKey[3]       = SDLK_h;
+    m_nPullBackKey[3]    = SDLK_u;
+    m_nPushForwardKey[3] = SDLK_i;
+    m_nChangeDirKey[3]   = SDLK_n;
     
     #if defined(ENABLE_ZOOMING)    
       m_nZoomIn          = SDLK_PAGEUP;
@@ -581,19 +585,34 @@ namespace vapp {
   }  
 
   void InputHandler::_SetDefaultConfigToUnsetKeys() {
-    m_ControllerModeID1 = CONTROLLER_MODE_KEYBOARD;
+    m_ControllerModeID[0] = CONTROLLER_MODE_KEYBOARD;
+    m_ControllerModeID[1] = CONTROLLER_MODE_KEYBOARD;
+    m_ControllerModeID[2] = CONTROLLER_MODE_KEYBOARD;
+    m_ControllerModeID[3] = CONTROLLER_MODE_KEYBOARD;
     
-    if(m_nDriveKey1       < 0) { m_nDriveKey1 	    = SDLK_UP;       }
-    if(m_nBrakeKey1       < 0) { m_nBrakeKey1 	    = SDLK_DOWN;     }
-    if(m_nPullBackKey1    < 0) { m_nPullBackKey1    = SDLK_LEFT;     }
-    if(m_nPushForwardKey1 < 0) { m_nPushForwardKey1 = SDLK_RIGHT;    }
-    if(m_nChangeDirKey1   < 0) { m_nChangeDirKey1   = SDLK_SPACE;    }
+    if(m_nDriveKey[0]       < 0) { m_nDriveKey[0] 	    = SDLK_UP;       }
+    if(m_nBrakeKey[0]       < 0) { m_nBrakeKey[0] 	    = SDLK_DOWN;     }
+    if(m_nPullBackKey[0]    < 0) { m_nPullBackKey[0]    = SDLK_LEFT;     }
+    if(m_nPushForwardKey[0] < 0) { m_nPushForwardKey[0] = SDLK_RIGHT;    }
+    if(m_nChangeDirKey[0]   < 0) { m_nChangeDirKey[0]   = SDLK_SPACE;    }
  
-    if(m_nDriveKey2       < 0) { m_nDriveKey2 	    = SDLK_a;       }
-    if(m_nBrakeKey2       < 0) { m_nBrakeKey2 	    = SDLK_q;     }
-    if(m_nPullBackKey2    < 0) { m_nPullBackKey2    = SDLK_z;     }
-    if(m_nPushForwardKey2 < 0) { m_nPushForwardKey2 = SDLK_e;    }
-    if(m_nChangeDirKey2   < 0) { m_nChangeDirKey2   = SDLK_w;    }
+    if(m_nDriveKey[1]       < 0) { m_nDriveKey[1] 	    = SDLK_a;       }
+    if(m_nBrakeKey[1]       < 0) { m_nBrakeKey[1] 	    = SDLK_q;     }
+    if(m_nPullBackKey[1]    < 0) { m_nPullBackKey[1]    = SDLK_z;     }
+    if(m_nPushForwardKey[1] < 0) { m_nPushForwardKey[1] = SDLK_e;    }
+    if(m_nChangeDirKey[1]   < 0) { m_nChangeDirKey[1]   = SDLK_w;    }
+
+    if(m_nDriveKey[2]       < 0) { m_nDriveKey[2] 	    = SDLK_r;       }
+    if(m_nBrakeKey[2]       < 0) { m_nBrakeKey[2] 	    = SDLK_f;     }
+    if(m_nPullBackKey[2]    < 0) { m_nPullBackKey[2]    = SDLK_t;     }
+    if(m_nPushForwardKey[2] < 0) { m_nPushForwardKey[2] = SDLK_y;    }
+    if(m_nChangeDirKey[2]   < 0) { m_nChangeDirKey[2]   = SDLK_v;    }
+
+    if(m_nDriveKey[3]       < 0) { m_nDriveKey[3] 	    = SDLK_y;       }
+    if(m_nBrakeKey[3]       < 0) { m_nBrakeKey[3] 	    = SDLK_h;     }
+    if(m_nPullBackKey[3]    < 0) { m_nPullBackKey[3]    = SDLK_h;     }
+    if(m_nPushForwardKey[3] < 0) { m_nPushForwardKey[3] = SDLK_i;    }
+    if(m_nChangeDirKey[3]   < 0) { m_nChangeDirKey[3]   = SDLK_n;    }
    
     #if defined(ENABLE_ZOOMING)
     if(m_nZoomIn          < 0) { m_nZoomIn          = SDLK_PAGEUP;   }
@@ -611,19 +630,29 @@ namespace vapp {
   Get key by action...
   ===========================================================================*/  
   std::string InputHandler::getKeyByAction(const std::string &Action) {
-    if(m_ControllerModeID1 != CONTROLLER_MODE_KEYBOARD) return "?";
-    
-    if(Action == "Drive")    	return _KeyToString(m_nDriveKey1);
-    if(Action == "Brake")    	return _KeyToString(m_nBrakeKey1);
-    if(Action == "PullBack") 	return _KeyToString(m_nPullBackKey1);
-    if(Action == "PushForward") return _KeyToString(m_nPushForwardKey1);
-    if(Action == "ChangeDir")   return _KeyToString(m_nChangeDirKey1);
+    if(Action == "Drive")    	return _KeyToString(m_nDriveKey[0]);
+    if(Action == "Brake")    	return _KeyToString(m_nBrakeKey[0]);
+    if(Action == "PullBack") 	return _KeyToString(m_nPullBackKey[0]);
+    if(Action == "PushForward") return _KeyToString(m_nPushForwardKey[0]);
+    if(Action == "ChangeDir")   return _KeyToString(m_nChangeDirKey[0]);
 
-    if(Action == "Drive 2")    	  return _KeyToString(m_nDriveKey2);
-    if(Action == "Brake 2")    	  return _KeyToString(m_nBrakeKey2);
-    if(Action == "PullBack 2") 	  return _KeyToString(m_nPullBackKey2);
-    if(Action == "PushForward 2") return _KeyToString(m_nPushForwardKey2);
-    if(Action == "ChangeDir 2")   return _KeyToString(m_nChangeDirKey2);
+    if(Action == "Drive 2")    	  return _KeyToString(m_nDriveKey[1]);
+    if(Action == "Brake 2")    	  return _KeyToString(m_nBrakeKey[1]);
+    if(Action == "PullBack 2") 	  return _KeyToString(m_nPullBackKey[1]);
+    if(Action == "PushForward 2") return _KeyToString(m_nPushForwardKey[1]);
+    if(Action == "ChangeDir 2")   return _KeyToString(m_nChangeDirKey[1]);
+
+    if(Action == "Drive 3")    	  return _KeyToString(m_nDriveKey[2]);
+    if(Action == "Brake 3")    	  return _KeyToString(m_nBrakeKey[2]);
+    if(Action == "PullBack 3") 	  return _KeyToString(m_nPullBackKey[2]);
+    if(Action == "PushForward 3") return _KeyToString(m_nPushForwardKey[2]);
+    if(Action == "ChangeDir 3")   return _KeyToString(m_nChangeDirKey[2]);
+
+    if(Action == "Drive 4")    	  return _KeyToString(m_nDriveKey[3]);
+    if(Action == "Brake 4")    	  return _KeyToString(m_nBrakeKey[3]);
+    if(Action == "PullBack 4") 	  return _KeyToString(m_nPullBackKey[3]);
+    if(Action == "PushForward 4") return _KeyToString(m_nPushForwardKey[3]);
+    if(Action == "ChangeDir 4")   return _KeyToString(m_nChangeDirKey[3]);
     
     #if defined(ENABLE_ZOOMING)    
     if(Action == "ZoomIn")   	    	return _KeyToString(m_nZoomIn);

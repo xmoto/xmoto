@@ -647,6 +647,18 @@ namespace vapp {
     m_Config.createVar( "KeyFlipLeft2",           "Z" );
     m_Config.createVar( "KeyFlipRight2",          "E" );
     m_Config.createVar( "KeyChangeDir2",          "W" );
+    m_Config.createVar( "ControllerMode3",        "Keyboard" );
+    m_Config.createVar( "KeyDrive3",              "R" );
+    m_Config.createVar( "KeyBrake3",              "F" );
+    m_Config.createVar( "KeyFlipLeft3",           "T" );
+    m_Config.createVar( "KeyFlipRight3",          "Y" );
+    m_Config.createVar( "KeyChangeDir3",          "V" );
+    m_Config.createVar( "ControllerMode4",        "Keyboard" );
+    m_Config.createVar( "KeyDrive4",              "Y" );
+    m_Config.createVar( "KeyBrake4",              "H" );
+    m_Config.createVar( "KeyFlipLeft4",           "U" );
+    m_Config.createVar( "KeyFlipRight4",          "I" );
+    m_Config.createVar( "KeyChangeDir4",          "N" );
     
     m_Config.createVar( "AutosaveHighscoreReplays", "true");
 
