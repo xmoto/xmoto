@@ -16,7 +16,7 @@ msgstr "cs_CZ"
 
 #: src/GameText.h:36
 msgid "11 kHz"
-msgstr ""
+msgstr "11 kHz"
 
 #: src/GameText.h:37
 msgid "16-bit"
@@ -28,7 +28,7 @@ msgstr "16 bitů na pixel"
 
 #: src/GameText.h:39
 msgid "22 kHz"
-msgstr ""
+msgstr "22 kHz"
 
 #: src/GameText.h:40
 msgid "32 bits per pixel"
@@ -36,7 +36,7 @@ msgstr "32 bitů na pixel"
 
 #: src/GameText.h:41
 msgid "44 kHz"
-msgstr ""
+msgstr "44 kHz"
 
 #: src/GameText.h:42
 msgid "8-bit"
@@ -230,11 +230,11 @@ msgstr "Švédština"
 
 #: src/GameText.h:113
 msgid "Czech"
-msgstr ""
+msgstr "Čeština"
 
 #: src/GameText.h:114
 msgid "Mikhail Brinchuk"
-msgstr ""
+msgstr "Mikhail Brinchuk"
 
 #: src/GameText.h:114
 msgid "Russian"
@@ -690,7 +690,7 @@ msgstr "Nejdříve zobrazit úroveň"
 
 #: src/GameText.h:228
 msgid "Joystick"
-msgstr ""
+msgstr "Joystick"
 
 #: src/GameText.h:229
 msgid "Oops!"
@@ -796,7 +796,7 @@ msgstr "Úroveň odkazuje na neznámou texturu, nemůže být hratelná!"
 
 #: src/GameText.h:254
 msgid "Mono"
-msgstr ""
+msgstr "Mono"
 
 #: src/GameText.h:255
 msgid "Following are your most played levels"
@@ -913,7 +913,7 @@ msgstr "# Úrovní"
 
 #: src/GameText.h:285
 msgid "OK"
-msgstr ""
+msgstr "Ok"
 
 #: src/GameText.h:286
 msgid "Open"
@@ -985,7 +985,7 @@ msgstr "Hrát další úroveň"
 
 #: src/GameText.h:306
 msgid "Port"
-msgstr ""
+msgstr "Port"
 
 #: src/GameText.h:307
 #, c-format
@@ -1106,7 +1106,7 @@ msgstr "STATISTIKY"
 
 #: src/GameText.h:338
 msgid "Stereo"
-msgstr ""
+msgstr "Stereo"
 
 #: src/GameText.h:339
 msgid "Theme"
@@ -1138,7 +1138,7 @@ msgstr "Zkusit tuto úroveň znovu"
 
 #: src/GameText.h:346
 msgid "Tutorial"
-msgstr ""
+msgstr "Tutorial"
 
 #: src/GameText.h:347
 msgid "Unknown"
@@ -1228,7 +1228,7 @@ msgstr "Použít SOCKS5 proxy"
 
 #: src/GameText.h:366
 msgid "Video"
-msgstr ""
+msgstr "Video"
 
 #: src/GameText.h:367
 msgid "View"
@@ -1253,7 +1253,7 @@ msgstr "Hlavní"
 
 #: src/GameText.h:373
 msgid "WWW"
-msgstr ""
+msgstr "WWW"
 
 #: src/GameText.h:374
 msgid "Rooms"
