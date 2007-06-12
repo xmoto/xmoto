@@ -81,6 +81,32 @@
 <sprite type="Texture" name="ComicClouds" file="ComicClouds_213.jpg" />
 <sprite type="Texture" name="Grass1" file="Grass1_210.png" />
 <sprite type="Texture" name="Grass2" file="Grass2_211.jpg" />
+<sprite type="Texture" name="blackwhite" file="blackwhite_231.jpg" />
+<sprite type="Texture" name="BlurBlocks1" file="BlurBlocks1_270.jpg" />
+<sprite type="Texture" name="Bricks2" file="Bricks2_271.jpg" />
+<sprite type="Texture" name="darkgrey" file="darkgrey_295.png" />
+<sprite type="Texture" name="Dirt_fg" file="Dirt_fg_243.jpg" />
+<sprite type="Texture" name="GroundGravel" file="GroundGravel_272.jpg" />
+<sprite type="Texture" name="hochhaus" file="hochhaus_298.jpg" />
+<sprite type="Texture" name="hochhaus2" file="hochhaus2_299.jpg" />
+<sprite type="Texture" name="hochhaus3" file="hochhaus3_300.jpg" />
+<sprite type="Texture" name="hochhaus4" file="hochhaus4_301.jpg" />
+<sprite type="Texture" name="KRWBlueRockDark" file="KRWBlueRockDark_253.jpg" />
+<sprite type="Texture" name="KRWBlueRockVeryDark" file="KRWBlueRockVeryDark_254.jpg" />
+<sprite type="Texture" name="KRWNightSky" file="KRWNightSky_255.jpg" />
+<sprite type="Texture" name="KRWNightSkyMoon" file="KRWNightSkyMoon_256.jpg" />
+<sprite type="Texture" name="KRWNightSkyNoMoon" file="KRWNightSkyNoMoon_257.jpg" />
+<sprite type="Texture" name="lightgrey" file="lightgrey_293.png" />
+<sprite type="Texture" name="loupechene" file="loupechene_277.jpg" />
+<sprite type="Texture" name="mediumgrey" file="mediumgrey_294.png" />
+<sprite type="Texture" name="Moon" file="Moon_223.png" />
+<sprite type="Texture" name="Sand" file="Sand_310.jpg" />
+<sprite type="Texture" name="SandDark" file="SandDark_311.jpg" />
+<sprite type="Texture" name="Sky3" file="Sky3_297.jpg" />
+<sprite type="Texture" name="TiZeta" file="TiZeta_278.jpg" />
+<sprite type="Texture" name="TransparentBlue1" file="TransparentBlue1_269.png" />
+<sprite type="Texture" name="vloup" file="vloup_279.jpg" />
+<sprite type="Texture" name="Wood3" file="Wood3_296.png" />
 
 <sprite type="Entity" name="Strawberry"  fileBase="Strawberry"  fileExtension="png" width="1" height="1" delay="0.05">
 <frame centerX="0.5" centerY="0.5" />
