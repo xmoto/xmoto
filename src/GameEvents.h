@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __MOTOGAMEEVENT_H__
 #define __MOTOGAMEEVENT_H__
 
+#include "DBuffer.h"
 #include "xmscene/BasicSceneStructs.h"
 #include "xmscene/Zone.h"
 #include "xmscene/Entity.h"

@@ -63,7 +63,7 @@ common_SOURCES = Image.cpp \
   Packager.cpp \
   Packager.h \
   svn_version.h \
-  svn_version.cpp
+  svn_version.cpp 
 
 bz2_SOURCES = bzip2/blocksort.c     \
               bzip2/bzlib.c         \
@@ -159,6 +159,8 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp GameMain.cpp \
   xmscene/BikeGhost.cpp \
   xmscene/BikePlayer.h  \
   xmscene/BikePlayer.cpp \
+  RendererObjects.cpp \
+  xmscene/LevelObject.cpp \
   xmscene/Camera.h \
   xmscene/Camera.cpp
 

@@ -24,12 +24,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "VCommon.h"
 #include "VApp.h"
-#include "xmscene/Scene.h"
 #include "GUI.h"
 #include "Replay.h"
 
 namespace vapp {
- 
+	
   /*===========================================================================
   Quality settings
   ===========================================================================*/
@@ -49,7 +48,7 @@ namespace vapp {
   Static geometry
   ===========================================================================*/
   struct GeomCoord {
-    float x,y;
+    float x,y,z;
   };
 
   struct GeomPoly {
@@ -200,12 +199,21 @@ namespace vapp {
     void addPlayTimes(int numberCamera);
     void removePlayTimes();
 
+	
+	/* methods used by LevelObject callbacks */
+	void RenderLevelBlock(Block* block);
+	void RenderLevelDynamicBlock(Block* block);
+	void RenderLevelLayerBlock(Block* block);
+	void RenderLevelEntity(Entity* entity);
+	void RenderLevelExternEntities();
+	void RenderLevelBikes();
+	
   private:
     /* Data */
     std::vector<GraphDebugInfo *> m_DebugInfo;
       
-    std::vector<Geom *> m_StaticGeoms;
-    std::vector<Geom *> m_DynamicGeoms;
+    std::vector<Geom *> m_Geoms;
+	std::vector<LevelObject* > m_LevelObjects;
       
     MotoGame *m_pMotoGame;        /* Game object, so we know what to draw. */
     App *m_pParent;               /* Our owner, so we know where to draw. */
@@ -256,7 +264,7 @@ namespace vapp {
 
     /* Subroutines */
 	
-	void renderEngineCounterNeedle(int nWidth, int nHeight, Vector2f center, float value);
+	void renderEngineCounterNeedle(Vector2f center, float value, float length);
 	
 	
     void _RenderSprites(bool bForeground,bool bBackground);
@@ -276,10 +284,12 @@ namespace vapp {
 			int i_90_rotation = 0
 			);
     void _RenderBlocks(void);
-    void _RenderBlock(Block* block);
+    
     void _RenderBlockEdges(Block* block);
     void _RenderDynamicBlocks(bool bBackground=false);
     void _RenderBackground(void);
+	void _RenderBlock(Block* block);
+	void _RenderUglyBlock(Block* block);
     void _RenderLayers(bool renderFront);
     void _RenderLayer(int layer);
     void _RenderSky(float i_zoom, float i_offset, const TColor& i_color,
