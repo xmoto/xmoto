@@ -1908,7 +1908,7 @@ GameApp::GameApp() {
     try {
       for (int i = 0; i<nrow; i++) {
 	std::ostringstream v_percentage;
-	v_percentage << std::setprecision (1);
+	v_percentage << std::setprecision(1);
 	v_percentage << (i*100.0/nrow);
 
 	v_currentIdLevel = m_db->getResult(v_result, 2, i, 0);

@@ -498,7 +498,7 @@ void xmDatabase::user_xm_floord(sqlite3_context* i_context, int i_nArgs, sqlite3
   }
 
   v_value = sqlite3_value_double(i_values[0]);
-  sqlite3_result_double(i_context, (double)((int)(v_value)));
+  sqlite3_result_double(i_context, (double)((int)(v_value + 0.00001)));
 }
 
 void xmDatabase::user_xm_lvlUpdatedToTxt(sqlite3_context* i_context, int i_nArgs, sqlite3_value** i_values) {

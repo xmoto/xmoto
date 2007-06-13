@@ -22,6 +22,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __ENTITY_H__
 #define __ENTITY_H__
 
+#include "LevelObject.h"
+
 #include "../helpers/VMath.h"
 #include "../helpers/Color.h"
 #include "BasicSceneStructs.h"
@@ -40,7 +42,7 @@ class EntityParticle;
 /**
   An entity is an object that the biker can found on his way
 */
-class Entity {
+class Entity: public LevelObject {
  public:
   Entity(const std::string& i_id);
   virtual ~Entity();
@@ -88,7 +90,10 @@ class Entity {
 
   virtual bool updateToTime(float i_time, Vector2f i_gravity);
 
-  AABB& getAABB();
+  virtual AABB& getAABB();
+  
+  virtual void render(vapp::GameRenderer*);
+  virtual void setDepthAuto();
 
  private:
   std::string m_id;              /** Its own identifer */
@@ -106,9 +111,6 @@ class Entity {
   /* Use to know if a script shall update the pos of the entity*/
   bool        m_isAlive;
   TColor      m_color;
-
-  AABB        m_BBox;
-  bool        m_isBBoxDirty;
 };
 
 class ParticlesSource : public Entity {
@@ -179,7 +181,7 @@ class ParticlesSourceDebris : public ParticlesSource {
 };
 
 /**
-  An EntityParticle is an entity which as a movement and which dies
+  An EntityParticle is an entity which has a movement and which dies
 */
 class EntityParticle : public Entity {
  public:

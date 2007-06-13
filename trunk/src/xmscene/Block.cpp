@@ -24,6 +24,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../Collision.h"
 #include "../PhysSettings.h"
 
+#include "Renderer.h"
+
 /* Vertex */
 ConvexBlockVertex::ConvexBlockVertex(const Vector2f& i_position, const Vector2f& i_texturePosition) {
   m_position         = i_position;
@@ -62,7 +64,7 @@ void ConvexBlock::Move(const Vector2f& i_vector) {
   }
 }
 
-Block::Block(std::string i_id) {
+Block::Block(std::string i_id): LevelObject(false) {
   m_id               = i_id;
   m_initialPosition  = Vector2f(0.0, 0.0);
   m_initialRotation  = 0;
@@ -545,4 +547,27 @@ Block* Block::readFromBinary(vapp::FileHandle *i_pfh) {
   }
 
   return pBlock;
+}
+
+void Block::setDepthAuto()
+{
+	if (getLayer() >= 0) {
+		if (isBackground())
+			this->setDepth(OBJECT_DEPTH_BACK_LAYERS + DEPTH_LAYER_GAIN * getLayer());
+		else
+			this->setDepth(OBJECT_DEPTH_FRONT_LAYERS - DEPTH_LAYER_GAIN * getLayer());
+	} else if (isBackground()) {
+			this->setDepth(OBJECT_DEPTH_BACK_BLOCKS);
+	} else 
+		this->setDepth(OBJECT_DEPTH_BLOCKS);
+}
+
+void Block::render(vapp::GameRenderer* r)
+{
+	if (isDynamic())
+		r->RenderLevelDynamicBlock(this);
+	else if (getLayer() >= 0) 
+		r->RenderLevelLayerBlock(this);
+	else
+		r->RenderLevelBlock(this);
 }

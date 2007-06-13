@@ -1037,6 +1037,7 @@ void MotoGame::cleanPlayers() {
     }
     
     /* Destroy entity */
+	v_entity->setAlive(false);
     deleteEntity(v_entity);
   }
 
