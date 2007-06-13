@@ -1,4 +1,4 @@
-X-Moto 0.3.0 2007-
+X-Moto 0.3.0 2007-06-13
 -----------------------
  * libsqlite integration (for a better and faster data managing)
  * libcurl is now mandatory
