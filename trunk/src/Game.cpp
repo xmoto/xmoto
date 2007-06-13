@@ -229,7 +229,7 @@ GameApp::GameApp() {
 
 				try {
 					m_replayBiker = m_MotoGame.addReplayFromFile(m_PlaySpecificReplay,
-																											 &m_theme, m_theme.getPlayerTheme());
+										     &m_theme, m_theme.getPlayerTheme());
 					m_MotoGame.getCamera()->setPlayerToFollow(m_replayBiker);
 				} catch(Exception &e) {
 					setState(m_StateAfterPlaying);
@@ -2052,12 +2052,22 @@ GameApp::GameApp() {
 	for(int i=0; i<v_nbPlayer; i++) {
 		m_MotoGame.setCurrentCamera(i);
 		m_MotoGame.getCamera()->setPlayerToFollow(m_MotoGame.addPlayerBiker(m_MotoGame.getLevelSrc()->PlayerStart(),
-																																				DD_RIGHT,
-																																				&m_theme, m_theme.getPlayerTheme(),
-																																				getColorFromPlayerNumber(i),
-																																				getUglyColorFromPlayerNumber(i)));
+										    DD_RIGHT,
+										    &m_theme, m_theme.getPlayerTheme(),
+										    getColorFromPlayerNumber(i),
+										    getUglyColorFromPlayerNumber(i)));
 	}
+	// if there's more camera than player (ex: 3 players and 4 cameras),
+	// then, make the remaining cameras follow the first player
+	if(v_nbPlayer < m_MotoGame.getNumberCameras()){
+	  for(int i=v_nbPlayer; i<m_MotoGame.getNumberCameras(); i++){
+	    m_MotoGame.setCurrentCamera(i);
+	    m_MotoGame.getCamera()->setPlayerToFollow(m_MotoGame.Players()[0]);
+	  }
+	}
+
 	if(m_MotoGame.getNumberCameras() > 1){
+	  // make the zoom camera follow the first player
 	  m_MotoGame.setCurrentCamera(m_MotoGame.getNumberCameras());
 	  m_MotoGame.getCamera()->setPlayerToFollow(m_MotoGame.Players()[0]);
 	}
