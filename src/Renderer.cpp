@@ -534,17 +534,25 @@ namespace vapp {
   void GameRenderer::_RenderGhost(Biker* i_ghost, int i) {
     /* Render ghost - ugly mode? */
     if(m_bUglyMode == false) {
+      // can't use the same overlay for the multi cameras,
+      // because the fade is made using all the cameras,
+      // there should be one overlay per camera.
+      int nbCamera = getGameObject()->getNumberCameras();
       /* No not ugly, fancy! Render into overlay? */      
-      if(m_bGhostMotionBlur && getParent()->getDrawLib()->useFBOs()) {
+      if(m_bGhostMotionBlur
+	 && getParent()->getDrawLib()->useFBOs()
+	 && nbCamera == 1) {
 	m_Overlay.beginRendering();
 	m_Overlay.fade(0.15);
       }
       _RenderBike(i_ghost->getState(), &(i_ghost->getState()->Parameters()), i_ghost->getBikeTheme());
 	  
-      if(m_bGhostMotionBlur && getParent()->getDrawLib()->useFBOs()) {
+      if(m_bGhostMotionBlur
+	 && getParent()->getDrawLib()->useFBOs()
+	 && nbCamera == 1) {
 	m_Overlay.endRendering();
 	m_Overlay.present();
-      }
+     }
 	  
       if(i_ghost->getDescription() != "") {
 	if(m_nGhostInfoTrans > 0 && m_displayGhostInformation) {
