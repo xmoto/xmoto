@@ -324,7 +324,7 @@ namespace vapp {
 //    pTexture->m_TI.Name = TexName;
 //
 //    /* Load and manage texture */
-//    pTexture->load(FilePath,bSmall);  /* TODO:  FIX DET HER!! Mï¿½SKE SKRIV EN NY TEXTUREMANAGER :( */
+//    pTexture->load(FilePath,bSmall);  /* TODO:  FIX DET HER!! MÅSKE SKRIV EN NY TEXTUREMANAGER :( */
 //    //printf("%x  %x  L!! %s\n",this,pTexture,FilePath.c_str());
 //    m_Textures.push_back( pTexture );
 //    return pTexture;

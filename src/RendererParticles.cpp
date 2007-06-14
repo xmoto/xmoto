@@ -63,6 +63,7 @@ namespace vapp {
   }
 
   void GameRenderer::_RenderParticle(ParticlesSource *i_source) {
+
     if(i_source->SpriteName() == "Star") {
 
       AnimationSprite *pStarAnimation;

@@ -60,18 +60,12 @@ namespace vapp {
 
     m_fNextGhostInfoUpdate = 0.0f;
     m_nGhostInfoTrans      = 255;
-	
 
     /* Optimize scene */
-    const std::vector<Block *>& Blocks = getGameObject()->getLevelSrc()->Blocks();
+    std::vector<Block *> Blocks = getGameObject()->getLevelSrc()->Blocks();
     int nVertexBytes = 0;
   
     for(int i=0; i<Blocks.size(); i++) {
-		
-		if (Blocks[i]->getLayer() < 0) {
-			Blocks[i]->setDepthAuto();
-			m_LevelObjects.push_back(Blocks[i]);
-		}
 
       /* do not load into the graphic card blocks which won't be
 	 displayed. On ati card with free driver, levels like green
@@ -81,9 +75,19 @@ namespace vapp {
       if(m_Quality == GQ_LOW && Blocks[i]->isBackground() == true)
 	continue;
 
+      bool dynamicBlock = false;
+      std::vector<Geom *>* pGeoms;
+      if(Blocks[i]->isDynamic() == true){
+	dynamicBlock = true;
+	pGeoms = &m_DynamicGeoms;
+      }
+      else{
+	pGeoms = &m_StaticGeoms;
+      }
+
       std::vector<ConvexBlock *> ConvexBlocks = Blocks[i]->ConvexBlocks();
       Vector2f Center;
-      if(Blocks[i]->isDynamic() == true){
+      if(dynamicBlock == true){
       	Center.x = 0.0;
       	Center.y = 0.0;
       }
@@ -110,8 +114,8 @@ namespace vapp {
 
       Geom* pSuitableGeom = new Geom;
       pSuitableGeom->pTexture = pTexture;
-      int geomIndex = m_Geoms.size();
-      m_Geoms.push_back(pSuitableGeom);
+      int geomIndex = pGeoms->size();
+      pGeoms->push_back(pSuitableGeom);
       Blocks[i]->setGeom(geomIndex);
 
       for(int j=0; j<ConvexBlocks.size(); j++) {
@@ -127,14 +131,8 @@ namespace vapp {
         for(int k=0; k<pPoly->nNumVertices; k++) {
           pPoly->pVertices[k].x = Center.x + ConvexBlocks[j]->Vertices()[k]->Position().x;
           pPoly->pVertices[k].y = Center.y + ConvexBlocks[j]->Vertices()[k]->Position().y;
-		  
-		  
-		  /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx */
-		  pPoly->pVertices[k].z = 0;
-		  
           pPoly->pTexCoords[k].x = ConvexBlocks[j]->Vertices()[k]->TexturePosition().x;
           pPoly->pTexCoords[k].y = ConvexBlocks[j]->Vertices()[k]->TexturePosition().y;
-		  pPoly->pTexCoords[k].z = 0;
 
 	  v_center += Vector2f(pPoly->pVertices[k].x, pPoly->pVertices[k].y);
         }
@@ -160,11 +158,11 @@ namespace vapp {
 	  /* Copy static coordinates unto video memory */
 	  ((DrawLibOpenGL*)getParent()->getDrawLib())->glGenBuffersARB(1, (GLuint *) &pPoly->nVertexBufferID);
 	  ((DrawLibOpenGL*)getParent()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nVertexBufferID);
-	  ((DrawLibOpenGL*)getParent()->getDrawLib())->glBufferDataARB(GL_ARRAY_BUFFER_ARB,pPoly->nNumVertices*3*sizeof(float),(void *)pPoly->pVertices,GL_STATIC_DRAW_ARB);
+	  ((DrawLibOpenGL*)getParent()->getDrawLib())->glBufferDataARB(GL_ARRAY_BUFFER_ARB,pPoly->nNumVertices*2*sizeof(float),(void *)pPoly->pVertices,GL_STATIC_DRAW_ARB);
 
 	  ((DrawLibOpenGL*)getParent()->getDrawLib())->glGenBuffersARB(1, (GLuint *) &pPoly->nTexCoordBufferID);
 	  ((DrawLibOpenGL*)getParent()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB,pPoly->nTexCoordBufferID);
-	  ((DrawLibOpenGL*)getParent()->getDrawLib())->glBufferDataARB(GL_ARRAY_BUFFER_ARB,pPoly->nNumVertices*3*sizeof(float),(void *)pPoly->pTexCoords,GL_STATIC_DRAW_ARB);
+	  ((DrawLibOpenGL*)getParent()->getDrawLib())->glBufferDataARB(GL_ARRAY_BUFFER_ARB,pPoly->nNumVertices*2*sizeof(float),(void *)pPoly->pTexCoords,GL_STATIC_DRAW_ARB);
 	}
 #endif
       }
@@ -235,26 +233,6 @@ namespace vapp {
     
 
     Log("GL: %d kB vertex buffers",    nVertexBytes/1024);
-	
-	/* push entities into LevelObjects*/
-	const std::vector<Entity *>& ents = getGameObject()->getLevelSrc()->Entities();
-	for (std::vector<Entity *>::const_iterator i = ents.begin(); i != ents.end(); i++) {
-		
-		//if ()
-		
-		(*i)->setDepthAuto();
-		m_LevelObjects.push_back(*i);
-	}
-	
-	
-	PseudoObjectBikes* b = new PseudoObjectBikes();
-	b->setDepth(0);
-	PseudoObjectExternEntities* ee = new PseudoObjectExternEntities();
-	ee->setDepth(10);
-	m_LevelObjects.push_back(b);
-	m_LevelObjects.push_back(ee);
-	
-	std::stable_sort(m_LevelObjects.begin(), m_LevelObjects.end(), LevelObjectComparer);
   }
 
   /*===========================================================================
@@ -284,16 +262,8 @@ namespace vapp {
   void GameRenderer::unprepareForNewLevel(void) {
     if(m_pInGameStats)
       m_pInGameStats->showWindow(false);
-    _deleteGeoms(m_Geoms);
-	
-	for (std::vector<LevelObject*>::iterator i = m_LevelObjects.begin();
-			i != m_LevelObjects.end(); i++) {
-				if ((*i)->isPseudoClass())
-					delete *i;
-	}
-	
-	m_LevelObjects.clear();
-	
+    _deleteGeoms(m_StaticGeoms);
+    _deleteGeoms(m_DynamicGeoms);
   }
   
   void GameRenderer::renderEngineCounter(int x, int y, int nWidth,int nHeight, float pSpeed, float pLinVel) {
@@ -364,9 +334,6 @@ namespace vapp {
     p1 = Vector2f(x+nWidth, getParent()->getDrawLib()->getDispHeight()-y-nHeight);
     p2 = Vector2f(x+nWidth, getParent()->getDrawLib()->getDispHeight()-y);
     p3 = Vector2f(x,        getParent()->getDrawLib()->getDispHeight()-y);
-	
-	Vector2f center = p3 + Vector2f(ENGINECOUNTER_CENTERX   * coefw,
-								- ENGINECOUNTER_CENTERY * coefh);
 
 	pSprite = (MiscSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_MISC, "EngineCounter");
 	if(pSprite != NULL) {
@@ -375,51 +342,45 @@ namespace vapp {
 			_RenderAlphaBlendedSection(pTexture, p0, p1, p2, p3);
 
 			getParent()->getDrawLib()->setColorRGB(255,50,50);
-			renderEngineCounterNeedle(center, 1.2 * pSpeed_eff, 0.8 * coefw );
+			renderEngineCounterNeedle(nWidth, nHeight, p3, pSpeed_eff);
 			getParent()->getDrawLib()->setColorRGB(50,50,255);
 			if (pLinVel_eff > -1) {
-				renderEngineCounterNeedle(center, pLinVel_eff, coefw);
+				renderEngineCounterNeedle(nWidth, nHeight, p3, pLinVel_eff);
 			}
 		}
 	}
   }
     
-  void GameRenderer::renderEngineCounterNeedle(Vector2f center, float value, float length) {  
+  void GameRenderer::renderEngineCounterNeedle(int nWidth, int nHeight, Vector2f center, float value) {
+	  float coefw = 1.0 / ENGINECOUNTER_PICTURE_SIZE * nWidth;
+	  float coefh = 1.0 / ENGINECOUNTER_PICTURE_SIZE * nHeight;  
+	  Vector2f pcenter = center + Vector2f(ENGINECOUNTER_CENTERX   * coefw,
+							  - ENGINECOUNTER_CENTERY * coefh);
 
-	  Vector2f pcenterl = center + Vector2f(-cosf(value / 360.0 * (2.0 * 3.14159) + (3.14159/2) + ENGINECOUNTER_STARTANGLE)
-			  * (ENGINECOUNTER_RADIUS) * length * ENGINECOUNTER_NEEDLE_WIDTH_FACTOR,
+	  Vector2f pcenterl = pcenter + Vector2f(-cosf(value / 360.0 * (2.0 * 3.14159) + (3.14159/2) + ENGINECOUNTER_STARTANGLE)
+			  * (ENGINECOUNTER_RADIUS) * coefw * ENGINECOUNTER_NEEDLE_WIDTH_FACTOR,
 				 sinf(value / 360.0  * (2.0 * 3.14159) + (3.14159/2))
-						 * (ENGINECOUNTER_RADIUS) * length * ENGINECOUNTER_NEEDLE_WIDTH_FACTOR);
+						 * (ENGINECOUNTER_RADIUS) * coefh * ENGINECOUNTER_NEEDLE_WIDTH_FACTOR);
 
-	  Vector2f pcenterr = center - Vector2f(-cosf(value / 360.0 * (2.0 * 3.14159) + (3.14159/2) + ENGINECOUNTER_STARTANGLE)
-			  * (ENGINECOUNTER_RADIUS) * length * ENGINECOUNTER_NEEDLE_WIDTH_FACTOR,
+	  Vector2f pcenterr = pcenter - Vector2f(-cosf(value / 360.0 * (2.0 * 3.14159) + (3.14159/2) + ENGINECOUNTER_STARTANGLE)
+			  * (ENGINECOUNTER_RADIUS) * coefw * ENGINECOUNTER_NEEDLE_WIDTH_FACTOR,
 				 sinf(value / 360.0  * (2.0 * 3.14159) + (3.14159/2) + ENGINECOUNTER_STARTANGLE)
-						 * (ENGINECOUNTER_RADIUS) * length * ENGINECOUNTER_NEEDLE_WIDTH_FACTOR);
+						 * (ENGINECOUNTER_RADIUS) * coefh * ENGINECOUNTER_NEEDLE_WIDTH_FACTOR);
 
-	  Vector2f pdest    = center + Vector2f(-cosf(value / 360.0 * (2.0 * 3.14159) + ENGINECOUNTER_STARTANGLE )
-			  * (ENGINECOUNTER_RADIUS) * length, sinf(value / 360.0  * (2.0 * 3.14159) + ENGINECOUNTER_STARTANGLE) * (ENGINECOUNTER_RADIUS) * length);
+	  Vector2f pdest    = pcenter + Vector2f(-cosf(value / 360.0 * (2.0 * 3.14159) + ENGINECOUNTER_STARTANGLE )
+			  * (ENGINECOUNTER_RADIUS) * coefw, sinf(value / 360.0  * (2.0 * 3.14159) + ENGINECOUNTER_STARTANGLE) * (ENGINECOUNTER_RADIUS) * coefh);
 
-	  Vector2f pbottom   = center - Vector2f(-cosf(value / 360.0 * (2.0 * 3.14159) + ENGINECOUNTER_STARTANGLE )
-			  * (ENGINECOUNTER_RADIUS) * length * ENGINECOUNTER_NEEDLE_BOTTOM_FACTOR,
+	  Vector2f pbottom   = pcenter - Vector2f(-cosf(value / 360.0 * (2.0 * 3.14159) + ENGINECOUNTER_STARTANGLE )
+			  * (ENGINECOUNTER_RADIUS) * coefw * ENGINECOUNTER_NEEDLE_BOTTOM_FACTOR,
 				 sinf(value / 360.0  * (2.0 * 3.14159)
-						 + ENGINECOUNTER_STARTANGLE) * (ENGINECOUNTER_RADIUS) * length * ENGINECOUNTER_NEEDLE_BOTTOM_FACTOR);
-	  
+						 + ENGINECOUNTER_STARTANGLE) * (ENGINECOUNTER_RADIUS) * coefh * ENGINECOUNTER_NEEDLE_BOTTOM_FACTOR);
 	  
 	  getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
 	  getParent()->getDrawLib()->glVertex(pdest);
 	  getParent()->getDrawLib()->glVertex(pcenterl);
 	  getParent()->getDrawLib()->glVertex(pbottom);
 	  getParent()->getDrawLib()->glVertex(pcenterr);
-	  getParent()->getDrawLib()->endDraw();	  
-	  
-	  if (m_Quality != GQ_LOW) {
-		getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_LOOP);
-		getParent()->getDrawLib()->glVertex(pdest);
-		getParent()->getDrawLib()->glVertex(pcenterl);
-		getParent()->getDrawLib()->glVertex(pbottom);
-		getParent()->getDrawLib()->glVertex(pcenterr);
-		getParent()->getDrawLib()->endDraw();
-	  }
+	  getParent()->getDrawLib()->endDraw();
   }
   
   /*===========================================================================
@@ -629,10 +590,8 @@ namespace vapp {
     }
      
     m_fZoom = 60.0f;    
-
     pCamera->setScroll(true, pGame->getGravity());
     pCamera->setCamera2d();
-
 
     /* calculate screen AABB to show only visible entities and dyn blocks */
     m_screenBBox.reset();
@@ -646,7 +605,6 @@ namespace vapp {
     Vector2f v1(pCamera->getCameraPositionX()-xCamOffset, pCamera->getCameraPositionY()-yCamOffset);
     Vector2f v2(pCamera->getCameraPositionX()+xCamOffset, pCamera->getCameraPositionY()+yCamOffset);
 
-	//printf("->\n\t%lf %lf\t%lf %lf\n", v1.x, v1.y, v2.x, v2.y);
     m_screenBBox.addPointToAABB2f(v1);
     m_screenBBox.addPointToAABB2f(v2);
 
@@ -662,7 +620,6 @@ namespace vapp {
 
     pCamera->setCamera3d();
 
-
     /* Perform scaling/translation */    
     getParent()->getDrawLib()->setScale(xScale, yScale);
     if(pCamera->isMirrored() == true){
@@ -671,10 +628,6 @@ namespace vapp {
     float rotationAngle = pCamera->guessDesiredAngleRotation();
     getParent()->getDrawLib()->setRotateZ(rotationAngle);
     getParent()->getDrawLib()->setTranslate(-pCamera->getCameraPositionX(), -pCamera->getCameraPositionY());
-	
-	
-	
-#if 0 /* XXX FIXME XXX */
 
     if(m_Quality == GQ_HIGH && m_bUglyMode == false) {
       /* background level blocks */
@@ -698,22 +651,9 @@ namespace vapp {
     /* ... covered by blocks ... */
     _RenderDynamicBlocks(false);
     _RenderBlocks();
-#endif 
-	
-		/* 
-	XXX VERY IMPORTANT: XXX
-	it's only temporary solution, extreme unefective and so on and was done to 
-	just to demonstrate my idea. 
-		*/
-	for (std::vector<LevelObject*>::iterator iter = m_LevelObjects.begin();
-		 iter != m_LevelObjects.end();
-		 iter++) {
-		if ((*iter)->isVisible(m_screenBBox))
-			(*iter)->render(this);
-	}
-	
+
     /* ... then render "middleground" sprites ... */
-//     _RenderSprites(false,false);
+    _RenderSprites(false,false);
 
     /* zones */
     if(m_bUglyOverMode) {
@@ -721,20 +661,70 @@ namespace vapp {
 	_RenderZone(pGame->getLevelSrc()->Zones()[i]);
       }
     }
-	    
+
+    /* ghosts */
+    bool v_found = false;
+    int v_found_i = 0;
+    for(unsigned int i=0; i<pGame->Ghosts().size(); i++) {
+      Ghost* v_ghost = pGame->Ghosts()[i];
+      if(v_ghost != pCamera->getPlayerToFollow()) {
+	_RenderGhost(v_ghost, i);
+      } else {
+	v_found = true;
+	v_found_i = i;
+      }
+    }
+    /* draw the player to follow over the others */
+    if(v_found) {
+      _RenderGhost(pGame->Ghosts()[v_found_i], v_found_i);
+    }
+
+    /* ... followed by the bike ... */
+    v_found = false;
+    for(unsigned int i=0; i<pGame->Players().size(); i++) {
+      Biker* v_player = pGame->Players()[i];
+      if(v_player != pCamera->getPlayerToFollow()) {
+	_RenderBike(v_player->getState(),
+		    &(v_player->getState()->Parameters()),
+		    v_player->getBikeTheme(),
+		    v_player->getRenderBikeFront(),
+		    v_player->getColorFilter(),
+		    v_player->getUglyColorFilter());
+      } else {
+	v_found = true;
+      }
+    }
+    if(v_found) {
+      _RenderBike(pCamera->getPlayerToFollow()->getState(),
+		  &(pCamera->getPlayerToFollow()->getState()->Parameters()),
+		  pCamera->getPlayerToFollow()->getBikeTheme(),
+		  pCamera->getPlayerToFollow()->getRenderBikeFront(),
+		  pCamera->getPlayerToFollow()->getColorFilter(),
+		  pCamera->getPlayerToFollow()->getUglyColorFilter());
+    }
+
+    /* ghost information */
+    if(pGame->getTime() > m_fNextGhostInfoUpdate) {
+      if(m_nGhostInfoTrans > 0) {
+	if(m_fNextGhostInfoUpdate > 1.5f) {
+	  m_nGhostInfoTrans-=16;
+	}
+	m_fNextGhostInfoUpdate += 0.025f;
+      }
+    }
+    
     if(m_Quality == GQ_HIGH && m_bUglyMode == false) {
       /* Render particles (front!) */    
-   //   _RenderParticles();
+      _RenderParticles();
     }
     
     /* ... and finally the foreground sprites! */
-//     _RenderSprites(true,false);
-	
+    _RenderSprites(true,false);
 
     /* and finally finally, front layers */
-//     if(m_Quality == GQ_HIGH && m_bUglyMode == false) {
-//       _RenderLayers(true);
-//     }
+    if(m_Quality == GQ_HIGH && m_bUglyMode == false) {
+      _RenderLayers(true);
+    }
 
     if(isDebug()) {
       /* Draw some collision handling debug info */
@@ -827,8 +817,7 @@ namespace vapp {
 	 && pGame->getNumberCameras() == 1) {
 	renderEngineCounter(getParent()->getDrawLib()->getDispWidth()-128,
 			    getParent()->getDrawLib()->getDispHeight()-128,128,128,
-			    pCamera->getPlayerToFollow()->getBikeEngineSpeed(),
-				pCamera->getPlayerToFollow()->getBikeLinearVel());
+			    pCamera->getPlayerToFollow()->getBikeEngineSpeed());
       }
     }
 		
@@ -972,7 +961,6 @@ namespace vapp {
     }
   }
   
-#if 0 /* not in use anymore */
   /*===========================================================================
   Sprite rendering main
   ===========================================================================*/
@@ -1001,10 +989,44 @@ namespace vapp {
 
     for(int i=0;i<Entities.size();i++) {
       pEnt = Entities[i];
+
+      switch(pEnt->Speciality()) {
+        case ET_NONE:
+          /* Middleground? (not foreground, not background) */
+          if(pEnt->Z() == 0.0f && !bForeground && !bBackground) {
+            _RenderSprite(pEnt);  
+          } 
+          else {
+            /* In front? */
+            if(pEnt->Z() > 0.0f && bForeground) {
+              _RenderSprite(pEnt);
+            } 
+            else {
+              /* Those in back? */
+              if(pEnt->Z() < 0.0f && bBackground) {
+                _RenderSprite(pEnt);
+              }
+            }
+          }
+          break;
+      default:
+          if(!bForeground && !bBackground) {
+	    switch(pEnt->Speciality()) {
+	    case ET_MAKEWIN:
+	      _RenderSprite(pEnt, m_sizeMultOfEntitiesWhichMakeWin);
+	      break;
+	    case ET_ISTOTAKE:
+	      _RenderSprite(pEnt, m_sizeMultOfEntitiesToTake);
+	      break;
+	    default:	      
+	      _RenderSprite(pEnt);
+	    }
+          }
+          break;
+      }
     }
   }
-#endif 
-  
+
   /*===========================================================================
   Render a sprite
   ===========================================================================*/
@@ -1177,12 +1199,9 @@ namespace vapp {
     }
   }
      
-#if 0 /* not in use anymore */
   /*===========================================================================
   Blocks (dynamic)
   ===========================================================================*/
-  /* benetnash: I don't like this code very very much - it's very messy 
-  */
   void GameRenderer::_RenderDynamicBlocks(bool bBackground) {
     MotoGame *pGame = getGameObject();
 
@@ -1191,16 +1210,149 @@ namespace vapp {
 
     /* sort blocks on their texture */
     std::sort(Blocks.begin(), Blocks.end(), AscendingTextureSort());
+
+    if(m_bUglyMode == false) {
       for(int i=0; i<Blocks.size(); i++) {
-			Blocks[i]->render(this);
+	/* Are we rendering background blocks or what? */
+	if(Blocks[i]->isBackground() != bBackground)
+	  continue;
+
+	Block* block = Blocks[i];
+	/* Build rotation matrix for block */
+	float fR[4];
+	float rotation = block->DynamicRotation();
+	fR[0] =  cos(rotation);
+	fR[2] =  sin(rotation);
+	fR[1] = -fR[2];
+	fR[3] =  fR[0];
+
+	Vector2f dynRotCenter = block->DynamicRotationCenter();
+	Vector2f dynPos       = block->DynamicPosition();
+	int geom = block->getGeom();
+
+// 57.295779524 = 180/pi
+#define rad2deg(x) ((x)*57.295779524)
+
+	if(getParent()->getDrawLib()->getBackend() == DrawLib::backend_OpenGl) {
+#ifdef ENABLE_OPENGL
+	  glEnableClientState(GL_VERTEX_ARRAY);
+	  glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	  /* we're working with modelview matrix*/
+	  glPushMatrix();
+
+	  glTranslatef(dynPos.x, dynPos.y, 0);
+	  if(rotation != 0.0){
+	    glTranslatef(dynRotCenter.x, dynRotCenter.y, 0);
+	    glRotatef(rad2deg(rotation), 0, 0, 1);
+	    glTranslatef(-dynRotCenter.x, -dynRotCenter.y, 0);
+	  }
+
+	  getParent()->getDrawLib()->setTexture(m_DynamicGeoms[geom]->pTexture, BLEND_MODE_NONE);
+	  getParent()->getDrawLib()->setColorRGB(255, 255, 255);
+
+	  /* VBO optimized? */
+	  if(getParent()->getDrawLib()->useVBOs()) {
+	    for(int j=0;j<m_DynamicGeoms[geom]->Polys.size();j++) {          
+	      GeomPoly *pPoly = m_DynamicGeoms[geom]->Polys[j];
+
+	      ((DrawLibOpenGL*)getParent()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nVertexBufferID);
+	      glVertexPointer(2,GL_FLOAT,0,(char *)NULL);
+
+	      ((DrawLibOpenGL*)getParent()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nTexCoordBufferID);
+	      glTexCoordPointer(2,GL_FLOAT,0,(char *)NULL);
+
+	      glDrawArrays(GL_POLYGON,0,pPoly->nNumVertices);
+	    }      
+	  } else {
+	    for(int j=0;j<m_DynamicGeoms[geom]->Polys.size();j++) {          
+	      GeomPoly *pPoly = m_DynamicGeoms[geom]->Polys[j];
+	      glVertexPointer(2,   GL_FLOAT, 0, pPoly->pVertices);
+	      glTexCoordPointer(2, GL_FLOAT, 0, pPoly->pTexCoords);
+	      glDrawArrays(GL_POLYGON, 0, pPoly->nNumVertices);
+	    }
+	  }
+
+	  glPopMatrix();
+
+	  glDisableClientState(GL_VERTEX_ARRAY);
+	  glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+#endif
+	} else if(getParent()->getDrawLib()->getBackend() == DrawLib::backend_SdlGFX){
+
+	  for(int j=0;j<m_DynamicGeoms[geom]->Polys.size();j++) {          
+	    getParent()->getDrawLib()->setTexture(m_DynamicGeoms[geom]->pTexture,BLEND_MODE_NONE);
+	    getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+	    getParent()->getDrawLib()->setColorRGB(255,255,255);
+
+	    for(int k=0;k<m_DynamicGeoms[geom]->Polys[j]->nNumVertices;k++) {
+	      Vector2f vertex = Vector2f(m_DynamicGeoms[geom]->Polys[j]->pVertices[k].x,
+					 m_DynamicGeoms[geom]->Polys[j]->pVertices[k].y);
+	      /* transform vertex */
+	      Vector2f transVertex = Vector2f((vertex.x-dynRotCenter.x)*fR[0] + (vertex.y-dynRotCenter.y)*fR[1],
+					      (vertex.x-dynRotCenter.x)*fR[2] + (vertex.y-dynRotCenter.y)*fR[3]);
+	      transVertex += dynPos + dynRotCenter;
+
+	      getParent()->getDrawLib()->glTexCoord(m_DynamicGeoms[geom]->Polys[j]->pTexCoords[k].x,
+						    m_DynamicGeoms[geom]->Polys[j]->pTexCoords[k].y);
+	      getParent()->getDrawLib()->glVertex(transVertex.x, transVertex.y);
+	    }
+	    getParent()->getDrawLib()->endDraw();
+	  }
+
+	}
       }
+
+      /* Render all special edges (if quality!=low) */
+      if(m_Quality != GQ_LOW) {
+	for(int i=0;i<Blocks.size();i++) {
+	  if(Blocks[i]->isBackground() == bBackground){
+	    _RenderBlockEdges(Blocks[i]);
+	  }
+	}
+      }
+
+    }
+
+    if(m_bUglyMode || m_bUglyOverMode) {
+      for(int i=0; i<Blocks.size(); i++) {
+	/* Are we rendering background blocks or what? */
+	if(Blocks[i]->isBackground() != bBackground)
+	  continue;
+
+	/* Build rotation matrix for block */
+	float fR[4];
+	float rotation = Blocks[i]->DynamicRotation();
+	fR[0] =  cos(rotation);
+	fR[2] =  sin(rotation);
+	fR[1] = -fR[2];
+	fR[3] =  fR[0];
+
+	Vector2f dynRotCenter = Blocks[i]->DynamicRotationCenter();
+	Vector2f dynPos       = Blocks[i]->DynamicPosition();
+
+	getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_LOOP);
+	getParent()->getDrawLib()->setColorRGB(255,255,255);
+
+        for(int j=0;j<Blocks[i]->Vertices().size();j++) {
+	  Vector2f vertex = Blocks[i]->Vertices()[j]->Position();
+	  /* transform vertex */
+	  Vector2f transVertex = Vector2f((vertex.x-dynRotCenter.x)*fR[0] + (vertex.y-dynRotCenter.y)*fR[1],
+					  (vertex.x-dynRotCenter.x)*fR[2] + (vertex.y-dynRotCenter.y)*fR[3]);
+	  transVertex += dynPos + dynRotCenter;
+
+          getParent()->getDrawLib()->glVertex(transVertex.x, transVertex.y);
+        }
+	getParent()->getDrawLib()->endDraw();
+      }
+    }
+
   }
 
-#endif
   void GameRenderer::_RenderBlock(Block* block)
   {
     int geom = block->getGeom();
-    getParent()->getDrawLib()->setTexture(m_Geoms[geom]->pTexture, BLEND_MODE_A);
+    getParent()->getDrawLib()->setTexture(m_StaticGeoms[geom]->pTexture, BLEND_MODE_A);
     getParent()->getDrawLib()->setColorRGB(255, 255, 255);
 
     if(getParent()->getDrawLib()->getBackend() == DrawLib::backend_OpenGl) {
@@ -1208,74 +1360,48 @@ namespace vapp {
       glEnableClientState(GL_VERTEX_ARRAY);
       glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-	  /* enable z-buffer */
-// 	  glEnable(GL_DEPTH_TEST);
-	  
       /* VBO optimized? */
       if(getParent()->getDrawLib()->useVBOs()) {
-	for(int j=0;j<m_Geoms[geom]->Polys.size();j++) {          
-	  GeomPoly *pPoly = m_Geoms[geom]->Polys[j];
+	for(int j=0;j<m_StaticGeoms[geom]->Polys.size();j++) {          
+	  GeomPoly *pPoly = m_StaticGeoms[geom]->Polys[j];
 
 	  ((DrawLibOpenGL*)getParent()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nVertexBufferID);
-	  glVertexPointer(3,GL_FLOAT,0,(char *)NULL);
+	  glVertexPointer(2,GL_FLOAT,0,(char *)NULL);
 
 	  ((DrawLibOpenGL*)getParent()->getDrawLib())->glBindBufferARB(GL_ARRAY_BUFFER_ARB, pPoly->nTexCoordBufferID);
-	  glTexCoordPointer(3,GL_FLOAT,0,(char *)NULL);
+	  glTexCoordPointer(2,GL_FLOAT,0,(char *)NULL);
 
- 	  glDrawArrays(GL_POLYGON,0,pPoly->nNumVertices);
-// 	  glHint(GL_LINE_SMOOTH_HINT, GL_NICEST)
-// 	  glEnable(GL_LINE_SMOOTH);
-// 	  glEnable(GL_BLEND);
-// 	  glDrawArrays(GL_LINE_LOOP,0,pPoly->nNumVertices);
-// 	  glDisable(GL_LINE_SMOOTH);
-// 	  glDisable(GL_BLEND);
+	  glDrawArrays(GL_POLYGON,0,pPoly->nNumVertices);
 	}      
       } else {
-	for(int j=0;j<m_Geoms[geom]->Polys.size();j++) {          
-	  GeomPoly *pPoly = m_Geoms[geom]->Polys[j];
-	  glVertexPointer(3,   GL_FLOAT, 0, pPoly->pVertices);
-	  glTexCoordPointer(3, GL_FLOAT, 0, pPoly->pTexCoords);
+	for(int j=0;j<m_StaticGeoms[geom]->Polys.size();j++) {          
+	  GeomPoly *pPoly = m_StaticGeoms[geom]->Polys[j];
+	  glVertexPointer(2,   GL_FLOAT, 0, pPoly->pVertices);
+	  glTexCoordPointer(2, GL_FLOAT, 0, pPoly->pTexCoords);
 	  glDrawArrays(GL_POLYGON, 0, pPoly->nNumVertices);
 	}
       }
 
-// 	  glDisable(GL_DEPTH_TEST);
-	  
       glDisableClientState(GL_VERTEX_ARRAY);
       glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	  
-
 #endif
     } else if(getParent()->getDrawLib()->getBackend() == DrawLib::backend_SdlGFX){
 
-      for(int j=0;j<m_Geoms[geom]->Polys.size();j++) {
-	getParent()->getDrawLib()->setTexture(m_Geoms[geom]->pTexture,BLEND_MODE_NONE);
+      for(int j=0;j<m_StaticGeoms[geom]->Polys.size();j++) {
+	getParent()->getDrawLib()->setTexture(m_StaticGeoms[geom]->pTexture,BLEND_MODE_NONE);
 	getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
 	getParent()->getDrawLib()->setColorRGB(255,255,255);
-	for(int k=0;k<m_Geoms[geom]->Polys[j]->nNumVertices;k++) {
-	  getParent()->getDrawLib()->glTexCoord(m_Geoms[geom]->Polys[j]->pTexCoords[k].x,
-						m_Geoms[geom]->Polys[j]->pTexCoords[k].y);
-	  getParent()->getDrawLib()->glVertex(m_Geoms[geom]->Polys[j]->pVertices[k].x,
-					      m_Geoms[geom]->Polys[j]->pVertices[k].y);
+	for(int k=0;k<m_StaticGeoms[geom]->Polys[j]->nNumVertices;k++) {
+	  getParent()->getDrawLib()->glTexCoord(m_StaticGeoms[geom]->Polys[j]->pTexCoords[k].x,
+						m_StaticGeoms[geom]->Polys[j]->pTexCoords[k].y);
+	  getParent()->getDrawLib()->glVertex(m_StaticGeoms[geom]->Polys[j]->pVertices[k].x,
+					      m_StaticGeoms[geom]->Polys[j]->pVertices[k].y);
 	}
 	getParent()->getDrawLib()->endDraw();
       }
-    }	
+    }
   }
 
-  void GameRenderer::_RenderUglyBlock(Block* block) 
-  {
-// 	  if(block->isBackground() == false && block->isLayer() == false) {
-		  getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_LOOP);
-		  getParent()->getDrawLib()->setColorRGB(255,255,255);
-		  for(int j=0;j<block->Vertices().size();j++) {
-			  getParent()->getDrawLib()->glVertex(block->Vertices()[j]->Position().x + block->DynamicPosition().x,
-						block->Vertices()[j]->Position().y + block->DynamicPosition().y);
-		  }
-		  getParent()->getDrawLib()->endDraw();
-// 	  }
-  }
-  
   void GameRenderer::_RenderBlockEdges(Block* block)
   {
     BlockVertex* v_blockVertexA;
@@ -1335,28 +1461,57 @@ namespace vapp {
     }
   }
 
-#if 0 /* not in use anymore */
   /*===========================================================================
   Blocks (static)
   ===========================================================================*/
   void GameRenderer::_RenderBlocks(void) {
-	  MotoGame *pGame = getGameObject();
+    MotoGame *pGame = getGameObject();
 
-	  for(int layer=-1; layer<=0; layer++){
-		  std::vector<Block *> Blocks;
+    for(int layer=-1; layer<=0; layer++){
+      std::vector<Block *> Blocks;
 
-		  /* Render all non-background blocks */
-		  Blocks = getGameObject()->getCollisionHandler()->getStaticBlocksNearPosition(m_screenBBox, layer);
+      /* Render all non-background blocks */
+      Blocks = getGameObject()->getCollisionHandler()->getStaticBlocksNearPosition(m_screenBBox, layer);
 
-		  /* sort blocks on their texture */
-		  std::sort(Blocks.begin(), Blocks.end(), AscendingTextureSort());
+      /* sort blocks on their texture */
+      std::sort(Blocks.begin(), Blocks.end(), AscendingTextureSort());
 
-		  for(int i=0;i<Blocks.size();i++) 
-			  if(Blocks[i]->isBackground() == false) 
-				  Blocks[i]->render(this);
+      /* Ugly mode? */
+      if(m_bUglyMode == false) {
+	/* Render all non-background blocks */
+	/* Static geoms... */
+	for(int i=0;i<Blocks.size();i++) {
+	  if(Blocks[i]->isBackground() == false) {
+	    _RenderBlock(Blocks[i]);
 	  }
+	}
+
+	/* Render all special edges (if quality!=low) */
+	if(m_Quality != GQ_LOW) {
+	  for(int i=0;i<Blocks.size();i++) {
+	    if(Blocks[i]->isBackground() == false) {
+	    _RenderBlockEdges(Blocks[i]);
+	    }
+	  }
+	}
+      }
+
+      if(m_bUglyMode || m_bUglyOverMode) {
+	for(int i=0;i<Blocks.size();i++) {
+	  if(Blocks[i]->isBackground() == false) {
+	    getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_LOOP);
+	    getParent()->getDrawLib()->setColorRGB(255,255,255);
+	    for(int j=0;j<Blocks[i]->Vertices().size();j++) {
+	      getParent()->getDrawLib()->glVertex(Blocks[i]->Vertices()[j]->Position().x + Blocks[i]->DynamicPosition().x,
+						  Blocks[i]->Vertices()[j]->Position().y + Blocks[i]->DynamicPosition().y);
+	    }
+	    getParent()->getDrawLib()->endDraw();
+	  }
+	}
+      }
+
+    }
   }
-#endif
 
   void GameRenderer::_RenderZone(Zone *i_zone) {
     ZonePrim *v_prim;
@@ -1372,7 +1527,7 @@ namespace vapp {
       }
     }
   }
-												 
+
   /*===========================================================================
   Sky.
   ===========================================================================*/
@@ -1435,7 +1590,6 @@ namespace vapp {
   } 
  }
 
-#if 0 /* not in use anymore */
   /*===========================================================================
   And background rendering
   ===========================================================================*/
@@ -1450,13 +1604,20 @@ namespace vapp {
 
     for(int i=0;i<Blocks.size();i++) {
       if(Blocks[i]->isBackground() == true) {
-		Blocks[i]->render(this);
+	_RenderBlock(Blocks[i]);
+      }
+    }
+
+    /* Render all special edges (if quality != low) */
+    if(m_Quality != GQ_LOW) {
+      for(int i=0;i<Blocks.size();i++) {
+	if(Blocks[i]->isBackground() == true) {
+	  _RenderBlockEdges(Blocks[i]);
+	}
       }
     }
   }
-#endif 
- 
-#if 0 /* not in use anymore */
+
   void GameRenderer::_RenderLayer(int layer) {
     if(getParent()->getDrawLib()->getBackend() != DrawLib::backend_OpenGl) {
       return;
@@ -1486,33 +1647,26 @@ namespace vapp {
     /* sort blocks on their texture */
     std::sort(Blocks.begin(), Blocks.end(), AscendingTextureSort());
 
+#ifdef ENABLE_OPENGL
+    glPushMatrix();
+    glTranslatef(translateVector.x, translateVector.y, 0);
+
     for(int i=0; i<Blocks.size(); i++) {
-		
-		Vector2f layerOffset = getGameObject()->getLevelSrc()->getLayerOffset(layer);
+      Block* block = Blocks[i];
+      int geom = block->getGeom();
 
-		/* get bounding box in the layer depending on its offset */
-		Vector2f size = m_screenBBox.getBMax() - m_screenBBox.getBMin();
-
-		Vector2f levelLeftTop = Vector2f(getGameObject()->getLevelSrc()->LeftLimit(),
-										 getGameObject()->getLevelSrc()->TopLimit());
-
-		Vector2f levelViewLeftTop = Vector2f(m_screenBBox.getBMin().x,
-											 m_screenBBox.getBMin().y+size.y);
-
-		Vector2f originalTranslateVector = levelViewLeftTop - levelLeftTop;
-		Vector2f translationInLayer = originalTranslateVector * layerOffset;
-		Vector2f translateVector = originalTranslateVector - translationInLayer;
-	
-		glMatrixMode(GL_MODELVIEW);
-		glPushMatrix();
-		glTranslatef(translateVector.x, translateVector.y, 0);
-		RenderLevelBlock(Blocks[i]);
-		glPopMatrix();
-	}
-  }
+      _RenderBlock(block);
+    }
+    /* Render all special edges (if quality!=low) */
+    if(m_Quality != GQ_LOW) {
+      for(int i=0;i<Blocks.size();i++) {
+	_RenderBlockEdges(Blocks[i]);
+      }
+    }
+    glPopMatrix();
 #endif
+  }
 
-#if 0 /* not in use anymore */
   void GameRenderer::_RenderLayers(bool renderFront) { 
     /* Render background level blocks */
     int nbLayer = getGameObject()->getLevelSrc()->getNumberLayer();
@@ -1522,7 +1676,6 @@ namespace vapp {
       }
     }
   }
-#endif
 
   /*===========================================================================
   Free stuff
