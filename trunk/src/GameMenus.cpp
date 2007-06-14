@@ -304,7 +304,7 @@ namespace vapp {
     pUploadHighscoreButton->setContextHelp(CONTEXTHELP_UPLOAD_HIGHSCORE);
 
     /* filter */
-    UIButton *pListAllButton = new UIButton(m_pReplaysWindow,m_pReplaysWindow->getPosition().nWidth-125,m_pReplaysWindow->getPosition().nHeight-68,GAMETEXT_LISTALL,145,57);
+    UIButton *pListAllButton = new UIButton(m_pReplaysWindow,m_pReplaysWindow->getPosition().nWidth-105,m_pReplaysWindow->getPosition().nHeight-68,GAMETEXT_LISTALL,115,57);
     pListAllButton->setFont(drawLib->getFontSmall());
     pListAllButton->setType(UI_BUTTON_TYPE_CHECK);
     pListAllButton->setChecked(false);

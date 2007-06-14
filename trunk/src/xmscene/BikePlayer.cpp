@@ -811,13 +811,6 @@ BikeController* PlayerBiker::getControler() {
   return &m_BikeC;
 }
 
-/* why we calculate speed of rear wheel when in real bicycles speed of fron
-wheel is measured (according to Jens):
- - when bike rides bumpy ground wront wheel is in the air most of the time, so
-measured speed would be 0 excepr moments when bike rides flat gound
- - when bike accelerates front wheel goes slightly up and it's angular velocity
-is smaller. Advanced players accelerate riding only on rear wheel so front wheel
-speed is once again 0 for all the time*/
 float PlayerBiker::getBikeEngineSpeed() {
 	float fWheelAngVel;
 	float speed;

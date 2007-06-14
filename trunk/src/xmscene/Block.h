@@ -30,9 +30,7 @@ namespace vapp{
 #include "../helpers/VMath.h"
 #include "../helpers/Color.h"
 #include "../BSP.h"
-				 
-#include "LevelObject.h"				 
-				 				 
+
 #define XM_DEFAULT_BLOCK_TEXTURE "default"
 #define XM_DEFAULT_PHYS_BLOCK_GRIP 20
 
@@ -108,13 +106,10 @@ class BlockVertex {
   TColor m_color;
 };
 
-class Block: public LevelObject {
+class Block {
  public:
   Block(std::string i_id);
   ~Block();
-  
-  void render(vapp::GameRenderer* r);
-  virtual void setDepthAuto();
 
   std::string Id() const;
   std::string Texture() const;
@@ -167,7 +162,7 @@ class Block: public LevelObject {
   void saveBinary(vapp::FileHandle *i_pfh);
   static Block* readFromXml(vapp::XMLDocument& i_xmlSource, TiXmlElement *pElem);
   static Block* readFromBinary(vapp::FileHandle *i_pfh);
-  virtual AABB& getAABB();
+  AABB& getAABB();
   std::vector<vapp::Line *>& getCollisionLines() {return m_collisionLines;}
 
   int getGeom() {
@@ -206,6 +201,8 @@ private:
   // a static block from the second static blocks layer
   int   m_layer;
   float m_grip;                         /* GRIP of the block */
+  AABB  m_BBox;
+  bool  m_isBBoxDirty;
 
   // the geom used to render the block
   int   m_geom;
