@@ -1,18 +1,3 @@
-Assigned to nicolas:
- * BUG : xmoto -replay bugs/onMacWontWork.rpl when you press forward on this scripted level, the elevator is not at the correct position.
- * script key on multiplayer : each player must have his own key
- * 2 player mode : message for the winner
- * several joypad (currently, joypack is available only for player 1)
- * when you choose keys : if a key is already attributed, it should assign it and set <unset> to the other one because it's not pleasant to have a message
- * beeing able to update the theme even if you don't download all the levels
- * BUG : if ghost is enable, then you disable it, then you play a level
-    having a ghost -> cannot found entity
- * BUG : hum, about checksum, when you modify a level with f5 while
-    playing, then it is not updated with the new level button (if you
-    press enter, the level must be dwd)
- * PAD_5 -> to finish zoom
- * F5 while developping a level, if the level is scripted, it could crash it and required a full F5 at the menu stage
- 
 Assigned to manu:
  * load into the graphic card only the blocks which will be displayed depending on the selected graphic quality. DONE
  * multicamera. DONE
@@ -24,33 +9,12 @@ Assigned to manu:
 
 Not assigned:
  * <music name="None" /> => put levels into musical levels
- * mirror mode : the minimap is not mirrored
- * fix the mirror mode and the keys to modify the view
- * remove the typedef Vector3<int> Vector3d; from manu
  * document AddForceToPlayer
- * [10:16] <gaivota> how about a little detail: this pixel gap problem, that recently had been fixed, can also be seen in the minimap
-   [10:16] <gaivota> dunno if necessary to fix it in there, just realized
- * [13:49] <gaivota> aspegic500: another bug: although I disabled engine sound in options, it remains in the game
- * joystick: mirror mode doesn't work.
- * [21:35] <gaivota> aspegic500: I have a request: It would be nice, that if you zoom in, the camera remains attached to the player, and not to a virtual point
-  => in Renderer.cpp
-     float normal_hoffset = 4.0;
-     float normal_voffset = 2.0; 
-  -> this offset should be the one between the left/right border and the player
- * in the level metallica you can see that some blocks have problems (badly drawn) -> problem with the bsp
- * after opening and closing levels, memory is consomed. -> remove unused textures from memory
- * Theme.cpp : update the old fonts with the new ones.
- * handle the all the characteres of the keyboard (and check that it works in the database): see keyboard-0.1.10.patch
- *It would be nice if you could use a separate image file for the front and the rear wheels of your bike.
+
  *[20:26] <Christoph> btw, I noticed a few days ago: in the level "MASTERKUD Padrinos magicos" there is something broken. the strawberry at the right end of the ground crashes the level with "Entity 'MySprite18' doesn't exist" (in the replay, too)
- * add the free textures from this website:
-   http://blender-archi.tuxfamily.org/Textures  
-   http://lemog.free.fr/lemog_v5/thumbnails.php?album=topn&cat=0  
- * zoom in replays
- * start game with menu music ; go in option; disable sound ; play a level ; abort -> the music start because sound is still enabled
+
  * add documentation of AddPenaltyTime and unallow the possibility of putting a negative value
- * Better handle of the game states
-   example: syntax error in lua script -> segfault (in drawFrame, in a GS_PREPLAY case, you can change the game state -> the game want to draw a non loaded level -> segfault)
+
  * in replay mode, (replay 53361 for example), when you touch a strawberry in the same time as the flower, the strawberry doesn't pop.
  * feature : a replay button when you finish a level (or die) which plays Latest.rpl
  * script : disable a key (brake for example, ...)
