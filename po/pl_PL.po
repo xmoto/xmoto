@@ -59,13 +59,11 @@ msgstr "Dodaj do ulubionych"
 msgid "Action"
 msgstr "Akcja"
 
-#: src/GameText.h:46
-#: src/GameText.h:51
+#: src/GameText.h:46 src/GameText.h:51
 msgid "All (on this computer)"
 msgstr "Wszystko (na tym komputerze)"
 
-#: src/GameText.h:47
-#: src/GameText.h:522
+#: src/GameText.h:47 src/GameText.h:522
 msgid "All levels"
 msgstr "Wszystkie poziomy"
 
@@ -87,8 +85,7 @@ msgstr "Użyte!"
 msgid "and"
 msgstr "i"
 
-#: src/GameText.h:54
-#: src/GameText.h:94
+#: src/GameText.h:54 src/GameText.h:94
 msgid "Audio"
 msgstr "Dźwięk"
 
@@ -300,8 +297,7 @@ msgstr "Każdego, kto pomógł nam w jakikolwiek sposób"
 msgid "Credits"
 msgstr "Podziękowania"
 
-#: src/GameText.h:135
-#: src/GameText.h:301
+#: src/GameText.h:135 src/GameText.h:301
 msgid "Player"
 msgstr "Gracz"
 
@@ -337,8 +333,7 @@ msgstr "Na pewno chcesz usunąć gracza?"
 msgid "Do you really want to delete replay?"
 msgstr "Na pewno chcesz usunąć powtórkę?"
 
-#: src/GameText.h:144
-#: src/GameText.h:146
+#: src/GameText.h:144 src/GameText.h:146
 msgid "Delete"
 msgstr "Usuń"
 
@@ -634,8 +629,7 @@ msgstr "Obraca w prawo"
 msgid "Turns around and drives in the other direction"
 msgstr "Jazda w innych kierunkach"
 
-#: src/GameText.h:212
-#: src/GameText.h:297
+#: src/GameText.h:212 src/GameText.h:297
 msgid "Pause"
 msgstr "Pauza"
 
@@ -943,8 +937,7 @@ msgstr "Przez autora"
 msgid "Medals"
 msgstr "Medale"
 
-#: src/GameText.h:291
-#: src/GameText.h:324
+#: src/GameText.h:291 src/GameText.h:324
 msgid "Room"
 msgstr "Pokój"
 
@@ -960,13 +953,11 @@ msgstr "Standard"
 msgid "Web votes"
 msgstr "Głosy na www"
 
-#: src/GameText.h:295
-#: src/GameText.h:336
+#: src/GameText.h:295 src/GameText.h:336
 msgid "Statistics"
 msgstr "Statystyki"
 
-#: src/GameText.h:296
-#: src/GameText.h:531
+#: src/GameText.h:296 src/GameText.h:531
 msgid "By best driver"
 msgstr "Wg. najlepszego gracza"
 
@@ -974,8 +965,7 @@ msgstr "Wg. najlepszego gracza"
 msgid "Password"
 msgstr "Hasło"
 
-#: src/GameText.h:299
-#: src/GameText.h:300
+#: src/GameText.h:299 src/GameText.h:300
 msgid "Personal"
 msgstr "Osobiste"
 
@@ -1605,8 +1595,11 @@ msgid "Show helpful help strings such as this one"
 msgstr "Pokazuj pomoc, taką jak ta"
 
 #: src/GameText.h:461
-msgid "Let X-Moto look for more levels on the net, and install them automatically"
-msgstr "Pozwól, by X-Moto pobierało z internetu i instalowało automatycznie nowe poziomy"
+msgid ""
+"Let X-Moto look for more levels on the net, and install them automatically"
+msgstr ""
+"Pozwól, by X-Moto pobierało z internetu i instalowało automatycznie nowe "
+"poziomy"
 
 #: src/GameText.h:462
 msgid "Select this if you got a direct connection to the Internet"
@@ -1649,8 +1642,11 @@ msgid "Choose which ghost to display"
 msgstr "Wybierz, który z duchów ma być wyświetlany"
 
 #: src/GameText.h:473
-msgid "Make motion blur effect for the ghost (if supported by your graphics card)"
-msgstr "Powoduje rozmycie w ruchu ducha (o ile jest to obsługiwane przez kartę graficzną)"
+msgid ""
+"Make motion blur effect for the ghost (if supported by your graphics card)"
+msgstr ""
+"Powoduje rozmycie w ruchu ducha (o ile jest to obsługiwane przez kartę "
+"graficzną)"
 
 #: src/GameText.h:474
 msgid "When starting a level with a ghost, display who the ghost is of"
@@ -1713,7 +1709,9 @@ msgid "Configure the main www options"
 msgstr "Ustaw główne opcje www"
 
 #: src/GameText.h:492
-msgid "Choose where to upload/download replays, highscore lists (for more information, check the website)"
+msgid ""
+"Choose where to upload/download replays, highscore lists (for more "
+"information, check the website)"
 msgstr "Wybierz gdzie wysyłać/ściągać powtórki, rekordy"
 
 #: src/GameText.h:493
@@ -1820,8 +1818,7 @@ msgstr "Zwiększ lub zmniejsz trudność poziomów"
 msgid "Levels with no highscore"
 msgstr "Poziomy bez rekordu"
 
-#: src/GameText.h:520
-#: src/GameText.h:547
+#: src/GameText.h:520 src/GameText.h:547
 msgid "Levels you have not completed"
 msgstr "Poziomy nieukończone"
 
@@ -2225,19 +2222,15 @@ msgstr "osiągniesz krawędź musisz podnieść"
 msgid "wheel up."
 msgstr "przednie koło"
 
-#: src/LevelsText.h:63
-#: src/LevelsText.h:90
+#: src/LevelsText.h:63 src/LevelsText.h:90
 msgid "That will cause the rear suspension to increase the"
 msgstr "To spowoduje, że zawieszenie zwiększy"
 
-#: src/LevelsText.h:64
-#: src/LevelsText.h:91
+#: src/LevelsText.h:64 src/LevelsText.h:91
 msgid "length of the jump."
 msgstr "długość skoku"
 
-#: src/LevelsText.h:65
-#: src/LevelsText.h:82
-#: src/LevelsText.h:92
+#: src/LevelsText.h:65 src/LevelsText.h:82 src/LevelsText.h:92
 msgid "Try it..."
 msgstr "Spróbuj..."
 
@@ -2364,4 +2357,3 @@ msgstr "Ostatnia... Nie jest taka długa, ale"
 #: src/LevelsText.h:100
 msgid "there's even less room for your precious head. Good luck! :)"
 msgstr "jest jeszcze mniej miejsca na głowę. Powodzenia! :]"
-

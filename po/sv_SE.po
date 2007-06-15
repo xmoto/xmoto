@@ -1,14 +1,14 @@
-# translation of se.po to Swedish
+# translation of sv.po to Swedish
 # Copyright (C) 2007 Free Software Foundation, Inc.
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Lukas <lukas.klingsbo@piratpartiet.se>, 2007.
 msgid ""
 msgstr ""
-"Project-Id-Version: se\n"
+"Project-Id-Version: sv\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-06-11 20:19+0200\n"
-"PO-Revision-Date: 2007-06-01 23:55+0200\n"
+"PO-Revision-Date: 2007-06-15 22:11+0200\n"
 "Last-Translator: Lukas <lukas.klingsbo@piratpartiet.se>\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -80,7 +80,7 @@ msgstr ""
 
 #: src/GameText.h:52
 msgid "Already used!"
-msgstr "Redan använd!"
+msgstr "Används redan!"
 
 #: src/GameText.h:53
 msgid "and"
@@ -176,7 +176,7 @@ msgstr "Kontroller"
 
 #: src/GameText.h:78
 msgid "Lead Programming"
-msgstr "Huvud programmerare"
+msgstr "Huvudprogrammerare"
 
 #: src/GameText.h:84
 msgid "Additional Programming"
@@ -249,7 +249,7 @@ msgstr "Ryska"
 
 #: src/GameText.h:116
 msgid "Main testers"
-msgstr "Huvud testare"
+msgstr "Huvudtestare"
 
 #: src/GameText.h:121
 msgid "Thanks to"
@@ -365,18 +365,18 @@ msgstr "Laddar ner spöket..."
 
 #: src/GameText.h:152
 msgid "Downloading the highscore..."
-msgstr "Laddar ner highscore..."
+msgstr "Laddar ner rekorden..."
 
 #: src/GameText.h:153
 msgid "Downloading high-scores..."
-msgstr "Laddar ner high-scores"
+msgstr "Laddar ner rekord..."
 
 #: src/GameText.h:154
 msgid ""
 "Downloading extra levels...\n"
 "Press ESC to abort."
 msgstr ""
-"Laddar net extra banor...\n"
+"Laddar ner extra banor...\n"
 "Tryck ESC för att avbryta."
 
 #: src/GameText.h:155
@@ -421,15 +421,15 @@ msgstr "Kolla efter nya rekord vid start"
 
 #: src/GameText.h:164
 msgid "Enable Context Help"
-msgstr "Sätt på kontext hjälp"
+msgstr "Aktivera hjälpsträngar"
 
 #: src/GameText.h:165
 msgid "Enable Engine Sound"
-msgstr "Sätt på motorljud"
+msgstr "Aktivera motorljud"
 
 #: src/GameText.h:166
 msgid "Enable Ghost"
-msgstr "Sätt på spöke"
+msgstr "Aktivera spöke"
 
 #: src/GameText.h:167
 msgid "Show World Record in-game"
@@ -437,7 +437,7 @@ msgstr "Visa världsrekord i spelet"
 
 #: src/GameText.h:168
 msgid "Enable Music"
-msgstr "Sätt på musik"
+msgstr "Aktivera musik"
 
 #: src/GameText.h:169
 msgid "Enable WWW Access"
@@ -557,7 +557,7 @@ msgstr "Snurra höger"
 
 #: src/GameText.h:190
 msgid "Game Graphics"
-msgstr "Spel grafik"
+msgstr "Spelgrafik"
 
 #: src/GameText.h:191
 msgid "General"
@@ -956,7 +956,7 @@ msgstr "Standard"
 
 #: src/GameText.h:294
 msgid "Web votes"
-msgstr "Web röstningar"
+msgstr "Webbröstningar"
 
 #: src/GameText.h:295 src/GameText.h:336
 msgid "Statistics"
@@ -1048,7 +1048,7 @@ msgstr ""
 
 #: src/GameText.h:320
 msgid "The replay can't be played!"
-msgstr "Repriser kan inte spelas!"
+msgstr "Reprisen kan inte spelas!"
 
 #: src/GameText.h:321
 msgid "Replays"
@@ -1170,7 +1170,7 @@ msgstr "Uppdatera"
 
 #: src/GameText.h:351
 msgid "Updated"
-msgstr "Uppdaterat"
+msgstr "Uppdaterad"
 
 #: src/GameText.h:352
 msgid "Check WWW"
@@ -1206,7 +1206,7 @@ msgstr ""
 
 #: src/GameText.h:359
 msgid "Oh no !"
-msgstr "Åh nej !"
+msgstr "Nedrans !"
 
 #: src/GameText.h:360
 msgid "Uploading the highscore..."
@@ -1383,7 +1383,7 @@ msgstr "Konfigruera X-Moto's inställningar"
 
 #: src/GameText.h:406
 msgid "Instructions of how to play X-Moto"
-msgstr "Instruktioner hur man spelar X-Moto"
+msgstr "Instruktioner - Hur man spelar X-Moto"
 
 #: src/GameText.h:407
 msgid "Change player profile"
@@ -1443,7 +1443,7 @@ msgstr "Spara inställningar"
 
 #: src/GameText.h:421
 msgid "Revert options to defaults"
-msgstr "Sätt inställningar till grundinställningar"
+msgstr "Sätt tillbaka inställningar till grundinställning"
 
 #: src/GameText.h:422
 msgid "Show a map of your surroundings when playing"
@@ -1451,7 +1451,7 @@ msgstr "Visa en karta över ömrådet när man spelar"
 
 #: src/GameText.h:423
 msgid "Automatically download best times off the net when the game starts"
-msgstr "Ladda automatiskt ner rekord tider från nätet när spelet startas"
+msgstr "Ladda automatiskt ner rekordtider från nätet när spelet startas"
 
 #: src/GameText.h:424
 msgid "Show the World Record for a given level when playing"
@@ -1459,11 +1459,11 @@ msgstr "Visa  världsrekordet för en given bana när man spelar"
 
 #: src/GameText.h:425
 msgid "Enable high-color graphics"
-msgstr "Sätt på high-color grafik"
+msgstr "Aktivera high-color grafik"
 
 #: src/GameText.h:426
 msgid "Enable true-color graphics"
-msgstr "Sätt på true-color grafik"
+msgstr "Aktivera true-color grafik"
 
 #: src/GameText.h:427
 msgid "Select graphics resolution"
@@ -1555,7 +1555,7 @@ msgstr "Skapa ny spelar profil"
 
 #: src/GameText.h:449
 msgid "Permanently delete selected player profile, including best times"
-msgstr "Ta permanent bort den valda spelarprofilen, inklusive rekord tider"
+msgstr "Ta permanent bort den valda spelarprofilen, inklusive rekordtider"
 
 #: src/GameText.h:450
 msgid "Select a level in the level pack to play"
@@ -1583,7 +1583,7 @@ msgstr "Visa endast personligt rekord för den här banan"
 
 #: src/GameText.h:456
 msgid "Show all best times for this level"
-msgstr "Visa alla rekord tider för den här banan"
+msgstr "Visa alla rekordtider för den här banan"
 
 #: src/GameText.h:457
 msgid "Only show personal replays for this level"
@@ -1686,7 +1686,7 @@ msgstr "Uppdater statistik (görs också varje gång X-Moto startas)"
 
 #: src/GameText.h:484
 msgid "Enables background music in the main menu"
-msgstr "Sätt på bakgrundsmusik för huvudmenyn"
+msgstr "Aktivera bakgrundsmusik för huvudmenyn"
 
 #: src/GameText.h:486
 msgid "Choose the X-Moto graphics theme"
@@ -1814,12 +1814,10 @@ msgid "Press to play immediatly to X-Moto"
 msgstr "Tryck för att spela direkt till X-Moto"
 
 #: src/GameText.h:516
-#, fuzzy
 msgid "Increase or dicrease the quality of the levels selected"
 msgstr "Höj eller sänk kvalitén av den valda banan"
 
 #: src/GameText.h:517
-#, fuzzy
 msgid "Increase or dicrease the difficulty of the levels selected"
 msgstr "Höj eller sänk svårigheten av den valda banan"
 
