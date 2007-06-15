@@ -344,6 +344,7 @@
 <music name="menu1" file="menu.ogg" />
 <music name="rideALong" file="ridealong.ogg" />
 <music name="batcave" file="batcave.ogg" />
+<music name="blockolando" file="legolodio.ogg" />
 
 <sound name="Headcrash"        file="Headcrash.ogg" />
 <sound name="NewHighscore"     file="NewHighscore.ogg" />
