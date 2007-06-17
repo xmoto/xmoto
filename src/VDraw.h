@@ -29,7 +29,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Image.h"
 #include "PolyDraw.h"
 
-#include <SDL/SDL_ttf.h>
+#ifdef HAVE_SDL_FRAMEWORK
+	#include <SDL_ttf.h>
+#else
+	#include <SDL/SDL_ttf.h>
+#endif
 
 #ifdef __GNUC__
 #if (__GNUC__ >= 3)
