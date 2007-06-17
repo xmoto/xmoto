@@ -79,7 +79,10 @@ if WIN32
 common_SOURCES += $(bz2_SOURCES)
 endif
 
-common_LDADD = $(MINGW32_LIBS) $(GL_LIBS) $(SDL_LIBS)
+common_LDADD = $(GL_LIBS) $(SDL_LIBS) $(LIBINTL)
+if WIN32
+common_LDADD += $(MINGW32_LIBS)
+endif
 
 bin_PROGRAMS = xmoto
 

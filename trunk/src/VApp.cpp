@@ -542,7 +542,7 @@ namespace vapp {
           std::string OutDir = ".";
           if(i+1 < nNumArgs) {OutDir = ppcArgs[i+1]; i++;}
           bool bMakePackageList = true;
-          if(i+1 < nNumArgs && ppcArgs[i+1]=="no_lst") {bMakePackageList=false; i++;}
+          if(i+1 < nNumArgs && strcmp(ppcArgs[i+1], "no_lst") == 0) {bMakePackageList=false; i++;}
           Packager::goUnpack(BinFile,OutDir,bMakePackageList);
           exit(0); /* leaks memory too, but still nobody cares */
       } else if(!strcmp(ppcArgs[i],"-nogfx")) {
