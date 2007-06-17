@@ -1235,6 +1235,7 @@ void PlayerBiker::setBodyDetach(bool state) {
 
 void PlayerBiker::addBodyForce(const Vector2f& i_force) {
   m_forceToAdd += i_force;
+  resetAutoDisabler();
 }
 
 void PlayerBiker::resetAutoDisabler() {
