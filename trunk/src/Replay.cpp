@@ -233,7 +233,7 @@ namespace vapp {
       m_fFinishTime = FS::readFloat_LE(pfh);
       if(bDisplayInformation) {
 	if(m_bFinished) {
-	  printf("%-30s: %.2f\n", "Finish time", m_fFinishTime);
+	  printf("%-30s: %.2f (%f)\n", "Finish time", m_fFinishTime, m_fFinishTime);
 	} else {
 	  printf("%-30s: %s\n", "Finish time", "unfinished");
 	}
