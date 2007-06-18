@@ -87,6 +87,7 @@ Textures/Textures/TiZeta_278.jpg
 Textures/Textures/TransparentBlue1_269.png
 Textures/Textures/vloup_279.jpg
 Textures/Textures/Wood3_296.png
+Textures/Textures/stone_white_357.jpg
 
 Textures/Anims/checkball_235_00.png
 Textures/Anims/checkball_235_01.png
@@ -418,6 +419,69 @@ Textures/Anims/zombie_animiert_02.png
 Textures/Anims/zombie_animiert_03.png
 Textures/Anims/zombie_animiert_04.png
 
+Textures/Anims/cog2_240_00.png
+Textures/Anims/cog2_240_01.png
+Textures/Anims/cog2_240_02.png
+Textures/Anims/cog2_240_03.png
+Textures/Anims/cog2_240_04.png
+Textures/Anims/cog2_240_05.png
+Textures/Anims/cog2_240_06.png
+Textures/Anims/cog2_240_07.png
+Textures/Anims/cog2_240_08.png
+Textures/Anims/cog2_240_09.png
+Textures/Anims/cog2_240_10.png
+Textures/Anims/cog2_240_11.png
+Textures/Anims/cog2_240_12.png
+Textures/Anims/cog2_240_13.png
+Textures/Anims/cog2_240_14.png
+Textures/Anims/cog2_240_15.png
+Textures/Anims/cog2_240_16.png
+Textures/Anims/cog2_240_17.png
+Textures/Anims/cog2_240_18.png
+Textures/Anims/cog2_240_19.png
+Textures/Anims/cog2_240_20.png
+Textures/Anims/cog2_240_21.png
+Textures/Anims/cog2_240_22.png
+Textures/Anims/cog2_240_23.png
+Textures/Anims/cog2_240_24.png
+Textures/Anims/cog2_240_25.png
+Textures/Anims/cog2_240_26.png
+Textures/Anims/cog2_240_27.png
+
+Textures/Anims/deathstar_234_00.png
+Textures/Anims/deathstar_234_01.png
+Textures/Anims/deathstar_234_02.png
+Textures/Anims/deathstar_234_03.png
+Textures/Anims/deathstar_234_04.png
+Textures/Anims/deathstar_234_05.png
+Textures/Anims/deathstar_234_06.png
+Textures/Anims/deathstar_234_07.png
+Textures/Anims/deathstar_234_08.png
+Textures/Anims/deathstar_234_09.png
+Textures/Anims/deathstar_234_10.png
+Textures/Anims/deathstar_234_11.png
+Textures/Anims/deathstar_234_12.png
+Textures/Anims/deathstar_234_13.png
+Textures/Anims/deathstar_234_14.png
+Textures/Anims/deathstar_234_15.png
+Textures/Anims/deathstar_234_16.png
+Textures/Anims/deathstar_234_17.png
+Textures/Anims/deathstar_234_18.png
+Textures/Anims/deathstar_234_19.png
+Textures/Anims/deathstar_234_20.png
+Textures/Anims/deathstar_234_21.png
+Textures/Anims/deathstar_234_22.png
+Textures/Anims/deathstar_234_23.png
+
+Textures/Anims/MetallicaWrecker_273_00.png
+Textures/Anims/MetallicaWrecker_273_01.png
+Textures/Anims/MetallicaWrecker_273_02.png
+Textures/Anims/MetallicaWrecker_273_03.png
+Textures/Anims/MetallicaWrecker_273_04.png
+Textures/Anims/MetallicaWrecker_273_05.png
+Textures/Anims/MetallicaWrecker_273_06.png
+Textures/Anims/MetallicaWrecker_273_07.png
+Textures/Anims/MetallicaWrecker_273_08.png
 
 Textures/Effects/EarthVines.png
 Textures/Effects/EdgeGrass1.png
@@ -430,6 +494,9 @@ Textures/Effects/Fire1.png
 Textures/Effects/Smoke1.png
 Textures/Effects/Smoke2.png
 Textures/Effects/Debris1.png
+Textures/Effects/darken_288.png
+Textures/Effects/KRWBlueRockEdge_252.png
+Textures/Effects/street_245.png
 
 Textures/Misc/Arrow.png
 Textures/Misc/enginecounter.png
@@ -490,6 +557,7 @@ Textures/Sprites/Sun_161.png
 Textures/Sprites/totem1_203.png
 Textures/Sprites/totem2_206.png
 Textures/Sprites/TuxFly_160.png
+Textures/Sprites/ScriptWarning_309.png
 
 Textures/Effects/EdgeCSite1_209.png
 
