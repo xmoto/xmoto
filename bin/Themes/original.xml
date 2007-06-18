@@ -107,6 +107,7 @@
 <sprite type="Texture" name="TransparentBlue1" file="TransparentBlue1_269.png" />
 <sprite type="Texture" name="vloup" file="vloup_279.jpg" />
 <sprite type="Texture" name="Wood3" file="Wood3_296.png" />
+<sprite type="Texture" name="stone_white" file="stone_white_357.jpg" />
 
 <sprite type="Entity" name="Strawberry"  fileBase="Strawberry"  fileExtension="png" width="1" height="1" delay="0.05">
 <frame centerX="0.5" centerY="0.5" />
@@ -193,6 +194,9 @@
 <sprite type="EdgeEffect" name="GrassAlt"   file="EdgeGrassAlt1.png"   scale="0.5" depth="0.6" />
 <sprite type="EdgeEffect" name="GrassAlt2"  file="EdgeGrassAlt1.png"   scale="0.5" depth="0.9" />
 <sprite type="EdgeEffect" name="EdgeCSite1" file="EdgeCSite1_209.png"  scale="0.9" depth="0.35" />
+<sprite type="EdgeEffect" name="darken" file="darken_288.png" scale="0.7" depth="0.2" />
+<sprite type="EdgeEffect" name="KRWBlueRockEdge" file="KRWBlueRockEdge_252.png" scale="1.0" depth="1.0" />
+<sprite type="EdgeEffect" name="street" file="street_245.png" scale="1" depth="0.4" />
 
 <sprite type="Misc" name="Arrow" file="Arrow.png" />
 <sprite type="Misc" name="EngineCounter" file="enginecounter.png" />
@@ -215,6 +219,7 @@
 <sprite type="Entity" name="Tree2"    	   file="Tree2.png" width="5" height="6" centerX="2.5" centerY="0.2" />
 <sprite type="Entity" name="Tut3Sign" 	   file="Tut3Sign.png" width="3" height="3" centerX="1.5" centerY="0.2" />
 <sprite type="Entity" name="YellowFlare"		file="YellowFlare.png" width="2" height="2" centerX="1" centerY="1" blendmode="add"/>
+<sprite type="Entity" name="ScriptWarning" file="ScriptWarning_309.png" width="3.5" height="3.5" centerX="1.7" centerY="1.0" />
 
 <sprite type="Entity" name="alien" fileBase="alien_238_" fileExtension="png" width="1.0" height="1.0" centerX="0.5" centerY="0.5" delay="0.25">
 <frame />
@@ -313,6 +318,76 @@
 <sprite type="Entity" name="panel" file="panel_230.png" width="2.6" height="2.6" centerX="1.3" centerY="0.8" />
 
 <sprite type="Entity" name="checkball" fileBase="checkball_235_" fileExtension="png" width="1" height="1" delay="0.05">
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+</sprite>
+
+<sprite type="Entity" name="cog2" fileBase="cog2_240_" fileExtension="png" width="1" height="1" centerX="0.45" delay="0.04">
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+</sprite>
+
+<sprite type="Entity" name="deathstar" fileBase="deathstar_234_" fileExtension="png" width="0.95" height="0.95" centerX="0.49" delay="0.045">
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+</sprite>
+
+<sprite type="Entity" name="MetallicaWrecker" fileBase="MetallicaWrecker_273_" fileExtension="png">
+<frame />
+<frame />
+<frame />
+<frame />
 <frame />
 <frame />
 <frame />
