@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-06-11 20:19+0200\n"
+"POT-Creation-Date: 2007-06-18 22:04+0200\n"
 "PO-Revision-Date: 2007-06-13 15:53+0200\n"
 "Last-Translator: Luca Manzari\n"
 "Language-Team:  <en@li.org>\n"
@@ -83,45 +83,47 @@ msgstr ""
 msgid "Already used!"
 msgstr "Già in uso!"
 
-#: src/GameText.h:53
-msgid "and"
-msgstr "e"
-
-#: src/GameText.h:54 src/GameText.h:94
+#: src/GameText.h:53 src/GameText.h:94
 msgid "Audio"
 msgstr "Audio"
 
-#: src/GameText.h:55
+#: src/GameText.h:54
 msgid "Author"
 msgstr "Autore"
 
-#: src/GameText.h:56
+#: src/GameText.h:55
 msgid "Automatic saving of replays"
 msgstr "Salvataggio automatico dei replay"
 
-#: src/GameText.h:57
+#: src/GameText.h:56
 msgid "Auto zoom"
 msgstr "Zoom automatico"
 
-#: src/GameText.h:58
+#: src/GameText.h:57
 msgid "Best Times"
 msgstr "Tempi migliori"
 
-#: src/GameText.h:59
+#: src/GameText.h:58
 msgid "Best player"
 msgstr "Giocatori migliori"
 
-#: src/GameText.h:60
+#: src/GameText.h:59
 msgid "Brake"
 msgstr "Freno"
 
-#: src/GameText.h:61
+#: src/GameText.h:60
 msgid "Built-In Levels"
 msgstr "Livelli interni"
 
+#: src/GameText.h:61
+#, c-format
+msgid "(%s by %s)"
+msgstr ""
+
 #: src/GameText.h:62
-msgid "by"
-msgstr "di"
+#, c-format
+msgid "(by %s)"
+msgstr ""
 
 #: src/GameText.h:63
 msgid "Move Camera to left"
@@ -596,7 +598,8 @@ msgid "The best of the replays (on this computer)"
 msgstr "Il migliore dei replay (su questo computer)"
 
 #: src/GameText.h:200
-msgid "Ghost of"
+#, fuzzy, c-format
+msgid "Ghost of %s"
 msgstr "Fantasma di"
 
 #: src/GameText.h:201
@@ -2395,6 +2398,12 @@ msgstr "E ora l'ultimo...non è troppo lungo, ma"
 msgid "there's even less room for your precious head. Good luck! :)"
 msgstr ""
 "c'è ancora meno spazio per la tua preziosissima testa. Buona fortuna! :)"
+
+#~ msgid "and"
+#~ msgstr "e"
+
+#~ msgid "by"
+#~ msgstr "di"
 
 #~ msgid "Brake 2"
 #~ msgstr "Freno 2"
