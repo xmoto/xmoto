@@ -301,9 +301,13 @@ GameApp::GameApp() {
 				}
 				/* *** */
 
-				m_MotoGame.setInfos(m_MotoGame.getLevelSrc()->Name() +
-														" (" + std::string(GAMETEXT_BY)  +
-														" " + m_replayBiker->playerName() + ")"); 
+				char c_tmp[1024];
+				snprintf(c_tmp, 1024,
+					 GAMETEXT_REPLAYLEVEL_BY_PLAYER,
+					 m_MotoGame.getLevelSrc()->Name().c_str(),
+					 m_replayBiker->playerName().c_str()
+					 );
+				m_MotoGame.setInfos(c_tmp);
 
 				m_nFrame = 0;
 				m_Renderer.prepareForNewLevel(bCreditsMode);            
@@ -2561,8 +2565,8 @@ GameApp::GameApp() {
     int nHours = ((int)v_totalPlayedTime) / (60 * 60);
     int nMinutes = (((int)v_totalPlayedTime) / (60)) - nHours*60;
     int nSeconds = (((int)v_totalPlayedTime)) - nMinutes*60 - nHours*3600;
-    if(nHours > 0) sprintf(cTime,(std::string(GAMETEXT_XHOURS) + ", " + std::string(GAMETEXT_XMINUTES) + ", " + std::string(GAMETEXT_AND) + " " + std::string(GAMETEXT_XSECONDS)).c_str(),nHours,nMinutes,nSeconds);
-    else if(nMinutes > 0) sprintf(cTime,(std::string(GAMETEXT_XMINUTES) +  " " + std::string(GAMETEXT_AND) +  " " + std::string(GAMETEXT_XSECONDS)).c_str(),nMinutes,nSeconds);
+    if(nHours > 0) sprintf(cTime,(std::string(GAMETEXT_XHOURS) + ", " + std::string(GAMETEXT_XMINUTES) + ", " + std::string(GAMETEXT_XSECONDS)).c_str(),nHours,nMinutes,nSeconds);
+    else if(nMinutes > 0) sprintf(cTime,(std::string(GAMETEXT_XMINUTES) + ", " + std::string(GAMETEXT_XSECONDS)).c_str(),nMinutes,nSeconds);
     else sprintf(cTime,GAMETEXT_XSECONDS,nSeconds);
   
     sprintf(cBuf,GAMETEXT_XMOTOGLOBALSTATS,      

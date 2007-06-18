@@ -84,10 +84,15 @@ void Ghost::setInfo(std::string i_info) {
 }
 
 std::string Ghost::getDescription() const {
+  char c_tmp[1024];
+
+  snprintf(c_tmp, 1024,
+	   GAMETEXT_GHOSTOF,
+	   m_replay->getPlayerName().c_str());
+
   return
-    std::string(GAMETEXT_GHOSTOF)   +
-    " " + m_replay->getPlayerName() +
-    "\n(" + m_info + ")"            +
+    std::string(c_tmp)   +
+    "\n(" + m_info + ")" +
     "\n(" + vapp::App::formatTime(m_replay->getFinishTime()) + ")";
 }
 

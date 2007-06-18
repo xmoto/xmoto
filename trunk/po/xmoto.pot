@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-06-11 20:19+0200\n"
+"POT-Creation-Date: 2007-06-18 22:04+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -79,44 +79,46 @@ msgstr ""
 msgid "Already used!"
 msgstr ""
 
-#: src/GameText.h:53
-msgid "and"
-msgstr ""
-
-#: src/GameText.h:54 src/GameText.h:94
+#: src/GameText.h:53 src/GameText.h:94
 msgid "Audio"
 msgstr ""
 
-#: src/GameText.h:55
+#: src/GameText.h:54
 msgid "Author"
 msgstr ""
 
-#: src/GameText.h:56
+#: src/GameText.h:55
 msgid "Automatic saving of replays"
 msgstr ""
 
-#: src/GameText.h:57
+#: src/GameText.h:56
 msgid "Auto zoom"
 msgstr ""
 
-#: src/GameText.h:58
+#: src/GameText.h:57
 msgid "Best Times"
 msgstr ""
 
-#: src/GameText.h:59
+#: src/GameText.h:58
 msgid "Best player"
 msgstr ""
 
-#: src/GameText.h:60
+#: src/GameText.h:59
 msgid "Brake"
 msgstr ""
 
-#: src/GameText.h:61
+#: src/GameText.h:60
 msgid "Built-In Levels"
 msgstr ""
 
+#: src/GameText.h:61
+#, c-format
+msgid "(%s by %s)"
+msgstr ""
+
 #: src/GameText.h:62
-msgid "by"
+#, c-format
+msgid "(by %s)"
 msgstr ""
 
 #: src/GameText.h:63
@@ -572,7 +574,8 @@ msgid "The best of the replays (on this computer)"
 msgstr ""
 
 #: src/GameText.h:200
-msgid "Ghost of"
+#, c-format
+msgid "Ghost of %s"
 msgstr ""
 
 #: src/GameText.h:201

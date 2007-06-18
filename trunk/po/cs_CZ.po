@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-06-11 20:19+0200\n"
+"POT-Creation-Date: 2007-06-18 22:04+0200\n"
 "PO-Revision-Date: 2006-09-04 19:52+0100\n"
 "Last-Translator: Jan Kaláb <pitel@nomi.cz>\n"
 "Language-Team: X-Moto\n"
@@ -76,45 +76,47 @@ msgstr ""
 msgid "Already used!"
 msgstr "Již použito!"
 
-#: src/GameText.h:53
-msgid "and"
-msgstr "a"
-
-#: src/GameText.h:54 src/GameText.h:94
+#: src/GameText.h:53 src/GameText.h:94
 msgid "Audio"
 msgstr "Zvuk"
 
-#: src/GameText.h:55
+#: src/GameText.h:54
 msgid "Author"
 msgstr "Autor"
 
-#: src/GameText.h:56
+#: src/GameText.h:55
 msgid "Automatic saving of replays"
 msgstr "Automatické ukládání záznamů"
 
-#: src/GameText.h:57
+#: src/GameText.h:56
 msgid "Auto zoom"
 msgstr "Atomatické přibližování"
 
-#: src/GameText.h:58
+#: src/GameText.h:57
 msgid "Best Times"
 msgstr "Nejlepší Časy"
 
-#: src/GameText.h:59
+#: src/GameText.h:58
 msgid "Best player"
 msgstr "Nejlepší hráč"
 
-#: src/GameText.h:60
+#: src/GameText.h:59
 msgid "Brake"
 msgstr "Brzda"
 
-#: src/GameText.h:61
+#: src/GameText.h:60
 msgid "Built-In Levels"
 msgstr "Vestavěné Úrovně"
 
+#: src/GameText.h:61
+#, c-format
+msgid "(%s by %s)"
+msgstr ""
+
 #: src/GameText.h:62
-msgid "by"
-msgstr "od"
+#, c-format
+msgid "(by %s)"
+msgstr ""
 
 #: src/GameText.h:63
 msgid "Move Camera to left"
@@ -589,7 +591,8 @@ msgid "The best of the replays (on this computer)"
 msgstr "Nejlepší záznam (na tomto počítači)"
 
 #: src/GameText.h:200
-msgid "Ghost of"
+#, fuzzy, c-format
+msgid "Ghost of %s"
 msgstr "Duch"
 
 #: src/GameText.h:201
@@ -2360,6 +2363,12 @@ msgstr "Teď poslední... není tak dlouhá, místo toho"
 #: src/LevelsText.h:100
 msgid "there's even less room for your precious head. Good luck! :)"
 msgstr "je tu ještě méně místa pro vaši cennou hlavu. Hodně štěstí! :)"
+
+#~ msgid "and"
+#~ msgstr "a"
+
+#~ msgid "by"
+#~ msgstr "od"
 
 #~ msgid "Brake 2"
 #~ msgstr "Brzda 2"

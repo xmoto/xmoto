@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-06-11 20:19+0200\n"
+"POT-Creation-Date: 2007-06-18 22:04+0200\n"
 "PO-Revision-Date: 2007-05-04 23:56+0200\n"
 "Last-Translator: Mikhail Brinchuk aka Thecentury <thecentury@gmail.com>\n"
 "Language-Team: ru\n"
@@ -81,44 +81,46 @@ msgstr ""
 msgid "Already used!"
 msgstr "Уже используется!"
 
-#: src/GameText.h:53
-msgid "and"
-msgstr "и"
-
-#: src/GameText.h:54 src/GameText.h:94
+#: src/GameText.h:53 src/GameText.h:94
 msgid "Audio"
 msgstr "Звук"
 
-#: src/GameText.h:55
+#: src/GameText.h:54
 msgid "Author"
 msgstr "Автор"
 
-#: src/GameText.h:56
+#: src/GameText.h:55
 msgid "Automatic saving of replays"
 msgstr "Автоматическое сохранение записей прохождения"
 
-#: src/GameText.h:57
+#: src/GameText.h:56
 msgid "Auto zoom"
 msgstr "Авто приближение"
 
-#: src/GameText.h:58
+#: src/GameText.h:57
 msgid "Best Times"
 msgstr "Лучшее время"
 
-#: src/GameText.h:59
+#: src/GameText.h:58
 msgid "Best player"
 msgstr "Лучший игрок"
 
-#: src/GameText.h:60
+#: src/GameText.h:59
 msgid "Brake"
 msgstr "Тормоз"
 
-#: src/GameText.h:61
+#: src/GameText.h:60
 msgid "Built-In Levels"
 msgstr "Встроенные уровни"
 
+#: src/GameText.h:61
+#, c-format
+msgid "(%s by %s)"
+msgstr ""
+
 #: src/GameText.h:62
-msgid "by"
+#, c-format
+msgid "(by %s)"
 msgstr ""
 
 #: src/GameText.h:63
@@ -595,7 +597,8 @@ msgid "The best of the replays (on this computer)"
 msgstr "Лучшая из записей игр (на этом компьютере)"
 
 #: src/GameText.h:200
-msgid "Ghost of"
+#, fuzzy, c-format
+msgid "Ghost of %s"
 msgstr "Призрак"
 
 #: src/GameText.h:201
@@ -2392,6 +2395,9 @@ msgstr "Теперь последний... Он не такой длинный, 
 #: src/LevelsText.h:100
 msgid "there's even less room for your precious head. Good luck! :)"
 msgstr "здесь еще меньше места для вашей драгоценной головы. Удачи! :)"
+
+#~ msgid "and"
+#~ msgstr "и"
 
 #~ msgid "Brake 2"
 #~ msgstr "Тормоз 2"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-06-11 20:19+0200\n"
+"POT-Creation-Date: 2007-06-18 22:04+0200\n"
 "PO-Revision-Date: 2006-12-21 21:14+0100\n"
 "Last-Translator: Jens Erler <mothbox@gmx.net>\n"
 "Language-Team: German\n"
@@ -82,45 +82,47 @@ msgstr ""
 msgid "Already used!"
 msgstr "Bereits verwendet!"
 
-#: src/GameText.h:53
-msgid "and"
-msgstr "und"
-
-#: src/GameText.h:54 src/GameText.h:94
+#: src/GameText.h:53 src/GameText.h:94
 msgid "Audio"
 msgstr "Audio"
 
-#: src/GameText.h:55
+#: src/GameText.h:54
 msgid "Author"
 msgstr "Autor"
 
-#: src/GameText.h:56
+#: src/GameText.h:55
 msgid "Automatic saving of replays"
 msgstr "Automatisches Speichern von Replays"
 
-#: src/GameText.h:57
+#: src/GameText.h:56
 msgid "Auto zoom"
 msgstr "Auto-Zoom"
 
-#: src/GameText.h:58
+#: src/GameText.h:57
 msgid "Best Times"
 msgstr "Bestzeiten"
 
-#: src/GameText.h:59
+#: src/GameText.h:58
 msgid "Best player"
 msgstr "Bester Spieler"
 
-#: src/GameText.h:60
+#: src/GameText.h:59
 msgid "Brake"
 msgstr "Bremse"
 
-#: src/GameText.h:61
+#: src/GameText.h:60
 msgid "Built-In Levels"
 msgstr "Eingebaute Levels"
 
+#: src/GameText.h:61
+#, c-format
+msgid "(%s by %s)"
+msgstr ""
+
 #: src/GameText.h:62
-msgid "by"
-msgstr "von"
+#, c-format
+msgid "(by %s)"
+msgstr ""
 
 #: src/GameText.h:63
 msgid "Move Camera to left"
@@ -595,7 +597,8 @@ msgid "The best of the replays (on this computer)"
 msgstr "Die besten Replays (auf diesem Computer)"
 
 #: src/GameText.h:200
-msgid "Ghost of"
+#, fuzzy, c-format
+msgid "Ghost of %s"
 msgstr "Geist von"
 
 #: src/GameText.h:201
@@ -2387,6 +2390,12 @@ msgstr "Dies ist die letzte Hürde! Nicht so lang, dafür aber"
 #: src/LevelsText.h:100
 msgid "there's even less room for your precious head. Good luck! :)"
 msgstr "ist die Decke noch niedriger. Viel Glück!"
+
+#~ msgid "and"
+#~ msgstr "und"
+
+#~ msgid "by"
+#~ msgstr "von"
 
 #~ msgid "Brake 2"
 #~ msgstr "Bremse (Spieler 2)"

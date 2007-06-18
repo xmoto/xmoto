@@ -1492,8 +1492,11 @@ namespace vapp {
 	m_db->read_DB_free(v_result);
 
 	if(v_id_profile != "") {
+	  char c_tmp[1024];
+	  snprintf(c_tmp, 1024,
+		   GAMETEXT_BY_PLAYER, v_id_profile.c_str());
           pLV_BestTimes_WorldRecord->setCaption(v_roomName + ": " + vapp::App::formatTime(v_finishTime) +
-						" (" + GAMETEXT_BY + " " + v_id_profile + ")");
+						" " + std::string(c_tmp));
 	} else {
 	  pLV_BestTimes_WorldRecord->setCaption(v_roomName + ": " + GAMETEXT_WORLDRECORDNA);
 	}
