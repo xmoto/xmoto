@@ -84,63 +84,6 @@ class FontManager {
   DrawLib* m_drawLib;
 };
 
-#ifdef ENABLE_OPENGL
-class GLFontGlyph : public FontGlyph {
- public:
-  /* for simple glyph */
-  GLFontGlyph(const std::string& i_value);
-
-  /* a glyph from other glyphs */
-  GLFontGlyph(const std::string& i_value,
-	      HashNamespace::hash_map<const char*, GLFontGlyphLetter*, HashNamespace::hash<const char*>, hashcmp_str>& i_glyphsLetters);
-  virtual ~GLFontGlyph();
-
-  std::string Value() const;
-  int drawWidth()     const;
-  int drawHeight()    const;
-  int realWidth()     const;
-  int realHeight()    const;
-  int firstLineDrawHeight() const;
-
- protected:
-  std::string m_value;
-  int m_drawWidth, m_drawHeight;
-  int m_realWidth, m_realHeight;
-  int m_firstLineDrawHeight;
-
-  static int powerOf2(int i_value);
-};
-
-class GLFontGlyphLetter : public GLFontGlyph {
- public:
-  GLFontGlyphLetter(const std::string& i_value, TTF_Font* i_ttf);
-  virtual ~GLFontGlyphLetter();
-  GLuint GLID() const;  
-
- private:
-  GLuint m_GLID;  
-};
-
-class GLFontManager : public FontManager {
- public:
-  GLFontManager(DrawLib* i_drawLib, const std::string &i_fontFile, int i_fontSize);
-  virtual ~GLFontManager();
-
-  FontGlyph* getGlyph(const std::string& i_string);
-  void printString(FontGlyph* i_glyph, int i_x, int i_y, Color i_color);
-  void printStringGrad(FontGlyph* i_glyph, int i_x, int i_y,
-		       Color c1, Color c2, Color c3, Color c4);
-  virtual int nbGlyphsInMemory();
-
- private:
-  std::vector<GLFontGlyph*> m_glyphsList;
-  HashNamespace::hash_map<const char*, GLFontGlyph*, HashNamespace::hash<const char*>, hashcmp_str> m_glyphs;
-
-  std::vector<GLFontGlyphLetter*> m_glyphsLettersList;
-  HashNamespace::hash_map<const char*, GLFontGlyphLetter*, HashNamespace::hash<const char*>, hashcmp_str> m_glyphsLetters;
-};
-
-#endif
 
   /**
    * VApp draw modes to be used as argument in startDraw
