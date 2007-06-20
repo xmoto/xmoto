@@ -317,7 +317,7 @@ namespace vapp {
     pReplayList->setFont(drawLib->getFontSmall());
     pReplayList->addColumn(GAMETEXT_REPLAY, pReplayList->getPosition().nWidth/2 - 100,CONTEXTHELP_REPLAYCOL);
     pReplayList->addColumn(GAMETEXT_LEVEL,  pReplayList->getPosition().nWidth/2 - 28,CONTEXTHELP_REPLAYLEVELCOL);
-    pReplayList->addColumn(GAMETEXT_PLAYER,128,CONTEXTHELP_REPLAYPLAYERCOL);
+    pReplayList->addColumn(GAMETEXT_PLAYER(1),128,CONTEXTHELP_REPLAYPLAYERCOL);
     pReplayList->setEnterButton( pShowButton );
     
     //m_pPlayWindow->setPrimaryChild(m_pJustDeadMenuButtons[0]); /* default button: Try Again */
@@ -971,11 +971,8 @@ namespace vapp {
       std::string str_nbPlayers;
     
       s_nbPlayers << (int) i+1;
-      if(i == 0) {
-    	str_nbPlayers = s_nbPlayers.str() + " " + GAMETEXT_PLAYER;
-      } else {
-    	str_nbPlayers = s_nbPlayers.str() + " " + GAMETEXT_PLAYERS;
-      }
+      str_nbPlayers = s_nbPlayers.str() + " " + GAMETEXT_PLAYER(i+1);
+
       pNbPlayers = new UIButton(pMultiOptionsTab, 0, 40+(i*20), str_nbPlayers, pMultiOptionsTab->getPosition().nWidth, 28);
       pNbPlayers->setType(UI_BUTTON_TYPE_RADIO);
       pNbPlayers->setID("MULTINB_" + s_nbPlayers.str());
@@ -1265,7 +1262,7 @@ namespace vapp {
     pLV_BestTimes_List->setID("LEVEL_VIEWER_BESTTIMES_LIST");
     pLV_BestTimes_List->setFont(drawLib->getFontSmall());
     pLV_BestTimes_List->addColumn(GAMETEXT_FINISHTIME,128);
-    pLV_BestTimes_List->addColumn(GAMETEXT_PLAYER,pLV_BestTimes_List->getPosition().nWidth-128);    
+    pLV_BestTimes_List->addColumn(GAMETEXT_PLAYER(1),pLV_BestTimes_List->getPosition().nWidth-128);    
     UIStatic *pLV_BestTimes_WorldRecord = new UIStatic(pLVTab_BestTimes,5,pLVTab_BestTimes->getPosition().nHeight-50,"",pLVTab_BestTimes->getPosition().nWidth,50);
     pLV_BestTimes_WorldRecord->setID("LEVEL_VIEWER_BESTTIMES_WORLDRECORD");
     pLV_BestTimes_WorldRecord->setFont(drawLib->getFontSmall());
@@ -1294,7 +1291,7 @@ namespace vapp {
     pLV_Replays_List->setID("LEVEL_VIEWER_REPLAYS_LIST");
     pLV_Replays_List->setFont(drawLib->getFontSmall());
     pLV_Replays_List->addColumn(GAMETEXT_REPLAY,128);
-    pLV_Replays_List->addColumn(GAMETEXT_PLAYER,128);
+    pLV_Replays_List->addColumn(GAMETEXT_PLAYER(1),128);
     pLV_Replays_List->addColumn(GAMETEXT_FINISHTIME,128);    
     UIButton *pLV_Replays_Show = new UIButton(pLVTab_Replays,0,pLVTab_Replays->getPosition().nHeight-50,GAMETEXT_SHOW,115,57);
     pLV_Replays_Show->setFont(drawLib->getFontSmall());
