@@ -303,11 +303,10 @@ GameApp::GameApp() {
 
 				char c_tmp[1024];
 				snprintf(c_tmp, 1024,
-					 GAMETEXT_REPLAYLEVEL_BY_PLAYER,
-					 m_MotoGame.getLevelSrc()->Name().c_str(),
+					 GAMETEXT_BY_PLAYER,
 					 m_replayBiker->playerName().c_str()
 					 );
-				m_MotoGame.setInfos(c_tmp);
+				m_MotoGame.setInfos(m_MotoGame.getLevelSrc()->Name() + " " + std::string(c_tmp));
 
 				m_nFrame = 0;
 				m_Renderer.prepareForNewLevel(bCreditsMode);            
