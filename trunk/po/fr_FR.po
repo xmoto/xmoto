@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n>1;"
+"Plural-Forms: nplurals=2; plural=n>1;\n"
 
 #: src/GameText.h:34
 msgid "en_EN"
@@ -591,6 +591,7 @@ msgid "The best of the replays (on this computer)"
 msgstr "Le meilleur des replays (sur cet ordinateur)"
 
 #: src/GameText.h:199
+#, c-format
 msgid "Ghost of %s"
 msgstr "Fantôme de %s"
 
