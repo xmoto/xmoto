@@ -32,9 +32,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Input.h"
 #include "db/xmDatabase.h";
 
-  #include <curl/curl.h>
+#include <curl/curl.h>
 
-#define DATABASE_FILE vapp::FS::getUserDir() + "/" + "xm.db"
+#define DATABASE_FILE vapp::FS::getUserDirUTF8() + "/" + "xm.db"
 
 namespace vapp {
 
@@ -158,7 +158,7 @@ namespace vapp {
     /* database */
     m_db = new xmDatabase(DATABASE_FILE,
 			  m_profile == "" ? std::string("") : m_profile,
-			  FS::getDataDir(), FS::getUserDir(), FS::binCheckSum(),
+			  FS::getDataDir(), FS::getUserDirUTF8(), FS::binCheckSum(),
 			  m_useGraphics ? this : NULL);
     if(m_sqlTrace) {
       m_db->setTrace(m_sqlTrace);
