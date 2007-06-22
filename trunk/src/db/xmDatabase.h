@@ -31,7 +31,7 @@ class Level;
 class xmDatabase {
 
   public:
-  xmDatabase(const std::string& i_dbFile,
+  xmDatabase(const std::string& i_dbFileUTF8,
 	     const std::string& i_profile,
 	     const std::string& i_gameDir,
 	     const std::string& i_userDir,

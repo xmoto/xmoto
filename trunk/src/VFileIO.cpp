@@ -43,11 +43,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "md5sum/md5file.h"
 
 #ifdef WIN32
-std::string win32_getUserDir() {
+std::string win32_getUserDir(bool i_asUtf8 = false) {
   HANDLE hToken;
-  TCHAR szProfilePath[1024];
-  DWORD cchPath = 1024;
   HANDLE proc;
+  std::string v_dest;
+  DWORD cchPath = 1024;
 
   proc = GetCurrentProcess();
 
@@ -55,11 +55,25 @@ std::string win32_getUserDir() {
     throw Exception("Can't determine user directory (OpenProcessToken)");
   }
 
-  if (!GetUserProfileDirectory( hToken, szProfilePath, &cchPath ) ) {
-    throw Exception("Can't determine user directory (GetUserProfileDirectory)");
+  if(i_asUtf8) {
+    WCHAR szProfilePath[1024];
+    char v_tmp[1024];
+
+    if (!GetUserProfileDirectoryW( hToken, szProfilePath, &cchPath ) ) {
+      throw Exception("Can't determine user directory (GetUserProfileDirectory)");
+    }
+    WideCharToMultiByte(CP_UTF8, 0, szProfilePath, wcslen(szProfilePath), v_tmp, 1024-1, NULL, NULL);
+    v_dest = v_tmp;
+
+  } else {
+    TCHAR szProfilePath[1024];
+    if (!GetUserProfileDirectory( hToken, szProfilePath, &cchPath ) ) {
+      throw Exception("Can't determine user directory (GetUserProfileDirectory)");
+    }
+    v_dest = szProfilePath;
   }
 
-  return szProfilePath;
+  return v_dest;
 }
 #endif
 
@@ -1038,7 +1052,7 @@ namespace vapp {
   /*===========================================================================
   Initialize file system fun
   ===========================================================================*/
-  std::string FS::m_UserDir="",FS::m_DataDir; /* Globals */
+  std::string FS::m_UserDir="",FS::m_UserDirUTF8="",FS::m_DataDir; /* Globals */
   bool FS::m_bGotDataDir;
   std::string FS::m_BinDataFile = "";
   int FS::m_nNumPackFiles = 0;
@@ -1048,6 +1062,7 @@ namespace vapp {
   void FS::init(std::string AppDir) {    
     m_bGotDataDir = false;
     m_UserDir = "";
+    m_UserDirUTF8 = "";
     m_DataDir = "";
   
     #if defined(WIN32) /* Windoze... */
@@ -1065,7 +1080,8 @@ namespace vapp {
       /* Valid path? */
       if(isDir(cModulePath)) {
         /* Alright, use this dir */    
-        m_UserDir = win32_getUserDir() + std::string("/.") + AppDir;
+        m_UserDir     = win32_getUserDir()     + std::string("/.") + AppDir;
+        m_UserDirUTF8 = win32_getUserDir(true) + std::string("/.") + AppDir;
         m_DataDir = cModulePath;     
         
         m_bGotDataDir = true;
@@ -1080,7 +1096,8 @@ namespace vapp {
         throw Exception("invalid user home directory");
       
       m_UserDir = m_UserDir + std::string("/.") + AppDir;
-      
+      m_UserDirUTF8 = m_UserDir;
+
       /* And the data dir? */
       m_DataDir = std::string(GAMEDATADIR);
       if(isDir(m_DataDir)) {

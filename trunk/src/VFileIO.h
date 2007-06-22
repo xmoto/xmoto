@@ -166,6 +166,7 @@ namespace vapp {
       
       /* Data interfaces */
       static std::string getUserDir(void) {return m_UserDir;}
+      static std::string getUserDirUTF8(void) {return m_UserDirUTF8;}
       static std::string getDataDir(void) {return m_DataDir;}
       static bool isDataDirAvailable(void) {return m_bGotDataDir;}
       
@@ -196,7 +197,7 @@ namespace vapp {
       static void _FindFilesRecursive(const std::string &Dir,const std::string &Wildcard,std::vector<std::string> &List);
       
       /* Data */
-      static std::string m_UserDir,m_DataDir;
+      static std::string m_UserDir, m_UserDirUTF8, m_DataDir;
       static bool m_bGotDataDir;
       
       static std::string m_BinDataFile;      
