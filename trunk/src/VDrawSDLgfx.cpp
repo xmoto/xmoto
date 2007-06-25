@@ -38,6 +38,104 @@ namespace vapp {
     return (*(const int *)a) - (*(const int *)b);
   };
 
+class SDLFontGlyph : public FontGlyph {
+ public:
+  /* for simple glyph */
+  SDLFontGlyph(const std::string& i_value);
+
+  virtual ~SDLFontGlyph();
+
+  std::string Value() const;
+  int drawWidth()     const;
+  int drawHeight()    const;
+  int realWidth()     const;
+  int realHeight()    const;
+  int firstLineDrawHeight() const;
+
+ protected:
+  std::string m_value;
+  int m_drawWidth, m_drawHeight;
+  int m_realWidth, m_realHeight;
+  int m_firstLineDrawHeight;
+
+};
+
+SDLFontGlyph::SDLFontGlyph(const std::string& i_value){
+ m_value = i_value; /*c++ */
+
+ m_drawWidth =1;
+m_drawHeight =1;
+m_realWidth=1;
+m_realHeight=1;
+m_firstLineDrawHeight =1;
+};
+SDLFontGlyph::~SDLFontGlyph(){
+}
+std::string SDLFontGlyph::Value() const {
+  return m_value;
+}
+
+int SDLFontGlyph::drawWidth() const{
+ return m_drawWidth;
+}
+int SDLFontGlyph::drawHeight() const{
+ return m_drawHeight;
+}
+int SDLFontGlyph::realWidth() const{
+ return m_realWidth;
+}
+int SDLFontGlyph::realHeight() const{
+ return m_realHeight;
+}
+int SDLFontGlyph::firstLineDrawHeight() const{
+	return m_firstLineDrawHeight;
+}
+
+class SDLFontManager : public FontManager {
+ public:
+  SDLFontManager(DrawLib* i_drawLib, const std::string &i_fontFile, int i_fontSize);
+  virtual ~SDLFontManager();
+
+  FontGlyph* getGlyph(const std::string& i_string);
+  void printString(FontGlyph* i_glyph, int i_x, int i_y, Color i_color);
+  void printStringGrad(FontGlyph* i_glyph, int i_x, int i_y,
+		       Color c1, Color c2, Color c3, Color c4);
+  private:
+  DrawLib * m_drawlib;
+  std::string i_fontFile;
+};
+
+SDLFontManager::SDLFontManager(DrawLib* i_drawLib, const std::string &i_fontFile, int i_fontSize)
+: FontManager(i_drawLib, i_fontFile, i_fontSize){
+};
+
+FontGlyph* SDLFontManager::getGlyph(const std::string& i_string) {
+	return new SDLFontGlyph("test");
+};
+
+void SDLFontManager::printStringGrad(FontGlyph* i_glyph, int i_x, int i_y,
+      Color c1, Color c2, Color c3, Color c4) {
+
+ 
+	SDL_Color color={99,0,33};
+	SDL_Surface *text_surface =TTF_RenderText_Blended(m_ttf,((SDLFontGlyph*)i_glyph)->Value().c_str(),color);
+	SDL_FreeSurface(text_surface);
+
+}
+void SDLFontManager::printString(FontGlyph* i_glyph, int i_x, int i_y, Color i_color) {
+
+  printStringGrad(i_glyph, i_x, i_y, i_color, i_color, i_color, i_color);
+}
+
+SDLFontManager::~SDLFontManager() {
+}
+
+
+
+FontManager* DrawLibSDLgfx::getFontManager(const std::string &i_fontFile, int i_fontSize) {
+    return new SDLFontManager(this, i_fontFile, i_fontSize);
+};
+
 DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
     m_scale.x = 1;
     m_scale.y = 1;
@@ -51,6 +149,10 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
     m_max.x = 0;
     m_max.y = 0;
     polyDraw = NULL;
+
+   m_fontSmall  = getFontManager(FS::FullPath(DRAW_FONT_FILE), 14);
+   m_fontMedium = getFontManager(FS::FullPath(DRAW_FONT_FILE), 22);
+   m_fontBig    = getFontManager(FS::FullPath(DRAW_FONT_FILE), 60);
   };
 
   DrawLibSDLgfx::~DrawLibSDLgfx() {

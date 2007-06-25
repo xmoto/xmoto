@@ -52,13 +52,16 @@ struct hashcmp_str {
     return s1 == s2;
   }
 };
+#define DRAW_FONT_FILE "Textures/Fonts/DejaVuSans.ttf"
 
 class Camera;
 
 namespace vapp {
 
+
 class DrawLib;
-class GLFontGlyphLetter;
+
+
 
 class FontGlyph {
   public:
@@ -74,10 +77,11 @@ class FontManager {
   virtual ~FontManager();
 
   virtual FontGlyph* getGlyph(const std::string& i_string) = 0;
+
   virtual void printString(FontGlyph* i_glyph, int i_x, int i_y, Color i_color) = 0;
   virtual void printStringGrad(FontGlyph* i_glyph, int i_x, int i_y,
 			       Color c1,Color c2,Color c3,Color c4) = 0;
-  virtual int nbGlyphsInMemory();
+
 
  protected:
   TTF_Font* m_ttf;
@@ -285,6 +289,7 @@ class FontManager {
     /* handle display lists */
     
     void toogleFullscreen();
+
     FontManager* getFontSmall();
     FontManager* getFontMedium();
     FontManager* getFontBig();
@@ -537,6 +542,8 @@ class FontManager {
 
     virtual Img *grabScreen(void);
     virtual bool isExtensionSupported(std::string Ext);
+
+    virtual FontManager* getFontManager(const std::string &i_fontFile, int i_fontSize);
   private:
     int xx_texturedHLine(SDL_Surface * dst, Sint16 x1, Sint16 x2, Sint16 y,
 			 SDL_Surface * texture, int texture_dx,
