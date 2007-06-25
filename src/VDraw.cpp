@@ -24,6 +24,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "VDraw.h"
 
+
+
 namespace vapp {
 
   DrawLib::backendtype DrawLib::m_backend = DrawLib::backend_None;
@@ -77,9 +79,6 @@ namespace vapp {
  DrawLib::~DrawLib() {
  }
 
-  int FontManager::nbGlyphsInMemory() {
-    return 0;
-  }
 
   FontManager* DrawLib::getFontManager(const std::string &i_fontFile, int i_fontSize) {
     throw Exception("Your DrawLib doesn't manage FontManager");
@@ -244,5 +243,19 @@ namespace vapp {
       /* hum */
     }
   }
+
+FontManager::FontManager(DrawLib* i_drawLib, const std::string &i_fontFile, int i_fontSize) {
+  m_drawLib = i_drawLib;
+  m_ttf = TTF_OpenFont(i_fontFile.c_str(), i_fontSize);
+  if (m_ttf == NULL) {
+    throw Exception("FontManager: " + std::string(TTF_GetError()));
+  }
+  TTF_SetFontStyle(m_ttf, TTF_STYLE_NORMAL);
+}
+
+FontManager::~FontManager() {
+  TTF_CloseFont(m_ttf);
+}
+
 
 }

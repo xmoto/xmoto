@@ -111,6 +111,7 @@ namespace vapp {
 #endif
     
     m_nTexSpaceUsage += pTexture->nSize;
+#ifdef ENABLE_SDLGFX
         #if SDL_BYTEORDER == SDL_BIG_ENDIAN
             Uint32 rmask = 0xff000000;
             Uint32 gmask = 0x00ff0000;
@@ -122,15 +123,13 @@ namespace vapp {
             Uint32 bmask = 0x00ff0000;
             Uint32 amask = 0xff000000;
         #endif
-#if 0    
+
       if(bAlpha){
         pTexture->surface  = SDL_CreateRGBSurfaceFrom(pcData,nWidth,nHeight,32 /*bitsPerPixel */, nWidth * 4 /*pitch*/,rmask,gmask,bmask,amask);
       } else {
         pTexture->surface  = SDL_CreateRGBSurfaceFrom(pcData,nWidth,nHeight,24 /*bitsPerPixel */, nWidth * 3 /*pitch*/,rmask,gmask,bmask,0);
 
       }
-#else
-    pTexture->surface = NULL;
 #endif
   
     /* Do it captain */
@@ -151,10 +150,12 @@ namespace vapp {
           glDeleteTextures(1,(GLuint *)&pTexture->nID);
 #endif
       
+#ifdef ENABLE_SDLGFX
 	  //keesj:todo when using SDL surface we cannot delete the image data
 	  //this is a problem.
 	  //delete [] pc; => it's why i keep pTexture->pcData
 	  delete [] pTexture->pcData;
+#endif
           m_nTexSpaceUsage -= pTexture->nSize;
           delete pTexture;
           m_Textures.erase(m_Textures.begin() + i);

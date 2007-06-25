@@ -27,12 +27,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/utf8.h"
 #include "xmscene/Camera.h"
 
-#define DRAW_FONT_FILE "Textures/Fonts/DejaVuSans.ttf"
+
 #define UTF8_INTERLINE_SPACE 2
 #define UTF8_INTERCHAR_SPACE 0
 
 #ifdef ENABLE_OPENGL
 namespace vapp {
+
+
+class GLFontGlyphLetter;
 
 class GLFontGlyph : public FontGlyph {
  public:
@@ -40,6 +43,7 @@ class GLFontGlyph : public FontGlyph {
   GLFontGlyph(const std::string& i_value);
 
   /* a glyph from other glyphs */
+/*kejo:why not just grrr create a copy contructor*/
   GLFontGlyph(const std::string& i_value,
 	      HashNamespace::hash_map<const char*, GLFontGlyphLetter*, HashNamespace::hash<const char*>, hashcmp_str>& i_glyphsLetters);
   virtual ~GLFontGlyph();
@@ -69,6 +73,7 @@ class GLFontGlyphLetter : public GLFontGlyph {
  private:
   GLuint m_GLID;  
 };
+
 
 class GLFontManager : public FontManager {
  public:
@@ -662,18 +667,7 @@ int GLFontGlyph::firstLineDrawHeight() const {
   return m_firstLineDrawHeight;
 }
 
-FontManager::FontManager(DrawLib* i_drawLib, const std::string &i_fontFile, int i_fontSize) {
-  m_drawLib = i_drawLib;
-  m_ttf = TTF_OpenFont(i_fontFile.c_str(), i_fontSize);
-  if (m_ttf == NULL) {
-    throw Exception("FontManager: " + std::string(TTF_GetError()));
-  }
-  TTF_SetFontStyle(m_ttf, TTF_STYLE_NORMAL);
-}
 
-FontManager::~FontManager() {
-  TTF_CloseFont(m_ttf);
-}
 
 GLFontManager::GLFontManager(DrawLib* i_drawLib, const std::string &i_fontFile, int i_fontSize)
   : FontManager(i_drawLib, i_fontFile, i_fontSize) {
