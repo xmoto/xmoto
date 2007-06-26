@@ -158,7 +158,7 @@ namespace vapp {
     /* database */
     m_db = new xmDatabase(DATABASE_FILE,
 			  m_profile == "" ? std::string("") : m_profile,
-			  FS::getDataDir(), FS::getUserDirUTF8(), FS::binCheckSum(),
+			  FS::getDataDir(), FS::getUserDir(), FS::binCheckSum(),
 			  m_useGraphics ? this : NULL);
     if(m_sqlTrace) {
       m_db->setTrace(m_sqlTrace);
