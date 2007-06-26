@@ -1284,6 +1284,7 @@ GameApp::GameApp() {
     /* Try downloading the highscores */
     m_pWebHighscores->setWebsiteInfos(m_WebHighscoresIdRoom,
 				      m_WebHighscoresURL);
+    Log("WWW: Checking for new highscores...");
     m_pWebHighscores->update();
   }
 
