@@ -1268,7 +1268,7 @@ GameApp::GameApp() {
     }
     m_db->read_DB_free(v_result);
     
-    if(m_bShowWebHighscoreInGame && v_id_profile != "") {
+    if(v_id_profile != "") {
       m_Renderer.setWorldRecordTime(v_roomName + ": " + 
 				    vapp::App::formatTime(v_finishTime) +
 				    std::string(" (") + v_id_profile + std::string(")"));
