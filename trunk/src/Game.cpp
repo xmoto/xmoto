@@ -1244,6 +1244,11 @@ GameApp::GameApp() {
 
     m_Renderer.setWorldRecordTime("");
 
+    /* don't update if the option is not set */
+    if(m_bShowWebHighscoreInGame == false) {
+      return;
+    }
+
     v_result = m_db->readDB("SELECT a.name, b.id_profile, b.finishTime "
 			    "FROM webrooms AS a LEFT OUTER JOIN webhighscores AS b "
 			    "ON (a.id_room = b.id_room "
