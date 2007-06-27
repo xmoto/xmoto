@@ -636,6 +636,7 @@ void LevelsManager::addExternalLevel(xmDatabase *i_db, std::string i_levelFile) 
 		     v_level->isScripted(),
 		     true);
   } catch(Exception &e) {
+    vapp::Log("** Warning ** : Unable to add external level (%s)", e.getMsg().c_str());
   }
   delete v_level;
 }

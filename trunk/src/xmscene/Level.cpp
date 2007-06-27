@@ -448,8 +448,8 @@ void Level::loadXML(void) {
     m_xmlSource = new vapp::XMLDocument();
   }
 
-  m_xmlSource->readFromFile( m_fileName, NULL );    
-  
+  m_xmlSource->readFromFile(m_fileName, NULL);
+
   TiXmlDocument *pDoc = m_xmlSource->getLowLevelAccess();
   if(pDoc == NULL) throw Exception("failed to load level XML");
   
