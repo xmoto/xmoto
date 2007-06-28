@@ -178,7 +178,7 @@ namespace vapp {
   /*===========================================================================
   Packager main - note that this is a VERY simplistic approach to data files
   ===========================================================================*/
-  void Packager::go(void) {
+  void Packager::go(const std::string &BinFile, const std::string &DataDir) {
     char cBuf[256];
 
     printf("X-Moto Data Packager!\n");
@@ -186,8 +186,8 @@ namespace vapp {
     printf("Finding out which files to package...\n");
     
     FILE *fp;
-
-    if( (fp=fopen("package.lst","r")) == NULL) {
+    std::string pkglist = DataDir + "/package.lst";
+    if( (fp=fopen(pkglist.c_str(),"r")) == NULL) {
       printf("Can't find the file package.lst...\n");
       return;
     }
@@ -195,20 +195,19 @@ namespace vapp {
     std::vector<std::string> FileList;
     
     while(!feof(fp) && fgets(cBuf,sizeof(cBuf)-1,fp)!=NULL) {
-      /* Strip leading and tailing white-spaces */
-      while(cBuf[0] == ' ' || cBuf[0] == '\t') {
-        char cTemp[256];
-        strcpy(cTemp,&cBuf[1]); strcpy(cBuf,cTemp);
-      }
-      for(int i=strlen(cBuf)-1;i>=0;i--) {
-        if(cBuf[i] == ' ' || cBuf[i] == '\t' || cBuf[i] == '\n' || cBuf[i] == '\r') cBuf[i]='\0';
-        else break;
-      }
+      std::string s = cBuf;
+      bool bOk = true;
       
-      if(cBuf[0]) {
+      /* Strip leading and tailing white-spaces */
+      std::string::size_type lead = s.find_first_not_of("\t ");
+      std::string::size_type trail = s.find_last_not_of("\t \n\r");
+      
+      if(trail != std::string::npos) {
+      	s = s.substr(lead, trail - lead + 1);
+        printf("  %s\n",s.c_str());
+      	
         /* Add it to the list */
-        printf("  %s\n",cBuf);
-        FileList.push_back(cBuf);
+        FileList.push_back(DataDir + "/" + s);
       }      
     }
     fclose(fp);
@@ -218,12 +217,12 @@ namespace vapp {
     printf("Creating package 'xmoto.bin'...\n");
     
     /* Do it */
-    fp = fopen("xmoto.bin","wb");
+    fp = fopen(BinFile.c_str(),"wb");
     fwrite("XBI3",4,1,fp);
     
     /* control sum */
     unsigned char c;
-    std::string sum = md5file("package.lst");
+    std::string sum = md5file(pkglist);
     c = sum.length();
     fputc(c, fp);
     fwrite(sum.c_str(), c, 1, fp);

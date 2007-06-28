@@ -420,7 +420,7 @@ namespace vapp {
     /* Set window title */
     SDL_WM_SetCaption(m_AppName.c_str(),m_AppName.c_str());
 
-#ifndef WIN32
+#if !defined(WIN32) && !defined(__APPLE__) 
     SDL_Surface *v_icon = SDL_LoadBMP(GAMEDATADIR "/xmoto_icone_x.ico");
     if(v_icon != NULL) {
       SDL_SetColorKey(v_icon, SDL_SRCCOLORKEY,
@@ -534,18 +534,21 @@ namespace vapp {
   
     /* Walk through the args */
     for(int i=1;i<nNumArgs;i++) {
-      if(!strcmp(ppcArgs[i],"-pack")) {
-	Packager::go();
-	exit(0); /* leaks memory, but who cares? :) */
-      } else if(!strcmp(ppcArgs[i],"-unpack")) {
-	std::string BinFile = "xmoto.bin";
-	if(i+1 < nNumArgs) {BinFile = ppcArgs[i+1]; i++;}
-          std::string OutDir = ".";
-          if(i+1 < nNumArgs) {OutDir = ppcArgs[i+1]; i++;}
-          bool bMakePackageList = true;
-          if(i+1 < nNumArgs && strcmp(ppcArgs[i+1], "no_lst") == 0) {bMakePackageList=false; i++;}
-          Packager::goUnpack(BinFile,OutDir,bMakePackageList);
-          exit(0); /* leaks memory too, but still nobody cares */
+      bool pack = !strcmp(ppcArgs[i],"-pack");
+      bool unpack = !strcmp(ppcArgs[i],"-unpack");
+      if(pack || unpack) {
+        std::string BinFile = "xmoto.bin", Dir = ".";
+        bool bMakePackageList = true;
+        if(i+1 < nNumArgs) {BinFile = ppcArgs[i+1]; i++;}
+        if(i+1 < nNumArgs) {Dir = ppcArgs[i+1]; i++;}
+        if(unpack && i+1 < nNumArgs && !strcmp(ppcArgs[i+1], "no_list"))
+          {bMakePackageList=false; i++;}
+        
+        if(pack)
+          Packager::go(BinFile,Dir);
+        else
+          Packager::goUnpack(BinFile,Dir,bMakePackageList);
+        exit(0); /* leaks memory, but who cares? :) */
       } else if(!strcmp(ppcArgs[i],"-nogfx")) {
 	m_useGraphics = true;
       }

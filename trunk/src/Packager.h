@@ -30,7 +30,7 @@ namespace vapp {
   class Packager {
     public:
       /* Methods */
-      static void go(void);
+      static void go(const std::string &BinFile, const std::string &DataDir);
       static void goUnpack(const std::string &BinFile,const std::string &OutPath,bool bWritePackageList);
       
     private:
