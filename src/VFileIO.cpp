@@ -1173,6 +1173,7 @@ namespace vapp {
 				
 				if(m_nNumPackFiles < MAX_PACK_FILES) {
 					m_PackFiles[m_nNumPackFiles].Name = cBuf;
+					//printf("%s\n", m_PackFiles[m_nNumPackFiles].Name.c_str());
 					m_PackFiles[m_nNumPackFiles].md5sum = md5sum;
 					//printf("md5sum(%s) = %s\n",
 					//   m_PackFiles[m_nNumPackFiles].Name.c_str(),

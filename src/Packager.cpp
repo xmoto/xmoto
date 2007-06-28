@@ -207,7 +207,7 @@ namespace vapp {
         printf("  %s\n",s.c_str());
       	
         /* Add it to the list */
-        FileList.push_back(DataDir + "/" + s);
+        FileList.push_back(s);
       }      
     }
     fclose(fp);
@@ -229,7 +229,7 @@ namespace vapp {
 
     for(int i=0;i<FileList.size();i++) {
       /* Open and load entire file into memory (yikes!! (but all files a pretty small :P)) */
-      FILE *in = fopen(FileList[i].c_str(),"rb");
+      FILE *in = fopen((DataDir + "/" + FileList[i]).c_str(),"rb");
       if(in != NULL) {
         fseek(in,0,SEEK_END);
         int nSize = ftell(in);
@@ -243,7 +243,7 @@ namespace vapp {
         fputc(c,fp);
         fwrite(FileList[i].c_str(),c,1,fp);
 
-	std::string md5sum = md5file(FileList[i]);
+	std::string md5sum = md5file((DataDir + "/" + FileList[i]));
         c = md5sum.length();
         fputc(c,fp);
         fwrite(md5sum.c_str(),c,1,fp);
