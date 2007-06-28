@@ -137,16 +137,22 @@ namespace vapp {
 
           /* Render */
           if(!getDrawLib()->isNoGraphics()) {
-	    if((m_autoZoom || (m_bPrePlayAnim && m_bUglyMode == false)) && numberCam > 1){
-	      m_Renderer.render(bIsPaused);
-	    }else{
-	      for(int i=0; i<numberCam; i++){
-		m_MotoGame.setCurrentCamera(i);
+	    try {
+	      if((m_autoZoom || (m_bPrePlayAnim && m_bUglyMode == false)) && numberCam > 1){
 		m_Renderer.render(bIsPaused);
+	      }else{
+		for(int i=0; i<numberCam; i++){
+		  m_MotoGame.setCurrentCamera(i);
+		  m_Renderer.render(bIsPaused);
+		}
 	      }
+	    } catch(Exception &e) {
+	      m_MotoGame.endLevel();
+	      setState(m_StateAfterPlaying);
+	      notifyMsg(splitText(e.getMsg(), 50));
 	    }
 	    getDrawLib()->getMenuCamera()->setCamera2d();
-          }
+	  }
 #if SIMULATE_SLOW_RENDERING
           SDL_Delay(SIMULATE_SLOW_RENDERING);
 #endif
@@ -249,11 +255,13 @@ namespace vapp {
           if(m_bShowFrameRate) bDrawFPS = true;
 
           break;
-        } 
+        }
         catch(Exception &e) {
-	  m_MotoGame.endLevel();
-	  setState(m_StateAfterPlaying);
-          notifyMsg(splitText(e.getMsg(), 50));
+	  Log("** Warning ** : drawFrame failed !");
+	  // it doesn't work
+	  //m_MotoGame.endLevel();
+	  //setState(m_StateAfterPlaying);
+          //notifyMsg(splitText(e.getMsg(), 50));
         }
       }
     }

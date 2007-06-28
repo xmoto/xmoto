@@ -551,15 +551,12 @@ vapp::Texture* Sprite::getTexture(bool bSmall, bool bClamp, vapp::FilterMode eFi
   v_currentTexture = getCurrentTexture();
   if(v_currentTexture == NULL) {
     v_currentTexture = m_associated_theme->loadTexture(getCurrentTextureFileName(),
-                   bSmall,
-                   bClamp,
-                   eFilterMode);
-    if(v_currentTexture == NULL) { 
-      throw Exception("Unable to load texture '" + getCurrentTextureFileName() + "'");
-    }
+						       bSmall,
+						       bClamp,
+						       eFilterMode);
     setCurrentTexture(v_currentTexture);
   }
-
+  
   return v_currentTexture;
 }
 
