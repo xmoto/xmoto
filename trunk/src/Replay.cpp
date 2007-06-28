@@ -53,6 +53,7 @@ namespace vapp {
   }        
   
   void Replay::_FreeReplay(void) {
+
     /* Get rid of replay events */
     for(int i=0;i<m_ReplayEvents.size();i++) {
       delete m_ReplayEvents[i]->Event;
@@ -69,7 +70,10 @@ namespace vapp {
     }
     m_Chunks.clear();
     
-    if(m_pcInputEventsData != NULL) delete [] m_pcInputEventsData;
+    if(m_pcInputEventsData != NULL) {
+      delete [] m_pcInputEventsData;
+      m_pcInputEventsData = NULL;
+    }
   }
   
   void Replay::finishReplay(bool bFinished,float fFinishTime) {
@@ -331,14 +335,14 @@ namespace vapp {
           uLongf nSrcLen = nCompressedSize;
           int nZRet = uncompress((Bytef *)Chunk->pcChunkData,&nDestLen,(Bytef *)pcCompressed,nSrcLen);
           if(nZRet != Z_OK || nDestLen != Chunk->nNumStates * m_nStateSize) {
+            Log("** Warning ** : Failed to uncompress chunk %d in replay: %s",i,FileName.c_str());
             delete [] pcCompressed;
-            delete [] Chunk->pcChunkData;
+            Chunk->pcChunkData = NULL;
             FS::closeFile(pfh);
             _FreeReplay();
-            Log("** Warning ** : Failed to uncompress chunk %d in replay: %s",i,FileName.c_str());
             throw Exception("Unable to open the replay");
           }
-          
+
           /* Clean up */
           delete [] pcCompressed;
         }
