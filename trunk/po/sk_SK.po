@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-06-20 18:54+0200\n"
+"POT-Creation-Date: 2007-06-29 16:32+0200\n"
 "PO-Revision-Date: 2007-06-11 00:28+0200\n"
 "Last-Translator: Jozef Riha <jose1711@gmail.com\n"
 "Language-Team:  <sk@li.org>\n"
@@ -230,7 +230,7 @@ msgid "Italian"
 msgstr "Taliančina"
 
 #: src/GameText.h:111
-msgid "Swedenian"
+msgid "Swedish"
 msgstr "Švédština"
 
 #: src/GameText.h:112

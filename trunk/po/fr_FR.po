@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-06-20 18:54+0200\n"
+"POT-Creation-Date: 2007-06-29 16:32+0200\n"
 "PO-Revision-Date: 2006-09-04 19:52+0100\n"
 "Last-Translator: Nicolas Adenis-Lamarre\n"
 "Language-Team: X-Moto\n"
@@ -223,7 +223,7 @@ msgid "Italian"
 msgstr "Italien"
 
 #: src/GameText.h:111
-msgid "Swedenian"
+msgid "Swedish"
 msgstr "Suédois"
 
 #: src/GameText.h:112

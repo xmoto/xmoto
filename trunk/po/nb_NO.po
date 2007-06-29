@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-MOTO 3.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-06-20 18:54+0200\n"
+"POT-Creation-Date: 2007-06-29 16:32+0200\n"
 "PO-Revision-Date: 2007-06-12 17:26+0100\n"
 "Last-Translator: Wilhelm Francke <wilhelm.francke@gmail.com>\n"
 "Language-Team: English <en@li.org>\n"
@@ -231,7 +231,7 @@ msgid "Italian"
 msgstr "Italiensk"
 
 #: src/GameText.h:111
-msgid "Swedenian"
+msgid "Swedish"
 msgstr "Svensk"
 
 #: src/GameText.h:112
