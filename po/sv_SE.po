@@ -229,7 +229,7 @@ msgid "Italian"
 msgstr "Italienska"
 
 #: src/GameText.h:111
-msgid "Swedenian"
+msgid "Swedish"
 msgstr "Svenska"
 
 #: src/GameText.h:112
