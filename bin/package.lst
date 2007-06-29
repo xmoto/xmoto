@@ -88,6 +88,9 @@ Textures/Textures/TransparentBlue1_269.png
 Textures/Textures/vloup_279.jpg
 Textures/Textures/Wood3_296.png
 Textures/Textures/stone_white_357.jpg
+Textures/Textures/technics_362.jpg
+Textures/Textures/glass1_364.png
+Textures/Textures/technics_dark_363.jpg
 
 Textures/Anims/checkball_235_00.png
 Textures/Anims/checkball_235_01.png
@@ -260,6 +263,34 @@ Levels/l48.lvl
 Levels/l513.lvl
 Levels/l718.lvl
 Levels/l769.lvl
+Levels/l1447.lvl
+Levels/l1445.lvl
+Levels/l1431.lvl
+Levels/l1426.lvl
+Levels/l1406.lvl
+Levels/l1364.lvl
+Levels/l1136.lvl
+Levels/l1242.lvl
+Levels/l1239.lvl
+Levels/l1271.lvl
+Levels/l1214.lvl
+Levels/l1457.lvl
+Levels/l374.lvl
+Levels/l1454.lvl
+Levels/l1287.lvl
+Levels/l1337.lvl
+Levels/l1294.lvl
+Levels/l1177.lvl
+Levels/l1437.lvl
+Levels/l1238.lvl
+Levels/l1240.lvl
+Levels/l1204.lvl
+Levels/l1440.lvl
+Levels/l1343.lvl
+Levels/l1162.lvl
+Levels/l1423.lvl
+Levels/l1251.lvl
+Levels/l1253.lvl
 
 Textures/Anims/Flower00.png
 Textures/Anims/Flower01.png
@@ -497,6 +528,7 @@ Textures/Effects/Debris1.png
 Textures/Effects/darken_288.png
 Textures/Effects/KRWBlueRockEdge_252.png
 Textures/Effects/street_245.png
+Textures/Effects/bluen_365.png
 
 Textures/Misc/Arrow.png
 Textures/Misc/enginecounter.png

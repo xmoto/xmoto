@@ -108,6 +108,9 @@
 <sprite type="Texture" name="vloup" file="vloup_279.jpg" />
 <sprite type="Texture" name="Wood3" file="Wood3_296.png" />
 <sprite type="Texture" name="stone_white" file="stone_white_357.jpg" />
+<sprite type="Texture" name="technics" file="technics_362.jpg" />
+<sprite type="Texture" name="technics_dark" file="technics_dark_363.jpg" />
+<sprite type="Texture" name="glass1" file="glass1_364.png" />
 
 <sprite type="Entity" name="Strawberry"  fileBase="Strawberry"  fileExtension="png" width="1" height="1" delay="0.05">
 <frame centerX="0.5" centerY="0.5" />
@@ -197,6 +200,7 @@
 <sprite type="EdgeEffect" name="darken" file="darken_288.png" scale="0.7" depth="0.2" />
 <sprite type="EdgeEffect" name="KRWBlueRockEdge" file="KRWBlueRockEdge_252.png" scale="1.0" depth="1.0" />
 <sprite type="EdgeEffect" name="street" file="street_245.png" scale="1" depth="0.4" />
+<sprite type="EdgeEffect" name="bluen" file="bluen_365.png" scale="0.7" depth="0.2" />
 
 <sprite type="Misc" name="Arrow" file="Arrow.png" />
 <sprite type="Misc" name="EngineCounter" file="enginecounter.png" />
