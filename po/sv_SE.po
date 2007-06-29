@@ -1,14 +1,14 @@
-# translation of sv.po to Swedish
+# translation of sv_SE.po to Swedish
 # Copyright (C) 2007 Free Software Foundation, Inc.
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Lukas <lukas.klingsbo@piratpartiet.se>, 2007.
 msgid ""
 msgstr ""
-"Project-Id-Version: sv\n"
+"Project-Id-Version: sv_SE\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-06-20 18:54+0200\n"
-"PO-Revision-Date: 2007-06-15 22:11+0200\n"
+"PO-Revision-Date: 2007-06-29 14:30+0200\n"
 "Last-Translator: Lukas <lukas.klingsbo@piratpartiet.se>\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -47,7 +47,7 @@ msgstr "44 kHz"
 
 #: src/GameText.h:42
 msgid "8-bit"
-msgstr "8-bit"
+msgstr "F8-bit"
 
 #: src/GameText.h:43
 msgid "Quit level"
@@ -118,7 +118,7 @@ msgstr "Inbyggda banor"
 #: src/GameText.h:61
 #, c-format
 msgid "(by %s)"
-msgstr ""
+msgstr "(av %s)"
 
 #: src/GameText.h:62
 msgid "Move Camera to left"
@@ -190,23 +190,23 @@ msgstr "MacOS X Support"
 
 #: src/GameText.h:101
 msgid "Localization"
-msgstr "Plats"
+msgstr "Översättare"
 
 #: src/GameText.h:102
 msgid "Slovak"
-msgstr "Slovakien"
+msgstr "Slovakiska"
 
 #: src/GameText.h:103
 msgid "French"
-msgstr "Frankrike"
+msgstr "Franska"
 
 #: src/GameText.h:104
 msgid "Norwegian"
-msgstr "Norge"
+msgstr "Norska"
 
 #: src/GameText.h:105
 msgid "German"
-msgstr "Tyskland"
+msgstr "Tyska"
 
 #: src/GameText.h:106
 msgid "Finnish"
@@ -225,17 +225,16 @@ msgid "Polish"
 msgstr "Polska"
 
 #: src/GameText.h:110
-#, fuzzy
 msgid "Italian"
-msgstr "Katalanska"
+msgstr "Italienska"
 
 #: src/GameText.h:111
 msgid "Swedenian"
-msgstr ""
+msgstr "Svenska"
 
 #: src/GameText.h:112
 msgid "Czech"
-msgstr ""
+msgstr "Tjeckiska"
 
 #: src/GameText.h:113
 msgid "Mikhail Brinchuk"
@@ -291,14 +290,13 @@ msgstr "Folk som har rapporterat buggar"
 
 #: src/GameText.h:131
 msgid "Anyone who has helped in any way"
-msgstr "Alla som harhjälpt till på något sätt"
+msgstr "Alla som har hjälpt till på något sätt"
 
 #: src/GameText.h:133
 msgid "Credits"
 msgstr "Credits"
 
 #: src/GameText.h:134 src/GameText.h:300
-#, fuzzy
 msgid "Player"
 msgid_plural "Players"
 msgstr[0] "Spelare"
@@ -597,9 +595,9 @@ msgid "The best of the replays (on this computer)"
 msgstr "De bästa repriserna (på den här datorn)"
 
 #: src/GameText.h:199
-#, fuzzy, c-format
+#, c-format
 msgid "Ghost of %s"
-msgstr "Spöke av"
+msgstr "Spöke av %s"
 
 #: src/GameText.h:200
 msgid "Ghost"
@@ -1122,7 +1120,7 @@ msgstr "Tillgänglig"
 
 #: src/GameText.h:339
 msgid "To download"
-msgstr "Ska laddas ner"
+msgstr "Kan laddas ner"
 
 #: src/GameText.h:340
 msgid "To be updated"
@@ -2245,7 +2243,7 @@ msgstr "Den här genomgången kommer lära dig grunderna för att hoppa."
 
 #: src/LevelsText.h:67
 msgid "Remember you can turn around your bike"
-msgstr "Kom ihåg att du kan vända din cycel"
+msgstr "Kom ihåg att du kan vända din cykel"
 
 #: src/LevelsText.h:68
 msgid "by pressing "
@@ -2285,7 +2283,7 @@ msgstr "Den svåra delen är att hålla balansen."
 
 #: src/LevelsText.h:77
 msgid "When the distance you have to drive is quite short,"
-msgstr "När sträckan su ska köra är kort,"
+msgstr "När sträckan du ska köra är kort,"
 
 #: src/LevelsText.h:78
 msgid "you don't need to keep the balance."
@@ -2325,7 +2323,7 @@ msgstr "Pröva köra en bit fram och tillbaka på ditt bakhjul,"
 
 #: src/LevelsText.h:88
 msgid "keeping the bike as steady as possible..."
-msgstr "håll cyceln så stadig som möjligt..."
+msgstr "håll cykeln så stadig som möjligt..."
 
 #: src/LevelsText.h:89
 msgid "Try getting under the next obstacle when you feel you're ready."
@@ -2363,27 +2361,3 @@ msgstr "Nu är det den sista... Den är inte så lång, men istället"
 msgid "there's even less room for your precious head. Good luck! :)"
 msgstr ""
 "är det till och med mindre rum för ditt värdefulla huvud. Lycka till! :)"
-
-#~ msgid "Players"
-#~ msgstr "Spelare"
-
-#~ msgid "and"
-#~ msgstr "och"
-
-#~ msgid "by"
-#~ msgstr "av"
-
-#~ msgid "Brake 2"
-#~ msgstr "Bromsa 2"
-
-#~ msgid "Change direction 2"
-#~ msgstr "Byt riktning 2"
-
-#~ msgid "Drive 2"
-#~ msgstr "Kör 2"
-
-#~ msgid "Flip left 2"
-#~ msgstr "Snurra vänster 2"
-
-#~ msgid "Flip right 2"
-#~ msgstr "Snurra höger 2"
