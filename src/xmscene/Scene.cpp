@@ -986,7 +986,7 @@ void MotoGame::cleanPlayers() {
   }
 
   void MotoGame::killPlayer(int i_player) {
-    if(m_players[i_player]->isDead() == false) {
+    if(m_players[i_player]->isDead() == false && m_players[i_player]->isFinished() == false) {
       m_players[i_player]->setDead(true);
 
       if(m_bDeathAnimEnabled) {
@@ -1059,7 +1059,7 @@ void MotoGame::cleanPlayers() {
   }
 
   void MotoGame::makePlayerWin(int i_player) {
-    if(m_players[i_player]->isDead() == false) {
+    if(m_players[i_player]->isDead() == false && m_players[i_player]->isFinished() == false) {
       m_players[i_player]->setFinished(true, getTime());
     }
   }

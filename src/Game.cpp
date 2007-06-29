@@ -53,6 +53,7 @@ GameApp::GameApp() {
   m_bShowFrameRate=false;
   m_bEnableMenuMusic=false;
   m_bEnableInitZoom=true;
+  m_bMultiStopWhenOneFinishes=true;
   m_autoZoom = false;
   m_autoZoomStep = 0;
   m_bAutoZoomInitialized = false;
@@ -693,6 +694,9 @@ GameApp::GameApp() {
     m_bEnableMenuMusic = m_Config.getBool("MenuMusic");
     m_bEnableInitZoom = m_Config.getBool("InitZoom");
     m_bEnableDeathAnim = m_Config.getBool("DeathAnim");
+
+    /* multi */
+    m_bMultiStopWhenOneFinishes = m_Config.getBool("MultiStopWhenOneFinishes");
 
     /* www */
     m_WebHighscoresURL    = m_Config.getString("WebHighscoresURL");

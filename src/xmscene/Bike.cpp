@@ -183,6 +183,8 @@ float Biker::getBikeEngineRPM() {
 void Biker::updateToTime(float i_time, float i_timeStep,
 			     vapp::CollisionSystem *v_collisionSystem, Vector2f i_gravity,
 			     vapp::MotoGame *i_motogame) {
+  if(isFinished() || isDead()) return;
+
   /* sound */
   if(vapp::Sound::isEnabled()) {
     m_EngineSound.setRPM(getBikeEngineRPM());

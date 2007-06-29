@@ -76,6 +76,11 @@ void PlayerBiker::updateToTime(float i_time, float i_timeStep,
 			       vapp::MotoGame *i_motogame) {
   Biker::updateToTime(i_time, i_timeStep, i_collisionSystem, i_gravity, i_motogame);
 
+  if(isFinished()) {
+    return;
+  }
+  /* DONT UPDATE BELOW IF PLAYER FINISHED THE LEVEL */
+
   m_bSqueeking = false; /* no squeeking right now */
   updatePhysics(i_time, i_timeStep, i_collisionSystem, i_gravity);
   updateGameState();
@@ -83,6 +88,7 @@ void PlayerBiker::updateToTime(float i_time, float i_timeStep,
   if(isDead()) {
     return;
   }
+  /* DONT UPDATE BELOW IF PLAYER IS DEAD */
 
   /* Squeeking? */
   if(isSqueeking()) {
@@ -230,10 +236,12 @@ void PlayerBiker::updatePhysics(float i_time, float fTimeStep, vapp::CollisionSy
   /* Apply attitude control (SIMPLISTIC!) */
   // when you want to rotate in opposite direction  (m_BikeC.Pull() * m_fLastAttitudeDir < 0) it's true
   //  benetnash: I don't think It will affect highscores in any way
-  if((m_BikeC.Pull() != 0.0f) && (i_time > m_fNextAttitudeCon /*XXX*/ || (m_BikeC.Pull() * m_fLastAttitudeDir < 0) /*XXX*/ )) {
-    m_fAttitudeCon = m_BikeC.Pull() * PHYS_RIDER_ATTITUDE_TORQUE;
-    m_fLastAttitudeDir = m_fAttitudeCon;
-    m_fNextAttitudeCon = i_time + (0.6f * fabsf(m_BikeC.Pull()));
+  if(isDead() == false && isFinished() == false) {
+    if((m_BikeC.Pull() != 0.0f) && (i_time > m_fNextAttitudeCon /*XXX*/ || (m_BikeC.Pull() * m_fLastAttitudeDir < 0) /*XXX*/ )) {
+      m_fAttitudeCon = m_BikeC.Pull() * PHYS_RIDER_ATTITUDE_TORQUE;
+      m_fLastAttitudeDir = m_fAttitudeCon;
+      m_fNextAttitudeCon = i_time + (0.6f * fabsf(m_BikeC.Pull()));
+    }
   }
 
   if(m_fAttitudeCon != 0.0f) {
@@ -242,15 +250,15 @@ void PlayerBiker::updatePhysics(float i_time, float fTimeStep, vapp::CollisionSy
     dBodyEnable(m_RearWheelBodyID);
     dBodyEnable(m_FrameBodyID);
     dBodyAddTorque(m_FrameBodyID,0,0,m_fAttitudeCon);
-
+    
     //printf("AttitudeCon %f\n",m_fAttitudeCon);
   }
-
+  
   m_fAttitudeCon *= PHYS_ATTITUDE_DEFACTOR;
   if(fabs(m_fAttitudeCon) < 100) { /* make sure we glue to zero */
     m_fAttitudeCon = 0.0f;
   }
-
+  
   float fRearWheelAngVel = dBodyGetAngularVel(m_RearWheelBodyID)[2];
   float fFrontWheelAngVel = dBodyGetAngularVel(m_FrontWheelBodyID)[2];
 
@@ -270,55 +278,55 @@ void PlayerBiker::updatePhysics(float i_time, float fTimeStep, vapp::CollisionSy
   m_bikeState.physicalUpdate();
 
   /* Update RPM */
-  /* Simply map the wheel ang vel to the RPM (stupid, lame, lots of bad stuff) */
-  if(m_bikeState.Dir == DD_RIGHT) {
-    float f = -fRearWheelAngVel;
-    if(f<0.0f) f=0.0f;
-    m_bikeState.fBikeEngineRPM = ENGINE_MIN_RPM + (ENGINE_MAX_RPM - ENGINE_MIN_RPM) * (f / PHYS_MAX_ROLL_VELOCITY) * m_BikeC.Drive();
-    if(m_bikeState.fBikeEngineRPM < ENGINE_MIN_RPM) m_bikeState.fBikeEngineRPM = ENGINE_MIN_RPM;
-    if(m_bikeState.fBikeEngineRPM > ENGINE_MAX_RPM) m_bikeState.fBikeEngineRPM = ENGINE_MAX_RPM;
-  }
-  else if(m_bikeState.Dir == DD_LEFT) {
-    float f = fFrontWheelAngVel;
-    if(f<0.0f) f=0.0f;
-    m_bikeState.fBikeEngineRPM = ENGINE_MIN_RPM + (ENGINE_MAX_RPM - ENGINE_MIN_RPM) * (f / PHYS_MAX_ROLL_VELOCITY) * m_BikeC.Drive();
-    if(m_bikeState.fBikeEngineRPM < ENGINE_MIN_RPM) m_bikeState.fBikeEngineRPM = ENGINE_MIN_RPM;
-    if(m_bikeState.fBikeEngineRPM > ENGINE_MAX_RPM) m_bikeState.fBikeEngineRPM = ENGINE_MAX_RPM;
+  if(isDead() == false && isFinished() == false) {
+    /* Simply map the wheel ang vel to the RPM (stupid, lame, lots of bad stuff) */
+    if(m_bikeState.Dir == DD_RIGHT) {
+      float f = -fRearWheelAngVel;
+      if(f<0.0f) f=0.0f;
+      m_bikeState.fBikeEngineRPM = ENGINE_MIN_RPM + (ENGINE_MAX_RPM - ENGINE_MIN_RPM) * (f / PHYS_MAX_ROLL_VELOCITY) * m_BikeC.Drive();
+      if(m_bikeState.fBikeEngineRPM < ENGINE_MIN_RPM) m_bikeState.fBikeEngineRPM = ENGINE_MIN_RPM;
+      if(m_bikeState.fBikeEngineRPM > ENGINE_MAX_RPM) m_bikeState.fBikeEngineRPM = ENGINE_MAX_RPM;
+    } else if(m_bikeState.Dir == DD_LEFT) {
+      float f = fFrontWheelAngVel;
+      if(f<0.0f) f=0.0f;
+      m_bikeState.fBikeEngineRPM = ENGINE_MIN_RPM + (ENGINE_MAX_RPM - ENGINE_MIN_RPM) * (f / PHYS_MAX_ROLL_VELOCITY) * m_BikeC.Drive();
+      if(m_bikeState.fBikeEngineRPM < ENGINE_MIN_RPM) m_bikeState.fBikeEngineRPM = ENGINE_MIN_RPM;
+      if(m_bikeState.fBikeEngineRPM > ENGINE_MAX_RPM) m_bikeState.fBikeEngineRPM = ENGINE_MAX_RPM;
+    }
   }
 
   /* Apply motor/brake torques */
-  if(m_BikeC.Drive() < 0.0f) {
-    /* Brake! */
-    if(!bSleep) {
-      //printf("Brake!\n");
+  if(isDead() == false && isFinished() == false) {
+    if(m_BikeC.Drive() < 0.0f) {
+      /* Brake! */
+      if(!bSleep) {
+	//printf("Brake!\n");
 
-      dBodyAddTorque(m_RearWheelBodyID,0,0,dBodyGetAngularVel(m_RearWheelBodyID)[2]*PHYS_BRAKE_FACTOR*m_BikeC.Drive());
-      dBodyAddTorque(m_FrontWheelBodyID,0,0,dBodyGetAngularVel(m_FrontWheelBodyID)[2]*PHYS_BRAKE_FACTOR*m_BikeC.Drive());
-    }
-  }
-  else {
-    /* Throttle? */
-    if(m_BikeC.Drive() > 0.0f) {
-      if(m_bikeState.Dir == DD_RIGHT) {
-	if(fRearWheelAngVel > -PHYS_MAX_ROLL_VELOCITY) {
-	  m_nStillFrames=0;
-	  dBodyEnable(m_FrontWheelBodyID);
-	  dBodyEnable(m_RearWheelBodyID);
-	  dBodyEnable(m_FrameBodyID);
-
-	  dBodyAddTorque(m_RearWheelBodyID,0,0,-m_bikeState.Parameters().MaxEngine()*PHYS_ENGINE_DAMP*m_BikeC.Drive());
-
-	  //printf("Drive!\n");
-	}
+	dBodyAddTorque(m_RearWheelBodyID,0,0,dBodyGetAngularVel(m_RearWheelBodyID)[2]*PHYS_BRAKE_FACTOR*m_BikeC.Drive());
+	dBodyAddTorque(m_FrontWheelBodyID,0,0,dBodyGetAngularVel(m_FrontWheelBodyID)[2]*PHYS_BRAKE_FACTOR*m_BikeC.Drive());
       }
-      else {
-	if(fFrontWheelAngVel < PHYS_MAX_ROLL_VELOCITY) {
-	  m_nStillFrames=0;
-	  dBodyEnable(m_FrontWheelBodyID);
-	  dBodyEnable(m_RearWheelBodyID);
-	  dBodyEnable(m_FrameBodyID);
-
-	  dBodyAddTorque(m_FrontWheelBodyID,0,0,m_bikeState.Parameters().MaxEngine()*PHYS_ENGINE_DAMP*m_BikeC.Drive());
+    } else {
+      /* Throttle? */
+      if(m_BikeC.Drive() > 0.0f) {
+	if(m_bikeState.Dir == DD_RIGHT) {
+	  if(fRearWheelAngVel > -PHYS_MAX_ROLL_VELOCITY) {
+	    m_nStillFrames=0;
+	    dBodyEnable(m_FrontWheelBodyID);
+	    dBodyEnable(m_RearWheelBodyID);
+	    dBodyEnable(m_FrameBodyID);
+	    
+	    dBodyAddTorque(m_RearWheelBodyID,0,0,-m_bikeState.Parameters().MaxEngine()*PHYS_ENGINE_DAMP*m_BikeC.Drive());
+	    
+	    //printf("Drive!\n");
+	  }
+	} else {
+	  if(fFrontWheelAngVel < PHYS_MAX_ROLL_VELOCITY) {
+	    m_nStillFrames=0;
+	    dBodyEnable(m_FrontWheelBodyID);
+	    dBodyEnable(m_RearWheelBodyID);
+	    dBodyEnable(m_FrameBodyID);
+	    dBodyAddTorque(m_FrontWheelBodyID,0,0,m_bikeState.Parameters().MaxEngine()*PHYS_ENGINE_DAMP*m_BikeC.Drive());
+	  }
 	}
       }
     }
@@ -385,11 +393,13 @@ void PlayerBiker::updatePhysics(float i_time, float fTimeStep, vapp::CollisionSy
     //}
 
     if(m_bikeState.Dir == DD_LEFT) {
-      if(fabs(fFrontWheelAngVel) > 5 && m_BikeC.Drive()>0.0f && nNumContacts > 0) {
-	m_bWheelSpin = true;
-	m_WheelSpinPoint = WSP;
-	m_WheelSpinDir.x = (((m_bikeState.FrontWheelP.y - WSP.y))*1 + (m_bikeState.FrontWheelP.x - WSP.x)) /2;
-	m_WheelSpinDir.y = ((-(m_bikeState.FrontWheelP.x - WSP.x))*1 + (m_bikeState.FrontWheelP.y - WSP.y)) /2;
+      if(isDead() == false && isFinished() == false) {
+	if(fabs(fFrontWheelAngVel) > 5 && m_BikeC.Drive()>0.0f && nNumContacts > 0) {
+	  m_bWheelSpin = true;
+	  m_WheelSpinPoint = WSP;
+	  m_WheelSpinDir.x = (((m_bikeState.FrontWheelP.y - WSP.y))*1 + (m_bikeState.FrontWheelP.x - WSP.x)) /2;
+	  m_WheelSpinDir.y = ((-(m_bikeState.FrontWheelP.x - WSP.x))*1 + (m_bikeState.FrontWheelP.y - WSP.y)) /2;
+	}
       }
     }
   }
@@ -446,11 +456,13 @@ void PlayerBiker::updatePhysics(float i_time, float fTimeStep, vapp::CollisionSy
     //}
 
     if(m_bikeState.Dir == DD_RIGHT) {
-      if(fabs(fRearWheelAngVel) > 5 && m_BikeC.Drive()>0 && nNumContacts > 0) {
-	m_bWheelSpin = true;
-	m_WheelSpinPoint = WSP;
-	m_WheelSpinDir.x = ((-(m_bikeState.RearWheelP.y - WSP.y))*1 + (m_bikeState.RearWheelP.x - WSP.x)) /2;
-	m_WheelSpinDir.y = (((m_bikeState.RearWheelP.x - WSP.x))*1 + (m_bikeState.RearWheelP.y - WSP.y)) /2;
+      if(isDead() == false && isFinished() == false) {
+	if(fabs(fRearWheelAngVel) > 5 && m_BikeC.Drive()>0 && nNumContacts > 0) {
+	  m_bWheelSpin = true;
+	  m_WheelSpinPoint = WSP;
+	  m_WheelSpinDir.x = ((-(m_bikeState.RearWheelP.y - WSP.y))*1 + (m_bikeState.RearWheelP.x - WSP.x)) /2;
+	  m_WheelSpinDir.y = (((m_bikeState.RearWheelP.x - WSP.x))*1 + (m_bikeState.RearWheelP.y - WSP.y)) /2;
+	}
       }
     }
   }
@@ -801,10 +813,12 @@ void PlayerBiker::clearStates() {
   m_bikeState.SwingAnchor2P = Vector2f(0,0);
   m_bikeState.SwingAnchorP = Vector2f(0,0);
 
-  /* BIKE_C */
-  memset(&m_BikeC,0,sizeof(m_BikeC));
+  if(isDead() == false && isFinished() == false) {
+    /* BIKE_C */
+    memset(&m_BikeC,0,sizeof(m_BikeC));
 
-  m_forceToAdd = Vector2f(0.0, 0.0);
+    m_forceToAdd = Vector2f(0.0, 0.0);
+  }
 }
 
 BikeController* PlayerBiker::getControler() {
