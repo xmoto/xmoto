@@ -530,6 +530,7 @@ namespace vapp {
 
   void GameApp::_PostUpdatePlaying(void) {
     bool v_all_dead = true;
+    bool v_one_still_play = false;
     bool v_one_finished = false;
  
     for(unsigned int i=0; i<m_MotoGame.Players().size(); i++) {
@@ -539,15 +540,21 @@ namespace vapp {
       if(m_MotoGame.Players()[i]->isFinished()) {
 	v_one_finished = true;
       }
-    }
 
+      if(m_MotoGame.Players()[i]->isFinished() == false && m_MotoGame.Players()[i]->isDead() == false) {
+	v_one_still_play = true;
+      }
+    }
+    
     /* News? */
-    if(v_one_finished) {
-      /* You're done maaaan! :D */
-      setState(GS_FINISHED);
-    } else if(v_all_dead) {
-      /* You're dead maan! */
-      setState(GS_DEADJUST);
+    if(v_one_still_play == false || m_bMultiStopWhenOneFinishes) { // let people continuing when one finished or not
+      if(v_one_finished) {
+	/* You're done maaaan! :D */
+	setState(GS_FINISHED);
+      } else if(v_all_dead) {
+	/* You're dead maan! */
+	setState(GS_DEADJUST);
+      }
     }
   }
 

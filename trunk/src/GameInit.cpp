@@ -739,6 +739,9 @@ namespace vapp {
     m_Config.createVar("QSDifficultyMIN", "1");
     m_Config.createVar("QSQualityMAX",    "5");
     m_Config.createVar("QSDifficultyMAX", "5");
+
+    /* multi */
+    m_Config.createVar("MultiStopWhenOneFinishes" , "true");
   }
   
 }

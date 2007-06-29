@@ -170,6 +170,7 @@ class xmDatabase;
 
     private:   
       /* Data */
+      bool m_bMultiStopWhenOneFinishes;         /* in multiplayer, stop the game when one finishes the level */
       bool m_bEnableInitZoom;                   /* true: Perform initial level scroll/zoom */
       bool m_autoZoom;                          /* true : the key is pressed so that it zooms out to see the level */
       int m_autoZoomStep;
