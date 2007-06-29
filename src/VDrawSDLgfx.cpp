@@ -441,7 +441,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 
 	  char key[255] = "";
 
-	  sprintf(key, "%s--", m_texture->Name.c_str());
+	  snprintf(key, 255, "%s--", m_texture->Name.c_str());
 	  std::map < const char *,
 	    SDL_Surface * >::iterator i = m_image_cache.find(key);
 	  if (i != m_image_cache.end()) {
