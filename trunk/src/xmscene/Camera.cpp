@@ -238,17 +238,38 @@ void Camera::setDesiredRotationAngle(float i_value) {
 }
 
 void Camera::adaptRotationAngleToGravity(Vector2f& gravity) {
+  float v_x, v_y;
+
   if(gravity.x == 0.0) {
     if(gravity.y > 0) {
       m_desiredRotationAngle = 180.0;
     } else {
       m_desiredRotationAngle = 0.0;
     }
-  } else {
-    m_desiredRotationAngle = tan(gravity.y/gravity.x);
-    m_desiredRotationAngle = ((m_desiredRotationAngle * 180.0) / M_PI) + 90.0;
-    m_desiredRotationAngle = (float)((int)((m_desiredRotationAngle) + 360.0) % 360);
+    return;
   }
+
+  v_x = gravity.x;
+  v_y = -gravity.y; // because gravity y is reversed
+
+  if(v_x > 0.0) {
+    if(v_y > 0.0) {
+      m_desiredRotationAngle = atan(v_y/v_x);
+    } else {
+      m_desiredRotationAngle = -atan(-v_y/v_x);
+    }
+  } else {
+    if(v_y > 0.0) {
+      m_desiredRotationAngle = M_PI - atan(v_y/-v_x);
+    } else {
+      m_desiredRotationAngle = M_PI + atan(-v_y/-v_x);
+    }
+  }
+
+  m_desiredRotationAngle = ((m_desiredRotationAngle * 180.0) / M_PI) - 90.0;
+  m_desiredRotationAngle = (float)((int)((m_desiredRotationAngle) + 360.0) % 360);
+  printf("Gravity (%.2f, %.2f)\n", gravity.x, gravity.y);
+  printf("Desired Angle = %.2f\n", m_desiredRotationAngle < 0.0 ? m_desiredRotationAngle+360.0 : m_desiredRotationAngle);
 }
 
 
