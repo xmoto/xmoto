@@ -986,6 +986,17 @@ namespace vapp {
 	pNbPlayers->setChecked(true);
       }
     }
+
+    UIButton *pMultiStopWhenOneFinishes = new UIButton(pMultiOptionsTab, 0, pMultiOptionsTab->getPosition().nHeight - 40 - 28 - 10,
+						       GAMETEXT_MULTISTOPWHENONEFINISHES,
+						       pMultiOptionsTab->getPosition().nWidth,28);
+    pMultiStopWhenOneFinishes->setType(UI_BUTTON_TYPE_CHECK);
+    pMultiStopWhenOneFinishes->setID("ENABLEMULTISTOPWHENONEFINISHES");
+    pMultiStopWhenOneFinishes->enableWindow(true);
+    pMultiStopWhenOneFinishes->setFont(drawLib->getFontSmall());
+    pMultiStopWhenOneFinishes->setGroup(50050);
+    pMultiStopWhenOneFinishes->setContextHelp(CONTEXTHELP_MULTISTOPWHENONEFINISHES);    
+    pMultiStopWhenOneFinishes->setChecked(m_bMultiStopWhenOneFinishes);
   }
 
   int GameApp::getNumberOfPlayersToPlay() {
@@ -2598,6 +2609,8 @@ namespace vapp {
     UIButton *pDisplayGhostInfo = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:DISPLAY_GHOST_INFO");
     UIButton *pDisplayGhostTimeDiff = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:DISPLAY_GHOST_TIMEDIFF");
 
+    UIButton *pMultiStopWhenOneFinishes = (UIButton *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:MULTI_TAB:ENABLEMULTISTOPWHENONEFINISHES");
+
 	/* unfortunately because of differences betw->setClicked(false);een finishTime in webhighscores and replays table (one is rounded to 0.01s and other to 0.001s) and lack of math functions in sqlite we cannot make it with just one smart query :( */
 	if(pUploadAllHighscoresButton->isClicked()) {
 		pUploadAllHighscoresButton->setClicked(false);
@@ -2708,6 +2721,12 @@ namespace vapp {
 	notifyMsg(GAMETEXT_FAILEDGETSELECTEDTHEME);
       }
     } 
+
+    if(pMultiStopWhenOneFinishes->isClicked()) {
+      pMultiStopWhenOneFinishes->setClicked(false);
+      m_bMultiStopWhenOneFinishes = pMultiStopWhenOneFinishes->getChecked();
+      m_Config.setBool("MultiStopWhenOneFinishes", m_bMultiStopWhenOneFinishes);
+    }
 
     UIButton *pSaveOptions = (UIButton *)m_pOptionsWindow->getChild("SAVE_BUTTON");
     UIButton *pDefaultOptions = (UIButton *)m_pOptionsWindow->getChild("DEFAULTS_BUTTON");
