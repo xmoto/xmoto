@@ -254,6 +254,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_MOSTPLAYEDLEVELSFOLLOW _("Following are your most played levels")
 #define GAMETEXT_MOTIONBLURGHOST      _("Motion blur ghost")
 #define GAMETEXT_MULTI                _("Multi")
+#define GAMETEXT_MULTISTOPWHENONEFINISHES _("Stop the game once a player ends the level")
 #define GAMETEXT_NAME                 _("Name")
 #define GAMETEXT_NB_PLAYERS           _("Number of players")
 #define GAMETEXT_NEW                  _("New")
@@ -513,6 +514,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_QUICKSTART _("Press to play immediatly to X-Moto")
 #define CONTEXTHELP_QUICKSTART_QUALITY    _("Increase or dicrease the quality of the levels selected")
 #define CONTEXTHELP_QUICKSTART_DIFFICULTY _("Increase or dicrease the difficulty of the levels selected")
+#define CONTEXTHELP_MULTISTOPWHENONEFINISHES _("Stop the game once a player ends the level or continue while a player is running")
 
 #define VPACKAGENAME_LEVELS_WITH_NO_HIGHSCORE   _("Levels with no highscore")
 #define VPACKAGENAME_INCOMPLETED_LEVELS         _("Levels you have not completed")
