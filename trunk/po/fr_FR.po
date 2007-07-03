@@ -1827,7 +1827,9 @@ msgstr "Changer la difficulté des niveaux sélectionnés"
 msgid ""
 "Stop the game once a player ends the level or continue while a player is "
 "running"
-msgstr "Arrêter la partie dès qu'un joueur a fini le niveau ou laisser les autres joueurs finir"
+msgstr ""
+"Arrêter la partie dès qu'un joueur a fini le niveau ou laisser les autres "
+"joueurs finir"
 
 #: src/GameText.h:519
 msgid "Levels with no highscore"
