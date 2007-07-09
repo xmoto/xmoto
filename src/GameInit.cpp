@@ -39,15 +39,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 namespace vapp {
 
   /*===========================================================================
-  Pre-initialize game
-  ===========================================================================*/
-  void GameApp::userPreInit(void) {
-    /* Config */
-    _CreateDefaultConfig();
-    m_Config.loadFile();
-  }
-  
-  /*===========================================================================
   Select display mode
   ===========================================================================*/
   void GameApp::selectDisplayMode(int *pnWidth,int *pnHeight,int *pnBPP,bool *pbWindowed) {
@@ -615,7 +606,8 @@ namespace vapp {
   /*===========================================================================
   Create the default config
   ===========================================================================*/
-  void GameApp::_CreateDefaultConfig(void) {
+  void GameApp::createDefaultConfig(void) {
+    m_Config.createVar( "Language" , "");
     m_Config.createVar( "Theme",                  THEME_DEFAULT_THEMENAME);    
 
     /* Display */

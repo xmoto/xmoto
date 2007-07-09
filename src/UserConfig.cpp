@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VFileIO.h"
 #include "VXml.h"
 #include "UserConfig.h"
+#include "VApp.h"
 
 namespace vapp {
 

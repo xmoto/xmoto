@@ -19,51 +19,20 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#include "Locales.h"
-#include <iostream>
-#include "BuildConfig.h"
-#include "helpers/Environment.h"
-#include "helpers/VExcept.h"
-
-#define PACKAGE_LANG "xmoto"
-
-std::string Locales::init(std::string i_locale) {
-#ifdef USE_GETTEXT
-  char *locale;
-  char* btd;
-  char* cs;
-
-  if(i_locale != "") {
-    try {
-      // this var is looked by gettext in priority (and it is set on most environment, then change it to change the lang)
-      set_environment_variable("LANGUAGE", i_locale);
-    } catch(Exception &e) {
-      /* hum, ok */
-    }
-  }
-
+#include "Environment.h"
+#include "VExcept.h"
 #ifdef WIN32
-  /* gettext at 0.13 - not enought for LC_MESSAGE */
-  /* LC_CTYPE seems to work */
-  locale = setlocale(LC_CTYPE, "");
+#include <windows.h>
+#include <winbase.h>
+#endif
+
+void set_environment_variable(const std::string& i_variable, const std::string& i_value) {
+#ifdef WIN32
+  if(SetEnvironmentVariable(i_variable.c_str(), i_value.c_str()) == 0) {
 #else
-  locale = setlocale(LC_MESSAGES, "");
+  if(setenv(i_variable.c_str(), i_value.c_str(), 1) != 0) {
 #endif
-
-  if(locale == NULL) {
-    return "";
+    throw Exception("Set Env failed");
   }
 
-  textdomain(PACKAGE_LANG);
-  if((btd=bindtextdomain(PACKAGE_LANG, LOCALESDIR)) == NULL) {
-    return "";
-  }
-
-  cs = bind_textdomain_codeset(PACKAGE_LANG, "UTF-8");
-
-  return locale;
-
-#endif
-  return "";
 }
-

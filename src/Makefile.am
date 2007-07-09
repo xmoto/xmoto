@@ -35,6 +35,8 @@ helpers_SOURCES = helpers/VMath.h             \
                   helpers/HighPrecisionTimer.h \
 		  helpers/utf8.h   \
 		  helpers/utf8.cpp \
+                  helpers/Environment.h \
+                  helpers/Environment.cpp \
                   iqsort.h
 
 common_SOURCES = Image.cpp \
