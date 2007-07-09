@@ -174,12 +174,18 @@ namespace vapp {
   void App::run(int nNumArgs,char **ppcArgs) {
 
     /* init endian system */ 
-#ifdef USE_GETTEXT
-    std::string v_locale = Locales::init();
-#endif
     SwapEndian::Swap_Init();
-
     srand(time(NULL));
+    /* Init file system stuff */
+    FS::init( "xmoto" );
+
+    /* load config */
+    createDefaultConfig();
+    m_Config.loadFile();
+
+#ifdef USE_GETTEXT
+    std::string v_locale = Locales::init(m_Config.getString("Language"));
+#endif
 
     try {
       /* Parse command-line arguments */
@@ -193,9 +199,6 @@ namespace vapp {
       return;
     }
 
-    /* Init file system stuff */
-    FS::init( "xmoto" );
-
     Log("compiled at "__DATE__" "__TIME__);
     if(SwapEndian::bigendien) {
       Log("Systeme is bigendien");
@@ -207,8 +210,6 @@ namespace vapp {
     vapp::Log("Locales set to '%s' (directory '%s')", v_locale.c_str(), LOCALESDIR);
 #endif
 
-    /* Do user pre-init */
-    userPreInit();
     _InitWin(m_useGraphics);
 
     int configured_width,configured_height,configured_BPP;

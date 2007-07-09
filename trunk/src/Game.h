@@ -30,7 +30,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VTexture.h"
 #include "Renderer.h"
 #include "Replay.h"
-#include "UserConfig.h"
 #include "GameText.h"
 #include "Sound.h"
 #include "Input.h"
@@ -129,7 +128,6 @@ class xmDatabase;
       /* Virtual methods */
       virtual void drawFrame(void);
       virtual void userInit(void);
-      virtual void userPreInit(void);
       virtual void userShutdown(void);
       virtual void keyDown(int nKey, SDLMod mod,int nChar);
       virtual void keyUp(int nKey, SDLMod mod);
@@ -167,6 +165,9 @@ class xmDatabase;
       bool creditsModeActive();
 
       void initCameras(int nbPlayer);
+
+   protected:
+      void createDefaultConfig();
 
     private:   
       /* Data */
@@ -342,7 +343,7 @@ class xmDatabase;
       int m_nPauseShade;
       UIButton *m_pPauseMenuButtons[10];
       int m_nNumPauseMenuButtons;
-      
+
       /* In-game JUSTDEAD menu fun */
       UIFrame *m_pJustDeadMenu;
       int m_nJustDeadShade;
@@ -378,9 +379,6 @@ class xmDatabase;
       
       /* Replay saving UI fun */
       UIMsgBox *m_pSaveReplayMsgBox;    
-      
-      /* Config & profiles */
-      UserConfig m_Config;
 
       LevelsManager m_levelsManager;
       
@@ -418,7 +416,6 @@ class xmDatabase;
       void _CreateThemesList(UIList *pList);
       void _CreateRoomsList(UIList *pList);
       void _CreateProfileList(void);
-      void _CreateDefaultConfig(void);
       void _CreateLevelPackLevelList();
       void _UpdateLevelPackLevelList(const std::string& v_levelPack);
       void _UpdateActionKeyList(void);

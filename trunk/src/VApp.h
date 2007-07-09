@@ -29,11 +29,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VDraw.h"
 //#include "VTexture.h"
 #include "Image.h"
+#include "UserConfig.h"
 
 namespace vapp {
 
 
   class App;
+  class UserConfig;
 
   /*===========================================================================
   Globals
@@ -208,9 +210,9 @@ namespace vapp {
     }
     virtual void userInit(void) {
     }
-    virtual void userPreInit(void) {
-    }
     virtual void userShutdown(void) {
+    }
+    virtual void createDefaultConfig() {
     }
     virtual void selectDisplayMode(int *pnWidth, int *pnHeight, int *pnBPP,
 				   bool * pbWindowed) {
@@ -222,6 +224,10 @@ namespace vapp {
       /**
        * The DrawLib instance to use for this app
        **/
+      
+    /* Config & profiles */
+    UserConfig m_Config;
+
     Theme m_theme;
     DrawLib *drawLib;
     bool m_useGraphics;
