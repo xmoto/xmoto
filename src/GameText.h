@@ -211,7 +211,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 "  Esc - " + std::string(_("Pause")) + "\n" \
 "  Return - " + std::string(_("Restart the level")) + "\n" \
 "  F12 - " + std::string(_("Take a screenshot")) + "\n" \
-"  F5 - " + std::string(_("Reload levels from Levels dir (if you create a new level)")) + "\n" \
+"  F5 - " + std::string(_("Reload levels, themes and replays from directories")) + "\n" \
 "\n" \
  + std::string(_("Find all the strawberries and touch the flower to finish\nthe level.")) + "\n" \
  + std::string(_("Read the README file or check out the website at\nhttp://xmoto.tuxfamily.org for more information."))

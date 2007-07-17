@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-07-03 20:42+0200\n"
+"POT-Creation-Date: 2007-07-17 22:27+0200\n"
 "PO-Revision-Date: 2006-09-04 19:52+0100\n"
 "Last-Translator: Nicolas Adenis-Lamarre\n"
 "Language-Team: X-Moto\n"
@@ -640,8 +640,8 @@ msgid "Take a screenshot"
 msgstr "Faire une capture d'écran"
 
 #: src/GameText.h:214
-msgid "Reload levels from Levels dir (if you create a new level)"
-msgstr "Recharger les niveaux (si vous créez un nouveau niveau)"
+msgid "Reload levels, themes and replays from directories"
+msgstr ""
 
 #: src/GameText.h:216
 msgid ""
@@ -2375,6 +2375,9 @@ msgstr "Enfin, le dernier... Il n'est pas très long, mais"
 #: src/LevelsText.h:100
 msgid "there's even less room for your precious head. Good luck! :)"
 msgstr "il y a encore moins de place pour votre tête. Bonne change ! :)"
+
+#~ msgid "Reload levels from Levels dir (if you create a new level)"
+#~ msgstr "Recharger les niveaux (si vous créez un nouveau niveau)"
 
 #~ msgid "Players"
 #~ msgstr "Joueurs"
