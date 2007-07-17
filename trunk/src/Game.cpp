@@ -2090,6 +2090,25 @@ GameApp::GameApp() {
 	  std::string v_PlayGhostReplay;
 	  
 	  // add the GhostSearchStrategy ghost
+// add all the replays found
+//	  {
+//	    char **v_result;
+//	    int nrow;
+//	    std::string res;
+//	    
+//	    v_result = m_db->readDB("SELECT name FROM replays "
+//				    "WHERE id_level=\""   + xmDatabase::protectString(m_MotoGame.getLevelSrc()->Id()) + "\" "
+//				    "AND   isFinished=1;",
+//				    nrow);    
+//	    for(int i=0; i<nrow; i++) {
+//	      res = std::string("Replays/") + m_db->getResult(v_result, 1, i, 0) + std::string(".rpl");
+//	      m_MotoGame.addGhostFromFile(res, "",
+//					  &m_theme, m_theme.getGhostTheme());
+//	    }
+//
+//	    m_db->read_DB_free(v_result);
+//	  }
+
 	  v_PlayGhostReplay = _getGhostReplayPath(m_MotoGame.getLevelSrc()->Id(), m_GhostSearchStrategy);
 	  if(v_PlayGhostReplay != "") {
 	    try {
