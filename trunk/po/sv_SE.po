@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sv_SE\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-07-03 20:42+0200\n"
+"POT-Creation-Date: 2007-07-17 22:27+0200\n"
 "PO-Revision-Date: 2007-07-06 19:55+0200\n"
 "Last-Translator: Lukas <lukas.klingsbo@piratpartiet.se>\n"
 "Language-Team: Swedish\n"
@@ -644,8 +644,8 @@ msgid "Take a screenshot"
 msgstr "Ta en skärmbild"
 
 #: src/GameText.h:214
-msgid "Reload levels from Levels dir (if you create a new level)"
-msgstr "Ladda om banor ifrån ban-mappen (Ifall du skapar en ny bana)"
+msgid "Reload levels, themes and replays from directories"
+msgstr ""
 
 #: src/GameText.h:216
 msgid ""
@@ -2373,3 +2373,6 @@ msgstr "Nu är det den sista... Den är inte så lång, men istället"
 msgid "there's even less room for your precious head. Good luck! :)"
 msgstr ""
 "är det till och med mindre rum för ditt värdefulla huvud. Lycka till! :)"
+
+#~ msgid "Reload levels from Levels dir (if you create a new level)"
+#~ msgstr "Ladda om banor ifrån ban-mappen (Ifall du skapar en ny bana)"

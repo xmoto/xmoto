@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-07-03 20:42+0200\n"
+"POT-Creation-Date: 2007-07-17 22:27+0200\n"
 "PO-Revision-Date: 2006-12-21 21:14+0100\n"
 "Last-Translator: Jens Erler <mothbox@gmx.net>\n"
 "Language-Team: German\n"
@@ -644,8 +644,8 @@ msgid "Take a screenshot"
 msgstr "Bildschirmfoto aufnehmen"
 
 #: src/GameText.h:214
-msgid "Reload levels from Levels dir (if you create a new level)"
-msgstr "Level-Liste neu einlesen (beim Hinzufügen eigener Level)"
+msgid "Reload levels, themes and replays from directories"
+msgstr ""
 
 #: src/GameText.h:216
 msgid ""
@@ -2394,6 +2394,9 @@ msgstr "Dies ist die letzte Hürde! Nicht so lang, dafür aber"
 #: src/LevelsText.h:100
 msgid "there's even less room for your precious head. Good luck! :)"
 msgstr "ist die Decke noch niedriger. Viel Glück!"
+
+#~ msgid "Reload levels from Levels dir (if you create a new level)"
+#~ msgstr "Level-Liste neu einlesen (beim Hinzufügen eigener Level)"
 
 #~ msgid "Players"
 #~ msgstr "Spieler"

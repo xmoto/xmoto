@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ca\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-07-03 20:42+0200\n"
+"POT-Creation-Date: 2007-07-17 22:27+0200\n"
 "PO-Revision-Date: 2007-05-02 02:31+0200\n"
 "Last-Translator: Trullo\n"
 "Language-Team:  X-Moto\n"
@@ -642,8 +642,8 @@ msgid "Take a screenshot"
 msgstr "Desa una fotografia de la pantalla"
 
 #: src/GameText.h:214
-msgid "Reload levels from Levels dir (if you create a new level)"
-msgstr "Recarrega els nivells del directori (si has creat un nou nivell)"
+msgid "Reload levels, themes and replays from directories"
+msgstr ""
 
 #: src/GameText.h:216
 msgid ""
@@ -2389,6 +2389,9 @@ msgstr ""
 #: src/LevelsText.h:100
 msgid "there's even less room for your precious head. Good luck! :)"
 msgstr ""
+
+#~ msgid "Reload levels from Levels dir (if you create a new level)"
+#~ msgstr "Recarrega els nivells del directori (si has creat un nou nivell)"
 
 #~ msgid "Players"
 #~ msgstr "Jugadors"
