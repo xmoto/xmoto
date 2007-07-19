@@ -1496,7 +1496,7 @@ namespace vapp {
 	}
       }
 
-      if(m_bUglyMode || m_bUglyOverMode) {
+      if(m_bUglyMode) {
 	for(int i=0;i<Blocks.size();i++) {
 	  if(Blocks[i]->isBackground() == false) {
 	    getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_LOOP);
@@ -1510,6 +1510,26 @@ namespace vapp {
 	}
       }
 
+      if(m_bUglyOverMode) {
+	for(int i=0; i<Blocks.size(); i++) {
+	  for(int j=0; j<Blocks[i]->ConvexBlocks().size(); j++) {
+
+	    getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_LOOP);
+
+	    if(Blocks[i]->isBackground() == false) {
+	      getParent()->getDrawLib()->setColorRGB(255,0,0);
+	    } else {
+	      getParent()->getDrawLib()->setColorRGB(255,255,255);
+	    }
+	    for(int k=0; k<Blocks[i]->ConvexBlocks()[j]->Vertices().size(); k++) {
+	      getParent()->getDrawLib()->glVertex(Blocks[i]->ConvexBlocks()[j]->Vertices()[k]->Position().x + Blocks[i]->DynamicPosition().x,
+						  Blocks[i]->ConvexBlocks()[j]->Vertices()[k]->Position().y + Blocks[i]->DynamicPosition().y);
+	    }
+	    getParent()->getDrawLib()->endDraw();
+
+	  }
+	}
+      }
     }
   }
 
