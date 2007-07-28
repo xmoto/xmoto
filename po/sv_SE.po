@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sv_SE\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-07-17 22:27+0200\n"
+"POT-Creation-Date: 2007-07-28 10:02+0200\n"
 "PO-Revision-Date: 2007-07-06 19:55+0200\n"
 "Last-Translator: Lukas <lukas.klingsbo@piratpartiet.se>\n"
 "Language-Team: Swedish\n"
@@ -2006,10 +2006,12 @@ msgid "You highscore finish time is almost the room highscore (95%)"
 msgstr "Ditt rekord är nästan lika bra som rumets (95%)"
 
 #: src/GameText.h:567
+#, c-format
 msgid "You highscore finish time is almost the room highscore (90%-95%)"
 msgstr "Ditt rekord är nästan lika bra som rumets (90%-95%)"
 
 #: src/GameText.h:568
+#, c-format
 msgid "You highscore finish time is almost the room highscore (80%-90%)"
 msgstr "Ditt rekord är nästan lika bra som rumets (80%-90%)"
 

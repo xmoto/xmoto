@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-07-17 22:27+0200\n"
+"POT-Creation-Date: 2007-07-28 10:02+0200\n"
 "PO-Revision-Date: 2006-09-04 19:52+0100\n"
 "Last-Translator: Jan Kaláb <pitel@nomi.cz>\n"
 "Language-Team: X-Moto\n"
@@ -2002,10 +2002,12 @@ msgid "You highscore finish time is almost the room highscore (95%)"
 msgstr "Vaše jízda je skoro nejlepší v místnosti (95 %)"
 
 #: src/GameText.h:567
+#, fuzzy, c-format
 msgid "You highscore finish time is almost the room highscore (90%-95%)"
 msgstr "Vaše jízda je skoro nejlepší v místnosti (90--95 %)"
 
 #: src/GameText.h:568
+#, fuzzy, c-format
 msgid "You highscore finish time is almost the room highscore (80%-90%)"
 msgstr "Vaše jízda je skoro nejlepší v místnosti (80--90 %)"
 
