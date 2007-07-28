@@ -111,6 +111,10 @@
 <sprite type="Texture" name="technics" file="technics_362.jpg" />
 <sprite type="Texture" name="technics_dark" file="technics_dark_363.jpg" />
 <sprite type="Texture" name="glass1" file="glass1_364.png" />
+<sprite type="Texture" name="BubbleDark" file="BubbleDark_371.jpg" />
+<sprite type="Texture" name="BubbleLight" file="BubbleLight_370.jpg" />
+<sprite type="Texture" name="Lava" file="Lava_372.jpg" />
+<sprite type="Texture" name="snow_sprite" file="snow_sprite_377.png" />
 
 <sprite type="Entity" name="Strawberry"  fileBase="Strawberry"  fileExtension="png" width="1" height="1" delay="0.05">
 <frame centerX="0.5" centerY="0.5" />
@@ -201,6 +205,7 @@
 <sprite type="EdgeEffect" name="KRWBlueRockEdge" file="KRWBlueRockEdge_252.png" scale="1.0" depth="1.0" />
 <sprite type="EdgeEffect" name="street" file="street_245.png" scale="1" depth="0.4" />
 <sprite type="EdgeEffect" name="bluen" file="bluen_365.png" scale="0.7" depth="0.2" />
+<sprite type="EdgeEffect" name="lighten" file="lighten_369.png" scale="0.7" depth="0.2" />
 
 <sprite type="Misc" name="Arrow" file="Arrow.png" />
 <sprite type="Misc" name="EngineCounter" file="enginecounter.png" />
@@ -320,6 +325,9 @@
 <sprite type="Entity" name="beerleft" file="beerleft_222.png" width="0.5" height="0.6" centerX="0" centerY="0.5" />
 <sprite type="Entity" name="TuxFly" file="TuxFly_160.png" width="3" height="3" centerX="1.5" centerY="0.2" />
 <sprite type="Entity" name="panel" file="panel_230.png" width="2.6" height="2.6" centerX="1.3" centerY="0.8" />
+
+<sprite type="Entity" name="cow" file="cow_379.png" width="2" height="2" centerX="1.0" centerY="0.8" />
+<sprite type="Entity" name="tree" file="tree_381.png" width="7" height="7" centerX="3.5" centerY="1.2" />
 
 <sprite type="Entity" name="checkball" fileBase="checkball_235_" fileExtension="png" width="1" height="1" delay="0.05">
 <frame />
