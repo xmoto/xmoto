@@ -92,7 +92,6 @@ class xmDatabase;
      GHOST_STRATEGY_BESTOFROOM
    };
 
-
    class XMMotoGameHooks : public MotoGameHooks {
    public:
      XMMotoGameHooks();
@@ -229,6 +228,8 @@ class xmDatabase;
       bool m_reloadingLevelsUser;
       
       Replay *m_pJustPlayReplay;
+
+      std::vector<GhostSearchStrategy> GhostSearchStrategies;
 
       bool m_bEnableGhost;
       GhostSearchStrategy m_GhostSearchStrategy;
@@ -538,7 +539,8 @@ class xmDatabase;
       void initReplaysFromDir();
       void addReplay(const std::string& i_file);
 
-      static UIFrame* makeOptionsWindow(DrawLib* i_drawLib, UIWindow* io_parent, UserConfig* i_Config);
+      static UIFrame* makeOptionsWindow(DrawLib* i_drawLib, UIWindow* io_parent, UserConfig* i_Config, std::vector<GhostSearchStrategy>& i_ghostStrategies);
+      static UIFrame* makeHelpWindow(DrawLib* i_drawLib, UIWindow* io_parent, UserConfig* i_Config);
   };
 
 }
