@@ -3929,7 +3929,6 @@ namespace vapp {
     if(pGhostStrategy->getSelected() >= 0 && pGhostStrategy->getSelected() < pGhostStrategy->getEntries().size()) {
       UIListEntry *pEntry = pGhostStrategy->getEntries()[pGhostStrategy->getSelected()];
       m_Config.setInteger("GhostSearchStrategy", *((int*)(pEntry->pvUser)));
-      printf("%i\n", *((int*)(pEntry->pvUser)));
     }
 
     if(pThemeList->getSelected() >= 0 && pThemeList->getSelected() < pThemeList->getEntries().size()) {
