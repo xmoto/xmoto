@@ -368,6 +368,8 @@ class Theme {
   std::vector<Sound*> m_sounds;
   std::vector<std::string> m_requiredFiles;
 
+  bool isAFileOutOfDate(const std::string& i_file); // to not download old files for compatibilities
+
   BikerTheme *m_player;
   BikerTheme *m_ghost;
 

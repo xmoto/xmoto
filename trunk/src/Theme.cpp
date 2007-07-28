@@ -131,6 +131,21 @@ void Theme::load(std::string p_themeFile) {
   }
 }
 
+bool Theme::isAFileOutOfDate(const std::string& i_file) {
+
+  /* files that you can found in themes files for compatibility reason but no need to download */
+
+  if(i_file == "Textures/UI/NewLevelsAvail.png") return true;
+  if(i_file == "Textures/Effects/Sky1.jpg")      return true;
+  if(i_file == "Textures/Effects/Sky2.jpg")      return true;
+  if(i_file == "Textures/Effects/Sky2Drift.jpg") return true;
+  if(i_file == "Textures/Fonts/MFont.png")       return true;
+  if(i_file == "Textures/Fonts/SFont.png")       return true;
+  if(i_file == "Textures/UI/Loading.png")        return true;
+
+  return false;
+}
+
 void Theme::loadSpritesFromXML(TiXmlElement *p_ThemeXmlDataElement) {
   std::string v_spriteType;
   bool v_isAnimation;
@@ -192,8 +207,10 @@ void Theme::loadSpritesFromXML(TiXmlElement *p_ThemeXmlDataElement) {
     if(pc == NULL) { continue; }
     v_musicFile = pc;
 
-    m_musics.push_back(new Music(this, v_musicName, v_musicFile));
-    m_requiredFiles.push_back(THEME_MUSICS_FILE_DIR + std::string("/") + v_musicFile);    
+    if(isAFileOutOfDate(THEME_MUSICS_FILE_DIR + std::string("/") + v_musicFile) == false) {
+      m_musics.push_back(new Music(this, v_musicName, v_musicFile));
+      m_requiredFiles.push_back(THEME_MUSICS_FILE_DIR + std::string("/") + v_musicFile);    
+    }
   }
 
   /* get sounds */
@@ -213,8 +230,10 @@ void Theme::loadSpritesFromXML(TiXmlElement *p_ThemeXmlDataElement) {
     if(pc == NULL) { continue; }
     v_soundFile = pc;
 
-    m_sounds.push_back(new Sound(this, v_soundName, v_soundFile));
-    m_requiredFiles.push_back(THEME_SOUNDS_FILE_DIR + std::string("/") + v_soundFile);    
+    if(isAFileOutOfDate(THEME_SOUNDS_FILE_DIR + std::string("/") + v_soundFile) == false) {
+      m_sounds.push_back(new Sound(this, v_soundName, v_soundFile));
+      m_requiredFiles.push_back(THEME_SOUNDS_FILE_DIR + std::string("/") + v_soundFile);    
+    }
   }
 
 }
@@ -340,13 +359,17 @@ void Theme::newAnimationSpriteFromXML(TiXmlElement *pVarElem) {
     pc = pVarSubElem->Attribute("delay");
     if(pc != NULL) {v_delay = atof(pc);} else {v_delay = global_delay;}
 
-    v_anim->addFrame(v_centerX, v_centerY, v_width, v_height, v_delay);
+    if(isAFileOutOfDate(THEME_ANIMATION_SPRITE_FILE_DIR + std::string("/") +
+			v_fileBase + std::string(buf) + std::string(".") + v_fileExtension) == false) {
+      v_anim->addFrame(v_centerX, v_centerY, v_width, v_height, v_delay);
 
-    if(n < 100) {
-      sprintf(buf, "%02i", n);
-      m_requiredFiles.push_back(THEME_ANIMATION_SPRITE_FILE_DIR + std::string("/") + v_fileBase + std::string(buf) + std::string(".") + v_fileExtension);
+      if(n < 100) {
+	sprintf(buf, "%02i", n);
+	m_requiredFiles.push_back(THEME_ANIMATION_SPRITE_FILE_DIR + std::string("/") +
+				  v_fileBase + std::string(buf) + std::string(".") + v_fileExtension);
+      }
+      n++;
     }
-    n++;
   }
 }
 
@@ -363,8 +386,10 @@ void Theme::newBikerPartSpriteFromXML(TiXmlElement *pVarElem) {
   if(pc == NULL) {vapp::Log("** BikerPart with no file"); return;}
   v_fileName = pc;
 
-  m_sprites.push_back(new BikerPartSprite(this, v_name, v_fileName));
-  m_requiredFiles.push_back(THEME_BIKERPART_SPRITE_FILE_DIR + std::string("/") + v_fileName);
+  if(isAFileOutOfDate(THEME_BIKERPART_SPRITE_FILE_DIR + std::string("/") + v_fileName) == false) {
+    m_sprites.push_back(new BikerPartSprite(this, v_name, v_fileName));
+    m_requiredFiles.push_back(THEME_BIKERPART_SPRITE_FILE_DIR + std::string("/") + v_fileName);
+  }
 }
 
 void Theme::newDecorationSpriteFromXML(TiXmlElement *pVarElem) {
@@ -405,14 +430,16 @@ void Theme::newDecorationSpriteFromXML(TiXmlElement *pVarElem) {
   pc = pVarElem->Attribute("blendmode");
   if(pc != NULL) v_blendmode = pc;
 
-  m_sprites.push_back(new DecorationSprite(this, v_name, v_fileName,
-					   v_width,
-					   v_height,
-					   v_centerX,
-					   v_centerY,
-					   strToBlendMode(v_blendmode)
-					   ));
-  m_requiredFiles.push_back(THEME_DECORATION_SPRITE_FILE_DIR + std::string("/") + v_fileName);
+  if(isAFileOutOfDate(THEME_DECORATION_SPRITE_FILE_DIR + std::string("/") + v_fileName) == false) {
+    m_sprites.push_back(new DecorationSprite(this, v_name, v_fileName,
+					     v_width,
+					     v_height,
+					     v_centerX,
+					     v_centerY,
+					     strToBlendMode(v_blendmode)
+					     ));
+    m_requiredFiles.push_back(THEME_DECORATION_SPRITE_FILE_DIR + std::string("/") + v_fileName);
+  }
 }
 
 void Theme::newEffectSpriteFromXML(TiXmlElement *pVarElem) {
@@ -428,8 +455,10 @@ void Theme::newEffectSpriteFromXML(TiXmlElement *pVarElem) {
   if(pc == NULL) {vapp::Log("** Effect with no file"); return;}
   v_fileName = pc;
 
-  m_sprites.push_back(new EffectSprite(this, v_name, v_fileName));
-  m_requiredFiles.push_back(THEME_EFFECT_SPRITE_FILE_DIR + std::string("/") + v_fileName);
+  if(isAFileOutOfDate(THEME_EFFECT_SPRITE_FILE_DIR + std::string("/") + v_fileName) == false) {
+    m_sprites.push_back(new EffectSprite(this, v_name, v_fileName));
+    m_requiredFiles.push_back(THEME_EFFECT_SPRITE_FILE_DIR + std::string("/") + v_fileName);
+  }
 }
 
 void Theme::newEdgeEffectSpriteFromXML(TiXmlElement *pVarElem) {
@@ -455,10 +484,12 @@ void Theme::newEdgeEffectSpriteFromXML(TiXmlElement *pVarElem) {
   if(pc == NULL) {vapp::Log("Edge with no depth"); return;}
   v_depth = pc;
 
-  m_sprites.push_back(new EdgeEffectSprite(this, v_name, v_fileName,
-             atof(v_scale.c_str()),
-             atof(v_depth.c_str())));
-  m_requiredFiles.push_back(THEME_EDGEEFFECT_SPRITE_FILE_DIR + std::string("/") + v_fileName);
+  if(isAFileOutOfDate(THEME_EDGEEFFECT_SPRITE_FILE_DIR + std::string("/") + v_fileName) == false) {
+    m_sprites.push_back(new EdgeEffectSprite(this, v_name, v_fileName,
+					     atof(v_scale.c_str()),
+					     atof(v_depth.c_str())));
+    m_requiredFiles.push_back(THEME_EDGEEFFECT_SPRITE_FILE_DIR + std::string("/") + v_fileName);
+  }
 }
 
 void Theme::newFontSpriteFromXML(TiXmlElement *pVarElem) {
@@ -474,8 +505,10 @@ void Theme::newFontSpriteFromXML(TiXmlElement *pVarElem) {
   if(pc == NULL) {vapp::Log("Font with no file"); return;}
   v_fileName = pc;
 
-  m_sprites.push_back(new FontSprite(this, v_name, v_fileName));
-  m_requiredFiles.push_back(THEME_FONT_SPRITE_FILE_DIR + std::string("/") + v_fileName);
+  if(isAFileOutOfDate(THEME_FONT_SPRITE_FILE_DIR + std::string("/") + v_fileName) == false) {
+    m_sprites.push_back(new FontSprite(this, v_name, v_fileName));
+    m_requiredFiles.push_back(THEME_FONT_SPRITE_FILE_DIR + std::string("/") + v_fileName);
+  }
 }
 
 void Theme::newMiscSpriteFromXML(TiXmlElement *pVarElem) {
@@ -491,8 +524,10 @@ void Theme::newMiscSpriteFromXML(TiXmlElement *pVarElem) {
   if(pc == NULL) {vapp::Log("** Misc with no file"); return;}
   v_fileName = pc;
 
-  m_sprites.push_back(new MiscSprite(this, v_name, v_fileName));
-  m_requiredFiles.push_back(THEME_MISC_SPRITE_FILE_DIR + std::string("/") + v_fileName);
+  if(isAFileOutOfDate(THEME_MISC_SPRITE_FILE_DIR + std::string("/") + v_fileName) == false) {
+    m_sprites.push_back(new MiscSprite(this, v_name, v_fileName));
+    m_requiredFiles.push_back(THEME_MISC_SPRITE_FILE_DIR + std::string("/") + v_fileName);
+  }
 }
 
 void Theme::newUISpriteFromXML(TiXmlElement *pVarElem) {
@@ -508,8 +543,10 @@ void Theme::newUISpriteFromXML(TiXmlElement *pVarElem) {
   if(pc == NULL) {vapp::Log("** UI with no file"); return;}
   v_fileName = pc;
 
-  m_sprites.push_back(new UISprite(this, v_name, v_fileName));
-  m_requiredFiles.push_back(THEME_UI_SPRITE_FILE_DIR + std::string("/") + v_fileName);
+  if(isAFileOutOfDate(THEME_UI_SPRITE_FILE_DIR + std::string("/") + v_fileName) == false) {
+    m_sprites.push_back(new UISprite(this, v_name, v_fileName));
+    m_requiredFiles.push_back(THEME_UI_SPRITE_FILE_DIR + std::string("/") + v_fileName);
+  }
 }
 
 void Theme::newTextureSpriteFromXML(TiXmlElement *pVarElem) {
@@ -525,8 +562,10 @@ void Theme::newTextureSpriteFromXML(TiXmlElement *pVarElem) {
   if(pc == NULL) {vapp::Log("** Texture with no file"); return;}
   v_fileName = pc;
 
-  m_sprites.push_back(new TextureSprite(this, v_name, v_fileName));
-  m_requiredFiles.push_back(THEME_TEXTURE_SPRITE_FILE_DIR + std::string("/") + v_fileName);
+  if(isAFileOutOfDate(THEME_TEXTURE_SPRITE_FILE_DIR + std::string("/") + v_fileName) == false) {
+    m_sprites.push_back(new TextureSprite(this, v_name, v_fileName));
+    m_requiredFiles.push_back(THEME_TEXTURE_SPRITE_FILE_DIR + std::string("/") + v_fileName);
+  }
 }
 
 BikerTheme* Theme::getPlayerTheme() {

@@ -91,6 +91,10 @@ Textures/Textures/stone_white_357.jpg
 Textures/Textures/technics_362.jpg
 Textures/Textures/glass1_364.png
 Textures/Textures/technics_dark_363.jpg
+Textures/Textures/BubbleDark_371.jpg
+Textures/Textures/BubbleLight_370.jpg
+Textures/Textures/Lava_372.jpg
+Textures/Textures/snow_sprite_377.png
 
 Textures/Anims/checkball_235_00.png
 Textures/Anims/checkball_235_01.png
@@ -545,6 +549,7 @@ Textures/Effects/darken_288.png
 Textures/Effects/KRWBlueRockEdge_252.png
 Textures/Effects/street_245.png
 Textures/Effects/bluen_365.png
+Textures/Effects/lighten_369.png
 
 Textures/Misc/Arrow.png
 Textures/Misc/enginecounter.png
@@ -606,6 +611,8 @@ Textures/Sprites/totem1_203.png
 Textures/Sprites/totem2_206.png
 Textures/Sprites/TuxFly_160.png
 Textures/Sprites/ScriptWarning_309.png
+Textures/Sprites/cow_379.png
+Textures/Sprites/tree_381.png
 
 Textures/Effects/EdgeCSite1_209.png
 
