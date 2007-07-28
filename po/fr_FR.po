@@ -641,7 +641,7 @@ msgstr "Faire une capture d'écran"
 
 #: src/GameText.h:214
 msgid "Reload levels, themes and replays from directories"
-msgstr ""
+msgstr "Recharger les niveaux, thèmes et replays depuis les répertoires"
 
 #: src/GameText.h:216
 msgid ""
