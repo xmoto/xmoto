@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-07-17 22:27+0200\n"
+"POT-Creation-Date: 2007-07-28 10:02+0200\n"
 "PO-Revision-Date: 2007-06-11 00:28+0200\n"
 "Last-Translator: Jozef Riha <jose1711@gmail.com\n"
 "Language-Team:  <sk@li.org>\n"
@@ -2014,12 +2014,14 @@ msgstr ""
 "(95%)"
 
 #: src/GameText.h:567
+#, fuzzy, c-format
 msgid "You highscore finish time is almost the room highscore (90%-95%)"
 msgstr ""
 "Váš rekordný čas dokončenia levelu je takmer taký ako rekord v miestnosti "
 "(90-95%)"
 
 #: src/GameText.h:568
+#, fuzzy, c-format
 msgid "You highscore finish time is almost the room highscore (80%-90%)"
 msgstr ""
 "Váš rekordný čas dokončenia levelu je takmer taký ako rekord v miestnosti "

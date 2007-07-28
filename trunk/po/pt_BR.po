@@ -1,25 +1,25 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Free Software Foundation, Inc.
-# This file is distributed under the same license as the PACKAGE package.
-# Mateusz Kosibowicz <mateusz.kosibowcz@gmail.com>, 2007.
-#
+# pt_BR translation of xmoto.
+# Copyright (C) 2007 Free Software Foundation, Inc.
+# This file is distributed under the same license as the X-Moto package.
+# Lucas Hermann Negri <kkndrox@gmail.com>
+# 
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-07-28 10:02+0200\n"
-"PO-Revision-Date: 2007-06-13 11:25+0100\n"
-"Last-Translator: Jan Polak <benetnash@mail.icpnet.pl>\n"
-"Language-Team: Polish\n"
+"PO-Revision-Date: 2007-07-26 19:46-0300\n"
+"Last-Translator: Lucas Hermann Negri <kkndrox@gmail.com>\n"
+"Language-Team: Portuguese/Brazil\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
-"|| n%100>=20) ? 1 : 2;\n"
+"Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
 #: src/GameText.h:34
 msgid "en_EN"
-msgstr "pl_PL"
+msgstr "pt_BR"
 
 #: src/GameText.h:36
 msgid "11 kHz"
@@ -27,11 +27,11 @@ msgstr "11 kHz"
 
 #: src/GameText.h:37
 msgid "16-bit"
-msgstr "16 bit"
+msgstr "16-bit"
 
 #: src/GameText.h:38
 msgid "16 bits per pixel"
-msgstr "16 bpp"
+msgstr "16 bits por pixel"
 
 #: src/GameText.h:39
 msgid "22 kHz"
@@ -39,7 +39,7 @@ msgstr "22 kHz"
 
 #: src/GameText.h:40
 msgid "32 bits per pixel"
-msgstr "32 bpp"
+msgstr "32 bits por pixel"
 
 #: src/GameText.h:41
 msgid "44 kHz"
@@ -47,27 +47,27 @@ msgstr "44 kHz"
 
 #: src/GameText.h:42
 msgid "8-bit"
-msgstr "8 bit"
+msgstr "8-bit"
 
 #: src/GameText.h:43
 msgid "Quit level"
-msgstr "Opuść poziom"
+msgstr "Sair do Nível"
 
 #: src/GameText.h:44
 msgid "Add to favorite"
-msgstr "Dodaj do ulubionych"
+msgstr "Adicionar aos favoritos"
 
 #: src/GameText.h:45
 msgid "Action"
-msgstr "Akcja"
+msgstr "Ação"
 
 #: src/GameText.h:46 src/GameText.h:51
 msgid "All (on this computer)"
-msgstr "Wszystko (na tym komputerze)"
+msgstr "Tudo (neste computador)"
 
 #: src/GameText.h:47 src/GameText.h:522
 msgid "All levels"
-msgstr "Wszystkie poziomy"
+msgstr "Todos os níveis"
 
 #: src/GameText.h:48
 msgid ""
@@ -75,17 +75,17 @@ msgid ""
 "to the Internet to look for more levels\n"
 "and best times of other players?"
 msgstr ""
-"Czy chcesz pozwolić, by X-Moto łączyło\n"
-"się z Internetem w poszukiwaniu nowych poziomów\n"
-"i najlepszych czasów innych graczy?"
+"Você quer permitir que o X-Moto se connecte\n"
+"à internet para procurar por mais níveis\n"
+"e melhores tempos de outros jogadores?"
 
 #: src/GameText.h:52
 msgid "Already used!"
-msgstr "Użyte!"
+msgstr "Já foi utilizado!"
 
 #: src/GameText.h:53 src/GameText.h:93
 msgid "Audio"
-msgstr "Dźwięk"
+msgstr "Audio"
 
 #: src/GameText.h:54
 msgid "Author"
@@ -93,148 +93,148 @@ msgstr "Autor"
 
 #: src/GameText.h:55
 msgid "Automatic saving of replays"
-msgstr "Automatyczny zapis powtórek"
+msgstr "Gravação automática de replays"
 
 #: src/GameText.h:56
 msgid "Auto zoom"
-msgstr "Auto-zoom"
+msgstr "Zoom automático"
 
 #: src/GameText.h:57
 msgid "Best Times"
-msgstr "Najlepsze czasy"
+msgstr "Melhores tempos"
 
 #: src/GameText.h:58
 msgid "Best player"
-msgstr "Najlepszy gracz"
+msgstr "Melhor jogador"
 
 #: src/GameText.h:59
 msgid "Brake"
-msgstr "Hamulec"
+msgstr "Freio"
 
 #: src/GameText.h:60
 msgid "Built-In Levels"
-msgstr "Wbudowane poziomy"
+msgstr "Níveis inclusos"
 
 #: src/GameText.h:61
 #, c-format
 msgid "(by %s)"
-msgstr ""
+msgstr "(por %s)"
 
 #: src/GameText.h:62
 msgid "Move Camera to left"
-msgstr "Przesuń kamerę w lewo"
+msgstr "Mover a Camera para esquerda"
 
 #: src/GameText.h:63
 msgid "Move Camera to right"
-msgstr "Przesuń kamerę w prawo"
+msgstr "Mover a Camera para direita"
 
 #: src/GameText.h:64
 msgid "Move Camera down"
-msgstr "Przesuń kamerę w dół"
+msgstr "Mover a Camera para baixo"
 
 #: src/GameText.h:65
 msgid "Move Camera up"
-msgstr "Przesuń kamerę w górę"
+msgstr "Mover a Camera para cima"
 
 #: src/GameText.h:66
 msgid "Cancel"
-msgstr "Anuluj"
+msgstr "Cancelar"
 
 #: src/GameText.h:67
 msgid "Change..."
-msgstr "Zmień..."
+msgstr "Mudar..."
 
 #: src/GameText.h:68
 msgid "Change direction"
-msgstr "Zmień kierunek"
+msgstr "Mudar direção"
 
 #: src/GameText.h:69
 msgid "Change Key..."
-msgstr "Zmień klawisz"
+msgstr "Mudar Tecla..."
 
 #: src/GameText.h:70
 msgid "Checking for new or updated levels..."
-msgstr "Sprawdzanie nowych lub uaktualnionych poziomów"
+msgstr "Verificando por níveis atualizados ou novos"
 
 #: src/GameText.h:71
 msgid "Choose Level"
-msgstr "Wybierz poziom"
+msgstr "Escolha o Nível"
 
 #: src/GameText.h:72
 msgid "Close"
-msgstr "Zamknij"
+msgstr "Fechar"
 
 #: src/GameText.h:73
 msgid "Configure Joystick..."
-msgstr "Konfiguruj joystick..."
+msgstr "Configurar Joystick..."
 
 #: src/GameText.h:74
 msgid "Controls"
-msgstr "Sterowanie"
+msgstr "Controles"
 
 #: src/GameText.h:77
 msgid "Lead Programming"
-msgstr "Programowanie"
+msgstr "Programação principal"
 
 #: src/GameText.h:83
 msgid "Additional Programming"
-msgstr "Dodatkowe programowanie"
+msgstr "Programação adicional"
 
 #: src/GameText.h:89
 msgid "Graphics"
-msgstr "Grafika"
+msgstr "Gráficos"
 
 #: src/GameText.h:97
 msgid "MacOS X Support"
-msgstr "Obsługa MacOS X"
+msgstr "Suporte ao MacOS X"
 
 #: src/GameText.h:101
 msgid "Localization"
-msgstr "Lokalizacja"
+msgstr "Localização"
 
 #: src/GameText.h:102
 msgid "Slovak"
-msgstr "Słowacki"
+msgstr "Eslovaco"
 
 #: src/GameText.h:103
 msgid "French"
-msgstr "Francuski"
+msgstr "Francês"
 
 #: src/GameText.h:104
 msgid "Norwegian"
-msgstr "Norweski"
+msgstr "Norueguês"
 
 #: src/GameText.h:105
 msgid "German"
-msgstr "Niemiecki"
+msgstr "Alemão"
 
 #: src/GameText.h:106
 msgid "Finnish"
-msgstr "Fiński"
+msgstr "Finlandês"
 
 #: src/GameText.h:107
 msgid "Catalan"
-msgstr "Kataloński"
+msgstr "Catalão"
 
 #: src/GameText.h:108
 msgid "Spanish"
-msgstr "Hiszpański"
+msgstr "Espanhol"
 
 #: src/GameText.h:109
 msgid "Polish"
-msgstr "Polski"
+msgstr "Polonês"
 
 #: src/GameText.h:110
 msgid "Italian"
-msgstr "Włoski"
+msgstr "Italiano"
 
 #: src/GameText.h:111
 msgid "Swedish"
-msgstr "Szwedzki"
+msgstr "Suéco"
 
 #: src/GameText.h:112
 msgid "Czech"
-msgstr "Czeski"
+msgstr "Tcheco"
 
 #: src/GameText.h:113
 msgid "Mikhail Brinchuk"
@@ -242,66 +242,65 @@ msgstr "Mikhail Brinchuk"
 
 #: src/GameText.h:113
 msgid "Russian"
-msgstr "Rosyjski"
+msgstr "Russo"
 
 #: src/GameText.h:115
 msgid "Main testers"
-msgstr "Główni testerzy"
+msgstr "Testadores principais"
 
 #: src/GameText.h:120
 msgid "Thanks to"
-msgstr "Podziękowania dla"
+msgstr "Obrigado a"
 
 #: src/GameText.h:121
 msgid "for KDE/gnome integration"
-msgstr "za integrację z KDE/gnome"
+msgstr "pela integração KDE/GNOME"
 
 #: src/GameText.h:122
 msgid "for Debian packaging"
-msgstr "za pakiety dla Debiana"
+msgstr "pelo empacotamento Debian"
 
 #: src/GameText.h:123
 msgid "for Gentoo packaging"
-msgstr "za pakiety dla Gentoo"
+msgstr "pelo empacotamento Gentoo"
 
 #: src/GameText.h:124
 msgid "for Mandriva packaging"
-msgstr "za pakiety dla Mandrivy"
+msgstr "pelo empacotamento Mandriva"
 
 #: src/GameText.h:125
 msgid "for across/elma"
-msgstr "za across/elma"
+msgstr "por across/elma"
 
 #: src/GameText.h:126
 msgid "for making tinyxml"
-msgstr "za stworzenie tinyxml"
+msgstr "por ter feito o tinyxml"
 
 #: src/GameText.h:127
 msgid "for the MD5 code"
-msgstr "za kod MD5"
+msgstr "pelo hash MD5"
 
 #: src/GameText.h:129
 msgid "Everyone who have made levels"
-msgstr "Twórców poziomów"
+msgstr "Todos que contribuiram com níveis"
 
 #: src/GameText.h:130
 msgid "People who have provided bug reports"
-msgstr "Osób, które powiadamiały o błędach"
+msgstr "Pessoas que proveram relatórios de erros"
 
 #: src/GameText.h:131
 msgid "Anyone who has helped in any way"
-msgstr "Każdego, kto pomógł nam w jakikolwiek sposób"
+msgstr "Qualquer um que ajudou de alguma forma"
 
 #: src/GameText.h:133
 msgid "Credits"
-msgstr "Podziękowania"
+msgstr "Créditos"
 
 #: src/GameText.h:134 src/GameText.h:301
-#, fuzzy
 msgid "Player"
 msgid_plural "Players"
-msgstr[0] "Gracz"
-msgstr[1] "Gracz"
+msgstr[0] "Jogador"
+msgstr[1] "Jogadores"
 
 #: src/GameText.h:135
 msgid "Date"
@@ -309,340 +308,339 @@ msgstr "Data"
 
 #: src/GameText.h:136
 msgid "Upgrading database"
-msgstr "Uaktualnianie bazy danych"
+msgstr "Atualizando banco de dados"
 
 #: src/GameText.h:137
 msgid "Upgrading database stats for the profile"
-msgstr "Uaktualnianie statystyk dla profilu"
+msgstr "Atualizando dados do banco de dados para o perfil"
 
 #: src/GameText.h:138
 msgid "Upgrading database profile"
-msgstr "Uaktualnianie profilu"
+msgstr "Atualizando o banco de dados do perfil"
 
 #: src/GameText.h:139
 msgid "Death Animation"
-msgstr "Animacja wypadku"
+msgstr "Animação de morte"
 
 #: src/GameText.h:140
 msgid "Defaults"
-msgstr "Domyślne"
+msgstr "Padrões"
 
 #: src/GameText.h:141
 msgid "Do you really want to delete player?"
-msgstr "Na pewno chcesz usunąć gracza?"
+msgstr "Você realmente quer apagar o jogador?"
 
 #: src/GameText.h:142
 msgid "Do you really want to delete replay?"
-msgstr "Na pewno chcesz usunąć powtórkę?"
+msgstr "Você realmente quer apagar o replay?"
 
 #: src/GameText.h:143 src/GameText.h:145
 msgid "Delete"
-msgstr "Usuń"
+msgstr "Apagar"
 
 #: src/GameText.h:144
 msgid "Delete from favorite"
-msgstr "Usuń z ulubionych"
+msgstr "Apagar dos favoritos"
 
 #: src/GameText.h:146
 msgid "Description"
-msgstr "Opis"
+msgstr "Descrição"
 
 #: src/GameText.h:147
 msgid "Display Ghost time difference"
-msgstr "Wyświetlaj różnicę czasów"
+msgstr "Mostrar a diferença do tempo Fantasma"
 
 #: src/GameText.h:148
 msgid "Display Ghost Information"
-msgstr "Wyświetlaj informacje"
+msgstr "Mostar informação Fantasma"
 
 #: src/GameText.h:149
 msgid "Direct Connection"
-msgstr "Bezpośrednie połączenie"
+msgstr "Conexão direta"
 
 #: src/GameText.h:150
 msgid "Downloading the ghost..."
-msgstr "Pobieranie ducha..."
+msgstr "Baixando o fantasma..."
 
 #: src/GameText.h:151
 msgid "Downloading the highscore..."
-msgstr "Pobieranie rekordu..."
+msgstr "Baixando o recorde..."
 
 #: src/GameText.h:152
 msgid "Downloading high-scores..."
-msgstr "Pobieranie rekordów..."
+msgstr "Baixando recordes..."
 
 #: src/GameText.h:153
 msgid ""
 "Downloading extra levels...\n"
 "Press ESC to abort."
 msgstr ""
-"Pobieranie dodatkowych poziomów...\n"
-"Naciśnij ESC, by anulować."
+"Baixando níveis extras...\n"
+"Pressione ESC para abortar."
 
 #: src/GameText.h:154
 msgid "Checking for new levels..."
-msgstr "Sprawdzanie nowych poziomów..."
+msgstr "Verificando por novos níveis..."
 
 #: src/GameText.h:155
 msgid "Checking for existing rooms..."
-msgstr "Sprawdzenie istniejących pokoi.."
+msgstr "Verificando salas existentes..."
 
 #: src/GameText.h:156
 msgid ""
 "Downloading theme data required by new levels...\n"
 "Press ESC to abort."
 msgstr ""
-"Pobieranie motywów wymaganych przez nowe poziomy...\n"
-"Naciśnij ESC, by anulować."
+"Baixando dados do tema requeridos para para novos níveis...\n"
+"Pressione ESC para abortar."
 
 #: src/GameText.h:157
 msgid "Checking for new themes..."
-msgstr "Sprawdzenie nowych motywów..."
+msgstr "Verificando por novos temas..."
 
 #: src/GameText.h:158
 msgid "Get More Levels!"
-msgstr "Więcej poziomów!"
+msgstr "Pegar Mais Níveis!"
 
 #: src/GameText.h:159
 msgid "Drive"
-msgstr "Gaz"
+msgstr "Dirigir"
 
 #: src/GameText.h:160
 msgid "Enable Audio"
-msgstr "Uaktywnij dźwięk"
+msgstr "Habilitar Audio"
 
 #: src/GameText.h:161
 msgid "Check new levels at startup"
-msgstr "Sprawdzaj nowe poziomy przy starcie"
+msgstr "Verificar por novos níveis na inicialização"
 
 #: src/GameText.h:162
 msgid "Check new highscores at startup"
-msgstr "Sprawdzaj nowe rekordy przy starcie"
+msgstr "Verificar por recordes na inicialização"
 
 #: src/GameText.h:163
 msgid "Enable Context Help"
-msgstr "Uaktywnij pomoc kontekstową"
+msgstr "Habilitar Ajuda de Contexto"
 
 #: src/GameText.h:164
 msgid "Enable Engine Sound"
-msgstr "Uaktywnij dźwięk silnika"
+msgstr "Habilitar Engine de Som"
 
 #: src/GameText.h:165
 msgid "Enable Ghost"
-msgstr "Uaktywnij ducha"
+msgstr "Habilitar Fantasma"
 
 #: src/GameText.h:166
 msgid "Show World Record in-game"
-msgstr "Pokazuj rekordy świata w grze"
+msgstr "Mostrar o Recorde Mundial no jogo"
 
 #: src/GameText.h:167
 msgid "Enable Music"
-msgstr "Uaktywnij muzykę"
+msgstr "Habilitar Música"
 
 #: src/GameText.h:168
 msgid "Enable WWW Access"
-msgstr "Uaktywnij dostęp www"
+msgstr "Habilitar o acesso WWW"
 
 #: src/GameText.h:169
 msgid "Enter player name"
-msgstr "Wprowadź nazwę gracza"
+msgstr "Entre com o nome do jogador"
 
 #: src/GameText.h:170
 msgid "Enter name of replay"
-msgstr "Wprowadź nazwę powtórki"
+msgstr "Entre com o nome do replay"
 
 #: src/GameText.h:171
 msgid "There are errors in the level, don't expect it to be playable!"
-msgstr "Poziom zawiera błędy, nie wymagaj by był wykonalny"
+msgstr "FOram encontrados erros no nível, não espere que ele seja jogável!"
 
 #: src/GameText.h:172
 msgid "External Levels"
-msgstr "Zewnętrzne poziomy"
+msgstr "Níveis Externos"
 
 #: src/GameText.h:173
 msgid ""
 "Failed to check for levels.\n"
 "Check your Internet connection!"
 msgstr ""
-"Nie udało się sprawdzić dostępnych poziomów.\n"
-"Sprawdź swoje połączenie z internetem!"
+"Falha ao checar por níveis.\n"
+"Verifique sua conexão com a Internet!"
 
 #: src/GameText.h:174
 msgid ""
 "Failed to download high-scores.\n"
 "Check your Internet connection!"
 msgstr ""
-"Nie udało się pobrać rekordów.\n"
-"Sprawdź swoje połączenie z internetem!"
+"Falha ao baixar os recordes.\n"
+"Verifique sua conexão com a Internet!"
 
 #: src/GameText.h:175
 msgid ""
 "Failed to download levels.\n"
 "Check your Internet connection!"
 msgstr ""
-"Nie udało się pobrać poziomów.\n"
-"Sprawdź swoje połączenie z internetem!"
+"Falha ao baixar níveis.\n"
+"Verifique sua conexão com a Internet!"
 
 #: src/GameText.h:176
 msgid ""
 "Failed to download the replay.\n"
 "Check your Internet connection!"
 msgstr ""
-"Nie udało się pobrać powtórki.\n"
-"Sprawdź swoje połączenie z internetem!"
+"Falha ao baixar o replay.\n"
+"Verifique sua conexão com a Internet!"
 
 #: src/GameText.h:177
 msgid ""
 "Failed to download the rooms list.\n"
 "Check your Internet connection!"
 msgstr ""
-"Nie udało się pobrać listy pokoi.\n"
-"Sprawdź swoje połączenie z internetem!"
+"Falha ao baixar a lista de salas.\n"
+"Verifique sua conexão com a Internet!"
 
 #: src/GameText.h:178
 msgid ""
 "Failed to get the selected theme\n"
 "Check your Internet connection!"
 msgstr ""
-"Nie udało się pobrać wybranego motywu.\n"
-"Sprawdź swoje połączenie z internetem!"
+"Falha ao pegar o tema selecionado!Verifique sua conexão com a Internet!"
 
 #: src/GameText.h:179
 msgid "Failed to initialize level!"
-msgstr "Nie udała się inicjalizacja poziomu!"
+msgstr "Falha ao inicializar o nível!"
 
 #: src/GameText.h:180
 msgid "Failed to load replay!"
-msgstr "Nie udało się załadować powtórki!"
+msgstr "Falha ao carregar o replay!"
 
 #: src/GameText.h:181
 msgid ""
 "Failed to save replay!\n"
 "Maybe you should try with another name?"
 msgstr ""
-"Nie udało się zapisać powtórki!\n"
-"Spróbuj zapisać z inną nazwą?"
+"Falha ao salvar o replay!\n"
+"Talvez você devesse tentar com outro nome?"
 
 #: src/GameText.h:182
 msgid ""
 "Failed to update the theme list\n"
 "Check your Internet connection!"
 msgstr ""
-"Nie udało uaktualnić listy motywów.\n"
-"Sprawdź swoje połączenie z internetem!"
+"Falha ao atualizar a lista de temas\n"
+"Verifique sua conexão com a Internet!"
 
 #: src/GameText.h:183
 msgid "File"
-msgstr "Plik"
+msgstr "Arquivo"
 
 #: src/GameText.h:184
 msgid "Filter"
-msgstr "Filtr"
+msgstr "Filtro"
 
 #: src/GameText.h:185
 msgid "Finished!"
-msgstr "Ukończono!"
+msgstr "Terminou!"
 
 #: src/GameText.h:186
 msgid "Finish Time"
-msgstr "Końcowy czas"
+msgstr "Tempo de Término"
 
 #: src/GameText.h:187
 msgid "Flip left"
-msgstr "Odwróć w lewo"
+msgstr "Virar para esquerda"
 
 #: src/GameText.h:188
 msgid "Flip right"
-msgstr "Odwróć w prawo"
+msgstr "Virar para direita"
 
 #: src/GameText.h:189
 msgid "Game Graphics"
-msgstr "Grafika"
+msgstr "Gráficos do jogo"
 
 #: src/GameText.h:190
 msgid "General"
-msgstr "Ogólne"
+msgstr "Geral"
 
 #: src/GameText.h:191
 msgid "General Info"
-msgstr "Ogólne informacje"
+msgstr "Informações gerais"
 
 #: src/GameText.h:192
 msgid "Get this theme"
-msgstr "Pobierz ten motyw"
+msgstr "Pegar o tema"
 
 #: src/GameText.h:193
 msgid "Local best"
-msgstr "Najlepsze lokalne"
+msgstr "Melhor local"
 
 #: src/GameText.h:194
 msgid "Your best"
-msgstr "Twoje najlepsze"
+msgstr "Seu recorde"
 
 #: src/GameText.h:195
 msgid "Type"
-msgstr "Typ"
+msgstr "Tipo"
 
 #: src/GameText.h:196
 msgid "The highscore of the room"
-msgstr "Rekord tego pokoju"
+msgstr "O recorde desta sala"
 
 #: src/GameText.h:197
 msgid "The best of my replays (on this computer)"
-msgstr "Najlepsza z moich powtórek (ten komputer)"
+msgstr "O melhor de meus replays (neste computador)"
 
 #: src/GameText.h:198
 msgid "The best of the replays (on this computer)"
-msgstr "Najlepsza z powtórek (ten komputer)"
+msgstr "O melhor dos replays (neste computador)"
 
 #: src/GameText.h:199
-#, fuzzy, c-format
+#, c-format
 msgid "Ghost of %s"
-msgstr "Duch"
+msgstr "Fantasma do %s"
 
 #: src/GameText.h:200
 msgid "Ghost"
-msgstr "Duch"
+msgstr "Fantasma"
 
 #: src/GameText.h:201
 msgid "Help"
-msgstr "Pomoc"
+msgstr "Ajuda"
 
 #: src/GameText.h:205
 msgid "You control your bike using the keyboard"
-msgstr "Sterujesz motocyklem przy użyciu klawiatury"
+msgstr "Você controla a motocicleta utilizando o teclado"
 
 #: src/GameText.h:206
 msgid "Accelerates"
-msgstr "Przyśpieszenie"
+msgstr "Acelera"
 
 #: src/GameText.h:207
 msgid "Brakes"
-msgstr "Hamulce"
+msgstr "Freia"
 
 #: src/GameText.h:208
 msgid "Rotates it counter-clockwise"
-msgstr "Obraca w lewo"
+msgstr "Rotaciona em sentido anti-horário"
 
 #: src/GameText.h:209
 msgid "Rotates it clockwise"
-msgstr "Obraca w prawo"
+msgstr "Rotaciona em sentido horário"
 
 #: src/GameText.h:210
 msgid "Turns around and drives in the other direction"
-msgstr "Jazda w innych kierunkach"
+msgstr "Vira e direge para outro direção"
 
 #: src/GameText.h:211 src/GameText.h:297
 msgid "Pause"
-msgstr "Pauza"
+msgstr "Pausa"
 
 #: src/GameText.h:212
 msgid "Restart the level"
-msgstr "Restartuj poziom"
+msgstr "Reinicia o nível"
 
 #: src/GameText.h:213
 msgid "Take a screenshot"
-msgstr "Wykonaj zrzut ekranu"
+msgstr "Tira uma captura de tela"
 
 #: src/GameText.h:214
 msgid "Reload levels, themes and replays from directories"
@@ -652,47 +650,49 @@ msgstr ""
 msgid ""
 "Find all the strawberries and touch the flower to finish\n"
 "the level."
-msgstr "Odszukaj wszystkie truskawki i dotknij kwiatka kończąc"
+msgstr ""
+"Encontrar todos os morangos e tocar a flor para terminar\n"
+"o nível"
 
 #: src/GameText.h:217
 msgid ""
 "Read the README file or check out the website at\n"
 "http://xmoto.tuxfamily.org for more information."
 msgstr ""
-"Przeczytaj README lub przeglądnij serwis www\n"
-"http://xmoto.tuxfamily.org."
+"Leia o arquivo README ou verifique no site no endereço\n"
+"http://xmoto.tuxfamily.org para mais informações."
 
 #: src/GameText.h:219
 msgid "High"
-msgstr "Wysokie"
+msgstr "Alto"
 
 #: src/GameText.h:220
 msgid "Levels are being added into the database. Please wait."
-msgstr "Poziomy są dodawane do bazy danych. Proszę czekać"
+msgstr "Níveis estão sendo adicionados ao banco de dados. Aguarde."
 
 #: src/GameText.h:221
 msgid "Internet Configuration"
-msgstr "Konfiguracja internetu"
+msgstr "Configuração da Internet"
 
 #: src/GameText.h:222
 msgid "Initializing input system..."
-msgstr "Inicjalizacja systemu wejściowego"
+msgstr "Inicializando sistema de entrada..."
 
 #: src/GameText.h:223
 msgid "Initializing menus..."
-msgstr "Inicjalizacja menu"
+msgstr "Inicializando menus..."
 
 #: src/GameText.h:224
 msgid "Initializing renderer..."
-msgstr "Inicjalizacja renderera..."
+msgstr "Inicializando renderizador..."
 
 #: src/GameText.h:225
 msgid "Initializing text renderer..."
-msgstr "Inicjalizacja renderera..."
+msgstr "Inicializando renderizador de texto..."
 
 #: src/GameText.h:226
 msgid "View Level Initially"
-msgstr "Podgląd poziomu na starcie"
+msgstr "Ver o Nível ao Inicializar"
 
 #: src/GameText.h:227
 msgid "Joystick"
@@ -700,85 +700,85 @@ msgstr "Joystick"
 
 #: src/GameText.h:228
 msgid "Oops!"
-msgstr "Ups!"
+msgstr "Oops!"
 
 #: src/GameText.h:229
 msgid "Press ENTER to try again"
-msgstr "Naciśnij ENTER i spróbuj ponownie"
+msgstr "Pressione ENTER para tentar novamente"
 
 #: src/GameText.h:230
 msgid "Press ESC to display the menu"
-msgstr "Naciśnij ESC, by wrócić do menu"
+msgstr "Pressione ESC para mostrar o menu"
 
 #: src/GameText.h:231
 msgid "Key"
-msgstr "Klawisz"
+msgstr "Tecla"
 
 #: src/GameText.h:232
 msgid "Keyboard"
-msgstr "Klawiatura"
+msgstr "Teclado"
 
 #: src/GameText.h:233
 msgid "Level"
-msgstr "Poziom"
+msgstr "Nível"
 
 #: src/GameText.h:234
 msgid "Level Info..."
-msgstr "Informacje o poziomie..."
+msgstr "Informações do Nível"
 
 #: src/GameText.h:235
 msgid "Level Name"
-msgstr "Nazwa poziomu"
+msgstr "Nome do Nível"
 
 #: src/GameText.h:236
 #, c-format
 msgid "Level '%s' cannot be loaded"
-msgstr "Poziom '%s' nie może być załadowany"
+msgstr "Nível '%s' não pode ser carregado"
 
 #: src/GameText.h:237
 msgid "Level Pack"
-msgstr "Pakiet poziomów"
+msgstr "Pacote de Níveis"
 
 #: src/GameText.h:238
 msgid "Level Packs"
-msgstr "Pakiety poziomów"
+msgstr "Pacote de Níveis"
 
 #: src/GameText.h:239
 #, c-format
 msgid "Level '%s' required by replay!"
-msgstr "Poziom '%s' jest wymagany przez powtórkę"
+msgstr "Nível '%s' requerido pelo replay!"
 
 #: src/GameText.h:240
 msgid "Levels"
-msgstr "Poziomy"
+msgstr "Níveis"
 
 #: src/GameText.h:241
 msgid "List All"
-msgstr "Wszystkie"
+msgstr "Listar Todos"
 
 #: src/GameText.h:242
 msgid "Loading..."
-msgstr "Ładowanie..."
+msgstr "Carregando..."
 
 #: src/GameText.h:243
 msgid "Loading levels..."
-msgstr "Ładowanie poziomów..."
+msgstr "Carregando níveis..."
 
 #: src/GameText.h:244
 msgid "Loading menu graphics..."
-msgstr "Ładowanie grafiki menu..."
+msgstr "Carregando gráficos do menu..."
 
 #: src/GameText.h:245
 msgid "Loading replays..."
-msgstr "Ładowanie powtórek..."
+msgstr "Carregando replays..."
 
 #: src/GameText.h:246
 msgid "Loading sounds..."
-msgstr "Ładowanie dźwięków..."
+msgstr "Carregando sons..."
 
 #: src/GameText.h:247
 msgid "Loading textures..."
-msgstr "Ładowanie tekstur..."
+msgstr "Carregando texturas..."
 
 #: src/GameText.h:248
 msgid "Login"
@@ -786,19 +786,19 @@ msgstr "Login"
 
 #: src/GameText.h:249
 msgid "Low"
-msgstr "Niskie"
+msgstr "Baixo"
 
 #: src/GameText.h:250
 msgid "Medium"
-msgstr "Średnie"
+msgstr "Médio"
 
 #: src/GameText.h:251
 msgid "Menu Graphics"
-msgstr "Detale menu"
+msgstr "Gráficos do Menu"
 
 #: src/GameText.h:252
 msgid "Level references unknown textures, it could be unplayable!"
-msgstr "Poziom potrzebuje nieznanej tekstury, może być niegrywalny"
+msgstr "O nível referencia texturas desconhecidas, ele pode não ser jogável!"
 
 #: src/GameText.h:253
 msgid "Mono"
@@ -806,70 +806,70 @@ msgstr "Mono"
 
 #: src/GameText.h:254
 msgid "Following are your most played levels"
-msgstr "Poziomy, w które najczęściej grasz"
+msgstr "A seguir estão os seus níveis mais jogados"
 
 #: src/GameText.h:255
 msgid "Motion blur ghost"
-msgstr "Rozmycie w ruchu ducha"
+msgstr "Fantasma de borrão de movimento"
 
 #: src/GameText.h:256
 msgid "Multi"
-msgstr "Multi"
+msgstr "Multijogador"
 
 #: src/GameText.h:257
 msgid "Stop the game once a player ends the level"
-msgstr ""
+msgstr "Parar o jogo quando o jogador chegar ao fim do nível"
 
 #: src/GameText.h:258
 msgid "Name"
-msgstr "Nazwa"
+msgstr "Nome"
 
 #: src/GameText.h:259
 msgid "Number of players"
-msgstr "Liczba graczy"
+msgstr "Número de jogadores"
 
 #: src/GameText.h:260
 msgid "New"
-msgstr "Nowy"
+msgstr "Novo"
 
 #: src/GameText.h:261
 #, c-format
 msgid "X-Moto %s or newer required to load level"
-msgstr "X-Moto %s lub nowsze jest potrzebne do załadowania poziomu"
+msgstr "X-Moto %s ou mais atual é necessário para carregar o nível"
 
 #: src/GameText.h:262
 msgid "New highscore!"
-msgstr "Nowy rekord!"
+msgstr "Novo recorde!"
 
 #: src/GameText.h:263
 msgid "New personal highscore!"
-msgstr "Nowy osobisty rekord!"
+msgstr "Novo recorde pessoal!"
 
 #: src/GameText.h:264
 #, c-format
 msgid "%d new or updated level available. Download now?"
-msgstr "Nowych lub uaktualnionych poziomów - %d. Pobrać teraz?"
+msgstr "%d nível atualizado ou novo disponível. Baixar agora?"
 
 #: src/GameText.h:265
 msgid "New Levels"
-msgstr "Nowe poziomy"
+msgstr "Novos níveis"
 
 #: src/GameText.h:266
 msgid "New levels available!"
-msgstr "Dostępne nowe poziomy!"
+msgstr "Novos níveis disponíveis!"
 
 #: src/GameText.h:267
 #, c-format
 msgid "%d new or updated levels available. Download now?"
-msgstr "Nowych lub uaktualnionych poziomów - %d. Pobrać teraz?"
+msgstr "%d nível atualizado ou novo disponível. Baixar agora?"
 
 #: src/GameText.h:268
 msgid "New Profile..."
-msgstr "Nowy profil"
+msgstr "Novo perfil..."
 
 #: src/GameText.h:269
 msgid "No"
-msgstr "Nie"
+msgstr "Não"
 
 #: src/GameText.h:270
 msgid ""
@@ -877,21 +877,21 @@ msgid ""
 "\n"
 "Try again another time."
 msgstr ""
-"Brak nowych lub uaktualnionych poziomów.\n"
+"Não há nenhum nível novo ou atualizado.\n"
 "\n"
-"Spróbuj innym razem."
+"Tente novamente outra hora."
 
 #: src/GameText.h:271
 msgid "No level following this one, sorry."
-msgstr "Brak kolejnych poziomów"
+msgstr "Nenhum nível na sequência, desculpe."
 
 #: src/GameText.h:272
 msgid "No statistics for this profile."
-msgstr "Brak statystyk dla tego profilu"
+msgstr "Não há estatísticas para este perfil."
 
 #: src/GameText.h:273
 msgid "Not finished"
-msgstr "Nie ukończono"
+msgstr "Não concluído."
 
 #: src/GameText.h:274
 msgid ""
@@ -906,19 +906,21 @@ msgid ""
 "Also visit http://xmoto.tuxfamily.org to make sure you've\n"
 "got the latest version."
 msgstr ""
-"Ważna informacja!\n"
+"Nota importante!\n"
 "\n"
-"Jest to rozwojowa wersja X-Moto\n"
-"Wszystkie uwagi są mile widziane, pozwoli to ulepszać grę\n"
-"Wyślij wszystkie komentarze, pomysły, prośby itd.\n"
-"na nicolas (malpa) adenis-lamarre (kropka) fr \n"
+"Esta é uma versão em desenvolvimento do X-Moto!\n"
+"Todo tipo de Feedback é muito bem-vindom paa que o jogo\n"
+"possa melhorar.\n"
+"Envie bugs, idéias, comentários, requisições de funcionalidades, críticas, "
+"etc\n"
+"para nicolas at adenis-lamarre dot fr\n"
 "\n"
-"Odwiedź też http://xmoto.tuxfamily.org. Upewnij się, że\n"
-"masz najnowszą wersję"
+"Visite também http://xmoto.tuxfamily.org para ter certeza que você\n"
+"possui a versão mais atual."
 
 #: src/GameText.h:284
 msgid "# Levels"
-msgstr "# Poziomy"
+msgstr "# Níveis"
 
 #: src/GameText.h:285
 msgid "OK"
@@ -926,184 +928,187 @@ msgstr "OK"
 
 #: src/GameText.h:286
 msgid "Open"
-msgstr "Otwórz"
+msgstr "Abrir"
 
 #: src/GameText.h:287
 msgid "Options"
-msgstr "Opcje"
+msgstr "Opções"
 
 #: src/GameText.h:288
 msgid "Some options will not take effect before next restart!"
-msgstr "Niektóre opcje nie przyniosą skutku przed ponownym uruchomieniem!"
+msgstr "Alguma opções não vão ter efeito até a próxima inicialização!"
 
 #: src/GameText.h:289
 msgid "By author"
-msgstr "Przez autora"
+msgstr "Pelo autor"
 
 #: src/GameText.h:290
 msgid "Medals"
-msgstr "Medale"
+msgstr "Medalhas"
 
 #: src/GameText.h:291 src/GameText.h:323
 msgid "Room"
-msgstr "Pokój"
+msgstr "Sala"
 
 #: src/GameText.h:292
 msgid "Special"
-msgstr "Specjalne"
+msgstr "Especial"
 
 #: src/GameText.h:293
 msgid "Standard"
-msgstr "Standard"
+msgstr "Padrão"
 
 #: src/GameText.h:294
 msgid "Web votes"
-msgstr "Głosy na www"
+msgstr "Votos da web"
 
 #: src/GameText.h:295 src/GameText.h:335
 msgid "Statistics"
-msgstr "Statystyki"
+msgstr "Estatísticas"
 
 #: src/GameText.h:296 src/GameText.h:531
 msgid "By best driver"
-msgstr "Wg. najlepszego gracza"
+msgstr "Pelo melhor piloto"
 
 #: src/GameText.h:298
 msgid "Password"
-msgstr "Hasło"
+msgstr "Senha"
 
 #: src/GameText.h:299 src/GameText.h:300
 msgid "Personal"
-msgstr "Osobiste"
+msgstr "Pessoal"
 
 #: src/GameText.h:302
 msgid "Player Profile"
-msgstr "Profil gracza"
+msgstr "Perfil do jogador"
 
 #: src/GameText.h:303
 msgid "Player Profiles"
-msgstr "Profile graczy"
+msgstr "Perfis de jogadores"
 
 #: src/GameText.h:304
 msgid "Play Next Level"
-msgstr "Następny poziom"
+msgstr "Jogar Próximo Nível"
 
 #: src/GameText.h:305
 msgid "Port"
-msgstr "Port"
+msgstr "Porta"
 
 #: src/GameText.h:306
 #, c-format
 msgid "Press key you want to '%s' or ESC to cancel..."
-msgstr "Naciśnij klawisz, by '%s' lub ESC, by anulować"
+msgstr "Pressione uma tecla se você quer '%s' ou ESC para cancelar..."
 
 #: src/GameText.h:307
 msgid "Proxy Server"
-msgstr "Serwery proxy"
+msgstr "Servidor de Proxy"
 
 #: src/GameText.h:308
 msgid "Configure Proxy..."
-msgstr "Ustaw proxy..."
+msgstr "Configurar Proxy..."
 
 #: src/GameText.h:309
 msgid "Quick start"
-msgstr "Szybki start"
+msgstr "Início rápido"
 
 #: src/GameText.h:310
 msgid "Quit Game"
-msgstr "Wyjście"
+msgstr "Sair do Jogo"
 
 #: src/GameText.h:311
 msgid "Do you really want to quit?"
-msgstr "Na pewno chcesz wyjść z gry?"
+msgstr "Você quer realmente sair?"
 
 #: src/GameText.h:312
 msgid "Randomize"
-msgstr "Losowo"
+msgstr "Tornar aleatório"
 
 #: src/GameText.h:313
 msgid "Reloading levels..."
-msgstr "Przeładowywanie poziomów..."
+msgstr "Recarregar níveis..."
 
 #: src/GameText.h:314
 msgid "Reloading replays..."
-msgstr "Przeładowywanie powtórek..."
+msgstr "Recarregar replays..."
 
 #: src/GameText.h:315
 msgid "Replay"
-msgstr "Powtórka"
+msgstr "Replays"
 
 #: src/GameText.h:316
 msgid "Stop[esc] ||[space]  << >>[left/right keys]  < >[up/down keys]   Speed:"
-msgstr "Stop[esc] ||[spacja]  << >>[lewo/prawo]  < >[góra/dół]   Prędkość:"
+msgstr ""
+"Parar[esc] ||[espaço] << >>[tecla esquerda/direita] < >[tecla cima/baixo]"
+"\tVelocidade:"
 
 #: src/GameText.h:317
 msgid "Stop[esc] ||[space] >>[right key] < >[up/down keys]   Speed:"
-msgstr "Stop[esc] ||[spacja] >>[prawo] < >[góra/dół]   Prędkość:"
+msgstr ""
+"Parar[esc] || [espaço] >>[tecla direita] < >[tecla cima/baixo]\tVelocidade:"
 
 #: src/GameText.h:319
 msgid "The replay can't be played!"
-msgstr "Powtórka nie może być odtworzona"
+msgstr "O replay não pode ser mostrado!"
 
 #: src/GameText.h:320
 msgid "Replays"
-msgstr "Powtórki"
+msgstr "Replays"
 
 #: src/GameText.h:321
 msgid "Restart This Level"
-msgstr "Restartuj ten poziom"
+msgstr "Reiniciar Este Nível"
 
 #: src/GameText.h:322
 msgid "Resume Playing"
-msgstr "Wznów"
+msgstr "Voltar a Jogar"
 
 #: src/GameText.h:324
 msgid "Run Windowed"
-msgstr "Uruchom w oknie"
+msgstr "Rodar em Janela"
 
 #: src/GameText.h:325
 msgid "Save"
-msgstr "Zapisz"
+msgstr "Salvar"
 
 #: src/GameText.h:326
 msgid "Saved as"
-msgstr "Zapisane jako"
+msgstr "Salvar como"
 
 #: src/GameText.h:327
 msgid "Save Replay"
-msgstr "Zapisz powtórkę"
+msgstr "Salvar Replay"
 
 #: src/GameText.h:328
 msgid "Screen Resolution"
-msgstr "Rozdzielczość ekranu"
+msgstr "Resolução da Tela"
 
 #: src/GameText.h:329
 msgid "Show"
-msgstr "Pokaż"
+msgstr "Mostrar"
 
 #: src/GameText.h:330
 msgid "Speedometer"
-msgstr "Prędkościomierz"
+msgstr "Velocímetro"
 
 #: src/GameText.h:331
 msgid "Info..."
-msgstr "Informacje..."
+msgstr "Informações..."
 
 #: src/GameText.h:332
 msgid "Show Mini Map"
-msgstr "Pokaż mini-mapę"
+msgstr "Mostrar Mini Mapa"
 
 #: src/GameText.h:333
 msgid "Scripted"
-msgstr "Oskryptowany"
+msgstr "Scriptado"
 
 #: src/GameText.h:334
 msgid "Play!"
-msgstr "Graj!"
+msgstr "Jogar!"
 
 #: src/GameText.h:336
 msgid "STATS"
-msgstr "STATYSTYKI"
+msgstr "STATS"
 
 #: src/GameText.h:337
 msgid "Stereo"
@@ -1111,43 +1116,43 @@ msgstr "Stereo"
 
 #: src/GameText.h:338
 msgid "Theme"
-msgstr "Motyw"
+msgstr "Tema"
 
 #: src/GameText.h:339
 msgid "Available"
-msgstr "Dostępne"
+msgstr "Disponível"
 
 #: src/GameText.h:340
 msgid "To download"
-msgstr "Aby pobrać"
+msgstr "Para baixar"
 
 #: src/GameText.h:341
 msgid "To be updated"
-msgstr "Do aktualizacji"
+msgstr "A ser atualizado"
 
 #: src/GameText.h:342
 msgid "The theme is now up to date"
-msgstr "Motyw jest teraz aktualny"
+msgstr "O tema agora está atualizado!"
 
 #: src/GameText.h:343
 msgid "Time"
-msgstr "Czas"
+msgstr "Tempo"
 
 #: src/GameText.h:344
 msgid "Try This Level Again"
-msgstr "Spróbuj ponownie"
+msgstr "Tentar Novamente"
 
 #: src/GameText.h:345
 msgid "Tutorial"
-msgstr "Samouczek"
+msgstr "Tutorial"
 
 #: src/GameText.h:346
 msgid "Unknown"
-msgstr "Nieznane"
+msgstr "Desconhecido"
 
 #: src/GameText.h:347
 msgid "Unpacked levels"
-msgstr "Poziomy pojedyncze"
+msgstr "Níveis desempacotados"
 
 #: src/GameText.h:348
 msgid ""
@@ -1155,102 +1160,102 @@ msgid ""
 "The theme is not avaible on the web\n"
 "or your theme list is not up to date"
 msgstr ""
-"Nie można uaktualnić tego motywu!\n"
-"Nie jest dostępny w internecie\n"
-"lub lista motywów jest nieaktualna"
+"Não foi possível atualizar este tema !\n"
+"O tema não está disponível na internet\n"
+"ou sua lista de temas está desatualizada"
 
 #: src/GameText.h:349
 msgid "Update"
-msgstr "Aktualizacja"
+msgstr "Atualizar"
 
 #: src/GameText.h:350
 msgid "Updated"
-msgstr "Uaktualniono"
+msgstr "Atualizado"
 
 #: src/GameText.h:351
 msgid "Check WWW"
-msgstr "Sprawdź WWW"
+msgstr "Verificar WWW"
 
 #: src/GameText.h:352
 msgid "Update the rooms list"
-msgstr "Uaktualnij listę pokoi"
+msgstr "Atualizar lista de salas"
 
 #: src/GameText.h:353
 msgid "Update the theme list"
-msgstr "Uaktualnij listę motywów"
+msgstr "Atualizar a lista de temas"
 
 #: src/GameText.h:354
 msgid "Updating level lists..."
-msgstr "Aktualizacja list poziomów..."
+msgstr "Atualizando lista de níveis..."
 
 #: src/GameText.h:355
 msgid "Upload highscore"
-msgstr "Wysyłanie rekordu"
+msgstr "Enviar recorde"
 
 #: src/GameText.h:356
 msgid "Upload all highscores"
-msgstr "Wyślij wszystkie rekordy"
+msgstr "Enviar todos recordes"
 
 #: src/GameText.h:357
 msgid ""
 "An unexcepted error occured\n"
 "The website has perhaps some troubles"
 msgstr ""
-"Nastąpił niespodziewany błąd\n"
-"Nasz serwis www ma problemy"
+"Um erro inesperado aconteceu\n"
+"O site deve estar com algum problema"
 
 #: src/GameText.h:358
 msgid "Oh no !"
-msgstr "O nie!"
+msgstr "Oh não !"
 
 #: src/GameText.h:359
 msgid "Uploading the highscore..."
-msgstr "Wysyłanie rekordu..."
+msgstr "Enviando o recorde..."
 
 #: src/GameText.h:360
 msgid "Use Environment Vars"
-msgstr "Użyj zmiennych środowiskowych"
+msgstr "Utilizar Variáveis de Ambiente"
 
 #: src/GameText.h:361
 msgid "Use Profile"
-msgstr "Użyj profil"
+msgstr "Utilizar Perfil"
 
 #: src/GameText.h:362
 msgid "Using HTTP Proxy"
-msgstr "Używaj HTTP Proxy"
+msgstr "Utilizando Proxy HTTP"
 
 #: src/GameText.h:363
 msgid "Using SOCKS4 Proxy"
-msgstr "Używaj SOCKS4 Proxy"
+msgstr "Utilizando Proxy SOCKS4"
 
 #: src/GameText.h:364
 msgid "Using SOCKS5 Proxy"
-msgstr "Używaj SOCKS5 Proxy"
+msgstr "Utilizando Proxy SOCKS5"
 
 #: src/GameText.h:365
 msgid "Video"
-msgstr "Obraz"
+msgstr "Video"
 
 #: src/GameText.h:366
 msgid "View"
-msgstr "Widok"
+msgstr "Ver"
 
 #: src/GameText.h:367
 msgid "View the highscore"
-msgstr "Zobacz rekord"
+msgstr "Ver o recorde"
 
 #: src/GameText.h:368
 #, c-format
 msgid "Do you want to update level \"%s\"?"
-msgstr "Czy chcesz uaktualnić \"%s\"?"
+msgstr "Você quer atualizar o nível \"%s\"?"
 
 #: src/GameText.h:369
 msgid "Warning"
-msgstr "Ostrzeżenie"
+msgstr "Advertência"
 
 #: src/GameText.h:371
 msgid "Main"
-msgstr "Główne"
+msgstr "Principal"
 
 #: src/GameText.h:372
 msgid "WWW"
@@ -1258,17 +1263,17 @@ msgstr "WWW"
 
 #: src/GameText.h:373
 msgid "Rooms"
-msgstr "Pokoje"
+msgstr "Salas"
 
 #: src/GameText.h:375
 #, c-format
 msgid "%d hours"
-msgstr "godzin - %d"
+msgstr "%d horas"
 
 #: src/GameText.h:376
 #, c-format
 msgid "%d minutes"
-msgstr "minut - %d"
+msgstr "%d minutos"
 
 #: src/GameText.h:377
 #, c-format
@@ -1278,1105 +1283,1118 @@ msgid ""
 "%d deaths, %d finishes, and %d restarts.\n"
 "Time played: %s"
 msgstr ""
-"(Statystyki od: %s)\n"
-"X-Moto uruchomiono %d razy; %d razy grano (%d unikalne poziomy),\n"
-"%d porażek, %d ukończono, %d restarty.\n"
-"Łącznie czas gry: %s"
+"(Dados desde: %s)\n"
+"X-Moto foi iniciado %d vezes; %d partidas (%d diferentes níveis),\n"
+"%d mortes, %d términos e %d tentativas adicionais,Tempo de jogo: %s"
 
 #: src/GameText.h:380
 #, c-format
 msgid "%d plays, %d deaths, %d finishes, and %d restarts"
-msgstr "%d razy grano, %d porażek, %d ukończono, i %d restarty"
+msgstr "%d jogos, %d mortes, %d términos e %d tentativas adicionais"
 
 #: src/GameText.h:381
 #, c-format
 msgid "%d seconds"
-msgstr "%d sekund"
+msgstr "%d segundos"
 
 #: src/GameText.h:382
 msgid "Yes"
-msgstr "Tak"
+msgstr "Sim"
 
 #: src/GameText.h:383
 msgid "Yes to all"
-msgstr "Wszystkie"
+msgstr "Sim para todos"
 
 #: src/GameText.h:384
 msgid "Zoom in"
-msgstr "Powiększ"
+msgstr "Aumentar zoom"
 
 #: src/GameText.h:385
 msgid "Reinitialize zoom"
-msgstr "Przywróć powiększenie"
+msgstr "Reinicializar zoom"
 
 #: src/GameText.h:386
 msgid "Zoom out"
-msgstr "Pomniejsz"
+msgstr "Diminuir zoom"
 
 #: src/GameText.h:389
 msgid "Download the latest X-Moto world records and check for new levels"
-msgstr "Pobierz najnowsze rekordy świata"
+msgstr "Baixar os recordes mundiais do X-Moto e verificar por novos níveis"
 
 #: src/GameText.h:390
 msgid "Configure how you are connected to the Internet"
-msgstr "Ustaw jak jesteś podłączony do internetu"
+msgstr "Configurar a forma de conexão com a internet"
 
 #: src/GameText.h:391
 msgid "Play this level again"
-msgstr "Zagraj ponownie"
+msgstr "Jogar este nivel novamente"
 
 #: src/GameText.h:392
 msgid "Save a replay for later viewing"
-msgstr "Zapisz powtórkę"
+msgstr "Salvar replay para visualização posterior"
 
 #: src/GameText.h:393
 msgid "Play next level"
-msgstr "Następny poziom"
+msgstr "Jogar o próximo nível"
 
 #: src/GameText.h:394
 msgid "Back to the main menu"
-msgstr "Wróć do menu głównego"
+msgstr "Voltar para o menu principal"
 
 #: src/GameText.h:395
 msgid "Quit the game"
-msgstr "Wyjdź z gry"
+msgstr "Sair do jogo"
 
 #: src/GameText.h:396
 msgid "Back to the game"
-msgstr "Wróć do gry"
+msgstr "Voltar para o jogo"
 
 #: src/GameText.h:397
 msgid "Try this level again from the beginning"
-msgstr "Spróbuj ten poziom od początku"
+msgstr "Tentar novamente desde o início"
 
 #: src/GameText.h:398
 msgid "Play next level instead"
-msgstr "Spróbuj następny poziom"
+msgstr "Jogar o próximo nível então"
 
 #: src/GameText.h:399
 msgid "Try this level again"
-msgstr "Spróbuj ponownie"
+msgstr "Tentar novamente"
 
 #: src/GameText.h:400
 msgid "Built-in and stand-alone external levels"
-msgstr "Wbudowane i zewnętrzne poziomy"
+msgstr "Níveis inclusos e níveis externos isolados"
 
 #: src/GameText.h:401
 msgid "Levels grouped together in level packs"
-msgstr "Poziomy pogrupowane razem w pakietach"
+msgstr "Níveis agrupados por pacotes de níveis"
 
 #: src/GameText.h:402
 msgid "Browse levels available to you"
-msgstr "Przeglądaj poziomy dostępne dla Ciebie"
+msgstr "Navegar por níveis disponíveis para você"
 
 #: src/GameText.h:403
 msgid "View list of recorded replays"
-msgstr "Zobacz listę powtórek"
+msgstr "Ver a lista de replays gravados"
 
 #: src/GameText.h:404
 msgid "Configure X-Moto preferences"
-msgstr "Ustaw X-Moto"
+msgstr "Configurar as preferências do X-Moto"
 
 #: src/GameText.h:405
 msgid "Instructions of how to play X-Moto"
-msgstr "Jak grać w X-Moto"
+msgstr "Instruções de como jogar o X-Moto"
 
 #: src/GameText.h:406
 msgid "Change player profile"
-msgstr "Zmień profil gracza"
+msgstr "Mudar o perfil de jogador"
 
 #: src/GameText.h:407
 msgid "Play tutorial of how to play the game"
-msgstr "Samouczek, zobacz jak grać w X-Moto"
+msgstr "Ir para o tutorial de como jogar o jogo"
 
 #: src/GameText.h:408
 msgid "Official built-in levels"
-msgstr "Oficjalne poziomy"
+msgstr "Níveis oficiais inclusos"
 
 #: src/GameText.h:409
 msgid "Unofficial stand-alone external levels"
-msgstr "Nieoficjalne zewnętrzne poziomy"
+msgstr "Níveis isolados externos não-oficiais"
 
 #: src/GameText.h:410
 msgid "Play the selected level"
-msgstr "Zagraj w wybrany poziom"
+msgstr "Jogar o nível selecionado"
 
 #: src/GameText.h:411
 msgid "View general information about the level, best times, and replays"
-msgstr "Zobacz ogólne informacje o poziomie, rekordy, powtórki"
+msgstr "Ver informações gerais asobre o nível, melhores tempos e replays"
 
 #: src/GameText.h:412
 msgid "Run the selected replay"
-msgstr "Uruchom powtórkę"
+msgstr "Rodar o replay selecionado"
 
 #: src/GameText.h:413
 msgid "Permanently delete the selected replay"
-msgstr "Usuń wybraną powtórkę"
+msgstr "Apagar permanentemente o replay selecionado"
 
 #: src/GameText.h:414
 msgid "Show replays of all players in list"
-msgstr "Pokaż powtórki wszystkich graczy"
+msgstr "Mostar os replays de todos os jogadores na lista"
 
 #: src/GameText.h:415
 msgid "General X-Moto preferences"
-msgstr "Ogólne ustawienia X-Moto"
+msgstr "Preferências gerais do X-Moto"
 
 #: src/GameText.h:416
 msgid "Configure graphical options"
-msgstr "Ustawienia graficzne"
+msgstr "Configurar opções gráficas"
 
 #: src/GameText.h:417
 msgid "Configure audio options"
-msgstr "Ustawienia dźwiękowe"
+msgstr "Configurar opções de áudio"
 
 #: src/GameText.h:418
 msgid "Configure control options"
-msgstr "Ustawienia sterowania"
+msgstr "Configurar opções de controles"
 
 #: src/GameText.h:419
 msgid "Save options"
-msgstr "Zapisz ustawienia"
+msgstr "Salvar opções"
 
 #: src/GameText.h:420
 msgid "Revert options to defaults"
-msgstr "Przywróć ustawienia domyślne"
+msgstr "Reverter as opções para os seus padrões"
 
 #: src/GameText.h:421
 msgid "Show a map of your surroundings when playing"
-msgstr "Pokaż mapę podczas gry"
+msgstr "Mostrar o mapa de sua visinhança quando estiver jogando"
 
 #: src/GameText.h:422
 msgid "Automatically download best times off the net when the game starts"
-msgstr "Automatycznie pobierz rekordy przy starcie"
+msgstr ""
+"Baixar automaticamente os melhores tempos da intert quando o jogo iniciar"
 
 #: src/GameText.h:423
 msgid "Show the World Record for a given level when playing"
-msgstr "Pokaż rekord świata w czasie gry"
+msgstr "Mostra o Recorde Mundial para um dado nível quando estiver jogando"
 
 #: src/GameText.h:424
 msgid "Enable high-color graphics"
-msgstr "Uaktywnij tryb high-color"
+msgstr "Habilitar gráficos de muitas cores"
 
 #: src/GameText.h:425
 msgid "Enable true-color graphics"
-msgstr "Uaktywnij tryb true-color"
+msgstr "Habilitar gráficos true-color"
 
 #: src/GameText.h:426
 msgid "Select graphics resolution"
-msgstr "Wybierz rozdzielczość"
+msgstr "Selecionas resolução dos gráficos"
 
 #: src/GameText.h:427
 msgid "Run the game in a window"
-msgstr "Uruchom grę w oknie"
+msgstr "Rodar o jogo em uma janela"
 
 #: src/GameText.h:428
 msgid "Not so fancy menu graphics"
-msgstr "Surowa grafika w menu"
+msgstr "Gráficos não tão trabalhados do menu"
 
 #: src/GameText.h:429
 msgid "A bit more fancy menu graphics"
-msgstr "Ładniejsza grafika w menu"
+msgstr "Gráficos um pouco mais trabalhados do menu"
 
 #: src/GameText.h:430
 msgid "Fanciest menu graphics"
-msgstr "Najładniejsza grafika w menu"
+msgstr "Gráficos bem trabalhados do menu"
 
 #: src/GameText.h:431
 msgid "Disable most graphics not important to the gameplay"
-msgstr "Wyłącz większość grafiki nieistotnej dla samej gry"
+msgstr ""
+"Desabilitar a maioria dos gráficos que não tem importância na jogabilidade"
 
 #: src/GameText.h:432
 msgid "Disable some of the most resource-intensive graphics, like particles"
-msgstr "Wyłącz część z elementów graficznych"
+msgstr ""
+"Desabilitar alguns dos gráficos que mais consomem recursos, como partículas"
 
 #: src/GameText.h:433
 msgid "Enable all graphical effects"
-msgstr "Włącz wszystkie efekty graficzne"
+msgstr "Habilitar todos os efeitos gráficos"
 
 #: src/GameText.h:434
 msgid "Turn on sound effects"
-msgstr "Włącz efekty dźwiękowe"
+msgstr "Habilitar efeitos de sons"
 
 #: src/GameText.h:435
 msgid "Poor sound quality"
-msgstr "Niska jakość dźwięku"
+msgstr "Baixa qualidade de som"
 
 #: src/GameText.h:436
 msgid "Normal sound quality"
-msgstr "Normalna jakość dźwięku"
+msgstr "Qualidade normal de som"
 
 #: src/GameText.h:437
 msgid "Best sound quality"
-msgstr "Najwyższa jakość dźwięku"
+msgstr "Alta qualidade de som"
 
 #: src/GameText.h:438
 msgid "8-bit sound samples, poor quality"
-msgstr "8 bitów, słaba jakość"
+msgstr "Amostras de som de 8-bits, qualidade ruim"
 
 #: src/GameText.h:439
 msgid "16-bit sound samples, good quality"
-msgstr "16 bitów, dobra jakość"
+msgstr "Amostras de som de 160bits, qualidade boa"
 
 #: src/GameText.h:440
 msgid "Mono (single channel) audio"
-msgstr "Dźwięk mono"
+msgstr "Audio Mono (canal único)"
 
 #: src/GameText.h:441
 msgid "Stereo (two channel) audio"
-msgstr "Dźwięk stereo"
+msgstr "Audio Stereo (dois canais)"
 
 #: src/GameText.h:442
 msgid "Turn on engine noise"
-msgstr "Włącz dźwięk silnika"
+msgstr "Ligar barulho do motor"
 
 #: src/GameText.h:443
 msgid "Select action to re-configure to another key"
-msgstr "Wybierz akcje, której chcesz przypisać klawisz"
+msgstr "Selecione a opção para reconfigurar para outra tecla"
 
 #: src/GameText.h:444
 msgid "View contents of level pack"
-msgstr "Zobacz konkurencje z pakietu poziomów"
+msgstr "Ver o conteúdo dos pacotes de níveis"
 
 #: src/GameText.h:445
 msgid "Select a player profile to use"
-msgstr "Wybierz profil gracza"
+msgstr "Selecionar um perfil de jogador para utilizar"
 
 #: src/GameText.h:446
 msgid "Use the selected player profile"
-msgstr "Użyj zaznaczony profil gracza"
+msgstr "Utilizar o perfil de jogador selecionado"
 
 #: src/GameText.h:447
 msgid "Create new player profile"
-msgstr "Utwórz nowy profil gracza"
+msgstr "Criar novo perfil de jogador"
 
 #: src/GameText.h:448
 msgid "Permanently delete selected player profile, including best times"
-msgstr "Usuń profil, łącznie z jego rekordami"
+msgstr ""
+"Deletar o perfil de jogador selecionado permanentemente, incluindo os "
+"melhores tempos"
 
 #: src/GameText.h:449
 msgid "Select a level in the level pack to play"
-msgstr "Wybierz poziom z pakietu, który chcesz włączyć"
+msgstr "Selecione um nível no pacote de níveis para jogar"
 
 #: src/GameText.h:450
 msgid "Close level pack"
-msgstr "Zamknij"
+msgstr "Fechar um pacote de níveis"
 
 #: src/GameText.h:451
 msgid "General information about the level"
-msgstr "Ogólne informacje o poziomie"
+msgstr "Informações gerais sobre o nível"
 
 #: src/GameText.h:452
 msgid "View best times for the level"
-msgstr "Zobacz najlepsze czasy na tym poziomie"
+msgstr "Ver os melhores tempos para o nível"
 
 #: src/GameText.h:453
 msgid "View locally stored replays of the level"
-msgstr "Zobacz lokalnie zapisane powtórki"
+msgstr "Ver os replays do nível armazenados localmente"
 
 #: src/GameText.h:454
 msgid "Only show personal best times for this level"
-msgstr "Pokaż tylko osobiste rekordy na tym poziomie"
+msgstr "Mostrar somente os recordes pessoais para este nível"
 
 #: src/GameText.h:455
 msgid "Show all best times for this level"
-msgstr "Pokaż wszystkie najlepsze czasy tego poziomu"
+msgstr "Mostrar todos os recordes para este nível"
 
 #: src/GameText.h:456
 msgid "Only show personal replays for this level"
-msgstr "Pokaż tylko osobiste powtórki"
+msgstr "Mostrar somente os replays para este nível"
 
 #: src/GameText.h:457
 msgid "Show all replays for this level"
-msgstr "Pokaż wszystkie powtórki"
+msgstr "Mostrar todos os replays para este nível"
 
 #: src/GameText.h:458
 msgid "Run selected replay"
-msgstr "Uruchom powtórkę"
+msgstr "Rodar o replay selecionado"
 
 #: src/GameText.h:459
 msgid "Show helpful help strings such as this one"
-msgstr "Pokazuj pomoc, taką jak ta"
+msgstr "Mostrar palavras de ajuda como esta"
 
 #: src/GameText.h:460
 msgid ""
 "Let X-Moto look for more levels on the net, and install them automatically"
 msgstr ""
-"Pozwól, by X-Moto pobierało z internetu i instalowało automatycznie nowe "
-"poziomy"
+"Deixar que o X-Moto procure por mais níveis na internet, e instalar eles "
+"automaticamente"
 
 #: src/GameText.h:461
 msgid "Select this if you got a direct connection to the Internet"
-msgstr "Wybierz to, gdy jesteś połączony bezpośrednio z internetem"
+msgstr "Selecione isto se você tem uma conexão direta com a Internet"
 
 #: src/GameText.h:462
 msgid "Select this if you connects to the Internet through an HTTP proxy"
-msgstr "Wybierz to, gdy jesteś połączony z internetem przez proxy"
+msgstr ""
+"Selecione isto se você conecta com a Internet por meio de umj proxy HTTP"
 
 #: src/GameText.h:463
 msgid "Select this if you connects to the Internet through a SOCKS4 proxy"
-msgstr "Wybierz to, gdy jesteś połączony z internetem przez proxy SOCKS4"
+msgstr ""
+"Selecione isto se você conecta com Internet por meio de um proxy SOCKS4"
 
 #: src/GameText.h:464
 msgid "Select this if you connects to the Internet through a SOCKS5 proxy"
-msgstr "Wybierz to, gdy jesteś połączony z internetem przez proxy SOCKS5"
+msgstr ""
+"Selecione isto se você conecta com Internet por meio de um proxy SOCKS5"
 
 #: src/GameText.h:465
 msgid "Use these settings"
-msgstr "Użyj tych ustawień"
+msgstr "Utilizar estas configurações"
 
 #: src/GameText.h:466
 msgid "Write the IP address or host name of proxy server to use"
-msgstr "Wpisz adres IP lub nazwę serwera proxy"
+msgstr ""
+"Escreva o endereço de IP ou nome de host para o servidor de proxy à ser "
+"utilizado"
 
 #: src/GameText.h:467
 msgid "Write the port number used by the proxy server"
-msgstr "Wpisz port, którego używa serwer proxy"
+msgstr "Escreva o número da porta utilizado pelo servidor proxy"
 
 #: src/GameText.h:468
 msgid "New levels and levels updated from the Internet"
-msgstr "Nowe poziomy i poziomy uaktualnione"
+msgstr "Novas níveis e atualizações de níveis da Internet"
 
 #: src/GameText.h:470
 msgid "Show the ghost if possible in the game"
-msgstr "Pokaż ducha o ile to możliwe"
+msgstr "Se possível, mostrar o fantasma no jogo"
 
 #: src/GameText.h:471
 msgid "Choose which ghost to display"
-msgstr "Wybierz, który z duchów ma być wyświetlany"
+msgstr "Escolha qual fantasma mostrar"
 
 #: src/GameText.h:472
 msgid ""
 "Make motion blur effect for the ghost (if supported by your graphics card)"
 msgstr ""
-"Powoduje rozmycie w ruchu ducha (o ile jest to obsługiwane przez kartę "
-"graficzną)"
+"Utilizar efeito de borrão de movimento para o fantasma (se a sua placa de "
+"vídeo suportar)"
 
 #: src/GameText.h:473
 msgid "When starting a level with a ghost, display who the ghost is of"
-msgstr "Przy włączaniu poziomu wyświetl kto jest duchem"
+msgstr ""
+"Quando começando um nível com um fantasma, mostrar de quem que o fantasma é"
 
 #: src/GameText.h:474
 msgid "Display the time difference between the ghost and you"
-msgstr "Wyświetlaj różnicę czasu między Twoim przejazdem i ducha"
+msgstr "Mostar a diferença de tempo entre o fantasma e você"
 
 #: src/GameText.h:475
 msgid "If you make a highscore it will automatically be saved as a replay"
-msgstr "Jeśli pobijesz rekord zostanie automatycznie zapisana powtórka"
+msgstr ""
+"Se você fizer um recorde ele vai ser salvo automaticamente como um replay"
 
 #: src/GameText.h:476
 msgid "View the replay of the room's highscore"
-msgstr "Zobacz powtórki z rekordów w danym pokoju"
+msgstr "Ver o replay do recorde da sala"
 
 #: src/GameText.h:478
 msgid "Check for new levels at startup"
-msgstr "Sprawdź, czy są nowe poziomy przy starcie gry"
+msgstr "Verificar por novos níveis ao iniciar"
 
 #: src/GameText.h:479
 msgid "Check for new highscores at startup"
-msgstr "Sprawdź, czy są nowe rekordy przy starcie gry"
+msgstr "Verificar por novos recordes ao iniciar"
 
 #: src/GameText.h:481
 msgid "Show various statistics about X-Moto"
-msgstr "Pokaż różne statystyki na temat gry"
+msgstr "Mostrar várias estatísticas sobre o X-Moto"
 
 #: src/GameText.h:482
 msgid "Update statistics (also happens each time X-Moto is started)"
-msgstr "Uaktualnij statystyki (automatycznie przy starcie gry)"
+msgstr ""
+"Atualizar estatísticas (também acontece a cada inicialização do X-Moto)"
 
 #: src/GameText.h:483
 msgid "Enables background music in the main menu"
-msgstr "Uaktywnij muzykę w tle menu głównego"
+msgstr "Habilita a música de fundo no menu do jogo"
 
 #: src/GameText.h:485
 msgid "Choose the X-Moto graphics theme"
-msgstr "Wybierz motyw graficzny"
+msgstr "Escolha o tema de gráficos do X-Moto"
 
 #: src/GameText.h:486
 msgid "Check for new themes on the web"
-msgstr "Sprawdź, czy są nowe motywy w internecie"
+msgstr "Verificar por novos temas na web"
 
 #: src/GameText.h:487
 msgid "Download or update the selected theme"
-msgstr "Pobierz lub uaktualnij wybrany motyw"
+msgstr "Baixar ou atualizar o tema selecionado"
 
 #: src/GameText.h:488
 msgid "Upload the replay on the website of highscores"
-msgstr "Wyślij powtórkę do serwisu z rekordami"
+msgstr "Enviar o replay para o site de recordes"
 
 #: src/GameText.h:489
 msgid "Upload your best replays to your room (useful when it is just created)"
-msgstr "Wyślij powtórkę do swojego pokoju"
+msgstr ""
+"Enviar os seus melhores replaus para a sua sala (útil para quando foi recém "
+"criado)"
 
 #: src/GameText.h:490
 msgid "Configure the main www options"
-msgstr "Ustaw główne opcje www"
+msgstr "Configurar as opções principais de www"
 
 #: src/GameText.h:491
 msgid ""
 "Choose where to upload/download replays, highscore lists (for more "
 "information, check the website)"
-msgstr "Wybierz gdzie wysyłać/ściągać powtórki, rekordy"
+msgstr ""
+"Escolher aonde enviar/baixar replays, listas de recordes (para mais "
+"informações, verifique o site)"
 
 #: src/GameText.h:492
 msgid "Choose your room"
-msgstr "Wybierz swój pokój"
+msgstr "Escolha a sua sala"
 
 #: src/GameText.h:493
 msgid "Get the rooms list from the web"
-msgstr "Pobierz listę dostępnych pokoi"
+msgstr "Pegar a lista de salas da internet"
 
 #: src/GameText.h:494
 msgid "Upload of highscore requires to log in (Except for WR)"
-msgstr "Wysłanie rekordu wymaga zalogowania (z wyjątkiem pokoju WR)"
+msgstr "O envio de recordes requer login (Exceto para Recorde Mundial)"
 
 #: src/GameText.h:495
 msgid "Upload of highscore requires a password (Except for WR)"
-msgstr "Wysłanie rekordu wymaga hasła (z wyjątkiem pokoju WR)"
+msgstr "O envio de recordes requer senha (Exceto para Recorde Mundial)"
 
 #: src/GameText.h:496
 msgid "Show the speedometer when playing"
-msgstr "Pokaż prędkościomierz podczas gry"
+msgstr "Mostrar o velocímetro quando estiver jogando"
 
 #: src/GameText.h:497
 msgid "Enable animation of bike falling apart when dead"
-msgstr "Uaktywnij animacje przewracania się motocykla przy porażce"
+msgstr "Habilitar animação da motocicleta caindo quando morto"
 
 #: src/GameText.h:498
 msgid "Automatically scroll over the level before starting playing it"
-msgstr "Automatycznie pokaż cały poziom przed początkiem gry"
+msgstr "Percorrer o nível antes de começar a jogá-lo"
 
 #: src/GameText.h:499
 msgid "View the X-Moto credits"
-msgstr "Pokaż podziękowania"
+msgstr "Ver os créditos do X-Moto"
 
 #: src/GameText.h:500
 msgid "Name of replay"
-msgstr "Nazwa powtórki"
+msgstr "Nome do replay"
 
 #: src/GameText.h:501
 msgid "Level played in replay"
-msgstr "Poziom na powtórce"
+msgstr "Level jogado no replay"
 
 #: src/GameText.h:502
 msgid "Player who recorded the replay"
-msgstr "Gracz, który nagrał powtórkę"
+msgstr "Jogador que gravou o replay"
 
 #: src/GameText.h:503
 msgid "Click to select screen resolution"
-msgstr "Kliknij, by wybrać rozdzielczość"
+msgstr "Clique para selecionar a resolução de tela"
 
 #: src/GameText.h:504
 msgid "Completed levels / total number of levels in pack"
-msgstr "Ukończone/Wszystkie poziomy w pakiecie"
+msgstr "Níveis completados / número total de níveis no pacote"
 
 #: src/GameText.h:505
 msgid "Name of level pack"
-msgstr "Nazwa pakietu z poziomami"
+msgstr "Nome do pacote de níveis"
 
 #: src/GameText.h:506
 msgid "Add the level to the favorite levels list"
-msgstr "Dodaj poziom do listy ulubionych"
+msgstr "Adicionar o nível para a lista de níveis faoritos"
 
 #: src/GameText.h:507
 msgid "Delete the level from the favorite levels list"
-msgstr "Usuń poziom z listy ulubionych"
+msgstr "Deletar o nível da lista de níveis favoritos"
 
 #: src/GameText.h:508
 msgid "Puzzle the levels pack list"
-msgstr "Wymieszaj listę pakietów"
+msgstr "Embaralhar a lista de pacotes de níveis"
 
 #: src/GameText.h:509
 msgid "Put a text to limit the level list"
-msgstr "Wprowadź tekst, by zmniejszyć długość listy"
+msgstr "Colocar um texto para limitar a lista de  níveis"
 
 #: src/GameText.h:510
 msgid "Choose the number of players"
-msgstr "Wybierz liczbę graczy"
+msgstr "Escolha o número de jogadores"
 
 #: src/GameText.h:511
 msgid "Your login in the room"
-msgstr "Twój login w pokoju"
+msgstr "Seu login para a sala"
 
 #: src/GameText.h:512
 msgid "Your password associated with your login"
-msgstr "Twoje hasło"
+msgstr "A senha associada ao seu login"
 
 #: src/GameText.h:513
 msgid "Filter on replay list"
-msgstr "Filtr dla listy powtórek"
+msgstr "Filtro da lista de replays"
 
 #: src/GameText.h:514
 msgid "Press to play immediatly to X-Moto"
-msgstr "Naciśnij, by natychmiast rozpocząć grę"
+msgstr "Precionar para jogar imediatamente o X-Moto"
 
 #: src/GameText.h:515
 msgid "Increase or dicrease the quality of the levels selected"
-msgstr "Zwiększ lub zmniejsz minimalną jakość poziomów"
+msgstr "Aumentar ou diminuir a qualidade dos níveis selecionados"
 
 #: src/GameText.h:516
 msgid "Increase or dicrease the difficulty of the levels selected"
-msgstr "Zwiększ lub zmniejsz trudność poziomów"
+msgstr "Aumentar ou diminuir a dificuldade dos níveis selecionados"
 
 #: src/GameText.h:517
 msgid ""
 "Stop the game once a player ends the level or continue while a player is "
 "running"
 msgstr ""
+"Para o jogo quando o jogador chegar ao fim ou continuar enquanto um jogador "
+"estiver jogando"
 
 #: src/GameText.h:519
 msgid "Levels with no highscore"
-msgstr "Poziomy bez rekordu"
+msgstr "Níveis sem recorde"
 
 #: src/GameText.h:520 src/GameText.h:547
 msgid "Levels you have not completed"
-msgstr "Poziomy nieukończone"
+msgstr "Níveis que você não completou"
 
 #: src/GameText.h:521
 msgid "You're not the highscore holder"
-msgstr "Nie jesteś rekordzistą"
+msgstr "Você não é o detentor do recorde"
 
 #: src/GameText.h:523
 msgid "New and updated levels"
-msgstr "Nowe i uaktualnione poziomy"
+msgstr "Níveis novos e atualizados"
 
 #: src/GameText.h:524
 msgid "Favorite levels"
-msgstr "Ulubione poziomy"
+msgstr "Níveis Favoritos"
 
 #: src/GameText.h:525
 msgid "Nicest levels"
-msgstr "Najlepsze poziomy"
+msgstr "Melhores níveis"
 
 #: src/GameText.h:526
 msgid "Hardest levels"
-msgstr "Najtrudniejsze poziomy"
+msgstr "Níveis mais difíceis"
 
 #: src/GameText.h:527
 msgid "Easiest levels"
-msgstr "Najłatwiejsze poziomy"
+msgstr "Níveis mais simples"
 
 #: src/GameText.h:528
 msgid "Crapiest levels"
-msgstr "Najgorsze poziomy"
+msgstr "Piores níveis"
 
 #: src/GameText.h:529
 msgid "Scripted levels"
-msgstr "Oskryptowane poziomy"
+msgstr "Níveis scriptados"
 
 #: src/GameText.h:530
 msgid "Musical"
-msgstr "Musical"
+msgstr "Musicais"
 
 #: src/GameText.h:532
 msgid "Last played levels"
-msgstr "Ostatnio wybierane poziomy"
+msgstr "Últimos níveis jogados"
 
 #: src/GameText.h:533
 msgid "Never played levels"
-msgstr "Nigdy nie wybierane"
+msgstr "Níveis que nunca foram jogados"
 
 #: src/GameText.h:534
 msgid "Most played levels"
-msgstr "Najczęściej wybierane"
+msgstr "Níveis mais jogados"
 
 #: src/GameText.h:535
 msgid "Less played levels (but played)"
-msgstr "Najrzadziej wybierane"
+msgstr "Níveis menos jogados (porém jogados)"
 
 #: src/GameText.h:536
 msgid "Last highscores"
-msgstr "Najnowsze rekordy"
+msgstr "Últimos melhores tempos"
 
 #: src/GameText.h:537
 msgid "Last levels"
-msgstr "Najnowsze poziomy"
+msgstr "Últimos níveis"
 
 #: src/GameText.h:538
 msgid "Oldest highscores"
-msgstr "Najstarsze rekordy"
+msgstr "Recordes mais antigos"
 
 #: src/GameText.h:539
 msgid "Platinium"
-msgstr "Platyna"
+msgstr "Platina"
 
 #: src/GameText.h:540
 msgid "Gold"
-msgstr "Złoto"
+msgstr "Ouro"
 
 #: src/GameText.h:541
 msgid "Silver"
-msgstr "Srebro"
+msgstr "Prata"
 
 #: src/GameText.h:542
 msgid "Bronze"
-msgstr "Brąz"
+msgstr "Bronze"
 
 #: src/GameText.h:543
 msgid "No medal"
-msgstr "Brak medalu"
+msgstr "Nenhuma medalha"
 
 #: src/GameText.h:544
 msgid "My levels"
-msgstr "Moje poziomy"
+msgstr "Meus níveis"
 
 #: src/GameText.h:546
 msgid "Levels with no highscore in you room"
-msgstr "Poziomy bez rekordu w pokoju"
+msgstr "Níveis com nenhum recorde em sua sala"
 
 #: src/GameText.h:548
 msgid "Somebody in the room made a better highscore than yours"
-msgstr "Ktoś w pokoju uzyskał lepszy czas niż Ty"
+msgstr "Alguém na sala fez um recorde melhor que o seu"
 
 #: src/GameText.h:549
 msgid "All X-Moto levels"
-msgstr "Wszystkie poziomy"
+msgstr "Todos os níveis do X-Motos"
 
 #: src/GameText.h:550
 msgid "New and updated levels since your last check"
-msgstr "Nowe i uaktualnione poziomy od ostatniego sprawdzania"
+msgstr "Níveis novos e atualizados dede sua última verificação"
 
 #: src/GameText.h:551
 msgid "Your favorite levels"
-msgstr "Twoje ulubione poziomy"
+msgstr "Seus níveis favoritos"
 
 #: src/GameText.h:552
 msgid "Nicest X-Moto levels according to the web votes"
-msgstr "Najlepsze poziomy wg. głosów w serwisie www"
+msgstr "Melhores níveis do X-Moto de acordo com votos da web"
 
 #: src/GameText.h:553
 msgid "Hardest X-Moto levels according to the web votes"
-msgstr "Najtrudniejsze poziomy wg. głosów w serwisie www"
+msgstr "Níveis mais difíceis do X-Moto de acordo com votos da web"
 
 #: src/GameText.h:554
 msgid "Easiest X-Moto levels according to the web votes"
-msgstr "Najłatwiejsze poziomy wg. głosów w serwisie www"
+msgstr "Níveis mais simples do X-Moto de acordo com votos da web"
 
 #: src/GameText.h:555
 msgid "Crapiest X-Moto levels according to the web votes"
-msgstr "Najgorsze poziomy wg. głosów w serwisie www"
+msgstr "Piores níveis do X-Moto de acordo com votos da web"
 
 #: src/GameText.h:556
 msgid "X-Moto levels which are dynamic"
-msgstr "Poziome, które są dynamiczne"
+msgstr "Níveis dinâmicos do X-Moto"
 
 #: src/GameText.h:557
 msgid "X-Moto levels with a background music"
-msgstr "Poziomy z muzyką"
+msgstr "Níveis com música de fundo do X-Moto"
 
 #: src/GameText.h:558
 msgid "Last levels you have played"
-msgstr "Poziomy, w które grałeś ostatnio"
+msgstr "Últimos níveis que você jogou"
 
 #: src/GameText.h:559
 msgid "X-Moto levels you never played"
-msgstr "Poziomy, w które nigdy nie grałeś"
+msgstr "Níveis do X-Moto que você nunca jogou"
 
 #: src/GameText.h:560
 msgid "X-Moto levels you have played the most"
-msgstr "Poziomy, w które grasz najczęściej"
+msgstr "Níveis do X-Moto que você mais jogou"
 
 #: src/GameText.h:561
 msgid "X-Moto levels you have played only a few times"
-msgstr "Poziomy włączane tylko kilka razy"
+msgstr "Níveis do X-Moto que você só jogou algumas vezes"
 
 #: src/GameText.h:562
 msgid "X-Moto levels having a recent highscore in you room"
-msgstr "Poziomy mające najnowsze rekordy w pokoju"
+msgstr "Níveis que possuem um recorde mais recente em sua sala"
 
 #: src/GameText.h:563
 msgid "Last created X-Moto levels"
-msgstr "Najnowsze poziomy"
+msgstr "Últimos níveis do X-Moto criados"
 
 #: src/GameText.h:564
 msgid "X-Moto levels having an old highscore in you room"
-msgstr "Poziomy, które mają najstarsze rekordy"
+msgstr "Níveis do X-Moto qu possuem um recorde antigo em sua sala"
 
 #: src/GameText.h:565
 msgid "You have the room highscore"
-msgstr "Uzyskałeś rekord pokoju"
+msgstr "Você possui o recorde da sala"
 
 #: src/GameText.h:566
 msgid "You highscore finish time is almost the room highscore (95%)"
-msgstr "Twój rekord jest blisko rekordu danego pokoju (95%)"
+msgstr "O seu recorde é quase o recorde da sala (95%)"
 
 #: src/GameText.h:567
 #, c-format
 msgid "You highscore finish time is almost the room highscore (90%-95%)"
-msgstr "Twój rekord jest blisko rekordu danego pokoju (90%-95%)"
+msgstr "O seu recorde é quase o recorde da sala (90%-95%)"
 
 #: src/GameText.h:568
 #, c-format
 msgid "You highscore finish time is almost the room highscore (80%-90%)"
-msgstr "Twój rekord jest blisko rekordu danego pokoju (80%-90%)"
+msgstr "O seu recorde é quase o recorde da sala (80%-90%)"
 
 #: src/GameText.h:569
 msgid "The room highscore is really better than your own highscore"
-msgstr "Rekord danego pokoju jest znacznie lepszy od Twojego"
+msgstr "O recorde da sala é realmente melhor do que o seu"
 
 #: src/GameText.h:570
 msgid "Level pack"
-msgstr "Pakiet poziomów"
+msgstr "Pacote de níveis"
 
 #: src/GameText.h:571
 msgid "Highscores by"
-msgstr "Rekordy wg."
+msgstr "Recordes por"
 
 #: src/GameText.h:572
 msgid "External levels (the one you put into the 'My levels' directory)"
-msgstr "Zewnętrzne poziomy (z katalogu 'My levels')"
+msgstr ""
+"Níveis externos (aqueles que você coloca dentro do diretório 'Meus níveis')"
 
 #: src/GameText.h:574
 msgid "Ugly mode enabled"
-msgstr "Tryb Ugly aktywny"
+msgstr "Modo Feio habilitado"
 
 #: src/GameText.h:575
 msgid "Ugly mode disabled"
-msgstr "Tryb Ugly nieaktywny"
+msgstr "Modo Feio desabilitado"
 
 #: src/GameText.h:576
 msgid "Theme mode enabled"
-msgstr "Motyw aktywny"
+msgstr "Modo temático habilitado"
 
 #: src/GameText.h:577
 msgid "Theme mode disabled"
-msgstr "Motyw nieaktywny"
+msgstr "Modo temático desabilitado"
 
 #: src/GameText.h:578
 msgid "UglyOver mode enabled"
-msgstr "UglyOver aktywne"
+msgstr "Modo MuitoFeio habilitado"
 
 #: src/GameText.h:579
 msgid "UglyOver mode disabled"
-msgstr "UglyOver nieaktywne"
+msgstr "Modo MuitoFeio desabilitado"
 
 #: src/GameText.h:580
 msgid "Web connexion enabled"
-msgstr "Połączenie z internetem aktywne"
+msgstr "Conexão com a web habilitada"
 
 #: src/GameText.h:581
 msgid "Web connexion disabled"
-msgstr "Połączenie z internetem nieaktywne"
+msgstr "Conexão com a web desabilitada"
 
 #: src/GameText.h:582
 msgid "Replay interpolation enabled"
-msgstr "Interpolacja na powtórkach aktywna"
+msgstr "Interpolação no replay habilitada"
 
 #: src/GameText.h:583
 msgid "Replay interpolation disabled"
-msgstr "Interpolacja na powtórkach nieaktywna"
+msgstr "Interpolação no replay desabilitada"
 
 #: src/LevelsText.h:21
 msgid "First let's take a look at the user interface..."
-msgstr "Najpierw popatrz na interfejs użytkownika"
+msgstr "Primeiro vamos dar uma olhada na interface sdo usuário..."
 
 #: src/LevelsText.h:22
 msgid "In the upper left corner, you've got your timers"
-msgstr "W lewym górnym roku widzisz zegary"
+msgstr "No canto superior esquerdo, você tem os seus relógios"
 
 #: src/LevelsText.h:23
 msgid "The big one is your current time"
-msgstr "Największy wyświetla Twój bieżący czas"
+msgstr "O maior é o seu tempo atual"
 
 #: src/LevelsText.h:24
 msgid "The small one to the right is your own best time"
-msgstr "Mniejszy, na prawo oznacza Twój najlepszy czas"
+msgstr "A menor à direita é o seu próprio melhor tempo"
 
 #: src/LevelsText.h:25
 msgid "for the current level..."
-msgstr "dla aktualnego poziomu"
+msgstr "para o nível atual"
 
 #: src/LevelsText.h:26
 msgid "... and the one to the left is the best of all"
-msgstr "... oraz ten po lewej podaje najlepszy czas ze wszystkich"
+msgstr ".. e o da esquerda é o melhor de todos"
 
 #: src/LevelsText.h:27
 msgid "on this computer."
-msgstr "na tym komputerze"
+msgstr "neste computador."
 
 #: src/LevelsText.h:28
 msgid "Down here there's the minimap, which shows the level"
-msgstr "Na dole jest mini-mapa, która pokazuje poziom"
+msgstr "Abaixo existe um mini-mapa, que mostra o nível"
 
 #: src/LevelsText.h:29
 msgid "around you, so you know where you're heading."
-msgstr "w Twoim otoczeniu, możesz się zorientować gdzie się znajdujesz"
+msgstr "por sua volta, para que você saiba onde está indo"
 
 #: src/LevelsText.h:30
 msgid "Now let's look at your controls."
-msgstr "...A teraz, sterowanie..."
+msgstr "Agora vamos ver os seus controles"
 
 #: src/LevelsText.h:31
 msgid "(You seem to be using a joystick, can't help with that :P)"
-msgstr "(Używasz joysticka, nie możemy Ci pomóc;p)"
+msgstr ""
+"(Aparentemente você está utilizando um joystick, não há ajuda para isto :P)"
 
 #: src/LevelsText.h:32
 msgid ": Drive forward"
-msgstr ": Jedź do przodu"
+msgstr ": Dirija para frente"
 
 #: src/LevelsText.h:33
 msgid ": Brake"
-msgstr ": Hamulec"
+msgstr ": Freie"
 
 #: src/LevelsText.h:34
 msgid ": Change direction"
-msgstr ": Zmień kierunek"
+msgstr ": Mudar de direção"
 
 #: src/LevelsText.h:35
 msgid ": Rotate anti-clockwise"
-msgstr ": Obracaj w lewo"
+msgstr ": Rotacionar no sentido anti-horario"
 
 #: src/LevelsText.h:36
 msgid ": Rotate clockwise"
-msgstr ": Obracaj w prawo"
+msgstr ": Rotacionar no sentido horário"
 
 #: src/LevelsText.h:37
 msgid "Okay. The red dot on your minimap is a strawberry."
-msgstr "Wybornie. Czerwona kropka na mapie oznacza truskawkę."
+msgstr "Tudo bem. O ponto vermelho no seu minimapa é um morango."
 
 #: src/LevelsText.h:38
 msgid "The primary objective of the game is for you"
-msgstr "Podstawowym celem gry jest"
+msgstr "O objetivo primário deste jogo é para você"
 
 #: src/LevelsText.h:39
 msgid "to collect all of them, and then find the flower."
-msgstr "zebranie wszystkich truskawek i odnalezienie kwiatka"
+msgstr "coletar todos eles e achar a flor."
 
 #: src/LevelsText.h:40
 msgid "The icon to the right of your time,"
-msgstr "Symbol na prawo od Twojego czasu"
+msgstr "O ícone à direita é o seu tempo"
 
 #: src/LevelsText.h:41
 msgid "indicates how many strawberries still left."
-msgstr "informuje jak wiele truskawek pozostało"
+msgstr "indica quantos morangos ainda precisam ser coletados."
 
 #: src/LevelsText.h:42
 msgid "Drive in its direction..."
-msgstr "Jedź w tym kierunku"
+msgstr "Dirijir na sua direção..."
 
 #: src/LevelsText.h:43
 msgid "When done, head for the flower."
-msgstr "Doskonale, teraz kwiatek"
+msgstr "Quando concluído, vá para a flor."
 
 #: src/LevelsText.h:44
 msgid "It's the purple dot on your minimap."
-msgstr "jest purpurową kropką na mapie"
+msgstr "É o ponto roxo em seu mini-mapa."
 
 #: src/LevelsText.h:45
 msgid "Welcome to X-Moto!"
-msgstr "Witaj w X-Moto!"
+msgstr "Bem vindo ao X-Moto!"
 
 #: src/LevelsText.h:46
 msgid "This level is a short tutorial of"
-msgstr "Ten poziom jest krótkim samouczkiem"
+msgstr "Este nível é um pequeno tutorial de"
 
 #: src/LevelsText.h:47
 msgid "how you play the game."
-msgstr "jak grać w tę grę"
+msgstr "como jogar o jogo."
 
 #: src/LevelsText.h:48
 msgid "Please stay put and follow the instructions! :)"
-msgstr "Wykonuj instrukcje :)"
+msgstr "Por favor fique ligado e siga as instruções! :)"
 
 #: src/LevelsText.h:49
 msgid "Pick up the strawberry by touching it"
-msgstr "Zbierz truskawki poprzez ich dotknięcie;)"
+msgstr "Pegue o morango tocando-o"
 
 #: src/LevelsText.h:50
 msgid "Touch it to finish the level. Good luck with the rest :)"
-msgstr "Dotknij, by ukończyć poziom. Powodzenia dalej :)"
+msgstr "Toque a flor para terminar o nível. Boa sorte com o restante :)"
 
 #: src/LevelsText.h:51
 msgid "The first jump you're going to perform is very easy."
-msgstr "Pierwszy skok, który będziesz musiał wykonać jest bardzo prosty"
+msgstr "O primeiro pulo que você vai realizar é bem fácil"
 
 #: src/LevelsText.h:52
 msgid "Drive to the left, accelerate, and when you are in"
-msgstr "Jedź w lewo, przyspiesz, a kiedy będziesz"
+msgstr "Dirija para a esquerda, acelere e quando você estiver no"
 
 #: src/LevelsText.h:53
 msgid "the air, try to adjust your attitude with the left"
-msgstr "w powietrzu, spróbuj ustawić motocykl lewą"
+msgstr "air, tente ajustar a sua altitude com a tecla "
 
 #: src/LevelsText.h:54
 msgid "and right arrow keys, so you'll land on your wheels."
-msgstr "i prawą strzałką, będziesz mógł wylądować na kołach"
+msgstr "direita / esquerda, para pousar com as suas rodas."
 
 #: src/LevelsText.h:55
 msgid "The next jump is a bit trickier. You'll need all the"
-msgstr "Kolejny skok jest nieco trudniejszy. Musisz"
+msgstr "O próximo pulo é um pouco mais complicado. Você precisa de toda"
 
 #: src/LevelsText.h:56
 msgid "speed you can get to reach the other side..."
-msgstr "uzyskać maksymalną prędkość, by znaleźć się na drugiej stronie"
+msgstr "velocidade que você puder pegar para chegar ao outro lado..."
 
 #: src/LevelsText.h:57
 msgid "Now for the most difficult jump in this tutorial!"
-msgstr "Teraz najtrudniejszy skok w samouczku"
+msgstr "Agora o pulo mais difícil do tutorial!"
 
 #: src/LevelsText.h:58
 msgid "This time, speed alone won't do the job..."
-msgstr "Tym razem samo przyśpieszanie nie wystarczy"
+msgstr "Agora, a velocidade por si só não vai dar conta do trabalho..."
 
 #: src/LevelsText.h:59
 msgid "Here's the plan:"
-msgstr "Oto plan:"
+msgstr "Este é o plano:"
 
 #: src/LevelsText.h:60
 msgid "Again, you'll have to obtain maximum speed, but when"
-msgstr "Ponownie, musisz uzyskać maksymalną prędkość, ale kiedy"
+msgstr "Novamente, você vai ter que obter am aior velocidade, mas quando"
 
 #: src/LevelsText.h:61
 msgid "you reach the edge of the jump, pull the bike's front"
-msgstr "osiągniesz krawędź musisz podnieść"
+msgstr "você chegar ao topo do pulo, puxe a roda da frente da moto"
 
 #: src/LevelsText.h:62
 msgid "wheel up."
-msgstr "przednie koło"
+msgstr "para cima"
 
 #: src/LevelsText.h:63 src/LevelsText.h:90
 msgid "That will cause the rear suspension to increase the"
-msgstr "To spowoduje, że zawieszenie zwiększy"
+msgstr "Isto vai fazer a suspensão traseira aumentar a"
 
 #: src/LevelsText.h:64 src/LevelsText.h:91
 msgid "length of the jump."
-msgstr "długość skoku"
+msgstr "duração do pulo."
 
 #: src/LevelsText.h:65 src/LevelsText.h:82 src/LevelsText.h:92
 msgid "Try it..."
-msgstr "Spróbuj..."
+msgstr "Tente fazer isso..."
 
 #: src/LevelsText.h:66
 msgid "This tutorial will teach you the basics of jumping."
-msgstr "Ten samouczek nauczy Cię podstaw skakania"
+msgstr "Este tutorial vai te ensinar o básico sobre saltos."
 
 #: src/LevelsText.h:67
 msgid "Remember you can turn around your bike"
-msgstr "Pamiętaj, możesz obracać motocykl"
+msgstr "Lembre-se que você pode virar a sua motocicleta"
 
 #: src/LevelsText.h:68
 msgid "by pressing "
-msgstr "naciskając"
+msgstr "pressionando "
 
 #: src/LevelsText.h:69
 msgid "That was pretty easy, right?"
-msgstr "To było prościutkie, nie sądzisz?"
+msgstr "Isso foi um tanto fácil, certo?"
 
 #: src/LevelsText.h:70
 msgid "Accelerate NOW! Obtain maximum speed, and try to"
-msgstr "Przyśpieszaj TERAZ! Maksymalna prędkość, próbuj"
+msgstr "Acelere AGORA! Conseiga a velocidade máxima e tente"
 
 #: src/LevelsText.h:71
 msgid "keep the front wheel at the ground..."
-msgstr "utrzymać przednie koło na podłożu"
+msgstr "manter a roda frontal no chão..."
 
 #: src/LevelsText.h:72
 msgid "Nice jump there! :)"
-msgstr "Wyśmienity skok"
+msgstr "Belo salto! :) "
 
 #: src/LevelsText.h:73
 msgid "Congrats, you're now a master jumper!"
-msgstr "Gratulacje, jesteś mistrzem skakania. Fantastycznie."
+msgstr "Congratulações, você agora é um mestre saltador!"
 
 #: src/LevelsText.h:74
 msgid "The basic idea is that when driving on the rear wheel,"
-msgstr "Podstawowy pomysł. Kiedy jedziesz na tylnym kole"
+msgstr "A idéia básica é que quando estiver pilotando com a roda traseira,"
 
 #: src/LevelsText.h:75
 msgid "your head is lowered quite a lot..."
-msgstr "Twoja głowa jest znacznie niżej"
+msgstr "a sua cabeça vai ser bem baixada..."
 
 #: src/LevelsText.h:76
 msgid "The difficult part is to keep the balance."
-msgstr "Najtrudniejszym jest utrzymać równowagę"
+msgstr "A parte difícil é tentar manter o equilíbrio."
 
 #: src/LevelsText.h:77
 msgid "When the distance you have to drive is quite short,"
-msgstr "Kiedy dystans jest dość krótki"
+msgstr "Quando a distância à percorrer é pouca,"
 
 #: src/LevelsText.h:78
 msgid "you don't need to keep the balance."
-msgstr "nie musisz utrzymywać równowagi"
+msgstr "você não precisa se preoculpar com o equilíbrio."
 
 #: src/LevelsText.h:79
 msgid "Accelerate (slowly) to the right with the front wheel raising."
-msgstr "Przyśpiesz, a przednie koło zacznie się podnosić"
+msgstr "Acelere (de leve) para a direita, elevando a roda frontal."
 
 #: src/LevelsText.h:80
 msgid "Just before your head hit the block, make a quick left/right"
-msgstr "Zanim uderzysz głową szybko użyj klawiszy prawo/lewo"
+msgstr ""
+"Justo antes de a sua cabeça atingir o bloco, faça uma combinação rápida"
 
 #: src/LevelsText.h:81
 msgid "combination, and you should be on the other side."
-msgstr "i powinieneś być po drugiej stronie"
+msgstr "de  direita/esquerda, e você deve passar para o outro lado."
 
 #: src/LevelsText.h:83
 msgid "Now you'll try a bit more difficult one..."
-msgstr "Teraz spróbujesz czegoś trudniejszego"
+msgstr "Agora você vai tentar uma um pouco mais difícil..."
 
 #: src/LevelsText.h:84
 msgid "This time keep your hands off the left and right arrow keys,"
-msgstr "Musisz trzymać palce na strzałkach w lewo i prawo"
+msgstr "Desta vez deixe as suas mãos fora das setas de esquerda e direita"
 
 #: src/LevelsText.h:85
 msgid "they're not delicate enough to help you keep balance."
-msgstr "nie udało się utrzymać równowagi"
+msgstr "elas não são delicadas o suficiente para ajudar a manter o equilíbrio."
 
 #: src/LevelsText.h:86
 msgid "Instead regulate your angle by accelerating and braking."
-msgstr "Zamiast ustawiać kąt przez przyśpieszanie i hamowanie"
+msgstr "Ao invés, regule o seu ângulo acelerando ou freiando."
 
 #: src/LevelsText.h:87
 msgid "Try to drive a bit back and forth on your rear wheel,"
-msgstr "Spróbuj się trochę wrócić i jechać na tylnym kole do przodu "
+msgstr "Tente dirigir um pouco com a sua roda traseira,"
 
 #: src/LevelsText.h:88
 msgid "keeping the bike as steady as possible..."
-msgstr "utrzymując motocykl tak stabilny, jak to możliwe"
+msgstr "deixando a moto tão preparada quanto o possível..."
 
 #: src/LevelsText.h:89
 msgid "Try getting under the next obstacle when you feel you're ready."
-msgstr "Spróbuj przejechać pod następną przeszkodą"
+msgstr ""
+"Tente passar por baixo do próximo obstáculo quando você se sentir preparado."
 
 #: src/LevelsText.h:93
 msgid "This tutorial will teach you to rear-wheel through"
-msgstr "Ten samouczek nauczy Cię jak jeździć na tylnym kole"
+msgstr "Este tutorial vai te ensinar a passar com a roda traseira"
 
 #: src/LevelsText.h:94
 msgid "areas where the ceiling is low."
-msgstr "obszary gdzie sufit jest nisko"
+msgstr "por áreas aonde o teto é baixo."
 
 #: src/LevelsText.h:95
 msgid "Beware that this can be pretty difficult :)"
-msgstr "Uważaj, to nie jest takie proste"
+msgstr "Esteja ciente que isto pode ser um tanto complicado :)"
 
 #: src/LevelsText.h:96
 msgid "Not that difficult, right?"
-msgstr "Nie takie trudne, prawda?"
+msgstr "Não foi tão difícil, foi?"
 
 #: src/LevelsText.h:97
 msgid "Nice! Now try the next one, it's a bit more difficult..."
-msgstr "Cudownie! Teraz kolejna, trochę trudniejsza..."
+msgstr "Ótimo! Agora tente o próximo, é um pouco mais difícil..."
 
 #: src/LevelsText.h:98
 msgid "Good job! The next one is even more difficult..."
-msgstr "Bardzo dobra robota! Kolejna jeszcze jeszcze trudniejsza..."
+msgstr "Bom trabalho! O proxímo é ainda mais difícil..."
 
 #: src/LevelsText.h:99
 msgid "Now for the final one... It's not that long, but instead"
-msgstr "Ostatnia... Nie jest taka długa, ale"
+msgstr "Agora para o final... Não é tão longo, porém"
 
 #: src/LevelsText.h:100
 msgid "there's even less room for your precious head. Good luck! :)"
-msgstr "jest jeszcze mniej miejsca na głowę. Powodzenia! :]"
+msgstr "tem ainda menos espaço para a sua preciosa cabeça. Boa sorte! :)"
 
 #~ msgid "Reload levels from Levels dir (if you create a new level)"
-#~ msgstr "Przeładuj poziomy z katalogu Levels (jeśli stworzyłeś nowy poziom)"
-
-#~ msgid "Players"
-#~ msgstr "Graczy"
-
-#~ msgid "and"
-#~ msgstr "i"
-
-#~ msgid "by"
-#~ msgstr "przez"
+#~ msgstr "Recarregar os níveis, temas e replays de diretórios"

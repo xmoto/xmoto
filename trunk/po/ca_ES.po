@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ca\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-07-17 22:27+0200\n"
+"POT-Creation-Date: 2007-07-28 10:02+0200\n"
 "PO-Revision-Date: 2007-05-02 02:31+0200\n"
 "Last-Translator: Trullo\n"
 "Language-Team:  X-Moto\n"
@@ -2016,10 +2016,12 @@ msgid "You highscore finish time is almost the room highscore (95%)"
 msgstr "El teu record es quasi el mateix que el de la sala (95%)"
 
 #: src/GameText.h:567
+#, c-format
 msgid "You highscore finish time is almost the room highscore (90%-95%)"
 msgstr "El teu record es quasi el mateix que el de la sala (90%-95%)"
 
 #: src/GameText.h:568
+#, c-format
 msgid "You highscore finish time is almost the room highscore (80%-90%)"
 msgstr "El teu record es quasi el mateix que el de la sala (80%-90%)"
 

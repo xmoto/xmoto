@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-07-17 22:27+0200\n"
+"POT-Creation-Date: 2007-07-28 10:02+0200\n"
 "PO-Revision-Date: 2006-05-02 18:09+0200\n"
 "Last-Translator: Maximum\n"
 "Language-Team: Finnish\n"
@@ -2004,10 +2004,12 @@ msgid "You highscore finish time is almost the room highscore (95%)"
 msgstr "Huipputuloksesi on melkein huoneen huipputulos (95%)"
 
 #: src/GameText.h:567
+#, c-format
 msgid "You highscore finish time is almost the room highscore (90%-95%)"
 msgstr "Huipputuloksesi on melkein huoneen huipputulos (90%-95%)"
 
 #: src/GameText.h:568
+#, c-format
 msgid "You highscore finish time is almost the room highscore (80%-90%)"
 msgstr "Huipputuloksesi on melkein huoneen huipputulos (80%-90%)"
 
