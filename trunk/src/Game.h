@@ -230,7 +230,6 @@ class xmDatabase;
       
       Replay *m_pJustPlayReplay;
 
-      enum GhostSearchStrategy GhostSearchStrategies[3];
       bool m_bEnableGhost;
       GhostSearchStrategy m_GhostSearchStrategy;
       bool m_bShowGhostTimeDiff;
@@ -538,6 +537,8 @@ class xmDatabase;
 
       void initReplaysFromDir();
       void addReplay(const std::string& i_file);
+
+      static UIFrame* makeOptionsWindow(DrawLib* i_drawLib, UIWindow* io_parent, UserConfig* i_Config);
   };
 
 }
