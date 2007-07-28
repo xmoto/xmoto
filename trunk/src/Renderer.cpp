@@ -1517,7 +1517,7 @@ namespace vapp {
 	    getParent()->getDrawLib()->startDraw(DRAW_MODE_LINE_LOOP);
 
 	    if(Blocks[i]->isBackground() == false) {
-	      getParent()->getDrawLib()->setColorRGB(255,0,0);
+	      getParent()->getDrawLib()->setColorRGB(255,255,0);
 	    } else {
 	      getParent()->getDrawLib()->setColorRGB(255,255,255);
 	    }
