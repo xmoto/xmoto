@@ -399,6 +399,24 @@
 <frame />
 </sprite>
 
+<sprite type="Entity" name="heart1" fileBase="heart1_361_" fileExtension="png">
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+<frame />
+</sprite>
+
 <sprite type="UI" name="TitleBL" 	      file="TitleBL.jpg" />
 <sprite type="UI" name="TitleBR" 	      file="TitleBR.jpg" />
 <sprite type="UI" name="TitleTL" 	      file="TitleTL.jpg" />
