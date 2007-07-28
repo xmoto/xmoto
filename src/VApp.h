@@ -123,10 +123,7 @@ namespace vapp {
     void getMousePos(int *pnX, int *pnY);
     bool haveMouseMoved(void);
 
-
-
-
-    std::vector < std::string > *getDisplayModes(int windowed);
+    static std::vector<std::string>* getDisplayModes(int windowed);
 
     void setFrameDelay(int nDelay) {
       m_nFrameDelay = nDelay;
@@ -141,7 +138,7 @@ namespace vapp {
       return m_UserNotify;
     }
 
-
+    
     float getFPS(void) {
       return m_fFramesPerSecond;
     }

@@ -87,9 +87,6 @@ GameApp::GameApp() {
   m_updateAutomaticallyLevels = false;
   m_reloadingLevelsUser = false;
 
-  GhostSearchStrategies[0] = GHOST_STRATEGY_MYBEST;
-  GhostSearchStrategies[1] = GHOST_STRATEGY_THEBEST;
-  GhostSearchStrategies[2] = GHOST_STRATEGY_BESTOFROOM;
   m_bEnableGhost = true;
   m_bShowGhostTimeDiff = true;
   m_GhostSearchStrategy = GHOST_STRATEGY_MYBEST;
