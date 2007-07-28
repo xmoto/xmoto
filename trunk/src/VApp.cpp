@@ -176,8 +176,17 @@ namespace vapp {
     /* init endian system */ 
     SwapEndian::Swap_Init();
     srand(time(NULL));
+
+    /* first, check command line args */
+    try {
+      _ParseArgs(nNumArgs,ppcArgs);
+    } 
+    catch (SyntaxError &e) {
+      printf("syntax error : %s\n", e.getMsg().c_str());
+      return; /* abort */
+    }
     /* Init file system stuff */
-    FS::init( "xmoto" );
+    FS::init("xmoto");
 
     /* load config */
     createDefaultConfig();
@@ -187,14 +196,6 @@ namespace vapp {
     std::string v_locale = Locales::init(m_Config.getString("Language"));
 #endif
 
-    try {
-      /* Parse command-line arguments */
-      _ParseArgs(nNumArgs,ppcArgs);
-    } 
-    catch (SyntaxError &e) {
-      printf("syntax error : %s\n",e.getMsg().c_str());
-      return; /* abort */
-    }
     if (m_bQuit){
       return;
     }
