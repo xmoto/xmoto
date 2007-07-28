@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: sk\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-07-28 10:02+0200\n"
-"PO-Revision-Date: 2007-06-11 00:28+0200\n"
+"PO-Revision-Date: 2007-07-28 10:28+0200\n"
 "Last-Translator: Jozef Riha <jose1711@gmail.com\n"
 "Language-Team:  <sk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -119,7 +119,7 @@ msgstr "Zabudované levely"
 #: src/GameText.h:61
 #, c-format
 msgid "(by %s)"
-msgstr ""
+msgstr "(od %s)"
 
 #: src/GameText.h:62
 msgid "Move Camera to left"
@@ -298,11 +298,11 @@ msgid "Credits"
 msgstr "Zásluhy"
 
 #: src/GameText.h:134 src/GameText.h:301
-#, fuzzy
 msgid "Player"
 msgid_plural "Players"
 msgstr[0] "Hráč"
-msgstr[1] "Hráč"
+msgstr[1] "Hráči"
+msgstr[2] "Hráčov"
 
 #: src/GameText.h:135
 msgid "Date"
@@ -597,9 +597,9 @@ msgid "The best of the replays (on this computer)"
 msgstr "Najlepšie záznamy (na tomto počítači)"
 
 #: src/GameText.h:199
-#, fuzzy, c-format
+#, c-format
 msgid "Ghost of %s"
-msgstr "Duch z"
+msgstr "Duch %s"
 
 #: src/GameText.h:200
 msgid "Ghost"
@@ -647,7 +647,7 @@ msgstr "Urobiť snímok obrazovky"
 
 #: src/GameText.h:214
 msgid "Reload levels, themes and replays from directories"
-msgstr ""
+msgstr "Znovu načítať levely, témy a záznamy z adresárov"
 
 #: src/GameText.h:216
 msgid ""
@@ -821,7 +821,7 @@ msgstr "Multi"
 
 #: src/GameText.h:257
 msgid "Stop the game once a player ends the level"
-msgstr ""
+msgstr "Ukončiť hru, keď hráč ukončí level"
 
 #: src/GameText.h:258
 msgid "Name"
@@ -1834,6 +1834,7 @@ msgid ""
 "Stop the game once a player ends the level or continue while a player is "
 "running"
 msgstr ""
+"Ukončiť hru, keď hráč ukončí level alebo pokračovať, pokým hráč pokračuje"
 
 #: src/GameText.h:519
 msgid "Levels with no highscore"
@@ -2014,18 +2015,18 @@ msgstr ""
 "(95%)"
 
 #: src/GameText.h:567
-#, fuzzy, c-format
+#, c-format
 msgid "You highscore finish time is almost the room highscore (90%-95%)"
 msgstr ""
 "Váš rekordný čas dokončenia levelu je takmer taký ako rekord v miestnosti "
-"(90-95%)"
+"(90%-95%)"
 
 #: src/GameText.h:568
-#, fuzzy, c-format
+#, c-format
 msgid "You highscore finish time is almost the room highscore (80%-90%)"
 msgstr ""
 "Váš rekordný čas dokončenia levelu je takmer taký ako rekord v miestnosti "
-"(80-90%)"
+"(80%-90%)"
 
 #: src/GameText.h:569
 msgid "The room highscore is really better than your own highscore"

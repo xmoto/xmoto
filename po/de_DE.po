@@ -117,7 +117,7 @@ msgstr "Eingebaute Levels"
 #: src/GameText.h:61
 #, c-format
 msgid "(by %s)"
-msgstr ""
+msgstr "(von %s)"
 
 #: src/GameText.h:62
 msgid "Move Camera to left"
@@ -296,7 +296,6 @@ msgid "Credits"
 msgstr "Abspann"
 
 #: src/GameText.h:134 src/GameText.h:301
-#, fuzzy
 msgid "Player"
 msgid_plural "Players"
 msgstr[0] "Spieler"
@@ -595,9 +594,9 @@ msgid "The best of the replays (on this computer)"
 msgstr "Die besten Replays (auf diesem Computer)"
 
 #: src/GameText.h:199
-#, fuzzy, c-format
+#, c-format
 msgid "Ghost of %s"
-msgstr "Geist von"
+msgstr "Geist von %s"
 
 #: src/GameText.h:200
 msgid "Ghost"
@@ -645,7 +644,7 @@ msgstr "Bildschirmfoto aufnehmen"
 
 #: src/GameText.h:214
 msgid "Reload levels, themes and replays from directories"
-msgstr ""
+msgstr "Levels, Themes und Replays aus den Verzeichnissen neuladen."
 
 #: src/GameText.h:216
 msgid ""
@@ -747,7 +746,7 @@ msgstr "Level-Pakete"
 #: src/GameText.h:239
 #, c-format
 msgid "Level '%s' required by replay!"
-msgstr "Level '%s' wird von dem Replay benötigt"
+msgstr "Level '%s' wird von dem Replay benötigt!"
 
 #: src/GameText.h:240
 msgid "Levels"
@@ -819,7 +818,7 @@ msgstr "Mehrspieler"
 
 #: src/GameText.h:257
 msgid "Stop the game once a player ends the level"
-msgstr ""
+msgstr "Spiel anhalten, sobald ein Spieler das Level beendet"
 
 #: src/GameText.h:258
 msgid "Name"
@@ -1012,7 +1011,7 @@ msgstr "Proxy konfigurieren"
 msgid "Quick start"
 msgstr ""
 "Schnelles\n"
-" Spiel"
+"  Spiel"
 
 #: src/GameText.h:310
 msgid "Quit Game"
@@ -1849,7 +1848,7 @@ msgstr ""
 msgid ""
 "Stop the game once a player ends the level or continue while a player is "
 "running"
-msgstr ""
+msgstr "Spiel abbrechen oder fortsetzen, sobald 1 Spieler das Level beendet."
 
 #: src/GameText.h:519
 msgid "Levels with no highscore"
@@ -2396,30 +2395,3 @@ msgstr "Dies ist die letzte Hürde! Nicht so lang, dafür aber"
 #: src/LevelsText.h:100
 msgid "there's even less room for your precious head. Good luck! :)"
 msgstr "ist die Decke noch niedriger. Viel Glück!"
-
-#~ msgid "Reload levels from Levels dir (if you create a new level)"
-#~ msgstr "Level-Liste neu einlesen (beim Hinzufügen eigener Level)"
-
-#~ msgid "Players"
-#~ msgstr "Spieler"
-
-#~ msgid "and"
-#~ msgstr "und"
-
-#~ msgid "by"
-#~ msgstr "von"
-
-#~ msgid "Brake 2"
-#~ msgstr "Bremse (Spieler 2)"
-
-#~ msgid "Change direction 2"
-#~ msgstr "Richtung wechseln (Spieler 2)"
-
-#~ msgid "Drive 2"
-#~ msgstr "Beschleunigen (Spieler 2)"
-
-#~ msgid "Flip left 2"
-#~ msgstr "Links drehen (Spieler 2)"
-
-#~ msgid "Flip right 2"
-#~ msgstr "Rechts drehen (Spieler 2)"
