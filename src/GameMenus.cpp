@@ -27,14 +27,47 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 namespace vapp {
 
-  UIFrame* GameApp::makeOptionsWindow(DrawLib* i_drawLib, UIWindow* io_parent, UserConfig* i_Config) {
+  UIFrame* GameApp::makeHelpWindow(DrawLib* i_drawLib, UIWindow* io_parent, UserConfig* i_Config) {
+    UIFrame *v_pHelpWindow;
+    UIStatic *pSomeText;
+
+    v_pHelpWindow = new UIFrame(io_parent,220,(i_drawLib->getDispHeight()*140)/600,"",i_drawLib->getDispWidth()-220-20,i_drawLib->getDispHeight()-40-(i_drawLib->getDispHeight()*120)/600-10);
+    v_pHelpWindow->showWindow(false);
+    pSomeText = new UIStatic(v_pHelpWindow,0,0,GAMETEXT_HELP,v_pHelpWindow->getPosition().nWidth,36);
+    pSomeText->setFont(i_drawLib->getFontMedium());
+    pSomeText = new UIStatic(v_pHelpWindow,
+			     10,
+			     46,
+			     GAMETEXT_HELPTEXT(i_Config->getString("KeyDrive1"),
+					       i_Config->getString("KeyBrake1"),
+					       i_Config->getString("KeyFlipLeft1"),
+					       i_Config->getString("KeyFlipRight1"),
+					       i_Config->getString("KeyChangeDir1")					       
+					       )
+			     ,v_pHelpWindow->getPosition().nWidth-20,
+			     v_pHelpWindow->getPosition().nHeight-56);
+    pSomeText->setFont(i_drawLib->getFontSmall());
+    pSomeText->setVAlign(UI_ALIGN_TOP);
+    pSomeText->setHAlign(UI_ALIGN_LEFT);
+    UIButton *pTutorialButton = new UIButton(v_pHelpWindow,v_pHelpWindow->getPosition().nWidth-120,v_pHelpWindow->getPosition().nHeight-62,
+                                             GAMETEXT_TUTORIAL,115,57);
+    pTutorialButton->setContextHelp(CONTEXTHELP_TUTORIAL);
+    pTutorialButton->setFont(i_drawLib->getFontSmall());
+    pTutorialButton->setType(UI_BUTTON_TYPE_SMALL);
+    pTutorialButton->setID("HELP_TUTORIAL_BUTTON");    
+    UIButton *pCreditsButton = new UIButton(v_pHelpWindow,v_pHelpWindow->getPosition().nWidth-240,v_pHelpWindow->getPosition().nHeight-62,
+                                             GAMETEXT_CREDITSBUTTON,115,57);
+    pCreditsButton->setContextHelp(CONTEXTHELP_CREDITS);
+    pCreditsButton->setFont(i_drawLib->getFontSmall());
+    pCreditsButton->setType(UI_BUTTON_TYPE_SMALL);
+    pCreditsButton->setID("HELP_CREDITS_BUTTON");
+
+    return v_pHelpWindow;
+  }
+
+  UIFrame* GameApp::makeOptionsWindow(DrawLib* i_drawLib, UIWindow* io_parent, UserConfig* i_Config, std::vector<GhostSearchStrategy>& i_ghostStrategies) {
     UIFrame *v_pOptionsWindow;
     UIStatic *pSomeText;
-    enum GhostSearchStrategy GhostSearchStrategies[3];
-
-    GhostSearchStrategies[0] = GHOST_STRATEGY_MYBEST;
-    GhostSearchStrategies[1] = GHOST_STRATEGY_THEBEST;
-    GhostSearchStrategies[2] = GHOST_STRATEGY_BESTOFROOM;
 
     v_pOptionsWindow = new UIFrame(io_parent, 220,(i_drawLib->getDispHeight()*140)/600,"",i_drawLib->getDispWidth()-220-20,i_drawLib->getDispHeight()-40-(i_drawLib->getDispHeight()*120)/600-10);
     v_pOptionsWindow->showWindow(false);
@@ -536,10 +569,10 @@ namespace vapp {
     pGhostStrategiesList->setID("GHOST_STRATEGIES_LIST");
     pGhostStrategiesList->setFont(i_drawLib->getFontSmall());
     pGhostStrategiesList->addColumn(GAMETEXT_GHOST_STRATEGIES_TYPE,pGhostStrategiesList->getPosition().nWidth);
-    pGhostStrategiesList->addEntry(GAMETEXT_GHOST_STRATEGY_MYBEST, GhostSearchStrategies + 0);
-    pGhostStrategiesList->addEntry(GAMETEXT_GHOST_STRATEGY_THEBEST, GhostSearchStrategies + 1);
 
-    pGhostStrategiesList->addEntry(GAMETEXT_GHOST_STRATEGY_BESTOFROOM, GhostSearchStrategies + 2);
+    pGhostStrategiesList->addEntry(GAMETEXT_GHOST_STRATEGY_MYBEST, &(i_ghostStrategies[0]));
+    pGhostStrategiesList->addEntry(GAMETEXT_GHOST_STRATEGY_THEBEST, &(i_ghostStrategies[1]));
+    pGhostStrategiesList->addEntry(GAMETEXT_GHOST_STRATEGY_BESTOFROOM, &(i_ghostStrategies[2]));
 
     pGhostStrategiesList->setContextHelp(CONTEXTHELP_GHOST_STRATEGIES);
 
@@ -774,41 +807,10 @@ namespace vapp {
     //m_pGameInfoWindow = new UIFrame(m_pMainMenu,47,20+getDispHeight()/2 + (m_nNumMainMenuButtons*57)/2,
     //                                "",207,getDispHeight() - (20+getDispHeight()/2 + (m_nNumMainMenuButtons*57)/2));
     //m_pGameInfoWindow->showWindow(true);
-          
-    m_pHelpWindow = new UIFrame(m_pMainMenu,220,(drawLib->getDispHeight()*140)/600,"",drawLib->getDispWidth()-220-20,drawLib->getDispHeight()-40-(drawLib->getDispHeight()*120)/600-10);
-    m_pHelpWindow->showWindow(false);
-    pSomeText = new UIStatic(m_pHelpWindow,0,0,GAMETEXT_HELP,m_pHelpWindow->getPosition().nWidth,36);
-    pSomeText->setFont(drawLib->getFontMedium());
-    pSomeText = new UIStatic(m_pHelpWindow,
-			     10,
-			     46,
-			     GAMETEXT_HELPTEXT(m_Config.getString("KeyDrive1"),
-					       m_Config.getString("KeyBrake1"),
-					       m_Config.getString("KeyFlipLeft1"),
-					       m_Config.getString("KeyFlipRight1"),
-					       m_Config.getString("KeyChangeDir1")					       
-					       )
-			     ,m_pHelpWindow->getPosition().nWidth-20,
-			     m_pHelpWindow->getPosition().nHeight-56);
-    pSomeText->setFont(drawLib->getFontSmall());
-    pSomeText->setVAlign(UI_ALIGN_TOP);
-    pSomeText->setHAlign(UI_ALIGN_LEFT);
-    UIButton *pTutorialButton = new UIButton(m_pHelpWindow,m_pHelpWindow->getPosition().nWidth-120,m_pHelpWindow->getPosition().nHeight-62,
-                                             GAMETEXT_TUTORIAL,115,57);
-    pTutorialButton->setContextHelp(CONTEXTHELP_TUTORIAL);
-    pTutorialButton->setFont(drawLib->getFontSmall());
-    pTutorialButton->setType(UI_BUTTON_TYPE_SMALL);
-    pTutorialButton->setID("HELP_TUTORIAL_BUTTON");    
-    UIButton *pCreditsButton = new UIButton(m_pHelpWindow,m_pHelpWindow->getPosition().nWidth-240,m_pHelpWindow->getPosition().nHeight-62,
-                                             GAMETEXT_CREDITSBUTTON,115,57);
-    pCreditsButton->setContextHelp(CONTEXTHELP_CREDITS);
-    pCreditsButton->setFont(drawLib->getFontSmall());
-    pCreditsButton->setType(UI_BUTTON_TYPE_SMALL);
-    pCreditsButton->setID("HELP_CREDITS_BUTTON");
 
     m_pReplaysWindow = new UIFrame(m_pMainMenu,220,(drawLib->getDispHeight()*140)/600,"",drawLib->getDispWidth()-220-20,drawLib->getDispHeight()-40-(drawLib->getDispHeight()*120)/600-10);      
     m_pReplaysWindow->showWindow(false);
-    pSomeText = new UIStatic(m_pReplaysWindow,0,0,GAMETEXT_REPLAYS,m_pHelpWindow->getPosition().nWidth,36);
+    pSomeText = new UIStatic(m_pReplaysWindow,0,0,GAMETEXT_REPLAYS,m_pReplaysWindow->getPosition().nWidth,36);
     pSomeText->setFont(drawLib->getFontMedium());
 
     pSomeText = new UIStatic(m_pReplaysWindow, 10, 35, std::string(GAMETEXT_FILTER) + ":", 90, 25);
@@ -863,9 +865,13 @@ namespace vapp {
     //m_pPlayWindow->setPrimaryChild(m_pJustDeadMenuButtons[0]); /* default button: Try Again */
 
     /* OPTIONS */
-    m_pOptionsWindow = makeOptionsWindow(drawLib, m_pMainMenu, &m_Config);
+    m_pOptionsWindow = makeOptionsWindow(drawLib, m_pMainMenu, &m_Config, GhostSearchStrategies);
     _UpdateThemesLists();
     _UpdateRoomsLists();
+    /* ***** */
+
+    /* HELP */
+    m_pHelpWindow = makeHelpWindow(drawLib, m_pMainMenu, &m_Config);
     /* ***** */
 
     m_pLevelPacksWindow = new UIFrame(m_pMainMenu,220,(drawLib->getDispHeight()*140)/600,"",drawLib->getDispWidth()-220-20,drawLib->getDispHeight()-40-(drawLib->getDispHeight()*120)/600-10);      
@@ -3923,6 +3929,7 @@ namespace vapp {
     if(pGhostStrategy->getSelected() >= 0 && pGhostStrategy->getSelected() < pGhostStrategy->getEntries().size()) {
       UIListEntry *pEntry = pGhostStrategy->getEntries()[pGhostStrategy->getSelected()];
       m_Config.setInteger("GhostSearchStrategy", *((int*)(pEntry->pvUser)));
+      printf("%i\n", *((int*)(pEntry->pvUser)));
     }
 
     if(pThemeList->getSelected() >= 0 && pThemeList->getSelected() < pThemeList->getEntries().size()) {

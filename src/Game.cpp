@@ -129,6 +129,10 @@ GameApp::GameApp() {
 
   m_quickStartList = NULL;
 
+  GhostSearchStrategies.push_back(GHOST_STRATEGY_MYBEST);
+  GhostSearchStrategies.push_back(GHOST_STRATEGY_THEBEST);
+  GhostSearchStrategies.push_back(GHOST_STRATEGY_BESTOFROOM);
+
   m_db = NULL;
 }
     
