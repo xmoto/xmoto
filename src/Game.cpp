@@ -743,28 +743,41 @@ GameApp::GameApp() {
   void GameApp::_GameScreenshot(void) {
     Img *pShot = getDrawLib()->grabScreen();      
     FileHandle *pfh;
-    char cBuf[256];
+
+    std::string v_ShotsDir;
+    std::string v_ShotExtension;
+    std::string v_destFile;
     int nShot=0;
+    char v_val[5];
+
+    v_ShotsDir = vapp::FS::getUserDir() + std::string("/Screenshots");
+    vapp::FS::mkArborescenceDir(v_ShotsDir);
+    v_ShotExtension = m_Config.getString("ScreenshotFormat");
     
     /* User preference for format? must be either jpeg or png */
-    std::string ShotExtension = m_Config.getString("ScreenshotFormat");
-    if(ShotExtension != "jpeg" && ShotExtension != "jpg" && ShotExtension != "png") {
-      Log("** Warning ** : unsupported screenshot format '%s', using png instead!",ShotExtension.c_str());
-      ShotExtension = "png";
+    if(v_ShotExtension != "jpeg" && v_ShotExtension != "jpg" && v_ShotExtension != "png") {
+      Log("** Warning ** : unsupported screenshot format '%s', using png instead!", v_ShotExtension.c_str());
+      v_ShotExtension = "png";
     }    
-    
-    while(1) {
-      sprintf(cBuf,"screenshot%04d.%s",nShot,ShotExtension.c_str());
+
+    do {
       nShot++;
       if(nShot > 9999) {
-        Log("Too many screenshots!");
-        return;
+	Log("Too many screenshots !");
+	delete pShot;
+	return;
       }
-      pfh = FS::openIFile(cBuf);
-      if(pfh == NULL) break;
-      else FS::closeFile(pfh);
+
+      snprintf(v_val, 5, "%04d", nShot);
+      v_destFile = v_ShotsDir + "/screenshot" + std::string(v_val) + "." + v_ShotExtension;
+    } while(FS::fileExists(v_destFile));
+    
+    try {
+      pShot->saveFile(v_destFile.c_str());
+    } catch(Exception &e) {
+      Log(std::string("Unable to save the screenshot: " + e.getMsg()).c_str());
     }
-    pShot->saveFile(cBuf);
+
     delete pShot;
   }
 
