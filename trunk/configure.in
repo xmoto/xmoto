@@ -2,7 +2,7 @@ AC_INIT(src/GameMain.cpp)
 
 dnl otherwise autoconf whines
 AC_CANONICAL_TARGET()
-AM_INIT_AUTOMAKE(xmoto,0.3.1)
+AM_INIT_AUTOMAKE(xmoto,0.3.2)
 AC_GNU_SOURCE
 
 AC_PROG_CXX
@@ -112,7 +112,7 @@ AC_LANG_POP()
 
 AC_CHECK_LIB(curl, curl_easy_init,[],[AC_MSG_ERROR(libcurl required)])
 
-ALL_LINGUAS="fr_FR de_DE es_ES ca_ES sk_SK nb_NO nn_NO no_NO fi_FI pl_PL ru_RU it_IT sv_SE cs_CZ pt_BR"
+ALL_LINGUAS="fr_FR de_DE es_ES ca_ES sk_SK nb_NO nn_NO no_NO fi_FI pl_PL ru_RU it_IT sv_SE cs_CZ pt_BR lv_LV"
 AM_GNU_GETTEXT()
 
 dnl Put LOCALESDIR in makefiles

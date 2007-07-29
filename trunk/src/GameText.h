@@ -103,14 +103,16 @@ Central place to keep many in-game text strings
     ":Nicolas Adenis-Lamarre (" + std::string(_("French")) + ");"                            \
     ":Wilhelm Francke (" + std::string(_("Norwegian")) + ");"                                \
     ":Jonathan Sieber and Jens Erler (" + std::string(_("German")) + ");"                    \
-    ":Maximum (" + std::string(_("Finnish")) + ");"                                          \
+    ":Maximum/Tuomo Koistinen (" + std::string(_("Finnish")) + ");"                                          \
     ":Trullo (" + std::string(_("Catalan")) + ");"                                           \
     ":Trullo (" + std::string(_("Spanish")) + ");"                                           \
     ":Mateusz Kosibowicz (" + std::string(_("Polish")) + ");"                                \
     ":Lucas Manzari (" + std::string(_("Italian")) + ");"                                    \
-    ":Lukas Klingsbo (" + std::string(_("Swedish")) + ");"                                 \
+    ":Lukas Klingsbo (" + std::string(_("Swedish")) + ");"                                   \
     ":Jan Kaláb (" + std::string(_("Czech")) + ");"                                          \
     ":" + std::string(_("Mikhail Brinchuk")) + " (" + std::string(_("Russian")) + ");"       \
+    ":Lucas Hermann Negri (" + std::string(_("Brazilian Portuguese")) + ");"                 \
+    ":Janis Rucis Janis Rucis (" + std::string(_("Latvian")) + ");"                 \
     ":;"                                                                                     \
     + std::string(_("Main testers")) +                                                       \
     ":Jose Alberto Coelho;"                                                                  \

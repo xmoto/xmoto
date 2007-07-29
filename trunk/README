@@ -1,4 +1,4 @@
-X-Moto 0.3.1
+X-Moto 0.3.2
 Copyright (C) 2005-2007
 Rasmus Neckelmann (neckelmann !at! gmail !dot! com)
 Nicolas Adenis-Lamarre (nicolas !at! adenis-lamarre !dot! fr)
@@ -24,11 +24,11 @@ System Requirements
 
 General hardware requirements:
 
- - CPU: 500 MHz (a wild guess)
+ - CPU: 300 MHz (a wild guess)
  - RAM: 64 MB (at least 40 MB of free memory prefered)
- - Graphics: nVidia GeForce-class card with 32 MB of video memory
- - HDD: 12 MB of free space on your hard drive.
- - Software: Windows 2000/XP, Linux, Mac OS X or FreeBSD (other UNIX-like 
+ - Graphics: nVidia GeForce-class card with 128 MB of video memory
+ - HDD: 50 MB of free space on your hard drive.
+ - Software: Windows, Linux, Mac OS X or FreeBSD (other UNIX-like 
    OS's might be supported as well)
 
 Recommended:
