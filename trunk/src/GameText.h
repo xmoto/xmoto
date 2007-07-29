@@ -112,7 +112,7 @@ Central place to keep many in-game text strings
     ":Jan Kaláb (" + std::string(_("Czech")) + ");"                                          \
     ":" + std::string(_("Mikhail Brinchuk")) + " (" + std::string(_("Russian")) + ");"       \
     ":Lucas Hermann Negri (" + std::string(_("Brazilian Portuguese")) + ");"                 \
-    ":Janis Rucis Janis Rucis (" + std::string(_("Latvian")) + ");"                 \
+    ":Jānis Rūcis (" + std::string(_("Latvian")) + ");"                 \
     ":;"                                                                                     \
     + std::string(_("Main testers")) +                                                       \
     ":Jose Alberto Coelho;"                                                                  \

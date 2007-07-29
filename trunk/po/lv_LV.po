@@ -248,11 +248,11 @@ msgstr "krieviski"
 
 #: src/GameText.h:114
 msgid "Brazilian Portuguese"
-msgstr ""
+msgstr "Brazīlijas portugāļu val"
 
 #: src/GameText.h:115
 msgid "Latvian"
-msgstr ""
+msgstr "latviešu"
 
 #: src/GameText.h:117
 msgid "Main testers"
@@ -663,7 +663,7 @@ msgstr "Saglabāt ekrāna attēlu"
 
 #: src/GameText.h:216
 msgid "Reload levels, themes and replays from directories"
-msgstr ""
+msgstr "Atkārtoti ielādēt līmeņus, tēmas un ierakstus no mapēm"
 
 #: src/GameText.h:218
 msgid ""
