@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-07-29 10:37+0200\n"
-"PO-Revision-Date: 2007-07-26 19:46-0300\n"
+"PO-Revision-Date: 2007-07-31 19:46-0300\n"
 "Last-Translator: Lucas Hermann Negri <kkndrox@gmail.com>\n"
 "Language-Team: Portuguese/Brazil\n"
 "MIME-Version: 1.0\n"
@@ -246,11 +246,11 @@ msgstr "Russo"
 
 #: src/GameText.h:114
 msgid "Brazilian Portuguese"
-msgstr ""
+msgstr "Português do Brasil"
 
 #: src/GameText.h:115
 msgid "Latvian"
-msgstr ""
+msgstr "Latvian"
 
 #: src/GameText.h:117
 msgid "Main testers"
@@ -814,7 +814,7 @@ msgstr "Mono"
 
 #: src/GameText.h:256
 msgid "Following are your most played levels"
-msgstr "A seguir estão os seus níveis mais jogados"
+msgstr "Estes são os seus níveis mais jogados"
 
 #: src/GameText.h:257
 msgid "Motion blur ghost"
@@ -860,7 +860,7 @@ msgstr "%d nível atualizado ou novo disponível. Baixar agora?"
 
 #: src/GameText.h:267
 msgid "New Levels"
-msgstr "Novos níveis"
+msgstr "Novos Níveis"
 
 #: src/GameText.h:268
 msgid "New levels available!"
@@ -873,7 +873,7 @@ msgstr "%d nível atualizado ou novo disponível. Baixar agora?"
 
 #: src/GameText.h:270
 msgid "New Profile..."
-msgstr "Novo perfil..."
+msgstr "Novo Perfil..."
 
 #: src/GameText.h:271
 msgid "No"
@@ -1029,7 +1029,7 @@ msgstr "Você quer realmente sair?"
 
 #: src/GameText.h:314
 msgid "Randomize"
-msgstr "Tornar aleatório"
+msgstr "Embaralhar"
 
 #: src/GameText.h:315
 msgid "Reloading levels..."
@@ -1100,7 +1100,7 @@ msgstr "Velocímetro"
 
 #: src/GameText.h:333
 msgid "Info..."
-msgstr "Informações..."
+msgstr "Info..."
 
 #: src/GameText.h:334
 msgid "Show Mini Map"
@@ -1379,7 +1379,7 @@ msgstr "Níveis agrupados por pacotes de níveis"
 
 #: src/GameText.h:404
 msgid "Browse levels available to you"
-msgstr "Navegar por níveis disponíveis para você"
+msgstr "Navegar pelos níveis disponíveis"
 
 #: src/GameText.h:405
 msgid "View list of recorded replays"
@@ -1399,7 +1399,7 @@ msgstr "Mudar o perfil de jogador"
 
 #: src/GameText.h:409
 msgid "Play tutorial of how to play the game"
-msgstr "Ir para o tutorial de como jogar o jogo"
+msgstr "Ir para o tutorial do jogo"
 
 #: src/GameText.h:410
 msgid "Official built-in levels"
@@ -1415,7 +1415,7 @@ msgstr "Jogar o nível selecionado"
 
 #: src/GameText.h:413
 msgid "View general information about the level, best times, and replays"
-msgstr "Ver informações gerais asobre o nível, melhores tempos e replays"
+msgstr "Ver informações gerais sobre o nível, recordes e replays"
 
 #: src/GameText.h:414
 msgid "Run the selected replay"
@@ -1460,7 +1460,7 @@ msgstr "Mostrar o mapa de sua visinhança quando estiver jogando"
 #: src/GameText.h:424
 msgid "Automatically download best times off the net when the game starts"
 msgstr ""
-"Baixar automaticamente os melhores tempos da intert quando o jogo iniciar"
+"Baixar automaticamente os melhores tempos da internet quando o jogo iniciar"
 
 #: src/GameText.h:425
 msgid "Show the World Record for a given level when playing"
@@ -1836,7 +1836,7 @@ msgstr "Filtro da lista de replays"
 
 #: src/GameText.h:516
 msgid "Press to play immediatly to X-Moto"
-msgstr "Precionar para jogar imediatamente o X-Moto"
+msgstr "Pressione para jogar imediatamente"
 
 #: src/GameText.h:517
 msgid "Increase or dicrease the quality of the levels selected"
@@ -1952,7 +1952,7 @@ msgstr "Meus níveis"
 
 #: src/GameText.h:548
 msgid "Levels with no highscore in you room"
-msgstr "Níveis com nenhum recorde em sua sala"
+msgstr "Níveis sem recorde em sua sala"
 
 #: src/GameText.h:550
 msgid "Somebody in the room made a better highscore than yours"
@@ -2226,7 +2226,7 @@ msgstr "Dirija para a esquerda, acelere e quando você estiver no"
 
 #: src/LevelsText.h:53
 msgid "the air, try to adjust your attitude with the left"
-msgstr "air, tente ajustar a sua altitude com a tecla "
+msgstr "ar, tente ajustar a sua altitude com a tecla "
 
 #: src/LevelsText.h:54
 msgid "and right arrow keys, so you'll land on your wheels."
@@ -2294,7 +2294,7 @@ msgstr "Isso foi um tanto fácil, certo?"
 
 #: src/LevelsText.h:70
 msgid "Accelerate NOW! Obtain maximum speed, and try to"
-msgstr "Acelere AGORA! Conseiga a velocidade máxima e tente"
+msgstr "Acelere AGORA! Consiga a velocidade máxima e tente"
 
 #: src/LevelsText.h:71
 msgid "keep the front wheel at the ground..."
@@ -2306,11 +2306,11 @@ msgstr "Belo salto! :) "
 
 #: src/LevelsText.h:73
 msgid "Congrats, you're now a master jumper!"
-msgstr "Congratulações, você agora é um mestre saltador!"
+msgstr "Congratulações, você agora é um mestre do salto!"
 
 #: src/LevelsText.h:74
 msgid "The basic idea is that when driving on the rear wheel,"
-msgstr "A idéia básica é que quando estiver pilotando com a roda traseira,"
+msgstr "A idéia é que quando estiver pilotando com a roda traseira,"
 
 #: src/LevelsText.h:75
 msgid "your head is lowered quite a lot..."
@@ -2401,6 +2401,3 @@ msgstr "Agora para o final... Não é tão longo, porém"
 #: src/LevelsText.h:100
 msgid "there's even less room for your precious head. Good luck! :)"
 msgstr "tem ainda menos espaço para a sua preciosa cabeça. Boa sorte! :)"
-
-#~ msgid "Reload levels from Levels dir (if you create a new level)"
-#~ msgstr "Recarregar os níveis, temas e replays de diretórios"
