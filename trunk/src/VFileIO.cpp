@@ -62,7 +62,7 @@ std::string win32_getUserDir(bool i_asUtf8 = false) {
     if (!GetUserProfileDirectoryW( hToken, szProfilePath, &cchPath ) ) {
       throw Exception("Can't determine user directory (GetUserProfileDirectory)");
     }
-    WideCharToMultiByte(CP_UTF8, 0, szProfilePath, wcslen(szProfilePath), v_tmp, 1024-1, NULL, NULL);
+    WideCharToMultiByte(CP_UTF8, 0, szProfilePath, -1, v_tmp, 1024, NULL, NULL);
     v_dest = v_tmp;
 
   } else {
