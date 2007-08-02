@@ -408,9 +408,11 @@ void MotoGame::cleanPlayers() {
   }
 
   ReplayBiker* MotoGame::addReplayFromFile(std::string i_ghostFile,
-					   Theme *i_theme, BikerTheme* i_bikerTheme) {
+					   Theme *i_theme, BikerTheme* i_bikerTheme,
+					   bool i_enableEngineSound) {
     ReplayBiker* v_biker = NULL;
     v_biker = new ReplayBiker(i_ghostFile, i_theme, i_bikerTheme);
+    v_biker->setPlaySound(i_enableEngineSound);
     m_players.push_back(v_biker);
     return v_biker;
   }
@@ -1092,11 +1094,13 @@ void MotoGame::cleanPlayers() {
   PlayerBiker* MotoGame::addPlayerBiker(Vector2f i_position, DriveDir i_direction,
 					Theme *i_theme, BikerTheme* i_bikerTheme,
 					const TColor& i_filterColor,
-					const TColor& i_filterUglyColor) {
+					const TColor& i_filterUglyColor,
+					bool i_enableEngineSound) {
     PlayerBiker* v_playerBiker = new PlayerBiker(i_position, i_direction, m_PhysGravity,
 						 i_theme, i_bikerTheme,
 						 i_filterColor, i_filterUglyColor);
     v_playerBiker->setOnBikerHooks(new MotoGameOnBikerHooks(this, m_players.size()));
+    v_playerBiker->setPlaySound(i_enableEngineSound);
     m_players.push_back(v_playerBiker);
     return v_playerBiker;
   }

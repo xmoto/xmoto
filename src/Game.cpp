@@ -231,7 +231,8 @@ GameApp::GameApp() {
 
 				try {
 					m_replayBiker = m_MotoGame.addReplayFromFile(m_PlaySpecificReplay,
-										     &m_theme, m_theme.getPlayerTheme());
+										     &m_theme, m_theme.getPlayerTheme(),
+										     m_bEnableEngineSound);
 					m_MotoGame.getCamera()->setPlayerToFollow(m_replayBiker);
 				} catch(Exception &e) {
 					setState(m_StateAfterPlaying);
@@ -2082,7 +2083,8 @@ GameApp::GameApp() {
 										    DD_RIGHT,
 										    &m_theme, m_theme.getPlayerTheme(),
 										    getColorFromPlayerNumber(i),
-										    getUglyColorFromPlayerNumber(i)));
+										    getUglyColorFromPlayerNumber(i),
+										    m_bEnableEngineSound));
 	}
 	// if there's more camera than player (ex: 3 players and 4 cameras),
 	// then, make the remaining cameras follow the first player

@@ -426,7 +426,7 @@ msgstr "Activer l'aide contextuelle"
 
 #: src/GameText.h:166
 msgid "Enable Engine Sound"
-msgstr "Activer le son"
+msgstr "Activer le bruit du moteur"
 
 #: src/GameText.h:167
 msgid "Enable Ghost"

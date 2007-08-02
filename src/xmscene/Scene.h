@@ -201,13 +201,15 @@ namespace vapp {
       const Vector2f &getGravity(void);
 
       ReplayBiker* addReplayFromFile(std::string i_ghostFile,
-				     Theme *i_theme, BikerTheme* i_bikerTheme);
+				     Theme *i_theme, BikerTheme* i_bikerTheme,
+				     bool i_enableEngineSound);
       Ghost* addGhostFromFile(std::string i_ghostFile, std::string i_info,
 			      Theme *i_theme, BikerTheme* i_bikerTheme);
       PlayerBiker* addPlayerBiker(Vector2f i_position, DriveDir i_direction,
 				  Theme *i_theme, BikerTheme* i_bikerTheme,
 				  const TColor& i_filterColor,
-				  const TColor& i_filterUglyColor);
+				  const TColor& i_filterUglyColor,
+				  bool i_enableEngineSound);
 
       std::vector<Ghost *> &Ghosts();
       std::vector<Biker*> &Players();
