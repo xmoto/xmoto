@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xmoto 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-07-29 10:37+0200\n"
+"POT-Creation-Date: 2007-08-03 18:25+0200\n"
 "PO-Revision-Date: 2007-07-03 14:39+0300\n"
 "Last-Translator: Jānis Rūcis <parasti@gmail.com>\n"
 "Language-Team: Latvian\n"
@@ -1869,7 +1869,8 @@ msgstr "Filtrēt ierakstu sarakstu"
 # XXX
 # Not good English.  How about "Press to play X-Moto instantly"?
 #: src/GameText.h:516
-msgid "Press to play immediatly to X-Moto"
+#, fuzzy
+msgid "Press to play X-Moto immediately"
 msgstr "Nospied, lai uzreiz sāktu spēlēt X-Moto"
 
 # XXX
