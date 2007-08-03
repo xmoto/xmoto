@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-MOTO 3.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-07-29 10:37+0200\n"
+"POT-Creation-Date: 2007-08-03 18:25+0200\n"
 "PO-Revision-Date: 2007-06-12 17:26+0100\n"
 "Last-Translator: Wilhelm Francke <wilhelm.francke@gmail.com>\n"
 "Language-Team: English <en@li.org>\n"
@@ -1827,7 +1827,8 @@ msgid "Filter on replay list"
 msgstr "Filter på replay listen"
 
 #: src/GameText.h:516
-msgid "Press to play immediatly to X-Moto"
+#, fuzzy
+msgid "Press to play X-Moto immediately"
 msgstr "Trykk for å spille umiddelbart til X-Moto"
 
 #: src/GameText.h:517

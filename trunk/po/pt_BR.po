@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-07-29 10:37+0200\n"
-"PO-Revision-Date: 2007-07-31 19:46-0300\n"
+"POT-Creation-Date: 2007-08-03 18:25+0200\n"
+"PO-Revision-Date: 2007-08-02 19:46-0300\n"
 "Last-Translator: Lucas Hermann Negri <kkndrox@gmail.com>\n"
 "Language-Team: Portuguese/Brazil\n"
 "MIME-Version: 1.0\n"
@@ -250,11 +250,11 @@ msgstr "Português do Brasil"
 
 #: src/GameText.h:115
 msgid "Latvian"
-msgstr "Latvian"
+msgstr "Letão"
 
 #: src/GameText.h:117
 msgid "Main testers"
-msgstr "Testadores principais"
+msgstr "Equipe de teste"
 
 #: src/GameText.h:122
 msgid "Thanks to"
@@ -290,7 +290,7 @@ msgstr "pelo hash MD5"
 
 #: src/GameText.h:131
 msgid "Everyone who have made levels"
-msgstr "Todos que contribuiram com níveis"
+msgstr "Todos que contribuíram com níveis"
 
 #: src/GameText.h:132
 msgid "People who have provided bug reports"
@@ -652,7 +652,7 @@ msgstr "Tira uma captura de tela"
 
 #: src/GameText.h:216
 msgid "Reload levels, themes and replays from directories"
-msgstr ""
+msgstr "Recarregar níveis, temas e replays de diretórios"
 
 #: src/GameText.h:218
 msgid ""
@@ -917,7 +917,7 @@ msgstr ""
 "Nota importante!\n"
 "\n"
 "Esta é uma versão em desenvolvimento do X-Moto!\n"
-"Todo tipo de Feedback é muito bem-vindom paa que o jogo\n"
+"Todo tipo de Feedback é muito bem-vindo para que o jogo\n"
 "possa melhorar.\n"
 "Envie bugs, idéias, comentários, requisições de funcionalidades, críticas, "
 "etc\n"
@@ -1731,7 +1731,7 @@ msgstr "Enviar o replay para o site de recordes"
 #: src/GameText.h:491
 msgid "Upload your best replays to your room (useful when it is just created)"
 msgstr ""
-"Enviar os seus melhores replaus para a sua sala (útil para quando foi recém "
+"Enviar os seus melhores replays para a sua sala (útil para quando foi recém "
 "criado)"
 
 #: src/GameText.h:492
@@ -1772,7 +1772,7 @@ msgstr "Habilitar animação da motocicleta caindo quando morto"
 
 #: src/GameText.h:500
 msgid "Automatically scroll over the level before starting playing it"
-msgstr "Percorrer o nível antes de começar a jogá-lo"
+msgstr "Percorrer o nível antes do início do jogo"
 
 #: src/GameText.h:501
 msgid "View the X-Moto credits"
@@ -1804,7 +1804,7 @@ msgstr "Nome do pacote de níveis"
 
 #: src/GameText.h:508
 msgid "Add the level to the favorite levels list"
-msgstr "Adicionar o nível para a lista de níveis faoritos"
+msgstr "Adicionar o nível para a lista de níveis favoritos"
 
 #: src/GameText.h:509
 msgid "Delete the level from the favorite levels list"
@@ -1835,7 +1835,8 @@ msgid "Filter on replay list"
 msgstr "Filtro da lista de replays"
 
 #: src/GameText.h:516
-msgid "Press to play immediatly to X-Moto"
+#, fuzzy
+msgid "Press to play X-Moto immediately"
 msgstr "Pressione para jogar imediatamente"
 
 #: src/GameText.h:517
@@ -1964,7 +1965,7 @@ msgstr "Todos os níveis do X-Motos"
 
 #: src/GameText.h:552
 msgid "New and updated levels since your last check"
-msgstr "Níveis novos e atualizados dede sua última verificação"
+msgstr "Níveis novos e atualizados desde sua última verificação"
 
 #: src/GameText.h:553
 msgid "Your favorite levels"
@@ -2154,7 +2155,7 @@ msgstr ": Mudar de direção"
 
 #: src/LevelsText.h:35
 msgid ": Rotate anti-clockwise"
-msgstr ": Rotacionar no sentido anti-horario"
+msgstr ": Rotacionar no sentido anti-horário"
 
 #: src/LevelsText.h:36
 msgid ": Rotate clockwise"
@@ -2162,7 +2163,7 @@ msgstr ": Rotacionar no sentido horário"
 
 #: src/LevelsText.h:37
 msgid "Okay. The red dot on your minimap is a strawberry."
-msgstr "Tudo bem. O ponto vermelho no seu minimapa é um morango."
+msgstr "Tudo bem. O ponto vermelho no seu mini-mapa é um morango."
 
 #: src/LevelsText.h:38
 msgid "The primary objective of the game is for you"
@@ -2326,7 +2327,7 @@ msgstr "Quando a distância à percorrer é pouca,"
 
 #: src/LevelsText.h:78
 msgid "you don't need to keep the balance."
-msgstr "você não precisa se preoculpar com o equilíbrio."
+msgstr "você não precisa se preocupar com o equilíbrio."
 
 #: src/LevelsText.h:79
 msgid "Accelerate (slowly) to the right with the front wheel raising."
@@ -2392,7 +2393,7 @@ msgstr "Ótimo! Agora tente o próximo, é um pouco mais difícil..."
 
 #: src/LevelsText.h:98
 msgid "Good job! The next one is even more difficult..."
-msgstr "Bom trabalho! O proxímo é ainda mais difícil..."
+msgstr "Bom trabalho! O próximo é ainda mais difícil..."
 
 #: src/LevelsText.h:99
 msgid "Now for the final one... It's not that long, but instead"

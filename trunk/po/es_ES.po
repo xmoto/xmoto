@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-07-29 10:37+0200\n"
+"POT-Creation-Date: 2007-08-03 18:25+0200\n"
 "PO-Revision-Date: 2007-05-03 02:11+0200\n"
 "Last-Translator: Trullo\n"
 "Language-Team:  <XMoto>\n"
@@ -1829,7 +1829,7 @@ msgid "Filter on replay list"
 msgstr "Filtro en la lista de repetición"
 
 #: src/GameText.h:516
-msgid "Press to play immediatly to X-Moto"
+msgid "Press to play X-Moto immediately"
 msgstr ""
 
 #: src/GameText.h:517

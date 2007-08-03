@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-07-29 10:37+0200\n"
+"POT-Creation-Date: 2007-08-03 18:25+0200\n"
 "PO-Revision-Date: 2007-05-04 23:56+0200\n"
 "Last-Translator: Mikhail Brinchuk aka Thecentury <thecentury@gmail.com>\n"
 "Language-Team: ru\n"
@@ -1837,7 +1837,8 @@ msgid "Filter on replay list"
 msgstr "Отфильтровать список записей игр"
 
 #: src/GameText.h:516
-msgid "Press to play immediatly to X-Moto"
+#, fuzzy
+msgid "Press to play X-Moto immediately"
 msgstr "Нажмите, чтобы немедленно играть в X-Moto"
 
 #: src/GameText.h:517

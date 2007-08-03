@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-07-29 10:37+0200\n"
+"POT-Creation-Date: 2007-08-03 18:25+0200\n"
 "PO-Revision-Date: 2007-06-13 15:53+0200\n"
 "Last-Translator: Luca Manzari\n"
 "Language-Team:  <en@li.org>\n"
@@ -1838,7 +1838,8 @@ msgid "Filter on replay list"
 msgstr "Filtri sulla lista dei replay"
 
 #: src/GameText.h:516
-msgid "Press to play immediatly to X-Moto"
+#, fuzzy
+msgid "Press to play X-Moto immediately"
 msgstr "Premi per giocare subito a X-Moto"
 
 #: src/GameText.h:517
