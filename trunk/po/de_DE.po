@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-08-03 18:25+0200\n"
+"POT-Creation-Date: 2007-08-04 19:43+0200\n"
 "PO-Revision-Date: 2006-12-21 21:14+0100\n"
 "Last-Translator: Jens Erler <mothbox@gmx.net>\n"
 "Language-Team: German\n"
@@ -245,11 +245,11 @@ msgstr "Russisch"
 
 #: src/GameText.h:114
 msgid "Brazilian Portuguese"
-msgstr ""
+msgstr "Brasilianisches Portugiesisch"
 
 #: src/GameText.h:115
 msgid "Latvian"
-msgstr ""
+msgstr "Lettisch"
 
 #: src/GameText.h:117
 msgid "Main testers"
@@ -1840,7 +1840,6 @@ msgid "Filter on replay list"
 msgstr "Filter für Replays"
 
 #: src/GameText.h:516
-#, fuzzy
 msgid "Press to play X-Moto immediately"
 msgstr "Spontanes Spiel mit zufälligen Levels"
 
@@ -2036,10 +2035,12 @@ msgid "You highscore finish time is almost the room highscore (95%)"
 msgstr "Deine Bestzeit ist beinahe der Rekord des Raums (95%)"
 
 #: src/GameText.h:569
+#, c-format
 msgid "You highscore finish time is almost the room highscore (90%-95%)"
 msgstr "Deine Bestzeit ist beinahe der Rekord des Raums (90%-95%)"
 
 #: src/GameText.h:570
+#, c-format
 msgid "You highscore finish time is almost the room highscore (80%-90%)"
 msgstr "Deine Bestzeit ist beinahe der Rekord des Raums (80%-90%)"
 
