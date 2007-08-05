@@ -32,8 +32,8 @@
 #include <sys/stat.h>
 #include <vector>
 #include "helpers/FileCompression.h"
-#include "md5sum/md5file.h"
 #include "db/xmDatabase.h"
+#include "md5sum/md5file.h"
 
 struct f_curl_download_data {
   vapp::WWWAppInterface *v_WebApp;
@@ -210,7 +210,7 @@ void FSWeb::downloadFileBz2UsingMd5(const std::string &p_local_file,
 
   try {
     if(vapp::FS::isFileReadable(p_local_file) == true) {
-      std::string v_md5Local  = md5file(p_local_file);
+      std::string v_md5Local  = vapp::FS::md5sum(p_local_file);
       if(v_md5Local != "") {
   std::string v_md5File = p_local_file + ".md5";
   
@@ -800,6 +800,8 @@ void WebThemes::upgrade(xmDatabase *i_db, const std::string& i_id_theme) {
   std::string v_filePath;
   std::string v_themeFile;
   bool v_onDisk = false;
+  std::string v_md5Local;
+  std::string v_md5Dist;
 
   /* download even if the the theme is uptodate
      it give a possibility to download file removed by mistake
@@ -849,52 +851,68 @@ void WebThemes::upgrade(xmDatabase *i_db, const std::string& i_id_theme) {
 
   /* download all the files required */
   Theme *v_theme = new Theme();
-  std::vector<std::string> *v_required_files;
+  std::vector<ThemeFile> *v_required_files;
   v_theme->load(v_destinationFile);
   v_required_files = v_theme->getRequiredFiles();
 
+  // all files must be checked for md5sum
   int v_nb_files_to_download = 0;
   for(unsigned int i=0; i<v_required_files->size(); i++) {
-    if(vapp::FS::fileExists((*v_required_files)[i]) == false) {
+    if(vapp::FS::fileExists((*v_required_files)[i].filepath) == false) {
       v_nb_files_to_download++;
+    } else {
+      v_md5Local = vapp::FS::md5sum((*v_required_files)[i].filepath);
+      v_md5Dist  = (*v_required_files)[i].filemd5;
+      if(v_md5Local != v_md5Dist && v_md5Dist != "") {
+	v_nb_files_to_download++;
+      }
     }
   }
+
   if(v_nb_files_to_download != 0) {
     int v_nb_files_performed  = 0;
-
+    
     v_data.v_WebApp = m_WebApp;
     v_data.v_nb_files_to_download = v_nb_files_to_download;
-
+    
     unsigned int i = 0;
     while(i<v_required_files->size() && m_WebApp->isCancelAsSoonAsPossible() == false) {
       // download v_required_files[i]     
-      v_destinationFile = vapp::FS::getUserDir() + std::string("/") + (*v_required_files)[i];
+      v_destinationFile = vapp::FS::getUserDir() + std::string("/") + (*v_required_files)[i].filepath;
       v_sourceFile = m_themes_urlBase + 
-	std::string("/") + (*v_required_files)[i];
-
-      if(vapp::FS::fileExists((*v_required_files)[i]) == false) {
+	std::string("/") + (*v_required_files)[i].filepath;
+      
+      /* check md5 sums */
+      v_md5Local = v_md5Dist = "";
+      if(vapp::FS::fileExists((*v_required_files)[i].filepath) == true) {
+	v_md5Local = vapp::FS::md5sum((*v_required_files)[i].filepath);
+	v_md5Dist  = (*v_required_files)[i].filemd5;
+      }
+      
+      /* if v_md5Dist == "", don't download ; it's a manually adding */
+      if(vapp::FS::fileExists((*v_required_files)[i].filepath) == false || (v_md5Local != v_md5Dist && v_md5Dist != "")) {
 	v_data.v_nb_files_performed = v_nb_files_performed;
-  
+	
 	float v_percentage = (((float)v_nb_files_performed) * 100.0) / ((float)v_nb_files_to_download);
 	m_WebApp->setTaskProgress(v_percentage);
-	m_WebApp->setBeingDownloadedInformation((*v_required_files)[i], true);
-
+	m_WebApp->setBeingDownloadedInformation((*v_required_files)[i].filepath, true);
+	
 	vapp::FS::mkArborescence(v_destinationFile);
-
+	
 	FSWeb::downloadFile(v_destinationFile,
 			    v_sourceFile,
 			    FSWeb::f_curl_progress_callback_download,
 			    &v_data,
 			    m_proxy_settings);
-  
+	
 	v_nb_files_performed++;
       }
       m_WebApp->readEvents();
       i++;
     }
     m_WebApp->setTaskProgress(100.0);
-  }
-  
+  }    
+
   delete v_theme;
 
   if(v_onDisk) {

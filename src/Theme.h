@@ -337,6 +337,11 @@ class DecorationSprite : public SimpleFrameSprite {
 
 };
 
+struct ThemeFile {
+  std::string filepath;
+  std::string filemd5;
+};
+
 class Theme {
   public:
   Theme();
@@ -355,7 +360,7 @@ class Theme {
 
   std::vector<Sprite*> getSpritesList();
   std::vector<Sound*> getSoundsList();
-  std::vector<std::string>* getRequiredFiles();
+  std::vector<ThemeFile>* getRequiredFiles();
 
   BikerTheme* getPlayerTheme();
   BikerTheme* getGhostTheme();
@@ -366,7 +371,7 @@ class Theme {
   std::vector<Sprite*> m_sprites;
   std::vector<Music*> m_musics;
   std::vector<Sound*> m_sounds;
-  std::vector<std::string> m_requiredFiles;
+  std::vector<ThemeFile> m_requiredFiles;
 
   bool isAFileOutOfDate(const std::string& i_file); // to not download old files for compatibilities
 
