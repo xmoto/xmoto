@@ -33,6 +33,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VFileIO.h"
 #include "Packager.h"
 #include "helpers/SwapEndian.h"
+#include "helpers/Log.h"
 #include "svn_version.h"
 
 #ifdef USE_GETTEXT
@@ -41,33 +42,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 namespace vapp {
 
-  /*===========================================================================
-  Global application log 
-  ===========================================================================*/
-  bool g_bQuietLog = false;
   bool g_bVerbose = false;
-  
-  void LogRaw(const char *pcMsg) {
-    if(!g_bQuietLog) {
-      Verbose(pcMsg);
-      FS::writeLog(pcMsg);
-    }
-  }
-  
-  void Verbose(const char *pcMsg) {
-    if(g_bVerbose) 
-    printf("%s\n",pcMsg); /* also write to stdout */
-  }
-
-  void Log(const char *pcFmt,...) {
-    va_list List;
-    char cBuf[1024];
-    va_start(List,pcFmt);
-    vsprintf(cBuf,pcFmt,List);
-    va_end(List);
-    
-    LogRaw(cBuf);    
-  }
 
   App::App() {
     m_bQuit = false;
@@ -187,6 +162,8 @@ namespace vapp {
     }
     /* Init file system stuff */
     FS::init("xmoto");
+    Logger::init(FS::getUserDir() + "/xmoto.log");
+    Logger::setVerbose(g_bVerbose);
 
     /* load config */
     createDefaultConfig();
@@ -200,15 +177,18 @@ namespace vapp {
       return;
     }
 
-    Log("compiled at "__DATE__" "__TIME__);
+    Logger::Log("compiled at "__DATE__" "__TIME__);
     if(SwapEndian::bigendien) {
-      Log("Systeme is bigendien");
+      Logger::Log("Systeme is bigendien");
     } else {
-      Log("Systeme is littleendien");
+      Logger::Log("Systeme is littleendien");
     }
 
+    Logger::Log("User directory: %s", FS::getUserDir().c_str());
+    Logger::Log("Data directory: %s", FS::getDataDir().c_str());
+
 #ifdef USE_GETTEXT
-    vapp::Log("Locales set to '%s' (directory '%s')", v_locale.c_str(), LOCALESDIR);
+    Logger::Log("Locales set to '%s' (directory '%s')", v_locale.c_str(), LOCALESDIR);
 #endif
 
     _InitWin(m_useGraphics);
@@ -448,7 +428,8 @@ namespace vapp {
       /* Uninit drawing library */
       drawLib->unInit();
     }
-
+    
+    Logger::uninit();
     
     /* Shutdown SDL */
     SDL_Quit();
@@ -471,7 +452,7 @@ namespace vapp {
 
     /* Check is there are any modes available */
     if(sdl_modes == (SDL_Rect **)0){
-      Log("** Warning ** : No display modes available.");
+      Logger::Log("** Warning ** : No display modes available.");
       throw Exception("getDisplayModes : No modes available.");
     }
 
@@ -576,9 +557,6 @@ namespace vapp {
 	m_CmdWindowed = true;
         m_bCmdWindowed = true;
       }
-      else if(!strcmp(ppcArgs[i],"-q")) {
-        g_bQuietLog = true;
-      } 
       else if(!strcmp(ppcArgs[i],"-v")) {
         g_bVerbose = true;
       } 

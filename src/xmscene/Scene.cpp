@@ -33,6 +33,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Bike.h"
 #include "BikeGhost.h"
 #include "BikePlayer.h"
+#include "../helpers/Log.h"
 
 #define REPLAY_SPEED_INCREMENT 0.25
 
@@ -390,7 +391,7 @@ void MotoGame::cleanPlayers() {
     try {
       _GenerateLevel();
     } catch(Exception &e) {
-      Log(std::string("** Warning ** : Level generation failed !\n" + e.getMsg()).c_str());
+      Logger::Log(std::string("** Warning ** : Level generation failed !\n" + e.getMsg()).c_str());
       throw Exception(e);
     }        
 
@@ -456,7 +457,7 @@ void MotoGame::cleanPlayers() {
       /* if no OnLoad(), assume success */
       /* Success? */
       if(!bOnLoadSuccess) {
-	Log("OnLoad script function failed !");
+	Logger::Log("OnLoad script function failed !");
 	throw Exception("OnLoad script function failed !");
       }
     }
@@ -503,7 +504,7 @@ void MotoGame::cleanPlayers() {
     ===========================================================================*/
   void MotoGame::_GenerateLevel(void) {
     if(m_pLevelSrc == NULL) {
-      Log("** Warning ** : Can't generate level when no source is assigned!");
+      Logger::Log("** Warning ** : Can't generate level when no source is assigned!");
       return;
     }
         
@@ -536,17 +537,17 @@ void MotoGame::cleanPlayers() {
 			m_pLevelSrc->getNumberLayer(),
 			m_pLevelSrc->getLayerOffsets());
 
-    Log("Generating level from %d block%s...",InBlocks.size(),InBlocks.size()==1?"":"s");
+    Logger::Log("Generating level from %d block%s...",InBlocks.size(),InBlocks.size()==1?"":"s");
     
     /* For each input block */
     int nTotalBSPErrors = 0;
     
     nTotalBSPErrors = m_pLevelSrc->loadToPlay();
 
-    Log(" %d poly%s in total",m_pLevelSrc->Blocks().size(),m_pLevelSrc->Blocks().size()==1?"":"s");        
+    Logger::Log(" %d poly%s in total",m_pLevelSrc->Blocks().size(),m_pLevelSrc->Blocks().size()==1?"":"s");        
     
     if(nTotalBSPErrors > 0) {
-      Log(" %d BSP error%s in total",nTotalBSPErrors,nTotalBSPErrors==1?"":"s");
+      Logger::Log(" %d BSP error%s in total",nTotalBSPErrors,nTotalBSPErrors==1?"":"s");
       gameMessage(std::string(GAMETEXT_WARNING) + ":");
       gameMessage(GAMETEXT_ERRORSINLEVEL);
     }
@@ -569,10 +570,10 @@ void MotoGame::cleanPlayers() {
       /* Show stats about the collision system */
       CollisionSystemStats CStats;
       m_Collision.getStats(&CStats);
-      Log(" %dx%d grid with %.1fx%.1f cells (%.0f%% empty)",
+      Logger::Log(" %dx%d grid with %.1fx%.1f cells (%.0f%% empty)",
 	  CStats.nGridWidth,CStats.nGridHeight,CStats.fCellWidth,CStats.fCellHeight,
 	  CStats.fPercentageOfEmptyCells);
-      Log(" %d total blocking lines",CStats.nTotalLines);
+      Logger::Log(" %d total blocking lines",CStats.nTotalLines);
     }
   }
 

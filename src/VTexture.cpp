@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VTexture.h"
 #include "Image.h"
 #include "VFileIO.h"
+#include "helpers/Log.h"
 
 namespace vapp {
 
@@ -35,7 +36,7 @@ namespace vapp {
   Texture *TextureManager::createTexture(std::string Name,unsigned char *pcData,int nWidth,int nHeight,bool bAlpha,bool bClamp, FilterMode eFilterMode) {
     /* Name free? */
     if(getTexture(Name) != NULL) {
-      Log("** Warning ** : TextureManager::createTexture() : Name '%s' already in use",Name.c_str());
+      Logger::Log("** Warning ** : TextureManager::createTexture() : Name '%s' already in use",Name.c_str());
       throw TextureError("texture naming conflict");
     }
 
@@ -190,7 +191,7 @@ namespace vapp {
     if(TextureImage.checkFile( Path,&ii )) {
       /* Valid texture size? */
       if(ii.nWidth != ii.nHeight) {
-        Log("** Warning ** : TextureManager::loadTexture() : texture '%s' is not square",Path.c_str());
+        Logger::Log("** Warning ** : TextureManager::loadTexture() : texture '%s' is not square",Path.c_str());
         throw TextureError("texture not square");
       }
       if(!(ii.nWidth == 1 ||
@@ -204,7 +205,7 @@ namespace vapp {
          ii.nWidth == 256 ||
          ii.nWidth == 512 ||
          ii.nWidth == 1024)) {
-        Log("** Warning ** : TextureManager::loadTexture() : texture '%s' size is not power of two",Path.c_str());
+        Logger::Log("** Warning ** : TextureManager::loadTexture() : texture '%s' size is not power of two",Path.c_str());
         throw TextureError("texture size not power of two");
       }
          
@@ -223,7 +224,7 @@ namespace vapp {
       pTexture = createTexture(TexName,pc,TextureImage.getWidth(),TextureImage.getHeight(),bAlpha,bClamp, eFilterMode);
     }
     else {
-      Log("** Warning ** : TextureManager::loadTexture() : texture '%s' not found or invalid",Path.c_str());
+      Logger::Log("** Warning ** : TextureManager::loadTexture() : texture '%s' not found or invalid",Path.c_str());
       throw TextureError(std::string("invalid or missing texture file (" + Path + ")").c_str());
     }    
     

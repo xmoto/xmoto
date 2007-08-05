@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VFileIO.h"
 #include "UserConfig.h"
 #include "Sound.h"
+#include "helpers/Log.h"
 
 /* SDL_mixer / nosound is the only ones supported!!! I should really clean up this 
    file :) */
@@ -70,7 +71,7 @@ namespace vapp {
           m_nSampleRate = n;
           break;
         default:
-          Log("** Warning ** : invalid audio sample rate, falling back to 22050");
+          Logger::Log("** Warning ** : invalid audio sample rate, falling back to 22050");
           m_nSampleRate = 22050;
           break;
       }      
@@ -81,7 +82,7 @@ namespace vapp {
           m_nSampleBits = n;
           break;
         default:
-          Log("** Warning ** : invalid audio sample bits, falling back to 16");
+          Logger::Log("** Warning ** : invalid audio sample bits, falling back to 16");
           m_nSampleRate = 16;
           break;
       }      
@@ -90,7 +91,7 @@ namespace vapp {
       if(s == "Mono") m_nChannels = 1;
       else if(s == "Stereo") m_nChannels = 2;
       else {
-        Log("** Warning ** : invalid number of audio channels, falling back to mono");
+        Logger::Log("** Warning ** : invalid number of audio channels, falling back to mono");
         m_nChannels = 1;
       }
         
@@ -105,7 +106,7 @@ namespace vapp {
 //        sal::Global::init("default",m_nSampleRate,0,sal::SYNC_DEFAULT);
       }
       catch(const char *e) {
-        Log("** Warning ** : failed to initialize OpenAL (%s)",e);
+        Logger::Log("** Warning ** : failed to initialize OpenAL (%s)",e);
         m_bEnable = false;
         return;
       }
@@ -117,7 +118,7 @@ namespace vapp {
           
       /* Init SDL stuff */
       if(SDL_InitSubSystem(SDL_INIT_AUDIO) < 0) {
-        Log("** Warning ** : failed to initialize SDL audio (%s)",SDL_GetError());
+        Logger::Log("** Warning ** : failed to initialize SDL audio (%s)",SDL_GetError());
         m_bEnable = false;
         return;
       }
@@ -128,7 +129,7 @@ namespace vapp {
         else nFormat = AUDIO_S16;
         
         if(Mix_OpenAudio(m_nSampleRate,nFormat,m_nChannels,2048) < 0) {
-          Log("** Warning ** : failed to open mixer device (%s)",Mix_GetError());
+          Logger::Log("** Warning ** : failed to open mixer device (%s)",Mix_GetError());
           SDL_QuitSubSystem(SDL_INIT_AUDIO);
           m_bEnable = false;
           return;
@@ -149,7 +150,7 @@ namespace vapp {
         m_ASpec.userdata = NULL;
         
         if(SDL_OpenAudio(&m_ASpec,NULL) < 0) {
-          Log("** Warning ** : failed to open audio device (%s)",SDL_GetError());
+          Logger::Log("** Warning ** : failed to open audio device (%s)",SDL_GetError());
           SDL_QuitSubSystem(SDL_INIT_AUDIO);
           m_bEnable = false;
           return;
@@ -348,7 +349,7 @@ namespace vapp {
       if(SDL_BuildAudioCVT(&pSample->cvt,nSrcFormat,nSrcChannels,nSrcRate,nDstFormat,nDstChannels,nDstRate) < 0) {
         vs.closeFile();
         delete pSample;
-        Log("** Warning ** : Sound::loadSample() : Failed to prepare audio conversion for '%s'!",File.c_str());
+        Logger::Log("** Warning ** : Sound::loadSample() : Failed to prepare audio conversion for '%s'!",File.c_str());
         throw Exception("unsupported audio format");
       } 
       

@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VApp.h"
 #include "md5sum/md5file.h"
 #include "db/xmDatabase.h"
+#include "helpers/Log.h"
 
 class vapp::App;
 
@@ -91,7 +92,7 @@ std::vector<ThemeFile>* Theme::getRequiredFiles() {
 }
 
 void Theme::load(std::string p_themeFile) {
-  vapp::Log(std::string("Loading theme from file " + p_themeFile).c_str());
+  Logger::Log(std::string("Loading theme from file " + p_themeFile).c_str());
 
   cleanSprites(); /* removing existing sprites */
   cleanMusics();
@@ -187,7 +188,7 @@ void Theme::loadSpritesFromXML(TiXmlElement *p_ThemeXmlDataElement) {
     } else if(v_spriteType == "EdgeEffect") {
       newEdgeEffectSpriteFromXML(pVarElem);
     } else {
-      vapp::Log("Warning: unknown type '%s' in theme file !", v_spriteType.c_str());
+      Logger::Log("Warning: unknown type '%s' in theme file !", v_spriteType.c_str());
     }
   }
 
@@ -315,15 +316,15 @@ void Theme::newAnimationSpriteFromXML(TiXmlElement *pVarElem) {
   float global_delay   = 0.1;
 
   pc = pVarElem->Attribute("name");
-  if(pc == NULL) {vapp::Log("** Animation with no name"); return;}
+  if(pc == NULL) {Logger::Log("** Animation with no name"); return;}
   v_name = pc;
   
   pc = pVarElem->Attribute("fileBase");
-  if(pc == NULL) {vapp::Log("** Animation with no fileBase"); return;}
+  if(pc == NULL) {Logger::Log("** Animation with no fileBase"); return;}
   v_fileBase = pc;
 
   pc = pVarElem->Attribute("fileExtension");
-  if(pc == NULL) {vapp::Log("** Animation with no fileExtension"); return;}
+  if(pc == NULL) {Logger::Log("** Animation with no fileExtension"); return;}
   v_fileExtension = pc;
 
   pc = pVarElem->Attribute("centerX");
@@ -399,11 +400,11 @@ void Theme::newBikerPartSpriteFromXML(TiXmlElement *pVarElem) {
   std::string v_sum;
 
   pc = pVarElem->Attribute("name");
-  if(pc == NULL) {vapp::Log("** BikerPart with no name"); return;}
+  if(pc == NULL) {Logger::Log("** BikerPart with no name"); return;}
   v_name = pc;
 
   pc = pVarElem->Attribute("file");
-  if(pc == NULL) {vapp::Log("** BikerPart with no file"); return;}
+  if(pc == NULL) {Logger::Log("** BikerPart with no file"); return;}
   v_fileName = pc;
 
   pc = pVarElem->Attribute("sum");
@@ -433,11 +434,11 @@ void Theme::newDecorationSpriteFromXML(TiXmlElement *pVarElem) {
   float global_height  = 1.0;
 
   pc = pVarElem->Attribute("name");
-  if(pc == NULL) {vapp::Log("** Sprite with no name"); return;}
+  if(pc == NULL) {Logger::Log("** Sprite with no name"); return;}
   v_name = pc;
 
   pc = pVarElem->Attribute("file");
-  if(pc == NULL) {vapp::Log("** Sprite with no name"); return;}
+  if(pc == NULL) {Logger::Log("** Sprite with no name"); return;}
   v_fileName = pc;
 
   pc = pVarElem->Attribute("width");
@@ -478,11 +479,11 @@ void Theme::newEffectSpriteFromXML(TiXmlElement *pVarElem) {
   std::string v_sum;
 
   pc = pVarElem->Attribute("name");
-  if(pc == NULL) {vapp::Log("** Effect with no name"); return;}
+  if(pc == NULL) {Logger::Log("** Effect with no name"); return;}
   v_name = pc;
 
   pc = pVarElem->Attribute("file");
-  if(pc == NULL) {vapp::Log("** Effect with no file"); return;}
+  if(pc == NULL) {Logger::Log("** Effect with no file"); return;}
   v_fileName = pc;
 
   pc = pVarElem->Attribute("sum");
@@ -504,19 +505,19 @@ void Theme::newEdgeEffectSpriteFromXML(TiXmlElement *pVarElem) {
   std::string v_sum;
 
   pc = pVarElem->Attribute("name");
-  if(pc == NULL) {vapp::Log("** Edge with no name"); return;}
+  if(pc == NULL) {Logger::Log("** Edge with no name"); return;}
   v_name = pc;
 
   pc = pVarElem->Attribute("file");
-  if(pc == NULL) {vapp::Log("** Edge with no file"); return;}
+  if(pc == NULL) {Logger::Log("** Edge with no file"); return;}
   v_fileName = pc;
 
   pc = pVarElem->Attribute("scale");
-  if(pc == NULL) {vapp::Log("** Edge with no scale"); return;}
+  if(pc == NULL) {Logger::Log("** Edge with no scale"); return;}
   v_scale = pc;
 
   pc = pVarElem->Attribute("depth");
-  if(pc == NULL) {vapp::Log("Edge with no depth"); return;}
+  if(pc == NULL) {Logger::Log("Edge with no depth"); return;}
   v_depth = pc;
 
   pc = pVarElem->Attribute("sum");
@@ -538,11 +539,11 @@ void Theme::newFontSpriteFromXML(TiXmlElement *pVarElem) {
   std::string v_sum;
 
   pc = pVarElem->Attribute("name");
-  if(pc == NULL) {vapp::Log("** Font with no name"); return;}
+  if(pc == NULL) {Logger::Log("** Font with no name"); return;}
   v_name = pc;
 
   pc = pVarElem->Attribute("file");
-  if(pc == NULL) {vapp::Log("Font with no file"); return;}
+  if(pc == NULL) {Logger::Log("Font with no file"); return;}
   v_fileName = pc;
 
   pc = pVarElem->Attribute("sum");
@@ -562,11 +563,11 @@ void Theme::newMiscSpriteFromXML(TiXmlElement *pVarElem) {
   std::string v_sum;
 
   pc = pVarElem->Attribute("name");
-  if(pc == NULL) {vapp::Log("** Misc with no name"); return;}
+  if(pc == NULL) {Logger::Log("** Misc with no name"); return;}
   v_name = pc;
 
   pc = pVarElem->Attribute("file");
-  if(pc == NULL) {vapp::Log("** Misc with no file"); return;}
+  if(pc == NULL) {Logger::Log("** Misc with no file"); return;}
   v_fileName = pc;
 
   pc = pVarElem->Attribute("sum");
@@ -586,11 +587,11 @@ void Theme::newUISpriteFromXML(TiXmlElement *pVarElem) {
   std::string v_sum;
 
   pc = pVarElem->Attribute("name");
-  if(pc == NULL) {vapp::Log("** UI with no name"); return;}
+  if(pc == NULL) {Logger::Log("** UI with no name"); return;}
   v_name = pc;
 
   pc = pVarElem->Attribute("file");
-  if(pc == NULL) {vapp::Log("** UI with no file"); return;}
+  if(pc == NULL) {Logger::Log("** UI with no file"); return;}
   v_fileName = pc;
 
   pc = pVarElem->Attribute("sum");
@@ -610,11 +611,11 @@ void Theme::newTextureSpriteFromXML(TiXmlElement *pVarElem) {
   std::string v_sum;
 
   pc = pVarElem->Attribute("name");
-  if(pc == NULL) {vapp::Log("** Texture with no name"); return;}
+  if(pc == NULL) {Logger::Log("** Texture with no name"); return;}
   v_name = pc;
 
   pc = pVarElem->Attribute("file");
-  if(pc == NULL) {vapp::Log("** Texture with no file"); return;}
+  if(pc == NULL) {Logger::Log("** Texture with no file"); return;}
   v_fileName = pc;
 
   pc = pVarElem->Attribute("sum");
@@ -1037,7 +1038,7 @@ void ThemeChoicer::initThemesFromDir(xmDatabase *i_db) {
       if(i_db->themes_exists(v_name) == false) {
 	i_db->themes_add(v_name, v_themesFiles[i]);
       } else {
-	vapp::Log(std::string("Theme " + v_name + " is present several times").c_str());
+	Logger::Log(std::string("Theme " + v_name + " is present several times").c_str());
       }
     } catch(Exception &e) {
       /* anyway, give up this theme */

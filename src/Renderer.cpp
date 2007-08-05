@@ -30,6 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Bike.h"
 #include "xmscene/BikeGhost.h"
 #include "xmscene/BikePlayer.h"
+#include "helpers/Log.h"
 #include <algorithm>
 
 namespace vapp {
@@ -102,12 +103,12 @@ namespace vapp {
 	try {
 	  pTexture = pSprite->getTexture();
 	} catch(Exception &e) {
-	  Log("** Warning ** : Texture '%s' not found!",
+	  Logger::Log("** Warning ** : Texture '%s' not found!",
 	      Blocks[i]->Texture().c_str());
 	  getGameObject()->gameMessage(GAMETEXT_MISSINGTEXTURES,true);   
 	}
       } else {
-	Log("** Warning ** : Texture '%s' not found!",
+	Logger::Log("** Warning ** : Texture '%s' not found!",
 	    Blocks[i]->Texture().c_str());
 	getGameObject()->gameMessage(GAMETEXT_MISSINGTEXTURES,true);          
       }
@@ -232,7 +233,7 @@ namespace vapp {
     }
     
 
-    Log("GL: %d kB vertex buffers",    nVertexBytes/1024);
+    Logger::Log("GL: %d kB vertex buffers",    nVertexBytes/1024);
   }
 
   /*===========================================================================
@@ -1605,7 +1606,7 @@ namespace vapp {
       getParent()->getDrawLib()->endDraw();
     }
   } else {
-    Log(std::string("** Invalid sky " + pGame->getLevelSrc()->Sky().Texture()).c_str());
+    Logger::Log(std::string("** Invalid sky " + pGame->getLevelSrc()->Sky().Texture()).c_str());
     getParent()->getDrawLib()->clearGraphics();
   } 
  }

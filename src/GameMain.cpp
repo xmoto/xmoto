@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "Game.h"
 #include "VFileIO.h"
+#include "helpers/Log.h"
 
 using namespace vapp;
 
@@ -49,7 +50,7 @@ int main(int nNumArgs,char **ppcArgs) {
     Game.run(nNumArgs,ppcArgs);
   }
   catch (Exception &e) {
-    FS::writeLog(std::string("Exception: ") + e.getMsg());
+    Logger::Log((std::string("Exception: ") + e.getMsg()).c_str());
   
     printf("fatal exception : %s\n",e.getMsg().c_str());        
     SDL_Quit(); /* make sure SDL shuts down gracefully */

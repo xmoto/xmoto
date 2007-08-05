@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Game.h"
 #include "BSP.h"
 #include "VFileIO.h"
+#include "helpers/Log.h"
 
 namespace vapp {
 
@@ -106,8 +107,8 @@ namespace vapp {
         BSPPoly *pTempPoly = new BSPPoly;
 
 	if(pPoly->Vertices.empty()) {
-	  Log("** Warning ** : _Recurse(), try to split an empty poly (no BestSplitter)");
-	  Log("** Warning ** : Line causing the trouble is (%.5f %.5f ; %.5f %.5f)",
+	  Logger::Log("** Warning ** : _Recurse(), try to split an empty poly (no BestSplitter)");
+	  Logger::Log("** Warning ** : Line causing the trouble is (%.5f %.5f ; %.5f %.5f)",
 	      Lines[i]->P0.x, Lines[i]->P0.y, Lines[i]->P1.x, Lines[i]->P1.y);
 	}
         _SplitPoly(pPoly,NULL,pTempPoly,&Splitter);
@@ -119,9 +120,9 @@ namespace vapp {
         m_Polys.push_back( pPoly );
       else {
 
-	Log("** Warning ** : Lines causing the trouble are :");
+	Logger::Log("** Warning ** : Lines causing the trouble are :");
 	for(int i=0;i<Lines.size();i++) {
-	  Log("%.5f %.5f ; %.5f %.5f",
+	  Logger::Log("%.5f %.5f ; %.5f %.5f",
 	      Lines[i]->P0.x, Lines[i]->P0.y, Lines[i]->P1.x, Lines[i]->P1.y);
 	}
 
@@ -130,7 +131,7 @@ namespace vapp {
           printf("    (%f,%f)  ->  (%f,%f)\n",Lines[i]->P0.x,Lines[i]->P0.y,Lines[i]->P1.x,Lines[i]->P1.y);*/
       
         delete pPoly;
-        Log("** Warning ** : BSP::_Recurse() - empty final polygon ignored");
+        Logger::Log("** Warning ** : BSP::_Recurse() - empty final polygon ignored");
         
         m_nNumErrors++;
       }
@@ -144,7 +145,7 @@ namespace vapp {
       /* Also split the convex subspace */
       BSPPoly FrontSpace,BackSpace;
       if(pSubSpace->Vertices.empty()) {
-	Log("** Warning ** : _Recurse(), try to split an empty poly (BestSplitter is set)");
+	Logger::Log("** Warning ** : _Recurse(), try to split an empty poly (BestSplitter is set)");
       }
       _SplitPoly(pSubSpace,&FrontSpace,&BackSpace,pBestSplitter);
       
@@ -189,7 +190,7 @@ namespace vapp {
 
     /* Empty? */
     if(pPoly->Vertices.empty()) {
-      Log("** Warning ** : BSP::_SplitPoly() - empty polygon encountered");
+      Logger::Log("** Warning ** : BSP::_SplitPoly() - empty polygon encountered");
       m_nNumErrors++;
       return;
     }
@@ -214,7 +215,7 @@ namespace vapp {
     /* Do we need a split, or can we draw a simple conclusion to this madness? */
     if(nNumInBack==0 && nNumInFront==0) {
       /* Everything is on the line */                 
-      Log("** Warning ** : BSP::_SplitPoly() - polygon fully plane aligned");
+      Logger::Log("** Warning ** : BSP::_SplitPoly() - polygon fully plane aligned");
       m_nNumErrors++;
       //printf("   %d verts :\n",pPoly->Vertices.size());
       //for(int i=0;i<pPoly->Vertices.size();i++) {
@@ -283,7 +284,7 @@ namespace vapp {
           float den = v.dot(pLine->Normal);
           if(den == 0.0f) { 
             /* This should REALLY not be the case... warning! */
-            Log("** Warning ** : BSP::_SplitPoly() - impossible case (1)");
+            Logger::Log("** Warning ** : BSP::_SplitPoly() - impossible case (1)");
             m_nNumErrors++;
             
             /* Now it's best simply to ignore this */
@@ -394,7 +395,7 @@ namespace vapp {
           float den = v.dot(pLine->Normal);
           if(den == 0.0f) { 
             /* This should REALLY not be the case... warning! */
-            Log("** Warning ** : BSP::_SplitLines() - impossible case (1)");
+            Logger::Log("** Warning ** : BSP::_SplitLines() - impossible case (1)");
             m_nNumErrors++;
             
             /* Now it's best simply to ignore this */
@@ -432,7 +433,7 @@ namespace vapp {
           }
           else {
             /* Another thing we should just ignore */
-            Log("** Warning ** : BSP::_SplitLines() - impossible case (2)");
+            Logger::Log("** Warning ** : BSP::_SplitLines() - impossible case (2)");
             m_nNumErrors++;
             
             continue;

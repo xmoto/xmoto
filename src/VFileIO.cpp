@@ -37,6 +37,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <sys/stat.h>
 
 #include "helpers/VExcept.h"
+#include "helpers/Log.h"
 #include "VApp.h"
 #include "VFileIO.h"
 #include "helpers/SwapEndian.h"
@@ -903,32 +904,29 @@ namespace vapp {
   /*===========================================================================
   Delete file
   ===========================================================================*/  
-  bool FS::deleteFile(const std::string &File) {
+  void FS::deleteFile(const std::string &File) {
     std::string FullFile;
     
     if(m_UserDir == "") {
-      Log("** Warning ** : No user directory, can't delete file: %s",File.c_str());
-      return false;
+      throw Exception("Unable to delete the file");
     }
     
     /* Absolute file path? */
     if(isPathAbsolute(File)) {
-      /* Yeah, check if file is in user directory - otherwise we won't delete 
-         it */
-      if(File.length() < m_UserDir.length() || File.substr(0,m_UserDir.length()) != m_UserDir) return false;
+      /* Yeah, check if file is in user directory - otherwise we won't delete it */
+      if(File.length() < m_UserDir.length() || File.substr(0, m_UserDir.length()) != m_UserDir) {
+	throw Exception("Unable to delete the file");
+      }
       
       FullFile = File;
-    }
-    else {  
+    } else {  
       /* We can only delete user files */      
       FullFile = m_UserDir + std::string("/") + File;
     }
 
     if(remove(FullFile.c_str())) {
-      return false;
+      throw Exception("Unable to delete the file");
     }
-
-    return true;
   }
   
   /*===========================================================================
@@ -937,7 +935,7 @@ namespace vapp {
   bool FS::copyFile(const std::string &From,const std::string &To, std::string &To_really_done) {
     /* All file copying must happen inside the user directory... */
     if(m_UserDir == "") {
-      Log("** Warning ** : No user directory, can't copy file '%s' to '%s'",From.c_str(),To.c_str());
+      Logger::Log("** Warning ** : No user directory, can't copy file '%s' to '%s'",From.c_str(),To.c_str());
       return false;
     }
 
@@ -1013,7 +1011,7 @@ namespace vapp {
           fclose(in);
           fclose(out);
           remove(FullTo.c_str());
-          Log("** Warning ** : Failed to copy all of '%s' to '%s'",FullFrom.c_str(),FullTo.c_str());
+          Logger::Log("** Warning ** : Failed to copy all of '%s' to '%s'",FullFrom.c_str(),FullTo.c_str());
           return false;
         }
         
@@ -1021,33 +1019,20 @@ namespace vapp {
       }
       else {
         fclose(in);
-        Log("** Warning ** : Failed to open file for output: %s",FullTo.c_str());
+        Logger::Log("** Warning ** : Failed to open file for output: %s",FullTo.c_str());
         return false;      
       }
       
       fclose(in);
     }
     else {
-      Log("** Warning ** : Failed to open file for input: %s",FullFrom.c_str());
+      Logger::Log("** Warning ** : Failed to open file for input: %s",FullFrom.c_str());
       return false;
     }
     
     /* OK */
     return true;
   }
-  
-  /*===========================================================================
-  Write message to log
-  ===========================================================================*/
-  void FS::writeLog(const std::string &s) {
-    if(m_UserDir != "") {
-      FILE *fp = fopen((m_UserDir + std::string("/xmoto.log")).c_str(),"a");
-      if(fp != NULL) {
-        fprintf(fp,"%s\n",s.c_str());
-        fclose(fp);
-      }
-    }
-  } 
   
   /*===========================================================================
   Initialize file system fun
@@ -1124,9 +1109,7 @@ namespace vapp {
     remove( (m_UserDir + std::string("/xmoto.log")).c_str() );
     
     /* Info */
-    Log("User directory: %s",m_UserDir.c_str());      
     if(m_bGotDataDir) {
-      Log("Data directory: %s",m_DataDir.c_str());
       m_BinDataFile = m_DataDir + std::string("/xmoto.bin");
     }
           
@@ -1137,8 +1120,6 @@ namespace vapp {
 			throw Exception("Package xmoto.bin not found !");
 		}
 
-		Log("Initializing binary data package...");
-      
 		char cBuf[256];
 		char md5sum[256];
 		fread(cBuf,4,1,fp);
@@ -1183,13 +1164,15 @@ namespace vapp {
 					m_PackFiles[m_nNumPackFiles].nSize = nSize;
 					m_nNumPackFiles ++;
 				}
-				else
-					Log("** Warning ** : Too many files in binary data package! (Limit=%d)",MAX_PACK_FILES);          
-				
+				else {
+				  throw Exception("Too many files in binary data package");
+				}				
+
 				fseek(fp,nSize,SEEK_CUR);
 			}
-		} else
-			Log("** Warning ** : Invalid binary data package format!");
+		} else {
+		  throw Exception("Invalid binary data package format");
+		}
 		fclose(fp);
 	}     
 

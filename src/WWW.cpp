@@ -18,6 +18,7 @@
 #include "VApp.h"
 #include "VFileIO.h"
 #include "helpers/VExcept.h"
+#include "helpers/Log.h"
 #include "VXml.h"
 #include <curl/curl.h>
 #include "GameText.h"
@@ -244,23 +245,23 @@ void FSWeb::downloadFileBz2UsingMd5(const std::string &p_local_file,
 }
 
 void FSWeb::downloadFile(const std::string &p_local_file,
-       const std::string &p_web_file,
-       int (*curl_progress_callback_download)(void *clientp,
-                double dltotal,
-                double dlnow,
-                double ultotal,
-                double ulnow),
-       void *p_data,
-       const ProxySettings *p_proxy_settings
-       ) {
-
-  vapp::Verbose(std::string("downloading " + 
-          p_web_file     +
-          " to "         +
-          p_local_file
-          ).c_str()
-    );
-
+			 const std::string &p_web_file,
+			 int (*curl_progress_callback_download)(void *clientp,
+								double dltotal,
+								double dlnow,
+								double ultotal,
+								double ulnow),
+			 void *p_data,
+			 const ProxySettings *p_proxy_settings
+			 ) {
+  
+  Logger::Log(std::string("downloading " + 
+			  p_web_file     +
+			  " to "         +
+			  p_local_file
+			  ).c_str()
+	      );
+  
   CURL *v_curl;
   CURLcode res;
   FILE *v_destinationFile;
@@ -307,7 +308,7 @@ void FSWeb::downloadFile(const std::string &p_local_file,
       + p_proxy_settings->getAuthentificationPassword();
 
     if(p_proxy_settings->useDefaultServer() == false) {
-      vapp::Verbose(std::string("set proxy ->" + v_proxy_server).c_str());
+      Logger::Log(std::string("set proxy ->" + v_proxy_server).c_str());
       curl_easy_setopt(v_curl, CURLOPT_PROXY, v_proxy_server.c_str());
     }
     
@@ -318,7 +319,7 @@ void FSWeb::downloadFile(const std::string &p_local_file,
     curl_easy_setopt(v_curl, CURLOPT_PROXYTYPE, p_proxy_settings->getType());
    
     if(p_proxy_settings->useDefaultAuthentification() == false) {
-      vapp::Verbose(std::string("set proxy authentification ->" + v_proxy_auth_str).c_str());
+      Logger::Log(std::string("set proxy authentification ->" + v_proxy_auth_str).c_str());
       curl_easy_setopt(v_curl, CURLOPT_PROXYUSERPWD,
            v_proxy_auth_str.c_str());
     }
@@ -384,7 +385,7 @@ void FSWeb::uploadReplay(std::string p_replayFilename,
 
   struct curl_httppost *v_post, *v_last;
 
-  vapp::Verbose(std::string("Uploading replay " + p_replayFilename).c_str());
+  Logger::Log(std::string("Uploading replay " + p_replayFilename).c_str());
 
   /* open the file */
   if( (v_destinationFile = fopen(v_local_file.c_str(), "wb")) == false) {
@@ -445,7 +446,7 @@ void FSWeb::uploadReplay(std::string p_replayFilename,
       + p_proxy_settings->getAuthentificationPassword();
 
     if(p_proxy_settings->useDefaultServer() == false) {
-      vapp::Verbose(std::string("set proxy ->" + v_proxy_server).c_str());
+      Logger::Log(std::string("set proxy ->" + v_proxy_server).c_str());
       curl_easy_setopt(v_curl, CURLOPT_PROXY, v_proxy_server.c_str());
     }
     
@@ -456,7 +457,7 @@ void FSWeb::uploadReplay(std::string p_replayFilename,
     curl_easy_setopt(v_curl, CURLOPT_PROXYTYPE, p_proxy_settings->getType());
    
     if(p_proxy_settings->useDefaultAuthentification() == false) {
-      vapp::Verbose(std::string("set proxy authentification ->" + v_proxy_auth_str).c_str());
+      Logger::Log(std::string("set proxy authentification ->" + v_proxy_auth_str).c_str());
       curl_easy_setopt(v_curl, CURLOPT_PROXYUSERPWD,
            v_proxy_auth_str.c_str());
     }

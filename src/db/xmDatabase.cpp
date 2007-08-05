@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/VExcept.h"
 #include "GameText.h"
 #include "VApp.h"
+#include "helpers/Log.h"
 
 #define XMDB_VERSION 13
 
@@ -48,14 +49,14 @@ xmDatabase::xmDatabase(const std::string& i_dbFile,
   createUserFunctions();
 
   v_version = getXmDbVersion();
-  vapp::Log("XmDb version is %i", v_version);
+  Logger::Log("XmDb version is %i", v_version);
 
   if(v_version > XMDB_VERSION) {
     throw Exception("Your XM database required a newer version of xmoto");
   }
 
   if(v_version < XMDB_VERSION) {
-    vapp::Log("Update XmDb version from %i to %i", v_version, XMDB_VERSION);
+    Logger::Log("Update XmDb version from %i to %i", v_version, XMDB_VERSION);
 
     if(i_interface != NULL) {
       i_interface->updatingDatabase(GAMETEXT_DB_UPGRADING);
@@ -263,7 +264,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
     try {
       updateDB_stats(i_interface);
     } catch(Exception &e) {
-      vapp::Log(std::string("Oups, updateDB_stats() failed: " + e.getMsg()).c_str());
+      Logger::Log(std::string("Oups, updateDB_stats() failed: " + e.getMsg()).c_str());
     }
 
   case 2:
@@ -284,7 +285,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
       try {
 	updateDB_favorite(i_profile, i_interface);
       } catch(Exception &e) {
-	vapp::Log(std::string("Oups, updateDB_favorite() failed: " + e.getMsg()).c_str());
+	Logger::Log(std::string("Oups, updateDB_favorite() failed: " + e.getMsg()).c_str());
       }
       updateXmDbVersion(4);
     } catch(Exception &e) {
@@ -300,7 +301,7 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
       try {
 	updateDB_profiles(i_interface);
       } catch(Exception &e) {
-	vapp::Log(std::string("Oups, updateDB_profiles() failed: " + e.getMsg()).c_str());
+	Logger::Log(std::string("Oups, updateDB_profiles() failed: " + e.getMsg()).c_str());
       }
       updateXmDbVersion(5);
     } catch(Exception &e) {
@@ -416,7 +417,7 @@ void xmDatabase::simpleSql(const std::string& i_sql) {
   char *errMsg;
   std::string v_errMsg;
 
-  //vapp::Log(i_sql.c_str());
+  //Logger::Log(i_sql.c_str());
   //printf("%s\n", i_sql.c_str());
 
   if(sqlite3_exec(m_db,

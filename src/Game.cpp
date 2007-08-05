@@ -31,6 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/BikeGhost.h"
 #include "xmscene/BikePlayer.h"
 #include "db/xmDatabase.h";
+#include "helpers/Log.h"
 
 #include <curl/curl.h>
 #include <iomanip.h>
@@ -259,7 +260,7 @@ GameApp::GameApp() {
 				}
 
 				if(m_MotoGame.getLevelSrc()->isXMotoTooOld()) {
-					Log("** Warning ** : level '%s' specified by replay '%s' requires newer X-Moto",m_replayBiker->levelId().c_str(),m_PlaySpecificReplay.c_str());	    
+					Logger::Log("** Warning ** : level '%s' specified by replay '%s' requires newer X-Moto",m_replayBiker->levelId().c_str(),m_PlaySpecificReplay.c_str());	    
 					char cBuf[256];
 					sprintf(cBuf,GAMETEXT_NEWERXMOTOREQUIRED,
 									m_MotoGame.getLevelSrc()->getRequiredVersion().c_str());
@@ -397,7 +398,7 @@ GameApp::GameApp() {
 				m_nFrame = 0;
 				v_newMusicPlaying = m_MotoGame.getLevelSrc()->Music();
 			} catch(Exception &e) {
-				Log("** Warning ** : level '%s' cannot be loaded",m_PlaySpecificLevel.c_str());
+				Logger::Log("** Warning ** : level '%s' cannot be loaded",m_PlaySpecificLevel.c_str());
 				m_MotoGame.endLevel();
 				char cBuf[256];
 				sprintf(cBuf,GAMETEXT_LEVELCANNOTBELOADED,m_PlaySpecificLevel.c_str());
@@ -630,7 +631,7 @@ GameApp::GameApp() {
 						Sound::playMusic(m_theme.getMusic(v_newMusicPlaying)->FilePath());
 					}
 				} catch(Exception &e) {
-					Log("** Warning ** : PlayMusic(%s) failed", v_newMusicPlaying.c_str());
+					Logger::Log("** Warning ** : PlayMusic(%s) failed", v_newMusicPlaying.c_str());
 					Sound::stopMusic();
 				}
       }
@@ -757,14 +758,14 @@ GameApp::GameApp() {
     
     /* User preference for format? must be either jpeg or png */
     if(v_ShotExtension != "jpeg" && v_ShotExtension != "jpg" && v_ShotExtension != "png") {
-      Log("** Warning ** : unsupported screenshot format '%s', using png instead!", v_ShotExtension.c_str());
+      Logger::Log("** Warning ** : unsupported screenshot format '%s', using png instead!", v_ShotExtension.c_str());
       v_ShotExtension = "png";
     }    
 
     do {
       nShot++;
       if(nShot > 9999) {
-	Log("Too many screenshots !");
+	Logger::Log("Too many screenshots !");
 	delete pShot;
 	return;
       }
@@ -776,7 +777,7 @@ GameApp::GameApp() {
     try {
       pShot->saveFile(v_destFile.c_str());
     } catch(Exception &e) {
-      Log(std::string("Unable to save the screenshot: " + e.getMsg()).c_str());
+      Logger::Log(std::string("Unable to save the screenshot: " + e.getMsg()).c_str());
     }
 
     delete pShot;
@@ -1228,7 +1229,7 @@ GameApp::GameApp() {
     if(!FS::copyFile("Replays/Latest.rpl",
          std::string("Replays/") + RealName + std::string(".rpl"),
          v_outputfile)) {
-      Log("** Warning ** : Failed to save replay: %s",Name.c_str());
+      Logger::Log("** Warning ** : Failed to save replay: %s",Name.c_str());
       notifyMsg(GAMETEXT_FAILEDTOSAVEREPLAY);
     } else {
       /* Update replay list to reflect changes */
@@ -1308,7 +1309,7 @@ GameApp::GameApp() {
     /* Try downloading the highscores */
     m_pWebHighscores->setWebsiteInfos(m_WebHighscoresIdRoom,
 				      m_WebHighscoresURL);
-    Log("WWW: Checking for new highscores...");
+    Logger::Log("WWW: Checking for new highscores...");
     m_pWebHighscores->update();
   }
 
@@ -1322,7 +1323,7 @@ GameApp::GameApp() {
       m_pWebLevels = new WebLevels(this,&m_ProxySettings);
     }
     m_pWebLevels->setURL(m_Config.getString("WebLevelsURL"));
-    Log("WWW: Checking for new or updated levels...");
+    Logger::Log("WWW: Checking for new or updated levels...");
 
     m_pWebLevels->update(m_db);
     m_bWebLevelsToDownload = m_pWebLevels->nbLevelsToGet(m_db);
@@ -1335,7 +1336,7 @@ GameApp::GameApp() {
 
     m_themeChoicer->setURL(m_Config.getString("WebThemesURL"));
 
-    Log("WWW: Checking for new or updated themes...");
+    Logger::Log("WWW: Checking for new or updated themes...");
 
     try {
       m_DownloadingInformation = "";
@@ -1343,7 +1344,7 @@ GameApp::GameApp() {
       _UpdateThemesLists();
     } catch(Exception &e) {
       /* file probably doesn't exist */
-      Log("** Warning ** : Failed to analyse web-themes file");   
+      Logger::Log("** Warning ** : Failed to analyse web-themes file");   
     }
   }    
 
@@ -1354,13 +1355,13 @@ GameApp::GameApp() {
 
     m_pWebRooms->setURL(m_Config.getString("WebRoomsURL"));
 
-    Log("WWW: Checking for rooms list...");
+    Logger::Log("WWW: Checking for rooms list...");
 
     try {
       m_pWebRooms->update();
     } catch(Exception &e) {
       /* file probably doesn't exist */
-      Log("** Warning ** : Failed to analyse update webrooms list");    
+      Logger::Log("** Warning ** : Failed to analyse update webrooms list");    
     }
   }
 
@@ -1400,7 +1401,7 @@ GameApp::GameApp() {
     m_DownloadingInformation = "";
     m_DownloadingMessage = std::string(GAMETEXT_DLTHEME) + "\n\n ";
     try {
-      Log("WWW: Downloading a theme...");
+      Logger::Log("WWW: Downloading a theme...");
       clearCancelAsSoonAsPossible();
       m_themeChoicer->updateThemeFromWWW(m_db, i_id_theme);
       _UpdateThemesLists();
@@ -1410,7 +1411,7 @@ GameApp::GameApp() {
       }
     } catch(Exception &e) {
       /* file probably doesn't exist */
-      Log("** Warning ** : Failed to update theme ", i_id_theme.c_str());
+      Logger::Log("** Warning ** : Failed to update theme ", i_id_theme.c_str());
       if(bNotify) {
 	notifyMsg(GAMETEXT_FAILEDGETSELECTEDTHEME);
       }
@@ -1424,7 +1425,7 @@ GameApp::GameApp() {
       m_pWebHighscores->upgrade(m_db);
     } catch(Exception &e) {
       /* file probably doesn't exist */
-      Log("** Warning ** : Failed to analyse web-highscores file");   
+      Logger::Log("** Warning ** : Failed to analyse web-highscores file");   
     }
   }
 
@@ -1437,7 +1438,7 @@ GameApp::GameApp() {
       }
     } catch(Exception &e) {
       /* file probably doesn't exist */
-      Log("** Warning ** : Failed to analyse webrooms file");   
+      Logger::Log("** Warning ** : Failed to analyse webrooms file");   
     }
   }
 
@@ -1451,13 +1452,13 @@ GameApp::GameApp() {
 
       if(m_pWebLevels != NULL) {
         try {                  
-          Log("WWW: Downloading levels...");
+          Logger::Log("WWW: Downloading levels...");
           clearCancelAsSoonAsPossible();
           m_pWebLevels->upgrade(m_db);
 	  m_bWebLevelsToDownload = false;
         } 
         catch(Exception &e) {
-          Log("** Warning ** : Unable to download extra levels [%s]",e.getMsg().c_str());
+          Logger::Log("** Warning ** : Unable to download extra levels [%s]",e.getMsg().c_str());
   
           if(m_pInfoMsgBox != NULL) {
             delete m_pInfoMsgBox;
@@ -1467,7 +1468,7 @@ GameApp::GameApp() {
         }
 
         /* Got some new levels... load them! */
-        Log("Loading new and updated levels...");
+        Logger::Log("Loading new and updated levels...");
 	m_pActiveLevelPack = NULL; /* the active level pack could no more exists after update */
 	m_levelsManager.updateLevelsFromLvl(m_db,
 					    m_pWebLevels->getNewDownloadedLevels(),
@@ -1489,7 +1490,7 @@ GameApp::GameApp() {
   }
         m_pWebLevels->setURL(m_Config.getString("WebLevelsURL"));
         
-        Log("WWW: Checking for new or updated levels...");
+        Logger::Log("WWW: Checking for new or updated levels...");
         clearCancelAsSoonAsPossible();
 
         m_pWebLevels->update(m_db);
@@ -1497,7 +1498,7 @@ GameApp::GameApp() {
 	nULevels = m_pWebLevels->nbLevelsToGet(m_db);
 	m_bWebLevelsToDownload = nULevels!=0;
 
-        Log("WWW: %d new or updated level%s found",nULevels,nULevels==1?"":"s");
+        Logger::Log("WWW: %d new or updated level%s found",nULevels,nULevels==1?"":"s");
 
         if(nULevels == 0) {
           notifyMsg(GAMETEXT_NONEWLEVELS);
@@ -1515,7 +1516,7 @@ GameApp::GameApp() {
         }
       } 
       catch(Exception &e) {
-        Log("** Warning ** : Unable to check for extra levels [%s]",e.getMsg().c_str());
+        Logger::Log("** Warning ** : Unable to check for extra levels [%s]",e.getMsg().c_str());
         if(m_pInfoMsgBox != NULL) {
           delete m_pInfoMsgBox;
           m_pInfoMsgBox = NULL;
@@ -2023,7 +2024,7 @@ GameApp::GameApp() {
       
     /* We need a profile */
     if(m_profile == "") {
-      Log("** Warning ** : no player profile selected, use -profile option");
+      Logger::Log("** Warning ** : no player profile selected, use -profile option");
       throw Exception("no player");
     }
       
@@ -2031,7 +2032,7 @@ GameApp::GameApp() {
     try {
      m_MotoGame.loadLevel(m_db, m_PlaySpecificLevel);
     } catch(Exception &e) {
-      Log("** Warning ** : level '%s' cannot be loaded",m_PlaySpecificLevel.c_str());
+      Logger::Log("** Warning ** : level '%s' cannot be loaded",m_PlaySpecificLevel.c_str());
       char cBuf[256];
       sprintf(cBuf,GAMETEXT_LEVELCANNOTBELOADED,m_PlaySpecificLevel.c_str());
       setState(m_StateAfterPlaying);
@@ -2040,7 +2041,7 @@ GameApp::GameApp() {
     }
 
     if(m_MotoGame.getLevelSrc()->isXMotoTooOld()) {
-      Log("** Warning ** : level '%s' requires newer X-Moto",
+      Logger::Log("** Warning ** : level '%s' requires newer X-Moto",
 	  m_MotoGame.getLevelSrc()->Name().c_str());
   
       char cBuf[256];
@@ -2072,7 +2073,7 @@ GameApp::GameApp() {
 	
 	/* add the players */
 	int v_nbPlayer = getNumberOfPlayersToPlay();
-	Log("Preplay level for %i player(s)", v_nbPlayer);
+	Logger::Log("Preplay level for %i player(s)", v_nbPlayer);
 
 	initCameras(v_nbPlayer);
 	m_Renderer.addPlayTimes(m_MotoGame.getNumberCameras());
@@ -2150,7 +2151,7 @@ GameApp::GameApp() {
 
 	}
       } catch(Exception &e) {
-	Log(std::string("** Warning ** : failed to initialize level\n" + e.getMsg()).c_str());
+	Logger::Log(std::string("** Warning ** : failed to initialize level\n" + e.getMsg()).c_str());
 	m_MotoGame.endLevel();
 	setState(m_StateAfterPlaying);
 	notifyMsg(splitText(e.getMsg(), 50));
