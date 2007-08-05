@@ -141,7 +141,6 @@ namespace vapp {
     void setNoWWW(bool bValue) {
       m_bNoWWW = bValue;
     }
-    static std::string getVersionString();
 
     virtual bool isUglyMode() {
       return false;

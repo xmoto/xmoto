@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -25,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Game.h"
 #include "VFileIO.h"
 #include "helpers/Log.h"
+#include "XMBuild.h"
 
 namespace vapp {
 
@@ -794,7 +794,7 @@ namespace vapp {
     pChangePlayerButton->setContextHelp(CONTEXTHELP_CHANGE_PLAYER);
     
     UIStatic *pSomeText = new UIStatic(m_pMainMenu,0,drawLib->getDispHeight()-20,
-                                        std::string("X-Moto/") + getVersionString(),
+                                        std::string("X-Moto/") + XMBuild::getVersionString(),
                                         drawLib->getDispWidth(),20);
     pSomeText->setFont(drawLib->getFontSmall());
     pSomeText->setVAlign(UI_ALIGN_BOTTOM);

@@ -34,8 +34,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Packager.h"
 #include "helpers/SwapEndian.h"
 #include "helpers/Log.h"
-#include "svn_version.h"
 #include "Game.h"
+#include "XMArgs.h"
+#include "XMBuild.h"
 
 #ifdef USE_GETTEXT
 #include "Locales.h"
@@ -184,8 +185,18 @@ namespace vapp {
   Main application entry point
   ===========================================================================*/
   void App::run(int nNumArgs,char **ppcArgs) {
+    XMArguments v_xmArgs;
 
-    /* init endian system */ 
+    /* check args */
+    try {
+      v_xmArgs.parse(nNumArgs, ppcArgs);
+    } catch (Exception &e) {
+      printf("syntax error : %s\n", e.getMsg().c_str());
+      v_xmArgs.help(nNumArgs >= 1 ? ppcArgs[0] : "xmoto");
+      return; /* abort */
+    }
+
+    /* init sub-systems */
     SwapEndian::Swap_Init();
     srand(time(NULL));
 
@@ -610,7 +621,7 @@ namespace vapp {
         i++;
       } else if(!strcmp(ppcArgs[i],"-h") || !strcmp(ppcArgs[i],"-?") ||
               !strcmp(ppcArgs[i],"--help") || !strcmp(ppcArgs[i],"-help")) {
-        printf("%s (Version %s)\n",m_AppName.c_str(),getVersionString().c_str());
+        printf("%s (Version %s)\n",m_AppName.c_str(), XMBuild::getVersionString().c_str());
         if(m_CopyrightInfo.length()>0)
           printf("%s\n",m_CopyrightInfo.c_str());
         printf("usage:  %s {options}\n"
@@ -648,25 +659,6 @@ namespace vapp {
     /* Pass any arguments to the user app */
     if(UserArgs.size() > 0)
       parseUserArgs(UserArgs);
-  }
-
-  std::string App::getVersionString(void) {
-    std::ostringstream v_version;
-    std::string v_svn = svn_version();
-
-    v_version << BUILD_MAJORVERSION;
-    v_version << ".";
-    v_version << BUILD_VERSION;
-    v_version << ".";
-    v_version << BUILD_MINORVERSION;
-    v_version << " ";
-    v_version << BUILD_EXTRAINFO;
-
-    if(std::string(BUILD_EXTRAINFO) != "" && v_svn != "") {
-      v_version << " (svn " + v_svn + ")";
-    }
-
-    return v_version.str();
   }
 
 }

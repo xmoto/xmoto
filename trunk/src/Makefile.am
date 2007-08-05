@@ -43,6 +43,8 @@ helpers_SOURCES = helpers/VMath.h             \
 
 common_SOURCES = Image.cpp \
   VApp.cpp VBezier.cpp VDraw.cpp VDrawOpenGL.cpp PolyDraw.h PolyDraw.cpp VDrawSDLgfx.cpp \
+  XMArgs.h XMArgs.cpp \
+  XMBuild.h XMBuild.cpp XMBuild_info.h \
   VFileIO.cpp VTexture.cpp \
   VXml.cpp \
   $(helpers_SOURCES) \
