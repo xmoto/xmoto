@@ -80,6 +80,8 @@ std::string win32_getUserDir(bool i_asUtf8 = false) {
 
 namespace vapp {
 
+  bool FS::m_isInitialized = false;
+
   /*===========================================================================
   Helper functions
   ===========================================================================*/
@@ -1174,7 +1176,17 @@ namespace vapp {
 		  throw Exception("Invalid binary data package format");
 		}
 		fclose(fp);
+
+		m_isInitialized = true;
 	}     
+
+  void FS::uninit() {
+    m_isInitialized = false;
+  }
+
+  bool FS::isInitialized() {
+    return m_isInitialized;
+  }
 
   /*===========================================================================
   Hmm, for some reason I have to do this. Don't ask me why.
