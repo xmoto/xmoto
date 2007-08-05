@@ -1518,7 +1518,10 @@ namespace vapp {
   } 
   
   void MGE_CameraMove::doAction(MotoGame *p_pMotoGame) {
-    p_pMotoGame->CameraMove(m_moveX, m_moveY);
+    for(unsigned int i=0; i<p_pMotoGame->getNumberCameras(); i++) {
+    p_pMotoGame->setCurrentCamera(i);
+      p_pMotoGame->CameraMove(m_moveX, m_moveY);
+    }
   }
 
   void MGE_CameraMove::serialize(DBuffer &Buffer) {
@@ -1559,7 +1562,10 @@ namespace vapp {
   } 
   
   void MGE_CameraZoom::doAction(MotoGame *p_pMotoGame) {
-    p_pMotoGame->CameraZoom(m_zoom);
+    for(unsigned int i=0; i<p_pMotoGame->getNumberCameras(); i++) {
+      p_pMotoGame->setCurrentCamera(i);
+      p_pMotoGame->CameraZoom(m_zoom);
+    }
   }
 
   void MGE_CameraZoom::serialize(DBuffer &Buffer) {
@@ -1753,7 +1759,10 @@ namespace vapp {
   } 
   
   void MGE_CameraRotate::doAction(MotoGame *p_pMotoGame) {
-    p_pMotoGame->CameraRotate(m_angle);
+    for(unsigned int i=0; i<p_pMotoGame->getNumberCameras(); i++) {
+      p_pMotoGame->setCurrentCamera(i);
+      p_pMotoGame->CameraRotate(m_angle);
+    }
   }
 
   void MGE_CameraRotate::serialize(DBuffer &Buffer) {
@@ -1786,7 +1795,10 @@ namespace vapp {
   } 
   
   void MGE_CameraAdaptToGravity::doAction(MotoGame *p_pMotoGame) {
-    p_pMotoGame->CameraAdaptToGravity();
+    for(unsigned int i=0; i<p_pMotoGame->getNumberCameras(); i++) {
+      p_pMotoGame->setCurrentCamera(i);
+      p_pMotoGame->CameraAdaptToGravity();
+    }
   }
 
   void MGE_CameraAdaptToGravity::serialize(DBuffer &Buffer) {
