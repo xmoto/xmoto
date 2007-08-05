@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: xmoto 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-08-03 18:25+0200\n"
-"PO-Revision-Date: 2007-07-03 14:39+0300\n"
+"PO-Revision-Date: 2007-08-05 21:45+0300\n"
 "Last-Translator: Jānis Rūcis <parasti@gmail.com>\n"
 "Language-Team: Latvian\n"
 "MIME-Version: 1.0\n"
@@ -248,7 +248,7 @@ msgstr "krieviski"
 
 #: src/GameText.h:114
 msgid "Brazilian Portuguese"
-msgstr "Brazīlijas portugāļu val"
+msgstr "Brazīlijas portugāļu val."
 
 #: src/GameText.h:115
 msgid "Latvian"
@@ -1221,7 +1221,8 @@ msgstr "Atjaunot tēmu sarakstu"
 msgid "Updating level lists..."
 msgstr "Tiek atjaunoti līmeņu saraksti..."
 
-# Special case.  "Augšupielādēt" is too long, so "iesniegt" is used.
+# Šis ir izņēmuma gadījums.  "Augšupielādēt" ir pārāk garš, tādēļ šeit
+# izmantoju "iesniegt".
 #: src/GameText.h:357
 msgid "Upload highscore"
 msgstr "Iesniegt rekordu"
@@ -1430,7 +1431,7 @@ msgstr "Mainīt spēlētāja profilu"
 
 #: src/GameText.h:409
 msgid "Play tutorial of how to play the game"
-msgstr "Spēlēt pamācību, kā spēlēt šo spēli"
+msgstr "Spēlēt pamācību"
 
 #: src/GameText.h:410
 msgid "Official built-in levels"
@@ -1602,7 +1603,7 @@ msgstr ""
 
 #: src/GameText.h:451
 msgid "Select a level in the level pack to play"
-msgstr "Izvēlies līmeni līmeņu pakā, kuru spēlēt"
+msgstr "Izvēlies līmeņu pakā līmeni, kuru spēlēt"
 
 #: src/GameText.h:452
 msgid "Close level pack"
@@ -1866,12 +1867,9 @@ msgstr "Parole, kas saistīta ar tavu lietotājvārdu"
 msgid "Filter on replay list"
 msgstr "Filtrēt ierakstu sarakstu"
 
-# XXX
-# Not good English.  How about "Press to play X-Moto instantly"?
 #: src/GameText.h:516
-#, fuzzy
 msgid "Press to play X-Moto immediately"
-msgstr "Nospied, lai uzreiz sāktu spēlēt X-Moto"
+msgstr "Uzreiz sākt spēlēt X-Moto"
 
 # XXX
 # "dicrease" -> "decrease"
