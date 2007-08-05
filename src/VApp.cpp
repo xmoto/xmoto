@@ -200,6 +200,29 @@ namespace vapp {
     SwapEndian::Swap_Init();
     srand(time(NULL));
 
+    /* Init file system stuff */
+    FS::init("xmoto");
+    Logger::init(FS::getUserDir() + "/xmoto.log");
+    Logger::setVerbose(g_bVerbose);
+
+    /* package / unpackage */
+    if(v_xmArgs.isOptPack()) {
+      Packager::go(v_xmArgs.getOpt_pack_bin() == "" ? "xmoto.bin" : v_xmArgs.getOpt_pack_bin(),
+		   v_xmArgs.getOpt_pack_dir() == "" ? "."         : v_xmArgs.getOpt_pack_dir());
+      Logger::uninit();
+      FS::uninit();
+      return;
+    }
+    if(v_xmArgs.isOptUnPack()) {
+      Packager::goUnpack(v_xmArgs.getOpt_unpack_bin() == "" ? "xmoto.bin" : v_xmArgs.getOpt_unpack_bin(),
+			 v_xmArgs.getOpt_unpack_dir() == "" ? "."         : v_xmArgs.getOpt_unpack_dir(),
+			 v_xmArgs.getOpt_unpack_noList());
+      Logger::uninit();
+      FS::uninit();
+      return;
+    }
+    /* ***** */
+
     /* first, check command line args */
     try {
       _ParseArgs(nNumArgs,ppcArgs);
@@ -208,10 +231,6 @@ namespace vapp {
       printf("syntax error : %s\n", e.getMsg().c_str());
       return; /* abort */
     }
-    /* Init file system stuff */
-    FS::init("xmoto");
-    Logger::init(FS::getUserDir() + "/xmoto.log");
-    Logger::setVerbose(g_bVerbose);
 
     /* load config */
     createDefaultConfig();
@@ -565,22 +584,7 @@ namespace vapp {
   
     /* Walk through the args */
     for(int i=1;i<nNumArgs;i++) {
-      bool pack = !strcmp(ppcArgs[i],"-pack");
-      bool unpack = !strcmp(ppcArgs[i],"-unpack");
-      if(pack || unpack) {
-        std::string BinFile = "xmoto.bin", Dir = ".";
-        bool bMakePackageList = true;
-        if(i+1 < nNumArgs) {BinFile = ppcArgs[i+1]; i++;}
-        if(i+1 < nNumArgs) {Dir = ppcArgs[i+1]; i++;}
-        if(unpack && i+1 < nNumArgs && !strcmp(ppcArgs[i+1], "no_list"))
-          {bMakePackageList=false; i++;}
-        
-        if(pack)
-          Packager::go(BinFile,Dir);
-        else
-          Packager::goUnpack(BinFile,Dir,bMakePackageList);
-        exit(0); /* leaks memory, but who cares? :) */
-      } else if(!strcmp(ppcArgs[i],"-nogfx")) {
+      if(!strcmp(ppcArgs[i],"-nogfx")) {
 	m_useGraphics = true;
       }
       else if(!strcmp(ppcArgs[i],"-res")) {

@@ -29,13 +29,24 @@ class XMArguments {
   void parse(int i_argc, char **i_argv);
   void help(const std::string& i_cmd);
 
+  bool isOptPack() const;
+  std::string getOpt_pack_bin() const;
+  std::string getOpt_pack_dir() const;
+
+  bool isOptUnPack() const;
+  std::string getOpt_unpack_bin()    const;
+  std::string getOpt_unpack_dir()    const;
+  bool        getOpt_unpack_noList() const;
+
   private:
   /* pack options */
   bool m_opt_pack;
+  std::string m_pack_bin;
+  std::string m_pack_dir;
   bool m_opt_unpack;
-  std::string m_pack_Bin;
-  std::string m_pack_Dir;
-  bool m_opt_pack_NoList;
+  std::string m_unpack_bin;
+  std::string m_unpack_dir;
+  bool m_unpack_noList;
 
   /* graphics */
   bool m_opt_nogfx;
@@ -63,16 +74,16 @@ class XMArguments {
   
   /* replays */
   bool m_opt_replay;
-  std::string m_replay_File;
+  std::string m_replay_file;
   bool m_opt_listReplays;
   bool m_opt_replayInfos;
-  std::string m_replayInfos_File;
+  std::string m_replayInfos_file;
 
   /* levels */
   bool m_opt_levelID;
-  std::string m_levelID_Id;
+  std::string m_levelID_id;
   bool m_opt_levelFile;
-  std::string m_levelFile_File;
+  std::string m_levelFile_file;
   bool m_opt_listLevels;
 
   /* profile */

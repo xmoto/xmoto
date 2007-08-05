@@ -23,41 +23,173 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "XMBuild.h"
 
 XMArguments::XMArguments() {
-  m_opt_pack   	    = false;
-  m_opt_unpack 	    = false;
-  m_opt_pack_NoList = false;
-  m_opt_nogfx       = false;
-  m_opt_res 	    = false;
-  m_res_dispWidth   = 0;
-  m_res_dispHeight  = 0;
-  m_opt_bpp         = false;
-  m_bpp_value 	    = 0;
-  m_opt_fs          = false;
-  m_opt_win         = false;
-  m_opt_noext       = false;
-  m_opt_drawlib     = false;
-  m_opt_ugly        = false;
-  m_opt_nowww       = false;
-  m_opt_help        = false;
-  m_opt_verbose     = false;
-  m_opt_debug       = false;
-  m_opt_sqlTrace    = false;
-  m_opt_fps         = false;
-  m_opt_replay      = false;
-  m_opt_listReplays = false;
-  m_opt_replayInfos = false;
-  m_opt_levelID     = false;
-  m_opt_levelFile   = false;
-  m_opt_listLevels  = false;
-  m_opt_profile     = false;
-  m_opt_timedemo    = false;
-  m_opt_testTheme   = false;
-  m_opt_benchmark   = false;
-  m_opt_cleanCache  = false;
+  m_opt_pack   	      = false;
+  m_opt_unpack 	      = false;
+  m_unpack_noList     = false;
+  m_opt_nogfx         = false;
+  m_opt_res 	      = false;
+  m_res_dispWidth     = 0;
+  m_res_dispHeight    = 0;
+  m_opt_bpp           = false;
+  m_bpp_value 	      = 0;
+  m_opt_fs            = false;
+  m_opt_win           = false;
+  m_opt_noext         = false;
+  m_opt_drawlib       = false;
+  m_opt_ugly          = false;
+  m_opt_nowww         = false;
+  m_opt_help          = false;
+  m_opt_verbose       = false;
+  m_opt_debug         = false;
+  m_opt_sqlTrace      = false;
+  m_opt_fps           = false;
+  m_opt_replay        = false;
+  m_opt_listReplays   = false;
+  m_opt_replayInfos   = false;
+  m_opt_levelID       = false;
+  m_opt_levelFile     = false;
+  m_opt_listLevels    = false;
+  m_opt_profile       = false;
+  m_opt_timedemo      = false;
+  m_opt_testTheme     = false;
+  m_opt_benchmark     = false;
+  m_opt_cleanCache    = false;
 }
 
 void XMArguments::parse(int i_argc, char **i_argv) {
+  std::string v_opt;
+  std::string v_arg;
+
+  int i = 1;
+  while(i<i_argc) {
+    v_opt = i_argv[i];
+    
+    if(v_opt == "-pack") {
+      m_opt_pack = true;
+      if(i+1 < i_argc) {
+	m_pack_bin = i_argv[i+1];
+	i++;
+      }
+      if(i+1 < i_argc) {
+	m_pack_dir = i_argv[i+1];
+	i++;
+      }
+    } else if(v_opt == "-unpack") {
+      m_opt_unpack = true;
+      if(i+1 < i_argc) {
+	m_unpack_bin = i_argv[i+1];
+	i++;
+      }
+      if(i+1 < i_argc) {
+	m_unpack_dir = i_argv[i+1];
+	i++;
+      }
+      if(i+1 < i_argc) {
+	v_arg = i_argv[i+1];
+	if(v_arg != "no_list") {
+	  throw Exception("only no_list is allow here");
+	}
+	m_unpack_noList = true;
+	i++;
+      }      
+    } else if(v_opt == "-nogfx") {
+      m_opt_nogfx = true;
+    } else if(v_opt == "-res") {
+      m_opt_res = true;
+    } else {
+      //throw Exception("Invalid option \"" + v_opt + "\"");
+    }
+
+    i++;
+  }
+
   //throw Exception("To do");
+}
+
+//  void App::_ParseArgs(int nNumArgs,char **ppcArgs) {
+//
+//      } else if(!strcmp(ppcArgs[i],"-nogfx")) {
+//	m_useGraphics = true;
+//      }
+//      else if(!strcmp(ppcArgs[i],"-res")) {
+//        if(i+1 == nNumArgs) 
+//          throw SyntaxError("missing resolution");
+//        sscanf(ppcArgs[i+1],"%dx%d",&m_CmdDispWidth,&m_CmdDispHeight);
+//        m_bCmdDispWidth = m_bCmdDispHeight = true;
+//        i++;
+//      }
+//      else if(!strcmp(ppcArgs[i],"-bpp")) {
+//        if(i+1 == nNumArgs) 
+//          throw SyntaxError("missing bit depth");
+//	m_CmdDispBpp = atoi(ppcArgs[i+1]);
+//        m_bCmdDispBPP = true;
+//        i++;
+//      }
+//      else if(!strcmp(ppcArgs[i],"-fs")) {
+//	m_CmdWindowed = false;
+//        m_bCmdWindowed = true;
+//      }
+//      else if(!strcmp(ppcArgs[i],"-win")) {
+//	m_CmdWindowed = true;
+//        m_bCmdWindowed = true;
+//      }
+//      else if(!strcmp(ppcArgs[i],"-v")) {
+//        g_bVerbose = true;
+//      } 
+//      else if(!strcmp(ppcArgs[i],"-noexts")) {
+//	m_useGlExtension = false;
+//      }
+//      else if(!strcmp(ppcArgs[i],"-nowww")) {
+//        m_bNoWWW = true;
+//      } else if(!strcmp(ppcArgs[i],"-drawlib")) {
+//        if(i+1 == nNumArgs) {
+//          throw SyntaxError("missing drawlib");
+//	}
+//	m_CmdDrawLibName = ppcArgs[i+1];
+//        i++;
+//      } else if(!strcmp(ppcArgs[i],"-h") || !strcmp(ppcArgs[i],"-?") ||
+//              !strcmp(ppcArgs[i],"--help") || !strcmp(ppcArgs[i],"-help")) {
+//        printf("%s (Version %s)\n",m_AppName.c_str(), XMBuild::getVersionString().c_str());
+//
+//        helpUserArgs();
+//        printf("\n");
+//        
+//	/* mark that we want to quit the application */
+//	m_bQuit = true;
+//        return;
+//      }
+//      else {
+//        /* Add it to argument vector */
+//        UserArgs.push_back(ppcArgs[i]);
+//      }
+//    }
+
+bool XMArguments::isOptPack() const {
+  return m_opt_pack;
+}
+
+std::string XMArguments::getOpt_pack_bin() const {
+  return m_pack_bin;
+}
+
+std::string XMArguments::getOpt_pack_dir() const {
+  return m_pack_dir;
+}
+
+bool XMArguments::isOptUnPack() const {
+  return m_opt_unpack;
+}
+
+std::string XMArguments::getOpt_unpack_bin() const {
+  return m_unpack_bin;
+}
+
+std::string XMArguments::getOpt_unpack_dir() const {
+  return m_unpack_dir;
+}
+
+bool XMArguments::getOpt_unpack_noList() const {
+  return m_unpack_noList;
 }
 
 void XMArguments::help(const std::string& i_cmd) {
@@ -66,6 +198,21 @@ void XMArguments::help(const std::string& i_cmd) {
   printf("usage:  %s {options}\n"
 	 "options:\n", i_cmd.c_str());
         
+  printf("\t-level ID\n\t\tStart playing the given level right away.\n");
+  printf("\t-replay NAME\n\t\tPlayback replay with the given name.\n");    
+  printf("\t-debug\n\t\tEnable debug mode.\n");
+  printf("\t-profile NAME\n\t\tUse this player profile.\n");
+  printf("\t-listlevels\n\t\tOutputs a list of all installed levels.\n");
+  printf("\t-listreplays\n\t\tOutputs a list of all replays.\n");
+  printf("\t-timedemo\n\t\tNo delaying, maximum framerate.\n");
+  printf("\t-fps\n\t\tDisplay framerate.\n");
+  printf("\t-ugly\n\t\tEnable 'ugly' mode, suitable for computers without\n");
+  printf("\t\ta good OpenGL-enabled video card.\n");
+  printf("\t-testTheme\n\t\tDisplay forms around the theme to check it.\n");
+  printf("\t-benchmark\n\t\tOnly meaningful when combined with -replay\n");
+  printf("\t\tand -timedemo. Useful to determine the graphics\n");
+  printf("\t\tperformance.\n");
+  printf("\t-cleancache\n\t\tDeletes the content of the level cache.\n");
   printf("\t-res WIDTHxHEIGHT\n\t\tSpecifies display resolution to use.\n");
   printf("\t-bpp BITS\n\t\tTry to use this display color bit depth.\n");
   printf("\t-fs\n\t\tForces fullscreen mode.\n");

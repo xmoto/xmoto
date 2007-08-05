@@ -204,7 +204,7 @@ namespace vapp {
       
       if(trail != std::string::npos) {
       	s = s.substr(lead, trail - lead + 1);
-        printf("  %s\n",s.c_str());
+        //printf("  %s\n",s.c_str());
       	
         /* Add it to the list */
         FileList.push_back(s);
@@ -214,7 +214,7 @@ namespace vapp {
     
     /* Info */
     printf("%d files scheduled for packaging!\n",FileList.size());
-    printf("Creating package 'xmoto.bin'...\n");
+    printf("Creating package '%s'...\n", BinFile.c_str());
     
     /* Do it */
     fp = fopen(BinFile.c_str(),"wb");
