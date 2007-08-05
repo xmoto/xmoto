@@ -26,7 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VApp.h"
 #include "helpers/utf8.h"
 #include "xmscene/Camera.h"
-
+#include "helpers/Log.h"
 
 #define UTF8_INTERLINE_SPACE 2
 #define UTF8_INTERCHAR_SPACE 0
@@ -209,13 +209,13 @@ class GLFontManager : public FontManager {
   
     /* At last, try to "set the video mode" */
     if((m_screen=SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,m_nDispBPP,nFlags))==NULL) {
-      vapp::Log("** Warning ** : Tried to set video mode %dx%d @ %d-bit, but SDL responded: %s\n"
+      Logger::Log("** Warning ** : Tried to set video mode %dx%d @ %d-bit, but SDL responded: %s\n"
           "                Now SDL will try determining a proper mode itself.",m_nDispWidth,m_nDispHeight,m_nDispBPP);
     
       /* Hmm, try letting it decide the BPP automatically */
       if((m_screen=SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,0,nFlags))==NULL) {       
         /* Still no luck */
-        Log("** Warning ** : Still no luck, now we'll try 800x600 in a window.");
+        Logger::Log("** Warning ** : Still no luck, now we'll try 800x600 in a window.");
         m_nDispWidth = 800; m_nDispHeight = 600;        
         m_bWindowed = true;
         if((m_screen=SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,0,SDL_OPENGL))==NULL) {       
@@ -249,10 +249,10 @@ class GLFontManager : public FontManager {
     SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY,SDL_DEFAULT_REPEAT_INTERVAL);
      
     /* Output some general info */
-    Log("GL: %s (%s)",glGetString(GL_RENDERER),glGetString(GL_VENDOR));
+    Logger:: Log("GL: %s (%s)",glGetString(GL_RENDERER),glGetString(GL_VENDOR));
     if(glGetString(GL_RENDERER) == NULL || 
        glGetString(GL_VENDOR) == NULL) {
-      Log("** Warning ** : GL strings NULL!");
+      Logger::Log("** Warning ** : GL strings NULL!");
       throw Exception("GL strings are NULL!");
     }
     
@@ -261,7 +261,7 @@ class GLFontManager : public FontManager {
     #if defined(WIN32) 
       if(!strcmp(reinterpret_cast<const char *>(glGetString(GL_RENDERER)),"GDI Generic") &&
          !strcmp(reinterpret_cast<const char *>(glGetString(GL_VENDOR)),"Microsoft Corporation")) {
-        Log("** Warning ** : No GL hardware acceleration!");
+        Logger::Log("** Warning ** : No GL hardware acceleration!");
         //m_UserNotify = "It seems that no OpenGL hardware acceleration is available!\n"
         //               "Please make sure OpenGL is configured properly.";
       }
@@ -291,10 +291,10 @@ class GLFontManager : public FontManager {
       glEnableClientState( GL_VERTEX_ARRAY );   
       glEnableClientState( GL_TEXTURE_COORD_ARRAY );
           
-      Log("GL: using ARB_vertex_buffer_object");    
+      Logger::Log("GL: using ARB_vertex_buffer_object");    
     }
     else
-      Log("GL: not using ARB_vertex_buffer_object");    
+      Logger::Log("GL: not using ARB_vertex_buffer_object");    
       
     if(m_bFBOSupported) {
       glIsRenderbufferEXT = (PFNGLISRENDERBUFFEREXTPROC)SDL_GL_GetProcAddress("glIsRenderbufferEXT");
@@ -315,10 +315,10 @@ class GLFontManager : public FontManager {
       glGetFramebufferAttachmentParameterivEXT = (PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVEXTPROC)SDL_GL_GetProcAddress("glGetFramebufferAttachmentParameterivEXT");
       glGenerateMipmapEXT = (PFNGLGENERATEMIPMAPEXTPROC)SDL_GL_GetProcAddress("glGenerateMipmapEXT");
           
-      Log("GL: using EXT_framebuffer_object");
+      Logger::Log("GL: using EXT_framebuffer_object");
     }
     else
-      Log("GL: not using EXT_framebuffer_object");
+      Logger::Log("GL: not using EXT_framebuffer_object");
       
     if(m_bShadersSupported) {
       glBindAttribLocationARB = (PFNGLBINDATTRIBLOCATIONARBPROC)SDL_GL_GetProcAddress("glBindAttribLocationARB");
@@ -364,10 +364,10 @@ class GLFontManager : public FontManager {
       glGetUniformivARB = (PFNGLGETUNIFORMIVARBPROC)SDL_GL_GetProcAddress("glGetUniformivARB");
       glGetShaderSourceARB = (PFNGLGETSHADERSOURCEARBPROC)SDL_GL_GetProcAddress("glGetShaderSourceARB");    
         
-      Log("GL: using ARB_fragment_shader/ARB_vertex_shader/ARB_shader_objects");
+      Logger::Log("GL: using ARB_fragment_shader/ARB_vertex_shader/ARB_shader_objects");
     }
     else
-      Log("GL: not using ARB_fragment_shader/ARB_vertex_shader/ARB_shader_objects");
+      Logger::Log("GL: not using ARB_fragment_shader/ARB_vertex_shader/ARB_shader_objects");
     
     /* Set background color to black */
     glClearColor(0.0f,0.0f,0.0f,0.0f);
@@ -389,7 +389,7 @@ class GLFontManager : public FontManager {
     
     pcExtensions = glGetString(GL_EXTENSIONS);
     if(pcExtensions == NULL) {
-      Log("Failed to determine OpenGL extensions. Try stopping all other\n"
+      Logger::Log("Failed to determine OpenGL extensions. Try stopping all other\n"
           "applications that might use your OpenGL hardware.\n"
           "If it still doesn't work, please create a detailed bug report.\n"
           );

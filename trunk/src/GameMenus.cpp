@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "Game.h"
 #include "VFileIO.h"
+#include "helpers/Log.h"
 
 namespace vapp {
 
@@ -2198,7 +2199,7 @@ namespace vapp {
 	  try {
 	    m_db->stats_createProfile(PlayerName);
 	  } catch(Exception &e) {
-	    Log("Unable to create the profile");
+	    Logger::Log("Unable to create the profile");
 	  }
 	  _CreateProfileList();
         }
@@ -3933,7 +3934,7 @@ namespace vapp {
       UIListEntry *pEntry = pThemeList->getEntries()[pThemeList->getSelected()];
       m_Config.setString("Theme", pEntry->Text[0]);
       if(m_theme.Name() != pEntry->Text[0]) {
-	Log("Reloading the theme...");
+	Logger::Log("Reloading the theme...");
 	reloadTheme();
       }
     }

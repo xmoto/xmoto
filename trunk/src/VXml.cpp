@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VXml.h"
 #include "VFileIO.h"
 #include "CRCHash.h"
+#include "helpers/Log.h"
 
 namespace vapp {
 
@@ -60,7 +61,7 @@ namespace vapp {
       /* Parse XML */
       m_pXML->Parse(Doc.c_str());
       if(m_pXML->Error()) {
-        Log("** Warning ** : XML-parsing error in '%s' : %s",File.c_str(),m_pXML->ErrorDesc());
+        Logger::Log("** Warning ** : XML-parsing error in '%s' : %s",File.c_str(),m_pXML->ErrorDesc());
       }
     }
   }

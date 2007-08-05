@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <algorithm> 
 #include <time.h>
 #include "db/xmDatabase.h"
+#include "helpers/Log.h"
 
 LevelsPack::LevelsPack(std::string i_name, const std::string& i_sql, bool i_ascSort) {
   m_name         = i_name;
@@ -636,7 +637,7 @@ void LevelsManager::addExternalLevel(xmDatabase *i_db, std::string i_levelFile) 
 		     v_level->isScripted(),
 		     true);
   } catch(Exception &e) {
-    vapp::Log("** Warning ** : Unable to add external level (%s)", e.getMsg().c_str());
+    Logger::Log("** Warning ** : Unable to add external level (%s)", e.getMsg().c_str());
   }
   delete v_level;
 }
@@ -683,7 +684,7 @@ void LevelsManager::reloadLevelsFromLvl(xmDatabase *i_db,
 		       v_level->isScripted(),
 		       false);
     } catch(Exception &e) {
-      vapp::Log("** Warning (just mean that the level has been updated if the level is in xmoto.bin) ** : %s (%s - %s)",
+      Logger::Log("** Warning (just mean that the level has been updated if the level is in xmoto.bin) ** : %s (%s - %s)",
 		e.getMsg().c_str(),
 		v_level->Name().c_str(),
 		v_level->FileName().c_str());
@@ -799,7 +800,7 @@ void LevelsManager::updateLevelsFromLvl(xmDatabase *i_db,
 		       false);
       i_db->levels_addToNew(v_level->Id(), false);
     } catch(Exception &e) {
-      vapp::Log("** Warning ** : %s", e.getMsg().c_str() );
+      Logger::Log("** Warning ** : %s", e.getMsg().c_str() );
     }
     delete v_level;
   }
@@ -828,7 +829,7 @@ void LevelsManager::updateLevelsFromLvl(xmDatabase *i_db,
       i_db->levels_addToNew(v_level->Id(), true);
 
     } catch(Exception &e) {
-      vapp::Log("** Warning ** : %s", e.getMsg().c_str() );
+      Logger::Log("** Warning ** : %s", e.getMsg().c_str() );
     }
     delete v_level;
   }

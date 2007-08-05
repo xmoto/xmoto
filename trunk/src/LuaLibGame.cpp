@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GameEvents.h"
 #include "Input.h"
 #include "Locales.h"
+#include "helpers/Log.h"
 
 vapp::MotoGame*     LuaLibGame::m_exec_world              = NULL;
 vapp::InputHandler* LuaLibGame::m_exec_activeInputHandler = NULL;
@@ -283,7 +284,7 @@ int LuaLibGame::L_Game_Log(lua_State *pL) {
   std::string Out;
   for(int i=0;i<lua_gettop(pL);i++) 
     Out.append(luaL_checkstring(pL,i+1));
-  vapp::Log((char *)Out.c_str());    
+  Logger::Log((char *)Out.c_str());    
   return 0;    
 }
   

@@ -33,6 +33,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Bike.h"
 #include "xmscene/BikeGhost.h"
 #include "xmscene/BikePlayer.h"
+#include "helpers/Log.h"
 
 #include <curl/curl.h>
 
@@ -257,7 +258,7 @@ namespace vapp {
           break;
         }
         catch(Exception &e) {
-	  Log("** Warning ** : drawFrame failed !");
+	  Logger::Log("** Warning ** : drawFrame failed !");
 	  // it doesn't work
 	  //m_MotoGame.endLevel();
 	  //setState(m_StateAfterPlaying);

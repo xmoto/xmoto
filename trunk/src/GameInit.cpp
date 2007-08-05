@@ -31,6 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "PhysSettings.h"
 #include "Input.h"
 #include "db/xmDatabase.h";
+#include "helpers/Log.h"
 
 #include <curl/curl.h>
 
@@ -142,7 +143,7 @@ namespace vapp {
     m_MotoGame.getCollisionHandler()->setDebug( m_bDebugMode );
     
     /* Data time! */
-    Log("Loading data...");
+    Logger::Log("Loading data...");
 
     if(m_GraphDebugInfoFile != "") m_Renderer.loadDebugInfo(m_GraphDebugInfoFile);
 
@@ -181,7 +182,7 @@ namespace vapp {
     } catch(Exception &e) {
       /* if the theme cannot be loaded, try to reload from files */
       /* perhaps that the xm.db comes from an other computer */
-      Log("** warning ** : Theme cannot be reload, try to update themes into the database");
+      Logger::Log("** warning ** : Theme cannot be reload, try to update themes into the database");
       m_themeChoicer->initThemesFromDir(m_db);
       reloadTheme();
     }
@@ -254,11 +255,11 @@ namespace vapp {
 	    Sound::loadSample(m_theme.getSoundsList()[i]->FilePath());
 	  }
 	} catch(Exception &e) {
-	  Log("*** Warning *** : %s\n", e.getMsg().c_str());
+	  Logger::Log("*** Warning *** : %s\n", e.getMsg().c_str());
 	  /* hum, not cool */
 	}
 	
-        Log(" %d sound%s loaded",Sound::getNumSamples(),Sound::getNumSamples()==1?"":"s");
+        Logger::Log(" %d sound%s loaded",Sound::getNumSamples(),Sound::getNumSamples()==1?"":"s");
       }
 
       _UpdateLoadingScreen((1.0f/9.0f) * 1,GAMETEXT_INITTEXT);
@@ -317,7 +318,7 @@ namespace vapp {
 	}
       } catch(Exception &e) {
 	/* No internet connection, probably... (just use the latest times, if any) */
-	Log("** Warning ** : Failed to update web-highscores [%s]",e.getMsg().c_str());              
+	Logger::Log("** Warning ** : Failed to update web-highscores [%s]",e.getMsg().c_str());              
 	if(!bSilent)
 	  notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES);
       }
@@ -327,7 +328,7 @@ namespace vapp {
 	  _UpdateLoadingScreen((1.0f/9.0f) * 4,GAMETEXT_DLLEVELSCHECK);      
 	  _UpdateWebLevels(bSilent);       
 	} catch(Exception &e) {
-	  Log("** Warning ** : Failed to update web-levels [%s]",e.getMsg().c_str());              
+	  Logger::Log("** Warning ** : Failed to update web-levels [%s]",e.getMsg().c_str());              
 	  if(!bSilent)
 	    notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES);
 	}
@@ -398,7 +399,7 @@ namespace vapp {
       /* ======= PLAY SPECIFIC LEVEL ======= */
       m_StateAfterPlaying = GS_MENU;
       setState(GS_PREPLAYING);
-      Log("Playing as '%s'...", m_profile.c_str());
+      Logger::Log("Playing as '%s'...", m_profile.c_str());
     }
     else if(m_PlaySpecificReplay != "") {
       /* ======= PLAY SPECIFIC REPLAY ======= */
@@ -425,7 +426,7 @@ namespace vapp {
       }
     }
 
-    Log("UserInit ended at %.3f", App::getTime());
+    Logger::Log("UserInit ended at %.3f", App::getTime());
   }
     
   /*===========================================================================

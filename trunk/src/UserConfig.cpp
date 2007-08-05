@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VXml.h"
 #include "UserConfig.h"
 #include "VApp.h"
+#include "helpers/Log.h"
 
 namespace vapp {
 
@@ -53,10 +54,10 @@ namespace vapp {
 	      }
 	    }
 	    else 
-	      Log("** Warning ** : no configuration in 'config.dat'");
+	      Logger::Log("** Warning ** : no configuration in 'config.dat'");
 	  }
 	  else
-	    Log("** Warning ** : failed to load or parse user configuration 'config.dat'");
+	    Logger::Log("** Warning ** : failed to load or parse user configuration 'config.dat'");
 	}
 
   /*===========================================================================
@@ -81,7 +82,7 @@ namespace vapp {
 	    FS::closeFile(pfh);
 	  }
 	  else
-	    Log("** Warning ** : failed to save user configuration 'config.dat'");
+	    Logger::Log("** Warning ** : failed to save user configuration 'config.dat'");
 	}
 
   /*===========================================================================
@@ -142,7 +143,7 @@ namespace vapp {
 	std::string UserConfig::getDefaultValue(std::string Name) {
 	  UserConfigVar *pVar = _FindVarByName(Name);
 	  if(pVar == NULL) {
-	    Log("** Warning ** : impossible to get default value of unknown configuration variable '%s'",Name.c_str());
+	    Logger::Log("** Warning ** : impossible to get default value of unknown configuration variable '%s'",Name.c_str());
 	    return "";
 	  }
 	  return pVar->DefaultValue;
@@ -151,7 +152,7 @@ namespace vapp {
 	std::string UserConfig::getValue(std::string Name) {
 	  UserConfigVar *pVar = _FindVarByName(Name);
 	  if(pVar == NULL) {
-	    Log("** Warning ** : impossible to get value of unknown configuration variable '%s'",Name.c_str());
+	    Logger::Log("** Warning ** : impossible to get value of unknown configuration variable '%s'",Name.c_str());
 	    return "";
 	  }
 	  return pVar->Value;
@@ -160,7 +161,7 @@ namespace vapp {
 	void UserConfig::setValue(std::string Name,std::string Value) {
 	  UserConfigVar *pVar = _FindVarByName(Name);
 	  if(pVar == NULL) {
-	    Log("** Warning ** : impossible to set value of unknown configuration variable '%s'",Name.c_str());
+	    Logger::Log("** Warning ** : impossible to set value of unknown configuration variable '%s'",Name.c_str());
 	    return;
 	  }
 	  

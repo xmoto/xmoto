@@ -24,6 +24,7 @@
  */
 #include "PhysSettings.h"
 #include "xmscene/Scene.h"
+#include "helpers/Log.h"
 
 namespace vapp {
 
@@ -45,7 +46,7 @@ namespace vapp {
       v_ReplayEvents->push_back(p);
       }
     } catch(Exception &e) {
-      Log("** Warning ** : unable to unserialize game events !");
+      Logger::Log("** Warning ** : unable to unserialize game events !");
       throw e;
     }
   }

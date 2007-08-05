@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Input.h"
 #include "Game.h"
 #include "LuaLibGame.h"
+#include "helpers/Log.h"
 
 namespace vapp {
 
@@ -292,7 +293,7 @@ namespace vapp {
     std::string ControllerMode1 = pConfig->getString("ControllerMode1");    
     if(ControllerMode1 != "Keyboard" && ControllerMode1 != "Joystick1") {
       ControllerMode1 = "Keyboard"; /* go default then */
-      Log("** Warning ** : 'ControllerMode1' must be either 'Keyboard' or 'Joystick1'!");
+      Logger::Log("** Warning ** : 'ControllerMode1' must be either 'Keyboard' or 'Joystick1'!");
     }
 
     /* Get settings for mode */
@@ -387,7 +388,7 @@ namespace vapp {
        || m_nAutoZoom<0
 #endif
        ) {
-      Log("** Warning ** : Invalid keyboard configuration!");
+      Logger::Log("** Warning ** : Invalid keyboard configuration!");
       _SetDefaultConfigToUnsetKeys();
     }    
   }

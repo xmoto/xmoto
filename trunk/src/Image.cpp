@@ -30,6 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "image/tim.h"
 #include "VFileIO.h"
 #include "helpers/VExcept.h"
+#include "helpers/Log.h"
 
 namespace vapp {
 
@@ -45,7 +46,7 @@ namespace vapp {
       }
     }
     catch (Exception &e) {
-      Log("** Warning ** : _image_io_open() - exception when opening: %s\n",pcWhere);
+      Logger::Log("** Warning ** : _image_io_open() - exception when opening: %s\n",pcWhere);
     }
     
     return NULL; /* some prob */
@@ -56,7 +57,7 @@ namespace vapp {
       FS::closeFile( (FileHandle *)pvHandle );
     }
     catch (Exception &e) {
-      Log("** Warning ** : _image_io_close() - exception when closing: %s\n",((FileHandle *)pvHandle)->Name.c_str());
+      Logger::Log("** Warning ** : _image_io_close() - exception when closing: %s\n",((FileHandle *)pvHandle)->Name.c_str());
     }
   }
 
@@ -70,7 +71,7 @@ namespace vapp {
       }
     }
     catch (Exception &e) {
-      Log("** Warning ** : _image_io_seek() - exception when seeking: %s\n",((FileHandle *)pvHandle)->Name.c_str());
+      Logger::Log("** Warning ** : _image_io_seek() - exception when seeking: %s\n",((FileHandle *)pvHandle)->Name.c_str());
       return TIM_RV_ERR_COULD_NOT_PERFORM;
     }
       
@@ -88,7 +89,7 @@ namespace vapp {
       }
     }
     catch (Exception &e) {
-      Log("** Warning ** : _image_io_read() - exception when reading from: %s\n",((FileHandle *)pvHandle)->Name.c_str());
+      Logger::Log("** Warning ** : _image_io_read() - exception when reading from: %s\n",((FileHandle *)pvHandle)->Name.c_str());
     }
     
     return nRet;
@@ -102,7 +103,7 @@ namespace vapp {
       }
     }
     catch (Exception &e) {
-      Log("** Warning ** : _image_io_read() - exception when writing to: %s\n",((FileHandle *)pvHandle)->Name.c_str());
+      Logger::Log("** Warning ** : _image_io_read() - exception when writing to: %s\n",((FileHandle *)pvHandle)->Name.c_str());
     }
     
     return nRet;
@@ -113,7 +114,7 @@ namespace vapp {
       if(FS::isEnd( (FileHandle *)pvHandle )) return TRUE;
     }
     catch (Exception &e) {
-      Log("** Warning ** : _image_io_eof() - exception thrown by FS::isEnd() when checking: %s\n",((FileHandle *)pvHandle)->Name.c_str());
+      Logger::Log("** Warning ** : _image_io_eof() - exception thrown by FS::isEnd() when checking: %s\n",((FileHandle *)pvHandle)->Name.c_str());
     }
     return FALSE;
   }

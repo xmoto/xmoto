@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../VFileIO.h"
 #include "../VXml.h"
 #include "../helpers/Color.h"
+#include "../helpers/Log.h"
 #include "../db/xmDatabase.h";
 
 #define CACHE_LEVEL_FORMAT_VERSION 18
@@ -288,7 +289,7 @@ void Level::saveXML(void) {
   vapp::FileHandle *pfh = vapp::FS::openOFile(m_fileName);
   if(pfh == NULL) {
     /* Failed! */
-    vapp::Log("** Warning ** : failed to save level '%s'",m_fileName.c_str());
+    Logger::Log("** Warning ** : failed to save level '%s'",m_fileName.c_str());
     return;
   }
     
@@ -469,7 +470,7 @@ void Level::loadXML(void) {
     if(compareVersionNumbers(vapp::App::getVersionString(),m_requiredVersion) < 0) {
       /* Our version is too low to load this */
       m_xmotoTooOld = true;
-      vapp::Log("** Warning ** : Level '%s' requires a newer version (%s) to load!",m_id.c_str(),m_requiredVersion.c_str());
+      Logger::Log("** Warning ** : Level '%s' requires a newer version (%s) to load!",m_id.c_str(),m_requiredVersion.c_str());
     }
   }
   
@@ -617,7 +618,7 @@ void Level::loadXML(void) {
 	m_isLayerFront.push_back(vapp::XML::getOption(pElem, "frontlayer", "false") == "true");
       }
       for(int i=0; i<m_numberLayer; i++){
-	vapp::Log("Level::loadXML offsets layer %d: %f, %f isfront: %s",
+	Logger::Log("Level::loadXML offsets layer %d: %f, %f isfront: %s",
 		  i, m_layerOffsets[i].x, m_layerOffsets[i].y,
 		  m_isLayerFront[i]?"true":"false");
       }
@@ -695,7 +696,7 @@ void Level::loadXML(void) {
     try {
       m_playerStart = getStartEntity().InitialPosition();
     } catch(Exception &e) {
-      vapp::Log("Warning : no player start entity for level %s", Id().c_str());
+      Logger::Log("Warning : no player start entity for level %s", Id().c_str());
       m_playerStart = Vector2f(0.0, 0.0);
     }    
 
@@ -717,7 +718,7 @@ void Level::loadXML(void) {
     int blockLayer = m_blocks[i]->getLayer();
     if(blockLayer != -1){
       if((getNumberLayer() == 0) || (blockLayer >= getNumberLayer())){
-	vapp::Log("** Warning ** : Level '%s' Block '%s' as a layer, but the level has no layer", m_id.c_str(), m_blocks[i]->Id().c_str());
+	Logger::Log("** Warning ** : Level '%s' Block '%s' as a layer, but the level has no layer", m_id.c_str(), m_blocks[i]->Id().c_str());
 	throw Exception("the block has a layer but the level is without layers");
       }
     }
@@ -747,7 +748,7 @@ bool Level::loadReducedFromFile() {
   try {
     cached = importBinaryHeaderFromFile(cacheFileName, m_checkSum);
   } catch (Exception &e) {
-    vapp::Log("** Warning **: Exception while loading binary level, will load "
+    Logger::Log("** Warning **: Exception while loading binary level, will load "
 	      "XML instead for '%s' (%s)", FileName().c_str(),
 	      e.getMsg().c_str());
   }
@@ -795,7 +796,7 @@ void Level::exportBinary(const std::string &FileName, const std::string& pSum) {
   /* Export binary... */
   vapp::FileHandle *pfh = vapp::FS::openOFile(FileName);
   if(pfh == NULL) {
-    vapp::Log("** Warning ** : Failed to export binary: %s",FileName.c_str());
+    Logger::Log("** Warning ** : Failed to export binary: %s",FileName.c_str());
   }
   else {
     exportBinaryHeader(pfh);
@@ -940,7 +941,7 @@ bool Level::importBinaryHeaderFromFile(const std::string &FileName, const std::s
   try {
     importBinaryHeader(pfh);
     if(m_checkSum != pSum) {
-      vapp::Log("** Warning ** : CRC check failed, can't import: %s",FileName.c_str());
+      Logger::Log("** Warning ** : CRC check failed, can't import: %s",FileName.c_str());
       vapp::FS::closeFile(pfh);
       return false;
     }
@@ -996,7 +997,7 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
       /* Right */
       std::string md5sum = vapp::FS::readString(pfh);
       if(md5sum != pSum) {
-        vapp::Log("** Warning ** : CRC check failed, can't import: %s",FileName.c_str());
+        Logger::Log("** Warning ** : CRC check failed, can't import: %s",FileName.c_str());
         bRet = false;
       }
       else {
@@ -1090,7 +1091,7 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
 	try {
 	  m_playerStart = getStartEntity().InitialPosition();
 	} catch(Exception &e) {
-	  vapp::Log("Warning : no player start entity for level %s", Id().c_str());
+	  Logger::Log("Warning : no player start entity for level %s", Id().c_str());
 	  m_playerStart = Vector2f(0.0, 0.0);
 	}
 
@@ -1103,7 +1104,7 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
       }
     }
     else {
-      vapp::Log("** Warning ** : Invalid binary format (%d), can't import: %s",nFormat,FileName.c_str());
+      Logger::Log("** Warning ** : Invalid binary format (%d), can't import: %s",nFormat,FileName.c_str());
       bRet = false;
     }
              

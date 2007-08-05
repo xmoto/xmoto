@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Scene.h"
 #include "Renderer.h"
 #include "GameText.h"
+#include "helpers/Log.h"
 
 namespace vapp {
   
@@ -79,7 +80,7 @@ namespace vapp {
           ((DrawLibOpenGL*)m_pApp->getDrawLib())->glGetObjectParameterivARB(m_ProgramID,
             GL_OBJECT_LINK_STATUS_ARB,(GLint*)&nStatus);
           if(!nStatus) {
-            Log("-- Failed to link SFXOverlay shader program --");
+            Logger::Log("-- Failed to link SFXOverlay shader program --");
             
             /* Retrieve info-log */
             int nInfoLogLen = 0;
@@ -89,7 +90,7 @@ namespace vapp {
 		        int nCharsWritten = 0;
 		        ((DrawLibOpenGL*)m_pApp->getDrawLib())->glGetInfoLogARB(m_ProgramID,nInfoLogLen,
 		          (GLsizei*)&nCharsWritten,pcInfoLog);
-		        LogRaw(pcInfoLog);
+		        Logger::Log(pcInfoLog);
 		        delete [] pcInfoLog;
       			
             m_bUseShaders = false;
@@ -188,7 +189,7 @@ namespace vapp {
       GL_OBJECT_COMPILE_STATUS_ARB,(GLint*)&nStatus);
     if(!nStatus) {
       _FreeShaderSource(ppc,nNumLines);
-      Log("-- Failed to compile shader: %s --",File.c_str());
+      Logger::Log("-- Failed to compile shader: %s --",File.c_str());
       
       /* Retrieve info-log */
       int nInfoLogLen = 0;
@@ -198,7 +199,7 @@ namespace vapp {
 		  int nCharsWritten = 0;
 		  ((DrawLibOpenGL*)m_pApp->getDrawLib())->glGetInfoLogARB(ShaderID,nInfoLogLen,
 		    (GLsizei*)&nCharsWritten,pcInfoLog);
-		  LogRaw(pcInfoLog);
+		  Logger::Log(pcInfoLog);
 		  delete [] pcInfoLog;
 			
       return false;
