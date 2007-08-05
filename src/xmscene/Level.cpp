@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "Level.h"
 #include "../VFileIO.h"
+#include "../XMBuild.h"
 #include "../VXml.h"
 #include "../helpers/Color.h"
 #include "../helpers/Log.h"
@@ -467,7 +468,7 @@ void Level::loadXML(void) {
   m_xmotoTooOld = false;
   if(m_id != "") {
     /* Check version */
-    if(compareVersionNumbers(vapp::App::getVersionString(),m_requiredVersion) < 0) {
+    if(compareVersionNumbers(XMBuild::getVersionString(),m_requiredVersion) < 0) {
       /* Our version is too low to load this */
       m_xmotoTooOld = true;
       Logger::Log("** Warning ** : Level '%s' requires a newer version (%s) to load!",m_id.c_str(),m_requiredVersion.c_str());

@@ -36,6 +36,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "WWWAppInterface.h"
 #include "Theme.h"
+#include "XMBuild.h"
 class ThemeChoice;
 
 #define DEFAULT_WEBHIGHSCORES_URL         "http://xmoto.tuxfamily.org/highscores.xml"
@@ -55,7 +56,7 @@ class ThemeChoice;
 #define DEFAULT_WEBROOM_ID                "1"
 #define DEFAULT_WEBROOM_NAME              "WR"
 
-#define WWW_AGENT ("xmoto-" + vapp::App::getVersionString())
+#define WWW_AGENT ("xmoto-" + XMBuild::getVersionString())
 
 #if defined(USE_HASH_MAP)
   #ifdef __GNUC__
