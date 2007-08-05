@@ -249,6 +249,7 @@ class xmDatabase;
 
       std::string m_WebHighscoresIdRoom;
       std::string m_WebHighscoresURL;
+      std::string m_WebHighscoresRoomName;
 
       bool m_bEnableWebHighscores;              /* true: Read world highscores from website */
       bool m_bWebHighscoresUpdatedThisSession;  /* true: Updated this session */
@@ -541,6 +542,8 @@ class xmDatabase;
 
       static UIFrame* makeOptionsWindow(DrawLib* i_drawLib, UIWindow* io_parent, UserConfig* i_Config, std::vector<GhostSearchStrategy>& i_ghostStrategies);
       static UIFrame* makeHelpWindow(DrawLib* i_drawLib, UIWindow* io_parent, UserConfig* i_Config);
+
+      void updatePlayerTag();
   };
 
 }

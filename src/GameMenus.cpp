@@ -768,11 +768,13 @@ namespace vapp {
     m_pLevelInfoViewReplayButton->setFont(drawLib->getFontSmall());
     m_pLevelInfoViewReplayButton->setContextHelp(CONTEXTHELP_VIEWTHEHIGHSCORE);
 
-    UIStatic *pPlayerText = new UIStatic(m_pMainMenu,300,(drawLib->getDispHeight()*85)/600,"",drawLib->getDispWidth()-300-120,50);
+    UIStatic *pPlayerText = new UIStatic(m_pMainMenu,200,(drawLib->getDispHeight()*85)/600,"",drawLib->getDispWidth()-200-120,50);
     pPlayerText->setFont(drawLib->getFontMedium());            
     pPlayerText->setHAlign(UI_ALIGN_RIGHT);
     pPlayerText->setID("PLAYERTAG");
-    if(m_profile != "") pPlayerText->setCaption(std::string(GAMETEXT_CURPLAYER) + ": " + m_profile);
+    if(m_profile != "") {
+      updatePlayerTag();
+    }
     
     /* new levels ? */
     m_pNewLevelsAvailable = new UIButtonDrawn(m_pMainMenu,
@@ -2259,10 +2261,7 @@ namespace vapp {
       _UpdateLevelsLists();
       _UpdateReplaysList();      
                   
-      UIStatic *pPlayerTag = reinterpret_cast<UIStatic *>(m_pMainMenu->getChild("PLAYERTAG"));
-      if(pPlayerTag) {
-        pPlayerTag->setCaption(std::string(GAMETEXT_CURPLAYER) + ": " + m_profile);
-      }                   
+      updatePlayerTag();
            
       m_pProfileEditor->showWindow(false);
 
@@ -2556,7 +2555,6 @@ namespace vapp {
     
     /* Change player */
     UIButton *pChangePlayerButton = (UIButton *)m_pMainMenu->getChild("CHANGEPLAYERBUTTON");
-    UIStatic *pPlayerText = (UIStatic *)m_pMainMenu->getChild("PLAYERTAG");
     if(pChangePlayerButton->isClicked()) {
       /* Open profile editor */
       m_pProfileEditor->showWindow(true);
@@ -3978,8 +3976,32 @@ namespace vapp {
     
     /* Update things that can be updated */
     _UpdateSettings();
+
+    /* set the room name ; set to WR if it cannot be determined */
+    m_WebHighscoresRoomName = "WR";
+    char **v_result;
+    int nrow;
+    v_result = m_db->readDB("SELECT name "
+			    "FROM webrooms "
+			    "WHERE id_room=" + m_WebHighscoresIdRoom + ";",
+			    nrow);
+    if(nrow == 1) {
+      m_WebHighscoresRoomName = m_db->getResult(v_result, 1, 0, 0);
+    }
+    m_db->read_DB_free(v_result);
+
+    updatePlayerTag();
   }
   
+  void GameApp::updatePlayerTag() {
+    UIStatic *pPlayerTag = reinterpret_cast<UIStatic *>(m_pMainMenu->getChild("PLAYERTAG"));
+    if(pPlayerTag) {
+      if(m_profile != "") {
+	pPlayerTag->setCaption(std::string(GAMETEXT_CURPLAYER) + ": " + m_profile + "@" + m_WebHighscoresRoomName);
+      }
+    }
+  }
+
   void GameApp::setLevelInfoFrameBestPlayer(String pLevelID,
 					    UIWindow *i_pLevelInfoFrame,
 					    UIButton *i_pLevelInfoViewReplayButton,
