@@ -154,6 +154,18 @@ namespace vapp {
     if(m_sqlTrace) {
       m_db->setTrace(m_sqlTrace);
     }
+    /* set the room name ; set to WR if it cannot be determined */
+    m_WebHighscoresRoomName = "WR";
+    char **v_result;
+    int nrow;
+    v_result = m_db->readDB("SELECT name "
+			    "FROM webrooms "
+			    "WHERE id_room=" + m_WebHighscoresIdRoom + ";",
+			    nrow);
+    if(nrow == 1) {
+      m_WebHighscoresRoomName = m_db->getResult(v_result, 1, 0, 0);
+    }
+    m_db->read_DB_free(v_result);
 
     /* load theme */
     m_themeChoicer = new ThemeChoicer(
