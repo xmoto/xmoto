@@ -322,6 +322,7 @@ void MotoGame::cleanPlayers() {
 
     m_fTime = 0.0f;
     m_speed_factor = 1.00f;
+    m_is_paused = false;
 
     m_nLastEventSeq = 0;
     
