@@ -1305,6 +1305,8 @@ namespace vapp {
   }
 
   std::string FS::md5sum(std::string i_filePath) {
+    i_filePath = FullPath(i_filePath);
+
     /* is it a file from the pack or a real file ? */
     if(FS::isFileReal(i_filePath)) {
       return md5file(i_filePath);
@@ -1339,7 +1341,11 @@ namespace vapp {
     if(fileExists(getUserDir() + std::string("/") + i_relative_path)) {
       return getUserDir() + std::string("/") + i_relative_path;
     }
-    return getDataDir() + std::string("/") + i_relative_path;
+    if(fileExists(getDataDir() + std::string("/") + i_relative_path)) {
+      return getDataDir() + std::string("/") + i_relative_path;
+    }
+
+    return i_relative_path;
   }
 }
 
