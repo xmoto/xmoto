@@ -21,11 +21,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Log.h"
 #include "VExcept.h"
 #include "../VFileIO.h"
+#include "assert.h"
 
-bool  Logger::m_verbose = false;
-FILE* Logger::m_fd      = NULL;
+bool  Logger::m_isInitialized = false;
+bool  Logger::m_verbose       = false;
+FILE* Logger::m_fd            = NULL;
 
 void Logger::init(const std::string& i_logFile) {
+  assert(vapp::FS::isInitialized());
+
   m_verbose = false;
 
   if(vapp::FS::fileExists(i_logFile)) {
@@ -36,10 +40,13 @@ void Logger::init(const std::string& i_logFile) {
   if(m_fd == NULL) {
     throw Exception("Unable to open log file");
   }
+
+  m_isInitialized = true;
 }
 
 void Logger::uninit() {
   fclose(m_fd);
+  m_isInitialized = false;
 }
 
 void Logger::setVerbose(bool i_value) {

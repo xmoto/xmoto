@@ -27,10 +27,13 @@ class Logger {
   public:
   static void init(const std::string& i_logFile);
   static void uninit();
+  static bool isInitialized();
+
   static void setVerbose(bool i_value);
   static void Log(const char *pcFmt, ...);
 
   private:
+  static bool  m_isInitialized;
   static bool  m_verbose;
   static FILE* m_fd;
 

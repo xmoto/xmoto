@@ -1,4 +1,4 @@
-AC_INIT(src/GameMain.cpp)
+AC_INIT(src/VApp.cpp)
 
 dnl otherwise autoconf whines
 AC_CANONICAL_TARGET()

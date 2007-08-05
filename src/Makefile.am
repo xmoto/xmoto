@@ -90,7 +90,7 @@ endif
 
 bin_PROGRAMS = xmoto
 
-xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp GameMain.cpp \
+xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp \
   GameMenus.cpp GUIBestTimes.cpp GUIButton.cpp GUIButtonDrawn.cpp GUI.cpp \
   GUIFrame.cpp GUIList.cpp GUIStatic.cpp GUITabView.cpp \
   Renderer.cpp RendererInit.cpp Replay.cpp Sound.cpp \

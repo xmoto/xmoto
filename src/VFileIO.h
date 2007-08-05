@@ -92,7 +92,9 @@ namespace vapp {
     public:        
       /* Methods */
       static void init(std::string AppDir);
-      
+      static void uninit();
+      static bool isInitialized();
+
       static std::vector<std::string> findPhysFiles(std::string Files,bool bRecurse = false);
       
       static bool copyFile(const std::string &From,const std::string &To, std::string &To_really_done); /* To_really_done is out : it is the name of the file really written */
@@ -191,6 +193,8 @@ namespace vapp {
       static std::string binCheckSum();
 
     private:
+      static bool m_isInitialized;
+
       /* Helper functions */
       static void _ThrowFileError(FileHandle *pfh,std::string Description);
       static void _FindFilesRecursive(const std::string &Dir,const std::string &Wildcard,std::vector<std::string> &List);
