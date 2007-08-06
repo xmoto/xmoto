@@ -135,8 +135,6 @@ class xmDatabase;
       virtual void mouseUp(int nButton);
       virtual void parseUserArgs(std::vector<std::string> &UserArgs);
       virtual void helpUserArgs(void);
-      virtual void selectDisplayMode(int *pnWidth,int *pnHeight,int *pnBPP,bool *pbWindowed);
-      virtual std::string selectDrawLibMode();
       virtual std::string getConfigThemeName(ThemeChoicer *p_themeChoicer);
 
       /* Methods */
@@ -251,7 +249,6 @@ class xmDatabase;
       std::string m_WebHighscoresURL;
       std::string m_WebHighscoresRoomName;
 
-      bool m_bEnableWebHighscores;              /* true: Read world highscores from website */
       bool m_bWebHighscoresUpdatedThisSession;  /* true: Updated this session */
       bool m_bWebLevelsToDownload;              /* true: there are new levels to download */
       bool m_bEnableCheckNewLevelsAtStartup;

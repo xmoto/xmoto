@@ -24,7 +24,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "VCommon.h"
 
-namespace vapp {
 
 	/*===========================================================================
 	User variable
@@ -75,7 +74,5 @@ namespace vapp {
 	    
 	    UserConfigVar *_FindVarByName(std::string Name);
 	};
-
-}
 
 #endif

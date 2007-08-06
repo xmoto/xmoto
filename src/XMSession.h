@@ -33,20 +33,36 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 class XMArguments;
+class UserConfig;
 
 class XMSession {
   public:
   XMSession();
   void load(const XMArguments* i_xmargs);
-
+  void load(UserConfig* m_Config);
   bool isVerbose() const;
 
   void setUseGraphics(bool i_value);
   bool useGraphics() const;
+  int resolutionWidth() const;
+  int resolutionHeight() const;
+  int bpp() const;
+  int windowed() const;
+  bool glExts() const;
+  std::string drawlib() const;
+  bool www() const;
+  void setWWW(bool i_value);
 
   private:
   bool m_verbose;
   bool m_useGraphics;
+  int  m_resolutionWidth;
+  int  m_resolutionHeight;
+  int  m_bpp;
+  bool m_windowed;
+  bool m_glExts;
+  std::string m_drawlib;
+  bool m_www;
 };
 
 #endif

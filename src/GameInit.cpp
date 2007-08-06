@@ -41,20 +41,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 namespace vapp {
 
   /*===========================================================================
-  Select display mode
-  ===========================================================================*/
-  void GameApp::selectDisplayMode(int *pnWidth,int *pnHeight,int *pnBPP,bool *pbWindowed) {
-    *pnWidth = m_Config.getInteger("DisplayWidth");
-    *pnHeight = m_Config.getInteger("DisplayHeight");
-    *pnBPP = m_Config.getInteger("DisplayBPP");
-    *pbWindowed = m_Config.getBool("DisplayWindowed");
-  }  
-  
-  std::string GameApp::selectDrawLibMode() {
-    return m_Config.getString("DrawLib");
-  }
-
-  /*===========================================================================
   Update loading screen
   ===========================================================================*/
   void GameApp::_UpdateLoadingScreen(float fDone, const std::string &NextTask) {
@@ -309,7 +295,7 @@ namespace vapp {
       m_pWebHighscores->setWebsiteInfos(m_WebHighscoresIdRoom,
 					m_WebHighscoresURL);
       
-    if(m_bEnableWebHighscores && m_PlaySpecificLevelFile == "" && m_PlaySpecificReplay == "") {  
+    if(m_xmsession->www() && m_PlaySpecificLevelFile == "" && m_PlaySpecificReplay == "") {  
       bool bSilent = true;
       try {
 	if(m_bEnableCheckHighscoresAtStartup) {

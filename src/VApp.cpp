@@ -91,21 +91,9 @@ namespace vapp {
     m_UserNotify = "";
     m_fFramesPerSecond = 25.0f;
     m_fNextFrame = 0.0f;
-    m_bNoWWW = false;
     m_nFrameDelay = 0;
     drawLib = NULL;
     
-    m_useGlExtension = true;
-    
-    m_CmdDispWidth = -1;
-    m_CmdDispHeight = -1;
-    m_CmdDispBpp = -1;
-    m_CmdWindowed = false;
-    m_bCmdDispWidth = false;
-    m_bCmdDispHeight = false;
-    m_bCmdDispBPP = false;
-    m_bCmdWindowed = false;
-
     m_xmsession = new XMSession();
   }
 
@@ -198,17 +186,17 @@ namespace vapp {
       return; /* abort */
     }
 
+    /* help */
+    if(v_xmArgs.isOptHelp()) {
+      v_xmArgs.help(nNumArgs >= 1 ? ppcArgs[0] : "xmoto");
+      return;
+    }
+
     /* init sub-systems */
     SwapEndian::Swap_Init();
     srand(time(NULL));
     FS::init("xmoto");
     Logger::init(FS::getUserDir() + "/xmoto.log");
-
-    /* load session */
-    m_xmsession->load(&v_xmArgs); /* overload default session by xmargs */
-
-    /* apply verbose mode */
-    Logger::setVerbose(m_xmsession->isVerbose());
 
     /* package / unpackage */
     if(v_xmArgs.isOptPack()) {
@@ -237,9 +225,16 @@ namespace vapp {
       return; /* abort */
     }
 
-    /* load config */
+    /* load config file */
     createDefaultConfig();
     m_Config.loadFile();
+
+    /* load session */
+    m_xmsession->load(&m_Config); /* overload default session by userConfig */
+    m_xmsession->load(&v_xmArgs); /* overload default session by xmargs     */
+
+    /* apply verbose mode */
+    Logger::setVerbose(m_xmsession->isVerbose());
 
 #ifdef USE_GETTEXT
     std::string v_locale = Locales::init(m_Config.getString("Language"));
@@ -265,36 +260,23 @@ namespace vapp {
 
     _InitWin(m_xmsession->useGraphics());
 
-    int configured_width,configured_height,configured_BPP;
-    bool configured_windowed;
-    /* user configuration */
-    selectDisplayMode(&configured_width, &configured_height, &configured_BPP, &configured_windowed);
-        
-    /* overwrite by cmdline configuration */
-    if(isCmdDispWidth())    configured_width     = m_CmdDispWidth;
-    if(isCmdDispHeight())   configured_height    = m_CmdDispHeight;
-    if(isCmdDispBPP())      configured_BPP       = m_CmdDispBpp;
-    if(isCmdDispWindowed()) configured_windowed  = m_CmdWindowed;
-
     if(m_xmsession->useGraphics()) {
       /* init drawLib */
-      if(m_CmdDrawLibName == "") {
-	drawLib = DrawLib::DrawLibFromName(selectDrawLibMode());
-      } else {
-	drawLib = DrawLib::DrawLibFromName(m_CmdDrawLibName);
-      }
+      drawLib = DrawLib::DrawLibFromName(m_xmsession->drawlib());
 
       if(drawLib == NULL) {
 	throw Exception("Drawlib not initialized");
       }
 
       drawLib->setNoGraphics(m_xmsession->useGraphics() == false);
-      drawLib->setDontUseGLExtensions(m_useGlExtension == false);
+      drawLib->setDontUseGLExtensions(m_xmsession->glExts() == false);
 
       /* Init! */
-      drawLib->init(configured_width, configured_height, configured_BPP, configured_windowed, &m_theme);
+      Logger::Log("Resolution: %ix%i (%i bpp)", m_xmsession->resolutionWidth(), m_xmsession->resolutionHeight(), m_xmsession->bpp());
+      drawLib->init(m_xmsession->resolutionWidth(), m_xmsession->resolutionHeight(), m_xmsession->bpp(), m_xmsession->windowed(), &m_theme);
       if(!drawLib->isNoGraphics()) {        
-	drawLib->setDrawDims(configured_width,configured_height,configured_width,configured_height);
+	drawLib->setDrawDims(m_xmsession->resolutionWidth(), m_xmsession->resolutionHeight(),
+			     m_xmsession->resolutionWidth(), m_xmsession->resolutionHeight());
       }
     }
     
@@ -594,67 +576,30 @@ namespace vapp {
       else if(!strcmp(ppcArgs[i],"-res")) {
         if(i+1 == nNumArgs) 
           throw SyntaxError("missing resolution");
-        sscanf(ppcArgs[i+1],"%dx%d",&m_CmdDispWidth,&m_CmdDispHeight);
-        m_bCmdDispWidth = m_bCmdDispHeight = true;
         i++;
       }
       else if(!strcmp(ppcArgs[i],"-bpp")) {
         if(i+1 == nNumArgs) 
           throw SyntaxError("missing bit depth");
-	m_CmdDispBpp = atoi(ppcArgs[i+1]);
-        m_bCmdDispBPP = true;
         i++;
       }
       else if(!strcmp(ppcArgs[i],"-fs")) {
-	m_CmdWindowed = false;
-        m_bCmdWindowed = true;
       }
       else if(!strcmp(ppcArgs[i],"-win")) {
-	m_CmdWindowed = true;
-        m_bCmdWindowed = true;
       }
       else if(!strcmp(ppcArgs[i],"-v")) {
       } 
       else if(!strcmp(ppcArgs[i],"-noexts")) {
-	m_useGlExtension = false;
       }
       else if(!strcmp(ppcArgs[i],"-nowww")) {
-        m_bNoWWW = true;
       } else if(!strcmp(ppcArgs[i],"-drawlib")) {
         if(i+1 == nNumArgs) {
           throw SyntaxError("missing drawlib");
 	}
-	m_CmdDrawLibName = ppcArgs[i+1];
         i++;
       } else if(!strcmp(ppcArgs[i],"-h") || !strcmp(ppcArgs[i],"-?") ||
               !strcmp(ppcArgs[i],"--help") || !strcmp(ppcArgs[i],"-help")) {
-        printf("%s (Version %s)\n",m_AppName.c_str(), XMBuild::getVersionString().c_str());
-        if(m_CopyrightInfo.length()>0)
-          printf("%s\n",m_CopyrightInfo.c_str());
-        printf("usage:  %s {options}\n"
-               "options:\n",m_AppCommand.c_str());
-        
-        printf("\t-res WIDTHxHEIGHT\n\t\tSpecifies display resolution to use.\n");
-        printf("\t-bpp BITS\n\t\tTry to use this display color bit depth.\n");
-        printf("\t-fs\n\t\tForces fullscreen mode.\n");
-        printf("\t-win\n\t\tForces windowed mode.\n");
-        printf("\t-nogfx\n\t\tDon't show any graphical elements.\n");
-        printf("\t-q\n\t\tDon't print messages to screen, and don't save them in the log.\n");
-        printf("\t-v\n\t\tBe verbose.\n");
-        printf("\t-noexts\n\t\tDon't use any OpenGL extensions.\n");
-        printf("\t-nowww\n\t\tDon't allow xmoto to connect on the web.\n");
-//If both sdlgfx and opengl are available give the user the posibility
-//to select the draw library
-#ifdef ENABLE_SDLGFX
-  #ifdef ENABLE_OPENGL
-        printf("\t-drawlib [OPENGL|SDLGFX]\n\t\tSelect the draw library to use.\n");
-  #endif
-#endif
-        helpUserArgs();
-        printf("\n");
-        
 	/* mark that we want to quit the application */
-	m_bQuit = true;
         return;
       }
       else {
