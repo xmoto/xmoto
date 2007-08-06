@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VFileIO.h"
 #include "helpers/Log.h"
 #include "XMBuild.h"
+#include "XMSession.h"
 
 namespace vapp {
 
@@ -1498,7 +1499,7 @@ namespace vapp {
 
       
       /* Get record */
-      if(m_bEnableWebHighscores) {
+      if(m_xmsession->www()) {
 	char **v_result;
 	int nrow;
 	std::string v_roomName;
@@ -2099,15 +2100,15 @@ namespace vapp {
       if(Clicked != UI_MSGBOX_NOTHING) {
         if(Clicked == UI_MSGBOX_YES) {
           /* Show the actual web config editor */
-          m_bEnableWebHighscores = true;
+	  m_xmsession->setWWW(true);
           m_pWebConfEditor->showWindow(true);          
         }
         else {
           /* No internet connection thank you */
-          m_bEnableWebHighscores = false;
+	  m_xmsession->setWWW(false);
           setState(GS_MENU);
         }
-	m_Config.setBool("WebHighscores", m_bEnableWebHighscores);
+	m_Config.setBool("WebHighscores", m_xmsession->www());
         
         m_Config.setBool("WebConfAtInit",false);
         delete m_pWebConfMsgBox;
@@ -2967,7 +2968,7 @@ namespace vapp {
       pReplaysList->setChanged(false);
       pUploadHighscoreButton->enableWindow(false);
 
-      if(m_bEnableWebHighscores) {
+      if(m_xmsession->www()) {
 	if(pReplaysList->getSelected() >= 0 && pReplaysList->getSelected() < pReplaysList->getEntries().size()) {
 	  UIListEntry *pListEntry = pReplaysList->getEntries()[pReplaysList->getSelected()];
 	  if(pListEntry != NULL) {
@@ -4037,7 +4038,7 @@ namespace vapp {
     if(m_db->replays_exists(FS::getFileBaseName(v_fileUrl))) {
       i_pLevelInfoViewReplayButton->enableWindow(true);
     } else {
-      i_pLevelInfoViewReplayButton->enableWindow(m_bEnableWebHighscores);
+      i_pLevelInfoViewReplayButton->enableWindow(m_xmsession->www());
     }
   }
 
@@ -4070,7 +4071,7 @@ namespace vapp {
       return;
     }
     
-    if(m_bEnableWebHighscores == false) {
+    if(m_xmsession->www() == false) {
       return;
     }
 

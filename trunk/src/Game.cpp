@@ -32,6 +32,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/BikePlayer.h"
 #include "db/xmDatabase.h";
 #include "helpers/Log.h"
+#include "XMSession.h"
 
 #include <curl/curl.h>
 #include <iomanip.h>
@@ -104,7 +105,6 @@ GameApp::GameApp() {
   m_bDisplayInfosReplay = false;
   
   m_bShowWebHighscoreInGame = false;
-  m_bEnableWebHighscores = true;
   m_pWebHighscores = NULL;
   m_pWebLevels = NULL;
   m_pWebRooms = NULL;
@@ -551,7 +551,7 @@ GameApp::GameApp() {
 					}
 	    
 					// enable upload button
-					if(m_bEnableWebHighscores) {
+					if(m_xmsession->www()) {
 						if(m_pJustPlayReplay != NULL) {
 							for(int i=0;i<m_nNumFinishMenuButtons;i++) {
 								if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_UPLOAD_HIGHSCORE) {
@@ -686,7 +686,6 @@ GameApp::GameApp() {
     m_bEnableGhostInfo = m_Config.getBool("DisplayGhostInfo");
     m_Renderer.setGhostDisplayInformation(m_bEnableGhostInfo);
 
-    m_bEnableWebHighscores = m_Config.getBool("WebHighscores") && isNoWWW()== false;
     m_bShowWebHighscoreInGame = m_Config.getBool("ShowInGameWorldRecord");
     m_bEnableCheckNewLevelsAtStartup  = m_Config.getBool("CheckNewLevelsAtStartup");
     m_bEnableCheckHighscoresAtStartup = m_Config.getBool("CheckHighscoresAtStartup");
@@ -784,12 +783,11 @@ GameApp::GameApp() {
   }
 
   void GameApp::enableWWW(bool bValue) {
-    setNoWWW(!isNoWWW());
-    m_bEnableWebHighscores = m_Config.getBool("WebHighscores") && isNoWWW()== false;
-    if(isNoWWW()) {
-      m_sysMsg.displayText(SYS_MSG_WWW_DISABLED);
-    } else {
+    m_xmsession->setWWW(m_xmsession->www() == false);
+    if(m_xmsession->www()) {
       m_sysMsg.displayText(SYS_MSG_WWW_ENABLED);
+    } else {
+      m_sysMsg.displayText(SYS_MSG_WWW_DISABLED);
     }
   }
 
@@ -804,7 +802,7 @@ GameApp::GameApp() {
     }
 
     if(nKey == SDLK_F8) {
-      enableWWW(!isNoWWW());
+      enableWWW(m_xmsession->www() == false);
       return;        
     }
 
@@ -1783,7 +1781,7 @@ GameApp::GameApp() {
     if(m_db->replays_exists(v_replayName)) {
       res = std::string("Replays/") + v_replayName + std::string(".rpl");
     } else {
-      if(m_bEnableWebHighscores) {
+      if(m_xmsession->www()) {
 	/* download the replay */
 	try {
 	  _SimpleMessage(GAMETEXT_DLGHOST,&m_InfoMsgBoxRect);

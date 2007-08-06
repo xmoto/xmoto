@@ -32,12 +32,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "UserConfig.h"
 
 class XMSession;
+class UserConfig;
 
 namespace vapp {
 
 
   class App;
-  class UserConfig;
+
 
   /*===========================================================================
   Sub-application - something that runs in the context of a parent app
@@ -134,15 +135,6 @@ namespace vapp {
     float getFPS(void) {
       return m_fFramesPerSecond;
     }
-//      bool isNoGraphics(void) {return m_bNoGraphics;}
-//      void setNoGraphics(bool b) {m_bNoGraphics = b;}
-    bool isNoWWW(void) {
-      return m_bNoWWW;
-    }
-
-    void setNoWWW(bool bValue) {
-      m_bNoWWW = bValue;
-    }
 
     virtual bool isUglyMode() {
       return false;
@@ -167,18 +159,6 @@ namespace vapp {
 
 
   protected:
-    bool isCmdDispWidth(void) {
-      return m_bCmdDispWidth;
-    }
-    bool isCmdDispHeight(void) {
-      return m_bCmdDispHeight;
-    }
-    bool isCmdDispBPP(void) {
-      return m_bCmdDispBPP;
-    }
-    bool isCmdDispWindowed(void) {
-      return m_bCmdWindowed;
-    }
     /* Virtual protected methods */
     virtual void drawFrame(void) {
     }
@@ -202,13 +182,7 @@ namespace vapp {
     }
     virtual void createDefaultConfig() {
     }
-    virtual void selectDisplayMode(int *pnWidth, int *pnHeight, int *pnBPP,
-				   bool * pbWindowed) {
-    }
 
-    virtual std::string selectDrawLibMode() {
-      return "";
-    }
       /**
        * The DrawLib instance to use for this app
        **/
@@ -218,13 +192,6 @@ namespace vapp {
 
     Theme m_theme;
     DrawLib *drawLib;
-    bool m_useGlExtension;
-
-    int  m_CmdDispWidth;
-    int  m_CmdDispHeight;
-    int  m_CmdDispBpp;
-    bool m_CmdWindowed;
-    std::string m_CmdDrawLibName;
 
     XMSession* m_xmsession;
 
@@ -237,11 +204,7 @@ namespace vapp {
     /* Data */
     int m_nFrameDelay;		/* # of millisecs to wait after screen buffer swap */
 
-    bool m_bNoWWW;
     float m_fFramesPerSecond;	/* Force this FPS */
-
-
-    bool m_bCmdDispWidth, m_bCmdDispHeight, m_bCmdDispBPP, m_bCmdWindowed;
 
     /* User nofification */
     std::string m_UserNotify;

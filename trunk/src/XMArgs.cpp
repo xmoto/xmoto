@@ -34,7 +34,7 @@ XMArguments::XMArguments() {
   m_bpp_value 	      = 0;
   m_opt_fs            = false;
   m_opt_win           = false;
-  m_opt_noext         = false;
+  m_opt_noexts        = false;
   m_opt_drawlib       = false;
   m_opt_ugly          = false;
   m_opt_nowww         = false;
@@ -94,13 +94,42 @@ void XMArguments::parse(int i_argc, char **i_argv) {
       }      
     } else if(v_opt == "-nogfx") {
       m_opt_nogfx = true;
-    } else if(v_opt == "-res") {
-      m_opt_res = true;
     } else if(v_opt == "-v") {
       m_opt_verbose = true;
     } else if(v_opt == "-nogfx") {
       m_opt_nogfx = true;
-    } else {
+    } else if(v_opt == "-res") {
+      m_opt_res = true;
+      if(i+1 >= i_argc) {
+	throw SyntaxError("missing resolution");
+      }
+      sscanf(i_argv[i+1], "%ix%i", &m_res_dispWidth, &m_res_dispHeight);
+      i++;
+    } else if(v_opt == "-bpp") {
+      m_opt_bpp = true;
+      if(i+1 >= i_argc) {
+	throw SyntaxError("missing bit depth");
+      }
+      m_bpp_value = atoi(i_argv[i+1]);
+      i++;
+    } else if(v_opt == "-win") {
+      m_opt_win = true;
+    } else if(v_opt == "-fs") {
+      m_opt_fs = true;
+    } else if(v_opt == "-noexts") {
+      m_opt_noexts = true;
+    } else if(v_opt == "-drawlib") {
+      m_opt_drawlib = true;
+      if(i+1 >= i_argc) {
+	throw SyntaxError("missing drawlib name");
+      }
+      m_drawlib_lib = i_argv[i+1];
+      i++;
+    } else if(v_opt == "-h" || v_opt == "-?" || v_opt == "--help" || v_opt == "-help" ) {
+      m_opt_help = true;
+    } else if(v_opt == "-nowww") {
+      m_opt_nowww = true;
+    }  else {
       //throw Exception("Invalid option \"" + v_opt + "\"");
     }
 
@@ -110,30 +139,6 @@ void XMArguments::parse(int i_argc, char **i_argv) {
   //throw Exception("To do");
 }
 
-//  void App::_ParseArgs(int nNumArgs,char **ppcArgs) {
-//
-//      else if(!strcmp(ppcArgs[i],"-res")) {
-//        if(i+1 == nNumArgs) 
-//          throw SyntaxError("missing resolution");
-//        sscanf(ppcArgs[i+1],"%dx%d",&m_CmdDispWidth,&m_CmdDispHeight);
-//        m_bCmdDispWidth = m_bCmdDispHeight = true;
-//        i++;
-//      }
-//      else if(!strcmp(ppcArgs[i],"-bpp")) {
-//        if(i+1 == nNumArgs) 
-//          throw SyntaxError("missing bit depth");
-//	m_CmdDispBpp = atoi(ppcArgs[i+1]);
-//        m_bCmdDispBPP = true;
-//        i++;
-//      }
-//      else if(!strcmp(ppcArgs[i],"-fs")) {
-//	m_CmdWindowed = false;
-//        m_bCmdWindowed = true;
-//      }
-//      else if(!strcmp(ppcArgs[i],"-win")) {
-//	m_CmdWindowed = true;
-//        m_bCmdWindowed = true;
-//      }
 //      else if(!strcmp(ppcArgs[i],"-noexts")) {
 //	m_useGlExtension = false;
 //      }
@@ -196,6 +201,54 @@ bool XMArguments::isOptVerbose() const {
 
 bool XMArguments::isOptNoGfx() const {
   return m_opt_nogfx;
+}
+
+bool XMArguments::isOptRes() const {
+  return m_opt_res;
+}
+
+int XMArguments::getOpt_res_dispWidth() const {
+  return m_res_dispWidth;
+}
+
+int XMArguments::getOpt_res_dispHeight() const {
+  return m_res_dispHeight;
+}
+
+bool XMArguments::isOptBpp() const {
+  return m_opt_bpp;
+}
+
+int XMArguments::getOpt_bpp_value() const {
+  return m_bpp_value;
+}
+
+bool XMArguments::isOptWindowed() const {
+  return m_opt_win;
+}
+
+bool XMArguments::isOptFs() const {
+  return m_opt_fs;
+}
+
+bool XMArguments::isOptNoExts() const {
+  return m_opt_noexts;
+}
+
+bool XMArguments::isOptDrawlib() const {
+  return m_opt_drawlib;
+}
+
+std::string XMArguments::getOpt_drawlib_lib() const {
+  return m_drawlib_lib;
+}
+
+bool XMArguments::isOptHelp() const {
+  return m_opt_help;
+}
+
+bool XMArguments::isOptNoWWW() const {
+  return m_opt_nowww;
 }
 
 void XMArguments::help(const std::string& i_cmd) {

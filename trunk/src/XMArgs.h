@@ -32,14 +32,24 @@ class XMArguments {
   bool isOptPack() const;
   std::string getOpt_pack_bin() const;
   std::string getOpt_pack_dir() const;
-
   bool isOptUnPack() const;
   std::string getOpt_unpack_bin()    const;
   std::string getOpt_unpack_dir()    const;
   bool        getOpt_unpack_noList() const;
-
   bool isOptVerbose() const;
   bool isOptNoGfx() const;
+  bool isOptRes() const;
+  int  getOpt_res_dispWidth() const;
+  int  getOpt_res_dispHeight() const;
+  bool isOptBpp() const;
+  int  getOpt_bpp_value() const;
+  bool isOptWindowed() const;
+  bool isOptFs() const;
+  bool isOptNoExts() const;
+  bool isOptDrawlib() const;
+  std::string getOpt_drawlib_lib() const;
+  bool isOptHelp() const;
+  bool isOptNoWWW() const;
 
   private:
   /* pack options */
@@ -60,7 +70,7 @@ class XMArguments {
   int m_bpp_value;
   bool m_opt_fs;
   bool m_opt_win;
-  bool m_opt_noext;
+  bool m_opt_noexts;
   bool m_opt_drawlib;
   std::string m_drawlib_lib;
   bool m_opt_ugly;
