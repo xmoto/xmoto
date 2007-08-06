@@ -2163,7 +2163,7 @@ namespace vapp {
 	  }
 	}
 	
-	      m_Config.setBool("WebHighscores",true);
+	m_Config.setBool("WebHighscores",true);
 	
         /* Update options */
         _ImportOptions();
@@ -2649,6 +2649,10 @@ namespace vapp {
       pDisplayGhostTimeDiff->enableWindow(false);
     }
 
+
+    if(pWebHighscores->isClicked()) {
+      pWebHighscores->setClicked(false);
+
       if(pWebHighscores->getChecked()) {
         pINetConf->enableWindow(true);
         pUpdHS->enableWindow(true);
@@ -2657,8 +2661,7 @@ namespace vapp {
 	pUpdThemeList->enableWindow(true);
 	pUpdSelectedTheme->enableWindow(true);
 	pRoomsTab->enableWindow(true);
-      }
-      else {
+      } else {
         pINetConf->enableWindow(false);
         pUpdHS->enableWindow(false);
 	pCheckNewLevelsAtStartup->enableWindow(false);
@@ -2667,6 +2670,9 @@ namespace vapp {
 	pUpdSelectedTheme->enableWindow(false);
 	pRoomsTab->enableWindow(false);
       }
+
+      enableWWW(pWebHighscores->getChecked());
+    }
     
     if(pEnableAudioButton) {
       bool t=pEnableAudioButton->getChecked();
@@ -2754,7 +2760,7 @@ namespace vapp {
     UIButton *pJoystickRB = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:CONTROLS_TAB:JOYSTICK");
     UIButton *pKeyboardRB = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:CONTROLS_TAB:KEYBOARD");
     UIButton *pConfigJoystick = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:CONTROLS_TAB:CONFIGURE_JOYSTICK");
-    
+
     if(SDL_NumJoysticks() > 0) {    
       if(pJoystickRB->getChecked()) {
         pActionKeyList->enableWindow(false);
@@ -2786,7 +2792,7 @@ namespace vapp {
     if(pConfigJoystick && pConfigJoystick->isClicked()) {
       _ConfigureJoystick();
     }
-    
+
     /* HELP */
     /* Tutorial button clicked? */
     UIButton *pTutorialButton = (UIButton *)m_pHelpWindow->getChild("HELP_TUTORIAL_BUTTON");
