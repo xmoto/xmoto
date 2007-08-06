@@ -96,6 +96,10 @@ void XMArguments::parse(int i_argc, char **i_argv) {
       m_opt_nogfx = true;
     } else if(v_opt == "-res") {
       m_opt_res = true;
+    } else if(v_opt == "-v") {
+      m_opt_verbose = true;
+    } else if(v_opt == "-nogfx") {
+      m_opt_nogfx = true;
     } else {
       //throw Exception("Invalid option \"" + v_opt + "\"");
     }
@@ -108,9 +112,6 @@ void XMArguments::parse(int i_argc, char **i_argv) {
 
 //  void App::_ParseArgs(int nNumArgs,char **ppcArgs) {
 //
-//      } else if(!strcmp(ppcArgs[i],"-nogfx")) {
-//	m_useGraphics = true;
-//      }
 //      else if(!strcmp(ppcArgs[i],"-res")) {
 //        if(i+1 == nNumArgs) 
 //          throw SyntaxError("missing resolution");
@@ -133,9 +134,6 @@ void XMArguments::parse(int i_argc, char **i_argv) {
 //	m_CmdWindowed = true;
 //        m_bCmdWindowed = true;
 //      }
-//      else if(!strcmp(ppcArgs[i],"-v")) {
-//        g_bVerbose = true;
-//      } 
 //      else if(!strcmp(ppcArgs[i],"-noexts")) {
 //	m_useGlExtension = false;
 //      }
@@ -190,6 +188,14 @@ std::string XMArguments::getOpt_unpack_dir() const {
 
 bool XMArguments::getOpt_unpack_noList() const {
   return m_unpack_noList;
+}
+
+bool XMArguments::isOptVerbose() const {
+  return m_opt_verbose;
+}
+
+bool XMArguments::isOptNoGfx() const {
+  return m_opt_nogfx;
 }
 
 void XMArguments::help(const std::string& i_cmd) {

@@ -56,7 +56,7 @@ class ThemeChoice;
 #define DEFAULT_WEBROOM_ID                "1"
 #define DEFAULT_WEBROOM_NAME              "WR"
 
-#define WWW_AGENT ("xmoto-" + XMBuild::getVersionString())
+#define WWW_AGENT ("xmoto-" + XMBuild::getVersionString(true))
 
 #if defined(USE_HASH_MAP)
   #ifdef __GNUC__

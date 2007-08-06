@@ -794,7 +794,7 @@ namespace vapp {
     pChangePlayerButton->setContextHelp(CONTEXTHELP_CHANGE_PLAYER);
     
     UIStatic *pSomeText = new UIStatic(m_pMainMenu,0,drawLib->getDispHeight()-20,
-                                        std::string("X-Moto/") + XMBuild::getVersionString(),
+                                        std::string("X-Moto/") + XMBuild::getVersionString(true),
                                         drawLib->getDispWidth(),20);
     pSomeText->setFont(drawLib->getFontSmall());
     pSomeText->setVAlign(UI_ALIGN_BOTTOM);

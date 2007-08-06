@@ -34,6 +34,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/Log.h"
 
 #include <curl/curl.h>
+#include "XMSession.h"
 
 #define DATABASE_FILE vapp::FS::getUserDirUTF8() + "/" + "xm.db"
 
@@ -126,7 +127,7 @@ namespace vapp {
     }     
 
     /* Init sound system */
-    if(m_useGraphics) {
+    if(m_xmsession->useGraphics()) {
       Sound::init(&m_Config);
       if(!Sound::isEnabled()) {
       }    
@@ -151,7 +152,7 @@ namespace vapp {
     m_db = new xmDatabase(DATABASE_FILE,
 			  m_profile == "" ? std::string("") : m_profile,
 			  FS::getDataDir(), FS::getUserDir(), FS::binCheckSum(),
-			  m_useGraphics ? this : NULL);
+			  m_xmsession->useGraphics() ? this : NULL);
     if(m_sqlTrace) {
       m_db->setTrace(m_sqlTrace);
     }
@@ -193,9 +194,9 @@ namespace vapp {
 
     /* load levels */
     if(m_db->levels_isIndexUptodate() == false) {
-      m_levelsManager.reloadLevelsFromLvl(m_db, m_useGraphics ? this : NULL);
+      m_levelsManager.reloadLevelsFromLvl(m_db, m_xmsession->useGraphics() ? this : NULL);
     }
-    m_levelsManager.reloadExternalLevels(m_db, m_useGraphics ? this : NULL);
+    m_levelsManager.reloadExternalLevels(m_db, m_xmsession->useGraphics() ? this : NULL);
 
     /* Update replays */
     
@@ -245,7 +246,7 @@ namespace vapp {
       return;	
     }
     
-    if(m_useGraphics) {  
+    if(m_xmsession->useGraphics()) {  
       _UpdateLoadingScreen((1.0f/9.0f) * 0,GAMETEXT_LOADINGSOUNDS);
       
       if(Sound::isEnabled()) {
@@ -342,7 +343,7 @@ namespace vapp {
     }
 
     /* Test level cache directory */
-    if(m_useGraphics) {  
+    if(m_xmsession->useGraphics()) {  
       _UpdateLoadingScreen((1.0f/9.0f) * 5,GAMETEXT_LOADINGLEVELS);
     }
     LevelsManager::checkPrerequires();
@@ -361,7 +362,7 @@ namespace vapp {
       m_levelsManager.printLevelsList(m_db);
     }
 
-    if(m_useGraphics) {  
+    if(m_xmsession->useGraphics()) {  
       _UpdateLoadingScreen((1.0f/9.0f) * 6,GAMETEXT_INITRENDERER);
     }    
 
@@ -370,7 +371,7 @@ namespace vapp {
       return;
     }
 
-    if(m_useGraphics) {
+    if(m_xmsession->useGraphics()) {
       /* Initialize renderer */
       m_Renderer.init();
       _UpdateLoadingScreen((1.0f/9.0f) * 7,GAMETEXT_INITMENUS);
@@ -395,7 +396,7 @@ namespace vapp {
 	m_PlaySpecificLevel = m_PlaySpecificLevelFile;
       }
     }
-    if((m_PlaySpecificLevel != "") && m_useGraphics) {
+    if((m_PlaySpecificLevel != "") && m_xmsession->useGraphics()) {
       /* ======= PLAY SPECIFIC LEVEL ======= */
       m_StateAfterPlaying = GS_MENU;
       setState(GS_PREPLAYING);
@@ -408,7 +409,7 @@ namespace vapp {
     }
     else {
       /* Graphics? */
-      if(m_useGraphics == false)
+      if(m_xmsession->useGraphics() == false)
         throw Exception("menu requires graphics");
         
       /* Do we have a player profile? */
@@ -445,7 +446,7 @@ namespace vapp {
     if(m_pCredits != NULL)
     delete m_pCredits;
     
-    if(m_useGraphics) {
+    if(m_xmsession->useGraphics()) {
       m_Renderer.unprepareForNewLevel(); /* just to be sure, shutdown can happen quite hard */
       m_Renderer.shutdown();
       m_InputHandler.uninit();
@@ -547,11 +548,11 @@ namespace vapp {
       }      
       else if(UserArgs[i] == "-listlevels") {
         m_bListLevels = true;
-	m_useGraphics = false;
+	m_xmsession->setUseGraphics(false);
       }
       else if(UserArgs[i] == "-listreplays") {
         m_bListReplays = true;
-	m_useGraphics = false;
+	m_xmsession->setUseGraphics(false);
       }
       else if(UserArgs[i] == "-timedemo") {
         m_bTimeDemo = true;
@@ -572,7 +573,7 @@ namespace vapp {
         m_bCleanCache = true;
      } else if(UserArgs[i] == "-replayInfos") {
        if(i+1<UserArgs.size()) {
-	 m_useGraphics = false;
+	 m_xmsession->setUseGraphics(false);
 	 m_bDisplayInfosReplay = true;
 	 m_InfosReplay = UserArgs[i+1];
        } else
