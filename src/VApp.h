@@ -31,6 +31,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Image.h"
 #include "UserConfig.h"
 
+class XMSession;
+
 namespace vapp {
 
 
@@ -216,7 +218,6 @@ namespace vapp {
 
     Theme m_theme;
     DrawLib *drawLib;
-    bool m_useGraphics;
     bool m_useGlExtension;
 
     int  m_CmdDispWidth;
@@ -225,15 +226,13 @@ namespace vapp {
     bool m_CmdWindowed;
     std::string m_CmdDrawLibName;
 
+    XMSession* m_xmsession;
+
   private:
     /* Private helper functions */
     void _InitWin(bool bInitGraphics);
     void _Uninit(void);
     void _ParseArgs(int nNumArgs, char **ppcArgs);
-
-
-
-
 
     /* Data */
     int m_nFrameDelay;		/* # of millisecs to wait after screen buffer swap */

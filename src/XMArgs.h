@@ -38,6 +38,9 @@ class XMArguments {
   std::string getOpt_unpack_dir()    const;
   bool        getOpt_unpack_noList() const;
 
+  bool isOptVerbose() const;
+  bool isOptNoGfx() const;
+
   private:
   /* pack options */
   bool m_opt_pack;

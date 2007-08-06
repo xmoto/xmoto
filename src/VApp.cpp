@@ -42,6 +42,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Locales.h"
 #endif
 
+#include "XMSession.h"
+
 /*===========================================================================
 SDL main entry point
 ===========================================================================*/
@@ -80,8 +82,6 @@ int main(int nNumArgs,char **ppcArgs) {
 
 namespace vapp {
 
-  bool g_bVerbose = false;
-
   App::App() {
     m_bQuit = false;
     m_fAppTime = 0.0f;
@@ -95,7 +95,6 @@ namespace vapp {
     m_nFrameDelay = 0;
     drawLib = NULL;
     
-    m_useGraphics = true;
     m_useGlExtension = true;
     
     m_CmdDispWidth = -1;
@@ -107,6 +106,7 @@ namespace vapp {
     m_bCmdDispBPP = false;
     m_bCmdWindowed = false;
 
+    m_xmsession = new XMSession();
   }
 
   App::~App() {
@@ -119,6 +119,8 @@ namespace vapp {
 //	  );
       delete drawLib;
     }
+
+    delete m_xmsession;
   }
 
   /*===========================================================================
@@ -199,11 +201,14 @@ namespace vapp {
     /* init sub-systems */
     SwapEndian::Swap_Init();
     srand(time(NULL));
-
-    /* Init file system stuff */
     FS::init("xmoto");
     Logger::init(FS::getUserDir() + "/xmoto.log");
-    Logger::setVerbose(g_bVerbose);
+
+    /* load session */
+    m_xmsession->load(&v_xmArgs); /* overload default session by xmargs */
+
+    /* apply verbose mode */
+    Logger::setVerbose(m_xmsession->isVerbose());
 
     /* package / unpackage */
     if(v_xmArgs.isOptPack()) {
@@ -258,7 +263,7 @@ namespace vapp {
     Logger::Log("Locales set to '%s' (directory '%s')", v_locale.c_str(), LOCALESDIR);
 #endif
 
-    _InitWin(m_useGraphics);
+    _InitWin(m_xmsession->useGraphics());
 
     int configured_width,configured_height,configured_BPP;
     bool configured_windowed;
@@ -271,7 +276,7 @@ namespace vapp {
     if(isCmdDispBPP())      configured_BPP       = m_CmdDispBpp;
     if(isCmdDispWindowed()) configured_windowed  = m_CmdWindowed;
 
-    if(m_useGraphics) {
+    if(m_xmsession->useGraphics()) {
       /* init drawLib */
       if(m_CmdDrawLibName == "") {
 	drawLib = DrawLib::DrawLibFromName(selectDrawLibMode());
@@ -283,8 +288,8 @@ namespace vapp {
 	throw Exception("Drawlib not initialized");
       }
 
-      drawLib->setNoGraphics(m_useGraphics == false);
-      drawLib->setDontUseGLExtensions(m_useGraphics == false);
+      drawLib->setNoGraphics(m_xmsession->useGraphics() == false);
+      drawLib->setDontUseGLExtensions(m_useGlExtension == false);
 
       /* Init! */
       drawLib->init(configured_width, configured_height, configured_BPP, configured_windowed, &m_theme);
@@ -491,7 +496,7 @@ namespace vapp {
     /* Tell user app to turn off */
     userShutdown();
 
-    if(m_useGraphics) {
+    if(m_xmsession->useGraphics()) {
       /* Uninit drawing library */
       drawLib->unInit();
     }
@@ -585,7 +590,6 @@ namespace vapp {
     /* Walk through the args */
     for(int i=1;i<nNumArgs;i++) {
       if(!strcmp(ppcArgs[i],"-nogfx")) {
-	m_useGraphics = true;
       }
       else if(!strcmp(ppcArgs[i],"-res")) {
         if(i+1 == nNumArgs) 
@@ -610,7 +614,6 @@ namespace vapp {
         m_bCmdWindowed = true;
       }
       else if(!strcmp(ppcArgs[i],"-v")) {
-        g_bVerbose = true;
       } 
       else if(!strcmp(ppcArgs[i],"-noexts")) {
 	m_useGlExtension = false;
