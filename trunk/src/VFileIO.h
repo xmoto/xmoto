@@ -156,7 +156,7 @@ namespace vapp {
       /* File name mangling */
       static std::string getFileDir(std::string Path);
       static std::string getFileBaseName(std::string Path);
-      static std::string getFileExtension(std::string Path);      
+      static std::string getFileExtension(std::string Path); // do not require FS initialization      
 
       /* Misc */
       static bool isDir(std::string AppDir);

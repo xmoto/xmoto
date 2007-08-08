@@ -47,12 +47,6 @@ GameApp::~GameApp() {
 
 GameApp::GameApp() {
   m_pCredits = NULL;
-  m_bDebugMode=false;
-  m_sqlTrace=false;
-  m_bListLevels=false;
-  m_bListReplays=false;
-  m_bTimeDemo=false;
-  m_bShowFrameRate=false;
   m_bEnableMenuMusic=false;
   m_bEnableInitZoom=true;
   m_bMultiStopWhenOneFinishes=true;
@@ -60,7 +54,6 @@ GameApp::GameApp() {
   m_autoZoomStep = 0;
   m_bAutoZoomInitialized = false;
   m_bLockMotoGame = false;
-  m_bCleanCache=false;
   m_bEnableDeathAnim=true;
   m_pQuitMsgBox=NULL;
   m_pNotifyMsgBox=NULL;
@@ -82,9 +75,6 @@ GameApp::GameApp() {
   m_fFrameTime = 0;
   m_fFPS_Rate = 0;
   m_b50FpsMode = false;
-  m_bUglyMode = false;
-  m_bTestThemeMode = false;
-  m_bUglyOverMode  = false;
   m_pJustPlayReplay = NULL;
   m_updateAutomaticallyLevels = false;
   m_reloadingLevelsUser = false;
@@ -100,9 +90,7 @@ GameApp::GameApp() {
   m_bShowCursor = true;
   m_bEnableEngineSound = true;
   m_bCompressReplays = true;
-  m_bBenchmark = false;
   m_bEnableContextHelp = true;     
-  m_bDisplayInfosReplay = false;
   
   m_bShowWebHighscoreInGame = false;
   m_pWebHighscores = NULL;
@@ -335,7 +323,7 @@ GameApp::GameApp() {
 					v_result = m_db->readDB("SELECT MIN(finishTime) FROM profile_completedLevels WHERE "
 																	"id_level=\"" + 
 																	xmDatabase::protectString(m_MotoGame.getLevelSrc()->Id()) + "\" " + 
-																	"AND id_profile=\"" + xmDatabase::protectString(m_profile)  + "\";",
+																	"AND id_profile=\"" + xmDatabase::protectString(m_xmsession->profile())  + "\";",
 																	nrow);
 					v_res = m_db->getResult(v_result, 1, 0, 0);
 					if(v_res != NULL) {
@@ -347,7 +335,7 @@ GameApp::GameApp() {
 					m_Renderer.showReplayHelp(m_MotoGame.getSpeed(),
 																		m_MotoGame.getLevelSrc()->isScripted() == false);
 	    
-					if(m_bBenchmark || bCreditsMode) m_Renderer.setBestTime("");
+					if(m_xmsession->benchmark() || bCreditsMode) m_Renderer.setBestTime("");
 	    
 					/* World-record stuff */
 					if(!bCreditsMode)
@@ -398,10 +386,10 @@ GameApp::GameApp() {
 				m_nFrame = 0;
 				v_newMusicPlaying = m_MotoGame.getLevelSrc()->Music();
 			} catch(Exception &e) {
-				Logger::Log("** Warning ** : level '%s' cannot be loaded",m_PlaySpecificLevel.c_str());
+				Logger::Log("** Warning ** : level '%s' cannot be loaded",m_PlaySpecificLevelId.c_str());
 				m_MotoGame.endLevel();
 				char cBuf[256];
-				sprintf(cBuf,GAMETEXT_LEVELCANNOTBELOADED,m_PlaySpecificLevel.c_str());
+				sprintf(cBuf,GAMETEXT_LEVELCANNOTBELOADED,m_PlaySpecificLevelId.c_str());
 				setState(m_StateAfterPlaying);
 				notifyMsg(cBuf);
 			}
@@ -429,9 +417,9 @@ GameApp::GameApp() {
 
 			/* Update stats */        
 			if(m_MotoGame.Players().size() == 1) {
-				m_db->stats_died(m_profile,
-												 m_MotoGame.getLevelSrc()->Id(),
-												 m_MotoGame.getTime());
+			  m_db->stats_died(m_xmsession->profile(),
+					   m_MotoGame.getLevelSrc()->Id(),
+					   m_MotoGame.getTime());
 			}                
 
 			/* Play the DIE!!! sound */
@@ -515,7 +503,7 @@ GameApp::GameApp() {
 				v_result = m_db->readDB("SELECT MIN(finishTime) FROM profile_completedLevels WHERE "
 																"id_level=\"" + 
 																xmDatabase::protectString(m_MotoGame.getLevelSrc()->Id()) + "\" " + 
-																"AND id_profile=\"" + xmDatabase::protectString(m_profile)  + "\";",
+																"AND id_profile=\"" + xmDatabase::protectString(m_xmsession->profile())  + "\";",
 																nrow);
 				v_res = m_db->getResult(v_result, 1, 0, 0);
 				if(v_res != NULL) {
@@ -597,16 +585,16 @@ GameApp::GameApp() {
 				}
 			}
 			if(m_MotoGame.Players().size() == 1) {
-				m_db->profiles_addFinishTime(m_profile, m_MotoGame.getLevelSrc()->Id(),
+				m_db->profiles_addFinishTime(m_xmsession->profile(), m_MotoGame.getLevelSrc()->Id(),
 																		 TimeStamp, v_finish_time);
 			}
-			_MakeBestTimesWindow(m_pBestTimes, m_profile, m_MotoGame.getLevelSrc()->Id(),
+			_MakeBestTimesWindow(m_pBestTimes, m_xmsession->profile(), m_MotoGame.getLevelSrc()->Id(),
 													 v_finish_time,TimeStamp);
 
 			/* Update stats */
 			/* update stats only in one player mode */
 			if(m_MotoGame.Players().size() == 1) {       
-				m_db->stats_levelCompleted(m_profile,
+				m_db->stats_levelCompleted(m_xmsession->profile(),
 																	 m_MotoGame.getLevelSrc()->Id(),
 																	 m_MotoGame.Players()[0]->finishTime());
 				_UpdateLevelsLists();
@@ -712,7 +700,7 @@ GameApp::GameApp() {
   Draw menu/title screen background
   ===========================================================================*/
   void GameApp::_DrawMenuBackground(void) {
-    if(m_MenuBackgroundGraphics != MENU_GFX_OFF && !m_bUglyMode) {
+    if(m_MenuBackgroundGraphics != MENU_GFX_OFF && m_xmsession->ugly() == false) {
       if(m_pTitleTL != NULL)
         drawLib->drawImage(Vector2f(0,0),Vector2f(drawLib->getDispWidth()/2,drawLib->getDispHeight()/2),m_pTitleTL);
       if(m_pTitleTR != NULL)
@@ -807,8 +795,8 @@ GameApp::GameApp() {
     }
 
     if(nKey == SDLK_F9) {
-      switchUglyMode(!m_bUglyMode);
-      if(m_bUglyMode) {
+      switchUglyMode(m_xmsession->ugly() == false);
+      if(m_xmsession->ugly()) {
 	m_sysMsg.displayText(SYS_MSG_UGLY_MODE_ENABLED);
       } else {
 	m_sysMsg.displayText(SYS_MSG_UGLY_MODE_DISABLED);
@@ -822,8 +810,8 @@ GameApp::GameApp() {
     }
 
     if(nKey == SDLK_F10) {
-      switchTestThemeMode(!m_bTestThemeMode);
-      if(m_bTestThemeMode) {
+      switchTestThemeMode(m_xmsession->testTheme() == false);
+      if(m_xmsession->testTheme()) {
 	m_sysMsg.displayText(SYS_MSG_THEME_MODE_ENABLED);
       } else {
 	m_sysMsg.displayText(SYS_MSG_THEME_MODE_DISABLED);
@@ -832,8 +820,8 @@ GameApp::GameApp() {
     }
 
     if(nKey == SDLK_F11) {
-      switchUglyOverMode(!m_bUglyOverMode);
-      if(m_bUglyOverMode) {
+      switchUglyOverMode(m_xmsession->uglyOver() == false);
+      if(m_xmsession->uglyOver()) {
 	m_sysMsg.displayText(SYS_MSG_UGLY_OVER_MODE_ENABLED);
       } else {
 	m_sysMsg.displayText(SYS_MSG_UGLY_OVER_MODE_DISABLED);
@@ -1529,7 +1517,7 @@ GameApp::GameApp() {
     /* Update stats */        
     if(m_MotoGame.Players().size() == 1) {
       if(m_MotoGame.Players()[0]->isDead() == false) {
-				m_db->stats_levelRestarted(m_profile,
+				m_db->stats_levelRestarted(m_xmsession->profile(),
 																	 m_MotoGame.getLevelSrc()->Id(),
 																	 m_MotoGame.getTime());
       }
@@ -1542,7 +1530,7 @@ GameApp::GameApp() {
 
     if(i_reloadLevel) {
       try {
-				Level::removeFromCache(m_db, m_PlaySpecificLevel);
+				Level::removeFromCache(m_db, m_PlaySpecificLevelId);
       } catch(Exception &e) {
 				// hum, not nice
       }
@@ -1739,7 +1727,7 @@ GameApp::GameApp() {
     p_time = -1.0;
 
     v_result = m_db->readDB("SELECT name, finishTime FROM replays "
-			    "WHERE id_profile=\"" + xmDatabase::protectString(m_profile) + "\" "
+			    "WHERE id_profile=\"" + xmDatabase::protectString(m_xmsession->profile()) + "\" "
 			    "AND   id_level=\""   + xmDatabase::protectString(p_levelId) + "\" "
 			    "AND   isFinished=1 "
 			    "ORDER BY finishTime LIMIT 1;",
@@ -1926,7 +1914,7 @@ GameApp::GameApp() {
     "LEFT OUTER JOIN webhighscores h "
     "ON (r.id_level = h.id_level AND h.id_room=" + m_WebHighscoresIdRoom + ") "
     "INNER JOIN weblevels l ON r.id_level = l.id_level "
-    "WHERE r.id_profile=\"" + xmDatabase::protectString(m_profile) + "\" "
+    "WHERE r.id_profile=\"" + xmDatabase::protectString(m_xmsession->profile()) + "\" "
     "AND r.isFinished "
     "AND ( (h.id_room IS NULL) OR xm_floord(h.finishTime*100.0) > xm_floord(r.finishTime*100.0)) "
     "ORDER BY r.id_level, r.finishTime;";
@@ -1982,7 +1970,7 @@ GameApp::GameApp() {
   }
 
   void GameApp::switchUglyMode(bool bUgly) {
-    m_bUglyMode = bUgly;
+    m_xmsession->setUgly(bUgly);
     if(bUgly == false) {
       SDL_ShowCursor(SDL_DISABLE);        
     } else {
@@ -1992,13 +1980,13 @@ GameApp::GameApp() {
   }
 
   void GameApp::switchTestThemeMode(bool mode) {
-    m_bTestThemeMode = mode;
-    m_Renderer.setTestThemeMode(m_bTestThemeMode);
+    m_xmsession->setTestTheme(mode);
+    m_Renderer.setTestThemeMode(mode);
   }
 
   void GameApp::switchUglyOverMode(bool mode) {
-    m_bUglyOverMode = mode;
-    m_Renderer.setUglyOverMode(m_bUglyOverMode);
+    m_xmsession->setUglyOver(mode);
+    m_Renderer.setUglyOverMode(mode);
   }
 
   void GameApp::setPrePlayAnim(bool pEnabled) {
@@ -2021,18 +2009,18 @@ GameApp::GameApp() {
     m_fLastPerfStateTime = 0.0f;
       
     /* We need a profile */
-    if(m_profile == "") {
+    if(m_xmsession->profile() == "") {
       Logger::Log("** Warning ** : no player profile selected, use -profile option");
       throw Exception("no player");
     }
       
     /* Find the level */
     try {
-     m_MotoGame.loadLevel(m_db, m_PlaySpecificLevel);
+     m_MotoGame.loadLevel(m_db, m_PlaySpecificLevelId);
     } catch(Exception &e) {
-      Logger::Log("** Warning ** : level '%s' cannot be loaded",m_PlaySpecificLevel.c_str());
+      Logger::Log("** Warning ** : level '%s' cannot be loaded",m_PlaySpecificLevelId.c_str());
       char cBuf[256];
-      sprintf(cBuf,GAMETEXT_LEVELCANNOTBELOADED,m_PlaySpecificLevel.c_str());
+      sprintf(cBuf,GAMETEXT_LEVELCANNOTBELOADED,m_PlaySpecificLevelId.c_str());
       setState(m_StateAfterPlaying);
       notifyMsg(cBuf);
       return;
@@ -2060,7 +2048,7 @@ GameApp::GameApp() {
     if(m_bRecordReplays) {
       m_pJustPlayReplay = new Replay;
       m_pJustPlayReplay->createReplay("Latest.rpl",
-				      m_MotoGame.getLevelSrc()->Id(),m_profile, m_fReplayFrameRate,sizeof(SerializedBikeState));
+				      m_MotoGame.getLevelSrc()->Id(),m_xmsession->profile(), m_fReplayFrameRate,sizeof(SerializedBikeState));
     }
       
       try {
@@ -2175,7 +2163,7 @@ GameApp::GameApp() {
     v_result = m_db->readDB("SELECT MIN(finishTime) FROM profile_completedLevels WHERE "
     			    "id_level=\"" + 
     			    xmDatabase::protectString(m_MotoGame.getLevelSrc()->Id()) + "\" " + 
-    			    "AND id_profile=\"" + xmDatabase::protectString(m_profile)  + "\";",
+    			    "AND id_profile=\"" + xmDatabase::protectString(m_xmsession->profile())  + "\";",
     			    nrow);
     v_res = m_db->getResult(v_result, 1, 0, 0);
     if(v_res != NULL) {
@@ -2187,7 +2175,7 @@ GameApp::GameApp() {
     m_Renderer.hideReplayHelp();
     
     /* World-record stuff */
-    _UpdateWorldRecord(m_PlaySpecificLevel);
+    _UpdateWorldRecord(m_PlaySpecificLevelId);
 
     /* Prepare level */
     m_Renderer.prepareForNewLevel();
@@ -2426,7 +2414,7 @@ GameApp::GameApp() {
   }
 
   void GameApp::prestartAnimation_init() {
-    if(m_bPrePlayAnim && m_bEnableInitZoom && m_bUglyMode == false) {
+    if(m_bPrePlayAnim && m_bEnableInitZoom && m_xmsession->ugly() == false) {
       m_MotoGame.gameMessage(m_MotoGame.getLevelSrc()->Name(), false, PRESTART_ANIMATION_LEVEL_MSG_DURATION);
       zoomAnimation1_init();
     } else {
@@ -2436,7 +2424,7 @@ GameApp::GameApp() {
   }
   
   void GameApp::prestartAnimation_step() {
-    if(m_bPrePlayAnim && m_bEnableInitZoom && m_bUglyMode == false) {
+    if(m_bPrePlayAnim && m_bEnableInitZoom && m_xmsession->ugly() == false) {
       if(zoomAnimation1_step() == false) {
         setPrePlayAnim(false); // disable anim
 	zoomAnimation1_abort();
@@ -2709,5 +2697,17 @@ GameApp::GameApp() {
     if(pList == NULL) return;
 
     pList->updateLevel(i_id_level, i_playerHighscore);
+  }
+
+  void GameApp::setSpecificReplay(const std::string& i_replay) {
+    m_PlaySpecificReplay = i_replay;
+  }
+  
+  void GameApp::setSpecificLevelId(const std::string& i_levelID) {
+    m_PlaySpecificLevelId = i_levelID;
+  }
+
+  void GameApp::setSpecificLevelFile(const std::string& i_leveFile) {
+    m_PlaySpecificLevelFile = i_leveFile;
   }
 }

@@ -34,6 +34,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/BikeGhost.h"
 #include "xmscene/BikePlayer.h"
 #include "helpers/Log.h"
+#include "XMSession.h"
 
 #include <curl/curl.h>
 
@@ -75,7 +76,7 @@ namespace vapp {
         _DrawMainGUI();
         
         /* Show frame rate? */
-        if(m_bShowFrameRate) bDrawFPS = true;
+        if(m_xmsession->fps()) bDrawFPS = true;
 
         /* Delay a bit so we don't eat all CPU */
         setFrameDelay(10);
@@ -106,7 +107,7 @@ namespace vapp {
 	    }
             statePrestart_step();
 
-	    if(!m_bTimeDemo) {
+	    if(m_xmsession->timedemo() == false) {
 	      /* limit framerate while PREPLAY (100 fps)*/
 	      double timeElapsed = getTime() - fStartFrameTime;
 	      if(timeElapsed < 0.01)
@@ -139,7 +140,7 @@ namespace vapp {
           /* Render */
           if(!getDrawLib()->isNoGraphics()) {
 	    try {
-	      if((m_autoZoom || (m_bPrePlayAnim && m_bUglyMode == false)) && numberCam > 1){
+	      if((m_autoZoom || (m_bPrePlayAnim && m_xmsession->ugly() == false)) && numberCam > 1){
 		m_Renderer.render(bIsPaused);
 	      }else{
 		for(int i=0; i<numberCam; i++){
@@ -188,13 +189,13 @@ namespace vapp {
           }
 
           if(nADelay > 0) {
-            if(!m_bTimeDemo) {
+            if(m_xmsession->timedemo() == false) {
               setFrameDelay(nADelay);
             }
           }        
 
           /* Show fps (debug modish) */
-          if(m_bDebugMode) {
+          if(m_xmsession->debug()) {
             static char cBuf[256] = ""; 
             static int nFrameCnt = 0;
             if(m_fFrameTime - m_fLastPerfStateTime > 0.5f) {
@@ -253,16 +254,16 @@ namespace vapp {
           }
 
           /* Show frame rate */
-          if(m_bShowFrameRate) bDrawFPS = true;
+          if(m_xmsession->fps()) bDrawFPS = true;
 
           break;
         }
         catch(Exception &e) {
-	  Logger::Log("** Warning ** : drawFrame failed !");
+	  Logger::Log("** Warning ** : drawFrame failed ! (%s)", e.getMsg().c_str());
 	  // it doesn't work
-	  //m_MotoGame.endLevel();
-	  //setState(m_StateAfterPlaying);
-          //notifyMsg(splitText(e.getMsg(), 50));
+	  m_MotoGame.endLevel();
+	  setState(m_StateAfterPlaying);
+          notifyMsg(splitText(e.getMsg(), 50));
         }
       }
     }
@@ -291,7 +292,7 @@ namespace vapp {
   Main loop utility functions
   ===========================================================================*/
   void GameApp::_DrawMouseCursor(void) {
-    if(!getDrawLib()->isNoGraphics() && m_pCursor != NULL && m_bUglyMode == false) {
+    if(!getDrawLib()->isNoGraphics() && m_pCursor != NULL && m_xmsession->ugly() == false) {
       int nMX,nMY;
       getMousePos(&nMX,&nMY);      
       getDrawLib()->drawImage(Vector2f(nMX-2,nMY-2),Vector2f(nMX+30,nMY+30),m_pCursor);
@@ -343,7 +344,7 @@ namespace vapp {
       if(Button == UI_MSGBOX_YES) {
         if(m_State == GS_PAUSE) {
 	  if(m_MotoGame.Players().size() == 1) {
-	    m_db->stats_abortedLevel(m_profile,
+	    m_db->stats_abortedLevel(m_xmsession->profile(),
 				     m_MotoGame.getLevelSrc()->Id(),
 				     m_MotoGame.getTime()); 
 	  }
@@ -489,7 +490,7 @@ namespace vapp {
 			m_MotoGame.getCamera()->setSpeedMultiplier(nPhysSteps);
 		}
   
-    if(m_bTimeDemo == false) {
+    if(m_xmsession->timedemo() == false) {
       /* Never pass this point while being ahead of time, busy wait until it's time */
       if(nPhysSteps <= 1) {  
         while (m_fLastPhysTime > getTime());
@@ -499,8 +500,7 @@ namespace vapp {
     if(m_State == GS_REPLAYING) {
       if(m_replayBiker->isDead() || m_replayBiker->isFinished()) {
 	m_stopToUpdateReplay = true;
-
-    	if(m_bBenchmark) {
+    	if(m_xmsession->benchmark()) {
     	  double fBenchmarkTime = getRealTime() - m_fStartTime;
     	  printf("\n");
     	  printf(" * %d frames rendered in %.0f seconds\n",m_nFrame,fBenchmarkTime);
@@ -560,7 +560,7 @@ namespace vapp {
   }
 
   void GameApp::_PostUpdatePause(void) {
-    if(!m_bUglyMode) {
+    if(m_xmsession->ugly() == false) {
       if(m_nPauseShade < 150) m_nPauseShade+=8;
       getDrawLib()->drawBox(Vector2f(0,0),Vector2f(getDrawLib()->getDispWidth(),getDrawLib()->getDispHeight()),0,MAKE_COLOR(0,0,0,m_nPauseShade));                                        
     }
@@ -573,14 +573,14 @@ namespace vapp {
   }
 
   void GameApp::_PostUpdateJustDead(void) {
-    if(!m_bUglyMode) {
+    if(m_xmsession->ugly() == false) {
       if(m_nJustDeadShade < 150) m_nJustDeadShade+=8;
       getDrawLib()->drawBox(Vector2f(0,0),Vector2f(getDrawLib()->getDispWidth(),getDrawLib()->getDispHeight()),0,MAKE_COLOR(0,0,0,m_nJustDeadShade));     
     }
   }
 
   void GameApp::_PostUpdateMenuDead(void) {
-    if(!m_bUglyMode) {
+    if(m_xmsession->ugly() == false) {
       if(m_nJustDeadShade < 150) m_nJustDeadShade+=8;
       getDrawLib()->drawBox(Vector2f(0,0),Vector2f(getDrawLib()->getDispWidth(),getDrawLib()->getDispHeight()),0,MAKE_COLOR(0,0,0,m_nJustDeadShade));     
     }
@@ -595,7 +595,7 @@ namespace vapp {
   }
 
   void GameApp::_PostUpdateFinished(void) {
-    if(!m_bUglyMode) {
+    if(m_xmsession->ugly() == false) {
       if(m_nFinishShade < 150) m_nFinishShade+=8;
       getDrawLib()->drawBox(Vector2f(0,0),Vector2f(getDrawLib()->getDispWidth(),getDrawLib()->getDispHeight()),0,MAKE_COLOR(0,0,0,m_nFinishShade));     
     }

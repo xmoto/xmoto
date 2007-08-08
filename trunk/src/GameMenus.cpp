@@ -774,7 +774,7 @@ namespace vapp {
     pPlayerText->setFont(drawLib->getFontMedium());            
     pPlayerText->setHAlign(UI_ALIGN_RIGHT);
     pPlayerText->setID("PLAYERTAG");
-    if(m_profile != "") {
+    if(m_xmsession->profile() != "") {
       updatePlayerTag();
     }
     
@@ -1346,7 +1346,7 @@ namespace vapp {
     pSomeText = new UIStatic(m_pStatsWindow,40,0,GAMETEXT_STATISTICS,m_pStatsWindow->getPosition().nWidth-80,36);
     pSomeText->setFont(drawLib->getFontMedium());
     
-    m_pStatsReport = stats_generateReport(m_profile,m_pStatsWindow,30,36,m_pStatsWindow->getPosition().nWidth-45,m_pStatsWindow->getPosition().nHeight-36, drawLib->getFontSmall());
+    m_pStatsReport = stats_generateReport(m_xmsession->profile(), m_pStatsWindow,30,36,m_pStatsWindow->getPosition().nWidth-45,m_pStatsWindow->getPosition().nHeight-36, drawLib->getFontSmall());
   }
 
   /*===========================================================================
@@ -1414,7 +1414,7 @@ namespace vapp {
       pList->hideRoomBestTime();
     }
 
-    v_result = m_db->readDB(m_pActiveLevelPack->getLevelsWithHighscoresQuery(m_profile,
+    v_result = m_db->readDB(m_pActiveLevelPack->getLevelsWithHighscoresQuery(m_xmsession->profile(),
 									     m_WebHighscoresIdRoom),
 			    nrow);
     for(unsigned int i=0; i<nrow; i++) {
@@ -1465,7 +1465,7 @@ namespace vapp {
     UIButton *pLV_BestTimes_All = (UIButton *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_BESTTIMES_TAB:LEVEL_VIEWER_BESTTIMES_ALL");
     UIStatic *pLV_BestTimes_WorldRecord = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_BESTTIMES_TAB:LEVEL_VIEWER_BESTTIMES_WORLDRECORD");
 
-    if(pList != NULL && pLV_BestTimes_All != NULL && pLV_BestTimes_Personal != NULL && m_profile != "" &&
+    if(pList != NULL && pLV_BestTimes_All != NULL && pLV_BestTimes_Personal != NULL && m_xmsession->profile() != "" &&
        pLV_BestTimes_WorldRecord != NULL) {
 
       /* Create list */
@@ -1485,14 +1485,14 @@ namespace vapp {
 	m_db->read_DB_free(v_result);
       } else {      
 	v_result = m_db->readDB("SELECT finishTime FROM profile_completedLevels "
-				"WHERE id_profile=\"" + xmDatabase::protectString(m_profile)  + "\" "
+				"WHERE id_profile=\"" + xmDatabase::protectString(m_xmsession->profile())  + "\" "
 				"AND   id_level=\""   + xmDatabase::protectString(LevelID)    + "\" "
 				"ORDER BY finishTime LIMIT 10;",
 				nrow);
 	for(unsigned int i=0; i<nrow; i++) {
 	  v_finishTime  = atof(m_db->getResult(v_result, 1, i, 0));
 	  UIListEntry *pEntry = pList->addEntry(formatTime(v_finishTime));
-	  pEntry->Text.push_back(m_profile);
+	  pEntry->Text.push_back(m_xmsession->profile());
 	}
 	m_db->read_DB_free(v_result);
       }
@@ -1549,7 +1549,7 @@ namespace vapp {
     UIButton *pLV_Replays_All = (UIButton *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_REPLAYS_TAB:LEVEL_VIEWER_REPLAYS_ALL");
     UIButton *pLV_Replays_Show = (UIButton *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_REPLAYS_TAB:LEVEL_VIEWER_REPLAYS_SHOW");
 
-    if(pList != NULL && pLV_BestTimes_All != NULL && pLV_BestTimes_Personal != NULL && m_profile != "" &&
+    if(pList != NULL && pLV_BestTimes_All != NULL && pLV_BestTimes_Personal != NULL && m_xmsession->profile() != "" &&
        pLV_Replays_Show != NULL) {
       char **v_result;
       int nrow;
@@ -1564,7 +1564,7 @@ namespace vapp {
       else if(pLV_Replays_Personal->getChecked()) {
 	v_sql = "SELECT name, id_profile, isFinished, finishTime FROM replays "
 	  "WHERE id_level=\""   + xmDatabase::protectString(LevelID) + "\" ";
-	  "AND   id_profile=\"" + xmDatabase::protectString(m_profile) + "\";";
+	  "AND   id_profile=\"" + xmDatabase::protectString(m_xmsession->profile()) + "\";";
       }
       
       /* Create list */
@@ -1652,14 +1652,14 @@ namespace vapp {
       p_packName = m_levelsManager.LevelsPacks()[i]->Name();
 
       /* the unpackaged pack exists only in debug mode */
-      if(p_packName != "" || m_bDebugMode) {
+      if(p_packName != "" || m_xmsession->debug()) {
 	if(p_packName == "") {
 	  p_packName = GAMETEXT_UNPACKED_LEVELS_PACK;
 	}
 	
 	pTree->addPack(m_levelsManager.LevelsPacks()[i],
 		       m_levelsManager.LevelsPacks()[i]->Group(),
-		       m_levelsManager.LevelsPacks()[i]->getNumberOfFinishedLevels(m_db, m_profile),
+		       m_levelsManager.LevelsPacks()[i]->getNumberOfFinishedLevels(m_db, m_xmsession->profile()),
 		       m_levelsManager.LevelsPacks()[i]->getNumberOfLevels(m_db)
 		       );
 	
@@ -1680,7 +1680,7 @@ namespace vapp {
     for(int i=0;i<m_nNumPauseMenuButtons;i++) {
       if(m_pPauseMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
         /* Uhm... is it likely that there's a next level? */
-	m_pPauseMenuButtons[i]->enableWindow(_IsThereANextLevel(m_PlaySpecificLevel));
+	m_pPauseMenuButtons[i]->enableWindow(_IsThereANextLevel(m_PlaySpecificLevelId));
       }
 
       if(m_pPauseMenuButtons[i]->isClicked()) {
@@ -1694,7 +1694,7 @@ namespace vapp {
         else if(m_pPauseMenuButtons[i]->getCaption() == GAMETEXT_ABORT) {
           m_pPauseMenu->showWindow(false);
 	  if(m_MotoGame.Players().size() == 1) {
-	    m_db->stats_abortedLevel(m_profile,
+	    m_db->stats_abortedLevel(m_xmsession->profile(),
 				     m_MotoGame.getLevelSrc()->Id(),
 				     m_MotoGame.getTime());
 	  }
@@ -1712,11 +1712,11 @@ namespace vapp {
 	  _RestartLevel();
         }
         else if(m_pPauseMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
-	  std::string NextLevel = _DetermineNextLevel(m_PlaySpecificLevel);
+	  std::string NextLevel = _DetermineNextLevel(m_PlaySpecificLevelId);
 	  if(NextLevel != "") {        
 	    m_pPauseMenu->showWindow(false);              
 	    if(m_MotoGame.Players().size() == 1) {
-	      m_db->stats_abortedLevel(m_profile,
+	      m_db->stats_abortedLevel(m_xmsession->profile(),
 				       m_MotoGame.getLevelSrc()->Id(),
 				       m_MotoGame.getTime());
 	    }
@@ -1725,7 +1725,7 @@ namespace vapp {
 	    m_InputHandler.resetScriptKeyHooks();                     
 	    m_Renderer.unprepareForNewLevel();                    
 	    
-	    m_PlaySpecificLevel = NextLevel;              
+	    m_PlaySpecificLevelId = NextLevel;              
 	    
 	    setPrePlayAnim(true);
               setState(GS_PREPLAYING);
@@ -1776,7 +1776,7 @@ namespace vapp {
 
       if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
         /* Uhm... is it likely that there's a next level? */
-	m_pFinishMenuButtons[i]->enableWindow(_IsThereANextLevel(m_PlaySpecificLevel));
+	m_pFinishMenuButtons[i]->enableWindow(_IsThereANextLevel(m_PlaySpecificLevelId));
       }
       
       if(m_pFinishMenuButtons[i]->isClicked()) {
@@ -1788,7 +1788,7 @@ namespace vapp {
 	  }
         }
         else if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
-	  std::string NextLevel = _DetermineNextLevel(m_PlaySpecificLevel);
+	  std::string NextLevel = _DetermineNextLevel(m_PlaySpecificLevelId);
 	  if(NextLevel != "") {        
 	    m_pFinishMenu->showWindow(false);
 	    m_Renderer.hideMsgNewHighscore();
@@ -1798,7 +1798,7 @@ namespace vapp {
 	    m_InputHandler.resetScriptKeyHooks();                     
 	    m_Renderer.unprepareForNewLevel();                    
 	    
-	    m_PlaySpecificLevel = NextLevel;
+	    m_PlaySpecificLevelId = NextLevel;
 	    
 	    setPrePlayAnim(true);
 	    setState(GS_PREPLAYING);                               
@@ -1821,7 +1821,7 @@ namespace vapp {
         }	
         else if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_TRYAGAIN) {
           Level *pCurLevel = m_MotoGame.getLevelSrc();
-          m_PlaySpecificLevel = pCurLevel->Id();
+          m_PlaySpecificLevelId = pCurLevel->Id();
           m_pFinishMenu->showWindow(false);
 	  m_Renderer.hideMsgNewHighscore();
           m_pBestTimes->showWindow(false);
@@ -1931,7 +1931,7 @@ namespace vapp {
       if(i_level != "") {
 	m_pLevelPackViewer->showWindow(false);
 	m_pMainMenu->showWindow(false);      
-	m_PlaySpecificLevel = i_level;
+	m_PlaySpecificLevelId = i_level;
 	m_StateAfterPlaying = GS_LEVELPACK_VIEWER;
 	m_currentPlayingList = pList;
 	setState(GS_PREPLAYING);
@@ -1944,7 +1944,7 @@ namespace vapp {
       std::string v_id_level = pList->getSelectedLevel();
      
       if(v_id_level != "") {
-	m_levelsManager.addToFavorite(m_db, m_profile, v_id_level);
+	m_levelsManager.addToFavorite(m_db, m_xmsession->profile(), v_id_level);
 	_UpdateLevelPackLevelList(VPACKAGENAME_FAVORITE_LEVELS);
 	_UpdateLevelLists();
       }
@@ -2154,9 +2154,9 @@ namespace vapp {
 	    _UpdateWebLevels(false);
 
 	    m_levelsManager.makePacks(m_db,
-				      m_profile,
+				      m_xmsession->profile(),
 				      m_Config.getString("WebHighscoresIdRoom"),
-				      m_bDebugMode);
+				      m_xmsession->debug());
 	    _UpdateLevelsLists();
 	  } catch(Exception &e) {
 	    notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES);
@@ -2245,21 +2245,21 @@ namespace vapp {
         if(nIdx >= 0 && nIdx < pList->getEntries().size()) {
           UIListEntry *pEntry = pList->getEntries()[nIdx];
           
-          m_profile = pEntry->Text[0];
-	  m_db->stats_xmotoStarted(m_profile);
+          m_xmsession->setProfile(pEntry->Text[0]);
+	  m_db->stats_xmotoStarted(m_xmsession->profile());
 
 	  delete m_pStatsReport;
-          m_pStatsReport = stats_generateReport(m_profile,m_pStatsWindow,30,36,m_pStatsWindow->getPosition().nWidth-45,m_pStatsWindow->getPosition().nHeight-36, drawLib->getFontSmall());
+          m_pStatsReport = stats_generateReport(m_xmsession->profile(),m_pStatsWindow,30,36,m_pStatsWindow->getPosition().nWidth-45,m_pStatsWindow->getPosition().nHeight-36, drawLib->getFontSmall());
         }
       }      
       
-      if(m_profile == "") throw Exception("failed to set profile");
+      if(m_xmsession->profile() == "") throw Exception("failed to set profile");
 
       /* remake the packs with the new profile */
       m_levelsManager.makePacks(m_db,
-				m_profile,
+				m_xmsession->profile(),
 				m_WebHighscoresIdRoom,
-				m_bDebugMode);
+				m_xmsession->debug());
       _UpdateLevelsLists();
       _UpdateReplaysList();      
                   
@@ -2332,7 +2332,7 @@ namespace vapp {
 
       if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
         /* Uhm... is it likely that there's a next level? */
-	m_pJustDeadMenuButtons[i]->enableWindow(_IsThereANextLevel(m_PlaySpecificLevel));
+	m_pJustDeadMenuButtons[i]->enableWindow(_IsThereANextLevel(m_PlaySpecificLevelId));
       }
       
       if(m_pJustDeadMenuButtons[i]->isClicked()) {
@@ -2349,7 +2349,7 @@ namespace vapp {
 	  _RestartLevel();
         }
         else if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
-	  std::string NextLevel = _DetermineNextLevel(m_PlaySpecificLevel);
+	  std::string NextLevel = _DetermineNextLevel(m_PlaySpecificLevelId);
 	  if(NextLevel != "") {        
 	    m_pJustDeadMenu->showWindow(false);
 	    m_MotoGame.getCamera()->setPlayerToFollow(NULL);
@@ -2357,7 +2357,7 @@ namespace vapp {
 	    m_InputHandler.resetScriptKeyHooks();                     
 	    m_Renderer.unprepareForNewLevel();                    
 	    
-	    m_PlaySpecificLevel = NextLevel;
+	    m_PlaySpecificLevelId = NextLevel;
 	    
 	    setPrePlayAnim(true);
 	    setState(GS_PREPLAYING);                               
@@ -2456,9 +2456,9 @@ namespace vapp {
 	  throw Exception("Empty quick start list");
 	}
 	m_currentPlayingList = m_quickStartList;
-	m_PlaySpecificLevel  = m_quickStartList->getLevel(0);
+	m_PlaySpecificLevelId  = m_quickStartList->getLevel(0);
       } catch(Exception &e) {
-	m_PlaySpecificLevel = "tut1";
+	m_PlaySpecificLevelId = "tut1";
       }
       m_pMainMenu->showWindow(false);
       m_StateAfterPlaying = GS_MENU;
@@ -2706,9 +2706,9 @@ namespace vapp {
 	_UpdateWebLevels(false);  
 
 	m_levelsManager.makePacks(m_db,
-				  m_profile,
+				  m_xmsession->profile(),
 				  m_Config.getString("WebHighscoresIdRoom"),
-				  m_bDebugMode);
+				  m_xmsession->debug());
 	_UpdateLevelsLists();
       } catch(Exception &e) {
 	notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES);
@@ -2802,7 +2802,7 @@ namespace vapp {
       /* Find first tutorial level */
       try {
         m_pMainMenu->showWindow(false);      
-        m_PlaySpecificLevel = "tut1";
+        m_PlaySpecificLevelId = "tut1";
         m_StateAfterPlaying = GS_MENU;
 	m_currentPlayingList = NULL;
         setState(GS_PREPLAYING);
@@ -2847,7 +2847,7 @@ namespace vapp {
       pLevelDeleteFromFavoriteButton->setClicked(false);
       v_id_level = m_pAllLevelsList->getSelectedLevel();
       if(v_id_level != "") {
-	m_levelsManager.delFromFavorite(m_db, m_profile, v_id_level);
+	m_levelsManager.delFromFavorite(m_db, m_xmsession->profile(), v_id_level);
 	_UpdateLevelPackLevelList(VPACKAGENAME_FAVORITE_LEVELS);
 	_UpdateLevelLists();
       }
@@ -2874,7 +2874,7 @@ namespace vapp {
       /* Start playing it */
       if(v_id_level != "") {
         m_pMainMenu->showWindow(false);      
-        m_PlaySpecificLevel = v_id_level;
+        m_PlaySpecificLevelId = v_id_level;
         m_StateAfterPlaying = GS_MENU;
         setState(GS_PREPLAYING);
       }
@@ -2981,7 +2981,7 @@ namespace vapp {
 	    ReplayInfo* rplInfos;
 	    rplInfos = Replay::getReplayInfos(pListEntry->Text[0]);
 	    if(rplInfos != NULL) {
-	      if(rplInfos->fFinishTime > 0.0 && rplInfos->Player == m_profile) {
+	      if(rplInfos->fFinishTime > 0.0 && rplInfos->Player == m_xmsession->profile()) {
 		
 		char **v_result;
 		int nrow;
@@ -3053,7 +3053,7 @@ namespace vapp {
           
           /* Update */
           delete m_pStatsReport;
-          m_pStatsReport = stats_generateReport(m_profile, m_pStatsWindow,30,36,m_pStatsWindow->getPosition().nWidth-45,m_pStatsWindow->getPosition().nHeight-36, drawLib->getFontSmall());
+          m_pStatsReport = stats_generateReport(m_xmsession->profile(), m_pStatsWindow,30,36,m_pStatsWindow->getPosition().nWidth-45,m_pStatsWindow->getPosition().nHeight-36, drawLib->getFontSmall());
         }        
       }
     }
@@ -3169,7 +3169,7 @@ namespace vapp {
       for(unsigned int i=0; i<nrow; i++) {
 	v_profile = m_db->getResult(v_result, 1, i, 0);
 	pList->addEntry(v_profile);
-	if(m_profile == v_profile) {
+	if(m_xmsession->profile() == v_profile) {
 	  pList->setRealSelected(i);
 	}
       }
@@ -3214,7 +3214,7 @@ namespace vapp {
     } else {
       v_sql = "SELECT a.name, a.id_profile, b.name FROM replays AS a "
       "INNER JOIN levels AS b ON a.id_level = b.id_level "
-      "WHERE a.id_profile=\"" + xmDatabase::protectString(m_profile) + "\";";
+      "WHERE a.id_profile=\"" + xmDatabase::protectString(m_xmsession->profile()) + "\";";
     }
 
     v_result = m_db->readDB(v_sql, nrow);
@@ -3234,7 +3234,7 @@ namespace vapp {
     int nrow;
     float v_playerHighscore, v_roomHighscore;
     
-    if(m_profile == "") return;
+    if(m_xmsession->profile() == "") return;
     
     /* get selected item */
     std::string v_selected_levelName = "";
@@ -3283,7 +3283,7 @@ namespace vapp {
 
   void GameApp::_CreateLevelLists(UILevelList *pAllLevels, std::string i_packageName) {
     LevelsPack *v_levelsPack = &(m_levelsManager.LevelsPackByName(i_packageName));
-    _CreateLevelListsSql(pAllLevels, v_levelsPack->getLevelsWithHighscoresQuery(m_profile,
+    _CreateLevelListsSql(pAllLevels, v_levelsPack->getLevelsWithHighscoresQuery(m_xmsession->profile(),
 										m_WebHighscoresIdRoom));
   }
 
@@ -4004,8 +4004,8 @@ namespace vapp {
   void GameApp::updatePlayerTag() {
     UIStatic *pPlayerTag = reinterpret_cast<UIStatic *>(m_pMainMenu->getChild("PLAYERTAG"));
     if(pPlayerTag) {
-      if(m_profile != "") {
-	pPlayerTag->setCaption(std::string(GAMETEXT_CURPLAYER) + ": " + m_profile + "@" + m_WebHighscoresRoomName);
+      if(m_xmsession->profile() != "") {
+	pPlayerTag->setCaption(std::string(GAMETEXT_CURPLAYER) + ": " + m_xmsession->profile() + "@" + m_WebHighscoresRoomName);
       }
     }
   }
@@ -4105,7 +4105,7 @@ namespace vapp {
     LevelsPack *v_pack = &(m_levelsManager.LevelsPackByName(v_levelPack));
 
     pTree->updatePack(v_pack,
-		      v_pack->getNumberOfFinishedLevels(m_db, m_profile),
+		      v_pack->getNumberOfFinishedLevels(m_db, m_xmsession->profile()),
 		      v_pack->getNumberOfLevels(m_db)
 		      );
   }
@@ -4123,7 +4123,7 @@ namespace vapp {
 							       m_pQuickStart->getDifficultyMIN(),
 							       m_pQuickStart->getQualityMAX(),
 							       m_pQuickStart->getDifficultyMAX(),
-							       m_profile, m_WebHighscoresIdRoom));
+							       m_xmsession->profile(), m_WebHighscoresIdRoom));
     return v_list;
   }
 }

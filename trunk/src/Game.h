@@ -126,15 +126,13 @@ class xmDatabase;
 
       /* Virtual methods */
       virtual void drawFrame(void);
-      virtual void userInit(void);
+      virtual void userInit(XMArguments* v_xmArgs);
       virtual void userShutdown(void);
       virtual void keyDown(int nKey, SDLMod mod,int nChar);
       virtual void keyUp(int nKey, SDLMod mod);
       virtual void mouseDown(int nButton);
       virtual void mouseDoubleClick(int nButton);
       virtual void mouseUp(int nButton);
-      virtual void parseUserArgs(std::vector<std::string> &UserArgs);
-      virtual void helpUserArgs(void);
       virtual std::string getConfigThemeName(ThemeChoicer *p_themeChoicer);
 
       /* Methods */
@@ -142,15 +140,6 @@ class xmDatabase;
       void notifyMsg(std::string Msg);      
       void setPrePlayAnim(bool pEnabled);
       void reloadTheme();
-
-      void PlaySpecificLevel(std::string i_level);
-      void PlaySpecificLevelFile(std::string i_levelFile);
-      void PlaySpecificReplay(std::string i_replay);
-
-      /* Data interface */
-      bool isUglyMode() {return m_bUglyMode;}
-      bool isTestThemeMode(void) {return m_bTestThemeMode;}
-      bool isUglyOverMode() {return m_bUglyOverMode;}
 
       void setAutoZoom(bool bValue);
       bool AutoZoom();
@@ -162,6 +151,10 @@ class xmDatabase;
       bool creditsModeActive();
 
       void initCameras(int nbPlayer);
+
+      void setSpecificReplay(const std::string& i_replay);
+      void setSpecificLevelId(const std::string& i_levelID);
+      void setSpecificLevelFile(const std::string& i_leveFile);
 
    protected:
       void createDefaultConfig();
@@ -176,36 +169,15 @@ class xmDatabase;
       bool m_bEnableDeathAnim;                  /* true: Bike falls apart at when dead */
       bool m_bEnableMenuMusic;                  /* true: Play menu music */      
       bool m_bEnableContextHelp;                /* true: Show context help */
-      bool m_bBenchmark;                        /* true: Test game performance */
-      bool m_bShowFrameRate;                    /* true: frame rate */
-      bool m_bListLevels;                       /* true: list installed levels */
-      bool m_bListReplays;                      /* true: list replays */
-      bool m_bTimeDemo;                         /* true: (valid for replaying) - performance benchmark */
-      bool m_bDebugMode;                        /* true: show debug info */
-      bool m_sqlTrace;                          /* true: show sql traces */
-      bool m_bUglyMode;                         /* true: fast 'n ugly graphics */
-      bool m_bCleanCache;                       /* true: clean the level cache at startup */
-      bool m_bDisplayInfosReplay;               /* true: just display infos of a replay */
-      std::string m_InfosReplay;                /* name of the replay to display information */
 
-      bool m_bTestThemeMode;
-      bool m_bUglyOverMode;
       bool m_bEnableEngineSound;                /* true: engine sound is enabled */
       bool m_bCompressReplays;                  /* true: compress replays with zlib */
       bool m_bAutosaveHighscoreReplays;
-      std::string m_PlaySpecificLevel;          /* If set, we only want to 
-                                                   play this level */
-      std::string m_PlaySpecificReplay;         /* If set, we only want to
-                                                   play this replay */
-      std::string m_PlaySpecificLevelFile;      /* If set, we only want to
-                                                   play this level */
 
       ReplayBiker* m_replayBiker; /* link to the replay biker in REPLAYING state */
       bool m_stopToUpdateReplay;
       bool m_allowReplayInterpolation;
 
-      std::string m_ForceProfile;               /* Force this player profile */    
-      std::string m_GraphDebugInfoFile;
       InputHandler m_InputHandler;              /* The glorious input handler */
       GameState m_State;                        /* Current state */      
       GameState m_StateAfterPlaying;            /* State that should be used later */
@@ -213,7 +185,6 @@ class xmDatabase;
       XMMotoGameHooks m_MotoGameHooks;
       GameRenderer m_Renderer;                  /* Renderer */
       int m_nFrame;                             /* Frame # */
-      std::string m_profile;
        
       double m_fLastFrameTime;                  /* When the last frama was initiated */
       double m_fLastPerfStateTime;   
@@ -394,6 +365,10 @@ class xmDatabase;
       /* Main loop statics */
       double m_fFrameTime;
       float m_fFPS_Rate;
+      
+      std::string m_PlaySpecificReplay;
+      std::string m_PlaySpecificLevelId;
+      std::string m_PlaySpecificLevelFile;
 
       bool m_bLockMotoGame;
       xmDatabase *m_db;
