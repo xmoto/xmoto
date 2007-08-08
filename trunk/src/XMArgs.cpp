@@ -411,7 +411,7 @@ std::string XMArguments::getOpt_replayInfos_file() const {
 
 void XMArguments::help(const std::string& i_cmd) {
   printf("X-Moto %s\n", XMBuild::getVersionString().c_str());
-  printf("usage:  %s {options}\n"
+  printf("usage:  %s [options]\n"
 	 "options:\n", i_cmd.c_str());
         
   printf("\tFILE\n\t\tOpen the replay or the level from file FILE.\n");
