@@ -35,6 +35,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <curl/curl.h>
 #include "XMSession.h"
+#include "XMArgs.h"
 
 #define DATABASE_FILE vapp::FS::getUserDirUTF8() + "/" + "xm.db"
 
@@ -84,11 +85,11 @@ namespace vapp {
   /*===========================================================================
   Initialize game
   ===========================================================================*/
-  void GameApp::userInit(void) {
+  void GameApp::userInit(XMArguments* v_xmArgs) {
     Sprite* pSprite;
 
-    switchUglyMode(m_bUglyMode);
-    switchTestThemeMode(m_bTestThemeMode);
+    switchUglyMode(m_xmsession->ugly());
+    switchTestThemeMode(m_xmsession->testTheme());
 
     /* Reset timers */
     m_fLastFrameTime = 0.0f;
@@ -102,15 +103,6 @@ namespace vapp {
     
     /* Init some config */
     _UpdateSettings();
-    
-    /* Select profile */
-    m_profile = "";
-    if(m_ForceProfile != "") {
-      m_profile = m_ForceProfile;
-    }
-    if(m_profile == "") {
-      m_profile = m_Config.getString("DefaultProfile");
-    }     
 
     /* Init sound system */
     if(m_xmsession->useGraphics()) {
@@ -122,25 +114,25 @@ namespace vapp {
     /* Init renderer */
     m_Renderer.setParent( (App *)this );
     m_Renderer.setGameObject( &m_MotoGame );        
-    m_Renderer.setDebug( m_bDebugMode );
+    m_Renderer.setDebug(m_xmsession->debug());
 
     m_Renderer.setGhostMotionBlur( m_bGhostMotionBlur );
     
     /* Tell collision system whether we want debug-info or not */
-    m_MotoGame.getCollisionHandler()->setDebug( m_bDebugMode );
+    m_MotoGame.getCollisionHandler()->setDebug(m_xmsession->debug());
     
     /* Data time! */
     Logger::Log("Loading data...");
 
-    if(m_GraphDebugInfoFile != "") m_Renderer.loadDebugInfo(m_GraphDebugInfoFile);
+    if(m_xmsession->gDebug()) m_Renderer.loadDebugInfo(m_xmsession->gDebugFile());
 
     /* database */
     m_db = new xmDatabase(DATABASE_FILE,
-			  m_profile == "" ? std::string("") : m_profile,
+			  m_xmsession->profile() == "" ? std::string("") : m_xmsession->profile(),
 			  FS::getDataDir(), FS::getUserDir(), FS::binCheckSum(),
 			  m_xmsession->useGraphics() ? this : NULL);
-    if(m_sqlTrace) {
-      m_db->setTrace(m_sqlTrace);
+    if(m_xmsession->sqlTrace()) {
+      m_db->setTrace(m_xmsession->sqlTrace());
     }
     /* set the room name ; set to WR if it cannot be determined */
     m_WebHighscoresRoomName = "WR";
@@ -175,8 +167,8 @@ namespace vapp {
     }
 
     /* Update stats */
-    if(m_profile != "")
-      m_db->stats_xmotoStarted(m_profile);
+    if(m_xmsession->profile() != "")
+      m_db->stats_xmotoStarted(m_xmsession->profile());
 
     /* load levels */
     if(m_db->levels_isIndexUptodate() == false) {
@@ -191,7 +183,7 @@ namespace vapp {
     }
 
     /* List replays? */  
-    if(m_bListReplays) {
+    if(v_xmArgs->isOptListReplays()) {
       char **v_result;
       int nrow;
 
@@ -218,12 +210,12 @@ namespace vapp {
       return;
     }
     
-    if(m_bDisplayInfosReplay) {
+    if(v_xmArgs->isOptReplayInfos()) {
       Replay v_replay;
       std::string v_levelId;
       std::string v_player;
       
-      v_levelId = v_replay.openReplay(m_InfosReplay, v_player, true);
+      v_levelId = v_replay.openReplay(v_xmArgs->getOpt_replayInfos_file(), v_player, true);
       if(v_levelId == "") {
 	throw Exception("Invalid replay");
       }
@@ -232,6 +224,16 @@ namespace vapp {
       return;	
     }
     
+    if(v_xmArgs->isOptLevelID()) {
+      m_PlaySpecificLevelId = v_xmArgs->getOpt_levelID_id();
+    }
+    if(v_xmArgs->isOptLevelFile()) {
+      m_PlaySpecificLevelFile = v_xmArgs->getOpt_levelFile_file();
+    }
+    if(v_xmArgs->isOptReplay()) {
+      m_PlaySpecificReplay = v_xmArgs->getOpt_replay_file();
+    }
+
     if(m_xmsession->useGraphics()) {  
       _UpdateLoadingScreen((1.0f/9.0f) * 0,GAMETEXT_LOADINGSOUNDS);
       
@@ -334,28 +336,25 @@ namespace vapp {
     }
     LevelsManager::checkPrerequires();
     m_levelsManager.makePacks(m_db,
-			      m_profile,
+			      m_xmsession->profile(),
 			      m_Config.getString("WebHighscoresIdRoom"),
-			      m_bDebugMode);     
+			      m_xmsession->debug());     
 
     /* Should we clean the level cache? (can also be done when disabled) */
-    if(m_bCleanCache) {
+    if(v_xmArgs->isOptCleanCache()) {
       LevelsManager::cleanCache();
     }
 
     /* -listlevels? */
-    if(m_bListLevels) {
+    if(v_xmArgs->isOptListLevels()) {
       m_levelsManager.printLevelsList(m_db);
+     quit();
+     return;
     }
 
     if(m_xmsession->useGraphics()) {  
       _UpdateLoadingScreen((1.0f/9.0f) * 6,GAMETEXT_INITRENDERER);
     }    
-
-    if(m_bListLevels) {
-      quit();
-      return;
-    }
 
     if(m_xmsession->useGraphics()) {
       /* Initialize renderer */
@@ -377,16 +376,16 @@ namespace vapp {
     if(m_PlaySpecificLevelFile != "") {
       try {
 	m_levelsManager.addExternalLevel(m_db, m_PlaySpecificLevelFile);
-	m_PlaySpecificLevel = m_levelsManager.LevelByFileName(m_db, m_PlaySpecificLevelFile);
+	m_PlaySpecificLevelId = m_levelsManager.LevelByFileName(m_db, m_PlaySpecificLevelFile);
       } catch(Exception &e) {
-	m_PlaySpecificLevel = m_PlaySpecificLevelFile;
+	m_PlaySpecificLevelId = m_PlaySpecificLevelFile;
       }
     }
-    if((m_PlaySpecificLevel != "") && m_xmsession->useGraphics()) {
+    if((m_PlaySpecificLevelId != "") && m_xmsession->useGraphics()) {
       /* ======= PLAY SPECIFIC LEVEL ======= */
       m_StateAfterPlaying = GS_MENU;
       setState(GS_PREPLAYING);
-      Logger::Log("Playing as '%s'...", m_profile.c_str());
+      Logger::Log("Playing as '%s'...", m_xmsession->profile().c_str());
     }
     else if(m_PlaySpecificReplay != "") {
       /* ======= PLAY SPECIFIC REPLAY ======= */
@@ -399,7 +398,7 @@ namespace vapp {
         throw Exception("menu requires graphics");
         
       /* Do we have a player profile? */
-      if(m_profile == "") {
+      if(m_xmsession->profile() == "") {
         setState(GS_EDIT_PROFILES);
       }
       else if(m_Config.getBool("WebConfAtInit")) {
@@ -443,8 +442,8 @@ namespace vapp {
     if(m_pJustPlayReplay != NULL)
     delete m_pJustPlayReplay;
     
-    if(m_profile != "") 
-    m_Config.setString("DefaultProfile", m_profile);
+    if(m_xmsession->profile() != "") 
+    m_Config.setString("DefaultProfile", m_xmsession->profile());
     
     Sound::uninit();
     
@@ -454,153 +453,6 @@ namespace vapp {
     m_Config.setInteger("QSDifficultyMAX", m_pQuickStart->getDifficultyMAX());
 
     m_Config.saveFile();
-  }  
-  
-  void GameApp::PlaySpecificLevel(std::string i_level) {
-    m_PlaySpecificLevel = i_level;
-          
-    /* If it is a plain number, it's for a internal level */
-    bool v_isANumber =  true;
-    for(int i=0; i<m_PlaySpecificLevel.length(); i++) {
-      if(m_PlaySpecificLevel[i] < '0' || m_PlaySpecificLevel[i] > '9') {
-	v_isANumber = false;
-      }
-    }
-    if(v_isANumber) {
-      int nNum = atoi(m_PlaySpecificLevel.c_str());
-      if(nNum > 0) {
-	char cBuf[256];
-	sprintf(cBuf,"_iL%02d_",nNum-1);
-	m_PlaySpecificLevel = cBuf;
-      }
-    }
-  }
-
-  void GameApp::PlaySpecificReplay(std::string i_replay) {
-    m_PlaySpecificReplay = i_replay;
-  }
-
-  void GameApp::PlaySpecificLevelFile(std::string i_levelFile) {
-    m_PlaySpecificLevelFile = i_levelFile;
-  }
-
-  /*===========================================================================
-  Handle a command-line passed argument
-  ===========================================================================*/
-  void GameApp::parseUserArgs(std::vector<std::string> &UserArgs) {
-    /* Look through them... */
-    for(int i=0;i<UserArgs.size();i++) {
-      if(UserArgs[i] == "-replay") {
-        if(i+1<UserArgs.size()) {
-          PlaySpecificReplay(UserArgs[i+1]);
-        }
-        else
-          throw SyntaxError("no replay specified");        
-        i++;
-      }
-      else if(UserArgs[i] == "-level") {
-        if(i+1<UserArgs.size()) {
-	  PlaySpecificLevel(UserArgs[i+1]);
-        } else
-	throw SyntaxError("no level specified");        
-        i++;
-      }
-      else if(UserArgs[i] == "-levelFile") {
-        if(i+1<UserArgs.size()) {
-	  PlaySpecificLevelFile(UserArgs[i+1]);
-        } else
-	throw SyntaxError("no level file specified");        
-        i++;
-      }
-      else if(UserArgs[i] == "-debug") {
-        m_bDebugMode = true;
-      }
-      else if(UserArgs[i] == "-sqlTrace") {
-	m_sqlTrace = true;
-      }
-      else if(UserArgs[i] == "-profile") {
-        if(i+1<UserArgs.size())
-          m_ForceProfile = UserArgs[i+1];
-        else
-          throw SyntaxError("no profile specified");        
-        i++;
-      }
-      else if(UserArgs[i] == "-gdebug") {
-        if(i+1<UserArgs.size())
-          m_GraphDebugInfoFile = UserArgs[i+1];
-        else
-          throw SyntaxError("no debug file specified");        
-        i++;
-      }      
-      else if(UserArgs[i] == "-listlevels") {
-        m_bListLevels = true;
-	m_xmsession->setUseGraphics(false);
-      }
-      else if(UserArgs[i] == "-listreplays") {
-        m_bListReplays = true;
-	m_xmsession->setUseGraphics(false);
-      }
-      else if(UserArgs[i] == "-timedemo") {
-        m_bTimeDemo = true;
-      }
-      else if(UserArgs[i] == "-fps") {
-        m_bShowFrameRate = true;
-      }
-      else if(UserArgs[i] == "-ugly") {
-        m_bUglyMode = true;
-      }
-      else if(UserArgs[i] == "-testTheme") {
-        m_bTestThemeMode = true;
-      }
-      else if(UserArgs[i] == "-benchmark") {
-        m_bBenchmark = true;
-      }
-      else if(UserArgs[i] == "-cleancache") {
-        m_bCleanCache = true;
-     } else if(UserArgs[i] == "-replayInfos") {
-       if(i+1<UserArgs.size()) {
-	 m_xmsession->setUseGraphics(false);
-	 m_bDisplayInfosReplay = true;
-	 m_InfosReplay = UserArgs[i+1];
-       } else
-       throw SyntaxError("no replay specified");        
-       i++;
-     } else {
-       /* check if the parameter is a file */
-       std::string v_extension = FS::getFileExtension(UserArgs[i]);
-
-       /* replays */
-       if(v_extension == "rpl") {
-	   PlaySpecificReplay(UserArgs[i]);
-       } else if(v_extension == "lvl") {
-	 PlaySpecificLevelFile(UserArgs[i]);
-       } else {
-	 /* unknown extension */
-	 throw SyntaxError("Invalid argument");
-       }
-     }
-    }
-  }
-
-  /*===========================================================================
-  Show some extra user arg help
-  ===========================================================================*/
-  void GameApp::helpUserArgs(void) {
-    printf("\t-level ID\n\t\tStart playing the given level right away.\n");
-    printf("\t-replay NAME\n\t\tPlayback replay with the given name.\n");    
-    printf("\t-debug\n\t\tEnable debug mode.\n");
-    printf("\t-profile NAME\n\t\tUse this player profile.\n");
-    printf("\t-listlevels\n\t\tOutputs a list of all installed levels.\n");
-    printf("\t-listreplays\n\t\tOutputs a list of all replays.\n");
-    printf("\t-timedemo\n\t\tNo delaying, maximum framerate.\n");
-    printf("\t-fps\n\t\tDisplay framerate.\n");
-    printf("\t-ugly\n\t\tEnable 'ugly' mode, suitable for computers without\n");
-             printf("\t\ta good OpenGL-enabled video card.\n");
-    printf("\t-testTheme\n\t\tDisplay forms around the theme to check it.\n");
-    printf("\t-benchmark\n\t\tOnly meaningful when combined with -replay\n");
-    printf("\t\tand -timedemo. Useful to determine the graphics\n");
-             printf("\t\tperformance.\n");
-    printf("\t-cleancache\n\t\tDeletes the content of the level cache.\n");
   }  
   
   /*===========================================================================

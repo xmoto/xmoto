@@ -33,6 +33,16 @@ XMSession::XMSession() {
   m_glExts           = true;
   m_drawlib          = "OPENGL";
   m_www              = true;
+  m_benchmark 	     = false;
+  m_debug     	     = false;
+  m_sqlTrace  	     = false;
+  m_profile   	     = "";
+  m_gdebug    	     = false;
+  m_timedemo  	     = false;
+  m_fps       	     = false;
+  m_ugly      	     = false;
+  m_uglyOver         = false;
+  m_testTheme 	     = false;
 }
 
 void XMSession::load(const XMArguments* i_xmargs) {
@@ -71,6 +81,43 @@ void XMSession::load(const XMArguments* i_xmargs) {
     m_www = false;
   }
 
+  if(i_xmargs->isOptBenchmark()) {
+    m_benchmark = true;
+  }
+
+  if(i_xmargs->isOptDebug()) {
+    m_debug = true;
+  }
+
+  if(i_xmargs->isOptSqlTrace()) {
+    m_sqlTrace = true;
+  }
+
+  if(i_xmargs->isOptProfile()) {
+    m_profile = i_xmargs->getOpt_profile_value();
+  }
+
+  if(i_xmargs->isOptGDebug()) {
+    m_gdebug = true;
+    m_gdebug_file = i_xmargs->getOpt_gdebug_file();
+  }
+
+  if(i_xmargs->isOptTimedemo()) {
+    m_timedemo = true;
+  }
+
+  if(i_xmargs->isOptFps()) {
+    m_fps = true;
+  }
+
+  if(i_xmargs->isOptUgly()) {
+    m_ugly = true;
+  }
+
+  if(i_xmargs->isOptTestTheme()) {
+    m_testTheme = true;
+  }
+
 }
 
 void XMSession::load(UserConfig* m_Config) {
@@ -80,6 +127,7 @@ void XMSession::load(UserConfig* m_Config) {
   m_windowed         = m_Config->getBool("DisplayWindowed");
   m_drawlib          = m_Config->getString("DrawLib");
   m_www              = m_Config->getBool("WebHighscores");
+  m_profile          = m_Config->getString("DefaultProfile");
 }
 
 bool XMSession::isVerbose() const {
@@ -124,4 +172,64 @@ bool XMSession::www() const {
 
 void XMSession::setWWW(bool i_value) {
   m_www = i_value;
+}
+
+bool XMSession::benchmark() const {
+  return m_benchmark;
+}
+
+bool XMSession::debug() const {
+  return m_debug;
+}
+
+bool XMSession::sqlTrace() const {
+  return m_sqlTrace;
+}
+
+std::string XMSession::profile() const {
+  return m_profile;
+}
+
+void XMSession::setProfile(const std::string& i_profile) {
+  m_profile = i_profile;
+}
+
+bool XMSession::gDebug() const {
+  return m_gdebug;
+}
+
+std::string XMSession::gDebugFile() const {
+  return m_gdebug_file;
+}
+
+bool XMSession::timedemo() const {
+  return m_timedemo;
+}
+
+bool XMSession::fps() const {
+  return m_fps;
+}
+
+bool XMSession::ugly() const {
+  return m_ugly;
+}
+
+bool XMSession::uglyOver() const {
+  return m_uglyOver;
+}
+
+bool XMSession::testTheme() const {
+  return m_testTheme;
+}
+
+void XMSession::setUgly(bool i_value) {
+  m_ugly = i_value;
+}
+
+void XMSession::setUglyOver(bool i_value) {
+  m_uglyOver = i_value;
+}
+
+void XMSession::setTestTheme(bool i_value) {
+  m_testTheme = i_value;
 }

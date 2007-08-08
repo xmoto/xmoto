@@ -56,38 +56,30 @@ int main(int nNumArgs,char **ppcArgs) {
   try {     
     /* Setup basic info */
     vapp::GameApp Game;
-    
-    Game.setAppName(std::string("X-Moto"));
-    Game.setAppCommand(std::string("xmoto"));
-    Game.setCopyrightInfo(std::string("(C) Copyright 2005-2007"));
     Game.run(nNumArgs,ppcArgs);
   }
   catch (Exception &e) {
     Logger::Log((std::string("Exception: ") + e.getMsg()).c_str());
-  
+    
     printf("fatal exception : %s\n",e.getMsg().c_str());        
     SDL_Quit(); /* make sure SDL shuts down gracefully */
-
-    #if defined(WIN32)
-      char cBuf[1024];
-      sprintf(cBuf,"Fatal exception occured: %s\n"
-                   "Consult the file xmoto.log for more information about what\n"
-                   "might has occured.\n",e.getMsg().c_str());                    
-      MessageBox(NULL,cBuf,"X-Moto Error",MB_OK|MB_ICONERROR);
-    #endif
+    
+#if defined(WIN32)
+    char cBuf[1024];
+    sprintf(cBuf,"Fatal exception occured: %s\n"
+	    "Consult the file xmoto.log for more information about what\n"
+	    "might has occured.\n",e.getMsg().c_str());                    
+    MessageBox(NULL,cBuf,"X-Moto Error",MB_OK|MB_ICONERROR);
+#endif
   }
   return 0;
 }
-
 
 namespace vapp {
 
   App::App() {
     m_bQuit = false;
     m_fAppTime = 0.0f;
-    m_AppName = "";
-    m_CopyrightInfo = "";
-    m_AppCommand = "";
     m_UserNotify = "";
     m_fFramesPerSecond = 25.0f;
     m_fNextFrame = 0.0f;
@@ -111,65 +103,6 @@ namespace vapp {
     delete m_xmsession;
   }
 
-  /*===========================================================================
-  Sub app entry point and stuff
-  ===========================================================================*/
-  int SubApp::run(App *pParent) {
-    /* Reset everything */
-    m_nRetVal = 0;
-    m_bShouldClose = false;
-    m_pParentApp = pParent;
-    
-    /* Start looping */
-    while(!m_bShouldClose) {
-      /* Handle SDL events */      
-      SDL_PumpEvents();
-      
-      SDL_Event Event;
-      while(SDL_PollEvent(&Event)) {
-        int ch=0;
-    
-        /* What event? */
-        switch(Event.type) {
-          case SDL_KEYDOWN: 
-            if((Event.key.keysym.unicode&0xff80)==0) {
-              ch = Event.key.keysym.unicode & 0x7F;
-            }
-            keyDown(Event.key.keysym.sym, Event.key.keysym.mod, ch);            
-            break;
-          case SDL_KEYUP: 
-            keyUp(Event.key.keysym.sym, Event.key.keysym.mod);            
-            break;
-          case SDL_MOUSEBUTTONDOWN:
-            mouseDown(Event.button.button);
-            break;
-          case SDL_MOUSEBUTTONUP:
-            mouseUp(Event.button.button);
-            break;
-          case SDL_QUIT:  
-            /* Force quit */
-            getParent()->quit();
-            return 0;
-        }
-      }
-    
-      pParent->getDrawLib()->clearGraphics();
-      pParent->getDrawLib()->resetGraphics();
-      
-      /* Update */
-      update();
-      
-      pParent->getDrawLib()->flushGraphics();
-    }
-    
-    /* Return */
-    return m_nRetVal;
-  }
-  
-  void SubApp::subClose(int nRetVal) {
-    m_nRetVal = nRetVal;
-    m_bShouldClose = true;
-  }
   
   /*===========================================================================
   Main application entry point
@@ -209,21 +142,12 @@ namespace vapp {
     if(v_xmArgs.isOptUnPack()) {
       Packager::goUnpack(v_xmArgs.getOpt_unpack_bin() == "" ? "xmoto.bin" : v_xmArgs.getOpt_unpack_bin(),
 			 v_xmArgs.getOpt_unpack_dir() == "" ? "."         : v_xmArgs.getOpt_unpack_dir(),
-			 v_xmArgs.getOpt_unpack_noList());
+			 v_xmArgs.getOpt_unpack_noList() == false);
       Logger::uninit();
       FS::uninit();
       return;
     }
     /* ***** */
-
-    /* first, check command line args */
-    try {
-      _ParseArgs(nNumArgs,ppcArgs);
-    } 
-    catch (SyntaxError &e) {
-      printf("syntax error : %s\n", e.getMsg().c_str());
-      return; /* abort */
-    }
 
     /* load config file */
     createDefaultConfig();
@@ -240,10 +164,6 @@ namespace vapp {
     std::string v_locale = Locales::init(m_Config.getString("Language"));
 #endif
 
-    if (m_bQuit){
-      return;
-    }
-
     Logger::Log("compiled at "__DATE__" "__TIME__);
     if(SwapEndian::bigendien) {
       Logger::Log("Systeme is bigendien");
@@ -257,6 +177,10 @@ namespace vapp {
 #ifdef USE_GETTEXT
     Logger::Log("Locales set to '%s' (directory '%s')", v_locale.c_str(), LOCALESDIR);
 #endif
+
+    if(v_xmArgs.isOptListLevels() || v_xmArgs.isOptListReplays() || v_xmArgs.isOptReplayInfos()) {
+      m_xmsession->setUseGraphics(false);
+    }
 
     _InitWin(m_xmsession->useGraphics());
 
@@ -281,7 +205,7 @@ namespace vapp {
     }
     
     /* Now perform user init */
-    userInit();
+    userInit(&v_xmArgs);
     
     /* Enter the main loop */
     while(!m_bQuit) {
@@ -454,7 +378,7 @@ namespace vapp {
         throw Exception("(2) SDL_Init : " + std::string(SDL_GetError()));
     }
     /* Set window title */
-    SDL_WM_SetCaption(m_AppName.c_str(),m_AppName.c_str());
+    SDL_WM_SetCaption(XMBuild::getVersionString(true).c_str(), XMBuild::getVersionString(true).c_str());
 
 #if !defined(WIN32) && !defined(__APPLE__) 
     SDL_Surface *v_icon = SDL_LoadBMP(GAMEDATADIR "/xmoto_icone_x.ico");
@@ -559,59 +483,10 @@ namespace vapp {
   void App::getScissorGraphics(int *px,int *py,int *pnWidth,int *pnHeight) {
 	  drawLib->getClipRect(px,py,pnWidth,pnHeight);
   }  
-
   
-
-
-  /*===========================================================================
-  Parse command-line arguments
-  ===========================================================================*/
-  void App::_ParseArgs(int nNumArgs,char **ppcArgs) {
-    std::vector<std::string> UserArgs;
-  
-    /* Walk through the args */
-    for(int i=1;i<nNumArgs;i++) {
-      if(!strcmp(ppcArgs[i],"-nogfx")) {
-      }
-      else if(!strcmp(ppcArgs[i],"-res")) {
-        if(i+1 == nNumArgs) 
-          throw SyntaxError("missing resolution");
-        i++;
-      }
-      else if(!strcmp(ppcArgs[i],"-bpp")) {
-        if(i+1 == nNumArgs) 
-          throw SyntaxError("missing bit depth");
-        i++;
-      }
-      else if(!strcmp(ppcArgs[i],"-fs")) {
-      }
-      else if(!strcmp(ppcArgs[i],"-win")) {
-      }
-      else if(!strcmp(ppcArgs[i],"-v")) {
-      } 
-      else if(!strcmp(ppcArgs[i],"-noexts")) {
-      }
-      else if(!strcmp(ppcArgs[i],"-nowww")) {
-      } else if(!strcmp(ppcArgs[i],"-drawlib")) {
-        if(i+1 == nNumArgs) {
-          throw SyntaxError("missing drawlib");
-	}
-        i++;
-      } else if(!strcmp(ppcArgs[i],"-h") || !strcmp(ppcArgs[i],"-?") ||
-              !strcmp(ppcArgs[i],"--help") || !strcmp(ppcArgs[i],"-help")) {
-	/* mark that we want to quit the application */
-        return;
-      }
-      else {
-        /* Add it to argument vector */
-        UserArgs.push_back(ppcArgs[i]);
-      }
-    }
-    
-    /* Pass any arguments to the user app */
-    if(UserArgs.size() > 0)
-      parseUserArgs(UserArgs);
+  bool App::isUglyMode() {
+    return m_xmsession->ugly();
   }
-
 }
+
 

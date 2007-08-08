@@ -50,6 +50,28 @@ class XMArguments {
   std::string getOpt_drawlib_lib() const;
   bool isOptHelp() const;
   bool isOptNoWWW() const;
+  bool isOptReplay() const;
+  std::string getOpt_replay_file() const;
+  bool isOptLevelID() const;
+  std::string getOpt_levelID_id() const;
+  bool isOptLevelFile() const;
+  std::string getOpt_levelFile_file() const;
+  bool isOptDebug() const;
+  bool isOptSqlTrace() const;
+  bool isOptProfile() const;
+  std::string getOpt_profile_value() const;
+  bool isOptGDebug() const;
+  std::string getOpt_gdebug_file() const;
+  bool isOptListLevels() const;
+  bool isOptListReplays() const;
+  bool isOptTimedemo() const;
+  bool isOptFps() const;
+  bool isOptUgly() const;
+  bool isOptTestTheme() const;
+  bool isOptBenchmark() const;
+  bool isOptCleanCache() const;
+  bool isOptReplayInfos() const;
+  std::string getOpt_replayInfos_file() const;
 
   private:
   /* pack options */
@@ -84,7 +106,9 @@ class XMArguments {
   bool m_opt_debug;
   bool m_opt_sqlTrace;
   bool m_opt_fps;
-  
+  bool m_opt_gdebug;  
+  std::string m_gdebug_file;
+
   /* replays */
   bool m_opt_replay;
   std::string m_replay_file;
@@ -109,6 +133,8 @@ class XMArguments {
   bool m_opt_benchmark;
   bool m_opt_cleanCache;
 
+  /* at command line, you can pass [0-9]* for level of id _iLXX_ */
+  static std::string levelArg2levelId(std::string i_arg);
 };
 
 #endif

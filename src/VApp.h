@@ -24,14 +24,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "VCommon.h"
 
-//#include "VExcept.h"
-//#include "VMath.h"
 #include "VDraw.h"
-//#include "VTexture.h"
 #include "Image.h"
 #include "UserConfig.h"
 
 class XMSession;
+class XMArguments;
 class UserConfig;
 
 namespace vapp {
@@ -39,50 +37,6 @@ namespace vapp {
 
   class App;
 
-
-  /*===========================================================================
-  Sub-application - something that runs in the context of a parent app
-  useful for ugly pop-menus, etc.
-  ===========================================================================*/
-  class SubApp {
-  public:
-    SubApp() {
-      m_pParentApp = NULL;
-      m_bShouldClose = false;
-    } virtual ~ SubApp() {
-    };
-
-    /* Methods */
-    int run(App * pParent);
-
-    /* Data interface */
-    App *getParent(void) {
-      return m_pParentApp;
-    }
-
-    /* Protected */
-    void subClose(int nRetVal);
-
-  protected:
-
-    /* Virtual protected methods */
-    virtual void update(void) {
-    }
-    virtual void keyDown(int nKey, SDLMod mod, int nChar) {
-    }
-    virtual void keyUp(int nKey, SDLMod mod) {
-    }
-    virtual void mouseDown(int nButton) {
-    }
-    virtual void mouseUp(int nButton) {
-    }
-
-  private:
-    /* Data */
-    App * m_pParentApp;
-    bool m_bShouldClose;
-    int m_nRetVal;
-  };
 
   /*===========================================================================
   Vector graphics application base class
@@ -95,16 +49,6 @@ namespace vapp {
     /* Methods */
     void run(int nNumArgs, char **ppcArgs);
 
-    /* Application definition */
-    void setAppName(const std::string & i) {
-      m_AppName = i;
-    }
-    void setCopyrightInfo(const std::string & i) {
-      m_CopyrightInfo = i;
-    }
-    void setAppCommand(const std::string & i) {
-      m_AppCommand = i;
-    }
     void setFPS(float i) {
       m_fFramesPerSecond = i;
     }
@@ -131,14 +75,11 @@ namespace vapp {
       return m_UserNotify;
     }
 
+    bool isUglyMode();
     
     float getFPS(void) {
       return m_fFramesPerSecond;
     }
-
-    virtual bool isUglyMode() {
-      return false;
-    };
 
       /**
        * keesj:TOTO
@@ -172,11 +113,7 @@ namespace vapp {
     }
     virtual void mouseUp(int nButton) {
     }
-    virtual void parseUserArgs(std::vector < std::string > &UserArgs) {
-    }
-    virtual void helpUserArgs(void) {
-    }
-    virtual void userInit(void) {
+    virtual void userInit(XMArguments* v_xmArgs) {
     }
     virtual void userShutdown(void) {
     }
@@ -199,7 +136,6 @@ namespace vapp {
     /* Private helper functions */
     void _InitWin(bool bInitGraphics);
     void _Uninit(void);
-    void _ParseArgs(int nNumArgs, char **ppcArgs);
 
     /* Data */
     int m_nFrameDelay;		/* # of millisecs to wait after screen buffer swap */
@@ -208,11 +144,6 @@ namespace vapp {
 
     /* User nofification */
     std::string m_UserNotify;
-
-    /* App def */
-    std::string m_AppName;	/* Name of app */
-    std::string m_CopyrightInfo;	/* Application copyright string */
-    std::string m_AppCommand;	/* Command to start app */
 
     /* Run-time fun */
     bool m_bQuit;		/* Quit flag */

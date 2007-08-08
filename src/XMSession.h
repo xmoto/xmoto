@@ -52,7 +52,21 @@ class XMSession {
   std::string drawlib() const;
   bool www() const;
   void setWWW(bool i_value);
-
+  bool benchmark() const;
+  bool debug() const;
+  bool sqlTrace() const;
+  std::string profile() const;
+  void setProfile(const std::string& i_profile);
+  bool gDebug() const;
+  std::string gDebugFile() const;
+  bool timedemo() const;
+  bool fps() const;
+  bool ugly() const;
+  void setUgly(bool i_value);
+  bool uglyOver() const;
+  void setUglyOver(bool i_value);
+  bool testTheme() const;
+  void setTestTheme(bool i_value);
   private:
   bool m_verbose;
   bool m_useGraphics;
@@ -63,6 +77,17 @@ class XMSession {
   bool m_glExts;
   std::string m_drawlib;
   bool m_www;
+  bool m_benchmark;
+  bool m_debug;
+  bool m_sqlTrace;
+  std::string m_profile;
+  bool m_gdebug;
+  std::string m_gdebug_file;
+  bool m_timedemo;
+  bool m_fps;
+  bool m_ugly;
+  bool m_uglyOver;
+  bool m_testTheme;
 };
 
 #endif
