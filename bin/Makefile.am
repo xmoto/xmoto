@@ -11,7 +11,7 @@ xmoto.bin: package.lst
 if CROSS_COMPILING
 	echo "Cross-compiling, cannot build xmoto.bin"
 else
-	if test -e $<; then ../src/xmoto -pack $@ `dirname $<`; fi
+	if test -e $<; then ../src/xmoto --pack $@ `dirname $<`; fi
 endif
 
 # nothing to do for package.lst, but this entry exists because this file is not included in releases.
