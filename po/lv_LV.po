@@ -1,5 +1,5 @@
 # Latvian translations for xmoto package.
-# Copyright (C) 2007 Free Software Foundation, Inc.
+# Copyright (C) 2007 X-Moto Development Team
 # This file is distributed under the same license as the xmoto package.
 # Jānis Rūcis <parasti@gmail.com>, 2007.
 #
@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xmoto 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-08-10 20:51+0200\n"
-"PO-Revision-Date: 2007-08-05 21:45+0300\n"
+"POT-Creation-Date: 2007-08-10 23:47+0200\n"
+"PO-Revision-Date: 2007-08-11 00:31+0300\n"
 "Last-Translator: Jānis Rūcis <parasti@gmail.com>\n"
 "Language-Team: Latvian\n"
 "MIME-Version: 1.0\n"
@@ -252,7 +252,7 @@ msgstr "Brazīlijas portugāļu val."
 
 #: src/GameText.h:115
 msgid "Latvian"
-msgstr "latviešu"
+msgstr "latviski"
 
 #: src/GameText.h:117
 msgid "Main testers"
@@ -307,7 +307,6 @@ msgid "Credits"
 msgstr "Titri"
 
 #: src/GameText.h:136
-#, fuzzy
 msgid "Player"
 msgstr "Spēlētājs"
 
@@ -469,43 +468,32 @@ msgid "External Levels"
 msgstr "Ārējie līmeņi"
 
 #: src/GameText.h:175
-#, fuzzy
 msgid "Check your Internet connection !"
-msgstr ""
-"Neizdevās lejupielādēt līmeņus.\n"
-"Pārbaudi savu interneta pieslēgumu!"
+msgstr "Pārbaudi savu interneta pieslēgumu!"
 
 #: src/GameText.h:176
-#, fuzzy
 msgid "Failed to check for levels."
-msgstr "Neizdevās sagatavot līmeni!"
+msgstr "Neizdevās meklēt līmeņus."
 
 #: src/GameText.h:177
-#, fuzzy
 msgid "Failed to download high-scores."
-msgstr "Tiek lejupielādēti rekordi..."
+msgstr "Neizdevās lejupielādēt rekordus."
 
 #: src/GameText.h:178
-#, fuzzy
 msgid "Failed to download levels."
-msgstr "Neizdevās ielādēt ierakstu!"
+msgstr "Neizdevās lejupielādēt līmeņus."
 
 #: src/GameText.h:179
-#, fuzzy
 msgid "Failed to download the replay."
-msgstr "Neizdevās ielādēt ierakstu!"
+msgstr "Neizdevās lejupielādēt ierakstu."
 
 #: src/GameText.h:180
-#, fuzzy
 msgid "Failed to download the rooms list."
-msgstr ""
-"Neizdevās lejupielādēt istabu sarakstu.\n"
-"Pārbaudi savu interneta pieslēgumu!"
+msgstr "Neizdevās lejupielādēt istabu sarakstu."
 
 #: src/GameText.h:181
-#, fuzzy
 msgid "Failed to get the selected theme"
-msgstr "Lejupielādēt vai atjaunot izvēlēto tēmu"
+msgstr "Neizdevās iegūt izvēlēto tēmu."
 
 #: src/GameText.h:182
 msgid "Failed to initialize level!"
@@ -524,9 +512,8 @@ msgstr ""
 "Varbūt pamēģini ar citu nosaukumu?"
 
 #: src/GameText.h:185
-#, fuzzy
 msgid "Failed to update the theme list"
-msgstr "Atjaunot tēmu sarakstu"
+msgstr "Neizdevās atjaunot tēmu sarakstu."
 
 #: src/GameText.h:186
 msgid "File"
@@ -844,15 +831,14 @@ msgstr "Jauns rekords!"
 msgid "New personal highscore!"
 msgstr "Jauns personīgais rekords!"
 
-# XXX
-# Another case of hard-coded English singular/plural forms.
+# Tas pēdējais ir tāds padraņķīgs, bet nekas labāks nenāk prātā.
 #: src/GameText.h:266
-#, fuzzy, c-format
+#, c-format
 msgid "%i new or updated level available. Download now ?"
 msgid_plural "%i new or updated levels available. Download now ?"
 msgstr[0] "Pieejams %d jauns vai atjaunots līmenis. Lejupielādēt?"
-msgstr[1] "Pieejams %d jauns vai atjaunots līmenis. Lejupielādēt?"
-msgstr[2] "Pieejams %d jauns vai atjaunots līmenis. Lejupielādēt?"
+msgstr[1] "Pieejami %d jauni vai atjaunoti līmeņi. Lejupielādēt?"
+msgstr[2] "Pieejami %d jauni vai atjaunoti līmeņi. Lejupielādēt?"
 
 #: src/GameText.h:269
 msgid "New Levels"
@@ -978,12 +964,12 @@ msgid "Personal"
 msgstr "Personīgie"
 
 #: src/GameText.h:304
-#, fuzzy, c-format
+#, c-format
 msgid "%i player"
 msgid_plural "%i players"
-msgstr[0] "Labākais spēlētājs"
-msgstr[1] "Labākais spēlētājs"
-msgstr[2] "Labākais spēlētājs"
+msgstr[0] "%i spēlētājs"
+msgstr[1] "%i spēlētāji"
+msgstr[2] "%i spēlētāju"
 
 #: src/GameText.h:305
 msgid "Player Profile"
@@ -1078,9 +1064,9 @@ msgid "Save"
 msgstr "Saglabāt"
 
 #: src/GameText.h:329
-#, fuzzy, c-format
+#, c-format
 msgid "Saved as %s"
-msgstr "Saglabāts kā"
+msgstr "Saglabāts kā %s"
 
 #: src/GameText.h:330
 msgid "Save Replay"
@@ -1202,7 +1188,7 @@ msgstr "Iesniegt visus rekordus"
 msgid ""
 "An unexpected error has occured. There may be some problems with the web "
 "site."
-msgstr ""
+msgstr "Notikusi negaidīta kļūda. Iespējams, ka radušās problēmas ar serveri."
 
 #: src/GameText.h:359
 msgid "Oh no !"
@@ -1617,17 +1603,14 @@ msgid "Select this if you got a direct connection to the Internet"
 msgstr "Izvēlies šo, ja tev ir tiešs pieslēgums internetam"
 
 #: src/GameText.h:463
-#, fuzzy
 msgid "Select this if you connect to the Internet through an HTTP proxy"
 msgstr "Izvēlies šo, ja tu lieto HTTP starpnieku, lai pieslēgtos internetam"
 
 #: src/GameText.h:464
-#, fuzzy
 msgid "Select this if you connect to the Internet through a SOCKS4 proxy"
 msgstr "Izvēlies šo, ja tu lieto SOCKS4 starpnieku, lai pieslēgtos internetam"
 
 #: src/GameText.h:465
-#, fuzzy
 msgid "Select this if you connect to the Internet through a SOCKS5 proxy"
 msgstr "Izvēlies šo, ja tu lieto SOCKS5 starpnieku, lai pieslēgtos internetam"
 
@@ -1804,9 +1787,8 @@ msgid "Puzzle the levels pack list"
 msgstr "Sajaukt līmeņu sarakstu"
 
 #: src/GameText.h:510
-#, fuzzy
 msgid "Enter text to filter the level list"
-msgstr "Pievienot līmeni iecienītajiem līmeņiem"
+msgstr "Ievadi tekstu līmeņu saraksta filtrēšanai"
 
 #: src/GameText.h:511
 msgid "Choose the number of players"
@@ -1814,28 +1796,25 @@ msgstr "Izvēlies spēlētāju skaitu"
 
 #: src/GameText.h:512
 msgid "Your proxy login"
-msgstr ""
+msgstr "Tavs starpnieksevera lietotājvārds"
 
 #: src/GameText.h:513
 msgid "Your password associated with your login"
 msgstr "Parole, kas saistīta ar tavu lietotājvārdu"
 
 #: src/GameText.h:514
-#, fuzzy
 msgid "Enter text to filter the replay list"
-msgstr "Filtrēt ierakstu sarakstu"
+msgstr "Ievadi tekstu ierakstu saraksta filtrēšanai"
 
 #: src/GameText.h:515
 msgid "Press to play X-Moto immediately"
 msgstr "Uzreiz sākt spēlēt X-Moto"
 
 #: src/GameText.h:516
-#, fuzzy
 msgid "Increase or decrease the quality of the levels selected"
 msgstr "Palielināt vai samazināt atlasīto līmeņu kvalitāti"
 
 #: src/GameText.h:517
-#, fuzzy
 msgid "Increase or decrease the difficulty of the levels selected"
 msgstr "Palielināt vai samazināt atlasīto līmeņu grūtības pakāpi"
 
@@ -1888,9 +1867,8 @@ msgid "Scripted levels"
 msgstr "Programmētie līmeņi"
 
 #: src/GameText.h:531
-#, fuzzy
 msgid "Musical levels"
-msgstr "Mani līmeņi"
+msgstr "Muzikālie līmeņi"
 
 #: src/GameText.h:533
 msgid "Last played levels"
@@ -1921,7 +1899,6 @@ msgid "Oldest highscores"
 msgstr "Visvecākie rekordi"
 
 #: src/GameText.h:540
-#, fuzzy
 msgid "Platinum"
 msgstr "Platīns"
 
@@ -1946,7 +1923,6 @@ msgid "My levels"
 msgstr "Mani līmeņi"
 
 #: src/GameText.h:547
-#, fuzzy
 msgid "Levels with no highscore in your room"
 msgstr "Līmeņi bez rekorda tavā istabā"
 
@@ -2007,16 +1983,14 @@ msgid "X-Moto levels you have played only a few times"
 msgstr "X-Moto līmeņi, kurus esi spēlējis tikai dažas reizes"
 
 #: src/GameText.h:563
-#, fuzzy
 msgid "X-Moto levels having a recent highscore in your room"
-msgstr "X-Moto līmeņi ar neseniem rekordiem tavā istabā"
+msgstr "X-Moto līmeņi ar nesenu rekordu tavā istabā"
 
 #: src/GameText.h:564
 msgid "Last created X-Moto levels"
 msgstr "Pēdējie izveidotie X-Moto līmeņi"
 
 #: src/GameText.h:565
-#, fuzzy
 msgid "X-Moto levels having an old highscore in your room"
 msgstr "X-Moto līmeņi ar veciem rekordiem tavā istabā"
 
@@ -2025,19 +1999,16 @@ msgid "You have the room highscore"
 msgstr "Tu esi istabas rekorda īpašnieks"
 
 #: src/GameText.h:567
-#, fuzzy
 msgid "Your personal highscore finish time is almost the room highscore (95%)"
 msgstr "Tava rekorda finiša laiks daudz neatšķiras no istabas rekorda (95%)"
 
 #: src/GameText.h:568
-#, fuzzy
 msgid ""
 "Your personal highscore finish time is almost the room highscore (90%-95%)"
 msgstr ""
 "Tava rekorda finiša laiks daudz neatšķiras no istabas rekorda (90%-95%)"
 
 #: src/GameText.h:569
-#, fuzzy
 msgid ""
 "Your personal highscore finish time is almost the room highscore (80%-90%)"
 msgstr ""
@@ -2048,14 +2019,14 @@ msgid "The room highscore is really better than your own highscore"
 msgstr "Istabas rekords ir daudz labāks par tavu personīgo rekordu"
 
 #: src/GameText.h:571
-#, fuzzy, c-format
+#, c-format
 msgid "Level pack \"%s\""
-msgstr "Līmeņu paka"
+msgstr "Līmeņu paka \"%s\""
 
 #: src/GameText.h:572
 #, c-format
 msgid "Highscores by %s"
-msgstr ""
+msgstr "%s rekordi"
 
 #: src/GameText.h:573
 msgid "External levels (the one you put into the 'My levels' directory)"
@@ -2086,14 +2057,12 @@ msgid "UglyOver mode disabled"
 msgstr "UglyOver režīms deaktivizēts"
 
 #: src/GameText.h:581
-#, fuzzy
 msgid "Web connection enabled"
-msgstr "Tīmekļa savienojums aktivizēts"
+msgstr "Tīmekļa pieslēgums aktivizēts"
 
 #: src/GameText.h:582
-#, fuzzy
 msgid "Web connection disabled"
-msgstr "Tīmekļa savienojums deaktivizēts"
+msgstr "Tīmekļa pieslēgums deaktivizēts"
 
 #: src/GameText.h:583
 msgid "Replay interpolation enabled"
