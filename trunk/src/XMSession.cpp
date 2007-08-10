@@ -154,8 +154,24 @@ int XMSession::bpp() const {
   return m_bpp;
 }
 
-int XMSession::windowed() const {
+bool XMSession::windowed() const {
   return m_windowed;
+}
+
+void XMSession::setResolutionWidth(int i_value) {
+  m_resolutionWidth = i_value;
+}
+
+void XMSession::setResolutionHeight(int i_value) {
+  m_resolutionHeight = i_value;
+}
+
+void XMSession::setBpp(int i_value) {
+  m_bpp = i_value;
+}
+
+void XMSession::setWindowed(bool i_value) {
+  m_windowed = i_value;
 }
 
 bool XMSession::glExts() const {

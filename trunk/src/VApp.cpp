@@ -195,8 +195,15 @@ namespace vapp {
       drawLib->setDontUseGLExtensions(m_xmsession->glExts() == false);
 
       /* Init! */
-      Logger::Log("Resolution: %ix%i (%i bpp)", m_xmsession->resolutionWidth(), m_xmsession->resolutionHeight(), m_xmsession->bpp());
       drawLib->init(m_xmsession->resolutionWidth(), m_xmsession->resolutionHeight(), m_xmsession->bpp(), m_xmsession->windowed(), &m_theme);
+      /* drawlib can change the final resolution if it fails, then, reinit session one's */
+      m_xmsession->setResolutionWidth(drawLib->getDispWidth());
+      m_xmsession->setResolutionHeight(drawLib->getDispHeight());
+      m_xmsession->setBpp(drawLib->getDispBPP());
+      m_xmsession->setWindowed(drawLib->getWindowed());
+      Logger::Log("Resolution: %ix%i (%i bpp)", m_xmsession->resolutionWidth(), m_xmsession->resolutionHeight(), m_xmsession->bpp());
+      /* */
+
       if(!drawLib->isNoGraphics()) {        
 	drawLib->setDrawDims(m_xmsession->resolutionWidth(), m_xmsession->resolutionHeight(),
 			     m_xmsession->resolutionWidth(), m_xmsession->resolutionHeight());

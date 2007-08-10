@@ -47,7 +47,11 @@ class XMSession {
   int resolutionWidth() const;
   int resolutionHeight() const;
   int bpp() const;
-  int windowed() const;
+  bool windowed() const;
+  void setResolutionWidth(int i_value);
+  void setResolutionHeight(int i_value);
+  void setBpp(int i_value);
+  void setWindowed(bool i_value);
   bool glExts() const;
   std::string drawlib() const;
   bool www() const;
