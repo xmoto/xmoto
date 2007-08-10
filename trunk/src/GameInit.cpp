@@ -309,7 +309,7 @@ namespace vapp {
 	/* No internet connection, probably... (just use the latest times, if any) */
 	Logger::Log("** Warning ** : Failed to update web-highscores [%s]",e.getMsg().c_str());              
 	if(!bSilent)
-	  notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES);
+	  notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW);
       }
       
       if(m_bEnableCheckNewLevelsAtStartup) {
@@ -319,7 +319,7 @@ namespace vapp {
 	} catch(Exception &e) {
 	  Logger::Log("** Warning ** : Failed to update web-levels [%s]",e.getMsg().c_str());              
 	  if(!bSilent)
-	    notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES);
+	    notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW);
 	}
       }
       

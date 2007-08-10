@@ -26,6 +26,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #ifndef USE_GETTEXT
 #define _(a) a
+char* ngettext(const char* msgid, const char* msgid_plural, unsigned long int n) {
+  if(n > 1) {
+    return msgid_plural;
+  }
+  return msgid;
+}
 #else
 #include <locale.h>
 #include <libintl.h>

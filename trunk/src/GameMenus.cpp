@@ -863,7 +863,7 @@ namespace vapp {
     pReplayList->setFont(drawLib->getFontSmall());
     pReplayList->addColumn(GAMETEXT_REPLAY, pReplayList->getPosition().nWidth/2 - 100,CONTEXTHELP_REPLAYCOL);
     pReplayList->addColumn(GAMETEXT_LEVEL,  pReplayList->getPosition().nWidth/2 - 28,CONTEXTHELP_REPLAYLEVELCOL);
-    pReplayList->addColumn(GAMETEXT_PLAYER(1),128,CONTEXTHELP_REPLAYPLAYERCOL);
+    pReplayList->addColumn(GAMETEXT_PLAYER,128,CONTEXTHELP_REPLAYPLAYERCOL);
     pReplayList->setEnterButton( pShowButton );
     
     //m_pPlayWindow->setPrimaryChild(m_pJustDeadMenuButtons[0]); /* default button: Try Again */
@@ -992,12 +992,11 @@ namespace vapp {
     for(unsigned int i=0; i<4; i++) {
       UIButton *pNbPlayers;
       std::ostringstream s_nbPlayers;
-      std::string str_nbPlayers;
-    
+      char strPlayer[64];
+      snprintf(strPlayer, 64, GAMETEXT_NPLAYER(i+1), i+1);
       s_nbPlayers << (int) i+1;
-      str_nbPlayers = s_nbPlayers.str() + " " + GAMETEXT_PLAYER(i+1);
 
-      pNbPlayers = new UIButton(pMultiOptionsTab, 0, 40+(i*20), str_nbPlayers, pMultiOptionsTab->getPosition().nWidth, 28);
+      pNbPlayers = new UIButton(pMultiOptionsTab, 0, 40+(i*20), strPlayer, pMultiOptionsTab->getPosition().nWidth, 28);
       pNbPlayers->setType(UI_BUTTON_TYPE_RADIO);
       pNbPlayers->setID("MULTINB_" + s_nbPlayers.str());
       pNbPlayers->enableWindow(true);
@@ -1297,7 +1296,7 @@ namespace vapp {
     pLV_BestTimes_List->setID("LEVEL_VIEWER_BESTTIMES_LIST");
     pLV_BestTimes_List->setFont(drawLib->getFontSmall());
     pLV_BestTimes_List->addColumn(GAMETEXT_FINISHTIME,128);
-    pLV_BestTimes_List->addColumn(GAMETEXT_PLAYER(1),pLV_BestTimes_List->getPosition().nWidth-128);    
+    pLV_BestTimes_List->addColumn(GAMETEXT_PLAYER,pLV_BestTimes_List->getPosition().nWidth-128);    
     UIStatic *pLV_BestTimes_WorldRecord = new UIStatic(pLVTab_BestTimes,5,pLVTab_BestTimes->getPosition().nHeight-50,"",pLVTab_BestTimes->getPosition().nWidth,50);
     pLV_BestTimes_WorldRecord->setID("LEVEL_VIEWER_BESTTIMES_WORLDRECORD");
     pLV_BestTimes_WorldRecord->setFont(drawLib->getFontSmall());
@@ -1326,7 +1325,7 @@ namespace vapp {
     pLV_Replays_List->setID("LEVEL_VIEWER_REPLAYS_LIST");
     pLV_Replays_List->setFont(drawLib->getFontSmall());
     pLV_Replays_List->addColumn(GAMETEXT_REPLAY,128);
-    pLV_Replays_List->addColumn(GAMETEXT_PLAYER(1),128);
+    pLV_Replays_List->addColumn(GAMETEXT_PLAYER,128);
     pLV_Replays_List->addColumn(GAMETEXT_FINISHTIME,128);    
     UIButton *pLV_Replays_Show = new UIButton(pLVTab_Replays,0,pLVTab_Replays->getPosition().nHeight-50,GAMETEXT_SHOW,115,57);
     pLV_Replays_Show->setFont(drawLib->getFontSmall());
@@ -2159,7 +2158,7 @@ namespace vapp {
 				      m_xmsession->debug());
 	    _UpdateLevelsLists();
 	  } catch(Exception &e) {
-	    notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES);
+	    notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW);
 	  }
 	}
 	
@@ -2711,7 +2710,7 @@ namespace vapp {
 				  m_xmsession->debug());
 	_UpdateLevelsLists();
       } catch(Exception &e) {
-	notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES);
+	notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW);
       }
     }
 
@@ -2721,7 +2720,7 @@ namespace vapp {
     	_UpdateWebRooms(false);
     	_UpgradeWebRooms(true);    
       } catch(Exception &e) {
-    	notifyMsg(GAMETEXT_FAILEDDLROOMSLIST);
+    	notifyMsg(GAMETEXT_FAILEDDLROOMSLIST + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW);
       }
     }
     
@@ -2730,7 +2729,7 @@ namespace vapp {
       try {
 	_UpdateWebThemes(false);
       } catch(Exception &e) {
-	notifyMsg(GAMETEXT_FAILEDUPDATETHEMESLIST);
+	notifyMsg(GAMETEXT_FAILEDUPDATETHEMESLIST + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW);
       }
     }  
 
@@ -2744,7 +2743,7 @@ namespace vapp {
 	  }
 	}
       } catch(Exception &e) {
-	notifyMsg(GAMETEXT_FAILEDGETSELECTEDTHEME);
+	notifyMsg(GAMETEXT_FAILEDGETSELECTEDTHEME + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW);
       }
     } 
 
@@ -4005,7 +4004,7 @@ namespace vapp {
     UIStatic *pPlayerTag = reinterpret_cast<UIStatic *>(m_pMainMenu->getChild("PLAYERTAG"));
     if(pPlayerTag) {
       if(m_xmsession->profile() != "") {
-	pPlayerTag->setCaption(std::string(GAMETEXT_CURPLAYER) + ": " + m_xmsession->profile() + "@" + m_WebHighscoresRoomName);
+	pPlayerTag->setCaption(std::string(GAMETEXT_PLAYER) + ": " + m_xmsession->profile() + "@" + m_WebHighscoresRoomName);
       }
     }
   }
@@ -4094,7 +4093,7 @@ namespace vapp {
 	return;
       }
     } catch(Exception &e) {
-      notifyMsg(GAMETEXT_FAILEDDLREPLAY);
+      notifyMsg(GAMETEXT_FAILEDDLREPLAY + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW);
       return;
     }
     m_PlaySpecificReplay = v_replayName;

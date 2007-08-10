@@ -1900,8 +1900,11 @@ namespace vapp {
     if(p_save == "") {
       m_pNewHighscoreSave_str->showWindow(false);
     } else {
+      char v_str[256];
+      snprintf(v_str, 256, GAMETEXT_SAVE_AS, p_save.c_str());
+
       m_pNewHighscoreSave_str->showWindow(true);
-      m_pNewHighscoreSave_str->setCaption("(" + std::string(GAMETEXT_SAVE_AS) + " " + p_save + ")");
+      m_pNewHighscoreSave_str->setCaption(v_str);
     }
   }
   
