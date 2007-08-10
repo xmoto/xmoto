@@ -130,26 +130,23 @@ namespace vapp {
     /* init sub-systems */
     SwapEndian::Swap_Init();
     srand(time(NULL));
-    FS::init("xmoto");
-    Logger::init(FS::getUserDir() + "/xmoto.log");
 
     /* package / unpackage */
     if(v_xmArgs.isOptPack()) {
       Packager::go(v_xmArgs.getOpt_pack_bin() == "" ? "xmoto.bin" : v_xmArgs.getOpt_pack_bin(),
 		   v_xmArgs.getOpt_pack_dir() == "" ? "."         : v_xmArgs.getOpt_pack_dir());
-      Logger::uninit();
-      FS::uninit();
       return;
     }
     if(v_xmArgs.isOptUnPack()) {
       Packager::goUnpack(v_xmArgs.getOpt_unpack_bin() == "" ? "xmoto.bin" : v_xmArgs.getOpt_unpack_bin(),
 			 v_xmArgs.getOpt_unpack_dir() == "" ? "."         : v_xmArgs.getOpt_unpack_dir(),
 			 v_xmArgs.getOpt_unpack_noList() == false);
-      Logger::uninit();
-      FS::uninit();
       return;
     }
     /* ***** */
+
+    FS::init("xmoto");
+    Logger::init(FS::getUserDir() + "/xmoto.log");
 
     /* load config file */
     createDefaultConfig();
