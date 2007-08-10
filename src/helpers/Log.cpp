@@ -49,6 +49,10 @@ void Logger::uninit() {
   m_isInitialized = false;
 }
 
+bool Logger::isInitialized() {
+  return m_isInitialized;
+}
+
 void Logger::setVerbose(bool i_value) {
   m_verbose = i_value;
 }
