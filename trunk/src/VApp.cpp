@@ -59,8 +59,10 @@ int main(int nNumArgs,char **ppcArgs) {
     Game.run(nNumArgs,ppcArgs);
   }
   catch (Exception &e) {
-    Logger::Log((std::string("Exception: ") + e.getMsg()).c_str());
-    
+    if(Logger::isInitialized()) {
+      Logger::Log((std::string("Exception: ") + e.getMsg()).c_str());
+    }    
+
     printf("fatal exception : %s\n",e.getMsg().c_str());        
     SDL_Quit(); /* make sure SDL shuts down gracefully */
     
