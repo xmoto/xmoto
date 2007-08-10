@@ -209,14 +209,15 @@ class GLFontManager : public FontManager {
   
     /* At last, try to "set the video mode" */
     if((m_screen=SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,m_nDispBPP,nFlags))==NULL) {
-      Logger::Log("** Warning ** : Tried to set video mode %dx%d @ %d-bit, but SDL responded: %s\n"
-          "                Now SDL will try determining a proper mode itself.",m_nDispWidth,m_nDispHeight,m_nDispBPP);
-    
+      Logger::Log("** Warning ** : Tried to set video mode %ix%i @ %i-bit, but SDL failed (%s)\n"
+		  "                Now SDL will try determining a proper mode itself.", m_nDispWidth, m_nDispHeight, m_nDispBPP, SDL_GetError());
+      m_nDispBPP = 0;
+
       /* Hmm, try letting it decide the BPP automatically */
       if((m_screen=SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,0,nFlags))==NULL) {       
         /* Still no luck */
         Logger::Log("** Warning ** : Still no luck, now we'll try 800x600 in a window.");
-        m_nDispWidth = 800; m_nDispHeight = 600;        
+        m_nDispWidth = 800; m_nDispHeight = 600; m_nDispBPP = 0;       
         m_bWindowed = true;
         if((m_screen=SDL_SetVideoMode(m_nDispWidth,m_nDispHeight,0,SDL_OPENGL))==NULL) {       
           throw Exception("SDL_SetVideoMode : " + std::string(SDL_GetError()));
