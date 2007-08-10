@@ -1399,7 +1399,7 @@ GameApp::GameApp() {
       /* file probably doesn't exist */
       Logger::Log("** Warning ** : Failed to update theme ", i_id_theme.c_str());
       if(bNotify) {
-	notifyMsg(GAMETEXT_FAILEDGETSELECTEDTHEME);
+	notifyMsg(GAMETEXT_FAILEDGETSELECTEDTHEME + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW);
       }
       return;
     }
@@ -1450,7 +1450,7 @@ GameApp::GameApp() {
             delete m_pInfoMsgBox;
             m_pInfoMsgBox = NULL;
           }
-          notifyMsg(GAMETEXT_FAILEDDLLEVELS);
+          notifyMsg(GAMETEXT_FAILEDDLLEVELS + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW);
         }
 
         /* Got some new levels... load them! */
@@ -1493,11 +1493,9 @@ GameApp::GameApp() {
           /* Ask user whether he want to download levels or snot */
           if(m_pInfoMsgBox == NULL) {
             char cBuf[256];
-            
-            sprintf(cBuf,nULevels==1?GAMETEXT_NEWLEVELAVAIL:
-                                     GAMETEXT_NEWLEVELSAVAIL,nULevels);
+	    snprintf(cBuf, 256, GAMETEXT_NEWLEVELAVAIL(nULevels), nULevels);
 	    m_Renderer.getGUI()->setFont(drawLib->getFontSmall());
-            m_pInfoMsgBox = m_Renderer.getGUI()->msgBox(cBuf,(UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
+            m_pInfoMsgBox = m_Renderer.getGUI()->msgBox(cBuf, (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
           }
         }
       } 
@@ -1507,7 +1505,7 @@ GameApp::GameApp() {
           delete m_pInfoMsgBox;
           m_pInfoMsgBox = NULL;
         }
-        notifyMsg(GAMETEXT_FAILEDCHECKLEVELS);
+        notifyMsg(GAMETEXT_FAILEDCHECKLEVELS + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW);
       } 
   }
 

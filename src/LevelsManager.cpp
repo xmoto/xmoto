@@ -525,14 +525,17 @@ void LevelsManager::makePacks(xmDatabase *i_db,
   v_result = i_db->readDB("SELECT DISTINCT packName FROM levels ORDER BY UPPER(packName);",
 			  nrow);
   for(unsigned int i=0; i<nrow; i++) {
+    char v_levelPackStr[256];
+
     v_pack = new LevelsPack(i_db->getResult(v_result, 1, i, 0),
 			    "SELECT id_level, name, packNum || UPPER(name) AS sort_field "
 			    "FROM levels WHERE packName=\"" +
 			    xmDatabase::protectString(i_db->getResult(v_result, 1, i, 0)) +
 			    "\"");
     v_pack->setGroup(GAMETEXT_PACK_STANDARD);
-    v_pack->setDescription(std::string(VPACKAGENAME_DESC_STANDARD) +
-			   " \"" + std::string(i_db->getResult(v_result, 1, i, 0)) + "\"");
+
+    snprintf(v_levelPackStr, 256, VPACKAGENAME_DESC_STANDARD, i_db->getResult(v_result, 1, i, 0));
+    v_pack->setDescription(v_levelPackStr);
     m_levelsPacks.push_back(v_pack);
   }
   i_db->read_DB_free(v_result);
@@ -544,6 +547,8 @@ void LevelsManager::makePacks(xmDatabase *i_db,
 			  "ORDER BY COUNT(1) DESC LIMIT 10;",
 			  nrow);
   for(unsigned int i=0; i<nrow; i++) {
+    char v_levelPackStr[256];
+
     std::ostringstream v_n;
     if(i+1<10) v_n << "0";
     v_n << i+1;
@@ -557,7 +562,8 @@ void LevelsManager::makePacks(xmDatabase *i_db,
 			    "WHERE b.id_room=" + i_id_room + " "
 			    "AND b.id_profile=\"" + xmDatabase::protectString(v_id_profile) + "\"");
     v_pack->setGroup(GAMETEXT_PACK_BEST_DRIVERS);
-    v_pack->setDescription(std::string(VPACKAGENAME_DESC_BEST_DRIVERS) + " " + v_id_profile);
+    snprintf(v_levelPackStr, 256, VPACKAGENAME_DESC_BEST_DRIVERS, v_id_profile.c_str());
+    v_pack->setDescription(v_levelPackStr);
     m_levelsPacks.push_back(v_pack);
   }
   i_db->read_DB_free(v_result);  
