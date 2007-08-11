@@ -27,58 +27,58 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Locales.h"
 #include "helpers/Log.h"
 
-vapp::MotoGame*     LuaLibGame::m_exec_world              = NULL;
-vapp::InputHandler* LuaLibGame::m_exec_activeInputHandler = NULL;
-luaL_reg            LuaLibGame::m_gameFuncs[] = {
-  {"GetTime",                     LuaLibGame::L_Game_GetTime},
-  {"Message",                     LuaLibGame::L_Game_Message},
-  {"IsPlayerInZone",              LuaLibGame::L_Game_IsPlayerInZone},
-  {"MoveBlock",                   LuaLibGame::L_Game_MoveBlock},
-  {"GetBlockPos",                 LuaLibGame::L_Game_GetBlockPos},
-  {"SetBlockPos",                 LuaLibGame::L_Game_SetBlockPos},
-  {"PlaceInGameArrow",            LuaLibGame::L_Game_PlaceInGameArrow},
-  {"PlaceScreenArrow",            LuaLibGame::L_Game_PlaceScreenArrow},
-  {"HideArrow",                   LuaLibGame::L_Game_HideArrow},
-  {"ClearMessages",               LuaLibGame::L_Game_ClearMessages},
-  {"SetGravity",                  LuaLibGame::L_Game_SetGravity},
-  {"GetGravity",                  LuaLibGame::L_Game_GetGravity},
-  {"SetPlayerPosition",           LuaLibGame::L_Game_SetPlayerPosition},
-  {"AddForceToPlayer",            LuaLibGame::L_Game_AddForceToPlayer},
-  {"GetPlayerPosition",           LuaLibGame::L_Game_GetPlayerPosition},
-  {"GetEntityPos",                LuaLibGame::L_Game_GetEntityPos},
-  {"SetEntityPos",                LuaLibGame::L_Game_SetEntityPos},
-  {"SetKeyHook",                  LuaLibGame::L_Game_SetKeyHook},
-  {"GetKeyByAction",              LuaLibGame::L_Game_GetKeyByAction},
-  {"Log",                         LuaLibGame::L_Game_Log},
-  {"SetBlockCenter",              LuaLibGame::L_Game_SetBlockCenter},
-  {"SetBlockRotation",            LuaLibGame::L_Game_SetBlockRotation},
+luaL_reg LuaLibGame::m_gameFuncs[] = {
+  {"GetTime",                      LuaLibGame::L_Game_GetTime},
+  {"Message",                      LuaLibGame::L_Game_Message},
+  {"IsPlayerInZone",               LuaLibGame::L_Game_IsPlayerInZone},
+  {"MoveBlock",                    LuaLibGame::L_Game_MoveBlock},
+  {"GetBlockPos",                  LuaLibGame::L_Game_GetBlockPos},
+  {"SetBlockPos",                  LuaLibGame::L_Game_SetBlockPos},
+  {"PlaceInGameArrow",             LuaLibGame::L_Game_PlaceInGameArrow},
+  {"PlaceScreenArrow",             LuaLibGame::L_Game_PlaceScreenArrow},
+  {"HideArrow",                    LuaLibGame::L_Game_HideArrow},
+  {"ClearMessages",                LuaLibGame::L_Game_ClearMessages},
+  {"SetGravity",                   LuaLibGame::L_Game_SetGravity},
+  {"GetGravity",                   LuaLibGame::L_Game_GetGravity},
+  {"SetPlayerPosition",            LuaLibGame::L_Game_SetPlayerPosition},
+  {"AddForceToPlayer",             LuaLibGame::L_Game_AddForceToPlayer},
+  {"GetPlayerPosition",            LuaLibGame::L_Game_GetPlayerPosition},
+  {"GetEntityPos",                 LuaLibGame::L_Game_GetEntityPos},
+  {"SetEntityPos",                 LuaLibGame::L_Game_SetEntityPos},
+  {"SetKeyHook",                   LuaLibGame::L_Game_SetKeyHook},
+  {"GetKeyByAction",               LuaLibGame::L_Game_GetKeyByAction},
+  {"Log",                          LuaLibGame::L_Game_Log},
+  {"SetBlockCenter",               LuaLibGame::L_Game_SetBlockCenter},
+  {"SetBlockRotation",             LuaLibGame::L_Game_SetBlockRotation},
   {"SetDynamicEntitySelfRotation", LuaLibGame::L_Game_SetDynamicEntitySelfRotation},
-  {"SetDynamicEntityRotation",    LuaLibGame::L_Game_SetDynamicEntityRotation},
-  {"SetDynamicEntityTranslation", LuaLibGame::L_Game_SetDynamicEntityTranslation},
-  {"SetDynamicEntityNone",        LuaLibGame::L_Game_SetDynamicEntityNone},
-  {"SetDynamicBlockRotation",     LuaLibGame::L_Game_SetDynamicBlockRotation},
-  {"SetDynamicBlockSelfRotation", LuaLibGame::L_Game_SetDynamicBlockSelfRotation},
-  {"SetDynamicBlockTranslation",  LuaLibGame::L_Game_SetDynamicBlockTranslation},
-  {"SetDynamicBlockNone",         LuaLibGame::L_Game_SetDynamicBlockNone},
-  {"CameraZoom",        	  LuaLibGame::L_Game_CameraZoom},
-  {"CameraMove",        	  LuaLibGame::L_Game_CameraMove},
-  {"GetEntityRadius",       	  LuaLibGame::L_Game_GetEntityRadius},
-  {"IsEntityTouched",       	  LuaLibGame::L_Game_IsEntityTouched},
-  {"KillPlayer",                  LuaLibGame::L_Game_KillPlayer},
-  {"KillEntity",                  LuaLibGame::L_Game_KillEntity},
-  {"RemainingStrawberries",       LuaLibGame::L_Game_RemainingStrawberries},
-  {"WinPlayer",                   LuaLibGame::L_Game_WinPlayer},
-  {"AddPenaltyTime",              LuaLibGame::L_Game_PenaltyTime},
-  {"IsAPlayerInZone",             LuaLibGame::L_Game_IsAPlayerInZone},
-  {"SetAPlayerPosition", 	  LuaLibGame::L_Game_SetAPlayerPosition},
-  {"GetAPlayerPosition", 	  LuaLibGame::L_Game_GetAPlayerPosition},
-  {"KillAPlayer", 		  LuaLibGame::L_Game_KillAPlayer},
-  {"WinAPlayer",  		  LuaLibGame::L_Game_WinAPlayer},
-  {"NumberOfPlayers",             LuaLibGame::L_Game_NumberOfPlayers},
-  {"CameraRotate",                LuaLibGame::L_Game_CameraRotate},
-  {"CameraAdaptToGravity",        LuaLibGame::L_Game_CameraAdaptToGravity},
+  {"SetDynamicEntityRotation",     LuaLibGame::L_Game_SetDynamicEntityRotation},
+  {"SetDynamicEntityTranslation",  LuaLibGame::L_Game_SetDynamicEntityTranslation},
+  {"SetDynamicEntityNone",         LuaLibGame::L_Game_SetDynamicEntityNone},
+  {"SetDynamicBlockRotation",      LuaLibGame::L_Game_SetDynamicBlockRotation},
+  {"SetDynamicBlockSelfRotation",  LuaLibGame::L_Game_SetDynamicBlockSelfRotation},
+  {"SetDynamicBlockTranslation",   LuaLibGame::L_Game_SetDynamicBlockTranslation},
+  {"SetDynamicBlockNone",          LuaLibGame::L_Game_SetDynamicBlockNone},
+  {"CameraZoom",        	   LuaLibGame::L_Game_CameraZoom},
+  {"CameraMove",        	   LuaLibGame::L_Game_CameraMove},
+  {"GetEntityRadius",       	   LuaLibGame::L_Game_GetEntityRadius},
+  {"IsEntityTouched",       	   LuaLibGame::L_Game_IsEntityTouched},
+  {"KillPlayer",                   LuaLibGame::L_Game_KillPlayer},
+  {"KillEntity",                   LuaLibGame::L_Game_KillEntity},
+  {"RemainingStrawberries",        LuaLibGame::L_Game_RemainingStrawberries},
+  {"WinPlayer",                    LuaLibGame::L_Game_WinPlayer},
+  {"AddPenaltyTime",               LuaLibGame::L_Game_PenaltyTime},
+  {"IsAPlayerInZone",              LuaLibGame::L_Game_IsAPlayerInZone},
+  {"SetAPlayerPosition", 	   LuaLibGame::L_Game_SetAPlayerPosition},
+  {"GetAPlayerPosition", 	   LuaLibGame::L_Game_GetAPlayerPosition},
+  {"KillAPlayer", 		   LuaLibGame::L_Game_KillAPlayer},
+  {"WinAPlayer",  		   LuaLibGame::L_Game_WinAPlayer},
+  {"NumberOfPlayers",              LuaLibGame::L_Game_NumberOfPlayers},
+  {"CameraRotate",                 LuaLibGame::L_Game_CameraRotate},
+  {"CameraAdaptToGravity",         LuaLibGame::L_Game_CameraAdaptToGravity},
   {NULL, NULL}
 };
+vapp::MotoGame*     LuaLibGame::m_exec_world              = NULL;
+vapp::InputHandler* LuaLibGame::m_exec_activeInputHandler = NULL;
 
 /*===========================================================================
   Lua 5.1 compatibility code (Following is from lua 5.0.2)
@@ -99,7 +99,7 @@ LuaLibGame::LuaLibGame(vapp::MotoGame *i_pMotoGame, vapp::InputHandler *i_pActiv
   luaopen_base(m_pL);   
   luaopen_math(m_pL);
   luaopen_table(m_pL);
-  luaL_openlib(m_pL,"Game", m_gameFuncs, 0);
+  luaL_openlib(m_pL, "Game", m_gameFuncs, 0);
 
   m_pMotoGame           = i_pMotoGame;
   m_pActiveInputHandler = i_pActiveInputHandler;
