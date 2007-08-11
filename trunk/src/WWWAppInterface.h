@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -25,8 +24,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "BuildConfig.h"
 
 #include <string>
-
-namespace vapp {
 
   class WWWAppInterface {
   public:  
@@ -53,8 +50,6 @@ namespace vapp {
     /* Data */
     bool m_cancel_as_soon_as_possible;
   };
-
-}
 
 #endif
 

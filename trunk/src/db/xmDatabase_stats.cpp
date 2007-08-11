@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GUI.h"
 
 void xmDatabase::updateDB_stats(XmDatabaseUpdateInterface *i_interface) {
-  vapp::XMLDocument XML;
+  XMLDocument XML;
   const char *tag, *tagv;
   std::string v_playerName, v_since, v_starts;
   std::string v_levelId, v_playedTime, v_played, v_died, v_restarted, v_completed;
@@ -145,7 +145,7 @@ void xmDatabase::updateDB_stats(XmDatabaseUpdateInterface *i_interface) {
 void xmDatabase::stats_createProfile(const std::string& i_profile) {
   simpleSql("INSERT INTO stats_profiles(id_profile, nbStarts, since) "
 	    "VALUES(\"" + protectString(i_profile) + "\", 0, \"" + 
-	    vapp::App::getTimeStamp() + "\");");
+	    App::getTimeStamp() + "\");");
 }
 
 void xmDatabase::stats_destroyProfile(const std::string& i_profile) {

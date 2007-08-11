@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -27,8 +26,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Sound.h"
 
 #define GUILIST_SCROLL_SIZE 4
-
-namespace vapp {
 
   int UIList::HeaderHeight() {
     return m_headerHeight;
@@ -940,9 +937,8 @@ namespace vapp {
 
   std::string UIList::getSelectedEntry() {
     if(getSelected() >= 0 && getSelected() < getEntries().size()) {
-      vapp::UIListEntry *pEntry = getEntries()[getSelected()];
+      UIListEntry *pEntry = getEntries()[getSelected()];
       return pEntry->Text[0];
     }
     return "";
   }
-}

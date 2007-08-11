@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -93,10 +92,10 @@ int LevelsPack::getNumberOfFinishedLevels(xmDatabase *i_db, const std::string& i
 }
 
 void LevelsPack::setHintsFromFile() {
-  std::vector<std::string> LpkFiles = vapp::FS::findPhysFiles("Levels/*.lpk", true);
+  std::vector<std::string> LpkFiles = FS::findPhysFiles("Levels/*.lpk", true);
 
   for(int i=0; i<LpkFiles.size(); i++) {
-    vapp::XMLDocument XML; 
+    XMLDocument XML; 
     XML.readFromFile(LpkFiles[i]);
     TiXmlDocument *pDoc = XML.getLowLevelAccess();
           
@@ -576,7 +575,7 @@ const std::vector<LevelsPack *>& LevelsManager::LevelsPacks() {
 
 void LevelsManager::reloadExternalLevels(xmDatabase *i_db,
 					 XMotoLoadLevelsInterface *i_loadLevelsInterface) {
-  std::vector<std::string> LvlFiles = vapp::FS::findPhysFiles("Levels/MyLevels/*.lvl", true);
+  std::vector<std::string> LvlFiles = FS::findPhysFiles("Levels/MyLevels/*.lvl", true);
 
   i_db->levels_add_begin(true);
 
@@ -650,7 +649,7 @@ void LevelsManager::addExternalLevel(xmDatabase *i_db, std::string i_levelFile) 
 
 void LevelsManager::reloadLevelsFromLvl(xmDatabase *i_db,
 					XMotoLoadLevelsInterface *i_loadLevelsInterface) {
-  std::vector<std::string> LvlFiles = vapp::FS::findPhysFiles("Levels/*.lvl", true);
+  std::vector<std::string> LvlFiles = FS::findPhysFiles("Levels/*.lvl", true);
 
   i_db->levels_add_begin(false);
 
@@ -704,22 +703,22 @@ void LevelsManager::reloadLevelsFromLvl(xmDatabase *i_db,
 }
 
 void LevelsManager::checkPrerequires() {
-  std::string LCachePath = vapp::FS::getUserDir() + std::string("/LCache");
+  std::string LCachePath = FS::getUserDir() + std::string("/LCache");
 
-  if(vapp::FS::isDir(LCachePath) == false) {
-    vapp::FS::mkArborescenceDir(LCachePath);
+  if(FS::isDir(LCachePath) == false) {
+    FS::mkArborescenceDir(LCachePath);
   }
 
-  if(vapp::FS::isDir(vapp::FS::getUserDir() + "/Levels/MyLevels") == false) {
-    vapp::FS::mkArborescenceDir(vapp::FS::getUserDir() + "/Levels/MyLevels");
+  if(FS::isDir(FS::getUserDir() + "/Levels/MyLevels") == false) {
+    FS::mkArborescenceDir(FS::getUserDir() + "/Levels/MyLevels");
   }
 }
 
 void LevelsManager::cleanCache() {
   /* Find all .blv-files in the directory */
-  std::vector<std::string> BlvFiles = vapp::FS::findPhysFiles("LCache/*.blv");
+  std::vector<std::string> BlvFiles = FS::findPhysFiles("LCache/*.blv");
   for(int i=0; i<BlvFiles.size(); i++) {
-    vapp::FS::deleteFile(BlvFiles[i]);
+    FS::deleteFile(BlvFiles[i]);
   }
 }
 

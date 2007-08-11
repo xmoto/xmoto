@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -77,8 +76,8 @@ luaL_reg LuaLibGame::m_gameFuncs[] = {
   {"CameraAdaptToGravity",         LuaLibGame::L_Game_CameraAdaptToGravity},
   {NULL, NULL}
 };
-vapp::MotoGame*     LuaLibGame::m_exec_world              = NULL;
-vapp::InputHandler* LuaLibGame::m_exec_activeInputHandler = NULL;
+MotoGame*     LuaLibGame::m_exec_world              = NULL;
+InputHandler* LuaLibGame::m_exec_activeInputHandler = NULL;
 
 /*===========================================================================
   Lua 5.1 compatibility code (Following is from lua 5.0.2)
@@ -94,7 +93,7 @@ lua_Number X_luaL_check_number(lua_State *L,int narg) {
   return d;    
 }
 
-LuaLibGame::LuaLibGame(vapp::MotoGame *i_pMotoGame, vapp::InputHandler *i_pActiveInputHandler) {
+LuaLibGame::LuaLibGame(MotoGame *i_pMotoGame, InputHandler *i_pActiveInputHandler) {
   m_pL = lua_open();
   luaopen_base(m_pL);   
   luaopen_math(m_pL);
@@ -290,13 +289,13 @@ int LuaLibGame::L_Game_Log(lua_State *pL) {
   
 int LuaLibGame::L_Game_ClearMessages(lua_State *pL) {
   /* event for this */
-  m_exec_world->createGameEvent(new vapp::MGE_ClearMessages(m_exec_world->getTime()));
+  m_exec_world->createGameEvent(new MGE_ClearMessages(m_exec_world->getTime()));
   return 0;
 }
 
 int LuaLibGame::L_Game_PlaceInGameArrow(lua_State *pL) {
   /* event for this */
-  m_exec_world->createGameEvent(new vapp::MGE_PlaceInGameArrow(m_exec_world->getTime(),
+  m_exec_world->createGameEvent(new MGE_PlaceInGameArrow(m_exec_world->getTime(),
 							X_luaL_check_number(pL,1),
 							X_luaL_check_number(pL,2),
 							X_luaL_check_number(pL,3)));
@@ -305,7 +304,7 @@ int LuaLibGame::L_Game_PlaceInGameArrow(lua_State *pL) {
 
 int LuaLibGame::L_Game_PlaceScreenArrow(lua_State *pL) {
   /* event for this */
-  m_exec_world->createGameEvent(new vapp::MGE_PlaceScreenarrow(m_exec_world->getTime(),
+  m_exec_world->createGameEvent(new MGE_PlaceScreenarrow(m_exec_world->getTime(),
 							X_luaL_check_number(pL,1),
 							X_luaL_check_number(pL,2),
 							X_luaL_check_number(pL,3)));
@@ -314,7 +313,7 @@ int LuaLibGame::L_Game_PlaceScreenArrow(lua_State *pL) {
 
 int LuaLibGame::L_Game_HideArrow(lua_State *pL) {
   /* event for this */
-  m_exec_world->createGameEvent(new vapp::MGE_HideArrow(m_exec_world->getTime()));
+  m_exec_world->createGameEvent(new MGE_HideArrow(m_exec_world->getTime()));
   return 0;
 }
   
@@ -334,7 +333,7 @@ int LuaLibGame::L_Game_Message(lua_State *pL) {
   for(int i=0;i<lua_gettop(pL);i++) 
     Out.append(_(luaL_checkstring(pL, i+1)));
   
-  m_exec_world->createGameEvent(new vapp::MGE_Message(m_exec_world->getTime(), Out));
+  m_exec_world->createGameEvent(new MGE_Message(m_exec_world->getTime(), Out));
   return 0;
 }  
   
@@ -355,7 +354,7 @@ int LuaLibGame::L_Game_IsPlayerInZone(lua_State *pL) {
 int LuaLibGame::L_Game_MoveBlock(lua_State *pL) {
   /* event for this */
 
-  m_exec_world->createGameEvent(new vapp::MGE_MoveBlock(m_exec_world->getTime(),
+  m_exec_world->createGameEvent(new MGE_MoveBlock(m_exec_world->getTime(),
 						 luaL_checkstring(pL,1),
 						 X_luaL_check_number(pL,2),
 						 X_luaL_check_number(pL,3)));
@@ -375,7 +374,7 @@ int LuaLibGame::L_Game_GetBlockPos(lua_State *pL) {
 int LuaLibGame::L_Game_SetBlockPos(lua_State *pL) {
   /* event for this */
 
-  m_exec_world->createGameEvent(new vapp::MGE_SetBlockPos(m_exec_world->getTime(),
+  m_exec_world->createGameEvent(new MGE_SetBlockPos(m_exec_world->getTime(),
 						   luaL_checkstring(pL,1),
 						   X_luaL_check_number(pL,2),
 						   X_luaL_check_number(pL,3)));
@@ -385,7 +384,7 @@ int LuaLibGame::L_Game_SetBlockPos(lua_State *pL) {
 int LuaLibGame::L_Game_SetGravity(lua_State *pL) {
   /* event for this */
 
-  m_exec_world->createGameEvent(new vapp::MGE_SetGravity(m_exec_world->getTime(),
+  m_exec_world->createGameEvent(new MGE_SetGravity(m_exec_world->getTime(),
 						  X_luaL_check_number(pL,1),
 						  X_luaL_check_number(pL,2)));
   return 0;
@@ -403,7 +402,7 @@ int LuaLibGame::L_Game_GetGravity(lua_State *pL) {
 int LuaLibGame::L_Game_SetPlayerPosition(lua_State *pL) {
   /* event for this */
   bool bRight = X_luaL_check_number(pL,3) > 0.0f;
-  m_exec_world->createGameEvent(new vapp::MGE_SetPlayersPosition(m_exec_world->getTime(),
+  m_exec_world->createGameEvent(new MGE_SetPlayersPosition(m_exec_world->getTime(),
 								 X_luaL_check_number(pL,1),
 								 X_luaL_check_number(pL,2),
 								 bRight));
@@ -466,7 +465,7 @@ int LuaLibGame::L_Game_IsEntityTouched(lua_State *pL) {
 
 int LuaLibGame::L_Game_SetEntityPos(lua_State *pL) {
   /* event for this */
-  m_exec_world->createGameEvent(new vapp::MGE_SetEntityPos(m_exec_world->getTime(),
+  m_exec_world->createGameEvent(new MGE_SetEntityPos(m_exec_world->getTime(),
 						    luaL_checkstring(pL,1),
 						    X_luaL_check_number(pL,2),
 						    X_luaL_check_number(pL,3)));
@@ -494,7 +493,7 @@ int LuaLibGame::L_Game_GetKeyByAction(lua_State *pL) {
 
 int LuaLibGame::L_Game_SetBlockCenter(lua_State *pL) {
   /* event for this */    
-  m_exec_world->createGameEvent(new vapp::MGE_SetBlockCenter(m_exec_world->getTime(),
+  m_exec_world->createGameEvent(new MGE_SetBlockCenter(m_exec_world->getTime(),
 						      luaL_checkstring(pL,1),
 						      X_luaL_check_number(pL,2),
 						      X_luaL_check_number(pL,3)));
@@ -503,7 +502,7 @@ int LuaLibGame::L_Game_SetBlockCenter(lua_State *pL) {
     
 int LuaLibGame::L_Game_SetBlockRotation(lua_State *pL) {
   /* event for this */    
-  m_exec_world->createGameEvent(new vapp::MGE_SetBlockRotation(m_exec_world->getTime(),
+  m_exec_world->createGameEvent(new MGE_SetBlockRotation(m_exec_world->getTime(),
 							luaL_checkstring(pL,1),
 							X_luaL_check_number(pL,2)));
   return 0;
@@ -511,7 +510,7 @@ int LuaLibGame::L_Game_SetBlockRotation(lua_State *pL) {
     
 int LuaLibGame::L_Game_SetDynamicEntityRotation(lua_State *pL) {
   /* event for this */    
-  m_exec_world->createGameEvent(new vapp::MGE_SetDynamicEntityRotation(m_exec_world->getTime(),
+  m_exec_world->createGameEvent(new MGE_SetDynamicEntityRotation(m_exec_world->getTime(),
 								luaL_checkstring(pL,1),
 								X_luaL_check_number(pL,2),
 								X_luaL_check_number(pL,3),
@@ -523,7 +522,7 @@ int LuaLibGame::L_Game_SetDynamicEntityRotation(lua_State *pL) {
 
 int LuaLibGame::L_Game_SetDynamicEntitySelfRotation(lua_State *pL) {
   /* event for this */
-  m_exec_world->createGameEvent(new vapp::MGE_SetDynamicEntitySelfRotation(m_exec_world->getTime(),
+  m_exec_world->createGameEvent(new MGE_SetDynamicEntitySelfRotation(m_exec_world->getTime(),
 									   luaL_checkstring(pL,1),
 									   X_luaL_check_number(pL,2),
 									   X_luaL_check_number(pL,3),
@@ -533,7 +532,7 @@ int LuaLibGame::L_Game_SetDynamicEntitySelfRotation(lua_State *pL) {
 
 int LuaLibGame::L_Game_SetDynamicEntityTranslation(lua_State *pL) {
   /* event for this */    
-  m_exec_world->createGameEvent(new vapp::MGE_SetDynamicEntityTranslation(m_exec_world->getTime(),
+  m_exec_world->createGameEvent(new MGE_SetDynamicEntityTranslation(m_exec_world->getTime(),
 								   luaL_checkstring(pL,1),
 								   X_luaL_check_number(pL,2),
 								   X_luaL_check_number(pL,3),
@@ -545,14 +544,14 @@ int LuaLibGame::L_Game_SetDynamicEntityTranslation(lua_State *pL) {
 
 int LuaLibGame::L_Game_SetDynamicEntityNone(lua_State *pL) {
   /* event for this */    
-  m_exec_world->createGameEvent(new vapp::MGE_SetDynamicEntityNone(m_exec_world->getTime(),
+  m_exec_world->createGameEvent(new MGE_SetDynamicEntityNone(m_exec_world->getTime(),
 							    luaL_checkstring(pL,1)));
   return 0;
 }
 
 int LuaLibGame::L_Game_SetDynamicBlockRotation(lua_State *pL) {
   /* event for this */
-  m_exec_world->createGameEvent(new vapp::MGE_SetDynamicBlockRotation(m_exec_world->getTime(),
+  m_exec_world->createGameEvent(new MGE_SetDynamicBlockRotation(m_exec_world->getTime(),
 							       luaL_checkstring(pL,1),
 							       X_luaL_check_number(pL,2),
 							       X_luaL_check_number(pL,3),
@@ -564,7 +563,7 @@ int LuaLibGame::L_Game_SetDynamicBlockRotation(lua_State *pL) {
 
 int LuaLibGame::L_Game_SetDynamicBlockSelfRotation(lua_State *pL) {
   /* event for this */
-  m_exec_world->createGameEvent(new vapp::MGE_SetDynamicBlockSelfRotation(m_exec_world->getTime(),
+  m_exec_world->createGameEvent(new MGE_SetDynamicBlockSelfRotation(m_exec_world->getTime(),
 									  luaL_checkstring(pL,1),
 									  X_luaL_check_number(pL,2),
 									  X_luaL_check_number(pL,3),
@@ -574,7 +573,7 @@ int LuaLibGame::L_Game_SetDynamicBlockSelfRotation(lua_State *pL) {
 
 int LuaLibGame::L_Game_SetDynamicBlockTranslation(lua_State *pL) {
   /* event for this */    
-  m_exec_world->createGameEvent(new vapp::MGE_SetDynamicBlockTranslation(m_exec_world->getTime(),
+  m_exec_world->createGameEvent(new MGE_SetDynamicBlockTranslation(m_exec_world->getTime(),
 								  luaL_checkstring(pL,1),
 								  X_luaL_check_number(pL,2),
 								  X_luaL_check_number(pL,3),
@@ -586,28 +585,28 @@ int LuaLibGame::L_Game_SetDynamicBlockTranslation(lua_State *pL) {
 
 int LuaLibGame::L_Game_SetDynamicBlockNone(lua_State *pL) {
   /* event for this */    
-  m_exec_world->createGameEvent(new vapp::MGE_SetDynamicBlockNone(m_exec_world->getTime(),
+  m_exec_world->createGameEvent(new MGE_SetDynamicBlockNone(m_exec_world->getTime(),
 							   luaL_checkstring(pL,1)));
   return 0;
 }
 
 int LuaLibGame::L_Game_CameraZoom(lua_State *pL) {
   /* event for this */
-  m_exec_world->createGameEvent(new vapp::MGE_CameraZoom(m_exec_world->getTime(),
+  m_exec_world->createGameEvent(new MGE_CameraZoom(m_exec_world->getTime(),
 						  X_luaL_check_number(pL,1)));
   return 0;
 }
 
 int LuaLibGame::L_Game_CameraMove(lua_State *pL) {
   /* event for this */
-  m_exec_world->createGameEvent(new vapp::MGE_CameraMove(m_exec_world->getTime(),
+  m_exec_world->createGameEvent(new MGE_CameraMove(m_exec_world->getTime(),
 						  X_luaL_check_number(pL,1),
 						  X_luaL_check_number(pL,2)));
   return 0;
 }
 
 int LuaLibGame::L_Game_KillPlayer(lua_State *pL) {
-  m_exec_world->createGameEvent(new vapp::MGE_PlayersDie(m_exec_world->getTime(), false));
+  m_exec_world->createGameEvent(new MGE_PlayersDie(m_exec_world->getTime(), false));
   return 0;
 }
 
@@ -631,7 +630,7 @@ int LuaLibGame::L_Game_WinPlayer(lua_State *pL) {
 
 int LuaLibGame::L_Game_PenaltyTime(lua_State *pL) {
   /* event for this */
-  m_exec_world->createGameEvent(new vapp::MGE_PenalityTime(m_exec_world->getTime(),
+  m_exec_world->createGameEvent(new MGE_PenalityTime(m_exec_world->getTime(),
 						    X_luaL_check_number(pL,1)));
   return 0;
 }
@@ -663,7 +662,7 @@ int LuaLibGame::L_Game_SetAPlayerPosition(lua_State *pL) {
     //throw Exception("Invalid player " + v_txt_player.str());
   }
 
-  m_exec_world->createGameEvent(new vapp::MGE_SetPlayerPosition(m_exec_world->getTime(),
+  m_exec_world->createGameEvent(new MGE_SetPlayerPosition(m_exec_world->getTime(),
 								X_luaL_check_number(pL,1),
 								X_luaL_check_number(pL,2),
 								bRight,
@@ -704,7 +703,7 @@ int LuaLibGame::L_Game_KillAPlayer(lua_State *pL) {
     throw Exception("Invalid player " + v_txt_player.str());
   }
 
-  m_exec_world->createGameEvent(new vapp::MGE_PlayerDies(m_exec_world->getTime(), false, v_player));
+  m_exec_world->createGameEvent(new MGE_PlayerDies(m_exec_world->getTime(), false, v_player));
   return 0;
 }
 
@@ -728,19 +727,19 @@ int LuaLibGame::L_Game_NumberOfPlayers(lua_State *pL) {
 
 
 int LuaLibGame::L_Game_CameraRotate(lua_State *pL) {
-  m_exec_world->createGameEvent(new vapp::MGE_CameraRotate(m_exec_world->getTime(),
+  m_exec_world->createGameEvent(new MGE_CameraRotate(m_exec_world->getTime(),
 							   X_luaL_check_number(pL,1)));
   return 0;
 }
 
 int LuaLibGame::L_Game_CameraAdaptToGravity(lua_State *pL) {
-  m_exec_world->createGameEvent(new vapp::MGE_CameraAdaptToGravity(m_exec_world->getTime()));
+  m_exec_world->createGameEvent(new MGE_CameraAdaptToGravity(m_exec_world->getTime()));
   return 0;
 }
 
 int LuaLibGame::L_Game_AddForceToPlayer(lua_State *pL) {
   /* event for this */
-  m_exec_world->createGameEvent(new vapp::MGE_AddForceToPlayer(m_exec_world->getTime(),
+  m_exec_world->createGameEvent(new MGE_AddForceToPlayer(m_exec_world->getTime(),
 							       Vector2f(X_luaL_check_number(pL,1),
 									X_luaL_check_number(pL,2)),
 							       X_luaL_check_number(pL,3)

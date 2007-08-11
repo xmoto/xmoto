@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -28,8 +27,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class Block;
 class Entity;
 class Zone;
-
-namespace vapp {
 
   class CollisionSystem;
   struct GridCell;
@@ -248,8 +245,6 @@ namespace vapp {
     double _CalculateCircleLineDepth(const Vector2f &Cp,float Cr,Vector2f P1,Vector2f P2);
     int _AddContactToList(dContact *pContacts,int nNumContacts,dContact *pc,int nMaxContacts);
   };
-
-}
 
 #endif
 

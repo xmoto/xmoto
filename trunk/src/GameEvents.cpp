@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -21,8 +20,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "GameEvents.h"
 #include "helpers/SwapEndian.h"
-
-namespace vapp {
 
   MotoGameEvent::MotoGameEvent(float p_fEventTime) {
     m_fEventTime = p_fEventTime;
@@ -1867,5 +1864,3 @@ namespace vapp {
   std::string MGE_AddForceToPlayer::toString() {
     return "Add force to the player " + m_player;
   }
-
-}

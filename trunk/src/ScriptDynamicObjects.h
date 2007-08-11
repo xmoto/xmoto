@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -24,9 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <string>
 
-namespace vapp {
-  class MotoGame;
-}
+class MotoGame;
 
 class SDynamicObject {
  public:
@@ -34,12 +31,12 @@ class SDynamicObject {
   virtual ~SDynamicObject();
   
   /* return false if the dynamic is finished */
-  bool nextState(vapp::MotoGame* v_motoGame, int i_nbCents);
+  bool nextState(MotoGame* v_motoGame, int i_nbCents);
   virtual std::string getObjectId() = 0;
   
  protected:
   bool isTimeToMove();
-  virtual void performMove(vapp::MotoGame* v_motoGame, int i_nbCents) = 0;  
+  virtual void performMove(MotoGame* v_motoGame, int i_nbCents) = 0;  
   float Period() const;
 
  private:
@@ -103,7 +100,7 @@ class SDynamicEntityMove : public SDynamicObject {
   SDynamicEntityMove(std::string pEntity, int p_startTime, int p_endTime, float pPeriod);
   virtual ~SDynamicEntityMove();
 
-  void performMove(vapp::MotoGame* p_motoGame, int i_nbCents);
+  void performMove(MotoGame* p_motoGame, int i_nbCents);
   std::string getObjectId();
 
  protected:
@@ -149,7 +146,7 @@ class SDynamicBlockMove : public SDynamicObject {
   SDynamicBlockMove(std::string pBlock, int p_startTime, int p_endTime, float pPeriod);
   virtual ~SDynamicBlockMove();
 
-  void performMove(vapp::MotoGame* p_motoGame, int i_nbCents);
+  void performMove(MotoGame* p_motoGame, int i_nbCents);
   std::string getObjectId();
 
  protected:

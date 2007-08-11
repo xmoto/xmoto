@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -105,22 +104,22 @@ bool Zone::doesCircleTouch(const Vector2f& i_cp, float i_cr) {
   return false;
 }
 
-void Zone::saveXml(vapp::FileHandle *i_pfh) {
-  vapp::FS::writeLineF(i_pfh,"\t<zone id=\"%s\">",Id().c_str());
+void Zone::saveXml(FileHandle *i_pfh) {
+  FS::writeLineF(i_pfh,"\t<zone id=\"%s\">",Id().c_str());
   for(unsigned int i=0;i<Prims().size();i++) {
     Prims()[i]->saveXml(i_pfh);
   }
-  vapp::FS::writeLineF(i_pfh,"\t</zone>");
+  FS::writeLineF(i_pfh,"\t</zone>");
 }
 
 
-void ZonePrimBox::saveXml(vapp::FileHandle *i_pfh) {
-  vapp::FS::writeLineF(i_pfh,"\t\t<box left=\"%f\" right=\"%f\" top=\"%f\" bottom=\"%f\"/>",
+void ZonePrimBox::saveXml(FileHandle *i_pfh) {
+  FS::writeLineF(i_pfh,"\t\t<box left=\"%f\" right=\"%f\" top=\"%f\" bottom=\"%f\"/>",
                        m_left, m_right, m_top, m_bottom);
 }
 
 Zone* Zone::readFromXml(TiXmlElement *pElem) {
-  Zone *v_zone = new Zone(vapp::XML::getOption(pElem,"id"));
+  Zone *v_zone = new Zone(XML::getOption(pElem,"id"));
   
   /* Get primitives */
   for(TiXmlElement *pj = pElem->FirstChildElement("box"); pj!=NULL; pj=pj->NextSiblingElement("box")) {
@@ -130,32 +129,32 @@ Zone* Zone::readFromXml(TiXmlElement *pElem) {
   return v_zone;
 }
 
-void Zone::saveBinary(vapp::FileHandle *i_pfh) {
-  vapp::FS::writeString(i_pfh,Id());
-  vapp::FS::writeByte(i_pfh, Prims().size());
+void Zone::saveBinary(FileHandle *i_pfh) {
+  FS::writeString(i_pfh,Id());
+  FS::writeByte(i_pfh, Prims().size());
         
   for(unsigned int j=0;j<Prims().size();j++) {
-    vapp::FS::writeInt_LE(i_pfh,(int) (Prims()[j]->Type()));
+    FS::writeInt_LE(i_pfh,(int) (Prims()[j]->Type()));
     Prims()[j]->saveBinary(i_pfh);
   }
 }
 
         
-void ZonePrimBox::saveBinary(vapp::FileHandle *i_pfh) {
-  vapp::FS::writeFloat_LE(i_pfh,m_left);
-  vapp::FS::writeFloat_LE(i_pfh,m_right);
-  vapp::FS::writeFloat_LE(i_pfh,m_top);
-  vapp::FS::writeFloat_LE(i_pfh,m_bottom);
+void ZonePrimBox::saveBinary(FileHandle *i_pfh) {
+  FS::writeFloat_LE(i_pfh,m_left);
+  FS::writeFloat_LE(i_pfh,m_right);
+  FS::writeFloat_LE(i_pfh,m_top);
+  FS::writeFloat_LE(i_pfh,m_bottom);
 }
 
-Zone* Zone::readFromBinary(vapp::FileHandle *i_pfh) {
-  Zone *v_zone = new Zone(vapp::FS::readString(i_pfh));
+Zone* Zone::readFromBinary(FileHandle *i_pfh) {
+  Zone *v_zone = new Zone(FS::readString(i_pfh));
   ZonePrimType v_zonePrimType;
   
-  int nNumPrims = vapp::FS::readByte(i_pfh);
+  int nNumPrims = FS::readByte(i_pfh);
   v_zone->m_prims.reserve(nNumPrims);
   for(int j=0;j<nNumPrims;j++) {
-    v_zonePrimType = (ZonePrimType) vapp::FS::readInt_LE(i_pfh);
+    v_zonePrimType = (ZonePrimType) FS::readInt_LE(i_pfh);
 
     switch(v_zonePrimType) {
     case LZPT_BOX:
@@ -170,21 +169,21 @@ Zone* Zone::readFromBinary(vapp::FileHandle *i_pfh) {
 ZonePrim* ZonePrimBox::readFromXml(TiXmlElement *i_elem) {
   float v_bottom, v_top, v_left, v_right;
 
-  v_bottom = atof( vapp::XML::getOption(i_elem,"bottom","0").c_str() );
-  v_top    = atof( vapp::XML::getOption(i_elem,"top","0").c_str() );
-  v_left   = atof( vapp::XML::getOption(i_elem,"left","0").c_str() );
-  v_right  = atof( vapp::XML::getOption(i_elem,"right","0").c_str() );
+  v_bottom = atof( XML::getOption(i_elem,"bottom","0").c_str() );
+  v_top    = atof( XML::getOption(i_elem,"top","0").c_str() );
+  v_left   = atof( XML::getOption(i_elem,"left","0").c_str() );
+  v_right  = atof( XML::getOption(i_elem,"right","0").c_str() );
   
   return new ZonePrimBox(v_left, v_right, v_top, v_bottom);
 }
 
-ZonePrim* ZonePrimBox::readFromBinary(vapp::FileHandle *i_pfh) {
+ZonePrim* ZonePrimBox::readFromBinary(FileHandle *i_pfh) {
   float v_bottom, v_top, v_left, v_right;
 
-  v_left   = vapp::FS::readFloat_LE(i_pfh);
-  v_right  = vapp::FS::readFloat_LE(i_pfh);
-  v_top    = vapp::FS::readFloat_LE(i_pfh);
-  v_bottom = vapp::FS::readFloat_LE(i_pfh);
+  v_left   = FS::readFloat_LE(i_pfh);
+  v_right  = FS::readFloat_LE(i_pfh);
+  v_top    = FS::readFloat_LE(i_pfh);
+  v_bottom = FS::readFloat_LE(i_pfh);
 
   return new ZonePrimBox(v_left, v_right, v_top, v_bottom);
 }

@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -27,8 +26,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Scene.h"
 #include "Renderer.h"
 #include "GameText.h"
-
-namespace vapp {
 
   /*===========================================================================
   Init at game start-up
@@ -100,6 +97,4 @@ namespace vapp {
     /* Overlays? */
     m_Overlay.init(getParent(),512,512);
   }
-
-}
 

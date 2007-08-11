@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -24,8 +23,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
 #include "VBezier.h"
-
-namespace vapp {
 
   #define BEZIER_LENGTH_THRESHOLD   0.01f
   #define BEZIER_LENGTH_MAX_STEPS   100
@@ -166,5 +163,3 @@ namespace vapp {
     
     return m_pCurves[0].step(0.0f);
   }
-  
-}

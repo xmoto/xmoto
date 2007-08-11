@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -55,7 +54,7 @@ int main(int nNumArgs,char **ppcArgs) {
   /* Start application */
   try {     
     /* Setup basic info */
-    vapp::GameApp Game;
+    GameApp Game;
     Game.run(nNumArgs,ppcArgs);
   }
   catch (Exception &e) {
@@ -76,8 +75,6 @@ int main(int nNumArgs,char **ppcArgs) {
   }
   return 0;
 }
-
-namespace vapp {
 
   App::App() {
     m_bQuit = false;
@@ -145,7 +142,7 @@ namespace vapp {
     }
     /* ***** */
 
-    FS::init("xmoto");
+    FS::init("xmoto", "xmoto.bin", "xmoto.log");
     Logger::init(FS::getUserDir() + "/xmoto.log");
 
     /* load config file */
@@ -493,6 +490,6 @@ namespace vapp {
   bool App::isUglyMode() {
     return m_xmsession->ugly();
   }
-}
+
 
 

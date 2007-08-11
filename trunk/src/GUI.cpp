@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -26,8 +25,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GUI.h"
 #include "GameText.h"
 #include "VDraw.h"
-
-namespace vapp {
 
   DrawLib* UIWindow::m_drawLib = NULL;
 
@@ -405,8 +402,8 @@ namespace vapp {
 			  GET_BLUE(getTextStyle().c3),
 			  (int)(GET_ALPHA(getTextStyle().c3)*getOpacity()/100));
     
-    vapp::FontManager* v_fm = m_curFont;
-    vapp::FontGlyph* v_fg = v_fm->getGlyph(Text);
+    FontManager* v_fm = m_curFont;
+    FontGlyph* v_fg = v_fm->getGlyph(Text);
     v_fm->printStringGrad(v_fg,
 		      getAbsPosX()+x + ((int)((float)v_fg->realWidth()) * i_xper),
 		      getAbsPosY()+y + ((int)((float)v_fg->realHeight()) * i_yper),
@@ -1033,7 +1030,3 @@ FRAME_BR (187,198) (8x8)
   void UIRoot::activateRight(void) {
     _ActivateByVector(1,0);
   }
-
-
-}
-

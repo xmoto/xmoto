@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -39,15 +38,15 @@ class Ghost : public Biker {
   void updateDiffToPlayer(std::vector<float> &i_lastToTakeEntities);
   float diffToPlayer() const;
   virtual void updateToTime(float i_time, float i_timeStep,
-			    vapp::CollisionSystem *i_collisionSystem, Vector2f i_gravity,
-			    vapp::MotoGame *i_motogame);
+			    CollisionSystem *i_collisionSystem, Vector2f i_gravity,
+			    MotoGame *i_motogame);
   void setInfo(std::string i_info);
   std::string getDescription() const;
   bool getRenderBikeFront();
   float getBikeEngineSpeed();
   float getBikeLinearVel();
  private:
-  vapp::Replay* m_replay;
+  Replay* m_replay;
   std::vector<float> m_lastToTakeEntities;
   float m_diffToPlayer; /* time diff between the ghost and the player */
   std::string m_info;
@@ -57,7 +56,7 @@ class Ghost : public Biker {
   SerializedBikeState m_previous_ghostBikeState;
   SerializedBikeState m_next_ghostBikeState;
 
-  void execReplayEvents(float i_time, vapp::MotoGame *i_motogame);
+  void execReplayEvents(float i_time, MotoGame *i_motogame);
 };
 
 #endif

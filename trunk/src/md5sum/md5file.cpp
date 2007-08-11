@@ -11,10 +11,10 @@ std::string md5file(std::string p_filename) {
   md5_byte_t  pcBuf[MD5_BUFFER_SIZE];
   int nb_read;
 
-  //vapp::FileHandle *fh;
+  //FileHandle *fh;
   FILE *fh;
 
-  //fh = vapp::FS::openIFile(p_filename);
+  //fh = FS::openIFile(p_filename);
   fh = fopen(p_filename.c_str(), "rb");
 
   if(fh == NULL) {
@@ -23,14 +23,14 @@ std::string md5file(std::string p_filename) {
 
   md5_init(&md5state);
 
-  //while(vapp::FS::readBuf(fh, (char *) pcBuf, MD5_BUFFER_SIZE)) {
+  //while(FS::readBuf(fh, (char *) pcBuf, MD5_BUFFER_SIZE)) {
   while( (nb_read = fread(pcBuf, sizeof(md5_byte_t), MD5_BUFFER_SIZE, fh)) > 0) {
     md5_append(&md5state, pcBuf, nb_read);
   }
 
   md5_finish(&md5state, md5digest);
 
-  //vapp::FS::closeFile(fh);
+  //FS::closeFile(fh);
   fclose(fh);
   
   std::string sum = "";

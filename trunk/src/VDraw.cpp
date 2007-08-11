@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -23,10 +22,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *  Simple 2D drawing library, built closely on top of OpenGL.
  */
 #include "VDraw.h"
-
-
-
-namespace vapp {
 
   DrawLib::backendtype DrawLib::m_backend = DrawLib::backend_None;
 
@@ -255,7 +250,4 @@ FontManager::FontManager(DrawLib* i_drawLib, const std::string &i_fontFile, int 
 
 FontManager::~FontManager() {
   TTF_CloseFont(m_ttf);
-}
-
-
 }

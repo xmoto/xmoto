@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -39,8 +38,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "LuaLibGame.h"
 
-namespace vapp {
-  
   MotoGame::MotoGame() {
     m_bDeathAnimEnabled=true;
     m_lastCallToEveryHundreath = 0.0;
@@ -1212,9 +1209,8 @@ void MotoGame::cleanPlayers() {
   std::vector<Camera*>& MotoGame::Cameras() {
     return m_cameras;
   }
-}
 
-MotoGameOnBikerHooks::MotoGameOnBikerHooks(vapp::MotoGame* i_motoGame, int i_playerNumber) {
+MotoGameOnBikerHooks::MotoGameOnBikerHooks(MotoGame* i_motoGame, int i_playerNumber) {
   m_motoGame = i_motoGame;
   m_playerNumber = i_playerNumber;
 }
@@ -1252,6 +1248,6 @@ void MotoGameOnBikerHooks::onWheelTouches(int i_wheel, bool i_touch) {
 }
 
 void MotoGameOnBikerHooks::onHeadTouches() {
-  m_motoGame->createGameEvent(new vapp::MGE_PlayerDies(m_motoGame->getTime(), false, m_playerNumber));
+  m_motoGame->createGameEvent(new MGE_PlayerDies(m_motoGame->getTime(), false, m_playerNumber));
 }
 

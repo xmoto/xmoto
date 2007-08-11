@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -36,10 +35,10 @@ class ZonePrim {
   virtual ~ZonePrim();
 
  virtual bool doesCircleTouch(const Vector2f& i_cp, float i_cr) = 0;
- virtual void saveXml(vapp::FileHandle *i_pfh)     = 0;
- virtual void saveBinary(vapp::FileHandle *i_pfh)  = 0;
+ virtual void saveXml(FileHandle *i_pfh)     = 0;
+ virtual void saveBinary(FileHandle *i_pfh)  = 0;
  virtual ZonePrimType Type() const = 0;
- static ZonePrim* readFromBinary(vapp::FileHandle *i_pfh);
+ static ZonePrim* readFromBinary(FileHandle *i_pfh);
 
  private:
 };
@@ -50,11 +49,11 @@ class ZonePrimBox : public ZonePrim {
   ~ZonePrimBox();
 
   virtual bool doesCircleTouch(const Vector2f& i_cp, float i_cr);
-  virtual void saveXml(vapp::FileHandle *i_pfh);
-  virtual void saveBinary(vapp::FileHandle *i_pfh);
+  virtual void saveXml(FileHandle *i_pfh);
+  virtual void saveBinary(FileHandle *i_pfh);
   virtual ZonePrimType Type() const;
   static ZonePrim* readFromXml(TiXmlElement *pElem);
-  static ZonePrim* readFromBinary(vapp::FileHandle *i_pfh);
+  static ZonePrim* readFromBinary(FileHandle *i_pfh);
 
   float Left()   const;
   float Right()  const;
@@ -76,10 +75,10 @@ class Zone {
   std::vector<ZonePrim *> &Prims();
 
   bool doesCircleTouch(const Vector2f& i_cp, float i_cr);
-  void saveXml(vapp::FileHandle *i_pfh);
-  void saveBinary(vapp::FileHandle *i_pfh);
+  void saveXml(FileHandle *i_pfh);
+  void saveBinary(FileHandle *i_pfh);
   static Zone* readFromXml(TiXmlElement *pElem);
-  static Zone* readFromBinary(vapp::FileHandle *i_pfh);
+  static Zone* readFromBinary(FileHandle *i_pfh);
   AABB& getAABB() {return m_BBox;}
 
  private:

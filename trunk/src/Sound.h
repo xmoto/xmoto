@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -26,11 +25,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VApp.h"
 #include "VFileIO.h"
 #include "UserConfig.h"
-
-//#include "vorbis/codec.h"
-//#include "vorbis/vorbisfile.h"
-
-namespace vapp {
 
 	/*===========================================================================
 	Sound sample
@@ -122,8 +116,6 @@ namespace vapp {
       /* Helpers */
       //static int _GetFreePlayerSlot(void);
   };
-
-}
 
 #endif
 

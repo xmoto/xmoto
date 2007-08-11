@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -37,9 +36,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "XMSession.h"
 #include "XMArgs.h"
 
-#define DATABASE_FILE vapp::FS::getUserDirUTF8() + "/" + "xm.db"
-
-namespace vapp {
+#define DATABASE_FILE FS::getUserDirUTF8() + "/" + "xm.db"
 
   /*===========================================================================
   Update loading screen
@@ -587,6 +584,4 @@ namespace vapp {
     /* multi */
     m_Config.createVar("MultiStopWhenOneFinishes" , "true");
   }
-  
-}
 

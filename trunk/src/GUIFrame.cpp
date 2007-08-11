@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -25,8 +24,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VXml.h"
 #include "GUI.h"
 #include "helpers/utf8.h"
-
-namespace vapp {
 
   UIFrame::UIFrame() {
     m_bMinimizable = false;
@@ -219,5 +216,3 @@ namespace vapp {
   void UIFrame::setMinimized(bool b) {
     m_bMinimized = b;
   }
-
-}

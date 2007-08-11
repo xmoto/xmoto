@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -104,42 +103,36 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 Macros
 ===========================================================================*/
 #define MAKE_COLOR(red,green,blue,alpha) \
-	((vapp::Color)(alpha|(((vapp::Color)blue)<<8)|(((vapp::Color)green)<<16)|(((vapp::Color)red)<<24)))
+	((Color)(alpha|(((Color)blue)<<8)|(((Color)green)<<16)|(((Color)red)<<24)))
 #define GET_ALPHA(color) \
-	((vapp::Color)(color&0xff))
+	((Color)(color&0xff))
 #define GET_BLUE(color) \
-	((vapp::Color)((color&0xff00)>>8))
+	((Color)((color&0xff00)>>8))
 #define GET_GREEN(color) \
-	((vapp::Color)((color&0xff0000)>>16))
+	((Color)((color&0xff0000)>>16))
 #define GET_RED(color) \
-	((vapp::Color)((color&0xff000000)>>24))
+	((Color)((color&0xff000000)>>24))
 #define GETF_ALPHA(color) \
-	(((vapp::Color)(color&0xff))/255.0f)
+	(((Color)(color&0xff))/255.0f)
 #define GETF_BLUE(color) \
-	(((vapp::Color)((color&0xff00)>>8))/255.0f)
+	(((Color)((color&0xff00)>>8))/255.0f)
 #define GETF_GREEN(color) \
-	(((vapp::Color)((color&0xff0000)>>16))/255.0f)
+	(((Color)((color&0xff0000)>>16))/255.0f)
 #define GETF_RED(color) \
-	(((vapp::Color)((color&0xff000000)>>24))/255.0f)
+	(((Color)((color&0xff000000)>>24))/255.0f)
 #define INVERT_COLOR(color) \
 	MAKE_COLOR(255-GET_RED(color),255-GET_GREEN(color),255-GET_BLUE(color),255)
 
-namespace vapp {
-
-  /*===========================================================================
+/*===========================================================================
   Types
   ===========================================================================*/
   typedef unsigned int Color;
 
-  //used a comparator in sdt::map
-  struct ltstr {
-    bool operator()(const char* s1, const char* s2) const {
-      return strcmp(s1, s2) < 0;
-    }
-  };
-
-
-
-}
+//used a comparator in sdt::map
+struct ltstr {
+  bool operator()(const char* s1, const char* s2) const {
+    return strcmp(s1, s2) < 0;
+  }
+};
 
 #endif

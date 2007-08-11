@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -38,8 +37,8 @@ class PlayerBiker : public Biker {
   ~PlayerBiker();
 
   void updateToTime(float i_time, float i_timeStep,
-		    vapp::CollisionSystem *i_collisionSystem, Vector2f i_gravity,
-		    vapp::MotoGame *i_motogame);
+		    CollisionSystem *i_collisionSystem, Vector2f i_gravity,
+		    MotoGame *i_motogame);
   void initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity);
   BikeController* getControler();
 
@@ -135,14 +134,14 @@ class PlayerBiker : public Biker {
 
   void initPhysics(Vector2f i_gravity);
   void uninitPhysics();
-  void updatePhysics(float i_time, float fTimeStep, vapp::CollisionSystem *v_collisionSystem, Vector2f i_gravity);
+  void updatePhysics(float i_time, float fTimeStep, CollisionSystem *v_collisionSystem, Vector2f i_gravity);
   void clearStates();
   void updateGameState();
   void prepareBikePhysics(Vector2f StartPos);
   void prepareRider(Vector2f StartPos);
 
-  bool intersectHeadLevel(Vector2f Cp,float Cr,const Vector2f &LastCp, vapp::CollisionSystem *v_collisionSystem);
-  int  intersectWheelLevel(Vector2f Cp,float Cr,dContact *pContacts, vapp::CollisionSystem *v_collisionSystem);
+  bool intersectHeadLevel(Vector2f Cp,float Cr,const Vector2f &LastCp, CollisionSystem *v_collisionSystem);
+  int  intersectWheelLevel(Vector2f Cp,float Cr,dContact *pContacts, CollisionSystem *v_collisionSystem);
   int  intersectWheelLine(Vector2f Cp,float Cr,int nNumContacts,dContact *pContacts,Vector2f A0,Vector2f A1);
   bool intersectHeadLine(Vector2f Cp,float Cr,Vector2f A0,Vector2f A1);
 };

@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -32,8 +31,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define USE_SDL_MIXER     1
 #define USE_OPENAL        0
 #define USE_NO_SOUND      0
-
-namespace vapp {
 
   /*===========================================================================
   Globals
@@ -478,5 +475,4 @@ namespace vapp {
   bool Sound::isPlayingMusic() {
     return Mix_PlayingMusic();
   }
-}
 

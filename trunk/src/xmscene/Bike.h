@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -36,12 +35,10 @@ class Zone;
 
 class OnBikerHooks;
 
-namespace vapp {
-  class Replay;
-  class CollisionSystem;
-  class MotoGame;
-  class Replay;
-}
+class Replay;
+class CollisionSystem;
+class MotoGame;
+class Replay;
 
 class BikeState {
   public:
@@ -143,8 +140,8 @@ class Biker {
   virtual std::string getDescription() const = 0;
   virtual float getBikeEngineRPM();
   virtual void  updateToTime(float i_time, float i_timeStep,
-			     vapp::CollisionSystem *i_collisionSystem, Vector2f i_gravity,
-			     vapp::MotoGame *i_motogame);
+			     CollisionSystem *i_collisionSystem, Vector2f i_gravity,
+			     MotoGame *i_motogame);
   void setPlaySound(bool i_value);
 
   void setFinished(bool i_value, float i_finishTime);
@@ -187,7 +184,7 @@ class Biker {
   BikerTheme* m_bikerTheme;
   bool m_playSound;
   BikeState m_bikeState;
-  vapp::EngineSoundSimulator m_EngineSound;
+  EngineSoundSimulator m_EngineSound;
   bool m_finished;
   float m_finishTime;
   bool m_dead;

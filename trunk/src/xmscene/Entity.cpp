@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -391,25 +390,25 @@ EntityParticle::EntityParticle(const Vector2f& i_position, const Vector2f i_velo
 EntityParticle::~EntityParticle() {
 }
 
-void Entity::saveXml(vapp::FileHandle *i_pfh) {
-  vapp::FS::writeLineF(i_pfh,"\t<entity id=\"%s\" typeid=\"%s\">", Id().c_str(), Entity::SpecialityToStr(Speciality()).c_str());
-  vapp::FS::writeLineF(i_pfh,"\t\t<size r=\"%f\"/>",Size());
-  vapp::FS::writeLineF(i_pfh,"\t\t<position x=\"%f\" y=\"%f\"/>", InitialPosition().x, InitialPosition().y);      
+void Entity::saveXml(FileHandle *i_pfh) {
+  FS::writeLineF(i_pfh,"\t<entity id=\"%s\" typeid=\"%s\">", Id().c_str(), Entity::SpecialityToStr(Speciality()).c_str());
+  FS::writeLineF(i_pfh,"\t\t<size r=\"%f\"/>",Size());
+  FS::writeLineF(i_pfh,"\t\t<position x=\"%f\" y=\"%f\"/>", InitialPosition().x, InitialPosition().y);      
 
-  vapp::FS::writeLineF(i_pfh,"\t\t<param name=\"%s\" value=\"%.2f\"/>",
+  FS::writeLineF(i_pfh,"\t\t<param name=\"%s\" value=\"%.2f\"/>",
                        "z", Z());
 
   if(Speciality() == ET_NONE) {
-    vapp::FS::writeLineF(i_pfh,"\t\t<param name=\"%s\" value=\"%.2f\"/>",
+    FS::writeLineF(i_pfh,"\t\t<param name=\"%s\" value=\"%.2f\"/>",
 			 "name", SpriteName().c_str());
   }
 
   if(Speciality() == ET_PARTICLES_SOURCE) {
-    vapp::FS::writeLineF(i_pfh,"\t\t<param name=\"%s\" value=\"%.2f\"/>",
+    FS::writeLineF(i_pfh,"\t\t<param name=\"%s\" value=\"%.2f\"/>",
 			 "type", SpriteName().c_str());
   }
 
-  vapp::FS::writeLineF(i_pfh,"\t</entity>");
+  FS::writeLineF(i_pfh,"\t</entity>");
 }
 
 EntitySpeciality Entity::SpecialityFromStr(std::string i_typeStr) {
@@ -459,29 +458,29 @@ Entity* Entity::readFromXml(TiXmlElement *pElem) {
   std::string v_typeName;
 
   /* read xml information */
-  v_id         = vapp::XML::getOption(pElem,"id");
-  v_typeId     = vapp::XML::getOption(pElem,"typeid");
+  v_id         = XML::getOption(pElem,"id");
+  v_typeId     = XML::getOption(pElem,"typeid");
   v_speciality = Entity::SpecialityFromStr(v_typeId);
   TiXmlElement *pPosElem = pElem->FirstChildElement("position");
   if(pPosElem != NULL) {
-    v_position.x = atof(vapp::XML::getOption(pPosElem,"x","0").c_str());
-    v_position.y = atof(vapp::XML::getOption(pPosElem,"y","0").c_str());
-    v_angle      = atof(vapp::XML::getOption(pPosElem,"angle","-1.0").c_str());
-    v_reversed   = vapp::XML::getOption(pPosElem,"reversed","false") == "true";
+    v_position.x = atof(XML::getOption(pPosElem,"x","0").c_str());
+    v_position.y = atof(XML::getOption(pPosElem,"y","0").c_str());
+    v_angle      = atof(XML::getOption(pPosElem,"angle","-1.0").c_str());
+    v_reversed   = XML::getOption(pPosElem,"reversed","false") == "true";
   }
   TiXmlElement *pSizeElem = pElem->FirstChildElement("size");
   if(pSizeElem != NULL) {
-    v_size = (atof(vapp::XML::getOption(pSizeElem,"r","0.2").c_str()));
-    v_width = atof(vapp::XML::getOption(pSizeElem,"width","-1.0").c_str());
-    v_height = atof(vapp::XML::getOption(pSizeElem,"height","-1.0").c_str());
+    v_size = (atof(XML::getOption(pSizeElem,"r","0.2").c_str()));
+    v_width = atof(XML::getOption(pSizeElem,"width","-1.0").c_str());
+    v_height = atof(XML::getOption(pSizeElem,"height","-1.0").c_str());
   }
   /* Get parameters */
   std::string v_paramName;
   std::string v_paramValue;
   for(TiXmlElement *pParamElem = pElem->FirstChildElement("param"); pParamElem!=NULL;
       pParamElem=pParamElem->NextSiblingElement("param")) {   
-    v_paramName  = vapp::XML::getOption(pParamElem,"name");
-    v_paramValue = vapp::XML::getOption(pParamElem,"value");
+    v_paramName  = XML::getOption(pParamElem,"name");
+    v_paramValue = XML::getOption(pParamElem,"value");
     if(v_paramName == "z") {
       v_z = (atof(v_paramValue.c_str()));
     } else if(v_paramName == "name") {
@@ -538,43 +537,43 @@ Entity* Entity::readFromXml(TiXmlElement *pElem) {
   return v_entity;
 }
 
-void Entity::saveBinary(vapp::FileHandle *i_pfh) {
-  vapp::FS::writeString(i_pfh,   Id());
-  vapp::FS::writeString(i_pfh,   Entity::SpecialityToStr(Speciality()));
-  vapp::FS::writeFloat_LE(i_pfh, Size());
-  vapp::FS::writeFloat_LE(i_pfh, Width());       
-  vapp::FS::writeFloat_LE(i_pfh, Height()); 
-  vapp::FS::writeFloat_LE(i_pfh, InitialPosition().x);
-  vapp::FS::writeFloat_LE(i_pfh, InitialPosition().y);
-  vapp::FS::writeFloat_LE(i_pfh, DrawAngle());
-  vapp::FS::writeBool(i_pfh,  DrawReversed());
+void Entity::saveBinary(FileHandle *i_pfh) {
+  FS::writeString(i_pfh,   Id());
+  FS::writeString(i_pfh,   Entity::SpecialityToStr(Speciality()));
+  FS::writeFloat_LE(i_pfh, Size());
+  FS::writeFloat_LE(i_pfh, Width());       
+  FS::writeFloat_LE(i_pfh, Height()); 
+  FS::writeFloat_LE(i_pfh, InitialPosition().x);
+  FS::writeFloat_LE(i_pfh, InitialPosition().y);
+  FS::writeFloat_LE(i_pfh, DrawAngle());
+  FS::writeBool(i_pfh,  DrawReversed());
   
   switch(Speciality()) {
   case ET_NONE:
   case ET_PARTICLES_SOURCE:
-    vapp::FS::writeByte(i_pfh, 0x02);
+    FS::writeByte(i_pfh, 0x02);
     break;
   default:
-    vapp::FS::writeByte(i_pfh, 0x01);
+    FS::writeByte(i_pfh, 0x01);
   }
 
   std::ostringstream v_z;
   v_z << Z();
-  vapp::FS::writeString(i_pfh, "z");
-  vapp::FS::writeString(i_pfh, v_z.str());
+  FS::writeString(i_pfh, "z");
+  FS::writeString(i_pfh, v_z.str());
 
   if(Speciality() == ET_NONE) {
-    vapp::FS::writeString(i_pfh, "name");
-    vapp::FS::writeString(i_pfh, SpriteName());
+    FS::writeString(i_pfh, "name");
+    FS::writeString(i_pfh, SpriteName());
   }
 
   if(Speciality() == ET_PARTICLES_SOURCE) {
-    vapp::FS::writeString(i_pfh, "type");
-    vapp::FS::writeString(i_pfh, SpriteName());
+    FS::writeString(i_pfh, "type");
+    FS::writeString(i_pfh, SpriteName());
   }
 }
 
-Entity* Entity::readFromBinary(vapp::FileHandle *i_pfh) {
+Entity* Entity::readFromBinary(FileHandle *i_pfh) {
   std::string v_id;
   std::string v_typeId;
   EntitySpeciality  v_speciality;
@@ -589,22 +588,22 @@ Entity* Entity::readFromBinary(vapp::FileHandle *i_pfh) {
   std::string v_typeName;
 
   /* read values */
-  v_id         = vapp::FS::readString(i_pfh);
-  v_typeId     = vapp::FS::readString(i_pfh);
+  v_id         = FS::readString(i_pfh);
+  v_typeId     = FS::readString(i_pfh);
   v_speciality = Entity::SpecialityFromStr(v_typeId);
-  v_size       = vapp::FS::readFloat_LE(i_pfh);
-  v_width      = vapp::FS::readFloat_LE(i_pfh);
-  v_height     = vapp::FS::readFloat_LE(i_pfh);
-  v_position.x = vapp::FS::readFloat_LE(i_pfh);
-  v_position.y = vapp::FS::readFloat_LE(i_pfh);
-  v_angle      = vapp::FS::readFloat_LE(i_pfh);
-  v_reversed   = vapp::FS::readBool(i_pfh);
+  v_size       = FS::readFloat_LE(i_pfh);
+  v_width      = FS::readFloat_LE(i_pfh);
+  v_height     = FS::readFloat_LE(i_pfh);
+  v_position.x = FS::readFloat_LE(i_pfh);
+  v_position.y = FS::readFloat_LE(i_pfh);
+  v_angle      = FS::readFloat_LE(i_pfh);
+  v_reversed   = FS::readBool(i_pfh);
   std::string v_paramName;
   std::string v_paramValue;
-  int nNumParams = vapp::FS::readByte(i_pfh);
+  int nNumParams = FS::readByte(i_pfh);
   for(int j=0;j<nNumParams;j++) {
-    v_paramName  = vapp::FS::readString(i_pfh);
-    v_paramValue = vapp::FS::readString(i_pfh);
+    v_paramName  = FS::readString(i_pfh);
+    v_paramValue = FS::readString(i_pfh);
 
     if(v_paramName == "z") {
       v_z = atof(v_paramValue.c_str());

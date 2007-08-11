@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -23,8 +22,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __IMAGE_H__
 
 #include "VCommon.h"
-
-namespace vapp {
 
   /*===========================================================================
   Lazy stuff
@@ -95,7 +92,5 @@ namespace vapp {
       void _Resample(color_t *pSrc,int nSrcWidth,int nSrcHeight,
                     color_t *pDest,int nDestWidth,int nDestHeight);                                                    
   };
-
-}
 
 #endif

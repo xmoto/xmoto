@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -25,11 +24,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VCommon.h"
 #include "VApp.h"
 
-namespace vapp {
-
-  class UIMsgBox;
-  class UIButton;
-  class UIRoot;
+class UIMsgBox;
+class UIButton;
+class UIRoot;
+class App;
+class DrawLib;
 
 	/*===========================================================================
 	Alignments
@@ -815,7 +814,5 @@ class UIButtonDrawn : public UIButton {
       void _ActivateByVector(int dx,int dy);
       int _GetActiveIdx(UIRootActCandidate *pMap,int nNum);
   };
-
-}
 
 #endif

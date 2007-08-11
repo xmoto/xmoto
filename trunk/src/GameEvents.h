@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -26,7 +25,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Zone.h"
 #include "xmscene/Entity.h"
 
-namespace vapp {
   /*===========================================================================
     Game event types
     ===========================================================================*/
@@ -71,21 +69,15 @@ namespace vapp {
     GAME_EVENT_CAMERAADAPTTOGRAVITY         = 34,
     GAME_EVENT_ADDFORCETOPLAYER             = 35
   };
-}
 
-namespace vapp {
 class MotoGameEvent;
 
 struct RecordedGameEvent {
-  vapp::MotoGameEvent *Event;     /* Event itself */
-  bool bPassed;                   /* Whether we have passed it */
+  MotoGameEvent *Event;     /* Event itself */
+  bool bPassed;             /* Whether we have passed it */
 };
 
-}
-
 #include "xmscene/Scene.h"
-
-namespace vapp {
 
 class MotoGameEvent {
   public:
@@ -829,7 +821,5 @@ class MGE_CameraAdaptToGravity : public MotoGameEvent {
 
  private:
 };
-
-}
 
 #endif /* __MOTOGAMEEVENT_H__ */

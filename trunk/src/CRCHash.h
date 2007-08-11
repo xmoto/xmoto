@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -22,8 +21,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __CRCHASH_H__
 #define __CRCHASH_H__
 
-namespace vapp {
-
   /*===========================================================================
   Static CRC32 class
   ===========================================================================*/
@@ -40,8 +37,6 @@ namespace vapp {
       static void _InitCRC32(void);
       static unsigned int _ReflectCRC32(unsigned int nData,unsigned char cBits);
   };
-  
-}
 
 #endif
 

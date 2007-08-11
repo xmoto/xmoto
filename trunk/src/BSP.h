@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -27,8 +26,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/VMath.h"
 #include "xmscene/Level.h"
 #include "VTexture.h"
-
-namespace vapp {
 
   /*===========================================================================
   Types
@@ -100,7 +97,5 @@ namespace vapp {
       BSPLine *_CopyLine(BSPLine *pSrc);
       BSPPoly *_CopyPoly(BSPPoly *pDst,BSPPoly *pSrc);      
   };
-
-}
 
 #endif

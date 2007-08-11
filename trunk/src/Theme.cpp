@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -29,13 +28,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "WWW.h"
 #include "VFileIO.h"
 
-class vapp::App;
-
 std::vector<Sprite*> Theme::getSpritesList() {
   return m_sprites;
 }
 
-std::vector<Sound*> Theme::getSoundsList() {
+std::vector<ThemeSound*> Theme::getSoundsList() {
   return m_sounds;
 }
 
@@ -85,7 +82,7 @@ std::string Theme::Name() const {
   return m_name;
 }
 
-vapp::Texture* Theme::loadTexture(std::string p_fileName, bool bSmall, bool bClamp, vapp::FilterMode eFilterMode) {
+Texture* Theme::loadTexture(std::string p_fileName, bool bSmall, bool bClamp, FilterMode eFilterMode) {
   return m_texMan.loadTexture(p_fileName.c_str(), bSmall, bClamp, eFilterMode);
 }
 
@@ -100,7 +97,7 @@ void Theme::load(std::string p_themeFile) {
   cleanMusics();
   cleanSounds();
 
-  vapp::XMLDocument v_ThemeXml;
+  XMLDocument v_ThemeXml;
   TiXmlDocument *v_ThemeXmlData;
   TiXmlElement *v_ThemeXmlDataElement;
   const char *pc;
@@ -216,7 +213,7 @@ void Theme::loadSpritesFromXML(TiXmlElement *p_ThemeXmlDataElement) {
     if(pc != NULL) { v_sum = pc; };
 
     if(isAFileOutOfDate(THEME_MUSICS_FILE_DIR + std::string("/") + v_musicFile) == false) {
-      m_musics.push_back(new Music(this, v_musicName, v_musicFile));
+      m_musics.push_back(new ThemeMusic(this, v_musicName, v_musicFile));
 
       ThemeFile v_file = {THEME_MUSICS_FILE_DIR + std::string("/") + v_musicFile, v_sum};
       m_requiredFiles.push_back(v_file);
@@ -245,7 +242,7 @@ void Theme::loadSpritesFromXML(TiXmlElement *p_ThemeXmlDataElement) {
     if(pc != NULL) { v_sum = pc; };
 
     if(isAFileOutOfDate(THEME_SOUNDS_FILE_DIR + std::string("/") + v_soundFile) == false) {
-      m_sounds.push_back(new Sound(this, v_soundName, v_soundFile));
+      m_sounds.push_back(new ThemeSound(this, v_soundName, v_soundFile));
       ThemeFile v_file = {THEME_SOUNDS_FILE_DIR + std::string("/") + v_soundFile, v_sum};
       m_requiredFiles.push_back(v_file);
     }
@@ -265,7 +262,7 @@ Sprite* Theme::getSprite(enum SpriteType pSpriteType, std::string pName) {
   return NULL;
 }
 
-Music* Theme::getMusic(std::string i_name) {
+ThemeMusic* Theme::getMusic(std::string i_name) {
   for(unsigned int i=0; i<m_musics.size(); i++) {
     if(m_musics[i]->Name() == i_name) {
       return m_musics[i];
@@ -274,7 +271,7 @@ Music* Theme::getMusic(std::string i_name) {
   throw Exception("Music " + i_name + " not found");
 }
 
-Sound* Theme::getSound(std::string i_name) {
+ThemeSound* Theme::getSound(std::string i_name) {
   for(unsigned int i=0; i<m_sounds.size(); i++) {
     if(m_sounds[i]->Name() == i_name) {
       return m_sounds[i];
@@ -646,8 +643,8 @@ Sprite::Sprite(Theme* p_associated_theme, std::string v_name) {
 Sprite::~Sprite() {
 }
 
-vapp::Texture* Sprite::getTexture(bool bSmall, bool bClamp, vapp::FilterMode eFilterMode) {
-  vapp::Texture* v_currentTexture;
+Texture* Sprite::getTexture(bool bSmall, bool bClamp, FilterMode eFilterMode) {
+  Texture* v_currentTexture;
 
   v_currentTexture = getCurrentTexture();
   if(v_currentTexture == NULL) {
@@ -689,7 +686,7 @@ std::string AnimationSprite::getFileDir() {
   return THEME_ANIMATION_SPRITE_FILE_DIR;
 }
 
-vapp::Texture* AnimationSprite::getCurrentTexture() {
+Texture* AnimationSprite::getCurrentTexture() {
   if(m_frames.size() == 0) {return NULL;}
   return m_frames[getCurrentFrame()]->getTexture();
 }
@@ -701,13 +698,13 @@ std::string AnimationSprite::getCurrentTextureFileName() {
   return getFileDir() + "/" + m_fileBase + std::string(v_num) + std::string(".") + m_fileExtension;
 }
 
-void AnimationSprite::setCurrentTexture(vapp::Texture *p_texture) {
+void AnimationSprite::setCurrentTexture(Texture *p_texture) {
   m_frames[getCurrentFrame()]->setTexture(p_texture);
 }
 
 int AnimationSprite::getCurrentFrame() {
   /* Next frame? */
-  float v_realTime = vapp::App::getRealTime();
+  float v_realTime = App::getRealTime();
 
   while(v_realTime > m_fFrameTime + m_frames[m_current_frame]->getDelay()) {
     m_fFrameTime = v_realTime;
@@ -764,11 +761,11 @@ AnimationSpriteFrame::AnimationSpriteFrame(AnimationSprite *p_associatedAnimatio
 AnimationSpriteFrame::~AnimationSpriteFrame() {
 }
 
-vapp::Texture* AnimationSpriteFrame::getTexture() {
+Texture* AnimationSpriteFrame::getTexture() {
   return m_texture;
 }
 
-void  AnimationSpriteFrame::setTexture(vapp::Texture *p_texture) {
+void  AnimationSpriteFrame::setTexture(Texture *p_texture) {
   m_texture = p_texture;
 }
 
@@ -868,7 +865,7 @@ float EdgeEffectSprite::getDepth() const {
   return m_fDepth;
 }
 
-vapp::Texture* EdgeEffectSprite::getTexture(bool bSmall, bool bClamp, vapp::FilterMode eFilterMode) {
+Texture* EdgeEffectSprite::getTexture(bool bSmall, bool bClamp, FilterMode eFilterMode) {
   Sprite::getTexture(bSmall, bClamp, eFilterMode);
 }
 
@@ -924,7 +921,7 @@ SimpleFrameSprite::SimpleFrameSprite(Theme* p_associated_theme, std::string p_na
 SimpleFrameSprite::~SimpleFrameSprite() {
 }
 
-vapp::Texture* SimpleFrameSprite::getCurrentTexture() {
+Texture* SimpleFrameSprite::getCurrentTexture() {
   return m_texture;
 }
 
@@ -932,7 +929,7 @@ std::string SimpleFrameSprite::getCurrentTextureFileName() {
   return getFileDir() + "/" + m_fileName;
 }
 
-void SimpleFrameSprite::setCurrentTexture(vapp::Texture *p_texture) {
+void SimpleFrameSprite::setCurrentTexture(Texture *p_texture) {
   m_texture = p_texture;
 }
 
@@ -946,8 +943,8 @@ BikerTheme::BikerTheme(Theme* p_associated_theme,
            std::string p_Torso,
            std::string p_UpperArm,
            std::string p_UpperLeg,
-           vapp::Color p_UglyRiderColor,
-           vapp::Color p_UglyWheelColor
+           Color p_UglyRiderColor,
+           Color p_UglyWheelColor
            ) {
   m_associated_theme = p_associated_theme;
   m_Body           = p_Body;
@@ -1003,15 +1000,15 @@ Sprite* BikerTheme::getUpperLeg() {
   return m_associated_theme->getSprite(SPRITE_TYPE_BIKERPART, m_UpperLeg);
 }
 
-vapp::Color BikerTheme::getUglyRiderColor() {
+Color BikerTheme::getUglyRiderColor() {
   return m_UglyRiderColor;
 }
 
-vapp::Color BikerTheme::getUglyWheelColor() {
+Color BikerTheme::getUglyWheelColor() {
   return m_UglyWheelColor;
 }
 
-ThemeChoicer::ThemeChoicer(vapp::WWWAppInterface *p_WebApp,
+ThemeChoicer::ThemeChoicer(WWWAppInterface *p_WebApp,
 			   const ProxySettings *p_proxy_settings) {                    
   m_webThemes = new WebThemes(p_WebApp, p_proxy_settings);
 }
@@ -1029,7 +1026,7 @@ ThemeChoicer::~ThemeChoicer() {
  }
 
 void ThemeChoicer::initThemesFromDir(xmDatabase *i_db) {
-  std::vector<std::string> v_themesFiles = vapp::FS::findPhysFiles(std::string(THEMES_DIRECTORY)
+  std::vector<std::string> v_themesFiles = FS::findPhysFiles(std::string(THEMES_DIRECTORY)
 								   + std::string("/*.xml"), true);
   std::string v_name;
 
@@ -1050,7 +1047,7 @@ void ThemeChoicer::initThemesFromDir(xmDatabase *i_db) {
 }
 
 std::string ThemeChoicer::getThemeNameFromFile(std::string p_themeFile) {
-  vapp::XMLDocument v_ThemeXml;
+  XMLDocument v_ThemeXml;
   TiXmlDocument *v_ThemeXmlData;
   TiXmlElement *v_ThemeXmlDataElement;
   const char *pc;
@@ -1096,44 +1093,44 @@ std::string Theme::blendModeToStr(SpriteBlendMode Mode) {
   return "default";
 }
 
-Music::Music(Theme* p_associated_theme, std::string i_name, std::string i_fileName) {
+ThemeMusic::ThemeMusic(Theme* p_associated_theme, std::string i_name, std::string i_fileName) {
   m_associated_theme = p_associated_theme;
   m_name     	      = i_name;
   m_fileName 	      = i_fileName;
 }
  
-Music::~Music() {
+ThemeMusic::~ThemeMusic() {
 }
 
-std::string Music::Name() const {
+std::string ThemeMusic::Name() const {
   return m_name;
 }
 
-std::string Music::FileName() const {
+std::string ThemeMusic::FileName() const {
   return m_fileName;
 }
  
-std::string Music::FilePath() const {
-  return vapp::FS::FullPath(THEME_MUSICS_FILE_DIR + std::string("/") + m_fileName);
+std::string ThemeMusic::FilePath() const {
+  return FS::FullPath(THEME_MUSICS_FILE_DIR + std::string("/") + m_fileName);
 }
 
-Sound::Sound(Theme* p_associated_theme, std::string i_name, std::string i_fileName) {
+ThemeSound::ThemeSound(Theme* p_associated_theme, std::string i_name, std::string i_fileName) {
   m_associated_theme = p_associated_theme;
   m_name     	      = i_name;
   m_fileName 	      = i_fileName;
 }
  
-Sound::~Sound() {
+ThemeSound::~ThemeSound() {
 }
 
-std::string Sound::Name() const {
+std::string ThemeSound::Name() const {
   return m_name;
 }
 
-std::string Sound::FileName() const {
+std::string ThemeSound::FileName() const {
   return m_fileName;
 }
  
-std::string Sound::FilePath() const {
+std::string ThemeSound::FilePath() const {
   return THEME_SOUNDS_FILE_DIR + std::string("/") + m_fileName;
 }

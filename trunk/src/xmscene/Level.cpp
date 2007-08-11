@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -202,7 +201,7 @@ void Level::setAuthor(const std::string& i_author) {
   m_author = i_author;
 }
 
-void Level::setCollisionSystem(vapp::CollisionSystem* p_CollisionSystem) {
+void Level::setCollisionSystem(CollisionSystem* p_CollisionSystem) {
   m_pCollisionSystem = p_CollisionSystem;
 }
 
@@ -275,7 +274,7 @@ void Level::revertEntityDestroyed(const std::string& i_entityId) {
   throw Exception("Entity '" + i_entityId + "' can't be reverted");
 }
 
-void Level::updateToTime(vapp::MotoGame& i_scene) {
+void Level::updateToTime(MotoGame& i_scene) {
   bool v_b;
 
   for(unsigned int i=0;i<Entities().size();i++) {
@@ -287,14 +286,14 @@ void Level::updateToTime(vapp::MotoGame& i_scene) {
 }
 
 void Level::saveXML(void) {
-  vapp::FileHandle *pfh = vapp::FS::openOFile(m_fileName);
+  FileHandle *pfh = FS::openOFile(m_fileName);
   if(pfh == NULL) {
     /* Failed! */
     Logger::Log("** Warning ** : failed to save level '%s'",m_fileName.c_str());
     return;
   }
     
-  vapp::FS::writeLineF(pfh,"<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+  FS::writeLineF(pfh,"<?xml version=\"1.0\" encoding=\"utf-8\"?>");
 
   std::string v_levelTag;
   v_levelTag = "<level id=\"" + m_id + "\"";
@@ -308,16 +307,16 @@ void Level::saveXML(void) {
     v_levelTag += " rversion=\"" + m_requiredVersion + "\"";
   }
   v_levelTag += ">";
-  vapp::FS::writeLineF(pfh, "%s", v_levelTag.c_str());
+  FS::writeLineF(pfh, "%s", v_levelTag.c_str());
   
   /* INFO */
-  vapp::FS::writeLineF(pfh,"\t<info>");
-  vapp::FS::writeLineF(pfh,"\t\t<name>%s</name>",m_name.c_str());
-  vapp::FS::writeLineF(pfh,"\t\t<description>%s</description>",m_description.c_str());
-  vapp::FS::writeLineF(pfh,"\t\t<author>%s</author>",m_author.c_str());
-  vapp::FS::writeLineF(pfh,"\t\t<date>%s</date>",m_date.c_str());
+  FS::writeLineF(pfh,"\t<info>");
+  FS::writeLineF(pfh,"\t\t<name>%s</name>",m_name.c_str());
+  FS::writeLineF(pfh,"\t\t<description>%s</description>",m_description.c_str());
+  FS::writeLineF(pfh,"\t\t<author>%s</author>",m_author.c_str());
+  FS::writeLineF(pfh,"\t\t<date>%s</date>",m_date.c_str());
   if(m_sky.Drifted()) {
-    vapp::FS::writeLineF(pfh,
+    FS::writeLineF(pfh,
 			 "\t\t<sky zoom=\"%f\" offset=\"%f\" color_r=\"%i\" color_g=\"%i\" color_b=\"%i\" color_a=\"%i\" drifted=\"true\" driftZoom=\"%f\" driftColor_r=\"%i\" driftColor_g=\"%i\" driftColor_b=\"%i\" driftColor_a=\"%i\">%s</sky>",
 			 m_sky.Zoom(),
 			 m_sky.Offset(),
@@ -332,7 +331,7 @@ void Level::saveXML(void) {
 			 m_sky.DriftTextureColor().Alpha(),
 			 m_sky.Texture().c_str());
   } else {
-    vapp::FS::writeLineF(pfh,
+    FS::writeLineF(pfh,
 			 "\t\t<sky zoom=\"%f\" offset=\"%f\" color_r=\"%i\" color_g=\"%i\" color_b=\"%i\" color_a=\"%i\">%s</sky>",
 			 m_sky.Zoom(),
 			 m_sky.Offset(),
@@ -342,22 +341,22 @@ void Level::saveXML(void) {
 			 m_sky.TextureColor().Alpha(),
 			 m_sky.Texture().c_str());
   }
-  vapp::FS::writeLineF(pfh,"\t\t<border texture=\"%s\" />",m_borderTexture.c_str());
-  vapp::FS::writeLineF(pfh,"\t\t<music name=\"%s\" />", m_music.c_str());
-  vapp::FS::writeLineF(pfh,"\t</info>");
+  FS::writeLineF(pfh,"\t\t<border texture=\"%s\" />",m_borderTexture.c_str());
+  FS::writeLineF(pfh,"\t\t<music name=\"%s\" />", m_music.c_str());
+  FS::writeLineF(pfh,"\t</info>");
 
   if(m_numberLayer > 0){
-    vapp::FS::writeLineF(pfh, "\t\t<layeroffsets>");
+    FS::writeLineF(pfh, "\t\t<layeroffsets>");
     for(int i=0; i<m_numberLayer; i++){
       std::string front = "";
       if(m_isLayerFront[i] == true){
 	front = " frontlayer=\"true\"";
       }
 
-      vapp::FS::writeLineF(pfh, "\t\t\t<layeroffset x=\"%f\" y=\"%f\"%s/>",
+      FS::writeLineF(pfh, "\t\t\t<layeroffset x=\"%f\" y=\"%f\"%s/>",
 			   m_layerOffsets[i].x, m_layerOffsets[i].y, front.c_str());
     }
-    vapp::FS::writeLineF(pfh, "\t\t</layeroffsets>");
+    FS::writeLineF(pfh, "\t\t</layeroffsets>");
   }
   
   /* replacement sprites */
@@ -367,62 +366,62 @@ void Level::saveXML(void) {
      m_rSpriteForStar       	 != "" ||
      m_rSoundForPickUpStrawberry != ""
      ) {
-    vapp::FS::writeLineF(pfh,"\t<theme_replacements>");
+    FS::writeLineF(pfh,"\t<theme_replacements>");
     if(m_rSpriteForStrawberry != "") {
-      vapp::FS::writeLineF(pfh,"\t\t<sprite_replacement old_name=\"Strawberry\" new_name=\"%s\" />",
+      FS::writeLineF(pfh,"\t\t<sprite_replacement old_name=\"Strawberry\" new_name=\"%s\" />",
 			   m_rSpriteForStrawberry.c_str());
     }
     if(m_rSpriteForWecker != "") {
-      vapp::FS::writeLineF(pfh,"\t\t<sprite_replacement old_name=\"Wrecker\" new_name=\"%s\" />",
+      FS::writeLineF(pfh,"\t\t<sprite_replacement old_name=\"Wrecker\" new_name=\"%s\" />",
 			   m_rSpriteForWecker.c_str());
     }
     if(m_rSpriteForFlower != "") {
-      vapp::FS::writeLineF(pfh,"\t\t<sprite_replacement old_name=\"Flower\" new_name=\"%s\" />",
+      FS::writeLineF(pfh,"\t\t<sprite_replacement old_name=\"Flower\" new_name=\"%s\" />",
 			   m_rSpriteForFlower.c_str());
     }
     if(m_rSpriteForStar != "") {
-      vapp::FS::writeLineF(pfh,"\t\t<sprite_replacement old_name=\"Star\" new_name=\"%s\" />",
+      FS::writeLineF(pfh,"\t\t<sprite_replacement old_name=\"Star\" new_name=\"%s\" />",
 			   m_rSpriteForStar.c_str());
     }
     if(m_rSoundForPickUpStrawberry != "") {
-      vapp::FS::writeLineF(pfh,"\t\t<sound_replacement old_name=\"PickUpStrawberry\" new_name=\"%s\" />",
+      FS::writeLineF(pfh,"\t\t<sound_replacement old_name=\"PickUpStrawberry\" new_name=\"%s\" />",
 			   m_rSoundForPickUpStrawberry.c_str());
     }
-    vapp::FS::writeLineF(pfh,"\t</theme_replacements>");
+    FS::writeLineF(pfh,"\t</theme_replacements>");
   }
 
   /* MISC */
   if(m_scriptFileName != "" && m_scriptSource != "") {
-    vapp::FS::writeLineF(pfh,"\t<script source=\"%s\">",m_scriptFileName.c_str());
-    vapp::FS::writeByte(pfh,'\t'); vapp::FS::writeByte(pfh,'\t');
+    FS::writeLineF(pfh,"\t<script source=\"%s\">",m_scriptFileName.c_str());
+    FS::writeByte(pfh,'\t'); FS::writeByte(pfh,'\t');
     
     /* Write script and transform dangerous characters */
     for(unsigned int i=0;i<m_scriptSource.length();i++) {
       int c = m_scriptSource[i];
-      if(c == '<') vapp::FS::writeBuf(pfh,"&lt;",4);
-      else if(c == '>') vapp::FS::writeBuf(pfh,"&gt;",4);
-      else vapp::FS::writeByte(pfh,c);
+      if(c == '<') FS::writeBuf(pfh,"&lt;",4);
+      else if(c == '>') FS::writeBuf(pfh,"&gt;",4);
+      else FS::writeByte(pfh,c);
     }
-    //vapp::FS::writeBuf(pfh,(char *)m_ScriptSource.c_str(),m_ScriptSource.length());
-    vapp::FS::writeLineF(pfh,"</script>");
+    //FS::writeBuf(pfh,(char *)m_ScriptSource.c_str(),m_ScriptSource.length());
+    FS::writeLineF(pfh,"</script>");
   }
   else if(m_scriptFileName != "")
-    vapp::FS::writeLineF(pfh,"\t<script source=\"%s\"/>",m_scriptFileName.c_str());
+    FS::writeLineF(pfh,"\t<script source=\"%s\"/>",m_scriptFileName.c_str());
   else if(m_scriptSource != "") {
-    vapp::FS::writeLineF(pfh,"\t<script>");
-    vapp::FS::writeByte(pfh,'\t'); vapp::FS::writeByte(pfh,'\t');
+    FS::writeLineF(pfh,"\t<script>");
+    FS::writeByte(pfh,'\t'); FS::writeByte(pfh,'\t');
     /* Write script and transform dangerous characters */
     for(unsigned int i=0;i<m_scriptSource.length();i++) {
       int c = m_scriptSource[i];
-      if(c == '<') vapp::FS::writeBuf(pfh,"&lt;",4);
-      else if(c == '>') vapp::FS::writeBuf(pfh,"&gt;",4);
-      else vapp::FS::writeByte(pfh,c);
+      if(c == '<') FS::writeBuf(pfh,"&lt;",4);
+      else if(c == '>') FS::writeBuf(pfh,"&gt;",4);
+      else FS::writeByte(pfh,c);
     }
-    //      vapp::FS::writeBuf(pfh,(char *)m_ScriptSource.c_str(),m_ScriptSource.length());
-    vapp::FS::writeLineF(pfh,"</script>");
+    //      FS::writeBuf(pfh,(char *)m_ScriptSource.c_str(),m_ScriptSource.length());
+    FS::writeLineF(pfh,"</script>");
   }
   
-  vapp::FS::writeLineF(pfh,"\t<limits left=\"%f\" right=\"%f\" top=\"%f\" bottom=\"%f\"/>",m_leftLimit,m_rightLimit,m_topLimit,m_bottomLimit);
+  FS::writeLineF(pfh,"\t<limits left=\"%f\" right=\"%f\" top=\"%f\" bottom=\"%f\"/>",m_leftLimit,m_rightLimit,m_topLimit,m_bottomLimit);
   
   /* BLOCKS */
   for(unsigned int i=0;i<m_blocks.size();i++) {
@@ -439,15 +438,15 @@ void Level::saveXML(void) {
     m_zones[i]->saveXml(pfh);
   }
   
-  vapp::FS::writeLineF(pfh,"\n</level>");           
-  vapp::FS::closeFile(pfh);
+  FS::writeLineF(pfh,"\n</level>");           
+  FS::closeFile(pfh);
 }
 
 void Level::loadXML(void) {
   /* Load XML document and fetch tinyxml handle */
   unloadLevelBody();
   if(m_xmlSource == NULL) {
-    m_xmlSource = new vapp::XMLDocument();
+    m_xmlSource = new XMLDocument();
   }
 
   m_xmlSource->readFromFile(m_fileName, NULL);
@@ -456,15 +455,15 @@ void Level::loadXML(void) {
   if(pDoc == NULL) throw Exception("failed to load level XML");
   
   /* Start the fantastic parsing by fetching the <level> element */
-  TiXmlElement *pLevelElem = vapp::XML::findElement(*m_xmlSource, NULL,std::string("level"));    
+  TiXmlElement *pLevelElem = XML::findElement(*m_xmlSource, NULL,std::string("level"));    
   if(pLevelElem == NULL) throw Exception("<level> tag not found in XML");
   
   /* Get level ID */
-  m_id = vapp::XML::getOption(pLevelElem,"id");
+  m_id = XML::getOption(pLevelElem,"id");
   if(m_id == "") throw Exception("no ID specified in level XML");
 
   /* Get required xmoto version */
-  m_requiredVersion = vapp::XML::getOption(pLevelElem,"rversion");
+  m_requiredVersion = XML::getOption(pLevelElem,"rversion");
   m_xmotoTooOld = false;
   if(m_id != "") {
     /* Check version */
@@ -498,56 +497,56 @@ void Level::loadXML(void) {
 
   if(!m_xmotoTooOld) {    
     /* Get level pack */
-    m_pack = vapp::XML::getOption(pLevelElem,"levelpack");
-    m_packNum = vapp::XML::getOption(pLevelElem,"levelpackNum");      
+    m_pack = XML::getOption(pLevelElem,"levelpack");
+    m_packNum = XML::getOption(pLevelElem,"levelpackNum");      
     
     /* Get level <info> element */
-    TiXmlElement *pInfoElem = vapp::XML::findElement(*m_xmlSource, pLevelElem,std::string("info"));
+    TiXmlElement *pInfoElem = XML::findElement(*m_xmlSource, pLevelElem,std::string("info"));
     if(pInfoElem != NULL) {
       /* Name */
-      std::string Tmp = vapp::XML::getElementText(*m_xmlSource, pInfoElem,"name");
+      std::string Tmp = XML::getElementText(*m_xmlSource, pInfoElem,"name");
       if(Tmp != "") m_name = Tmp;
 
       /* Author */
-      Tmp = vapp::XML::getElementText(*m_xmlSource, pInfoElem,"author");
+      Tmp = XML::getElementText(*m_xmlSource, pInfoElem,"author");
       if(Tmp != "") m_author = Tmp;
       
       /* Description */
-      Tmp = vapp::XML::getElementText(*m_xmlSource, pInfoElem,"description");
+      Tmp = XML::getElementText(*m_xmlSource, pInfoElem,"description");
       if(Tmp != "") m_description = Tmp;
       
       /* Date */
-      Tmp = vapp::XML::getElementText(*m_xmlSource, pInfoElem,"date");
+      Tmp = XML::getElementText(*m_xmlSource, pInfoElem,"date");
       if(Tmp != "") m_date = Tmp;
       
       /* Sky */
-      Tmp = vapp::XML::getElementText(*m_xmlSource, pInfoElem,"sky");
+      Tmp = XML::getElementText(*m_xmlSource, pInfoElem,"sky");
       if(Tmp != "") m_sky.setTexture(Tmp);
 
       /* advanced sky parameters ? */
       bool v_useAdvancedOptions = false;
-      TiXmlElement *pSkyElem = vapp::XML::findElement(*m_xmlSource, NULL, std::string("sky"));
+      TiXmlElement *pSkyElem = XML::findElement(*m_xmlSource, NULL, std::string("sky"));
       std::string v_skyValue;
       if(pSkyElem != NULL) {
-	v_skyValue = vapp::XML::getOption(pSkyElem, "zoom");
+	v_skyValue = XML::getOption(pSkyElem, "zoom");
 	if(v_skyValue != "") {
 	  m_sky.setZoom(atof(v_skyValue.c_str()));
 	  v_useAdvancedOptions = true;
 	}
-	v_skyValue = vapp::XML::getOption(pSkyElem, "offset");
+	v_skyValue = XML::getOption(pSkyElem, "offset");
 	if(v_skyValue != "") {
 	  m_sky.setOffset(atof(v_skyValue.c_str()));
 	  v_useAdvancedOptions = true;
 	}
 
 	int v_r = -1, v_g = -1, v_b = -1, v_a = -1;
-	v_skyValue = vapp::XML::getOption(pSkyElem, "color_r");
+	v_skyValue = XML::getOption(pSkyElem, "color_r");
 	if(v_skyValue != "") v_r = atoi(v_skyValue.c_str());
-	v_skyValue = vapp::XML::getOption(pSkyElem, "color_g");
+	v_skyValue = XML::getOption(pSkyElem, "color_g");
 	if(v_skyValue != "") v_g = atoi(v_skyValue.c_str());
-	v_skyValue = vapp::XML::getOption(pSkyElem, "color_b");
+	v_skyValue = XML::getOption(pSkyElem, "color_b");
 	if(v_skyValue != "") v_b = atoi(v_skyValue.c_str());
-	v_skyValue = vapp::XML::getOption(pSkyElem, "color_a");
+	v_skyValue = XML::getOption(pSkyElem, "color_a");
 	if(v_skyValue != "") v_a = atoi(v_skyValue.c_str());
 	if(v_r != -1 || v_g != -1 || v_b != -1 || v_a != -1) {
 	  if(v_r == -1) v_r = 0;
@@ -558,22 +557,22 @@ void Level::loadXML(void) {
 	  v_useAdvancedOptions = true;
 	}
 
-	v_skyValue = vapp::XML::getOption(pSkyElem, "drifted");
+	v_skyValue = XML::getOption(pSkyElem, "drifted");
 	if(v_skyValue == "true") {
 	  m_sky.setDrifted(true);
 	  v_useAdvancedOptions = true;
 
-	  v_skyValue = vapp::XML::getOption(pSkyElem, "driftZoom");
+	  v_skyValue = XML::getOption(pSkyElem, "driftZoom");
 	  if(v_skyValue != "") m_sky.setDriftZoom(atof(v_skyValue.c_str()));
 
 	  int v_r = -1, v_g = -1, v_b = -1, v_a = -1;
-	  v_skyValue = vapp::XML::getOption(pSkyElem, "driftColor_r");
+	  v_skyValue = XML::getOption(pSkyElem, "driftColor_r");
 	  if(v_skyValue != "") v_r = atoi(v_skyValue.c_str());
-	  v_skyValue = vapp::XML::getOption(pSkyElem, "driftColor_g");
+	  v_skyValue = XML::getOption(pSkyElem, "driftColor_g");
 	  if(v_skyValue != "") v_g = atoi(v_skyValue.c_str());
-	  v_skyValue = vapp::XML::getOption(pSkyElem, "driftColor_b");
+	  v_skyValue = XML::getOption(pSkyElem, "driftColor_b");
 	  if(v_skyValue != "") v_b = atoi(v_skyValue.c_str());
-	  v_skyValue = vapp::XML::getOption(pSkyElem, "driftColor_a");
+	  v_skyValue = XML::getOption(pSkyElem, "driftColor_a");
 	  if(v_skyValue != "") v_a = atoi(v_skyValue.c_str());
 	  if(v_r != -1 || v_g != -1 || v_b != -1 || v_a != -1) {
 	    if(v_r == -1) v_r = 0;
@@ -590,20 +589,20 @@ void Level::loadXML(void) {
       }
 
       /* Border */
-      TiXmlElement *pBorderElem = vapp::XML::findElement(*m_xmlSource, NULL, std::string("border"));
+      TiXmlElement *pBorderElem = XML::findElement(*m_xmlSource, NULL, std::string("border"));
       if(pBorderElem != NULL) {
-	m_borderTexture = vapp::XML::getOption(pBorderElem, "texture");  
+	m_borderTexture = XML::getOption(pBorderElem, "texture");  
       }
 
       /* Music */
-      TiXmlElement *pMusicElem = vapp::XML::findElement(*m_xmlSource, NULL, std::string("music"));
+      TiXmlElement *pMusicElem = XML::findElement(*m_xmlSource, NULL, std::string("music"));
       if(pMusicElem != NULL) {
-	m_music = vapp::XML::getOption(pMusicElem, "name");  
+	m_music = XML::getOption(pMusicElem, "name");  
       }
     }
 
     /* background level offsets */
-    TiXmlElement* pLayerOffsets = vapp::XML::findElement(*m_xmlSource, NULL, std::string("layeroffsets"));
+    TiXmlElement* pLayerOffsets = XML::findElement(*m_xmlSource, NULL, std::string("layeroffsets"));
     if(pLayerOffsets == NULL){
       m_numberLayer = 0;
     }
@@ -612,11 +611,11 @@ void Level::loadXML(void) {
 	  pElem!=NULL;
 	  pElem=pElem->NextSiblingElement("layeroffset")) {
 	Vector2f offset;
-	offset.x = atof(vapp::XML::getOption(pElem, "x").c_str());
-	offset.y = atof(vapp::XML::getOption(pElem, "y").c_str());
+	offset.x = atof(XML::getOption(pElem, "x").c_str());
+	offset.y = atof(XML::getOption(pElem, "y").c_str());
 	m_numberLayer++;
 	m_layerOffsets.push_back(offset);
-	m_isLayerFront.push_back(vapp::XML::getOption(pElem, "frontlayer", "false") == "true");
+	m_isLayerFront.push_back(XML::getOption(pElem, "frontlayer", "false") == "true");
       }
       for(int i=0; i<m_numberLayer; i++){
 	Logger::Log("Level::loadXML offsets layer %d: %f, %f isfront: %s",
@@ -632,13 +631,13 @@ void Level::loadXML(void) {
     m_rSpriteForStar   	   	= "";
     m_rSoundForPickUpStrawberry = "";
 
-    TiXmlElement *pThemeReplaceElem = vapp::XML::findElement(*m_xmlSource, pLevelElem,std::string("theme_replacements"));
+    TiXmlElement *pThemeReplaceElem = XML::findElement(*m_xmlSource, pLevelElem,std::string("theme_replacements"));
     if(pThemeReplaceElem != NULL) {
       /* Get replacements  for sprites */
       for(TiXmlElement *pElem = pThemeReplaceElem->FirstChildElement("sprite_replacement"); pElem!=NULL;
 	  pElem=pElem->NextSiblingElement("sprite_replacement")) {
-	std::string v_old_name = vapp::XML::getOption(pElem, "old_name");
-	std::string v_new_name = vapp::XML::getOption(pElem, "new_name");
+	std::string v_old_name = XML::getOption(pElem, "old_name");
+	std::string v_new_name = XML::getOption(pElem, "new_name");
 	/* for efficacity and before other are not required, only change main ones */
 	if        (v_old_name == "Strawberry") {
 	  m_rSpriteForStrawberry = v_new_name;
@@ -653,8 +652,8 @@ void Level::loadXML(void) {
       /* Get replacements  for sounds */
       for(TiXmlElement *pElem = pThemeReplaceElem->FirstChildElement("sound_replacement"); pElem!=NULL;
 	  pElem=pElem->NextSiblingElement("sound_replacement")) {
-	std::string v_old_name = vapp::XML::getOption(pElem, "old_name");
-	std::string v_new_name = vapp::XML::getOption(pElem, "new_name");
+	std::string v_old_name = XML::getOption(pElem, "old_name");
+	std::string v_new_name = XML::getOption(pElem, "new_name");
 	/* for efficacity and before other are not required, only change main ones */
 	if        (v_old_name == "PickUpStrawberry") {
 	  m_rSoundForPickUpStrawberry = v_new_name;
@@ -663,12 +662,12 @@ void Level::loadXML(void) {
     }
 
     /* Get script */
-    TiXmlElement *pScriptElem = vapp::XML::findElement(*m_xmlSource, pLevelElem,std::string("script"));
+    TiXmlElement *pScriptElem = XML::findElement(*m_xmlSource, pLevelElem,std::string("script"));
     if(pScriptElem != NULL) {
       m_isScripted = true;
 
       /* External script file specified? */
-      m_scriptFileName = vapp::XML::getOption(pScriptElem,"source");      
+      m_scriptFileName = XML::getOption(pScriptElem,"source");      
       
       /* Encapsulated script? */
       for(TiXmlNode *pScript=pScriptElem->FirstChild();pScript!=NULL;
@@ -680,12 +679,12 @@ void Level::loadXML(void) {
     }    
     
     /* Get level limits */
-    TiXmlElement *pLimitsElem = vapp::XML::findElement(*m_xmlSource, pLevelElem,std::string("limits"));
+    TiXmlElement *pLimitsElem = XML::findElement(*m_xmlSource, pLevelElem,std::string("limits"));
     if(pLimitsElem != NULL) {
-      m_bottomLimit = atof( vapp::XML::getOption(pLimitsElem,"bottom","-50").c_str() );
-      m_leftLimit = atof( vapp::XML::getOption(pLimitsElem,"left","-50").c_str() );
-      m_topLimit = atof( vapp::XML::getOption(pLimitsElem,"top","50").c_str() );
-      m_rightLimit = atof( vapp::XML::getOption(pLimitsElem,"right","50").c_str() );
+      m_bottomLimit = atof( XML::getOption(pLimitsElem,"bottom","-50").c_str() );
+      m_leftLimit = atof( XML::getOption(pLimitsElem,"left","-50").c_str() );
+      m_topLimit = atof( XML::getOption(pLimitsElem,"top","50").c_str() );
+      m_rightLimit = atof( XML::getOption(pLimitsElem,"right","50").c_str() );
     }
 
     /* Get entities */
@@ -738,12 +737,12 @@ void Level::loadXML(void) {
 bool Level::loadReducedFromFile() {
   std::string cacheFileName;
 
-  m_checkSum = vapp::FS::md5sum(FileName());
+  m_checkSum = FS::md5sum(FileName());
 
   // First try to load it from the cache
   bool cached = false;
   /* Determine name in cache */
-  std::string LevelFileBaseName = vapp::FS::getFileBaseName(FileName());
+  std::string LevelFileBaseName = FS::getFileBaseName(FileName());
   cacheFileName = getNameInCache();
     
   try {
@@ -766,7 +765,7 @@ bool Level::loadReducedFromFile() {
 }
 
 std::string Level::getNameInCache() const {
-  return "LCache/" + Checksum() + vapp::FS::getFileBaseName(FileName()) + ".blv";
+  return "LCache/" + Checksum() + FS::getFileBaseName(FileName()) + ".blv";
 }
 
 void Level::removeFromCache(xmDatabase *i_db, const std::string& i_id_level) {
@@ -779,7 +778,7 @@ void Level::removeFromCache(xmDatabase *i_db, const std::string& i_id_level) {
     try {
       std::string v_checkSum = i_db->getResult(v_result, 2, 0, 0);
       std::string v_filePath = i_db->getResult(v_result, 2, 0, 1);
-      vapp::FS::deleteFile("LCache/" + v_checkSum + vapp::FS::getFileBaseName(v_filePath) + ".blv");
+      FS::deleteFile("LCache/" + v_checkSum + FS::getFileBaseName(v_filePath) + ".blv");
     } catch(Exception &e) {
       /* ok, it was perhaps not in cache */
     }
@@ -795,72 +794,72 @@ void Level::exportBinary(const std::string &FileName, const std::string& pSum) {
   if(isXMotoTooOld()) return;
   
   /* Export binary... */
-  vapp::FileHandle *pfh = vapp::FS::openOFile(FileName);
+  FileHandle *pfh = FS::openOFile(FileName);
   if(pfh == NULL) {
     Logger::Log("** Warning ** : Failed to export binary: %s",FileName.c_str());
   }
   else {
     exportBinaryHeader(pfh);
 
-    vapp::FS::writeString(pfh,   m_sky.Texture());
-    vapp::FS::writeFloat_LE(pfh, m_sky.Zoom());
-    vapp::FS::writeFloat_LE(pfh, m_sky.Offset());
-    vapp::FS::writeInt_LE(pfh,   m_sky.TextureColor().Red());
-    vapp::FS::writeInt_LE(pfh,   m_sky.TextureColor().Green());
-    vapp::FS::writeInt_LE(pfh,   m_sky.TextureColor().Blue());
-    vapp::FS::writeInt_LE(pfh,   m_sky.TextureColor().Alpha());
-    vapp::FS::writeBool(pfh,     m_sky.Drifted());
-    vapp::FS::writeFloat_LE(pfh, m_sky.DriftZoom());
-    vapp::FS::writeInt_LE(pfh,   m_sky.DriftTextureColor().Red());
-    vapp::FS::writeInt_LE(pfh,   m_sky.DriftTextureColor().Green());
-    vapp::FS::writeInt_LE(pfh,   m_sky.DriftTextureColor().Blue());
-    vapp::FS::writeInt_LE(pfh,   m_sky.DriftTextureColor().Alpha());
+    FS::writeString(pfh,   m_sky.Texture());
+    FS::writeFloat_LE(pfh, m_sky.Zoom());
+    FS::writeFloat_LE(pfh, m_sky.Offset());
+    FS::writeInt_LE(pfh,   m_sky.TextureColor().Red());
+    FS::writeInt_LE(pfh,   m_sky.TextureColor().Green());
+    FS::writeInt_LE(pfh,   m_sky.TextureColor().Blue());
+    FS::writeInt_LE(pfh,   m_sky.TextureColor().Alpha());
+    FS::writeBool(pfh,     m_sky.Drifted());
+    FS::writeFloat_LE(pfh, m_sky.DriftZoom());
+    FS::writeInt_LE(pfh,   m_sky.DriftTextureColor().Red());
+    FS::writeInt_LE(pfh,   m_sky.DriftTextureColor().Green());
+    FS::writeInt_LE(pfh,   m_sky.DriftTextureColor().Blue());
+    FS::writeInt_LE(pfh,   m_sky.DriftTextureColor().Alpha());
 
-    vapp::FS::writeString(pfh,m_borderTexture);
-    vapp::FS::writeString(pfh,m_scriptFileName);
+    FS::writeString(pfh,m_borderTexture);
+    FS::writeString(pfh,m_scriptFileName);
 
-    vapp::FS::writeFloat_LE(pfh,m_leftLimit);
-    vapp::FS::writeFloat_LE(pfh,m_rightLimit);
-    vapp::FS::writeFloat_LE(pfh,m_topLimit);
-    vapp::FS::writeFloat_LE(pfh,m_bottomLimit);
+    FS::writeFloat_LE(pfh,m_leftLimit);
+    FS::writeFloat_LE(pfh,m_rightLimit);
+    FS::writeFloat_LE(pfh,m_topLimit);
+    FS::writeFloat_LE(pfh,m_bottomLimit);
 
-    vapp::FS::writeString(pfh,m_rSpriteForStrawberry);
-    vapp::FS::writeString(pfh,m_rSpriteForFlower);
-    vapp::FS::writeString(pfh,m_rSpriteForWecker);
-    vapp::FS::writeString(pfh,m_rSpriteForStar);
-    vapp::FS::writeString(pfh,m_rSoundForPickUpStrawberry);
+    FS::writeString(pfh,m_rSpriteForStrawberry);
+    FS::writeString(pfh,m_rSpriteForFlower);
+    FS::writeString(pfh,m_rSpriteForWecker);
+    FS::writeString(pfh,m_rSpriteForStar);
+    FS::writeString(pfh,m_rSoundForPickUpStrawberry);
 
-    vapp::FS::writeInt_LE(pfh, m_numberLayer);
+    FS::writeInt_LE(pfh, m_numberLayer);
     for(int i=0; i<m_numberLayer; i++){
-      vapp::FS::writeFloat_LE(pfh, m_layerOffsets[i].x);
-      vapp::FS::writeFloat_LE(pfh, m_layerOffsets[i].y);
-      vapp::FS::writeBool(pfh,     m_isLayerFront[i]);
+      FS::writeFloat_LE(pfh, m_layerOffsets[i].x);
+      FS::writeFloat_LE(pfh, m_layerOffsets[i].y);
+      FS::writeBool(pfh,     m_isLayerFront[i]);
     }    
 
     /* Write script (if any) */
-    vapp::FS::writeInt_LE(pfh,m_scriptSource.length());
-    vapp::FS::writeBuf(pfh,(char *)m_scriptSource.c_str(),m_scriptSource.length());
+    FS::writeInt_LE(pfh,m_scriptSource.length());
+    FS::writeBuf(pfh,(char *)m_scriptSource.c_str(),m_scriptSource.length());
       
     /* Write blocks */
-    vapp::FS::writeInt_LE(pfh,m_blocks.size());
+    FS::writeInt_LE(pfh,m_blocks.size());
     for(unsigned int i=0;i<m_blocks.size();i++) {
       m_blocks[i]->saveBinary(pfh);
     }
       
     /* Write entities */
-    vapp::FS::writeInt_LE(pfh,m_entities.size());
+    FS::writeInt_LE(pfh,m_entities.size());
     for(unsigned int i=0;i<m_entities.size();i++) {
       m_entities[i]->saveBinary(pfh);
     }  
       
     /* Write zones */
-    vapp::FS::writeInt_LE(pfh,m_zones.size());
+    FS::writeInt_LE(pfh,m_zones.size());
     for(unsigned int i=0;i<m_zones.size();i++) {
       m_zones[i]->saveBinary(pfh);
     }
                 
     /* clean up */
-    vapp::FS::closeFile(pfh);
+    FS::closeFile(pfh);
   }
 }
   
@@ -875,29 +874,29 @@ void Level::loadFullyFromFile() {
   }
 }
 
-void Level::importBinaryHeader(vapp::FileHandle *pfh) {
+void Level::importBinaryHeader(FileHandle *pfh) {
   unloadLevelBody();
 
   m_isBodyLoaded = false;  
   m_playerStart  = Vector2f(0.0, 0.0);
   m_xmotoTooOld  = false;
 
-  int nFormat = vapp::FS::readInt_LE(pfh);
+  int nFormat = FS::readInt_LE(pfh);
   
   if(nFormat != CACHE_LEVEL_FORMAT_VERSION) {
     throw Exception("Old file format");
   }
   
-  m_checkSum    = vapp::FS::readString(pfh);
-  m_id      	= vapp::FS::readString(pfh);
-  m_pack    	= vapp::FS::readString(pfh);
-  m_packNum 	= vapp::FS::readString(pfh);
-  m_name    	= vapp::FS::readString(pfh);
-  m_description = vapp::FS::readString(pfh);
-  m_author 	= vapp::FS::readString(pfh);
-  m_date   	= vapp::FS::readString(pfh);
-  m_music       = vapp::FS::readString(pfh);
-  m_isScripted  = vapp::FS::readBool(pfh);
+  m_checkSum    = FS::readString(pfh);
+  m_id      	= FS::readString(pfh);
+  m_pack    	= FS::readString(pfh);
+  m_packNum 	= FS::readString(pfh);
+  m_name    	= FS::readString(pfh);
+  m_description = FS::readString(pfh);
+  m_author 	= FS::readString(pfh);
+  m_date   	= FS::readString(pfh);
+  m_music       = FS::readString(pfh);
+  m_isScripted  = FS::readBool(pfh);
 }
 
 void Level::importHeader(const std::string& i_id,
@@ -934,7 +933,7 @@ void Level::importHeader(const std::string& i_id,
   ===========================================================================*/
 bool Level::importBinaryHeaderFromFile(const std::string &FileName, const std::string& pSum) {
   /* Import binary */
-  vapp::FileHandle *pfh = vapp::FS::openIFile(FileName);
+  FileHandle *pfh = FS::openIFile(FileName);
   if(pfh == NULL) {
     return false;
   }
@@ -943,37 +942,37 @@ bool Level::importBinaryHeaderFromFile(const std::string &FileName, const std::s
     importBinaryHeader(pfh);
     if(m_checkSum != pSum) {
       Logger::Log("** Warning ** : CRC check failed, can't import: %s",FileName.c_str());
-      vapp::FS::closeFile(pfh);
+      FS::closeFile(pfh);
       return false;
     }
   } catch(Exception &e) {
-    vapp::FS::closeFile(pfh);
+    FS::closeFile(pfh);
     return false;
   }
              
   /* clean up */
-  vapp::FS::closeFile(pfh);
+  FS::closeFile(pfh);
 
   return true;
 }
 
-void Level::exportBinaryHeader(vapp::FileHandle *pfh) {
+void Level::exportBinaryHeader(FileHandle *pfh) {
   /* version two includes dynamic information about blocks */
   /* 3 -> includes now the grip of the block, width and height of the sprites */      
   /* 4 -> includes level pack num */
   /* 5 -> clean code */
   /* Write CRC32 of XML */
-  vapp::FS::writeInt_LE(pfh, CACHE_LEVEL_FORMAT_VERSION);
-  vapp::FS::writeString(pfh	    , m_checkSum);
-  vapp::FS::writeString(pfh	    , m_id);
-  vapp::FS::writeString(pfh	    , m_pack);
-  vapp::FS::writeString(pfh	    , m_packNum);
-  vapp::FS::writeString(pfh	    , m_name);
-  vapp::FS::writeString(pfh	    , m_description);
-  vapp::FS::writeString(pfh	    , m_author);
-  vapp::FS::writeString(pfh	    , m_date);
-  vapp::FS::writeString(pfh	    , m_music);
-  vapp::FS::writeBool(  pfh	    , m_isScripted);
+  FS::writeInt_LE(pfh, CACHE_LEVEL_FORMAT_VERSION);
+  FS::writeString(pfh	    , m_checkSum);
+  FS::writeString(pfh	    , m_id);
+  FS::writeString(pfh	    , m_pack);
+  FS::writeString(pfh	    , m_packNum);
+  FS::writeString(pfh	    , m_name);
+  FS::writeString(pfh	    , m_description);
+  FS::writeString(pfh	    , m_author);
+  FS::writeString(pfh	    , m_date);
+  FS::writeString(pfh	    , m_music);
+  FS::writeBool(  pfh	    , m_isScripted);
 }
 
 bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
@@ -985,87 +984,87 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
   m_xmotoTooOld = false;
   
   /* Import binary */
-  vapp::FileHandle *pfh = vapp::FS::openIFile(FileName);
+  FileHandle *pfh = FS::openIFile(FileName);
   if(pfh == NULL) {
     return false;
   }
   else {
     /* Read tag - it tells something about the format */
-    int nFormat = vapp::FS::readInt_LE(pfh);
+    int nFormat = FS::readInt_LE(pfh);
     
     if(nFormat == CACHE_LEVEL_FORMAT_VERSION) { /* reject other formats */
       /* Read "format 1" / "format 2" binary level */
       /* Right */
-      std::string md5sum = vapp::FS::readString(pfh);
+      std::string md5sum = FS::readString(pfh);
       if(md5sum != pSum) {
         Logger::Log("** Warning ** : CRC check failed, can't import: %s",FileName.c_str());
         bRet = false;
       }
       else {
         /* Read header */
-        m_id = vapp::FS::readString(pfh);
-        m_pack = vapp::FS::readString(pfh);
-        m_packNum = vapp::FS::readString(pfh);
-        m_name = vapp::FS::readString(pfh);
-        m_description = vapp::FS::readString(pfh);
-        m_author = vapp::FS::readString(pfh);
-        m_date = vapp::FS::readString(pfh);
-        m_music = vapp::FS::readString(pfh);
-	m_isScripted = vapp::FS::readBool(pfh);
+        m_id = FS::readString(pfh);
+        m_pack = FS::readString(pfh);
+        m_packNum = FS::readString(pfh);
+        m_name = FS::readString(pfh);
+        m_description = FS::readString(pfh);
+        m_author = FS::readString(pfh);
+        m_date = FS::readString(pfh);
+        m_music = FS::readString(pfh);
+	m_isScripted = FS::readBool(pfh);
 
 	/* sky */
-        m_sky.setTexture(vapp::FS::readString(pfh));
-	m_sky.setZoom(vapp::FS::readFloat_LE(pfh));
-	m_sky.setOffset(vapp::FS::readFloat_LE(pfh));
+        m_sky.setTexture(FS::readString(pfh));
+	m_sky.setZoom(FS::readFloat_LE(pfh));
+	m_sky.setOffset(FS::readFloat_LE(pfh));
 
 	int v_r, v_g, v_b, v_a;
-	v_r = vapp::FS::readInt_LE(pfh);
-	v_g = vapp::FS::readInt_LE(pfh);
-	v_b = vapp::FS::readInt_LE(pfh);
-	v_a = vapp::FS::readInt_LE(pfh);
+	v_r = FS::readInt_LE(pfh);
+	v_g = FS::readInt_LE(pfh);
+	v_b = FS::readInt_LE(pfh);
+	v_a = FS::readInt_LE(pfh);
 	m_sky.setTextureColor(TColor(v_r, v_g, v_b, v_a));
 
-	m_sky.setDrifted(vapp::FS::readBool(pfh));
-	m_sky.setDriftZoom(vapp::FS::readFloat_LE(pfh));
+	m_sky.setDrifted(FS::readBool(pfh));
+	m_sky.setDriftZoom(FS::readFloat_LE(pfh));
 
-	v_r = vapp::FS::readInt_LE(pfh);
-	v_g = vapp::FS::readInt_LE(pfh);
-	v_b = vapp::FS::readInt_LE(pfh);
-	v_a = vapp::FS::readInt_LE(pfh);
+	v_r = FS::readInt_LE(pfh);
+	v_g = FS::readInt_LE(pfh);
+	v_b = FS::readInt_LE(pfh);
+	v_a = FS::readInt_LE(pfh);
 	m_sky.setDriftTextureColor(TColor(v_r, v_g, v_b, v_a));
 	/* *** */
 
-        m_borderTexture = vapp::FS::readString(pfh);
+        m_borderTexture = FS::readString(pfh);
 
-        m_scriptFileName = vapp::FS::readString(pfh);
+        m_scriptFileName = FS::readString(pfh);
 
-        m_leftLimit = vapp::FS::readFloat_LE(pfh);
-        m_rightLimit = vapp::FS::readFloat_LE(pfh);
-        m_topLimit = vapp::FS::readFloat_LE(pfh);
-        m_bottomLimit = vapp::FS::readFloat_LE(pfh);
+        m_leftLimit = FS::readFloat_LE(pfh);
+        m_rightLimit = FS::readFloat_LE(pfh);
+        m_topLimit = FS::readFloat_LE(pfh);
+        m_bottomLimit = FS::readFloat_LE(pfh);
 
 	/* theme replacements */
-	m_rSpriteForStrawberry 	    = vapp::FS::readString(pfh);
-	m_rSpriteForFlower     	    = vapp::FS::readString(pfh);
-	m_rSpriteForWecker     	    = vapp::FS::readString(pfh);
-	m_rSpriteForStar       	    = vapp::FS::readString(pfh);
-	m_rSoundForPickUpStrawberry = vapp::FS::readString(pfh);
+	m_rSpriteForStrawberry 	    = FS::readString(pfh);
+	m_rSpriteForFlower     	    = FS::readString(pfh);
+	m_rSpriteForWecker     	    = FS::readString(pfh);
+	m_rSpriteForStar       	    = FS::readString(pfh);
+	m_rSoundForPickUpStrawberry = FS::readString(pfh);
 
 	/* layers */
-	m_numberLayer = vapp::FS::readInt_LE(pfh);
+	m_numberLayer = FS::readInt_LE(pfh);
 	for(int i=0; i<m_numberLayer; i++){
 	  Vector2f offset;
-	  offset.x = vapp::FS::readFloat_LE(pfh);
-	  offset.y = vapp::FS::readFloat_LE(pfh);
+	  offset.x = FS::readFloat_LE(pfh);
+	  offset.y = FS::readFloat_LE(pfh);
 	  m_layerOffsets.push_back(offset);
-	  m_isLayerFront.push_back(vapp::FS::readBool(pfh));
+	  m_isLayerFront.push_back(FS::readBool(pfh));
 	}
 
         /* Read embedded script */
-        int nScriptSourceLen = vapp::FS::readInt_LE(pfh);
+        int nScriptSourceLen = FS::readInt_LE(pfh);
         if(nScriptSourceLen > 0) {
           char *pcTemp = new char[nScriptSourceLen+1];
-          vapp::FS::readBuf(pfh,(char *)pcTemp,nScriptSourceLen);
+          FS::readBuf(pfh,(char *)pcTemp,nScriptSourceLen);
           pcTemp[nScriptSourceLen]='\0';
             
           m_scriptSource = pcTemp;
@@ -1076,14 +1075,14 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
           m_scriptSource = "";
 
         /* Read blocks */
-        int nNumBlocks = vapp::FS::readInt_LE(pfh);
+        int nNumBlocks = FS::readInt_LE(pfh);
         m_blocks.reserve(nNumBlocks);
         for(int i=0;i<nNumBlocks;i++) {
           m_blocks.push_back(Block::readFromBinary(pfh));
         }
 
         /* Read entities */
-        int nNumEntities = vapp::FS::readInt_LE(pfh);
+        int nNumEntities = FS::readInt_LE(pfh);
         m_entities.reserve(nNumEntities);
         for(int i=0;i<nNumEntities;i++) {
           m_entities.push_back(Entity::readFromBinary(pfh));
@@ -1097,7 +1096,7 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
 	}
 
         /* Read zones */
-        int nNumZones = vapp::FS::readInt_LE(pfh);
+        int nNumZones = FS::readInt_LE(pfh);
         m_zones.reserve(nNumZones);
         for(int i=0;i<nNumZones;i++) {
           m_zones.push_back(Zone::readFromBinary(pfh));
@@ -1110,7 +1109,7 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
     }
              
     /* clean up */
-    vapp::FS::closeFile(pfh);
+    FS::closeFile(pfh);
   }
     
   m_isBodyLoaded = bRet;

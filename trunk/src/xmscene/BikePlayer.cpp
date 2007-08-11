@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -72,8 +71,8 @@ std::string PlayerBiker::getDescription() const {
 }
 
 void PlayerBiker::updateToTime(float i_time, float i_timeStep,
-			       vapp::CollisionSystem *i_collisionSystem, Vector2f i_gravity,
-			       vapp::MotoGame *i_motogame) {
+			       CollisionSystem *i_collisionSystem, Vector2f i_gravity,
+			       MotoGame *i_motogame) {
   Biker::updateToTime(i_time, i_timeStep, i_collisionSystem, i_gravity, i_motogame);
 
   if(isFinished()) {
@@ -144,7 +143,7 @@ void PlayerBiker::uninitPhysics(void) {
   dCloseODE();
 }
 
-void PlayerBiker::updatePhysics(float i_time, float fTimeStep, vapp::CollisionSystem *v_collisionSystem, Vector2f i_gravity) {
+void PlayerBiker::updatePhysics(float i_time, float fTimeStep, CollisionSystem *v_collisionSystem, Vector2f i_gravity) {
   /* No wheel spin per default */
   m_bWheelSpin = false;
 
@@ -684,7 +683,7 @@ void PlayerBiker::updatePhysics(float i_time, float fTimeStep, vapp::CollisionSy
   m_bFirstPhysicsUpdate = false;
 }
 
-bool PlayerBiker::intersectHeadLevel(Vector2f Cp,float Cr,const Vector2f &LastCp, vapp::CollisionSystem *v_collisionSystem) {
+bool PlayerBiker::intersectHeadLevel(Vector2f Cp,float Cr,const Vector2f &LastCp, CollisionSystem *v_collisionSystem) {
   if(v_collisionSystem->checkCircle(Cp.x,Cp.y,Cr)) return true;
 
   if(!m_bFirstPhysicsUpdate) {
@@ -698,7 +697,7 @@ bool PlayerBiker::intersectHeadLevel(Vector2f Cp,float Cr,const Vector2f &LastCp
   return false;
 }
 
-int PlayerBiker::intersectWheelLevel(Vector2f Cp,float Cr,dContact *pContacts, vapp::CollisionSystem *v_collisionSystem) {
+int PlayerBiker::intersectWheelLevel(Vector2f Cp,float Cr,dContact *pContacts, CollisionSystem *v_collisionSystem) {
   int nNumContacts = v_collisionSystem->collideCircle(Cp.x,Cp.y,Cr,pContacts,100);
   if(nNumContacts == 0) {
       /* Nothing... but what if we are moving so fast that the circle has moved

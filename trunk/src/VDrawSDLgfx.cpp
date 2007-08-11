@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -33,7 +32,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define islt(a,b) ((*a)<(*b))
 
 
-namespace vapp {
   int xx_gfxPrimitivesCompareInt(const void *a, const void *b) {
     return (*(const int *)a) - (*(const int *)b);
   };
@@ -1193,5 +1191,5 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 
     return (result);
   }
-}
+
 #endif

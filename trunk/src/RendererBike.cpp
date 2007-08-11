@@ -26,8 +26,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Scene.h"
 #include "Renderer.h"
 
-namespace vapp {
-
   void GameRenderer::renderBodyPart(const Vector2f& i_from, const Vector2f& i_to,
 				    float i_c11, float i_c12,
 				    float i_c21, float i_c22,
@@ -419,6 +417,4 @@ namespace vapp {
     getParent()->getDrawLib()->glVertex(p3+C);
     getParent()->getDrawLib()->endDraw();
   }
-  
-}
 

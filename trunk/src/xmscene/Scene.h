@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -50,8 +49,6 @@ class MotoGameOnBikerHooks;
 class LuaLibGame;
 class xmDatabase;
 class Camera;
-
-namespace vapp {
 
   class MotoGameEvent;
   class Replay;
@@ -320,18 +317,16 @@ namespace vapp {
       
     };
 
-}
-
 class MotoGameOnBikerHooks : public OnBikerHooks {
  public:
-  MotoGameOnBikerHooks(vapp::MotoGame* i_motoGame, int i_playerNumber);
+  MotoGameOnBikerHooks(MotoGame* i_motoGame, int i_playerNumber);
   virtual ~MotoGameOnBikerHooks();
   void onSomersaultDone(bool i_counterclock);
   void onWheelTouches(int i_wheel, bool i_touch);
   void onHeadTouches();
 
  private:
-  vapp::MotoGame* m_motoGame;
+  MotoGame* m_motoGame;
   int m_playerNumber;
 };
 

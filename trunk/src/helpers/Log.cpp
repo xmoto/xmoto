@@ -29,12 +29,12 @@ bool  Logger::m_verbose       = false;
 FILE* Logger::m_fd            = NULL;
 
 void Logger::init(const std::string& i_logFile) {
-  assert(vapp::FS::isInitialized());
+  assert(FS::isInitialized());
 
   m_verbose = false;
 
-  if(vapp::FS::fileExists(i_logFile)) {
-    vapp::FS::deleteFile(i_logFile);
+  if(FS::fileExists(i_logFile)) {
+    FS::deleteFile(i_logFile);
   }
 
   m_fd = fopen(i_logFile.c_str(), "w");

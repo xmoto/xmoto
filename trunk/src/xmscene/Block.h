@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -22,10 +21,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __BLOCK_H__
 #define __BLOCK_H__
 
-namespace vapp{
-  class CollisionSystem;
-  class Line;
-}
+class CollisionSystem;
+class Line;
 
 #include "../helpers/VMath.h"
 #include "../helpers/Color.h"
@@ -34,10 +31,7 @@ namespace vapp{
 #define XM_DEFAULT_BLOCK_TEXTURE "default"
 #define XM_DEFAULT_PHYS_BLOCK_GRIP 20
 
-namespace vapp {
-  class FileHandle;
-}
-
+class FileHandle;
 class Block;
 
 /*===========================================================================
@@ -159,15 +153,15 @@ class Block {
 	/* angle position ; consider of the block center */
   void setDynamicRotation(float i_dynamicRotation);
 
-  int loadToPlay(vapp::CollisionSystem& io_collisionSystem); /* load for playing */
+  int loadToPlay(CollisionSystem& io_collisionSystem); /* load for playing */
   void unloadToPlay();
 
-  void saveXml(vapp::FileHandle *i_pfh);
-  void saveBinary(vapp::FileHandle *i_pfh);
-  static Block* readFromXml(vapp::XMLDocument& i_xmlSource, TiXmlElement *pElem);
-  static Block* readFromBinary(vapp::FileHandle *i_pfh);
+  void saveXml(FileHandle *i_pfh);
+  void saveBinary(FileHandle *i_pfh);
+  static Block* readFromXml(XMLDocument& i_xmlSource, TiXmlElement *pElem);
+  static Block* readFromBinary(FileHandle *i_pfh);
   AABB& getAABB();
-  std::vector<vapp::Line *>& getCollisionLines() {return m_collisionLines;}
+  std::vector<Line *>& getCollisionLines() {return m_collisionLines;}
 
   int getGeom() {
     return m_geom;
@@ -218,9 +212,9 @@ private:
   Vector2f m_dynamicRotationCenter;
   Vector2f m_dynamicPositionCenter;
   Vector2f m_dynamicPosition; /* Block position */
-  std::vector<vapp::Line *> m_collisionLines; /* Line to collide against */
+  std::vector<Line *> m_collisionLines; /* Line to collide against */
 
-  void addPoly(const vapp::BSPPoly& i_poly, vapp::CollisionSystem& io_collisionSystem);
+  void addPoly(const BSPPoly& i_poly, CollisionSystem& io_collisionSystem);
   void updateCollisionLines();
 };
 

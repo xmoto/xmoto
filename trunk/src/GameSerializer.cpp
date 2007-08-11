@@ -1,6 +1,5 @@
 /*=============================================================================
   XMOTO
-  Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
   This file is part of XMOTO.
 
@@ -25,10 +24,6 @@
 #include "PhysSettings.h"
 #include "xmscene/Scene.h"
 #include "helpers/Log.h"
-
-namespace vapp {
-
-
   
   /*===========================================================================
     Decoding of event stream
@@ -160,7 +155,4 @@ namespace vapp {
       pState->cKneeY = BikeState::_MapCoordTo8Bits(pState->fFrameY,pState->fMaxYDiff,i_bikeState->Knee2P.y);
     }
   }      
-
-}
-
 

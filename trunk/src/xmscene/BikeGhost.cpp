@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -32,7 +31,7 @@ Ghost::Ghost(std::string i_replayFile, bool i_isActiv,
   std::string v_levelId;
   std::string v_playerName;
 
-  m_replay = new vapp::Replay();
+  m_replay = new Replay();
   v_levelId = m_replay->openReplay(i_replayFile, v_playerName);
 
   m_replay->peekState(m_previous_ghostBikeState);
@@ -48,8 +47,8 @@ Ghost::Ghost(std::string i_replayFile, bool i_isActiv,
 Ghost::~Ghost() {
 }
 
-void Ghost::execReplayEvents(float i_time, vapp::MotoGame *i_motogame) {
-  std::vector<vapp::RecordedGameEvent *> *v_replayEvents;
+void Ghost::execReplayEvents(float i_time, MotoGame *i_motogame) {
+  std::vector<RecordedGameEvent *> *v_replayEvents;
   v_replayEvents = m_replay->getEvents();
   
   /* Start looking for events that should be passed */
@@ -93,7 +92,7 @@ std::string Ghost::getDescription() const {
   return
     std::string(c_tmp)   +
     "\n(" + m_info + ")" +
-    "\n(" + vapp::App::formatTime(m_replay->getFinishTime()) + ")";
+    "\n(" + App::formatTime(m_replay->getFinishTime()) + ")";
 }
 
 std::string Ghost::playerName() {
@@ -101,7 +100,7 @@ std::string Ghost::playerName() {
 }
 
 void Ghost::initLastToTakeEntities(Level* i_level) {
-  std::vector<vapp::RecordedGameEvent *> *v_replayEvents;
+  std::vector<RecordedGameEvent *> *v_replayEvents;
   v_replayEvents = m_replay->getEvents();
     
   m_lastToTakeEntities.clear();
@@ -109,10 +108,10 @@ void Ghost::initLastToTakeEntities(Level* i_level) {
 
   /* Start looking for events */
   for(int i=0; i<v_replayEvents->size(); i++) {
-    vapp::MotoGameEvent *v_event = (*v_replayEvents)[i]->Event;
+    MotoGameEvent *v_event = (*v_replayEvents)[i]->Event;
       
-    if(v_event->getType() == vapp::GAME_EVENT_ENTITY_DESTROYED) {
-      if(i_level->getEntityById(((vapp::MGE_EntityDestroyed*)v_event)->EntityId()).IsToTake()) {
+    if(v_event->getType() == GAME_EVENT_ENTITY_DESTROYED) {
+      if(i_level->getEntityById(((MGE_EntityDestroyed*)v_event)->EntityId()).IsToTake()) {
 	/* new Strawberry for ghost */
 	m_lastToTakeEntities.push_back((*v_replayEvents)[i]->Event->getEventTime());
       }
@@ -142,8 +141,8 @@ void Ghost::updateDiffToPlayer(std::vector<float> &i_lastToTakeEntities) {
 }
 
 void Ghost::updateToTime(float i_time, float i_timeStep,
-			 vapp::CollisionSystem *i_collisionSystem, Vector2f i_gravity,
-			 vapp::MotoGame *i_motogame) {
+			 CollisionSystem *i_collisionSystem, Vector2f i_gravity,
+			 MotoGame *i_motogame) {
   Biker::updateToTime(i_time, i_timeStep, i_collisionSystem, i_gravity, i_motogame);
 
   /* back in the past */
