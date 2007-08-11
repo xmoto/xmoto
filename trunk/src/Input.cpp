@@ -572,8 +572,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_nChangeDirKey[3]   = SDLK_n;
     
     #if defined(ENABLE_ZOOMING)    
-      m_nZoomIn          = SDLK_PAGEUP;
-      m_nZoomOut         = SDLK_PAGEDOWN;
+      m_nZoomIn          = SDLK_KP7;
+      m_nZoomOut         = SDLK_KP9;
       m_nZoomInit        = SDLK_HOME;
       m_nCameraMoveXUp   = SDLK_KP6;
       m_nCameraMoveXDown = SDLK_KP4;
@@ -614,8 +614,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     if(m_nChangeDirKey[3]   < 0) { m_nChangeDirKey[3]   = SDLK_n;    }
    
     #if defined(ENABLE_ZOOMING)
-    if(m_nZoomIn          < 0) { m_nZoomIn          = SDLK_PAGEUP;   }
-    if(m_nZoomOut         < 0) { m_nZoomOut         = SDLK_PAGEDOWN; }
+    if(m_nZoomIn          < 0) { m_nZoomIn          = SDLK_KP7;   }
+    if(m_nZoomOut         < 0) { m_nZoomOut         = SDLK_KP9; }
     if(m_nZoomInit        < 0) { m_nZoomInit        = SDLK_HOME; }
     if(m_nCameraMoveXUp   < 0) { m_nCameraMoveXUp   = SDLK_KP6; }
     if(m_nCameraMoveXDown < 0) { m_nCameraMoveXDown = SDLK_KP4; }
