@@ -86,8 +86,9 @@ dnl AC_CHECK_HEADERS(lualib.h lua/lualib.h lua50/lualib.h, [break], [AC_MSG_ERRO
 
 dnl search in this order to put in USE_LUA_VERSION the recenter version
 dnl in .h inclusion, order is reversed to include the recenter version
+USE_LUA_VERSION="unknown"
 AC_CHECK_HEADER(lua.h,        AC_DEFINE(HAVE_LUA_H)       , [USE_LUA_VERSION="unknown"])
-AC_CHECK_HEADER(lua/lua.h,    AC_DEFINE(HAVE_LUA_LUA_H)   , [USE_LUA_VERSION="unknonw"])
+AC_CHECK_HEADER(lua/lua.h,    AC_DEFINE(HAVE_LUA_LUA_H)   , [USE_LUA_VERSION="unknown"])
 AC_CHECK_HEADER(lua50/lua.h,  AC_DEFINE(HAVE_LUA50_LUA_H) , [USE_LUA_VERSION="5.0"])
 AC_CHECK_HEADER(lua51/lua.h,  AC_DEFINE(HAVE_LUA51_LUA_H) , [USE_LUA_VERSION="5.1"])
 AC_CHECK_HEADER(lua5.1/lua.h, AC_DEFINE(HAVE_LUA5_1_LUA_H), [USE_LUA_VERSION="5.1"])
