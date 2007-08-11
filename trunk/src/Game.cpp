@@ -1033,6 +1033,7 @@ GameApp::GameApp() {
 	  break;
 	case SDLK_PAGEUP:
 	  if(_IsThereANextLevel(m_PlaySpecificLevelId)) {
+	    m_db->stats_abortedLevel(m_xmsession->profile(), m_MotoGame.getLevelSrc()->Id(), m_MotoGame.getTime());
 	    m_MotoGame.endLevel();
 	    m_Renderer.unprepareForNewLevel();
 	    m_PlaySpecificLevelId = _DetermineNextLevel(m_PlaySpecificLevelId);
@@ -1042,6 +1043,7 @@ GameApp::GameApp() {
 	  break;
 	case SDLK_PAGEDOWN:
 	  if(_IsThereAPreviousLevel(m_PlaySpecificLevelId)) {
+	    m_db-> stats_abortedLevel(m_xmsession->profile(), m_MotoGame.getLevelSrc()->Id(), m_MotoGame.getTime());
 	    m_MotoGame.endLevel();
 	    m_Renderer.unprepareForNewLevel();
 	    m_PlaySpecificLevelId = _DeterminePreviousLevel(m_PlaySpecificLevelId);
