@@ -504,8 +504,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_Config.createVar( "AutosaveHighscoreReplays", "true");
 
     #if defined(ENABLE_ZOOMING)
-      m_Config.createVar( "KeyZoomIn",              "PageUp" );
-      m_Config.createVar( "KeyZoomOut",             "PageDown" );
+      m_Config.createVar( "KeyZoomIn",              "Pad 7" );
+      m_Config.createVar( "KeyZoomOut",             "Pad 9" );
       m_Config.createVar( "KeyZoomInit",            "Home" );
       m_Config.createVar( "KeyCameraMoveXUp",       "Pad 6" );
       m_Config.createVar( "KeyCameraMoveXDown",     "Pad 4" );
