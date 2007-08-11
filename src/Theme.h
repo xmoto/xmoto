@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -27,11 +26,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "VTexture.h"
 
-namespace vapp {
-  class Texture;
-  class WWWAppInterface;
-}
-
+class Texture;
+class WWWAppInterface;
 class TiXmlElement;
 class ProxySettings;
 class WebThemes;
@@ -97,10 +93,10 @@ class xmDatabase;
 class Theme;
 class BikerTheme;
 
-class Music {
+class ThemeMusic {
  public:
-  Music(Theme* p_associated_theme, std::string i_name, std::string i_fileName);
-  ~Music();
+  ThemeMusic(Theme* p_associated_theme, std::string i_name, std::string i_fileName);
+  ~ThemeMusic();
 
   std::string Name() const;
   std::string FileName() const;
@@ -112,10 +108,10 @@ class Music {
   std::string m_fileName;
 };
 
-class Sound {
+class ThemeSound {
  public:
-  Sound(Theme* p_associated_theme, std::string i_name, std::string i_fileName);
-  ~Sound();
+  ThemeSound(Theme* p_associated_theme, std::string i_name, std::string i_fileName);
+  ~ThemeSound();
 
   std::string Name() const;
   std::string FileName() const;
@@ -148,12 +144,12 @@ class Sprite {
      the bSmall, bClamp, bFilter parameters are considerated 
      only the first time that getTexture is called for a given sprite
   */
-  vapp::Texture* getTexture(bool bSmall=false, bool bClamp=false, vapp::FilterMode eFilterMode = vapp::FM_MIPMAP);
+  Texture* getTexture(bool bSmall=false, bool bClamp=false, FilterMode eFilterMode = FM_MIPMAP);
 
  protected:
-  virtual vapp::Texture* getCurrentTexture() = 0;
+  virtual Texture* getCurrentTexture() = 0;
   virtual std::string getCurrentTextureFileName() = 0;
-  virtual void setCurrentTexture(vapp::Texture *p_texture) = 0;
+  virtual void setCurrentTexture(Texture *p_texture) = 0;
   virtual std::string getFileDir();
   enum SpriteType m_type;
 
@@ -169,13 +165,13 @@ class SimpleFrameSprite : public Sprite {
   virtual ~SimpleFrameSprite();
 
  protected:
-  vapp::Texture* getCurrentTexture();
+  Texture* getCurrentTexture();
   std::string getCurrentTextureFileName();
-  void setCurrentTexture(vapp::Texture *p_texture);
+  void setCurrentTexture(Texture *p_texture);
 
  private:
   std::string m_fileName;
-  vapp::Texture* m_texture;
+  Texture* m_texture;
 };
 
 class TextureSprite : public SimpleFrameSprite {
@@ -212,8 +208,8 @@ class AnimationSpriteFrame {
 		       float p_delay
 		       );
   virtual ~AnimationSpriteFrame();
-  vapp::Texture *getTexture();
-  void  setTexture(vapp::Texture *p_texture);
+  Texture *getTexture();
+  void  setTexture(Texture *p_texture);
   float getCenterX() const;
   float getCenterY() const;
   float getWidth() const;
@@ -223,7 +219,7 @@ class AnimationSpriteFrame {
  private:
   AnimationSprite *m_associatedAnimationSprite;
 
-  vapp::Texture* m_texture;
+  Texture* m_texture;
   float m_centerX;
   float m_centerY;
   float m_width;
@@ -242,9 +238,9 @@ class AnimationSprite : public Sprite {
   void  addFrame(float p_centerX, float p_centerY, float p_width, float p_height, float p_delay);
 
  protected:
-  vapp::Texture* getCurrentTexture();
+  Texture* getCurrentTexture();
   std::string getCurrentTextureFileName();
-  void setCurrentTexture(vapp::Texture *p_texture);
+  void setCurrentTexture(Texture *p_texture);
   std::string getFileDir();
 
  private:
@@ -273,7 +269,7 @@ class EdgeEffectSprite : public SimpleFrameSprite {
  public:
   EdgeEffectSprite(Theme* p_associated_theme, std::string p_name, std::string p_filename, float fScale, float fDepth);
   virtual ~EdgeEffectSprite();
-  vapp::Texture* getTexture(bool bSmall=false, bool bClamp=false, vapp::FilterMode eFilterMode = vapp::FM_LINEAR);
+  Texture* getTexture(bool bSmall=false, bool bClamp=false, FilterMode eFilterMode = FM_LINEAR);
 
   float getScale() const;
   float getDepth() const;
@@ -354,26 +350,26 @@ class Theme {
 
   std::string Name() const;
   Sprite* getSprite(enum SpriteType pSpriteType, std::string pName);
-  Music* getMusic(std::string i_name);
-  Sound* getSound(std::string i_name);
-  vapp::Texture* loadTexture(std::string p_fileName,
+  ThemeMusic* getMusic(std::string i_name);
+  ThemeSound* getSound(std::string i_name);
+  Texture* loadTexture(std::string p_fileName,
 			     bool bSmall=false,
 			     bool bClamp=false,
-			     vapp::FilterMode eFilterMode = vapp::FM_MIPMAP);
+			     FilterMode eFilterMode = FM_MIPMAP);
 
   std::vector<Sprite*> getSpritesList();
-  std::vector<Sound*> getSoundsList();
+  std::vector<ThemeSound*> getSoundsList();
   std::vector<ThemeFile>* getRequiredFiles();
 
   BikerTheme* getPlayerTheme();
   BikerTheme* getGhostTheme();
 
   private:
-  vapp::TextureManager m_texMan;
+  TextureManager m_texMan;
   std::string m_name;
   std::vector<Sprite*> m_sprites;
-  std::vector<Music*> m_musics;
-  std::vector<Sound*> m_sounds;
+  std::vector<ThemeMusic*> m_musics;
+  std::vector<ThemeSound*> m_sounds;
   std::vector<ThemeFile> m_requiredFiles;
 
   bool isAFileOutOfDate(const std::string& i_file); // to not download old files for compatibilities
@@ -413,8 +409,8 @@ class BikerTheme {
 	     std::string p_Torso,
 	     std::string p_UpperArm,
 	     std::string p_UpperLeg,
-	     vapp::Color p_UglyRiderColor,
-	     vapp::Color p_UglyWheelColor
+	     Color p_UglyRiderColor,
+	     Color p_UglyWheelColor
 	     );
   ~BikerTheme();
 
@@ -428,14 +424,14 @@ class BikerTheme {
   Sprite* getUpperArm();
   Sprite* getUpperLeg();
 
-  vapp::Color getUglyRiderColor();
-  vapp::Color getUglyWheelColor();
+  Color getUglyRiderColor();
+  Color getUglyWheelColor();
 
  private:
   Theme* m_associated_theme;
 
-  vapp::Color m_UglyRiderColor;
-  vapp::Color m_UglyWheelColor;
+  Color m_UglyRiderColor;
+  Color m_UglyWheelColor;
   
   std::string m_Body;
   std::string m_Front;
@@ -451,7 +447,7 @@ class BikerTheme {
 class ThemeChoicer {
  public:
 
-  ThemeChoicer(vapp::WWWAppInterface *p_WebApp = NULL,
+  ThemeChoicer(WWWAppInterface *p_WebApp = NULL,
 	       const ProxySettings *p_proxy_settings = NULL);	       
   ~ThemeChoicer();
 

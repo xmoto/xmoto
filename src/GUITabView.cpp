@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -24,8 +23,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "VXml.h"
 #include "GUI.h"
-
-namespace vapp {
 
   /*===========================================================================
   Painting
@@ -123,8 +120,8 @@ namespace vapp {
     int nCX = 8;
 
     for(int i=0;i<getChildren().size();i++) {
-      vapp::FontManager* v_fm = m_drawLib->getFontSmall();
-      vapp::FontGlyph* v_fg = v_fm->getGlyph(getChildren()[i]->getCaption());
+      FontManager* v_fm = m_drawLib->getFontSmall();
+      FontGlyph* v_fg = v_fm->getGlyph(getChildren()[i]->getCaption());
       int v_width = v_fg->realWidth();
 
       if(x >= nCX-8 && y >= -4 && x < nCX+8+v_width && y < nHeaderHeight) {
@@ -148,8 +145,8 @@ namespace vapp {
     int nCX = 8;
 
     for(int i=0;i<getChildren().size();i++) {
-      vapp::FontManager* v_fm = m_drawLib->getFontSmall();
-      vapp::FontGlyph* v_fg = v_fm->getGlyph(getChildren()[i]->getCaption());
+      FontManager* v_fm = m_drawLib->getFontSmall();
+      FontGlyph* v_fg = v_fm->getGlyph(getChildren()[i]->getCaption());
       int v_width = v_fg->realWidth();
 
       if(x >= nCX-8 && y >= -4 && x < nCX+16+v_width && y < nHeaderHeight) {
@@ -175,5 +172,3 @@ namespace vapp {
 
   void UITabView::mouseHover(int x,int y) {
   }
-
-}

@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -37,7 +36,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <curl/curl.h>
 #include <iomanip.h>
 
-namespace vapp {
 
 GameApp::~GameApp() {
   if(m_db != NULL) {
@@ -739,8 +737,8 @@ GameApp::GameApp() {
     int nShot=0;
     char v_val[5];
 
-    v_ShotsDir = vapp::FS::getUserDir() + std::string("/Screenshots");
-    vapp::FS::mkArborescenceDir(v_ShotsDir);
+    v_ShotsDir = FS::getUserDir() + std::string("/Screenshots");
+    FS::mkArborescenceDir(v_ShotsDir);
     v_ShotExtension = m_Config.getString("ScreenshotFormat");
     
     /* User preference for format? must be either jpeg or png */
@@ -1276,7 +1274,7 @@ GameApp::GameApp() {
     
     if(v_id_profile != "") {
       m_Renderer.setWorldRecordTime(v_roomName + ": " + 
-				    vapp::App::formatTime(v_finishTime) +
+				    App::formatTime(v_finishTime) +
 				    std::string(" (") + v_id_profile + std::string(")"));
     } else {
       m_Renderer.setWorldRecordTime(v_roomName + ": " + 
@@ -1941,7 +1939,7 @@ GameApp::GameApp() {
 
   TColor GameApp::getUglyColorFromPlayerNumber(int i_player) {
     // try to find nice colors for first player, then automatic
-    vapp::Color v_color;
+    Color v_color;
 
     switch(i_player) {
       
@@ -2539,7 +2537,7 @@ GameApp::GameApp() {
     return m_bCreditsModeActive;
   }
 
-  UIWindow* GameApp::stats_generateReport(const std::string &PlayerName, vapp::UIWindow *pParent,
+  UIWindow* GameApp::stats_generateReport(const std::string &PlayerName, UIWindow *pParent,
 					  int x, int y, int nWidth, int nHeight, FontManager* pFont) {
     /* Create stats window */
     UIWindow *p;
@@ -2708,4 +2706,4 @@ GameApp::GameApp() {
   void GameApp::setSpecificLevelFile(const std::string& i_leveFile) {
     m_PlaySpecificLevelFile = i_leveFile;
   }
-}
+

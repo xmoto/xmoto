@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -32,8 +31,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define UTF8_INTERCHAR_SPACE 0
 
 #ifdef ENABLE_OPENGL
-namespace vapp {
-
 
 class GLFontGlyphLetter;
 
@@ -801,5 +798,4 @@ void GLFontManager::printString(FontGlyph* i_glyph, int i_x, int i_y, Color i_co
   printStringGrad(i_glyph, i_x, i_y, i_color, i_color, i_color, i_color);
 }
 
-}
 #endif

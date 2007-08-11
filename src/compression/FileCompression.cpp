@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -36,12 +35,12 @@ void FileCompression::bunzip2(std::string p_fileIN, std::string p_fileOUT) {
   // open in file
   f_in = fopen (p_fileIN.c_str(), "rb");
   if (!f_in) {
-    throw vapp::Exception("Unable to read file " + p_fileIN);
+    throw Exception("Unable to read file " + p_fileIN);
   }
   b_in = BZ2_bzReadOpen (&bzerror_in, f_in, 0, 0, NULL, 0);
   if(bzerror_in != BZ_OK) {
     BZ2_bzReadClose (&bzerror_in, b_in);
-    throw vapp::Exception("Unable to read file " + p_fileIN);
+    throw Exception("Unable to read file " + p_fileIN);
   }
 
   //open out file
@@ -49,7 +48,7 @@ void FileCompression::bunzip2(std::string p_fileIN, std::string p_fileOUT) {
   if (!f_out) {
     fclose(f_in);
     fclose(f_out);
-    throw vapp::Exception("Unable to write file " + p_fileOUT);
+    throw Exception("Unable to write file " + p_fileOUT);
   }
 
   // read file
@@ -63,7 +62,7 @@ void FileCompression::bunzip2(std::string p_fileIN, std::string p_fileOUT) {
 	BZ2_bzReadClose (&bzerror_in, b_in);
 	fclose(f_in);
 	fclose(f_out);
-	throw vapp::Exception("Unable to write file " + p_fileOUT);
+	throw Exception("Unable to write file " + p_fileOUT);
       }
     }
   }
@@ -73,7 +72,7 @@ void FileCompression::bunzip2(std::string p_fileIN, std::string p_fileOUT) {
     BZ2_bzReadClose (&bzerror_in, b_in);
     fclose(f_in);
     fclose(f_out);
-    throw vapp::Exception("Unable to read file " + p_fileIN);
+    throw Exception("Unable to read file " + p_fileIN);
   } else {
     BZ2_bzReadClose (&bzerror_in, b_in);
     fclose(f_in);

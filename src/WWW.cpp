@@ -2,18 +2,6 @@
 
 #include "BuildConfig.h"
 
-/* I (rasmus) made these (among others) changes to the files:  
-    - File names changed to WWW.cpp and WWW.h
-    - vapp::FS::getReplaysDir(), not vapp::FS::getReplayDir()
-    - vapp::FS::getLevelsDir(), not vapp::FS::getLevelDir()
-    - Interface class in WWWAppInterface.h (also renamed class to WWWAppInterface
-    - USE_HASH_MAP specifies whether hash_map or (stupid) vector should be used. 
-      Still too lazy to implement hash_map on windows :)
-    - no mkdir() in vs.net
-    - remove() also a bit different in vs.net
-    - added cleanHash() to WebRoom destructor
- */
-
 #include "WWW.h"
 #include "VApp.h"
 #include "VFileIO.h"
@@ -37,13 +25,13 @@
 #include "md5sum/md5file.h"
 
 struct f_curl_download_data {
-  vapp::WWWAppInterface *v_WebApp;
+  WWWAppInterface *v_WebApp;
   int v_nb_files_to_download;
   int v_nb_files_performed;
 };
 
 struct f_curl_upload_data {
-  vapp::WWWAppInterface *v_WebApp;
+  WWWAppInterface *v_WebApp;
 };
 
 ProxySettings::ProxySettings() {
@@ -121,9 +109,9 @@ bool ProxySettings::useDefaultAuthentification() const {
 }
 
 void WebRoom::downloadReplay(const std::string& i_url) {
-  std::string i_rplFilename = vapp::FS::getReplaysDir()
+  std::string i_rplFilename = FS::getReplaysDir()
     + "/" 
-    + vapp::FS::getFileBaseName(i_url) 
+    + FS::getFileBaseName(i_url) 
     + ".rpl";
 
   FSWeb::downloadFile(i_rplFilename, i_url, NULL, NULL, m_proxy_settings);
@@ -131,7 +119,7 @@ void WebRoom::downloadReplay(const std::string& i_url) {
 
 WebRoom::WebRoom(const ProxySettings *p_proxy_settings) {
   std::string v_userDir;
-  v_userDir = vapp::FS::getUserDir();
+  v_userDir = FS::getUserDir();
   m_userFilename =  v_userDir 
     + "/" 
     + DEFAULT_WEBHIGHSCORES_FILENAME;
@@ -210,8 +198,8 @@ void FSWeb::downloadFileBz2UsingMd5(const std::string &p_local_file,
   bool require_dwd = true;
 
   try {
-    if(vapp::FS::isFileReadable(p_local_file) == true) {
-      std::string v_md5Local  = vapp::FS::md5sum(p_local_file);
+    if(FS::isFileReadable(p_local_file) == true) {
+      std::string v_md5Local  = FS::md5sum(p_local_file);
       if(v_md5Local != "") {
   std::string v_md5File = p_local_file + ".md5";
   
@@ -364,7 +352,7 @@ void FSWeb::uploadReplay(std::string p_replayFilename,
        std::string p_login,
        std::string p_password,
        std::string p_url_to_transfert,
-       vapp::WWWAppInterface *p_WebApp,
+       WWWAppInterface *p_WebApp,
        const ProxySettings *p_proxy_settings,
        bool &p_msg_status,
        std::string &p_msg) {
@@ -379,7 +367,7 @@ void FSWeb::uploadReplay(std::string p_replayFilename,
 
   FILE *v_destinationFile;
   std::string v_local_file;
-  v_local_file = vapp::FS::getUserDir() + "/" + DEFAULT_REPLAYUPLOAD_MSGFILE;
+  v_local_file = FS::getUserDir() + "/" + DEFAULT_REPLAYUPLOAD_MSGFILE;
 
   //printf("%s\n", v_local_file.c_str());
 
@@ -504,7 +492,7 @@ void FSWeb::uploadReplay(std::string p_replayFilename,
 void FSWeb::uploadReplayAnalyseMsg(std::string p_filename,
            bool &p_msg_status_ok,
            std::string &p_msg) {
-  vapp::XMLDocument v_Xml;
+  XMLDocument v_Xml;
   TiXmlDocument *v_XmlData;
   TiXmlElement *v_XmlDataElement;
   TiXmlElement *v_XmlDataElementMsg;
@@ -554,7 +542,7 @@ void FSWeb::uploadReplayAnalyseMsg(std::string p_filename,
   p_msg = pc;
 }
 
-WebLevels::WebLevels(vapp::WWWAppInterface *p_WebLevelApp,
+WebLevels::WebLevels(WWWAppInterface *p_WebLevelApp,
          const ProxySettings *p_proxy_settings) {
   m_WebLevelApp    = p_WebLevelApp;
   m_proxy_settings = p_proxy_settings;
@@ -565,7 +553,7 @@ WebLevels::~WebLevels() {
 }
 
 std::string WebLevels::getXmlFileName() {
-  return vapp::FS::getUserDir() + "/" + DEFAULT_WEBLEVELS_FILENAME;
+  return FS::getUserDir() + "/" + DEFAULT_WEBLEVELS_FILENAME;
 }
 
 void WebLevels::downloadXml() {
@@ -577,20 +565,20 @@ void WebLevels::downloadXml() {
 }
 
 std::string WebLevels::getDestinationDir() {
-  return vapp::FS::getLevelsDir() + "/" + DEFAULT_WEBLEVELS_DIR;
+  return FS::getLevelsDir() + "/" + DEFAULT_WEBLEVELS_DIR;
 }
 
 void WebLevels::createDestinationDirIfRequired() {
   std::string v_destination_dir = getDestinationDir();
 
-  if(vapp::FS::isDir(v_destination_dir) == false) {
+  if(FS::isDir(v_destination_dir) == false) {
     /* no mkdir() with microsoft C */
-    vapp::FS::mkArborescence(v_destination_dir + "/file");
+    FS::mkArborescence(v_destination_dir + "/file");
   }
 }
 
 std::string WebLevels::getDestinationFile(std::string p_url) {
-  return getDestinationDir() + "/" + vapp::FS::getFileBaseName(p_url) + ".lvl";
+  return getDestinationDir() + "/" + FS::getFileBaseName(p_url) + ".lvl";
 }
 
 void WebLevels::update(xmDatabase *i_db) {
@@ -726,7 +714,7 @@ void WebLevels::upgrade(xmDatabase *i_db) {
 	std::string v_destFile;
 	
 	if(v_isAnUpdate) {
-	  if(vapp::FS::isInUserDir(v_filePath)) {
+	  if(FS::isInUserDir(v_filePath)) {
 	    v_destFile = v_filePath;
 	  } else {
 	    v_destFile = WebLevels::getDestinationFile(v_urlFile);
@@ -767,7 +755,7 @@ const std::vector<std::string> &WebLevels::getUpdatedDownloadedLevels(void) {
   return m_webLevelsUpdatedDownloadedOK;
 }
 
-WebThemes::WebThemes(vapp::WWWAppInterface *p_WebApp,
+WebThemes::WebThemes(WWWAppInterface *p_WebApp,
          const ProxySettings *p_proxy_settings) {
   m_proxy_settings = p_proxy_settings;
   m_themes_url     = DEFAULT_WEBTHEMES_URL;
@@ -788,7 +776,7 @@ void WebThemes::update(xmDatabase *i_db) {
 }
 
 std::string WebThemes::getXmlFileName() {
-  return vapp::FS::getUserDir() + "/" + DEFAULT_WEBTHEMES_FILENAME;
+  return FS::getUserDir() + "/" + DEFAULT_WEBTHEMES_FILENAME;
 }
 
 void WebThemes::upgrade(xmDatabase *i_db, const std::string& i_id_theme) {
@@ -828,7 +816,7 @@ void WebThemes::upgrade(xmDatabase *i_db, const std::string& i_id_theme) {
 
   /* the destination file must be in the user dir */
   if(v_filePath != "") {
-    if(vapp::FS::isInUserDir(v_filePath)) {
+    if(FS::isInUserDir(v_filePath)) {
       v_destinationFile = v_filePath;
     }
   }
@@ -836,14 +824,14 @@ void WebThemes::upgrade(xmDatabase *i_db, const std::string& i_id_theme) {
   if(v_destinationFile == "") {
     /* determine destination file */
     v_destinationFile = 
-      vapp::FS::getUserDir() + "/" + THEMES_DIRECTORY + "/" + 
-      vapp::FS::getFileBaseName(v_fileUrl) + ".xml";
+      FS::getUserDir() + "/" + THEMES_DIRECTORY + "/" + 
+      FS::getFileBaseName(v_fileUrl) + ".xml";
   } 
   
   v_themeFile = v_destinationFile;
 
   /* download the theme file */
-  vapp::FS::mkArborescence(v_destinationFile);
+  FS::mkArborescence(v_destinationFile);
   FSWeb::downloadFileBz2(v_destinationFile,
 			 v_fileUrl,
 			 NULL,
@@ -859,10 +847,10 @@ void WebThemes::upgrade(xmDatabase *i_db, const std::string& i_id_theme) {
   // all files must be checked for md5sum
   int v_nb_files_to_download = 0;
   for(unsigned int i=0; i<v_required_files->size(); i++) {
-    if(vapp::FS::fileExists((*v_required_files)[i].filepath) == false) {
+    if(FS::fileExists((*v_required_files)[i].filepath) == false) {
       v_nb_files_to_download++;
     } else {
-      v_md5Local = vapp::FS::md5sum((*v_required_files)[i].filepath);
+      v_md5Local = FS::md5sum((*v_required_files)[i].filepath);
       v_md5Dist  = (*v_required_files)[i].filemd5;
       if(v_md5Local != v_md5Dist && v_md5Dist != "") {
 	v_nb_files_to_download++;
@@ -879,26 +867,26 @@ void WebThemes::upgrade(xmDatabase *i_db, const std::string& i_id_theme) {
     unsigned int i = 0;
     while(i<v_required_files->size() && m_WebApp->isCancelAsSoonAsPossible() == false) {
       // download v_required_files[i]     
-      v_destinationFile = vapp::FS::getUserDir() + std::string("/") + (*v_required_files)[i].filepath;
+      v_destinationFile = FS::getUserDir() + std::string("/") + (*v_required_files)[i].filepath;
       v_sourceFile = m_themes_urlBase + 
 	std::string("/") + (*v_required_files)[i].filepath;
       
       /* check md5 sums */
       v_md5Local = v_md5Dist = "";
-      if(vapp::FS::fileExists((*v_required_files)[i].filepath) == true) {
-	v_md5Local = vapp::FS::md5sum((*v_required_files)[i].filepath);
+      if(FS::fileExists((*v_required_files)[i].filepath) == true) {
+	v_md5Local = FS::md5sum((*v_required_files)[i].filepath);
 	v_md5Dist  = (*v_required_files)[i].filemd5;
       }
       
       /* if v_md5Dist == "", don't download ; it's a manually adding */
-      if(vapp::FS::fileExists((*v_required_files)[i].filepath) == false || (v_md5Local != v_md5Dist && v_md5Dist != "")) {
+      if(FS::fileExists((*v_required_files)[i].filepath) == false || (v_md5Local != v_md5Dist && v_md5Dist != "")) {
 	v_data.v_nb_files_performed = v_nb_files_performed;
 	
 	float v_percentage = (((float)v_nb_files_performed) * 100.0) / ((float)v_nb_files_to_download);
 	m_WebApp->setTaskProgress(v_percentage);
 	m_WebApp->setBeingDownloadedInformation((*v_required_files)[i].filepath, true);
 	
-	vapp::FS::mkArborescence(v_destinationFile);
+	FS::mkArborescence(v_destinationFile);
 	
 	FSWeb::downloadFile(v_destinationFile,
 			    v_sourceFile,
@@ -939,7 +927,7 @@ void WebRooms::update() {
 }
 
 std::string WebRooms::getXmlFileName() {
-  return vapp::FS::getUserDir() + "/" + DEFAULT_WEBROOMS_FILENAME;
+  return FS::getUserDir() + "/" + DEFAULT_WEBROOMS_FILENAME;
 }
 
 void WebRooms::upgrade(xmDatabase *i_db) {

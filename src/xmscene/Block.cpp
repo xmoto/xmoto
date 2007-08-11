@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -171,7 +170,7 @@ void Block::setDynamicRotation(float i_dynamicRotation) {
   updateCollisionLines();
 }
 
-int Block::loadToPlay(vapp::CollisionSystem& io_collisionSystem) {
+int Block::loadToPlay(CollisionSystem& io_collisionSystem) {
 
   m_dynamicPosition       = m_initialPosition;
   m_dynamicRotation       = m_initialRotation;
@@ -181,7 +180,7 @@ int Block::loadToPlay(vapp::CollisionSystem& io_collisionSystem) {
   /* Do the "convexifying" the BSP-way. It might be overkill, but we'll
      probably appreciate it when the input data is very complex. It'll also 
      let us handle crossing edges, and other kinds of weird input. */
-  vapp::BSP v_BSPTree;
+  BSP v_BSPTree;
 
   /* Define edges */
   for(unsigned int i=0; i<Vertices().size(); i++) {
@@ -201,7 +200,7 @@ int Block::loadToPlay(vapp::CollisionSystem& io_collisionSystem) {
     /* add dynamic lines */
     if(isLayer() == false && isDynamic()) {
       /* Define collision lines */
-      vapp::Line *v_line = new vapp::Line;
+      Line *v_line = new Line;
       v_line->x1 = v_line->y1 = v_line->x2 = v_line->y2 = 0.0f;
       v_line->fGrip = m_grip;
       m_collisionLines.push_back(v_line);
@@ -226,7 +225,7 @@ int Block::loadToPlay(vapp::CollisionSystem& io_collisionSystem) {
   }
 
   /* Compute */
-  std::vector<vapp::BSPPoly *> &v_BSPPolys = v_BSPTree.compute();      
+  std::vector<BSPPoly *> &v_BSPPolys = v_BSPTree.compute();      
   
   /* Create convex blocks */
   for(unsigned int i=0; i<v_BSPPolys.size(); i++) {
@@ -242,7 +241,7 @@ int Block::loadToPlay(vapp::CollisionSystem& io_collisionSystem) {
   return v_BSPTree.getNumErrors();  
 }
 
-void Block::addPoly(const vapp::BSPPoly& i_poly, vapp::CollisionSystem& io_collisionSystem) {
+void Block::addPoly(const BSPPoly& i_poly, CollisionSystem& io_collisionSystem) {
   ConvexBlock *v_block = new ConvexBlock(this);
   
   for(unsigned int i=0; i<i_poly.Vertices.size(); i++) {
@@ -337,7 +336,7 @@ AABB& Block::getAABB()
 
     if(isDynamic() == true){
       for(int i=0; i<m_collisionLines.size(); i++){
-	vapp::Line* pLine = m_collisionLines[i];
+	Line* pLine = m_collisionLines[i];
 	// add only the first point because the second
 	// point of the line n is the same as the first
 	// point of the line n+1
@@ -375,8 +374,8 @@ void BlockVertex::setColor(const TColor &i_color) {
   m_color = i_color;
 }
 
-void Block::saveXml(vapp::FileHandle *i_pfh) {
-  vapp::FS::writeLineF(i_pfh,"\t<block id=\"%s\">", Id().c_str());
+void Block::saveXml(FileHandle *i_pfh) {
+  FS::writeLineF(i_pfh,"\t<block id=\"%s\">", Id().c_str());
     
   std::string v_position;
   std::ostringstream v_x, v_y;
@@ -406,56 +405,56 @@ void Block::saveXml(vapp::FileHandle *i_pfh) {
     v_position = v_position + " layerid=\"" + layer.str() + "\"";
   }
   
-  vapp::FS::writeLineF(i_pfh, (char*) v_position.c_str());
+  FS::writeLineF(i_pfh, (char*) v_position.c_str());
   
   if(Grip() != DEFAULT_PHYS_WHEEL_GRIP) {
-    vapp::FS::writeLineF(i_pfh,"\t\t<physics grip=\"%f\"/>", Grip());
+    FS::writeLineF(i_pfh,"\t\t<physics grip=\"%f\"/>", Grip());
   }
-  vapp::FS::writeLineF(i_pfh,"\t\t<usetexture id=\"%s\"/>", Texture().c_str());
+  FS::writeLineF(i_pfh,"\t\t<usetexture id=\"%s\"/>", Texture().c_str());
   for(unsigned int j=0;j<Vertices().size();j++) {
     if(Vertices()[j]->EdgeEffect() != "")
-      vapp::FS::writeLineF(i_pfh,"\t\t<vertex x=\"%f\" y=\"%f\" edge=\"%s\"/>",
+      FS::writeLineF(i_pfh,"\t\t<vertex x=\"%f\" y=\"%f\" edge=\"%s\"/>",
                            Vertices()[j]->Position().x,
                            Vertices()[j]->Position().y,
                            Vertices()[j]->EdgeEffect().c_str());
     else
-      vapp::FS::writeLineF(i_pfh,"\t\t<vertex x=\"%f\" y=\"%f\"/>",
+      FS::writeLineF(i_pfh,"\t\t<vertex x=\"%f\" y=\"%f\"/>",
                            Vertices()[j]->Position().x,
                            Vertices()[j]->Position().y);
   }
-  vapp::FS::writeLineF(i_pfh,"\t</block>");
+  FS::writeLineF(i_pfh,"\t</block>");
 }
 
-Block* Block::readFromXml(vapp::XMLDocument& i_xmlSource, TiXmlElement *pElem) {
+Block* Block::readFromXml(XMLDocument& i_xmlSource, TiXmlElement *pElem) {
   
-  Block *pBlock = new Block(vapp::XML::getOption(pElem, "id"));
+  Block *pBlock = new Block(XML::getOption(pElem, "id"));
   pBlock->setTexture("default");
         
-  TiXmlElement *pUseTextureElem = vapp::XML::findElement(i_xmlSource, pElem,std::string("usetexture"));
-  TiXmlElement *pPositionElem   = vapp::XML::findElement(i_xmlSource, pElem,std::string("position"));                
-  TiXmlElement *pPhysicsElem    = vapp::XML::findElement(i_xmlSource, pElem,std::string("physics"));          
+  TiXmlElement *pUseTextureElem = XML::findElement(i_xmlSource, pElem,std::string("usetexture"));
+  TiXmlElement *pPositionElem   = XML::findElement(i_xmlSource, pElem,std::string("position"));                
+  TiXmlElement *pPhysicsElem    = XML::findElement(i_xmlSource, pElem,std::string("physics"));          
         
   if(pUseTextureElem != NULL) {
-    pBlock->setTexture(vapp::XML::getOption(pUseTextureElem,"id", "default"));
-    pBlock->setTextureScale(atof(vapp::XML::getOption(pUseTextureElem,"scale","1").c_str()));
+    pBlock->setTexture(XML::getOption(pUseTextureElem,"id", "default"));
+    pBlock->setTextureScale(atof(XML::getOption(pUseTextureElem,"scale","1").c_str()));
   }
    
   if(pPositionElem != NULL) {
-    pBlock->setInitialPosition(Vector2f(atof( vapp::XML::getOption(pPositionElem,"x","0").c_str() ),
-                                        atof( vapp::XML::getOption(pPositionElem,"y","0").c_str() )
+    pBlock->setInitialPosition(Vector2f(atof( XML::getOption(pPositionElem,"x","0").c_str() ),
+                                        atof( XML::getOption(pPositionElem,"y","0").c_str() )
                                         )
                                );
           
-    pBlock->setBackground(vapp::XML::getOption(pPositionElem,"background","false") == "true");
-    pBlock->setDynamic(vapp::XML::getOption(pPositionElem,"dynamic","false") == "true");
-    pBlock->setIsLayer(vapp::XML::getOption(pPositionElem,"islayer","false") == "true");
-    pBlock->setLayer(atoi(vapp::XML::getOption(pPositionElem,"layerid","-1").c_str()));
+    pBlock->setBackground(XML::getOption(pPositionElem,"background","false") == "true");
+    pBlock->setDynamic(XML::getOption(pPositionElem,"dynamic","false") == "true");
+    pBlock->setIsLayer(XML::getOption(pPositionElem,"islayer","false") == "true");
+    pBlock->setLayer(atoi(XML::getOption(pPositionElem,"layerid","-1").c_str()));
  }
    
   if(pPhysicsElem != NULL) {
     char str[5];
     snprintf(str, 5, "%f", DEFAULT_PHYS_WHEEL_GRIP);
-    pBlock->setGrip(atof(vapp::XML::getOption(pPhysicsElem, "grip", str).c_str()));
+    pBlock->setGrip(atof(XML::getOption(pPhysicsElem, "grip", str).c_str()));
   } else {
     pBlock->setGrip(DEFAULT_PHYS_WHEEL_GRIP);
   }
@@ -464,20 +463,20 @@ Block* Block::readFromXml(vapp::XMLDocument& i_xmlSource, TiXmlElement *pElem) {
   for(TiXmlElement *pj = pElem->FirstChildElement(); pj!=NULL; pj=pj->NextSiblingElement()) {
     if(!strcmp(pj->Value(),"vertex")) {
       /* Alloc */
-      BlockVertex *pVertex = new BlockVertex(Vector2f(atof( vapp::XML::getOption(pj,"x","0").c_str() ),
-                                                      atof( vapp::XML::getOption(pj,"y","0").c_str() )),
-                                             vapp::XML::getOption(pj,"edge",""));
+      BlockVertex *pVertex = new BlockVertex(Vector2f(atof( XML::getOption(pj,"x","0").c_str() ),
+                                                      atof( XML::getOption(pj,"y","0").c_str() )),
+                                             XML::getOption(pj,"edge",""));
       
       std::string k;
       Vector2f v_TexturePosition;
-      k = vapp::XML::getOption(pj,"tx","");
+      k = XML::getOption(pj,"tx","");
       if(k != "") {
         v_TexturePosition.x = atof( k.c_str() );
       } else {
         v_TexturePosition.x = pVertex->Position().x * pBlock->TextureScale();
       }
       
-      k = vapp::XML::getOption(pj,"ty","");
+      k = XML::getOption(pj,"ty","");
       if(k != "") {
         v_TexturePosition.y = atof( k.c_str() );
       } else {
@@ -485,10 +484,10 @@ Block* Block::readFromXml(vapp::XMLDocument& i_xmlSource, TiXmlElement *pElem) {
       }
       pVertex->setTexturePosition(v_TexturePosition);
       
-      TColor v_color = TColor(atoi(vapp::XML::getOption(pj,"r","255").c_str()),
-                              atoi(vapp::XML::getOption(pj,"g","255").c_str()),
-                              atoi(vapp::XML::getOption(pj,"b","255").c_str()),
-                              atoi(vapp::XML::getOption(pj,"a","255").c_str())
+      TColor v_color = TColor(atoi(XML::getOption(pj,"r","255").c_str()),
+                              atoi(XML::getOption(pj,"g","255").c_str()),
+                              atoi(XML::getOption(pj,"b","255").c_str()),
+                              atoi(XML::getOption(pj,"a","255").c_str())
                               );
       pVertex->setColor(v_color);
       
@@ -500,48 +499,48 @@ Block* Block::readFromXml(vapp::XMLDocument& i_xmlSource, TiXmlElement *pElem) {
   return pBlock;
 }
 
-void Block::saveBinary(vapp::FileHandle *i_pfh) {
-      vapp::FS::writeString(i_pfh,   Id());
-      vapp::FS::writeBool(i_pfh,     isBackground());
-      vapp::FS::writeBool(i_pfh,     isDynamic());
-      vapp::FS::writeBool(i_pfh,     isLayer());
-      vapp::FS::writeInt_LE(i_pfh,   getLayer());
-      vapp::FS::writeString(i_pfh,   Texture());
-      vapp::FS::writeFloat_LE(i_pfh, InitialPosition().x);
-      vapp::FS::writeFloat_LE(i_pfh, InitialPosition().y);
-      vapp::FS::writeFloat_LE(i_pfh, Grip());
+void Block::saveBinary(FileHandle *i_pfh) {
+      FS::writeString(i_pfh,   Id());
+      FS::writeBool(i_pfh,     isBackground());
+      FS::writeBool(i_pfh,     isDynamic());
+      FS::writeBool(i_pfh,     isLayer());
+      FS::writeInt_LE(i_pfh,   getLayer());
+      FS::writeString(i_pfh,   Texture());
+      FS::writeFloat_LE(i_pfh, InitialPosition().x);
+      FS::writeFloat_LE(i_pfh, InitialPosition().y);
+      FS::writeFloat_LE(i_pfh, Grip());
 
-      vapp::FS::writeShort_LE(i_pfh, Vertices().size());
+      FS::writeShort_LE(i_pfh, Vertices().size());
         
       for(unsigned int j=0; j<Vertices().size();j++) {
-        vapp::FS::writeFloat_LE(i_pfh, Vertices()[j]->Position().x);
-        vapp::FS::writeFloat_LE(i_pfh, Vertices()[j]->Position().y);
-        vapp::FS::writeString(i_pfh,   Vertices()[j]->EdgeEffect());
+        FS::writeFloat_LE(i_pfh, Vertices()[j]->Position().x);
+        FS::writeFloat_LE(i_pfh, Vertices()[j]->Position().y);
+        FS::writeString(i_pfh,   Vertices()[j]->EdgeEffect());
       }   
 }
 
-Block* Block::readFromBinary(vapp::FileHandle *i_pfh) {
-  Block *pBlock = new Block(vapp::FS::readString(i_pfh));
+Block* Block::readFromBinary(FileHandle *i_pfh) {
+  Block *pBlock = new Block(FS::readString(i_pfh));
 
-  pBlock->setBackground(vapp::FS::readBool(i_pfh));
-  pBlock->setDynamic(vapp::FS::readBool(i_pfh));
-  pBlock->setIsLayer(vapp::FS::readBool(i_pfh));
-  pBlock->setLayer(vapp::FS::readInt_LE(i_pfh));
-  pBlock->setTexture(vapp::FS::readString(i_pfh));
+  pBlock->setBackground(FS::readBool(i_pfh));
+  pBlock->setDynamic(FS::readBool(i_pfh));
+  pBlock->setIsLayer(FS::readBool(i_pfh));
+  pBlock->setLayer(FS::readInt_LE(i_pfh));
+  pBlock->setTexture(FS::readString(i_pfh));
 
   Vector2f v_Position;
-  v_Position.x = vapp::FS::readFloat_LE(i_pfh);
-  v_Position.y = vapp::FS::readFloat_LE(i_pfh);
+  v_Position.x = FS::readFloat_LE(i_pfh);
+  v_Position.y = FS::readFloat_LE(i_pfh);
   pBlock->setInitialPosition(v_Position);
-  pBlock->setGrip(vapp::FS::readFloat_LE(i_pfh));
+  pBlock->setGrip(FS::readFloat_LE(i_pfh));
   
-  int nNumVertices = vapp::FS::readShort_LE(i_pfh);
+  int nNumVertices = FS::readShort_LE(i_pfh);
   pBlock->Vertices().reserve(nNumVertices);
   for(int j=0;j<nNumVertices;j++) {
     Vector2f v_Position;
-    v_Position.x = vapp::FS::readFloat_LE(i_pfh);
-    v_Position.y = vapp::FS::readFloat_LE(i_pfh);
-    std::string v_EdgeEffect = vapp::FS::readString(i_pfh);
+    v_Position.x = FS::readFloat_LE(i_pfh);
+    v_Position.y = FS::readFloat_LE(i_pfh);
+    std::string v_EdgeEffect = FS::readString(i_pfh);
     pBlock->Vertices().push_back(new BlockVertex(v_Position, v_EdgeEffect));
   }
 

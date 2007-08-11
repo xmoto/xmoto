@@ -195,7 +195,7 @@ void XMArguments::parse(int i_argc, char **i_argv) {
     } else {
       /* check if the parameter is a file */
       v_arg = i_argv[i];
-      std::string v_extension = vapp::FS::getFileExtension(v_arg);
+      std::string v_extension = FS::getFileExtension(v_arg);
       
       if(v_extension == "rpl") {        /* replay file */
 	m_opt_replay = true;

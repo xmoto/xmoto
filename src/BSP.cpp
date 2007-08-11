@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -27,7 +26,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VFileIO.h"
 #include "helpers/Log.h"
 
-namespace vapp {
 
   /*===========================================================================
   Add input line definition
@@ -540,5 +538,5 @@ namespace vapp {
     
     return pDst;
   }
-}
+
 

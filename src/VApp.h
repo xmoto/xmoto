@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -31,8 +30,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class XMSession;
 class XMArguments;
 class UserConfig;
-
-namespace vapp {
 
 
   class App;
@@ -150,7 +147,5 @@ namespace vapp {
     double m_fAppTime;		/* Current application time */
     double m_fNextFrame;	/* Time next frame rendering should begin */
   };
-
-}
 
 #endif

@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -27,8 +26,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Scene.h"
 #include "UserConfig.h"
 #include "Renderer.h"
-
-namespace vapp {
 
 	class GameApp;
 
@@ -181,8 +178,6 @@ namespace vapp {
       void _SetDefaultConfig(void);
       void _SetDefaultConfigToUnsetKeys();
   };
-  
-}
 
 
 #endif

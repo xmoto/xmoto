@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -29,8 +28,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Scene.h"
 
 #define STATES_PER_CHUNK 512
-
-namespace vapp {
 
   /*===========================================================================
   Structs
@@ -121,8 +118,6 @@ namespace vapp {
       /* Events reconstructed from replay */
       std::vector<RecordedGameEvent *> m_ReplayEvents;
   };
-
-}
 
 #endif
 

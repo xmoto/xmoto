@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -53,8 +52,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define LOGF_PRE_ANIM_TIME_ADDED_ONE 1.386294361
 
 class xmDatabase;
-
- namespace vapp {
 
    /*===========================================================================
    Overall game states
@@ -506,7 +503,7 @@ class xmDatabase;
       TColor getColorFromPlayerNumber(int i_player);
       TColor getUglyColorFromPlayerNumber(int i_player);
 
-      UIWindow* stats_generateReport(const std::string &PlayerName, vapp::UIWindow *pParent,
+      UIWindow* stats_generateReport(const std::string &PlayerName, UIWindow *pParent,
 				     int x, int y, int nWidth, int nHeight, FontManager* pFont);
 
       void initReplaysFromDir();
@@ -517,7 +514,5 @@ class xmDatabase;
 
       void updatePlayerTag();
   };
-
-}
 
 #endif

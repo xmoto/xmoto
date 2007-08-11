@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -56,14 +55,12 @@ extern "C" {
   #endif
 }
 
-namespace vapp {
-  class MotoGame;
-  class InputHandler;
-}
+class MotoGame;
+class InputHandler;
 
 class LuaLibGame {
 public:
-  LuaLibGame(vapp::MotoGame *i_pMotoGame, vapp::InputHandler *i_pActiveInputHandler);
+  LuaLibGame(MotoGame *i_pMotoGame, InputHandler *i_pActiveInputHandler);
   ~LuaLibGame();
 
   void loadScript(const std::string& i_scriptCode, const std::string& i_scriptFilename);
@@ -78,11 +75,11 @@ public:
 
 private:
   lua_State *m_pL;
-  vapp::MotoGame* m_pMotoGame;
-  vapp::InputHandler *m_pActiveInputHandler;
+  MotoGame* m_pMotoGame;
+  InputHandler *m_pActiveInputHandler;
 
-  static vapp::InputHandler* m_exec_activeInputHandler;
-  static vapp::MotoGame*     m_exec_world;
+  static InputHandler* m_exec_activeInputHandler;
+  static MotoGame*     m_exec_world;
   static luaL_reg            m_gameFuncs[];
 
   /*

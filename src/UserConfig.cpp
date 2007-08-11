@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -32,7 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   Load from XML
   ===========================================================================*/
 	void UserConfig::loadFile(void) {
-	  vapp::XMLDocument ConfigDoc;
+	  XMLDocument ConfigDoc;
 	  
 	  ConfigDoc.readFromFile("config.dat");
 	  TiXmlDocument *pConfigData = ConfigDoc.getLowLevelAccess();
@@ -63,21 +62,21 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   ===========================================================================*/
 	void UserConfig::saveFile(void) {
 	  /* Save configuration */
-	  vapp::FileHandle *pfh = vapp::FS::openOFile("config.dat");
+	  FileHandle *pfh = FS::openOFile("config.dat");
 	  if(pfh != NULL) {
-	    vapp::FS::writeLine(pfh,"<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-	    vapp::FS::writeLine(pfh,"");
-	    vapp::FS::writeLine(pfh,"<userconfig>");
+	    FS::writeLine(pfh,"<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+	    FS::writeLine(pfh,"");
+	    FS::writeLine(pfh,"<userconfig>");
 	    
 	    for(int i=0;i<m_Vars.size();i++) {
 	      char cBuf[256];
-	      sprintf(cBuf,"\t<var name=\"%s\" value=\"%s\"/>",vapp::XML::str2xmlstr(m_Vars[i]->Name).c_str(),vapp::XML::str2xmlstr(m_Vars[i]->Value).c_str());
-	      vapp::FS::writeLine(pfh,cBuf);
+	      sprintf(cBuf,"\t<var name=\"%s\" value=\"%s\"/>",XML::str2xmlstr(m_Vars[i]->Name).c_str(),XML::str2xmlstr(m_Vars[i]->Value).c_str());
+	      FS::writeLine(pfh,cBuf);
 	    }
 	  
-	    vapp::FS::writeLine(pfh,"</userconfig>");
-	    vapp::FS::writeLine(pfh,"");
-	    vapp::FS::closeFile(pfh);
+	    FS::writeLine(pfh,"</userconfig>");
+	    FS::writeLine(pfh,"");
+	    FS::closeFile(pfh);
 	  }
 	  else
 	    Logger::Log("** Warning ** : failed to save user configuration 'config.dat'");

@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -133,21 +132,21 @@ Biker::Biker(Theme *i_theme, BikerTheme* i_bikerTheme,
 	     const TColor& i_colorFilter,
 	     const TColor& i_uglyColorFilter) {
   /* sound engine */
-  if(vapp::Sound::isEnabled()) {
+  if(Sound::isEnabled()) {
     try {
-      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine00")->FilePath()));
-      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine01")->FilePath()));
-      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine02")->FilePath()));
-      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine03")->FilePath()));
-      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine04")->FilePath()));
-      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine05")->FilePath()));
-      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine06")->FilePath()));
-      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine07")->FilePath()));
-      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine08")->FilePath()));
-      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine09")->FilePath()));
-      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine10")->FilePath()));
-      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine11")->FilePath()));
-      m_EngineSound.addBangSample(vapp::Sound::findSample(i_theme->getSound("Engine12")->FilePath()));
+      m_EngineSound.addBangSample(Sound::findSample(i_theme->getSound("Engine00")->FilePath()));
+      m_EngineSound.addBangSample(Sound::findSample(i_theme->getSound("Engine01")->FilePath()));
+      m_EngineSound.addBangSample(Sound::findSample(i_theme->getSound("Engine02")->FilePath()));
+      m_EngineSound.addBangSample(Sound::findSample(i_theme->getSound("Engine03")->FilePath()));
+      m_EngineSound.addBangSample(Sound::findSample(i_theme->getSound("Engine04")->FilePath()));
+      m_EngineSound.addBangSample(Sound::findSample(i_theme->getSound("Engine05")->FilePath()));
+      m_EngineSound.addBangSample(Sound::findSample(i_theme->getSound("Engine06")->FilePath()));
+      m_EngineSound.addBangSample(Sound::findSample(i_theme->getSound("Engine07")->FilePath()));
+      m_EngineSound.addBangSample(Sound::findSample(i_theme->getSound("Engine08")->FilePath()));
+      m_EngineSound.addBangSample(Sound::findSample(i_theme->getSound("Engine09")->FilePath()));
+      m_EngineSound.addBangSample(Sound::findSample(i_theme->getSound("Engine10")->FilePath()));
+      m_EngineSound.addBangSample(Sound::findSample(i_theme->getSound("Engine11")->FilePath()));
+      m_EngineSound.addBangSample(Sound::findSample(i_theme->getSound("Engine12")->FilePath()));
     } catch(Exception &e) {
       /* hum, no nice */
     }
@@ -181,12 +180,12 @@ float Biker::getBikeEngineRPM() {
 }
 
 void Biker::updateToTime(float i_time, float i_timeStep,
-			     vapp::CollisionSystem *v_collisionSystem, Vector2f i_gravity,
-			     vapp::MotoGame *i_motogame) {
+			     CollisionSystem *v_collisionSystem, Vector2f i_gravity,
+			     MotoGame *i_motogame) {
   if(isFinished() || isDead()) return;
 
   /* sound */
-  if(vapp::Sound::isEnabled()) {
+  if(Sound::isEnabled()) {
     m_EngineSound.setRPM(getBikeEngineRPM());
     if(m_playSound) {
       m_EngineSound.update(i_time);

@@ -1,8 +1,6 @@
 #ifndef __POLYDRAW_H__
 #define __POLYDRAW_H__
 
-namespace vapp {
-
   class PolyDraw {
   public:
     struct EdgeValue {
@@ -36,5 +34,4 @@ namespace vapp {
     int _TexSq(int n);
   };
 
-}
 #endif

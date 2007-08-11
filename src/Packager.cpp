@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -30,25 +29,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/SwapEndian.h"
 #include "md5sum/md5file.h"
 
-/* 
-   How to create an xmoto.bin file:
-
-      Run xmoto-edit -pack in the xmoto bin/ directory. Make sure the file 
-      package.lst is present in the directory, and that all the files listed
-      in it is available in the directory hierachy.
-      
-   How to extract file from xmoto.bin: (NEW to xmoto 0.2.3)
-   
-      Run xmoto-edit -unpack BINFILE TARGETDIR [no_lst]
-      
-      where BINFILE is the path leading to xmoto.bin and TARGETDIR is its 
-      contained files should be extracted to. If no_lst is specified, no
-      package.lst file will be generated, otherwise it will be put in the
-      same directory as the BINFILE.      
-*/
-
-namespace vapp {
- 
   /*===========================================================================
   Unpackager
   ===========================================================================*/
@@ -259,6 +239,4 @@ namespace vapp {
     }
     fclose(fp);
   }
-  
-}
 

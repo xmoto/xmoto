@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -151,7 +150,7 @@ class FSWeb {
 			   std::string p_login,
 			   std::string p_password,
 			   std::string p_url_to_transfert,
-			   vapp::WWWAppInterface *p_WebApp,
+			   WWWAppInterface *p_WebApp,
 			   const ProxySettings *p_proxy_settings,
 			   bool &p_msg_status,
 			   std::string &p_msg);
@@ -218,7 +217,7 @@ class WebRooms {
 
 class WebLevels {
  public:
-  WebLevels(vapp::WWWAppInterface *p_WebLevelApp,
+  WebLevels(WWWAppInterface *p_WebLevelApp,
 	    const ProxySettings *p_proxy_settings);
   ~WebLevels();
 
@@ -243,7 +242,7 @@ class WebLevels {
   int nbLevelsToGet(xmDatabase *i_db) const;
 
  private:
-  vapp::WWWAppInterface *m_WebLevelApp;
+  WWWAppInterface *m_WebLevelApp;
 
   std::vector<std::string> m_webLevelsNewDownloadedOK; /* file names of those levels 
            which where downloaded OK (so we can load them right away) and which are new */
@@ -261,7 +260,7 @@ class WebLevels {
 
 class WebThemes {
  public:
-  WebThemes(vapp::WWWAppInterface *p_WebApp,
+  WebThemes(WWWAppInterface *p_WebApp,
 	    const ProxySettings *p_proxy_settings);
   ~WebThemes();
 
@@ -277,7 +276,7 @@ class WebThemes {
  private:
   std::string getXmlFileName();
 
-  vapp::WWWAppInterface *m_WebApp;
+  WWWAppInterface *m_WebApp;
   std::string m_themes_url;
   std::string m_themes_urlBase;
   const ProxySettings *m_proxy_settings;

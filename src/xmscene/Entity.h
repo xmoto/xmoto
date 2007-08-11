@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -37,10 +36,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class EntityParticle;
 class TiXmlElement;
-
-namespace vapp {
-  class FileHandle;
-}
+class FileHandle;
 
 /**
   An entity is an object that the biker can found on his way
@@ -81,10 +77,10 @@ class Entity {
   void setColor(const TColor& i_color);
   void setAlive(bool alive);
 
-  void saveXml(vapp::FileHandle *i_pfh);
-  void saveBinary(vapp::FileHandle *i_pfh);
+  void saveXml(FileHandle *i_pfh);
+  void saveBinary(FileHandle *i_pfh);
   static Entity* readFromXml(TiXmlElement *pElem);
-  static Entity* readFromBinary(vapp::FileHandle *i_pfh);
+  static Entity* readFromBinary(FileHandle *i_pfh);
 
   static EntitySpeciality  SpecialityFromStr(std::string i_typeStr);
   static std::string       SpecialityToStr(EntitySpeciality i_type);

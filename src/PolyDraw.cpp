@@ -16,7 +16,6 @@
 #ifdef ENABLE_SDLGFX
 
 #include "SDL_gfxPrimitives.h"
-namespace vapp {
 
   PolyDraw::PolyDraw(SDL_Surface * pBuf) {
     /* Set defaults */
@@ -374,5 +373,5 @@ Various helper functions
       }
     }
   }
-}
+
 #endif

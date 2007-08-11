@@ -27,8 +27,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "XMBuild.h"
 #include "XMSession.h"
 
-namespace vapp {
-
   UIFrame* GameApp::makeHelpWindow(DrawLib* i_drawLib, UIWindow* io_parent, UserConfig* i_Config) {
     UIFrame *v_pHelpWindow;
     UIStatic *pSomeText;
@@ -1526,7 +1524,7 @@ namespace vapp {
 	  char c_tmp[1024];
 	  snprintf(c_tmp, 1024,
 		   GAMETEXT_BY_PLAYER, v_id_profile.c_str());
-          pLV_BestTimes_WorldRecord->setCaption(v_roomName + ": " + vapp::App::formatTime(v_finishTime) +
+          pLV_BestTimes_WorldRecord->setCaption(v_roomName + ": " + App::formatTime(v_finishTime) +
 						" " + std::string(c_tmp));
 	} else {
 	  pLV_BestTimes_WorldRecord->setCaption(v_roomName + ": " + GAMETEXT_WORLDRECORDNA);
@@ -4125,4 +4123,4 @@ namespace vapp {
 							       m_xmsession->profile(), m_WebHighscoresIdRoom));
     return v_list;
   }
-}
+

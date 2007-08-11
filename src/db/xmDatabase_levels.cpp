@@ -72,7 +72,7 @@ void xmDatabase::levels_delToFavorite(const std::string& i_profile, const std::s
 
 void xmDatabase::updateDB_favorite(const std::string& i_profile,
 				   XmDatabaseUpdateInterface *i_interface) {
-  vapp::XMLDocument v_favoriteLevelsXml;
+  XMLDocument v_favoriteLevelsXml;
   TiXmlDocument *v_favoriteLevelsXmlData;
   TiXmlElement *v_favoriteLevelsXmlDataElement;
   const char *pc;

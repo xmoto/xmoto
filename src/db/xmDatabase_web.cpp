@@ -38,7 +38,7 @@ void xmDatabase::webrooms_addRoom(const std::string& i_id_room, const std::strin
 
 std::string xmDatabase::webhighscores_updateDB(const std::string& i_webhighscoresFile,
 					const std::string& i_websource) {
-  vapp::XMLDocument v_webHSXml;
+  XMLDocument v_webHSXml;
   TiXmlDocument *v_webHSXmlData;
   TiXmlElement *v_webHSXmlDataElement;
   const char *pc;
@@ -184,7 +184,7 @@ float xmDatabase::webrooms_getHighscoreTime(const std::string& i_id_room,
 }
 
 void xmDatabase::weblevels_updateDB(const std::string& i_weblevelsFile) {
-  vapp::XMLDocument v_webLXml;
+  XMLDocument v_webLXml;
   TiXmlDocument *v_webLXmlData;
   TiXmlElement *v_webLXmlDataElement;
   const char *pc;
@@ -267,7 +267,7 @@ void xmDatabase::weblevels_updateDB(const std::string& i_weblevelsFile) {
 }
 
 void xmDatabase::webrooms_updateDB(const std::string& i_webroomsFile) {
-  vapp::XMLDocument v_webRXml;
+  XMLDocument v_webRXml;
   TiXmlDocument *v_webRXmlData;
   TiXmlElement *v_webRXmlDataElement;
   const char *pc;
@@ -317,7 +317,7 @@ void xmDatabase::webrooms_updateDB(const std::string& i_webroomsFile) {
 }
 
 void xmDatabase::webthemes_updateDB(const std::string& i_webThemesFile) {
-  vapp::XMLDocument v_webTXml;
+  XMLDocument v_webTXml;
   TiXmlDocument *v_webTXmlData;
   TiXmlElement *v_webTXmlDataElement;
   const char *pc;

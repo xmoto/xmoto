@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -33,7 +32,7 @@ SDynamicObject::SDynamicObject(int p_startTime, int p_endTime, float pPeriod) {
 SDynamicObject::~SDynamicObject() {
 }
 
-bool SDynamicObject::nextState(vapp::MotoGame* v_motoGame, int i_nbCents) {
+bool SDynamicObject::nextState(MotoGame* v_motoGame, int i_nbCents) {
   int v_realNbCents;
 
   v_realNbCents = i_nbCents;
@@ -177,7 +176,7 @@ SDynamicEntityMove::SDynamicEntityMove(std::string pEntity, int p_startTime, int
 SDynamicEntityMove::~SDynamicEntityMove() {
 }
 
-void SDynamicEntityMove::performMove(vapp::MotoGame* v_motoGame, int i_nbCents) {
+void SDynamicEntityMove::performMove(MotoGame* v_motoGame, int i_nbCents) {
   Entity* p = &(v_motoGame->getLevelSrc()->getEntityById(m_entity));
   if(! p->isAlive()){
     return;
@@ -240,7 +239,7 @@ SDynamicBlockMove::SDynamicBlockMove(std::string pBlock, int p_startTime, int p_
 SDynamicBlockMove::~SDynamicBlockMove() {
 }
 
-void SDynamicBlockMove::performMove(vapp::MotoGame* v_motoGame, int i_nbCents) {
+void SDynamicBlockMove::performMove(MotoGame* v_motoGame, int i_nbCents) {
   Block *p = &(v_motoGame->getLevelSrc()->getBlockById(m_block));
   float vx, vy, vAngle;
   float addvx = 0.0, addvy = 0.0, addvAngle = 0.0;

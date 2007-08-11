@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -41,8 +40,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       last sample position and the current. (no falling through the ground)
     * Static level geometry is stored in grid-structure for faster access. 
 */
-
-namespace vapp {
 
   #define CD_MIN(a,b)             ((a)>(b)?(b):(a))
   #define CD_MAX(a,b)             ((a)<(b)?(b):(a))
@@ -1058,4 +1055,4 @@ namespace vapp {
     throw Exception("Collision element not found");
   }
   */
-}
+

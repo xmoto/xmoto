@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -24,9 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <string>
 
-namespace vapp {
-  class DrawLib;
-}
+class DrawLib;
 
 class SysMessage {
   public:
@@ -34,14 +31,14 @@ class SysMessage {
   SysMessage();
   ~SysMessage();
 
-  void setDrawLib(vapp::DrawLib* i_drawLib);
+  void setDrawLib(DrawLib* i_drawLib);
   void displayText(std::string i_msg);
   void render();
 
   private:
   std::string m_txt;
   float m_startDisplay;
-  vapp::DrawLib* m_drawLib;
+  DrawLib* m_drawLib;
 };
 
 #endif

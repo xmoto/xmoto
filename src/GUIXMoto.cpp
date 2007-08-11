@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -42,7 +41,7 @@ UILevelList::~UILevelList() {
 
 std::string UILevelList::getLevel(int n) {
   if(getEntries().empty() == false) {
-    vapp::UIListEntry *pEntry = getEntries()[n];
+    UIListEntry *pEntry = getEntries()[n];
     return *(reinterpret_cast<std::string *>(pEntry->pvUser));
   }
   return "";
@@ -81,7 +80,7 @@ void UILevelList::addLevel(const std::string& i_id_level,
   if(i_name != "") v_name = i_name;
   else v_name = "???";
 
-  vapp::UIListEntry *pEntry = NULL;
+  UIListEntry *pEntry = NULL;
   pEntry = addEntry(i_prefix + v_name, reinterpret_cast<void *>(new String(i_id_level)));
   
   /* Add times to list entry */
@@ -89,13 +88,13 @@ void UILevelList::addLevel(const std::string& i_id_level,
     if(i_playerHighscore < 0.0) {
       pEntry->Text.push_back("--:--:--");
     } else {
-      pEntry->Text.push_back(vapp::App::formatTime(i_playerHighscore));
+      pEntry->Text.push_back(App::formatTime(i_playerHighscore));
     }
 
     if(i_roomHighscore < 0.0) {
       pEntry->Text.push_back(GAMETEXT_WORLDRECORDNA);
     } else {
-      pEntry->Text.push_back(vapp::App::formatTime(i_roomHighscore));
+      pEntry->Text.push_back(App::formatTime(i_roomHighscore));
     }
   }
 }  
@@ -103,7 +102,7 @@ void UILevelList::addLevel(const std::string& i_id_level,
 void UILevelList::updateLevel(const std::string& i_id_level, float i_playerHighscore) {
   for(unsigned int i=0; i<getEntries().size(); i++) {
     if(*(reinterpret_cast<std::string *>(getEntries()[i]->pvUser)) == i_id_level) {
-      getEntries()[i]->Text[1] = vapp::App::formatTime(i_playerHighscore);
+      getEntries()[i]->Text[1] = App::formatTime(i_playerHighscore);
     }
   }
 }
@@ -112,7 +111,7 @@ UIPackTree::UIPackTree(UIWindow *pParent,
 		       int x, int y,
 		       const std::string& Caption,
 		       int nWidth, int nHeight)
-  : vapp::UIList(pParent, x, y, Caption, nWidth, nHeight) {
+  : UIList(pParent, x, y, Caption, nWidth, nHeight) {
   addColumn(GAMETEXT_LEVELPACK, getPosition().nWidth-150, CONTEXTHELP_LEVELPACK);
   addColumn(GAMETEXT_NUMLEVELS, 150, CONTEXTHELP_LEVELPACKNUMLEVELS);
 }
@@ -124,7 +123,7 @@ void UIPackTree::addPack(LevelsPack* i_levelsPack,
 			 const std::string& i_categorie,
 			 int i_nbFinishedLevels,
 			 int i_nbLevels) {
-  vapp::UIListEntry *c, *p;
+  UIListEntry *c, *p;
 
   /* looking the categorie */
   int found = -1;
@@ -185,7 +184,7 @@ void UIPackTree::updatePack(LevelsPack* i_levelsPack,
 
 LevelsPack* UIPackTree::getSelectedPack() {
   if(getSelected() >= 0 && getSelected() < getEntries().size()) {
-    vapp::UIListEntry *pEntry = getEntries()[getSelected()];
+    UIListEntry *pEntry = getEntries()[getSelected()];
     if(pEntry->pvUser != NULL) {
       return (LevelsPack*) pEntry->pvUser;
     }
@@ -211,7 +210,7 @@ std::string UIPackTree::subContextHelp(int x,int y) {
   LevelsPack *v_levelPack;
 
   if(getColumnAtPosition(x, y) != 0) {
-    return vapp::UIList::subContextHelp(x, y);
+    return UIList::subContextHelp(x, y);
   }
 
   n = getRowAtPosition(x, y);
@@ -219,7 +218,7 @@ std::string UIPackTree::subContextHelp(int x,int y) {
     return "";
   }
 
-  vapp::UIListEntry *pEntry = getEntries()[n];
+  UIListEntry *pEntry = getEntries()[n];
   if(pEntry->pvUser == NULL) {
     return "";
   }

@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -55,8 +54,6 @@ struct hashcmp_str {
 #define DRAW_FONT_FILE "Textures/Fonts/DejaVuSans.ttf"
 
 class Camera;
-
-namespace vapp {
 
 
 class DrawLib;
@@ -612,6 +609,5 @@ class FontManager {
     int nPolyTextureVertices[100];
 
   };
-};
 
 #endif

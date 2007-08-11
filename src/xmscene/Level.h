@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -33,9 +32,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class Block;
 class Entity;
-namespace vapp {
-  class MotoGame;
-}
+class MotoGame;
 class xmDatabase;
 
 /*===========================================================================
@@ -49,8 +46,8 @@ class Level {
   bool loadReducedFromFile();
   void loadFullyFromFile();
   bool isFullyLoaded() const;
-  void exportBinaryHeader(vapp::FileHandle *pfh);
-  void importBinaryHeader(vapp::FileHandle *pfh);
+  void exportBinaryHeader(FileHandle *pfh);
+  void importBinaryHeader(FileHandle *pfh);
   void importHeader(const std::string& i_id,
 		    const std::string& i_checkSum,
 		    const std::string& i_pack,
@@ -104,7 +101,7 @@ class Level {
   void setDescription(const std::string& i_description);
   void setDate(const std::string& i_date);
   void setAuthor(const std::string& i_author);
-  void setCollisionSystem(vapp::CollisionSystem* p_CollisionSystem);
+  void setCollisionSystem(CollisionSystem* p_CollisionSystem);
 
   std::string scriptFileName() const;
   std::string scriptSource() const;
@@ -126,7 +123,7 @@ class Level {
   static int compareVersionNumbers(const std::string &i_v1, const std::string &i_v2);
 
   /* because some objects like entities have an internal movement */
-  void updateToTime(vapp::MotoGame& i_scene);
+  void updateToTime(MotoGame& i_scene);
   /* this method calls objects because rewind in replay can required some actions (like removing particles) */
 
   /* the entity will be destroyed by the level */
@@ -167,7 +164,7 @@ class Level {
   std::string m_pack;               /* In this level pack */
   std::string m_packNum;            /* value to sort levels */
   std::string m_fileName;
-  vapp::XMLDocument *m_xmlSource;    /* Plain XML source */      
+  XMLDocument *m_xmlSource;    /* Plain XML source */      
   std::string m_scriptFileName;     /* Script file name */      
   std::string m_scriptSource;       /* Script source code */
   std::string m_checkSum;
@@ -181,7 +178,7 @@ class Level {
   std::vector<Entity *> m_entitiesExterns;
   Entity               *m_startEntity; /* entity where the player start */
   bool m_isBodyLoaded;
-  vapp::CollisionSystem* m_pCollisionSystem;
+  CollisionSystem* m_pCollisionSystem;
   /* to avoid calculate it each frame */
   int  m_nbEntitiesToTake;
   std::string m_borderTexture;

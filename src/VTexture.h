@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -25,7 +24,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VCommon.h"
 #include "helpers/VExcept.h"
 
-namespace vapp {
 
   enum FilterMode {
     FM_NEAREST,
@@ -99,98 +97,5 @@ namespace vapp {
       
       int m_nTexSpaceUsage;                   /* Bytes of textures resident */
   };
-  
-}
-
-//#include "VCommon.h"
-//#include "VExcept.h"
-//
-//namespace vapp {
-//
-//  class Texture;
-//  class TextureManager;
-//
-//  /*===========================================================================
-//  Types
-//  ===========================================================================*/    
-//  class TextureError : public Exception {
-//    public:
-//      TextureError() {}
-//      TextureError(std::string &iMsg)
-//        : Exception(iMsg) {}
-//      TextureError(const char *pc)
-//        : Exception(std::string(pc)) {}
-//    private:
-//  };
-//
-//  /*===========================================================================
-//  Types
-//  ===========================================================================*/    
-//  typedef struct _TexInfo {
-//    std::string Name;               /* Name of texture */
-//    std::string FilePath;           /* File path to texture */
-//    int nWidth,nHeight;             /* Size of texture */
-//    unsigned int nID;               /* OpenGL identifier */
-//    std::string Tag;                /* Texture tag. Optional */
-//  } TexInfo;  
-//
-//  /*===========================================================================
-//  Texture class
-//  ===========================================================================*/    
-//  class Texture {
-//    public:
-//      friend class TextureManager; /* allow TextureManager to access us */
-//
-//      Texture() {m_TI.Name=""; m_TI.nWidth=m_TI.nHeight=0; m_TI.nID=0; m_TI.FilePath="";}
-//
-//      /* Virtual methods */
-//      virtual void load(std::string FilePath,bool bSmall=false);
-//      virtual void unload(void);
-//                              
-//      /* Data interface */
-//      unsigned int getID(void) {return m_TI.nID;}
-//      int getWidth(void) {return m_TI.nWidth;}
-//      int getHeight(void) {return m_TI.nHeight;}
-//      std::string &getName(void) {return m_TI.Name;}
-//      std::string &getFilePath(void) {return m_TI.FilePath;}
-//      std::string &getTag(void) {return m_TI.Tag;}
-//      void setTag(std::string Tag) {m_TI.Tag = Tag;}
-//      
-//    protected:
-//      /* Data */
-//      TexInfo m_TI;
-//  };    
-//
-//  /*===========================================================================
-//  Texture manager class
-//  ===========================================================================*/    
-//  class TextureManager {
-//    public:    
-//      TextureManager() {m_DefaultTextureName = "";}
-//    
-//      friend class Texture; /* allow Texture to access us */
-//          
-//      /* Methods */
-//      Texture *loadTexture(Texture *pTexture,std::string FilePath,bool bSmall=false);      
-//      void unloadTextures(void) {_Shutdown();}
-//      Texture *getTexture(std::string Name);
-//      std::vector<Texture *> fetchTaggedTextures(std::string Tag);
-//      
-//      /* Data interface */
-//      std::vector<Texture *> &getTextures(void) {return m_Textures;}
-//      std::string &getDefaultTextureName(void) {return m_DefaultTextureName;}
-//      void setDefaultTextureName(std::string Name) {m_DefaultTextureName=Name;}
-//      
-//    private:
-//      /* Private methods */
-//      void _Unmanage(Texture *pTexture);
-//      void _Shutdown(void);
-//    
-//      /* Data */
-//      std::vector<Texture *> m_Textures;      /* Textures */
-//      std::string m_DefaultTextureName;       /* Name of default texture */
-//  };
-//  
-//};
 
 #endif

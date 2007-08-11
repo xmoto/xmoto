@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -27,26 +26,26 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define SYSMSG_DISPLAY_DECREASE_TIME 0.75
 
 SysMessage::SysMessage() {
-  m_startDisplay = vapp::App::getTime() - SYSMSG_DISPLAY_TIME;
+  m_startDisplay = App::getTime() - SYSMSG_DISPLAY_TIME;
   m_drawLib = NULL;
 }
 
 SysMessage::~SysMessage() {
 }
 
-void SysMessage::setDrawLib(vapp::DrawLib* i_drawLib) {
+void SysMessage::setDrawLib(DrawLib* i_drawLib) {
   m_drawLib = i_drawLib;
 }
 
 void SysMessage::displayText(std::string i_msg) {
-  m_startDisplay = vapp::App::getTime();
+  m_startDisplay = App::getTime();
   m_txt      = i_msg;
 }
 
 void SysMessage::render() {
   if(m_drawLib == NULL) return;
 
-  float v_time = vapp::App::getTime();
+  float v_time = App::getTime();
 
   if(m_startDisplay + SYSMSG_DISPLAY_TIME > v_time) {
     int v_shadow;
@@ -59,8 +58,8 @@ void SysMessage::render() {
 					/ (SYSMSG_DISPLAY_TIME-SYSMSG_DISPLAY_DECREASE_TIME));
     }
 
-    vapp::FontManager* v_fm = m_drawLib->getFontMedium();
-    vapp::FontGlyph* v_fg = v_fm->getGlyph(m_txt);
+    FontManager* v_fm = m_drawLib->getFontMedium();
+    FontGlyph* v_fg = v_fm->getGlyph(m_txt);
     v_fm->printString(v_fg,
 		      5,
 		      5,

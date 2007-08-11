@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -42,7 +41,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define SIMULATE_SLOW_RENDERING     0 /* extra ms to add to rendering */
 #define SIMULATE_SLOW_PHYSICS       0 /* extra ms to add to physics calcs */
 
-namespace vapp {
 
   /*===========================================================================
   Draw frame
@@ -606,6 +604,4 @@ namespace vapp {
     /* Blah... */
     _HandleFinishMenu();
   }
-  
-}
 

@@ -1,6 +1,5 @@
 /*=============================================================================
 XMOTO
-Copyright (C) 2005-2006 Rasmus Neckelmann (neckelmann@gmail.com)
 
 This file is part of XMOTO.
 
@@ -27,7 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "WWW.h"
 #include "LevelsManager.h"
   
-class UILevelList : public vapp::UIList {
+class UILevelList : public UIList {
   public:
   UILevelList(UIWindow *pParent,
 	      int x = 0,int y = 0,
@@ -51,7 +50,7 @@ class UILevelList : public vapp::UIList {
   private:
 };
 
-class UIPackTree : public vapp::UIList {
+class UIPackTree : public UIList {
  public:
   UIPackTree(UIWindow *pParent,
 	     int x = 0,int y = 0,
@@ -76,7 +75,7 @@ class UIPackTree : public vapp::UIList {
  private:
 };
 
-class UIQuickStartButton : public vapp::UIButtonDrawn {
+class UIQuickStartButton : public UIButtonDrawn {
   public:
   UIQuickStartButton(UIWindow *pParent,
 		     int x=0, int y=0,
@@ -95,7 +94,7 @@ class UIQuickStartButton : public vapp::UIButtonDrawn {
   virtual std::string subContextHelp(int x, int y);
 
  private:
-  vapp::Texture *m_uncheckedTex, *m_qualityTex, *m_difficultyTex;
+  Texture *m_uncheckedTex, *m_qualityTex, *m_difficultyTex;
   int m_qualityMIN, m_difficultyMIN;
   int m_qualityMAX, m_difficultyMAX;
 
