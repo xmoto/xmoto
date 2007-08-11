@@ -1059,9 +1059,8 @@ msgid "Save"
 msgstr "Sauver"
 
 #: src/GameText.h:329
-#, fuzzy, c-format
 msgid "Saved as %s"
-msgstr "Sauvé sous"
+msgstr "Sauvé sous %s"
 
 #: src/GameText.h:330
 msgid "Save Replay"
