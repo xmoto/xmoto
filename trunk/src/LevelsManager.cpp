@@ -442,7 +442,7 @@ void LevelsManager::makePacks(xmDatabase *i_db,
 			  "ON (a.id_level=b.id_level AND "
 			  "b.id_profile=\"" + xmDatabase::protectString(i_playerName) + "\") "
 			  "WHERE b.last_play_date IS NOT NULL "
-			  "ORDER BY b.last_play_date "
+			  "ORDER BY b.last_play_date DESC "
 			  "LIMIT 50", false);
   v_pack->setGroup(GAMETEXT_PACK_STATS);
   v_pack->setDescription(VPACKAGENAME_DESC_LAST_PLAYED);
