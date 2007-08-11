@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "../VXml.h"
 #include "../PhysSettings.h"
+#include "../VFileIO.h"
 
 Entity::Entity(const std::string& i_id) {
   m_id          = i_id;

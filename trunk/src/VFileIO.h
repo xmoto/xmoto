@@ -22,16 +22,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __VFILEIO_H__
 #define __VFILEIO_H__
 
-#include "VCommon.h"
-#include "tinyxml/tinyxml.h"
-
-#ifdef WIN32
-  #include <io.h>
-#else
-  #include <unistd.h>
-  #include <sys/types.h>
-  #include <dirent.h>
-#endif
+#include <string>
+#include <vector>
 
 namespace vapp {
 
