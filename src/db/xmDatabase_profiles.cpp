@@ -22,6 +22,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GameText.h"
 #include "VFileIO.h"
 #include "helpers/VExcept.h"
+#include <sstream>
+#include <math.h>
 
 void xmDatabase::updateDB_profiles(XmDatabaseUpdateInterface *i_interface) {
   std::string v_playerName;

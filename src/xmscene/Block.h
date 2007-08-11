@@ -34,6 +34,10 @@ namespace vapp{
 #define XM_DEFAULT_BLOCK_TEXTURE "default"
 #define XM_DEFAULT_PHYS_BLOCK_GRIP 20
 
+namespace vapp {
+  class FileHandle;
+}
+
 class Block;
 
 /*===========================================================================

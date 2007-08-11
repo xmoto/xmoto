@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmDatabase.h"
 #include "helpers/VExcept.h"
 #include "GameText.h"
-#include "VApp.h"
+#include "WWW.h"
 #include "helpers/Log.h"
 
 #define XMDB_VERSION 13

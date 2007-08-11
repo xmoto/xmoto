@@ -26,6 +26,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "md5sum/md5file.h"
 #include "db/xmDatabase.h"
 #include "helpers/Log.h"
+#include "WWW.h"
+#include "VFileIO.h"
 
 class vapp::App;
 

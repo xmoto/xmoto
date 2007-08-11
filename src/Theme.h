@@ -25,11 +25,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <string>
 #include <vector>
 
-#include "BuildConfig.h"
 #include "VTexture.h"
-#include "VFileIO.h"
-#include "WWW.h"
 
+namespace vapp {
+  class Texture;
+  class WWWAppInterface;
+}
+
+class TiXmlElement;
 class ProxySettings;
 class WebThemes;
 class xmDatabase;
