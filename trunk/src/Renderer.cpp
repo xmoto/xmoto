@@ -1912,8 +1912,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     if(p_save == "") {
       m_pNewHighscoreSave_str->showWindow(false);
     } else {
+      char v_str[256];
+      snprintf(v_str, 256, GAMETEXT_SAVE_AS, p_save.c_str());
+
       m_pNewHighscoreSave_str->showWindow(true);
-      m_pNewHighscoreSave_str->setCaption("(" + std::string(GAMETEXT_SAVE_AS) + " " + p_save + ")");
+      m_pNewHighscoreSave_str->setCaption(v_str);
     }
   }
 
