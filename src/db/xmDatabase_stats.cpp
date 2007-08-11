@@ -19,10 +19,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "xmDatabase.h"
-#include "VXml.h"
-#include "GameText.h"
+#include "../helpers/VExcept.h"
+#include "../VXml.h"
+#include "../GameText.h"
 #include "VApp.h"
-#include "GUI.h"
 
 void xmDatabase::updateDB_stats(XmDatabaseUpdateInterface *i_interface) {
   XMLDocument XML;
