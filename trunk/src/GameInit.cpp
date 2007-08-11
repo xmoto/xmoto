@@ -444,10 +444,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     
     Sound::uninit();
     
-    m_Config.setInteger("QSQualityMIN",    m_pQuickStart->getQualityMIN());
-    m_Config.setInteger("QSDifficultyMIN", m_pQuickStart->getDifficultyMIN());
-    m_Config.setInteger("QSQualityMAX",    m_pQuickStart->getQualityMAX());
-    m_Config.setInteger("QSDifficultyMAX", m_pQuickStart->getDifficultyMAX());
+    if(m_xmsession->useGraphics()) {
+      m_Config.setInteger("QSQualityMIN",    m_pQuickStart->getQualityMIN());
+      m_Config.setInteger("QSDifficultyMIN", m_pQuickStart->getDifficultyMIN());
+      m_Config.setInteger("QSQualityMAX",    m_pQuickStart->getQualityMAX());
+      m_Config.setInteger("QSDifficultyMAX", m_pQuickStart->getDifficultyMAX());
+    }
 
     m_Config.saveFile();
   }  
