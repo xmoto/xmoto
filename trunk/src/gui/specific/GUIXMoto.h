@@ -21,11 +21,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __GUIXMOTO_H__
 #define __GUIXMOTO_H__
 
-#include "GUI.h"
-#include "xmscene/Level.h"
-#include "WWW.h"
-#include "LevelsManager.h"
-  
+#include "../basic/GUI.h"
+
+class LevelsPack;
+
 class UILevelList : public UIList {
   public:
   UILevelList(UIWindow *pParent,

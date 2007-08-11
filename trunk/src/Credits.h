@@ -22,7 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __CREDITS_H__
 
 #include "VCommon.h"
-#include "GUI.h"
+#include "gui/basic/GUI.h"
 
   /*===========================================================================
   Credits class

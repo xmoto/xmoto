@@ -4,6 +4,7 @@ X-Moto 0.3.3 2007-
  * check md5sum for theme update
  * Portuguese translation
  * command line options changes
+ * pageup/pagedown to play next/previous level
  * some bug fixes
 
 X-Moto 0.3.2 2007-07-29

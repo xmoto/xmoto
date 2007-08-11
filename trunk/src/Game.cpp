@@ -1031,6 +1031,24 @@ GameApp::GameApp() {
 	case SDLK_F2:
 	  m_Renderer.switchFollow();
 	  break;
+	case SDLK_PAGEUP:
+	  if(_IsThereANextLevel(m_PlaySpecificLevelId)) {
+	    m_MotoGame.endLevel();
+	    m_Renderer.unprepareForNewLevel();
+	    m_PlaySpecificLevelId = _DetermineNextLevel(m_PlaySpecificLevelId);
+	    m_bPrePlayAnim = true;
+	    setState(GS_PREPLAYING);
+	  }
+	  break;
+	case SDLK_PAGEDOWN:
+	  if(_IsThereAPreviousLevel(m_PlaySpecificLevelId)) {
+	    m_MotoGame.endLevel();
+	    m_Renderer.unprepareForNewLevel();
+	    m_PlaySpecificLevelId = _DeterminePreviousLevel(m_PlaySpecificLevelId);
+	    m_bPrePlayAnim = true;
+	    setState(GS_PREPLAYING);
+	  }
+	  break;
   case SDLK_RETURN:
     /* retart immediatly the level */
     _RestartLevel();
@@ -1237,7 +1255,24 @@ GameApp::GameApp() {
   
   bool GameApp::_IsThereANextLevel(const std::string& i_id_level) {
     return _DetermineNextLevel(i_id_level) != "";
-  }  
+  }
+
+  std::string GameApp::_DeterminePreviousLevel(const std::string& i_id_level) {
+    if(m_currentPlayingList == NULL) {
+      return "";
+    }
+
+    for(int i=1;i<m_currentPlayingList->getEntries().size();i++) {
+      if((*((std::string*)m_currentPlayingList->getEntries()[i]->pvUser)) == i_id_level) {
+	return *((std::string*)m_currentPlayingList->getEntries()[i-1]->pvUser);
+      }
+    }
+    return *((std::string*)m_currentPlayingList->getEntries()[m_currentPlayingList->getEntries().size()-1]->pvUser);
+  }
+  
+  bool GameApp::_IsThereAPreviousLevel(const std::string& i_id_level) {
+    return _DeterminePreviousLevel(i_id_level) != "";
+  } 
 
   void GameApp::_UpdateWorldRecord(const std::string &LevelID) {  
     char **v_result;

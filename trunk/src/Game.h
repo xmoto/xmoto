@@ -34,7 +34,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Input.h"
 #include "WWW.h"
 #include "WWWAppInterface.h"
-#include "GUIXMoto.h"
+#include "gui/specific/GUIXMoto.h"
 #include "Credits.h"
 #include "LevelsManager.h"
 #include "XMotoLoadLevelsInterface.h"
@@ -425,7 +425,9 @@ class xmDatabase;
       
       std::string _DetermineNextLevel(const std::string& i_id_level);
       bool _IsThereANextLevel(const std::string& i_id_level);
-      
+      std::string _DeterminePreviousLevel(const std::string& i_id_level);
+      bool _IsThereAPreviousLevel(const std::string& i_id_level); 
+     
       void _RestartLevel(bool i_reloadLevel = false);
   
       void _InitWebConf(void);

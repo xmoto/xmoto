@@ -23,6 +23,19 @@ tinyxml_SOURCES = tinyxml/tinystr.cpp tinyxml/tinyxml.cpp \
 md5_SOURCES = md5sum/md5.h md5sum/md5.c \
   md5sum/md5file.h md5sum/md5file.cpp
 
+gui_basic_SOURCES = gui/basic/GUI.h               \
+		    gui/basic/GUI.cpp             \
+		    gui/basic/GUIButton.cpp       \
+		    gui/basic/GUIButtonDrawn.cpp  \
+		    gui/basic/GUIEdit.cpp         \
+		    gui/basic/GUIFrame.cpp        \
+		    gui/basic/GUIList.cpp         \
+		    gui/basic/GUIStatic.cpp       \
+		    gui/basic/GUITabView.cpp
+
+gui_specific_SOURCES = gui/specific/GUIXMoto.h   \
+                       gui/specific/GUIXMoto.cpp
+
 helpers_SOURCES = helpers/VMath.h             \
                   helpers/VMath.cpp           \
                   helpers/VExcept.h           \
@@ -85,6 +98,9 @@ if WIN32
 common_SOURCES += $(bz2_SOURCES)
 endif
 
+common_SOURCES += $(gui_basic_SOURCES)
+common_SOURCES += $(gui_specific_SOURCES)
+
 common_LDADD = $(GL_LIBS) $(SDL_LIBS) $(LIBINTL)
 if WIN32
 common_LDADD += $(MINGW32_LIBS)
@@ -93,8 +109,7 @@ endif
 bin_PROGRAMS = xmoto
 
 xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp \
-  GameMenus.cpp GUIBestTimes.cpp GUIButton.cpp GUIButtonDrawn.cpp GUI.cpp \
-  GUIFrame.cpp GUIList.cpp GUIStatic.cpp GUITabView.cpp \
+  GameMenus.cpp GUIBestTimes.cpp \
   Renderer.cpp RendererInit.cpp Replay.cpp Sound.cpp \
   LuaLibGame.h LuaLibGame.cpp \
   UserConfig.cpp \
@@ -102,9 +117,6 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp \
   Game.h \
   GameText.h \
   LevelsText.h \
-  GUI.h \
-  GUIXMoto.h \
-  GUIXMoto.cpp \
   PhysSettings.h \
   Renderer.h \
   Replay.h \
@@ -117,7 +129,6 @@ xmoto_SOURCES = $(common_SOURCES) BSP.cpp Game.cpp \
   GameSerializer.cpp \
   Collision.cpp \
   Collision.h \
-  GUIEdit.cpp \
   RendererFBO.cpp \
   glext.h \
   ScriptDynamicObjects.h \
