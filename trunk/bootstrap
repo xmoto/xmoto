@@ -1,24 +1,25 @@
 #!/bin/sh
 
-(automake --version) < /dev/null > /dev/null 2>&1 || {
-	echo;
-	echo "You must have automake installed to compile xmoto";
-	echo;
-	exit;
-}
+if ! aclocal -I config $ACLOCAL_FLAGS
+then
+    echo "aclocal failed !"                2>&1
+    echo "aclocal >= 1.9.6 is required !"  2>&1
+    exit 1
+fi
 
-(autoconf --version) < /dev/null > /dev/null 2>&1 || {
-	echo;
-	echo "You must have autoconf installed to compile xmoto";
-	echo;
-	exit;
-}
+if ! automake --gnu --add-missing --copy
+then
+    echo "automake failed !"               2>&1
+    echo "automake >= 1.9.6 is required !" 2>&1
+    exit 1
+fi
 
-echo "Generating configuration files for xmoto, please wait..."
-echo;
+if ! autoconf
+then
+    echo "autoconf failed !"               2>&1
+    echo "autoconf >= 2.13 is required !"  2>&1
+    exit 1
+fi
 
-aclocal -I config $ACLOCAL_FLAGS\
-&& automake --gnu --add-missing --copy \
-&& autoconf \
-&& echo "You can now run ./configure"
+echo "You can now run ./configure"
 

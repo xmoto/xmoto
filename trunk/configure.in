@@ -1,6 +1,5 @@
 AC_INIT(src/VApp.cpp)
 
-dnl otherwise autoconf whines
 AC_CANONICAL_TARGET()
 AM_INIT_AUTOMAKE(xmoto,0.3.3)
 AC_GNU_SOURCE
@@ -9,6 +8,7 @@ AC_PROG_CXX
 AC_PROG_CPP
 AC_PROG_INSTALL
 
+dnl endianness
 AC_C_BIGENDIAN(AC_DEFINE([XMOTO_BIG_ENDIAN]),
 AC_DEFINE([XMOTO_LITTLE_ENDIAN]))
 
@@ -17,9 +17,8 @@ AC_CHECK_HEADERS([sqlite3.h],[SQLITE_LIBS=-lsqlite3],[AC_MSG_ERROR("sqlite3 requ
 AC_CHECK_LIB(sqlite3, main,[],[AC_MSG_ERROR("Linking against sqlite3 failed.")])
 AC_SUBST(SQLITE_LIBS)
 
-dnl libz before png!
+dnl libz before png
 AC_CHECK_LIB(z, uncompress, [], [AC_MSG_ERROR(zlib required)])
-
 AC_CHECK_LIB(jpeg, jpeg_CreateCompress, [], [AC_MSG_ERROR(libjpeg required)])
 AC_CHECK_LIB(png, png_read_image, [], [AC_MSG_ERROR(libpng required)])
 
@@ -48,7 +47,7 @@ dnl sdl_ttf
 #AC_CHECK_HEADERS([SDL/SDL_ttf.h],[],[AC_MSG_ERROR(SDL_ttf headers required)])
 AC_SDL_CHECK_LIB(SDL_ttf, TTF_OpenFont, [], [AC_MSG_ERROR(SDL_ttf lib required)])
 
-dnl Put OpenGL
+dnl openGl
 AC_ARG_WITH([renderer-openGl],
   [AS_HELP_STRING([--with-renderer-openGl=0|1],
     [RendererOpenGl])],
@@ -62,7 +61,7 @@ then
   AX_CHECK_GL()
 fi
 
-dnl Put SDL_gfx
+dnl sdlGfx
 AC_ARG_WITH([renderer-sdlGfx],
   [AS_HELP_STRING([--with-renderer-sdlGfx=0|1],
     [RendererSdlGfx])],
@@ -85,21 +84,13 @@ dnl AC_CHECK_HEADERS(lua.h lua/lua.h lua50/lua.h, [break], [AC_MSG_ERROR(Could n
 dnl AC_CHECK_HEADERS(lauxlib.h lua/lauxlib.h lua50/lauxlib.h, [break], [AC_MSG_ERROR(Could not find luaxlib.h)])
 dnl AC_CHECK_HEADERS(lualib.h lua/lualib.h lua50/lualib.h, [break], [AC_MSG_ERROR(Could not find lualib.h)])
 
-AC_CHECK_HEADER(lua5.1/lua.h,AC_DEFINE(HAVE_LUA51_LUA_H),[])
-AC_CHECK_HEADER(lua5.1/lauxlib.h,AC_DEFINE(HAVE_LUA51_LAUXLIB_H),[])
-AC_CHECK_HEADER(lua5.1/lualib.h,AC_DEFINE(HAVE_LUA51_LUALIB_H),[])
-
-AC_CHECK_HEADER(lua50/lua.h,AC_DEFINE(HAVE_LUA50_LUA_H),[])
-AC_CHECK_HEADER(lua50/lauxlib.h,AC_DEFINE(HAVE_LUA50_LAUXLIB_H),[])
-AC_CHECK_HEADER(lua50/lualib.h,AC_DEFINE(HAVE_LUA50_LUALIB_H),[])
-
-AC_CHECK_HEADER(lua/lua.h,AC_DEFINE(HAVE_LUA_LUA_H),[])
-AC_CHECK_HEADER(lua/lauxlib.h,AC_DEFINE(HAVE_LUA_LAUXLIB_H),[])
-AC_CHECK_HEADER(lua/lualib.h,AC_DEFINE(HAVE_LUA_LUALIB_H),[])
-
-AC_CHECK_HEADER(lua.h,AC_DEFINE(HAVE_LUA_H),[])
-AC_CHECK_HEADER(lauxlib.h,AC_DEFINE(HAVE_LAUXLIB_H),[])
-AC_CHECK_HEADER(lualib.h,AC_DEFINE(HAVE_LUALIB_H),[])
+dnl search in this order to put in USE_LUA_VERSION the recenter version
+dnl in .h inclusion, order is reversed to include the recenter version
+AC_CHECK_HEADER(lua.h,        AC_DEFINE(HAVE_LUA_H)       , [USE_LUA_VERSION="unknown"])
+AC_CHECK_HEADER(lua/lua.h,    AC_DEFINE(HAVE_LUA_LUA_H)   , [USE_LUA_VERSION="unknonw"])
+AC_CHECK_HEADER(lua50/lua.h,  AC_DEFINE(HAVE_LUA50_LUA_H) , [USE_LUA_VERSION="5.0"])
+AC_CHECK_HEADER(lua51/lua.h,  AC_DEFINE(HAVE_LUA51_LUA_H) , [USE_LUA_VERSION="5.1"])
+AC_CHECK_HEADER(lua5.1/lua.h, AC_DEFINE(HAVE_LUA5_1_LUA_H), [USE_LUA_VERSION="5.1"])
 
 AC_LANG_PUSH([C++])
 
@@ -153,11 +144,10 @@ AC_OUTPUT(Makefile       \
           bin/Makefile   \
           po/Makefile.in \
           src/Makefile   \
-          extra/Makefile         \
+          extra/Makefile \
          )
 
 # display is something is missing
-
 function displayRequirement {
   STUFF="$1"
   VAR="$2"
@@ -165,10 +155,16 @@ function displayRequirement {
   REQ="$4"
 
   if test "$VAR" = "$GOOD_RES"; then
-    printf "| %15s | %10s | %51s |\n" "$STUFF" "enabled" "($REQ)"
+    printf "| %15s | %10s | %51s |\n" "$STUFF" "enabled" "(""$REQ"")"
   else
-    printf "| %15s | %10s | %51s |\n" "$STUFF" "disabled" "($REQ missing)"
+    printf "| %15s | %10s | %51s |\n" "$STUFF" "disabled" "(""$REQ"" missing)"
   fi
+}
+
+function displayVersion {
+  LIB="$1"
+  VERSION="$2"
+  printf "| %15s | %10s | %51s |\n" "$LIB" "enabled" "$VERSION"
 }
 
 use_gettext=no
@@ -184,6 +180,8 @@ fi
 echo
 echo   "+-----------------+------------+-----------------------------------------------------+"
 displayRequirement "Locales" "$use_gettext" "yes" "gettext"
+echo   "+-----------------+------------+-----------------------------------------------------+"
+displayVersion "Lua" "$USE_LUA_VERSION"
 echo   "+-----------------+------------+-----------------------------------------------------+"
 displayRequirement "Zoom" "$with_enable_zoom" "1" "--with-enable-zoom=1"
 echo   "+-----------------+------------+-----------------------------------------------------+"
