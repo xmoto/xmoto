@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Renderer.h"
 #include "PhysSettings.h"
 #include "xmscene/BasicSceneStructs.h"
-
+#include "VDraw.h"
 
   void GameRenderer::_RenderParticleDraw(Vector2f P,Texture *pTexture,float fSize,float fAngle, TColor c) {
     /* Render single particle */

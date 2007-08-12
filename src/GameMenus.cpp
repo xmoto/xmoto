@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/Log.h"
 #include "XMBuild.h"
 #include "XMSession.h"
+#include "VDraw.h"
 
   UIFrame* GameApp::makeHelpWindow(DrawLib* i_drawLib, UIWindow* io_parent, UserConfig* i_Config) {
     UIFrame *v_pHelpWindow;
