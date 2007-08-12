@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-08-12 10:50+0200\n"
+"POT-Creation-Date: 2007-08-12 12:38+0200\n"
 "PO-Revision-Date: 2006-12-21 21:14+0100\n"
 "Last-Translator: Jens Erler <mothbox@gmx.net>\n"
 "Language-Team: German\n"
@@ -2113,296 +2113,352 @@ msgid "The big one is your current time"
 msgstr "Die größte ist die laufende Zeit"
 
 #: src/LevelsText.h:24
-msgid "The small one to the right is your own best time"
+#, fuzzy
+msgid ""
+"The small one to the right is your own best time\n"
+"for the current level..."
 msgstr "Die kleine rechts ist deine eigene Bestzeit"
 
 #: src/LevelsText.h:25
-msgid "for the current level..."
-msgstr "für das Level..."
-
-#: src/LevelsText.h:26
-msgid "... and the one to the left is the best of all"
+#, fuzzy
+msgid ""
+"... and the one to the left is the best of all\n"
+"on this computer."
 msgstr "... und die links die Bestzeit aus allen Spieler-Profilen"
 
-#: src/LevelsText.h:27
-msgid "on this computer."
-msgstr "auf diesem Computer"
-
-#: src/LevelsText.h:28
-msgid "Down here there's the minimap, which shows the level"
+#: src/LevelsText.h:26
+#, fuzzy
+msgid ""
+"Down here there's the minimap, which shows the level\n"
+"around you, so you know where you're heading."
 msgstr "Hier unten ist die Mini-Karte, welche einen größeren"
 
-#: src/LevelsText.h:29
-msgid "around you, so you know where you're heading."
-msgstr "Ausschnitt des Levels anzeigt."
-
-#: src/LevelsText.h:30
+#: src/LevelsText.h:27
 msgid "Now let's look at your controls."
 msgstr "Und nun, zur Steuerung."
 
-#: src/LevelsText.h:31
+#: src/LevelsText.h:28
 msgid "(You seem to be using a joystick, can't help with that :P)"
 msgstr "(Du scheinst einen Joystick zu benutzen, dann ist wohl alles klar.)"
 
-#: src/LevelsText.h:32
+#: src/LevelsText.h:29
 msgid ": Drive forward"
 msgstr ": Vorwärts"
 
-#: src/LevelsText.h:33
+#: src/LevelsText.h:30
 msgid ": Brake"
 msgstr ": Bremsen"
 
-#: src/LevelsText.h:34
+#: src/LevelsText.h:31
 msgid ": Change direction"
 msgstr ": Richtung wechseln"
 
-#: src/LevelsText.h:35
+#: src/LevelsText.h:32
 msgid ": Rotate anti-clockwise"
 msgstr ": gegen den Uhrzeigersinn drehen"
 
-#: src/LevelsText.h:36
+#: src/LevelsText.h:33
 msgid ": Rotate clockwise"
 msgstr ": im Uhrzeigersinn drehen"
 
-#: src/LevelsText.h:37
+#: src/LevelsText.h:34
 msgid "Okay. The red dot on your minimap is a strawberry."
 msgstr "Soweit, so gut. Der rote Punkt auf der Mini-Karte ist eine Erdbeere."
 
-#: src/LevelsText.h:38
-msgid "The primary objective of the game is for you"
-msgstr "Diese müssen alle aufgesammelt werden, bevor"
-
-#: src/LevelsText.h:39
-msgid "to collect all of them, and then find the flower."
+#: src/LevelsText.h:35
+#, fuzzy
+msgid ""
+"The primary objective of the game is for you\n"
+"to collect all of them, and then find the flower."
 msgstr "das Level abgeschlossen werden kann."
 
-#: src/LevelsText.h:40
-msgid "The icon to the right of your time,"
-msgstr "Das Symbol rechts vom Zeitzähler"
-
-#: src/LevelsText.h:41
-msgid "indicates how many strawberries still left."
+#: src/LevelsText.h:36
+#, fuzzy
+msgid ""
+"The icon to the right of your time,\n"
+"indicates how many strawberries still left."
 msgstr "zeigt die Anzahl verbleibender Erdeeren."
 
-#: src/LevelsText.h:42
+#: src/LevelsText.h:37
 msgid "Drive in its direction..."
 msgstr "Fahre in deren Richtung..."
 
-#: src/LevelsText.h:43
-msgid "When done, head for the flower."
-msgstr "Wenn das geschafft ist, auf zur Blume."
-
-#: src/LevelsText.h:44
-msgid "It's the purple dot on your minimap."
+#: src/LevelsText.h:38
+#, fuzzy
+msgid ""
+"When done, head for the flower.\n"
+"It's the purple dot on your minimap."
 msgstr "Dies ist der violette Punkt auf der Mini-Karte."
 
-#: src/LevelsText.h:45
+#: src/LevelsText.h:39
 msgid "Welcome to X-Moto!"
 msgstr "Wilkommen bei X-Moto!"
 
-#: src/LevelsText.h:46
-msgid "This level is a short tutorial of"
+#: src/LevelsText.h:40
+#, fuzzy
+msgid ""
+"This level is a short tutorial of\n"
+"how you play the game."
 msgstr "Dieses Level ist eine kleine Einführung,"
 
-#: src/LevelsText.h:47
-msgid "how you play the game."
-msgstr "um sich mit dem Spiel vertraut zu machen."
-
-#: src/LevelsText.h:48
+#: src/LevelsText.h:41
 msgid "Please stay put and follow the instructions! :)"
 msgstr "Bitte bleib an Ort und Stelle und folge den Anweisungen!"
 
-#: src/LevelsText.h:49
+#: src/LevelsText.h:42
 msgid "Pick up the strawberry by touching it"
 msgstr "Nimm die Erdbeere auf, indem du sie berührst."
 
-#: src/LevelsText.h:50
+#: src/LevelsText.h:43
 msgid "Touch it to finish the level. Good luck with the rest :)"
 msgstr "Berühre sie, um das Level zu beenden. Viel Glück mit dem Rest!"
 
-#: src/LevelsText.h:51
+#: src/LevelsText.h:44
 msgid "The first jump you're going to perform is very easy."
 msgstr "Der erste Sprung ist noch sehr einfach."
 
-#: src/LevelsText.h:52
-msgid "Drive to the left, accelerate, and when you are in"
-msgstr "Fahre nach links, beschleunige, und sobald du"
+#: src/LevelsText.h:45
+msgid ""
+"Drive to the left, accelerate, and when you are in\n"
+"the air, try to adjust your attitude with the left\n"
+"and right arrow keys, so you'll land on your wheels."
+msgstr ""
 
-#: src/LevelsText.h:53
-msgid "the air, try to adjust your attitude with the left"
-msgstr "in der Luft bist, versuch dein Bike mit den Pfeiltasten"
-
-#: src/LevelsText.h:54
-msgid "and right arrow keys, so you'll land on your wheels."
-msgstr "auszutarieren, so dass du auf den Rädern aufkommst."
-
-#: src/LevelsText.h:55
-msgid "The next jump is a bit trickier. You'll need all the"
+#: src/LevelsText.h:46
+#, fuzzy
+msgid ""
+"The next jump is a bit trickier. You'll need all the\n"
+"speed you can get to reach the other side..."
 msgstr "Der nächste Sprung ist etwas kniffliger. Du brauchst"
 
-#: src/LevelsText.h:56
-msgid "speed you can get to reach the other side..."
-msgstr "maximale Geschwindigkeit, um die andere Seite zu erreichen."
-
-#: src/LevelsText.h:57
+#: src/LevelsText.h:47
 msgid "Now for the most difficult jump in this tutorial!"
 msgstr "Nun auf zum schwierigsten Sprung in dieser Einführung!"
 
-#: src/LevelsText.h:58
+#: src/LevelsText.h:48
 msgid "This time, speed alone won't do the job..."
 msgstr "Diesmal wird Geschwindigkeit allein nicht zum Ziel führen..."
 
-#: src/LevelsText.h:59
-msgid "Here's the plan:"
-msgstr "Und so gehts:"
+#: src/LevelsText.h:49
+msgid ""
+"Here's the plan:\n"
+"Again, you'll have to obtain maximum speed, but when\n"
+"you reach the edge of the jump, pull the bike's front\n"
+"wheel up."
+msgstr ""
 
-#: src/LevelsText.h:60
-msgid "Again, you'll have to obtain maximum speed, but when"
-msgstr "Zunächst muss wieder Höchstgeschwindigkeit erreicht werden,"
-
-#: src/LevelsText.h:61
-msgid "you reach the edge of the jump, pull the bike's front"
-msgstr "sobald du aber den rettenden Vorsprung erreichst, "
-
-#: src/LevelsText.h:62
-msgid "wheel up."
-msgstr "zieh die Nase des Bikes hoch!"
-
-#: src/LevelsText.h:63 src/LevelsText.h:90
-msgid "That will cause the rear suspension to increase the"
+#: src/LevelsText.h:50 src/LevelsText.h:63
+#, fuzzy
+msgid ""
+"That will cause the rear suspension to increase the\n"
+"length of the jump.\n"
+"Try it..."
 msgstr "Dadurch wird die Federung des Hinterrads helfen,"
 
-#: src/LevelsText.h:64 src/LevelsText.h:91
-msgid "length of the jump."
-msgstr "die Kante zu erklimmen."
-
-#: src/LevelsText.h:65 src/LevelsText.h:82 src/LevelsText.h:92
-msgid "Try it..."
-msgstr "Versuchs!"
-
-#: src/LevelsText.h:66
+#: src/LevelsText.h:51
 msgid "This tutorial will teach you the basics of jumping."
 msgstr "Diese Einführung lehrt die Grundlagen für Sprünge."
 
-#: src/LevelsText.h:67
-msgid "Remember you can turn around your bike"
+#: src/LevelsText.h:52
+#, fuzzy
+msgid ""
+"Remember you can turn around your bike\n"
+"by pressing :"
 msgstr "Denk dran, wenn du das Bike herumdrehen willst,"
 
-#: src/LevelsText.h:68
-msgid "by pressing "
-msgstr "drück die Taste "
-
-#: src/LevelsText.h:69
+#: src/LevelsText.h:53
 msgid "That was pretty easy, right?"
 msgstr "Das war einfach, nicht wahr?"
 
-#: src/LevelsText.h:70
-msgid "Accelerate NOW! Obtain maximum speed, and try to"
+#: src/LevelsText.h:54
+#, fuzzy
+msgid ""
+"Accelerate NOW! Obtain maximum speed, and try to\n"
+"keep the front wheel at the ground..."
 msgstr "Beschleunige JETZT! Volles Rohr und versuch,"
 
-#: src/LevelsText.h:71
-msgid "keep the front wheel at the ground..."
-msgstr "das Vorderrad am Boden zu halten..."
-
-#: src/LevelsText.h:72
+#: src/LevelsText.h:55
 msgid "Nice jump there! :)"
 msgstr "Netter Sprung!"
 
-#: src/LevelsText.h:73
+#: src/LevelsText.h:56
 msgid "Congrats, you're now a master jumper!"
 msgstr "Gratulation, du bist jetzt ein Meisterspringer!"
 
-#: src/LevelsText.h:74
-msgid "The basic idea is that when driving on the rear wheel,"
+#: src/LevelsText.h:57
+#, fuzzy
+msgid ""
+"The basic idea is that when driving on the rear wheel,\n"
+"your head is lowered quite a lot..."
 msgstr "Durch fahren auf dem Hinterrad wird der Kopf abgesenkt,"
 
-#: src/LevelsText.h:75
-msgid "your head is lowered quite a lot..."
-msgstr "was die Durchfahrt niedriger Passagen ermöglicht."
+#: src/LevelsText.h:58
+msgid ""
+"The difficult part is to keep the balance.\n"
+"When the distance you have to drive is quite short,\n"
+"you don't need to keep the balance."
+msgstr ""
 
-#: src/LevelsText.h:76
-msgid "The difficult part is to keep the balance."
-msgstr "Das schwierige daran ist das Balance-halten."
+#: src/LevelsText.h:59
+msgid ""
+"Accelerate (slowly) to the right with the front wheel raising.\n"
+"Just before your head hit the block, make a quick left/right\n"
+"combination, and you should be on the other side.\n"
+"Try it..."
+msgstr ""
 
-#: src/LevelsText.h:77
-msgid "When the distance you have to drive is quite short,"
-msgstr "Bei nur kurzen Passagen"
+#: src/LevelsText.h:60
+msgid ""
+"Now you'll try a bit more difficult one...\n"
+"This time keep your hands off the left and right arrow keys,\n"
+"they're not delicate enough to help you keep balance."
+msgstr ""
 
-#: src/LevelsText.h:78
-msgid "you don't need to keep the balance."
-msgstr "muss die Balance nicht lange gehalten werden."
+#: src/LevelsText.h:61
+msgid ""
+"Instead regulate your angle by accelerating and braking.\n"
+"Try to drive a bit back and forth on your rear wheel,\n"
+"keeping the bike as steady as possible..."
+msgstr ""
 
-#: src/LevelsText.h:79
-msgid "Accelerate (slowly) to the right with the front wheel raising."
-msgstr "Beschleunige langsam, und zieh dabei das Vorderrad hoch."
-
-#: src/LevelsText.h:80
-msgid "Just before your head hit the block, make a quick left/right"
-msgstr "Kurz bevor Kopf auf Kante trifft, mach eine schnelle Links/Rechts-"
-
-#: src/LevelsText.h:81
-msgid "combination, and you should be on the other side."
-msgstr "Kombination mit den Pfeiltasten, und es sollte geschafft sein."
-
-#: src/LevelsText.h:83
-msgid "Now you'll try a bit more difficult one..."
-msgstr "Jetzt wirds etwas schwieriger..."
-
-#: src/LevelsText.h:84
-msgid "This time keep your hands off the left and right arrow keys,"
-msgstr "Lass diesmal die Finger von den Links/Rechts-Pfeiltasten,"
-
-#: src/LevelsText.h:85
-msgid "they're not delicate enough to help you keep balance."
-msgstr "denn sie reagieren nicht sensibel genug, um die Balance zu halten."
-
-#: src/LevelsText.h:86
-msgid "Instead regulate your angle by accelerating and braking."
-msgstr "Stattdessen, reguliere den Winkel per Gas und Bremse."
-
-#: src/LevelsText.h:87
-msgid "Try to drive a bit back and forth on your rear wheel,"
-msgstr "Versuch, auf dem Hinterrad etwas hin und her zu wippen,"
-
-#: src/LevelsText.h:88
-msgid "keeping the bike as steady as possible..."
-msgstr "und dabei das Bike so sicher wie möglich zu kontrollieren."
-
-#: src/LevelsText.h:89
+#: src/LevelsText.h:62
+#, fuzzy
 msgid "Try getting under the next obstacle when you feel you're ready."
 msgstr "Auf zur nächsten Passage, wenn du bereit bist!"
 
-#: src/LevelsText.h:93
-msgid "This tutorial will teach you to rear-wheel through"
-msgstr "Diese Einführung lehrt das Fahren auf dem Hinterrad,"
+#: src/LevelsText.h:64
+msgid ""
+"This tutorial will teach you to rear-wheel through\n"
+"areas where the ceiling is low.\n"
+"Beware that this can be pretty difficult :)"
+msgstr ""
 
-#: src/LevelsText.h:94
-msgid "areas where the ceiling is low."
-msgstr "was bei Passagen mit niedriger Decke erforderlich ist."
-
-#: src/LevelsText.h:95
-msgid "Beware that this can be pretty difficult :)"
-msgstr "Aber Achtung, das ist wirklich nicht einfach!"
-
-#: src/LevelsText.h:96
+#: src/LevelsText.h:65
 msgid "Not that difficult, right?"
 msgstr "Not soo schwierig, nicht wahr?"
 
-#: src/LevelsText.h:97
+#: src/LevelsText.h:66
 msgid "Nice! Now try the next one, it's a bit more difficult..."
 msgstr "Schön! Auf zur nächsten, du schaffst es..."
 
-#: src/LevelsText.h:98
+#: src/LevelsText.h:67
 msgid "Good job! The next one is even more difficult..."
 msgstr "Sehr gut! Jetzt wirds richtig knifflig..."
 
-#: src/LevelsText.h:99
-msgid "Now for the final one... It's not that long, but instead"
-msgstr "Dies ist die letzte Hürde! Nicht so lang, dafür aber"
-
-#: src/LevelsText.h:100
-msgid "there's even less room for your precious head. Good luck! :)"
+#: src/LevelsText.h:68
+#, fuzzy
+msgid ""
+"Now for the final one... It's not that long, but instead\n"
+"there's even less room for your precious head. Good luck! :)"
 msgstr "ist die Decke noch niedriger. Viel Glück!"
+
+#~ msgid "for the current level..."
+#~ msgstr "für das Level..."
+
+#~ msgid "on this computer."
+#~ msgstr "auf diesem Computer"
+
+#~ msgid "around you, so you know where you're heading."
+#~ msgstr "Ausschnitt des Levels anzeigt."
+
+#~ msgid "The primary objective of the game is for you"
+#~ msgstr "Diese müssen alle aufgesammelt werden, bevor"
+
+#~ msgid "The icon to the right of your time,"
+#~ msgstr "Das Symbol rechts vom Zeitzähler"
+
+#~ msgid "When done, head for the flower."
+#~ msgstr "Wenn das geschafft ist, auf zur Blume."
+
+#~ msgid "how you play the game."
+#~ msgstr "um sich mit dem Spiel vertraut zu machen."
+
+#~ msgid "Drive to the left, accelerate, and when you are in"
+#~ msgstr "Fahre nach links, beschleunige, und sobald du"
+
+#~ msgid "the air, try to adjust your attitude with the left"
+#~ msgstr "in der Luft bist, versuch dein Bike mit den Pfeiltasten"
+
+#~ msgid "and right arrow keys, so you'll land on your wheels."
+#~ msgstr "auszutarieren, so dass du auf den Rädern aufkommst."
+
+#~ msgid "speed you can get to reach the other side..."
+#~ msgstr "maximale Geschwindigkeit, um die andere Seite zu erreichen."
+
+#~ msgid "Here's the plan:"
+#~ msgstr "Und so gehts:"
+
+#~ msgid "Again, you'll have to obtain maximum speed, but when"
+#~ msgstr "Zunächst muss wieder Höchstgeschwindigkeit erreicht werden,"
+
+#~ msgid "you reach the edge of the jump, pull the bike's front"
+#~ msgstr "sobald du aber den rettenden Vorsprung erreichst, "
+
+#~ msgid "wheel up."
+#~ msgstr "zieh die Nase des Bikes hoch!"
+
+#~ msgid "length of the jump."
+#~ msgstr "die Kante zu erklimmen."
+
+#~ msgid "Try it..."
+#~ msgstr "Versuchs!"
+
+#~ msgid "by pressing "
+#~ msgstr "drück die Taste "
+
+#~ msgid "keep the front wheel at the ground..."
+#~ msgstr "das Vorderrad am Boden zu halten..."
+
+#~ msgid "your head is lowered quite a lot..."
+#~ msgstr "was die Durchfahrt niedriger Passagen ermöglicht."
+
+#~ msgid "The difficult part is to keep the balance."
+#~ msgstr "Das schwierige daran ist das Balance-halten."
+
+#~ msgid "When the distance you have to drive is quite short,"
+#~ msgstr "Bei nur kurzen Passagen"
+
+#~ msgid "you don't need to keep the balance."
+#~ msgstr "muss die Balance nicht lange gehalten werden."
+
+#~ msgid "Accelerate (slowly) to the right with the front wheel raising."
+#~ msgstr "Beschleunige langsam, und zieh dabei das Vorderrad hoch."
+
+#~ msgid "Just before your head hit the block, make a quick left/right"
+#~ msgstr "Kurz bevor Kopf auf Kante trifft, mach eine schnelle Links/Rechts-"
+
+#~ msgid "combination, and you should be on the other side."
+#~ msgstr "Kombination mit den Pfeiltasten, und es sollte geschafft sein."
+
+#~ msgid "Now you'll try a bit more difficult one..."
+#~ msgstr "Jetzt wirds etwas schwieriger..."
+
+#~ msgid "This time keep your hands off the left and right arrow keys,"
+#~ msgstr "Lass diesmal die Finger von den Links/Rechts-Pfeiltasten,"
+
+#~ msgid "they're not delicate enough to help you keep balance."
+#~ msgstr "denn sie reagieren nicht sensibel genug, um die Balance zu halten."
+
+#~ msgid "Instead regulate your angle by accelerating and braking."
+#~ msgstr "Stattdessen, reguliere den Winkel per Gas und Bremse."
+
+#~ msgid "Try to drive a bit back and forth on your rear wheel,"
+#~ msgstr "Versuch, auf dem Hinterrad etwas hin und her zu wippen,"
+
+#~ msgid "keeping the bike as steady as possible..."
+#~ msgstr "und dabei das Bike so sicher wie möglich zu kontrollieren."
+
+#~ msgid "This tutorial will teach you to rear-wheel through"
+#~ msgstr "Diese Einführung lehrt das Fahren auf dem Hinterrad,"
+
+#~ msgid "areas where the ceiling is low."
+#~ msgstr "was bei Passagen mit niedriger Decke erforderlich ist."
+
+#~ msgid "Beware that this can be pretty difficult :)"
+#~ msgstr "Aber Achtung, das ist wirklich nicht einfach!"
+
+#~ msgid "Now for the final one... It's not that long, but instead"
+#~ msgstr "Dies ist die letzte Hürde! Nicht so lang, dafür aber"
 
 #~ msgid ""
 #~ "Failed to check for levels.\n"

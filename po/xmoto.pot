@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-08-12 10:50+0200\n"
+"POT-Creation-Date: 2007-08-12 12:38+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2020,293 +2020,227 @@ msgid "The big one is your current time"
 msgstr ""
 
 #: src/LevelsText.h:24
-msgid "The small one to the right is your own best time"
+msgid ""
+"The small one to the right is your own best time\n"
+"for the current level..."
 msgstr ""
 
 #: src/LevelsText.h:25
-msgid "for the current level..."
+msgid ""
+"... and the one to the left is the best of all\n"
+"on this computer."
 msgstr ""
 
 #: src/LevelsText.h:26
-msgid "... and the one to the left is the best of all"
+msgid ""
+"Down here there's the minimap, which shows the level\n"
+"around you, so you know where you're heading."
 msgstr ""
 
 #: src/LevelsText.h:27
-msgid "on this computer."
-msgstr ""
-
-#: src/LevelsText.h:28
-msgid "Down here there's the minimap, which shows the level"
-msgstr ""
-
-#: src/LevelsText.h:29
-msgid "around you, so you know where you're heading."
-msgstr ""
-
-#: src/LevelsText.h:30
 msgid "Now let's look at your controls."
 msgstr ""
 
-#: src/LevelsText.h:31
+#: src/LevelsText.h:28
 msgid "(You seem to be using a joystick, can't help with that :P)"
 msgstr ""
 
-#: src/LevelsText.h:32
+#: src/LevelsText.h:29
 msgid ": Drive forward"
 msgstr ""
 
-#: src/LevelsText.h:33
+#: src/LevelsText.h:30
 msgid ": Brake"
 msgstr ""
 
-#: src/LevelsText.h:34
+#: src/LevelsText.h:31
 msgid ": Change direction"
 msgstr ""
 
-#: src/LevelsText.h:35
+#: src/LevelsText.h:32
 msgid ": Rotate anti-clockwise"
 msgstr ""
 
-#: src/LevelsText.h:36
+#: src/LevelsText.h:33
 msgid ": Rotate clockwise"
 msgstr ""
 
-#: src/LevelsText.h:37
+#: src/LevelsText.h:34
 msgid "Okay. The red dot on your minimap is a strawberry."
 msgstr ""
 
-#: src/LevelsText.h:38
-msgid "The primary objective of the game is for you"
+#: src/LevelsText.h:35
+msgid ""
+"The primary objective of the game is for you\n"
+"to collect all of them, and then find the flower."
 msgstr ""
 
-#: src/LevelsText.h:39
-msgid "to collect all of them, and then find the flower."
+#: src/LevelsText.h:36
+msgid ""
+"The icon to the right of your time,\n"
+"indicates how many strawberries still left."
 msgstr ""
 
-#: src/LevelsText.h:40
-msgid "The icon to the right of your time,"
-msgstr ""
-
-#: src/LevelsText.h:41
-msgid "indicates how many strawberries still left."
-msgstr ""
-
-#: src/LevelsText.h:42
+#: src/LevelsText.h:37
 msgid "Drive in its direction..."
 msgstr ""
 
-#: src/LevelsText.h:43
-msgid "When done, head for the flower."
+#: src/LevelsText.h:38
+msgid ""
+"When done, head for the flower.\n"
+"It's the purple dot on your minimap."
 msgstr ""
 
-#: src/LevelsText.h:44
-msgid "It's the purple dot on your minimap."
-msgstr ""
-
-#: src/LevelsText.h:45
+#: src/LevelsText.h:39
 msgid "Welcome to X-Moto!"
 msgstr ""
 
-#: src/LevelsText.h:46
-msgid "This level is a short tutorial of"
+#: src/LevelsText.h:40
+msgid ""
+"This level is a short tutorial of\n"
+"how you play the game."
 msgstr ""
 
-#: src/LevelsText.h:47
-msgid "how you play the game."
-msgstr ""
-
-#: src/LevelsText.h:48
+#: src/LevelsText.h:41
 msgid "Please stay put and follow the instructions! :)"
 msgstr ""
 
-#: src/LevelsText.h:49
+#: src/LevelsText.h:42
 msgid "Pick up the strawberry by touching it"
 msgstr ""
 
-#: src/LevelsText.h:50
+#: src/LevelsText.h:43
 msgid "Touch it to finish the level. Good luck with the rest :)"
 msgstr ""
 
-#: src/LevelsText.h:51
+#: src/LevelsText.h:44
 msgid "The first jump you're going to perform is very easy."
 msgstr ""
 
-#: src/LevelsText.h:52
-msgid "Drive to the left, accelerate, and when you are in"
+#: src/LevelsText.h:45
+msgid ""
+"Drive to the left, accelerate, and when you are in\n"
+"the air, try to adjust your attitude with the left\n"
+"and right arrow keys, so you'll land on your wheels."
 msgstr ""
 
-#: src/LevelsText.h:53
-msgid "the air, try to adjust your attitude with the left"
+#: src/LevelsText.h:46
+msgid ""
+"The next jump is a bit trickier. You'll need all the\n"
+"speed you can get to reach the other side..."
 msgstr ""
 
-#: src/LevelsText.h:54
-msgid "and right arrow keys, so you'll land on your wheels."
-msgstr ""
-
-#: src/LevelsText.h:55
-msgid "The next jump is a bit trickier. You'll need all the"
-msgstr ""
-
-#: src/LevelsText.h:56
-msgid "speed you can get to reach the other side..."
-msgstr ""
-
-#: src/LevelsText.h:57
+#: src/LevelsText.h:47
 msgid "Now for the most difficult jump in this tutorial!"
 msgstr ""
 
-#: src/LevelsText.h:58
+#: src/LevelsText.h:48
 msgid "This time, speed alone won't do the job..."
 msgstr ""
 
-#: src/LevelsText.h:59
-msgid "Here's the plan:"
+#: src/LevelsText.h:49
+msgid ""
+"Here's the plan:\n"
+"Again, you'll have to obtain maximum speed, but when\n"
+"you reach the edge of the jump, pull the bike's front\n"
+"wheel up."
 msgstr ""
 
-#: src/LevelsText.h:60
-msgid "Again, you'll have to obtain maximum speed, but when"
+#: src/LevelsText.h:50 src/LevelsText.h:63
+msgid ""
+"That will cause the rear suspension to increase the\n"
+"length of the jump.\n"
+"Try it..."
 msgstr ""
 
-#: src/LevelsText.h:61
-msgid "you reach the edge of the jump, pull the bike's front"
-msgstr ""
-
-#: src/LevelsText.h:62
-msgid "wheel up."
-msgstr ""
-
-#: src/LevelsText.h:63 src/LevelsText.h:90
-msgid "That will cause the rear suspension to increase the"
-msgstr ""
-
-#: src/LevelsText.h:64 src/LevelsText.h:91
-msgid "length of the jump."
-msgstr ""
-
-#: src/LevelsText.h:65 src/LevelsText.h:82 src/LevelsText.h:92
-msgid "Try it..."
-msgstr ""
-
-#: src/LevelsText.h:66
+#: src/LevelsText.h:51
 msgid "This tutorial will teach you the basics of jumping."
 msgstr ""
 
-#: src/LevelsText.h:67
-msgid "Remember you can turn around your bike"
+#: src/LevelsText.h:52
+msgid ""
+"Remember you can turn around your bike\n"
+"by pressing :"
 msgstr ""
 
-#: src/LevelsText.h:68
-msgid "by pressing "
-msgstr ""
-
-#: src/LevelsText.h:69
+#: src/LevelsText.h:53
 msgid "That was pretty easy, right?"
 msgstr ""
 
-#: src/LevelsText.h:70
-msgid "Accelerate NOW! Obtain maximum speed, and try to"
+#: src/LevelsText.h:54
+msgid ""
+"Accelerate NOW! Obtain maximum speed, and try to\n"
+"keep the front wheel at the ground..."
 msgstr ""
 
-#: src/LevelsText.h:71
-msgid "keep the front wheel at the ground..."
-msgstr ""
-
-#: src/LevelsText.h:72
+#: src/LevelsText.h:55
 msgid "Nice jump there! :)"
 msgstr ""
 
-#: src/LevelsText.h:73
+#: src/LevelsText.h:56
 msgid "Congrats, you're now a master jumper!"
 msgstr ""
 
-#: src/LevelsText.h:74
-msgid "The basic idea is that when driving on the rear wheel,"
+#: src/LevelsText.h:57
+msgid ""
+"The basic idea is that when driving on the rear wheel,\n"
+"your head is lowered quite a lot..."
 msgstr ""
 
-#: src/LevelsText.h:75
-msgid "your head is lowered quite a lot..."
+#: src/LevelsText.h:58
+msgid ""
+"The difficult part is to keep the balance.\n"
+"When the distance you have to drive is quite short,\n"
+"you don't need to keep the balance."
 msgstr ""
 
-#: src/LevelsText.h:76
-msgid "The difficult part is to keep the balance."
+#: src/LevelsText.h:59
+msgid ""
+"Accelerate (slowly) to the right with the front wheel raising.\n"
+"Just before your head hit the block, make a quick left/right\n"
+"combination, and you should be on the other side.\n"
+"Try it..."
 msgstr ""
 
-#: src/LevelsText.h:77
-msgid "When the distance you have to drive is quite short,"
+#: src/LevelsText.h:60
+msgid ""
+"Now you'll try a bit more difficult one...\n"
+"This time keep your hands off the left and right arrow keys,\n"
+"they're not delicate enough to help you keep balance."
 msgstr ""
 
-#: src/LevelsText.h:78
-msgid "you don't need to keep the balance."
+#: src/LevelsText.h:61
+msgid ""
+"Instead regulate your angle by accelerating and braking.\n"
+"Try to drive a bit back and forth on your rear wheel,\n"
+"keeping the bike as steady as possible..."
 msgstr ""
 
-#: src/LevelsText.h:79
-msgid "Accelerate (slowly) to the right with the front wheel raising."
-msgstr ""
-
-#: src/LevelsText.h:80
-msgid "Just before your head hit the block, make a quick left/right"
-msgstr ""
-
-#: src/LevelsText.h:81
-msgid "combination, and you should be on the other side."
-msgstr ""
-
-#: src/LevelsText.h:83
-msgid "Now you'll try a bit more difficult one..."
-msgstr ""
-
-#: src/LevelsText.h:84
-msgid "This time keep your hands off the left and right arrow keys,"
-msgstr ""
-
-#: src/LevelsText.h:85
-msgid "they're not delicate enough to help you keep balance."
-msgstr ""
-
-#: src/LevelsText.h:86
-msgid "Instead regulate your angle by accelerating and braking."
-msgstr ""
-
-#: src/LevelsText.h:87
-msgid "Try to drive a bit back and forth on your rear wheel,"
-msgstr ""
-
-#: src/LevelsText.h:88
-msgid "keeping the bike as steady as possible..."
-msgstr ""
-
-#: src/LevelsText.h:89
+#: src/LevelsText.h:62
 msgid "Try getting under the next obstacle when you feel you're ready."
 msgstr ""
 
-#: src/LevelsText.h:93
-msgid "This tutorial will teach you to rear-wheel through"
+#: src/LevelsText.h:64
+msgid ""
+"This tutorial will teach you to rear-wheel through\n"
+"areas where the ceiling is low.\n"
+"Beware that this can be pretty difficult :)"
 msgstr ""
 
-#: src/LevelsText.h:94
-msgid "areas where the ceiling is low."
-msgstr ""
-
-#: src/LevelsText.h:95
-msgid "Beware that this can be pretty difficult :)"
-msgstr ""
-
-#: src/LevelsText.h:96
+#: src/LevelsText.h:65
 msgid "Not that difficult, right?"
 msgstr ""
 
-#: src/LevelsText.h:97
+#: src/LevelsText.h:66
 msgid "Nice! Now try the next one, it's a bit more difficult..."
 msgstr ""
 
-#: src/LevelsText.h:98
+#: src/LevelsText.h:67
 msgid "Good job! The next one is even more difficult..."
 msgstr ""
 
-#: src/LevelsText.h:99
-msgid "Now for the final one... It's not that long, but instead"
-msgstr ""
-
-#: src/LevelsText.h:100
-msgid "there's even less room for your precious head. Good luck! :)"
+#: src/LevelsText.h:68
+msgid ""
+"Now for the final one... It's not that long, but instead\n"
+"there's even less room for your precious head. Good luck! :)"
 msgstr ""

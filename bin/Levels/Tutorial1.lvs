@@ -47,10 +47,9 @@ function Tick()
 	elseif TutorialStage == 4 then
 		if Game.GetTime() > 19 then
 			TutorialStage = 5
-									
-			Game.Message("The small one to the right is your own best time")
-			Game.Message("for the current level...")
-			
+
+			Game.Message("The small one to the right is your own best time\nfor the current level...")
+
 			ArrowMode = 2
 			TargetArrowAngle = 135
 			TargetArrowX = 120
@@ -60,8 +59,7 @@ function Tick()
 		if Game.GetTime() > 24 then
 			TutorialStage = 6
 									
-			Game.Message("... and the one to the left is the best of all")
-			Game.Message("on this computer.")
+			Game.Message("... and the one to the left is the best of all\non this computer.")
 			
 			ArrowMode = 2
 			TargetArrowAngle = 135
@@ -72,9 +70,7 @@ function Tick()
 		if Game.GetTime() > 29 then
 			TutorialStage = 7
 									
-			Game.Message("Down here there's the minimap, which shows the level")
-			Game.Message("around you, so you know where you're heading.")
-			
+			Game.Message("Down here there's the minimap, which shows the level\naround you, so you know where you're heading.")
 			ArrowMode = 2
 			TargetArrowAngle = -20
 			TargetArrowX = 140
@@ -119,15 +115,13 @@ function Tick()
 			TutorialStage = 10
 									
 			Game.Message("Okay. The red dot on your minimap is a strawberry.")
-			Game.Message("The primary objective of the game is for you")
-			Game.Message("to collect all of them, and then find the flower.")						
+			Game.Message("The primary objective of the game is for you\nto collect all of them, and then find the flower.")
 		end	
 	elseif TutorialStage == 10 then
 		if Game.GetTime() > 52 then
 			TutorialStage = 11
 									
-			Game.Message("The icon to the right of your time,")
-			Game.Message("indicates how many strawberries still left.")
+			Game.Message("The icon to the right of your time,\nindicates how many strawberries still left.")
 
 			ArrowMode = 2
 			TargetArrowAngle = 45
@@ -149,8 +143,7 @@ function Tick()
 		if (Game.GetTime() - Zone2Time) > 8 then
 			TutorialStage = 14
 									
-			Game.Message("When done, head for the flower.")
-			Game.Message("It's the purple dot on your minimap.")
+			Game.Message("When done, head for the flower.\nIt's the purple dot on your minimap.")
 
 			ArrowMode = 0
 		end	
@@ -206,8 +199,7 @@ function FirstZone.OnEnter()
 		TutorialStage = 1
 		Game.ClearMessages()
 		Game.Message("Welcome to X-Moto!")
-		Game.Message("This level is a short tutorial of")
-		Game.Message("how you play the game.")
+		Game.Message("This level is a short tutorial of\nhow you play the game.")
 		Game.Message("Please stay put and follow the instructions! :)")
 	end
 end
