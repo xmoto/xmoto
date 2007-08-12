@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-08-12 12:38+0200\n"
+"POT-Creation-Date: 2007-08-12 17:08+0200\n"
 "PO-Revision-Date: 2006-12-21 21:14+0100\n"
 "Last-Translator: Jens Erler <mothbox@gmx.net>\n"
 "Language-Team: German\n"
@@ -2029,13 +2029,13 @@ msgid "Your personal highscore finish time is almost the room highscore (95%)"
 msgstr "Deine Bestzeit ist beinahe der Rekord des Raums (95%)"
 
 #: src/GameText.h:567
-#, fuzzy, c-format
+#, fuzzy
 msgid ""
 "Your personal highscore finish time is almost the room highscore (90%-95%)"
 msgstr "Deine Bestzeit ist beinahe der Rekord des Raums (90%-95%)"
 
 #: src/GameText.h:568
-#, fuzzy, c-format
+#, fuzzy
 msgid ""
 "Your personal highscore finish time is almost the room highscore (80%-90%)"
 msgstr "Deine Bestzeit ist beinahe der Rekord des Raums (80%-90%)"
