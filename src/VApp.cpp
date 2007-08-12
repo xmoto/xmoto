@@ -36,6 +36,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Game.h"
 #include "XMArgs.h"
 #include "XMBuild.h"
+#include "VDraw.h"
 
 #ifdef USE_GETTEXT
 #include "Locales.h"
