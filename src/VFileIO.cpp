@@ -1024,7 +1024,7 @@ std::string FS::m_BinDataFile = "";
 std::string FS::m_binCheckSum = "";
 std::vector<PackFile> FS::m_PackFiles;
 
-void FS::init(const std::string& AppDir, const std::string& i_binFile, const std::string& i_logFile) {    
+void FS::init(const std::string& AppDir, const std::string& i_binFile, const std::string& i_logFile, const std::string& i_userDirPath) {
   m_bGotDataDir = false;
   m_UserDir = "";
   m_UserDirUTF8 = "";
@@ -1045,10 +1045,14 @@ void FS::init(const std::string& AppDir, const std::string& i_binFile, const std
   /* Valid path? */
   if(isDir(cModulePath)) {
     /* Alright, use this dir */    
-    m_UserDir     = win32_getUserDir()     + std::string("/.") + AppDir;
-    m_UserDirUTF8 = win32_getUserDir(true) + std::string("/.") + AppDir;
+    if(i_userDirPath != "") {
+      m_UserDir = m_UserDirUTF8 = i_userDirPath;
+    } else {
+      m_UserDir     = win32_getUserDir()     + std::string("/.") + AppDir;
+      m_UserDirUTF8 = win32_getUserDir(true) + std::string("/.") + AppDir;
+    }
+
     m_DataDir = cModulePath;     
-        
     m_bGotDataDir = true;
   } 
   else throw Exception("invalid process directory");
@@ -1056,12 +1060,17 @@ void FS::init(const std::string& AppDir, const std::string& i_binFile, const std
 #else /* Assume unix-like */
       /* Determine users home dir, so we can find out where to get/save user 
 	 files */
-  m_UserDir = getenv("HOME");            
-  if(!isDir(m_UserDir)) 
-    throw Exception("invalid user home directory");
+
+  if(i_userDirPath != "") {
+    m_UserDir = m_UserDirUTF8 = i_userDirPath;
+  } else {
+    m_UserDir = getenv("HOME");            
+    if(!isDir(m_UserDir)) 
+      throw Exception("invalid user home directory");
       
-  m_UserDir = m_UserDir + std::string("/.") + AppDir;
-  m_UserDirUTF8 = m_UserDir;
+    m_UserDir = m_UserDir + std::string("/.") + AppDir;
+    m_UserDirUTF8 = m_UserDir;
+  }
 
   /* And the data dir? */
   m_DataDir = std::string(GAMEDATADIR);

@@ -142,7 +142,11 @@ int main(int nNumArgs,char **ppcArgs) {
     }
     /* ***** */
 
-    FS::init("xmoto", "xmoto.bin", "xmoto.log");
+    if(v_xmArgs.isOptConfigPath()) {
+      FS::init("xmoto", "xmoto.bin", "xmoto.log", v_xmArgs.getOpt_configPath_path());
+    } else {
+      FS::init("xmoto", "xmoto.bin", "xmoto.log");
+    }
     Logger::init(FS::getUserDir() + "/xmoto.log");
 
     /* load config file */
