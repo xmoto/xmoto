@@ -57,6 +57,7 @@ XMArguments::XMArguments() {
   m_opt_benchmark     = false;
   m_opt_cleanCache    = false;
   m_opt_gdebug        = false;
+  m_opt_configpath    = false;
 }
 
 void XMArguments::parse(int i_argc, char **i_argv) {
@@ -191,6 +192,13 @@ void XMArguments::parse(int i_argc, char **i_argv) {
 	throw SyntaxError("missing replay");
       }
       m_replayInfos_file = i_argv[i+1];
+      i++;
+    } else if(v_opt == "--configpath") {
+      m_opt_configpath = true;
+      if(i+1 >= i_argc) {
+	throw SyntaxError("missing config path");
+      }
+      m_configpath_path = i_argv[i+1];
       i++;
     } else {
       /* check if the parameter is a file */
@@ -410,6 +418,14 @@ std::string XMArguments::getOpt_replayInfos_file() const {
   return m_replayInfos_file;
 }
 
+bool XMArguments::isOptConfigPath() const {
+  return m_opt_configpath;
+}
+
+std::string XMArguments::getOpt_configPath_path() const {
+  return m_configpath_path;
+}
+
 void XMArguments::help(const std::string& i_cmd) {
   printf("X-Moto %s\n", XMBuild::getVersionString().c_str());
   printf("usage:  %s [options]\n"
@@ -420,7 +436,8 @@ void XMArguments::help(const std::string& i_cmd) {
   printf("\t--levelFile FILE\n\t\tStart playing the given level right away.\n");
   printf("\t-r, -replay NAME\n\t\tPlayback replay with the given name.\n");    
   printf("\t-ri, --replayInfos REPLAY NAME\n\t\tDisplay information about a replay.\n");    
-  printf("\t-p, --profile NAME\n\t\tUse this player profile.\n");
+  printf("\t-p, --profile NAME\n\t\tUse the profile NAME as the player profile.\n");
+  printf("\t--configpath PATH\n\t\tUse the path PATH as the xmoto configuration path.\n");
   printf("\t-ll, --listlevels\n\t\tOutputs a list of all installed levels.\n");
   printf("\t-lr, --listreplays\n\t\tOutputs a list of all replays.\n");
   printf("\t--nowww\n\t\tDisable web connection at startup.\n");

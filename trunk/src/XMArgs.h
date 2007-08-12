@@ -72,6 +72,8 @@ class XMArguments {
   bool isOptCleanCache() const;
   bool isOptReplayInfos() const;
   std::string getOpt_replayInfos_file() const;
+  bool isOptConfigPath() const;
+  std::string getOpt_configPath_path() const;
 
   private:
   /* pack options */
@@ -96,6 +98,10 @@ class XMArguments {
   bool m_opt_drawlib;
   std::string m_drawlib_lib;
   bool m_opt_ugly;
+
+  /* config */
+  bool m_opt_configpath;
+  std::string m_configpath_path;
 
   /* web */
   bool m_opt_nowww;

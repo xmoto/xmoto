@@ -79,7 +79,7 @@ struct FileHandle {
 class FS {
  public:        
   /* Methods */
-  static void init(const std::string& AppDir, const std::string& i_binFile, const std::string& i_logFile);
+  static void init(const std::string& AppDir, const std::string& i_binFile, const std::string& i_logFile, const std::string& i_userDirPath = "");
   static void uninit();
   static bool isInitialized();
   
