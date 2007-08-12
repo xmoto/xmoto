@@ -29,6 +29,7 @@ class UIButton;
 class UIRoot;
 class App;
 class DrawLib;
+class FontManager;
 
 	/*===========================================================================
 	Alignments

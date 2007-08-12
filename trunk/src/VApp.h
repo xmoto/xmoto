@@ -23,17 +23,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "VCommon.h"
 
-#include "VDraw.h"
 #include "Image.h"
 #include "UserConfig.h"
+#include "Theme.h"
 
 class XMSession;
 class XMArguments;
 class UserConfig;
-
-
-  class App;
-
+class DrawLib;
 
   /*===========================================================================
   Vector graphics application base class

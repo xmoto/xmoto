@@ -146,7 +146,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
     m_min.y = 0;
     m_max.x = 0;
     m_max.y = 0;
-    polyDraw = NULL;
+    m_polyDraw = NULL;
 
    m_fontSmall  = getFontManager(FS::FullPath(DRAW_FONT_FILE), 14);
    m_fontMedium = getFontManager(FS::FullPath(DRAW_FONT_FILE), 22);
@@ -328,7 +328,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
     //screenBuffer.nPixelSize = m_screen->format->BytesPerPixel;
     //screenBuffer.nWidth = m_nDispWidth;
     //screenBuffer.nHeight = m_nDispHeight;
-    polyDraw = new PolyDraw(m_screen);
+    m_polyDraw = new PolyDraw(m_screen);
 
     //setBackgroundColor(0,0,40,255);
   }
@@ -502,7 +502,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
 	  }
 
 
-	  polyDraw->render(screenVerticles, nPolyTextureVertices, size, s);
+	  m_polyDraw->render(screenVerticles, nPolyTextureVertices, size, s);
 	  SDL_UnlockSurface(s);
 	  SDL_UnlockSurface(m_screen);
 	} else {

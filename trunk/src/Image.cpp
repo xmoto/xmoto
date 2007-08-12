@@ -24,7 +24,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *  everything else. This file is essential stupid glue code.
  */
 
-#include "VApp.h"
 #include "Image.h"
 #include "image/tim.h"
 #include "VFileIO.h"

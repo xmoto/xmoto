@@ -72,11 +72,13 @@ std::string win32_getUserDir(bool i_asUtf8 = false) {
 }
 #endif
 
-bool FS::m_isInitialized = false;
-
+#ifndef WIN32
 void strlwr(char *pc) {
   for(unsigned int i=0; i<strlen(pc); i++) pc[i] = tolower(pc[i]);
 }
+#endif
+
+bool FS::m_isInitialized = false;
 
 bool str_match_wildcard(char *pcMWildcard,char *pcMString, bool CaseSensitive) {
   int nPos=0;

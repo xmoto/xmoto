@@ -26,7 +26,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VTexture.h"
 #include "Theme.h"
 #include "Image.h"
-#include "PolyDraw.h"
 
 #ifdef HAVE_SDL_FRAMEWORK
 	#include <SDL_ttf.h>
@@ -54,11 +53,8 @@ struct hashcmp_str {
 #define DRAW_FONT_FILE "Textures/Fonts/DejaVuSans.ttf"
 
 class Camera;
-
-
+class PolyDraw;
 class DrawLib;
-
-
 
 class FontGlyph {
   public:
@@ -470,6 +466,8 @@ class FontManager {
 
   };
 
+
+#ifdef ENABLE_SDLGFX
   class DrawLibSDLgfx:public DrawLib {
   public:
     DrawLibSDLgfx();
@@ -604,10 +602,13 @@ class FontManager {
 
     int *gfxPrimitivesPolyInts;
     int gfxPrimitivesPolyAllocated;
-    PolyDraw * polyDraw;
+    PolyDraw* m_polyDraw;
+    //    PolyDraw* m_polyDraw;
     int screenVerticles[100];
     int nPolyTextureVertices[100];
 
   };
+#endif
+
 
 #endif
