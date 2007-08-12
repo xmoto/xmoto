@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *  Scrolling credits stuff
  */
 #include "Credits.h"
+#include "VDraw.h"
 
 #define CREDITS_DARKNESS 0.55    /* a number between 0 (not darkened) and 
                                     1 (black) */

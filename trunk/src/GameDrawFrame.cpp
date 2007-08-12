@@ -34,6 +34,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/BikePlayer.h"
 #include "helpers/Log.h"
 #include "XMSession.h"
+#include "VDraw.h"
 
 #include <curl/curl.h>
 

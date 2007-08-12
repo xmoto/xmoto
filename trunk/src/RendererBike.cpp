@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VFileIO.h"
 #include "xmscene/Scene.h"
 #include "Renderer.h"
+#include "VDraw.h"
 
   void GameRenderer::renderBodyPart(const Vector2f& i_from, const Vector2f& i_to,
 				    float i_c11, float i_c12,

@@ -30,7 +30,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/BikeGhost.h"
 #include "xmscene/BikePlayer.h"
 #include "helpers/Log.h"
+#include "VDraw.h"
 #include <algorithm>
+
 
   /* to sort blocks on their texture */
   struct AscendingTextureSort {

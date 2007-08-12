@@ -19,10 +19,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "GUIXMoto.h"
-#include "GameText.h"
-#include "VFileIO.h"
-#include "VApp.h"
+#include "../../GameText.h"
+#include "../../VFileIO.h"
+#include "../../VApp.h"
 #include "../../LevelsManager.h"
+#include "../../VDraw.h"
 
 #define UIQUICKSTART_BORDER 25
 
