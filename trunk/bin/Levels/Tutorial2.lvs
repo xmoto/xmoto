@@ -21,16 +21,13 @@ function Tick()
 	elseif TutorialStage == 2 then
 		if Game.GetTime() > 10 then
 			TutorialStage = 3			
-			Game.Message("Drive to the left, accelerate, and when you are in")
-			Game.Message("the air, try to adjust your attitude with the left")
-			Game.Message("and right arrow keys, so you'll land on your wheels.")
+			Game.Message("Drive to the left, accelerate, and when you are in\nthe air, try to adjust your attitude with the left\nand right arrow keys, so you'll land on your wheels.")
 		end
 	elseif TutorialStage == 4 then
 		if (Game.GetTime() - Zone2Time) > 4 then
 			TutorialStage = 5			
 			Game.ClearMessages()
-			Game.Message("The next jump is a bit trickier. You'll need all the")
-			Game.Message("speed you can get to reach the other side...")
+			Game.Message("The next jump is a bit trickier. You'll need all the\nspeed you can get to reach the other side...")
 		end
 	elseif TutorialStage == 7 then
 		if (Game.GetTime() - Zone4Time) > 4 then
@@ -48,18 +45,13 @@ function Tick()
 		if (Game.GetTime() - Zone4Time) > 14 then
 			TutorialStage = 10
 			Game.ClearMessages()
-			Game.Message("Here's the plan:")
-			Game.Message("Again, you'll have to obtain maximum speed, but when")
-			Game.Message("you reach the edge of the jump, pull the bike's front")
-			Game.Message("wheel up.")
+			Game.Message("Here's the plan:\nAgain, you'll have to obtain maximum speed, but when\nyou reach the edge of the jump, pull the bike's front\nwheel up.")
 		end
 	elseif TutorialStage == 10 then
 		if (Game.GetTime() - Zone4Time) > 24 then
 			TutorialStage = 11
 			Game.ClearMessages()
-			Game.Message("That will cause the rear suspension to increase the")
-			Game.Message("length of the jump.")
-			Game.Message("Try it...")
+			Game.Message("That will cause the rear suspension to increase the\nlength of the jump.\nTry it...")
 		end
 	end
 		
@@ -83,8 +75,7 @@ function FirstZone.OnEnter()
 		if ChangeDirControl == "?" then
 			-- Well, something is wrong, don't say anything :)
 		else
-			Game.Message("Remember you can turn around your bike")
-			Game.Message("by pressing ",ChangeDirControl,".")
+			Game.Message("Remember you can turn around your bike\nby pressing :", ChangeDirControl)
 		end
 	end
 end
@@ -113,8 +104,7 @@ function ThirdZone.OnEnter()
 		Zone3Time = Game.GetTime()
 
 		Game.ClearMessages()
-		Game.Message("Accelerate NOW! Obtain maximum speed, and try to")
-		Game.Message("keep the front wheel at the ground...")
+		Game.Message("Accelerate NOW! Obtain maximum speed, and try to\nkeep the front wheel at the ground...")
 	end
 end
 

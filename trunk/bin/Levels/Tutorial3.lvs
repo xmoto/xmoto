@@ -18,42 +18,32 @@ function Tick()
 			TutorialStage = 2
 
 			Game.ClearMessages()			
-			Game.Message("The basic idea is that when driving on the rear wheel,")
-			Game.Message("your head is lowered quite a lot...")
+			Game.Message("The basic idea is that when driving on the rear wheel,\nyour head is lowered quite a lot...")
 		end
 	elseif TutorialStage == 2 then
 		if Game.GetTime() > 17 then
 			TutorialStage = 3			
 
 			Game.ClearMessages()			
-			Game.Message("The difficult part is to keep the balance.")
-			Game.Message("When the distance you have to drive is quite short,")
-			Game.Message("you don't need to keep the balance.");
+			Game.Message("The difficult part is to keep the balance.\nWhen the distance you have to drive is quite short,\nyou don't need to keep the balance.")
 		end
 	elseif TutorialStage == 3 then
 		if Game.GetTime() > 27 then
 			TutorialStage = 4			
 			Game.ClearMessages()
-			Game.Message("Accelerate (slowly) to the right with the front wheel raising.")
-			Game.Message("Just before your head hit the block, make a quick left/right")
-			Game.Message("combination, and you should be on the other side.")
-			Game.Message("Try it...")
+			Game.Message("Accelerate (slowly) to the right with the front wheel raising.\nJust before your head hit the block, make a quick left/right\ncombination, and you should be on the other side.\nTry it...")
 		end
 	elseif TutorialStage == 5 then
 		if (Game.GetTime() - Zone2Time) > 4 then
 			TutorialStage = 6
 			Game.ClearMessages()
-			Game.Message("Now you'll try a bit more difficult one...")
-			Game.Message("This time keep your hands off the left and right arrow keys,")
-			Game.Message("they're not delicate enough to help you keep balance.")
+			Game.Message("Now you'll try a bit more difficult one...\nThis time keep your hands off the left and right arrow keys,\nthey're not delicate enough to help you keep balance.")
 		end
 	elseif TutorialStage == 6 then
 		if (Game.GetTime() - Zone2Time) > 13 then
 			TutorialStage = 7
 			Game.ClearMessages()
-			Game.Message("Instead regulate your angle by accelerating and braking.")
-			Game.Message("Try to drive a bit back and forth on your rear wheel,")
-			Game.Message("keeping the bike as steady as possible...")
+			Game.Message("Instead regulate your angle by accelerating and braking.\nTry to drive a bit back and forth on your rear wheel,\nkeeping the bike as steady as possible...")
 		end
 	elseif TutorialStage == 7 then
 		if (Game.GetTime() - Zone2Time) > 23 then
@@ -65,9 +55,7 @@ function Tick()
 		if (Game.GetTime() - Zone4Time) > 24 then
 			TutorialStage = 11
 			Game.ClearMessages()
-			Game.Message("That will cause the rear suspension to increase the")
-			Game.Message("length of the jump.")
-			Game.Message("Try it...")
+			Game.Message("That will cause the rear suspension to increase the\nlength of the jump.\nTry it...")
 		end
 	end
 		
@@ -136,9 +124,7 @@ function FirstZone.OnEnter()
 		TutorialStage = 1
 		
 		Game.ClearMessages()
-		Game.Message("This tutorial will teach you to rear-wheel through")
-		Game.Message("areas where the ceiling is low.")
-		Game.Message("Beware that this can be pretty difficult :)")
+		Game.Message("This tutorial will teach you to rear-wheel through\nareas where the ceiling is low.\nBeware that this can be pretty difficult :)")
 	end
 end
 
@@ -213,8 +199,7 @@ function FifthZone.OnEnter()
 		TutorialStage = 11
 
 		Game.ClearMessages()
-		Game.Message("Now for the final one... It's not that long, but instead")
-		Game.Message("there's even less room for your precious head. Good luck! :)")
+		Game.Message("Now for the final one... It's not that long, but instead\nthere's even less room for your precious head. Good luck! :)")
 	end
 end
 

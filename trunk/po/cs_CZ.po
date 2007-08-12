@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-08-12 10:50+0200\n"
+"POT-Creation-Date: 2007-08-12 12:38+0200\n"
 "PO-Revision-Date: 2006-09-04 19:52+0100\n"
 "Last-Translator: Jan Kaláb <pitel@nomi.cz>\n"
 "Language-Team: X-Moto\n"
@@ -2088,296 +2088,352 @@ msgid "The big one is your current time"
 msgstr "Ta velká je váš aktuální čas"
 
 #: src/LevelsText.h:24
-msgid "The small one to the right is your own best time"
+#, fuzzy
+msgid ""
+"The small one to the right is your own best time\n"
+"for the current level..."
 msgstr "Ta malá je je váš nejlepší čas"
 
 #: src/LevelsText.h:25
-msgid "for the current level..."
-msgstr "z aktuální úrovně..."
-
-#: src/LevelsText.h:26
-msgid "... and the one to the left is the best of all"
+#, fuzzy
+msgid ""
+"... and the one to the left is the best of all\n"
+"on this computer."
 msgstr "... a ta vlevo je nejlepší ze všech"
 
-#: src/LevelsText.h:27
-msgid "on this computer."
-msgstr "na tomto počítači."
-
-#: src/LevelsText.h:28
-msgid "Down here there's the minimap, which shows the level"
+#: src/LevelsText.h:26
+#, fuzzy
+msgid ""
+"Down here there's the minimap, which shows the level\n"
+"around you, so you know where you're heading."
 msgstr "Dole je minimapa která ukazuje úroveň"
 
-#: src/LevelsText.h:29
-msgid "around you, so you know where you're heading."
-msgstr "kolem vás, abyste věděli kam jedete."
-
-#: src/LevelsText.h:30
+#: src/LevelsText.h:27
 msgid "Now let's look at your controls."
 msgstr "Nyní se podíváme na ovládání."
 
-#: src/LevelsText.h:31
+#: src/LevelsText.h:28
 msgid "(You seem to be using a joystick, can't help with that :P)"
 msgstr "(Zdá se že používáte joystick, tak s tím vam nepomůžeme :P)"
 
-#: src/LevelsText.h:32
+#: src/LevelsText.h:29
 msgid ": Drive forward"
 msgstr ": Jízda vpřed"
 
-#: src/LevelsText.h:33
+#: src/LevelsText.h:30
 msgid ": Brake"
 msgstr ": Brzda"
 
-#: src/LevelsText.h:34
+#: src/LevelsText.h:31
 msgid ": Change direction"
 msgstr ": Změna směru"
 
-#: src/LevelsText.h:35
+#: src/LevelsText.h:32
 msgid ": Rotate anti-clockwise"
 msgstr ": Rotace proti směru hodinových ručiček"
 
-#: src/LevelsText.h:36
+#: src/LevelsText.h:33
 msgid ": Rotate clockwise"
 msgstr ": Rotace po směru hodinových ručiček"
 
-#: src/LevelsText.h:37
+#: src/LevelsText.h:34
 msgid "Okay. The red dot on your minimap is a strawberry."
 msgstr "Dobře. Červená tečka na mapě je jahoda."
 
-#: src/LevelsText.h:38
-msgid "The primary objective of the game is for you"
-msgstr "Vaším hlavním úkolem ve hře je"
-
-#: src/LevelsText.h:39
-msgid "to collect all of them, and then find the flower."
+#: src/LevelsText.h:35
+#, fuzzy
+msgid ""
+"The primary objective of the game is for you\n"
+"to collect all of them, and then find the flower."
 msgstr "posbírat je všechny a poté najít květinu."
 
-#: src/LevelsText.h:40
-msgid "The icon to the right of your time,"
-msgstr "Ikona napravo od vašeho času"
-
-#: src/LevelsText.h:41
-msgid "indicates how many strawberries still left."
+#: src/LevelsText.h:36
+#, fuzzy
+msgid ""
+"The icon to the right of your time,\n"
+"indicates how many strawberries still left."
 msgstr "ukazuje kolik jahod ješte zbývá."
 
-#: src/LevelsText.h:42
+#: src/LevelsText.h:37
 msgid "Drive in its direction..."
 msgstr "Jeďte za ní..."
 
-#: src/LevelsText.h:43
-msgid "When done, head for the flower."
-msgstr "Až to uděláte, jeďte za květinou."
-
-#: src/LevelsText.h:44
-msgid "It's the purple dot on your minimap."
+#: src/LevelsText.h:38
+#, fuzzy
+msgid ""
+"When done, head for the flower.\n"
+"It's the purple dot on your minimap."
 msgstr "To je fialová tečka na minimapě."
 
-#: src/LevelsText.h:45
+#: src/LevelsText.h:39
 msgid "Welcome to X-Moto!"
 msgstr "Vítejte v X-Motu!"
 
-#: src/LevelsText.h:46
-msgid "This level is a short tutorial of"
+#: src/LevelsText.h:40
+#, fuzzy
+msgid ""
+"This level is a short tutorial of\n"
+"how you play the game."
 msgstr "Tato úroveň je krátký tutorial"
 
-#: src/LevelsText.h:47
-msgid "how you play the game."
-msgstr "jak hrát tuto hru."
-
-#: src/LevelsText.h:48
+#: src/LevelsText.h:41
 msgid "Please stay put and follow the instructions! :)"
 msgstr "Prosím dávejte pozor a následujte instrukce! :)"
 
-#: src/LevelsText.h:49
+#: src/LevelsText.h:42
 msgid "Pick up the strawberry by touching it"
 msgstr "Vezměte jahodu tím že se jí dotknete"
 
-#: src/LevelsText.h:50
+#: src/LevelsText.h:43
 msgid "Touch it to finish the level. Good luck with the rest :)"
 msgstr "Dotkněte se jí a dokončíte úroveň. Hodně štěstí se zbytkem :)"
 
-#: src/LevelsText.h:51
+#: src/LevelsText.h:44
 msgid "The first jump you're going to perform is very easy."
 msgstr "Váš první skok bude velmi jednoduchý."
 
-#: src/LevelsText.h:52
-msgid "Drive to the left, accelerate, and when you are in"
-msgstr "Jeďte vlevo, akcelerujte a až budete"
+#: src/LevelsText.h:45
+msgid ""
+"Drive to the left, accelerate, and when you are in\n"
+"the air, try to adjust your attitude with the left\n"
+"and right arrow keys, so you'll land on your wheels."
+msgstr ""
 
-#: src/LevelsText.h:53
-msgid "the air, try to adjust your attitude with the left"
-msgstr "ve vzduchu, ovládejte náklon šipkami vlevo"
-
-#: src/LevelsText.h:54
-msgid "and right arrow keys, so you'll land on your wheels."
-msgstr "a vpravo abyste přistáli na kola."
-
-#: src/LevelsText.h:55
-msgid "The next jump is a bit trickier. You'll need all the"
+#: src/LevelsText.h:46
+#, fuzzy
+msgid ""
+"The next jump is a bit trickier. You'll need all the\n"
+"speed you can get to reach the other side..."
 msgstr "Další skok je trošku těžší. Budete potřebovat veškerou"
 
-#: src/LevelsText.h:56
-msgid "speed you can get to reach the other side..."
-msgstr "rychlost abyste se dotali na druhou stranu..."
-
-#: src/LevelsText.h:57
+#: src/LevelsText.h:47
 msgid "Now for the most difficult jump in this tutorial!"
 msgstr "Nyní nejtěžší skok tohoto tutorialu!"
 
-#: src/LevelsText.h:58
+#: src/LevelsText.h:48
 msgid "This time, speed alone won't do the job..."
 msgstr "Tentokrát nebude stačit jen rychlost..."
 
-#: src/LevelsText.h:59
-msgid "Here's the plan:"
-msgstr "Tady je plán:"
+#: src/LevelsText.h:49
+msgid ""
+"Here's the plan:\n"
+"Again, you'll have to obtain maximum speed, but when\n"
+"you reach the edge of the jump, pull the bike's front\n"
+"wheel up."
+msgstr ""
 
-#: src/LevelsText.h:60
-msgid "Again, you'll have to obtain maximum speed, but when"
-msgstr "Opět bude muste jet velmi rychle, ale když"
-
-#: src/LevelsText.h:61
-msgid "you reach the edge of the jump, pull the bike's front"
-msgstr "dosáhnete okraje skoku, zvedněte přední"
-
-#: src/LevelsText.h:62
-msgid "wheel up."
-msgstr "kolo nahoru."
-
-#: src/LevelsText.h:63 src/LevelsText.h:90
-msgid "That will cause the rear suspension to increase the"
+#: src/LevelsText.h:50 src/LevelsText.h:63
+#, fuzzy
+msgid ""
+"That will cause the rear suspension to increase the\n"
+"length of the jump.\n"
+"Try it..."
 msgstr "To způsobí že zadní odpružení zvýší"
 
-#: src/LevelsText.h:64 src/LevelsText.h:91
-msgid "length of the jump."
-msgstr "délku skoku."
-
-#: src/LevelsText.h:65 src/LevelsText.h:82 src/LevelsText.h:92
-msgid "Try it..."
-msgstr "Zkuste to..."
-
-#: src/LevelsText.h:66
+#: src/LevelsText.h:51
 msgid "This tutorial will teach you the basics of jumping."
 msgstr "Tento tutorial vás naučí základy skákání."
 
-#: src/LevelsText.h:67
-msgid "Remember you can turn around your bike"
+#: src/LevelsText.h:52
+#, fuzzy
+msgid ""
+"Remember you can turn around your bike\n"
+"by pressing :"
 msgstr "Pamatujte že můžete obrátit motorku"
 
-#: src/LevelsText.h:68
-msgid "by pressing "
-msgstr "stiskem "
-
-#: src/LevelsText.h:69
+#: src/LevelsText.h:53
 msgid "That was pretty easy, right?"
 msgstr "To bylo jednoduché, že?"
 
-#: src/LevelsText.h:70
-msgid "Accelerate NOW! Obtain maximum speed, and try to"
+#: src/LevelsText.h:54
+#, fuzzy
+msgid ""
+"Accelerate NOW! Obtain maximum speed, and try to\n"
+"keep the front wheel at the ground..."
 msgstr "HNED zrychlete! Získejte maximální rychlost a snažte se"
 
-#: src/LevelsText.h:71
-msgid "keep the front wheel at the ground..."
-msgstr "držet přední kolo na zemi..."
-
-#: src/LevelsText.h:72
+#: src/LevelsText.h:55
 msgid "Nice jump there! :)"
 msgstr "To byl hezký skok! :)"
 
-#: src/LevelsText.h:73
+#: src/LevelsText.h:56
 msgid "Congrats, you're now a master jumper!"
 msgstr "Gratuluji, nyní jste skokmistr!"
 
-#: src/LevelsText.h:74
-msgid "The basic idea is that when driving on the rear wheel,"
+#: src/LevelsText.h:57
+#, fuzzy
+msgid ""
+"The basic idea is that when driving on the rear wheel,\n"
+"your head is lowered quite a lot..."
 msgstr "Základní smysl jízdy na zadním kole je"
 
-#: src/LevelsText.h:75
-msgid "your head is lowered quite a lot..."
-msgstr "že máte podstatně níž hlavu..."
+#: src/LevelsText.h:58
+msgid ""
+"The difficult part is to keep the balance.\n"
+"When the distance you have to drive is quite short,\n"
+"you don't need to keep the balance."
+msgstr ""
 
-#: src/LevelsText.h:76
-msgid "The difficult part is to keep the balance."
-msgstr "Složité je udržet rovnováhu."
+#: src/LevelsText.h:59
+msgid ""
+"Accelerate (slowly) to the right with the front wheel raising.\n"
+"Just before your head hit the block, make a quick left/right\n"
+"combination, and you should be on the other side.\n"
+"Try it..."
+msgstr ""
 
-#: src/LevelsText.h:77
-msgid "When the distance you have to drive is quite short,"
-msgstr "Když je vzdálenost kterou musíte ujet malá, tak"
+#: src/LevelsText.h:60
+msgid ""
+"Now you'll try a bit more difficult one...\n"
+"This time keep your hands off the left and right arrow keys,\n"
+"they're not delicate enough to help you keep balance."
+msgstr ""
 
-#: src/LevelsText.h:78
-msgid "you don't need to keep the balance."
-msgstr "naní problém udržet rovnováhu."
+#: src/LevelsText.h:61
+msgid ""
+"Instead regulate your angle by accelerating and braking.\n"
+"Try to drive a bit back and forth on your rear wheel,\n"
+"keeping the bike as steady as possible..."
+msgstr ""
 
-#: src/LevelsText.h:79
-msgid "Accelerate (slowly) to the right with the front wheel raising."
-msgstr "Zrychlujte (pomalu) vpravo se zvedajícím se předním kolem."
-
-#: src/LevelsText.h:80
-msgid "Just before your head hit the block, make a quick left/right"
-msgstr "Těsně než byste se hlavou dotkli zdi, udělejte rychle komibnaci"
-
-#: src/LevelsText.h:81
-msgid "combination, and you should be on the other side."
-msgstr "vlavo/vpravo a měli byste být na druhé straně."
-
-#: src/LevelsText.h:83
-msgid "Now you'll try a bit more difficult one..."
-msgstr "Teď zkuste něco složitějšího..."
-
-#: src/LevelsText.h:84
-msgid "This time keep your hands off the left and right arrow keys,"
-msgstr "Tentokrát zkuste dát ruce pryč od šipek vlevo a vpravo,"
-
-#: src/LevelsText.h:85
-msgid "they're not delicate enough to help you keep balance."
-msgstr "nejsou dost přesné na udržení rovnováhy."
-
-#: src/LevelsText.h:86
-msgid "Instead regulate your angle by accelerating and braking."
-msgstr "Místo toho ovládejte náklon akcelerací a bržděním."
-
-#: src/LevelsText.h:87
-msgid "Try to drive a bit back and forth on your rear wheel,"
-msgstr "Zkuste chvíli jezdit tam a zpátky na zadním kole,"
-
-#: src/LevelsText.h:88
-msgid "keeping the bike as steady as possible..."
-msgstr "udržujte motroku co nejvíc v klidu..."
-
-#: src/LevelsText.h:89
+#: src/LevelsText.h:62
+#, fuzzy
 msgid "Try getting under the next obstacle when you feel you're ready."
 msgstr "Zkuste projet pod další překážkou až budete připraveni."
 
-#: src/LevelsText.h:93
-msgid "This tutorial will teach you to rear-wheel through"
-msgstr "Tento tutorial vás naučí jezdit na zadním kole skrz"
+#: src/LevelsText.h:64
+msgid ""
+"This tutorial will teach you to rear-wheel through\n"
+"areas where the ceiling is low.\n"
+"Beware that this can be pretty difficult :)"
+msgstr ""
 
-#: src/LevelsText.h:94
-msgid "areas where the ceiling is low."
-msgstr "oblasti s nízkým stropem."
-
-#: src/LevelsText.h:95
-msgid "Beware that this can be pretty difficult :)"
-msgstr "Pozor, může to být dost obtížné :)"
-
-#: src/LevelsText.h:96
+#: src/LevelsText.h:65
 msgid "Not that difficult, right?"
 msgstr "Ne moc těžké, že?"
 
-#: src/LevelsText.h:97
+#: src/LevelsText.h:66
 msgid "Nice! Now try the next one, it's a bit more difficult..."
 msgstr "Dobře! Nyní zkuste další, to je trošku těžší..."
 
-#: src/LevelsText.h:98
+#: src/LevelsText.h:67
 msgid "Good job! The next one is even more difficult..."
 msgstr "Dobrá práce! Další je ještě těžší..."
 
-#: src/LevelsText.h:99
-msgid "Now for the final one... It's not that long, but instead"
-msgstr "Teď poslední... není tak dlouhá, místo toho"
-
-#: src/LevelsText.h:100
-msgid "there's even less room for your precious head. Good luck! :)"
+#: src/LevelsText.h:68
+#, fuzzy
+msgid ""
+"Now for the final one... It's not that long, but instead\n"
+"there's even less room for your precious head. Good luck! :)"
 msgstr "je tu ještě méně místa pro vaši cennou hlavu. Hodně štěstí! :)"
+
+#~ msgid "for the current level..."
+#~ msgstr "z aktuální úrovně..."
+
+#~ msgid "on this computer."
+#~ msgstr "na tomto počítači."
+
+#~ msgid "around you, so you know where you're heading."
+#~ msgstr "kolem vás, abyste věděli kam jedete."
+
+#~ msgid "The primary objective of the game is for you"
+#~ msgstr "Vaším hlavním úkolem ve hře je"
+
+#~ msgid "The icon to the right of your time,"
+#~ msgstr "Ikona napravo od vašeho času"
+
+#~ msgid "When done, head for the flower."
+#~ msgstr "Až to uděláte, jeďte za květinou."
+
+#~ msgid "how you play the game."
+#~ msgstr "jak hrát tuto hru."
+
+#~ msgid "Drive to the left, accelerate, and when you are in"
+#~ msgstr "Jeďte vlevo, akcelerujte a až budete"
+
+#~ msgid "the air, try to adjust your attitude with the left"
+#~ msgstr "ve vzduchu, ovládejte náklon šipkami vlevo"
+
+#~ msgid "and right arrow keys, so you'll land on your wheels."
+#~ msgstr "a vpravo abyste přistáli na kola."
+
+#~ msgid "speed you can get to reach the other side..."
+#~ msgstr "rychlost abyste se dotali na druhou stranu..."
+
+#~ msgid "Here's the plan:"
+#~ msgstr "Tady je plán:"
+
+#~ msgid "Again, you'll have to obtain maximum speed, but when"
+#~ msgstr "Opět bude muste jet velmi rychle, ale když"
+
+#~ msgid "you reach the edge of the jump, pull the bike's front"
+#~ msgstr "dosáhnete okraje skoku, zvedněte přední"
+
+#~ msgid "wheel up."
+#~ msgstr "kolo nahoru."
+
+#~ msgid "length of the jump."
+#~ msgstr "délku skoku."
+
+#~ msgid "Try it..."
+#~ msgstr "Zkuste to..."
+
+#~ msgid "by pressing "
+#~ msgstr "stiskem "
+
+#~ msgid "keep the front wheel at the ground..."
+#~ msgstr "držet přední kolo na zemi..."
+
+#~ msgid "your head is lowered quite a lot..."
+#~ msgstr "že máte podstatně níž hlavu..."
+
+#~ msgid "The difficult part is to keep the balance."
+#~ msgstr "Složité je udržet rovnováhu."
+
+#~ msgid "When the distance you have to drive is quite short,"
+#~ msgstr "Když je vzdálenost kterou musíte ujet malá, tak"
+
+#~ msgid "you don't need to keep the balance."
+#~ msgstr "naní problém udržet rovnováhu."
+
+#~ msgid "Accelerate (slowly) to the right with the front wheel raising."
+#~ msgstr "Zrychlujte (pomalu) vpravo se zvedajícím se předním kolem."
+
+#~ msgid "Just before your head hit the block, make a quick left/right"
+#~ msgstr "Těsně než byste se hlavou dotkli zdi, udělejte rychle komibnaci"
+
+#~ msgid "combination, and you should be on the other side."
+#~ msgstr "vlavo/vpravo a měli byste být na druhé straně."
+
+#~ msgid "Now you'll try a bit more difficult one..."
+#~ msgstr "Teď zkuste něco složitějšího..."
+
+#~ msgid "This time keep your hands off the left and right arrow keys,"
+#~ msgstr "Tentokrát zkuste dát ruce pryč od šipek vlevo a vpravo,"
+
+#~ msgid "they're not delicate enough to help you keep balance."
+#~ msgstr "nejsou dost přesné na udržení rovnováhy."
+
+#~ msgid "Instead regulate your angle by accelerating and braking."
+#~ msgstr "Místo toho ovládejte náklon akcelerací a bržděním."
+
+#~ msgid "Try to drive a bit back and forth on your rear wheel,"
+#~ msgstr "Zkuste chvíli jezdit tam a zpátky na zadním kole,"
+
+#~ msgid "keeping the bike as steady as possible..."
+#~ msgstr "udržujte motroku co nejvíc v klidu..."
+
+#~ msgid "This tutorial will teach you to rear-wheel through"
+#~ msgstr "Tento tutorial vás naučí jezdit na zadním kole skrz"
+
+#~ msgid "areas where the ceiling is low."
+#~ msgstr "oblasti s nízkým stropem."
+
+#~ msgid "Beware that this can be pretty difficult :)"
+#~ msgstr "Pozor, může to být dost obtížné :)"
+
+#~ msgid "Now for the final one... It's not that long, but instead"
+#~ msgstr "Teď poslední... není tak dlouhá, místo toho"
 
 #~ msgid ""
 #~ "Failed to check for levels.\n"

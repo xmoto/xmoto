@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sv_SE\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-08-12 10:50+0200\n"
+"POT-Creation-Date: 2007-08-12 12:38+0200\n"
 "PO-Revision-Date: 2007-07-06 19:55+0200\n"
 "Last-Translator: Lukas <lukas.klingsbo@piratpartiet.se>\n"
 "Language-Team: Swedish\n"
@@ -2093,297 +2093,353 @@ msgid "The big one is your current time"
 msgstr "Det stora är din nuvarande tid"
 
 #: src/LevelsText.h:24
-msgid "The small one to the right is your own best time"
+#, fuzzy
+msgid ""
+"The small one to the right is your own best time\n"
+"for the current level..."
 msgstr "Den lilla är din egen bästa tid"
 
 #: src/LevelsText.h:25
-msgid "for the current level..."
-msgstr "för den här banan..."
-
-#: src/LevelsText.h:26
-msgid "... and the one to the left is the best of all"
+#, fuzzy
+msgid ""
+"... and the one to the left is the best of all\n"
+"on this computer."
 msgstr "... och den till vänster är den som är bäst av alla"
 
-#: src/LevelsText.h:27
-msgid "on this computer."
-msgstr "på den här datorn."
-
-#: src/LevelsText.h:28
-msgid "Down here there's the minimap, which shows the level"
+#: src/LevelsText.h:26
+#, fuzzy
+msgid ""
+"Down here there's the minimap, which shows the level\n"
+"around you, so you know where you're heading."
 msgstr "Längst nere är det en liten karta som visar banan"
 
-#: src/LevelsText.h:29
-msgid "around you, so you know where you're heading."
-msgstr "runt dig, så vet du var du är på väg."
-
-#: src/LevelsText.h:30
+#: src/LevelsText.h:27
 msgid "Now let's look at your controls."
 msgstr "Nu ska vi ta en kik på din kontroller."
 
-#: src/LevelsText.h:31
+#: src/LevelsText.h:28
 msgid "(You seem to be using a joystick, can't help with that :P)"
 msgstr "(Du verkar använda en joystick, kan inte hjälpa dig med den :P)"
 
-#: src/LevelsText.h:32
+#: src/LevelsText.h:29
 msgid ": Drive forward"
 msgstr "Kör framåt"
 
-#: src/LevelsText.h:33
+#: src/LevelsText.h:30
 msgid ": Brake"
 msgstr "Bromsa"
 
-#: src/LevelsText.h:34
+#: src/LevelsText.h:31
 msgid ": Change direction"
 msgstr "Byt riktning"
 
-#: src/LevelsText.h:35
+#: src/LevelsText.h:32
 msgid ": Rotate anti-clockwise"
 msgstr "Snurra motsols"
 
-#: src/LevelsText.h:36
+#: src/LevelsText.h:33
 msgid ": Rotate clockwise"
 msgstr "Snurra medsols"
 
-#: src/LevelsText.h:37
+#: src/LevelsText.h:34
 msgid "Okay. The red dot on your minimap is a strawberry."
 msgstr "Okej. Den röda pricken på din minikarta är en jordgubb."
 
-#: src/LevelsText.h:38
-msgid "The primary objective of the game is for you"
-msgstr "Det främsta målet med spelet för  är "
-
-#: src/LevelsText.h:39
-msgid "to collect all of them, and then find the flower."
+#: src/LevelsText.h:35
+#, fuzzy
+msgid ""
+"The primary objective of the game is for you\n"
+"to collect all of them, and then find the flower."
 msgstr "att samla alla och sen hitta blomman."
 
-#: src/LevelsText.h:40
-msgid "The icon to the right of your time,"
-msgstr "Ikonen till höger om din tid,"
-
-#: src/LevelsText.h:41
-msgid "indicates how many strawberries still left."
+#: src/LevelsText.h:36
+#, fuzzy
+msgid ""
+"The icon to the right of your time,\n"
+"indicates how many strawberries still left."
 msgstr "indikerar hur många jordgubbar du har kvar."
 
-#: src/LevelsText.h:42
+#: src/LevelsText.h:37
 msgid "Drive in its direction..."
 msgstr "Kör åt dens håll..."
 
-#: src/LevelsText.h:43
-msgid "When done, head for the flower."
-msgstr "När du är klar, åk mot blomman."
-
-#: src/LevelsText.h:44
-msgid "It's the purple dot on your minimap."
+#: src/LevelsText.h:38
+#, fuzzy
+msgid ""
+"When done, head for the flower.\n"
+"It's the purple dot on your minimap."
 msgstr "Det är den lila pricken på din minikarta"
 
-#: src/LevelsText.h:45
+#: src/LevelsText.h:39
 msgid "Welcome to X-Moto!"
 msgstr "Välkommen till X-Moto!"
 
-#: src/LevelsText.h:46
-msgid "This level is a short tutorial of"
+#: src/LevelsText.h:40
+#, fuzzy
+msgid ""
+"This level is a short tutorial of\n"
+"how you play the game."
 msgstr "Den här banan är en kort genomgång av"
 
-#: src/LevelsText.h:47
-msgid "how you play the game."
-msgstr "hur man spelar spelet."
-
-#: src/LevelsText.h:48
+#: src/LevelsText.h:41
 msgid "Please stay put and follow the instructions! :)"
 msgstr "Snälla stanna och följ instruktionerna! :)"
 
-#: src/LevelsText.h:49
+#: src/LevelsText.h:42
 msgid "Pick up the strawberry by touching it"
 msgstr "Ta upp jordgubben genom att röra den"
 
-#: src/LevelsText.h:50
+#: src/LevelsText.h:43
 msgid "Touch it to finish the level. Good luck with the rest :)"
 msgstr "Rör den för att klara banan. Lycka till med resten :)"
 
-#: src/LevelsText.h:51
+#: src/LevelsText.h:44
 msgid "The first jump you're going to perform is very easy."
 msgstr "Det första hoppet du ska göra är väldigt lätt"
 
-#: src/LevelsText.h:52
-msgid "Drive to the left, accelerate, and when you are in"
-msgstr "Kör till vänster, accelera och när du är i"
+#: src/LevelsText.h:45
+msgid ""
+"Drive to the left, accelerate, and when you are in\n"
+"the air, try to adjust your attitude with the left\n"
+"and right arrow keys, so you'll land on your wheels."
+msgstr ""
 
-#: src/LevelsText.h:53
-msgid "the air, try to adjust your attitude with the left"
-msgstr "luften, försök att justera cyceln med vänster"
-
-#: src/LevelsText.h:54
-msgid "and right arrow keys, so you'll land on your wheels."
-msgstr "och höger pilknapp så att du landar på hjulen."
-
-#: src/LevelsText.h:55
-msgid "The next jump is a bit trickier. You'll need all the"
+#: src/LevelsText.h:46
+#, fuzzy
+msgid ""
+"The next jump is a bit trickier. You'll need all the\n"
+"speed you can get to reach the other side..."
 msgstr "Nästa hopp är lite svårare. Du kommer att behöva all"
 
-#: src/LevelsText.h:56
-msgid "speed you can get to reach the other side..."
-msgstr "fart du kan få för att nå andra sidan..."
-
-#: src/LevelsText.h:57
+#: src/LevelsText.h:47
 msgid "Now for the most difficult jump in this tutorial!"
 msgstr "Nu kommer det svåraste hoppet i den här genomgången!"
 
-#: src/LevelsText.h:58
+#: src/LevelsText.h:48
 msgid "This time, speed alone won't do the job..."
 msgstr "Den här gången kommer inte fart att göra allt..."
 
-#: src/LevelsText.h:59
-msgid "Here's the plan:"
-msgstr "Det här är planen:"
+#: src/LevelsText.h:49
+msgid ""
+"Here's the plan:\n"
+"Again, you'll have to obtain maximum speed, but when\n"
+"you reach the edge of the jump, pull the bike's front\n"
+"wheel up."
+msgstr ""
 
-#: src/LevelsText.h:60
-msgid "Again, you'll have to obtain maximum speed, but when"
-msgstr "Du kommer behöva max fart igen, men när"
-
-#: src/LevelsText.h:61
-msgid "you reach the edge of the jump, pull the bike's front"
-msgstr "du når kanten av hoppet ska du dra upp cycelns"
-
-#: src/LevelsText.h:62
-msgid "wheel up."
-msgstr "framhjul upp."
-
-#: src/LevelsText.h:63 src/LevelsText.h:90
-msgid "That will cause the rear suspension to increase the"
+#: src/LevelsText.h:50 src/LevelsText.h:63
+#, fuzzy
+msgid ""
+"That will cause the rear suspension to increase the\n"
+"length of the jump.\n"
+"Try it..."
 msgstr "Det kommer att göra så att bakfjädringen ökar"
 
-#: src/LevelsText.h:64 src/LevelsText.h:91
-msgid "length of the jump."
-msgstr "hoppets längd."
-
-#: src/LevelsText.h:65 src/LevelsText.h:82 src/LevelsText.h:92
-msgid "Try it..."
-msgstr "Försök..."
-
-#: src/LevelsText.h:66
+#: src/LevelsText.h:51
 msgid "This tutorial will teach you the basics of jumping."
 msgstr "Den här genomgången kommer lära dig grunderna för att hoppa."
 
-#: src/LevelsText.h:67
-msgid "Remember you can turn around your bike"
+#: src/LevelsText.h:52
+#, fuzzy
+msgid ""
+"Remember you can turn around your bike\n"
+"by pressing :"
 msgstr "Kom ihåg att du kan vända din cykel"
 
-#: src/LevelsText.h:68
-msgid "by pressing "
-msgstr "genom att trycka"
-
-#: src/LevelsText.h:69
+#: src/LevelsText.h:53
 msgid "That was pretty easy, right?"
 msgstr "Det var rätt enkelt, eller hur?"
 
-#: src/LevelsText.h:70
-msgid "Accelerate NOW! Obtain maximum speed, and try to"
+#: src/LevelsText.h:54
+#, fuzzy
+msgid ""
+"Accelerate NOW! Obtain maximum speed, and try to\n"
+"keep the front wheel at the ground..."
 msgstr "Accelera NU! Håll max fart och försök att"
 
-#: src/LevelsText.h:71
-msgid "keep the front wheel at the ground..."
-msgstr "hålla framhjulet mot marken..."
-
-#: src/LevelsText.h:72
+#: src/LevelsText.h:55
 msgid "Nice jump there! :)"
 msgstr "Snyggt hopp! :)"
 
-#: src/LevelsText.h:73
+#: src/LevelsText.h:56
 msgid "Congrats, you're now a master jumper!"
 msgstr "Gratulationer, du är nu en mäster hoppare!"
 
-#: src/LevelsText.h:74
-msgid "The basic idea is that when driving on the rear wheel,"
+#: src/LevelsText.h:57
+#, fuzzy
+msgid ""
+"The basic idea is that when driving on the rear wheel,\n"
+"your head is lowered quite a lot..."
 msgstr "Grundidéen är att när man kör på bakhjulet"
 
-#: src/LevelsText.h:75
-msgid "your head is lowered quite a lot..."
-msgstr "så ligger ditt huvud mycket lägre..."
+#: src/LevelsText.h:58
+msgid ""
+"The difficult part is to keep the balance.\n"
+"When the distance you have to drive is quite short,\n"
+"you don't need to keep the balance."
+msgstr ""
 
-#: src/LevelsText.h:76
-msgid "The difficult part is to keep the balance."
-msgstr "Den svåra delen är att hålla balansen."
+#: src/LevelsText.h:59
+msgid ""
+"Accelerate (slowly) to the right with the front wheel raising.\n"
+"Just before your head hit the block, make a quick left/right\n"
+"combination, and you should be on the other side.\n"
+"Try it..."
+msgstr ""
 
-#: src/LevelsText.h:77
-msgid "When the distance you have to drive is quite short,"
-msgstr "När sträckan du ska köra är kort,"
+#: src/LevelsText.h:60
+msgid ""
+"Now you'll try a bit more difficult one...\n"
+"This time keep your hands off the left and right arrow keys,\n"
+"they're not delicate enough to help you keep balance."
+msgstr ""
 
-#: src/LevelsText.h:78
-msgid "you don't need to keep the balance."
-msgstr " behöver du inte hålla balansen."
+#: src/LevelsText.h:61
+msgid ""
+"Instead regulate your angle by accelerating and braking.\n"
+"Try to drive a bit back and forth on your rear wheel,\n"
+"keeping the bike as steady as possible..."
+msgstr ""
 
-#: src/LevelsText.h:79
-msgid "Accelerate (slowly) to the right with the front wheel raising."
-msgstr "Accelerera (sakta) till höger med framhjulet stigande."
-
-#: src/LevelsText.h:80
-msgid "Just before your head hit the block, make a quick left/right"
-msgstr "Precis innan ditt huvud slår i väggen, gör en snabb vänster/höger"
-
-#: src/LevelsText.h:81
-msgid "combination, and you should be on the other side."
-msgstr "kombination så borde du klara dig till andra sidan."
-
-#: src/LevelsText.h:83
-msgid "Now you'll try a bit more difficult one..."
-msgstr "Nu ska du pröva en lite svårare en..."
-
-#: src/LevelsText.h:84
-msgid "This time keep your hands off the left and right arrow keys,"
-msgstr "Den här gången håll händerna ifrån vänster och höger pilarna,"
-
-#: src/LevelsText.h:85
-msgid "they're not delicate enough to help you keep balance."
-msgstr "de är inte bra nog att hjälpa dig hålla balansen."
-
-#: src/LevelsText.h:86
-msgid "Instead regulate your angle by accelerating and braking."
-msgstr "Istället reglera din vinkel genom att accelerera och bromsa."
-
-#: src/LevelsText.h:87
-msgid "Try to drive a bit back and forth on your rear wheel,"
-msgstr "Pröva köra en bit fram och tillbaka på ditt bakhjul,"
-
-#: src/LevelsText.h:88
-msgid "keeping the bike as steady as possible..."
-msgstr "håll cykeln så stadig som möjligt..."
-
-#: src/LevelsText.h:89
+#: src/LevelsText.h:62
+#, fuzzy
 msgid "Try getting under the next obstacle when you feel you're ready."
 msgstr "Försök komma under nästa hinder när du känner dig redo."
 
-#: src/LevelsText.h:93
-msgid "This tutorial will teach you to rear-wheel through"
-msgstr "Den här genomgången kommer att lära dig att åka på bakhjulet genom"
+#: src/LevelsText.h:64
+msgid ""
+"This tutorial will teach you to rear-wheel through\n"
+"areas where the ceiling is low.\n"
+"Beware that this can be pretty difficult :)"
+msgstr ""
 
-#: src/LevelsText.h:94
-msgid "areas where the ceiling is low."
-msgstr "ställen där taket är lågt"
-
-#: src/LevelsText.h:95
-msgid "Beware that this can be pretty difficult :)"
-msgstr "Akta dig det kan vara ganska svårt :)"
-
-#: src/LevelsText.h:96
+#: src/LevelsText.h:65
 msgid "Not that difficult, right?"
 msgstr "Inte så svårt, va?"
 
-#: src/LevelsText.h:97
+#: src/LevelsText.h:66
 msgid "Nice! Now try the next one, it's a bit more difficult..."
 msgstr "Snyggt! Pröva nästa nu, den är lite svårare..."
 
-#: src/LevelsText.h:98
+#: src/LevelsText.h:67
 msgid "Good job! The next one is even more difficult..."
 msgstr "Snyggt jobbat! Nästa är ännu svårare..."
 
-#: src/LevelsText.h:99
-msgid "Now for the final one... It's not that long, but instead"
-msgstr "Nu är det den sista... Den är inte så lång, men istället"
-
-#: src/LevelsText.h:100
-msgid "there's even less room for your precious head. Good luck! :)"
+#: src/LevelsText.h:68
+#, fuzzy
+msgid ""
+"Now for the final one... It's not that long, but instead\n"
+"there's even less room for your precious head. Good luck! :)"
 msgstr ""
 "är det till och med mindre rum för ditt värdefulla huvud. Lycka till! :)"
+
+#~ msgid "for the current level..."
+#~ msgstr "för den här banan..."
+
+#~ msgid "on this computer."
+#~ msgstr "på den här datorn."
+
+#~ msgid "around you, so you know where you're heading."
+#~ msgstr "runt dig, så vet du var du är på väg."
+
+#~ msgid "The primary objective of the game is for you"
+#~ msgstr "Det främsta målet med spelet för  är "
+
+#~ msgid "The icon to the right of your time,"
+#~ msgstr "Ikonen till höger om din tid,"
+
+#~ msgid "When done, head for the flower."
+#~ msgstr "När du är klar, åk mot blomman."
+
+#~ msgid "how you play the game."
+#~ msgstr "hur man spelar spelet."
+
+#~ msgid "Drive to the left, accelerate, and when you are in"
+#~ msgstr "Kör till vänster, accelera och när du är i"
+
+#~ msgid "the air, try to adjust your attitude with the left"
+#~ msgstr "luften, försök att justera cyceln med vänster"
+
+#~ msgid "and right arrow keys, so you'll land on your wheels."
+#~ msgstr "och höger pilknapp så att du landar på hjulen."
+
+#~ msgid "speed you can get to reach the other side..."
+#~ msgstr "fart du kan få för att nå andra sidan..."
+
+#~ msgid "Here's the plan:"
+#~ msgstr "Det här är planen:"
+
+#~ msgid "Again, you'll have to obtain maximum speed, but when"
+#~ msgstr "Du kommer behöva max fart igen, men när"
+
+#~ msgid "you reach the edge of the jump, pull the bike's front"
+#~ msgstr "du når kanten av hoppet ska du dra upp cycelns"
+
+#~ msgid "wheel up."
+#~ msgstr "framhjul upp."
+
+#~ msgid "length of the jump."
+#~ msgstr "hoppets längd."
+
+#~ msgid "Try it..."
+#~ msgstr "Försök..."
+
+#~ msgid "by pressing "
+#~ msgstr "genom att trycka"
+
+#~ msgid "keep the front wheel at the ground..."
+#~ msgstr "hålla framhjulet mot marken..."
+
+#~ msgid "your head is lowered quite a lot..."
+#~ msgstr "så ligger ditt huvud mycket lägre..."
+
+#~ msgid "The difficult part is to keep the balance."
+#~ msgstr "Den svåra delen är att hålla balansen."
+
+#~ msgid "When the distance you have to drive is quite short,"
+#~ msgstr "När sträckan du ska köra är kort,"
+
+#~ msgid "you don't need to keep the balance."
+#~ msgstr " behöver du inte hålla balansen."
+
+#~ msgid "Accelerate (slowly) to the right with the front wheel raising."
+#~ msgstr "Accelerera (sakta) till höger med framhjulet stigande."
+
+#~ msgid "Just before your head hit the block, make a quick left/right"
+#~ msgstr "Precis innan ditt huvud slår i väggen, gör en snabb vänster/höger"
+
+#~ msgid "combination, and you should be on the other side."
+#~ msgstr "kombination så borde du klara dig till andra sidan."
+
+#~ msgid "Now you'll try a bit more difficult one..."
+#~ msgstr "Nu ska du pröva en lite svårare en..."
+
+#~ msgid "This time keep your hands off the left and right arrow keys,"
+#~ msgstr "Den här gången håll händerna ifrån vänster och höger pilarna,"
+
+#~ msgid "they're not delicate enough to help you keep balance."
+#~ msgstr "de är inte bra nog att hjälpa dig hålla balansen."
+
+#~ msgid "Instead regulate your angle by accelerating and braking."
+#~ msgstr "Istället reglera din vinkel genom att accelerera och bromsa."
+
+#~ msgid "Try to drive a bit back and forth on your rear wheel,"
+#~ msgstr "Pröva köra en bit fram och tillbaka på ditt bakhjul,"
+
+#~ msgid "keeping the bike as steady as possible..."
+#~ msgstr "håll cykeln så stadig som möjligt..."
+
+#~ msgid "This tutorial will teach you to rear-wheel through"
+#~ msgstr "Den här genomgången kommer att lära dig att åka på bakhjulet genom"
+
+#~ msgid "areas where the ceiling is low."
+#~ msgstr "ställen där taket är lågt"
+
+#~ msgid "Beware that this can be pretty difficult :)"
+#~ msgstr "Akta dig det kan vara ganska svårt :)"
+
+#~ msgid "Now for the final one... It's not that long, but instead"
+#~ msgstr "Nu är det den sista... Den är inte så lång, men istället"
 
 #~ msgid ""
 #~ "Failed to check for levels.\n"
