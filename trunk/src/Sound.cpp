@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "UserConfig.h"
 #include "Sound.h"
 #include "helpers/Log.h"
+#include "helpers/VExcept.h"
 
 /* SDL_mixer / nosound is the only ones supported!!! I should really clean up this 
    file :) */

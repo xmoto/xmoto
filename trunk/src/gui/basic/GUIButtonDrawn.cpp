@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "GUI.h"
 #include "../../VDraw.h"
+#include "../../Game.h"
 
 UIButtonDrawn::UIButtonDrawn(UIWindow *pParent,
 			     const std::string& i_spriteUnpressed,

@@ -22,7 +22,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __RENDERER_H__
 
 #include "VCommon.h"
-#include "VApp.h"
 #include "xmscene/Scene.h"
 #include "gui/basic/GUI.h"
 #include "Replay.h"
@@ -90,7 +89,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       }
     
       /* Methods */
-      void init(App *pApp,int nWidth,int nHeight);
+      void init(GameApp *pApp,int nWidth,int nHeight);
       void cleanUp(void);
       void beginRendering(void);
       void endRendering(void);
@@ -118,7 +117,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       
 
       int m_nOverlayWidth,m_nOverlayHeight;
-      App *m_pApp;
+      GameApp *m_pApp;
   };
 
   /*===========================================================================
@@ -158,8 +157,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /* Data interface */
     void setGameObject(MotoGame *pMotoGame) {m_pMotoGame=pMotoGame;}
     MotoGame *getGameObject(void) {return m_pMotoGame;}
-    void setParent(App *pParent) {m_pParent=pParent;}
-    App *getParent(void) {return m_pParent;}
+    void setParent(GameApp *pParent) {m_pParent=pParent;}
+    GameApp *getParent(void) {return m_pParent;}
     void setDebug(bool bDebug) {m_bDebug = bDebug;}
     void setUglyMode(bool bUglyMode) {m_bUglyMode = bUglyMode;}
     void setTestThemeMode(bool bTestThemeMode) {m_bTestThemeMode = bTestThemeMode;}
@@ -178,8 +177,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     void setGhostDisplayInformation(bool i_display);
 
     /* if p_save == "", nothing is displayed for p_save */
-    void showMsgNewPersonalHighscore(String p_save = "");
-    void showMsgNewBestHighscore(String p_save = "");
+    void showMsgNewPersonalHighscore(std::string p_save = "");
+    void showMsgNewBestHighscore(std::string p_save = "");
     void hideMsgNewHighscore();
 
     float SizeMultOfEntitiesToTake() const;
@@ -205,7 +204,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     std::vector<Geom *> m_DynamicGeoms;
       
     MotoGame *m_pMotoGame;        /* Game object, so we know what to draw. */
-    App *m_pParent;               /* Our owner, so we know where to draw. */
+    GameApp *m_pParent;               /* Our owner, so we know where to draw. */
       
     bool m_bDebug;
     bool m_bUglyMode;

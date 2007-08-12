@@ -21,9 +21,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* 
  *  GUI: button
  */
-#include "Sound.h"
-#include "VXml.h"
 #include "GUI.h"
+#include "../../Game.h"
 
   /*===========================================================================
   Painting

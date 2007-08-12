@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "Credits.h"
 #include "VDraw.h"
+#include "Game.h"
 
 #define CREDITS_DARKNESS 0.55    /* a number between 0 (not darkened) and 
                                     1 (black) */
@@ -42,7 +43,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     return m_bFinished;
   }
   
-  void Credits::init(App* v_pApp, float fBackgroundReplayLength,float fFadeInLength,float fFadeOutLength,const char *pcCredits) {
+  void Credits::init(GameApp* v_pApp, float fBackgroundReplayLength,float fFadeInLength,float fFadeOutLength,const char *pcCredits) {
     if(fBackgroundReplayLength <= 0) {
       /* No replay or empty replay, just use black background */
       m_bBlackBackground = true;

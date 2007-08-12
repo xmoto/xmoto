@@ -39,6 +39,8 @@ class Replay;
 class CollisionSystem;
 class MotoGame;
 class Replay;
+class BikerTheme;
+class Theme;
 
 class BikeState {
   public:

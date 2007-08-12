@@ -39,7 +39,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       ~Credits();
       
       /* Methods */
-      void init(App* v_pApp, float fBackgroundReplayLength,float fFadeInLength,float fFadeOutLength,const char *pcCredits);
+      void init(GameApp* v_pApp, float fBackgroundReplayLength,float fFadeInLength,float fFadeOutLength,const char *pcCredits);
       void render(float fTime);
       bool isFinished(void);
       
@@ -49,7 +49,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       float m_fTime,m_fReplayLength,m_fFadeIn,m_fFadeOut;
       bool m_bBlackBackground;
       FontManager* m_font;
-      App *m_pApp;
+      GameApp *m_pApp;
       bool m_bFinished;
   };
 

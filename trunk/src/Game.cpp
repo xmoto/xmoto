@@ -38,13 +38,239 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <iomanip.h>
 
 
+  bool GameApp::haveMouseMoved(void) {
+    int nX,nY;
+    SDL_GetRelativeMouseState(&nX,&nY);
+    if(nX || nY) return true;
+    return false;
+  }
+
+  void GameApp::getMousePos(int *pnX,int *pnY) {
+    int nX,nY;
+    SDL_GetMouseState(&nX,&nY);
+    
+    //int xx = (m_nDispWidth/2 - getDispWidth()/2);
+    //int yy = (m_nDispHeight/2 - getDispHeight()/2);
+    
+    if(pnX) *pnX = nX;// - xx;
+    if(pnY) *pnY = nY;// - yy;
+    
+    //if(pnX) *pnX = (nX*getDispWidth()) / m_nDispWidth;
+    //if(pnY) *pnY = (nY*getDispHeight()) / m_nDispHeight;
+  }
+  
+  /*===========================================================================
+  Get real-time clock
+  ===========================================================================*/
+  std::string GameApp::getTimeStamp(void) {
+    struct tm *pTime;
+    time_t T;
+    char cBuf[256] = "";
+    time(&T);
+    pTime = localtime(&T);
+    if(pTime != NULL) {
+      sprintf(cBuf,"%d-%02d-%02d %02d:%02d:%02d",
+              pTime->tm_year+1900, pTime->tm_mon+1, pTime->tm_mday,
+	      pTime->tm_hour, pTime->tm_min, pTime->tm_sec);                    
+    }    
+    return cBuf;
+  }
+  
+  double GameApp::getTime(void) {
+    return SDL_GetTicks() / 1000.0f;
+  }
+  double GameApp::getRealTime(void) {
+    return SDL_GetTicks() / 1000.0f;
+  }
+  
+  std::string GameApp::formatTime(float fSecs) {
+    char cBuf[256];
+    int nM, nS, nH;
+    float nHres;
+
+    nM = (int)(fSecs/60.0);
+    nS = (int)(fSecs - ((float)nM)*60.0);
+    nHres = (fSecs - ((float)nM)*60.0 - ((float)nS));
+    nH = (int)(nHres * 100.0);
+
+    /* hum, case, in which 0.9800 * 100.0 => 0.9799999*/
+    if(((int)(nHres * 100.0)) < ((int)((nHres * 100.0) + 0.001))) {
+      nH = ((int)((nHres * 100.0) + 0.001));
+      nH %= 100;
+    }
+
+    sprintf(cBuf,"%02d:%02d:%02d", nM, nS, nH);
+    return cBuf;
+  }
+  
+  /*===========================================================================
+  Quits the application
+  ===========================================================================*/
+  void GameApp::quit(void) {
+    /* Set quit flag */
+    m_bQuit = true;
+  }
+  
+  /*===========================================================================
+  Init 
+  ===========================================================================*/
+  void GameApp::_InitWin(bool bInitGraphics) {
+
+    /* Init SDL */
+    if(bInitGraphics == false) {
+      if(SDL_Init(SDL_INIT_TIMER) < 0)
+        throw Exception("(1) SDL_Init : " + std::string(SDL_GetError()));
+      
+      /* No graphics mojo here, thank you */
+      return;
+    } else {
+      if(SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER) < 0)
+        throw Exception("(2) SDL_Init : " + std::string(SDL_GetError()));
+    }
+    /* Set window title */
+    SDL_WM_SetCaption(XMBuild::getVersionString(true).c_str(), XMBuild::getVersionString(true).c_str());
+
+#if !defined(WIN32) && !defined(__APPLE__) 
+    SDL_Surface *v_icon = SDL_LoadBMP(GAMEDATADIR "/xmoto_icone_x.ico");
+    if(v_icon != NULL) {
+      SDL_SetColorKey(v_icon, SDL_SRCCOLORKEY,
+		      SDL_MapRGB(v_icon->format, 236, 45, 211));
+      SDL_WM_SetIcon(v_icon, NULL);
+    }
+#endif
+
+    if(TTF_Init() < 0) {
+      throw Exception("Initializing TTF failed: " + std::string(TTF_GetError()));
+    }
+    atexit(TTF_Quit);
+  }
+
+  /*===========================================================================
+  Uninit 
+  ===========================================================================*/
+  void GameApp::_Uninit(void) {
+    /* Tell user app to turn off */
+    userShutdown();
+
+    if(m_xmsession->useGraphics()) {
+      /* Uninit drawing library */
+      drawLib->unInit();
+    }
+    
+    Logger::uninit();
+    
+    /* Shutdown SDL */
+    SDL_Quit();
+  }
+  
+  /*===========================================================================
+    Return available display modes
+    ===========================================================================*/
+  std::vector<std::string>* GameApp::getDisplayModes(int windowed){
+    std::vector<std::string>* modes = new std::vector<std::string>;
+    SDL_Rect **sdl_modes;
+    int i, nFlags;
+
+    /* Always use the fullscreen flags to be sure to
+       always get a result (no any modes available like in windowed) */
+    nFlags = SDL_OPENGL | SDL_FULLSCREEN;
+
+    /* Get available fullscreen/hardware modes */
+    sdl_modes = SDL_ListModes(NULL, nFlags);
+
+    /* Check is there are any modes available */
+    if(sdl_modes == (SDL_Rect **)0){
+      Logger::Log("** Warning ** : No display modes available.");
+      throw Exception("getDisplayModes : No modes available.");
+    }
+
+    /* Always include these to modes */
+    modes->push_back("800 X 600");
+    modes->push_back("1024 X 768");
+    modes->push_back("1280 X 1024");
+    modes->push_back("1600 X 1200");
+
+    /* Print valid modes */
+    //Log("Available Modes :");
+
+    for(i=0; sdl_modes[i]; i++){
+      char tmp[128];
+
+      /* Menus don't fit under 800x600 */
+      if(sdl_modes[i]->w < 800 || sdl_modes[i]->h < 600)
+	continue;
+
+      snprintf(tmp, 126, "%d X %d",
+	       sdl_modes[i]->w,
+	       sdl_modes[i]->h);
+      tmp[127] = '\0';
+
+      /* Only single */
+      bool findDouble = false;
+      //Log("size: %d", modes->size());
+      for(unsigned int j=0; j<modes->size(); j++)
+	if(!strcmp(tmp, (*modes)[j].c_str())){
+	  findDouble = true;
+	  break;
+	}
+
+      if(!findDouble){
+	modes->push_back(tmp);
+	//Log("  %s", tmp);
+      }
+    }
+
+    return modes;
+  }
+
+  /*===========================================================================
+  Set/get graphics scissoring
+  ===========================================================================*/
+  void GameApp::scissorGraphics(int x,int y,int nWidth,int nHeight) {
+	  drawLib->setClipRect(x,y,nWidth,nHeight);
+  }  
+  
+  void GameApp::getScissorGraphics(int *px,int *py,int *pnWidth,int *pnHeight) {
+	  drawLib->getClipRect(px,py,pnWidth,pnHeight);
+  }  
+  
+  bool GameApp::isUglyMode() {
+    return m_xmsession->ugly();
+  }
+
+
+
+
+
 GameApp::~GameApp() {
   if(m_db != NULL) {
     delete m_db;
   }
+
+    if(drawLib != NULL) {
+/* kejo removed GL specific...*/
+      //Log("Nb glyphs created: %i",
+	  //drawLib->getFontSmall()->nbGlyphsInMemory()  +
+	  //drawLib->getFontMedium()->nbGlyphsInMemory() +
+	  //drawLib->getFontBig()->nbGlyphsInMemory()
+//	  );
+      delete drawLib;
+    }
+
+    delete m_xmsession;
 }
 
 GameApp::GameApp() {
+  m_bQuit = false;
+  m_fAppTime = 0.0f;
+  m_UserNotify = "";
+  m_fFramesPerSecond = 25.0f;
+  m_fNextFrame = 0.0f;
+  m_nFrameDelay = 0;
+  drawLib = NULL;
+  
+  m_xmsession = new XMSession();
+
   m_pCredits = NULL;
   m_bEnableMenuMusic=false;
   m_bEnableInitZoom=true;
@@ -549,7 +775,7 @@ GameApp::GameApp() {
 					}
 	    
 					if(m_pJustPlayReplay != NULL && m_bAutosaveHighscoreReplays) {
-						String v_replayName = Replay::giveAutomaticName();
+						std::string v_replayName = Replay::giveAutomaticName();
 						_SaveReplay(v_replayName);
 						m_Renderer.showMsgNewBestHighscore(v_replayName);
 					} else {
@@ -562,7 +788,7 @@ GameApp::GameApp() {
 						} catch(Exception &e) {
 						}
 						if(m_pJustPlayReplay != NULL && m_bAutosaveHighscoreReplays) {
-							String v_replayName = Replay::giveAutomaticName();
+							std::string v_replayName = Replay::giveAutomaticName();
 							_SaveReplay(v_replayName);
 							m_Renderer.showMsgNewPersonalHighscore(v_replayName);
 						} else {
@@ -1312,7 +1538,7 @@ GameApp::GameApp() {
     
     if(v_id_profile != "") {
       m_Renderer.setWorldRecordTime(v_roomName + ": " + 
-				    App::formatTime(v_finishTime) +
+				    GameApp::formatTime(v_finishTime) +
 				    std::string(" (") + v_id_profile + std::string(")"));
     } else {
       m_Renderer.setWorldRecordTime(v_roomName + ": " + 
@@ -2668,7 +2894,7 @@ GameApp::GameApp() {
       v_nbRestarted     = atoi(m_db->getResult(v_result, 6, i, 4));
     
       sprintf(cBuf,("[%s] %s:\n   " + std::string(GAMETEXT_XMOTOLEVELSTATS)).c_str(),
-	      App::formatTime(v_totalPlayedTime).c_str(), v_level_name.c_str(),
+	      GameApp::formatTime(v_totalPlayedTime).c_str(), v_level_name.c_str(),
 	      v_nbPlayed, v_nbDied, v_nbCompleted, v_nbRestarted);
     
       pText = new UIStatic(p,0,cy,cBuf,nWidth,45);

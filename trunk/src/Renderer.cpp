@@ -31,6 +31,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/BikePlayer.h"
 #include "helpers/Log.h"
 #include "VDraw.h"
+#include "Game.h"
 #include <algorithm>
 
 
@@ -1785,28 +1786,28 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   void GameRenderer::showReplayHelp(float p_speed, bool bAllowRewind) {
     if(bAllowRewind) {
       if(p_speed >= 10.0) {
-        m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXT(String(">> 10")));
+        m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXT(std::string(">> 10")));
       } 
       else if(p_speed <= -10.0) {
-        m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXT(String("<<-10")));
+        m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXT(std::string("<<-10")));
       } 
       else {
         char v_speed_str[5 + 1];
         sprintf(v_speed_str, "% .2f", p_speed);
-        m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXT(String(v_speed_str)));
+        m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXT(std::string(v_speed_str)));
       }
     } 
     else {
       if(p_speed >= 10.0) {
-        m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXTNOREWIND(String(">> 10")));
+        m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXTNOREWIND(std::string(">> 10")));
       } 
       else if(p_speed <= -10.0) {
-        m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXTNOREWIND(String("<<-10")));
+        m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXTNOREWIND(std::string("<<-10")));
       } 
       else {
         char v_speed_str[256];
         sprintf(v_speed_str, "% .2f", p_speed);
-        m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXTNOREWIND(String(v_speed_str)));
+        m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXTNOREWIND(std::string(v_speed_str)));
       }
     }
   }
@@ -1892,7 +1893,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
   }
   
-  void GameRenderer::showMsgNewPersonalHighscore(String p_save) {
+  void GameRenderer::showMsgNewPersonalHighscore(std::string p_save) {
     m_pInGameNewHighscore->showWindow(true);
     m_pNewHighscorePersonal_str->showWindow(true);
     m_pNewHighscoreBest_str->showWindow(false);
@@ -1907,7 +1908,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
   }
   
-  void GameRenderer::showMsgNewBestHighscore(String p_save) {
+  void GameRenderer::showMsgNewBestHighscore(std::string p_save) {
     m_pInGameNewHighscore->showWindow(true);
     m_pNewHighscorePersonal_str->showWindow(false);
     m_pNewHighscoreBest_str->showWindow(true);

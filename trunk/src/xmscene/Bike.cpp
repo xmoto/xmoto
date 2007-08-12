@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../GameEvents.h"
 #include "../GameText.h"
 #include "../PhysSettings.h"
+#include "../Game.h"
 
 #define PHYSICAL_ENGINE_REDUCTION 0.05
 

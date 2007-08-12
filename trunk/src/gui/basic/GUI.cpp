@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GUI.h"
 #include "GameText.h"
 #include "VDraw.h"
+#include "Game.h"
 
   DrawLib* UIWindow::m_drawLib = NULL;
 
@@ -43,6 +44,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     return fOpacity;
   }
   
+bool UIWindow::isUglyMode() {
+  return getApp()->isUglyMode();
+}
+
   /*===========================================================================
   Base window init/shutdown
   ===========================================================================*/
@@ -868,7 +873,7 @@ FRAME_BR (187,198) (8x8)
   /*===========================================================================
   Texture mangling
   ===========================================================================*/ 
-  App *UITexture::getApp(void) {
+  GameApp *UITexture::getApp(void) {
     return m_pApp;
   }
   
@@ -884,7 +889,7 @@ FRAME_BR (187,198) (8x8)
     return m_pUIElemTextureA;
   }
   
-  void UITexture::setApp(App *pApp) {
+  void UITexture::setApp(GameApp *pApp) {
     m_pApp = pApp;
     
     Sprite *pSprite;
@@ -906,7 +911,7 @@ FRAME_BR (187,198) (8x8)
   }
   
   /* Static class data */  
-  App *UITexture::m_pApp = NULL;
+  GameApp *UITexture::m_pApp = NULL;
   Texture *UITexture::m_pUIElemTexture = NULL;
   Texture *UITexture::m_pUIElemTextureD = NULL;
   Texture *UITexture::m_pUIElemTextureA = NULL;

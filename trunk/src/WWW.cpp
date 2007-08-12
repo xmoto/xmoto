@@ -3,7 +3,7 @@
 #include "BuildConfig.h"
 
 #include "WWW.h"
-#include "VApp.h"
+#include "Game.h"
 #include "VFileIO.h"
 #include "helpers/VExcept.h"
 #include "helpers/Log.h"

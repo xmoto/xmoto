@@ -885,7 +885,7 @@ void MotoGame::cleanPlayers() {
     }
   }
 
-  void MotoGame::SetEntityPos(String pEntityID, float pX, float pY) {
+  void MotoGame::SetEntityPos(std::string pEntityID, float pX, float pY) {
     SetEntityPos(&(m_pLevelSrc->getEntityById(pEntityID)),
 		 pX, pY);
   }
@@ -914,31 +914,31 @@ void MotoGame::cleanPlayers() {
     getArrowPointer().nArrowPointerMode = 0;
   }
 
-  void MotoGame::MoveBlock(String pBlockID, float pX, float pY) {
+  void MotoGame::MoveBlock(std::string pBlockID, float pX, float pY) {
     Block& v_block = m_pLevelSrc->getBlockById(pBlockID);
     v_block.setDynamicPosition(v_block.DynamicPosition() + Vector2f(pX, pY));
     m_Collision.moveDynBlock(&v_block);
   }
   
-  void MotoGame::SetBlockPos(String pBlockID, float pX, float pY) {
+  void MotoGame::SetBlockPos(std::string pBlockID, float pX, float pY) {
     Block& v_block = m_pLevelSrc->getBlockById(pBlockID);
     v_block.setDynamicPositionAccordingToCenter(Vector2f(pX, pY));
     m_Collision.moveDynBlock(&v_block);
   }
   
-  void MotoGame::SetBlockCenter(String pBlockID, float pX, float pY) {
+  void MotoGame::SetBlockCenter(std::string pBlockID, float pX, float pY) {
     Block& v_block = m_pLevelSrc->getBlockById(pBlockID);
     v_block.setCenter(Vector2f(pX, pY));
     m_Collision.moveDynBlock(&v_block);
   }
   
-  void MotoGame::SetBlockRotation(String pBlockID, float pAngle) {
+  void MotoGame::SetBlockRotation(std::string pBlockID, float pAngle) {
     Block& v_block = m_pLevelSrc->getBlockById(pBlockID);
     v_block.setDynamicRotation(pAngle);
     m_Collision.moveDynBlock(&v_block);
   }     
   
-  void MotoGame::SetEntityDrawAngle(String pEntityID, float pAngle) {
+  void MotoGame::SetEntityDrawAngle(std::string pEntityID, float pAngle) {
     Entity *v_entity;
     v_entity = &(getLevelSrc()->getEntityById(pEntityID));
     v_entity->setDrawAngle(pAngle);

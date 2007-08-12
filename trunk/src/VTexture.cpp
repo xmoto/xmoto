@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* 
  *  Handling of textures.
  */
-#include "VApp.h"
+#include "Game.h"
 #include "VTexture.h"
 #include "Image.h"
 #include "VFileIO.h"
