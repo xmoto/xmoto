@@ -146,15 +146,44 @@ void MotoGame::cleanPlayers() {
     }
     
     if(pMsg == NULL) {    
-      pMsg = new GameMessage;
-      m_GameMessages.push_back(pMsg);
+      if(bOnce) { /* don't allow \n split on bOnce messages (i'm too lazy) */
+	pMsg = new GameMessage;
+	pMsg->fRemoveTime = getTime() + fDuration;
+	pMsg->bNew = true;
+	pMsg->nAlpha = 255;
+	pMsg->bOnce = bOnce;
+	pMsg->Text = Text;
+	m_GameMessages.push_back(pMsg);	
+      } else {
+	/* split the message if \n is encoutered */
+	std::string v_txtRest = Text;
+	int n = v_txtRest.find_first_of("\n");
+
+	while(n >= 0 && n < v_txtRest.length()) {
+	  pMsg = new GameMessage;
+	  pMsg->fRemoveTime = getTime() + fDuration;
+	  pMsg->bNew = true;
+	  pMsg->nAlpha = 255;
+	  pMsg->bOnce = bOnce;
+	  pMsg->Text = v_txtRest.substr(0, n);
+	  m_GameMessages.push_back(pMsg);
+	  v_txtRest = v_txtRest.substr(n+1, v_txtRest.length()-1);
+	  n = v_txtRest.find_first_of("\n");
+	}
+
+	pMsg = new GameMessage;
+	pMsg->fRemoveTime = getTime() + fDuration;
+	pMsg->bNew = true;
+	pMsg->nAlpha = 255;
+	pMsg->bOnce = bOnce;
+	pMsg->Text = v_txtRest;
+	m_GameMessages.push_back(pMsg);
+      }
+    } else {
+      /* redefine the text only to replay a bonce message */
+      pMsg->Text = Text;
     }
-    
-    pMsg->fRemoveTime = getTime() + fDuration;
-    pMsg->bNew = true;
-    pMsg->nAlpha = 255;
-    pMsg->Text = Text;
-    pMsg->bOnce = bOnce;
+
     updateGameMessages();
   }
 
