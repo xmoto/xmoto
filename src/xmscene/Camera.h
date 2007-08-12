@@ -22,7 +22,6 @@
 #define __CAMERA_H__
 
 #include "../VCommon.h"
-#include "../VApp.h"
 #include "Bike.h"
 
 #define ZOOM_DEFAULT 0.195f

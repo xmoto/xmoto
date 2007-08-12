@@ -23,6 +23,25 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "VXml.h"
 #include "GUI.h"
+#include "Game.h"
+
+  UIStatic::UIStatic(UIWindow *pParent,int x,int y,std::string Caption,int nWidth,int nHeight) {
+        initW(pParent,x,y,Caption,nWidth,nHeight);
+        
+        m_VAlign = UI_ALIGN_CENTER;
+        m_HAlign = UI_ALIGN_CENTER;
+        
+        m_bBackgroundShade = false;
+        
+        m_pDarkBlobTexture = NULL;
+	Sprite *pSprite;
+	pSprite = getApp()->getTheme()->getSprite(SPRITE_TYPE_UI, "DarkBlob");
+	if(pSprite != NULL) {
+	  m_pDarkBlobTexture = pSprite->getTexture(false,true, FM_NEAREST);
+	}
+        
+        m_pCustomBackgroundTexture = NULL;
+  }
 
   /*===========================================================================
   Painting

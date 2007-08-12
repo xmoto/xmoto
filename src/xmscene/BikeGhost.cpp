@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "BikeGhost.h"
 #include "../Replay.h"
 #include "../GameText.h"
+#include "../Game.h"
 
 Ghost::Ghost(std::string i_replayFile, bool i_isActiv,
 	     Theme *i_theme, BikerTheme* i_bikerTheme,
@@ -92,7 +93,7 @@ std::string Ghost::getDescription() const {
   return
     std::string(c_tmp)   +
     "\n(" + m_info + ")" +
-    "\n(" + App::formatTime(m_replay->getFinishTime()) + ")";
+    "\n(" + GameApp::formatTime(m_replay->getFinishTime()) + ")";
 }
 
 std::string Ghost::playerName() {

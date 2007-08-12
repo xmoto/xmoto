@@ -21,15 +21,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __GUI_H__
 #define __GUI_H__
 
-#include "VCommon.h"
-#include "VApp.h"
-
 class UIMsgBox;
 class UIButton;
 class UIRoot;
-class App;
 class DrawLib;
 class FontManager;
+class Sprite;
+class GameApp;
+
+#include "../../Theme.h"
+
 
 	/*===========================================================================
 	Alignments
@@ -105,14 +106,14 @@ class FontManager;
   ===========================================================================*/
   class UITexture {
     public:
-      static App *getApp(void);
-      static void setApp(App *pApp);
+      static GameApp *getApp(void);
+      static void setApp(GameApp *pApp);
       static Texture *getMiscTexture(void);
       static Texture *getMiscDisabledTexture(void);
       static Texture *getMiscActiveTexture(void);
     
     private:
-      static App *m_pApp;
+      static GameApp *m_pApp;
       
       static Texture *m_pUIElemTexture;
       static Texture *m_pUIElemTextureD;
@@ -205,8 +206,8 @@ class FontManager;
       FontManager *getFont() {return m_curFont;}
       void setFont(FontManager *pFont) {m_curFont = pFont;}
       UIWindow *getParent(void) {return m_pParent;}
-      App *getApp(void) {return m_pApp;}
-      void setApp(App *pApp) {m_pApp=pApp;}
+      GameApp *getApp(void) {return m_pApp;}
+      void setApp(GameApp *pApp) {m_pApp=pApp;}
       void setID(std::string ID) {m_ID=ID;}
       std::string getID(void) {return m_ID;}      
       std::vector<UIWindow *> &getChildren(void) {return m_Children;}
@@ -233,7 +234,7 @@ class FontManager;
       const std::string &getContextHelp(void) {return m_ContextHelp;}
       void clearMsgBoxActive(void) {m_bActiveMsgBox = false; /* pain */}
     
-      bool isUglyMode() {return getApp()->isUglyMode();}
+      bool isUglyMode();
 
     protected:
       /* Protected interface */
@@ -254,7 +255,7 @@ class FontManager;
       UIWindow *m_pParent;                      /* Parent window */
       std::string m_ID;                         /* Non-unique id */
       std::vector<UIWindow *> m_Children;       /* Child windows */  
-      App *m_pApp;                              /* Application */      
+      GameApp *m_pApp;                              /* Application */      
       UIRect m_Pos;                             /* Position */
       std::string m_Caption;                    /* Caption */
       FontManager* m_curFont;
@@ -447,23 +448,7 @@ class FontManager;
   class UIStatic : public UIWindow {
     public:
       UIStatic() {}
-      UIStatic(UIWindow *pParent,int x=0,int y=0,std::string Caption="",int nWidth=0,int nHeight=0) {
-        initW(pParent,x,y,Caption,nWidth,nHeight);
-        
-        m_VAlign = UI_ALIGN_CENTER;
-        m_HAlign = UI_ALIGN_CENTER;
-        
-        m_bBackgroundShade = false;
-        
-        m_pDarkBlobTexture = NULL;
-	Sprite *pSprite;
-	pSprite = getApp()->getTheme()->getSprite(SPRITE_TYPE_UI, "DarkBlob");
-	if(pSprite != NULL) {
-	  m_pDarkBlobTexture = pSprite->getTexture(false,true, FM_NEAREST);
-	}
-        
-        m_pCustomBackgroundTexture = NULL;
-      }      
+      UIStatic(UIWindow *pParent,int x=0,int y=0,std::string Caption="",int nWidth=0,int nHeight=0);
 
       /* Methods */
       virtual void paint(void);

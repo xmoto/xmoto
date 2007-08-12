@@ -1525,7 +1525,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	  char c_tmp[1024];
 	  snprintf(c_tmp, 1024,
 		   GAMETEXT_BY_PLAYER, v_id_profile.c_str());
-          pLV_BestTimes_WorldRecord->setCaption(v_roomName + ": " + App::formatTime(v_finishTime) +
+          pLV_BestTimes_WorldRecord->setCaption(v_roomName + ": " + GameApp::formatTime(v_finishTime) +
 						" " + std::string(c_tmp));
 	} else {
 	  pLV_BestTimes_WorldRecord->setCaption(v_roomName + ": " + GAMETEXT_WORLDRECORDNA);

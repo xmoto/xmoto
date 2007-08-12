@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Theme.h"
 #include "helpers/VExcept.h"
 #include "VXml.h"
-#include "VApp.h"
+#include "Game.h"
 #include "md5sum/md5file.h"
 #include "db/xmDatabase.h"
 #include "helpers/Log.h"
@@ -704,7 +704,7 @@ void AnimationSprite::setCurrentTexture(Texture *p_texture) {
 
 int AnimationSprite::getCurrentFrame() {
   /* Next frame? */
-  float v_realTime = App::getRealTime();
+  float v_realTime = GameApp::getRealTime();
 
   while(v_realTime > m_fFrameTime + m_frames[m_current_frame]->getDelay()) {
     m_fFrameTime = v_realTime;

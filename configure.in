@@ -1,4 +1,4 @@
-AC_INIT(src/VApp.cpp)
+AC_INIT(src/GameInit.cpp)
 
 AC_CANONICAL_TARGET()
 AM_INIT_AUTOMAKE(xmoto,0.3.3)

@@ -36,8 +36,231 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "XMSession.h"
 #include "XMArgs.h"
 #include "VDraw.h"
+#include "Packager.h"
+#include "helpers/SwapEndian.h"
 
 #define DATABASE_FILE FS::getUserDirUTF8() + "/" + "xm.db"
+
+#if defined(WIN32)
+int SDL_main(int nNumArgs,char **ppcArgs) {
+#else
+int main(int nNumArgs,char **ppcArgs) {
+#endif
+  /* Start application */
+  try {     
+    /* Setup basic info */
+    GameApp vapp;
+
+    vapp.run(nNumArgs,ppcArgs);
+  }
+  catch (Exception &e) {
+    if(Logger::isInitialized()) {
+      Logger::Log((std::string("Exception: ") + e.getMsg()).c_str());
+    }    
+
+    printf("fatal exception : %s\n",e.getMsg().c_str());        
+    SDL_Quit(); /* make sure SDL shuts down gracefully */
+    
+#if defined(WIN32)
+    char cBuf[1024];
+    sprintf(cBuf,"Fatal exception occured: %s\n"
+	    "Consult the file xmoto.log for more information about what\n"
+	    "might has occured.\n",e.getMsg().c_str());                    
+    MessageBox(NULL,cBuf,"X-Moto Error",MB_OK|MB_ICONERROR);
+#endif
+  }
+  return 0;
+}
+
+  void GameApp::run(int nNumArgs,char **ppcArgs) {
+    XMArguments v_xmArgs;
+
+    /* check args */
+    try {
+      v_xmArgs.parse(nNumArgs, ppcArgs);
+    } catch (Exception &e) {
+      printf("syntax error : %s\n", e.getMsg().c_str());
+      v_xmArgs.help(nNumArgs >= 1 ? ppcArgs[0] : "xmoto");
+      return; /* abort */
+    }
+
+    /* help */
+    if(v_xmArgs.isOptHelp()) {
+      v_xmArgs.help(nNumArgs >= 1 ? ppcArgs[0] : "xmoto");
+      return;
+    }
+
+    /* init sub-systems */
+    SwapEndian::Swap_Init();
+    srand(time(NULL));
+
+    /* package / unpackage */
+    if(v_xmArgs.isOptPack()) {
+      Packager::go(v_xmArgs.getOpt_pack_bin() == "" ? "xmoto.bin" : v_xmArgs.getOpt_pack_bin(),
+		   v_xmArgs.getOpt_pack_dir() == "" ? "."         : v_xmArgs.getOpt_pack_dir());
+      return;
+    }
+    if(v_xmArgs.isOptUnPack()) {
+      Packager::goUnpack(v_xmArgs.getOpt_unpack_bin() == "" ? "xmoto.bin" : v_xmArgs.getOpt_unpack_bin(),
+			 v_xmArgs.getOpt_unpack_dir() == "" ? "."         : v_xmArgs.getOpt_unpack_dir(),
+			 v_xmArgs.getOpt_unpack_noList() == false);
+      return;
+    }
+    /* ***** */
+
+    if(v_xmArgs.isOptConfigPath()) {
+      FS::init("xmoto", "xmoto.bin", "xmoto.log", v_xmArgs.getOpt_configPath_path());
+    } else {
+      FS::init("xmoto", "xmoto.bin", "xmoto.log");
+    }
+    Logger::init(FS::getUserDir() + "/xmoto.log");
+
+    /* load config file */
+    createDefaultConfig();
+    m_Config.loadFile();
+
+    /* load session */
+    m_xmsession->load(&m_Config); /* overload default session by userConfig */
+    m_xmsession->load(&v_xmArgs); /* overload default session by xmargs     */
+
+    /* apply verbose mode */
+    Logger::setVerbose(m_xmsession->isVerbose());
+
+#ifdef USE_GETTEXT
+    std::string v_locale = Locales::init(m_Config.getString("Language"));
+#endif
+
+    Logger::Log("compiled at "__DATE__" "__TIME__);
+    if(SwapEndian::bigendien) {
+      Logger::Log("Systeme is bigendien");
+    } else {
+      Logger::Log("Systeme is littleendien");
+    }
+
+    Logger::Log("User directory: %s", FS::getUserDir().c_str());
+    Logger::Log("Data directory: %s", FS::getDataDir().c_str());
+
+#ifdef USE_GETTEXT
+    Logger::Log("Locales set to '%s' (directory '%s')", v_locale.c_str(), LOCALESDIR);
+#endif
+
+    if(v_xmArgs.isOptListLevels() || v_xmArgs.isOptListReplays() || v_xmArgs.isOptReplayInfos()) {
+      m_xmsession->setUseGraphics(false);
+    }
+
+    _InitWin(m_xmsession->useGraphics());
+
+    if(m_xmsession->useGraphics()) {
+      /* init drawLib */
+      drawLib = DrawLib::DrawLibFromName(m_xmsession->drawlib());
+
+      if(drawLib == NULL) {
+	throw Exception("Drawlib not initialized");
+      }
+
+      drawLib->setNoGraphics(m_xmsession->useGraphics() == false);
+      drawLib->setDontUseGLExtensions(m_xmsession->glExts() == false);
+
+      /* Init! */
+      drawLib->init(m_xmsession->resolutionWidth(), m_xmsession->resolutionHeight(), m_xmsession->bpp(), m_xmsession->windowed(), &m_theme);
+      /* drawlib can change the final resolution if it fails, then, reinit session one's */
+      m_xmsession->setResolutionWidth(drawLib->getDispWidth());
+      m_xmsession->setResolutionHeight(drawLib->getDispHeight());
+      m_xmsession->setBpp(drawLib->getDispBPP());
+      m_xmsession->setWindowed(drawLib->getWindowed());
+      Logger::Log("Resolution: %ix%i (%i bpp)", m_xmsession->resolutionWidth(), m_xmsession->resolutionHeight(), m_xmsession->bpp());
+      /* */
+
+      if(!drawLib->isNoGraphics()) {        
+	drawLib->setDrawDims(m_xmsession->resolutionWidth(), m_xmsession->resolutionHeight(),
+			     m_xmsession->resolutionWidth(), m_xmsession->resolutionHeight());
+      }
+    }
+    
+    /* Now perform user init */
+    userInit(&v_xmArgs);
+    
+    /* Enter the main loop */
+    while(!m_bQuit) {
+      if(!drawLib->isNoGraphics()) {
+        /* Handle SDL events */            
+        SDL_PumpEvents();
+        
+        SDL_Event Event;
+        while(SDL_PollEvent(&Event)) {
+          int ch=0;
+          static int nLastMouseClickX = -100,nLastMouseClickY = -100;
+          static int nLastMouseClickButton = -100;
+          static float fLastMouseClickTime = 0.0f;
+          int nX,nY;
+
+          /* What event? */
+          switch(Event.type) {
+            case SDL_KEYDOWN: 
+              if((Event.key.keysym.unicode&0xff80)==0) {
+                ch = Event.key.keysym.unicode & 0x7F;
+              }
+              keyDown(Event.key.keysym.sym, Event.key.keysym.mod, ch);            
+              break;
+            case SDL_KEYUP: 
+              keyUp(Event.key.keysym.sym, Event.key.keysym.mod);            
+              break;
+            case SDL_QUIT:  
+              /* Force quit */
+              quit();
+              break;
+            case SDL_MOUSEBUTTONDOWN:
+              /* Pass ordinary click */
+              mouseDown(Event.button.button);
+              
+              /* Is this a double click? */
+              getMousePos(&nX,&nY);
+              if(nX == nLastMouseClickX &&
+                 nY == nLastMouseClickY &&
+                 nLastMouseClickButton == Event.button.button &&
+                 (getRealTime() - fLastMouseClickTime) < 0.250f) {                
+
+                /* Pass double click */
+                mouseDoubleClick(Event.button.button);                
+              }
+              fLastMouseClickTime = getRealTime();
+              nLastMouseClickX = nX;
+              nLastMouseClickY = nY;
+              nLastMouseClickButton = Event.button.button;
+            
+              break;
+            case SDL_MOUSEBUTTONUP:
+              mouseUp(Event.button.button);
+              break;
+          }
+        }
+          
+        /* Clear screen */  
+        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	if (isUglyMode()){
+	  drawLib->clearGraphics();
+	}
+        drawLib->resetGraphics();
+
+      }
+      
+      /* Update user app */
+      drawFrame();
+      
+      if(!drawLib->isNoGraphics()) {
+        /* Swap buffers */
+       drawLib->flushGraphics();
+        
+        /* Does app want us to delay a bit after the frame? */
+        if(m_nFrameDelay > 0)
+	  SDL_Delay(m_nFrameDelay);
+      }
+    }
+    
+    /* Shutdown */
+    _Uninit();
+  }
+
 
   /*===========================================================================
   Update loading screen
@@ -110,7 +333,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
       
     /* Init renderer */
-    m_Renderer.setParent( (App *)this );
+    m_Renderer.setParent( (GameApp *)this );
     m_Renderer.setGameObject( &m_MotoGame );        
     m_Renderer.setDebug(m_xmsession->debug());
 
@@ -410,7 +633,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       }
     }
 
-    Logger::Log("UserInit ended at %.3f", App::getTime());
+    Logger::Log("UserInit ended at %.3f", GameApp::getTime());
   }
     
   /*===========================================================================

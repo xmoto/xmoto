@@ -22,7 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../helpers/VExcept.h"
 #include "../VXml.h"
 #include "../GameText.h"
-#include "VApp.h"
+#include "Game.h"
 
 void xmDatabase::updateDB_stats(XmDatabaseUpdateInterface *i_interface) {
   XMLDocument XML;
@@ -145,7 +145,7 @@ void xmDatabase::updateDB_stats(XmDatabaseUpdateInterface *i_interface) {
 void xmDatabase::stats_createProfile(const std::string& i_profile) {
   simpleSql("INSERT INTO stats_profiles(id_profile, nbStarts, since) "
 	    "VALUES(\"" + protectString(i_profile) + "\", 0, \"" + 
-	    App::getTimeStamp() + "\");");
+	    GameApp::getTimeStamp() + "\");");
 }
 
 void xmDatabase::stats_destroyProfile(const std::string& i_profile) {

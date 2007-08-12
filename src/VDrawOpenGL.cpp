@@ -22,7 +22,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *  Simple 2D drawing library, built closely on top of OpenGL.
  */
 #include "VDraw.h"
-#include "VApp.h"
 #include "helpers/utf8.h"
 #include "xmscene/Camera.h"
 #include "helpers/Log.h"

@@ -21,25 +21,24 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __GAME_H__
 #define __GAME_H__
 
+#include "GameText.h"
 #include "VCommon.h"
-#include "VApp.h"
 #include "xmscene/Level.h"
 #include "xmscene/Bike.h"
 #include "xmscene/Scene.h"
 #include "VTexture.h"
 #include "Renderer.h"
 #include "Replay.h"
-#include "GameText.h"
 #include "Sound.h"
 #include "Input.h"
 #include "WWW.h"
 #include "WWWAppInterface.h"
-#include "gui/specific/GUIXMoto.h"
 #include "Credits.h"
 #include "LevelsManager.h"
 #include "XMotoLoadLevelsInterface.h"
 #include "db/xmDatabaseUpdateInterface.h"
 #include "SysMessage.h"
+#include "gui/specific/GUIXMoto.h"
 
 #define PRESTART_ANIMATION_TIME 2.0
 #define INPLAY_ANIMATION_TIME 1.0
@@ -51,7 +50,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* logf(PRESTART_ANIMATION_CURVE + 1.0) = 1.386294361*/
 #define LOGF_PRE_ANIM_TIME_ADDED_ONE 1.386294361
 
+class XMArguments;
 class xmDatabase;
+class XMSession;
+class Img;
 
    /*===========================================================================
    Overall game states
@@ -104,11 +106,13 @@ class xmDatabase;
    /*===========================================================================
    Game application
    ===========================================================================*/
-   class GameApp : public App, public XMotoLoadLevelsInterface, public XmDatabaseUpdateInterface, public WWWAppInterface {
+   class GameApp : public XMotoLoadLevelsInterface, public XmDatabaseUpdateInterface, public WWWAppInterface {
      public:
      GameApp();
-     virtual ~GameApp();
+     ~GameApp();
            
+    void run(int nNumArgs, char **ppcArgs);
+
         /* WWWAppInterface implementation */ 
         virtual void setTaskProgress(float fPercent);
 
@@ -121,16 +125,16 @@ class xmDatabase;
 	void loadLevelHook(std::string i_level, int i_percentage);
 	void updatingDatabase(std::string i_message);
 
-      /* Virtual methods */
-      virtual void drawFrame(void);
-      virtual void userInit(XMArguments* v_xmArgs);
-      virtual void userShutdown(void);
-      virtual void keyDown(int nKey, SDLMod mod,int nChar);
-      virtual void keyUp(int nKey, SDLMod mod);
-      virtual void mouseDown(int nButton);
-      virtual void mouseDoubleClick(int nButton);
-      virtual void mouseUp(int nButton);
-      virtual std::string getConfigThemeName(ThemeChoicer *p_themeChoicer);
+      /* ** */
+      void drawFrame(void);
+      void userInit(XMArguments* v_xmArgs);
+      void userShutdown(void);
+      void keyDown(int nKey, SDLMod mod,int nChar);
+      void keyUp(int nKey, SDLMod mod);
+      void mouseDown(int nButton);
+      void mouseDoubleClick(int nButton);
+      void mouseUp(int nButton);
+      std::string getConfigThemeName(ThemeChoicer *p_themeChoicer);
 
       /* Methods */
       void setState(GameState s);
@@ -152,6 +156,44 @@ class xmDatabase;
       void setSpecificReplay(const std::string& i_replay);
       void setSpecificLevelId(const std::string& i_levelID);
       void setSpecificLevelFile(const std::string& i_leveFile);
+
+      /* */
+      static double getTime(void);
+      static double getRealTime(void);
+      static std::string getTimeStamp(void);
+      void quit(void);
+      static std::string formatTime(float fSecs);
+      void getMousePos(int *pnX, int *pnY);
+      bool haveMouseMoved(void);
+      
+      static std::vector<std::string>* getDisplayModes(int windowed);
+      void scissorGraphics(int x, int y, int nWidth, int nHeight);
+      void getScissorGraphics(int *px, int *py, int *pnWidth, int *pnHeight);
+      Img *grabScreen(void);
+      bool isUglyMode();
+      /* */
+
+      DrawLib *getDrawLib() {
+	return drawLib;
+      };
+      Theme *getTheme() {
+	return &m_theme;
+      };
+      void setFPS(float i) {
+	m_fFramesPerSecond = i;
+      }
+
+      void setFrameDelay(int nDelay) {
+	m_nFrameDelay = nDelay;
+      }
+
+      const std::string & getUserNotify(void) {
+	return m_UserNotify;
+      }
+    
+      float getFPS(void) {
+	return m_fFramesPerSecond;
+      }
 
    protected:
       void createDefaultConfig();
@@ -299,7 +341,7 @@ class xmDatabase;
       UIButton *m_pPackLevelInfoViewReplayButton;      
       UIStatic *m_pPackBestPlayerText;
 
-      String    m_pLevelToShowOnViewHighscore;
+      std::string    m_pLevelToShowOnViewHighscore;
 
       /* if true, don't ask for updating levels */
       bool m_updateAutomaticallyLevels;
@@ -369,6 +411,25 @@ class xmDatabase;
 
       bool m_bLockMotoGame;
       xmDatabase *m_db;
+
+      UserConfig m_Config;
+      
+      Theme m_theme;
+      DrawLib *drawLib;
+
+      XMSession* m_xmsession;
+
+      int m_nFrameDelay;		/* # of millisecs to wait after screen buffer swap */
+      
+      float m_fFramesPerSecond;	/* Force this FPS */
+      
+      /* User nofification */
+      std::string m_UserNotify;
+      
+      /* Run-time fun */
+      bool m_bQuit;		/* Quit flag */
+      double m_fAppTime;		/* Current application time */
+      double m_fNextFrame;	/* Time next frame rendering should begin */
 
       /* Helpers */
       void _UpdateWorldRecord(const std::string &LevelID);
@@ -444,7 +505,7 @@ class xmDatabase;
       void _UploadAllHighscores();
       void _ConfigureProxy(void);
 
-      void setLevelInfoFrameBestPlayer(String pLevelID,
+      void setLevelInfoFrameBestPlayer(std::string pLevelID,
 				       UIWindow *i_pLevelInfoFrame,
 				       UIButton *i_pLevelInfoViewReplayButton,
 				       UIStatic *i_pBestPlayerText
@@ -515,6 +576,11 @@ class xmDatabase;
       static UIFrame* makeHelpWindow(DrawLib* i_drawLib, UIWindow* io_parent, UserConfig* i_Config);
 
       void updatePlayerTag();
+      
+      /* */
+      void _InitWin(bool bInitGraphics);
+      void _Uninit(void);
+
   };
 
 #endif

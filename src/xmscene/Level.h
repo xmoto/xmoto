@@ -21,7 +21,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __LEVELSRC_H__
 #define __LEVELSRC_H__
 
-#include "../VApp.h"
 #include "../VXml.h"
 #include "Scene.h"
 #include "Block.h"

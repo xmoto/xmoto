@@ -55,7 +55,7 @@ helpers_SOURCES = helpers/VMath.h             \
                   iqsort.h
 
 common_SOURCES = Image.cpp \
-  VApp.cpp VBezier.cpp VDraw.cpp VDrawOpenGL.cpp PolyDraw.h PolyDraw.cpp VDrawSDLgfx.cpp \
+  VBezier.cpp VDraw.cpp VDrawOpenGL.cpp PolyDraw.h PolyDraw.cpp VDrawSDLgfx.cpp \
   XMArgs.h XMArgs.cpp XMSession.h XMSession.cpp \
   XMBuild.h XMBuild.cpp XMBuild_info.h \
   VFileIO.cpp VTexture.cpp \
@@ -64,7 +64,7 @@ common_SOURCES = Image.cpp \
   $(image_SOURCES) $(tinyxml_SOURCES) \
   $(md5_SOURCES) \
   Image.h \
-  VApp.h VBezier.h VCommon.h VDraw.h \
+  VBezier.h VCommon.h VDraw.h \
   VFileIO.h VTexture.h VXml.h \
   BuildConfig.h \
   DBuffer.cpp \

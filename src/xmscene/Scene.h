@@ -24,7 +24,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define MOTOGAME_DEFAULT_GAME_MESSAGE_DURATION 5.0
 
 #include "../VCommon.h"
-#include "../VApp.h"
 #include "../helpers/VMath.h"
 #include "Level.h"
 #include "../BSP.h"
@@ -162,16 +161,16 @@ class Camera;
       void setShowGhostTimeDiff(bool b) { m_showGhostTimeDiff = b; }
 
       /* action for events */
-      void SetEntityPos(String pEntityID, float pX, float pY);
+      void SetEntityPos(std::string pEntityID, float pX, float pY);
       void SetEntityPos(Entity* pEntity,  float pX, float pY);
       void PlaceInGameArrow(float pX, float pY, float pAngle);
       void PlaceScreenArrow(float pX, float pY, float pAngle);
       void HideArrow();
-      void MoveBlock(String pBlockID, float pX, float pY);
-      void SetBlockPos(String pBlockID, float pX, float pY);
-      void SetBlockCenter(String pBlockID, float pX, float pY);
-      void SetBlockRotation(String pBlockID, float pAngle);
-      void SetEntityDrawAngle(String pEntityID, float pAngle);
+      void MoveBlock(std::string pBlockID, float pX, float pY);
+      void SetBlockPos(std::string pBlockID, float pX, float pY);
+      void SetBlockCenter(std::string pBlockID, float pX, float pY);
+      void SetBlockRotation(std::string pBlockID, float pAngle);
+      void SetEntityDrawAngle(std::string pEntityID, float pAngle);
 
       void setRenderer(GameRenderer *p_renderer);
       void CameraZoom(float pZoom);

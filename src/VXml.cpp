@@ -21,7 +21,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* 
  *  XML support through the tinyxml library.
  */
-#include "VApp.h"
 #include "VXml.h"
 #include "VFileIO.h"
 #include "CRCHash.h"

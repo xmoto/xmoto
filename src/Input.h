@@ -22,7 +22,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __INPUT_H__
 
 #include "VCommon.h"
-#include "VApp.h"
 #include "xmscene/Scene.h"
 #include "UserConfig.h"
 #include "Renderer.h"

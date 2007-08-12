@@ -22,7 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *  Simple 2D drawing library, built closely on top of OpenGL.
  */
 #include "VDraw.h"
-#include "VApp.h"
+#include "Game.h"
 
 #ifdef ENABLE_SDLGFX
 #include "SDL_gfxPrimitives.h"

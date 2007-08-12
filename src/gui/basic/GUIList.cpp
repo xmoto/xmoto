@@ -21,10 +21,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* 
  *  GUI: list control
  */
-#include "VXml.h"
 #include "GUI.h"
-#include "Sound.h"
 #include "../../VDraw.h"
+#include "../../Game.h"
 
 #define GUILIST_SCROLL_SIZE 4
 
