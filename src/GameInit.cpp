@@ -499,10 +499,6 @@ int main(int nNumArgs,char **ppcArgs) {
       }
 
       m_pCursor = NULL;
-      pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "Cursor");
-      if(pSprite != NULL) {
-        m_pCursor = pSprite->getTexture(false, true, FM_LINEAR);
-      }
 
       /* Fetch highscores from web? */
       m_pWebHighscores = new WebRoom(&m_ProxySettings);      
@@ -624,6 +620,12 @@ int main(int nNumArgs,char **ppcArgs) {
     
     /* build handler */
     m_InputHandler.init(&m_Config);
+
+    /* load cursor */
+    pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "Cursor");
+    if(pSprite != NULL) {
+      m_pCursor = pSprite->getTexture(false, true, FM_LINEAR);
+    }
 
     /* Update stats */
     if(m_xmsession->profile() != "") {
