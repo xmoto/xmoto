@@ -954,10 +954,11 @@ msgid "Personal"
 msgstr "Persönlich"
 
 #: src/GameText.h:303
+#, c-format
 msgid "%i player"
 msgid_plural "%i players"
-msgstr[0] "Bester Spieler"
-msgstr[1] "Beste Spieler"
+msgstr[0] "%i Spieler"
+msgstr[1] "%i Spieler"
 
 #: src/GameText.h:304
 msgid "Player Profile"
