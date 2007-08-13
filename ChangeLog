@@ -6,6 +6,7 @@ X-Moto 0.3.3 2007-
  * command line options changed
  * pageup/pagedown to play next/previous level
  * new command line option to choose the config dir (on a usb key for example) : xmoto --configpath /media/usbkey/xmoto (or e:/xmoto on windows)
+ * minor improvements
  * some bugs fixed
 
 X-Moto 0.3.2 2007-07-29
