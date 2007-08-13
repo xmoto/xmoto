@@ -101,7 +101,7 @@ Central place to keep many in-game text strings
     ":Jozef Riha (" + std::string(_("Slovak")) + ");"                                        \
     ":Nicolas Adenis-Lamarre (" + std::string(_("French")) + ");"                            \
     ":Wilhelm Francke (" + std::string(_("Norwegian")) + ");"                                \
-    ":Jonathan Sieber and Jens Erler (" + std::string(_("German")) + ");"                    \
+    ":Jonathan Sieber, Jens Erler (" + std::string(_("German")) + ");"                    \
     ":Maximum/Tuomo Koistinen (" + std::string(_("Finnish")) + ");"                                          \
     ":Trullo (" + std::string(_("Catalan")) + ");"                                           \
     ":Trullo (" + std::string(_("Spanish")) + ");"                                           \
