@@ -3119,31 +3119,20 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       sprintf(cBuf,GAMETEXT_PRESSANYKEYTO,pActionList->getEntries()[nSel]->Text[0].c_str());
       _SimpleMessage(cBuf);
       
-      while(1) {
-        /* Wait for a key */
-        std::string NewKey = m_InputHandler.waitForKey();
-        if(NewKey == "<<QUIT>>") {
-          /* Quit! */
-          quit();
-        }        
-        else if(NewKey == "<<CANCEL>>" || NewKey == "") {
-          /* Do nothing */
-          break;
-        }
-        else {
-          /* Good... is the key already in use? */
-          int nAlreadyUsedBy = _IsKeyInUse(NewKey);
-          
-          if(nAlreadyUsedBy<0 || nAlreadyUsedBy == nSel) {
-            pActionList->getEntries()[nSel]->Text[1] = NewKey;        
-            break;
-          }
-          else {
-            sprintf(cBuf, (std::string(GAMETEXT_PRESSANYKEYTO) + "\n" + std::string(GAMETEXT_ALREADYUSED)).c_str(),
-		    pActionList->getEntries()[nSel]->Text[0].c_str());
-            _SimpleMessage(cBuf);
-          }
-        }
+      /* Wait for a key */
+      std::string NewKey = m_InputHandler.waitForKey();
+      if(NewKey == "<<QUIT>>") {
+	/* Quit! */
+	quit();
+      }        
+      else if(NewKey != "<<CANCEL>>" && NewKey != "") {
+	/* Good... is the key already in use? */
+	int nAlreadyUsedBy = _IsKeyInUse(NewKey);
+	if(nAlreadyUsedBy > 0 && nAlreadyUsedBy != nSel) {
+	  /* affect to the key already in use the current key */
+	  pActionList->getEntries()[nAlreadyUsedBy]->Text[1] = pActionList->getEntries()[nSel]->Text[1];
+	}
+	pActionList->getEntries()[nSel]->Text[1] = NewKey;
       }      
     }
   }
