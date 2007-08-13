@@ -26,12 +26,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #define PACKAGE_LANG "xmoto"
 
+#ifndef USE_GETTEXT
 char* ngettext(char* msgid, char* msgid_plural, unsigned long int n) {
   if(n > 1) {
     return msgid_plural;
   }
   return msgid;
 }
+#endif
 
 std::string Locales::init(std::string i_locale) {
 #ifdef USE_GETTEXT
