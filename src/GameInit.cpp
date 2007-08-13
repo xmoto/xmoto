@@ -176,10 +176,10 @@ int main(int nNumArgs,char **ppcArgs) {
 			     m_xmsession->resolutionWidth(), m_xmsession->resolutionHeight());
       }
     }
-    
+
     /* Now perform user init */
     userInit(&v_xmArgs);
-    
+
     /* Enter the main loop */
     while(!m_bQuit) {
       if(!drawLib->isNoGraphics()) {
@@ -309,9 +309,6 @@ int main(int nNumArgs,char **ppcArgs) {
   void GameApp::userInit(XMArguments* v_xmArgs) {
     Sprite* pSprite;
 
-    switchUglyMode(m_xmsession->ugly());
-    switchTestThemeMode(m_xmsession->testTheme());
-
     /* Reset timers */
     m_fLastFrameTime = 0.0f;
     m_fLastPerfStateTime = 0.0f;
@@ -333,6 +330,8 @@ int main(int nNumArgs,char **ppcArgs) {
     }
       
     /* Init renderer */
+    switchUglyMode(m_xmsession->ugly());
+    switchTestThemeMode(m_xmsession->testTheme());
     m_Renderer.setParent( (GameApp *)this );
     m_Renderer.setGameObject( &m_MotoGame );        
     m_Renderer.setDebug(m_xmsession->debug());
@@ -387,10 +386,6 @@ int main(int nNumArgs,char **ppcArgs) {
       reloadTheme();
     }
 
-    /* Update stats */
-    if(m_xmsession->profile() != "")
-      m_db->stats_xmotoStarted(m_xmsession->profile());
-
     /* load levels */
     if(m_db->levels_isIndexUptodate() == false) {
       m_levelsManager.reloadLevelsFromLvl(m_db, m_xmsession->useGraphics() ? this : NULL);
@@ -398,7 +393,6 @@ int main(int nNumArgs,char **ppcArgs) {
     m_levelsManager.reloadExternalLevels(m_db, m_xmsession->useGraphics() ? this : NULL);
 
     /* Update replays */
-    
     if(m_db->replays_isIndexUptodate() == false) {
       initReplaysFromDir();
     }
@@ -472,8 +466,6 @@ int main(int nNumArgs,char **ppcArgs) {
         Logger::Log(" %d sound%s loaded",Sound::getNumSamples(),Sound::getNumSamples()==1?"":"s");
       }
 
-      _UpdateLoadingScreen((1.0f/9.0f) * 1,GAMETEXT_INITTEXT);
-          
       /* Find all files in the textures dir and load them */     
       UITexture::setApp(this);
       UIWindow::setDrawLib(getDrawLib());
@@ -513,7 +505,6 @@ int main(int nNumArgs,char **ppcArgs) {
       }
 
       /* Fetch highscores from web? */
-      if(m_pWebHighscores != NULL) delete m_pWebHighscores;
       m_pWebHighscores = new WebRoom(&m_ProxySettings);      
       m_pWebHighscores->setWebsiteInfos(m_WebHighscoresIdRoom,
 					m_WebHighscoresURL);
@@ -545,21 +536,7 @@ int main(int nNumArgs,char **ppcArgs) {
       }
       
     }
-
-      if(m_pWebRooms != NULL) delete m_pWebRooms;
-      m_pWebRooms = new WebRooms(&m_ProxySettings);
-      
     }
-
-    /* Test level cache directory */
-    if(m_xmsession->useGraphics()) {  
-      _UpdateLoadingScreen((1.0f/9.0f) * 5,GAMETEXT_LOADINGLEVELS);
-    }
-    LevelsManager::checkPrerequires();
-    m_levelsManager.makePacks(m_db,
-			      m_xmsession->profile(),
-			      m_Config.getString("WebHighscoresIdRoom"),
-			      m_xmsession->debug());     
 
     /* Should we clean the level cache? (can also be done when disabled) */
     if(v_xmArgs->isOptCleanCache()) {
@@ -573,26 +550,17 @@ int main(int nNumArgs,char **ppcArgs) {
      return;
     }
 
-    if(m_xmsession->useGraphics()) {  
-      _UpdateLoadingScreen((1.0f/9.0f) * 6,GAMETEXT_INITRENDERER);
-    }    
-
-    if(m_xmsession->useGraphics()) {
-      /* Initialize renderer */
-      m_Renderer.init();
-      _UpdateLoadingScreen((1.0f/9.0f) * 7,GAMETEXT_INITMENUS);
-      
-      /* Initialize menu system */
-      _InitMenus();    
-      _UpdateLoadingScreen((1.0f/9.0f) * 8,GAMETEXT_UPDATINGLEVELS);
-
-      _UpdateLevelsLists();
-      _UpdateLoadingScreen((1.0f/9.0f) * 9,GAMETEXT_INITINPUT);      
-      
-      /* Init input system */
-      m_InputHandler.init(&m_Config);
+    if(m_xmsession->useGraphics() == false) {
+      return;
     }
-        
+
+    /* Initialize renderer */
+    _UpdateLoadingScreen((1.0f/9.0f) * 6,GAMETEXT_INITRENDERER);
+    m_Renderer.init();
+    
+    /* Initialize menu system */
+    _InitMenus();
+
     /* What to do? */
     if(m_PlaySpecificLevelFile != "") {
       try {
@@ -631,6 +599,35 @@ int main(int nNumArgs,char **ppcArgs) {
         /* Enter the menu */
         setState(GS_MENU);
       }
+    }
+
+    /* final initialisation */
+    Logger::Log("UserPreInit ended at %.3f", GameApp::getTime());
+    /* display what must be displayed */
+    if (isUglyMode()){
+      drawLib->clearGraphics();
+    }
+    drawFrame();
+    drawLib->flushGraphics();
+    
+    /* final initialisation so that xmoto seems to be loaded fastly */
+    
+    /* load packs */
+    LevelsManager::checkPrerequires();
+    m_levelsManager.makePacks(m_db,
+			      m_xmsession->profile(),
+			      m_Config.getString("WebHighscoresIdRoom"),
+			      m_xmsession->debug());     
+    
+    /* load levels lists */
+    _UpdateLevelsLists();
+    
+    /* build handler */
+    m_InputHandler.init(&m_Config);
+
+    /* Update stats */
+    if(m_xmsession->profile() != "") {
+      m_db->stats_xmotoStarted(m_xmsession->profile());
     }
 
     Logger::Log("UserInit ended at %.3f", GameApp::getTime());
