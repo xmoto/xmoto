@@ -2785,16 +2785,22 @@ GameApp::GameApp() {
     std::ostringstream v_percentage;
     v_percentage << i_percentage;
     v_percentage << "%";
-    
+
     if(m_reloadingLevelsUser == false) {
       _UpdateLoadingScreen(0, std::string(GAMETEXT_LOAD_LEVEL_HOOK) + std::string("\n") + v_percentage.str() + std::string(" ") + i_level);
     } else {
       _SimpleMessage(GAMETEXT_RELOADINGLEVELS + std::string("\n") + v_percentage.str(), &m_InfoMsgBoxRect);
     }
+
+    /* pump events to so that windows don't think the appli is crashed */
+    SDL_PumpEvents();
   }
 
   void GameApp::updatingDatabase(std::string i_message) {
     _UpdateLoadingScreen(0, i_message);
+
+    /* pump events to so that windows don't think the appli is crashed */
+    SDL_PumpEvents();
   }
 
   bool GameApp::creditsModeActive() {
@@ -2918,6 +2924,9 @@ GameApp::GameApp() {
 
     for(unsigned int i=0; i<ReplayFiles.size(); i++) {
       try {
+	/* pump events to so that windows don't think the appli is crashed */
+	SDL_PumpEvents();
+
 	if(FS::getFileBaseName(ReplayFiles[i]) == "Latest") {
 	  continue;
 	}
