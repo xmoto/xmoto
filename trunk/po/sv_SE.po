@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: sv_SE\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-08-14 00:22+0200\n"
-"PO-Revision-Date: 2007-07-06 19:55+0200\n"
+"PO-Revision-Date: 2007-08-14 15:24+0200\n"
 "Last-Translator: Lukas <lukas.klingsbo@piratpartiet.se>\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -238,11 +238,11 @@ msgstr "Ryska"
 
 #: src/GameText.h:111
 msgid "Brazilian Portuguese"
-msgstr ""
+msgstr "Brasiliansk Portugisiska"
 
 #: src/GameText.h:112
 msgid "Latvian"
-msgstr ""
+msgstr "Lettiska"
 
 #: src/GameText.h:114
 msgid "Main testers"
@@ -297,7 +297,6 @@ msgid "Credits"
 msgstr "Credits"
 
 #: src/GameText.h:133
-#, fuzzy
 msgid "Player"
 msgstr "Spelare"
 
@@ -454,43 +453,34 @@ msgid "There are errors in the level, don't expect it to be playable!"
 msgstr "Det finns fel i banan, förvänta dig inte att den är spelbar!"
 
 #: src/GameText.h:171
-#, fuzzy
 msgid "Check your Internet connection !"
-msgstr ""
-"Misslyckases att ladda ner banor.\n"
-"Undersök din Internet anslutning!"
+msgstr "Undersök din Internet anslutning!"
 
 #: src/GameText.h:172
-#, fuzzy
 msgid "Failed to check for levels."
-msgstr "Misslyckades att initiera banan!"
+msgstr "Misslyckades att kolla efter banor!"
 
 #: src/GameText.h:173
-#, fuzzy
 msgid "Failed to download high-scores."
-msgstr "Laddar ner rekord..."
+msgstr "Misslyckades att ladda ner rekord."
 
 #: src/GameText.h:174
-#, fuzzy
 msgid "Failed to download levels."
-msgstr "Misslyckades att ladda repris!"
+msgstr "Misslyckades att ladda ner banor!"
 
 #: src/GameText.h:175
-#, fuzzy
 msgid "Failed to download the replay."
-msgstr "Misslyckades att ladda repris!"
+msgstr "Misslyckades att ladda ner reprisen!"
 
 #: src/GameText.h:176
-#, fuzzy
 msgid "Failed to download the rooms list."
 msgstr ""
-"Misslyckases att rumslistan.\n"
+"Misslyckades att ladda ner rumslistan.\n"
 "Undersök din Internet anslutning!"
 
 #: src/GameText.h:177
-#, fuzzy
 msgid "Failed to get the selected theme"
-msgstr "Ladda ner eller uppdatera det markerade temat"
+msgstr "Misslyckades att ladda ner det markerade temat"
 
 #: src/GameText.h:178
 msgid "Failed to initialize level!"
@@ -509,9 +499,8 @@ msgstr ""
 "Du kanske ska pröva med ett annat namn?"
 
 #: src/GameText.h:181
-#, fuzzy
 msgid "Failed to update the theme list"
-msgstr "Uppdatera temalistan"
+msgstr "Misslyckades att uppdatera temalistan"
 
 #: src/GameText.h:182
 msgid "File"
@@ -628,7 +617,7 @@ msgstr "Ta en skärmbild"
 
 #: src/GameText.h:213
 msgid "Reload levels, themes and replays from directories"
-msgstr ""
+msgstr "Ladda om banor, teman och repriser ifrån mapparna"
 
 #: src/GameText.h:215
 msgid ""
@@ -826,11 +815,11 @@ msgid "New personal highscore!"
 msgstr "Nytt personbästa!"
 
 #: src/GameText.h:262
-#, fuzzy, c-format
+#, c-format
 msgid "%i new or updated level available. Download now ?"
 msgid_plural "%i new or updated levels available. Download now ?"
 msgstr[0] "%d ny eller uppdaterad bana tillgänglig. Ladda ner nu?"
-msgstr[1] "%d ny eller uppdaterad bana tillgänglig. Ladda ner nu?"
+msgstr[1] "%d nya eller uppdaterade banor tillgängliga. Ladda ner nu?"
 
 #: src/GameText.h:265
 msgid "New Levels"
@@ -955,11 +944,11 @@ msgid "Personal"
 msgstr "Personligt"
 
 #: src/GameText.h:300
-#, fuzzy, c-format
+#, c-format
 msgid "%i player"
 msgid_plural "%i players"
-msgstr[0] "Bästa spelare"
-msgstr[1] "Bästa spelare"
+msgstr[0] "%i spelare"
+msgstr[1] "%i spelare"
 
 #: src/GameText.h:301
 msgid "Player Profile"
@@ -1054,9 +1043,9 @@ msgid "Save"
 msgstr "Spara"
 
 #: src/GameText.h:325
-#, fuzzy, c-format
+#, c-format
 msgid "Saved as %s"
-msgstr "Spara som"
+msgstr "Spara som %s"
 
 #: src/GameText.h:326
 msgid "Save Replay"
@@ -1173,13 +1162,11 @@ msgid "Upload all highscores"
 msgstr "Ladda upp alla rekord"
 
 #: src/GameText.h:354
-#, fuzzy
 msgid ""
 "An unexpected error has occured. There may be some problems with the web "
 "site."
 msgstr ""
-"Ett oväntat fel har inträffat\n"
-" Det kanske är någonting fel på webbsidan"
+"Ett oväntat fel har inträffat. Det kanske är något problem på hemsidan."
 
 #: src/GameText.h:355
 msgid "Oh no !"
@@ -1581,17 +1568,14 @@ msgid "Select this if you got a direct connection to the Internet"
 msgstr "Välj den här ifall du har direkt anslutning till Internet"
 
 #: src/GameText.h:457
-#, fuzzy
 msgid "Select this if you connect to the Internet through an HTTP proxy"
 msgstr "Välj den här ifall du ansluter till Internet genom en HTTP proxy"
 
 #: src/GameText.h:458
-#, fuzzy
 msgid "Select this if you connect to the Internet through a SOCKS4 proxy"
 msgstr "Välj den här ifall du ansluter till Internet genom en SOCKS4 proxy"
 
 #: src/GameText.h:459
-#, fuzzy
 msgid "Select this if you connect to the Internet through a SOCKS5 proxy"
 msgstr "Välj den här ifall du ansluter till Internet genom en SOCKS5 proxy"
 
@@ -1762,9 +1746,8 @@ msgid "Puzzle the levels pack list"
 msgstr "Pussla ban-paket listan"
 
 #: src/GameText.h:504
-#, fuzzy
 msgid "Enter text to filter the level list"
-msgstr "Lägg in en text för att begränsa listan med banor"
+msgstr "Skriv text för att filtrera listan med banor"
 
 #: src/GameText.h:505
 msgid "Choose the number of players"
@@ -1772,31 +1755,27 @@ msgstr "Välj antalet spelare"
 
 #: src/GameText.h:506
 msgid "Your proxy login"
-msgstr ""
+msgstr "Ditt proxy login"
 
 #: src/GameText.h:507
 msgid "Your password associated with your login"
 msgstr "Ditt lösenord sammankopplat med ditt inloggningsnamn"
 
 #: src/GameText.h:508
-#, fuzzy
 msgid "Enter text to filter the replay list"
-msgstr "Lägg in en text för att begränsa listan med banor"
+msgstr "Skriv text för att filtrera listan med repriser"
 
 #: src/GameText.h:509
-#, fuzzy
 msgid "Press to play X-Moto immediately"
-msgstr "Tryck för att spela direkt till X-Moto"
+msgstr "Tryck för att spela X-Moto direkt"
 
 #: src/GameText.h:510
-#, fuzzy
 msgid "Increase or decrease the quality of the levels selected"
-msgstr "Höj eller sänk kvalitén av den valda banan"
+msgstr "Höj eller sänk kvalitén på de valda banorna"
 
 #: src/GameText.h:511
-#, fuzzy
 msgid "Increase or decrease the difficulty of the levels selected"
-msgstr "Höj eller sänk svårigheten av den valda banan"
+msgstr "Höj eller sänk svårigheten på de valda banorna"
 
 #: src/GameText.h:512
 msgid ""
@@ -1847,9 +1826,8 @@ msgid "Scripted levels"
 msgstr "Scriptade banor"
 
 #: src/GameText.h:525
-#, fuzzy
 msgid "Musical levels"
-msgstr "Mina banor"
+msgstr "Musikalbanor"
 
 #: src/GameText.h:527
 msgid "Last played levels"
@@ -1880,9 +1858,8 @@ msgid "Oldest highscores"
 msgstr "Äldsta rekord"
 
 #: src/GameText.h:534
-#, fuzzy
 msgid "Platinum"
-msgstr "Platinum"
+msgstr "Platina"
 
 #: src/GameText.h:535
 msgid "Gold"
@@ -1905,7 +1882,6 @@ msgid "My levels"
 msgstr "Mina banor"
 
 #: src/GameText.h:541
-#, fuzzy
 msgid "Levels with no highscore in your room"
 msgstr "Banor utan rekord i ditt rum"
 
@@ -1966,53 +1942,48 @@ msgid "X-Moto levels you have played only a few times"
 msgstr "X-Moto banor du bara har spelat ett fåtal gånger"
 
 #: src/GameText.h:557
-#, fuzzy
 msgid "X-Moto levels having a recent highscore in your room"
-msgstr "X-Moto banor som har ett rekord i ditt rum"
+msgstr "X-Moto banor som har ett nyligen gjort rekord i ditt rum"
 
 #: src/GameText.h:558
 msgid "Last created X-Moto levels"
 msgstr "Senast skapade X-Moto banor"
 
 #: src/GameText.h:559
-#, fuzzy
 msgid "X-Moto levels having an old highscore in your room"
-msgstr "X-Moto banor som har ett gamalt rekord i ditt rum"
+msgstr "X-Moto banor som har ett gammalt rekord i ditt rum"
 
 #: src/GameText.h:560
 msgid "You have the room highscore"
 msgstr "Du har rumets rekord"
 
 #: src/GameText.h:561
-#, fuzzy
 msgid "Your personal highscore finish time is almost the room highscore (95%)"
-msgstr "Ditt rekord är nästan lika bra som rumets (95%)"
+msgstr "Din personliga rekordtid är nästan lika bra som rummets (95%)"
 
 #: src/GameText.h:562
-#, fuzzy
 msgid ""
 "Your personal highscore finish time is almost the room highscore (90%-95%)"
-msgstr "Ditt rekord är nästan lika bra som rumets (90%-95%)"
+msgstr "Din personliga rekordtid är nästan lika bra som rummets (90%-95%)"
 
 #: src/GameText.h:563
-#, fuzzy
 msgid ""
 "Your personal highscore finish time is almost the room highscore (80%-90%)"
-msgstr "Ditt rekord är nästan lika bra som rumets (80%-90%)"
+msgstr "Din personliga rekordtid är nästan lika bra som rummets (80%-90%)"
 
 #: src/GameText.h:564
 msgid "The room highscore is really better than your own highscore"
-msgstr "Rumets rekord är verkligen bättre än ditt eget"
+msgstr "Rummets rekord är grymt mycket bättre än ditt eget"
 
 #: src/GameText.h:565
-#, fuzzy, c-format
+#, c-format
 msgid "Level pack \"%s\""
-msgstr "Ban-paket"
+msgstr "Ban-paket  \"%s\""
 
 #: src/GameText.h:566
-#, fuzzy, c-format
+#, c-format
 msgid "Highscores by %s"
-msgstr "Rekord av"
+msgstr "Rekord av %s"
 
 #: src/GameText.h:567
 msgid "External levels (the one you put into the 'My levels' directory)"
@@ -2043,14 +2014,12 @@ msgid "UglyOver mode disabled"
 msgstr "UglyOver läge av"
 
 #: src/GameText.h:575
-#, fuzzy
 msgid "Web connection enabled"
-msgstr "Internet anslutning på"
+msgstr "Internet anslutning möjliggjord"
 
 #: src/GameText.h:576
-#, fuzzy
 msgid "Web connection disabled"
-msgstr "Internet anslutning av"
+msgstr "Internet anslutning omöjliggjord"
 
 #: src/GameText.h:577
 msgid "Replay interpolation enabled"
@@ -2073,25 +2042,26 @@ msgid "The big one is your current time"
 msgstr "Det stora är din nuvarande tid"
 
 #: src/LevelsText.h:24
-#, fuzzy
 msgid ""
 "The small one to the right is your own best time\n"
 "for the current level..."
-msgstr "Den lilla är din egen bästa tid"
+msgstr ""
+"Den lilla  till höger är din egen bästa tid<br> för den nuvarande banan..."
 
 #: src/LevelsText.h:25
-#, fuzzy
 msgid ""
 "... and the one to the left is the best of all\n"
 "on this computer."
-msgstr "... och den till vänster är den som är bäst av alla"
+msgstr ""
+"... och den till vänster är den som är bäst av alla<br> på den här datorn."
 
 #: src/LevelsText.h:26
-#, fuzzy
 msgid ""
 "Down here there's the minimap, which shows the level\n"
 "around you, so you know where you're heading."
-msgstr "Längst nere är det en liten karta som visar banan"
+msgstr ""
+"Här nere är det en liten karta som visar banan<br> omkring dig så att du vet "
+"var du ska."
 
 #: src/LevelsText.h:27
 msgid "Now let's look at your controls."
@@ -2126,40 +2096,39 @@ msgid "Okay. The red dot on your minimap is a strawberry."
 msgstr "Okej. Den röda pricken på din minikarta är en jordgubb."
 
 #: src/LevelsText.h:35
-#, fuzzy
 msgid ""
 "The primary objective of the game is for you\n"
 "to collect all of them, and then find the flower."
-msgstr "att samla alla och sen hitta blomman."
+msgstr "Det primära spelmålet är att samla<br> alla och sen hitta blomman."
 
 #: src/LevelsText.h:36
-#, fuzzy
 msgid ""
 "The icon to the right of your time,\n"
 "indicates how many strawberries still left."
-msgstr "indikerar hur många jordgubbar du har kvar."
+msgstr ""
+"Ikonen till höger om din tid, <br> indikerar hur många jordgubbar du "
+"fortfarande har kvar."
 
 #: src/LevelsText.h:37
 msgid "Drive in its direction..."
 msgstr "Kör åt dens håll..."
 
 #: src/LevelsText.h:38
-#, fuzzy
 msgid ""
 "When done, head for the flower.\n"
 "It's the purple dot on your minimap."
-msgstr "Det är den lila pricken på din minikarta"
+msgstr ""
+"När du är klar, åk mot blomman.<br> Det är den lila pricken på din minikarta."
 
 #: src/LevelsText.h:39
 msgid "Welcome to X-Moto!"
 msgstr "Välkommen till X-Moto!"
 
 #: src/LevelsText.h:40
-#, fuzzy
 msgid ""
 "This level is a short tutorial of\n"
 "how you play the game."
-msgstr "Den här banan är en kort genomgång av"
+msgstr "Den här banan är en kort genomgång av<br> hur du spelar spelet."
 
 #: src/LevelsText.h:41
 msgid "Please stay put and follow the instructions! :)"
@@ -2183,13 +2152,16 @@ msgid ""
 "the air, try to adjust your attitude with the left\n"
 "and right arrow keys, so you'll land on your wheels."
 msgstr ""
+"Kör år vänster, accelerera och när du är i<br> luften, försök att ändra din "
+"ställning med den vänstra<br> och den högra pilen så att du landar på hjulen."
 
 #: src/LevelsText.h:46
-#, fuzzy
 msgid ""
 "The next jump is a bit trickier. You'll need all the\n"
 "speed you can get to reach the other side..."
-msgstr "Nästa hopp är lite svårare. Du kommer att behöva all"
+msgstr ""
+"Nästa hopp är lite svårare. Du kommer att behöva all<br> fart du kan få för "
+"att nå till andra sidan..."
 
 #: src/LevelsText.h:47
 msgid "Now for the most difficult jump in this tutorial!"
@@ -2206,36 +2178,38 @@ msgid ""
 "you reach the edge of the jump, pull the bike's front\n"
 "wheel up."
 msgstr ""
+"Här är planen:<br> Du måste nå maxfart igen, men när<br> du kommer till "
+"kanten av hoppet, dra upp cykelns<br> framdäck."
 
 #: src/LevelsText.h:50 src/LevelsText.h:63
-#, fuzzy
 msgid ""
 "That will cause the rear suspension to increase the\n"
 "length of the jump.\n"
 "Try it..."
-msgstr "Det kommer att göra så att bakfjädringen ökar"
+msgstr ""
+"Det kommer att göra så att bakfjädringen ökar<br> längden på hoppet.<br> "
+"Försök..."
 
 #: src/LevelsText.h:51
 msgid "This tutorial will teach you the basics of jumping."
 msgstr "Den här genomgången kommer lära dig grunderna för att hoppa."
 
 #: src/LevelsText.h:52
-#, fuzzy
 msgid ""
 "Remember you can turn around your bike\n"
 "by pressing :"
-msgstr "Kom ihåg att du kan vända din cykel"
+msgstr "Kom ihåg att du kan vända din cykel<br> genom att trycka :"
 
 #: src/LevelsText.h:53
 msgid "That was pretty easy, right?"
 msgstr "Det var rätt enkelt, eller hur?"
 
 #: src/LevelsText.h:54
-#, fuzzy
 msgid ""
 "Accelerate NOW! Obtain maximum speed, and try to\n"
 "keep the front wheel at the ground..."
-msgstr "Accelera NU! Håll max fart och försök att"
+msgstr ""
+"Accelera NU! Håll max fart och försök att<br> hålla framdäcket på marken..."
 
 #: src/LevelsText.h:55
 msgid "Nice jump there! :)"
@@ -2246,11 +2220,12 @@ msgid "Congrats, you're now a master jumper!"
 msgstr "Gratulationer, du är nu en mäster hoppare!"
 
 #: src/LevelsText.h:57
-#, fuzzy
 msgid ""
 "The basic idea is that when driving on the rear wheel,\n"
 "your head is lowered quite a lot..."
-msgstr "Grundidéen är att när man kör på bakhjulet"
+msgstr ""
+"Grundidéen är att när man kör på bakhjulet<br> så sänks ditt huvud ganska "
+"mycket..."
 
 #: src/LevelsText.h:58
 msgid ""
@@ -2258,6 +2233,8 @@ msgid ""
 "When the distance you have to drive is quite short,\n"
 "you don't need to keep the balance."
 msgstr ""
+"Den svåra delen är att hålla balansen.<br> När du ska köra en kort bit<br> "
+"behöver du inte hålla balansen."
 
 #: src/LevelsText.h:59
 msgid ""
@@ -2266,6 +2243,9 @@ msgid ""
 "combination, and you should be on the other side.\n"
 "Try it..."
 msgstr ""
+"Accelerera (sakta) till höger med framhjulet resande.<br> Precis innan ditt "
+"huvud slår i blocket gör du en snabb vänster/höger<br> kombination och du "
+"borde komma över till andra sidan.<br> Försök..."
 
 #: src/LevelsText.h:60
 msgid ""
@@ -2273,6 +2253,9 @@ msgid ""
 "This time keep your hands off the left and right arrow keys,\n"
 "they're not delicate enough to help you keep balance."
 msgstr ""
+"Nu ska du pröva en lite svårare en...<br> Den här gången håller du händerna "
+"ifrån höger och vänster pilarna,<br> de är inte känsliga nog att hjälpa dig "
+"hålla balansen."
 
 #: src/LevelsText.h:61
 msgid ""
@@ -2280,9 +2263,11 @@ msgid ""
 "Try to drive a bit back and forth on your rear wheel,\n"
 "keeping the bike as steady as possible..."
 msgstr ""
+"Använd istället din gas och broms för att ändra vinkeln.<br> Försök att köra "
+"en bit fram och tillbaka på bakhjulet<br> och håll cykeln så stadig som "
+"möjligt..."
 
 #: src/LevelsText.h:62
-#, fuzzy
 msgid "Try getting under the next obstacle when you feel you're ready."
 msgstr "Försök komma under nästa hinder när du känner dig redo."
 
@@ -2292,6 +2277,8 @@ msgid ""
 "areas where the ceiling is low.\n"
 "Beware that this can be pretty difficult :)"
 msgstr ""
+"Den här genomgången kommer att lära dig att köra på<br> bakhjulet där taket "
+"är lågt.<br> Akta dig, det kan vara ganska svårt :)"
 
 #: src/LevelsText.h:65
 msgid "Not that difficult, right?"
@@ -2306,191 +2293,9 @@ msgid "Good job! The next one is even more difficult..."
 msgstr "Snyggt jobbat! Nästa är ännu svårare..."
 
 #: src/LevelsText.h:68
-#, fuzzy
 msgid ""
 "Now for the final one... It's not that long, but instead\n"
 "there's even less room for your precious head. Good luck! :)"
 msgstr ""
-"är det till och med mindre rum för ditt värdefulla huvud. Lycka till! :)"
-
-#~ msgid "Already used!"
-#~ msgstr "Används redan!"
-
-#~ msgid "Built-In Levels"
-#~ msgstr "Inbyggda banor"
-
-#~ msgid "External Levels"
-#~ msgstr "Externa banor"
-
-#~ msgid "Official built-in levels"
-#~ msgstr "Officiella inbyggda banor"
-
-#~ msgid "Unofficial stand-alone external levels"
-#~ msgstr "Självständiga externa banor"
-
-#~ msgid "for the current level..."
-#~ msgstr "för den här banan..."
-
-#~ msgid "on this computer."
-#~ msgstr "på den här datorn."
-
-#~ msgid "around you, so you know where you're heading."
-#~ msgstr "runt dig, så vet du var du är på väg."
-
-#~ msgid "The primary objective of the game is for you"
-#~ msgstr "Det främsta målet med spelet för  är "
-
-#~ msgid "The icon to the right of your time,"
-#~ msgstr "Ikonen till höger om din tid,"
-
-#~ msgid "When done, head for the flower."
-#~ msgstr "När du är klar, åk mot blomman."
-
-#~ msgid "how you play the game."
-#~ msgstr "hur man spelar spelet."
-
-#~ msgid "Drive to the left, accelerate, and when you are in"
-#~ msgstr "Kör till vänster, accelera och när du är i"
-
-#~ msgid "the air, try to adjust your attitude with the left"
-#~ msgstr "luften, försök att justera cyceln med vänster"
-
-#~ msgid "and right arrow keys, so you'll land on your wheels."
-#~ msgstr "och höger pilknapp så att du landar på hjulen."
-
-#~ msgid "speed you can get to reach the other side..."
-#~ msgstr "fart du kan få för att nå andra sidan..."
-
-#~ msgid "Here's the plan:"
-#~ msgstr "Det här är planen:"
-
-#~ msgid "Again, you'll have to obtain maximum speed, but when"
-#~ msgstr "Du kommer behöva max fart igen, men när"
-
-#~ msgid "you reach the edge of the jump, pull the bike's front"
-#~ msgstr "du når kanten av hoppet ska du dra upp cycelns"
-
-#~ msgid "wheel up."
-#~ msgstr "framhjul upp."
-
-#~ msgid "length of the jump."
-#~ msgstr "hoppets längd."
-
-#~ msgid "Try it..."
-#~ msgstr "Försök..."
-
-#~ msgid "by pressing "
-#~ msgstr "genom att trycka"
-
-#~ msgid "keep the front wheel at the ground..."
-#~ msgstr "hålla framhjulet mot marken..."
-
-#~ msgid "your head is lowered quite a lot..."
-#~ msgstr "så ligger ditt huvud mycket lägre..."
-
-#~ msgid "The difficult part is to keep the balance."
-#~ msgstr "Den svåra delen är att hålla balansen."
-
-#~ msgid "When the distance you have to drive is quite short,"
-#~ msgstr "När sträckan du ska köra är kort,"
-
-#~ msgid "you don't need to keep the balance."
-#~ msgstr " behöver du inte hålla balansen."
-
-#~ msgid "Accelerate (slowly) to the right with the front wheel raising."
-#~ msgstr "Accelerera (sakta) till höger med framhjulet stigande."
-
-#~ msgid "Just before your head hit the block, make a quick left/right"
-#~ msgstr "Precis innan ditt huvud slår i väggen, gör en snabb vänster/höger"
-
-#~ msgid "combination, and you should be on the other side."
-#~ msgstr "kombination så borde du klara dig till andra sidan."
-
-#~ msgid "Now you'll try a bit more difficult one..."
-#~ msgstr "Nu ska du pröva en lite svårare en..."
-
-#~ msgid "This time keep your hands off the left and right arrow keys,"
-#~ msgstr "Den här gången håll händerna ifrån vänster och höger pilarna,"
-
-#~ msgid "they're not delicate enough to help you keep balance."
-#~ msgstr "de är inte bra nog att hjälpa dig hålla balansen."
-
-#~ msgid "Instead regulate your angle by accelerating and braking."
-#~ msgstr "Istället reglera din vinkel genom att accelerera och bromsa."
-
-#~ msgid "Try to drive a bit back and forth on your rear wheel,"
-#~ msgstr "Pröva köra en bit fram och tillbaka på ditt bakhjul,"
-
-#~ msgid "keeping the bike as steady as possible..."
-#~ msgstr "håll cykeln så stadig som möjligt..."
-
-#~ msgid "This tutorial will teach you to rear-wheel through"
-#~ msgstr "Den här genomgången kommer att lära dig att åka på bakhjulet genom"
-
-#~ msgid "areas where the ceiling is low."
-#~ msgstr "ställen där taket är lågt"
-
-#~ msgid "Beware that this can be pretty difficult :)"
-#~ msgstr "Akta dig det kan vara ganska svårt :)"
-
-#~ msgid "Now for the final one... It's not that long, but instead"
-#~ msgstr "Nu är det den sista... Den är inte så lång, men istället"
-
-#~ msgid ""
-#~ "Failed to check for levels.\n"
-#~ "Check your Internet connection!"
-#~ msgstr ""
-#~ "Misslyckases att kolla efter banor.\n"
-#~ "Undersök din Internet anslutning!"
-
-#~ msgid ""
-#~ "Failed to download high-scores.\n"
-#~ "Check your Internet connection!"
-#~ msgstr ""
-#~ "Misslyckases att kolla efter high-score.\n"
-#~ "Undersök din Internet anslutning!"
-
-#~ msgid ""
-#~ "Failed to download the replay.\n"
-#~ "Check your Internet connection!"
-#~ msgstr ""
-#~ "Misslyckases att ladda ner repris.\n"
-#~ "Undersök din Internet anslutning!"
-
-#~ msgid ""
-#~ "Failed to get the selected theme\n"
-#~ "Check your Internet connection!"
-#~ msgstr ""
-#~ "Misslyckases att fixa det valda temat.\n"
-#~ "Undersök din Internet anslutning!"
-
-#~ msgid ""
-#~ "Failed to update the theme list\n"
-#~ "Check your Internet connection!"
-#~ msgstr ""
-#~ "Misslyckades med att uppdatera listan med teman\n"
-#~ "Undersök din Interner anslutning"
-
-#~ msgid "Name"
-#~ msgstr "Namn"
-
-#~ msgid "%d new or updated levels available. Download now?"
-#~ msgstr "%d nya eller uppdaterade banor tillgängliga. Ladda ner nu?"
-
-#~ msgid "Scripted"
-#~ msgstr "Scriptad"
-
-#~ msgid "Unknown"
-#~ msgstr "Okänd"
-
-#~ msgid "Your login in the room"
-#~ msgstr "Ditt inloggningsnamn för rumet"
-
-#~ msgid "Filter on replay list"
-#~ msgstr "Filtrera repris listan"
-
-#~ msgid "Musical"
-#~ msgstr "Musikal"
-
-#~ msgid "Reload levels from Levels dir (if you create a new level)"
-#~ msgstr "Ladda om banor ifrån ban-mappen (Ifall du skapar en ny bana)"
+"Nu är det den sista... Den är inte så lång, men istället<br> är det till och "
+"med mindre rum för ditt värdefulla huvud. Lycka till! :)"
