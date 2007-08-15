@@ -70,8 +70,8 @@ function make_windows {
 	cp ../sources/bin/xmoto.bin bin/xmoto.bin &&
 	make > /dev/null && 
 	../trunk/make_windows_package.sh > /dev/null &&
-	cp "xmoto-""`getVersion`""-win32-setup-svn""$SVNVERSION"".exe" ../builds &&
-	cp "xmoto-""`getVersion`""-win32-svn""$SVNVERSION"".zip"       ../builds
+	cp "xmoto-""`getVersion`""-win32-setup.exe" ../builds/"xmoto-""`getVersion`""-win32-setup-svn""$SVNVERSION"".exe" &&
+	cp "xmoto-""`getVersion`""-win32.zip"       ../builds/"xmoto-""`getVersion`""-win32-svn""$SVNVERSION"".zip"
     ) && return 0
 
     # retry with configure
@@ -80,8 +80,8 @@ function make_windows {
 	../trunk/configure_mingw_from_linux.sh > /dev/null &&
 	make > /dev/null &&
 	../trunk/make_windows_package.sh > /dev/null &&
-	cp "xmoto-""`getVersion`""-win32-setup-svn""$SVNVERSION"".exe" ../builds &&
-	cp "xmoto-""`getVersion`""-win32-svn""$SVNVERSION"".zip"       ../builds
+	cp "xmoto-""`getVersion`""-win32-setup.exe" ../builds/"xmoto-""`getVersion`""-win32-setup-svn""$SVNVERSION"".exe" &&
+	cp "xmoto-""`getVersion`""-win32.zip"       ../builds/"xmoto-""`getVersion`""-win32-svn""$SVNVERSION"".zip"
     ) && return 0
 
     return 1
