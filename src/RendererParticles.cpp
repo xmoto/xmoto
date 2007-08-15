@@ -33,7 +33,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   void GameRenderer::_RenderParticleDraw(Vector2f P,Texture *pTexture,float fSize,float fAngle, TColor c) {
     /* Render single particle */
     if(pTexture == NULL) return;
-    
+
     Vector2f C = P;
     Vector2f p1,p2,p3,p4;
     p1 = Vector2f(1,0); p1.rotateXY(fAngle);
@@ -46,7 +46,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     p3 = C + p3 * fSize;
     p4 = C + p4 * fSize;
     
-    getParent()->getDrawLib()->setTexture(pTexture,BLEND_MODE_A);
     getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
     //convert the TColor to a Color 
     getParent()->getDrawLib()->setColor(MAKE_COLOR(c.Red(), c.Green(), c.Blue(), c.Alpha()));
@@ -58,7 +57,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     getParent()->getDrawLib()->glVertex(p3);
     getParent()->getDrawLib()->glTexCoord(0.01, 0.99);
     getParent()->getDrawLib()->glVertex(p4);
-    getParent()->getDrawLib()->endDraw();
+    getParent()->getDrawLib()->endDrawKeepProperties();
   }
 
   void GameRenderer::_RenderParticle(ParticlesSource *i_source) {
@@ -70,7 +69,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       ->getSprite(SPRITE_TYPE_ANIMATION, getGameObject()->getLevelSrc()->SpriteForStar());
 
       if(pStarAnimation != NULL) {
-	
+
+	getParent()->getDrawLib()->setTexture(pStarAnimation->getTexture(),BLEND_MODE_A);	
 	for(unsigned j = 0; j < i_source->Particles().size(); j++) {
 	  _RenderParticleDraw(i_source->Particles()[j]->DynamicPosition(),
 			      pStarAnimation->getTexture(),
@@ -78,6 +78,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 			      i_source->Particles()[j]->Angle(),
 			      i_source->Particles()[j]->Color());
 	}
+	getParent()->getDrawLib()->removePropertiesAfterEnd();
       } else {
 	DecorationSprite *pStarDecoration;
 
@@ -86,6 +87,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	->getSprite(SPRITE_TYPE_DECORATION, getGameObject()->getLevelSrc()->SpriteForStar());
 	if(pStarDecoration != NULL) {
 	
+	  getParent()->getDrawLib()->setTexture(pStarDecoration->getTexture(),BLEND_MODE_A);
 	  for(unsigned j = 0; j < i_source->Particles().size(); j++) {
 	    _RenderParticleDraw(i_source->Particles()[j]->DynamicPosition(),
 				pStarDecoration->getTexture(),
@@ -93,6 +95,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 				i_source->Particles()[j]->Angle(),
 				i_source->Particles()[j]->Color());
 	  }
+	  getParent()->getDrawLib()->removePropertiesAfterEnd();
 	}
       }
     } else if(i_source->SpriteName() == "Fire") {
@@ -100,6 +103,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       ->getSprite(SPRITE_TYPE_EFFECT, "Fire1");
 
       if(pFireType != NULL) {
+	getParent()->getDrawLib()->setTexture(pFireType->getTexture(),BLEND_MODE_A);
 	for(unsigned j = 0; j < i_source->Particles().size(); j++) {
 	  _RenderParticleDraw(i_source->Particles()[j]->DynamicPosition(),
 			      pFireType->getTexture(),
@@ -107,6 +111,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 			      i_source->Particles()[j]->Angle(),
 			      i_source->Particles()[j]->Color());
 	}
+	getParent()->getDrawLib()->removePropertiesAfterEnd();
       }
     } else if(i_source->SpriteName() == "Smoke") {
       EffectSprite* pSmoke1Type = (EffectSprite*) getParent()->getTheme()
@@ -115,6 +120,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       ->getSprite(SPRITE_TYPE_EFFECT, "Smoke2");
 
       if(pSmoke1Type != NULL && pSmoke2Type != NULL) {
+	if(i_source->Particles().size() > 0) {
+	  if(i_source->Particles()[0]->SpriteName() == "Smoke1") {
+	    getParent()->getDrawLib()->setTexture(pSmoke1Type->getTexture(),BLEND_MODE_A);
+	  } else if(i_source->Particles()[0]->SpriteName() == "Smoke2") {
+	    getParent()->getDrawLib()->setTexture(pSmoke1Type->getTexture(),BLEND_MODE_A);
+	  }
+	}
 	for(unsigned j = 0; j < i_source->Particles().size(); j++) {
 	  if(i_source->Particles()[j]->SpriteName() == "Smoke1") {
 	    _RenderParticleDraw(i_source->Particles()[j]->DynamicPosition(),
@@ -130,12 +142,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 				i_source->Particles()[j]->Color());
 	  }
 	}
+	getParent()->getDrawLib()->removePropertiesAfterEnd();
       }
     } else if(i_source->SpriteName() == "Debris1") {
       EffectSprite* pDebrisType = (EffectSprite*) getParent()->getTheme()
       ->getSprite(SPRITE_TYPE_EFFECT, "Debris1");
 
       if(pDebrisType != NULL) {
+	getParent()->getDrawLib()->setTexture(pDebrisType->getTexture(),BLEND_MODE_A);
 	for(unsigned j = 0; j < i_source->Particles().size(); j++) {
 	  if(i_source->Particles()[j]->SpriteName() == "Debris1") {
 	    _RenderParticleDraw(i_source->Particles()[j]->DynamicPosition(),
@@ -145,6 +159,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 				i_source->Particles()[j]->Color());
 	  }
 	}
+	getParent()->getDrawLib()->removePropertiesAfterEnd();
       }
     }
   }
