@@ -7,6 +7,13 @@ BUILD_PATH="/home/nicolas/xmoto_dev/build"
 # require a subdir windows
 # require a subdir builds
 
+function svnVersion {
+    (
+	cd trunk   || return 1
+	svnversion || return 1
+    ) || return 1
+}
+
 function update_svn {
     (
 	cd trunk || return 1
@@ -28,6 +35,8 @@ function getVersion {
 }
 
 function make_sources {
+    SVNVERSION="$1"
+
     # update this po file
     cp trunk/po/remove-potcdate.sed sources/po/remove-potcdate.sed || return 1
 
@@ -36,7 +45,7 @@ function make_sources {
 	cd sources       &&
 	make > /dev/null &&
 	make dist-gzip > /dev/null &&
-	cp "xmoto-"""`getVersion`""".tar.gz" ../builds
+	cp "xmoto-""`getVersion`"".tar.gz" ../builds/"xmoto-""`getVersion`""-src-svn""$SVNVERSION"".tar.gz"
     ) && return 0
 
     prepare_sources || return 1
@@ -47,20 +56,22 @@ function make_sources {
 	../trunk/configure > /dev/null &&
 	make > /dev/null &&
 	make dist-gzip > /dev/null && 
-	cp "xmoto-"""`getVersion`""".tar.gz" ../builds
+	cp "xmoto-""`getVersion`"".tar.gz" ../builds/"xmoto-""`getVersion`""-src-svn""$SVNVERSION"".tar.gz"
     ) && return 0
 
     return 1
 }
 
 function make_windows {
+    SVNVERSION="$1"
+
     (
 	cd windows &&
 	cp ../sources/bin/xmoto.bin bin/xmoto.bin &&
 	make > /dev/null && 
 	../trunk/make_windows_package.sh > /dev/null &&
-	cp "xmoto-"""`getVersion`"""-win32-setup.exe" ../builds &&
-	cp "xmoto-"""`getVersion`"""-win32.zip"       ../builds
+	cp "xmoto-""`getVersion`""-win32-setup-svn""$SVNVERSION"".exe" ../builds &&
+	cp "xmoto-""`getVersion`""-win32-svn""$SVNVERSION"".zip"       ../builds
     ) && return 0
 
     # retry with configure
@@ -69,8 +80,8 @@ function make_windows {
 	../trunk/configure_mingw_from_linux.sh > /dev/null &&
 	make > /dev/null &&
 	../trunk/make_windows_package.sh > /dev/null &&
-	cp "xmoto-"""`getVersion`"""-win32-setup.exe" ../builds &&
-	cp "xmoto-"""`getVersion`"""-win32.zip"       ../builds
+	cp "xmoto-""`getVersion`""-win32-setup-svn""$SVNVERSION"".exe" ../builds &&
+	cp "xmoto-""`getVersion`""-win32-svn""$SVNVERSION"".zip"       ../builds
     ) && return 0
 
     return 1
@@ -105,9 +116,11 @@ fi
 rm -rf builds || return 1
 mkdir builds  || return 1
 
+SVNVERSION="`svnVersion`"
+
 # make unix package
 echo "Make sources package..."
-if ! make_sources
+if ! make_sources "$SVNVERSION"
     then
     echo "Erreur" >&2
     exit 1
@@ -115,7 +128,7 @@ fi
 
 # make windows packages
 echo "Building windows packages..."
-if ! make_windows
+if ! make_windows "$SVNVERSION"
     then
     echo "Erreur" >&2
     exit 1
