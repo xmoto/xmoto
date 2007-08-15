@@ -191,6 +191,12 @@ function buildSetup {
 }
 
 RELATIVE_TRUNK_DIR="`dirname "$0"`"
+if echo "$RELATIVE_TRUNK_DIR" | grep -E "^/"
+    then
+    echo "$0"" must be call with a relative path" 1>&2
+    exit 1
+fi
+
 VERSION=`getVersion "$RELATIVE_TRUNK_DIR"`
 ZIPDIR="xmoto-""$VERSION""-win32"
 ZIPFILE="$ZIPDIR"".zip"
