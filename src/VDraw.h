@@ -375,6 +375,8 @@ class FontManager {
        * End draw
        **/
     virtual void endDraw();
+    virtual void endDrawKeepProperties(); /* to keep textures, ... to render several times the same entity fastly */
+    virtual void removePropertiesAfterEnd(); /* remove properties endDraw = endDrawKeepProperties + removePropertiesAfterEnd */
 
       /**
        * Clears the screen with the configured background
