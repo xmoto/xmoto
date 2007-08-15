@@ -458,6 +458,20 @@ class GLFontManager : public FontManager {
 	}
   }
 
+void DrawLibOpenGL::endDrawKeepProperties() {
+  glEnd();
+}
+
+void DrawLibOpenGL::removePropertiesAfterEnd() {
+  if (m_texture != NULL){
+    glDisable(GL_TEXTURE_2D);
+    m_texture = NULL;
+  }
+  if (m_blendMode != BLEND_MODE_NONE){
+    glDisable(GL_BLEND);
+  }
+}
+
   void DrawLibOpenGL::setColor(Color color){
     glColor4ub(GET_RED(color),GET_GREEN(color),GET_BLUE(color),GET_ALPHA(color));
   }
