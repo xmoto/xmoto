@@ -275,9 +275,9 @@ bool ParticlesSourceSmoke::updateToTime(float i_time, Vector2f i_gravity) {
     /* Generate smoke */
     if(randomNum(0,5) < 1) {
       if(randomNum(0,1) < 0.5) {
-	      addParticle(Vector2f(randomNum(-0.6,0.6), randomNum(0.2,0.6)), i_time + 10.0, "Smoke1");
+	addParticle(Vector2f(randomNum(-0.6,0.6), randomNum(0.2,0.6)), i_time + 10.0, "Smoke1");
       } else {
-	      addParticle(Vector2f(randomNum(-0.6,0.6), randomNum(0.2,0.6)), i_time + 10.0, "Smoke2");
+	addParticle(Vector2f(randomNum(-0.6,0.6), randomNum(0.2,0.6)), i_time + 10.0, "Smoke2");
       }
     }
     return true;
@@ -313,7 +313,7 @@ bool SmokeParticle::updateToTime(float i_time, Vector2f i_gravity) {
 bool FireParticle::updateToTime(float i_time, Vector2f i_gravity) {
   EntityParticle::updateToTime(i_time, i_gravity);
 
-  float v_timeStep = 0.035;
+  float v_timeStep = 0.040;
   TColor v_color(Color());
 
   int v_g = Color().Green() - (int)(randomNum(190,210) * v_timeStep);
@@ -330,10 +330,10 @@ bool FireParticle::updateToTime(float i_time, Vector2f i_gravity) {
     m_killTime = i_time;
   }
       
-  m_velocity.x = sin((i_time + m_fireSeed) * randomNum(5,15)) * 0.8f
+  m_velocity.x = sin((i_time + m_fireSeed) * randomNum(5,15)) * 0.4f
     +
     sin((i_time - m_fireSeed) * 10) * 0.3;
-  m_acceleration.y = 2.0;
+  m_acceleration.y = 3.0;
 
   return false;
 }
@@ -341,10 +341,8 @@ bool FireParticle::updateToTime(float i_time, Vector2f i_gravity) {
 bool ParticlesSourceFire::updateToTime(float i_time, Vector2f i_gravity) {
   if(ParticlesSource::updateToTime(i_time, i_gravity)) {
     /* Generate fire */
-    for(int k=0;k<3;k++) {
-      /* maximum 10s for a fire particule, but it can be destroyed before */
-      ParticlesSource::addParticle(Vector2f(randomNum(-1,1),randomNum(0.1,0.3)), i_time + 10.0);
-    }
+    /* maximum 5s for a fire particule, but it can be destroyed before */
+    ParticlesSource::addParticle(Vector2f(randomNum(-1,1),randomNum(0.1,0.3)), i_time + 5.0);
     return true;
   }
   return false;
