@@ -1,12 +1,14 @@
 #!/bin/bash
 
 function getVersion {
-    if ! test -e ./configure.in
+    RELATIVE_TRUNK_DIR="$1"
+
+    if ! test -e ./"$RELATIVE_TRUNK_DIR"/configure.in
 	then
 	return 1
     fi
 
-    grep "AM_INIT_AUTOMAKE" ./configure.in |
+    grep "AM_INIT_AUTOMAKE" ./"$RELATIVE_TRUNK_DIR"/configure.in |
     sed -e s+".*AM_INIT_AUTOMAKE(\(.*\),\(.*\)).*"+"\\2"+
 }
 
@@ -107,6 +109,7 @@ function prepare_tmp_directory {
 
 function fill_tmp_directory {
     ZIPDIR="$1"
+    RELATIVE_TRUNK_DIR="$2"
 
     (
     cd "$ZIPDIR" || return 1
@@ -122,30 +125,30 @@ function fill_tmp_directory {
 	return 1
     fi
 
-    if test ! -f ../mingw_lib.zip
+    if test ! -f "../""$RELATIVE_TRUNK_DIR""/mingw_lib.zip"
 	then
 	echo "mingw_lib.zip does not exist" 1>&2
 	return 1
     fi
 
-    cp ../src/xmoto.exe .            || return 1
-    i586-mingw32msvc-strip xmoto.exe || return 1
-    cp ../bin/xmoto.bin .     	     || return 1
-    unzip -q ../mingw_lib.zip 	     || return 1
-    mv mingw_lib/* .          	     || return 1
-    rmdir mingw_lib           	     || return 1
+    cp ../src/xmoto.exe .            	       || return 1
+    i586-mingw32msvc-strip xmoto.exe 	       || return 1
+    cp ../bin/xmoto.bin .     	     	       || return 1
+    unzip -q "../""$RELATIVE_TRUNK_DIR""/mingw_lib.zip" || return 1
+    mv mingw_lib/* .          	     	       || return 1
+    rmdir mingw_lib           	     	       || return 1
 
     # musics
     mkdir -p Textures/Musics         || return 1
-    cp ../bin/Textures/Musics/*.ogg Textures/Musics || return 1
+    cp ../"$RELATIVE_TRUNK_DIR"/bin/Textures/Musics/*.ogg Textures/Musics || return 1
 
     # fonts
     mkdir -p Textures/Fonts          || return 1
-    cp ../bin/Textures/Fonts/*.ttf Textures/Fonts || return 1
+    cp ../"$RELATIVE_TRUNK_DIR"/bin/Textures/Fonts/*.ttf Textures/Fonts || return 1
 
     # langs
     mkdir locale     || return 1
-    for PO in ../po/*.gmo
+    for PO in ../"$RELATIVE_TRUNK_DIR"/po/*.gmo
       do
       POLANG="`basename "$PO" | sed -e s+"\(\.[^\.]*\)$"+""+`"
       mkdir -p "locale/""$POLANG""/LC_MESSAGES"            || return 1
@@ -153,12 +156,12 @@ function fill_tmp_directory {
     done
 
     # extra files
-    cp ../README    README.txt    || return 1
-    unix2dos        README.txt    || return 1
-    cp ../COPYING   COPYING.txt   || return 1
-    unix2dos        COPYING.txt   || return 1
-    cp ../ChangeLog ChangeLog.txt || return 1
-    unix2dos        ChangeLog.txt || return 1
+    cp ../"$RELATIVE_TRUNK_DIR"/README    README.txt    || return 1
+    unix2dos        README.txt                 || return 1
+    cp ../"$RELATIVE_TRUNK_DIR"/COPYING   COPYING.txt   || return 1
+    unix2dos        COPYING.txt                || return 1
+    cp ../"$RELATIVE_TRUNK_DIR"/ChangeLog ChangeLog.txt || return 1
+    unix2dos        ChangeLog.txt              || return 1
     )
 }
 
@@ -187,7 +190,8 @@ function buildSetup {
   mv "$DIR""/""xmoto-""$VERSION""-win32-setup.exe" . || return 1
 }
 
-VERSION=`getVersion`
+RELATIVE_TRUNK_DIR="`dirname "$0"`"
+VERSION=`getVersion "$RELATIVE_TRUNK_DIR"`
 ZIPDIR="xmoto-""$VERSION""-win32"
 ZIPFILE="$ZIPDIR"".zip"
 
@@ -197,7 +201,7 @@ then
     exit 1
 fi
 
-if ! fill_tmp_directory "$ZIPDIR"
+if ! fill_tmp_directory "$ZIPDIR" "$RELATIVE_TRUNK_DIR"
 then
     rm -rf "$ZIPDIR"
     echo "Unable to get required files" 1>&2
