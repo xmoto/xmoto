@@ -128,6 +128,9 @@ class ParticlesSource : public Entity {
  protected:
   std::vector<EntityParticle *> m_particles;
 
+  static int m_totalOfParticles;
+  static bool hasReachedMaxParticles();
+
  private:
   float       m_lastParticleTime;
   float       m_particleTime_increment;

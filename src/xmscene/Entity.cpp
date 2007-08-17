@@ -24,6 +24,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../PhysSettings.h"
 #include "../VFileIO.h"
 
+// don't excceed this number of particles to not reduce significantly the fps
+#define PARTICLESSOURCE_TOTAL_MAX_PARTICLES 500
+
 Entity::Entity(const std::string& i_id) {
   m_id          = i_id;
   m_spriteName  = ENTITY_DEFAULT_SPRITE_NAME;
@@ -191,6 +194,8 @@ AABB& Entity::getAABB()
   return m_BBox;
 }
 
+/* static members */
+int ParticlesSource::m_totalOfParticles = 0;
 
 ParticlesSource::ParticlesSource(const std::string& i_id, float i_particleTime_increment)
   : Entity(i_id) {
@@ -222,6 +227,7 @@ bool ParticlesSource::updateToTime(float i_time, Vector2f i_gravity) {
       if(i_time > m_particles[i]->KillTime()) {
 	delete m_particles[i];
 	m_particles.erase(m_particles.begin() + i);
+	m_totalOfParticles--;
       } else {
 	m_particles[i]->updateToTime(i_time, i_gravity);
 	i++;
@@ -664,6 +670,7 @@ void ParticlesSource::deleteParticles() {
   for(unsigned int i=0; i<m_particles.size(); i++) {
     delete m_particles[i];
   }
+  m_totalOfParticles -= m_particles.size();
   m_particles.clear();
 }
 
@@ -684,7 +691,10 @@ void ParticlesSource::addParticle(Vector2f i_velocity, float i_killTime) {
 }
 
 void ParticlesSourceStar::addParticle(Vector2f i_velocity, float i_killTime, std::string i_spriteName) {
+  if(hasReachedMaxParticles()) return;
+
   m_particles.push_back(new StarParticle(DynamicPosition(), i_killTime, SpriteName()));
+  m_totalOfParticles++;
 }
 
 StarParticle::StarParticle(const Vector2f& i_position, float i_killTime, std::string i_spriteName)
@@ -756,13 +766,26 @@ SmokeParticle::~SmokeParticle() {
 
 
 void ParticlesSourceSmoke::addParticle(Vector2f i_velocity, float i_killTime, std::string i_spriteName) {
+  if(hasReachedMaxParticles()) return;
+
   m_particles.push_back(new SmokeParticle(DynamicPosition(), i_velocity, i_killTime, i_spriteName));
+  m_totalOfParticles++;
 }
 
 void ParticlesSourceFire::addParticle(Vector2f i_velocity, float i_killTime, std::string i_spriteName) {
+  if(hasReachedMaxParticles()) return;
+
   m_particles.push_back(new FireParticle(DynamicPosition(), i_velocity, i_killTime, i_spriteName));
+  m_totalOfParticles++;
 }
 
 void ParticlesSourceDebris::addParticle(Vector2f i_velocity, float i_killTime, std::string i_spriteName) {
+  if(hasReachedMaxParticles()) return;
+
   m_particles.push_back(new DebrisParticle(DynamicPosition(), i_velocity, i_killTime, i_spriteName));
+  m_totalOfParticles++;
+}
+
+bool ParticlesSource::hasReachedMaxParticles() {
+  return m_totalOfParticles >= PARTICLESSOURCE_TOTAL_MAX_PARTICLES;
 }
