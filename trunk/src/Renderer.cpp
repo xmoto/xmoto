@@ -167,69 +167,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	}
 #endif
       }
-
-#ifdef ENABLE_OPENGL
-#if 0
-      int displayList = glGenLists(1);
-      glNewList(displayList, GL_COMPILE);
-      Blocks[i]->setDisplayList(displayList);
-
-      BlockVertex* v_blockVertexA;
-      BlockVertex* v_blockVertexB;
-      Vector2f vertexPos;
-      //glPushAttrib(GL_CURRENT_BIT|GL_TEXTURE_BIT);
-      glPushAttrib(GL_ALL_ATTRIB_BITS);
-
-      /* create display list for edge rendering */
-      for(int j=0; j<Blocks[i]->Vertices().size(); j++) {  
-	v_blockVertexA = Blocks[i]->Vertices()[j];
-	if(v_blockVertexA->EdgeEffect() != "") {
-	  v_blockVertexB = Blocks[i]->Vertices()[(j+1) % Blocks[i]->Vertices().size()];
-
-	  /* link A to B */
-	  float fXScale,fDepth;
-	  EdgeEffectSprite* pType;
-	  pType = (EdgeEffectSprite*)getParent()->getTheme()->getSprite(SPRITE_TYPE_EDGEEFFECT, v_blockVertexA->EdgeEffect());
-
-	  if(pType != NULL) {
-	    fXScale = pType->getScale();
-	    fDepth  = pType->getDepth();
-                 
-	    glEnable(GL_TEXTURE_2D);
-	    glEnable(GL_BLEND);
-	    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-	    glBindTexture(GL_TEXTURE_2D, pType->getTexture()->nID);	    
-	    glBegin(GL_POLYGON);
-	    glColor4ub(255, 255, 255, 255);
-
-	    glTexCoord2f((Center.x + v_blockVertexA->Position().x)*fXScale, 0.01);
-	    vertexPos = v_blockVertexA->Position() + Center;
-	    glVertex2f(vertexPos.x, vertexPos.y);
-
-	    glTexCoord2f((Center.x + v_blockVertexB->Position().x)*fXScale, 0.01);
-	    getParent()->getDrawLib()->glVertex(v_blockVertexB->Position() + Center);
-	    glVertex2f(vertexPos.x, vertexPos.y);
-
-	    glTexCoord2f((Center.x + v_blockVertexB->Position().x)*fXScale, 0.99);
-	    vertexPos = v_blockVertexB->Position() + Center + Vector2f(0,-fDepth);
-	    glVertex2f(vertexPos.x, vertexPos.y);
-
-	    glTexCoord2f((Center.x + v_blockVertexA->Position().x)*fXScale, 0.99);
-	    vertexPos = v_blockVertexA->Position() + Center + Vector2f(0,-fDepth);
-	    glVertex2f(vertexPos.x, vertexPos.y);
-
-	    glEnd();
-	    glDisable(GL_TEXTURE_2D);
-	    glDisable(GL_BLEND);
-	  }
-	}
-      }
-
-      glPopAttrib();
-      glEndList();
-#endif
-#endif
-
     }
     
 
@@ -1281,24 +1218,27 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #endif
 	} else if(getParent()->getDrawLib()->getBackend() == DrawLib::backend_SdlGFX){
 
-	  for(int j=0;j<m_DynamicGeoms[geom]->Polys.size();j++) {          
+	  if(m_DynamicGeoms[geom]->Polys.size() > 0) {
 	    getParent()->getDrawLib()->setTexture(m_DynamicGeoms[geom]->pTexture,BLEND_MODE_NONE);
-	    getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
 	    getParent()->getDrawLib()->setColorRGB(255,255,255);
 
-	    for(int k=0;k<m_DynamicGeoms[geom]->Polys[j]->nNumVertices;k++) {
-	      Vector2f vertex = Vector2f(m_DynamicGeoms[geom]->Polys[j]->pVertices[k].x,
-					 m_DynamicGeoms[geom]->Polys[j]->pVertices[k].y);
-	      /* transform vertex */
-	      Vector2f transVertex = Vector2f((vertex.x-dynRotCenter.x)*fR[0] + (vertex.y-dynRotCenter.y)*fR[1],
-					      (vertex.x-dynRotCenter.x)*fR[2] + (vertex.y-dynRotCenter.y)*fR[3]);
-	      transVertex += dynPos + dynRotCenter;
-
-	      getParent()->getDrawLib()->glTexCoord(m_DynamicGeoms[geom]->Polys[j]->pTexCoords[k].x,
-						    m_DynamicGeoms[geom]->Polys[j]->pTexCoords[k].y);
-	      getParent()->getDrawLib()->glVertex(transVertex.x, transVertex.y);
+	    for(int j=0;j<m_DynamicGeoms[geom]->Polys.size();j++) {          
+	      getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+	      for(int k=0;k<m_DynamicGeoms[geom]->Polys[j]->nNumVertices;k++) {
+		Vector2f vertex = Vector2f(m_DynamicGeoms[geom]->Polys[j]->pVertices[k].x,
+					   m_DynamicGeoms[geom]->Polys[j]->pVertices[k].y);
+		/* transform vertex */
+		Vector2f transVertex = Vector2f((vertex.x-dynRotCenter.x)*fR[0] + (vertex.y-dynRotCenter.y)*fR[1],
+						(vertex.x-dynRotCenter.x)*fR[2] + (vertex.y-dynRotCenter.y)*fR[3]);
+		transVertex += dynPos + dynRotCenter;
+		
+		getParent()->getDrawLib()->glTexCoord(m_DynamicGeoms[geom]->Polys[j]->pTexCoords[k].x,
+						      m_DynamicGeoms[geom]->Polys[j]->pTexCoords[k].y);
+		getParent()->getDrawLib()->glVertex(transVertex.x, transVertex.y);
+	      }
+	      getParent()->getDrawLib()->endDrawKeepProperties();
 	    }
-	    getParent()->getDrawLib()->endDraw();
+	    getParent()->getDrawLib()->removePropertiesAfterEnd();
 	  }
 
 	}
@@ -1410,55 +1350,71 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     //      glCallList(block->getDisplayList());
     /* FIXME::is the edge of a dyn block rotated with the dyn block ?? */
-    for(int j=0; j<block->Vertices().size(); j++) {  
-      v_blockVertexA = block->Vertices()[j];
-      if(v_blockVertexA->EdgeEffect() != "") {
-	v_blockVertexB = block->Vertices()[(j+1) % block->Vertices().size()];
 
-	Vector2f vAPos = v_blockVertexA->Position();
-	Vector2f vBPos = v_blockVertexB->Position();
+    if(block->Vertices().size() > 0) {
 
-	/* link A to B */
-	float fXScale,fDepth;
-	EdgeEffectSprite* pType;
-	pType = (EdgeEffectSprite*)getParent()->getTheme()->getSprite(SPRITE_TYPE_EDGEEFFECT, v_blockVertexA->EdgeEffect());
+      EdgeEffectSprite* pType;
+      std::string v_previousEdgeEffect = "";
+      pType = NULL;
 
-	if(pType != NULL) {
-	  fXScale = pType->getScale();
-	  fDepth  = pType->getDepth();
-                 
-	  getParent()->getDrawLib()->setTexture(pType->getTexture(),BLEND_MODE_A);
-	  getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
-	  getParent()->getDrawLib()->setColorRGB(255,255,255);
+      for(int j=0; j<block->Vertices().size(); j++) {
+	v_blockVertexA = block->Vertices()[j];
+	if(v_blockVertexA->EdgeEffect() != "") {
 
-	  float v_border; // add a small border because polygons are a bit larger to avoid gap polygon pb.
-	  if(fDepth > 0) {
-	    v_border = 0.01;
-	  } else {
-	    v_border = -0.01;
+	  if(v_blockVertexA->EdgeEffect() != v_previousEdgeEffect) {
+	    pType = (EdgeEffectSprite*)getParent()->getTheme()->getSprite(SPRITE_TYPE_EDGEEFFECT, v_blockVertexA->EdgeEffect());
+	    v_previousEdgeEffect = v_blockVertexA->EdgeEffect();
+
+	    if(pType != NULL) {
+	      getParent()->getDrawLib()->setTexture(pType->getTexture(),BLEND_MODE_A);
+	    }
 	  }
+
+	  v_blockVertexB = block->Vertices()[(j+1) % block->Vertices().size()];
 	  
-
-	  getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vAPos.x)*fXScale,
-						0.01);
-	  getParent()->getDrawLib()->glVertex(vAPos + Vector2f(block->DynamicPosition().x,
-							       block->DynamicPosition().y + v_border));
-	  getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vBPos.x)*fXScale,
-						0.01);
-	  getParent()->getDrawLib()->glVertex(vBPos + Vector2f(block->DynamicPosition().x,
-							       block->DynamicPosition().y + v_border));
-	  getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vBPos.x)*fXScale,
-						0.99);
-	  getParent()->getDrawLib()->glVertex(vBPos + Vector2f(block->DynamicPosition().x,
-							       block->DynamicPosition().y) + Vector2f(0,-fDepth));
-	  getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vAPos.x)*fXScale,
-						0.99);
-	  getParent()->getDrawLib()->glVertex(vAPos + Vector2f(block->DynamicPosition().x,
-							       block->DynamicPosition().y) + Vector2f(0,-fDepth));
-
-	  getParent()->getDrawLib()->endDraw();
+	  Vector2f vAPos = v_blockVertexA->Position();
+	  Vector2f vBPos = v_blockVertexB->Position();
+	  
+	  /* link A to B */
+	  float fXScale,fDepth;
+	  
+	  if(pType != NULL) {
+	    fXScale = pType->getScale();
+	    fDepth  = pType->getDepth();
+	    
+	    getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+	    getParent()->getDrawLib()->setColorRGB(255,255,255);
+	    
+	    float v_border; // add a small border because polygons are a bit larger to avoid gap polygon pb.
+	    if(fDepth > 0) {
+	      v_border = 0.01;
+	    } else {
+	      v_border = -0.01;
+	    }
+	    
+	    
+	    getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vAPos.x)*fXScale,
+						  0.01);
+	    getParent()->getDrawLib()->glVertex(vAPos + Vector2f(block->DynamicPosition().x,
+								 block->DynamicPosition().y + v_border));
+	    getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vBPos.x)*fXScale,
+						  0.01);
+	    getParent()->getDrawLib()->glVertex(vBPos + Vector2f(block->DynamicPosition().x,
+								 block->DynamicPosition().y + v_border));
+	    getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vBPos.x)*fXScale,
+						  0.99);
+	    getParent()->getDrawLib()->glVertex(vBPos + Vector2f(block->DynamicPosition().x,
+								 block->DynamicPosition().y) + Vector2f(0,-fDepth));
+	    getParent()->getDrawLib()->glTexCoord((block->DynamicPosition().x+vAPos.x)*fXScale,
+						  0.99);
+	    getParent()->getDrawLib()->glVertex(vAPos + Vector2f(block->DynamicPosition().x,
+								 block->DynamicPosition().y) + Vector2f(0,-fDepth));
+	    
+	    getParent()->getDrawLib()->endDrawKeepProperties();
+	  }
 	}
       }
+      getParent()->getDrawLib()->removePropertiesAfterEnd();
     }
   }
 
