@@ -509,12 +509,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
   }
 
+int GameRenderer::nbParticlesRendered() const {
+  return m_nParticlesRendered;
+}
+
   /*===========================================================================
   Main rendering function
   ===========================================================================*/
   void GameRenderer::render(bool bIsPaused) {
     MotoGame* pGame   = getGameObject();
     Camera*   pCamera = pGame->getCamera();
+
+    m_nParticlesRendered = 0;
 
     /* Update time */
     m_pInGameStats->showWindow(!m_bCreditsMode);
@@ -583,7 +589,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     if(m_Quality == GQ_HIGH && m_bUglyMode == false) {
       /* Render particles (back!) */    
-      _RenderParticles(false);
+       _RenderParticles(false);
     }
 
     /* ... covered by blocks ... */
@@ -653,7 +659,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     
     if(m_Quality == GQ_HIGH && m_bUglyMode == false) {
       /* Render particles (front!) */    
-      _RenderParticles();
+      _RenderParticles(true);
     }
     
     /* ... and finally the foreground sprites! */

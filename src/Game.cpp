@@ -412,6 +412,9 @@ GameApp::GameApp() {
     /* Always clear context when changing state */
     m_Renderer.getGUI()->clearContext();
     
+    /* reallow particle renderering when changing of state */
+    ParticlesSource::setAllowParticleGeneration(true);
+
     switch(s) {
 		case GS_LEVELPACK_VIEWER: {
 			v_newMusicPlaying = "menu1";
@@ -995,6 +998,15 @@ GameApp::GameApp() {
     delete pShot;
   }
 
+  void GameApp::enableFps(bool bValue) {
+    m_xmsession->setFps(m_xmsession->fps() == false);
+    if(m_xmsession->fps()) {
+      m_sysMsg.displayText(SYS_MSG_FPS_ENABLED);
+    } else {
+      m_sysMsg.displayText(SYS_MSG_FPS_DISABLED);
+    }
+  }
+
   void GameApp::enableWWW(bool bValue) {
     m_xmsession->setWWW(m_xmsession->www() == false);
     if(m_xmsession->www()) {
@@ -1016,6 +1028,11 @@ GameApp::GameApp() {
 
     if(nKey == SDLK_F8) {
       enableWWW(m_xmsession->www() == false);
+      return;        
+    }
+
+    if(nKey == SDLK_F7) {
+      enableFps(m_xmsession->fps() == false);
       return;        
     }
 

@@ -576,5 +576,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define SYS_MSG_WWW_DISABLED  	       	_("Web connection disabled")
 #define SYS_MSG_INTERPOLATION_ENABLED  	_("Replay interpolation enabled")
 #define SYS_MSG_INTERPOLATION_DISABLED 	_("Replay interpolation disabled")
+#define SYS_MSG_FPS_ENABLED             _("Fps enabled")
+#define SYS_MSG_FPS_DISABLED            _("Fps disabled")
 
 #endif

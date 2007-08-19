@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xmoto 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-08-14 00:22+0200\n"
+"POT-Creation-Date: 2007-08-19 21:21+0200\n"
 "PO-Revision-Date: 2007-08-11 00:31+0300\n"
 "Last-Translator: Jānis Rūcis <parasti@gmail.com>\n"
 "Language-Team: Latvian\n"
@@ -2051,6 +2051,15 @@ msgstr "Ieraksta interpolācija aktivizēta"
 #: src/GameText.h:578
 msgid "Replay interpolation disabled"
 msgstr "Ieraksta interpolācija deaktivizēta"
+
+#: src/GameText.h:579
+msgid "Fps enabled"
+msgstr ""
+
+#: src/GameText.h:580
+#, fuzzy
+msgid "Fps disabled"
+msgstr "Neglītais režīms deaktivizēts"
 
 #: src/LevelsText.h:21
 msgid "First let's take a look at the user interface..."

@@ -34,6 +34,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /* Render single particle */
     if(pTexture == NULL) return;
 
+    m_nParticlesRendered++;
+
     Vector2f C = P;
     Vector2f p1,p2,p3,p4;
     p1 = Vector2f(1,0); p1.rotateXY(fAngle);
@@ -180,14 +182,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     for(unsigned int i = 0; i < Entities.size(); i++) {
       Entity* v_entity = Entities[i];
       if(v_entity->Speciality() == ET_PARTICLES_SOURCE) {
-	_RenderParticle((ParticlesSource*) v_entity);
+	if((v_entity->Z() >= 0.0) == bFront) {
+	  _RenderParticle((ParticlesSource*) v_entity);
+	}
       }
     }
 
     for(unsigned int i = 0; i < getGameObject()->getLevelSrc()->EntitiesExterns().size(); i++) {
       Entity* v_entity = getGameObject()->getLevelSrc()->EntitiesExterns()[i];
       if(v_entity->Speciality() == ET_PARTICLES_SOURCE) {
-	_RenderParticle((ParticlesSource*) v_entity);
+	if((v_entity->Z() >= 0.0) == bFront) {
+	  _RenderParticle((ParticlesSource*) v_entity);
+	  }
       }
     }
   }

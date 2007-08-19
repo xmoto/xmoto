@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-08-14 00:22+0200\n"
+"POT-Creation-Date: 2007-08-19 21:21+0200\n"
 "PO-Revision-Date: 2007-06-13 11:25+0100\n"
 "Last-Translator: Jan Polak <benetnash@mail.icpnet.pl>\n"
 "Language-Team: Polish\n"
@@ -2054,6 +2054,15 @@ msgstr "Interpolacja na powtórkach aktywna"
 #: src/GameText.h:578
 msgid "Replay interpolation disabled"
 msgstr "Interpolacja na powtórkach nieaktywna"
+
+#: src/GameText.h:579
+msgid "Fps enabled"
+msgstr ""
+
+#: src/GameText.h:580
+#, fuzzy
+msgid "Fps disabled"
+msgstr "Tryb Ugly nieaktywny"
 
 #: src/LevelsText.h:21
 msgid "First let's take a look at the user interface..."

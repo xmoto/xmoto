@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../VFileIO.h"
 
 // don't excceed this number of particles to not reduce significantly the fps
-#define PARTICLESSOURCE_TOTAL_MAX_PARTICLES 500
+#define PARTICLESSOURCE_TOTAL_MAX_PARTICLES 1000
 
 Entity::Entity(const std::string& i_id) {
   m_id          = i_id;
@@ -196,6 +196,11 @@ AABB& Entity::getAABB()
 
 /* static members */
 int ParticlesSource::m_totalOfParticles = 0;
+bool ParticlesSource::m_allowParticleGeneration = true;
+
+void ParticlesSource::setAllowParticleGeneration(bool i_value) {
+  m_allowParticleGeneration = i_value;
+}
 
 ParticlesSource::ParticlesSource(const std::string& i_id, float i_particleTime_increment)
   : Entity(i_id) {
@@ -787,5 +792,5 @@ void ParticlesSourceDebris::addParticle(Vector2f i_velocity, float i_killTime, s
 }
 
 bool ParticlesSource::hasReachedMaxParticles() {
-  return m_totalOfParticles >= PARTICLESSOURCE_TOTAL_MAX_PARTICLES;
+  return m_totalOfParticles >= PARTICLESSOURCE_TOTAL_MAX_PARTICLES || m_allowParticleGeneration == false;
 }

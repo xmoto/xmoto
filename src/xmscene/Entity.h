@@ -125,6 +125,8 @@ class ParticlesSource : public Entity {
   std::vector<EntityParticle *> &Particles();
   virtual EntitySpeciality Speciality() const;
 
+  static void setAllowParticleGeneration(bool i_value);
+
  protected:
   std::vector<EntityParticle *> m_particles;
 
@@ -134,6 +136,7 @@ class ParticlesSource : public Entity {
  private:
   float       m_lastParticleTime;
   float       m_particleTime_increment;
+  static bool m_allowParticleGeneration;
 
   void deleteParticles();
 };

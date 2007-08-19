@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-08-14 00:22+0200\n"
+"POT-Creation-Date: 2007-08-19 21:21+0200\n"
 "PO-Revision-Date: 2007-08-17 20:19-0300\n"
 "Last-Translator: Lucas Hermann Negri <kkndrox@gmail.com>\n"
 "Language-Team: Portuguese/Brazil\n"
@@ -2046,6 +2046,15 @@ msgstr "Interpolação no replay habilitada"
 #: src/GameText.h:578
 msgid "Replay interpolation disabled"
 msgstr "Interpolação no replay desabilitada"
+
+#: src/GameText.h:579
+msgid "Fps enabled"
+msgstr ""
+
+#: src/GameText.h:580
+#, fuzzy
+msgid "Fps disabled"
+msgstr "Modo Feio desabilitado"
 
 #: src/LevelsText.h:21
 msgid "First let's take a look at the user interface..."

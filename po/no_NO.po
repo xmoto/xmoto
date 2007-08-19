@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-MOTO 3.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-08-14 00:22+0200\n"
+"POT-Creation-Date: 2007-08-19 21:21+0200\n"
 "PO-Revision-Date: 2007-06-12 17:26+0100\n"
 "Last-Translator: Wilhelm Francke <wilhelm.francke@gmail.com>\n"
 "Language-Team: English <en@li.org>\n"
@@ -2065,6 +2065,15 @@ msgstr "Replay interpolation aktivert"
 #: src/GameText.h:578
 msgid "Replay interpolation disabled"
 msgstr "Replay interpolation deaktivert"
+
+#: src/GameText.h:579
+msgid "Fps enabled"
+msgstr ""
+
+#: src/GameText.h:580
+#, fuzzy
+msgid "Fps disabled"
+msgstr "Ugly mode deaktivert"
 
 #: src/LevelsText.h:21
 msgid "First let's take a look at the user interface..."

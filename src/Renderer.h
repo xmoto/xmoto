@@ -196,6 +196,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     void addPlayTimes(int numberCamera);
     void removePlayTimes();
 
+    int nbParticlesRendered() const;
+
   private:
     /* Data */
     std::vector<GraphDebugInfo *> m_DebugInfo;
@@ -249,6 +251,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     float m_sizeMultOfEntitiesToTake;
     float m_sizeMultOfEntitiesWhichMakeWin;
+    int m_nParticlesRendered;
 
     /* Subroutines */
 	
