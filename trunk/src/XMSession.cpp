@@ -226,6 +226,10 @@ bool XMSession::fps() const {
   return m_fps;
 }
 
+void XMSession::setFps(bool i_value) {
+  m_fps = i_value;
+}
+
 bool XMSession::ugly() const {
   return m_ugly;
 }

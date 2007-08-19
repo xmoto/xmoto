@@ -512,6 +512,7 @@ class Img;
 				       );
       void viewHighscoreOf();
       void enableWWW(bool bValue);
+      void enableFps(bool bValue);
 
       UILevelList* buildQuickStartList();
 

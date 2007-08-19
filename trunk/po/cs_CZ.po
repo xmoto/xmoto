@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-08-14 00:22+0200\n"
+"POT-Creation-Date: 2007-08-19 21:21+0200\n"
 "PO-Revision-Date: 2006-09-04 19:52+0100\n"
 "Last-Translator: Jan Kaláb <pitel@nomi.cz>\n"
 "Language-Team: X-Moto\n"
@@ -2054,6 +2054,15 @@ msgstr "Interpolace záznamu zapnuta"
 #: src/GameText.h:578
 msgid "Replay interpolation disabled"
 msgstr "Interpolace záznamu vypnuta"
+
+#: src/GameText.h:579
+msgid "Fps enabled"
+msgstr ""
+
+#: src/GameText.h:580
+#, fuzzy
+msgid "Fps disabled"
+msgstr "Ošklivý režim vypnut"
 
 #: src/LevelsText.h:21
 msgid "First let's take a look at the user interface..."

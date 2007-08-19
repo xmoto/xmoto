@@ -42,6 +42,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define SIMULATE_SLOW_RENDERING     0 /* extra ms to add to rendering */
 #define SIMULATE_SLOW_PHYSICS       0 /* extra ms to add to physics calcs */
 
+/* control the particle generation by ask the particle renders to limit themself if there are too much particles on the screen */
+#define NB_PARTICLES_TO_RENDER_LIMITATION 130
 
   /*===========================================================================
   Draw frame
@@ -141,10 +143,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	    try {
 	      if((m_autoZoom || (m_bPrePlayAnim && m_xmsession->ugly() == false)) && numberCam > 1){
 		m_Renderer.render(bIsPaused);
+		ParticlesSource::setAllowParticleGeneration(m_Renderer.nbParticlesRendered() < NB_PARTICLES_TO_RENDER_LIMITATION);
 	      }else{
 		for(int i=0; i<numberCam; i++){
 		  m_MotoGame.setCurrentCamera(i);
 		  m_Renderer.render(bIsPaused);
+		  ParticlesSource::setAllowParticleGeneration(m_Renderer.nbParticlesRendered() < NB_PARTICLES_TO_RENDER_LIMITATION);
 		}
 	      }
 	    } catch(Exception &e) {

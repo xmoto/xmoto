@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ca\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-08-14 00:22+0200\n"
+"POT-Creation-Date: 2007-08-19 21:21+0200\n"
 "PO-Revision-Date: 2007-05-02 02:31+0200\n"
 "Last-Translator: Trullo\n"
 "Language-Team:  X-Moto\n"
@@ -2065,6 +2065,15 @@ msgstr "Repetició interpolada activada"
 #: src/GameText.h:578
 msgid "Replay interpolation disabled"
 msgstr "Repetició interpolada desactivada"
+
+#: src/GameText.h:579
+msgid "Fps enabled"
+msgstr ""
+
+#: src/GameText.h:580
+#, fuzzy
+msgid "Fps disabled"
+msgstr "Mode lleig desactivat"
 
 #: src/LevelsText.h:21
 msgid "First let's take a look at the user interface..."

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sv_SE\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-08-14 00:22+0200\n"
+"POT-Creation-Date: 2007-08-19 21:21+0200\n"
 "PO-Revision-Date: 2007-08-14 15:24+0200\n"
 "Last-Translator: Lukas <lukas.klingsbo@piratpartiet.se>\n"
 "Language-Team: Swedish\n"
@@ -2028,6 +2028,15 @@ msgstr "Repriskurva på"
 #: src/GameText.h:578
 msgid "Replay interpolation disabled"
 msgstr "Repriskurva av"
+
+#: src/GameText.h:579
+msgid "Fps enabled"
+msgstr ""
+
+#: src/GameText.h:580
+#, fuzzy
+msgid "Fps disabled"
+msgstr "Fult läge av"
 
 #: src/LevelsText.h:21
 msgid "First let's take a look at the user interface..."

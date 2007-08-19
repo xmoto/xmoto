@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xmoto\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-08-14 00:22+0200\n"
+"POT-Creation-Date: 2007-08-19 21:21+0200\n"
 "PO-Revision-Date: 2007-06-16 17:45+0300\n"
 "Last-Translator: Tuomo Koistinen <tuomo@tuomo.fi>\n"
 "Language-Team: \n"
@@ -2056,6 +2056,15 @@ msgstr "Toistovideon interpolaatio päällä"
 #: src/GameText.h:578
 msgid "Replay interpolation disabled"
 msgstr "Toistovideon interpolaatio pois päältä"
+
+#: src/GameText.h:579
+msgid "Fps enabled"
+msgstr ""
+
+#: src/GameText.h:580
+#, fuzzy
+msgid "Fps disabled"
+msgstr "Ruma tila pois päältä"
 
 #: src/LevelsText.h:21
 msgid "First let's take a look at the user interface..."

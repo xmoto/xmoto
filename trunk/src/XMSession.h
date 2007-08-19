@@ -65,6 +65,7 @@ class XMSession {
   std::string gDebugFile() const;
   bool timedemo() const;
   bool fps() const;
+  void setFps(bool i_value);
   bool ugly() const;
   void setUgly(bool i_value);
   bool uglyOver() const;
