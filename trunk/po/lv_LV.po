@@ -594,11 +594,11 @@ msgstr "Bremzēt"
 
 #: src/GameText.h:207
 msgid "Rotates it counter-clockwise"
-msgstr "Rotēt pretēji pulksteņa rādītāja virzienam"
+msgstr "Griezties pretēji pulksteņa rādītāja virzienam"
 
 #: src/GameText.h:208
 msgid "Rotates it clockwise"
-msgstr "Rotēt pulksteņa rādītāja virzienā"
+msgstr "Griezties pulksteņa rādītāja virzienā"
 
 #: src/GameText.h:209
 msgid "Turns around and drives in the other direction"
@@ -2057,120 +2057,133 @@ msgid "Fps enabled"
 msgstr ""
 
 #: src/GameText.h:580
-#, fuzzy
 msgid "Fps disabled"
-msgstr "Neglītais režīms deaktivizēts"
+msgstr ""
 
 #: src/LevelsText.h:21
 msgid "First let's take a look at the user interface..."
-msgstr ""
+msgstr "Vispirms aplūkosim lietotāja interfeisu."
 
 #: src/LevelsText.h:22
 msgid "In the upper left corner, you've got your timers"
-msgstr ""
+msgstr "Augšējā kreisajā stūrī atrodas taimeri."
 
 #: src/LevelsText.h:23
 msgid "The big one is your current time"
-msgstr ""
+msgstr "Lielākais rāda tavu šībrīža laiku."
 
 #: src/LevelsText.h:24
 msgid ""
 "The small one to the right is your own best time\n"
 "for the current level..."
 msgstr ""
+"Mazais pa labi rāda tavu labāko rezultātu\n"
+"šajā līmenī..."
 
 #: src/LevelsText.h:25
 msgid ""
 "... and the one to the left is the best of all\n"
 "on this computer."
 msgstr ""
+"... un tas pa kreisi rāda labāko no visiem\n"
+"rezultātiem šajā datorā."
 
 #: src/LevelsText.h:26
 msgid ""
 "Down here there's the minimap, which shows the level\n"
 "around you, so you know where you're heading."
 msgstr ""
+"Šeit, apakšā, atrodas minikarte. Tajā redzams\n"
+"apkārt esošais līmenis, lai tu zinātu, kurp dodies."
 
 #: src/LevelsText.h:27
 msgid "Now let's look at your controls."
-msgstr ""
+msgstr "Tagad apskatīsim vadību."
 
 #: src/LevelsText.h:28
 msgid "(You seem to be using a joystick, can't help with that :P)"
-msgstr ""
+msgstr "(Izskatās, ka tu lieto vadības sviru. Nevaru palīdzēt :P)"
 
+# XXX
+# Hard-coded word order.  Here it is not a problem in Latvian, but it
+# might be in other languages.  More below.
 #: src/LevelsText.h:29
 msgid ": Drive forward"
-msgstr ""
+msgstr ": braukt uz priekšu"
 
 #: src/LevelsText.h:30
 msgid ": Brake"
-msgstr ""
+msgstr ": bremzēt"
 
 #: src/LevelsText.h:31
 msgid ": Change direction"
-msgstr ""
+msgstr ": mainīt virzienu"
 
 #: src/LevelsText.h:32
 msgid ": Rotate anti-clockwise"
-msgstr ""
+msgstr ": griezties pretēji pulksteņa rādītāja virzienam"
 
 #: src/LevelsText.h:33
 msgid ": Rotate clockwise"
-msgstr ""
+msgstr ": griezties pulksteņa rādītāja virzienā"
 
 #: src/LevelsText.h:34
 msgid "Okay. The red dot on your minimap is a strawberry."
-msgstr ""
+msgstr "Minikartē redzamais sarkanais punkts ir zemene."
 
 #: src/LevelsText.h:35
 msgid ""
 "The primary objective of the game is for you\n"
 "to collect all of them, and then find the flower."
 msgstr ""
+"Tavs galvenais uzdevums spēlē ir savākt\n"
+"visas zemenes un pēc tam sameklēt ziedu."
 
 #: src/LevelsText.h:36
 msgid ""
 "The icon to the right of your time,\n"
 "indicates how many strawberries still left."
 msgstr ""
+"Ikona, kas atrodas pa labi no tava laika,\n"
+"rāda, cik daudz zemeņu vēl atlicis."
 
 #: src/LevelsText.h:37
 msgid "Drive in its direction..."
-msgstr ""
+msgstr "Tagad dodies tās virzienā..."
 
 #: src/LevelsText.h:38
 msgid ""
 "When done, head for the flower.\n"
 "It's the purple dot on your minimap."
 msgstr ""
+"Kad tas paveikts, dodies pie zieda.\n"
+"Tas minikartē attēlots kā purpursarkans punkts."
 
 #: src/LevelsText.h:39
 msgid "Welcome to X-Moto!"
-msgstr ""
+msgstr "Laipni lūdzam X-Moto!"
 
 #: src/LevelsText.h:40
-#, fuzzy
 msgid ""
 "This level is a short tutorial of\n"
 "how you play the game."
-msgstr "Spēlēt pamācību"
+msgstr "Šis līmenis ir īsa pamācība spēles spēlēšanā."
 
 #: src/LevelsText.h:41
 msgid "Please stay put and follow the instructions! :)"
-msgstr ""
+msgstr "Lūdzu, negrozies un seko norādījumiem! :)"
 
 #: src/LevelsText.h:42
 msgid "Pick up the strawberry by touching it"
-msgstr ""
+msgstr "Pieskaries zemenei, lai to savāktu."
 
 #: src/LevelsText.h:43
 msgid "Touch it to finish the level. Good luck with the rest :)"
-msgstr ""
+msgstr "Pieskaries tam, lai pabeigtu līmeni. Lai veicas turpmāk! :)"
 
 #: src/LevelsText.h:44
 msgid "The first jump you're going to perform is very easy."
-msgstr ""
+msgstr "Tavs pirmais lēciens ir ļoti viegls."
 
 #: src/LevelsText.h:45
 msgid ""
@@ -2178,20 +2191,26 @@ msgid ""
 "the air, try to adjust your attitude with the left\n"
 "and right arrow keys, so you'll land on your wheels."
 msgstr ""
+"Dodies pa kreisi, uzņem ātrumu un, kad esi gaisā,\n"
+"centies regulēt savu stāvokli pārmaiņus gan ar labo,\n"
+"gan kreiso bulttaustiņu, lai nokristu uz riteņiem."
 
 #: src/LevelsText.h:46
 msgid ""
 "The next jump is a bit trickier. You'll need all the\n"
 "speed you can get to reach the other side..."
 msgstr ""
+"Nākošais lēciens ir nedaudz sarežģītāks. Šeit tev\n"
+"būs vajadzīgs viss iespējamais ātrums, lai tiktu\n"
+"otrā pusē."
 
 #: src/LevelsText.h:47
 msgid "Now for the most difficult jump in this tutorial!"
-msgstr ""
+msgstr "Tagad ķeramies pie visgrūtākā lēciena šajā pamācībā!"
 
 #: src/LevelsText.h:48
 msgid "This time, speed alone won't do the job..."
-msgstr ""
+msgstr "Šoreiz ar ātrumu vien nebūs līdzēts..."
 
 #: src/LevelsText.h:49
 msgid ""
@@ -2200,6 +2219,10 @@ msgid ""
 "you reach the edge of the jump, pull the bike's front\n"
 "wheel up."
 msgstr ""
+"Lūk, kāds ir plāns:\n"
+"Arī šoreiz tev būs jāuzņem liels ātrums, taču,\n"
+"sasniedzot aizas malu, tev jāparauj motocikla\n"
+"priekšējais ritenis uz augšu."
 
 #: src/LevelsText.h:50 src/LevelsText.h:63
 msgid ""
@@ -2207,40 +2230,51 @@ msgid ""
 "length of the jump.\n"
 "Try it..."
 msgstr ""
+"Tas liks aizmugurējā riteņa atsperēm saspringt\n"
+"un tādējādi paildzināt lēcienu.\n"
+"Pamēģini..."
 
 #: src/LevelsText.h:51
 msgid "This tutorial will teach you the basics of jumping."
-msgstr ""
+msgstr "Šajā pamācībā tu iepazīsies ar lēkšanas pamatiem."
 
+# XXX
+# Hard-coded word order.
 #: src/LevelsText.h:52
 msgid ""
 "Remember you can turn around your bike\n"
 "by pressing :"
 msgstr ""
+"Atceries, ka vari apgriezt motociklu,\n"
+"nospiežot "
 
 #: src/LevelsText.h:53
 msgid "That was pretty easy, right?"
-msgstr ""
+msgstr "Diezgan viegli, vai ne?"
 
 #: src/LevelsText.h:54
 msgid ""
 "Accelerate NOW! Obtain maximum speed, and try to\n"
 "keep the front wheel at the ground..."
 msgstr ""
+"Uzņem ātrumu TAGAD! Brauc cik ātri vien iespējams, un\n"
+"centies turēt priekšējo riteni pie zemes."
 
 #: src/LevelsText.h:55
 msgid "Nice jump there! :)"
-msgstr ""
+msgstr "Lielisks lēciens! :)"
 
 #: src/LevelsText.h:56
 msgid "Congrats, you're now a master jumper!"
-msgstr ""
+msgstr "Tagad tu esi īsts lēkšanas meistars!"
 
 #: src/LevelsText.h:57
 msgid ""
 "The basic idea is that when driving on the rear wheel,\n"
 "your head is lowered quite a lot..."
 msgstr ""
+"Galvenā doma ir tāda, ka, pārvietojoties uz aizmugurējā\n"
+"riteņa, tava galva atrodas diezgan zemu."
 
 #: src/LevelsText.h:58
 msgid ""
@@ -2248,6 +2282,9 @@ msgid ""
 "When the distance you have to drive is quite short,\n"
 "you don't need to keep the balance."
 msgstr ""
+"Grūtākais ir saglabāt līdzsvaru.\n"
+"Ja veicamais attālums ir samērā neliels,\n"
+"līdzvars nav jāsaglabā."
 
 #: src/LevelsText.h:59
 msgid ""
@@ -2256,6 +2293,11 @@ msgid ""
 "combination, and you should be on the other side.\n"
 "Try it..."
 msgstr ""
+"Lēnām dodies pa labi, tā lai priekšējais ritenis celtos uz augšu.\n"
+"Tieši pirms tam, kad tavai galvai būtu jāatsitas pret apmali,\n"
+"izdari strauju pa kreisi/pa labi kombināciju, un tev vajadzētu\n"
+"veiksmīgi nonākt otrā pusē.\n"
+"Pamēģini!"
 
 #: src/LevelsText.h:60
 msgid ""
@@ -2263,6 +2305,9 @@ msgid ""
 "This time keep your hands off the left and right arrow keys,\n"
 "they're not delicate enough to help you keep balance."
 msgstr ""
+"Nākošais būs nedaudz grūtāks...\n"
+"Šoreiz neķeries klāt labajam un kreisajam bulttaustiņam,\n"
+"tie nav pietiekoši smalki, lai palīdzētu noturēt līdzsvaru."
 
 #: src/LevelsText.h:61
 msgid ""
@@ -2270,10 +2315,13 @@ msgid ""
 "Try to drive a bit back and forth on your rear wheel,\n"
 "keeping the bike as steady as possible..."
 msgstr ""
+"Tā vietā, lai regulētu leņķi, palielini un samazini ātrumu.\n"
+"Pamēģini pabraukāt turp un atpakaļ uz aizmugurējā riteņa,\n"
+"turot motociklu pēc iespējas stabilāku."
 
 #: src/LevelsText.h:62
 msgid "Try getting under the next obstacle when you feel you're ready."
-msgstr ""
+msgstr "Kad esi sagatavojies, pamēģini pakļūt zem nākošā šķēršļa."
 
 #: src/LevelsText.h:64
 msgid ""
@@ -2281,24 +2329,29 @@ msgid ""
 "areas where the ceiling is low.\n"
 "Beware that this can be pretty difficult :)"
 msgstr ""
+"Šī pamācība iepazīstinās tevi ar pārvietošanos uz\n"
+"aizmugurējā riteņa vietās ar zemiem griestiem.\n"
+"Ņem vērā, ka tas var būt diezgan grūti :)"
 
 #: src/LevelsText.h:65
 msgid "Not that difficult, right?"
-msgstr ""
+msgstr "Nebija nemaz tik grūti, vai ne?"
 
 #: src/LevelsText.h:66
 msgid "Nice! Now try the next one, it's a bit more difficult..."
-msgstr ""
+msgstr "Labi! Tagad pamēģini nākošo; tas ir nedaudz grūtāks..."
 
 #: src/LevelsText.h:67
 msgid "Good job! The next one is even more difficult..."
-msgstr ""
+msgstr "Lieliski! Taču nākošais ir vēl grūtāks..."
 
 #: src/LevelsText.h:68
 msgid ""
 "Now for the final one... It's not that long, but instead\n"
 "there's even less room for your precious head. Good luck! :)"
 msgstr ""
+"Un tagad pēdējais! Tas nav tik garš, taču šoreiz\n"
+"šeit ir vēl mazāk vietas tavai galvai.  Lai veicas! :)"
 
 #~ msgid "Already used!"
 #~ msgstr "Jau aizņemts!"
