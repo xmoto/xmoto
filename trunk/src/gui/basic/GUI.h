@@ -94,7 +94,7 @@ class GameApp;
   ===========================================================================*/
   struct UITextStyle {
     UITextStyle() {
-      c0 = c1 = c2 = c3 = -1;
+      c0 = c1 = c2 = c3 = (Color) -1;
     }
   
     Color c0,c1,c2,c3;
@@ -729,7 +729,7 @@ class UIButtonDrawn : public UIButton {
     private:
       /* Data */
       bool m_bChanged;
-      int m_nSelected;
+      unsigned int m_nSelected;
       std::vector<std::string> m_TabContextHelp;
   };
 

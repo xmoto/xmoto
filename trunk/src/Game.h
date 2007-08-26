@@ -21,24 +21,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __GAME_H__
 #define __GAME_H__
 
-#include "GameText.h"
 #include "VCommon.h"
-#include "xmscene/Level.h"
-#include "xmscene/Bike.h"
 #include "xmscene/Scene.h"
-#include "VTexture.h"
-#include "Renderer.h"
-#include "Replay.h"
-#include "Sound.h"
+#include "db/xmDatabaseUpdateInterface.h"
+#include "XMotoLoadLevelsInterface.h"
+#include "WWWAppInterface.h"
 #include "Input.h"
 #include "WWW.h"
-#include "WWWAppInterface.h"
-#include "Credits.h"
 #include "LevelsManager.h"
-#include "XMotoLoadLevelsInterface.h"
-#include "db/xmDatabaseUpdateInterface.h"
-#include "SysMessage.h"
-#include "gui/specific/GUIXMoto.h"
 
 #define PRESTART_ANIMATION_TIME 2.0
 #define INPLAY_ANIMATION_TIME 1.0
@@ -54,6 +44,19 @@ class XMArguments;
 class xmDatabase;
 class XMSession;
 class Img;
+class SysMessage;
+class GameApp;
+class DrawLib;
+class WebRoom;
+class WebRooms;
+class WebLevels;
+class LevelsPack;
+class UIWindow;
+class UIQuickStartButton;
+class UILevelList;
+class LevelsManager;
+class Credits;
+class SoundSample;
 
    /*===========================================================================
    Overall game states
@@ -84,17 +87,10 @@ class Img;
      MENU_GFX_HIGH
    };
 
-
-   enum GhostSearchStrategy {
-     GHOST_STRATEGY_MYBEST,
-     GHOST_STRATEGY_THEBEST,
-     GHOST_STRATEGY_BESTOFROOM
-   };
-
    class XMMotoGameHooks : public MotoGameHooks {
    public:
      XMMotoGameHooks();
-     ~XMMotoGameHooks();
+     virtual ~XMMotoGameHooks();
      void setGameApps(GameApp *i_GameApp, MotoGame *i_MotoGame);
      void OnTakeEntity();
 
@@ -158,8 +154,7 @@ class Img;
       void setSpecificLevelFile(const std::string& i_leveFile);
 
       /* */
-      static double getTime(void);
-      static double getRealTime(void);
+      static double getXMTime(void);
       static std::string getTimeStamp(void);
       void quit(void);
       static std::string formatTime(float fSecs);
@@ -167,8 +162,6 @@ class Img;
       bool haveMouseMoved(void);
       
       static std::vector<std::string>* getDisplayModes(int windowed);
-      void scissorGraphics(int x, int y, int nWidth, int nHeight);
-      void getScissorGraphics(int *px, int *py, int *pnWidth, int *pnHeight);
       Img *grabScreen(void);
       bool isUglyMode();
       /* */
@@ -222,7 +215,7 @@ class Img;
       GameState m_StateAfterPlaying;            /* State that should be used later */
       MotoGame m_MotoGame;                      /* Game object */      
       XMMotoGameHooks m_MotoGameHooks;
-      GameRenderer m_Renderer;                  /* Renderer */
+      GameRenderer* m_Renderer;                  /* Renderer */
       int m_nFrame;                             /* Frame # */
        
       double m_fLastFrameTime;                  /* When the last frama was initiated */
@@ -237,10 +230,7 @@ class Img;
       
       Replay *m_pJustPlayReplay;
 
-      std::vector<GhostSearchStrategy> GhostSearchStrategies;
-
       bool m_bEnableGhost;
-      GhostSearchStrategy m_GhostSearchStrategy;
       bool m_bShowGhostTimeDiff;
       bool m_bGhostMotionBlur;                  /* true: apply fancy motion blur to ghosts */
       bool m_bEnableGhostInfo;
@@ -399,7 +389,7 @@ class Img;
       /* Credits */
       Credits *m_pCredits;         
       
-      SysMessage m_sysMsg;
+      SysMessage* m_sysMsg;
 
       /* Main loop statics */
       double m_fFrameTime;
@@ -519,8 +509,7 @@ class Img;
       std::string _getGhostReplayPath_bestOfThePlayer(std::string p_levelId, float &p_time);
       std::string _getGhostReplayPath_bestOfLocal(std::string p_levelId, float &p_time);
       std::string _getGhostReplayPath_bestOfTheRoom(std::string p_levelId, float &p_time);
-      std::string _getGhostReplayPath(std::string p_levelId,
-              GhostSearchStrategy p_strategy);
+      void addGhosts(MotoGame* i_motogame, Theme* i_theme);
 
       void switchUglyMode(bool bUgly);
       void switchTestThemeMode(bool mode);
@@ -573,7 +562,7 @@ class Img;
       void initReplaysFromDir();
       void addReplay(const std::string& i_file);
 
-      static UIFrame* makeOptionsWindow(DrawLib* i_drawLib, UIWindow* io_parent, UserConfig* i_Config, std::vector<GhostSearchStrategy>& i_ghostStrategies);
+      static UIFrame* makeOptionsWindow(DrawLib* i_drawLib, UIWindow* io_parent, UserConfig* i_Config);
       static UIFrame* makeHelpWindow(DrawLib* i_drawLib, UIWindow* io_parent, UserConfig* i_Config);
 
       void updatePlayerTag();

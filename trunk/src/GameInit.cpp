@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
 /* rneckelmann 2006-09-30: moved a lot of stuff from Game.cpp into here to 
                            make it a tad smaller */ 
+#include "GameText.h"
 #include "Game.h"
 #include "VFileIO.h"
 #include "Sound.h"
@@ -35,9 +36,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <curl/curl.h>
 #include "XMSession.h"
 #include "XMArgs.h"
-#include "VDraw.h"
+#include "drawlib/DrawLib.h"
 #include "Packager.h"
 #include "helpers/SwapEndian.h"
+#include "SysMessage.h"
+#include "gui/specific/GUIXMoto.h"
+#include "Credits.h"
 
 #define DATABASE_FILE FS::getUserDirUTF8() + "/" + "xm.db"
 
@@ -158,6 +162,11 @@ int main(int nNumArgs,char **ppcArgs) {
 	throw Exception("Drawlib not initialized");
       }
 
+      m_Renderer = new GameRenderer(drawLib);
+      m_Renderer->setTheme(&m_theme);
+      m_MotoGame.setRenderer(m_Renderer);
+      m_sysMsg = new SysMessage(drawLib);
+
       drawLib->setNoGraphics(m_xmsession->useGraphics() == false);
       drawLib->setDontUseGLExtensions(m_xmsession->glExts() == false);
 
@@ -218,12 +227,12 @@ int main(int nNumArgs,char **ppcArgs) {
               if(nX == nLastMouseClickX &&
                  nY == nLastMouseClickY &&
                  nLastMouseClickButton == Event.button.button &&
-                 (getRealTime() - fLastMouseClickTime) < 0.250f) {                
+                 (getXMTime() - fLastMouseClickTime) < 0.250f) {                
 
                 /* Pass double click */
                 mouseDoubleClick(Event.button.button);                
               }
-              fLastMouseClickTime = getRealTime();
+              fLastMouseClickTime = getXMTime();
               nLastMouseClickX = nX;
               nLastMouseClickY = nY;
               nLastMouseClickButton = Event.button.button;
@@ -312,7 +321,7 @@ int main(int nNumArgs,char **ppcArgs) {
     /* Reset timers */
     m_fLastFrameTime = 0.0f;
     m_fLastPerfStateTime = 0.0f;
-    m_fLastPhysTime = getTime() - PHYS_STEP_SIZE;
+    m_fLastPhysTime = getXMTime() - PHYS_STEP_SIZE;
     
     /* And stuff */
     m_nPauseShade = 0;
@@ -332,11 +341,11 @@ int main(int nNumArgs,char **ppcArgs) {
     /* Init renderer */
     switchUglyMode(m_xmsession->ugly());
     switchTestThemeMode(m_xmsession->testTheme());
-    m_Renderer.setParent( (GameApp *)this );
-    m_Renderer.setGameObject( &m_MotoGame );        
-    m_Renderer.setDebug(m_xmsession->debug());
+    m_Renderer->setParent( (GameApp *)this );
+    m_Renderer->setGameObject( &m_MotoGame );        
+    m_Renderer->setDebug(m_xmsession->debug());
 
-    m_Renderer.setGhostMotionBlur( m_bGhostMotionBlur );
+    m_Renderer->setGhostMotionBlur( m_bGhostMotionBlur );
     
     /* Tell collision system whether we want debug-info or not */
     m_MotoGame.getCollisionHandler()->setDebug(m_xmsession->debug());
@@ -344,7 +353,7 @@ int main(int nNumArgs,char **ppcArgs) {
     /* Data time! */
     Logger::Log("Loading data...");
 
-    if(m_xmsession->gDebug()) m_Renderer.loadDebugInfo(m_xmsession->gDebugFile());
+    if(m_xmsession->gDebug()) m_Renderer->loadDebugInfo(m_xmsession->gDebugFile());
 
     /* database */
     m_db = new xmDatabase(DATABASE_FILE,
@@ -357,7 +366,7 @@ int main(int nNumArgs,char **ppcArgs) {
     /* set the room name ; set to WR if it cannot be determined */
     m_WebHighscoresRoomName = "WR";
     char **v_result;
-    int nrow;
+    unsigned int nrow;
     v_result = m_db->readDB("SELECT name "
 			    "FROM webrooms "
 			    "WHERE id_room=" + m_WebHighscoresIdRoom + ";",
@@ -400,7 +409,7 @@ int main(int nNumArgs,char **ppcArgs) {
     /* List replays? */  
     if(v_xmArgs->isOptListReplays()) {
       char **v_result;
-      int nrow;
+      unsigned int nrow;
 
       printf("\nReplay                    Level                     Player\n");
       printf("-----------------------------------------------------------------------\n");
@@ -469,7 +478,6 @@ int main(int nNumArgs,char **ppcArgs) {
       /* Find all files in the textures dir and load them */     
       UITexture::setApp(this);
       UIWindow::setDrawLib(getDrawLib());
-      m_sysMsg.setDrawLib(getDrawLib());
 
       _UpdateLoadingScreen((1.0f/9.0f) * 2,GAMETEXT_LOADINGMENUGRAPHICS);
         
@@ -552,7 +560,7 @@ int main(int nNumArgs,char **ppcArgs) {
 
     /* Initialize renderer */
     _UpdateLoadingScreen((1.0f/9.0f) * 6,GAMETEXT_INITRENDERER);
-    m_Renderer.init();
+    m_Renderer->init();
     
     /* Initialize menu system */
     _InitMenus();
@@ -598,7 +606,7 @@ int main(int nNumArgs,char **ppcArgs) {
     }
 
     /* final initialisation */
-    Logger::Log("UserPreInit ended at %.3f", GameApp::getTime());
+    Logger::Log("UserPreInit ended at %.3f", GameApp::getXMTime());
     /* display what must be displayed */
     if (isUglyMode()){
       drawLib->clearGraphics();
@@ -632,7 +640,7 @@ int main(int nNumArgs,char **ppcArgs) {
       m_db->stats_xmotoStarted(m_xmsession->profile());
     }
 
-    Logger::Log("UserInit ended at %.3f", GameApp::getTime());
+    Logger::Log("UserInit ended at %.3f", GameApp::getXMTime());
   }
     
   /*===========================================================================
@@ -652,8 +660,8 @@ int main(int nNumArgs,char **ppcArgs) {
     delete m_pCredits;
     
     if(m_xmsession->useGraphics()) {
-      m_Renderer.unprepareForNewLevel(); /* just to be sure, shutdown can happen quite hard */
-      m_Renderer.shutdown();
+      m_Renderer->unprepareForNewLevel(); /* just to be sure, shutdown can happen quite hard */
+      m_Renderer->shutdown();
       m_InputHandler.uninit();
     }
     
@@ -666,7 +674,9 @@ int main(int nNumArgs,char **ppcArgs) {
     m_Config.setString("DefaultProfile", m_xmsession->profile());
     
     Sound::uninit();
-    
+    delete m_Renderer;
+    delete m_sysMsg;
+
     if(m_xmsession->useGraphics()) {
       m_Config.setInteger("QSQualityMIN",    m_pQuickStart->getQualityMIN());
       m_Config.setInteger("QSDifficultyMIN", m_pQuickStart->getDifficultyMIN());
@@ -795,7 +805,9 @@ int main(int nNumArgs,char **ppcArgs) {
     m_Config.createVar( "WebHighscoreUploadPassword" , ""); 
 
     m_Config.createVar( "EnableGhost"        , "true");
-    m_Config.createVar( "GhostSearchStrategy", "0");
+    m_Config.createVar( "GhostStrategy_MYBEST", "true");
+    m_Config.createVar( "GhostStrategy_THEBEST", "false");
+    m_Config.createVar( "GhostStrategy_BESTOFROOM", "false");
     m_Config.createVar( "ShowGhostTimeDiff"  , "true");
     m_Config.createVar( "DisplayGhostInfo"   , "false");
     m_Config.createVar( "GhostMotionBlur"    , "true" );

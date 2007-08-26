@@ -510,6 +510,9 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_QUICKSTART_QUALITY    _("Increase or decrease the quality of the levels selected")
 #define CONTEXTHELP_QUICKSTART_DIFFICULTY _("Increase or decrease the difficulty of the levels selected")
 #define CONTEXTHELP_MULTISTOPWHENONEFINISHES _("Stop the game once a player ends the level or continue while a player is running")
+#define CONTEXTHELP_GHOST_STRATEGY_MYBEST _("The best of my replays (on this computer)")
+#define CONTEXTHELP_GHOST_STRATEGY_THEBEST _("The best of the replays (on this computer)")
+#define CONTEXTHELP_GHOST_STRATEGY_BESTOFROOM _("The highscore of the room")
 
 #define VPACKAGENAME_LEVELS_WITH_NO_HIGHSCORE   _("Levels with no highscore")
 #define VPACKAGENAME_INCOMPLETED_LEVELS         _("Levels you have not completed")

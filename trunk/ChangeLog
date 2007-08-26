@@ -5,7 +5,9 @@ X-Moto 0.3.3 2007-
  * Portuguese translation
  * command line options changed
  * pageup/pagedown to play next/previous level
- * new command line option to choose the config dir (on a usb key for example) : xmoto --configpath /media/usbkey/xmoto (or e:/xmoto on windows)
+ * new command line option to choose the config dir (on a usb key for example)
+   xmoto --configpath /media/usbkey/xmoto (or e:/xmoto on windows)
+ * multi ghosts
  * minor improvements
  * some bugs fixed
 

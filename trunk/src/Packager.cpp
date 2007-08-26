@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "VCommon.h"
 #include "Packager.h"
+#include "VFileIO.h"
 #include "helpers/SwapEndian.h"
 #include "md5sum/md5file.h"
 
@@ -102,10 +103,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
           if(fp_out != NULL) {
             /* Extract */
             char cExtractBuf[16384];
-            int nRemaining = nSize;
+            unsigned int nRemaining = nSize;
             while(nRemaining > 0) {
-              int nToExtract = sizeof(cExtractBuf)>nRemaining?nRemaining:sizeof(cExtractBuf);
-              int nExtracted = fread(cExtractBuf,1,nToExtract,fp);
+              unsigned int nToExtract = sizeof(cExtractBuf)>nRemaining?nRemaining:sizeof(cExtractBuf);
+              unsigned int nExtracted = fread(cExtractBuf,1,nToExtract,fp);
               fwrite(cExtractBuf,1,nExtracted,fp_out);
               
               nRemaining -= nExtracted;
@@ -176,8 +177,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     
     while(!feof(fp) && fgets(cBuf,sizeof(cBuf)-1,fp)!=NULL) {
       std::string s = cBuf;
-      bool bOk = true;
-      
+
       /* Strip leading and tailing white-spaces */
       std::string::size_type lead = s.find_first_not_of("\t ");
       std::string::size_type trail = s.find_last_not_of("\t \n\r");
@@ -207,7 +207,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     fputc(c, fp);
     fwrite(sum.c_str(), c, 1, fp);
 
-    for(int i=0;i<FileList.size();i++) {
+    for(unsigned int i=0;i<FileList.size();i++) {
       /* Open and load entire file into memory (yikes!! (but all files a pretty small :P)) */
       FILE *in = fopen((DataDir + "/" + FileList[i]).c_str(),"rb");
       if(in != NULL) {

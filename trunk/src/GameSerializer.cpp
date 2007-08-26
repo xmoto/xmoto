@@ -24,6 +24,8 @@
 #include "PhysSettings.h"
 #include "xmscene/Scene.h"
 #include "helpers/Log.h"
+#include "GameEvents.h"
+#include "DBuffer.h"
   
   /*===========================================================================
     Decoding of event stream
@@ -49,8 +51,8 @@
   /*===========================================================================
     Encoding of event buffer 
     ===========================================================================*/
-  void MotoGame::_SerializeGameEventQueue(DBuffer &Buffer, MotoGameEvent *pEvent) {
-    pEvent->serialize(Buffer);
+  void MotoGame::_SerializeGameEventQueue(DBuffer* Buffer, MotoGameEvent *pEvent) {
+    pEvent->serialize(*Buffer);
   }
 
   /*===========================================================================

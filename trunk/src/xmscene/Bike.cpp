@@ -25,15 +25,23 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../GameText.h"
 #include "../PhysSettings.h"
 #include "../Game.h"
+#include "BikeParameters.h"
+#include "BikeAnchors.h"
+#include "Sound.h"
 
 #define PHYSICAL_ENGINE_REDUCTION 0.05
 
 BikeState::BikeState() {
+  m_bikeParameters = new BikeParameters();
+  m_bikeAnchors    = new BikeAnchors();
+
   reInitializeSpeed();
   reInitializeAnchors();
 }
 
 BikeState::~BikeState() {
+  delete m_bikeParameters;
+  delete m_bikeAnchors;
 }
 
 
@@ -110,18 +118,18 @@ float BikeState::CurrentEngine() const {
 
 void BikeState::physicalUpdate() {
   if(m_curEngine > 0.0)
-    m_curEngine -= m_bikeParameters.MaxEngine() * PHYSICAL_ENGINE_REDUCTION; 
+    m_curEngine -= m_bikeParameters->MaxEngine() * PHYSICAL_ENGINE_REDUCTION; 
 }
 
 void BikeState::reInitializeAnchors() {
-  m_bikeAnchors.update(m_bikeParameters);
+  m_bikeAnchors->update(m_bikeParameters);
 }
 
-BikeAnchors& BikeState::Anchors() {
+BikeAnchors* BikeState::Anchors() {
   return m_bikeAnchors;
 }
 
-BikeParameters& BikeState::Parameters() {
+BikeParameters* BikeState::Parameters() {
   return m_bikeParameters;
 }
 
@@ -132,22 +140,24 @@ BikeState* Biker::getState() {
 Biker::Biker(Theme *i_theme, BikerTheme* i_bikerTheme,
 	     const TColor& i_colorFilter,
 	     const TColor& i_uglyColorFilter) {
+  m_EngineSound = new EngineSoundSimulator();
+
   /* sound engine */
   if(Sound::isEnabled()) {
     try {
-      m_EngineSound.addBangSample(Sound::findSample(i_theme->getSound("Engine00")->FilePath()));
-      m_EngineSound.addBangSample(Sound::findSample(i_theme->getSound("Engine01")->FilePath()));
-      m_EngineSound.addBangSample(Sound::findSample(i_theme->getSound("Engine02")->FilePath()));
-      m_EngineSound.addBangSample(Sound::findSample(i_theme->getSound("Engine03")->FilePath()));
-      m_EngineSound.addBangSample(Sound::findSample(i_theme->getSound("Engine04")->FilePath()));
-      m_EngineSound.addBangSample(Sound::findSample(i_theme->getSound("Engine05")->FilePath()));
-      m_EngineSound.addBangSample(Sound::findSample(i_theme->getSound("Engine06")->FilePath()));
-      m_EngineSound.addBangSample(Sound::findSample(i_theme->getSound("Engine07")->FilePath()));
-      m_EngineSound.addBangSample(Sound::findSample(i_theme->getSound("Engine08")->FilePath()));
-      m_EngineSound.addBangSample(Sound::findSample(i_theme->getSound("Engine09")->FilePath()));
-      m_EngineSound.addBangSample(Sound::findSample(i_theme->getSound("Engine10")->FilePath()));
-      m_EngineSound.addBangSample(Sound::findSample(i_theme->getSound("Engine11")->FilePath()));
-      m_EngineSound.addBangSample(Sound::findSample(i_theme->getSound("Engine12")->FilePath()));
+      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine00")->FilePath()));
+      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine01")->FilePath()));
+      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine02")->FilePath()));
+      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine03")->FilePath()));
+      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine04")->FilePath()));
+      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine05")->FilePath()));
+      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine06")->FilePath()));
+      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine07")->FilePath()));
+      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine08")->FilePath()));
+      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine09")->FilePath()));
+      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine10")->FilePath()));
+      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine11")->FilePath()));
+      m_EngineSound->addBangSample(Sound::findSample(i_theme->getSound("Engine12")->FilePath()));
     } catch(Exception &e) {
       /* hum, no nice */
     }
@@ -162,6 +172,10 @@ Biker::Biker(Theme *i_theme, BikerTheme* i_bikerTheme,
   m_colorFilter = i_colorFilter;
   m_uglyColorFilter = i_uglyColorFilter;
   m_doInterpolation = true;
+}
+
+Biker::~Biker() { 
+  delete m_EngineSound;
 }
 
 const TColor& Biker::getColorFilter() const {
@@ -187,34 +201,34 @@ void Biker::updateToTime(float i_time, float i_timeStep,
 
   /* sound */
   if(Sound::isEnabled()) {
-    m_EngineSound.setRPM(getBikeEngineRPM());
+    m_EngineSound->setRPM(getBikeEngineRPM());
     if(m_playSound) {
-      m_EngineSound.update(i_time);
+      m_EngineSound->update(i_time);
     }
   }
 }
 
-bool Biker::isTouching(const Entity& i_entity) const {
+bool Biker::isTouching(const Entity* i_entity) const {
   for(int i=0; i<m_entitiesTouching.size(); i++) {
-    if(m_entitiesTouching[i] == &i_entity) {
+    if(m_entitiesTouching[i] == i_entity) {
       return true;
     }
   }
   return false;
 }
 
-Biker::touch Biker::setTouching(Entity& i_entity, bool i_touching) {
+Biker::touch Biker::setTouching(Entity* i_entity, bool i_touching) {
   bool v_wasTouching = isTouching(i_entity);
   if(v_wasTouching == i_touching) {
     return none;
   }
   
   if(i_touching) {
-    m_entitiesTouching.push_back(&i_entity);
+    m_entitiesTouching.push_back(i_entity);
     return added;
   } else {
     for(int i=0; i<m_entitiesTouching.size(); i++) {
-      if(m_entitiesTouching[i] == &i_entity) {
+      if(m_entitiesTouching[i] == i_entity) {
 	m_entitiesTouching.erase(m_entitiesTouching.begin() + i);
 	return removed;
       }
@@ -223,27 +237,27 @@ Biker::touch Biker::setTouching(Entity& i_entity, bool i_touching) {
   return none;
 }
 
-bool Biker::isTouching(const Zone& i_zone) const {
+bool Biker::isTouching(const Zone* i_zone) const {
   for(unsigned int i=0; i<m_zonesTouching.size(); i++) {
-    if(m_zonesTouching[i]->Id() == i_zone.Id()) {
+    if(m_zonesTouching[i]->Id() == i_zone->Id()) {
       return true;
     }
   }
   return false;
 }
 
-Biker::touch Biker::setTouching(Zone& i_zone, bool i_isTouching) {
+Biker::touch Biker::setTouching(Zone* i_zone, bool i_isTouching) {
   bool v_wasTouching = isTouching(i_zone);
   if(v_wasTouching == i_isTouching) {
     return none;
   }
     
   if(i_isTouching) {
-    m_zonesTouching.push_back(&i_zone);
+    m_zonesTouching.push_back(i_zone);
     return added;
   } else {
     for(int i=0; i<m_zonesTouching.size(); i++) {
-      if(m_zonesTouching[i] == &i_zone) {
+      if(m_zonesTouching[i] == i_zone) {
 	m_zonesTouching.erase(m_zonesTouching.begin() + i);
 	return removed;
       }
@@ -359,26 +373,26 @@ BikerTheme* Biker::getBikeTheme() {
     /* Update engine stuff */
     pBikeS->fBikeEngineRPM = ENGINE_MIN_RPM + (ENGINE_MAX_RPM - ENGINE_MIN_RPM) * ((float)pReplayState->cBikeEngineRPM) / 255.0f;
     
-    pBikeS->SwingAnchorP.x = pBikeS->Anchors().AR.x*pBikeS->fFrameRot[0] + pBikeS->Anchors().AR.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
-    pBikeS->SwingAnchorP.y = pBikeS->Anchors().AR.x*pBikeS->fFrameRot[2] + pBikeS->Anchors().AR.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;
-    pBikeS->FrontAnchorP.x = pBikeS->Anchors().AF.x*pBikeS->fFrameRot[0] + pBikeS->Anchors().AF.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
-    pBikeS->FrontAnchorP.y = pBikeS->Anchors().AF.x*pBikeS->fFrameRot[2] + pBikeS->Anchors().AF.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;
+    pBikeS->SwingAnchorP.x = pBikeS->Anchors()->AR.x*pBikeS->fFrameRot[0] + pBikeS->Anchors()->AR.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
+    pBikeS->SwingAnchorP.y = pBikeS->Anchors()->AR.x*pBikeS->fFrameRot[2] + pBikeS->Anchors()->AR.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;
+    pBikeS->FrontAnchorP.x = pBikeS->Anchors()->AF.x*pBikeS->fFrameRot[0] + pBikeS->Anchors()->AF.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
+    pBikeS->FrontAnchorP.y = pBikeS->Anchors()->AF.x*pBikeS->fFrameRot[2] + pBikeS->Anchors()->AF.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;
     
-    pBikeS->SwingAnchor2P.x = pBikeS->Anchors().AR2.x*pBikeS->fFrameRot[0] + pBikeS->Anchors().AR2.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
-    pBikeS->SwingAnchor2P.y = pBikeS->Anchors().AR2.x*pBikeS->fFrameRot[2] + pBikeS->Anchors().AR2.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;
-    pBikeS->FrontAnchor2P.x = pBikeS->Anchors().AF2.x*pBikeS->fFrameRot[0] + pBikeS->Anchors().AF2.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
-    pBikeS->FrontAnchor2P.y = pBikeS->Anchors().AF2.x*pBikeS->fFrameRot[2] + pBikeS->Anchors().AF2.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;
+    pBikeS->SwingAnchor2P.x = pBikeS->Anchors()->AR2.x*pBikeS->fFrameRot[0] + pBikeS->Anchors()->AR2.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
+    pBikeS->SwingAnchor2P.y = pBikeS->Anchors()->AR2.x*pBikeS->fFrameRot[2] + pBikeS->Anchors()->AR2.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;
+    pBikeS->FrontAnchor2P.x = pBikeS->Anchors()->AF2.x*pBikeS->fFrameRot[0] + pBikeS->Anchors()->AF2.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
+    pBikeS->FrontAnchor2P.y = pBikeS->Anchors()->AF2.x*pBikeS->fFrameRot[2] + pBikeS->Anchors()->AF2.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;
     
     /* Calculate desired hand/foot positions */
-    pBikeS->WantedFootP.x = pBikeS->Anchors().PFp.x*pBikeS->fFrameRot[0] + pBikeS->Anchors().PFp.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
-    pBikeS->WantedFootP.y = pBikeS->Anchors().PFp.x*pBikeS->fFrameRot[2] + pBikeS->Anchors().PFp.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;
-    pBikeS->WantedHandP.x = pBikeS->Anchors().PHp.x*pBikeS->fFrameRot[0] + pBikeS->Anchors().PHp.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
-    pBikeS->WantedHandP.y = pBikeS->Anchors().PHp.x*pBikeS->fFrameRot[2] + pBikeS->Anchors().PHp.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;    
+    pBikeS->WantedFootP.x = pBikeS->Anchors()->PFp.x*pBikeS->fFrameRot[0] + pBikeS->Anchors()->PFp.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
+    pBikeS->WantedFootP.y = pBikeS->Anchors()->PFp.x*pBikeS->fFrameRot[2] + pBikeS->Anchors()->PFp.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;
+    pBikeS->WantedHandP.x = pBikeS->Anchors()->PHp.x*pBikeS->fFrameRot[0] + pBikeS->Anchors()->PHp.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
+    pBikeS->WantedHandP.y = pBikeS->Anchors()->PHp.x*pBikeS->fFrameRot[2] + pBikeS->Anchors()->PHp.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;    
     
-    pBikeS->WantedFoot2P.x = pBikeS->Anchors().PFp2.x*pBikeS->fFrameRot[0] + pBikeS->Anchors().PFp2.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
-    pBikeS->WantedFoot2P.y = pBikeS->Anchors().PFp2.x*pBikeS->fFrameRot[2] + pBikeS->Anchors().PFp2.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;
-    pBikeS->WantedHand2P.x = pBikeS->Anchors().PHp2.x*pBikeS->fFrameRot[0] + pBikeS->Anchors().PHp2.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
-    pBikeS->WantedHand2P.y = pBikeS->Anchors().PHp2.x*pBikeS->fFrameRot[2] + pBikeS->Anchors().PHp2.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;    
+    pBikeS->WantedFoot2P.x = pBikeS->Anchors()->PFp2.x*pBikeS->fFrameRot[0] + pBikeS->Anchors()->PFp2.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
+    pBikeS->WantedFoot2P.y = pBikeS->Anchors()->PFp2.x*pBikeS->fFrameRot[2] + pBikeS->Anchors()->PFp2.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;
+    pBikeS->WantedHand2P.x = pBikeS->Anchors()->PHp2.x*pBikeS->fFrameRot[0] + pBikeS->Anchors()->PHp2.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
+    pBikeS->WantedHand2P.y = pBikeS->Anchors()->PHp2.x*pBikeS->fFrameRot[2] + pBikeS->Anchors()->PHp2.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;    
     
     /* Get hinges from serialized state */
     if(pReplayState->cFlags & SER_BIKE_STATE_DIR_RIGHT) {
@@ -420,21 +434,21 @@ BikerTheme* Biker::getBikeTheme() {
       /* Calculate head position */
       V = (pBikeS->ShoulderP - pBikeS->LowerBodyP);
       V.normalize();
-      pBikeS->HeadP = pBikeS->ShoulderP + V*pBikeS->Parameters().fNeckLength;
+      pBikeS->HeadP = pBikeS->ShoulderP + V*pBikeS->Parameters()->fNeckLength;
     }
     
     if(bUpdateAltRider) {
       /* Calculate head position (Alt.) */
       V = (pBikeS->Shoulder2P - pBikeS->LowerBody2P);
       V.normalize();
-      pBikeS->Head2P = pBikeS->Shoulder2P + V*pBikeS->Parameters().fNeckLength;
+      pBikeS->Head2P = pBikeS->Shoulder2P + V*pBikeS->Parameters()->fNeckLength;
     }
     
     /* Internally we'd like to know the abs. relaxed position of the wheels */
-    pBikeS->RFrontWheelP.x = pBikeS->Anchors().Fp.x*pBikeS->fFrameRot[0] + pBikeS->Anchors().Fp.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
-    pBikeS->RFrontWheelP.y = pBikeS->Anchors().Fp.x*pBikeS->fFrameRot[2] + pBikeS->Anchors().Fp.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;
-    pBikeS->RRearWheelP.x = pBikeS->Anchors().Rp.x*pBikeS->fFrameRot[0] + pBikeS->Anchors().Rp.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
-    pBikeS->RRearWheelP.y = pBikeS->Anchors().Rp.x*pBikeS->fFrameRot[2] + pBikeS->Anchors().Rp.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;     
+    pBikeS->RFrontWheelP.x = pBikeS->Anchors()->Fp.x*pBikeS->fFrameRot[0] + pBikeS->Anchors()->Fp.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
+    pBikeS->RFrontWheelP.y = pBikeS->Anchors()->Fp.x*pBikeS->fFrameRot[2] + pBikeS->Anchors()->Fp.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;
+    pBikeS->RRearWheelP.x = pBikeS->Anchors()->Rp.x*pBikeS->fFrameRot[0] + pBikeS->Anchors()->Rp.y*pBikeS->fFrameRot[1] + pBikeS->CenterP.x;
+    pBikeS->RRearWheelP.y = pBikeS->Anchors()->Rp.x*pBikeS->fFrameRot[2] + pBikeS->Anchors()->Rp.y*pBikeS->fFrameRot[3] + pBikeS->CenterP.y;     
   }
 
 void Biker::addBodyForce(const Vector2f& i_force) {

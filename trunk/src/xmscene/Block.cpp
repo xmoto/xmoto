@@ -20,9 +20,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <algorithm>
 #include "Block.h"
-#include "../Collision.h"
-#include "../PhysSettings.h"
-#include "../helpers/Log.h"
+#include "Collision.h"
+#include "PhysSettings.h"
+#include "helpers/Log.h"
+#include "VFileIO.h"
+#include "VXml.h"
+#include "BSP.h"
+
+#define XM_DEFAULT_BLOCK_TEXTURE "default"
+#define XM_DEFAULT_PHYS_BLOCK_GRIP 20
 
 /* Vertex */
 ConvexBlockVertex::ConvexBlockVertex(const Vector2f& i_position, const Vector2f& i_texturePosition) {
@@ -229,7 +235,7 @@ int Block::loadToPlay(CollisionSystem& io_collisionSystem) {
   
   /* Create convex blocks */
   for(unsigned int i=0; i<v_BSPPolys.size(); i++) {
-    addPoly(*(v_BSPPolys[i]), io_collisionSystem);
+    addPoly(v_BSPPolys[i], io_collisionSystem);
   }
   
   updateCollisionLines();
@@ -241,13 +247,13 @@ int Block::loadToPlay(CollisionSystem& io_collisionSystem) {
   return v_BSPTree.getNumErrors();  
 }
 
-void Block::addPoly(const BSPPoly& i_poly, CollisionSystem& io_collisionSystem) {
+void Block::addPoly(const BSPPoly* i_poly, CollisionSystem& io_collisionSystem) {
   ConvexBlock *v_block = new ConvexBlock(this);
   
-  for(unsigned int i=0; i<i_poly.Vertices.size(); i++) {
-    v_block->addVertex(i_poly.Vertices[i]->P,
-                       Vector2f((InitialPosition().x + i_poly.Vertices[i]->P.x) * 0.25,
-                                (InitialPosition().y + i_poly.Vertices[i]->P.y) * 0.25));
+  for(unsigned int i=0; i<i_poly->Vertices.size(); i++) {
+    v_block->addVertex(i_poly->Vertices[i]->P,
+                       Vector2f((InitialPosition().x + i_poly->Vertices[i]->P.x) * 0.25,
+                                (InitialPosition().y + i_poly->Vertices[i]->P.y) * 0.25));
   }
   m_convexBlocks.push_back(v_block);
 }
@@ -335,7 +341,7 @@ AABB& Block::getAABB()
     m_BBox.reset();
 
     if(isDynamic() == true){
-      for(int i=0; i<m_collisionLines.size(); i++){
+      for(unsigned int i=0; i<m_collisionLines.size(); i++){
 	Line* pLine = m_collisionLines[i];
 	// add only the first point because the second
 	// point of the line n is the same as the first
@@ -425,14 +431,14 @@ void Block::saveXml(FileHandle *i_pfh) {
   FS::writeLineF(i_pfh,"\t</block>");
 }
 
-Block* Block::readFromXml(XMLDocument& i_xmlSource, TiXmlElement *pElem) {
+Block* Block::readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem) {
   
   Block *pBlock = new Block(XML::getOption(pElem, "id"));
   pBlock->setTexture("default");
         
-  TiXmlElement *pUseTextureElem = XML::findElement(i_xmlSource, pElem,std::string("usetexture"));
-  TiXmlElement *pPositionElem   = XML::findElement(i_xmlSource, pElem,std::string("position"));                
-  TiXmlElement *pPhysicsElem    = XML::findElement(i_xmlSource, pElem,std::string("physics"));          
+  TiXmlElement *pUseTextureElem = XML::findElement(*i_xmlSource, pElem,std::string("usetexture"));
+  TiXmlElement *pPositionElem   = XML::findElement(*i_xmlSource, pElem,std::string("position"));                
+  TiXmlElement *pPhysicsElem    = XML::findElement(*i_xmlSource, pElem,std::string("physics"));          
         
   if(pUseTextureElem != NULL) {
     pBlock->setTexture(XML::getOption(pUseTextureElem,"id", "default"));

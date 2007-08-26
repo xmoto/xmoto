@@ -21,10 +21,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* 
  *  Simple 2D drawing library, built closely on top of OpenGL.
  */
-#include "VDraw.h"
+#include "DrawLibOpenGL.h"
 #include "helpers/utf8.h"
 #include "xmscene/Camera.h"
 #include "helpers/Log.h"
+#include "Image.h"
+#include "VFileIO.h"
+#include "VTexture.h"
 
 #define UTF8_INTERLINE_SPACE 2
 #define UTF8_INTERCHAR_SPACE 0
@@ -45,17 +48,17 @@ class GLFontGlyph : public FontGlyph {
   virtual ~GLFontGlyph();
 
   std::string Value() const;
-  int drawWidth()     const;
-  int drawHeight()    const;
-  int realWidth()     const;
-  int realHeight()    const;
-  int firstLineDrawHeight() const;
+  unsigned int drawWidth()     const;
+  unsigned int drawHeight()    const;
+  unsigned int realWidth()     const;
+  unsigned int realHeight()    const;
+  unsigned int firstLineDrawHeight() const;
 
  protected:
   std::string m_value;
-  int m_drawWidth, m_drawHeight;
-  int m_realWidth, m_realHeight;
-  int m_firstLineDrawHeight;
+  unsigned int m_drawWidth, m_drawHeight;
+  unsigned int m_realWidth, m_realHeight;
+  unsigned int m_firstLineDrawHeight;
 
   static int powerOf2(int i_value);
 };
@@ -73,14 +76,14 @@ class GLFontGlyphLetter : public GLFontGlyph {
 
 class GLFontManager : public FontManager {
  public:
-  GLFontManager(DrawLib* i_drawLib, const std::string &i_fontFile, int i_fontSize);
+  GLFontManager(DrawLib* i_drawLib, const std::string &i_fontFile, unsigned int i_fontSize);
   virtual ~GLFontManager();
 
   FontGlyph* getGlyph(const std::string& i_string);
   void printString(FontGlyph* i_glyph, int i_x, int i_y, Color i_color);
   void printStringGrad(FontGlyph* i_glyph, int i_x, int i_y,
 		       Color c1, Color c2, Color c3, Color c4);
-  virtual int nbGlyphsInMemory();
+  virtual unsigned int nbGlyphsInMemory();
 
  private:
   std::vector<GLFontGlyph*> m_glyphsList;
@@ -132,7 +135,7 @@ class GLFontManager : public FontManager {
     *y = m_nActualHeight - (*y);
   }
 
-  void DrawLibOpenGL::setClipRect(int x , int y , int w , int h){
+  void DrawLibOpenGL::setClipRect(int x , int y , unsigned int w , unsigned int h){
     glScissor(x,m_nDispHeight - (y+h),w,h);
     
     m_nLScissorX = x;
@@ -175,7 +178,7 @@ class GLFontManager : public FontManager {
     glLineWidth(width);
   }
  
-  void DrawLibOpenGL::init(int nDispWidth,int nDispHeight,int nDispBPP,bool bWindowed,Theme * ptheme){
+  void DrawLibOpenGL::init(unsigned int nDispWidth,unsigned int nDispHeight,unsigned int nDispBPP,bool bWindowed,Theme * ptheme){
 
     
     /* Set suggestions */
@@ -420,9 +423,9 @@ class GLFontManager : public FontManager {
     glReadBuffer(GL_FRONT);
 
     /* Read the pixels (reversed) */
-    for(int i=0;i<m_nDispHeight;i++) {          
+    for(unsigned int i=0;i<m_nDispHeight;i++) {          
       glReadPixels(0,i,m_nDispWidth,1,GL_RGB,GL_UNSIGNED_BYTE,pcTemp);
-      for(int j=0;j<m_nDispWidth;j++) {
+      for(unsigned int j=0;j<m_nDispWidth;j++) {
         pPixels[(m_nDispHeight - i - 1)*m_nDispWidth + j] = MAKE_COLOR(
           pcTemp[j*3],pcTemp[j*3+1],pcTemp[j*3+2],255
         );
@@ -524,7 +527,7 @@ void DrawLibOpenGL::removePropertiesAfterEnd() {
           SDL_GL_SwapBuffers();
       }
 
-  FontManager* DrawLibOpenGL::getFontManager(const std::string &i_fontFile, int i_fontSize) {
+  FontManager* DrawLibOpenGL::getFontManager(const std::string &i_fontFile, unsigned int i_fontSize) {
     return new GLFontManager(this, i_fontFile, i_fontSize);
   }
 
@@ -540,7 +543,10 @@ GLFontGlyphLetter::GLFontGlyphLetter(const std::string& i_value, TTF_Font* i_ttf
     throw Exception("GLFontGlyphLetter: " + std::string(TTF_GetError()));
   }
 
-  TTF_SizeUTF8(i_ttf, i_value.c_str(), &m_realWidth, &m_realHeight);
+  int v_realWidth, v_realHeight;
+  TTF_SizeUTF8(i_ttf, i_value.c_str(), &v_realWidth, &v_realHeight);
+  m_realWidth = (unsigned int) v_realWidth;
+  m_realHeight = (unsigned int) v_realHeight;
 
   m_drawWidth  = powerOf2(m_realWidth);
   m_drawHeight = powerOf2(m_realHeight);
@@ -658,33 +664,33 @@ std::string GLFontGlyph::Value() const {
   return m_value;
 }
 
-int GLFontGlyph::drawWidth() const {
+unsigned int GLFontGlyph::drawWidth() const {
   return m_drawWidth;
 }
 
-int GLFontGlyph::drawHeight() const {
+unsigned int GLFontGlyph::drawHeight() const {
   return m_drawHeight;
 }
 
-int GLFontGlyph::realWidth() const {
+unsigned int GLFontGlyph::realWidth() const {
   return m_realWidth;
 }
 
-int GLFontGlyph::realHeight() const {
+unsigned int GLFontGlyph::realHeight() const {
   return m_realHeight;
 }
 
-int GLFontGlyph::firstLineDrawHeight() const {
+unsigned int GLFontGlyph::firstLineDrawHeight() const {
   return m_firstLineDrawHeight;
 }
 
 
 
-GLFontManager::GLFontManager(DrawLib* i_drawLib, const std::string &i_fontFile, int i_fontSize)
+GLFontManager::GLFontManager(DrawLib* i_drawLib, const std::string &i_fontFile, unsigned int i_fontSize)
   : FontManager(i_drawLib, i_fontFile, i_fontSize) {
 }
 
-int GLFontManager::nbGlyphsInMemory() {
+unsigned int GLFontManager::nbGlyphsInMemory() {
   return m_glyphsLettersList.size();
 }
 

@@ -21,7 +21,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* 
  *  Handling of textures.
  */
-#include "Game.h"
 #include "VTexture.h"
 #include "Image.h"
 #include "VFileIO.h"
@@ -44,7 +43,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     pTexture->nHeight = nHeight;
     pTexture->Tag = "";
     pTexture->isAlpha = bAlpha;
+
+
+#ifdef ENABLE_OPENGL
+    pTexture->pcData = NULL;
+#endif
+
+#ifdef ENABLE_SDLGFX
     pTexture->pcData = pcData;
+#endif
+
 #ifdef ENABLE_OPENGL
     pTexture->nID = 0;
 #endif
@@ -134,7 +142,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   
     /* Do it captain */
     m_Textures.push_back( pTexture );
-    
+
     return pTexture;
   }
   
@@ -145,17 +153,19 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     if(pTexture != NULL) {
       for(unsigned int i=0;i<m_Textures.size();i++) {
         if(m_Textures[i] == pTexture) {
+#ifdef ENABLE_SDLGFX
 	  SDL_FreeSurface(pTexture->surface);
+#endif
 #ifdef ENABLE_OPENGL
           glDeleteTextures(1,(GLuint *)&pTexture->nID);
 #endif
       
-	  //#ifdef ENABLE_SDLGFX
 	  //keesj:todo when using SDL surface we cannot delete the image data
 	  //this is a problem.
 	  //delete [] pc; => it's why i keep pTexture->pcData
+#ifdef ENABLE_SDLGFX
 	  delete [] pTexture->pcData;
-	  //#endif
+#endif
           m_nTexSpaceUsage -= pTexture->nSize;
           delete pTexture;
           m_Textures.erase(m_Textures.begin() + i);
@@ -219,6 +229,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       }
       
       pTexture = createTexture(TexName,pc,TextureImage.getWidth(),TextureImage.getHeight(),bAlpha,bClamp, eFilterMode);
+#ifdef ENABLE_OPENGL
+      delete pc;
+#endif
     }
     else {
       Logger::Log("** Warning ** : TextureManager::loadTexture() : texture '%s' not found or invalid",Path.c_str());

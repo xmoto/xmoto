@@ -26,7 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Scene.h"
 #include "Renderer.h"
 #include "GameText.h"
-#include "VDraw.h"
+#include "drawlib/DrawLib.h"
 #include "Game.h"
 
   /*===========================================================================
@@ -97,7 +97,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_pNewHighscoreSave_str->showWindow(false);
 
     /* Overlays? */
-    m_Overlay.init(getParent(),512,512);
+    m_Overlay.init(getParent()->getDrawLib(),512,512);
 
     m_nParticlesRendered = 0;
 

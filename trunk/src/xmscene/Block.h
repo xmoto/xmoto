@@ -24,14 +24,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class CollisionSystem;
 class Line;
 
-#include "../helpers/VMath.h"
-#include "../helpers/Color.h"
-#include "../BSP.h"
-
-#define XM_DEFAULT_BLOCK_TEXTURE "default"
-#define XM_DEFAULT_PHYS_BLOCK_GRIP 20
+#include "helpers/VMath.h"
+#include "helpers/Color.h"
 
 class FileHandle;
+class XMLDocument;
+class TiXmlElement;
+class BSPPoly;
 class Block;
 
 /*===========================================================================
@@ -158,7 +157,7 @@ class Block {
 
   void saveXml(FileHandle *i_pfh);
   void saveBinary(FileHandle *i_pfh);
-  static Block* readFromXml(XMLDocument& i_xmlSource, TiXmlElement *pElem);
+  static Block* readFromXml(XMLDocument* i_xmlSource, TiXmlElement *pElem);
   static Block* readFromBinary(FileHandle *i_pfh);
   AABB& getAABB();
   std::vector<Line *>& getCollisionLines() {return m_collisionLines;}
@@ -214,7 +213,7 @@ private:
   Vector2f m_dynamicPosition; /* Block position */
   std::vector<Line *> m_collisionLines; /* Line to collide against */
 
-  void addPoly(const BSPPoly& i_poly, CollisionSystem& io_collisionSystem);
+  void addPoly(const BSPPoly* i_poly, CollisionSystem& io_collisionSystem);
   void updateCollisionLines();
 };
 

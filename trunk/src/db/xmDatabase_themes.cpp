@@ -58,7 +58,7 @@ void xmDatabase::themes_delete(const std::string& i_id_theme) {
 
 bool xmDatabase::themes_exists(const std::string& i_id_theme) {
   char **v_result;
-  int nrow;
+  unsigned int nrow;
 
   v_result = readDB("SELECT id_theme FROM themes WHERE id_theme=\"" + protectString(i_id_theme) + "\";",
 		    nrow);
@@ -68,7 +68,7 @@ bool xmDatabase::themes_exists(const std::string& i_id_theme) {
 
 std::string xmDatabase::themes_getFileName(const std::string& i_id_theme) {
   char **v_result;
-  int nrow;
+  unsigned int nrow;
   std::string v_res;
 
   v_result = readDB("SELECT filepath FROM themes WHERE id_theme=\"" + protectString(i_id_theme) + "\";",

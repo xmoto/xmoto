@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../Replay.h"
 #include "../GameText.h"
 #include "../Game.h"
+#include "../GameEvents.h"
 
 Ghost::Ghost(std::string i_replayFile, bool i_isActiv,
 	     Theme *i_theme, BikerTheme* i_bikerTheme,
@@ -112,7 +113,7 @@ void Ghost::initLastToTakeEntities(Level* i_level) {
     MotoGameEvent *v_event = (*v_replayEvents)[i]->Event;
       
     if(v_event->getType() == GAME_EVENT_ENTITY_DESTROYED) {
-      if(i_level->getEntityById(((MGE_EntityDestroyed*)v_event)->EntityId()).IsToTake()) {
+      if(i_level->getEntityById(((MGE_EntityDestroyed*)v_event)->EntityId())->IsToTake()) {
 	/* new Strawberry for ghost */
 	m_lastToTakeEntities.push_back((*v_replayEvents)[i]->Event->getEventTime());
       }

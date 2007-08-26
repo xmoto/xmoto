@@ -21,6 +21,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "ScriptDynamicObjects.h"
 #include "xmscene/Scene.h"
 #include "math.h"
+#include "xmscene/Level.h"
+#include "xmscene/Entity.h"
+#include "xmscene/Block.h"
 
 SDynamicObject::SDynamicObject(int p_startTime, int p_endTime, float pPeriod) {
   m_time = 0;
@@ -177,7 +180,7 @@ SDynamicEntityMove::~SDynamicEntityMove() {
 }
 
 void SDynamicEntityMove::performMove(MotoGame* v_motoGame, int i_nbCents) {
-  Entity* p = &(v_motoGame->getLevelSrc()->getEntityById(m_entity));
+  Entity* p = v_motoGame->getLevelSrc()->getEntityById(m_entity);
   if(! p->isAlive()){
     return;
   }
@@ -240,7 +243,7 @@ SDynamicBlockMove::~SDynamicBlockMove() {
 }
 
 void SDynamicBlockMove::performMove(MotoGame* v_motoGame, int i_nbCents) {
-  Block *p = &(v_motoGame->getLevelSrc()->getBlockById(m_block));
+  Block *p = v_motoGame->getLevelSrc()->getBlockById(m_block);
   float vx, vy, vAngle;
   float addvx = 0.0, addvy = 0.0, addvAngle = 0.0;
 

@@ -18,8 +18,9 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#include "xmscene/Level.h"
 #include "xmDatabase.h"
+#include "xmscene/Level.h"
+#include "VXml.h"
 
 void xmDatabase::levels_add_begin(bool i_isToReload) {
   simpleSql("BEGIN TRANSACTION;");

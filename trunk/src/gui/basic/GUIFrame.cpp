@@ -139,7 +139,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       if(!isActive() && !m_bMinimized) {
         /* No longer active, minimize */
         m_bMinimized = true;
-        m_fMinMaxTime = getApp()->getTime();
+        m_fMinMaxTime = getApp()->getXMTime();
       }    
 
       int nTargetX,nTargetY;
@@ -172,7 +172,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       }
       
       /* If this takes too long, just set the position */
-      if(getApp()->getTime() - m_fMinMaxTime > 1.0f) {
+      if(getApp()->getXMTime() - m_fMinMaxTime > 1.0f) {
         setPosition(nTargetX,nTargetY,getPosition().nWidth,getPosition().nHeight);
       }
     }  
@@ -185,7 +185,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   ===========================================================================*/
   void UIFrame::mouseLDown(int x,int y) {
     m_bMinimized = !m_bMinimized;    
-    m_fMinMaxTime = getApp()->getTime();
+    m_fMinMaxTime = getApp()->getXMTime();
     
     if(!m_bMinimized) {
       makeActive();

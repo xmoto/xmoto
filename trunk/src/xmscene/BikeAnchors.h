@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class BikeAnchors {
   public:
   Vector2f GroundPoint() const;
-  void update(const BikeParameters &i_bikeParameters);
+  void update(BikeParameters* i_bikeParameters);
 
   //  private:
   Vector2f Tp;          /* Point on the ground, exactly between the wheels */

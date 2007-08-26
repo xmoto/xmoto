@@ -21,23 +21,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __MOTOGAME_H__
 #define __MOTOGAME_H__
 
-#define MOTOGAME_DEFAULT_GAME_MESSAGE_DURATION 5.0
-
-#include "../VCommon.h"
-#include "../helpers/VMath.h"
-#include "Level.h"
-#include "../BSP.h"
-#include "../DBuffer.h"
-#include "../Collision.h"
-#include "../ScriptDynamicObjects.h"
-#include "../SomersaultCounter.h"
-#include "../GameEvents.h"
-
+#include "helpers/VMath.h"
+#include "Collision.h"
+#include "helpers/Color.h"
 #include "BasicSceneStructs.h"
-#include "BikeParameters.h"
-#include "BikeAnchors.h"
 #include "Bike.h"
-#include "Camera.h"
+
+#define MOTOGAME_DEFAULT_GAME_MESSAGE_DURATION 5.0
 
 class Level;
 class BikeState;
@@ -48,12 +38,21 @@ class MotoGameOnBikerHooks;
 class LuaLibGame;
 class xmDatabase;
 class Camera;
+class Entity;
+class MotoGameEvent;
+class Replay;
+class GameRenderer;
+class CollisionSystem;
+class InputHandler;
+class SerializedBikeState;
+class DBuffer;
+class RecordedGameEvent;
+class Zone;
+class SDynamicObject;
+class Theme;
+class BikerTheme;
+class Biker;
 
-  class MotoGameEvent;
-  class Replay;
-  class GameRenderer;
-  class CollisionSystem;
-  class InputHandler;
 
   /*===========================================================================
   Serialized bike state
@@ -100,6 +99,7 @@ class Camera;
 
   class MotoGameHooks {
   public:
+    virtual ~MotoGameHooks() {};
     virtual void OnTakeEntity() = 0;
   };
 
@@ -311,7 +311,7 @@ class Camera;
       void cleanScriptDynamicObjects();
       void nextStateScriptDynamicObjects(int i_nbCents);
 
-      void _SerializeGameEventQueue(DBuffer &Buffer,MotoGameEvent *pEvent);      
+      void _SerializeGameEventQueue(DBuffer* Buffer,MotoGameEvent *pEvent);      
       void _UpdateDynamicCollisionLines(void);
       
     };
