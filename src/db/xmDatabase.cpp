@@ -92,7 +92,7 @@ void xmDatabase::sqlTrace(void* arg1, const char* sql) {
 
 std::string xmDatabase::getXmDbGameDir() {
   char **v_result;
-  int nrow;
+  unsigned int nrow;
   std::string v_dir;
 
   v_result = readDB("SELECT value FROM xm_parameters WHERE param=\"gameDir\";", nrow);
@@ -109,7 +109,7 @@ std::string xmDatabase::getXmDbGameDir() {
 
 std::string xmDatabase::getXmDbUserDir() {
   char **v_result;
-  int nrow;
+  unsigned int nrow;
   std::string v_dir;
 
   v_result = readDB("SELECT value FROM xm_parameters WHERE param=\"userDir\";", nrow);
@@ -126,7 +126,7 @@ std::string xmDatabase::getXmDbUserDir() {
 
 void xmDatabase::setXmDbGameDir(const std::string& i_gameDir) {
   char **v_result;
-  int nrow;
+  unsigned int nrow;
 
   v_result = readDB("SELECT value FROM xm_parameters WHERE param=\"gameDir\";", nrow);
   read_DB_free(v_result);
@@ -142,7 +142,7 @@ void xmDatabase::setXmDbGameDir(const std::string& i_gameDir) {
 
 void xmDatabase::setXmDbUserDir(const std::string& i_userDir) {
   char **v_result;
-  int nrow;
+  unsigned int nrow;
 
   v_result = readDB("SELECT value FROM xm_parameters WHERE param=\"userDir\";", nrow);
   read_DB_free(v_result);
@@ -158,7 +158,7 @@ void xmDatabase::setXmDbUserDir(const std::string& i_userDir) {
 
 std::string xmDatabase::getXmDbBinPackCheckSum() {
   char **v_result;
-  int nrow;
+  unsigned int nrow;
   std::string v_dir;
 
   v_result = readDB("SELECT value FROM xm_parameters WHERE param=\"binPackCkSum\";", nrow);
@@ -175,7 +175,7 @@ std::string xmDatabase::getXmDbBinPackCheckSum() {
 
 void xmDatabase::setXmDbBinPackCheckSum(const std::string& i_binPackChecksum) {
   char **v_result;
-  int nrow;
+  unsigned int nrow;
 
   v_result = readDB("SELECT value FROM xm_parameters WHERE param=\"binPackCkSum\";", nrow);
   read_DB_free(v_result);
@@ -191,7 +191,8 @@ void xmDatabase::setXmDbBinPackCheckSum(const std::string& i_binPackChecksum) {
 
 int xmDatabase::getXmDbVersion() {
   char **v_result;
-  int nrow, ncolumn;
+  int nrow;
+  int ncolumn;
   char *errMsg;
   std::string v_errMsg;
   int v_version;
@@ -430,32 +431,35 @@ void xmDatabase::simpleSql(const std::string& i_sql) {
   }
 }
 
-void xmDatabase::debugResult(char **i_result, int ncolumn, int nrow) {
+void xmDatabase::debugResult(char **i_result, int ncolumn, unsigned int nrow) {
   for(int i=0; i<ncolumn*(nrow+1); i++) {
     printf("result[%i] = %s\n", i, i_result[i]);
   }
 }
 
-char* xmDatabase::getResult(char **i_result, int ncolumn, int i_row, int i_column) {
+char* xmDatabase::getResult(char **i_result, int ncolumn, unsigned int i_row, int i_column) {
   return i_result[ncolumn*(i_row+1) + i_column];
 }
 
-char** xmDatabase::readDB(const std::string& i_sql, int &i_nrow) {
+char** xmDatabase::readDB(const std::string& i_sql, unsigned int &i_nrow) {
   char **v_result;
   int ncolumn;
   char *errMsg;
   std::string v_errMsg;
-  
+  int v_nrow;
+
   //printf("%s\n", i_sql.c_str());
 
   if(sqlite3_get_table(m_db,
 		       i_sql.c_str(),
-		       &v_result, &i_nrow, &ncolumn, &errMsg)
+		       &v_result, &v_nrow, &ncolumn, &errMsg)
      != SQLITE_OK) {
     v_errMsg = errMsg;
     sqlite3_free(errMsg);
     throw Exception("xmDb: " + v_errMsg);
   }
+  i_nrow = (unsigned int) v_nrow;
+
   return v_result;
 }
 

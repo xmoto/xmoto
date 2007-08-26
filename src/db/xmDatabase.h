@@ -43,10 +43,10 @@ class xmDatabase {
      all write access must be done from class xmDatabase
      read can be done from anywhere using readDB;
   */
-  char **readDB(const std::string& i_sql, int &i_nrow);
+  char **readDB(const std::string& i_sql, unsigned int &i_nrow);
   void read_DB_free(char **i_result);
-  char* getResult(char **i_result, int ncolumn, int i_row, int i_column);
-  void debugResult(char **i_result, int ncolumn, int nrow);
+  char* getResult(char **i_result, int ncolumn, unsigned int i_row, int i_column);
+  void debugResult(char **i_result, int ncolumn, unsigned int nrow);
   static std::string protectString(const std::string& i_str);
   static void setTrace(bool i_value);
 

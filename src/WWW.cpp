@@ -647,7 +647,7 @@ int FSWeb::f_curl_progress_callback_download(void *clientp,
 
 int WebLevels::nbLevelsToGet(xmDatabase *i_db) const {
   char **v_result;
-  int nrow;
+  unsigned int nrow;
   v_result = i_db->readDB("SELECT a.name FROM weblevels AS a "
 			  "LEFT OUTER JOIN levels AS b ON a.id_level=b.id_level "
 			  "WHERE b.id_level IS NULL OR a.checkSum <> b.checkSum;",
@@ -658,7 +658,7 @@ int WebLevels::nbLevelsToGet(xmDatabase *i_db) const {
 
 void WebLevels::upgrade(xmDatabase *i_db) {
   char **v_result;
-  int nrow;
+  unsigned int nrow;
   std::string v_levelId;
   std::string v_levelName;
   std::string v_urlFile;
@@ -784,7 +784,7 @@ void WebThemes::upgrade(xmDatabase *i_db, const std::string& i_id_theme) {
   std::string v_sourceFile;
   f_curl_download_data v_data;
   char **v_result;
-  int nrow;
+  unsigned int nrow;
   std::string v_fileUrl;
   std::string v_filePath;
   std::string v_themeFile;

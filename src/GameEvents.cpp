@@ -20,6 +20,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "GameEvents.h"
 #include "helpers/SwapEndian.h"
+#include "DBuffer.h"
+#include "xmscene/Level.h"
+#include "ScriptDynamicObjects.h"
 
   MotoGameEvent::MotoGameEvent(float p_fEventTime) {
     m_fEventTime = p_fEventTime;

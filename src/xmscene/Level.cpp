@@ -25,12 +25,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
 #include "Level.h"
-#include "../VFileIO.h"
-#include "../XMBuild.h"
-#include "../VXml.h"
-#include "../helpers/Color.h"
-#include "../helpers/Log.h"
-#include "../db/xmDatabase.h";
+#include "VFileIO.h"
+#include "XMBuild.h"
+#include "VXml.h"
+#include "helpers/Color.h"
+#include "helpers/Log.h"
+#include "db/xmDatabase.h"
+#include "Block.h"
+#include "Entity.h"
+#include "Zone.h"
+#include "SkyApparence.h"
+#include "Collision.h"
+#include "Scene.h"
 
 #define CACHE_LEVEL_FORMAT_VERSION 18
 
@@ -45,11 +51,13 @@ Level::Level() {
   m_borderTexture = "";
   m_numberLayer   = 0;
   m_isScripted    = false;
+  m_sky = new SkyApparence();
 }
 
 Level::~Level() {
   unloadToPlay();
   unloadLevelBody();
+  delete m_sky;
 }
 
 std::string Level::Id() const {
@@ -135,47 +143,47 @@ bool Level::isScripted() const {
   return m_isScripted;
 }
 
-Block& Level::getBlockById(const std::string& i_id) {
+Block* Level::getBlockById(const std::string& i_id) {
   for(unsigned int i=0; i<m_blocks.size(); i++) {
     if(m_blocks[i]->Id() == i_id) {
-      return *(m_blocks[i]);
+      return m_blocks[i];
     }
   }
   throw Exception("Block '" + i_id + "'" + " doesn't exist");
 }
 
-Entity& Level::getEntityById(const std::string& i_id) {
+Entity* Level::getEntityById(const std::string& i_id) {
   for(unsigned int i=0; i<m_entities.size(); i++) {
     if(m_entities[i]->Id() == i_id) {
-      return *(m_entities[i]);
+      return m_entities[i];
     }
   }
   for(unsigned int i=0; i<m_entitiesDestroyed.size(); i++) {
     if(m_entitiesDestroyed[i]->Id() == i_id) {
-      return *(m_entitiesDestroyed[i]);
+      return m_entitiesDestroyed[i];
     }
   }
   for(unsigned int i=0; i<m_entitiesExterns.size(); i++) {
     if(m_entitiesExterns[i]->Id() == i_id) {
-      return *(m_entitiesExterns[i]);
+      return m_entitiesExterns[i];
     }
   }
   throw Exception("Entity '" + i_id + "'" + " doesn't exist");
 }
  
-Zone& Level::getZoneById(const std::string& i_id) {
+Zone* Level::getZoneById(const std::string& i_id) {
   for(unsigned int i=0; i<m_zones.size(); i++) {
     if(m_zones[i]->Id() == i_id) {
-      return *(m_zones[i]);
+      return m_zones[i];
     }
   }
   throw Exception("Zone '" + i_id + "'" + " doesn't exist");
 }
 
-Entity& Level::getStartEntity() {
+Entity* Level::getStartEntity() {
   for(unsigned int i=0; i<m_entities.size(); i++) {
     if(m_entities[i]->SpriteName() == "PlayerStart") {
-      return *(m_entities[i]);
+      return m_entities[i];
     }
   }
   throw Exception("No start found");
@@ -225,7 +233,7 @@ std::vector<Zone *> &Level::Zones() {
   return m_zones;
 }
 
-const SkyApparence& Level::Sky() const {
+const SkyApparence* Level::Sky() const {
   return m_sky;
 }
 
@@ -315,31 +323,31 @@ void Level::saveXML(void) {
   FS::writeLineF(pfh,"\t\t<description>%s</description>",m_description.c_str());
   FS::writeLineF(pfh,"\t\t<author>%s</author>",m_author.c_str());
   FS::writeLineF(pfh,"\t\t<date>%s</date>",m_date.c_str());
-  if(m_sky.Drifted()) {
+  if(m_sky->Drifted()) {
     FS::writeLineF(pfh,
 			 "\t\t<sky zoom=\"%f\" offset=\"%f\" color_r=\"%i\" color_g=\"%i\" color_b=\"%i\" color_a=\"%i\" drifted=\"true\" driftZoom=\"%f\" driftColor_r=\"%i\" driftColor_g=\"%i\" driftColor_b=\"%i\" driftColor_a=\"%i\">%s</sky>",
-			 m_sky.Zoom(),
-			 m_sky.Offset(),
-			 m_sky.TextureColor().Red(),
-			 m_sky.TextureColor().Green(),
-			 m_sky.TextureColor().Blue(),
-			 m_sky.TextureColor().Alpha(),
-			 m_sky.DriftZoom(),
-			 m_sky.DriftTextureColor().Red(),
-			 m_sky.DriftTextureColor().Green(),
-			 m_sky.DriftTextureColor().Blue(),
-			 m_sky.DriftTextureColor().Alpha(),
-			 m_sky.Texture().c_str());
+			 m_sky->Zoom(),
+			 m_sky->Offset(),
+			 m_sky->TextureColor().Red(),
+			 m_sky->TextureColor().Green(),
+			 m_sky->TextureColor().Blue(),
+			 m_sky->TextureColor().Alpha(),
+			 m_sky->DriftZoom(),
+			 m_sky->DriftTextureColor().Red(),
+			 m_sky->DriftTextureColor().Green(),
+			 m_sky->DriftTextureColor().Blue(),
+			 m_sky->DriftTextureColor().Alpha(),
+			 m_sky->Texture().c_str());
   } else {
     FS::writeLineF(pfh,
 			 "\t\t<sky zoom=\"%f\" offset=\"%f\" color_r=\"%i\" color_g=\"%i\" color_b=\"%i\" color_a=\"%i\">%s</sky>",
-			 m_sky.Zoom(),
-			 m_sky.Offset(),
-			 m_sky.TextureColor().Red(),
-			 m_sky.TextureColor().Green(),
-			 m_sky.TextureColor().Blue(),
-			 m_sky.TextureColor().Alpha(),
-			 m_sky.Texture().c_str());
+			 m_sky->Zoom(),
+			 m_sky->Offset(),
+			 m_sky->TextureColor().Red(),
+			 m_sky->TextureColor().Green(),
+			 m_sky->TextureColor().Blue(),
+			 m_sky->TextureColor().Alpha(),
+			 m_sky->Texture().c_str());
   }
   FS::writeLineF(pfh,"\t\t<border texture=\"%s\" />",m_borderTexture.c_str());
   FS::writeLineF(pfh,"\t\t<music name=\"%s\" />", m_music.c_str());
@@ -493,7 +501,7 @@ void Level::loadXML(void) {
   
   m_isScripted = false;
 
-  m_sky.reInit();
+  m_sky->reInit();
 
   if(!m_xmotoTooOld) {    
     /* Get level pack */
@@ -521,7 +529,7 @@ void Level::loadXML(void) {
       
       /* Sky */
       Tmp = XML::getElementText(*m_xmlSource, pInfoElem,"sky");
-      if(Tmp != "") m_sky.setTexture(Tmp);
+      if(Tmp != "") m_sky->setTexture(Tmp);
 
       /* advanced sky parameters ? */
       bool v_useAdvancedOptions = false;
@@ -530,12 +538,12 @@ void Level::loadXML(void) {
       if(pSkyElem != NULL) {
 	v_skyValue = XML::getOption(pSkyElem, "zoom");
 	if(v_skyValue != "") {
-	  m_sky.setZoom(atof(v_skyValue.c_str()));
+	  m_sky->setZoom(atof(v_skyValue.c_str()));
 	  v_useAdvancedOptions = true;
 	}
 	v_skyValue = XML::getOption(pSkyElem, "offset");
 	if(v_skyValue != "") {
-	  m_sky.setOffset(atof(v_skyValue.c_str()));
+	  m_sky->setOffset(atof(v_skyValue.c_str()));
 	  v_useAdvancedOptions = true;
 	}
 
@@ -553,17 +561,17 @@ void Level::loadXML(void) {
 	  if(v_g == -1) v_g = 0;
 	  if(v_b == -1) v_b = 0;
 	  if(v_a == -1) v_a = 0;
-	  m_sky.setTextureColor(TColor(v_r, v_g, v_b, v_a));
+	  m_sky->setTextureColor(TColor(v_r, v_g, v_b, v_a));
 	  v_useAdvancedOptions = true;
 	}
 
 	v_skyValue = XML::getOption(pSkyElem, "drifted");
 	if(v_skyValue == "true") {
-	  m_sky.setDrifted(true);
+	  m_sky->setDrifted(true);
 	  v_useAdvancedOptions = true;
 
 	  v_skyValue = XML::getOption(pSkyElem, "driftZoom");
-	  if(v_skyValue != "") m_sky.setDriftZoom(atof(v_skyValue.c_str()));
+	  if(v_skyValue != "") m_sky->setDriftZoom(atof(v_skyValue.c_str()));
 
 	  int v_r = -1, v_g = -1, v_b = -1, v_a = -1;
 	  v_skyValue = XML::getOption(pSkyElem, "driftColor_r");
@@ -579,13 +587,13 @@ void Level::loadXML(void) {
 	    if(v_g == -1) v_g = 0;
 	    if(v_b == -1) v_b = 0;
 	    if(v_a == -1) v_a = 0;
-	    m_sky.setDriftTextureColor(TColor(v_r, v_g, v_b, v_a)); 
+	    m_sky->setDriftTextureColor(TColor(v_r, v_g, v_b, v_a)); 
 	  }
 	}
       }
       if(v_useAdvancedOptions == false) {
 	/* set old values in case no option is used */
-	m_sky.setOldXmotoValuesFromTextureName();
+	m_sky->setOldXmotoValuesFromTextureName();
       }
 
       /* Border */
@@ -694,7 +702,7 @@ void Level::loadXML(void) {
     }    
 
     try {
-      m_playerStart = getStartEntity().InitialPosition();
+      m_playerStart = getStartEntity()->InitialPosition();
     } catch(Exception &e) {
       Logger::Log("Warning : no player start entity for level %s", Id().c_str());
       m_playerStart = Vector2f(0.0, 0.0);
@@ -709,12 +717,12 @@ void Level::loadXML(void) {
     /* Get blocks */
     for(TiXmlElement *pElem = pLevelElem->FirstChildElement("block"); pElem!=NULL;
         pElem=pElem->NextSiblingElement("block")) {
-      m_blocks.push_back(Block::readFromXml(*m_xmlSource, pElem));
+      m_blocks.push_back(Block::readFromXml(m_xmlSource, pElem));
     }  
   }
 
   /* if blocks with layerid but level with no layer, throw an exception */
-  for(int i=0; i<m_blocks.size(); i++){
+  for(unsigned int i=0; i<m_blocks.size(); i++){
     int blockLayer = m_blocks[i]->getLayer();
     if(blockLayer != -1){
       if((getNumberLayer() == 0) || (blockLayer >= getNumberLayer())){
@@ -770,7 +778,7 @@ std::string Level::getNameInCache() const {
 
 void Level::removeFromCache(xmDatabase *i_db, const std::string& i_id_level) {
   char **v_result;
-  int nrow;
+  unsigned int nrow;
   v_result = i_db->readDB("SELECT checkSum, filepath FROM levels WHERE id_level=\"" +
 			  xmDatabase::protectString(i_id_level) + "\";",
 			  nrow);
@@ -801,19 +809,19 @@ void Level::exportBinary(const std::string &FileName, const std::string& pSum) {
   else {
     exportBinaryHeader(pfh);
 
-    FS::writeString(pfh,   m_sky.Texture());
-    FS::writeFloat_LE(pfh, m_sky.Zoom());
-    FS::writeFloat_LE(pfh, m_sky.Offset());
-    FS::writeInt_LE(pfh,   m_sky.TextureColor().Red());
-    FS::writeInt_LE(pfh,   m_sky.TextureColor().Green());
-    FS::writeInt_LE(pfh,   m_sky.TextureColor().Blue());
-    FS::writeInt_LE(pfh,   m_sky.TextureColor().Alpha());
-    FS::writeBool(pfh,     m_sky.Drifted());
-    FS::writeFloat_LE(pfh, m_sky.DriftZoom());
-    FS::writeInt_LE(pfh,   m_sky.DriftTextureColor().Red());
-    FS::writeInt_LE(pfh,   m_sky.DriftTextureColor().Green());
-    FS::writeInt_LE(pfh,   m_sky.DriftTextureColor().Blue());
-    FS::writeInt_LE(pfh,   m_sky.DriftTextureColor().Alpha());
+    FS::writeString(pfh,   m_sky->Texture());
+    FS::writeFloat_LE(pfh, m_sky->Zoom());
+    FS::writeFloat_LE(pfh, m_sky->Offset());
+    FS::writeInt_LE(pfh,   m_sky->TextureColor().Red());
+    FS::writeInt_LE(pfh,   m_sky->TextureColor().Green());
+    FS::writeInt_LE(pfh,   m_sky->TextureColor().Blue());
+    FS::writeInt_LE(pfh,   m_sky->TextureColor().Alpha());
+    FS::writeBool(pfh,     m_sky->Drifted());
+    FS::writeFloat_LE(pfh, m_sky->DriftZoom());
+    FS::writeInt_LE(pfh,   m_sky->DriftTextureColor().Red());
+    FS::writeInt_LE(pfh,   m_sky->DriftTextureColor().Green());
+    FS::writeInt_LE(pfh,   m_sky->DriftTextureColor().Blue());
+    FS::writeInt_LE(pfh,   m_sky->DriftTextureColor().Alpha());
 
     FS::writeString(pfh,m_borderTexture);
     FS::writeString(pfh,m_scriptFileName);
@@ -1013,25 +1021,25 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
 	m_isScripted = FS::readBool(pfh);
 
 	/* sky */
-        m_sky.setTexture(FS::readString(pfh));
-	m_sky.setZoom(FS::readFloat_LE(pfh));
-	m_sky.setOffset(FS::readFloat_LE(pfh));
+        m_sky->setTexture(FS::readString(pfh));
+	m_sky->setZoom(FS::readFloat_LE(pfh));
+	m_sky->setOffset(FS::readFloat_LE(pfh));
 
 	int v_r, v_g, v_b, v_a;
 	v_r = FS::readInt_LE(pfh);
 	v_g = FS::readInt_LE(pfh);
 	v_b = FS::readInt_LE(pfh);
 	v_a = FS::readInt_LE(pfh);
-	m_sky.setTextureColor(TColor(v_r, v_g, v_b, v_a));
+	m_sky->setTextureColor(TColor(v_r, v_g, v_b, v_a));
 
-	m_sky.setDrifted(FS::readBool(pfh));
-	m_sky.setDriftZoom(FS::readFloat_LE(pfh));
+	m_sky->setDrifted(FS::readBool(pfh));
+	m_sky->setDriftZoom(FS::readFloat_LE(pfh));
 
 	v_r = FS::readInt_LE(pfh);
 	v_g = FS::readInt_LE(pfh);
 	v_b = FS::readInt_LE(pfh);
 	v_a = FS::readInt_LE(pfh);
-	m_sky.setDriftTextureColor(TColor(v_r, v_g, v_b, v_a));
+	m_sky->setDriftTextureColor(TColor(v_r, v_g, v_b, v_a));
 	/* *** */
 
         m_borderTexture = FS::readString(pfh);
@@ -1089,7 +1097,7 @@ bool Level::importBinary(const std::string &FileName, const std::string& pSum) {
         }
 
 	try {
-	  m_playerStart = getStartEntity().InitialPosition();
+	  m_playerStart = getStartEntity()->InitialPosition();
 	} catch(Exception &e) {
 	  Logger::Log("Warning : no player start entity for level %s", Id().c_str());
 	  m_playerStart = Vector2f(0.0, 0.0);

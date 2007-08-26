@@ -23,7 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../../VFileIO.h"
 #include "../../Game.h"
 #include "../../LevelsManager.h"
-#include "../../VDraw.h"
+#include "drawlib/DrawLib.h"
 
 #define UIQUICKSTART_BORDER 25
 
@@ -83,7 +83,7 @@ void UILevelList::addLevel(const std::string& i_id_level,
   else v_name = "???";
 
   UIListEntry *pEntry = NULL;
-  pEntry = addEntry(i_prefix + v_name, reinterpret_cast<void *>(new String(i_id_level)));
+  pEntry = addEntry(i_prefix + v_name, reinterpret_cast<void *>(new std::string(i_id_level)));
   
   /* Add times to list entry */
   if(pEntry != NULL) {

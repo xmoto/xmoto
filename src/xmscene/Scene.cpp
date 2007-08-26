@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* 
  *  Game object. Handles all of the gamestate management und so weiter.
  */
+#include "GameText.h"
 #include "../Game.h"
 #include "Scene.h"
 #include "../VFileIO.h"
@@ -29,14 +30,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../PhysSettings.h"
 #include "../GameEvents.h"
 #include "Entity.h"
-#include "Bike.h"
 #include "BikeGhost.h"
 #include "BikePlayer.h"
-#include "../helpers/Log.h"
+#include "BikeParameters.h"
+#include "helpers/Log.h"
+#include "Camera.h"
+#include "Block.h"
+#include "Entity.h"
+#include "LuaLibGame.h"
+#include "ScriptDynamicObjects.h"
 
 #define REPLAY_SPEED_INCREMENT 0.25
-
-#include "LuaLibGame.h"
 
   MotoGame::MotoGame() {
     m_bDeathAnimEnabled=true;
@@ -65,7 +69,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
   void MotoGame::loadLevel(xmDatabase *i_db, const std::string& i_id_level) {
     char **v_result;
-    int nrow;
+    unsigned int nrow;
     bool bCached;
 
     m_pLevelSrc = new Level();
@@ -242,7 +246,7 @@ void MotoGame::cleanPlayers() {
 	if(m_players[i]->isWheelSpinning()) {
 	  if(randomNum(0,1) < 0.7f) {
 	    ParticlesSource *v_debris;
-	    v_debris = (ParticlesSource*) &(getLevelSrc()->getEntityById("BikeDebris"));
+	    v_debris = (ParticlesSource*) getLevelSrc()->getEntityById("BikeDebris");
 	    v_debris->setDynamicPosition(m_players[i]->getWheelSpinPoint());	
 	    v_debris->addParticle(m_players[i]->getWheelSpinDir(), getTime() + 3.0);
 	  }
@@ -283,7 +287,7 @@ void MotoGame::cleanPlayers() {
       MotoGameEvent *pEvent = getNextGameEvent();
       if(p_replay != NULL) {
 	/* Encode event */
-	_SerializeGameEventQueue(*p_replay, pEvent);
+	_SerializeGameEventQueue(p_replay, pEvent);
       }
       
       /* What event? */
@@ -691,17 +695,17 @@ void MotoGame::cleanPlayers() {
 	if(m_players[j]->isDead() == false) {
 
 	  /* Check it against the wheels and the head */
-	  if(pZone->doesCircleTouch(v_player->getState()->FrontWheelP, v_player->getState()->Parameters().WheelRadius()) ||
-	     pZone->doesCircleTouch(v_player->getState()->RearWheelP,  v_player->getState()->Parameters().WheelRadius()) ||
-	     pZone->doesCircleTouch(v_player->getState()->HeadP, v_player->getState()->Parameters().HeadSize())) {       
+	  if(pZone->doesCircleTouch(v_player->getState()->FrontWheelP, v_player->getState()->Parameters()->WheelRadius()) ||
+	     pZone->doesCircleTouch(v_player->getState()->RearWheelP,  v_player->getState()->Parameters()->WheelRadius()) ||
+	     pZone->doesCircleTouch(v_player->getState()->HeadP, v_player->getState()->Parameters()->HeadSize())) {       
 	    /* In the zone -- did he just enter it? */
-	    if(v_player->setTouching(*pZone, true) == PlayerBiker::added){
+	    if(v_player->setTouching(pZone, true) == PlayerBiker::added){
 	      createGameEvent(new MGE_PlayerEntersZone(getTime(), pZone, j));
 	    }
 	  } else {
 	    /* Not in the zone... but was he during last update? - i.e. has 
 	       he just left it? */      
-	    if(v_player->setTouching(*pZone, false) == PlayerBiker::removed){
+	    if(v_player->setTouching(pZone, false) == PlayerBiker::removed){
 	      createGameEvent(new MGE_PlayerLeavesZone(getTime(), pZone, j));
 	    }
 	  }
@@ -720,8 +724,8 @@ void MotoGame::cleanPlayers() {
 	
 	/* Get biker bounding box */
 	AABB BBox;
-	float headSize = v_player->getState()->Parameters().HeadSize();
-	float wheelRadius = v_player->getState()->Parameters().WheelRadius();
+	float headSize = v_player->getState()->Parameters()->HeadSize();
+	float wheelRadius = v_player->getState()->Parameters()->WheelRadius();
 	/* in case the body is outside of the aabb */
 	float securityMargin = 0.5;
 	
@@ -749,8 +753,8 @@ void MotoGame::cleanPlayers() {
 	    if(circleTouchCircle2f(entities[i]->DynamicPosition(),
 				   entities[i]->Size(),
 				   HeadPos,
-				   v_player->getState()->Parameters().HeadSize())) {
-	      if(v_player->setTouching(*(entities[i]), true) == PlayerBiker::added){
+				   v_player->getState()->Parameters()->HeadSize())) {
+	      if(v_player->setTouching(entities[i], true) == PlayerBiker::added){
 		createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
 							    entities[i]->Id(),
 							    true, j));
@@ -760,12 +764,12 @@ void MotoGame::cleanPlayers() {
 	    } else if(circleTouchCircle2f(entities[i]->DynamicPosition(),
 					  entities[i]->Size(),
 					  v_player->getState()->FrontWheelP,
-					  v_player->getState()->Parameters().WheelRadius()) ||
+					  v_player->getState()->Parameters()->WheelRadius()) ||
 		      circleTouchCircle2f(entities[i]->DynamicPosition(),
 					  entities[i]->Size(),
 					  v_player->getState()->RearWheelP,
-					  v_player->getState()->Parameters().WheelRadius())) {
-	      if(v_player->setTouching(*(entities[i]), true) == PlayerBiker::added){
+					  v_player->getState()->Parameters()->WheelRadius())) {
+	      if(v_player->setTouching(entities[i], true) == PlayerBiker::added){
 		createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
 							    entities[i]->Id(),
 							    false, j));
@@ -773,18 +777,18 @@ void MotoGame::cleanPlayers() {
 	      
 	      /* body then ?*/
 	    } else if(touchEntityBodyExceptHead(*(v_player->getState()), *(entities[i]))) {
-	      if(v_player->setTouching(*(entities[i]), true) == PlayerBiker::added){
+	      if(v_player->setTouching(entities[i], true) == PlayerBiker::added){
 		createGameEvent(new MGE_PlayerTouchesEntity(getTime(),
 							    entities[i]->Id(),
 							    false, j));
 	      }
 	    } else {
 	      /* TODO::generate an event "leaves entity" if needed */
-	      v_player->setTouching(*(entities[i]), false);
+	      v_player->setTouching(entities[i], false);
 	    }
 	  } else {
 	    /* TODO::generate an event "leaves entity" if needed */
-	    v_player->setTouching(*(entities[i]), false);
+	    v_player->setTouching(entities[i], false);
 	  }
 	}
       }
@@ -886,7 +890,7 @@ void MotoGame::cleanPlayers() {
   }
 
   void MotoGame::SetEntityPos(std::string pEntityID, float pX, float pY) {
-    SetEntityPos(&(m_pLevelSrc->getEntityById(pEntityID)),
+    SetEntityPos(m_pLevelSrc->getEntityById(pEntityID),
 		 pX, pY);
   }
 
@@ -915,32 +919,32 @@ void MotoGame::cleanPlayers() {
   }
 
   void MotoGame::MoveBlock(std::string pBlockID, float pX, float pY) {
-    Block& v_block = m_pLevelSrc->getBlockById(pBlockID);
-    v_block.setDynamicPosition(v_block.DynamicPosition() + Vector2f(pX, pY));
-    m_Collision.moveDynBlock(&v_block);
+    Block* v_block = m_pLevelSrc->getBlockById(pBlockID);
+    v_block->setDynamicPosition(v_block->DynamicPosition() + Vector2f(pX, pY));
+    m_Collision.moveDynBlock(v_block);
   }
   
   void MotoGame::SetBlockPos(std::string pBlockID, float pX, float pY) {
-    Block& v_block = m_pLevelSrc->getBlockById(pBlockID);
-    v_block.setDynamicPositionAccordingToCenter(Vector2f(pX, pY));
-    m_Collision.moveDynBlock(&v_block);
+    Block* v_block = m_pLevelSrc->getBlockById(pBlockID);
+    v_block->setDynamicPositionAccordingToCenter(Vector2f(pX, pY));
+    m_Collision.moveDynBlock(v_block);
   }
   
   void MotoGame::SetBlockCenter(std::string pBlockID, float pX, float pY) {
-    Block& v_block = m_pLevelSrc->getBlockById(pBlockID);
-    v_block.setCenter(Vector2f(pX, pY));
-    m_Collision.moveDynBlock(&v_block);
+    Block* v_block = m_pLevelSrc->getBlockById(pBlockID);
+    v_block->setCenter(Vector2f(pX, pY));
+    m_Collision.moveDynBlock(v_block);
   }
   
   void MotoGame::SetBlockRotation(std::string pBlockID, float pAngle) {
-    Block& v_block = m_pLevelSrc->getBlockById(pBlockID);
-    v_block.setDynamicRotation(pAngle);
-    m_Collision.moveDynBlock(&v_block);
+    Block* v_block = m_pLevelSrc->getBlockById(pBlockID);
+    v_block->setDynamicRotation(pAngle);
+    m_Collision.moveDynBlock(v_block);
   }     
   
   void MotoGame::SetEntityDrawAngle(std::string pEntityID, float pAngle) {
     Entity *v_entity;
-    v_entity = &(getLevelSrc()->getEntityById(pEntityID));
+    v_entity = getLevelSrc()->getEntityById(pEntityID);
     v_entity->setDrawAngle(pAngle);
   }
 
@@ -1045,12 +1049,12 @@ void MotoGame::cleanPlayers() {
   }
 
   void MotoGame::playerTouchesEntity(int i_player, std::string p_entityID, bool p_bTouchedWithHead) {
-    touchEntity(i_player, &(getLevelSrc()->getEntityById(p_entityID)), p_bTouchedWithHead);
+    touchEntity(i_player, getLevelSrc()->getEntityById(p_entityID), p_bTouchedWithHead);
   }
 
   void MotoGame::entityDestroyed(const std::string& i_entityId) {
     Entity *v_entity;
-    v_entity = &(getLevelSrc()->getEntityById(i_entityId));
+    v_entity = getLevelSrc()->getEntityById(i_entityId);
 
     if(v_entity->IsToTake()) {
       ParticlesSource *v_stars = new ParticlesSourceStar("");
@@ -1076,7 +1080,7 @@ void MotoGame::cleanPlayers() {
 
   void MotoGame::createKillEntityEvent(std::string p_entityID) {
     Entity *v_entity;
-    v_entity = &(m_pLevelSrc->getEntityById(p_entityID));
+    v_entity = m_pLevelSrc->getEntityById(p_entityID);
     createGameEvent(new MGE_EntityDestroyed(getTime(),
                                             v_entity->Id(),
                                             v_entity->Speciality(),

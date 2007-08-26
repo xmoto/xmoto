@@ -25,6 +25,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Input.h"
 #include "Locales.h"
 #include "helpers/Log.h"
+#include "xmscene/Level.h"
+#include "xmscene/Block.h"
 
 luaL_reg LuaLibGame::m_gameFuncs[] = {
   {"GetTime",                      LuaLibGame::L_Game_GetTime},
@@ -340,10 +342,10 @@ int LuaLibGame::L_Game_Message(lua_State *pL) {
 int LuaLibGame::L_Game_IsPlayerInZone(lua_State *pL) {
   /* no event for this */
   bool res = false;
-  Zone* v_zone = &(m_exec_world->getLevelSrc()->getZoneById(luaL_checkstring(pL, 1)));
+  Zone* v_zone = m_exec_world->getLevelSrc()->getZoneById(luaL_checkstring(pL, 1));
 
   for(int i=0; i<m_exec_world->Players().size(); i++) {
-    if(m_exec_world->Players()[i]->isTouching(*v_zone)) {
+    if(m_exec_world->Players()[i]->isTouching(v_zone)) {
       res = true;
     }
   }
@@ -365,9 +367,9 @@ int LuaLibGame::L_Game_GetBlockPos(lua_State *pL) {
   /* no event for this */
 
   /* Find the specified block and return its position */
-  Block &pBlock = m_exec_world->getLevelSrc()->getBlockById(luaL_checkstring(pL,1));
-  lua_pushnumber(pL,pBlock.DynamicPosition().x);
-  lua_pushnumber(pL,pBlock.DynamicPosition().y);
+  Block* pBlock = m_exec_world->getLevelSrc()->getBlockById(luaL_checkstring(pL,1));
+  lua_pushnumber(pL,pBlock->DynamicPosition().x);
+  lua_pushnumber(pL,pBlock->DynamicPosition().y);
   return 2;
 }
   
@@ -431,7 +433,7 @@ int LuaLibGame::L_Game_GetEntityPos(lua_State *pL) {
   /* no event for this */
 
   /* Find the specified entity and return its position */
-  Entity *p = &(m_exec_world->getLevelSrc()->getEntityById(luaL_checkstring(pL,1)));
+  Entity *p = m_exec_world->getLevelSrc()->getEntityById(luaL_checkstring(pL,1));
   if(p != NULL) {
     lua_pushnumber(pL,p->DynamicPosition().x);
     lua_pushnumber(pL,p->DynamicPosition().y);
@@ -446,7 +448,7 @@ int LuaLibGame::L_Game_GetEntityPos(lua_State *pL) {
   
 int LuaLibGame::L_Game_GetEntityRadius(lua_State *pL) {
   /* no event for this */
-  lua_pushnumber(pL, m_exec_world->getLevelSrc()->getEntityById(luaL_checkstring(pL,1)).Size());
+  lua_pushnumber(pL, m_exec_world->getLevelSrc()->getEntityById(luaL_checkstring(pL,1))->Size());
   return 1;
 }
 
@@ -637,7 +639,7 @@ int LuaLibGame::L_Game_PenaltyTime(lua_State *pL) {
 
 int LuaLibGame::L_Game_IsAPlayerInZone(lua_State *pL) {
   /* no event for this */
-  Zone* v_zone = &(m_exec_world->getLevelSrc()->getZoneById(luaL_checkstring(pL, 1)));
+  Zone* v_zone = m_exec_world->getLevelSrc()->getZoneById(luaL_checkstring(pL, 1));
   int v_player = X_luaL_check_number(pL, 2);
 
   if(v_player < 0 || v_player >= m_exec_world->Players().size()) {
@@ -646,7 +648,7 @@ int LuaLibGame::L_Game_IsAPlayerInZone(lua_State *pL) {
     throw Exception("Invalid player " + v_txt_player.str());
   }
 
-  lua_pushboolean(pL, m_exec_world->Players()[v_player]->isTouching(*v_zone)?1:0);
+  lua_pushboolean(pL, m_exec_world->Players()[v_player]->isTouching(v_zone)?1:0);
   return 1;
 }
 

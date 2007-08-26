@@ -21,12 +21,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* 
  *  Game application. (menus)
  */
+#include "GameText.h"
 #include "Game.h"
 #include "VFileIO.h"
+#include "Sound.h"
 #include "helpers/Log.h"
 #include "XMBuild.h"
 #include "XMSession.h"
-#include "VDraw.h"
+#include "drawlib/DrawLib.h"
+#include "gui/specific/GUIXMoto.h"
+#include "xmscene/Camera.h"
 
   UIFrame* GameApp::makeHelpWindow(DrawLib* i_drawLib, UIWindow* io_parent, UserConfig* i_Config) {
     UIFrame *v_pHelpWindow;
@@ -66,7 +70,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     return v_pHelpWindow;
   }
 
-  UIFrame* GameApp::makeOptionsWindow(DrawLib* i_drawLib, UIWindow* io_parent, UserConfig* i_Config, std::vector<GhostSearchStrategy>& i_ghostStrategies) {
+  UIFrame* GameApp::makeOptionsWindow(DrawLib* i_drawLib, UIWindow* io_parent, UserConfig* i_Config) {
     UIFrame *v_pOptionsWindow;
     UIStatic *pSomeText;
 
@@ -559,39 +563,52 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     pGhostOptionsTab->showWindow(false);
     pGhostOptionsTab->setID("GHOST_TAB");
 
-    UIButton *pEnableGhost = new UIButton(pGhostOptionsTab,5,5,GAMETEXT_ENABLEGHOST,(pGhostOptionsTab->getPosition().nWidth-40)/2,28);
+    UIButton *pEnableGhost = new UIButton(pGhostOptionsTab,5,5,GAMETEXT_ENABLEGHOST,(pGhostOptionsTab->getPosition().nWidth-40),28);
     pEnableGhost->setType(UI_BUTTON_TYPE_CHECK);
     pEnableGhost->setID("ENABLE_GHOST");
     pEnableGhost->enableWindow(true);
     pEnableGhost->setFont(i_drawLib->getFontSmall());
     pEnableGhost->setContextHelp(CONTEXTHELP_GHOST_MODE);
 
-    UIList *pGhostStrategiesList = new UIList(pGhostOptionsTab,5,43,"",pGhostOptionsTab->getPosition().nWidth-10,125);
-    pGhostStrategiesList->setID("GHOST_STRATEGIES_LIST");
-    pGhostStrategiesList->setFont(i_drawLib->getFontSmall());
-    pGhostStrategiesList->addColumn(GAMETEXT_GHOST_STRATEGIES_TYPE,pGhostStrategiesList->getPosition().nWidth);
+    UIButton *pGhostStrategy_MYBEST = new UIButton(pGhostOptionsTab,5+20,35,GAMETEXT_GHOST_STRATEGY_MYBEST,
+						   (pGhostOptionsTab->getPosition().nWidth-40),28);
+    pGhostStrategy_MYBEST->setType(UI_BUTTON_TYPE_CHECK);
+    pGhostStrategy_MYBEST->setID("GHOST_STRATEGY_MYBEST");
+    pGhostStrategy_MYBEST->enableWindow(true);
+    pGhostStrategy_MYBEST->setFont(i_drawLib->getFontSmall());
+    pGhostStrategy_MYBEST->setContextHelp(CONTEXTHELP_GHOST_STRATEGY_MYBEST);
 
-    pGhostStrategiesList->addEntry(GAMETEXT_GHOST_STRATEGY_MYBEST, &(i_ghostStrategies[0]));
-    pGhostStrategiesList->addEntry(GAMETEXT_GHOST_STRATEGY_THEBEST, &(i_ghostStrategies[1]));
-    pGhostStrategiesList->addEntry(GAMETEXT_GHOST_STRATEGY_BESTOFROOM, &(i_ghostStrategies[2]));
+    UIButton *pGhostStrategy_THEBEST = new UIButton(pGhostOptionsTab,5+20,65,GAMETEXT_GHOST_STRATEGY_THEBEST,
+						   (pGhostOptionsTab->getPosition().nWidth-40),28);
+    pGhostStrategy_THEBEST->setType(UI_BUTTON_TYPE_CHECK);
+    pGhostStrategy_THEBEST->setID("GHOST_STRATEGY_THEBEST");
+    pGhostStrategy_THEBEST->enableWindow(true);
+    pGhostStrategy_THEBEST->setFont(i_drawLib->getFontSmall());
+    pGhostStrategy_THEBEST->setContextHelp(CONTEXTHELP_GHOST_STRATEGY_THEBEST);
 
-    pGhostStrategiesList->setContextHelp(CONTEXTHELP_GHOST_STRATEGIES);
+    UIButton *pGhostStrategy_BESTOFROOM = new UIButton(pGhostOptionsTab,5+20,95,GAMETEXT_GHOST_STRATEGY_BESTOFROOM,
+						       (pGhostOptionsTab->getPosition().nWidth-40),28);
+    pGhostStrategy_BESTOFROOM->setType(UI_BUTTON_TYPE_CHECK);
+    pGhostStrategy_BESTOFROOM->setID("GHOST_STRATEGY_BESTOFROOM");
+    pGhostStrategy_BESTOFROOM->enableWindow(true);
+    pGhostStrategy_BESTOFROOM->setFont(i_drawLib->getFontSmall());
+    pGhostStrategy_BESTOFROOM->setContextHelp(CONTEXTHELP_GHOST_STRATEGY_BESTOFROOM);
 
-    UIButton *pDisplayGhostTimeDiff = new UIButton(pGhostOptionsTab,5,175,GAMETEXT_DISPLAYGHOSTTIMEDIFF,(pGhostOptionsTab->getPosition().nWidth-40),28);
+    UIButton *pDisplayGhostTimeDiff = new UIButton(pGhostOptionsTab,5,125,GAMETEXT_DISPLAYGHOSTTIMEDIFF,(pGhostOptionsTab->getPosition().nWidth-40),28);
     pDisplayGhostTimeDiff->setType(UI_BUTTON_TYPE_CHECK);
     pDisplayGhostTimeDiff->setID("DISPLAY_GHOST_TIMEDIFF");
     pDisplayGhostTimeDiff->enableWindow(true);
     pDisplayGhostTimeDiff->setFont(i_drawLib->getFontSmall());
     pDisplayGhostTimeDiff->setContextHelp(CONTEXTHELP_DISPLAY_GHOST_TIMEDIFF);
 
-    UIButton *pDisplayGhostInfo = new UIButton(pGhostOptionsTab,5,203,GAMETEXT_DISPLAYGHOSTINFO,(pGhostOptionsTab->getPosition().nWidth-40),28);
+    UIButton *pDisplayGhostInfo = new UIButton(pGhostOptionsTab,5,155,GAMETEXT_DISPLAYGHOSTINFO,(pGhostOptionsTab->getPosition().nWidth-40),28);
     pDisplayGhostInfo->setType(UI_BUTTON_TYPE_CHECK);
     pDisplayGhostInfo->setID("DISPLAY_GHOST_INFO");
     pDisplayGhostInfo->enableWindow(true);
     pDisplayGhostInfo->setFont(i_drawLib->getFontSmall());
     pDisplayGhostInfo->setContextHelp(CONTEXTHELP_DISPLAY_GHOST_INFO);
 
-    UIButton *pMotionBlurGhost = new UIButton(pGhostOptionsTab,5,231,GAMETEXT_MOTIONBLURGHOST,(pGhostOptionsTab->getPosition().nWidth-40),28);
+    UIButton *pMotionBlurGhost = new UIButton(pGhostOptionsTab,5,185,GAMETEXT_MOTIONBLURGHOST,(pGhostOptionsTab->getPosition().nWidth-40),28);
     pMotionBlurGhost->setType(UI_BUTTON_TYPE_CHECK);
     pMotionBlurGhost->setID("MOTION_BLUR_GHOST");
     pMotionBlurGhost->enableWindow(true);
@@ -606,12 +623,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     int default_button;
 
     /* Best times windows (at finish) */
-    m_pBestTimes = new UIBestTimes(m_Renderer.getGUI(),10,50,"",290,500);
+    m_pBestTimes = new UIBestTimes(m_Renderer->getGUI(),10,50,"",290,500);
     m_pBestTimes->setFont(drawLib->getFontMedium());
     m_pBestTimes->setHFont(drawLib->getFontMedium());
 
     /* Initialize finish menu */
-    m_pFinishMenu = new UIFrame(m_Renderer.getGUI(),300,30,"",400,540);
+    m_pFinishMenu = new UIFrame(m_Renderer->getGUI(),300,30,"",400,540);
     m_pFinishMenu->setStyle(UI_FRAMESTYLE_MENU);
 
     i=0;
@@ -656,7 +673,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_pFinishMenu->setPrimaryChild(m_pFinishMenuButtons[default_button]); /* default button: Play next */
                       
     /* Initialize pause menu */
-    m_pPauseMenu = new UIFrame(m_Renderer.getGUI(),drawLib->getDispWidth()/2 - 200,70,"",400,540);
+    m_pPauseMenu = new UIFrame(m_Renderer->getGUI(),drawLib->getDispWidth()/2 - 200,70,"",400,540);
     m_pPauseMenu->setStyle(UI_FRAMESTYLE_MENU);
     
     m_pPauseMenuButtons[0] = new UIButton(m_pPauseMenu,0,0,GAMETEXT_RESUME,207,57);
@@ -686,7 +703,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_pPauseMenu->setPrimaryChild(m_pPauseMenuButtons[0]); /* default button: Resume */
     
     /* Initialize just-dead menu */
-    m_pJustDeadMenu = new UIFrame(m_Renderer.getGUI(),drawLib->getDispWidth()/2 - 200,70,"",400,540);
+    m_pJustDeadMenu = new UIFrame(m_Renderer->getGUI(),drawLib->getDispWidth()/2 - 200,70,"",400,540);
     m_pJustDeadMenu->setStyle(UI_FRAMESTYLE_MENU);
     
     m_pJustDeadMenuButtons[0] = new UIButton(m_pJustDeadMenu,0,0,GAMETEXT_TRYAGAIN,207,57);
@@ -721,9 +738,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   void GameApp::_InitMenus_MainMenu(void) {
     /* Initialize main menu */      
 
-    m_pMainMenu = new UIWindow(m_Renderer.getGUI(),0,0,"",
-                                m_Renderer.getGUI()->getPosition().nWidth,
-                                m_Renderer.getGUI()->getPosition().nHeight);
+    m_pMainMenu = new UIWindow(m_Renderer->getGUI(),0,0,"",
+                                m_Renderer->getGUI()->getPosition().nWidth,
+                                m_Renderer->getGUI()->getPosition().nHeight);
     m_pMainMenu->showWindow(true);
     m_pMainMenu->enableWindow(true);                                 
     
@@ -868,7 +885,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     //m_pPlayWindow->setPrimaryChild(m_pJustDeadMenuButtons[0]); /* default button: Try Again */
 
     /* OPTIONS */
-    m_pOptionsWindow = makeOptionsWindow(drawLib, m_pMainMenu, &m_Config, GhostSearchStrategies);
+    m_pOptionsWindow = makeOptionsWindow(drawLib, m_pMainMenu, &m_Config);
     _UpdateThemesLists();
     _UpdateRoomsLists();
     /* ***** */
@@ -1038,7 +1055,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     UIStatic *pSomeText;
 
     /* Initialize internet connection configurator */
-    m_pWebConfEditor = new UIFrame(m_Renderer.getGUI(),drawLib->getDispWidth()/2-206,drawLib->getDispHeight()/2-385/2,"",412,425); 
+    m_pWebConfEditor = new UIFrame(m_Renderer->getGUI(),drawLib->getDispWidth()/2-206,drawLib->getDispHeight()/2-385/2,"",412,425); 
     m_pWebConfEditor->setStyle(UI_FRAMESTYLE_TRANS);           
     m_pWebConfEditor->showWindow(false);
     UIStatic *pWebConfEditorTitle = new UIStatic(m_pWebConfEditor,0,0,GAMETEXT_INETCONF,400,50);
@@ -1127,7 +1144,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     pProxyPasswordEdit->setContextHelp(CONTEXTHELP_PROXYPASSWORD);
 
     /* Initialize profile editor */
-    m_pProfileEditor = new UIFrame(m_Renderer.getGUI(),drawLib->getDispWidth()/2-350,drawLib->getDispHeight()/2-250,"",700,500); 
+    m_pProfileEditor = new UIFrame(m_Renderer->getGUI(),drawLib->getDispWidth()/2-350,drawLib->getDispHeight()/2-250,"",700,500); 
     m_pProfileEditor->setStyle(UI_FRAMESTYLE_TRANS);           
     UIStatic *pProfileEditorTitle = new UIStatic(m_pProfileEditor,0,0,GAMETEXT_PLAYERPROFILES,700,50);
     pProfileEditorTitle->setFont(drawLib->getFontMedium());
@@ -1152,7 +1169,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     _CreateProfileList();
 
     /* Initialize level pack viewer */
-    m_pLevelPackViewer = new UIFrame(m_Renderer.getGUI(),drawLib->getDispWidth()/2-350,drawLib->getDispHeight()/2-250,"",700,500); 
+    m_pLevelPackViewer = new UIFrame(m_Renderer->getGUI(),drawLib->getDispWidth()/2-350,drawLib->getDispHeight()/2-250,"",700,500); 
     m_pLevelPackViewer->setStyle(UI_FRAMESTYLE_TRANS);           
     UIStatic *pLevelPackViewerTitle = new UIStatic(m_pLevelPackViewer,0,0,"(level pack name goes here)",700,40);
     pLevelPackViewerTitle->setID("LEVELPACK_VIEWER_TITLE");
@@ -1213,7 +1230,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_pPackLevelInfoViewReplayButton->setContextHelp(CONTEXTHELP_VIEWTHEHIGHSCORE);
 
     /* Initialize level info viewer */
-    m_pLevelInfoViewer = new UIFrame(m_Renderer.getGUI(),drawLib->getDispWidth()/2-350,drawLib->getDispHeight()/2-250,"",700,500); 
+    m_pLevelInfoViewer = new UIFrame(m_Renderer->getGUI(),drawLib->getDispWidth()/2-350,drawLib->getDispHeight()/2-250,"",700,500); 
     m_pLevelInfoViewer->setStyle(UI_FRAMESTYLE_TRANS);
     UIStatic *pLevelInfoViewerTitle = new UIStatic(m_pLevelInfoViewer,0,0,"(level name goes here)",700,40);
     pLevelInfoViewerTitle->setID("LEVEL_VIEWER_TITLE");  
@@ -1378,7 +1395,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   ===========================================================================*/  
   void GameApp::_CreateLevelPackLevelList(void) {
     char **v_result;
-    int nrow;
+    unsigned int nrow;
     float v_playerHighscore;
     float v_roomHighscore;
 
@@ -1454,7 +1471,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   ===========================================================================*/  
   void GameApp::_UpdateLevelInfoViewerBestTimes(const std::string &LevelID) {
     char **v_result;
-    int nrow;
+    unsigned int nrow;
     float v_finishTime;
     std::string v_profile;
 
@@ -1499,7 +1516,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       /* Get record */
       if(m_xmsession->www()) {
 	char **v_result;
-	int nrow;
+	unsigned int nrow;
 	std::string v_roomName;
 	std::string v_id_profile;
 	float       v_finishTime;
@@ -1550,7 +1567,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     if(pList != NULL && pLV_BestTimes_All != NULL && pLV_BestTimes_Personal != NULL && m_xmsession->profile() != "" &&
        pLV_Replays_Show != NULL) {
       char **v_result;
-      int nrow;
+      unsigned int nrow;
 
       /* Personal or all replays? */
       std::string v_sql;
@@ -1684,8 +1701,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       if(m_pPauseMenuButtons[i]->isClicked()) {
         if(m_pPauseMenuButtons[i]->getCaption() == GAMETEXT_QUIT) {
           if(m_pQuitMsgBox == NULL) {
-	    m_Renderer.getGUI()->setFont(drawLib->getFontSmall());
-            m_pQuitMsgBox = m_Renderer.getGUI()->msgBox(GAMETEXT_QUITMESSAGE,
+	    m_Renderer->getGUI()->setFont(drawLib->getFontSmall());
+            m_pQuitMsgBox = m_Renderer->getGUI()->msgBox(GAMETEXT_QUITMESSAGE,
                                                         (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
 	  }
         }
@@ -1700,7 +1717,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	  m_MotoGame.getCamera()->setPlayerToFollow(NULL);
           m_MotoGame.endLevel();
           m_InputHandler.resetScriptKeyHooks();                     
-          m_Renderer.unprepareForNewLevel();
+          m_Renderer->unprepareForNewLevel();
 
           setState(m_StateAfterPlaying);
           //setState(GS_MENU);          
@@ -1721,7 +1738,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	    m_MotoGame.getCamera()->setPlayerToFollow(NULL);
 	    m_MotoGame.endLevel();
 	    m_InputHandler.resetScriptKeyHooks();                     
-	    m_Renderer.unprepareForNewLevel();                    
+	    m_Renderer->unprepareForNewLevel();                    
 	    
 	    m_PlaySpecificLevelId = NextLevel;              
 	    
@@ -1780,8 +1797,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       if(m_pFinishMenuButtons[i]->isClicked()) {
         if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_QUIT) {
           if(m_pQuitMsgBox == NULL) {
-	    m_Renderer.getGUI()->setFont(drawLib->getFontSmall());
-            m_pQuitMsgBox = m_Renderer.getGUI()->msgBox(GAMETEXT_QUITMESSAGE,
+	    m_Renderer->getGUI()->setFont(drawLib->getFontSmall());
+            m_pQuitMsgBox = m_Renderer->getGUI()->msgBox(GAMETEXT_QUITMESSAGE,
                                                         (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
 	  }
         }
@@ -1789,12 +1806,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	  std::string NextLevel = _DetermineNextLevel(m_PlaySpecificLevelId);
 	  if(NextLevel != "") {        
 	    m_pFinishMenu->showWindow(false);
-	    m_Renderer.hideMsgNewHighscore();
+	    m_Renderer->hideMsgNewHighscore();
 	    m_pBestTimes->showWindow(false);
 	    m_MotoGame.getCamera()->setPlayerToFollow(NULL);
 	    m_MotoGame.endLevel();
 	    m_InputHandler.resetScriptKeyHooks();                     
-	    m_Renderer.unprepareForNewLevel();                    
+	    m_Renderer->unprepareForNewLevel();                    
 	    
 	    m_PlaySpecificLevelId = NextLevel;
 	    
@@ -1805,8 +1822,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         else if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_SAVEREPLAY) {
           if(m_pJustPlayReplay != NULL) {
             if(m_pSaveReplayMsgBox == NULL) {
-	      m_Renderer.getGUI()->setFont(drawLib->getFontSmall());
-              m_pSaveReplayMsgBox = m_Renderer.getGUI()->msgBox(std::string(GAMETEXT_ENTERREPLAYNAME) + ":",
+	      m_Renderer->getGUI()->setFont(drawLib->getFontSmall());
+              m_pSaveReplayMsgBox = m_Renderer->getGUI()->msgBox(std::string(GAMETEXT_ENTERREPLAYNAME) + ":",
                                                                 (UIMsgBoxButton)(UI_MSGBOX_OK|UI_MSGBOX_CANCEL),
                                                                 true);
               m_pSaveReplayMsgBox->setTextInputFont(drawLib->getFontMedium());
@@ -1821,19 +1838,19 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
           Level *pCurLevel = m_MotoGame.getLevelSrc();
           m_PlaySpecificLevelId = pCurLevel->Id();
           m_pFinishMenu->showWindow(false);
-	  m_Renderer.hideMsgNewHighscore();
+	  m_Renderer->hideMsgNewHighscore();
           m_pBestTimes->showWindow(false);
 
 	  _RestartLevel();
         }
         else if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_ABORT) {
           m_pFinishMenu->showWindow(false);
-	  m_Renderer.hideMsgNewHighscore();
+	  m_Renderer->hideMsgNewHighscore();
           m_pBestTimes->showWindow(false);
 	  m_MotoGame.getCamera()->setPlayerToFollow(NULL);
           m_MotoGame.endLevel();
           m_InputHandler.resetScriptKeyHooks();                     
-          m_Renderer.unprepareForNewLevel();
+          m_Renderer->unprepareForNewLevel();
 //          setState(GS_MENU);          
           setState(m_StateAfterPlaying);                   
         }
@@ -1986,7 +2003,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       if(v_id_level != "") {
 	
 	char **v_result;
-	int nrow;
+	unsigned int nrow;
 	std::string v_levelName;
 	std::string v_levelDescription;
 	std::string v_levelAuthor;
@@ -2281,15 +2298,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }    
     else if(pDeleteButton->isClicked()) {
       if(m_pDeleteProfileMsgBox == NULL) {
-	m_Renderer.getGUI()->setFont(drawLib->getFontSmall());
-        m_pDeleteProfileMsgBox = m_Renderer.getGUI()->msgBox(GAMETEXT_DELETEPLAYERMESSAGE,
+	m_Renderer->getGUI()->setFont(drawLib->getFontSmall());
+        m_pDeleteProfileMsgBox = m_Renderer->getGUI()->msgBox(GAMETEXT_DELETEPLAYERMESSAGE,
                                                           (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
       }
     }
     else if(pNewButton->isClicked()) {
       if(m_pNewProfileMsgBox == NULL) {
-	m_Renderer.getGUI()->setFont(drawLib->getFontSmall());
-        m_pNewProfileMsgBox = m_Renderer.getGUI()->msgBox(std::string(GAMETEXT_ENTERPLAYERNAME) + ":",
+	m_Renderer->getGUI()->setFont(drawLib->getFontSmall());
+        m_pNewProfileMsgBox = m_Renderer->getGUI()->msgBox(std::string(GAMETEXT_ENTERPLAYERNAME) + ":",
                                                           (UIMsgBoxButton)(UI_MSGBOX_OK|UI_MSGBOX_CANCEL),
                                                           true);
         m_pNewProfileMsgBox->setTextInputFont(drawLib->getFontMedium());
@@ -2336,8 +2353,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       if(m_pJustDeadMenuButtons[i]->isClicked()) {
         if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_QUIT) {
           if(m_pQuitMsgBox == NULL) {
-	    m_Renderer.getGUI()->setFont(drawLib->getFontSmall());
-            m_pQuitMsgBox = m_Renderer.getGUI()->msgBox(GAMETEXT_QUITMESSAGE,
+	    m_Renderer->getGUI()->setFont(drawLib->getFontSmall());
+            m_pQuitMsgBox = m_Renderer->getGUI()->msgBox(GAMETEXT_QUITMESSAGE,
                                                         (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
 	  }
         }
@@ -2353,7 +2370,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	    m_MotoGame.getCamera()->setPlayerToFollow(NULL);
 	    m_MotoGame.endLevel();
 	    m_InputHandler.resetScriptKeyHooks();                     
-	    m_Renderer.unprepareForNewLevel();                    
+	    m_Renderer->unprepareForNewLevel();                    
 	    
 	    m_PlaySpecificLevelId = NextLevel;
 	    
@@ -2364,8 +2381,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         else if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_SAVEREPLAY) {
           if(m_pJustPlayReplay != NULL) {
             if(m_pSaveReplayMsgBox == NULL) {
-	      m_Renderer.getGUI()->setFont(drawLib->getFontSmall());
-              m_pSaveReplayMsgBox = m_Renderer.getGUI()->msgBox(std::string(GAMETEXT_ENTERREPLAYNAME) + ":",
+	      m_Renderer->getGUI()->setFont(drawLib->getFontSmall());
+              m_pSaveReplayMsgBox = m_Renderer->getGUI()->msgBox(std::string(GAMETEXT_ENTERREPLAYNAME) + ":",
                                                                 (UIMsgBoxButton)(UI_MSGBOX_OK|UI_MSGBOX_CANCEL),
                                                                 true);
               m_pSaveReplayMsgBox->setTextInputFont(drawLib->getFontMedium());
@@ -2378,7 +2395,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	  m_MotoGame.getCamera()->setPlayerToFollow(NULL);
           m_MotoGame.endLevel();
           m_InputHandler.resetScriptKeyHooks();                     
-          m_Renderer.unprepareForNewLevel();
+          m_Renderer->unprepareForNewLevel();
           //setState(GS_MENU);
           setState(m_StateAfterPlaying);
         }
@@ -2433,8 +2450,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         }
         else if(m_pMainMenuButtons[i]->getCaption() == GAMETEXT_QUIT) {
           if(m_pQuitMsgBox == NULL) {
-	    m_Renderer.getGUI()->setFont(drawLib->getFontSmall());
-            m_pQuitMsgBox = m_Renderer.getGUI()->msgBox(GAMETEXT_QUITMESSAGE,
+	    m_Renderer->getGUI()->setFont(drawLib->getFontSmall());
+            m_pQuitMsgBox = m_Renderer->getGUI()->msgBox(GAMETEXT_QUITMESSAGE,
                                                         (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
 	  }
         }
@@ -2622,7 +2639,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     UIList *pThemeList = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GENERAL_TAB:THEMES_LIST");
 
     UIButton *pEnableGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:ENABLE_GHOST");
-    UIList *pGhostStrategy = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGIES_LIST");
+    UIButton *pGhostStrategy_MYBEST = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGY_MYBEST");
+    UIButton *pGhostStrategy_THEBEST = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGY_THEBEST");
+    UIButton *pGhostStrategy_BESTOFROOM = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGY_BESTOFROOM");
     UIButton *pMotionBlurGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:MOTION_BLUR_GHOST");
     UIButton *pDisplayGhostInfo = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:DISPLAY_GHOST_INFO");
     UIButton *pDisplayGhostTimeDiff = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:DISPLAY_GHOST_TIMEDIFF");
@@ -2636,12 +2655,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	}		
 	
     if(pEnableGhost->getChecked()) {
-      pGhostStrategy->enableWindow(true);
+      pGhostStrategy_MYBEST->enableWindow(true);
+      pGhostStrategy_THEBEST->enableWindow(true);
+      pGhostStrategy_BESTOFROOM->enableWindow(true);
       pMotionBlurGhost->enableWindow(true);
       pDisplayGhostInfo->enableWindow(true);
       pDisplayGhostTimeDiff->enableWindow(true);
     } else {
-      pGhostStrategy->enableWindow(false);
+      pGhostStrategy_MYBEST->enableWindow(false);
+      pGhostStrategy_THEBEST->enableWindow(false);
+      pGhostStrategy_BESTOFROOM->enableWindow(false);
       pMotionBlurGhost->enableWindow(false);
       pDisplayGhostInfo->enableWindow(false);
       pDisplayGhostTimeDiff->enableWindow(false);
@@ -2894,7 +2917,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       
       if(v_id_level != "") {
 	char **v_result;
-	int nrow;
+	unsigned int nrow;
 	std::string v_levelName;
 	std::string v_levelDescription;
 	std::string v_levelAuthor;
@@ -2982,7 +3005,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	      if(rplInfos->fFinishTime > 0.0 && rplInfos->Player == m_xmsession->profile()) {
 		
 		char **v_result;
-		int nrow;
+		unsigned int nrow;
 		float v_finishTime;
 		
 		v_result = m_db->readDB("SELECT finishTime "
@@ -3034,8 +3057,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     if(pReplaysDeleteButton->isClicked()) {
       /* Delete replay - but ask the user first */
       if(m_pDeleteReplayMsgBox == NULL) {
-	m_Renderer.getGUI()->setFont(drawLib->getFontSmall());
-        m_pDeleteReplayMsgBox = m_Renderer.getGUI()->msgBox(GAMETEXT_DELETEREPLAYMESSAGE,
+	m_Renderer->getGUI()->setFont(drawLib->getFontSmall());
+        m_pDeleteReplayMsgBox = m_Renderer->getGUI()->msgBox(GAMETEXT_DELETEREPLAYMESSAGE,
                                                             (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
       }
     }
@@ -3071,10 +3094,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
   
   void GameApp::_SimpleMessage(const std::string &Msg,UIRect *pRect,bool bNoSwap) {      
-    m_Renderer.getGUI()->paint();
+    m_Renderer->getGUI()->paint();
     drawLib->drawBox(Vector2f(0,0),Vector2f(drawLib->getDispWidth(),drawLib->getDispHeight()),0,MAKE_COLOR(0,0,0,170),0);
 
-    m_Renderer.getGUI()->setFont(drawLib->getFontMedium());
+    m_Renderer->getGUI()->setFont(drawLib->getFontMedium());
     FontGlyph* fg = drawLib->getFontMedium()->getGlyph(Msg);
     
     int border = 75;
@@ -3088,18 +3111,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       pRect->nHeight = nH;
     }
 
-    m_Renderer.getGUI()->putElem(nx,ny,-1,-1,UI_ELEM_FRAME_TL,false);
-    m_Renderer.getGUI()->putElem(nx+nW-8,ny,-1,-1,UI_ELEM_FRAME_TR,false);
-    m_Renderer.getGUI()->putElem(nx+nW-8,ny+nH-8,-1,-1,UI_ELEM_FRAME_BR,false);
-    m_Renderer.getGUI()->putElem(nx,ny+nH-8,-1,-1,UI_ELEM_FRAME_BL,false);
-    m_Renderer.getGUI()->putElem(nx+8,ny,nW-16,-1,UI_ELEM_FRAME_TM,false);
-    m_Renderer.getGUI()->putElem(nx+8,ny+nH-8,nW-16,-1,UI_ELEM_FRAME_BM,false);
-    m_Renderer.getGUI()->putElem(nx,ny+8,-1,nH-16,UI_ELEM_FRAME_ML,false);
-    m_Renderer.getGUI()->putElem(nx+nW-8,ny+8,-1,nH-16,UI_ELEM_FRAME_MR,false);
-    m_Renderer.getGUI()->putRect(nx+8,ny+8,nW-16,nH-16,MAKE_COLOR(0,0,0,127));
+    m_Renderer->getGUI()->putElem(nx,ny,-1,-1,UI_ELEM_FRAME_TL,false);
+    m_Renderer->getGUI()->putElem(nx+nW-8,ny,-1,-1,UI_ELEM_FRAME_TR,false);
+    m_Renderer->getGUI()->putElem(nx+nW-8,ny+nH-8,-1,-1,UI_ELEM_FRAME_BR,false);
+    m_Renderer->getGUI()->putElem(nx,ny+nH-8,-1,-1,UI_ELEM_FRAME_BL,false);
+    m_Renderer->getGUI()->putElem(nx+8,ny,nW-16,-1,UI_ELEM_FRAME_TM,false);
+    m_Renderer->getGUI()->putElem(nx+8,ny+nH-8,nW-16,-1,UI_ELEM_FRAME_BM,false);
+    m_Renderer->getGUI()->putElem(nx,ny+8,-1,nH-16,UI_ELEM_FRAME_ML,false);
+    m_Renderer->getGUI()->putElem(nx+nW-8,ny+8,-1,nH-16,UI_ELEM_FRAME_MR,false);
+    m_Renderer->getGUI()->putRect(nx+8,ny+8,nW-16,nH-16,MAKE_COLOR(0,0,0,127));
 
-    m_Renderer.getGUI()->setTextSolidColor(MAKE_COLOR(255,255,255,255));
-    m_Renderer.getGUI()->putText(drawLib->getDispWidth()/2,drawLib->getDispHeight()/2,Msg, -0.5, -0.5);
+    m_Renderer->getGUI()->setTextSolidColor(MAKE_COLOR(255,255,255,255));
+    m_Renderer->getGUI()->putText(drawLib->getDispWidth()/2,drawLib->getDispHeight()/2,Msg, -0.5, -0.5);
     
     if(!bNoSwap)
       drawLib->flushGraphics();
@@ -3143,7 +3166,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   void GameApp::_CreateProfileList(void) {
     UIList *pList = reinterpret_cast<UIList *>(m_pProfileEditor->getChild("PROFILE_LIST"));
     char **v_result;
-    int nrow;
+    unsigned int nrow;
     std::string v_profile;
 
     if(pList != NULL) {
@@ -3183,7 +3206,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /* Should we list all players' replays? */
     std::string v_sql;
     char **v_result;
-    int nrow;
+    unsigned int nrow;
     UIButton *pButton = (UIButton *)m_pReplaysWindow->getChild("REPLAY_LIST_ALL");
     bool bListAll = false;
     if(pButton != NULL && pButton->getChecked()) {
@@ -3218,7 +3241,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   ===========================================================================*/
   void GameApp::_CreateLevelListsSql(UILevelList *pAllLevels, const std::string& i_sql) {
     char **v_result;
-    int nrow;
+    unsigned int nrow;
     float v_playerHighscore, v_roomHighscore;
     
     if(m_xmsession->profile() == "") return;
@@ -3276,7 +3299,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
   void GameApp::_CreateThemesList(UIList *pList) {
     char **v_result;
-    int nrow;
+    unsigned int nrow;
     UIListEntry *pEntry;
     std::string v_id_theme;
     std::string v_ck1, v_ck2;
@@ -3341,7 +3364,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     UIListEntry *pEntry;
     std::string v_selected_roomName = "";
     char **v_result;
-    int nrow;
+    unsigned int nrow;
     std::string v_roomName, v_roomId;
 
     /* get selected item */
@@ -3387,7 +3410,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   void GameApp::_MakeBestTimesWindow(UIBestTimes *pWindow,std::string PlayerName,std::string LevelID,
                                      float fFinishTime,std::string TimeStamp) {
     char **v_result;
-    int nrow;
+    unsigned int nrow;
     int n1=-1,n2=-1;
     float v_finishTime;
     std::string v_timeStamp;
@@ -3511,31 +3534,20 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
 
     UIButton *pEnableGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:ENABLE_GHOST");
-    UIList *pGhostStrategy = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGIES_LIST");
+    UIButton *pGhostStrategy_MYBEST = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGY_MYBEST");
+    UIButton *pGhostStrategy_THEBEST = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGY_THEBEST");
+    UIButton *pGhostStrategy_BESTOFROOM = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGY_BESTOFROOM");
     UIButton *pMotionBlurGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:MOTION_BLUR_GHOST");
     UIButton *pDisplayGhostInfo = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:DISPLAY_GHOST_INFO");
     UIButton *pDisplayGhostTimeDiff = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:DISPLAY_GHOST_TIMEDIFF");
 
     pEnableGhost->setChecked(m_Config.getBool("EnableGhost"));
-    int v_ghost_strategy = m_Config.getInteger("GhostSearchStrategy");
+    pGhostStrategy_MYBEST->setChecked(m_Config.getBool("GhostStrategy_MYBEST"));
+    pGhostStrategy_THEBEST->setChecked(m_Config.getBool("GhostStrategy_THEBEST"));
+    pGhostStrategy_BESTOFROOM->setChecked(m_Config.getBool("GhostStrategy_BESTOFROOM"));
     pMotionBlurGhost->setChecked(m_Config.getBool("GhostMotionBlur"));
     pDisplayGhostInfo->setChecked(m_Config.getBool("DisplayGhostInfo"));
     pDisplayGhostTimeDiff->setChecked(m_Config.getBool("ShowGhostTimeDiff"));
-
-    int nGSMode = -1;
-    for(int i=0;i<pGhostStrategy->getEntries().size();i++) {
-      if(*((int*)(pGhostStrategy->getEntries()[i]->pvUser)) == v_ghost_strategy) {
-        nGSMode = i;
-        break;
-      }
-    }
-    if(nGSMode < 0) {
-      /* TODO: warning */
-      pGhostStrategy->setRealSelected(0);
-    }
-    else {
-      pGhostStrategy->setRealSelected(nGSMode);
-    }  
 
     pShowMiniMap->setChecked(m_Config.getBool("ShowMiniMap"));
     pShowEngineCounter->setChecked(m_Config.getBool("ShowEngineCounter"));
@@ -3702,9 +3714,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     m_Config.setValue("WebHighscores",m_Config.getDefaultValue("WebHighscores"));
     
-      m_Config.setValue("EnableGhost",m_Config.getDefaultValue("EnableGhost"));
-      m_Config.setValue("GhostSearchStrategy",m_Config.getDefaultValue("GhostSearchStrategy"));
-        
+    m_Config.setValue("EnableGhost",m_Config.getDefaultValue("EnableGhost"));
+    m_Config.setValue("GhostStrategy_MYBEST", m_Config.getDefaultValue("GhostStrategy_MYBEST"));
+    m_Config.setValue("GhostStrategy_THEBEST", m_Config.getDefaultValue("GhostStrategy_THEBEST"));
+    m_Config.setValue("GhostStrategy_BESTOFROOM", m_Config.getDefaultValue("GhostStrategy_BESTOFROOM"));
+    m_xmsession->setGhostStrategy_MYBEST(m_Config.getBool("GhostStrategy_MYBEST"));
+    m_xmsession->setGhostStrategy_THEBEST(m_Config.getBool("GhostStrategy_THEBEST"));
+    m_xmsession->setGhostStrategy_BESTOFROOM(m_Config.getBool("GhostStrategy_BESTOFROOM"));
+
     m_Config.setValue("AudioEnable",m_Config.getDefaultValue("AudioEnable"));
     m_Config.setValue("AudioSampleRate",m_Config.getDefaultValue("AudioSampleRate"));
     m_Config.setValue("AudioSampleBits",m_Config.getDefaultValue("AudioSampleBits"));
@@ -3884,7 +3901,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     if(pRoomsList->getSelected() >= 0 &&
        pRoomsList->getSelected() < pRoomsList->getEntries().size()) {
       char **v_result;
-      int nrow;
+      unsigned int nrow;
 
       m_WebHighscoresIdRoom = *((std::string*)pRoomsList->getEntries()[pRoomsList->getSelected()]->pvUser);
       m_Config.setString("WebHighscoresIdRoom", m_WebHighscoresIdRoom);
@@ -3903,26 +3920,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     m_Config.setString("WebHighscoreUploadLogin", pRoomsLogin->getCaption());
     m_Config.setString("WebHighscoreUploadPassword", pRoomsPassword->getCaption());
-
-    UIButton *pMotionBlurGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:MOTION_BLUR_GHOST");
-    UIButton *pDisplayGhostInfo = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:DISPLAY_GHOST_INFO");
-    UIButton *pDisplayGhostTimeDiff = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:DISPLAY_GHOST_TIMEDIFF");
-
-    m_Config.setBool("GhostMotionBlur",pMotionBlurGhost->getChecked());
-    m_Config.setBool("DisplayGhostInfo",pDisplayGhostInfo->getChecked());
-    m_Config.setBool("ShowGhostTimeDiff",pDisplayGhostTimeDiff->getChecked());
-
     m_Config.setBool("WebHighscores",pWebHighscores->getChecked());
-
-    UIButton *pEnableGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:ENABLE_GHOST");
-    UIList *pGhostStrategy = (UIList *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGIES_LIST");
-
-    m_Config.setBool("EnableGhost",pEnableGhost->getChecked());
-
-    if(pGhostStrategy->getSelected() >= 0 && pGhostStrategy->getSelected() < pGhostStrategy->getEntries().size()) {
-      UIListEntry *pEntry = pGhostStrategy->getEntries()[pGhostStrategy->getSelected()];
-      m_Config.setInteger("GhostSearchStrategy", *((int*)(pEntry->pvUser)));
-    }
 
     if(pThemeList->getSelected() >= 0 && pThemeList->getSelected() < pThemeList->getEntries().size()) {
       UIListEntry *pEntry = pThemeList->getEntries()[pThemeList->getSelected()];
@@ -3932,7 +3930,27 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	reloadTheme();
       }
     }
-       
+
+    UIButton *pEnableGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:ENABLE_GHOST");
+    UIButton *pGhostStrategy_MYBEST = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGY_MYBEST");
+    UIButton *pGhostStrategy_THEBEST = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGY_THEBEST");
+    UIButton *pGhostStrategy_BESTOFROOM = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGY_BESTOFROOM");
+    UIButton *pMotionBlurGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:MOTION_BLUR_GHOST");
+    UIButton *pDisplayGhostInfo = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:DISPLAY_GHOST_INFO");
+    UIButton *pDisplayGhostTimeDiff = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:DISPLAY_GHOST_TIMEDIFF");
+
+    m_Config.setBool("EnableGhost",pEnableGhost->getChecked());
+    m_Config.setBool("GhostStrategy_MYBEST",pGhostStrategy_MYBEST->getChecked());
+    m_Config.setBool("GhostStrategy_THEBEST",pGhostStrategy_THEBEST->getChecked());
+    m_Config.setBool("GhostStrategy_BESTOFROOM",pGhostStrategy_BESTOFROOM->getChecked());
+    m_xmsession->setGhostStrategy_MYBEST(m_Config.getBool("GhostStrategy_MYBEST"));
+    m_xmsession->setGhostStrategy_THEBEST(m_Config.getBool("GhostStrategy_THEBEST"));
+    m_xmsession->setGhostStrategy_BESTOFROOM(m_Config.getBool("GhostStrategy_BESTOFROOM"));
+    m_Config.setBool("GhostMotionBlur",pMotionBlurGhost->getChecked());
+    m_Config.setBool("DisplayGhostInfo",pDisplayGhostInfo->getChecked());
+    m_Config.setBool("ShowGhostTimeDiff",pDisplayGhostTimeDiff->getChecked());
+
+
     /* The following require restart */
     m_Config.setChanged(false);      
 
@@ -3975,7 +3993,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /* set the room name ; set to WR if it cannot be determined */
     m_WebHighscoresRoomName = "WR";
     char **v_result;
-    int nrow;
+    unsigned int nrow;
     v_result = m_db->readDB("SELECT name "
 			    "FROM webrooms "
 			    "WHERE id_room=" + m_WebHighscoresIdRoom + ";",
@@ -3997,13 +4015,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
   }
 
-  void GameApp::setLevelInfoFrameBestPlayer(String pLevelID,
+  void GameApp::setLevelInfoFrameBestPlayer(std::string pLevelID,
 					    UIWindow *i_pLevelInfoFrame,
 					    UIButton *i_pLevelInfoViewReplayButton,
 					    UIStatic *i_pBestPlayerText
 					    ) {
     char **v_result;
-    int nrow;
+    unsigned int nrow;
     std::string v_levelAuthor;
     std::string v_fileUrl;
     
@@ -4037,7 +4055,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
   void GameApp::viewHighscoreOf() {
     char **v_result;
-    int nrow;
+    unsigned int nrow;
     std::string v_levelAuthor;
     std::string v_fileUrl;
     std::string v_replayName;

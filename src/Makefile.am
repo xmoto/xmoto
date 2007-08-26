@@ -36,6 +36,19 @@ gui_basic_SOURCES = gui/basic/GUI.h               \
 gui_specific_SOURCES = gui/specific/GUIXMoto.h   \
                        gui/specific/GUIXMoto.cpp
 
+drawlib_SOURCES = drawlib/DrawLib.h   \
+                  drawlib/DrawLib.cpp
+
+if USE_OPENGL
+drawlib_SOURCES += drawlib/DrawLibOpenGL.h   \
+                   drawlib/DrawLibOpenGL.cpp
+endif
+
+if USE_SDLGFX
+drawlib_SOURCES += drawlib/DrawLibSDLgfx.h   \
+                   drawlib/DrawLibSDLgfx.cpp
+endif
+
 helpers_SOURCES = helpers/VMath.h             \
                   helpers/VMath.cpp           \
                   helpers/VExcept.h           \
@@ -55,7 +68,7 @@ helpers_SOURCES = helpers/VMath.h             \
                   iqsort.h
 
 common_SOURCES = Image.cpp \
-  VBezier.cpp VDraw.cpp VDrawOpenGL.cpp PolyDraw.h PolyDraw.cpp VDrawSDLgfx.cpp \
+  VBezier.cpp PolyDraw.h PolyDraw.cpp \
   XMArgs.h XMArgs.cpp XMSession.h XMSession.cpp \
   XMBuild.h XMBuild.cpp XMBuild_info.h \
   VFileIO.cpp VTexture.cpp \
@@ -64,7 +77,7 @@ common_SOURCES = Image.cpp \
   $(image_SOURCES) $(tinyxml_SOURCES) \
   $(md5_SOURCES) \
   Image.h \
-  VBezier.h VCommon.h VDraw.h \
+  VBezier.h VCommon.h \
   VFileIO.h VTexture.h VXml.h \
   BuildConfig.h \
   DBuffer.cpp \
@@ -100,6 +113,7 @@ endif
 
 common_SOURCES += $(gui_basic_SOURCES)
 common_SOURCES += $(gui_specific_SOURCES)
+common_SOURCES += $(drawlib_SOURCES)
 
 common_LDADD = $(GL_LIBS) $(SDL_LIBS) $(LIBINTL)
 if WIN32

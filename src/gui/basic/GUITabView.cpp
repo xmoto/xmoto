@@ -23,7 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "VXml.h"
 #include "GUI.h"
-#include "../../VDraw.h"
+#include "drawlib/DrawLib.h"
 
   /*===========================================================================
   Painting
@@ -53,7 +53,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     int v_width, v_height;
 
     setTextSolidColor(MAKE_COLOR(188,186,67,255));
-    for(int i=0;i<getChildren().size();i++) {
+    for(unsigned int i=0;i<getChildren().size();i++) {
 
       putTextS(nCX, nCY, getChildren()[i]->getCaption(), v_width, v_height);
       if(isUglyMode()) {
@@ -81,7 +81,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
   void UITabView::selectChildren(unsigned int i) {
     /* Hide everything except this */
-    for(int j=0;j<getChildren().size();j++) { 
+    for(unsigned int j=0;j<getChildren().size();j++) { 
       if(j == i) {
 	getChildren()[j]->showWindow(true);
 	if(m_nSelected != j) {
@@ -97,7 +97,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
   void UITabView::selectChildrenById(const std::string& i_id) {
     /* Hide everything except this */
-    for(int j=0;j<getChildren().size();j++) { 
+    for(unsigned int j=0;j<getChildren().size();j++) { 
       if(getChildren()[j]->getID() == i_id) {
 	getChildren()[j]->showWindow(true);
 	if(m_nSelected != j) {

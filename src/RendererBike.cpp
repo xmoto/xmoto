@@ -24,8 +24,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VXml.h"
 #include "VFileIO.h"
 #include "xmscene/Scene.h"
+#include "xmscene/BikeParameters.h"
 #include "Renderer.h"
-#include "VDraw.h"
+#include "drawlib/DrawLib.h"
 #include "Game.h"
 
   void GameRenderer::renderBodyPart(const Vector2f& i_from, const Vector2f& i_to,

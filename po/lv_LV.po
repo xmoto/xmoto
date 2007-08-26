@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xmoto 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-08-19 21:21+0200\n"
+"POT-Creation-Date: 2007-08-26 22:42+0200\n"
 "PO-Revision-Date: 2007-08-11 00:31+0300\n"
 "Last-Translator: Jānis Rūcis <parasti@gmail.com>\n"
 "Language-Team: Latvian\n"
@@ -65,7 +65,7 @@ msgstr "Darbība"
 msgid "All (on this computer)"
 msgstr "Visi (uz šī datora)"
 
-#: src/GameText.h:46 src/GameText.h:517
+#: src/GameText.h:46 src/GameText.h:520
 msgid "All levels"
 msgstr "Visi līmeņi"
 
@@ -555,15 +555,15 @@ msgstr "Tavs labākais"
 msgid "Type"
 msgstr "Tips"
 
-#: src/GameText.h:195
+#: src/GameText.h:195 src/GameText.h:515
 msgid "The highscore of the room"
 msgstr "Istabas rekords"
 
-#: src/GameText.h:196
+#: src/GameText.h:196 src/GameText.h:513
 msgid "The best of my replays (on this computer)"
 msgstr "Labākais no maniem ierakstiem (uz šī datora)"
 
-#: src/GameText.h:197
+#: src/GameText.h:197 src/GameText.h:514
 msgid "The best of the replays (on this computer)"
 msgstr "Labākais no ierakstiem (uz šī datora)"
 
@@ -939,7 +939,7 @@ msgstr "Tīmekļa balsojums"
 msgid "Statistics"
 msgstr "Statistika"
 
-#: src/GameText.h:295 src/GameText.h:526
+#: src/GameText.h:295 src/GameText.h:529
 msgid "By best driver"
 msgstr "Pēc labākā braucēja"
 
@@ -1806,257 +1806,259 @@ msgstr ""
 "Pārtraukt spēli, kad spēlētājs pabeidz līmeni, vai turpināt, kamēr kāds "
 "spēlētājs vēl spēlē"
 
-#: src/GameText.h:514
+#: src/GameText.h:517
 msgid "Levels with no highscore"
 msgstr "Līmeņi bez rekorda"
 
-#: src/GameText.h:515 src/GameText.h:542
+#: src/GameText.h:518 src/GameText.h:545
 msgid "Levels you have not completed"
 msgstr "Līmeņi, kurus neesi pabeidzis"
 
-#: src/GameText.h:516
+#: src/GameText.h:519
 msgid "You're not the highscore holder"
 msgstr "Tu neesi rekorda īpašnieks"
 
-#: src/GameText.h:518
+#: src/GameText.h:521
 msgid "New and updated levels"
 msgstr "Jauni un atjaunoti līmeņi"
 
-#: src/GameText.h:519
+#: src/GameText.h:522
 msgid "Favorite levels"
 msgstr "Iecienītie līmeņi"
 
-#: src/GameText.h:520
+#: src/GameText.h:523
 msgid "Nicest levels"
 msgstr "Vistīkamākie līmeņi"
 
-#: src/GameText.h:521
+#: src/GameText.h:524
 msgid "Hardest levels"
 msgstr "Visgrūtākie līmeņi"
 
-#: src/GameText.h:522
+#: src/GameText.h:525
 msgid "Easiest levels"
 msgstr "Visvieglākie līmeņi"
 
-#: src/GameText.h:523
+#: src/GameText.h:526
 msgid "Crapiest levels"
 msgstr "Visdraņķīgākie līmeņi"
 
-#: src/GameText.h:524
+#: src/GameText.h:527
 msgid "Scripted levels"
 msgstr "Programmētie līmeņi"
 
-#: src/GameText.h:525
+#: src/GameText.h:528
 msgid "Musical levels"
 msgstr "Muzikālie līmeņi"
 
-#: src/GameText.h:527
+#: src/GameText.h:530
 msgid "Last played levels"
 msgstr "Pēdējie spēlētie līmeņi"
 
-#: src/GameText.h:528
+#: src/GameText.h:531
 msgid "Never played levels"
 msgstr "Nekad nespēlētie līmeņi"
 
-#: src/GameText.h:529
+#: src/GameText.h:532
 msgid "Most played levels"
 msgstr "Visspēlētākie līmeņi"
 
-#: src/GameText.h:530
+#: src/GameText.h:533
 msgid "Less played levels (but played)"
 msgstr "Retāk spēlētie līmeņi (bet spēlētie)"
 
-#: src/GameText.h:531
+#: src/GameText.h:534
 msgid "Last highscores"
 msgstr "Pēdējie rekordi"
 
-#: src/GameText.h:532
+#: src/GameText.h:535
 msgid "Last levels"
 msgstr "Pēdējie līmeņi"
 
-#: src/GameText.h:533
+#: src/GameText.h:536
 msgid "Oldest highscores"
 msgstr "Visvecākie rekordi"
 
-#: src/GameText.h:534
+#: src/GameText.h:537
 msgid "Platinum"
 msgstr "Platīns"
 
-#: src/GameText.h:535
+#: src/GameText.h:538
 msgid "Gold"
 msgstr "Zelts"
 
-#: src/GameText.h:536
+#: src/GameText.h:539
 msgid "Silver"
 msgstr "Sudrabs"
 
-#: src/GameText.h:537
+#: src/GameText.h:540
 msgid "Bronze"
 msgstr "Bronza"
 
-#: src/GameText.h:538
+#: src/GameText.h:541
 msgid "No medal"
 msgstr "Bez medaļas"
 
-#: src/GameText.h:539
+#: src/GameText.h:542
 msgid "My levels"
 msgstr "Mani līmeņi"
 
-#: src/GameText.h:541
+#: src/GameText.h:544
 msgid "Levels with no highscore in your room"
 msgstr "Līmeņi bez rekorda tavā istabā"
 
-#: src/GameText.h:543
+#: src/GameText.h:546
 msgid "Somebody in the room made a better highscore than yours"
 msgstr "Kāds istabā uzstādīja labāku rekordu par tavējo"
 
-#: src/GameText.h:544
+#: src/GameText.h:547
 msgid "All X-Moto levels"
 msgstr "Visi X-Moto līmeņi"
 
-#: src/GameText.h:545
+#: src/GameText.h:548
 msgid "New and updated levels since your last check"
 msgstr "Jauni un atjaunoti līmeņi kopš pēdējās pārbaudes"
 
-#: src/GameText.h:546
+#: src/GameText.h:549
 msgid "Your favorite levels"
 msgstr "Tavi iecienītākie līmeņi"
 
-#: src/GameText.h:547
+#: src/GameText.h:550
 msgid "Nicest X-Moto levels according to the web votes"
 msgstr "Vistīkamākie X-Moto līmeņi, spriežot pēc tīmekļa balsojuma"
 
-#: src/GameText.h:548
+#: src/GameText.h:551
 msgid "Hardest X-Moto levels according to the web votes"
 msgstr "Visgrūtākie X-Moto līmeņi, spriežot pēc tīmekļa balsojuma"
 
-#: src/GameText.h:549
+#: src/GameText.h:552
 msgid "Easiest X-Moto levels according to the web votes"
 msgstr "Visvieglākie X-Moto līmeņi, spriežot pēc tīmekļa balsojuma"
 
-#: src/GameText.h:550
+#: src/GameText.h:553
 msgid "Crapiest X-Moto levels according to the web votes"
 msgstr "Visdraņķīgākie X-Moto līmeņi, spriežot pēc tīmekļa balsojuma"
 
-#: src/GameText.h:551
+#: src/GameText.h:554
 msgid "X-Moto levels which are dynamic"
 msgstr "Interaktīvi X-Moto līmeņi"
 
-#: src/GameText.h:552
+#: src/GameText.h:555
 msgid "X-Moto levels with a background music"
 msgstr "X-Moto līmeņi ar fona mūziku"
 
-#: src/GameText.h:553
+#: src/GameText.h:556
 msgid "Last levels you have played"
 msgstr "Pēdējie līmeņi, kurus tu esi spēlējis"
 
-#: src/GameText.h:554
+#: src/GameText.h:557
 msgid "X-Moto levels you never played"
 msgstr "X-Moto līmeņi, kurus nekad neesi spēlējis"
 
-#: src/GameText.h:555
+#: src/GameText.h:558
 msgid "X-Moto levels you have played the most"
 msgstr "X-Moto līmeņi, kurus esi spēlējis visbiežāk"
 
-#: src/GameText.h:556
+#: src/GameText.h:559
 msgid "X-Moto levels you have played only a few times"
 msgstr "X-Moto līmeņi, kurus esi spēlējis tikai dažas reizes"
 
-#: src/GameText.h:557
+#: src/GameText.h:560
 msgid "X-Moto levels having a recent highscore in your room"
 msgstr "X-Moto līmeņi ar nesenu rekordu tavā istabā"
 
-#: src/GameText.h:558
+#: src/GameText.h:561
 msgid "Last created X-Moto levels"
 msgstr "Pēdējie izveidotie X-Moto līmeņi"
 
-#: src/GameText.h:559
+#: src/GameText.h:562
 msgid "X-Moto levels having an old highscore in your room"
 msgstr "X-Moto līmeņi ar veciem rekordiem tavā istabā"
 
-#: src/GameText.h:560
+#: src/GameText.h:563
 msgid "You have the room highscore"
 msgstr "Tu esi istabas rekorda īpašnieks"
 
-#: src/GameText.h:561
+#: src/GameText.h:564
 msgid "Your personal highscore finish time is almost the room highscore (95%)"
 msgstr "Tava rekorda finiša laiks daudz neatšķiras no istabas rekorda (95%)"
 
-#: src/GameText.h:562
+#: src/GameText.h:565
+#, c-format
 msgid ""
 "Your personal highscore finish time is almost the room highscore (90%-95%)"
 msgstr ""
 "Tava rekorda finiša laiks daudz neatšķiras no istabas rekorda (90%-95%)"
 
-#: src/GameText.h:563
+#: src/GameText.h:566
+#, c-format
 msgid ""
 "Your personal highscore finish time is almost the room highscore (80%-90%)"
 msgstr ""
 "Tava rekorda finiša laiks daudz neatšķiras no istabas rekorda (80%-90%)"
 
-#: src/GameText.h:564
+#: src/GameText.h:567
 msgid "The room highscore is really better than your own highscore"
 msgstr "Istabas rekords ir daudz labāks par tavu personīgo rekordu"
 
-#: src/GameText.h:565
+#: src/GameText.h:568
 #, c-format
 msgid "Level pack \"%s\""
 msgstr "Līmeņu paka \"%s\""
 
-#: src/GameText.h:566
+#: src/GameText.h:569
 #, c-format
 msgid "Highscores by %s"
 msgstr "%s rekordi"
 
-#: src/GameText.h:567
+#: src/GameText.h:570
 msgid "External levels (the one you put into the 'My levels' directory)"
 msgstr "Ārējie līmeņi (tie, kurus tu esi ielicis \"My levels\" mapē)"
 
-#: src/GameText.h:569
+#: src/GameText.h:572
 msgid "Ugly mode enabled"
 msgstr "Neglītais režīms aktivizēts"
 
-#: src/GameText.h:570
+#: src/GameText.h:573
 msgid "Ugly mode disabled"
 msgstr "Neglītais režīms deaktivizēts"
 
-#: src/GameText.h:571
+#: src/GameText.h:574
 msgid "Theme mode enabled"
 msgstr "Tēmas režīms aktivizēts"
 
-#: src/GameText.h:572
+#: src/GameText.h:575
 msgid "Theme mode disabled"
 msgstr "Tēmas režīms deaktivizēts"
 
-#: src/GameText.h:573
+#: src/GameText.h:576
 msgid "UglyOver mode enabled"
 msgstr "UglyOver režīms aktivizēts"
 
-#: src/GameText.h:574
+#: src/GameText.h:577
 msgid "UglyOver mode disabled"
 msgstr "UglyOver režīms deaktivizēts"
 
-#: src/GameText.h:575
+#: src/GameText.h:578
 msgid "Web connection enabled"
 msgstr "Tīmekļa pieslēgums aktivizēts"
 
-#: src/GameText.h:576
+#: src/GameText.h:579
 msgid "Web connection disabled"
 msgstr "Tīmekļa pieslēgums deaktivizēts"
 
-#: src/GameText.h:577
+#: src/GameText.h:580
 msgid "Replay interpolation enabled"
 msgstr "Ieraksta interpolācija aktivizēta"
 
-#: src/GameText.h:578
+#: src/GameText.h:581
 msgid "Replay interpolation disabled"
 msgstr "Ieraksta interpolācija deaktivizēta"
 
-#: src/GameText.h:579
+#: src/GameText.h:582
 msgid "Fps enabled"
 msgstr ""
 
-#: src/GameText.h:580
+#: src/GameText.h:583
 msgid "Fps disabled"
 msgstr ""
 

@@ -22,7 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *  GUI: text edit box
  */
 #include "GUI.h"
-#include "../../VDraw.h"
+#include "drawlib/DrawLib.h"
 #include "../../Game.h"
 
   /*===========================================================================
@@ -83,7 +83,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     if(!bDisabled) {
       if(bActive) {
-        if(sin(getApp()->getRealTime()*13.0f) > 0.0f)
+        if(sin(getApp()->getXMTime()*13.0f) > 0.0f)
           putRect(4+nCursorOffset,3,nCursorWidth+1,18,MAKE_COLOR(255,0,0,255));
       }      
     

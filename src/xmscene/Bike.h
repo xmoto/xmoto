@@ -23,24 +23,23 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <string>
 #include "BasicSceneStructs.h"
-#include "BikeAnchors.h"
-#include "BikeController.h"
-#include "../SomersaultCounter.h"
-#include "../Sound.h"
-#include "../helpers/Color.h"
+#include "helpers/Color.h"
+#include "helpers/VMath.h"
 
 class Level;
 class Entity;
 class Zone;
-
 class OnBikerHooks;
-
 class Replay;
 class CollisionSystem;
 class MotoGame;
 class Replay;
 class BikerTheme;
 class Theme;
+class BikeAnchors;
+class BikeParameters;
+class BikeController;
+class EngineSoundSimulator;
 
 class BikeState {
   public:
@@ -112,8 +111,8 @@ class BikeState {
   float CurrentBrake() const;
   float CurrentEngine() const;
     
-  BikeAnchors& Anchors();
-  BikeParameters& Parameters();
+  BikeAnchors* Anchors();
+  BikeParameters* Parameters();
 
   static void interpolateGameState(SerializedBikeState *pA,SerializedBikeState *pB,SerializedBikeState *p,float t);
   static void updateStateFromReplay(SerializedBikeState *pReplayState,BikeState *pBikeS);
@@ -126,8 +125,8 @@ class BikeState {
   private:
   /* Driving */
   float m_curBrake, m_curEngine;    
-  BikeParameters m_bikeParameters;
-  BikeAnchors    m_bikeAnchors;
+  BikeParameters* m_bikeParameters;
+  BikeAnchors*    m_bikeAnchors;
 };
 
 class Biker {
@@ -135,6 +134,7 @@ class Biker {
   Biker(Theme *i_theme, BikerTheme* i_bikerTheme,
 	const TColor& i_colorFilter,
 	const TColor& i_uglyColorFilter);
+  virtual ~Biker();
   virtual BikeState* getState();
   virtual bool getRenderBikeFront() = 0; /* display the bikefront ? (for detach) */
   virtual float getBikeEngineSpeed() = 0; /* engine speed */
@@ -169,10 +169,10 @@ class Biker {
   std::vector<Entity *> &EntitiesTouching();
   std::vector<Zone *> &ZonesTouching();
 
-  bool isTouching(const Entity& i_entity) const;
-  touch setTouching(Entity& i_entity, bool i_touching);     
-  bool isTouching(const Zone& i_zone) const;
-  touch setTouching(Zone& i_zone, bool i_isTouching);
+  bool isTouching(const Entity* i_entity) const;
+  touch setTouching(Entity* i_entity, bool i_touching);     
+  bool isTouching(const Zone* i_zone) const;
+  touch setTouching(Zone* i_zone, bool i_isTouching);
 
   virtual void setBodyDetach(bool state);
   const TColor& getColorFilter() const;
@@ -186,7 +186,7 @@ class Biker {
   BikerTheme* m_bikerTheme;
   bool m_playSound;
   BikeState m_bikeState;
-  EngineSoundSimulator m_EngineSound;
+  EngineSoundSimulator* m_EngineSound;
   bool m_finished;
   float m_finishTime;
   bool m_dead;
@@ -206,6 +206,7 @@ class Biker {
 
 class OnBikerHooks {
 public:
+  virtual ~OnBikerHooks() {};
   virtual void onSomersaultDone(bool i_counterclock) = 0;
   virtual void onWheelTouches(int i_wheel, bool i_touch) = 0;
   virtual void onHeadTouches() = 0;

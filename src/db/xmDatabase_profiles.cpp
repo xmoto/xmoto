@@ -109,7 +109,7 @@ void xmDatabase::profiles_addFinishTime(const std::string& i_profile, const std:
   v_fTime_str << std::fixed << (floor(i_finishTime * 1000.0))/1000.0;
   std::string v_timeToKeep;
   char **v_result;
-  int nrow;
+  unsigned int nrow;
 
   simpleSql(std::string("INSERT INTO profile_completedLevels("
 			"id_profile, id_level, timeStamp, finishTime) "

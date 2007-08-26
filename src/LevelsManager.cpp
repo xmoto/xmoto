@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <time.h>
 #include "db/xmDatabase.h"
 #include "helpers/Log.h"
+#include "VFileIO.h"
 
 LevelsPack::LevelsPack(std::string i_name, const std::string& i_sql, bool i_ascSort) {
   m_name         = i_name;
@@ -40,7 +41,7 @@ LevelsPack::~LevelsPack() {
 
 int LevelsPack::getNumberOfLevels(xmDatabase *i_db) {
   char **v_result;
-  int nrow;
+  unsigned int nrow;
   int n;
 
   v_result = i_db->readDB("SELECT count(id_level) FROM (" + m_sql_levels + ");",
@@ -73,7 +74,7 @@ std::string LevelsPack::getLevelsWithHighscoresQuery(const std::string& i_profil
 
 int LevelsPack::getNumberOfFinishedLevels(xmDatabase *i_db, const std::string& i_profile) {
   char **v_result;
-  int nrow;
+  unsigned int nrow;
   int n;
 
   v_result = i_db->readDB("SELECT count(a.id_level) FROM (" +
@@ -206,7 +207,7 @@ void LevelsManager::makePacks(xmDatabase *i_db,
 			      bool i_bDebugMode) {
   LevelsPack *v_pack;
   char **v_result;
-  int nrow;
+  unsigned int nrow;
 
   cleanPacks();
 
@@ -724,7 +725,7 @@ void LevelsManager::cleanCache() {
 
 std::string LevelsManager::LevelByFileName(xmDatabase *i_db, const std::string& i_fileName) {
     char **v_result;
-    int nrow;
+    unsigned int nrow;
     std::string v_id_level;
 
     v_result = i_db->readDB("SELECT id_level FROM levels WHERE filepath=\"" +
@@ -744,7 +745,7 @@ std::string LevelsManager::LevelByFileName(xmDatabase *i_db, const std::string& 
 bool LevelsManager::doesLevelExist(xmDatabase *i_db,
 				   const std::string& i_id) {
   char **v_result;
-  int nrow;
+  unsigned int nrow;
 
   v_result = i_db->readDB("SELECT id_level "
 			  "FROM levels "
@@ -757,7 +758,7 @@ bool LevelsManager::doesLevelExist(xmDatabase *i_db,
 
 void LevelsManager::printLevelsList(xmDatabase *i_db) const {
   char **v_result;
-  int nrow;
+  unsigned int nrow;
 
   printf("%-40s %-40s\n", "Id", "Name");
 
@@ -842,7 +843,7 @@ void LevelsManager::updateLevelsFromLvl(xmDatabase *i_db,
 
 void LevelsManager::addToFavorite(xmDatabase *i_db, std::string i_profile,
 				  const std::string& i_id_level) {
-  int nrow;
+  unsigned int nrow;
   char **v_result;
   int v_n;
 
@@ -864,7 +865,7 @@ void LevelsManager::addToFavorite(xmDatabase *i_db, std::string i_profile,
 
 void LevelsManager::delFromFavorite(xmDatabase *i_db, std::string i_profile,
 				    const std::string& i_id_level) {
-  int nrow;
+  unsigned int nrow;
   char **v_result;
   int v_n;  
 
@@ -890,7 +891,7 @@ std::string LevelsManager::getQuickStartPackQuery(xmDatabase *i_db,
 						  const std::string& i_profile, const std::string& i_id_room) {
   /* SELECT id_level, name, profile_best_finishTime, web_highscore */
   char **v_result;
-  int nrow;
+  unsigned int nrow;
   char *v_res;
 
   /* if xmoto run only 1 time, run the tutorial pack */

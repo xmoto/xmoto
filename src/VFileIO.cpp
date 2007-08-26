@@ -410,7 +410,7 @@ std::vector<std::string> FS::findPhysFiles(std::string Files,bool bRecurse) {
 #endif
 		
   /* Look in package */
-  for(int i=0; i<m_PackFiles.size(); i++) {
+  for(unsigned int i=0; i<m_PackFiles.size(); i++) {
     /* Make sure about the directory... */
     int k = Files.find_last_of('/');
     std::string Ds1 = Files.substr(0,k+1);
@@ -487,7 +487,7 @@ FileHandle *FS::openIFile(std::string Path, bool i_includeCurrentDir) {
     
   if(pfh->fp == NULL) {
     /* No luck so far, look in the data package */
-    for(int i=0; i<m_PackFiles.size(); i++) {              
+    for(unsigned int i=0; i<m_PackFiles.size(); i++) {              
       if(m_PackFiles[i].Name == Path ||
 	 (std::string("./") + m_PackFiles[i].Name) == Path) {
 	/* Found it, yeah. */
@@ -1287,7 +1287,7 @@ std::string FS::md5sum(std::string i_filePath) {
   }
 
   /* package */
-  for(int i=0; i<m_PackFiles.size(); i++) {              
+  for(unsigned int i=0; i<m_PackFiles.size(); i++) {              
     if(m_PackFiles[i].Name == i_filePath ||
        (std::string("./") + m_PackFiles[i].Name) == i_filePath) {
       /* Found it, yeah. */

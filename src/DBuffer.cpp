@@ -28,7 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   void DBuffer::_FreeDBuffer(void) {
     /* Free stuff if anything */
     if(m_pcData != NULL && m_bOwnData) delete [] m_pcData;
-    for(int i=0;i<m_Parts.size();i++) {
+    for(unsigned int i=0;i<m_Parts.size();i++) {
       delete [] m_Parts[i]->pcBuffer;
       delete m_Parts[i];
     }
@@ -142,14 +142,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     if(isOutput()) {
       /* Build full buffer */
       m_nSize = 0;
-      for(int i=0;i<m_Parts.size();i++) {
+      for(unsigned int i=0;i<m_Parts.size();i++) {
         if(i == m_Parts.size() - 1) m_nSize += m_Parts[i]->nPtr;
         else m_nSize += m_nPartSize;
       }
 
       m_pcData = new char [m_nSize];
       int k = 0;
-      for(int i=0;i<m_Parts.size();i++) {
+      for(unsigned int i=0;i<m_Parts.size();i++) {
         int w;
         if(i == m_Parts.size() - 1) w = m_Parts[i]->nPtr;
         else w = m_nPartSize;

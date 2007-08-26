@@ -21,17 +21,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __ENTITY_H__
 #define __ENTITY_H__
 
-#define ENTITY_DEFAULT_SPRITE_NAME ""
-#define ENTITY_DEFAULT_SIZE        1.0
-#define ENTITY_DEFAULT_Z           -1.0
-#define PARTICLES_SOURCE_SMOKE_TIME_INCREMENT  0.050
-#define PARTICLES_SOURCE_STAR_TIME_INCREMENT   0.025
-#define PARTICLES_SOURCE_FIRE_TIME_INCREMENT   0.040
-#define PARTICLES_SOURCE_DEBRIS_TIME_INCREMENT 0.025
-
 #include <string>
-#include "../helpers/Color.h"
-#include "../helpers/VMath.h"
+#include "helpers/Color.h"
+#include "helpers/VMath.h"
 #include "BasicSceneStructs.h"
 
 class EntityParticle;

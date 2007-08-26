@@ -35,6 +35,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "helpers/Log.h"
 #include "helpers/SwapEndian.h"
+#include "GameEvents.h"
 
   bool Replay::m_bEnableCompression = true;
 

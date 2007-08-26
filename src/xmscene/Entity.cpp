@@ -19,13 +19,19 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "Entity.h"
-
-#include "../VXml.h"
-#include "../PhysSettings.h"
-#include "../VFileIO.h"
+#include "VXml.h"
+#include "PhysSettings.h"
+#include "VFileIO.h"
 
 // don't excceed this number of particles to not reduce significantly the fps
-#define PARTICLESSOURCE_TOTAL_MAX_PARTICLES 1000
+#define PARTICLESSOURCE_TOTAL_MAX_PARTICLES 5000
+#define ENTITY_DEFAULT_SPRITE_NAME ""
+#define ENTITY_DEFAULT_SIZE        1.0
+#define ENTITY_DEFAULT_Z           -1.0
+#define PARTICLES_SOURCE_SMOKE_TIME_INCREMENT  0.050
+#define PARTICLES_SOURCE_STAR_TIME_INCREMENT   0.025
+#define PARTICLES_SOURCE_FIRE_TIME_INCREMENT   0.040
+#define PARTICLES_SOURCE_DEBRIS_TIME_INCREMENT 0.025
 
 Entity::Entity(const std::string& i_id) {
   m_id          = i_id;

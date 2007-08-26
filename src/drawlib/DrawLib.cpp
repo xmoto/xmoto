@@ -21,7 +21,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* 
  *  Simple 2D drawing library, built closely on top of OpenGL.
  */
-#include "VDraw.h"
+#include "DrawLib.h"
+
+#ifdef ENABLE_OPENGL
+#include "DrawLibOpenGL.h"
+#endif
+
+#ifdef ENABLE_SDLGFX
+#include "DrawLibSDLgfx.h"
+#endif
 
   DrawLib::backendtype DrawLib::m_backend = DrawLib::backend_None;
 
@@ -75,7 +83,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  }
 
 
-  FontManager* DrawLib::getFontManager(const std::string &i_fontFile, int i_fontSize) {
+  FontManager* DrawLib::getFontManager(const std::string &i_fontFile, unsigned int i_fontSize) {
     throw Exception("Your DrawLib doesn't manage FontManager");
   }
 
@@ -213,7 +221,88 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /* Disable alpha again if we enabled it */
    if(bAlpha) { setBlendMode(BLEND_MODE_NONE); }
   }
-  
+
+void DrawLib::setDispWidth(unsigned int width) {
+  m_nDispWidth = width;
+}
+
+unsigned int DrawLib::getDispWidth(void) {
+  return m_nDispWidth;
+}
+
+void DrawLib::setNoGraphics(bool disable_graphics) {
+  m_bNoGraphics = disable_graphics;
+}
+
+bool DrawLib::isNoGraphics() {
+  return m_bNoGraphics;
+}
+
+void DrawLib::setDispHeight(unsigned int height) {
+  m_nDispHeight = height;
+}
+
+unsigned int DrawLib::getDispHeight(void) {
+  return m_nDispHeight;
+}
+
+void DrawLib::setDispBPP(unsigned int bpp) {
+  m_nDispBPP = bpp;
+}
+
+unsigned int DrawLib::getDispBPP(void) {
+  return m_nDispBPP;
+}
+
+void DrawLib::setWindowed(bool windowed) {
+  m_bWindowed = windowed;
+}
+
+bool DrawLib::getWindowed(void) {
+  return m_bWindowed;
+}
+
+void DrawLib::glVertex(Vector2f x) {
+  glVertex(x.x, x.y);
+}
+
+void DrawLib::setColorRGB(unsigned int r, unsigned int g, unsigned int b) {
+  setColor(MAKE_COLOR(r, g, b, 255));
+}
+
+void DrawLib::setColorRGBA(unsigned int r, unsigned int g, unsigned int b, unsigned int a) {
+  setColor(MAKE_COLOR(r, g, b, a));
+}
+
+void DrawLib::resetGraphics() {
+}
+
+void DrawLib::setDontUseGLExtensions(bool dont_use) {
+  m_bDontUseGLExtensions = dont_use;
+}
+
+void DrawLib::setDrawDims(unsigned int nActualW, unsigned int nActualH, unsigned int w, unsigned int h) {
+  m_nDrawWidth = w;
+  m_nDrawHeight = h;
+  m_nActualWidth = nActualW;
+  m_nActualHeight = nActualH;
+}
+
+bool DrawLib::useVBOs() {
+  return m_bVBOSupported;
+};
+
+bool DrawLib::useFBOs() {
+  return m_bFBOSupported;
+};
+
+bool DrawLib::useShaders() {
+  return m_bShadersSupported;
+};
+
+Camera* DrawLib::getMenuCamera(){
+  return m_menuCamera;
+}
 
   /*===========================================================================
   Primitive: box
@@ -239,7 +328,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
   }
 
-FontManager::FontManager(DrawLib* i_drawLib, const std::string &i_fontFile, int i_fontSize) {
+FontManager::FontManager(DrawLib* i_drawLib, const std::string &i_fontFile, unsigned int i_fontSize) {
   m_drawLib = i_drawLib;
   m_ttf = TTF_OpenFont(i_fontFile.c_str(), i_fontSize);
   if (m_ttf == NULL) {

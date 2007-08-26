@@ -704,7 +704,7 @@ void AnimationSprite::setCurrentTexture(Texture *p_texture) {
 
 int AnimationSprite::getCurrentFrame() {
   /* Next frame? */
-  float v_realTime = GameApp::getRealTime();
+  float v_realTime = GameApp::getXMTime();
 
   while(v_realTime > m_fFrameTime + m_frames[m_current_frame]->getDelay()) {
     m_fFrameTime = v_realTime;
@@ -866,7 +866,7 @@ float EdgeEffectSprite::getDepth() const {
 }
 
 Texture* EdgeEffectSprite::getTexture(bool bSmall, bool bClamp, FilterMode eFilterMode) {
-  Sprite::getTexture(bSmall, bClamp, eFilterMode);
+  return Sprite::getTexture(bSmall, bClamp, eFilterMode);
 }
 
 FontSprite::FontSprite(Theme* p_associated_theme, std::string p_name, std::string p_fileName) : SimpleFrameSprite(p_associated_theme, p_name, p_fileName) {

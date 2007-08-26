@@ -72,6 +72,13 @@ class XMSession {
   void setUglyOver(bool i_value);
   bool testTheme() const;
   void setTestTheme(bool i_value);
+  bool ghostStrategy_MYBEST() const;
+  void setGhostStrategy_MYBEST(bool i_value);
+  bool ghostStrategy_THEBEST() const;
+  void setGhostStrategy_THEBEST(bool i_value);
+  bool ghostStrategy_BESTOFROOM() const;
+  void setGhostStrategy_BESTOFROOM(bool i_value);
+
   private:
   bool m_verbose;
   bool m_useGraphics;
@@ -93,6 +100,10 @@ class XMSession {
   bool m_ugly;
   bool m_uglyOver;
   bool m_testTheme;
+
+  bool m_ghostStrategy_MYBEST;
+  bool m_ghostStrategy_THEBEST;
+  bool m_ghostStrategy_BESTOFROOM;
 };
 
 #endif

@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  
 /* rneckelmann 2006-09-30: moved a lot of stuff from Game.cpp into here to 
                            make it a tad smaller */ 
+#include "GameText.h"
 #include "Game.h"
 #include "VFileIO.h"
 #include "Sound.h"
@@ -34,7 +35,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/BikePlayer.h"
 #include "helpers/Log.h"
 #include "XMSession.h"
-#include "VDraw.h"
+#include "drawlib/DrawLib.h"
+#include "SysMessage.h"
+#include "Credits.h"
+#include "xmscene/Camera.h"
+#include "xmscene/Entity.h"
 
 #include <curl/curl.h>
 
@@ -98,7 +103,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
           int nPhysSteps = 0;
         
           /* When did the frame start? */
-          double fStartFrameTime = getTime();                    
+          double fStartFrameTime = getXMTime();                    
 	  int numberCam = m_MotoGame.getNumberCameras();
 
           if(m_State == GS_PREPLAYING) {
@@ -110,7 +115,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 	    if(m_xmsession->timedemo() == false) {
 	      /* limit framerate while PREPLAY (100 fps)*/
-	      double timeElapsed = getTime() - fStartFrameTime;
+	      double timeElapsed = getXMTime() - fStartFrameTime;
 	      if(timeElapsed < 0.01)
 		setFrameDelay(10 - (int)(timeElapsed*1000.0));
 	    }
@@ -142,13 +147,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
           if(!getDrawLib()->isNoGraphics()) {
 	    try {
 	      if((m_autoZoom || (m_bPrePlayAnim && m_xmsession->ugly() == false)) && numberCam > 1){
-		m_Renderer.render(bIsPaused);
-		ParticlesSource::setAllowParticleGeneration(m_Renderer.nbParticlesRendered() < NB_PARTICLES_TO_RENDER_LIMITATION);
+		m_Renderer->render(bIsPaused);
+		ParticlesSource::setAllowParticleGeneration(m_Renderer->nbParticlesRendered() < NB_PARTICLES_TO_RENDER_LIMITATION);
 	      }else{
 		for(int i=0; i<numberCam; i++){
 		  m_MotoGame.setCurrentCamera(i);
-		  m_Renderer.render(bIsPaused);
-		  ParticlesSource::setAllowParticleGeneration(m_Renderer.nbParticlesRendered() < NB_PARTICLES_TO_RENDER_LIMITATION);
+		  m_Renderer->render(bIsPaused);
+		  ParticlesSource::setAllowParticleGeneration(m_Renderer->nbParticlesRendered() < NB_PARTICLES_TO_RENDER_LIMITATION);
 		}
 	      }
 	    } catch(Exception &e) {
@@ -168,7 +173,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
           }
         
           /* When did frame rendering end? */
-          double fEndFrameTime = getTime();
+          double fEndFrameTime = getXMTime();
           
           /* Calculate how large a delay should be inserted after the frame, to keep the 
              desired frame rate */
@@ -185,7 +190,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 	    if(m_autoZoom){
 	      /* limit framerate while zooming (100 fps)*/
-	      double timeElapsed = getTime() - fStartFrameTime;
+	      double timeElapsed = getXMTime() - fStartFrameTime;
 	      if(timeElapsed < 0.01)
 		nADelay = 10 - (int)(timeElapsed*1000.0);
 	    }
@@ -241,14 +246,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
          
           /* Context menu? */
           if(m_State == GS_PREPLAYING || m_State == GS_PLAYING || m_State == GS_REPLAYING || !m_bEnableContextHelp)
-            m_Renderer.getGUI()->enableContextMenuDrawing(false);
+            m_Renderer->getGUI()->enableContextMenuDrawing(false);
           else
-            m_Renderer.getGUI()->enableContextMenuDrawing(true);
+            m_Renderer->getGUI()->enableContextMenuDrawing(true);
           
           /* Draw GUI */
 	  // only if it's not the autozoom camera
 	  if(m_MotoGame.getCurrentCamera() != m_MotoGame.getNumberCameras()){
-	    m_Renderer.getGUI()->paint();        
+	    m_Renderer->getGUI()->paint();        
 	  }
         
           /* Credits? */
@@ -288,7 +293,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       _DrawMouseCursor();
 
     /* system message */
-    m_sysMsg.render();
+    m_sysMsg->render();
   }
 
   /*===========================================================================
@@ -393,12 +398,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   
   void GameApp::_UpdateFPSCounter(void) {
     /* Perform a rather precise calculation of the frame rate */    
-    m_fFrameTime = getRealTime();
+    m_fFrameTime = getXMTime();
     static int nFPS_Frames = 0;
     static double fFPS_LastTime = 0.0f;
     static double fFPS_CurrentTime = 0.0f;
     
-    fFPS_CurrentTime = getRealTime();
+    fFPS_CurrentTime = getXMTime();
     if(fFPS_CurrentTime - fFPS_LastTime > 1.0f && nFPS_Frames>0) {
       m_fFPS_Rate = ((float)nFPS_Frames) / (fFPS_CurrentTime - fFPS_LastTime);
       nFPS_Frames = 0;
@@ -446,11 +451,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
               
     /* Draw GUI */
     if(m_bEnableContextHelp)
-      m_Renderer.getGUI()->enableContextMenuDrawing(true);
+      m_Renderer->getGUI()->enableContextMenuDrawing(true);
     else
-      m_Renderer.getGUI()->enableContextMenuDrawing(false);
+      m_Renderer->getGUI()->enableContextMenuDrawing(false);
       
-    m_Renderer.getGUI()->paint();                
+    m_Renderer->getGUI()->paint();                
   }
   
   int GameApp::_UpdateGamePlaying(void) {
@@ -469,8 +474,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         frame-miss number from 50 to 10, because it wasn't working well. */
 
     /* reinitialise if we can't catch up */
-    if (m_fLastPhysTime - getTime() < -0.1f)
-      m_fLastPhysTime = getTime() - PHYS_STEP_SIZE;
+    if (m_fLastPhysTime - getXMTime() < -0.1f)
+      m_fLastPhysTime = getXMTime() - PHYS_STEP_SIZE;
 
     /* Update game until we've catched up with the real time */
     int nPhysSteps = 0;
@@ -486,7 +491,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #endif
 
       /* don't do this infinitely, maximum miss 10 frames, then give up */
-    } while ((m_fLastPhysTime + PHYS_STEP_SIZE <= getTime()) && (nPhysSteps < 10));
+    } while ((m_fLastPhysTime + PHYS_STEP_SIZE <= getXMTime()) && (nPhysSteps < 10));
 
 		for(int i=0; i<m_MotoGame.getNumberCameras(); i++){
 			m_MotoGame.setCurrentCamera(i);
@@ -496,7 +501,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     if(m_xmsession->timedemo() == false) {
       /* Never pass this point while being ahead of time, busy wait until it's time */
       if(nPhysSteps <= 1) {  
-        while (m_fLastPhysTime > getTime());
+        while (m_fLastPhysTime > getXMTime());
       }
     }
 
@@ -504,7 +509,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       if(m_replayBiker->isDead() || m_replayBiker->isFinished()) {
 	m_stopToUpdateReplay = true;
     	if(m_xmsession->benchmark()) {
-    	  double fBenchmarkTime = getRealTime() - m_fStartTime;
+    	  double fBenchmarkTime = getXMTime() - m_fStartTime;
     	  printf("\n");
     	  printf(" * %d frames rendered in %.0f seconds\n",m_nFrame,fBenchmarkTime);
     	  printf(" * Average framerate: %.1f fps\n",((double)m_nFrame) / fBenchmarkTime);
@@ -591,7 +596,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /* Update mouse stuff */
     _DispatchMouseHover();
     
-    if(getRealTime() > m_fCoolDownEnd) {
+    if(getXMTime() > m_fCoolDownEnd) {
       /* Blah... */
       _HandleJustDeadMenu();
     }

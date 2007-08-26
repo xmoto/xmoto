@@ -60,6 +60,7 @@ if test "$USE_OPENGL" = "1"
 then
   AX_CHECK_GL()
 fi
+AM_CONDITIONAL([USE_OPENGL], test "$USE_OPENGL" = "1")
 
 dnl sdlGfx
 AC_ARG_WITH([renderer-sdlGfx],
@@ -74,6 +75,7 @@ if test "$USE_SDLGFX" = "1"
 then
   AC_SDL_CHECK_LIB(SDL_gfx, pixelColor, [], [AC_MSG_ERROR(SDL_gfx required)])
 fi
+AM_CONDITIONAL([USE_SDLGFX], test "$USE_SDLGFX" = "1")
 
 AC_SEARCH_LIBS(lua_pushboolean,lua lua5.1 lua50, [], [AC_MSG_ERROR(liblua5.1, liblua50, or liblua required)])
 AC_SEARCH_LIBS(luaopen_math,lualib lualib5.1 lualib50, [], [AC_MSG_ERROR(liblualib5.1, liblualib50, or liblualib required)])

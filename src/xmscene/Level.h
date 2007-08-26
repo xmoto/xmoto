@@ -21,18 +21,19 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __LEVELSRC_H__
 #define __LEVELSRC_H__
 
-#include "../VXml.h"
-#include "Scene.h"
-#include "Block.h"
-#include "Zone.h"
-#include "Entity.h"
+#include <string>
 #include "BasicSceneStructs.h"
-#include "SkyApparence.h"
+#include "helpers/VMath.h"
 
 class Block;
 class Entity;
 class MotoGame;
 class xmDatabase;
+class FileHandle;
+class SkyApparence;
+class Zone;
+class CollisionSystem;
+class XMLDocument;
 
 /*===========================================================================
   Level source object - holds all stored information about a level
@@ -82,7 +83,7 @@ class Level {
   float TopLimit()          const;
   float BottomLimit()       const;
   Vector2f PlayerStart()    const;
-  const SkyApparence& Sky()        const;
+  const SkyApparence* Sky()        const;
   void setLimits(float v_leftLimit, float v_rightLimit, float v_topLimit, float v_bottomLimit);
 
   std::string FileName() const;
@@ -90,10 +91,10 @@ class Level {
   std::string Checksum() const;
   bool isScripted() const;
 
-  Block&  getBlockById(const std::string& i_id);
-  Entity& getEntityById(const std::string& i_id);
-  Entity& getStartEntity();
-  Zone&   getZoneById(const std::string& i_id);
+  Block*  getBlockById(const std::string& i_id);
+  Entity* getEntityById(const std::string& i_id);
+  Entity* getStartEntity();
+  Zone*   getZoneById(const std::string& i_id);
 
   void setId(const std::string& i_id);
   void setName(const std::string& i_name);
@@ -181,7 +182,7 @@ class Level {
   /* to avoid calculate it each frame */
   int  m_nbEntitiesToTake;
   std::string m_borderTexture;
-  SkyApparence m_sky;
+  SkyApparence* m_sky;
   bool m_isScripted;
 
   int m_numberLayer;

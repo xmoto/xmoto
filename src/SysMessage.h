@@ -28,10 +28,9 @@ class DrawLib;
 class SysMessage {
   public:
 
-  SysMessage();
+  SysMessage(DrawLib* i_drawLib);
   ~SysMessage();
 
-  void setDrawLib(DrawLib* i_drawLib);
   void displayText(std::string i_msg);
   void render();
 

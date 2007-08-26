@@ -60,7 +60,7 @@ void xmDatabase::replays_delete(const std::string& i_replay) {
 
 bool xmDatabase::replays_exists(const std::string& i_name) {
   char **v_result;
-  int nrow;
+  unsigned int nrow;
 
   v_result = readDB("SELECT name FROM replays WHERE name=\"" + protectString(i_name) + "\";",
 		    nrow);

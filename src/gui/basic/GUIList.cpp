@@ -22,8 +22,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *  GUI: list control
  */
 #include "GUI.h"
-#include "../../VDraw.h"
-#include "../../Game.h"
+#include "drawlib/DrawLib.h"
+#include "Game.h"
+#include "Sound.h"
 
 #define GUILIST_SCROLL_SIZE 4
 
@@ -140,7 +141,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_bClicked = false;
     m_bChanged = false;
     m_bScrolling = false;
-    m_lastRefreshTime = getApp()->getRealTime();
+    m_lastRefreshTime = getApp()->getXMTime();
     
     /* draw */
     m_headerHeight    = 18;
@@ -267,7 +268,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   void UIList::_refreshByTime() {
-    float v_time = getApp()->getRealTime();
+    float v_time = getApp()->getXMTime();
 
     while(m_lastRefreshTime + 0.01 < v_time) {
       
@@ -434,7 +435,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	    }
 	  } else {
 	    if(bActive && !bDisabled && m_Entries[i]->bUseOwnProperties == false) {
-	      float s = 50 + 50*sin(getApp()->getRealTime()*10);
+	      float s = 50 + 50*sin(getApp()->getXMTime()*10);
 	      int n = (int)s;
 	      if(n<0) n=0;
 	      if(n>255) n=255; /* just to be sure, i'm lazy */    

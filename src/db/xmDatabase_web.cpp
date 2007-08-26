@@ -148,7 +148,7 @@ std::string xmDatabase::webhighscores_updateDB(const std::string& i_webhighscore
 
 std::string xmDatabase::webrooms_getName(const std::string& i_id_room) {
   char **v_result;
-  int nrow;
+  unsigned int nrow;
   std::string v_res;
 
   v_result = readDB("SELECT name FROM webrooms WHERE id_room=" + i_id_room + ";",
@@ -166,7 +166,7 @@ std::string xmDatabase::webrooms_getName(const std::string& i_id_room) {
 float xmDatabase::webrooms_getHighscoreTime(const std::string& i_id_room,
 					    const std::string& i_id_level) {
   char **v_result;
-  int nrow;
+  unsigned int nrow;
   std::string v_res;
 
   v_result = readDB("SELECT finishTime FROM webhighscores "

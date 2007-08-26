@@ -25,6 +25,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Scene.h"
 #include "gui/basic/GUI.h"
 #include "Replay.h"
+
+class ParticlesSource;
  
   /*===========================================================================
   Quality settings
@@ -79,7 +81,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   class SFXOverlay {
     public:
       SFXOverlay() {
-        m_pApp = NULL;
+        m_drawLib = NULL;
 #ifdef ENABLE_OPENGL	
         m_bUseShaders = false;
         m_VertShaderID = m_FragShaderID = m_ProgramID = 0;
@@ -89,7 +91,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       }
     
       /* Methods */
-      void init(GameApp *pApp,int nWidth,int nHeight);
+      void init(DrawLib* i_drawLib,int nWidth,int nHeight);
       void cleanUp(void);
       void beginRendering(void);
       void endRendering(void);
@@ -117,7 +119,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       
 
       int m_nOverlayWidth,m_nOverlayHeight;
-      GameApp *m_pApp;
+      DrawLib* m_drawLib;
   };
 
   /*===========================================================================
@@ -125,14 +127,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     ===========================================================================*/
   class GameRenderer {
   public:
-    GameRenderer() {
+    GameRenderer(DrawLib* i_drawLib) {
+      m_drawLib = i_drawLib;
       m_bDebug=false;
       m_Quality=GQ_HIGH;
       m_bGhostMotionBlur = true;
       m_displayGhostInformation = false;
       m_theme = NULL;
       m_previousEngineSpeed = -1.0;
-	  m_previousEngineLinVel = -1.0;
+      m_previousEngineLinVel = -1.0;
       m_sizeMultOfEntitiesToTake = 1.0;
       m_sizeMultOfEntitiesWhichMakeWin = 1.0;
       m_showMinimap = true;
@@ -200,6 +203,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
   private:
     /* Data */
+    DrawLib* m_drawLib;
     std::vector<GraphDebugInfo *> m_DebugInfo;
       
     std::vector<Geom *> m_StaticGeoms;

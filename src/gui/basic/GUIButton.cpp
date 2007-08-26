@@ -22,7 +22,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *  GUI: button
  */
 #include "GUI.h"
-#include "../../Game.h"
+#include "Game.h"
+#include "Sound.h"
 
   /*===========================================================================
   Painting
@@ -286,7 +287,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     if(nGroup != 0) {
       UIWindow *pParent = getParent();
       if(pParent != NULL) {
-        for(int i=0;i<pParent->getChildren().size();i++) {
+        for(unsigned int i=0;i<pParent->getChildren().size();i++) {
           if(pParent->getChildren()[i]->getGroup() == nGroup) {
             /* This is dangerous. But I'm very lazy right now, and just want to get stuff done. :| */
             ((UIButton *)pParent->getChildren()[i])->m_bChecked = false;

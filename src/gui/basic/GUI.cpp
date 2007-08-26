@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "VXml.h"
 #include "GUI.h"
 #include "GameText.h"
-#include "VDraw.h"
+#include "drawlib/DrawLib.h"
 #include "Game.h"
 
   DrawLib* UIWindow::m_drawLib = NULL;
@@ -434,12 +434,12 @@ bool UIWindow::isUglyMode() {
   
   void UIWindow::setScissor(int x,int y,int nWidth,int nHeight) {
     /* This can be used for a simple 2-level scissor stack */
-    getApp()->scissorGraphics(x+getAbsPosX(),y+getAbsPosY(),nWidth,nHeight);
+    m_drawLib->setClipRect(x+getAbsPosX(),y+getAbsPosY(),nWidth,nHeight);
   }
   
   void UIWindow::getScissor(int *px,int *py,int *pnWidth,int *pnHeight) {
     int x,y;
-    getApp()->getScissorGraphics(&x,&y,pnWidth,pnHeight);
+    m_drawLib->getClipRect(&x,&y,pnWidth,pnHeight);
     *px = x - getAbsPosX();
     *py = y - getAbsPosY();    
   }
@@ -550,7 +550,7 @@ bool UIWindow::isUglyMode() {
     
     /* Active? If so we want a nice blinking overlay */
     if(bActive) {
-      float s = 160 + 76*sin(getApp()->getRealTime()*10);
+      float s = 160 + 76*sin(getApp()->getXMTime()*10);
       int n = (int)s;
       if(n<0) n=0;
       if(n>255) n=255; /* just to be sure, i'm lazy */    
@@ -641,7 +641,7 @@ FRAME_BR (187,198) (8x8)
     /* Anything to paint? */
     if(WindowRect.nWidth > 0 && WindowRect.nHeight > 0) {
       /* Set scissor */
-      getApp()->scissorGraphics(WindowRect.nX,WindowRect.nY,WindowRect.nWidth,WindowRect.nHeight);
+      m_drawLib->setClipRect(WindowRect.nX,WindowRect.nY,WindowRect.nWidth,WindowRect.nHeight);
         
       /* Invoke client painting code */
       pWindow->paint();

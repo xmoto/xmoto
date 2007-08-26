@@ -30,10 +30,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/BikeGhost.h"
 #include "xmscene/BikePlayer.h"
 #include "helpers/Log.h"
-#include "VDraw.h"
+#include "drawlib/DrawLib.h"
 #include "Game.h"
 #include <algorithm>
+#include "xmscene/Camera.h"
+#include "xmscene/Block.h"
+#include "xmscene/Entity.h"
+#include "xmscene/Zone.h"
+#include "xmscene/SkyApparence.h"
 
+#ifdef ENABLE_OPENGL
+#include "drawlib/DrawLibOpenGL.h"
+#endif
 
   /* to sort blocks on their texture */
   struct AscendingTextureSort {
@@ -350,9 +358,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
        || getGameObject()->getNumberCameras() == 1){
       y_translate = 0;
     }
-    getParent()->scissorGraphics(bottomLeft.x + x+1,
-				 y+1 - y_translate,
-				 nWidth-2,nHeight-2);
+    getParent()->getDrawLib()->setClipRect(bottomLeft.x + x+1,
+			 y+1 - y_translate,
+			 nWidth-2,nHeight-2);
 #ifdef ENABLE_OPENGL
     glEnable(GL_SCISSOR_TEST);
     glLoadIdentity();
@@ -466,7 +474,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     glDisable(GL_SCISSOR_TEST);
 #endif
     //keesj:todo replace with setClipRect(NULL) in drawlib
-    getParent()->scissorGraphics(0,0,getParent()->getDrawLib()->getDispWidth(),getParent()->getDrawLib()->getDispHeight());
+    getParent()->getDrawLib()->setClipRect(0,0,getParent()->getDrawLib()->getDispWidth(),getParent()->getDrawLib()->getDispHeight());
   }
 
   void GameRenderer::_RenderGhost(Biker* i_ghost, int i) {
@@ -483,7 +491,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	m_Overlay.beginRendering();
 	m_Overlay.fade(0.15);
       }
-      _RenderBike(i_ghost->getState(), &(i_ghost->getState()->Parameters()), i_ghost->getBikeTheme());
+      _RenderBike(i_ghost->getState(), i_ghost->getState()->Parameters(), i_ghost->getBikeTheme());
 	  
       if(m_bGhostMotionBlur
 	 && getParent()->getDrawLib()->useFBOs()
@@ -502,7 +510,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
 
     if(m_bUglyMode) {
-      _RenderBike(i_ghost->getState(), &(i_ghost->getState()->Parameters()),
+      _RenderBike(i_ghost->getState(), i_ghost->getState()->Parameters(),
 		  i_ghost->getBikeTheme(),
 		  true,
 		  TColor(255, 255, 255, 0), i_ghost->getUglyColorFilter());
@@ -554,12 +562,12 @@ int GameRenderer::nbParticlesRendered() const {
 
     /* SKY! */
     if(m_bUglyMode == false) {
-      _RenderSky(pGame->getLevelSrc()->Sky().Zoom(),
-		 pGame->getLevelSrc()->Sky().Offset(),
-		 pGame->getLevelSrc()->Sky().TextureColor(),
-		 pGame->getLevelSrc()->Sky().DriftZoom(),
-		 pGame->getLevelSrc()->Sky().DriftTextureColor(),
-		 pGame->getLevelSrc()->Sky().Drifted());
+      _RenderSky(pGame->getLevelSrc()->Sky()->Zoom(),
+		 pGame->getLevelSrc()->Sky()->Offset(),
+		 pGame->getLevelSrc()->Sky()->TextureColor(),
+		 pGame->getLevelSrc()->Sky()->DriftZoom(),
+		 pGame->getLevelSrc()->Sky()->DriftTextureColor(),
+		 pGame->getLevelSrc()->Sky()->Drifted());
     }    
 
     pCamera->setCamera3d();
@@ -629,7 +637,7 @@ int GameRenderer::nbParticlesRendered() const {
       Biker* v_player = pGame->Players()[i];
       if(v_player != pCamera->getPlayerToFollow()) {
 	_RenderBike(v_player->getState(),
-		    &(v_player->getState()->Parameters()),
+		    v_player->getState()->Parameters(),
 		    v_player->getBikeTheme(),
 		    v_player->getRenderBikeFront(),
 		    v_player->getColorFilter(),
@@ -640,7 +648,7 @@ int GameRenderer::nbParticlesRendered() const {
     }
     if(v_found) {
       _RenderBike(pCamera->getPlayerToFollow()->getState(),
-		  &(pCamera->getPlayerToFollow()->getState()->Parameters()),
+		  pCamera->getPlayerToFollow()->getState()->Parameters(),
 		  pCamera->getPlayerToFollow()->getBikeTheme(),
 		  pCamera->getPlayerToFollow()->getRenderBikeFront(),
 		  pCamera->getPlayerToFollow()->getColorFilter(),
@@ -1527,7 +1535,7 @@ int GameRenderer::nbParticlesRendered() const {
   }
   
   pType = (TextureSprite*) getParent()->getTheme()->getSprite(SPRITE_TYPE_TEXTURE,
-																															pGame->getLevelSrc()->Sky().Texture());
+							      pGame->getLevelSrc()->Sky()->Texture());
   
   if(pType != NULL) {
     if(i_drifted) {
@@ -1539,7 +1547,7 @@ int GameRenderer::nbParticlesRendered() const {
     getParent()->getDrawLib()->setColorRGBA(i_color.Red() , i_color.Green(), i_color.Blue(), i_color.Alpha());
     
     if(i_drifted) {
-      fDrift = getParent()->getRealTime() / 25.0f;
+      fDrift = getParent()->getXMTime() / 25.0f;
     }
     
     getParent()->getDrawLib()->glTexCoord(getGameObject()->getCamera()->getCameraPositionX()*i_offset+ fDrift,-getGameObject()->getCamera()->getCameraPositionY()*i_offset);
@@ -1556,7 +1564,7 @@ int GameRenderer::nbParticlesRendered() const {
       getParent()->getDrawLib()->setTexture(pType->getTexture(),BLEND_MODE_B);
       getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
       getParent()->getDrawLib()->setColorRGBA(i_driftColor.Red(), i_driftColor.Green(), i_driftColor.Blue(), i_driftColor.Alpha());
-      fDrift = getParent()->getRealTime() / 15.0f;
+      fDrift = getParent()->getXMTime() / 15.0f;
       getParent()->getDrawLib()->glTexCoord(getGameObject()->getCamera()->getCameraPositionX()*i_offset + fDrift,-getGameObject()->getCamera()->getCameraPositionY()*i_offset);
       getParent()->getDrawLib()->glVertexSP(0,0);
       getParent()->getDrawLib()->glTexCoord(getGameObject()->getCamera()->getCameraPositionX()*i_offset+uDriftZoom + fDrift,-getGameObject()->getCamera()->getCameraPositionY()*i_offset);
@@ -1568,7 +1576,7 @@ int GameRenderer::nbParticlesRendered() const {
       getParent()->getDrawLib()->endDraw();
     }
   } else {
-    Logger::Log(std::string("** Invalid sky " + pGame->getLevelSrc()->Sky().Texture()).c_str());
+    Logger::Log(std::string("** Invalid sky " + pGame->getLevelSrc()->Sky()->Texture()).c_str());
     getParent()->getDrawLib()->clearGraphics();
   } 
  }

@@ -43,6 +43,9 @@ XMSession::XMSession() {
   m_ugly      	     = false;
   m_uglyOver         = false;
   m_testTheme 	     = false;
+  m_ghostStrategy_MYBEST     = true;
+  m_ghostStrategy_THEBEST    = false;
+  m_ghostStrategy_BESTOFROOM = false;
 }
 
 void XMSession::load(const XMArguments* i_xmargs) {
@@ -128,6 +131,9 @@ void XMSession::load(UserConfig* m_Config) {
   m_drawlib          = m_Config->getString("DrawLib");
   m_www              = m_Config->getBool("WebHighscores");
   m_profile          = m_Config->getString("DefaultProfile");
+  m_ghostStrategy_MYBEST     = m_Config->getBool("GhostStrategy_MYBEST");
+  m_ghostStrategy_THEBEST    = m_Config->getBool("GhostStrategy_THEBEST");
+  m_ghostStrategy_BESTOFROOM = m_Config->getBool("GhostStrategy_BESTOFROOM");
 }
 
 bool XMSession::isVerbose() const {
@@ -252,4 +258,28 @@ void XMSession::setUglyOver(bool i_value) {
 
 void XMSession::setTestTheme(bool i_value) {
   m_testTheme = i_value;
+}
+
+bool XMSession::ghostStrategy_MYBEST() const {
+  return m_ghostStrategy_MYBEST;
+}
+
+void XMSession::setGhostStrategy_MYBEST(bool i_value) {
+  m_ghostStrategy_MYBEST = i_value;
+}
+
+bool XMSession::ghostStrategy_THEBEST() const {
+  return m_ghostStrategy_THEBEST;
+}
+
+void XMSession::setGhostStrategy_THEBEST(bool i_value) {
+  m_ghostStrategy_THEBEST = i_value;
+}
+
+bool XMSession::ghostStrategy_BESTOFROOM() const {
+  return m_ghostStrategy_BESTOFROOM;
+}
+
+void XMSession::setGhostStrategy_BESTOFROOM(bool i_value) {
+  m_ghostStrategy_BESTOFROOM = i_value;
 }
