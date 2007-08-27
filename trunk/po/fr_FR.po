@@ -530,7 +530,7 @@ msgstr "Général"
 
 #: src/GameText.h:190
 msgid "General Info"
-msgstr "Information genérale"
+msgstr "Informations genérales"
 
 #: src/GameText.h:191
 msgid "Get this theme"
