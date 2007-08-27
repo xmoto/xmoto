@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-08-26 22:42+0200\n"
+"POT-Creation-Date: 2007-08-27 20:15+0200\n"
 "PO-Revision-Date: 2007-08-17 20:19-0300\n"
 "Last-Translator: Lucas Hermann Negri <kkndrox@gmail.com>\n"
 "Language-Team: Portuguese/Brazil\n"
@@ -1979,13 +1979,11 @@ msgid "Your personal highscore finish time is almost the room highscore (95%)"
 msgstr "O seu recorde é quase o recorde da sala (95%)"
 
 #: src/GameText.h:565
-#, c-format
 msgid ""
 "Your personal highscore finish time is almost the room highscore (90%-95%)"
 msgstr "O seu recorde é quase o recorde da sala (90%-95%)"
 
 #: src/GameText.h:566
-#, c-format
 msgid ""
 "Your personal highscore finish time is almost the room highscore (80%-90%)"
 msgstr "O seu recorde é quase o recorde da sala (80%-90%)"
@@ -2057,6 +2055,10 @@ msgstr ""
 #, fuzzy
 msgid "Fps disabled"
 msgstr "Modo Feio desabilitado"
+
+#: src/GameText.h:586
+msgid "FontGroup:GENERAL"
+msgstr ""
 
 #: src/LevelsText.h:21
 msgid "First let's take a look at the user interface..."

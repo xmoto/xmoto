@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xmoto 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-08-26 22:42+0200\n"
+"POT-Creation-Date: 2007-08-27 20:15+0200\n"
 "PO-Revision-Date: 2007-08-11 00:31+0300\n"
 "Last-Translator: Jānis Rūcis <parasti@gmail.com>\n"
 "Language-Team: Latvian\n"
@@ -1983,14 +1983,12 @@ msgid "Your personal highscore finish time is almost the room highscore (95%)"
 msgstr "Tava rekorda finiša laiks daudz neatšķiras no istabas rekorda (95%)"
 
 #: src/GameText.h:565
-#, c-format
 msgid ""
 "Your personal highscore finish time is almost the room highscore (90%-95%)"
 msgstr ""
 "Tava rekorda finiša laiks daudz neatšķiras no istabas rekorda (90%-95%)"
 
 #: src/GameText.h:566
-#, c-format
 msgid ""
 "Your personal highscore finish time is almost the room highscore (80%-90%)"
 msgstr ""
@@ -2060,6 +2058,10 @@ msgstr ""
 
 #: src/GameText.h:583
 msgid "Fps disabled"
+msgstr ""
+
+#: src/GameText.h:586
+msgid "FontGroup:GENERAL"
 msgstr ""
 
 #: src/LevelsText.h:21

@@ -111,9 +111,9 @@ class GLFontManager : public FontManager {
  }
 
  DrawLibOpenGL::DrawLibOpenGL() : DrawLib(){
-   m_fontSmall  = getFontManager(FS::FullPath(DRAW_FONT_FILE), 14);
-   m_fontMedium = getFontManager(FS::FullPath(DRAW_FONT_FILE), 22);
-   m_fontBig    = getFontManager(FS::FullPath(DRAW_FONT_FILE), 60);
+   m_fontSmall  = getFontManager(FS::FullPath(FontManager::getDrawFontFile()), 14);
+   m_fontMedium = getFontManager(FS::FullPath(FontManager::getDrawFontFile()), 22);
+   m_fontBig    = getFontManager(FS::FullPath(FontManager::getDrawFontFile()), 60);
  };
  
   /*===========================================================================

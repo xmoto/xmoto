@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-08-26 22:42+0200\n"
+"POT-Creation-Date: 2007-08-27 20:15+0200\n"
 "PO-Revision-Date: 2006-12-21 21:14+0100\n"
 "Last-Translator: Jens Erler <mothbox@gmx.net>\n"
 "Language-Team: German\n"
@@ -1980,13 +1980,11 @@ msgid "Your personal highscore finish time is almost the room highscore (95%)"
 msgstr "Deine Bestzeit ist beinahe der Rekord des Raums (95%)"
 
 #: src/GameText.h:565
-#, c-format
 msgid ""
 "Your personal highscore finish time is almost the room highscore (90%-95%)"
 msgstr "Deine Bestzeit ist beinahe der Rekord des Raums (90%-95%)"
 
 #: src/GameText.h:566
-#, c-format
 msgid ""
 "Your personal highscore finish time is almost the room highscore (80%-90%)"
 msgstr "Deine Bestzeit ist beinahe der Rekord des Raums (80%-90%)"
@@ -2057,6 +2055,10 @@ msgstr ""
 #, fuzzy
 msgid "Fps disabled"
 msgstr "Strich-Modus deaktiviert"
+
+#: src/GameText.h:586
+msgid "FontGroup:GENERAL"
+msgstr ""
 
 #: src/LevelsText.h:21
 msgid "First let's take a look at the user interface..."
