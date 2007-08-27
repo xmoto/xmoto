@@ -450,7 +450,9 @@ void MotoGame::cleanPlayers() {
   }
 
   Ghost* MotoGame::addGhostFromFile(std::string i_ghostFile, std::string i_info,
-				    Theme *i_theme, BikerTheme* i_bikerTheme) {
+				    Theme *i_theme, BikerTheme* i_bikerTheme,
+				    const TColor& i_filterColor,
+				    const TColor& i_filterUglyColor) {
     Ghost* v_ghost = NULL;
 
     /* the level must be set to add a ghost */
@@ -459,12 +461,7 @@ void MotoGame::cleanPlayers() {
     }
 
     v_ghost = new Ghost(i_ghostFile, false, i_theme, i_bikerTheme,
-			TColor(255,255,255,0),
-			TColor(GET_RED(i_theme->getGhostTheme()->getUglyRiderColor()),
-			       GET_GREEN(i_theme->getGhostTheme()->getUglyRiderColor()),
-			       GET_BLUE(i_theme->getGhostTheme()->getUglyRiderColor()),
-			       0)
-			       );
+			i_filterColor, i_filterUglyColor);
     v_ghost->setPlaySound(false);
     v_ghost->setInfo(i_info);
     v_ghost->initLastToTakeEntities(m_pLevelSrc);
