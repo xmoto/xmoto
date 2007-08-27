@@ -1578,7 +1578,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       }
       else if(pLV_Replays_Personal->getChecked()) {
 	v_sql = "SELECT name, id_profile, isFinished, finishTime FROM replays "
-	  "WHERE id_level=\""   + xmDatabase::protectString(LevelID) + "\" ";
+	  "WHERE id_level=\""   + xmDatabase::protectString(LevelID) + "\" "
 	  "AND   id_profile=\"" + xmDatabase::protectString(m_xmsession->profile()) + "\";";
       }
       
