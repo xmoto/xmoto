@@ -47,8 +47,6 @@ struct hashcmp_str {
 
 #include "helpers/VMath.h"
 
-#define DRAW_FONT_FILE "Textures/Fonts/DejaVuSans.ttf"
-
 class Img;
 class Camera;
 class DrawLib;
@@ -73,6 +71,8 @@ class FontManager {
   virtual void printStringGrad(FontGlyph* i_glyph, int i_x, int i_y,
 			       Color c1,Color c2,Color c3,Color c4) = 0;
   
+
+  static std::string getDrawFontFile();
 
  protected:
   TTF_Font* m_ttf;

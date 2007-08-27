@@ -148,9 +148,9 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
     m_max.y = 0;
     m_polyDraw = NULL;
 
-   m_fontSmall  = getFontManager(FS::FullPath(DRAW_FONT_FILE), 14);
-   m_fontMedium = getFontManager(FS::FullPath(DRAW_FONT_FILE), 22);
-   m_fontBig    = getFontManager(FS::FullPath(DRAW_FONT_FILE), 60);
+   m_fontSmall  = getFontManager(FS::FullPath(FontManager::getDrawFontFile()), 14);
+   m_fontMedium = getFontManager(FS::FullPath(FontManager::getDrawFontFile()), 22);
+   m_fontBig    = getFontManager(FS::FullPath(FontManager::getDrawFontFile()), 60);
   };
 
   DrawLibSDLgfx::~DrawLibSDLgfx() {

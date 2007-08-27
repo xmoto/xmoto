@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-08-26 22:42+0200\n"
+"POT-Creation-Date: 2007-08-27 20:15+0200\n"
 "PO-Revision-Date: 2006-09-04 19:52+0100\n"
 "Last-Translator: Jan Kaláb <pitel@nomi.cz>\n"
 "Language-Team: X-Moto\n"
@@ -1984,13 +1984,13 @@ msgid "Your personal highscore finish time is almost the room highscore (95%)"
 msgstr "Vaše jízda je skoro nejlepší v místnosti (95 %)"
 
 #: src/GameText.h:565
-#, fuzzy, c-format
+#, fuzzy
 msgid ""
 "Your personal highscore finish time is almost the room highscore (90%-95%)"
 msgstr "Vaše jízda je skoro nejlepší v místnosti (90--95 %)"
 
 #: src/GameText.h:566
-#, fuzzy, c-format
+#, fuzzy
 msgid ""
 "Your personal highscore finish time is almost the room highscore (80%-90%)"
 msgstr "Vaše jízda je skoro nejlepší v místnosti (80--90 %)"
@@ -2063,6 +2063,10 @@ msgstr ""
 #, fuzzy
 msgid "Fps disabled"
 msgstr "Ošklivý režim vypnut"
+
+#: src/GameText.h:586
+msgid "FontGroup:GENERAL"
+msgstr ""
 
 #: src/LevelsText.h:21
 msgid "First let's take a look at the user interface..."

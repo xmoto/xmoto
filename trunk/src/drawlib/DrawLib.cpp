@@ -22,6 +22,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *  Simple 2D drawing library, built closely on top of OpenGL.
  */
 #include "DrawLib.h"
+#include "GameText.h"
+
+#define DRAW_FONT_FILE_GENERAL "Textures/Fonts/DejaVuSans.ttf"
+#define DRAW_FONT_FILE_ASIAN   "Textures/Fonts/DejaVuSans.ttf"
 
 #ifdef ENABLE_OPENGL
 #include "DrawLibOpenGL.h"
@@ -339,4 +343,11 @@ FontManager::FontManager(DrawLib* i_drawLib, const std::string &i_fontFile, unsi
 
 FontManager::~FontManager() {
   TTF_CloseFont(m_ttf);
+}
+
+std::string FontManager::getDrawFontFile() {
+  if(std::string(_("FontGroup:GENERAL")) == std::string("FontGroup:GENERAL")) return DRAW_FONT_FILE_GENERAL;
+  if(std::string(_("FontGroup:GENERAL")) == std::string("FontGroup:ASIAN"))   return DRAW_FONT_FILE_ASIAN;
+
+  return DRAW_FONT_FILE_GENERAL;
 }
