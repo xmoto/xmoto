@@ -570,7 +570,6 @@ class SoundSample;
       /* */
       void _InitWin(bool bInitGraphics);
       void _Uninit(void);
-
   };
 
 #endif

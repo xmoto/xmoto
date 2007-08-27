@@ -2896,7 +2896,13 @@ void GameApp::addGhosts(MotoGame* i_motogame, Theme* i_theme) {
     if(v_replay_BESTOFROOM != "") {
 	m_MotoGame.addGhostFromFile(v_replay_BESTOFROOM,
 				    m_db->webrooms_getName(m_WebHighscoresIdRoom),
-				    &m_theme, m_theme.getGhostTheme());
+				    &m_theme, m_theme.getGhostTheme(),
+				    TColor(255,255,0,0),
+				    TColor(GET_RED(i_theme->getGhostTheme()->getUglyRiderColor()),
+					   GET_GREEN(i_theme->getGhostTheme()->getUglyRiderColor()),
+					   GET_BLUE(i_theme->getGhostTheme()->getUglyRiderColor()),
+					   0)
+				    );
     }
   }
 
@@ -2906,7 +2912,13 @@ void GameApp::addGhosts(MotoGame* i_motogame, Theme* i_theme) {
     if(v_replay_MYBEST != "") {
       if(v_replay_MYBEST != v_replay_BESTOFROOM) {
 	i_motogame->addGhostFromFile(v_replay_MYBEST, GAMETEXT_GHOST_BEST,
-				     i_theme, i_theme->getGhostTheme());
+				     i_theme, i_theme->getGhostTheme(),
+				     TColor(255,150,0,0),
+				     TColor(GET_RED(i_theme->getGhostTheme()->getUglyRiderColor()),
+					    GET_GREEN(i_theme->getGhostTheme()->getUglyRiderColor()),
+					    GET_BLUE(i_theme->getGhostTheme()->getUglyRiderColor()),
+					    0)
+				     );
       }
     }
   }
@@ -2917,7 +2929,13 @@ void GameApp::addGhosts(MotoGame* i_motogame, Theme* i_theme) {
     if(v_replay_THEBEST != "") {
       if(v_replay_THEBEST != v_replay_MYBEST && v_replay_THEBEST != v_replay_BESTOFROOM) { /* don't add two times the same ghost */
 	i_motogame->addGhostFromFile(v_replay_THEBEST, GAMETEXT_GHOST_LOCAL,
-				     i_theme, i_theme->getGhostTheme());
+				     i_theme, i_theme->getGhostTheme(),
+				     TColor(0,0,255,0),
+				     TColor(GET_RED(i_theme->getGhostTheme()->getUglyRiderColor()),
+					    GET_GREEN(i_theme->getGhostTheme()->getUglyRiderColor()),
+					    GET_BLUE(i_theme->getGhostTheme()->getUglyRiderColor()),
+					    0)
+				     );
       }
     }
   }

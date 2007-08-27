@@ -491,7 +491,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	m_Overlay.beginRendering();
 	m_Overlay.fade(0.15);
       }
-      _RenderBike(i_ghost->getState(), i_ghost->getState()->Parameters(), i_ghost->getBikeTheme());
+      _RenderBike(i_ghost->getState(), i_ghost->getState()->Parameters(), i_ghost->getBikeTheme(), true,
+		  i_ghost->getColorFilter(), i_ghost->getUglyColorFilter());
 	  
       if(m_bGhostMotionBlur
 	 && getParent()->getDrawLib()->useFBOs()
@@ -513,7 +514,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       _RenderBike(i_ghost->getState(), i_ghost->getState()->Parameters(),
 		  i_ghost->getBikeTheme(),
 		  true,
-		  TColor(255, 255, 255, 0), i_ghost->getUglyColorFilter());
+		  i_ghost->getColorFilter(), i_ghost->getUglyColorFilter());
     }
   }
 
