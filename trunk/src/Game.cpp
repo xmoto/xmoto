@@ -587,7 +587,12 @@ GameApp::GameApp() {
 			/* Finish replay */
 			if(m_pJustPlayReplay != NULL) {
 				if(m_MotoGame.Players().size() == 1) {
-					m_pJustPlayReplay->finishReplay(false,0.0f);
+				  
+				  /* save the last state because scene don't record each frame */
+				  SerializedBikeState BikeState;
+				  MotoGame::getSerializedBikeState(m_MotoGame.Players()[0]->getState(), m_MotoGame.getTime(), &BikeState);
+				  m_pJustPlayReplay->storeState(BikeState);
+				  m_pJustPlayReplay->finishReplay(false,0.0f);
 				}
 			}
 
@@ -656,7 +661,11 @@ GameApp::GameApp() {
 			/* Finish replay */
 			if(m_pJustPlayReplay != NULL) {
 				if(m_MotoGame.Players().size() == 1) {
-					m_pJustPlayReplay->finishReplay(true,m_MotoGame.Players()[0]->finishTime());
+				  /* save the last state because scene don't record each frame */
+				  SerializedBikeState BikeState;
+				  MotoGame::getSerializedBikeState(m_MotoGame.Players()[0]->getState(), m_MotoGame.getTime(), &BikeState);
+				  m_pJustPlayReplay->storeState(BikeState);
+				  m_pJustPlayReplay->finishReplay(true,m_MotoGame.Players()[0]->finishTime());
 				}
 			}
 
