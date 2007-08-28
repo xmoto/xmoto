@@ -355,7 +355,9 @@ int main(int nNumArgs,char **ppcArgs) {
     /* Data time! */
     Logger::Log("Loading data...");
 
-    if(m_xmsession->gDebug()) m_Renderer->loadDebugInfo(m_xmsession->gDebugFile());
+    if(m_xmsession->useGraphics()) {
+      if(m_xmsession->gDebug()) m_Renderer->loadDebugInfo(m_xmsession->gDebugFile());
+    }
 
     /* database */
     m_db = new xmDatabase(DATABASE_FILE,
