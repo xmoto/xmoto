@@ -186,6 +186,8 @@ void MotoGame::cleanPlayers() {
     } else {
       /* redefine the text only to replay a bonce message */
       pMsg->Text = Text;
+      pMsg->fRemoveTime = getTime() + fDuration;
+      pMsg->nAlpha = 255;
     }
 
     updateGameMessages();
