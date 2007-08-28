@@ -339,14 +339,16 @@ int main(int nNumArgs,char **ppcArgs) {
     }
       
     /* Init renderer */
-    switchUglyMode(m_xmsession->ugly());
-    switchTestThemeMode(m_xmsession->testTheme());
-    m_Renderer->setParent( (GameApp *)this );
-    m_Renderer->setGameObject( &m_MotoGame );        
-    m_Renderer->setDebug(m_xmsession->debug());
+    if(m_xmsession->useGraphics()) {
+      switchUglyMode(m_xmsession->ugly());
+      switchTestThemeMode(m_xmsession->testTheme());
+      m_Renderer->setParent( (GameApp *)this );
+      m_Renderer->setGameObject( &m_MotoGame );        
+      m_Renderer->setDebug(m_xmsession->debug());
 
-    m_Renderer->setGhostMotionBlur( m_bGhostMotionBlur );
-    
+      m_Renderer->setGhostMotionBlur( m_bGhostMotionBlur );
+    }    
+
     /* Tell collision system whether we want debug-info or not */
     m_MotoGame.getCollisionHandler()->setDebug(m_xmsession->debug());
     
