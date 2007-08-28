@@ -824,14 +824,19 @@ GameApp::GameApp() {
     
     /* Game graphics */
     s = m_Config.getString("GameGraphics");
-    if(s == "Low") m_Renderer->setQuality(GQ_LOW);
-    else if(s == "Medium") m_Renderer->setQuality(GQ_MEDIUM);
-    else if(s == "High") m_Renderer->setQuality(GQ_HIGH);
-      
+
+    if(m_xmsession->useGraphics()) {
+      if(s == "Low") m_Renderer->setQuality(GQ_LOW);
+      else if(s == "Medium") m_Renderer->setQuality(GQ_MEDIUM);
+      else if(s == "High") m_Renderer->setQuality(GQ_HIGH);
+    }      
+
     /* Show mini map? && show engine counter */
-    m_Renderer->setShowMinimap(m_Config.getBool("ShowMiniMap"));
-    m_Renderer->setShowEngineCounter(m_Config.getBool("ShowEngineCounter"));
-    
+    if(m_xmsession->useGraphics()) {
+      m_Renderer->setShowMinimap(m_Config.getBool("ShowMiniMap"));
+      m_Renderer->setShowEngineCounter(m_Config.getBool("ShowEngineCounter"));
+    }    
+
     /* Replay stuff */
     m_fReplayFrameRate = m_Config.getFloat("ReplayFrameRate");
     m_bRecordReplays = m_Config.getBool("StoreReplays");
@@ -844,12 +849,16 @@ GameApp::GameApp() {
     m_bShowGhostTimeDiff  = m_Config.getBool("ShowGhostTimeDiff");
     m_MotoGame.setShowGhostTimeDiff(m_bShowGhostTimeDiff);
     m_bGhostMotionBlur = m_Config.getBool("GhostMotionBlur");
-    m_Renderer->setGhostMotionBlur( m_bGhostMotionBlur );
+    if(m_xmsession->useGraphics()) {
+      m_Renderer->setGhostMotionBlur( m_bGhostMotionBlur );
+    }
 
     m_bEnableGhostInfo = m_Config.getBool("DisplayGhostInfo");
     m_bHideGhosts = m_Config.getBool("HideGhosts");
-    m_Renderer->setGhostDisplayInformation(m_bEnableGhostInfo);
-    m_Renderer->setHideGhosts(m_bHideGhosts);
+    if(m_xmsession->useGraphics()) {
+      m_Renderer->setGhostDisplayInformation(m_bEnableGhostInfo);
+      m_Renderer->setHideGhosts(m_bHideGhosts);
+    }
 
     m_bShowWebHighscoreInGame = m_Config.getBool("ShowInGameWorldRecord");
     m_bEnableCheckNewLevelsAtStartup  = m_Config.getBool("CheckNewLevelsAtStartup");
