@@ -94,6 +94,7 @@ class LevelsManager {
   
   void printLevelsList(xmDatabase *i_db) const;
 
+  bool isInFavorite(xmDatabase *i_db, std::string i_profile, const std::string& i_id_level);
   void addToFavorite(xmDatabase *i_db, std::string i_profile, const std::string& i_id_level);
   void delFromFavorite(xmDatabase *i_db, std::string i_profile, const std::string& i_id_level);
 

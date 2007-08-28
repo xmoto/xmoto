@@ -841,8 +841,7 @@ void LevelsManager::updateLevelsFromLvl(xmDatabase *i_db,
   }
 }
 
-void LevelsManager::addToFavorite(xmDatabase *i_db, std::string i_profile,
-				  const std::string& i_id_level) {
+bool LevelsManager::isInFavorite(xmDatabase *i_db, std::string i_profile, const std::string& i_id_level) {
   unsigned int nrow;
   char **v_result;
   int v_n;
@@ -856,33 +855,21 @@ void LevelsManager::addToFavorite(xmDatabase *i_db, std::string i_profile,
   v_n = atoi(i_db->getResult(v_result, 1, 0, 0));
   i_db->read_DB_free(v_result);
 
-  if(v_n != 0) {
-    return;
-  }
+  return v_n != 0;
+}
 
-  i_db->levels_addToFavorite(i_profile, i_id_level);
+void LevelsManager::addToFavorite(xmDatabase *i_db, std::string i_profile,
+				  const std::string& i_id_level) {
+  if(isInFavorite(i_db, i_profile, i_id_level) == false) {
+    i_db->levels_addToFavorite(i_profile, i_id_level);
+  }
 }
 
 void LevelsManager::delFromFavorite(xmDatabase *i_db, std::string i_profile,
 				    const std::string& i_id_level) {
-  unsigned int nrow;
-  char **v_result;
-  int v_n;  
-
-  /* check if the level is into the favorite list */
-  v_result = i_db->readDB("SELECT COUNT(id_level) "
-			  "FROM levels_favorite "
-			  "WHERE id_level=\""   + i_db->protectString(i_id_level) + "\""
-			  "AND   id_profile=\"" + i_db->protectString(i_profile)  + "\";",
-			  nrow);  
-  v_n = atoi(i_db->getResult(v_result, 1, 0, 0));
-  i_db->read_DB_free(v_result);
-
-  if(v_n == 0) {
-    return;
+  if(isInFavorite(i_db, i_profile, i_id_level)) {
+    i_db->levels_delToFavorite(i_profile, i_id_level);
   }
-
-  i_db->levels_delToFavorite(i_profile, i_id_level);
 }
 
 std::string LevelsManager::getQuickStartPackQuery(xmDatabase *i_db,

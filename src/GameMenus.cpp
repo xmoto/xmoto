@@ -601,14 +601,21 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     pDisplayGhostTimeDiff->setFont(i_drawLib->getFontSmall());
     pDisplayGhostTimeDiff->setContextHelp(CONTEXTHELP_DISPLAY_GHOST_TIMEDIFF);
 
-    UIButton *pDisplayGhostInfo = new UIButton(pGhostOptionsTab,5,155,GAMETEXT_DISPLAYGHOSTINFO,(pGhostOptionsTab->getPosition().nWidth-40),28);
+    UIButton *pDisplayGhostInfo = new UIButton(pGhostOptionsTab,5,185,GAMETEXT_DISPLAYGHOSTINFO,(pGhostOptionsTab->getPosition().nWidth-40),28);
     pDisplayGhostInfo->setType(UI_BUTTON_TYPE_CHECK);
     pDisplayGhostInfo->setID("DISPLAY_GHOST_INFO");
     pDisplayGhostInfo->enableWindow(true);
     pDisplayGhostInfo->setFont(i_drawLib->getFontSmall());
     pDisplayGhostInfo->setContextHelp(CONTEXTHELP_DISPLAY_GHOST_INFO);
 
-    UIButton *pMotionBlurGhost = new UIButton(pGhostOptionsTab,5,185,GAMETEXT_MOTIONBLURGHOST,(pGhostOptionsTab->getPosition().nWidth-40),28);
+    UIButton *pHideGhosts = new UIButton(pGhostOptionsTab,5,155,GAMETEXT_HIDEGHOSTS,(pGhostOptionsTab->getPosition().nWidth-40),28);
+    pHideGhosts->setType(UI_BUTTON_TYPE_CHECK);
+    pHideGhosts->setID("HIDEGHOSTS");
+    pHideGhosts->enableWindow(true);
+    pHideGhosts->setFont(i_drawLib->getFontSmall());
+    pHideGhosts->setContextHelp(CONTEXTHELP_HIDEGHOSTS);
+
+    UIButton *pMotionBlurGhost = new UIButton(pGhostOptionsTab,5,215,GAMETEXT_MOTIONBLURGHOST,(pGhostOptionsTab->getPosition().nWidth-40),28);
     pMotionBlurGhost->setType(UI_BUTTON_TYPE_CHECK);
     pMotionBlurGhost->setID("MOTION_BLUR_GHOST");
     pMotionBlurGhost->enableWindow(true);
@@ -1959,9 +1966,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       std::string v_id_level = pList->getSelectedLevel();
      
       if(v_id_level != "") {
-	m_levelsManager.addToFavorite(m_db, m_xmsession->profile(), v_id_level);
-	_UpdateLevelPackLevelList(VPACKAGENAME_FAVORITE_LEVELS);
-	_UpdateLevelLists();
+	addLevelToFavorite(v_id_level);
       }
     }
 
@@ -2644,6 +2649,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     UIButton *pGhostStrategy_BESTOFROOM = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGY_BESTOFROOM");
     UIButton *pMotionBlurGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:MOTION_BLUR_GHOST");
     UIButton *pDisplayGhostInfo = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:DISPLAY_GHOST_INFO");
+    UIButton *pHideGhosts = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:HIDEGHOSTS");
     UIButton *pDisplayGhostTimeDiff = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:DISPLAY_GHOST_TIMEDIFF");
 
     UIButton *pMultiStopWhenOneFinishes = (UIButton *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:MULTI_TAB:ENABLEMULTISTOPWHENONEFINISHES");
@@ -2660,6 +2666,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       pGhostStrategy_BESTOFROOM->enableWindow(true);
       pMotionBlurGhost->enableWindow(true);
       pDisplayGhostInfo->enableWindow(true);
+      pHideGhosts->enableWindow(true);
       pDisplayGhostTimeDiff->enableWindow(true);
     } else {
       pGhostStrategy_MYBEST->enableWindow(false);
@@ -2667,6 +2674,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       pGhostStrategy_BESTOFROOM->enableWindow(false);
       pMotionBlurGhost->enableWindow(false);
       pDisplayGhostInfo->enableWindow(false);
+      pHideGhosts->enableWindow(false);
       pDisplayGhostTimeDiff->enableWindow(false);
     }
 
@@ -3539,6 +3547,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     UIButton *pGhostStrategy_BESTOFROOM = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGY_BESTOFROOM");
     UIButton *pMotionBlurGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:MOTION_BLUR_GHOST");
     UIButton *pDisplayGhostInfo = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:DISPLAY_GHOST_INFO");
+    UIButton *pHideGhosts = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:HIDEGHOSTS");
     UIButton *pDisplayGhostTimeDiff = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:DISPLAY_GHOST_TIMEDIFF");
 
     pEnableGhost->setChecked(m_Config.getBool("EnableGhost"));
@@ -3547,6 +3556,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     pGhostStrategy_BESTOFROOM->setChecked(m_Config.getBool("GhostStrategy_BESTOFROOM"));
     pMotionBlurGhost->setChecked(m_Config.getBool("GhostMotionBlur"));
     pDisplayGhostInfo->setChecked(m_Config.getBool("DisplayGhostInfo"));
+    pHideGhosts->setChecked(m_Config.getBool("HideGhosts"));
     pDisplayGhostTimeDiff->setChecked(m_Config.getBool("ShowGhostTimeDiff"));
 
     pShowMiniMap->setChecked(m_Config.getBool("ShowMiniMap"));
@@ -3689,6 +3699,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
       m_Config.setValue("GhostMotionBlur",m_Config.getDefaultValue("GhostMotionBlur"));
       m_Config.setValue("DisplayGhostInfo",m_Config.getDefaultValue("DisplayGhostInfo"));
+      m_Config.setValue("HideGhosts",m_Config.getDefaultValue("HideGhosts"));
       m_Config.setValue("ShowGhostTimeDiff",m_Config.getDefaultValue("ShowGhostTimeDiff"));
 
       m_Config.setValue("ShowInGameWorldRecord",m_Config.getDefaultValue("ShowInGameWorldRecord"));
@@ -3937,6 +3948,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     UIButton *pGhostStrategy_BESTOFROOM = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGY_BESTOFROOM");
     UIButton *pMotionBlurGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:MOTION_BLUR_GHOST");
     UIButton *pDisplayGhostInfo = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:DISPLAY_GHOST_INFO");
+    UIButton *pHideGhosts = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:HIDEGHOSTS");
     UIButton *pDisplayGhostTimeDiff = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:DISPLAY_GHOST_TIMEDIFF");
 
     m_Config.setBool("EnableGhost",pEnableGhost->getChecked());
@@ -3948,6 +3960,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_xmsession->setGhostStrategy_BESTOFROOM(m_Config.getBool("GhostStrategy_BESTOFROOM"));
     m_Config.setBool("GhostMotionBlur",pMotionBlurGhost->getChecked());
     m_Config.setBool("DisplayGhostInfo",pDisplayGhostInfo->getChecked());
+    m_Config.setBool("HideGhosts",pHideGhosts->getChecked());
     m_Config.setBool("ShowGhostTimeDiff",pDisplayGhostTimeDiff->getChecked());
 
 

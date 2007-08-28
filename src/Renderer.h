@@ -133,6 +133,7 @@ class ParticlesSource;
       m_Quality=GQ_HIGH;
       m_bGhostMotionBlur = true;
       m_displayGhostInformation = false;
+      m_hideGhosts = false;
       m_theme = NULL;
       m_previousEngineSpeed = -1.0;
       m_previousEngineLinVel = -1.0;
@@ -178,6 +179,7 @@ class ParticlesSource;
     void setQuality(GraphQuality Quality) {m_Quality = Quality;}      
     void setGhostMotionBlur(bool b) {m_bGhostMotionBlur = b;}
     void setGhostDisplayInformation(bool i_display);
+    void setHideGhosts(bool i_value);
 
     /* if p_save == "", nothing is displayed for p_save */
     void showMsgNewPersonalHighscore(std::string p_save = "");
@@ -238,6 +240,7 @@ class ParticlesSource;
     float m_fNextGhostInfoUpdate;
     int m_nGhostInfoTrans;
     bool m_displayGhostInformation;
+    bool m_hideGhosts;
 
     float m_previousEngineSpeed;
 	float m_previousEngineLinVel;

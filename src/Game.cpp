@@ -281,6 +281,7 @@ GameApp::GameApp() {
   m_bEnableGhost = true;
   m_bShowGhostTimeDiff = true;
   m_bEnableGhostInfo = false;
+  m_bHideGhosts = false;
   m_bGhostMotionBlur = true;
 
   m_bAutosaveHighscoreReplays = true;
@@ -846,7 +847,9 @@ GameApp::GameApp() {
     m_Renderer->setGhostMotionBlur( m_bGhostMotionBlur );
 
     m_bEnableGhostInfo = m_Config.getBool("DisplayGhostInfo");
+    m_bHideGhosts = m_Config.getBool("HideGhosts");
     m_Renderer->setGhostDisplayInformation(m_bEnableGhostInfo);
+    m_Renderer->setHideGhosts(m_bHideGhosts);
 
     m_bShowWebHighscoreInGame = m_Config.getBool("ShowInGameWorldRecord");
     m_bEnableCheckNewLevelsAtStartup  = m_Config.getBool("CheckNewLevelsAtStartup");
@@ -1096,6 +1099,9 @@ GameApp::GameApp() {
 	  m_pPauseMenu->showWindow(false);
 	  m_State = GS_PLAYING;
 	  break;
+	case SDLK_F3:
+	  switchLevelToFavorite(m_MotoGame.getLevelSrc()->Id(), true);
+	  break;
           default:
             m_Renderer->getGUI()->keyDown(nKey, mod,nChar);
             break;      
@@ -1172,6 +1178,11 @@ GameApp::GameApp() {
 	case SDLK_F2:
 	  m_Renderer->switchFollow();
 	  break;
+
+	case SDLK_F3:
+	  switchLevelToFavorite(m_MotoGame.getLevelSrc()->Id(), true);
+	  break;
+
   case SDLK_SPACE:
     /* pause */
     m_MotoGame.pause();
@@ -1220,6 +1231,9 @@ GameApp::GameApp() {
 		break;
 	case SDLK_F2:
 	  m_Renderer->switchFollow();
+	  break;
+	case SDLK_F3:
+	  switchLevelToFavorite(m_MotoGame.getLevelSrc()->Id(), true);
 	  break;
 	case SDLK_PAGEUP:
 	  if(_IsThereANextLevel(m_PlaySpecificLevelId)) {
@@ -2940,4 +2954,27 @@ void GameApp::addGhosts(MotoGame* i_motogame, Theme* i_theme) {
     }
   }
 
+}
+
+void GameApp::addLevelToFavorite(const std::string& i_levelId) {
+  m_levelsManager.addToFavorite(m_db, m_xmsession->profile(), i_levelId);
+  _UpdateLevelPackLevelList(VPACKAGENAME_FAVORITE_LEVELS);
+  _UpdateLevelLists();
+}
+
+void GameApp::switchLevelToFavorite(const std::string& i_levelId, bool v_displayMessage) {
+  if(m_levelsManager.isInFavorite(m_db, m_xmsession->profile(), i_levelId)) {
+    m_levelsManager.delFromFavorite(m_db, m_xmsession->profile(), i_levelId);
+    if(v_displayMessage) {
+      m_sysMsg->displayText(GAMETEXT_LEVEL_DELETED_FROM_FAVORITE);
+    }
+  } else {
+    m_levelsManager.addToFavorite(m_db, m_xmsession->profile(), i_levelId);
+    if(v_displayMessage) {
+      m_sysMsg->displayText(GAMETEXT_LEVEL_ADDED_TO_FAVORITE);
+    }
+  }
+
+  _UpdateLevelPackLevelList(VPACKAGENAME_FAVORITE_LEVELS);
+  _UpdateLevelLists();
 }
