@@ -209,8 +209,12 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 "  " + change_direction_KEY + " - " + std::string(_("Turns around and drives in the other direction")) + "\n" \
 "  Esc - " + std::string(_("Pause")) + "\n" \
 "  Return - " + std::string(_("Restart the level")) + "\n" \
-"  F12 - " + std::string(_("Take a screenshot")) + "\n" \
+"  PageDown/PageUp - " + std::string(_("Previous/Next level")) + "\n" \
+"  F3 - " + std::string(_("Add/remove to favorite levels")) + "\n"\ 
+"  F8 - " + std::string(_("Enable/disable web")) + "\n" \
+"  F9 - " + std::string(_("Enable/disable ugly mode")) + "\n" \
 "  F5 - " + std::string(_("Reload levels, themes and replays from directories")) + "\n" \
+"  F12 - " + std::string(_("Take a screenshot")) + "\n" \
 "\n" \
  + std::string(_("Find all the strawberries and touch the flower to finish\nthe level.")) + "\n" \
  + std::string(_("Read the README file or check out the website at\nhttp://xmoto.tuxfamily.org for more information."))
