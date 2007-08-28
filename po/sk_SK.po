@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-08-28 19:50+0200\n"
+"POT-Creation-Date: 2007-08-28 23:09+0200\n"
 "PO-Revision-Date: 2007-07-28 10:28+0200\n"
 "Last-Translator: Jozef Riha <jose1711@gmail.com\n"
 "Language-Team:  <sk@li.org>\n"
@@ -731,12 +731,12 @@ msgstr "Level"
 
 #: src/GameText.h:238
 #, fuzzy
-msgid "Added to the favorite"
+msgid "Added to favorites"
 msgstr "Pridať k obľúbeným"
 
 #: src/GameText.h:239
 #, fuzzy
-msgid "Delete from the favorite"
+msgid "Deleted from favorites"
 msgstr "Vymazať z obľúbených"
 
 #: src/GameText.h:240
@@ -2377,6 +2377,14 @@ msgid ""
 "Now for the final one... It's not that long, but instead\n"
 "there's even less room for your precious head. Good luck! :)"
 msgstr "je tam ešte menej miesta na vašu vzácnu hlavu. Veľa šťastia! :)"
+
+#, fuzzy
+#~ msgid "Added to the favorite"
+#~ msgstr "Pridať k obľúbeným"
+
+#, fuzzy
+#~ msgid "Delete from the favorite"
+#~ msgstr "Vymazať z obľúbených"
 
 #~ msgid "Already used!"
 #~ msgstr "Už použité!"

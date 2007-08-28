@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-08-28 19:50+0200\n"
+"POT-Creation-Date: 2007-08-28 23:09+0200\n"
 "PO-Revision-Date: 2007-05-03 02:11+0200\n"
 "Last-Translator: Trullo\n"
 "Language-Team:  <XMoto>\n"
@@ -727,12 +727,12 @@ msgstr "Nivel"
 
 #: src/GameText.h:238
 #, fuzzy
-msgid "Added to the favorite"
+msgid "Added to favorites"
 msgstr "Añadir a favorito"
 
 #: src/GameText.h:239
 #, fuzzy
-msgid "Delete from the favorite"
+msgid "Deleted from favorites"
 msgstr "Eliminar de los favoritos"
 
 #: src/GameText.h:240
@@ -2362,6 +2362,14 @@ msgid ""
 "Now for the final one... It's not that long, but instead\n"
 "there's even less room for your precious head. Good luck! :)"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Added to the favorite"
+#~ msgstr "Añadir a favorito"
+
+#, fuzzy
+#~ msgid "Delete from the favorite"
+#~ msgstr "Eliminar de los favoritos"
 
 #~ msgid "Already used!"
 #~ msgstr "Ya esta en uso!"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ca\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-08-28 19:50+0200\n"
+"POT-Creation-Date: 2007-08-28 23:09+0200\n"
 "PO-Revision-Date: 2007-05-02 02:31+0200\n"
 "Last-Translator: Trullo\n"
 "Language-Team:  X-Moto\n"
@@ -727,12 +727,12 @@ msgstr "Nivell"
 
 #: src/GameText.h:238
 #, fuzzy
-msgid "Added to the favorite"
+msgid "Added to favorites"
 msgstr "Afegeix als favorits"
 
 #: src/GameText.h:239
 #, fuzzy
-msgid "Delete from the favorite"
+msgid "Deleted from favorites"
 msgstr "Eliminar dels favorits"
 
 #: src/GameText.h:240
@@ -2359,6 +2359,14 @@ msgid ""
 "Now for the final one... It's not that long, but instead\n"
 "there's even less room for your precious head. Good luck! :)"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Added to the favorite"
+#~ msgstr "Afegeix als favorits"
+
+#, fuzzy
+#~ msgid "Delete from the favorite"
+#~ msgstr "Eliminar dels favorits"
 
 #~ msgid "Already used!"
 #~ msgstr "Ja esta en us!"

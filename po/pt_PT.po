@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto Portuguese Translation v1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-08-28 19:50+0200\n"
+"POT-Creation-Date: 2007-08-28 23:09+0200\n"
 "PO-Revision-Date: 2007-07-31 19:19-0000\n"
 "Last-Translator: Luís Miguel Fonseca Garcia <LuisG280@hotmail.com>\n"
 "Language-Team: LT <LuisG280@hotmail.com>\n"
@@ -734,12 +734,12 @@ msgstr "Nível"
 
 #: src/GameText.h:238
 #, fuzzy
-msgid "Added to the favorite"
+msgid "Added to favorites"
 msgstr "Adicionar aos favoritos"
 
 #: src/GameText.h:239
 #, fuzzy
-msgid "Delete from the favorite"
+msgid "Deleted from favorites"
 msgstr "Apagar dos favoritos"
 
 #: src/GameText.h:240
@@ -2385,6 +2385,14 @@ msgid ""
 "Now for the final one... It's not that long, but instead\n"
 "there's even less room for your precious head. Good luck! :)"
 msgstr "há ainda menos espaço para a tua preciosa cabeça. Boa sorte! :)"
+
+#, fuzzy
+#~ msgid "Added to the favorite"
+#~ msgstr "Adicionar aos favoritos"
+
+#, fuzzy
+#~ msgid "Delete from the favorite"
+#~ msgstr "Apagar dos favoritos"
 
 #~ msgid "Already used!"
 #~ msgstr "Já foi usado!"

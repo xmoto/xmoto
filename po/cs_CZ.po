@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-08-28 19:50+0200\n"
+"POT-Creation-Date: 2007-08-28 23:09+0200\n"
 "PO-Revision-Date: 2006-09-04 19:52+0100\n"
 "Last-Translator: Jan Kaláb <pitel@nomi.cz>\n"
 "Language-Team: X-Moto\n"
@@ -724,12 +724,12 @@ msgstr "Úroveň"
 
 #: src/GameText.h:238
 #, fuzzy
-msgid "Added to the favorite"
+msgid "Added to favorites"
 msgstr "Přidat k oblíbeným"
 
 #: src/GameText.h:239
 #, fuzzy
-msgid "Delete from the favorite"
+msgid "Deleted from favorites"
 msgstr "Smazat z oblíbených"
 
 #: src/GameText.h:240
@@ -2356,6 +2356,14 @@ msgid ""
 "Now for the final one... It's not that long, but instead\n"
 "there's even less room for your precious head. Good luck! :)"
 msgstr "je tu ještě méně místa pro vaši cennou hlavu. Hodně štěstí! :)"
+
+#, fuzzy
+#~ msgid "Added to the favorite"
+#~ msgstr "Přidat k oblíbeným"
+
+#, fuzzy
+#~ msgid "Delete from the favorite"
+#~ msgstr "Smazat z oblíbených"
 
 #~ msgid "Already used!"
 #~ msgstr "Již použito!"

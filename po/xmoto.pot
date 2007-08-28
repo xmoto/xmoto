@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-08-28 19:50+0200\n"
+"POT-Creation-Date: 2007-08-28 23:09+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -701,11 +701,11 @@ msgid "Level"
 msgstr ""
 
 #: src/GameText.h:238
-msgid "Added to the favorite"
+msgid "Added to favorites"
 msgstr ""
 
 #: src/GameText.h:239
-msgid "Delete from the favorite"
+msgid "Deleted from favorites"
 msgstr ""
 
 #: src/GameText.h:240
