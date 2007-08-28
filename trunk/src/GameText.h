@@ -215,6 +215,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
  + std::string(_("Find all the strawberries and touch the flower to finish\nthe level.")) + "\n" \
  + std::string(_("Read the README file or check out the website at\nhttp://xmoto.tuxfamily.org for more information."))
 
+#define GAMETEXT_HIDEGHOSTS           _("Hide ghosts")
 #define GAMETEXT_HIGH                 _("High")
 #define GAMETEXT_LOAD_LEVEL_HOOK      _("Levels are being added into the database. Please wait.")
 #define GAMETEXT_INETCONF             _("Internet Configuration")
@@ -230,6 +231,8 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_KEY                  _("Key")
 #define GAMETEXT_KEYBOARD             _("Keyboard")
 #define GAMETEXT_LEVEL                _("Level")
+#define GAMETEXT_LEVEL_ADDED_TO_FAVORITE     _("Added to the favorite")
+#define GAMETEXT_LEVEL_DELETED_FROM_FAVORITE _("Delete from the favorite")
 #define GAMETEXT_LEVELINFO            _("Level Info...")
 #define GAMETEXT_LEVELNAME            _("Level Name")
 #define GAMETEXT_LEVELCANNOTBELOADED  _("Level '%s' cannot be loaded")
@@ -513,6 +516,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define CONTEXTHELP_GHOST_STRATEGY_MYBEST _("The best of my replays (on this computer)")
 #define CONTEXTHELP_GHOST_STRATEGY_THEBEST _("The best of the replays (on this computer)")
 #define CONTEXTHELP_GHOST_STRATEGY_BESTOFROOM _("The highscore of the room")
+#define CONTEXTHELP_HIDEGHOSTS _("Don't show the ghosts while playing")
 
 #define VPACKAGENAME_LEVELS_WITH_NO_HIGHSCORE   _("Levels with no highscore")
 #define VPACKAGENAME_INCOMPLETED_LEVELS         _("Levels you have not completed")

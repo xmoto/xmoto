@@ -468,6 +468,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       else if(Entities[i]->IsToTake()) {
         getParent()->getDrawLib()->drawCircle(entityPos, 3, 0, MAKE_COLOR(255,0,0,255), 0);
       }
+      else if(Entities[i]->DoesKill()) {
+        getParent()->getDrawLib()->drawCircle(entityPos, 3, 0, MAKE_COLOR(0,0,70,255), 0);
+      }
     }
     
 #ifdef ENABLE_OPENGL
@@ -480,27 +483,30 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   void GameRenderer::_RenderGhost(Biker* i_ghost, int i) {
     /* Render ghost - ugly mode? */
     if(m_bUglyMode == false) {
-      // can't use the same overlay for the multi cameras,
-      // because the fade is made using all the cameras,
-      // there should be one overlay per camera.
-      int nbCamera = getGameObject()->getNumberCameras();
-      /* No not ugly, fancy! Render into overlay? */      
-      if(m_bGhostMotionBlur
-	 && getParent()->getDrawLib()->useFBOs()
-	 && nbCamera == 1) {
-	m_Overlay.beginRendering();
-	m_Overlay.fade(0.15);
+      if(m_hideGhosts == false) { /* ghosts can be hidden, but don't hide text */
+
+	// can't use the same overlay for the multi cameras,
+	// because the fade is made using all the cameras,
+	// there should be one overlay per camera.
+	int nbCamera = getGameObject()->getNumberCameras();
+	/* No not ugly, fancy! Render into overlay? */      
+	if(m_bGhostMotionBlur
+	   && getParent()->getDrawLib()->useFBOs()
+	   && nbCamera == 1) {
+	  m_Overlay.beginRendering();
+	  m_Overlay.fade(0.15);
+	}
+	_RenderBike(i_ghost->getState(), i_ghost->getState()->Parameters(), i_ghost->getBikeTheme(), true,
+		    i_ghost->getColorFilter(), i_ghost->getUglyColorFilter());
+	
+	if(m_bGhostMotionBlur
+	   && getParent()->getDrawLib()->useFBOs()
+	   && nbCamera == 1) {
+	  m_Overlay.endRendering();
+	  m_Overlay.present();
+	}
       }
-      _RenderBike(i_ghost->getState(), i_ghost->getState()->Parameters(), i_ghost->getBikeTheme(), true,
-		  i_ghost->getColorFilter(), i_ghost->getUglyColorFilter());
-	  
-      if(m_bGhostMotionBlur
-	 && getParent()->getDrawLib()->useFBOs()
-	 && nbCamera == 1) {
-	m_Overlay.endRendering();
-	m_Overlay.present();
-     }
-	  
+ 
       if(i_ghost->getDescription() != "") {
 	if(m_nGhostInfoTrans > 0 && m_displayGhostInformation) {
 	  _RenderInGameText(i_ghost->getState()->CenterP + Vector2f(i*3.0,-1.5f),
@@ -509,12 +515,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	}
       }
     }
-
+    
     if(m_bUglyMode) {
-      _RenderBike(i_ghost->getState(), i_ghost->getState()->Parameters(),
-		  i_ghost->getBikeTheme(),
-		  true,
-		  i_ghost->getColorFilter(), i_ghost->getUglyColorFilter());
+      if(m_hideGhosts == false) { /* ghosts can be hidden, but don't hide text */
+	_RenderBike(i_ghost->getState(), i_ghost->getState()->Parameters(),
+		    i_ghost->getBikeTheme(),
+		    true,
+		    i_ghost->getColorFilter(), i_ghost->getUglyColorFilter());
+      }
     }
   }
 
@@ -526,6 +534,7 @@ int GameRenderer::nbParticlesRendered() const {
   Main rendering function
   ===========================================================================*/
   void GameRenderer::render(bool bIsPaused) {
+    bool v_found;
     MotoGame* pGame   = getGameObject();
     Camera*   pCamera = pGame->getCamera();
 
@@ -616,7 +625,7 @@ int GameRenderer::nbParticlesRendered() const {
     }
 
     /* ghosts */
-    bool v_found = false;
+    v_found = false;
     int v_found_i = 0;
     for(unsigned int i=0; i<pGame->Ghosts().size(); i++) {
       Ghost* v_ghost = pGame->Ghosts()[i];
@@ -2003,6 +2012,10 @@ int GameRenderer::nbParticlesRendered() const {
 
   void GameRenderer::setGhostDisplayInformation(bool i_display) {
     m_displayGhostInformation = i_display;
+  }
+
+  void GameRenderer::setHideGhosts(bool i_value) {
+    m_hideGhosts = i_value;
   }
 
   bool GameRenderer::showMinimap() const {

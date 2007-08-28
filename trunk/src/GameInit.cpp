@@ -810,6 +810,7 @@ int main(int nNumArgs,char **ppcArgs) {
     m_Config.createVar( "GhostStrategy_BESTOFROOM", "false");
     m_Config.createVar( "ShowGhostTimeDiff"  , "true");
     m_Config.createVar( "DisplayGhostInfo"   , "false");
+    m_Config.createVar( "HideGhosts"   , "false");
     m_Config.createVar( "GhostMotionBlur"    , "true" );
 
     /* quick start button */

@@ -234,6 +234,7 @@ class SoundSample;
       bool m_bShowGhostTimeDiff;
       bool m_bGhostMotionBlur;                  /* true: apply fancy motion blur to ghosts */
       bool m_bEnableGhostInfo;
+      bool m_bHideGhosts;
 
       /* WWW */
       bool m_bShowWebHighscoreInGame;           /* true: Show world highscore inside the game */
@@ -567,6 +568,9 @@ class SoundSample;
 
       void updatePlayerTag();
       
+      void addLevelToFavorite(const std::string& i_levelId);
+      void switchLevelToFavorite(const std::string& i_levelId, bool v_displayMessage = false);
+
       /* */
       void _InitWin(bool bInitGraphics);
       void _Uninit(void);

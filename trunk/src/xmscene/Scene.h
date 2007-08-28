@@ -302,7 +302,6 @@ class Biker;
       void _GenerateLevel(void);          /* Called by playLevel() to 
                                              prepare the level */
       bool _DoCircleTouchZone(const Vector2f &Cp,float Cr,Zone *pZone);
-      Entity *_SpawnEntity(std::string ID,EntitySpeciality Type,Vector2f Pos, Entity *pSrc);
       void _KillEntity(Entity *pEnt);
       void _UpdateEntities(void);
       void _UpdateZones(void);

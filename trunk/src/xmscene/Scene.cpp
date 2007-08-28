@@ -430,6 +430,7 @@ void MotoGame::cleanPlayers() {
     /* add the debris particlesSource */
     ParticlesSource *v_debris = new ParticlesSourceDebris("BikeDebris");
     v_debris->loadToPlay();
+    v_debris->setZ(1.0);
     getLevelSrc()->spawnEntity(v_debris);
 
     /* execute events */
@@ -1057,6 +1058,7 @@ void MotoGame::cleanPlayers() {
       ParticlesSource *v_stars = new ParticlesSourceStar("");
       v_stars->setInitialPosition(v_entity->DynamicPosition());
       v_stars->loadToPlay();
+      v_stars->setZ(1.0);
       for(int i=0; i<3; i++) {
 	v_stars->addParticle(Vector2f(0,0), getTime() + 5.0);
       }
