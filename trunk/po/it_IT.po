@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-08-28 19:50+0200\n"
+"POT-Creation-Date: 2007-08-28 23:09+0200\n"
 "PO-Revision-Date: 2007-06-13 15:53+0200\n"
 "Last-Translator: Luca Manzari\n"
 "Language-Team:  <en@li.org>\n"
@@ -731,12 +731,12 @@ msgstr "Livello"
 
 #: src/GameText.h:238
 #, fuzzy
-msgid "Added to the favorite"
+msgid "Added to favorites"
 msgstr "Aggiungi ai preferiti"
 
 #: src/GameText.h:239
 #, fuzzy
-msgid "Delete from the favorite"
+msgid "Deleted from favorites"
 msgstr "Rimuovi dai preferiti"
 
 #: src/GameText.h:240
@@ -2389,6 +2389,14 @@ msgid ""
 "there's even less room for your precious head. Good luck! :)"
 msgstr ""
 "c'è ancora meno spazio per la tua preziosissima testa. Buona fortuna! :)"
+
+#, fuzzy
+#~ msgid "Added to the favorite"
+#~ msgstr "Aggiungi ai preferiti"
+
+#, fuzzy
+#~ msgid "Delete from the favorite"
+#~ msgstr "Rimuovi dai preferiti"
 
 #~ msgid "Already used!"
 #~ msgstr "Già in uso!"

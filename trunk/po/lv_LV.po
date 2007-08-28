@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xmoto 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-08-28 19:50+0200\n"
-"PO-Revision-Date: 2007-08-11 00:31+0300\n"
+"POT-Creation-Date: 2007-08-28 23:09+0200\n"
+"PO-Revision-Date: 2007-08-28 23:48+0300\n"
 "Last-Translator: Jānis Rūcis <parasti@gmail.com>\n"
 "Language-Team: Latvian\n"
 "MIME-Version: 1.0\n"
@@ -613,22 +613,20 @@ msgid "Restart the level"
 msgstr "Sākt līmeni no jauna"
 
 #: src/GameText.h:212
-#, fuzzy
 msgid "Previous/Next level"
-msgstr "Visgrūtākie līmeņi"
+msgstr "Iepriekšējais/nākošais līmenis"
 
 #: src/GameText.h:213
-#, fuzzy
 msgid "Add/remove to favorite levels"
-msgstr "Pievienot līmeni iecienītajiem līmeņiem"
+msgstr "Pievienot/dzēst no iecienītajiem līmeņiem"
 
 #: src/GameText.h:214
 msgid "Enable/disable web"
-msgstr ""
+msgstr "Aktivizēt/deaktivizēt tīmekli"
 
 #: src/GameText.h:215
 msgid "Enable/disable ugly mode"
-msgstr ""
+msgstr "Aktivizēt/deaktivizēt neglīto režīmu"
 
 #: src/GameText.h:216
 msgid "Reload levels, themes and replays from directories"
@@ -654,7 +652,7 @@ msgstr ""
 
 #: src/GameText.h:222
 msgid "Hide ghosts"
-msgstr ""
+msgstr "Paslēpt spokus"
 
 #: src/GameText.h:223
 msgid "High"
@@ -718,12 +716,12 @@ msgstr "Līmenis"
 
 #: src/GameText.h:238
 #, fuzzy
-msgid "Added to the favorite"
+msgid "Added to favorites"
 msgstr "Pielikt iecienītajiem"
 
 #: src/GameText.h:239
 #, fuzzy
-msgid "Delete from the favorite"
+msgid "Deleted from favorites"
 msgstr "Dzēst no iecienītajiem"
 
 #: src/GameText.h:240
@@ -1476,11 +1474,11 @@ msgstr "Rādīt spēli savā logā"
 
 #: src/GameText.h:430
 msgid "Not so fancy menu graphics"
-msgstr "Visai zemas kvalitātes izvēlņu grafikas"
+msgstr "Zemas kvalitātes izvēlņu grafikas"
 
 #: src/GameText.h:431
 msgid "A bit more fancy menu graphics"
-msgstr "Nedaudz augstākas kvalitātes izvēlņu grafikas"
+msgstr "Augstākas kvalitātes izvēlņu grafikas"
 
 #: src/GameText.h:432
 msgid "Fanciest menu graphics"
@@ -1667,7 +1665,7 @@ msgstr "Parādīt laika atšķirību starp spoku un tevi"
 
 #: src/GameText.h:477
 msgid "If you make a highscore it will automatically be saved as a replay"
-msgstr "Uzstādot rekordu, tas tiks automātiski saglabāts kā ieraksts"
+msgstr "Uzstādot rekordu, tā ieraksts tiks automātiski saglabāts"
 
 #: src/GameText.h:478
 msgid "View the replay of the room's highscore"
@@ -1839,9 +1837,8 @@ msgstr ""
 "spēlētājs vēl spēlē"
 
 #: src/GameText.h:523
-#, fuzzy
 msgid "Don't show the ghosts while playing"
-msgstr "Rādīt spidometru spēles laikā"
+msgstr "Nerādīt spokus spēles laikā"
 
 #: src/GameText.h:525
 msgid "Levels with no highscore"
@@ -2067,11 +2064,11 @@ msgstr "Tēmas režīms deaktivizēts"
 
 #: src/GameText.h:584
 msgid "UglyOver mode enabled"
-msgstr "UglyOver režīms aktivizēts"
+msgstr "Neglītā režīma pārklājums aktivizēts"
 
 #: src/GameText.h:585
 msgid "UglyOver mode disabled"
-msgstr "UglyOver režīms deaktivizēts"
+msgstr "Neglītā režīma pārklājums deaktivizēts"
 
 #: src/GameText.h:586
 msgid "Web connection enabled"
@@ -2091,15 +2088,15 @@ msgstr "Ieraksta interpolācija deaktivizēta"
 
 #: src/GameText.h:590
 msgid "Fps enabled"
-msgstr ""
+msgstr "Kadru skaitītājs aktivizēts"
 
 #: src/GameText.h:591
 msgid "Fps disabled"
-msgstr ""
+msgstr "Kadru skaitītājs deaktivizēts"
 
 #: src/GameText.h:594
 msgid "FontGroup:GENERAL"
-msgstr ""
+msgstr "FontGroup:GENERAL"
 
 #: src/LevelsText.h:21
 msgid "First let's take a look at the user interface..."
@@ -2393,6 +2390,12 @@ msgid ""
 msgstr ""
 "Un tagad pēdējais! Tas nav tik garš, taču šoreiz\n"
 "šeit ir vēl mazāk vietas tavai galvai.  Lai veicas! :)"
+
+#~ msgid "Added to the favorite"
+#~ msgstr "Pievienots iecienītajiem"
+
+#~ msgid "Delete from the favorite"
+#~ msgstr "Izdzēsts no iecienītajiem"
 
 #~ msgid "Already used!"
 #~ msgstr "Jau aizņemts!"

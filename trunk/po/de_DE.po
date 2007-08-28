@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-08-28 19:50+0200\n"
+"POT-Creation-Date: 2007-08-28 23:09+0200\n"
 "PO-Revision-Date: 2006-12-21 21:14+0100\n"
 "Last-Translator: Jens Erler <mothbox@gmx.net>\n"
 "Language-Team: German\n"
@@ -716,12 +716,12 @@ msgstr "Level"
 
 #: src/GameText.h:238
 #, fuzzy
-msgid "Added to the favorite"
+msgid "Added to favorites"
 msgstr "Zu den Favoriten"
 
 #: src/GameText.h:239
 #, fuzzy
-msgid "Delete from the favorite"
+msgid "Deleted from favorites"
 msgstr "Aus Liste entfernen"
 
 #: src/GameText.h:240
@@ -2376,6 +2376,14 @@ msgid ""
 msgstr ""
 "Dies ist die letzte Hürde! Nicht so lang, dafür aber\n"
 "ist die Decke noch niedriger. Viel Glück!"
+
+#, fuzzy
+#~ msgid "Added to the favorite"
+#~ msgstr "Zu den Favoriten"
+
+#, fuzzy
+#~ msgid "Delete from the favorite"
+#~ msgstr "Aus Liste entfernen"
 
 #~ msgid "Already used!"
 #~ msgstr "Bereits verwendet!"

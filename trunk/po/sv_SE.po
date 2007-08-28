@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sv_SE\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-08-28 19:50+0200\n"
+"POT-Creation-Date: 2007-08-28 23:09+0200\n"
 "PO-Revision-Date: 2007-08-14 15:24+0200\n"
 "Last-Translator: Lukas <lukas.klingsbo@piratpartiet.se>\n"
 "Language-Team: Swedish\n"
@@ -719,12 +719,12 @@ msgstr "Bana"
 
 #: src/GameText.h:238
 #, fuzzy
-msgid "Added to the favorite"
+msgid "Added to favorites"
 msgstr "Lägg till som favorit"
 
 #: src/GameText.h:239
 #, fuzzy
-msgid "Delete from the favorite"
+msgid "Deleted from favorites"
 msgstr "Ta bort från favoriter"
 
 #: src/GameText.h:240
@@ -2349,3 +2349,11 @@ msgid ""
 msgstr ""
 "Nu är det den sista... Den är inte så lång, men istället<br> är det till och "
 "med mindre rum för ditt värdefulla huvud. Lycka till! :)"
+
+#, fuzzy
+#~ msgid "Added to the favorite"
+#~ msgstr "Lägg till som favorit"
+
+#, fuzzy
+#~ msgid "Delete from the favorite"
+#~ msgstr "Ta bort från favoriter"

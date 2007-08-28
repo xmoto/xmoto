@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-08-28 19:50+0200\n"
+"POT-Creation-Date: 2007-08-28 23:09+0200\n"
 "PO-Revision-Date: 2007-08-27 18:20-0300\n"
 "Last-Translator: Lucas Hermann Negri <kkndrox@gmail.com>\n"
 "Language-Team: Portuguese/Brazil\n"
@@ -717,12 +717,12 @@ msgstr "Nível"
 
 #: src/GameText.h:238
 #, fuzzy
-msgid "Added to the favorite"
+msgid "Added to favorites"
 msgstr "Adicionar aos favoritos"
 
 #: src/GameText.h:239
 #, fuzzy
-msgid "Delete from the favorite"
+msgid "Deleted from favorites"
 msgstr "Apagar dos favoritos"
 
 #: src/GameText.h:240
@@ -2385,3 +2385,11 @@ msgid ""
 msgstr ""
 "Agora para o desafio final... Não é tão longo, porém\n"
 "tem ainda menos espaço para a sua preciosa cabeça. Boa sorte! :)"
+
+#, fuzzy
+#~ msgid "Added to the favorite"
+#~ msgstr "Adicionar aos favoritos"
+
+#, fuzzy
+#~ msgid "Delete from the favorite"
+#~ msgstr "Apagar dos favoritos"

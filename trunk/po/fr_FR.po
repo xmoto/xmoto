@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-08-28 19:50+0200\n"
+"POT-Creation-Date: 2007-08-28 23:09+0200\n"
 "PO-Revision-Date: 2006-09-04 19:52+0100\n"
 "Last-Translator: Nicolas Adenis-Lamarre\n"
 "Language-Team: X-Moto\n"
@@ -708,11 +708,11 @@ msgid "Level"
 msgstr "Niveau"
 
 #: src/GameText.h:238
-msgid "Added to the favorite"
+msgid "Added to favorites"
 msgstr "Ajouté aux favoris"
 
 #: src/GameText.h:239
-msgid "Delete from the favorite"
+msgid "Deleted from favorites"
 msgstr "Supprimé des favoris"
 
 #: src/GameText.h:240
@@ -2362,6 +2362,12 @@ msgid ""
 msgstr ""
 "Enfin, le dernier... Il n'est pas très long, mais\n"
 "il y a encore moins de place pour votre tête. Bonne change ! :)"
+
+#~ msgid "Added to the favorite"
+#~ msgstr "Ajouté aux favoris"
+
+#~ msgid "Delete from the favorite"
+#~ msgstr "Supprimé des favoris"
 
 #~ msgid "Switch camera"
 #~ msgstr "Changer de caméra"
