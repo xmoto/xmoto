@@ -323,6 +323,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define GAMETEXT_REPLAYHELPTEXTNOREWIND(current_speed) _("Stop[esc] ||[space] >>[right key] < >[up/down keys]   Speed:") + current_speed + "x"
   // + "a" + "X"
 #define GAMETEXT_REPLAYNOTFOUND       _("The replay can't be played!")
+#define GAMETEXT_REPLAYOF             _("Replay of %s")
 #define GAMETEXT_REPLAYS              _("Replays")
 #define GAMETEXT_RESTART              _("Restart This Level")
 #define GAMETEXT_RESUME               _("Resume Playing")

@@ -18,6 +18,7 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
+#include "GameText.h"
 #include "BikePlayer.h"
 #include "BikeParameters.h"
 #include "BikeAnchors.h"
@@ -37,6 +38,16 @@ ReplayBiker::ReplayBiker(std::string i_replayFile, Theme *i_theme, BikerTheme* i
 	      GET_GREEN(i_bikerTheme->getUglyRiderColor()),
 	      GET_BLUE(i_bikerTheme->getUglyRiderColor()),
 	      GET_ALPHA(i_bikerTheme->getUglyRiderColor()))) {
+}
+
+std::string ReplayBiker::getQuickDescription() const {
+  char c_tmp[1024];
+  
+  snprintf(c_tmp, 1024,
+	   GAMETEXT_REPLAYOF,
+	   m_replay->getPlayerName().c_str()); 
+  
+  return std::string(c_tmp);
 }
 
 PlayerBiker::PlayerBiker(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity,
@@ -71,6 +82,10 @@ PlayerBiker::~PlayerBiker() {
 
 std::string PlayerBiker::getDescription() const {
   return "";
+}
+
+std::string PlayerBiker::getQuickDescription() const {
+  return GAMETEXT_PLAYER;
 }
 
 void PlayerBiker::updateToTime(float i_time, float i_timeStep,

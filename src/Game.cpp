@@ -1194,7 +1194,7 @@ GameApp::GameApp() {
 	    }
             break;
 	case SDLK_F2:
-	  m_Renderer->switchFollow();
+	  switchFollowCamera();
 	  break;
 
 	case SDLK_F3:
@@ -1248,7 +1248,7 @@ GameApp::GameApp() {
 		}
 		break;
 	case SDLK_F2:
-	  m_Renderer->switchFollow();
+	  switchFollowCamera();
 	  break;
 	case SDLK_F3:
 	  switchLevelToFavorite(m_MotoGame.getLevelSrc()->Id(), true);
@@ -2995,4 +2995,12 @@ void GameApp::switchLevelToFavorite(const std::string& i_levelId, bool v_display
 
   _UpdateLevelPackLevelList(VPACKAGENAME_FAVORITE_LEVELS);
   _UpdateLevelLists();
+}
+
+void GameApp::switchFollowCamera() {
+  m_Renderer->switchFollow();
+
+  m_sysMsg->displayText(m_MotoGame.getCamera()->
+			getPlayerToFollow()->
+			getQuickDescription());
 }

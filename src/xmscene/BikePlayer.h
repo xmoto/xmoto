@@ -29,7 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class ReplayBiker : public Ghost {
  public:
   ReplayBiker(std::string i_replayFile, Theme *i_theme, BikerTheme* i_bikerTheme);
-  //Ghost(std::string i_replayFile, bool i_isActiv, Theme *i_theme, BikerTheme* i_bikerTheme)
+  std::string getQuickDescription() const;
  private:
 };
 
@@ -44,6 +44,7 @@ class PlayerBiker : public Biker {
   void initToPosition(Vector2f i_position, DriveDir i_direction, Vector2f i_gravity);
   BikeController* getControler();
 
+  std::string getQuickDescription() const;
   std::string getDescription() const;
   void setBodyDetach(bool state);
 
