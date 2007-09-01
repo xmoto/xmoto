@@ -571,6 +571,8 @@ class SoundSample;
       void addLevelToFavorite(const std::string& i_levelId);
       void switchLevelToFavorite(const std::string& i_levelId, bool v_displayMessage = false);
 
+      void switchFollowCamera();
+
       /* */
       void _InitWin(bool bInitGraphics);
       void _Uninit(void);

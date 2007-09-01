@@ -41,12 +41,16 @@ class Ghost : public Biker {
 			    CollisionSystem *i_collisionSystem, Vector2f i_gravity,
 			    MotoGame *i_motogame);
   void setInfo(std::string i_info);
+  std::string getQuickDescription() const;
   std::string getDescription() const;
   bool getRenderBikeFront();
   float getBikeEngineSpeed();
   float getBikeLinearVel();
- private:
+
+ protected:
   Replay* m_replay;
+
+ private:
   std::vector<float> m_lastToTakeEntities;
   float m_diffToPlayer; /* time diff between the ghost and the player */
   std::string m_info;

@@ -97,6 +97,16 @@ std::string Ghost::getDescription() const {
     "\n(" + GameApp::formatTime(m_replay->getFinishTime()) + ")";
 }
 
+std::string Ghost::getQuickDescription() const {
+  char c_tmp[1024];
+
+  snprintf(c_tmp, 1024,
+	   GAMETEXT_GHOSTOF,
+	   m_replay->getPlayerName().c_str()); 
+
+  return std::string(c_tmp);
+}
+
 std::string Ghost::playerName() {
   return m_replay->getPlayerName();
 }
