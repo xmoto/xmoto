@@ -22,7 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "drawlib/DrawLib.h"
 #include "Game.h"
 
-#define SYSMSG_DISPLAY_TIME 1.0
+#define SYSMSG_DISPLAY_TIME 1.6
 #define SYSMSG_DISPLAY_DECREASE_TIME 0.75
 
 SysMessage::SysMessage(DrawLib* i_drawLib) {
@@ -57,8 +57,8 @@ void SysMessage::render() {
     FontManager* v_fm = m_drawLib->getFontMedium();
     FontGlyph* v_fg = v_fm->getGlyph(m_txt);
     v_fm->printString(v_fg,
-		      5,
-		      5,
-		      MAKE_COLOR(255, 255, 255, v_shadow));
+		      m_drawLib->getDispWidth()/2 - v_fg->realWidth()/2,
+		      m_drawLib->getDispHeight()/3 - v_fg->realHeight()/2,
+		      MAKE_COLOR(255, 255, 255, v_shadow), true);
   }
 }

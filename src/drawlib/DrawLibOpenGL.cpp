@@ -80,9 +80,12 @@ class GLFontManager : public FontManager {
   virtual ~GLFontManager();
 
   FontGlyph* getGlyph(const std::string& i_string);
-  void printString(FontGlyph* i_glyph, int i_x, int i_y, Color i_color);
+  void printString(FontGlyph* i_glyph, int i_x, int i_y, Color i_color, bool i_shadowEffect = false);
   void printStringGrad(FontGlyph* i_glyph, int i_x, int i_y,
-		       Color c1, Color c2, Color c3, Color c4);
+		       Color c1, Color c2, Color c3, Color c4, bool i_shadowEffect = false);
+  void printStringGradOne(FontGlyph* i_glyph, int i_x, int i_y,
+			  Color c1, Color c2, Color c3, Color c4);
+
   virtual unsigned int nbGlyphsInMemory();
 
  private:
@@ -753,6 +756,17 @@ FontGlyph* GLFontManager::getGlyph(const std::string& i_string) {
 }
 
 void GLFontManager::printStringGrad(FontGlyph* i_glyph, int i_x, int i_y,
+      Color c1, Color c2, Color c3, Color c4, bool i_shadowEffect) {
+
+  if(i_shadowEffect) {
+    printStringGradOne(i_glyph, i_x,   i_y,   INVERT_COLOR(c1), INVERT_COLOR(c2), INVERT_COLOR(c3), INVERT_COLOR(c4));
+    printStringGradOne(i_glyph, i_x+1, i_y+1, c1, c2, c3, c4);
+  } else {
+    printStringGradOne(i_glyph, i_x, i_y, c1, c2, c3, c4);
+  }
+}
+
+void GLFontManager::printStringGradOne(FontGlyph* i_glyph, int i_x, int i_y,
       Color c1, Color c2, Color c3, Color c4) {
 
   GLFontGlyph* v_glyph = (GLFontGlyph*) i_glyph;
@@ -813,8 +827,8 @@ void GLFontManager::printStringGrad(FontGlyph* i_glyph, int i_x, int i_y,
   }
 }
 
-void GLFontManager::printString(FontGlyph* i_glyph, int i_x, int i_y, Color i_color) {
-  printStringGrad(i_glyph, i_x, i_y, i_color, i_color, i_color, i_color);
+void GLFontManager::printString(FontGlyph* i_glyph, int i_x, int i_y, Color i_color, bool i_shadowEffect) {
+  printStringGrad(i_glyph, i_x, i_y, i_color, i_color, i_color, i_color, i_shadowEffect);
 }
 
 #endif

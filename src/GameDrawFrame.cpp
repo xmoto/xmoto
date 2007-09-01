@@ -202,25 +202,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
             }
           }        
 
-          /* Show fps (debug modish) */
-          if(m_xmsession->debug()) {
-            static char cBuf[256] = ""; 
-            static int nFrameCnt = 0;
-            if(m_fFrameTime - m_fLastPerfStateTime > 0.5f) {
-              float f = m_fFrameTime - m_fLastPerfStateTime;
-              sprintf(cBuf,"%.1f",((float)nFrameCnt)/f);
-              nFrameCnt = 0;
-              m_fLastPerfStateTime = m_fFrameTime;
-            }
-	    FontManager* v_fm = getDrawLib()->getFontSmall();
-	    FontGlyph* v_fg = v_fm->getGlyph(cBuf);
-	    v_fm->printString(v_fg,
-			      0, 100,
-			      MAKE_COLOR(0,0,0,255));
-            nFrameCnt++;
-          }
-
-
           if(m_State == GS_PAUSE) {
             /* Okay, nifty thing. Paused! */
             _PostUpdatePause();
@@ -285,7 +266,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       FontGlyph* v_fg = v_fm->getGlyph(cTemp);
       v_fm->printString(v_fg,
 			130, 0,
-			MAKE_COLOR(255,255,255,255));
+			MAKE_COLOR(255,255,255,255), true);
     }    
        
     /* Draw mouse cursor */

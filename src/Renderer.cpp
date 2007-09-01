@@ -798,7 +798,7 @@ int GameRenderer::nbParticlesRendered() const {
       v_fm->printString(v_fg,
 			5,
 			getParent()->getDrawLib()->getDispHeight() - v_fg->realHeight() - 2,
-			MAKE_COLOR(255,255,255,255));
+			MAKE_COLOR(255,255,255,255), true);
   }
 
   /*===========================================================================
@@ -918,7 +918,7 @@ int GameRenderer::nbParticlesRendered() const {
 	v_fm->printString(v_fg,
 			  getParent()->getDrawLib()->getDispWidth()/2 - v_fg->realWidth()/2,
 			  pMsg->Pos[1]*getParent()->getDrawLib()->getDispHeight(),
-			  MAKE_COLOR(255,255,255,pMsg->nAlpha));
+			  MAKE_COLOR(255,255,255,pMsg->nAlpha), true);
       }
     }
   }
@@ -1861,7 +1861,7 @@ int GameRenderer::nbParticlesRendered() const {
       
       FontManager* v_fm = getParent()->getDrawLib()->getFontSmall();
       FontGlyph* v_fg = v_fm->getGlyph(Text);
-      v_fm->printString(v_fg, vx, vy, c);
+      v_fm->printString(v_fg, vx, vy, c, true);
 
 #ifdef ENABLE_OPENGL
       glPopMatrix();
