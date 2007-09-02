@@ -31,29 +31,44 @@ StateManager::~StateManager()
 
 void StateManager::pushState(GameState* pNewState)
 {
-  (m_statesStack.back())->leaveAfterPush();
+  if(m_statesStack.size() != 0){
+    (m_statesStack.back())->leaveAfterPush();
+  }
 
   m_statesStack.push_back(pNewState);
   (m_statesStack.back())->enter();
 
-  /* calculate which state will be rendered */
-  std::vector<GameState*>::reverse_iterator stateIterator = m_statesStack.rbegin();
-  bool hideState = false;
-
-  while(stateIterator != m_statesStack.rend()){
-    (*stateIterator)->setHide(hideState);
-
-    if((*stateIterator)->drawStatesBehind() == false){
-      hideState = true;
-    }
-    
-    stateIterator++;
-  }
-  
+  calculateWhichStateIsRendered();
 }
 
 GameState* StateManager::popState()
 {
+  (m_statesStack.back())->leave();
+  GameState* pState = m_statesStack.pop_back();
+  
+  if(m_statesStack.size() != 0)
+    (m_statesStack.back())->enterAfterPop();
+  
+  calculateWhichStateIsRendered();
+  
+  return pState;
+}
+
+GameState* StateManager::enterState(GameState* pNewState)
+{
+  GameState* pState = NULL;
+
+  if(m_statesStack.size() != 0){
+    (m_statesStack.back())->leave();
+    pState = m_statesStack.pop_back();
+  }
+  
+  m_statesStack.push_back(pNewState);
+  (m_statesStack.back())->enter();
+
+  calculateWhichStateIsRendered();
+
+  return pState;
 }
 
 void StateManager::update()
@@ -76,7 +91,8 @@ void StateManager::render()
   std::vector<GameState*>::iterator stateIterator = m_statesStack.begin();
 
   while(stateIterator != m_statesStack.end()){
-    (*stateIterator)->render();
+    if((*stateIterator)->isHide() != false)
+      (*stateIterator)->render();
     
     stateIterator++;
   }
@@ -91,6 +107,24 @@ void StateManager::input()
 
     if((*stateIterator)->sendInputToStatesBehind() == false)
       break;
+    
+    stateIterator++;
+  }
+}
+
+void StateManager::calculateWhichStateIsRendered()
+{
+  /* calculate which state will be rendered */
+  std::vector<GameState*>::reverse_iterator stateIterator = m_statesStack.rbegin();
+  bool hideState = false;
+
+  while(stateIterator != m_statesStack.rend()){
+    (*stateIterator)->setHide(hideState);
+
+    if(hideState == false
+       && (*stateIterator)->drawStatesBehind() == false){
+      hideState = true;
+    }
     
     stateIterator++;
   }

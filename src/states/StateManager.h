@@ -71,12 +71,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     void pushState(GameState* pNewState);
     GameState* popState();
+    GameState* enterState(GameState* pNewState);
 
     void update();
     void render();
     void input();
 
   private:
+    void calculateWhichStateIsRendered();
+
     std::vector<GameState*> m_statesStack;
   };
 
