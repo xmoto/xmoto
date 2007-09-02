@@ -63,11 +63,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_pWorldRecordTime->setVAlign(UI_ALIGN_TOP);
     m_pWorldRecordTime->setHAlign(UI_ALIGN_LEFT);
 
-    m_pSpeed = new UIStatic(m_pInGameStats,0,60,"",60,20);
-    m_pSpeed->setFont(getParent()->getDrawLib()->getFontSmall());
-    m_pSpeed->setVAlign(UI_ALIGN_TOP);
-    m_pSpeed->setHAlign(UI_ALIGN_RIGHT);
-
     /* new highscore ! */
     m_pInGameNewHighscore = new UIWindow(getGUI(),405,475,"",200,100);
     m_pInGameNewHighscore->showWindow(false);

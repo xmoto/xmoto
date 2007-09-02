@@ -174,7 +174,6 @@ class ParticlesSource;
     void hideReplayHelp();
     void setWorldRecordTime(const std::string &s) {m_pWorldRecordTime->setCaption(s);}
 
-    void setSpeed(const std::string &s) {m_pSpeed->setCaption(s);}
     std::string getBestTime(void) {return m_pBestTime->getCaption();}
     void setQuality(GraphQuality Quality) {m_Quality = Quality;}      
     void setGhostMotionBlur(bool b) {m_bGhostMotionBlur = b;}
@@ -231,7 +230,6 @@ class ParticlesSource;
     UIStatic *m_pReplayHelp;
     UIStatic *m_pWorldRecordTime;
 
-    UIStatic *m_pSpeed;      
     UIWindow *m_pInGameNewHighscore;
     UIStatic *m_pNewHighscoreBest_str;
     UIStatic *m_pNewHighscorePersonal_str;
