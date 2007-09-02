@@ -60,6 +60,7 @@ void Logger::setVerbose(bool i_value) {
 
 void Logger::LogRaw(const std::string &s) {
   fprintf(m_fd, "%s\n", s.c_str());
+  fflush(m_fd);
   
   if(m_verbose) {
     printf("%s\n", s.c_str());
