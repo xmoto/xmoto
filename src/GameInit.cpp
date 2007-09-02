@@ -513,6 +513,7 @@ int main(int nNumArgs,char **ppcArgs) {
       m_pCursor = NULL;
 
       /* Fetch highscores from web? */
+      m_pWebRooms = new WebRooms(&m_ProxySettings);
       m_pWebHighscores = new WebRoom(&m_ProxySettings);      
       m_pWebHighscores->setWebsiteInfos(m_WebHighscoresIdRoom,
 					m_WebHighscoresURL);
