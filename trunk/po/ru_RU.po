@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-08-28 23:09+0200\n"
+"POT-Creation-Date: 2007-09-03 19:15+0200\n"
 "PO-Revision-Date: 2007-05-04 23:56+0200\n"
 "Last-Translator: Mikhail Brinchuk aka Thecentury <thecentury@gmail.com>\n"
 "Language-Team: ru\n"
@@ -65,7 +65,7 @@ msgstr "Действие"
 msgid "All (on this computer)"
 msgstr "Все (на этом компьютере)"
 
-#: src/GameText.h:46 src/GameText.h:528
+#: src/GameText.h:46 src/GameText.h:529
 msgid "All levels"
 msgstr "Все уровни"
 
@@ -566,15 +566,15 @@ msgstr "Ваше лучшее время"
 msgid "Type"
 msgstr "Тип"
 
-#: src/GameText.h:195 src/GameText.h:522
+#: src/GameText.h:195 src/GameText.h:523
 msgid "The highscore of the room"
 msgstr "Лучшее время комнаты"
 
-#: src/GameText.h:196 src/GameText.h:520
+#: src/GameText.h:196 src/GameText.h:521
 msgid "The best of my replays (on this computer)"
 msgstr "Лучшая из моих записей игр (на этом компьютере)"
 
-#: src/GameText.h:197 src/GameText.h:521
+#: src/GameText.h:197 src/GameText.h:522
 msgid "The best of the replays (on this computer)"
 msgstr "Лучшая из записей игр (на этом компьютере)"
 
@@ -959,7 +959,7 @@ msgstr "Автором"
 msgid "Medals"
 msgstr "Медали"
 
-#: src/GameText.h:297 src/GameText.h:329
+#: src/GameText.h:297 src/GameText.h:330
 msgid "Room"
 msgstr "Комната"
 
@@ -975,11 +975,11 @@ msgstr "Стандартные"
 msgid "Web votes"
 msgstr "Web голосования"
 
-#: src/GameText.h:301 src/GameText.h:340
+#: src/GameText.h:301 src/GameText.h:341
 msgid "Statistics"
 msgstr "Статистика"
 
-#: src/GameText.h:302 src/GameText.h:537
+#: src/GameText.h:302 src/GameText.h:538
 msgid "By best driver"
 msgstr "Лучшим водителем"
 
@@ -1070,103 +1070,108 @@ msgid "The replay can't be played!"
 msgstr "Нельзя играть в запись игры"
 
 #: src/GameText.h:326
-msgid "Replays"
+#, fuzzy, c-format
+msgid "Replay of %s"
 msgstr "Записи игр"
 
 #: src/GameText.h:327
+msgid "Replays"
+msgstr "Записи игр"
+
+#: src/GameText.h:328
 msgid "Restart This Level"
 msgstr "Перезапустить уровень"
 
-#: src/GameText.h:328
+#: src/GameText.h:329
 msgid "Resume Playing"
 msgstr "Продолжить игру"
 
-#: src/GameText.h:330
+#: src/GameText.h:331
 msgid "Run Windowed"
 msgstr "Запускать в окне"
 
-#: src/GameText.h:331
+#: src/GameText.h:332
 msgid "Save"
 msgstr "Сохранить"
 
-#: src/GameText.h:332
+#: src/GameText.h:333
 #, fuzzy, c-format
 msgid "Saved as %s"
 msgstr "Сохранить как"
 
-#: src/GameText.h:333
+#: src/GameText.h:334
 msgid "Save Replay"
 msgstr "Сохранить повтор"
 
-#: src/GameText.h:334
+#: src/GameText.h:335
 msgid "Screen Resolution"
 msgstr "Разрешение экрана"
 
-#: src/GameText.h:335
+#: src/GameText.h:336
 msgid "Show"
 msgstr "Проиграть"
 
-#: src/GameText.h:336
+#: src/GameText.h:337
 msgid "Speedometer"
 msgstr "Спидометр"
 
-#: src/GameText.h:337
+#: src/GameText.h:338
 msgid "Info..."
 msgstr "Инфо..."
 
-#: src/GameText.h:338
+#: src/GameText.h:339
 msgid "Show Mini Map"
 msgstr "Показывать мини-карту"
 
-#: src/GameText.h:339
+#: src/GameText.h:340
 msgid "Play!"
 msgstr "Играть!"
 
-#: src/GameText.h:341
+#: src/GameText.h:342
 msgid "STATS"
 msgstr "Статистика"
 
-#: src/GameText.h:342
+#: src/GameText.h:343
 msgid "Stereo"
 msgstr "Стерео"
 
-#: src/GameText.h:343
+#: src/GameText.h:344
 msgid "Theme"
 msgstr "Тема"
 
-#: src/GameText.h:344
+#: src/GameText.h:345
 msgid "Available"
 msgstr "Доступно"
 
-#: src/GameText.h:345
+#: src/GameText.h:346
 msgid "To download"
 msgstr "Скачать"
 
-#: src/GameText.h:346
+#: src/GameText.h:347
 msgid "To be updated"
 msgstr "Обновить"
 
-#: src/GameText.h:347
+#: src/GameText.h:348
 msgid "The theme is now up to date"
 msgstr "Тема не нуждается в обновлении"
 
-#: src/GameText.h:348
+#: src/GameText.h:349
 msgid "Time"
 msgstr "Время"
 
-#: src/GameText.h:349
+#: src/GameText.h:350
 msgid "Try This Level Again"
 msgstr "Переиграть заново"
 
-#: src/GameText.h:350
+#: src/GameText.h:351
 msgid "Tutorial"
 msgstr "Обучение"
 
-#: src/GameText.h:351
+#: src/GameText.h:352
 msgid "Unpacked levels"
 msgstr "Незапакованные уровни"
 
-#: src/GameText.h:352
+#: src/GameText.h:353
 msgid ""
 "Can't update this theme !\n"
 "The theme is not avaible on the web\n"
@@ -1176,39 +1181,39 @@ msgstr ""
 "Эта тема не доступна в интернете\n"
 "или ваш список тем не обновлен"
 
-#: src/GameText.h:353
+#: src/GameText.h:354
 msgid "Update"
 msgstr "Обновить"
 
-#: src/GameText.h:354
+#: src/GameText.h:355
 msgid "Updated"
 msgstr "Обновлено"
 
-#: src/GameText.h:355
+#: src/GameText.h:356
 msgid "Check WWW"
 msgstr "Проверить WWW"
 
-#: src/GameText.h:356
+#: src/GameText.h:357
 msgid "Update the rooms list"
 msgstr "Обновить список комнат"
 
-#: src/GameText.h:357
+#: src/GameText.h:358
 msgid "Update the theme list"
 msgstr "Обновить список тем"
 
-#: src/GameText.h:358
+#: src/GameText.h:359
 msgid "Updating level lists..."
 msgstr "Обновление списка уровней..."
 
-#: src/GameText.h:359
+#: src/GameText.h:360
 msgid "Upload highscore"
 msgstr "Загрузить рекорд на сервер"
 
-#: src/GameText.h:360
+#: src/GameText.h:361
 msgid "Upload all highscores"
 msgstr "Заргузить все рекорды на сервер"
 
-#: src/GameText.h:361
+#: src/GameText.h:362
 #, fuzzy
 msgid ""
 "An unexpected error has occured. There may be some problems with the web "
@@ -1217,78 +1222,78 @@ msgstr ""
 "Произошла неожиданная ошибка\n"
 "Сайт, возможно, работает неправильно"
 
-#: src/GameText.h:362
+#: src/GameText.h:363
 msgid "Oh no !"
 msgstr "О, нет!"
 
-#: src/GameText.h:363
+#: src/GameText.h:364
 msgid "Uploading the highscore..."
 msgstr "Загрузка рекорда на сервер..."
 
-#: src/GameText.h:364
+#: src/GameText.h:365
 msgid "Use Environment Vars"
 msgstr "Использовать переменные окружения"
 
-#: src/GameText.h:365
+#: src/GameText.h:366
 msgid "Use Profile"
 msgstr "Использовать профиль"
 
-#: src/GameText.h:366
+#: src/GameText.h:367
 msgid "Using HTTP Proxy"
 msgstr "Используя HTTP прокси"
 
-#: src/GameText.h:367
+#: src/GameText.h:368
 msgid "Using SOCKS4 Proxy"
 msgstr "Используя SOCKS4 прокси"
 
-#: src/GameText.h:368
+#: src/GameText.h:369
 msgid "Using SOCKS5 Proxy"
 msgstr "Используя SOCKS5 прокси"
 
-#: src/GameText.h:369
+#: src/GameText.h:370
 msgid "Video"
 msgstr "Видео"
 
-#: src/GameText.h:370
+#: src/GameText.h:371
 msgid "View"
 msgstr "Показать"
 
-#: src/GameText.h:371
+#: src/GameText.h:372
 msgid "View the highscore"
 msgstr "Показать рекорд"
 
-#: src/GameText.h:372
+#: src/GameText.h:373
 #, c-format
 msgid "Do you want to update level \"%s\"?"
 msgstr "Вы хотите обновить уровень \"%s\"?"
 
-#: src/GameText.h:373
+#: src/GameText.h:374
 msgid "Warning"
 msgstr "Предостережение"
 
-#: src/GameText.h:375
+#: src/GameText.h:376
 msgid "Main"
 msgstr "Главный"
 
-#: src/GameText.h:376
+#: src/GameText.h:377
 msgid "WWW"
 msgstr "WWW"
 
-#: src/GameText.h:377
+#: src/GameText.h:378
 msgid "Rooms"
 msgstr "Комнаты"
 
-#: src/GameText.h:379
+#: src/GameText.h:380
 #, c-format
 msgid "%d hours"
 msgstr "%d часов"
 
-#: src/GameText.h:380
+#: src/GameText.h:381
 #, c-format
 msgid "%d minutes"
 msgstr "%d минут"
 
-#: src/GameText.h:381
+#: src/GameText.h:382
 #, c-format
 msgid ""
 "(Stats since: %s)\n"
@@ -1301,440 +1306,440 @@ msgstr ""
 "Смертей: %d, финишей: %d, перезапусков: %d.\n"
 "Времени сыграно: %s"
 
-#: src/GameText.h:384
+#: src/GameText.h:385
 #, c-format
 msgid "%d plays, %d deaths, %d finishes, and %d restarts"
 msgstr "Игр: %d, смертей: %d, финишей: %d, перезапусков: %d"
 
-#: src/GameText.h:385
+#: src/GameText.h:386
 #, c-format
 msgid "%d seconds"
 msgstr "%d секунд"
 
-#: src/GameText.h:386
+#: src/GameText.h:387
 msgid "Yes"
 msgstr "Да"
 
-#: src/GameText.h:387
+#: src/GameText.h:388
 msgid "Yes to all"
 msgstr "Да для всех"
 
-#: src/GameText.h:388
+#: src/GameText.h:389
 msgid "Zoom in"
 msgstr "Приблизиться"
 
-#: src/GameText.h:389
+#: src/GameText.h:390
 msgid "Reinitialize zoom"
 msgstr "Инициализировать приближение заново"
 
-#: src/GameText.h:390
+#: src/GameText.h:391
 msgid "Zoom out"
 msgstr "Отдалиться"
 
-#: src/GameText.h:393
+#: src/GameText.h:394
 msgid "Download the latest X-Moto world records and check for new levels"
 msgstr ""
 "Скачать последние мировые рекорды X-Moto и проверить наличие новых уровней"
 
-#: src/GameText.h:394
+#: src/GameText.h:395
 msgid "Configure how you are connected to the Internet"
 msgstr "Настойте, как вы подключены к интернету"
 
-#: src/GameText.h:395
+#: src/GameText.h:396
 msgid "Play this level again"
 msgstr "Проехать этот уровень заново"
 
-#: src/GameText.h:396
+#: src/GameText.h:397
 msgid "Save a replay for later viewing"
 msgstr "Сохранить запись игры для дальнейшего просмотра"
 
-#: src/GameText.h:397
+#: src/GameText.h:398
 msgid "Play next level"
 msgstr "Запустить следующий уровень"
 
-#: src/GameText.h:398
+#: src/GameText.h:399
 msgid "Back to the main menu"
 msgstr "Вернуться в главное меню"
 
-#: src/GameText.h:399
+#: src/GameText.h:400
 msgid "Quit the game"
 msgstr "Выйти из игры"
 
-#: src/GameText.h:400
+#: src/GameText.h:401
 msgid "Back to the game"
 msgstr "Назад в игру"
 
-#: src/GameText.h:401
+#: src/GameText.h:402
 msgid "Try this level again from the beginning"
 msgstr "Переиграть этот уровень с начала"
 
-#: src/GameText.h:402
+#: src/GameText.h:403
 msgid "Play next level instead"
 msgstr "Запустить следующий уровень вместо текущего"
 
-#: src/GameText.h:403
+#: src/GameText.h:404
 msgid "Try this level again"
 msgstr "Попробовать пройти этот уровень снова"
 
-#: src/GameText.h:404
+#: src/GameText.h:405
 msgid "Built-in and stand-alone external levels"
 msgstr "Встроенные и отдельные внешние уровни"
 
-#: src/GameText.h:405
+#: src/GameText.h:406
 msgid "Levels grouped together in level packs"
 msgstr "Уровни, сгруппированные по наборам уровней"
 
-#: src/GameText.h:406
+#: src/GameText.h:407
 msgid "Browse levels available to you"
 msgstr "Просмотреть доступные уровни"
 
-#: src/GameText.h:407
+#: src/GameText.h:408
 msgid "View list of recorded replays"
 msgstr "Просмотреть список записанных повторов игр"
 
-#: src/GameText.h:408
+#: src/GameText.h:409
 msgid "Configure X-Moto preferences"
 msgstr "Настроить предпочтения X-Moto"
 
-#: src/GameText.h:409
+#: src/GameText.h:410
 msgid "Instructions of how to play X-Moto"
 msgstr "Инструкции по игре в X-Moto"
 
-#: src/GameText.h:410
+#: src/GameText.h:411
 msgid "Change player profile"
 msgstr "Сменить профиль пользователя"
 
-#: src/GameText.h:411
+#: src/GameText.h:412
 msgid "Play tutorial of how to play the game"
 msgstr "Запустить обучающую игру"
 
-#: src/GameText.h:412
+#: src/GameText.h:413
 msgid "Play the selected level"
 msgstr "Запустить выбранный уровень"
 
-#: src/GameText.h:413
+#: src/GameText.h:414
 msgid "View general information about the level, best times, and replays"
 msgstr "Просмотреть общую информацию об уровне, лучшие времена и записи игр"
 
-#: src/GameText.h:414
+#: src/GameText.h:415
 msgid "Run the selected replay"
 msgstr "Запустить выбранную запись игры"
 
-#: src/GameText.h:415
+#: src/GameText.h:416
 msgid "Permanently delete the selected replay"
 msgstr "Удалить выбранную запись игра навсегда"
 
-#: src/GameText.h:416
+#: src/GameText.h:417
 msgid "Show replays of all players in list"
 msgstr "Показать записи игр всех игроков в списке"
 
-#: src/GameText.h:417
+#: src/GameText.h:418
 msgid "General X-Moto preferences"
 msgstr "Общие предпочтения X-Moto"
 
-#: src/GameText.h:418
+#: src/GameText.h:419
 msgid "Configure graphical options"
 msgstr "Настроить графику"
 
-#: src/GameText.h:419
+#: src/GameText.h:420
 msgid "Configure audio options"
 msgstr "Настроить звук"
 
-#: src/GameText.h:420
+#: src/GameText.h:421
 msgid "Configure control options"
 msgstr "Настроить управление"
 
-#: src/GameText.h:421
+#: src/GameText.h:422
 msgid "Save options"
 msgstr "Сохранить настройки"
 
-#: src/GameText.h:422
+#: src/GameText.h:423
 msgid "Revert options to defaults"
 msgstr "Вернуть настройки по умолчанию"
 
-#: src/GameText.h:423
+#: src/GameText.h:424
 msgid "Show a map of your surroundings when playing"
 msgstr "Показывать во время игры карту"
 
-#: src/GameText.h:424
+#: src/GameText.h:425
 msgid "Automatically download best times off the net when the game starts"
 msgstr "Автоматически скачивать лучшие времена из интернета при запуске игры"
 
-#: src/GameText.h:425
+#: src/GameText.h:426
 msgid "Show the World Record for a given level when playing"
 msgstr "Показывать мировой рекорд уровня во время игры"
 
-#: src/GameText.h:426
+#: src/GameText.h:427
 msgid "Enable high-color graphics"
 msgstr "Включить графику high-color"
 
-#: src/GameText.h:427
+#: src/GameText.h:428
 msgid "Enable true-color graphics"
 msgstr "Включить графику true-color"
 
-#: src/GameText.h:428
+#: src/GameText.h:429
 msgid "Select graphics resolution"
 msgstr "Выбрать графическое разрешение"
 
-#: src/GameText.h:429
+#: src/GameText.h:430
 msgid "Run the game in a window"
 msgstr "Запускать игру в окне"
 
-#: src/GameText.h:430
+#: src/GameText.h:431
 msgid "Not so fancy menu graphics"
 msgstr "Не столь красивая графика меню"
 
-#: src/GameText.h:431
+#: src/GameText.h:432
 msgid "A bit more fancy menu graphics"
 msgstr "Немного более красивая графика меню"
 
-#: src/GameText.h:432
+#: src/GameText.h:433
 msgid "Fanciest menu graphics"
 msgstr "Наиболее красивая графика меню"
 
-#: src/GameText.h:433
+#: src/GameText.h:434
 msgid "Disable most graphics not important to the gameplay"
 msgstr "Отключить большую часть графики, неважной для игрового процесса"
 
-#: src/GameText.h:434
+#: src/GameText.h:435
 msgid "Disable some of the most resource-intensive graphics, like particles"
 msgstr ""
 "Отключить некоторые из наиболее ресурсоемких графических эффектов, например, "
 "частицы"
 
-#: src/GameText.h:435
+#: src/GameText.h:436
 msgid "Enable all graphical effects"
 msgstr "Включить все графические эффекты"
 
-#: src/GameText.h:436
+#: src/GameText.h:437
 msgid "Turn on sound effects"
 msgstr "Включить аудио эффекты"
 
-#: src/GameText.h:437
+#: src/GameText.h:438
 msgid "Poor sound quality"
 msgstr "Плохое качество звука"
 
-#: src/GameText.h:438
+#: src/GameText.h:439
 msgid "Normal sound quality"
 msgstr "Нормальное качество звука"
 
-#: src/GameText.h:439
+#: src/GameText.h:440
 msgid "Best sound quality"
 msgstr "Наилучшее качество звука"
 
-#: src/GameText.h:440
+#: src/GameText.h:441
 msgid "8-bit sound samples, poor quality"
 msgstr "8-битный звук, плохое качество"
 
-#: src/GameText.h:441
+#: src/GameText.h:442
 msgid "16-bit sound samples, good quality"
 msgstr "16-битный звук, хорошее качество"
 
-#: src/GameText.h:442
+#: src/GameText.h:443
 msgid "Mono (single channel) audio"
 msgstr "Монофонический (одноканальный) звук"
 
-#: src/GameText.h:443
+#: src/GameText.h:444
 msgid "Stereo (two channel) audio"
 msgstr "Стереофонический (двухканальный) звук"
 
-#: src/GameText.h:444
+#: src/GameText.h:445
 msgid "Turn on engine noise"
 msgstr "Включить шум мотора"
 
-#: src/GameText.h:445
+#: src/GameText.h:446
 msgid "Select action to re-configure to another key"
 msgstr "Выберите действие для переназначения на другую клавишу"
 
-#: src/GameText.h:446
+#: src/GameText.h:447
 msgid "View contents of level pack"
 msgstr "Показать содержимое набора уровней"
 
-#: src/GameText.h:447
+#: src/GameText.h:448
 msgid "Select a player profile to use"
 msgstr "Выбрать профиль игрока"
 
-#: src/GameText.h:448
+#: src/GameText.h:449
 msgid "Use the selected player profile"
 msgstr "Использовать выбранный профиль игрока"
 
-#: src/GameText.h:449
+#: src/GameText.h:450
 msgid "Create new player profile"
 msgstr "Создать новый профиль игрока"
 
-#: src/GameText.h:450
+#: src/GameText.h:451
 msgid "Permanently delete selected player profile, including best times"
 msgstr "Удалить выбранный профиль игрока, включая лучшие времена, навсегда"
 
-#: src/GameText.h:451
+#: src/GameText.h:452
 msgid "Select a level in the level pack to play"
 msgstr "Выберите уровень в наборе уровней для прохождения"
 
-#: src/GameText.h:452
+#: src/GameText.h:453
 msgid "Close level pack"
 msgstr "Закрыть набор уровней"
 
-#: src/GameText.h:453
+#: src/GameText.h:454
 msgid "General information about the level"
 msgstr "Общая информация об уровне"
 
-#: src/GameText.h:454
+#: src/GameText.h:455
 msgid "View best times for the level"
 msgstr "Показать лучшие времена для уровня"
 
-#: src/GameText.h:455
+#: src/GameText.h:456
 msgid "View locally stored replays of the level"
 msgstr "Показать хранимые на этом компьютере записи прохождения уровня"
 
-#: src/GameText.h:456
+#: src/GameText.h:457
 msgid "Only show personal best times for this level"
 msgstr "Показывать только личные лучшие времена для этого уровня"
 
-#: src/GameText.h:457
+#: src/GameText.h:458
 msgid "Show all best times for this level"
 msgstr "Показывать все лучшие времена для этого уровня"
 
-#: src/GameText.h:458
+#: src/GameText.h:459
 msgid "Only show personal replays for this level"
 msgstr ""
 "Показывать только хранимые на этом компьютере записи прохождения этого уровня"
 
-#: src/GameText.h:459
+#: src/GameText.h:460
 msgid "Show all replays for this level"
 msgstr "Показать все записи прохождения этого уровня"
 
-#: src/GameText.h:460
+#: src/GameText.h:461
 msgid "Run selected replay"
 msgstr "Запустить выбранную запись игры"
 
-#: src/GameText.h:461
+#: src/GameText.h:462
 msgid "Show helpful help strings such as this one"
 msgstr "Показывать полезные строки справки, такие как эта"
 
-#: src/GameText.h:462
+#: src/GameText.h:463
 msgid ""
 "Let X-Moto look for more levels on the net, and install them automatically"
 msgstr ""
 "Позволить X-Moto искать дополнительные уровни в сети и устанавливать их "
 "автоматически"
 
-#: src/GameText.h:463
+#: src/GameText.h:464
 msgid "Select this if you got a direct connection to the Internet"
 msgstr "Выберите этот пункт, если у вас прямое соединение с интернетом"
 
-#: src/GameText.h:464
+#: src/GameText.h:465
 #, fuzzy
 msgid "Select this if you connect to the Internet through an HTTP proxy"
 msgstr ""
 "Выберите этот пункт, если у вас соединение с интернетом через HTTP прокси"
 
-#: src/GameText.h:465
+#: src/GameText.h:466
 #, fuzzy
 msgid "Select this if you connect to the Internet through a SOCKS4 proxy"
 msgstr ""
 "Выберите этот пункт, если у вас соединение с интернетом через SOCKS4 прокси"
 
-#: src/GameText.h:466
+#: src/GameText.h:467
 #, fuzzy
 msgid "Select this if you connect to the Internet through a SOCKS5 proxy"
 msgstr ""
 "Выберите этот пункт, если у вас соединение с интернетом через SOCKS5 прокси"
 
-#: src/GameText.h:467
+#: src/GameText.h:468
 msgid "Use these settings"
 msgstr "Использовать эти настройки"
 
-#: src/GameText.h:468
+#: src/GameText.h:469
 msgid "Write the IP address or host name of proxy server to use"
 msgstr "Введите IP адрес или имя прокси сервера"
 
-#: src/GameText.h:469
+#: src/GameText.h:470
 msgid "Write the port number used by the proxy server"
 msgstr "Введите номер порта, используемого прокси сервером"
 
-#: src/GameText.h:470
+#: src/GameText.h:471
 msgid "New levels and levels updated from the Internet"
 msgstr "Новые уровни и уровни, загруженные из интернета"
 
-#: src/GameText.h:472
+#: src/GameText.h:473
 msgid "Show the ghost if possible in the game"
 msgstr "Показывать Призрака в игре, если это возможно"
 
-#: src/GameText.h:473
+#: src/GameText.h:474
 msgid "Choose which ghost to display"
 msgstr "Выберите, какого Призрака отображать"
 
-#: src/GameText.h:474
+#: src/GameText.h:475
 msgid ""
 "Make motion blur effect for the ghost (if supported by your graphics card)"
 msgstr ""
 "Размывать перемещнение Призрака (если поддерживается вашей графической "
 "картой)"
 
-#: src/GameText.h:475
+#: src/GameText.h:476
 msgid "When starting a level with a ghost, display who the ghost is of"
 msgstr "Начиная уровень с Призраком, показывать, чей это Призрак"
 
-#: src/GameText.h:476
+#: src/GameText.h:477
 msgid "Display the time difference between the ghost and you"
 msgstr "Показывать разницу времени между Призраком и вами"
 
-#: src/GameText.h:477
+#: src/GameText.h:478
 msgid "If you make a highscore it will automatically be saved as a replay"
 msgstr ""
 "Если вы установить рекорд, он будет автоматически сохранен как запись игры"
 
-#: src/GameText.h:478
+#: src/GameText.h:479
 msgid "View the replay of the room's highscore"
 msgstr "Показать запись лучшего времени комнаты"
 
-#: src/GameText.h:480
+#: src/GameText.h:481
 msgid "Check for new levels at startup"
 msgstr "Проверять наличие новых уровней при запуске"
 
-#: src/GameText.h:481
+#: src/GameText.h:482
 msgid "Check for new highscores at startup"
 msgstr "Проверять наличие новых рекордов при запуске"
 
-#: src/GameText.h:483
+#: src/GameText.h:484
 msgid "Show various statistics about X-Moto"
 msgstr "Показать различную статистику о X-Moto"
 
-#: src/GameText.h:484
+#: src/GameText.h:485
 msgid "Update statistics (also happens each time X-Moto is started)"
 msgstr "Обновить статистику (также проиходить при каждом запуске X-Moto)"
 
-#: src/GameText.h:485
+#: src/GameText.h:486
 msgid "Enables background music in the main menu"
 msgstr "Включить фоновую музыку в главном меню"
 
-#: src/GameText.h:487
+#: src/GameText.h:488
 msgid "Choose the X-Moto graphics theme"
 msgstr "Выбрать графическую тему X-Moto"
 
-#: src/GameText.h:488
+#: src/GameText.h:489
 msgid "Check for new themes on the web"
 msgstr "Поверить наличие новых тем в интернете"
 
-#: src/GameText.h:489
+#: src/GameText.h:490
 msgid "Download or update the selected theme"
 msgstr "Скачать или обновить выбранную тему"
 
-#: src/GameText.h:490
+#: src/GameText.h:491
 msgid "Upload the replay on the website of highscores"
 msgstr "Загрузить запись игры на сайт рекордов"
 
-#: src/GameText.h:491
+#: src/GameText.h:492
 msgid "Upload your best replays to your room (useful when it is just created)"
 msgstr ""
 "Загрузить ваши лучшие записи игр в вашу комнату (полезно, когда она только "
 "что создана)"
 
-#: src/GameText.h:492
+#: src/GameText.h:493
 msgid "Configure the main www options"
 msgstr "Настроить основные опции подключения к интернету"
 
-#: src/GameText.h:493
+#: src/GameText.h:494
 msgid ""
 "Choose where to upload/download replays, highscore lists (for more "
 "information, check the website)"
@@ -1742,392 +1747,392 @@ msgstr ""
 "Выбрать куда и откуда загружать записи игр, списки рекордов (для "
 "дополнительной информации, проверьте сайт)"
 
-#: src/GameText.h:494
+#: src/GameText.h:495
 msgid "Choose your room"
 msgstr "Выберите вашу комнату"
 
-#: src/GameText.h:495
+#: src/GameText.h:496
 msgid "Get the rooms list from the web"
 msgstr "Загрузить из интернета список комнат"
 
-#: src/GameText.h:496
+#: src/GameText.h:497
 msgid "Upload of highscore requires to log in (Except for WR)"
 msgstr ""
 "Загрузка рекордов на сервер требует входа под своим логином (кроме мировых "
 "рекордов)"
 
-#: src/GameText.h:497
+#: src/GameText.h:498
 msgid "Upload of highscore requires a password (Except for WR)"
 msgstr ""
 "Загрузка рекордов на сервер требует указания пароля (кроме мировых рекордов)"
 
-#: src/GameText.h:498
+#: src/GameText.h:499
 msgid "Show the speedometer when playing"
 msgstr "Показывать спидометр во время игры"
 
-#: src/GameText.h:499
+#: src/GameText.h:500
 msgid "Enable animation of bike falling apart when dead"
 msgstr "Включить анимацию разваливающегося мотоцикла во время смерти"
 
-#: src/GameText.h:500
+#: src/GameText.h:501
 msgid "Automatically scroll over the level before starting playing it"
 msgstr "Автоматически обозреть уровень перед началом игры"
 
-#: src/GameText.h:501
+#: src/GameText.h:502
 msgid "View the X-Moto credits"
 msgstr "Показать титры X-Moto"
 
-#: src/GameText.h:502
+#: src/GameText.h:503
 msgid "Name of replay"
 msgstr "Имя записи игры"
 
-#: src/GameText.h:503
+#: src/GameText.h:504
 msgid "Level played in replay"
 msgstr "Уровень, на котором создана запись игры"
 
-#: src/GameText.h:504
+#: src/GameText.h:505
 msgid "Player who recorded the replay"
 msgstr "Игрок, создавший запись игры"
 
-#: src/GameText.h:505
+#: src/GameText.h:506
 msgid "Click to select screen resolution"
 msgstr "Нажмите для смены разрешения экрана"
 
-#: src/GameText.h:506
+#: src/GameText.h:507
 msgid "Completed levels / total number of levels in pack"
 msgstr "Завершенные уровни / общее число уровней в наборе"
 
-#: src/GameText.h:507
+#: src/GameText.h:508
 msgid "Name of level pack"
 msgstr "Имя набора уровней"
 
-#: src/GameText.h:508
+#: src/GameText.h:509
 msgid "Add the level to the favorite levels list"
 msgstr "Добавить уровень к списку избранных"
 
-#: src/GameText.h:509
+#: src/GameText.h:510
 msgid "Delete the level from the favorite levels list"
 msgstr "Удалить уровень из списка избранных"
 
-#: src/GameText.h:510
+#: src/GameText.h:511
 msgid "Puzzle the levels pack list"
 msgstr "Перемешать список уровней"
 
-#: src/GameText.h:511
+#: src/GameText.h:512
 #, fuzzy
 msgid "Enter text to filter the level list"
 msgstr "Введите текст, чтобы ограничить список уровней"
 
-#: src/GameText.h:512
+#: src/GameText.h:513
 msgid "Choose the number of players"
 msgstr "Выберите число игроков"
 
-#: src/GameText.h:513
+#: src/GameText.h:514
 msgid "Your proxy login"
 msgstr ""
 
-#: src/GameText.h:514
+#: src/GameText.h:515
 msgid "Your password associated with your login"
 msgstr "Пароль, связанный с вашим логином"
 
-#: src/GameText.h:515
+#: src/GameText.h:516
 #, fuzzy
 msgid "Enter text to filter the replay list"
 msgstr "Введите текст, чтобы ограничить список уровней"
 
-#: src/GameText.h:516
+#: src/GameText.h:517
 #, fuzzy
 msgid "Press to play X-Moto immediately"
 msgstr "Нажмите, чтобы немедленно играть в X-Moto"
 
-#: src/GameText.h:517
+#: src/GameText.h:518
 #, fuzzy
 msgid "Increase or decrease the quality of the levels selected"
 msgstr "Увеличить или уменьшить минимальное качество выбранных уровней"
 
-#: src/GameText.h:518
+#: src/GameText.h:519
 #, fuzzy
 msgid "Increase or decrease the difficulty of the levels selected"
 msgstr "Увеличить или уменьшить сложность выбранных уровней"
 
-#: src/GameText.h:519
+#: src/GameText.h:520
 msgid ""
 "Stop the game once a player ends the level or continue while a player is "
 "running"
 msgstr ""
 
-#: src/GameText.h:523
+#: src/GameText.h:524
 #, fuzzy
 msgid "Don't show the ghosts while playing"
 msgstr "Показывать спидометр во время игры"
 
-#: src/GameText.h:525
+#: src/GameText.h:526
 msgid "Levels with no highscore"
 msgstr "Уровни без рекорда"
 
-#: src/GameText.h:526 src/GameText.h:553
+#: src/GameText.h:527 src/GameText.h:554
 msgid "Levels you have not completed"
 msgstr "Незавершенные уровни"
 
-#: src/GameText.h:527
+#: src/GameText.h:528
 msgid "You're not the highscore holder"
 msgstr "Рекорд установили не вы"
 
-#: src/GameText.h:529
+#: src/GameText.h:530
 msgid "New and updated levels"
 msgstr "Новые и обновленные уровни"
 
-#: src/GameText.h:530
+#: src/GameText.h:531
 msgid "Favorite levels"
 msgstr "Избранные уровни"
 
-#: src/GameText.h:531
+#: src/GameText.h:532
 msgid "Nicest levels"
 msgstr "Самые лучшие уровни"
 
-#: src/GameText.h:532
+#: src/GameText.h:533
 msgid "Hardest levels"
 msgstr "Самые сложные уровни"
 
-#: src/GameText.h:533
+#: src/GameText.h:534
 msgid "Easiest levels"
 msgstr "Самые легкие уровни"
 
-#: src/GameText.h:534
+#: src/GameText.h:535
 msgid "Crapiest levels"
 msgstr "Самые мрачные уровни"
 
-#: src/GameText.h:535
+#: src/GameText.h:536
 msgid "Scripted levels"
 msgstr "Заскриптованные уровни"
 
-#: src/GameText.h:536
+#: src/GameText.h:537
 #, fuzzy
 msgid "Musical levels"
 msgstr "Мои уровни"
 
-#: src/GameText.h:538
+#: src/GameText.h:539
 msgid "Last played levels"
 msgstr "Последние игранные уровни"
 
-#: src/GameText.h:539
+#: src/GameText.h:540
 msgid "Never played levels"
 msgstr "Никогда не игранные уровни"
 
-#: src/GameText.h:540
+#: src/GameText.h:541
 msgid "Most played levels"
 msgstr "Наиболее часто игранные уровни"
 
-#: src/GameText.h:541
+#: src/GameText.h:542
 msgid "Less played levels (but played)"
 msgstr "Наименее часто игранные (но игранные) уровни"
 
-#: src/GameText.h:542
+#: src/GameText.h:543
 msgid "Last highscores"
 msgstr "Последние рекорды"
 
-#: src/GameText.h:543
+#: src/GameText.h:544
 msgid "Last levels"
 msgstr "Последние уровни"
 
-#: src/GameText.h:544
+#: src/GameText.h:545
 msgid "Oldest highscores"
 msgstr "Самые старые рекорды"
 
-#: src/GameText.h:545
+#: src/GameText.h:546
 #, fuzzy
 msgid "Platinum"
 msgstr "Платина"
 
-#: src/GameText.h:546
+#: src/GameText.h:547
 msgid "Gold"
 msgstr "Золото"
 
-#: src/GameText.h:547
+#: src/GameText.h:548
 msgid "Silver"
 msgstr "Серебро"
 
-#: src/GameText.h:548
+#: src/GameText.h:549
 msgid "Bronze"
 msgstr "Бронза"
 
-#: src/GameText.h:549
+#: src/GameText.h:550
 msgid "No medal"
 msgstr "Без медали"
 
-#: src/GameText.h:550
+#: src/GameText.h:551
 msgid "My levels"
 msgstr "Мои уровни"
 
-#: src/GameText.h:552
+#: src/GameText.h:553
 #, fuzzy
 msgid "Levels with no highscore in your room"
 msgstr "Уровни без рекордов, установленных в вашей комнате"
 
-#: src/GameText.h:554
+#: src/GameText.h:555
 msgid "Somebody in the room made a better highscore than yours"
 msgstr "Кто-то в комнате показал лучшее время, чем вы"
 
-#: src/GameText.h:555
+#: src/GameText.h:556
 msgid "All X-Moto levels"
 msgstr "Все уровни X-Moto"
 
-#: src/GameText.h:556
+#: src/GameText.h:557
 msgid "New and updated levels since your last check"
 msgstr "Новые и обновленные уровни со времени последней проверки"
 
-#: src/GameText.h:557
+#: src/GameText.h:558
 msgid "Your favorite levels"
 msgstr "Ваши избранные уровни"
 
-#: src/GameText.h:558
+#: src/GameText.h:559
 msgid "Nicest X-Moto levels according to the web votes"
 msgstr "Самые красивые уровни X-Moto согласно веб-голосованию"
 
-#: src/GameText.h:559
+#: src/GameText.h:560
 msgid "Hardest X-Moto levels according to the web votes"
 msgstr "Самые трудные уровни X-Moto согласно веб-голосованию"
 
-#: src/GameText.h:560
+#: src/GameText.h:561
 msgid "Easiest X-Moto levels according to the web votes"
 msgstr "Самые легкие уровни X-Moto согласно веб-голосованию"
 
-#: src/GameText.h:561
+#: src/GameText.h:562
 msgid "Crapiest X-Moto levels according to the web votes"
 msgstr "Самые мрачные уровни X-Moto согласно веб-голосованию"
 
-#: src/GameText.h:562
+#: src/GameText.h:563
 msgid "X-Moto levels which are dynamic"
 msgstr "Динамичные уровни X-Moto"
 
-#: src/GameText.h:563
+#: src/GameText.h:564
 msgid "X-Moto levels with a background music"
 msgstr "Уровни X-Moto с фоновой музыкой"
 
-#: src/GameText.h:564
+#: src/GameText.h:565
 msgid "Last levels you have played"
 msgstr "Последние уровни X-Moto, на которых вы ездили"
 
-#: src/GameText.h:565
+#: src/GameText.h:566
 msgid "X-Moto levels you never played"
 msgstr "Уровни X-Moto, на которых вы никогда не ездили"
 
-#: src/GameText.h:566
+#: src/GameText.h:567
 msgid "X-Moto levels you have played the most"
 msgstr "Уровни X-Moto, в которые вы играли больше всего"
 
-#: src/GameText.h:567
+#: src/GameText.h:568
 msgid "X-Moto levels you have played only a few times"
 msgstr "Уровни X-Moto, в которые вы играли всего несколько раз"
 
-#: src/GameText.h:568
+#: src/GameText.h:569
 #, fuzzy
 msgid "X-Moto levels having a recent highscore in your room"
 msgstr "Уровни X-Moto, в которых в вашей комнате был недавно установлен рекорд"
 
-#: src/GameText.h:569
+#: src/GameText.h:570
 msgid "Last created X-Moto levels"
 msgstr "Недавно созданные уровни X-Moto"
 
-#: src/GameText.h:570
+#: src/GameText.h:571
 #, fuzzy
 msgid "X-Moto levels having an old highscore in your room"
 msgstr ""
 "Уровни X-Moto, в которых в вашей комнате был установлен рекорд раньше всего"
 
-#: src/GameText.h:571
+#: src/GameText.h:572
 msgid "You have the room highscore"
 msgstr "Вы установили рекорд комнаты"
 
-#: src/GameText.h:572
+#: src/GameText.h:573
 #, fuzzy
 msgid "Your personal highscore finish time is almost the room highscore (95%)"
 msgstr "Ваше рекордное финишное время почти является рекордом комнаты (95%)"
 
-#: src/GameText.h:573
+#: src/GameText.h:574
 #, fuzzy
 msgid ""
 "Your personal highscore finish time is almost the room highscore (90%-95%)"
 msgstr ""
 "Ваше рекордное финишное время почти является рекордом комнаты (90%-95%)"
 
-#: src/GameText.h:574
+#: src/GameText.h:575
 #, fuzzy
 msgid ""
 "Your personal highscore finish time is almost the room highscore (80%-90%)"
 msgstr ""
 "Ваше рекордное финишное время почти является рекордом комнаты (80%-90%)"
 
-#: src/GameText.h:575
+#: src/GameText.h:576
 msgid "The room highscore is really better than your own highscore"
 msgstr "Рекорд комнаты гораздо лучше, чем ваш"
 
-#: src/GameText.h:576
+#: src/GameText.h:577
 #, fuzzy, c-format
 msgid "Level pack \"%s\""
 msgstr "Набор уровней"
 
-#: src/GameText.h:577
+#: src/GameText.h:578
 #, fuzzy, c-format
 msgid "Highscores by %s"
 msgstr "Рекорд установлен"
 
-#: src/GameText.h:578
+#: src/GameText.h:579
 msgid "External levels (the one you put into the 'My levels' directory)"
 msgstr "Внешние уровни (те, что записаны в папку 'My levels')"
 
-#: src/GameText.h:580
+#: src/GameText.h:581
 msgid "Ugly mode enabled"
 msgstr "Уродливый режим включен"
 
-#: src/GameText.h:581
+#: src/GameText.h:582
 msgid "Ugly mode disabled"
 msgstr "Уродливый режим выключен"
 
-#: src/GameText.h:582
+#: src/GameText.h:583
 msgid "Theme mode enabled"
 msgstr "Режим темы включен"
 
-#: src/GameText.h:583
+#: src/GameText.h:584
 msgid "Theme mode disabled"
 msgstr "Режим темы выключен"
 
-#: src/GameText.h:584
+#: src/GameText.h:585
 msgid "UglyOver mode enabled"
 msgstr "Чересчур уродливый режим включен"
 
-#: src/GameText.h:585
+#: src/GameText.h:586
 msgid "UglyOver mode disabled"
 msgstr "Чересчур уродливый режим выключен"
 
-#: src/GameText.h:586
+#: src/GameText.h:587
 #, fuzzy
 msgid "Web connection enabled"
 msgstr "Соединение к интернету включено"
 
-#: src/GameText.h:587
+#: src/GameText.h:588
 #, fuzzy
 msgid "Web connection disabled"
 msgstr "Соединение к интернету выключено"
 
-#: src/GameText.h:588
+#: src/GameText.h:589
 msgid "Replay interpolation enabled"
 msgstr "Интерполяция записи игры включена"
 
-#: src/GameText.h:589
+#: src/GameText.h:590
 msgid "Replay interpolation disabled"
 msgstr "Интерполяция записи игры выключена"
 
-#: src/GameText.h:590
+#: src/GameText.h:591
 msgid "Fps enabled"
 msgstr ""
 
-#: src/GameText.h:591
+#: src/GameText.h:592
 #, fuzzy
 msgid "Fps disabled"
 msgstr "Уродливый режим выключен"
 
-#: src/GameText.h:594
+#: src/GameText.h:595
 msgid "FontGroup:GENERAL"
 msgstr ""
 
