@@ -281,11 +281,11 @@ msgstr "MD5-Code"
 
 #: src/GameText.h:128
 msgid "Everyone who have made levels"
-msgstr "Jeden, der Levels beigesteuert hat,"
+msgstr "Alle, die Levels beigesteuert haben,"
 
 #: src/GameText.h:129
 msgid "People who have provided bug reports"
-msgstr "Jeden, der Bug-Reports gesendet hat,"
+msgstr "alle, die Bug-Reports gesendet haben,"
 
 #: src/GameText.h:130
 msgid "Anyone who has helped in any way"
@@ -609,22 +609,20 @@ msgid "Restart the level"
 msgstr "Level neustarten"
 
 #: src/GameText.h:212
-#, fuzzy
 msgid "Previous/Next level"
-msgstr "Schwerste Levels"
+msgstr "Vorheriges/Nächstes Level"
 
 #: src/GameText.h:213
-#, fuzzy
 msgid "Add/remove to favorite levels"
-msgstr "Level der Favoritenliste hinzufügen"
+msgstr "Level der Favoritenliste hinzufügen/entfernen"
 
 #: src/GameText.h:214
 msgid "Enable/disable web"
-msgstr ""
+msgstr "Internet-Verbindung aktivieren/deaktivieren"
 
 #: src/GameText.h:215
 msgid "Enable/disable ugly mode"
-msgstr ""
+msgstr "Strich-Modus aktivieren/deaktivieren"
 
 #: src/GameText.h:216
 msgid "Reload levels, themes and replays from directories"
@@ -652,7 +650,7 @@ msgstr ""
 
 #: src/GameText.h:222
 msgid "Hide ghosts"
-msgstr ""
+msgstr "Geister verstecken"
 
 #: src/GameText.h:223
 msgid "High"
@@ -715,14 +713,12 @@ msgid "Level"
 msgstr "Level"
 
 #: src/GameText.h:238
-#, fuzzy
 msgid "Added to favorites"
-msgstr "Zu den Favoriten"
+msgstr "Zu Favoriten hinzugefügt"
 
 #: src/GameText.h:239
-#, fuzzy
 msgid "Deleted from favorites"
-msgstr "Aus Liste entfernen"
+msgstr "Aus Favoriten entfernt"
 
 #: src/GameText.h:240
 msgid "Level Info..."
@@ -1056,9 +1052,9 @@ msgid "The replay can't be played!"
 msgstr "Das Replay kann nicht abgespielt werden!"
 
 #: src/GameText.h:326
-#, fuzzy, c-format
+#, c-format
 msgid "Replay of %s"
-msgstr "Replays"
+msgstr "Replay von %s"
 
 #: src/GameText.h:327
 msgid "Replays"
@@ -1841,9 +1837,8 @@ msgid ""
 msgstr "Spiel abbrechen oder fortsetzen, sobald 1 Spieler das Level beendet."
 
 #: src/GameText.h:524
-#, fuzzy
 msgid "Don't show the ghosts while playing"
-msgstr "Tacho beim Spielen anzeigen"
+msgstr "Geister in Wiederholungen verstecken"
 
 #: src/GameText.h:526
 msgid "Levels with no highscore"
@@ -2381,190 +2376,3 @@ msgid ""
 msgstr ""
 "Dies ist die letzte Hürde! Nicht so lang, dafür aber\n"
 "ist die Decke noch niedriger. Viel Glück!"
-
-#, fuzzy
-#~ msgid "Added to the favorite"
-#~ msgstr "Zu den Favoriten"
-
-#, fuzzy
-#~ msgid "Delete from the favorite"
-#~ msgstr "Aus Liste entfernen"
-
-#~ msgid "Already used!"
-#~ msgstr "Bereits verwendet!"
-
-#~ msgid "Built-In Levels"
-#~ msgstr "Eingebaute Levels"
-
-#~ msgid "External Levels"
-#~ msgstr "Externe Levels"
-
-#~ msgid "Official built-in levels"
-#~ msgstr "Offiziell eingebaute Levels"
-
-#~ msgid "Unofficial stand-alone external levels"
-#~ msgstr "Inoffizielle, externe Levels"
-
-#~ msgid "for the current level..."
-#~ msgstr "für das Level..."
-
-#~ msgid "on this computer."
-#~ msgstr "auf diesem Computer"
-
-#~ msgid "around you, so you know where you're heading."
-#~ msgstr "Ausschnitt des Levels anzeigt."
-
-#~ msgid "The primary objective of the game is for you"
-#~ msgstr "Diese müssen alle aufgesammelt werden, bevor"
-
-#~ msgid "The icon to the right of your time,"
-#~ msgstr "Das Symbol rechts vom Zeitzähler"
-
-#~ msgid "When done, head for the flower."
-#~ msgstr "Wenn das geschafft ist, auf zur Blume."
-
-#~ msgid "how you play the game."
-#~ msgstr "um sich mit dem Spiel vertraut zu machen."
-
-#~ msgid "Drive to the left, accelerate, and when you are in"
-#~ msgstr "Fahre nach links, beschleunige, und sobald du"
-
-#~ msgid "the air, try to adjust your attitude with the left"
-#~ msgstr "in der Luft bist, versuch dein Bike mit den Pfeiltasten"
-
-#~ msgid "and right arrow keys, so you'll land on your wheels."
-#~ msgstr "auszutarieren, so dass du auf den Rädern aufkommst."
-
-#~ msgid "speed you can get to reach the other side..."
-#~ msgstr "maximale Geschwindigkeit, um die andere Seite zu erreichen."
-
-#~ msgid "Here's the plan:"
-#~ msgstr "Und so gehts:"
-
-#~ msgid "Again, you'll have to obtain maximum speed, but when"
-#~ msgstr "Zunächst muss wieder Höchstgeschwindigkeit erreicht werden,"
-
-#~ msgid "you reach the edge of the jump, pull the bike's front"
-#~ msgstr "sobald du aber den rettenden Vorsprung erreichst, "
-
-#~ msgid "wheel up."
-#~ msgstr "zieh die Nase des Bikes hoch!"
-
-#~ msgid "length of the jump."
-#~ msgstr "die Kante zu erklimmen."
-
-#~ msgid "Try it..."
-#~ msgstr "Versuchs!"
-
-#~ msgid "by pressing "
-#~ msgstr "drück die Taste "
-
-#~ msgid "keep the front wheel at the ground..."
-#~ msgstr "das Vorderrad am Boden zu halten..."
-
-#~ msgid "your head is lowered quite a lot..."
-#~ msgstr "was die Durchfahrt niedriger Passagen ermöglicht."
-
-#~ msgid "The difficult part is to keep the balance."
-#~ msgstr "Das schwierige daran ist das Balance-halten."
-
-#~ msgid "When the distance you have to drive is quite short,"
-#~ msgstr "Bei nur kurzen Passagen"
-
-#~ msgid "you don't need to keep the balance."
-#~ msgstr "muss die Balance nicht lange gehalten werden."
-
-#~ msgid "Accelerate (slowly) to the right with the front wheel raising."
-#~ msgstr "Beschleunige langsam, und zieh dabei das Vorderrad hoch."
-
-#~ msgid "Just before your head hit the block, make a quick left/right"
-#~ msgstr "Kurz bevor Kopf auf Kante trifft, mach eine schnelle Links/Rechts-"
-
-#~ msgid "combination, and you should be on the other side."
-#~ msgstr "Kombination mit den Pfeiltasten, und es sollte geschafft sein."
-
-#~ msgid "Now you'll try a bit more difficult one..."
-#~ msgstr "Jetzt wirds etwas schwieriger..."
-
-#~ msgid "This time keep your hands off the left and right arrow keys,"
-#~ msgstr "Lass diesmal die Finger von den Links/Rechts-Pfeiltasten,"
-
-#~ msgid "they're not delicate enough to help you keep balance."
-#~ msgstr "denn sie reagieren nicht sensibel genug, um die Balance zu halten."
-
-#~ msgid "Instead regulate your angle by accelerating and braking."
-#~ msgstr "Stattdessen, reguliere den Winkel per Gas und Bremse."
-
-#~ msgid "Try to drive a bit back and forth on your rear wheel,"
-#~ msgstr "Versuch, auf dem Hinterrad etwas hin und her zu wippen,"
-
-#~ msgid "keeping the bike as steady as possible..."
-#~ msgstr "und dabei das Bike so sicher wie möglich zu kontrollieren."
-
-#~ msgid "This tutorial will teach you to rear-wheel through"
-#~ msgstr "Diese Einführung lehrt das Fahren auf dem Hinterrad,"
-
-#~ msgid "areas where the ceiling is low."
-#~ msgstr "was bei Passagen mit niedriger Decke erforderlich ist."
-
-#~ msgid "Beware that this can be pretty difficult :)"
-#~ msgstr "Aber Achtung, das ist wirklich nicht einfach!"
-
-#~ msgid "Now for the final one... It's not that long, but instead"
-#~ msgstr "Dies ist die letzte Hürde! Nicht so lang, dafür aber"
-
-#~ msgid ""
-#~ "Failed to check for levels.\n"
-#~ "Check your Internet connection!"
-#~ msgstr ""
-#~ "Suche nach Levels fehlgeschlagen.\n"
-#~ "Bitte Internetverbindung überprüfen!"
-
-#~ msgid ""
-#~ "Failed to download high-scores.\n"
-#~ "Check your Internet connection!"
-#~ msgstr ""
-#~ "Herunterladen der Highscores fehlgeschlagen.\n"
-#~ "Bitte Internetverbindung überprüfen!"
-
-#~ msgid ""
-#~ "Failed to download the replay.\n"
-#~ "Check your Internet connection!"
-#~ msgstr ""
-#~ "Herunterladen des Replays fehlgeschlagen.\n"
-#~ "Bitte Internetverbindung überprüfen!"
-
-#~ msgid ""
-#~ "Failed to get the selected theme\n"
-#~ "Check your Internet connection!"
-#~ msgstr ""
-#~ "Konnte das gewählte Theme nicht holen.\n"
-#~ "Bitte Internetverbindung überprüfen!"
-
-#~ msgid ""
-#~ "Failed to update the theme list\n"
-#~ "Check your Internet connection!"
-#~ msgstr ""
-#~ "Aktualisieren der Themenliste fehlgeschlagen.\n"
-#~ "Bitte Internetverbindung überprüfen!"
-
-#~ msgid "Name"
-#~ msgstr "Name"
-
-#~ msgid "%d new or updated levels available. Download now?"
-#~ msgstr "%d neue oder aktualisierte Levels vefügbar. Jetzt herunterladen?"
-
-#~ msgid "Scripted"
-#~ msgstr "Geskriptet"
-
-#~ msgid "Unknown"
-#~ msgstr "Unbekannt"
-
-#~ msgid "Your login in the room"
-#~ msgstr "Dein Log-In für den Raum"
-
-#~ msgid "Filter on replay list"
-#~ msgstr "Filter für Replays"
-
-#~ msgid "Musical"
-#~ msgstr "Levels mit Musik"
