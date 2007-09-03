@@ -169,12 +169,12 @@ class ParticlesSource;
     void setUglyOverMode(bool bUglyOverMode) {m_bUglyOverMode = bUglyOverMode;}
     bool isDebug(void) {return m_bDebug;}
     UIRoot *getGUI(void) {return &m_GUI;}
-    void setBestTime(std::string s) {m_pBestTime->setCaption(s);}
+    void setBestTime(const std::string& s) {m_bestTime = s;}
     void showReplayHelp(float p_speed, bool bAllowRewind);
     void hideReplayHelp();
-    void setWorldRecordTime(const std::string &s) {m_pWorldRecordTime->setCaption(s);}
+    void setWorldRecordTime(const std::string &s) {m_worldRecordTime = s;}
 
-    std::string getBestTime(void) {return m_pBestTime->getCaption();}
+    std::string getBestTime(void) {return m_bestTime;}
     void setQuality(GraphQuality Quality) {m_Quality = Quality;}      
     void setGhostMotionBlur(bool b) {m_bGhostMotionBlur = b;}
     void setGhostDisplayInformation(bool i_display);
@@ -196,9 +196,6 @@ class ParticlesSource;
     void setShowEngineCounter(bool i_value);
 
     void switchFollow();
-
-    void addPlayTimes(int numberCamera);
-    void removePlayTimes();
 
     int nbParticlesRendered() const;
 
@@ -224,11 +221,10 @@ class ParticlesSource;
     Theme *m_theme;
 
     float m_fZoom;
-    UIWindow *m_pInGameStats;
-    std::vector<UIStatic*> m_playTimes;   
-    UIStatic *m_pBestTime;
-    UIStatic *m_pReplayHelp;
-    UIStatic *m_pWorldRecordTime;
+
+    std::string m_bestTime;
+    std::string m_replayHelp;
+    std::string m_worldRecordTime;
 
     UIWindow *m_pInGameNewHighscore;
     UIStatic *m_pNewHighscoreBest_str;
@@ -308,6 +304,9 @@ class ParticlesSource;
     void _RenderRectangle(const Vector2f& i_p1, const Vector2f& i_p2, const Color& i_color);
     void _RenderCircle(int nSteps,Color CircleColor,const Vector2f &C,float fRadius);
     void _deleteGeoms(std::vector<Geom *>& geom);
+
+    void renderTimePanel();
+    void renderReplayHelpMessage();
 
     /* _Free */
     void _Free(void);

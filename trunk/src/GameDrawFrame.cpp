@@ -105,7 +105,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
           /* When did the frame start? */
           double fStartFrameTime = getXMTime();                    
 	  int numberCam = m_MotoGame.getNumberCameras();
-
           if(m_State == GS_PREPLAYING) {
             /* If "preplaying" / "initial-zoom" is enabled, this is where it's done */
 	    if(numberCam > 1){

@@ -526,7 +526,6 @@ void MotoGame::cleanPlayers() {
     cleanGhosts();
 
     removeCameras();
-    m_renderer->removePlayTimes();
   }
 
   /*===========================================================================
@@ -1021,7 +1020,7 @@ void MotoGame::cleanPlayers() {
 
   void MotoGame::killPlayer(int i_player) {
     if(m_players[i_player]->isDead() == false && m_players[i_player]->isFinished() == false) {
-      m_players[i_player]->setDead(true);
+      m_players[i_player]->setDead(true, getTime());
 
       if(m_bDeathAnimEnabled) {
 	m_players[i_player]->setBodyDetach(true);

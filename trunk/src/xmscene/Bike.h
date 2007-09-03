@@ -148,10 +148,11 @@ class Biker {
   void setPlaySound(bool i_value);
 
   void setFinished(bool i_value, float i_finishTime);
-  void setDead(bool i_value);
+  void setDead(bool i_value, float i_deadTime);
   bool isFinished() const;
   float finishTime() const;
   bool isDead() const;
+  float deadTime() const;
   BikerTheme* getBikeTheme();
   virtual BikeController* getControler();
   virtual bool  isWheelSpinning();
@@ -191,6 +192,7 @@ class Biker {
   bool m_finished;
   float m_finishTime;
   bool m_dead;
+  float m_deadTime;
   OnBikerHooks* m_bikerHooks;
   bool m_bodyDetach;
   std::vector<Entity *> m_entitiesTouching;
