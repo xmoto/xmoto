@@ -1042,9 +1042,9 @@ msgid "The replay can't be played!"
 msgstr "Le replay ne peut être visionné"
 
 #: src/GameText.h:326
-#, fuzzy, c-format
+#, c-format
 msgid "Replay of %s"
-msgstr "Replays"
+msgstr "Replay de %s"
 
 #: src/GameText.h:327
 msgid "Replays"
