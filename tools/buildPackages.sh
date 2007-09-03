@@ -17,6 +17,7 @@ function svnVersion {
 function update_svn {
     (
 	cd trunk || return 1
+	svn -q status | while read STATUS FILE; do svn revert "$FILE"; done
 	svn up   || return 1
 
 	# check that svn version is only a number
