@@ -206,8 +206,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
   
   void GameRenderer::unprepareForNewLevel(void) {
-    if(m_pInGameStats)
-      m_pInGameStats->showWindow(false);
     _deleteGeoms(m_StaticGeoms);
     _deleteGeoms(m_DynamicGeoms);
   }
@@ -539,18 +537,7 @@ int GameRenderer::nbParticlesRendered() const {
     Camera*   pCamera = pGame->getCamera();
 
     m_nParticlesRendered = 0;
-
-    /* Update time */
-    m_pInGameStats->showWindow(!m_bCreditsMode);
-    // only if it's not the autozoom camera
-    if(pGame->getCurrentCamera() != pGame->getNumberCameras()){
-      m_playTimes[pGame->getCurrentCamera()]->setCaption(m_bCreditsMode?"":getParent()->formatTime(pGame->getTime()));
-      // show only if the player if not dead
-      Biker* pBiker = pCamera->getPlayerToFollow();
-      m_playTimes[pGame->getCurrentCamera()]->showWindow(pGame->getNumberCameras() == 1
-							 || (pBiker != NULL && pBiker->isDead() == false));
-    }
-     
+    
     m_fZoom = 60.0f;    
     pCamera->setScroll(true, pGame->getGravity());
     pCamera->setCamera2d();
@@ -785,7 +772,12 @@ int GameRenderer::nbParticlesRendered() const {
 		
     getParent()->getDrawLib()->getMenuCamera()->setCamera2d();
 
-    if(!m_bCreditsMode) {
+    if(m_bCreditsMode == false) {
+      renderTimePanel();
+      renderReplayHelpMessage();
+    }
+
+    if(m_bCreditsMode == false) {
       /* And then the game messages */
       _RenderGameMessages();            
       
@@ -793,12 +785,14 @@ int GameRenderer::nbParticlesRendered() const {
       _RenderGameStatus();
     }
 
+    if(m_bCreditsMode == false) {
       FontManager* v_fm = getParent()->getDrawLib()->getFontMedium();
       FontGlyph* v_fg = v_fm->getGlyph(pGame->getInfos());
       v_fm->printString(v_fg,
 			5,
 			getParent()->getDrawLib()->getDispHeight() - v_fg->realHeight() - 2,
 			MAKE_COLOR(255,255,255,255), true);
+    }
   }
 
   /*===========================================================================
@@ -808,9 +802,8 @@ int GameRenderer::nbParticlesRendered() const {
     Sprite* pType = NULL;
     MotoGame *pGame = getGameObject();
 
-    Biker* pBiker = pGame->getCamera()->getPlayerToFollow();
-    if((pBiker == NULL || (pBiker != NULL && pBiker->isDead() == true))
-       && pGame->getNumberCameras() > 1){
+    // do not render it if it's the autozoom camera or ...
+    if(getGameObject()->getCurrentCamera() == getGameObject()->getNumberCameras()) {
       return;
     }
     
@@ -1766,34 +1759,29 @@ int GameRenderer::nbParticlesRendered() const {
   void GameRenderer::showReplayHelp(float p_speed, bool bAllowRewind) {
     if(bAllowRewind) {
       if(p_speed >= 10.0) {
-        m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXT(std::string(">> 10")));
-      } 
-      else if(p_speed <= -10.0) {
-        m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXT(std::string("<<-10")));
-      } 
-      else {
-        char v_speed_str[5 + 1];
-        sprintf(v_speed_str, "% .2f", p_speed);
-        m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXT(std::string(v_speed_str)));
+	m_replayHelp = GAMETEXT_REPLAYHELPTEXT(std::string(">> 10"));
+      } else if(p_speed <= -10.0) {
+	m_replayHelp = GAMETEXT_REPLAYHELPTEXT(std::string("<<-10"));
+      } else {
+	char v_speed_str[5 + 1];
+	sprintf(v_speed_str, "% .2f", p_speed);
+	m_replayHelp = GAMETEXT_REPLAYHELPTEXT(std::string(v_speed_str));
       }
-    } 
-    else {
+    } else {
       if(p_speed >= 10.0) {
-        m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXTNOREWIND(std::string(">> 10")));
-      } 
-      else if(p_speed <= -10.0) {
-        m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXTNOREWIND(std::string("<<-10")));
-      } 
-      else {
-        char v_speed_str[256];
-        sprintf(v_speed_str, "% .2f", p_speed);
-        m_pReplayHelp->setCaption(GAMETEXT_REPLAYHELPTEXTNOREWIND(std::string(v_speed_str)));
+	m_replayHelp = GAMETEXT_REPLAYHELPTEXTNOREWIND(std::string(">> 10"));
+      } else if(p_speed <= -10.0) {
+	m_replayHelp = GAMETEXT_REPLAYHELPTEXTNOREWIND(std::string("<<-10"));
+      } else {
+	char v_speed_str[256];
+	sprintf(v_speed_str, "% .2f", p_speed);
+	m_replayHelp = GAMETEXT_REPLAYHELPTEXTNOREWIND(std::string(v_speed_str));
       }
     }
   }
 
   void GameRenderer::hideReplayHelp() {
-    m_pReplayHelp->setCaption("");
+    m_replayHelp = "";
   }
   
   /*===========================================================================
@@ -2070,42 +2058,81 @@ int GameRenderer::nbParticlesRendered() const {
     }
   }
 
-  void GameRenderer::addPlayTimes(int numberCamera){
-    int width  = getParent()->getDrawLib()->getDispWidth();
-    int height = getParent()->getDrawLib()->getDispHeight();
 
-    switch(numberCamera){
-    case 2:
-      m_playTimes.push_back(new UIStatic(m_pInGameStats,0,height/2,"00:00:00",200,25));
-      m_playTimes[1]->setFont(getParent()->getDrawLib()->getFontMedium());
-      m_playTimes[1]->setVAlign(UI_ALIGN_TOP);
-      m_playTimes[1]->setHAlign(UI_ALIGN_LEFT);
-      break;
-    case 3:
-    case 4:
-      m_playTimes.push_back(new UIStatic(m_pInGameStats,width/2,0,"00:00:00",200,25));
-      m_playTimes.push_back(new UIStatic(m_pInGameStats,0,height/2,"00:00:00",200,25));
-      m_playTimes.push_back(new UIStatic(m_pInGameStats,width/2,height/2,"00:00:00",200,25));
+void GameRenderer::renderTimePanel() {
+  int x, y;
+  FontGlyph* v_fg;
 
-
-      m_playTimes[1]->setFont(getParent()->getDrawLib()->getFontMedium());
-      m_playTimes[1]->setVAlign(UI_ALIGN_TOP);
-      m_playTimes[1]->setHAlign(UI_ALIGN_LEFT);
-      m_playTimes[2]->setFont(getParent()->getDrawLib()->getFontMedium());
-      m_playTimes[2]->setVAlign(UI_ALIGN_TOP);
-      m_playTimes[2]->setHAlign(UI_ALIGN_LEFT);
-      m_playTimes[3]->setFont(getParent()->getDrawLib()->getFontMedium());
-      m_playTimes[3]->setVAlign(UI_ALIGN_TOP);
-      m_playTimes[3]->setHAlign(UI_ALIGN_LEFT);
-      break;
-    }
+  // do not render it if it's the autozoom camera or ...
+  if(getGameObject()->getCurrentCamera() == getGameObject()->getNumberCameras()) {
+    return;
   }
 
-  void GameRenderer::removePlayTimes(){
-    for(int i=1; i<m_playTimes.size(); i++){
-      //m_playTimes[i]->getRoot()->removeChildW(m_playTimes[i]);
-      delete m_playTimes[i];
-      m_playTimes[i] = NULL;
+  unsigned int width  = getParent()->getDrawLib()->getDispWidth();
+  unsigned int height = getParent()->getDrawLib()->getDispHeight();
+  Biker* pBiker = getGameObject()->getCamera()->getPlayerToFollow();
+
+  /* render game time */
+  FontManager* v_fm = getParent()->getDrawLib()->getFontMedium();
+
+  if(pBiker != NULL) {
+    if(pBiker->isDead()) {
+      v_fg = v_fm->getGlyph(getParent()->formatTime(pBiker->deadTime()));
+    } else {
+      if(pBiker->isFinished()) {
+	v_fg = v_fm->getGlyph(getParent()->formatTime(pBiker->finishTime()));
+      } else {
+	v_fg = v_fm->getGlyph(getParent()->formatTime(getGameObject()->getTime()));
+      }
     }
-    m_playTimes.erase(m_playTimes.begin()+1, m_playTimes.end());
+  } else {
+    v_fg = v_fm->getGlyph(getParent()->formatTime(getGameObject()->getTime()));
   }
+
+  switch(getGameObject()->getCurrentCamera()) {
+  case 0:
+    x=0; y=0;
+    break;
+  case 1:
+    if(getGameObject()->getNumberCameras() == 2) {
+      x=0; y=height/2;
+    } else {
+	x=width/2; y=0;
+    }
+    break;
+  case 2:
+    x=0; y=height/2;
+    break;
+  case 3:
+    x=width/2; y=height/2;
+    break;
+  }
+  
+  v_fm->printString(v_fg,
+		    x, y,
+		    MAKE_COLOR(255,255,255,255), true);
+
+  /* next things must be rendered only the first camera */
+  if(getGameObject()->getCurrentCamera() != 0) return;
+
+  v_fm = getParent()->getDrawLib()->getFontSmall();
+
+  v_fg = v_fm->getGlyph(m_bestTime);
+  v_fm->printString(v_fg, 0, 28, MAKE_COLOR(255,255,255,255), true);
+
+  v_fg = v_fm->getGlyph(m_worldRecordTime);
+  v_fm->printString(v_fg, 0, 48, MAKE_COLOR(255,255,255,255), true);
+  
+}
+
+void GameRenderer::renderReplayHelpMessage() {
+  /* next things must be rendered only the first camera */
+  if(getGameObject()->getCurrentCamera() != 0) return;
+
+  FontManager* v_fm = getParent()->getDrawLib()->getFontSmall();
+  FontGlyph* v_fg = v_fm->getGlyph(m_replayHelp);
+  v_fm->printString(v_fg,
+		    getParent()->getDrawLib()->getDispWidth() - v_fg->realWidth(),
+		    0,
+		    MAKE_COLOR(255,255,255,255), true);
+}

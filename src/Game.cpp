@@ -2287,7 +2287,6 @@ GameApp::GameApp() {
 	Logger::Log("Preplay level for %i player(s)", v_nbPlayer);
 
 	initCameras(v_nbPlayer);
-	m_Renderer->addPlayTimes(m_MotoGame.getNumberCameras());
 
 	for(int i=0; i<v_nbPlayer; i++) {
 		m_MotoGame.setCurrentCamera(i);

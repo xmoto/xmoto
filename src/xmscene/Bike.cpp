@@ -164,6 +164,7 @@ Biker::Biker(Theme *i_theme, BikerTheme* i_bikerTheme,
   }
   m_playSound = true;
   m_dead      = false;
+  m_deadTime  = 0.0;
   m_finished  = false;
   m_finishTime = 0.0;
   m_bikerTheme = i_bikerTheme;
@@ -189,6 +190,11 @@ const TColor& Biker::getUglyColorFilter() const {
 float Biker::finishTime() const {
   return m_finishTime;
 }
+
+float Biker::deadTime() const {
+  return m_deadTime;
+}
+
 
 float Biker::getBikeEngineRPM() {
   return m_bikeState.fBikeEngineRPM;
@@ -318,8 +324,9 @@ void Biker::setFinished(bool i_value, float i_finishTime) {
   m_finishTime = i_finishTime;
 }
 
-void Biker::setDead(bool i_value) {
+void Biker::setDead(bool i_value, float i_deadTime) {
   m_dead = i_value;
+  m_deadTime = i_deadTime;
 }
 
 bool Biker::isFinished() const {

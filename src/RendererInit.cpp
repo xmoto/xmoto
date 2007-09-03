@@ -39,30 +39,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     getGUI()->setPosition(0,0,getParent()->getDrawLib()->getDispWidth(),getParent()->getDrawLib()->getDispHeight());
     getGUI()->setFont(getParent()->getDrawLib()->getFontSmall());    
 
-    m_pInGameStats = new UIWindow(getGUI(),0,0,"",
-				  getParent()->getDrawLib()->getDispWidth(),
-				  getParent()->getDrawLib()->getDispHeight());
-    m_pInGameStats->showWindow(false);
-
-    m_playTimes.push_back(new UIStatic(m_pInGameStats,0,0,"00:00:00",200,25));
-    m_playTimes[0]->setFont(getParent()->getDrawLib()->getFontMedium());
-    m_playTimes[0]->setVAlign(UI_ALIGN_TOP);
-    m_playTimes[0]->setHAlign(UI_ALIGN_LEFT);
-    m_pBestTime   = new UIStatic(m_pInGameStats,0,28,"--:--:-- / --:--:--",800,20);
-    m_pBestTime->setFont(getParent()->getDrawLib()->getFontSmall());
-    m_pBestTime->setVAlign(UI_ALIGN_TOP);
-    m_pBestTime->setHAlign(UI_ALIGN_LEFT);
-    m_pBestTime->setContextHelp("Personal best time / best time on this computer");
-    m_pReplayHelp = new UIStatic(m_pInGameStats, 150, 0, "", 640, 20);
-    m_pReplayHelp->setFont(getParent()->getDrawLib()->getFontSmall());
-    m_pReplayHelp->setVAlign(UI_ALIGN_TOP);
-    m_pReplayHelp->setHAlign(UI_ALIGN_RIGHT);
-
-    m_pWorldRecordTime = new UIStatic(m_pInGameStats,0,48,"",800,20);
-    m_pWorldRecordTime->setFont(getParent()->getDrawLib()->getFontSmall());
-    m_pWorldRecordTime->setVAlign(UI_ALIGN_TOP);
-    m_pWorldRecordTime->setHAlign(UI_ALIGN_LEFT);
-
     /* new highscore ! */
     m_pInGameNewHighscore = new UIWindow(getGUI(),405,475,"",200,100);
     m_pInGameNewHighscore->showWindow(false);
@@ -95,6 +71,5 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_Overlay.init(getParent()->getDrawLib(),512,512);
 
     m_nParticlesRendered = 0;
-
   }
 
