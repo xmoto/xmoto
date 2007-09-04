@@ -891,14 +891,14 @@ void FS::deleteFile(const std::string &File) {
   std::string FullFile;
     
   if(m_UserDir == "") {
-    throw Exception("Unable to delete the file");
+    throw Exception("Unable to delete the file " + File);
   }
     
   /* Absolute file path? */
   if(isPathAbsolute(File)) {
     /* Yeah, check if file is in user directory - otherwise we won't delete it */
     if(File.length() < m_UserDir.length() || File.substr(0, m_UserDir.length()) != m_UserDir) {
-      throw Exception("Unable to delete the file");
+      throw Exception("Unable to delete the file " + File);
     }
       
     FullFile = File;
@@ -908,7 +908,7 @@ void FS::deleteFile(const std::string &File) {
   }
 
   if(remove(FullFile.c_str())) {
-    throw Exception("Unable to delete the file");
+    throw Exception("Unable to delete the file " + File);
   }
 }
   

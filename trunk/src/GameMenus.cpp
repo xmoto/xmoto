@@ -2563,9 +2563,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
             if(nIdx >= 0 && nIdx < pList->getEntries().size()) {
               UIListEntry *pEntry = pList->getEntries()[nIdx];
               if(pEntry != NULL) {
-		Replay::deleteReplay(pEntry->Text[0]);
-		m_db->replays_delete(pEntry->Text[0]);
-                _UpdateReplaysList();
+		try {
+		  Replay::deleteReplay(pEntry->Text[0]);
+		} catch(Exception &e) {
+		  Logger::Log(e.getMsg().c_str());
+		}
+		try {
+		  m_db->replays_delete(pEntry->Text[0]);
+		} catch(Exception &e) {
+		  Logger::Log(e.getMsg().c_str());
+		}
+
+		_UpdateReplaysList();
               }
             }
           }
