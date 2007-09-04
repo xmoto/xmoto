@@ -23,7 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * CRT memory driver.
  */
 
-#if defined(__APPLE__) && defined(__MACH__)
+#if defined(__FreeBSD__) || (defined(__APPLE__) && defined(__MACH__))
   #include <stdlib.h>
 #else
   #include <malloc.h>

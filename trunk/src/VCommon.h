@@ -76,7 +76,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <math.h>
 
 #if !defined(WIN32) && !defined(__APPLE__) && !defined(__MACH__)
-  #include <endian.h>
+  #if defined(__FreeBSD__)
+    #include <sys/endian.h>
+  #else
+    #include <endian.h>
+  #endif
 #endif
 
 #if !defined(XMOTO_LITTLE_ENDIAN) && !defined(XMOTO_BIG_ENDIAN)
