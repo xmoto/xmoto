@@ -5,10 +5,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: xmoto 0.3.0\n"
+"Project-Id-Version: xmoto 0.3.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-09-03 19:15+0200\n"
-"PO-Revision-Date: 2007-08-28 23:48+0300\n"
+"PO-Revision-Date: 2007-09-04 02:36+0300\n"
 "Last-Translator: Jānis Rūcis <parasti@gmail.com>\n"
 "Language-Team: Latvian\n"
 "MIME-Version: 1.0\n"
@@ -715,14 +715,12 @@ msgid "Level"
 msgstr "Līmenis"
 
 #: src/GameText.h:238
-#, fuzzy
 msgid "Added to favorites"
-msgstr "Pielikt iecienītajiem"
+msgstr "Pievienots iecienītajiem"
 
 #: src/GameText.h:239
-#, fuzzy
 msgid "Deleted from favorites"
-msgstr "Dzēst no iecienītajiem"
+msgstr "Izdzēsts no iecienītajiem"
 
 #: src/GameText.h:240
 msgid "Level Info..."
@@ -1062,9 +1060,9 @@ msgid "The replay can't be played!"
 msgstr "Ierakstu nevar parādīt!"
 
 #: src/GameText.h:326
-#, fuzzy, c-format
+#, c-format
 msgid "Replay of %s"
-msgstr "Ieraksti"
+msgstr "%s ieraksts"
 
 #: src/GameText.h:327
 msgid "Replays"
