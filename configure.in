@@ -151,7 +151,7 @@ AC_OUTPUT(Makefile       \
          )
 
 # display is something is missing
-function displayRequirement {
+displayRequirement() {
   STUFF="$1"
   VAR="$2"
   GOOD_RES="$3"
@@ -164,7 +164,7 @@ function displayRequirement {
   fi
 }
 
-function displayVersion {
+displayVersion() {
   LIB="$1"
   VERSION="$2"
   printf "| %15s | %10s | %51s |\n" "$LIB" "enabled" "$VERSION"
