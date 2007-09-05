@@ -54,13 +54,13 @@ GameState* StateManager::popState()
   return pState;
 }
 
-GameState* StateManager::enterState(GameState* pNewState)
+GameState* StateManager::replaceState(GameState* pNewState)
 {
-  GameState* pState = NULL;
+  GameState* pPreviousState = NULL;
 
   if(m_statesStack.size() != 0){
     (m_statesStack.back())->leave();
-    pState = m_statesStack.pop_back();
+    pPreviousState = m_statesStack.pop_back();
   }
   
   m_statesStack.push_back(pNewState);
@@ -68,7 +68,7 @@ GameState* StateManager::enterState(GameState* pNewState)
 
   calculateWhichStateIsRendered();
 
-  return pState;
+  return pPreviousState;
 }
 
 void StateManager::update()
@@ -98,18 +98,29 @@ void StateManager::render()
   }
 }
 
-void StateManager::input()
+void StateManager::keyDown(int nKey, SDLMod mod,int nChar)
 {
-  std::vector<GameState*>::reverse_iterator stateIterator = m_statesStack.rbegin();
+  (m_statesStack.back())->keyDown(int nKey, SDLMod mod,int nChar);
+}
 
-  while(stateIterator != m_statesStack.rend()){
-    (*stateIterator)->input();
+void StateManager::keyUp(int nKey,   SDLMod mod)
+{
+  (m_statesStack.back())->keyUp(int nKey,   SDLMod mod);
+}
 
-    if((*stateIterator)->sendInputToStatesBehind() == false)
-      break;
-    
-    stateIterator++;
-  }
+void StateManager::mouseDown(int nButton)
+{
+  (m_statesStack.back())->mouseDown(int nButton);
+}
+
+void StateManager::mouseDoubleClick(int nButton)
+{
+  (m_statesStack.back())->mouseDoubleClick(int nButton);
+}
+
+void StateManager::mouseUp(int nButton)
+{
+  (m_statesStack.back())->mouseUp(int nButton);
 }
 
 void StateManager::calculateWhichStateIsRendered()
