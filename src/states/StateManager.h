@@ -22,12 +22,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __STATEMANAGER_H__
 
 #include "VCommon.h"
+class GameApp;
 
   class GameState {
   public:
     GameState(bool drawStateBehind,
 	      bool sendInputToStatesBehind,
-	      bool updateStatesBehind);
+	      bool updateStatesBehind,
+	      GameApp* pGame);
     virtual ~GameState();
 
     virtual void enter()=0;
@@ -39,7 +41,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     virtual void update()=0;
     virtual void render()=0;
-    virtual void input()=0;
+    /* input */
+    virtual void keyDown(int nKey, SDLMod mod,int nChar)=0;
+    virtual void keyUp(int nKey,   SDLMod mod)=0;
+    virtual void mouseDown(int nButton)=0;
+    virtual void mouseDoubleClick(int nButton)=0;
+    virtual void mouseUp(int nButton)=0;
 
     bool isHide(){
       return m_isHide;
@@ -50,18 +57,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     bool drawStatesBehind(){
       return m_drawStateBehind;
     }
-    bool sendInputToStatesBehind(){
-      return m_sendInputToStatesBehind;
-    }
     bool updateStatesBehind(){
       return m_updateStatesBehind;
     }
 
   private:
-    bool m_isHide;
-    bool m_drawStateBehind;
-    bool m_sendInputToStatesBehind;
-    bool m_updateStatesBehind;
+    bool     m_isHide;
+    bool     m_drawStateBehind;
+    bool     m_updateStatesBehind;
+    GameApp* m_pGame;
   };
 
   class StateManager {
@@ -71,11 +75,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     void pushState(GameState* pNewState);
     GameState* popState();
-    GameState* enterState(GameState* pNewState);
+    /* return the previous top state */
+    GameState* replaceState(GameState* pNewState);
 
     void update();
     void render();
-    void input();
+    /* input */
+    void keyDown(int nKey, SDLMod mod,int nChar);
+    void keyUp(int nKey,   SDLMod mod);
+    void mouseDown(int nButton);
+    void mouseDoubleClick(int nButton);
+    void mouseUp(int nButton);
 
   private:
     void calculateWhichStateIsRendered();
