@@ -100,27 +100,27 @@ void StateManager::render()
 
 void StateManager::keyDown(int nKey, SDLMod mod,int nChar)
 {
-  (m_statesStack.back())->keyDown(int nKey, SDLMod mod,int nChar);
+  (m_statesStack.back())->keyDown(nKey, mod, nChar);
 }
 
 void StateManager::keyUp(int nKey,   SDLMod mod)
 {
-  (m_statesStack.back())->keyUp(int nKey,   SDLMod mod);
+  (m_statesStack.back())->keyUp(nKey, mod);
 }
 
 void StateManager::mouseDown(int nButton)
 {
-  (m_statesStack.back())->mouseDown(int nButton);
+  (m_statesStack.back())->mouseDown(nButton);
 }
 
 void StateManager::mouseDoubleClick(int nButton)
 {
-  (m_statesStack.back())->mouseDoubleClick(int nButton);
+  (m_statesStack.back())->mouseDoubleClick(nButton);
 }
 
 void StateManager::mouseUp(int nButton)
 {
-  (m_statesStack.back())->mouseUp(int nButton);
+  (m_statesStack.back())->mouseUp(nButton);
 }
 
 void StateManager::calculateWhichStateIsRendered()
@@ -139,4 +139,14 @@ void StateManager::calculateWhichStateIsRendered()
     
     stateIterator++;
   }
+}
+
+GameState::GameState(bool drawStateBehind,
+		     bool updateStatesBehind,
+		     GameApp* pGame):
+  m_drawStateBehind    = drawStateBehind,
+  m_updateStatesBehind = updateStatesBehind
+  m_pGame              = pGame
+{
+
 }

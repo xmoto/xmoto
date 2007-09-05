@@ -27,7 +27,6 @@ class GameApp;
   class GameState {
   public:
     GameState(bool drawStateBehind,
-	      bool sendInputToStatesBehind,
 	      bool updateStatesBehind,
 	      GameApp* pGame);
     virtual ~GameState();
