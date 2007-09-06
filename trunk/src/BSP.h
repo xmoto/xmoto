@@ -21,80 +21,65 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __BSP_H__
 #define __BSP_H__
 
-#include "VCommon.h"
 #include "helpers/VMath.h"
-#include "xmscene/Level.h"
 #include "VTexture.h"
 
-  /*===========================================================================
-  Types
-  ===========================================================================*/
-  struct BSPLine {
-    Vector2f P0,P1;                   /* Line */
-    Vector2f Normal;                  /* Linenormal (meaningless, but hey :P)*/
-  };  
+class BSPLine {
+  public:
+  BSPLine(const Vector2f& i_p0, const Vector2f& i_p1);
+  BSPLine(const BSPLine& i_line);
+  ~BSPLine();
 
-  /*===========================================================================
-  Convex polygon vertex
-  ===========================================================================*/
-  struct BSPVertex {
-    BSPVertex() {}
-    BSPVertex(const Vector2f &iP,const Vector2f &iT,std::string iEdgeEffect="") : 
-      P(iP), T(iT) {}    
-    Vector2f P;                       /* Position */
-    Vector2f T;                       /* Texture coordinates */
-  };
+  Vector2f P0();
+  Vector2f P1();
+  Vector2f Normal();
 
-  /*===========================================================================
-  Convex polygon
-  ===========================================================================*/
-  struct BSPPoly {
-    BSPPoly() {
-      pTexture = NULL;
-    }
-    ~BSPPoly();                       /* Destructor */      
-    void debugOutput(void) {
-      //printf("POLY %X with %d vertices:\n",this,Vertices.size());
-      //for(int i=0;i<Vertices.size();i++)
-      //  printf(" <%f, %f>\n",Vertices[i]->P.x,Vertices[i]->P.y);
-      //printf("\n");
-    }
-    std::vector<BSPVertex *> Vertices; /* Vertices */
-    Texture *pTexture;                /* Texture */
-  };
+  private:
 
-  /*===========================================================================
-  BSP class
-  ===========================================================================*/
-  class BSP {
-    public:
-      BSP() {m_nNumErrors=0;}
-      ~BSP() {_Cleanup();}
-    
-      /* Methods */
-      void addLineDef(Vector2f P0,Vector2f P1);
-      std::vector<BSPPoly *> &compute(void);            
+  void computeNormal();
+
+  Vector2f m_p0, m_p1; /* Line */
+  Vector2f m_normal;   /* Linenormal (meaningless, but hey :P)*/
+};  
+
+class BSPPoly {
+ public:
+  BSPPoly();
+  BSPPoly(const BSPPoly& i_poly);
+  ~BSPPoly();
+
+  std::vector<Vector2f> &Vertices();
+  void addVertice(const Vector2f& i_vertice);
+  void addVerticesOf(const BSPPoly* i_poly);
+
+ private:
+  std::vector<Vector2f> m_vertices;
+};
+
+class BSP {
+ public:
+  BSP();
+  ~BSP();
+
+  int getNumErrors();
+  void addLineDefinition(const Vector2f& i_p0, const Vector2f& i_p1);
+
+  /* build some polygons ; don't delete the result, it's in memory in the class BSP */
+  std::vector<BSPPoly *> &compute();
       
-      int getNumErrors(void) {return m_nNumErrors;}
-      
-    private:
-      /* Data */
-      std::vector<BSPLine *> m_Lines;     /* Input data set */
-      std::vector<BSPPoly *> m_Polys;     /* Output data set */
-      
-      int m_nNumErrors;                   /* Number of errors found */
-      
-      /* Helpers */
-      void _Cleanup(void);
-      void _ComputeNormal(BSPLine *pLine);     
-      void _UpdateAABB(Vector2f &P,Vector2f &Min,Vector2f &Max); 
-      void _Recurse(BSPPoly *pSubSpace,std::vector<BSPLine *> &Lines);
-      void _SplitPoly(BSPPoly *pPoly,BSPPoly *pFront,BSPPoly *pBack,BSPLine *pLine);
-      void _SplitLines(std::vector<BSPLine *> &Lines,std::vector<BSPLine *> &Front,std::vector<BSPLine *> &Back,
-                            BSPLine *pLine,int *pnNumFront,int *pnNumBack,int *pnNumSplits,bool bProbe);
-      BSPLine *_FindBestSplitter(std::vector<BSPLine *> &Lines);
-      BSPLine *_CopyLine(BSPLine *pSrc);
-      BSPPoly *_CopyPoly(BSPPoly *pDst,BSPPoly *pSrc);      
-  };
+ private:
+  int m_nNumErrors;               /* Number of errors found */
+  std::vector<BSPLine *> m_lines; /* Input data set */
+  std::vector<BSPPoly *> m_polys; /* Output data set */
+
+  void recurse(BSPPoly *pSubSpace,std::vector<BSPLine *> &Lines);
+
+  BSPLine* findBestSplitter(std::vector<BSPLine *>& i_lines);
+  /* if bProbe is true, pnNumFront, pnNumBack and pnNumSplits must not be NULL to be filled AND Front and Back will not be filled */
+  void splitLines(std::vector<BSPLine *> &Lines, std::vector<BSPLine *> &Front, std::vector<BSPLine *> &Back,
+		   BSPLine *pLine, bool bProbe = false, int* pnNumFront = NULL, int* pnNumBack = NULL, int* pnNumSplits = NULL);
+  void splitPoly(BSPPoly *pPoly, BSPPoly *pFront, BSPPoly *pBack, BSPLine *pLine);
+
+};
 
 #endif

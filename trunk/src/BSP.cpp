@@ -21,153 +21,194 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* 
  *  Convex polygon generation using BSP trees.
  */
-#include "Game.h"
 #include "BSP.h"
 #include "VFileIO.h"
 #include "helpers/Log.h"
+#include "Game.h"
 
+#define PLANE_LIMIT_VALUE 0.0001
+#define T_LIMIT_VALUE     0.0001
 
-  /*===========================================================================
-  Add input line definition
-  ===========================================================================*/
-  void BSP::addLineDef(Vector2f P0,Vector2f P1) {
-    BSPLine *pLine = new BSPLine;
-    
-    pLine->P0 = P0;
-    pLine->P1 = P1;
+BSPLine::BSPLine(const Vector2f& i_p0, const Vector2f& i_p1) {
+  m_p0 = i_p0;
+  m_p1 = i_p1;
 
-    try {
-      _ComputeNormal( pLine );
-      m_Lines.push_back( pLine );
-    } catch(Exception &e) {
-      /* can't compute normal because points are too near */
-      /* just forget this line */
-    }
+  computeNormal();
+}
+
+BSPLine::BSPLine(const BSPLine& i_line) {
+  m_p0 	   = i_line.m_p0;
+  m_p1 	   = i_line.m_p1;
+  m_normal = i_line.m_normal;
+}
+
+BSPLine::~BSPLine() {
+}
+
+Vector2f BSPLine::P0() {
+  return m_p0;
+}
+
+Vector2f BSPLine::P1() {
+  return m_p1;
+}
+
+Vector2f BSPLine::Normal() {
+  return m_normal;
+}
+
+void BSPLine::computeNormal() {
+  Vector2f v;
+
+  v = m_p1 - m_p0;
+  m_normal.x =  v.y;
+  m_normal.y = -v.x;
+  m_normal.normalize();
+}
+
+BSPPoly::BSPPoly() {
+}
+
+BSPPoly::BSPPoly(const BSPPoly& i_poly) {
+  addVerticesOf(&i_poly);
+}
+
+void BSPPoly::addVerticesOf(const BSPPoly* i_poly) {
+  for(unsigned int i=0; i<i_poly->m_vertices.size(); i++) {
+    m_vertices.push_back(i_poly->m_vertices[i]);
+  }
+}
+
+BSPPoly::~BSPPoly() {
+}
+
+std::vector<Vector2f> &BSPPoly::Vertices() {
+  return m_vertices;
+}
+
+void BSPPoly::addVertice(const Vector2f& i_vertice) {
+  m_vertices.push_back(i_vertice);
+}
+
+BSP::BSP() {
+  m_nNumErrors = 0;
+}
+
+BSP::~BSP() {
+  for(int i=0;i<m_lines.size();i++) {
+    delete m_lines[i];
   }
 
-  /*===========================================================================
-  2D BSP class... creates convex hulls from a set of arbitrary edge definitions
-  ===========================================================================*/
-  std::vector<BSPPoly *> &BSP::compute(void) {
-    /* Start by creating the root polygon - i.e. the quad that covers
-       the entire region enclosed by the input linedefs */
-    AABB GlobalBox;
+  for(int i=0;i<m_polys.size();i++) {
+    delete m_polys[i];
+  }
+}
 
-    for(int i=0;i<m_Lines.size();i++) {
-      GlobalBox.addPointToAABB2f(m_Lines[i]->P0);
-      GlobalBox.addPointToAABB2f(m_Lines[i]->P1);
-    }
-    
-    BSPPoly RootPoly;
-    Vector2f GlobalMin = GlobalBox.getBMin();
-    Vector2f GlobalMax = GlobalBox.getBMax();
-    RootPoly.Vertices.push_back( new BSPVertex( Vector2f(GlobalMin.x,GlobalMin.y),Vector2f(0,0) ) ); 
-    RootPoly.Vertices.push_back( new BSPVertex( Vector2f(GlobalMin.x,GlobalMax.y),Vector2f(0,0) ) ); 
-    RootPoly.Vertices.push_back( new BSPVertex( Vector2f(GlobalMax.x,GlobalMax.y),Vector2f(0,0) ) ); 
-    RootPoly.Vertices.push_back( new BSPVertex( Vector2f(GlobalMax.x,GlobalMin.y),Vector2f(0,0) ) ); 
-    
-    RootPoly.pTexture = NULL;
-    
-    /* Start the recursion */
-    _Recurse(&RootPoly,m_Lines);
+void BSP::addLineDefinition(const Vector2f& i_p0, const Vector2f& i_p1) {
+  try {
+    m_lines.push_back(new BSPLine(i_p0, i_p1));
+  } catch(Exception &e) {
+    /* can't compute normal because points are too near */
+    /* just forget this line */
+  }
+}
 
-    /* Return polygon list */
-    return m_Polys;
+int BSP::getNumErrors() {
+  return m_nNumErrors;
+}
+
+std::vector<BSPPoly *> &BSP::compute() {
+  /* Start by creating the root polygon - i.e. the quad that covers
+     the entire region enclosed by the input linedefs */
+  AABB GlobalBox;
+
+  for(int i=0;i<m_lines.size();i++) {
+    GlobalBox.addPointToAABB2f(m_lines[i]->P0());
+    GlobalBox.addPointToAABB2f(m_lines[i]->P1());
+  }
+    
+  BSPPoly RootPoly;
+
+  // try this root polygon to see if it fixes the graphic problem due to the AABB one
+  for(unsigned int i=0; i<m_lines.size(); i++) {
+    RootPoly.addVertice(m_lines[i]->P0());
   }
 
-  /*===========================================================================
+  //Vector2f GlobalMin = GlobalBox.getBMin();
+  //Vector2f GlobalMax = GlobalBox.getBMax();
+  //RootPoly.addVertice(Vector2f(GlobalMin.x,GlobalMin.y) ); 
+  //RootPoly.addVertice(Vector2f(GlobalMin.x,GlobalMax.y) ); 
+  //RootPoly.addVertice(Vector2f(GlobalMax.x,GlobalMax.y) ); 
+  //RootPoly.addVertice(Vector2f(GlobalMax.x,GlobalMin.y) ); 
+    
+  /* Start the recursion */
+  recurse(&RootPoly, m_lines);
+
+  return m_polys;
+}
+
+/*===========================================================================
   Recursive generation
   ===========================================================================*/
-  void BSP::_Recurse(BSPPoly *pSubSpace,std::vector<BSPLine *> &Lines) {  
-    /* Find best splitter */
-    //printf("FIND BEST SPLITTER: %08x\n",&Lines);
-    BSPLine *pBestSplitter = _FindBestSplitter(Lines);
+void BSP::recurse(BSPPoly *pSubSpace,std::vector<BSPLine *> &Lines) {  
+  BSPLine *pBestSplitter = findBestSplitter(Lines);
     
     if(pBestSplitter == NULL) {
-      /* We've found a final convex hull! :D  stop here -- add it to output
-         (after cutting it of course) */
-      BSPPoly *pPoly = _CopyPoly(new BSPPoly,pSubSpace);
-        
-      /* Cut the polygon by each lines */
-      //for(int i=0;i<1;i++) { 
-//      printf("HULL!\n");
-      for(int i=0;i<Lines.size();i++) {
-        /* Define splitting plane */
-        BSPLine Splitter;
-        Splitter.P0 = Lines[i]->P0;
-        Splitter.P1 = Lines[i]->P1;
-        Splitter.Normal = Lines[i]->Normal;
-        
-      /*  printf("SPLITTER: [%f,%f]->[%f,%f] n=%f %f\n",Splitter.P0.x,Splitter.P0.y
-          ,Splitter.P1.x,Splitter.P1.y,Splitter.Normal.x,Splitter.Normal.y);*/
-        
-        /* Cut */
-        BSPPoly *pTempPoly = new BSPPoly;
+      /* We've found a final convex hull! :D  stop here -- add it to output (after cutting it of course) */
+      BSPPoly *pPoly = new BSPPoly(*pSubSpace);
 
-	if(pPoly->Vertices.empty()) {
-	  Logger::Log("** Warning ** : _Recurse(), try to split an empty poly (no BestSplitter)");
+      /* Cut the polygon by each lines */
+      for(unsigned int i=0; i<Lines.size(); i++) {
+        /* Define splitting plane */
+        BSPLine Splitter = *(Lines[i]);
+
+        /* Cut */
+        BSPPoly *pTempPoly = new BSPPoly();
+
+	if(pPoly->Vertices().empty()) {
+	  Logger::Log("** Warning ** : recurse(), try to split an empty poly (no BestSplitter)");
 	  Logger::Log("** Warning ** : Line causing the trouble is (%.5f %.5f ; %.5f %.5f)",
-	      Lines[i]->P0.x, Lines[i]->P0.y, Lines[i]->P1.x, Lines[i]->P1.y);
+	      Lines[i]->P0().x, Lines[i]->P0().y, Lines[i]->P1().x, Lines[i]->P1().y);
+	} else {
+	  splitPoly(pPoly, NULL, pTempPoly, &Splitter);
 	}
-        _SplitPoly(pPoly,NULL,pTempPoly,&Splitter);
         delete pPoly;
         pPoly = pTempPoly;
       }
       
-      if(pPoly->Vertices.size() > 0)
-        m_Polys.push_back( pPoly );
-      else {
+      if(pPoly->Vertices().size() > 0) {
+        m_polys.push_back(pPoly);
+      } else {
 
 	Logger::Log("** Warning ** : Lines causing the trouble are :");
 	for(int i=0;i<Lines.size();i++) {
 	  Logger::Log("%.5f %.5f ; %.5f %.5f",
-	      Lines[i]->P0.x, Lines[i]->P0.y, Lines[i]->P1.x, Lines[i]->P1.y);
+		      Lines[i]->P0().x, Lines[i]->P0().y, Lines[i]->P1().x, Lines[i]->P1().y);
 	}
 
-      /*  printf("Lines: %d   (subspace size: %d)\n",Lines.size(),pSubSpace->Vertices.size());
-        for(int i=0;i<Lines.size();i++)
-          printf("    (%f,%f)  ->  (%f,%f)\n",Lines[i]->P0.x,Lines[i]->P0.y,Lines[i]->P1.x,Lines[i]->P1.y);*/
-      
         delete pPoly;
-        Logger::Log("** Warning ** : BSP::_Recurse() - empty final polygon ignored");
+        Logger::Log("** Warning ** : BSP::recurse() - empty final polygon ignored");
         
-        m_nNumErrors++;
+        //m_nNumErrors++; not considered as an error now
       }
     }
     else {
       /* Split the mess */
     //  printf("(subdividing)\n");
+
       std::vector<BSPLine *> Front,Back;      
-      _SplitLines(Lines,Front,Back,pBestSplitter,NULL,NULL,NULL,false);
+      splitLines(Lines,Front,Back,pBestSplitter);
       
       /* Also split the convex subspace */
       BSPPoly FrontSpace,BackSpace;
-      if(pSubSpace->Vertices.empty()) {
-	Logger::Log("** Warning ** : _Recurse(), try to split an empty poly (BestSplitter is set)");
+      if(pSubSpace->Vertices().empty()) {
+	Logger::Log("** Warning ** : recurse(), try to split an empty poly (BestSplitter is set)");
       }
-      _SplitPoly(pSubSpace,&FrontSpace,&BackSpace,pBestSplitter);
-      
-      //if(FrontSpace.Vertices.empty()) {
-      //  printf("FRONTSPACE EMPTY!\n");
-      //  printf("  (subspace size=%d)\n",pSubSpace->Vertices.size());
-      //  printf("  (subspace:\n");
-      //  for(int i=0;i<pSubSpace->Vertices.size();i++) {
-      //    printf("   [%f %f]\n",pSubSpace->Vertices[i]->P.x,pSubSpace->Vertices[i]->P.y);
-      //  }
-      //  printf("  )\n");
-      //  printf("  (splitter: %f %f -> %f %f (of %d lines))\n",pBestSplitter->P0.x,pBestSplitter->P0.y,
-      //                                          pBestSplitter->P1.x,pBestSplitter->P1.y,Lines.size());
-      //  for(int i=0;i<Lines.size();i++) {
-      //    printf("%f %f %f %f\n",Lines[i]->P0.x,Lines[i]->P0.y,Lines[i]->P1.x,Lines[i]->P1.y);
-      //  }
-      //}
-      //else if(BackSpace.Vertices.empty()) {
-      //  printf("******* BACKSPACE EMPTY! *******\n");
-      //}
+      splitPoly(pSubSpace, &FrontSpace, &BackSpace, pBestSplitter);
       
       /* Continue recursion */
-      _Recurse(&FrontSpace,Front);
-      _Recurse(&BackSpace,Back);            
+      recurse(&FrontSpace,Front);
+      recurse(&BackSpace,Back);            
       
       /* Clean up */
       for(int i=0;i<Front.size();i++)
@@ -177,366 +218,265 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
   }
 
-  /*===========================================================================
-  Split polygon
-  ===========================================================================*/
-  void BSP::_SplitPoly(BSPPoly *pPoly,BSPPoly *pFront,BSPPoly *pBack,BSPLine *pLine) {
-    /* Split the given convex polygon to produce two new convex polygons */
-    enum SplitPolyRel {
-      SPR_ON_PLANE,SPR_IN_FRONT,SPR_IN_BACK
-    };
-
-    /* Empty? */
-    if(pPoly->Vertices.empty()) {
-      Logger::Log("** Warning ** : BSP::_SplitPoly() - empty polygon encountered");
-      m_nNumErrors++;
-      return;
-    }
-    
-    /* Look at each corner of the polygon -- how does each of them relate to
-       the plane? */
-    std::vector<int> Rels;
-    int nNumInFront=0,nNumInBack=0,nNumOnPlane=0;
-    
-    for(int i=0;i<pPoly->Vertices.size();i++) {
-      double d = pLine->Normal.dot(pLine->P0 - pPoly->Vertices[i]->P);
-      //printf("%f ",d);
-
-      if(fabs(d) < 0.00001f) {Rels.push_back( SPR_ON_PLANE ); nNumOnPlane++;}
-      else if(d < 0.0f) {Rels.push_back( SPR_IN_BACK ); nNumInBack++;}
-      else {Rels.push_back( SPR_IN_FRONT ); nNumInFront++;}
-    }
-    
-        
-//    printf("\n[front=%d back=%d onplane=%d\n\n",nNumInFront,nNumInBack,nNumOnPlane);
-    
-    /* Do we need a split, or can we draw a simple conclusion to this madness? */
-    if(nNumInBack==0 && nNumInFront==0) {
-      /* Everything is on the line */                 
-      Logger::Log("** Warning ** : BSP::_SplitPoly() - polygon fully plane aligned");
-      m_nNumErrors++;
-      //printf("   %d verts :\n",pPoly->Vertices.size());
-      //for(int i=0;i<pPoly->Vertices.size();i++) {
-      //  printf("     [%f %f]\n",pPoly->Vertices[i]->P.x,pPoly->Vertices[i]->P.y);
-      //}
-    }
-    else if(nNumInBack==0 && nNumInFront>0) {
-      /* Polygon can be regarded as being in front */
-      if(pFront != NULL)
-        _CopyPoly(pFront,pPoly);
-    }
-    else if(nNumInBack>0 && nNumInFront==0) {
-      /* Polygon can be regarded as being behind the line */
-      if(pBack != NULL)
-        _CopyPoly(pBack,pPoly);
-    }
-    else {
-      /* We need to divide the polygon */
-      for(int i=0;i<pPoly->Vertices.size();i++) {
-        bool bSplit = false;
-      
-        /* Next vertex? */
-        int j=i+1;
-        if(j==pPoly->Vertices.size()) j=0;
-      
-        /* Which sides should we add this corner to? */
-        if(Rels[i] == SPR_ON_PLANE) {
-          /* Both */
-          BSPVertex *pVertex;
-          if(pFront) {
-            pFront->Vertices.push_back(pVertex = new BSPVertex);
-            pVertex->P = pPoly->Vertices[i]->P;
-          }
-          if(pBack) {
-            pBack->Vertices.push_back(pVertex = new BSPVertex);
-            pVertex->P = pPoly->Vertices[i]->P;
-          }
-        }
-        else if(Rels[i] == SPR_IN_FRONT) {
-          /* In front */
-          BSPVertex *pVertex;
-          if(pFront) {
-            pFront->Vertices.push_back(pVertex = new BSPVertex);
-            pVertex->P = pPoly->Vertices[i]->P;
-          }
-          
-          if(Rels[j] == SPR_IN_BACK)
-            bSplit = true;
-        }
-        else if(Rels[i] == SPR_IN_BACK) {
-          /* In back */
-          BSPVertex *pVertex;
-          if(pBack) {
-            pBack->Vertices.push_back(pVertex = new BSPVertex);
-            pVertex->P = pPoly->Vertices[i]->P;
-          }
-          
-          if(Rels[j] == SPR_IN_FRONT)
-            bSplit = true;
-        }
-        
-        /* Check split? */
-        if(bSplit) {        
-          /* Calculate */
-          Vector2f v = pPoly->Vertices[j]->P - pPoly->Vertices[i]->P;
-          float den = v.dot(pLine->Normal);
-          if(den == 0.0f) { 
-            /* This should REALLY not be the case... warning! */
-            Logger::Log("** Warning ** : BSP::_SplitPoly() - impossible case (1)");
-            m_nNumErrors++;
-            
-            /* Now it's best simply to ignore this */
-            continue;
-          }
-          
-          float t = -(pLine->Normal.dot(pPoly->Vertices[i]->P - pLine->P0)) / den;
-
-          if(t>-0.0001f && t<1.0001f) {
-            BSPVertex *pt = pPoly->Vertices[i];
-            Vector2f Sect = pt->P + v*t;            
-            
-            /* We have now calculated the intersection point.
-               Add it to both front/back */
-            BSPVertex *pVertex;
-            if(pFront) {
-              pFront->Vertices.push_back(pVertex = new BSPVertex);
-              pVertex->P = Sect;
-            }
-            if(pBack) {
-              pBack->Vertices.push_back(pVertex = new BSPVertex);
-              pVertex->P = Sect;
-            }
-          }            
-        }
-      }
-    }
-  }
-  
-  /*===========================================================================
-  Split lines
-  ===========================================================================*/
-  void BSP::_SplitLines(std::vector<BSPLine *> &Lines,std::vector<BSPLine *> &Front,std::vector<BSPLine *> &Back,
-                        BSPLine *pLine,int *pnNumFront,int *pnNumBack,int *pnNumSplits,bool bProbe) {
-    enum SplitLineRel {
-      SLR_ON_PLANE,SLR_IN_FRONT,SLR_IN_BACK
-    };
-                        
-    /* Try splitting all the lines -- and collect a bunch of stats about it */
-    for(int i=0;i<Lines.size();i++) {
-      /* Look at this... determined the signed point-plane distance for each ends of the line to split */
-      double d0 = pLine->Normal.dot(pLine->P0 - Lines[i]->P0);
-      double d1 = pLine->Normal.dot(pLine->P0 - Lines[i]->P1);
-      
-      /* Now decide how it relates to the splitter */
-      SplitLineRel r0,r1;
-
-      if(fabs(d0) < 0.0001f) r0=SLR_ON_PLANE;
-      else if(d0 < 0.0f) r0=SLR_IN_BACK;
-      else r0=SLR_IN_FRONT;
-
-      if(fabs(d1) < 0.0001f) r1=SLR_ON_PLANE;
-      else if(d1 < 0.0f) r1=SLR_IN_BACK;
-      else r1=SLR_IN_FRONT;
-      
-      /* If we are lucky we don't need to perform the split */
-      if((r0==SLR_IN_FRONT && r1!=SLR_IN_BACK) ||
-         (r1==SLR_IN_FRONT && r0!=SLR_IN_BACK)) {
-        /* The entire line can be regarded as being IN FRONT */
-        if(bProbe) {
-          if(pnNumFront) *pnNumFront=*pnNumFront + 1;
-        }
-        else {
-          Front.push_back( _CopyLine(Lines[i]) );
-        }
-      }
-      else if((r0==SLR_IN_BACK && r1!=SLR_IN_FRONT) ||
-              (r1==SLR_IN_BACK && r0!=SLR_IN_FRONT)) {
-        /* The entire line can be regarded as being IN BACK */
-        if(bProbe) {
-          if(pnNumBack) *pnNumBack=*pnNumBack + 1;
-        }
-        else {
-          Back.push_back( _CopyLine(Lines[i]) );
-        }
-      }
-      else if(r0==SLR_ON_PLANE && r1==SLR_ON_PLANE) {
-        /* The line is approximately on the plane... find out which way it faces */
-        if(Lines[i]->Normal.almostEqual(pLine->Normal)) {
-//          printf("ON PLANE!!  [%f %f]  [%f %f]\n",Lines[i]->Normal.x,Lines[i]->Normal.y,pLine->Normal.x,pLine->Normal.y);
-          /* In back then */
-          if(bProbe) {
-            if(pnNumBack) *pnNumBack=*pnNumBack + 1;
-          }
-          else {
-            Back.push_back( _CopyLine(Lines[i]) );
-          }
-        }
-        else {
-          /* In front then */
-          if(bProbe) {
-            if(pnNumFront) *pnNumFront=*pnNumFront + 1;
-          }
-          else {
-            Front.push_back( _CopyLine(Lines[i]) );
-          }
-        }
-      }
-      else {
-        /* We need to perform a split :( */
-        if(bProbe) {
-          if(pnNumFront) *pnNumFront=*pnNumFront + 1;
-          if(pnNumBack) *pnNumBack=*pnNumBack + 1;
-          if(pnNumSplits) *pnNumSplits=*pnNumSplits + 1;
-        }
-        else {
-          Vector2f v = Lines[i]->P1 - Lines[i]->P0;
-          float den = v.dot(pLine->Normal);
-          if(den == 0.0f) { 
-            /* This should REALLY not be the case... warning! */
-            Logger::Log("** Warning ** : BSP::_SplitLines() - impossible case (1)");
-            m_nNumErrors++;
-            
-            /* Now it's best simply to ignore this */
-            continue;
-          }
-          
-          double t = -(pLine->Normal.dot(Lines[i]->P0 - pLine->P0)) / den;
-          
-          if(t>-0.0001f && t<1.0001f) {
-            Vector2f Sect = Lines[i]->P0 + v*t;            
-            
-            BSPLine *pNewLine;
-            
-            Front.push_back( pNewLine = new BSPLine );
-            if(r0 == SLR_IN_FRONT) {
-              pNewLine->P0 = Lines[i]->P0;
-              pNewLine->P1 = Sect;
-            }
-            else {
-              pNewLine->P0 = Sect;
-              pNewLine->P1 = Lines[i]->P1;
-            }
-            _ComputeNormal(pNewLine);
-
-            Back.push_back( pNewLine = new BSPLine );
-            if(r0 == SLR_IN_FRONT) {
-              pNewLine->P0 = Sect;
-              pNewLine->P1 = Lines[i]->P1;
-            }
-            else {
-              pNewLine->P0 = Lines[i]->P0;
-              pNewLine->P1 = Sect;
-            }            
-            _ComputeNormal(pNewLine);
-          }
-          else {
-            /* Another thing we should just ignore */
-            Logger::Log("** Warning ** : BSP::_SplitLines() - impossible case (2)");
-            m_nNumErrors++;
-            
-            continue;
-          }         
-        }
-      }
-    }                      
-  }                        
-  
-  /*===========================================================================
+/*===========================================================================
   Find best splitter in line soup
   ===========================================================================*/
-  BSPLine *BSP::_FindBestSplitter(std::vector<BSPLine *> &Lines) {
-    std::vector<BSPLine *> Dummy1,Dummy2;
+BSPLine* BSP::findBestSplitter(std::vector<BSPLine *>& i_lines) {
+  BSPLine *pBest = NULL;
+  std::vector<BSPLine *> Dummy1, Dummy2;
+  int nBestScore = -1;
+  int nNumFront, nNumBack, nNumSplits, nScore;
+  
+  /* Try splitting all lines with each of the lines */
+  for(unsigned int i=0; i<i_lines.size(); i++) {
+    splitLines(i_lines, Dummy1, Dummy2, i_lines[i], true, &nNumFront, &nNumBack, &nNumSplits);
     
-    int nBestScore = 10000000;
-    BSPLine *pBest = NULL;
-    int nBest = -1;
-    
-    /* Try splitting all lines with each of the lines */
-//    printf("findbest\n");
-    for(int i=0;i<Lines.size();i++) {
-      int nNumFront=0,nNumBack=0,nNumSplits=0,nScore=0;      
-      _SplitLines(Lines,Dummy1,Dummy2,Lines[i],&nNumFront,&nNumBack,&nNumSplits,true);
-  //      printf("LINE%d:   f:%d  b:%d  s:%d\n",i,nNumFront,nNumBack,nNumSplits);
-      
-      /* Only qualify if both front and back is larger than 0 */
-      if(nNumFront>0 && nNumBack>0) {      
-        /* Compute the score (smaller the better) */
-        nScore = abs(nNumBack - nNumFront) + nNumSplits*2;
-        if(nScore < nBestScore) {
-          pBest = Lines[i];
-          nBest = i;
-          nBestScore = nScore;
-        }
+    /* Only qualify if both front and back is larger than 0 */
+    if(nNumFront > 0 && nNumBack > 0) {      
+      /* Compute the score (smaller the better) */
+      nScore = abs(nNumBack - nNumFront) + nNumSplits*2;
+      if(nScore < nBestScore || nBestScore == -1) {
+	pBest = i_lines[i];
+	nBestScore = nScore;
       }
     }
-//    printf("    best = %d\n",nBest);
-    
-    /* OK */
-    return pBest;
-  }
-
-  /*===========================================================================
-  Clean up
-  ===========================================================================*/
-  void BSP::_Cleanup(void) {
-    /* Free input & output data */
-    for(int i=0;i<m_Lines.size();i++)
-      delete m_Lines[i];
-
-    for(int i=0;i<m_Polys.size();i++)
-      delete m_Polys[i];
-  }
-
-  /*===========================================================================
-  Update line "normal"
-  ===========================================================================*/
-  void BSP::_ComputeNormal(BSPLine *pLine) {
-    Vector2f v = pLine->P1 - pLine->P0;
-    pLine->Normal.x = v.y;
-    pLine->Normal.y = -v.x;
-    pLine->Normal.normalize();
-  }
-   
-  /*===========================================================================
-  Update line axis-aligned bounding box
-  ===========================================================================*/
-  void BSP::_UpdateAABB(Vector2f &P,Vector2f &Min,Vector2f &Max) {
-    if(P.x < Min.x) Min.x = P.x;
-    if(P.x > Max.x) Max.x = P.x;
-    if(P.y < Min.y) Min.y = P.y;
-    if(P.y > Max.y) Max.y = P.y;
   }
   
-  /*===========================================================================
-  Update line axis-aligned bounding box
+  return pBest;
+}
+
+
+
+/*===========================================================================
+  Split polygon
   ===========================================================================*/
-  BSPPoly::~BSPPoly() {
-    /* Voilala -- BSPPolys can clean up after themselves! */
-    for(int i=0;i<Vertices.size();i++)
-      delete Vertices[i];
+void BSP::splitPoly(BSPPoly *pPoly, BSPPoly *pFront, BSPPoly *pBack, BSPLine *pLine) {
+  /* Split the given convex polygon to produce two new convex polygons */
+  enum SplitPolyRel {
+    SPR_ON_PLANE, SPR_IN_FRONT, SPR_IN_BACK
+  };
+  
+  /* Empty? */
+  if(pPoly->Vertices().empty()) {
+    Logger::Log("** Error ** : BSP::splitPoly() - empty polygon encountered");
+    m_nNumErrors++;
+    return;
   }
   
-  /*===========================================================================
-  Copy a BSP line
-  ===========================================================================*/
-  BSPLine *BSP::_CopyLine(BSPLine *pSrc) {
-    BSPLine *pDst = new BSPLine;
-    pDst->Normal = pSrc->Normal;
-    pDst->P0 = pSrc->P0;
-    pDst->P1 = pSrc->P1;
-    return pDst;
-  }
-
-  /*===========================================================================
-  Copy a BSP polygon
-  ===========================================================================*/
-  BSPPoly *BSP::_CopyPoly(BSPPoly *pDst,BSPPoly *pSrc) {
-    for(int i=0;i<pSrc->Vertices.size();i++)
-      pDst->Vertices.push_back( new BSPVertex( pSrc->Vertices[i]->P,pSrc->Vertices[i]->T ) );       
+  /* Look at each corner of the polygon -- how does each of them relate to the plane? */
+  std::vector<int> Rels;
+  int nNumInFront=0, nNumInBack=0, nNumOnPlane=0;
+  
+  for(unsigned int i=0; i<pPoly->Vertices().size(); i++) {
+    double d = pLine->Normal().dot(pLine->P0() - pPoly->Vertices()[i]);
     
-    pDst->pTexture = pSrc->pTexture;
-    
-    return pDst;
+    if(fabs(d) < PLANE_LIMIT_VALUE) {
+      Rels.push_back( SPR_ON_PLANE );
+      nNumOnPlane++;
+    } else if(d < 0.0f) {
+      Rels.push_back( SPR_IN_BACK );
+      nNumInBack++;
+    } else {
+      Rels.push_back( SPR_IN_FRONT );
+      nNumInFront++;
+    }
   }
+  
+  /* Do we need a split, or can we draw a simple conclusion to this madness? */
+  if(nNumInBack == 0 && nNumInFront == 0) {
+    /* Everything is on the line */
+    Logger::Log("** Error ** : BSP::splitPoly() - polygon fully plane aligned");
+    m_nNumErrors++;
+  }
+  else if(nNumInBack == 0 && nNumInFront > 0) {
+    /* Polygon can be regarded as being in front */
+    if(pFront != NULL) {
+      pFront->addVerticesOf(pPoly);
+    }
+  }
+  else if(nNumInBack > 0 && nNumInFront == 0) {
+    /* Polygon can be regarded as being behind the line */
+    if(pBack != NULL) {
+      pBack->addVerticesOf(pPoly);
+    }
+  }
+  else {
+    /* We need to divide the polygon */
+    for(int i=0;i<pPoly->Vertices().size();i++) {
+      bool bSplit = false;
+      
+      /* Next vertex? */
+      int j=i+1;
+      if(j==pPoly->Vertices().size()) j=0;
+      
+      /* Which sides should we add this corner to? */
+      if(Rels[i] == SPR_ON_PLANE) {
+	/* Both */
+	if(pFront) {
+	  pFront->addVertice(pPoly->Vertices()[i]);
+	}
+	if(pBack) {
+	  pBack->addVertice(pPoly->Vertices()[i]);
+	}
+      }
+      else if(Rels[i] == SPR_IN_FRONT) {
+	/* In front */
+	if(pFront) {
+	  pFront->addVertice(pPoly->Vertices()[i]);
+	}
+	
+	if(Rels[j] == SPR_IN_BACK)
+	  bSplit = true;
+      }
+      else if(Rels[i] == SPR_IN_BACK) {
+	/* In back */
+	if(pBack) {
+	  pBack->addVertice(pPoly->Vertices()[i]);
+	}
+	
+	if(Rels[j] == SPR_IN_FRONT)
+	  bSplit = true;
+      }
+      
+      /* Check split? */
+      if(bSplit) {        
+	/* Calculate */
+	Vector2f v = pPoly->Vertices()[j] - pPoly->Vertices()[i];
+	float den = v.dot(pLine->Normal());
+	if(den == 0.0f) { 
+	  /* This should REALLY not be the case... warning! */
+	  Logger::Log("** Error ** : BSP::splitPoly() - impossible case (1)");
+	  m_nNumErrors++;
+	  
+	  /* Now it's best simply to ignore this */
+	  continue;
+	}
+	
+	float t = -(pLine->Normal().dot(pPoly->Vertices()[i] - pLine->P0())) / den;
+	
+	if(t>-(T_LIMIT_VALUE) && t<1.0+(T_LIMIT_VALUE)) {
+	  Vector2f Sect = pPoly->Vertices()[i] + v*t;            
+	  
+	  /* We have now calculated the intersection point.
+	     Add it to both front/back */
+	  if(pFront) {
+	    pFront->addVertice(Sect);
+	  }
+	  if(pBack) {
+	    pBack->addVertice(Sect);
+	  }
+	}            
+      }
+    }
+  }
+}
+  
+void BSP::splitLines(std::vector<BSPLine *> &Lines,std::vector<BSPLine *> &Front,std::vector<BSPLine *> &Back,
+		     BSPLine *pLine,bool bProbe,int *pnNumFront,int *pnNumBack,int *pnNumSplits) {
+  enum SplitLineRel {
+    SLR_ON_PLANE, SLR_IN_FRONT, SLR_IN_BACK
+  };
+  
+  if(bProbe) {
+    *pnNumFront = *pnNumBack = *pnNumSplits = 0;
+  }
+  
+  /* Try splitting all the lines -- and collect a bunch of stats about it */
+  for(int i=0;i<Lines.size();i++) {
+    /* Look at this... determined the signed point-plane distance for each ends of the line to split */
+    double d0 = pLine->Normal().dot(pLine->P0() - Lines[i]->P0());
+    double d1 = pLine->Normal().dot(pLine->P0() - Lines[i]->P1());
+      
+    /* Now decide how it relates to the splitter */
+    SplitLineRel r0, r1;
 
+    if(fabs(d0) < PLANE_LIMIT_VALUE) r0 = SLR_ON_PLANE;
+    else if(d0  < 0.0f)    r0 = SLR_IN_BACK;
+    else                   r0 = SLR_IN_FRONT;
+    
+    if(fabs(d1) < PLANE_LIMIT_VALUE) r1 = SLR_ON_PLANE;
+    else if(d1  < 0.0f)    r1 = SLR_IN_BACK;
+    else                   r1 = SLR_IN_FRONT;
+    
+    /* If we are lucky we don't need to perform the split */
+    if((r0 == SLR_IN_FRONT && r1 != SLR_IN_BACK) || (r1 == SLR_IN_FRONT && r0 != SLR_IN_BACK)) {
+      /* The entire line can be regarded as being IN FRONT */
+      if(bProbe) {
+	*pnNumFront = *pnNumFront + 1;
+      } else {
+	Front.push_back(new BSPLine(*(Lines[i])));
+      }
+    } else if((r0 == SLR_IN_BACK && r1 != SLR_IN_FRONT) || (r1 == SLR_IN_BACK && r0 != SLR_IN_FRONT)) {
+      /* The entire line can be regarded as being IN BACK */
+      if(bProbe) {
+	*pnNumBack = *pnNumBack + 1;
+      } else {
+	Back.push_back(new BSPLine(*(Lines[i])));
+      }
+    } else if(r0 == SLR_ON_PLANE && r1 == SLR_ON_PLANE) {
+        /* The line is approximately on the plane... find out which way it faces */
+      if(Lines[i]->Normal().almostEqual(pLine->Normal())) {
+	/* In back then */
+	if(bProbe) {
+	  *pnNumBack = *pnNumBack + 1;
+	} else {
+	  Back.push_back(new BSPLine(*(Lines[i])));
+	}
+      } else {
+	/* In front then */
+	if(bProbe) {
+	  *pnNumFront = *pnNumFront + 1;
+	}
+	else {
+	  Front.push_back(new BSPLine(*(Lines[i])));
+	}
+      }
+    }
+    else {
+      /* We need to perform a split :( */
+      if(bProbe) {
+	*pnNumFront  = *pnNumFront  + 1;
+	*pnNumBack   = *pnNumBack   + 1;
+	*pnNumSplits = *pnNumSplits + 1;
+      } else {
+	Vector2f v = Lines[i]->P1() - Lines[i]->P0();
+	float den = v.dot(pLine->Normal());
+	if(den == 0.0f) { 
+	  /* This should REALLY not be the case... warning! */
+	  Logger::Log("** Error ** : BSP::_SplitLines() - impossible case (1)");
+	  m_nNumErrors++;
+	  
+	  /* Now it's best simply to ignore this */
+	  continue;
+	}
+          
+	double t = -(pLine->Normal().dot(Lines[i]->P0() - pLine->P0())) / den;
+          
+	if(t>-(T_LIMIT_VALUE) && t<1.0+(T_LIMIT_VALUE)) {
+	  Vector2f Sect = Lines[i]->P0() + v*t;
+	  
+	  if(r0 == SLR_IN_FRONT) {
+	    Front.push_back(new BSPLine(Lines[i]->P0(), Sect));
+	  }
+	  else {
+	    Front.push_back(new BSPLine(Sect, Lines[i]->P1()));
+	  }
 
+	  if(r0 == SLR_IN_FRONT) {
+	    Back.push_back(new BSPLine(Sect, Lines[i]->P1()));
+	  }
+	  else {
+	    Back.push_back(new BSPLine(Lines[i]->P0(), Sect));
+	  }
+	}
+	else {
+	  /* Another thing we should just ignore */
+	  Logger::Log("** Error ** : BSP::_SplitLines() - impossible case (2)");
+	  m_nNumErrors++;
+	  
+	  continue;
+	}         
+      }
+    }
+  }                      
+}        

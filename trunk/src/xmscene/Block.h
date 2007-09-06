@@ -213,7 +213,7 @@ private:
   Vector2f m_dynamicPosition; /* Block position */
   std::vector<Line *> m_collisionLines; /* Line to collide against */
 
-  void addPoly(const BSPPoly* i_poly, CollisionSystem& io_collisionSystem);
+  void addPoly(BSPPoly* i_poly, CollisionSystem& io_collisionSystem);
   void updateCollisionLines();
 };
 
