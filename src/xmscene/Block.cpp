@@ -213,7 +213,7 @@ int Block::loadToPlay(CollisionSystem& io_collisionSystem) {
     }
 
     /* Add line to BSP generator */
-    v_BSPTree.addLineDef(Vertices()[i]->Position(), Vertices()[inext]->Position());
+    v_BSPTree.addLineDefinition(Vertices()[i]->Position(), Vertices()[inext]->Position());
   }
 
   /* define dynamic block in the collision system */
@@ -247,13 +247,13 @@ int Block::loadToPlay(CollisionSystem& io_collisionSystem) {
   return v_BSPTree.getNumErrors();  
 }
 
-void Block::addPoly(const BSPPoly* i_poly, CollisionSystem& io_collisionSystem) {
+void Block::addPoly(BSPPoly* i_poly, CollisionSystem& io_collisionSystem) {
   ConvexBlock *v_block = new ConvexBlock(this);
   
-  for(unsigned int i=0; i<i_poly->Vertices.size(); i++) {
-    v_block->addVertex(i_poly->Vertices[i]->P,
-                       Vector2f((InitialPosition().x + i_poly->Vertices[i]->P.x) * 0.25,
-                                (InitialPosition().y + i_poly->Vertices[i]->P.y) * 0.25));
+  for(unsigned int i=0; i<i_poly->Vertices().size(); i++) {
+    v_block->addVertex(i_poly->Vertices()[i],
+		       Vector2f((InitialPosition().x + i_poly->Vertices()[i].x) * 0.25,
+                                (InitialPosition().y + i_poly->Vertices()[i].y) * 0.25));
   }
   m_convexBlocks.push_back(v_block);
 }
