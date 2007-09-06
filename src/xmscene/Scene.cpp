@@ -573,8 +573,6 @@ void MotoGame::cleanPlayers() {
     
     nTotalBSPErrors = m_pLevelSrc->loadToPlay();
 
-    Logger::Log(" %d poly%s in total",m_pLevelSrc->Blocks().size(),m_pLevelSrc->Blocks().size()==1?"":"s");        
-    
     if(nTotalBSPErrors > 0) {
       Logger::Log(" %d BSP error%s in total",nTotalBSPErrors,nTotalBSPErrors==1?"":"s");
       gameMessage(std::string(GAMETEXT_WARNING) + ":");

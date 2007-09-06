@@ -207,9 +207,13 @@ void BSP::recurse(BSPPoly *pSubSpace,std::vector<BSPLine *> &Lines) {
       splitPoly(pSubSpace, &FrontSpace, &BackSpace, pBestSplitter);
       
       /* Continue recursion */
-      recurse(&FrontSpace,Front);
-      recurse(&BackSpace,Back);            
-      
+      if(FrontSpace.Vertices().empty() == false) {
+	recurse(&FrontSpace,Front);
+      }
+      if(BackSpace.Vertices().empty() == false) {
+	recurse(&BackSpace,Back);
+      }      
+
       /* Clean up */
       for(int i=0;i<Front.size();i++)
         delete Front[i];
