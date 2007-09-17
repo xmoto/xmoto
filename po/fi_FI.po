@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: xmoto\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-09-03 19:15+0200\n"
-"PO-Revision-Date: 2007-08-28 15:59+0200\n"
+"PO-Revision-Date: 2007-09-09 08:24+0200\n"
 "Last-Translator: Maximum <max@mymail.fi>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -564,9 +564,9 @@ msgid "The best of the replays (on this computer)"
 msgstr "Paras toistovideo (tällä koneella)"
 
 #: src/GameText.h:198
-#, fuzzy, c-format
+#, c-format
 msgid "Ghost of %s"
-msgstr "Haamu"
+msgstr "%s:n haamu"
 
 #: src/GameText.h:199
 msgid "Ghost"
@@ -609,22 +609,20 @@ msgid "Restart the level"
 msgstr "Aloita kenttä alusta"
 
 #: src/GameText.h:212
-#, fuzzy
 msgid "Previous/Next level"
-msgstr "Vaikeimmat kentät"
+msgstr "Edellinen/Seuraava kenttä"
 
 #: src/GameText.h:213
-#, fuzzy
 msgid "Add/remove to favorite levels"
-msgstr "Lisää kenttän suosikkilistaan"
+msgstr "Lisää/poista suosikeista"
 
 #: src/GameText.h:214
 msgid "Enable/disable web"
-msgstr ""
+msgstr "Salli/estä web"
 
 #: src/GameText.h:215
 msgid "Enable/disable ugly mode"
-msgstr ""
+msgstr "Salli/estä ruma tila"
 
 #: src/GameText.h:216
 msgid "Reload levels, themes and replays from directories"
@@ -650,7 +648,7 @@ msgstr ""
 
 #: src/GameText.h:222
 msgid "Hide ghosts"
-msgstr ""
+msgstr "Piilota haamut"
 
 #: src/GameText.h:223
 msgid "High"
@@ -713,14 +711,12 @@ msgid "Level"
 msgstr "Kenttä"
 
 #: src/GameText.h:238
-#, fuzzy
 msgid "Added to favorites"
-msgstr "Lisää suosikkeihin"
+msgstr "Lisätty suosikeihin"
 
 #: src/GameText.h:239
-#, fuzzy
 msgid "Deleted from favorites"
-msgstr "Poista suosikeista"
+msgstr "Poistettu suosikeista"
 
 #: src/GameText.h:240
 msgid "Level Info..."
@@ -843,11 +839,11 @@ msgid "New personal highscore!"
 msgstr "Uusi henkilökohtainen huipputulos!"
 
 #: src/GameText.h:269
-#, fuzzy, c-format
+#, c-format
 msgid "%i new or updated level available. Download now ?"
 msgid_plural "%i new or updated levels available. Download now ?"
-msgstr[0] "%d uutta tai päivitettyä kenttää saatavilla. Ladataanko nyt?"
-msgstr[1] "%d uutta tai päivitettyä kenttää saatavilla. Ladataanko nyt?"
+msgstr[0] "%i uusi tai päivitetty kenttä saatavilla. Ladataanko nyt?"
+msgstr[1] "%i uutta tai päivitettyä kenttää saatavilla. Ladataanko nyt?"
 
 #: src/GameText.h:272
 msgid "New Levels"
@@ -973,11 +969,11 @@ msgid "Personal"
 msgstr "Henkilökohtainen"
 
 #: src/GameText.h:307
-#, fuzzy, c-format
+#, c-format
 msgid "%i player"
 msgid_plural "%i players"
-msgstr[0] "%i pelaajat"
-msgstr[1] "Paras pelaaja"
+msgstr[0] "%i pelaaja"
+msgstr[1] "%i pelaajat"
 
 #: src/GameText.h:308
 msgid "Player Profile"
@@ -1051,9 +1047,9 @@ msgid "The replay can't be played!"
 msgstr "Toistovideota ei voida toistaa!"
 
 #: src/GameText.h:326
-#, fuzzy, c-format
+#, c-format
 msgid "Replay of %s"
-msgstr "Toistovideot"
+msgstr "%s:n toistovideo"
 
 #: src/GameText.h:327
 msgid "Replays"
@@ -1078,7 +1074,7 @@ msgstr "Tallenna"
 #: src/GameText.h:333
 #, c-format
 msgid "Saved as %s"
-msgstr ""
+msgstr "Tallenna %s:na"
 
 #: src/GameText.h:334
 msgid "Save Replay"
@@ -1820,9 +1816,8 @@ msgstr ""
 "ajamassa"
 
 #: src/GameText.h:524
-#, fuzzy
 msgid "Don't show the ghosts while playing"
-msgstr "Näytä nopeusmittari pelissä"
+msgstr "Älä näytä haamua pelissä"
 
 #: src/GameText.h:526
 msgid "Levels with no highscore"
