@@ -183,7 +183,16 @@ void Ghost::updateToTime(float i_time, float i_timeStep,
       } while(m_next_ghostBikeState.fGameTime < i_time && m_replay->endOfFile() == false);
       BikeState::updateStateFromReplay(&m_previous_ghostBikeState, &m_bikeState);
     } else { /* interpolation */
-      if(m_doInterpolation) {
+
+      /* do interpolation if it doesn't seems to be a teleportation or something like that */
+      float v_distance = Vector2f(Vector2f(m_next_ghostBikeState.fFrameX, m_next_ghostBikeState.fFrameY) -
+				  Vector2f(m_previous_ghostBikeState.fFrameX, m_previous_ghostBikeState.fFrameY)
+				  ).length();
+      bool v_can_interpolate =
+	m_next_ghostBikeState.fGameTime - m_previous_ghostBikeState.fGameTime < 0.3 && // interpolate only if the frame are near in the time
+	v_distance < 5.0;                                                              // interpolate only if the state are near in the space
+
+      if(m_doInterpolation && v_can_interpolate) {
 	if(m_next_ghostBikeState.fGameTime - m_previous_ghostBikeState.fGameTime > 0.0) {
 	  /* INTERPOLATED FRAME */
 	  SerializedBikeState ibs;
@@ -219,7 +228,7 @@ bool Ghost::getRenderBikeFront() {
 }
 
 float Ghost::getBikeLinearVel() {
-	return 0.0; /* unable to know it */
+  return 0.0; /* unable to know it */
 }
 
 float Ghost::getBikeEngineSpeed() {

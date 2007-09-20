@@ -865,7 +865,7 @@ float PlayerBiker::getBikeLinearVel() {
 
   /* protection against invalid values */
   if (speed > 400)
-	  return 0;
+    return 0;
 
   return speed;  
   
