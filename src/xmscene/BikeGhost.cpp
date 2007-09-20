@@ -24,6 +24,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../Game.h"
 #include "../GameEvents.h"
 
+#define INTERPOLATION_MAXIMUM_TIME  0.3
+#define INTERPOLATION_MAXIMUM_SPACE 5.0
+
 Ghost::Ghost(std::string i_replayFile, bool i_isActiv,
 	     Theme *i_theme, BikerTheme* i_bikerTheme,
 	     const TColor& i_colorFilter,
@@ -189,8 +192,10 @@ void Ghost::updateToTime(float i_time, float i_timeStep,
 				  Vector2f(m_previous_ghostBikeState.fFrameX, m_previous_ghostBikeState.fFrameY)
 				  ).length();
       bool v_can_interpolate =
-	m_next_ghostBikeState.fGameTime - m_previous_ghostBikeState.fGameTime < 0.3 && // interpolate only if the frame are near in the time
-	v_distance < 5.0;                                                              // interpolate only if the state are near in the space
+	// interpolate only if the frame are near in the time
+	m_next_ghostBikeState.fGameTime - m_previous_ghostBikeState.fGameTime < INTERPOLATION_MAXIMUM_TIME &&
+	// interpolate only if the state are near in the space
+	v_distance < INTERPOLATION_MAXIMUM_SPACE;
 
       if(m_doInterpolation && v_can_interpolate) {
 	if(m_next_ghostBikeState.fGameTime - m_previous_ghostBikeState.fGameTime > 0.0) {
