@@ -188,6 +188,7 @@ void Ghost::updateToTime(float i_time, float i_timeStep,
     } else { /* interpolation */
 
       /* do interpolation if it doesn't seems to be a teleportation or something like that */
+      /* in fact, this is not nice ; the best way would be to test if there is a teleport event between the two frames */
       float v_distance = Vector2f(Vector2f(m_next_ghostBikeState.fFrameX, m_next_ghostBikeState.fFrameY) -
 				  Vector2f(m_previous_ghostBikeState.fFrameX, m_previous_ghostBikeState.fFrameY)
 				  ).length();
