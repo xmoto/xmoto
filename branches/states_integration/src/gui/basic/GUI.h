@@ -135,7 +135,7 @@ class GameApp;
   class UIWindow {
     protected:
       void _InitWindow(void) {
-        m_pParent=NULL;m_pApp=NULL;
+        m_pParent=NULL;
         m_Pos.nX=m_Pos.nY=m_Pos.nWidth=m_Pos.nHeight=0;        
         m_bHide = false;
         m_bDisable = false;
@@ -206,8 +206,7 @@ class GameApp;
       FontManager *getFont() {return m_curFont;}
       void setFont(FontManager *pFont) {m_curFont = pFont;}
       UIWindow *getParent(void) {return m_pParent;}
-      GameApp *getApp(void) {return m_pApp;}
-      void setApp(GameApp *pApp) {m_pApp=pApp;}
+      virtual GameApp *getApp(void) {return getParent()->getApp();}
       void setID(std::string ID) {m_ID=ID;}
       std::string getID(void) {return m_ID;}      
       std::vector<UIWindow *> &getChildren(void) {return m_Children;}
@@ -255,7 +254,6 @@ class GameApp;
       UIWindow *m_pParent;                      /* Parent window */
       std::string m_ID;                         /* Non-unique id */
       std::vector<UIWindow *> m_Children;       /* Child windows */  
-      GameApp *m_pApp;                              /* Application */      
       UIRect m_Pos;                             /* Position */
       std::string m_Caption;                    /* Caption */
       FontManager* m_curFont;
@@ -760,6 +758,7 @@ class UIButtonDrawn : public UIButton {
   class UIRoot : public UIWindow {
     public:
       UIRoot() {
+	m_pApp=NULL;
         _InitWindow();        
       }
     
@@ -779,18 +778,23 @@ class UIButtonDrawn : public UIButton {
       void deactivate(UIWindow *pWindow);
 
       void enableContextMenuDrawing(bool b) {m_bShowContextMenu=b;}
-      void clearContext(void) {m_CurrentContextHelp = "";}
+      void clearContextHelp(void) {m_CurrentContextHelp = "";}
       
       void activateUp(void);
       void activateDown(void);
       void activateLeft(void);
       void activateRight(void);
             
+      void setApp(GameApp *pApp) {m_pApp=pApp;}
+      virtual GameApp *getApp(void) {return m_pApp;}
+      void dispatchMouseHover();
+
     private:
       /* Data */
       bool m_bShowContextMenu;
       std::string m_CurrentContextHelp;
-            
+      GameApp *m_pApp; /* Application */      
+
       /* Helpers */      
       bool _RootKeyEvent(UIWindow *pWindow,UIRootKeyEvent Event,int nKey, SDLMod mod,int nChar);
       bool _RootMouseEvent(UIWindow *pWindow,UIRootMouseEvent Event,int x,int y);

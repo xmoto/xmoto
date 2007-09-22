@@ -79,7 +79,6 @@ bool UIWindow::isUglyMode() {
     setOpacity(100.0f);
     m_pParent = pParent;
     getParent()->addChildW(this);
-    setApp(getParent()->getApp());    
   } 
   
   void UIWindow::freeW(void) {
@@ -793,7 +792,7 @@ FRAME_BR (187,198) (8x8)
   bool UIRoot::_RootMouseEvent(UIWindow *pWindow,UIRootMouseEvent Event,int x,int y) {
     /* Hidden or disabled? */
     if(pWindow->isHidden() || pWindow->isDisabled()) return false;
-    
+
     /* All root mouse events are handled the same... - first remap coords */
     int wx = x - pWindow->getPosition().nX;    
     int wy = y - pWindow->getPosition().nY;    
@@ -840,6 +839,8 @@ FRAME_BR (187,198) (8x8)
           case UI_ROOT_MOUSE_WHEEL_DOWN: pWindow->mouseWheelDown(wx,wy); break;
           case UI_ROOT_MOUSE_DOUBLE_CLICK: pWindow->mouseLDoubleClick(wx,wy); break;
         }
+      } else {
+	m_CurrentContextHelp = "";
       }
       
       /* Mkay */
@@ -1035,3 +1036,9 @@ FRAME_BR (187,198) (8x8)
   void UIRoot::activateRight(void) {
     _ActivateByVector(1,0);
   }
+
+void UIRoot::dispatchMouseHover() {
+  int nX,nY;
+  GameApp::getMousePos(&nX,&nY);
+  mouseHover(nX,nY);
+}

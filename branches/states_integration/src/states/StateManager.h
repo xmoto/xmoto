@@ -100,6 +100,9 @@ class GameApp;
     void mouseDoubleClick(int nButton);
     void mouseUp(int nButton);
 
+    /* ask to states to clean themself */
+    static void cleanStates();
+
   private:
     void calculateWhichStateIsRendered();
 

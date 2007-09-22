@@ -161,7 +161,7 @@ class StateManager;
       static std::string getTimeStamp(void);
       void quit(void);
       static std::string formatTime(float fSecs);
-      void getMousePos(int *pnX, int *pnY);
+      static void getMousePos(int *pnX, int *pnY);
       bool haveMouseMoved(void);
       
       static std::vector<std::string>* getDisplayModes(int windowed);
@@ -346,11 +346,6 @@ class StateManager;
       /* if true, don't ask for updating levels */
       bool m_updateAutomaticallyLevels;
 
-      /* In-game PAUSE menu fun */
-      UIFrame *m_pPauseMenu;
-      UIButton *m_pPauseMenuButtons[10];
-      int m_nNumPauseMenuButtons;
-
       /* In-game JUSTDEAD menu fun */
       UIFrame *m_pJustDeadMenu;
       int m_nJustDeadShade;
@@ -434,7 +429,6 @@ class StateManager;
       /* Helpers */
       void _UpdateWorldRecord(const std::string &LevelID);
       void _HandleMainMenu(void);  
-      void _HandlePauseMenu(void);
       void _HandleJustDeadMenu(void);
       void _HandleFinishMenu(void);
       void _HandleWebConfEditor(void);
@@ -458,7 +452,6 @@ class StateManager;
       void _MakeBestTimesWindow(UIBestTimes *pWindow,std::string PlayerName,std::string LevelID,
                                 float fFinishTime,std::string TimeStamp);      
       void _DrawMenuBackground(void); 
-      void _DispatchMouseHover(void);                               
       void _InitMenus(void);        
       void _InitMenus_PlayingMenus(void);
       void _InitMenus_MainMenu(void);

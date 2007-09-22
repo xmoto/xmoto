@@ -678,37 +678,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
 
     m_pFinishMenu->setPrimaryChild(m_pFinishMenuButtons[default_button]); /* default button: Play next */
-                      
-    /* Initialize pause menu */
-    m_pPauseMenu = new UIFrame(m_Renderer->getGUI(),drawLib->getDispWidth()/2 - 200,70,"",400,540);
-    m_pPauseMenu->setStyle(UI_FRAMESTYLE_MENU);
-    
-    m_pPauseMenuButtons[0] = new UIButton(m_pPauseMenu,0,0,GAMETEXT_RESUME,207,57);
-    m_pPauseMenuButtons[0]->setContextHelp(CONTEXTHELP_BACK_TO_GAME);
-    
-    m_pPauseMenuButtons[1] = new UIButton(m_pPauseMenu,0,0,GAMETEXT_RESTART,207,57);
-    m_pPauseMenuButtons[1]->setContextHelp(CONTEXTHELP_TRY_LEVEL_AGAIN_FROM_BEGINNING);
-    
-    m_pPauseMenuButtons[2] = new UIButton(m_pPauseMenu,0,0,GAMETEXT_PLAYNEXT,207,57);
-    m_pPauseMenuButtons[2]->setContextHelp(CONTEXTHELP_PLAY_NEXT_INSTEAD);
-    
-    m_pPauseMenuButtons[3] = new UIButton(m_pPauseMenu,0,0,GAMETEXT_ABORT,207,57);
-    m_pPauseMenuButtons[3]->setContextHelp(CONTEXTHELP_BACK_TO_MAIN_MENU);
-    
-    m_pPauseMenuButtons[4] = new UIButton(m_pPauseMenu,0,0,GAMETEXT_QUIT,207,57);
-    m_pPauseMenuButtons[4]->setContextHelp(CONTEXTHELP_QUIT_THE_GAME);    
-    m_nNumPauseMenuButtons = 5;
 
-    UIStatic *pPauseText = new UIStatic(m_pPauseMenu,0,100,GAMETEXT_PAUSE,m_pPauseMenu->getPosition().nWidth,36);
-    pPauseText->setFont(drawLib->getFontMedium());
-    
-    for(int i=0;i<m_nNumPauseMenuButtons;i++) {
-      m_pPauseMenuButtons[i]->setPosition(200 -207/2,10+m_pPauseMenu->getPosition().nHeight/2 - (m_nNumPauseMenuButtons*57)/2 + i*57,207,57);
-      m_pPauseMenuButtons[i]->setFont(drawLib->getFontSmall());
-    }
-    
-    m_pPauseMenu->setPrimaryChild(m_pPauseMenuButtons[0]); /* default button: Resume */
-    
     /* Initialize just-dead menu */
     m_pJustDeadMenu = new UIFrame(m_Renderer->getGUI(),drawLib->getDispWidth()/2 - 200,70,"",400,540);
     m_pJustDeadMenu->setStyle(UI_FRAMESTYLE_MENU);
@@ -1384,7 +1354,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     /* Hide menus */
     m_pMainMenu->showWindow(false);
-    m_pPauseMenu->showWindow(false);
     m_pJustDeadMenu->showWindow(false);
     m_pProfileEditor->showWindow(false);
     m_pFinishMenu->showWindow(false);
@@ -1691,77 +1660,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /* reselect the previous pack */
     if(v_selected_packName != "") {
       pTree->setSelectedPackByName(v_selected_packName);
-    }
-  }
-  
-  /*===========================================================================
-  Update pause menu
-  ===========================================================================*/
-  void GameApp::_HandlePauseMenu(void) {
-    /* Any of the pause menu buttons clicked? */
-    for(int i=0;i<m_nNumPauseMenuButtons;i++) {
-      if(m_pPauseMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
-        /* Uhm... is it likely that there's a next level? */
-	m_pPauseMenuButtons[i]->enableWindow(_IsThereANextLevel(m_PlaySpecificLevelId));
-      }
-
-      if(m_pPauseMenuButtons[i]->isClicked()) {
-        if(m_pPauseMenuButtons[i]->getCaption() == GAMETEXT_QUIT) {
-          if(m_pQuitMsgBox == NULL) {
-	    m_Renderer->getGUI()->setFont(drawLib->getFontSmall());
-            m_pQuitMsgBox = m_Renderer->getGUI()->msgBox(GAMETEXT_QUITMESSAGE,
-                                                        (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
-	  }
-        }
-        else if(m_pPauseMenuButtons[i]->getCaption() == GAMETEXT_ABORT) {
-          m_pPauseMenu->showWindow(false);
-	  if(m_MotoGame.Players().size() == 1) {
-	    m_db->stats_abortedLevel(m_xmsession->profile(),
-				     m_MotoGame.getLevelSrc()->Id(),
-				     m_MotoGame.getTime());
-	  }
-
-	  m_MotoGame.getCamera()->setPlayerToFollow(NULL);
-          m_MotoGame.endLevel();
-          m_InputHandler.resetScriptKeyHooks();                     
-          m_Renderer->unprepareForNewLevel();
-
-          setState(m_StateAfterPlaying);
-          //setState(GS_MENU);          
-        }
-        else if(m_pPauseMenuButtons[i]->getCaption() == GAMETEXT_RESTART) {
-          m_pPauseMenu->showWindow(false);
-	  _RestartLevel();
-        }
-        else if(m_pPauseMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
-	  std::string NextLevel = _DetermineNextLevel(m_PlaySpecificLevelId);
-	  if(NextLevel != "") {        
-	    m_pPauseMenu->showWindow(false);              
-	    if(m_MotoGame.Players().size() == 1) {
-	      m_db->stats_abortedLevel(m_xmsession->profile(),
-				       m_MotoGame.getLevelSrc()->Id(),
-				       m_MotoGame.getTime());
-	    }
-	    m_MotoGame.getCamera()->setPlayerToFollow(NULL);
-	    m_MotoGame.endLevel();
-	    m_InputHandler.resetScriptKeyHooks();                     
-	    m_Renderer->unprepareForNewLevel();                    
-	    
-	    m_PlaySpecificLevelId = NextLevel;              
-	    
-	    setPrePlayAnim(true);
-              setState(GS_PREPLAYING);
-          }
-        }
-        else if(m_pPauseMenuButtons[i]->getCaption() == GAMETEXT_RESUME) {
-          m_pPauseMenu->showWindow(false);
-	  m_MotoGame.setInfos("");
-          m_State = GS_PLAYING; /* no don't use setState() for this. Old code, depends on madness */
-        }
-
-        /* Don't process this clickin' more than once */
-        m_pPauseMenuButtons[i]->setClicked(false);
-      }
     }
   }
 

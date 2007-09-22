@@ -23,6 +23,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "StateManager.h"
 
+class UIRoot;
+class UIFrame;
+class DrawLib;
+
 class StatePause : public GameState {
   public:
   StatePause(GameApp* pGame,
@@ -47,8 +51,16 @@ class StatePause : public GameState {
   virtual void mouseDoubleClick(int nButton);
   virtual void mouseUp(int nButton);
   
+  static void clean();
+
   private:
   int m_nPauseShade;
+
+  /* GUI */
+  static UIRoot   *m_GUI;
+  static UIFrame  *m_pPauseMenu;
+
+  static void createGUIIfNeeded(GameApp* pGame);
 };
 
 #endif

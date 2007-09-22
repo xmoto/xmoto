@@ -406,7 +406,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     _DrawMenuBackground();
             
     /* Update mouse stuff */
-    _DispatchMouseHover();
+    m_Renderer->getGUI()->dispatchMouseHover();
     
     /* Blah... */
     if(m_State == GS_MENU)
@@ -552,7 +552,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
     
     /* Update mouse stuff */
-    _DispatchMouseHover();
+    m_Renderer->getGUI()->dispatchMouseHover();
     
     if(getXMTime() > m_fCoolDownEnd) {
       /* Blah... */
@@ -567,7 +567,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
 
     /* Update mouse stuff */
-    _DispatchMouseHover();
+    m_Renderer->getGUI()->dispatchMouseHover();
     
     /* Blah... */
     _HandleFinishMenu();

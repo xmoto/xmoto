@@ -232,6 +232,8 @@ GameApp::~GameApp() {
 
   delete m_xmsession;
   delete m_stateManager;
+
+  StateManager::cleanStates();
 }
 
 GameApp::GameApp() {
@@ -380,9 +382,6 @@ GameApp::GameApp() {
     unsigned int nrow;
     char *v_res;
 
-    /* Always clear context when changing state */
-    m_Renderer->getGUI()->clearContext();
-    
     /* reallow particle renderering when changing of state */
     ParticlesSource::setAllowParticleGeneration(true);
 
@@ -907,15 +906,6 @@ GameApp::GameApp() {
         drawLib->clearGraphics();
     }
   }
-
-  /*===========================================================================
-  GUI mouse hover
-  ===========================================================================*/
-  void GameApp::_DispatchMouseHover(void) {
-    int nX,nY;
-    getMousePos(&nX,&nY);
-    m_Renderer->getGUI()->mouseHover(nX,nY);
-  }
     
   /*===========================================================================
   Screenshooting
@@ -1299,8 +1289,12 @@ GameApp::GameApp() {
       break; 
       case GS_DEADJUST:
       {
-  break;
+	break;
       }
+
+    case GS_PAUSE: // states already in the state manager
+      m_stateManager->keyUp(nKey, mod);
+      break;
     }
   }
 
@@ -1310,7 +1304,6 @@ GameApp::GameApp() {
   void GameApp::mouseDoubleClick(int nButton) {
     switch(m_State) {
       case GS_MENU:
-      case GS_PAUSE:
       case GS_DEADMENU:
       case GS_FINISHED:
       case GS_EDIT_PROFILES:
@@ -1326,13 +1319,16 @@ GameApp::GameApp() {
         break;
       case GS_DEADJUST:
       break;
+
+    case GS_PAUSE: // states already in the state manager
+      m_stateManager->mouseDoubleClick(nButton);
+      break;
     }
   }
 
   void GameApp::mouseDown(int nButton) {
     switch(m_State) {
       case GS_MENU:
-      case GS_PAUSE:
       case GS_DEADMENU:
       case GS_FINISHED:
       case GS_EDIT_PROFILES:
@@ -1363,13 +1359,17 @@ GameApp::GameApp() {
       break;
       case GS_DEADJUST:
       break;
+
+      case GS_PAUSE: // states already in the state manager
+      m_stateManager->mouseDown(nButton);
+      break;
+
     }
   }
 
   void GameApp::mouseUp(int nButton) {
     switch(m_State) {
       case GS_MENU:
-      case GS_PAUSE:
       case GS_DEADMENU:
       case GS_FINISHED:
       case GS_EDIT_PROFILES:
@@ -1393,6 +1393,9 @@ GameApp::GameApp() {
 				 this);
         break;
       case GS_DEADJUST:
+      break;
+      case GS_PAUSE: // states already in the state manager
+      m_stateManager->mouseUp(nButton);
       break;
     }
   }
@@ -1846,7 +1849,7 @@ GameApp::GameApp() {
       }
       
       _DrawMenuBackground();
-      _DispatchMouseHover();
+      m_Renderer->getGUI()->dispatchMouseHover();
       
       m_Renderer->getGUI()->paint();
       
