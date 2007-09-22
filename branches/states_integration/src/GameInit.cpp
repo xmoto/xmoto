@@ -42,6 +42,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "SysMessage.h"
 #include "gui/specific/GUIXMoto.h"
 #include "Credits.h"
+#include "states/StateManager.h"
 
 #define DATABASE_FILE FS::getUserDirUTF8() + "/" + "xm.db"
 
@@ -78,6 +79,7 @@ int main(int nNumArgs,char **ppcArgs) {
 
   void GameApp::run(int nNumArgs,char **ppcArgs) {
     XMArguments v_xmArgs;
+    GameState* pState;
 
     /* check args */
     try {
@@ -242,6 +244,11 @@ int main(int nNumArgs,char **ppcArgs) {
               mouseUp(Event.button.button);
               break;
           }
+
+	  pState = m_stateManager->flush();
+	  if(pState != NULL) {
+	    delete pState;
+	  }
         }
           
         /* Clear screen */  

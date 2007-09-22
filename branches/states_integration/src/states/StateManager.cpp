@@ -19,7 +19,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateManager.h"
-
+#include "helpers/Log.h"
 
 StateManager::StateManager()
 {
@@ -31,6 +31,8 @@ StateManager::~StateManager()
 
 void StateManager::pushState(GameState* pNewState)
 {
+  Logger::Log("pushState");
+
   if(m_statesStack.size() != 0){
     (m_statesStack.back())->leaveAfterPush();
   }
@@ -43,6 +45,8 @@ void StateManager::pushState(GameState* pNewState)
 
 GameState* StateManager::popState()
 {
+  Logger::Log("popState");
+
   (m_statesStack.back())->leave();
   GameState* pState = m_statesStack.back();
   m_statesStack.pop_back();
@@ -53,6 +57,16 @@ GameState* StateManager::popState()
   calculateWhichStateIsRendered();
   
   return pState;
+}
+
+GameState* StateManager::flush() {
+  if(m_statesStack.size() != 0){
+    if(m_statesStack.back()->requestForEnd()) {
+      return popState();
+    }
+  }
+
+  return NULL;
 }
 
 GameState* StateManager::replaceState(GameState* pNewState)
@@ -102,26 +116,31 @@ void StateManager::render()
 
 void StateManager::keyDown(int nKey, SDLMod mod,int nChar)
 {
+  if(m_statesStack.size() == 0) return;
   (m_statesStack.back())->keyDown(nKey, mod, nChar);
 }
 
 void StateManager::keyUp(int nKey,   SDLMod mod)
 {
+  if(m_statesStack.size() == 0) return;
   (m_statesStack.back())->keyUp(nKey, mod);
 }
 
 void StateManager::mouseDown(int nButton)
 {
+  if(m_statesStack.size() == 0) return;
   (m_statesStack.back())->mouseDown(nButton);
 }
 
 void StateManager::mouseDoubleClick(int nButton)
 {
+  if(m_statesStack.size() == 0) return;
   (m_statesStack.back())->mouseDoubleClick(nButton);
 }
 
 void StateManager::mouseUp(int nButton)
 {
+  if(m_statesStack.size() == 0) return;
   (m_statesStack.back())->mouseUp(nButton);
 }
 
@@ -150,6 +169,7 @@ GameState::GameState(bool drawStateBehind,
   m_drawStateBehind    = drawStateBehind;
   m_updateStatesBehind = updateStatesBehind;
   m_pGame              = pGame;
+  m_requestForEnd      = false;
 }
 
 GameState::~GameState() {

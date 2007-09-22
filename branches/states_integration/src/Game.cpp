@@ -44,6 +44,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <curl/curl.h>
 #include <iomanip.h>
 #include "states/StateManager.h"
+#include "states/StatePause.h"
 
   bool GameApp::haveMouseMoved() {
     int nX,nY;
@@ -574,15 +575,7 @@ GameApp::GameApp() {
 			}
 			break;
 		}
-		case GS_PAUSE: {
-			m_MotoGame.setInfos(m_MotoGame.getLevelSrc()->Name());
-			v_newMusicPlaying = m_playingMusic;
-			//        SDL_ShowCursor(SDL_ENABLE);
-			m_bShowCursor = true;
 
-			/* Paused from GS_PLAYING */
-			break;
-		}
 		case GS_DEADJUST: {
 			m_MotoGame.setInfos(m_MotoGame.getLevelSrc()->Name());
 			v_newMusicPlaying = "";
@@ -1112,22 +1105,6 @@ GameApp::GameApp() {
         m_Renderer->getGUI()->keyDown(nKey, mod,nChar);
         break;
       }
-      case GS_PAUSE:
-        switch(nKey) {
-          case SDLK_ESCAPE:
-            /* Back to the game, please */
-	  m_MotoGame.setInfos("");
-	  m_pPauseMenu->showWindow(false);
-	  m_State = GS_PLAYING;
-	  break;
-	case SDLK_F3:
-	  switchLevelToFavorite(m_MotoGame.getLevelSrc()->Id(), true);
-	  break;
-          default:
-            m_Renderer->getGUI()->keyDown(nKey, mod,nChar);
-            break;      
-        }
-        break;
       case GS_DEADJUST:
       {
   switch(nKey) {
@@ -1245,9 +1222,7 @@ GameApp::GameApp() {
   case SDLK_ESCAPE:
 		if(isLockedMotoGame() == false) {
 			/* Escape pauses */
-			setState(GS_PAUSE);
-			m_pPauseMenu->showWindow(true);
-			m_nPauseShade = 0;
+		  m_stateManager->pushState(new StatePause(this));
 		}
 		break;
 	case SDLK_F2:
@@ -1283,6 +1258,7 @@ GameApp::GameApp() {
   case SDLK_F5:
     _RestartLevel(true);
     break;
+
           default:
             /* Notify the controller */
 	    m_InputHandler.handleInput(INPUT_KEY_DOWN,nKey,mod,
@@ -1290,8 +1266,13 @@ GameApp::GameApp() {
 				       m_MotoGame.Cameras(),
 				       this);
         }
-      break; 
+      break;
+
+    case GS_PAUSE: // states already in the state manager
+      m_stateManager->keyDown(nKey, mod, nChar);
+      break;
     }
+    
   }
 
   /*===========================================================================

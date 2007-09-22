@@ -35,7 +35,7 @@ class GameApp;
     virtual void enter()=0;
     virtual void leave()=0;
     /* called when a new state is pushed or poped on top of the
-       current one*/
+       current one */
     virtual void enterAfterPop()=0;
     virtual void leaveAfterPush()=0;
 
@@ -61,11 +61,18 @@ class GameApp;
       return m_updateStatesBehind;
     }
 
+    bool requestForEnd() {
+      return m_requestForEnd;
+    }
+
+  protected:
+    bool     m_requestForEnd;    
+    GameApp* m_pGame;
+
   private:
     bool     m_isHide;
     bool     m_drawStateBehind;
     bool     m_updateStatesBehind;
-    GameApp* m_pGame;
   };
 
   class StateManager {
@@ -77,6 +84,12 @@ class GameApp;
     GameState* popState();
     /* return the previous top state */
     GameState* replaceState(GameState* pNewState);
+
+    /*
+      after some events, a state can requestForEnd
+      -> return NULL or the state which requested to be ended
+    */
+    GameState* flush();
 
     void update();
     void render();

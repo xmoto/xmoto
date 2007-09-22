@@ -55,7 +55,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   ===========================================================================*/
   void GameApp::drawFrame(void) {
     /* This function is called by the framework as fast as possible */
-    bool bIsPaused = false;
+    bool bIsPaused = m_State == GS_PAUSE;
     bool bDrawFPS = false;
 
     /* Prepare frame rendering / game update */
@@ -87,9 +87,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         /* Delay a bit so we don't eat all CPU */
         setFrameDelay(10);
         break;
-        
-      case GS_PAUSE:
-        bIsPaused = true;
               
       case GS_DEADMENU:
       case GS_DEADJUST:
@@ -178,7 +175,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
              desired frame rate */
           int nADelay = 0;    
           
-	  if ((m_State == GS_FINISHED) || (m_State == GS_DEADMENU || m_State == GS_DEADJUST) || (m_State == GS_PAUSE)) {
+	  if ((m_State == GS_FINISHED) || (m_State == GS_DEADMENU || m_State == GS_DEADJUST)) {
             setFrameDelay(10);
           } else if(m_State == GS_REPLAYING && m_stopToUpdateReplay == true) {
 	    nADelay = 10;
@@ -201,11 +198,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
             }
           }        
 
-          if(m_State == GS_PAUSE) {
-            /* Okay, nifty thing. Paused! */
-            _PostUpdatePause();
-          }        
-          else if(m_State == GS_DEADJUST) {
+          if(m_State == GS_DEADJUST) {
             /* Hmm, you're dead and you know it. */
             _PostUpdateJustDead();
           }
@@ -217,12 +210,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
             /* Hmm, you've won and you know it. */
             _PostUpdateFinished();
           }        
-
-          /* Level and player name to draw? */
-          if(!m_bCreditsModeActive &&
-            (m_State == GS_DEADMENU || m_State == GS_DEADJUST || m_State == GS_PAUSE || m_State == GS_FINISHED || m_State == GS_REPLAYING) &&
-            m_MotoGame.getLevelSrc() != NULL) {
-	  }
          
           /* Context menu? */
           if(m_State == GS_PREPLAYING || m_State == GS_PLAYING || m_State == GS_REPLAYING || !m_bEnableContextHelp)
@@ -311,7 +298,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       case GS_EDIT_PROFILES:
       case GS_EDIT_WEBCONFIG:
       case GS_LEVEL_INFO_VIEWER:
-      case GS_PAUSE:
       case GS_DEADMENU:
       case GS_FINISHED:
       case GS_LEVELPACK_VIEWER:
@@ -335,14 +321,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     if(m_pQuitMsgBox != NULL) {
       UIMsgBoxButton Button = m_pQuitMsgBox->getClicked();
       if(Button == UI_MSGBOX_YES) {
-        if(m_State == GS_PAUSE) {
-	  if(m_MotoGame.Players().size() == 1) {
-	    m_db->stats_abortedLevel(m_xmsession->profile(),
-				     m_MotoGame.getLevelSrc()->Id(),
-				     m_MotoGame.getTime()); 
-	  }
-        }
-      
         quit();      
         delete m_pQuitMsgBox;
         m_pQuitMsgBox = NULL;
@@ -550,19 +528,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	setState(GS_DEADJUST);
       }
     }
-  }
-
-  void GameApp::_PostUpdatePause(void) {
-    if(m_xmsession->ugly() == false) {
-      if(m_nPauseShade < 150) m_nPauseShade+=8;
-      getDrawLib()->drawBox(Vector2f(0,0),Vector2f(getDrawLib()->getDispWidth(),getDrawLib()->getDispHeight()),0,MAKE_COLOR(0,0,0,m_nPauseShade));                                        
-    }
-
-    /* Update mouse stuff */
-    _DispatchMouseHover();
-    
-    /* Blah... */
-    _HandlePauseMenu();
   }
 
   void GameApp::_PostUpdateJustDead(void) {

@@ -25,9 +25,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
   class StatePause : public GameState {
   public:
-    StatePause(bool drawStateBehind,
-	       bool updateStatesBehind,
-	       GameApp* pGame);
+    StatePause(GameApp* pGame,
+	       bool drawStateBehind    = true,
+	       bool updateStatesBehind = false
+	       );
     virtual ~StatePause();
 
     virtual void enter();

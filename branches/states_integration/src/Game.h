@@ -189,6 +189,9 @@ class StateManager;
 	return m_fFramesPerSecond;
       }
 
+      /* public so that we can add progressively the states ; to be removed */
+      OldGameState m_State; /* Current state */      
+
    protected:
       void createDefaultConfig();
 
@@ -212,7 +215,6 @@ class StateManager;
       bool m_allowReplayInterpolation;
 
       InputHandler m_InputHandler;              /* The glorious input handler */
-      OldGameState m_State;                        /* Current state */      
       OldGameState m_StateAfterPlaying;            /* State that should be used later */
       MotoGame m_MotoGame;                      /* Game object */      
       XMMotoGameHooks m_MotoGameHooks;
@@ -548,7 +550,6 @@ class StateManager;
       int _UpdateGamePlaying(void); /* returns number of physics steps performed */
       int _UpdateGameReplaying(void); /* return whether the game state is valid */
       void _PostUpdatePlaying(void);
-      void _PostUpdatePause(void);
       void _PostUpdateMenuDead(void);
       void _PostUpdateJustDead(void);
       void _PostUpdateFinished(void);

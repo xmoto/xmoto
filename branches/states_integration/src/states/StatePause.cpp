@@ -19,15 +19,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StatePause.h"
+#include "Game.h"
 
-StatePause::StatePause(bool drawStateBehind,
-		       bool updateStatesBehind,
-		       GameApp* pGame):
+StatePause::StatePause(GameApp* pGame,
+		       bool drawStateBehind,
+		       bool updateStatesBehind):
   GameState(drawStateBehind,
 	    updateStatesBehind,
 	    pGame)
 {
-
+  
 }
 
 StatePause::~StatePause()
@@ -35,15 +36,21 @@ StatePause::~StatePause()
 
 }
 
-
 void StatePause::enter()
 {
-
+  m_pGame->m_State = GS_PAUSE; // to be removed, just the time states are finished
+//  m_MotoGame.setInfos(m_MotoGame.getLevelSrc()->Name());
+//  m_bShowCursor = true;
+//
+//  m_pPauseMenu->showWindow(true);
+//  m_nPauseShade = 0;
 }
 
 void StatePause::leave()
 {
-
+  m_pGame->m_State = GS_PLAYING; // to be removed, just the time states are finished
+//  m_MotoGame.setInfos("");
+//  m_pPauseMenu->showWindow(false);
 }
 
 void StatePause::enterAfterPop()
@@ -63,12 +70,39 @@ void StatePause::update()
 
 void StatePause::render()
 {
-
+  // rendering of the gui must be done by the mother call : to add here when states will be almost finished
+//  setFrameDelay(10);
+//
+//    if(m_xmsession->ugly() == false) {
+//      if(m_nPauseShade < 150) m_nPauseShade+=8;
+//      getDrawLib()->drawBox(Vector2f(0,0),Vector2f(getDrawLib()->getDispWidth(),getDrawLib()->getDispHeight()),0,MAKE_COLOR(0,0,0,m_nPauseShade));                                        
+//    }
+//
+//    /* Update mouse stuff */
+//    _DispatchMouseHover();
+//    
+//    /* Blah... */
+//    _HandlePauseMenu();
 }
 
 void StatePause::keyDown(int nKey, SDLMod mod,int nChar)
 {
+  switch(nKey) {
 
+  case SDLK_ESCAPE:
+    /* quit this state */
+    m_requestForEnd = true;
+    break;
+
+//  case SDLK_F3:
+//    switchLevelToFavorite(m_MotoGame.getLevelSrc()->Id(), true);
+//    break;
+//
+//  default:
+//    m_Renderer->getGUI()->keyDown(nKey, mod,nChar);
+//    break;      
+//
+  }
 }
 
 void StatePause::keyUp(int nKey,   SDLMod mod)
