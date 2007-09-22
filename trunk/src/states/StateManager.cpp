@@ -44,7 +44,8 @@ void StateManager::pushState(GameState* pNewState)
 GameState* StateManager::popState()
 {
   (m_statesStack.back())->leave();
-  GameState* pState = m_statesStack.pop_back();
+  GameState* pState = m_statesStack.back();
+  m_statesStack.pop_back();
   
   if(m_statesStack.size() != 0)
     (m_statesStack.back())->enterAfterPop();
@@ -60,7 +61,8 @@ GameState* StateManager::replaceState(GameState* pNewState)
 
   if(m_statesStack.size() != 0){
     (m_statesStack.back())->leave();
-    pPreviousState = m_statesStack.pop_back();
+    pPreviousState = m_statesStack.back();
+    m_statesStack.pop_back();
   }
   
   m_statesStack.push_back(pNewState);
@@ -143,10 +145,12 @@ void StateManager::calculateWhichStateIsRendered()
 
 GameState::GameState(bool drawStateBehind,
 		     bool updateStatesBehind,
-		     GameApp* pGame):
-  m_drawStateBehind    = drawStateBehind,
-  m_updateStatesBehind = updateStatesBehind
-  m_pGame              = pGame
+		     GameApp* pGame)
 {
+  m_drawStateBehind    = drawStateBehind;
+  m_updateStatesBehind = updateStatesBehind;
+  m_pGame              = pGame;
+}
 
+GameState::~GameState() {
 }

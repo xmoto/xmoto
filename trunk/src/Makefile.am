@@ -97,6 +97,35 @@ common_SOURCES = Image.cpp \
   svn_version.h \
   svn_version.cpp
 
+states_SOURCES = states/StateManager.h       	  \
+                 states/StateManager.cpp     	  \
+                 states/StateMenu.h          	  \
+                 states/StateMenu.cpp        	  \
+                 states/StatePause.h         	  \
+                 states/StatePause.cpp       	  \
+                 states/StateDeadJust.h      	  \
+                 states/StateDeadJust.cpp    	  \
+                 states/StateDeadMenu.h      	  \
+                 states/StateDeadMenu.cpp    	  \
+                 states/StateFinished.h      	  \
+                 states/StateFinished.cpp    	  \
+                 states/StateCreditsMode.h   	  \
+                 states/StateCreditsMode.cpp 	  \
+                 states/StateEditProfile.h   	  \
+                 states/StateEditProfile.cpp 	  \
+                 states/StateEditWebConfig.h 	  \
+                 states/StateEditWebConfig.cpp   \
+                 states/StateLevelInfoViewer.h   \
+                 states/StateLevelInfoViewer.cpp \
+                 states/StateLevelPackViewer.h   \
+                 states/StateLevelPackViewer.cpp \
+                 states/StatePlaying.h           \
+                 states/StatePlaying.cpp         \
+                 states/StatePreplaying.h        \
+                 states/StatePreplaying.cpp      \
+                 states/StateReplaying.h         \
+                 states/StateReplaying.cpp
+
 bz2_SOURCES = bzip2/blocksort.c     \
               bzip2/bzlib.c         \
               bzip2/bzlib.h         \
@@ -114,6 +143,7 @@ endif
 common_SOURCES += $(gui_basic_SOURCES)
 common_SOURCES += $(gui_specific_SOURCES)
 common_SOURCES += $(drawlib_SOURCES)
+common_SOURCES += $(states_SOURCES)
 
 common_LDADD = $(GL_LIBS) $(SDL_LIBS) $(LIBINTL)
 if WIN32

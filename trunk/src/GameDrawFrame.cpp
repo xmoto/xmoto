@@ -256,6 +256,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       }
     }
     
+    /* draw the game states */
+
+
+    /* */
+
     /* Draw a little FPS counter */
     if(bDrawFPS) {
       char cTemp[256];        
