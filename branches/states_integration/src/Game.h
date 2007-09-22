@@ -134,6 +134,8 @@ class StateManager;
       std::string getConfigThemeName(ThemeChoicer *p_themeChoicer);
 
       /* Methods */
+      MotoGame* getMotoGame();
+
       void setState(OldGameState s);
       void notifyMsg(std::string Msg);      
       void setPrePlayAnim(bool pEnabled);
@@ -188,6 +190,10 @@ class StateManager;
       float getFPS(void) {
 	return m_fFramesPerSecond;
       }
+
+      XMSession* getSession();
+      void setShowCursor(bool bValue);
+      void switchLevelToFavorite(const std::string& i_levelId, bool v_displayMessage = false);
 
       /* public so that we can add progressively the states ; to be removed */
       OldGameState m_State; /* Current state */      
@@ -342,7 +348,6 @@ class StateManager;
 
       /* In-game PAUSE menu fun */
       UIFrame *m_pPauseMenu;
-      int m_nPauseShade;
       UIButton *m_pPauseMenuButtons[10];
       int m_nNumPauseMenuButtons;
 
@@ -572,7 +577,6 @@ class StateManager;
       void updatePlayerTag();
       
       void addLevelToFavorite(const std::string& i_levelId);
-      void switchLevelToFavorite(const std::string& i_levelId, bool v_displayMessage = false);
 
       void switchFollowCamera();
 

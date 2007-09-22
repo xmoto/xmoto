@@ -40,6 +40,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Credits.h"
 #include "xmscene/Camera.h"
 #include "xmscene/Entity.h"
+#include "states/StateManager.h"
 
 #include <curl/curl.h>
 
@@ -87,13 +88,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         /* Delay a bit so we don't eat all CPU */
         setFrameDelay(10);
         break;
-              
+
+      case GS_PAUSE:
       case GS_DEADMENU:
       case GS_DEADJUST:
       case GS_FINISHED:
       case GS_REPLAYING:
       case GS_PREPLAYING:
       case GS_PLAYING: {
+
         /* These states all requires that the actual game graphics are rendered (i.e. inside 
            the game, not the main menu) */
         try {
@@ -242,10 +245,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         }
       }
     }
-    
-    /* draw the game states */
 
+    // states managed via the state manager
+    if(m_State == GS_PAUSE) {
+      /* draw the game states */
+      m_stateManager->update();
+      m_stateManager->render(); 
+    }
 
+ 
     /* */
 
     /* Draw a little FPS counter */

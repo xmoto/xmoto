@@ -107,7 +107,7 @@ void StateManager::render()
   std::vector<GameState*>::iterator stateIterator = m_statesStack.begin();
 
   while(stateIterator != m_statesStack.end()){
-    if((*stateIterator)->isHide() != false)
+    if((*stateIterator)->isHide() == false)
       (*stateIterator)->render();
     
     stateIterator++;
@@ -166,6 +166,7 @@ GameState::GameState(bool drawStateBehind,
 		     bool updateStatesBehind,
 		     GameApp* pGame)
 {
+  m_isHide             = false;
   m_drawStateBehind    = drawStateBehind;
   m_updateStatesBehind = updateStatesBehind;
   m_pGame              = pGame;

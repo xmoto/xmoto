@@ -331,7 +331,6 @@ int main(int nNumArgs,char **ppcArgs) {
     m_fLastPhysTime = getXMTime() - PHYS_STEP_SIZE;
     
     /* And stuff */
-    m_nPauseShade = 0;
     m_nJustDeadShade = 0;
     m_nFinishShade = 0;
     

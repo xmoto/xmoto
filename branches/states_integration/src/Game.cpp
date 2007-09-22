@@ -2987,3 +2987,15 @@ void GameApp::switchFollowCamera() {
 			getPlayerToFollow()->
 			getQuickDescription());
 }
+
+XMSession* GameApp::getSession() {
+  return m_xmsession;
+}
+
+MotoGame* GameApp::getMotoGame() {
+  return &m_MotoGame;
+}
+
+void GameApp::setShowCursor(bool bValue) {
+  m_bShowCursor = bValue;
+}
