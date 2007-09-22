@@ -43,7 +43,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <curl/curl.h>
 #include <iomanip.h>
-
+#include "states/StateManager.h"
 
   bool GameApp::haveMouseMoved() {
     int nX,nY;
@@ -230,6 +230,7 @@ GameApp::~GameApp() {
   }
 
   delete m_xmsession;
+  delete m_stateManager;
 }
 
 GameApp::GameApp() {
@@ -315,6 +316,8 @@ GameApp::GameApp() {
   m_quickStartList = NULL;
 
   m_db = NULL;
+
+  m_stateManager = new StateManager();
 }
     
   std::string GameApp::splitText(const std::string &str, int p_breakLineLength) {
@@ -366,7 +369,7 @@ GameApp::GameApp() {
   /*===========================================================================
   Change game state
   ===========================================================================*/
-  void GameApp::setState(GameState s) {
+  void GameApp::setState(OldGameState s) {
     /* This function is called to perform a controlled game state change.
        The various states are described below in the switch-statement */  
     m_State = s;

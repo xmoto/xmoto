@@ -57,11 +57,12 @@ class UILevelList;
 class LevelsManager;
 class Credits;
 class SoundSample;
+class StateManager;
 
    /*===========================================================================
    Overall game states
    ===========================================================================*/
-   enum GameState {
+   enum OldGameState {
      GS_UNASSIGNED = 0,
      GS_MENU,                  /* In the game menu */
      GS_PREPLAYING,            /* Just before the game start */
@@ -133,7 +134,7 @@ class SoundSample;
       std::string getConfigThemeName(ThemeChoicer *p_themeChoicer);
 
       /* Methods */
-      void setState(GameState s);
+      void setState(OldGameState s);
       void notifyMsg(std::string Msg);      
       void setPrePlayAnim(bool pEnabled);
       void reloadTheme();
@@ -211,8 +212,8 @@ class SoundSample;
       bool m_allowReplayInterpolation;
 
       InputHandler m_InputHandler;              /* The glorious input handler */
-      GameState m_State;                        /* Current state */      
-      GameState m_StateAfterPlaying;            /* State that should be used later */
+      OldGameState m_State;                        /* Current state */      
+      OldGameState m_StateAfterPlaying;            /* State that should be used later */
       MotoGame m_MotoGame;                      /* Game object */      
       XMMotoGameHooks m_MotoGameHooks;
       GameRenderer* m_Renderer;                  /* Renderer */
@@ -409,6 +410,7 @@ class SoundSample;
       DrawLib *drawLib;
 
       XMSession* m_xmsession;
+      StateManager* m_stateManager;
 
       int m_nFrameDelay;		/* # of millisecs to wait after screen buffer swap */
       
