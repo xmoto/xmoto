@@ -1696,7 +1696,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
       if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
         /* Uhm... is it likely that there's a next level? */
-	m_pFinishMenuButtons[i]->enableWindow(_IsThereANextLevel(m_PlaySpecificLevelId));
+	m_pFinishMenuButtons[i]->enableWindow(isThereANextLevel(m_PlaySpecificLevelId));
       }
       
       if(m_pFinishMenuButtons[i]->isClicked()) {
@@ -1746,7 +1746,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	  m_Renderer->hideMsgNewHighscore();
           m_pBestTimes->showWindow(false);
 
-	  _RestartLevel();
+	  restartLevel();
         }
         else if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_ABORT) {
           m_pFinishMenu->showWindow(false);
@@ -2250,7 +2250,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
       if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
         /* Uhm... is it likely that there's a next level? */
-	m_pJustDeadMenuButtons[i]->enableWindow(_IsThereANextLevel(m_PlaySpecificLevelId));
+	m_pJustDeadMenuButtons[i]->enableWindow(isThereANextLevel(m_PlaySpecificLevelId));
       }
       
       if(m_pJustDeadMenuButtons[i]->isClicked()) {
@@ -2264,7 +2264,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         else if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_TRYAGAIN) {
 
           m_pJustDeadMenu->showWindow(false);
-	  _RestartLevel();
+	  restartLevel();
         }
         else if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
 	  std::string NextLevel = _DetermineNextLevel(m_PlaySpecificLevelId);

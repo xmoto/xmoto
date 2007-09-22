@@ -195,8 +195,17 @@ class StateManager;
       void setShowCursor(bool bValue);
       void switchLevelToFavorite(const std::string& i_levelId, bool v_displayMessage = false);
 
+      bool isThereANextLevel(const std::string& i_id_level);
+      bool isThereAPreviousLevel(const std::string& i_id_level); 
+
+      // to call while playing
+      void restartLevel(bool i_reloadLevel = false);
+      void abortPlaying();
+      void playNextLevel();
+
       /* public so that we can add progressively the states ; to be removed */
       OldGameState m_State; /* Current state */      
+      OldGameState m_StateAfterPlaying;            /* State that should be used later */
 
    protected:
       void createDefaultConfig();
@@ -221,7 +230,6 @@ class StateManager;
       bool m_allowReplayInterpolation;
 
       InputHandler m_InputHandler;              /* The glorious input handler */
-      OldGameState m_StateAfterPlaying;            /* State that should be used later */
       MotoGame m_MotoGame;                      /* Game object */      
       XMMotoGameHooks m_MotoGameHooks;
       GameRenderer* m_Renderer;                  /* Renderer */
@@ -478,11 +486,7 @@ class StateManager;
       int _IsKeyInUse(const std::string &Key);
       
       std::string _DetermineNextLevel(const std::string& i_id_level);
-      bool _IsThereANextLevel(const std::string& i_id_level);
       std::string _DeterminePreviousLevel(const std::string& i_id_level);
-      bool _IsThereAPreviousLevel(const std::string& i_id_level); 
-     
-      void _RestartLevel(bool i_reloadLevel = false);
   
       void _InitWebConf(void);
       void _CheckForExtraLevels(void);

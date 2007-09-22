@@ -1100,7 +1100,7 @@ GameApp::GameApp() {
   switch(nKey) {
   case SDLK_RETURN:
     m_MotoGame.clearGameMessages();
-    _RestartLevel();
+    restartLevel();
     break;
   case SDLK_ESCAPE:
     m_MotoGame.clearGameMessages();
@@ -1222,7 +1222,7 @@ GameApp::GameApp() {
 	  switchLevelToFavorite(m_MotoGame.getLevelSrc()->Id(), true);
 	  break;
 	case SDLK_PAGEUP:
-	  if(_IsThereANextLevel(m_PlaySpecificLevelId)) {
+	  if(isThereANextLevel(m_PlaySpecificLevelId)) {
 	    m_db->stats_abortedLevel(m_xmsession->profile(), m_MotoGame.getLevelSrc()->Id(), m_MotoGame.getTime());
 	    m_MotoGame.endLevel();
 	    m_Renderer->unprepareForNewLevel();
@@ -1232,7 +1232,7 @@ GameApp::GameApp() {
 	  }
 	  break;
 	case SDLK_PAGEDOWN:
-	  if(_IsThereAPreviousLevel(m_PlaySpecificLevelId)) {
+	  if(isThereAPreviousLevel(m_PlaySpecificLevelId)) {
 	    m_db-> stats_abortedLevel(m_xmsession->profile(), m_MotoGame.getLevelSrc()->Id(), m_MotoGame.getTime());
 	    m_MotoGame.endLevel();
 	    m_Renderer->unprepareForNewLevel();
@@ -1243,10 +1243,10 @@ GameApp::GameApp() {
 	  break;
   case SDLK_RETURN:
     /* retart immediatly the level */
-    _RestartLevel();
+    restartLevel();
     break;
   case SDLK_F5:
-    _RestartLevel(true);
+    restartLevel(true);
     break;
 
           default:
@@ -1464,7 +1464,7 @@ GameApp::GameApp() {
     return *((std::string*)m_currentPlayingList->getEntries()[0]->pvUser);
   }
   
-  bool GameApp::_IsThereANextLevel(const std::string& i_id_level) {
+  bool GameApp::isThereANextLevel(const std::string& i_id_level) {
     return _DetermineNextLevel(i_id_level) != "";
   }
 
@@ -1481,7 +1481,7 @@ GameApp::GameApp() {
     return *((std::string*)m_currentPlayingList->getEntries()[m_currentPlayingList->getEntries().size()-1]->pvUser);
   }
   
-  bool GameApp::_IsThereAPreviousLevel(const std::string& i_id_level) {
+  bool GameApp::isThereAPreviousLevel(const std::string& i_id_level) {
     return _DeterminePreviousLevel(i_id_level) != "";
   } 
 
@@ -1753,7 +1753,7 @@ GameApp::GameApp() {
       } 
   }
 
-  void GameApp::_RestartLevel(bool i_reloadLevel) {
+  void GameApp::restartLevel(bool i_reloadLevel) {
 		lockMotoGame(false);
 
     /* Update stats */        
@@ -1780,6 +1780,19 @@ GameApp::GameApp() {
 
     setState(GS_PREPLAYING);   
   }
+
+void GameApp::abortPlaying() {
+  if(m_MotoGame.Players().size() == 1) {
+    m_db->stats_abortedLevel(m_xmsession->profile(),
+			     m_MotoGame.getLevelSrc()->Id(),
+			     m_MotoGame.getTime());
+  }
+  
+  m_MotoGame.getCamera()->setPlayerToFollow(NULL);
+  m_MotoGame.endLevel();
+  m_InputHandler.resetScriptKeyHooks();                     
+  m_Renderer->unprepareForNewLevel();
+}
 
   /*===========================================================================
   WWWAppInterface implementation
@@ -3001,4 +3014,23 @@ MotoGame* GameApp::getMotoGame() {
 
 void GameApp::setShowCursor(bool bValue) {
   m_bShowCursor = bValue;
+}
+
+void GameApp::playNextLevel() {
+  std::string NextLevel = _DetermineNextLevel(m_PlaySpecificLevelId);
+  if(NextLevel != "") {        
+    if(m_MotoGame.Players().size() == 1) {
+      m_db->stats_abortedLevel(m_xmsession->profile(),
+			       m_MotoGame.getLevelSrc()->Id(),
+			       m_MotoGame.getTime());
+    }
+    m_MotoGame.getCamera()->setPlayerToFollow(NULL);
+    m_MotoGame.endLevel();
+    m_InputHandler.resetScriptKeyHooks();                     
+    m_Renderer->unprepareForNewLevel();                    
+    
+    m_PlaySpecificLevelId = NextLevel;              
+    
+    setPrePlayAnim(true);
+  }
 }

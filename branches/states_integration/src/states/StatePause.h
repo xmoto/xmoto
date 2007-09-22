@@ -56,10 +56,10 @@ class StatePause : public GameState {
   private:
   int m_nPauseShade;
 
+  void checkEvents();
+
   /* GUI */
   static UIRoot   *m_GUI;
-  static UIFrame  *m_pPauseMenu;
-
   static void createGUIIfNeeded(GameApp* pGame);
 };
 

@@ -55,6 +55,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   Draw frame
   ===========================================================================*/
   void GameApp::drawFrame(void) {
+
     /* This function is called by the framework as fast as possible */
     bool bIsPaused = m_State == GS_PAUSE;
     bool bDrawFPS = false;
