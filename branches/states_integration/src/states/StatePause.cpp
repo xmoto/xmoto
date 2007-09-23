@@ -24,6 +24,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "drawlib/DrawLib.h"
 #include "GameText.h"
 
+#define PAUSE_SHADING_TIME 0.3
+#define PAUSE_SHADING_VALUE 150
+
 /* static members */
 UIRoot*  StatePause::m_GUI        = NULL;
 
@@ -135,10 +138,10 @@ void StatePause::render()
     float v_currentTime = GameApp::getXMTime();
     int   v_nPauseShade;
 
-    if(v_currentTime - m_nPauseShadeTime < 5.0) {
-      v_nPauseShade = (int ) ((v_currentTime - m_nPauseShadeTime) * 30.0);
+    if(v_currentTime - m_nPauseShadeTime < PAUSE_SHADING_TIME) {
+      v_nPauseShade = (int ) ((v_currentTime - m_nPauseShadeTime) * (PAUSE_SHADING_VALUE / PAUSE_SHADING_TIME));
     } else {
-      v_nPauseShade = 150;
+      v_nPauseShade = PAUSE_SHADING_VALUE;
     }
 
     m_pGame->getDrawLib()->drawBox(Vector2f(0,0),
