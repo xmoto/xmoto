@@ -610,6 +610,9 @@ int main(int nNumArgs,char **ppcArgs) {
       }
     }
 
+    /* build handler */
+    m_InputHandler.init(&m_Config); // must be initialized before call to drawFrame
+
     /* final initialisation */
     Logger::Log("UserPreInit ended at %.3f", GameApp::getXMTime());
     /* display what must be displayed */
@@ -630,9 +633,6 @@ int main(int nNumArgs,char **ppcArgs) {
     
     /* load levels lists */
     _UpdateLevelsLists();
-    
-    /* build handler */
-    m_InputHandler.init(&m_Config);
 
     /* load cursor */
     pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "Cursor");
