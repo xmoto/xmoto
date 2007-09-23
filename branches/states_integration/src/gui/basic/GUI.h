@@ -202,7 +202,7 @@ class GameApp;
     
       /* Data interface */
       UIWindow *getPrimaryChild(void) {return m_pPrimaryChild;}
-      void setPrimaryChild(UIWindow *p) {m_pPrimaryChild = p;}
+      void setPrimaryChild(UIWindow *p) {m_pPrimaryChild = p; if(m_pPrimaryChild != NULL) {m_pPrimaryChild->setActive(true);}}
       FontManager *getFont() {return m_curFont;}
       void setFont(FontManager *pFont) {m_curFont = pFont;}
       UIWindow *getParent(void) {return m_pParent;}
