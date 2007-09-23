@@ -43,7 +43,7 @@ StatePause::~StatePause()
 
 void StatePause::enter()
 {
-  m_nPauseShade = 0; 
+  m_nPauseShadeTime = GameApp::getXMTime();
   m_pGame->m_State = GS_PAUSE; // to be removed, just the time states are finished
   m_pGame->getMotoGame()->setInfos(m_pGame->getMotoGame()->getLevelSrc()->Name());
   m_pGame->setShowCursor(true);
@@ -57,7 +57,6 @@ void StatePause::enter()
 
 void StatePause::leave()
 {
-  m_pGame->m_State = GS_PLAYING; // to be removed, just the time states are finished
   m_pGame->getMotoGame()->setInfos("");
 }
 
@@ -76,6 +75,7 @@ void StatePause::checkEvents() {
   if(pResumeButton->isClicked()) {
     pResumeButton->setClicked(false);
 
+    m_pGame->m_State = GS_PLAYING; // to be removed, just the time states are finished
     m_requestForEnd = true;
   }
 
@@ -83,6 +83,7 @@ void StatePause::checkEvents() {
   if(pRestartButton->isClicked()) {
     pRestartButton->setClicked(false);
 
+    m_pGame->m_State = GS_PLAYING; // to be removed, just the time states are finished
     m_pGame->restartLevel();
     m_requestForEnd = true;
   }
@@ -100,8 +101,8 @@ void StatePause::checkEvents() {
   if(pAbortButton->isClicked()) {
     pAbortButton->setClicked(false);
 
-    //m_pGame->abortPlaying();
-    //m_pGame->setState(m_pGame->m_StateAfterPlaying); // to be removed once states will be finished
+    m_pGame->abortPlaying();
+    m_pGame->setState(m_pGame->m_StateAfterPlaying); // to be removed once states will be finished
     m_requestForEnd = true;
   }
 
@@ -113,6 +114,9 @@ void StatePause::checkEvents() {
 
     //m_pQuitMsgBox = m_GUI->msgBox(GAMETEXT_QUITMESSAGE,
     //			  (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
+
+    m_pGame->requestEnd(); 
+
     m_requestForEnd = true;
   }
 }
@@ -128,13 +132,20 @@ void StatePause::render()
   m_pGame->setFrameDelay(10);
 
   if(m_pGame->getSession()->ugly() == false) {
-    if(m_nPauseShade < 150) m_nPauseShade+=8;
+    float v_currentTime = GameApp::getXMTime();
+    int   v_nPauseShade;
+
+    if(v_currentTime - m_nPauseShadeTime < 5.0) {
+      v_nPauseShade = (int ) ((v_currentTime - m_nPauseShadeTime) * 30.0);
+    } else {
+      v_nPauseShade = 150;
+    }
 
     m_pGame->getDrawLib()->drawBox(Vector2f(0,0),
 				   Vector2f(m_pGame->getDrawLib()->getDispWidth(),
 					    m_pGame->getDrawLib()->getDispHeight()),
 				   0,
-				   MAKE_COLOR(0,0,0, m_nPauseShade)
+				   MAKE_COLOR(0,0,0, v_nPauseShade)
 				   );
   }
 
@@ -147,6 +158,7 @@ void StatePause::keyDown(int nKey, SDLMod mod,int nChar)
 
   case SDLK_ESCAPE:
     /* quit this state */
+    m_pGame->m_State = GS_PLAYING; // to be removed, just the time states are finished
     m_requestForEnd = true;
     break;
 

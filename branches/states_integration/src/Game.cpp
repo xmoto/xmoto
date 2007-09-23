@@ -784,7 +784,7 @@ GameApp::GameApp() {
 			break;
 		}
     }
-        
+
     m_fLastPhysTime = getXMTime() - PHYS_STEP_SIZE;
 
     /* manage music */
@@ -3033,4 +3033,8 @@ void GameApp::playNextLevel() {
     
     setPrePlayAnim(true);
   }
+}
+
+void GameApp::requestEnd() {
+  m_bQuit = true;
 }

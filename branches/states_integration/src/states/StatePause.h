@@ -54,7 +54,7 @@ class StatePause : public GameState {
   static void clean();
 
   private:
-  int m_nPauseShade;
+  float m_nPauseShadeTime;
 
   void checkEvents();
 
