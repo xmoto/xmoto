@@ -3396,7 +3396,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
     pList->clear();
 
-    v_result = m_db->readDB("SELECT id_room, name FROM webrooms ORDER BY id_room ASC;",
+    v_result = m_db->readDB("SELECT id_room, name FROM webrooms ORDER BY name;",
 			    nrow);
 
     for(unsigned int i=0; i<nrow; i++) {
