@@ -263,6 +263,11 @@ void StateFinished::clean() {
 void StateFinished::createGUIIfNeeded(GameApp* pGame) {
   if(m_sGUI != NULL) return;
 
+  UIFrame     *v_frame;
+  UIBestTimes *v_pBestTimes;
+  UIButton    *v_button;
+  UIStatic    *v_pFinishText;
+
   m_sGUI = new UIRoot();
   m_sGUI->setApp(pGame);
   m_sGUI->setFont(pGame->getDrawLib()->getFontSmall()); 
@@ -270,22 +275,45 @@ void StateFinished::createGUIIfNeeded(GameApp* pGame) {
 		      pGame->getDrawLib()->getDispWidth(),
 		      pGame->getDrawLib()->getDispHeight());
   
-//
-//              m_pFinishMenu->showWindow(false);
-//        m_Renderer->hideMsgNewHighscore();
-//              m_pBestTimes->showWindow(false);
-//
-//      /* In-game FINISH menu fun */
-//      UIFrame *m_pFinishMenu;
-//      int m_nFinishShade;
-//      UIButton *m_pFinishMenuButtons[10];
-//      UIStatic *m_pNewWorldRecord;
-//
-//      int m_nNumFinishMenuButtons;      
-//      UIBestTimes *m_pBestTimes;
+
+  v_frame = new UIFrame(m_sGUI, 300, 30, "", 400, 540);
+  v_frame->setStyle(UI_FRAMESTYLE_MENU);
+
+  v_pFinishText = new UIStatic(v_frame, 0, 100, GAMETEXT_FINISH, v_frame->getPosition().nWidth, 36);
+  v_pFinishText->setFont(pGame->getDrawLib()->getFontMedium());
+
+  v_pBestTimes = new UIBestTimes(m_sGUI, 10, 50, "", 290, 500);
+  v_pBestTimes->setFont(pGame->getDrawLib()->getFontMedium());
+  v_pBestTimes->setHFont(pGame->getDrawLib()->getFontMedium());
+
+  v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 6*57/2 + 0*49 + 25, GAMETEXT_TRYAGAIN, 207, 57);
+  v_button->setContextHelp(CONTEXTHELP_PLAY_THIS_LEVEL_AGAIN);
+  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+  v_frame->setPrimaryChild(v_button); /* default button */
+
+  v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 6*57/2 + 1*49 + 25, GAMETEXT_PLAYNEXT, 207, 57);
+  v_button->setContextHelp(CONTEXTHELP_PLAY_NEXT_LEVEL);
+  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+
+  v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 6*57/2 + 2*49 + 25, GAMETEXT_SAVEREPLAY, 207, 57);
+  v_button->setContextHelp(CONTEXTHELP_SAVE_A_REPLAY);
+  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+
+  v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 6*57/2 + 3*49 + 25, GAMETEXT_UPLOAD_HIGHSCORE, 207, 57);
+  v_button->setContextHelp(CONTEXTHELP_UPLOAD_HIGHSCORE);
+  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+
+  v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 6*57/2 + 4*49 + 25, GAMETEXT_ABORT, 207, 57);
+  v_button->setContextHelp(CONTEXTHELP_BACK_TO_MAIN_MENU);
+  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+
+  v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 6*57/2 + 5*49 + 25, GAMETEXT_QUIT, 207, 57);
+  v_button->setContextHelp(CONTEXTHELP_QUIT_THE_GAME);
+  v_button->setFont(pGame->getDrawLib()->getFontSmall());
 
 }
 
+//      UIStatic *m_pNewWorldRecord;
 //void StatePause::checkEvents() {
 //    /* Is savereplay box open? */
 //    if(m_pSaveReplayMsgBox != NULL) {
@@ -304,33 +332,33 @@ void StateFinished::createGUIIfNeeded(GameApp* pGame) {
 //    
 //    /* Any of the finish menu buttons clicked? */
 //    for(int i=0;i<m_nNumFinishMenuButtons;i++) {
-//      if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_SAVEREPLAY) {
+//      if(v_frameButtons[i]->getCaption() == GAMETEXT_SAVEREPLAY) {
 //        /* Have we recorded a replay? If not then disable the "Save Replay" button */
 //        if(m_pJustPlayReplay == NULL || m_MotoGame.Players().size() != 1) {
-//          m_pFinishMenuButtons[i]->enableWindow(false);
+//          v_frameButtons[i]->enableWindow(false);
 //        }
 //        else {
-//          m_pFinishMenuButtons[i]->enableWindow(true);
+//          v_frameButtons[i]->enableWindow(true);
 //        }
 //      }
 //
-//      if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
+//      if(v_frameButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
 //        /* Uhm... is it likely that there's a next level? */
-//	m_pFinishMenuButtons[i]->enableWindow(isThereANextLevel(m_PlaySpecificLevelId));
+//	v_frameButtons[i]->enableWindow(isThereANextLevel(m_PlaySpecificLevelId));
 //      }
 //      
-//      if(m_pFinishMenuButtons[i]->isClicked()) {
-//        if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_QUIT) {
+//      if(v_frameButtons[i]->isClicked()) {
+//        if(v_frameButtons[i]->getCaption() == GAMETEXT_QUIT) {
 //          if(m_pQuitMsgBox == NULL) {
 //	    m_Renderer->getGUI()->setFont(drawLib->getFontSmall());
 //            m_pQuitMsgBox = m_Renderer->getGUI()->msgBox(GAMETEXT_QUITMESSAGE,
 //                                                        (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
 //	  }
 //        }
-//        else if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
+//        else if(v_frameButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
 //	  std::string NextLevel = _DetermineNextLevel(m_PlaySpecificLevelId);
 //	  if(NextLevel != "") {        
-//	    m_pFinishMenu->showWindow(false);
+//	    v_frame->showWindow(false);
 //	    m_Renderer->hideMsgNewHighscore();
 //	    m_pBestTimes->showWindow(false);
 //	    m_MotoGame.getCamera()->setPlayerToFollow(NULL);
@@ -344,7 +372,7 @@ void StateFinished::createGUIIfNeeded(GameApp* pGame) {
 //	    setState(GS_PREPLAYING);                               
 //          }
 //        }
-//        else if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_SAVEREPLAY) {
+//        else if(v_frameButtons[i]->getCaption() == GAMETEXT_SAVEREPLAY) {
 //          if(m_pJustPlayReplay != NULL) {
 //            if(m_pSaveReplayMsgBox == NULL) {
 //	      m_Renderer->getGUI()->setFont(drawLib->getFontSmall());
@@ -356,20 +384,20 @@ void StateFinished::createGUIIfNeeded(GameApp* pGame) {
 //            }          
 //          }
 //        }
-//        else if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_UPLOAD_HIGHSCORE) {
+//        else if(v_frameButtons[i]->getCaption() == GAMETEXT_UPLOAD_HIGHSCORE) {
 //	  _UploadHighscore("Latest");
 //        }	
-//        else if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_TRYAGAIN) {
+//        else if(v_frameButtons[i]->getCaption() == GAMETEXT_TRYAGAIN) {
 //          Level *pCurLevel = m_MotoGame.getLevelSrc();
 //          m_PlaySpecificLevelId = pCurLevel->Id();
-//          m_pFinishMenu->showWindow(false);
+//          v_frame->showWindow(false);
 //	  m_Renderer->hideMsgNewHighscore();
 //          m_pBestTimes->showWindow(false);
 //
 //	  restartLevel();
 //        }
-//        else if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_ABORT) {
-//          m_pFinishMenu->showWindow(false);
+//        else if(v_frameButtons[i]->getCaption() == GAMETEXT_ABORT) {
+//          v_frame->showWindow(false);
 //	  m_Renderer->hideMsgNewHighscore();
 //          m_pBestTimes->showWindow(false);
 //	  m_MotoGame.getCamera()->setPlayerToFollow(NULL);
@@ -380,7 +408,7 @@ void StateFinished::createGUIIfNeeded(GameApp* pGame) {
 //        }
 //
 //        /* Don't process this clickin' more than once */
-//        m_pFinishMenuButtons[i]->setClicked(false);
+//        v_frameButtons[i]->setClicked(false);
 //      }
 //    }
 //  }
@@ -434,56 +462,6 @@ void StateFinished::createGUIIfNeeded(GameApp* pGame) {
 //
 //
 //makeWIndow() {
-//    /* Best times windows (at finish) */
-//    m_pBestTimes = new UIBestTimes(m_Renderer->getGUI(),10,50,"",290,500);
-//    m_pBestTimes->setFont(drawLib->getFontMedium());
-//    m_pBestTimes->setHFont(drawLib->getFontMedium());
-//
-//    /* Initialize finish menu */
-//    m_pFinishMenu = new UIFrame(m_Renderer->getGUI(),300,30,"",400,540);
-//    m_pFinishMenu->setStyle(UI_FRAMESTYLE_MENU);
-//
-//    i=0;
-//
-//    m_pFinishMenuButtons[i] = new UIButton(m_pFinishMenu,0,0,GAMETEXT_TRYAGAIN,207,57);
-//    m_pFinishMenuButtons[i]->setContextHelp(CONTEXTHELP_PLAY_THIS_LEVEL_AGAIN);
-//    i++;
-//
-//    m_pFinishMenuButtons[i] = new UIButton(m_pFinishMenu,0,0,GAMETEXT_PLAYNEXT,207,57);
-//    m_pFinishMenuButtons[i]->setContextHelp(CONTEXTHELP_PLAY_NEXT_LEVEL);
-//    default_button = i;
-//    i++;
-//
-//    m_pFinishMenuButtons[i] = new UIButton(m_pFinishMenu,0,0,GAMETEXT_SAVEREPLAY,207,57);
-//    m_pFinishMenuButtons[i]->setContextHelp(CONTEXTHELP_SAVE_A_REPLAY);
-//    if(!m_bRecordReplays) m_pFinishMenuButtons[1]->enableWindow(false);
-//    i++;
-//
-//    m_pFinishMenuButtons[i] = new UIButton(m_pFinishMenu,0,0,GAMETEXT_UPLOAD_HIGHSCORE,207,57);
-//    m_pFinishMenuButtons[i]->setContextHelp(CONTEXTHELP_UPLOAD_HIGHSCORE);
-//    m_pFinishMenuButtons[i]->enableWindow(false);
-//    i++;
-//   
-//    m_pFinishMenuButtons[i] = new UIButton(m_pFinishMenu,0,0,GAMETEXT_ABORT,207,57);
-//    m_pFinishMenuButtons[i]->setContextHelp(CONTEXTHELP_BACK_TO_MAIN_MENU);
-//    i++;
-//    
-//    m_pFinishMenuButtons[i] = new UIButton(m_pFinishMenu,0,0,GAMETEXT_QUIT,207,57);
-//    m_pFinishMenuButtons[i]->setContextHelp(CONTEXTHELP_QUIT_THE_GAME);
-//    i++;
-//
-//    m_nNumFinishMenuButtons = i;
-//
-//    UIStatic *pFinishText = new UIStatic(m_pFinishMenu,0,100,GAMETEXT_FINISH,m_pFinishMenu->getPosition().nWidth,36);
-//    pFinishText->setFont(drawLib->getFontMedium());
-//   
-//    for(int i=0;i<m_nNumFinishMenuButtons;i++) {
-//      m_pFinishMenuButtons[i]->setPosition(200-207/2,m_pFinishMenu->getPosition().nHeight/2 - (m_nNumFinishMenuButtons*57)/2 + i*49 + 25,207,57);
-//      m_pFinishMenuButtons[i]->setFont(drawLib->getFontSmall());
-//    }
-//
-//    m_pFinishMenu->setPrimaryChild(m_pFinishMenuButtons[default_button]); /* default button: Play next */
-//
 //
 //}
 //

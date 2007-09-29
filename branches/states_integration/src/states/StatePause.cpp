@@ -207,35 +207,30 @@ void StatePause::createGUIIfNeeded(GameApp* pGame) {
   UIStatic *pPauseText = new UIStatic(v_frame, 0, 100, GAMETEXT_PAUSE, v_frame->getPosition().nWidth, 36);
   pPauseText->setFont(pGame->getDrawLib()->getFontMedium());
 
-  v_button = new UIButton(v_frame, 0, 0, GAMETEXT_RESUME, 207, 57);
+  v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 5*57/2 + 0*57, GAMETEXT_RESUME, 207, 57);
   v_button->setID("RESUME_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_BACK_TO_GAME);
-  v_button->setPosition(400/2 - 207/2, v_frame->getPosition().nHeight/2 - 5*57/2 + 0*57, 207, 57);
   v_button->setFont(pGame->getDrawLib()->getFontSmall());
   v_frame->setPrimaryChild(v_button); /* default button */
 
-  v_button = new UIButton(v_frame,0,0,GAMETEXT_RESTART,207,57);
+  v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 5*57/2 + 1*57, GAMETEXT_RESTART, 207, 57);
   v_button->setID("RESTART_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_TRY_LEVEL_AGAIN_FROM_BEGINNING);
-  v_button->setPosition(400/2 - 207/2, v_frame->getPosition().nHeight/2 - 5*57/2 + 1*57, 207, 57);
   v_button->setFont(pGame->getDrawLib()->getFontSmall());
 
-  v_button = new UIButton(v_frame,0,0,GAMETEXT_PLAYNEXT,207,57);
+  v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 5*57/2 + 2*57, GAMETEXT_PLAYNEXT, 207, 57);
   v_button->setID("PLAYNEXT_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_PLAY_NEXT_INSTEAD);
-  v_button->setPosition(400/2 - 207/2, v_frame->getPosition().nHeight/2 - 5*57/2 + 2*57, 207, 57);
   v_button->setFont(pGame->getDrawLib()->getFontSmall());
 
-  v_button = new UIButton(v_frame,0,0,GAMETEXT_ABORT,207,57);
+  v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 5*57/2 + 3*57, GAMETEXT_ABORT, 207, 57);
   v_button->setID("ABORT_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_BACK_TO_MAIN_MENU);
-  v_button->setPosition(400/2 - 207/2, v_frame->getPosition().nHeight/2 - 5*57/2 + 3*57, 207, 57);
   v_button->setFont(pGame->getDrawLib()->getFontSmall());
   
-  v_button = new UIButton(v_frame,0,0,GAMETEXT_QUIT,207,57);
+  v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 5*57/2 + 4*57, GAMETEXT_QUIT, 207, 57);
   v_button->setID("QUIT_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_QUIT_THE_GAME);
-  v_button->setPosition(400/2 - 207/2, v_frame->getPosition().nHeight/2 - 5*57/2 + 4*57, 207, 57);
   v_button->setFont(pGame->getDrawLib()->getFontSmall());
 
 }
