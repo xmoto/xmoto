@@ -25,6 +25,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateMenu.h"
 
 class UIRoot;
+class UIBestTimes;
+class xmDatabase;
 
 class StateFinished : public StateMenu {
   public:
@@ -56,6 +58,10 @@ class StateFinished : public StateMenu {
   virtual void checkEvents();
 
   private:
+  void makeBestTimesWindow(UIBestTimes* pWindow, xmDatabase* i_db,
+			   const std::string& PlayerName, const std::string& LevelID,
+			   float fFinishTime, const std::string& TimeStamp);      
+
   /* GUI */
   static UIRoot   *m_sGUI;
   static void createGUIIfNeeded(GameApp* pGame);

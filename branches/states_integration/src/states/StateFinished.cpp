@@ -45,6 +45,9 @@ StateFinished::~StateFinished()
 
 void StateFinished::enter()
 {
+  float v_finish_time = 0.0;
+  std::string TimeStamp;
+
   StateMenu::enter();
 
   m_pGame->m_State = GS_FINISHED; // to be removed, just the time states are finished
@@ -170,8 +173,6 @@ void StateFinished::enter()
 //    m_db->profiles_addFinishTime(m_xmsession->profile(), m_MotoGame.getLevelSrc()->Id(),
 //				 TimeStamp, v_finish_time);
 //  }
-//  _MakeBestTimesWindow(m_pBestTimes, m_xmsession->profile(), m_MotoGame.getLevelSrc()->Id(),
-//		       v_finish_time,TimeStamp);
 //  
 //  /* Update stats */
 //  /* update stats only in one player mode */
@@ -184,6 +185,10 @@ void StateFinished::enter()
 //			   m_MotoGame.Players()[0]->finishTime());
 //  }
 //
+
+  UIBestTimes *v_pBestTimes = reinterpret_cast<UIBestTimes *>(m_GUI->getChild("BESTTIMES"));
+  makeBestTimesWindow(v_pBestTimes, m_pGame->getDb(), m_pGame->getSession()->profile(), m_pGame->getMotoGame()->getLevelSrc()->Id(),
+		      v_finish_time, TimeStamp);
 }
 
 void StateFinished::leave()
@@ -282,7 +287,8 @@ void StateFinished::createGUIIfNeeded(GameApp* pGame) {
   v_pFinishText = new UIStatic(v_frame, 0, 100, GAMETEXT_FINISH, v_frame->getPosition().nWidth, 36);
   v_pFinishText->setFont(pGame->getDrawLib()->getFontMedium());
 
-  v_pBestTimes = new UIBestTimes(m_sGUI, 10, 50, "", 290, 500);
+  v_pBestTimes = new UIBestTimes(m_sGUI, 10, 50, "", 290, m_sGUI->getPosition().nHeight - 50*2);
+  v_pBestTimes->setID("BESTTIMES");
   v_pBestTimes->setFont(pGame->getDrawLib()->getFontMedium());
   v_pBestTimes->setHFont(pGame->getDrawLib()->getFontMedium());
 
@@ -415,56 +421,46 @@ void StateFinished::createGUIIfNeeded(GameApp* pGame) {
 //}
 
 
+void StateFinished::makeBestTimesWindow(UIBestTimes *pWindow,
+					xmDatabase *i_db,
+					const std::string& PlayerName, const std::string& LevelID,
+					float fFinishTime, const std::string& TimeStamp) {
+  char **v_result;
+  unsigned int nrow;
+  int n1=-1,n2=-1;
+  float v_finishTime;
+  std::string v_timeStamp;
+  std::string v_profile;
+  
+  pWindow->clear();
+  
+  v_result = i_db->readDB("SELECT finishTime, timeStamp, id_profile FROM profile_completedLevels "
+			  "WHERE id_level=\""   + xmDatabase::protectString(LevelID)    + "\" "
+			  "ORDER BY finishTime LIMIT 10;",
+			  nrow);
+  for(unsigned int i=0; i<nrow; i++) {
+    v_finishTime  = atof(i_db->getResult(v_result, 3, i, 0));
+    v_timeStamp   =      i_db->getResult(v_result, 3, i, 1);
+    v_profile     =      i_db->getResult(v_result, 3, i, 2);
+    pWindow->addRow1(GameApp::formatTime(v_finishTime), v_profile);
+    if(v_profile == PlayerName &&
+       v_timeStamp == TimeStamp) n1 = i;
+  }
+  i_db->read_DB_free(v_result);
+  
+  v_result = i_db->readDB("SELECT finishTime, timeStamp FROM profile_completedLevels "
+			  "WHERE id_profile=\"" + xmDatabase::protectString(PlayerName) + "\" "
+			  "AND   id_level=\""   + xmDatabase::protectString(LevelID)    + "\" "
+			  "ORDER BY finishTime LIMIT 10;",
+			    nrow);
+    for(unsigned int i=0; i<nrow; i++) {
+      v_finishTime  = atof(i_db->getResult(v_result, 2, i, 0));
+      v_timeStamp   =      i_db->getResult(v_result, 2, i, 1);
+      pWindow->addRow2(GameApp::formatTime(v_finishTime), PlayerName);
+      if(v_timeStamp == TimeStamp) n2 = i;
+    }
+    i_db->read_DB_free(v_result);
+    
+    pWindow->setup(GAMETEXT_BESTTIMES,n1,n2);
+}
 
-//  /*===========================================================================
-//  Fill a window with best times
-//  ===========================================================================*/
-//  void GameApp::_MakeBestTimesWindow(UIBestTimes *pWindow,std::string PlayerName,std::string LevelID,
-//                                     float fFinishTime,std::string TimeStamp) {
-//    char **v_result;
-//    unsigned int nrow;
-//    int n1=-1,n2=-1;
-//    float v_finishTime;
-//    std::string v_timeStamp;
-//    std::string v_profile;
-//    
-//    pWindow->clear();
-//    
-//    v_result = m_db->readDB("SELECT finishTime, timeStamp, id_profile FROM profile_completedLevels "
-//			    "WHERE id_level=\""   + xmDatabase::protectString(LevelID)    + "\" "
-//			    "ORDER BY finishTime LIMIT 10;",
-//			    nrow);
-//    for(unsigned int i=0; i<nrow; i++) {
-//      v_finishTime  = atof(m_db->getResult(v_result, 3, i, 0));
-//      v_timeStamp   =      m_db->getResult(v_result, 3, i, 1);
-//      v_profile     =      m_db->getResult(v_result, 3, i, 2);
-//      pWindow->addRow1(formatTime(v_finishTime), v_profile);
-//      if(v_profile == PlayerName &&
-//	 v_timeStamp == TimeStamp) n1 = i;
-//    }
-//    m_db->read_DB_free(v_result);
-//
-//    v_result = m_db->readDB("SELECT finishTime, timeStamp FROM profile_completedLevels "
-//			    "WHERE id_profile=\"" + xmDatabase::protectString(PlayerName) + "\" "
-//			    "AND   id_level=\""   + xmDatabase::protectString(LevelID)    + "\" "
-//			    "ORDER BY finishTime LIMIT 10;",
-//			    nrow);
-//    for(unsigned int i=0; i<nrow; i++) {
-//      v_finishTime  = atof(m_db->getResult(v_result, 2, i, 0));
-//      v_timeStamp   =      m_db->getResult(v_result, 2, i, 1);
-//      pWindow->addRow2(formatTime(v_finishTime), PlayerName);
-//      if(v_timeStamp == TimeStamp) n2 = i;
-//    }
-//    m_db->read_DB_free(v_result);
-//
-//    pWindow->setup(GAMETEXT_BESTTIMES,n1,n2);
-//  }
-//
-//
-//makeWIndow() {
-//
-//}
-//
-//
-//      void _MakeBestTimesWindow(UIBestTimes *pWindow,std::string PlayerName,std::string LevelID,
-//                                float fFinishTime,std::string TimeStamp);      

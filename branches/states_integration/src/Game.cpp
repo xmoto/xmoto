@@ -2911,3 +2911,7 @@ void GameApp::playMusic(const std::string& i_music) {
     }
   }
 }
+
+xmDatabase* GameApp::getDb() {
+  return m_db;
+}

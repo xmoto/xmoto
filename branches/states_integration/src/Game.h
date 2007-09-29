@@ -208,6 +208,9 @@ class StateManager;
       // ask the game to close as soon as possible
       void requestEnd();
 
+      //
+      xmDatabase* getDb();
+
       /* public so that we can add progressively the states ; to be removed */
       OldGameState m_State; /* Current state */      
       OldGameState m_StateAfterPlaying;            /* State that should be used later */
