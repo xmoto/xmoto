@@ -22,31 +22,43 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __STATEFINISHED_H__
 
 #include "StateManager.h"
+#include "StateMenu.h"
 
-  class StateFinished : public GameState {
+class UIRoot;
+
+class StateFinished : public StateMenu {
   public:
-    StateFinished(bool drawStateBehind,
-		  bool updateStatesBehind,
-		  GameApp* pGame);
-    virtual ~StateFinished();
-
-    virtual void enter();
-    virtual void leave();
-    /* called when a new state is pushed or poped on top of the
-       current one*/
-    virtual void enterAfterPop();
-    virtual void leaveAfterPush();
-
-    virtual void update();
-    virtual void render();
-    /* input */
-    virtual void keyDown(int nKey, SDLMod mod,int nChar);
-    virtual void keyUp(int nKey,   SDLMod mod);
-    virtual void mouseDown(int nButton);
-    virtual void mouseDoubleClick(int nButton);
-    virtual void mouseUp(int nButton);
+  StateFinished(GameApp* pGame,
+		bool drawStateBehind    = true,
+		bool updateStatesBehind = false
+		);
+  virtual ~StateFinished();
+  
+  virtual void enter();
+  virtual void leave();
+  /* called when a new state is pushed or poped on top of the
+     current one*/
+  virtual void enterAfterPop();
+  virtual void leaveAfterPush();
+  
+  virtual void update();
+  virtual void render();
+  /* input */
+  virtual void keyDown(int nKey, SDLMod mod,int nChar);
+  virtual void keyUp(int nKey,   SDLMod mod);
+  virtual void mouseDown(int nButton);
+  virtual void mouseDoubleClick(int nButton);
+  virtual void mouseUp(int nButton);
+  
+  static void clean();
+  
+ protected:
+  virtual void checkEvents();
 
   private:
-  };
+  /* GUI */
+  static UIRoot   *m_sGUI;
+  static void createGUIIfNeeded(GameApp* pGame);
+};
 
 #endif

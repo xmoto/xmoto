@@ -332,7 +332,6 @@ int main(int nNumArgs,char **ppcArgs) {
     
     /* And stuff */
     m_nJustDeadShade = 0;
-    m_nFinishShade = 0;
     
     /* Init some config */
     _UpdateSettings();

@@ -645,165 +645,12 @@ GameApp::GameApp() {
                                                        (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
         break;
       }
-
-		case GS_FINISHED: {
-			m_MotoGame.setInfos(m_MotoGame.getLevelSrc()->Name());
-			v_newMusicPlaying = "";
-
-			//        SDL_ShowCursor(SDL_ENABLE);
-			m_bShowCursor = true;
-
-			/* Finish replay */
-			if(m_pJustPlayReplay != NULL) {
-				if(m_MotoGame.Players().size() == 1) {
-				  /* save the last state because scene don't record each frame */
-				  SerializedBikeState BikeState;
-				  MotoGame::getSerializedBikeState(m_MotoGame.Players()[0]->getState(), m_MotoGame.getTime(), &BikeState);
-				  m_pJustPlayReplay->storeState(BikeState);
-				  m_pJustPlayReplay->finishReplay(true,m_MotoGame.Players()[0]->finishTime());
-				}
-			}
-
-			/* A more lucky outcome of GS_PLAYING than GS_DEADMENU :) */
-			m_pFinishMenu->showWindow(true);
-			m_pBestTimes->showWindow(true);
-			m_nFinishShade = 0;            
-
-			if(m_MotoGame.Players().size() == 1) {
-				/* display message on finish and eventually save the replay */
-        
-				/* is it a highscore ? */
-				float v_best_personal_time;
-				float v_best_room_time;
-				float v_current_time;
-				bool v_is_a_highscore;
-				bool v_is_a_personal_highscore;
-  
-				/* get best player result */
-				v_result = m_db->readDB("SELECT MIN(finishTime) FROM profile_completedLevels WHERE "
-																"id_level=\"" + 
-																xmDatabase::protectString(m_MotoGame.getLevelSrc()->Id()) + "\" " + 
-																"AND id_profile=\"" + xmDatabase::protectString(m_xmsession->profile())  + "\";",
-																nrow);
-				v_res = m_db->getResult(v_result, 1, 0, 0);
-				if(v_res != NULL) {
-					v_best_personal_time = atof(v_res);
-				} else {
-					/* should never happend because the score is already stored */
-					v_best_personal_time = -1.0;
-				}
-				m_db->read_DB_free(v_result);
-
-				v_current_time = m_MotoGame.Players()[0]->finishTime();
-	  
-				v_is_a_personal_highscore = (v_current_time <= v_best_personal_time
-																		 || v_best_personal_time < 0.0);
-	  
-				/* search a better webhighscore */
-				v_best_room_time = m_db->webrooms_getHighscoreTime(m_WebHighscoresIdRoom,
-																													 m_MotoGame.getLevelSrc()->Id());
-				v_is_a_highscore = (v_current_time < v_best_room_time
-														|| v_best_room_time < 0.0);
-	  
-				// disable upload button
-				for(int i=0;i<m_nNumFinishMenuButtons;i++) {
-					if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_UPLOAD_HIGHSCORE) {
-						m_pFinishMenuButtons[i]->enableWindow(false);
-					}
-				}
-	  
-				if(v_is_a_highscore) { /* best highscore */
-					try {
-						Sound::playSampleByName(m_theme.getSound("NewHighscore")->FilePath());
-					} catch(Exception &e) {
-					}
-	    
-					// enable upload button
-					if(m_xmsession->www()) {
-						if(m_pJustPlayReplay != NULL) {
-							for(int i=0;i<m_nNumFinishMenuButtons;i++) {
-								if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_UPLOAD_HIGHSCORE) {
-									m_pFinishMenuButtons[i]->enableWindow(true);
-								}
-							}
-						}
-					}
-	    
-					if(m_pJustPlayReplay != NULL && m_bAutosaveHighscoreReplays) {
-						std::string v_replayName = Replay::giveAutomaticName();
-						_SaveReplay(v_replayName);
-						m_Renderer->showMsgNewBestHighscore(v_replayName);
-					} else {
-						m_Renderer->showMsgNewBestHighscore();
-					} /* ok i officially give up on indention in x-moto :P */
-				} else {
-					if(v_is_a_personal_highscore) { /* personal highscore */
-						try {
-							Sound::playSampleByName(m_theme.getSound("NewHighscore")->FilePath());
-						} catch(Exception &e) {
-						}
-						if(m_pJustPlayReplay != NULL && m_bAutosaveHighscoreReplays) {
-							std::string v_replayName = Replay::giveAutomaticName();
-							_SaveReplay(v_replayName);
-							m_Renderer->showMsgNewPersonalHighscore(v_replayName);
-						} else {
-							m_Renderer->showMsgNewPersonalHighscore();
-						}
-	      
-					} else { /* no highscore */
-						m_Renderer->hideMsgNewHighscore();
-					}
-				}
-			}
-
-			/* update profiles */
-			float v_finish_time = 0.0;
-			std::string TimeStamp = getTimeStamp();
-			for(unsigned int i=0; i<m_MotoGame.Players().size(); i++) {
-				if(m_MotoGame.Players()[i]->isFinished()) {
-					v_finish_time  = m_MotoGame.Players()[i]->finishTime();
-				}
-			}
-			if(m_MotoGame.Players().size() == 1) {
-				m_db->profiles_addFinishTime(m_xmsession->profile(), m_MotoGame.getLevelSrc()->Id(),
-																		 TimeStamp, v_finish_time);
-			}
-			_MakeBestTimesWindow(m_pBestTimes, m_xmsession->profile(), m_MotoGame.getLevelSrc()->Id(),
-													 v_finish_time,TimeStamp);
-
-			/* Update stats */
-			/* update stats only in one player mode */
-			if(m_MotoGame.Players().size() == 1) {       
-				m_db->stats_levelCompleted(m_xmsession->profile(),
-																	 m_MotoGame.getLevelSrc()->Id(),
-																	 m_MotoGame.Players()[0]->finishTime());
-				_UpdateLevelsLists();
-				_UpdateCurrentPackList(m_MotoGame.getLevelSrc()->Id(),
-															 m_MotoGame.Players()[0]->finishTime());
-			}
-			break;
-		}
     }
 
     m_fLastPhysTime = getXMTime() - PHYS_STEP_SIZE;
 
     /* manage music */
-    if(m_bEnableMenuMusic && Sound::isEnabled()) {
-      if(v_newMusicPlaying != m_playingMusic) {
-				try {
-					if(v_newMusicPlaying == "") {
-						m_playingMusic = v_newMusicPlaying;
-						Sound::stopMusic();
-					} else {
-						m_playingMusic = v_newMusicPlaying;
-						Sound::playMusic(m_theme.getMusic(v_newMusicPlaying)->FilePath());
-					}
-				} catch(Exception &e) {
-					Logger::Log("** Warning ** : PlayMusic(%s) failed", v_newMusicPlaying.c_str());
-					Sound::stopMusic();
-				}
-      }
-    }
+    playMusic(v_newMusicPlaying);
   }
 
   std::string GameApp::getConfigThemeName(ThemeChoicer *p_themeChoicer) {
@@ -1109,15 +956,12 @@ GameApp::GameApp() {
   }
   break;
       }
-      case GS_FINISHED:
       case GS_DEADMENU:
         switch(nKey) {
           case SDLK_ESCAPE:
             if(m_pSaveReplayMsgBox == NULL) {          
               /* Out of this game, please */
-              m_pFinishMenu->showWindow(false);
-        m_Renderer->hideMsgNewHighscore();
-              m_pBestTimes->showWindow(false);
+	      m_Renderer->hideMsgNewHighscore();
               m_pJustDeadMenu->showWindow(false);
 							m_MotoGame.resetFollow();
               m_MotoGame.endLevel();
@@ -1258,7 +1102,9 @@ GameApp::GameApp() {
         }
       break;
 
-    case GS_PAUSE: // states already in the state manager
+    // states already in the state manager
+    case GS_FINISHED:
+    case GS_PAUSE:
       m_stateManager->keyDown(nKey, mod, nChar);
       break;
     }
@@ -1274,7 +1120,6 @@ GameApp::GameApp() {
       case GS_EDIT_WEBCONFIG:
       case GS_EDIT_PROFILES:
       case GS_LEVEL_INFO_VIEWER:
-      case GS_FINISHED:
       case GS_DEADMENU:
       case GS_LEVELPACK_VIEWER:
       case GS_MENU:
@@ -1292,7 +1137,9 @@ GameApp::GameApp() {
 	break;
       }
 
-    case GS_PAUSE: // states already in the state manager
+    // states already in the state manager
+    case GS_FINISHED:
+    case GS_PAUSE:
       m_stateManager->keyUp(nKey, mod);
       break;
     }
@@ -1305,7 +1152,6 @@ GameApp::GameApp() {
     switch(m_State) {
       case GS_MENU:
       case GS_DEADMENU:
-      case GS_FINISHED:
       case GS_EDIT_PROFILES:
       case GS_EDIT_WEBCONFIG:
       case GS_LEVEL_INFO_VIEWER:
@@ -1320,7 +1166,9 @@ GameApp::GameApp() {
       case GS_DEADJUST:
       break;
 
-    case GS_PAUSE: // states already in the state manager
+    // states already in the state manager
+    case GS_FINISHED:
+    case GS_PAUSE:
       m_stateManager->mouseDoubleClick(nButton);
       break;
     }
@@ -1330,7 +1178,6 @@ GameApp::GameApp() {
     switch(m_State) {
       case GS_MENU:
       case GS_DEADMENU:
-      case GS_FINISHED:
       case GS_EDIT_PROFILES:
       case GS_EDIT_WEBCONFIG:
       case GS_LEVEL_INFO_VIEWER:
@@ -1360,7 +1207,10 @@ GameApp::GameApp() {
       case GS_DEADJUST:
       break;
 
-      case GS_PAUSE: // states already in the state manager
+
+      // states already in the state manager
+      case GS_FINISHED:
+      case GS_PAUSE:
       m_stateManager->mouseDown(nButton);
       break;
 
@@ -1371,7 +1221,6 @@ GameApp::GameApp() {
     switch(m_State) {
       case GS_MENU:
       case GS_DEADMENU:
-      case GS_FINISHED:
       case GS_EDIT_PROFILES:
       case GS_EDIT_WEBCONFIG:
       case GS_LEVEL_INFO_VIEWER:
@@ -1394,7 +1243,10 @@ GameApp::GameApp() {
         break;
       case GS_DEADJUST:
       break;
-      case GS_PAUSE: // states already in the state manager
+
+      // states already in the state manager
+      case GS_FINISHED:
+      case GS_PAUSE:
       m_stateManager->mouseUp(nButton);
       break;
     }
@@ -1788,7 +1640,11 @@ void GameApp::abortPlaying() {
 			     m_MotoGame.getTime());
   }
   
-  m_MotoGame.getCamera()->setPlayerToFollow(NULL);
+  closePlaying();
+}
+
+void GameApp::closePlaying() {
+  m_MotoGame.resetFollow();
   m_MotoGame.endLevel();
   m_InputHandler.resetScriptKeyHooks();                     
   m_Renderer->unprepareForNewLevel();
@@ -3024,10 +2880,8 @@ void GameApp::playNextLevel() {
 			       m_MotoGame.getLevelSrc()->Id(),
 			       m_MotoGame.getTime());
     }
-    m_MotoGame.getCamera()->setPlayerToFollow(NULL);
-    m_MotoGame.endLevel();
-    m_InputHandler.resetScriptKeyHooks();                     
-    m_Renderer->unprepareForNewLevel();                    
+
+    closePlaying();
     
     m_PlaySpecificLevelId = NextLevel;              
     
@@ -3037,4 +2891,23 @@ void GameApp::playNextLevel() {
 
 void GameApp::requestEnd() {
   m_bQuit = true;
+}
+
+void GameApp::playMusic(const std::string& i_music) {
+  if(m_bEnableMenuMusic && Sound::isEnabled()) {
+    if(i_music != m_playingMusic) {
+      try {
+	if(i_music == "") {
+	  m_playingMusic = "";
+	  Sound::stopMusic();
+	} else {
+	  m_playingMusic = i_music;
+	  Sound::playMusic(m_theme.getMusic(i_music)->FilePath());
+	}
+      } catch(Exception &e) {
+	Logger::Log("** Warning ** : PlayMusic(%s) failed", i_music.c_str());
+	Sound::stopMusic();
+      }
+    }
+  }
 }

@@ -200,8 +200,10 @@ class StateManager;
 
       // to call while playing
       void restartLevel(bool i_reloadLevel = false);
+      void closePlaying();
       void abortPlaying();
       void playNextLevel();
+      void playMusic(const std::string& i_music); // "" => no music
 
       // ask the game to close as soon as possible
       void requestEnd();
@@ -363,16 +365,7 @@ class StateManager;
       UIButton *m_pJustDeadMenuButtons[10];            
       int m_nNumJustDeadMenuButtons;      
       float m_fCoolDownEnd;
-
-      /* In-game FINISH menu fun */
-      UIFrame *m_pFinishMenu;
-      int m_nFinishShade;
-      UIButton *m_pFinishMenuButtons[10];
-      UIStatic *m_pNewWorldRecord;
-
-      int m_nNumFinishMenuButtons;      
-      UIBestTimes *m_pBestTimes;
-      
+     
       /* Profile editor fun */
       UIFrame *m_pProfileEditor;  
       UIMsgBox *m_pNewProfileMsgBox;    
@@ -441,7 +434,6 @@ class StateManager;
       void _UpdateWorldRecord(const std::string &LevelID);
       void _HandleMainMenu(void);  
       void _HandleJustDeadMenu(void);
-      void _HandleFinishMenu(void);
       void _HandleWebConfEditor(void);
       void _HandleProfileEditor(void);
       void _HandleLevelInfoViewer(void);
@@ -460,8 +452,6 @@ class StateManager;
       void _UpdateLevelInfoViewerReplays(const std::string &LevelID);     
       void _ChangeKeyConfig(void);
       void _ConfigureJoystick(void);
-      void _MakeBestTimesWindow(UIBestTimes *pWindow,std::string PlayerName,std::string LevelID,
-                                float fFinishTime,std::string TimeStamp);      
       void _DrawMenuBackground(void); 
       void _InitMenus(void);        
       void _InitMenus_PlayingMenus(void);
@@ -557,7 +547,6 @@ class StateManager;
       void _PostUpdatePlaying(void);
       void _PostUpdateMenuDead(void);
       void _PostUpdateJustDead(void);
-      void _PostUpdateFinished(void);
 
       void autoZoom();
 

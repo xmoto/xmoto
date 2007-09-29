@@ -22,12 +22,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __STATEPAUSE_H__
 
 #include "StateManager.h"
+#include "StateMenu.h"
 
 class UIRoot;
-class UIFrame;
-class DrawLib;
 
-class StatePause : public GameState {
+class StatePause : public StateMenu {
   public:
   StatePause(GameApp* pGame,
 	     bool drawStateBehind    = true,
@@ -53,13 +52,12 @@ class StatePause : public GameState {
   
   static void clean();
 
+ protected:
+  virtual void checkEvents();
+
   private:
-  float m_nPauseShadeTime;
-
-  void checkEvents();
-
   /* GUI */
-  static UIRoot   *m_GUI;
+  static UIRoot   *m_sGUI;
   static void createGUIIfNeeded(GameApp* pGame);
 };
 

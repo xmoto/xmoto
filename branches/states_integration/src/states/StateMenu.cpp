@@ -19,6 +19,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateMenu.h"
+#include "gui/basic/GUI.h"
+#include "Game.h"
+#include "XMSession.h"
+#include "drawlib/DrawLib.h"
+
+#define MENU_SHADING_TIME 0.3
+#define MENU_SHADING_VALUE 150
 
 StateMenu::StateMenu(bool drawStateBehind,
 		     bool updateStatesBehind,
@@ -27,7 +34,7 @@ StateMenu::StateMenu(bool drawStateBehind,
 	    updateStatesBehind,
 	    pGame)
 {
-
+  m_GUI = NULL;
 }
 
 StateMenu::~StateMenu()
@@ -38,7 +45,7 @@ StateMenu::~StateMenu()
 
 void StateMenu::enter()
 {
-
+  m_nShadeTime = GameApp::getXMTime();
 }
 
 void StateMenu::leave()
@@ -58,35 +65,88 @@ void StateMenu::leaveAfterPush()
 
 void StateMenu::update()
 {
-
+  m_GUI->dispatchMouseHover();
 }
 
 void StateMenu::render()
 {
+  // rendering of the gui must be done by the mother call : to add here when states will be almost finished
+  m_pGame->setFrameDelay(10);
 
+  if(m_pGame->getSession()->ugly() == false) {
+    float v_currentTime = GameApp::getXMTime();
+    int   v_nShade;
+
+    if(v_currentTime - m_nShadeTime < MENU_SHADING_TIME) {
+      v_nShade = (int ) ((v_currentTime - m_nShadeTime) * (MENU_SHADING_VALUE / MENU_SHADING_TIME));
+    } else {
+      v_nShade = MENU_SHADING_VALUE;
+    }
+
+    m_pGame->getDrawLib()->drawBox(Vector2f(0,0),
+				   Vector2f(m_pGame->getDrawLib()->getDispWidth(),
+					    m_pGame->getDrawLib()->getDispHeight()),
+				   0,
+				   MAKE_COLOR(0,0,0, v_nShade)
+				   );
+  }
+
+  m_GUI->paint();
 }
 
 void StateMenu::keyDown(int nKey, SDLMod mod,int nChar)
 {
-
+  m_GUI->keyDown(nKey, mod, nChar);
+  checkEvents();
 }
 
-void StateMenu::keyUp(int nKey,   SDLMod mod)
+void StateMenu::keyUp(int nKey, SDLMod mod)
 {
-
+  m_GUI->keyUp(nKey, mod);
+  checkEvents();
 }
 
 void StateMenu::mouseDown(int nButton)
 {
-
+  int nX,nY;        
+  GameApp::getMousePos(&nX,&nY);
+        
+  if(nButton == SDL_BUTTON_LEFT) {
+    m_GUI->mouseLDown(nX,nY);
+    checkEvents();
+  } else if(nButton == SDL_BUTTON_RIGHT) {
+    m_GUI->mouseRDown(nX,nY);
+    checkEvents();
+  } else if(nButton == SDL_BUTTON_WHEELUP) {
+    m_GUI->mouseWheelUp(nX,nY);
+    checkEvents();
+  } else if(nButton == SDL_BUTTON_WHEELDOWN) {
+    m_GUI->mouseWheelDown(nX,nY);
+    checkEvents();
+  }
 }
 
 void StateMenu::mouseDoubleClick(int nButton)
 {
-
+  int nX,nY;        
+  GameApp::getMousePos(&nX,&nY);
+        
+  if(nButton == SDL_BUTTON_LEFT) {
+    m_GUI->mouseLDoubleClick(nX,nY);
+    checkEvents();
+  }
 }
 
 void StateMenu::mouseUp(int nButton)
 {
-
+  int nX,nY;
+  GameApp::getMousePos(&nX,&nY);
+  
+  if(nButton == SDL_BUTTON_LEFT) {
+    m_GUI->mouseLUp(nX,nY);
+    checkEvents();
+  } else if(nButton == SDL_BUTTON_RIGHT) {
+    m_GUI->mouseRUp(nX,nY);
+    checkEvents();
+  }
 }

@@ -41,6 +41,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Camera.h"
 #include "xmscene/Entity.h"
 #include "states/StateManager.h"
+#include "states/StateFinished.h"
 
 #include <curl/curl.h>
 
@@ -93,7 +94,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       case GS_PAUSE:
       case GS_DEADMENU:
       case GS_DEADJUST:
-      case GS_FINISHED:
       case GS_REPLAYING:
       case GS_PREPLAYING:
       case GS_PLAYING: {
@@ -179,7 +179,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
              desired frame rate */
           int nADelay = 0;    
           
-	  if ((m_State == GS_FINISHED) || (m_State == GS_DEADMENU || m_State == GS_DEADJUST)) {
+	  if ((m_State == GS_DEADMENU || m_State == GS_DEADJUST)) {
             setFrameDelay(10);
           } else if(m_State == GS_REPLAYING && m_stopToUpdateReplay == true) {
 	    nADelay = 10;
@@ -210,10 +210,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
             /* Hmm, you're dead and you know it. */
             _PostUpdateMenuDead();
           }
-          else if(m_State == GS_FINISHED) {
-            /* Hmm, you've won and you know it. */
-            _PostUpdateFinished();
-          }        
          
           /* Context menu? */
           if(m_State == GS_PREPLAYING || m_State == GS_PLAYING || m_State == GS_REPLAYING || !m_bEnableContextHelp)
@@ -248,7 +244,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
 
     // states managed via the state manager
-    if(m_State == GS_PAUSE) {
+    if(m_State == GS_PAUSE ||
+       m_State == GS_FINISHED
+       ) {
       /* draw the game states */
       m_stateManager->update();
       m_stateManager->render(); 
@@ -308,7 +306,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       case GS_EDIT_WEBCONFIG:
       case GS_LEVEL_INFO_VIEWER:
       case GS_DEADMENU:
-      case GS_FINISHED:
       case GS_LEVELPACK_VIEWER:
         m_bShowCursor = true;
         //SDL_ShowCursor(SDL_ENABLE);
@@ -531,7 +528,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     if(v_one_still_play == false || m_bMultiStopWhenOneFinishes) { // let people continuing when one finished or not
       if(v_one_finished) {
 	/* You're done maaaan! :D */
-	setState(GS_FINISHED);
+	m_stateManager->pushState(new StateFinished(this));
       } else if(v_all_dead) {
 	/* You're dead maan! */
 	setState(GS_DEADJUST);
@@ -559,18 +556,5 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       /* Blah... */
       _HandleJustDeadMenu();
     }
-  }
-
-  void GameApp::_PostUpdateFinished(void) {
-    if(m_xmsession->ugly() == false) {
-      if(m_nFinishShade < 150) m_nFinishShade+=8;
-      getDrawLib()->drawBox(Vector2f(0,0),Vector2f(getDrawLib()->getDispWidth(),getDrawLib()->getDispHeight()),0,MAKE_COLOR(0,0,0,m_nFinishShade));     
-    }
-
-    /* Update mouse stuff */
-    m_Renderer->getGUI()->dispatchMouseHover();
-    
-    /* Blah... */
-    _HandleFinishMenu();
   }
 

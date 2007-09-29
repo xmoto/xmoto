@@ -24,16 +24,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "drawlib/DrawLib.h"
 #include "GameText.h"
 
-#define PAUSE_SHADING_TIME 0.3
-#define PAUSE_SHADING_VALUE 150
-
 /* static members */
-UIRoot*  StatePause::m_GUI        = NULL;
+UIRoot*  StatePause::m_sGUI = NULL;
 
 StatePause::StatePause(GameApp* pGame,
 		       bool drawStateBehind,
 		       bool updateStatesBehind):
-  GameState(drawStateBehind,
+  StateMenu(drawStateBehind,
 	    updateStatesBehind,
 	    pGame)
 {
@@ -46,12 +43,15 @@ StatePause::~StatePause()
 
 void StatePause::enter()
 {
-  m_nPauseShadeTime = GameApp::getXMTime();
+  StateMenu::enter();
+
   m_pGame->m_State = GS_PAUSE; // to be removed, just the time states are finished
   m_pGame->getMotoGame()->setInfos(m_pGame->getMotoGame()->getLevelSrc()->Name());
   m_pGame->setShowCursor(true);
+  m_pGame->playMusic("");
   
   createGUIIfNeeded(m_pGame);
+  m_GUI = m_sGUI;
 
   /* reset the playnext button */
   UIButton *playNextButton = reinterpret_cast<UIButton *>(m_GUI->getChild("PAUSE_FRAME:PLAYNEXT_BUTTON"));
@@ -126,33 +126,12 @@ void StatePause::checkEvents() {
 
 void StatePause::update()
 {
-  m_GUI->dispatchMouseHover();
+  StateMenu::update();
 }
 
 void StatePause::render()
 {
-  // rendering of the gui must be done by the mother call : to add here when states will be almost finished
-  m_pGame->setFrameDelay(10);
-
-  if(m_pGame->getSession()->ugly() == false) {
-    float v_currentTime = GameApp::getXMTime();
-    int   v_nPauseShade;
-
-    if(v_currentTime - m_nPauseShadeTime < PAUSE_SHADING_TIME) {
-      v_nPauseShade = (int ) ((v_currentTime - m_nPauseShadeTime) * (PAUSE_SHADING_VALUE / PAUSE_SHADING_TIME));
-    } else {
-      v_nPauseShade = PAUSE_SHADING_VALUE;
-    }
-
-    m_pGame->getDrawLib()->drawBox(Vector2f(0,0),
-				   Vector2f(m_pGame->getDrawLib()->getDispWidth(),
-					    m_pGame->getDrawLib()->getDispHeight()),
-				   0,
-				   MAKE_COLOR(0,0,0, v_nPauseShade)
-				   );
-  }
-
-  m_GUI->paint();
+  StateMenu::render();
 }
 
 void StatePause::keyDown(int nKey, SDLMod mod,int nChar)
@@ -170,7 +149,7 @@ void StatePause::keyDown(int nKey, SDLMod mod,int nChar)
     break;
 
   default:
-    m_GUI->keyDown(nKey, mod, nChar);
+    StateMenu::keyDown(nKey, mod, nChar);
     checkEvents();
     break;
 
@@ -179,59 +158,28 @@ void StatePause::keyDown(int nKey, SDLMod mod,int nChar)
 
 void StatePause::keyUp(int nKey, SDLMod mod)
 {
-  m_GUI->keyUp(nKey, mod);
-  checkEvents();
+  StateMenu::keyUp(nKey, mod);
 }
 
 void StatePause::mouseDown(int nButton)
 {
-  int nX,nY;        
-  GameApp::getMousePos(&nX,&nY);
-        
-  if(nButton == SDL_BUTTON_LEFT) {
-    m_GUI->mouseLDown(nX,nY);
-    checkEvents();
-  } else if(nButton == SDL_BUTTON_RIGHT) {
-    m_GUI->mouseRDown(nX,nY);
-    checkEvents();
-  } else if(nButton == SDL_BUTTON_WHEELUP) {
-    m_GUI->mouseWheelUp(nX,nY);
-    checkEvents();
-  } else if(nButton == SDL_BUTTON_WHEELDOWN) {
-    m_GUI->mouseWheelDown(nX,nY);
-    checkEvents();
-  }
+  StateMenu::mouseDown(nButton);
 }
 
 void StatePause::mouseDoubleClick(int nButton)
 {
-  int nX,nY;        
-  GameApp::getMousePos(&nX,&nY);
-        
-  if(nButton == SDL_BUTTON_LEFT) {
-    m_GUI->mouseLDoubleClick(nX,nY);
-    checkEvents();
-  }
+  StateMenu::mouseDoubleClick(nButton);
 }
 
 void StatePause::mouseUp(int nButton)
 {
-  int nX,nY;
-  GameApp::getMousePos(&nX,&nY);
-  
-  if(nButton == SDL_BUTTON_LEFT) {
-    m_GUI->mouseLUp(nX,nY);
-    checkEvents();
-  } else if(nButton == SDL_BUTTON_RIGHT) {
-    m_GUI->mouseRUp(nX,nY);
-    checkEvents();
-  }
+  StateMenu::mouseUp(nButton);
 }
 
 void StatePause::clean() {
-  if(StatePause::m_GUI != NULL) {
-    delete StatePause::m_GUI;
-    StatePause::m_GUI = NULL;
+  if(StatePause::m_sGUI != NULL) {
+    delete StatePause::m_sGUI;
+    StatePause::m_sGUI = NULL;
   }
 }
 
@@ -239,20 +187,20 @@ void StatePause::createGUIIfNeeded(GameApp* pGame) {
   UIButton *v_button;
   UIFrame  *v_frame;
 
-  if(m_GUI != NULL) return;
+  if(m_sGUI != NULL) return;
 
-  m_GUI = new UIRoot();
-  m_GUI->setApp(pGame);
-  m_GUI->setFont(pGame->getDrawLib()->getFontSmall()); 
-  m_GUI->setPosition(0, 0,
-		     pGame->getDrawLib()->getDispWidth(),
-		     pGame->getDrawLib()->getDispHeight());
-
-
-  v_frame = new UIFrame(m_GUI,
-			     pGame->getDrawLib()->getDispWidth()/2  - 400/2,
-			     pGame->getDrawLib()->getDispHeight()/2 - 540/2,
-			     "", 400, 540);
+  m_sGUI = new UIRoot();
+  m_sGUI->setApp(pGame);
+  m_sGUI->setFont(pGame->getDrawLib()->getFontSmall()); 
+  m_sGUI->setPosition(0, 0,
+		      pGame->getDrawLib()->getDispWidth(),
+		      pGame->getDrawLib()->getDispHeight());
+  
+  
+  v_frame = new UIFrame(m_sGUI,
+			pGame->getDrawLib()->getDispWidth()/2  - 400/2,
+			pGame->getDrawLib()->getDispHeight()/2 - 540/2,
+			"", 400, 540);
   v_frame->setID("PAUSE_FRAME");
   v_frame->setStyle(UI_FRAMESTYLE_MENU);
 

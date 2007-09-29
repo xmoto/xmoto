@@ -21,6 +21,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateManager.h"
 #include "helpers/Log.h"
 #include "StatePause.h"
+#include "StateFinished.h"
+
+  /*
+TODO of the states
+
+MENU : une classe mère aux menus
+
+PAUSE : gérer le voulez vous quitter yes/no
+FINISHED : gérer le voulez vous quitter yes/no ET sauvegarde du replay
+
+  */
 
 StateManager::StateManager()
 {
@@ -165,6 +176,7 @@ void StateManager::calculateWhichStateIsRendered()
 
 void StateManager::cleanStates() {
   StatePause::clean();
+  StateFinished::clean();
 }
 
 GameState::GameState(bool drawStateBehind,
