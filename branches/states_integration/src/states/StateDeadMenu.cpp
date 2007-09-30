@@ -43,7 +43,6 @@ StateDeadMenu::~StateDeadMenu()
 
 }
 
-
 void StateDeadMenu::enter()
 {
   StateMenu::enter();
@@ -56,9 +55,11 @@ void StateDeadMenu::enter()
   createGUIIfNeeded(m_pGame);
   m_GUI = m_sGUI;
 
-  /* reset the playnext button */
-  //UIButton *playNextButton = reinterpret_cast<UIButton *>(m_GUI->getChild("PAUSE_FRAME:PLAYNEXT_BUTTON"));
-  //playNextButton->enableWindow(m_pGame->isThereANextLevel(m_pGame->getMotoGame()->getLevelSrc()->Id()));
+  UIButton *playNextButton = reinterpret_cast<UIButton *>(m_GUI->getChild("DEADMENU_FRAME:PLAYNEXT_BUTTON"));
+  playNextButton->enableWindow(m_pGame->isThereANextLevel(m_pGame->getMotoGame()->getLevelSrc()->Id()));
+
+  UIButton* saveReplayButton = reinterpret_cast<UIButton *>(m_GUI->getChild("DEADMENU_FRAME:SAVEREPLAY_BUTTON"));
+  saveReplayButton->enableWindow(m_pGame->isAReplayToSave());
 }
 
 void StateDeadMenu::leave()
@@ -77,6 +78,51 @@ void StateDeadMenu::leaveAfterPush()
 }
 
 void StateDeadMenu::checkEvents() {
+  UIButton *pTryAgainButton = reinterpret_cast<UIButton *>(m_GUI->getChild("DEADMENU_FRAME:TRYAGAIN_BUTTON"));
+  if(pTryAgainButton->isClicked()) {
+    pTryAgainButton->setClicked(false);
+
+    m_pGame->m_State = GS_PLAYING; // to be removed, just the time states are finished
+    m_pGame->restartLevel();
+    m_requestForEnd = true;
+  }
+
+  UIButton *pSavereplayButton = reinterpret_cast<UIButton *>(m_GUI->getChild("DEADMENU_FRAME:SAVEREPLAY_BUTTON"));
+  if(pSavereplayButton->isClicked()) {
+    pSavereplayButton->setClicked(false);
+  }
+
+  UIButton *pPlaynextButton = reinterpret_cast<UIButton *>(m_GUI->getChild("DEADMENU_FRAME:PLAYNEXT_BUTTON"));
+  if(pPlaynextButton->isClicked()) {
+    pPlaynextButton->setClicked(false);
+    
+    m_pGame->playNextLevel();
+    m_pGame->setPrePlayAnim(true);
+    m_pGame->setState(GS_PREPLAYING);
+    m_requestForEnd = true;
+  }
+
+  UIButton *pAbortButton = reinterpret_cast<UIButton *>(m_GUI->getChild("DEADMENU_FRAME:ABORT_BUTTON"));
+  if(pAbortButton->isClicked()) {
+    pAbortButton->setClicked(false);
+
+    m_pGame->abortPlaying();
+    m_pGame->setState(m_pGame->m_StateAfterPlaying); // to be removed once states will be finished
+    m_requestForEnd = true;
+  }
+
+  UIButton *pQuitButton = reinterpret_cast<UIButton *>(m_GUI->getChild("DEADMENU_FRAME:QUIT_BUTTON"));
+  if(pQuitButton->isClicked()) {
+    pQuitButton->setClicked(false);
+
+    //UIMsgBox *m_pQuitMsgBox;
+    //m_pQuitMsgBox = m_GUI->msgBox(GAMETEXT_QUITMESSAGE,
+    //			  (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
+
+    m_pGame->requestEnd(); 
+    m_requestForEnd = true;
+  }
+
 }
 
 void StateDeadMenu::update()
@@ -147,47 +193,44 @@ void StateDeadMenu::createGUIIfNeeded(GameApp* pGame) {
   m_sGUI->setPosition(0, 0,
 		      pGame->getDrawLib()->getDispWidth(),
 		      pGame->getDrawLib()->getDispHeight());
+
+  v_frame = new UIFrame(m_sGUI,
+			pGame->getDrawLib()->getDispWidth()/2  - 400/2,
+			pGame->getDrawLib()->getDispHeight()/2 - 540/2,
+			"", 400, 540);
+  v_frame->setID("DEADMENU_FRAME");
+  v_frame->setStyle(UI_FRAMESTYLE_MENU);
+
+  UIStatic *pDeadText = new UIStatic(v_frame, 0, 100, GAMETEXT_JUSTDEAD, v_frame->getPosition().nWidth, 36);
+  pDeadText->setFont(pGame->getDrawLib()->getFontMedium());
+
+  v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 5*57/2 + 0*57, GAMETEXT_TRYAGAIN, 207, 57);
+  v_button->setID("TRYAGAIN_BUTTON");
+  v_button->setContextHelp(CONTEXTHELP_TRY_LEVEL_AGAIN);
+  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+  v_frame->setPrimaryChild(v_button); /* default button */
+
+  v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 5*57/2 + 1*57, GAMETEXT_SAVEREPLAY, 207, 57);
+  v_button->setID("SAVEREPLAY_BUTTON");
+  v_button->setContextHelp(CONTEXTHELP_SAVE_A_REPLAY);
+  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+
+  v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 5*57/2 + 2*57, GAMETEXT_PLAYNEXT, 207, 57);
+  v_button->setID("PLAYNEXT_BUTTON");
+  v_button->setContextHelp(CONTEXTHELP_PLAY_NEXT_LEVEL);
+  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+
+  v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 5*57/2 + 3*57, GAMETEXT_ABORT, 207, 57);
+  v_button->setID("ABORT_BUTTON");
+  v_button->setContextHelp(CONTEXTHELP_BACK_TO_MAIN_MENU);
+  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+
+  v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 5*57/2 + 4*57, GAMETEXT_QUIT, 207, 57);
+  v_button->setID("QUIT_BUTTON");
+  v_button->setContextHelp(CONTEXTHELP_QUIT_THE_GAME);
+  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+
 }
-
-
-
-//      /* In-game JUSTDEAD menu fun */
-//      UIFrame *m_pJustDeadMenu;
-//      int m_nJustDeadShade;
-//      UIButton *m_pJustDeadMenuButtons[10];            
-//      int m_nNumJustDeadMenuButtons;     
-
-//    /* Initialize just-dead menu */
-//    m_pJustDeadMenu = new UIFrame(m_Renderer->getGUI(),drawLib->getDispWidth()/2 - 200,70,"",400,540);
-//    m_pJustDeadMenu->setStyle(UI_FRAMESTYLE_MENU);
-//    
-//    m_pJustDeadMenuButtons[0] = new UIButton(m_pJustDeadMenu,0,0,GAMETEXT_TRYAGAIN,207,57);
-//    m_pJustDeadMenuButtons[0]->setContextHelp(CONTEXTHELP_TRY_LEVEL_AGAIN);
-//    
-//    m_pJustDeadMenuButtons[1] = new UIButton(m_pJustDeadMenu,0,0,GAMETEXT_SAVEREPLAY,207,57);
-//    m_pJustDeadMenuButtons[1]->setContextHelp(CONTEXTHELP_SAVE_A_REPLAY);    
-//    if(!m_bRecordReplays) m_pJustDeadMenuButtons[1]->enableWindow(false);
-//    
-//    m_pJustDeadMenuButtons[2] = new UIButton(m_pJustDeadMenu,0,0,GAMETEXT_PLAYNEXT,207,57);
-//    m_pJustDeadMenuButtons[2]->setContextHelp(CONTEXTHELP_PLAY_NEXT_LEVEL);
-//    
-//    m_pJustDeadMenuButtons[3] = new UIButton(m_pJustDeadMenu,0,0,GAMETEXT_ABORT,207,57);
-//    m_pJustDeadMenuButtons[3]->setContextHelp(CONTEXTHELP_BACK_TO_MAIN_MENU);
-//    
-//    m_pJustDeadMenuButtons[4] = new UIButton(m_pJustDeadMenu,0,0,GAMETEXT_QUIT,207,57);
-//    m_pJustDeadMenuButtons[4]->setContextHelp(CONTEXTHELP_QUIT_THE_GAME);
-//    m_nNumJustDeadMenuButtons = 5;
-//
-//    UIStatic *pJustDeadText = new UIStatic(m_pJustDeadMenu,0,100,GAMETEXT_JUSTDEAD,m_pJustDeadMenu->getPosition().nWidth,36);
-//    pJustDeadText->setFont(drawLib->getFontMedium());
-//    
-//    for(int i=0;i<m_nNumJustDeadMenuButtons;i++) {
-//      m_pJustDeadMenuButtons[i]->setPosition( 200 -207/2,10+m_pJustDeadMenu->getPosition().nHeight/2 - (m_nNumJustDeadMenuButtons*57)/2 + i*57,207,57);
-//      m_pJustDeadMenuButtons[i]->setFont(drawLib->getFontSmall());
-//    }
-//
-//    m_pJustDeadMenu->setPrimaryChild(m_pJustDeadMenuButtons[0]); /* default button: Try Again */
-
 
 //  void GameApp::_HandleJustDeadMenu(void) {
 //    /* Is savereplay box open? */
@@ -205,22 +248,9 @@ void StateDeadMenu::createGUIIfNeeded(GameApp* pGame) {
 //      }
 //    }
 //    
-//    /* Any of the just-dead menu buttons clicked? */
-//    for(int i=0;i<m_nNumJustDeadMenuButtons;i++) {
-//      if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_SAVEREPLAY) {
-//        /* Have we recorded a replay? If not then disable the "Save Replay" button */
-//        if(m_pJustPlayReplay == NULL || m_MotoGame.Players().size() != 1) {
-//          m_pJustDeadMenuButtons[i]->enableWindow(false);
-//        }
-//        else {
-//          m_pJustDeadMenuButtons[i]->enableWindow(true);
-//        }
-//      }    
+ 
 //
-//      if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
-//        /* Uhm... is it likely that there's a next level? */
-//	m_pJustDeadMenuButtons[i]->enableWindow(isThereANextLevel(m_PlaySpecificLevelId));
-//      }
+
 //      
 //      if(m_pJustDeadMenuButtons[i]->isClicked()) {
 //        if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_QUIT) {
@@ -230,26 +260,7 @@ void StateDeadMenu::createGUIIfNeeded(GameApp* pGame) {
 //                                                        (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
 //	  }
 //        }
-//        else if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_TRYAGAIN) {
-//
-//          m_pJustDeadMenu->showWindow(false);
-//	  restartLevel();
-//        }
-//        else if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
-//	  std::string NextLevel = _DetermineNextLevel(m_PlaySpecificLevelId);
-//	  if(NextLevel != "") {        
-//	    m_pJustDeadMenu->showWindow(false);
-//	    m_MotoGame.getCamera()->setPlayerToFollow(NULL);
-//	    m_MotoGame.endLevel();
-//	    m_InputHandler.resetScriptKeyHooks();                     
-//	    m_Renderer->unprepareForNewLevel();                    
-//	    
-//	    m_PlaySpecificLevelId = NextLevel;
-//	    
-//	    setPrePlayAnim(true);
-//	    setState(GS_PREPLAYING);                               
-//          }
-//        }
+
 //        else if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_SAVEREPLAY) {
 //          if(m_pJustPlayReplay != NULL) {
 //            if(m_pSaveReplayMsgBox == NULL) {
@@ -262,18 +273,3 @@ void StateDeadMenu::createGUIIfNeeded(GameApp* pGame) {
 //            }          
 //          }
 //        }
-//        else if(m_pJustDeadMenuButtons[i]->getCaption() == GAMETEXT_ABORT) {
-//          m_pJustDeadMenu->showWindow(false);
-//	  m_MotoGame.getCamera()->setPlayerToFollow(NULL);
-//          m_MotoGame.endLevel();
-//          m_InputHandler.resetScriptKeyHooks();                     
-//          m_Renderer->unprepareForNewLevel();
-//          //setState(GS_MENU);
-//          setState(m_StateAfterPlaying);
-//        }
-//
-//        /* Don't process this clickin' more than once */
-//        m_pJustDeadMenuButtons[i]->setClicked(false);
-//      }
-//    }
-//  }
