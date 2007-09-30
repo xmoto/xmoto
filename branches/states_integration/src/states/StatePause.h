@@ -57,7 +57,7 @@ class StatePause : public StateMenu {
 
   private:
   /* GUI */
-  static UIRoot   *m_sGUI;
+  static UIRoot* m_sGUI;
   static void createGUIIfNeeded(GameApp* pGame);
 };
 

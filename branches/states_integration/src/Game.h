@@ -366,11 +366,7 @@ class StateManager;
       bool m_updateAutomaticallyLevels;
 
       /* In-game JUSTDEAD menu fun */
-      UIFrame *m_pJustDeadMenu;
       int m_nJustDeadShade;
-      UIButton *m_pJustDeadMenuButtons[10];            
-      int m_nNumJustDeadMenuButtons;      
-      float m_fCoolDownEnd;
      
       /* Profile editor fun */
       UIFrame *m_pProfileEditor;  
@@ -460,7 +456,6 @@ class StateManager;
       void _ConfigureJoystick(void);
       void _DrawMenuBackground(void); 
       void _InitMenus(void);        
-      void _InitMenus_PlayingMenus(void);
       void _InitMenus_MainMenu(void);
       void _InitMenus_Others(void);
       void _ImportOptions(void);
@@ -549,7 +544,6 @@ class StateManager;
       int _UpdateGamePlaying(void); /* returns number of physics steps performed */
       int _UpdateGameReplaying(void); /* return whether the game state is valid */
       void _PostUpdatePlaying(void);
-      void _PostUpdateMenuDead(void);
       void _PostUpdateJustDead(void);
 
       void autoZoom();

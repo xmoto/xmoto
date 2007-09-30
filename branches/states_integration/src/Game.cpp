@@ -45,6 +45,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <iomanip.h>
 #include "states/StateManager.h"
 #include "states/StatePause.h"
+#include "states/StateDeadMenu.h"
 
   bool GameApp::haveMouseMoved() {
     int nX,nY;
@@ -609,20 +610,10 @@ GameApp::GameApp() {
 				m_MotoGame.gameMessage(GAMETEXT_JUSTDEAD_RESTART,     false, 15);
 				m_MotoGame.gameMessage(GAMETEXT_JUSTDEAD_DISPLAYMENU, false, 15);
 			} else {
-				setState(GS_DEADMENU);
+			  m_stateManager->pushState(new StateDeadMenu(this, true));
 			}
 			break;
 		}
-    case GS_DEADMENU: {
-      v_newMusicPlaying = "";
-
-      m_bShowCursor = true;
-      m_pJustDeadMenu->showWindow(true);
-
-      /* Possible exit of GS_PLAYING, when the player is dead */
-      m_fCoolDownEnd = getXMTime() + 0.3f;
-      break;
-    }
 		case GS_EDIT_PROFILES: {
 			v_newMusicPlaying = "menu1";
 			//        SDL_ShowCursor(SDL_ENABLE);
@@ -949,40 +940,11 @@ GameApp::GameApp() {
     break;
   case SDLK_ESCAPE:
     m_MotoGame.clearGameMessages();
-    setState(GS_DEADMENU);
+    m_stateManager->pushState(new StateDeadMenu(this, false)); // state should be replaced and not push - to make after states are finished
     break;
   }
   break;
       }
-      case GS_DEADMENU:
-        switch(nKey) {
-          case SDLK_ESCAPE:
-            if(m_pSaveReplayMsgBox == NULL) {          
-              /* Out of this game, please */
-              m_pJustDeadMenu->showWindow(false);
-							m_MotoGame.resetFollow();
-              m_MotoGame.endLevel();
-              m_Renderer->unprepareForNewLevel();
-              //setState(GS_MENU);
-              setState(m_StateAfterPlaying);
-            }
-            else {
-              if(m_State == GS_DEADMENU)
-                if(getXMTime() < m_fCoolDownEnd)
-                  break;
-               
-              m_Renderer->getGUI()->keyDown(nKey, mod,nChar);
-            }
-            break;
-          default:
-            if(m_State == GS_DEADMENU)
-              if(getXMTime() < m_fCoolDownEnd)
-                break;
-             
-            m_Renderer->getGUI()->keyDown(nKey, mod,nChar);
-            break;      
-        }
-        break;
       case GS_REPLAYING:
         switch(nKey) {
           case SDLK_ESCAPE:
@@ -1102,6 +1064,7 @@ GameApp::GameApp() {
     // states already in the state manager
     case GS_FINISHED:
     case GS_PAUSE:
+    case GS_DEADMENU:
       m_stateManager->keyDown(nKey, mod, nChar);
       break;
     }
@@ -1117,7 +1080,6 @@ GameApp::GameApp() {
       case GS_EDIT_WEBCONFIG:
       case GS_EDIT_PROFILES:
       case GS_LEVEL_INFO_VIEWER:
-      case GS_DEADMENU:
       case GS_LEVELPACK_VIEWER:
       case GS_MENU:
         m_Renderer->getGUI()->keyUp(nKey, mod);
@@ -1137,6 +1099,7 @@ GameApp::GameApp() {
     // states already in the state manager
     case GS_FINISHED:
     case GS_PAUSE:
+    case GS_DEADMENU:
       m_stateManager->keyUp(nKey, mod);
       break;
     }
@@ -1148,7 +1111,6 @@ GameApp::GameApp() {
   void GameApp::mouseDoubleClick(int nButton) {
     switch(m_State) {
       case GS_MENU:
-      case GS_DEADMENU:
       case GS_EDIT_PROFILES:
       case GS_EDIT_WEBCONFIG:
       case GS_LEVEL_INFO_VIEWER:
@@ -1166,6 +1128,7 @@ GameApp::GameApp() {
     // states already in the state manager
     case GS_FINISHED:
     case GS_PAUSE:
+    case GS_DEADMENU:
       m_stateManager->mouseDoubleClick(nButton);
       break;
     }
@@ -1174,7 +1137,6 @@ GameApp::GameApp() {
   void GameApp::mouseDown(int nButton) {
     switch(m_State) {
       case GS_MENU:
-      case GS_DEADMENU:
       case GS_EDIT_PROFILES:
       case GS_EDIT_WEBCONFIG:
       case GS_LEVEL_INFO_VIEWER:
@@ -1208,6 +1170,7 @@ GameApp::GameApp() {
       // states already in the state manager
       case GS_FINISHED:
       case GS_PAUSE:
+      case GS_DEADMENU:
       m_stateManager->mouseDown(nButton);
       break;
 
@@ -1217,7 +1180,6 @@ GameApp::GameApp() {
   void GameApp::mouseUp(int nButton) {
     switch(m_State) {
       case GS_MENU:
-      case GS_DEADMENU:
       case GS_EDIT_PROFILES:
       case GS_EDIT_WEBCONFIG:
       case GS_LEVEL_INFO_VIEWER:
@@ -1244,6 +1206,7 @@ GameApp::GameApp() {
       // states already in the state manager
       case GS_FINISHED:
       case GS_PAUSE:
+      case GS_DEADMENU:
       m_stateManager->mouseUp(nButton);
       break;
     }

@@ -93,8 +93,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
       case GS_PAUSE:
       case GS_FINISHED:
-
       case GS_DEADMENU:
+
       case GS_DEADJUST:
       case GS_REPLAYING:
       case GS_PREPLAYING:
@@ -181,7 +181,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
              desired frame rate */
           int nADelay = 0;    
           
-	  if ((m_State == GS_DEADMENU || m_State == GS_DEADJUST)) {
+	  if (m_State == GS_DEADJUST) {
             setFrameDelay(10);
           } else if(m_State == GS_REPLAYING && m_stopToUpdateReplay == true) {
 	    nADelay = 10;
@@ -207,10 +207,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
           if(m_State == GS_DEADJUST) {
             /* Hmm, you're dead and you know it. */
             _PostUpdateJustDead();
-          }
-          else if(m_State == GS_DEADMENU) {
-            /* Hmm, you're dead and you know it. */
-            _PostUpdateMenuDead();
           }
          
           /* Context menu? */
@@ -246,8 +242,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
 
     // states managed via the state manager
-    if(m_State == GS_PAUSE ||
-       m_State == GS_FINISHED
+    if(m_State == GS_PAUSE    ||
+       m_State == GS_FINISHED ||
+       m_State == GS_DEADMENU
        ) {
       /* draw the game states */
       m_stateManager->update();
@@ -307,7 +304,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       case GS_EDIT_PROFILES:
       case GS_EDIT_WEBCONFIG:
       case GS_LEVEL_INFO_VIEWER:
-      case GS_DEADMENU:
       case GS_LEVELPACK_VIEWER:
         m_bShowCursor = true;
         //SDL_ShowCursor(SDL_ENABLE);
@@ -580,19 +576,3 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       getDrawLib()->drawBox(Vector2f(0,0),Vector2f(getDrawLib()->getDispWidth(),getDrawLib()->getDispHeight()),0,MAKE_COLOR(0,0,0,m_nJustDeadShade));     
     }
   }
-
-  void GameApp::_PostUpdateMenuDead(void) {
-    if(m_xmsession->ugly() == false) {
-      if(m_nJustDeadShade < 150) m_nJustDeadShade+=8;
-      getDrawLib()->drawBox(Vector2f(0,0),Vector2f(getDrawLib()->getDispWidth(),getDrawLib()->getDispHeight()),0,MAKE_COLOR(0,0,0,m_nJustDeadShade));     
-    }
-    
-    /* Update mouse stuff */
-    m_Renderer->getGUI()->dispatchMouseHover();
-    
-    if(getXMTime() > m_fCoolDownEnd) {
-      /* Blah... */
-      _HandleJustDeadMenu();
-    }
-  }
-

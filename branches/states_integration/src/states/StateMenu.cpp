@@ -29,12 +29,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 StateMenu::StateMenu(bool drawStateBehind,
 		     bool updateStatesBehind,
-		     GameApp* pGame):
+		     GameApp* pGame,
+		     bool i_doShadeAnim):
   GameState(drawStateBehind,
 	    updateStatesBehind,
 	    pGame)
 {
   m_GUI = NULL;
+  m_doShadeAnim = i_doShadeAnim;
 }
 
 StateMenu::~StateMenu()
@@ -77,7 +79,7 @@ void StateMenu::render()
     float v_currentTime = GameApp::getXMTime();
     int   v_nShade;
 
-    if(v_currentTime - m_nShadeTime < MENU_SHADING_TIME) {
+    if(v_currentTime - m_nShadeTime < MENU_SHADING_TIME && m_doShadeAnim) {
       v_nShade = (int ) ((v_currentTime - m_nShadeTime) * (MENU_SHADING_VALUE / MENU_SHADING_TIME));
     } else {
       v_nShade = MENU_SHADING_VALUE;

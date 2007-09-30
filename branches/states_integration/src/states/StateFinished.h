@@ -63,7 +63,7 @@ class StateFinished : public StateMenu {
 			   float fFinishTime, const std::string& TimeStamp);      
 
   /* GUI */
-  static UIRoot   *m_sGUI;
+  static UIRoot* m_sGUI;
   static void createGUIIfNeeded(GameApp* pGame);
 };
 
