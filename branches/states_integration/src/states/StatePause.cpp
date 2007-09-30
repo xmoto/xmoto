@@ -113,12 +113,10 @@ void StatePause::checkEvents() {
     pQuitButton->setClicked(false);
 
     //UIMsgBox *m_pQuitMsgBox;
-
     //m_pQuitMsgBox = m_GUI->msgBox(GAMETEXT_QUITMESSAGE,
     //			  (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
 
     m_pGame->requestEnd(); 
-
     m_requestForEnd = true;
   }
 }

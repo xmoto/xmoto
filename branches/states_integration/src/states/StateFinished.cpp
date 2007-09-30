@@ -18,11 +18,12 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
+#include "GameText.h"
 #include "StateFinished.h"
 #include "Game.h"
 #include "XMSession.h"
 #include "drawlib/DrawLib.h"
-#include "GameText.h"
+#include "Sound.h"
 
 /* static members */
 UIRoot* StateFinished::m_sGUI = NULL;
@@ -47,6 +48,8 @@ void StateFinished::enter()
 {
   float v_finish_time = 0.0;
   std::string TimeStamp;
+  bool v_is_a_room_highscore;
+  bool v_is_a_personnal_highscore;
 
   StateMenu::enter();
 
@@ -58,133 +61,67 @@ void StateFinished::enter()
   createGUIIfNeeded(m_pGame);
   m_GUI = m_sGUI;
 
-//  /* reset the playnext button */
-//  UIButton *playNextButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:PLAYNEXT_BUTTON"));
-//  playNextButton->enableWindow(m_pGame->isThereANextLevel(m_pGame->getMotoGame()->getLevelSrc()->Id()));
-//
-//
-//  /* Finish replay */
-//  if(m_pJustPlayReplay != NULL) {
-//    if(m_MotoGame.Players().size() == 1) {
-//      /* save the last state because scene don't record each frame */
-//      SerializedBikeState BikeState;
-//      MotoGame::getSerializedBikeState(m_MotoGame.Players()[0]->getState(), m_MotoGame.getTime(), &BikeState);
-//      m_pJustPlayReplay->storeState(BikeState);
-//      m_pJustPlayReplay->finishReplay(true,m_MotoGame.Players()[0]->finishTime());
-//    }
-//  }
-//
-//  if(m_MotoGame.Players().size() == 1) {
-//    /* display message on finish and eventually save the replay */
-//        
-//    /* is it a highscore ? */
-//    float v_best_personal_time;
-//    float v_best_room_time;
-//    float v_current_time;
-//    bool v_is_a_highscore;
-//    bool v_is_a_personal_highscore;
-//    
-//    /* get best player result */
-//    v_result = m_db->readDB("SELECT MIN(finishTime) FROM profile_completedLevels WHERE "
-//			    "id_level=\"" + 
-//			    xmDatabase::protectString(m_MotoGame.getLevelSrc()->Id()) + "\" " + 
-//			    "AND id_profile=\"" + xmDatabase::protectString(m_xmsession->profile())  + "\";",
-//			    nrow);
-//    v_res = m_db->getResult(v_result, 1, 0, 0);
-//    if(v_res != NULL) {
-//      v_best_personal_time = atof(v_res);
-//    } else {
-//      /* should never happend because the score is already stored */
-//      v_best_personal_time = -1.0;
-//    }
-//    m_db->read_DB_free(v_result);
-//    
-//    v_current_time = m_MotoGame.Players()[0]->finishTime();
-//    
-//    v_is_a_personal_highscore = (v_current_time <= v_best_personal_time
-//				 || v_best_personal_time < 0.0);
-//    
-//    /* search a better webhighscore */
-//    v_best_room_time = m_db->webrooms_getHighscoreTime(m_WebHighscoresIdRoom,
-//						       m_MotoGame.getLevelSrc()->Id());
-//    v_is_a_highscore = (v_current_time < v_best_room_time
-//			|| v_best_room_time < 0.0);
-//    
-//    // disable upload button
-//    for(int i=0;i<m_nNumFinishMenuButtons;i++) {
-//      if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_UPLOAD_HIGHSCORE) {
-//	m_pFinishMenuButtons[i]->enableWindow(false);
-//      }
-//    }
-//    
-//    if(v_is_a_highscore) { /* best highscore */
-//      try {
-//	Sound::playSampleByName(m_theme.getSound("NewHighscore")->FilePath());
-//      } catch(Exception &e) {
-//      }
-//      
-//      // enable upload button
-//      if(m_xmsession->www()) {
-//	if(m_pJustPlayReplay != NULL) {
-//	  for(int i=0;i<m_nNumFinishMenuButtons;i++) {
-//	    if(m_pFinishMenuButtons[i]->getCaption() == GAMETEXT_UPLOAD_HIGHSCORE) {
-//	      m_pFinishMenuButtons[i]->enableWindow(true);
-//	    }
-//	  }
-//	}
-//      }
-//      
-//      if(m_pJustPlayReplay != NULL && m_bAutosaveHighscoreReplays) {
-//	std::string v_replayName = Replay::giveAutomaticName();
-//	_SaveReplay(v_replayName);
-//	m_Renderer->showMsgNewBestHighscore(v_replayName);
-//      } else {
-//	m_Renderer->showMsgNewBestHighscore();
-//      } /* ok i officially give up on indention in x-moto :P */
-//    } else {
-//      if(v_is_a_personal_highscore) { /* personal highscore */
-//	try {
-//	  Sound::playSampleByName(m_theme.getSound("NewHighscore")->FilePath());
-//	} catch(Exception &e) {
-//	}
-//	if(m_pJustPlayReplay != NULL && m_bAutosaveHighscoreReplays) {
-//	  std::string v_replayName = Replay::giveAutomaticName();
-//	  _SaveReplay(v_replayName);
-//	  m_Renderer->showMsgNewPersonalHighscore(v_replayName);
-//	} else {
-//	  m_Renderer->showMsgNewPersonalHighscore();
-//	}
-//	
-//      } else { /* no highscore */
-//	m_Renderer->hideMsgNewHighscore();
-//      }
-//    }
-//  }
-//  
-//  /* update profiles */
-//  float v_finish_time = 0.0;
-//  std::string TimeStamp = getTimeStamp();
-//  for(unsigned int i=0; i<m_MotoGame.Players().size(); i++) {
-//    if(m_MotoGame.Players()[i]->isFinished()) {
-//      v_finish_time  = m_MotoGame.Players()[i]->finishTime();
-//    }
-//  }
-//  if(m_MotoGame.Players().size() == 1) {
-//    m_db->profiles_addFinishTime(m_xmsession->profile(), m_MotoGame.getLevelSrc()->Id(),
-//				 TimeStamp, v_finish_time);
-//  }
-//  
-//  /* Update stats */
-//  /* update stats only in one player mode */
-//  if(m_MotoGame.Players().size() == 1) {       
-//    m_db->stats_levelCompleted(m_xmsession->profile(),
-//			       m_MotoGame.getLevelSrc()->Id(),
-//			       m_MotoGame.Players()[0]->finishTime());
-//    _UpdateLevelsLists();
-//    _UpdateCurrentPackList(m_MotoGame.getLevelSrc()->Id(),
-//			   m_MotoGame.Players()[0]->finishTime());
-//  }
-//
+  /* reset the playnext button */
+  UIButton *playNextButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:PLAYNEXT_BUTTON"));
+  playNextButton->enableWindow(m_pGame->isThereANextLevel(m_pGame->getMotoGame()->getLevelSrc()->Id()));
+
+  UIButton* saveReplayButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:SAVEREPLAY_BUTTON"));
+  saveReplayButton->enableWindow(m_pGame->isAReplayToSave());
+
+  UIButton* v_uploadButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:UPLOAD_BUTTON"));
+  v_uploadButton->enableWindow(false);
+
+  UIStatic* v_pNewHighscore_str = reinterpret_cast<UIStatic *>(m_GUI->getChild("HIGHSCORESTR_STATIC"));
+  v_pNewHighscore_str->setCaption("");
+
+  UIStatic* v_pNewHighscoreSaved_str = reinterpret_cast<UIStatic *>(m_GUI->getChild("HIGHSCORESAVEDSTR_STATIC"));
+  v_pNewHighscoreSaved_str->setCaption("");
+
+  m_pGame->isTheCurrentPlayAHighscore(v_is_a_personnal_highscore, v_is_a_room_highscore);
+
+  /* replay */
+  if(m_pGame->isAReplayToSave()) {
+
+    /* upload button */
+    if(v_is_a_room_highscore) {
+      /* active upload button */
+      if(m_pGame->getSession()->www()) {
+	v_uploadButton->enableWindow(v_is_a_room_highscore);
+      }
+    }
+
+    /* autosave */
+    if(v_is_a_room_highscore || v_is_a_personnal_highscore) {
+      if(m_pGame->getSession()->autosaveHighscoreReplays()) {
+	std::string v_replayName;
+	char v_str[256];
+	v_replayName = Replay::giveAutomaticName();
+	m_pGame->saveReplay(v_replayName);
+	snprintf(v_str, 256, GAMETEXT_SAVE_AS, v_replayName.c_str());
+	v_pNewHighscoreSaved_str->setCaption(v_str);
+      }
+    }
+  }
+
+  /* sound */
+  if(v_is_a_room_highscore || v_is_a_personnal_highscore) {
+    /* play a sound */
+    try {
+      Sound::playSampleByName(m_pGame->getTheme()->getSound("NewHighscore")->FilePath());
+    } catch(Exception &e) {
+    }
+  }
+
+  /* new highscores text */
+  if(v_is_a_room_highscore) {
+    v_pNewHighscore_str->setFont(m_pGame->getDrawLib()->getFontMedium());
+    v_pNewHighscore_str->setCaption(GAMETEXT_NEWHIGHSCORE);
+  } else {
+    if(v_is_a_personnal_highscore) {
+      v_pNewHighscore_str->setFont(m_pGame->getDrawLib()->getFontSmall());
+      v_pNewHighscore_str->setCaption(GAMETEXT_NEWHIGHSCOREPERSONAL);
+    }
+  }
 
   UIBestTimes *v_pBestTimes = reinterpret_cast<UIBestTimes *>(m_GUI->getChild("BESTTIMES"));
   makeBestTimesWindow(v_pBestTimes, m_pGame->getDb(), m_pGame->getSession()->profile(), m_pGame->getMotoGame()->getLevelSrc()->Id(),
@@ -207,6 +144,89 @@ void StateFinished::leaveAfterPush()
 }
 
 void StateFinished::checkEvents() {
+
+  UIButton *pTryAgainButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:TRYAGAIN_BUTTON"));
+  if(pTryAgainButton->isClicked()) {
+    pTryAgainButton->setClicked(false);
+
+    m_pGame->m_State = GS_PLAYING; // to be removed, just the time states are finished
+    m_pGame->restartLevel();
+    m_requestForEnd = true;
+  }
+
+  UIButton *pPlaynextButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:PLAYNEXT_BUTTON"));
+  if(pPlaynextButton->isClicked()) {
+    pPlaynextButton->setClicked(false);
+
+    m_pGame->playNextLevel();
+    m_pGame->setPrePlayAnim(true);
+    m_pGame->setState(GS_PREPLAYING);
+    m_requestForEnd = true;
+  }
+
+  UIButton *pSavereplayButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:SAVEREPLAY_BUTTON"));
+  if(pSavereplayButton->isClicked()) {
+    pSavereplayButton->setClicked(false);
+  }
+
+  UIButton *pUploadButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:UPLOAD_BUTTON"));
+  if(pUploadButton->isClicked()) {
+    pUploadButton->setClicked(false);
+
+    m_pGame->uploadHighscore("Latest");
+  }
+
+  UIButton *pAbortButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:ABORT_BUTTON"));
+  if(pAbortButton->isClicked()) {
+    pAbortButton->setClicked(false);
+
+    m_pGame->abortPlaying();
+    m_pGame->setState(m_pGame->m_StateAfterPlaying); // to be removed once states will be finished
+    m_requestForEnd = true;
+  }
+
+  UIButton *pQuitButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:QUIT_BUTTON"));
+  if(pQuitButton->isClicked()) {
+    pQuitButton->setClicked(false);
+
+    //UIMsgBox *m_pQuitMsgBox;
+    //m_pQuitMsgBox = m_GUI->msgBox(GAMETEXT_QUITMESSAGE,
+    //			  (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
+
+    m_pGame->requestEnd(); 
+    m_requestForEnd = true;
+  }
+
+//      UIStatic *m_pNewWorldRecord;
+//void StatePause::checkEvents() {
+//    /* Is savereplay box open? */
+//    if(m_pSaveReplayMsgBox != NULL) {
+//      UIMsgBoxButton Clicked = m_pSaveReplayMsgBox->getClicked();
+//      if(Clicked != UI_MSGBOX_NOTHING) {
+//        std::string Name = m_pSaveReplayMsgBox->getTextInput();
+//      
+//        delete m_pSaveReplayMsgBox;
+//        m_pSaveReplayMsgBox = NULL;
+//
+//        if(Clicked == UI_MSGBOX_OK) {
+//          _SaveReplay(Name);
+//        }    
+//      }
+//    }
+//      
+//        else if(v_frameButtons[i]->getCaption() == GAMETEXT_SAVEREPLAY) {
+//          if(m_pJustPlayReplay != NULL) {
+//            if(m_pSaveReplayMsgBox == NULL) {
+//	      m_Renderer->getGUI()->setFont(drawLib->getFontSmall());
+//              m_pSaveReplayMsgBox = m_Renderer->getGUI()->msgBox(std::string(GAMETEXT_ENTERREPLAYNAME) + ":",
+//                                                                (UIMsgBoxButton)(UI_MSGBOX_OK|UI_MSGBOX_CANCEL),
+//                                                                true);
+//              m_pSaveReplayMsgBox->setTextInputFont(drawLib->getFontMedium());
+//	      m_pSaveReplayMsgBox->setTextInput(Replay::giveAutomaticName());
+//            }          
+//          }
+	
+
 }
 
 void StateFinished::update()
@@ -268,10 +288,12 @@ void StateFinished::clean() {
 void StateFinished::createGUIIfNeeded(GameApp* pGame) {
   if(m_sGUI != NULL) return;
 
-  UIFrame     *v_frame;
-  UIBestTimes *v_pBestTimes;
-  UIButton    *v_button;
-  UIStatic    *v_pFinishText;
+  UIFrame*     v_frame;
+  UIBestTimes* v_pBestTimes;
+  UIButton*    v_button;
+  UIStatic*    v_pFinishText;
+  UIStatic*    v_pNewHighscore_str;
+  UIStatic*    v_pNewHighscoreSaved_str;
 
   m_sGUI = new UIRoot();
   m_sGUI->setApp(pGame);
@@ -282,6 +304,7 @@ void StateFinished::createGUIIfNeeded(GameApp* pGame) {
   
 
   v_frame = new UIFrame(m_sGUI, 300, 30, "", 400, 540);
+  v_frame->setID("FINISHED_FRAME");
   v_frame->setStyle(UI_FRAMESTYLE_MENU);
 
   v_pFinishText = new UIStatic(v_frame, 0, 100, GAMETEXT_FINISH, v_frame->getPosition().nWidth, 36);
@@ -293,133 +316,47 @@ void StateFinished::createGUIIfNeeded(GameApp* pGame) {
   v_pBestTimes->setHFont(pGame->getDrawLib()->getFontMedium());
 
   v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 6*57/2 + 0*49 + 25, GAMETEXT_TRYAGAIN, 207, 57);
+  v_button->setID("TRYAGAIN_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_PLAY_THIS_LEVEL_AGAIN);
   v_button->setFont(pGame->getDrawLib()->getFontSmall());
   v_frame->setPrimaryChild(v_button); /* default button */
 
   v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 6*57/2 + 1*49 + 25, GAMETEXT_PLAYNEXT, 207, 57);
+  v_button->setID("PLAYNEXT_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_PLAY_NEXT_LEVEL);
   v_button->setFont(pGame->getDrawLib()->getFontSmall());
 
   v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 6*57/2 + 2*49 + 25, GAMETEXT_SAVEREPLAY, 207, 57);
+  v_button->setID("SAVEREPLAY_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_SAVE_A_REPLAY);
   v_button->setFont(pGame->getDrawLib()->getFontSmall());
 
   v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 6*57/2 + 3*49 + 25, GAMETEXT_UPLOAD_HIGHSCORE, 207, 57);
+  v_button->setID("UPLOAD_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_UPLOAD_HIGHSCORE);
   v_button->setFont(pGame->getDrawLib()->getFontSmall());
 
   v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 6*57/2 + 4*49 + 25, GAMETEXT_ABORT, 207, 57);
+  v_button->setID("ABORT_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_BACK_TO_MAIN_MENU);
   v_button->setFont(pGame->getDrawLib()->getFontSmall());
 
   v_button = new UIButton(v_frame, 400/2 - 207/2, v_frame->getPosition().nHeight/2 - 6*57/2 + 5*49 + 25, GAMETEXT_QUIT, 207, 57);
+  v_button->setID("QUIT_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_QUIT_THE_GAME);
   v_button->setFont(pGame->getDrawLib()->getFontSmall());
 
+  v_pNewHighscore_str = new UIStatic(m_sGUI, 0, m_sGUI->getPosition().nHeight - 20 - 20, "Where are you ?", m_sGUI->getPosition().nWidth, 20);
+  v_pNewHighscore_str->setID("HIGHSCORESTR_STATIC");
+  v_pNewHighscore_str->setFont(pGame->getDrawLib()->getFontSmall());
+  v_pNewHighscore_str->setHAlign(UI_ALIGN_CENTER);
+
+  v_pNewHighscoreSaved_str = new UIStatic(m_sGUI, 0, m_sGUI->getPosition().nHeight - 20, "And you ?", m_sGUI->getPosition().nWidth, 20);
+  v_pNewHighscoreSaved_str->setID("HIGHSCORESAVEDSTR_STATIC");
+  v_pNewHighscoreSaved_str->setFont(pGame->getDrawLib()->getFontSmall());
+  v_pNewHighscoreSaved_str->setHAlign(UI_ALIGN_CENTER);
+
 }
-
-//      UIStatic *m_pNewWorldRecord;
-//void StatePause::checkEvents() {
-//    /* Is savereplay box open? */
-//    if(m_pSaveReplayMsgBox != NULL) {
-//      UIMsgBoxButton Clicked = m_pSaveReplayMsgBox->getClicked();
-//      if(Clicked != UI_MSGBOX_NOTHING) {
-//        std::string Name = m_pSaveReplayMsgBox->getTextInput();
-//      
-//        delete m_pSaveReplayMsgBox;
-//        m_pSaveReplayMsgBox = NULL;
-//
-//        if(Clicked == UI_MSGBOX_OK) {
-//          _SaveReplay(Name);
-//        }    
-//      }
-//    }
-//    
-//    /* Any of the finish menu buttons clicked? */
-//    for(int i=0;i<m_nNumFinishMenuButtons;i++) {
-//      if(v_frameButtons[i]->getCaption() == GAMETEXT_SAVEREPLAY) {
-//        /* Have we recorded a replay? If not then disable the "Save Replay" button */
-//        if(m_pJustPlayReplay == NULL || m_MotoGame.Players().size() != 1) {
-//          v_frameButtons[i]->enableWindow(false);
-//        }
-//        else {
-//          v_frameButtons[i]->enableWindow(true);
-//        }
-//      }
-//
-//      if(v_frameButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
-//        /* Uhm... is it likely that there's a next level? */
-//	v_frameButtons[i]->enableWindow(isThereANextLevel(m_PlaySpecificLevelId));
-//      }
-//      
-//      if(v_frameButtons[i]->isClicked()) {
-//        if(v_frameButtons[i]->getCaption() == GAMETEXT_QUIT) {
-//          if(m_pQuitMsgBox == NULL) {
-//	    m_Renderer->getGUI()->setFont(drawLib->getFontSmall());
-//            m_pQuitMsgBox = m_Renderer->getGUI()->msgBox(GAMETEXT_QUITMESSAGE,
-//                                                        (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
-//	  }
-//        }
-//        else if(v_frameButtons[i]->getCaption() == GAMETEXT_PLAYNEXT) {
-//	  std::string NextLevel = _DetermineNextLevel(m_PlaySpecificLevelId);
-//	  if(NextLevel != "") {        
-//	    v_frame->showWindow(false);
-//	    m_Renderer->hideMsgNewHighscore();
-//	    m_pBestTimes->showWindow(false);
-//	    m_MotoGame.getCamera()->setPlayerToFollow(NULL);
-//	    m_MotoGame.endLevel();
-//	    m_InputHandler.resetScriptKeyHooks();                     
-//	    m_Renderer->unprepareForNewLevel();                    
-//	    
-//	    m_PlaySpecificLevelId = NextLevel;
-//	    
-//	    setPrePlayAnim(true);
-//	    setState(GS_PREPLAYING);                               
-//          }
-//        }
-//        else if(v_frameButtons[i]->getCaption() == GAMETEXT_SAVEREPLAY) {
-//          if(m_pJustPlayReplay != NULL) {
-//            if(m_pSaveReplayMsgBox == NULL) {
-//	      m_Renderer->getGUI()->setFont(drawLib->getFontSmall());
-//              m_pSaveReplayMsgBox = m_Renderer->getGUI()->msgBox(std::string(GAMETEXT_ENTERREPLAYNAME) + ":",
-//                                                                (UIMsgBoxButton)(UI_MSGBOX_OK|UI_MSGBOX_CANCEL),
-//                                                                true);
-//              m_pSaveReplayMsgBox->setTextInputFont(drawLib->getFontMedium());
-//	      m_pSaveReplayMsgBox->setTextInput(Replay::giveAutomaticName());
-//            }          
-//          }
-//        }
-//        else if(v_frameButtons[i]->getCaption() == GAMETEXT_UPLOAD_HIGHSCORE) {
-//	  _UploadHighscore("Latest");
-//        }	
-//        else if(v_frameButtons[i]->getCaption() == GAMETEXT_TRYAGAIN) {
-//          Level *pCurLevel = m_MotoGame.getLevelSrc();
-//          m_PlaySpecificLevelId = pCurLevel->Id();
-//          v_frame->showWindow(false);
-//	  m_Renderer->hideMsgNewHighscore();
-//          m_pBestTimes->showWindow(false);
-//
-//	  restartLevel();
-//        }
-//        else if(v_frameButtons[i]->getCaption() == GAMETEXT_ABORT) {
-//          v_frame->showWindow(false);
-//	  m_Renderer->hideMsgNewHighscore();
-//          m_pBestTimes->showWindow(false);
-//	  m_MotoGame.getCamera()->setPlayerToFollow(NULL);
-//          m_MotoGame.endLevel();
-//          m_InputHandler.resetScriptKeyHooks();                     
-//          m_Renderer->unprepareForNewLevel();
-//          setState(m_StateAfterPlaying);                   
-//        }
-//
-//        /* Don't process this clickin' more than once */
-//        v_frameButtons[i]->setClicked(false);
-//      }
-//    }
-//  }
-//}
-
 
 void StateFinished::makeBestTimesWindow(UIBestTimes *pWindow,
 					xmDatabase *i_db,

@@ -60,34 +60,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     getGUI()->setPosition(0,0,getParent()->getDrawLib()->getDispWidth(),getParent()->getDrawLib()->getDispHeight());
     getGUI()->setFont(getParent()->getDrawLib()->getFontSmall());    
 
-    /* new highscore ! */
-    m_pInGameNewHighscore = new UIWindow(getGUI(),405,475,"",200,100);
-    m_pInGameNewHighscore->showWindow(false);
-
-    m_pNewHighscorePersonal_str = new UIStatic(m_pInGameNewHighscore,
-					       0, 5,
-					       GAMETEXT_NEWHIGHSCOREPERSONAL,
-					       200, 20);
-    m_pNewHighscorePersonal_str->setFont(getParent()->getDrawLib()->getFontSmall());
-    m_pNewHighscorePersonal_str->setHAlign(UI_ALIGN_CENTER);
-    m_pNewHighscorePersonal_str->showWindow(false);
-
-    m_pNewHighscoreBest_str = new UIStatic(m_pInGameNewHighscore,
-					   0, 0,
-					   GAMETEXT_NEWHIGHSCORE,
-					   200, 30);
-    m_pNewHighscoreBest_str->setFont(getParent()->getDrawLib()->getFontMedium());
-    m_pNewHighscoreBest_str->setHAlign(UI_ALIGN_CENTER);
-    m_pNewHighscoreBest_str->showWindow(false);
-
-    m_pNewHighscoreSave_str = new UIStatic(m_pInGameNewHighscore,
-					   0, 25,
-					   "",
-					   200, 20);
-    m_pNewHighscoreSave_str->setFont(getParent()->getDrawLib()->getFontSmall());
-    m_pNewHighscoreSave_str->setHAlign(UI_ALIGN_CENTER);
-    m_pNewHighscoreSave_str->showWindow(false);
-
     /* Overlays? */
     m_Overlay.init(getParent()->getDrawLib(),512,512);
 
@@ -1903,40 +1875,6 @@ int GameRenderer::nbParticlesRendered() const {
 #endif
       
     }
-  }
-  
-  void GameRenderer::showMsgNewPersonalHighscore(std::string p_save) {
-    m_pInGameNewHighscore->showWindow(true);
-    m_pNewHighscorePersonal_str->showWindow(true);
-    m_pNewHighscoreBest_str->showWindow(false);
-    if(p_save == "") {
-      m_pNewHighscoreSave_str->showWindow(false);
-    } else {
-      char v_str[256];
-      snprintf(v_str, 256, GAMETEXT_SAVE_AS, p_save.c_str());
-
-      m_pNewHighscoreSave_str->showWindow(true);
-      m_pNewHighscoreSave_str->setCaption(v_str);
-    }
-  }
-  
-  void GameRenderer::showMsgNewBestHighscore(std::string p_save) {
-    m_pInGameNewHighscore->showWindow(true);
-    m_pNewHighscorePersonal_str->showWindow(false);
-    m_pNewHighscoreBest_str->showWindow(true);
-    if(p_save == "") {
-      m_pNewHighscoreSave_str->showWindow(false);
-    } else {
-      char v_str[256];
-      snprintf(v_str, 256, GAMETEXT_SAVE_AS, p_save.c_str());
-
-      m_pNewHighscoreSave_str->showWindow(true);
-      m_pNewHighscoreSave_str->setCaption(v_str);
-    }
-  }
-
-  void GameRenderer::hideMsgNewHighscore() {
-    m_pInGameNewHighscore->showWindow(false);
   }
 
   /*===========================================================================

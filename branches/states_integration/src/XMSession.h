@@ -78,6 +78,8 @@ class XMSession {
   void setGhostStrategy_THEBEST(bool i_value);
   bool ghostStrategy_BESTOFROOM() const;
   void setGhostStrategy_BESTOFROOM(bool i_value);
+  bool autosaveHighscoreReplays() const;
+  void setAutosaveHighscoreReplays(bool i_value);
 
   private:
   bool m_verbose;
@@ -100,6 +102,7 @@ class XMSession {
   bool m_ugly;
   bool m_uglyOver;
   bool m_testTheme;
+  bool m_autosaveHighscoreReplays;
 
   bool m_ghostStrategy_MYBEST;
   bool m_ghostStrategy_THEBEST;

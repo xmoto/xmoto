@@ -2076,7 +2076,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         m_pSaveReplayMsgBox = NULL;
 
         if(Clicked == UI_MSGBOX_OK) {
-          _SaveReplay(Name);
+          saveReplay(Name);
         }        
       }
     }
@@ -2794,7 +2794,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       if(pReplaysList->getSelected() >= 0 && pReplaysList->getSelected() < pReplaysList->getEntries().size()) {
         UIListEntry *pListEntry = pReplaysList->getEntries()[pReplaysList->getSelected()];
         if(pListEntry != NULL) {
-	  _UploadHighscore(pListEntry->Text[0]);
+	  uploadHighscore(pListEntry->Text[0]);
 	}
       }
     }
@@ -3272,7 +3272,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     pInitZoom->setChecked(m_Config.getBool("InitZoom"));
     pDeathAnim->setChecked(m_Config.getBool("DeathAnim"));
     pContextHelp->setChecked(m_Config.getBool("ContextHelp"));
-    pAutosaveReplays->setChecked(m_Config.getBool("AutosaveHighscoreReplays"));
+    pAutosaveReplays->setChecked(m_xmsession->autosaveHighscoreReplays());
 
     std::string v_themeName = m_Config.getString("Theme");
     int nTheme = 0;
@@ -3411,11 +3411,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       m_Config.setValue("ShowGhostTimeDiff",m_Config.getDefaultValue("ShowGhostTimeDiff"));
 
       m_Config.setValue("ShowInGameWorldRecord",m_Config.getDefaultValue("ShowInGameWorldRecord"));
-      m_Config.setValue("AutosaveHighscoreReplays",m_Config.getDefaultValue("AutosaveHighscoreReplays"));
+
+      m_Config.setValue("AutosaveHighscoreReplays", m_Config.getDefaultValue("AutosaveHighscoreReplays"));
+      m_xmsession->setAutosaveHighscoreReplays(m_Config.getBool("AutosaveHighscoreReplays"));
+
       m_Config.setValue("CheckNewLevelsAtStartup",m_Config.getDefaultValue("CheckNewLevelsAtStartup"));
       m_Config.setValue("CheckHighscoresAtStartup",m_Config.getDefaultValue("CheckHighscoresAtStartup"));
-
-    m_Config.setValue("AutosaveHighscoreReplays",m_Config.getDefaultValue("AutosaveHighscoreReplays"));
 
     m_WebHighscoresIdRoom = m_Config.getDefaultValue("WebHighscoresIdRoom");
     m_Config.setValue("WebHighscoresIdRoom", m_WebHighscoresIdRoom);
@@ -3612,7 +3613,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     UIEdit *pRoomsPassword = (UIEdit *)m_pOptionsWindow->getChild("OPTIONS_TABS:WWW_TAB:WWWOPTIONS_TABS:WWW_ROOMS_TAB:ROOM_PASSWORD");
 
     m_Config.setBool("ShowInGameWorldRecord",pInGameWorldRecord->getChecked());
-    m_Config.setBool("AutosaveHighscoreReplays",pAutosaveReplays->getChecked());
+
+    m_xmsession->setAutosaveHighscoreReplays(pAutosaveReplays->getChecked());
+    m_Config.setBool("AutosaveHighscoreReplays", m_xmsession->autosaveHighscoreReplays());
 
     m_Config.setBool("CheckNewLevelsAtStartup",pCheckNewLevelsAtStartup->getChecked());
     m_Config.setBool("CheckHighscoresAtStartup",pCheckHighscoresAtStartup->getChecked());

@@ -530,6 +530,42 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     if(v_one_still_play == false || m_bMultiStopWhenOneFinishes) { // let people continuing when one finished or not
       if(v_one_finished) {
 	/* You're done maaaan! :D */
+	
+	/* finalize the replay */
+	if(m_pJustPlayReplay != NULL) {
+	  if(m_MotoGame.Players().size() == 1) {
+	    /* save the last state because scene don't record each frame */
+	    SerializedBikeState BikeState;
+	    MotoGame::getSerializedBikeState(m_MotoGame.Players()[0]->getState(), m_MotoGame.getTime(), &BikeState);
+	    m_pJustPlayReplay->storeState(BikeState);
+	    m_pJustPlayReplay->finishReplay(true,m_MotoGame.Players()[0]->finishTime());
+	  }
+	}
+
+	/* update profiles */
+	float v_finish_time = 0.0;
+	std::string TimeStamp = getTimeStamp();
+	for(unsigned int i=0; i<m_MotoGame.Players().size(); i++) {
+	  if(m_MotoGame.Players()[i]->isFinished()) {
+	    v_finish_time  = m_MotoGame.Players()[i]->finishTime();
+	  }
+	}
+	if(m_MotoGame.Players().size() == 1) {
+	  m_db->profiles_addFinishTime(m_xmsession->profile(), m_MotoGame.getLevelSrc()->Id(),
+				       TimeStamp, v_finish_time);
+	}
+  
+	/* Update stats */
+	/* update stats only in one player mode */
+	if(m_MotoGame.Players().size() == 1) {       
+	  m_db->stats_levelCompleted(m_xmsession->profile(),
+				     m_MotoGame.getLevelSrc()->Id(),
+				     m_MotoGame.Players()[0]->finishTime());
+	  _UpdateLevelsLists();
+	  _UpdateCurrentPackList(m_MotoGame.getLevelSrc()->Id(),
+				 m_MotoGame.Players()[0]->finishTime());
+	}
+
 	m_stateManager->pushState(new StateFinished(this));
       } else if(v_all_dead) {
 	/* You're dead maan! */

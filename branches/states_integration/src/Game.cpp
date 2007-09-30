@@ -288,7 +288,6 @@ GameApp::GameApp() {
   m_bHideGhosts = false;
   m_bGhostMotionBlur = true;
 
-  m_bAutosaveHighscoreReplays = true;
   m_bRecordReplays = true;
   m_bShowCursor = true;
   m_bEnableEngineSound = true;
@@ -693,7 +692,6 @@ GameApp::GameApp() {
     m_bRecordReplays = m_Config.getBool("StoreReplays");
     m_bCompressReplays = m_Config.getBool("CompressReplays");
     Replay::enableCompression(m_bCompressReplays);
-    m_bAutosaveHighscoreReplays = m_Config.getBool("AutosaveHighscoreReplays");
 
     /* ghost */
     m_bEnableGhost        = m_Config.getBool("EnableGhost");
@@ -961,7 +959,6 @@ GameApp::GameApp() {
           case SDLK_ESCAPE:
             if(m_pSaveReplayMsgBox == NULL) {          
               /* Out of this game, please */
-	      m_Renderer->hideMsgNewHighscore();
               m_pJustDeadMenu->showWindow(false);
 							m_MotoGame.resetFollow();
               m_MotoGame.endLevel();
@@ -1264,7 +1261,7 @@ GameApp::GameApp() {
   /*===========================================================================
   Save a replay
   ===========================================================================*/
-  void GameApp::_SaveReplay(const std::string &Name) {
+  void GameApp::saveReplay(const std::string &Name) {
     /* This is simply a job of copying the Replays/Latest.rpl file into 
        Replays/Name.rpl */
     std::string RealName = Name;
@@ -1920,7 +1917,7 @@ void GameApp::closePlaying() {
     return res;
   }
 
-  void GameApp::_UploadHighscore(std::string p_replayname, bool b_notify) {
+  void GameApp::uploadHighscore(std::string p_replayname, bool b_notify) {
     std::string v_msg;
 
     try {
@@ -2013,7 +2010,7 @@ void GameApp::closePlaying() {
 	if(v_previousIdLevel != v_currentIdLevel) {
 	  v_previousIdLevel = v_currentIdLevel;
 	  _SimpleMessage(GAMETEXT_UPLOADING_HIGHSCORE + std::string("\n") + v_percentage.str() + "%");
-	  _UploadHighscore(m_db->getResult(v_result, 2, i, 1), false);
+	  uploadHighscore(m_db->getResult(v_result, 2, i, 1), false);
 	}
       }
     } catch(Exception &e) {
@@ -2126,7 +2123,7 @@ void GameApp::closePlaying() {
     if(m_pJustPlayReplay != NULL) delete m_pJustPlayReplay;
     m_pJustPlayReplay = NULL;
       
-    if(m_bRecordReplays) {
+    if(m_bRecordReplays && getNumberOfPlayersToPlay() == 1) {
       m_pJustPlayReplay = new Replay;
       m_pJustPlayReplay->createReplay("Latest.rpl",
 				      m_MotoGame.getLevelSrc()->Id(),m_xmsession->profile(), m_fReplayFrameRate,sizeof(SerializedBikeState));
@@ -2914,4 +2911,47 @@ void GameApp::playMusic(const std::string& i_music) {
 
 xmDatabase* GameApp::getDb() {
   return m_db;
+}
+
+bool GameApp::isAReplayToSave() const {
+  return m_pJustPlayReplay != NULL;
+}
+
+void GameApp::isTheCurrentPlayAHighscore(bool& o_personal, bool& o_room) {
+  int v_best_personal_time;
+  int v_current_time;
+  int v_best_room_time;
+  char **v_result;
+  unsigned int nrow;
+  char *v_res;
+
+  o_personal = o_room = false;
+
+  if(m_MotoGame.Players().size() != 1) {
+    return;
+  }
+
+  v_current_time = (int)(100.0 * m_MotoGame.Players()[0]->finishTime());
+
+  /* get best player result */
+  v_result = m_db->readDB("SELECT MIN(finishTime) FROM profile_completedLevels WHERE "
+			  "id_level=\"" + 
+			  xmDatabase::protectString(m_MotoGame.getLevelSrc()->Id()) + "\" " + 
+			  "AND id_profile=\"" + xmDatabase::protectString(m_xmsession->profile())  + "\";",
+			  nrow);
+  v_res = m_db->getResult(v_result, 1, 0, 0);
+  if(v_res != NULL) {
+    v_best_personal_time = (int)(100.0 * (atof(v_res) + 0.001)); /* + 0.001 because it is converted into a float */
+  } else {
+    /* should never happend because the score is already stored */
+    v_best_personal_time = -1;
+  }
+  m_db->read_DB_free(v_result);
+  o_personal = (v_current_time <= v_best_personal_time
+		|| v_best_personal_time < 0);
+
+  /* search a better webhighscore */
+  v_best_room_time = (int)(100.0 * m_db->webrooms_getHighscoreTime(m_WebHighscoresIdRoom, m_MotoGame.getLevelSrc()->Id()));
+  o_room = (v_current_time < v_best_room_time
+	    || v_best_room_time < 0);
 }

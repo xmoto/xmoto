@@ -180,11 +180,6 @@ class ParticlesSource;
     void setGhostDisplayInformation(bool i_display);
     void setHideGhosts(bool i_value);
 
-    /* if p_save == "", nothing is displayed for p_save */
-    void showMsgNewPersonalHighscore(std::string p_save = "");
-    void showMsgNewBestHighscore(std::string p_save = "");
-    void hideMsgNewHighscore();
-
     float SizeMultOfEntitiesToTake() const;
     float SizeMultOfEntitiesWhichMakeWin() const;
     void setSizeMultOfEntitiesToTake(float i_sizeMult);
@@ -225,11 +220,6 @@ class ParticlesSource;
     std::string m_bestTime;
     std::string m_replayHelp;
     std::string m_worldRecordTime;
-
-    UIWindow *m_pInGameNewHighscore;
-    UIStatic *m_pNewHighscoreBest_str;
-    UIStatic *m_pNewHighscorePersonal_str;
-    UIStatic *m_pNewHighscoreSave_str;
       
     float m_fNextGhostInfoUpdate;
     int m_nGhostInfoTrans;

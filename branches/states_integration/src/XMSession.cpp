@@ -46,6 +46,7 @@ XMSession::XMSession() {
   m_ghostStrategy_MYBEST     = true;
   m_ghostStrategy_THEBEST    = false;
   m_ghostStrategy_BESTOFROOM = false;
+  m_autosaveHighscoreReplays = true;
 }
 
 void XMSession::load(const XMArguments* i_xmargs) {
@@ -134,6 +135,7 @@ void XMSession::load(UserConfig* m_Config) {
   m_ghostStrategy_MYBEST     = m_Config->getBool("GhostStrategy_MYBEST");
   m_ghostStrategy_THEBEST    = m_Config->getBool("GhostStrategy_THEBEST");
   m_ghostStrategy_BESTOFROOM = m_Config->getBool("GhostStrategy_BESTOFROOM");
+  m_autosaveHighscoreReplays = m_Config->getBool("AutosaveHighscoreReplays");
 }
 
 bool XMSession::isVerbose() const {
@@ -282,4 +284,12 @@ bool XMSession::ghostStrategy_BESTOFROOM() const {
 
 void XMSession::setGhostStrategy_BESTOFROOM(bool i_value) {
   m_ghostStrategy_BESTOFROOM = i_value;
+}
+
+bool XMSession::autosaveHighscoreReplays() const {
+  return m_autosaveHighscoreReplays;
+}
+
+void XMSession::setAutosaveHighscoreReplays(bool i_value) {
+  m_autosaveHighscoreReplays = i_value;
 }

@@ -204,6 +204,10 @@ class StateManager;
       void abortPlaying();
       void playNextLevel();
       void playMusic(const std::string& i_music); // "" => no music
+      bool isAReplayToSave() const;
+      void isTheCurrentPlayAHighscore(bool& o_personal, bool& o_room);
+      void saveReplay(const std::string &Name);
+      void uploadHighscore(std::string p_replayname, bool b_notify = true);
 
       // ask the game to close as soon as possible
       void requestEnd();
@@ -231,7 +235,6 @@ class StateManager;
 
       bool m_bEnableEngineSound;                /* true: engine sound is enabled */
       bool m_bCompressReplays;                  /* true: compress replays with zlib */
-      bool m_bAutosaveHighscoreReplays;
 
       ReplayBiker* m_replayBiker; /* link to the replay biker in REPLAYING state */
       bool m_stopToUpdateReplay;
@@ -473,7 +476,6 @@ class StateManager;
 
       void _UpdateRoomsLists(void);
       void _GameScreenshot(void);
-      void _SaveReplay(const std::string &Name);
     
       void _UpdateLoadingScreen(float fDone, const std::string &NextTask);
       
@@ -494,7 +496,6 @@ class StateManager;
       void _UpdateWebRooms(bool bSilent);
       void _UpgradeWebRooms(bool bUpdateMenus);
       void _DownloadExtraLevels(void);
-      void _UploadHighscore(std::string p_replayname, bool b_notify = true);
       void _UploadAllHighscores();
       void _ConfigureProxy(void);
 
