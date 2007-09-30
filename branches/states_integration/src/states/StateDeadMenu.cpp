@@ -33,6 +33,7 @@ StateDeadMenu::StateDeadMenu(GameApp* pGame,
   StateMenu(drawStateBehind,
 	    updateStatesBehind,
 	    pGame,
+	    true,
 	    i_doShadeAnim)
 {
 

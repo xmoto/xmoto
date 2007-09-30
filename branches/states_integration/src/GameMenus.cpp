@@ -32,6 +32,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "gui/specific/GUIXMoto.h"
 #include "xmscene/Camera.h"
 
+#include "states/StateEditProfile.h"
+
   UIFrame* GameApp::makeHelpWindow(DrawLib* i_drawLib, UIWindow* io_parent, UserConfig* i_Config) {
     UIFrame *v_pHelpWindow;
     UIStatic *pSomeText;
@@ -1031,31 +1033,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     pProxyPasswordEdit->setID("PASSWORDEDIT");
     pProxyPasswordEdit->setContextHelp(CONTEXTHELP_PROXYPASSWORD);
 
-    /* Initialize profile editor */
-    m_pProfileEditor = new UIFrame(m_Renderer->getGUI(),drawLib->getDispWidth()/2-350,drawLib->getDispHeight()/2-250,"",700,500); 
-    m_pProfileEditor->setStyle(UI_FRAMESTYLE_TRANS);           
-    UIStatic *pProfileEditorTitle = new UIStatic(m_pProfileEditor,0,0,GAMETEXT_PLAYERPROFILES,700,50);
-    pProfileEditorTitle->setFont(drawLib->getFontMedium());
-    UIList *pProfileList = new UIList(m_pProfileEditor,20,50,"",400,430);
-    pProfileList->setFont(drawLib->getFontSmall());
-    pProfileList->addColumn(GAMETEXT_PLAYERPROFILE,128);      
-    pProfileList->setID("PROFILE_LIST");
-    pProfileList->setContextHelp(CONTEXTHELP_SELECT_PLAYER_PROFILE);
-    UIButton *pProfUseButton = new UIButton(m_pProfileEditor,450,50,GAMETEXT_USEPROFILE,207,57);
-    pProfUseButton->setFont(drawLib->getFontSmall());
-    pProfUseButton->setID("USEPROFILE_BUTTON");
-    pProfUseButton->setContextHelp(CONTEXTHELP_USE_PLAYER_PROFILE);
-    UIButton *pProfNewButton = new UIButton(m_pProfileEditor,450,107,GAMETEXT_NEWPROFILE,207,57);
-    pProfNewButton->setFont(drawLib->getFontSmall());
-    pProfNewButton->setID("NEWPROFILE_BUTTON");
-    pProfNewButton->setContextHelp(CONTEXTHELP_CREATE_PLAYER_PROFILE);
-    UIButton *pProfDeleteButton = new UIButton(m_pProfileEditor,450,423,GAMETEXT_DELETEPROFILE,207,57);
-    pProfDeleteButton->setFont(drawLib->getFontSmall());
-    pProfDeleteButton->setID("DELETEPROFILE_BUTTON");
-    pProfDeleteButton->setContextHelp(CONTEXTHELP_DELETE_PROFILE);
-    pProfileList->setEnterButton( pProfUseButton );
-    _CreateProfileList();
-
     /* Initialize level pack viewer */
     m_pLevelPackViewer = new UIFrame(m_Renderer->getGUI(),drawLib->getDispWidth()/2-350,drawLib->getDispHeight()/2-250,"",700,500); 
     m_pLevelPackViewer->setStyle(UI_FRAMESTYLE_TRANS);           
@@ -1264,7 +1241,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     /* Hide menus */
     m_pMainMenu->showWindow(false);
-    m_pProfileEditor->showWindow(false);
     m_pLevelInfoViewer->showWindow(false);
     m_pLevelPackViewer->showWindow(false);
     
@@ -1909,119 +1885,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   /*===========================================================================
-  Update profile editor
-  ===========================================================================*/
-  void GameApp::_HandleProfileEditor(void) {    
-    /* Is newplayer box open? */
-    if(m_pNewProfileMsgBox != NULL) {
-      UIMsgBoxButton Clicked = m_pNewProfileMsgBox->getClicked();
-      if(Clicked != UI_MSGBOX_NOTHING) {
-        if(Clicked == UI_MSGBOX_OK) {
-          /* Create new profile */
-          std::string PlayerName = m_pNewProfileMsgBox->getTextInput();
-	  try {
-	    m_db->stats_createProfile(PlayerName);
-	  } catch(Exception &e) {
-	    Logger::Log("Unable to create the profile");
-	  }
-	  _CreateProfileList();
-        }
-        
-        delete m_pNewProfileMsgBox;
-        m_pNewProfileMsgBox = NULL;
-      }
-    }
-    /* What about the delete player box? */
-    if(m_pDeleteProfileMsgBox != NULL) {
-      UIMsgBoxButton Clicked = m_pDeleteProfileMsgBox->getClicked();
-      if(Clicked != UI_MSGBOX_NOTHING) {
-        if(Clicked == UI_MSGBOX_YES) {
-          /* Delete selected profile */
-          UIList *pList = reinterpret_cast<UIList *>(m_pProfileEditor->getChild("PROFILE_LIST"));
-          if(pList != NULL) {
-            int nIdx = pList->getSelected();
-            if(nIdx >= 0 && nIdx < pList->getEntries().size()) {
-              UIListEntry *pEntry = pList->getEntries()[nIdx];
-      
-	      m_db->stats_destroyProfile(pEntry->Text[0]);
-              pList->setRealSelected(0);
-              _CreateProfileList();              
-            }
-          }
-        }
-        delete m_pDeleteProfileMsgBox;
-        m_pDeleteProfileMsgBox = NULL;
-      }      
-    }
-  
-    /* Get buttons */
-    UIButton *pUseButton = reinterpret_cast<UIButton *>(m_pProfileEditor->getChild("USEPROFILE_BUTTON"));
-    UIButton *pDeleteButton = reinterpret_cast<UIButton *>(m_pProfileEditor->getChild("DELETEPROFILE_BUTTON"));
-    UIButton *pNewButton = reinterpret_cast<UIButton *>(m_pProfileEditor->getChild("NEWPROFILE_BUTTON"));
-    
-    /* Check them */
-    if(pUseButton->isClicked()) {      
-      UIList *pList = reinterpret_cast<UIList *>(m_pProfileEditor->getChild("PROFILE_LIST"));
-      if(pList != NULL) {
-        int nIdx = pList->getSelected();
-        if(nIdx >= 0 && nIdx < pList->getEntries().size()) {
-          UIListEntry *pEntry = pList->getEntries()[nIdx];
-          
-          m_xmsession->setProfile(pEntry->Text[0]);
-	  m_db->stats_xmotoStarted(m_xmsession->profile());
-
-	  delete m_pStatsReport;
-          m_pStatsReport = stats_generateReport(m_xmsession->profile(),m_pStatsWindow,30,36,m_pStatsWindow->getPosition().nWidth-45,m_pStatsWindow->getPosition().nHeight-36, drawLib->getFontSmall());
-        }
-      }      
-      
-      if(m_xmsession->profile() == "") throw Exception("failed to set profile");
-
-      /* remake the packs with the new profile */
-      m_levelsManager.makePacks(m_db,
-				m_xmsession->profile(),
-				m_WebHighscoresIdRoom,
-				m_xmsession->debug());
-      _UpdateLevelsLists();
-      _UpdateReplaysList();      
-                  
-      updatePlayerTag();
-           
-      m_pProfileEditor->showWindow(false);
-
-      /* Should we jump to the web config now? */
-      if(m_Config.getBool("WebConfAtInit")) {
-        _InitWebConf();
-        setState(GS_EDIT_WEBCONFIG);
-      }
-      else
-      {
-        m_pMainMenu->enableChildren(true);
-        m_pMainMenu->enableWindow(true);
-
-        setState(GS_MENU);
-      }
-
-    }    
-    else if(pDeleteButton->isClicked()) {
-      if(m_pDeleteProfileMsgBox == NULL) {
-	m_Renderer->getGUI()->setFont(drawLib->getFontSmall());
-        m_pDeleteProfileMsgBox = m_Renderer->getGUI()->msgBox(GAMETEXT_DELETEPLAYERMESSAGE,
-                                                          (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
-      }
-    }
-    else if(pNewButton->isClicked()) {
-      if(m_pNewProfileMsgBox == NULL) {
-	m_Renderer->getGUI()->setFont(drawLib->getFontSmall());
-        m_pNewProfileMsgBox = m_Renderer->getGUI()->msgBox(std::string(GAMETEXT_ENTERPLAYERNAME) + ":",
-                                                          (UIMsgBoxButton)(UI_MSGBOX_OK|UI_MSGBOX_CANCEL),
-                                                          true);
-        m_pNewProfileMsgBox->setTextInputFont(drawLib->getFontMedium());
-      }
-    }
-  }
- 
-  /*===========================================================================
   Update main menu
   ===========================================================================*/
   void GameApp::_HandleMainMenu(void) {
@@ -2198,10 +2061,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     UIButton *pChangePlayerButton = (UIButton *)m_pMainMenu->getChild("CHANGEPLAYERBUTTON");
     if(pChangePlayerButton->isClicked()) {
       /* Open profile editor */
-      m_pProfileEditor->showWindow(true);
       m_pMainMenu->enableChildren(false);
       m_pMainMenu->enableWindow(false);
-      m_State = GS_EDIT_PROFILES;
+
+      m_stateManager->pushState(new StateEditProfile(this));
+
       return;
     }
 
@@ -2784,45 +2648,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	}
 	pActionList->getEntries()[nSel]->Text[1] = NewKey;
       }      
-    }
-  }
-  
-  /*===========================================================================
-  Add all profiles to the list
-  ===========================================================================*/
-  void GameApp::_CreateProfileList(void) {
-    UIList *pList = reinterpret_cast<UIList *>(m_pProfileEditor->getChild("PROFILE_LIST"));
-    char **v_result;
-    unsigned int nrow;
-    std::string v_profile;
-
-    if(pList != NULL) {
-      /* Clear it */
-      pList->clear();
-      
-      /* Add all player profiles to it */
-      v_result = m_db->readDB("SELECT id_profile FROM stats_profiles ORDER BY id_profile;",
-			      nrow);
-      for(unsigned int i=0; i<nrow; i++) {
-	v_profile = m_db->getResult(v_result, 1, i, 0);
-	pList->addEntry(v_profile);
-	if(m_xmsession->profile() == v_profile) {
-	  pList->setRealSelected(i);
-	}
-      }
-      m_db->read_DB_free(v_result);
-      
-      /* Update buttons */
-      UIButton *pUseButton = reinterpret_cast<UIButton *>(m_pProfileEditor->getChild("USEPROFILE_BUTTON"));
-      UIButton *pDeleteButton = reinterpret_cast<UIButton *>(m_pProfileEditor->getChild("DELETEPROFILE_BUTTON"));
-      
-      if(nrow == 0) {
-	pUseButton->enableWindow(false);
-	pDeleteButton->enableWindow(false);
-      } else {
-        pUseButton->enableWindow(true);
-	pDeleteButton->enableWindow(true);
-      }
     }
   }
 

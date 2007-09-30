@@ -59,7 +59,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     /* This function is called by the framework as fast as possible */
     bool bIsPaused = m_State == GS_PAUSE;
-    bool bDrawFPS = false;
 
     /* Prepare frame rendering / game update */
     _PrepareFrame();    
@@ -80,16 +79,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       case GS_LEVEL_INFO_VIEWER:
       case GS_LEVELPACK_VIEWER:
       case GS_EDIT_WEBCONFIG:
-      case GS_EDIT_PROFILES:
         /* Following is done for all the above states */
         _DrawMainGUI();
-        
-        /* Show frame rate? */
-        if(m_xmsession->fps()) bDrawFPS = true;
 
         /* Delay a bit so we don't eat all CPU */
         setFrameDelay(10);
         break;
+
+      case GS_EDIT_PROFILES:
+        _DrawMainGUI();
+	break;
 
       case GS_PAUSE:
       case GS_FINISHED:
@@ -226,9 +225,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
             m_pCredits->render(m_MotoGame.getTime());
           }
 
-          /* Show frame rate */
-          if(m_xmsession->fps()) bDrawFPS = true;
-
           break;
         }
         catch(Exception &e) {
@@ -244,7 +240,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     // states managed via the state manager
     if(m_State == GS_PAUSE    ||
        m_State == GS_FINISHED ||
-       m_State == GS_DEADMENU
+       m_State == GS_DEADMENU ||
+       m_State == GS_EDIT_PROFILES
        ) {
       /* draw the game states */
       m_stateManager->update();
@@ -253,9 +250,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
  
     /* */
-
     /* Draw a little FPS counter */
-    if(bDrawFPS) {
+    if(m_xmsession->fps()) {
       char cTemp[256];        
       sprintf(cTemp,"%.1f",m_fFPS_Rate);
 
@@ -301,7 +297,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /* Whether or not we should have a mouse cursor? */
     switch(m_State) {
       case GS_MENU:
-      case GS_EDIT_PROFILES:
       case GS_EDIT_WEBCONFIG:
       case GS_LEVEL_INFO_VIEWER:
       case GS_LEVELPACK_VIEWER:
@@ -407,8 +402,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /* Blah... */
     if(m_State == GS_MENU)
       _HandleMainMenu();
-    else if(m_State == GS_EDIT_PROFILES)
-      _HandleProfileEditor();
     else if(m_State == GS_EDIT_WEBCONFIG)
       _HandleWebConfEditor();
     else if(m_State == GS_LEVEL_INFO_VIEWER)

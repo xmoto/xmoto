@@ -368,11 +368,6 @@ class StateManager;
       /* In-game JUSTDEAD menu fun */
       int m_nJustDeadShade;
      
-      /* Profile editor fun */
-      UIFrame *m_pProfileEditor;  
-      UIMsgBox *m_pNewProfileMsgBox;    
-      UIMsgBox *m_pDeleteProfileMsgBox;
-      
       /* Internet connection configurator */
       UIFrame *m_pWebConfEditor;      
       UIMsgBox *m_pWebConfMsgBox;    
@@ -437,7 +432,6 @@ class StateManager;
       void _HandleMainMenu(void);  
       void _HandleJustDeadMenu(void);
       void _HandleWebConfEditor(void);
-      void _HandleProfileEditor(void);
       void _HandleLevelInfoViewer(void);
       void _HandleLevelPackViewer(void);
       void _CreateLevelListsSql(UILevelList *pAllLevels, const std::string& i_sql);
@@ -445,7 +439,6 @@ class StateManager;
       void _CreateReplaysList(UIList *pList);
       void _CreateThemesList(UIList *pList);
       void _CreateRoomsList(UIList *pList);
-      void _CreateProfileList(void);
       void _CreateLevelPackLevelList();
       void _UpdateLevelPackLevelList(const std::string& v_levelPack);
       void _UpdateActionKeyList(void);

@@ -30,6 +30,7 @@ class StateMenu : public GameState {
   StateMenu(bool drawStateBehind,
 	    bool updateStatesBehind,
 	    GameApp* pGame,
+	    bool i_doShade     = false,
 	    bool i_doShadeAnim = true);
   virtual ~StateMenu();
   
@@ -54,6 +55,7 @@ class StateMenu : public GameState {
   UIRoot *m_GUI;
   
  private:
+  bool  m_doShade;
   bool  m_doShadeAnim;
   float m_nShadeTime;
 };

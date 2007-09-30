@@ -31,7 +31,8 @@ StatePause::StatePause(GameApp* pGame,
 		       bool updateStatesBehind):
   StateMenu(drawStateBehind,
 	    updateStatesBehind,
-	    pGame)
+	    pGame,
+	    true)
 {
 }
 

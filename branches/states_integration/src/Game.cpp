@@ -266,8 +266,6 @@ GameApp::GameApp() {
   m_pWebConfEditor=NULL;
   m_pWebConfMsgBox=NULL;
 
-  m_pNewProfileMsgBox=NULL;
-  m_pDeleteProfileMsgBox=NULL;
   m_pDeleteReplayMsgBox=NULL;
   m_pSaveReplayMsgBox=NULL;
   m_pReplaysWindow=NULL;
@@ -530,6 +528,8 @@ GameApp::GameApp() {
 			break;
 		}  
     case GS_MENU: {
+      m_pMainMenu->enableChildren(true);
+      m_pMainMenu->enableWindow(true);
 			v_newMusicPlaying = "menu1";
 
 			//SDL_ShowCursor(SDL_ENABLE);
@@ -612,16 +612,6 @@ GameApp::GameApp() {
 			} else {
 			  m_stateManager->pushState(new StateDeadMenu(this, true));
 			}
-			break;
-		}
-		case GS_EDIT_PROFILES: {
-			v_newMusicPlaying = "menu1";
-			//        SDL_ShowCursor(SDL_ENABLE);
-			m_bShowCursor = true;
-
-			/* The profile editor can work on top of the main menu, or as init
-				 state when there is no player profiles available */
-			m_pProfileEditor->showWindow(true);
 			break;
 		}
 
@@ -922,7 +912,6 @@ GameApp::GameApp() {
   
     /* What state? */
     switch(m_State) {
-      case GS_EDIT_PROFILES:
       case GS_EDIT_WEBCONFIG:
       case GS_LEVEL_INFO_VIEWER:
       case GS_LEVELPACK_VIEWER:
@@ -1065,6 +1054,7 @@ GameApp::GameApp() {
     case GS_FINISHED:
     case GS_PAUSE:
     case GS_DEADMENU:
+    case GS_EDIT_PROFILES:
       m_stateManager->keyDown(nKey, mod, nChar);
       break;
     }
@@ -1078,7 +1068,6 @@ GameApp::GameApp() {
     /* What state? */
     switch(m_State) {
       case GS_EDIT_WEBCONFIG:
-      case GS_EDIT_PROFILES:
       case GS_LEVEL_INFO_VIEWER:
       case GS_LEVELPACK_VIEWER:
       case GS_MENU:
@@ -1100,6 +1089,7 @@ GameApp::GameApp() {
     case GS_FINISHED:
     case GS_PAUSE:
     case GS_DEADMENU:
+    case GS_EDIT_PROFILES:
       m_stateManager->keyUp(nKey, mod);
       break;
     }
@@ -1111,7 +1101,6 @@ GameApp::GameApp() {
   void GameApp::mouseDoubleClick(int nButton) {
     switch(m_State) {
       case GS_MENU:
-      case GS_EDIT_PROFILES:
       case GS_EDIT_WEBCONFIG:
       case GS_LEVEL_INFO_VIEWER:
       case GS_LEVELPACK_VIEWER:
@@ -1129,6 +1118,7 @@ GameApp::GameApp() {
     case GS_FINISHED:
     case GS_PAUSE:
     case GS_DEADMENU:
+    case GS_EDIT_PROFILES:
       m_stateManager->mouseDoubleClick(nButton);
       break;
     }
@@ -1137,7 +1127,6 @@ GameApp::GameApp() {
   void GameApp::mouseDown(int nButton) {
     switch(m_State) {
       case GS_MENU:
-      case GS_EDIT_PROFILES:
       case GS_EDIT_WEBCONFIG:
       case GS_LEVEL_INFO_VIEWER:
       case GS_LEVELPACK_VIEWER:
@@ -1171,6 +1160,7 @@ GameApp::GameApp() {
       case GS_FINISHED:
       case GS_PAUSE:
       case GS_DEADMENU:
+      case GS_EDIT_PROFILES:
       m_stateManager->mouseDown(nButton);
       break;
 
@@ -1180,7 +1170,6 @@ GameApp::GameApp() {
   void GameApp::mouseUp(int nButton) {
     switch(m_State) {
       case GS_MENU:
-      case GS_EDIT_PROFILES:
       case GS_EDIT_WEBCONFIG:
       case GS_LEVEL_INFO_VIEWER:
       case GS_LEVELPACK_VIEWER:
@@ -1207,6 +1196,7 @@ GameApp::GameApp() {
       case GS_FINISHED:
       case GS_PAUSE:
       case GS_DEADMENU:
+      case GS_EDIT_PROFILES:
       m_stateManager->mouseUp(nButton);
       break;
     }

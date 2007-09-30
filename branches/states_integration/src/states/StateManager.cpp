@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/Log.h"
 #include "StatePause.h"
 #include "StateFinished.h"
+#include "StateDeadMenu.h"
 
   /*
 TODO of the states
@@ -30,6 +31,7 @@ MENU : une classe mère aux menus
 
 PAUSE : gérer le voulez vous quitter yes/no
 FINISHED : gérer le voulez vous quitter yes/no ET sauvegarde du replay
+DEADMENU : gérer le voulez vous quitter yes/no ET sauvegarde du replay
 
   */
 
@@ -177,6 +179,7 @@ void StateManager::calculateWhichStateIsRendered()
 void StateManager::cleanStates() {
   StatePause::clean();
   StateFinished::clean();
+  StateDeadMenu::clean();
 }
 
 GameState::GameState(bool drawStateBehind,

@@ -42,7 +42,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "SysMessage.h"
 #include "gui/specific/GUIXMoto.h"
 #include "Credits.h"
+
 #include "states/StateManager.h"
+#include "states/StateEditProfile.h"
 
 #define DATABASE_FILE FS::getUserDirUTF8() + "/" + "xm.db"
 
@@ -602,7 +604,7 @@ int main(int nNumArgs,char **ppcArgs) {
         
       /* Do we have a player profile? */
       if(m_xmsession->profile() == "") {
-        setState(GS_EDIT_PROFILES);
+	m_stateManager->pushState(new StateEditProfile(this));
       }
       else if(m_Config.getBool("WebConfAtInit")) {
         /* We need web-config */

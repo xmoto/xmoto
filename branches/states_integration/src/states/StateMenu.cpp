@@ -30,12 +30,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 StateMenu::StateMenu(bool drawStateBehind,
 		     bool updateStatesBehind,
 		     GameApp* pGame,
+		     bool i_doShade,
 		     bool i_doShadeAnim):
   GameState(drawStateBehind,
 	    updateStatesBehind,
 	    pGame)
 {
   m_GUI = NULL;
+  m_doShade     = i_doShade;
   m_doShadeAnim = i_doShadeAnim;
 }
 
@@ -75,7 +77,7 @@ void StateMenu::render()
   // rendering of the gui must be done by the mother call : to add here when states will be almost finished
   m_pGame->setFrameDelay(10);
 
-  if(m_pGame->getSession()->ugly() == false) {
+  if(m_pGame->getSession()->ugly() == false && m_doShade) {
     float v_currentTime = GameApp::getXMTime();
     int   v_nShade;
 

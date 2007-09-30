@@ -34,7 +34,8 @@ StateFinished::StateFinished(GameApp* pGame,
 			     ) :
   StateMenu(drawStateBehind,
 	    updateStatesBehind,
-	    pGame)
+	    pGame,
+	    true)
 {
 
 }
