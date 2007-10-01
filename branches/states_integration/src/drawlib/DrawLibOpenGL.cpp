@@ -415,25 +415,25 @@ class GLFontManager : public FontManager {
     /*===========================================================================
   Grab screen contents
   ===========================================================================*/
-  Img *DrawLibOpenGL::grabScreen(void) {
+  Img *DrawLibOpenGL::grabScreen(int i_reduce) {
+    int v_imgH = m_nDispHeight / i_reduce;
+    int v_imgW = m_nDispWidth  / i_reduce;
+
     Img *pImg = new Img;
     
-    pImg->createEmpty(m_nDispWidth,m_nDispHeight);
+    pImg->createEmpty(v_imgW, v_imgH);
     Color *pPixels = pImg->getPixels();
     unsigned char *pcTemp = new unsigned char [m_nDispWidth*3];
   
     /* Select frontbuffer */
     glReadBuffer(GL_FRONT);
 
-    /* Read the pixels (reversed) */
-    for(unsigned int i=0;i<m_nDispHeight;i++) {          
-      glReadPixels(0,i,m_nDispWidth,1,GL_RGB,GL_UNSIGNED_BYTE,pcTemp);
-      for(unsigned int j=0;j<m_nDispWidth;j++) {
-        pPixels[(m_nDispHeight - i - 1)*m_nDispWidth + j] = MAKE_COLOR(
-          pcTemp[j*3],pcTemp[j*3+1],pcTemp[j*3+2],255
-        );
+    for(unsigned int i=0; i<v_imgH; i++) {
+      glReadPixels(0, i*i_reduce, m_nDispWidth, 1, GL_RGB, GL_UNSIGNED_BYTE, pcTemp);
+      for(unsigned int j=0; j<v_imgW; j++) {
+	pPixels[(v_imgH - i - 1) * v_imgW + j] = MAKE_COLOR(pcTemp[j*i_reduce*3], pcTemp[j*i_reduce*3+1], pcTemp[j*i_reduce*3+2], 255);
       }
-    }           
+    }  
     
     delete [] pcTemp;
     return pImg;            

@@ -99,6 +99,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       case GS_PREPLAYING:
       case GS_PLAYING: {
 
+//	if(m_State == GS_REPLAYING) {
+//	  static int n = 0;
+//	  n++;
+//	  if(n % 4 == 0) {
+//	    _GameScreenshot();
+//	  }
+//	}
+
         /* These states all requires that the actual game graphics are rendered (i.e. inside 
            the game, not the main menu) */
         try {

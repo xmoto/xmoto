@@ -737,7 +737,8 @@ GameApp::GameApp() {
   Screenshooting
   ===========================================================================*/
   void GameApp::_GameScreenshot(void) {
-    Img *pShot = getDrawLib()->grabScreen();      
+    //    Img *pShot = getDrawLib()->grabScreen(2);      
+    Img *pShot = getDrawLib()->grabScreen();
     FileHandle *pfh;
 
     std::string v_ShotsDir;
@@ -767,7 +768,6 @@ GameApp::GameApp() {
       snprintf(v_val, 5, "%04d", nShot);
       v_destFile = v_ShotsDir + "/screenshot" + std::string(v_val) + "." + v_ShotExtension;
     } while(FS::fileExists(v_destFile));
-    
     try {
       pShot->saveFile(v_destFile.c_str());
     } catch(Exception &e) {
