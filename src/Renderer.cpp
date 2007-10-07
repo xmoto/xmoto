@@ -452,26 +452,28 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     /* TOFIX::do not calculate this again. (already done in Block.cpp) */
     for(int i=0; i<Blocks.size(); i++) {
-      std::vector<ConvexBlock *> ConvexBlocks = Blocks[i]->ConvexBlocks();
-      for(int j=0; j<ConvexBlocks.size(); j++) {
-	getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
-	getParent()->getDrawLib()->setColorRGB(128,128,128);
-	/* Build rotation matrix for block */
-	float fR[4];
-	fR[0] = cos(Blocks[i]->DynamicRotation()); fR[1] = -sin(Blocks[i]->DynamicRotation());
-	fR[2] = sin(Blocks[i]->DynamicRotation()); fR[3] = cos(Blocks[i]->DynamicRotation());
-	for(int k=0; k<ConvexBlocks[j]->Vertices().size(); k++) {
-	  ConvexBlockVertex *pVertex = ConvexBlocks[j]->Vertices()[k];
+      if(Blocks[i]->isBackground() == false && Blocks[i]->getLayer() == -1) {
+	std::vector<ConvexBlock *> ConvexBlocks = Blocks[i]->ConvexBlocks();
+	for(int j=0; j<ConvexBlocks.size(); j++) {
+	  getParent()->getDrawLib()->startDraw(DRAW_MODE_POLYGON);
+	  getParent()->getDrawLib()->setColorRGB(128,128,128);
+	  /* Build rotation matrix for block */
+	  float fR[4];
+	  fR[0] = cos(Blocks[i]->DynamicRotation()); fR[1] = -sin(Blocks[i]->DynamicRotation());
+	  fR[2] = sin(Blocks[i]->DynamicRotation()); fR[3] = cos(Blocks[i]->DynamicRotation());
+	  for(int k=0; k<ConvexBlocks[j]->Vertices().size(); k++) {
+	    ConvexBlockVertex *pVertex = ConvexBlocks[j]->Vertices()[k];
+	    
+	    /* Transform vertex */
+	    Vector2f Tv = Vector2f((pVertex->Position().x-Blocks[i]->DynamicRotationCenter().x) * fR[0] + (pVertex->Position().y-Blocks[i]->DynamicRotationCenter().y) * fR[1],
+				   (pVertex->Position().x-Blocks[i]->DynamicRotationCenter().x) * fR[2] + (pVertex->Position().y-Blocks[i]->DynamicRotationCenter().y) * fR[3]);
+	    Tv += Blocks[i]->DynamicPosition() + Blocks[i]->DynamicRotationCenter();
+	    
+	    MINIVERTEX(Tv.x,Tv.y);
+	  }
 	  
-	  /* Transform vertex */
-	  Vector2f Tv = Vector2f((pVertex->Position().x-Blocks[i]->DynamicRotationCenter().x) * fR[0] + (pVertex->Position().y-Blocks[i]->DynamicRotationCenter().y) * fR[1],
-				 (pVertex->Position().x-Blocks[i]->DynamicRotationCenter().x) * fR[2] + (pVertex->Position().y-Blocks[i]->DynamicRotationCenter().y) * fR[3]);
-	  Tv += Blocks[i]->DynamicPosition() + Blocks[i]->DynamicRotationCenter();
-	  
-	  MINIVERTEX(Tv.x,Tv.y);
+	  getParent()->getDrawLib()->endDraw();
 	}
-	
-	getParent()->getDrawLib()->endDraw();
       }
     }
 
