@@ -532,7 +532,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define VPACKAGENAME_NICEST_LEVELS              _("Nicest levels")
 #define VPACKAGENAME_HARDEST_LEVELS             _("Hardest levels")
 #define VPACKAGENAME_EASIEST_LEVELS             _("Easiest levels")
-#define VPACKAGENAME_CRAPIEST_LEVELS            _("Crapiest levels")
+#define VPACKAGENAME_CRAPPIEST_LEVELS            _("Crappiest levels")
 #define VPACKAGENAME_SCRIPTED                   _("Scripted levels")
 #define VPACKAGENAME_MUSICAL                    _("Musical levels")
 #define VPACKAGENAME_BEST_DRIVER                _("By best driver")
@@ -549,6 +549,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define VPACKAGENAME_MEDAL_BRONZE               _("Bronze")
 #define VPACKAGENAME_MEDAL_NONE                 _("No medal")
 #define VPACKAGENAME_MY_LEVELS                  _("My levels")
+#define VPACKAGENAME_CRAPPY_LEVELS              _("Crappy levels")
 
 #define VPACKAGENAME_DESC_LEVELS_WITH_NO_HIGHSCORE   _("Levels with no highscore in your room")
 #define VPACKAGENAME_DESC_INCOMPLETED_LEVELS         _("Levels you have not completed")
@@ -559,7 +560,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define VPACKAGENAME_DESC_NICEST_LEVELS          _("Nicest X-Moto levels according to the web votes")
 #define VPACKAGENAME_DESC_HARDEST_LEVELS         _("Hardest X-Moto levels according to the web votes")
 #define VPACKAGENAME_DESC_EASIEST_LEVELS         _("Easiest X-Moto levels according to the web votes")
-#define VPACKAGENAME_DESC_CRAPIEST_LEVELS        _("Crapiest X-Moto levels according to the web votes")
+#define VPACKAGENAME_DESC_CRAPPIEST_LEVELS       _("Crappiest X-Moto levels according to the web votes")
 #define VPACKAGENAME_DESC_SCRIPTED                   _("X-Moto levels which are dynamic")
 #define VPACKAGENAME_DESC_MUSICAL                    _("X-Moto levels with a background music")
 #define VPACKAGENAME_DESC_LAST_PLAYED                _("Last levels you have played")
@@ -577,6 +578,7 @@ std::string(_("You control your bike using the keyboard")) + ":\n" \
 #define VPACKAGENAME_DESC_STANDARD               _("Level pack \"%s\"")
 #define VPACKAGENAME_DESC_BEST_DRIVERS           _("Highscores by %s")
 #define VPACKAGENAME_DESC_MY_LEVELS              _("External levels (the one you put into the 'My levels' directory)")
+#define VPACKAGENAME_DESC_CRAPPY_LEVELS          _("Levels marked 'crappy' are hidden in all other packs")
 
 #define SYS_MSG_UGLY_MODE_ENABLED      	_("Ugly mode enabled")
 #define SYS_MSG_UGLY_MODE_DISABLED     	_("Ugly mode disabled")
