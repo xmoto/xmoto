@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ca\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-09-03 19:15+0200\n"
+"POT-Creation-Date: 2007-10-08 23:08+0200\n"
 "PO-Revision-Date: 2007-05-02 02:31+0200\n"
 "Last-Translator: Trullo\n"
 "Language-Team:  X-Moto\n"
@@ -1856,7 +1856,7 @@ msgstr "Mostra el velocímetre durant la partida"
 msgid "Levels with no highscore"
 msgstr "Nivells sense record"
 
-#: src/GameText.h:527 src/GameText.h:554
+#: src/GameText.h:527 src/GameText.h:555
 msgid "Levels you have not completed"
 msgstr "Nivells que no has completat"
 
@@ -1885,7 +1885,8 @@ msgid "Easiest levels"
 msgstr "Nivells fàcils"
 
 #: src/GameText.h:535
-msgid "Crapiest levels"
+#, fuzzy
+msgid "Crappiest levels"
 msgstr "Crapiest levels"
 
 #: src/GameText.h:536
@@ -1951,173 +1952,183 @@ msgstr "Sense medalla"
 msgid "My levels"
 msgstr "Els meus nivells"
 
-#: src/GameText.h:553
+#: src/GameText.h:552
+#, fuzzy
+msgid "Crappy levels"
+msgstr "Crapiest levels"
+
+#: src/GameText.h:554
 #, fuzzy
 msgid "Levels with no highscore in your room"
 msgstr "Nivells sense record en la teva sala"
 
-#: src/GameText.h:555
+#: src/GameText.h:556
 msgid "Somebody in the room made a better highscore than yours"
 msgstr "Algun de la sala ha fet un record millor que el teu"
 
-#: src/GameText.h:556
+#: src/GameText.h:557
 msgid "All X-Moto levels"
 msgstr "Tots els nivells"
 
-#: src/GameText.h:557
+#: src/GameText.h:558
 msgid "New and updated levels since your last check"
 msgstr "Nivells nous o actualitzat des de l'ultima comprovació"
 
-#: src/GameText.h:558
+#: src/GameText.h:559
 msgid "Your favorite levels"
 msgstr "Nivells favorits"
 
-#: src/GameText.h:559
+#: src/GameText.h:560
 msgid "Nicest X-Moto levels according to the web votes"
 msgstr "Nivells bonics segons les votacions web"
 
-#: src/GameText.h:560
+#: src/GameText.h:561
 msgid "Hardest X-Moto levels according to the web votes"
 msgstr "Nivells difícils segons les votacions web"
 
-#: src/GameText.h:561
+#: src/GameText.h:562
 msgid "Easiest X-Moto levels according to the web votes"
 msgstr "Nivells fàcils segons les votacions web"
 
-#: src/GameText.h:562
-msgid "Crapiest X-Moto levels according to the web votes"
+#: src/GameText.h:563
+#, fuzzy
+msgid "Crappiest X-Moto levels according to the web votes"
 msgstr "Crapiest levels segons les votacions web"
 
-#: src/GameText.h:563
+#: src/GameText.h:564
 msgid "X-Moto levels which are dynamic"
 msgstr "Nivells dinàmics del X-Moto"
 
-#: src/GameText.h:564
+#: src/GameText.h:565
 msgid "X-Moto levels with a background music"
 msgstr "Nivells de l'X-Moto amb musica de fons"
 
-#: src/GameText.h:565
+#: src/GameText.h:566
 #, fuzzy
 msgid "Last levels you have played"
 msgstr "Nivells del X-Moto que mai has jugat"
 
-#: src/GameText.h:566
+#: src/GameText.h:567
 msgid "X-Moto levels you never played"
 msgstr "Nivells del X-Moto que mai has jugat"
 
-#: src/GameText.h:567
+#: src/GameText.h:568
 msgid "X-Moto levels you have played the most"
 msgstr "Nivells del X-Moto que mes jugues"
 
-#: src/GameText.h:568
+#: src/GameText.h:569
 msgid "X-Moto levels you have played only a few times"
 msgstr "Nivells del X-Moto que només has jugat uns quants cops"
 
-#: src/GameText.h:569
+#: src/GameText.h:570
 #, fuzzy
 msgid "X-Moto levels having a recent highscore in your room"
 msgstr "Nivells del X-Moto  amb un record recient en la teva sala"
 
-#: src/GameText.h:570
+#: src/GameText.h:571
 msgid "Last created X-Moto levels"
 msgstr "Últims nivells creats del X-Moto"
 
-#: src/GameText.h:571
+#: src/GameText.h:572
 #, fuzzy
 msgid "X-Moto levels having an old highscore in your room"
 msgstr "Nivells del X-Moto amb un record antic en la teva sala"
 
-#: src/GameText.h:572
+#: src/GameText.h:573
 msgid "You have the room highscore"
 msgstr "Tens el record de la sala"
 
-#: src/GameText.h:573
+#: src/GameText.h:574
 #, fuzzy
 msgid "Your personal highscore finish time is almost the room highscore (95%)"
 msgstr "El teu record es quasi el mateix que el de la sala (95%)"
 
-#: src/GameText.h:574
+#: src/GameText.h:575
 #, fuzzy
 msgid ""
 "Your personal highscore finish time is almost the room highscore (90%-95%)"
 msgstr "El teu record es quasi el mateix que el de la sala (90%-95%)"
 
-#: src/GameText.h:575
+#: src/GameText.h:576
 #, fuzzy
 msgid ""
 "Your personal highscore finish time is almost the room highscore (80%-90%)"
 msgstr "El teu record es quasi el mateix que el de la sala (80%-90%)"
 
-#: src/GameText.h:576
+#: src/GameText.h:577
 msgid "The room highscore is really better than your own highscore"
 msgstr "El record de la sala es molt superior al teu"
 
-#: src/GameText.h:577
+#: src/GameText.h:578
 #, fuzzy, c-format
 msgid "Level pack \"%s\""
 msgstr "Nivells Empaquetats"
 
-#: src/GameText.h:578
+#: src/GameText.h:579
 #, fuzzy, c-format
 msgid "Highscores by %s"
 msgstr "Records per"
 
-#: src/GameText.h:579
+#: src/GameText.h:580
 msgid "External levels (the one you put into the 'My levels' directory)"
 msgstr "Nivells Externs (el que tens en el directori 'My-levels')"
 
 #: src/GameText.h:581
+msgid "Levels marked 'crappy' are hidden in all other packs"
+msgstr ""
+
+#: src/GameText.h:583
 msgid "Ugly mode enabled"
 msgstr "Mode lleig activat"
 
-#: src/GameText.h:582
+#: src/GameText.h:584
 msgid "Ugly mode disabled"
 msgstr "Mode lleig desactivat"
 
-#: src/GameText.h:583
+#: src/GameText.h:585
 msgid "Theme mode enabled"
 msgstr "Tema activat"
 
-#: src/GameText.h:584
+#: src/GameText.h:586
 msgid "Theme mode disabled"
 msgstr "Tema desactivat"
 
-#: src/GameText.h:585
+#: src/GameText.h:587
 msgid "UglyOver mode enabled"
 msgstr "Mode lleig 2 activat"
 
-#: src/GameText.h:586
+#: src/GameText.h:588
 msgid "UglyOver mode disabled"
 msgstr "Mode lleig 2 desactivat"
 
-#: src/GameText.h:587
+#: src/GameText.h:589
 #, fuzzy
 msgid "Web connection enabled"
 msgstr "Connexió Web activada"
 
-#: src/GameText.h:588
+#: src/GameText.h:590
 #, fuzzy
 msgid "Web connection disabled"
 msgstr "Connexió Web desactivada"
 
-#: src/GameText.h:589
+#: src/GameText.h:591
 msgid "Replay interpolation enabled"
 msgstr "Repetició interpolada activada"
 
-#: src/GameText.h:590
+#: src/GameText.h:592
 msgid "Replay interpolation disabled"
 msgstr "Repetició interpolada desactivada"
 
-#: src/GameText.h:591
+#: src/GameText.h:593
 msgid "Fps enabled"
 msgstr ""
 
-#: src/GameText.h:592
+#: src/GameText.h:594
 #, fuzzy
 msgid "Fps disabled"
 msgstr "Mode lleig desactivat"
 
-#: src/GameText.h:595
+#: src/GameText.h:597
 msgid "FontGroup:GENERAL"
 msgstr ""
 
