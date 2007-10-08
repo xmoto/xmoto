@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sv_SE\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-09-03 19:15+0200\n"
+"POT-Creation-Date: 2007-10-08 23:08+0200\n"
 "PO-Revision-Date: 2007-08-14 15:24+0200\n"
 "Last-Translator: Lukas <lukas.klingsbo@piratpartiet.se>\n"
 "Language-Team: Swedish\n"
@@ -1831,7 +1831,7 @@ msgstr "Visa hastighetsmätare när man spelar"
 msgid "Levels with no highscore"
 msgstr "Banor utan rekord"
 
-#: src/GameText.h:527 src/GameText.h:554
+#: src/GameText.h:527 src/GameText.h:555
 msgid "Levels you have not completed"
 msgstr "Banor som du inte har klarat"
 
@@ -1860,7 +1860,8 @@ msgid "Easiest levels"
 msgstr "Lättaste banorna"
 
 #: src/GameText.h:535
-msgid "Crapiest levels"
+#, fuzzy
+msgid "Crappiest levels"
 msgstr "Fulaste banorna"
 
 #: src/GameText.h:536
@@ -1923,164 +1924,174 @@ msgstr "Ingen medalj"
 msgid "My levels"
 msgstr "Mina banor"
 
-#: src/GameText.h:553
+#: src/GameText.h:552
+#, fuzzy
+msgid "Crappy levels"
+msgstr "Fulaste banorna"
+
+#: src/GameText.h:554
 msgid "Levels with no highscore in your room"
 msgstr "Banor utan rekord i ditt rum"
 
-#: src/GameText.h:555
+#: src/GameText.h:556
 msgid "Somebody in the room made a better highscore than yours"
 msgstr "Någon i ditt rum har gjort ett bättre rekord än ditt"
 
-#: src/GameText.h:556
+#: src/GameText.h:557
 msgid "All X-Moto levels"
 msgstr "Alla X-Moto banor"
 
-#: src/GameText.h:557
+#: src/GameText.h:558
 msgid "New and updated levels since your last check"
 msgstr "Nya och uppdaterade banor sedan din senaste koll"
 
-#: src/GameText.h:558
+#: src/GameText.h:559
 msgid "Your favorite levels"
 msgstr "Dina favorit banor"
 
-#: src/GameText.h:559
+#: src/GameText.h:560
 msgid "Nicest X-Moto levels according to the web votes"
 msgstr "Skönaste X-Moto banorna enligt Internet rösterna"
 
-#: src/GameText.h:560
+#: src/GameText.h:561
 msgid "Hardest X-Moto levels according to the web votes"
 msgstr "Svåraste X-Moto banorna enligt Internet rösterna"
 
-#: src/GameText.h:561
+#: src/GameText.h:562
 msgid "Easiest X-Moto levels according to the web votes"
 msgstr "Lättaste X-Moto banorna enligt Internet rösterna"
 
-#: src/GameText.h:562
-msgid "Crapiest X-Moto levels according to the web votes"
+#: src/GameText.h:563
+#, fuzzy
+msgid "Crappiest X-Moto levels according to the web votes"
 msgstr "Fulaste X-Moto banorna enligt Internet rösterna"
 
-#: src/GameText.h:563
+#: src/GameText.h:564
 msgid "X-Moto levels which are dynamic"
 msgstr "X-Moto banor som är dynamiska"
 
-#: src/GameText.h:564
+#: src/GameText.h:565
 msgid "X-Moto levels with a background music"
 msgstr "X-Moto banor som har bakgrundsmusik"
 
-#: src/GameText.h:565
+#: src/GameText.h:566
 msgid "Last levels you have played"
 msgstr "Senaste banorna du har spelat"
 
-#: src/GameText.h:566
+#: src/GameText.h:567
 msgid "X-Moto levels you never played"
 msgstr "X-Moto banor du aldrig spelat"
 
-#: src/GameText.h:567
+#: src/GameText.h:568
 msgid "X-Moto levels you have played the most"
 msgstr "X-Moto banor du har spelat mest"
 
-#: src/GameText.h:568
+#: src/GameText.h:569
 msgid "X-Moto levels you have played only a few times"
 msgstr "X-Moto banor du bara har spelat ett fåtal gånger"
 
-#: src/GameText.h:569
+#: src/GameText.h:570
 msgid "X-Moto levels having a recent highscore in your room"
 msgstr "X-Moto banor som har ett nyligen gjort rekord i ditt rum"
 
-#: src/GameText.h:570
+#: src/GameText.h:571
 msgid "Last created X-Moto levels"
 msgstr "Senast skapade X-Moto banor"
 
-#: src/GameText.h:571
+#: src/GameText.h:572
 msgid "X-Moto levels having an old highscore in your room"
 msgstr "X-Moto banor som har ett gammalt rekord i ditt rum"
 
-#: src/GameText.h:572
+#: src/GameText.h:573
 msgid "You have the room highscore"
 msgstr "Du har rumets rekord"
 
-#: src/GameText.h:573
+#: src/GameText.h:574
 msgid "Your personal highscore finish time is almost the room highscore (95%)"
 msgstr "Din personliga rekordtid är nästan lika bra som rummets (95%)"
 
-#: src/GameText.h:574
+#: src/GameText.h:575
 msgid ""
 "Your personal highscore finish time is almost the room highscore (90%-95%)"
 msgstr "Din personliga rekordtid är nästan lika bra som rummets (90%-95%)"
 
-#: src/GameText.h:575
+#: src/GameText.h:576
 msgid ""
 "Your personal highscore finish time is almost the room highscore (80%-90%)"
 msgstr "Din personliga rekordtid är nästan lika bra som rummets (80%-90%)"
 
-#: src/GameText.h:576
+#: src/GameText.h:577
 msgid "The room highscore is really better than your own highscore"
 msgstr "Rummets rekord är grymt mycket bättre än ditt eget"
 
-#: src/GameText.h:577
+#: src/GameText.h:578
 #, c-format
 msgid "Level pack \"%s\""
 msgstr "Ban-paket  \"%s\""
 
-#: src/GameText.h:578
+#: src/GameText.h:579
 #, c-format
 msgid "Highscores by %s"
 msgstr "Rekord av %s"
 
-#: src/GameText.h:579
+#: src/GameText.h:580
 msgid "External levels (the one you put into the 'My levels' directory)"
 msgstr "Externa banor (de som du la i 'My levels' mappen)"
 
 #: src/GameText.h:581
+msgid "Levels marked 'crappy' are hidden in all other packs"
+msgstr ""
+
+#: src/GameText.h:583
 msgid "Ugly mode enabled"
 msgstr "Fult läge på"
 
-#: src/GameText.h:582
+#: src/GameText.h:584
 msgid "Ugly mode disabled"
 msgstr "Fult läge av"
 
-#: src/GameText.h:583
+#: src/GameText.h:585
 msgid "Theme mode enabled"
 msgstr "Tema läge på"
 
-#: src/GameText.h:584
+#: src/GameText.h:586
 msgid "Theme mode disabled"
 msgstr "Tema läge av"
 
-#: src/GameText.h:585
+#: src/GameText.h:587
 msgid "UglyOver mode enabled"
 msgstr "UglyOver läge på"
 
-#: src/GameText.h:586
+#: src/GameText.h:588
 msgid "UglyOver mode disabled"
 msgstr "UglyOver läge av"
 
-#: src/GameText.h:587
+#: src/GameText.h:589
 msgid "Web connection enabled"
 msgstr "Internet anslutning möjliggjord"
 
-#: src/GameText.h:588
+#: src/GameText.h:590
 msgid "Web connection disabled"
 msgstr "Internet anslutning omöjliggjord"
 
-#: src/GameText.h:589
+#: src/GameText.h:591
 msgid "Replay interpolation enabled"
 msgstr "Repriskurva på"
 
-#: src/GameText.h:590
+#: src/GameText.h:592
 msgid "Replay interpolation disabled"
 msgstr "Repriskurva av"
 
-#: src/GameText.h:591
+#: src/GameText.h:593
 msgid "Fps enabled"
 msgstr ""
 
-#: src/GameText.h:592
+#: src/GameText.h:594
 #, fuzzy
 msgid "Fps disabled"
 msgstr "Fult läge av"
 
-#: src/GameText.h:595
+#: src/GameText.h:597
 msgid "FontGroup:GENERAL"
 msgstr ""
 
