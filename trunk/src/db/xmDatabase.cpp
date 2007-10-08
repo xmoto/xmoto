@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "WWW.h"
 #include "helpers/Log.h"
 
-#define XMDB_VERSION 13
+#define XMDB_VERSION 14
 
 bool xmDatabase::Trace = false;
 
@@ -386,6 +386,15 @@ void xmDatabase::upgradeXmDbToVersion(int i_fromVersion,
       updateXmDbVersion(13);
     } catch(Exception &e) {
       throw Exception("Unable to update xmDb from 12: " + e.getMsg());
+    }
+
+  case 13:
+    try {
+      simpleSql("ALTER TABLE weblevels ADD COLUMN crappy DEFAULT 0;");
+      simpleSql("CREATE INDEX weblevels_crappy_idx1 ON weblevels(crappy);");
+      updateXmDbVersion(14);
+    } catch(Exception &e) {
+      throw Exception("Unable to update xmDb from 13: " + e.getMsg());
     }
 
     // next

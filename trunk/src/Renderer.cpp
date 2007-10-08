@@ -893,7 +893,18 @@ int GameRenderer::nbParticlesRendered() const {
     }
             
     if(pType != NULL) {
-      _RenderAlphaBlendedSectionSP(pType->getTexture(),Vector2f(x2_cam,y2_cam),Vector2f(x1_cam,y2_cam),Vector2f(x1_cam,y1_cam),Vector2f(x2_cam,y1_cam));
+      if(pType->getBlendMode() == SPRITE_BLENDMODE_ADDITIVE) {
+	_RenderAdditiveBlendedSection(pType->getTexture(), Vector2f(x2_cam,getParent()->getDrawLib()->getDispHeight()-y2_cam),Vector2f(x1_cam,getParent()->getDrawLib()->getDispHeight()-y2_cam),Vector2f(x1_cam,getParent()->getDrawLib()->getDispHeight()-y1_cam),Vector2f(x2_cam,getParent()->getDrawLib()->getDispHeight()-y1_cam));      
+      } else {
+#ifdef ENABLE_OPENGL
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GEQUAL,0.5f);      
+#endif
+	_RenderAlphaBlendedSection(pType->getTexture(), Vector2f(x2_cam,getParent()->getDrawLib()->getDispHeight()-y2_cam),Vector2f(x1_cam,getParent()->getDrawLib()->getDispHeight()-y2_cam),Vector2f(x1_cam,getParent()->getDrawLib()->getDispHeight()-y1_cam),Vector2f(x2_cam,getParent()->getDrawLib()->getDispHeight()-y1_cam));      
+#ifdef ENABLE_OPENGL
+	glDisable(GL_ALPHA_TEST);
+#endif
+      }
     }
 
     if(nQuantity > 0) {
