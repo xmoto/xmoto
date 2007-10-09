@@ -220,6 +220,10 @@ class StateManager;
       OldGameState m_State; /* Current state */      
       OldGameState m_StateAfterPlaying;            /* State that should be used later */
 
+      std::string getWebHighscoresIdRoom(){
+	return m_WebHighscoresIdRoom;
+      }
+
    protected:
       void createDefaultConfig();
 
@@ -377,10 +381,6 @@ class StateManager;
       UIFrame *m_pLevelPackViewer;  
       LevelsPack *m_pActiveLevelPack;
       
-      /* Level info viewer fun */
-      UIFrame *m_pLevelInfoViewer;      
-      std::string m_LevelInfoViewerLevel;
-      
       /* Replay saving UI fun */
       UIMsgBox *m_pSaveReplayMsgBox;    
 
@@ -444,8 +444,6 @@ class StateManager;
       void _UpdateLevelPackLevelList(const std::string& v_levelPack);
       void _UpdateActionKeyList(void);
       void _UpdateLevelPackList(void);
-      void _UpdateLevelInfoViewerBestTimes(const std::string &LevelID);     
-      void _UpdateLevelInfoViewerReplays(const std::string &LevelID);     
       void _ChangeKeyConfig(void);
       void _ConfigureJoystick(void);
       void _DrawMenuBackground(void); 

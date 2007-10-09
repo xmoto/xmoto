@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StatePause.h"
 #include "StateFinished.h"
 #include "StateDeadMenu.h"
+#include "StateLevelInfoViewer.h"
 
   /*
 TODO of the states
@@ -180,6 +181,7 @@ void StateManager::cleanStates() {
   StatePause::clean();
   StateFinished::clean();
   StateDeadMenu::clean();
+  StateLevelInfoViewer::clean();
 }
 
 GameState::GameState(bool drawStateBehind,

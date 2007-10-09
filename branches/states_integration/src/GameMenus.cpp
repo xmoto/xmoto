@@ -1094,127 +1094,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_pPackLevelInfoViewReplayButton->setFont(drawLib->getFontSmall());
     m_pPackLevelInfoViewReplayButton->setContextHelp(CONTEXTHELP_VIEWTHEHIGHSCORE);
 
-    /* Initialize level info viewer */
-    m_pLevelInfoViewer = new UIFrame(m_Renderer->getGUI(),drawLib->getDispWidth()/2-350,drawLib->getDispHeight()/2-250,"",700,500); 
-    m_pLevelInfoViewer->setStyle(UI_FRAMESTYLE_TRANS);
-    UIStatic *pLevelInfoViewerTitle = new UIStatic(m_pLevelInfoViewer,0,0,"(level name goes here)",700,40);
-    pLevelInfoViewerTitle->setID("LEVEL_VIEWER_TITLE");  
-    pLevelInfoViewerTitle->setFont(drawLib->getFontMedium());
-    UITabView *pLevelViewerTabs = new UITabView(m_pLevelInfoViewer,20,40,"",m_pLevelInfoViewer->getPosition().nWidth-40,m_pLevelInfoViewer->getPosition().nHeight-115);
-    pLevelViewerTabs->setFont(drawLib->getFontSmall());
-    pLevelViewerTabs->setID("LEVEL_VIEWER_TABS");  
-    pLevelViewerTabs->setTabContextHelp(0,CONTEXTHELP_GENERAL_INFO);
-    pLevelViewerTabs->setTabContextHelp(1,CONTEXTHELP_BEST_TIMES_INFO);
-    pLevelViewerTabs->setTabContextHelp(2,CONTEXTHELP_REPLAYS_INFO);
-    UIWindow *pLVTab_Info = new UIWindow(pLevelViewerTabs,20,40,GAMETEXT_GENERALINFO,pLevelViewerTabs->getPosition().nWidth-40,pLevelViewerTabs->getPosition().nHeight-60);
-    pLVTab_Info->enableWindow(true);
-    pLVTab_Info->setID("LEVEL_VIEWER_GENERALINFO_TAB");
-    UIWindow *pLVTab_BestTimes = new UIWindow(pLevelViewerTabs,20,40,GAMETEXT_BESTTIMES,pLevelViewerTabs->getPosition().nWidth-40,pLevelViewerTabs->getPosition().nHeight-60);
-    pLVTab_BestTimes->enableWindow(true);
-    pLVTab_BestTimes->showWindow(false);
-    pLVTab_BestTimes->setID("LEVEL_VIEWER_BESTTIMES_TAB");
-    UIWindow *pLVTab_Replays = new UIWindow(pLevelViewerTabs,20,40,GAMETEXT_REPLAYS,pLevelViewerTabs->getPosition().nWidth-40,pLevelViewerTabs->getPosition().nHeight-60);
-    pLVTab_Replays->enableWindow(true);
-    pLVTab_Replays->showWindow(false);
-    pLVTab_Replays->setID("LEVEL_VIEWER_REPLAYS_TAB");
-    UIButton *pOKButton = new UIButton(m_pLevelInfoViewer,11,m_pLevelInfoViewer->getPosition().nHeight-68,GAMETEXT_OK,115,57);
-    pOKButton->setFont(drawLib->getFontSmall());
-    pOKButton->setType(UI_BUTTON_TYPE_SMALL);
-    pOKButton->setID("LEVEL_VIEWER_OK_BUTTON");
-    pOKButton->setContextHelp(CONTEXTHELP_BACK_TO_MAIN_MENU);
-    
-    /* Level info viewer - general info */
-    UIStatic *pLV_Info_LevelPack = new UIStatic(pLVTab_Info,0,0,"(pack name goes here)",pLVTab_Info->getPosition().nWidth,40);
-    pLV_Info_LevelPack->setID("LEVEL_VIEWER_INFO_LEVELPACK");
-    pLV_Info_LevelPack->showWindow(true);
-    pLV_Info_LevelPack->setHAlign(UI_ALIGN_LEFT);
-    pLV_Info_LevelPack->setVAlign(UI_ALIGN_TOP);
-    pLV_Info_LevelPack->setFont(drawLib->getFontSmall());
-    UIStatic *pLV_Info_LevelName = new UIStatic(pLVTab_Info,0,40,"(level name goes here)",pLVTab_Info->getPosition().nWidth,40);
-    pLV_Info_LevelName->setID("LEVEL_VIEWER_INFO_LEVELNAME");
-    pLV_Info_LevelName->showWindow(true);
-    pLV_Info_LevelName->setHAlign(UI_ALIGN_LEFT);
-    pLV_Info_LevelName->setVAlign(UI_ALIGN_TOP);
-    pLV_Info_LevelName->setFont(drawLib->getFontSmall());
-    UIStatic *pLV_Info_Author = new UIStatic(pLVTab_Info,0,80,"(author goes here)",pLVTab_Info->getPosition().nWidth,40);
-    pLV_Info_Author->setID("LEVEL_VIEWER_INFO_AUTHOR");
-    pLV_Info_Author->showWindow(true);
-    pLV_Info_Author->setHAlign(UI_ALIGN_LEFT);                
-    pLV_Info_Author->setVAlign(UI_ALIGN_TOP);
-    pLV_Info_Author->setFont(drawLib->getFontSmall());
-    UIStatic *pLV_Info_Date = new UIStatic(pLVTab_Info,0,120,"(date goes here)",pLVTab_Info->getPosition().nWidth,40);
-    pLV_Info_Date->setID("LEVEL_VIEWER_INFO_DATE");
-    pLV_Info_Date->showWindow(true);
-    pLV_Info_Date->setHAlign(UI_ALIGN_LEFT);                
-    pLV_Info_Date->setVAlign(UI_ALIGN_TOP);
-    pLV_Info_Date->setFont(drawLib->getFontSmall());
-    UIStatic *pLV_Info_Description = new UIStatic(pLVTab_Info,0,160,"(description goes here)",pLVTab_Info->getPosition().nWidth,200);
-    pLV_Info_Description->setID("LEVEL_VIEWER_INFO_DESCRIPTION");
-    pLV_Info_Description->showWindow(true);
-    pLV_Info_Description->setHAlign(UI_ALIGN_LEFT);                
-    pLV_Info_Description->setVAlign(UI_ALIGN_TOP);
-    pLV_Info_Description->setFont(drawLib->getFontSmall());
-    
-    /* Level info viewer - best times */
-    UIButton *pLV_BestTimes_Personal = new UIButton(pLVTab_BestTimes,5,5,GAMETEXT_PERSONAL,(pLVTab_BestTimes->getPosition().nWidth-40)/2,28);
-    pLV_BestTimes_Personal->setType(UI_BUTTON_TYPE_RADIO);
-    pLV_BestTimes_Personal->setID("LEVEL_VIEWER_BESTTIMES_PERSONAL");
-    pLV_BestTimes_Personal->enableWindow(true);
-    pLV_BestTimes_Personal->setChecked(true);
-    pLV_BestTimes_Personal->setFont(drawLib->getFontSmall());
-    pLV_BestTimes_Personal->setGroup(421023);
-    pLV_BestTimes_Personal->setContextHelp(CONTEXTHELP_ONLY_SHOW_PERSONAL_BESTS);
-    UIButton *pLV_BestTimes_All = new UIButton(pLVTab_BestTimes,5 + ((pLVTab_BestTimes->getPosition().nWidth-40)/2)*1,5,GAMETEXT_ALL,(pLVTab_BestTimes->getPosition().nWidth-40)/2,28);
-    pLV_BestTimes_All->setType(UI_BUTTON_TYPE_RADIO);
-    pLV_BestTimes_All->setID("LEVEL_VIEWER_BESTTIMES_ALL");
-    pLV_BestTimes_All->enableWindow(true);
-    pLV_BestTimes_All->setChecked(false);
-    pLV_BestTimes_All->setFont(drawLib->getFontSmall());
-    pLV_BestTimes_All->setGroup(421023);
-    pLV_BestTimes_All->setContextHelp(CONTEXTHELP_SHOW_ALL_BESTS);
-    
-    UIList *pLV_BestTimes_List= new UIList(pLVTab_BestTimes,5,43,"",pLVTab_BestTimes->getPosition().nWidth-10,pLVTab_BestTimes->getPosition().nHeight-100);
-    pLV_BestTimes_List->setID("LEVEL_VIEWER_BESTTIMES_LIST");
-    pLV_BestTimes_List->setFont(drawLib->getFontSmall());
-    pLV_BestTimes_List->addColumn(GAMETEXT_FINISHTIME,128);
-    pLV_BestTimes_List->addColumn(GAMETEXT_PLAYER,pLV_BestTimes_List->getPosition().nWidth-128);    
-    UIStatic *pLV_BestTimes_WorldRecord = new UIStatic(pLVTab_BestTimes,5,pLVTab_BestTimes->getPosition().nHeight-50,"",pLVTab_BestTimes->getPosition().nWidth,50);
-    pLV_BestTimes_WorldRecord->setID("LEVEL_VIEWER_BESTTIMES_WORLDRECORD");
-    pLV_BestTimes_WorldRecord->setFont(drawLib->getFontSmall());
-    pLV_BestTimes_WorldRecord->setVAlign(UI_ALIGN_CENTER);
-    pLV_BestTimes_WorldRecord->setHAlign(UI_ALIGN_LEFT);
-
-    /* Level info viewer - replays */
-    UIButton *pLV_Replays_Personal = new UIButton(pLVTab_Replays,5,5,GAMETEXT_PERSONAL,(pLVTab_Replays->getPosition().nWidth-40)/2,28);
-    pLV_Replays_Personal->setType(UI_BUTTON_TYPE_RADIO);
-    pLV_Replays_Personal->setID("LEVEL_VIEWER_REPLAYS_PERSONAL");
-    pLV_Replays_Personal->enableWindow(true);
-    pLV_Replays_Personal->setChecked(false);
-    pLV_Replays_Personal->setFont(drawLib->getFontSmall());
-    pLV_Replays_Personal->setGroup(421024);
-    pLV_Replays_Personal->setContextHelp(CONTEXTHELP_ONLY_SHOW_PERSONAL_REPLAYS);
-    UIButton *pLV_Replays_All = new UIButton(pLVTab_Replays,5 + ((pLVTab_Replays->getPosition().nWidth-40)/2)*1,5,GAMETEXT_ALL,(pLVTab_Replays->getPosition().nWidth-40)/2,28);
-    pLV_Replays_All->setType(UI_BUTTON_TYPE_RADIO);
-    pLV_Replays_All->setID("LEVEL_VIEWER_REPLAYS_ALL");
-    pLV_Replays_All->enableWindow(true);
-    pLV_Replays_All->setChecked(true);
-    pLV_Replays_All->setFont(drawLib->getFontSmall());
-    pLV_Replays_All->setGroup(421024);
-    pLV_Replays_All->setContextHelp(CONTEXTHELP_SHOW_ALL_REPLAYS);
-    
-    UIList *pLV_Replays_List= new UIList(pLVTab_Replays,5,43,"",pLVTab_Replays->getPosition().nWidth-10,pLVTab_Replays->getPosition().nHeight-100);
-    pLV_Replays_List->setID("LEVEL_VIEWER_REPLAYS_LIST");
-    pLV_Replays_List->setFont(drawLib->getFontSmall());
-    pLV_Replays_List->addColumn(GAMETEXT_REPLAY,128);
-    pLV_Replays_List->addColumn(GAMETEXT_PLAYER,128);
-    pLV_Replays_List->addColumn(GAMETEXT_FINISHTIME,128);    
-    UIButton *pLV_Replays_Show = new UIButton(pLVTab_Replays,0,pLVTab_Replays->getPosition().nHeight-50,GAMETEXT_SHOW,115,57);
-    pLV_Replays_Show->setFont(drawLib->getFontSmall());
-    pLV_Replays_Show->setType(UI_BUTTON_TYPE_SMALL);
-    pLV_Replays_Show->setID("LEVEL_VIEWER_REPLAYS_SHOW");
-    pLV_Replays_Show->setContextHelp(CONTEXTHELP_RUN_SELECTED_REPLAY);
-    pLV_Replays_List->setEnterButton( pLV_Replays_Show );
-    
     /* Build stats window */
     m_pStatsWindow = new UIFrame(m_pMainMenu,220,(drawLib->getDispHeight()*140)/600,GAMETEXT_STATS,drawLib->getDispWidth()-200,drawLib->getDispHeight()-40-(drawLib->getDispHeight()*120)/600-10);      
     m_pStatsWindow->setStyle(UI_FRAMESTYLE_LEFTTAG);
@@ -1241,7 +1120,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     /* Hide menus */
     m_pMainMenu->showWindow(false);
-    m_pLevelInfoViewer->showWindow(false);
     m_pLevelPackViewer->showWindow(false);
     
     /* Update options */
@@ -1326,146 +1204,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
   
   /*===========================================================================
-  Update level info viewer best times list
-  ===========================================================================*/  
-  void GameApp::_UpdateLevelInfoViewerBestTimes(const std::string &LevelID) {
-    char **v_result;
-    unsigned int nrow;
-    float v_finishTime;
-    std::string v_profile;
-
-    UIList *pList = (UIList *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_BESTTIMES_TAB:LEVEL_VIEWER_BESTTIMES_LIST");
-    UIButton *pLV_BestTimes_Personal = (UIButton *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_BESTTIMES_TAB:LEVEL_VIEWER_BESTTIMES_PERSONAL");
-    UIButton *pLV_BestTimes_All = (UIButton *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_BESTTIMES_TAB:LEVEL_VIEWER_BESTTIMES_ALL");
-    UIStatic *pLV_BestTimes_WorldRecord = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_BESTTIMES_TAB:LEVEL_VIEWER_BESTTIMES_WORLDRECORD");
-
-    if(pList != NULL && pLV_BestTimes_All != NULL && pLV_BestTimes_Personal != NULL && m_xmsession->profile() != "" &&
-       pLV_BestTimes_WorldRecord != NULL) {
-
-      /* Create list */
-      pList->clear();
-      if(pLV_BestTimes_All->getChecked()) {
-	v_result = m_db->readDB("SELECT finishTime, id_profile FROM profile_completedLevels "
-				"WHERE id_level=\""   + xmDatabase::protectString(LevelID)    + "\" "
-				"ORDER BY finishTime LIMIT 10;",
-				nrow);
-	for(unsigned int i=0; i<nrow; i++) {
-	  v_finishTime  = atof(m_db->getResult(v_result, 2, i, 0));
-	  v_profile     =      m_db->getResult(v_result, 2, i, 1);
-
-	  UIListEntry *pEntry = pList->addEntry(formatTime(v_finishTime));
-	  pEntry->Text.push_back(v_profile);
-	}
-	m_db->read_DB_free(v_result);
-      } else {      
-	v_result = m_db->readDB("SELECT finishTime FROM profile_completedLevels "
-				"WHERE id_profile=\"" + xmDatabase::protectString(m_xmsession->profile())  + "\" "
-				"AND   id_level=\""   + xmDatabase::protectString(LevelID)    + "\" "
-				"ORDER BY finishTime LIMIT 10;",
-				nrow);
-	for(unsigned int i=0; i<nrow; i++) {
-	  v_finishTime  = atof(m_db->getResult(v_result, 1, i, 0));
-	  UIListEntry *pEntry = pList->addEntry(formatTime(v_finishTime));
-	  pEntry->Text.push_back(m_xmsession->profile());
-	}
-	m_db->read_DB_free(v_result);
-      }
-
-      
-      /* Get record */
-      if(m_xmsession->www()) {
-	char **v_result;
-	unsigned int nrow;
-	std::string v_roomName;
-	std::string v_id_profile;
-	float       v_finishTime;
-
-	v_result = m_db->readDB("SELECT a.name, b.id_profile, b.finishTime "
-				"FROM webrooms AS a LEFT OUTER JOIN webhighscores AS b "
-				"ON (a.id_room = b.id_room "
-				"AND b.id_level=\"" + xmDatabase::protectString(LevelID) + "\") "
-				"WHERE a.id_room=" + m_WebHighscoresIdRoom + ";",
-				nrow);
-	if(nrow != 1) {
-	  pLV_BestTimes_WorldRecord->setCaption("");
-	  return;
-	}
-	v_roomName = m_db->getResult(v_result, 3, 0, 0);
-	if(m_db->getResult(v_result, 3, 0, 1) != NULL) {
-	  v_id_profile = m_db->getResult(v_result, 3, 0, 1);
-	  v_finishTime = atof(m_db->getResult(v_result, 3, 0, 2));
-	}
-	m_db->read_DB_free(v_result);
-
-	if(v_id_profile != "") {
-	  char c_tmp[1024];
-	  snprintf(c_tmp, 1024,
-		   GAMETEXT_BY_PLAYER, v_id_profile.c_str());
-          pLV_BestTimes_WorldRecord->setCaption(v_roomName + ": " + GameApp::formatTime(v_finishTime) +
-						" " + std::string(c_tmp));
-	} else {
-	  pLV_BestTimes_WorldRecord->setCaption(v_roomName + ": " + GAMETEXT_WORLDRECORDNA);
-	}
-      }
-      else
-        pLV_BestTimes_WorldRecord->setCaption("");
-    }
-  }
-
-  /*===========================================================================
-  Update level info viewer replays list
-  ===========================================================================*/  
-  void GameApp::_UpdateLevelInfoViewerReplays(const std::string &LevelID) {
-    UIList *pList = (UIList *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_REPLAYS_TAB:LEVEL_VIEWER_REPLAYS_LIST");
-    UIButton *pLV_BestTimes_Personal = (UIButton *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_BESTTIMES_TAB:LEVEL_VIEWER_BESTTIMES_PERSONAL");
-    UIButton *pLV_BestTimes_All = (UIButton *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_BESTTIMES_TAB:LEVEL_VIEWER_BESTTIMES_ALL");
-    UIButton *pLV_Replays_Personal = (UIButton *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_REPLAYS_TAB:LEVEL_VIEWER_REPLAYS_PERSONAL");
-    UIButton *pLV_Replays_All = (UIButton *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_REPLAYS_TAB:LEVEL_VIEWER_REPLAYS_ALL");
-    UIButton *pLV_Replays_Show = (UIButton *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_REPLAYS_TAB:LEVEL_VIEWER_REPLAYS_SHOW");
-
-    if(pList != NULL && pLV_BestTimes_All != NULL && pLV_BestTimes_Personal != NULL && m_xmsession->profile() != "" &&
-       pLV_Replays_Show != NULL) {
-      char **v_result;
-      unsigned int nrow;
-
-      /* Personal or all replays? */
-      std::string v_sql;
-
-      if(pLV_Replays_All->getChecked()) {
-	v_sql = "SELECT name, id_profile, isFinished, finishTime FROM replays "
-	  "WHERE id_level=\""   + xmDatabase::protectString(LevelID) + "\";";
-      }
-      else if(pLV_Replays_Personal->getChecked()) {
-	v_sql = "SELECT name, id_profile, isFinished, finishTime FROM replays "
-	  "WHERE id_level=\""   + xmDatabase::protectString(LevelID) + "\" "
-	  "AND   id_profile=\"" + xmDatabase::protectString(m_xmsession->profile()) + "\";";
-      }
-      
-      /* Create list */
-      pList->clear();
-
-      v_result = m_db->readDB(v_sql, nrow);
-      for(unsigned int i=0; i<nrow; i++) {
-	UIListEntry *pEntry = pList->addEntry(m_db->getResult(v_result, 4, i, 0));
-	pEntry->Text.push_back(m_db->getResult(v_result, 4, i, 1));
-	
-	if(m_db->getResult(v_result, 4, i, 2) == "0") {
-	  pEntry->Text.push_back("("+ std::string(GAMETEXT_NOTFINISHED) + ")");
-	} else {
-	  pEntry->Text.push_back(formatTime(atof(m_db->getResult(v_result, 4, i, 3))));
-	}
-      }
-      m_db->read_DB_free(v_result);
-      
-      /* Clean up */
-      pLV_Replays_Personal->enableWindow(true);
-      pLV_Replays_All->enableWindow(true);
-      pLV_Replays_Show->enableWindow(true);
-      pList->enableWindow(true);
-    }
-  }
-  
-  /*===========================================================================
   Update action key list (options)
   ===========================================================================*/  
   void GameApp::_UpdateActionKeyList(void) {
@@ -1543,54 +1281,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /* reselect the previous pack */
     if(v_selected_packName != "") {
       pTree->setSelectedPackByName(v_selected_packName);
-    }
-  }
-
-  /*===========================================================================
-  Update level info viewer
-  ===========================================================================*/
-  void GameApp::_HandleLevelInfoViewer(void) {
-    /* Get buttons */
-    UIButton *pOKButton = reinterpret_cast<UIButton *>(m_pLevelInfoViewer->getChild("LEVEL_VIEWER_OK_BUTTON"));    
-    UIButton *pLV_BestTimes_Personal = (UIButton *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_BESTTIMES_TAB:LEVEL_VIEWER_BESTTIMES_PERSONAL");
-    UIButton *pLV_BestTimes_All = (UIButton *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_BESTTIMES_TAB:LEVEL_VIEWER_BESTTIMES_ALL");
-    UIButton *pLV_Replays_Personal = (UIButton *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_REPLAYS_TAB:LEVEL_VIEWER_REPLAYS_PERSONAL");
-    UIButton *pLV_Replays_All = (UIButton *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_REPLAYS_TAB:LEVEL_VIEWER_REPLAYS_ALL");
-    UIButton *pLV_Replays_Show = (UIButton *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_REPLAYS_TAB:LEVEL_VIEWER_REPLAYS_SHOW");
-    UIList *pLV_Replays_List = (UIList *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_REPLAYS_TAB:LEVEL_VIEWER_REPLAYS_LIST");
-
-    /* Check buttons */
-    if(pOKButton->isClicked()) {
-      m_State = GS_MENU;
-      m_pLevelInfoViewer->showWindow(false);
-      m_pMainMenu->enableChildren(true);
-      m_pMainMenu->enableWindow(true);
-    }   
-    
-    if(pLV_BestTimes_All->isClicked() || pLV_BestTimes_Personal->isClicked()) {
-      _UpdateLevelInfoViewerBestTimes(m_LevelInfoViewerLevel);
-    }         
-
-    if(pLV_Replays_All->isClicked() || pLV_Replays_Personal->isClicked()) {
-      _UpdateLevelInfoViewerReplays(m_LevelInfoViewerLevel);
-    }         
-
-    if(pLV_Replays_Show->isClicked()) {
-      /* Show replay */
-      if(pLV_Replays_List->getSelected() >= 0 && pLV_Replays_List->getSelected() < pLV_Replays_List->getEntries().size()) {
-        UIListEntry *pListEntry = pLV_Replays_List->getEntries()[pLV_Replays_List->getSelected()];
-        if(pListEntry != NULL && !pListEntry->Text.empty()) {
-          /* Do it captain */
-          pLV_Replays_Show->setClicked(false);
-          m_pLevelInfoViewer->showWindow(false);
-          m_pMainMenu->enableChildren(true);
-          m_pMainMenu->enableWindow(true);
-          m_pMainMenu->showWindow(false);
-          m_PlaySpecificReplay = pListEntry->Text[0];
-	  m_StateAfterPlaying = GS_MENU;
-          setState(GS_REPLAYING);
-        }
-      }
     }
   }
 
@@ -1711,6 +1401,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
         /* === OPEN LEVEL INFO VIEWER === */      
         /* Set information */
+
+	/* StateLevelInfoViewer has nothing to do in there
         UIStatic *pLevelName = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TITLE");
         
         if(pLevelName != NULL) pLevelName->setCaption(v_levelName);
@@ -1726,14 +1418,22 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         if(pGeneralInfo_Author != NULL) pGeneralInfo_Author->setCaption(std::string(GAMETEXT_AUTHOR) + ": " + v_levelAuthor);
         if(pGeneralInfo_Date != NULL) pGeneralInfo_Date->setCaption(std::string(GAMETEXT_DATE) + ": " + v_levelDateStr);
         if(pGeneralInfo_Description != NULL) pGeneralInfo_Description->setCaption(std::string(GAMETEXT_DESCRIPTION) + ": " + v_levelDescription);
-            
+	*/
+
+	/* now in StateLevelInfoViewer. to be put in a mother
+	   class of them.
         _UpdateLevelInfoViewerBestTimes(m_LevelInfoViewerLevel = v_id_level);
         _UpdateLevelInfoViewerReplays(m_LevelInfoViewerLevel);
+	*/
         
         /* Nice. Open the level info viewer */
         pLevelInfoButton->setActive(false);
         m_pLevelPackViewer->showWindow(false);
+
+	/* StateLevelInfoViewer has nothing to do in there
         m_pLevelInfoViewer->showWindow(true);
+	*/
+
         m_pMainMenu->enableChildren(false);
         m_pMainMenu->enableWindow(false);
         m_State = GS_LEVEL_INFO_VIEWER;      
@@ -2433,8 +2133,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
         /* Set information */
+
+
+	/* StateLevelInfoViewer has nothing to do here 
         UIStatic *pLevelName = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TITLE");
-        
+
         if(pLevelName != NULL) pLevelName->setCaption(v_levelName);
 
         UIStatic *pGeneralInfo_LevelPack = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_LEVELPACK");
@@ -2448,14 +2151,22 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         if(pGeneralInfo_Author != NULL) pGeneralInfo_Author->setCaption(std::string(GAMETEXT_AUTHOR) + ": " + v_levelAuthor);
         if(pGeneralInfo_Date != NULL) pGeneralInfo_Date->setCaption(std::string(GAMETEXT_DATE) + ": " + v_levelDateStr);
         if(pGeneralInfo_Description != NULL) pGeneralInfo_Description->setCaption(std::string(GAMETEXT_DESCRIPTION) + ": "  + v_levelDescription);
+	*/
             
+	/* now in StateLevelInfoViewer. to be put in a mother
+	   class of them.
         _UpdateLevelInfoViewerBestTimes(m_LevelInfoViewerLevel = v_id_level);
         _UpdateLevelInfoViewerReplays(m_LevelInfoViewerLevel);
+	*/
         
         /* Nice. Open the level info viewer */
         pLevelInfoButton->setActive(false);
         pNewLevelsLevelInfoButton->setActive(false);
+
+	/* StateLevelInfoViewer not in there
         m_pLevelInfoViewer->showWindow(true);
+	*/
+
         m_pMainMenu->enableChildren(false);
         m_pMainMenu->enableWindow(false);
         m_State = GS_LEVEL_INFO_VIEWER;

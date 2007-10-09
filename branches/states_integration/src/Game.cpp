@@ -798,277 +798,276 @@ GameApp::GameApp() {
   /*===========================================================================
   Key down event
   ===========================================================================*/
-  void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
-    /* No matter what, F12 always equals a screenshot */
-    if(nKey == SDLK_F12) {
-      _GameScreenshot();
-      return;        
+void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
+  /* No matter what, F12 always equals a screenshot */
+  if(nKey == SDLK_F12) {
+    _GameScreenshot();
+    return;        
+  }
+
+  if(nKey == SDLK_F8) {
+    enableWWW(m_xmsession->www() == false);
+    return;        
+  }
+
+  if(nKey == SDLK_F7) {
+    enableFps(m_xmsession->fps() == false);
+    return;        
+  }
+
+  if(nKey == SDLK_F9) {
+    switchUglyMode(m_xmsession->ugly() == false);
+    if(m_xmsession->ugly()) {
+      m_sysMsg->displayText(SYS_MSG_UGLY_MODE_ENABLED);
+    } else {
+      m_sysMsg->displayText(SYS_MSG_UGLY_MODE_DISABLED);
+    }
+    return;        
+  }
+
+  if(nKey == SDLK_RETURN && (((mod & KMOD_LALT) == KMOD_LALT) || ((mod & KMOD_RALT) == KMOD_RALT))) {
+    drawLib->toogleFullscreen();
+    return;
+  }
+
+  if(nKey == SDLK_F10) {
+    switchTestThemeMode(m_xmsession->testTheme() == false);
+    if(m_xmsession->testTheme()) {
+      m_sysMsg->displayText(SYS_MSG_THEME_MODE_ENABLED);
+    } else {
+      m_sysMsg->displayText(SYS_MSG_THEME_MODE_DISABLED);
+    }
+    return;        
+  }
+
+  if(nKey == SDLK_F11) {
+    switchUglyOverMode(m_xmsession->uglyOver() == false);
+    if(m_xmsession->uglyOver()) {
+      m_sysMsg->displayText(SYS_MSG_UGLY_OVER_MODE_ENABLED);
+    } else {
+      m_sysMsg->displayText(SYS_MSG_UGLY_OVER_MODE_DISABLED);
+    }
+    return;        
+  }
+
+  /* activate/desactivate interpolation */
+  if(nKey == SDLK_i && ( (mod & KMOD_LCTRL) || (mod & KMOD_RCTRL) )) {
+    m_allowReplayInterpolation = !m_allowReplayInterpolation;
+    if(m_allowReplayInterpolation) {
+      m_sysMsg->displayText(SYS_MSG_INTERPOLATION_ENABLED);
+    } else {
+      m_sysMsg->displayText(SYS_MSG_INTERPOLATION_DISABLED);
     }
 
-    if(nKey == SDLK_F8) {
-      enableWWW(m_xmsession->www() == false);
-      return;        
+    for(unsigned int i=0; i<m_MotoGame.Players().size(); i++) {
+      m_MotoGame.Players()[i]->setInterpolation(m_allowReplayInterpolation);
     }
 
-    if(nKey == SDLK_F7) {
-      enableFps(m_xmsession->fps() == false);
-      return;        
+    return;
+  }
+
+  if(nKey == SDLK_m && ( (mod & KMOD_LCTRL) || (mod & KMOD_RCTRL) )) {
+    for(unsigned int i=0; i<m_MotoGame.Cameras().size(); i++) {
+      m_MotoGame.Cameras()[i]->setMirrored(m_MotoGame.Cameras()[i]->isMirrored() == false);
+    }
+    m_InputHandler.setMirrored(m_MotoGame.Cameras()[0]->isMirrored());
+  }
+
+  if(m_State == GS_MENU) {
+
+    if(nKey == SDLK_F5) {
+      _SimpleMessage(GAMETEXT_RELOADINGLEVELS, &m_InfoMsgBoxRect);
+      m_reloadingLevelsUser = true;
+      m_levelsManager.reloadLevelsFromLvl(m_db, this);
+      m_pActiveLevelPack = NULL;
+      _UpdateLevelsLists();
+      _SimpleMessage(GAMETEXT_RELOADINGREPLAYS, &m_InfoMsgBoxRect);
+      initReplaysFromDir();
+      _UpdateReplaysList();
+      m_themeChoicer->initThemesFromDir(m_db);
+      _UpdateThemesLists();
     }
 
-    if(nKey == SDLK_F9) {
-      switchUglyMode(m_xmsession->ugly() == false);
-      if(m_xmsession->ugly()) {
-	m_sysMsg->displayText(SYS_MSG_UGLY_MODE_ENABLED);
-      } else {
-	m_sysMsg->displayText(SYS_MSG_UGLY_MODE_DISABLED);
-      }
-      return;        
-    }
-
-    if(nKey == SDLK_RETURN && (((mod & KMOD_LALT) == KMOD_LALT) || ((mod & KMOD_RALT) == KMOD_RALT))) {
-      drawLib->toogleFullscreen();
-      return;
-    }
-
-    if(nKey == SDLK_F10) {
-      switchTestThemeMode(m_xmsession->testTheme() == false);
-      if(m_xmsession->testTheme()) {
-	m_sysMsg->displayText(SYS_MSG_THEME_MODE_ENABLED);
-      } else {
-	m_sysMsg->displayText(SYS_MSG_THEME_MODE_DISABLED);
-      }
-      return;        
-    }
-
-    if(nKey == SDLK_F11) {
-      switchUglyOverMode(m_xmsession->uglyOver() == false);
-      if(m_xmsession->uglyOver()) {
-	m_sysMsg->displayText(SYS_MSG_UGLY_OVER_MODE_ENABLED);
-      } else {
-	m_sysMsg->displayText(SYS_MSG_UGLY_OVER_MODE_DISABLED);
-      }
-      return;        
-    }
-
-    /* activate/desactivate interpolation */
-    if(nKey == SDLK_i && ( (mod & KMOD_LCTRL) || (mod & KMOD_RCTRL) )) {
-      m_allowReplayInterpolation = !m_allowReplayInterpolation;
-      if(m_allowReplayInterpolation) {
-	m_sysMsg->displayText(SYS_MSG_INTERPOLATION_ENABLED);
-      } else {
-	m_sysMsg->displayText(SYS_MSG_INTERPOLATION_DISABLED);
-      }
-
-      for(unsigned int i=0; i<m_MotoGame.Players().size(); i++) {
-	m_MotoGame.Players()[i]->setInterpolation(m_allowReplayInterpolation);
-      }
-
-      return;
-    }
-
-    if(nKey == SDLK_m && ( (mod & KMOD_LCTRL) || (mod & KMOD_RCTRL) )) {
-      for(unsigned int i=0; i<m_MotoGame.Cameras().size(); i++) {
-	m_MotoGame.Cameras()[i]->setMirrored(m_MotoGame.Cameras()[i]->isMirrored() == false);
-      }
-      m_InputHandler.setMirrored(m_MotoGame.Cameras()[0]->isMirrored());
-    }
-
-    if(m_State == GS_MENU) {
-
-      if(nKey == SDLK_F5) {
-	_SimpleMessage(GAMETEXT_RELOADINGLEVELS, &m_InfoMsgBoxRect);
-	m_reloadingLevelsUser = true;
-	m_levelsManager.reloadLevelsFromLvl(m_db, this);
-	m_pActiveLevelPack = NULL;
-	_UpdateLevelsLists();
-	_SimpleMessage(GAMETEXT_RELOADINGREPLAYS, &m_InfoMsgBoxRect);
-	initReplaysFromDir();
-	_UpdateReplaysList();
-	m_themeChoicer->initThemesFromDir(m_db);
-	_UpdateThemesLists();
-      }
-
-    }
+  }
     
-    /* If message box... */
-    if(m_pQuitMsgBox) {
-      if(nKey == SDLK_ESCAPE) {
-        delete m_pQuitMsgBox;
-        m_pQuitMsgBox = NULL;
-      }    
-      else
-        m_Renderer->getGUI()->keyDown(nKey, mod, nChar);      
-      return;
-    }
-    else if(m_pNotifyMsgBox) {
-      if(nKey == SDLK_ESCAPE) {
-        delete m_pNotifyMsgBox;
-        m_pNotifyMsgBox = NULL;
-      }    
-      else
-        m_Renderer->getGUI()->keyDown(nKey, mod, nChar);      
-      return;
-    }
+  /* If message box... */
+  if(m_pQuitMsgBox) {
+    if(nKey == SDLK_ESCAPE) {
+      delete m_pQuitMsgBox;
+      m_pQuitMsgBox = NULL;
+    }    
+    else
+      m_Renderer->getGUI()->keyDown(nKey, mod, nChar);      
+    return;
+  }
+  else if(m_pNotifyMsgBox) {
+    if(nKey == SDLK_ESCAPE) {
+      delete m_pNotifyMsgBox;
+      m_pNotifyMsgBox = NULL;
+    }    
+    else
+      m_Renderer->getGUI()->keyDown(nKey, mod, nChar);      
+    return;
+  }
   
-    /* What state? */
-    switch(m_State) {
-      case GS_EDIT_WEBCONFIG:
-      case GS_LEVEL_INFO_VIEWER:
-      case GS_LEVELPACK_VIEWER:
-      case GS_MENU: {
-        /* The GUI wants to know about keypresses... */
-        m_Renderer->getGUI()->keyDown(nKey, mod,nChar);
-        break;
-      }
-      case GS_DEADJUST:
-      {
-  switch(nKey) {
-  case SDLK_RETURN:
-    m_MotoGame.clearGameMessages();
-    restartLevel();
-    break;
-  case SDLK_ESCAPE:
-    m_MotoGame.clearGameMessages();
-    m_stateManager->pushState(new StateDeadMenu(this, false)); // state should be replaced and not push - to make after states are finished
+  /* What state? */
+  switch(m_State) {
+  case GS_EDIT_WEBCONFIG:
+  case GS_LEVELPACK_VIEWER:
+  case GS_MENU: {
+    /* The GUI wants to know about keypresses... */
+    m_Renderer->getGUI()->keyDown(nKey, mod,nChar);
     break;
   }
-  break;
+  case GS_DEADJUST:
+    {
+      switch(nKey) {
+      case SDLK_RETURN:
+	m_MotoGame.clearGameMessages();
+	restartLevel();
+	break;
+      case SDLK_ESCAPE:
+	m_MotoGame.clearGameMessages();
+	m_stateManager->pushState(new StateDeadMenu(this, false)); // state should be replaced and not push - to make after states are finished
+	break;
       }
-      case GS_REPLAYING:
-        switch(nKey) {
-          case SDLK_ESCAPE:
-            /* Escape quits the replay */
-						m_MotoGame.resetFollow();
-            m_MotoGame.endLevel();
-            m_Renderer->unprepareForNewLevel();
-	    setState(m_StateAfterPlaying);
-            break;          
-          case SDLK_RIGHT:
-            /* Right arrow key: fast forward */
-	    if(m_stopToUpdateReplay == false) {
-	      m_MotoGame.fastforward(1);
-	    }
-            break;
-          case SDLK_LEFT:
-	    if(m_MotoGame.getLevelSrc()->isScripted() == false) {
-	      m_MotoGame.fastrewind(1);
-	      m_stopToUpdateReplay = false;
-	    }
-            break;
-	case SDLK_F2:
-	  switchFollowCamera();
-	  break;
+      break;
+    }
+  case GS_REPLAYING:
+    switch(nKey) {
+    case SDLK_ESCAPE:
+      /* Escape quits the replay */
+      m_MotoGame.resetFollow();
+      m_MotoGame.endLevel();
+      m_Renderer->unprepareForNewLevel();
+      setState(m_StateAfterPlaying);
+      break;          
+    case SDLK_RIGHT:
+      /* Right arrow key: fast forward */
+      if(m_stopToUpdateReplay == false) {
+	m_MotoGame.fastforward(1);
+      }
+      break;
+    case SDLK_LEFT:
+      if(m_MotoGame.getLevelSrc()->isScripted() == false) {
+	m_MotoGame.fastrewind(1);
+	m_stopToUpdateReplay = false;
+      }
+      break;
+    case SDLK_F2:
+      switchFollowCamera();
+      break;
 
-	case SDLK_F3:
-	  switchLevelToFavorite(m_MotoGame.getLevelSrc()->Id(), true);
-	  break;
+    case SDLK_F3:
+      switchLevelToFavorite(m_MotoGame.getLevelSrc()->Id(), true);
+      break;
 
-  case SDLK_SPACE:
-    /* pause */
-    m_MotoGame.pause();
+    case SDLK_SPACE:
+      /* pause */
+      m_MotoGame.pause();
 
-    m_Renderer->showReplayHelp(m_MotoGame.getSpeed(),
-			      m_MotoGame.getLevelSrc()->isScripted() == false
-			      ); /* update help */
-    break;
-  case SDLK_UP:
-    /* faster */
-    m_MotoGame.faster();
+      m_Renderer->showReplayHelp(m_MotoGame.getSpeed(),
+				 m_MotoGame.getLevelSrc()->isScripted() == false
+				 ); /* update help */
+      break;
+    case SDLK_UP:
+      /* faster */
+      m_MotoGame.faster();
 
-    m_Renderer->showReplayHelp(m_MotoGame.getSpeed(),
-			      m_MotoGame.getLevelSrc()->isScripted() == false
-			      ); /* update help */
-    break;
-  case SDLK_DOWN:
-    /* slower */
-    m_MotoGame.slower();
-    m_stopToUpdateReplay = false;
+      m_Renderer->showReplayHelp(m_MotoGame.getSpeed(),
+				 m_MotoGame.getLevelSrc()->isScripted() == false
+				 ); /* update help */
+      break;
+    case SDLK_DOWN:
+      /* slower */
+      m_MotoGame.slower();
+      m_stopToUpdateReplay = false;
     
-    m_Renderer->showReplayHelp(m_MotoGame.getSpeed(),
-			      m_MotoGame.getLevelSrc()->isScripted() == false
-			      ); /* update help */
-    break;
-        }
+      m_Renderer->showReplayHelp(m_MotoGame.getSpeed(),
+				 m_MotoGame.getLevelSrc()->isScripted() == false
+				 ); /* update help */
       break;
-      case GS_PREPLAYING:
-      /* any key to remove the animation */
-      //switch(nKey) {
-      //case SDLK_ESCAPE:
-      //case SDLK_RETURN:
-  m_bPrePlayAnim = false;
-      //break;
-      //}
+    }
+    break;
+  case GS_PREPLAYING:
+    /* any key to remove the animation */
+    //switch(nKey) {
+    //case SDLK_ESCAPE:
+    //case SDLK_RETURN:
+    m_bPrePlayAnim = false;
+    //break;
+    //}
+    break;
+  case GS_PLAYING:
+    switch(nKey) {
+    case SDLK_ESCAPE:
+      if(isLockedMotoGame() == false) {
+	/* Escape pauses */
+	m_stateManager->pushState(new StatePause(this));
+      }
       break;
-      case GS_PLAYING:
-        switch(nKey) {
-  case SDLK_ESCAPE:
-		if(isLockedMotoGame() == false) {
-			/* Escape pauses */
-		  m_stateManager->pushState(new StatePause(this));
-		}
-		break;
-	case SDLK_F2:
-	  switchFollowCamera();
-	  break;
-	case SDLK_F3:
-	  switchLevelToFavorite(m_MotoGame.getLevelSrc()->Id(), true);
-	  break;
-	case SDLK_PAGEUP:
-	  if(isThereANextLevel(m_PlaySpecificLevelId)) {
-	    m_db->stats_abortedLevel(m_xmsession->profile(), m_MotoGame.getLevelSrc()->Id(), m_MotoGame.getTime());
-	    m_MotoGame.endLevel();
-	    m_Renderer->unprepareForNewLevel();
-	    m_PlaySpecificLevelId = _DetermineNextLevel(m_PlaySpecificLevelId);
-	    m_bPrePlayAnim = true;
-	    setState(GS_PREPLAYING);
-	  }
-	  break;
-	case SDLK_PAGEDOWN:
-	  if(isThereAPreviousLevel(m_PlaySpecificLevelId)) {
-	    m_db-> stats_abortedLevel(m_xmsession->profile(), m_MotoGame.getLevelSrc()->Id(), m_MotoGame.getTime());
-	    m_MotoGame.endLevel();
-	    m_Renderer->unprepareForNewLevel();
-	    m_PlaySpecificLevelId = _DeterminePreviousLevel(m_PlaySpecificLevelId);
-	    m_bPrePlayAnim = true;
-	    setState(GS_PREPLAYING);
-	  }
-	  break;
-  case SDLK_RETURN:
-    /* retart immediatly the level */
-    restartLevel();
-    break;
-  case SDLK_F5:
-    restartLevel(true);
-    break;
+    case SDLK_F2:
+      switchFollowCamera();
+      break;
+    case SDLK_F3:
+      switchLevelToFavorite(m_MotoGame.getLevelSrc()->Id(), true);
+      break;
+    case SDLK_PAGEUP:
+      if(isThereANextLevel(m_PlaySpecificLevelId)) {
+	m_db->stats_abortedLevel(m_xmsession->profile(), m_MotoGame.getLevelSrc()->Id(), m_MotoGame.getTime());
+	m_MotoGame.endLevel();
+	m_Renderer->unprepareForNewLevel();
+	m_PlaySpecificLevelId = _DetermineNextLevel(m_PlaySpecificLevelId);
+	m_bPrePlayAnim = true;
+	setState(GS_PREPLAYING);
+      }
+      break;
+    case SDLK_PAGEDOWN:
+      if(isThereAPreviousLevel(m_PlaySpecificLevelId)) {
+	m_db-> stats_abortedLevel(m_xmsession->profile(), m_MotoGame.getLevelSrc()->Id(), m_MotoGame.getTime());
+	m_MotoGame.endLevel();
+	m_Renderer->unprepareForNewLevel();
+	m_PlaySpecificLevelId = _DeterminePreviousLevel(m_PlaySpecificLevelId);
+	m_bPrePlayAnim = true;
+	setState(GS_PREPLAYING);
+      }
+      break;
+    case SDLK_RETURN:
+      /* retart immediatly the level */
+      restartLevel();
+      break;
+    case SDLK_F5:
+      restartLevel(true);
+      break;
 
-          default:
-            /* Notify the controller */
-	    m_InputHandler.handleInput(INPUT_KEY_DOWN,nKey,mod,
-				       m_MotoGame.Players(),
-				       m_MotoGame.Cameras(),
-				       this);
-        }
-      break;
+    default:
+      /* Notify the controller */
+      m_InputHandler.handleInput(INPUT_KEY_DOWN,nKey,mod,
+				 m_MotoGame.Players(),
+				 m_MotoGame.Cameras(),
+				 this);
+    }
+    break;
 
     // states already in the state manager
-    case GS_FINISHED:
-    case GS_PAUSE:
-    case GS_DEADMENU:
-    case GS_EDIT_PROFILES:
-      m_stateManager->keyDown(nKey, mod, nChar);
-      break;
-    }
-    
+  case GS_LEVEL_INFO_VIEWER:
+  case GS_FINISHED:
+  case GS_PAUSE:
+  case GS_DEADMENU:
+  case GS_EDIT_PROFILES:
+    m_stateManager->keyDown(nKey, mod, nChar);
+    break;
   }
+    
+}
 
-  /*===========================================================================
+/*===========================================================================
   Key up event
   ===========================================================================*/
   void GameApp::keyUp(int nKey, SDLMod mod) {
     /* What state? */
     switch(m_State) {
       case GS_EDIT_WEBCONFIG:
-      case GS_LEVEL_INFO_VIEWER:
       case GS_LEVELPACK_VIEWER:
       case GS_MENU:
         m_Renderer->getGUI()->keyUp(nKey, mod);
@@ -1086,6 +1085,7 @@ GameApp::GameApp() {
       }
 
     // states already in the state manager
+      case GS_LEVEL_INFO_VIEWER:
     case GS_FINISHED:
     case GS_PAUSE:
     case GS_DEADMENU:
@@ -1102,7 +1102,6 @@ GameApp::GameApp() {
     switch(m_State) {
       case GS_MENU:
       case GS_EDIT_WEBCONFIG:
-      case GS_LEVEL_INFO_VIEWER:
       case GS_LEVELPACK_VIEWER:
         int nX,nY;        
         getMousePos(&nX,&nY);
@@ -1115,6 +1114,7 @@ GameApp::GameApp() {
       break;
 
     // states already in the state manager
+    case GS_LEVEL_INFO_VIEWER:
     case GS_FINISHED:
     case GS_PAUSE:
     case GS_DEADMENU:
@@ -1128,7 +1128,6 @@ GameApp::GameApp() {
     switch(m_State) {
       case GS_MENU:
       case GS_EDIT_WEBCONFIG:
-      case GS_LEVEL_INFO_VIEWER:
       case GS_LEVELPACK_VIEWER:
         int nX,nY;        
         getMousePos(&nX,&nY);
@@ -1157,6 +1156,7 @@ GameApp::GameApp() {
 
 
       // states already in the state manager
+      case GS_LEVEL_INFO_VIEWER:
       case GS_FINISHED:
       case GS_PAUSE:
       case GS_DEADMENU:
@@ -1171,7 +1171,6 @@ GameApp::GameApp() {
     switch(m_State) {
       case GS_MENU:
       case GS_EDIT_WEBCONFIG:
-      case GS_LEVEL_INFO_VIEWER:
       case GS_LEVELPACK_VIEWER:
         int nX,nY;
         getMousePos(&nX,&nY);
@@ -1193,6 +1192,7 @@ GameApp::GameApp() {
       break;
 
       // states already in the state manager
+      case GS_LEVEL_INFO_VIEWER:
       case GS_FINISHED:
       case GS_PAUSE:
       case GS_DEADMENU:

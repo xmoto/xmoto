@@ -76,7 +76,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         _PreUpdateMenu();
         /* Note the lack of break; the following are done for GS_MENU too */
 
+	// handle in the state manager
       case GS_LEVEL_INFO_VIEWER:
+        _DrawMainGUI();
+	break;
+
       case GS_LEVELPACK_VIEWER:
       case GS_EDIT_WEBCONFIG:
         /* Following is done for all the above states */
@@ -249,7 +253,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     if(m_State == GS_PAUSE    ||
        m_State == GS_FINISHED ||
        m_State == GS_DEADMENU ||
-       m_State == GS_EDIT_PROFILES
+       m_State == GS_EDIT_PROFILES ||
+       m_State == GS_LEVEL_INFO_VIEWER
        ) {
       /* draw the game states */
       m_stateManager->update();
@@ -306,7 +311,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     switch(m_State) {
       case GS_MENU:
       case GS_EDIT_WEBCONFIG:
-      case GS_LEVEL_INFO_VIEWER:
       case GS_LEVELPACK_VIEWER:
         m_bShowCursor = true;
         //SDL_ShowCursor(SDL_ENABLE);
@@ -412,8 +416,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       _HandleMainMenu();
     else if(m_State == GS_EDIT_WEBCONFIG)
       _HandleWebConfEditor();
-    else if(m_State == GS_LEVEL_INFO_VIEWER)
-      _HandleLevelInfoViewer();
     else if(m_State == GS_LEVELPACK_VIEWER)
       _HandleLevelPackViewer();
               

@@ -50,6 +50,8 @@ StateMenu::~StateMenu()
 void StateMenu::enter()
 {
   m_nShadeTime = GameApp::getXMTime();
+
+  m_pGame->setShowCursor(true);
 }
 
 void StateMenu::leave()
