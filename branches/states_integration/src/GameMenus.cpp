@@ -33,6 +33,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Camera.h"
 
 #include "states/StateEditProfile.h"
+#include "states/StateLevelInfoViewer.h"
 
   UIFrame* GameApp::makeHelpWindow(DrawLib* i_drawLib, UIWindow* io_parent, UserConfig* i_Config) {
     UIFrame *v_pHelpWindow;
@@ -1436,7 +1437,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
         m_pMainMenu->enableChildren(false);
         m_pMainMenu->enableWindow(false);
-        m_State = GS_LEVEL_INFO_VIEWER;      
+	m_stateManager->pushState(new StateLevelInfoViewer(this));
       }
     }
   }
@@ -1794,7 +1795,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         m_pLevelPackViewer->showWindow(true);
         m_pMainMenu->enableChildren(false);
         m_pMainMenu->enableWindow(false);
-        m_State = GS_LEVELPACK_VIEWER;
+	m_State = GS_LEVELPACK_VIEWER;
         return;
       }
     }
@@ -2169,7 +2170,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
         m_pMainMenu->enableChildren(false);
         m_pMainMenu->enableWindow(false);
-        m_State = GS_LEVEL_INFO_VIEWER;
+	m_stateManager->pushState(new StateLevelInfoViewer(this));
       }
     }
        

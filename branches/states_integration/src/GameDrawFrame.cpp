@@ -81,7 +81,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         _DrawMainGUI();
 	break;
 
-      case GS_LEVELPACK_VIEWER:
       case GS_EDIT_WEBCONFIG:
         /* Following is done for all the above states */
         _DrawMainGUI();
@@ -90,6 +89,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         setFrameDelay(10);
         break;
 
+      case GS_LEVELPACK_VIEWER:
       case GS_EDIT_PROFILES:
         _DrawMainGUI();
 	break;
