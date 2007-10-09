@@ -70,12 +70,12 @@ void StateDeadMenu::leave()
 
 void StateDeadMenu::enterAfterPop()
 {
-
+  StateMenu::enterAfterPop();
 }
 
 void StateDeadMenu::leaveAfterPush()
 {
-
+  StateMenu::leaveAfterPush();
 }
 
 void StateDeadMenu::checkEvents() {

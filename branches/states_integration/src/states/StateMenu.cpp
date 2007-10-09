@@ -59,12 +59,12 @@ void StateMenu::leave()
 
 void StateMenu::enterAfterPop()
 {
-
+  m_GUI->enableWindow(true);
 }
 
 void StateMenu::leaveAfterPush()
 {
-
+  m_GUI->enableWindow(false);
 }
 
 void StateMenu::update()

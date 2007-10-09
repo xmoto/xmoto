@@ -62,12 +62,12 @@ void StateEditProfile::leave()
 
 void StateEditProfile::enterAfterPop()
 {
-
+  StateMenu::enterAfterPop();
 }
 
 void StateEditProfile::leaveAfterPush()
 {
-
+  StateMenu::leaveAfterPush();
 }
 
 void StateEditProfile::checkEvents() {

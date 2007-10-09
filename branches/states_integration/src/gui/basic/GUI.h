@@ -225,7 +225,7 @@ class GameApp;
       bool isDisabled(void);
       void showWindow(bool b);      
       void enableWindow(bool b) {m_bDisable=!b; if(!b) m_bActive=false;}
-      bool isActive(void) {return m_bActive;}
+      bool isActive(void);
       void setActive(bool b) {m_bActive = b;}
       int getGroup(void) {return m_nGroup;}
       void setGroup(int n) {m_nGroup = n;}

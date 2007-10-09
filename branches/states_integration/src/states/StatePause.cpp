@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Game.h"
 #include "drawlib/DrawLib.h"
 #include "GameText.h"
+#include "StateMessageBox.h"
 
 /* static members */
 UIRoot*  StatePause::m_sGUI = NULL;
@@ -65,12 +66,12 @@ void StatePause::leave()
 
 void StatePause::enterAfterPop()
 {
-
+  StateMenu::enterAfterPop();
 }
 
 void StatePause::leaveAfterPush()
 {
-
+  StateMenu::leaveAfterPush();
 }
 
 void StatePause::checkEvents() {
@@ -113,12 +114,9 @@ void StatePause::checkEvents() {
   if(pQuitButton->isClicked()) {
     pQuitButton->setClicked(false);
 
-    //UIMsgBox *m_pQuitMsgBox;
-    //m_pQuitMsgBox = m_GUI->msgBox(GAMETEXT_QUITMESSAGE,
-    //			  (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
-
-    m_pGame->requestEnd(); 
-    m_requestForEnd = true;
+    m_pGame->getStateManager()->pushState(new StateMessageBox(m_pGame, GAMETEXT_QUITMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO));
+    //m_pGame->requestEnd(); 
+    //m_requestForEnd = true;
   }
 }
 

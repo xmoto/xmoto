@@ -214,6 +214,7 @@ class StateManager;
 
       //
       xmDatabase* getDb();
+      StateManager* getStateManager();
 
       /* public so that we can add progressively the states ; to be removed */
       OldGameState m_State; /* Current state */      

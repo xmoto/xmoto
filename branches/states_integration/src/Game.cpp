@@ -2908,3 +2908,7 @@ void GameApp::isTheCurrentPlayAHighscore(bool& o_personal, bool& o_room) {
   o_room = (v_current_time < v_best_room_time
 	    || v_best_room_time < 0);
 }
+
+StateManager* GameApp::getStateManager() {
+  return m_stateManager;
+}

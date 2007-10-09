@@ -100,6 +100,12 @@ bool UIWindow::isUglyMode() {
     }
   }
   
+  bool UIWindow::isActive() {
+    if(getParent() == NULL) return m_bActive;
+
+    return getParent()->isActive() && m_bActive;
+  }
+
   UIRoot *UIWindow::getRoot(void) {
     UIRoot *pRoot = NULL;
     for(UIWindow *p=this;p!=NULL;p=p->getParent()) {

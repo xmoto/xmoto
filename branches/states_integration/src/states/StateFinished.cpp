@@ -136,12 +136,12 @@ void StateFinished::leave()
 
 void StateFinished::enterAfterPop()
 {
-
+  StateMenu::enterAfterPop();
 }
 
 void StateFinished::leaveAfterPush()
 {
-
+  StateMenu::leaveAfterPush();
 }
 
 void StateFinished::checkEvents() {
