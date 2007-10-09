@@ -136,7 +136,6 @@ void StateMessageBox::keyUp(int nKey, SDLMod mod)
 void StateMessageBox::mouseDown(int nButton)
 {
   StateMenu::mouseDown(nButton);
-  m_requestForEnd = true;
 }
 
 void StateMessageBox::mouseDoubleClick(int nButton)
