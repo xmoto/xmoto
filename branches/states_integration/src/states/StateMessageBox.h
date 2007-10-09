@@ -25,15 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateMenu.h"
 
 class UIRoot;
-
-enum MessageBoxButton {
-  MSGBOX_NOTHING     = 0,    
-  MSGBOX_OK          = 1,
-  MSGBOX_CANCEL      = 2,
-  MSGBOX_YES         = 4,
-  MSGBOX_NO          = 8,
-  MSGBOX_YES_FOR_ALL = 16
-};
+class UIMsgBox;
 
 class StateMessageBox : public StateMenu {
   public:
@@ -69,8 +61,8 @@ class StateMessageBox : public StateMenu {
   virtual void checkEvents();
 
   private:
-  int m_buttons;
-  UIRoot* createGUI(GameApp* pGame, const std::string& i_text, bool i_input, bool i_query);
+  UIMsgBox* m_msgbox;
+  void createGUI(GameApp* pGame, const std::string& i_text, int i_buttons, bool i_input, bool i_query);
 };
 
 #endif

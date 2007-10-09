@@ -101,9 +101,7 @@ bool UIWindow::isUglyMode() {
   }
   
   bool UIWindow::isActive() {
-    if(getParent() == NULL) return m_bActive;
-
-    return getParent()->isActive() && m_bActive;
+    return m_bActive;
   }
 
   UIRoot *UIWindow::getRoot(void) {
@@ -554,7 +552,7 @@ bool UIWindow::isUglyMode() {
     getApp()->getDrawLib()->endDraw();
     
     /* Active? If so we want a nice blinking overlay */
-    if(bActive) {
+    if(bActive && bDisabled == false) {
       float s = 160 + 76*sin(getApp()->getXMTime()*10);
       int n = (int)s;
       if(n<0) n=0;
@@ -758,7 +756,6 @@ FRAME_BR (187,198) (8x8)
           activateRight();
           return true;
       }
-      
       return false;
     }
     return true;
@@ -771,13 +768,13 @@ FRAME_BR (187,198) (8x8)
   bool UIRoot::_RootKeyEvent(UIWindow *pWindow,UIRootKeyEvent Event,int nKey, SDLMod mod,int nChar) {
     /* Hidden or disabled? */
     if(pWindow->isHidden() || pWindow->isDisabled()) return false;
-        
+
     /* First try if any children want it */
     for(int i=0;i<pWindow->getChildren().size();i++) {
       if(_RootKeyEvent(pWindow->getChildren()[i],Event,nKey,mod,nChar))
         return true;
-    } 
-    
+    }
+
     /* Try this */
     if(pWindow != this && pWindow->isActive()) {
       bool b = false;

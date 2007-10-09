@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StatePause.h"
 #include "StateFinished.h"
 #include "StateDeadMenu.h"
+#include "StateMessageBox.h"
 #include "StateLevelInfoViewer.h"
 
   /*
@@ -178,6 +179,7 @@ void StateManager::calculateWhichStateIsRendered()
 }
 
 void StateManager::cleanStates() {
+  StateMessageBox::clean();
   StatePause::clean();
   StateFinished::clean();
   StateDeadMenu::clean();

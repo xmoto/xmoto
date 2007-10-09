@@ -224,7 +224,7 @@ class GameApp;
       bool isBranchHidden(void);
       bool isDisabled(void);
       void showWindow(bool b);      
-      void enableWindow(bool b) {m_bDisable=!b; if(!b) m_bActive=false;}
+      void enableWindow(bool b) {m_bDisable=!b;}
       bool isActive(void);
       void setActive(bool b) {m_bActive = b;}
       int getGroup(void) {return m_nGroup;}

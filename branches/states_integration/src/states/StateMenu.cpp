@@ -36,7 +36,7 @@ StateMenu::StateMenu(bool drawStateBehind,
 	    updateStatesBehind,
 	    pGame)
 {
-  m_GUI = NULL;
+  m_GUI         = NULL;
   m_doShade     = i_doShade;
   m_doShadeAnim = i_doShadeAnim;
 }
