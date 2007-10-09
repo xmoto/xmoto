@@ -46,8 +46,6 @@ StateMessageBox::~StateMessageBox()
 void StateMessageBox::enter()
 {
   StateMenu::enter();
-
-  m_pGame->setShowCursor(true);
 }
 
 void StateMessageBox::leave()
