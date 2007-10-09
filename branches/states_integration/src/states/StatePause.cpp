@@ -114,9 +114,7 @@ void StatePause::checkEvents() {
   if(pQuitButton->isClicked()) {
     pQuitButton->setClicked(false);
 
-    m_pGame->getStateManager()->pushState(new StateMessageBox(m_pGame, GAMETEXT_QUITMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO, true, true));
-    //m_pGame->requestEnd(); 
-    //m_requestForEnd = true;
+    m_pGame->getStateManager()->pushState(new StateMessageBox(m_pGame, GAMETEXT_QUITMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO));
   }
 }
 
