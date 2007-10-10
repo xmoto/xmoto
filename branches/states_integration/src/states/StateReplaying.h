@@ -23,30 +23,37 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "StateManager.h"
 
-  class StateReplaying : public GameState {
+class ReplayBiker;
+
+class StateReplaying : public GameState {
   public:
-    StateReplaying(bool drawStateBehind,
-		   bool updateStatesBehind,
-		   GameApp* pGame);
-    virtual ~StateReplaying();
-
-    virtual void enter();
-    virtual void leave();
-    /* called when a new state is pushed or poped on top of the
-       current one*/
-    virtual void enterAfterPop();
-    virtual void leaveAfterPush();
-
-    virtual void update();
-    virtual void render();
-    /* input */
-    virtual void keyDown(int nKey, SDLMod mod,int nChar);
-    virtual void keyUp(int nKey,   SDLMod mod);
-    virtual void mouseDown(int nButton);
-    virtual void mouseDoubleClick(int nButton);
-    virtual void mouseUp(int nButton);
-
+  StateReplaying(GameApp* pGame,
+		 const std::string& i_id_level,
+		 bool drawStateBehind    = false,
+		 bool updateStatesBehind = false
+		 );
+  virtual ~StateReplaying();
+  
+  virtual void enter();
+  virtual void leave();
+  /* called when a new state is pushed or poped on top of the
+     current one*/
+  virtual void enterAfterPop();
+  virtual void leaveAfterPush();
+  
+  virtual void update();
+  virtual void render();
+  /* input */
+  virtual void keyDown(int nKey, SDLMod mod,int nChar);
+  virtual void keyUp(int nKey,   SDLMod mod);
+  virtual void mouseDown(int nButton);
+  virtual void mouseDoubleClick(int nButton);
+  virtual void mouseUp(int nButton);
+  
   private:
-  };
+  std::string m_replay;
+  ReplayBiker* m_replayBiker; /* replay watched */
+  bool m_stopToUpdate;
+};
 
 #endif

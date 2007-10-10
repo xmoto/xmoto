@@ -24,29 +24,31 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 XMSession::XMSession() {
   /* default config */
-  m_verbose          = false;
-  m_useGraphics      = true;
-  m_resolutionWidth  = 800;
-  m_resolutionHeight = 600;
-  m_bpp              = 32;
-  m_windowed         = false;
-  m_glExts           = true;
-  m_drawlib          = "OPENGL";
-  m_www              = true;
-  m_benchmark 	     = false;
-  m_debug     	     = false;
-  m_sqlTrace  	     = false;
-  m_profile   	     = "";
-  m_gdebug    	     = false;
-  m_timedemo  	     = false;
-  m_fps       	     = false;
-  m_ugly      	     = false;
-  m_uglyOver         = false;
-  m_testTheme 	     = false;
+  m_verbose          	     = false;
+  m_useGraphics      	     = true;
+  m_resolutionWidth  	     = 800;
+  m_resolutionHeight 	     = 600;
+  m_bpp              	     = 32;
+  m_windowed         	     = false;
+  m_glExts           	     = true;
+  m_drawlib          	     = "OPENGL";
+  m_www              	     = true;
+  m_benchmark 	     	     = false;
+  m_debug     	     	     = false;
+  m_sqlTrace  	     	     = false;
+  m_profile   	     	     = "";
+  m_gdebug    	     	     = false;
+  m_timedemo  	     	     = false;
+  m_fps       	     	     = false;
+  m_ugly      	     	     = false;
+  m_uglyOver         	     = false;
+  m_testTheme 	     	     = false;
   m_ghostStrategy_MYBEST     = true;
   m_ghostStrategy_THEBEST    = false;
   m_ghostStrategy_BESTOFROOM = false;
   m_autosaveHighscoreReplays = true;
+  m_enableGhosts             = true;
+  m_enableEngineSound        = true;
 }
 
 void XMSession::load(const XMArguments* i_xmargs) {
@@ -125,17 +127,19 @@ void XMSession::load(const XMArguments* i_xmargs) {
 }
 
 void XMSession::load(UserConfig* m_Config) {
-  m_resolutionWidth  = m_Config->getInteger("DisplayWidth");
-  m_resolutionHeight = m_Config->getInteger("DisplayHeight");
-  m_bpp              = m_Config->getInteger("DisplayBPP");
-  m_windowed         = m_Config->getBool("DisplayWindowed");
-  m_drawlib          = m_Config->getString("DrawLib");
-  m_www              = m_Config->getBool("WebHighscores");
-  m_profile          = m_Config->getString("DefaultProfile");
+  m_resolutionWidth  	     = m_Config->getInteger("DisplayWidth");
+  m_resolutionHeight 	     = m_Config->getInteger("DisplayHeight");
+  m_bpp              	     = m_Config->getInteger("DisplayBPP");
+  m_windowed         	     = m_Config->getBool("DisplayWindowed");
+  m_drawlib          	     = m_Config->getString("DrawLib");
+  m_www              	     = m_Config->getBool("WebHighscores");
+  m_profile          	     = m_Config->getString("DefaultProfile");
   m_ghostStrategy_MYBEST     = m_Config->getBool("GhostStrategy_MYBEST");
   m_ghostStrategy_THEBEST    = m_Config->getBool("GhostStrategy_THEBEST");
   m_ghostStrategy_BESTOFROOM = m_Config->getBool("GhostStrategy_BESTOFROOM");
   m_autosaveHighscoreReplays = m_Config->getBool("AutosaveHighscoreReplays");
+  m_enableGhosts             = m_Config->getBool("EnableGhost");
+  m_enableEngineSound        = m_Config->getBool("EngineSoundEnable");
 }
 
 bool XMSession::isVerbose() const {
@@ -292,4 +296,20 @@ bool XMSession::autosaveHighscoreReplays() const {
 
 void XMSession::setAutosaveHighscoreReplays(bool i_value) {
   m_autosaveHighscoreReplays = i_value;
+}
+
+void XMSession::setEnableGhosts(bool i_value) {
+  m_enableGhosts = i_value;
+}
+ 
+bool XMSession::enableGhosts() const {
+  return m_enableGhosts;
+}
+
+void XMSession::setEnableEngineSound(bool i_value) {
+  m_enableEngineSound = i_value;
+}
+
+bool XMSession::enableEngineSound() const {
+  return m_enableEngineSound;
 }

@@ -32,8 +32,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "gui/specific/GUIXMoto.h"
 #include "xmscene/Camera.h"
 
+#include "PhysSettings.h"
 #include "states/StateEditProfile.h"
 #include "states/StateLevelInfoViewer.h"
+#include "states/StateReplaying.h"
 
   UIFrame* GameApp::makeHelpWindow(DrawLib* i_drawLib, UIWindow* io_parent, UserConfig* i_Config) {
     UIFrame *v_pHelpWindow;
@@ -2122,10 +2124,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         if(pListEntry != NULL) {
           /* Do it captain */
           pReplaysShowButton->setClicked(false);
-          m_pMainMenu->showWindow(false);
+
           m_PlaySpecificReplay = pListEntry->Text[0];
           m_StateAfterPlaying = GS_MENU;
-          setState(GS_REPLAYING);
+
+	  m_fLastPhysTime = getXMTime() - PHYS_STEP_SIZE;
+	  m_stateManager->pushState(new StateReplaying(this, pListEntry->Text[0]));	  
         }
       }
     }

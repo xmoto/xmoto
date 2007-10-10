@@ -228,8 +228,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
           
           /* Draw GUI */
 	  // only if it's not the autozoom camera
-	  if(m_MotoGame.getCurrentCamera() != m_MotoGame.getNumberCameras()){
-	    m_Renderer->getGUI()->paint();        
+	  if(m_State != GS_REPLAYING) { /* to remove after states finished */
+	    if(m_MotoGame.getCurrentCamera() != m_MotoGame.getNumberCameras()){
+	      m_Renderer->getGUI()->paint();        
+	    }
 	  }
         
           /* Credits? */
@@ -250,11 +252,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     }
 
     // states managed via the state manager
-    if(m_State == GS_PAUSE    ||
-       m_State == GS_FINISHED ||
-       m_State == GS_DEADMENU ||
-       m_State == GS_EDIT_PROFILES ||
-       m_State == GS_LEVEL_INFO_VIEWER
+    if(m_State == GS_PAUSE    	       ||
+       m_State == GS_FINISHED 	       ||
+       m_State == GS_DEADMENU 	       ||
+       m_State == GS_EDIT_PROFILES     ||
+       m_State == GS_LEVEL_INFO_VIEWER ||
+       m_State == GS_REPLAYING
        ) {
       /* draw the game states */
       m_stateManager->update();
@@ -429,13 +432,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
   
   int GameApp::_UpdateGamePlaying(void) {
-
     if(m_State == GS_REPLAYING) {
       if(m_stopToUpdateReplay) {
 	return 0;
       }
     }
-    
 
     /* Increase frame counter */
     m_nFrame++;

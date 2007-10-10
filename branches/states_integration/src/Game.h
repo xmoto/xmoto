@@ -198,6 +198,10 @@ class StateManager;
       bool isThereANextLevel(const std::string& i_id_level);
       bool isThereAPreviousLevel(const std::string& i_id_level); 
 
+      std::string getWorldRecord(const std::string &LevelID);
+
+      void addGhosts(MotoGame* i_motogame, Theme* i_theme);
+
       // to call while playing
       void restartLevel(bool i_reloadLevel = false);
       void closePlaying();
@@ -215,6 +219,8 @@ class StateManager;
       //
       xmDatabase* getDb();
       StateManager* getStateManager();
+      GameRenderer* getGameRenderer();
+      InputHandler* getInputHandler();
 
       /* public so that we can add progressively the states ; to be removed */
       OldGameState m_State; /* Current state */      
@@ -223,6 +229,8 @@ class StateManager;
       std::string getWebHighscoresIdRoom(){
 	return m_WebHighscoresIdRoom;
       }
+
+      static std::string splitText(const std::string &str, int p_breakLineLength);
 
    protected:
       void createDefaultConfig();
@@ -238,7 +246,6 @@ class StateManager;
       bool m_bEnableMenuMusic;                  /* true: Play menu music */      
       bool m_bEnableContextHelp;                /* true: Show context help */
 
-      bool m_bEnableEngineSound;                /* true: engine sound is enabled */
       bool m_bCompressReplays;                  /* true: compress replays with zlib */
 
       ReplayBiker* m_replayBiker; /* link to the replay biker in REPLAYING state */
@@ -263,7 +270,6 @@ class StateManager;
       
       Replay *m_pJustPlayReplay;
 
-      bool m_bEnableGhost;
       bool m_bShowGhostTimeDiff;
       bool m_bGhostMotionBlur;                  /* true: apply fancy motion blur to ghosts */
       bool m_bEnableGhostInfo;
@@ -429,7 +435,6 @@ class StateManager;
       double m_fNextFrame;	/* Time next frame rendering should begin */
 
       /* Helpers */
-      void _UpdateWorldRecord(const std::string &LevelID);
       void _HandleMainMenu(void);  
       void _HandleJustDeadMenu(void);
       void _HandleWebConfEditor(void);
@@ -500,7 +505,6 @@ class StateManager;
       std::string _getGhostReplayPath_bestOfThePlayer(std::string p_levelId, float &p_time);
       std::string _getGhostReplayPath_bestOfLocal(std::string p_levelId, float &p_time);
       std::string _getGhostReplayPath_bestOfTheRoom(std::string p_levelId, float &p_time);
-      void addGhosts(MotoGame* i_motogame, Theme* i_theme);
 
       void switchUglyMode(bool bUgly);
       void switchTestThemeMode(bool mode);
@@ -523,9 +527,7 @@ class StateManager;
 
       void lockMotoGame(bool bLock);
       bool isLockedMotoGame() const;
-
-      std::string splitText(const std::string &str, int p_breakLineLength);
-      
+     
       /* Main loop utility functions */
       void _UpdateFPSCounter(void);
       void _PrepareFrame(void);

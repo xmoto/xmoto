@@ -281,7 +281,6 @@ GameApp::GameApp() {
   m_updateAutomaticallyLevels = false;
   m_reloadingLevelsUser = false;
 
-  m_bEnableGhost = true;
   m_bShowGhostTimeDiff = true;
   m_bEnableGhostInfo = false;
   m_bHideGhosts = false;
@@ -289,7 +288,6 @@ GameApp::GameApp() {
 
   m_bRecordReplays = true;
   m_bShowCursor = true;
-  m_bEnableEngineSound = true;
   m_bCompressReplays = true;
   m_bEnableContextHelp = true;     
   
@@ -397,7 +395,8 @@ GameApp::GameApp() {
 		}
 			break;
 		case GS_CREDITSMODE:
-		case GS_REPLAYING: {
+		  {
+		  /* warning, same code as in the replaying state, don't just copy and paste */
 			m_stopToUpdateReplay = false;
 			v_newMusicPlaying = "";
 			m_Renderer->setShowEngineCounter(false);
@@ -417,7 +416,7 @@ GameApp::GameApp() {
 				try {
 					m_replayBiker = m_MotoGame.addReplayFromFile(m_PlaySpecificReplay,
 										     &m_theme, m_theme.getPlayerTheme(),
-										     m_bEnableEngineSound);
+										     m_xmsession->enableEngineSound());
 					m_MotoGame.getCamera()->setPlayerToFollow(m_replayBiker);
 				} catch(Exception &e) {
 					setState(m_StateAfterPlaying);
@@ -460,7 +459,7 @@ GameApp::GameApp() {
 	  m_MotoGame.prePlayLevel(&m_InputHandler, NULL, false);
 
 	  /* add the ghosts */
-	  if(m_bEnableGhost) {
+	  if(m_xmsession->enableGhosts()) {
 	    try {
 	      addGhosts(&m_MotoGame, &m_theme);
 	    } catch(Exception &e) {
@@ -516,7 +515,7 @@ GameApp::GameApp() {
 	    
 	    /* World-record stuff */
 	    if(!bCreditsMode)
-	      _UpdateWorldRecord(m_MotoGame.getLevelSrc()->Id());
+	      m_Renderer->setWorldRecordTime(getWorldRecord(m_MotoGame.getLevelSrc()->Id()));
 	  }
 	  m_fStartTime = getXMTime();
 	  
@@ -526,7 +525,7 @@ GameApp::GameApp() {
 				notifyMsg(splitText(e.getMsg(), 50));   
 			}
 			break;
-		}  
+		}
     case GS_MENU: {
       m_pMainMenu->enableChildren(true);
       m_pMainMenu->enableWindow(true);
@@ -675,7 +674,6 @@ GameApp::GameApp() {
     Replay::enableCompression(m_bCompressReplays);
 
     /* ghost */
-    m_bEnableGhost        = m_Config.getBool("EnableGhost");
     m_bShowGhostTimeDiff  = m_Config.getBool("ShowGhostTimeDiff");
     m_MotoGame.setShowGhostTimeDiff(m_bShowGhostTimeDiff);
     m_bGhostMotionBlur = m_Config.getBool("GhostMotionBlur");
@@ -695,7 +693,6 @@ GameApp::GameApp() {
     m_bEnableCheckHighscoresAtStartup = m_Config.getBool("CheckHighscoresAtStartup");
 
     /* Other settings */
-    m_bEnableEngineSound = m_Config.getBool("EngineSoundEnable");
     m_bEnableContextHelp = m_Config.getBool("ContextHelp");
     m_bEnableMenuMusic = m_Config.getBool("MenuMusic");
     m_bEnableInitZoom = m_Config.getBool("InitZoom");
@@ -1287,18 +1284,16 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
     return _DeterminePreviousLevel(i_id_level) != "";
   } 
 
-  void GameApp::_UpdateWorldRecord(const std::string &LevelID) {  
+  std::string GameApp::getWorldRecord(const std::string &LevelID) {  
     char **v_result;
     unsigned int nrow;
     std::string v_roomName;
     std::string v_id_profile;
     float       v_finishTime;
 
-    m_Renderer->setWorldRecordTime("");
-
     /* don't update if the option is not set */
     if(m_bShowWebHighscoreInGame == false) {
-      return;
+      return "";
     }
 
     v_result = m_db->readDB("SELECT a.name, b.id_profile, b.finishTime "
@@ -1310,8 +1305,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
     if(nrow != 1) {
       /* should not happend */
       m_db->read_DB_free(v_result);
-      m_Renderer->setWorldRecordTime(std::string("WR: ") + GAMETEXT_WORLDRECORDNA);
-      return;
+      return std::string("WR: ") + GAMETEXT_WORLDRECORDNA;
     }
     v_roomName = m_db->getResult(v_result, 3, 0, 0);
     if(m_db->getResult(v_result, 3, 0, 1) != NULL) {
@@ -1321,14 +1315,10 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
     m_db->read_DB_free(v_result);
     
     if(v_id_profile != "") {
-      m_Renderer->setWorldRecordTime(v_roomName + ": " + 
-				    GameApp::formatTime(v_finishTime) +
-				    std::string(" (") + v_id_profile + std::string(")"));
-    } else {
-      m_Renderer->setWorldRecordTime(v_roomName + ": " + 
-				    GAMETEXT_WORLDRECORDNA
-				    );
+      return v_roomName + ": " + GameApp::formatTime(v_finishTime) + std::string(" (") + v_id_profile + std::string(")");
     }
+     
+    return v_roomName + ": " + GAMETEXT_WORLDRECORDNA;
   }
 
   void GameApp::_UpdateWebHighscores(bool bSilent) {
@@ -2101,7 +2091,7 @@ void GameApp::closePlaying() {
 										    &m_theme, m_theme.getPlayerTheme(),
 										    getColorFromPlayerNumber(i),
 										    getUglyColorFromPlayerNumber(i),
-										    m_bEnableEngineSound));
+										    m_xmsession->enableEngineSound()));
 	}
 	// if there's more camera than player (ex: 3 players and 4 cameras),
 	// then, make the remaining cameras follow the first player
@@ -2119,7 +2109,7 @@ void GameApp::closePlaying() {
 	}
 
 	/* add the ghosts */
-	if(m_bEnableGhost) {
+	if(m_xmsession->enableGhosts()) {
 	  try {
 	    addGhosts(&m_MotoGame, &m_theme);
 	  } catch(Exception &e) {
@@ -2165,7 +2155,7 @@ void GameApp::closePlaying() {
     m_Renderer->hideReplayHelp();
     
     /* World-record stuff */
-    _UpdateWorldRecord(m_PlaySpecificLevelId);
+    m_Renderer->setWorldRecordTime(getWorldRecord(m_PlaySpecificLevelId));
 
     /* Prepare level */
     m_Renderer->prepareForNewLevel();
@@ -2911,4 +2901,12 @@ void GameApp::isTheCurrentPlayAHighscore(bool& o_personal, bool& o_room) {
 
 StateManager* GameApp::getStateManager() {
   return m_stateManager;
+}
+
+GameRenderer* GameApp::getGameRenderer() {
+  return m_Renderer;
+}
+
+InputHandler* GameApp::getInputHandler() {
+  return &m_InputHandler;
 }
