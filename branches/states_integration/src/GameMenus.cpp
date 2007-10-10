@@ -1375,69 +1375,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
       std::string v_id_level = pList->getSelectedLevel();
       if(v_id_level != "") {
-	
-	char **v_result;
-	unsigned int nrow;
-	std::string v_levelName;
-	std::string v_levelDescription;
-	std::string v_levelAuthor;
-	std::string v_levelPack;
-	std::string v_levelDateStr;
-
-	v_result = m_db->readDB("SELECT name, author, description, packName, date_str "
-				"FROM levels WHERE id_level=\"" + 
-				xmDatabase::protectString(v_id_level) + "\";",
-				nrow);
-	if(nrow == 0) {
-	  m_db->read_DB_free(v_result);
-	  return;
-	}
-
-	v_levelName        = m_db->getResult(v_result, 5, 0, 0);
-	v_levelAuthor      = m_db->getResult(v_result, 5, 0, 1);
-	v_levelDescription = m_db->getResult(v_result, 5, 0, 2);
-	v_levelPack        = m_db->getResult(v_result, 5, 0, 3);
-	v_levelDateStr     = m_db->getResult(v_result, 5, 0, 4);
-	m_db->read_DB_free(v_result);
-
-        /* === OPEN LEVEL INFO VIEWER === */      
-        /* Set information */
-
-	/* StateLevelInfoViewer has nothing to do in there
-        UIStatic *pLevelName = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TITLE");
-        
-        if(pLevelName != NULL) pLevelName->setCaption(v_levelName);
-
-        UIStatic *pGeneralInfo_LevelPack = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_LEVELPACK");
-        UIStatic *pGeneralInfo_LevelName = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_LEVELNAME");
-        UIStatic *pGeneralInfo_Author = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_AUTHOR");
-        UIStatic *pGeneralInfo_Date = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_DATE");
-        UIStatic *pGeneralInfo_Description = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_DESCRIPTION");
-
-        if(pGeneralInfo_LevelPack != NULL) pGeneralInfo_LevelPack->setCaption(std::string(GAMETEXT_LEVELPACK) + ": " + v_levelPack);
-        if(pGeneralInfo_LevelName != NULL) pGeneralInfo_LevelName->setCaption(std::string(GAMETEXT_LEVELNAME) + ": " + v_levelName);
-        if(pGeneralInfo_Author != NULL) pGeneralInfo_Author->setCaption(std::string(GAMETEXT_AUTHOR) + ": " + v_levelAuthor);
-        if(pGeneralInfo_Date != NULL) pGeneralInfo_Date->setCaption(std::string(GAMETEXT_DATE) + ": " + v_levelDateStr);
-        if(pGeneralInfo_Description != NULL) pGeneralInfo_Description->setCaption(std::string(GAMETEXT_DESCRIPTION) + ": " + v_levelDescription);
-	*/
-
-	/* now in StateLevelInfoViewer. to be put in a mother
-	   class of them.
-        _UpdateLevelInfoViewerBestTimes(m_LevelInfoViewerLevel = v_id_level);
-        _UpdateLevelInfoViewerReplays(m_LevelInfoViewerLevel);
-	*/
-        
-        /* Nice. Open the level info viewer */
-        pLevelInfoButton->setActive(false);
-        m_pLevelPackViewer->showWindow(false);
-
-	/* StateLevelInfoViewer has nothing to do in there
-        m_pLevelInfoViewer->showWindow(true);
-	*/
-
-        m_pMainMenu->enableChildren(false);
-        m_pMainMenu->enableWindow(false);
-	m_stateManager->pushState(new StateLevelInfoViewer(this));
+	m_stateManager->pushState(new StateLevelInfoViewer(this, v_id_level));
       }
     }
   }
@@ -2093,14 +2031,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       }
     }
     else if(pLevelInfoButton->isClicked()
-	    || pNewLevelsLevelInfoButton->isClicked()
-	    ) {
+	    || pNewLevelsLevelInfoButton->isClicked()){
       pLevelInfoButton->setClicked(false);
       pNewLevelsLevelInfoButton->setClicked(false);
-      
-      /* Find out what level is selected */
-      std::string v_id_level;
 
+      std::string v_id_level;
       if(m_pAllLevelsList && !m_pAllLevelsList->isBranchHidden()) {
 	v_id_level = m_pAllLevelsList->getSelectedLevel();
       } else if(m_pPlayNewLevelsList && !m_pPlayNewLevelsList->isBranchHidden()) {
@@ -2108,72 +2043,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       }
       
       if(v_id_level != "") {
-	char **v_result;
-	unsigned int nrow;
-	std::string v_levelName;
-	std::string v_levelDescription;
-	std::string v_levelAuthor;
-	std::string v_levelPack;
-	std::string v_levelDateStr;
-
-	v_result = m_db->readDB("SELECT name, author, description, packName, date_str "
-				"FROM levels WHERE id_level=\"" + 
-				xmDatabase::protectString(v_id_level) + "\";",
-				nrow);
-	if(nrow == 0) {
-	  m_db->read_DB_free(v_result);
-	  return;
-	}
-
-	v_levelName        = m_db->getResult(v_result, 5, 0, 0);
-	v_levelAuthor      = m_db->getResult(v_result, 5, 0, 1);
-	v_levelDescription = m_db->getResult(v_result, 5, 0, 2);
-	v_levelPack        = m_db->getResult(v_result, 5, 0, 3);
-	v_levelDateStr     = m_db->getResult(v_result, 5, 0, 4);
-	m_db->read_DB_free(v_result);
-
-
-        /* Set information */
-
-
-	/* StateLevelInfoViewer has nothing to do here 
-        UIStatic *pLevelName = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TITLE");
-
-        if(pLevelName != NULL) pLevelName->setCaption(v_levelName);
-
-        UIStatic *pGeneralInfo_LevelPack = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_LEVELPACK");
-        UIStatic *pGeneralInfo_LevelName = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_LEVELNAME");
-        UIStatic *pGeneralInfo_Author = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_AUTHOR");
-        UIStatic *pGeneralInfo_Date = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_DATE");
-        UIStatic *pGeneralInfo_Description = (UIStatic *)m_pLevelInfoViewer->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_GENERALINFO_TAB:LEVEL_VIEWER_INFO_DESCRIPTION");
-
-        if(pGeneralInfo_LevelPack != NULL) pGeneralInfo_LevelPack->setCaption(std::string(GAMETEXT_LEVELPACK) + ": " + v_levelPack);
-        if(pGeneralInfo_LevelName != NULL) pGeneralInfo_LevelName->setCaption(std::string(GAMETEXT_LEVELNAME) + ": " + v_levelName);
-        if(pGeneralInfo_Author != NULL) pGeneralInfo_Author->setCaption(std::string(GAMETEXT_AUTHOR) + ": " + v_levelAuthor);
-        if(pGeneralInfo_Date != NULL) pGeneralInfo_Date->setCaption(std::string(GAMETEXT_DATE) + ": " + v_levelDateStr);
-        if(pGeneralInfo_Description != NULL) pGeneralInfo_Description->setCaption(std::string(GAMETEXT_DESCRIPTION) + ": "  + v_levelDescription);
-	*/
-            
-	/* now in StateLevelInfoViewer. to be put in a mother
-	   class of them.
-        _UpdateLevelInfoViewerBestTimes(m_LevelInfoViewerLevel = v_id_level);
-        _UpdateLevelInfoViewerReplays(m_LevelInfoViewerLevel);
-	*/
-        
-        /* Nice. Open the level info viewer */
-        pLevelInfoButton->setActive(false);
-        pNewLevelsLevelInfoButton->setActive(false);
-
-	/* StateLevelInfoViewer not in there
-        m_pLevelInfoViewer->showWindow(true);
-	*/
-
-        m_pMainMenu->enableChildren(false);
-        m_pMainMenu->enableWindow(false);
-	m_stateManager->pushState(new StateLevelInfoViewer(this));
+	m_stateManager->pushState(new StateLevelInfoViewer(this, v_id_level));
       }
     }
-       
+
     /* REPLAYS */        
     UIButton *pReplaysShowButton = (UIButton *)m_pReplaysWindow->getChild("REPLAY_SHOW_BUTTON");
     UIButton *pReplaysDeleteButton = (UIButton *)m_pReplaysWindow->getChild("REPLAY_DELETE_BUTTON");

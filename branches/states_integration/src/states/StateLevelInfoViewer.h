@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   class StateLevelInfoViewer : public StateMenu {
   public:
     StateLevelInfoViewer(GameApp* pGame,
+			 const std::string& level,
 			 bool drawStateBehind    = true,
 			 bool updateStatesBehind = true
 			 );			 
@@ -59,11 +60,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /* GUI */
     static UIRoot* m_sGUI;
     static void createGUIIfNeeded(GameApp* pGame);
+    void updateGUI();
 
-    void updateLevelInfoViewerBestTimes(const std::string &LevelID);
-    void updateLevelInfoViewerReplays(const   std::string &LevelID);
+    void updateLevelInfoViewerBestTimes();
+    void updateLevelInfoViewerReplays();
 
-    std::string m_LevelInfoViewerLevel;
+    std::string m_level;
   };
 
 #endif
