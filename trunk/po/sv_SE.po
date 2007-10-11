@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: sv_SE\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-10-08 23:08+0200\n"
-"PO-Revision-Date: 2007-08-14 15:24+0200\n"
+"PO-Revision-Date: 2007-10-10 20:31+0200\n"
 "Last-Translator: Lukas <lukas.klingsbo@piratpartiet.se>\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -318,7 +318,7 @@ msgstr "Uppgraderar databasens profil"
 
 #: src/GameText.h:138
 msgid "Death Animation"
-msgstr "Döds Animation"
+msgstr "Dödsanimation"
 
 #: src/GameText.h:139
 msgid "Defaults"
@@ -612,22 +612,20 @@ msgid "Restart the level"
 msgstr "Starta om banan"
 
 #: src/GameText.h:212
-#, fuzzy
 msgid "Previous/Next level"
-msgstr "Svåraste banorna"
+msgstr "Förra/Nästa bana"
 
 #: src/GameText.h:213
-#, fuzzy
 msgid "Add/remove to favorite levels"
-msgstr "Lägg till banan i favoritbanor"
+msgstr "Lägg till/ta bort banan ifrån favoritbanor"
 
 #: src/GameText.h:214
 msgid "Enable/disable web"
-msgstr ""
+msgstr "Sätt på/av webben"
 
 #: src/GameText.h:215
 msgid "Enable/disable ugly mode"
-msgstr ""
+msgstr "Sätt på/av ful-läget"
 
 #: src/GameText.h:216
 msgid "Reload levels, themes and replays from directories"
@@ -655,7 +653,7 @@ msgstr ""
 
 #: src/GameText.h:222
 msgid "Hide ghosts"
-msgstr ""
+msgstr "Göm spöken"
 
 #: src/GameText.h:223
 msgid "High"
@@ -718,14 +716,12 @@ msgid "Level"
 msgstr "Bana"
 
 #: src/GameText.h:238
-#, fuzzy
 msgid "Added to favorites"
-msgstr "Lägg till som favorit"
+msgstr "Tilllagd till favoriter"
 
 #: src/GameText.h:239
-#, fuzzy
 msgid "Deleted from favorites"
-msgstr "Ta bort från favoriter"
+msgstr "Borttagen från favoriter"
 
 #: src/GameText.h:240
 msgid "Level Info..."
@@ -1055,9 +1051,9 @@ msgid "The replay can't be played!"
 msgstr "Reprisen kan inte spelas!"
 
 #: src/GameText.h:326
-#, fuzzy, c-format
+#, c-format
 msgid "Replay of %s"
-msgstr "Repriser"
+msgstr "Repris av %s"
 
 #: src/GameText.h:327
 msgid "Replays"
@@ -1823,9 +1819,8 @@ msgstr ""
 "spelare kör"
 
 #: src/GameText.h:524
-#, fuzzy
 msgid "Don't show the ghosts while playing"
-msgstr "Visa hastighetsmätare när man spelar"
+msgstr "Visa inte spöket medans man spelar"
 
 #: src/GameText.h:526
 msgid "Levels with no highscore"
@@ -1860,9 +1855,8 @@ msgid "Easiest levels"
 msgstr "Lättaste banorna"
 
 #: src/GameText.h:535
-#, fuzzy
 msgid "Crappiest levels"
-msgstr "Fulaste banorna"
+msgstr "Lodigaste banorna"
 
 #: src/GameText.h:536
 msgid "Scripted levels"
@@ -1925,9 +1919,8 @@ msgid "My levels"
 msgstr "Mina banor"
 
 #: src/GameText.h:552
-#, fuzzy
 msgid "Crappy levels"
-msgstr "Fulaste banorna"
+msgstr "Lodiga banorna"
 
 #: src/GameText.h:554
 msgid "Levels with no highscore in your room"
@@ -1962,9 +1955,8 @@ msgid "Easiest X-Moto levels according to the web votes"
 msgstr "Lättaste X-Moto banorna enligt Internet rösterna"
 
 #: src/GameText.h:563
-#, fuzzy
 msgid "Crappiest X-Moto levels according to the web votes"
-msgstr "Fulaste X-Moto banorna enligt Internet rösterna"
+msgstr "Lodigaste X-Moto banorna enligt Internet-rösterna"
 
 #: src/GameText.h:564
 msgid "X-Moto levels which are dynamic"
@@ -2040,7 +2032,7 @@ msgstr "Externa banor (de som du la i 'My levels' mappen)"
 
 #: src/GameText.h:581
 msgid "Levels marked 'crappy' are hidden in all other packs"
-msgstr ""
+msgstr "Banor som är märkta 'lodig' är dolda i alla andra paket"
 
 #: src/GameText.h:583
 msgid "Ugly mode enabled"
@@ -2084,16 +2076,15 @@ msgstr "Repriskurva av"
 
 #: src/GameText.h:593
 msgid "Fps enabled"
-msgstr ""
+msgstr "Fps påslagen"
 
 #: src/GameText.h:594
-#, fuzzy
 msgid "Fps disabled"
-msgstr "Fult läge av"
+msgstr "Fps avslagen"
 
 #: src/GameText.h:597
 msgid "FontGroup:GENERAL"
-msgstr ""
+msgstr "FontGrup:GENERAL"
 
 #: src/LevelsText.h:21
 msgid "First let's take a look at the user interface..."
@@ -2112,22 +2103,24 @@ msgid ""
 "The small one to the right is your own best time\n"
 "for the current level..."
 msgstr ""
-"Den lilla  till höger är din egen bästa tid<br> för den nuvarande banan..."
+"Den lilla till höger är din egen bästa tid\n"
+"för den nuvarande banan..."
 
 #: src/LevelsText.h:25
 msgid ""
 "... and the one to the left is the best of all\n"
 "on this computer."
 msgstr ""
-"... och den till vänster är den som är bäst av alla<br> på den här datorn."
+"... och den till vänster är den som är bäst av alla\n"
+"på den här datorn."
 
 #: src/LevelsText.h:26
 msgid ""
 "Down here there's the minimap, which shows the level\n"
 "around you, so you know where you're heading."
 msgstr ""
-"Här nere är det en liten karta som visar banan<br> omkring dig så att du vet "
-"var du ska."
+"Här nere är det en liten karta som visar banan\n"
+"omkring dig så att du vet var du ska."
 
 #: src/LevelsText.h:27
 msgid "Now let's look at your controls."
@@ -2165,15 +2158,17 @@ msgstr "Okej. Den röda pricken på din minikarta är en jordgubb."
 msgid ""
 "The primary objective of the game is for you\n"
 "to collect all of them, and then find the flower."
-msgstr "Det primära spelmålet är att samla<br> alla och sen hitta blomman."
+msgstr ""
+"Det primära spelmålet är att samla\n"
+"alla och sen hitta blomman."
 
 #: src/LevelsText.h:36
 msgid ""
 "The icon to the right of your time,\n"
 "indicates how many strawberries still left."
 msgstr ""
-"Ikonen till höger om din tid, <br> indikerar hur många jordgubbar du "
-"fortfarande har kvar."
+"Ikonen till höger om din tid, \n"
+"indikerar hur många jordgubbar du fortfarande har kvar."
 
 #: src/LevelsText.h:37
 msgid "Drive in its direction..."
@@ -2184,7 +2179,8 @@ msgid ""
 "When done, head for the flower.\n"
 "It's the purple dot on your minimap."
 msgstr ""
-"När du är klar, åk mot blomman.<br> Det är den lila pricken på din minikarta."
+"När du är klar, åk mot blomman.\n"
+"Det är den lila pricken på din minikarta."
 
 #: src/LevelsText.h:39
 msgid "Welcome to X-Moto!"
@@ -2194,7 +2190,9 @@ msgstr "Välkommen till X-Moto!"
 msgid ""
 "This level is a short tutorial of\n"
 "how you play the game."
-msgstr "Den här banan är en kort genomgång av<br> hur du spelar spelet."
+msgstr ""
+"Den här banan är en kort genomgång av\n"
+"hur du spelar spelet."
 
 #: src/LevelsText.h:41
 msgid "Please stay put and follow the instructions! :)"
@@ -2218,16 +2216,17 @@ msgid ""
 "the air, try to adjust your attitude with the left\n"
 "and right arrow keys, so you'll land on your wheels."
 msgstr ""
-"Kör år vänster, accelerera och när du är i<br> luften, försök att ändra din "
-"ställning med den vänstra<br> och den högra pilen så att du landar på hjulen."
+"Kör år vänster, accelerera och när du är i\n"
+"luften, försök att ändra din ställning med den vänstra\n"
+"och den högra pilen så att du landar på hjulen."
 
 #: src/LevelsText.h:46
 msgid ""
 "The next jump is a bit trickier. You'll need all the\n"
 "speed you can get to reach the other side..."
 msgstr ""
-"Nästa hopp är lite svårare. Du kommer att behöva all<br> fart du kan få för "
-"att nå till andra sidan..."
+"Nästa hopp är lite svårare. Du kommer att behöva all\n"
+"fart du kan få för att nå till andra sidan..."
 
 #: src/LevelsText.h:47
 msgid "Now for the most difficult jump in this tutorial!"
@@ -2244,8 +2243,10 @@ msgid ""
 "you reach the edge of the jump, pull the bike's front\n"
 "wheel up."
 msgstr ""
-"Här är planen:<br> Du måste nå maxfart igen, men när<br> du kommer till "
-"kanten av hoppet, dra upp cykelns<br> framdäck."
+"Här är planen:\n"
+"Du måste nå maxfart igen, men när\n"
+"du kommer till kanten av hoppet, dra upp cykelns\n"
+"framdäck."
 
 #: src/LevelsText.h:50 src/LevelsText.h:63
 msgid ""
@@ -2253,7 +2254,8 @@ msgid ""
 "length of the jump.\n"
 "Try it..."
 msgstr ""
-"Det kommer att göra så att bakfjädringen ökar<br> längden på hoppet.<br> "
+"Det kommer att göra så att bakfjädringen ökar\n"
+"längden på hoppet.\n"
 "Försök..."
 
 #: src/LevelsText.h:51
@@ -2264,7 +2266,9 @@ msgstr "Den här genomgången kommer lära dig grunderna för att hoppa."
 msgid ""
 "Remember you can turn around your bike\n"
 "by pressing :"
-msgstr "Kom ihåg att du kan vända din cykel<br> genom att trycka :"
+msgstr ""
+"Kom ihåg att du kan vända din cykel\n"
+"genom att trycka :"
 
 #: src/LevelsText.h:53
 msgid "That was pretty easy, right?"
@@ -2275,7 +2279,8 @@ msgid ""
 "Accelerate NOW! Obtain maximum speed, and try to\n"
 "keep the front wheel at the ground..."
 msgstr ""
-"Accelera NU! Håll max fart och försök att<br> hålla framdäcket på marken..."
+"Accelera NU! Håll max fart och försök att\n"
+"hålla framdäcket på marken..."
 
 #: src/LevelsText.h:55
 msgid "Nice jump there! :)"
@@ -2290,8 +2295,8 @@ msgid ""
 "The basic idea is that when driving on the rear wheel,\n"
 "your head is lowered quite a lot..."
 msgstr ""
-"Grundidéen är att när man kör på bakhjulet<br> så sänks ditt huvud ganska "
-"mycket..."
+"Grundidéen är att när man kör på bakhjulet\n"
+"så sänks ditt huvud ganska mycket..."
 
 #: src/LevelsText.h:58
 msgid ""
@@ -2299,7 +2304,8 @@ msgid ""
 "When the distance you have to drive is quite short,\n"
 "you don't need to keep the balance."
 msgstr ""
-"Den svåra delen är att hålla balansen.<br> När du ska köra en kort bit<br> "
+"Den svåra delen är att hålla balansen.\n"
+"När du ska köra en kort bit\n"
 "behöver du inte hålla balansen."
 
 #: src/LevelsText.h:59
@@ -2309,9 +2315,10 @@ msgid ""
 "combination, and you should be on the other side.\n"
 "Try it..."
 msgstr ""
-"Accelerera (sakta) till höger med framhjulet resande.<br> Precis innan ditt "
-"huvud slår i blocket gör du en snabb vänster/höger<br> kombination och du "
-"borde komma över till andra sidan.<br> Försök..."
+"Accelerera (sakta) till höger med framhjulet resande.\n"
+"Precis innan ditt huvud slår i blocket gör du en snabb vänster/höger\n"
+"kombination och du borde komma över till andra sidan.\n"
+"Försök..."
 
 #: src/LevelsText.h:60
 msgid ""
@@ -2319,9 +2326,9 @@ msgid ""
 "This time keep your hands off the left and right arrow keys,\n"
 "they're not delicate enough to help you keep balance."
 msgstr ""
-"Nu ska du pröva en lite svårare en...<br> Den här gången håller du händerna "
-"ifrån höger och vänster pilarna,<br> de är inte känsliga nog att hjälpa dig "
-"hålla balansen."
+"Nu ska du pröva en lite svårare en...\n"
+"Den här gången håller du händerna ifrån höger och vänster pilarna,\n"
+"de är inte känsliga nog att hjälpa dig hålla balansen."
 
 #: src/LevelsText.h:61
 msgid ""
@@ -2329,9 +2336,9 @@ msgid ""
 "Try to drive a bit back and forth on your rear wheel,\n"
 "keeping the bike as steady as possible..."
 msgstr ""
-"Använd istället din gas och broms för att ändra vinkeln.<br> Försök att köra "
-"en bit fram och tillbaka på bakhjulet<br> och håll cykeln så stadig som "
-"möjligt..."
+"Använd istället din gas och broms för att ändra vinkeln.\n"
+"Försök att köra en bit fram och tillbaka på bakhjulet\n"
+"och håll cykeln så stadig som möjligt..."
 
 #: src/LevelsText.h:62
 msgid "Try getting under the next obstacle when you feel you're ready."
@@ -2343,8 +2350,9 @@ msgid ""
 "areas where the ceiling is low.\n"
 "Beware that this can be pretty difficult :)"
 msgstr ""
-"Den här genomgången kommer att lära dig att köra på<br> bakhjulet där taket "
-"är lågt.<br> Akta dig, det kan vara ganska svårt :)"
+"Den här genomgången kommer att lära dig att köra på\n"
+"bakhjulet där taket är lågt.\n"
+"Akta dig, det kan vara ganska svårt :)"
 
 #: src/LevelsText.h:65
 msgid "Not that difficult, right?"
@@ -2363,13 +2371,5 @@ msgid ""
 "Now for the final one... It's not that long, but instead\n"
 "there's even less room for your precious head. Good luck! :)"
 msgstr ""
-"Nu är det den sista... Den är inte så lång, men istället<br> är det till och "
-"med mindre rum för ditt värdefulla huvud. Lycka till! :)"
-
-#, fuzzy
-#~ msgid "Added to the favorite"
-#~ msgstr "Lägg till som favorit"
-
-#, fuzzy
-#~ msgid "Delete from the favorite"
-#~ msgstr "Ta bort från favoriter"
+"Nu är det den sista... Den är inte så lång, men istället\n"
+"är det till och med mindre rum för ditt värdefulla huvud. Lycka till! :)"
