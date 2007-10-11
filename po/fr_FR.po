@@ -1856,7 +1856,6 @@ msgid "Easiest levels"
 msgstr "Niveaux les plus faciles"
 
 #: src/GameText.h:535
-#, fuzzy
 msgid "Crappiest levels"
 msgstr "Niveaux les plus moches"
 
@@ -1921,9 +1920,8 @@ msgid "My levels"
 msgstr "Mes niveaux"
 
 #: src/GameText.h:552
-#, fuzzy
 msgid "Crappy levels"
-msgstr "Niveaux les plus moches"
+msgstr "Niveaux moches"
 
 #: src/GameText.h:554
 msgid "Levels with no highscore in your room"
@@ -1958,7 +1956,6 @@ msgid "Easiest X-Moto levels according to the web votes"
 msgstr "Niveaux X-Moto les plus faciles (d'après les votes web)"
 
 #: src/GameText.h:563
-#, fuzzy
 msgid "Crappiest X-Moto levels according to the web votes"
 msgstr "Niveaux X-Moto les plus moches (d'après les votes web)"
 
@@ -2036,7 +2033,7 @@ msgstr "Niveaux externes (ceux du répertoire 'My levels')"
 
 #: src/GameText.h:581
 msgid "Levels marked 'crappy' are hidden in all other packs"
-msgstr ""
+msgstr "Les niveaux marqués 'moches' sont cachés dans les autres packs"
 
 #: src/GameText.h:583
 msgid "Ugly mode enabled"
