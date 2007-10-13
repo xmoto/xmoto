@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-10-08 23:08+0200\n"
+"POT-Creation-Date: 2007-10-13 18:22+0200\n"
 "PO-Revision-Date: 2006-12-21 21:14+0100\n"
 "Last-Translator: Jens Erler <mothbox@gmx.net>\n"
 "Language-Team: German\n"
@@ -1873,9 +1873,8 @@ msgid "Easiest levels"
 msgstr "Einfachste Levels"
 
 #: src/GameText.h:535
-#, fuzzy
 msgid "Crappiest levels"
-msgstr "Unschönste Levels"
+msgstr "Schrott-Levels"
 
 #: src/GameText.h:536
 msgid "Scripted levels"
@@ -1935,12 +1934,11 @@ msgstr "Keine Medaille"
 
 #: src/GameText.h:551
 msgid "My levels"
-msgstr "Meine Level"
+msgstr "Meine Levels"
 
 #: src/GameText.h:552
-#, fuzzy
 msgid "Crappy levels"
-msgstr "Unschönste Levels"
+msgstr "Ausschuss-Levels"
 
 #: src/GameText.h:554
 msgid "Levels with no highscore in your room"
@@ -1975,7 +1973,6 @@ msgid "Easiest X-Moto levels according to the web votes"
 msgstr "Einfachste Levels (Nach Web-Abstimmung)"
 
 #: src/GameText.h:563
-#, fuzzy
 msgid "Crappiest X-Moto levels according to the web votes"
 msgstr "Schrottigste Levels (nach Web-Abstimmung)"
 
@@ -2024,11 +2021,13 @@ msgid "Your personal highscore finish time is almost the room highscore (95%)"
 msgstr "Deine Bestzeit ist beinahe der Rekord des Raums (95%)"
 
 #: src/GameText.h:575
+#, c-format
 msgid ""
 "Your personal highscore finish time is almost the room highscore (90%-95%)"
 msgstr "Deine Bestzeit ist beinahe der Rekord des Raums (90%-95%)"
 
 #: src/GameText.h:576
+#, c-format
 msgid ""
 "Your personal highscore finish time is almost the room highscore (80%-90%)"
 msgstr "Deine Bestzeit ist beinahe der Rekord des Raums (80%-90%)"
@@ -2054,6 +2053,7 @@ msgstr "Externe Levels (eigenständig im 'My Levels' Ordner platziert)"
 #: src/GameText.h:581
 msgid "Levels marked 'crappy' are hidden in all other packs"
 msgstr ""
+"Diese als Ausschuss markierten Levels bleiben für andere Pakete unsichtbar."
 
 #: src/GameText.h:583
 msgid "Ugly mode enabled"
