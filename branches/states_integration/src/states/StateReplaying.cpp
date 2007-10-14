@@ -184,6 +184,7 @@ void StateReplaying::leaveAfterPush()
 void StateReplaying::update()
 {
   if(m_stopToUpdate) { /* pause */
+    SDL_Delay(50);
     return;
   }
   
