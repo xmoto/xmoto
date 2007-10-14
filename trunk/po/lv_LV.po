@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: xmoto 0.3.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-10-14 12:08+0200\n"
-"PO-Revision-Date: 2007-09-04 02:36+0300\n"
+"PO-Revision-Date: 2007-10-14 16:25+0300\n"
 "Last-Translator: Jānis Rūcis <parasti@gmail.com>\n"
 "Language-Team: Latvian\n"
 "MIME-Version: 1.0\n"
@@ -497,7 +497,7 @@ msgid ""
 "Maybe you should try with another name?"
 msgstr ""
 "Neizdevās saglabāt ierakstu!\n"
-"Varbūt pamēģini ar citu nosaukumu?"
+"Varbūt pamēģini citu nosaukumu?"
 
 #: src/GameText.h:181
 msgid "Failed to update the theme list"
@@ -802,7 +802,7 @@ msgstr "Izvēlņu grafikas"
 msgid "Level references unknown textures, it could be unplayable!"
 msgstr ""
 "Līmenis satur norādes uz nezināmām tekstūrām.\n"
-"Iespējams, ka to nevar spēlēt!"
+"Iespējams, ka tas nav spēlējams!"
 
 #: src/GameText.h:259
 msgid "Mono"
@@ -878,9 +878,9 @@ msgid ""
 "\n"
 "Try again another time."
 msgstr ""
-"Nav pieejami jauni vai atjaunoti līmeņi.\n"
+"Nav jaunu vai atjaunotu līmeņu.\n"
 "\n"
-"Mēģini atkal citreiz."
+"Mēģini citreiz."
 
 #: src/GameText.h:277
 msgid "No level following this one, sorry."
@@ -937,7 +937,7 @@ msgstr "Iestatījumi"
 
 #: src/GameText.h:294
 msgid "Some options will not take effect before next restart!"
-msgstr "Daži iestatījumi stāsies spēkā tikai pēc restartēšanas!"
+msgstr "Dažas izmaiņas stāsies spēkā tikai pēc restartēšanas!"
 
 #: src/GameText.h:295
 msgid "By author"
@@ -1008,7 +1008,7 @@ msgstr "Ports"
 msgid "Press key you want to '%s' or ESC to cancel..."
 msgstr ""
 "Nospied taustiņu \"%s\" darbībai\n"
-"vai ESC, lai atceltu..."
+"vai ESC, lai atceltu izmaiņas..."
 
 #: src/GameText.h:313
 msgid "Proxy Server"
@@ -1049,11 +1049,11 @@ msgstr "Ieraksts"
 #: src/GameText.h:322
 msgid "Stop[esc] ||[space]  << >>[left/right keys]  < >[up/down keys]   Speed:"
 msgstr ""
-"Stop[esc] ||[atstarpe]  << >>[pa kreisi/pa labi]  < >[augšup/lejup]   Ātrums:"
+"Stāt[esc] ||[atstarpe]  << >>[pa kreisi/pa labi]  < >[augšup/lejup]   Ātrums:"
 
 #: src/GameText.h:323
 msgid "Stop[esc] ||[space] >>[right key] < >[up/down keys]   Speed:"
-msgstr "Stop[esc] ||[atstarpe] >>[pa labi] < >[augšup/lejup]   Ātrums:"
+msgstr "Stāt[esc] ||[atstarpe] >>[pa labi] < >[augšup/lejup]   Ātrums:"
 
 #: src/GameText.h:325
 msgid "The replay can't be played!"
@@ -1311,7 +1311,7 @@ msgstr "Jā"
 
 #: src/GameText.h:388
 msgid "Yes to all"
-msgstr "Jā uz visiem"
+msgstr "Jā (visiem)"
 
 #: src/GameText.h:389
 msgid "Zoom in"
@@ -1332,7 +1332,7 @@ msgstr ""
 
 #: src/GameText.h:395
 msgid "Configure how you are connected to the Internet"
-msgstr "Norādīt, kādu interneta pieslēgumu tu lieto"
+msgstr "Norādi savu interneta pieslēgumu"
 
 #: src/GameText.h:396
 msgid "Play this level again"
@@ -1372,7 +1372,7 @@ msgstr "Mēģināt šo līmeni vēlreiz"
 
 #: src/GameText.h:405
 msgid "Built-in and stand-alone external levels"
-msgstr "Iebūvētie un atsevišķi ārējie līmeņi"
+msgstr "Iebūvētie un savrupi ārējie līmeņi"
 
 #: src/GameText.h:406
 msgid "Levels grouped together in level packs"
@@ -1453,7 +1453,7 @@ msgstr "Rādīt apkārtnes karti spēles laikā"
 
 #: src/GameText.h:425
 msgid "Automatically download best times off the net when the game starts"
-msgstr "Automātiski lejupielādēt labākos laikus no tīmekļa, spēlei sākoties"
+msgstr "Sākot spēli, automātiski lejupielādēt labākos laikus no tīmekļa"
 
 #: src/GameText.h:426
 msgid "Show the World Record for a given level when playing"
@@ -1535,7 +1535,7 @@ msgstr "Stereo (divu kanālu) skaņa"
 
 #: src/GameText.h:445
 msgid "Turn on engine noise"
-msgstr "Ieslēgt dzinēja skaņu"
+msgstr "Ieslēgt dzinēja trokšņus"
 
 #: src/GameText.h:446
 msgid "Select action to re-configure to another key"
@@ -1564,7 +1564,7 @@ msgstr ""
 
 #: src/GameText.h:452
 msgid "Select a level in the level pack to play"
-msgstr "Izvēlies līmeņu pakā līmeni, kuru spēlēt"
+msgstr "Izvēlies spēlējamo līmeni līmeņu pakā"
 
 #: src/GameText.h:453
 msgid "Close level pack"
@@ -1604,12 +1604,12 @@ msgstr "Parādīt izvēlēto ierakstu"
 
 #: src/GameText.h:462
 msgid "Show helpful help strings such as this one"
-msgstr "Rādīt izpalīdzīgus teksta ziņojumus, tādus kā šis"
+msgstr "Rādīt izpalīdzīgus teksta ziņojumus (tādus kā šis)"
 
 #: src/GameText.h:463
 msgid ""
 "Let X-Moto look for more levels on the net, and install them automatically"
-msgstr "Ļaut X-Moto meklēt jaunus līmeņus tīmeklī un tos automātiski uzstādīt"
+msgstr "Ļaut X-Moto meklēt tīmeklī jaunus līmeņus un automātiski tos instalēt"
 
 #: src/GameText.h:464
 msgid "Select this if you got a direct connection to the Internet"
@@ -1700,7 +1700,7 @@ msgstr "Izvēlies X-Moto grafisko tēmu"
 
 #: src/GameText.h:489
 msgid "Check for new themes on the web"
-msgstr "Meklēt jaunas tēmas tīmeklī"
+msgstr "Meklēt tīmeklī jaunas tēmas"
 
 #: src/GameText.h:490
 msgid "Download or update the selected theme"
@@ -1725,7 +1725,7 @@ msgid ""
 "Choose where to upload/download replays, highscore lists (for more "
 "information, check the website)"
 msgstr ""
-"Izvēlies, kur augšupielādēt/lejupielādēt ierakstus un rekordu sarakstus (lai "
+"Izvēlies, kur augšup-/lejupielādēt ierakstus un rekordu sarakstus (lai "
 "uzzinātu vairāk, apmeklē mājas lapu)"
 
 #: src/GameText.h:495
@@ -1738,14 +1738,11 @@ msgstr "Lejupielādēt istabu sarakstu no tīmekļa"
 
 #: src/GameText.h:497
 msgid "Upload of highscore requires to log in (Except for WR)"
-msgstr ""
-"Lai augšupielādētu rekordus, jānorāda lietotājvārds (izņemot pasaules "
-"rekordus)"
+msgstr "Lai augšupielādētu rekordus, jānorāda lietotājvārds (izņemot WR)"
 
 #: src/GameText.h:498
 msgid "Upload of highscore requires a password (Except for WR)"
-msgstr ""
-"Lai augšupielādētu rekordus, jānorāda parole (izņemot pasaules rekordus)"
+msgstr "Lai augšupielādētu rekordus, jānorāda parole (izņemot WR)"
 
 #: src/GameText.h:499
 msgid "Show the speedometer when playing"
@@ -1757,7 +1754,7 @@ msgstr "Aktivizēt motocikla izjukšanas animāciju"
 
 #: src/GameText.h:501
 msgid "Automatically scroll over the level before starting playing it"
-msgstr "Automātiski parādīt visu līmeni pirms sākt to spēlēt"
+msgstr "Automātiski pirms spēles parādīt visu līmeni"
 
 #: src/GameText.h:502
 msgid "View the X-Moto credits"
@@ -1849,7 +1846,7 @@ msgstr "Līmeņi bez rekorda"
 
 #: src/GameText.h:527 src/GameText.h:555
 msgid "Levels you have not completed"
-msgstr "Līmeņi, kurus neesi pabeidzis"
+msgstr "Nepabeigti līmeņi"
 
 #: src/GameText.h:528
 msgid "You're not the highscore holder"
@@ -1876,7 +1873,6 @@ msgid "Easiest levels"
 msgstr "Visvieglākie līmeņi"
 
 #: src/GameText.h:535
-#, fuzzy
 msgid "Crappiest levels"
 msgstr "Visdraņķīgākie līmeņi"
 
@@ -1941,9 +1937,8 @@ msgid "My levels"
 msgstr "Mani līmeņi"
 
 #: src/GameText.h:552
-#, fuzzy
 msgid "Crappy levels"
-msgstr "Visdraņķīgākie līmeņi"
+msgstr "Draņķīgi līmeņi"
 
 #: src/GameText.h:554
 msgid "Levels with no highscore in your room"
@@ -1951,7 +1946,7 @@ msgstr "Līmeņi bez rekorda tavā istabā"
 
 #: src/GameText.h:556
 msgid "Somebody in the room made a better highscore than yours"
-msgstr "Kāds istabā uzstādīja labāku rekordu par tavējo"
+msgstr "Kāds istabā ir uzstādījis labāku rekordu par tavējo"
 
 #: src/GameText.h:557
 msgid "All X-Moto levels"
@@ -1978,7 +1973,6 @@ msgid "Easiest X-Moto levels according to the web votes"
 msgstr "Visvieglākie X-Moto līmeņi, spriežot pēc tīmekļa balsojuma"
 
 #: src/GameText.h:563
-#, fuzzy
 msgid "Crappiest X-Moto levels according to the web votes"
 msgstr "Visdraņķīgākie X-Moto līmeņi, spriežot pēc tīmekļa balsojuma"
 
@@ -1992,7 +1986,7 @@ msgstr "X-Moto līmeņi ar fona mūziku"
 
 #: src/GameText.h:566
 msgid "Last levels you have played"
-msgstr "Pēdējie līmeņi, kurus tu esi spēlējis"
+msgstr "Pēdējie tevis spēlētie līmeņi"
 
 #: src/GameText.h:567
 msgid "X-Moto levels you never played"
@@ -2054,11 +2048,11 @@ msgstr "%s rekordi"
 
 #: src/GameText.h:580
 msgid "External levels (the one you put into the 'My levels' directory)"
-msgstr "Ārējie līmeņi (tie, kurus tu esi ielicis \"My levels\" mapē)"
+msgstr "Ārējie līmeņi (tie, kas atrodas \"My levels\" mapē)"
 
 #: src/GameText.h:581
 msgid "Levels marked 'crappy' are hidden in all other packs"
-msgstr ""
+msgstr "Līmeņi, kas atzīmēti kā \"draņķīgi\", netiek rādīti citās pakās"
 
 #: src/GameText.h:583
 msgid "Ugly mode enabled"
@@ -2129,7 +2123,7 @@ msgid ""
 "The small one to the right is your own best time\n"
 "for the current level..."
 msgstr ""
-"Mazais pa labi rāda tavu labāko rezultātu\n"
+"Mazais, pa labi, rāda tavu labāko rezultātu\n"
 "šajā līmenī..."
 
 #: src/LevelsText.h:25
@@ -2137,7 +2131,7 @@ msgid ""
 "... and the one to the left is the best of all\n"
 "on this computer."
 msgstr ""
-"... un tas pa kreisi rāda labāko no visiem\n"
+"... un tas, pa kreisi, rāda labāko no visiem\n"
 "rezultātiem šajā datorā."
 
 #: src/LevelsText.h:26
@@ -2154,7 +2148,7 @@ msgstr "Tagad apskatīsim vadību."
 
 #: src/LevelsText.h:28
 msgid "(You seem to be using a joystick, can't help with that :P)"
-msgstr "(Izskatās, ka tu lieto vadības sviru. Nevaru palīdzēt :P)"
+msgstr "(Izskatās, ka tu lieto vadības sviru. Neko darīt :P)"
 
 # XXX
 # Hard-coded word order.  Here it is not a problem in Latvian, but it
@@ -2197,7 +2191,7 @@ msgid ""
 "indicates how many strawberries still left."
 msgstr ""
 "Ikona, kas atrodas pa labi no tava laika,\n"
-"rāda, cik daudz zemeņu vēl atlicis."
+"rāda, cik daudz zemeņu vēl jāsavāc."
 
 #: src/LevelsText.h:37
 msgid "Drive in its direction..."
@@ -2208,7 +2202,7 @@ msgid ""
 "When done, head for the flower.\n"
 "It's the purple dot on your minimap."
 msgstr ""
-"Kad tas paveikts, dodies pie zieda.\n"
+"Kad tas izdarīts, dodies pie zieda.\n"
 "Tas minikartē attēlots kā purpursarkans punkts."
 
 #: src/LevelsText.h:39
@@ -2227,7 +2221,7 @@ msgstr "Lūdzu, negrozies un seko norādījumiem! :)"
 
 #: src/LevelsText.h:42
 msgid "Pick up the strawberry by touching it"
-msgstr "Pieskaries zemenei, lai to savāktu."
+msgstr "Savāc zemeni, tai pieskaroties."
 
 #: src/LevelsText.h:43
 msgid "Touch it to finish the level. Good luck with the rest :)"
@@ -2235,7 +2229,7 @@ msgstr "Pieskaries tam, lai pabeigtu līmeni. Lai veicas turpmāk! :)"
 
 #: src/LevelsText.h:44
 msgid "The first jump you're going to perform is very easy."
-msgstr "Tavs pirmais lēciens ir ļoti viegls."
+msgstr "Tavs pirmais lēciens būs ļoti viegls."
 
 #: src/LevelsText.h:45
 msgid ""
@@ -2271,7 +2265,7 @@ msgid ""
 "you reach the edge of the jump, pull the bike's front\n"
 "wheel up."
 msgstr ""
-"Lūk, kāds ir plāns:\n"
+"Plāns ir šāds:\n"
 "Arī šoreiz tev būs jāuzņem liels ātrums, taču,\n"
 "sasniedzot aizas malu, tev jāparauj motocikla\n"
 "priekšējais ritenis uz augšu."
@@ -2309,7 +2303,7 @@ msgid ""
 "Accelerate NOW! Obtain maximum speed, and try to\n"
 "keep the front wheel at the ground..."
 msgstr ""
-"Uzņem ātrumu TAGAD! Brauc cik ātri vien iespējams, un\n"
+"Uzņem ātrumu! Brauc cik ātri vien iespējams, un\n"
 "centies turēt priekšējo riteni pie zemes."
 
 #: src/LevelsText.h:55
