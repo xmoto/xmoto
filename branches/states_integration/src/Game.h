@@ -190,10 +190,6 @@ class StateManager;
 	return m_UserNotify;
       }
     
-      float getFPS(void) {
-	return m_fFramesPerSecond;
-      }
-
       XMSession* getSession();
       void setShowCursor(bool bValue);
       void switchLevelToFavorite(const std::string& i_levelId, bool v_displayMessage = false);

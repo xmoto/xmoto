@@ -100,6 +100,9 @@ class GameApp;
     void mouseDoubleClick(int nButton);
     void mouseUp(int nButton);
 
+    int getFPS();
+    void setMaxAllowedFps(int i_value);
+
     /* ask to states to clean themself */
     static void cleanStates();
 
@@ -113,6 +116,7 @@ class GameApp;
     float m_fLastFpsTime;
     int   m_currentFps;
     int   m_fpsNbFrame;
+    int   m_maxAllowedFps;
 
     GameApp* m_pGame;
   };

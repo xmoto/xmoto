@@ -39,6 +39,7 @@ StateScene::~StateScene()
 
 void StateScene::enter()
 {
+  m_pGame->getStateManager()->setMaxAllowedFps(50);
   m_pGame->setShowCursor(false);
 }
 
@@ -58,9 +59,10 @@ void StateScene::leaveAfterPush()
 void StateScene::update()
 {
   int nPhysSteps = 0;
+  int nADelay = 0;
 
-  if(m_fLastPhysTime < 0.0) { /* initialize for the first update of the state */
-    m_fLastPhysTime = GameApp::getXMTime() - PHYS_STEP_SIZE;
+  if(m_fLastPhysTime < 0.0) {
+    m_fLastPhysTime = GameApp::getXMTime();
   }
 
   // don't update if that's not required
@@ -69,6 +71,11 @@ void StateScene::update()
     m_pGame->getMotoGame()->updateLevel(PHYS_STEP_SIZE);
     m_fLastPhysTime += PHYS_STEP_SIZE;
     nPhysSteps++;    
+  }
+
+  nADelay = ((m_fLastPhysTime + PHYS_STEP_SIZE) - GameApp::getXMTime()) * 1000.0f;
+  if(nADelay > 0) {
+    SDL_Delay(nADelay);
   }
 }
 
@@ -79,6 +86,10 @@ void StateScene::render()
       m_pGame->getMotoGame()->setCurrentCamera(i);
       m_pGame->getGameRenderer()->render();
     }
+
+#if SIMULATE_SLOW_PHYSICS
+      SDL_Delay(SIMULATE_SLOW_PHYSICS);
+#endif
 
     ParticlesSource::setAllowParticleGeneration(m_pGame->getGameRenderer()->nbParticlesRendered() < NB_PARTICLES_TO_RENDER_LIMITATION);
   } catch(Exception &e) {

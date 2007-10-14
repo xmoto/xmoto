@@ -256,7 +256,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /* Draw a little FPS counter */
     if(m_xmsession->fps()) {
       char cTemp[256];        
-      sprintf(cTemp,"%.1f",m_fFPS_Rate);
+      sprintf(cTemp,"%i",m_stateManager->getFPS());
 
       FontManager* v_fm = getDrawLib()->getFontSmall();
       FontGlyph* v_fg = v_fm->getGlyph(cTemp);

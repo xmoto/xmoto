@@ -36,6 +36,8 @@ StateManager::StateManager(GameApp* pGame)
   m_fLastFpsTime = -1.0;
   m_currentFps   = 0;
   m_fpsNbFrame   = 0;
+
+  m_maxAllowedFps = 50;
 }
 
 StateManager::~StateManager()
@@ -118,23 +120,21 @@ void StateManager::update()
     m_currentFps   = m_fpsNbFrame;
     m_fLastFpsTime = GameApp::getXMTime();
     m_fpsNbFrame   = 0;
-    printf("Fps = %i\n", m_currentFps);
   }
-
-  /* pausing */
-  //nADelay = (int) ((fAllowedOneRunTime - fOneRunTime) * 100.0);
-  //if(nADelay > 0 && m_pGame->getSession()->timedemo() == false) {
-  //SDL_Delay(nADelay);
-  //}
 }
 
 void StateManager::render()
 {
-  int nADelay = 0;
   int nHz = 50;
 
-  float fOneRunTime = GameApp::getXMTime() - m_fLastRenderingTime;
+  float fOneRunTime        = GameApp::getXMTime() - m_fLastRenderingTime;
   float fAllowedOneRunTime = 1.0 / ((double)nHz);
+
+  /* don't exceed the nHz */
+  if(fOneRunTime - fAllowedOneRunTime < 0.0) {
+    return;
+  }
+  m_fLastRenderingTime = GameApp::getXMTime();
 
   /* we have to draw states from the bottom of the stack to the top */
   std::vector<GameState*>::iterator stateIterator = m_statesStack.begin();
@@ -146,7 +146,6 @@ void StateManager::render()
     stateIterator++;
   }
 
-  m_fLastRenderingTime = GameApp::getXMTime();
   m_fpsNbFrame++;
 }
 
@@ -204,6 +203,14 @@ void StateManager::cleanStates() {
   StateFinished::clean();
   StateDeadMenu::clean();
   StateLevelInfoViewer::clean();
+}
+
+int StateManager::getFPS() {
+  return m_currentFps;
+}
+
+void StateManager::setMaxAllowedFps(int i_value) {
+  m_maxAllowedFps = i_value;
 }
 
 GameState::GameState(bool drawStateBehind,
