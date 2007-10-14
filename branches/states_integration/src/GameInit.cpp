@@ -45,6 +45,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "states/StateManager.h"
 #include "states/StateEditProfile.h"
+#include "states/StateReplaying.h"
 
 #define DATABASE_FILE FS::getUserDirUTF8() + "/" + "xm.db"
 
@@ -594,7 +595,7 @@ int main(int nNumArgs,char **ppcArgs) {
     else if(m_PlaySpecificReplay != "") {
       /* ======= PLAY SPECIFIC REPLAY ======= */
       m_StateAfterPlaying = GS_MENU;
-      setState(GS_REPLAYING);
+      m_stateManager->pushState(new StateReplaying(this, m_PlaySpecificReplay));
     }
     else {
       /* Graphics? */

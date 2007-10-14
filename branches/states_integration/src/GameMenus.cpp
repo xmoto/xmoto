@@ -1369,7 +1369,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       m_pLevelPackViewer->showWindow(false);
       m_pMainMenu->showWindow(false);      
       m_StateAfterPlaying = GS_LEVELPACK_VIEWER;
-      setState(GS_REPLAYING); 
+      m_stateManager->pushState(new StateReplaying(this, m_PlaySpecificReplay));
     }
 
     if(pLevelInfoButton!=NULL && pLevelInfoButton->isClicked()) {
@@ -1612,11 +1612,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     /* view highscore button clicked */
     if(m_pLevelInfoViewReplayButton->isClicked()) {
+      m_pLevelInfoViewReplayButton->setClicked(false);
       viewHighscoreOf();
       m_pMainMenu->showWindow(false);
       m_StateAfterPlaying = GS_MENU;
-      setState(GS_REPLAYING);
-      m_pLevelInfoViewReplayButton->setClicked(false);
+      m_stateManager->pushState(new StateReplaying(this, m_PlaySpecificReplay));
     }
 
     if(m_pNewLevelsAvailable->isClicked()) {
@@ -2126,9 +2126,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
           pReplaysShowButton->setClicked(false);
 
           m_PlaySpecificReplay = pListEntry->Text[0];
-          m_StateAfterPlaying = GS_MENU;
-
-	  m_fLastPhysTime = getXMTime() - PHYS_STEP_SIZE;
 	  m_stateManager->pushState(new StateReplaying(this, pListEntry->Text[0]));	  
         }
       }
