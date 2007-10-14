@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-10-14 12:08+0200\n"
-"PO-Revision-Date: 2007-06-13 15:53+0200\n"
-"Last-Translator: Luca Manzari\n"
+"PO-Revision-Date: 2007-10-14 18:52+0100\n"
+"Last-Translator: Carmine 'earcar' Paolino <earcar@gmail.com>\n"
 "Language-Team:  <en@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,7 +20,7 @@ msgstr ""
 
 #: src/GameText.h:33
 msgid "en_EN"
-msgstr "en_EN"
+msgstr "it_IT"
 
 #: src/GameText.h:35
 msgid "11 kHz"
@@ -40,7 +40,7 @@ msgstr "22 kHz"
 
 #: src/GameText.h:39
 msgid "32 bits per pixel"
-msgstr "32 bit per pizel"
+msgstr "32 bit per pixel"
 
 #: src/GameText.h:40
 msgid "44 kHz"
@@ -78,7 +78,7 @@ msgid ""
 msgstr ""
 "Vuoi permettere ad X-Moto di connettersi\n"
 "ad Internet per cercare altri livelli\n"
-"e punteggi miglori di altri giocatori?"
+"e punteggi migliori di altri giocatori?"
 
 #: src/GameText.h:51 src/GameText.h:90
 msgid "Audio"
@@ -102,7 +102,7 @@ msgstr "Tempi migliori"
 
 #: src/GameText.h:56
 msgid "Best player"
-msgstr "Giocatori migliori"
+msgstr "Miglior giocatore"
 
 #: src/GameText.h:57
 msgid "Brake"
@@ -111,23 +111,23 @@ msgstr "Freno"
 #: src/GameText.h:58
 #, c-format
 msgid "(by %s)"
-msgstr ""
+msgstr "(di %s)"
 
 #: src/GameText.h:59
 msgid "Move Camera to left"
-msgstr "Muovi la camera a sinistra"
+msgstr "Muovi la telecamera a sinistra"
 
 #: src/GameText.h:60
 msgid "Move Camera to right"
-msgstr "Muovi la camera a destra"
+msgstr "Muovi la telecamera a destra"
 
 #: src/GameText.h:61
 msgid "Move Camera down"
-msgstr "Muovi la camera in basso"
+msgstr "Muovi la telecamera in basso"
 
 #: src/GameText.h:62
 msgid "Move Camera up"
-msgstr "Muovi la camera in alto"
+msgstr "Muovi la telecamera in alto"
 
 #: src/GameText.h:63
 msgid "Cancel"
@@ -175,7 +175,7 @@ msgstr "Programmazione addizionale"
 
 #: src/GameText.h:86
 msgid "Graphics"
-msgstr "Grafiche"
+msgstr "Grafica"
 
 #: src/GameText.h:94
 msgid "MacOS X Support"
@@ -219,15 +219,15 @@ msgstr "Polacco"
 
 #: src/GameText.h:107
 msgid "Italian"
-msgstr ""
+msgstr "Italiano"
 
 #: src/GameText.h:108
 msgid "Swedish"
-msgstr ""
+msgstr "Svedese"
 
 #: src/GameText.h:109
 msgid "Czech"
-msgstr ""
+msgstr "Ceco"
 
 #: src/GameText.h:110
 msgid "Mikhail Brinchuk"
@@ -239,11 +239,11 @@ msgstr "Russo"
 
 #: src/GameText.h:111
 msgid "Brazilian Portuguese"
-msgstr ""
+msgstr "Portoghese Brasiliano"
 
 #: src/GameText.h:112
 msgid "Latvian"
-msgstr ""
+msgstr "Lituano"
 
 #: src/GameText.h:114
 msgid "Main testers"
@@ -298,7 +298,6 @@ msgid "Credits"
 msgstr "Crediti"
 
 #: src/GameText.h:133
-#, fuzzy
 msgid "Player"
 msgstr "Giocatore"
 
@@ -424,7 +423,7 @@ msgstr "Aiuto contestuale"
 
 #: src/GameText.h:163
 msgid "Enable Engine Sound"
-msgstr "Suono del motore"
+msgstr "Rumore del motore"
 
 #: src/GameText.h:164
 msgid "Enable Ghost"
@@ -432,7 +431,7 @@ msgstr "Fantasma"
 
 #: src/GameText.h:165
 msgid "Show World Record in-game"
-msgstr "Record mondiale mostrato durante il gioco"
+msgstr "Visualizza Record Mondiale durante il gioco"
 
 #: src/GameText.h:166
 msgid "Enable Music"
@@ -455,43 +454,32 @@ msgid "There are errors in the level, don't expect it to be playable!"
 msgstr "Ci sono errori nel livello, non considerarlo giocabile!"
 
 #: src/GameText.h:171
-#, fuzzy
 msgid "Check your Internet connection !"
-msgstr ""
-"Lo scaricamento dei livelli non è andato a buon fine.\n"
-"Controlla la tua connessione ad internet!"
+msgstr "Controlla la tua connessione ad Internet!"
 
 #: src/GameText.h:172
-#, fuzzy
 msgid "Failed to check for levels."
-msgstr "L'inizializzazione del livello non è andata a buon fine!"
+msgstr "Il controllo dei nuovi livelli è fallito."
 
 #: src/GameText.h:173
-#, fuzzy
 msgid "Failed to download high-scores."
-msgstr "Scarico i punteggi migliori..."
+msgstr "Lo scaricamento dei punteggi migliori non è andato a buon fine!"
 
 #: src/GameText.h:174
-#, fuzzy
 msgid "Failed to download levels."
-msgstr "Il caricamento del livello non è andato a buon fine!"
+msgstr "Lo scaricamento del livello non è andato a buon fine!"
 
 #: src/GameText.h:175
-#, fuzzy
 msgid "Failed to download the replay."
-msgstr "Il caricamento del livello non è andato a buon fine!"
+msgstr "Lo scaricamento del replay non è andato a buon fine!"
 
 #: src/GameText.h:176
-#, fuzzy
 msgid "Failed to download the rooms list."
-msgstr ""
-"Lo scaricamento della lista delle stanze non è andato a buon fine.\n"
-"Controlla la tua connessione ad Internet!"
+msgstr "Lo scaricamento della lista delle stanze non è andato a buon fine!"
 
 #: src/GameText.h:177
-#, fuzzy
 msgid "Failed to get the selected theme"
-msgstr "Ottieni oppure aggiorna il tema selezionato"
+msgstr "Lo scaricamento del tema selezionato non è andato a buon fine!"
 
 #: src/GameText.h:178
 msgid "Failed to initialize level!"
@@ -510,9 +498,8 @@ msgstr ""
 "Hai provato con un nome differente?"
 
 #: src/GameText.h:181
-#, fuzzy
 msgid "Failed to update the theme list"
-msgstr "Aggiorna la lista dei temi"
+msgstr "L'aggiornamento della lista dei temi non è andato a buon fine!"
 
 #: src/GameText.h:182
 msgid "File"
@@ -540,7 +527,7 @@ msgstr "Ruota a destra"
 
 #: src/GameText.h:188
 msgid "Game Graphics"
-msgstr "Grafica del gioco"
+msgstr "Grafica Gioco"
 
 #: src/GameText.h:189
 msgid "General"
@@ -548,7 +535,7 @@ msgstr "Generali"
 
 #: src/GameText.h:190
 msgid "General Info"
-msgstr "Imformazioni generali"
+msgstr "Informazioni generali"
 
 #: src/GameText.h:191
 msgid "Get this theme"
@@ -579,9 +566,9 @@ msgid "The best of the replays (on this computer)"
 msgstr "Il migliore dei replay (su questo computer)"
 
 #: src/GameText.h:198
-#, fuzzy, c-format
+#, c-format
 msgid "Ghost of %s"
-msgstr "Fantasma di"
+msgstr "Fantasma di %s"
 
 #: src/GameText.h:199
 msgid "Ghost"
@@ -624,26 +611,24 @@ msgid "Restart the level"
 msgstr "Ricomincia il livello"
 
 #: src/GameText.h:212
-#, fuzzy
 msgid "Previous/Next level"
-msgstr "Livelli più difficili"
+msgstr "Livello Precedente/Successivo"
 
 #: src/GameText.h:213
-#, fuzzy
 msgid "Add/remove to favorite levels"
-msgstr "Aggiungi il livello alla lista dei preferiti"
+msgstr "Aggiungi/rimuovi il livello alla lista dei preferiti"
 
 #: src/GameText.h:214
 msgid "Enable/disable web"
-msgstr ""
+msgstr "Abilita/disabilita web"
 
 #: src/GameText.h:215
 msgid "Enable/disable ugly mode"
-msgstr ""
+msgstr "Abilita/disabilita modalità brutta"
 
 #: src/GameText.h:216
 msgid "Reload levels, themes and replays from directories"
-msgstr ""
+msgstr "Ricarica i livelli, i temi e replay dalle cartelle"
 
 #: src/GameText.h:217
 msgid "Take a screenshot"
@@ -653,9 +638,7 @@ msgstr "Scatta una foto allo schermo"
 msgid ""
 "Find all the strawberries and touch the flower to finish\n"
 "the level."
-msgstr ""
-"Trova tutte le fragole e tocca il fiore per terminare\n"
-"il livello"
+msgstr "Trova tutte le fragole e tocca il fiore per terminare il livello."
 
 #: src/GameText.h:220
 msgid ""
@@ -667,11 +650,11 @@ msgstr ""
 
 #: src/GameText.h:222
 msgid "Hide ghosts"
-msgstr ""
+msgstr "Nascondi fantasma"
 
 #: src/GameText.h:223
 msgid "High"
-msgstr "Alto"
+msgstr "Alta"
 
 #: src/GameText.h:224
 msgid "Levels are being added into the database. Please wait."
@@ -719,7 +702,7 @@ msgstr "Premi ESC per mostrare il menu"
 
 #: src/GameText.h:235
 msgid "Key"
-msgstr "Tasti"
+msgstr "Tasto"
 
 #: src/GameText.h:236
 msgid "Keyboard"
@@ -730,14 +713,12 @@ msgid "Level"
 msgstr "Livello"
 
 #: src/GameText.h:238
-#, fuzzy
 msgid "Added to favorites"
-msgstr "Aggiungi ai preferiti"
+msgstr "Aggiunto ai preferiti"
 
 #: src/GameText.h:239
-#, fuzzy
 msgid "Deleted from favorites"
-msgstr "Rimuovi dai preferiti"
+msgstr "Rimosso dai preferiti"
 
 #: src/GameText.h:240
 msgid "Level Info..."
@@ -799,19 +780,19 @@ msgstr "Caricamento delle textures..."
 
 #: src/GameText.h:254
 msgid "Login"
-msgstr "Connessione"
+msgstr "Nome utente"
 
 #: src/GameText.h:255
 msgid "Low"
-msgstr "Basso"
+msgstr "Bassa"
 
 #: src/GameText.h:256
 msgid "Medium"
-msgstr "Medio"
+msgstr "Media"
 
 #: src/GameText.h:257
 msgid "Menu Graphics"
-msgstr "Grafiche dei menu"
+msgstr "Grafica Menu"
 
 #: src/GameText.h:258
 msgid "Level references unknown textures, it could be unplayable!"
@@ -829,7 +810,7 @@ msgstr "Seguono i livelli giocati più volte"
 
 #: src/GameText.h:261
 msgid "Motion blur ghost"
-msgstr "Fantsma sfocato"
+msgstr "Fantasma sfocato"
 
 #: src/GameText.h:262
 msgid "Multi"
@@ -837,7 +818,7 @@ msgstr "Multi"
 
 #: src/GameText.h:263
 msgid "Stop the game once a player ends the level"
-msgstr ""
+msgstr "Ferma il gioco quando un giocatore finisce il livello"
 
 #: src/GameText.h:264
 msgid "Number of players"
@@ -861,11 +842,11 @@ msgid "New personal highscore!"
 msgstr "Nuovo punteggio massimo personale!"
 
 #: src/GameText.h:269
-#, fuzzy, c-format
+#, c-format
 msgid "%i new or updated level available. Download now ?"
 msgid_plural "%i new or updated levels available. Download now ?"
 msgstr[0] "%d livello nuovo o aggiornato. Scaricarlo ora?"
-msgstr[1] "%d livello nuovo o aggiornato. Scaricarlo ora?"
+msgstr[1] "%d livelli nuovi o aggiornati. Scaricarli ora?"
 
 #: src/GameText.h:272
 msgid "New Levels"
@@ -891,11 +872,11 @@ msgid ""
 msgstr ""
 "Nessun livello nuovo o aggiornato disponibile.\n"
 "\n"
-"Prova di nuovo un altra volta."
+"Prova di nuovo un'altra volta."
 
 #: src/GameText.h:277
 msgid "No level following this one, sorry."
-msgstr "Nessun livello segue questo, spiacente."
+msgstr "Spiacente, nessun livello segue questo."
 
 #: src/GameText.h:278
 msgid "No statistics for this profile."
@@ -918,15 +899,17 @@ msgid ""
 "Also visit http://xmoto.tuxfamily.org to make sure you've\n"
 "got the latest version."
 msgstr ""
-"Questa è una versione in fase di sviluppo di Moto!\n"
-"Tutti i tipi di commenti sono molto apprezzati, di modo che il gioco\n"
-"possa essere migliorato.\n"
-"Mail riguardanti bug, idee, commenti, caratteristiche mancanti, proteste, "
-"ecc.\n"
-"possono essere inviate a nicolas at adenis-lamarre dot fr\n"
+"Nota importante!\n"
 "\n"
-"Visita inoltre http://xmoto.tuxfamily.org per essere sicuro di avere\n"
-"la versione più recente."
+"Questa è una versione in fase di sviluppo di Moto!\n"
+"Tutti i tipi di commenti sono molto apprezzati, di modo che il gioco possa "
+"essere migliorato.\n"
+"Mail riguardanti bug, idee, commenti, caratteristiche mancanti, proteste, "
+"ecc. possono essere inviate a\n"
+"nicolas at adenis-lamarre dot fr\n"
+"\n"
+"Visita inoltre http://xmoto.tuxfamily.org per essere sicuro di avere la "
+"versione più recente."
 
 #: src/GameText.h:290
 msgid "# Levels"
@@ -978,7 +961,7 @@ msgstr "Statistiche"
 
 #: src/GameText.h:302 src/GameText.h:538
 msgid "By best driver"
-msgstr "Per guidatore migliore"
+msgstr "Per miglior giocatore"
 
 #: src/GameText.h:304
 msgid "Password"
@@ -989,11 +972,11 @@ msgid "Personal"
 msgstr "Personale"
 
 #: src/GameText.h:307
-#, fuzzy, c-format
+#, c-format
 msgid "%i player"
 msgid_plural "%i players"
-msgstr[0] "Giocatori migliori"
-msgstr[1] "Giocatori migliori"
+msgstr[0] "%i giocatore"
+msgstr[1] "%i giocatori"
 
 #: src/GameText.h:308
 msgid "Player Profile"
@@ -1069,9 +1052,9 @@ msgid "The replay can't be played!"
 msgstr "Il replay non può essere mostrato!"
 
 #: src/GameText.h:326
-#, fuzzy, c-format
+#, c-format
 msgid "Replay of %s"
-msgstr "Replay"
+msgstr "Replay di %s"
 
 #: src/GameText.h:327
 msgid "Replays"
@@ -1094,9 +1077,9 @@ msgid "Save"
 msgstr "Salva"
 
 #: src/GameText.h:333
-#, fuzzy, c-format
+#, c-format
 msgid "Saved as %s"
-msgstr "Salvato come"
+msgstr "Salvato come %s"
 
 #: src/GameText.h:334
 msgid "Save Replay"
@@ -1148,7 +1131,7 @@ msgstr "Da scaricare"
 
 #: src/GameText.h:347
 msgid "To be updated"
-msgstr "Da essere aggiornato"
+msgstr "Da aggiornare"
 
 #: src/GameText.h:348
 msgid "The theme is now up to date"
@@ -1168,7 +1151,7 @@ msgstr "Tutorial"
 
 #: src/GameText.h:352
 msgid "Unpacked levels"
-msgstr "Livelli non inseriti in alcun pacchetto"
+msgstr "Livelli non inseriti in nessun pacchetto"
 
 #: src/GameText.h:353
 msgid ""
@@ -1176,7 +1159,7 @@ msgid ""
 "The theme is not avaible on the web\n"
 "or your theme list is not up to date"
 msgstr ""
-"Non è possibile aggiornare questo tema !\n"
+"Non è possibile aggiornare questo tema!\n"
 "Il tema non è disponibile sul web\n"
 "o la tua lista dei temi non è aggiornata"
 
@@ -1186,7 +1169,7 @@ msgstr "Aggiorna"
 
 #: src/GameText.h:355
 msgid "Updated"
-msgstr "Aggiornati"
+msgstr "Aggiornato"
 
 #: src/GameText.h:356
 msgid "Check WWW"
@@ -1213,13 +1196,10 @@ msgid "Upload all highscores"
 msgstr "Invia tutti i punteggi"
 
 #: src/GameText.h:362
-#, fuzzy
 msgid ""
 "An unexpected error has occured. There may be some problems with the web "
 "site."
-msgstr ""
-"è occorso un errore imprevisto\n"
-"Probabilmente il sito ha dei problemi"
+msgstr "È occorso un errore imprevisto. Probabilmente il sito ha dei problemi."
 
 #: src/GameText.h:363
 msgid "Oh no !"
@@ -1626,19 +1606,16 @@ msgid "Select this if you got a direct connection to the Internet"
 msgstr "Seleziona se ti connetti direttamente ad internet"
 
 #: src/GameText.h:465
-#, fuzzy
 msgid "Select this if you connect to the Internet through an HTTP proxy"
-msgstr "Seleziona se ti connetti ad internet attraverso un proxy HTTP"
+msgstr "Connessione tramite proxy HTTP"
 
 #: src/GameText.h:466
-#, fuzzy
 msgid "Select this if you connect to the Internet through a SOCKS4 proxy"
-msgstr "Seleziona se ti connetti ad internet attraverso un proxy SOCKS4"
+msgstr "Connessione tramite proxy SOCKS4"
 
 #: src/GameText.h:467
-#, fuzzy
 msgid "Select this if you connect to the Internet through a SOCKS5 proxy"
-msgstr "Seleziona se ti connetti ad internet attraverso un proxy SOCKS5"
+msgstr "Connessione tramite proxy SOCKS5"
 
 #: src/GameText.h:468
 msgid "Use these settings"
@@ -1749,7 +1726,7 @@ msgstr "Scegli la tua stanza"
 
 #: src/GameText.h:496
 msgid "Get the rooms list from the web"
-msgstr "Ottieni la lista delle stanze dal web"
+msgstr "Scarica la lista delle stanze dal web"
 
 #: src/GameText.h:497
 msgid "Upload of highscore requires to log in (Except for WR)"
@@ -1769,7 +1746,7 @@ msgstr "Mostra il tachimetro durante il gioco"
 
 #: src/GameText.h:500
 msgid "Enable animation of bike falling apart when dead"
-msgstr "Abilita l'animazione della moto che si stacca quando muori"
+msgstr "Abilita l'animazione della moto che si rompe quando muori"
 
 #: src/GameText.h:501
 msgid "Automatically scroll over the level before starting playing it"
@@ -1803,7 +1780,7 @@ msgstr "Livelli completati / totale di livelli nel pacchetto"
 
 #: src/GameText.h:508
 msgid "Name of level pack"
-msgstr "Nome del pacchetto"
+msgstr "Nome del pacchetto di livelli"
 
 #: src/GameText.h:509
 msgid "Add the level to the favorite levels list"
@@ -1818,9 +1795,8 @@ msgid "Puzzle the levels pack list"
 msgstr "Genera la lista del pacchetto di livelli"
 
 #: src/GameText.h:512
-#, fuzzy
 msgid "Enter text to filter the level list"
-msgstr "Immetti un testo per definire la lista di livelli"
+msgstr "Inserisci un testo per filtrare la lista dei livelli"
 
 #: src/GameText.h:513
 msgid "Choose the number of players"
@@ -1828,29 +1804,25 @@ msgstr "Scegli il numero di giocatori"
 
 #: src/GameText.h:514
 msgid "Your proxy login"
-msgstr ""
+msgstr "Il nome utente del tuo account sul proxy"
 
 #: src/GameText.h:515
 msgid "Your password associated with your login"
-msgstr "La tua password associata al tuo login"
+msgstr "La password associata al tuo login"
 
 #: src/GameText.h:516
-#, fuzzy
 msgid "Enter text to filter the replay list"
-msgstr "Immetti un testo per definire la lista di livelli"
+msgstr "Inserisci un testo per filtrare la lista dei replay"
 
 #: src/GameText.h:517
-#, fuzzy
 msgid "Press to play X-Moto immediately"
-msgstr "Premi per giocare subito a X-Moto"
+msgstr "Clicca per giocare subito a X-Moto"
 
 #: src/GameText.h:518
-#, fuzzy
 msgid "Increase or decrease the quality of the levels selected"
 msgstr "Aumenta o diminuisci la qualità dei livelli selezionati"
 
 #: src/GameText.h:519
-#, fuzzy
 msgid "Increase or decrease the difficulty of the levels selected"
 msgstr "Aumenta o diminuisci la difficoltà dei livelli selezionati"
 
@@ -1859,11 +1831,12 @@ msgid ""
 "Stop the game once a player ends the level or continue while a player is "
 "running"
 msgstr ""
+"Ferma il gioco quando un giocatore finisce il livello o continua finché "
+"tutti abbiano finito"
 
 #: src/GameText.h:524
-#, fuzzy
 msgid "Don't show the ghosts while playing"
-msgstr "Mostra il tachimetro durante il gioco"
+msgstr "Non mostrare il fantasma durante il gioco"
 
 #: src/GameText.h:526
 msgid "Levels with no highscore"
@@ -1879,7 +1852,7 @@ msgstr "Non detieni il punteggio migliore"
 
 #: src/GameText.h:530
 msgid "New and updated levels"
-msgstr "Livelli nuovi e aggiornati"
+msgstr "Livelli nuovi o aggiornati"
 
 #: src/GameText.h:531
 msgid "Favorite levels"
@@ -1898,18 +1871,16 @@ msgid "Easiest levels"
 msgstr "Livelli più facili"
 
 #: src/GameText.h:535
-#, fuzzy
 msgid "Crappiest levels"
-msgstr "Livelli ingiocabili"
+msgstr "Livelli peggiori"
 
 #: src/GameText.h:536
 msgid "Scripted levels"
 msgstr "Livelli scriptati"
 
 #: src/GameText.h:537
-#, fuzzy
 msgid "Musical levels"
-msgstr "Miei livelli"
+msgstr "Livelli musicali"
 
 #: src/GameText.h:539
 msgid "Last played levels"
@@ -1940,7 +1911,6 @@ msgid "Oldest highscores"
 msgstr "Livelli più vecchi"
 
 #: src/GameText.h:546
-#, fuzzy
 msgid "Platinum"
 msgstr "Platino"
 
@@ -1965,12 +1935,10 @@ msgid "My levels"
 msgstr "Miei livelli"
 
 #: src/GameText.h:552
-#, fuzzy
 msgid "Crappy levels"
-msgstr "Livelli ingiocabili"
+msgstr "Livelli scadenti"
 
 #: src/GameText.h:554
-#, fuzzy
 msgid "Levels with no highscore in your room"
 msgstr "Livelli senza punteggio nella stanza"
 
@@ -1992,28 +1960,27 @@ msgstr "I tuoi livelli preferiti"
 
 #: src/GameText.h:560
 msgid "Nicest X-Moto levels according to the web votes"
-msgstr "Livelli migliori di X-Moto secondo i voti web"
+msgstr "Livelli migliori secondo i voti web"
 
 #: src/GameText.h:561
 msgid "Hardest X-Moto levels according to the web votes"
-msgstr "Livelli più difficili di X-Moto secondo i voti web"
+msgstr "Livelli più difficili secondo i voti web"
 
 #: src/GameText.h:562
 msgid "Easiest X-Moto levels according to the web votes"
-msgstr "Livelli più facili di X-Moto secondo i voti web"
+msgstr "Livelli più facili secondo i voti web"
 
 #: src/GameText.h:563
-#, fuzzy
 msgid "Crappiest X-Moto levels according to the web votes"
-msgstr "Livelli più ingiocabili di X-Moto secondo i voti web"
+msgstr "Livelli più scadenti secondo i voti web"
 
 #: src/GameText.h:564
 msgid "X-Moto levels which are dynamic"
-msgstr "Livelli dinamici di X-Moto"
+msgstr "Livelli dinamici"
 
 #: src/GameText.h:565
 msgid "X-Moto levels with a background music"
-msgstr "Livelli di X-Moto con musica di sottofondo"
+msgstr "Livellicon musica di sottofondo"
 
 #: src/GameText.h:566
 msgid "Last levels you have played"
@@ -2021,46 +1988,41 @@ msgstr "Ultimi livelli giocati "
 
 #: src/GameText.h:567
 msgid "X-Moto levels you never played"
-msgstr "Livelli di X-Moto mai giocati"
+msgstr "Livelli mai giocati"
 
 #: src/GameText.h:568
 msgid "X-Moto levels you have played the most"
-msgstr "Livelli di X-Moto giocati più spesso"
+msgstr "Livelli giocati più spesso"
 
 #: src/GameText.h:569
 msgid "X-Moto levels you have played only a few times"
-msgstr "Livelli di X-Moto giocati raramente"
+msgstr "Livelli giocati raramente"
 
 #: src/GameText.h:570
-#, fuzzy
 msgid "X-Moto levels having a recent highscore in your room"
 msgstr ""
-"Livelli di X-Moto per i quali detieni un punteggio migliore recente "
-"all'interno della stanza"
+"Livelli che hanno un recente punteggio migliore all'interno della stanza"
 
 #: src/GameText.h:571
 msgid "Last created X-Moto levels"
-msgstr "Livelli di X-Moto creati di recente"
+msgstr "Livelli creati di recente"
 
 #: src/GameText.h:572
-#, fuzzy
 msgid "X-Moto levels having an old highscore in your room"
 msgstr ""
-"Livelli di X-Moto con un vecchio punteggio massimo all'interno della stanza"
+"Livelli che hanno un datato punteggio migliore all'interno della stanza"
 
 #: src/GameText.h:573
 msgid "You have the room highscore"
 msgstr "Detieni il punteggio massimo all'interno della stanza"
 
 #: src/GameText.h:574
-#, fuzzy
 msgid "Your personal highscore finish time is almost the room highscore (95%)"
 msgstr ""
 "Il tuo punteggio migliore è vicino al miglior punteggio all'interno della "
 "stanza (95%)"
 
 #: src/GameText.h:575
-#, fuzzy
 msgid ""
 "Your personal highscore finish time is almost the room highscore (90%-95%)"
 msgstr ""
@@ -2068,7 +2030,6 @@ msgstr ""
 "stanza (90%-95%)"
 
 #: src/GameText.h:576
-#, fuzzy
 msgid ""
 "Your personal highscore finish time is almost the room highscore (80%-90%)"
 msgstr ""
@@ -2080,14 +2041,14 @@ msgid "The room highscore is really better than your own highscore"
 msgstr "Il punteggio migliore della stanza è parecchio più alto del tuo"
 
 #: src/GameText.h:578
-#, fuzzy, c-format
+#, c-format
 msgid "Level pack \"%s\""
-msgstr "Pacchetto di livelli"
+msgstr "Pacchetto di livelli \"%s\""
 
 #: src/GameText.h:579
-#, fuzzy, c-format
+#, c-format
 msgid "Highscores by %s"
-msgstr "Punteggi migliori di"
+msgstr "Punteggi migliori di %s"
 
 #: src/GameText.h:580
 msgid "External levels (the one you put into the 'My levels' directory)"
@@ -2096,6 +2057,7 @@ msgstr "Livelli esterni (quelli inseriti della cartella 'My levels')"
 #: src/GameText.h:581
 msgid "Levels marked 'crappy' are hidden in all other packs"
 msgstr ""
+"I livelli definiti 'scadenti' sono nascosti in tutti gli altri pacchetti"
 
 #: src/GameText.h:583
 msgid "Ugly mode enabled"
@@ -2122,12 +2084,10 @@ msgid "UglyOver mode disabled"
 msgstr "Modo eccessivamente sgradevole disabilitato"
 
 #: src/GameText.h:589
-#, fuzzy
 msgid "Web connection enabled"
 msgstr "Connessione al web abilitata"
 
 #: src/GameText.h:590
-#, fuzzy
 msgid "Web connection disabled"
 msgstr "Connessione al web disabilitata"
 
@@ -2141,16 +2101,15 @@ msgstr "Interpolazione dei replay disabilitata"
 
 #: src/GameText.h:593
 msgid "Fps enabled"
-msgstr ""
+msgstr "FPS abilitato"
 
 #: src/GameText.h:594
-#, fuzzy
 msgid "Fps disabled"
-msgstr "Modo sgradevole disabilitato"
+msgstr "FPS disabilitato"
 
 #: src/GameText.h:597
 msgid "FontGroup:GENERAL"
-msgstr ""
+msgstr "FontGroup:GENERAL"
 
 #: src/LevelsText.h:21
 msgid "First let's take a look at the user interface..."
@@ -2165,25 +2124,28 @@ msgid "The big one is your current time"
 msgstr "Il più grande è il tuo tempo istantaneo"
 
 #: src/LevelsText.h:24
-#, fuzzy
 msgid ""
 "The small one to the right is your own best time\n"
 "for the current level..."
-msgstr "Il più piccolo alla destra è il tuo tempo migliore"
+msgstr ""
+"Il più piccolo alla destra è il tuo tempo migliore\n"
+"per il livello corrente..."
 
 #: src/LevelsText.h:25
-#, fuzzy
 msgid ""
 "... and the one to the left is the best of all\n"
 "on this computer."
-msgstr "... e quello a sinistra è invece il migliore di tutti"
+msgstr ""
+"... e quello a sinistra è il migliore di tutti\n"
+"in questo computer."
 
 #: src/LevelsText.h:26
-#, fuzzy
 msgid ""
 "Down here there's the minimap, which shows the level\n"
 "around you, so you know where you're heading."
-msgstr "In basso c'è la minimappa, che mostra il livello"
+msgstr ""
+"In basso c'è la minimappa, che mostra il livello\n"
+"attorno a te, così sai dove stai andando."
 
 #: src/LevelsText.h:27
 msgid "Now let's look at your controls."
@@ -2219,40 +2181,44 @@ msgid "Okay. The red dot on your minimap is a strawberry."
 msgstr "Okay. Il punto rosso sulla minimappa è una fragola."
 
 #: src/LevelsText.h:35
-#, fuzzy
 msgid ""
 "The primary objective of the game is for you\n"
 "to collect all of them, and then find the flower."
-msgstr "raccoglierle tutte e poi trovare il fiore."
+msgstr ""
+"L'obiettivo principale del gioco è\n"
+"raccoglierle tutte e poi trovare il fiore."
 
 #: src/LevelsText.h:36
-#, fuzzy
 msgid ""
 "The icon to the right of your time,\n"
 "indicates how many strawberries still left."
-msgstr "indica quante fragole devi ancora raccogliere."
+msgstr ""
+"L'icona alla destra del tuo tempo,\n"
+"indica quante fragole devi ancora raccogliere."
 
 #: src/LevelsText.h:37
 msgid "Drive in its direction..."
 msgstr "Guida verso di loro..."
 
 #: src/LevelsText.h:38
-#, fuzzy
 msgid ""
 "When done, head for the flower.\n"
 "It's the purple dot on your minimap."
-msgstr "E' il punto viola sulla tua minimappa."
+msgstr ""
+"Quando hai finito, vai a prendere il fiore.\n"
+"E' il punto viola sulla tua minimappa."
 
 #: src/LevelsText.h:39
 msgid "Welcome to X-Moto!"
 msgstr "Benvenuto in X-Moto!"
 
 #: src/LevelsText.h:40
-#, fuzzy
 msgid ""
 "This level is a short tutorial of\n"
 "how you play the game."
-msgstr "Questo livello è un breve tutorial"
+msgstr ""
+"Questo livello è un breve tutorial\n"
+"su come giocare."
 
 #: src/LevelsText.h:41
 msgid "Please stay put and follow the instructions! :)"
@@ -2264,7 +2230,7 @@ msgstr "Prendi la fragola toccandola"
 
 #: src/LevelsText.h:43
 msgid "Touch it to finish the level. Good luck with the rest :)"
-msgstr "Toccalo per finire il livello. Buona fortuna per tutto il resto :)"
+msgstr "Tocca il fiore per finire il livello. Buona fortuna per il resto :)"
 
 #: src/LevelsText.h:44
 msgid "The first jump you're going to perform is very easy."
@@ -2276,17 +2242,21 @@ msgid ""
 "the air, try to adjust your attitude with the left\n"
 "and right arrow keys, so you'll land on your wheels."
 msgstr ""
+"Guida verso sinistra, accelera, e quando sei in\n"
+"aria prova ad aggiustare l'orientamento della moto\n"
+"con le frecce, in modo da atterrare sulle ruote."
 
 #: src/LevelsText.h:46
-#, fuzzy
 msgid ""
 "The next jump is a bit trickier. You'll need all the\n"
 "speed you can get to reach the other side..."
-msgstr "Il prossimo salto è un po' più complesso. Avrai bisogno di tutta"
+msgstr ""
+"Il prossimo salto è un po' più complesso. Avrai bisogno di\n"
+"prendere più velocità possibile per raggiungere l'altra parte..."
 
 #: src/LevelsText.h:47
 msgid "Now for the most difficult jump in this tutorial!"
-msgstr "Ora il salto più difficile del tutorial!"
+msgstr "E ora il salto più difficile del tutorial!"
 
 #: src/LevelsText.h:48
 msgid "This time, speed alone won't do the job..."
@@ -2299,36 +2269,42 @@ msgid ""
 "you reach the edge of the jump, pull the bike's front\n"
 "wheel up."
 msgstr ""
+"Questo è il piano:\n"
+"Di nuovo, devi raggiungere la massima velocità, ma\n"
+"quando raggiungi la cima della rampa, tira in su la\n"
+"ruota davanti."
 
 #: src/LevelsText.h:50 src/LevelsText.h:63
-#, fuzzy
 msgid ""
 "That will cause the rear suspension to increase the\n"
 "length of the jump.\n"
 "Try it..."
-msgstr "Questo farà sì che la sospensione posteriore aumenti"
+msgstr ""
+"Questo farà sì che la sospensione posteriore aumenti\n"
+"la lunghezza del salto.\n"
+"Prova..."
 
 #: src/LevelsText.h:51
 msgid "This tutorial will teach you the basics of jumping."
 msgstr "Questo tutorial ti insegnerà le basi del salto."
 
 #: src/LevelsText.h:52
-#, fuzzy
 msgid ""
 "Remember you can turn around your bike\n"
 "by pressing :"
-msgstr "Ricorda che puoi girare la tua moto"
+msgstr "Ricorda che puoi girare la tua moto premendo:"
 
 #: src/LevelsText.h:53
 msgid "That was pretty easy, right?"
-msgstr "E' stato facile, vero?"
+msgstr "È stato facile, vero?"
 
 #: src/LevelsText.h:54
-#, fuzzy
 msgid ""
 "Accelerate NOW! Obtain maximum speed, and try to\n"
 "keep the front wheel at the ground..."
-msgstr "Accelera ORA! Ottieni la massima velocità, e prova a"
+msgstr ""
+"Accelera ORA! Ottieni la massima velocità, e prova a\n"
+"mantenere la ruota davanti incollata al terreno..."
 
 #: src/LevelsText.h:55
 msgid "Nice jump there! :)"
@@ -2336,14 +2312,15 @@ msgstr "Ottimo salto! :)"
 
 #: src/LevelsText.h:56
 msgid "Congrats, you're now a master jumper!"
-msgstr "Congratulazioni, ora sei un grande saltatore!"
+msgstr "Congratulazioni, ora sei un saltatore provetto!"
 
 #: src/LevelsText.h:57
-#, fuzzy
 msgid ""
 "The basic idea is that when driving on the rear wheel,\n"
 "your head is lowered quite a lot..."
-msgstr "Il concetto di base è che quando guidi sulla ruota posteriore"
+msgstr ""
+"L'idea di base è che quando guidi sulla ruota posteriore,\n"
+"la tua testa è abbassata un bel po'..."
 
 #: src/LevelsText.h:58
 msgid ""
@@ -2351,6 +2328,9 @@ msgid ""
 "When the distance you have to drive is quite short,\n"
 "you don't need to keep the balance."
 msgstr ""
+"La parte difficile è mantenere il bilanciamento.\n"
+"Quando la distanza che devi percorrere è breve,\n"
+"non serve mantenere il bilanciamento."
 
 #: src/LevelsText.h:59
 msgid ""
@@ -2359,6 +2339,10 @@ msgid ""
 "combination, and you should be on the other side.\n"
 "Try it..."
 msgstr ""
+"Accelera (piano) verso destra impennando la ruota davanti.\n"
+"Prima che la tua testa urti il blocco, fai una veloce\n"
+"combinazione, e dovresti trovarti dall'altra parte.\n"
+"Prova..."
 
 #: src/LevelsText.h:60
 msgid ""
@@ -2366,6 +2350,9 @@ msgid ""
 "This time keep your hands off the left and right arrow keys,\n"
 "they're not delicate enough to help you keep balance."
 msgstr ""
+"Ora ne proverai uno un po' più difficile...\n"
+"Questa volta non toccare le frecce a sinistra o destra,\n"
+"non sono abbastanza delicate per mantenere il bilanciamento."
 
 #: src/LevelsText.h:61
 msgid ""
@@ -2373,9 +2360,11 @@ msgid ""
 "Try to drive a bit back and forth on your rear wheel,\n"
 "keeping the bike as steady as possible..."
 msgstr ""
+"Piuttosto regola l'angolazione accelerando e frenando.\n"
+"Prova un po' a guidare avanti e indietro sulla ruota\n"
+"posteriore, tenendo la moto più stabile possibile..."
 
 #: src/LevelsText.h:62
-#, fuzzy
 msgid "Try getting under the next obstacle when you feel you're ready."
 msgstr "Prova ad attraversare il prossimo ostacolo non appena ti senti pronto."
 
@@ -2385,6 +2374,9 @@ msgid ""
 "areas where the ceiling is low.\n"
 "Beware that this can be pretty difficult :)"
 msgstr ""
+"Questo tutorial ti insegnerà a impennare in aree\n"
+"dove il soffitto è basso.\n"
+"Attento che può diventare difficile :)"
 
 #: src/LevelsText.h:65
 msgid "Not that difficult, right?"
@@ -2399,12 +2391,12 @@ msgid "Good job! The next one is even more difficult..."
 msgstr "Bel lavoro! Il prossimo è ancora più difficile..."
 
 #: src/LevelsText.h:68
-#, fuzzy
 msgid ""
 "Now for the final one... It's not that long, but instead\n"
 "there's even less room for your precious head. Good luck! :)"
 msgstr ""
-"c'è ancora meno spazio per la tua preziosissima testa. Buona fortuna! :)"
+"Ora l'ultimo... Non è così lungo, ma c'è ancora meno\n"
+"spazio per la tua preziosissima testa. Buona fortuna! :)"
 
 #, fuzzy
 #~ msgid "Added to the favorite"
