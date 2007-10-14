@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-10-13 18:22+0200\n"
+"POT-Creation-Date: 2007-10-14 12:08+0200\n"
 "PO-Revision-Date: 2007-08-29 01:53+0200\n"
 "Last-Translator: Jozef Riha <jose1711@gmail.com\n"
 "Language-Team:  <sk@li.org>\n"
@@ -2013,7 +2013,6 @@ msgstr ""
 "miestnosti (95%)"
 
 #: src/GameText.h:575
-#, c-format
 msgid ""
 "Your personal highscore finish time is almost the room highscore (90%-95%)"
 msgstr ""
@@ -2021,7 +2020,6 @@ msgstr ""
 "miestnosti (90%-95%)"
 
 #: src/GameText.h:576
-#, c-format
 msgid ""
 "Your personal highscore finish time is almost the room highscore (80%-90%)"
 msgstr ""

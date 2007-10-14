@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-10-13 18:22+0200\n"
+"POT-Creation-Date: 2007-10-14 12:08+0200\n"
 "PO-Revision-Date: 2006-12-21 21:14+0100\n"
 "Last-Translator: Jens Erler <mothbox@gmx.net>\n"
 "Language-Team: German\n"
@@ -1902,11 +1902,11 @@ msgstr "Am wenigsten gespielte Levels"
 
 #: src/GameText.h:543
 msgid "Last highscores"
-msgstr "Letzte Bestzeiten"
+msgstr "Neuste Bestzeiten"
 
 #: src/GameText.h:544
 msgid "Last levels"
-msgstr "Letzte Levels"
+msgstr "Neuste Levels"
 
 #: src/GameText.h:545
 msgid "Oldest highscores"
@@ -2021,13 +2021,11 @@ msgid "Your personal highscore finish time is almost the room highscore (95%)"
 msgstr "Deine Bestzeit ist beinahe der Rekord des Raums (95%)"
 
 #: src/GameText.h:575
-#, c-format
 msgid ""
 "Your personal highscore finish time is almost the room highscore (90%-95%)"
 msgstr "Deine Bestzeit ist beinahe der Rekord des Raums (90%-95%)"
 
 #: src/GameText.h:576
-#, c-format
 msgid ""
 "Your personal highscore finish time is almost the room highscore (80%-90%)"
 msgstr "Deine Bestzeit ist beinahe der Rekord des Raums (80%-90%)"
@@ -2053,6 +2051,7 @@ msgstr "Externe Levels (eigenständig im 'My Levels' Ordner platziert)"
 #: src/GameText.h:581
 msgid "Levels marked 'crappy' are hidden in all other packs"
 msgstr ""
+"Diese als Ausschuss markierten Levels bleiben für andere Pakete unsichtbar."
 "Diese als Ausschuss markierten Levels bleiben für andere Pakete unsichtbar."
 
 #: src/GameText.h:583

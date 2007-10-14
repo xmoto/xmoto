@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto Portuguese Translation v1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-10-13 18:22+0200\n"
+"POT-Creation-Date: 2007-10-14 12:08+0200\n"
 "PO-Revision-Date: 2007-07-31 19:19-0000\n"
 "Last-Translator: Luís Miguel Fonseca Garcia <LuisG280@hotmail.com>\n"
 "Language-Team: LT <LuisG280@hotmail.com>\n"
@@ -2056,7 +2056,7 @@ msgstr ""
 "servidor (95%)"
 
 #: src/GameText.h:575
-#, fuzzy, c-format
+#, fuzzy
 msgid ""
 "Your personal highscore finish time is almost the room highscore (90%-95%)"
 msgstr ""
@@ -2064,7 +2064,7 @@ msgstr ""
 "servidor (90%-95%)"
 
 #: src/GameText.h:576
-#, fuzzy, c-format
+#, fuzzy
 msgid ""
 "Your personal highscore finish time is almost the room highscore (80%-90%)"
 msgstr ""
