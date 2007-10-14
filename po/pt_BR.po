@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-10-13 18:22+0200\n"
+"POT-Creation-Date: 2007-10-14 12:08+0200\n"
 "PO-Revision-Date: 2007-08-27 18:20-0300\n"
 "Last-Translator: Lucas Hermann Negri <kkndrox@gmail.com>\n"
 "Language-Team: Portuguese/Brazil\n"
@@ -2028,13 +2028,11 @@ msgid "Your personal highscore finish time is almost the room highscore (95%)"
 msgstr "O seu recorde é quase o recorde da sala (95%)"
 
 #: src/GameText.h:575
-#, c-format
 msgid ""
 "Your personal highscore finish time is almost the room highscore (90%-95%)"
 msgstr "O seu recorde é quase o recorde da sala (90%-95%)"
 
 #: src/GameText.h:576
-#, c-format
 msgid ""
 "Your personal highscore finish time is almost the room highscore (80%-90%)"
 msgstr "O seu recorde é quase o recorde da sala (80%-90%)"

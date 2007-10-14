@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-10-13 18:22+0200\n"
+"POT-Creation-Date: 2007-10-14 12:08+0200\n"
 "PO-Revision-Date: 2007-06-13 15:53+0200\n"
 "Last-Translator: Luca Manzari\n"
 "Language-Team:  <en@li.org>\n"
@@ -2060,7 +2060,7 @@ msgstr ""
 "stanza (95%)"
 
 #: src/GameText.h:575
-#, fuzzy, c-format
+#, fuzzy
 msgid ""
 "Your personal highscore finish time is almost the room highscore (90%-95%)"
 msgstr ""
@@ -2068,7 +2068,7 @@ msgstr ""
 "stanza (90%-95%)"
 
 #: src/GameText.h:576
-#, fuzzy, c-format
+#, fuzzy
 msgid ""
 "Your personal highscore finish time is almost the room highscore (80%-90%)"
 msgstr ""

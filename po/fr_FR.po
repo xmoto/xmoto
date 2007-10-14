@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-10-13 18:22+0200\n"
+"POT-Creation-Date: 2007-10-14 12:08+0200\n"
 "PO-Revision-Date: 2006-09-04 19:52+0100\n"
 "Last-Translator: Nicolas Adenis-Lamarre\n"
 "Language-Team: X-Moto\n"
@@ -2004,13 +2004,11 @@ msgid "Your personal highscore finish time is almost the room highscore (95%)"
 msgstr "Votre record est presque celui du salon (95%)"
 
 #: src/GameText.h:575
-#, c-format
 msgid ""
 "Your personal highscore finish time is almost the room highscore (90%-95%)"
 msgstr "Votre record est presque celui du salon (90%-95%)"
 
 #: src/GameText.h:576
-#, c-format
 msgid ""
 "Your personal highscore finish time is almost the room highscore (80%-90%)"
 msgstr "Votre record est presque celui du salon (80%-90%)"
