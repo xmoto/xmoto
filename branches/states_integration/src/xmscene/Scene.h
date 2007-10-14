@@ -117,7 +117,7 @@ class Biker;
 		      bool i_playEvents);
 
     void playLevel();
-    void updateLevel(float fTimeStep, Replay *i_recordedReplay);
+    void updateLevel(float fTimeStep, Replay *i_recordedReplay = NULL);
     void endLevel();
 
     /* entities */

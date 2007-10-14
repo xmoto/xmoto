@@ -328,7 +328,6 @@ int main(int nNumArgs,char **ppcArgs) {
     Sprite* pSprite;
 
     /* Reset timers */
-    m_fLastFrameTime = 0.0f;
     m_fLastPerfStateTime = 0.0f;
     m_fLastPhysTime = getXMTime() - PHYS_STEP_SIZE;
     

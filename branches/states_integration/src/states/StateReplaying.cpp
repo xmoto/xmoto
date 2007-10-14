@@ -24,9 +24,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GameText.h"
 #include "xmscene/Camera.h"
 #include "xmscene/BikePlayer.h"
+#include "xmscene/Entity.h"
 #include "StateMessageBox.h"
 #include "helpers/Log.h"
 #include "XMSession.h"
+#include "PhysSettings.h"
 
 StateReplaying::StateReplaying(GameApp* pGame,
 			       const std::string& i_replay,
@@ -37,7 +39,9 @@ StateReplaying::StateReplaying(GameApp* pGame,
 	    updateStatesBehind,
 	    pGame)
 {
-  m_replay = i_replay;
+  m_replay         = i_replay;
+  m_stopToUpdate   = false;
+  m_fLastPhysTime = GameApp::getXMTime() - PHYS_STEP_SIZE;
 }
 
 StateReplaying::~StateReplaying()
@@ -162,6 +166,9 @@ void StateReplaying::enter()
     m_pGame->getStateManager()->pushState(new StateMessageBox(m_pGame, GameApp::splitText(e.getMsg(), 50), UI_MSGBOX_OK));  
   }
 
+  /* Context menu? */
+  m_pGame->getGameRenderer()->getGUI()->enableContextMenuDrawing(false); // to remove after states
+
 }
 
 void StateReplaying::leave()
@@ -181,17 +188,139 @@ void StateReplaying::leaveAfterPush()
 
 void StateReplaying::update()
 {
+  int nPhysSteps = 0;
 
+  if(m_stopToUpdate) {
+    return;
+  }
+
+  /* Following time code is made by Eric Piel, but I took the liberty to change the minimum
+     frame-miss number from 50 to 10, because it wasn't working well. */
+  
+  /* reinitialise if we can't catch up */
+  if (m_fLastPhysTime - GameApp::getXMTime() < -0.1f) {
+    m_fLastPhysTime = GameApp::getXMTime() - PHYS_STEP_SIZE;
+  }
+  
+  /* Update game until we've catched up with the real time */
+  
+  do {
+    m_pGame->getMotoGame()->updateLevel(PHYS_STEP_SIZE);
+    m_fLastPhysTime += PHYS_STEP_SIZE;
+    nPhysSteps++;
+    
+    /* don't do this infinitely, maximum miss 10 frames, then give up */
+  } while ((m_fLastPhysTime + PHYS_STEP_SIZE <= GameApp::getXMTime()) && (nPhysSteps < 10));
+  
+  m_pGame->getMotoGame()->setCurrentCamera(0);
+  m_pGame->getMotoGame()->getCamera()->setSpeedMultiplier(nPhysSteps);
+  
+  if(m_pGame->getSession()->timedemo() == false) {
+    /* Never pass this point while being ahead of time, busy wait until it's time */
+    if(nPhysSteps <= 1) {  
+      while (m_fLastPhysTime > GameApp::getXMTime());
+    }
+  }
+  
+  if(m_replayBiker->isDead() || m_replayBiker->isFinished()) {
+    m_stopToUpdate = true;
+    
+    if(m_replayBiker->isFinished()) {
+      m_pGame->getMotoGame()->setTime(m_replayBiker->finishTime());
+    }
+  }
 }
 
 void StateReplaying::render()
 {
+//    int nPhysSteps = 0;
+//        
+//    /* When did the frame start? */
+//    double fStartFrameTime = GameApp::getXMTime();                    
 
+  //    getDrawLib()->getMenuCamera()->setCamera2d(); ??
+
+  try {
+    m_pGame->getMotoGame()->setCurrentCamera(0);
+    m_pGame->getGameRenderer()->render();
+    ParticlesSource::setAllowParticleGeneration(m_pGame->getGameRenderer()->nbParticlesRendered() < NB_PARTICLES_TO_RENDER_LIMITATION);
+  } catch(Exception &e) {
+    m_pGame->getStateManager()->pushState(new StateMessageBox(m_pGame, GameApp::splitText(e.getMsg(), 50), UI_MSGBOX_OK));
+    //m_pGame->closePlaying();
+    //m_pGame->setState(GS_MENU); // to be removed, just the time states are finished
+    //m_requestForEnd = true;
+  }
+
+//    /* When did frame rendering end? */
+//    double fEndFrameTime = GameApp::getXMTime();
+//          
+//    /* Calculate how large a delay should be inserted after the frame, to keep the 
+//       desired frame rate */
+//    int nADelay = 0;    
+//          
+//	  /* become idle only if we hadn't to skip any frame, recently, and more globaly (80% of fps) */
+//    if((nPhysSteps <= 1) && (m_fFPS_Rate > (0.8f / PHYS_STEP_SIZE)))
+//      nADelay = ((m_fLastPhysTime + PHYS_STEP_SIZE) - fEndFrameTime) * 1000.0f;
+//    
+//    if(nADelay > 0) {
+//      if(m_xmsession->timedemo() == false) {
+//	setFrameDelay(nADelay);
+//      }
+//    }  
 }
 
 void StateReplaying::keyDown(int nKey, SDLMod mod,int nChar)
 {
+  switch(nKey) {
+    
+  case SDLK_ESCAPE:
+    m_pGame->closePlaying();
+    m_pGame->setState(GS_MENU); // to be removed, just the time states are finished
+    m_requestForEnd = true;
+    break;          
 
+  case SDLK_RIGHT:
+    /* Right arrow key: fast forward */
+    if(m_stopToUpdate == false) {
+      m_pGame->getMotoGame()->fastforward(1);
+    }
+    break;
+
+  case SDLK_LEFT:
+    if(m_pGame->getMotoGame()->getLevelSrc()->isScripted() == false) {
+      m_pGame->getMotoGame()->fastrewind(1);
+      m_stopToUpdate = false;
+    }
+    break;
+
+  case SDLK_F2:
+    m_pGame->switchFollowCamera();
+    break;
+    
+  case SDLK_F3:
+    m_pGame->switchLevelToFavorite(m_pGame->getMotoGame()->getLevelSrc()->Id(), true);
+    break;
+    
+  case SDLK_SPACE:
+    /* pause */
+    m_pGame->getMotoGame()->pause();
+    m_pGame->getGameRenderer()->showReplayHelp(m_pGame->getMotoGame()->getSpeed(), m_pGame->getMotoGame()->getLevelSrc()->isScripted() == false);
+    break;
+
+  case SDLK_UP:
+    /* faster */
+    m_pGame->getMotoGame()->faster();
+    m_pGame->getGameRenderer()->showReplayHelp(m_pGame->getMotoGame()->getSpeed(), m_pGame->getMotoGame()->getLevelSrc()->isScripted() == false);
+    break;
+
+  case SDLK_DOWN:
+    /* slower */
+    m_pGame->getMotoGame()->slower();
+    m_stopToUpdate = false;
+    m_pGame->getGameRenderer()->showReplayHelp(m_pGame->getMotoGame()->getSpeed(), m_pGame->getMotoGame()->getLevelSrc()->isScripted() == false);
+    break;
+
+  }
 }
 
 void StateReplaying::keyUp(int nKey,   SDLMod mod)

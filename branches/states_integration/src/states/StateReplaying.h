@@ -54,6 +54,8 @@ class StateReplaying : public GameState {
   std::string m_replay;
   ReplayBiker* m_replayBiker; /* replay watched */
   bool m_stopToUpdate;
+
+  double m_fLastPhysTime; /* When the last frama was initiated */
 };
 
 #endif

@@ -40,6 +40,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* logf(PRESTART_ANIMATION_CURVE + 1.0) = 1.386294361*/
 #define LOGF_PRE_ANIM_TIME_ADDED_ONE 1.386294361
 
+/* control the particle generation by ask the particle renders to limit themself if there are too much particles on the screen */
+#define NB_PARTICLES_TO_RENDER_LIMITATION 130
+
 class XMArguments;
 class xmDatabase;
 class XMSession;
@@ -212,6 +215,7 @@ class StateManager;
       void isTheCurrentPlayAHighscore(bool& o_personal, bool& o_room);
       void saveReplay(const std::string &Name);
       void uploadHighscore(std::string p_replayname, bool b_notify = true);
+      void switchFollowCamera();
 
       // ask the game to close as soon as possible
       void requestEnd();
@@ -249,7 +253,6 @@ class StateManager;
       bool m_bCompressReplays;                  /* true: compress replays with zlib */
 
       ReplayBiker* m_replayBiker; /* link to the replay biker in REPLAYING state */
-      bool m_stopToUpdateReplay;
       bool m_allowReplayInterpolation;
 
       InputHandler m_InputHandler;              /* The glorious input handler */
@@ -258,7 +261,6 @@ class StateManager;
       GameRenderer* m_Renderer;                  /* Renderer */
       int m_nFrame;                             /* Frame # */
        
-      double m_fLastFrameTime;                  /* When the last frama was initiated */
       double m_fLastPerfStateTime;   
       double m_fLastPhysTime;                  /* When the last physic was computed */
       double m_fStartTime;                      
@@ -558,8 +560,6 @@ class StateManager;
       void updatePlayerTag();
       
       void addLevelToFavorite(const std::string& i_levelId);
-
-      void switchFollowCamera();
 
       /* */
       void _InitWin(bool bInitGraphics);

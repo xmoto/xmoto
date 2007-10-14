@@ -49,9 +49,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define SIMULATE_SLOW_RENDERING     0 /* extra ms to add to rendering */
 #define SIMULATE_SLOW_PHYSICS       0 /* extra ms to add to physics calcs */
 
-/* control the particle generation by ask the particle renders to limit themself if there are too much particles on the screen */
-#define NB_PARTICLES_TO_RENDER_LIMITATION 130
-
   /*===========================================================================
   Draw frame
   ===========================================================================*/
@@ -99,7 +96,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       case GS_DEADMENU:
 
       case GS_DEADJUST:
-      case GS_REPLAYING:
       case GS_PREPLAYING:
       case GS_PLAYING: {
 
@@ -142,11 +138,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	    } else {
 	      nPhysSteps = _UpdateGamePlaying();            
 	    }
-          }
-          else if(m_State == GS_REPLAYING) {
-            /* When playing back a replay, no physics update is requried - instead
-               the game state is streamed out of a binary .rpl file */
-	    nPhysSteps = _UpdateGamePlaying();
           }
   
 	  if(m_State == GS_PLAYING) {
@@ -194,9 +185,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
           
 	  if (m_State == GS_DEADJUST) {
             setFrameDelay(10);
-          } else if(m_State == GS_REPLAYING && m_stopToUpdateReplay == true) {
-	    nADelay = 10;
-	  } else {
+          } else {
             /* become idle only if we hadn't to skip any frame, recently, and more globaly (80% of fps) */
             if((nPhysSteps <= 1) && (m_fFPS_Rate > (0.8f / PHYS_STEP_SIZE)))
               nADelay = ((m_fLastPhysTime + PHYS_STEP_SIZE) - fEndFrameTime) * 1000.0f;
@@ -221,17 +210,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
           }
          
           /* Context menu? */
-          if(m_State == GS_PREPLAYING || m_State == GS_PLAYING || m_State == GS_REPLAYING || !m_bEnableContextHelp)
+          if(m_State == GS_PREPLAYING || m_State == GS_PLAYING || !m_bEnableContextHelp)
             m_Renderer->getGUI()->enableContextMenuDrawing(false);
           else
             m_Renderer->getGUI()->enableContextMenuDrawing(true);
           
           /* Draw GUI */
 	  // only if it's not the autozoom camera
-	  if(m_State != GS_REPLAYING) { /* to remove after states finished */
-	    if(m_MotoGame.getCurrentCamera() != m_MotoGame.getNumberCameras()){
-	      m_Renderer->getGUI()->paint();        
-	    }
+	  if(m_MotoGame.getCurrentCamera() != m_MotoGame.getNumberCameras()){
+	    m_Renderer->getGUI()->paint();        
 	  }
         
           /* Credits? */
@@ -319,13 +306,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         //SDL_ShowCursor(SDL_ENABLE);
         break;
 
-      case GS_PREPLAYING:
-      case GS_PLAYING:
-      case GS_REPLAYING:
-        m_bShowCursor = false;
-        //SDL_ShowCursor(SDL_DISABLE);      
-        break;
-      case GS_DEADJUST:
       break;
     }
   }  
@@ -387,8 +367,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       fFPS_LastTime = fFPS_CurrentTime;
     }
     nFPS_Frames++;
-    
-    m_fLastFrameTime = m_fFrameTime; /* FIXME unsused*/
   }
   
   void GameApp::_PreUpdateMenu(void) {
@@ -432,12 +410,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
   
   int GameApp::_UpdateGamePlaying(void) {
-    if(m_State == GS_REPLAYING) {
-      if(m_stopToUpdateReplay) {
-	return 0;
-      }
-    }
-
     /* Increase frame counter */
     m_nFrame++;
 
@@ -451,7 +423,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /* Update game until we've catched up with the real time */
     int nPhysSteps = 0;
     do {
-      if(m_State == GS_PLAYING || m_State == GS_DEADJUST || m_State == GS_REPLAYING) {
+      if(m_State == GS_PLAYING || m_State == GS_DEADJUST) {
         m_MotoGame.updateLevel(PHYS_STEP_SIZE, m_pJustPlayReplay);
       }
       m_fLastPhysTime += PHYS_STEP_SIZE;
@@ -473,23 +445,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       /* Never pass this point while being ahead of time, busy wait until it's time */
       if(nPhysSteps <= 1) {  
         while (m_fLastPhysTime > getXMTime());
-      }
-    }
-
-    if(m_State == GS_REPLAYING) {
-      if(m_replayBiker->isDead() || m_replayBiker->isFinished()) {
-	m_stopToUpdateReplay = true;
-    	if(m_xmsession->benchmark()) {
-    	  double fBenchmarkTime = getXMTime() - m_fStartTime;
-    	  printf("\n");
-    	  printf(" * %d frames rendered in %.0f seconds\n",m_nFrame,fBenchmarkTime);
-    	  printf(" * Average framerate: %.1f fps\n",((double)m_nFrame) / fBenchmarkTime);
-    	  quit();
-    	}
-
-    	if(m_replayBiker->isFinished()) {
-    	  m_MotoGame.setTime(m_replayBiker->finishTime());
-	}
       }
     }
 

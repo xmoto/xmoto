@@ -309,7 +309,6 @@ GameApp::GameApp() {
   
   m_currentPlayingList = NULL;
   m_fReplayFrameRate = 25.0;
-  m_stopToUpdateReplay = false;
   m_allowReplayInterpolation = true;
 
   m_quickStartList = NULL;
@@ -397,7 +396,6 @@ GameApp::GameApp() {
 		case GS_CREDITSMODE:
 		  {
 		  /* warning, same code as in the replaying state, don't just copy and paste */
-			m_stopToUpdateReplay = false;
 			v_newMusicPlaying = "";
 			m_Renderer->setShowEngineCounter(false);
 
@@ -930,62 +928,6 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
       }
       break;
     }
-  case GS_REPLAYING:
-    switch(nKey) {
-    case SDLK_ESCAPE:
-      /* Escape quits the replay */
-      m_MotoGame.resetFollow();
-      m_MotoGame.endLevel();
-      m_Renderer->unprepareForNewLevel();
-      setState(m_StateAfterPlaying);
-      break;          
-    case SDLK_RIGHT:
-      /* Right arrow key: fast forward */
-      if(m_stopToUpdateReplay == false) {
-	m_MotoGame.fastforward(1);
-      }
-      break;
-    case SDLK_LEFT:
-      if(m_MotoGame.getLevelSrc()->isScripted() == false) {
-	m_MotoGame.fastrewind(1);
-	m_stopToUpdateReplay = false;
-      }
-      break;
-    case SDLK_F2:
-      switchFollowCamera();
-      break;
-
-    case SDLK_F3:
-      switchLevelToFavorite(m_MotoGame.getLevelSrc()->Id(), true);
-      break;
-
-    case SDLK_SPACE:
-      /* pause */
-      m_MotoGame.pause();
-
-      m_Renderer->showReplayHelp(m_MotoGame.getSpeed(),
-				 m_MotoGame.getLevelSrc()->isScripted() == false
-				 ); /* update help */
-      break;
-    case SDLK_UP:
-      /* faster */
-      m_MotoGame.faster();
-
-      m_Renderer->showReplayHelp(m_MotoGame.getSpeed(),
-				 m_MotoGame.getLevelSrc()->isScripted() == false
-				 ); /* update help */
-      break;
-    case SDLK_DOWN:
-      /* slower */
-      m_MotoGame.slower();
-      m_stopToUpdateReplay = false;
-    
-      m_Renderer->showReplayHelp(m_MotoGame.getSpeed(),
-				 m_MotoGame.getLevelSrc()->isScripted() == false
-				 ); /* update help */
-      break;
-    }
-    break;
   case GS_PREPLAYING:
     /* any key to remove the animation */
     //switch(nKey) {
@@ -1050,6 +992,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
   case GS_LEVEL_INFO_VIEWER:
   case GS_FINISHED:
   case GS_PAUSE:
+  case GS_REPLAYING:
   case GS_DEADMENU:
   case GS_EDIT_PROFILES:
     m_stateManager->keyDown(nKey, mod, nChar);
@@ -1085,6 +1028,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
       case GS_LEVEL_INFO_VIEWER:
     case GS_FINISHED:
     case GS_PAUSE:
+    case GS_REPLAYING:
     case GS_DEADMENU:
     case GS_EDIT_PROFILES:
       m_stateManager->keyUp(nKey, mod);
@@ -1114,6 +1058,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
     case GS_LEVEL_INFO_VIEWER:
     case GS_FINISHED:
     case GS_PAUSE:
+    case GS_REPLAYING:
     case GS_DEADMENU:
     case GS_EDIT_PROFILES:
       m_stateManager->mouseDoubleClick(nButton);
@@ -1156,6 +1101,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
       case GS_LEVEL_INFO_VIEWER:
       case GS_FINISHED:
       case GS_PAUSE:
+      case GS_REPLAYING:
       case GS_DEADMENU:
       case GS_EDIT_PROFILES:
       m_stateManager->mouseDown(nButton);
@@ -1192,6 +1138,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
       case GS_LEVEL_INFO_VIEWER:
       case GS_FINISHED:
       case GS_PAUSE:
+    case GS_REPLAYING:
       case GS_DEADMENU:
       case GS_EDIT_PROFILES:
       m_stateManager->mouseUp(nButton);
@@ -2026,7 +1973,6 @@ void GameApp::closePlaying() {
     m_InputHandler.configure(&m_Config);
       
     /* Default playing state */
-    m_fLastFrameTime = 0.0f;
     m_fLastPerfStateTime = 0.0f;
       
     /* We need a profile */
