@@ -46,9 +46,11 @@ class StateReplaying : public StateScene {
   virtual void mouseDoubleClick(int nButton);
   virtual void mouseUp(int nButton);
   
-  private:
+ protected:
   std::string m_replay;
   ReplayBiker* m_replayBiker; /* replay watched */
+
+  private:
   bool m_stopToUpdate;
 };
 

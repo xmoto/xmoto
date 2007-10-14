@@ -55,6 +55,7 @@ void StateReplaying::enter()
 
   m_stopToUpdate = false;
   m_pGame->getGameRenderer()->setShowEngineCounter(false);
+  m_pGame->getGameRenderer()->setShowTimePanel(true);
   m_replayBiker = NULL;
   
   try {  
@@ -118,7 +119,7 @@ void StateReplaying::enter()
 	     );
     m_pGame->getMotoGame()->setInfos(m_pGame->getMotoGame()->getLevelSrc()->Name() + " " + std::string(c_tmp));
     
-    m_pGame->getGameRenderer()->prepareForNewLevel(false);
+    m_pGame->getGameRenderer()->prepareForNewLevel();
     m_pGame->playMusic(m_pGame->getMotoGame()->getLevelSrc()->Music());
     
     /* Show help string */
@@ -188,6 +189,12 @@ void StateReplaying::update()
   
   StateScene::update();
   
+//	  static int n = 0;
+//	  n++;
+//	  if(n % 4 == 0) {
+//	    _GameScreenshot();
+//	  }
+
   if(m_replayBiker->isDead() || m_replayBiker->isFinished()) {
     m_stopToUpdate = true;
     

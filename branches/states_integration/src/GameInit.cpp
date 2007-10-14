@@ -668,9 +668,6 @@ int main(int nNumArgs,char **ppcArgs) {
     if(m_pWebRooms != NULL)
     delete m_pWebRooms;  
     
-    if(m_pCredits != NULL)
-    delete m_pCredits;
-    
     if(m_xmsession->useGraphics()) {
       m_Renderer->unprepareForNewLevel(); /* just to be sure, shutdown can happen quite hard */
       m_Renderer->shutdown();

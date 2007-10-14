@@ -143,6 +143,7 @@ class ParticlesSource;
       m_showEngineCounter = true;
       m_bTestThemeMode = false;
       m_bUglyOverMode  = false;
+      m_showTimePanel = true;
     }
     ~GameRenderer() {_Free();}
     
@@ -154,7 +155,7 @@ class ParticlesSource;
     void render(bool bIsPaused = false);
     void renderMiniMap(int x,int y,int nWidth,int nHeight);
     void renderEngineCounter(int x,int y,int nWidth,int nHeight, float pSpeed, float pLinVel = -1);
-    void prepareForNewLevel(bool bCreditsMode=false);
+    void prepareForNewLevel();
     void unprepareForNewLevel(void);
     void loadDebugInfo(std::string File);
       
@@ -189,6 +190,7 @@ class ParticlesSource;
     bool showEngineCounter() const;
     void setShowMinimap(bool i_value);
     void setShowEngineCounter(bool i_value);
+    void setShowTimePanel(bool i_value);
 
     void switchFollow();
 
@@ -209,7 +211,6 @@ class ParticlesSource;
     bool m_bUglyMode;
     bool m_bTestThemeMode;
     bool m_bUglyOverMode;
-    bool m_bCreditsMode;
 
     UIRoot m_GUI;                 /* GUI root */
       
@@ -231,6 +232,7 @@ class ParticlesSource;
 	
     bool m_showMinimap;
     bool m_showEngineCounter;
+    bool m_showTimePanel;
 
     GraphQuality m_Quality;
     bool m_bGhostMotionBlur;

@@ -395,10 +395,7 @@ class StateManager;
       bool m_bShowMiniMap;
       bool m_bRecordReplays;
       float m_fReplayFrameRate;
-      
-      /* Credits */
-      Credits *m_pCredits;         
-      
+            
       SysMessage* m_sysMsg;
 
       /* Main loop statics */

@@ -99,14 +99,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       case GS_PREPLAYING:
       case GS_PLAYING: {
 
-//	if(m_State == GS_REPLAYING) {
-//	  static int n = 0;
-//	  n++;
-//	  if(n % 4 == 0) {
-//	    _GameScreenshot();
-//	  }
-//	}
-
         /* These states all requires that the actual game graphics are rendered (i.e. inside 
            the game, not the main menu) */
         try {
@@ -221,11 +213,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	    m_Renderer->getGUI()->paint();        
 	  }
         
-          /* Credits? */
-          if(m_State == GS_REPLAYING && m_bCreditsModeActive && m_pCredits!=NULL) {
-            m_pCredits->render(m_MotoGame.getTime());
-          }
-
           break;
         }
         catch(Exception &e) {
@@ -244,7 +231,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
        m_State == GS_DEADMENU 	       ||
        m_State == GS_EDIT_PROFILES     ||
        m_State == GS_LEVEL_INFO_VIEWER ||
-       m_State == GS_REPLAYING
+       m_State == GS_REPLAYING         ||
+       m_State == GS_CREDITSMODE
        ) {
       /* draw the game states */
       m_stateManager->update();

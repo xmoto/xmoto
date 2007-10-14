@@ -21,32 +21,33 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __STATECREDITSMODE_H__
 #define __STATECREDITSMODE_H__
 
-#include "StateManager.h"
+#include "StateReplaying.h"
 
-  class StateCreditsMode : public GameState {
+class Credits;
+
+class StateCreditsMode : public StateReplaying {
   public:
-    StateCreditsMode(bool drawStateBehind,
-		     bool updateStatesBehind,
-		     GameApp* pGame);
-    virtual ~StateCreditsMode();
-
-    virtual void enter();
-    virtual void leave();
-    /* called when a new state is pushed or poped on top of the
-       current one*/
+  StateCreditsMode(GameApp* pGame, const std::string& i_replay);
+  virtual ~StateCreditsMode();
+  
+  virtual void enter();
+  virtual void leave();
+  /* called when a new state is pushed or poped on top of the
+     current one*/
     virtual void enterAfterPop();
-    virtual void leaveAfterPush();
-
-    virtual void update();
-    virtual void render();
-    /* input */
+  virtual void leaveAfterPush();
+  
+  virtual void update();
+  virtual void render();
+  /* input */
     virtual void keyDown(int nKey, SDLMod mod,int nChar);
-    virtual void keyUp(int nKey,   SDLMod mod);
-    virtual void mouseDown(int nButton);
-    virtual void mouseDoubleClick(int nButton);
-    virtual void mouseUp(int nButton);
-
+  virtual void keyUp(int nKey,   SDLMod mod);
+  virtual void mouseDown(int nButton);
+  virtual void mouseDoubleClick(int nButton);
+  virtual void mouseUp(int nButton);
+  
   private:
-  };
+  Credits* m_credits;
+};
 
 #endif

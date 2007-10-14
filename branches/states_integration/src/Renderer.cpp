@@ -69,7 +69,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   /*===========================================================================
   Called to prepare renderer for new level
   ===========================================================================*/
-  void GameRenderer::prepareForNewLevel(bool bCreditsMode) {
+  void GameRenderer::prepareForNewLevel() {
     int numberCamera = getGameObject()->getNumberCameras();
     if(numberCamera > 1){
       numberCamera++;
@@ -79,8 +79,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       getGameObject()->getCamera()->prepareForNewLevel();
     }
     
-    m_bCreditsMode = bCreditsMode;
-
     m_screenBBox.reset();
 
     m_fNextGhostInfoUpdate = 0.0f;
@@ -765,7 +763,7 @@ int GameRenderer::nbParticlesRendered() const {
 
     /* minimap + counter */
     if(pCamera->getPlayerToFollow() != NULL) {
-      if(showMinimap() && m_bCreditsMode == false) {
+      if(showMinimap()) {
 	if(pCamera->getPlayerToFollow()->getState()->Dir == DD_LEFT
 	   && showEngineCounter() == false
 	   && pGame->getNumberCameras() == 1) {
@@ -788,27 +786,23 @@ int GameRenderer::nbParticlesRendered() const {
 		
     getParent()->getDrawLib()->getMenuCamera()->setCamera2d();
 
-    if(m_bCreditsMode == false) {
+    if(m_showTimePanel) {
       renderTimePanel();
-      renderReplayHelpMessage();
-    }
-
-    if(m_bCreditsMode == false) {
-      /* And then the game messages */
-      _RenderGameMessages();            
-      
       /* If there's strawberries in the level, tell the user how many there's left */
       _RenderGameStatus();
     }
 
-    if(m_bCreditsMode == false) {
-      FontManager* v_fm = getParent()->getDrawLib()->getFontMedium();
-      FontGlyph* v_fg = v_fm->getGlyph(pGame->getInfos());
-      v_fm->printString(v_fg,
-			5,
-			getParent()->getDrawLib()->getDispHeight() - v_fg->realHeight() - 2,
-			MAKE_COLOR(255,255,255,255), true);
-    }
+    renderReplayHelpMessage();
+
+    /* And then the game messages */
+    _RenderGameMessages();            
+
+    FontManager* v_fm = getParent()->getDrawLib()->getFontMedium();
+    FontGlyph* v_fg = v_fm->getGlyph(pGame->getInfos());
+    v_fm->printString(v_fg,
+		      5,
+		      getParent()->getDrawLib()->getDispHeight() - v_fg->realHeight() - 2,
+		      MAKE_COLOR(255,255,255,255), true);
   }
 
   /*===========================================================================
@@ -1991,6 +1985,10 @@ int GameRenderer::nbParticlesRendered() const {
   bool GameRenderer::showMinimap() const {
     return m_showMinimap;
   }
+
+void GameRenderer::setShowTimePanel(bool i_value) {
+  m_showTimePanel = i_value;
+}
 
   bool GameRenderer::showEngineCounter() const {
     return m_showEngineCounter;

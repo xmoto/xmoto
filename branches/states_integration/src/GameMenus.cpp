@@ -36,6 +36,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "states/StateEditProfile.h"
 #include "states/StateLevelInfoViewer.h"
 #include "states/StateReplaying.h"
+#include "states/StateCreditsMode.h"
 
   UIFrame* GameApp::makeHelpWindow(DrawLib* i_drawLib, UIWindow* io_parent, UserConfig* i_Config) {
     UIFrame *v_pHelpWindow;
@@ -1968,9 +1969,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       pCreditsButton->setClicked(false);
       
       m_pMainMenu->showWindow(false);      
-      m_PlaySpecificReplay = "credits.rpl";
-      m_StateAfterPlaying = GS_MENU;
-      setState(GS_CREDITSMODE);      
+
+      m_stateManager->pushState(new StateCreditsMode(this, "credits.rpl"));      
     }
     
     /* PLAY */

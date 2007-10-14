@@ -250,7 +250,6 @@ GameApp::GameApp() {
   m_xmsession = new XMSession();
   m_sysMsg = NULL;
 
-  m_pCredits = NULL;
   m_bEnableMenuMusic=false;
   m_bEnableInitZoom=true;
   m_bMultiStopWhenOneFinishes=true;
@@ -393,137 +392,7 @@ GameApp::GameApp() {
 			setPrePlayAnim(true);
 		}
 			break;
-		case GS_CREDITSMODE:
-		  {
-		  /* warning, same code as in the replaying state, don't just copy and paste */
-			v_newMusicPlaying = "";
-			m_Renderer->setShowEngineCounter(false);
 
-			try {  
-				/* ghost, replay */
-				m_replayBiker = NULL;
-	  
-				m_bShowCursor = false;
-				bool bCreditsMode = (m_State == GS_CREDITSMODE);
-				m_bCreditsModeActive = bCreditsMode;
-				m_State = GS_REPLAYING;
-	  
-				int nbPlayer = 1;
-				initCameras(nbPlayer);
-
-				try {
-					m_replayBiker = m_MotoGame.addReplayFromFile(m_PlaySpecificReplay,
-										     &m_theme, m_theme.getPlayerTheme(),
-										     m_xmsession->enableEngineSound());
-					m_MotoGame.getCamera()->setPlayerToFollow(m_replayBiker);
-				} catch(Exception &e) {
-					setState(m_StateAfterPlaying);
-					notifyMsg("Unable to read the replay: " + e.getMsg());
-					return;
-				}
-
-				/* Credits mode? */
-				if(bCreditsMode) {
-					if(m_pCredits == NULL)
-						m_pCredits = new Credits;
-	    
-	    m_pCredits->init(this, m_replayBiker->getFinishTime(),4,4,
-			     std::string(GAMETEXT_CREDITS).c_str());
-	  }
-
-				/* Fine, open the level */
-				try {
-					m_MotoGame.loadLevel(m_db, m_replayBiker->levelId());
-				} catch(Exception &e) {
-					setState(m_StateAfterPlaying);
-					notifyMsg(e.getMsg());     
-					return;
-				}
-
-				if(m_MotoGame.getLevelSrc()->isXMotoTooOld()) {
-					Logger::Log("** Warning ** : level '%s' specified by replay '%s' requires newer X-Moto",m_replayBiker->levelId().c_str(),m_PlaySpecificReplay.c_str());	    
-					char cBuf[256];
-					sprintf(cBuf,GAMETEXT_NEWERXMOTOREQUIRED,
-									m_MotoGame.getLevelSrc()->getRequiredVersion().c_str());
-					m_MotoGame.endLevel();
-					setState(m_StateAfterPlaying);
-					notifyMsg(cBuf); 
-					return;
-				}
-  
-	  /* Init level */    
-	  m_InputHandler.reset();
-	  //m_InputHandler.setMirrored(m_MotoGame.getCamera()->isMirrored());
-	  m_MotoGame.prePlayLevel(&m_InputHandler, NULL, false);
-
-	  /* add the ghosts */
-	  if(m_xmsession->enableGhosts()) {
-	    try {
-	      addGhosts(&m_MotoGame, &m_theme);
-	    } catch(Exception &e) {
-	      /* anyway */
-	    }
-	  }
-
-	  /* *** */
-	  
-	  char c_tmp[1024];
-	  snprintf(c_tmp, 1024,
-		   GAMETEXT_BY_PLAYER,
-		   m_replayBiker->playerName().c_str()
-		   );
-	  m_MotoGame.setInfos(m_MotoGame.getLevelSrc()->Name() + " " + std::string(c_tmp));
-	  
-	  m_nFrame = 0;
-	  m_Renderer->prepareForNewLevel(bCreditsMode);            
-	  v_newMusicPlaying = m_MotoGame.getLevelSrc()->Music();
-	  
-	  /* Show help string */
-	  if(!drawLib->isNoGraphics()) {
-	    std::string T1 = "--:--:--",T2 = "--:--:--";
-	    
-	    /* get best result */
-	    v_result = m_db->readDB("SELECT MIN(finishTime) FROM profile_completedLevels WHERE "
-				    "id_level=\"" + 
-				    xmDatabase::protectString(m_MotoGame.getLevelSrc()->Id()) + "\";",
-				    nrow);
-	    v_res = m_db->getResult(v_result, 1, 0, 0);
-	    if(v_res != NULL) {
-	      T1 = formatTime(atof(v_res));
-	    }
-	    m_db->read_DB_free(v_result);
-	    
-	    /* get best player result */
-	    v_result = m_db->readDB("SELECT MIN(finishTime) FROM profile_completedLevels WHERE "
-				    "id_level=\"" + 
-				    xmDatabase::protectString(m_MotoGame.getLevelSrc()->Id()) + "\" " + 
-				    "AND id_profile=\"" + xmDatabase::protectString(m_xmsession->profile())  + "\";",
-				    nrow);
-	    v_res = m_db->getResult(v_result, 1, 0, 0);
-	    if(v_res != NULL) {
-	      T2 = formatTime(atof(v_res));
-	    }
-	    m_db->read_DB_free(v_result);
-	    
-	    m_Renderer->setBestTime(T1 + std::string(" / ") + T2);
-	    m_Renderer->showReplayHelp(m_MotoGame.getSpeed(),
-				      m_MotoGame.getLevelSrc()->isScripted() == false);
-	    
-	    if(m_xmsession->benchmark() || bCreditsMode) m_Renderer->setBestTime("");
-	    
-	    /* World-record stuff */
-	    if(!bCreditsMode)
-	      m_Renderer->setWorldRecordTime(getWorldRecord(m_MotoGame.getLevelSrc()->Id()));
-	  }
-	  m_fStartTime = getXMTime();
-	  
-			} catch(Exception &e) {
-			  m_MotoGame.endLevel();
-			  setState(m_StateAfterPlaying);
-				notifyMsg(splitText(e.getMsg(), 50));   
-			}
-			break;
-		}
     case GS_MENU: {
       m_pMainMenu->enableChildren(true);
       m_pMainMenu->enableWindow(true);
@@ -541,6 +410,7 @@ GameApp::GameApp() {
 			break;
 		}
 		case GS_PREPLAYING: {
+		  m_Renderer->setShowTimePanel(false);
 			/* because statePrestart_init() can call setState */
 			if(m_bEnableMenuMusic && Sound::isEnabled()) {
 				Sound::stopMusic();
@@ -552,6 +422,7 @@ GameApp::GameApp() {
 		}
 		case GS_PLAYING: {
 			m_Renderer->setShowEngineCounter(m_Config.getBool("ShowEngineCounter"));
+			m_Renderer->setShowTimePanel(true);
 			v_newMusicPlaying = "";
 
 			m_bAutoZoomInitialized = false;
@@ -993,6 +864,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
   case GS_FINISHED:
   case GS_PAUSE:
   case GS_REPLAYING:
+  case GS_CREDITSMODE:
   case GS_DEADMENU:
   case GS_EDIT_PROFILES:
     m_stateManager->keyDown(nKey, mod, nChar);
@@ -1029,6 +901,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
     case GS_FINISHED:
     case GS_PAUSE:
     case GS_REPLAYING:
+    case GS_CREDITSMODE:
     case GS_DEADMENU:
     case GS_EDIT_PROFILES:
       m_stateManager->keyUp(nKey, mod);
@@ -1059,6 +932,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
     case GS_FINISHED:
     case GS_PAUSE:
     case GS_REPLAYING:
+    case GS_CREDITSMODE:
     case GS_DEADMENU:
     case GS_EDIT_PROFILES:
       m_stateManager->mouseDoubleClick(nButton);
@@ -1102,6 +976,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
       case GS_FINISHED:
       case GS_PAUSE:
       case GS_REPLAYING:
+      case GS_CREDITSMODE:
       case GS_DEADMENU:
       case GS_EDIT_PROFILES:
       m_stateManager->mouseDown(nButton);
@@ -1138,7 +1013,8 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
       case GS_LEVEL_INFO_VIEWER:
       case GS_FINISHED:
       case GS_PAUSE:
-    case GS_REPLAYING:
+      case GS_REPLAYING:
+      case GS_CREDITSMODE:
       case GS_DEADMENU:
       case GS_EDIT_PROFILES:
       m_stateManager->mouseUp(nButton);
