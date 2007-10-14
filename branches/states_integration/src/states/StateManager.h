@@ -77,7 +77,7 @@ class GameApp;
 
   class StateManager {
   public:
-    StateManager();
+    StateManager(GameApp* pGame);
     ~StateManager();
 
     void pushState(GameState* pNewState);
@@ -107,6 +107,14 @@ class GameApp;
     void calculateWhichStateIsRendered();
 
     std::vector<GameState*> m_statesStack;
+    float m_fLastRenderingTime;
+
+    /* fps */
+    float m_fLastFpsTime;
+    int   m_currentFps;
+    int   m_fpsNbFrame;
+
+    GameApp* m_pGame;
   };
 
 #endif

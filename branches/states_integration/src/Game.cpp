@@ -315,7 +315,7 @@ GameApp::GameApp() {
 
   m_db = NULL;
 
-  m_stateManager = new StateManager();
+  m_stateManager = new StateManager(this);
 }
     
   std::string GameApp::splitText(const std::string &str, int p_breakLineLength) {

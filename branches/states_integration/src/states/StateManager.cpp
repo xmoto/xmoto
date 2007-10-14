@@ -25,20 +25,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateDeadMenu.h"
 #include "StateMessageBox.h"
 #include "StateLevelInfoViewer.h"
+#include "Game.h"
+#include "XMSession.h"
 
-  /*
-TODO of the states
-
-MENU : une classe mère aux menus
-
-PAUSE : gérer le voulez vous quitter yes/no
-FINISHED : gérer le voulez vous quitter yes/no ET sauvegarde du replay
-DEADMENU : gérer le voulez vous quitter yes/no ET sauvegarde du replay
-
-  */
-
-StateManager::StateManager()
+StateManager::StateManager(GameApp* pGame)
 {
+  m_pGame = pGame;
+  m_fLastRenderingTime = -1.0;
+
+  m_fLastFpsTime = -1.0;
+  m_currentFps   = 0;
+  m_fpsNbFrame   = 0;
 }
 
 StateManager::~StateManager()
@@ -115,10 +112,30 @@ void StateManager::update()
     
     stateIterator++;
   }
+
+  /* update fps */
+  if(m_fLastFpsTime + 1.0 < GameApp::getXMTime()) {
+    m_currentFps   = m_fpsNbFrame;
+    m_fLastFpsTime = GameApp::getXMTime();
+    m_fpsNbFrame   = 0;
+    printf("Fps = %i\n", m_currentFps);
+  }
+
+  /* pausing */
+  //nADelay = (int) ((fAllowedOneRunTime - fOneRunTime) * 100.0);
+  //if(nADelay > 0 && m_pGame->getSession()->timedemo() == false) {
+  //SDL_Delay(nADelay);
+  //}
 }
 
 void StateManager::render()
 {
+  int nADelay = 0;
+  int nHz = 50;
+
+  float fOneRunTime = GameApp::getXMTime() - m_fLastRenderingTime;
+  float fAllowedOneRunTime = 1.0 / ((double)nHz);
+
   /* we have to draw states from the bottom of the stack to the top */
   std::vector<GameState*>::iterator stateIterator = m_statesStack.begin();
 
@@ -128,6 +145,9 @@ void StateManager::render()
     
     stateIterator++;
   }
+
+  m_fLastRenderingTime = GameApp::getXMTime();
+  m_fpsNbFrame++;
 }
 
 void StateManager::keyDown(int nKey, SDLMod mod,int nChar)

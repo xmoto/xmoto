@@ -18,38 +18,34 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __STATEREPLAYING_H__
-#define __STATEREPLAYING_H__
+#ifndef __STATESCENE_H__
+#define __STATESCENE_H__
 
-#include "StateScene.h"
+#include "StateManager.h"
 
-class ReplayBiker;
-
-class StateReplaying : public StateScene {
-  public:
-  StateReplaying(GameApp* pGame, const std::string& i_replay);
-  virtual ~StateReplaying();
-  
-  virtual void enter();
-  virtual void leave();
-  /* called when a new state is pushed or poped on top of the
-     current one*/
-  virtual void enterAfterPop();
-  virtual void leaveAfterPush();
-  
-  virtual void update();
-  virtual void render();
-  /* input */
-  virtual void keyDown(int nKey, SDLMod mod,int nChar);
-  virtual void keyUp(int nKey,   SDLMod mod);
-  virtual void mouseDown(int nButton);
-  virtual void mouseDoubleClick(int nButton);
-  virtual void mouseUp(int nButton);
-  
-  private:
-  std::string m_replay;
-  ReplayBiker* m_replayBiker; /* replay watched */
-  bool m_stopToUpdate;
+class StateScene : public GameState {
+ public:
+ StateScene(GameApp* pGame);
+ virtual ~StateScene();
+ 
+ virtual void enter();
+ virtual void leave();
+ /* called when a new state is pushed or poped on top of the
+    current one*/
+ virtual void enterAfterPop();
+ virtual void leaveAfterPush();
+ 
+ virtual void update();
+ virtual void render();
+ /* input */
+ virtual void keyDown(int nKey, SDLMod mod,int nChar);
+ virtual void keyUp(int nKey,   SDLMod mod);
+ virtual void mouseDown(int nButton);
+ virtual void mouseDoubleClick(int nButton);
+ virtual void mouseUp(int nButton);
+ 
+ private:
+ double m_fLastPhysTime; /* When the last frama was initiated */
 };
 
 #endif

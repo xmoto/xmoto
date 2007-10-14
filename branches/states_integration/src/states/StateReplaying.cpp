@@ -22,31 +22,23 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Game.h"
 #include "drawlib/DrawLib.h"
 #include "GameText.h"
-#include "xmscene/Camera.h"
 #include "xmscene/BikePlayer.h"
-#include "xmscene/Entity.h"
-#include "StateMessageBox.h"
 #include "helpers/Log.h"
 #include "XMSession.h"
-#include "PhysSettings.h"
+#include "xmscene/Camera.h"
+#include "StateMessageBox.h"
 
 StateReplaying::StateReplaying(GameApp* pGame,
-			       const std::string& i_replay,
-			       bool drawStateBehind,
-			       bool updateStatesBehind
+			       const std::string& i_replay
 			       ) :
-  GameState(drawStateBehind,
-	    updateStatesBehind,
-	    pGame)
+  StateScene(pGame)
 {
   m_replay         = i_replay;
   m_stopToUpdate   = false;
-  m_fLastPhysTime = GameApp::getXMTime() - PHYS_STEP_SIZE;
 }
 
 StateReplaying::~StateReplaying()
 {
-
 }
 
 
@@ -188,39 +180,11 @@ void StateReplaying::leaveAfterPush()
 
 void StateReplaying::update()
 {
-  int nPhysSteps = 0;
-
-  if(m_stopToUpdate) {
+  if(m_stopToUpdate) { /* pause */
     return;
   }
-
-  /* Following time code is made by Eric Piel, but I took the liberty to change the minimum
-     frame-miss number from 50 to 10, because it wasn't working well. */
   
-  /* reinitialise if we can't catch up */
-  if (m_fLastPhysTime - GameApp::getXMTime() < -0.1f) {
-    m_fLastPhysTime = GameApp::getXMTime() - PHYS_STEP_SIZE;
-  }
-  
-  /* Update game until we've catched up with the real time */
-  
-  do {
-    m_pGame->getMotoGame()->updateLevel(PHYS_STEP_SIZE);
-    m_fLastPhysTime += PHYS_STEP_SIZE;
-    nPhysSteps++;
-    
-    /* don't do this infinitely, maximum miss 10 frames, then give up */
-  } while ((m_fLastPhysTime + PHYS_STEP_SIZE <= GameApp::getXMTime()) && (nPhysSteps < 10));
-  
-  m_pGame->getMotoGame()->setCurrentCamera(0);
-  m_pGame->getMotoGame()->getCamera()->setSpeedMultiplier(nPhysSteps);
-  
-  if(m_pGame->getSession()->timedemo() == false) {
-    /* Never pass this point while being ahead of time, busy wait until it's time */
-    if(nPhysSteps <= 1) {  
-      while (m_fLastPhysTime > GameApp::getXMTime());
-    }
-  }
+  StateScene::update();
   
   if(m_replayBiker->isDead() || m_replayBiker->isFinished()) {
     m_stopToUpdate = true;
@@ -233,40 +197,10 @@ void StateReplaying::update()
 
 void StateReplaying::render()
 {
-//    int nPhysSteps = 0;
-//        
-//    /* When did the frame start? */
-//    double fStartFrameTime = GameApp::getXMTime();                    
-
-  //    getDrawLib()->getMenuCamera()->setCamera2d(); ??
-
-  try {
-    m_pGame->getMotoGame()->setCurrentCamera(0);
-    m_pGame->getGameRenderer()->render();
-    ParticlesSource::setAllowParticleGeneration(m_pGame->getGameRenderer()->nbParticlesRendered() < NB_PARTICLES_TO_RENDER_LIMITATION);
-  } catch(Exception &e) {
-    m_pGame->getStateManager()->pushState(new StateMessageBox(m_pGame, GameApp::splitText(e.getMsg(), 50), UI_MSGBOX_OK));
-    //m_pGame->closePlaying();
-    //m_pGame->setState(GS_MENU); // to be removed, just the time states are finished
-    //m_requestForEnd = true;
-  }
-
-//    /* When did frame rendering end? */
-//    double fEndFrameTime = GameApp::getXMTime();
-//          
-//    /* Calculate how large a delay should be inserted after the frame, to keep the 
-//       desired frame rate */
-//    int nADelay = 0;    
-//          
-//	  /* become idle only if we hadn't to skip any frame, recently, and more globaly (80% of fps) */
-//    if((nPhysSteps <= 1) && (m_fFPS_Rate > (0.8f / PHYS_STEP_SIZE)))
-//      nADelay = ((m_fLastPhysTime + PHYS_STEP_SIZE) - fEndFrameTime) * 1000.0f;
-//    
-//    if(nADelay > 0) {
-//      if(m_xmsession->timedemo() == false) {
-//	setFrameDelay(nADelay);
-//      }
-//    }  
+  for(unsigned int i=0; i<m_pGame->getMotoGame()->Cameras().size(); i++) {
+    m_pGame->getMotoGame()->Cameras()[i]->setSpeedMultiplier(10.0); // tell to the camera the nPhysSteps
+  }  
+  StateScene::render();
 }
 
 void StateReplaying::keyDown(int nKey, SDLMod mod,int nChar)
