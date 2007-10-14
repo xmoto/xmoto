@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: X-Moto\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-10-14 12:08+0200\n"
-"PO-Revision-Date: 2007-08-27 18:20-0300\n"
+"PO-Revision-Date: 2007-10-14 18:11-0300\n"
 "Last-Translator: Lucas Hermann Negri <kkndrox@gmail.com>\n"
 "Language-Team: Portuguese/Brazil\n"
 "MIME-Version: 1.0\n"
@@ -610,22 +610,20 @@ msgid "Restart the level"
 msgstr "Reinicia o nível"
 
 #: src/GameText.h:212
-#, fuzzy
 msgid "Previous/Next level"
-msgstr "Níveis mais difíceis"
+msgstr "Nível anterior/próximo"
 
 #: src/GameText.h:213
-#, fuzzy
 msgid "Add/remove to favorite levels"
-msgstr "Adicionar o nível para a lista de níveis favoritos"
+msgstr "Adicionar/remover o nível da lista de favoritos"
 
 #: src/GameText.h:214
 msgid "Enable/disable web"
-msgstr ""
+msgstr "Habilitar/desabilitar web"
 
 #: src/GameText.h:215
 msgid "Enable/disable ugly mode"
-msgstr ""
+msgstr "Habilitar/disabilitar o modo feio"
 
 #: src/GameText.h:216
 msgid "Reload levels, themes and replays from directories"
@@ -653,7 +651,7 @@ msgstr ""
 
 #: src/GameText.h:222
 msgid "Hide ghosts"
-msgstr ""
+msgstr "Esconder fantasmas"
 
 #: src/GameText.h:223
 msgid "High"
@@ -716,14 +714,12 @@ msgid "Level"
 msgstr "Nível"
 
 #: src/GameText.h:238
-#, fuzzy
 msgid "Added to favorites"
-msgstr "Adicionar aos favoritos"
+msgstr "Adicionado aos favoritos"
 
 #: src/GameText.h:239
-#, fuzzy
 msgid "Deleted from favorites"
-msgstr "Apagar dos favoritos"
+msgstr "Apagado dos favoritos"
 
 #: src/GameText.h:240
 msgid "Level Info..."
@@ -1054,9 +1050,9 @@ msgid "The replay can't be played!"
 msgstr "O replay não pode ser mostrado!"
 
 #: src/GameText.h:326
-#, fuzzy, c-format
+#, c-format
 msgid "Replay of %s"
-msgstr "Replays"
+msgstr "Replay de %s"
 
 #: src/GameText.h:327
 msgid "Replays"
@@ -1840,9 +1836,8 @@ msgstr ""
 "estiver jogando"
 
 #: src/GameText.h:524
-#, fuzzy
 msgid "Don't show the ghosts while playing"
-msgstr "Mostrar o velocímetro quando estiver jogando"
+msgstr "Não mostrar fantasmas quando estiver jogando"
 
 #: src/GameText.h:526
 msgid "Levels with no highscore"
@@ -1877,7 +1872,6 @@ msgid "Easiest levels"
 msgstr "Níveis mais simples"
 
 #: src/GameText.h:535
-#, fuzzy
 msgid "Crappiest levels"
 msgstr "Piores níveis"
 
@@ -1942,9 +1936,8 @@ msgid "My levels"
 msgstr "Meus níveis"
 
 #: src/GameText.h:552
-#, fuzzy
 msgid "Crappy levels"
-msgstr "Piores níveis"
+msgstr "Níveis ruins"
 
 #: src/GameText.h:554
 msgid "Levels with no highscore in your room"
@@ -1979,7 +1972,6 @@ msgid "Easiest X-Moto levels according to the web votes"
 msgstr "Níveis mais simples do X-Moto de acordo com votos da web"
 
 #: src/GameText.h:563
-#, fuzzy
 msgid "Crappiest X-Moto levels according to the web votes"
 msgstr "Piores níveis do X-Moto de acordo com votos da web"
 
@@ -2058,7 +2050,7 @@ msgstr ""
 
 #: src/GameText.h:581
 msgid "Levels marked 'crappy' are hidden in all other packs"
-msgstr ""
+msgstr "Níveis marcados como 'ruins' são escondidos nos outros pacotes"
 
 #: src/GameText.h:583
 msgid "Ugly mode enabled"
@@ -2401,11 +2393,3 @@ msgid ""
 msgstr ""
 "Agora para o desafio final... Não é tão longo, porém\n"
 "tem ainda menos espaço para a sua preciosa cabeça. Boa sorte! :)"
-
-#, fuzzy
-#~ msgid "Added to the favorite"
-#~ msgstr "Adicionar aos favoritos"
-
-#, fuzzy
-#~ msgid "Delete from the favorite"
-#~ msgstr "Apagar dos favoritos"
