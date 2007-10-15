@@ -2369,7 +2369,7 @@ msgstr ""
 
 #: src/LevelsText.h:65
 msgid "Not that difficult, right?"
-msgstr "Not soo schwierig, nicht wahr?"
+msgstr "Nicht soo schwierig, nicht wahr?"
 
 #: src/LevelsText.h:66
 msgid "Nice! Now try the next one, it's a bit more difficult..."
