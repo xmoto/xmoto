@@ -31,10 +31,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 StateManager::StateManager(GameApp* pGame)
 {
   m_pGame = pGame;
-  m_fLastRenderingTime = -1.0;
-  m_fLastUpdateTime    = -1.0;
-
-  m_fLastFpsTime = -1.0;
 
   m_currentRenderFps = 0;
   m_currentUpdateFps = 0;
@@ -114,18 +110,13 @@ GameState* StateManager::replaceState(GameState* pNewState)
 
 void StateManager::update()
 {
-  float fOneRunTime        = GameApp::getXMTime() - m_fLastUpdateTime;
-  float fAllowedOneRunTime = 1.0 / ((double)m_maxUpdateFps);
-
-  if(fOneRunTime < fAllowedOneRunTime) {
-    return;
-  }
-  m_fLastUpdateTime = GameApp::getXMTime();
-
+  bool oneUpdate = false;
   std::vector<GameState*>::reverse_iterator stateIterator = m_statesStack.rbegin();
 
   while(stateIterator != m_statesStack.rend()){
-    (*stateIterator)->update();
+    if((*stateIterator)->update() == true){
+      oneUpdate = true;
+    }
 
     if((*stateIterator)->updateStatesBehind() == false)
       break;
@@ -133,40 +124,39 @@ void StateManager::update()
     stateIterator++;
   }
 
-  m_updateFpsNbFrame++;
+  if(oneUpdate == true){
+    m_updateFpsNbFrame++;
+  }
 
   /* update fps */
-  if(m_fLastFpsTime + 1.0 < GameApp::getXMTime()) {
+  if(m_lastFpsTime + 1000 < GameApp::getXMTimeInt()) {
     m_currentRenderFps = m_renderFpsNbFrame;
     m_currentUpdateFps = m_updateFpsNbFrame;
-    m_fLastFpsTime     = GameApp::getXMTime();
     m_renderFpsNbFrame = 0;
     m_updateFpsNbFrame = 0;
+    m_lastFpsTime += 1000;
   }
 }
 
 void StateManager::render()
 {
-  float fOneRunTime        = GameApp::getXMTime() - m_fLastRenderingTime;
-  float fAllowedOneRunTime = 1.0 / ((double)m_maxRenderFps);
-
-  /* don't exceed the fps limitation */
-  if(fOneRunTime < fAllowedOneRunTime) {
-    return;
-  }
-  m_fLastRenderingTime = GameApp::getXMTime();
-
+  bool oneRender = false;
   /* we have to draw states from the bottom of the stack to the top */
   std::vector<GameState*>::iterator stateIterator = m_statesStack.begin();
 
   while(stateIterator != m_statesStack.end()){
-    if((*stateIterator)->isHide() == false)
-      (*stateIterator)->render();
+    if((*stateIterator)->isHide() == false){
+      if((*stateIterator)->render() == true){
+	oneRender = true;
+      }
+    }
     
     stateIterator++;
   }
 
-  m_renderFpsNbFrame++;
+  if(oneRender == true){
+    m_renderFpsNbFrame++;
+  }
 }
 
 void StateManager::keyDown(int nKey, SDLMod mod,int nChar)
@@ -219,6 +209,7 @@ void StateManager::calculateWhichStateIsRendered()
 
 void StateManager::calculateFps()
 {
+  // while every states are not done, we can't initialize with zero
   int maxUpdateFps = 50;
   int maxRenderFps = 50;
 
@@ -244,6 +235,17 @@ void StateManager::calculateFps()
   m_maxUpdateFps = maxUpdateFps;
   m_maxRenderFps = maxRenderFps;
   m_maxFps = (m_maxUpdateFps > m_maxRenderFps) ? m_maxUpdateFps : m_maxRenderFps;
+
+  Logger::Log("UpdateFps: %d RenderFps: %d Max: %d",
+	      m_maxUpdateFps,
+	      m_maxRenderFps,
+	      m_maxFps);
+
+  stateIterator = m_statesStack.begin();
+  while(stateIterator != m_statesStack.end()){
+    (*stateIterator)->setMaxFps(m_maxFps);
+    stateIterator++;
+  }
 }
 
 void StateManager::cleanStates() {
@@ -271,11 +273,15 @@ GameState::GameState(bool drawStateBehind,
   m_updateStatesBehind = updateStatesBehind;
   m_pGame              = pGame;
   m_requestForEnd      = false;
+
   // default rendering and update fps
   m_updateFps          = 50;
   m_renderFps          = 50;
 
-  m_fLastUpdateTime = m_fLastRenderingTime = GameApp::getXMTime();
+  m_maxFps = m_updatePeriod = m_renderPeriod = 0;
+
+  m_updateCounter      = 0;
+  m_renderCounter      = 0;
 }
 
 GameState::~GameState() {
@@ -283,30 +289,22 @@ GameState::~GameState() {
 
 bool GameState::doUpdate()
 {
-  float currentTime        = GameApp::getXMTime();
-  float fOneRunTime        = currentTime - m_fLastUpdateTime;
-  float fAllowedOneRunTime = 1.0 / ((double)m_updateFps);
+  m_updateCounter += 1.0;
 
-  /* don't exceed the fps limitation */
-  if(fOneRunTime < fAllowedOneRunTime) {
-    return false;
+  if(m_updateCounter >= m_updatePeriod){
+    m_updateCounter -= m_updatePeriod;
+    return true;
   }
-  m_fLastUpdateTime = currentTime;
-
-  return true;  
+  return false;
 }
 
 bool GameState::doRender()
 {
-  float currentTime        = GameApp::getXMTime();
-  float fOneRunTime        = currentTime - m_fLastRenderingTime;
-  float fAllowedOneRunTime = 1.0 / ((double)m_renderFps);
+  m_renderCounter += 1.0;
 
-  /* don't exceed the fps limitation */
-  if(fOneRunTime < fAllowedOneRunTime) {
-    return false;
+  if(m_renderCounter >= m_renderPeriod){
+    m_renderCounter -= m_renderPeriod;
+    return true;
   }
-  m_fLastRenderingTime = currentTime;
-
-  return true;
+  return false;
 }

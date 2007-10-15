@@ -74,6 +74,12 @@ class GameApp;
       return m_renderFps;
     }
 
+    void setMaxFps(int maxFps){
+      m_maxFps = maxFps;
+      m_updatePeriod = (float)m_maxFps / (float)m_updateFps;
+      m_renderPeriod = (float)m_maxFps / (float)m_renderFps;
+    }
+
   protected:
     bool doUpdate();
     bool doRender();
@@ -82,11 +88,15 @@ class GameApp;
     GameApp* m_pGame;
 
     // the desired fps for updating and rendering the state
-    int      m_updateFps;
-    int      m_renderFps;
-    // the last time when an update/render was done
-    float    m_fLastUpdateTime;
-    float    m_fLastRenderingTime;
+    int m_updateFps;
+    int m_renderFps;
+    int m_maxFps;
+    // how many max fps beat for one update/render
+    float m_updatePeriod;
+    float m_renderPeriod;
+    // current beat counters
+    float m_updateCounter;
+    float m_renderCounter;
 
   private:
     bool     m_isHide;
@@ -134,26 +144,22 @@ class GameApp;
 
     std::vector<GameState*> m_statesStack;
 
-    // time at the begining of the last frame rendered/updated
-    float m_fLastRenderingTime;
-    float m_fLastUpdateTime;
-
     // last time the m_current*Fps have been filled
-    float m_fLastFpsTime;
+    int m_lastFpsTime;
 
     // contains the number of frame during the last second
-    int   m_currentRenderFps;
-    int   m_currentUpdateFps;
+    int m_currentRenderFps;
+    int m_currentUpdateFps;
 
     // counting the number of frame for the current second
-    int   m_renderFpsNbFrame;
-    int   m_updateFpsNbFrame;
+    int m_renderFpsNbFrame;
+    int m_updateFpsNbFrame;
 
     // the hz at which the state manager runs
     // (the highest from the states)
-    int   m_maxUpdateFps;
-    int   m_maxRenderFps;
-    int   m_maxFps;
+    int m_maxUpdateFps;
+    int m_maxRenderFps;
+    int m_maxFps;
 
     GameApp* m_pGame;
   };

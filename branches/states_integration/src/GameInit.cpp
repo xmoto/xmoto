@@ -270,27 +270,51 @@ int main(int nNumArgs,char **ppcArgs) {
         /* Swap buffers */
        drawLib->flushGraphics();
 
-       if(m_lastFrameTimeStamp < 0.0){
-	 m_lastFrameTimeStamp = getXMTime();
-       }
+       _Wait();
 
-       /* Does app want us to delay a bit after the frame? */
-       float currentTimeStamp = getXMTime();
-       float currentFrameMinDuration = 1.0/((float)m_stateManager->getMaxFps());
-       float lastFrameDuration = currentTimeStamp - m_lastFrameTimeStamp;
-       float delta = currentFrameMinDuration - lastFrameDuration;
-       
-       if(delta > 0.0){
-	 delta *= 1000.0f;
-	 SDL_Delay((int)(delta));
-       }
-       m_lastFrameTimeStamp = getXMTime();
       }
     }
     
     /* Shutdown */
     _Uninit();
   }
+
+void GameApp::_Wait()
+{
+  if(m_lastFrameTimeStamp < 0){
+    m_lastFrameTimeStamp = getXMTimeInt();
+  }
+
+  /* Does app want us to delay a bit after the frame? */
+  int currentTimeStamp        = getXMTimeInt();
+  int currentFrameMinDuration = 1000/m_stateManager->getMaxFps();
+  int lastFrameDuration       = currentTimeStamp - m_lastFrameTimeStamp;
+  // late from the lasts frame is not forget
+  int delta = currentFrameMinDuration - (lastFrameDuration + m_frameLate);
+
+  if(delta > 0){
+    // we're in advance
+    // -> sleep
+    int beforeSleep = getXMTimeInt();
+    SDL_Delay(delta);
+    int afterSleep  = getXMTimeInt();
+    int sleepTime   = afterSleep - beforeSleep;
+
+    // now that we have sleep, see if we don't have too much sleep
+    if(sleepTime > delta){
+      int tooMuchSleep = sleepTime - delta;
+      m_frameLate      = tooMuchSleep;
+    }
+  }
+  else{
+    // we're late
+    // -> update late time
+    m_frameLate = (-delta);
+  }
+
+  // the sleeping time is not included in the next frame time
+  m_lastFrameTimeStamp = getXMTimeInt();
+}
 
 
   /*===========================================================================

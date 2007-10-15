@@ -78,7 +78,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   double GameApp::getXMTime(void) {
     return SDL_GetTicks() / 1000.0f;
   }
-  
+
+  int GameApp::getXMTimeInt(void){
+    return SDL_GetTicks();
+  }
+
   std::string GameApp::formatTime(float fSecs) {
     char cBuf[256];
     int nM, nS, nH;
@@ -311,8 +315,9 @@ GameApp::GameApp() {
 
   m_db = NULL;
 
-  m_stateManager = new StateManager(this);
-  m_lastFrameTimeStamp = -1.0;
+  m_stateManager       = new StateManager(this);
+  m_lastFrameTimeStamp = -1;
+  m_frameLate          = 0;
 }
     
   std::string GameApp::splitText(const std::string &str, int p_breakLineLength) {

@@ -161,6 +161,7 @@ class StateManager;
 
       /* */
       static double getXMTime(void);
+      static int    getXMTimeInt(void);
       static std::string getTimeStamp(void);
       void quit(void);
       static std::string formatTime(float fSecs);
@@ -417,9 +418,11 @@ class StateManager;
       bool m_bQuit;		/* Quit flag */
 
       // calculate sleeping time
-      float m_lastFrameTimeStamp;
+      int m_lastFrameTimeStamp;
+      int m_frameLate;
 
       /* Helpers */
+      void _Wait();
       void _HandleMainMenu(void);  
       void _HandleJustDeadMenu(void);
       void _HandleWebConfEditor(void);

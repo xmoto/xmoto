@@ -35,6 +35,8 @@ StateReplaying::StateReplaying(GameApp* pGame,
 {
   m_replay         = i_replay;
   m_stopToUpdate   = false;
+  m_updateFps = 100;
+  m_renderFps = 50;
 }
 
 StateReplaying::~StateReplaying()
