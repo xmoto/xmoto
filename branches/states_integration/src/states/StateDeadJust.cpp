@@ -56,12 +56,12 @@ void StateDeadJust::leaveAfterPush()
 
 }
 
-void StateDeadJust::update()
+bool StateDeadJust::update()
 {
 
 }
 
-void StateDeadJust::render()
+bool StateDeadJust::render()
 {
 
 }

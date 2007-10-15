@@ -126,14 +126,14 @@ void StateDeadMenu::checkEvents() {
 
 }
 
-void StateDeadMenu::update()
+bool StateDeadMenu::update()
 {
-  StateMenu::update();
+  return StateMenu::update();
 }
 
-void StateDeadMenu::render()
+bool StateDeadMenu::render()
 {
-  StateMenu::render();
+  return StateMenu::render();
 }
 
 void StateDeadMenu::keyDown(int nKey, SDLMod mod,int nChar)

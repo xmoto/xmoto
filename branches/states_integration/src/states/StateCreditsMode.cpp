@@ -60,15 +60,18 @@ void StateCreditsMode::leaveAfterPush()
   StateReplaying::leaveAfterPush();
 }
 
-void StateCreditsMode::update()
+bool StateCreditsMode::update()
 {
-  StateReplaying::update();
+  return StateReplaying::update();
 }
 
-void StateCreditsMode::render()
+bool StateCreditsMode::render()
 {
-  StateReplaying::render();
+  if(StateReplaying::render() == false){
+    return false;
+  }
   m_credits->render(m_pGame->getMotoGame()->getTime());
+  return true;
 }
 
 void StateCreditsMode::keyDown(int nKey, SDLMod mod,int nChar)

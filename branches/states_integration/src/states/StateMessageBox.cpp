@@ -82,14 +82,14 @@ void StateMessageBox::checkEvents() {
   m_requestForEnd = true;
 }
 
-void StateMessageBox::update()
+bool StateMessageBox::update()
 {
-  StateMenu::update();
+  return StateMenu::update();
 }
 
-void StateMessageBox::render()
+bool StateMessageBox::render()
 {
-  StateMenu::render();
+  return StateMenu::render();
 }
 
 void StateMessageBox::keyDown(int nKey, SDLMod mod,int nChar)

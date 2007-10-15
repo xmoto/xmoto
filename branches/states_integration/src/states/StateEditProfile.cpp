@@ -189,14 +189,14 @@ void StateEditProfile::checkEvents() {
 // 
 }
 
-void StateEditProfile::update()
+bool StateEditProfile::update()
 {
-  StateMenu::update();
+  return StateMenu::update();
 }
 
-void StateEditProfile::render()
+bool StateEditProfile::render()
 {
-  StateMenu::render();
+  return StateMenu::render();
 }
 
 void StateEditProfile::keyDown(int nKey, SDLMod mod,int nChar)

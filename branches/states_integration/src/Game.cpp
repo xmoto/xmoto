@@ -239,11 +239,7 @@ GameApp::~GameApp() {
 
 GameApp::GameApp() {
   m_bQuit = false;
-  m_fAppTime = 0.0f;
   m_UserNotify = "";
-  m_fFramesPerSecond = 25.0f;
-  m_fNextFrame = 0.0f;
-  m_nFrameDelay = 0;
   drawLib = NULL;
   m_Renderer = NULL;
   
@@ -315,6 +311,7 @@ GameApp::GameApp() {
   m_db = NULL;
 
   m_stateManager = new StateManager(this);
+  m_lastFrameTimeStamp = -1.0;
 }
     
   std::string GameApp::splitText(const std::string &str, int p_breakLineLength) {

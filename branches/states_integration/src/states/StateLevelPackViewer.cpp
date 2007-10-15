@@ -56,14 +56,14 @@ void StateLevelPackViewer::leaveAfterPush()
 
 }
 
-void StateLevelPackViewer::update()
+bool StateLevelPackViewer::update()
 {
-
+  return false;
 }
 
-void StateLevelPackViewer::render()
+bool StateLevelPackViewer::render()
 {
-
+  return false;
 }
 
 void StateLevelPackViewer::keyDown(int nKey, SDLMod mod,int nChar)

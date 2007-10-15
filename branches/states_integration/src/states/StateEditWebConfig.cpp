@@ -56,14 +56,14 @@ void StateEditWebConfig::leaveAfterPush()
 
 }
 
-void StateEditWebConfig::update()
+bool StateEditWebConfig::update()
 {
-
+  return false;
 }
 
-void StateEditWebConfig::render()
+bool StateEditWebConfig::render()
 {
-
+  return false;
 }
 
 void StateEditWebConfig::keyDown(int nKey, SDLMod mod,int nChar)

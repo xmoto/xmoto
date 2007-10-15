@@ -30,6 +30,8 @@ StateScene::StateScene(GameApp* pGame):
   GameState(false, false, pGame)
 {
   m_fLastPhysTime = -1.0;
+  // while playing, we want 100 fps for the physic
+  m_updateFps     = 100;
 }
 
 StateScene::~StateScene()
@@ -39,7 +41,6 @@ StateScene::~StateScene()
 
 void StateScene::enter()
 {
-  m_pGame->getStateManager()->setMaxAllowedFps(50);
   m_pGame->setShowCursor(false);
 }
 
@@ -56,8 +57,12 @@ void StateScene::leaveAfterPush()
 {
 }
 
-void StateScene::update()
+bool StateScene::update()
 {
+  if(doUpdate() == false){
+    return false;
+  }
+  
   int nPhysSteps = 0;
   int nADelay = 0;
 
@@ -73,14 +78,15 @@ void StateScene::update()
     nPhysSteps++;    
   }
 
-  nADelay = ((m_fLastPhysTime + PHYS_STEP_SIZE) - GameApp::getXMTime()) * 1000.0f;
-  if(nADelay > 0) {
-    SDL_Delay(nADelay);
-  }
+  return true;
 }
 
-void StateScene::render()
+bool StateScene::render()
 {
+  if(doRender() == false){
+    return false;
+  }
+
   try {
     for(unsigned int i=0; i<m_pGame->getMotoGame()->getNumberCameras(); i++) {
       m_pGame->getMotoGame()->setCurrentCamera(i);
@@ -98,6 +104,8 @@ void StateScene::render()
     //m_pGame->setState(GS_MENU); // to be removed, just the time states are finished
     //m_requestForEnd = true;
   }
+
+  return true;
 }
 
 void StateScene::keyDown(int nKey, SDLMod mod,int nChar)

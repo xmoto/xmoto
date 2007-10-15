@@ -269,10 +269,22 @@ int main(int nNumArgs,char **ppcArgs) {
       if(!drawLib->isNoGraphics()) {
         /* Swap buffers */
        drawLib->flushGraphics();
-        
-        /* Does app want us to delay a bit after the frame? */
-        if(m_nFrameDelay > 0)
-	  SDL_Delay(m_nFrameDelay);
+
+       if(m_lastFrameTimeStamp < 0.0){
+	 m_lastFrameTimeStamp = getXMTime();
+       }
+
+       /* Does app want us to delay a bit after the frame? */
+       float currentTimeStamp = getXMTime();
+       float currentFrameMinDuration = 1.0/((float)m_stateManager->getMaxFps());
+       float lastFrameDuration = currentTimeStamp - m_lastFrameTimeStamp;
+       float delta = currentFrameMinDuration - lastFrameDuration;
+       
+       if(delta > 0.0){
+	 delta *= 1000.0f;
+	 SDL_Delay((int)(delta));
+       }
+       m_lastFrameTimeStamp = getXMTime();
       }
     }
     

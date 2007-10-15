@@ -117,14 +117,14 @@ void StatePause::checkEvents() {
   }
 }
 
-void StatePause::update()
+bool StatePause::update()
 {
-  StateMenu::update();
+  return StateMenu::update();
 }
 
-void StatePause::render()
+bool StatePause::render()
 {
-  StateMenu::render();
+  return StateMenu::render();
 }
 
 void StatePause::keyDown(int nKey, SDLMod mod,int nChar)

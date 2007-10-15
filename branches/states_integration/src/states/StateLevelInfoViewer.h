@@ -42,8 +42,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     virtual void enterAfterPop();
     virtual void leaveAfterPush();
 
-    virtual void update();
-    virtual void render();
+    virtual bool update();
+    virtual bool render();
     /* input */
     virtual void keyDown(int nKey, SDLMod mod,int nChar);
     virtual void keyUp(int nKey,   SDLMod mod);

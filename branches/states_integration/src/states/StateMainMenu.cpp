@@ -56,14 +56,14 @@ void StateMainMenu::leaveAfterPush()
 
 }
 
-void StateMainMenu::update()
+bool StateMainMenu::update()
 {
-
+  return false;
 }
 
-void StateMainMenu::render()
+bool StateMainMenu::render()
 {
-
+  return false;
 }
 
 void StateMainMenu::keyDown(int nKey, SDLMod mod,int nChar)

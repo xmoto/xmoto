@@ -39,8 +39,9 @@ class GameApp;
     virtual void enterAfterPop()=0;
     virtual void leaveAfterPush()=0;
 
-    virtual void update()=0;
-    virtual void render()=0;
+    // return true if update/render was done
+    virtual bool update()=0;
+    virtual bool render()=0;
     /* input */
     virtual void keyDown(int nKey, SDLMod mod,int nChar)=0;
     virtual void keyUp(int nKey,   SDLMod mod)=0;
@@ -65,9 +66,27 @@ class GameApp;
       return m_requestForEnd;
     }
 
+    int getUpdateFps(){
+      return m_updateFps;
+    }
+
+    int getRenderFps(){
+      return m_renderFps;
+    }
+
   protected:
+    bool doUpdate();
+    bool doRender();
+
     bool     m_requestForEnd;    
     GameApp* m_pGame;
+
+    // the desired fps for updating and rendering the state
+    int      m_updateFps;
+    int      m_renderFps;
+    // the last time when an update/render was done
+    float    m_fLastUpdateTime;
+    float    m_fLastRenderingTime;
 
   private:
     bool     m_isHide;
@@ -100,23 +119,41 @@ class GameApp;
     void mouseDoubleClick(int nButton);
     void mouseUp(int nButton);
 
-    int getFPS();
-    void setMaxAllowedFps(int i_value);
+    int getCurrentUpdateFPS();
+    int getCurrentRenderFPS();
+    int getMaxFps(){
+      return m_maxFps;
+    }
 
     /* ask to states to clean themself */
     static void cleanStates();
 
   private:
     void calculateWhichStateIsRendered();
+    void calculateFps();
 
     std::vector<GameState*> m_statesStack;
-    float m_fLastRenderingTime;
 
-    /* fps */
+    // time at the begining of the last frame rendered/updated
+    float m_fLastRenderingTime;
+    float m_fLastUpdateTime;
+
+    // last time the m_current*Fps have been filled
     float m_fLastFpsTime;
-    int   m_currentFps;
-    int   m_fpsNbFrame;
-    int   m_maxAllowedFps;
+
+    // contains the number of frame during the last second
+    int   m_currentRenderFps;
+    int   m_currentUpdateFps;
+
+    // counting the number of frame for the current second
+    int   m_renderFpsNbFrame;
+    int   m_updateFpsNbFrame;
+
+    // the hz at which the state manager runs
+    // (the highest from the states)
+    int   m_maxUpdateFps;
+    int   m_maxRenderFps;
+    int   m_maxFps;
 
     GameApp* m_pGame;
   };

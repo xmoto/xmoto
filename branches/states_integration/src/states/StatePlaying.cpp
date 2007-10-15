@@ -56,14 +56,14 @@ void StatePlaying::leaveAfterPush()
 
 }
 
-void StatePlaying::update()
+bool StatePlaying::update()
 {
-
+  return false;
 }
 
-void StatePlaying::render()
+bool StatePlaying::render()
 {
-
+  return false;
 }
 
 void StatePlaying::keyDown(int nKey, SDLMod mod,int nChar)

@@ -81,9 +81,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       case GS_EDIT_WEBCONFIG:
         /* Following is done for all the above states */
         _DrawMainGUI();
-
-        /* Delay a bit so we don't eat all CPU */
-        setFrameDelay(10);
         break;
 
       case GS_LEVELPACK_VIEWER:
@@ -116,9 +113,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 	    if(m_xmsession->timedemo() == false) {
 	      /* limit framerate while PREPLAY (100 fps)*/
+	      // TODO::MANU::the sleep is done in only one place now.
+	      // put it there
+	      /*
 	      double timeElapsed = getXMTime() - fStartFrameTime;
 	      if(timeElapsed < 0.01)
 		setFrameDelay(10 - (int)(timeElapsed*1000.0));
+	      */
 	    }
           } else if(m_State == GS_PLAYING ||
 		    ((m_State == GS_DEADMENU || m_State == GS_DEADJUST) && m_bEnableDeathAnim)
@@ -167,23 +168,24 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
           if(m_State == GS_PLAYING) {        
             _PostUpdatePlaying();
           }
-        
-          /* When did frame rendering end? */
+
+	  /* TODO::MANU::get out !!
+          // When did frame rendering end?
           double fEndFrameTime = getXMTime();
           
-          /* Calculate how large a delay should be inserted after the frame, to keep the 
-             desired frame rate */
+          // Calculate how large a delay should be inserted after the frame, to keep the 
+	  // desired frame rate 
           int nADelay = 0;    
           
 	  if (m_State == GS_DEADJUST) {
             setFrameDelay(10);
           } else {
-            /* become idle only if we hadn't to skip any frame, recently, and more globaly (80% of fps) */
+            // become idle only if we hadn't to skip any frame, recently, and more globaly (80% of fps)
             if((nPhysSteps <= 1) && (m_fFPS_Rate > (0.8f / PHYS_STEP_SIZE)))
               nADelay = ((m_fLastPhysTime + PHYS_STEP_SIZE) - fEndFrameTime) * 1000.0f;
 
 	    if(m_autoZoom){
-	      /* limit framerate while zooming (100 fps)*/
+	      // limit framerate while zooming (100 fps)
 	      double timeElapsed = getXMTime() - fStartFrameTime;
 	      if(timeElapsed < 0.01)
 		nADelay = 10 - (int)(timeElapsed*1000.0);
@@ -194,7 +196,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
             if(m_xmsession->timedemo() == false) {
               setFrameDelay(nADelay);
             }
-          }        
+          }
+	  */
 
           if(m_State == GS_DEADJUST) {
             /* Hmm, you're dead and you know it. */
@@ -244,7 +247,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /* Draw a little FPS counter */
     if(m_xmsession->fps()) {
       char cTemp[256];        
-      sprintf(cTemp,"%i",m_stateManager->getFPS());
+      sprintf(cTemp,
+	      "u(%i) d(%i)",
+	      m_stateManager->getCurrentUpdateFPS(),
+	      m_stateManager->getCurrentRenderFPS());
 
       FontManager* v_fm = getDrawLib()->getFontSmall();
       FontGlyph* v_fg = v_fm->getGlyph(cTemp);
@@ -274,9 +280,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   
   void GameApp::_PrepareFrame(void) {
     m_MotoGame.setDeathAnim(m_bEnableDeathAnim); /* hack hack hack */
-                
-    /* Per default, don't wait between frames */
-    setFrameDelay(0);
     
     /* Update sound system and input */
     if(!getDrawLib()->isNoGraphics()) {        

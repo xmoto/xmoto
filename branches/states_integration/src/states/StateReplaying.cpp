@@ -181,21 +181,12 @@ void StateReplaying::leaveAfterPush()
 
 }
 
-void StateReplaying::update()
+bool StateReplaying::update()
 {
-  if(m_stopToUpdate) { /* pause */
-    SDL_Delay(50);
-    return;
+  if(StateScene::update() == false){
+    return false;
   }
   
-  StateScene::update();
-  
-//	  static int n = 0;
-//	  n++;
-//	  if(n % 4 == 0) {
-//	    _GameScreenshot();
-//	  }
-
   if(m_replayBiker->isDead() || m_replayBiker->isFinished()) {
     m_stopToUpdate = true;
     
@@ -203,14 +194,16 @@ void StateReplaying::update()
       m_pGame->getMotoGame()->setTime(m_replayBiker->finishTime());
     }
   }
+
+  return true;
 }
 
-void StateReplaying::render()
+bool StateReplaying::render()
 {
   for(unsigned int i=0; i<m_pGame->getMotoGame()->Cameras().size(); i++) {
     m_pGame->getMotoGame()->Cameras()[i]->setSpeedMultiplier(10.0); // tell to the camera the nPhysSteps
   }  
-  StateScene::render();
+  return StateScene::render();
 }
 
 void StateReplaying::keyDown(int nKey, SDLMod mod,int nChar)

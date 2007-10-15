@@ -119,14 +119,14 @@ void StateLevelInfoViewer::checkEvents()
     }
 }
 
-void StateLevelInfoViewer::update()
+bool StateLevelInfoViewer::update()
 {
-  StateMenu::update();
+  return StateMenu::update();
 }
 
-void StateLevelInfoViewer::render()
+bool StateLevelInfoViewer::render()
 {
-  StateMenu::render();
+  return StateMenu::render();
 }
 
 void StateLevelInfoViewer::keyDown(int nKey, SDLMod mod,int nChar)

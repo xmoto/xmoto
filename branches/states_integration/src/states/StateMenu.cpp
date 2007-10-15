@@ -50,7 +50,6 @@ StateMenu::~StateMenu()
 void StateMenu::enter()
 {
   m_nShadeTime = GameApp::getXMTime();
-  m_pGame->getStateManager()->setMaxAllowedFps(30);
   m_pGame->setShowCursor(true);
 }
 
@@ -69,15 +68,22 @@ void StateMenu::leaveAfterPush()
   m_GUI->enableWindow(false);
 }
 
-void StateMenu::update()
+bool StateMenu::update()
 {
+  if(doUpdate() == false){
+    return false;
+  }
+
   m_GUI->dispatchMouseHover();
+  return true;
 }
 
-void StateMenu::render()
+bool StateMenu::render()
 {
   // rendering of the gui must be done by the mother call : to add here when states will be almost finished
-  m_pGame->setFrameDelay(10);
+  if(doRender() == false){
+    return false;
+  }
 
   if(m_pGame->getSession()->ugly() == false && m_doShade) {
     float v_currentTime = GameApp::getXMTime();
@@ -98,6 +104,8 @@ void StateMenu::render()
   }
 
   m_GUI->paint();
+
+  return true;
 }
 
 void StateMenu::keyDown(int nKey, SDLMod mod,int nChar)

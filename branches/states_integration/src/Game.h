@@ -178,13 +178,6 @@ class StateManager;
       Theme *getTheme() {
 	return &m_theme;
       };
-      void setFPS(float i) {
-	m_fFramesPerSecond = i;
-      }
-
-      void setFrameDelay(int nDelay) {
-	m_nFrameDelay = nDelay;
-      }
 
       const std::string & getUserNotify(void) {
 	return m_UserNotify;
@@ -416,18 +409,15 @@ class StateManager;
 
       XMSession* m_xmsession;
       StateManager* m_stateManager;
-
-      int m_nFrameDelay;		/* # of millisecs to wait after screen buffer swap */
-      
-      float m_fFramesPerSecond;	/* Force this FPS */
       
       /* User nofification */
       std::string m_UserNotify;
       
       /* Run-time fun */
       bool m_bQuit;		/* Quit flag */
-      double m_fAppTime;		/* Current application time */
-      double m_fNextFrame;	/* Time next frame rendering should begin */
+
+      // calculate sleeping time
+      float m_lastFrameTimeStamp;
 
       /* Helpers */
       void _HandleMainMenu(void);  

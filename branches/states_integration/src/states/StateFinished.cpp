@@ -230,14 +230,14 @@ void StateFinished::checkEvents() {
 
 }
 
-void StateFinished::update()
+bool StateFinished::update()
 {
-  StateMenu::update();
+  return StateMenu::update();
 }
 
-void StateFinished::render()
+bool StateFinished::render()
 {
-  StateMenu::render();
+  return StateMenu::render();
 }
 
 void StateFinished::keyDown(int nKey, SDLMod mod,int nChar)
