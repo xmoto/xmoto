@@ -51,7 +51,6 @@ void StateReplaying::enter()
   char *v_res;
 
   m_pGame->m_State = GS_REPLAYING; // to be removed, just the time states are finished
-  m_pGame->setShowCursor(false);
 
   m_stopToUpdate = false;
   m_pGame->getGameRenderer()->setShowEngineCounter(false);
@@ -257,25 +256,27 @@ void StateReplaying::keyDown(int nKey, SDLMod mod,int nChar)
     m_pGame->getGameRenderer()->showReplayHelp(m_pGame->getMotoGame()->getSpeed(), m_pGame->getMotoGame()->getLevelSrc()->isScripted() == false);
     break;
 
+  default:
+    StateScene::keyDown(nKey, mod, nChar);
   }
 }
 
 void StateReplaying::keyUp(int nKey,   SDLMod mod)
 {
-
+  StateScene::keyUp(nKey, mod);
 }
 
 void StateReplaying::mouseDown(int nButton)
 {
-
+  StateScene::mouseDown(nButton);
 }
 
 void StateReplaying::mouseDoubleClick(int nButton)
 {
-
+  StateScene::mouseDoubleClick(nButton);
 }
 
 void StateReplaying::mouseUp(int nButton)
 {
-
+  StateScene::mouseUp(nButton);
 }

@@ -46,6 +46,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "states/StateManager.h"
 #include "states/StatePause.h"
 #include "states/StateDeadMenu.h"
+#include "states/StatePlaying.h"
 
   bool GameApp::haveMouseMoved() {
     int nX,nY;
@@ -417,29 +418,6 @@ GameApp::GameApp() {
 			return;
 			break;
 		}
-		case GS_PLAYING: {
-			m_Renderer->setShowEngineCounter(m_Config.getBool("ShowEngineCounter"));
-			m_Renderer->setShowTimePanel(true);
-			v_newMusicPlaying = "";
-
-			m_bAutoZoomInitialized = false;
-				
-			try {
-				m_MotoGame.playLevel();
-				m_State = GS_PLAYING;        
-				m_nFrame = 0;
-				v_newMusicPlaying = m_MotoGame.getLevelSrc()->Music();
-			} catch(Exception &e) {
-				Logger::Log("** Warning ** : level '%s' cannot be loaded",m_PlaySpecificLevelId.c_str());
-				m_MotoGame.endLevel();
-				char cBuf[256];
-				sprintf(cBuf,GAMETEXT_LEVELCANNOTBELOADED,m_PlaySpecificLevelId.c_str());
-				setState(m_StateAfterPlaying);
-				notifyMsg(cBuf);
-			}
-			break;
-		}
-
 		case GS_DEADJUST: {
 			m_MotoGame.setInfos(m_MotoGame.getLevelSrc()->Name());
 			v_newMusicPlaying = "";
@@ -805,62 +783,13 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
     //break;
     //}
     break;
-  case GS_PLAYING:
-    switch(nKey) {
-    case SDLK_ESCAPE:
-      if(isLockedMotoGame() == false) {
-	/* Escape pauses */
-	m_stateManager->pushState(new StatePause(this));
-      }
-      break;
-    case SDLK_F2:
-      switchFollowCamera();
-      break;
-    case SDLK_F3:
-      switchLevelToFavorite(m_MotoGame.getLevelSrc()->Id(), true);
-      break;
-    case SDLK_PAGEUP:
-      if(isThereANextLevel(m_PlaySpecificLevelId)) {
-	m_db->stats_abortedLevel(m_xmsession->profile(), m_MotoGame.getLevelSrc()->Id(), m_MotoGame.getTime());
-	m_MotoGame.endLevel();
-	m_Renderer->unprepareForNewLevel();
-	m_PlaySpecificLevelId = _DetermineNextLevel(m_PlaySpecificLevelId);
-	m_bPrePlayAnim = true;
-	setState(GS_PREPLAYING);
-      }
-      break;
-    case SDLK_PAGEDOWN:
-      if(isThereAPreviousLevel(m_PlaySpecificLevelId)) {
-	m_db-> stats_abortedLevel(m_xmsession->profile(), m_MotoGame.getLevelSrc()->Id(), m_MotoGame.getTime());
-	m_MotoGame.endLevel();
-	m_Renderer->unprepareForNewLevel();
-	m_PlaySpecificLevelId = _DeterminePreviousLevel(m_PlaySpecificLevelId);
-	m_bPrePlayAnim = true;
-	setState(GS_PREPLAYING);
-      }
-      break;
-    case SDLK_RETURN:
-      /* retart immediatly the level */
-      restartLevel();
-      break;
-    case SDLK_F5:
-      restartLevel(true);
-      break;
-
-    default:
-      /* Notify the controller */
-      m_InputHandler.handleInput(INPUT_KEY_DOWN,nKey,mod,
-				 m_MotoGame.Players(),
-				 m_MotoGame.Cameras(),
-				 this);
-    }
-    break;
 
     // states already in the state manager
   case GS_LEVEL_INFO_VIEWER:
   case GS_FINISHED:
   case GS_PAUSE:
   case GS_REPLAYING:
+  case GS_PLAYING:
   case GS_CREDITSMODE:
   case GS_DEADMENU:
   case GS_EDIT_PROFILES:
@@ -881,13 +810,6 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
       case GS_MENU:
         m_Renderer->getGUI()->keyUp(nKey, mod);
         break;
-      case GS_PLAYING:
-        /* Notify the controller */
-      m_InputHandler.handleInput(INPUT_KEY_UP,nKey,mod,
-				 m_MotoGame.Players(),
-				 m_MotoGame.Cameras(),
-				 this);
-      break; 
       case GS_DEADJUST:
       {
 	break;
@@ -898,6 +820,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
     case GS_FINISHED:
     case GS_PAUSE:
     case GS_REPLAYING:
+    case GS_PLAYING:
     case GS_CREDITSMODE:
     case GS_DEADMENU:
     case GS_EDIT_PROFILES:
@@ -929,6 +852,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
     case GS_FINISHED:
     case GS_PAUSE:
     case GS_REPLAYING:
+    case GS_PLAYING:
     case GS_CREDITSMODE:
     case GS_DEADMENU:
     case GS_EDIT_PROFILES:
@@ -956,14 +880,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
         
         break;
 
-      case GS_PLAYING:
-      /* Notify the controller */
-      m_InputHandler.handleInput(INPUT_KEY_DOWN,nButton,KMOD_NONE,
-				 m_MotoGame.Players(),
-				 m_MotoGame.Cameras(),
-				 this);
 
-      break;
       case GS_DEADJUST:
       break;
 
@@ -973,6 +890,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
       case GS_FINISHED:
       case GS_PAUSE:
       case GS_REPLAYING:
+      case GS_PLAYING:
       case GS_CREDITSMODE:
       case GS_DEADMENU:
       case GS_EDIT_PROFILES:
@@ -996,13 +914,6 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
           m_Renderer->getGUI()->mouseRUp(nX,nY);
         break;
 
-      case GS_PLAYING:
-        /* Notify the controller */
-      m_InputHandler.handleInput(INPUT_KEY_UP,nButton,KMOD_NONE,
-				 m_MotoGame.Players(),
-				 m_MotoGame.Cameras(),
-				 this);
-        break;
       case GS_DEADJUST:
       break;
 
@@ -1011,6 +922,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
       case GS_FINISHED:
       case GS_PAUSE:
       case GS_REPLAYING:
+      case GS_PLAYING:
       case GS_CREDITSMODE:
       case GS_DEADMENU:
       case GS_EDIT_PROFILES:
@@ -2220,7 +2132,8 @@ void GameApp::closePlaying() {
       zoomAnimation1_init();
     } else {
       m_bPrePlayAnim = false;
-      setState(GS_PLAYING);
+      
+      m_stateManager->pushState(new StatePlaying(this));
     }
   }
   
@@ -2229,12 +2142,12 @@ void GameApp::closePlaying() {
       if(zoomAnimation1_step() == false) {
         setPrePlayAnim(false); // disable anim
 	zoomAnimation1_abort();
-        setState(GS_PLAYING);
+	m_stateManager->pushState(new StatePlaying(this));
       }
     } else { /* animation has been rupted */
       setPrePlayAnim(false); // disable anim
       zoomAnimation1_abort();
-      setState(GS_PLAYING);
+      m_stateManager->pushState(new StatePlaying(this));
     }
     m_MotoGame.updateGameMessages();
   }

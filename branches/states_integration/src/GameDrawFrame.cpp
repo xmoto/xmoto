@@ -94,7 +94,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
       case GS_DEADJUST:
       case GS_PREPLAYING:
-      case GS_PLAYING: {
+     {
 
         /* These states all requires that the actual game graphics are rendered (i.e. inside 
            the game, not the main menu) */
@@ -235,6 +235,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
        m_State == GS_EDIT_PROFILES     ||
        m_State == GS_LEVEL_INFO_VIEWER ||
        m_State == GS_REPLAYING         ||
+       m_State == GS_PLAYING           ||
        m_State == GS_CREDITSMODE
        ) {
       /* draw the game states */
