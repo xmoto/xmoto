@@ -86,9 +86,11 @@ void StatePlaying::leaveAfterPush()
 
 bool StatePlaying::update()
 {
-  if(StateScene::update() == false){
+  if(doUpdate() == false){
     return false;
   }
+
+  StateScene::update();
 
 //
 //
@@ -224,12 +226,17 @@ bool StatePlaying::update()
 //      }
 //    }
 
-  return false;
+  return true;
 }
 
 bool StatePlaying::render()
 {
-  return StateScene::render();
+  if(doRender() == false){
+    return false;
+  }
+
+  StateScene::render();
+  return true;
 }
 
 void StatePlaying::keyDown(int nKey, SDLMod mod,int nChar)

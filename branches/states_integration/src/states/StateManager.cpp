@@ -213,6 +213,8 @@ void StateManager::calculateFps()
   int maxUpdateFps = 50;
   int maxRenderFps = 50;
 
+  int topStateRenderFps = 0;
+
   std::vector<GameState*>::iterator stateIterator = m_statesStack.begin();
 
   while(stateIterator != m_statesStack.end()){
@@ -220,6 +222,7 @@ void StateManager::calculateFps()
     int renderFps = 0;
     if((*stateIterator)->isHide() == false){
       renderFps = (*stateIterator)->getRenderFps();
+      topStateRenderFps = renderFps;
     }
 
     if(updateFps > maxUpdateFps){
@@ -236,13 +239,15 @@ void StateManager::calculateFps()
   m_maxRenderFps = maxRenderFps;
   m_maxFps = (m_maxUpdateFps > m_maxRenderFps) ? m_maxUpdateFps : m_maxRenderFps;
 
-  Logger::Log("UpdateFps: %d RenderFps: %d Max: %d",
+  Logger::Log("MaxUpdateFps: %d MaxRenderFps: %d Max: %d TopStateRenderFps: %d",
 	      m_maxUpdateFps,
 	      m_maxRenderFps,
-	      m_maxFps);
+	      m_maxFps,
+	      topStateRenderFps);
 
   stateIterator = m_statesStack.begin();
   while(stateIterator != m_statesStack.end()){
+    (*stateIterator)->setCurrentRenderFps(topStateRenderFps);
     (*stateIterator)->setMaxFps(m_maxFps);
     stateIterator++;
   }
@@ -277,6 +282,7 @@ GameState::GameState(bool drawStateBehind,
   // default rendering and update fps
   m_updateFps          = 50;
   m_renderFps          = 50;
+  m_curRenderFps       = m_renderFps;
 
   m_maxFps = m_updatePeriod = m_renderPeriod = 0;
 

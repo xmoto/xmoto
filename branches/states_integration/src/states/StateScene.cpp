@@ -59,12 +59,7 @@ void StateScene::leaveAfterPush()
 
 bool StateScene::update()
 {
-  if(doUpdate() == false){
-    return false;
-  }
-  
   int nPhysSteps = 0;
-  int nADelay = 0;
 
   if(m_fLastPhysTime < 0.0) {
     m_fLastPhysTime = GameApp::getXMTime();
@@ -83,10 +78,6 @@ bool StateScene::update()
 
 bool StateScene::render()
 {
-  if(doRender() == false){
-    return false;
-  }
-
   try {
     for(unsigned int i=0; i<m_pGame->getMotoGame()->getNumberCameras(); i++) {
       m_pGame->getMotoGame()->setCurrentCamera(i);

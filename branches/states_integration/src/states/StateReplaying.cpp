@@ -184,9 +184,11 @@ void StateReplaying::leaveAfterPush()
 
 bool StateReplaying::update()
 {
-  if(StateScene::update() == false){
+  if(doUpdate() == false){
     return false;
   }
+  
+  StateScene::update();
   
   if(m_replayBiker->isDead() || m_replayBiker->isFinished()) {
     m_stopToUpdate = true;
@@ -201,10 +203,16 @@ bool StateReplaying::update()
 
 bool StateReplaying::render()
 {
+  if(doRender() == false){
+    return false;
+  }
+
   for(unsigned int i=0; i<m_pGame->getMotoGame()->Cameras().size(); i++) {
     m_pGame->getMotoGame()->Cameras()[i]->setSpeedMultiplier(10.0); // tell to the camera the nPhysSteps
   }  
-  return StateScene::render();
+  StateScene::render();
+
+  return true;
 }
 
 void StateReplaying::keyDown(int nKey, SDLMod mod,int nChar)

@@ -74,10 +74,14 @@ class GameApp;
       return m_renderFps;
     }
 
+    void setCurrentRenderFps(int curRenFps){
+      m_curRenderFps = curRenFps;
+    }
+
     void setMaxFps(int maxFps){
       m_maxFps = maxFps;
       m_updatePeriod = (float)m_maxFps / (float)m_updateFps;
-      m_renderPeriod = (float)m_maxFps / (float)m_renderFps;
+      m_renderPeriod = (float)m_maxFps / (float)m_curRenderFps;
     }
 
   protected:
@@ -90,6 +94,8 @@ class GameApp;
     // the desired fps for updating and rendering the state
     int m_updateFps;
     int m_renderFps;
+    // state behind the top state have to render at the same speed at it.
+    int m_curRenderFps;
     int m_maxFps;
     // how many max fps beat for one update/render
     float m_updatePeriod;
@@ -129,8 +135,10 @@ class GameApp;
     void mouseDoubleClick(int nButton);
     void mouseUp(int nButton);
 
+    // to display on the screen
     int getCurrentUpdateFPS();
     int getCurrentRenderFPS();
+
     int getMaxFps(){
       return m_maxFps;
     }
