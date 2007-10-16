@@ -511,10 +511,8 @@ GameApp::GameApp() {
     }      
 
     /* Show mini map? && show engine counter */
-    if(m_xmsession->useGraphics()) {
-      m_Renderer->setShowMinimap(m_Config.getBool("ShowMiniMap"));
-      m_Renderer->setShowEngineCounter(m_Config.getBool("ShowEngineCounter"));
-    }    
+    m_xmsession->setShowMinimap(m_Config.getBool("ShowMiniMap"));
+    m_xmsession->setShowEngineCounter(m_Config.getBool("ShowEngineCounter"));
 
     /* Replay stuff */
     m_fReplayFrameRate = m_Config.getFloat("ReplayFrameRate");

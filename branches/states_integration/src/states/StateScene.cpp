@@ -101,6 +101,17 @@ bool StateScene::render()
 
 void StateScene::keyDown(int nKey, SDLMod mod,int nChar)
 {
+  switch(nKey) {
+
+  case SDLK_F2:
+    m_pGame->switchFollowCamera();
+    break;
+
+  case SDLK_F3:
+    m_pGame->switchLevelToFavorite(m_pGame->getMotoGame()->getLevelSrc()->Id(), true);
+    break;
+
+  }
 }
 
 void StateScene::keyUp(int nKey, SDLMod mod)

@@ -45,6 +45,10 @@ class StatePlaying : public StateScene {
   virtual void mouseUp(int nButton);
   
   private:
+  bool m_bAutoZoomInitialized;
+  bool m_autoZoom; /* true : the key is pressed so that it zooms out to see the level */
+  int m_autoZoomStep;
+
 };
 
 #endif

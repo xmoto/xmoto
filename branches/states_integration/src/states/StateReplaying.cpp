@@ -77,7 +77,6 @@ void StateReplaying::enter()
     try {
       m_pGame->getMotoGame()->loadLevel(m_pGame->getDb(), m_replayBiker->levelId());
     } catch(Exception &e) {
-      m_requestForEnd = true;
       m_pGame->getStateManager()->pushState(new StateMessageBox(m_pGame, e.getMsg(), UI_MSGBOX_OK));
       return;
     }

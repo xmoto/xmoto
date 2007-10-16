@@ -386,7 +386,6 @@ class StateManager;
       
       /* Misc settings */
       MenuBackgroundGraphics m_MenuBackgroundGraphics;
-      bool m_bShowMiniMap;
       bool m_bRecordReplays;
       float m_fReplayFrameRate;
             

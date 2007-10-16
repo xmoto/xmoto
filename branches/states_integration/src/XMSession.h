@@ -84,6 +84,10 @@ class XMSession {
   bool enableGhosts() const;
   void setEnableEngineSound(bool i_value);
   bool enableEngineSound() const;
+  void setShowEngineCounter(bool i_value);
+  bool showEngineCounter() const;
+  void setShowMinimap(bool i_value);
+  bool showMinimap() const;
 
   private:
   bool m_verbose;
@@ -112,6 +116,8 @@ class XMSession {
   bool m_ghostStrategy_BESTOFROOM;
   bool m_enableGhosts;
   bool m_enableEngineSound;
+  bool m_showEngineCounter;
+  bool m_showMinimap;
 };
 
 #endif

@@ -21,6 +21,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StatePlaying.h"
 #include "StatePause.h"
 #include "Game.h"
+#include "XMSession.h"
+#include "helpers/Log.h"
+#include "GameText.h"
+#include "StateMessageBox.h"
 
 StatePlaying::StatePlaying(GameApp* pGame):
   StateScene(pGame)
@@ -40,33 +44,24 @@ void StatePlaying::enter()
 
   m_pGame->m_State = GS_PLAYING; // to be removed, just the time states are finished
 
-
-  //  m_pGame->getGameRenderer()->setShowEngineCounter(true);
+  m_pGame->getGameRenderer()->setShowEngineCounter(m_pGame->getSession()->showEngineCounter());
+  m_pGame->getGameRenderer()->setShowMinimap(m_pGame->getSession()->showMinimap());
   m_pGame->getGameRenderer()->setShowTimePanel(true);
 
-//
-//		case GS_PLAYING: {
-//			m_Renderer->setShowEngineCounter(m_Config.getBool("ShowEngineCounter"));
-//			m_Renderer->setShowTimePanel(true);
-//			v_newMusicPlaying = "";
-//
-//			m_bAutoZoomInitialized = false;
-//				
-//			try {
-//				m_MotoGame.playLevel();
-//				m_State = GS_PLAYING;        
-//				m_nFrame = 0;
-//				v_newMusicPlaying = m_MotoGame.getLevelSrc()->Music();
-//			} catch(Exception &e) {
-//				Logger::Log("** Warning ** : level '%s' cannot be loaded",m_PlaySpecificLevelId.c_str());
-//				m_MotoGame.endLevel();
-//				char cBuf[256];
-//				sprintf(cBuf,GAMETEXT_LEVELCANNOTBELOADED,m_PlaySpecificLevelId.c_str());
-//				setState(m_StateAfterPlaying);
-//				notifyMsg(cBuf);
-//			}
-//			break;
-//		}
+  m_bAutoZoomInitialized = false;
+
+  try {
+    m_pGame->getMotoGame()->playLevel();
+    m_pGame->playMusic(m_pGame->getMotoGame()->getLevelSrc()->Music());
+
+  } catch(Exception &e) {
+    Logger::Log("** Warning ** : level '%s' cannot be loaded", m_pGame->getMotoGame()->getLevelSrc()->Name().c_str());
+    m_pGame->getMotoGame()->endLevel();
+
+    char cBuf[256];
+    sprintf(cBuf,GAMETEXT_LEVELCANNOTBELOADED, m_pGame->getMotoGame()->getLevelSrc()->Name().c_str());
+    m_pGame->getStateManager()->pushState(new StateMessageBox(m_pGame, cBuf, UI_MSGBOX_OK));
+  }
 }
 
 void StatePlaying::leave()
@@ -92,137 +87,81 @@ bool StatePlaying::update()
 
   StateScene::update();
 
+  int numberCam = m_pGame->getMotoGame()->getNumberCameras();
+  m_pGame->getMotoGame()->setCurrentCamera(numberCam);
+
+  /* When actually playing or when dead and the bike is falling apart, a physics update is required */
+  //if(isLockedMotoGame()) {
+  //  nPhysSteps = 0;
+  //} else {
+  //nPhysSteps = _UpdateGamePlaying();            
+  
+  if(numberCam > 1){
+    // m_MotoGame.setCurrentCamera(numberCam);
+  }
+  // autoZoom();
+
+
+//    bool v_all_dead       = true;
+//    bool v_one_still_play = false;
+//    bool v_one_finished   = false;
+// 
+//    for(unsigned int i=0; i<m_MotoGame.Players().size(); i++) {
+//      if(m_MotoGame.Players()[i]->isDead() == false) {
+//	v_all_dead = false;
+//      }
+//      if(m_MotoGame.Players()[i]->isFinished()) {
+//	v_one_finished = true;
+//      }
 //
+//      if(m_MotoGame.Players()[i]->isFinished() == false && m_MotoGame.Players()[i]->isDead() == false) {
+//	v_one_still_play = true;
+//      }
+//    }
+//    
+//    if(v_one_still_play == false || m_bMultiStopWhenOneFinishes) { // let people continuing when one finished or not
+//      if(v_one_finished) {
+//	/* You're done maaaan! :D */
+//	
+//	/* finalize the replay */
+//	if(m_pJustPlayReplay != NULL) {
+//	  if(m_MotoGame.Players().size() == 1) {
+//	    /* save the last state because scene don't record each frame */
+//	    SerializedBikeState BikeState;
+//	    MotoGame::getSerializedBikeState(m_MotoGame.Players()[0]->getState(), m_MotoGame.getTime(), &BikeState);
+//	    m_pJustPlayReplay->storeState(BikeState);
+//	    m_pJustPlayReplay->finishReplay(true,m_MotoGame.Players()[0]->finishTime());
+//	  }
+//	}
 //
-//        /* These states all requires that the actual game graphics are rendered (i.e. inside 
-//           the game, not the main menu) */
-//        try {
-//          int nPhysSteps = 0;
-//        
-//          /* When did the frame start? */
-//          double fStartFrameTime = getXMTime();                    
-//	  int numberCam = m_MotoGame.getNumberCameras();
-//          if(m_State == GS_PREPLAYING) {
-//            /* If "preplaying" / "initial-zoom" is enabled, this is where it's done */
-//	    if(numberCam > 1){
-//	      m_MotoGame.setCurrentCamera(numberCam);
-//	    }
-//            statePrestart_step();
-//
-//	    if(m_xmsession->timedemo() == false) {
-//	      /* limit framerate while PREPLAY (100 fps)*/
-//	      // TODO::MANU::the sleep is done in only one place now.
-//	      // put it there
-//	      /*
-//	      double timeElapsed = getXMTime() - fStartFrameTime;
-//	      if(timeElapsed < 0.01)
-//		setFrameDelay(10 - (int)(timeElapsed*1000.0));
-//	      */
-//	    }
-//          } else if(m_State == GS_PLAYING ||
-//		    ((m_State == GS_DEADMENU || m_State == GS_DEADJUST) && m_bEnableDeathAnim)
-//		    ) {
-//            /* When actually playing or when dead and the bike is falling apart, 
-//               a physics update is required */
-//	    if(isLockedMotoGame()) {
-//	      nPhysSteps = 0;
-//	    } else {
-//	      nPhysSteps = _UpdateGamePlaying();            
-//	    }
-//          }
+//	/* update profiles */
+//	float v_finish_time = 0.0;
+//	std::string TimeStamp = getTimeStamp();
+//	for(unsigned int i=0; i<m_MotoGame.Players().size(); i++) {
+//	  if(m_MotoGame.Players()[i]->isFinished()) {
+//	    v_finish_time  = m_MotoGame.Players()[i]->finishTime();
+//	  }
+//	}
+//	if(m_MotoGame.Players().size() == 1) {
+//	  m_db->profiles_addFinishTime(m_xmsession->profile(), m_MotoGame.getLevelSrc()->Id(),
+//				       TimeStamp, v_finish_time);
+//	}
 //  
-//	  if(m_State == GS_PLAYING) {
-//	    if(numberCam > 1){
-//	      m_MotoGame.setCurrentCamera(numberCam);
-//	    }
-//	    autoZoom();
-//	  }
+//	/* Update stats */
+//	/* update stats only in one player mode */
+//	if(m_MotoGame.Players().size() == 1) {       
+//	  m_db->stats_levelCompleted(m_xmsession->profile(),
+//				     m_MotoGame.getLevelSrc()->Id(),
+//				     m_MotoGame.Players()[0]->finishTime());
+//	  _UpdateLevelsLists();
+//	  _UpdateCurrentPackList(m_MotoGame.getLevelSrc()->Id(),
+//				 m_MotoGame.Players()[0]->finishTime());
+//	}
 //
-//          /* Render */
-//          if(!getDrawLib()->isNoGraphics()) {
-//	    try {
-//	      if((m_autoZoom || (m_bPrePlayAnim && m_xmsession->ugly() == false)) && numberCam > 1){
-//		m_Renderer->render(bIsPaused);
-//		ParticlesSource::setAllowParticleGeneration(m_Renderer->nbParticlesRendered() < NB_PARTICLES_TO_RENDER_LIMITATION);
-//	      }else{
-//		for(int i=0; i<numberCam; i++){
-//		  m_MotoGame.setCurrentCamera(i);
-//		  m_Renderer->render(bIsPaused);
-//		  ParticlesSource::setAllowParticleGeneration(m_Renderer->nbParticlesRendered() < NB_PARTICLES_TO_RENDER_LIMITATION);
-//		}
-//	      }
-//	    } catch(Exception &e) {
-//	      m_MotoGame.endLevel();
-//	      setState(m_StateAfterPlaying);
-//	      notifyMsg(splitText(e.getMsg(), 50));
-//	    }
-//	    getDrawLib()->getMenuCamera()->setCamera2d();
-//	  }
-//#if SIMULATE_SLOW_RENDERING
-//          SDL_Delay(SIMULATE_SLOW_RENDERING);
-//#endif
-//  
-//          /* When actually playing, check if something happened (like dying or finishing) */
-//          if(m_State == GS_PLAYING) {        
-//            _PostUpdatePlaying();
-//          }
-//
-//	  /* TODO::MANU::get out !!
-//          // When did frame rendering end?
-//          double fEndFrameTime = getXMTime();
-//          
-//          // Calculate how large a delay should be inserted after the frame, to keep the 
-//	  // desired frame rate 
-//          int nADelay = 0;    
-//          
-//	  if (m_State == GS_DEADJUST) {
-//            setFrameDelay(10);
-//          } else {
-//            // become idle only if we hadn't to skip any frame, recently, and more globaly (80% of fps)
-//            if((nPhysSteps <= 1) && (m_fFPS_Rate > (0.8f / PHYS_STEP_SIZE)))
-//              nADelay = ((m_fLastPhysTime + PHYS_STEP_SIZE) - fEndFrameTime) * 1000.0f;
-//
-//	    if(m_autoZoom){
-//	      // limit framerate while zooming (100 fps)
-//	      double timeElapsed = getXMTime() - fStartFrameTime;
-//	      if(timeElapsed < 0.01)
-//		nADelay = 10 - (int)(timeElapsed*1000.0);
-//	    }
-//          }
-//
-//          if(nADelay > 0) {
-//            if(m_xmsession->timedemo() == false) {
-//              setFrameDelay(nADelay);
-//            }
-//          }
-//	  */
-//
-//          if(m_State == GS_DEADJUST) {
-//            /* Hmm, you're dead and you know it. */
-//            _PostUpdateJustDead();
-//          }
-//         
-//          /* Context menu? */
-//          if(m_State == GS_PREPLAYING || m_State == GS_PLAYING || !m_bEnableContextHelp)
-//            m_Renderer->getGUI()->enableContextMenuDrawing(false);
-//          else
-//            m_Renderer->getGUI()->enableContextMenuDrawing(true);
-//          
-//          /* Draw GUI */
-//	  // only if it's not the autozoom camera
-//	  if(m_MotoGame.getCurrentCamera() != m_MotoGame.getNumberCameras()){
-//	    m_Renderer->getGUI()->paint();        
-//	  }
-//        
-//          break;
-//        }
-//        catch(Exception &e) {
-//	  Logger::Log("** Warning ** : drawFrame failed ! (%s)", e.getMsg().c_str());
-//	  // it doesn't work
-//	  m_MotoGame.endLevel();
-//	  setState(m_StateAfterPlaying);
-//          notifyMsg(splitText(e.getMsg(), 50));
-//        }
+//	m_stateManager->pushState(new StateFinished(this));
+//      } else if(v_all_dead) {
+//	/* You're dead maan! */
+//	setState(GS_DEADJUST);
 //      }
 //    }
 
@@ -248,12 +187,7 @@ void StatePlaying::keyDown(int nKey, SDLMod mod,int nChar)
       m_pGame->getStateManager()->pushState(new StatePause(m_pGame));
       //}
     break;
-//  case SDLK_F2:
-//    switchFollowCamera();
-//      break;
-//  case SDLK_F3:
-//    switchLevelToFavorite(m_MotoGame.getLevelSrc()->Id(), true);
-//    break;
+
 //  case SDLK_PAGEUP:
 //    if(isThereANextLevel(m_PlaySpecificLevelId)) {
 //      m_db->stats_abortedLevel(m_xmsession->profile(), m_MotoGame.getLevelSrc()->Id(), m_MotoGame.getTime());
@@ -278,10 +212,7 @@ void StatePlaying::keyDown(int nKey, SDLMod mod,int nChar)
     /* retart immediatly the level */
     m_pGame->restartLevel();
     break;
-//  case SDLK_F5:
-//    restartLevel(true);
-//    break;
-//    
+
   default:
     /* Notify the controller */
     m_pGame->getInputHandler()->handleInput(INPUT_KEY_DOWN, nKey, mod,

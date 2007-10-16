@@ -49,6 +49,8 @@ XMSession::XMSession() {
   m_autosaveHighscoreReplays = true;
   m_enableGhosts             = true;
   m_enableEngineSound        = true;
+  m_showEngineCounter        = true;
+  m_showMinimap              = true;
 }
 
 void XMSession::load(const XMArguments* i_xmargs) {
@@ -140,6 +142,8 @@ void XMSession::load(UserConfig* m_Config) {
   m_autosaveHighscoreReplays = m_Config->getBool("AutosaveHighscoreReplays");
   m_enableGhosts             = m_Config->getBool("EnableGhost");
   m_enableEngineSound        = m_Config->getBool("EngineSoundEnable");
+  m_showEngineCounter        = m_Config->getBool("ShowEngineCounter");
+  m_showMinimap              = m_Config->getBool("ShowMiniMap");
 }
 
 bool XMSession::isVerbose() const {
@@ -312,4 +316,20 @@ void XMSession::setEnableEngineSound(bool i_value) {
 
 bool XMSession::enableEngineSound() const {
   return m_enableEngineSound;
+}
+
+void XMSession::setShowEngineCounter(bool i_value) {
+  m_showEngineCounter = i_value;
+}
+
+bool XMSession::showEngineCounter() const {
+  return m_showEngineCounter;
+}
+
+void XMSession::setShowMinimap(bool i_value) {
+  m_showMinimap = i_value;
+}
+
+bool XMSession::showMinimap() const {
+  return m_showMinimap;
 }
