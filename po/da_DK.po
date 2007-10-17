@@ -175,7 +175,7 @@ msgstr "MacOS x support"
 
 #: src/GameText.h:98
 msgid "Localization"
-msgstr "lokalisering"
+msgstr "Oversættelser"
 
 #: src/GameText.h:99
 msgid "Slovak"
@@ -239,7 +239,7 @@ msgstr "lettisk"
 
 #: src/GameText.h:113
 msgid "Danish"
-msgstr "Dansk"
+msgstr "dansk"
 
 #: src/GameText.h:115
 msgid "Main testers"
@@ -275,7 +275,7 @@ msgstr "for at lave tinyxml"
 
 #: src/GameText.h:127
 msgid "for the MD5 code"
-msgstr "for MD5 koden "
+msgstr "for MD5 koden"
 
 #: src/GameText.h:129
 msgid "Everyone who have made levels"
@@ -283,7 +283,7 @@ msgstr "Alle som har lavet en bane"
 
 #: src/GameText.h:130
 msgid "People who have provided bug reports"
-msgstr "Folk som har indberettet fejl reporter"
+msgstr "Folk som har indberettet fejlreporter"
 
 #: src/GameText.h:131
 msgid "Anyone who has helped in any way"
@@ -307,7 +307,7 @@ msgstr "Opgraderer database "
 
 #: src/GameText.h:137
 msgid "Upgrading database stats for the profile"
-msgstr "Opgraderer database tilstand for profilen "
+msgstr "Opgraderer database tilstand for profilen"
 
 #: src/GameText.h:138
 msgid "Upgrading database profile"
@@ -319,7 +319,7 @@ msgstr "Død-animationen"
 
 #: src/GameText.h:140
 msgid "Defaults"
-msgstr "Standart"
+msgstr "Standard"
 
 #: src/GameText.h:141
 msgid "Do you really want to delete player?"
@@ -343,7 +343,7 @@ msgstr "Beskrivelse"
 
 #: src/GameText.h:147
 msgid "Display Ghost time difference"
-msgstr "Vis spøgelse tids forskelle"
+msgstr "Vis spøgelse tids-forskelle"
 
 #: src/GameText.h:148
 msgid "Display Ghost Information"
@@ -371,15 +371,15 @@ msgid ""
 "Press ESC to abort."
 msgstr ""
 "Henter ekstra baner...\n"
-" Tryk ESC for at afbryde"
+"Tryk ESC for at afbryde."
 
 #: src/GameText.h:154
 msgid "Checking for new levels..."
-msgstr "Tjekker efter nye baner"
+msgstr "Tjekker efter nye baner..."
 
 #: src/GameText.h:155
 msgid "Checking for existing rooms..."
-msgstr "Tjekker efter rum"
+msgstr "Tjekker efter rum..."
 
 #: src/GameText.h:156
 msgid ""
@@ -391,7 +391,7 @@ msgstr ""
 
 #: src/GameText.h:157
 msgid "Checking for new themes..."
-msgstr "Tjekker efter nye temaer"
+msgstr "Tjekker efter nye temaer..."
 
 #: src/GameText.h:158
 msgid "Get More Levels!"
@@ -403,7 +403,7 @@ msgstr "Kør"
 
 #: src/GameText.h:160
 msgid "Enable Audio"
-msgstr "Lyd til/fra"
+msgstr "Lyd"
 
 #: src/GameText.h:161
 msgid "Check new levels at startup"
@@ -415,15 +415,15 @@ msgstr "Tjek for nye rekorder ved opstart"
 
 #: src/GameText.h:163
 msgid "Enable Context Help"
-msgstr "Hjælp til/fra"
+msgstr "Hjælpe tekster"
 
 #: src/GameText.h:164
 msgid "Enable Engine Sound"
-msgstr "Motorlyd til/fra"
+msgstr "Motorlyd"
 
 #: src/GameText.h:165
 msgid "Enable Ghost"
-msgstr "Spøgelse til/fra"
+msgstr "Spøgelse"
 
 #: src/GameText.h:166
 msgid "Show World Record in-game"
@@ -431,11 +431,11 @@ msgstr "Vis verdens rekord i spillet"
 
 #: src/GameText.h:167
 msgid "Enable Music"
-msgstr "Musik til/fra"
+msgstr "Musik"
 
 #: src/GameText.h:168
 msgid "Enable WWW Access"
-msgstr "WWW adgang til/fra"
+msgstr "WWW adgang"
 
 #: src/GameText.h:169
 msgid "Enter player name"
@@ -463,11 +463,11 @@ msgstr "Kunne ikke hente rekorder"
 
 #: src/GameText.h:175
 msgid "Failed to download levels."
-msgstr "Kunne ikke hente baner"
+msgstr "Kunne ikke hente baner."
 
 #: src/GameText.h:176
 msgid "Failed to download the replay."
-msgstr "Kunne ikke hente replayen"
+msgstr "Kunne ikke hente replayen."
 
 #: src/GameText.h:177
 msgid "Failed to download the rooms list."
@@ -490,7 +490,7 @@ msgid ""
 "Failed to save replay!\n"
 "Maybe you should try with another name?"
 msgstr ""
-"Kunne ikke gemme replayen\n"
+"Kunne ikke gemme replayen!\n"
 "Måske skulle du prøve med et andet navn?"
 
 #: src/GameText.h:182
@@ -588,7 +588,7 @@ msgstr "Bremser"
 
 #: src/GameText.h:208
 msgid "Rotates it counter-clockwise"
-msgstr "Roterer den mod uret   "
+msgstr "Roterer den mod uret"
 
 #: src/GameText.h:209
 msgid "Rotates it clockwise"
@@ -636,7 +636,7 @@ msgid ""
 "the level."
 msgstr ""
 "Find alle jordbærene og rør blomsten for at gennemføre\n"
-" banen"
+"banen"
 
 #: src/GameText.h:221
 msgid ""
@@ -656,7 +656,7 @@ msgstr "Høj"
 
 #: src/GameText.h:225
 msgid "Levels are being added into the database. Please wait."
-msgstr "Banen bliver ført ind i databasen. Vent venlist."
+msgstr "Baner bliver ført ind i databasen. Vent venlist."
 
 #: src/GameText.h:226
 msgid "Internet Configuration"
@@ -668,7 +668,7 @@ msgstr "Opstarter input systemet..."
 
 #: src/GameText.h:228
 msgid "Initializing menus..."
-msgstr "Opstarter menuer"
+msgstr "Opstarter menuer..."
 
 #: src/GameText.h:229
 msgid "Initializing renderer..."
@@ -676,7 +676,7 @@ msgstr "Opstarter rendering..."
 
 #: src/GameText.h:230
 msgid "Initializing text renderer..."
-msgstr "Opstarter tekst rendering"
+msgstr "Opstarter tekst rendering..."
 
 #: src/GameText.h:231
 msgid "View Level Initially"
@@ -729,7 +729,7 @@ msgstr "Bane navn"
 #: src/GameText.h:243
 #, c-format
 msgid "Level '%s' cannot be loaded"
-msgstr "Banen '%s' kunne ikke loades "
+msgstr "Banen '%s' kunne ikke loades"
 
 #: src/GameText.h:244
 msgid "Level Pack"
@@ -841,7 +841,7 @@ msgstr "Ny personlig rekord!"
 #, c-format
 msgid "%i new or updated level available. Download now ?"
 msgid_plural "%i new or updated levels available. Download now ?"
-msgstr[0] "%i nye eller opdaterede baner er tilgængelige. Hent dem nu ? "
+msgstr[0] "%i ny eller opdateret bane er tilgængelig. Hent den nu ? "
 msgstr[1] "%i nye eller opdaterede baner er tilgængelige. Hent dem nu ?"
 
 #: src/GameText.h:273
@@ -854,7 +854,7 @@ msgstr "Nye baner tilgængelige"
 
 #: src/GameText.h:275
 msgid "New Profile..."
-msgstr "Ny spiller"
+msgstr "Ny spiller..."
 
 #: src/GameText.h:276
 msgid "No"
@@ -898,14 +898,14 @@ msgstr ""
 "Vigtig note!\n"
 "\n"
 "Dette er en udviklingsversion af X-Moto!\n"
-"Al slags tilbagemelding er højt værdsat så spillet kan blive bedreE-mail "
+"Al slags tilbagemelding er højt værdsat så spillet kan blive bedre. E-mail\n"
 "fejl, ideer, kommentarer, ønsker, hademails osv.\n"
 "til nicolas (at) adenis-lamarre (dot) fr\n"
 "besøg også http://xmoto.tuxfamily.org"
 
 #: src/GameText.h:291
 msgid "# Levels"
-msgstr "Baner"
+msgstr "# Baner"
 
 #: src/GameText.h:292
 msgid "OK"
@@ -913,7 +913,7 @@ msgstr "OK"
 
 #: src/GameText.h:293
 msgid "Open"
-msgstr "Åben"
+msgstr "Ãben"
 
 #: src/GameText.h:294
 msgid "Options"
@@ -922,7 +922,8 @@ msgstr "Indstillinger"
 #: src/GameText.h:295
 msgid "Some options will not take effect before next restart!"
 msgstr ""
-"Nogle af indstillingerne vil første tage effekt efter genstart af X-Moto!"
+"Nogle af indstillingerne vil første tage effekt efter næste genstart af X-"
+"Moto!"
 
 #: src/GameText.h:296
 msgid "By author"
@@ -981,7 +982,7 @@ msgstr "Spiller profiler"
 
 #: src/GameText.h:311
 msgid "Play Next Level"
-msgstr "Spil den næste bane"
+msgstr "Næste bane"
 
 #: src/GameText.h:312
 msgid "Port"
@@ -1010,7 +1011,7 @@ msgstr "Afslut spillet"
 
 #: src/GameText.h:318
 msgid "Do you really want to quit?"
-msgstr "Ønsker du virkelig at afslutte?"
+msgstr "Ãnsker du virkelig at afslutte?"
 
 #: src/GameText.h:319
 msgid "Randomize"
@@ -1237,7 +1238,7 @@ msgstr "Se rekorden"
 #: src/GameText.h:374
 #, c-format
 msgid "Do you want to update level \"%s\"?"
-msgstr "Vil du opdatere banen \"%s\"? "
+msgstr "Vil du opdatere banen \"%s\"?"
 
 #: src/GameText.h:375
 msgid "Warning"
@@ -1888,7 +1889,7 @@ msgstr "Seneste baner"
 
 #: src/GameText.h:546
 msgid "Oldest highscores"
-msgstr "Ældste rekorder"
+msgstr "Ãldste rekorder"
 
 #: src/GameText.h:547
 msgid "Platinum"
@@ -2194,7 +2195,7 @@ msgstr "Så forbliv rolig og følg instruktionerne! :) "
 
 #: src/LevelsText.h:42
 msgid "Pick up the strawberry by touching it"
-msgstr "Opsaml jordbærret ved at røre det"
+msgstr "Opsammel jordbærret ved at røre det"
 
 #: src/LevelsText.h:43
 msgid "Touch it to finish the level. Good luck with the rest :)"
@@ -2276,11 +2277,11 @@ msgstr ""
 
 #: src/LevelsText.h:55
 msgid "Nice jump there! :)"
-msgstr "Flot hop dér =)"
+msgstr "Flot hop dÃ©r =)"
 
 #: src/LevelsText.h:56
 msgid "Congrats, you're now a master jumper!"
-msgstr "Tillykke, du er nu en mester springer!"
+msgstr "Tillykke, du er nu en mester-springer!"
 
 #: src/LevelsText.h:57
 msgid ""
@@ -2364,5 +2365,5 @@ msgid ""
 "there's even less room for your precious head. Good luck! :)"
 msgstr ""
 "Nu til den sidste og sværeste... den er ikke særlig lang\n"
-"men til gengæld er det endnu mindre plads til dit dyrebare hoved! Held og "
-"lykke!"
+"men til gengæld er det endnu mindre plads til dit dyrebare hoved! Held "
+"oglykke!"

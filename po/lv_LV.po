@@ -247,9 +247,8 @@ msgid "Latvian"
 msgstr "latviski"
 
 #: src/GameText.h:113
-#, fuzzy
 msgid "Danish"
-msgstr "spāniski"
+msgstr "dāniski"
 
 #: src/GameText.h:115
 msgid "Main testers"
