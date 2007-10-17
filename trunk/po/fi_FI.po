@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: xmoto\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-10-16 19:05+0200\n"
-"PO-Revision-Date: 2007-09-09 08:24+0200\n"
+"PO-Revision-Date: 2007-10-17 14:34+0200\n"
 "Last-Translator: Maximum <max@mymail.fi>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 
 #: src/GameText.h:33
 msgid "en_EN"
-msgstr ""
+msgstr "en_EN"
 
 #: src/GameText.h:35
 msgid "11 kHz"
@@ -244,9 +244,8 @@ msgid "Latvian"
 msgstr "latvia"
 
 #: src/GameText.h:113
-#, fuzzy
 msgid "Danish"
-msgstr "espanja"
+msgstr "Tanska"
 
 #: src/GameText.h:115
 msgid "Main testers"
@@ -1857,7 +1856,6 @@ msgid "Easiest levels"
 msgstr "Helpoimmat kentät"
 
 #: src/GameText.h:536
-#, fuzzy
 msgid "Crappiest levels"
 msgstr "Huonoimmat kentät"
 
@@ -1922,9 +1920,8 @@ msgid "My levels"
 msgstr "Omat kentät"
 
 #: src/GameText.h:553
-#, fuzzy
 msgid "Crappy levels"
-msgstr "Huonoimmat kentät"
+msgstr "Huonot kentät"
 
 #: src/GameText.h:555
 msgid "Levels with no highscore in your room"
@@ -1959,9 +1956,8 @@ msgid "Easiest X-Moto levels according to the web votes"
 msgstr "Web-äänestyksen mukaan helpoimmat X-Moto-kentät"
 
 #: src/GameText.h:564
-#, fuzzy
 msgid "Crappiest X-Moto levels according to the web votes"
-msgstr "Web-äänestyksen mukaan huonoimmat X-Moto-kentät"
+msgstr "Huonoimmat X-Moto kentät web-äänestyksen mukaan"
 
 #: src/GameText.h:565
 msgid "X-Moto levels which are dynamic"
@@ -2037,7 +2033,7 @@ msgstr "Oheiskentät ('My levels'-hakemistossa)"
 
 #: src/GameText.h:582
 msgid "Levels marked 'crappy' are hidden in all other packs"
-msgstr ""
+msgstr "'Huonoiksi' merkatut kentät piilotetaan kaikissa muissa paketeissa"
 
 #: src/GameText.h:584
 msgid "Ugly mode enabled"
@@ -2089,7 +2085,7 @@ msgstr "Fps pois päältä"
 
 #: src/GameText.h:598
 msgid "FontGroup:GENERAL"
-msgstr ""
+msgstr "FonttiRyhmä:GENERAL"
 
 #: src/LevelsText.h:21
 msgid "First let's take a look at the user interface..."

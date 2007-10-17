@@ -2341,7 +2341,7 @@ msgid ""
 msgstr ""
 "Ten samouczek nauczy Cię poruszania się na tylnym kole\n"
 "w miejscach gdzie sufit jest nisko.\n"
-"W cale nie jest to takie proste :)"
+"Wcale nie jest to takie proste :)"
 
 #: src/LevelsText.h:65
 msgid "Not that difficult, right?"
@@ -2363,9 +2363,11 @@ msgstr ""
 "Teraz ostatnia... Nie jest najdłuższa, ale \n"
 "jest jeszcze mniej miejsca na głowę. Powodzenia! :]"
 
+#, fuzzy
 #~ msgid "Added to the favorite"
 #~ msgstr "Dodaj do ulubionych"
 
+#, fuzzy
 #~ msgid "Delete from the favorite"
 #~ msgstr "Usuń z ulubionych"
 
