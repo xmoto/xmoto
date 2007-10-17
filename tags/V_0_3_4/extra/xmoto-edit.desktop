@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=0.9.2
+Name=Xmoto Level Editor
+Type=Application
+Comment=A challenging 2D motocross platform game
+Exec=xmoto-edit
+TryExec=xmoto-edit
+Path=
+Icon=xmoto.xpm
+Categories=Application;Game;SportsGame;
