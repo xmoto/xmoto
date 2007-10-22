@@ -90,9 +90,7 @@ bool StateScene::render()
 
     ParticlesSource::setAllowParticleGeneration(m_pGame->getGameRenderer()->nbParticlesRendered() < NB_PARTICLES_TO_RENDER_LIMITATION);
   } catch(Exception &e) {
-    StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, GameApp::splitText(e.getMsg(), 50), UI_MSGBOX_OK);
-    v_msgboxState->setId("ERROR");
-    m_pGame->getStateManager()->pushState(v_msgboxState);
+    m_pGame->getStateManager()->replaceState(new StateMessageBox(NULL, m_pGame, GameApp::splitText(e.getMsg(), 50), UI_MSGBOX_OK));
   }
 
   return true;

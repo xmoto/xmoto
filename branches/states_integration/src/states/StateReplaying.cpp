@@ -68,9 +68,9 @@ void StateReplaying::enter()
 								m_pGame->getSession()->enableEngineSound());
       m_pGame->getMotoGame()->getCamera()->setPlayerToFollow(m_replayBiker);
     } catch(Exception &e) {
-      StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, "Unable to read the replay: " + e.getMsg(), UI_MSGBOX_OK);
-      v_msgboxState->setId("ERROR");
-      m_pGame->getStateManager()->pushState(v_msgboxState);
+      m_pGame->abortPlaying();
+      m_pGame->getStateManager()->replaceState(new StateMessageBox(NULL, m_pGame, "Unable to read the replay: " + e.getMsg(), UI_MSGBOX_OK));
+      m_pGame->setState(GS_MENU);
       return;
     }
     
@@ -78,9 +78,9 @@ void StateReplaying::enter()
     try {
       m_pGame->getMotoGame()->loadLevel(m_pGame->getDb(), m_replayBiker->levelId());
     } catch(Exception &e) {
-      StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, e.getMsg(), UI_MSGBOX_OK);
-      v_msgboxState->setId("ERROR");
-      m_pGame->getStateManager()->pushState(v_msgboxState);
+      m_pGame->abortPlaying();
+      m_pGame->getStateManager()->replaceState(new StateMessageBox(this, m_pGame, e.getMsg(), UI_MSGBOX_OK));
+      m_pGame->setState(GS_MENU);
       return;
     }
     
@@ -93,9 +93,9 @@ void StateReplaying::enter()
       char cBuf[256];
       sprintf(cBuf,GAMETEXT_NEWERXMOTOREQUIRED,
 	      m_pGame->getMotoGame()->getLevelSrc()->getRequiredVersion().c_str());
-      StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, cBuf, UI_MSGBOX_OK);
-      v_msgboxState->setId("ERROR");
-      m_pGame->getStateManager()->pushState(v_msgboxState);
+      m_pGame->abortPlaying();
+      m_pGame->getStateManager()->replaceState(new StateMessageBox(this, m_pGame, cBuf, UI_MSGBOX_OK));
+      m_pGame->setState(GS_MENU);
       return;
     }
     
@@ -158,9 +158,9 @@ void StateReplaying::enter()
     m_pGame->getGameRenderer()->setWorldRecordTime(m_pGame->getWorldRecord(m_pGame->getMotoGame()->getLevelSrc()->Id()));
     
   } catch(Exception &e) {
-    StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, GameApp::splitText(e.getMsg(), 50), UI_MSGBOX_OK);
-    v_msgboxState->setId("ERROR");
-    m_pGame->getStateManager()->pushState(v_msgboxState);
+    m_pGame->abortPlaying();
+    m_pGame->getStateManager()->replaceState(new StateMessageBox(this, m_pGame, GameApp::splitText(e.getMsg(), 50), UI_MSGBOX_OK));
+    m_pGame->setState(GS_MENU);
     return;
   }
 
@@ -291,12 +291,4 @@ void StateReplaying::mouseDoubleClick(int nButton)
 void StateReplaying::mouseUp(int nButton)
 {
   StateScene::mouseUp(nButton);
-}
-
-void StateReplaying::send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
-  if(i_id == "ERROR") {
-    m_pGame->abortPlaying();
-    m_requestForEnd = true;
-    m_pGame->setState(GS_MENU); // to be removed once states will be finished
-  }
 }

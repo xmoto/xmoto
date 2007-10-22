@@ -52,7 +52,9 @@ void StateMessageBox::enter()
 
 void StateMessageBox::leave()
 {
-  m_receiver->send(getId(), m_clickedButton, m_msgbox->getTextInput());
+  if(m_receiver != NULL) {
+    m_receiver->send(getId(), m_clickedButton, m_msgbox->getTextInput());
+  }
 }
 
 void StateMessageBox::enterAfterPop()
