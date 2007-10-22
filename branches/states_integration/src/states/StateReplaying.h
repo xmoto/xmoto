@@ -45,7 +45,9 @@ class StateReplaying : public StateScene {
   virtual void mouseDown(int nButton);
   virtual void mouseDoubleClick(int nButton);
   virtual void mouseUp(int nButton);
-  
+
+  void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
+
  protected:
   std::string m_replay;
   ReplayBiker* m_replayBiker; /* replay watched */

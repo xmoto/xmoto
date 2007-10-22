@@ -43,7 +43,9 @@ class StateScene : public GameState {
  virtual void mouseDown(int nButton);
  virtual void mouseDoubleClick(int nButton);
  virtual void mouseUp(int nButton);
- 
+
+ virtual void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
+
  private:
  double m_fLastPhysTime; /* When the last frama was initiated */
 };

@@ -234,7 +234,6 @@ void StatePause::send(const std::string& i_id, UIMsgBoxButton i_button, const st
   if(i_id == "QUIT") {
     switch(i_button) {
     case UI_MSGBOX_YES:
-      m_pGame->m_State = GS_MENU; // to be removed, just the time states are finished
       m_requestForEnd = true;
       m_pGame->requestEnd();
       break;

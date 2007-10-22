@@ -90,10 +90,9 @@ bool StateScene::render()
 
     ParticlesSource::setAllowParticleGeneration(m_pGame->getGameRenderer()->nbParticlesRendered() < NB_PARTICLES_TO_RENDER_LIMITATION);
   } catch(Exception &e) {
-    m_pGame->getStateManager()->pushState(new StateMessageBox(this, m_pGame, GameApp::splitText(e.getMsg(), 50), UI_MSGBOX_OK));
-    //m_pGame->closePlaying();
-    //m_pGame->setState(GS_MENU); // to be removed, just the time states are finished
-    //m_requestForEnd = true;
+    StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, GameApp::splitText(e.getMsg(), 50), UI_MSGBOX_OK);
+    v_msgboxState->setId("ERROR");
+    m_pGame->getStateManager()->pushState(v_msgboxState);
   }
 
   return true;
@@ -128,4 +127,12 @@ void StateScene::mouseDoubleClick(int nButton)
 
 void StateScene::mouseUp(int nButton)
 {
+}
+
+void StateScene::send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
+  if(i_id == "ERROR") {
+    m_pGame->closePlaying();
+    m_requestForEnd = true;
+    m_pGame->setState(GS_MENU); // to be removed once states will be finished
+  }
 }
