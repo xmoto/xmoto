@@ -46,7 +46,7 @@ class StateScene : public GameState {
 
  virtual void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
 
- private:
+ protected:
  double m_fLastPhysTime; /* When the last frama was initiated */
 };
 
