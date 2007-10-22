@@ -88,7 +88,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         _DrawMainGUI();
 	break;
 
-      case GS_PAUSE:
       case GS_FINISHED:
       case GS_DEADMENU:
 
@@ -256,7 +255,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       FontManager* v_fm = getDrawLib()->getFontSmall();
       FontGlyph* v_fg = v_fm->getGlyph(cTemp);
       v_fm->printString(v_fg,
-			130, 0,
+			0, 130,
 			MAKE_COLOR(255,255,255,255), true);
     }    
        
