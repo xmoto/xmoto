@@ -113,7 +113,9 @@ void StatePause::checkEvents() {
   if(pQuitButton->isClicked()) {
     pQuitButton->setClicked(false);
 
-    m_pGame->getStateManager()->pushState(new StateMessageBox(m_pGame, GAMETEXT_QUITMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO));
+    StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, GAMETEXT_QUITMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO);
+    v_msgboxState->setId("QUIT");
+    m_pGame->getStateManager()->pushState(v_msgboxState);
   }
 }
 
@@ -226,4 +228,19 @@ void StatePause::createGUIIfNeeded(GameApp* pGame) {
   v_button->setContextHelp(CONTEXTHELP_QUIT_THE_GAME);
   v_button->setFont(pGame->getDrawLib()->getFontSmall());
 
+}
+
+void StatePause::send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
+  if(i_id == "QUIT") {
+    switch(i_button) {
+    case UI_MSGBOX_YES:
+      m_pGame->m_State = GS_MENU; // to be removed, just the time states are finished
+      m_requestForEnd = true;
+      m_pGame->requestEnd();
+      break;
+    case UI_MSGBOX_NO:
+      return;
+      break;
+    }
+  }
 }

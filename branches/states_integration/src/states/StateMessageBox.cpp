@@ -23,7 +23,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "drawlib/DrawLib.h"
 #include "GameText.h"
 
-StateMessageBox::StateMessageBox(GameApp* pGame,
+StateMessageBox::StateMessageBox(StateMessageBoxReceiver* i_receiver,
+				 GameApp* pGame,
 				 const std::string& i_text,
 				 int i_buttons,
 				 bool i_input,
@@ -34,6 +35,8 @@ StateMessageBox::StateMessageBox(GameApp* pGame,
 	    updateStatesBehind,
 	    pGame)
 {
+  m_receiver = i_receiver;
+  m_clickedButton = UI_MSGBOX_NOTHING;
   createGUI(m_pGame, i_text, i_buttons, i_input, i_query);
 }
 
@@ -49,6 +52,7 @@ void StateMessageBox::enter()
 
 void StateMessageBox::leave()
 {
+  m_receiver->send(getId(), m_clickedButton, m_msgbox->getTextInput());
 }
 
 void StateMessageBox::enterAfterPop()
@@ -65,6 +69,7 @@ void StateMessageBox::checkEvents() {
   UIMsgBoxButton Button = m_msgbox->getClicked();
 
   if(Button == UI_MSGBOX_NOTHING) return;
+  m_clickedButton = Button;
 
   switch(Button) {
   case UI_MSGBOX_OK:

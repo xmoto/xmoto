@@ -22,10 +22,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __STATEMANAGER_H__
 
 #include "VCommon.h"
+#include "StateMessageBoxReceiver.h"
 
 class GameApp;
 
-  class GameState {
+class GameState : public StateMessageBoxReceiver {
   public:
     GameState(bool drawStateBehind,
 	      bool updateStatesBehind,
@@ -84,6 +85,11 @@ class GameApp;
       m_renderPeriod = (float)m_maxFps / (float)m_curRenderFps;
     }
 
+    std::string getId() const;
+    void setId(const std::string& i_id);
+
+    virtual void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
+
   protected:
     bool doUpdate();
     bool doRender();
@@ -108,6 +114,7 @@ class GameApp;
     bool     m_isHide;
     bool     m_drawStateBehind;
     bool     m_updateStatesBehind;
+    std::string m_id;
   };
 
   class StateManager {

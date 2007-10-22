@@ -69,7 +69,7 @@ void StateReplaying::enter()
       m_pGame->getMotoGame()->getCamera()->setPlayerToFollow(m_replayBiker);
     } catch(Exception &e) {
       m_requestForEnd = true;
-      m_pGame->getStateManager()->pushState(new StateMessageBox(m_pGame, "Unable to read the replay: " + e.getMsg(), UI_MSGBOX_OK));
+      m_pGame->getStateManager()->pushState(new StateMessageBox(this, m_pGame, "Unable to read the replay: " + e.getMsg(), UI_MSGBOX_OK));
       return;
     }
     
@@ -77,7 +77,7 @@ void StateReplaying::enter()
     try {
       m_pGame->getMotoGame()->loadLevel(m_pGame->getDb(), m_replayBiker->levelId());
     } catch(Exception &e) {
-      m_pGame->getStateManager()->pushState(new StateMessageBox(m_pGame, e.getMsg(), UI_MSGBOX_OK));
+      m_pGame->getStateManager()->pushState(new StateMessageBox(this, m_pGame, e.getMsg(), UI_MSGBOX_OK));
       return;
     }
     
@@ -93,7 +93,7 @@ void StateReplaying::enter()
       m_pGame->getMotoGame()->endLevel();
 
       m_requestForEnd = true;
-      m_pGame->getStateManager()->pushState(new StateMessageBox(m_pGame, cBuf, UI_MSGBOX_OK));  
+      m_pGame->getStateManager()->pushState(new StateMessageBox(this, m_pGame, cBuf, UI_MSGBOX_OK));  
       return;
     }
     
@@ -158,7 +158,7 @@ void StateReplaying::enter()
   } catch(Exception &e) {
     m_pGame->getMotoGame()->endLevel();
     m_requestForEnd = true;
-    m_pGame->getStateManager()->pushState(new StateMessageBox(m_pGame, GameApp::splitText(e.getMsg(), 50), UI_MSGBOX_OK));  
+    m_pGame->getStateManager()->pushState(new StateMessageBox(this, m_pGame, GameApp::splitText(e.getMsg(), 50), UI_MSGBOX_OK));  
   }
 
   /* Context menu? */

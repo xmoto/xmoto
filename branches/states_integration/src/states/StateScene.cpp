@@ -90,7 +90,7 @@ bool StateScene::render()
 
     ParticlesSource::setAllowParticleGeneration(m_pGame->getGameRenderer()->nbParticlesRendered() < NB_PARTICLES_TO_RENDER_LIMITATION);
   } catch(Exception &e) {
-    m_pGame->getStateManager()->pushState(new StateMessageBox(m_pGame, GameApp::splitText(e.getMsg(), 50), UI_MSGBOX_OK));
+    m_pGame->getStateManager()->pushState(new StateMessageBox(this, m_pGame, GameApp::splitText(e.getMsg(), 50), UI_MSGBOX_OK));
     //m_pGame->closePlaying();
     //m_pGame->setState(GS_MENU); // to be removed, just the time states are finished
     //m_requestForEnd = true;

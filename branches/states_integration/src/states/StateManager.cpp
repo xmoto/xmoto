@@ -314,3 +314,16 @@ bool GameState::doRender()
   }
   return false;
 }
+
+std::string GameState::getId() const {
+  return m_id;
+}
+
+void GameState::setId(const std::string& i_id) {
+  m_id = i_id;
+}
+
+void GameState::send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
+  /* by default, do nothing */
+  Logger::Log("** Warning ** : StateMessageBoxReceiver::send() received, but nothing done !");
+}

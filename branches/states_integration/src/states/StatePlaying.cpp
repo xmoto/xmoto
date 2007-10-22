@@ -60,7 +60,7 @@ void StatePlaying::enter()
 
     char cBuf[256];
     sprintf(cBuf,GAMETEXT_LEVELCANNOTBELOADED, m_pGame->getMotoGame()->getLevelSrc()->Name().c_str());
-    m_pGame->getStateManager()->pushState(new StateMessageBox(m_pGame, cBuf, UI_MSGBOX_OK));
+    m_pGame->getStateManager()->pushState(new StateMessageBox(this, m_pGame, cBuf, UI_MSGBOX_OK));
   }
 }
 

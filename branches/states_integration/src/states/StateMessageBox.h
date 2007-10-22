@@ -23,13 +23,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "StateManager.h"
 #include "StateMenu.h"
+#include "gui/basic/GUI.h"
 
 class UIRoot;
 class UIMsgBox;
+class StateMessageBoxReceiver;
 
 class StateMessageBox : public StateMenu {
   public:
-  StateMessageBox(GameApp* pGame,
+  StateMessageBox(StateMessageBoxReceiver* i_receiver,
+		  GameApp* pGame,
 		  const std::string& i_text,
 		  int i_buttons,
 		  bool i_input = false,
@@ -62,6 +65,9 @@ class StateMessageBox : public StateMenu {
 
   private:
   UIMsgBox* m_msgbox;
+  StateMessageBoxReceiver* m_receiver;
+  UIMsgBoxButton m_clickedButton;
+
   void createGUI(GameApp* pGame, const std::string& i_text, int i_buttons, bool i_input, bool i_query);
 };
 
