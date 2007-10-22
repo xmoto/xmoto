@@ -72,7 +72,7 @@ void StatePlaying::leave()
 
 void StatePlaying::enterAfterPop()
 {
-
+  m_fLastPhysTime = GameApp::getXMTime();
 }
 
 void StatePlaying::leaveAfterPush()
@@ -88,6 +88,7 @@ bool StatePlaying::update()
 
   StateScene::update();
 
+#if 0  
   int numberCam = m_pGame->getMotoGame()->getNumberCameras();
   m_pGame->getMotoGame()->setCurrentCamera(numberCam);
 
@@ -101,7 +102,7 @@ bool StatePlaying::update()
     // m_MotoGame.setCurrentCamera(numberCam);
   }
   // autoZoom();
-
+#endif
 
 //    bool v_all_dead       = true;
 //    bool v_one_still_play = false;
@@ -171,10 +172,6 @@ bool StatePlaying::update()
 
 bool StatePlaying::render()
 {
-  if(doRender() == false){
-    return false;
-  }
-
   StateScene::render();
   return true;
 }

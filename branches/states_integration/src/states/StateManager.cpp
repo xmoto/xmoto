@@ -38,9 +38,11 @@ StateManager::StateManager(GameApp* pGame)
   m_renderFpsNbFrame = 0;
   m_updateFpsNbFrame = 0;
 
-  m_maxUpdateFps = 50;
-  m_maxRenderFps = 50;
-  m_maxFps       = 50;
+  m_maxUpdateFps  = 50;
+  m_maxRenderFps  = 50;
+  m_maxFps        = 50;
+  m_renderCounter = 0;
+  m_curRenderFps  = 50;
 }
 
 StateManager::~StateManager()
@@ -140,21 +142,19 @@ void StateManager::update()
 
 void StateManager::render()
 {
-  bool oneRender = false;
-  /* we have to draw states from the bottom of the stack to the top */
-  std::vector<GameState*>::iterator stateIterator = m_statesStack.begin();
+  if(doRender() == true){
 
-  while(stateIterator != m_statesStack.end()){
-    if((*stateIterator)->isHide() == false){
-      if((*stateIterator)->render() == true){
-	oneRender = true;
+    /* we have to draw states from the bottom of the stack to the top */
+    std::vector<GameState*>::iterator stateIterator = m_statesStack.begin();
+
+    while(stateIterator != m_statesStack.end()){
+      if((*stateIterator)->isHide() == false){
+	(*stateIterator)->render();
       }
-    }
-    
-    stateIterator++;
-  }
 
-  if(oneRender == true){
+      stateIterator++;
+    }
+
     m_renderFpsNbFrame++;
   }
 }
@@ -221,7 +221,7 @@ void StateManager::calculateFps()
     int updateFps = (*stateIterator)->getUpdateFps();
     int renderFps = 0;
     if((*stateIterator)->isHide() == false){
-      renderFps = (*stateIterator)->getRenderFps();
+      renderFps         = (*stateIterator)->getRenderFps();
       topStateRenderFps = renderFps;
     }
 
@@ -251,6 +251,9 @@ void StateManager::calculateFps()
     (*stateIterator)->setMaxFps(m_maxFps);
     stateIterator++;
   }
+
+  m_curRenderFps = topStateRenderFps;
+  m_renderPeriod = (float)m_maxFps / (float)m_curRenderFps;
 }
 
 void StateManager::cleanStates() {
@@ -269,6 +272,17 @@ int StateManager::getCurrentRenderFPS() {
   return m_currentRenderFps;
 }
 
+bool StateManager::doRender()
+{
+  m_renderCounter += 1.0;
+
+  if(m_renderCounter >= m_renderPeriod){
+    m_renderCounter -= m_renderPeriod;
+    return true;
+  }
+  return false;
+}
+
 GameState::GameState(bool drawStateBehind,
 		     bool updateStatesBehind,
 		     GameApp* pGame)
@@ -284,10 +298,10 @@ GameState::GameState(bool drawStateBehind,
   m_renderFps          = 50;
   m_curRenderFps       = m_renderFps;
 
-  m_maxFps = m_updatePeriod = m_renderPeriod = 0;
+  m_maxFps             = 0;
 
+  m_updatePeriod       = 0;
   m_updateCounter      = 0;
-  m_renderCounter      = 0;
 }
 
 GameState::~GameState() {
@@ -299,17 +313,6 @@ bool GameState::doUpdate()
 
   if(m_updateCounter >= m_updatePeriod){
     m_updateCounter -= m_updatePeriod;
-    return true;
-  }
-  return false;
-}
-
-bool GameState::doRender()
-{
-  m_renderCounter += 1.0;
-
-  if(m_renderCounter >= m_renderPeriod){
-    m_renderCounter -= m_renderPeriod;
     return true;
   }
   return false;

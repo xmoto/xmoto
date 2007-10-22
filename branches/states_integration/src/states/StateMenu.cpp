@@ -55,7 +55,7 @@ void StateMenu::enter()
 
 void StateMenu::leave()
 {
-
+  m_pGame->setShowCursor(false);
 }
 
 void StateMenu::enterAfterPop()
@@ -80,11 +80,6 @@ bool StateMenu::update()
 
 bool StateMenu::render()
 {
-  // rendering of the gui must be done by the mother call : to add here when states will be almost finished
-  if(doRender() == false){
-    return false;
-  }
-
   if(m_pGame->getSession()->ugly() == false && m_doShade) {
     float v_currentTime = GameApp::getXMTime();
     int   v_nShade;

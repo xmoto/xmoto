@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "drawlib/DrawLib.h"
 #include "GameText.h"
 #include "StateMessageBox.h"
+#include "helpers/Log.h"
 
 /* static members */
 UIRoot*  StatePause::m_sGUI = NULL;

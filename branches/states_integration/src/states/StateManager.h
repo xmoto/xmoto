@@ -82,7 +82,6 @@ class GameState : public StateMessageBoxReceiver {
     void setMaxFps(int maxFps){
       m_maxFps = maxFps;
       m_updatePeriod = (float)m_maxFps / (float)m_updateFps;
-      m_renderPeriod = (float)m_maxFps / (float)m_curRenderFps;
     }
 
     std::string getId() const;
@@ -92,7 +91,6 @@ class GameState : public StateMessageBoxReceiver {
 
   protected:
     bool doUpdate();
-    bool doRender();
 
     bool     m_requestForEnd;    
     GameApp* m_pGame;
@@ -105,15 +103,13 @@ class GameState : public StateMessageBoxReceiver {
     int m_maxFps;
     // how many max fps beat for one update/render
     float m_updatePeriod;
-    float m_renderPeriod;
     // current beat counters
     float m_updateCounter;
-    float m_renderCounter;
 
   private:
-    bool     m_isHide;
-    bool     m_drawStateBehind;
-    bool     m_updateStatesBehind;
+    bool        m_isHide;
+    bool        m_drawStateBehind;
+    bool        m_updateStatesBehind;
     std::string m_id;
   };
 
@@ -156,6 +152,7 @@ class GameState : public StateMessageBoxReceiver {
   private:
     void calculateWhichStateIsRendered();
     void calculateFps();
+    bool doRender();
 
     std::vector<GameState*> m_statesStack;
 
@@ -175,6 +172,13 @@ class GameState : public StateMessageBoxReceiver {
     int m_maxUpdateFps;
     int m_maxRenderFps;
     int m_maxFps;
+
+    // to render depending on the max Hz
+    float m_renderCounter;
+    // the desired rendering fps
+    int m_curRenderFps;
+    // how many max fps beat for one render
+    float m_renderPeriod;
 
     GameApp* m_pGame;
   };

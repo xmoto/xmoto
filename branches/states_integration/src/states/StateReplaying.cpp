@@ -205,10 +205,6 @@ bool StateReplaying::update()
 
 bool StateReplaying::render()
 {
-  if(doRender() == false){
-    return false;
-  }
-
   for(unsigned int i=0; i<m_pGame->getMotoGame()->Cameras().size(); i++) {
     m_pGame->getMotoGame()->Cameras()[i]->setSpeedMultiplier(10.0); // tell to the camera the nPhysSteps
   }  
