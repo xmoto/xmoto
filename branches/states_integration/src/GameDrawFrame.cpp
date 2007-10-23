@@ -88,7 +88,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         _DrawMainGUI();
 	break;
 
-      case GS_FINISHED:
       case GS_DEADMENU:
 
       case GS_DEADJUST:
@@ -120,7 +119,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 		setFrameDelay(10 - (int)(timeElapsed*1000.0));
 	      */
 	    }
-          } else if(m_State == GS_PLAYING ||
+          } else if(
 		    ((m_State == GS_DEADMENU || m_State == GS_DEADJUST) && m_bEnableDeathAnim)
 		    ) {
             /* When actually playing or when dead and the bike is falling apart, 
@@ -131,13 +130,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	      nPhysSteps = _UpdateGamePlaying();            
 	    }
           }
-  
-	  if(m_State == GS_PLAYING) {
-	    if(numberCam > 1){
-	      m_MotoGame.setCurrentCamera(numberCam);
-	    }
-	    autoZoom();
-	  }
 
           /* Render */
           if(!getDrawLib()->isNoGraphics()) {
@@ -199,7 +191,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
           }
          
           /* Context menu? */
-          if(m_State == GS_PREPLAYING || m_State == GS_PLAYING || !m_bEnableContextHelp)
+          if(m_State == GS_PREPLAYING || !m_bEnableContextHelp)
             m_Renderer->getGUI()->enableContextMenuDrawing(false);
           else
             m_Renderer->getGUI()->enableContextMenuDrawing(true);
@@ -409,7 +401,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /* Update game until we've catched up with the real time */
     int nPhysSteps = 0;
     do {
-      if(m_State == GS_PLAYING || m_State == GS_DEADJUST) {
+      if(m_State == GS_DEADJUST) {
         m_MotoGame.updateLevel(PHYS_STEP_SIZE, m_pJustPlayReplay);
       }
       m_fLastPhysTime += PHYS_STEP_SIZE;

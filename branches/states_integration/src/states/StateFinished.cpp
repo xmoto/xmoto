@@ -47,14 +47,14 @@ StateFinished::~StateFinished()
 
 void StateFinished::enter()
 {
+  StateMenu::enter();
+
   float v_finish_time = 0.0;
   std::string TimeStamp;
   bool v_is_a_room_highscore;
   bool v_is_a_personnal_highscore;
 
-  StateMenu::enter();
-
-  //m_pGame->m_State = GS_FINISHED; // to be removed, just the time states are finished
+  m_pGame->m_State = GS_FINISHED; // to be removed, just the time states are finished
   m_pGame->getMotoGame()->setInfos(m_pGame->getMotoGame()->getLevelSrc()->Name());
   m_pGame->setShowCursor(true);	
   m_pGame->playMusic("");
