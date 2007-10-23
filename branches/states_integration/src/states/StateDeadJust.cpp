@@ -19,13 +19,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
 #include "StateDeadJust.h"
+#include "Game.h"
 
-StateDeadJust::StateDeadJust(bool drawStateBehind,
-			     bool updateStatesBehind,
-			     GameApp* pGame):
-  GameState(drawStateBehind,
-	    updateStatesBehind,
-	    pGame)
+StateDeadJust::StateDeadJust(GameApp* pGame) :
+  StateScene(pGame)
 {
 
 }
@@ -68,7 +65,8 @@ bool StateDeadJust::render()
 
 void StateDeadJust::keyDown(int nKey, SDLMod mod,int nChar)
 {
-
+  m_requestForEnd = true;
+  m_pGame->setState(m_pGame->m_StateAfterPlaying);
 }
 
 void StateDeadJust::keyUp(int nKey,   SDLMod mod)

@@ -25,6 +25,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "helpers/Log.h"
 #include "GameText.h"
 #include "StateMessageBox.h"
+#include "StateFinished.h"
+#include "StateDeadJust.h"
 
 StatePlaying::StatePlaying(GameApp* pGame):
   StateScene(pGame)
@@ -104,68 +106,60 @@ bool StatePlaying::update()
   // autoZoom();
 #endif
 
-//    bool v_all_dead       = true;
-//    bool v_one_still_play = false;
-//    bool v_one_finished   = false;
-// 
-//    for(unsigned int i=0; i<m_MotoGame.Players().size(); i++) {
-//      if(m_MotoGame.Players()[i]->isDead() == false) {
-//	v_all_dead = false;
-//      }
-//      if(m_MotoGame.Players()[i]->isFinished()) {
-//	v_one_finished = true;
-//      }
-//
-//      if(m_MotoGame.Players()[i]->isFinished() == false && m_MotoGame.Players()[i]->isDead() == false) {
-//	v_one_still_play = true;
-//      }
-//    }
-//    
-//    if(v_one_still_play == false || m_bMultiStopWhenOneFinishes) { // let people continuing when one finished or not
-//      if(v_one_finished) {
-//	/* You're done maaaan! :D */
-//	
-//	/* finalize the replay */
-//	if(m_pJustPlayReplay != NULL) {
-//	  if(m_MotoGame.Players().size() == 1) {
-//	    /* save the last state because scene don't record each frame */
-//	    SerializedBikeState BikeState;
-//	    MotoGame::getSerializedBikeState(m_MotoGame.Players()[0]->getState(), m_MotoGame.getTime(), &BikeState);
-//	    m_pJustPlayReplay->storeState(BikeState);
-//	    m_pJustPlayReplay->finishReplay(true,m_MotoGame.Players()[0]->finishTime());
-//	  }
-//	}
-//
-//	/* update profiles */
-//	float v_finish_time = 0.0;
-//	std::string TimeStamp = getTimeStamp();
-//	for(unsigned int i=0; i<m_MotoGame.Players().size(); i++) {
-//	  if(m_MotoGame.Players()[i]->isFinished()) {
-//	    v_finish_time  = m_MotoGame.Players()[i]->finishTime();
-//	  }
-//	}
-//	if(m_MotoGame.Players().size() == 1) {
-//	  m_db->profiles_addFinishTime(m_xmsession->profile(), m_MotoGame.getLevelSrc()->Id(),
-//				       TimeStamp, v_finish_time);
-//	}
-//  
-//	/* Update stats */
-//	/* update stats only in one player mode */
-//	if(m_MotoGame.Players().size() == 1) {       
-//	  m_db->stats_levelCompleted(m_xmsession->profile(),
-//				     m_MotoGame.getLevelSrc()->Id(),
-//				     m_MotoGame.Players()[0]->finishTime());
-//	  _UpdateLevelsLists();
-//	  _UpdateCurrentPackList(m_MotoGame.getLevelSrc()->Id(),
-//				 m_MotoGame.Players()[0]->finishTime());
-//	}
-//
-//	m_stateManager->pushState(new StateFinished(this));
-//      } else if(v_all_dead) {
-//	/* You're dead maan! */
-//	setState(GS_DEADJUST);
-//      }
-//    }
+  bool v_all_dead       = true;
+  bool v_one_still_play = false;
+  bool v_one_finished   = false;
+  
+    for(unsigned int i=0; i<m_pGame->getMotoGame()->Players().size(); i++) {
+      if(m_pGame->getMotoGame()->Players()[i]->isDead() == false) {
+	v_all_dead = false;
+      }
+      if(m_pGame->getMotoGame()->Players()[i]->isFinished()) {
+	v_one_finished = true;
+      }
+      
+      if(m_pGame->getMotoGame()->Players()[i]->isFinished() == false && m_pGame->getMotoGame()->Players()[i]->isDead() == false) {
+	v_one_still_play = true;
+      }
+    }
+    
+    if(v_one_still_play == false || m_pGame->getSession()->MultiStopWhenOneFinishes()) { // let people continuing when one finished or not
+      if(v_one_finished) {
+	/* You're done maaaan! :D */
+	
+	/* finalize the replay */
+	if(m_pGame->isAReplayToSave()) {
+	  m_pGame->finalizeReplay();
+	}
+	
+	/* update profiles */
+	float v_finish_time = 0.0;
+	std::string TimeStamp = m_pGame->getTimeStamp();
+	for(unsigned int i=0; i<m_pGame->getMotoGame()->Players().size(); i++) {
+	  if(m_pGame->getMotoGame()->Players()[i]->isFinished()) {
+	    v_finish_time  = m_pGame->getMotoGame()->Players()[i]->finishTime();
+	  }
+	}
+	if(m_pGame->getMotoGame()->Players().size() == 1) {
+	  m_pGame->getDb()->profiles_addFinishTime(m_pGame->getSession()->profile(), m_pGame->getMotoGame()->getLevelSrc()->Id(),
+				       TimeStamp, v_finish_time);
+	}
+	
+	/* Update stats */
+	/* update stats only in one player mode */
+	if(m_pGame->getMotoGame()->Players().size() == 1) {       
+	  m_pGame->getDb()->stats_levelCompleted(m_pGame->getSession()->profile(),
+				     m_pGame->getMotoGame()->getLevelSrc()->Id(),
+				     m_pGame->getMotoGame()->Players()[0]->finishTime());
+	  m_pGame->updateLevelsListsOnEnd();
+	}
+	
+	m_pGame->getStateManager()->pushState(new StateFinished(m_pGame));
+      } else if(v_all_dead) {
+	/* You're dead maan! */
+	m_pGame->getStateManager()->replaceState(new StateDeadJust(m_pGame));
+      }
+    }
 
   return true;
 }
@@ -188,8 +182,8 @@ void StatePlaying::keyDown(int nKey, SDLMod mod,int nChar)
 
 //  case SDLK_PAGEUP:
 //    if(isThereANextLevel(m_PlaySpecificLevelId)) {
-//      m_db->stats_abortedLevel(m_xmsession->profile(), m_MotoGame.getLevelSrc()->Id(), m_MotoGame.getTime());
-//      m_MotoGame.endLevel();
+//      m_pGame->getDb()->stats_abortedLevel(m_pGame->getSession()->profile(), m_pGame->getMotoGame()->getLevelSrc()->Id(), m_pGame->getMotoGame()->getTime());
+//      m_pGame->getMotoGame()->endLevel();
 //      m_Renderer->unprepareForNewLevel();
 //      m_PlaySpecificLevelId = _DetermineNextLevel(m_PlaySpecificLevelId);
 //      m_bPrePlayAnim = true;
@@ -198,8 +192,8 @@ void StatePlaying::keyDown(int nKey, SDLMod mod,int nChar)
 //    break;
 //  case SDLK_PAGEDOWN:
 //    if(isThereAPreviousLevel(m_PlaySpecificLevelId)) {
-//      m_db-> stats_abortedLevel(m_xmsession->profile(), m_MotoGame.getLevelSrc()->Id(), m_MotoGame.getTime());
-//	m_MotoGame.endLevel();
+//      m_pGame->getDb()-> stats_abortedLevel(m_pGame->getSession()->profile(), m_pGame->getMotoGame()->getLevelSrc()->Id(), m_pGame->getMotoGame()->getTime());
+//	m_pGame->getMotoGame()->endLevel();
 //	m_Renderer->unprepareForNewLevel();
 //	m_PlaySpecificLevelId = _DeterminePreviousLevel(m_PlaySpecificLevelId);
 //	m_bPrePlayAnim = true;

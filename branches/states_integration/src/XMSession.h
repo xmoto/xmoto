@@ -88,6 +88,8 @@ class XMSession {
   bool showEngineCounter() const;
   void setShowMinimap(bool i_value);
   bool showMinimap() const;
+  void setMultiStopWhenOneFinishes(bool i_value);
+  bool MultiStopWhenOneFinishes() const;
 
   private:
   bool m_verbose;
@@ -118,6 +120,7 @@ class XMSession {
   bool m_enableEngineSound;
   bool m_showEngineCounter;
   bool m_showMinimap;
+  bool m_multiStopWhenOneFinishes; /* in multiplayer, stop the game when one finishes the level */
 };
 
 #endif

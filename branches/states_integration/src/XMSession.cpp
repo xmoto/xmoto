@@ -51,6 +51,7 @@ XMSession::XMSession() {
   m_enableEngineSound        = true;
   m_showEngineCounter        = true;
   m_showMinimap              = true;
+  m_multiStopWhenOneFinishes = true;
 }
 
 void XMSession::load(const XMArguments* i_xmargs) {
@@ -144,6 +145,7 @@ void XMSession::load(UserConfig* m_Config) {
   m_enableEngineSound        = m_Config->getBool("EngineSoundEnable");
   m_showEngineCounter        = m_Config->getBool("ShowEngineCounter");
   m_showMinimap              = m_Config->getBool("ShowMiniMap");
+  m_multiStopWhenOneFinishes = m_Config->getBool("MultiStopWhenOneFinishes");
 }
 
 bool XMSession::isVerbose() const {
@@ -332,4 +334,12 @@ void XMSession::setShowMinimap(bool i_value) {
 
 bool XMSession::showMinimap() const {
   return m_showMinimap;
+}
+
+void XMSession::setMultiStopWhenOneFinishes(bool i_value) {
+  m_multiStopWhenOneFinishes = i_value;
+}
+
+bool XMSession::MultiStopWhenOneFinishes() const {
+  return m_multiStopWhenOneFinishes;
 }

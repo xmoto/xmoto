@@ -224,6 +224,10 @@ class StateManager;
 	return m_WebHighscoresIdRoom;
       }
 
+      /* call to close the replay */
+      void finalizeReplay();
+      void updateLevelsListsOnEnd();
+
       static std::string splitText(const std::string &str, int p_breakLineLength);
 
    protected:
@@ -231,7 +235,6 @@ class StateManager;
 
     private:   
       /* Data */
-      bool m_bMultiStopWhenOneFinishes;         /* in multiplayer, stop the game when one finishes the level */
       bool m_bEnableInitZoom;                   /* true: Perform initial level scroll/zoom */
       bool m_autoZoom;                          /* true : the key is pressed so that it zooms out to see the level */
       int m_autoZoomStep;
@@ -524,7 +527,6 @@ class StateManager;
       void _DrawMouseCursor(void);
       int _UpdateGamePlaying(void); /* returns number of physics steps performed */
       int _UpdateGameReplaying(void); /* return whether the game state is valid */
-      void _PostUpdatePlaying(void);
       void _PostUpdateJustDead(void);
 
       void autoZoom();

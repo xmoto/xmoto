@@ -929,7 +929,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     pMultiStopWhenOneFinishes->setFont(drawLib->getFontSmall());
     pMultiStopWhenOneFinishes->setGroup(50050);
     pMultiStopWhenOneFinishes->setContextHelp(CONTEXTHELP_MULTISTOPWHENONEFINISHES);    
-    pMultiStopWhenOneFinishes->setChecked(m_bMultiStopWhenOneFinishes);
+    pMultiStopWhenOneFinishes->setChecked(m_xmsession->MultiStopWhenOneFinishes());
   }
 
   int GameApp::getNumberOfPlayersToPlay() {
@@ -1904,8 +1904,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     if(pMultiStopWhenOneFinishes->isClicked()) {
       pMultiStopWhenOneFinishes->setClicked(false);
-      m_bMultiStopWhenOneFinishes = pMultiStopWhenOneFinishes->getChecked();
-      m_Config.setBool("MultiStopWhenOneFinishes", m_bMultiStopWhenOneFinishes);
+
+      m_xmsession->setMultiStopWhenOneFinishes(pMultiStopWhenOneFinishes->getChecked());
+      m_Config.setBool("MultiStopWhenOneFinishes", pMultiStopWhenOneFinishes->getChecked());
     }
 
     UIButton *pSaveOptions = (UIButton *)m_pOptionsWindow->getChild("SAVE_BUTTON");

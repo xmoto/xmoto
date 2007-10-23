@@ -253,7 +253,6 @@ GameApp::GameApp() {
 
   m_bEnableMenuMusic=false;
   m_bEnableInitZoom=true;
-  m_bMultiStopWhenOneFinishes=true;
   m_autoZoom = false;
   m_autoZoomStep = 0;
   m_bAutoZoomInitialized = false;
@@ -546,7 +545,7 @@ GameApp::GameApp() {
     m_bEnableDeathAnim = m_Config.getBool("DeathAnim");
 
     /* multi */
-    m_bMultiStopWhenOneFinishes = m_Config.getBool("MultiStopWhenOneFinishes");
+    m_xmsession->setMultiStopWhenOneFinishes(m_Config.getBool("MultiStopWhenOneFinishes"));
 
     /* www */
     m_WebHighscoresURL    = m_Config.getString("WebHighscoresURL");
@@ -2644,4 +2643,20 @@ GameRenderer* GameApp::getGameRenderer() {
 
 InputHandler* GameApp::getInputHandler() {
   return &m_InputHandler;
+}
+
+void GameApp::finalizeReplay() {
+  if(m_MotoGame.Players().size() != 1) return;
+
+  /* save the last state because scene don't record each frame */
+  SerializedBikeState BikeState;
+  MotoGame::getSerializedBikeState(m_MotoGame.Players()[0]->getState(), m_MotoGame.getTime(), &BikeState);
+  m_pJustPlayReplay->storeState(BikeState);
+  m_pJustPlayReplay->finishReplay(true, m_MotoGame.Players()[0]->finishTime());
+}
+
+void GameApp::updateLevelsListsOnEnd() {
+  _UpdateLevelsLists();
+  _UpdateCurrentPackList(m_MotoGame.getLevelSrc()->Id(),
+			 m_MotoGame.Players()[0]->finishTime());
 }
