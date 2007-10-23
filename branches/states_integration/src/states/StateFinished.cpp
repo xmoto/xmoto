@@ -54,7 +54,7 @@ void StateFinished::enter()
 
   StateMenu::enter();
 
-  m_pGame->m_State = GS_FINISHED; // to be removed, just the time states are finished
+  //m_pGame->m_State = GS_FINISHED; // to be removed, just the time states are finished
   m_pGame->getMotoGame()->setInfos(m_pGame->getMotoGame()->getLevelSrc()->Name());
   m_pGame->setShowCursor(true);	
   m_pGame->playMusic("");
