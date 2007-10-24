@@ -51,7 +51,7 @@ StateManager::~StateManager()
 
 void StateManager::pushState(GameState* pNewState)
 {
-  Logger::Log("pushState");
+  Logger::Log("pushState number states:%d", m_statesStack.size());
 
   if(m_statesStack.size() != 0){
     (m_statesStack.back())->leaveAfterPush();
@@ -66,7 +66,7 @@ void StateManager::pushState(GameState* pNewState)
 
 GameState* StateManager::popState()
 {
-  Logger::Log("popState");
+  Logger::Log("popState number states:%d", m_statesStack.size());
 
   (m_statesStack.back())->leave();
   GameState* pState = m_statesStack.back();
@@ -93,6 +93,8 @@ GameState* StateManager::flush() {
 
 GameState* StateManager::replaceState(GameState* pNewState)
 {
+  Logger::Log("replaceState number states:%d", m_statesStack.size());
+
   GameState* pPreviousState = NULL;
 
   if(m_statesStack.size() != 0){
@@ -118,7 +120,7 @@ void StateManager::update()
   std::vector<GameState*> tmp = m_statesStack;
   std::vector<GameState*>::reverse_iterator stateIterator = tmp.rbegin();
 
-  while(stateIterator != m_statesStack.rend()){
+  while(stateIterator != tmp.rend()){
     if((*stateIterator)->update() == true){
       oneUpdate = true;
     }
