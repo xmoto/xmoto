@@ -113,7 +113,10 @@ GameState* StateManager::replaceState(GameState* pNewState)
 void StateManager::update()
 {
   bool oneUpdate = false;
-  std::vector<GameState*>::reverse_iterator stateIterator = m_statesStack.rbegin();
+  // we need a temporary vector to iterate on, because in their update
+  // function, some states can push/replace a new state
+  std::vector<GameState*> tmp = m_statesStack;
+  std::vector<GameState*>::reverse_iterator stateIterator = tmp.rbegin();
 
   while(stateIterator != m_statesStack.rend()){
     if((*stateIterator)->update() == true){
@@ -126,6 +129,7 @@ void StateManager::update()
     stateIterator++;
   }
 
+  
   if(oneUpdate == true){
     m_updateFpsNbFrame++;
   }
