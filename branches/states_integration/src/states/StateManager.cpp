@@ -49,10 +49,19 @@ StateManager::~StateManager()
 {
 }
 
+void StateManager::logStateStack()
+{
+  std::vector<GameState*>::iterator stateIterator = m_statesStack.begin();
+
+  while(stateIterator != m_statesStack.end()){
+    Logger::Log(" --%s", (*stateIterator)->getName().c_str());
+
+    stateIterator++;
+  }
+}
+
 void StateManager::pushState(GameState* pNewState)
 {
-  Logger::Log("pushState number states:%d", m_statesStack.size());
-
   if(m_statesStack.size() != 0){
     (m_statesStack.back())->leaveAfterPush();
   }
@@ -62,12 +71,15 @@ void StateManager::pushState(GameState* pNewState)
 
   calculateWhichStateIsRendered();
   calculateFps();
+
+  Logger::Log("pushState (%s) number states:%d",
+	      pNewState->getName().c_str(),
+	      m_statesStack.size());
+  logStateStack();
 }
 
 GameState* StateManager::popState()
 {
-  Logger::Log("popState number states:%d", m_statesStack.size());
-
   (m_statesStack.back())->leave();
   GameState* pState = m_statesStack.back();
   m_statesStack.pop_back();
@@ -78,6 +90,11 @@ GameState* StateManager::popState()
   calculateWhichStateIsRendered();
   calculateFps();
   
+  Logger::Log("popState (%s) number states:%d",
+	      (m_statesStack.back())->getName().c_str(),
+	      m_statesStack.size());
+  logStateStack();
+
   return pState;
 }
 
@@ -93,8 +110,6 @@ GameState* StateManager::flush() {
 
 GameState* StateManager::replaceState(GameState* pNewState)
 {
-  Logger::Log("replaceState number states:%d", m_statesStack.size());
-
   GameState* pPreviousState = NULL;
 
   if(m_statesStack.size() != 0){
@@ -108,6 +123,11 @@ GameState* StateManager::replaceState(GameState* pNewState)
 
   calculateWhichStateIsRendered();
   calculateFps();
+
+  Logger::Log("replaceState (%s) number states:%d",
+	      pNewState->getName().c_str(),
+	      m_statesStack.size());
+  logStateStack();
 
   return pPreviousState;
 }

@@ -28,6 +28,7 @@ StateCreditsMode::StateCreditsMode(GameApp* pGame, const std::string& i_replay):
   StateReplaying(pGame, i_replay)
 {
   m_credits = new Credits();
+  m_name    = "StateCreditsMode";
 }
 
 StateCreditsMode::~StateCreditsMode()

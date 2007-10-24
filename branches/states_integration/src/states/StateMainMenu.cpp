@@ -27,7 +27,7 @@ StateMainMenu::StateMainMenu(bool drawStateBehind,
 	    updateStatesBehind,
 	    pGame)
 {
-
+  m_name    = "StateMainMenu";
 }
 
 StateMainMenu::~StateMainMenu()

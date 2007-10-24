@@ -27,7 +27,7 @@ StateLevelPackViewer::StateLevelPackViewer(bool drawStateBehind,
 	    updateStatesBehind,
 	    pGame)
 {
-
+  m_name  = "StateLevelPackViewer";
 }
 
 StateLevelPackViewer::~StateLevelPackViewer()

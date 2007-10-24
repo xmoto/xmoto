@@ -36,7 +36,7 @@ StateDeadMenu::StateDeadMenu(GameApp* pGame,
 	    true,
 	    i_doShadeAnim)
 {
-
+  m_name    = "StateDeadMenu";
 }
 
 StateDeadMenu::~StateDeadMenu()

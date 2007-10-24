@@ -27,7 +27,7 @@ StatePreplaying::StatePreplaying(bool drawStateBehind,
 	    updateStatesBehind,
 	    pGame)
 {
-
+  m_name  = "StatePreplaying";
 }
 
 StatePreplaying::~StatePreplaying()

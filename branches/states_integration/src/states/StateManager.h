@@ -89,6 +89,10 @@ class GameState : public StateMessageBoxReceiver {
 
     virtual void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
 
+    std::string getName() const {
+      return m_name;
+    }
+
   protected:
     bool doUpdate();
 
@@ -105,6 +109,8 @@ class GameState : public StateMessageBoxReceiver {
     float m_updatePeriod;
     // current beat counters
     float m_updateCounter;
+
+    std::string m_name;
 
   private:
     bool        m_isHide;
@@ -153,6 +159,8 @@ class GameState : public StateMessageBoxReceiver {
     void calculateWhichStateIsRendered();
     void calculateFps();
     bool doRender();
+
+    void logStateStack();
 
     std::vector<GameState*> m_statesStack;
 

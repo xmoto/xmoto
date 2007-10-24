@@ -34,7 +34,7 @@ StateEditProfile::StateEditProfile(GameApp* pGame,
 	    updateStatesBehind,
 	    pGame)
 {
-
+  m_name    = "StateEditProfile";
 }
 
 StateEditProfile::~StateEditProfile()

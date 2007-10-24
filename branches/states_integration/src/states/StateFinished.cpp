@@ -37,7 +37,7 @@ StateFinished::StateFinished(GameApp* pGame,
 	    pGame,
 	    true)
 {
-
+  m_name    = "StateFinished";
 }
 
 StateFinished::~StateFinished()

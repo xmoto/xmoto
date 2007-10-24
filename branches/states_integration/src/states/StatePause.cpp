@@ -36,6 +36,7 @@ StatePause::StatePause(GameApp* pGame,
 	    pGame,
 	    true)
 {
+  m_name  = "StatePause";
 }
 
 StatePause::~StatePause()

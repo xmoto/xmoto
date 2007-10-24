@@ -27,7 +27,7 @@ StateEditWebConfig::StateEditWebConfig(bool drawStateBehind,
 	    updateStatesBehind,
 	    pGame)
 {
-
+  m_name    = "StateEditWebConfig";
 }
 
 StateEditWebConfig::~StateEditWebConfig()

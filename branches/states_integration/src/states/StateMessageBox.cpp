@@ -38,6 +38,7 @@ StateMessageBox::StateMessageBox(StateMessageBoxReceiver* i_receiver,
   m_receiver = i_receiver;
   m_clickedButton = UI_MSGBOX_NOTHING;
   createGUI(m_pGame, i_text, i_buttons, i_input, i_query);
+  m_name  = "StateMessageBox";
 }
 
 StateMessageBox::~StateMessageBox()
