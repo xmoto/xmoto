@@ -89,9 +89,9 @@ GameState* StateManager::popState()
   
   calculateWhichStateIsRendered();
   calculateFps();
-  
+
   Logger::Log("popState (%s) number states:%d",
-	      (m_statesStack.back())->getName().c_str(),
+	      pState->getName().c_str(),
 	      m_statesStack.size());
   logStateStack();
 
@@ -169,7 +169,6 @@ void StateManager::update()
 void StateManager::render()
 {
   if(doRender() == true){
-
     /* we have to draw states from the bottom of the stack to the top */
     std::vector<GameState*>::iterator stateIterator = m_statesStack.begin();
 

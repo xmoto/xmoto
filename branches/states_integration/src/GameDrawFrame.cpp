@@ -91,7 +91,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       case GS_DEADMENU:
 
       case GS_DEADJUST:
-      case GS_PREPLAYING:
      {
 
         /* These states all requires that the actual game graphics are rendered (i.e. inside 
@@ -102,24 +101,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
           /* When did the frame start? */
           double fStartFrameTime = getXMTime();                    
 	  int numberCam = m_MotoGame.getNumberCameras();
-          if(m_State == GS_PREPLAYING) {
-            /* If "preplaying" / "initial-zoom" is enabled, this is where it's done */
-	    if(numberCam > 1){
-	      m_MotoGame.setCurrentCamera(numberCam);
-	    }
-            statePrestart_step();
-
-	    if(m_xmsession->timedemo() == false) {
-	      /* limit framerate while PREPLAY (100 fps)*/
-	      // TODO::MANU::the sleep is done in only one place now.
-	      // put it there
-	      /*
-	      double timeElapsed = getXMTime() - fStartFrameTime;
-	      if(timeElapsed < 0.01)
-		setFrameDelay(10 - (int)(timeElapsed*1000.0));
-	      */
-	    }
-          } else if(
+	  if(
 		    ((m_State == GS_DEADMENU || m_State == GS_DEADJUST) && m_bEnableDeathAnim)
 		    ) {
             /* When actually playing or when dead and the bike is falling apart, 
@@ -189,13 +171,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
             /* Hmm, you're dead and you know it. */
             _PostUpdateJustDead();
           }
-         
-          /* Context menu? */
-          if(m_State == GS_PREPLAYING || !m_bEnableContextHelp)
-            m_Renderer->getGUI()->enableContextMenuDrawing(false);
-          else
-            m_Renderer->getGUI()->enableContextMenuDrawing(true);
-          
+
           /* Draw GUI */
 	  // only if it's not the autozoom camera
 	  if(m_MotoGame.getCurrentCamera() != m_MotoGame.getNumberCameras()){
@@ -222,6 +198,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
        m_State == GS_LEVEL_INFO_VIEWER ||
        m_State == GS_REPLAYING         ||
        m_State == GS_PLAYING           ||
+       m_State == GS_PREPLAYING        ||
        m_State == GS_CREDITSMODE
        ) {
       /* draw the game states */

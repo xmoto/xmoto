@@ -47,6 +47,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "states/StatePause.h"
 #include "states/StateDeadMenu.h"
 #include "states/StatePlaying.h"
+#include "states/StatePreplaying.h"
 
   bool GameApp::haveMouseMoved() {
     int nX,nY;
@@ -411,17 +412,6 @@ GameApp::GameApp() {
 			setPrePlayAnim(true);
 			break;
 		}
-		case GS_PREPLAYING: {
-		  m_Renderer->setShowTimePanel(false);
-			/* because statePrestart_init() can call setState */
-			if(m_bEnableMenuMusic && Sound::isEnabled()) {
-				Sound::stopMusic();
-				m_playingMusic = "";
-			}
-			statePrestart_init();
-			return;
-			break;
-		}
 		case GS_DEADJUST: {
 			m_MotoGame.setInfos(m_MotoGame.getLevelSrc()->Name());
 			v_newMusicPlaying = "";
@@ -776,15 +766,6 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
       }
       break;
     }
-  case GS_PREPLAYING:
-    /* any key to remove the animation */
-    //switch(nKey) {
-    //case SDLK_ESCAPE:
-    //case SDLK_RETURN:
-    m_bPrePlayAnim = false;
-    //break;
-    //}
-    break;
 
     // states already in the state manager
   case GS_LEVEL_INFO_VIEWER:
@@ -1304,7 +1285,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
       }
     }
 
-    setState(GS_PREPLAYING);   
+    m_stateManager->replaceState(new StatePreplaying(this, m_PlaySpecificLevelId));
   }
 
 void GameApp::abortPlaying() {
@@ -1746,153 +1727,6 @@ void GameApp::closePlaying() {
 
   void GameApp::setPrePlayAnim(bool pEnabled) {
     m_bPrePlayAnim = pEnabled;
-  }
-
-  void GameApp::statePrestart_init() {
-    char **v_result;
-    unsigned int nrow;
-    char *v_res;
-
-    //        SDL_ShowCursor(SDL_DISABLE);
-    m_bShowCursor = false;
-      
-    /* Initialize controls */
-    m_InputHandler.configure(&m_Config);
-      
-    /* Default playing state */
-    m_fLastPerfStateTime = 0.0f;
-      
-    /* We need a profile */
-    if(m_xmsession->profile() == "") {
-      Logger::Log("** Warning ** : no player profile selected, use -profile option");
-      throw Exception("no player");
-    }
-      
-    /* Find the level */
-    try {
-     m_MotoGame.loadLevel(m_db, m_PlaySpecificLevelId);
-    } catch(Exception &e) {
-      Logger::Log("** Warning ** : level '%s' cannot be loaded",m_PlaySpecificLevelId.c_str());
-      char cBuf[256];
-      sprintf(cBuf,GAMETEXT_LEVELCANNOTBELOADED,m_PlaySpecificLevelId.c_str());
-      setState(m_StateAfterPlaying);
-      notifyMsg(cBuf);
-      return;
-    }
-
-    if(m_MotoGame.getLevelSrc()->isXMotoTooOld()) {
-      Logger::Log("** Warning ** : level '%s' requires newer X-Moto",
-	  m_MotoGame.getLevelSrc()->Name().c_str());
-  
-      char cBuf[256];
-      sprintf(cBuf,GAMETEXT_NEWERXMOTOREQUIRED,
-	      m_MotoGame.getLevelSrc()->getRequiredVersion().c_str());
-      m_MotoGame.endLevel();
-
-      setState(m_StateAfterPlaying);
-      notifyMsg(cBuf);     
-      return;
-    }
-
-    /* Start playing right away */     
-
-    if(m_pJustPlayReplay != NULL) delete m_pJustPlayReplay;
-    m_pJustPlayReplay = NULL;
-      
-    if(m_bRecordReplays && getNumberOfPlayersToPlay() == 1) {
-      m_pJustPlayReplay = new Replay;
-      m_pJustPlayReplay->createReplay("Latest.rpl",
-				      m_MotoGame.getLevelSrc()->Id(),m_xmsession->profile(), m_fReplayFrameRate,sizeof(SerializedBikeState));
-    }
-      
-      try {
-	m_InputHandler.reset();
-	//m_InputHandler.setMirrored(m_MotoGame.getCamera()->isMirrored());
-	m_MotoGame.prePlayLevel(&m_InputHandler, m_pJustPlayReplay, true);
-	m_MotoGame.setInfos("");
-	
-	/* add the players */
-	int v_nbPlayer = getNumberOfPlayersToPlay();
-	Logger::Log("Preplay level for %i player(s)", v_nbPlayer);
-
-	initCameras(v_nbPlayer);
-
-	for(int i=0; i<v_nbPlayer; i++) {
-		m_MotoGame.setCurrentCamera(i);
-		m_MotoGame.getCamera()->setPlayerToFollow(m_MotoGame.addPlayerBiker(m_MotoGame.getLevelSrc()->PlayerStart(),
-										    DD_RIGHT,
-										    &m_theme, m_theme.getPlayerTheme(),
-										    getColorFromPlayerNumber(i),
-										    getUglyColorFromPlayerNumber(i),
-										    m_xmsession->enableEngineSound()));
-	}
-	// if there's more camera than player (ex: 3 players and 4 cameras),
-	// then, make the remaining cameras follow the first player
-	if(v_nbPlayer < m_MotoGame.getNumberCameras()){
-	  for(int i=v_nbPlayer; i<m_MotoGame.getNumberCameras(); i++){
-	    m_MotoGame.setCurrentCamera(i);
-	    m_MotoGame.getCamera()->setPlayerToFollow(m_MotoGame.Players()[0]);
-	  }
-	}
-
-	if(m_MotoGame.getNumberCameras() > 1){
-	  // make the zoom camera follow the first player
-	  m_MotoGame.setCurrentCamera(m_MotoGame.getNumberCameras());
-	  m_MotoGame.getCamera()->setPlayerToFollow(m_MotoGame.Players()[0]);
-	}
-
-	/* add the ghosts */
-	if(m_xmsession->enableGhosts()) {
-	  try {
-	    addGhosts(&m_MotoGame, &m_theme);
-	  } catch(Exception &e) {
-	    /* anyway */
-	  }
-	}
-      } catch(Exception &e) {
-	Logger::Log(std::string("** Warning ** : failed to initialize level\n" + e.getMsg()).c_str());
-	m_MotoGame.endLevel();
-	setState(m_StateAfterPlaying);
-	notifyMsg(splitText(e.getMsg(), 50));
-	return;
-      }
-
-    m_State = GS_PREPLAYING;
-
-    std::string T1 = "--:--:--", T2 = "--:--:--";
-
-    /* get best result */
-    v_result = m_db->readDB("SELECT MIN(finishTime) FROM profile_completedLevels WHERE "
-    			    "id_level=\"" + 
-    			    xmDatabase::protectString(m_MotoGame.getLevelSrc()->Id()) + "\";",
-    			    nrow);
-    v_res = m_db->getResult(v_result, 1, 0, 0);
-    if(v_res != NULL) {
-      T1 = formatTime(atof(v_res));
-    }
-    m_db->read_DB_free(v_result);
-    
-    /* get best player result */
-    v_result = m_db->readDB("SELECT MIN(finishTime) FROM profile_completedLevels WHERE "
-    			    "id_level=\"" + 
-    			    xmDatabase::protectString(m_MotoGame.getLevelSrc()->Id()) + "\" " + 
-    			    "AND id_profile=\"" + xmDatabase::protectString(m_xmsession->profile())  + "\";",
-    			    nrow);
-    v_res = m_db->getResult(v_result, 1, 0, 0);
-    if(v_res != NULL) {
-      T2 = formatTime(atof(v_res));
-    }
-    m_db->read_DB_free(v_result);
-    
-    m_Renderer->setBestTime(T1 + std::string(" / ") + T2);
-    m_Renderer->hideReplayHelp();
-    
-    /* World-record stuff */
-    m_Renderer->setWorldRecordTime(getWorldRecord(m_PlaySpecificLevelId));
-
-    /* Prepare level */
-    m_Renderer->prepareForNewLevel();
-    prestartAnimation_init();
   }
 
   void GameApp::initCameras(int nbPlayer) {
@@ -2659,4 +2493,8 @@ void GameApp::updateLevelsListsOnEnd() {
   _UpdateLevelsLists();
   _UpdateCurrentPackList(m_MotoGame.getLevelSrc()->Id(),
 			 m_MotoGame.Players()[0]->finishTime());
+}
+
+Replay* GameApp::getCurrentReplay() {
+  return m_pJustPlayReplay;
 }

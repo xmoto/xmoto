@@ -183,7 +183,11 @@ class StateManager;
       const std::string & getUserNotify(void) {
 	return m_UserNotify;
       }
-    
+      
+      UserConfig* getUserConfig() { /* to remove */
+	return &m_Config;
+      }
+
       XMSession* getSession();
       void setShowCursor(bool bValue);
       void switchLevelToFavorite(const std::string& i_levelId, bool v_displayMessage = false);
@@ -202,6 +206,7 @@ class StateManager;
       void playNextLevel();
       void playMusic(const std::string& i_music); // "" => no music
       bool isAReplayToSave() const;
+      Replay* getCurrentReplay();
       void isTheCurrentPlayAHighscore(bool& o_personal, bool& o_room);
       void saveReplay(const std::string &Name);
       void uploadHighscore(std::string p_replayname, bool b_notify = true);
@@ -209,6 +214,10 @@ class StateManager;
 
       // ask the game to close as soon as possible
       void requestEnd();
+
+      int getNumberOfPlayersToPlay();
+      TColor getColorFromPlayerNumber(int i_player);
+      TColor getUglyColorFromPlayerNumber(int i_player);
 
       //
       xmDatabase* getDb();
@@ -500,7 +509,6 @@ class StateManager;
       void switchTestThemeMode(bool mode);
       void switchUglyOverMode(bool mode);
 
-      void statePrestart_init();
       void statePrestart_step();
       void prestartAnimation_init();
       void prestartAnimation_step();
@@ -531,9 +539,6 @@ class StateManager;
 
       void autoZoom();
 
-      int getNumberOfPlayersToPlay();
-      TColor getColorFromPlayerNumber(int i_player);
-      TColor getUglyColorFromPlayerNumber(int i_player);
 
       UIWindow* stats_generateReport(const std::string &PlayerName, UIWindow *pParent,
 				     int x, int y, int nWidth, int nHeight, FontManager* pFont);

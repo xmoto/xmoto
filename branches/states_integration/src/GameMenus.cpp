@@ -36,6 +36,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "states/StateEditProfile.h"
 #include "states/StateLevelInfoViewer.h"
 #include "states/StateReplaying.h"
+#include "states/StatePreplaying.h"
 #include "states/StateCreditsMode.h"
 
   UIFrame* GameApp::makeHelpWindow(DrawLib* i_drawLib, UIWindow* io_parent, UserConfig* i_Config) {
@@ -1328,7 +1329,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	m_PlaySpecificLevelId = i_level;
 	m_StateAfterPlaying = GS_LEVELPACK_VIEWER;
 	m_currentPlayingList = pList;
-	setState(GS_PREPLAYING);
+	m_stateManager->pushState(new StatePreplaying(this, i_level));
       }
     }
 
@@ -1597,7 +1598,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       }
       m_pMainMenu->showWindow(false);
       m_StateAfterPlaying = GS_MENU;
-      setState(GS_PREPLAYING);     
+      m_stateManager->pushState(new StatePreplaying(this, m_PlaySpecificLevelId));
     }
 
     UIEdit *pReplayFilterEdit = reinterpret_cast<UIEdit *>(m_pReplaysWindow->getChild("REPLAYS_FILTER"));
@@ -1960,7 +1961,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         m_PlaySpecificLevelId = "tut1";
         m_StateAfterPlaying = GS_MENU;
 	m_currentPlayingList = NULL;
-        setState(GS_PREPLAYING);
+	m_stateManager->pushState(new StatePreplaying(this, m_PlaySpecificLevelId));
       } catch(Exception &e) {
       }
     }
@@ -2030,7 +2031,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         m_pMainMenu->showWindow(false);      
         m_PlaySpecificLevelId = v_id_level;
         m_StateAfterPlaying = GS_MENU;
-        setState(GS_PREPLAYING);
+	m_stateManager->pushState(new StatePreplaying(this, v_id_level));
       }
     }
     else if(pLevelInfoButton->isClicked()

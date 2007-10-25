@@ -46,6 +46,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "states/StateManager.h"
 #include "states/StateEditProfile.h"
 #include "states/StateReplaying.h"
+#include "states/StatePreplaying.h"
 
 #define DATABASE_FILE FS::getUserDirUTF8() + "/" + "xm.db"
 
@@ -625,7 +626,7 @@ void GameApp::_Wait()
     if((m_PlaySpecificLevelId != "") && m_xmsession->useGraphics()) {
       /* ======= PLAY SPECIFIC LEVEL ======= */
       m_StateAfterPlaying = GS_MENU;
-      setState(GS_PREPLAYING);
+      m_stateManager->pushState(new StatePreplaying(this, m_PlaySpecificLevelId));
       Logger::Log("Playing as '%s'...", m_xmsession->profile().c_str());
     }
     else if(m_PlaySpecificReplay != "") {

@@ -21,32 +21,32 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __STATEPREPLAYING_H__
 #define __STATEPREPLAYING_H__
 
-#include "StateManager.h"
+#include "StateScene.h"
 
-  class StatePreplaying : public GameState {
+class StatePreplaying : public StateScene {
   public:
-    StatePreplaying(bool drawStateBehind,
-		    bool updateStatesBehind,
-		    GameApp* pGame);
-    virtual ~StatePreplaying();
-
-    virtual void enter();
-    virtual void leave();
-    /* called when a new state is pushed or poped on top of the
-       current one*/
-    virtual void enterAfterPop();
-    virtual void leaveAfterPush();
-
-    virtual bool update();
-    virtual bool render();
-    /* input */
-    virtual void keyDown(int nKey, SDLMod mod,int nChar);
-    virtual void keyUp(int nKey,   SDLMod mod);
-    virtual void mouseDown(int nButton);
-    virtual void mouseDoubleClick(int nButton);
-    virtual void mouseUp(int nButton);
-
+  StatePreplaying(GameApp* pGame, const std::string i_idlevel);
+  virtual ~StatePreplaying();
+  
+  virtual void enter();
+  virtual void leave();
+  /* called when a new state is pushed or poped on top of the
+     current one*/
+  virtual void enterAfterPop();
+  virtual void leaveAfterPush();
+  
+  virtual bool update();
+  virtual bool render();
+  /* input */
+  virtual void keyDown(int nKey, SDLMod mod,int nChar);
+  virtual void keyUp(int nKey,   SDLMod mod);
+  virtual void mouseDown(int nButton);
+  virtual void mouseDoubleClick(int nButton);
+  virtual void mouseUp(int nButton);
+  
   private:
-  };
+  std::string m_idlevel;
+
+};
 
 #endif
