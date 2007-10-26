@@ -53,6 +53,8 @@ class StateFinished : public StateMenu {
   virtual void mouseUp(int nButton);
   
   static void clean();
+
+  virtual void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
   
  protected:
   virtual void checkEvents();

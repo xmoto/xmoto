@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "XMSession.h"
 #include "drawlib/DrawLib.h"
 #include "Sound.h"
+#include "StateMessageBox.h"
 
 /* static members */
 UIRoot* StateFinished::m_sGUI = NULL;
@@ -168,6 +169,11 @@ void StateFinished::checkEvents() {
   UIButton *pSavereplayButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:SAVEREPLAY_BUTTON"));
   if(pSavereplayButton->isClicked()) {
     pSavereplayButton->setClicked(false);
+
+    StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, std::string(GAMETEXT_ENTERREPLAYNAME) + ":",
+							 UI_MSGBOX_OK|UI_MSGBOX_CANCEL, true, Replay::giveAutomaticName());
+    v_msgboxState->setId("SAVEREPLAY");
+    m_pGame->getStateManager()->pushState(v_msgboxState);
   }
 
   UIButton *pUploadButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:UPLOAD_BUTTON"));
@@ -190,44 +196,28 @@ void StateFinished::checkEvents() {
   if(pQuitButton->isClicked()) {
     pQuitButton->setClicked(false);
 
-    //UIMsgBox *m_pQuitMsgBox;
-    //m_pQuitMsgBox = m_GUI->msgBox(GAMETEXT_QUITMESSAGE,
-    //			  (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
-
-    m_pGame->requestEnd(); 
-    m_requestForEnd = true;
+    StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, GAMETEXT_QUITMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO);
+    v_msgboxState->setId("QUIT");
+    m_pGame->getStateManager()->pushState(v_msgboxState);
   }
+}
 
-//      UIStatic *m_pNewWorldRecord;
-//void StatePause::checkEvents() {
-//    /* Is savereplay box open? */
-//    if(m_pSaveReplayMsgBox != NULL) {
-//      UIMsgBoxButton Clicked = m_pSaveReplayMsgBox->getClicked();
-//      if(Clicked != UI_MSGBOX_NOTHING) {
-//        std::string Name = m_pSaveReplayMsgBox->getTextInput();
-//      
-//        delete m_pSaveReplayMsgBox;
-//        m_pSaveReplayMsgBox = NULL;
-//
-//        if(Clicked == UI_MSGBOX_OK) {
-//          _SaveReplay(Name);
-//        }    
-//      }
-//    }
-//      
-//        else if(v_frameButtons[i]->getCaption() == GAMETEXT_SAVEREPLAY) {
-//          if(m_pJustPlayReplay != NULL) {
-//            if(m_pSaveReplayMsgBox == NULL) {
-//	      m_Renderer->getGUI()->setFont(drawLib->getFontSmall());
-//              m_pSaveReplayMsgBox = m_Renderer->getGUI()->msgBox(std::string(GAMETEXT_ENTERREPLAYNAME) + ":",
-//                                                                (UIMsgBoxButton)(UI_MSGBOX_OK|UI_MSGBOX_CANCEL),
-//                                                                true);
-//              m_pSaveReplayMsgBox->setTextInputFont(drawLib->getFontMedium());
-//	      m_pSaveReplayMsgBox->setTextInput(Replay::giveAutomaticName());
-//            }          
-//          }
-	
-
+void StateFinished::send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
+  if(i_id == "QUIT") {
+    switch(i_button) {
+    case UI_MSGBOX_YES:
+      m_requestForEnd = true;
+      m_pGame->requestEnd();
+      break;
+    case UI_MSGBOX_NO:
+      return;
+      break;
+    }
+  } else if(i_id == "SAVEREPLAY") {
+    if(i_button == UI_MSGBOX_OK) {
+      m_pGame->saveReplay(i_input);
+    }
+  }
 }
 
 bool StateFinished::update()

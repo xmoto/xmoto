@@ -2498,3 +2498,17 @@ void GameApp::updateLevelsListsOnEnd() {
 Replay* GameApp::getCurrentReplay() {
   return m_pJustPlayReplay;
 }
+
+void GameApp::initReplay() {
+  if(m_pJustPlayReplay != NULL) delete m_pJustPlayReplay;
+  m_pJustPlayReplay = NULL;
+
+  if(m_bRecordReplays && getNumberOfPlayersToPlay() == 1) {
+    m_pJustPlayReplay = new Replay;
+    m_pJustPlayReplay->createReplay("Latest.rpl",
+				    m_MotoGame.getLevelSrc()->Id(),
+				    m_xmsession->profile(),
+				    m_fReplayFrameRate,
+				    sizeof(SerializedBikeState));
+  }
+}

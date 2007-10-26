@@ -28,6 +28,7 @@ StateMessageBox::StateMessageBox(StateMessageBoxReceiver* i_receiver,
 				 const std::string& i_text,
 				 int i_buttons,
 				 bool i_input,
+				 const std::string& i_inputText,
 				 bool i_query,
 				 bool drawStateBehind,
 				 bool updateStatesBehind):
@@ -37,7 +38,7 @@ StateMessageBox::StateMessageBox(StateMessageBoxReceiver* i_receiver,
 {
   m_receiver = i_receiver;
   m_clickedButton = UI_MSGBOX_NOTHING;
-  createGUI(m_pGame, i_text, i_buttons, i_input, i_query);
+  createGUI(m_pGame, i_text, i_buttons, i_input, i_inputText, i_query);
   m_name  = "StateMessageBox";
 }
 
@@ -133,7 +134,8 @@ void StateMessageBox::mouseUp(int nButton)
 void StateMessageBox::clean() {
 }
 
-void StateMessageBox::createGUI(GameApp* pGame, const std::string& i_text, int i_buttons, bool i_input, bool i_query) {
+void StateMessageBox::createGUI(GameApp* pGame, const std::string& i_text, int i_buttons,
+				bool i_input, const std::string& i_inputText, bool i_query) {
   m_GUI = new UIRoot();
   m_GUI->setApp(pGame);
   m_GUI->setFont(pGame->getDrawLib()->getFontSmall()); 
@@ -144,6 +146,6 @@ void StateMessageBox::createGUI(GameApp* pGame, const std::string& i_text, int i
   m_msgbox = m_GUI->msgBox(i_text, (UIMsgBoxButton)(i_buttons), i_input);
   if(i_input) {
     m_msgbox->setTextInputFont(pGame->getDrawLib()->getFontMedium());
-    m_msgbox->setTextInput("");
+    m_msgbox->setTextInput(i_inputText);
   }
 }

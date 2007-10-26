@@ -36,6 +36,7 @@ class StateMessageBox : public StateMenu {
 		  const std::string& i_text,
 		  int i_buttons,
 		  bool i_input = false,
+		  const std::string& i_inputText = "",
 		  bool i_query = false,
 		  bool drawStateBehind    = true,
 		  bool updateStatesBehind = false
@@ -68,7 +69,8 @@ class StateMessageBox : public StateMenu {
   StateMessageBoxReceiver* m_receiver;
   UIMsgBoxButton m_clickedButton;
 
-  void createGUI(GameApp* pGame, const std::string& i_text, int i_buttons, bool i_input, bool i_query);
+  void createGUI(GameApp* pGame, const std::string& i_text, int i_buttons,
+		 bool i_input, const std::string& i_inputText, bool i_query);
 };
 
 #endif

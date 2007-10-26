@@ -88,8 +88,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         _DrawMainGUI();
 	break;
 
-      case GS_DEADMENU:
-
       case GS_DEADJUST:
      {
 
@@ -101,17 +99,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
           /* When did the frame start? */
           double fStartFrameTime = getXMTime();                    
 	  int numberCam = m_MotoGame.getNumberCameras();
-	  if(
-		    ((m_State == GS_DEADMENU || m_State == GS_DEADJUST) && m_bEnableDeathAnim)
-		    ) {
-            /* When actually playing or when dead and the bike is falling apart, 
-               a physics update is required */
-	    if(isLockedMotoGame()) {
-	      nPhysSteps = 0;
-	    } else {
-	      nPhysSteps = _UpdateGamePlaying();            
-	    }
-          }
+//	  if(
+//		    ((m_State == GS_DEADMENU || m_State == GS_DEADJUST) && m_bEnableDeathAnim)
+//		    ) {
+//            /* When actually playing or when dead and the bike is falling apart, 
+//               a physics update is required */
+//	    if(isLockedMotoGame()) {
+//	      nPhysSteps = 0;
+//	    } else {
+//	      nPhysSteps = _UpdateGamePlaying();            
+//	    }
+//          }
 
           /* Render */
           if(!getDrawLib()->isNoGraphics()) {

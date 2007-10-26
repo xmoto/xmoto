@@ -207,6 +207,7 @@ class StateManager;
       void playMusic(const std::string& i_music); // "" => no music
       bool isAReplayToSave() const;
       Replay* getCurrentReplay();
+      void initReplay();
       void isTheCurrentPlayAHighscore(bool& o_personal, bool& o_room);
       void saveReplay(const std::string &Name);
       void uploadHighscore(std::string p_replayname, bool b_notify = true);
