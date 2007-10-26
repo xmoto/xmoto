@@ -121,6 +121,7 @@ Central place to keep many in-game text strings
     ":Samuel Mimram ("      + std::string(_("for Debian packaging"))      	     + ");"  \
     ":Dark ("               + std::string(_("for Gentoo packaging"))      	     + ");"  \
     ":Olivier Blin (" 	    + std::string(_("for Mandriva packaging"))    	     + ");"  \
+    ":Dmitry Marakasov ("   + std::string(_("for FreeBSD packaging"))                + ");"  \
     ":Balazs Rozsa (" 	    + std::string(_("for across/elma"))           	     + ");"  \
     ":Yves Berquin (" 	    + std::string(_("for making tinyxml"))        	     + ");"  \
     ":L. Peter Deutsch ("   + std::string(_("for the MD5 code"))          	     + ");"  \
