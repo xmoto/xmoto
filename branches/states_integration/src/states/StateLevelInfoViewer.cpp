@@ -380,10 +380,10 @@ void StateLevelInfoViewer::updateLevelInfoViewerBestTimes() {
   float v_finishTime;
   std::string v_profile;
 
-  UIList *pList = (UIList *)m_GUI->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_BESTTIMES_TAB:LEVEL_VIEWER_BESTTIMES_LIST");
-  UIButton *pLV_BestTimes_Personal = (UIButton *)m_GUI->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_BESTTIMES_TAB:LEVEL_VIEWER_BESTTIMES_PERSONAL");
-  UIButton *pLV_BestTimes_All = (UIButton *)m_GUI->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_BESTTIMES_TAB:LEVEL_VIEWER_BESTTIMES_ALL");
-  UIStatic *pLV_BestTimes_WorldRecord = (UIStatic *)m_GUI->getChild("LEVEL_VIEWER_TABS:LEVEL_VIEWER_BESTTIMES_TAB:LEVEL_VIEWER_BESTTIMES_WORLDRECORD");
+  UIList *pList = (UIList *)m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_BESTTIMES_TAB:LEVEL_VIEWER_BESTTIMES_LIST");
+  UIButton *pLV_BestTimes_Personal = (UIButton *)m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_BESTTIMES_TAB:LEVEL_VIEWER_BESTTIMES_PERSONAL");
+  UIButton *pLV_BestTimes_All = (UIButton *)m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_BESTTIMES_TAB:LEVEL_VIEWER_BESTTIMES_ALL");
+  UIStatic *pLV_BestTimes_WorldRecord = (UIStatic *)m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_BESTTIMES_TAB:LEVEL_VIEWER_BESTTIMES_WORLDRECORD");
 
   if(pList != NULL && pLV_BestTimes_All != NULL && pLV_BestTimes_Personal != NULL && m_pGame->getSession()->profile() != "" &&
      pLV_BestTimes_WorldRecord != NULL) {
