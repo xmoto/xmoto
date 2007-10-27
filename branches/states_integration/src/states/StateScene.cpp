@@ -84,10 +84,6 @@ bool StateScene::render()
       m_pGame->getGameRenderer()->render();
     }
 
-#if SIMULATE_SLOW_PHYSICS
-      SDL_Delay(SIMULATE_SLOW_PHYSICS);
-#endif
-
     ParticlesSource::setAllowParticleGeneration(m_pGame->getGameRenderer()->nbParticlesRendered() < NB_PARTICLES_TO_RENDER_LIMITATION);
   } catch(Exception &e) {
     m_pGame->getStateManager()->replaceState(new StateMessageBox(NULL, m_pGame, GameApp::splitText(e.getMsg(), 50), UI_MSGBOX_OK));

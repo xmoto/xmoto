@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "StateDeadJust.h"
 #include "Game.h"
+#include "StateDeadMenu.h"
 
 StateDeadJust::StateDeadJust(GameApp* pGame) :
   StateScene(pGame)
@@ -35,7 +36,7 @@ StateDeadJust::~StateDeadJust()
 
 void StateDeadJust::enter()
 {
-
+  m_pGame->getStateManager()->replaceState(new StateDeadMenu(m_pGame, true));
 }
 
 void StateDeadJust::leave()
@@ -65,8 +66,8 @@ bool StateDeadJust::render()
 
 void StateDeadJust::keyDown(int nKey, SDLMod mod,int nChar)
 {
-  m_requestForEnd = true;
-  m_pGame->setState(m_pGame->m_StateAfterPlaying);
+  //  m_requestForEnd = true;
+  // m_pGame->setState(m_pGame->m_StateAfterPlaying);
 }
 
 void StateDeadJust::keyUp(int nKey,   SDLMod mod)
