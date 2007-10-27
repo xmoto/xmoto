@@ -46,9 +46,11 @@ void StatePreplaying::enter()
 
   m_pGame->m_State = GS_PREPLAYING; // to be removed, just the time states are finished
 
-//		  m_Renderer->setShowTimePanel(false);
-//			/* because statePrestart_init() can call setState */
-//			if(m_bEnableMenuMusic && Sound::isEnabled()) {
+  m_pGame->getGameRenderer()->setShowEngineCounter(false);
+  m_pGame->getGameRenderer()->setShowMinimap(false);
+  m_pGame->getGameRenderer()->setShowTimePanel(false);
+
+//  if(m_bEnableMenuMusic && Sound::isEnabled()) {
 //				Sound::stopMusic();
 //				m_playingMusic = "";
 //			}
@@ -185,10 +187,15 @@ void StatePreplaying::enter()
 //    m_Renderer->setWorldRecordTime(getWorldRecord(m_PlaySpecificLevelId));
 //
 //    /* Prepare level */
-    m_pGame->getGameRenderer()->prepareForNewLevel();
+      m_pGame->getGameRenderer()->prepareForNewLevel();
 //    prestartAnimation_init();
 
-      m_pGame->getStateManager()->replaceState(new StatePlaying(m_pGame));
+    /* If "preplaying" / "initial-zoom" is enabled, this is where it's done */
+    if(m_pGame->getMotoGame()->getNumberCameras() > 1){
+      m_pGame->getMotoGame()->setCurrentCamera(m_pGame->getMotoGame()->getNumberCameras());
+    }
+
+    //m_pGame->getStateManager()->replaceState(new StatePlaying(m_pGame));
 }
 
 void StatePreplaying::leave()
@@ -212,16 +219,8 @@ bool StatePreplaying::update()
     return false;
   }
 
-  //StateScene::update(); // don't update the scene in preplaying
-
-//  double fStartFrameTime = getXMTime();                    
-//  int numberCam = m_MotoGame.getNumberCameras();
-//  
-//  /* If "preplaying" / "initial-zoom" is enabled, this is where it's done */
-//  if(numberCam > 1){
-//    m_MotoGame.setCurrentCamera(numberCam);
-//  }
-//  statePrestart_step();
+  //StateScene::update(); // don't update the scene in preplaying mode
+  //statePrestart_step();
 
   return true;
 }
@@ -234,25 +233,21 @@ bool StatePreplaying::render()
 
 void StatePreplaying::keyDown(int nKey, SDLMod mod,int nChar)
 {
-  //    m_bPrePlayAnim = false;
+  m_pGame->getStateManager()->replaceState(new StatePlaying(m_pGame));
 }
 
 void StatePreplaying::keyUp(int nKey,   SDLMod mod)
 {
-
 }
 
 void StatePreplaying::mouseDown(int nButton)
 {
-
 }
 
 void StatePreplaying::mouseDoubleClick(int nButton)
 {
-
 }
 
 void StatePreplaying::mouseUp(int nButton)
 {
-
 }

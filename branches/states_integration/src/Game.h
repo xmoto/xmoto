@@ -534,8 +534,6 @@ class StateManager;
       void _PreUpdateMenu(void);
       void _DrawMainGUI(void);
       void _DrawMouseCursor(void);
-      int _UpdateGamePlaying(void); /* returns number of physics steps performed */
-      int _UpdateGameReplaying(void); /* return whether the game state is valid */
       void _PostUpdateJustDead(void);
 
       void autoZoom();

@@ -88,17 +88,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         _DrawMainGUI();
 	break;
 
-      case GS_DEADJUST:
-     {
+	//      case GS_DEADJUST:
+	//    {
 
         /* These states all requires that the actual game graphics are rendered (i.e. inside 
            the game, not the main menu) */
-        try {
-          int nPhysSteps = 0;
+       //        try {
+	  //          int nPhysSteps = 0;
         
           /* When did the frame start? */
-          double fStartFrameTime = getXMTime();                    
-	  int numberCam = m_MotoGame.getNumberCameras();
+	  //          double fStartFrameTime = getXMTime();                    
+	  //	  int numberCam = m_MotoGame.getNumberCameras();
 //	  if(
 //		    ((m_State == GS_DEADMENU || m_State == GS_DEADJUST) && m_bEnableDeathAnim)
 //		    ) {
@@ -112,28 +112,28 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //          }
 
           /* Render */
-          if(!getDrawLib()->isNoGraphics()) {
-	    try {
-	      if((m_autoZoom || (m_bPrePlayAnim && m_xmsession->ugly() == false)) && numberCam > 1){
-		m_Renderer->render(bIsPaused);
-		ParticlesSource::setAllowParticleGeneration(m_Renderer->nbParticlesRendered() < NB_PARTICLES_TO_RENDER_LIMITATION);
-	      }else{
-		for(int i=0; i<numberCam; i++){
-		  m_MotoGame.setCurrentCamera(i);
-		  m_Renderer->render(bIsPaused);
-		  ParticlesSource::setAllowParticleGeneration(m_Renderer->nbParticlesRendered() < NB_PARTICLES_TO_RENDER_LIMITATION);
-		}
-	      }
-	    } catch(Exception &e) {
-	      m_MotoGame.endLevel();
-	      setState(m_StateAfterPlaying);
-	      notifyMsg(splitText(e.getMsg(), 50));
-	    }
-	    getDrawLib()->getMenuCamera()->setCamera2d();
-	  }
-#if SIMULATE_SLOW_RENDERING
-          SDL_Delay(SIMULATE_SLOW_RENDERING);
-#endif
+//          if(!getDrawLib()->isNoGraphics()) {
+//	    try {
+//	      if((m_autoZoom || (m_bPrePlayAnim && m_xmsession->ugly() == false)) && numberCam > 1){
+//		m_Renderer->render(bIsPaused);
+//		ParticlesSource::setAllowParticleGeneration(m_Renderer->nbParticlesRendered() < NB_PARTICLES_TO_RENDER_LIMITATION);
+//	      }else{
+//		for(int i=0; i<numberCam; i++){
+//		  m_MotoGame.setCurrentCamera(i);
+//		  m_Renderer->render(bIsPaused);
+//		  ParticlesSource::setAllowParticleGeneration(m_Renderer->nbParticlesRendered() < NB_PARTICLES_TO_RENDER_LIMITATION);
+//		}
+//	      }
+//	    } catch(Exception &e) {
+//	      m_MotoGame.endLevel();
+//	      setState(m_StateAfterPlaying);
+//	      notifyMsg(splitText(e.getMsg(), 50));
+//	    }
+//	    getDrawLib()->getMenuCamera()->setCamera2d();
+//	  }
+//#if SIMULATE_SLOW_RENDERING
+//          SDL_Delay(SIMULATE_SLOW_RENDERING);
+//#endif
   
 	  /* TODO::MANU::get out !!
           // When did frame rendering end?
@@ -165,27 +165,27 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
           }
 	  */
 
-          if(m_State == GS_DEADJUST) {
-            /* Hmm, you're dead and you know it. */
-            _PostUpdateJustDead();
-          }
+//          if(m_State == GS_DEADJUST) {
+//            /* Hmm, you're dead and you know it. */
+//            _PostUpdateJustDead();
+//          }
 
           /* Draw GUI */
 	  // only if it's not the autozoom camera
-	  if(m_MotoGame.getCurrentCamera() != m_MotoGame.getNumberCameras()){
-	    m_Renderer->getGUI()->paint();        
-	  }
+//	  if(m_MotoGame.getCurrentCamera() != m_MotoGame.getNumberCameras()){
+//	    m_Renderer->getGUI()->paint();        
+//	  }
         
-          break;
-        }
-        catch(Exception &e) {
-	  Logger::Log("** Warning ** : drawFrame failed ! (%s)", e.getMsg().c_str());
-	  // it doesn't work
-	  m_MotoGame.endLevel();
-	  setState(m_StateAfterPlaying);
-          notifyMsg(splitText(e.getMsg(), 50));
-        }
-      }
+//          break;
+//        }
+//        catch(Exception &e) {
+//	  Logger::Log("** Warning ** : drawFrame failed ! (%s)", e.getMsg().c_str());
+//	  // it doesn't work
+//	  m_MotoGame.endLevel();
+//	  setState(m_StateAfterPlaying);
+//          notifyMsg(splitText(e.getMsg(), 50));
+//        }
+//     }
     }
 
     // states managed via the state manager
@@ -362,60 +362,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_Renderer->getGUI()->paint();                
   }
   
-  int GameApp::_UpdateGamePlaying(void) {
-    /* Increase frame counter */
-    m_nFrame++;
-
-    /* Following time code is made by Eric Piel, but I took the liberty to change the minimum
-        frame-miss number from 50 to 10, because it wasn't working well. */
-
-    /* reinitialise if we can't catch up */
-    if (m_fLastPhysTime - getXMTime() < -0.1f)
-      m_fLastPhysTime = getXMTime() - PHYS_STEP_SIZE;
-
-    /* Update game until we've catched up with the real time */
-    int nPhysSteps = 0;
-    do {
-      if(m_State == GS_DEADJUST) {
-        m_MotoGame.updateLevel(PHYS_STEP_SIZE, m_pJustPlayReplay);
-      }
-      m_fLastPhysTime += PHYS_STEP_SIZE;
-      nPhysSteps++;
-
-#if SIMULATE_SLOW_PHYSICS
-      SDL_Delay(SIMULATE_SLOW_PHYSICS);
-#endif
-
-      /* don't do this infinitely, maximum miss 10 frames, then give up */
-    } while ((m_fLastPhysTime + PHYS_STEP_SIZE <= getXMTime()) && (nPhysSteps < 10));
-
-		for(int i=0; i<m_MotoGame.getNumberCameras(); i++){
-			m_MotoGame.setCurrentCamera(i);
-			m_MotoGame.getCamera()->setSpeedMultiplier(nPhysSteps);
-		}
-  
-    if(m_xmsession->timedemo() == false) {
-      /* Never pass this point while being ahead of time, busy wait until it's time */
-      if(nPhysSteps <= 1) {  
-        while (m_fLastPhysTime > getXMTime());
-      }
-    }
-
-    return nPhysSteps;
-  }  
-
-  int GameApp::_UpdateGameReplaying(void) {
-    int nPhysSteps = 1;
-    m_nFrame++;
-    static float fGTime = 0, fRTime = 0;
-		for(int i=0; i<m_MotoGame.getNumberCameras(); i++){
-			m_MotoGame.setCurrentCamera(i);
-			m_MotoGame.getCamera()->setSpeedMultiplier(nPhysSteps);
-		}
-
-    return nPhysSteps;
-  }
-
   void GameApp::_PostUpdateJustDead(void) {
     if(m_xmsession->ugly() == false) {
       if(m_nJustDeadShade < 150) m_nJustDeadShade+=8;

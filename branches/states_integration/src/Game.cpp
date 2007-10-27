@@ -773,6 +773,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
   case GS_PAUSE:
   case GS_REPLAYING:
   case GS_PLAYING:
+  case GS_PREPLAYING:
   case GS_CREDITSMODE:
   case GS_DEADMENU:
   case GS_EDIT_PROFILES:
@@ -804,6 +805,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
     case GS_PAUSE:
     case GS_REPLAYING:
     case GS_PLAYING:
+    case GS_PREPLAYING:
     case GS_CREDITSMODE:
     case GS_DEADMENU:
     case GS_EDIT_PROFILES:
@@ -836,6 +838,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
     case GS_PAUSE:
     case GS_REPLAYING:
     case GS_PLAYING:
+    case GS_PREPLAYING:
     case GS_CREDITSMODE:
     case GS_DEADMENU:
     case GS_EDIT_PROFILES:
@@ -874,6 +877,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
       case GS_PAUSE:
       case GS_REPLAYING:
       case GS_PLAYING:
+      case GS_PREPLAYING:
       case GS_CREDITSMODE:
       case GS_DEADMENU:
       case GS_EDIT_PROFILES:
@@ -906,6 +910,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
       case GS_PAUSE:
       case GS_REPLAYING:
       case GS_PLAYING:
+      case GS_PREPLAYING:
       case GS_CREDITSMODE:
       case GS_DEADMENU:
       case GS_EDIT_PROFILES:

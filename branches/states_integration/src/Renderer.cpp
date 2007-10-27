@@ -545,7 +545,7 @@ int GameRenderer::nbParticlesRendered() const {
   /*===========================================================================
   Main rendering function
   ===========================================================================*/
-  void GameRenderer::render(bool bIsPaused) {
+  void GameRenderer::render() {
     bool v_found;
     MotoGame* pGame   = getGameObject();
     Camera*   pCamera = pGame->getCamera();

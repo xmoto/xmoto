@@ -152,7 +152,7 @@ class ParticlesSource;
     void shutdown(void);
 
     void setTheme(Theme *p_theme);
-    void render(bool bIsPaused = false);
+    void render();
     void renderMiniMap(int x,int y,int nWidth,int nHeight);
     void renderEngineCounter(int x,int y,int nWidth,int nHeight, float pSpeed, float pLinVel = -1);
     void prepareForNewLevel();
