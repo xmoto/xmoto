@@ -65,6 +65,8 @@ void StatePlaying::enter()
     v_msgboxState->setId("ERROR");
     m_pGame->getStateManager()->pushState(v_msgboxState);
   }
+
+  setScoresTimes();
 }
 
 void StatePlaying::leave()

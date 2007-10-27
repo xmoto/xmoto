@@ -48,6 +48,8 @@ class StateScene : public GameState {
 
  protected:
  double m_fLastPhysTime; /* When the last frama was initiated */
+
+ void setScoresTimes();
 };
 
 #endif

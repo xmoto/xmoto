@@ -124,40 +124,11 @@ void StateReplaying::enter()
     
     m_pGame->getGameRenderer()->prepareForNewLevel();
     m_pGame->playMusic(m_pGame->getMotoGame()->getLevelSrc()->Music());
-    
-    /* Show help string */
-    std::string T1 = "--:--:--",T2 = "--:--:--";
-      
-    /* get best result */
-    v_result = m_pGame->getDb()->readDB("SELECT MIN(finishTime) FROM profile_completedLevels WHERE "
-			    "id_level=\"" + 
-			    xmDatabase::protectString(m_pGame->getMotoGame()->getLevelSrc()->Id()) + "\";",
-			    nrow);
-    v_res = m_pGame->getDb()->getResult(v_result, 1, 0, 0);
-    if(v_res != NULL) {
-      T1 = GameApp::formatTime(atof(v_res));
-    }
-    m_pGame->getDb()->read_DB_free(v_result);
-    
-    /* get best player result */
-    v_result = m_pGame->getDb()->readDB("SELECT MIN(finishTime) FROM profile_completedLevels WHERE "
-			    "id_level=\"" + 
-			    xmDatabase::protectString(m_pGame->getMotoGame()->getLevelSrc()->Id()) + "\" " + 
-			    "AND id_profile=\"" + xmDatabase::protectString(m_pGame->getSession()->profile())  + "\";",
-			    nrow);
-    v_res = m_pGame->getDb()->getResult(v_result, 1, 0, 0);
-    if(v_res != NULL) {
-      T2 = GameApp::formatTime(atof(v_res));
-    }
-    m_pGame->getDb()->read_DB_free(v_result);
-    
-    m_pGame->getGameRenderer()->setBestTime(T1 + std::string(" / ") + T2);
+
     m_pGame->getGameRenderer()->showReplayHelp(m_pGame->getMotoGame()->getSpeed(),
 					       m_pGame->getMotoGame()->getLevelSrc()->isScripted() == false);
-    
-    /* World-record stuff */
-    m_pGame->getGameRenderer()->setWorldRecordTime(m_pGame->getWorldRecord(m_pGame->getMotoGame()->getLevelSrc()->Id()));
-    
+    // highscores
+    setScoresTimes();    
   } catch(Exception &e) {
     m_pGame->abortPlaying();
     m_pGame->getStateManager()->replaceState(new StateMessageBox(this, m_pGame, GameApp::splitText(e.getMsg(), 50), UI_MSGBOX_OK));

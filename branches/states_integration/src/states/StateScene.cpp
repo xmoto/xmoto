@@ -130,3 +130,38 @@ void StateScene::send(const std::string& i_id, UIMsgBoxButton i_button, const st
     m_pGame->setState(GS_MENU); // to be removed once states will be finished
   }
 }
+
+void StateScene::setScoresTimes() {
+    char **v_result;
+    unsigned int nrow;
+    char *v_res;  
+    std::string T1 = "--:--:--", T2 = "--:--:--";
+
+    /* get best result */
+    v_result = m_pGame->getDb()->readDB("SELECT MIN(finishTime) FROM profile_completedLevels WHERE "
+					"id_level=\"" + 
+					xmDatabase::protectString(m_pGame->getMotoGame()->getLevelSrc()->Id()) + "\";",
+					nrow);
+    v_res = m_pGame->getDb()->getResult(v_result, 1, 0, 0);
+    if(v_res != NULL) {
+      T1 = GameApp::formatTime(atof(v_res));
+    }
+    m_pGame->getDb()->read_DB_free(v_result);
+    
+    /* get best player result */
+    v_result = m_pGame->getDb()->readDB("SELECT MIN(finishTime) FROM profile_completedLevels WHERE "
+					"id_level=\"" + 
+					xmDatabase::protectString(m_pGame->getMotoGame()->getLevelSrc()->Id()) + "\" " + 
+					"AND id_profile=\"" + xmDatabase::protectString(m_pGame->getSession()->profile())  + "\";",
+					nrow);
+    v_res = m_pGame->getDb()->getResult(v_result, 1, 0, 0);
+    if(v_res != NULL) {
+      T2 = GameApp::formatTime(atof(v_res));
+    }
+    m_pGame->getDb()->read_DB_free(v_result);
+    
+    m_pGame->getGameRenderer()->setBestTime(T1 + std::string(" / ") + T2);
+    m_pGame->getGameRenderer()->hideReplayHelp();
+    m_pGame->getGameRenderer()->setWorldRecordTime(m_pGame->getWorldRecord(m_pGame->getMotoGame()->getLevelSrc()->Id()));
+
+}

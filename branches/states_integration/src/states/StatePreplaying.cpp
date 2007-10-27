@@ -155,37 +155,6 @@ void StatePreplaying::enter()
 //
 //    m_State = GS_PREPLAYING;
 //
-//    std::string T1 = "--:--:--", T2 = "--:--:--";
-//
-//    /* get best result */
-//    v_result = m_db->readDB("SELECT MIN(finishTime) FROM profile_completedLevels WHERE "
-//    			    "id_level=\"" + 
-//    			    xmDatabase::protectString(m_MotoGame.getLevelSrc()->Id()) + "\";",
-//    			    nrow);
-//    v_res = m_db->getResult(v_result, 1, 0, 0);
-//    if(v_res != NULL) {
-//      T1 = formatTime(atof(v_res));
-//    }
-//    m_db->read_DB_free(v_result);
-//    
-//    /* get best player result */
-//    v_result = m_db->readDB("SELECT MIN(finishTime) FROM profile_completedLevels WHERE "
-//    			    "id_level=\"" + 
-//    			    xmDatabase::protectString(m_MotoGame.getLevelSrc()->Id()) + "\" " + 
-//    			    "AND id_profile=\"" + xmDatabase::protectString(m_xmsession->profile())  + "\";",
-//    			    nrow);
-//    v_res = m_db->getResult(v_result, 1, 0, 0);
-//    if(v_res != NULL) {
-//      T2 = formatTime(atof(v_res));
-//    }
-//    m_db->read_DB_free(v_result);
-//    
-//    m_Renderer->setBestTime(T1 + std::string(" / ") + T2);
-//    m_Renderer->hideReplayHelp();
-//    
-//    /* World-record stuff */
-//    m_Renderer->setWorldRecordTime(getWorldRecord(m_PlaySpecificLevelId));
-//
 //    /* Prepare level */
       m_pGame->getGameRenderer()->prepareForNewLevel();
 //    prestartAnimation_init();
