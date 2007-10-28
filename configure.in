@@ -114,7 +114,7 @@ AC_ARG_WITH([localesdir],
   [AS_HELP_STRING([--with-localesdir=DIR],
     [Override the default directory for locales])],
   [LOCALESDIR="$withval"],
-  [LOCALESDIR="$datadir/locale"]
+  [LOCALESDIR="$localedir"]
 )
 if test "$target_os" = "mingw32"
 then
