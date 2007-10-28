@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "xmscene/Entity.h"
 #include "StateMessageBox.h"
 #include "drawlib/DrawLib.h"
+#include "StatePreplaying.h"
 
 StateScene::StateScene(GameApp* pGame):
   GameState(false, false, pGame)
@@ -172,6 +173,34 @@ void StateScene::setScoresTimes() {
     m_pGame->getGameRenderer()->hideReplayHelp();
     m_pGame->getGameRenderer()->setWorldRecordTime(m_pGame->getWorldRecord(m_pGame->getMotoGame()->getLevelSrc()->Id()));
 
+}
+
+void StateScene::restartLevel(bool i_reloadLevel) {
+  std::string v_level;
+
+  /* Update stats */        
+  if(m_pGame->getMotoGame()->Players().size() == 1) {
+    if(m_pGame->getMotoGame()->Players()[0]->isDead() == false) {
+      m_pGame->getDb()->stats_levelRestarted(m_pGame->getSession()->profile(),
+				 m_pGame->getMotoGame()->getLevelSrc()->Id(),
+				 m_pGame->getMotoGame()->getTime());
+    }
+  }  
+
+  v_level = m_pGame->getMotoGame()->getLevelSrc()->Id();
+  m_pGame->getMotoGame()->resetFollow();
+  m_pGame->getMotoGame()->endLevel();
+  m_pGame->getGameRenderer()->unprepareForNewLevel();
+  
+  if(i_reloadLevel) {
+    try {
+      Level::removeFromCache(m_pGame->getDb(), v_level);
+    } catch(Exception &e) {
+      // hum, not nice
+    }
+  }
+  
+  m_pGame->getStateManager()->replaceState(new StatePreplaying(m_pGame, v_level));
 }
 
 bool StateScene::isLockedScene() const {

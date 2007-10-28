@@ -253,7 +253,6 @@ GameApp::GameApp() {
   m_sysMsg = NULL;
 
   m_bEnableInitZoom=true;
-  m_bEnableDeathAnim=true;
   m_pQuitMsgBox=NULL;
   m_pNotifyMsgBox=NULL;
   m_pInfoMsgBox=NULL;
@@ -402,45 +401,7 @@ GameApp::GameApp() {
 
 			break;
 		}
-		case GS_DEADJUST: {
-			m_MotoGame.setInfos(m_MotoGame.getLevelSrc()->Name());
-			v_newMusicPlaying = "";
 
-			/* Finish replay */
-			if(m_pJustPlayReplay != NULL) {
-				if(m_MotoGame.Players().size() == 1) {
-				  
-				  /* save the last state because scene don't record each frame */
-				  SerializedBikeState BikeState;
-				  MotoGame::getSerializedBikeState(m_MotoGame.Players()[0]->getState(), m_MotoGame.getTime(), &BikeState);
-				  m_pJustPlayReplay->storeState(BikeState);
-				  m_pJustPlayReplay->finishReplay(false,0.0f);
-				}
-			}
-
-			/* Update stats */        
-			if(m_MotoGame.Players().size() == 1) {
-			  m_db->stats_died(m_xmsession->profile(),
-					   m_MotoGame.getLevelSrc()->Id(),
-					   m_MotoGame.getTime());
-			}                
-
-			/* Play the DIE!!! sound */
-			try {
-				Sound::playSampleByName(m_theme.getSound("Headcrash")->FilePath(),0.3);
-			} catch(Exception &e) {
-			}
-
-			m_nJustDeadShade = 0;
-
-			if(m_bEnableDeathAnim) {
-				m_MotoGame.gameMessage(GAMETEXT_JUSTDEAD_RESTART,     false, 15);
-				m_MotoGame.gameMessage(GAMETEXT_JUSTDEAD_DISPLAYMENU, false, 15);
-			} else {
-			  m_stateManager->pushState(new StateDeadMenu(this, true));
-			}
-			break;
-		}
 
       case GS_EDIT_WEBCONFIG: {
 	v_newMusicPlaying = "menu1";
@@ -522,7 +483,7 @@ GameApp::GameApp() {
     m_bEnableContextHelp = m_Config.getBool("ContextHelp");
     m_xmsession->setEnableMenuMusic(m_Config.getBool("MenuMusic"));
     m_bEnableInitZoom = m_Config.getBool("InitZoom");
-    m_bEnableDeathAnim = m_Config.getBool("DeathAnim");
+    m_xmsession->setEnableDeadAnimation(m_Config.getBool("DeathAnim"));
 
     /* multi */
     m_xmsession->setMultiStopWhenOneFinishes(m_Config.getBool("MultiStopWhenOneFinishes"));
@@ -742,21 +703,6 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
     m_Renderer->getGUI()->keyDown(nKey, mod,nChar);
     break;
   }
-  case GS_DEADJUST:
-    {
-      switch(nKey) {
-      case SDLK_RETURN:
-	m_MotoGame.clearGameMessages();
-	restartLevel();
-	break;
-      case SDLK_ESCAPE:
-	m_MotoGame.clearGameMessages();
-	m_stateManager->pushState(new StateDeadMenu(this, false)); // state should be replaced and not push - to make after states are finished
-	break;
-      }
-      break;
-    }
-
     // states already in the state manager
   case GS_LEVEL_INFO_VIEWER:
   case GS_FINISHED:
@@ -767,6 +713,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
   case GS_CREDITSMODE:
   case GS_DEADMENU:
   case GS_EDIT_PROFILES:
+  case GS_DEADJUST:
     m_stateManager->keyDown(nKey, mod, nChar);
     break;
   }
@@ -784,10 +731,6 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
       case GS_MENU:
         m_Renderer->getGUI()->keyUp(nKey, mod);
         break;
-      case GS_DEADJUST:
-      {
-	break;
-      }
 
     // states already in the state manager
       case GS_LEVEL_INFO_VIEWER:
@@ -799,6 +742,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
     case GS_CREDITSMODE:
     case GS_DEADMENU:
     case GS_EDIT_PROFILES:
+    case GS_DEADJUST:
       m_stateManager->keyUp(nKey, mod);
       break;
     }
@@ -819,8 +763,6 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
           m_Renderer->getGUI()->mouseLDoubleClick(nX,nY);
         
         break;
-      case GS_DEADJUST:
-      break;
 
     // states already in the state manager
     case GS_LEVEL_INFO_VIEWER:
@@ -832,6 +774,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
     case GS_CREDITSMODE:
     case GS_DEADMENU:
     case GS_EDIT_PROFILES:
+    case GS_DEADJUST:
       m_stateManager->mouseDoubleClick(nButton);
       break;
     }
@@ -856,11 +799,6 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
         
         break;
 
-
-      case GS_DEADJUST:
-      break;
-
-
       // states already in the state manager
       case GS_LEVEL_INFO_VIEWER:
       case GS_FINISHED:
@@ -871,6 +809,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
       case GS_CREDITSMODE:
       case GS_DEADMENU:
       case GS_EDIT_PROFILES:
+    case GS_DEADJUST:
       m_stateManager->mouseDown(nButton);
       break;
 
@@ -891,9 +830,6 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
           m_Renderer->getGUI()->mouseRUp(nX,nY);
         break;
 
-      case GS_DEADJUST:
-      break;
-
       // states already in the state manager
       case GS_LEVEL_INFO_VIEWER:
       case GS_FINISHED:
@@ -904,6 +840,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
       case GS_CREDITSMODE:
       case GS_DEADMENU:
       case GS_EDIT_PROFILES:
+    case GS_DEADJUST:
       m_stateManager->mouseUp(nButton);
       break;
     }
@@ -1253,32 +1190,6 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
         }
         notifyMsg(GAMETEXT_FAILEDCHECKLEVELS + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW);
       } 
-  }
-
-  void GameApp::restartLevel(bool i_reloadLevel) {
-    /* Update stats */        
-    if(m_MotoGame.Players().size() == 1) {
-      if(m_MotoGame.Players()[0]->isDead() == false) {
-				m_db->stats_levelRestarted(m_xmsession->profile(),
-																	 m_MotoGame.getLevelSrc()->Id(),
-																	 m_MotoGame.getTime());
-      }
-    }  
-
-		m_MotoGame.resetFollow();
-		m_MotoGame.endLevel();
-
-    m_Renderer->unprepareForNewLevel();
-
-    if(i_reloadLevel) {
-      try {
-				Level::removeFromCache(m_db, m_PlaySpecificLevelId);
-      } catch(Exception &e) {
-				// hum, not nice
-      }
-    }
-
-    m_stateManager->replaceState(new StatePreplaying(this, m_PlaySpecificLevelId));
   }
 
 void GameApp::abortPlaying() {

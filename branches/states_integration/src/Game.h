@@ -194,7 +194,6 @@ class StateManager;
       void addGhosts(MotoGame* i_motogame, Theme* i_theme);
 
       // to call while playing
-      void restartLevel(bool i_reloadLevel = false);
       void closePlaying();
       void abortPlaying();
       void playNextLevel();
@@ -240,7 +239,6 @@ class StateManager;
     private:   
       /* Data */
       bool m_bEnableInitZoom;                   /* true: Perform initial level scroll/zoom */
-      bool m_bEnableDeathAnim;                  /* true: Bike falls apart at when dead */
       bool m_bEnableContextHelp;                /* true: Show context help */
 
       bool m_bCompressReplays;                  /* true: compress replays with zlib */
@@ -495,8 +493,6 @@ class StateManager;
       void _PreUpdateMenu(void);
       void _DrawMainGUI(void);
       void _DrawMouseCursor(void);
-      void _PostUpdateJustDead(void);
-
 
       UIWindow* stats_generateReport(const std::string &PlayerName, UIWindow *pParent,
 				     int x, int y, int nWidth, int nHeight, FontManager* pFont);

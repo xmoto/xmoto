@@ -53,6 +53,8 @@ class StateScene : public GameState {
  int m_autoZoomStep;
 
  void setScoresTimes();
+ void restartLevel(bool i_reloadLevel = false);
+
  bool isLockedScene() const;
  void lockScene(bool i_value);
  void setAutoZoom(bool i_value);

@@ -88,104 +88,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         _DrawMainGUI();
 	break;
 
-	//      case GS_DEADJUST:
-	//    {
-
-        /* These states all requires that the actual game graphics are rendered (i.e. inside 
-           the game, not the main menu) */
-       //        try {
-	  //          int nPhysSteps = 0;
-        
-          /* When did the frame start? */
-	  //          double fStartFrameTime = getXMTime();                    
-	  //	  int numberCam = m_MotoGame.getNumberCameras();
-//	  if(
-//		    ((m_State == GS_DEADMENU || m_State == GS_DEADJUST) && m_bEnableDeathAnim)
-//		    ) {
-//            /* When actually playing or when dead and the bike is falling apart, 
-//               a physics update is required */
-//	    if(isLockedMotoGame()) {
-//	      nPhysSteps = 0;
-//	    } else {
-//	      nPhysSteps = _UpdateGamePlaying();            
-//	    }
-//          }
-
-          /* Render */
-//          if(!getDrawLib()->isNoGraphics()) {
-//	    try {
-//	      if((m_autoZoom || (m_bPrePlayAnim && m_xmsession->ugly() == false)) && numberCam > 1){
-//		m_Renderer->render(bIsPaused);
-//		ParticlesSource::setAllowParticleGeneration(m_Renderer->nbParticlesRendered() < NB_PARTICLES_TO_RENDER_LIMITATION);
-//	      }else{
-//		for(int i=0; i<numberCam; i++){
-//		  m_MotoGame.setCurrentCamera(i);
-//		  m_Renderer->render(bIsPaused);
-//		  ParticlesSource::setAllowParticleGeneration(m_Renderer->nbParticlesRendered() < NB_PARTICLES_TO_RENDER_LIMITATION);
-//		}
-//	      }
-//	    } catch(Exception &e) {
-//	      m_MotoGame.endLevel();
-//	      setState(m_StateAfterPlaying);
-//	      notifyMsg(splitText(e.getMsg(), 50));
-//	    }
-//	    getDrawLib()->getMenuCamera()->setCamera2d();
-//	  }
-//#if SIMULATE_SLOW_RENDERING
-//          SDL_Delay(SIMULATE_SLOW_RENDERING);
-//#endif
-  
-	  /* TODO::MANU::get out !!
-          // When did frame rendering end?
-          double fEndFrameTime = getXMTime();
-          
-          // Calculate how large a delay should be inserted after the frame, to keep the 
-	  // desired frame rate 
-          int nADelay = 0;    
-          
-	  if (m_State == GS_DEADJUST) {
-            setFrameDelay(10);
-          } else {
-            // become idle only if we hadn't to skip any frame, recently, and more globaly (80% of fps)
-            if((nPhysSteps <= 1) && (m_fFPS_Rate > (0.8f / PHYS_STEP_SIZE)))
-              nADelay = ((m_fLastPhysTime + PHYS_STEP_SIZE) - fEndFrameTime) * 1000.0f;
-
-	    if(m_autoZoom){
-	      // limit framerate while zooming (100 fps)
-	      double timeElapsed = getXMTime() - fStartFrameTime;
-	      if(timeElapsed < 0.01)
-		nADelay = 10 - (int)(timeElapsed*1000.0);
-	    }
-          }
-
-          if(nADelay > 0) {
-            if(m_xmsession->timedemo() == false) {
-              setFrameDelay(nADelay);
-            }
-          }
-	  */
-
-//          if(m_State == GS_DEADJUST) {
-//            /* Hmm, you're dead and you know it. */
-//            _PostUpdateJustDead();
-//          }
-
-          /* Draw GUI */
-	  // only if it's not the autozoom camera
-//	  if(m_MotoGame.getCurrentCamera() != m_MotoGame.getNumberCameras()){
-//	    m_Renderer->getGUI()->paint();        
-//	  }
-        
-//          break;
-//        }
-//        catch(Exception &e) {
-//	  Logger::Log("** Warning ** : drawFrame failed ! (%s)", e.getMsg().c_str());
-//	  // it doesn't work
-//	  m_MotoGame.endLevel();
-//	  setState(m_StateAfterPlaying);
-//          notifyMsg(splitText(e.getMsg(), 50));
-//        }
-//     }
     }
 
     // states managed via the state manager
@@ -197,7 +99,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
        m_State == GS_REPLAYING         ||
        m_State == GS_PLAYING           ||
        m_State == GS_PREPLAYING        ||
-       m_State == GS_CREDITSMODE
+       m_State == GS_CREDITSMODE       ||
+       m_State == GS_DEADJUST
        ) {
       /* draw the game states */
       m_stateManager->update();
@@ -241,8 +144,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
   
   void GameApp::_PrepareFrame(void) {
-    m_MotoGame.setDeathAnim(m_bEnableDeathAnim); /* hack hack hack */
-    
+   
     /* Update sound system and input */
     if(!getDrawLib()->isNoGraphics()) {        
       Sound::update();
@@ -360,11 +262,4 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       m_Renderer->getGUI()->enableContextMenuDrawing(false);
       
     m_Renderer->getGUI()->paint();                
-  }
-  
-  void GameApp::_PostUpdateJustDead(void) {
-    if(m_xmsession->ugly() == false) {
-      if(m_nJustDeadShade < 150) m_nJustDeadShade+=8;
-      getDrawLib()->drawBox(Vector2f(0,0),Vector2f(getDrawLib()->getDispWidth(),getDrawLib()->getDispHeight()),0,MAKE_COLOR(0,0,0,m_nJustDeadShade));     
-    }
   }

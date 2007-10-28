@@ -21,8 +21,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateDeadJust.h"
 #include "Game.h"
 #include "StateDeadMenu.h"
+#include "GameText.h"
 
-StateDeadJust::StateDeadJust(GameApp* pGame) :
+StateDeadJust::StateDeadJust(GameApp* pGame):
   StateScene(pGame)
 {
   m_name    = "StateDeadJust";
@@ -36,7 +37,12 @@ StateDeadJust::~StateDeadJust()
 
 void StateDeadJust::enter()
 {
-  m_pGame->getStateManager()->replaceState(new StateDeadMenu(m_pGame, true));
+  StateScene::enter();
+  m_pGame->getMotoGame()->clearGameMessages();
+  m_pGame->getMotoGame()->gameMessage(GAMETEXT_JUSTDEAD_RESTART,     false, 15);
+  m_pGame->getMotoGame()->gameMessage(GAMETEXT_JUSTDEAD_DISPLAYMENU, false, 15);
+  m_pGame->getMotoGame()->setInfos(m_pGame->getMotoGame()->getLevelSrc()->Name());
+  m_pGame->playMusic("");
 }
 
 void StateDeadJust::leave()
@@ -55,36 +61,60 @@ void StateDeadJust::leaveAfterPush()
 
 bool StateDeadJust::update()
 {
-
+  if(doUpdate() == false){
+    return false;
+  }
+  
+  StateScene::update();
 }
 
 bool StateDeadJust::render()
 {
+  StateScene::render();
 
+//    if(m_xmsession->ugly() == false) {
+//      if(m_nJustDeadShade < 150) m_nJustDeadShade+=8;
+//      getDrawLib()->drawBox(Vector2f(0,0),Vector2f(getDrawLib()->getDispWidth(),getDrawLib()->getDispHeight()),0,MAKE_COLOR(0,0,0,m_nJustDeadShade));     
+//    }
+
+  return true;
 }
 
 void StateDeadJust::keyDown(int nKey, SDLMod mod,int nChar)
 {
-  //  m_requestForEnd = true;
-  // m_pGame->setState(m_pGame->m_StateAfterPlaying);
+  switch(nKey) {
+
+  case SDLK_ESCAPE:
+    m_pGame->getStateManager()->pushState(new StateDeadMenu(m_pGame, false));
+    break;
+
+  case SDLK_RETURN:
+    /* retart immediatly the level */
+    restartLevel();
+    break;
+
+  default:
+    StateScene::keyDown(nKey, mod, nChar);
+
+  }
 }
 
 void StateDeadJust::keyUp(int nKey,   SDLMod mod)
 {
-
+  StateScene::keyUp(nKey, mod);
 }
 
 void StateDeadJust::mouseDown(int nButton)
 {
-
+  StateScene::mouseDown(nButton);
 }
 
 void StateDeadJust::mouseDoubleClick(int nButton)
 {
-
+  StateScene::mouseDoubleClick(nButton);
 }
 
 void StateDeadJust::mouseUp(int nButton)
 {
-
+  StateScene::mouseUp(nButton);
 }

@@ -84,7 +84,7 @@ void StateDeadMenu::checkEvents() {
     pTryAgainButton->setClicked(false);
 
     m_pGame->m_State = GS_PLAYING; // to be removed, just the time states are finished
-    m_pGame->restartLevel();
+    //m_pGame->restartLevel();
     m_requestForEnd = true;
   }
 

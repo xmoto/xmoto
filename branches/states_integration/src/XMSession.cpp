@@ -53,6 +53,7 @@ XMSession::XMSession() {
   m_showMinimap              = true;
   m_multiStopWhenOneFinishes = true;
   m_enableMenuMusic          = true;
+  m_enableDeadAnimation      = true;
 }
 
 void XMSession::load(const XMArguments* i_xmargs) {
@@ -149,6 +150,7 @@ void XMSession::load(UserConfig* m_Config) {
   m_multiStopWhenOneFinishes = m_Config->getBool("MultiStopWhenOneFinishes");
   m_enableMenuMusic          = m_Config->getBool("MenuMusic");
   m_enableInitZoom           = m_Config->getBool("InitZoom");
+  m_enableDeadAnimation      = m_Config->getBool("DeathAnim");
 }
 
 bool XMSession::isVerbose() const {
@@ -361,4 +363,12 @@ void XMSession::setEnableInitZoom(bool i_value) {
 
 bool XMSession::enableInitZoom() const {
   return m_enableInitZoom;
+}
+
+void XMSession::setEnableDeadAnimation(bool i_value) {
+  m_enableDeadAnimation = i_value;
+}
+
+bool XMSession::enableDeadAnimation() const {
+  return m_enableDeadAnimation;
 }

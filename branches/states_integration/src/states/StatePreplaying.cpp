@@ -49,7 +49,6 @@ StatePreplaying::~StatePreplaying()
 void StatePreplaying::enter()
 {
   setPlayAnimation(true); // must be removed, just for tests
-
   StateScene::enter();
 
   m_pGame->m_State = GS_PREPLAYING; // to be removed, just the time states are finished
@@ -58,6 +57,7 @@ void StatePreplaying::enter()
   m_pGame->getGameRenderer()->setShowMinimap(false);
   m_pGame->getGameRenderer()->setShowTimePanel(false);
   m_pGame->playMusic("");
+  m_pGame->getMotoGame()->setDeathAnim(m_pGame->getSession()->enableDeadAnimation());
 
   /* Initialize controls */
   m_pGame->getInputHandler()->configure(m_pGame->getUserConfig());

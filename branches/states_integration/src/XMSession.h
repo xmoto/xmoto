@@ -94,6 +94,8 @@ class XMSession {
   bool enableMenuMusic() const;
   void setEnableInitZoom(bool i_value);
   bool enableInitZoom() const;
+  void setEnableDeadAnimation(bool i_value);
+  bool enableDeadAnimation() const;
 
   private:
   bool m_verbose;
@@ -127,6 +129,7 @@ class XMSession {
   bool m_multiStopWhenOneFinishes; /* in multiplayer, stop the game when one finishes the level */
   bool m_enableMenuMusic;
   bool m_enableInitZoom;
+  bool m_enableDeadAnimation;
 };
 
 #endif

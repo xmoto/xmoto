@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateFinished.h"
 #include "StateDeadJust.h"
 #include "StateDeadMenu.h"
+#include "Sound.h"
 
 StatePlaying::StatePlaying(GameApp* pGame):
   StateScene(pGame)
@@ -147,7 +148,25 @@ bool StatePlaying::update()
 	if(m_pGame->isAReplayToSave()) {
 	  m_pGame->finalizeReplay(false);
 	}
-	m_pGame->getStateManager()->pushState(new StateDeadMenu(m_pGame, true));
+
+	/* Update stats */        
+	if(m_pGame->getMotoGame()->Players().size() == 1) {
+	  m_pGame->getDb()->stats_died(m_pGame->getSession()->profile(),
+				       m_pGame->getMotoGame()->getLevelSrc()->Id(),
+				       m_pGame->getMotoGame()->getTime());
+	}                
+
+	/* Play the DIE!!! sound */
+	try {
+	  Sound::playSampleByName(m_pGame->getTheme()->getSound("Headcrash")->FilePath(), 0.3);
+	} catch(Exception &e) {
+	}
+
+	if(m_pGame->getSession()->enableDeadAnimation()) {
+	  m_pGame->getStateManager()->replaceState(new StateDeadJust(m_pGame));
+	} else {
+	  m_pGame->getStateManager()->pushState(new StateDeadMenu(m_pGame, true));
+	}
       }
     }
   }    
@@ -193,7 +212,7 @@ void StatePlaying::keyDown(int nKey, SDLMod mod,int nChar)
 //    break;
   case SDLK_RETURN:
     /* retart immediatly the level */
-    m_pGame->restartLevel();
+    restartLevel();
     break;
 
   case SDLK_KP5:
