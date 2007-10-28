@@ -2585,7 +2585,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       pMonoButton->setChecked(true);
       
     pEnableEngineSoundButton->setChecked(m_Config.getBool("EngineSoundEnable"));      
-    pEnableMusicButton->setChecked(m_Config.getBool("MenuMusic"));      
+    pEnableMusicButton->setChecked(m_Config.getBool("MenuMusic"));
       
     switch(m_Config.getInteger("DisplayBPP")) {
       case 16: p16bpp->setChecked(true); break;
@@ -2866,7 +2866,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_Config.setBool("EngineSoundEnable",pEnableEngineSoundButton->getChecked());
 
     m_Config.setBool("MenuMusic",pEnableMusicButton->getChecked());
-    m_bEnableMenuMusic = pEnableMusicButton->getChecked();
+    m_xmsession->setEnableMenuMusic(pEnableMusicButton->getChecked());
 
     if(Sound::isEnabled()) {
       if(pEnableAudioButton->getChecked() && pEnableMusicButton->getChecked()

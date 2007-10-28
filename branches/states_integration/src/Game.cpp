@@ -252,7 +252,6 @@ GameApp::GameApp() {
   m_xmsession = new XMSession();
   m_sysMsg = NULL;
 
-  m_bEnableMenuMusic=false;
   m_bEnableInitZoom=true;
   m_autoZoom = false;
   m_autoZoomStep = 0;
@@ -530,7 +529,7 @@ GameApp::GameApp() {
 
     /* Other settings */
     m_bEnableContextHelp = m_Config.getBool("ContextHelp");
-    m_bEnableMenuMusic = m_Config.getBool("MenuMusic");
+    m_xmsession->setEnableMenuMusic(m_Config.getBool("MenuMusic"));
     m_bEnableInitZoom = m_Config.getBool("InitZoom");
     m_bEnableDeathAnim = m_Config.getBool("DeathAnim");
 
@@ -2407,7 +2406,7 @@ void GameApp::requestEnd() {
 }
 
 void GameApp::playMusic(const std::string& i_music) {
-  if(m_bEnableMenuMusic && Sound::isEnabled()) {
+  if(m_xmsession->enableMenuMusic() && Sound::isEnabled()) {
     if(i_music != m_playingMusic) {
       try {
 	if(i_music == "") {

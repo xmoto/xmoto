@@ -52,6 +52,7 @@ XMSession::XMSession() {
   m_showEngineCounter        = true;
   m_showMinimap              = true;
   m_multiStopWhenOneFinishes = true;
+  m_enableMenuMusic          = true;
 }
 
 void XMSession::load(const XMArguments* i_xmargs) {
@@ -146,6 +147,8 @@ void XMSession::load(UserConfig* m_Config) {
   m_showEngineCounter        = m_Config->getBool("ShowEngineCounter");
   m_showMinimap              = m_Config->getBool("ShowMiniMap");
   m_multiStopWhenOneFinishes = m_Config->getBool("MultiStopWhenOneFinishes");
+  m_enableMenuMusic          = m_Config->getBool("MenuMusic");
+  m_enableInitZoom           = m_Config->getBool("InitZoom");
 }
 
 bool XMSession::isVerbose() const {
@@ -342,4 +345,20 @@ void XMSession::setMultiStopWhenOneFinishes(bool i_value) {
 
 bool XMSession::MultiStopWhenOneFinishes() const {
   return m_multiStopWhenOneFinishes;
+}
+
+void XMSession::setEnableMenuMusic(bool i_value) {
+  m_enableMenuMusic = i_value;
+}
+
+bool XMSession::enableMenuMusic() const {
+  return m_enableMenuMusic;
+}
+
+void XMSession::setEnableInitZoom(bool i_value) {
+  m_enableInitZoom = i_value;
+}
+
+bool XMSession::enableInitZoom() const {
+  return m_enableInitZoom;
 }

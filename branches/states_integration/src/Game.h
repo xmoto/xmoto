@@ -250,7 +250,6 @@ class StateManager;
       int m_autoZoomStep;
       bool m_bAutoZoomInitialized;
       bool m_bEnableDeathAnim;                  /* true: Bike falls apart at when dead */
-      bool m_bEnableMenuMusic;                  /* true: Play menu music */      
       bool m_bEnableContextHelp;                /* true: Show context help */
 
       bool m_bCompressReplays;                  /* true: compress replays with zlib */

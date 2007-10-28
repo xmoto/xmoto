@@ -96,9 +96,9 @@ void StatePause::checkEvents() {
   UIButton *pPlayNextButton = reinterpret_cast<UIButton *>(m_GUI->getChild("PAUSE_FRAME:PLAYNEXT_BUTTON"));
   if(pPlayNextButton->isClicked()) {
     pPlayNextButton->setClicked(false);
-
+    
+    m_pGame->m_State = GS_PLAYING; // to be removed, just the time states are finished
     m_pGame->playNextLevel();
-    m_pGame->setState(GS_PREPLAYING);
     m_requestForEnd = true;
   }
 

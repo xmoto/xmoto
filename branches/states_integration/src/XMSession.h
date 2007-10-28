@@ -90,6 +90,10 @@ class XMSession {
   bool showMinimap() const;
   void setMultiStopWhenOneFinishes(bool i_value);
   bool MultiStopWhenOneFinishes() const;
+  void setEnableMenuMusic(bool i_value);
+  bool enableMenuMusic() const;
+  void setEnableInitZoom(bool i_value);
+  bool enableInitZoom() const;
 
   private:
   bool m_verbose;
@@ -121,6 +125,8 @@ class XMSession {
   bool m_showEngineCounter;
   bool m_showMinimap;
   bool m_multiStopWhenOneFinishes; /* in multiplayer, stop the game when one finishes the level */
+  bool m_enableMenuMusic;
+  bool m_enableInitZoom;
 };
 
 #endif
