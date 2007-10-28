@@ -141,13 +141,7 @@ class StateManager;
 
       void setState(OldGameState s);
       void notifyMsg(std::string Msg);      
-      void setPrePlayAnim(bool pEnabled);
       void reloadTheme();
-
-      void setAutoZoom(bool bValue);
-      bool AutoZoom();
-      void setAutoZoomStep(int n);
-      int AutoZoomStep();
 
       void TeleportationCheatTo(int i_player, Vector2f i_position);
 
@@ -246,9 +240,6 @@ class StateManager;
     private:   
       /* Data */
       bool m_bEnableInitZoom;                   /* true: Perform initial level scroll/zoom */
-      bool m_autoZoom;                          /* true : the key is pressed so that it zooms out to see the level */
-      int m_autoZoomStep;
-      bool m_bAutoZoomInitialized;
       bool m_bEnableDeathAnim;                  /* true: Bike falls apart at when dead */
       bool m_bEnableContextHelp;                /* true: Show context help */
 
@@ -301,31 +292,6 @@ class StateManager;
       bool m_bCreditsModeActive;
       
       ThemeChoicer *m_themeChoicer;
-
-      float m_fPrePlayStartTime;
-      bool m_bPrePlayAnim;
-      float m_fPrePlayCameraLastX;
-      float m_fPrePlayCameraLastY;
-      float m_fPrePlayStartInitZoom;
-      float m_fPrePlayStartCameraX;
-      float m_fPrePlayStartCameraY;
-      float m_fPreCameraStartX;
-      float m_fPreCameraStartY;
-      float m_fPreCameraFinalX;
-      float m_fPreCameraFinalY;
-      float m_zoomX;
-      float m_zoomY;
-      float m_zoomU;
-      float static_time;
-
-      float fAnimPlayStartZoom;
-      float fAnimPlayStartCameraX; 
-      float fAnimPlayStartCameraY;
-      float fAnimPlayFinalZoom;
-      float fAnimPlayFinalCameraX1;
-      float fAnimPlayFinalCameraY1;
-      float fAnimPlayFinalCameraX2;
-      float fAnimPlayFinalCameraY2;
 
       UIWindow *m_pStatsReport;
       
@@ -411,7 +377,6 @@ class StateManager;
       std::string m_PlaySpecificLevelId;
       std::string m_PlaySpecificLevelFile;
 
-      bool m_bLockMotoGame;
       xmDatabase *m_db;
 
       UserConfig m_Config;
@@ -523,9 +488,6 @@ class StateManager;
       bool zoomAnimation2_unstep();
       void zoomAnimation2_abort();
 
-      void lockMotoGame(bool bLock);
-      bool isLockedMotoGame() const;
-     
       /* Main loop utility functions */
       void _UpdateFPSCounter(void);
       void _PrepareFrame(void);
@@ -534,8 +496,6 @@ class StateManager;
       void _DrawMainGUI(void);
       void _DrawMouseCursor(void);
       void _PostUpdateJustDead(void);
-
-      void autoZoom();
 
 
       UIWindow* stats_generateReport(const std::string &PlayerName, UIWindow *pParent,

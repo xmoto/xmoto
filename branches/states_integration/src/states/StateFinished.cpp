@@ -160,7 +160,6 @@ void StateFinished::checkEvents() {
     pPlaynextButton->setClicked(false);
 
     m_pGame->playNextLevel();
-    m_pGame->setPrePlayAnim(true);
     m_pGame->setState(GS_PREPLAYING);
     m_requestForEnd = true;
   }

@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateMessageBox.h"
 #include "StateFinished.h"
 #include "StateDeadJust.h"
+#include "StateDeadMenu.h"
 
 StatePlaying::StatePlaying(GameApp* pGame):
   StateScene(pGame)
@@ -146,7 +147,7 @@ bool StatePlaying::update()
 	if(m_pGame->isAReplayToSave()) {
 	  m_pGame->finalizeReplay(false);
 	}
-	m_pGame->getStateManager()->replaceState(new StateDeadJust(m_pGame));
+	m_pGame->getStateManager()->pushState(new StateDeadMenu(m_pGame, true));
       }
     }
   }    
