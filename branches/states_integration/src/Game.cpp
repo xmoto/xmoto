@@ -2483,14 +2483,14 @@ InputHandler* GameApp::getInputHandler() {
   return &m_InputHandler;
 }
 
-void GameApp::finalizeReplay() {
+void GameApp::finalizeReplay(bool i_finished) {
   if(m_MotoGame.Players().size() != 1) return;
 
   /* save the last state because scene don't record each frame */
   SerializedBikeState BikeState;
   MotoGame::getSerializedBikeState(m_MotoGame.Players()[0]->getState(), m_MotoGame.getTime(), &BikeState);
   m_pJustPlayReplay->storeState(BikeState);
-  m_pJustPlayReplay->finishReplay(true, m_MotoGame.Players()[0]->finishTime());
+  m_pJustPlayReplay->finishReplay(i_finished, i_finished ? m_MotoGame.Players()[0]->finishTime() : 0.0);
 }
 
 void GameApp::updateLevelsListsOnEnd() {

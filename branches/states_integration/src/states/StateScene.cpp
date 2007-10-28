@@ -68,7 +68,7 @@ bool StateScene::update()
   // don't update if that's not required
   // don't do this infinitely, maximum miss 10 frames, then give up
   while ((m_fLastPhysTime + PHYS_STEP_SIZE <= GameApp::getXMTime()) && (nPhysSteps < 10)) {
-    m_pGame->getMotoGame()->updateLevel(PHYS_STEP_SIZE);
+    m_pGame->getMotoGame()->updateLevel(PHYS_STEP_SIZE, m_pGame->getCurrentReplay());
     m_fLastPhysTime += PHYS_STEP_SIZE;
     nPhysSteps++;    
   }

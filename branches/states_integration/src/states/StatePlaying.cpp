@@ -131,7 +131,7 @@ bool StatePlaying::update()
 	
 	/* finalize the replay */
 	if(m_pGame->isAReplayToSave()) {
-	  m_pGame->finalizeReplay();
+	  m_pGame->finalizeReplay(true);
 	}
 	
 	/* update profiles */
@@ -155,10 +155,12 @@ bool StatePlaying::update()
 				     m_pGame->getMotoGame()->Players()[0]->finishTime());
 	  m_pGame->updateLevelsListsOnEnd();
 	}
-	
 	m_pGame->getStateManager()->pushState(new StateFinished(m_pGame));
       } else if(v_all_dead) {
 	/* You're dead maan! */
+	if(m_pGame->isAReplayToSave()) {
+	  m_pGame->finalizeReplay(false);
+	}
 	m_pGame->getStateManager()->replaceState(new StateDeadJust(m_pGame));
       }
     }

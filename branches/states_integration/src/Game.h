@@ -235,7 +235,7 @@ class StateManager;
       }
 
       /* call to close the replay */
-      void finalizeReplay();
+      void finalizeReplay(bool i_finished);
       void updateLevelsListsOnEnd();
 
       static std::string splitText(const std::string &str, int p_breakLineLength);
