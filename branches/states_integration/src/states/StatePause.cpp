@@ -62,6 +62,7 @@ void StatePause::enter()
 
 void StatePause::leave()
 {
+  StateMenu::leave();
   m_pGame->getMotoGame()->setInfos("");
 }
 

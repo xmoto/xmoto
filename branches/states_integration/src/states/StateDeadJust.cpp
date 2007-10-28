@@ -41,7 +41,6 @@ void StateDeadJust::enter()
 
 void StateDeadJust::leave()
 {
-
 }
 
 void StateDeadJust::enterAfterPop()

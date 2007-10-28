@@ -131,6 +131,7 @@ void StateFinished::enter()
 
 void StateFinished::leave()
 {
+  StateMenu::leave();
   m_pGame->getMotoGame()->setInfos("");
 }
 

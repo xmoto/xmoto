@@ -169,7 +169,6 @@ bool StatePreplaying::shouldBeAnimated() const {
 
 void StatePreplaying::leave()
 {
-
 }
 
 void StatePreplaying::enterAfterPop()
