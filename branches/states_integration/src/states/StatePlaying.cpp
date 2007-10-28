@@ -92,26 +92,11 @@ bool StatePlaying::update()
 
   StateScene::update();
 
-#if 0  
-  int numberCam = m_pGame->getMotoGame()->getNumberCameras();
-  m_pGame->getMotoGame()->setCurrentCamera(numberCam);
-
-  /* When actually playing or when dead and the bike is falling apart, a physics update is required */
-  //if(isLockedMotoGame()) {
-  //  nPhysSteps = 0;
-  //} else {
-  //nPhysSteps = _UpdateGamePlaying();            
-  
-  if(numberCam > 1){
-    // m_MotoGame.setCurrentCamera(numberCam);
-  }
-  // autoZoom();
-#endif
-
-  bool v_all_dead       = true;
-  bool v_one_still_play = false;
-  bool v_one_finished   = false;
-  
+  if(isLockedScene() == false) {
+    bool v_all_dead       = true;
+    bool v_one_still_play = false;
+    bool v_one_finished   = false;
+    
     for(unsigned int i=0; i<m_pGame->getMotoGame()->Players().size(); i++) {
       if(m_pGame->getMotoGame()->Players()[i]->isDead() == false) {
 	v_all_dead = false;
@@ -144,15 +129,15 @@ bool StatePlaying::update()
 	}
 	if(m_pGame->getMotoGame()->Players().size() == 1) {
 	  m_pGame->getDb()->profiles_addFinishTime(m_pGame->getSession()->profile(), m_pGame->getMotoGame()->getLevelSrc()->Id(),
-				       TimeStamp, v_finish_time);
+						   TimeStamp, v_finish_time);
 	}
 	
 	/* Update stats */
 	/* update stats only in one player mode */
 	if(m_pGame->getMotoGame()->Players().size() == 1) {       
 	  m_pGame->getDb()->stats_levelCompleted(m_pGame->getSession()->profile(),
-				     m_pGame->getMotoGame()->getLevelSrc()->Id(),
-				     m_pGame->getMotoGame()->Players()[0]->finishTime());
+						 m_pGame->getMotoGame()->getLevelSrc()->Id(),
+						 m_pGame->getMotoGame()->Players()[0]->finishTime());
 	  m_pGame->updateLevelsListsOnEnd();
 	}
 	m_pGame->getStateManager()->pushState(new StateFinished(m_pGame));
@@ -164,6 +149,7 @@ bool StatePlaying::update()
 	m_pGame->getStateManager()->replaceState(new StateDeadJust(m_pGame));
       }
     }
+  }    
 
   return true;
 }
@@ -209,6 +195,12 @@ void StatePlaying::keyDown(int nKey, SDLMod mod,int nChar)
     m_pGame->restartLevel();
     break;
 
+  case SDLK_KP5:
+    if(autoZoom() == false) {
+      setAutoZoom(true);
+    }
+    break;
+
   default:
     /* Notify the controller */
     m_pGame->getInputHandler()->handleInput(INPUT_KEY_DOWN, nKey, mod,
@@ -222,12 +214,21 @@ void StatePlaying::keyDown(int nKey, SDLMod mod,int nChar)
 
 void StatePlaying::keyUp(int nKey, SDLMod mod)
 {
-  m_pGame->getInputHandler()->handleInput(INPUT_KEY_UP,nKey,mod,
-			     m_pGame->getMotoGame()->Players(),
-			     m_pGame->getMotoGame()->Cameras(),
-			     m_pGame);
+  switch(nKey) {
 
-  StateScene::keyUp(nKey, mod);
+  case SDLK_KP5:
+    if(autoZoom() && autoZoomStep() == 1) {
+      setAutoZoomStep(2);
+    }
+    break;
+    
+  default:
+    m_pGame->getInputHandler()->handleInput(INPUT_KEY_UP,nKey,mod,
+					    m_pGame->getMotoGame()->Players(),
+					    m_pGame->getMotoGame()->Cameras(),
+					    m_pGame);
+    StateScene::keyUp(nKey, mod);
+  }
 }
 
 void StatePlaying::mouseDown(int nButton)

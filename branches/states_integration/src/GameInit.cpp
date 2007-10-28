@@ -792,9 +792,8 @@ void GameApp::_Wait()
       m_Config.createVar( "KeyCameraMoveXDown",     "Pad 4" );
       m_Config.createVar( "KeyCameraMoveYUp",       "Pad 8" );
       m_Config.createVar( "KeyCameraMoveYDown",     "Pad 2" );
-      m_Config.createVar( "KeyAutoZoom",            "Pad 5" );
     #endif
-       
+     
     /* joystick */
     m_Config.createVar( "JoyIdx1",                "0" );
     m_Config.createVar( "JoyAxisPrim1",           "1" );

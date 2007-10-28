@@ -368,7 +368,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_nCameraMoveXDown = _StringToKey(pConfig->getString("KeyCameraMoveXDown"));
     m_nCameraMoveYUp   = _StringToKey(pConfig->getString("KeyCameraMoveYUp"));
     m_nCameraMoveYDown = _StringToKey(pConfig->getString("KeyCameraMoveYDown"));
-    m_nAutoZoom        = _StringToKey(pConfig->getString("KeyAutoZoom"));
 #endif
     
     /* All good? */
@@ -385,7 +384,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
        || m_nZoomIn<0 || m_nZoomOut <0 || m_nZoomInit <0
        || m_nCameraMoveXUp<0 || m_nCameraMoveXDown<0 
        || m_nCameraMoveYUp<0 || m_nCameraMoveYDown<0
-       || m_nAutoZoom<0
 #endif
        ) {
       Logger::Log("** Warning ** : Invalid keyboard configuration!");
@@ -476,12 +474,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	for(unsigned int i=0; i<i_cameras.size(); i++) {
 	  i_cameras[i]->moveCamera(0.0, -1.0);
 	}
-      }
-      else if(m_nAutoZoom == nKey) {
-	if(pGameApp->AutoZoom() == false) {
-	  pGameApp->setAutoZoom(true);
-	} else {
-	}
       } else if(nKey == SDLK_KP0 && ((mod & KMOD_LCTRL) == KMOD_LCTRL)) {
 	for(unsigned int i=0; i<i_bikers.size(); i++) {
 	  if(i_cameras.size() > 0) {
@@ -520,12 +512,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	}
      }
    }
-
-   if(m_nAutoZoom == nKey) {
-     if(pGameApp->AutoZoom() && pGameApp->AutoZoomStep() == 1) {
-       pGameApp->setAutoZoomStep(2);
-     }
-      }
    break;
  }
     
@@ -581,7 +567,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       m_nCameraMoveXDown = SDLK_KP4;
       m_nCameraMoveYUp   = SDLK_KP8;
       m_nCameraMoveYDown = SDLK_KP2;
-      m_nAutoZoom        = SDLK_KP5;
     #endif
   }  
 
@@ -623,7 +608,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     if(m_nCameraMoveXDown < 0) { m_nCameraMoveXDown = SDLK_KP4; }
     if(m_nCameraMoveYUp   < 0) { m_nCameraMoveYUp   = SDLK_KP8; }
     if(m_nCameraMoveYDown < 0) { m_nCameraMoveYDown = SDLK_KP2; }
-    if(m_nAutoZoom        < 0) { m_nAutoZoom        = SDLK_KP5; }
     #endif
   }
 
@@ -663,7 +647,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     if(Action == "CameraMoveXDown") return _KeyToString(m_nCameraMoveXDown);
     if(Action == "CameraMoveYUp")   return _KeyToString(m_nCameraMoveYUp);
     if(Action == "CameraMoveYDown") return _KeyToString(m_nCameraMoveYDown);
-    if(Action == "AutoZoom")        return _KeyToString(m_nAutoZoom);
     #endif
 
     return "?";
