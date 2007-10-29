@@ -218,10 +218,10 @@ void StateManager::render()
 
 void StateManager::drawFps() {
   char cTemp[256];        
+  sprintf(cTemp, "u(%i) d(%i)", getCurrentUpdateFPS(), getCurrentRenderFPS());
+
   FontManager* v_fm = m_pGame->getDrawLib()->getFontSmall();
   FontGlyph* v_fg = v_fm->getGlyph(cTemp);
-
-  sprintf(cTemp, "u(%i) d(%i)", getCurrentUpdateFPS(), getCurrentRenderFPS());
   v_fm->printString(v_fg, 0, 130, MAKE_COLOR(255,255,255,255), true);
 }
 
