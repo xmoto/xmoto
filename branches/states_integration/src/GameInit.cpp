@@ -299,6 +299,8 @@ void GameApp::_Wait()
     if(sleepTime > delta){
       int tooMuchSleep = sleepTime - delta;
       m_frameLate      = tooMuchSleep;
+    } else{
+      m_frameLate = 0;
     }
   }
   else{
