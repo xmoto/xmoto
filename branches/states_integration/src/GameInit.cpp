@@ -363,7 +363,6 @@ void GameApp::_Wait()
 
     /* Reset timers */
     m_fLastPerfStateTime = 0.0f;
-    m_fLastPhysTime = getXMTime() - PHYS_STEP_SIZE;
     
     /* And stuff */
     m_nJustDeadShade = 0;

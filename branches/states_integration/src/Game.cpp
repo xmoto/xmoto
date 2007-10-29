@@ -410,8 +410,6 @@ GameApp::GameApp() {
       }
     }
 
-    m_fLastPhysTime = getXMTime() - PHYS_STEP_SIZE;
-
     /* manage music */
     playMusic(v_newMusicPlaying);
   }

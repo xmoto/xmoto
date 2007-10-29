@@ -213,6 +213,9 @@ bool StateScene::isLockedScene() const {
 
 void StateScene::lockScene(bool i_value) {
   m_isLockedScene = i_value;
+  if(m_isLockedScene == false){
+    m_fLastPhysTime = GameApp::getXMTime();
+  }
 }
 
 void StateScene::setAutoZoom(bool i_value) {
