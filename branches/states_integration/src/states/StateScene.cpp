@@ -28,12 +28,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "drawlib/DrawLib.h"
 #include "StatePreplaying.h"
 
-StateScene::StateScene(GameApp* pGame):
-  GameState(false, false, pGame)
+StateScene::StateScene(GameApp* pGame, bool i_doShade, bool i_doShadeAnim):
+GameState(false, false, pGame, i_doShade, i_doShadeAnim)
 {
   m_fLastPhysTime = -1.0;
   // while playing, we want 100 fps for the physic
   m_updateFps     = 100;
+  m_showCursor = false;
 }
 
 StateScene::~StateScene()
@@ -43,7 +44,8 @@ StateScene::~StateScene()
 
 void StateScene::enter()
 {
-  //m_pGame->setShowCursor(false);
+  GameState::enter();
+
   m_isLockedScene = false;
   m_autoZoom      = false;
   m_autoZoomStep  = 0;
@@ -97,6 +99,8 @@ bool StateScene::render()
   } catch(Exception &e) {
     m_pGame->getStateManager()->replaceState(new StateMessageBox(NULL, m_pGame, GameApp::splitText(e.getMsg(), 50), UI_MSGBOX_OK));
   }
+
+  GameState::render();
 
   return true;
 }

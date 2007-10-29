@@ -24,9 +24,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "XMSession.h"
 #include "drawlib/DrawLib.h"
 
-#define MENU_SHADING_TIME 0.3
-#define MENU_SHADING_VALUE 150
-
 StateMenu::StateMenu(bool drawStateBehind,
 		     bool updateStatesBehind,
 		     GameApp* pGame,
@@ -34,11 +31,11 @@ StateMenu::StateMenu(bool drawStateBehind,
 		     bool i_doShadeAnim):
   GameState(drawStateBehind,
 	    updateStatesBehind,
-	    pGame)
+	    pGame,
+	    i_doShade, i_doShadeAnim)
 {
-  m_GUI         = NULL;
-  m_doShade     = i_doShade;
-  m_doShadeAnim = i_doShadeAnim;
+  m_GUI        = NULL;
+  m_showCursor = true;
 }
 
 StateMenu::~StateMenu()
@@ -49,13 +46,11 @@ StateMenu::~StateMenu()
 
 void StateMenu::enter()
 {
-  m_nShadeTime = GameApp::getXMTime();
-  //m_pGame->setShowCursor(true);
+  GameState::enter();
 }
 
 void StateMenu::leave()
 {
-  //m_pGame->setShowCursor(false);
 }
 
 void StateMenu::enterAfterPop()
@@ -80,26 +75,8 @@ bool StateMenu::update()
 
 bool StateMenu::render()
 {
-  if(m_pGame->getSession()->ugly() == false && m_doShade) {
-    float v_currentTime = GameApp::getXMTime();
-    int   v_nShade;
-
-    if(v_currentTime - m_nShadeTime < MENU_SHADING_TIME && m_doShadeAnim) {
-      v_nShade = (int ) ((v_currentTime - m_nShadeTime) * (MENU_SHADING_VALUE / MENU_SHADING_TIME));
-    } else {
-      v_nShade = MENU_SHADING_VALUE;
-    }
-
-    m_pGame->getDrawLib()->drawBox(Vector2f(0,0),
-				   Vector2f(m_pGame->getDrawLib()->getDispWidth(),
-					    m_pGame->getDrawLib()->getDispHeight()),
-				   0,
-				   MAKE_COLOR(0,0,0, v_nShade)
-				   );
-  }
-
+  GameState::render();
   m_GUI->paint();
-
   return true;
 }
 

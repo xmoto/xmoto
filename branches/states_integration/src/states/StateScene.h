@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class StateScene : public GameState {
  public:
- StateScene(GameApp* pGame);
+ StateScene(GameApp* pGame, bool i_doShade = false, bool i_doShadeAnim = false);
  virtual ~StateScene();
  
  virtual void enter();

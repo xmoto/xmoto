@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "GameText.h"
 
 StateDeadJust::StateDeadJust(GameApp* pGame):
-  StateScene(pGame)
+StateScene(pGame, true, true)
 {
   m_name    = "StateDeadJust";
 }

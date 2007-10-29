@@ -30,10 +30,12 @@ class GameState : public StateMessageBoxReceiver {
   public:
     GameState(bool drawStateBehind,
 	      bool updateStatesBehind,
-	      GameApp* pGame);
+	      GameApp* pGame,
+	      bool i_doShade     = false,
+	      bool i_doShadeAnim = false);
     virtual ~GameState();
 
-    virtual void enter()=0;
+    virtual void enter();
     virtual void leave()=0;
     /* called when a new state is pushed or poped on top of the
        current one */
@@ -42,7 +44,7 @@ class GameState : public StateMessageBoxReceiver {
 
     // return true if update/render was done
     virtual bool update()=0;
-    virtual bool render()=0;
+    virtual bool render();
     /* input */
     virtual void keyDown(int nKey, SDLMod mod,int nChar)=0;
     virtual void keyUp(int nKey,   SDLMod mod)=0;
@@ -93,6 +95,10 @@ class GameState : public StateMessageBoxReceiver {
       return m_name;
     }
 
+    bool showCursor() {
+      return m_showCursor;
+    }
+
   protected:
     bool doUpdate();
 
@@ -111,12 +117,18 @@ class GameState : public StateMessageBoxReceiver {
     float m_updateCounter;
 
     std::string m_name;
+    bool m_showCursor;
 
   private:
     bool        m_isHide;
     bool        m_drawStateBehind;
     bool        m_updateStatesBehind;
     std::string m_id;
+
+    // shade
+    bool  m_doShade;
+    bool  m_doShadeAnim;
+    float m_nShadeTime;
   };
 
   class StateManager {

@@ -30,6 +30,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "drawlib/DrawLib.h"
 #include "SysMessage.h"
 
+#define MENU_SHADING_TIME 0.3
+#define MENU_SHADING_VALUE 150
+
 StateManager::StateManager(GameApp* pGame)
 {
   m_pGame = pGame;
@@ -199,9 +202,13 @@ void StateManager::render()
     m_pGame->getSysMessage()->render();
 
     // CURSOR
-    //if(m_showCursor) {
-      drawCursor();
-    //}
+    if(m_statesStack.size() > 0) {
+      if(m_statesStack.back()->showCursor()) {
+	drawCursor();
+      }
+    } else {
+      drawCursor(); // to remove after state managing
+    }
 
     m_pGame->getDrawLib()->flushGraphics();
        
@@ -362,7 +369,9 @@ bool StateManager::doRender()
 
 GameState::GameState(bool drawStateBehind,
 		     bool updateStatesBehind,
-		     GameApp* pGame)
+		     GameApp* pGame,
+		     bool i_doShade,
+		     bool i_doShadeAnim)
 {
   m_isHide             = false;
   m_drawStateBehind    = drawStateBehind;
@@ -379,6 +388,12 @@ GameState::GameState(bool drawStateBehind,
 
   m_updatePeriod       = 0;
   m_updateCounter      = 0;
+
+  // shade
+  m_doShade     = i_doShade;
+  m_doShadeAnim = i_doShadeAnim;
+
+  m_showCursor = true;
 }
 
 GameState::~GameState() {
@@ -393,6 +408,31 @@ bool GameState::doUpdate()
     return true;
   }
   return false;
+}
+
+void GameState::enter() {
+  m_nShadeTime = GameApp::getXMTime();
+}
+
+bool GameState::render() {
+  // shade
+  if(m_pGame->getSession()->ugly() == false && m_doShade) {
+    float v_currentTime = GameApp::getXMTime();
+    int   v_nShade;
+    
+    if(v_currentTime - m_nShadeTime < MENU_SHADING_TIME && m_doShadeAnim) {
+      v_nShade = (int ) ((v_currentTime - m_nShadeTime) * (MENU_SHADING_VALUE / MENU_SHADING_TIME));
+    } else {
+      v_nShade = MENU_SHADING_VALUE;
+    }
+    
+    m_pGame->getDrawLib()->drawBox(Vector2f(0,0),
+				   Vector2f(m_pGame->getDrawLib()->getDispWidth(),
+					    m_pGame->getDrawLib()->getDispHeight()),
+				   0,
+				   MAKE_COLOR(0,0,0, v_nShade)
+				   );
+  }
 }
 
 std::string GameState::getId() const {

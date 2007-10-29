@@ -56,9 +56,6 @@ class StateMenu : public GameState {
   UIRoot *m_GUI;
   
  private:
-  bool  m_doShade;
-  bool  m_doShadeAnim;
-  float m_nShadeTime;
 };
 
 #endif
