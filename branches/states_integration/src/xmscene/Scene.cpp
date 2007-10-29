@@ -1224,6 +1224,7 @@ void MotoGame::cleanPlayers() {
   }
   void MotoGame::addCamera(Vector2i upperleft, Vector2i downright){
     m_cameras.push_back(new Camera(upperleft, downright));
+    m_cameras.back()->initCamera();
   }
   void MotoGame::resetFollow(){
     for(int i=0; i<m_cameras.size(); i++){
@@ -1235,6 +1236,15 @@ void MotoGame::cleanPlayers() {
       delete m_cameras[i];
     }
     m_cameras.clear();
+  }
+  void MotoGame::setAutoZoomCamera(){
+    if(m_cameras.size() == 1){
+      setCurrentCamera(0);
+    }
+    else{
+      // the last camera is the autozoom one
+      setCurrentCamera(m_cameras.size()-1);
+    }
   }
 
   std::vector<Camera*>& MotoGame::Cameras() {

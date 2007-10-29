@@ -233,12 +233,13 @@ class Biker;
       std::vector<Camera*>& Cameras();
 
       Camera* getCamera();
-      int getNumberCameras();
+      int  getNumberCameras();
       void setCurrentCamera(int currentCamera);
-      int getCurrentCamera();
+      int  getCurrentCamera();
       void addCamera(Vector2i upperleft, Vector2i downright);
       void resetFollow();
       void removeCameras();
+      void setAutoZoomCamera();
 
   private:
        

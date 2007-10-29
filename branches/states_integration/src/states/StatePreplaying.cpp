@@ -48,6 +48,8 @@ StatePreplaying::~StatePreplaying()
 
 void StatePreplaying::enter()
 {
+  MotoGame* pWorld = m_pGame->getMotoGame();
+
   setPlayAnimation(true); // must be removed, just for tests
   StateScene::enter();
 
@@ -57,13 +59,13 @@ void StatePreplaying::enter()
   m_pGame->getGameRenderer()->setShowMinimap(false);
   m_pGame->getGameRenderer()->setShowTimePanel(false);
   m_pGame->playMusic("");
-  m_pGame->getMotoGame()->setDeathAnim(m_pGame->getSession()->enableDeadAnimation());
+  pWorld->setDeathAnim(m_pGame->getSession()->enableDeadAnimation());
 
   /* Initialize controls */
   m_pGame->getInputHandler()->configure(m_pGame->getUserConfig());
 
   try {
-    m_pGame->getMotoGame()->loadLevel(m_pGame->getDb(), m_idlevel);
+    pWorld->loadLevel(m_pGame->getDb(), m_idlevel);
   } catch(Exception &e) {
     Logger::Log("** Warning ** : level '%s' cannot be loaded", m_idlevel.c_str());
     char cBuf[256];
@@ -73,14 +75,14 @@ void StatePreplaying::enter()
     return;
   }
 
-  if(m_pGame->getMotoGame()->getLevelSrc()->isXMotoTooOld()) {
+  if(pWorld->getLevelSrc()->isXMotoTooOld()) {
     Logger::Log("** Warning ** : level '%s' requires newer X-Moto",
-		m_pGame->getMotoGame()->getLevelSrc()->Name().c_str());
+		pWorld->getLevelSrc()->Name().c_str());
     
     char cBuf[256];
     sprintf(cBuf,GAMETEXT_NEWERXMOTOREQUIRED,
-	    m_pGame->getMotoGame()->getLevelSrc()->getRequiredVersion().c_str());
-    m_pGame->getMotoGame()->endLevel();
+	    pWorld->getLevelSrc()->getRequiredVersion().c_str());
+    pWorld->endLevel();
     m_pGame->setState(GS_MENU);
     m_pGame->getStateManager()->replaceState(new StateMessageBox(NULL, m_pGame, cBuf, UI_MSGBOX_OK));
     return;
@@ -92,8 +94,8 @@ void StatePreplaying::enter()
   try {
     m_pGame->getInputHandler()->reset();
     //m_InputHandler.setMirrored(m_MotoGame.getCamera()->isMirrored());
-    m_pGame->getMotoGame()->prePlayLevel(m_pGame->getInputHandler(), m_pGame->getCurrentReplay(), true);
-    m_pGame->getMotoGame()->setInfos("");
+    pWorld->prePlayLevel(m_pGame->getInputHandler(), m_pGame->getCurrentReplay(), true);
+    pWorld->setInfos("");
 	
     /* add the players */
     int v_nbPlayer = m_pGame->getNumberOfPlayersToPlay();
@@ -101,41 +103,41 @@ void StatePreplaying::enter()
 
     m_pGame->initCameras(v_nbPlayer);
     for(int i=0; i<v_nbPlayer; i++) {
-      m_pGame->getMotoGame()->setCurrentCamera(i);
-      m_pGame->getMotoGame()->getCamera()->setPlayerToFollow(m_pGame->getMotoGame()->addPlayerBiker(m_pGame->getMotoGame()->getLevelSrc()->PlayerStart(),
-												    DD_RIGHT,
-												    m_pGame->getTheme(), m_pGame->getTheme()->getPlayerTheme(),
-												    m_pGame->getColorFromPlayerNumber(i),
-												    m_pGame->getUglyColorFromPlayerNumber(i),
-												    m_pGame->getSession()->enableEngineSound()));
+      pWorld->setCurrentCamera(i);
+      pWorld->getCamera()->setPlayerToFollow(pWorld->addPlayerBiker(pWorld->getLevelSrc()->PlayerStart(),
+								    DD_RIGHT,
+								    m_pGame->getTheme(), m_pGame->getTheme()->getPlayerTheme(),
+								    m_pGame->getColorFromPlayerNumber(i),
+								    m_pGame->getUglyColorFromPlayerNumber(i),
+								    m_pGame->getSession()->enableEngineSound()));
     }
 
     // if there's more camera than player (ex: 3 players and 4 cameras),
     // then, make the remaining cameras follow the first player
-    if(v_nbPlayer < m_pGame->getMotoGame()->getNumberCameras()){
-      for(int i=v_nbPlayer; i<m_pGame->getMotoGame()->getNumberCameras(); i++){
-	m_pGame->getMotoGame()->setCurrentCamera(i);
-	m_pGame->getMotoGame()->getCamera()->setPlayerToFollow(m_pGame->getMotoGame()->Players()[0]);
+    if(v_nbPlayer < pWorld->getNumberCameras()){
+      for(int i=v_nbPlayer; i<pWorld->getNumberCameras(); i++){
+	pWorld->setCurrentCamera(i);
+	pWorld->getCamera()->setPlayerToFollow(pWorld->Players()[0]);
       }
     }
     
-    if(m_pGame->getMotoGame()->getNumberCameras() > 1){
+    if(pWorld->getNumberCameras() > 1){
       // make the zoom camera follow the first player
-      m_pGame->getMotoGame()->setCurrentCamera(m_pGame->getMotoGame()->getNumberCameras());
-      m_pGame->getMotoGame()->getCamera()->setPlayerToFollow(m_pGame->getMotoGame()->Players()[0]);
+      pWorld->setAutoZoomCamera();
+      pWorld->getCamera()->setPlayerToFollow(pWorld->Players()[0]);
     }
 
     /* add the ghosts */
     if(m_pGame->getSession()->enableGhosts()) {
       try {
-	m_pGame->addGhosts(m_pGame->getMotoGame(), m_pGame->getTheme());
+	m_pGame->addGhosts(pWorld, m_pGame->getTheme());
       } catch(Exception &e) {
 	/* anyway */
       }
     }
   } catch(Exception &e) {
     Logger::Log(std::string("** Warning ** : failed to initialize level\n" + e.getMsg()).c_str());
-    m_pGame->getMotoGame()->endLevel();
+    pWorld->endLevel();
     m_pGame->setState(GS_MENU);
     m_pGame->getStateManager()->replaceState(new StateMessageBox(NULL, m_pGame, GameApp::splitText(e.getMsg(), 50), UI_MSGBOX_OK));
     return;
@@ -150,17 +152,16 @@ void StatePreplaying::enter()
   }
 
   /* If "preplaying" / "initial-zoom" is enabled, this is where it's done */
-  if(m_pGame->getMotoGame()->getNumberCameras() > 1){
-    m_pGame->getMotoGame()->setCurrentCamera(m_pGame->getMotoGame()->getNumberCameras());
-  }
+  pWorld->setAutoZoomCamera();
 
   /* display level name */
-  m_pGame->getMotoGame()->gameMessage(m_pGame->getMotoGame()->getLevelSrc()->Name(),
-				      false,
-				      PRESTART_ANIMATION_LEVEL_MSG_DURATION);
+  pWorld->gameMessage(pWorld->getLevelSrc()->Name(),
+		      false,
+		      PRESTART_ANIMATION_LEVEL_MSG_DURATION);
 
   zoomAnimation1_init();
   
+  setAutoZoom(shouldBeAnimated());
 }
 
 bool StatePreplaying::shouldBeAnimated() const {
@@ -169,16 +170,17 @@ bool StatePreplaying::shouldBeAnimated() const {
 
 void StatePreplaying::leave()
 {
+  setAutoZoom(false);
 }
 
 void StatePreplaying::enterAfterPop()
 {
-
+  setAutoZoom(shouldBeAnimated());
 }
 
 void StatePreplaying::leaveAfterPush()
 {
-
+  setAutoZoom(false);
 }
 
 bool StatePreplaying::update()

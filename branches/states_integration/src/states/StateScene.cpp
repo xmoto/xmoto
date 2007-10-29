@@ -90,8 +90,13 @@ bool StateScene::update()
 bool StateScene::render()
 {
   try {
-    for(unsigned int i=0; i<m_pGame->getMotoGame()->getNumberCameras(); i++) {
-      m_pGame->getMotoGame()->setCurrentCamera(i);
+    if(autoZoom() == false){
+      for(unsigned int i=0; i<m_pGame->getMotoGame()->getNumberCameras(); i++) {
+	m_pGame->getMotoGame()->setCurrentCamera(i);
+	m_pGame->getGameRenderer()->render();
+      }
+    } else {
+      m_pGame->getMotoGame()->setAutoZoomCamera();
       m_pGame->getGameRenderer()->render();
     }
 

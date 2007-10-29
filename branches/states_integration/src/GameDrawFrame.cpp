@@ -38,8 +38,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "drawlib/DrawLib.h"
 #include "SysMessage.h"
 #include "Credits.h"
-#include "xmscene/Camera.h"
-#include "xmscene/Entity.h"
 #include "states/StateManager.h"
 #include "states/StateFinished.h"
 

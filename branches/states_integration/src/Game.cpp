@@ -1650,23 +1650,13 @@ void GameApp::closePlaying() {
 			   Vector2i(width, height/2));
       break;
     }
-    // the autozoom camera
+    // the autozoom camera is a special one in multi player
     if(nbPlayer > 1){
       m_MotoGame.addCamera(Vector2i(0,0),
 			   Vector2i(width, height));
-      m_MotoGame.setCurrentCamera(m_MotoGame.getNumberCameras());
-      m_MotoGame.getCamera()->initCamera();
     }
-    for(int i=0; i<m_MotoGame.getNumberCameras(); i++){
-      m_MotoGame.setCurrentCamera(i);
-      m_MotoGame.getCamera()->initCamera();
-    }
-    if(nbPlayer > 1){
-      // current cam is autozoom one
-      m_MotoGame.setCurrentCamera(m_MotoGame.getNumberCameras());
-    }else{
-      m_MotoGame.setCurrentCamera(0);
-    }
+    // current cam is autozoom one
+    m_MotoGame.setAutoZoomCamera();
   }
 
   void GameApp::_UpdateLevelsLists() {
