@@ -90,57 +90,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     }
 
-    // states managed via the state manager
-    if(m_State == GS_PAUSE    	       ||
-       m_State == GS_FINISHED 	       ||
-       m_State == GS_DEADMENU 	       ||
-       m_State == GS_EDIT_PROFILES     ||
-       m_State == GS_LEVEL_INFO_VIEWER ||
-       m_State == GS_REPLAYING         ||
-       m_State == GS_PLAYING           ||
-       m_State == GS_PREPLAYING        ||
-       m_State == GS_CREDITSMODE       ||
-       m_State == GS_DEADJUST
-       ) {
-      /* draw the game states */
-      m_stateManager->update();
-      m_stateManager->render(); 
-    }
-
- 
-    /* */
-    /* Draw a little FPS counter */
-    if(m_xmsession->fps()) {
-      char cTemp[256];        
-      sprintf(cTemp,
-	      "u(%i) d(%i)",
-	      m_stateManager->getCurrentUpdateFPS(),
-	      m_stateManager->getCurrentRenderFPS());
-
-      FontManager* v_fm = getDrawLib()->getFontSmall();
-      FontGlyph* v_fg = v_fm->getGlyph(cTemp);
-      v_fm->printString(v_fg,
-			0, 130,
-			MAKE_COLOR(255,255,255,255), true);
-    }    
-       
-    /* Draw mouse cursor */
-    if(m_bShowCursor)
-      _DrawMouseCursor();
-
-    /* system message */
-    m_sysMsg->render();
-  }
-
-  /*===========================================================================
-  Main loop utility functions
-  ===========================================================================*/
-  void GameApp::_DrawMouseCursor(void) {
-    if(!getDrawLib()->isNoGraphics() && m_pCursor != NULL && m_xmsession->ugly() == false) {
-      int nMX,nMY;
-      getMousePos(&nMX,&nMY);      
-      getDrawLib()->drawImage(Vector2f(nMX-2,nMY-2),Vector2f(nMX+30,nMY+30),m_pCursor);
-    }
+    m_stateManager->update();
+    m_stateManager->render(); 
   }
   
   void GameApp::_PrepareFrame(void) {
@@ -151,18 +102,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
       m_InputHandler.updateInput(m_MotoGame.Players());
     }    
-    
-    /* Whether or not we should have a mouse cursor? */
-    switch(m_State) {
-      case GS_MENU:
-      case GS_EDIT_WEBCONFIG:
-      case GS_LEVELPACK_VIEWER:
-        m_bShowCursor = true;
-        //SDL_ShowCursor(SDL_ENABLE);
-        break;
 
-      break;
-    }
   }  
 
   void GameApp::_PreUpdateGUI(void) {

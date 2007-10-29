@@ -281,7 +281,6 @@ GameApp::GameApp() {
   m_bGhostMotionBlur = true;
 
   m_bRecordReplays = true;
-  m_bShowCursor = true;
   m_bCompressReplays = true;
   m_bEnableContextHelp = true;     
   
@@ -392,9 +391,6 @@ GameApp::GameApp() {
       m_pMainMenu->enableWindow(true);
 			v_newMusicPlaying = "menu1";
 
-			//SDL_ShowCursor(SDL_ENABLE);
-			m_bShowCursor = true;                
-        
 			/* The main menu, the one which is entered initially when the game 
 				 begins. */
 			m_pMainMenu->showWindow(true);
@@ -405,7 +401,6 @@ GameApp::GameApp() {
 
       case GS_EDIT_WEBCONFIG: {
 	v_newMusicPlaying = "menu1";
-        m_bShowCursor = true;
         if(m_pWebConfMsgBox != NULL) delete m_pWebConfMsgBox;
         m_pWebConfEditor->showWindow(false);
 	m_Renderer->getGUI()->setFont(drawLib->getFontSmall());
@@ -1283,11 +1278,11 @@ void GameApp::closePlaying() {
       
       UIRect TempRect;
       
-      if(m_pCursor != NULL) {        
-	int nMX,nMY;
-	getMousePos(&nMX,&nMY);      
-	drawLib->drawImage(Vector2f(nMX-2,nMY-2),Vector2f(nMX+30,nMY+30),m_pCursor);
-      }
+      //if(m_pCursor != NULL) {        
+      //	int nMX,nMY;
+      //	getMousePos(&nMX,&nMY);      
+      //	drawLib->drawImage(Vector2f(nMX-2,nMY-2),Vector2f(nMX+30,nMY+30),m_pCursor);
+      //}
       
       drawLib->flushGraphics();
     }
@@ -2022,10 +2017,6 @@ XMSession* GameApp::getSession() {
 
 MotoGame* GameApp::getMotoGame() {
   return &m_MotoGame;
-}
-
-void GameApp::setShowCursor(bool bValue) {
-  m_bShowCursor = bValue;
 }
 
 void GameApp::playNextLevel() {

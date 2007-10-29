@@ -43,7 +43,7 @@ StateScene::~StateScene()
 
 void StateScene::enter()
 {
-  m_pGame->setShowCursor(false);
+  //m_pGame->setShowCursor(false);
   m_isLockedScene = false;
   m_autoZoom      = false;
   m_autoZoomStep  = 0;

@@ -197,83 +197,77 @@ int main(int nNumArgs,char **ppcArgs) {
 
     /* Enter the main loop */
     while(!m_bQuit) {
-      if(!drawLib->isNoGraphics()) {
-        /* Handle SDL events */            
-        SDL_PumpEvents();
+      /* Handle SDL events */            
+      SDL_PumpEvents();
         
-        SDL_Event Event;
-        while(SDL_PollEvent(&Event)) {
-          int ch=0;
-          static int nLastMouseClickX = -100,nLastMouseClickY = -100;
-          static int nLastMouseClickButton = -100;
-          static float fLastMouseClickTime = 0.0f;
-          int nX,nY;
+      SDL_Event Event;
+      while(SDL_PollEvent(&Event)) {
+	int ch=0;
+	static int nLastMouseClickX = -100,nLastMouseClickY = -100;
+	static int nLastMouseClickButton = -100;
+	static float fLastMouseClickTime = 0.0f;
+	int nX,nY;
 
-          /* What event? */
-          switch(Event.type) {
-            case SDL_KEYDOWN: 
-              if((Event.key.keysym.unicode&0xff80)==0) {
-                ch = Event.key.keysym.unicode & 0x7F;
-              }
-              keyDown(Event.key.keysym.sym, Event.key.keysym.mod, ch);            
-              break;
-            case SDL_KEYUP: 
-              keyUp(Event.key.keysym.sym, Event.key.keysym.mod);            
-              break;
-            case SDL_QUIT:  
-              /* Force quit */
-              quit();
-              break;
-            case SDL_MOUSEBUTTONDOWN:
-              /* Pass ordinary click */
-              mouseDown(Event.button.button);
-              
-              /* Is this a double click? */
-              getMousePos(&nX,&nY);
-              if(nX == nLastMouseClickX &&
-                 nY == nLastMouseClickY &&
-                 nLastMouseClickButton == Event.button.button &&
-                 (getXMTime() - fLastMouseClickTime) < 0.250f) {                
-
-                /* Pass double click */
-                mouseDoubleClick(Event.button.button);                
-              }
-              fLastMouseClickTime = getXMTime();
-              nLastMouseClickX = nX;
-              nLastMouseClickY = nY;
-              nLastMouseClickButton = Event.button.button;
-            
-              break;
-            case SDL_MOUSEBUTTONUP:
-              mouseUp(Event.button.button);
-              break;
-          }
-
-	  pState = m_stateManager->flush();
-	  if(pState != NULL) {
-	    delete pState;
+	/* What event? */
+	switch(Event.type) {
+	case SDL_KEYDOWN: 
+	  if((Event.key.keysym.unicode&0xff80)==0) {
+	    ch = Event.key.keysym.unicode & 0x7F;
 	  }
-        }
-          
-        /* Clear screen */  
-        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	  keyDown(Event.key.keysym.sym, Event.key.keysym.mod, ch);            
+	  break;
+	case SDL_KEYUP: 
+	  keyUp(Event.key.keysym.sym, Event.key.keysym.mod);            
+	  break;
+	case SDL_QUIT:  
+	  /* Force quit */
+	  quit();
+	  break;
+	case SDL_MOUSEBUTTONDOWN:
+	  /* Pass ordinary click */
+	  mouseDown(Event.button.button);
+              
+	  /* Is this a double click? */
+	  getMousePos(&nX,&nY);
+	  if(nX == nLastMouseClickX &&
+	     nY == nLastMouseClickY &&
+	     nLastMouseClickButton == Event.button.button &&
+	     (getXMTime() - fLastMouseClickTime) < 0.250f) {                
+	    
+	    /* Pass double click */
+	    mouseDoubleClick(Event.button.button);                
+	  }
+	  fLastMouseClickTime = getXMTime();
+	  nLastMouseClickX = nX;
+	  nLastMouseClickY = nY;
+	  nLastMouseClickButton = Event.button.button;
+	  
+	  break;
+	case SDL_MOUSEBUTTONUP:
+	  mouseUp(Event.button.button);
+	  break;
+	}
+
+	pState = m_stateManager->flush();
+	if(pState != NULL) {
+	  delete pState;
+	}
+      }
+
+      if(m_State == GS_MENU) {
 	if (isUglyMode()){
 	  drawLib->clearGraphics();
 	}
-        drawLib->resetGraphics();
-
       }
       
       /* Update user app */
       drawFrame();
-      
-      if(!drawLib->isNoGraphics()) {
-        /* Swap buffers */
-       drawLib->flushGraphics();
+
+      if(m_State == GS_MENU) {
+	drawLib->flushGraphics();
+      }
 
        _Wait();
-
-      }
     }
     
     /* Shutdown */
@@ -554,8 +548,6 @@ void GameApp::_Wait()
         m_pTitleTR = pSprite->getTexture(false, true, FM_LINEAR);
       }
 
-      m_pCursor = NULL;
-
       /* Fetch highscores from web? */
       m_pWebRooms = new WebRooms(&m_ProxySettings);
       m_pWebHighscores = new WebRoom(&m_ProxySettings);      
@@ -677,12 +669,6 @@ void GameApp::_Wait()
     
     /* build handler */
     m_InputHandler.init(&m_Config);
-
-    /* load cursor */
-    pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "Cursor");
-    if(pSprite != NULL) {
-      m_pCursor = pSprite->getTexture(false, true, FM_LINEAR);
-    }
 
     /* Update stats */
     if(m_xmsession->profile() != "") {

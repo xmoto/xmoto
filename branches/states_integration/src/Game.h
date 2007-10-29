@@ -183,7 +183,6 @@ class StateManager;
       }
 
       XMSession* getSession();
-      void setShowCursor(bool bValue);
       void switchLevelToFavorite(const std::string& i_levelId, bool v_displayMessage = false);
 
       bool isThereANextLevel(const std::string& i_id_level);
@@ -218,6 +217,8 @@ class StateManager;
       StateManager* getStateManager();
       GameRenderer* getGameRenderer();
       InputHandler* getInputHandler();
+
+      SysMessage* getSysMessage() { return m_sysMsg;}
 
       /* public so that we can add progressively the states ; to be removed */
       OldGameState m_State; /* Current state */      
@@ -308,9 +309,7 @@ class StateManager;
       UIRect m_InfoMsgBoxRect;
 
       /* Main menu background / title */
-      Texture *m_pTitleBL,*m_pTitleBR,*m_pTitleTL,*m_pTitleTR;
-      Texture *m_pCursor;
-      bool m_bShowCursor;
+      Texture *m_pTitleBL,*m_pTitleBR,*m_pTitleTL,*m_pTitleTR;      
 
       /* */
       UIButtonDrawn* m_pNewLevelsAvailable;
@@ -492,7 +491,6 @@ class StateManager;
       void _PreUpdateGUI(void);
       void _PreUpdateMenu(void);
       void _DrawMainGUI(void);
-      void _DrawMouseCursor(void);
 
       UIWindow* stats_generateReport(const std::string &PlayerName, UIWindow *pParent,
 				     int x, int y, int nWidth, int nHeight, FontManager* pFont);

@@ -27,6 +27,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateLevelInfoViewer.h"
 #include "Game.h"
 #include "XMSession.h"
+#include "drawlib/DrawLib.h"
+#include "SysMessage.h"
 
 StateManager::StateManager(GameApp* pGame)
 {
@@ -43,6 +45,8 @@ StateManager::StateManager(GameApp* pGame)
   m_maxFps        = 50;
   m_renderCounter = 0;
   m_curRenderFps  = 50;
+
+  m_cursor = NULL;
 }
 
 StateManager::~StateManager()
@@ -169,6 +173,12 @@ void StateManager::update()
 void StateManager::render()
 {
   if(doRender() == true){
+
+    if (m_pGame->getSession()->ugly()){
+      m_pGame->getDrawLib()->clearGraphics();
+    }
+    m_pGame->getDrawLib()->resetGraphics();
+
     /* we have to draw states from the bottom of the stack to the top */
     std::vector<GameState*>::iterator stateIterator = m_statesStack.begin();
 
@@ -180,7 +190,49 @@ void StateManager::render()
       stateIterator++;
     }
 
+    // FPS
+    if(m_pGame->getSession()->fps()) {
+      drawFps();
+    }
+
+    // SYSMESSAGE
+    m_pGame->getSysMessage()->render();
+
+    // CURSOR
+    //if(m_showCursor) {
+      drawCursor();
+    //}
+
+    m_pGame->getDrawLib()->flushGraphics();
+       
     m_renderFpsNbFrame++;
+  }
+}
+
+void StateManager::drawFps() {
+  char cTemp[256];        
+  FontManager* v_fm = m_pGame->getDrawLib()->getFontSmall();
+  FontGlyph* v_fg = v_fm->getGlyph(cTemp);
+
+  sprintf(cTemp, "u(%i) d(%i)", getCurrentUpdateFPS(), getCurrentRenderFPS());
+  v_fm->printString(v_fg, 0, 130, MAKE_COLOR(255,255,255,255), true);
+}
+
+void StateManager::drawCursor() {
+  Sprite* pSprite;
+
+  if(m_cursor == NULL) {
+    /* load cursor */
+    pSprite = m_pGame->getTheme()->getSprite(SPRITE_TYPE_UI, "Cursor");
+    if(pSprite != NULL) {
+      m_cursor = pSprite->getTexture(false, true, FM_LINEAR);
+    }
+  }
+
+  if(m_cursor != NULL && m_pGame->getSession()->ugly() == false) {
+    int nMX,nMY;
+    GameApp::getMousePos(&nMX, &nMY);      
+    m_pGame->getDrawLib()->drawImage(Vector2f(nMX-2,nMY-2), Vector2f(nMX+30,nMY+30), m_cursor);
   }
 }
 

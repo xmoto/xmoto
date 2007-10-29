@@ -48,7 +48,6 @@ void StateEditProfile::enter()
   StateMenu::enter();
 
   m_pGame->m_State = GS_EDIT_PROFILES; // to be removed, just the time states are finished
-  m_pGame->setShowCursor(true);
   m_pGame->playMusic("menu1");
   
   createGUIIfNeeded(m_pGame);

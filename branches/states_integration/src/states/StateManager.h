@@ -159,6 +159,8 @@ class GameState : public StateMessageBoxReceiver {
     void calculateWhichStateIsRendered();
     void calculateFps();
     bool doRender();
+    void drawFps();
+    void drawCursor();
 
     void logStateStack();
 
@@ -189,6 +191,9 @@ class GameState : public StateMessageBoxReceiver {
     float m_renderPeriod;
 
     GameApp* m_pGame;
+
+    // cursor
+    Texture* m_cursor;
   };
 
 #endif
