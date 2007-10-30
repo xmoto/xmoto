@@ -172,6 +172,7 @@ class GameState : public StateMessageBoxReceiver {
     void calculateFps();
     bool doRender();
     void drawFps();
+    void drawStack();
     void drawCursor();
 
     void logStateStack();

@@ -200,6 +200,11 @@ void StateManager::render()
       drawFps();
     }
 
+    // STACK
+    //if(m_pGame->getSession()->debug()) {
+      drawStack();
+      //}
+
     // SYSMESSAGE
     m_pGame->getSysMessage()->render();
 
@@ -225,6 +230,23 @@ void StateManager::drawFps() {
   FontManager* v_fm = m_pGame->getDrawLib()->getFontSmall();
   FontGlyph* v_fg = v_fm->getGlyph(cTemp);
   v_fm->printString(v_fg, 0, 130, MAKE_COLOR(255,255,255,255), true);
+}
+
+void StateManager::drawStack() {
+  std::vector<GameState*>::iterator stateIterator = m_statesStack.begin();
+  int i = 0;
+  char cTemp[256];        
+  FontGlyph* v_fg;
+  FontManager* v_fm = m_pGame->getDrawLib()->getFontSmall();
+
+  while(stateIterator != m_statesStack.end()){
+    m_pGame->getDrawLib()->drawBox(Vector2f(0.0, i * 30.0), Vector2f(150.0, (i+1) * 30.0), 1.0, MAKE_COLOR(255,0,0,200));
+    sprintf(cTemp, "%s", m_statesStack[i]->getName().c_str());
+    v_fg = v_fm->getGlyph(cTemp);
+    v_fm->printString(v_fg, 5, i * 30.0 + v_fg->realHeight()/2, MAKE_COLOR(255,255,255,255), true);
+    i++;
+    stateIterator++;
+  }
 }
 
 void StateManager::drawCursor() {
