@@ -148,8 +148,10 @@ void StateManager::update()
   std::vector<GameState*>::reverse_iterator stateIterator = tmp.rbegin();
 
   while(stateIterator != tmp.rend()){
-    if((*stateIterator)->update() == true){
-      oneUpdate = true;
+    if((*stateIterator)->requestForEnd() == false) {
+      if((*stateIterator)->update() == true){
+	oneUpdate = true;
+      }
     }
 
     if((*stateIterator)->updateStatesBehind() == false)
@@ -186,7 +188,7 @@ void StateManager::render()
     std::vector<GameState*>::iterator stateIterator = m_statesStack.begin();
 
     while(stateIterator != m_statesStack.end()){
-      if((*stateIterator)->isHide() == false){
+      if((*stateIterator)->isHide() == false && (*stateIterator)->requestForEnd() == false){
 	(*stateIterator)->render();
       }
 
