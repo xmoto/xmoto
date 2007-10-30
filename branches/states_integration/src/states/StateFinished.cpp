@@ -25,17 +25,20 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "drawlib/DrawLib.h"
 #include "Sound.h"
 #include "StateMessageBox.h"
+#include "StateMenuContextReceiver.h"
 
 /* static members */
 UIRoot* StateFinished::m_sGUI = NULL;
 
 StateFinished::StateFinished(GameApp* pGame,
+			     StateMenuContextReceiver* i_receiver,
 			     bool drawStateBehind,
 			     bool updateStatesBehind
 			     ) :
   StateMenu(drawStateBehind,
 	    updateStatesBehind,
 	    pGame,
+	    i_receiver,
 	    true)
 {
   m_name    = "StateFinished";
@@ -151,8 +154,9 @@ void StateFinished::checkEvents() {
   if(pTryAgainButton->isClicked()) {
     pTryAgainButton->setClicked(false);
 
-    m_pGame->m_State = GS_PLAYING; // to be removed, just the time states are finished
-    //m_pGame->restartLevel();
+    if(m_receiver != NULL) {
+      m_receiver->send(getId(), "RESTART");
+    }
     m_requestForEnd = true;
   }
 
@@ -160,8 +164,9 @@ void StateFinished::checkEvents() {
   if(pPlaynextButton->isClicked()) {
     pPlaynextButton->setClicked(false);
 
-    m_pGame->playNextLevel();
-    m_pGame->setState(GS_PREPLAYING);
+    if(m_receiver != NULL) {
+      m_receiver->send(getId(), "NEXTLEVEL");
+    }
     m_requestForEnd = true;
   }
 
@@ -186,8 +191,9 @@ void StateFinished::checkEvents() {
   if(pAbortButton->isClicked()) {
     pAbortButton->setClicked(false);
 
-    m_pGame->abortPlaying();
-    m_pGame->setState(m_pGame->m_StateAfterPlaying); // to be removed once states will be finished
+    if(m_receiver != NULL) {
+      m_receiver->send(getId(), "ABORT");
+    }
     m_requestForEnd = true;
   }
 

@@ -25,12 +25,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class UIRoot;
 class GameApp;
+class StateMenuContextReceiver;
 
 class StateMenu : public GameState {
  public:
   StateMenu(bool drawStateBehind,
 	    bool updateStatesBehind,
 	    GameApp* pGame,
+	    StateMenuContextReceiver* i_receiver = NULL,
 	    bool i_doShade     = false,
 	    bool i_doShadeAnim = true);
   virtual ~StateMenu();
@@ -54,7 +56,8 @@ class StateMenu : public GameState {
  protected:
   virtual void checkEvents() = 0;
   UIRoot *m_GUI;
-  
+  StateMenuContextReceiver* m_receiver;  
+
  private:
 };
 

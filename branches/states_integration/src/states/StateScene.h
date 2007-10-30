@@ -22,8 +22,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __STATESCENE_H__
 
 #include "StateManager.h"
+#include "StateMenuContextReceiver.h"
 
-class StateScene : public GameState {
+class StateScene : public GameState, public StateMenuContextReceiver {
  public:
  StateScene(GameApp* pGame, bool i_doShade = false, bool i_doShadeAnim = false);
  virtual ~StateScene();
@@ -45,6 +46,7 @@ class StateScene : public GameState {
  virtual void mouseUp(int nButton);
 
  virtual void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
+ virtual void send(const std::string& i_id, const std::string& i_message);
 
  protected:
  double m_fLastPhysTime; /* When the last frama was initiated */

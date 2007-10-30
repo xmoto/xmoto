@@ -29,6 +29,7 @@ class UIRoot;
 class StatePause : public StateMenu {
   public:
   StatePause(GameApp* pGame,
+	     StateMenuContextReceiver* i_receiver = NULL,
 	     bool drawStateBehind    = true,
 	     bool updateStatesBehind = false
 	     );

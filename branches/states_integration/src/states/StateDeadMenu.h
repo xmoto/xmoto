@@ -30,6 +30,7 @@ class StateDeadMenu : public StateMenu {
   public:
   StateDeadMenu(GameApp* pGame,
 		bool i_doShadeAnim,
+		StateMenuContextReceiver* i_receiver = NULL,
 		bool drawStateBehind    = true,
 		bool updateStatesBehind = false
 		);

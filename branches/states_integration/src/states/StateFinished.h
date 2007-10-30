@@ -31,6 +31,7 @@ class xmDatabase;
 class StateFinished : public StateMenu {
   public:
   StateFinished(GameApp* pGame,
+		StateMenuContextReceiver* i_receiver = NULL,
 		bool drawStateBehind    = true,
 		bool updateStatesBehind = false
 		);

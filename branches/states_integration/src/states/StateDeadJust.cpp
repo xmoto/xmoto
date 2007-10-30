@@ -71,12 +71,6 @@ bool StateDeadJust::update()
 bool StateDeadJust::render()
 {
   StateScene::render();
-
-//    if(m_xmsession->ugly() == false) {
-//      if(m_nJustDeadShade < 150) m_nJustDeadShade+=8;
-//      getDrawLib()->drawBox(Vector2f(0,0),Vector2f(getDrawLib()->getDispWidth(),getDrawLib()->getDispHeight()),0,MAKE_COLOR(0,0,0,m_nJustDeadShade));     
-//    }
-
   return true;
 }
 
@@ -85,7 +79,7 @@ void StateDeadJust::keyDown(int nKey, SDLMod mod,int nChar)
   switch(nKey) {
 
   case SDLK_ESCAPE:
-    m_pGame->getStateManager()->pushState(new StateDeadMenu(m_pGame, false));
+    m_pGame->getStateManager()->pushState(new StateDeadMenu(m_pGame, false, this));
     break;
 
   case SDLK_RETURN:

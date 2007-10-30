@@ -149,6 +149,25 @@ void StateScene::send(const std::string& i_id, UIMsgBoxButton i_button, const st
   }
 }
 
+void StateScene::send(const std::string& i_id, const std::string& i_message) {
+  if(i_message == "RESTART") {
+    restartLevel();
+    return;
+  }
+
+  if(i_message == "NEXTLEVEL") {
+    m_pGame->playNextLevel();
+    return;
+  }
+
+  if(i_message == "ABORT") {
+    m_pGame->abortPlaying();
+    m_pGame->setState(GS_MENU);
+    m_requestForEnd = true;
+    return;
+  }
+}
+
 void StateScene::setScoresTimes() {
     char **v_result;
     unsigned int nrow;

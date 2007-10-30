@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 StateMenu::StateMenu(bool drawStateBehind,
 		     bool updateStatesBehind,
 		     GameApp* pGame,
+		     StateMenuContextReceiver* i_receiver,
 		     bool i_doShade,
 		     bool i_doShadeAnim):
   GameState(drawStateBehind,
@@ -36,6 +37,7 @@ StateMenu::StateMenu(bool drawStateBehind,
 {
   m_GUI        = NULL;
   m_showCursor = true;
+  m_receiver   = i_receiver;
 }
 
 StateMenu::~StateMenu()

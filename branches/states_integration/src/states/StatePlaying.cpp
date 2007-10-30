@@ -142,7 +142,7 @@ bool StatePlaying::update()
 						 m_pGame->getMotoGame()->Players()[0]->finishTime());
 	  m_pGame->updateLevelsListsOnEnd();
 	}
-	m_pGame->getStateManager()->pushState(new StateFinished(m_pGame));
+	m_pGame->getStateManager()->pushState(new StateFinished(m_pGame, this));
       } else if(v_all_dead) {
 	/* You're dead maan! */
 	if(m_pGame->isAReplayToSave()) {
@@ -165,7 +165,7 @@ bool StatePlaying::update()
 	if(m_pGame->getSession()->enableDeadAnimation()) {
 	  m_pGame->getStateManager()->replaceState(new StateDeadJust(m_pGame));
 	} else {
-	  m_pGame->getStateManager()->pushState(new StateDeadMenu(m_pGame, true));
+	  m_pGame->getStateManager()->pushState(new StateDeadMenu(m_pGame, true, this));
 	}
       }
     }
@@ -186,7 +186,7 @@ void StatePlaying::keyDown(int nKey, SDLMod mod,int nChar)
   case SDLK_ESCAPE:
     //if(LockedMotoGame() == false) {
       /* Escape pauses */
-      m_pGame->getStateManager()->pushState(new StatePause(m_pGame));
+    m_pGame->getStateManager()->pushState(new StatePause(m_pGame, this));
       //}
     break;
 
