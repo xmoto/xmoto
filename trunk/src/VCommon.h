@@ -76,7 +76,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <math.h>
 
 #if !defined(WIN32) && !defined(__APPLE__) && !defined(__MACH__)
-  #if defined(__FreeBSD__)
+  #if defined(__FreeBSD__) || defined(__OpenBSD__)
     #include <sys/endian.h>
   #else
     #include <endian.h>
