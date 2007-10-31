@@ -57,17 +57,6 @@ StateManager::~StateManager()
 {
 }
 
-void StateManager::logStateStack()
-{
-  std::vector<GameState*>::iterator stateIterator = m_statesStack.begin();
-
-  while(stateIterator != m_statesStack.end()){
-    Logger::Log(" --%s", (*stateIterator)->getName().c_str());
-
-    stateIterator++;
-  }
-}
-
 void StateManager::pushState(GameState* pNewState)
 {
   if(m_statesStack.size() != 0){
@@ -79,11 +68,6 @@ void StateManager::pushState(GameState* pNewState)
 
   calculateWhichStateIsRendered();
   calculateFps();
-
-  Logger::Log("pushState (%s) number states:%d",
-	      pNewState->getName().c_str(),
-	      m_statesStack.size());
-  logStateStack();
 }
 
 GameState* StateManager::popState()
@@ -98,21 +82,18 @@ GameState* StateManager::popState()
   calculateWhichStateIsRendered();
   calculateFps();
 
-  Logger::Log("popState (%s) number states:%d",
-	      pState->getName().c_str(),
-	      m_statesStack.size());
-  logStateStack();
-
   return pState;
 }
 
-GameState* StateManager::flush() {
+void StateManager::flush() {
   while(m_statesStack.size() > 0 && m_statesStack.back()->requestForEnd()) {
-    Logger::Log("Flush %s", m_statesStack.back()->getName().c_str());
+    //Logger::Log("Flush %s", m_statesStack.back()->getName().c_str());
     delete popState();
   }
 
-  return NULL;
+  if(m_statesStack.size() == 0) {
+    m_pGame->requestEnd();
+  }
 }
 
 GameState* StateManager::replaceState(GameState* pNewState)
@@ -130,11 +111,6 @@ GameState* StateManager::replaceState(GameState* pNewState)
 
   calculateWhichStateIsRendered();
   calculateFps();
-
-  Logger::Log("replaceState (%s) number states:%d",
-	      pNewState->getName().c_str(),
-	      m_statesStack.size());
-  logStateStack();
 
   return pPreviousState;
 }
@@ -365,11 +341,11 @@ void StateManager::calculateFps()
   m_maxRenderFps = maxRenderFps;
   m_maxFps = (m_maxUpdateFps > m_maxRenderFps) ? m_maxUpdateFps : m_maxRenderFps;
 
-  Logger::Log("MaxUpdateFps: %d MaxRenderFps: %d Max: %d TopStateRenderFps: %d",
-	      m_maxUpdateFps,
-	      m_maxRenderFps,
-	      m_maxFps,
-	      topStateRenderFps);
+//  Logger::Log("MaxUpdateFps: %d MaxRenderFps: %d Max: %d TopStateRenderFps: %d",
+//	      m_maxUpdateFps,
+//	      m_maxRenderFps,
+//	      m_maxFps,
+//	      topStateRenderFps);
 
   stateIterator = m_statesStack.begin();
   while(stateIterator != m_statesStack.end()){

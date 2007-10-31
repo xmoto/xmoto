@@ -148,11 +148,9 @@ void StateScene::send(const std::string& i_id, UIMsgBoxButton i_button, const st
   }
 }
 
-
 void StateScene::send(const std::string& i_id, const std::string& i_message) {
   m_commands.push(i_message);
 }
-
 
 void StateScene::setScoresTimes() {
     char **v_result;

@@ -149,7 +149,7 @@ class GameState : public StateMessageBoxReceiver {
       after some events, a state can requestForEnd
       -> return NULL or the state which requested to be ended
     */
-    GameState* flush();
+    void flush();
 
     void update();
     void render();
@@ -178,8 +178,6 @@ class GameState : public StateMessageBoxReceiver {
     void drawFps();
     void drawStack();
     void drawCursor();
-
-    void logStateStack();
 
     std::vector<GameState*> m_statesStack;
 
