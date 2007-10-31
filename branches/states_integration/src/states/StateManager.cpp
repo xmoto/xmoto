@@ -155,6 +155,9 @@ void StateManager::update()
     stateIterator++;
   }
 
+  // flush states
+  flush();
+
   tmp = m_statesStack;
   std::vector<GameState*>::reverse_iterator RstateIterator = tmp.rbegin();
   while(RstateIterator != tmp.rend()){

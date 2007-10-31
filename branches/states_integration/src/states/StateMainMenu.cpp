@@ -269,7 +269,7 @@ void StateMainMenu::updateProfile() {
 }
 
 
-UIWindow* makeLevels() {
+UIWindow* makeWindowLevels() {
 //    m_pLevelPacksWindow = new UIFrame(m_pMainMenu,220,(drawlib->getDispHeight()*140)/600,"",drawlib->getDispWidth()-220-20,drawlib->getDispHeight()-40-(drawlib->getDispHeight()*120)/600-10);      
 //    m_pLevelPacksWindow->showWindow(false);
 //    pSomeText = new UIStatic(m_pLevelPacksWindow,0,0,GAMETEXT_LEVELS,m_pLevelPacksWindow->getPosition().nWidth,36);
@@ -592,5 +592,5 @@ void StateMainMenu::createLevelListsSql(UILevelList *io_levelsList, const std::s
       }
       }
     io_levelsList->setRealSelected(nLevel);
-  }  
+  }
 }

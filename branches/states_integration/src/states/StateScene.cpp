@@ -144,34 +144,13 @@ void StateScene::mouseUp(int nButton)
 
 void StateScene::send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
   if(i_id == "ERROR") {
-    m_pGame->closePlaying();
-    m_requestForEnd = true;
-    m_pGame->setState(GS_MENU); // to be removed once states will be finished
+    m_commands.push("ERROR");
   }
 }
 
 
 void StateScene::send(const std::string& i_id, const std::string& i_message) {
-#if 1
   m_commands.push(i_message);
-#else
-  if(i_message == "RESTART") {
-    restartLevel();
-    return;
-  }
-
-  if(i_message == "NEXTLEVEL") {
-    m_pGame->playNextLevel();
-    return;
-  }
-
-  if(i_message == "ABORT") {
-    m_pGame->abortPlaying();
-    m_pGame->setState(GS_MENU);
-    m_requestForEnd = true;
-    return;
-  }
-#endif
 }
 
 
@@ -420,6 +399,12 @@ void StateScene::executeOneCommand(std::string cmd)
 {
   Logger::Log("StateScene::executeOneCommand::%s", cmd.c_str());
 
+  if(cmd == "ERROR") {
+    m_pGame->closePlaying();
+    m_requestForEnd = true;
+    return;
+  }
+
   if(cmd == "RESTART") {
     restartLevel();
     return;
@@ -432,7 +417,6 @@ void StateScene::executeOneCommand(std::string cmd)
 
   if(cmd == "ABORT") {
     m_pGame->abortPlaying();
-    m_pGame->setState(GS_MENU);
     m_requestForEnd = true;
     return;
   }

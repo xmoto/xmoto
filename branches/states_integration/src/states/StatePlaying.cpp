@@ -278,8 +278,6 @@ void StatePlaying::mouseUp(int nButton)
 
 void StatePlaying::send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
   if(i_id == "ERROR") {
-    m_pGame->abortPlaying();
-    m_requestForEnd = true;
-    m_pGame->setState(GS_MENU); // to be removed once states will be finished
+    m_commands.push("ERROR");
   }
 }
