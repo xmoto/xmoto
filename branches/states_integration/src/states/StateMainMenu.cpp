@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "gui/specific/GUIXMoto.h"
 #include "XMSession.h"
 #include "StatePreplaying.h"
+#include "StateMessageBox.h"
 
 /* static members */
 UIRoot*  StateMainMenu::m_sGUI = NULL;
@@ -109,6 +110,7 @@ void StateMainMenu::checkEvents() {
   UIButton *v_button;
   std::string v_id_level;
 
+  // quickstart
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:QUICKSTART"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
@@ -127,6 +129,15 @@ void StateMainMenu::checkEvents() {
       v_id_level = "tut1";
     }
     m_pGame->getStateManager()->pushState(new StatePreplaying(m_pGame, v_id_level));    
+  }
+
+  // quit
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:QUIT"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, GAMETEXT_QUITMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO);
+    v_msgboxState->setId("QUIT");
+    m_pGame->getStateManager()->pushState(v_msgboxState);
   }
 }
 
@@ -592,5 +603,19 @@ void StateMainMenu::createLevelListsSql(UILevelList *io_levelsList, const std::s
       }
       }
     io_levelsList->setRealSelected(nLevel);
+  }
+}
+
+void StateMainMenu::send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
+  if(i_id == "QUIT") {
+    switch(i_button) {
+    case UI_MSGBOX_YES:
+      m_requestForEnd = true;
+      m_pGame->requestEnd();
+      break;
+    case UI_MSGBOX_NO:
+      return;
+      break;
+    }
   }
 }
