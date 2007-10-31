@@ -1349,28 +1349,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         }
       }
     }
-    
-    if(m_pQuickStart->isClicked()) {
-      m_pQuickStart->setClicked(false);
-
-      try {
-	if(m_quickStartList != NULL) {
-	  delete m_quickStartList;
-	}
-	m_quickStartList = buildQuickStartList();
-
-	if(m_quickStartList->getEntries().size() == 0) {
-	  throw Exception("Empty quick start list");
-	}
-	m_currentPlayingList = m_quickStartList;
-	m_PlaySpecificLevelId  = m_quickStartList->getLevel(0);
-      } catch(Exception &e) {
-	m_PlaySpecificLevelId = "tut1";
-      }
-      m_pMainMenu->showWindow(false);
-      m_StateAfterPlaying = GS_MENU;
-      m_stateManager->pushState(new StatePreplaying(this, m_PlaySpecificLevelId));
-    }
 
     UIEdit *pReplayFilterEdit = reinterpret_cast<UIEdit *>(m_pReplaysWindow->getChild("REPLAYS_FILTER"));
     UIList *pReplayList = reinterpret_cast<UIList *>(m_pReplaysWindow->getChild("REPLAY_LIST"));
@@ -2048,6 +2026,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   /*===========================================================================
   Scan through loaded levels
   ===========================================================================*/
+
+// to remove, it's now in statemainmenu
   void GameApp::_CreateLevelListsSql(UILevelList *pAllLevels, const std::string& i_sql) {
     char **v_result;
     unsigned int nrow;
@@ -2364,12 +2344,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         
     pRunWindowed->setChecked(m_Config.getBool("DisplayWindowed"));
     
-    if(m_Config.getString("MenuBackgroundGraphics") == "Low") 
+    if(m_xmsession->menuGraphics() == MENU_GFX_LOW) {
       pMenuLow->setChecked(true);
-    else if(m_Config.getString("MenuBackgroundGraphics") == "Medium") 
+    } else if(m_xmsession->menuGraphics() == MENU_GFX_MEDIUM) {
       pMenuMed->setChecked(true);
-    else if(m_Config.getString("MenuBackgroundGraphics") == "High") 
+    } else {
       pMenuHigh->setChecked(true);
+    }
 
     if(m_Config.getString("GameGraphics") == "Low") 
       pGameLow->setChecked(true);
@@ -2409,7 +2390,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     
     /* These don't require restart */
     m_Config.setValue("GameGraphics",m_Config.getDefaultValue("GameGraphics"));
-    m_Config.setValue("MenuBackgroundGraphics",m_Config.getDefaultValue("MenuBackgroundGraphics"));
+    m_Config.setValue("MenuGraphics",m_Config.getDefaultValue("MenuGraphics"));
     m_Config.setValue("ShowMiniMap",m_Config.getDefaultValue("ShowMiniMap"));
     m_Config.setValue("ShowEngineCounter",m_Config.getDefaultValue("ShowEngineCounter"));
     m_Config.setValue("InitZoom",m_Config.getDefaultValue("InitZoom"));
@@ -2556,9 +2537,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_Config.setBool("DeathAnim",pDeathAnim->getChecked());
     m_Config.setBool("ContextHelp",pContextHelp->getChecked());
     
-    if(pMenuLow->getChecked()) m_Config.setString("MenuBackgroundGraphics","Low");
-    else if(pMenuMed->getChecked()) m_Config.setString("MenuBackgroundGraphics","Medium");
-    else if(pMenuHigh->getChecked()) m_Config.setString("MenuBackgroundGraphics","High");
+    if(pMenuLow->getChecked()) m_Config.setString("MenuGraphics","Low");
+    else if(pMenuMed->getChecked()) m_Config.setString("MenuGraphics","Medium");
+    else if(pMenuHigh->getChecked()) m_Config.setString("MenuGraphics","High");
     
     if(pGameLow->getChecked()) m_Config.setString("GameGraphics","Low");
     else if(pGameMed->getChecked()) m_Config.setString("GameGraphics","Medium");
@@ -2886,22 +2867,5 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 		      v_pack->getNumberOfFinishedLevels(m_db, m_xmsession->profile()),
 		      v_pack->getNumberOfLevels(m_db)
 		      );
-  }
-
-  UILevelList* GameApp::buildQuickStartList() {
-    UILevelList* v_list;
-
-    v_list = new UILevelList(m_pMainMenu, 0, 0, "", 0, 0);     
-    v_list->setID("QUICKSTART_LIST");
-    v_list->showWindow(false);
-
-    _CreateLevelListsSql(v_list,
-			 LevelsManager::getQuickStartPackQuery(m_db,
-							       m_pQuickStart->getQualityMIN(),
-							       m_pQuickStart->getDifficultyMIN(),
-							       m_pQuickStart->getQualityMAX(),
-							       m_pQuickStart->getDifficultyMAX(),
-							       m_xmsession->profile(), m_WebHighscoresIdRoom));
-    return v_list;
   }
 

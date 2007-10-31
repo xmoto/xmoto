@@ -302,8 +302,6 @@ GameApp::GameApp() {
   m_fReplayFrameRate = 25.0;
   m_allowReplayInterpolation = true;
 
-  m_quickStartList = NULL;
-
   m_db = NULL;
 
   m_stateManager       = new StateManager(this);
@@ -428,14 +426,13 @@ GameApp::GameApp() {
   Update settings
   ===========================================================================*/
   void GameApp::_UpdateSettings(void) {
-    /* Menu graphics */
-    std::string s = m_Config.getString("MenuBackgroundGraphics");
-    if(s == "Medium") m_MenuBackgroundGraphics = MENU_GFX_LOW;
-    else if(s == "High") m_MenuBackgroundGraphics = MENU_GFX_HIGH;
-    else m_MenuBackgroundGraphics = MENU_GFX_OFF;
-    
+    std::string v_menuGraphics =   m_Config.getString("MenuGraphics");
+    if(v_menuGraphics == "Low")    m_xmsession->setMenuGraphics(MENU_GFX_LOW);
+    if(v_menuGraphics == "Medium") m_xmsession->setMenuGraphics(MENU_GFX_MEDIUM);
+    if(v_menuGraphics == "High")   m_xmsession->setMenuGraphics(MENU_GFX_HIGH);
+
     /* Game graphics */
-    s = m_Config.getString("GameGraphics");
+    std::string s = m_Config.getString("GameGraphics");
 
     if(m_xmsession->useGraphics()) {
       if(s == "Low") m_Renderer->setQuality(GQ_LOW);
@@ -487,27 +484,6 @@ GameApp::GameApp() {
 
     /* Configure proxy */
     _ConfigureProxy();
-  }
-  
-  /*===========================================================================
-  Draw menu/title screen background
-  ===========================================================================*/
-  void GameApp::_DrawMenuBackground(void) {
-    if(m_MenuBackgroundGraphics != MENU_GFX_OFF && m_xmsession->ugly() == false) {
-      if(m_pTitleTL != NULL)
-        drawLib->drawImage(Vector2f(0,0),Vector2f(drawLib->getDispWidth()/2,drawLib->getDispHeight()/2),m_pTitleTL);
-      if(m_pTitleTR != NULL)
-        drawLib->drawImage(Vector2f(drawLib->getDispWidth()/2,0),Vector2f(drawLib->getDispWidth(),drawLib->getDispHeight()/2),m_pTitleTR);
-      if(m_pTitleBR != NULL)
-        drawLib->drawImage(Vector2f(drawLib->getDispWidth()/2,drawLib->getDispHeight()/2),Vector2f(drawLib->getDispWidth(),drawLib->getDispHeight()),m_pTitleBR);
-      if(m_pTitleBL != NULL)
-        drawLib->drawImage(Vector2f(0,drawLib->getDispHeight()/2),Vector2f(drawLib->getDispWidth()/2,drawLib->getDispHeight()),m_pTitleBL);
-    } else if(m_MenuBackgroundGraphics == MENU_GFX_OFF){
-        //in Ugly mode the screen is cleared in the VApp main loop
-	//this is not the case when ugly mode is off.
-	//and when MENU_GFX_OFF we need to clear the screen
-        drawLib->clearGraphics();
-    }
   }
     
   /*===========================================================================
@@ -691,12 +667,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
   switch(m_State) {
   case GS_EDIT_WEBCONFIG:
   case GS_LEVELPACK_VIEWER:
-  case GS_MENU: {
-    /* The GUI wants to know about keypresses... */
-    m_Renderer->getGUI()->keyDown(nKey, mod,nChar);
-    break;
-  }
-    // states already in the state manager
+  case GS_MENU:
   case GS_LEVEL_INFO_VIEWER:
   case GS_FINISHED:
   case GS_PAUSE:
@@ -717,126 +688,22 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
   Key up event
   ===========================================================================*/
   void GameApp::keyUp(int nKey, SDLMod mod) {
-    /* What state? */
-    switch(m_State) {
-      case GS_EDIT_WEBCONFIG:
-      case GS_LEVELPACK_VIEWER:
-      case GS_MENU:
-        m_Renderer->getGUI()->keyUp(nKey, mod);
-        break;
-
-    // states already in the state manager
-      case GS_LEVEL_INFO_VIEWER:
-    case GS_FINISHED:
-    case GS_PAUSE:
-    case GS_REPLAYING:
-    case GS_PLAYING:
-    case GS_PREPLAYING:
-    case GS_CREDITSMODE:
-    case GS_DEADMENU:
-    case GS_EDIT_PROFILES:
-    case GS_DEADJUST:
-      m_stateManager->keyUp(nKey, mod);
-      break;
-    }
+    m_stateManager->keyUp(nKey, mod);
   }
 
   /*===========================================================================
   Mouse events
   ===========================================================================*/
   void GameApp::mouseDoubleClick(int nButton) {
-    switch(m_State) {
-      case GS_MENU:
-      case GS_EDIT_WEBCONFIG:
-      case GS_LEVELPACK_VIEWER:
-        int nX,nY;        
-        getMousePos(&nX,&nY);
-        
-        if(nButton == SDL_BUTTON_LEFT)
-          m_Renderer->getGUI()->mouseLDoubleClick(nX,nY);
-        
-        break;
-
-    // states already in the state manager
-    case GS_LEVEL_INFO_VIEWER:
-    case GS_FINISHED:
-    case GS_PAUSE:
-    case GS_REPLAYING:
-    case GS_PLAYING:
-    case GS_PREPLAYING:
-    case GS_CREDITSMODE:
-    case GS_DEADMENU:
-    case GS_EDIT_PROFILES:
-    case GS_DEADJUST:
-      m_stateManager->mouseDoubleClick(nButton);
-      break;
-    }
+    m_stateManager->mouseDoubleClick(nButton);
   }
 
   void GameApp::mouseDown(int nButton) {
-    switch(m_State) {
-      case GS_MENU:
-      case GS_EDIT_WEBCONFIG:
-      case GS_LEVELPACK_VIEWER:
-        int nX,nY;        
-        getMousePos(&nX,&nY);
-        
-        if(nButton == SDL_BUTTON_LEFT)
-          m_Renderer->getGUI()->mouseLDown(nX,nY);
-        else if(nButton == SDL_BUTTON_RIGHT)
-          m_Renderer->getGUI()->mouseRDown(nX,nY);
-        else if(nButton == SDL_BUTTON_WHEELUP)
-          m_Renderer->getGUI()->mouseWheelUp(nX,nY);
-        else if(nButton == SDL_BUTTON_WHEELDOWN)        
-          m_Renderer->getGUI()->mouseWheelDown(nX,nY);
-        
-        break;
-
-      // states already in the state manager
-      case GS_LEVEL_INFO_VIEWER:
-      case GS_FINISHED:
-      case GS_PAUSE:
-      case GS_REPLAYING:
-      case GS_PLAYING:
-      case GS_PREPLAYING:
-      case GS_CREDITSMODE:
-      case GS_DEADMENU:
-      case GS_EDIT_PROFILES:
-    case GS_DEADJUST:
-      m_stateManager->mouseDown(nButton);
-      break;
-
-    }
+    m_stateManager->mouseDown(nButton);
   }
 
   void GameApp::mouseUp(int nButton) {
-    switch(m_State) {
-      case GS_MENU:
-      case GS_EDIT_WEBCONFIG:
-      case GS_LEVELPACK_VIEWER:
-        int nX,nY;
-        getMousePos(&nX,&nY);
-        
-        if(nButton == SDL_BUTTON_LEFT)
-          m_Renderer->getGUI()->mouseLUp(nX,nY);
-        else if(nButton == SDL_BUTTON_RIGHT)
-          m_Renderer->getGUI()->mouseRUp(nX,nY);
-        break;
-
-      // states already in the state manager
-      case GS_LEVEL_INFO_VIEWER:
-      case GS_FINISHED:
-      case GS_PAUSE:
-      case GS_REPLAYING:
-      case GS_PLAYING:
-      case GS_PREPLAYING:
-      case GS_CREDITSMODE:
-      case GS_DEADMENU:
-      case GS_EDIT_PROFILES:
-    case GS_DEADJUST:
-      m_stateManager->mouseUp(nButton);
-      break;
-    }
+    m_stateManager->mouseUp(nButton);
   }
       
   /*===========================================================================
@@ -1269,7 +1136,6 @@ void GameApp::closePlaying() {
 	bDialogBoxOpen = false;
       }
       
-      _DrawMenuBackground();
       m_Renderer->getGUI()->dispatchMouseHover();
       
       m_Renderer->getGUI()->paint();
@@ -1296,7 +1162,6 @@ void GameApp::closePlaying() {
     m_fDownloadTaskProgressLast = fPercent;
     readEvents();
 
-    _DrawMenuBackground();
     _SimpleMessage(m_DownloadingMessage,&m_InfoMsgBoxRect,true);
     
     drawLib->drawBox(Vector2f(m_InfoMsgBoxRect.nX+10,m_InfoMsgBoxRect.nY+ m_InfoMsgBoxRect.nHeight-

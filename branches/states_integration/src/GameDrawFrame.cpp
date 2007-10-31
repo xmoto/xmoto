@@ -60,9 +60,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     /* Check some GUI controls */
     _PreUpdateGUI();     
-     
-    /* Update FPS stuff */
-    _UpdateFPSCounter();
             
     /* What state? */
     switch(m_State) {
@@ -145,23 +142,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       }
     }
   }
-  
-  void GameApp::_UpdateFPSCounter(void) {
-    /* Perform a rather precise calculation of the frame rate */    
-    m_fFrameTime = getXMTime();
-    static int nFPS_Frames = 0;
-    static double fFPS_LastTime = 0.0f;
-    static double fFPS_CurrentTime = 0.0f;
     
-    fFPS_CurrentTime = getXMTime();
-    if(fFPS_CurrentTime - fFPS_LastTime > 1.0f && nFPS_Frames>0) {
-      m_fFPS_Rate = ((float)nFPS_Frames) / (fFPS_CurrentTime - fFPS_LastTime);
-      nFPS_Frames = 0;
-      fFPS_LastTime = fFPS_CurrentTime;
-    }
-    nFPS_Frames++;
-  }
-  
   void GameApp::_PreUpdateMenu(void) {
     /* Did the initializer come up with messages for the user? */
     if(getUserNotify() != "") {
@@ -179,9 +160,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }
 
   void GameApp::_DrawMainGUI(void) {
-    /* Draw menu background */
-    _DrawMenuBackground();
-            
     /* Update mouse stuff */
     m_Renderer->getGUI()->dispatchMouseHover();
     

@@ -35,6 +35,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class XMArguments;
 class UserConfig;
 
+enum MenuGraphics {
+  MENU_GFX_LOW,
+  MENU_GFX_MEDIUM,
+  MENU_GFX_HIGH
+};
+
 class XMSession {
   public:
   XMSession();
@@ -96,6 +102,8 @@ class XMSession {
   bool enableInitZoom() const;
   void setEnableDeadAnimation(bool i_value);
   bool enableDeadAnimation() const;
+  void setMenuGraphics(MenuGraphics i_value);
+  MenuGraphics menuGraphics() const;
 
   private:
   bool m_verbose;
@@ -130,6 +138,7 @@ class XMSession {
   bool m_enableMenuMusic;
   bool m_enableInitZoom;
   bool m_enableDeadAnimation;
+  MenuGraphics m_menuGraphics;
 };
 
 #endif

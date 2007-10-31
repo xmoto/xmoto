@@ -22,31 +22,55 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __STATEMAINMENU_H__
 
 #include "StateManager.h"
+#include "StateMenu.h"
 
-  class StateMainMenu : public GameState {
+class Texture;
+class UILevelList;
+
+class StateMainMenu : public StateMenu {
   public:
-    StateMainMenu(bool drawStateBehind,
-		  bool updateStatesBehind,
-		  GameApp* pGame);
-    virtual ~StateMainMenu();
-
-    virtual void enter();
-    virtual void leave();
-    /* called when a new state is pushed or poped on top of the
-       current one*/
-    virtual void enterAfterPop();
-    virtual void leaveAfterPush();
-
-    virtual bool update();
-    virtual bool render();
-    /* input */
-    virtual void keyDown(int nKey, SDLMod mod,int nChar);
-    virtual void keyUp(int nKey,   SDLMod mod);
-    virtual void mouseDown(int nButton);
-    virtual void mouseDoubleClick(int nButton);
-    virtual void mouseUp(int nButton);
+  StateMainMenu(GameApp* pGame,
+		bool drawStateBehind    = false,
+		bool updateStatesBehind = false
+		);
+  virtual ~StateMainMenu();
+  
+  virtual void enter();
+  virtual void leave();
+  /* called when a new state is pushed or poped on top of the
+     current one*/
+  virtual void enterAfterPop();
+  virtual void leaveAfterPush();
+  
+  virtual bool update();
+  virtual bool render();
+  /* input */
+  virtual void keyDown(int nKey, SDLMod mod,int nChar);
+  virtual void keyUp(int nKey,   SDLMod mod);
+  virtual void mouseDown(int nButton);
+  virtual void mouseDoubleClick(int nButton);
+  virtual void mouseUp(int nButton);
+  
+  static void clean();
+  
+  protected:
+  virtual void checkEvents();
 
   private:
-  };
+  /* GUI */
+  static UIRoot* m_sGUI;
+  static void createGUIIfNeeded(GameApp* pGame);
+  void updateProfile();
+
+  /* Main menu background / title */
+  Texture *m_pTitleBL,*m_pTitleBR,*m_pTitleTL,*m_pTitleTR;      
+  void drawBackground(); 
+
+  /* lists */
+  UILevelList* m_quickStartList;
+  UILevelList* buildQuickStartList();
+  void createLevelListsSql(UILevelList* io_levelsList, const std::string& i_sql);
+
+};
 
 #endif

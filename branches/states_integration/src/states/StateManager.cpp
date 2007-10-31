@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateFinished.h"
 #include "StateDeadMenu.h"
 #include "StateMessageBox.h"
+#include "StateMainMenu.h"
 #include "StateLevelInfoViewer.h"
 #include "Game.h"
 #include "XMSession.h"
@@ -239,17 +240,25 @@ void StateManager::drawFps() {
 }
 
 void StateManager::drawStack() {
-  std::vector<GameState*>::iterator stateIterator = m_statesStack.begin();
   int i = 0;
-  char cTemp[256];        
   FontGlyph* v_fg;
-  FontManager* v_fm = m_pGame->getDrawLib()->getFontSmall();
+  FontManager* v_fm;
+  
+  int xoff = 0;
+  int yoff = m_pGame->getDrawLib()->getDispHeight();
+  int w = 150;
+  int h =  30;
+  Color bg = MAKE_COLOR(255,0,0,200);
+  int font_xoff = 5;
+  Color font_color = MAKE_COLOR(255,255,255,255);
+
+  std::vector<GameState*>::iterator stateIterator = m_statesStack.begin();
+  v_fm = m_pGame->getDrawLib()->getFontSmall();
 
   while(stateIterator != m_statesStack.end()){
-    m_pGame->getDrawLib()->drawBox(Vector2f(0.0, i * 30.0), Vector2f(150.0, (i+1) * 30.0), 1.0, MAKE_COLOR(255,0,0,200));
-    sprintf(cTemp, "%s", m_statesStack[i]->getName().c_str());
-    v_fg = v_fm->getGlyph(cTemp);
-    v_fm->printString(v_fg, 5, i * 30.0 + v_fg->realHeight()/2, MAKE_COLOR(255,255,255,255), true);
+    m_pGame->getDrawLib()->drawBox(Vector2f(xoff, yoff - (i * h)), Vector2f(xoff + w, yoff - ((i+1) * h)), 1.0, bg);
+    v_fg = v_fm->getGlyph(m_statesStack[i]->getName());
+    v_fm->printString(v_fg, xoff + font_xoff, yoff - ((i+1) * h - v_fg->realHeight()/2), font_color, true);
     i++;
     stateIterator++;
   }
@@ -376,6 +385,7 @@ void StateManager::cleanStates() {
   StateFinished::clean();
   StateDeadMenu::clean();
   StateLevelInfoViewer::clean();
+  StateMainMenu::clean();
 }
 
 int StateManager::getCurrentUpdateFPS() {

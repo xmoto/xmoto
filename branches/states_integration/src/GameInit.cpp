@@ -47,6 +47,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "states/StateEditProfile.h"
 #include "states/StateReplaying.h"
 #include "states/StatePreplaying.h"
+#include "states/StateMainMenu.h"
 
 #define DATABASE_FILE FS::getUserDirUTF8() + "/" + "xm.db"
 
@@ -250,18 +251,8 @@ int main(int nNumArgs,char **ppcArgs) {
 
       }
 
-      if(m_State == GS_MENU) {
-	if (isUglyMode()){
-	  drawLib->clearGraphics();
-	}
-      }
-      
       /* Update user app */
       drawFrame();
-
-      if(m_State == GS_MENU) {
-	drawLib->flushGraphics();
-      }
 
        _Wait();
     }
@@ -355,8 +346,6 @@ void GameApp::_Wait()
   Initialize game
   ===========================================================================*/
   void GameApp::userInit(XMArguments* v_xmArgs) {
-    Sprite* pSprite;
-
     /* Reset timers */
     m_fLastPerfStateTime = 0.0f;
     
@@ -520,31 +509,6 @@ void GameApp::_Wait()
 
       _UpdateLoadingScreen((1.0f/9.0f) * 2,GAMETEXT_LOADINGMENUGRAPHICS);
         
-      /* Load title screen textures + cursor + stuff */
-      m_pTitleBL = NULL;
-      pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "TitleBL");
-      if(pSprite != NULL) {
-        m_pTitleBL = pSprite->getTexture(false, true, FM_LINEAR);
-      }
-
-      m_pTitleBR = NULL;
-      pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "TitleBR");
-      if(pSprite != NULL) {
-        m_pTitleBR = pSprite->getTexture(false, true, FM_LINEAR);
-      }
-
-      m_pTitleTL = NULL;
-      pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "TitleTL");
-      if(pSprite != NULL) {
-        m_pTitleTL = pSprite->getTexture(false, true, FM_LINEAR);
-      }
-
-      m_pTitleTR = NULL;
-      pSprite = m_theme.getSprite(SPRITE_TYPE_UI, "TitleTR");
-      if(pSprite != NULL) {
-        m_pTitleTR = pSprite->getTexture(false, true, FM_LINEAR);
-      }
-
       /* Fetch highscores from web? */
       m_pWebRooms = new WebRooms(&m_ProxySettings);
       m_pWebHighscores = new WebRoom(&m_ProxySettings);      
@@ -614,13 +578,11 @@ void GameApp::_Wait()
     }
     if((m_PlaySpecificLevelId != "") && m_xmsession->useGraphics()) {
       /* ======= PLAY SPECIFIC LEVEL ======= */
-      m_StateAfterPlaying = GS_MENU;
       m_stateManager->pushState(new StatePreplaying(this, m_PlaySpecificLevelId));
       Logger::Log("Playing as '%s'...", m_xmsession->profile().c_str());
     }
     else if(m_PlaySpecificReplay != "") {
       /* ======= PLAY SPECIFIC REPLAY ======= */
-      m_StateAfterPlaying = GS_MENU;
       m_stateManager->pushState(new StateReplaying(this, m_PlaySpecificReplay));
     }
     else {
@@ -628,6 +590,8 @@ void GameApp::_Wait()
       if(m_xmsession->useGraphics() == false)
         throw Exception("menu requires graphics");
         
+      m_stateManager->pushState(new StateMainMenu(this));
+
       /* Do we have a player profile? */
       if(m_xmsession->profile() == "") {
 	m_stateManager->pushState(new StateEditProfile(this));
@@ -636,10 +600,6 @@ void GameApp::_Wait()
         /* We need web-config */
         _InitWebConf();
         setState(GS_EDIT_WEBCONFIG);
-      }
-      else {
-        /* Enter the menu */
-        setState(GS_MENU);
       }
     }
 
@@ -728,7 +688,7 @@ void GameApp::_Wait()
     m_Config.createVar( "DisplayHeight",          "600" );
     m_Config.createVar( "DisplayBPP",             "32" );
     m_Config.createVar( "DisplayWindowed",        "false" );
-    m_Config.createVar( "MenuBackgroundGraphics", "High" );
+    m_Config.createVar( "MenuGraphics",           "High" );
     m_Config.createVar( "GameGraphics",           "High" );
     m_Config.createVar( "DrawLib",                "OPENGL" );
         

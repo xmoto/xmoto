@@ -82,15 +82,6 @@ class StateManager;
      GS_EDIT_WEBCONFIG         /* Editing internet configuration */
    };
 
-   /*===========================================================================
-   Menu background graphical settings
-   ===========================================================================*/
-   enum MenuBackgroundGraphics {
-     MENU_GFX_OFF,
-     MENU_GFX_LOW,
-     MENU_GFX_HIGH
-   };
-
    class XMMotoGameHooks : public MotoGameHooks {
    public:
      XMMotoGameHooks();
@@ -242,6 +233,12 @@ class StateManager;
 				       );
       void viewHighscoreOf();
 
+      std::string getHighscoresRoomName() { return m_WebHighscoresRoomName;}
+      std::string getHighscoresRoomId() { return m_WebHighscoresIdRoom;}
+
+      // list played
+      void setCurrentPlayingList(UILevelList *i_levelsList) {m_currentPlayingList = i_levelsList;}
+
    protected:
       void createDefaultConfig();
 
@@ -316,9 +313,6 @@ class StateManager;
       UIMsgBox *m_pInfoMsgBox;
       UIRect m_InfoMsgBoxRect;
 
-      /* Main menu background / title */
-      Texture *m_pTitleBL,*m_pTitleBR,*m_pTitleTL,*m_pTitleTR;      
-
       /* */
       UIButtonDrawn* m_pNewLevelsAvailable;
       
@@ -336,7 +330,6 @@ class StateManager;
       UILevelList *m_currentPlayingList;
       UILevelList *m_pAllLevelsList;
       UILevelList *m_pPlayNewLevelsList;
-      UILevelList *m_quickStartList;
 
       UIWindow *m_pLevelInfoFrame;
       UIButton *m_pLevelInfoViewReplayButton;      
@@ -368,7 +361,6 @@ class StateManager;
       LevelsManager m_levelsManager;
       
       /* Misc settings */
-      MenuBackgroundGraphics m_MenuBackgroundGraphics;
       bool m_bRecordReplays;
       float m_fReplayFrameRate;
             
@@ -409,7 +401,7 @@ class StateManager;
       void _HandleWebConfEditor(void);
       void _HandleLevelInfoViewer(void);
       void _HandleLevelPackViewer(void);
-      void _CreateLevelListsSql(UILevelList *pAllLevels, const std::string& i_sql);
+      void _CreateLevelListsSql(UILevelList *pAllLevels, const std::string& i_sql); // to remove, it's now in statemainmenu
       void _CreateLevelLists(UILevelList *pAllLevels, std::string i_packageName);
       void _CreateReplaysList(UIList *pList);
       void _CreateThemesList(UIList *pList);
@@ -420,7 +412,6 @@ class StateManager;
       void _UpdateLevelPackList(void);
       void _ChangeKeyConfig(void);
       void _ConfigureJoystick(void);
-      void _DrawMenuBackground(void); 
       void _InitMenus(void);        
       void _InitMenus_MainMenu(void);
       void _InitMenus_Others(void);
@@ -463,8 +454,6 @@ class StateManager;
       void enableWWW(bool bValue);
       void enableFps(bool bValue);
 
-      UILevelList* buildQuickStartList();
-
       std::string _getGhostReplayPath_bestOfThePlayer(std::string p_levelId, float &p_time);
       std::string _getGhostReplayPath_bestOfLocal(std::string p_levelId, float &p_time);
       std::string _getGhostReplayPath_bestOfTheRoom(std::string p_levelId, float &p_time);
@@ -488,7 +477,6 @@ class StateManager;
       void zoomAnimation2_abort();
 
       /* Main loop utility functions */
-      void _UpdateFPSCounter(void);
       void _PrepareFrame(void);
       void _PreUpdateGUI(void);
       void _PreUpdateMenu(void);

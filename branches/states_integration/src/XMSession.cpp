@@ -54,6 +54,7 @@ XMSession::XMSession() {
   m_multiStopWhenOneFinishes = true;
   m_enableMenuMusic          = true;
   m_enableDeadAnimation      = true;
+  m_menuGraphics             = MENU_GFX_HIGH;
 }
 
 void XMSession::load(const XMArguments* i_xmargs) {
@@ -151,6 +152,11 @@ void XMSession::load(UserConfig* m_Config) {
   m_enableMenuMusic          = m_Config->getBool("MenuMusic");
   m_enableInitZoom           = m_Config->getBool("InitZoom");
   m_enableDeadAnimation      = m_Config->getBool("DeathAnim");
+
+  std::string v_menuGraphics = m_Config->getString("MenuGraphics");
+  if(v_menuGraphics == "Low")    m_menuGraphics = MENU_GFX_LOW;
+  if(v_menuGraphics == "Medium") m_menuGraphics = MENU_GFX_MEDIUM;
+  if(v_menuGraphics == "High")   m_menuGraphics = MENU_GFX_HIGH;
 }
 
 bool XMSession::isVerbose() const {
@@ -371,4 +377,12 @@ void XMSession::setEnableDeadAnimation(bool i_value) {
 
 bool XMSession::enableDeadAnimation() const {
   return m_enableDeadAnimation;
+}
+
+void XMSession::setMenuGraphics(MenuGraphics i_value) {
+  m_menuGraphics = i_value;
+}
+
+MenuGraphics XMSession::menuGraphics() const {
+  return m_menuGraphics;
 }
