@@ -107,6 +107,7 @@ GameState* StateManager::popState()
 
 GameState* StateManager::flush() {
   while(m_statesStack.size() > 0 && m_statesStack.back()->requestForEnd()) {
+    Logger::Log("Flush %s", m_statesStack.back()->getName().c_str());
     delete popState();
   }
 
@@ -139,29 +140,36 @@ GameState* StateManager::replaceState(GameState* pNewState)
 
 void StateManager::update()
 {
+  // flush states
+  flush();
+
   bool oneUpdate = false;
   // we need a temporary vector to iterate on, because in their update
   // function, some states can push/replace a new state
   std::vector<GameState*> tmp = m_statesStack;
-  std::vector<GameState*>::reverse_iterator stateIterator = tmp.rbegin();
+  std::vector<GameState*>::iterator stateIterator = tmp.begin();
 
-  while(stateIterator != tmp.rend()){
-    if((*stateIterator)->update() == true){
+  while(stateIterator != tmp.end()){
+    (*stateIterator)->executeCommands();
+    stateIterator++;
+  }
+
+  tmp = m_statesStack;
+  std::vector<GameState*>::reverse_iterator RstateIterator = tmp.rbegin();
+  while(RstateIterator != tmp.rend()){
+    if((*RstateIterator)->update() == true){
       oneUpdate = true;
     }
 
-    if((*stateIterator)->updateStatesBehind() == false)
+    if((*RstateIterator)->updateStatesBehind() == false)
       break;
     
-    stateIterator++;
+    RstateIterator++;
   }
 
   if(oneUpdate == true){
     m_updateFpsNbFrame++;
   }
-
-  // flush states
-  flush();
 
   /* update fps */
   if(m_lastFpsTime + 1000 < GameApp::getXMTimeInt()) {
@@ -472,13 +480,9 @@ void GameState::send(const std::string& i_id, UIMsgBoxButton i_button, const std
 
 void GameState::executeCommands()
 {
-  // we need a temporary vector to iterate on, because some commands
-  // could add some new commands
-  std::queue<std::string> tmp = m_commands;
-
-  while(tmp.empty() == false){
-    executeOneCommand(tmp.front());
-    tmp.pop();
+  while(m_commands.empty() == false){
+    executeOneCommand(m_commands.front());
+    m_commands.pop();
   }
 
 }

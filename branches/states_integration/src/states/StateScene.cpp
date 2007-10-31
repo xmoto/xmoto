@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateMessageBox.h"
 #include "drawlib/DrawLib.h"
 #include "StatePreplaying.h"
+#include "helpers/Log.h"
 
 StateScene::StateScene(GameApp* pGame, bool i_doShade, bool i_doShadeAnim):
 GameState(false, false, pGame, i_doShade, i_doShadeAnim)
@@ -417,6 +418,8 @@ bool StateScene::zoomAnimation2_unstep() {
 
 void StateScene::executeOneCommand(std::string cmd)
 {
+  Logger::Log("StateScene::executeOneCommand::%s", cmd.c_str());
+
   if(cmd == "RESTART") {
     restartLevel();
     return;

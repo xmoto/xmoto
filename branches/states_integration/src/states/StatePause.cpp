@@ -94,6 +94,7 @@ void StatePause::checkEvents() {
 
     m_requestForEnd = true;
     if(m_receiver != NULL) {
+      Logger::Log("StatePause::checkEvents RESTART");
       m_receiver->send(getId(), "RESTART");
     }
   }

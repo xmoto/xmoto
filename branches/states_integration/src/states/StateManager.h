@@ -98,6 +98,7 @@ class GameState : public StateMessageBoxReceiver {
     bool showCursor() {
       return m_showCursor;
     }
+    void executeCommands();
 
   protected:
     bool doUpdate();
@@ -120,7 +121,6 @@ class GameState : public StateMessageBoxReceiver {
     bool m_showCursor;
 
     std::queue<std::string> m_commands;
-    void executeCommands();
     virtual void executeOneCommand(std::string cmd);
 
   private:
