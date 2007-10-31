@@ -149,7 +149,11 @@ void StateScene::send(const std::string& i_id, UIMsgBoxButton i_button, const st
   }
 }
 
+
 void StateScene::send(const std::string& i_id, const std::string& i_message) {
+#if 1
+  m_commands.push(i_message);
+#else
   if(i_message == "RESTART") {
     restartLevel();
     return;
@@ -166,7 +170,9 @@ void StateScene::send(const std::string& i_id, const std::string& i_message) {
     m_requestForEnd = true;
     return;
   }
+#endif
 }
+
 
 void StateScene::setScoresTimes() {
     char **v_result;
@@ -407,4 +413,24 @@ bool StateScene::zoomAnimation2_unstep() {
     return true;
   }
   return false;
+}
+
+void StateScene::executeOneCommand(std::string cmd)
+{
+  if(cmd == "RESTART") {
+    restartLevel();
+    return;
+  }
+
+  if(cmd == "NEXTLEVEL") {
+    m_pGame->playNextLevel();
+    return;
+  }
+
+  if(cmd == "ABORT") {
+    m_pGame->abortPlaying();
+    m_pGame->setState(GS_MENU);
+    m_requestForEnd = true;
+    return;
+  }
 }

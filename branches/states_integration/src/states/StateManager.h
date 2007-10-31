@@ -119,6 +119,10 @@ class GameState : public StateMessageBoxReceiver {
     std::string m_name;
     bool m_showCursor;
 
+    std::queue<std::string> m_commands;
+    void executeCommands();
+    virtual void executeOneCommand(std::string cmd);
+
   private:
     bool        m_isHide;
     bool        m_drawStateBehind;

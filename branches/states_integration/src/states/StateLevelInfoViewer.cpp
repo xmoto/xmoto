@@ -74,50 +74,50 @@ void StateLevelInfoViewer::leaveAfterPush()
 
 void StateLevelInfoViewer::checkEvents()
 {
-    UIButton *pOKButton              = reinterpret_cast<UIButton *>(m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_OK_BUTTON"));    
-    UIButton *pLV_BestTimes_Personal = (UIButton *)m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_BESTTIMES_TAB:LEVEL_VIEWER_BESTTIMES_PERSONAL");
-    UIButton *pLV_BestTimes_All      = (UIButton *)m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_BESTTIMES_TAB:LEVEL_VIEWER_BESTTIMES_ALL");
-    UIButton *pLV_Replays_Personal   = (UIButton *)m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_REPLAYS_TAB:LEVEL_VIEWER_REPLAYS_PERSONAL");
-    UIButton *pLV_Replays_All        = (UIButton *)m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_REPLAYS_TAB:LEVEL_VIEWER_REPLAYS_ALL");
-    UIButton *pLV_Replays_Show       = (UIButton *)m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_REPLAYS_TAB:LEVEL_VIEWER_REPLAYS_SHOW");
-    UIList   *pLV_Replays_List       = (UIList *)m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_REPLAYS_TAB:LEVEL_VIEWER_REPLAYS_LIST");
+  UIButton *pOKButton              = reinterpret_cast<UIButton *>(m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_OK_BUTTON"));    
+  UIButton *pLV_BestTimes_Personal = (UIButton *)m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_BESTTIMES_TAB:LEVEL_VIEWER_BESTTIMES_PERSONAL");
+  UIButton *pLV_BestTimes_All      = (UIButton *)m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_BESTTIMES_TAB:LEVEL_VIEWER_BESTTIMES_ALL");
+  UIButton *pLV_Replays_Personal   = (UIButton *)m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_REPLAYS_TAB:LEVEL_VIEWER_REPLAYS_PERSONAL");
+  UIButton *pLV_Replays_All        = (UIButton *)m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_REPLAYS_TAB:LEVEL_VIEWER_REPLAYS_ALL");
+  UIButton *pLV_Replays_Show       = (UIButton *)m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_REPLAYS_TAB:LEVEL_VIEWER_REPLAYS_SHOW");
+  UIList   *pLV_Replays_List       = (UIList *)m_GUI->getChild("LEVEL_VIEWER_FRAME:LEVEL_VIEWER_TABS:LEVEL_VIEWER_REPLAYS_TAB:LEVEL_VIEWER_REPLAYS_LIST");
 
-    /* Check buttons */
-    if(pOKButton->isClicked()) {
-      // ugly. because this state can be called from two differents states
-      m_pGame->m_State = GS_LEVELPACK_VIEWER;
-      m_requestForEnd = true;
-    }
+  /* Check buttons */
+  if(pOKButton->isClicked()) {
+    // ugly. because this state can be called from two differents states
+    m_pGame->m_State = GS_LEVELPACK_VIEWER;
+    m_requestForEnd = true;
+  }
 
-    if(pLV_BestTimes_All->isClicked() || pLV_BestTimes_Personal->isClicked()) {
-      updateLevelInfoViewerBestTimes();
-    }
+  if(pLV_BestTimes_All->isClicked() || pLV_BestTimes_Personal->isClicked()) {
+    updateLevelInfoViewerBestTimes();
+  }
 
-    if(pLV_Replays_All->isClicked() || pLV_Replays_Personal->isClicked()) {
-      updateLevelInfoViewerReplays();
-    }
+  if(pLV_Replays_All->isClicked() || pLV_Replays_Personal->isClicked()) {
+    updateLevelInfoViewerReplays();
+  }
 
-    if(pLV_Replays_Show->isClicked()) {
-      /* Show replay */
-      if(pLV_Replays_List->getSelected() >= 0 && pLV_Replays_List->getSelected() < pLV_Replays_List->getEntries().size()) {
-        UIListEntry *pListEntry = pLV_Replays_List->getEntries()[pLV_Replays_List->getSelected()];
-        if(pListEntry != NULL && !pListEntry->Text.empty()) {
-          /* Do it captain */
+  if(pLV_Replays_Show->isClicked()) {
+    /* Show replay */
+    if(pLV_Replays_List->getSelected() >= 0 && pLV_Replays_List->getSelected() < pLV_Replays_List->getEntries().size()) {
+      UIListEntry *pListEntry = pLV_Replays_List->getEntries()[pLV_Replays_List->getSelected()];
+      if(pListEntry != NULL && !pListEntry->Text.empty()) {
+	/* Do it captain */
 
 	  
-	  /* TODO:: when the state replay is done
-          pLV_Replays_Show->setClicked(false);
-          m_PlaySpecificReplay = pListEntry->Text[0];
-	  m_StateAfterPlaying = GS_MENU;
-	  m_pGame->m_State
-          setState(GS_REPLAYING);
-	  */
+	/* TODO:: when the state replay is done
+	   pLV_Replays_Show->setClicked(false);
+	   m_PlaySpecificReplay = pListEntry->Text[0];
+	   m_StateAfterPlaying = GS_MENU;
+	   m_pGame->m_State
+	   setState(GS_REPLAYING);
+	*/
 
-	  std::string playSpecificReplay = pListEntry->Text[0];
-	  m_pGame->getStateManager()->pushState(new StateReplaying(m_pGame, playSpecificReplay));
-        }
+	std::string playSpecificReplay = pListEntry->Text[0];
+	m_pGame->getStateManager()->pushState(new StateReplaying(m_pGame, playSpecificReplay));
       }
     }
+  }
 }
 
 bool StateLevelInfoViewer::update()

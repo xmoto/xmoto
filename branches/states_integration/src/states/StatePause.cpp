@@ -92,30 +92,30 @@ void StatePause::checkEvents() {
   if(pRestartButton->isClicked()) {
     pRestartButton->setClicked(false);
 
+    m_requestForEnd = true;
     if(m_receiver != NULL) {
       m_receiver->send(getId(), "RESTART");
     }
-    m_requestForEnd = true;
   }
 
   UIButton *pPlayNextButton = reinterpret_cast<UIButton *>(m_GUI->getChild("PAUSE_FRAME:PLAYNEXT_BUTTON"));
   if(pPlayNextButton->isClicked()) {
     pPlayNextButton->setClicked(false);
-    
+
+    m_requestForEnd = true;    
     if(m_receiver != NULL) {
       m_receiver->send(getId(), "NEXTLEVEL");
     }
-    m_requestForEnd = true;
   }
 
   UIButton *pAbortButton = reinterpret_cast<UIButton *>(m_GUI->getChild("PAUSE_FRAME:ABORT_BUTTON"));
   if(pAbortButton->isClicked()) {
     pAbortButton->setClicked(false);
 
+    m_requestForEnd = true;
     if(m_receiver != NULL) {
       m_receiver->send(getId(), "ABORT");
     }
-    m_requestForEnd = true;
   }
 
   UIButton *pQuitButton = reinterpret_cast<UIButton *>(m_GUI->getChild("PAUSE_FRAME:QUIT_BUTTON"));

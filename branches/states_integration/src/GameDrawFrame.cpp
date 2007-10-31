@@ -190,8 +190,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       _HandleMainMenu();
     else if(m_State == GS_EDIT_WEBCONFIG)
       _HandleWebConfEditor();
-    else if(m_State == GS_LEVELPACK_VIEWER)
-      _HandleLevelPackViewer();
               
     /* Draw GUI */
     if(m_bEnableContextHelp)

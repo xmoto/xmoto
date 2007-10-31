@@ -49,6 +49,8 @@ class StateScene : public GameState, public StateMenuContextReceiver {
  virtual void send(const std::string& i_id, const std::string& i_message);
 
  protected:
+ virtual void executeOneCommand(std::string cmd);
+
  double m_fLastPhysTime; /* When the last frama was initiated */
  bool m_isLockedScene;
  bool m_autoZoom;      /* true : the key is pressed so that it zooms out to see the level */

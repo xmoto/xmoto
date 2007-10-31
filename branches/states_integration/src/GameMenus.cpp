@@ -38,6 +38,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "states/StateReplaying.h"
 #include "states/StatePreplaying.h"
 #include "states/StateCreditsMode.h"
+#include "states/StateLevelPackViewer.h"
 
   UIFrame* GameApp::makeHelpWindow(DrawLib* i_drawLib, UIWindow* io_parent, UserConfig* i_Config) {
     UIFrame *v_pHelpWindow;
@@ -789,6 +790,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_pHelpWindow = makeHelpWindow(drawLib, m_pMainMenu, &m_Config);
     /* ***** */
 
+
+
+
     m_pLevelPacksWindow = new UIFrame(m_pMainMenu,220,(drawLib->getDispHeight()*140)/600,"",drawLib->getDispWidth()-220-20,drawLib->getDispHeight()-40-(drawLib->getDispHeight()*120)/600-10);      
     m_pLevelPacksWindow->showWindow(false);
     pSomeText = new UIStatic(m_pLevelPacksWindow,0,0,GAMETEXT_LEVELS,m_pLevelPacksWindow->getPosition().nWidth,36);
@@ -1038,67 +1042,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     pProxyPasswordEdit->setID("PASSWORDEDIT");
     pProxyPasswordEdit->setContextHelp(CONTEXTHELP_PROXYPASSWORD);
 
-    /* Initialize level pack viewer */
-    m_pLevelPackViewer = new UIFrame(m_Renderer->getGUI(),drawLib->getDispWidth()/2-350,drawLib->getDispHeight()/2-250,"",700,500); 
-    m_pLevelPackViewer->setStyle(UI_FRAMESTYLE_TRANS);           
-    UIStatic *pLevelPackViewerTitle = new UIStatic(m_pLevelPackViewer,0,0,"(level pack name goes here)",700,40);
-    pLevelPackViewerTitle->setID("LEVELPACK_VIEWER_TITLE");
-    pLevelPackViewerTitle->setFont(drawLib->getFontMedium());
-
-    UIButton *pLevelPackPlay = new UIButton(m_pLevelPackViewer,450,50,GAMETEXT_STARTLEVEL,207,57);
-    pLevelPackPlay->setFont(drawLib->getFontSmall());
-    pLevelPackPlay->setID("LEVELPACK_PLAY_BUTTON");
-    pLevelPackPlay->setContextHelp(CONTEXTHELP_PLAY_SELECTED_LEVEL);
-
-    pSomeText = new UIStatic(m_pLevelPackViewer, 20, 70, std::string(GAMETEXT_FILTER) + ":", 90, 25);
-    pSomeText->setFont(drawLib->getFontSmall());
-    pSomeText->setHAlign(UI_ALIGN_RIGHT);
-    UIEdit *pLevelFilterEdit = new UIEdit(m_pLevelPackViewer,
-																					120,
-																					70,
-																					"",200,25);
-    pLevelFilterEdit->setFont(drawLib->getFontSmall());
-    pLevelFilterEdit->setID("LEVELPACK_LEVEL_FILTER");
-    pLevelFilterEdit->setContextHelp(CONTEXTHELP_LEVEL_FILTER);
-
-    UILevelList *pLevelPackLevelList = new UILevelList(m_pLevelPackViewer,20,100,"",400, 380);
-    pLevelPackLevelList->setFont(drawLib->getFontSmall());
-    pLevelPackLevelList->setContextHelp(CONTEXTHELP_SELECT_LEVEL_IN_LEVEL_PACK);
-    pLevelPackLevelList->setID("LEVELPACK_LEVEL_LIST");
-    pLevelPackLevelList->setEnterButton( pLevelPackPlay );
-
-    UIButton *pLevelPackInfo = new UIButton(m_pLevelPackViewer,450,107,GAMETEXT_LEVELINFO,207,57);
-    pLevelPackInfo->setFont(drawLib->getFontSmall());
-    pLevelPackInfo->setID("LEVELPACK_INFO_BUTTON");
-    pLevelPackInfo->setContextHelp(CONTEXTHELP_LEVEL_INFO);
-
-    UIButton *pLevelPackAddToFavorite = new UIButton(m_pLevelPackViewer,450,164,GAMETEXT_ADDTOFAVORITE,207,57);
-    pLevelPackAddToFavorite->setFont(drawLib->getFontSmall());
-    pLevelPackAddToFavorite->setID("LEVELPACK_ADDTOFAVORITE_BUTTON");
-    pLevelPackAddToFavorite->setContextHelp(CONTEXTHELP_ADDTOFAVORITE);
-
-    UIButton *pLevelPackRandomize = new UIButton(m_pLevelPackViewer,450,221,GAMETEXT_RANDOMIZE,207,57);
-    pLevelPackRandomize->setFont(drawLib->getFontSmall());
-    pLevelPackRandomize->setID("LEVELPACK_RANDOMIZE_BUTTON");
-    pLevelPackRandomize->setContextHelp(CONTEXTHELP_RANDOMIZE);
-
-    UIButton *pLevelPackCancel = new UIButton(m_pLevelPackViewer,450,278,GAMETEXT_CLOSE,207,57);
-    pLevelPackCancel->setFont(drawLib->getFontSmall());
-    pLevelPackCancel->setID("LEVELPACK_CANCEL_BUTTON");
-    pLevelPackCancel->setContextHelp(CONTEXTHELP_CLOSE_LEVEL_PACK);
-
-    /* level info frame */
-    m_pPackLevelInfoFrame = new UIWindow(m_pLevelPackViewer,419,400,"",275,100);
-    m_pPackLevelInfoFrame->showWindow(false);
-    m_pPackBestPlayerText = new UIStatic(m_pPackLevelInfoFrame, 0, 5,"", 275, 50);
-    m_pPackBestPlayerText->setHAlign(UI_ALIGN_RIGHT);
-    m_pPackBestPlayerText->setFont(drawLib->getFontSmall());
-    m_pPackBestPlayerText->setHAlign(UI_ALIGN_CENTER);
-    m_pPackBestPlayerText->showWindow(true);
-    m_pPackLevelInfoViewReplayButton = new UIButton(m_pPackLevelInfoFrame,50,40, GAMETEXT_VIEWTHEHIGHSCORE,175,40);
-    m_pPackLevelInfoViewReplayButton->setFont(drawLib->getFontSmall());
-    m_pPackLevelInfoViewReplayButton->setContextHelp(CONTEXTHELP_VIEWTHEHIGHSCORE);
-
     /* Build stats window */
     m_pStatsWindow = new UIFrame(m_pMainMenu,220,(drawLib->getDispHeight()*140)/600,GAMETEXT_STATS,drawLib->getDispWidth()-200,drawLib->getDispHeight()-40-(drawLib->getDispHeight()*120)/600-10);      
     m_pStatsWindow->setStyle(UI_FRAMESTYLE_LEFTTAG);
@@ -1125,89 +1068,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     /* Hide menus */
     m_pMainMenu->showWindow(false);
-    m_pLevelPackViewer->showWindow(false);
     
     /* Update options */
     _ImportOptions();
   }
 
 
-  /*===========================================================================
-  Add levels to list (level pack)
-  ===========================================================================*/  
-  void GameApp::_CreateLevelPackLevelList(void) {
-    char **v_result;
-    unsigned int nrow;
-    float v_playerHighscore;
-    float v_roomHighscore;
-
-    if(m_pActiveLevelPack == NULL) {
-      return;
-    } 
-    
-    UILevelList *pList = (UILevelList *)m_pLevelPackViewer->getChild("LEVELPACK_LEVEL_LIST");    
-    pList->setNumeroted(true);
-
-    /* get selected item */
-    std::string v_selected_levelName = "";
-    if(pList->getSelected() >= 0 && pList->getSelected() < pList->getEntries().size()) {
-      UIListEntry *pEntry = pList->getEntries()[pList->getSelected()];
-      v_selected_levelName = pEntry->Text[0];
-    }
-
-    pList->clear();
-
-    // clear the filter
-    UIEdit *pLevelFilterEdit = reinterpret_cast<UIEdit *>(m_pLevelPackViewer->getChild("LEVELPACK_LEVEL_FILTER"));  
-    pLevelFilterEdit->setCaption("");
-    pList->setFilter("");
-  
-    /* Obey hints */
-    pList->unhideAllColumns();
-    if(!m_pActiveLevelPack->ShowTimes()) {
-      pList->hideBestTime();
-    }
-    if(!m_pActiveLevelPack->ShowWebTimes()) {
-      pList->hideRoomBestTime();
-    }
-
-    v_result = m_db->readDB(m_pActiveLevelPack->getLevelsWithHighscoresQuery(m_xmsession->profile(),
-									     m_WebHighscoresIdRoom),
-			    nrow);
-    for(unsigned int i=0; i<nrow; i++) {
-      if(m_db->getResult(v_result, 4, i, 2) == NULL) {
-	v_playerHighscore = -1.0;
-      } else {
-	v_playerHighscore = atof(m_db->getResult(v_result, 4, i, 2));
-      }
-
-      if(m_db->getResult(v_result, 4, i, 3) == NULL) {
-	v_roomHighscore = -1.0;
-      } else {
-	v_roomHighscore = atof(m_db->getResult(v_result, 4, i, 3));
-      }
-
-      pList->addLevel(m_db->getResult(v_result, 4, i, 0),
-		      m_db->getResult(v_result, 4, i, 1),
-		      v_playerHighscore,
-		      v_roomHighscore
-		      );
-    }
-    m_db->read_DB_free(v_result);
-
-    /* reselect the previous level */
-    if(v_selected_levelName != "") {
-      int nLevel = 0;
-      for(int i=0; i<pList->getEntries().size(); i++) {
-        if(pList->getEntries()[i]->Text[0] == v_selected_levelName) {
-          nLevel = i;
-          break;
-        }
-      }
-      pList->setRealSelected(nLevel);
-    }
-  }
-  
   /*===========================================================================
   Update action key list (options)
   ===========================================================================*/  
@@ -1286,101 +1152,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /* reselect the previous pack */
     if(v_selected_packName != "") {
       pTree->setSelectedPackByName(v_selected_packName);
-    }
-  }
-
-  /*===========================================================================
-  Update level pack viewer
-  ===========================================================================*/
-  void GameApp::_HandleLevelPackViewer(void) {    
-    /* Get buttons and list */
-    UIButton *pCancelButton = reinterpret_cast<UIButton *>(m_pLevelPackViewer->getChild("LEVELPACK_CANCEL_BUTTON"));
-    UIButton *pPlayButton = reinterpret_cast<UIButton *>(m_pLevelPackViewer->getChild("LEVELPACK_PLAY_BUTTON"));
-    UIButton *pLevelInfoButton = reinterpret_cast<UIButton *>(m_pLevelPackViewer->getChild("LEVELPACK_INFO_BUTTON"));
-    UIButton *pLevelAddToFavoriteButton = reinterpret_cast<UIButton *>(m_pLevelPackViewer->getChild("LEVELPACK_ADDTOFAVORITE_BUTTON"));
-    UIButton *pLevelRandomizeButton = reinterpret_cast<UIButton *>(m_pLevelPackViewer->getChild("LEVELPACK_RANDOMIZE_BUTTON"));
-    UILevelList *pList = (UILevelList *)m_pLevelPackViewer->getChild("LEVELPACK_LEVEL_LIST");
-		UIEdit *pLevelFilterEdit = reinterpret_cast<UIEdit *>(m_pLevelPackViewer->getChild("LEVELPACK_LEVEL_FILTER"));   
-
-		/* check filter */
-		if(pLevelFilterEdit != NULL) {
-			if(pLevelFilterEdit->hasChanged()) {
-				pLevelFilterEdit->setHasChanged(false);
-				pList->setFilter(pLevelFilterEdit->getCaption());
-			}
-		}
-
-    /* Check buttons */
-    if(pCancelButton!=NULL && pCancelButton->isClicked()) {
-      pCancelButton->setClicked(false);
-      
-      m_State = GS_MENU;
-      m_pLevelPackViewer->showWindow(false);
-      m_pMainMenu->enableChildren(true);
-      m_pMainMenu->enableWindow(true);
-    }
-    
-    if(pPlayButton!=NULL && pPlayButton->isClicked()) {
-      pPlayButton->setClicked(false);
-      std::string i_level = pList->getSelectedLevel();
-      if(i_level != "") {
-	m_pLevelPackViewer->showWindow(false);
-	m_pMainMenu->showWindow(false);      
-	m_PlaySpecificLevelId = i_level;
-	m_StateAfterPlaying = GS_LEVELPACK_VIEWER;
-	m_currentPlayingList = pList;
-	m_stateManager->pushState(new StatePreplaying(this, i_level));
-      }
-    }
-
-    if(pLevelAddToFavoriteButton!=NULL && pLevelAddToFavoriteButton->isClicked()) {
-      pLevelAddToFavoriteButton->setClicked(false);
-
-      std::string v_id_level = pList->getSelectedLevel();
-     
-      if(v_id_level != "") {
-	addLevelToFavorite(v_id_level);
-      }
-    }
-
-    if(pLevelRandomizeButton!=NULL && pLevelRandomizeButton->isClicked()) {
-      pLevelRandomizeButton->setClicked(false);
-      
-      pList->randomize();
-    }
-
-    /* level menu : */
-    /* any list clicked ? */
-    if(pList->isChanged()) {
-      pList->setChanged(false);
-      std::string v_id_level = pList->getSelectedLevel();
-      if(v_id_level != "") {
-	setLevelInfoFrameBestPlayer(v_id_level,
-				    m_pPackLevelInfoFrame,
-				    m_pPackLevelInfoViewReplayButton,
-				    m_pPackBestPlayerText
-				    );
-
-      }
-    }
-
-    /* view highscore button clicked */
-    if(m_pPackLevelInfoViewReplayButton->isClicked()) {
-      m_pPackLevelInfoViewReplayButton->setClicked(false);
-      viewHighscoreOf();
-      m_pLevelPackViewer->showWindow(false);
-      m_pMainMenu->showWindow(false);      
-      m_StateAfterPlaying = GS_LEVELPACK_VIEWER;
-      m_stateManager->pushState(new StateReplaying(this, m_PlaySpecificReplay));
-    }
-
-    if(pLevelInfoButton!=NULL && pLevelInfoButton->isClicked()) {
-      pLevelInfoButton->setClicked(false);
-
-      std::string v_id_level = pList->getSelectedLevel();
-      if(v_id_level != "") {
-	m_stateManager->pushState(new StateLevelInfoViewer(this, v_id_level));
-      }
     }
   }
 
@@ -1727,17 +1498,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         pOpenButton->setClicked(false);
         pOpenButton->setActive(false);      
 
-        m_pActiveLevelPack = nSelectedPack;
-
-        UIStatic *pTitle = (UIStatic *)m_pLevelPackViewer->getChild("LEVELPACK_VIEWER_TITLE");
-        if(pTitle != NULL) pTitle->setCaption(m_pActiveLevelPack->Name());
-        
-        _CreateLevelPackLevelList();
+	m_stateManager->pushState(new StateLevelPackViewer(this, nSelectedPack));
+	// to be remplaced with the StateLevelPackViewer state.
+	/*
 	m_pPackLevelInfoFrame->showWindow(false);
         m_pLevelPackViewer->showWindow(true);
         m_pMainMenu->enableChildren(false);
         m_pMainMenu->enableWindow(false);
 	m_State = GS_LEVELPACK_VIEWER;
+	*/
         return;
       }
     }

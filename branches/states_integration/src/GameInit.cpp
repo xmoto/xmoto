@@ -248,10 +248,6 @@ int main(int nNumArgs,char **ppcArgs) {
 	  break;
 	}
 
-	pState = m_stateManager->flush();
-	if(pState != NULL) {
-	  delete pState;
-	}
       }
 
       if(m_State == GS_MENU) {

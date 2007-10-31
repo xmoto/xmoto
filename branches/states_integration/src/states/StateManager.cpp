@@ -106,10 +106,8 @@ GameState* StateManager::popState()
 }
 
 GameState* StateManager::flush() {
-  if(m_statesStack.size() != 0){
-    if(m_statesStack.back()->requestForEnd()) {
-      return popState();
-    }
+  while(m_statesStack.size() > 0 && m_statesStack.back()->requestForEnd()) {
+    delete popState();
   }
 
   return NULL;
@@ -148,10 +146,8 @@ void StateManager::update()
   std::vector<GameState*>::reverse_iterator stateIterator = tmp.rbegin();
 
   while(stateIterator != tmp.rend()){
-    if((*stateIterator)->requestForEnd() == false) {
-      if((*stateIterator)->update() == true){
-	oneUpdate = true;
-      }
+    if((*stateIterator)->update() == true){
+      oneUpdate = true;
     }
 
     if((*stateIterator)->updateStatesBehind() == false)
@@ -160,10 +156,12 @@ void StateManager::update()
     stateIterator++;
   }
 
-  
   if(oneUpdate == true){
     m_updateFpsNbFrame++;
   }
+
+  // flush states
+  flush();
 
   /* update fps */
   if(m_lastFpsTime + 1000 < GameApp::getXMTimeInt()) {
@@ -188,7 +186,7 @@ void StateManager::render()
     std::vector<GameState*>::iterator stateIterator = m_statesStack.begin();
 
     while(stateIterator != m_statesStack.end()){
-      if((*stateIterator)->isHide() == false && (*stateIterator)->requestForEnd() == false){
+      if((*stateIterator)->isHide() == false){
 	(*stateIterator)->render();
       }
 
@@ -470,4 +468,22 @@ void GameState::setId(const std::string& i_id) {
 void GameState::send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
   /* by default, do nothing */
   Logger::Log("** Warning ** : StateMessageBoxReceiver::send() received, but nothing done !");
+}
+
+void GameState::executeCommands()
+{
+  // we need a temporary vector to iterate on, because some commands
+  // could add some new commands
+  std::queue<std::string> tmp = m_commands;
+
+  while(tmp.empty() == false){
+    executeOneCommand(tmp.front());
+    tmp.pop();
+  }
+
+}
+
+void GameState::executeOneCommand(std::string cmd)
+{
+  // default one do nothing.
 }

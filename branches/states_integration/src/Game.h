@@ -233,6 +233,14 @@ class StateManager;
       void updateLevelsListsOnEnd();
 
       static std::string splitText(const std::string &str, int p_breakLineLength);
+      void addLevelToFavorite(const std::string& i_levelId);
+
+      void setLevelInfoFrameBestPlayer(std::string pLevelID,
+				       UIWindow *i_pLevelInfoFrame,
+				       UIButton *i_pLevelInfoViewReplayButton,
+				       UIStatic *i_pBestPlayerText
+				       );
+      void viewHighscoreOf();
 
    protected:
       void createDefaultConfig();
@@ -452,12 +460,6 @@ class StateManager;
       void _UploadAllHighscores();
       void _ConfigureProxy(void);
 
-      void setLevelInfoFrameBestPlayer(std::string pLevelID,
-				       UIWindow *i_pLevelInfoFrame,
-				       UIButton *i_pLevelInfoViewReplayButton,
-				       UIStatic *i_pBestPlayerText
-				       );
-      void viewHighscoreOf();
       void enableWWW(bool bValue);
       void enableFps(bool bValue);
 
@@ -503,8 +505,6 @@ class StateManager;
 
       void updatePlayerTag();
       
-      void addLevelToFavorite(const std::string& i_levelId);
-
       /* */
       void _InitWin(bool bInitGraphics);
       void _Uninit(void);

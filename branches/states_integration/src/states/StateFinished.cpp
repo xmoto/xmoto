@@ -154,20 +154,20 @@ void StateFinished::checkEvents() {
   if(pTryAgainButton->isClicked()) {
     pTryAgainButton->setClicked(false);
 
+    m_requestForEnd = true;
     if(m_receiver != NULL) {
       m_receiver->send(getId(), "RESTART");
     }
-    m_requestForEnd = true;
   }
 
   UIButton *pPlaynextButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:PLAYNEXT_BUTTON"));
   if(pPlaynextButton->isClicked()) {
     pPlaynextButton->setClicked(false);
 
+    m_requestForEnd = true;
     if(m_receiver != NULL) {
       m_receiver->send(getId(), "NEXTLEVEL");
     }
-    m_requestForEnd = true;
   }
 
   UIButton *pSavereplayButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:SAVEREPLAY_BUTTON"));
@@ -191,10 +191,10 @@ void StateFinished::checkEvents() {
   if(pAbortButton->isClicked()) {
     pAbortButton->setClicked(false);
 
+    m_requestForEnd = true;
     if(m_receiver != NULL) {
       m_receiver->send(getId(), "ABORT");
     }
-    m_requestForEnd = true;
   }
 
   UIButton *pQuitButton = reinterpret_cast<UIButton *>(m_GUI->getChild("FINISHED_FRAME:QUIT_BUTTON"));
