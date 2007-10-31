@@ -245,7 +245,6 @@ GameApp::~GameApp() {
 
 GameApp::GameApp() {
   m_bQuit = false;
-  m_UserNotify = "";
   drawLib = NULL;
   m_Renderer = NULL;
   
@@ -253,7 +252,6 @@ GameApp::GameApp() {
   m_sysMsg = NULL;
 
   m_bEnableInitZoom=true;
-  m_pQuitMsgBox=NULL;
   m_pNotifyMsgBox=NULL;
   m_pInfoMsgBox=NULL;
 
@@ -362,43 +360,9 @@ GameApp::GameApp() {
     /* This function is called to perform a controlled game state change.
        The various states are described below in the switch-statement */  
     m_State = s;
-    m_bCreditsModeActive = false;
-    std::string v_newMusicPlaying;
-    char **v_result;
-    unsigned int nrow;
-    char *v_res;
-
-    /* reallow particle renderering when changing of state */
-    ParticlesSource::setAllowParticleGeneration(true);
 
     switch(s) {
-		case GS_LEVELPACK_VIEWER: {
-			v_newMusicPlaying = "menu1";
-			m_pLevelPackViewer->showWindow(true);
-			m_pMainMenu->showWindow(true);
-          
-			UIList *pList = (UIList *)m_pLevelPackViewer->getChild("LEVELPACK_LEVEL_LIST");
-			if(pList != NULL) {
-				pList->makeActive();
-			}
-		}
-			break;
-
-    case GS_MENU: {
-      m_pMainMenu->enableChildren(true);
-      m_pMainMenu->enableWindow(true);
-			v_newMusicPlaying = "menu1";
-
-			/* The main menu, the one which is entered initially when the game 
-				 begins. */
-			m_pMainMenu->showWindow(true);
-
-			break;
-		}
-
-
       case GS_EDIT_WEBCONFIG: {
-	v_newMusicPlaying = "menu1";
         if(m_pWebConfMsgBox != NULL) delete m_pWebConfMsgBox;
         m_pWebConfEditor->showWindow(false);
 	m_Renderer->getGUI()->setFont(drawLib->getFontSmall());
@@ -407,9 +371,6 @@ GameApp::GameApp() {
         break;
       }
     }
-
-    /* manage music */
-    playMusic(v_newMusicPlaying);
   }
 
   std::string GameApp::getConfigThemeName(ThemeChoicer *p_themeChoicer) {
@@ -644,16 +605,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
   }
     
   /* If message box... */
-  if(m_pQuitMsgBox) {
-    if(nKey == SDLK_ESCAPE) {
-      delete m_pQuitMsgBox;
-      m_pQuitMsgBox = NULL;
-    }    
-    else
-      m_Renderer->getGUI()->keyDown(nKey, mod, nChar);      
-    return;
-  }
-  else if(m_pNotifyMsgBox) {
+  if(m_pNotifyMsgBox) {
     if(nKey == SDLK_ESCAPE) {
       delete m_pNotifyMsgBox;
       m_pNotifyMsgBox = NULL;
@@ -663,25 +615,8 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
     return;
   }
   
-  /* What state? */
-  switch(m_State) {
-  case GS_EDIT_WEBCONFIG:
-  case GS_LEVELPACK_VIEWER:
-  case GS_MENU:
-  case GS_LEVEL_INFO_VIEWER:
-  case GS_FINISHED:
-  case GS_PAUSE:
-  case GS_REPLAYING:
-  case GS_PLAYING:
-  case GS_PREPLAYING:
-  case GS_CREDITSMODE:
-  case GS_DEADMENU:
-  case GS_EDIT_PROFILES:
-  case GS_DEADJUST:
-    m_stateManager->keyDown(nKey, mod, nChar);
-    break;
-  }
-    
+
+  m_stateManager->keyDown(nKey, mod, nChar);
 }
 
 /*===========================================================================

@@ -40,43 +40,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "states/StateCreditsMode.h"
 #include "states/StateLevelPackViewer.h"
 
-  UIFrame* GameApp::makeHelpWindow(DrawLib* i_drawLib, UIWindow* io_parent, UserConfig* i_Config) {
-    UIFrame *v_pHelpWindow;
-    UIStatic *pSomeText;
-
-    v_pHelpWindow = new UIFrame(io_parent,220,(i_drawLib->getDispHeight()*140)/600,"",i_drawLib->getDispWidth()-220-20,i_drawLib->getDispHeight()-40-(i_drawLib->getDispHeight()*120)/600-10);
-    v_pHelpWindow->showWindow(false);
-    pSomeText = new UIStatic(v_pHelpWindow,0,0,GAMETEXT_HELP,v_pHelpWindow->getPosition().nWidth,36);
-    pSomeText->setFont(i_drawLib->getFontMedium());
-    pSomeText = new UIStatic(v_pHelpWindow,
-			     10,
-			     46,
-			     GAMETEXT_HELPTEXT(i_Config->getString("KeyDrive1"),
-					       i_Config->getString("KeyBrake1"),
-					       i_Config->getString("KeyFlipLeft1"),
-					       i_Config->getString("KeyFlipRight1"),
-					       i_Config->getString("KeyChangeDir1")					       
-					       )
-			     ,v_pHelpWindow->getPosition().nWidth-20,
-			     v_pHelpWindow->getPosition().nHeight-56);
-    pSomeText->setFont(i_drawLib->getFontSmall());
-    pSomeText->setVAlign(UI_ALIGN_TOP);
-    pSomeText->setHAlign(UI_ALIGN_LEFT);
-    UIButton *pTutorialButton = new UIButton(v_pHelpWindow,v_pHelpWindow->getPosition().nWidth-120,v_pHelpWindow->getPosition().nHeight-62,
-                                             GAMETEXT_TUTORIAL,115,57);
-    pTutorialButton->setContextHelp(CONTEXTHELP_TUTORIAL);
-    pTutorialButton->setFont(i_drawLib->getFontSmall());
-    pTutorialButton->setType(UI_BUTTON_TYPE_SMALL);
-    pTutorialButton->setID("HELP_TUTORIAL_BUTTON");    
-    UIButton *pCreditsButton = new UIButton(v_pHelpWindow,v_pHelpWindow->getPosition().nWidth-240,v_pHelpWindow->getPosition().nHeight-62,
-                                             GAMETEXT_CREDITSBUTTON,115,57);
-    pCreditsButton->setContextHelp(CONTEXTHELP_CREDITS);
-    pCreditsButton->setFont(i_drawLib->getFontSmall());
-    pCreditsButton->setType(UI_BUTTON_TYPE_SMALL);
-    pCreditsButton->setID("HELP_CREDITS_BUTTON");
-
-    return v_pHelpWindow;
-  }
 
   UIFrame* GameApp::makeOptionsWindow(DrawLib* i_drawLib, UIWindow* io_parent, UserConfig* i_Config) {
     UIFrame *v_pOptionsWindow;
@@ -786,13 +749,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     _UpdateRoomsLists();
     /* ***** */
 
-    /* HELP */
-    m_pHelpWindow = makeHelpWindow(drawLib, m_pMainMenu, &m_Config);
-    /* ***** */
-
-
-
-
     m_pLevelPacksWindow = new UIFrame(m_pMainMenu,220,(drawLib->getDispHeight()*140)/600,"",drawLib->getDispWidth()-220-20,drawLib->getDispHeight()-40-(drawLib->getDispHeight()*120)/600-10);      
     m_pLevelPacksWindow->showWindow(false);
     pSomeText = new UIStatic(m_pLevelPacksWindow,0,0,GAMETEXT_LEVELS,m_pLevelPacksWindow->getPosition().nWidth,36);
@@ -1308,7 +1264,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         if(m_pMainMenuButtons[i]->getCaption() == GAMETEXT_LEVELS) {
 	  m_pLevelInfoFrame->showWindow(false);
           m_pOptionsWindow->showWindow(false);
-          m_pHelpWindow->showWindow(false);
           m_pReplaysWindow->showWindow(false);
           m_pLevelPacksWindow->showWindow(true);
 	  m_pQuickStart->showWindow(false);
@@ -1318,7 +1273,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	  m_pLevelInfoFrame->showWindow(false);
 
           m_pOptionsWindow->showWindow(true);
-          m_pHelpWindow->showWindow(false);
           m_pReplaysWindow->showWindow(false);
           m_pLevelPacksWindow->showWindow(false);                    
 	  m_pQuickStart->showWindow(false);
@@ -1326,7 +1280,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         else if(m_pMainMenuButtons[i]->getCaption() == GAMETEXT_HELP) {
 	  m_pLevelInfoFrame->showWindow(false);
           m_pOptionsWindow->showWindow(false);
-          m_pHelpWindow->showWindow(true);
           m_pReplaysWindow->showWindow(false);
           m_pLevelPacksWindow->showWindow(false);                    
 	  m_pQuickStart->showWindow(false);
@@ -1335,17 +1288,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	  if(m_pReplaysWindow->isHidden()) _UpdateReplaysList();
 	  m_pLevelInfoFrame->showWindow(false);
           m_pOptionsWindow->showWindow(false);
-          m_pHelpWindow->showWindow(false);
           m_pReplaysWindow->showWindow(true);
           m_pLevelPacksWindow->showWindow(false);                    
 	  m_pQuickStart->showWindow(false);
-        }
-        else if(m_pMainMenuButtons[i]->getCaption() == GAMETEXT_QUIT) {
-          if(m_pQuitMsgBox == NULL) {
-	    m_Renderer->getGUI()->setFont(drawLib->getFontSmall());
-            m_pQuitMsgBox = m_Renderer->getGUI()->msgBox(GAMETEXT_QUITMESSAGE,
-                                                        (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
-	  }
         }
       }
     }
@@ -1374,7 +1319,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       m_pNewLevelsAvailable->setClicked(false);
       m_pLevelInfoFrame->showWindow(false);
       m_pOptionsWindow->showWindow(false);
-      m_pHelpWindow->showWindow(false);
       m_pReplaysWindow->showWindow(false);
       m_pLevelPacksWindow->showWindow(true);
       m_pQuickStart->showWindow(false);
@@ -1694,32 +1638,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     
     if(pConfigJoystick && pConfigJoystick->isClicked()) {
       _ConfigureJoystick();
-    }
-
-    /* HELP */
-    /* Tutorial button clicked? */
-    UIButton *pTutorialButton = (UIButton *)m_pHelpWindow->getChild("HELP_TUTORIAL_BUTTON");
-    if(pTutorialButton && pTutorialButton->isClicked()) {
-      pTutorialButton->setClicked(false);
-      
-      /* Find first tutorial level */
-      try {
-        m_pMainMenu->showWindow(false);      
-        m_PlaySpecificLevelId = "tut1";
-        m_StateAfterPlaying = GS_MENU;
-	m_currentPlayingList = NULL;
-	m_stateManager->pushState(new StatePreplaying(this, m_PlaySpecificLevelId));
-      } catch(Exception &e) {
-      }
-    }
-    /* View credits? */
-    UIButton *pCreditsButton = (UIButton *)m_pHelpWindow->getChild("HELP_CREDITS_BUTTON");
-    if(pCreditsButton && pCreditsButton->isClicked()) {
-      pCreditsButton->setClicked(false);
-      
-      m_pMainMenu->showWindow(false);      
-
-      m_stateManager->pushState(new StateCreditsMode(this, "credits.rpl"));      
     }
     
     /* PLAY */

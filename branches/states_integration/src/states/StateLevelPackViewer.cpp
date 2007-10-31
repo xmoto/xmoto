@@ -57,6 +57,7 @@ void StateLevelPackViewer::enter()
   
   createGUIIfNeeded(m_pGame);
   m_GUI = m_sGUI;
+
   updateGUI();
 }
 
@@ -318,6 +319,7 @@ void StateLevelPackViewer::updateGUI()
 
   UILevelList *pList = (UILevelList *)m_GUI->getChild("LEVELPACK_VIEWER_FRAME:LEVELPACK_LEVEL_LIST");    
   pList->setNumeroted(true);
+  pList->makeActive();
 
   /* get selected item */
   std::string v_selected_levelName = "";

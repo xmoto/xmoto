@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateDeadMenu.h"
 #include "StateMessageBox.h"
 #include "StateMainMenu.h"
+#include "StateHelp.h"
 #include "StateLevelInfoViewer.h"
 #include "Game.h"
 #include "XMSession.h"
@@ -479,4 +480,8 @@ void GameState::executeCommands()
 void GameState::executeOneCommand(std::string cmd)
 {
   // default one do nothing.
+}
+
+void GameState::keyDown(int nKey, SDLMod mod,int nChar) {
+  // will display help once it will be possible to have several motogame
 }

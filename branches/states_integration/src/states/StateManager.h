@@ -21,7 +21,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __STATEMANAGER_H__
 #define __STATEMANAGER_H__
 
-#include "VCommon.h"
 #include "StateMessageBoxReceiver.h"
 
 class GameApp;
@@ -46,7 +45,7 @@ class GameState : public StateMessageBoxReceiver {
     virtual bool update()=0;
     virtual bool render();
     /* input */
-    virtual void keyDown(int nKey, SDLMod mod,int nChar)=0;
+    virtual void keyDown(int nKey, SDLMod mod,int nChar);
     virtual void keyUp(int nKey,   SDLMod mod)=0;
     virtual void mouseDown(int nButton)=0;
     virtual void mouseDoubleClick(int nButton)=0;

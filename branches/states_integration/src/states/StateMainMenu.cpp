@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "XMSession.h"
 #include "StatePreplaying.h"
 #include "StateMessageBox.h"
+#include "StateHelp.h"
 
 /* static members */
 UIRoot*  StateMainMenu::m_sGUI = NULL;
@@ -139,6 +140,13 @@ void StateMainMenu::checkEvents() {
     v_msgboxState->setId("QUIT");
     m_pGame->getStateManager()->pushState(v_msgboxState);
   }
+
+  // help
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:HELP"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getStateManager()->pushState(new StateHelp(m_pGame));
+  }
 }
 
 bool StateMainMenu::update()
@@ -155,8 +163,11 @@ bool StateMainMenu::render()
 void StateMainMenu::keyDown(int nKey, SDLMod mod,int nChar)
 {
   switch(nKey) {
-    
-    
+
+  case SDLK_F1:
+    m_pGame->getStateManager()->pushState(new StateHelp(m_pGame));
+    break;
+
   default:
     StateMenu::keyDown(nKey, mod, nChar);
     checkEvents();
@@ -253,7 +264,7 @@ void StateMainMenu::createGUIIfNeeded(GameApp* pGame) {
   v_quickStart->setID("QUICKSTART");
 
   /* profile button */
-  v_someText = new UIStatic(v_menu, 200, m_sGUI->getPosition().nHeight*2/15, "Nicolas", m_sGUI->getPosition().nWidth-200-120,50);
+  v_someText = new UIStatic(v_menu, 200, m_sGUI->getPosition().nHeight*2/15, "", m_sGUI->getPosition().nWidth-200-120,50);
   v_someText->setFont(drawlib->getFontMedium());            
   v_someText->setHAlign(UI_ALIGN_RIGHT);
   v_someText->setID("PLAYERTAG");
@@ -275,8 +286,13 @@ void StateMainMenu::createGUIIfNeeded(GameApp* pGame) {
 
 void StateMainMenu::updateProfile() {
   UIStatic* v_playerTag = reinterpret_cast<UIStatic *>(m_GUI->getChild("MAIN:PLAYERTAG"));
-  v_playerTag->setCaption(std::string(GAMETEXT_PLAYER) + ": " + m_pGame->getSession()->profile()
-			  + "@" + m_pGame->getHighscoresRoomName());
+  std::string v_caption;
+
+  if(m_pGame->getSession()->profile() != "") {
+    v_caption = std::string(GAMETEXT_PLAYER) + ": " + m_pGame->getSession()->profile() + "@" + m_pGame->getHighscoresRoomName();
+  }
+
+  v_playerTag->setCaption(v_caption);
 }
 
 

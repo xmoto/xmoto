@@ -48,6 +48,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "states/StateReplaying.h"
 #include "states/StatePreplaying.h"
 #include "states/StateMainMenu.h"
+#include "states/StateMessageBox.h"
 
 #define DATABASE_FILE FS::getUserDirUTF8() + "/" + "xm.db"
 
@@ -563,6 +564,9 @@ void GameApp::_Wait()
     /* Initialize renderer */
     _UpdateLoadingScreen((1.0f/9.0f) * 6,GAMETEXT_INITRENDERER);
     m_Renderer->init();
+
+    /* build handler */
+    m_InputHandler.init(&m_Config);
     
     /* Initialize menu system */
     _InitMenus();
@@ -589,23 +593,32 @@ void GameApp::_Wait()
       /* Graphics? */
       if(m_xmsession->useGraphics() == false)
         throw Exception("menu requires graphics");
-        
+
+      /* final initialisation */
+      Logger::Log("UserPreInit ended at %.3f", GameApp::getXMTime());
+
+      /* display what must be displayed */
       m_stateManager->pushState(new StateMainMenu(this));
 
       /* Do we have a player profile? */
       if(m_xmsession->profile() == "") {
 	m_stateManager->pushState(new StateEditProfile(this));
-      }
-      else if(m_Config.getBool("WebConfAtInit")) {
-        /* We need web-config */
-        _InitWebConf();
-        setState(GS_EDIT_WEBCONFIG);
+      } 
+ 
+      // push a new state over for this
+      //      if(m_Config.getBool("WebConfAtInit")) {
+      //        /* We need web-config */
+      //        _InitWebConf();
+      //        setState(GS_EDIT_WEBCONFIG);
+      //      }
+
+      /* Should we show a notification box? (with important one-time info) */
+      if(m_Config.getBool("NotifyAtInit")) {
+	m_stateManager->pushState(new StateMessageBox(NULL, this, GAMETEXT_NOTIFYATINIT, UI_MSGBOX_OK));
+	m_Config.setBool("NotifyAtInit", false); 
       }
     }
 
-    /* final initialisation */
-    Logger::Log("UserPreInit ended at %.3f", GameApp::getXMTime());
-    /* display what must be displayed */
     if (isUglyMode()){
       drawLib->clearGraphics();
     }
@@ -623,9 +636,6 @@ void GameApp::_Wait()
     
     /* load levels lists */
     _UpdateLevelsLists();
-    
-    /* build handler */
-    m_InputHandler.init(&m_Config);
 
     /* Update stats */
     if(m_xmsession->profile() != "") {

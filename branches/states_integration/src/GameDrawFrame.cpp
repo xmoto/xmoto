@@ -63,12 +63,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
             
     /* What state? */
     switch(m_State) {
-      case GS_MENU:
-        /* Menu specifics */
-        _PreUpdateMenu();
-        /* Note the lack of break; the following are done for GS_MENU too */
-
-	// handle in the state manager
       case GS_LEVEL_INFO_VIEWER:
         _DrawMainGUI();
 	break;
@@ -101,22 +95,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   }  
 
   void GameApp::_PreUpdateGUI(void) {
-    /* Quit msg box open? */
-    if(m_pQuitMsgBox != NULL) {
-      UIMsgBoxButton Button = m_pQuitMsgBox->getClicked();
-      if(Button == UI_MSGBOX_YES) {
-        quit();      
-        delete m_pQuitMsgBox;
-        m_pQuitMsgBox = NULL;
-        return;
-      }
-      else if(Button == UI_MSGBOX_NO) {
-        delete m_pQuitMsgBox;
-        m_pQuitMsgBox = NULL;
-      }  
-    }
     /* What about the notify box then? */
-    else if(m_pNotifyMsgBox != NULL) {
+    if(m_pNotifyMsgBox != NULL) {
       if(m_pNotifyMsgBox->getClicked() == UI_MSGBOX_OK) {
         delete m_pNotifyMsgBox;
         m_pNotifyMsgBox = NULL;
@@ -139,22 +119,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       else if(Button == UI_MSGBOX_NO) {
         delete m_pInfoMsgBox;
         m_pInfoMsgBox = NULL;
-      }
-    }
-  }
-    
-  void GameApp::_PreUpdateMenu(void) {
-    /* Did the initializer come up with messages for the user? */
-    if(getUserNotify() != "") {
-      notifyMsg(getUserNotify());
-    }                
-    /* Should we show a notification box? (with important one-time info) */
-    else if(m_Config.getBool("NotifyAtInit")) {
-      if(m_pNotifyMsgBox == NULL) {
-        notifyMsg(GAMETEXT_NOTIFYATINIT);                    
-        
-        /* Don't do this again, please */
-        m_Config.setBool("NotifyAtInit",false); 
       }
     }
   }

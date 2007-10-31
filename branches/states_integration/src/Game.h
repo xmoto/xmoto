@@ -164,10 +164,6 @@ class StateManager;
       Theme *getTheme() {
 	return &m_theme;
       };
-
-      const std::string & getUserNotify(void) {
-	return m_UserNotify;
-      }
       
       UserConfig* getUserConfig() { /* to remove */
 	return &m_Config;
@@ -308,7 +304,6 @@ class StateManager;
       SoundSample *m_pDieSFX;
       
       /* Various popups */
-      UIMsgBox *m_pQuitMsgBox;
       UIMsgBox *m_pNotifyMsgBox;
       UIMsgBox *m_pInfoMsgBox;
       UIRect m_InfoMsgBoxRect;
@@ -320,7 +315,7 @@ class StateManager;
       int m_nNumMainMenuButtons;
       UITabView *m_pLevelPackTabs;
       UIButton *m_pMainMenuButtons[10];
-      UIFrame *m_pOptionsWindow,*m_pHelpWindow,*m_pPlayWindow,*m_pReplaysWindow,*m_pLevelPacksWindow;
+      UIFrame *m_pOptionsWindow,*m_pPlayWindow,*m_pReplaysWindow,*m_pLevelPacksWindow;
       UIWindow *m_pMainMenu;
       UIMsgBox *m_pDeleteReplayMsgBox;
       UIFrame *m_pGameInfoWindow;
@@ -383,9 +378,6 @@ class StateManager;
 
       XMSession* m_xmsession;
       StateManager* m_stateManager;
-      
-      /* User nofification */
-      std::string m_UserNotify;
       
       /* Run-time fun */
       bool m_bQuit;		/* Quit flag */
@@ -479,7 +471,6 @@ class StateManager;
       /* Main loop utility functions */
       void _PrepareFrame(void);
       void _PreUpdateGUI(void);
-      void _PreUpdateMenu(void);
       void _DrawMainGUI(void);
 
       UIWindow* stats_generateReport(const std::string &PlayerName, UIWindow *pParent,
@@ -489,7 +480,6 @@ class StateManager;
       void addReplay(const std::string& i_file);
 
       static UIFrame* makeOptionsWindow(DrawLib* i_drawLib, UIWindow* io_parent, UserConfig* i_Config);
-      static UIFrame* makeHelpWindow(DrawLib* i_drawLib, UIWindow* io_parent, UserConfig* i_Config);
 
       void updatePlayerTag();
       

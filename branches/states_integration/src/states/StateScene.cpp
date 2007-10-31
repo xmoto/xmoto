@@ -47,6 +47,7 @@ void StateScene::enter()
 {
   GameState::enter();
 
+  ParticlesSource::setAllowParticleGeneration(true);
   m_isLockedScene = false;
   m_autoZoom      = false;
   m_autoZoomStep  = 0;
@@ -123,6 +124,8 @@ void StateScene::keyDown(int nKey, SDLMod mod,int nChar)
     m_pGame->switchLevelToFavorite(m_pGame->getMotoGame()->getLevelSrc()->Id(), true);
     break;
     
+  default:
+    GameState::keyDown(nKey, mod, nChar);
   }
 }
 

@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "XMSession.h"
 #include "drawlib/DrawLib.h"
 #include "GameText.h"
+#include "StateMessageBox.h"
 
 /* static members */
 UIRoot*  StateEditProfile::m_sGUI = NULL;
@@ -70,10 +71,11 @@ void StateEditProfile::leaveAfterPush()
 }
 
 void StateEditProfile::checkEvents() {
+  UIButton *v_button;
 
-  UIButton *pUseProfileButton = reinterpret_cast<UIButton *>(m_GUI->getChild("EDITPROFILE_FRAME:USEPROFILE_BUTTON"));
-  if(pUseProfileButton->isClicked()) {
-    pUseProfileButton->setClicked(false);
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("EDITPROFILE_FRAME:USEPROFILE_BUTTON"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
 
 //    UIList *pList = reinterpret_cast<UIList *>(m_GUI->getChild("EDITPROFILE_FRAME:PROFILE_LIST"));
 //    if(pList != NULL) {
@@ -109,8 +111,18 @@ void StateEditProfile::checkEvents() {
 //        setState(GS_EDIT_WEBCONFIG);
 //      }
    
-    m_pGame->setState(GS_MENU); 
     m_requestForEnd = true;
+  }
+
+  // new profile
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("EDITPROFILE_FRAME:NEWPROFILE_BUTTON"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    
+    StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, std::string(GAMETEXT_ENTERPLAYERNAME) + ":",
+							 UI_MSGBOX_OK|UI_MSGBOX_CANCEL, true, "");
+    v_msgboxState->setId("NEWPROFILE");
+    m_pGame->getStateManager()->pushState(v_msgboxState);
   }
 
 //  /*===========================================================================
@@ -175,15 +187,7 @@ void StateEditProfile::checkEvents() {
 //                                                          (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
 //      }
 //    }
-//    else if(pNewButton->isClicked()) {
-//      if(m_pNewProfileMsgBox == NULL) {
-//	m_Renderer->getGUI()->setFont(drawLib->getFontSmall());
-//        m_pNewProfileMsgBox = m_Renderer->getGUI()->msgBox(std::string(GAMETEXT_ENTERPLAYERNAME) + ":",
-//                                                          (UIMsgBoxButton)(UI_MSGBOX_OK|UI_MSGBOX_CANCEL),
-//                                                          true);
-//        m_pNewProfileMsgBox->setTextInputFont(drawLib->getFontMedium());
-//      }
-//    }
+
 //  }
 // 
 }
