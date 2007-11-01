@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StatePreplaying.h"
 #include "StateMessageBox.h"
 #include "StateHelp.h"
+#include "StateEditProfile.h"
 
 /* static members */
 UIRoot*  StateMainMenu::m_sGUI = NULL;
@@ -186,6 +187,13 @@ void StateMainMenu::checkEvents() {
     v_windowLevels->showWindow(false);
     v_windowReplays->showWindow(false);
     v_windowOptions->showWindow(v_windowOptions->isHidden());
+  }
+
+  // edit profile
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:CHANGEPLAYERBUTTON"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getStateManager()->pushState(new StateEditProfile(m_pGame));
   }
 }
 

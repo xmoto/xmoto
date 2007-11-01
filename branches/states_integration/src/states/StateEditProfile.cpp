@@ -245,7 +245,8 @@ void StateEditProfile::createGUIIfNeeded(GameApp* pGame) {
   UIButton *v_button;
   UIFrame  *v_frame;
 
-  if(m_sGUI != NULL) return;
+  if(m_sGUI != NULL)
+    return;
 
   m_sGUI = new UIRoot();
   m_sGUI->setApp(pGame);

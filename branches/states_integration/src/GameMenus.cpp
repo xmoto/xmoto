@@ -1393,18 +1393,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       }      
     }
     
-    /* Change player */
-    UIButton *pChangePlayerButton = (UIButton *)m_pMainMenu->getChild("CHANGEPLAYERBUTTON");
-    if(pChangePlayerButton->isClicked()) {
-      /* Open profile editor */
-      m_pMainMenu->enableChildren(false);
-      m_pMainMenu->enableWindow(false);
-
-      m_stateManager->pushState(new StateEditProfile(this));
-
-      return;
-    }
-
     if(m_pNewLevelsAvailable != NULL) {
       m_pNewLevelsAvailable->showWindow(m_bWebLevelsToDownload);
     }
