@@ -282,6 +282,11 @@ void StateMainMenu::createGUIIfNeeded(GameApp* pGame) {
   v_someText->setFont(drawlib->getFontSmall());
   v_someText->setVAlign(UI_ALIGN_BOTTOM);
   v_someText->setHAlign(UI_ALIGN_LEFT);
+
+  // frames
+  makeWindowLevels(pGame,  v_menu);
+  makeWindowReplays(pGame, v_menu);
+  makeWindowOptions(pGame, v_menu);
 }
 
 void StateMainMenu::updateProfile() {
@@ -295,13 +300,28 @@ void StateMainMenu::updateProfile() {
   v_playerTag->setCaption(v_caption);
 }
 
+UIWindow* StateMainMenu::makeWindowReplays(GameApp* pGame, UIWindow* i_parent) {
+}
 
-UIWindow* makeWindowLevels() {
-//    m_pLevelPacksWindow = new UIFrame(m_pMainMenu,220,(drawlib->getDispHeight()*140)/600,"",drawlib->getDispWidth()-220-20,drawlib->getDispHeight()-40-(drawlib->getDispHeight()*120)/600-10);      
+UIWindow* StateMainMenu::makeWindowOptions(GameApp* pGame, UIWindow* i_parent) {
+}
+
+
+UIWindow* StateMainMenu::makeWindowLevels(GameApp* pGame, UIWindow* i_parent) {
+  UIWindow* v_window;
+  UIStatic* v_someText;
+ 
+  v_window = new UIFrame(i_parent, 220, i_parent->getPosition().nHeight*7/30, "",
+			 i_parent->getPosition().nWidth -220 -20,
+			 i_parent->getPosition().nHeight -40 -i_parent->getPosition().nHeight/5 -10);      
+  v_someText = new UIStatic(v_window, 0, 0, GAMETEXT_LEVELS, v_window->getPosition().nWidth, 36);
+  v_someText->setFont(pGame->getDrawLib()->getFontMedium());
+
+  return v_window;
+}
+
 //    m_pLevelPacksWindow->showWindow(false);
-//    pSomeText = new UIStatic(m_pLevelPacksWindow,0,0,GAMETEXT_LEVELS,m_pLevelPacksWindow->getPosition().nWidth,36);
-//    pSomeText->setFont(drawlib->getFontMedium());
-//
+
 //    /* tabs of the packs */
 //    m_pLevelPackTabs = new UITabView(m_pLevelPacksWindow,20,40,"",m_pLevelPacksWindow->getPosition().nWidth-40,m_pLevelPacksWindow->getPosition().nHeight-60);
 //    m_pLevelPackTabs->setFont(drawlib->getFontSmall());
@@ -440,8 +460,6 @@ UIWindow* makeWindowLevels() {
 //    pMultiStopWhenOneFinishes->setContextHelp(CONTEXTHELP_MULTISTOPWHENONEFINISHES);    
 //    pMultiStopWhenOneFinishes->setChecked(m_xmsession->MultiStopWhenOneFinishes());
 //
-
-}
 
 //
 //    /* level info frame */

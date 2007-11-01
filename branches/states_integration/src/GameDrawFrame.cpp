@@ -60,38 +60,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     /* Check some GUI controls */
     _PreUpdateGUI();     
-            
-    /* What state? */
-    switch(m_State) {
-      case GS_LEVEL_INFO_VIEWER:
-        _DrawMainGUI();
-	break;
-
-      case GS_EDIT_WEBCONFIG:
-        /* Following is done for all the above states */
-        _DrawMainGUI();
-        break;
-
-      case GS_LEVELPACK_VIEWER:
-      case GS_EDIT_PROFILES:
-        _DrawMainGUI();
-	break;
-
-    }
 
     m_stateManager->update();
     m_stateManager->render(); 
   }
   
   void GameApp::_PrepareFrame(void) {
-   
-    /* Update sound system and input */
-    if(!getDrawLib()->isNoGraphics()) {        
-      Sound::update();
-
-      m_InputHandler.updateInput(m_MotoGame.Players());
-    }    
-
+    Sound::update();
+    m_InputHandler.updateInput(m_MotoGame.Players());
   }  
 
   void GameApp::_PreUpdateGUI(void) {

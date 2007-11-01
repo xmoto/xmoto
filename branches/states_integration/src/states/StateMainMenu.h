@@ -62,6 +62,10 @@ class StateMainMenu : public StateMenu {
   /* GUI */
   static UIRoot* m_sGUI;
   static void createGUIIfNeeded(GameApp* pGame);
+  static UIWindow* makeWindowReplays(GameApp* pGame, UIWindow* i_parent);
+  static UIWindow* makeWindowOptions(GameApp* pGame, UIWindow* i_parent);
+  static UIWindow* makeWindowLevels(GameApp* pGame, UIWindow* i_parent);
+
   void updateProfile();
 
   /* Main menu background / title */
