@@ -44,20 +44,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     pTexture->Tag = "";
     pTexture->isAlpha = bAlpha;
 
-
-#ifdef ENABLE_OPENGL
-    pTexture->pcData = NULL;
-#endif
-
-#ifdef ENABLE_SDLGFX
-    pTexture->pcData = pcData;
-#endif
-
 #ifdef ENABLE_OPENGL
     pTexture->nID = 0;
-#endif
-    
-#ifdef ENABLE_OPENGL
+
     /* OpenGL magic */
     GLuint N;
     glEnable(GL_TEXTURE_2D);
@@ -92,24 +81,39 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
     }
 
-    if(bAlpha) {
-      /* Got alpha channel */
-      if(eFilterMode == FM_MIPMAP){
-	gluBuild2DMipmaps(GL_TEXTURE_2D,4,nWidth,nHeight,GL_RGBA,GL_UNSIGNED_BYTE,pcData);
-      }else{
-	glTexImage2D(GL_TEXTURE_2D,0,4,nWidth,nHeight,0,GL_RGBA,GL_UNSIGNED_BYTE,pcData);
+    /* Adapted from Extreme Tuxracer by Antti Harri and Lasse Collin */
+    GLint max_texture_size;
+    int depth = bAlpha?4:3;
+    /* Check if we need to scale image */
+    glGetIntegerv( GL_MAX_TEXTURE_SIZE, &max_texture_size );
+    if ( nWidth > max_texture_size || nHeight > max_texture_size ) {
+
+      Logger::Log("** Warning ** : TextureManager::createTexture() : Texture '%s' too large -- scaling to %i x %i",Name.c_str(), max_texture_size, max_texture_size );
+
+      unsigned char *newdata = new unsigned char[max_texture_size * max_texture_size * depth];
+
+      /*
+       * In the case of large- or small-aspect ratio textures, this
+       * could end up using *more* space... oh well.
+       */
+      GLint retval;
+      retval = gluScaleImage(bAlpha?GL_RGBA:GL_RGB,nWidth,nHeight,GL_UNSIGNED_BYTE,pcData,max_texture_size,max_texture_size,GL_UNSIGNED_BYTE,newdata );
+
+      if (retval!=0) {
+        throw TextureError("Failed to scale image in TextureManagerc::createTexture()");
       }
-      pTexture->nSize = nWidth * nHeight * 4;
+      delete[] pcData;
+      pcData = newdata;
+
+      pTexture->nWidth = nWidth = max_texture_size;
+      pTexture->nHeight = nHeight = max_texture_size;
     }
-    else {
-      /* Plain RGB */
+
       if(eFilterMode == FM_MIPMAP){
-	gluBuild2DMipmaps(GL_TEXTURE_2D,3,nWidth,nHeight,GL_RGB,GL_UNSIGNED_BYTE,pcData);
+        gluBuild2DMipmaps(GL_TEXTURE_2D,depth,nWidth,nHeight,bAlpha?GL_RGBA:GL_RGB,GL_UNSIGNED_BYTE,pcData);
       }else{
-	glTexImage2D(GL_TEXTURE_2D,0,3,nWidth,nHeight,0,GL_RGB,GL_UNSIGNED_BYTE,pcData);
+      glTexImage2D(GL_TEXTURE_2D,0,depth,nWidth,nHeight,0,bAlpha?GL_RGBA :GL_RGB,GL_UNSIGNED_BYTE,pcData);
       }
-      pTexture->nSize = nWidth * nHeight * 3;
-    }
 
     glDisable(GL_TEXTURE_2D);
     
@@ -136,8 +140,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         pTexture->surface  = SDL_CreateRGBSurfaceFrom(pcData,nWidth,nHeight,24 /*bitsPerPixel */, nWidth * 3 /*pitch*/,rmask,gmask,bmask,0);
 
       }
+
+      pTexture->pcData = pcData;
 #else
   pTexture->surface = NULL;
+  pTexture->pcData = NULL;
+  delete[] pcData;
 #endif
   
     /* Do it captain */
@@ -229,9 +237,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       }
       
       pTexture = createTexture(TexName,pc,TextureImage.getWidth(),TextureImage.getHeight(),bAlpha,bClamp, eFilterMode);
-#ifdef ENABLE_OPENGL
-      delete pc;
-#endif
     }
     else {
       Logger::Log("** Warning ** : TextureManager::loadTexture() : texture '%s' not found or invalid",Path.c_str());
