@@ -147,6 +147,46 @@ void StateMainMenu::checkEvents() {
     v_button->setClicked(false);
     m_pGame->getStateManager()->pushState(new StateHelp(m_pGame));
   }
+
+  // levels
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:LEVELS"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+
+    UIWindow* v_windowLevels = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_LEVELS"));
+    UIWindow* v_windowReplays = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_REPLAYS"));
+    UIWindow* v_windowOptions = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_OPTIONS"));
+    v_windowLevels->showWindow(v_windowLevels->isHidden());
+    v_windowReplays->showWindow(false);
+    v_windowOptions->showWindow(false);
+  }
+
+  // replays
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:REPLAYS"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+
+    UIWindow* v_windowLevels = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_LEVELS"));
+    UIWindow* v_windowReplays = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_REPLAYS"));
+    UIWindow* v_windowOptions = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_OPTIONS"));
+    v_windowLevels->showWindow(false);
+    v_windowReplays->showWindow(v_windowReplays->isHidden());
+    v_windowOptions->showWindow(false);
+  }
+
+  // options
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:OPTIONS"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+
+
+    UIWindow* v_windowLevels = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_LEVELS"));
+    UIWindow* v_windowReplays = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_REPLAYS"));
+    UIWindow* v_windowOptions = reinterpret_cast<UIWindow *>(m_GUI->getChild("MAIN:FRAME_OPTIONS"));
+    v_windowLevels->showWindow(false);
+    v_windowReplays->showWindow(false);
+    v_windowOptions->showWindow(v_windowOptions->isHidden());
+  }
 }
 
 bool StateMainMenu::update()
@@ -301,11 +341,36 @@ void StateMainMenu::updateProfile() {
 }
 
 UIWindow* StateMainMenu::makeWindowReplays(GameApp* pGame, UIWindow* i_parent) {
+  UIWindow* v_window;
+  UIStatic* v_someText;
+ 
+  v_window = new UIFrame(i_parent, 220, i_parent->getPosition().nHeight*7/30, "",
+			 i_parent->getPosition().nWidth -220 -20,
+			 i_parent->getPosition().nHeight -40 -i_parent->getPosition().nHeight/5 -10);
+  v_window->setID("FRAME_REPLAYS");
+  v_window->showWindow(false);
+   
+  v_someText = new UIStatic(v_window, 0, 0, GAMETEXT_REPLAYS, v_window->getPosition().nWidth, 36);
+  v_someText->setFont(pGame->getDrawLib()->getFontMedium());
+
+  return v_window;
 }
 
 UIWindow* StateMainMenu::makeWindowOptions(GameApp* pGame, UIWindow* i_parent) {
-}
+  UIWindow* v_window;
+  UIStatic* v_someText;
+ 
+  v_window = new UIFrame(i_parent, 220, i_parent->getPosition().nHeight*7/30, "",
+			 i_parent->getPosition().nWidth -220 -20,
+			 i_parent->getPosition().nHeight -40 -i_parent->getPosition().nHeight/5 -10);
+  v_window->setID("FRAME_OPTIONS");
+  v_window->showWindow(false);
+   
+  v_someText = new UIStatic(v_window, 0, 0, GAMETEXT_OPTIONS, v_window->getPosition().nWidth, 36);
+  v_someText->setFont(pGame->getDrawLib()->getFontMedium());
 
+  return v_window;
+}
 
 UIWindow* StateMainMenu::makeWindowLevels(GameApp* pGame, UIWindow* i_parent) {
   UIWindow* v_window;
@@ -313,7 +378,10 @@ UIWindow* StateMainMenu::makeWindowLevels(GameApp* pGame, UIWindow* i_parent) {
  
   v_window = new UIFrame(i_parent, 220, i_parent->getPosition().nHeight*7/30, "",
 			 i_parent->getPosition().nWidth -220 -20,
-			 i_parent->getPosition().nHeight -40 -i_parent->getPosition().nHeight/5 -10);      
+			 i_parent->getPosition().nHeight -40 -i_parent->getPosition().nHeight/5 -10);
+  v_window->setID("FRAME_LEVELS");
+  v_window->showWindow(false);
+   
   v_someText = new UIStatic(v_window, 0, 0, GAMETEXT_LEVELS, v_window->getPosition().nWidth, 36);
   v_someText->setFont(pGame->getDrawLib()->getFontMedium());
 
