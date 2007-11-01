@@ -375,7 +375,9 @@ UIWindow* StateMainMenu::makeWindowOptions(GameApp* pGame, UIWindow* i_parent) {
 UIWindow* StateMainMenu::makeWindowLevels(GameApp* pGame, UIWindow* i_parent) {
   UIWindow* v_window;
   UIStatic* v_someText;
- 
+  UIButton* v_button;
+  UIPackTree *v_packTree;
+
   v_window = new UIFrame(i_parent, 220, i_parent->getPosition().nHeight*7/30, "",
 			 i_parent->getPosition().nWidth -220 -20,
 			 i_parent->getPosition().nHeight -40 -i_parent->getPosition().nHeight/5 -10);
@@ -385,66 +387,61 @@ UIWindow* StateMainMenu::makeWindowLevels(GameApp* pGame, UIWindow* i_parent) {
   v_someText = new UIStatic(v_window, 0, 0, GAMETEXT_LEVELS, v_window->getPosition().nWidth, 36);
   v_someText->setFont(pGame->getDrawLib()->getFontMedium());
 
+  /* tabs */
+  UITabView *v_levelTabs = new UITabView(v_window, 20, 40, "",
+					 v_window->getPosition().nWidth-40, v_window->getPosition().nHeight-60);
+  v_levelTabs->setFont(pGame->getDrawLib()->getFontSmall());
+  v_levelTabs->setID("TABS");
+  v_levelTabs->setTabContextHelp(0, CONTEXTHELP_LEVEL_PACKS);
+  v_levelTabs->setTabContextHelp(1, CONTEXTHELP_BUILT_IN_AND_EXTERNALS);
+  v_levelTabs->setTabContextHelp(2, CONTEXTHELP_NEW_LEVELS);
+
+  /* pack tab */
+  UIWindow *v_packTab = new UIWindow(v_levelTabs, 10, 40, GAMETEXT_LEVELPACKS,
+				     v_levelTabs->getPosition().nWidth-20, v_levelTabs->getPosition().nHeight);
+  v_packTab->setID("PACK_TAB");
+
+  /* open button */
+  v_button = new UIButton(v_packTab, 11, v_packTab->getPosition().nHeight-57-45, GAMETEXT_OPEN, 115, 57);
+  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+  v_button->setType(UI_BUTTON_TYPE_SMALL);
+  v_button->setID("PACK_OPEN_BUTTON");
+  v_button->setContextHelp(CONTEXTHELP_VIEW_LEVEL_PACK);
+  
+  /* pack list */
+  v_packTree = new UIPackTree(v_packTab, 10, 0, "", v_packTab->getPosition().nWidth-20, v_packTab->getPosition().nHeight-105);      
+  v_packTree->setID("PACK_TREE");
+  v_packTree->setFont(pGame->getDrawLib()->getFontSmall());
+  v_packTree->setEnterButton(v_button);
+
+  /* favorite tab */
+  UIWindow *v_favoriteTab = new UIWindow(v_packTab, 20, 40, VPACKAGENAME_FAVORITE_LEVELS,
+					 v_packTab->getPosition().nWidth-40, v_packTab->getPosition().nHeight);
+  v_favoriteTab->setID("FAVORITE_TAB");
+  
+  /* favorite buttons */
+//  v_button = new UIButton(v_favoriteTab,0,pAllLevelsPackTab->getPosition().nHeight-103,GAMETEXT_STARTLEVEL,105,57);
+//  pGoButton->setContextHelp(CONTEXTHELP_PLAY_SELECTED_LEVEL);
+//  pGoButton->setFont(drawlib->getFontSmall());
+//  pGoButton->setType(UI_BUTTON_TYPE_SMALL);
+//  pGoButton->setID("PLAY_GO_BUTTON");
+//  UIButton *pLevelInfoButton = new UIButton(pAllLevelsPackTab,105,pAllLevelsPackTab->getPosition().nHeight-103,GAMETEXT_SHOWINFO,105,57);
+//  pLevelInfoButton->setFont(drawlib->getFontSmall());
+//  pLevelInfoButton->setType(UI_BUTTON_TYPE_SMALL);
+//  pLevelInfoButton->setID("PLAY_LEVEL_INFO_BUTTON");
+//  pLevelInfoButton->setContextHelp(CONTEXTHELP_LEVEL_INFO);
+//  
+//  UIButton *pDeleteFromFavoriteButton = new UIButton(pAllLevelsPackTab,pAllLevelsPackTab->getPosition().nWidth-187,pAllLevelsPackTab->getPosition().nHeight-103,GAMETEXT_DELETEFROMFAVORITE,187,57);
+//  pDeleteFromFavoriteButton->setFont(drawlib->getFontSmall());
+//  pDeleteFromFavoriteButton->setType(UI_BUTTON_TYPE_LARGE);
+//  pDeleteFromFavoriteButton->setID("ALL_LEVELS_DELETE_FROM_FAVORITE_BUTTON");
+//  pDeleteFromFavoriteButton->setContextHelp(CONTEXTHELP_DELETEFROMFAVORITE);
+
   return v_window;
 }
 
-//    m_pLevelPacksWindow->showWindow(false);
 
-//    /* tabs of the packs */
-//    m_pLevelPackTabs = new UITabView(m_pLevelPacksWindow,20,40,"",m_pLevelPacksWindow->getPosition().nWidth-40,m_pLevelPacksWindow->getPosition().nHeight-60);
-//    m_pLevelPackTabs->setFont(drawlib->getFontSmall());
-//    m_pLevelPackTabs->setID("LEVELPACK_TABS");
-//    m_pLevelPackTabs->enableWindow(true);
-//    m_pLevelPackTabs->showWindow(true);
-//    m_pLevelPackTabs->setTabContextHelp(0,CONTEXTHELP_LEVEL_PACKS);
-//    m_pLevelPackTabs->setTabContextHelp(1,CONTEXTHELP_BUILT_IN_AND_EXTERNALS);
-//    m_pLevelPackTabs->setTabContextHelp(2,CONTEXTHELP_NEW_LEVELS);
-//
-//    /* pack tab */
-//    UIWindow *pPackTab = new UIWindow(m_pLevelPackTabs,10,40,GAMETEXT_LEVELPACKS,m_pLevelPackTabs->getPosition().nWidth-20,m_pLevelPackTabs->getPosition().nHeight);
-//    pPackTab->enableWindow(true);
-//    pPackTab->showWindow(true);
-//    pPackTab->setID("PACK_TAB");
-//
-//    /* open button */
-//    UIButton *pOpenButton = new UIButton(pPackTab,11,pPackTab->getPosition().nHeight-57-45,GAMETEXT_OPEN,115,57);
-//    pOpenButton->setFont(drawlib->getFontSmall());
-//    pOpenButton->setType(UI_BUTTON_TYPE_SMALL);
-//    pOpenButton->setID("LEVELPACK_OPEN_BUTTON");
-//    pOpenButton->setContextHelp(CONTEXTHELP_VIEW_LEVEL_PACK);
-//
-//    /* pack list */
-//    UIPackTree *pLevelPackTree = new UIPackTree(pPackTab,10,0,"",pPackTab->getPosition().nWidth-20,pPackTab->getPosition().nHeight-105);      
-//    pLevelPackTree->setID("LEVELPACK_TREE");
-//    pLevelPackTree->showWindow(true);
-//    pLevelPackTree->enableWindow(true);
-//    pLevelPackTree->setFont(drawlib->getFontSmall());
-//    pLevelPackTree->setEnterButton( pOpenButton );
-//
-//    /* favorite levels tab */
-//    UIWindow *pAllLevelsPackTab = new UIWindow(m_pLevelPackTabs,20,40,VPACKAGENAME_FAVORITE_LEVELS,m_pLevelPackTabs->getPosition().nWidth-40,m_pLevelPackTabs->getPosition().nHeight);
-//    pAllLevelsPackTab->enableWindow(true);
-//    pAllLevelsPackTab->showWindow(false);
-//    pAllLevelsPackTab->setID("ALLLEVELS_TAB");
-//
-//    /* all levels button */
-//    UIButton *pGoButton = new UIButton(pAllLevelsPackTab,0,pAllLevelsPackTab->getPosition().nHeight-103,GAMETEXT_STARTLEVEL,105,57);
-//    pGoButton->setContextHelp(CONTEXTHELP_PLAY_SELECTED_LEVEL);
-//    pGoButton->setFont(drawlib->getFontSmall());
-//    pGoButton->setType(UI_BUTTON_TYPE_SMALL);
-//    pGoButton->setID("PLAY_GO_BUTTON");
-//    UIButton *pLevelInfoButton = new UIButton(pAllLevelsPackTab,105,pAllLevelsPackTab->getPosition().nHeight-103,GAMETEXT_SHOWINFO,105,57);
-//    pLevelInfoButton->setFont(drawlib->getFontSmall());
-//    pLevelInfoButton->setType(UI_BUTTON_TYPE_SMALL);
-//    pLevelInfoButton->setID("PLAY_LEVEL_INFO_BUTTON");
-//    pLevelInfoButton->setContextHelp(CONTEXTHELP_LEVEL_INFO);
-//
-//    UIButton *pDeleteFromFavoriteButton = new UIButton(pAllLevelsPackTab,pAllLevelsPackTab->getPosition().nWidth-187,pAllLevelsPackTab->getPosition().nHeight-103,GAMETEXT_DELETEFROMFAVORITE,187,57);
-//    pDeleteFromFavoriteButton->setFont(drawlib->getFontSmall());
-//    pDeleteFromFavoriteButton->setType(UI_BUTTON_TYPE_LARGE);
-//    pDeleteFromFavoriteButton->setID("ALL_LEVELS_DELETE_FROM_FAVORITE_BUTTON");
-//    pDeleteFromFavoriteButton->setContextHelp(CONTEXTHELP_DELETEFROMFAVORITE);
-//
+
 //    /* all levels list */
 //    m_pAllLevelsList = new UILevelList(pAllLevelsPackTab,0,0,"",pAllLevelsPackTab->getPosition().nWidth,pAllLevelsPackTab->getPosition().nHeight-105);     
 //    m_pAllLevelsList->setID("ALLLEVELS_LIST");
