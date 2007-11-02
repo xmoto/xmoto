@@ -1974,3 +1974,22 @@ void GameApp::updateProfile(const std::string &playerName)
     
   updatePlayerTag();
 }
+
+void GameApp::updateWebHighscores()
+{
+  if(!m_bWebHighscoresUpdatedThisSession) {        
+    try {
+      _UpdateWebHighscores(false);
+      _UpgradeWebHighscores();  
+      _UpdateWebLevels(false);
+
+      m_levelsManager.makePacks(m_db,
+				m_xmsession->profile(),
+				getUserConfig()->getString("WebHighscoresIdRoom"),
+				m_xmsession->debug());
+      _UpdateLevelsLists();
+    } catch(Exception &e) {
+      notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW);
+    }
+  }
+}

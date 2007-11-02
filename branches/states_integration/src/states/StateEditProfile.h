@@ -25,10 +25,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateMenu.h"
 
 class UIRoot;
+class StateMenuContextReceiver;
 
 class StateEditProfile : public StateMenu {
 public:
   StateEditProfile(GameApp* pGame,
+		   StateMenuContextReceiver* i_receiver = NULL,
 		   bool drawStateBehind    = true,
 		   bool updateStatesBehind = false
 		   );
@@ -62,6 +64,7 @@ private:
   /* GUI */
   static UIRoot* m_sGUI;
   static void createGUIIfNeeded(GameApp* pGame);
+  StateMenuContextReceiver* m_receiver;  
 };
 
 #endif

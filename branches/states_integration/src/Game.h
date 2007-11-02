@@ -239,6 +239,7 @@ class StateManager;
       void updateProfile(const std::string &PlayerName);
       void _ConfigureProxy(void);
       void _ImportOptions(void);
+      void updateWebHighscores();
 
    protected:
       void createDefaultConfig();

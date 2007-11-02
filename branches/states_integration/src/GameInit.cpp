@@ -605,13 +605,6 @@ void GameApp::_Wait()
 	m_stateManager->pushState(new StateEditProfile(this));
       } 
  
-      // push a new state over for this
-      //      if(m_Config.getBool("WebConfAtInit")) {
-      //        /* We need web-config */
-      //        _InitWebConf();
-      //        setState(GS_EDIT_WEBCONFIG);
-      //      }
-
       /* Should we show a notification box? (with important one-time info) */
       if(m_Config.getBool("NotifyAtInit")) {
 	m_stateManager->pushState(new StateMessageBox(NULL, this, GAMETEXT_NOTIFYATINIT, UI_MSGBOX_OK));

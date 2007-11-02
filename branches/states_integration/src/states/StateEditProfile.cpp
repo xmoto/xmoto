@@ -31,13 +31,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 UIRoot*  StateEditProfile::m_sGUI = NULL;
 
 StateEditProfile::StateEditProfile(GameApp* pGame,
+				   StateMenuContextReceiver* i_receiver,
 				   bool drawStateBehind,
-				   bool updateStatesBehind):
+				   bool updateStatesBehind
+				   ):
   StateMenu(drawStateBehind,
 	    updateStatesBehind,
 	    pGame)
 {
-  m_name    = "StateEditProfile";
+  m_name     = "StateEditProfile";
+  m_receiver = i_receiver;
 }
 
 StateEditProfile::~StateEditProfile()
@@ -89,10 +92,15 @@ void StateEditProfile::checkEvents() {
       UIListEntry *pEntry = pList->getEntries()[nIdx];
 
       m_pGame->updateProfile(pEntry->Text[0]);
+
+      // tell the menu to update the displayed profile
+      if(m_receiver != NULL){
+	m_receiver->send(getId(), "UPDATEPROFILE");
+      }
     }
 
     /* Should we jump to the web config now? */
-    if(m_pGame->getUserConfig()->getBool("WebConfAtInit")) {
+    if(m_pGame->getUserConfig()->getBool("WebConfAtInit") == true) {
       m_pGame->getStateManager()->replaceState(new StateEditWebConfig(m_pGame));
     }else{
       m_requestForEnd = true;

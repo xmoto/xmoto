@@ -53,14 +53,16 @@ void StateEditWebConfig::enter()
   m_GUI = m_sGUI;
   updateGUI();
 
-  // show the message box
-  UIFrame *v_frame = reinterpret_cast<UIFrame *>(m_GUI->getChild("EDITWEBCONF_FRAME"));
-  v_frame->showWindow(false);
+  if(m_pGame->getUserConfig()->getBool("WebConfAtInit") == true) {
+    // show the message box
+    UIFrame *v_frame = reinterpret_cast<UIFrame *>(m_GUI->getChild("EDITWEBCONF_FRAME"));
+    v_frame->showWindow(false);
 
-  StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, std::string(GAMETEXT_ALLOWINTERNETCONN),
-						       UI_MSGBOX_YES|UI_MSGBOX_NO);
-  v_msgboxState->setId("EDITWEBCONF");
-  m_pGame->getStateManager()->pushState(v_msgboxState);
+    StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, std::string(GAMETEXT_ALLOWINTERNETCONN),
+							 UI_MSGBOX_YES|UI_MSGBOX_NO);
+    v_msgboxState->setId("EDITWEBCONF");
+    m_pGame->getStateManager()->pushState(v_msgboxState);
+  }
 }
 
 void StateEditWebConfig::leave()
@@ -121,26 +123,8 @@ void StateEditWebConfig::checkEvents()
     m_requestForEnd = true;
 
     m_pGame->_ConfigureProxy();
-#if 0
-    if(!m_bWebHighscoresUpdatedThisSession) {        
-      try {
-	_UpdateWebHighscores(false);
-	_UpgradeWebHighscores();  
-	_UpdateWebLevels(false);
-
-	m_levelsManager.makePacks(m_db,
-				  m_xmsession->profile(),
-				  m_pGame->getUserConfig()->getString("WebHighscoresIdRoom"),
-				  m_xmsession->debug());
-	_UpdateLevelsLists();
-      } catch(Exception &e) {
-	notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW);
-      }
-    }
-#endif
-    m_pGame->getUserConfig()->setBool("WebHighscores",true);
-	
-    /* Update options */
+    m_pGame->updateWebHighscores();
+    m_pGame->getUserConfig()->setBool("WebHighscores", true);
     m_pGame->_ImportOptions();
   }      
 
@@ -379,5 +363,5 @@ void StateEditWebConfig::send(const std::string& i_id, UIMsgBoxButton i_button, 
   }
 
   m_pGame->getUserConfig()->setBool("WebHighscores", m_pGame->getSession()->www());
-  m_pGame->getUserConfig()->setBool("WebConfAtInit",false);
+  m_pGame->getUserConfig()->setBool("WebConfAtInit", false);
 }

@@ -54,6 +54,7 @@ class StateMainMenu : public StateMenu {
   static void clean();
   
   virtual void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
+  virtual void executeOneCommand(std::string cmd);
 
   protected:
   virtual void checkEvents();

@@ -194,7 +194,7 @@ void StateMainMenu::checkEvents() {
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:CHANGEPLAYERBUTTON"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
-    m_pGame->getStateManager()->pushState(new StateEditProfile(m_pGame));
+    m_pGame->getStateManager()->pushState(new StateEditProfile(m_pGame, this));
   }
 }
 
@@ -725,3 +725,11 @@ void StateMainMenu::send(const std::string& i_id, UIMsgBoxButton i_button, const
     }
   }
 }
+
+void StateMainMenu::executeOneCommand(std::string cmd)
+{
+  if(cmd == "UPDATEPROFILE"){
+    updateProfile();
+  }
+}
+

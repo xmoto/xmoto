@@ -145,3 +145,13 @@ void StateMenu::mouseUp(int nButton)
     checkEvents();
   }
 }
+
+void StateMenu::send(const std::string& i_id, const std::string& i_message) 
+{
+  m_commands.push(i_message);
+}
+
+void StateMenu::executeOneCommand(std::string cmd)
+{
+  // default do nothing
+}
