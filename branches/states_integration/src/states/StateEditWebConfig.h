@@ -49,12 +49,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     virtual void mouseDoubleClick(int nButton);
     virtual void mouseUp(int nButton);
 
+    static void clean();
     virtual void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
 
   protected:
     virtual void checkEvents();
 
   private:
+    /* GUI */
+    static UIRoot* m_sGUI;
+    static void createGUIIfNeeded(GameApp* pGame);
+    void updateGUI();
   };
 
 #endif

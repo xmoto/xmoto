@@ -59,7 +59,7 @@ void StateLevelInfoViewer::enter()
 
 void StateLevelInfoViewer::leave()
 {
-
+  StateMenu::leave();
 }
 
 void StateLevelInfoViewer::enterAfterPop()

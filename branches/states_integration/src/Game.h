@@ -237,6 +237,8 @@ class StateManager;
 
       void stats_generateReport(const std::string &PlayerName);
       void updateProfile(const std::string &PlayerName);
+      void _ConfigureProxy(void);
+      void _ImportOptions(void);
 
    protected:
       void createDefaultConfig();
@@ -410,7 +412,6 @@ class StateManager;
       void _InitMenus(void);        
       void _InitMenus_MainMenu(void);
       void _InitMenus_Others(void);
-      void _ImportOptions(void);
       void _DefaultOptions(void);
       void _SaveOptions(void);
       void _UpdateSettings(void);
@@ -444,7 +445,6 @@ class StateManager;
       void _UpgradeWebRooms(bool bUpdateMenus);
       void _DownloadExtraLevels(void);
       void _UploadAllHighscores();
-      void _ConfigureProxy(void);
 
       void enableWWW(bool bValue);
       void enableFps(bool bValue);

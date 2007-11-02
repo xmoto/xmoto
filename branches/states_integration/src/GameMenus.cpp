@@ -39,7 +39,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "states/StatePreplaying.h"
 #include "states/StateCreditsMode.h"
 #include "states/StateLevelPackViewer.h"
-
+#include "states/StateEditWebConfig.h"
 
   UIFrame* GameApp::makeOptionsWindow(DrawLib* i_drawLib, UIWindow* io_parent, UserConfig* i_Config) {
     UIFrame *v_pOptionsWindow;
@@ -908,96 +908,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
   void GameApp::_InitMenus_Others(void) {
     UIStatic *pSomeText;
-
-    /* Initialize internet connection configurator */
-    m_pWebConfEditor = new UIFrame(m_Renderer->getGUI(),drawLib->getDispWidth()/2-206,drawLib->getDispHeight()/2-385/2,"",412,425); 
-    m_pWebConfEditor->setStyle(UI_FRAMESTYLE_TRANS);           
-    m_pWebConfEditor->showWindow(false);
-    UIStatic *pWebConfEditorTitle = new UIStatic(m_pWebConfEditor,0,0,GAMETEXT_INETCONF,400,50);
-    pWebConfEditorTitle->setFont(drawLib->getFontMedium());
-   
-    #if defined(WIN32)
-      /* I don't expect a windows user to know what an environment variable is */
-      #define DIRCONNTEXT std::string(GAMETEXT_DIRECTCONN).c_str()
-    #else
-      #define DIRCONNTEXT (std::string(GAMETEXT_DIRECTCONN) + " / " + std::string(GAMETEXT_USEENVVARS)).c_str()
-    #endif
-     
-    UIButton *pConn1 = new UIButton(m_pWebConfEditor,25,60,DIRCONNTEXT,(m_pWebConfEditor->getPosition().nWidth-50),28);
-    pConn1->setType(UI_BUTTON_TYPE_RADIO);
-    pConn1->setID("DIRECTCONN");
-    pConn1->enableWindow(true);
-    pConn1->setFont(drawLib->getFontSmall());
-    pConn1->setGroup(16023);
-    pConn1->setChecked(true);
-    pConn1->setContextHelp(CONTEXTHELP_DIRECTCONN);
-
-    UIButton *pConn2 = new UIButton(m_pWebConfEditor,25,88,GAMETEXT_USINGHTTPPROXY,(m_pWebConfEditor->getPosition().nWidth-160),28);
-    pConn2->setType(UI_BUTTON_TYPE_RADIO);
-    pConn2->setID("HTTPPROXY");
-    pConn2->enableWindow(true);
-    pConn2->setFont(drawLib->getFontSmall());
-    pConn2->setGroup(16023);
-    pConn2->setContextHelp(CONTEXTHELP_HTTPPROXY);
-
-    UIButton *pConn3 = new UIButton(m_pWebConfEditor,25,116,GAMETEXT_USINGSOCKS4PROXY,(m_pWebConfEditor->getPosition().nWidth-160),28);
-    pConn3->setType(UI_BUTTON_TYPE_RADIO);
-    pConn3->setID("SOCKS4PROXY");
-    pConn3->enableWindow(true);
-    pConn3->setFont(drawLib->getFontSmall());
-    pConn3->setGroup(16023);
-    pConn3->setContextHelp(CONTEXTHELP_SOCKS4PROXY);
-
-    UIButton *pConn4 = new UIButton(m_pWebConfEditor,25,144,GAMETEXT_USINGSOCKS5PROXY,(m_pWebConfEditor->getPosition().nWidth-160),28);
-    pConn4->setType(UI_BUTTON_TYPE_RADIO);
-    pConn4->setID("SOCKS5PROXY");
-    pConn4->enableWindow(true);
-    pConn4->setFont(drawLib->getFontSmall());
-    pConn4->setGroup(16023);
-    pConn4->setContextHelp(CONTEXTHELP_SOCKS5PROXY);
-    
-    UIButton *pConnOKButton = new UIButton(m_pWebConfEditor,(m_pWebConfEditor->getPosition().nWidth-160)+28,(m_pWebConfEditor->getPosition().nHeight-68),GAMETEXT_OK,115,57);
-    pConnOKButton->setFont(drawLib->getFontSmall());
-    pConnOKButton->setType(UI_BUTTON_TYPE_SMALL);
-    pConnOKButton->setID("PROXYOK");
-    pConnOKButton->setContextHelp(CONTEXTHELP_OKPROXY);
-    
-    UIFrame *pSubFrame = new UIFrame(m_pWebConfEditor,25,185,"",(m_pWebConfEditor->getPosition().nWidth-50),(m_pWebConfEditor->getPosition().nHeight-185-75));
-    pSubFrame->setStyle(UI_FRAMESTYLE_TRANS);
-    pSubFrame->setID("SUBFRAME");    
-    
-    pSomeText = new UIStatic(pSubFrame,10,25,std::string(GAMETEXT_PROXYSERVER) + ":",120,25);
-    pSomeText->setFont(drawLib->getFontSmall());    
-    pSomeText->setHAlign(UI_ALIGN_RIGHT);
-    UIEdit *pProxyServerEdit = new UIEdit(pSubFrame,135,25,"",190,25);
-    pProxyServerEdit->setFont(drawLib->getFontSmall());
-    pProxyServerEdit->setID("SERVEREDIT");
-    pProxyServerEdit->setContextHelp(CONTEXTHELP_PROXYSERVER);
-
-    pSomeText = new UIStatic(pSubFrame,10,55,std::string(GAMETEXT_PORT) + ":",120,25);
-    pSomeText->setFont(drawLib->getFontSmall());    
-    pSomeText->setHAlign(UI_ALIGN_RIGHT);
-    UIEdit *pProxyPortEdit = new UIEdit(pSubFrame,135,55,"",50,25);
-    pProxyPortEdit->setFont(drawLib->getFontSmall());
-    pProxyPortEdit->setID("PORTEDIT");
-    pProxyPortEdit->setContextHelp(CONTEXTHELP_PROXYPORT);
-
-    pSomeText = new UIStatic(pSubFrame,10,85,std::string(GAMETEXT_LOGIN) + ":",120,25);
-    pSomeText->setFont(drawLib->getFontSmall());    
-    pSomeText->setHAlign(UI_ALIGN_RIGHT);
-    UIEdit *pProxyLoginEdit = new UIEdit(pSubFrame,135,85,"",190,25);
-    pProxyLoginEdit->setFont(drawLib->getFontSmall());
-    pProxyLoginEdit->setID("LOGINEDIT");
-    pProxyLoginEdit->setContextHelp(CONTEXTHELP_PROXYLOGIN);
-
-    pSomeText = new UIStatic(pSubFrame,10,115,std::string(GAMETEXT_PASSWORD) + ":",120,25);
-    pSomeText->setFont(drawLib->getFontSmall());    
-    pSomeText->setHAlign(UI_ALIGN_RIGHT);
-    UIEdit *pProxyPasswordEdit = new UIEdit(pSubFrame,135,115,"",190,25);
-    pProxyPasswordEdit->setFont(drawLib->getFontSmall());
-    pProxyPasswordEdit->setID("PASSWORDEDIT");
-    pProxyPasswordEdit->setContextHelp(CONTEXTHELP_PROXYPASSWORD);
-
     /* Build stats window */
     m_pStatsWindow = new UIFrame(m_pMainMenu,220,(drawLib->getDispHeight()*140)/600,GAMETEXT_STATS,drawLib->getDispWidth()-200,drawLib->getDispHeight()-40-(drawLib->getDispHeight()*120)/600-10);      
     m_pStatsWindow->setStyle(UI_FRAMESTYLE_LEFTTAG);
@@ -1108,149 +1018,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /* reselect the previous pack */
     if(v_selected_packName != "") {
       pTree->setSelectedPackByName(v_selected_packName);
-    }
-  }
-
-  /*===========================================================================
-  Update internet connection editor
-  ===========================================================================*/
-  void GameApp::_InitWebConf(void) {
-    /* Get some pointers */
-    UIButton *pDirectConn = (UIButton *)m_pWebConfEditor->getChild("DIRECTCONN");
-    UIButton *pHTTPConn = (UIButton *)m_pWebConfEditor->getChild("HTTPPROXY");
-    UIButton *pSOCKS4Conn = (UIButton *)m_pWebConfEditor->getChild("SOCKS4PROXY");
-    UIButton *pSOCKS5Conn = (UIButton *)m_pWebConfEditor->getChild("SOCKS5PROXY");
-    UIButton *pConnOK = (UIButton *)m_pWebConfEditor->getChild("PROXYOK");
-    UIEdit *pServer = (UIEdit *)m_pWebConfEditor->getChild("SUBFRAME:SERVEREDIT");
-    UIEdit *pPort = (UIEdit *)m_pWebConfEditor->getChild("SUBFRAME:PORTEDIT");    
-    UIEdit *pLogin    = (UIEdit *)m_pWebConfEditor->getChild("SUBFRAME:LOGINEDIT"); 
-    UIEdit *pPassword = (UIEdit *)m_pWebConfEditor->getChild("SUBFRAME:PASSWORDEDIT");     
-
-    pDirectConn->setChecked(false);
-    pHTTPConn->setChecked(false);
-    pSOCKS4Conn->setChecked(false);
-    pSOCKS5Conn->setChecked(false);
-
-    /* Read config */
-    pServer->setCaption(m_Config.getString("ProxyServer"));
-    char cBuf[256] = "";
-    int n = m_Config.getInteger("ProxyPort");
-    if(n > 0) sprintf(cBuf,"%d",n);
-    pPort->setCaption(cBuf);
-    pLogin->setCaption(m_Config.getString("ProxyAuthUser"));
-    pPassword->setCaption(m_Config.getString("ProxyAuthPwd"));
-    
-    std::string s = m_Config.getString("ProxyType");
-    if(s == "HTTP") pHTTPConn->setChecked(true);
-    else if(s == "SOCKS4") pSOCKS4Conn->setChecked(true);
-    else if(s == "SOCKS5") pSOCKS5Conn->setChecked(true);
-    else pDirectConn->setChecked(true);
-    
-    /* Make sure OK button is activated */
-    pConnOK->makeActive();
-  }
-
-  void GameApp::_HandleWebConfEditor(void) {
-    /* Get some pointers */
-    UIButton *pDirectConn = (UIButton *)m_pWebConfEditor->getChild("DIRECTCONN");
-    UIButton *pHTTPConn = (UIButton *)m_pWebConfEditor->getChild("HTTPPROXY");
-    UIButton *pSOCKS4Conn = (UIButton *)m_pWebConfEditor->getChild("SOCKS4PROXY");
-    UIButton *pSOCKS5Conn = (UIButton *)m_pWebConfEditor->getChild("SOCKS5PROXY");
-    UIButton *pConnOK = (UIButton *)m_pWebConfEditor->getChild("PROXYOK");
-    UIEdit *pServer = (UIEdit *)m_pWebConfEditor->getChild("SUBFRAME:SERVEREDIT");
-    UIEdit *pPort = (UIEdit *)m_pWebConfEditor->getChild("SUBFRAME:PORTEDIT");    
-    UIEdit *pLogin    = (UIEdit *)m_pWebConfEditor->getChild("SUBFRAME:LOGINEDIT"); 
-    UIEdit *pPassword = (UIEdit *)m_pWebConfEditor->getChild("SUBFRAME:PASSWORDEDIT");  
-
-    /* The yes/no box open? */
-    if(m_pWebConfMsgBox != NULL) {
-      UIMsgBoxButton Clicked = m_pWebConfMsgBox->getClicked();
-      if(Clicked != UI_MSGBOX_NOTHING) {
-        if(Clicked == UI_MSGBOX_YES) {
-          /* Show the actual web config editor */
-	  m_xmsession->setWWW(true);
-          m_pWebConfEditor->showWindow(true);          
-        }
-        else {
-          /* No internet connection thank you */
-	  m_xmsession->setWWW(false);
-          setState(GS_MENU);
-        }
-	m_Config.setBool("WebHighscores", m_xmsession->www());
-        
-        m_Config.setBool("WebConfAtInit",false);
-        delete m_pWebConfMsgBox;
-        m_pWebConfMsgBox=NULL;
-      }
-    }
-    else {
-      /* OK button pressed? */
-      if(pConnOK->isClicked()) {
-        pConnOK->setClicked(false);
-        
-        /* Save settings */
-        std::string ProxyType = "";
-        if(pHTTPConn->getChecked()) ProxyType = "HTTP";
-        else if(pSOCKS4Conn->getChecked()) ProxyType = "SOCKS4";
-        else if(pSOCKS5Conn->getChecked()) ProxyType = "SOCKS5";
-        
-        m_Config.setString("ProxyType",ProxyType);
-        
-        if(ProxyType != "") {
-          int nPort = atoi(pPort->getCaption().c_str());
-          if(nPort > 0)
-            m_Config.setInteger("ProxyPort",nPort);
-          else
-            m_Config.setInteger("ProxyPort",-1);          
-            
-          m_Config.setString("ProxyServer",pServer->getCaption());
-	  m_Config.setString("ProxyAuthUser",pLogin->getCaption());
-	  m_Config.setString("ProxyAuthPwd" ,pPassword->getCaption());
-        }
-
-        m_pWebConfEditor->showWindow(false);
-        m_pMainMenu->enableChildren(true);
-        m_pMainMenu->enableWindow(true);
-        setState(GS_MENU);
-
-        _ConfigureProxy();
-
-        if(!m_bWebHighscoresUpdatedThisSession) {        
-	  try {
-	    _UpdateWebHighscores(false);
-	    _UpgradeWebHighscores();  
-	    _UpdateWebLevels(false);
-
-	    m_levelsManager.makePacks(m_db,
-				      m_xmsession->profile(),
-				      m_Config.getString("WebHighscoresIdRoom"),
-				      m_xmsession->debug());
-	    _UpdateLevelsLists();
-	  } catch(Exception &e) {
-	    notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW);
-	  }
-	}
-	
-	m_Config.setBool("WebHighscores",true);
-	
-        /* Update options */
-        _ImportOptions();
-        
-      }      
-
-      /* Direct connection selected? If so, no need to enabled proxy editing */
-      if(pDirectConn->getChecked()) {
-        pServer->enableWindow(false);
-        pPort->enableWindow(false);
-	pLogin->enableWindow(false);
-	pPassword->enableWindow(false);
-      }            
-      else {
-        pServer->enableWindow(true);
-        pPort->enableWindow(true);
-	pLogin->enableWindow(true);
-	pPassword->enableWindow(true);
-      }
     }
   }
 
@@ -1524,11 +1291,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     if(pINetConf->isClicked()) {
       pINetConf->setClicked(false);
       
-      _InitWebConf();
-      m_State = GS_EDIT_WEBCONFIG;
-      m_pWebConfEditor->showWindow(true);
-      m_pMainMenu->enableChildren(false);
-      m_pMainMenu->enableWindow(false);
+      m_stateManager->pushState(new StateEditWebConfig(this));
+
       return;
     }
     
