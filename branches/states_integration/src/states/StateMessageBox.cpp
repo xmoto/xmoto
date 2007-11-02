@@ -72,7 +72,8 @@ void StateMessageBox::leaveAfterPush()
 void StateMessageBox::checkEvents() {
   UIMsgBoxButton Button = m_msgbox->getClicked();
 
-  if(Button == UI_MSGBOX_NOTHING) return;
+  if(Button == UI_MSGBOX_NOTHING)
+    return;
   m_clickedButton = Button;
 
   switch(Button) {

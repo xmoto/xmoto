@@ -235,6 +235,9 @@ class StateManager;
       // list played
       void setCurrentPlayingList(UILevelList *i_levelsList) {m_currentPlayingList = i_levelsList;}
 
+      void stats_generateReport(const std::string &PlayerName);
+      void updateProfile(const std::string &PlayerName);
+
    protected:
       void createDefaultConfig();
 
@@ -472,9 +475,6 @@ class StateManager;
       void _PrepareFrame(void);
       void _PreUpdateGUI(void);
       void _DrawMainGUI(void);
-
-      UIWindow* stats_generateReport(const std::string &PlayerName, UIWindow *pParent,
-				     int x, int y, int nWidth, int nHeight, FontManager* pFont);
 
       void initReplaysFromDir();
       void addReplay(const std::string& i_file);

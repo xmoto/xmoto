@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class UIRoot;
 
 class StateEditProfile : public StateMenu {
- public:
+public:
   StateEditProfile(GameApp* pGame,
 		   bool drawStateBehind    = true,
 		   bool updateStatesBehind = false
@@ -51,11 +51,12 @@ class StateEditProfile : public StateMenu {
   virtual void mouseUp(int nButton);
 
   static void clean();
+  virtual void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
 
- protected:
+protected:
   virtual void checkEvents();
-
-  private:
+  
+private:
   static void createProfileList(GameApp* pGame);
 
   /* GUI */

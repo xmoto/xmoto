@@ -1528,10 +1528,16 @@ void GameApp::closePlaying() {
     return m_bCreditsModeActive;
   }
 
-  UIWindow* GameApp::stats_generateReport(const std::string &PlayerName, UIWindow *pParent,
-					  int x, int y, int nWidth, int nHeight, FontManager* pFont) {
+  void GameApp::stats_generateReport(const std::string &PlayerName) {
+    // parameters are always the same !
+    UIWindow *pParent  = m_pStatsWindow;
+    int x              = 30;
+    int y              = 36;
+    int nWidth         = m_pStatsWindow->getPosition().nWidth-45;
+    int nHeight        = m_pStatsWindow->getPosition().nHeight-36;
+    FontManager* pFont = drawLib->getFontSmall();
+
     /* Create stats window */
-    UIWindow *p;
     char **v_result;
     unsigned int nrow;
 
@@ -1543,10 +1549,15 @@ void GameApp::closePlaying() {
     int   v_nbCompleted     = 0;
     int   v_nbRestarted     = 0;
     int   v_nbDiffLevels    = 0;
-    std::string v_level_name;
+    std::string v_level_name= "";
   
-    p = new UIWindow(pParent, x, y, "", nWidth, nHeight);
-    UIButton *pUpdateButton = new UIButton(p,nWidth-115,nHeight-57,GAMETEXT_UPDATE,115,57);
+    if(m_pStatsReport != NULL){
+      delete m_pStatsReport;
+      m_pStatsReport = NULL;
+    }
+
+    m_pStatsReport = new UIWindow(pParent, x, y, "", nWidth, nHeight);
+    UIButton *pUpdateButton = new UIButton(m_pStatsReport,nWidth-115,nHeight-57,GAMETEXT_UPDATE,115,57);
     pUpdateButton->setContextHelp(CONTEXTHELP_UPDATESTATS);
     pUpdateButton->setFont(pFont);
     pUpdateButton->setType(UI_BUTTON_TYPE_SMALL);
@@ -1563,7 +1574,7 @@ void GameApp::closePlaying() {
 
     if(nrow == 0) {
       m_db->read_DB_free(v_result);
-      return p;
+      return;
     }
   
     v_nbStarts        = atoi(m_db->getResult(v_result, 8, 0, 0));
@@ -1583,21 +1594,24 @@ void GameApp::closePlaying() {
     int nHours = ((int)v_totalPlayedTime) / (60 * 60);
     int nMinutes = (((int)v_totalPlayedTime) / (60)) - nHours*60;
     int nSeconds = (((int)v_totalPlayedTime)) - nMinutes*60 - nHours*3600;
-    if(nHours > 0) sprintf(cTime,(std::string(GAMETEXT_XHOURS) + ", " + std::string(GAMETEXT_XMINUTES) + ", " + std::string(GAMETEXT_XSECONDS)).c_str(),nHours,nMinutes,nSeconds);
-    else if(nMinutes > 0) sprintf(cTime,(std::string(GAMETEXT_XMINUTES) + ", " + std::string(GAMETEXT_XSECONDS)).c_str(),nMinutes,nSeconds);
-    else sprintf(cTime,GAMETEXT_XSECONDS,nSeconds);
+    if(nHours > 0)
+      sprintf(cTime,(std::string(GAMETEXT_XHOURS) + ", " + std::string(GAMETEXT_XMINUTES) + ", " + std::string(GAMETEXT_XSECONDS)).c_str(),nHours,nMinutes,nSeconds);
+    else if(nMinutes > 0)
+      sprintf(cTime,(std::string(GAMETEXT_XMINUTES) + ", " + std::string(GAMETEXT_XSECONDS)).c_str(),nMinutes,nSeconds);
+    else
+      sprintf(cTime,GAMETEXT_XSECONDS,nSeconds);
   
     sprintf(cBuf,GAMETEXT_XMOTOGLOBALSTATS,      
 	    v_since.c_str(), v_nbStarts, v_nbPlayed, v_nbDiffLevels,
 	    v_nbDied, v_nbCompleted, v_nbRestarted, cTime);                           
   
-    UIStatic *pText = new UIStatic(p, 0, 0, cBuf, nWidth, 80);
+    UIStatic *pText = new UIStatic(m_pStatsReport, 0, 0, cBuf, nWidth, 80);
     pText->setHAlign(UI_ALIGN_LEFT);
     pText->setTextSolidColor(MAKE_COLOR(255,255,0,255));
     pText->setFont(pFont);
 
     /* Per-level stats */      
-    pText = new UIStatic(p,0,90, std::string(GAMETEXT_MOSTPLAYEDLEVELSFOLLOW) + ":",nWidth,20);
+    pText = new UIStatic(m_pStatsReport,0,90, std::string(GAMETEXT_MOSTPLAYEDLEVELSFOLLOW) + ":",nWidth,20);
     pText->setHAlign(UI_ALIGN_LEFT);
     pText->setTextSolidColor(MAKE_COLOR(255,255,0,255));
     pText->setFont(pFont);      
@@ -1624,7 +1638,7 @@ void GameApp::closePlaying() {
 	      GameApp::formatTime(v_totalPlayedTime).c_str(), v_level_name.c_str(),
 	      v_nbPlayed, v_nbDied, v_nbCompleted, v_nbRestarted);
     
-      pText = new UIStatic(p,0,cy,cBuf,nWidth,45);
+      pText = new UIStatic(m_pStatsReport,0,cy,cBuf,nWidth,45);
       pText->setHAlign(UI_ALIGN_LEFT);        
       pText->setTextSolidColor(MAKE_COLOR(255,255,0,255));
       pText->setFont(pFont);
@@ -1633,7 +1647,6 @@ void GameApp::closePlaying() {
     }  
 
     m_db->read_DB_free(v_result);
-    return p;
   }
 
   void GameApp::initReplaysFromDir() {
@@ -1938,4 +1951,26 @@ void GameApp::initReplay() {
 				    m_fReplayFrameRate,
 				    sizeof(SerializedBikeState));
   }
+}
+
+void GameApp::updateProfile(const std::string &playerName)
+{
+  m_xmsession->setProfile(playerName);
+  m_db->stats_xmotoStarted(m_xmsession->profile());
+
+  if(m_xmsession->profile() == "")
+    throw Exception("failed to set profile");
+
+  stats_generateReport(m_xmsession->profile());
+
+  /* remake the packs with the new profile */
+  m_levelsManager.makePacks(m_db,
+			    m_xmsession->profile(),
+			    m_WebHighscoresIdRoom,
+			    m_xmsession->debug());
+
+  _UpdateLevelsLists();
+  _UpdateReplaysList();      
+    
+  updatePlayerTag();
 }

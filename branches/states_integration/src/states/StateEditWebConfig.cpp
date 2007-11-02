@@ -20,10 +20,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "StateEditWebConfig.h"
 
-StateEditWebConfig::StateEditWebConfig(bool drawStateBehind,
-				       bool updateStatesBehind,
-				       GameApp* pGame):
-  GameState(drawStateBehind,
+StateEditWebConfig::StateEditWebConfig(GameApp* pGame,
+				       bool drawStateBehind,
+				       bool updateStatesBehind):
+  StateMenu(drawStateBehind,
 	    updateStatesBehind,
 	    pGame)
 {
@@ -38,55 +38,64 @@ StateEditWebConfig::~StateEditWebConfig()
 
 void StateEditWebConfig::enter()
 {
-
+  StateMenu::enter();
+  m_requestForEnd = true;
 }
 
 void StateEditWebConfig::leave()
 {
-
+  StateMenu::leave();
 }
 
 void StateEditWebConfig::enterAfterPop()
 {
-
+  StateMenu::enterAfterPop();
 }
 
 void StateEditWebConfig::leaveAfterPush()
 {
+  StateMenu::leaveAfterPush();
+}
 
+void StateEditWebConfig::checkEvents()
+{
 }
 
 bool StateEditWebConfig::update()
 {
-  return false;
+  return StateMenu::update();
 }
 
 bool StateEditWebConfig::render()
 {
-  return false;
+  return StateMenu::render();
 }
 
 void StateEditWebConfig::keyDown(int nKey, SDLMod mod,int nChar)
 {
-
+  StateMenu::keyDown(nKey, mod, nChar);
 }
 
 void StateEditWebConfig::keyUp(int nKey,   SDLMod mod)
 {
-
+  StateMenu::keyUp(nKey, mod);
 }
 
 void StateEditWebConfig::mouseDown(int nButton)
 {
-
+  StateMenu::mouseDown(nButton);
 }
 
 void StateEditWebConfig::mouseDoubleClick(int nButton)
 {
-
+  StateMenu::mouseDoubleClick(nButton);
 }
 
 void StateEditWebConfig::mouseUp(int nButton)
 {
+  StateMenu::mouseUp(nButton);
+}
 
+void StateEditWebConfig::send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input)
+{
 }

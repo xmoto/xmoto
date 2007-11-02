@@ -1009,7 +1009,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     pSomeText = new UIStatic(m_pStatsWindow,40,0,GAMETEXT_STATISTICS,m_pStatsWindow->getPosition().nWidth-80,36);
     pSomeText->setFont(drawLib->getFontMedium());
     
-    m_pStatsReport = stats_generateReport(m_xmsession->profile(), m_pStatsWindow,30,36,m_pStatsWindow->getPosition().nWidth-45,m_pStatsWindow->getPosition().nHeight-36, drawLib->getFontSmall());
+    stats_generateReport(m_xmsession->profile());
   }
 
   /*===========================================================================
@@ -1805,8 +1805,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
           pUpdateReport->setClicked(false);          
           
           /* Update */
-          delete m_pStatsReport;
-          m_pStatsReport = stats_generateReport(m_xmsession->profile(), m_pStatsWindow,30,36,m_pStatsWindow->getPosition().nWidth-45,m_pStatsWindow->getPosition().nHeight-36, drawLib->getFontSmall());
+          stats_generateReport(m_xmsession->profile());
         }        
       }
     }

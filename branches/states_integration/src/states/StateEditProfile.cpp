@@ -24,6 +24,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "drawlib/DrawLib.h"
 #include "GameText.h"
 #include "StateMessageBox.h"
+#include "helpers/Log.h"
+#include "StateEditWebConfig.h"
 
 /* static members */
 UIRoot*  StateEditProfile::m_sGUI = NULL;
@@ -57,7 +59,7 @@ void StateEditProfile::enter()
 
 void StateEditProfile::leave()
 {
-
+  StateMenu::leave();
 }
 
 void StateEditProfile::enterAfterPop()
@@ -73,45 +75,28 @@ void StateEditProfile::leaveAfterPush()
 void StateEditProfile::checkEvents() {
   UIButton *v_button;
 
+  // use profile
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("EDITPROFILE_FRAME:USEPROFILE_BUTTON"));
   if(v_button->isClicked()) {
     v_button->setClicked(false);
 
-//    UIList *pList = reinterpret_cast<UIList *>(m_GUI->getChild("EDITPROFILE_FRAME:PROFILE_LIST"));
-//    if(pList != NULL) {
-//      int nIdx = pList->getSelected();
-//      if(nIdx >= 0 && nIdx < pList->getEntries().size()) {
-//	UIListEntry *pEntry = pList->getEntries()[nIdx];
-//	
-//	m_xmsession->setProfile(pEntry->Text[0]);
-//	m_db->stats_xmotoStarted(m_xmsession->profile());
+    UIList *pList = reinterpret_cast<UIList *>(m_sGUI->getChild("EDITPROFILE_FRAME:PROFILE_LIST"));
+    if(pList == NULL) {
+      throw Exception("EDITPROFILE_FRAME:PROFILE_LIST is NULL");
+    }
+    int nIdx = pList->getSelected();
+    if(nIdx >= 0 && nIdx < pList->getEntries().size()) {
+      UIListEntry *pEntry = pList->getEntries()[nIdx];
 
-//	  delete m_pStatsReport;
-//          m_pStatsReport = stats_generateReport(m_xmsession->profile(),m_pStatsWindow,30,36,m_pStatsWindow->getPosition().nWidth-45,m_pStatsWindow->getPosition().nHeight-36, drawLib->getFontSmall());
-//        }
-//      }      
-//      
-//      if(m_xmsession->profile() == "") throw Exception("failed to set profile");
-//
-//      /* remake the packs with the new profile */
-//      m_levelsManager.makePacks(m_db,
-//				m_xmsession->profile(),
-//				m_WebHighscoresIdRoom,
-//				m_xmsession->debug());
-//      _UpdateLevelsLists();
-//      _UpdateReplaysList();      
-//                  
-//      updatePlayerTag();
-//           
-//      m_pProfileEditor->showWindow(false);
-//
-//      /* Should we jump to the web config now? */
-//      if(m_Config.getBool("WebConfAtInit")) {
-//        _InitWebConf();
-//        setState(GS_EDIT_WEBCONFIG);
-//      }
-   
-    m_requestForEnd = true;
+      m_pGame->updateProfile(pEntry->Text[0]);
+    }
+
+    /* Should we jump to the web config now? */
+    if(m_pGame->getUserConfig()->getBool("WebConfAtInit")) {
+      m_pGame->getStateManager()->replaceState(new StateEditWebConfig(m_pGame));
+    }else{
+      m_requestForEnd = true;
+    }
   }
 
   // new profile
@@ -125,71 +110,16 @@ void StateEditProfile::checkEvents() {
     m_pGame->getStateManager()->pushState(v_msgboxState);
   }
 
-//  /*===========================================================================
-//  Update profile editor
-//  ===========================================================================*/
-//  void GameApp::_HandleProfileEditor(void) {    
-//    /* Is newplayer box open? */
-//    if(m_pNewProfileMsgBox != NULL) {
-//      UIMsgBoxButton Clicked = m_pNewProfileMsgBox->getClicked();
-//      if(Clicked != UI_MSGBOX_NOTHING) {
-//        if(Clicked == UI_MSGBOX_OK) {
-//          /* Create new profile */
-//          std::string PlayerName = m_pNewProfileMsgBox->getTextInput();
-//	  try {
-//	    m_db->stats_createProfile(PlayerName);
-//	  } catch(Exception &e) {
-//	    Logger::Log("Unable to create the profile");
-//	  }
-//	  _CreateProfileList();
-//        }
-//        
-//        delete m_pNewProfileMsgBox;
-//        m_pNewProfileMsgBox = NULL;
-//      }
-//    }
-//    /* What about the delete player box? */
-//    if(m_pDeleteProfileMsgBox != NULL) {
-//      UIMsgBoxButton Clicked = m_pDeleteProfileMsgBox->getClicked();
-//      if(Clicked != UI_MSGBOX_NOTHING) {
-//        if(Clicked == UI_MSGBOX_YES) {
-//          /* Delete selected profile */
-//          UIList *pList = reinterpret_cast<UIList *>(m_pProfileEditor->getChild("PROFILE_LIST"));
-//          if(pList != NULL) {
-//            int nIdx = pList->getSelected();
-//            if(nIdx >= 0 && nIdx < pList->getEntries().size()) {
-//              UIListEntry *pEntry = pList->getEntries()[nIdx];
-//      
-//	      m_db->stats_destroyProfile(pEntry->Text[0]);
-//              pList->setRealSelected(0);
-//              _CreateProfileList();              
-//            }
-//          }
-//        }
-//        delete m_pDeleteProfileMsgBox;
-//        m_pDeleteProfileMsgBox = NULL;
-//      }      
-//    }
-//  
-//    /* Get buttons */
-//    UIButton *pUseButton = reinterpret_cast<UIButton *>(m_pProfileEditor->getChild("USEPROFILE_BUTTON"));
-//    UIButton *pDeleteButton = reinterpret_cast<UIButton *>(m_pProfileEditor->getChild("DELETEPROFILE_BUTTON"));
-//    UIButton *pNewButton = reinterpret_cast<UIButton *>(m_pProfileEditor->getChild("NEWPROFILE_BUTTON"));
-//    
-//    /* Check them */
-//    if(pUseButton->isClicked()) {      
-
-//    }    
-//    else if(pDeleteButton->isClicked()) {
-//      if(m_pDeleteProfileMsgBox == NULL) {
-//	m_Renderer->getGUI()->setFont(drawLib->getFontSmall());
-//        m_pDeleteProfileMsgBox = m_Renderer->getGUI()->msgBox(GAMETEXT_DELETEPLAYERMESSAGE,
-//                                                          (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
-//      }
-//    }
-
-//  }
-// 
+  // delete profile
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("EDITPROFILE_FRAME:DELETEPROFILE_BUTTON"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    
+    StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, std::string(GAMETEXT_DELETEPLAYERMESSAGE),
+							 UI_MSGBOX_YES|UI_MSGBOX_NO);
+    v_msgboxState->setId("DELETEPROFILE");
+    m_pGame->getStateManager()->pushState(v_msgboxState);
+  }
 }
 
 bool StateEditProfile::update()
@@ -293,7 +223,8 @@ void StateEditProfile::createGUIIfNeeded(GameApp* pGame) {
 }
 
 void StateEditProfile::createProfileList(GameApp* pGame) {
-  if(m_sGUI == NULL) return;
+  if(m_sGUI == NULL)
+    return;
 
   UIList *pList = reinterpret_cast<UIList *>(m_sGUI->getChild("EDITPROFILE_FRAME:PROFILE_LIST"));
 
@@ -327,6 +258,41 @@ void StateEditProfile::createProfileList(GameApp* pGame) {
     } else {
       pUseButton->enableWindow(true);
       pDeleteButton->enableWindow(true);
+    }
+  }
+}
+
+void StateEditProfile::send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input)
+{
+  if(i_id == "NEWPROFILE"){
+    switch(i_button){
+    case UI_MSGBOX_OK:
+      std::string PlayerName = i_input;
+      try {
+	m_pGame->getDb()->stats_createProfile(PlayerName);
+      } catch(Exception &e) {
+	Logger::Log("Unable to create the profile");
+      }
+      createProfileList(m_pGame);
+      break;
+    }
+  }
+  else if (i_id == "DELETEPROFILE"){
+    switch(i_button){
+    case UI_MSGBOX_YES:
+      /* Delete selected profile */
+      UIList *pList = reinterpret_cast<UIList *>(m_GUI->getChild("EDITPROFILE_FRAME:PROFILE_LIST"));
+      if(pList != NULL) {
+	int nIdx = pList->getSelected();
+	if(nIdx >= 0 && nIdx < pList->getEntries().size()) {
+	  UIListEntry *pEntry = pList->getEntries()[nIdx];
+	  
+	  m_pGame->getDb()->stats_destroyProfile(pEntry->Text[0]);
+	  pList->setRealSelected(0);
+	  createProfileList(m_pGame);              
+	}
+      }
+      break;
     }
   }
 }
