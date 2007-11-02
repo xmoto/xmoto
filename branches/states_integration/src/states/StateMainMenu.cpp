@@ -91,6 +91,7 @@ void StateMainMenu::enter()
 
   // updates
   updateProfile();
+  updateOptions();
 }
 
 void StateMainMenu::leave()
@@ -348,6 +349,11 @@ void StateMainMenu::updateProfile() {
   v_playerTag->setCaption(v_caption);
 }
 
+void StateMainMenu::updateOptions() {
+  UIButton* v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:MULTI_TAB:ENABLEMULTISTOPWHENONEFINISHES"));
+  v_button->setChecked(m_pGame->getSession()->MultiStopWhenOneFinishes());
+}
+
 UIWindow* StateMainMenu::makeWindowReplays(GameApp* pGame, UIWindow* i_parent) {
   UIWindow* v_window;
   UIStatic* v_someText;
@@ -381,10 +387,11 @@ UIWindow* StateMainMenu::makeWindowOptions(GameApp* pGame, UIWindow* i_parent) {
 }
 
 UIWindow* StateMainMenu::makeWindowLevels(GameApp* pGame, UIWindow* i_parent) {
-  UIWindow* v_window;
-  UIStatic* v_someText;
-  UIButton* v_button;
-  UIPackTree *v_packTree;
+  UIWindow*    v_window;
+  UIStatic*    v_someText;
+  UIButton*    v_button;
+  UIPackTree*  v_packTree;
+  UILevelList* v_list;
 
   v_window = new UIFrame(i_parent, 220, i_parent->getPosition().nHeight*7/30, "",
 			 i_parent->getPosition().nWidth -220 -20,
@@ -411,128 +418,124 @@ UIWindow* StateMainMenu::makeWindowLevels(GameApp* pGame, UIWindow* i_parent) {
 
   /* open button */
   v_button = new UIButton(v_packTab, 11, v_packTab->getPosition().nHeight-57-45, GAMETEXT_OPEN, 115, 57);
-  v_button->setFont(pGame->getDrawLib()->getFontSmall());
   v_button->setType(UI_BUTTON_TYPE_SMALL);
+  v_button->setFont(pGame->getDrawLib()->getFontSmall());
   v_button->setID("PACK_OPEN_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_VIEW_LEVEL_PACK);
   
   /* pack list */
   v_packTree = new UIPackTree(v_packTab, 10, 0, "", v_packTab->getPosition().nWidth-20, v_packTab->getPosition().nHeight-105);      
-  v_packTree->setID("PACK_TREE");
   v_packTree->setFont(pGame->getDrawLib()->getFontSmall());
+  v_packTree->setID("PACK_TREE");
   v_packTree->setEnterButton(v_button);
 
   /* favorite tab */
-  UIWindow *v_favoriteTab = new UIWindow(v_packTab, 20, 40, VPACKAGENAME_FAVORITE_LEVELS,
-					 v_packTab->getPosition().nWidth-40, v_packTab->getPosition().nHeight);
+  UIWindow *v_favoriteTab = new UIWindow(v_levelTabs, 20, 40, VPACKAGENAME_FAVORITE_LEVELS,
+					 v_levelTabs->getPosition().nWidth-40, v_levelTabs->getPosition().nHeight);
   v_favoriteTab->setID("FAVORITE_TAB");
+  v_favoriteTab->showWindow(false);
+
+  /* favorite go button */
+  v_button = new UIButton(v_favoriteTab, 0, v_favoriteTab->getPosition().nHeight-103, GAMETEXT_STARTLEVEL, 105, 57);
+  v_button->setType(UI_BUTTON_TYPE_SMALL);
+  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+  v_button->setID("PLAY_GO_BUTTON");
+  v_button->setContextHelp(CONTEXTHELP_PLAY_SELECTED_LEVEL);
+
+  /* favorite list */
+  v_list = new UILevelList(v_favoriteTab, 0, 0, "", v_favoriteTab->getPosition().nWidth, v_favoriteTab->getPosition().nHeight-105);     
+  v_list->setID("FAVORITE_LIST");
+  v_list->setFont(pGame->getDrawLib()->getFontSmall());
+  v_list->setSort(true);
+  v_list->setEnterButton(v_button);
+
+  /* favorite other buttons */
+  v_button= new UIButton(v_favoriteTab, 105, v_favoriteTab->getPosition().nHeight-103, GAMETEXT_SHOWINFO, 105, 57);
+  v_button->setType(UI_BUTTON_TYPE_SMALL);
+  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+  v_button->setID("LEVEL_INFO_BUTTON");
+  v_button->setContextHelp(CONTEXTHELP_LEVEL_INFO);
   
-  /* favorite buttons */
-//  v_button = new UIButton(v_favoriteTab,0,pAllLevelsPackTab->getPosition().nHeight-103,GAMETEXT_STARTLEVEL,105,57);
-//  pGoButton->setContextHelp(CONTEXTHELP_PLAY_SELECTED_LEVEL);
-//  pGoButton->setFont(drawlib->getFontSmall());
-//  pGoButton->setType(UI_BUTTON_TYPE_SMALL);
-//  pGoButton->setID("PLAY_GO_BUTTON");
-//  UIButton *pLevelInfoButton = new UIButton(pAllLevelsPackTab,105,pAllLevelsPackTab->getPosition().nHeight-103,GAMETEXT_SHOWINFO,105,57);
-//  pLevelInfoButton->setFont(drawlib->getFontSmall());
-//  pLevelInfoButton->setType(UI_BUTTON_TYPE_SMALL);
-//  pLevelInfoButton->setID("PLAY_LEVEL_INFO_BUTTON");
-//  pLevelInfoButton->setContextHelp(CONTEXTHELP_LEVEL_INFO);
-//  
-//  UIButton *pDeleteFromFavoriteButton = new UIButton(pAllLevelsPackTab,pAllLevelsPackTab->getPosition().nWidth-187,pAllLevelsPackTab->getPosition().nHeight-103,GAMETEXT_DELETEFROMFAVORITE,187,57);
-//  pDeleteFromFavoriteButton->setFont(drawlib->getFontSmall());
-//  pDeleteFromFavoriteButton->setType(UI_BUTTON_TYPE_LARGE);
-//  pDeleteFromFavoriteButton->setID("ALL_LEVELS_DELETE_FROM_FAVORITE_BUTTON");
-//  pDeleteFromFavoriteButton->setContextHelp(CONTEXTHELP_DELETEFROMFAVORITE);
+  v_button= new UIButton(v_favoriteTab, v_favoriteTab->getPosition().nWidth-187, v_favoriteTab->getPosition().nHeight-103, GAMETEXT_DELETEFROMFAVORITE, 187, 57);
+  v_button->setType(UI_BUTTON_TYPE_LARGE);
+  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+  v_button->setID("DELETE_FROM_FAVORITE_BUTTON");
+  v_button->setContextHelp(CONTEXTHELP_DELETEFROMFAVORITE);
+  
+  /* new levels tab */
+  UIWindow *v_newLevelsTab = new UIWindow(v_levelTabs, 20, 40, GAMETEXT_NEWLEVELS,
+					  v_levelTabs->getPosition().nWidth-40, v_levelTabs->getPosition().nHeight);
+  v_newLevelsTab->showWindow(false);
+  v_newLevelsTab->setID("NEWLEVELS_TAB");
+
+  /* new levels tab go button */
+  v_button = new UIButton(v_newLevelsTab, 0, v_newLevelsTab->getPosition().nHeight-103, GAMETEXT_STARTLEVEL, 105, 57);
+  v_button->setType(UI_BUTTON_TYPE_SMALL);
+  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+  v_button->setID("NEW_LEVELS_GO_BUTTON");
+  v_button->setContextHelp(CONTEXTHELP_PLAY_SELECTED_LEVEL);
+
+  /* new levels list */
+  v_list = new UILevelList(v_newLevelsTab, 0, 0, "", v_newLevelsTab->getPosition().nWidth, v_newLevelsTab->getPosition().nHeight-105);     
+  v_list->setFont(pGame->getDrawLib()->getFontSmall());
+  v_list->setID("NEWLEVELS_LIST");
+  v_list->setSort(true);
+  v_list->setEnterButton(v_button);
+
+  /* new levels tab other buttons */
+  v_button = new UIButton(v_newLevelsTab, 105, v_newLevelsTab->getPosition().nHeight-103, GAMETEXT_SHOWINFO, 105, 57);
+  v_button->setType(UI_BUTTON_TYPE_SMALL);
+  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+  v_button->setID("NEW_LEVELS_LEVEL_INFO_BUTTON");
+  v_button->setContextHelp(CONTEXTHELP_LEVEL_INFO);
+
+  v_button = new UIButton(v_newLevelsTab, v_newLevelsTab->getPosition().nWidth-187, v_newLevelsTab->getPosition().nHeight-103,
+			  GAMETEXT_DOWNLOADLEVELS, 187, 57);
+  v_button->setType(UI_BUTTON_TYPE_LARGE);
+  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+  v_button->setID("NEW_LEVELS_DOWNLOAD_LEVELS_BUTTON");
+  v_button->setContextHelp(CONTEXTHELP_DOWNLOADLEVELS);
+
+  /* multi tab */
+  UIWindow *v_multiOptionsTab = new UIWindow(v_levelTabs, 20, 40, GAMETEXT_MULTI,
+					     v_levelTabs->getPosition().nWidth-40, v_levelTabs->getPosition().nHeight);
+  v_multiOptionsTab->showWindow(false);
+  v_multiOptionsTab->setID("MULTI_TAB");
+
+  v_someText = new UIStatic(v_multiOptionsTab, 10, 0, GAMETEXT_NB_PLAYERS, v_multiOptionsTab->getPosition().nWidth, 40);
+  v_someText->setFont(pGame->getDrawLib()->getFontMedium());
+  v_someText->setHAlign(UI_ALIGN_LEFT);
+
+  // choice of the number of players
+  for(unsigned int i=0; i<4; i++) {
+    std::ostringstream s_nbPlayers;
+    char strPlayer[64];
+    snprintf(strPlayer, 64, GAMETEXT_NPLAYER(i+1), i+1);
+    s_nbPlayers << (int) i+1;
+
+    v_button = new UIButton(v_multiOptionsTab, 0, 40+(i*20), strPlayer, v_multiOptionsTab->getPosition().nWidth, 28);
+    v_button->setType(UI_BUTTON_TYPE_RADIO);
+    v_button->setFont(pGame->getDrawLib()->getFontSmall());
+    v_button->setID("MULTINB_" + s_nbPlayers.str());
+    v_button->setGroup(10200);
+    v_button->setContextHelp(CONTEXTHELP_MULTI);
+    
+    // always check the 1 player mode
+    if(i == 0) {
+      v_button->setChecked(true);
+    }
+  }
+
+  v_button = new UIButton(v_multiOptionsTab, 0, v_multiOptionsTab->getPosition().nHeight - 40 - 28 - 10,
+			  GAMETEXT_MULTISTOPWHENONEFINISHES, v_multiOptionsTab->getPosition().nWidth,28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+  v_button->setID("ENABLEMULTISTOPWHENONEFINISHES");
+  v_button->setGroup(50050);
+  v_button->setContextHelp(CONTEXTHELP_MULTISTOPWHENONEFINISHES);    
 
   return v_window;
 }
-
-
-
-//    /* all levels list */
-//    m_pAllLevelsList = new UILevelList(pAllLevelsPackTab,0,0,"",pAllLevelsPackTab->getPosition().nWidth,pAllLevelsPackTab->getPosition().nHeight-105);     
-//    m_pAllLevelsList->setID("ALLLEVELS_LIST");
-//    m_pAllLevelsList->setFont(drawlib->getFontSmall());
-//    m_pAllLevelsList->setSort(true);
-//    m_pAllLevelsList->setEnterButton( pGoButton );
-//
-//    /* new levels tab */
-//    UIWindow *pNewLevelsPackTab = new UIWindow(m_pLevelPackTabs,20,40,GAMETEXT_NEWLEVELS,m_pLevelPackTabs->getPosition().nWidth-40,m_pLevelPackTabs->getPosition().nHeight);
-//    pNewLevelsPackTab->enableWindow(true);
-//    pNewLevelsPackTab->showWindow(false);
-//    pNewLevelsPackTab->setID("NEWLEVELS_TAB");
-//
-//    /* new levels tab buttons */
-//    UIButton *pNewLevelsGoButton = new UIButton(pNewLevelsPackTab,0,pNewLevelsPackTab->getPosition().nHeight-103,GAMETEXT_STARTLEVEL,105,57);
-//    pNewLevelsGoButton->setContextHelp(CONTEXTHELP_PLAY_SELECTED_LEVEL);
-//    pNewLevelsGoButton->setFont(drawlib->getFontSmall());
-//    pNewLevelsGoButton->setType(UI_BUTTON_TYPE_SMALL);
-//    pNewLevelsGoButton->setID("NEW_LEVELS_PLAY_GO_BUTTON");
-//    UIButton *pNewLevelsLevelInfoButton = new UIButton(pNewLevelsPackTab,105,pNewLevelsPackTab->getPosition().nHeight-103,GAMETEXT_SHOWINFO,105,57);
-//    pNewLevelsLevelInfoButton->setFont(drawlib->getFontSmall());
-//    pNewLevelsLevelInfoButton->setType(UI_BUTTON_TYPE_SMALL);
-//    pNewLevelsLevelInfoButton->setID("NEW_LEVELS_PLAY_LEVEL_INFO_BUTTON");
-//    pNewLevelsLevelInfoButton->setContextHelp(CONTEXTHELP_LEVEL_INFO);
-//
-//    UIButton *pDownloadLevelsButton = new UIButton(pNewLevelsPackTab,pNewLevelsPackTab->getPosition().nWidth-187,pNewLevelsPackTab->getPosition().nHeight-103,GAMETEXT_DOWNLOADLEVELS,187,57);
-//    pDownloadLevelsButton->setFont(drawlib->getFontSmall());
-//    pDownloadLevelsButton->setType(UI_BUTTON_TYPE_LARGE);
-//    pDownloadLevelsButton->setID("NEW_LEVELS_PLAY_DOWNLOAD_LEVELS_BUTTON");
-//    pDownloadLevelsButton->setContextHelp(CONTEXTHELP_DOWNLOADLEVELS);
-//
-//    /* all levels list */
-//    m_pPlayNewLevelsList = new UILevelList(pNewLevelsPackTab,0,0,"",pNewLevelsPackTab->getPosition().nWidth,pNewLevelsPackTab->getPosition().nHeight-105);     
-//    m_pPlayNewLevelsList->setID("NEWLEVELS_LIST");
-//    m_pPlayNewLevelsList->setFont(drawlib->getFontSmall());
-//    m_pPlayNewLevelsList->setSort(true);
-//    m_pPlayNewLevelsList->setEnterButton( pNewLevelsGoButton );
-//
-//    // multi tab
-//    UIWindow *pMultiOptionsTab = new UIWindow(m_pLevelPackTabs, 20, 40, GAMETEXT_MULTI,
-//					      m_pLevelPackTabs->getPosition().nWidth-40,
-//					      m_pLevelPackTabs->getPosition().nHeight);
-//    pMultiOptionsTab->enableWindow(true);
-//    pMultiOptionsTab->showWindow(false);
-//    pMultiOptionsTab->setID("MULTI_TAB");
-//
-//    pSomeText = new UIStatic(pMultiOptionsTab, 10, 0,
-//			     GAMETEXT_NB_PLAYERS, pMultiOptionsTab->getPosition().nWidth, 40);
-//    pSomeText->setFont(drawlib->getFontMedium());
-//    pSomeText->setHAlign(UI_ALIGN_LEFT);
-//
-//    for(unsigned int i=0; i<4; i++) {
-//      UIButton *pNbPlayers;
-//      std::ostringstream s_nbPlayers;
-//      char strPlayer[64];
-//      snprintf(strPlayer, 64, GAMETEXT_NPLAYER(i+1), i+1);
-//      s_nbPlayers << (int) i+1;
-//
-//      pNbPlayers = new UIButton(pMultiOptionsTab, 0, 40+(i*20), strPlayer, pMultiOptionsTab->getPosition().nWidth, 28);
-//      pNbPlayers->setType(UI_BUTTON_TYPE_RADIO);
-//      pNbPlayers->setID("MULTINB_" + s_nbPlayers.str());
-//      pNbPlayers->enableWindow(true);
-//      pNbPlayers->setFont(drawlib->getFontSmall());
-//      pNbPlayers->setGroup(10200);
-//      pNbPlayers->setContextHelp(CONTEXTHELP_MULTI);
-//
-//      // always check the 1 player mode
-//      if(i == 0) {
-//	pNbPlayers->setChecked(true);
-//      }
-//    }
-//
-//    UIButton *pMultiStopWhenOneFinishes = new UIButton(pMultiOptionsTab, 0, pMultiOptionsTab->getPosition().nHeight - 40 - 28 - 10,
-//						       GAMETEXT_MULTISTOPWHENONEFINISHES,
-//						       pMultiOptionsTab->getPosition().nWidth,28);
-//    pMultiStopWhenOneFinishes->setType(UI_BUTTON_TYPE_CHECK);
-//    pMultiStopWhenOneFinishes->setID("ENABLEMULTISTOPWHENONEFINISHES");
-//    pMultiStopWhenOneFinishes->enableWindow(true);
-//    pMultiStopWhenOneFinishes->setFont(drawlib->getFontSmall());
-//    pMultiStopWhenOneFinishes->setGroup(50050);
-//    pMultiStopWhenOneFinishes->setContextHelp(CONTEXTHELP_MULTISTOPWHENONEFINISHES);    
-//    pMultiStopWhenOneFinishes->setChecked(m_xmsession->MultiStopWhenOneFinishes());
-//
 
 //
 //    /* level info frame */
@@ -622,11 +625,7 @@ UIWindow* StateMainMenu::makeWindowLevels(GameApp* pGame, UIWindow* i_parent) {
 //    _UpdateThemesLists();
 //    _UpdateRoomsLists();
 //    /* ***** */
-//
-//    /* HELP */
-//    m_pHelpWindow = makeHelpWindow(drawLib, m_pMainMenu, &m_Config);
-//    /* ***** */
-//
+
 
 void StateMainMenu::drawBackground() {
   if(m_pGame->getSession()->menuGraphics() != MENU_GFX_LOW && m_pGame->getSession()->ugly() == false) {

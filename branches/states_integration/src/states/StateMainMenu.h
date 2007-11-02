@@ -67,6 +67,7 @@ class StateMainMenu : public StateMenu {
   static UIWindow* makeWindowLevels(GameApp* pGame, UIWindow* i_parent);
 
   void updateProfile();
+  void updateOptions();
 
   /* Main menu background / title */
   Texture *m_pTitleBL,*m_pTitleBR,*m_pTitleTL,*m_pTitleTR;      
