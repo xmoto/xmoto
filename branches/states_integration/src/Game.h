@@ -200,10 +200,11 @@ class StateManager;
       TColor getUglyColorFromPlayerNumber(int i_player);
 
       //
-      xmDatabase* getDb();
-      StateManager* getStateManager();
-      GameRenderer* getGameRenderer();
-      InputHandler* getInputHandler();
+      xmDatabase*    getDb();
+      LevelsManager* getLevelsManager();
+      StateManager*  getStateManager();
+      GameRenderer*  getGameRenderer();
+      InputHandler*  getInputHandler();
 
       SysMessage* getSysMessage() { return m_sysMsg;}
 

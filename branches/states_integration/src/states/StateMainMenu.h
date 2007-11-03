@@ -70,6 +70,11 @@ class StateMainMenu : public StateMenu {
   void updateProfile();
   void updateOptions();
 
+  void updateLevelsPacksList();
+  void updateLevelsLists();
+  void updateFavoriteLevelsList();
+  void updateNewLevelsList();
+
   /* Main menu background / title */
   Texture *m_pTitleBL,*m_pTitleBR,*m_pTitleTL,*m_pTitleTR;      
   void drawBackground(); 
@@ -78,7 +83,7 @@ class StateMainMenu : public StateMenu {
   UILevelList* m_quickStartList;
   UILevelList* buildQuickStartList();
   void createLevelListsSql(UILevelList* io_levelsList, const std::string& i_sql);
-
+  void createLevelLists(UILevelList *i_list, const std::string& i_packageName);
 };
 
 #endif

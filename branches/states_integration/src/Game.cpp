@@ -1993,3 +1993,7 @@ void GameApp::updateWebHighscores()
     }
   }
 }
+
+LevelsManager* GameApp::getLevelsManager() {
+  return &m_levelsManager;
+}

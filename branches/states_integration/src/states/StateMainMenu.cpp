@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateMessageBox.h"
 #include "StateHelp.h"
 #include "StateEditProfile.h"
+#include "LevelsManager.h"
 
 /* static members */
 UIRoot*  StateMainMenu::m_sGUI = NULL;
@@ -92,6 +93,8 @@ void StateMainMenu::enter()
   // updates
   updateProfile();
   updateOptions();
+  updateLevelsPacksList();
+  updateLevelsLists();
 }
 
 void StateMainMenu::leave()
@@ -733,3 +736,59 @@ void StateMainMenu::executeOneCommand(std::string cmd)
   }
 }
 
+void StateMainMenu::updateLevelsLists() {
+  updateFavoriteLevelsList();
+  updateNewLevelsList();
+}
+
+void StateMainMenu::createLevelLists(UILevelList *i_list, const std::string& i_packageName) {
+  LevelsPack *v_levelsPack = &(m_pGame->getLevelsManager()->LevelsPackByName(i_packageName));
+  createLevelListsSql(i_list, v_levelsPack->getLevelsWithHighscoresQuery(m_pGame->getSession()->profile(),
+									 m_pGame->getHighscoresRoomId()));
+}
+
+void StateMainMenu::updateFavoriteLevelsList() {
+  createLevelLists((UILevelList *)m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:FAVORITE_TAB:FAVORITE_LIST"),
+		   VPACKAGENAME_FAVORITE_LEVELS);
+}
+
+void StateMainMenu::updateNewLevelsList() {
+  createLevelLists((UILevelList *)m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NEWLEVELS_TAB:NEWLEVELS_LIST"),
+		   VPACKAGENAME_NEW_LEVELS);
+}
+
+void StateMainMenu::updateLevelsPacksList() {
+  UIPackTree *pTree = (UIPackTree *)m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:PACK_TAB:PACK_TREE");
+
+  /* get selected item */
+  std::string v_selected_packName = pTree->getSelectedEntry();
+  std::string p_packName;
+  LevelsManager* v_lm = m_pGame->getLevelsManager();
+
+  pTree->clear();
+    
+  for(int i=0; i<v_lm->LevelsPacks().size(); i++) {
+    p_packName = v_lm->LevelsPacks()[i]->Name();
+
+    /* the unpackaged pack exists only in debug mode */
+    if(p_packName != "" || m_pGame->getSession()->debug()) {
+      if(p_packName == "") {
+	p_packName = GAMETEXT_UNPACKED_LEVELS_PACK;
+      }
+	
+      pTree->addPack(v_lm->LevelsPacks()[i],
+		     v_lm->LevelsPacks()[i]->Group(),
+		     v_lm->LevelsPacks()[i]->getNumberOfFinishedLevels(m_pGame->getDb(),
+								       m_pGame->getSession()->profile()),
+		     v_lm->LevelsPacks()[i]->getNumberOfLevels(m_pGame->getDb())
+		     );
+      
+    }
+  }
+  
+  /* reselect the previous pack */
+  if(v_selected_packName != "") {
+    pTree->setSelectedPackByName(v_selected_packName);
+  }
+
+}

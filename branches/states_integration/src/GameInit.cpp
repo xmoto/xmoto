@@ -568,6 +568,14 @@ void GameApp::_Wait()
     /* build handler */
     m_InputHandler.init(&m_Config);
     
+    /* load packs */
+    LevelsManager::checkPrerequires();
+    m_levelsManager.makePacks(m_db,
+			      m_xmsession->profile(),
+			      m_Config.getString("WebHighscoresIdRoom"),
+			      m_xmsession->debug());     
+
+
     /* Initialize menu system */
     _InitMenus();
 
@@ -619,14 +627,7 @@ void GameApp::_Wait()
     drawLib->flushGraphics();
     
     /* final initialisation so that xmoto seems to be loaded fastly */
-    
-    /* load packs */
-    LevelsManager::checkPrerequires();
-    m_levelsManager.makePacks(m_db,
-			      m_xmsession->profile(),
-			      m_Config.getString("WebHighscoresIdRoom"),
-			      m_xmsession->debug());     
-    
+        
     /* load levels lists */
     _UpdateLevelsLists();
 
