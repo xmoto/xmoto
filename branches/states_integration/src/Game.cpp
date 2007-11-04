@@ -48,6 +48,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "states/StateDeadMenu.h"
 #include "states/StatePlaying.h"
 #include "states/StatePreplaying.h"
+#include "states/StateMessageBox.h"
 
   bool GameApp::haveMouseMoved() {
     int nX,nY;
@@ -692,7 +693,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
     }
   }
 
-  std::string GameApp::_DetermineNextLevel(const std::string& i_id_level) {
+  std::string GameApp::determineNextLevel(const std::string& i_id_level) {
     if(m_currentPlayingList == NULL) {
       return "";
     }
@@ -706,10 +707,10 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
   }
   
   bool GameApp::isThereANextLevel(const std::string& i_id_level) {
-    return _DetermineNextLevel(i_id_level) != "";
+    return determineNextLevel(i_id_level) != "";
   }
 
-  std::string GameApp::_DeterminePreviousLevel(const std::string& i_id_level) {
+  std::string GameApp::determinePreviousLevel(const std::string& i_id_level) {
     if(m_currentPlayingList == NULL) {
       return "";
     }
@@ -723,7 +724,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
   }
   
   bool GameApp::isThereAPreviousLevel(const std::string& i_id_level) {
-    return _DeterminePreviousLevel(i_id_level) != "";
+    return determinePreviousLevel(i_id_level) != "";
   } 
 
   std::string GameApp::getWorldRecord(const std::string &LevelID) {  
@@ -944,65 +945,49 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
       }
   }
 
-  void GameApp::_CheckForExtraLevels(void) {
-      /* Check for extra levels */
-      try {
-        _SimpleMessage(GAMETEXT_CHECKINGFORLEVELS);
+  void GameApp::checkForExtraLevels(void) {
+    /* Check for extra levels */
+    try {
+      _SimpleMessage(GAMETEXT_CHECKINGFORLEVELS);
       
-        if(m_pWebLevels == NULL) {
-    m_pWebLevels = new WebLevels(this,&m_ProxySettings);
-  }
-        m_pWebLevels->setURL(m_Config.getString("WebLevelsURL"));
+      if(m_pWebLevels == NULL) {
+	m_pWebLevels = new WebLevels(this,&m_ProxySettings);
+      }
+      m_pWebLevels->setURL(m_Config.getString("WebLevelsURL"));
         
-        Logger::Log("WWW: Checking for new or updated levels...");
-        clearCancelAsSoonAsPossible();
+      Logger::Log("WWW: Checking for new or updated levels...");
+      clearCancelAsSoonAsPossible();
 
-        m_pWebLevels->update(m_db);
-        int nULevels=0;
-	nULevels = m_pWebLevels->nbLevelsToGet(m_db);
-	m_bWebLevelsToDownload = nULevels!=0;
+      m_pWebLevels->update(m_db);
+      int nULevels=0;
+      nULevels = m_pWebLevels->nbLevelsToGet(m_db);
+      m_bWebLevelsToDownload = nULevels!=0;
 
-        Logger::Log("WWW: %d new or updated level%s found",nULevels,nULevels==1?"":"s");
+      Logger::Log("WWW: %d new or updated level%s found",nULevels,nULevels==1?"":"s");
 
-        if(nULevels == 0) {
-          notifyMsg(GAMETEXT_NONEWLEVELS);
-        }        
-        else {
-          /* Ask user whether he want to download levels or snot */
-          if(m_pInfoMsgBox == NULL) {
-            char cBuf[256];
-	    snprintf(cBuf, 256, GAMETEXT_NEWLEVELAVAIL(nULevels), nULevels);
-	    m_Renderer->getGUI()->setFont(drawLib->getFontSmall());
-            m_pInfoMsgBox = m_Renderer->getGUI()->msgBox(cBuf, (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
-          }
-        }
-      } 
-      catch(Exception &e) {
-        Logger::Log("** Warning ** : Unable to check for extra levels [%s]",e.getMsg().c_str());
-        if(m_pInfoMsgBox != NULL) {
-          delete m_pInfoMsgBox;
-          m_pInfoMsgBox = NULL;
-        }
-        notifyMsg(GAMETEXT_FAILEDCHECKLEVELS + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW);
-      } 
+      if(nULevels == 0) {
+	notifyMsg(GAMETEXT_NONEWLEVELS);
+      }        
+      else {
+	/* Ask user whether he want to download levels or snot */
+	if(m_pInfoMsgBox == NULL) {
+	  char cBuf[256];
+	  snprintf(cBuf, 256, GAMETEXT_NEWLEVELAVAIL(nULevels), nULevels);
+	  m_Renderer->getGUI()->setFont(drawLib->getFontSmall());
+	  m_pInfoMsgBox = m_Renderer->getGUI()->msgBox(cBuf, (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
+	}
+      }
+    } catch(Exception &e) {
+      Logger::Log("** Warning ** : Unable to check for extra levels [%s]",e.getMsg().c_str());
+      if(m_pInfoMsgBox != NULL) {
+	delete m_pInfoMsgBox;
+	m_pInfoMsgBox = NULL;
+      }
+
+      std::string v_msg = GAMETEXT_FAILEDCHECKLEVELS + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW;
+      m_stateManager->pushState(new StateMessageBox(NULL, this, v_msg, UI_MSGBOX_OK));
+    } 
   }
-
-void GameApp::abortPlaying() {
-  if(m_MotoGame.Players().size() == 1) {
-    m_db->stats_abortedLevel(m_xmsession->profile(),
-			     m_MotoGame.getLevelSrc()->Id(),
-			     m_MotoGame.getTime());
-  }
-  
-  closePlaying();
-}
-
-void GameApp::closePlaying() {
-  m_MotoGame.resetFollow();
-  m_MotoGame.endLevel();
-  m_InputHandler.resetScriptKeyHooks();                     
-  m_Renderer->unprepareForNewLevel();
-}
 
   /*===========================================================================
   WWWAppInterface implementation
@@ -1818,23 +1803,6 @@ XMSession* GameApp::getSession() {
 
 MotoGame* GameApp::getMotoGame() {
   return &m_MotoGame;
-}
-
-void GameApp::playNextLevel() {
-  std::string NextLevel = _DetermineNextLevel(m_PlaySpecificLevelId);
-  if(NextLevel != "") {        
-    if(m_MotoGame.Players().size() == 1) {
-      m_db->stats_abortedLevel(m_xmsession->profile(),
-			       m_MotoGame.getLevelSrc()->Id(),
-			       m_MotoGame.getTime());
-    }
-
-    closePlaying();
-    
-    m_PlaySpecificLevelId = NextLevel;              
-    
-    //setPrePlayAnim(true);
-  }
 }
 
 void GameApp::requestEnd() {

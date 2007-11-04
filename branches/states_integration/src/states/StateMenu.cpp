@@ -38,6 +38,9 @@ StateMenu::StateMenu(bool drawStateBehind,
   m_GUI        = NULL;
   m_showCursor = true;
   m_receiver   = i_receiver;
+
+  m_renderFps = 30; // is enouh for menus
+  m_updateFps = 30;
 }
 
 StateMenu::~StateMenu()
@@ -120,16 +123,11 @@ void StateMenu::mouseDoubleClick(int nButton)
   int nX,nY;        
   GameApp::getMousePos(&nX,&nY);
   
-  if(nButton == SDL_BUTTON_LEFT)
-    m_GUI->mouseLDown(nX, nY);
-  else if(nButton == SDL_BUTTON_RIGHT)
-    m_GUI->mouseRDown(nX, nY);
-  else if(nButton == SDL_BUTTON_WHEELUP)
-    m_GUI->mouseWheelUp(nX, nY);
-  else if(nButton == SDL_BUTTON_WHEELDOWN)        
-    m_GUI->mouseWheelDown(nX, nY);
-  
-  checkEvents();
+  if(nButton == SDL_BUTTON_LEFT) {
+    m_GUI->mouseLDoubleClick(nX, nY);
+    checkEvents();
+  }
+
 }
 
 void StateMenu::mouseUp(int nButton)

@@ -55,7 +55,6 @@ class WebRooms;
 class WebLevels;
 class LevelsPack;
 class UIWindow;
-class UIQuickStartButton;
 class UILevelList;
 class LevelsManager;
 class Credits;
@@ -180,9 +179,6 @@ class StateManager;
       void addGhosts(MotoGame* i_motogame, Theme* i_theme);
 
       // to call while playing
-      void closePlaying();
-      void abortPlaying();
-      void playNextLevel();
       void playMusic(const std::string& i_music); // "" => no music
       bool isAReplayToSave() const;
       Replay* getCurrentReplay();
@@ -241,6 +237,12 @@ class StateManager;
       void _ConfigureProxy(void);
       void _ImportOptions(void);
       void updateWebHighscores();
+      void checkForExtraLevels();
+
+    
+      std::string determineNextLevel(const std::string& i_id_level);
+      std::string determinePreviousLevel(const std::string& i_id_level);
+  
 
    protected:
       void createDefaultConfig();
@@ -302,8 +304,6 @@ class StateManager;
 
       UIWindow *m_pStatsReport;
       
-      UIQuickStartButton *m_pQuickStart;
-
       /* Sound effects */
       SoundSample *m_pEndOfLevelSFX;
       SoundSample *m_pStrawberryPickupSFX;
@@ -432,12 +432,8 @@ class StateManager;
       void _SimpleMessage(const std::string &Msg,UIRect *pRect=NULL,bool bNoSwap=false);
       
       int _IsKeyInUse(const std::string &Key);
-      
-      std::string _DetermineNextLevel(const std::string& i_id_level);
-      std::string _DeterminePreviousLevel(const std::string& i_id_level);
   
       void _InitWebConf(void);
-      void _CheckForExtraLevels(void);
       void _UpdateWebHighscores(bool bSilent);
       void _UpdateWebLevels(bool bSilent, bool bEnableWeb = true);
       void _UpdateWebThemes(bool bSilent);
@@ -474,9 +470,7 @@ class StateManager;
       void zoomAnimation2_abort();
 
       /* Main loop utility functions */
-      void _PrepareFrame(void);
       void _PreUpdateGUI(void);
-      void _DrawMainGUI(void);
 
       void initReplaysFromDir();
       void addReplay(const std::string& i_file);

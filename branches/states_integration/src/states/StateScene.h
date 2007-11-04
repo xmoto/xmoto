@@ -58,6 +58,10 @@ class StateScene : public GameState, public StateMenuContextReceiver {
 
  void setScoresTimes();
  void restartLevel(bool i_reloadLevel = false);
+ void nextLevel(bool i_positifOrder = true);
+
+ void closePlaying();
+ void abortPlaying();
 
  bool isLockedScene() const;
  void lockScene(bool i_value);

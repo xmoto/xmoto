@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "gui/specific/GUIXMoto.h"
 #include "XMSession.h"
 #include "StatePreplaying.h"
+#include "StateLevelInfoViewer.h"
 #include "StateMessageBox.h"
 #include "StateHelp.h"
 #include "StateEditProfile.h"
@@ -95,11 +96,20 @@ void StateMainMenu::enter()
   updateOptions();
   updateLevelsPacksList();
   updateLevelsLists();
+  updateReplaysList();
 }
 
 void StateMainMenu::leave()
 {
+  UIQuickStartButton *v_quickStart;
+
   StateMenu::leave();
+
+  v_quickStart = reinterpret_cast<UIQuickStartButton *>(m_GUI->getChild("MAIN:QUICKSTART"));
+  m_pGame->getUserConfig()->setInteger("QSQualityMIN",    v_quickStart->getQualityMIN());
+  m_pGame->getUserConfig()->setInteger("QSDifficultyMIN", v_quickStart->getDifficultyMIN());
+  m_pGame->getUserConfig()->setInteger("QSQualityMAX",    v_quickStart->getQualityMAX());
+  m_pGame->getUserConfig()->setInteger("QSDifficultyMAX", v_quickStart->getDifficultyMAX());
 }
 
 void StateMainMenu::enterAfterPop()
@@ -113,8 +123,9 @@ void StateMainMenu::leaveAfterPush()
 }
 
 void StateMainMenu::checkEvents() {
-  UIButton *v_button;
-  std::string v_id_level;
+  UIButton*    v_button;
+  UILevelList* v_list;
+  std::string  v_id_level;
 
   // quickstart
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:QUICKSTART"));
@@ -134,6 +145,7 @@ void StateMainMenu::checkEvents() {
     } catch(Exception &e) {
       v_id_level = "tut1";
     }
+    StatePreplaying::setPlayAnimation(true);
     m_pGame->getStateManager()->pushState(new StatePreplaying(m_pGame, v_id_level));    
   }
 
@@ -199,6 +211,102 @@ void StateMainMenu::checkEvents() {
     v_button->setClicked(false);
     m_pGame->getStateManager()->pushState(new StateEditProfile(m_pGame, this));
   }
+
+
+  // level tab
+  checkEventsLevelsFavoriteTab();
+  checkEventsLevelsNewTab();
+}
+
+void StateMainMenu::checkEventsLevelsFavoriteTab() {
+  UIButton*    v_button;
+  UILevelList* v_list;
+  std::string  v_id_level;
+
+  // play buton
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:FAVORITE_TAB:PLAY_GO_BUTTON"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+
+    v_list = reinterpret_cast<UILevelList *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:FAVORITE_TAB:FAVORITE_LIST"));
+    v_id_level = v_list->getSelectedLevel();
+
+    if(v_id_level != "") {
+      m_pGame->setCurrentPlayingList(v_list);
+      StatePreplaying::setPlayAnimation(true);
+      m_pGame->getStateManager()->pushState(new StatePreplaying(m_pGame, v_id_level));
+    }
+  }
+
+  // level info button
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:FAVORITE_TAB:LEVEL_INFO_BUTTON"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+
+    v_list = reinterpret_cast<UILevelList *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:FAVORITE_TAB:FAVORITE_LIST"));
+    v_id_level = v_list->getSelectedLevel();
+
+    if(v_id_level != "") {
+      m_pGame->getStateManager()->pushState(new StateLevelInfoViewer(m_pGame, v_id_level));
+    }
+  }
+
+  // delete from favorite button
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:FAVORITE_TAB:DELETE_FROM_FAVORITE_BUTTON"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+
+    v_list = reinterpret_cast<UILevelList *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:FAVORITE_TAB:FAVORITE_LIST"));
+    v_id_level = v_list->getSelectedLevel();
+
+    if(v_id_level != "") {
+      m_pGame->getLevelsManager()->delFromFavorite(m_pGame->getDb(), m_pGame->getSession()->profile(), v_id_level);
+      updateFavoriteLevelsList();
+    }
+  }
+}
+
+void StateMainMenu::checkEventsLevelsNewTab() {
+  UIButton*    v_button;
+  UILevelList* v_list;
+  std::string  v_id_level;
+
+  // play buton
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NEWLEVELS_TAB:PLAY_GO_BUTTON"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+
+    v_list = reinterpret_cast<UILevelList *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NEWLEVELS_TAB:NEWLEVELS_LIST"));
+    v_id_level = v_list->getSelectedLevel();
+
+    if(v_id_level != "") {
+      m_pGame->setCurrentPlayingList(v_list);
+      StatePreplaying::setPlayAnimation(true);
+      m_pGame->getStateManager()->pushState(new StatePreplaying(m_pGame, v_id_level));
+    }
+  }
+
+  // level info button
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NEWLEVELS_TAB:LEVEL_INFO_BUTTON"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+
+    v_list = reinterpret_cast<UILevelList *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NEWLEVELS_TAB:NEWLEVELS_LIST"));
+    v_id_level = v_list->getSelectedLevel();
+
+    if(v_id_level != "") {
+      m_pGame->getStateManager()->pushState(new StateLevelInfoViewer(m_pGame, v_id_level));
+    }
+  }
+
+  // download button
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:NEWLEVELS_TAB:DOWNLOAD_LEVELS_BUTTON"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+
+    m_pGame->checkForExtraLevels();
+  }
+
 }
 
 bool StateMainMenu::update()
@@ -360,7 +468,10 @@ void StateMainMenu::updateOptions() {
 UIWindow* StateMainMenu::makeWindowReplays(GameApp* pGame, UIWindow* i_parent) {
   UIWindow* v_window;
   UIStatic* v_someText;
- 
+  UIEdit*   v_edit;
+  UIButton *v_button, *v_showButton;
+  UIList*   v_list;
+
   v_window = new UIFrame(i_parent, 220, i_parent->getPosition().nHeight*7/30, "",
 			 i_parent->getPosition().nWidth -220 -20,
 			 i_parent->getPosition().nHeight -40 -i_parent->getPosition().nHeight/5 -10);
@@ -369,6 +480,54 @@ UIWindow* StateMainMenu::makeWindowReplays(GameApp* pGame, UIWindow* i_parent) {
    
   v_someText = new UIStatic(v_window, 0, 0, GAMETEXT_REPLAYS, v_window->getPosition().nWidth, 36);
   v_someText->setFont(pGame->getDrawLib()->getFontMedium());
+
+  v_someText = new UIStatic(v_window, 10, 35, std::string(GAMETEXT_FILTER) + ":", 90, 25);
+  v_someText->setFont(pGame->getDrawLib()->getFontSmall());
+  v_someText->setHAlign(UI_ALIGN_RIGHT);
+  v_edit = new UIEdit(v_window, 110, 35, "", 200, 25);
+  v_edit->setFont(pGame->getDrawLib()->getFontSmall());
+  v_edit->setID("REPLAYS_FILTER");
+  v_edit->setContextHelp(CONTEXTHELP_REPLAYS_FILTER);
+
+  /* show button */
+  v_button = new UIButton(v_window, 5, v_window->getPosition().nHeight-68, GAMETEXT_SHOW, 105, 57);
+  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+  v_button->setType(UI_BUTTON_TYPE_SMALL);
+  v_button->setID("REPLAY_SHOW_BUTTON");
+  v_button->setContextHelp(CONTEXTHELP_RUN_REPLAY);
+  v_showButton = v_button;
+
+  /* delete button */
+  v_button = new UIButton(v_window, 105, v_window->getPosition().nHeight-68, GAMETEXT_DELETE, 105, 57);
+  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+  v_button->setType(UI_BUTTON_TYPE_SMALL);
+  v_button->setID("REPLAY_DELETE_BUTTON");
+  v_button->setContextHelp(CONTEXTHELP_DELETE_REPLAY);
+
+  /* upload button */
+  v_button = new UIButton(v_window, 199, v_window->getPosition().nHeight-68, GAMETEXT_UPLOAD_HIGHSCORE, 186, 57);
+  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+  v_button->setType(UI_BUTTON_TYPE_SMALL);
+  v_button->setID("REPLAY_UPLOADHIGHSCORE_BUTTON");
+  v_button->setContextHelp(CONTEXTHELP_UPLOAD_HIGHSCORE);
+
+  /* filter */
+  v_button = new UIButton(v_window, v_window->getPosition().nWidth-105, v_window->getPosition().nHeight-68,
+			  GAMETEXT_LISTALL, 115, 57);
+  v_button->setFont(pGame->getDrawLib()->getFontSmall());
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setChecked(false);
+  v_button->setID("REPLAY_LIST_ALL");
+  v_button->setContextHelp(CONTEXTHELP_ALL_REPLAYS);
+
+  /* list */
+  v_list = new UIList(v_window, 20, 65, "", v_window->getPosition().nWidth-40, v_window->getPosition().nHeight-115-25);
+  v_list->setID("REPLAY_LIST");
+  v_list->setFont(pGame->getDrawLib()->getFontSmall());
+  v_list->addColumn(GAMETEXT_REPLAY, v_list->getPosition().nWidth/2 - 100, CONTEXTHELP_REPLAYCOL);
+  v_list->addColumn(GAMETEXT_LEVEL,  v_list->getPosition().nWidth/2 - 28,  CONTEXTHELP_REPLAYLEVELCOL);
+  v_list->addColumn(GAMETEXT_PLAYER,128,CONTEXTHELP_REPLAYPLAYERCOL);
+  v_list->setEnterButton(v_showButton);
 
   return v_window;
 }
@@ -475,7 +634,7 @@ UIWindow* StateMainMenu::makeWindowLevels(GameApp* pGame, UIWindow* i_parent) {
   v_button = new UIButton(v_newLevelsTab, 0, v_newLevelsTab->getPosition().nHeight-103, GAMETEXT_STARTLEVEL, 105, 57);
   v_button->setType(UI_BUTTON_TYPE_SMALL);
   v_button->setFont(pGame->getDrawLib()->getFontSmall());
-  v_button->setID("NEW_LEVELS_GO_BUTTON");
+  v_button->setID("PLAY_GO_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_PLAY_SELECTED_LEVEL);
 
   /* new levels list */
@@ -489,14 +648,14 @@ UIWindow* StateMainMenu::makeWindowLevels(GameApp* pGame, UIWindow* i_parent) {
   v_button = new UIButton(v_newLevelsTab, 105, v_newLevelsTab->getPosition().nHeight-103, GAMETEXT_SHOWINFO, 105, 57);
   v_button->setType(UI_BUTTON_TYPE_SMALL);
   v_button->setFont(pGame->getDrawLib()->getFontSmall());
-  v_button->setID("NEW_LEVELS_LEVEL_INFO_BUTTON");
+  v_button->setID("LEVEL_INFO_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_LEVEL_INFO);
 
   v_button = new UIButton(v_newLevelsTab, v_newLevelsTab->getPosition().nWidth-187, v_newLevelsTab->getPosition().nHeight-103,
 			  GAMETEXT_DOWNLOADLEVELS, 187, 57);
   v_button->setType(UI_BUTTON_TYPE_LARGE);
   v_button->setFont(pGame->getDrawLib()->getFontSmall());
-  v_button->setID("NEW_LEVELS_DOWNLOAD_LEVELS_BUTTON");
+  v_button->setID("DOWNLOAD_LEVELS_BUTTON");
   v_button->setContextHelp(CONTEXTHELP_DOWNLOADLEVELS);
 
   /* multi tab */
@@ -569,59 +728,6 @@ UIWindow* StateMainMenu::makeWindowLevels(GameApp* pGame, UIWindow* i_parent) {
 //    //                                "",207,getDispHeight() - (20+getDispHeight()/2 + (m_nNumMainMenuButtons*57)/2));
 //    //m_pGameInfoWindow->showWindow(true);
 //
-//    m_pReplaysWindow = new UIFrame(m_pMainMenu,220,(drawlib->getDispHeight()*140)/600,"",drawlib->getDispWidth()-220-20,drawlib->getDispHeight()-40-(drawlib->getDispHeight()*120)/600-10);      
-//    m_pReplaysWindow->showWindow(false);
-//    pSomeText = new UIStatic(m_pReplaysWindow,0,0,GAMETEXT_REPLAYS,m_pReplaysWindow->getPosition().nWidth,36);
-//    pSomeText->setFont(drawlib->getFontMedium());
-//
-//    pSomeText = new UIStatic(m_pReplaysWindow, 10, 35, std::string(GAMETEXT_FILTER) + ":", 90, 25);
-//    pSomeText->setFont(drawlib->getFontSmall());
-//    pSomeText->setHAlign(UI_ALIGN_RIGHT);
-//    UIEdit *pLevelFilterEdit = new UIEdit(m_pReplaysWindow,
-//					  110,
-//					  35,
-//					  "",200,25);
-//    pLevelFilterEdit->setFont(drawlib->getFontSmall());
-//    pLevelFilterEdit->setID("REPLAYS_FILTER");
-//    pLevelFilterEdit->setContextHelp(CONTEXTHELP_REPLAYS_FILTER);
-//
-//    /* show button */
-//    UIButton *pShowButton = new UIButton(m_pReplaysWindow,5,m_pReplaysWindow->getPosition().nHeight-68,GAMETEXT_SHOW,105,57);
-//    pShowButton->setFont(drawlib->getFontSmall());
-//    pShowButton->setType(UI_BUTTON_TYPE_SMALL);
-//    pShowButton->setID("REPLAY_SHOW_BUTTON");
-//    pShowButton->setContextHelp(CONTEXTHELP_RUN_REPLAY);
-//    /* delete button */
-//    UIButton *pDeleteButton = new UIButton(m_pReplaysWindow,105,m_pReplaysWindow->getPosition().nHeight-68,GAMETEXT_DELETE,105,57);
-//    pDeleteButton->setFont(drawlib->getFontSmall());
-//    pDeleteButton->setType(UI_BUTTON_TYPE_SMALL);
-//    pDeleteButton->setID("REPLAY_DELETE_BUTTON");
-//    pDeleteButton->setContextHelp(CONTEXTHELP_DELETE_REPLAY);
-//
-//    /* upload button */
-//    UIButton *pUploadHighscoreButton = new UIButton(m_pReplaysWindow,199,m_pReplaysWindow->getPosition().nHeight-68,GAMETEXT_UPLOAD_HIGHSCORE,186,57);
-//    pUploadHighscoreButton->setFont(drawlib->getFontSmall());
-//    pUploadHighscoreButton->setType(UI_BUTTON_TYPE_SMALL);
-//    pUploadHighscoreButton->setID("REPLAY_UPLOADHIGHSCORE_BUTTON");
-//    pUploadHighscoreButton->enableWindow(false);
-//    pUploadHighscoreButton->setContextHelp(CONTEXTHELP_UPLOAD_HIGHSCORE);
-//
-//    /* filter */
-//    UIButton *pListAllButton = new UIButton(m_pReplaysWindow,m_pReplaysWindow->getPosition().nWidth-105,m_pReplaysWindow->getPosition().nHeight-68,GAMETEXT_LISTALL,115,57);
-//    pListAllButton->setFont(drawlib->getFontSmall());
-//    pListAllButton->setType(UI_BUTTON_TYPE_CHECK);
-//    pListAllButton->setChecked(false);
-//    pListAllButton->setID("REPLAY_LIST_ALL");
-//    pListAllButton->setContextHelp(CONTEXTHELP_ALL_REPLAYS);
-//    /* */
-//    UIList *pReplayList = new UIList(m_pReplaysWindow,20,65,"",m_pReplaysWindow->getPosition().nWidth-40,m_pReplaysWindow->getPosition().nHeight-115-25);
-//    pReplayList->setID("REPLAY_LIST");
-//    pReplayList->showWindow(true);
-//    pReplayList->setFont(drawlib->getFontSmall());
-//    pReplayList->addColumn(GAMETEXT_REPLAY, pReplayList->getPosition().nWidth/2 - 100,CONTEXTHELP_REPLAYCOL);
-//    pReplayList->addColumn(GAMETEXT_LEVEL,  pReplayList->getPosition().nWidth/2 - 28,CONTEXTHELP_REPLAYLEVELCOL);
-//    pReplayList->addColumn(GAMETEXT_PLAYER,128,CONTEXTHELP_REPLAYPLAYERCOL);
-//    pReplayList->setEnterButton( pShowButton );
 //    
 //    /* OPTIONS */
 //    m_pOptionsWindow = makeOptionsWindow(drawLib, m_pMainMenu, &m_Config);
@@ -791,4 +897,38 @@ void StateMainMenu::updateLevelsPacksList() {
     pTree->setSelectedPackByName(v_selected_packName);
   }
 
+}
+
+void StateMainMenu::updateReplaysList() {
+  /* Should we list all players' replays? */
+  std::string v_sql;
+  char **v_result;
+  unsigned int nrow;
+  bool v_listAll;
+  UIList* v_list;
+
+  v_listAll = ((UIButton *) m_GUI->getChild("MAIN:FRAME_REPLAYS:REPLAY_LIST_ALL"))->getChecked();
+  v_list = (UIList *) m_GUI->getChild("MAIN:FRAME_REPLAYS:REPLAY_LIST");
+
+  /* Clear list */
+  v_list->clear();
+    
+  /* Enumerate replays */
+  std::string PlayerSearch;
+  if(v_listAll) {
+    v_sql = "SELECT a.name, a.id_profile, b.name FROM replays AS a "
+      "INNER JOIN levels AS b ON a.id_level = b.id_level;";
+  } else {
+    v_sql = "SELECT a.name, a.id_profile, b.name FROM replays AS a "
+      "INNER JOIN levels AS b ON a.id_level = b.id_level "
+      "WHERE a.id_profile=\"" + xmDatabase::protectString(m_pGame->getSession()->profile()) + "\";";
+  }
+
+  v_result = m_pGame->getDb()->readDB(v_sql, nrow);
+  for(unsigned int i=0; i<nrow; i++) {
+    UIListEntry *pEntry = v_list->addEntry(m_pGame->getDb()->getResult(v_result, 3, i, 0));
+    pEntry->Text.push_back(m_pGame->getDb()->getResult(v_result, 3, i, 2));
+    pEntry->Text.push_back(m_pGame->getDb()->getResult(v_result, 3, i, 1));
+  }
+  m_pGame->getDb()->read_DB_free(v_result); 
 }

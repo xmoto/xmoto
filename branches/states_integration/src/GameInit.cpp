@@ -590,6 +590,7 @@ void GameApp::_Wait()
     }
     if((m_PlaySpecificLevelId != "") && m_xmsession->useGraphics()) {
       /* ======= PLAY SPECIFIC LEVEL ======= */
+      StatePreplaying::setPlayAnimation(true);
       m_stateManager->pushState(new StatePreplaying(this, m_PlaySpecificLevelId));
       Logger::Log("Playing as '%s'...", m_xmsession->profile().c_str());
     }
@@ -669,13 +670,6 @@ void GameApp::_Wait()
     Sound::uninit();
     delete m_Renderer;
     delete m_sysMsg;
-
-    if(m_xmsession->useGraphics()) {
-      m_Config.setInteger("QSQualityMIN",    m_pQuickStart->getQualityMIN());
-      m_Config.setInteger("QSDifficultyMIN", m_pQuickStart->getDifficultyMIN());
-      m_Config.setInteger("QSQualityMAX",    m_pQuickStart->getQualityMAX());
-      m_Config.setInteger("QSDifficultyMAX", m_pQuickStart->getDifficultyMAX());
-    }
 
     m_Config.saveFile();
   }  

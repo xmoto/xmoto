@@ -124,6 +124,14 @@ void StateScene::keyDown(int nKey, SDLMod mod,int nChar)
     m_pGame->switchLevelToFavorite(m_pGame->getMotoGame()->getLevelSrc()->Id(), true);
     break;
     
+  case SDLK_PAGEUP:
+    nextLevel();
+    break;
+
+  case SDLK_PAGEDOWN:
+    nextLevel(false);
+    break;
+
   default:
     GameState::keyDown(nKey, mod, nChar);
   }
@@ -214,8 +222,50 @@ void StateScene::restartLevel(bool i_reloadLevel) {
       // hum, not nice
     }
   }
-  
+
+  StatePreplaying::setPlayAnimation(false);
   m_pGame->getStateManager()->replaceState(new StatePreplaying(m_pGame, v_level));
+}
+
+void StateScene::nextLevel(bool i_positifOrder) {
+  std::string v_currentLevel = m_pGame->getMotoGame()->getLevelSrc()->Id();
+  std::string v_nextLevel;
+
+  if(i_positifOrder) {
+    v_nextLevel = m_pGame->determineNextLevel(v_currentLevel);
+  } else {
+    v_nextLevel = m_pGame->determinePreviousLevel(v_currentLevel);
+  }
+
+  if(v_nextLevel != "") {
+    if(m_pGame->getMotoGame()->Players().size() == 1) {
+      m_pGame->getDb()->stats_abortedLevel(m_pGame->getSession()->profile(),
+					   v_currentLevel,
+					   m_pGame->getMotoGame()->getTime());
+    }
+
+    closePlaying();
+    StatePreplaying::setPlayAnimation(true);
+    m_pGame->getStateManager()->replaceState(new StatePreplaying(m_pGame, v_nextLevel));
+  }
+}
+
+
+void StateScene::abortPlaying() {
+  if(m_pGame->getMotoGame()->Players().size() == 1) {
+    m_pGame->getDb()->stats_abortedLevel(m_pGame->getSession()->profile(),
+					 m_pGame->getMotoGame()->getLevelSrc()->Id(),
+					 m_pGame->getMotoGame()->getTime());
+  }
+  
+  closePlaying();
+}
+
+void StateScene::closePlaying() {
+  m_pGame->getMotoGame()->resetFollow();
+  m_pGame->getMotoGame()->endLevel();
+  m_pGame->getInputHandler()->resetScriptKeyHooks();                     
+  m_pGame->getGameRenderer()->unprepareForNewLevel();
 }
 
 bool StateScene::isLockedScene() const {
@@ -401,7 +451,13 @@ void StateScene::executeOneCommand(std::string cmd)
   Logger::Log("StateScene::executeOneCommand::%s", cmd.c_str());
 
   if(cmd == "ERROR") {
-    m_pGame->closePlaying();
+    closePlaying();
+    m_requestForEnd = true;
+    return;
+  }
+
+  if(cmd == "FINISH") {
+    closePlaying();
     m_requestForEnd = true;
     return;
   }
@@ -412,12 +468,17 @@ void StateScene::executeOneCommand(std::string cmd)
   }
 
   if(cmd == "NEXTLEVEL") {
-    m_pGame->playNextLevel();
+    nextLevel();
+    return;
+  }
+
+  if(cmd == "PREVIOUSLEVEL") {
+    nextLevel(false);
     return;
   }
 
   if(cmd == "ABORT") {
-    m_pGame->abortPlaying();
+    abortPlaying();
     m_requestForEnd = true;
     return;
   }

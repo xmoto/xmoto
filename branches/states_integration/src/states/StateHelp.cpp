@@ -71,7 +71,8 @@ void StateHelp::checkEvents() {
 
     try {
       m_pGame->setCurrentPlayingList(NULL);
-      m_pGame->getStateManager()->replaceState(new StatePreplaying(m_pGame, "tut1"));
+      StatePreplaying::setPlayAnimation(true);
+      m_pGame->getStateManager()->pushState(new StatePreplaying(m_pGame, "tut1"));
     } catch(Exception &e) {
     }
   }
@@ -82,7 +83,7 @@ void StateHelp::checkEvents() {
     pCreditsButton->setClicked(false);
 
     try {
-      m_pGame->getStateManager()->replaceState(new StateCreditsMode(m_pGame, "credits.rpl"));      
+      m_pGame->getStateManager()->pushState(new StateCreditsMode(m_pGame, "credits.rpl"));      
     } catch(Exception &e) {
     }
   }

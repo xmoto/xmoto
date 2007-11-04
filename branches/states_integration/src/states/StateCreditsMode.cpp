@@ -77,9 +77,8 @@ bool StateCreditsMode::render()
 
 void StateCreditsMode::keyDown(int nKey, SDLMod mod,int nChar)
 {
-  m_pGame->closePlaying();
-  m_pGame->setState(GS_MENU); // to be removed, just the time states are finished
   m_requestForEnd = true;
+  closePlaying();
 }
 
 void StateCreditsMode::keyUp(int nKey,   SDLMod mod)

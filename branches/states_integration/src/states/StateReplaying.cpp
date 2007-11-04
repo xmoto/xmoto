@@ -69,7 +69,7 @@ void StateReplaying::enter()
 								m_pGame->getSession()->enableEngineSound());
       m_pGame->getMotoGame()->getCamera()->setPlayerToFollow(m_replayBiker);
     } catch(Exception &e) {
-      m_pGame->abortPlaying();
+      abortPlaying();
       m_pGame->getStateManager()->replaceState(new StateMessageBox(NULL, m_pGame, "Unable to read the replay: " + e.getMsg(), UI_MSGBOX_OK));
       m_pGame->setState(GS_MENU);
       return;
@@ -79,7 +79,7 @@ void StateReplaying::enter()
     try {
       m_pGame->getMotoGame()->loadLevel(m_pGame->getDb(), m_replayBiker->levelId());
     } catch(Exception &e) {
-      m_pGame->abortPlaying();
+      abortPlaying();
       m_pGame->getStateManager()->replaceState(new StateMessageBox(this, m_pGame, e.getMsg(), UI_MSGBOX_OK));
       m_pGame->setState(GS_MENU);
       return;
@@ -94,7 +94,7 @@ void StateReplaying::enter()
       char cBuf[256];
       sprintf(cBuf,GAMETEXT_NEWERXMOTOREQUIRED,
 	      m_pGame->getMotoGame()->getLevelSrc()->getRequiredVersion().c_str());
-      m_pGame->abortPlaying();
+      abortPlaying();
       m_pGame->getStateManager()->replaceState(new StateMessageBox(this, m_pGame, cBuf, UI_MSGBOX_OK));
       m_pGame->setState(GS_MENU);
       return;
@@ -130,7 +130,7 @@ void StateReplaying::enter()
     // highscores
     setScoresTimes();    
   } catch(Exception &e) {
-    m_pGame->abortPlaying();
+    abortPlaying();
     m_pGame->getStateManager()->replaceState(new StateMessageBox(this, m_pGame, GameApp::splitText(e.getMsg(), 50), UI_MSGBOX_OK));
     m_pGame->setState(GS_MENU);
     return;
@@ -177,9 +177,6 @@ bool StateReplaying::update()
 
 bool StateReplaying::render()
 {
-  for(unsigned int i=0; i<m_pGame->getMotoGame()->Cameras().size(); i++) {
-    m_pGame->getMotoGame()->Cameras()[i]->setSpeedMultiplier(10.0); // tell to the camera the nPhysSteps
-  }  
   StateScene::render();
 
   return true;
@@ -190,9 +187,8 @@ void StateReplaying::keyDown(int nKey, SDLMod mod,int nChar)
   switch(nKey) {
     
   case SDLK_ESCAPE:
-    m_pGame->closePlaying();
-    m_pGame->setState(GS_MENU); // to be removed, just the time states are finished
     m_requestForEnd = true;
+    closePlaying();
     break;          
 
   case SDLK_RIGHT:

@@ -167,8 +167,9 @@ void StateDeadMenu::keyDown(int nKey, SDLMod mod,int nChar)
 
   case SDLK_ESCAPE:
     /* quit this state */
-    m_pGame->abortPlaying();
-    m_pGame->setState(m_pGame->m_StateAfterPlaying); // to be removed, just the time states are finished
+    if(m_receiver != NULL) {
+      m_receiver->send(getId(), "ABORT");
+    }
     m_requestForEnd = true;
     break;
 

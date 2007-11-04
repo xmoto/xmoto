@@ -50,10 +50,7 @@ void StatePreplaying::enter()
 {
   MotoGame* pWorld = m_pGame->getMotoGame();
 
-  setPlayAnimation(true); // must be removed, just for tests
   StateScene::enter();
-
-  m_pGame->m_State = GS_PREPLAYING; // to be removed, just the time states are finished
 
   m_pGame->getGameRenderer()->setShowEngineCounter(false);
   m_pGame->getGameRenderer()->setShowMinimap(false);

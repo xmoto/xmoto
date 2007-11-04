@@ -117,6 +117,7 @@ void StateLevelPackViewer::checkEvents()
       //m_PlaySpecificLevelId = i_level;
       //m_StateAfterPlaying = GS_LEVELPACK_VIEWER;
       //m_currentPlayingList = pList;
+      StatePreplaying::setPlayAnimation(true);
       m_pGame->getStateManager()->pushState(new StatePreplaying(m_pGame, i_level));
     }
   }

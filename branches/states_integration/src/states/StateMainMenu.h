@@ -74,6 +74,7 @@ class StateMainMenu : public StateMenu {
   void updateLevelsLists();
   void updateFavoriteLevelsList();
   void updateNewLevelsList();
+  void updateReplaysList();
 
   /* Main menu background / title */
   Texture *m_pTitleBL,*m_pTitleBR,*m_pTitleTL,*m_pTitleTR;      
@@ -84,6 +85,9 @@ class StateMainMenu : public StateMenu {
   UILevelList* buildQuickStartList();
   void createLevelListsSql(UILevelList* io_levelsList, const std::string& i_sql);
   void createLevelLists(UILevelList *i_list, const std::string& i_packageName);
+
+  void checkEventsLevelsFavoriteTab();
+  void checkEventsLevelsNewTab();
 };
 
 #endif

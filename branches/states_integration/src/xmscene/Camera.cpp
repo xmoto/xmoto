@@ -149,10 +149,10 @@ void Camera::setScroll(bool isSmooth, const Vector2f& gravity) {
       m_fCurrentHorizontalScrollShift = v_fDesiredHorizontalScrollShift;
     }
     else if(d < 0.0f) {
-      m_fCurrentHorizontalScrollShift -= v_move_camera_max * m_fSpeedMultiply;
+      m_fCurrentHorizontalScrollShift -= v_move_camera_max;
     }
     else if(d > 0.0f) {
-      m_fCurrentHorizontalScrollShift += v_move_camera_max * m_fSpeedMultiply;
+      m_fCurrentHorizontalScrollShift += v_move_camera_max;
     }
   }
     
@@ -162,10 +162,10 @@ void Camera::setScroll(bool isSmooth, const Vector2f& gravity) {
       m_fCurrentVerticalScrollShift = v_fDesiredVerticalScrollShift;
     }
     else if(d < 0.0f) {
-      m_fCurrentVerticalScrollShift -= 0.01f * m_fSpeedMultiply;
+      m_fCurrentVerticalScrollShift -= 0.01f;
     }
     else if(d > 0.0f) {
-      m_fCurrentVerticalScrollShift += 0.01f * m_fSpeedMultiply;
+      m_fCurrentVerticalScrollShift += 0.01f;
     }
   }
     

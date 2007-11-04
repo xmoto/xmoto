@@ -241,9 +241,10 @@ void StateFinished::keyDown(int nKey, SDLMod mod,int nChar)
 
   case SDLK_ESCAPE:
     /* quit this state */
-    m_pGame->closePlaying();
-    m_pGame->setState(m_pGame->m_StateAfterPlaying); // to be removed, just the time states are finished
     m_requestForEnd = true;
+    if(m_receiver != NULL) {
+      m_receiver->send(getId(), "FINISH");
+    }
     break;
 
   default:

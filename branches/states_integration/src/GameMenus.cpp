@@ -622,20 +622,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     m_nNumMainMenuButtons = 5;
     
-    /* quick start button */
-    m_pQuickStart = new UIQuickStartButton(m_pMainMenu,
-					   drawLib->getDispWidth()  -180 -60,
-					   drawLib->getDispHeight() -180 -30,
-					   GAMETEXT_QUICKSTART, 180, 180,
-					   m_Config.getInteger("QSQualityMIN"),
-					   m_Config.getInteger("QSDifficultyMIN"),
-					   m_Config.getInteger("QSQualityMAX"),
-					   m_Config.getInteger("QSDifficultyMAX")
-					   );
-    m_pQuickStart->setFont(drawLib->getFontSmall());
-    m_pQuickStart->setID("QUICKSTART");
-    /* *** */
-
     /* level info frame */
     m_pLevelInfoFrame = new UIWindow(m_pMainMenu,0,drawLib->getDispHeight()/2 - (m_nNumMainMenuButtons*57)/2 + m_nNumMainMenuButtons*57,"",220,100);
     m_pLevelInfoFrame->showWindow(false);
@@ -1025,43 +1011,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   Update main menu
   ===========================================================================*/
   void GameApp::_HandleMainMenu(void) {
-    /* Any of the main menu buttons clicked? */
-    for(int i=0;i<m_nNumMainMenuButtons;i++) {
-      if(m_pMainMenuButtons[i]->isClicked()) {
-        if(m_pMainMenuButtons[i]->getCaption() == GAMETEXT_LEVELS) {
-	  m_pLevelInfoFrame->showWindow(false);
-          m_pOptionsWindow->showWindow(false);
-          m_pReplaysWindow->showWindow(false);
-          m_pLevelPacksWindow->showWindow(true);
-	  m_pQuickStart->showWindow(false);
-	}
-        else if(m_pMainMenuButtons[i]->getCaption() == GAMETEXT_OPTIONS) {
-          if(m_pOptionsWindow->isHidden()) _ImportOptions();        
-	  m_pLevelInfoFrame->showWindow(false);
-
-          m_pOptionsWindow->showWindow(true);
-          m_pReplaysWindow->showWindow(false);
-          m_pLevelPacksWindow->showWindow(false);                    
-	  m_pQuickStart->showWindow(false);
-        }
-        else if(m_pMainMenuButtons[i]->getCaption() == GAMETEXT_HELP) {
-	  m_pLevelInfoFrame->showWindow(false);
-          m_pOptionsWindow->showWindow(false);
-          m_pReplaysWindow->showWindow(false);
-          m_pLevelPacksWindow->showWindow(false);                    
-	  m_pQuickStart->showWindow(false);
-        }
-        else if(m_pMainMenuButtons[i]->getCaption() == GAMETEXT_REPLAYS) {
-	  if(m_pReplaysWindow->isHidden()) _UpdateReplaysList();
-	  m_pLevelInfoFrame->showWindow(false);
-          m_pOptionsWindow->showWindow(false);
-          m_pReplaysWindow->showWindow(true);
-          m_pLevelPacksWindow->showWindow(false);                    
-	  m_pQuickStart->showWindow(false);
-        }
-      }
-    }
-
     UIEdit *pReplayFilterEdit = reinterpret_cast<UIEdit *>(m_pReplaysWindow->getChild("REPLAYS_FILTER"));
     UIList *pReplayList = reinterpret_cast<UIList *>(m_pReplaysWindow->getChild("REPLAY_LIST"));
 
@@ -1088,11 +1037,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       m_pOptionsWindow->showWindow(false);
       m_pReplaysWindow->showWindow(false);
       m_pLevelPacksWindow->showWindow(true);
-      m_pQuickStart->showWindow(false);
 
       m_pLevelPackTabs->selectChildrenById("NEWLEVELS_TAB");
 
-      _CheckForExtraLevels();
+      checkForExtraLevels();
     }
 
     /* level menu : */
@@ -1392,82 +1340,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       _ConfigureJoystick();
     }
     
-    /* PLAY */
-    UIButton *pPlayGoButton = (UIButton *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:ALLLEVELS_TAB:PLAY_GO_BUTTON");
-    UIButton *pLevelInfoButton = (UIButton *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:ALLLEVELS_TAB:PLAY_LEVEL_INFO_BUTTON");
-    UIButton *pLevelDeleteFromFavoriteButton = (UIButton *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:ALLLEVELS_TAB:ALL_LEVELS_DELETE_FROM_FAVORITE_BUTTON");
-
-    UIButton *pNewLevelsPlayGoButton =    (UIButton *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:NEWLEVELS_TAB:NEW_LEVELS_PLAY_GO_BUTTON");
-    UIButton *pNewLevelsLevelInfoButton = (UIButton *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:NEWLEVELS_TAB:NEW_LEVELS_PLAY_LEVEL_INFO_BUTTON");
-    UIButton *pNewLevelsPlayDLButton =    (UIButton *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:NEWLEVELS_TAB:NEW_LEVELS_PLAY_DOWNLOAD_LEVELS_BUTTON");
-
-    if(pNewLevelsPlayDLButton != NULL) {
-      if(pWebHighscores->getChecked())
-	pNewLevelsPlayDLButton->enableWindow(true);
-      else
-	pNewLevelsPlayDLButton->enableWindow(false);
-      
-      if(pNewLevelsPlayDLButton->isClicked()) {
-	pNewLevelsPlayDLButton->setClicked(false);
-	
-	_CheckForExtraLevels();
-      }
-    }
-
-    if(pLevelDeleteFromFavoriteButton->isClicked()) {
-      std::string v_id_level;
-      pLevelDeleteFromFavoriteButton->setClicked(false);
-      v_id_level = m_pAllLevelsList->getSelectedLevel();
-      if(v_id_level != "") {
-	m_levelsManager.delFromFavorite(m_db, m_xmsession->profile(), v_id_level);
-	_UpdateLevelPackLevelList(VPACKAGENAME_FAVORITE_LEVELS);
-	_UpdateLevelLists();
-      }
-    }
-
-    if(pPlayGoButton->isClicked()
-       || pNewLevelsPlayGoButton->isClicked()
-       ) {
-      pPlayGoButton->setClicked(false);
-      pNewLevelsPlayGoButton->setClicked(false);
-      
-      // level
-      std::string v_id_level;
-
-      /* Find out what to play */
-      if(m_pAllLevelsList && !m_pAllLevelsList->isBranchHidden()) {
-	v_id_level = m_pAllLevelsList->getSelectedLevel();	
-	m_currentPlayingList = m_pAllLevelsList;
-      } else if(m_pPlayNewLevelsList && !m_pPlayNewLevelsList->isBranchHidden()) {
-	v_id_level = m_pPlayNewLevelsList->getSelectedLevel();
-	m_currentPlayingList = m_pPlayNewLevelsList;
-      }
-
-      /* Start playing it */
-      if(v_id_level != "") {
-        m_pMainMenu->showWindow(false);      
-        m_PlaySpecificLevelId = v_id_level;
-        m_StateAfterPlaying = GS_MENU;
-	m_stateManager->pushState(new StatePreplaying(this, v_id_level));
-      }
-    }
-    else if(pLevelInfoButton->isClicked()
-	    || pNewLevelsLevelInfoButton->isClicked()){
-      pLevelInfoButton->setClicked(false);
-      pNewLevelsLevelInfoButton->setClicked(false);
-
-      std::string v_id_level;
-      if(m_pAllLevelsList && !m_pAllLevelsList->isBranchHidden()) {
-	v_id_level = m_pAllLevelsList->getSelectedLevel();
-      } else if(m_pPlayNewLevelsList && !m_pPlayNewLevelsList->isBranchHidden()) {
-	v_id_level = m_pPlayNewLevelsList->getSelectedLevel();
-      }
-      
-      if(v_id_level != "") {
-	m_stateManager->pushState(new StateLevelInfoViewer(this, v_id_level));
-      }
-    }
-
     /* REPLAYS */        
     UIButton *pReplaysShowButton = (UIButton *)m_pReplaysWindow->getChild("REPLAY_SHOW_BUTTON");
     UIButton *pReplaysDeleteButton = (UIButton *)m_pReplaysWindow->getChild("REPLAY_DELETE_BUTTON");
@@ -1659,37 +1531,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   Update replays list
   ===========================================================================*/
   void GameApp::_CreateReplaysList(UIList *pList) {
-    /* Should we list all players' replays? */
-    std::string v_sql;
-    char **v_result;
-    unsigned int nrow;
-    UIButton *pButton = (UIButton *)m_pReplaysWindow->getChild("REPLAY_LIST_ALL");
-    bool bListAll = false;
-    if(pButton != NULL && pButton->getChecked()) {
-      bListAll = true;
-    }
-    
-    /* Clear list */
-    pList->clear();
-    
-    /* Enumerate replays */
-    std::string PlayerSearch;
-    if(bListAll) {
-      v_sql = "SELECT a.name, a.id_profile, b.name FROM replays AS a "
-	"INNER JOIN levels AS b ON a.id_level = b.id_level;";
-    } else {
-      v_sql = "SELECT a.name, a.id_profile, b.name FROM replays AS a "
-      "INNER JOIN levels AS b ON a.id_level = b.id_level "
-      "WHERE a.id_profile=\"" + xmDatabase::protectString(m_xmsession->profile()) + "\";";
-    }
-
-    v_result = m_db->readDB(v_sql, nrow);
-    for(unsigned int i=0; i<nrow; i++) {
-      UIListEntry *pEntry = pList->addEntry(m_db->getResult(v_result, 3, i, 0));
-      pEntry->Text.push_back(m_db->getResult(v_result, 3, i, 2));
-      pEntry->Text.push_back(m_db->getResult(v_result, 3, i, 1));
-    }
-    m_db->read_DB_free(v_result);
   }
   
   /*===========================================================================

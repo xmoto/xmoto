@@ -183,33 +183,14 @@ bool StatePlaying::render()
 void StatePlaying::keyDown(int nKey, SDLMod mod,int nChar)
 {
   switch(nKey) {
+
   case SDLK_ESCAPE:
-    //if(LockedMotoGame() == false) {
+    if(isLockedScene() == false) {
       /* Escape pauses */
-    m_pGame->getStateManager()->pushState(new StatePause(m_pGame, this));
-      //}
+      m_pGame->getStateManager()->pushState(new StatePause(m_pGame, this));
+    }
     break;
 
-//  case SDLK_PAGEUP:
-//    if(isThereANextLevel(m_PlaySpecificLevelId)) {
-//      m_pGame->getDb()->stats_abortedLevel(m_pGame->getSession()->profile(), m_pGame->getMotoGame()->getLevelSrc()->Id(), m_pGame->getMotoGame()->getTime());
-//      m_pGame->getMotoGame()->endLevel();
-//      m_Renderer->unprepareForNewLevel();
-//      m_PlaySpecificLevelId = _DetermineNextLevel(m_PlaySpecificLevelId);
-//      m_bPrePlayAnim = true;
-//      setState(GS_PREPLAYING);
-//    }
-//    break;
-//  case SDLK_PAGEDOWN:
-//    if(isThereAPreviousLevel(m_PlaySpecificLevelId)) {
-//      m_pGame->getDb()-> stats_abortedLevel(m_pGame->getSession()->profile(), m_pGame->getMotoGame()->getLevelSrc()->Id(), m_pGame->getMotoGame()->getTime());
-//	m_pGame->getMotoGame()->endLevel();
-//	m_Renderer->unprepareForNewLevel();
-//	m_PlaySpecificLevelId = _DeterminePreviousLevel(m_PlaySpecificLevelId);
-//	m_bPrePlayAnim = true;
-//	setState(GS_PREPLAYING);
-//    }
-//    break;
   case SDLK_RETURN:
     /* retart immediatly the level */
     restartLevel();
@@ -220,7 +201,7 @@ void StatePlaying::keyDown(int nKey, SDLMod mod,int nChar)
       setAutoZoom(true);
     }
     break;
-
+    
   default:
     /* Notify the controller */
     m_pGame->getInputHandler()->handleInput(INPUT_KEY_DOWN, nKey, mod,
