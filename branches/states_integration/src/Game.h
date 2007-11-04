@@ -232,8 +232,6 @@ class StateManager;
       // list played
       void setCurrentPlayingList(UILevelList *i_levelsList) {m_currentPlayingList = i_levelsList;}
 
-      void stats_generateReport(const std::string &PlayerName);
-      void updateProfile(const std::string &PlayerName);
       void _ConfigureProxy(void);
       void _ImportOptions(void);
       void updateWebHighscores();
@@ -302,8 +300,6 @@ class StateManager;
       
       ThemeChoicer *m_themeChoicer;
 
-      UIWindow *m_pStatsReport;
-      
       /* Sound effects */
       SoundSample *m_pEndOfLevelSFX;
       SoundSample *m_pStrawberryPickupSFX;
@@ -326,7 +322,6 @@ class StateManager;
       UIWindow *m_pMainMenu;
       UIMsgBox *m_pDeleteReplayMsgBox;
       UIFrame *m_pGameInfoWindow;
-      UIFrame *m_pStatsWindow;
       
       /* LEVEL lists */
       UILevelList *m_currentPlayingList;
@@ -413,7 +408,6 @@ class StateManager;
       void _ConfigureJoystick(void);
       void _InitMenus(void);        
       void _InitMenus_MainMenu(void);
-      void _InitMenus_Others(void);
       void _DefaultOptions(void);
       void _SaveOptions(void);
       void _UpdateSettings(void);

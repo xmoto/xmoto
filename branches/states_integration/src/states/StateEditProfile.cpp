@@ -91,7 +91,8 @@ void StateEditProfile::checkEvents() {
     if(nIdx >= 0 && nIdx < pList->getEntries().size()) {
       UIListEntry *pEntry = pList->getEntries()[nIdx];
 
-      m_pGame->updateProfile(pEntry->Text[0]);
+      m_pGame->getSession()->setProfile(pEntry->Text[0]);
+      m_pGame->getDb()->stats_xmotoStarted(pEntry->Text[0]);
 
       // tell the menu to update the displayed profile
       if(m_receiver != NULL){

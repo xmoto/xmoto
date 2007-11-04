@@ -892,22 +892,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     return 1;
   }
 
-  void GameApp::_InitMenus_Others(void) {
-    UIStatic *pSomeText;
-    /* Build stats window */
-    m_pStatsWindow = new UIFrame(m_pMainMenu,220,(drawLib->getDispHeight()*140)/600,GAMETEXT_STATS,drawLib->getDispWidth()-200,drawLib->getDispHeight()-40-(drawLib->getDispHeight()*120)/600-10);      
-    m_pStatsWindow->setStyle(UI_FRAMESTYLE_LEFTTAG);
-    m_pStatsWindow->setFont(drawLib->getFontSmall());
-    m_pStatsWindow->makeMinimizable(drawLib->getDispWidth()-17,(drawLib->getDispHeight()*140)/600);
-    m_pStatsWindow->setMinimized(true);
-    m_pStatsWindow->setContextHelp(CONTEXTHELP_STATS);
-    m_pStatsWindow->setPosition(drawLib->getDispWidth()-17,(drawLib->getDispHeight()*140)/600,m_pStatsWindow->getPosition().nWidth,m_pStatsWindow->getPosition().nHeight);
-    pSomeText = new UIStatic(m_pStatsWindow,40,0,GAMETEXT_STATISTICS,m_pStatsWindow->getPosition().nWidth-80,36);
-    pSomeText->setFont(drawLib->getFontMedium());
-    
-    stats_generateReport(m_xmsession->profile());
-  }
-
   /*===========================================================================
   Create menus and hide them
   ===========================================================================*/
@@ -916,7 +900,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
        a nice XML file instead. This really stinks */
     
     _InitMenus_MainMenu();
-    _InitMenus_Others();
 
     /* Hide menus */
     m_pMainMenu->showWindow(false);
@@ -1428,21 +1411,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	m_Renderer->getGUI()->setFont(drawLib->getFontSmall());
         m_pDeleteReplayMsgBox = m_Renderer->getGUI()->msgBox(GAMETEXT_DELETEREPLAYMESSAGE,
                                                             (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
-      }
-    }
-   
-    /* Statistics window */
-    if(m_pStatsReport != NULL) {
-      UIButton *pUpdateReport = (UIButton *)m_pStatsReport->getChild("UPDATE_BUTTON");
-      if(pUpdateReport != NULL) {
-        if(pUpdateReport->isClicked()) {
-          m_pStatsWindow->makeActive();
-          m_pStatsWindow->setMinimized(false);
-          pUpdateReport->setClicked(false);          
-          
-          /* Update */
-          stats_generateReport(m_xmsession->profile());
-        }        
       }
     }
 

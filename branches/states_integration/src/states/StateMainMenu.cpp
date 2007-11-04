@@ -97,6 +97,7 @@ void StateMainMenu::enter()
   updateLevelsPacksList();
   updateLevelsLists();
   updateReplaysList();
+  updateStats();
 }
 
 void StateMainMenu::leave()
@@ -447,6 +448,7 @@ void StateMainMenu::createGUIIfNeeded(GameApp* pGame) {
   makeWindowLevels(pGame,  v_menu);
   makeWindowReplays(pGame, v_menu);
   makeWindowOptions(pGame, v_menu);
+  makeWindowStats(pGame, v_menu);
 }
 
 void StateMainMenu::updateProfile() {
@@ -463,6 +465,31 @@ void StateMainMenu::updateProfile() {
 void StateMainMenu::updateOptions() {
   UIButton* v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:MULTI_TAB:ENABLEMULTISTOPWHENONEFINISHES"));
   v_button->setChecked(m_pGame->getSession()->MultiStopWhenOneFinishes());
+}
+
+UIWindow* StateMainMenu::makeWindowStats(GameApp* pGame, UIWindow* i_parent) {
+  UIStatic* v_someText;
+  UIFrame* v_window;
+  UIButton* v_button;
+  DrawLib* drawlib = pGame->getDrawLib();
+
+  v_window = new UIFrame(i_parent, 220, drawlib->getDispHeight()*7/30, GAMETEXT_STATS, drawlib->getDispWidth()-200,
+			 drawlib->getDispHeight() -40 -drawlib->getDispHeight()/5 -10);      
+  v_window->setStyle(UI_FRAMESTYLE_LEFTTAG);
+  v_window->setFont(drawlib->getFontSmall());
+  v_window->makeMinimizable(drawlib->getDispWidth()-17, drawlib->getDispHeight()*7/30);
+  v_window->setMinimized(true);
+  v_window->setContextHelp(CONTEXTHELP_STATS);
+
+  v_someText = new UIStatic(v_window, 0, 0, GAMETEXT_STATISTICS, v_window->getPosition().nWidth, 36);
+  v_someText->setFont(drawlib->getFontMedium());
+
+  v_button = new UIButton(v_window, v_window->getPosition().nWidth-115 -20,
+			  v_window->getPosition().nHeight-57, GAMETEXT_UPDATE, 115, 57);
+  v_button->setType(UI_BUTTON_TYPE_SMALL);
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setID("UPDATE_BUTTON"); 
+  v_button->setContextHelp(CONTEXTHELP_UPDATESTATS);
 }
 
 UIWindow* StateMainMenu::makeWindowReplays(GameApp* pGame, UIWindow* i_parent) {
@@ -839,6 +866,18 @@ void StateMainMenu::executeOneCommand(std::string cmd)
 {
   if(cmd == "UPDATEPROFILE"){
     updateProfile();
+
+    // update packs
+    m_pGame->getLevelsManager()->makePacks(m_pGame->getDb(),
+					   m_pGame->getSession()->profile(),
+					   m_pGame->getUserConfig()->getString("WebHighscoresIdRoom"),
+					   m_pGame->getSession()->debug());
+
+    // update lists and stats
+    updateLevelsPacksList();
+    updateLevelsLists();
+    updateReplaysList();
+    updateStats();
   }
 }
 
@@ -932,3 +971,128 @@ void StateMainMenu::updateReplaysList() {
   }
   m_pGame->getDb()->read_DB_free(v_result); 
 }
+
+void StateMainMenu::updateStats() {
+
+//    // parameters are always the same !
+//    UIWindow *pParent  = m_pStatsWindow;
+//    int x              = 30;
+//    int y              = 36;
+//    int nWidth         = m_pStatsWindow->getPosition().nWidth-45;
+//    int nHeight        = m_pStatsWindow->getPosition().nHeight-36;
+//    FontManager* pFont = drawLib->getFontSmall();
+//
+//    /* Create stats window */
+//    char **v_result;
+//    unsigned int nrow;
+//
+//    int   v_nbStarts        = 0;
+//    std::string v_since;
+//    float v_totalPlayedTime = 0.0;
+//    int   v_nbPlayed        = 0;
+//    int   v_nbDied          = 0;
+//    int   v_nbCompleted     = 0;
+//    int   v_nbRestarted     = 0;
+//    int   v_nbDiffLevels    = 0;
+//    std::string v_level_name= "";
+//  
+//    if(m_pStatsReport != NULL){
+//      delete m_pStatsReport;
+//      m_pStatsReport = NULL;
+//    }
+//
+//    m_pStatsReport = new UIWindow(pParent, x, y, "", nWidth, nHeight);
+//    UIButton *pUpdateButton = new UIButton(m_pStatsReport,nWidth-115,nHeight-57,GAMETEXT_UPDATE,115,57);
+//    pUpdateButton->setContextHelp(CONTEXTHELP_UPDATESTATS);
+//    pUpdateButton->setFont(pFont);
+//    pUpdateButton->setType(UI_BUTTON_TYPE_SMALL);
+//    pUpdateButton->setID("UPDATE_BUTTON");  
+//
+//    v_result = m_db->readDB("SELECT a.nbStarts, a.since, SUM(b.playedTime), "
+//			    "SUM(b.nbPlayed), SUM(b.nbDied), SUM(b.nbCompleted), "
+//			    "SUM(b.nbRestarted), count(b.id_level) "
+//			    "FROM stats_profiles AS a INNER JOIN stats_profiles_levels AS b "
+//			    "ON a.id_profile=b.id_profile "
+//			    "WHERE a.id_profile=\"" + xmDatabase::protectString(PlayerName) + "\" "
+//			    "GROUP BY a.id_profile;",
+//			    nrow);
+//
+//    if(nrow == 0) {
+//      m_db->read_DB_free(v_result);
+//      return;
+//    }
+//  
+//    v_nbStarts        = atoi(m_db->getResult(v_result, 8, 0, 0));
+//    v_since           =      m_db->getResult(v_result, 8, 0, 1);
+//    v_totalPlayedTime = atof(m_db->getResult(v_result, 8, 0, 2));
+//    v_nbPlayed        = atoi(m_db->getResult(v_result, 8, 0, 3));
+//    v_nbDied          = atoi(m_db->getResult(v_result, 8, 0, 4));
+//    v_nbCompleted     = atoi(m_db->getResult(v_result, 8, 0, 5));
+//    v_nbRestarted     = atoi(m_db->getResult(v_result, 8, 0, 6));
+//    v_nbDiffLevels    = atoi(m_db->getResult(v_result, 8, 0, 7));
+//  
+//    m_db->read_DB_free(v_result);
+//  
+//    /* Per-player info */
+//    char cBuf[512];
+//    char cTime[512];
+//    int nHours = ((int)v_totalPlayedTime) / (60 * 60);
+//    int nMinutes = (((int)v_totalPlayedTime) / (60)) - nHours*60;
+//    int nSeconds = (((int)v_totalPlayedTime)) - nMinutes*60 - nHours*3600;
+//    if(nHours > 0)
+//      sprintf(cTime,(std::string(GAMETEXT_XHOURS) + ", " + std::string(GAMETEXT_XMINUTES) + ", " + std::string(GAMETEXT_XSECONDS)).c_str(),nHours,nMinutes,nSeconds);
+//    else if(nMinutes > 0)
+//      sprintf(cTime,(std::string(GAMETEXT_XMINUTES) + ", " + std::string(GAMETEXT_XSECONDS)).c_str(),nMinutes,nSeconds);
+//    else
+//      sprintf(cTime,GAMETEXT_XSECONDS,nSeconds);
+//  
+//    sprintf(cBuf,GAMETEXT_XMOTOGLOBALSTATS,      
+//	    v_since.c_str(), v_nbStarts, v_nbPlayed, v_nbDiffLevels,
+//	    v_nbDied, v_nbCompleted, v_nbRestarted, cTime);                           
+//  
+//    UIStatic *pText = new UIStatic(m_pStatsReport, 0, 0, cBuf, nWidth, 80);
+//    pText->setHAlign(UI_ALIGN_LEFT);
+//    pText->setTextSolidColor(MAKE_COLOR(255,255,0,255));
+//    pText->setFont(pFont);
+//
+//    /* Per-level stats */      
+//    pText = new UIStatic(m_pStatsReport,0,90, std::string(GAMETEXT_MOSTPLAYEDLEVELSFOLLOW) + ":",nWidth,20);
+//    pText->setHAlign(UI_ALIGN_LEFT);
+//    pText->setTextSolidColor(MAKE_COLOR(255,255,0,255));
+//    pText->setFont(pFont);      
+//
+//    v_result = m_db->readDB("SELECT a.name, b.nbPlayed, b.nbDied, "
+//			    "b.nbCompleted, b.nbRestarted, b.playedTime "
+//			    "FROM levels AS a INNER JOIN stats_profiles_levels AS b ON a.id_level=b.id_level "
+//			    "WHERE id_profile=\"" + xmDatabase::protectString(PlayerName) + "\" "
+//			    "ORDER BY nbPlayed DESC LIMIT 10;",
+//			    nrow);
+//
+//    int cy = 110;
+//    for(int i=0; i<nrow; i++) {
+//      if(cy + 45 > nHeight) break; /* out of window */
+//
+//      v_level_name      =      m_db->getResult(v_result, 6, i, 0);
+//      v_totalPlayedTime = atof(m_db->getResult(v_result, 6, i, 5));
+//      v_nbDied          = atoi(m_db->getResult(v_result, 6, i, 2));
+//      v_nbPlayed        = atoi(m_db->getResult(v_result, 6, i, 1));
+//      v_nbCompleted     = atoi(m_db->getResult(v_result, 6, i, 3));
+//      v_nbRestarted     = atoi(m_db->getResult(v_result, 6, i, 4));
+//    
+//      sprintf(cBuf,("[%s] %s:\n   " + std::string(GAMETEXT_XMOTOLEVELSTATS)).c_str(),
+//	      GameApp::formatTime(v_totalPlayedTime).c_str(), v_level_name.c_str(),
+//	      v_nbPlayed, v_nbDied, v_nbCompleted, v_nbRestarted);
+//    
+//      pText = new UIStatic(m_pStatsReport,0,cy,cBuf,nWidth,45);
+//      pText->setHAlign(UI_ALIGN_LEFT);        
+//      pText->setTextSolidColor(MAKE_COLOR(255,255,0,255));
+//      pText->setFont(pFont);
+//    
+//      cy += 45;
+//    }  
+//
+//    m_db->read_DB_free(v_result);
+//  }
+//
+}
+

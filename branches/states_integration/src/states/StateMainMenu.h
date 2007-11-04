@@ -66,6 +66,7 @@ class StateMainMenu : public StateMenu {
   static UIWindow* makeWindowReplays(GameApp* pGame, UIWindow* i_parent);
   static UIWindow* makeWindowOptions(GameApp* pGame, UIWindow* i_parent);
   static UIWindow* makeWindowLevels(GameApp* pGame, UIWindow* i_parent);
+  static UIWindow* makeWindowStats(GameApp* pGame, UIWindow* i_parent);
 
   void updateProfile();
   void updateOptions();
@@ -75,6 +76,7 @@ class StateMainMenu : public StateMenu {
   void updateFavoriteLevelsList();
   void updateNewLevelsList();
   void updateReplaysList();
+  void updateStats();
 
   /* Main menu background / title */
   Texture *m_pTitleBL,*m_pTitleBR,*m_pTitleTL,*m_pTitleTR;      
