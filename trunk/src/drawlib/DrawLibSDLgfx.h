@@ -21,13 +21,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef __DRAWLIBSDLGFX_H__
 #define __DRAWLIBSDLGFX_H__
 
+#include "DrawLib.h"
+class PolyDraw;
+
 class DrawLibSDLgfx:public DrawLib {
   public:
   DrawLibSDLgfx();
   virtual ~DrawLibSDLgfx();
   
-  virtual void init(int nDispWidth, int nDispHeight, int nDispBPP,
-		    bool bWindowed, Theme * ptheme);
+  virtual void init(unsigned int nDispWidth, unsigned int nDispHeight,
+		    unsigned int nDispBPP, bool bWindowed, Theme * ptheme);
   virtual void unInit();
 
   virtual void glVertexSP(float x, float y);
@@ -49,7 +52,7 @@ class DrawLibSDLgfx:public DrawLib {
   /**
    * enables clipping and sets the clipping borders
    **/
-  virtual void setClipRect(int x, int y, int w, int h);
+  virtual void setClipRect(int x, int y, unsigned int w, unsigned int h);
   virtual void setClipRect(SDL_Rect * i_clip_rect);
   virtual void setScale(float x, float y);
   virtual void setTranslate(float x, float y);
@@ -72,6 +75,8 @@ class DrawLibSDLgfx:public DrawLib {
    * End draw
    **/
   virtual void endDraw();
+  virtual void endDrawKeepProperties(); /* to keep textures, ... to render several times the same entity fastly */
+  virtual void removePropertiesAfterEnd(); /* remove properties endDraw = endDrawKeepProperties + removePropertiesAfterEnd */
   
   /**
    * Clears the screen with the configured background

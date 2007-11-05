@@ -18,11 +18,12 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
+#include "VCommon.h"
+
 #ifdef ENABLE_SDLGFX
 
 #include <string.h>
 
-#include "VCommon.h"
 #include "PolyDraw.h"
 
 #if defined(MIN)
