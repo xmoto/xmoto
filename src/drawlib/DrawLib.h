@@ -126,8 +126,8 @@ class DrawLib {
   /**
    * initialize the screen
    **/
-  virtual void init(unsigned int nDispWidth, unsigned int nDispHeight, unsigned int nDispBPP,
-		    bool bWindowed, Theme * ptheme) = 0;
+  virtual void init(unsigned int nDispWidth, unsigned int nDispHeight,
+		    unsigned int nDispBPP, bool bWindowed, Theme * ptheme) = 0;
   
   virtual void unInit() = 0;
   

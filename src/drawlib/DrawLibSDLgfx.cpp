@@ -23,8 +23,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "DrawLibSDLgfx.h"
 #include "Game.h"
+#include "helpers/Log.h"
+#include "Image.h"
 
 #ifdef ENABLE_SDLGFX
+#include "PolyDraw.h"
 #include "SDL_gfxPrimitives.h"
 #include "SDL_rotozoom.h"
 #include "iqsort.h"
@@ -44,48 +47,54 @@ class SDLFontGlyph : public FontGlyph {
   virtual ~SDLFontGlyph();
 
   std::string Value() const;
-  int drawWidth()     const;
-  int drawHeight()    const;
-  int realWidth()     const;
-  int realHeight()    const;
-  int firstLineDrawHeight() const;
+  unsigned int drawWidth()     const;
+  unsigned int drawHeight()    const;
+  unsigned int realWidth()     const;
+  unsigned int realHeight()    const;
+  unsigned int firstLineDrawHeight() const;
 
  protected:
   std::string m_value;
-  int m_drawWidth, m_drawHeight;
-  int m_realWidth, m_realHeight;
-  int m_firstLineDrawHeight;
+  unsigned int m_drawWidth, m_drawHeight;
+  unsigned int m_realWidth, m_realHeight;
+  unsigned int m_firstLineDrawHeight;
 
 };
 
 SDLFontGlyph::SDLFontGlyph(const std::string& i_value){
- m_value = i_value; /*c++ */
+  m_value = i_value; /*c++ */
 
- m_drawWidth =1;
-m_drawHeight =1;
-m_realWidth=1;
-m_realHeight=1;
-m_firstLineDrawHeight =1;
+  m_drawWidth           = 1;
+  m_drawHeight          = 1;
+  m_realWidth           = 1;
+  m_realHeight          = 1;
+  m_firstLineDrawHeight = 1;
 };
+
 SDLFontGlyph::~SDLFontGlyph(){
 }
+
 std::string SDLFontGlyph::Value() const {
   return m_value;
 }
 
-int SDLFontGlyph::drawWidth() const{
+unsigned int SDLFontGlyph::drawWidth() const{
  return m_drawWidth;
 }
-int SDLFontGlyph::drawHeight() const{
+
+unsigned int SDLFontGlyph::drawHeight() const{
  return m_drawHeight;
 }
-int SDLFontGlyph::realWidth() const{
+
+unsigned int SDLFontGlyph::realWidth() const{
  return m_realWidth;
 }
-int SDLFontGlyph::realHeight() const{
+
+unsigned int SDLFontGlyph::realHeight() const{
  return m_realHeight;
 }
-int SDLFontGlyph::firstLineDrawHeight() const{
+
+unsigned int SDLFontGlyph::firstLineDrawHeight() const{
 	return m_firstLineDrawHeight;
 }
 
@@ -214,7 +223,8 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
     *y = m_nActualHeight - (*y);
   }
 
-  void DrawLibSDLgfx::setClipRect(int x, int y, int w, int h) {
+  void DrawLibSDLgfx::setClipRect(int x, int y,
+				  unsigned int w, unsigned int h) {
     SDL_Rect *rect = new SDL_Rect();
 
     rect->x = x;
@@ -254,9 +264,10 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
   void DrawLibSDLgfx::setLineWidth(float width) {
   }
 
-  void DrawLibSDLgfx::init(int nDispWidth, int nDispHeight, int nDispBPP,
-			   bool bWindowed, Theme * ptheme) {
-
+  void DrawLibSDLgfx::init(unsigned int nDispWidth, unsigned int nDispHeight,
+			   unsigned int nDispBPP, bool bWindowed,
+			   Theme * ptheme)
+  {
     /* Set suggestions */
     m_nDispWidth = nDispWidth;
     m_nDispHeight = nDispHeight;
@@ -283,18 +294,16 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
     if ((m_screen =
 	 SDL_SetVideoMode(m_nDispWidth, m_nDispHeight, m_nDispBPP,
 			  nFlags)) == NULL) {
-      Log
-	("** Warning ** : Tried to set video mode %dx%d @ %d-bit, but SDL responded: %s\n"
-	 "                Now SDL will try determining a proper mode itself.",
-	 m_nDispWidth, m_nDispHeight, m_nDispBPP);
+      Logger::Log("** Warning ** : Tried to set video mode %dx%d @ %d-bit, but SDL responded: %s\n"
+		  "                Now SDL will try determining a proper mode itself.",
+		  m_nDispWidth, m_nDispHeight, m_nDispBPP);
 
       /* Hmm, try letting it decide the BPP automatically */
       if ((m_screen =
 	   SDL_SetVideoMode(m_nDispWidth, m_nDispHeight, 0,
 			    nFlags)) == NULL) {
 	/* Still no luck */
-	Log
-	  ("** Warning ** : Still no luck, now we'll try 800x600 in a window.");
+	Logger::Log("** Warning ** : Still no luck, now we'll try 800x600 in a window.");
 	m_nDispWidth = 800;
 	m_nDispHeight = 600;
 	m_bWindowed = true;
@@ -321,7 +330,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
     SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY,
 			SDL_DEFAULT_REPEAT_INTERVAL);
 
-    Log("Using SDL_gfx implementation");
+    Logger::Log("Using SDL_gfx implementation");
 
 
     //screenBuffer.nPixelAlign = m_screen->format->BytesPerPixel;
@@ -543,6 +552,16 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
     m_min.y = 0;
     m_max.x = 0;
     m_max.y = 0;
+  }
+
+  void DrawLibSDLgfx::endDrawKeepProperties()
+  {
+    endDraw();
+  }
+
+  void DrawLibSDLgfx::removePropertiesAfterEnd()
+  {
+
   }
 
   void DrawLibSDLgfx::setColor(Color color) {
