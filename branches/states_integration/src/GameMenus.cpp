@@ -1086,30 +1086,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     if(m_pNewLevelsAvailable != NULL) {
       m_pNewLevelsAvailable->showWindow(m_bWebLevelsToDownload);
     }
-
-    /* LEVEL PACKS */
-    UIButton *pOpenButton = (UIButton *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:PACK_TAB:LEVELPACK_OPEN_BUTTON");
-    UIPackTree *pLevelPackTree = (UIPackTree *)m_pLevelPacksWindow->getChild("LEVELPACK_TABS:PACK_TAB:LEVELPACK_TREE");
-    if(pOpenButton!=NULL && pLevelPackTree!=NULL && pOpenButton->isClicked()) {
-      /* Open level pack viewer */
-      LevelsPack* nSelectedPack;
-      nSelectedPack = pLevelPackTree->getSelectedPack();
-      if(nSelectedPack != NULL) {
-        pOpenButton->setClicked(false);
-        pOpenButton->setActive(false);      
-
-	m_stateManager->pushState(new StateLevelPackViewer(this, nSelectedPack));
-	// to be remplaced with the StateLevelPackViewer state.
-	/*
-	m_pPackLevelInfoFrame->showWindow(false);
-        m_pLevelPackViewer->showWindow(true);
-        m_pMainMenu->enableChildren(false);
-        m_pMainMenu->enableWindow(false);
-	m_State = GS_LEVELPACK_VIEWER;
-	*/
-        return;
-      }
-    }
     
     /* OPTIONS */
     UIButton *pEnableAudioButton = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:AUDIO_TAB:ENABLE_AUDIO");

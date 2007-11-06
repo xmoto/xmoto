@@ -63,7 +63,7 @@ void StateLevelPackViewer::enter()
 
 void StateLevelPackViewer::leave()
 {
-
+  StateMenu::leave();
 }
 
 void StateLevelPackViewer::enterAfterPop()

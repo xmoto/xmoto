@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateMessageBox.h"
 #include "StateHelp.h"
 #include "StateEditProfile.h"
+#include "StateLevelPackViewer.h"
 #include "LevelsManager.h"
 
 /* static members */
@@ -214,11 +215,31 @@ void StateMainMenu::checkEvents() {
   }
 
   // level tab
+  checkEventsLevelsPackTab();
   checkEventsLevelsFavoriteTab();
   checkEventsLevelsNewTab();
 
   // replay tab
   checkEventsReplays();
+}
+
+void StateMainMenu::checkEventsLevelsPackTab()
+{
+  UIButton*   v_button;
+  UIPackTree* v_packTree;
+
+  // open button
+  v_button = reinterpret_cast<UIButton*>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:PACK_TAB:PACK_OPEN_BUTTON"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+
+    v_packTree = reinterpret_cast<UIPackTree*>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:PACK_TAB:PACK_TREE"));
+
+    LevelsPack* nSelectedPack = v_packTree->getSelectedPack();
+    if(nSelectedPack != NULL){
+      m_pGame->getStateManager()->pushState(new StateLevelPackViewer(m_pGame, nSelectedPack));
+    }
+  }
 }
 
 void StateMainMenu::checkEventsLevelsFavoriteTab() {
