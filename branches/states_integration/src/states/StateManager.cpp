@@ -27,6 +27,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateMainMenu.h"
 #include "StateHelp.h"
 #include "StateLevelInfoViewer.h"
+#include "StateEditProfile.h"
+#include "StateEditWebConfig.h"
+#include "StateLevelPackViewer.h"
 #include "Game.h"
 #include "XMSession.h"
 #include "drawlib/DrawLib.h"
@@ -56,6 +59,9 @@ StateManager::StateManager(GameApp* pGame)
 
 StateManager::~StateManager()
 {
+  while(m_statesStack.size() != 0){
+    delete popState();
+  }
 }
 
 void StateManager::pushState(GameState* pNewState)
@@ -360,12 +366,15 @@ void StateManager::calculateFps()
 }
 
 void StateManager::cleanStates() {
+  StateDeadMenu::clean();
+  StateEditProfile::clean();
+  StateEditWebConfig::clean();
+  StateFinished::clean();
+  StateLevelInfoViewer::clean();
+  StateLevelPackViewer::clean();
+  StateMainMenu::clean();
   StateMessageBox::clean();
   StatePause::clean();
-  StateFinished::clean();
-  StateDeadMenu::clean();
-  StateLevelInfoViewer::clean();
-  StateMainMenu::clean();
 }
 
 int StateManager::getCurrentUpdateFPS() {
