@@ -997,14 +997,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     UIEdit *pReplayFilterEdit = reinterpret_cast<UIEdit *>(m_pReplaysWindow->getChild("REPLAYS_FILTER"));
     UIList *pReplayList = reinterpret_cast<UIList *>(m_pReplaysWindow->getChild("REPLAY_LIST"));
 
-    /* check filter */
-    if(pReplayFilterEdit != NULL) {
-      if(pReplayFilterEdit->hasChanged()) {
-	pReplayFilterEdit->setHasChanged(false);
-	pReplayList->setFilter(pReplayFilterEdit->getCaption());
-      }
-    }
-
     /* view highscore button clicked */
     if(m_pLevelInfoViewReplayButton->isClicked()) {
       m_pLevelInfoViewReplayButton->setClicked(false);
@@ -1323,96 +1315,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       _ConfigureJoystick();
     }
     
-    /* REPLAYS */        
-    UIButton *pReplaysShowButton = (UIButton *)m_pReplaysWindow->getChild("REPLAY_SHOW_BUTTON");
-    UIButton *pReplaysDeleteButton = (UIButton *)m_pReplaysWindow->getChild("REPLAY_DELETE_BUTTON");
-    UIButton *pUploadHighscoreButton = (UIButton *)m_pReplaysWindow->getChild("REPLAY_UPLOADHIGHSCORE_BUTTON");
-    UIButton *pReplaysListAllButton = (UIButton *)m_pReplaysWindow->getChild("REPLAY_LIST_ALL");
-    UIList *pReplaysList = (UIList *)m_pReplaysWindow->getChild("REPLAY_LIST");
-    
-    if(pReplaysList->getEntries().empty()) {
-      pReplaysShowButton->enableWindow(false);
-      pReplaysDeleteButton->enableWindow(false);
-    }
-    else {
-      pReplaysShowButton->enableWindow(true);
-      pReplaysDeleteButton->enableWindow(true);
-    }
-
-    if(pReplaysListAllButton->isClicked()) {
-      _UpdateReplaysList();      
-    }
-    
-    if(pReplaysList->isChanged()) {
-      pReplaysList->setChanged(false);
-      pUploadHighscoreButton->enableWindow(false);
-
-      if(m_xmsession->www()) {
-	if(pReplaysList->getSelected() >= 0 && pReplaysList->getSelected() < pReplaysList->getEntries().size()) {
-	  UIListEntry *pListEntry = pReplaysList->getEntries()[pReplaysList->getSelected()];
-	  if(pListEntry != NULL) {
-	    ReplayInfo* rplInfos;
-	    rplInfos = Replay::getReplayInfos(pListEntry->Text[0]);
-	    if(rplInfos != NULL) {
-	      if(rplInfos->fFinishTime > 0.0 && rplInfos->Player == m_xmsession->profile()) {
-		
-		char **v_result;
-		unsigned int nrow;
-		float v_finishTime;
-		
-		v_result = m_db->readDB("SELECT finishTime "
-					"FROM webhighscores WHERE id_level=\"" + 
-					xmDatabase::protectString(rplInfos->Level) + "\""
-					"AND id_room=" + m_WebHighscoresIdRoom + ";",
-					nrow);
-		if(nrow == 0) {
-		  pUploadHighscoreButton->enableWindow(true);
-		  m_db->read_DB_free(v_result);
-		} else {
-		  v_finishTime = atof(m_db->getResult(v_result, 1, 0, 0));
-		  m_db->read_DB_free(v_result);
-		  pUploadHighscoreButton->enableWindow(rplInfos->fFinishTime < v_finishTime);
-		}  	      
-	      }
-	      delete rplInfos; 
-	    }
-	  }
-	}
-      }
-    }
-    
-    if(pUploadHighscoreButton->isClicked()) {
-      pReplaysList->setClicked(false);
-      if(pReplaysList->getSelected() >= 0 && pReplaysList->getSelected() < pReplaysList->getEntries().size()) {
-        UIListEntry *pListEntry = pReplaysList->getEntries()[pReplaysList->getSelected()];
-        if(pListEntry != NULL) {
-	  uploadHighscore(pListEntry->Text[0]);
-	}
-      }
-    }
-
-    if(pReplaysShowButton->isClicked()) {
-      /* Show replay */
-      if(pReplaysList->getSelected() >= 0 && pReplaysList->getSelected() < pReplaysList->getEntries().size()) {
-        UIListEntry *pListEntry = pReplaysList->getEntries()[pReplaysList->getSelected()];
-        if(pListEntry != NULL) {
-          /* Do it captain */
-          pReplaysShowButton->setClicked(false);
-
-          m_PlaySpecificReplay = pListEntry->Text[0];
-	  m_stateManager->pushState(new StateReplaying(this, pListEntry->Text[0]));	  
-        }
-      }
-    }
-    
-    if(pReplaysDeleteButton->isClicked()) {
-      /* Delete replay - but ask the user first */
-      if(m_pDeleteReplayMsgBox == NULL) {
-	m_Renderer->getGUI()->setFont(drawLib->getFontSmall());
-        m_pDeleteReplayMsgBox = m_Renderer->getGUI()->msgBox(GAMETEXT_DELETEREPLAYMESSAGE,
-                                                            (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
-      }
-    }
 
   }
 
