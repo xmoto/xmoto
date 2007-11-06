@@ -53,8 +53,6 @@ void StateLevelPackViewer::enter()
 {
   StateMenu::enter();
 
-  m_pGame->m_State = GS_LEVELPACK_VIEWER; // to be removed, just the time states are finished
-  
   createGUIIfNeeded(m_pGame);
   m_GUI = m_sGUI;
 
@@ -84,7 +82,7 @@ void StateLevelPackViewer::checkEvents()
   UIButton *pLevelInfoButton          = reinterpret_cast<UIButton *>(m_GUI->getChild("LEVELPACK_VIEWER_FRAME:LEVELPACK_INFO_BUTTON"));
   UIButton *pLevelAddToFavoriteButton = reinterpret_cast<UIButton *>(m_GUI->getChild("LEVELPACK_VIEWER_FRAME:LEVELPACK_ADDTOFAVORITE_BUTTON"));
   UIButton *pLevelRandomizeButton     = reinterpret_cast<UIButton *>(m_GUI->getChild("LEVELPACK_VIEWER_FRAME:LEVELPACK_RANDOMIZE_BUTTON"));
-  UILevelList *pList                  = (UILevelList *)m_GUI->getChild("LEVELPACK_VIEWER_FRAME:LEVELPACK_LEVEL_LIST");
+  UILevelList *pList                  = reinterpret_cast<UILevelList*>(m_GUI->getChild("LEVELPACK_VIEWER_FRAME:LEVELPACK_LEVEL_LIST"));
   UIEdit *pLevelFilterEdit            = reinterpret_cast<UIEdit *>(m_GUI->getChild("LEVELPACK_VIEWER_FRAME:LEVELPACK_LEVEL_FILTER"));   
 
   /* check filter */
@@ -100,23 +98,12 @@ void StateLevelPackViewer::checkEvents()
     pCancelButton->setClicked(false);
       
     m_requestForEnd = true;
-    /*
-    m_State = GS_MENU;
-    m_GUI->showWindow(false);
-    m_pMainMenu->enableChildren(true);
-    m_pMainMenu->enableWindow(true);
-    */
   }
     
   if(pPlayButton!=NULL && pPlayButton->isClicked()) {
     pPlayButton->setClicked(false);
     std::string i_level = pList->getSelectedLevel();
     if(i_level != "") {
-      //m_GUI->showWindow(false);
-      //m_pMainMenu->showWindow(false);      
-      //m_PlaySpecificLevelId = i_level;
-      //m_StateAfterPlaying = GS_LEVELPACK_VIEWER;
-      //m_currentPlayingList = pList;
       StatePreplaying::setPlayAnimation(true);
       m_pGame->getStateManager()->pushState(new StatePreplaying(m_pGame, i_level));
     }
@@ -315,10 +302,10 @@ void StateLevelPackViewer::updateGUI()
   float v_roomHighscore;
   xmDatabase* pDb = m_pGame->getDb();
 
-  UIStatic *pTitle = (UIStatic *)m_GUI->getChild("LEVELPACK_VIEWER_FRAME:LEVELPACK_VIEWER_TITLE");
+  UIStatic *pTitle = reinterpret_cast<UIStatic*>(m_GUI->getChild("LEVELPACK_VIEWER_FRAME:LEVELPACK_VIEWER_TITLE"));
   pTitle->setCaption(m_pActiveLevelPack->Name());
 
-  UILevelList *pList = (UILevelList *)m_GUI->getChild("LEVELPACK_VIEWER_FRAME:LEVELPACK_LEVEL_LIST");    
+  UILevelList *pList = reinterpret_cast<UILevelList*>(m_GUI->getChild("LEVELPACK_VIEWER_FRAME:LEVELPACK_LEVEL_LIST"));
   pList->setNumeroted(true);
   pList->makeActive();
 
