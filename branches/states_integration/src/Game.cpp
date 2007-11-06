@@ -259,7 +259,6 @@ GameApp::GameApp() {
   m_pWebConfEditor=NULL;
   m_pWebConfMsgBox=NULL;
 
-  m_pDeleteReplayMsgBox=NULL;
   m_pSaveReplayMsgBox=NULL;
   m_pReplaysWindow=NULL;
   m_pLevelPacksWindow=NULL;

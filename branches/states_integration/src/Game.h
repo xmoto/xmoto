@@ -320,7 +320,6 @@ class StateManager;
       UIButton *m_pMainMenuButtons[10];
       UIFrame *m_pOptionsWindow,*m_pPlayWindow,*m_pReplaysWindow,*m_pLevelPacksWindow;
       UIWindow *m_pMainMenu;
-      UIMsgBox *m_pDeleteReplayMsgBox;
       UIFrame *m_pGameInfoWindow;
       
       /* LEVEL lists */

@@ -1050,38 +1050,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       m_pLevelPackTabs->setChanged(false);
     }
 
-    /* Delete replay msgbox? */
-    if(m_pDeleteReplayMsgBox != NULL) {
-      UIMsgBoxButton Clicked = m_pDeleteReplayMsgBox->getClicked();
-      if(Clicked != UI_MSGBOX_NOTHING) {
-        if(Clicked == UI_MSGBOX_YES) {
-          /* Delete selected replay */
-          UIList *pList = reinterpret_cast<UIList *>(m_pReplaysWindow->getChild("REPLAY_LIST"));
-          if(pList != NULL) {
-            int nIdx = pList->getSelected();
-            if(nIdx >= 0 && nIdx < pList->getEntries().size()) {
-              UIListEntry *pEntry = pList->getEntries()[nIdx];
-              if(pEntry != NULL) {
-		try {
-		  Replay::deleteReplay(pEntry->Text[0]);
-		} catch(Exception &e) {
-		  Logger::Log(e.getMsg().c_str());
-		}
-		try {
-		  m_db->replays_delete(pEntry->Text[0]);
-		} catch(Exception &e) {
-		  Logger::Log(e.getMsg().c_str());
-		}
-
-		_UpdateReplaysList();
-              }
-            }
-          }
-        }
-        delete m_pDeleteReplayMsgBox;
-        m_pDeleteReplayMsgBox = NULL;
-      }      
-    }
     
     if(m_pNewLevelsAvailable != NULL) {
       m_pNewLevelsAvailable->showWindow(m_bWebLevelsToDownload);

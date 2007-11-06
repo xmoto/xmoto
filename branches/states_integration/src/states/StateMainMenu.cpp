@@ -29,8 +29,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateMessageBox.h"
 #include "StateHelp.h"
 #include "StateEditProfile.h"
+#include "StateReplaying.h"
 #include "StateLevelPackViewer.h"
 #include "LevelsManager.h"
+#include "helpers/Log.h"
 
 /* static members */
 UIRoot*  StateMainMenu::m_sGUI = NULL;
@@ -982,16 +984,18 @@ void StateMainMenu::createLevelListsSql(UILevelList *io_levelsList, const std::s
 
 void StateMainMenu::send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input) {
   if(i_id == "QUIT") {
-    switch(i_button) {
-    case UI_MSGBOX_YES:
+    if(i_button == UI_MSGBOX_YES) {
       m_requestForEnd = true;
       m_pGame->requestEnd();
-      break;
-    case UI_MSGBOX_NO:
-      return;
-      break;
     }
   }
+
+  if(i_id == "REPLAYS_DELETE") {
+    if(i_button == UI_MSGBOX_YES) {
+      m_commands.push("REPLAYS_DELETE");
+    }
+  }
+
 }
 
 void StateMainMenu::executeOneCommand(std::string cmd)
@@ -1010,7 +1014,29 @@ void StateMainMenu::executeOneCommand(std::string cmd)
     updateLevelsLists();
     updateReplaysList();
     updateStats();
+    return;
   }
+
+  if(cmd == "REPLAYS_DELETE") {
+    UILevelList* v_list = reinterpret_cast<UILevelList *>(m_GUI->getChild("MAIN:FRAME_REPLAYS:REPLAYS_LIST"));
+    if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
+      UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
+      if(pEntry != NULL) {
+	try {
+	  Replay::deleteReplay(pEntry->Text[0]);
+	} catch(Exception &e) {
+	  Logger::Log(e.getMsg().c_str());
+	}
+	try {
+	  m_pGame->getDb()->replays_delete(pEntry->Text[0]);
+	} catch(Exception &e) {
+	  Logger::Log(e.getMsg().c_str());
+	}
+	updateReplaysList();
+      }
+    }
+  }
+
 }
 
 void StateMainMenu::updateLevelsLists() {
@@ -1102,11 +1128,17 @@ void StateMainMenu::updateReplaysList() {
     pEntry->Text.push_back(m_pGame->getDb()->getResult(v_result, 3, i, 1));
   }
   m_pGame->getDb()->read_DB_free(v_result); 
+
+  // apply the filter
+  UIEdit*      v_edit;
+  v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:FRAME_REPLAYS:REPLAYS_FILTER"));
+  v_list->setFilter(v_edit->getCaption());
 }
 
 void StateMainMenu::checkEventsReplays() {
   UIEdit*      v_edit;
   UILevelList* v_list;
+  UIButton*    v_button;
 
   v_list = reinterpret_cast<UILevelList *>(m_GUI->getChild("MAIN:FRAME_REPLAYS:REPLAYS_LIST"));
 
@@ -1117,20 +1149,43 @@ void StateMainMenu::checkEventsReplays() {
     v_list->setFilter(v_edit->getCaption());
   }
 
-//    if(pReplayFilterEdit != NULL) {
-//      if(pReplayFilterEdit->hasChanged()) {
-//	pReplayFilterEdit->setHasChanged(false);
-//	pReplayList->setFilter(pReplayFilterEdit->getCaption());
-//      }
-//    }
-//
-//    /* REPLAYS */        
-//    UIButton *pReplaysShowButton = (UIButton *)m_pReplaysWindow->getChild("REPLAY_SHOW_BUTTON");
-//    UIButton *pReplaysDeleteButton = (UIButton *)m_pReplaysWindow->getChild("REPLAY_DELETE_BUTTON");
-//    UIButton *pUploadHighscoreButton = (UIButton *)m_pReplaysWindow->getChild("REPLAY_UPLOADHIGHSCORE_BUTTON");
-//    UIButton *pReplaysListAllButton = (UIButton *)m_pReplaysWindow->getChild("REPLAY_LIST_ALL");
-//    UIList *pReplaysList = (UIList *)m_pReplaysWindow->getChild("REPLAY_LIST");
-//    
+  // show
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_REPLAYS:REPLAYS_SHOW_BUTTON"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+
+    if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
+      UIListEntry *pListEntry = v_list->getEntries()[v_list->getSelected()];
+      if(pListEntry != NULL) {
+	m_pGame->getStateManager()->pushState(new StateReplaying(m_pGame, pListEntry->Text[0]));	  
+      }
+    }
+  }
+
+  // delete
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_REPLAYS:REPLAYS_DELETE_BUTTON"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+
+    if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
+      UIListEntry *pListEntry = v_list->getEntries()[v_list->getSelected()];
+      if(pListEntry != NULL) {
+	StateMessageBox* v_msgboxState = new StateMessageBox(this, m_pGame, GAMETEXT_DELETEREPLAYMESSAGE, UI_MSGBOX_YES|UI_MSGBOX_NO);
+	v_msgboxState->setId("REPLAYS_DELETE");
+	m_pGame->getStateManager()->pushState(v_msgboxState);	
+      }
+    }
+  }
+
+  // list all
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_REPLAYS:REPLAYS_LIST_ALL"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+
+    updateReplaysList();      
+  }
+
+
 //    if(pReplaysList->getEntries().empty()) {
 //      pReplaysShowButton->enableWindow(false);
 //      pReplaysDeleteButton->enableWindow(false);
@@ -1138,10 +1193,6 @@ void StateMainMenu::checkEventsReplays() {
 //    else {
 //      pReplaysShowButton->enableWindow(true);
 //      pReplaysDeleteButton->enableWindow(true);
-//    }
-//
-//    if(pReplaysListAllButton->isClicked()) {
-//      _UpdateReplaysList();      
 //    }
 //    
 //    if(pReplaysList->isChanged()) {
@@ -1189,29 +1240,6 @@ void StateMainMenu::checkEventsReplays() {
 //        if(pListEntry != NULL) {
 //	  uploadHighscore(pListEntry->Text[0]);
 //	}
-//      }
-//    }
-//
-//    if(pReplaysShowButton->isClicked()) {
-//      /* Show replay */
-//      if(pReplaysList->getSelected() >= 0 && pReplaysList->getSelected() < pReplaysList->getEntries().size()) {
-//        UIListEntry *pListEntry = pReplaysList->getEntries()[pReplaysList->getSelected()];
-//        if(pListEntry != NULL) {
-//          /* Do it captain */
-//          pReplaysShowButton->setClicked(false);
-//
-//          m_PlaySpecificReplay = pListEntry->Text[0];
-//	  m_stateManager->pushState(new StateReplaying(this, pListEntry->Text[0]));	  
-//        }
-//      }
-//    }
-//    
-//    if(pReplaysDeleteButton->isClicked()) {
-//      /* Delete replay - but ask the user first */
-//      if(m_pDeleteReplayMsgBox == NULL) {
-//	m_Renderer->getGUI()->setFont(drawLib->getFontSmall());
-//        m_pDeleteReplayMsgBox = m_Renderer->getGUI()->msgBox(GAMETEXT_DELETEREPLAYMESSAGE,
-//                                                            (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
 //      }
 //    }
 //
