@@ -71,7 +71,6 @@ void StateReplaying::enter()
     } catch(Exception &e) {
       abortPlaying();
       m_pGame->getStateManager()->replaceState(new StateMessageBox(NULL, m_pGame, "Unable to read the replay: " + e.getMsg(), UI_MSGBOX_OK));
-      m_pGame->setState(GS_MENU);
       return;
     }
     
@@ -81,7 +80,6 @@ void StateReplaying::enter()
     } catch(Exception &e) {
       abortPlaying();
       m_pGame->getStateManager()->replaceState(new StateMessageBox(this, m_pGame, e.getMsg(), UI_MSGBOX_OK));
-      m_pGame->setState(GS_MENU);
       return;
     }
     
@@ -96,7 +94,6 @@ void StateReplaying::enter()
 	      m_pGame->getMotoGame()->getLevelSrc()->getRequiredVersion().c_str());
       abortPlaying();
       m_pGame->getStateManager()->replaceState(new StateMessageBox(this, m_pGame, cBuf, UI_MSGBOX_OK));
-      m_pGame->setState(GS_MENU);
       return;
     }
     
@@ -132,13 +129,8 @@ void StateReplaying::enter()
   } catch(Exception &e) {
     abortPlaying();
     m_pGame->getStateManager()->replaceState(new StateMessageBox(this, m_pGame, GameApp::splitText(e.getMsg(), 50), UI_MSGBOX_OK));
-    m_pGame->setState(GS_MENU);
     return;
   }
-
-  /* Context menu? */
-  m_pGame->getGameRenderer()->getGUI()->enableContextMenuDrawing(false); // to remove after states
-
 }
 
 void StateReplaying::leave()

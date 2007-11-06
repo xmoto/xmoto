@@ -55,6 +55,7 @@ void StatePreplaying::enter()
   m_pGame->getGameRenderer()->setShowEngineCounter(false);
   m_pGame->getGameRenderer()->setShowMinimap(false);
   m_pGame->getGameRenderer()->setShowTimePanel(false);
+  m_pGame->getGameRenderer()->hideReplayHelp();
   m_pGame->playMusic("");
   pWorld->setDeathAnim(m_pGame->getSession()->enableDeadAnimation());
 
