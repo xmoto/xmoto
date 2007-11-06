@@ -607,11 +607,12 @@ void GameApp::_Wait()
       Logger::Log("UserPreInit ended at %.3f", GameApp::getXMTime());
 
       /* display what must be displayed */
-      m_stateManager->pushState(new StateMainMenu(this));
+      StateMainMenu* pMainMenu = new StateMainMenu(this);
+      m_stateManager->pushState(pMainMenu);
 
       /* Do we have a player profile? */
       if(m_xmsession->profile() == "") {
-	m_stateManager->pushState(new StateEditProfile(this));
+	m_stateManager->pushState(new StateEditProfile(this, pMainMenu));
       } 
  
       /* Should we show a notification box? (with important one-time info) */
