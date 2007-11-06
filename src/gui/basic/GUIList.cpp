@@ -906,35 +906,41 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     m_nScroll += nPixels;
   }
 
-	void UIList::setFilter(std::string i_filter) {
-		m_filter = i_filter;
-		m_filteredItems = 0;
+void UIList::setFilter(std::string i_filter) {
+  m_filter = i_filter;
+  m_filteredItems = 0;
+  
+  std::string v_entry_lower;
+  std::string v_filter_lower;
+  
+  v_filter_lower = m_filter;
+  for(int j=0; j<v_filter_lower.length(); j++) {
+    v_filter_lower[j] = tolower(v_filter_lower[j]);
+  }	
+  
+  for(int i=0;i<m_Entries.size();i++) {
+    bool v_filter = true;
+    for(int j=0; j<m_Entries[i]->Text.size(); j++) {
+      v_entry_lower = m_Entries[i]->Text[j];
+      for(int j=0; j<v_entry_lower.length(); j++) {
+	v_entry_lower[j] = tolower(v_entry_lower[j]);
+      }		
+    
+      if(v_entry_lower.find(v_filter_lower, 0) != std::string::npos) {
+	v_filter = false;
+      }
+    }
 
-		std::string v_entry_lower;
-		std::string v_filter_lower;
-
-		v_filter_lower = m_filter;
-		for(int j=0; j<v_filter_lower.length(); j++) {
-			v_filter_lower[j] = tolower(v_filter_lower[j]);
-		}	
-
-    for(int i=0;i<m_Entries.size();i++) {
-			v_entry_lower = m_Entries[i]->Text[0];
-			for(int j=0; j<v_entry_lower.length(); j++) {
-				v_entry_lower[j] = tolower(v_entry_lower[j]);
-			}		
-
-			int n = v_entry_lower.find(v_filter_lower, 0);
-			m_Entries[i]->bFiltered = n == std::string::npos;
-			if(n == std::string::npos) {
-				m_filteredItems++;
-			}
-		}
-
-		/* repair the scroll bar */
-		m_nScroll = 0;
-		setRealSelected(getSelected());
-	}
+    m_Entries[i]->bFiltered = v_filter;
+    if(v_filter) {
+      m_filteredItems++;
+    }
+  }
+  
+  /* repair the scroll bar */
+  m_nScroll = 0;
+  setRealSelected(getSelected());
+}
 
   std::string UIList::getSelectedEntry() {
     if(getSelected() >= 0 && getSelected() < getEntries().size()) {
