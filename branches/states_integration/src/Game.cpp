@@ -435,9 +435,6 @@ GameApp::GameApp() {
     m_bEnableInitZoom = m_Config.getBool("InitZoom");
     m_xmsession->setEnableDeadAnimation(m_Config.getBool("DeathAnim"));
 
-    /* multi */
-    m_xmsession->setMultiStopWhenOneFinishes(m_Config.getBool("MultiStopWhenOneFinishes"));
-
     /* www */
     m_WebHighscoresURL    = m_Config.getString("WebHighscoresURL");
     m_WebHighscoresIdRoom = m_Config.getString("WebHighscoresIdRoom");
@@ -1788,7 +1785,7 @@ void GameApp::initReplay() {
   if(m_pJustPlayReplay != NULL) delete m_pJustPlayReplay;
   m_pJustPlayReplay = NULL;
 
-  if(m_bRecordReplays && getNumberOfPlayersToPlay() == 1) {
+  if(m_bRecordReplays && m_xmsession->multiNbPlayers() == 1) {
     m_pJustPlayReplay = new Replay;
     m_pJustPlayReplay->createReplay("Latest.rpl",
 				    m_MotoGame.getLevelSrc()->Id(),

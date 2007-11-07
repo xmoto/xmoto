@@ -96,7 +96,7 @@ void StatePreplaying::enter()
     pWorld->setInfos("");
 	
     /* add the players */
-    int v_nbPlayer = m_pGame->getNumberOfPlayersToPlay();
+    int v_nbPlayer = m_pGame->getSession()->multiNbPlayers();
     Logger::Log("Preplay level for %i player(s)", v_nbPlayer);
 
     m_pGame->initCameras(v_nbPlayer);

@@ -24,37 +24,43 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 XMSession::XMSession() {
   /* default config */
-  m_verbose          	     = false;
-  m_useGraphics      	     = true;
-  m_resolutionWidth  	     = 800;
-  m_resolutionHeight 	     = 600;
-  m_bpp              	     = 32;
-  m_windowed         	     = false;
-  m_glExts           	     = true;
-  m_drawlib          	     = "OPENGL";
-  m_www              	     = true;
-  m_benchmark 	     	     = false;
-  m_debug     	     	     = false;
-  m_sqlTrace  	     	     = false;
-  m_profile   	     	     = "";
-  m_gdebug    	     	     = false;
-  m_timedemo  	     	     = false;
-  m_fps       	     	     = false;
-  m_ugly      	     	     = false;
-  m_uglyOver         	     = false;
-  m_testTheme 	     	     = false;
-  m_ghostStrategy_MYBEST     = true;
-  m_ghostStrategy_THEBEST    = false;
-  m_ghostStrategy_BESTOFROOM = false;
-  m_autosaveHighscoreReplays = true;
-  m_enableGhosts             = true;
-  m_enableEngineSound        = true;
-  m_showEngineCounter        = true;
-  m_showMinimap              = true;
-  m_multiStopWhenOneFinishes = true;
-  m_enableMenuMusic          = true;
-  m_enableDeadAnimation      = true;
-  m_menuGraphics             = MENU_GFX_HIGH;
+  m_verbose          	          = false;
+  m_useGraphics      	          = true;
+  m_resolutionWidth  	          = 800;
+  m_resolutionHeight 	          = 600;
+  m_bpp              	          = 32;
+  m_windowed         	          = false;
+  m_glExts           	          = true;
+  m_drawlib          	          = "OPENGL";
+  m_www              	          = true;
+  m_benchmark 	     	          = false;
+  m_debug     	     	          = false;
+  m_sqlTrace  	     	          = false;
+  m_profile   	     	          = "";
+  m_gdebug    	     	          = false;
+  m_timedemo  	     	          = false;
+  m_fps       	     	          = false;
+  m_ugly      	     	          = false;
+  m_uglyOver         	          = false;
+  m_testTheme 	     	          = false;
+  m_ghostStrategy_MYBEST          = true;
+  m_ghostStrategy_THEBEST         = false;
+  m_ghostStrategy_BESTOFROOM      = false;
+  m_autosaveHighscoreReplays      = true;
+  m_enableGhosts                  = true;
+  m_enableEngineSound             = true;
+  m_showEngineCounter             = true;
+  m_showMinimap                   = true;
+  m_multiStopWhenOneFinishes      = true;
+  m_enableMenuMusic               = true;
+  m_enableDeadAnimation           = true;
+  m_menuGraphics                  = MENU_GFX_HIGH;
+  m_quickStartQualityMIN          = 1;
+  m_quickStartQualityMAX          = 5;
+  m_quickStartDifficultyMIN       = 1;
+  m_quickStartDifficultyMAX       = 5;
+  m_multiNbPlayers                = 1;
+  m_multiEnablStopWheNoneFinishes = true;
 }
 
 void XMSession::load(const XMArguments* i_xmargs) {
@@ -157,6 +163,21 @@ void XMSession::load(UserConfig* m_Config) {
   if(v_menuGraphics == "Low")    m_menuGraphics = MENU_GFX_LOW;
   if(v_menuGraphics == "Medium") m_menuGraphics = MENU_GFX_MEDIUM;
   if(v_menuGraphics == "High")   m_menuGraphics = MENU_GFX_HIGH;
+
+  m_quickStartQualityMIN     = m_Config->getInteger("QSQualityMIN");
+  m_quickStartQualityMAX     = m_Config->getInteger("QSQualityMAX");
+  m_quickStartDifficultyMIN  = m_Config->getInteger("QSDifficultyMIN");
+  m_quickStartDifficultyMAX  = m_Config->getInteger("QSDifficultyMAX");
+  m_multiStopWhenOneFinishes = m_Config->getBool("MultiStopWhenOneFinishes");
+}
+
+void XMSession::save(UserConfig* m_Config) {
+  m_Config->setString("DefaultProfile",         m_profile);
+  m_Config->setInteger("QSQualityMIN",          m_quickStartQualityMIN);
+  m_Config->setInteger("QSQualityMAX",          m_quickStartQualityMAX);
+  m_Config->setInteger("QSDifficultyMIN",       m_quickStartDifficultyMIN);
+  m_Config->setInteger("QSDifficultyMAX",       m_quickStartDifficultyMAX);
+  m_Config->setBool("MultiStopWhenOneFinishes", m_multiStopWhenOneFinishes);
 }
 
 bool XMSession::isVerbose() const {
@@ -385,4 +406,52 @@ void XMSession::setMenuGraphics(MenuGraphics i_value) {
 
 MenuGraphics XMSession::menuGraphics() const {
   return m_menuGraphics;
+}
+
+void XMSession::setQuickStartQualityMIN(int i_value) {
+  m_quickStartQualityMIN = i_value;
+}
+
+int XMSession::quickStartQualityMIN() {
+  return m_quickStartQualityMIN;
+}
+
+void XMSession::setQuickStartQualityMAX(int i_value) {
+  m_quickStartQualityMAX = i_value;
+}
+
+int XMSession::quickStartQualityMAX() {
+  return m_quickStartQualityMAX;
+}
+
+void XMSession::setQuickStartDifficultyMIN(int i_value) {
+  m_quickStartDifficultyMIN = i_value;
+}
+
+int XMSession::quickStartDifficultyMIN() {
+  return m_quickStartDifficultyMIN;
+}
+
+void XMSession::setQuickStartDifficultyMAX(int i_value) {
+  m_quickStartDifficultyMAX = i_value;
+}
+
+int XMSession::quickStartDifficultyMAX() {
+  return m_quickStartDifficultyMAX;
+}
+
+void XMSession::setMultiNbPlayers(int i_value) {
+  m_multiNbPlayers = i_value;
+}
+
+int XMSession::multiNbPlayers() {
+  return m_multiNbPlayers;
+}
+
+void XMSession::setMultiEnablStopWheNoneFinishes(bool i_value) {
+  m_multiStopWhenOneFinishes = i_value;
+}
+
+bool XMSession::multiEnablStopWheNoneFinishes() {
+  return m_multiStopWhenOneFinishes;
 }

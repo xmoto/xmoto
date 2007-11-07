@@ -191,7 +191,6 @@ class StateManager;
       // ask the game to close as soon as possible
       void requestEnd();
 
-      int getNumberOfPlayersToPlay();
       TColor getColorFromPlayerNumber(int i_player);
       TColor getUglyColorFromPlayerNumber(int i_player);
 

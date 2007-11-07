@@ -90,6 +90,7 @@ class StateMainMenu : public StateMenu {
 
   void checkEventsLevelsFavoriteTab();
   void checkEventsLevelsNewTab();
+  void checkEventsLevelsMultiTab();
   void checkEventsLevelsPackTab();
   void checkEventsReplays();
 };

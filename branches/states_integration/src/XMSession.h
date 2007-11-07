@@ -46,6 +46,7 @@ class XMSession {
   XMSession();
   void load(const XMArguments* i_xmargs);
   void load(UserConfig* m_Config);
+  void save(UserConfig* m_Config);
   bool isVerbose() const;
 
   void setUseGraphics(bool i_value);
@@ -104,6 +105,18 @@ class XMSession {
   bool enableDeadAnimation() const;
   void setMenuGraphics(MenuGraphics i_value);
   MenuGraphics menuGraphics() const;
+  void setQuickStartQualityMIN(int i_value);
+  int quickStartQualityMIN();
+  void setQuickStartQualityMAX(int i_value);
+  int quickStartQualityMAX();
+  void setQuickStartDifficultyMIN(int i_value);
+  int quickStartDifficultyMIN();
+  void setQuickStartDifficultyMAX(int i_value);
+  int quickStartDifficultyMAX();
+  void setMultiNbPlayers(int i_value);
+  int multiNbPlayers();
+  void setMultiEnablStopWheNoneFinishes(bool i_value);
+  bool multiEnablStopWheNoneFinishes();
 
   private:
   bool m_verbose;
@@ -139,6 +152,12 @@ class XMSession {
   bool m_enableInitZoom;
   bool m_enableDeadAnimation;
   MenuGraphics m_menuGraphics;
+  int m_quickStartQualityMIN;
+  int m_quickStartQualityMAX;
+  int m_quickStartDifficultyMIN;
+  int m_quickStartDifficultyMAX;
+  int m_multiNbPlayers;
+  bool m_multiEnablStopWheNoneFinishes;
 };
 
 #endif

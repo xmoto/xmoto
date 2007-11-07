@@ -105,15 +105,7 @@ void StateMainMenu::enter()
 
 void StateMainMenu::leave()
 {
-  UIQuickStartButton *v_quickStart;
-
   StateMenu::leave();
-
-  v_quickStart = reinterpret_cast<UIQuickStartButton *>(m_GUI->getChild("MAIN:QUICKSTART"));
-  m_pGame->getUserConfig()->setInteger("QSQualityMIN",    v_quickStart->getQualityMIN());
-  m_pGame->getUserConfig()->setInteger("QSDifficultyMIN", v_quickStart->getDifficultyMIN());
-  m_pGame->getUserConfig()->setInteger("QSQualityMAX",    v_quickStart->getQualityMAX());
-  m_pGame->getUserConfig()->setInteger("QSDifficultyMAX", v_quickStart->getDifficultyMAX());
 }
 
 void StateMainMenu::enterAfterPop()
@@ -127,14 +119,26 @@ void StateMainMenu::leaveAfterPush()
 }
 
 void StateMainMenu::checkEvents() {
-  UIButton*    v_button;
-  UILevelList* v_list;
-  std::string  v_id_level;
+  UIButton*           v_button;
+  UILevelList*        v_list;
+  std::string         v_id_level;
+  UIQuickStartButton* v_quickstart;
 
   // quickstart
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:QUICKSTART"));
-  if(v_button->isClicked()) {
-    v_button->setClicked(false);
+  v_quickstart = reinterpret_cast<UIQuickStartButton *>(m_GUI->getChild("MAIN:QUICKSTART"));
+
+  if(v_quickstart->hasChanged()) {
+    v_quickstart->setHasChanged(false);
+
+    m_pGame->getSession()->setQuickStartQualityMIN(v_quickstart->getQualityMIN());
+    m_pGame->getSession()->setQuickStartQualityMAX(v_quickstart->getQualityMAX());
+    m_pGame->getSession()->setQuickStartDifficultyMIN(v_quickstart->getDifficultyMIN());
+    m_pGame->getSession()->setQuickStartDifficultyMAX(v_quickstart->getDifficultyMAX());
+  }
+
+  if(v_quickstart->isClicked()) {
+    v_quickstart->setClicked(false);
+
     try {
       if(m_quickStartList != NULL) {
 	delete m_quickStartList;
@@ -220,9 +224,35 @@ void StateMainMenu::checkEvents() {
   checkEventsLevelsPackTab();
   checkEventsLevelsFavoriteTab();
   checkEventsLevelsNewTab();
+  checkEventsLevelsMultiTab();
 
   // replay tab
   checkEventsReplays();
+}
+
+void StateMainMenu::checkEventsLevelsMultiTab() {
+  UIButton* v_button;
+
+  // MultiStopWhenOneFinishes
+  v_button = reinterpret_cast<UIButton*>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:MULTI_TAB:ENABLEMULTISTOPWHENONEFINISHES"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+
+    m_pGame->getSession()->setMultiStopWhenOneFinishes(v_button->getChecked());
+  }
+
+  // multi players
+  for(unsigned int i=0; i<4; i++) {
+    std::ostringstream s_nbPlayers;
+    s_nbPlayers << (int) i+1;
+    v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:MULTI_TAB:MULTINB_" + s_nbPlayers.str()));  
+    if(v_button->isClicked()) {
+      v_button->setClicked(false);
+      if(v_button->getChecked()) {
+	m_pGame->getSession()->setMultiNbPlayers(i+1);
+      }
+    }
+  }
 }
 
 void StateMainMenu::checkEventsLevelsPackTab()
@@ -441,10 +471,10 @@ void StateMainMenu::createGUIIfNeeded(GameApp* pGame) {
 					m_sGUI->getPosition().nWidth  -180 -60,
 					m_sGUI->getPosition().nHeight -180 -30,
 					GAMETEXT_QUICKSTART, 180, 180,
-					pGame->getUserConfig()->getInteger("QSQualityMIN"),
-					pGame->getUserConfig()->getInteger("QSDifficultyMIN"),
-					pGame->getUserConfig()->getInteger("QSQualityMAX"),
-					pGame->getUserConfig()->getInteger("QSDifficultyMAX")
+					pGame->getSession()->quickStartQualityMIN(),
+					pGame->getSession()->quickStartDifficultyMIN(),
+					pGame->getSession()->quickStartQualityMAX(),
+					pGame->getSession()->quickStartDifficultyMAX()
 					);
   v_quickStart->setFont(drawlib->getFontSmall());
   v_quickStart->setID("QUICKSTART");

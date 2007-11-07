@@ -92,11 +92,14 @@ class UIQuickStartButton : public UIButtonDrawn {
   int getQualityMAX() const;
   int getDifficultyMAX() const;
   virtual std::string subContextHelp(int x, int y);
+  bool hasChanged(); // indicate whether the button values quality or difficulty changed
+  void setHasChanged(bool i_value);
 
  private:
   Texture *m_uncheckedTex, *m_qualityTex, *m_difficultyTex;
   int m_qualityMIN, m_difficultyMIN;
   int m_qualityMAX, m_difficultyMAX;
+  bool m_hasChanged;
 
   Vector2i getQualityPoint(const Vector2i& i_center, unsigned int i_ray, unsigned int i_value);
   Vector2i getDifficultyPoint(const Vector2i& i_center, unsigned int i_ray, unsigned int i_value);

@@ -879,19 +879,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     pMultiStopWhenOneFinishes->setChecked(m_xmsession->MultiStopWhenOneFinishes());
   }
 
-  int GameApp::getNumberOfPlayersToPlay() {
-    UIButton *pNbPlayers;
-    for(unsigned int i=0; i<4; i++) {
-      std::ostringstream s_nbPlayers;
-      s_nbPlayers << (int) i+1;
-      pNbPlayers = reinterpret_cast<UIButton *>(m_pLevelPackTabs->getChild("MULTI_TAB:MULTINB_" + s_nbPlayers.str()));  
-      if(pNbPlayers->getChecked()) {
-	return i+1;
-      }
-    }
-    return 1;
-  }
-
   /*===========================================================================
   Create menus and hide them
   ===========================================================================*/

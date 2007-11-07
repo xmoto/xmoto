@@ -665,9 +665,8 @@ void GameApp::_Wait()
     if(m_pJustPlayReplay != NULL)
     delete m_pJustPlayReplay;
     
-    if(m_xmsession->profile() != "") 
-    m_Config.setString("DefaultProfile", m_xmsession->profile());
-    
+    m_xmsession->save(&m_Config);
+
     Sound::uninit();
     delete m_Renderer;
     delete m_sysMsg;
