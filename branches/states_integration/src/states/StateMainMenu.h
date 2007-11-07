@@ -67,6 +67,12 @@ class StateMainMenu : public StateMenu {
   static UIWindow* makeWindowOptions(GameApp* pGame, UIWindow* i_parent);
   static UIWindow* makeWindowLevels(GameApp* pGame, UIWindow* i_parent);
   static UIWindow* makeWindowStats(GameApp* pGame, UIWindow* i_parent);
+  static UIWindow* makeWindowOptions_general(GameApp* pGame, UIWindow* i_parent);
+  static UIWindow* makeWindowOptions_video(GameApp* pGame, UIWindow* i_parent);
+  static UIWindow* makeWindowOptions_audio(GameApp* pGame, UIWindow* i_parent);
+  static UIWindow* makeWindowOptions_controls(GameApp* pGame, UIWindow* i_parent);
+  static UIWindow* makeWindowOptions_rooms(GameApp* pGame, UIWindow* i_parent);
+  static UIWindow* makeWindowOptions_ghosts(GameApp* pGame, UIWindow* i_parent);
 
   void updateProfile();
   void updateOptions();
@@ -93,6 +99,7 @@ class StateMainMenu : public StateMenu {
   void checkEventsLevelsMultiTab();
   void checkEventsLevelsPackTab();
   void checkEventsReplays();
+  void checkEventsMainWindow();
 };
 
 #endif
