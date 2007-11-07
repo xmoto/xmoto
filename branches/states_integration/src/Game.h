@@ -30,19 +30,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "WWW.h"
 #include "LevelsManager.h"
 
-#define PRESTART_ANIMATION_TIME 2.0
-#define INPLAY_ANIMATION_TIME 1.0
-#define INPLAY_ANIMATION_SPEED 10
-#define PRESTART_ANIMATION_LEVEL_MSG_DURATION 1.0
-#define PRESTART_ANIMATION_MARGIN_SIZE 5
-#define PRESTART_ANIMATION_CURVE 3.0
-
-/* logf(PRESTART_ANIMATION_CURVE + 1.0) = 1.386294361*/
-#define LOGF_PRE_ANIM_TIME_ADDED_ONE 1.386294361
-
-/* control the particle generation by ask the particle renders to limit themself if there are too much particles on the screen */
-#define NB_PARTICLES_TO_RENDER_LIMITATION 130
-
 class XMArguments;
 class xmDatabase;
 class XMSession;

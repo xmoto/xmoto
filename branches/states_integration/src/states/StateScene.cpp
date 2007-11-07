@@ -29,6 +29,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StatePreplaying.h"
 #include "helpers/Log.h"
 
+#define INPLAY_ANIMATION_TIME 1.0
+#define INPLAY_ANIMATION_SPEED 10
+#define PRESTART_ANIMATION_MARGIN_SIZE 5
+
+/* control the particle generation by ask the particle renders to limit themself if there are too much particles on the screen */
+#define NB_PARTICLES_TO_RENDER_LIMITATION 130
+
+
 StateScene::StateScene(GameApp* pGame, bool i_doShade, bool i_doShadeAnim):
 GameState(false, false, pGame, i_doShade, i_doShadeAnim)
 {

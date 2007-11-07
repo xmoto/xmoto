@@ -29,7 +29,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateMessageBox.h"
 #include "drawlib/DrawLib.h"
 
+#define PRESTART_ANIMATION_MARGIN_SIZE 5
+#define PRESTART_ANIMATION_TIME 2.0
+#define PRESTART_ANIMATION_CURVE 3.0
 #define PRESTART_ANIMATION_LEVEL_MSG_DURATION 1.0
+/* logf(PRESTART_ANIMATION_CURVE + 1.0) = 1.386294361*/
+#define LOGF_PRE_ANIM_TIME_ADDED_ONE 1.386294361
 
 bool StatePreplaying::m_playAnimation = true;
 

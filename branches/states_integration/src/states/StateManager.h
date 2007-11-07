@@ -94,6 +94,8 @@ class GameState : public StateMessageBoxReceiver {
       return m_name;
     }
 
+    void simpleMessage(const std::string& msg);
+
     bool showCursor() {
       return m_showCursor;
     }
