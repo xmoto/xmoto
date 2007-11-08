@@ -759,7 +759,8 @@ class UIButtonDrawn : public UIButton {
     public:
       UIRoot() {
 	m_pApp=NULL;
-        _InitWindow();        
+	m_bShowContextMenu = true;
+        _InitWindow();
       }
     
       /* Methods */
