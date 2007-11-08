@@ -180,13 +180,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     pDispResList->setFont(i_drawLib->getFontSmall());
     pDispResList->addColumn(GAMETEXT_SCREENRES,pDispResList->getPosition().nWidth,CONTEXTHELP_SCREENRES);
 
-    std::vector<std::string>* modes = getDisplayModes(i_Config->getBool("DisplayWindowed"));
-    
-    for(int i=0; i < modes->size(); i++) {
-      pDispResList->addEntry((*modes)[i].c_str());
-    }
-    
-    delete modes;
+//    std::vector<std::string>* modes = getDisplayModes(i_Config->getBool("DisplayWindowed"));
+//    
+//    for(int i=0; i < modes->size(); i++) {
+//      pDispResList->addEntry((*modes)[i].c_str());
+//    }
+//    
+//    delete modes;
 
     pDispResList->setContextHelp(CONTEXTHELP_RESOLUTION);
 

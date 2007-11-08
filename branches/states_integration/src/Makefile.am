@@ -65,6 +65,8 @@ helpers_SOURCES = helpers/VMath.h             \
                   helpers/Environment.cpp \
 		  helpers/Log.h \
 		  helpers/Log.cpp \
+		  helpers/System.h \
+		  helpers/System.cpp \
                   iqsort.h
 
 common_SOURCES = Image.cpp \

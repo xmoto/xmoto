@@ -33,6 +33,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StateLevelPackViewer.h"
 #include "LevelsManager.h"
 #include "helpers/Log.h"
+#include "helpers/System.h"
 
 /* static members */
 UIRoot*  StateMainMenu::m_sGUI = NULL;
@@ -811,127 +812,101 @@ UIWindow* StateMainMenu::makeWindowOptions_video(GameApp* pGame, UIWindow* i_par
   UIWindow*  v_window;
   UIButton*  v_button;
   UIList*    v_list;
+  UIStatic*  v_someText;
   DrawLib* drawlib = pGame->getDrawLib();
 
   v_window = new UIWindow(i_parent, 20, 40, GAMETEXT_VIDEO, i_parent->getPosition().nWidth-40, i_parent->getPosition().nHeight);
   v_window->setID("VIDEO_TAB");
-    
-//    UIButton *p16BitsPerPixel = new UIButton(pVideoOptionsTab,5,5,GAMETEXT_16BPP,(pVideoOptionsTab->getPosition().nWidth-40)/2,28);
-//    p16BitsPerPixel->setType(UI_BUTTON_TYPE_RADIO);
-//    p16BitsPerPixel->setID("16BPP");
-//    p16BitsPerPixel->enableWindow(true);
-//    p16BitsPerPixel->setFont(drawlib->getFontSmall());
-//    p16BitsPerPixel->setGroup(20023);
-//    p16BitsPerPixel->setContextHelp(CONTEXTHELP_HIGHCOLOR);
-//
-//    UIButton *p32BitsPerPixel = new UIButton(pVideoOptionsTab,5 + ((pVideoOptionsTab->getPosition().nWidth-40)/2)*1,5,GAMETEXT_32BPP,(pVideoOptionsTab->getPosition().nWidth-40)/2,28);
-//    p32BitsPerPixel->setType(UI_BUTTON_TYPE_RADIO);
-//    p32BitsPerPixel->setID("32BPP");
-//    p32BitsPerPixel->enableWindow(true);
-//    p32BitsPerPixel->setFont(drawlib->getFontSmall());
-//    p32BitsPerPixel->setGroup(20023);
-//    p32BitsPerPixel->setContextHelp(CONTEXTHELP_TRUECOLOR);
-//    
-//    UIList *pDispResList = new UIList(pVideoOptionsTab,5,43,"",
-//				      pVideoOptionsTab->getPosition().nWidth       - 10,
-//				      pVideoOptionsTab->getPosition().nHeight - 43 - 10 - 140);
-//    pDispResList->setID("RES_LIST");
-//    pDispResList->setFont(drawlib->getFontSmall());
-//    pDispResList->addColumn(GAMETEXT_SCREENRES,pDispResList->getPosition().nWidth,CONTEXTHELP_SCREENRES);
-//
-//    std::vector<std::string>* modes = getDisplayModes(i_Config->getBool("DisplayWindowed"));
-//    
-//    for(int i=0; i < modes->size(); i++) {
-//      pDispResList->addEntry((*modes)[i].c_str());
-//    }
-//    
-//    delete modes;
-//
-//    pDispResList->setContextHelp(CONTEXTHELP_RESOLUTION);
-//
-//    UIButton *pRunWindowed = new UIButton(pVideoOptionsTab,5, pVideoOptionsTab->getPosition().nHeight - 43 - 10 - 90,
-//					  GAMETEXT_RUNWINDOWED,
-//					  (pVideoOptionsTab->getPosition().nWidth-40)/1,
-//					  28);
-//    pRunWindowed->setType(UI_BUTTON_TYPE_CHECK);
-//    pRunWindowed->setID("RUN_WINDOWED");
-//    pRunWindowed->enableWindow(true);
-//    pRunWindowed->setFont(drawlib->getFontSmall());
-//    pRunWindowed->setContextHelp(CONTEXTHELP_RUN_IN_WINDOW);
-//    
-//    pSomeText = new UIStatic(pVideoOptionsTab,5,pVideoOptionsTab->getPosition().nHeight - 43 - 10 - 60,
-//			     std::string(GAMETEXT_MENUGFX) +":",120,28);
-//    pSomeText->setFont(drawlib->getFontSmall());    
-//    pSomeText->enableWindow(true);
-//    pSomeText->showWindow(true);
-//
-//    UIButton *pMenuLow = new UIButton(pVideoOptionsTab,120,pVideoOptionsTab->getPosition().nHeight - 43 - 10 - 60,
-//				      GAMETEXT_LOW,(pVideoOptionsTab->getPosition().nWidth-120)/3,28);
-//    pMenuLow->setType(UI_BUTTON_TYPE_RADIO);
-//    pMenuLow->setID("MENULOW");
-//    pMenuLow->enableWindow(true);
-//    pMenuLow->setFont(drawlib->getFontSmall());
-//    pMenuLow->setGroup(20024);
-//    pMenuLow->setContextHelp(CONTEXTHELP_LOW_MENU);
-//
-//    UIButton *pMenuMed = new UIButton(pVideoOptionsTab,120+((pVideoOptionsTab->getPosition().nWidth-120)/3)*1,
-//				      pVideoOptionsTab->getPosition().nHeight - 43 - 10 - 60,
-//				      GAMETEXT_MEDIUM,(pVideoOptionsTab->getPosition().nWidth-120)/3,28);
-//    pMenuMed->setType(UI_BUTTON_TYPE_RADIO);
-//    pMenuMed->setID("MENUMEDIUM");
-//    pMenuMed->enableWindow(true);
-//    pMenuMed->setFont(drawlib->getFontSmall());
-//    pMenuMed->setGroup(20024);
-//    pMenuMed->setContextHelp(CONTEXTHELP_MEDIUM_MENU);
-//
-//    UIButton *pMenuHigh = new UIButton(pVideoOptionsTab,120+((pVideoOptionsTab->getPosition().nWidth-120)/3)*2,
-//				       pVideoOptionsTab->getPosition().nHeight - 43 - 10 - 60,
-//				       GAMETEXT_HIGH,(pVideoOptionsTab->getPosition().nWidth-120)/3,28);
-//    pMenuHigh->setType(UI_BUTTON_TYPE_RADIO);
-//    pMenuHigh->setID("MENUHIGH");
-//    pMenuHigh->enableWindow(true);
-//    pMenuHigh->setFont(drawlib->getFontSmall());
-//    pMenuHigh->setGroup(20024);
-//    pMenuHigh->setContextHelp(CONTEXTHELP_HIGH_MENU);
-//
-//    pSomeText = new UIStatic(pVideoOptionsTab,5,
-//			     pVideoOptionsTab->getPosition().nHeight - 43 - 10 - 30,
-//			     std::string(GAMETEXT_GAMEGFX) + ":",120,28);
-//    pSomeText->setFont(drawlib->getFontSmall());    
-//    pSomeText->enableWindow(true);
-//    pSomeText->showWindow(true);
-//
-//    UIButton *pGameLow = new UIButton(pVideoOptionsTab,120,
-//				      pVideoOptionsTab->getPosition().nHeight - 43 - 10 - 30,
-//				      GAMETEXT_LOW,(pVideoOptionsTab->getPosition().nWidth-120)/3,28);
-//    pGameLow->setType(UI_BUTTON_TYPE_RADIO);
-//    pGameLow->setID("GAMELOW");
-//    pGameLow->enableWindow(true);
-//    pGameLow->setFont(drawlib->getFontSmall());
-//    pGameLow->setGroup(20025);
-//    pGameLow->setContextHelp(CONTEXTHELP_LOW_GAME);
-//
-//    UIButton *pGameMed = new UIButton(pVideoOptionsTab,120+((pVideoOptionsTab->getPosition().nWidth-120)/3)*1,
-//				      pVideoOptionsTab->getPosition().nHeight - 43 - 10 - 30,
-//				      GAMETEXT_MEDIUM,(pVideoOptionsTab->getPosition().nWidth-120)/3,28);
-//    pGameMed->setType(UI_BUTTON_TYPE_RADIO);
-//    pGameMed->setID("GAMEMEDIUM");
-//    pGameMed->enableWindow(true);
-//    pGameMed->setFont(drawlib->getFontSmall());
-//    pGameMed->setGroup(20025);
-//    pGameMed->setContextHelp(CONTEXTHELP_MEDIUM_GAME);
-//
-//    UIButton *pGameHigh = new UIButton(pVideoOptionsTab,120+((pVideoOptionsTab->getPosition().nWidth-120)/3)*2,
-//				       pVideoOptionsTab->getPosition().nHeight - 43 - 10 - 30,
-//				       GAMETEXT_HIGH,(pVideoOptionsTab->getPosition().nWidth-120)/3,28);
-//    pGameHigh->setType(UI_BUTTON_TYPE_RADIO);
-//    pGameHigh->setID("GAMEHIGH");
-//    pGameHigh->enableWindow(true);
-//    pGameHigh->setFont(drawlib->getFontSmall());
-//    pGameHigh->setGroup(20025);
-//    pGameHigh->setContextHelp(CONTEXTHELP_HIGH_GAME);
-//
+  v_window->showWindow(false);
 
+  v_button = new UIButton(v_window, 5, 5, GAMETEXT_16BPP, (v_window->getPosition().nWidth-40)/2, 28);
+  v_button->setType(UI_BUTTON_TYPE_RADIO);
+  v_button->setID("16BPP");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setGroup(20023);
+  v_button->setContextHelp(CONTEXTHELP_HIGHCOLOR);
+
+  v_button = new UIButton(v_window, 5 + (v_window->getPosition().nWidth-40)/2, 5, GAMETEXT_32BPP,
+			  (v_window->getPosition().nWidth-40)/2, 28);
+  v_button->setType(UI_BUTTON_TYPE_RADIO);
+  v_button->setID("32BPP");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setGroup(20023);
+  v_button->setContextHelp(CONTEXTHELP_TRUECOLOR);
+    
+  v_list = new UIList(v_window, 5, 43, "", v_window->getPosition().nWidth - 10, v_window->getPosition().nHeight - 43 - 10 - 140);
+  v_list->setID("RES_LIST");
+  v_list->setFont(drawlib->getFontSmall());
+  v_list->addColumn(GAMETEXT_SCREENRES, v_list->getPosition().nWidth, CONTEXTHELP_SCREENRES);
+
+  //std::vector<std::string>* modes = System::getDisplayModes(i_Config->getBool("DisplayWindowed"));
+  //for(int i=0; i < modes->size(); i++) {
+  //v_list->addEntry((*modes)[i].c_str());
+  //}
+  //delete modes;
+
+  v_list->setContextHelp(CONTEXTHELP_RESOLUTION);
+
+  v_button = new UIButton(v_window,5, v_window->getPosition().nHeight - 43 - 10 - 90, GAMETEXT_RUNWINDOWED,
+			  v_window->getPosition().nWidth-40, 28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setID("RUN_WINDOWED");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_RUN_IN_WINDOW);
+
+  v_someText = new UIStatic(v_window, 5, v_window->getPosition().nHeight - 43 - 10 - 60, std::string(GAMETEXT_MENUGFX) +":", 120, 28);
+  v_someText->setFont(drawlib->getFontSmall());    
+
+  v_button = new UIButton(v_window, 120, v_window->getPosition().nHeight - 43 - 10 - 60, GAMETEXT_LOW,
+			  (v_window->getPosition().nWidth-120)/3, 28);
+  v_button->setType(UI_BUTTON_TYPE_RADIO);
+  v_button->setID("MENULOW");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setGroup(20024);
+  v_button->setContextHelp(CONTEXTHELP_LOW_MENU);
+  
+  v_button = new UIButton(v_window, 120+(v_window->getPosition().nWidth-120)/3,
+			  v_window->getPosition().nHeight - 43 - 10 - 60, GAMETEXT_MEDIUM,(v_window->getPosition().nWidth-120)/3,28);
+  v_button->setType(UI_BUTTON_TYPE_RADIO);
+  v_button->setID("MENUMEDIUM");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setGroup(20024);
+  v_button->setContextHelp(CONTEXTHELP_MEDIUM_MENU);
+  
+  v_button = new UIButton(v_window, 120+(v_window->getPosition().nWidth-120)/3*2,
+			  v_window->getPosition().nHeight - 43 - 10 - 60, GAMETEXT_HIGH,(v_window->getPosition().nWidth-120)/3, 28);
+  v_button->setType(UI_BUTTON_TYPE_RADIO);
+  v_button->setID("MENUHIGH");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setGroup(20024);
+  v_button->setContextHelp(CONTEXTHELP_HIGH_MENU);
+  
+  v_someText = new UIStatic(v_window, 5, v_window->getPosition().nHeight - 43 - 10 - 30, std::string(GAMETEXT_GAMEGFX) + ":", 120, 28);
+  v_someText->setFont(drawlib->getFontSmall());    
+
+  v_button = new UIButton(v_window, 120, v_window->getPosition().nHeight - 43 - 10 - 30,
+			  GAMETEXT_LOW,(v_window->getPosition().nWidth-120)/3, 28);
+  v_button->setType(UI_BUTTON_TYPE_RADIO);
+  v_button->setID("GAMELOW");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setGroup(20025);
+  v_button->setContextHelp(CONTEXTHELP_LOW_GAME);
+
+  v_button = new UIButton(v_window, 120+(v_window->getPosition().nWidth-120)/3, v_window->getPosition().nHeight - 43 - 10 - 30,
+			  GAMETEXT_MEDIUM,(v_window->getPosition().nWidth-120)/3, 28);
+  v_button->setType(UI_BUTTON_TYPE_RADIO);
+  v_button->setID("GAMEMEDIUM");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setGroup(20025);
+  v_button->setContextHelp(CONTEXTHELP_MEDIUM_GAME);
+
+  v_button = new UIButton(v_window, 120+(v_window->getPosition().nWidth-120)/3*2, v_window->getPosition().nHeight - 43 - 10 - 30,
+			  GAMETEXT_HIGH, (v_window->getPosition().nWidth-120)/3, 28);
+  v_button->setType(UI_BUTTON_TYPE_RADIO);
+  v_button->setID("GAMEHIGH");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setGroup(20025);
+  v_button->setContextHelp(CONTEXTHELP_HIGH_GAME);
 }
 
 UIWindow* StateMainMenu::makeWindowOptions_audio(GameApp* pGame, UIWindow* i_parent) {
@@ -942,83 +917,78 @@ UIWindow* StateMainMenu::makeWindowOptions_audio(GameApp* pGame, UIWindow* i_par
 
   v_window = new UIWindow(i_parent, 20, 40, GAMETEXT_AUDIO, i_parent->getPosition().nWidth-40, i_parent->getPosition().nHeight);
   v_window->setID("AUDIO_TAB");
+  v_window->showWindow(false);
 
-//    UIButton *pEnableAudioButton = new UIButton(pAudioOptionsTab,5,5,GAMETEXT_ENABLEAUDIO,pAudioOptionsTab->getPosition().nWidth-10,28);
-//    pEnableAudioButton->setType(UI_BUTTON_TYPE_CHECK);
-//    pEnableAudioButton->setID("ENABLE_AUDIO");
-//    pEnableAudioButton->enableWindow(true);
-//    pEnableAudioButton->setFont(drawlib->getFontSmall());
-//    pEnableAudioButton->setContextHelp(CONTEXTHELP_SOUND_ON);
-//    
-//    UIButton *pSampleRate11Button = new UIButton(pAudioOptionsTab,25,33,GAMETEXT_11KHZ,(pAudioOptionsTab->getPosition().nWidth-40)/3,28);
-//    pSampleRate11Button->setType(UI_BUTTON_TYPE_RADIO);
-//    pSampleRate11Button->setID("RATE11KHZ");
-//    pSampleRate11Button->enableWindow(true);
-//    pSampleRate11Button->setFont(drawlib->getFontSmall());
-//    pSampleRate11Button->setGroup(10023);
-//    pSampleRate11Button->setContextHelp(CONTEXTHELP_11HZ);
-//    
-//    UIButton *pSampleRate22Button = new UIButton(pAudioOptionsTab,25 + ((pAudioOptionsTab->getPosition().nWidth-40)/3)*1,33,GAMETEXT_22KHZ,(pAudioOptionsTab->getPosition().nWidth-40)/3,28);
-//    pSampleRate22Button->setType(UI_BUTTON_TYPE_RADIO);
-//    pSampleRate22Button->setID("RATE22KHZ");
-//    pSampleRate22Button->enableWindow(true);
-//    pSampleRate22Button->setFont(drawlib->getFontSmall());
-//    pSampleRate22Button->setGroup(10023);
-//    pSampleRate22Button->setContextHelp(CONTEXTHELP_22HZ);
-//    
-//    UIButton *pSampleRate44Button = new UIButton(pAudioOptionsTab,25 + ((pAudioOptionsTab->getPosition().nWidth-40)/3)*2,33,GAMETEXT_44KHZ,(pAudioOptionsTab->getPosition().nWidth-40)/3,28);
-//    pSampleRate44Button->setType(UI_BUTTON_TYPE_RADIO);
-//    pSampleRate44Button->setID("RATE44KHZ");
-//    pSampleRate44Button->enableWindow(true);
-//    pSampleRate44Button->setFont(drawlib->getFontSmall());
-//    pSampleRate44Button->setGroup(10023);
-//    pSampleRate44Button->setContextHelp(CONTEXTHELP_44HZ);
-//
-//    UIButton *pSample8Button = new UIButton(pAudioOptionsTab,25,61,GAMETEXT_8BIT,(pAudioOptionsTab->getPosition().nWidth-40)/3,28);
-//    pSample8Button->setType(UI_BUTTON_TYPE_RADIO);
-//    pSample8Button->setID("8BIT");
-//    pSample8Button->enableWindow(true);
-//    pSample8Button->setFont(drawlib->getFontSmall());
-//    pSample8Button->setGroup(10024);
-//    pSample8Button->setContextHelp(CONTEXTHELP_8BIT);
-//
-//    UIButton *pSample16Button = new UIButton(pAudioOptionsTab,25 + ((pAudioOptionsTab->getPosition().nWidth-40)/3)*1,61,GAMETEXT_16BIT,(pAudioOptionsTab->getPosition().nWidth-40)/3,28);    
-//    pSample16Button->setType(UI_BUTTON_TYPE_RADIO);
-//    pSample16Button->setID("16BIT");
-//    pSample16Button->enableWindow(true);
-//    pSample16Button->setFont(drawlib->getFontSmall());
-//    pSample16Button->setGroup(10024);
-//    pSample16Button->setContextHelp(CONTEXTHELP_16BIT);
-//
-//    UIButton *pMonoButton = new UIButton(pAudioOptionsTab,25,89,GAMETEXT_MONO,(pAudioOptionsTab->getPosition().nWidth-40)/3,28);
-//    pMonoButton->setType(UI_BUTTON_TYPE_RADIO);
-//    pMonoButton->setID("MONO");
-//    pMonoButton->enableWindow(true);
-//    pMonoButton->setFont(drawlib->getFontSmall());
-//    pMonoButton->setGroup(10025);
-//    pMonoButton->setContextHelp(CONTEXTHELP_MONO);
-//    
-//    UIButton *pStereoButton = new UIButton(pAudioOptionsTab,25 + ((pAudioOptionsTab->getPosition().nWidth-40)/3)*1,89,GAMETEXT_STEREO,(pAudioOptionsTab->getPosition().nWidth-40)/3,28);
-//    pStereoButton->setType(UI_BUTTON_TYPE_RADIO);
-//    pStereoButton->setID("STEREO");
-//    pStereoButton->enableWindow(true);
-//    pStereoButton->setFont(drawlib->getFontSmall());
-//    pStereoButton->setGroup(10025);
-//    pStereoButton->setContextHelp(CONTEXTHELP_STEREO);
-//
-//    UIButton *pEnableEngineSoundButton = new UIButton(pAudioOptionsTab,5,117,GAMETEXT_ENABLEENGINESOUND,pAudioOptionsTab->getPosition().nWidth-10,28);
-//    pEnableEngineSoundButton->setType(UI_BUTTON_TYPE_CHECK);
-//    pEnableEngineSoundButton->setID("ENABLE_ENGINE_SOUND");
-//    pEnableEngineSoundButton->enableWindow(true);
-//    pEnableEngineSoundButton->setFont(drawlib->getFontSmall());
-//    pEnableEngineSoundButton->setContextHelp(CONTEXTHELP_ENGINE_SOUND);
-//    
-//    UIButton *pEnableMusicButton = new UIButton(pAudioOptionsTab,5,145,GAMETEXT_ENABLEMUSIC,pAudioOptionsTab->getPosition().nWidth-10,28);
-//    pEnableMusicButton->setType(UI_BUTTON_TYPE_CHECK);
-//    pEnableMusicButton->setID("ENABLE_MUSIC");
-//    pEnableMusicButton->enableWindow(true);
-//    pEnableMusicButton->setFont(drawlib->getFontSmall());
-//    pEnableMusicButton->setContextHelp(CONTEXTHELP_MUSIC);
+  v_button = new UIButton(v_window, 5, 5, GAMETEXT_ENABLEAUDIO, v_window->getPosition().nWidth-10, 28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setID("ENABLE_AUDIO");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_SOUND_ON);
+    
+  v_button = new UIButton(v_window, 25, 33, GAMETEXT_11KHZ, (v_window->getPosition().nWidth-40)/3, 28);
+  v_button->setType(UI_BUTTON_TYPE_RADIO);
+  v_button->setID("RATE11KHZ");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setGroup(10023);
+  v_button->setContextHelp(CONTEXTHELP_11HZ);
+    
+  v_button = new UIButton(v_window, 25+(v_window->getPosition().nWidth-40)/3, 33, GAMETEXT_22KHZ,
+			  (v_window->getPosition().nWidth-40)/3, 28);
+  v_button->setType(UI_BUTTON_TYPE_RADIO);
+  v_button->setID("RATE22KHZ");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setGroup(10023);
+  v_button->setContextHelp(CONTEXTHELP_22HZ);
+    
+  v_button = new UIButton(v_window, 25+(v_window->getPosition().nWidth-40)/3*2, 33, GAMETEXT_44KHZ,
+			  (v_window->getPosition().nWidth-40)/3, 28);
+  v_button->setType(UI_BUTTON_TYPE_RADIO);
+  v_button->setID("RATE44KHZ");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setGroup(10023);
+  v_button->setContextHelp(CONTEXTHELP_44HZ);
+
+  v_button = new UIButton(v_window, 25, 61, GAMETEXT_8BIT, (v_window->getPosition().nWidth-40)/3, 28);
+  v_button->setType(UI_BUTTON_TYPE_RADIO);
+  v_button->setID("8BIT");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setGroup(10024);
+  v_button->setContextHelp(CONTEXTHELP_8BIT);
+
+  v_button = new UIButton(v_window, 25+(v_window->getPosition().nWidth-40)/3, 61, GAMETEXT_16BIT,
+			  (v_window->getPosition().nWidth-40)/3, 28);    
+  v_button->setType(UI_BUTTON_TYPE_RADIO);
+  v_button->setID("16BIT");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setGroup(10024);
+  v_button->setContextHelp(CONTEXTHELP_16BIT);
+
+  v_button = new UIButton(v_window, 25, 89, GAMETEXT_MONO, (v_window->getPosition().nWidth-40)/3, 28);
+  v_button->setType(UI_BUTTON_TYPE_RADIO);
+  v_button->setID("MONO");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setGroup(10025);
+  v_button->setContextHelp(CONTEXTHELP_MONO);
+    
+  v_button = new UIButton(v_window, 25+(v_window->getPosition().nWidth-40)/3, 89, GAMETEXT_STEREO,
+			  (v_window->getPosition().nWidth-40)/3, 28);
+  v_button->setType(UI_BUTTON_TYPE_RADIO);
+  v_button->setID("STEREO");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setGroup(10025);
+  v_button->setContextHelp(CONTEXTHELP_STEREO);
+
+  v_button = new UIButton(v_window, 5, 117, GAMETEXT_ENABLEENGINESOUND, v_window->getPosition().nWidth-10, 28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setID("ENABLE_ENGINE_SOUND");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_ENGINE_SOUND);
+    
+  v_button = new UIButton(v_window, 5, 145, GAMETEXT_ENABLEMUSIC, v_window->getPosition().nWidth-10, 28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setID("ENABLE_MUSIC");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_MUSIC);
 }
 
 UIWindow* StateMainMenu::makeWindowOptions_controls(GameApp* pGame, UIWindow* i_parent) {
@@ -1029,6 +999,7 @@ UIWindow* StateMainMenu::makeWindowOptions_controls(GameApp* pGame, UIWindow* i_
 
   v_window = new UIWindow(i_parent, 20, 40, GAMETEXT_CONTROLS, i_parent->getPosition().nWidth-40, i_parent->getPosition().nHeight);
   v_window->setID("CONTROLS_TAB");
+  v_window->showWindow(false);
 
 //    UIButton *pKeyboardControls = new UIButton(pControlsOptionsTab,5,5,GAMETEXT_KEYBOARD,(pControlsOptionsTab->getPosition().nWidth-40)/2,28);
 //    pKeyboardControls->setType(UI_BUTTON_TYPE_RADIO);
@@ -1078,6 +1049,7 @@ UIWindow* StateMainMenu::makeWindowOptions_rooms(GameApp* pGame, UIWindow* i_par
 
   v_window = new UIWindow(i_parent, 0, 26, GAMETEXT_WWWTAB, i_parent->getPosition().nWidth, i_parent->getPosition().nHeight);
   v_window->setID("WWW_TAB");
+  v_window->showWindow(false);
 
 //    UITabView *pWWWOptionsTabs  = new UITabView(pWWWOptionsTab,0,0,"",pWWWOptionsTab->getPosition().nWidth,pWWWOptionsTab->getPosition().nHeight-76);
 //    pWWWOptionsTabs->setID("WWWOPTIONS_TABS");
@@ -1214,6 +1186,7 @@ UIWindow* StateMainMenu::makeWindowOptions_ghosts(GameApp* pGame, UIWindow* i_pa
 
   v_window = new UIWindow(i_parent, 20, 40, GAMETEXT_GHOSTTAB, i_parent->getPosition().nWidth-40, i_parent->getPosition().nHeight);
   v_window->setID("GHOST_TAB");
+  v_window->showWindow(false);
 
 //    UIButton *pEnableGhost = new UIButton(pGhostOptionsTab,5,5,GAMETEXT_ENABLEGHOST,(pGhostOptionsTab->getPosition().nWidth-40),28);
 //    pEnableGhost->setType(UI_BUTTON_TYPE_CHECK);

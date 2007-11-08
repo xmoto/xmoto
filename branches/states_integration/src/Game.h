@@ -139,7 +139,6 @@ class StateManager;
       static void getMousePos(int *pnX, int *pnY);
       bool haveMouseMoved(void);
       
-      static std::vector<std::string>* getDisplayModes(int windowed);
       Img *grabScreen(void);
       bool isUglyMode();
       /* */

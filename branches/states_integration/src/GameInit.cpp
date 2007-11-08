@@ -629,9 +629,6 @@ void GameApp::_Wait()
     drawLib->flushGraphics();
     
     /* final initialisation so that xmoto seems to be loaded fastly */
-        
-    /* load levels lists */
-    _UpdateLevelsLists();
 
     /* Update stats */
     if(m_xmsession->profile() != "") {
