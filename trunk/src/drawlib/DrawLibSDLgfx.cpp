@@ -156,6 +156,7 @@ DrawLibSDLgfx::DrawLibSDLgfx():DrawLib() {
     m_max.x = 0;
     m_max.y = 0;
     m_polyDraw = NULL;
+    m_texture = NULL;
 
    m_fontSmall  = getFontManager(FS::FullPath(FontManager::getDrawFontFile()), 14);
    m_fontMedium = getFontManager(FS::FullPath(FontManager::getDrawFontFile()), 22);
