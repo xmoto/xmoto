@@ -102,6 +102,13 @@ void StateMainMenu::enter()
   updateLevelsLists();
   updateReplaysList();
   updateStats();
+  
+  // update options
+  updateThemesList();
+  updateResolutionsList();
+  updateControlsList();
+  updateRoomsList();
+  updateOptions();
 }
 
 void StateMainMenu::leave()
@@ -523,11 +530,6 @@ void StateMainMenu::updateProfile() {
   v_playerTag->setCaption(v_caption);
 }
 
-void StateMainMenu::updateOptions() {
-  UIButton* v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:MULTI_TAB:ENABLEMULTISTOPWHENONEFINISHES"));
-  v_button->setChecked(m_pGame->getSession()->MultiStopWhenOneFinishes());
-}
-
 UIWindow* StateMainMenu::makeWindowStats(GameApp* pGame, UIWindow* i_parent) {
   UIStatic* v_someText;
   UIFrame* v_window;
@@ -835,16 +837,9 @@ UIWindow* StateMainMenu::makeWindowOptions_video(GameApp* pGame, UIWindow* i_par
   v_button->setContextHelp(CONTEXTHELP_TRUECOLOR);
     
   v_list = new UIList(v_window, 5, 43, "", v_window->getPosition().nWidth - 10, v_window->getPosition().nHeight - 43 - 10 - 140);
-  v_list->setID("RES_LIST");
+  v_list->setID("RESOLUTIONS_LIST");
   v_list->setFont(drawlib->getFontSmall());
   v_list->addColumn(GAMETEXT_SCREENRES, v_list->getPosition().nWidth, CONTEXTHELP_SCREENRES);
-
-  //std::vector<std::string>* modes = System::getDisplayModes(i_Config->getBool("DisplayWindowed"));
-  //for(int i=0; i < modes->size(); i++) {
-  //v_list->addEntry((*modes)[i].c_str());
-  //}
-  //delete modes;
-
   v_list->setContextHelp(CONTEXTHELP_RESOLUTION);
 
   v_button = new UIButton(v_window,5, v_window->getPosition().nHeight - 43 - 10 - 90, GAMETEXT_RUNWINDOWED,
@@ -1001,181 +996,136 @@ UIWindow* StateMainMenu::makeWindowOptions_controls(GameApp* pGame, UIWindow* i_
   v_window->setID("CONTROLS_TAB");
   v_window->showWindow(false);
 
-//    UIButton *pKeyboardControls = new UIButton(pControlsOptionsTab,5,5,GAMETEXT_KEYBOARD,(pControlsOptionsTab->getPosition().nWidth-40)/2,28);
-//    pKeyboardControls->setType(UI_BUTTON_TYPE_RADIO);
-//    pKeyboardControls->setID("KEYBOARD");
-//    pKeyboardControls->enableWindow(true);
-//    pKeyboardControls->setFont(drawlib->getFontSmall());
-//    pKeyboardControls->setGroup(200243);
-//    //pKeyboardControls->setContextHelp("
+//  v_button = new UIButton(v_window, 5, 5, GAMETEXT_KEYBOARD, (v_window->getPosition().nWidth-40)/2, 28);
+//  v_button->setType(UI_BUTTON_TYPE_RADIO);
+//  v_button->setID("KEYBOARD");
+//  v_button->setFont(drawlib->getFontSmall());
+//  v_button->setGroup(200243);
 //
-//    UIButton *pJoystickControls = new UIButton(pControlsOptionsTab,5 + ((pControlsOptionsTab->getPosition().nWidth-40)/2)*1,5,GAMETEXT_JOYSTICK,(pVideoOptionsTab->getPosition().nWidth-40)/2,28);
-//    pJoystickControls->setType(UI_BUTTON_TYPE_RADIO);
-//    pJoystickControls->setID("JOYSTICK");
-//    pJoystickControls->enableWindow(true);
-//    pJoystickControls->setFont(drawlib->getFontSmall());
-//    pJoystickControls->setGroup(200243);    
+//  v_button = new UIButton(v_window, 5+(v_window->getPosition().nWidth-40)/2, 5, GAMETEXT_JOYSTICK, (v_window->getPosition().nWidth-40)/2, 28);
+//  v_button->setType(UI_BUTTON_TYPE_RADIO);
+//  v_button->setID("JOYSTICK");
+//  v_button->setFont(drawlib->getFontSmall());
+//  v_button->setGroup(200243);    
 //
-//    UIList *pKeyCList = new UIList(pControlsOptionsTab,5,43,"",pControlsOptionsTab->getPosition().nWidth-10, 118);
-//    pKeyCList->setID("KEY_ACTION_LIST");
-//    pKeyCList->setFont(drawlib->getFontSmall());
-//    pKeyCList->addColumn(GAMETEXT_ACTION,pKeyCList->getPosition().nWidth/2);
-//    pKeyCList->addColumn(GAMETEXT_KEY,pKeyCList->getPosition().nWidth/2);
-//    pKeyCList->setContextHelp(CONTEXTHELP_SELECT_ACTION);
-//
-//    UIButton *pConfigureJoystick = new UIButton(pControlsOptionsTab,0,180,GAMETEXT_CONFIGUREJOYSTICK,207,57);
-//    pConfigureJoystick->setType(UI_BUTTON_TYPE_LARGE);
-//    pConfigureJoystick->setID("CONFIGURE_JOYSTICK");
-//    pConfigureJoystick->enableWindow(true);
-//    pConfigureJoystick->setFont(drawlib->getFontSmall());
-//
-//#if defined(HIDE_JOYSTICK_SUPPORT)
-//  pKeyboardControls->showWindow(false);
-//  pJoystickControls->showWindow(false);
-//  pConfigureJoystick->showWindow(false);
-//  
-//  pKeyCList->setPosition(5,5,
-//			 pControlsOptionsTab->getPosition().nWidth  -10,
-//			 pControlsOptionsTab->getPosition().nHeight -43 -10 -10);
-//#endif
+  v_list = new UIList(v_window, 5, 5, "", v_window->getPosition().nWidth-10, v_window->getPosition().nHeight -43 -10 -10);
+  v_list->setID("KEY_ACTION_LIST");
+  v_list->setFont(drawlib->getFontSmall());
+  v_list->addColumn(GAMETEXT_ACTION, v_list->getPosition().nWidth/2);
+  v_list->addColumn(GAMETEXT_KEY, v_list->getPosition().nWidth/2);
+  v_list->setContextHelp(CONTEXTHELP_SELECT_ACTION);
 
+//  v_button = new UIButton(v_window, 0, 180, GAMETEXT_CONFIGUREJOYSTICK, 207, 57);
+//  v_button->setType(UI_BUTTON_TYPE_LARGE);
+//  v_button->setID("CONFIGURE_JOYSTICK");
+//  v_button->setFont(drawlib->getFontSmall());
 }
 
 UIWindow* StateMainMenu::makeWindowOptions_rooms(GameApp* pGame, UIWindow* i_parent) {
   UIWindow*  v_window;
   UIButton*  v_button;
   UIList*    v_list;
+  UIStatic*  v_someText;
+  UIEdit*    v_edit;
   DrawLib* drawlib = pGame->getDrawLib();
 
   v_window = new UIWindow(i_parent, 0, 26, GAMETEXT_WWWTAB, i_parent->getPosition().nWidth, i_parent->getPosition().nHeight);
   v_window->setID("WWW_TAB");
   v_window->showWindow(false);
 
-//    UITabView *pWWWOptionsTabs  = new UITabView(pWWWOptionsTab,0,0,"",pWWWOptionsTab->getPosition().nWidth,pWWWOptionsTab->getPosition().nHeight-76);
-//    pWWWOptionsTabs->setID("WWWOPTIONS_TABS");
-//    pWWWOptionsTabs->setFont(drawlib->getFontSmall());
-//    pWWWOptionsTabs->setTabContextHelp(0, CONTEXTHELP_WWW_MAIN_TAB);
-//    pWWWOptionsTabs->setTabContextHelp(1, CONTEXTHELP_WWW_ROOMS_TAB);
-//
-//    UIWindow *pWWWMainOptionsTab = new UIWindow(pWWWOptionsTabs,20,40,GAMETEXT_WWWMAINTAB,pWWWOptionsTabs->getPosition().nWidth-40,pWWWOptionsTabs->getPosition().nHeight);
-//    pWWWMainOptionsTab->enableWindow(true);
-//    pWWWMainOptionsTab->showWindow(true);
-//    pWWWMainOptionsTab->setID("WWW_MAIN_TAB");
-//
-//    UIWindow *pWWWRoomsOptionsTab = new UIWindow(pWWWOptionsTabs,20,40,GAMETEXT_WWWROOMSTAB,pWWWOptionsTabs->getPosition().nWidth-40,pWWWOptionsTabs->getPosition().nHeight);
-//    pWWWRoomsOptionsTab->enableWindow(true);
-//    pWWWRoomsOptionsTab->showWindow(false);
-//    pWWWRoomsOptionsTab->setID("WWW_ROOMS_TAB");
-//
-//    UIButton *pEnableWebHighscores = new UIButton(pWWWMainOptionsTab,5,5,GAMETEXT_ENABLEWEBHIGHSCORES,(pGeneralOptionsTab->getPosition().nWidth-40),28);
-//    pEnableWebHighscores->setType(UI_BUTTON_TYPE_CHECK);
-//    pEnableWebHighscores->setID("ENABLEWEBHIGHSCORES");
-//    pEnableWebHighscores->enableWindow(true);
-//    pEnableWebHighscores->setFont(drawlib->getFontSmall());
-//    pEnableWebHighscores->setGroup(50123);
-//    pEnableWebHighscores->setContextHelp(CONTEXTHELP_DOWNLOAD_BEST_TIMES);
-//
-//    UIButton *pEnableCheckNewLevelsAtStartup = new UIButton(pWWWMainOptionsTab,5,43,GAMETEXT_ENABLECHECKNEWLEVELSATSTARTUP,(pGeneralOptionsTab->getPosition().nWidth-40),28);
-//    pEnableCheckNewLevelsAtStartup->setType(UI_BUTTON_TYPE_CHECK);
-//    pEnableCheckNewLevelsAtStartup->setID("ENABLECHECKNEWLEVELSATSTARTUP");
-//    pEnableCheckNewLevelsAtStartup->enableWindow(true);
-//    pEnableCheckNewLevelsAtStartup->setFont(drawlib->getFontSmall());
-//    pEnableCheckNewLevelsAtStartup->setGroup(50123);
-//    pEnableCheckNewLevelsAtStartup->setContextHelp(CONTEXTHELP_ENABLE_CHECK_NEW_LEVELS_AT_STARTUP);
-//
-//    UIButton *pEnableCheckHighscoresAtStartup = new UIButton(pWWWMainOptionsTab,5,81,GAMETEXT_ENABLECHECKHIGHSCORESATSTARTUP,(pGeneralOptionsTab->getPosition().nWidth-40),28);
-//    pEnableCheckHighscoresAtStartup->setType(UI_BUTTON_TYPE_CHECK);
-//    pEnableCheckHighscoresAtStartup->setID("ENABLECHECKHIGHSCORESATSTARTUP");
-//    pEnableCheckHighscoresAtStartup->enableWindow(true);
-//    pEnableCheckHighscoresAtStartup->setFont(drawlib->getFontSmall());
-//    pEnableCheckHighscoresAtStartup->setGroup(50123);
-//    pEnableCheckHighscoresAtStartup->setContextHelp(CONTEXTHELP_ENABLE_CHECK_HIGHSCORES_AT_STARTUP);
-//
-//    UIButton *pInGameWorldRecord = new UIButton(pWWWMainOptionsTab,5,119,GAMETEXT_ENABLEINGAMEWORLDRECORD,(pGeneralOptionsTab->getPosition().nWidth-40),28);
-//    pInGameWorldRecord->setType(UI_BUTTON_TYPE_CHECK);
-//    pInGameWorldRecord->setID("INGAMEWORLDRECORD");
-//    pInGameWorldRecord->enableWindow(true);
-//    pInGameWorldRecord->setFont(drawlib->getFontSmall());
-//    pInGameWorldRecord->setGroup(50123);
-//    pInGameWorldRecord->setContextHelp(CONTEXTHELP_INGAME_WORLD_RECORD);
-//
-//    UIButton *pINetConf = new UIButton(pWWWOptionsTab,pWWWOptionsTab->getPosition().nWidth-225,pWWWOptionsTab->getPosition().nHeight-80,GAMETEXT_PROXYCONFIG,207,57);
-//    pINetConf->setType(UI_BUTTON_TYPE_LARGE);
-//    pINetConf->setID("PROXYCONFIG");
-//    pINetConf->setFont(drawlib->getFontSmall());
-//    pINetConf->setContextHelp(CONTEXTHELP_PROXYCONFIG);
-//
-//    UIButton *pUpdHS = new UIButton(pWWWOptionsTab,pWWWOptionsTab->getPosition().nWidth-225-200,pWWWOptionsTab->getPosition().nHeight-80,GAMETEXT_UPDATEHIGHSCORES,207,57);
-//    pUpdHS->setType(UI_BUTTON_TYPE_LARGE);
-//    pUpdHS->setID("UPDATEHIGHSCORES");
-//    pUpdHS->setFont(drawlib->getFontSmall());
-//    pUpdHS->setContextHelp(CONTEXTHELP_UPDATEHIGHSCORES);
-//
-//    // rooms tab
-//    UIList *pRoomsList = new UIList(pWWWRoomsOptionsTab,5,10,"",
-//				    pWWWRoomsOptionsTab->getPosition().nWidth-200,
-//				    pWWWRoomsOptionsTab->getPosition().nHeight-30 - 85);
-//    pRoomsList->setID("ROOMS_LIST");
-//    pRoomsList->setFont(drawlib->getFontSmall());
-//    pRoomsList->addColumn(GAMETEXT_ROOM, pThemeList->getPosition().nWidth);
-//    pRoomsList->setContextHelp(CONTEXTHELP_WWW_ROOMS_LIST);
-//
-//    pSomeText = new UIStatic(pWWWRoomsOptionsTab,
-//			     pWWWRoomsOptionsTab->getPosition().nWidth-180,
-//			     5,
-//			     std::string(GAMETEXT_LOGIN) + ":",
-//			     130,
-//			     30);
-//    pSomeText->setHAlign(UI_ALIGN_LEFT);
-//    pSomeText->setFont(drawlib->getFontSmall()); 
-//    UIEdit *pRoomLoginEdit = new UIEdit(pWWWRoomsOptionsTab,
-//					pWWWRoomsOptionsTab->getPosition().nWidth-180,
-//					30,
-//					i_Config->getString("WebHighscoreUploadLogin"),150,25);
-//    pRoomLoginEdit->setFont(drawlib->getFontSmall());
-//    pRoomLoginEdit->setID("ROOM_LOGIN");
-//    pRoomLoginEdit->setContextHelp(CONTEXTHELP_ROOM_LOGIN);
-//
-//    pSomeText = new UIStatic(pWWWRoomsOptionsTab,
-//			     pWWWRoomsOptionsTab->getPosition().nWidth-180,
-//			     65,
-//			     std::string(GAMETEXT_PASSWORD) + ":",
-//			     130,
-//			     30);
-//    pSomeText->setHAlign(UI_ALIGN_LEFT);
-//    pSomeText->setFont(drawlib->getFontSmall()); 
-//    UIEdit *pRoomPasswordEdit = new UIEdit(pWWWRoomsOptionsTab,
-//					pWWWRoomsOptionsTab->getPosition().nWidth-180,
-//					90,
-//					i_Config->getString("WebHighscoreUploadPassword"),150,25);
-//    pRoomPasswordEdit->hideText(true);
-//    pRoomPasswordEdit->setFont(drawlib->getFontSmall());
-//    pRoomPasswordEdit->setID("ROOM_PASSWORD");
-//    pRoomPasswordEdit->setContextHelp(CONTEXTHELP_ROOM_PASSWORD);
-//
-//    UIButton *pUpdateRoomsButton = new UIButton(pWWWRoomsOptionsTab,
-//						pWWWRoomsOptionsTab->getPosition().nWidth/2 - 212,
-//						pWWWRoomsOptionsTab->getPosition().nHeight - 100,
-//						 GAMETEXT_UPDATEROOMSSLIST,
-//						 215,
-//						 57);
-//    pUpdateRoomsButton->setType(UI_BUTTON_TYPE_LARGE);
-//    pUpdateRoomsButton->setID("UPDATE_ROOMS_LIST");
-//    pUpdateRoomsButton->enableWindow(true);
-//    pUpdateRoomsButton->setFont(drawlib->getFontSmall());
-//    pUpdateRoomsButton->setContextHelp(CONTEXTHELP_UPDATEROOMSLIST);
-//
-//	/* upload all button */
-//	UIButton *pUploadAllHighscoresButton = new UIButton(pWWWRoomsOptionsTab,
-//		pWWWRoomsOptionsTab->getPosition().nWidth/2 + 5,
-//		pWWWRoomsOptionsTab->getPosition().nHeight - 100,
-//					GAMETEXT_UPLOAD_ALL_HIGHSCORES,215,57);
-//	pUploadAllHighscoresButton->setFont(drawlib->getFontSmall());
-//	pUploadAllHighscoresButton->setType(UI_BUTTON_TYPE_LARGE);
-//	pUploadAllHighscoresButton->setID("REPLAY_UPLOADHIGHSCOREALL_BUTTON");
-//	pUploadAllHighscoresButton->enableWindow(true);
-//	pUploadAllHighscoresButton->setContextHelp(CONTEXTHELP_UPLOAD_HIGHSCORE_ALL);	
+  v_button = new UIButton(v_window, v_window->getPosition().nWidth-225, v_window->getPosition().nHeight-80,
+			  GAMETEXT_PROXYCONFIG, 207, 57);
+  v_button->setType(UI_BUTTON_TYPE_LARGE);
+  v_button->setID("PROXYCONFIG");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_PROXYCONFIG);
 
+  v_button = new UIButton(v_window, v_window->getPosition().nWidth-225-200, v_window->getPosition().nHeight-80,
+			  GAMETEXT_UPDATEHIGHSCORES, 207, 57);
+  v_button->setType(UI_BUTTON_TYPE_LARGE);
+  v_button->setID("UPDATEHIGHSCORES");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_UPDATEHIGHSCORES);
+
+  UITabView *v_roomsTabs = new UITabView(v_window, 0, 0, "", v_window->getPosition().nWidth, v_window->getPosition().nHeight-76);
+  v_roomsTabs->setID("TABS");
+  v_roomsTabs->setFont(drawlib->getFontSmall());
+  v_roomsTabs->setTabContextHelp(0, CONTEXTHELP_WWW_MAIN_TAB);
+  v_roomsTabs->setTabContextHelp(1, CONTEXTHELP_WWW_ROOMS_TAB);
+
+  v_window = new UIWindow(v_roomsTabs, 20, 40, GAMETEXT_WWWMAINTAB, v_roomsTabs->getPosition().nWidth-40,
+			  v_roomsTabs->getPosition().nHeight);
+  v_window->setID("WWW_MAIN_TAB");
+
+  v_button = new UIButton(v_window, 5, 5, GAMETEXT_ENABLEWEBHIGHSCORES, (v_window->getPosition().nWidth-40), 28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setID("ENABLEWEBHIGHSCORES");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setGroup(50123);
+  v_button->setContextHelp(CONTEXTHELP_DOWNLOAD_BEST_TIMES);
+
+  v_button = new UIButton(v_window, 5, 43, GAMETEXT_ENABLECHECKNEWLEVELSATSTARTUP,v_window->getPosition().nWidth-40, 28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setID("ENABLECHECKNEWLEVELSATSTARTUP");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setGroup(50123);
+  v_button->setContextHelp(CONTEXTHELP_ENABLE_CHECK_NEW_LEVELS_AT_STARTUP);
+  
+  v_button = new UIButton(v_window, 5, 81, GAMETEXT_ENABLECHECKHIGHSCORESATSTARTUP, v_window->getPosition().nWidth-40, 28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setID("ENABLECHECKHIGHSCORESATSTARTUP");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setGroup(50123);
+  v_button->setContextHelp(CONTEXTHELP_ENABLE_CHECK_HIGHSCORES_AT_STARTUP);
+
+  v_button = new UIButton(v_window, 5, 119, GAMETEXT_ENABLEINGAMEWORLDRECORD, v_window->getPosition().nWidth-40, 28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setID("INGAMEWORLDRECORD");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setGroup(50123);
+  v_button->setContextHelp(CONTEXTHELP_INGAME_WORLD_RECORD);
+
+  v_window = new UIWindow(v_roomsTabs, 20, 40, GAMETEXT_WWWROOMSTAB, v_roomsTabs->getPosition().nWidth-40,
+			  v_roomsTabs->getPosition().nHeight);
+  v_window->setID("ROOMS_TAB");
+  v_window->showWindow(false);
+
+  v_list = new UIList(v_window, 5, 10, "", v_window->getPosition().nWidth-200, v_window->getPosition().nHeight-30 - 85);
+  v_list->setID("ROOMS_LIST");
+  v_list->setFont(drawlib->getFontSmall());
+  v_list->addColumn(GAMETEXT_ROOM, v_list->getPosition().nWidth);
+  v_list->setContextHelp(CONTEXTHELP_WWW_ROOMS_LIST);
+
+  v_someText = new UIStatic(v_window, v_window->getPosition().nWidth-180, 5, std::string(GAMETEXT_LOGIN) + ":", 130, 30);
+  v_someText->setHAlign(UI_ALIGN_LEFT);
+  v_someText->setFont(drawlib->getFontSmall()); 
+
+  v_edit = new UIEdit(v_window, v_window->getPosition().nWidth-180, 30, "", 150, 25);
+  v_edit->setFont(drawlib->getFontSmall());
+  v_edit->setID("ROOM_LOGIN");
+  v_edit->setContextHelp(CONTEXTHELP_ROOM_LOGIN);
+
+  v_someText = new UIStatic(v_window, v_window->getPosition().nWidth-180, 65, std::string(GAMETEXT_PASSWORD) + ":", 130, 30);
+  v_someText->setHAlign(UI_ALIGN_LEFT);
+  v_someText->setFont(drawlib->getFontSmall()); 
+
+  v_edit = new UIEdit(v_window, v_window->getPosition().nWidth-180, 90, "", 150, 25);
+  v_edit->hideText(true);
+  v_edit->setFont(drawlib->getFontSmall());
+  v_edit->setID("ROOM_PASSWORD");
+  v_edit->setContextHelp(CONTEXTHELP_ROOM_PASSWORD);
+
+  v_button = new UIButton(v_window, v_window->getPosition().nWidth/2 - 212, v_window->getPosition().nHeight - 100, GAMETEXT_UPDATEROOMSSLIST, 215, 57);
+  v_button->setType(UI_BUTTON_TYPE_LARGE);
+  v_button->setID("UPDATE_ROOMS_LIST");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_UPDATEROOMSLIST);
+
+  v_button = new UIButton(v_window, v_window->getPosition().nWidth/2 + 5, v_window->getPosition().nHeight - 100, GAMETEXT_UPLOAD_ALL_HIGHSCORES, 215, 57);
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setType(UI_BUTTON_TYPE_LARGE);
+  v_button->setID("REPLAY_UPLOADHIGHSCOREALL_BUTTON");
+  v_button->setContextHelp(CONTEXTHELP_UPLOAD_HIGHSCORE_ALL);	
 }
 
 UIWindow* StateMainMenu::makeWindowOptions_ghosts(GameApp* pGame, UIWindow* i_parent) {
@@ -1188,64 +1138,53 @@ UIWindow* StateMainMenu::makeWindowOptions_ghosts(GameApp* pGame, UIWindow* i_pa
   v_window->setID("GHOST_TAB");
   v_window->showWindow(false);
 
-//    UIButton *pEnableGhost = new UIButton(pGhostOptionsTab,5,5,GAMETEXT_ENABLEGHOST,(pGhostOptionsTab->getPosition().nWidth-40),28);
-//    pEnableGhost->setType(UI_BUTTON_TYPE_CHECK);
-//    pEnableGhost->setID("ENABLE_GHOST");
-//    pEnableGhost->enableWindow(true);
-//    pEnableGhost->setFont(drawlib->getFontSmall());
-//    pEnableGhost->setContextHelp(CONTEXTHELP_GHOST_MODE);
-//
-//    UIButton *pGhostStrategy_MYBEST = new UIButton(pGhostOptionsTab,5+20,35,GAMETEXT_GHOST_STRATEGY_MYBEST,
-//						   (pGhostOptionsTab->getPosition().nWidth-40),28);
-//    pGhostStrategy_MYBEST->setType(UI_BUTTON_TYPE_CHECK);
-//    pGhostStrategy_MYBEST->setID("GHOST_STRATEGY_MYBEST");
-//    pGhostStrategy_MYBEST->enableWindow(true);
-//    pGhostStrategy_MYBEST->setFont(drawlib->getFontSmall());
-//    pGhostStrategy_MYBEST->setContextHelp(CONTEXTHELP_GHOST_STRATEGY_MYBEST);
-//
-//    UIButton *pGhostStrategy_THEBEST = new UIButton(pGhostOptionsTab,5+20,65,GAMETEXT_GHOST_STRATEGY_THEBEST,
-//						   (pGhostOptionsTab->getPosition().nWidth-40),28);
-//    pGhostStrategy_THEBEST->setType(UI_BUTTON_TYPE_CHECK);
-//    pGhostStrategy_THEBEST->setID("GHOST_STRATEGY_THEBEST");
-//    pGhostStrategy_THEBEST->enableWindow(true);
-//    pGhostStrategy_THEBEST->setFont(drawlib->getFontSmall());
-//    pGhostStrategy_THEBEST->setContextHelp(CONTEXTHELP_GHOST_STRATEGY_THEBEST);
-//
-//    UIButton *pGhostStrategy_BESTOFROOM = new UIButton(pGhostOptionsTab,5+20,95,GAMETEXT_GHOST_STRATEGY_BESTOFROOM,
-//						       (pGhostOptionsTab->getPosition().nWidth-40),28);
-//    pGhostStrategy_BESTOFROOM->setType(UI_BUTTON_TYPE_CHECK);
-//    pGhostStrategy_BESTOFROOM->setID("GHOST_STRATEGY_BESTOFROOM");
-//    pGhostStrategy_BESTOFROOM->enableWindow(true);
-//    pGhostStrategy_BESTOFROOM->setFont(drawlib->getFontSmall());
-//    pGhostStrategy_BESTOFROOM->setContextHelp(CONTEXTHELP_GHOST_STRATEGY_BESTOFROOM);
-//
-//    UIButton *pDisplayGhostTimeDiff = new UIButton(pGhostOptionsTab,5,125,GAMETEXT_DISPLAYGHOSTTIMEDIFF,(pGhostOptionsTab->getPosition().nWidth-40),28);
-//    pDisplayGhostTimeDiff->setType(UI_BUTTON_TYPE_CHECK);
-//    pDisplayGhostTimeDiff->setID("DISPLAY_GHOST_TIMEDIFF");
-//    pDisplayGhostTimeDiff->enableWindow(true);
-//    pDisplayGhostTimeDiff->setFont(drawlib->getFontSmall());
-//    pDisplayGhostTimeDiff->setContextHelp(CONTEXTHELP_DISPLAY_GHOST_TIMEDIFF);
-//
-//    UIButton *pDisplayGhostInfo = new UIButton(pGhostOptionsTab,5,185,GAMETEXT_DISPLAYGHOSTINFO,(pGhostOptionsTab->getPosition().nWidth-40),28);
-//    pDisplayGhostInfo->setType(UI_BUTTON_TYPE_CHECK);
-//    pDisplayGhostInfo->setID("DISPLAY_GHOST_INFO");
-//    pDisplayGhostInfo->enableWindow(true);
-//    pDisplayGhostInfo->setFont(drawlib->getFontSmall());
-//    pDisplayGhostInfo->setContextHelp(CONTEXTHELP_DISPLAY_GHOST_INFO);
-//
-//    UIButton *pHideGhosts = new UIButton(pGhostOptionsTab,5,155,GAMETEXT_HIDEGHOSTS,(pGhostOptionsTab->getPosition().nWidth-40),28);
-//    pHideGhosts->setType(UI_BUTTON_TYPE_CHECK);
-//    pHideGhosts->setID("HIDEGHOSTS");
-//    pHideGhosts->enableWindow(true);
-//    pHideGhosts->setFont(drawlib->getFontSmall());
-//    pHideGhosts->setContextHelp(CONTEXTHELP_HIDEGHOSTS);
-//
-//    UIButton *pMotionBlurGhost = new UIButton(pGhostOptionsTab,5,215,GAMETEXT_MOTIONBLURGHOST,(pGhostOptionsTab->getPosition().nWidth-40),28);
-//    pMotionBlurGhost->setType(UI_BUTTON_TYPE_CHECK);
-//    pMotionBlurGhost->setID("MOTION_BLUR_GHOST");
-//    pMotionBlurGhost->enableWindow(true);
-//    pMotionBlurGhost->setFont(drawlib->getFontSmall());
-//    pMotionBlurGhost->setContextHelp(CONTEXTHELP_MOTIONBLURGHOST);
+  v_button = new UIButton(v_window, 5, 5, GAMETEXT_ENABLEGHOST, v_window->getPosition().nWidth-40, 28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setID("ENABLE_GHOST");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_GHOST_MODE);
+
+  v_button = new UIButton(v_window, 5+20, 35, GAMETEXT_GHOST_STRATEGY_MYBEST, v_window->getPosition().nWidth-40,28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setID("GHOST_STRATEGY_MYBEST");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_GHOST_STRATEGY_MYBEST);
+
+  v_button = new UIButton(v_window, 5+20, 65, GAMETEXT_GHOST_STRATEGY_THEBEST, v_window->getPosition().nWidth-40,28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setID("GHOST_STRATEGY_THEBEST");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_GHOST_STRATEGY_THEBEST);
+
+  v_button = new UIButton(v_window, 5+20, 95, GAMETEXT_GHOST_STRATEGY_BESTOFROOM, v_window->getPosition().nWidth-40, 28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setID("GHOST_STRATEGY_BESTOFROOM");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_GHOST_STRATEGY_BESTOFROOM);
+
+  v_button = new UIButton(v_window, 5, 125, GAMETEXT_DISPLAYGHOSTTIMEDIFF, v_window->getPosition().nWidth-40, 28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setID("DISPLAY_GHOST_TIMEDIFF");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_DISPLAY_GHOST_TIMEDIFF);
+
+  v_button = new UIButton(v_window, 5, 185, GAMETEXT_DISPLAYGHOSTINFO, v_window->getPosition().nWidth-40, 28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setID("DISPLAY_GHOST_INFO");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_DISPLAY_GHOST_INFO);
+
+  v_button = new UIButton(v_window, 5, 155, GAMETEXT_HIDEGHOSTS, v_window->getPosition().nWidth-40, 28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setID("HIDEGHOSTS");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_HIDEGHOSTS);
+
+  v_button = new UIButton(v_window, 5, 215, GAMETEXT_MOTIONBLURGHOST, v_window->getPosition().nWidth-40, 28);
+  v_button->setType(UI_BUTTON_TYPE_CHECK);
+  v_button->setID("MOTION_BLUR_GHOST");
+  v_button->setFont(drawlib->getFontSmall());
+  v_button->setContextHelp(CONTEXTHELP_MOTIONBLURGHOST);
 }
 
 UIWindow* StateMainMenu::makeWindowOptions(GameApp* pGame, UIWindow* i_parent) {
@@ -1276,8 +1215,8 @@ UIWindow* StateMainMenu::makeWindowOptions(GameApp* pGame, UIWindow* i_parent) {
   v_frame = makeWindowOptions_video(pGame, v_tabview);
   v_frame = makeWindowOptions_audio(pGame, v_tabview);
   v_frame = makeWindowOptions_controls(pGame, v_tabview);
-  v_frame = makeWindowOptions_ghosts(pGame, v_tabview);
   v_frame = makeWindowOptions_rooms(pGame, v_tabview);
+  v_frame = makeWindowOptions_ghosts(pGame, v_tabview);
 
   v_button = new UIButton(v_window, 20, v_window->getPosition().nHeight-68, GAMETEXT_DEFAULTS, 115, 57);
   v_button->setID("DEFAULTS_BUTTON");
@@ -1822,4 +1761,177 @@ void StateMainMenu::checkEventsReplays() {
 //      }
 //    }
 //
+}
+
+void StateMainMenu::createThemesList(UIList *pList) {
+  char **v_result;
+  unsigned int nrow;
+  UIListEntry *pEntry;
+  std::string v_id_theme;
+  std::string v_ck1, v_ck2;
+  
+  /* get selected item */
+  std::string v_selected_themeName = "";
+  if(pList->getSelected() >= 0 && pList->getSelected() < pList->getEntries().size()) {
+    UIListEntry *pEntry = pList->getEntries()[pList->getSelected()];
+    v_selected_themeName = pEntry->Text[0];
+  }
+  
+  /* recreate the list */
+  pList->clear();
+  
+  v_result = m_pGame->getDb()->readDB("SELECT a.id_theme, a.checkSum, b.checkSum "
+				      "FROM themes AS a LEFT OUTER JOIN webthemes AS b "
+				      "ON a.id_theme=b.id_theme ORDER BY a.id_theme;",
+			  nrow);
+  for(unsigned int i=0; i<nrow; i++) {
+    v_id_theme = m_pGame->getDb()->getResult(v_result, 3, i, 0);
+    v_ck1      = m_pGame->getDb()->getResult(v_result, 3, i, 1);
+    if(m_pGame->getDb()->getResult(v_result, 3, i, 2) != NULL) {
+      v_ck2      = m_pGame->getDb()->getResult(v_result, 3, i, 2);
+    }
+    
+    pEntry = pList->addEntry(v_id_theme.c_str(),
+			     NULL);
+    if(v_ck1 == v_ck2 || v_ck2 == "") {
+      pEntry->Text.push_back(GAMETEXT_THEMEHOSTED);
+    } else {
+      pEntry->Text.push_back(GAMETEXT_THEMEREQUIREUPDATE);
+    }
+  }
+  m_pGame->getDb()->read_DB_free(v_result);
+  
+  v_result = m_pGame->getDb()->readDB("SELECT a.id_theme FROM webthemes AS a LEFT OUTER JOIN themes AS b "
+				      "ON a.id_theme=b.id_theme WHERE b.id_theme IS NULL;",
+				      nrow);
+  for(unsigned int i=0; i<nrow; i++) {
+    v_id_theme = m_pGame->getDb()->getResult(v_result, 1, i, 0);
+    pEntry = pList->addEntry(v_id_theme.c_str(),
+			     NULL);
+    pEntry->Text.push_back(GAMETEXT_THEMENOTHOSTED);
+  }
+  m_pGame->getDb()->read_DB_free(v_result);
+  
+  /* reselect the previous theme */
+  if(v_selected_themeName != "") {
+    int nTheme = 0;
+    for(int i=0; i<pList->getEntries().size(); i++) {
+      if(pList->getEntries()[i]->Text[0] == v_selected_themeName) {
+	nTheme = i;
+	break;
+      }
+    }
+    pList->setRealSelected(nTheme);
+  }  
+}
+
+void StateMainMenu::updateThemesList() {
+  createThemesList(reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:THEMES_LIST")));
+}
+
+void StateMainMenu::updateResolutionsList() {
+  UIList* v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:RESOLUTIONS_LIST"));
+
+  v_list->clear();
+  std::vector<std::string>* modes = System::getDisplayModes(m_pGame->getSession()->windowed());
+  for(int i=0; i < modes->size(); i++) {
+    v_list->addEntry((*modes)[i].c_str());
+  }
+  delete modes;
+}
+
+void StateMainMenu::updateControlsList() {
+  UIList *pList = (UIList *)m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:CONTROLS_TAB:KEY_ACTION_LIST");
+  pList->clear();
+    
+  UIListEntry *p;
+    
+  p = pList->addEntry(GAMETEXT_DRIVE); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyDrive1"));
+  p = pList->addEntry(GAMETEXT_BRAKE); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyBrake1"));
+  p = pList->addEntry(GAMETEXT_FLIPLEFT); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyFlipLeft1"));
+  p = pList->addEntry(GAMETEXT_FLIPRIGHT); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyFlipRight1"));
+  p = pList->addEntry(GAMETEXT_CHANGEDIR); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyChangeDir1"));
+
+  p = pList->addEntry(GAMETEXT_DRIVE + std::string(" 2")); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyDrive2"));
+  p = pList->addEntry(GAMETEXT_BRAKE + std::string(" 2")); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyBrake2"));
+  p = pList->addEntry(GAMETEXT_FLIPLEFT + std::string(" 2")); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyFlipLeft2"));
+  p = pList->addEntry(GAMETEXT_FLIPRIGHT + std::string(" 2")); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyFlipRight2"));
+  p = pList->addEntry(GAMETEXT_CHANGEDIR + std::string(" 2")); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyChangeDir2"));
+   
+  p = pList->addEntry(GAMETEXT_DRIVE + std::string(" 3")); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyDrive3"));
+  p = pList->addEntry(GAMETEXT_BRAKE + std::string(" 3")); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyBrake3"));
+  p = pList->addEntry(GAMETEXT_FLIPLEFT + std::string(" 3")); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyFlipLeft3"));
+  p = pList->addEntry(GAMETEXT_FLIPRIGHT + std::string(" 3")); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyFlipRight3"));
+  p = pList->addEntry(GAMETEXT_CHANGEDIR + std::string(" 3")); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyChangeDir3"));
+
+  p = pList->addEntry(GAMETEXT_DRIVE + std::string(" 4")); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyDrive4"));
+  p = pList->addEntry(GAMETEXT_BRAKE + std::string(" 4")); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyBrake4"));
+  p = pList->addEntry(GAMETEXT_FLIPLEFT + std::string(" 4")); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyFlipLeft4"));
+  p = pList->addEntry(GAMETEXT_FLIPRIGHT + std::string(" 4")); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyFlipRight4"));
+  p = pList->addEntry(GAMETEXT_CHANGEDIR + std::string(" 4")); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyChangeDir4"));
+ 
+#if defined(ENABLE_ZOOMING)    
+  p = pList->addEntry(GAMETEXT_ZOOMIN); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyZoomIn"));
+  p = pList->addEntry(GAMETEXT_ZOOMOUT); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyZoomOut"));
+  p = pList->addEntry(GAMETEXT_ZOOMINIT); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyZoomInit"));   
+  p = pList->addEntry(GAMETEXT_CAMERAMOVEXUP); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyCameraMoveXUp"));
+  p = pList->addEntry(GAMETEXT_CAMERAMOVEXDOWN); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyCameraMoveXDown"));
+  p = pList->addEntry(GAMETEXT_CAMERAMOVEYUP); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyCameraMoveYUp"));
+  p = pList->addEntry(GAMETEXT_CAMERAMOVEYDOWN); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyCameraMoveYDown"));
+  p = pList->addEntry(GAMETEXT_AUTOZOOM); p->Text.push_back(m_pGame->getUserConfig()->getString("KeyAutoZoom"));
+#endif
+}
+
+void StateMainMenu::createRoomsList(UIList *pList) {
+  UIListEntry *pEntry;
+  std::string v_selected_roomName = "";
+  char **v_result;
+  unsigned int nrow;
+  std::string v_roomName, v_roomId;
+
+  /* get selected item */
+  if(pList->getSelected() >= 0 && pList->getSelected() < pList->getEntries().size()) {
+    UIListEntry *pEntry = pList->getEntries()[pList->getSelected()];
+    v_selected_roomName = pEntry->Text[0];
+  }
+
+  /* recreate the list */
+  for(unsigned int i=0; i<pList->getEntries().size(); i++) {
+    delete pList->getEntries()[i]->pvUser;
+  }
+  pList->clear();
+
+  v_result = m_pGame->getDb()->readDB("SELECT id_room, name FROM webrooms ORDER BY id_room ASC;",
+				      nrow);
+
+  for(unsigned int i=0; i<nrow; i++) {
+    v_roomId   = m_pGame->getDb()->getResult(v_result, 2, i, 0);
+    v_roomName = m_pGame->getDb()->getResult(v_result, 2, i, 1);
+    pEntry = pList->addEntry(v_roomName,
+			     reinterpret_cast<void *>(new std::string(v_roomId))
+			     );    
+  }
+  m_pGame->getDb()->read_DB_free(v_result);
+
+  /* reselect the previous room */
+  if(v_selected_roomName != "") {
+    int nRoom = 0;
+    for(int i=0; i<pList->getEntries().size(); i++) {
+      if(pList->getEntries()[i]->Text[0] == v_selected_roomName) {
+	nRoom = i;
+	break;
+      }
+    }
+    pList->setRealSelected(nRoom);
+  }
+}
+
+
+void StateMainMenu::updateRoomsList() {
+  createRoomsList(reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB:ROOMS_LIST")));
+}
+
+void StateMainMenu::updateOptions() {
+  UIButton* v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:MULTI_TAB:ENABLEMULTISTOPWHENONEFINISHES"));
+  v_button->setChecked(m_pGame->getSession()->MultiStopWhenOneFinishes());
 }
