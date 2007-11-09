@@ -1931,6 +1931,37 @@ void StateMainMenu::updateRoomsList() {
 }
 
 void StateMainMenu::updateOptions() {
-  UIButton* v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:MULTI_TAB:ENABLEMULTISTOPWHENONEFINISHES"));
+  UIButton* v_button;
+  UIList*   v_list;
+
+  // level tab (multi)
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:MULTI_TAB:ENABLEMULTISTOPWHENONEFINISHES"));
   v_button->setChecked(m_pGame->getSession()->MultiStopWhenOneFinishes());
+
+  // options/general
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:SHOWMINIMAP"));
+  v_button->setChecked(m_pGame->getSession()->showMinimap());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:SHOWENGINECOUNTER"));
+  v_button->setChecked(m_pGame->getSession()->showEngineCounter());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:INITZOOM"));
+  v_button->setChecked(m_pGame->getSession()->enableInitZoom());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:DEATHANIM"));
+  v_button->setChecked(m_pGame->getSession()->enableDeadAnimation());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:ENABLECONTEXTHELP"));
+  v_button->setChecked(m_pGame->getSession()->enableContextHelp());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:AUTOSAVEREPLAYS"));
+  v_button->setChecked(m_pGame->getSession()->autosaveHighscoreReplays());
+
+  // theme
+  v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:THEMES_LIST"));
+  std::string v_themeName = m_pGame->getSession()->theme();
+  int nTheme = 0;
+  for(int i=0; i<v_list->getEntries().size(); i++) {
+    if(v_list->getEntries()[i]->Text[0] == v_themeName) {
+      nTheme = i;
+      break;
+    }
+  }
+  v_list->setRealSelected(nTheme);  
+
 }

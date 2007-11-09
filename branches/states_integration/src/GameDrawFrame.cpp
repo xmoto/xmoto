@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "drawlib/DrawLib.h"
 #include "states/StateManager.h"
 #include <curl/curl.h>
+#include "XMSession.h"
 
 void GameApp::drawFrame(void) {
   Sound::update();
@@ -59,7 +60,7 @@ void GameApp::_PreUpdateGUI(void) {
       
       /* current theme should be updated when there are new levels */
       _UpdateWebThemes(true);
-      _UpdateWebTheme(m_Config.getString("Theme"), false);      
+      _UpdateWebTheme(m_xmsession->theme(), false);      
     }
     else if(Button == UI_MSGBOX_NO) {
       delete m_pInfoMsgBox;

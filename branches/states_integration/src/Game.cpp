@@ -220,8 +220,7 @@ GameApp::GameApp() {
 
   m_bRecordReplays = true;
   m_bCompressReplays = true;
-  m_bEnableContextHelp = true;     
-  
+ 
   m_bShowWebHighscoreInGame = false;
   m_pWebHighscores = NULL;
   m_pWebLevels = NULL;
@@ -313,16 +312,6 @@ GameApp::GameApp() {
     }
   }
 
-  std::string GameApp::getConfigThemeName(ThemeChoicer *p_themeChoicer) {
-    std::string v_currentThemeName = m_Config.getString("Theme");
-
-    if(m_db->themes_exists(v_currentThemeName)) {
-      return v_currentThemeName;
-    }
-    /* theme of the config file doesn't exist */
-    return THEME_DEFAULT_THEMENAME;
-  }
-
   /*===========================================================================
   Update settings
   ===========================================================================*/
@@ -371,7 +360,6 @@ GameApp::GameApp() {
     m_bEnableCheckHighscoresAtStartup = m_Config.getBool("CheckHighscoresAtStartup");
 
     /* Other settings */
-    m_bEnableContextHelp = m_Config.getBool("ContextHelp");
     m_xmsession->setEnableMenuMusic(m_Config.getBool("MenuMusic"));
     m_bEnableInitZoom = m_Config.getBool("InitZoom");
     m_xmsession->setEnableDeadAnimation(m_Config.getBool("DeathAnim"));
@@ -1387,7 +1375,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
 
   void GameApp::reloadTheme() {
     try {
-      m_theme.load(m_db->themes_getFileName(getConfigThemeName(m_themeChoicer)));
+      m_theme.load(m_db->themes_getFileName(m_xmsession->theme()));
     } catch(Exception &e) {
       /* unable to load the theme, load the default one */
       m_theme.load(m_db->themes_getFileName(THEME_DEFAULT_THEMENAME));

@@ -61,6 +61,8 @@ XMSession::XMSession() {
   m_quickStartDifficultyMAX       = 5;
   m_multiNbPlayers                = 1;
   m_multiEnablStopWheNoneFinishes = true;
+  m_enableContextHelp             = true;
+  m_theme                         = THEME_DEFAULT_THEMENAME;
 }
 
 void XMSession::load(const XMArguments* i_xmargs) {
@@ -169,6 +171,8 @@ void XMSession::load(UserConfig* m_Config) {
   m_quickStartDifficultyMIN  = m_Config->getInteger("QSDifficultyMIN");
   m_quickStartDifficultyMAX  = m_Config->getInteger("QSDifficultyMAX");
   m_multiStopWhenOneFinishes = m_Config->getBool("MultiStopWhenOneFinishes");
+  m_enableContextHelp        = m_Config->getBool("ContextHelp");
+  m_theme                    = m_Config->getString("Theme");
 }
 
 void XMSession::save(UserConfig* m_Config) {
@@ -178,6 +182,8 @@ void XMSession::save(UserConfig* m_Config) {
   m_Config->setInteger("QSDifficultyMIN",       m_quickStartDifficultyMIN);
   m_Config->setInteger("QSDifficultyMAX",       m_quickStartDifficultyMAX);
   m_Config->setBool("MultiStopWhenOneFinishes", m_multiStopWhenOneFinishes);
+  m_Config->setBool("ContextHelp",              m_enableContextHelp);
+  m_Config->setString("Theme",                  m_theme);
 }
 
 bool XMSession::isVerbose() const {
@@ -412,7 +418,7 @@ void XMSession::setQuickStartQualityMIN(int i_value) {
   m_quickStartQualityMIN = i_value;
 }
 
-int XMSession::quickStartQualityMIN() {
+int XMSession::quickStartQualityMIN() const {
   return m_quickStartQualityMIN;
 }
 
@@ -420,7 +426,7 @@ void XMSession::setQuickStartQualityMAX(int i_value) {
   m_quickStartQualityMAX = i_value;
 }
 
-int XMSession::quickStartQualityMAX() {
+int XMSession::quickStartQualityMAX() const {
   return m_quickStartQualityMAX;
 }
 
@@ -428,7 +434,7 @@ void XMSession::setQuickStartDifficultyMIN(int i_value) {
   m_quickStartDifficultyMIN = i_value;
 }
 
-int XMSession::quickStartDifficultyMIN() {
+int XMSession::quickStartDifficultyMIN() const {
   return m_quickStartDifficultyMIN;
 }
 
@@ -436,7 +442,7 @@ void XMSession::setQuickStartDifficultyMAX(int i_value) {
   m_quickStartDifficultyMAX = i_value;
 }
 
-int XMSession::quickStartDifficultyMAX() {
+int XMSession::quickStartDifficultyMAX() const {
   return m_quickStartDifficultyMAX;
 }
 
@@ -444,7 +450,7 @@ void XMSession::setMultiNbPlayers(int i_value) {
   m_multiNbPlayers = i_value;
 }
 
-int XMSession::multiNbPlayers() {
+int XMSession::multiNbPlayers() const {
   return m_multiNbPlayers;
 }
 
@@ -452,6 +458,22 @@ void XMSession::setMultiEnablStopWheNoneFinishes(bool i_value) {
   m_multiStopWhenOneFinishes = i_value;
 }
 
-bool XMSession::multiEnablStopWheNoneFinishes() {
+bool XMSession::multiEnablStopWheNoneFinishes() const {
   return m_multiStopWhenOneFinishes;
+}
+
+void XMSession::setEnableContextHelp(bool i_value) {
+  m_enableContextHelp = i_value;
+}
+
+bool XMSession::enableContextHelp() const {
+  return m_enableContextHelp;
+}
+
+void XMSession::setTheme(const std::string& i_value) {
+  m_theme = i_value;
+}
+
+std::string XMSession::theme() const {
+  return m_theme;
 }

@@ -1614,7 +1614,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     pContextHelp->setChecked(m_Config.getBool("ContextHelp"));
     pAutosaveReplays->setChecked(m_xmsession->autosaveHighscoreReplays());
 
-    std::string v_themeName = m_Config.getString("Theme");
+    std::string v_themeName = m_xmsession->theme();
     int nTheme = 0;
     for(int i=0; i<pThemeList->getEntries().size(); i++) {
       if(pThemeList->getEntries()[i]->Text[0] == v_themeName) {
@@ -1771,7 +1771,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     /* The following require restart */
     m_Config.setChanged(false);      
 
-    m_Config.setValue("Theme",m_Config.getDefaultValue("Theme"));
+    m_xmsession->setTheme(m_Config.getDefaultValue("Theme"));
 
     m_Config.setValue("WebHighscores",m_Config.getDefaultValue("WebHighscores"));
     
@@ -1987,7 +1987,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     if(pThemeList->getSelected() >= 0 && pThemeList->getSelected() < pThemeList->getEntries().size()) {
       UIListEntry *pEntry = pThemeList->getEntries()[pThemeList->getSelected()];
-      m_Config.setString("Theme", pEntry->Text[0]);
+      m_xmsession->setTheme(pEntry->Text[0]);
       if(m_theme.Name() != pEntry->Text[0]) {
 	Logger::Log("Reloading the theme...");
 	reloadTheme();

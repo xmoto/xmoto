@@ -111,7 +111,6 @@ class StateManager;
       void mouseDown(int nButton);
       void mouseDoubleClick(int nButton);
       void mouseUp(int nButton);
-      std::string getConfigThemeName(ThemeChoicer *p_themeChoicer);
 
       /* Methods */
       MotoGame* getMotoGame();
@@ -233,7 +232,6 @@ class StateManager;
     private:   
       /* Data */
       bool m_bEnableInitZoom;                   /* true: Perform initial level scroll/zoom */
-      bool m_bEnableContextHelp;                /* true: Show context help */
 
       bool m_bCompressReplays;                  /* true: compress replays with zlib */
 

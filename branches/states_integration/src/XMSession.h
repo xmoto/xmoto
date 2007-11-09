@@ -23,6 +23,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <string>
 
+#define THEME_DEFAULT_THEMENAME "Classic"
+
 /*
   XMSession   : current session options
   UserConfig  : config file options
@@ -106,17 +108,21 @@ class XMSession {
   void setMenuGraphics(MenuGraphics i_value);
   MenuGraphics menuGraphics() const;
   void setQuickStartQualityMIN(int i_value);
-  int quickStartQualityMIN();
+  int quickStartQualityMIN() const;
   void setQuickStartQualityMAX(int i_value);
-  int quickStartQualityMAX();
+  int quickStartQualityMAX() const;
   void setQuickStartDifficultyMIN(int i_value);
-  int quickStartDifficultyMIN();
+  int quickStartDifficultyMIN() const;
   void setQuickStartDifficultyMAX(int i_value);
-  int quickStartDifficultyMAX();
+  int quickStartDifficultyMAX() const;
   void setMultiNbPlayers(int i_value);
-  int multiNbPlayers();
+  int multiNbPlayers() const;
   void setMultiEnablStopWheNoneFinishes(bool i_value);
-  bool multiEnablStopWheNoneFinishes();
+  bool multiEnablStopWheNoneFinishes() const;
+  void setEnableContextHelp(bool i_value);
+  bool enableContextHelp() const;
+  void setTheme(const std::string& i_value);
+  std::string theme() const;
 
   private:
   bool m_verbose;
@@ -158,6 +164,8 @@ class XMSession {
   int m_quickStartDifficultyMAX;
   int m_multiNbPlayers;
   bool m_multiEnablStopWheNoneFinishes;
+  bool m_enableContextHelp;
+  std::string m_theme;
 };
 
 #endif
