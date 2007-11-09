@@ -1806,8 +1806,7 @@ void StateMainMenu::createThemesList(UIList *pList) {
 				      nrow);
   for(unsigned int i=0; i<nrow; i++) {
     v_id_theme = m_pGame->getDb()->getResult(v_result, 1, i, 0);
-    pEntry = pList->addEntry(v_id_theme.c_str(),
-			     NULL);
+    pEntry = pList->addEntry(v_id_theme.c_str(), NULL);
     pEntry->Text.push_back(GAMETEXT_THEMENOTHOSTED);
   }
   m_pGame->getDb()->read_DB_free(v_result);
