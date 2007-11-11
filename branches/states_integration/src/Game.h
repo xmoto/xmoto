@@ -192,10 +192,6 @@ class StateManager;
       OldGameState m_State; /* Current state */      
       OldGameState m_StateAfterPlaying;            /* State that should be used later */
 
-      std::string getWebHighscoresIdRoom(){
-	return m_WebHighscoresIdRoom;
-      }
-
       /* call to close the replay */
       void finalizeReplay(bool i_finished);
       void updateLevelsListsOnEnd();
@@ -211,7 +207,6 @@ class StateManager;
       void viewHighscoreOf();
 
       std::string getHighscoresRoomName() { return m_WebHighscoresRoomName;}
-      std::string getHighscoresRoomId() { return m_WebHighscoresIdRoom;}
 
       // list played
       void setCurrentPlayingList(UILevelList *i_levelsList) {m_currentPlayingList = i_levelsList;}
@@ -269,7 +264,6 @@ class StateManager;
       std::string m_DownloadingMessage;
       float m_fDownloadTaskProgressLast;
 
-      std::string m_WebHighscoresIdRoom;
       std::string m_WebHighscoresURL;
       std::string m_WebHighscoresRoomName;
 

@@ -398,7 +398,7 @@ void GameApp::_Wait()
     unsigned int nrow;
     v_result = m_db->readDB("SELECT name "
 			    "FROM webrooms "
-			    "WHERE id_room=" + m_WebHighscoresIdRoom + ";",
+			    "WHERE id_room=" + m_xmsession->idRoom() + ";",
 			    nrow);
     if(nrow == 1) {
       m_WebHighscoresRoomName = m_db->getResult(v_result, 1, 0, 0);
@@ -513,7 +513,7 @@ void GameApp::_Wait()
       /* Fetch highscores from web? */
       m_pWebRooms = new WebRooms(&m_ProxySettings);
       m_pWebHighscores = new WebRoom(&m_ProxySettings);      
-      m_pWebHighscores->setWebsiteInfos(m_WebHighscoresIdRoom,
+      m_pWebHighscores->setWebsiteInfos(m_xmsession->idRoom(),
 					m_WebHighscoresURL);
       
     if(m_xmsession->www() && m_PlaySpecificLevelFile == "" && m_PlaySpecificReplay == "") {  
@@ -573,7 +573,7 @@ void GameApp::_Wait()
     LevelsManager::checkPrerequires();
     m_levelsManager.makePacks(m_db,
 			      m_xmsession->profile(),
-			      m_Config.getString("WebHighscoresIdRoom"),
+			      m_xmsession->idRoom(),
 			      m_xmsession->debug());     
 
 

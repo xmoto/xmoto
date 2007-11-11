@@ -52,7 +52,6 @@ class ThemeChoice;
 #define DEFAULT_REPLAYUPLOAD_MSGFILE      "UploadReplayMsg.xml"
 #define DEFAULT_WEBROOMS_URL              "http://xmoto.tuxfamily.org/rooms.xml"
 #define DEFAULT_WEBROOMS_FILENAME         "webrooms.xml"
-#define DEFAULT_WEBROOM_ID                "1"
 #define DEFAULT_WEBROOM_NAME              "WR"
 
 #define WWW_AGENT ("xmoto-" + XMBuild::getVersionString(true))

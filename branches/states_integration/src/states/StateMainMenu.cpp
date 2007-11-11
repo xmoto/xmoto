@@ -1054,7 +1054,7 @@ UIWindow* StateMainMenu::makeWindowOptions_rooms(GameApp* pGame, UIWindow* i_par
 
   v_window = new UIWindow(v_roomsTabs, 20, 40, GAMETEXT_WWWMAINTAB, v_roomsTabs->getPosition().nWidth-40,
 			  v_roomsTabs->getPosition().nHeight);
-  v_window->setID("WWW_MAIN_TAB");
+  v_window->setID("MAIN_TAB");
 
   v_button = new UIButton(v_window, 5, 5, GAMETEXT_ENABLEWEBHIGHSCORES, (v_window->getPosition().nWidth-40), 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
@@ -1445,7 +1445,7 @@ UILevelList* StateMainMenu::buildQuickStartList() {
 							    v_quickStart->getDifficultyMIN(),
 							    v_quickStart->getQualityMAX(),
 							    v_quickStart->getDifficultyMAX(),
-							    m_pGame->getSession()->profile(), m_pGame->getHighscoresRoomId()));
+							    m_pGame->getSession()->profile(), m_pGame->getSession()->idRoom()));
   return v_list;
 }
 
@@ -1564,7 +1564,7 @@ void StateMainMenu::updateLevelsLists() {
 void StateMainMenu::createLevelLists(UILevelList *i_list, const std::string& i_packageName) {
   LevelsPack *v_levelsPack = &(m_pGame->getLevelsManager()->LevelsPackByName(i_packageName));
   createLevelListsSql(i_list, v_levelsPack->getLevelsWithHighscoresQuery(m_pGame->getSession()->profile(),
-									 m_pGame->getHighscoresRoomId()));
+									 m_pGame->getSession()->idRoom()));
 }
 
 void StateMainMenu::updateFavoriteLevelsList() {
@@ -1932,6 +1932,7 @@ void StateMainMenu::updateRoomsList() {
 void StateMainMenu::updateOptions() {
   UIButton* v_button;
   UIList*   v_list;
+  UIEdit*   v_edit;
 
   // level tab (multi)
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_LEVELS:TABS:MULTI_TAB:ENABLEMULTISTOPWHENONEFINISHES"));
@@ -2023,16 +2024,30 @@ void StateMainMenu::updateOptions() {
   // controls
 
   // www
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:WWW_MAIN_TAB:ENABLEWEB"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:ENABLEWEB"));
   v_button->setChecked(m_pGame->getSession()->www());
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:WWW_MAIN_TAB:ENABLECHECKNEWLEVELSATSTARTUP"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:ENABLECHECKNEWLEVELSATSTARTUP"));
   v_button->setChecked(m_pGame->getSession()->checkNewHighscoresAtStartup());
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:WWW_MAIN_TAB:ENABLECHECKHIGHSCORESATSTARTUP"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:ENABLECHECKHIGHSCORESATSTARTUP"));
   v_button->setChecked(m_pGame->getSession()->checkNewLevelsAtStartup());
-  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:WWW_MAIN_TAB:INGAMEWORLDRECORD"));
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:MAIN_TAB:INGAMEWORLDRECORD"));
   v_button->setChecked(m_pGame->getSession()->showHighscoreInGame());
 
-  // :ROOMS_LIST
+  v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB:ROOMS_LIST"));
+
+  std::string v_id_room = m_pGame->getSession()->idRoom();
+  if(v_id_room == "") {v_id_room = DEFAULT_WEBROOM_ID;}
+  for(int i=0; i<v_list->getEntries().size(); i++) {
+    if((*(std::string*)v_list->getEntries()[i]->pvUser) == v_id_room) {
+      v_list->setRealSelected(i);
+      break;
+    }
+  }
+
+  v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB:ROOM_LOGIN"));
+  v_edit->setCaption(m_pGame->getSession()->uploadLogin());
+  v_edit = reinterpret_cast<UIEdit *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:ROOMS_TAB:ROOM_PASSWORD"));
+  v_edit->setCaption(m_pGame->getSession()->uploadPassword());
 
   // ghosts
 }

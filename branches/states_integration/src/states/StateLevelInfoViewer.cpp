@@ -423,7 +423,7 @@ void StateLevelInfoViewer::updateLevelInfoViewerBestTimes() {
 			      "FROM webrooms AS a LEFT OUTER JOIN webhighscores AS b "
 			      "ON (a.id_room = b.id_room "
 			      "AND b.id_level=\"" + xmDatabase::protectString(m_level) + "\") "
-			      "WHERE a.id_room=" + m_pGame->getWebHighscoresIdRoom() + ";",
+			      "WHERE a.id_room=" + m_pGame->getSession()->idRoom() + ";",
 			      nrow);
       if(nrow != 1) {
 	pLV_BestTimes_WorldRecord->setCaption("");

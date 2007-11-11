@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <string>
 
 #define THEME_DEFAULT_THEMENAME "Classic"
+#define DEFAULT_WEBROOM_ID      "1"
 
 /*
   XMSession   : current session options
@@ -141,6 +142,12 @@ class XMSession {
   bool checkNewHighscoresAtStartup() const;
   void setShowHighscoreInGame(bool i_value);
   bool showHighscoreInGame() const;
+  void setUploadLogin(const std::string& i_value);
+  std::string uploadLogin() const;
+  void setUploadPassword(const std::string& i_value);
+  std::string uploadPassword() const;
+  void setIdRoom(const std::string& i_value);
+  std::string idRoom() const;
 
   private:
   bool m_verbose;
@@ -193,6 +200,9 @@ class XMSession {
   bool m_checkNewLevelsAtStartup;
   bool m_checkNewHighscoresAtStartup;
   bool m_showHighscoreInGame;
+  std::string m_uploadLogin;
+  std::string m_uploadPassword;
+  std::string m_idRoom;
 };
 
 #endif

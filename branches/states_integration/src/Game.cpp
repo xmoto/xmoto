@@ -358,7 +358,6 @@ GameApp::GameApp() {
 
     /* www */
     m_WebHighscoresURL    = m_Config.getString("WebHighscoresURL");
-    m_WebHighscoresIdRoom = m_Config.getString("WebHighscoresIdRoom");
 
     /* Configure proxy */
     _ConfigureProxy();
@@ -654,7 +653,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
 			    "FROM webrooms AS a LEFT OUTER JOIN webhighscores AS b "
 			    "ON (a.id_room = b.id_room "
 			    "AND b.id_level=\"" + xmDatabase::protectString(LevelID) + "\") "
-			    "WHERE a.id_room=" + m_WebHighscoresIdRoom + ";",
+			    "WHERE a.id_room=" + m_xmsession->idRoom() + ";",
 			    nrow);
     if(nrow != 1) {
       /* should not happend */
@@ -683,7 +682,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
     m_bWebHighscoresUpdatedThisSession = true;
     
     /* Try downloading the highscores */
-    m_pWebHighscores->setWebsiteInfos(m_WebHighscoresIdRoom,
+    m_pWebHighscores->setWebsiteInfos(m_xmsession->idRoom(),
 				      m_WebHighscoresURL);
     Logger::Log("WWW: Checking for new highscores...");
     m_pWebHighscores->update();
@@ -1111,7 +1110,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
     std::string v_fileUrl;
 
     v_result = m_db->readDB("SELECT fileUrl, finishTime FROM webhighscores "
-			    "WHERE id_room=" + m_WebHighscoresIdRoom + " "
+			    "WHERE id_room=" + m_xmsession->idRoom() + " "
 			    "AND id_level=\"" + xmDatabase::protectString(p_levelId) + "\";",
 			    nrow);    
     if(nrow == 0) {
@@ -1177,7 +1176,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
       m_DownloadingInformation = "";
       m_DownloadingMessage = GAMETEXT_UPLOADING_HIGHSCORE;
       FSWeb::uploadReplay(FS::getUserDir() + "/Replays/" + p_replayname + ".rpl",
-        m_WebHighscoresIdRoom,
+        m_xmsession->idRoom(),
         m_Config.getString("WebHighscoreUploadLogin"),
         m_Config.getString("WebHighscoreUploadPassword"),
         m_Config.getString("WebHighscoreUploadURL"),
@@ -1232,7 +1231,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
 
   void GameApp::_UploadAllHighscores() {
     /* 1 is the main room ; don't allow full upload on it */
-    if(m_WebHighscoresIdRoom == "1") return;
+    if(m_xmsession->idRoom() == "1") return;
 
     _UpdateWebHighscores(false);
     char **v_result;
@@ -1241,7 +1240,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
 
 	std::string query = "SELECT r.id_level, r.name FROM replays r "
     "LEFT OUTER JOIN webhighscores h "
-    "ON (r.id_level = h.id_level AND h.id_room=" + m_WebHighscoresIdRoom + ") "
+    "ON (r.id_level = h.id_level AND h.id_room=" + m_xmsession->idRoom() + ") "
     "INNER JOIN weblevels l ON r.id_level = l.id_level "
     "WHERE r.id_profile=\"" + xmDatabase::protectString(m_xmsession->profile()) + "\" "
     "AND r.isFinished "
@@ -1509,7 +1508,7 @@ void GameApp::addGhosts(MotoGame* i_motogame, Theme* i_theme) {
     
     if(v_replay_BESTOFROOM != "") {
 	m_MotoGame.addGhostFromFile(v_replay_BESTOFROOM,
-				    m_db->webrooms_getName(m_WebHighscoresIdRoom),
+				    m_db->webrooms_getName(m_xmsession->idRoom()),
 				    &m_theme, m_theme.getGhostTheme(),
 				    TColor(255,255,255,0),
 				    TColor(GET_RED(i_theme->getGhostTheme()->getUglyRiderColor()),
@@ -1660,7 +1659,7 @@ void GameApp::isTheCurrentPlayAHighscore(bool& o_personal, bool& o_room) {
 		|| v_best_personal_time < 0);
 
   /* search a better webhighscore */
-  v_best_room_time = (int)(100.0 * m_db->webrooms_getHighscoreTime(m_WebHighscoresIdRoom, m_MotoGame.getLevelSrc()->Id()));
+  v_best_room_time = (int)(100.0 * m_db->webrooms_getHighscoreTime(m_xmsession->idRoom(), m_MotoGame.getLevelSrc()->Id()));
   o_room = (v_current_time < v_best_room_time
 	    || v_best_room_time < 0);
 }
@@ -1721,7 +1720,7 @@ void GameApp::updateWebHighscores()
 
       m_levelsManager.makePacks(m_db,
 				m_xmsession->profile(),
-				getUserConfig()->getString("WebHighscoresIdRoom"),
+				m_xmsession->idRoom(),
 				m_xmsession->debug());
       _UpdateLevelsLists();
     } catch(Exception &e) {

@@ -333,7 +333,7 @@ void StateLevelPackViewer::updateGUI()
   }
 
   v_result = pDb->readDB(m_pActiveLevelPack->getLevelsWithHighscoresQuery(m_pGame->getSession()->profile(),
-									  m_pGame->getWebHighscoresIdRoom()),
+									  m_pGame->getSession()->idRoom()),
 				      nrow);
   for(unsigned int i=0; i<nrow; i++) {
     if(pDb->getResult(v_result, 4, i, 2) == NULL) {

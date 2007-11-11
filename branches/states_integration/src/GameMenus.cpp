@@ -1394,7 +1394,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   void GameApp::_CreateLevelLists(UILevelList *pAllLevels, std::string i_packageName) {
     LevelsPack *v_levelsPack = &(m_levelsManager.LevelsPackByName(i_packageName));
     _CreateLevelListsSql(pAllLevels, v_levelsPack->getLevelsWithHighscoresQuery(m_xmsession->profile(),
-										m_WebHighscoresIdRoom));
+										m_xmsession->idRoom()));
   }
 
   void GameApp::_CreateThemesList(UIList *pList) {
@@ -1579,15 +1579,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
     /* set room in the list */
     m_WebHighscoresURL = m_Config.getString("WebHighscoresURL");
-    m_WebHighscoresIdRoom = m_Config.getString("WebHighscoresIdRoom");
-    std::string v_room_id = m_WebHighscoresIdRoom;
-    if(v_room_id == "") {v_room_id = DEFAULT_WEBROOM_ID;}
-    for(int i=0; i<pRoomsList->getEntries().size(); i++) {
-      if((*(std::string*)pRoomsList->getEntries()[i]->pvUser) == v_room_id) {
-	pRoomsList->setRealSelected(i);
-	break;
-      }
-    }
+    //m_WebHighscoresIdRoom = m_Config.getString("WebHighscoresIdRoom");
+    //std::string v_room_id = m_WebHighscoresIdRoom;
+    //if(v_room_id == "") {v_room_id = DEFAULT_WEBROOM_ID;}
+    //for(int i=0; i<pRoomsList->getEntries().size(); i++) {
+    //  if((*(std::string*)pRoomsList->getEntries()[i]->pvUser) == v_room_id) {
+    //	pRoomsList->setRealSelected(i);
+    //	break;
+    //  }
+    //}
 
     UIButton *pEnableGhost = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:ENABLE_GHOST");
     UIButton *pGhostStrategy_MYBEST = (UIButton *)m_pOptionsWindow->getChild("OPTIONS_TABS:GHOST_TAB:GHOST_STRATEGY_MYBEST");
@@ -1759,8 +1759,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       m_Config.setValue("CheckNewLevelsAtStartup",m_Config.getDefaultValue("CheckNewLevelsAtStartup"));
       m_Config.setValue("CheckHighscoresAtStartup",m_Config.getDefaultValue("CheckHighscoresAtStartup"));
 
-    m_WebHighscoresIdRoom = m_Config.getDefaultValue("WebHighscoresIdRoom");
-    m_Config.setValue("WebHighscoresIdRoom", m_WebHighscoresIdRoom);
+      //m_WebHighscoresIdRoom = m_Config.getDefaultValue("WebHighscoresIdRoom");
+      //m_Config.setValue("WebHighscoresIdRoom", m_WebHighscoresIdRoom);
     m_WebHighscoresURL = m_Config.getDefaultValue("WebHighscoresURL");
     m_Config.setValue("WebHighscoresURL", m_WebHighscoresURL);
     m_Config.setValue("WebHighscoreUploadLogin", m_Config.getDefaultValue("WebHighscoreUploadLogin"));
@@ -1966,19 +1966,19 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       char **v_result;
       unsigned int nrow;
 
-      m_WebHighscoresIdRoom = *((std::string*)pRoomsList->getEntries()[pRoomsList->getSelected()]->pvUser);
-      m_Config.setString("WebHighscoresIdRoom", m_WebHighscoresIdRoom);
+      //m_WebHighscoresIdRoom = *((std::string*)pRoomsList->getEntries()[pRoomsList->getSelected()]->pvUser);
+      //m_Config.setString("WebHighscoresIdRoom", m_WebHighscoresIdRoom);
 
-      v_result = m_db->readDB("SELECT highscoresUrl FROM webrooms WHERE id_room=" + m_WebHighscoresIdRoom + ";",
-			      nrow);
-      if(nrow == 1) {
-	m_WebHighscoresURL = m_db->getResult(v_result, 1, 0, 0);
-      } else {
-	m_WebHighscoresURL = "";
-      }
-      m_db->read_DB_free(v_result);
-
-      m_Config.setString("WebHighscoresURL", m_WebHighscoresURL);
+//     v_result = m_db->readDB("SELECT highscoresUrl FROM webrooms WHERE id_room=" + m_WebHighscoresIdRoom + ";",
+//			      nrow);
+//     if(nrow == 1) {
+//	m_WebHighscoresURL = m_db->getResult(v_result, 1, 0, 0);
+//     } else {
+//	m_WebHighscoresURL = "";
+//     }
+//     m_db->read_DB_free(v_result);
+//
+//     m_Config.setString("WebHighscoresURL", m_WebHighscoresURL);
     }
 
     m_Config.setString("WebHighscoreUploadLogin", pRoomsLogin->getCaption());
@@ -2056,17 +2056,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     _UpdateSettings();
 
     /* set the room name ; set to WR if it cannot be determined */
-    m_WebHighscoresRoomName = "WR";
-    char **v_result;
-    unsigned int nrow;
-    v_result = m_db->readDB("SELECT name "
-			    "FROM webrooms "
-			    "WHERE id_room=" + m_WebHighscoresIdRoom + ";",
-			    nrow);
-    if(nrow == 1) {
-      m_WebHighscoresRoomName = m_db->getResult(v_result, 1, 0, 0);
-    }
-    m_db->read_DB_free(v_result);
+//   m_WebHighscoresRoomName = "WR";
+//   char **v_result;
+//   unsigned int nrow;
+//   v_result = m_db->readDB("SELECT name "
+//			    "FROM webrooms "
+//			    "WHERE id_room=" + m_WebHighscoresIdRoom + ";",
+//			    nrow);
+//   if(nrow == 1) {
+//     m_WebHighscoresRoomName = m_db->getResult(v_result, 1, 0, 0);
+//   }
+//   m_db->read_DB_free(v_result);
 
     updatePlayerTag();
   }
@@ -2093,7 +2093,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     v_result = m_db->readDB("SELECT id_profile, fileUrl "
 			    "FROM webhighscores WHERE id_level=\"" + 
 			    xmDatabase::protectString(pLevelID) + "\" "
-			    "AND id_room=" + m_WebHighscoresIdRoom + ";",
+			    "AND id_room=" + m_xmsession->idRoom() + ";",
 			    nrow);
     if(nrow == 0) {
       i_pLevelInfoFrame->showWindow(false);
@@ -2130,7 +2130,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     v_result = m_db->readDB("SELECT id_profile, fileUrl "
 			    "FROM webhighscores WHERE id_level=\"" + 
 			    xmDatabase::protectString(m_pLevelToShowOnViewHighscore) + "\" "
-			    "AND id_room=" + m_WebHighscoresIdRoom + ";",
+			    "AND id_room=" + m_xmsession->idRoom() + ";",
 			    nrow);
     if(nrow == 0) {
       m_db->read_DB_free(v_result);

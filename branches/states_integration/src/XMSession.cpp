@@ -71,7 +71,8 @@ XMSession::XMSession() {
   m_enableAudioEngine             = true;
   m_checkNewLevelsAtStartup       = true;
   m_checkNewHighscoresAtStartup   = true;
-  m_showHighscoreInGame        = true;
+  m_showHighscoreInGame           = true;
+  m_idRoom                        = DEFAULT_WEBROOM_ID;
 }
 
 void XMSession::load(const XMArguments* i_xmargs) {
@@ -195,21 +196,27 @@ void XMSession::load(UserConfig* m_Config) {
   m_enableMenuMusic          	= m_Config->getBool("MenuMusic");
   m_checkNewLevelsAtStartup     = m_Config->getBool("CheckNewLevelsAtStartup");
   m_checkNewHighscoresAtStartup = m_Config->getBool("CheckHighscoresAtStartup");
-  m_showHighscoreInGame      = m_Config->getBool("ShowInGameWorldRecord");
+  m_showHighscoreInGame         = m_Config->getBool("ShowInGameWorldRecord");
+  m_uploadLogin                 = m_Config->getString("WebHighscoreUploadLogin");
+  m_uploadPassword              = m_Config->getString("WebHighscoreUploadPassword");
+  m_idRoom                      = m_Config->getString("WebHighscoresIdRoom");
 }
 
 void XMSession::save(UserConfig* m_Config) {
-  m_Config->setString("DefaultProfile",         m_profile);
-  m_Config->setInteger("QSQualityMIN",          m_quickStartQualityMIN);
-  m_Config->setInteger("QSQualityMAX",          m_quickStartQualityMAX);
-  m_Config->setInteger("QSDifficultyMIN",       m_quickStartDifficultyMIN);
-  m_Config->setInteger("QSDifficultyMAX",       m_quickStartDifficultyMAX);
-  m_Config->setBool("MultiStopWhenOneFinishes", m_multiStopWhenOneFinishes);
-  m_Config->setBool("ContextHelp",              m_enableContextHelp);
-  m_Config->setString("Theme",                  m_theme);
-  m_Config->setBool("CheckNewLevelsAtStartup",  m_checkNewLevelsAtStartup);
-  m_Config->setBool("CheckHighscoresAtStartup", m_checkNewHighscoresAtStartup);
-  m_Config->setBool("ShowInGameWorldRecord",    m_showHighscoreInGame);
+  m_Config->setString("DefaultProfile",             m_profile);
+  m_Config->setInteger("QSQualityMIN",              m_quickStartQualityMIN);
+  m_Config->setInteger("QSQualityMAX",              m_quickStartQualityMAX);
+  m_Config->setInteger("QSDifficultyMIN",           m_quickStartDifficultyMIN);
+  m_Config->setInteger("QSDifficultyMAX",           m_quickStartDifficultyMAX);
+  m_Config->setBool("MultiStopWhenOneFinishes",     m_multiStopWhenOneFinishes);
+  m_Config->setBool("ContextHelp",                  m_enableContextHelp);
+  m_Config->setString("Theme",                      m_theme);
+  m_Config->setBool("CheckNewLevelsAtStartup",      m_checkNewLevelsAtStartup);
+  m_Config->setBool("CheckHighscoresAtStartup",     m_checkNewHighscoresAtStartup);
+  m_Config->setBool("ShowInGameWorldRecord",        m_showHighscoreInGame);
+  m_Config->setString("WebHighscoreUploadLogin",    m_uploadLogin);
+  m_Config->setString("WebHighscoreUploadPassword", m_uploadPassword);
+  m_Config->setString("WebHighscoresIdRoom",        m_idRoom);
 }
 
 bool XMSession::isVerbose() const {
@@ -575,4 +582,28 @@ void XMSession::setShowHighscoreInGame(bool i_value) {
 
 bool XMSession::showHighscoreInGame() const {
   return m_showHighscoreInGame;
+}
+
+void XMSession::setUploadLogin(const std::string& i_value) {
+  m_uploadLogin = i_value;
+}
+
+std::string XMSession::uploadLogin() const {
+  return m_uploadLogin;
+}
+
+void XMSession::setUploadPassword(const std::string& i_value) {
+  m_uploadPassword = i_value;
+}
+
+std::string XMSession::uploadPassword() const {
+  return m_uploadPassword;
+}
+
+void XMSession::setIdRoom(const std::string& i_value) {
+  m_idRoom = i_value;
+}
+
+std::string XMSession::idRoom() const {
+  return m_idRoom;
 }
