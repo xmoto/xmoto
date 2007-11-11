@@ -125,7 +125,6 @@ class XMSession {
   bool enableContextHelp() const;
   void setTheme(const std::string& i_value);
   std::string theme() const;
-
   void setEnableAudio(bool i_value);
   bool enableAudio() const;
   void setAudioSampleRate(int i_value);
@@ -136,6 +135,12 @@ class XMSession {
   int audioChannels() const;
   void setEnableAudioEngine(bool i_value);
   bool enableAudioEngine() const;
+  void setCheckNewLevelsAtStartup(bool i_value);
+  bool checkNewLevelsAtStartup() const;
+  void setCheckNewHighscoresAtStartup(bool i_value);
+  bool checkNewHighscoresAtStartup() const;
+  void setShowHighscoreInGame(bool i_value);
+  bool showHighscoreInGame() const;
 
   private:
   bool m_verbose;
@@ -185,7 +190,9 @@ class XMSession {
   int m_audioSampleBits;
   int m_audioChannels;
   bool m_enableAudioEngine;
-
+  bool m_checkNewLevelsAtStartup;
+  bool m_checkNewHighscoresAtStartup;
+  bool m_showHighscoreInGame;
 };
 
 #endif

@@ -221,16 +221,12 @@ GameApp::GameApp() {
   m_bRecordReplays = true;
   m_bCompressReplays = true;
  
-  m_bShowWebHighscoreInGame = false;
   m_pWebHighscores = NULL;
   m_pWebLevels = NULL;
   m_pWebRooms = NULL;
   m_fDownloadTaskProgressLast = 0;
   m_bWebHighscoresUpdatedThisSession = false;
   m_bWebLevelsToDownload = false;
-  
-  m_bEnableCheckNewLevelsAtStartup  = true;
-  m_bEnableCheckHighscoresAtStartup = true;
   
   m_MotoGame.setHooks(&m_MotoGameHooks);
   m_MotoGameHooks.setGameApps(this, &m_MotoGame);
@@ -354,10 +350,6 @@ GameApp::GameApp() {
       m_Renderer->setGhostDisplayInformation(m_bEnableGhostInfo);
       m_Renderer->setHideGhosts(m_bHideGhosts);
     }
-
-    m_bShowWebHighscoreInGame = m_Config.getBool("ShowInGameWorldRecord");
-    m_bEnableCheckNewLevelsAtStartup  = m_Config.getBool("CheckNewLevelsAtStartup");
-    m_bEnableCheckHighscoresAtStartup = m_Config.getBool("CheckHighscoresAtStartup");
 
     /* Other settings */
     m_xmsession->setEnableMenuMusic(m_Config.getBool("MenuMusic"));
@@ -657,11 +649,6 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
     std::string v_roomName;
     std::string v_id_profile;
     float       v_finishTime;
-
-    /* don't update if the option is not set */
-    if(m_bShowWebHighscoreInGame == false) {
-      return "";
-    }
 
     v_result = m_db->readDB("SELECT a.name, b.id_profile, b.finishTime "
 			    "FROM webrooms AS a LEFT OUTER JOIN webhighscores AS b "

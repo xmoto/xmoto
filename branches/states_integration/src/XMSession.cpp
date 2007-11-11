@@ -69,6 +69,9 @@ XMSession::XMSession() {
   m_audioSampleBits               = 16;
   m_audioChannels                 = 1;
   m_enableAudioEngine             = true;
+  m_checkNewLevelsAtStartup       = true;
+  m_checkNewHighscoresAtStartup   = true;
+  m_showHighscoreInGame        = true;
 }
 
 void XMSession::load(const XMArguments* i_xmargs) {
@@ -177,19 +180,22 @@ void XMSession::load(UserConfig* m_Config) {
   if(v_gameGraphics == "Medium") m_gameGraphics = GFX_MEDIUM;
   if(v_gameGraphics == "High")   m_gameGraphics = GFX_HIGH;
 
-  m_quickStartQualityMIN     = m_Config->getInteger("QSQualityMIN");
-  m_quickStartQualityMAX     = m_Config->getInteger("QSQualityMAX");
-  m_quickStartDifficultyMIN  = m_Config->getInteger("QSDifficultyMIN");
-  m_quickStartDifficultyMAX  = m_Config->getInteger("QSDifficultyMAX");
-  m_multiStopWhenOneFinishes = m_Config->getBool("MultiStopWhenOneFinishes");
-  m_enableContextHelp        = m_Config->getBool("ContextHelp");
-  m_theme                    = m_Config->getString("Theme");
-  m_enableAudio              = m_Config->getBool("AudioEnable");
-  m_audioSampleRate          = m_Config->getInteger("AudioSampleRate");
-  m_audioSampleBits          = m_Config->getInteger("AudioSampleBits");
-  m_audioChannels            = m_Config->getString("AudioChannels") == "Mono" ? 1 : 2;
-  m_enableAudioEngine        = m_Config->getBool("EngineSoundEnable");
-  m_enableMenuMusic          = m_Config->getBool("MenuMusic");
+  m_quickStartQualityMIN     	= m_Config->getInteger("QSQualityMIN");
+  m_quickStartQualityMAX     	= m_Config->getInteger("QSQualityMAX");
+  m_quickStartDifficultyMIN  	= m_Config->getInteger("QSDifficultyMIN");
+  m_quickStartDifficultyMAX  	= m_Config->getInteger("QSDifficultyMAX");
+  m_multiStopWhenOneFinishes 	= m_Config->getBool("MultiStopWhenOneFinishes");
+  m_enableContextHelp        	= m_Config->getBool("ContextHelp");
+  m_theme                    	= m_Config->getString("Theme");
+  m_enableAudio              	= m_Config->getBool("AudioEnable");
+  m_audioSampleRate          	= m_Config->getInteger("AudioSampleRate");
+  m_audioSampleBits          	= m_Config->getInteger("AudioSampleBits");
+  m_audioChannels            	= m_Config->getString("AudioChannels") == "Mono" ? 1 : 2;
+  m_enableAudioEngine        	= m_Config->getBool("EngineSoundEnable");
+  m_enableMenuMusic          	= m_Config->getBool("MenuMusic");
+  m_checkNewLevelsAtStartup     = m_Config->getBool("CheckNewLevelsAtStartup");
+  m_checkNewHighscoresAtStartup = m_Config->getBool("CheckHighscoresAtStartup");
+  m_showHighscoreInGame      = m_Config->getBool("ShowInGameWorldRecord");
 }
 
 void XMSession::save(UserConfig* m_Config) {
@@ -201,6 +207,9 @@ void XMSession::save(UserConfig* m_Config) {
   m_Config->setBool("MultiStopWhenOneFinishes", m_multiStopWhenOneFinishes);
   m_Config->setBool("ContextHelp",              m_enableContextHelp);
   m_Config->setString("Theme",                  m_theme);
+  m_Config->setBool("CheckNewLevelsAtStartup",  m_checkNewLevelsAtStartup);
+  m_Config->setBool("CheckHighscoresAtStartup", m_checkNewHighscoresAtStartup);
+  m_Config->setBool("ShowInGameWorldRecord",    m_showHighscoreInGame);
 }
 
 bool XMSession::isVerbose() const {
@@ -542,4 +551,28 @@ void XMSession::setEnableAudioEngine(bool i_value) {
 
 bool XMSession::enableAudioEngine() const {
   return m_enableAudioEngine;
+}
+
+void XMSession::setCheckNewLevelsAtStartup(bool i_value) {
+  m_checkNewLevelsAtStartup = i_value;
+}
+
+bool XMSession::checkNewLevelsAtStartup() const {
+  return m_checkNewLevelsAtStartup;
+}
+
+void XMSession::setCheckNewHighscoresAtStartup(bool i_value) {
+  m_checkNewHighscoresAtStartup = i_value;
+}
+
+bool XMSession::checkNewHighscoresAtStartup() const {
+  return m_checkNewHighscoresAtStartup;
+}
+
+void XMSession::setShowHighscoreInGame(bool i_value) {
+  m_showHighscoreInGame = i_value;
+}
+
+bool XMSession::showHighscoreInGame() const {
+  return m_showHighscoreInGame;
 }

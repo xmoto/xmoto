@@ -261,7 +261,6 @@ class StateManager;
       bool m_bHideGhosts;
 
       /* WWW */
-      bool m_bShowWebHighscoreInGame;           /* true: Show world highscore inside the game */
       WebRoom *m_pWebHighscores;
       WebRooms *m_pWebRooms;
       WebLevels *m_pWebLevels;
@@ -276,8 +275,6 @@ class StateManager;
 
       bool m_bWebHighscoresUpdatedThisSession;  /* true: Updated this session */
       bool m_bWebLevelsToDownload;              /* true: there are new levels to download */
-      bool m_bEnableCheckNewLevelsAtStartup;
-      bool m_bEnableCheckHighscoresAtStartup;
       
       bool m_bCreditsModeActive;
       

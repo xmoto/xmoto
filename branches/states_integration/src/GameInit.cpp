@@ -519,7 +519,7 @@ void GameApp::_Wait()
     if(m_xmsession->www() && m_PlaySpecificLevelFile == "" && m_PlaySpecificReplay == "") {  
       bool bSilent = true;
       try {
-	if(m_bEnableCheckHighscoresAtStartup) {
+	if(m_xmsession->checkNewHighscoresAtStartup()) {
 	  _UpdateLoadingScreen((1.0f/9.0f) * 3,GAMETEXT_DLHIGHSCORES);      
 	  _UpdateWebHighscores(bSilent);
 	  _UpgradeWebHighscores();
@@ -531,7 +531,7 @@ void GameApp::_Wait()
 	  notifyMsg(GAMETEXT_FAILEDDLHIGHSCORES + std::string("\n") + GAMETEXT_CHECK_YOUR_WWW);
       }
       
-      if(m_bEnableCheckNewLevelsAtStartup) {
+      if(m_xmsession->checkNewLevelsAtStartup()) {
 	try {
 	  _UpdateLoadingScreen((1.0f/9.0f) * 4,GAMETEXT_DLLEVELSCHECK);      
 	  _UpdateWebLevels(bSilent);       
@@ -557,6 +557,7 @@ void GameApp::_Wait()
      return;
     }
 
+    /* requires graphics now */
     if(m_xmsession->useGraphics() == false) {
       return;
     }
@@ -588,7 +589,7 @@ void GameApp::_Wait()
 	m_PlaySpecificLevelId = m_PlaySpecificLevelFile;
       }
     }
-    if((m_PlaySpecificLevelId != "") && m_xmsession->useGraphics()) {
+    if((m_PlaySpecificLevelId != "")) {
       /* ======= PLAY SPECIFIC LEVEL ======= */
       StatePreplaying::setPlayAnimation(true);
       m_stateManager->pushState(new StatePreplaying(this, m_PlaySpecificLevelId));
@@ -599,10 +600,6 @@ void GameApp::_Wait()
       m_stateManager->pushState(new StateReplaying(this, m_PlaySpecificReplay));
     }
     else {
-      /* Graphics? */
-      if(m_xmsession->useGraphics() == false)
-        throw Exception("menu requires graphics");
-
       /* final initialisation */
       Logger::Log("UserPreInit ended at %.3f", GameApp::getXMTime());
 

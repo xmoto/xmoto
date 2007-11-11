@@ -2025,12 +2025,14 @@ void StateMainMenu::updateOptions() {
   // www
   v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:WWW_MAIN_TAB:ENABLEWEB"));
   v_button->setChecked(m_pGame->getSession()->www());
-//  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:ENABLECHECKNEWLEVELSATSTARTUP"));
-//  v_button->setChecked(m_pGame->getSession()->());
-//  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:ENABLECHECKHIGHSCORESATSTARTUP"));
-//  v_button->setChecked(m_pGame->getSession()->());
-//  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:INGAMEWORLDRECORD"));
-//  v_button->setChecked(m_pGame->getSession()->());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:WWW_MAIN_TAB:ENABLECHECKNEWLEVELSATSTARTUP"));
+  v_button->setChecked(m_pGame->getSession()->checkNewHighscoresAtStartup());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:WWW_MAIN_TAB:ENABLECHECKHIGHSCORESATSTARTUP"));
+  v_button->setChecked(m_pGame->getSession()->checkNewLevelsAtStartup());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:WWW_MAIN_TAB:INGAMEWORLDRECORD"));
+  v_button->setChecked(m_pGame->getSession()->showHighscoreInGame());
+
+  // :ROOMS_LIST
 
   // ghosts
 }

@@ -201,7 +201,12 @@ void StateScene::setScoresTimes() {
     m_pGame->getDb()->read_DB_free(v_result);
     
     m_pGame->getGameRenderer()->setBestTime(T1 + std::string(" / ") + T2);
-    m_pGame->getGameRenderer()->setWorldRecordTime(m_pGame->getWorldRecord(m_pGame->getMotoGame()->getLevelSrc()->Id()));
+
+    if(m_pGame->getSession()->showHighscoreInGame()) {
+      m_pGame->getGameRenderer()->setWorldRecordTime(m_pGame->getWorldRecord(m_pGame->getMotoGame()->getLevelSrc()->Id()));
+    } else {
+      m_pGame->getGameRenderer()->setWorldRecordTime("");
+    }
 
 }
 
