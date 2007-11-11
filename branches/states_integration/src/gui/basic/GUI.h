@@ -515,7 +515,7 @@ class GameApp;
       void setType(UIButtonType Type) {m_Type = Type;}
       void setClicked(bool b) {m_bClicked=b;}
       void setChecked(bool b) {
-        if(m_Type == UI_BUTTON_TYPE_RADIO) _UncheckGroup(getGroup());
+        if(m_Type == UI_BUTTON_TYPE_RADIO && b) _UncheckGroup(getGroup());
         m_bChecked=b;
       }
       bool getChecked(void) {return m_bChecked;}

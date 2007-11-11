@@ -37,10 +37,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 class XMArguments;
 class UserConfig;
 
-enum MenuGraphics {
-  MENU_GFX_LOW,
-  MENU_GFX_MEDIUM,
-  MENU_GFX_HIGH
+enum GraphicsLevel {
+  GFX_LOW,
+  GFX_MEDIUM,
+  GFX_HIGH
 };
 
 class XMSession {
@@ -105,8 +105,10 @@ class XMSession {
   bool enableInitZoom() const;
   void setEnableDeadAnimation(bool i_value);
   bool enableDeadAnimation() const;
-  void setMenuGraphics(MenuGraphics i_value);
-  MenuGraphics menuGraphics() const;
+  void setMenuGraphics(GraphicsLevel i_value);
+  GraphicsLevel menuGraphics() const;
+  void setGameGraphics(GraphicsLevel i_value);
+  GraphicsLevel gameGraphics() const;
   void setQuickStartQualityMIN(int i_value);
   int quickStartQualityMIN() const;
   void setQuickStartQualityMAX(int i_value);
@@ -123,6 +125,17 @@ class XMSession {
   bool enableContextHelp() const;
   void setTheme(const std::string& i_value);
   std::string theme() const;
+
+  void setEnableAudio(bool i_value);
+  bool enableAudio() const;
+  void setAudioSampleRate(int i_value);
+  int audioSampleRate() const;
+  void setAudioSampleBits(int i_value);
+  int audioSampleBits() const;
+  void setAudioChannels(int i_value);
+  int audioChannels() const;
+  void setEnableAudioEngine(bool i_value);
+  bool enableAudioEngine() const;
 
   private:
   bool m_verbose;
@@ -157,7 +170,8 @@ class XMSession {
   bool m_enableMenuMusic;
   bool m_enableInitZoom;
   bool m_enableDeadAnimation;
-  MenuGraphics m_menuGraphics;
+  GraphicsLevel m_menuGraphics;
+  GraphicsLevel m_gameGraphics;
   int m_quickStartQualityMIN;
   int m_quickStartQualityMAX;
   int m_quickStartDifficultyMIN;
@@ -166,6 +180,12 @@ class XMSession {
   bool m_multiEnablStopWheNoneFinishes;
   bool m_enableContextHelp;
   std::string m_theme;
+  bool m_enableAudio;
+  int m_audioSampleRate;
+  int m_audioSampleBits;
+  int m_audioChannels;
+  bool m_enableAudioEngine;
+
 };
 
 #endif

@@ -1655,9 +1655,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
         
     pRunWindowed->setChecked(m_Config.getBool("DisplayWindowed"));
     
-    if(m_xmsession->menuGraphics() == MENU_GFX_LOW) {
+    if(m_xmsession->menuGraphics() == GFX_LOW) {
       pMenuLow->setChecked(true);
-    } else if(m_xmsession->menuGraphics() == MENU_GFX_MEDIUM) {
+    } else if(m_xmsession->menuGraphics() == GFX_MEDIUM) {
       pMenuMed->setChecked(true);
     } else {
       pMenuHigh->setChecked(true);

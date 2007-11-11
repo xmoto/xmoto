@@ -223,34 +223,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       SDL_UnlockAudio();
     #endif
   }
-      
-  /*==============================================================================
-  Sound sample playing
-  ==============================================================================*/
-  //int SamplePlayer::fillBuffer(unsigned char *pcBuffer,int nSize) {
-  //  int nRem = m_pSample->nBufSize - m_nPosition;
-  //  if(nRem <= 0) {
-  //    setDone(true);    
-  //    return 0;            
-  //  }
-  //  
-  //  int nCopy = nRem < nSize ? nRem : nSize;
-  //  memcpy(pcBuffer,&m_pSample->pcBuf[m_nPosition],nCopy);
-  //  m_nPosition += nCopy;
-  //      
-  //  return nCopy;
-  //}
-  //
-  //void SamplePlayer::update(void) {
-  //}
-  //
-  //void SamplePlayer::shutdownPlayer(void) {
-  //}
-
-  //void SamplePlayer::initSample(SoundSample *pSample) {
-  //  m_pSample = pSample;
-  //  m_nPosition = 0;
-  //}
 
   int Sound::RWops_seek(SDL_RWops *context,int offset,int whence) {
     FileHandle *pf = (FileHandle *)context->hidden.unknown.data1;

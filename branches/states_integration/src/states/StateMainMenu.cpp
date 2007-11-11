@@ -97,7 +97,6 @@ void StateMainMenu::enter()
 
   // updates
   updateProfile();
-  updateOptions();
   updateLevelsPacksList();
   updateLevelsLists();
   updateReplaysList();
@@ -845,7 +844,7 @@ UIWindow* StateMainMenu::makeWindowOptions_video(GameApp* pGame, UIWindow* i_par
   v_button = new UIButton(v_window,5, v_window->getPosition().nHeight - 43 - 10 - 90, GAMETEXT_RUNWINDOWED,
 			  v_window->getPosition().nWidth-40, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
-  v_button->setID("RUN_WINDOWED");
+  v_button->setID("WINDOWED");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_RUN_IN_WINDOW);
 
@@ -981,7 +980,7 @@ UIWindow* StateMainMenu::makeWindowOptions_audio(GameApp* pGame, UIWindow* i_par
     
   v_button = new UIButton(v_window, 5, 145, GAMETEXT_ENABLEMUSIC, v_window->getPosition().nWidth-10, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
-  v_button->setID("ENABLE_MUSIC");
+  v_button->setID("ENABLE_MENU_MUSIC");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_MUSIC);
 }
@@ -1059,7 +1058,7 @@ UIWindow* StateMainMenu::makeWindowOptions_rooms(GameApp* pGame, UIWindow* i_par
 
   v_button = new UIButton(v_window, 5, 5, GAMETEXT_ENABLEWEBHIGHSCORES, (v_window->getPosition().nWidth-40), 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
-  v_button->setID("ENABLEWEBHIGHSCORES");
+  v_button->setID("ENABLEWEB");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setGroup(50123);
   v_button->setContextHelp(CONTEXTHELP_DOWNLOAD_BEST_TIMES);
@@ -1416,7 +1415,7 @@ UIWindow* StateMainMenu::makeWindowLevels(GameApp* pGame, UIWindow* i_parent) {
 
 
 void StateMainMenu::drawBackground() {
-  if(m_pGame->getSession()->menuGraphics() != MENU_GFX_LOW && m_pGame->getSession()->ugly() == false) {
+  if(m_pGame->getSession()->menuGraphics() != GFX_LOW && m_pGame->getSession()->ugly() == false) {
     DrawLib* drawlib = m_pGame->getDrawLib();
     int w = drawlib->getDispWidth();
     int h = drawlib->getDispHeight();
@@ -1964,4 +1963,74 @@ void StateMainMenu::updateOptions() {
   }
   v_list->setRealSelected(nTheme);  
 
+
+  // video
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:16BPP"));
+  v_button->setChecked(m_pGame->getSession()->bpp() == 16);
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:32BPP"));
+  v_button->setChecked(m_pGame->getSession()->bpp() == 32);
+
+  v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:RESOLUTIONS_LIST"));
+  char cBuf[256];
+  sprintf(cBuf, "%d X %d", m_pGame->getSession()->resolutionWidth(), m_pGame->getSession()->resolutionHeight());
+  int nMode = 0;
+  for(int i=0; i<v_list->getEntries().size(); i++) {
+    if(v_list->getEntries()[i]->Text[0] == std::string(cBuf)) {
+      nMode = i;
+      break;
+    }
+  }
+  v_list->setRealSelected(nMode);  
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:WINDOWED"));
+  v_button->setChecked(m_pGame->getSession()->windowed());
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:MENULOW"));
+  v_button->setChecked(m_pGame->getSession()->menuGraphics() == GFX_LOW);
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:MENUMEDIUM"));
+  v_button->setChecked(m_pGame->getSession()->menuGraphics() == GFX_MEDIUM);
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:MENUHIGH"));
+  v_button->setChecked(m_pGame->getSession()->menuGraphics() == GFX_HIGH);
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:GAMELOW"));
+  v_button->setChecked(m_pGame->getSession()->gameGraphics() == GFX_LOW);
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:GAMEMEDIUM"));
+  v_button->setChecked(m_pGame->getSession()->gameGraphics() == GFX_MEDIUM);
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:VIDEO_TAB:GAMEHIGH"));
+  v_button->setChecked(m_pGame->getSession()->gameGraphics() == GFX_HIGH);
+
+  // audio
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:ENABLE_AUDIO"));
+  v_button->setChecked(m_pGame->getSession()->enableAudio());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:RATE11KHZ"));
+  v_button->setChecked(m_pGame->getSession()->audioSampleRate() == 11025);
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:RATE22KHZ"));
+  v_button->setChecked(m_pGame->getSession()->audioSampleRate() == 22050);
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:RATE44KHZ"));
+  v_button->setChecked(m_pGame->getSession()->audioSampleRate() == 44100);
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:8BIT"));
+  v_button->setChecked(m_pGame->getSession()->audioSampleBits() == 8);
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:16BIT"));
+  v_button->setChecked(m_pGame->getSession()->audioSampleBits() == 16);
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:MONO"));
+  v_button->setChecked(m_pGame->getSession()->audioChannels() == 1);
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:STEREO"));
+  v_button->setChecked(m_pGame->getSession()->audioChannels() == 2);
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:ENABLE_ENGINE_SOUND"));
+  v_button->setChecked(m_pGame->getSession()->enableEngineSound());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:AUDIO_TAB:ENABLE_MENU_MUSIC"));
+  v_button->setChecked(m_pGame->getSession()->enableMenuMusic());
+
+  // controls
+
+  // www
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:TABS:WWW_MAIN_TAB:ENABLEWEB"));
+  v_button->setChecked(m_pGame->getSession()->www());
+//  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:ENABLECHECKNEWLEVELSATSTARTUP"));
+//  v_button->setChecked(m_pGame->getSession()->());
+//  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:ENABLECHECKHIGHSCORESATSTARTUP"));
+//  v_button->setChecked(m_pGame->getSession()->());
+//  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:WWW_TAB:INGAMEWORLDRECORD"));
+//  v_button->setChecked(m_pGame->getSession()->());
+
+  // ghosts
 }

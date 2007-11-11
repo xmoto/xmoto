@@ -54,7 +54,8 @@ XMSession::XMSession() {
   m_multiStopWhenOneFinishes      = true;
   m_enableMenuMusic               = true;
   m_enableDeadAnimation           = true;
-  m_menuGraphics                  = MENU_GFX_HIGH;
+  m_menuGraphics                  = GFX_HIGH;
+  m_gameGraphics                  = GFX_HIGH;
   m_quickStartQualityMIN          = 1;
   m_quickStartQualityMAX          = 5;
   m_quickStartDifficultyMIN       = 1;
@@ -63,6 +64,11 @@ XMSession::XMSession() {
   m_multiEnablStopWheNoneFinishes = true;
   m_enableContextHelp             = true;
   m_theme                         = THEME_DEFAULT_THEMENAME;
+  m_enableAudio                   = true;
+  m_audioSampleRate               = 22050;
+  m_audioSampleBits               = 16;
+  m_audioChannels                 = 1;
+  m_enableAudioEngine             = true;
 }
 
 void XMSession::load(const XMArguments* i_xmargs) {
@@ -162,9 +168,14 @@ void XMSession::load(UserConfig* m_Config) {
   m_enableDeadAnimation      = m_Config->getBool("DeathAnim");
 
   std::string v_menuGraphics = m_Config->getString("MenuGraphics");
-  if(v_menuGraphics == "Low")    m_menuGraphics = MENU_GFX_LOW;
-  if(v_menuGraphics == "Medium") m_menuGraphics = MENU_GFX_MEDIUM;
-  if(v_menuGraphics == "High")   m_menuGraphics = MENU_GFX_HIGH;
+  if(v_menuGraphics == "Low")    m_menuGraphics = GFX_LOW;
+  if(v_menuGraphics == "Medium") m_menuGraphics = GFX_MEDIUM;
+  if(v_menuGraphics == "High")   m_menuGraphics = GFX_HIGH;
+
+  std::string v_gameGraphics = m_Config->getString("GameGraphics");
+  if(v_gameGraphics == "Low")    m_gameGraphics = GFX_LOW;
+  if(v_gameGraphics == "Medium") m_gameGraphics = GFX_MEDIUM;
+  if(v_gameGraphics == "High")   m_gameGraphics = GFX_HIGH;
 
   m_quickStartQualityMIN     = m_Config->getInteger("QSQualityMIN");
   m_quickStartQualityMAX     = m_Config->getInteger("QSQualityMAX");
@@ -173,6 +184,12 @@ void XMSession::load(UserConfig* m_Config) {
   m_multiStopWhenOneFinishes = m_Config->getBool("MultiStopWhenOneFinishes");
   m_enableContextHelp        = m_Config->getBool("ContextHelp");
   m_theme                    = m_Config->getString("Theme");
+  m_enableAudio              = m_Config->getBool("AudioEnable");
+  m_audioSampleRate          = m_Config->getInteger("AudioSampleRate");
+  m_audioSampleBits          = m_Config->getInteger("AudioSampleBits");
+  m_audioChannels            = m_Config->getString("AudioChannels") == "Mono" ? 1 : 2;
+  m_enableAudioEngine        = m_Config->getBool("EngineSoundEnable");
+  m_enableMenuMusic          = m_Config->getBool("MenuMusic");
 }
 
 void XMSession::save(UserConfig* m_Config) {
@@ -406,13 +423,22 @@ bool XMSession::enableDeadAnimation() const {
   return m_enableDeadAnimation;
 }
 
-void XMSession::setMenuGraphics(MenuGraphics i_value) {
+void XMSession::setMenuGraphics(GraphicsLevel i_value) {
   m_menuGraphics = i_value;
 }
 
-MenuGraphics XMSession::menuGraphics() const {
+GraphicsLevel XMSession::menuGraphics() const {
   return m_menuGraphics;
 }
+
+void XMSession::setGameGraphics(GraphicsLevel i_value) {
+  m_gameGraphics = i_value;
+}
+
+GraphicsLevel XMSession::gameGraphics() const {
+  return m_gameGraphics;
+}
+
 
 void XMSession::setQuickStartQualityMIN(int i_value) {
   m_quickStartQualityMIN = i_value;
@@ -476,4 +502,44 @@ void XMSession::setTheme(const std::string& i_value) {
 
 std::string XMSession::theme() const {
   return m_theme;
+}
+
+void XMSession::setEnableAudio(bool i_value) {
+  m_enableAudio = i_value;
+}
+
+bool XMSession::enableAudio() const {
+  return m_enableAudio;
+}
+
+void XMSession::setAudioSampleRate(int i_value) {
+  m_audioSampleRate = i_value;
+}
+
+int XMSession::audioSampleRate() const {
+  return m_audioSampleRate;
+}
+
+void XMSession::setAudioSampleBits(int i_value) {
+  m_audioSampleBits = i_value;
+}
+
+int XMSession::audioSampleBits() const {
+  return m_audioSampleBits;
+}
+
+void XMSession::setAudioChannels(int i_value) {
+  m_audioChannels = i_value;
+}
+
+int XMSession::audioChannels() const {
+  return m_audioChannels;
+}
+
+void XMSession::setEnableAudioEngine(bool i_value) {
+  m_enableAudioEngine = i_value;
+}
+
+bool XMSession::enableAudioEngine() const {
+  return m_enableAudioEngine;
 }

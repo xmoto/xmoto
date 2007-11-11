@@ -317,9 +317,9 @@ GameApp::GameApp() {
   ===========================================================================*/
   void GameApp::_UpdateSettings(void) {
     std::string v_menuGraphics =   m_Config.getString("MenuGraphics");
-    if(v_menuGraphics == "Low")    m_xmsession->setMenuGraphics(MENU_GFX_LOW);
-    if(v_menuGraphics == "Medium") m_xmsession->setMenuGraphics(MENU_GFX_MEDIUM);
-    if(v_menuGraphics == "High")   m_xmsession->setMenuGraphics(MENU_GFX_HIGH);
+    if(v_menuGraphics == "Low")    m_xmsession->setMenuGraphics(GFX_LOW);
+    if(v_menuGraphics == "Medium") m_xmsession->setMenuGraphics(GFX_MEDIUM);
+    if(v_menuGraphics == "High")   m_xmsession->setMenuGraphics(GFX_HIGH);
 
     /* Game graphics */
     std::string s = m_Config.getString("GameGraphics");
