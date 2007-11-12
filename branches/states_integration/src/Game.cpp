@@ -284,26 +284,6 @@ GameApp::GameApp() {
   }
 
   /*===========================================================================
-  Change game state
-  ===========================================================================*/
-  void GameApp::setState(OldGameState s) {
-    /* This function is called to perform a controlled game state change.
-       The various states are described below in the switch-statement */  
-    m_State = s;
-
-    switch(s) {
-      case GS_EDIT_WEBCONFIG: {
-        if(m_pWebConfMsgBox != NULL) delete m_pWebConfMsgBox;
-        m_pWebConfEditor->showWindow(false);
-	m_Renderer->getGUI()->setFont(drawLib->getFontSmall());
-        m_pWebConfMsgBox = m_Renderer->getGUI()->msgBox(GAMETEXT_ALLOWINTERNETCONN,
-                                                       (UIMsgBoxButton)(UI_MSGBOX_YES|UI_MSGBOX_NO));
-        break;
-      }
-    }
-  }
-
-  /*===========================================================================
   Update settings
   ===========================================================================*/
   void GameApp::_UpdateSettings(void) {
@@ -492,23 +472,6 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
       m_MotoGame.Cameras()[i]->setMirrored(m_MotoGame.Cameras()[i]->isMirrored() == false);
     }
     m_InputHandler.setMirrored(m_MotoGame.Cameras()[0]->isMirrored());
-  }
-
-  if(m_State == GS_MENU) {
-
-    if(nKey == SDLK_F5) {
-      _SimpleMessage(GAMETEXT_RELOADINGLEVELS, &m_InfoMsgBoxRect);
-      m_reloadingLevelsUser = true;
-      m_levelsManager.reloadLevelsFromLvl(m_db, this);
-      m_pActiveLevelPack = NULL;
-      _UpdateLevelsLists();
-      _SimpleMessage(GAMETEXT_RELOADINGREPLAYS, &m_InfoMsgBoxRect);
-      initReplaysFromDir();
-      _UpdateReplaysList();
-      m_themeChoicer->initThemesFromDir(m_db);
-      _UpdateThemesLists();
-    }
-
   }
     
   /* If message box... */

@@ -51,12 +51,12 @@ StateLevelPackViewer::~StateLevelPackViewer()
 
 void StateLevelPackViewer::enter()
 {
-  StateMenu::enter();
-
   createGUIIfNeeded(m_pGame);
   m_GUI = m_sGUI;
 
   updateGUI();
+
+  StateMenu::enter();
 }
 
 void StateLevelPackViewer::leave()

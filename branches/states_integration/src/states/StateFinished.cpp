@@ -51,14 +51,11 @@ StateFinished::~StateFinished()
 
 void StateFinished::enter()
 {
-  StateMenu::enter();
-
   float v_finish_time = 0.0;
   std::string TimeStamp;
   bool v_is_a_room_highscore;
   bool v_is_a_personnal_highscore;
 
-  m_pGame->m_State = GS_FINISHED; // to be removed, just the time states are finished
   m_pGame->getMotoGame()->setInfos(m_pGame->getMotoGame()->getLevelSrc()->Name());
   m_pGame->playMusic("");
 
@@ -130,6 +127,8 @@ void StateFinished::enter()
   UIBestTimes *v_pBestTimes = reinterpret_cast<UIBestTimes *>(m_GUI->getChild("BESTTIMES"));
   makeBestTimesWindow(v_pBestTimes, m_pGame->getDb(), m_pGame->getSession()->profile(), m_pGame->getMotoGame()->getLevelSrc()->Id(),
 		      v_finish_time, TimeStamp);
+
+  StateMenu::enter();
 }
 
 void StateFinished::leave()

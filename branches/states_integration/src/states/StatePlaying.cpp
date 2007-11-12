@@ -46,8 +46,6 @@ void StatePlaying::enter()
 {
   StateScene::enter();
 
-  m_pGame->m_State = GS_PLAYING; // to be removed, just the time states are finished
-
   m_pGame->getGameRenderer()->setShowEngineCounter(m_pGame->getSession()->showEngineCounter());
   m_pGame->getGameRenderer()->setShowMinimap(m_pGame->getSession()->showMinimap());
   m_pGame->getGameRenderer()->setShowTimePanel(true);

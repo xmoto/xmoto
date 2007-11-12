@@ -49,8 +49,6 @@ StatePause::~StatePause()
 
 void StatePause::enter()
 {
-  StateMenu::enter();
-
   m_pGame->getMotoGame()->setInfos(m_pGame->getMotoGame()->getLevelSrc()->Name());
   m_pGame->playMusic("");
   
@@ -60,6 +58,8 @@ void StatePause::enter()
   /* reset the playnext button */
   UIButton *playNextButton = reinterpret_cast<UIButton *>(m_GUI->getChild("PAUSE_FRAME:PLAYNEXT_BUTTON"));
   playNextButton->enableWindow(m_pGame->isThereANextLevel(m_pGame->getMotoGame()->getLevelSrc()->Id()));
+
+  StateMenu::enter();
 }
 
 void StatePause::leave()
@@ -83,7 +83,6 @@ void StatePause::checkEvents() {
   if(pResumeButton->isClicked()) {
     pResumeButton->setClicked(false);
 
-    m_pGame->m_State = GS_PLAYING; // to be removed, just the time states are finished
     m_requestForEnd = true;
   }
 
@@ -144,7 +143,6 @@ void StatePause::keyDown(int nKey, SDLMod mod,int nChar)
 
   case SDLK_ESCAPE:
     /* quit this state */
-    m_pGame->m_State = GS_PLAYING; // to be removed, just the time states are finished
     m_requestForEnd = true;
     break;
 

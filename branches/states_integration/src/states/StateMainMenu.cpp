@@ -88,8 +88,6 @@ StateMainMenu::~StateMainMenu()
 
 void StateMainMenu::enter()
 {
-  StateMenu::enter();
-
   m_pGame->playMusic("");
   
   createGUIIfNeeded(m_pGame);
@@ -108,6 +106,8 @@ void StateMainMenu::enter()
   updateControlsList();
   updateRoomsList();
   updateOptions();
+
+  StateMenu::enter();
 }
 
 void StateMainMenu::leave()

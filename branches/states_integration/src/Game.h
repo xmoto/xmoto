@@ -48,26 +48,6 @@ class Credits;
 class SoundSample;
 class StateManager;
 
-   /*===========================================================================
-   Overall game states
-   ===========================================================================*/
-   enum OldGameState {
-     GS_UNASSIGNED = 0,
-     GS_MENU,                  /* In the game menu */
-     GS_PREPLAYING,            /* Just before the game start */
-     GS_PLAYING,               /* Playing the game */
-     GS_PAUSE,                 /* Paused from GS_PLAYING */
-     GS_DEADJUST,              /* just dead */
-     GS_DEADMENU,              /* Head-banging too much */
-     GS_EDIT_PROFILES,         /* In profile editor */
-     GS_FINISHED,              /* Finished a level */
-     GS_REPLAYING,             /* Replaying */
-     GS_LEVEL_INFO_VIEWER,     /* In level info viewer */
-     GS_LEVELPACK_VIEWER,      /* In level pack viewer */
-     GS_CREDITSMODE,           /* Credits/replay */
-     GS_EDIT_WEBCONFIG         /* Editing internet configuration */
-   };
-
    class XMMotoGameHooks : public MotoGameHooks {
    public:
      XMMotoGameHooks();
@@ -115,7 +95,6 @@ class StateManager;
       /* Methods */
       MotoGame* getMotoGame();
 
-      void setState(OldGameState s);
       void notifyMsg(std::string Msg);      
       void reloadTheme();
 
@@ -187,10 +166,6 @@ class StateManager;
       InputHandler*  getInputHandler();
 
       SysMessage* getSysMessage() { return m_sysMsg;}
-
-      /* public so that we can add progressively the states ; to be removed */
-      OldGameState m_State; /* Current state */      
-      OldGameState m_StateAfterPlaying;            /* State that should be used later */
 
       /* call to close the replay */
       void finalizeReplay(bool i_finished);

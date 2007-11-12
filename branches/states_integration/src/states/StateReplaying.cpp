@@ -53,8 +53,6 @@ void StateReplaying::enter()
   unsigned int nrow;
   char *v_res;
 
-  m_pGame->m_State = GS_REPLAYING; // to be removed, just the time states are finished
-
   m_stopToUpdate = false;
   m_pGame->getGameRenderer()->setShowEngineCounter(false);
   m_pGame->getGameRenderer()->setShowTimePanel(true);

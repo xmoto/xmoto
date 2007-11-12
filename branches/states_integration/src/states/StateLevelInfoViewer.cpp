@@ -47,12 +47,12 @@ StateLevelInfoViewer::~StateLevelInfoViewer()
 
 
 void StateLevelInfoViewer::enter()
-{
-  StateMenu::enter();
-  
+{ 
   createGUIIfNeeded(m_pGame);
   m_GUI = m_sGUI;
   updateGUI();
+
+  StateMenu::enter();
 }
 
 void StateLevelInfoViewer::leave()

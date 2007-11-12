@@ -1097,7 +1097,9 @@ void MotoGame::cleanPlayers() {
   }
 
   void MotoGame::addPenalityTime(float fTime) {
-    m_fTime += fTime;
+    if(fTime > 0.0) {
+      m_fTime += fTime;
+    }
   }
 
   void MotoGame::_KillEntity(Entity *pEnt) {

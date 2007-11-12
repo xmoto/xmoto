@@ -989,7 +989,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
       m_pLevelInfoViewReplayButton->setClicked(false);
       viewHighscoreOf();
       m_pMainMenu->showWindow(false);
-      m_StateAfterPlaying = GS_MENU;
       m_stateManager->pushState(new StateReplaying(this, m_PlaySpecificReplay));
     }
 

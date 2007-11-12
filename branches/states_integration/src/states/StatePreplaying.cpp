@@ -73,7 +73,6 @@ void StatePreplaying::enter()
     Logger::Log("** Warning ** : level '%s' cannot be loaded", m_idlevel.c_str());
     char cBuf[256];
     sprintf(cBuf,GAMETEXT_LEVELCANNOTBELOADED, m_idlevel.c_str());
-    m_pGame->setState(GS_MENU);
     m_pGame->getStateManager()->replaceState(new StateMessageBox(NULL, m_pGame, cBuf, UI_MSGBOX_OK));
     return;
   }
@@ -86,7 +85,6 @@ void StatePreplaying::enter()
     sprintf(cBuf,GAMETEXT_NEWERXMOTOREQUIRED,
 	    pWorld->getLevelSrc()->getRequiredVersion().c_str());
     pWorld->endLevel();
-    m_pGame->setState(GS_MENU);
     m_pGame->getStateManager()->replaceState(new StateMessageBox(NULL, m_pGame, cBuf, UI_MSGBOX_OK));
     return;
   }
@@ -141,7 +139,6 @@ void StatePreplaying::enter()
   } catch(Exception &e) {
     Logger::Log(std::string("** Warning ** : failed to initialize level\n" + e.getMsg()).c_str());
     pWorld->endLevel();
-    m_pGame->setState(GS_MENU);
     m_pGame->getStateManager()->replaceState(new StateMessageBox(NULL, m_pGame, GameApp::splitText(e.getMsg(), 50), UI_MSGBOX_OK));
     return;
   }

@@ -52,6 +52,7 @@ StateMenu::~StateMenu()
 void StateMenu::enter()
 {
   GameState::enter();
+  m_GUI->enableContextMenuDrawing(m_pGame->getSession()->enableContextHelp());
 }
 
 void StateMenu::leave()

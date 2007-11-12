@@ -46,9 +46,6 @@ StateEditWebConfig::~StateEditWebConfig()
 
 void StateEditWebConfig::enter()
 {
-  StateMenu::enter();
-  m_pGame->m_State = GS_EDIT_WEBCONFIG; // to be removed
-
   createGUIIfNeeded(m_pGame);
   m_GUI = m_sGUI;
   updateGUI();
@@ -63,6 +60,8 @@ void StateEditWebConfig::enter()
     v_msgboxState->setId("EDITWEBCONF");
     m_pGame->getStateManager()->pushState(v_msgboxState);
   }
+
+  StateMenu::enter();
 }
 
 void StateEditWebConfig::leave()

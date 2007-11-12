@@ -50,9 +50,6 @@ StateDeadMenu::~StateDeadMenu()
 
 void StateDeadMenu::enter()
 {
-  StateMenu::enter();
-
-  m_pGame->m_State = GS_DEADMENU; // to be removed, just the time states are finished
   m_pGame->getMotoGame()->setInfos(m_pGame->getMotoGame()->getLevelSrc()->Name());
   m_pGame->playMusic("");
   
@@ -64,6 +61,8 @@ void StateDeadMenu::enter()
 
   UIButton* saveReplayButton = reinterpret_cast<UIButton *>(m_GUI->getChild("DEADMENU_FRAME:SAVEREPLAY_BUTTON"));
   saveReplayButton->enableWindow(m_pGame->isAReplayToSave());
+
+  StateMenu::enter();
 }
 
 void StateDeadMenu::leave()
