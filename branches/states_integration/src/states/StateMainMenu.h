@@ -108,6 +108,7 @@ class StateMainMenu : public StateMenu {
   void checkEventsLevelsPackTab();
   void checkEventsReplays();
   void checkEventsMainWindow();
+  void checkEventsOptions();
 };
 
 #endif

@@ -137,6 +137,9 @@ void StateMainMenu::checkEvents() {
 
   // replay tab
   checkEventsReplays();
+
+  // options
+  checkEventsOptions();
 }
 
 void StateMainMenu::checkEventsMainWindow() {
@@ -1134,12 +1137,12 @@ UIWindow* StateMainMenu::makeWindowOptions_ghosts(GameApp* pGame, UIWindow* i_pa
   DrawLib* drawlib = pGame->getDrawLib();
 
   v_window = new UIWindow(i_parent, 20, 40, GAMETEXT_GHOSTTAB, i_parent->getPosition().nWidth-40, i_parent->getPosition().nHeight);
-  v_window->setID("GHOST_TAB");
+  v_window->setID("GHOSTS_TAB");
   v_window->showWindow(false);
 
   v_button = new UIButton(v_window, 5, 5, GAMETEXT_ENABLEGHOST, v_window->getPosition().nWidth-40, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
-  v_button->setID("ENABLE_GHOST");
+  v_button->setID("ENABLE_GHOSTS");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_GHOST_MODE);
 
@@ -1163,13 +1166,13 @@ UIWindow* StateMainMenu::makeWindowOptions_ghosts(GameApp* pGame, UIWindow* i_pa
 
   v_button = new UIButton(v_window, 5, 125, GAMETEXT_DISPLAYGHOSTTIMEDIFF, v_window->getPosition().nWidth-40, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
-  v_button->setID("DISPLAY_GHOST_TIMEDIFF");
+  v_button->setID("DISPLAY_GHOST_TIMEDIFFERENCE");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_DISPLAY_GHOST_TIMEDIFF);
 
   v_button = new UIButton(v_window, 5, 185, GAMETEXT_DISPLAYGHOSTINFO, v_window->getPosition().nWidth-40, 28);
   v_button->setType(UI_BUTTON_TYPE_CHECK);
-  v_button->setID("DISPLAY_GHOST_INFO");
+  v_button->setID("DISPLAY_GHOSTS_INFOS");
   v_button->setFont(drawlib->getFontSmall());
   v_button->setContextHelp(CONTEXTHELP_DISPLAY_GHOST_INFO);
 
@@ -2050,4 +2053,78 @@ void StateMainMenu::updateOptions() {
   v_edit->setCaption(m_pGame->getSession()->uploadPassword());
 
   // ghosts
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:ENABLE_GHOSTS"));
+  v_button->setChecked(m_pGame->getSession()->enableGhosts());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:GHOST_STRATEGY_MYBEST"));
+  v_button->setChecked(m_pGame->getSession()->ghostStrategy_MYBEST());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:GHOST_STRATEGY_THEBEST"));
+  v_button->setChecked(m_pGame->getSession()->ghostStrategy_THEBEST());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:GHOST_STRATEGY_BESTOFROOM"));
+  v_button->setChecked(m_pGame->getSession()->ghostStrategy_BESTOFROOM());
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:DISPLAY_GHOST_TIMEDIFFERENCE"));
+  v_button->setChecked(m_pGame->getSession()->showGhostTimeDifference());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:DISPLAY_GHOSTS_INFOS"));
+  v_button->setChecked(m_pGame->getSession()->showGhostsInfos());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:HIDEGHOSTS"));
+  v_button->setChecked(m_pGame->getSession()->hideGhosts());
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GHOSTS_TAB:MOTION_BLUR_GHOST"));
+  v_button->setChecked(m_pGame->getSession()->ghostMotionBlur());
+}
+
+void StateMainMenu::checkEventsOptions() {
+  UIButton*    v_button;
+  UIList* v_list;
+  std::string  v_id_level;
+
+  // general tab
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:SHOWMINIMAP"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getSession()->setShowMinimap(v_button->getChecked()); 
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:SHOWENGINECOUNTER"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getSession()->setShowEngineCounter(v_button->getChecked()); 
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:INITZOOM"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getSession()->setEnableInitZoom(v_button->getChecked()); 
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:DEATHANIM"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getSession()->setEnableDeadAnimation(v_button->getChecked()); 
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:ENABLECONTEXTHELP"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getSession()->setEnableContextHelp(v_button->getChecked()); 
+  }
+
+  v_button = reinterpret_cast<UIButton *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:AUTOSAVEREPLAYS"));
+  if(v_button->isClicked()) {
+    v_button->setClicked(false);
+    m_pGame->getSession()->setAutosaveHighscoreReplays(v_button->getChecked()); 
+  }
+
+  v_list = reinterpret_cast<UIList *>(m_GUI->getChild("MAIN:FRAME_OPTIONS:TABS:GENERAL_TAB:THEMES_LIST"));
+  if(v_list->isClicked()) {
+    v_list->setClicked(false);
+    if(v_list->getSelected() >= 0 && v_list->getSelected() < v_list->getEntries().size()) {
+      UIListEntry *pEntry = v_list->getEntries()[v_list->getSelected()];
+      m_pGame->getSession()->setTheme(pEntry->Text[0]);
+      if(m_pGame->getTheme()->Name() != m_pGame->getSession()->theme()) {
+	m_pGame->reloadTheme();
+      }
+    }
+  }
+
+  // video tab
 }

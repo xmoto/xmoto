@@ -148,6 +148,14 @@ class XMSession {
   std::string uploadPassword() const;
   void setIdRoom(const std::string& i_value);
   std::string idRoom() const;
+  void setShowGhostTimeDifference(bool i_value);
+  bool showGhostTimeDifference() const;
+  void setGhostMotionBlur(bool i_value);
+  bool ghostMotionBlur() const;
+  void setShowGhostsInfos(bool i_value);
+  bool showGhostsInfos() const;
+  void setHideGhosts(bool i_value);
+  bool hideGhosts() const;
 
   private:
   bool m_verbose;
@@ -203,6 +211,10 @@ class XMSession {
   std::string m_uploadLogin;
   std::string m_uploadPassword;
   std::string m_idRoom;
+  bool m_showGhostTimeDifference;
+  bool m_ghostMotionBlur;
+  bool m_showGhostsInfos;
+  bool m_hideGhosts;
 };
 
 #endif

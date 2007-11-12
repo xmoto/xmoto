@@ -250,11 +250,6 @@ class StateManager;
       
       Replay *m_pJustPlayReplay;
 
-      bool m_bShowGhostTimeDiff;
-      bool m_bGhostMotionBlur;                  /* true: apply fancy motion blur to ghosts */
-      bool m_bEnableGhostInfo;
-      bool m_bHideGhosts;
-
       /* WWW */
       WebRoom *m_pWebHighscores;
       WebRooms *m_pWebRooms;

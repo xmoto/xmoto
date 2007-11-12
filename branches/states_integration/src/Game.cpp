@@ -213,11 +213,6 @@ GameApp::GameApp() {
   m_updateAutomaticallyLevels = false;
   m_reloadingLevelsUser = false;
 
-  m_bShowGhostTimeDiff = true;
-  m_bEnableGhostInfo = false;
-  m_bHideGhosts = false;
-  m_bGhostMotionBlur = true;
-
   m_bRecordReplays = true;
   m_bCompressReplays = true;
  
@@ -337,18 +332,14 @@ GameApp::GameApp() {
     Replay::enableCompression(m_bCompressReplays);
 
     /* ghost */
-    m_bShowGhostTimeDiff  = m_Config.getBool("ShowGhostTimeDiff");
-    m_MotoGame.setShowGhostTimeDiff(m_bShowGhostTimeDiff);
-    m_bGhostMotionBlur = m_Config.getBool("GhostMotionBlur");
+    m_MotoGame.setShowGhostTimeDiff(m_xmsession->showGhostTimeDifference());
     if(m_xmsession->useGraphics()) {
-      m_Renderer->setGhostMotionBlur( m_bGhostMotionBlur );
+      m_Renderer->setGhostMotionBlur(m_xmsession->ghostMotionBlur());
     }
 
-    m_bEnableGhostInfo = m_Config.getBool("DisplayGhostInfo");
-    m_bHideGhosts = m_Config.getBool("HideGhosts");
     if(m_xmsession->useGraphics()) {
-      m_Renderer->setGhostDisplayInformation(m_bEnableGhostInfo);
-      m_Renderer->setHideGhosts(m_bHideGhosts);
+      m_Renderer->setGhostDisplayInformation(m_xmsession->showGhostsInfos());
+      m_Renderer->setHideGhosts(m_xmsession->hideGhosts());
     }
 
     /* Other settings */

@@ -73,6 +73,10 @@ XMSession::XMSession() {
   m_checkNewHighscoresAtStartup   = true;
   m_showHighscoreInGame           = true;
   m_idRoom                        = DEFAULT_WEBROOM_ID;
+  m_showGhostTimeDifference       = true;
+  m_ghostMotionBlur               = true;
+  m_showGhostsInfos               = false;
+  m_hideGhosts                    = false;
 }
 
 void XMSession::load(const XMArguments* i_xmargs) {
@@ -200,6 +204,10 @@ void XMSession::load(UserConfig* m_Config) {
   m_uploadLogin                 = m_Config->getString("WebHighscoreUploadLogin");
   m_uploadPassword              = m_Config->getString("WebHighscoreUploadPassword");
   m_idRoom                      = m_Config->getString("WebHighscoresIdRoom");
+  m_showGhostTimeDifference     = m_Config->getBool("ShowGhostTimeDiff");
+  m_ghostMotionBlur             = m_Config->getBool("GhostMotionBlur");
+  m_showGhostsInfos             = m_Config->getBool("DisplayGhostInfo");
+  m_hideGhosts                  = m_Config->getBool("HideGhosts");
 }
 
 void XMSession::save(UserConfig* m_Config) {
@@ -217,6 +225,15 @@ void XMSession::save(UserConfig* m_Config) {
   m_Config->setString("WebHighscoreUploadLogin",    m_uploadLogin);
   m_Config->setString("WebHighscoreUploadPassword", m_uploadPassword);
   m_Config->setString("WebHighscoresIdRoom",        m_idRoom);
+  m_Config->setBool("ShowGhostTimeDiff",            m_showGhostTimeDifference);
+  m_Config->setBool("GhostMotionBlur",              m_ghostMotionBlur);
+  m_Config->setBool("DisplayGhostInfo",             m_showGhostsInfos);
+  m_Config->setBool("HideGhosts",                   m_hideGhosts);
+  m_Config->setBool("ShowMiniMap",                  m_showMinimap);
+  m_Config->setBool("ShowEngineCounter",            m_showEngineCounter);
+  m_Config->setBool("InitZoom",                     m_enableInitZoom);
+  m_Config->setBool("DeathAnim",                    m_enableDeadAnimation);
+  m_Config->setBool("AutosaveHighscoreReplays",     m_autosaveHighscoreReplays);
 }
 
 bool XMSession::isVerbose() const {
@@ -606,4 +623,36 @@ void XMSession::setIdRoom(const std::string& i_value) {
 
 std::string XMSession::idRoom() const {
   return m_idRoom;
+}
+
+void XMSession::setShowGhostTimeDifference(bool i_value) {
+  m_showGhostTimeDifference = i_value;
+}
+
+bool XMSession::showGhostTimeDifference() const {
+  return m_showGhostTimeDifference;
+}
+
+void XMSession::setGhostMotionBlur(bool i_value) {
+  m_ghostMotionBlur = i_value;
+}
+
+bool XMSession::ghostMotionBlur() const {
+  return m_ghostMotionBlur;
+}
+
+void XMSession::setShowGhostsInfos(bool i_value) {
+  m_showGhostsInfos = i_value;
+}
+
+bool XMSession::showGhostsInfos() const {
+  return m_showGhostsInfos;
+}
+
+void XMSession::setHideGhosts(bool i_value) {
+  m_hideGhosts = i_value;
+}
+
+bool XMSession::hideGhosts() const {
+  return m_hideGhosts;
 }
