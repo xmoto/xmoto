@@ -164,6 +164,7 @@ class StateManager;
       StateManager*  getStateManager();
       GameRenderer*  getGameRenderer();
       InputHandler*  getInputHandler();
+      ThemeChoicer*  getThemeChoicer();
 
       SysMessage* getSysMessage() { return m_sysMsg;}
 
@@ -194,7 +195,9 @@ class StateManager;
     
       std::string determineNextLevel(const std::string& i_id_level);
       std::string determinePreviousLevel(const std::string& i_id_level);
-  
+
+      void initReplaysFromDir();
+      void _UpdateThemesLists(void);
 
    protected:
       void createDefaultConfig();
@@ -293,7 +296,6 @@ class StateManager;
 
       /* Level pack viewer fun */
       UIFrame *m_pLevelPackViewer;  
-      LevelsPack *m_pActiveLevelPack;
       
       /* Replay saving UI fun */
       UIMsgBox *m_pSaveReplayMsgBox;    
@@ -356,7 +358,6 @@ class StateManager;
       void _UpdateSettings(void);
       void _UpdateLevelLists(void);
       void _UpdateReplaysList(void);
-      void _UpdateThemesLists(void);
 
       void _UpdateLevelsLists();
       void _UpdateCurrentPackList(const std::string& i_id_level, float i_playerHighscore);
@@ -409,7 +410,6 @@ class StateManager;
       /* Main loop utility functions */
       void _PreUpdateGUI(void);
 
-      void initReplaysFromDir();
       void addReplay(const std::string& i_file);
 
       static UIFrame* makeOptionsWindow(DrawLib* i_drawLib, UIWindow* io_parent, UserConfig* i_Config);

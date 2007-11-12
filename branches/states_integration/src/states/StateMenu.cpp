@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Game.h"
 #include "XMSession.h"
 #include "drawlib/DrawLib.h"
+#include "StateUpdateLevels.h"
 
 StateMenu::StateMenu(bool drawStateBehind,
 		     bool updateStatesBehind,
@@ -91,6 +92,10 @@ void StateMenu::keyDown(int nKey, SDLMod mod,int nChar)
   GameState::keyDown(nKey, mod, nChar);
   m_GUI->keyDown(nKey, mod, nChar);
   checkEvents();
+
+  if(nKey == SDLK_F5){
+    m_pGame->getStateManager()->pushState(new StateUpdateLevels(m_pGame));
+  }
 }
 
 void StateMenu::keyUp(int nKey, SDLMod mod)

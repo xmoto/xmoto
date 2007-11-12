@@ -22,10 +22,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __STATEMANAGER_H__
 
 #include "StateMessageBoxReceiver.h"
+#include "StateMenuContextReceiver.h"
 
 class GameApp;
 
-class GameState : public StateMessageBoxReceiver {
+class GameState : public StateMessageBoxReceiver,
+		  public StateMenuContextReceiver {
   public:
     GameState(bool drawStateBehind,
 	      bool updateStatesBehind,
@@ -89,6 +91,7 @@ class GameState : public StateMessageBoxReceiver {
     void setId(const std::string& i_id);
 
     virtual void send(const std::string& i_id, UIMsgBoxButton i_button, const std::string& i_input);
+    virtual void send(const std::string& i_id, const std::string& i_message);
 
     std::string getName() const {
       return m_name;
@@ -100,6 +103,7 @@ class GameState : public StateMessageBoxReceiver {
       return m_showCursor;
     }
     void executeCommands();
+    virtual void executeOneCommand(std::string cmd);
 
   protected:
     bool doUpdate();
@@ -122,7 +126,6 @@ class GameState : public StateMessageBoxReceiver {
     bool m_showCursor;
 
     std::queue<std::string> m_commands;
-    virtual void executeOneCommand(std::string cmd);
 
   private:
     bool        m_isHide;
@@ -164,6 +167,10 @@ class GameState : public StateMessageBoxReceiver {
     // to display on the screen
     int getCurrentUpdateFPS();
     int getCurrentRenderFPS();
+
+    // send the message to every states
+    void sendSynchronousMessage(std::string cmd);
+    void sendAsynchronousMessage(std::string cmd);
 
     int getMaxFps(){
       return m_maxFps;

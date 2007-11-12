@@ -204,7 +204,6 @@ GameApp::GameApp() {
   m_pReplaysWindow=NULL;
   m_pLevelPacksWindow=NULL;
   m_pLevelPackViewer=NULL;  
-  m_pActiveLevelPack=NULL;
   m_pGameInfoWindow=NULL;
   m_fFrameTime = 0;
   m_fFPS_Rate = 0;
@@ -798,7 +797,6 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
 
         /* Got some new levels... load them! */
         Logger::Log("Loading new and updated levels...");
-	m_pActiveLevelPack = NULL; /* the active level pack could no more exists after update */
 	m_levelsManager.updateLevelsFromLvl(m_db,
 					    m_pWebLevels->getNewDownloadedLevels(),
 					    m_pWebLevels->getUpdatedDownloadedLevels()
@@ -1352,6 +1350,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
   }
 
   void GameApp::loadLevelHook(std::string i_level, int i_percentage) {
+#if 0
     std::ostringstream v_percentage;
     v_percentage << i_percentage;
     v_percentage << "%";
@@ -1364,6 +1363,7 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
 
     /* pump events to so that windows don't think the appli is crashed */
     SDL_PumpEvents();
+#endif
   }
 
   void GameApp::updatingDatabase(std::string i_message) {
@@ -1423,7 +1423,9 @@ void GameApp::keyDown(int nKey, SDLMod mod, int nChar) {
   }
 
   void GameApp::_UpdateCurrentPackList(const std::string& i_id_level, float i_playerHighscore) {
-    if(m_pActiveLevelPack == NULL) return;
+    //    if(m_pActiveLevelPack == NULL)
+    //      return;
+
     UILevelList *pList = (UILevelList *)m_pLevelPackViewer->getChild("LEVELPACK_LEVEL_LIST"); 
     if(pList == NULL) return;
 
@@ -1685,4 +1687,9 @@ void GameApp::updateWebHighscores()
 
 LevelsManager* GameApp::getLevelsManager() {
   return &m_levelsManager;
+}
+
+ThemeChoicer* GameApp::getThemeChoicer()
+{
+  return m_themeChoicer;
 }

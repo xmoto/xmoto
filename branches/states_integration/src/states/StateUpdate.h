@@ -18,32 +18,30 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
-#ifndef __STATEMENU_H__
-#define __STATEMENU_H__
+#ifndef __STATEUPDATE_H__
+#define __STATEUPDATE_H__
 
 #include "StateManager.h"
+#include "StateMenu.h"
+#include "AttractMode.h"
+#include <string>
 
 class UIRoot;
-class GameApp;
-class StateMenuContextReceiver;
 
-class StateMenu : public GameState {
- public:
-  StateMenu(bool drawStateBehind,
-	    bool updateStatesBehind,
-	    GameApp* pGame,
-	    StateMenuContextReceiver* i_receiver = NULL,
-	    bool i_doShade     = false,
-	    bool i_doShadeAnim = true);
-  virtual ~StateMenu();
-  
+class StateUpdate : public StateMenu, public AttractMode {
+public:
+  StateUpdate(GameApp* pGame,
+	      bool drawStateBehind,
+	      bool updateStatesBehind);			 
+  virtual ~StateUpdate();
+
   virtual void enter();
   virtual void leave();
   /* called when a new state is pushed or poped on top of the
      current one*/
   virtual void enterAfterPop();
   virtual void leaveAfterPush();
-  
+
   virtual bool update();
   virtual bool render();
   /* input */
@@ -52,16 +50,16 @@ class StateMenu : public GameState {
   virtual void mouseDown(int nButton);
   virtual void mouseDoubleClick(int nButton);
   virtual void mouseUp(int nButton);
-  
-  virtual void send(const std::string& i_id, const std::string& i_message);
-  virtual void executeOneCommand(std::string cmd);
 
- protected:
-  virtual void checkEvents() = 0;
-  UIRoot *m_GUI;
-  StateMenuContextReceiver* m_receiver;  
+  static void clean();
+protected:
+  virtual void checkEvents();
+  virtual void updateGUI() = 0;
 
- private:
+private:
+  /* GUI */
+  static UIRoot* m_sGUI;
+  static void createGUIIfNeeded(GameApp* pGame);
 };
 
 #endif

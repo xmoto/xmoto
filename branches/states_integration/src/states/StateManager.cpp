@@ -396,6 +396,28 @@ bool StateManager::doRender()
   return false;
 }
 
+void StateManager::sendSynchronousMessage(std::string cmd)
+{
+  std::vector<GameState*>::iterator stateIterator = m_statesStack.begin();
+
+  while(stateIterator != m_statesStack.end()){
+    (*stateIterator)->executeOneCommand(cmd);
+
+    stateIterator++;
+  }
+}
+
+void StateManager::sendAsynchronousMessage(std::string cmd)
+{
+  std::vector<GameState*>::iterator stateIterator = m_statesStack.begin();
+
+  while(stateIterator != m_statesStack.end()){
+    (*stateIterator)->send("STATE_MANAGER", cmd);
+
+    stateIterator++;
+  }
+}
+
 GameState::GameState(bool drawStateBehind,
 		     bool updateStatesBehind,
 		     GameApp* pGame,
@@ -477,6 +499,11 @@ void GameState::send(const std::string& i_id, UIMsgBoxButton i_button, const std
   Logger::Log("** Warning ** : StateMessageBoxReceiver::send() received, but nothing done !");
 }
 
+void GameState::send(const std::string& i_id, const std::string& i_message)
+{
+  
+}
+
 void GameState::executeCommands()
 {
   while(m_commands.empty() == false){
@@ -495,6 +522,7 @@ void GameState::keyDown(int nKey, SDLMod mod,int nChar) {
   // will display help once it will be possible to have several motogame
 }
 
+#if 0
 void GameState::simpleMessage(const std::string& msg) {
   UIRect v_rect;
   DrawLib* drawlib = m_pGame->getDrawLib();
@@ -524,3 +552,4 @@ void GameState::simpleMessage(const std::string& msg) {
   //m_GUI->setTextSolidColor(MAKE_COLOR(255,255,255,255));
   //m_GUI->putText(drawlib->getDispWidth()/2,drawlib->getDispHeight()/2, msg, -0.5, -0.5);
 }
+#endif

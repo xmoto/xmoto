@@ -136,7 +136,13 @@ states_SOURCES = states/StateManager.h       	  \
                  states/StatePreplaying.h        \
                  states/StatePreplaying.cpp      \
                  states/StateReplaying.h         \
-                 states/StateReplaying.cpp
+                 states/StateReplaying.cpp       \
+		 states/AttractMode.cpp          \
+		 states/AttractMode.h            \
+		 states/StateUpdate.cpp          \
+		 states/StateUpdate.h            \
+		 states/StateUpdateLevels.cpp    \
+		 states/StateUpdateLevels.h
 
 bz2_SOURCES = bzip2/blocksort.c     \
               bzip2/bzlib.c         \
@@ -148,6 +154,11 @@ bz2_SOURCES = bzip2/blocksort.c     \
               bzip2/huffman.c       \
               bzip2/randtable.c
 
+thread_SOURCES = thread/XMThread.cpp           \
+		 thread/UpdateLevelsThread.cpp \
+		 thread/XMThread.h             \
+		 thread/UpdateLevelsThread.h
+
 if WIN32
 common_SOURCES += $(bz2_SOURCES)
 endif
@@ -156,6 +167,7 @@ common_SOURCES += $(gui_basic_SOURCES)
 common_SOURCES += $(gui_specific_SOURCES)
 common_SOURCES += $(drawlib_SOURCES)
 common_SOURCES += $(states_SOURCES)
+common_SOURCES += $(thread_SOURCES)
 
 common_LDADD = $(GL_LIBS) $(SDL_LIBS) $(LIBINTL)
 if WIN32

@@ -22,9 +22,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define __STATESCENE_H__
 
 #include "StateManager.h"
-#include "StateMenuContextReceiver.h"
 
-class StateScene : public GameState, public StateMenuContextReceiver {
+class StateScene : public GameState {
  public:
  StateScene(GameApp* pGame, bool i_doShade = false, bool i_doShadeAnim = false);
  virtual ~StateScene();
@@ -52,9 +51,9 @@ class StateScene : public GameState, public StateMenuContextReceiver {
  virtual void executeOneCommand(std::string cmd);
 
  double m_fLastPhysTime; /* When the last frama was initiated */
- bool m_isLockedScene;
- bool m_autoZoom;      /* true : the key is pressed so that it zooms out to see the level */
- int m_autoZoomStep;
+ bool   m_isLockedScene;
+ bool   m_autoZoom;      /* true : the key is pressed so that it zooms out to see the level */
+ int    m_autoZoomStep;
 
  void setScoresTimes();
  void restartLevel(bool i_reloadLevel = false);
