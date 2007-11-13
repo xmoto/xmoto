@@ -238,8 +238,8 @@ void XMSession::save(UserConfig* m_Config) {
   m_Config->setInteger("DisplayHeight",             m_resolutionHeight);
   m_Config->setInteger("DisplayBPP",                m_bpp);
   m_Config->setBool("DisplayWindowed",              m_windowed);
-  m_Config->setString("MenuGraphics", m_menuGraphics == GFX_LOW ? "Low" :  m_menuGraphics == GFX_MEDIUM ? "Medium" : "High");
-  m_Config->setString("GameGraphics", m_gameGraphics == GFX_LOW ? "Low" :  m_gameGraphics == GFX_MEDIUM ? "Medium" : "High");
+  m_Config->setString("MenuGraphics", m_menuGraphics == GFX_LOW ? "Low" : m_menuGraphics == GFX_MEDIUM ? "Medium" : "High");
+  m_Config->setString("GameGraphics", m_gameGraphics == GFX_LOW ? "Low" : m_gameGraphics == GFX_MEDIUM ? "Medium" : "High");
   m_Config->setBool("AudioEnable",                  m_enableAudio);
   m_Config->setInteger("AudioSampleRate",           m_audioSampleRate);
   m_Config->setInteger("AudioSampleBits",           m_audioSampleBits);
