@@ -18,6 +18,8 @@ along with XMOTO; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =============================================================================*/
 
+#include "Game.h"
+#include "drawlib/DrawLib.h"
 #include "StateUpdateLevels.h"
 #include "thread/UpdateLevelsThread.h"
 #include "helpers/Log.h"
@@ -63,6 +65,22 @@ bool StateUpdateLevels::update()
   m_currentOperation = m_pThread->getThreadCurrentOperation();
 }
 
+bool StateUpdateLevels::render()
+{
+  int ret = StateUpdate::render();
+
+  DrawLib* drawLib = m_pGame->getDrawLib();
+
+
+  // draw text
+  m_GUI->setTextSolidColor(MAKE_COLOR(255,255,255,255));
+  m_GUI->putText(drawLib->getDispWidth()/2,
+		 drawLib->getDispHeight()/2,
+		 m_currentOperation,
+		 -0.5, -0.5);
+
+  return ret;
+}
 
 void StateUpdateLevels::updateGUI()
 {

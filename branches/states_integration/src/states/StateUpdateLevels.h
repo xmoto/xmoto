@@ -35,6 +35,7 @@ public:
   // enter attractmode, launch thread and call mother function.
   virtual void enter();
   virtual bool update();
+  virtual bool render();
 
 protected:
   UpdateLevelsThread* m_pThread;
